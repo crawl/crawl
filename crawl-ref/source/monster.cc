@@ -4772,19 +4772,23 @@ void monster::timeout_enchantments(int levels)
             }
             // Deliberate fall-through
 
-        case ENCH_POISON: case ENCH_ROT: case ENCH_CORONA:
+        case ENCH_POISON: case ENCH_ROT: case ENCH_CORONA
         case ENCH_STICKY_FLAME: case ENCH_ABJ: case ENCH_SHORT_LIVED:
         case ENCH_SLOW: case ENCH_HASTE: case ENCH_MIGHT: case ENCH_FEAR:
-        case ENCH_INVIS: case ENCH_CHARM:  case ENCH_SLEEP_WARY:
-        case ENCH_SICK: case ENCH_SLEEPY: case ENCH_PARALYSIS:
-        case ENCH_PETRIFYING: case ENCH_PETRIFIED: case ENCH_SWIFT:
-        case ENCH_BATTLE_FRENZY: case ENCH_TEMP_PACIF: case ENCH_SILENCE:
-        case ENCH_LOWERED_MR: case ENCH_SOUL_RIPE: case ENCH_BLEED:
-        case ENCH_ANTIMAGIC: case ENCH_FEAR_INSPIRING:
-        case ENCH_REGENERATION: case ENCH_RAISED_MR: case ENCH_MIRROR_DAMAGE:
-        case ENCH_STONESKIN: case ENCH_LIQUEFYING:
+        case ENCH_CHARM: case ENCH_SLEEP_WARY: case ENCH_SICK:
+        case ENCH_SLEEPY: case ENCH_PARALYSIS: case ENCH_PETRIFYING:
+        case ENCH_PETRIFIED: case ENCH_SWIFT: case ENCH_BATTLE_FRENZY:
+        case ENCH_TEMP_PACIF: case ENCH_SILENCE: case ENCH_LOWERED_MR:
+        case ENCH_SOUL_RIPE: case ENCH_BLEED: case ENCH_ANTIMAGIC:
+        case ENCH_FEAR_INSPIRING: case ENCH_REGENERATION: case ENCH_RAISED_MR:
+        case ENCH_MIRROR_DAMAGE: case ENCH_STONESKIN: case ENCH_LIQUEFYING:
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
             lose_ench_levels(i->second, levels);
+            break;
+
+        case ENCH_INVIS:
+            if (!mons_class_flag(type, M_INVIS))
+                lose_ench_levels(i->second, levels);
             break;
 
         case ENCH_INSANE:
