@@ -45,7 +45,27 @@ s/\*{9,}\n(.)\. (.*)\n\*{9,}/$dashes\n$1.$spaces\ca$2\cb\U$2\n$dashes/g;
 1 while s/ \ca[^\cb]{2}/\ca/g;
 s/\ca[^\cb]?\cb//g;
 
-# Final whitespace.
-s/\r//g;
-s/ +$//g;
-print;
+# Rewrap overlong lines.
+my $ls = "";
+my $rem = "";
+for(/^.*$/mg)
+{
+    s/\s*$//;
+    /^( *)(.*)/;
+    my ($s, $line) = ($1, $2);
+    if ($s ne $ls || $line eq "")
+    {
+        # Different indentation -- needs a separate line.
+        $_ = "$ls$rem";
+        s/\s+$//;
+        print "$_\n" unless $_ eq "";
+        $rem = "";
+    }
+    $ls = $s;
+    $_ = "$s$rem$line";
+    /(.{0,75})(?:$|\s+)(.*)/;
+    ($_, $rem) = ($1, "$2 ");
+    s/\s+$//;
+    print "$_\n";
+    $rem =~ s/^\s+//;
+}
