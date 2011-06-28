@@ -3194,7 +3194,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     {
         // If the monster somehow ended up in this habitat (and is
         // not dead by now), give it a chance to get out again.
-        if (grd(mons->pos()) == target_grid
+        if (grd(mons->pos()) == target_grid && mons->ground_level()
             && _no_habitable_adjacent_grids(mons))
         {
             return (true);
