@@ -44,6 +44,7 @@ DEADJOE
 # Generated documentation
 /docs/aptitudes.txt
 /docs/FAQ.html
+/docs/crawl_manual.txt
 
 # Crawl generated junk
 arena.result

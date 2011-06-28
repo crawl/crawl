@@ -1,0 +1,51 @@
+#! /usr/bin/env perl
+use warnings;
+
+undef $/;
+$_=<>;
+
+# URLs have damn inconsistent handling in reST.
+s|:http: ``(.+)``|$1|g;
+s|:telnet: ``(.+)``|telnet:  $1|g;
+s|:ssh: ``(.+)``|ssh:     $1|g;
+
+# Local references.
+s/`(.)\.\s+(.*?)`_/$1. "$2"/sg; # added "" for a nicer look
+
+# HTML and reST escapes.
+s/&lt;/</g;
+s/&gt;/>/g;
+s/&quot;/"/g;
+s/&#0*39;/'/g;
+s/&amp;/&/g;
+s/\\(.)/$1/g;
+
+# Table of contents.
+my $contents = "Contents\n--------\n";
+for(/\*{9,}\n(.\. .+)\n\*{9,}/g)
+{
+    /(.)\. (.+)/;
+    $contents .= "\nAppendices\n" if $1 eq "1";
+    $contents .= "$1.      $2\n";
+}
+s/\.\. contents::\n   :depth: 5/$contents/;
+
+# Main headers.
+my $DCSShead = <<END;
+                       DUNGEON CRAWL Stone Soup
+                            - the manual -
+END
+s/\+{9,}\nDungeon Crawl Stone Soup manual\n\+{9,}\n/$DCSShead/;
+s/#{9,}\nManual\n#{9,}\n\n//;
+
+# Make section headers nice and centered.
+my $dashes = "-"x72;
+my $spaces = " "x36;
+s/\*{9,}\n(.)\. (.*)\n\*{9,}/$dashes\n$1.$spaces\ca$2\cb\U$2\n$dashes/g;
+1 while s/ \ca[^\cb]{2}/\ca/g;
+s/\ca[^\cb]?\cb//g;
+
+# Final whitespace.
+s/\r//g;
+s/ +$//g;
+print;
