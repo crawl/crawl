@@ -4685,9 +4685,9 @@ void debuff_monster(monster* mon)
         ENCH_PETRIFIED
     };
 
-     // Dispel all magical enchantments.
-     for (unsigned int i = 0; i < ARRAYSZ(lost_enchantments); ++i)
-          mon->del_ench(lost_enchantments[i], true, true);
+    // Dispel all magical enchantments.
+    for (unsigned int i = 0; i < ARRAYSZ(lost_enchantments); ++i)
+        mon->del_ench(lost_enchantments[i], true, true);
 }
 
 // Return the number of monsters of the specified type.
