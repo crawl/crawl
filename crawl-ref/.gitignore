@@ -132,6 +132,8 @@ makefile.dep
 
 # Packaging
 /source/util/release_ver
+/source/contrib
+/source/prebuilt
 
 # Debian packaging
 /build-console
