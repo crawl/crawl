@@ -2193,8 +2193,17 @@ void handle_monster_move(monster* mons)
                 int pfound = 0;
                 for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
                     if (mons->can_pass_through(*ai))
-                        if (one_chance_in(++pfound))
+                    {
+                        // Intelligent monsters don't move if they might drown.
+                        if (mons_intel(mons) == I_HIGH
+                            && !mons->is_habitable(*ai))
+                        {
+                            mmov.reset();
+                            break;
+                        }
+                        else if (one_chance_in(++pfound))
                             mmov = *ai - mons->pos();
+                    }
 
                 // OK, mmov determined.
                 const coord_def newcell = mmov + mons->pos();
