@@ -1539,11 +1539,11 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
 
         // Vorpal brand increases damage dice size.
         if (bow_brand == SPWPN_VORPAL)
-            diceMult = diceMult * 130 / 100;
+            diceMult = diceMult * 120 / 100;
 
         // As do steel ammo.
         if (ammo_brand == SPMSL_STEEL)
-            diceMult = diceMult * 150 / 100;
+            diceMult = diceMult * 130 / 100;
 
         // Note: we already have throw_energy taken off.  -- bwr
         int speed_delta = 0;
@@ -1554,6 +1554,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
                 // Speed crossbows take 50% less time to use than
                 // ordinary crossbows.
                 speed_delta = div_rand_round(throw_energy * 2, 5);
+                speed_brand = true;
             }
             else
             {
@@ -1573,7 +1574,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
         mons->speed_increment += speed_delta;
     }
 
-    // Chaos overides flame and frost
+    // Chaos, flame, and frost.
     if (pbolt.flavour != BEAM_MISSILE)
     {
         baseHit    += 2;
