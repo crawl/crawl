@@ -145,9 +145,9 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         if ((midmons = monster_at(middle))
             && !midmons->submerged())
         {
-            const int skill = weapon_skill(wpn.base_type, wpn.sub_type);
-
-            if (!x_chance_in_y(5 + (3 * skill), 40))
+            // This chance should possibly depend on your skill with
+            // the weapon.
+            if (coinflip())
             {
                 success = false;
                 beam.target = middle;
