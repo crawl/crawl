@@ -579,6 +579,7 @@ SkillMenu::SkillMenu(bool reskilling) : PrecisionMenu(), m_flags(0),
 
     m_min_coord.x = 1;
     m_min_coord.y = 1;
+    m_pos = m_min_coord;
 
     m_max_coord.x = MIN_COLS + 1;
     m_max_coord.y = get_number_of_lines() + 1;
@@ -599,52 +600,50 @@ SkillMenu::SkillMenu(bool reskilling) : PrecisionMenu(), m_flags(0),
     if (is_set(SKMF_RESKILLING))
         _init_title();
 
-    const int first_line = m_min_coord.y + is_set(SKMF_RESKILLING);
+    m_pos.x++;
     const int col_split = MIN_COLS / 2
                           + (is_set(SKMF_SKILL_ICONS) ? TILES_COL : 0);
     for (int col = 0; col < SK_ARR_COL; ++col)
         for (int ln = 0; ln < SK_ARR_LN; ++ln)
         {
-            m_skills[ln][col] = SkillMenuEntry(coord_def(m_min_coord.x + 1
+            m_skills[ln][col] = SkillMenuEntry(coord_def(m_pos.x
                                                          + col_split * col,
-                                                         first_line + ln),
+                                                         m_pos.y + ln),
                                                m_ff);
         }
 
-    coord_def help_min_coord(m_min_coord.x + 1, 0);
-    help_min_coord.y = (m_min_coord.y + SK_ARR_LN + 1);
-    if (is_set(SKMF_RESKILLING))
-        ++help_min_coord.y;
-
+    m_pos.y += SK_ARR_LN + 1;
 #ifdef USE_TILE
     if (is_set(SKMF_SKILL_ICONS))
     {
-        --help_min_coord.y;
-        help_min_coord.y = tiles.to_lines(help_min_coord.y);
+        --m_pos.y;
+        m_pos.y = tiles.to_lines(m_pos.y);
     }
 #else
-    help_min_coord.y = std::min(help_min_coord.y,
-                                m_max_coord.y + is_set(SKMF_RESKILLING) - 4);
+    m_pos.y = std::min(m_pos.y, m_max_coord.y + is_set(SKMF_RESKILLING) - 4);
 #endif
 
     int help_height;
     if (is_set(SKMF_SIMPLE))
     {
-        // We just assume that the player won't learn too many skill while
+        // We just assume that the player won't learn too many skills while
         // in tutorial/hint mode.
-        help_min_coord.y -= 4;
+        m_pos.y -= 4;
         help_height = 6;
     }
     else
         help_height = 2;
 
-    m_help->set_bounds(help_min_coord,
+    m_help->set_bounds(m_pos,
                        coord_def(m_max_coord.x,
-                                 help_min_coord.y + help_height));
+                                 m_pos.y + help_height));
+    m_pos.y += help_height;
     m_ff->attach_item(m_help);
 
     _init_disp_queue();
-    _init_footer(coord_def(m_min_coord.x, help_min_coord.y + help_height));
+
+    --m_pos.x;
+    _init_footer(m_pos);
 
     if (is_set(SKMF_RESKILLING))
         _set_title();
@@ -799,8 +798,9 @@ void SkillMenu::_init_disp_queue()
 void SkillMenu::_init_title()
 {
     m_title = new NoSelectTextItem();
-    m_title->set_bounds(m_min_coord,
-                        coord_def(m_max_coord.x, m_min_coord.y + 1));
+    m_title->set_bounds(m_pos,
+                        coord_def(m_max_coord.x, m_pos.y + 1));
+    ++m_pos.y;
     m_title->set_fg_colour(WHITE);
     m_ff->attach_item(m_title);
     m_title->set_visible(true);
