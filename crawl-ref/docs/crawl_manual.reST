@@ -1919,9 +1919,9 @@ Abyssal Knights
   disorder in return.
 
 Skalds
-  The Skald is a decent fighter who can use the magical arts of enchantment to
-  become more dangerous in battle. Skalds start out lightly armed and armoured,
-  but equipped with a book of martial spells.
+  Skalds are warriors whose traditions include chantings songs or even reciting
+  poetry while going into battle. Such chants of more skilled Skalds are nothing
+  else than a form of magic spells, useful for augmenting their melee prowess.
 
 Warpers
   Warpers specialise in translocation magic, and are experts in travelling long
