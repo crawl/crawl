@@ -175,6 +175,7 @@ shopping.o \
 shout.o \
 show.o \
 showsymb.o \
+skill_menu.o \
 skills.o \
 skills2.o \
 species.o \
