@@ -28,7 +28,8 @@ neutral NEUTRAL
 animated_weapon ANIMATED_WEAPON
 mimic MIMIC
 poison POISON
-flame FLAME
+sticky_flame STICKY_FLAME
+inner_flame INNER_FLAME
 berserk BERSERK
 %rim 0
 fleeing FLEEING
