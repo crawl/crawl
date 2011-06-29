@@ -260,7 +260,8 @@ void tornado_damage(actor *caster, int dur)
         std::vector<coord_def> clouds;
         for (; dam_i && dam_i.radius() == r; ++dam_i)
         {
-            if (feat_is_tree(grd(*dam_i)) && dur > 0 && one_chance_in(20))
+            if (feat_is_tree(grd(*dam_i)) && dur > 0
+                && bernoulli(rdur * 0.01, 0.05)) // 5% chance per 10 aut
             {
                 grd(*dam_i) = DNGN_FLOOR;
                 set_terrain_changed(*dam_i);
