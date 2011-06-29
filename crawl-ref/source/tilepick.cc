@@ -4303,6 +4303,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_FIRE_BRAND:               return TILEG_FIRE_BRAND;
     case SPELL_THROW_FLAME:              return TILEG_THROW_FLAME;
     case SPELL_CONJURE_FLAME:            return TILEG_CONJURE_FLAME;
+    case SPELL_INNER_FLAME:              return TILEG_INNER_FLAME;
     case SPELL_STICKY_FLAME:             return TILEG_STICKY_FLAME;
     case SPELL_BOLT_OF_FIRE:             return TILEG_BOLT_OF_FIRE;
     case SPELL_IGNITE_POISON:            return TILEG_IGNITE_POISON;
@@ -4373,6 +4374,7 @@ tileidx_t tileidx_spell(spell_type spell)
     case SPELL_WARP_BRAND:               return TILEG_WARP_WEAPON;
     case SPELL_DISPERSAL:                return TILEG_DISPERSAL;
     case SPELL_GOLUBRIAS_PASSAGE:        return TILEG_PASSAGE_OF_GOLUBRIA;
+    case SPELL_SHROUD_OF_GOLUBRIA:       return TILEG_SHROUD_OF_GOLUBRIA;
 
     // Summoning
     case SPELL_SUMMON_BUTTERFLIES:       return TILEG_SUMMON_BUTTERFLIES;
