@@ -144,6 +144,7 @@ bool cast_tornado(int powc)
     if (you.fishtail)
         merfolk_stop_swimming();
 
+    you.props["tornado_since"].get_int() = you.elapsed_time;
     _set_tornado_durations(powc);
     burden_change();
 
@@ -189,6 +190,17 @@ static coord_def _rotate(coord_def org, coord_def from,
     return best;
 }
 
+static int _rdam(int rage)
+{
+    // integral of damage done until given age-radius
+    if (rage <= 0)
+        return 0;
+    else if (rage < 10)
+        return sqr(rage) / 2;
+    else
+        return rage * 10 - 50;
+}
+
 void tornado_damage(actor *caster, int dur)
 {
     if (!dur)
@@ -204,6 +216,11 @@ void tornado_damage(actor *caster, int dur)
     const coord_def org = caster->pos();
     noisy(25, org, caster->mindex());
     WindSystem winds(org);
+
+    int age = 100; // for permanent tornadoes
+    if (caster->props.exists("tornado_since"))
+        age = you.elapsed_time - caster->props["tornado_since"].get_int();
+    ASSERT(age >= 0);
 
     std::vector<actor*>        move_act;   // victims to move
     std::vector<coord_def>     move_avail; // legal destinations
@@ -222,8 +239,21 @@ void tornado_damage(actor *caster, int dur)
             ++cnt_all;
             ++count_i;
         }
-        int rpow = pow * cnt_open / cnt_all;
-        dprf("at dist %d pow is %d", r, rpow);
+        // effective age at radius r
+        int rage = age + 8 - r*7;
+        /* Not just "portion of time affected":
+                          **
+                        **
+                  ----++----
+                    **......
+                  **........
+           here, damage done is 3/4, not 1/2.
+        */
+        // effective duration at the radius
+        int rdur = _rdam(rage + abs(dur)) - _rdam(rage);
+        // power at the radius
+        int rpow = div_rand_round(pow * cnt_open * rdur, cnt_all * 100);
+        dprf("at dist %d dur is %d%%, pow is %d", r, rdur, rpow);
         if (!rpow)
             break;
 
@@ -288,9 +318,7 @@ void tornado_damage(actor *caster, int dur)
                     }
                     int dmg = roll_dice(6, rpow) / 15
                               - random2(victim->armour_class() / 3 + 1);
-                    if (dur > 0)
-                        dmg = div_rand_round(dmg * dur, 10);
-                    else if (dur < 0)
+                    if (dur < 0)
                         dmg = 0;
                     dprf("damage done: %d", dmg);
                     if (victim->atype() == ACT_PLAYER)
@@ -300,7 +328,7 @@ void tornado_damage(actor *caster, int dur)
                         victim->hurt(caster, dmg);
                 }
 
-                if (victim->alive() && !leda)
+                if (victim->alive() && !leda && dur > 0)
                     move_act.push_back(victim);
             }
             if ((env.cgrid(*dam_i) == EMPTY_CLOUD

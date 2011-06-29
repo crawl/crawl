@@ -1678,7 +1678,10 @@ static int _place_monster_aux(const mgen_data &mg,
     }
 
     if (mg.cls == MONS_TWISTER)
+    {
+        mon->props["tornado_since"].get_int() = you.elapsed_time;
         mon->add_ench(ENCH_PERM_TORNADO);
+    }
 
     if (mons_is_feat_mimic(mg.cls))
     {
