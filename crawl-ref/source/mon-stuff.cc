@@ -1215,8 +1215,9 @@ void setup_inner_flame_explosion(bolt & beam, const monster& origin)
     _setup_base_explosion(beam, origin);
     const int size = origin.body_size(PSIZE_BODY);
     beam.flavour   = BEAM_FIRE;
-    beam.damage    = (size > SIZE_BIG) ? dice_def(3, 25)
-                                       : dice_def(3, 20);
+    beam.damage    = (size > SIZE_BIG)  ? dice_def(3, 25) :
+                     (size > SIZE_TINY) ? dice_def(3, 20) :
+                                          dice_def(3, 15);
     beam.name      = "fiery explosion";
     beam.colour    = RED;
     beam.ex_size   = (size > SIZE_BIG) ? 2 : 1;
@@ -1251,9 +1252,10 @@ static bool _explode_monster(monster* mons, killer_type killer,
     else if (mons->has_ench(ENCH_INNER_FLAME))
     {
         setup_inner_flame_explosion(beam, *mons);
-        mons->flags |= MF_EXPLODE_KILL;
-        sanct_msg    = "By Zin's power, the fiery explosion "
-                       "is contained.";
+        mons->flags    |= MF_EXPLODE_KILL;
+        sanct_msg       = "By Zin's power, the fiery explosion "
+                          "is contained.";
+        beam.aux_source = "an exploding inner flame";
     }
     else
     {
@@ -1263,7 +1265,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
         return (false);
     }
 
-    if (YOU_KILL(killer))
+    if (YOU_KILL(killer) && beam.aux_source.empty())
         beam.aux_source = "set off by themselves";
     else if (pet_kill)
         beam.aux_source = "set off by their pet";
