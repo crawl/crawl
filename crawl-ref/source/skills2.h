@@ -190,6 +190,7 @@ private:
     int m_current_help;
     coord_def m_min_coord;
     coord_def m_max_coord;
+    coord_def m_pos;
 
     bool m_crosstrain;
     bool m_antitrain;
