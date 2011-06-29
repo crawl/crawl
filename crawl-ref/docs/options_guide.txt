@@ -2213,6 +2213,7 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
 
              player
              sensed monster
+             {trivial,easy,tough,nasty,friendly} sensed monster
              merged slime creature
              vampire bat
              kenku
