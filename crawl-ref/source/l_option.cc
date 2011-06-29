@@ -35,7 +35,7 @@ static int option_hboolean(lua_State *ls, const char *name, void *data,
 static option_handler handlers[] =
 {
     // Boolean options come first
-    { "easy_open",     &Options.easy_open, option_hboolean },
+    { "autoswitch",     &Options.autoswitch, option_hboolean },
     { "colour_map",    &Options.colour_map, option_hboolean },
     { "clean_map",     &Options.clean_map, option_hboolean },
     { "show_uncursed", &Options.show_uncursed, option_hboolean },

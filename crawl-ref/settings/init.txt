@@ -207,6 +207,7 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 # auto_list     = false
 # easy_open     = false
 # easy_unequip  = false
+# autoswitch    = false
 # equip_unequip = true
 # easy_confirm  = (none | safe)
 # allow_self_target      = (yes | no | prompt)
