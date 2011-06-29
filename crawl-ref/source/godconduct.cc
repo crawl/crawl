@@ -334,7 +334,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
             case GOD_KIKUBAAQUDGHA:
             case GOD_YREDELEMNUL:
+#ifndef NEW_OKAWARU_PIETY
             case GOD_OKAWARU:
+#endif
             case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_TROG:
@@ -360,7 +362,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             switch (you.religion)
             {
             case GOD_SHINING_ONE:
+#ifndef NEW_OKAWARU_PIETY
             case GOD_OKAWARU:
+#endif
             case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
@@ -387,7 +391,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             switch (you.religion)
             {
             case GOD_SHINING_ONE:
+#ifndef NEW_OKAWARU_PIETY
             case GOD_OKAWARU:
+#endif
             case GOD_MAKHLEB:
             case GOD_TROG:
             case GOD_KIKUBAAQUDGHA:
@@ -520,7 +526,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
+#ifndef NEW_OKAWARU_PIETY
             case GOD_OKAWARU:
+#endif
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
 
@@ -970,6 +978,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             break;
         }
 
+#ifdef NEW_OKAWARU_PIETY
         if (you.religion == GOD_OKAWARU
             // currently no constructs and plants
             && (thing_done == DID_KILL_LIVING
@@ -980,14 +989,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         {
             int gain = get_fuzzied_monster_difficulty(victim);
             dprf("fuzzied monster difficulty: %4.2f", gain*0.01);
-            okawaru_gain_piety(gain, 700);
-            // piety_denom = 700;
-            // if (piety_change > 3200)
-            //     simple_god_message(" appreciates your kill.");
-            // else if (piety_change > 9) // might still be miniscule
-            //     simple_god_message(" accepts your kill.");
-            // retval = true;
+            gain_piety(gain, 700);
+            piety_denom = 700;
+            if (piety_change > 3200)
+                simple_god_message(" appreciates your kill.");
+            else if (piety_change > 9) // might still be miniscule
+                simple_god_message(" accepts your kill.");
+            retval = true;
         }
+#endif
 
 #ifdef DEBUG_DIAGNOSTICS
         int old_piety = you.piety;
