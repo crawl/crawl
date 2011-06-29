@@ -2535,20 +2535,11 @@ int piety_scale(int piety)
     return (piety);
 }
 
-void okawaru_gain_piety(int pgn, int denominator)
-{
-    you.props["oka1"].get_float() += ((float)(pgn / 100)) * 100 / denominator;
-    you.props["oka2"].get_float() += ((float)pgn) / denominator;
-}
-
 static void _gain_piety_point();
 void gain_piety(int original_gain, int denominator, bool force, bool should_scale_piety)
 {
     if (original_gain <= 0)
         return;
-
-    if (you.religion == GOD_OKAWARU)
-        you.props["oka0"].get_float() += ((float)original_gain) / denominator;
 
     if (crawl_state.game_is_sprint() && you.level_type == LEVEL_ABYSS && !force)
         return;
