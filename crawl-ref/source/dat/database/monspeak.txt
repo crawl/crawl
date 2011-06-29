@@ -1677,6 +1677,28 @@ _Azrael_rare_
 @The_monster@ screams @at_foe@, "No! No! YES! No!"
 
 VISUAL:@The_monster@ whirls about in circles.
+
+@The_monster@ says @to_foe@, "May the fleas of a thousand camels infest your armpits."
+
+@The_monster@ wonders @at_foe@, "Do you still suffer from delusions of adequacy?"
+
+@The_monster@ says @to_foe@, "May your bottom itch incessantly and may your @_player_arms_@ be too short to scratch it."
+
+@The_monster@ says @to_foe@, "You child of a motherless goat."
+
+@The_monster@ says @to_foe@, "You child of a rabid dog! Grandchild of a stinking jackal! Great-grandchild of a plucked vulture!"
+
+@The_monster@ says @to_foe@, "May a porcupine live in your trousers for a thousand days and die there for a thousand and one."
+%%%%
+_player_arms_
+
+{{
+if you.race() == "Felid" then
+    return "paws"
+else
+    return "arms"
+end
+}}
 ## END Azrael ##
 %%%%
 ############ BLORK ### In case Blork ends up polymorphed.
