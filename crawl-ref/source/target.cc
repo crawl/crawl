@@ -149,10 +149,11 @@ aff_type targetter_reach::is_affected(coord_def loc)
     if (loc == aim)
         return AFF_YES;
 
-    // Knight move reach "slips through" and can't be blocked by either
-    // square in the middle.
-    if ((loc - origin) * 2 == (aim - origin))
+    if (((loc - origin) * 2 - (aim - origin)).abs() <= 1
+        && grd(loc) > DNGN_MAX_NONREACH)
+    {
         return AFF_TRACER;
+    }
 
     return AFF_NO;
 }

@@ -102,25 +102,36 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     if (mons && mons->submerged() && feat_is_floor(grd(beam.target)))
         mons = NULL;
 
-    const int x_middle = std::max(beam.target.x, you.pos().x)
+    const int x_first_middle = std::min(beam.target.x, you.pos().x)
+                            + (x_distance / 2);
+    const int y_first_middle = std::min(beam.target.y, you.pos().y)
+                            + (y_distance / 2);
+    const int x_second_middle = std::max(beam.target.x, you.pos().x)
                             - (x_distance / 2);
-    const int y_middle = std::max(beam.target.y, you.pos().y)
+    const int y_second_middle = std::max(beam.target.y, you.pos().y)
                             - (y_distance / 2);
-    const coord_def middle(x_middle, y_middle);
+    const coord_def first_middle(x_first_middle, y_first_middle);
+    const coord_def second_middle(x_second_middle, y_second_middle);
 
     if (x_distance > 2 || y_distance > 2)
     {
         mpr("Your weapon cannot reach that far!");
         return (false);
     }
-    else if (!you.see_cell_no_trans(beam.target)
-             && grd(middle) <= DNGN_MAX_NONREACH)
+    else if (grd(first_middle) <= DNGN_MAX_NONREACH
+             && grd(second_middle) <= DNGN_MAX_NONREACH)
     {
         // Might also be a granite statue/orcish idol which you
         // can reach _past_.
         mpr("There's a wall in the way.");
         return (false);
     }
+
+    // Choose one of the two middle squares (which might be the same).
+    const coord_def middle =
+                     (grd(first_middle) <= DNGN_MAX_NONREACH ? second_middle :
+                     (grd(second_middle) <= DNGN_MAX_NONREACH ? first_middle :
+                     (coinflip() ? first_middle : second_middle)));
 
     // BCR - Added a check for monsters in the way.  Only checks cardinal
     //       directions.  Knight moves are ignored.  Assume the weapon
@@ -131,10 +142,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     {
         bool success = true;
         monster *midmons;
-        // If not a knight move, we should check for a monster:
-        if ((beam.target.x - you.pos().x) % 2 == 0
-            && (beam.target.y - you.pos().y) % 2 == 0
-            && (midmons = monster_at(middle))
+        if ((midmons = monster_at(middle))
             && !midmons->submerged())
         {
             const int skill = weapon_skill(wpn.base_type, wpn.sub_type);
