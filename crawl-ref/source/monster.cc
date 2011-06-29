@@ -6592,7 +6592,7 @@ reach_type monster::reach_range() const
     if (wpn && get_weapon_brand(*wpn) == SPWPN_REACHING)
         return (REACH_TWO);
     if (attk.flavour == AF_REACH && attk.damage)
-        return (REACH_KNIGHT);
+        return (REACH_TWO);
     return (REACH_NONE);
 }
 
