@@ -2664,6 +2664,16 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
     // 'morph targets are _always_ "base" classes, not derived ones.
     new_mclass = mons_species(new_mclass);
 
+    // Shapeshifters cannot polymorph into glowing shapeshifters or
+    // vice versa.
+    if ((new_mclass == MONS_GLOWING_SHAPESHIFTER
+             && mons->has_ench(ENCH_SHAPESHIFTER))
+         || (new_mclass == MONS_SHAPESHIFTER
+             && mons->has_ench(ENCH_GLOWING_SHAPESHIFTER)))
+    {
+        return (false);
+    }
+
     // [ds] Non-base draconians are much more trouble than their HD
     // suggests.
     if (mons_genus(new_mclass) == MONS_DRACONIAN
@@ -2999,17 +3009,6 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     mons->add_ench(sub);
     mons->add_ench(summon);
     mons->add_ench(tp);
-
-    // Shapeshifters can turn into glowing shapeshifters or vice versa,
-    // but they can't be both at once.
-    if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER)
-        && mons->has_ench(ENCH_SHAPESHIFTER))
-    {
-        if (real_targetc == MONS_GLOWING_SHAPESHIFTER)
-            mons->del_ench(ENCH_SHAPESHIFTER);
-        else if (real_targetc == MONS_SHAPESHIFTER)
-            mons->del_ench(ENCH_GLOWING_SHAPESHIFTER);
-    }
 
     // Allows for handling of submerged monsters which polymorph into
     // monsters that can't submerge on this square.
