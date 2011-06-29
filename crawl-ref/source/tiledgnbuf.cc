@@ -699,10 +699,15 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
         m_buf_icons.add(TILEI_POISON, x, y, -status_shift, 0);
         status_shift += 5;
     }
-    if (fg & TILE_FLAG_FLAME)
+    if (fg & TILE_FLAG_STICKY_FLAME)
     {
-        m_buf_icons.add(TILEI_FLAME, x, y, -status_shift, 0);
+        m_buf_icons.add(TILEI_STICKY_FLAME, x, y, -status_shift, 0);
         status_shift += 5;
+    }
+    if (fg & TILE_FLAG_INNER_FLAME)
+    {
+        m_buf_icons.add(TILEI_INNER_FLAME, x, y, -status_shift, 0);
+        status_shift += 8;
     }
 
     if (fg & TILE_FLAG_ANIM_WEP)

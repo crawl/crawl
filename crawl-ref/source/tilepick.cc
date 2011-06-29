@@ -2586,7 +2586,9 @@ tileidx_t tileidx_monster(const monster* mons)
     if (mons->has_ench(ENCH_POISON))
         ch |= TILE_FLAG_POISON;
     if (mons->has_ench(ENCH_STICKY_FLAME))
-        ch |= TILE_FLAG_FLAME;
+        ch |= TILE_FLAG_STICKY_FLAME;
+    if (mons->has_ench(ENCH_INNER_FLAME))
+        ch |= TILE_FLAG_INNER_FLAME;
     if (mons->berserk())
         ch |= TILE_FLAG_BERSERK;
 
