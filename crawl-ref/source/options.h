@@ -99,6 +99,7 @@ public:
     bool        show_beam;       // Show targeting beam by default.
 
     uint32_t    autopickups;     // items to autopickup
+	bool        autoswitch;      // switch melee&ranged weapons according to enemy range
     bool        show_inventory_weights; // show weights in inventory listings
     bool        colour_map;      // add colour to the map
     bool        clean_map;       // remove unseen clouds/monsters
