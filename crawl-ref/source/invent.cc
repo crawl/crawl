@@ -819,6 +819,8 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
             continue;
 
         std::string subtitle = item_class_name(i);
+        if (type == MT_KNOW && i == OBJ_MISCELLANY)
+            subtitle = "Runes"; // hack
 
         // Mention the class selection shortcuts.
         if (is_set(MF_MULTISELECT) && inv_class[i] > 1)

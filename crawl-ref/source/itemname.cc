@@ -2203,6 +2203,23 @@ void check_item_knowledge(bool unknown_items)
         }
     }
 
+    // runes are shown only if known
+    if (!unknown_items)
+        for (int i = 0; i < NUM_RUNE_TYPES; i++)
+            if (you.runes[i])
+            {
+                item_def* ptmp = new item_def;
+                if (ptmp != 0)
+                {
+                    ptmp->base_type = OBJ_MISCELLANY;
+                    ptmp->sub_type  = MISC_RUNE_OF_ZOT;
+                    ptmp->quantity  = 1;
+                    ptmp->plus      = i;
+                    item_colour(*ptmp);
+                    items.push_back(ptmp);
+                }
+            }
+
     if (!unknown_items && items.empty())
     {
         // Directly skip ahead to unknown items.
