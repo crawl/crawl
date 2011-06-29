@@ -786,11 +786,8 @@ static bool _handle_reaching(monster* mons)
     if (grid_distance == 2
         // The monster has to be attacking the correct position.
         && mons->target == foepos
-        // With a reaching weapon OR ...
-        && (range > REACH_KNIGHT
-            // ... with a native reaching attack, provided the attack
-            // is not on a full diagonal.
-            || delta.abs() <= 5)
+        // With a reaching attack with a large enough range:
+        && (delta.abs() <= (range == REACH_TWO ? 8 : range == REACH_KNIGHT ? 5 : 2))
         // And with no dungeon furniture in the way of the reaching
         // attack; if the middle square is empty, skip the LOS check.
         && (grd(middle) > DNGN_MAX_NONREACH
