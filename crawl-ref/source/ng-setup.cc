@@ -486,24 +486,14 @@ static void _give_items_skills(const newgame_def& ng)
 
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ANIMAL_SKIN);
-
         newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_BUCKLER, ARM_SHIELD);
-
-        curr = 3;
-        if (you_can_wear(EQ_HELMET))
-        {
-            newgame_make_item(3, EQ_HELMET, OBJ_ARMOUR, ARM_HELMET);
-            curr++;
-        }
+        newgame_make_item(3, EQ_HELMET, OBJ_ARMOUR, ARM_HELMET, ARM_CAP);
 
         // Small species get darts, the others nets.
         if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM)
-            newgame_make_item(curr, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
+            newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
         else
-        {
-            newgame_make_item(curr, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
-                               4);
-        }
+            newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 4);
 
         // Skills.
         you.skills[SK_FIGHTING] = 2;
@@ -941,26 +931,10 @@ static void _give_items_skills(const newgame_def& ng)
 
     case JOB_HUNTER:
         // Equipment.
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
 
-        switch (you.species)
-        {
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_CENTAUR:
-            you.inv[0].sub_type = WPN_HAND_AXE;
-            break;
-        case SP_OGRE:
-            you.inv[0].sub_type = WPN_CLUB;
-            break;
-        case SP_GHOUL:
-        case SP_TROLL:
+        if (you.has_claws())
             _newgame_clear_item(0);
-            break;
-        default:
-            break;
-        }
 
         switch (you.species)
         {
