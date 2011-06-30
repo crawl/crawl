@@ -748,33 +748,3 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             return (CC_BANNED);
     }
 }
-
-// Is the given god restricted for the character defined by ng?
-// Only uses ng.species and ng.job.
-char_choice_restriction religion_restriction(god_type god,
-                                             const newgame_def &ng)
-{
-    ASSERT(is_valid_species(ng.species));
-    ASSERT(is_valid_job(ng.job));
-
-    if (ng.species == SP_DEMIGOD)
-        return (CC_BANNED);
-    if (ng.job != JOB_PRIEST)
-        return (CC_BANNED);
-
-    switch (god)
-    {
-        case GOD_BEOGH:
-            if (ng.job == JOB_PRIEST && ng.species == SP_HILL_ORC)
-                return (CC_UNRESTRICTED);
-            return (CC_BANNED);
-
-        case GOD_ZIN:
-            if (ng.job == JOB_PRIEST)
-                return (CC_RESTRICTED);
-            return (CC_BANNED);
-
-        default:
-            return (CC_BANNED);
-    }
-}

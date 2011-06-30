@@ -562,7 +562,11 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_PRIEST:
-        you.religion = ng.religion;
+        if (you.species == SP_HILL_ORC)
+            you.religion = GOD_BEOGH;
+        else
+            you.religion = GOD_ZIN;
+
         you.piety = 45;
 
         if (you.religion == GOD_BEOGH)

@@ -15,7 +15,5 @@ bool is_good_combination(species_type spc, job_type job,
                          bool good = false);
 char_choice_restriction weapon_restriction(weapon_type wpn,
                                            const newgame_def &ng);
-char_choice_restriction religion_restriction(god_type god,
-                                             const newgame_def &ng);
 
 #endif
