@@ -58,6 +58,7 @@
 #include "notes.h"
 #include "options.h"
 #include "ouch.h"
+#include "output.h"
 #include "player.h"
 #include "player-equip.h"
 #include "player-stats.h"
@@ -1256,27 +1257,22 @@ bool fire_warn_if_impossible(bool silent)
 }
 void autoswitch_to_ranged()
 {
-	int m_slot = you.m_quiver->get_fire_item();
-    if(m_slot == -1)
-        {
-			if( you.equip[EQ_WEAPON]== 0 || you.equip[EQ_WEAPON] == 1)
-			{
-				int item_slot = you.equip[EQ_WEAPON] ^ 1;
-				const item_def& launcher = you.inv[item_slot];
-				if(is_range_weapon(launcher))
-				{
-					FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();
-					for (;iter!=you.inv.end(); ++iter)
-					{
-					   if(iter->launched_by(launcher))
-					   {
-						  wield_weapon(true,item_slot);
-						  continue;
-					   }
-					}
-				}
-			}
-		}
+    if(you.equip[EQ_WEAPON] != 0 && you.equip[EQ_WEAPON] != 1)
+        return;
+
+    int item_slot = you.equip[EQ_WEAPON] ^ 1;
+    const item_def& launcher = you.inv[item_slot];
+    if(!is_range_weapon(launcher))
+        return;
+
+    FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();
+    for (;iter!=you.inv.end(); ++iter)
+       if(iter->launched_by(launcher))
+       {
+          wield_weapon(true, item_slot);
+          print_stats();
+          return;
+       }
 }
 
 int get_ammo_to_shoot(int item, dist &target, bool teleport)
@@ -1286,7 +1282,8 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport)
         flush_input_buffer(FLUSH_ON_FAILURE);
         return (-1);
     }
-	if(Options.autoswitch)
+
+	if(Options.auto_switch && you.m_quiver->get_fire_item() == -1)
 		autoswitch_to_ranged();
 
 	if(!_fire_choose_item_and_target(item, target, teleport))

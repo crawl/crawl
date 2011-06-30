@@ -6140,26 +6140,20 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     if (weapon)
     {
         if (needs_handle_warning(*weapon, OPER_ATTACK))
-        {
             weapon_warning = true;
-        }
-		if(!weapon_warning && !_is_melee_weapon(weapon))
+        else if(!_is_melee_weapon(weapon))
 		{
 			weapon_warning = true;
-			if(Options.autoswitch)
-			{
-				FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();
-				for (int index=0; iter!=you.inv.end(); ++iter,++index)
-				{
-					if(_is_melee_weapon(iter))
-					{
-						wield_weapon(true,index);
-						// This attack is cancelled,but we switched weapons
-						return (false);
 
-					}
-				}
-			}
+            // We switch to the first available melee weapon.
+			if(Options.auto_switch)
+                for (int i = 0; i < ENDOFPACK; ++i)
+                    if(_is_melee_weapon(&you.inv[i]))
+                    {
+                        wield_weapon(true, i);
+                        // This attack is cancelled, but we switched weapons
+                        return (false);
+                    }
 		}
     }
     else if (you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]

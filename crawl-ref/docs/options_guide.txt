@@ -58,8 +58,8 @@ The contents of this text are:
                 stash_filter, annotate_item_class,
                 annotate_item_dropped
 4-i     Command Enhancements.
-                auto_list, easy_open, easy_unequip, equip_unequip,
-                easy_confirm, allow_self_target,
+                auto_list, auto_switch, easy_open, easy_unequip,
+                equip_unequip, easy_confirm, allow_self_target,
                 easy_butcher, always_confirm_butcher, prefer_safe_chunks,
                 easy_eat_chunks, easy_eat_gourmand, easy_eat_contaminated,
                 prompt_for_swap, easy_quit_item_prompts,
@@ -1032,6 +1032,12 @@ auto_list = true
         because they won't get to see the prompts. This option does not
         apply to spell casting... Conjurers would probably find that
         really annoying.
+
+auto_switch = true
+        If you've got a melee weapon in slot a and a ranged weapon in
+        slot b (or the opposite), this option will allow you to
+        automatically switch to the appropriate weapon when firing or
+        attacking in melee.
 
 easy_open = true
         Open doors by moving on to them. Highly convenient. Note that
