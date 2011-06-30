@@ -2883,7 +2883,9 @@ bool mons_has_los_ability(monster_type mon_type)
     // These eyes only need LOS, as well.  (The other eyes use spells.)
     if (mon_type == MONS_GIANT_EYEBALL
         || mon_type == MONS_EYE_OF_DRAINING
-        || mon_type == MONS_GOLDEN_EYE)
+        || mon_type == MONS_GOLDEN_EYE
+        || mon_type == MONS_MOTH_OF_WRATH
+)
     {
         return (true);
     }
@@ -2935,14 +2937,27 @@ bool mons_has_ranged_spell(const monster* mon, bool attack_only,
 bool mons_has_ranged_ability(const monster* mon)
 {
     // [ds] FIXME: Get rid of special abilities and remove this.
-    if (mon->type == MONS_ELECTRIC_EEL
-        || mon->type == MONS_LAVA_SNAKE
-        || mon->type == MONS_OKLOB_PLANT)
+    switch (mon->type)
     {
-        return (true);
+    case MONS_ACID_BLOB:
+    case MONS_BURNING_BUSH:
+    case MONS_DRACONIAN:
+    case MONS_DRAGON:
+    case MONS_ICE_DRAGON:
+    case MONS_HELL_HOUND:
+    case MONS_LINDWURM:
+    case MONS_FIRE_DRAKE:
+    case MONS_XTAHUA:
+    case MONS_FIRE_CRAB:
+    case MONS_ELECTRIC_EEL:
+    case MONS_LAVA_SNAKE:
+    case MONS_MANTICORE:
+    case MONS_OKLOB_PLANT:
+    case MONS_OKLOB_SAPLING:
+        return true;
+    default:
+        return false;
     }
-
-    return (false);
 }
 
 bool mons_has_ranged_weapon(const monster* mon)
