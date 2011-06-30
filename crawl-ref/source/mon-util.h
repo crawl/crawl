@@ -298,7 +298,7 @@ bool mons_has_los_ability(monster_type mon_type);
 bool mons_has_los_attack(const monster* mon);
 bool mons_has_ranged_spell(const monster* mon, bool attack_only = false,
                            bool ench_too = true);
-bool mons_has_ranged_attack(const monster* mon);
+bool mons_has_ranged_weapon(const monster* mon);
 bool mons_has_ranged_ability(const monster* mon);
 
 const char *mons_pronoun(monster_type mon_type, pronoun_type variant,

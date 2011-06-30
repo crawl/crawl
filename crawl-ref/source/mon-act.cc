@@ -257,7 +257,7 @@ static bool _ranged_allied_monster_in_dir(monster* mon, coord_def p)
                 return (false);
             }
 
-            if (mons_has_ranged_attack(ally)
+            if (mons_has_ranged_weapon(ally)
                 || mons_has_ranged_spell(ally, true))
             {
                 return (true);

@@ -82,7 +82,7 @@ static bool _mon_tries_regain_los(monster* mon)
 {
     // Only intelligent monsters with ranged attack will try to regain LOS.
     if (mons_intel(mon) < I_NORMAL
-        || !mons_has_ranged_spell(mon, true) && !mons_has_ranged_attack(mon))
+        || !mons_has_ranged_spell(mon, true) && !mons_has_ranged_weapon(mon))
     {
         return false;
     }
