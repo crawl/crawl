@@ -14,10 +14,8 @@ The contents of this text are:
 0-c     Options and how to set them.
 0-d     Aliases and variables.
 1-  Starting Screen.
-                name, remember_name, weapon, wand,
-                religion,
-                species, background, random_pick, good_random,
-                restart_after_game
+                name, remember_name, weapon, wand, species, background,
+                random_pick, good_random, restart_after_game
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound
 3-  Lua files.
@@ -284,15 +282,11 @@ wand = (enslavement | confusion | magic darts | frost | flame | striking | rando
         wand out of enslavement, confusion, magic darts, frost, or flame, or
         with a rod of striking.
 
-religion = (Zin | Beogh | random)
-        Hill Orc priests may choose between worshipping Zin and Beogh, specifying
-        the religion option allows them to bypass this prompt.
-
 species = (Human |...| Vampire | random)
         The usual abbreviations (Hu, HE, etc.) work.
 
 background = (Fighter |...| Wanderer | random)
-        Here again the abbreviations (Fi, Wi, Pr, etc.) can be used.
+        Here again the abbreviations (Fi, Wz, Pr, etc.) can be used.
 
 random_pick = false
         The random_pick option will randomly generate a character.

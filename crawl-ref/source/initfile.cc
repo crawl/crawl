@@ -34,7 +34,6 @@
 #include "mon-util.h"
 #include "jobs.h"
 #include "player.h"
-#include "religion.h"
 #include "species.h"
 #include "spl-util.h"
 #include "stash.h"
@@ -1418,8 +1417,6 @@ static void write_newgame_options(const newgame_def& prefs, FILE *f)
         fprintf(f, "background = %s\n", _job_to_str(prefs.job).c_str());
     if (prefs.weapon != WPN_UNKNOWN)
         fprintf(f, "weapon = %s\n", _weapon_to_str(prefs.weapon).c_str());
-    if (prefs.religion != GOD_NO_GOD)
-        fprintf(f, "religion = %s\n", god_name(prefs.religion).c_str());
     if (prefs.wand != SWT_NO_SELECTION)
         fprintf(f, "wand = %s\n", _wand_to_str(prefs.wand).c_str());
     fprintf(f, "fully_random = %s\n", prefs.fully_random ? "yes" : "no");
@@ -2361,11 +2358,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         // Choose this wand for backgrounds that get choice.
         game.wand = _str_to_wand(field);
-    }
-    else if (key == "religion")
-    {
-        // Choose god for Priests.
-        game.religion = (field == "random") ? GOD_RANDOM : str_to_god(field);
     }
     BOOL_OPTION_NAMED("fully_random", game.fully_random);
     else if (key == "fire_items_start")
