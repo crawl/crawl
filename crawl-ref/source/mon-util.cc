@@ -2945,7 +2945,7 @@ bool mons_has_ranged_ability(const monster* mon)
     return (false);
 }
 
-bool mons_has_ranged_attack(const monster* mon)
+bool mons_has_ranged_weapon(const monster* mon)
 {
     // Ugh.
     monster* mnc = const_cast<monster* >(mon);
@@ -4020,7 +4020,7 @@ bool mons_landlubbers_in_reach(const monster* mons)
 {
     if (mons_has_ranged_spell(mons)
         || mons_has_ranged_ability(mons)
-        || mons_has_ranged_attack(mons))
+        || mons_has_ranged_weapon(mons))
     {
         return (true);
     }
