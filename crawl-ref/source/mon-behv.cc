@@ -105,8 +105,7 @@ static void _set_firing_pos(monster* mon, coord_def target)
 {
     const int ideal_range = LOS_RADIUS / 2;
     const int current_distance = mon->pos().distance_from(target);
-    const los_type los = mons_has_los_ability(mon->type) ? LOS_DEFAULT
-                                                         : LOS_NO_TRANS;
+    const los_type los = mons_has_los_attack(mon) ? LOS_DEFAULT : LOS_NO_TRANS;
 
     // We don't consider getting farther away unless already very close.
     const int max_range = std::max(ideal_range, current_distance);
@@ -576,7 +575,7 @@ void handle_behaviour(monster* mon)
                 // If monster is currently getting into firing position and
                 // see the player and can attack him, clear firing_pos.
                 if (!mon->firing_pos.zero()
-                    && (mons_has_los_ability(mon->type)
+                    && (mons_has_los_attack(mon)
                         || mon->see_cell_no_trans(mon->target)))
                 {
                     mon->firing_pos.reset();
