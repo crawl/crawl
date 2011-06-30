@@ -31,8 +31,11 @@ class TornadoFilter(logging.Filter):
 logging.getLogger().addFilter(TornadoFilter())
 
 def user_passwd_match(username, passwd): # Returns the correctly cased username.
-    passwd = passwd[0:max_passwd_length]
-    crypted_pw = crypt.crypt(passwd, passwd)
+    try:
+        passwd = passwd[0:max_passwd_length]
+        crypted_pw = crypt.crypt(passwd, passwd)
+    except:
+        return None
 
     try:
         conn = sqlite3.connect(password_db)
