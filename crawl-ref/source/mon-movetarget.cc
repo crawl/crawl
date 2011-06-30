@@ -128,8 +128,7 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
     // realise that.
     if ((!crawl_state.game_is_zotdef()) && need_pathfind
         && mons_intel(mon) >= I_NORMAL && !mon->friendly()
-        && (mons_has_ranged_spell(mon, true)
-            || mons_has_ranged_weapon(mon))
+        && mons_has_ranged_attack(mon)
         && exists_ray(mon->pos(), PLAYER_POS, opc_solid))
     {
         need_pathfind = false;

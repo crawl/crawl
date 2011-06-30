@@ -2965,6 +2965,12 @@ bool mons_has_ranged_weapon(const monster* mon)
     return (is_launched(mnc, weapon, *missile));
 }
 
+bool mons_has_ranged_attack(const monster* mon)
+{
+    return mons_has_ranged_spell(mon, true) || mons_has_ranged_ability(mon)
+           || mons_has_ranged_weapon(mon);
+}
+
 
 // Use of variant:
 // 0 : She is tap dancing.
@@ -4018,12 +4024,8 @@ bool player_or_mon_in_sanct(const monster* mons)
 
 bool mons_landlubbers_in_reach(const monster* mons)
 {
-    if (mons_has_ranged_spell(mons)
-        || mons_has_ranged_ability(mons)
-        || mons_has_ranged_weapon(mons))
-    {
+    if (mons_has_ranged_attack(mons))
         return (true);
-    }
 
     const reach_type range = mons->reach_range();
     actor *act;

@@ -81,11 +81,8 @@ static void _mon_check_foe_invalid(monster* mon)
 static bool _mon_tries_regain_los(monster* mon)
 {
     // Only intelligent monsters with ranged attack will try to regain LOS.
-    if (mons_intel(mon) < I_NORMAL
-        || !mons_has_ranged_spell(mon, true) && !mons_has_ranged_weapon(mon))
-    {
+    if (mons_intel(mon) < I_NORMAL || !mons_has_ranged_attack(mon))
         return false;
-    }
 
     // Any special case should go here.
     if (mons_class_flag(mon->type, M_FIGHTER)
