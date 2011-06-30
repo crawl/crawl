@@ -745,7 +745,7 @@ void game_options::reset_options()
                    (1 <<  7) | // jewellery
                    (1 <<  3) | // wands
                    (1 <<  4)); // food
-	autoswitch              =true;
+	auto_switch              =true;
     suppress_startup_errors = false;
 
     show_inventory_weights = false;
@@ -2213,7 +2213,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(restart_after_game);
 #endif
     else BOOL_OPTION(show_inventory_weights);
-	else BOOL_OPTION(autoswitch);
+	else BOOL_OPTION(auto_switch);
     else BOOL_OPTION(suppress_startup_errors);
     else BOOL_OPTION(clean_map);
     else BOOL_OPTION(colour_map);
