@@ -527,6 +527,7 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     num_runes         = se.num_runes;
     kills             = se.kills;
     maxed_skills      = se.maxed_skills;
+    fifteen_skills    = se.fifteen_skills;
     status_effects    = se.status_effects;
     gold              = se.gold;
     gold_spent        = se.gold_spent;
@@ -709,6 +710,7 @@ void scorefile_entry::init_with_fields()
 
     kills = fields->long_field("kills");
     maxed_skills = fields->str_field("maxskills");
+    fifteen_skills = fields->str_field("fifteenskills");
     status_effects = fields->str_field("status");
 
     gold       = fields->int_field("gold");
@@ -791,6 +793,8 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("kills", "%d", kills);
     if (!maxed_skills.empty())
         fields->add_field("maxskills", "%s", maxed_skills.c_str());
+    if (!fifteen_skills.empty())
+        fields->add_field("fifteenskills", "%s", fifteen_skills.c_str());
     if (!status_effects.empty())
         fields->add_field("status", "%s", status_effects.c_str());
 
@@ -1073,6 +1077,7 @@ void scorefile_entry::reset()
     num_runes            = 0;
     kills                = 0;
     maxed_skills.clear();
+    fifteen_skills.clear();
     status_effects.clear();
     gold                 = 0;
     gold_found           = 0;
@@ -1183,7 +1188,7 @@ void scorefile_entry::init(time_t dt)
     best_skill     = ::best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     best_skill_lvl = you.skills[ best_skill ];
 
-    // Note all skills at level 27.
+    // Note all skills at level 27, and also all skills at level >= 15.
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
         skill_type sk = static_cast<skill_type>(i);
@@ -1192,6 +1197,12 @@ void scorefile_entry::init(time_t dt)
             if (!maxed_skills.empty())
                 maxed_skills += ",";
             maxed_skills += skill_name(sk);
+        }
+        if (you.skills[sk] >= 15)
+        {
+            if (!fifteen_skills.empty())
+                fifteen_skills += ",";
+            fifteen_skills += skill_name(sk);
         }
     }
 
