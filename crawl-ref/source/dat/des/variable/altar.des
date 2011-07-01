@@ -722,6 +722,20 @@ ENDMAP
 #
 ######################################
 
+### Ashenzari overflow altars #################################################
+
+NAME:   ashenzari_altar_1
+TAGS:   uniq_altar_ahsnezari temple_overflow_ashenzari
+KFEAT:  _ = altar_ashenzari
+ITEM:   cursed mace / cursed trident / cursed flail w:1 / cursed whip w:1
+ITEM:   book of cantrips
+MAP
+...
+d_e
+...
+ENDMAP  
+
+
 ### Cheibriados overflow altars ###############################################
 
 NAME:   cheibriados_altar_1
