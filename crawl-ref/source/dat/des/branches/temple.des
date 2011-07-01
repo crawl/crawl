@@ -1823,7 +1823,7 @@ ENDMAP
 
 
 ##########################################################################
-# Triangular temples (dpeg)
+# Lava/triangular temples (dpeg)
 #   Total weight: 30 = 10+10+5+5
 #   Surrounded by lava, so red colour.
 
@@ -2655,6 +2655,45 @@ bbbbb...bbbbbbbbb...bbb...bbbbbbbbb...bbbbb
                   b.....b
                   b.....b
                   bbbbbbb
+ENDMAP
+
+# 10 gods
+NAME:   roderic_octagonal_lattice_temple 
+PLACE:  Temple
+WEIGHT: 5
+ORIENT: encompass
+TAGS:   no_rotate
+SUBST:  ' : ......b
+MAP
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+bbbbbbb'''bbbbbbbbb'''bbbbbbbbb'''bbbbbbb
+bbbbbbb'B'bbbbbbbbb'B'bbbbbbbbb'B'bbbbbbb
+bbbbbbb...bbbbbbbbb...bbbbbbbbb...bbbbbbb
+bbbbbb..b..bbbbbbb..b..bbbbbbb..b..bbbbbb
+bbbbbb.bbb.bbbbbbb.bbb.bbbbbbb.bbb.bbbbbb
+bbbb...bbb...bbb...bbb...bbb...bbb...bbbb
+b''..bbbbbbb..b..bbbbbbb..b..bbbbbbb..''b
+b'B.bbbbbbbbb...bbbbbbbbb...bbbbbbbbb.B'b
+b''..bbbbbbb..b..bbbbbbb..b..bbbbbbb..''b
+bbbb...bbb...bbb...bbb...bbb...bbb...bbbb
+bbbbbb.bbb.bbbbbbb.bbb.bbbbbbb.bbb.bbbbbb
+bbbbbb..b..bbbbbbb..b..bbbbbbb..b..bbbbbb
+bbbbbbb...bbbbbbbbb...bbbbbbbbb...bbbbbbb
+bbbbbbbb.bbbbbbbbbb.{.bbbbbbbbbb.bbbbbbbb
+bbbbbbb...bbbbbbbbb...bbbbbbbbb...bbbbbbb
+bbbbbb..b..bbbbbbb..b..bbbbbbb..b..bbbbbb
+bbbbbb.bbb.bbbbbbb.bbb.bbbbbbb.bbb.bbbbbb
+bbbb...bbb...bbb...bbb...bbb...bbb...bbbb
+b''..bbbbbbb..b..bbbbbbb..b..bbbbbbb..''b
+b'B.bbbbbbbbb...bbbbbbbbb...bbbbbbbbb.B'b
+b''..bbbbbbb..b..bbbbbbb..b..bbbbbbb..''b
+bbbb...bbb...bbb...bbb...bbb...bbb...bbbb
+bbbbbb.bbb.bbbbbbb.bbb.bbbbbbb.bbb.bbbbbb
+bbbbbb..b..bbbbbbb..b..bbbbbbb..b..bbbbbb
+bbbbbbb...bbbbbbbbb...bbbbbbbbb...bbbbbbb
+bbbbbbb'B'bbbbbbbbb'B'bbbbbbbbb'B'bbbbbbb
+bbbbbbb'''bbbbbbbbb'''bbbbbbbbb'''bbbbbbb
+bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
 ENDMAP
 
 
