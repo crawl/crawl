@@ -782,6 +782,34 @@ cccccccc+++cccccccc
         ...
 ENDMAP
 
+#######################
+# Yet Another Temple
+NAME:   bh_open_orc_temple
+TAGS:   mini_float
+DEPTH:  Orc:3-
+SUBST:  " = 1.......
+MONS:   orc w:8 / orc priest w:2 / orc warrior
+MONS:   patrolling orc high priest
+KFEAT:  _ = altar_beogh
+SUBST:  ' = $.
+MAP
+     cccccccccc
+ .............c
+...I..I..I..I.c
+.........""...cc
+.........""...cc
+..I..I..I""I'''c
+........""""'''c
+.I......"""2'_'c
+........""""'''c
+..I..I..I""I'''c
+.........""...cc
+.........""...cc
+..I...I..I..I.cc
+ .............c
+     cccccccccc
+ENDMAP
+
 ##################################################
 # Treasure chamber (minmay)
 #

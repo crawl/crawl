@@ -1047,6 +1047,37 @@ MAP
      .....
 ENDMAP
 
+NAME:   fedhas_altar_fruit_tree
+TAGS:   uniq_altar_fedhas temple_overflow_fedhas mini_float no_item_gen no_rotate
+DEPTH:  D:2-20
+NSUBST: g = 4:f/*:.
+NSUBST: f = 5:A/*:.
+NSUBST: w = 2:4 / *:w
+KFEAT:  C = altar_fedhas
+KFEAT:  A = .
+KITEM:  A = apple / apricot / orange / pear
+FTILE:  . = floor_moss
+FTILE:  t = floor_moss
+FTILE:  d = floor_hall
+FTILE:  f = floor_moss
+COLOUR: f = brown
+COLOUR: . = green
+COLOUR: d = brown
+MAP
+ttttttttttttttt
+ttttttttttttttt
+ttttttgfgtttttt
+tttttgf.fgttttt
+ttttgf.f.fgtttt
+tttgf..C..fgttt
+tttgf.f.f.fgttt
+ttgfffffffffgtt
+ttgt.......tgtt
+ttttttdddtttttt
+ttttttdddtttttt
+tttttdd@ddttttt
+ENDMAP
+
 
 ### Kikubaaqudgha overflow altars #############################################
 
@@ -1641,6 +1672,35 @@ MAP
   xx.....xx
    xxxTxxx
       @
+ENDMAP
+
+# kilobyte: obviously, it lacks handling of shafts and hatches.
+#           Troves might choose one of these items as their fee, too. Items are
+#           marked as "seen" for acquirement purposes as well. Under Ashenzari,
+#           you won't pick up rings and amulets seen in this vault since having
+#           one is considered enough for most types (this logic is partially 
+#           faulty with identification being possible without having the item in
+#           your inventory).
+#           If the second part doesn't scare you, I think merging this 
+#           functionality into current _is_affordable() could be good -- that 
+#           function contains crude heurestics for items on display.
+#
+NAME:   xom_gifts_altar
+TAGS:   temple_overflow_xom uniq_altar_xom
+CHANCE: 3
+KFEAT:  _ = altar_xom
+KPROP:  _ = bloody
+KPROP:  , = no_ctele_into
+KPROP:  , = no_rtele_into
+KITEM:  , = |
+KFEAT:  , = teleport trap
+MAP
+ XXXXXXX
+XX,,,,,XX
+X,,ooo,,X
+X,,o_o,,X
+XX,o.o,XX
+ XXX@XXX
 ENDMAP
 
 ### Yredelemnul overflow altars ###############################################
