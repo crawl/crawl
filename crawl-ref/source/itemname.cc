@@ -2885,7 +2885,7 @@ bool is_useless_item(const item_def &item, bool temp)
         return (!can_wear_armour(item, false, true));
 
     case OBJ_SCROLLS:
-        if (!item_type_known(item))
+        if (!item_type_known(item) || !you.skills[SK_SPELLCASTING])
             return (false);
 
         // A bad item is always useless.
