@@ -6147,7 +6147,7 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
 
             // We switch to the first available melee weapon.
 			if(Options.auto_switch)
-                for (int i = 0; i < ENDOFPACK; ++i)
+                for (int i = 0; i <= 1; ++i)
                     if(_is_melee_weapon(&you.inv[i]))
                     {
                         wield_weapon(true, i);
