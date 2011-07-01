@@ -213,7 +213,13 @@ DEPTH:    For random vaults, branch entry vaults, and minivaults, this
           constraints from the closest preceding default-depth: line. If there
           is no preceding default-depth directive in the .des file, the map will
           have no DEPTH: constraint. Note that maps without a DEPTH: constraint
-          cannot be selected as random vaults or minivaults.
+          cannot be selected as random vaults or minivaults. It can make sense
+          to use an empty DEPTH line as in
+
+            DEPTH: 
+
+          if these maps are otherwise chosen, e.g. by TAG. See serial_ponds.des
+          for an example.
 
 CHANCE:   <priority>:<roll> or <roll> [ (<depth-ranges>) ]
 
