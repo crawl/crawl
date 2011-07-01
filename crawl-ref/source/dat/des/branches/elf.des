@@ -327,6 +327,290 @@ ENDMAP
 
 
 ##############################################################################
+# Elf minivaults
+##############################################################################
+
+# Total weight of these is 30.
+NAME:   minmay_elf_crystal_square
+DEPTH:  Elf
+ORIENT: float
+MONS:   deep elf mage / nothing
+MAP
++bbbbbbbbbbbbbbb+
+b...............b
+b.bbbb..bbbbbb..b
+b.b1....b..11b..b
+b.bb....b..bbb..b
+b.b1............b
+b.b...bbbbb..b..b
+b....bb......b..b
+b...bb....1..b..b
+b..bb...b....b..b
+b..b.1..bb..1b..b
+b..b.....bb..b..b
+b..b1U.1..b..b..b
+b..b.......1.b..b
+b..bbbbbbbbbbb..b
+b...............b
++bbbbbbbbbbbbbbb+
+ENDMAP
+
+NAME:   minmay_elf_crystal_pentagon
+DEPTH:  Elf
+ORIENT: float
+WEIGHT: 8
+MONS:   deep elf mage / deep elf summoner / nothing w:25
+MAP
+   +bbbbbbbbbbb+
+   b...........b
+   b...........b
+  bb...bbbbb...bb
+  b1..bb1.1bb..1b
+  b...b1.U.1b...b
+ bb...bb1.1bb...bb
+ b.....bb.bb.....b
+ b...............b
+bb..bb..1........bb
++...b1....bbb.....+
+bb..bbbb...1b...1bb
+ bb1..1bb..bb...bb
+  bbb...b..b1.bbb
+    bb.......bb
+     bb.....bb
+      bbb.bbb
+        b+b
+ENDMAP
+
+NAME:   minmay_elf_crystal_hexagon
+DEPTH:  Elf:2-
+ORIENT: float
+WEIGHT: 6
+MONS:   deep elf mage / deep elf summoner / deep elf conjurer / nothing w:45
+MAP
+    +bbbbbbbbb+
+    b...1b1...b
+   bb...1b1...bb
+   b....bbbb...b
+  bb...bb.1....bb
+  b....b.1......b
+ bb....b...bb...bb
+bb.....b.1..bb...bb
++.......1.1..bb...+
+bb...bb1.U.1bb...bb
+ bb...bb1.1bb1..bb
+  b...1bb1bb....b
+  bb...1bbb....bb
+   b..1.1b1....b
+   bb.bbbb....bb
+    b.........b
+    +bbbbbbbbb+
+ENDMAP
+
+NAME:   minmay_elf_crystal_heptagon
+DEPTH:  Elf:3-
+ORIENT: float
+WEIGHT: 4
+MONS:   deep elf mage / deep elf summoner / deep elf conjurer / \
+        deep elf death mage / nothing w:70
+MAP
+    +bbbbbbb+
+   bb.......bb
+   b.........b
+  bb..bbbbb..bb
+ bb...b.1.b...bb
+bb...bb1.1bb...bb
++....b1.U.1b.1..+
+b.b1.b1.1.1b1bb.b
+b.bb1bb1.1bb.1b.b
+b1....bb.bb1....b
+bb..1.....11b..bb
+ b.bb1....bbb..b
+ b..b.1b11.....b
+ +b1...bbb....b+
+  bbb.......bbb
+    bbb...bbb
+      bb+bb
+ENDMAP
+
+NAME:   minmay_elf_crystal_octagon
+DEPTH:  Elf:3-
+ORIENT: float
+WEIGHT: 2
+MONS:   deep elf mage / deep elf summoner / deep elf conjurer / \
+        deep elf death mage / deep elf sorcerer / nothing w:100
+MAP
+     +bbbbb+
+    bb.....bb
+   bb..bb...bb
+  bb...1.1...bb
+ bb...bbbbb...bb
++b....b111b...1b+
+b...bb.1b1.bb...b
+b..1b11...11b1b.b
+b...b1b.U.b1b.b.b
+b.b1b11...11b1b.b
+b...bb.1b1.bb...b
++b....b111b....b+
+ bb...bbbbb...bb
+  bb1..1.1...bb
+   bb..b.b..bb
+    bb.....bb
+     +bbbbb+
+ENDMAP
+
+NAME:  minmay_elf_necromancy
+DEPTH: Elf
+MONS:  elf zombie / necromancer w:1 / nothing
+KMONS: 2 = deep elf death mage
+KITEM: 2 = randbook disc:necromancy slevels:16
+MAP
+xxxxxxxxxxx
+xxx1..x112x
+xxx..1+111x
+x.1.1.xxxxx
++......1..x
+x..1.1....+
+x.Y.....xxx
+x11...1xxxx
+xxxxxxxxxxx
+ENDMAP
+
+NAME:  minmay_elf_sorcery
+DEPTH: Elf:2-
+MONS:  deep elf summoner / deep elf conjurer / deep elf mage / nothing
+KMONS: 2 = deep elf sorcerer w:90 / deep elf annihilator / deep elf demonologist
+KITEM: 2 = randbook disc:conjuration disc2:summoning slevels:16
+SUBST: x : xxc, m : mmcxb
+MAP
+...........1............
+.mmm.x..x......x..x.mmm.
+.mmm...........1....mmm.
+.mmm1.x..x....x..x.1mmm.
+1mmmm.....1......1.mmmm.
+.mmmm1.x..x..x..x..mmmm.
+..mmmm..1.........mmmm..
+ ..mmmm......1...mmmm.1
+  ..mmmmm......mmmmm..
+   ...mmxxx++xxxmm...
+     1..xx....xx...
+      ..x......x..
+       .x......x1
+       .x......x.
+       .x......x.
+       .xx2...xx.
+       .xxxxxxxx.
+       ...1......
+ENDMAP
+
+NAME:  minmay_elf_annihilation
+DEPTH: Elf:3-
+MONS:  deep elf conjurer / nothing
+KMONS: 2 = deep elf annihilator / deep elf sorcerer w:2
+KITEM: 2 = randbook disc:conjuration slevels:16
+SUBST: x : x c:1
+MAP
+        ...
+        .x1
+  ...............
+  .x.xxxx+xxxx.x.
+  ...x....1..x...
+  .xxx1x...x.xxx.
+  .x....1......x.
+  .x.x..b+b..x.x.
+...x1..bb.bb1..x...
+.x.+...+.2.+...+.x.
+...x...bb.bb..1x...
+  .x.x1.b+b..x.x.
+  .x.......1...x.
+  .xxx.x...x.xxx.
+  .1.x..1....x..1
+  .x.xxxx+xxxx.x.
+  ...............
+        .x.
+        ...
+ENDMAP
+
+NAME:  minmay_elf_demonology
+DEPTH: Elf:3-
+MONS:  deep elf summoner / nothing
+KMONS: 2 = deep elf demonologist w:90 / deep elf sorcerer / deep elf high priest
+KITEM: 2 = randbook disc:summoning slevels:16
+MAP
+        ..
+       ....
+      ......
+     ..1xx...
+    ...xxxx...
+   ....xxxx1.1.
+  ...1..xx......
+ ..xx.....1..xx1.
+..xxxx..xx..xxxx..
+..xxxx1x.2x.xxxx..
+ ..xx..x..x..xx..
+  ..1...xx....1.
+   ..xx....xx1.
+   .xxxx..xxxx.
+   .xxxx1.xxxx.
+   ..xx...1xx..
+    ..1.......
+     ........
+      ......
+       ....
+        ..
+ENDMAP
+
+# Dummies give 2 XP and halt autotravel for adjacent players, used for flavour
+NAME:   minmay_elf_archery
+DEPTH:  Elf:3-
+ORIENT: float
+MONS:   deep elf soldier; bow | longbow . arrow / \
+        deep elf fighter; bow | longbow . arrow / nothing
+MONS:   deep elf master archer
+MONS:   training dummy tile:mons_training_dummy
+MAP
+x+xxxxxxxxxxxxxx
+x...1..........x
+x.1....1......3x
+.....1.........x
+@2............3x
+...1...........x
+x1....1.......3x
+x...1..........x
+x+xxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    minmay_elf_blademastery
+DEPTH:   Elf:4-
+ORIENT:  float
+MONS:    deep elf soldier; falchion | long sword | scimitar | sabre / \
+         deep elf fighter; falchion | long sword | scimitar | sabre / nothing
+MONS:    deep elf blademaster
+MONS:    training dummy tile:mons_training_dummy
+KITEM:   d = long sword race:elven, long sword race:elven / nothing, \
+             long sword race:elven / nothing, long sword race:elven / nothing
+KITEM:   e = falchion race:elven, falchion race:elven / nothing, \
+             falchion race:elven / nothing, falchion race:elven / nothing
+KITEM:   f = scimitar race:elven, scimitar race:elven / nothing, \
+             scimitar race:elven / nothing, scimitar race:elven / nothing
+KITEM:   g = sabre race:elven, sabre race:elven / nothing, \
+             sabre race:elven / nothing, sabre race:elven / nothing
+SHUFFLE: defg
+MAP
+xxxxxxxxxx+xxx
+x.1..........+
+x3..31.31....x
+x............x
+x..........2.x
+x3.13..3.....x
+x1.....1...x+x
+x..........xdx
+x31.31.3...xex
+x.......1..xfx
+xxxxxxxxxx+xxx
+ENDMAP
+
+
+##############################################################################
 # Elf:5 branch endings
 ##############################################################################
 
