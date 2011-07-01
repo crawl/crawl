@@ -1255,24 +1255,28 @@ bool fire_warn_if_impossible(bool silent)
     }
     return (false);
 }
-void autoswitch_to_ranged()
+static bool _autoswitch_to_ranged()
 {
     if(you.equip[EQ_WEAPON] != 0 && you.equip[EQ_WEAPON] != 1)
-        return;
+        return false;
 
     int item_slot = you.equip[EQ_WEAPON] ^ 1;
     const item_def& launcher = you.inv[item_slot];
     if(!is_range_weapon(launcher))
-        return;
+        return false;
 
     FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();
     for (;iter!=you.inv.end(); ++iter)
        if(iter->launched_by(launcher))
        {
           wield_weapon(true, item_slot);
-          print_stats();
-          return;
+          you.turn_is_over = true;
+          //XXX Hacky. Should use a delay instead.
+          macro_buf_add(command_to_key(CMD_FIRE));
+          return true;
        }
+
+    return false;
 }
 
 int get_ammo_to_shoot(int item, dist &target, bool teleport)
@@ -1283,8 +1287,11 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport)
         return (-1);
     }
 
-	if(Options.auto_switch && you.m_quiver->get_fire_item() == -1)
-		autoswitch_to_ranged();
+	if(Options.auto_switch && you.m_quiver->get_fire_item() == -1
+	   && _autoswitch_to_ranged())
+	{
+	    return (-1);
+	}
 
 	if(!_fire_choose_item_and_target(item, target, teleport))
 		return (-1);
