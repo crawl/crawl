@@ -8,6 +8,7 @@
 
 #if defined(TARGET_COMPILER_VC)
 
+#define __STDC_FORMAT_MACROS
 #include "MSVC/inttypes.h"
 
 #include <io.h>
