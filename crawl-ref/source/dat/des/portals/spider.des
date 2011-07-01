@@ -159,33 +159,33 @@ MONS:    redback / wolf spider
 MONS:    jumping spider / tarantella w:20
 MONS:    emperor scorpion / demonic crawler
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x.<.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x....xxxxxxxxxxWWWWxxxxxxxxxxxxxxxxxxxxxx
-xxx...xxxxxxxxxWW.Wxxxxxxxxxxxxxxxxxxxxxx
-xxxx...xxxxxxxxW.3.xxxxxxxxxxxxxxxxxxxxxx
-xxxxx....xxxxx......xxxxxxxxxxxxxxxxxxxxx
-xxxxxx.A.xxxx...xx...xxxxxxxxxxxxxxxxxxxx
-xxxxxx....xx...xxxx...xxxxxW4||xxxxxxxxxx
-xxxxxxxx.1111.xxxxxx..WWWxxWW4|xxxxxxxxxx
-xxxxxxxxx1111xxxxxxxx..WWxxWWW4xxxxxxxxxx
-xxxxxxxxx1111xxxxxxxx...WxxWWWWxxxxxxxxxx
-xxxxxxxx.1111.xxxxxx..3.WxxxWWxxxxxxxxxxx
-xxxxxxx...xx...xxxx.....xxxxWWxxxxxxxxxxx
-xxxxxx...xxxx...xx...x..xxxxWWxxxxxxxxxxx
-xxxW....xxxxxx.2222.xx..xxxWWWWxxxxxxxxxx
-xxx....xxxxxxxx2222xxx..xxxWWWWxxxxxxxxxx
-xxx..3.xxxxxxxx2222xxx..xxxW..Wxxxxxx.**x
-xxxW....xxxxxx.2222.xx..xx.....Wxxxxx.<*x
-xxxxxx...xxxx...xx...x..x...xx..Wxxx....x
-xxxxxxx...xx...xxxx........xxxx..Wx...xxx
-xxxxxxxx......xxxxxx..44..xxxxxx.55..xxxx
-xxxxxxxxx............4554.......5665xxxxx
-xxxxxxxxxW..3........4554.......5665xxxxx
-xxxxxxxxxWW..xxxxxxxW.44.Wxxxxxx.55.xxxxx
-xxxxxxxxxxxxxxxxxxxxWW..WWxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx
+x...x
+x.<.xx        xxxxxx
+x....xx       xWWWWx
+xxx...xx      xWW.Wx
+  xx...xxx   xxW.3.xx
+   xx....x  xx......xx
+    xx.A.xxxx...xx...xx   xxxxxx
+     x....xx...xxxx...xxxxxW4||x
+     xxx.1111.xxxxxx..WWWxxWW4|x
+       xx1111xxxxxxxx..WWxxWWW4x
+       xx1111xxxxxxxx...WxxWWWWx
+      xx.1111.xxxxxx..3.WxxxWWxx
+     xx...xx...xxxx.....xxxxWWx
+  xxxx...xxxx...xx...x..xxxxWWxx
+  xW....xxxxxx.2222.xx..xxxWWWWx
+  x....xxxxxxxx2222xxx..xxxWWWWx    xxxxx
+  x..3.xxxxxxxx2222xxx..xxxW..Wxx   x.**x
+  xW....xxxxxx.2222.xx..xx.....Wxxxxx.<*x
+  xxxx...xxxx...xx...x..x...xx..Wxxx....x
+     xx...xx...xxxx........xxxx..Wx...xxx
+      xx......xxxxxx..44..xxxxxx.55..xx  
+       xx............4554.......5665xx
+        xW..3........4554.......5665x
+        xWW..xxxxxxxW.44.Wxxxxxx.55.x
+        xxxxxx     xWW..WWx    xxxxxx
+                   xxxxxxxx
 ENDMAP
 
 ###############################################################################
@@ -346,4 +346,110 @@ xxxx1..x***xx.Wx
 xxxxW.xx****xx.x
 xA<.xxx******Z.x
 xxxxxxxxxxxxxxxx
+ENDMAP
+
+# Flavour text functions ##########################################
+
+{{
+function callback.spiders_nest_cobweb_light(data, triggerable, triggerer, marker, ev)
+    crawl.mpr("Something lightly touches your face!",1)
+    crawl.more()
+    crawl.mpr("Realising it was only a light strand of cobweb, you brush it aside and calm your nerves." , "talk_visual")
+end
+}}
+
+{{
+function callback.spiders_nest_web_lair(data, triggerable, triggerer, marker, ev)
+    crawl.mpr("The chamber up ahead is thickly strewn with cobwebs. You hear a scritching noise." , "talk_visual")
+end
+}}
+
+####################################################################
+# Spider Web final by Mumra
+#
+# A main spiral path to follow with randomised walls and pools / deep water.
+# Narrow deep water channels run laterally into the center; hopefully spiders
+# can pathfind these and keep jumping out at the player. The player could use
+# them to head straight for the center with levitate or cling, but it could be
+# dangerous getting blocked in.
+#
+# dpeg: The map can theoretically get a player stranded from a random teleport,
+#       but chances are very slim and I'd like a more conceptual solution (like
+#       disabling long-range teleports in spider vaults) before doing anything
+#       ad-hoc here.
+#
+NAME:    mumra_spider_spiderweb
+TAGS:    spiders_nest no_item_gen no_monster_gen no_pool_fixup no_rotate
+ORIENT:  encompass
+NSUBST:  y = 1:y / *:.
+{{
+local ym = TriggerableFunction:new{func="callback.spiders_nest_cobweb_light"}
+ym:add_triggerer(DgnTriggerer:new{type="player_move"})
+lua_marker('y', ym)
+local vm = TriggerableFunction:new{func="callback.spiders_nest_web_lair"}
+vm:add_triggerer(DgnTriggerer:new{type="player_move"})
+lua_marker('v', vm)
+}}
+SUBST:   y = .
+SUBST:   v = .
+# Monster randomise
+SUBST:   7 = 7 .:5
+# Water etc.
+SUBST:   w = z
+SUBST:   W = W w:15 x:4
+SUBST:   . = .:6 W
+SUBST:   z = W w:50 .:2
+SUBST:   X = w x
+# Items + monsters
+NSUBST:  s = 2:. / *:*
+KMONS:   1 = ghost moth
+KMONS:   2 = tarantella
+KMONS:   3 = redback
+KMONS:   4 = jumping spider
+KMONS:   5 = wolf spider
+KMONS:   6 = spider
+KMONS:   7 = trapdoor spider
+KITEM:   t = piece of ambrosia
+: spiders_nest_colours(_G)
+: spiders_nest_random_monster_set(_G)
+epilogue{{
+spiders_nest_milestone(_G)
+}}
+MAP
+          xxxx                           xxxxx 
+          xw6x                           x6wwx 
+          xwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwx6x 
+        xxxxw..WWWW......7.WWWWWWWW...WWWWwxxx 
+       xxWWyyx......WWWWWWW........WWW...WWxxx 
+       xWWyWW.WWWxxxxxxxxxxxxxxxxxxxWWWwW..Wxx 
+      xxWAWxxxwxxxx6*xxxxxxxxxxxxxxxxxwxxxW.Wx 
+      xW<Wxxxxxwxx56xxxxxxxWWxxxxxx**wxxxxW.Wxx
+      xW.Wx  x*xwwwxxxxxxWW..WWWxxxxxw66xxxW.Wxx
+     xxwWxx  xxxxxxwxWW....WW..7.WWWxxwxxxxxW.Wx
+     xwwwx       xwW...WWWxxxxWWW....wxxxxxxW.Wxxx  
+     xwwxx      xxW.WwxxxxxxxxxxxxxWw.WxxxxxxW.Wxx  
+    xxwxx      xxW.WxxwwxxxxxxxxxxxxwW.WxxxxxxxW.5xx 
+   xxwxx      xxW.2xxxxxwwxxxxxxxxxwxxW.Wxxx6xxW.Wxx
+  xxwxx   xxxxxW.WxxxxxxxxwwxxxxxxwxxxxW.WxxxwwW.Wwxx
+  xwxx    x4xxW.Wxxxxxxx3...w.34.wxxxxxxW.wwwx5xW.Wwx
+  xxx     xxwW.Wxxxxxx2..*|x*w..w5xxxxwwwW.WxxxxW.Wxx
+          xxW.Wxxxxx3..*.x*www.w..2wwwxxxW.WxxxW.Wxx
+         xxW.Wxxxxx5.x...ww1twwxwww5xxxxxW.WxxxW.Wx 
+        xxW.Wxxxxxxx..wwwwwtwwww...2xxxxxW.Wxxx.Wxx 
+        xW.Wxxxxxxwwww.x..www.x.www..xxxxW.WxxW.3x  
+  xxxxxxxW.WWxxxwwxxxx....x........wxxxxW.WxxxW.xx  
+  x*xx66wwW.<WWwxxxxxxxxx......xxxxxwxxxW.WxxW.Wx   
+ xx43wwwxxWWW...WWWxxxxxxxxxxW.WWWWxwxxW.Wxxx.Wxx   
+ x2ww66xxxxxxWWW...WWWxxxxxxxxW..v.WWwWW.WxxW.Wx    
+xxwxxx*x    xxxxWWW...WWWxxxxxxxxWW..<..Wxxx.WWx 
+xwxx xxx       xxxxWWW...WWWxxxxxxxWWWWWxxx4.Wxx 
+xxx               xxxxWWW...WWWxxxxxxxxwxxxW.4x  
+                    xxwxxWWW....Wxxxx65w3xW.Wxx  
+                    x44xxxxxWWWW..Wxxxx4wxW.Wx
+                    xxxx   xxxxWWW..WxxxwxW.Wx
+                              xxxxWW..WxwW.Wxx
+                                 xxxxW....WWx 
+                                    xxxxWWWxx 
+                                       xxxwx  
+                                         xxx  
 ENDMAP
