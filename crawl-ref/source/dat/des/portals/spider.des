@@ -114,6 +114,21 @@ function callback.spider_trap_warn(data, triggerable, triggerer, marker, ev)
 end
 }}
 
+# Flavour text for Spiderweb map ##########################################
+
+{{
+function callback.spiders_nest_cobweb_light(data, triggerable, triggerer, marker, ev)
+    crawl.mpr("Something lightly brushes against you...",1)
+    crawl.more()
+    crawl.mpr("You realise it was just a hanging strand of cobweb; you push it aside and calm your nerves." , "talk_visual")
+end
+}}
+
+{{
+function callback.spiders_nest_web_lair(data, triggerable, triggerer, marker, ev)
+    crawl.mpr("The chamber up ahead is thickly strewn with cobwebs." , "talk_visual")
+end
+}}
 
 # Entries ##########################################
 
@@ -348,24 +363,8 @@ xA<.xxx******Z.x
 xxxxxxxxxxxxxxxx
 ENDMAP
 
-# Flavour text functions ##########################################
-
-{{
-function callback.spiders_nest_cobweb_light(data, triggerable, triggerer, marker, ev)
-    crawl.mpr("Something lightly touches your face!",1)
-    crawl.more()
-    crawl.mpr("Realising it was only a light strand of cobweb, you brush it aside and calm your nerves." , "talk_visual")
-end
-}}
-
-{{
-function callback.spiders_nest_web_lair(data, triggerable, triggerer, marker, ev)
-    crawl.mpr("The chamber up ahead is thickly strewn with cobwebs. You hear a scritching noise." , "talk_visual")
-end
-}}
-
 ####################################################################
-# Spider Web final by Mumra
+# Spider Web by Mumra
 #
 # A main spiral path to follow with randomised walls and pools / deep water.
 # Narrow deep water channels run laterally into the center; hopefully spiders
@@ -379,7 +378,7 @@ end
 #       ad-hoc here.
 #
 NAME:    mumra_spider_spiderweb
-TAGS:    spiders_nest no_item_gen no_monster_gen no_pool_fixup no_rotate
+TAGS:    spiders_nest no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 NSUBST:  y = 1:y / *:.
 {{
@@ -392,22 +391,25 @@ lua_marker('v', vm)
 }}
 SUBST:   y = .
 SUBST:   v = .
-# Monster randomise
-SUBST:   7 = 7 .:5
 # Water etc.
 SUBST:   w = z
 SUBST:   W = W w:15 x:4
 SUBST:   . = .:6 W
-SUBST:   z = W w:50 .:2
+SUBST:   z = W:5 w:50 .:2
 SUBST:   X = w x
-# Items + monsters
-NSUBST:  s = 2:. / *:*
+# Monster sets, and some items
+NSUBST:  1 = 1:1 / 2:t / *:w
 KMONS:   1 = ghost moth
-KMONS:   2 = tarantella
+SUBST:   2 = 2 *:4
+KMONS:   2 = tarantella / redback w:12 / jumping spider w:8 / wolf spider w:5
 KMONS:   3 = redback
-KMONS:   4 = jumping spider
-KMONS:   5 = wolf spider
-KMONS:   6 = spider
+SUBST:   4 = 4 *:3
+KMONS:   4 = jumping spider / wolf spider w:5 / spider w:20 / redback w:2
+SUBST:   5 = 5 *:1
+KMONS:   5 = wolf spider / jumping spider w:3 / spider w:5
+SUBST:   6 = 6 *:2
+KMONS:   6 = spider / wolf spider w:4 / jumping spider w:1
+SUBST:   7 = 7 .:50
 KMONS:   7 = trapdoor spider
 KITEM:   t = piece of ambrosia
 : spiders_nest_colours(_G)
@@ -419,36 +421,36 @@ MAP
           xxxx                           xxxxx 
           xw6x                           x6wwx 
           xwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwx6x 
-        xxxxw..WWWW......7.WWWWWWWW...WWWWwxxx 
-       xxWWyyx......WWWWWWW........WWW...WWxxx 
-       xWWyWW.WWWxxxxxxxxxxxxxxxxxxxWWWwW..Wxx 
-      xxWAWxxxwxxxx6*xxxxxxxxxxxxxxxxxwxxxW.Wx 
-      xW<Wxxxxxwxx56xxxxxxxWWxxxxxx**wxxxxW.Wxx
-      xW.Wx  x*xwwwxxxxxxWW..WWWxxxxxw66xxxW.Wxx
-     xxwWxx  xxxxxxwxWW....WW..7.WWWxxwxxxxxW.Wx
-     xwwwx       xwW...WWWxxxxWWW....wxxxxxxW.Wxxx  
-     xwwxx      xxW.WwxxxxxxxxxxxxxWw.WxxxxxxW.Wxx  
-    xxwxx      xxW.WxxwwxxxxxxxxxxxxwW.WxxxxxxxW.5xx 
-   xxwxx      xxW.2xxxxxwwxxxxxxxxxwxxW.Wxxx6xxW.Wxx
-  xxwxx   xxxxxW.WxxxxxxxxwwxxxxxxwxxxxW.WxxxwwW.Wwxx
-  xwxx    x4xxW.Wxxxxxxx3...w.34.wxxxxxxW.wwwx5xW.Wwx
-  xxx     xxwW.Wxxxxxx2..*|x*w..w5xxxxwwwW.WxxxxW.Wxx
-          xxW.Wxxxxx3..*.x*www.w..2wwwxxxW.WxxxW.Wxx
-         xxW.Wxxxxx5.x...ww1twwxwww5xxxxxW.WxxxW.Wx 
-        xxW.Wxxxxxxx..wwwwwtwwww...2xxxxxW.Wxxx.Wxx 
-        xW.Wxxxxxxwwww.x..www.x.www..xxxxW.WxxW.3x  
-  xxxxxxxW.WWxxxwwxxxx....x........wxxxxW.WxxxW.xx  
-  x*xx66wwW.<WWwxxxxxxxxx......xxxxxwxxxW.WxxW.Wx   
- xx43wwwxxWWW...WWWxxxxxxxxxxW.WWWWxwxxW.Wxxx.Wxx   
- x2ww66xxxxxxWWW...WWWxxxxxxxxW..v.WWwWW.WxxW.Wx    
-xxwxxx*x    xxxxWWW...WWWxxxxxxxxWW..<..Wxxx.WWx 
-xwxx xxx       xxxxWWW...WWWxxxxxxxWWWWWxxx4.Wxx 
-xxx               xxxxWWW...WWWxxxxxxxxwxxxW.4x  
-                    xxwxxWWW....Wxxxx65w3xW.Wxx  
-                    x44xxxxxWWWW..Wxxxx4wxW.Wx
-                    xxxx   xxxxWWW..WxxxwxW.Wx
+        xxxxw..WWWW...7..7.WWWWWWWW.7.WWWWwxxx 
+       xxwwyyx....7.WWWWWWW...7..7.WWW.7.WWxxx 
+       xwwyww.WWWxxxxxxxxxxxxxxxxxxxWWWwW.7Wxx 
+      xxwAwxxxwxxxx66xxxxxxxxxxxxxxxxxwxxxW.Wx 
+      xw<wxxxxxwxx66xxxxxxxWWxxxxxx66wxxxxW.Wxx
+      xw.wx  x6xwwwxxxxxxWW.7.WWxxxxxw66xxxW7Wxx
+     xxwWxx  xxxxxxwxWW.7..WWW.7.WWWxxwxxxxxW.Wx
+     xWWWx       xwW7..WWWXxxxWWW...7wxxxxxxW7Wxxx  
+     xWwxx      xxW.WwxxxxxxxxxxxXXWw.WxxxxxxW.Xxxx 
+    xxwxx      xxW.WxxwwxxxxxxxxxxxxwW.WxxxxxxW.W5xx 
+   xxwxx      xxW.2xxxxxwwxxxxxxxxxwxxW.Wxxx5xxW.Wxx
+  xxwxx   xxxxx7.WxxxxxxxxwwxxxxxxwxxxxW7WxxxwwW7Wwxx
+  xwxx    x4xx.WWxxxxxxx2...w.22.wxxxxxxW.wwwx5xW.Wwx
+  xxx     xxw.WXxxxxxx2..2|x2w..w.xxxxwwwW.WxxxxW.Wxx
+          xx7WXxxxxx2..2.x2www.w..2wwwxxxW7WxxxW7Wxx
+         xxW.Wxxxxx2.x...ww11wwxwww2xxxxxXW.xxxW.Wx 
+        xxW.Wxxxxxxx..wwwww11www...2xxxxxXW.xxx.Wxx 
+        xW.Wxxxxxxwwww.x..www.x.www.2xxxxXW7xxW.3x  
+  xxxxxxxW.WWxxxwwxxxx....x........wxxxxXW.xxxW7xx  
+  x4xx44wwW.<WWwxxxxxxxxx......xxxxxwxxxW.WxxW.Wx   
+ xx34wwwxxWWW.7.WWWxxxxxxxxxxW.WWWWxwxxW7Wxxx.Wxx   
+ x3ww44xxxxxxWWW.7.WWXxxxxxxxxW7.v.WWwWW.WxxW7Wx    
+xxwxxx2x    xxxxWWW.WWWXXxxxxxxxxWW..<..Wxxx.WWx 
+xwxx xxx       xxxxW.7WWW.7.xxxxxxxWWWWWxxx4.Wxx 
+xxx               xxxx...WWW.7.xxxxxxxxwxxxW74x  
+                    xxwxxXXWWWW.Wxxxx55w5xW.Wxx  
+                    x42xxxxxXXWW..Wxxxx5wxW7Wx
+                    xxxx   xxxxXWW.7WxxxwxW.Wx
                               xxxxWW..WxwW.Wxx
-                                 xxxxW....WWx 
+                                 xxxxW...7WXx 
                                     xxxxWWWxx 
                                        xxxwx  
                                          xxx  
