@@ -5170,6 +5170,7 @@ void player::init()
     // Permanent data:
     your_name.clear();
     species          = SP_UNKNOWN;
+    species_name.clear();
     char_class       = JOB_UNKNOWN;
     class_name.clear();
     type             = MONS_PLAYER;
@@ -5300,6 +5301,7 @@ void player::init()
 
     religion         = GOD_NO_GOD;
     jiyva_second_name.clear();
+    god_name.clear();
     piety            = 0;
     piety_hysteresis = 0;
     gift_timeout     = 0;
@@ -5445,9 +5447,11 @@ player_save_info player_save_info::operator=(const player& rhs)
     experience_level = rhs.experience_level;
     wizard           = rhs.wizard;
     species          = rhs.species;
+    species_name     = rhs.species_name;
     class_name       = rhs.class_name;
     religion         = rhs.religion;
-    jiyva_second_name  = rhs.jiyva_second_name;
+    god_name         = rhs.god_name;
+    jiyva_second_name= rhs.jiyva_second_name;
 
     // [ds] Perhaps we should move game type to player?
     saved_game_type  = crawl_state.type;
@@ -5475,12 +5479,12 @@ std::string player_save_info::short_desc() const
         desc << "[" << qualifier << "] ";
 
     desc << name << ", a level " << experience_level << ' '
-         << species_name(species) << ' ' << class_name;
+         << species_name << ' ' << class_name;
 
     if (religion == GOD_JIYVA)
-        desc << " of " << god_name_jiyva(true);
+        desc << " of " << god_name << " " << jiyva_second_name;
     else if (religion != GOD_NO_GOD)
-        desc << " of " << god_name(religion);
+        desc << " of " << god_name;
 
 #ifdef WIZARD
     if (wizard)
