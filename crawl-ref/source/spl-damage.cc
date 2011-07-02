@@ -632,68 +632,68 @@ bool cast_freeze(int pow, monster* mons)
     return (true);
 }
 
-int airstrike(int pow, const dist &beam)
+bool cast_airstrike(int pow, const dist &beam)
 {
-    bool success = false;
-
     monster* mons = monster_at(beam.target);
     if (mons && (mons->submerged() ||
                  (cell_is_solid(beam.target) && mons_wall_shielded(mons))))
         mons = NULL;
 
     if (mons == NULL)
-        canned_msg(MSG_SPELL_FIZZLES);
-    else
     {
-        if (mons->res_wind() > 0)
-        {
-            mprf("The air twists arounds and harmlessly tosses %s around.",
-                 mons->name(DESC_NOCAP_THE).c_str());
-            // Bailing out early, no need to upset the gods or the target.
-            return (false);
-        }
-
-        god_conduct_trigger conducts[3];
-        disable_attack_conducts(conducts);
-
-        success = !stop_attack_prompt(mons, false, you.pos());
-
-        if (success)
-        {
-            set_attack_conducts(conducts, mons);
-
-            mprf("The air twists around and strikes %s!",
-                 mons->name(DESC_NOCAP_THE).c_str());
-            noisy(4, beam.target);
-
-            behaviour_event(mons, ME_ANNOY, MHITYOU);
-            if (mons_is_mimic(mons->type))
-                mimic_alert(mons);
-        }
-
-        enable_attack_conducts(conducts);
-
-        if (success)
-        {
-            int hurted = 8 + random2(random2(4) + (random2(pow) / 6)
-                           + (random2(pow) / 7));
-
-            bolt pbeam;
-            pbeam.flavour = BEAM_AIR;
-            hurted = mons->beam_resists(pbeam, hurted, false);
-            // perhaps we should let the beam subtract AC and do damage too?
-
-            hurted -= random2(1 + mons->armour_class());
-
-            hurted = std::max(0, hurted);
-
-            mons->hurt(&you, hurted);
-            if (mons->alive())
-                print_wounds(mons);
-        }
+        canned_msg(MSG_SPELL_FIZZLES);
+        return true; // still losing a turn
     }
 
-    return (success);
+    if (mons->res_wind() > 0)
+    {
+        if (mons->observable())
+        {
+            mprf("But air would do no harm to %s!",
+                 mons->name(DESC_NOCAP_THE).c_str());
+            return false;
+        }
+        mprf("The air twists arounds and harmlessly tosses %s around.",
+             mons->name(DESC_NOCAP_THE).c_str());
+        // Bailing out early, no need to upset the gods or the target.
+        return true; // you still did discover the invisible monster
+    }
+
+    god_conduct_trigger conducts[3];
+    disable_attack_conducts(conducts);
+
+    if (stop_attack_prompt(mons, false, you.pos()))
+        return false;
+
+    set_attack_conducts(conducts, mons);
+
+    mprf("The air twists around and strikes %s!",
+         mons->name(DESC_NOCAP_THE).c_str());
+    noisy(4, beam.target);
+
+    behaviour_event(mons, ME_ANNOY, MHITYOU);
+    if (mons_is_mimic(mons->type))
+        mimic_alert(mons);
+
+    enable_attack_conducts(conducts);
+
+    int hurted = 8 + random2(random2(4) + (random2(pow) / 6)
+                   + (random2(pow) / 7));
+
+    bolt pbeam;
+    pbeam.flavour = BEAM_AIR;
+    hurted = mons->beam_resists(pbeam, hurted, false);
+    // perhaps we should let the beam subtract AC and do damage too?
+
+    hurted -= random2(1 + mons->armour_class());
+
+    hurted = std::max(0, hurted);
+
+    mons->hurt(&you, hurted);
+    if (mons->alive())
+        print_wounds(mons);
+
+    return true;
 }
 
 // Just to avoid typing this over and over.
