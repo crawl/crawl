@@ -2734,6 +2734,7 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     unmarshallFixedBitArray<NUM_MB_FLAGS>(th, mi.mb);
     mi.mname = unmarshallString(th);
     unmarshallUnsigned(th, mi.type);
+    ASSERT(!invalid_monster_type(mi.type));
     unmarshallUnsigned(th, mi.base_type);
     unmarshallUnsigned(th, mi.number);
     unmarshallUnsigned(th, mi.colour);
@@ -3092,6 +3093,7 @@ void unmarshallMonster(reader &th, monster& m)
     else if (m.type == MONS_GILA_MONSTER)
         m.type = MONS_BASILISK;
 #endif
+    ASSERT(!invalid_monster_type(m.type));
 
     m.mid             = unmarshallInt(th);
     ASSERT(m.mid > 0);
