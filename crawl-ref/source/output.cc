@@ -47,6 +47,7 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "showsymb.h"
+#include "spl-transloc.h"
 
 #ifndef USE_TILE
 #include "directn.h"
@@ -632,6 +633,8 @@ static void _get_status_lights(std::vector<status_light>& out)
             out.push_back(sl);
         }
     }
+    if(!allow_control_teleport(true))
+        out.push_back(status_light(RED,"-cTele"));
 }
 
 static void _print_status_lights(int y)
@@ -1260,7 +1263,9 @@ int update_monster_pane()
 
 static const char* _itosym1(int stat)
 {
-    return ((stat >= 1) ? "+  " : ".  ");
+    return ((stat >= 1) ? "+  " :
+            (stat == 0) ? ".  " :
+                          "x  ");
 }
 
 static const char* _itosym2(int stat)
@@ -1841,7 +1846,8 @@ static std::vector<formatted_string> _get_overview_resistances(
     }
     cols.add_formatted(1, buf, false);
 
-    const int rctel = player_control_teleport(calc_unid);
+    int rctel = player_control_teleport(calc_unid);
+    rctel = allow_control_teleport(true) ? rctel : -1;
     const int rlevi = you.airborne();
     const int rcfli = wearing_amulet(AMU_CONTROLLED_FLIGHT, calc_unid);
     snprintf(buf, sizeof buf,
