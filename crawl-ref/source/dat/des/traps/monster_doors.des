@@ -1,0 +1,93 @@
+##############################################################################
+# Trap: Monsters behind doors
+##############################################################################
+
+# By sevenhm.
+# When the player steps on the pressure plate they are shut into the corridor
+# Doors appear where none were before.  Behind the door are monsters.
+
+{{
+function callback.monster_doors_stepped(data, triggerable, triggerer, marker, ev)
+  local x, y = marker:pos()
+  local p = dgn.find_marker_positions_by_prop("grate", 1)[1]
+  local o = dgn.find_marker_positions_by_prop("grate", 2)[1]
+  local d = dgn.find_marker_positions_by_prop("door", 1) [1]
+  local e = dgn.find_marker_positions_by_prop("door", 2) [1]
+  local q = dgn.find_marker_positions_by_prop("exit", 1) [1]
+-- Some basic error checking
+  if (p == nil) or (d == nil) or (o == nil) or (e == nil) or (q == nil) then
+    crawl.mpr("Error: no grate to close!")
+    dgn.grid(x, y, "floor")
+    return
+  end
+-- This ensures that if a monster is on the grates the grates don't close
+  if (dgn.mons_at(p.x, p.y) ~= nil or p == you.pos()) then
+    if (you.see_cell(x, y)) then
+      crawl.mpr("You feel the floor shift and hear a click.")
+      -- Once the plate is stepped on, we need to get rid of it regardless
+      dgn.grid(x, y, "floor")
+      return
+    end
+  end
+
+  if (dgn.mons_at(o.x, o.y) ~= nil or p == you.pos()) then
+    if (you.see_cell(x, y)) then
+      crawl.mpr("You feel the floor shift and hear a click.")
+      dgn.grid(x, y, "floor")
+      return
+    end
+  end
+-- This actually enacts the changes 
+  dgn.grid(p.x, p.y, "iron_grate")
+  dgn.grid(o.x, o.y, "iron_grate")
+  dgn.grid(d.x, d.y, "closed_door")
+  dgn.grid(e.x, e.y, "closed_door")
+  dgn.grid(q.x, q.y, "floor")
+  dgn.grid(x, y, "floor")
+-- This announces the changes
+  if (you.see_cell(p.x, p.y)) then
+    crawl.mpr("You step on to a pressure plate and iron grates slams shut around you!")
+    crawl.mpr("You now see doors in the wall!")
+  end  
+end
+}}
+
+NAME:   trap_monster_doors_1
+TAGS:   allow_dup extra luniq_monster_door
+ORIENT: float
+: if crawl.one_chance_in(4) then
+SUBST:  e:., E:q, g:x, G:x, h:x, H:x, f:x, F:x
+: elseif crawl.one_chance_in(3) then
+SUBST:  e:x, E:x, g:., G:q, h:x, H:x, f:x, F:x
+: elseif crawl.one_chance_in(2) then
+SUBST:  e:x, E:x, g:x, G:x, h:., H:q, f:x, F:x
+: else
+SUBST:  e:x, E:x, g:x, G:x, h:x, H:x, f:., F:q
+: end
+NSUBST: z=z/x, y=y/x
+KFEAT:  ^ = pressure plate trap
+{{
+local tm = TriggerableFunction:new{func="callback.monster_doors_stepped",
+                                   repeated=true}
+tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
+lua_marker('^', tm)
+lua_marker(',', props_marker { grate=1 })
+lua_marker(';', props_marker { grate=2 })
+lua_marker('z', props_marker { door=1 })
+lua_marker('y', props_marker { door=2 })
+lua_marker('q', props_marker { exit=1 })
+}}
+
+KPROP:  1q = no_rtele_into
+KMASK:  ,; = no_item_gen
+SUBST:  z:x, y:x, q:x, 1 = 1:20 9:5
+NSUBST: 1 = 8 / 9998
+MAP
+xxxxxxxxxxx
+xeee111gggx
+ExxxzzzxxxG
+@,...^...;@
+HxxxyyyxxxF
+xhhh111fffx
+xxxxxxxxxxx
+ENDMAP
