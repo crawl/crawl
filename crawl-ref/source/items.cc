@@ -1403,7 +1403,6 @@ bool items_similar(const item_def &item1, const item_def &item2, bool ignore_ide
     // These classes also require pluses and special.
     if (item1.base_type == OBJ_WEAPONS         // only throwing weapons
         || item1.base_type == OBJ_MISSILES
-        || item1.base_type == OBJ_MISCELLANY   // only runes
         || item1.base_type == OBJ_FOOD)        // chunks
     {
         if (item1.plus != item2.plus
@@ -1416,13 +1415,6 @@ bool items_similar(const item_def &item1, const item_def &item2, bool ignore_ide
         {
             return (false);
         }
-    }
-
-    // Missiles need to be of the same brand, not just plusses.
-    if (item1.base_type == OBJ_MISSILES
-        && get_ammo_brand(item1) != get_ammo_brand(item2))
-    {
-        return (false);
     }
 
     // Check the ID flags.
