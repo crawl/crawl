@@ -1783,7 +1783,8 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     item.link   = freeslot;
     item.pos.set(-1, -1);
     // Remove "dropped by ally" flag.
-    item.flags &= ~(ISFLAG_DROPPED_BY_ALLY);
+    // Also, remove "unobtainable" as it was just proven false.
+    item.flags &= ~(ISFLAG_DROPPED_BY_ALLY | ISFLAG_UNOBTAINABLE);
 
     if (!item.slot)
         item.slot = index_to_letter(item.link);

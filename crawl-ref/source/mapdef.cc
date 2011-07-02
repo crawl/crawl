@@ -4833,6 +4833,8 @@ item_spec item_list::parse_single_spec(std::string s)
         result.props["uncursed"] = bool(true);
     if (strip_tag(s, "useful"))
         result.props["useful"] = bool(true);
+    if (strip_tag(s, "unobtainable"))
+        result.props["unobtainable"] = true;
 
     const short charges = strip_number_tag(s, "charges:");
     if (charges >= 0)

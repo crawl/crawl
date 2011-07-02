@@ -4071,6 +4071,8 @@ retry:
             item.plus = props["charges"].get_int();
         if (props.exists("ident"))
             item.flags |= props["ident"].get_int();
+        if (props.exists("unobtainable"))
+            item.flags |= ISFLAG_UNOBTAINABLE;
 
         return (item_made);
     }

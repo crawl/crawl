@@ -640,18 +640,11 @@ bool _is_affordable(const item_def &item)
     if (in_shop(item))
         return (int)item_value(item) < you.gold;
 
-    // An ugly special case for items on display.
-    if (in_bounds(item.pos))
-    {
-        for (adjacent_iterator ai(item.pos); ai; ++ai)
-            if (you.can_pass_through(*ai))
-                return true;
-        //dprf("Seen item %s seems to be un(easily)obtainable.",
-        //     item.name(DESC_PLAIN).c_str());
+    // Explicitely marked by a vault.
+    if (item.flags & ISFLAG_UNOBTAINABLE)
         return false;
-    }
 
-    // A monster has it.  Violence is the answer.
+    // On the ground or a monster has it.  Violence is the answer.
     return true;
 }
 
