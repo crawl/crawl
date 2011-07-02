@@ -643,3 +643,38 @@ x.........................x
 ...........................
 @...@...@...@@@...@...@...@
 ENDMAP
+
+##############################################################################
+NAME:    roderic_lyre
+TAGS:    entry no_monster_gen no_item_gen no_trap_gen no_rotate
+ORIENT:  float
+WEIGHT:  1
+SHUFFLE: EF
+SUBST:   E = +
+SUBST:   F = x
+MAP
+    xxxxxxxxxxxxxxxxx
+  xxx....xxxxxxx....xxx
+  xx.xxxx.xxxxx.xxxx.xx
+  x.xx..xx.xxx.xx..xx.x
+  x.x.xx.x.xxx.x.xx.x.x
+  x.xx>x.x.E.F.x.x}xx.x
+  xx.xxx.x.x.x.x.xxx.xx
+  xxx...xx.x.x.xx...xxx
+  xxxxxxxx.x.x.xxxxxxxx
+   xxxxxx.xx.xx.xxxxxx
+   xxxxx.xxx+xxx.xxxxx
+   xxxx.xxx...xxx.xxxx
+   xxx.xxxx.{.xxxx.xxx
+   xx.xxxxx...xxxxx.xx 
+  xx.xxxxxxx+xxxxxxx.xx
+  x.xxxxxxxx.xxxxxxxx.x
+  x.xx...xxx.xxx...xx.x
+  x.x.xxx.xx.xx.xxx.x.x
+  x.x.x<xx.x.x.xx[x.x.x
+  x.x.xx.x.F.E.x.xx.x.x
+  x.xx..xx.xxx.xx..xx.x
+  xx.xxxx.xxxxx.xxxx.xx
+   xx....xxxxxxx....xx
+    xxxxxxxxxxxxxxxxx
+ENDMAP
