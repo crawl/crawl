@@ -728,7 +728,10 @@ MONS:     (list of monsters)
           * att:good_neutral -- hostile to att:hostile
           * att:fellow_slime -- tame, won't follow you
 
-          Note that 8, 9, 0 also place monsters (see the table).
+          Note that the glyphs 8, 9, 0 (without MONS) also place monsters:
+             0 - normal monster (this is equivalent to MONS: random)
+             9 - +5 depth monster
+             8 - (+2) * 2 depth monster.
 
           If you want to place a random monster suitable for the level
           the map is generated on, you can use
