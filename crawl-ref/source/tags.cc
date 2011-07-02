@@ -46,6 +46,7 @@
 #include "mon-util.h"
 #include "mon-transit.h"
 #include "quiver.h"
+#include "religion.h"
 #include "skills.h"
 #include "skills2.h"
 #include "state.h"
@@ -1003,6 +1004,9 @@ static void tag_construct_char(writer &th)
     marshallByte(th, crawl_state.type);
     if (crawl_state.game_is_tutorial())
         marshallString(th, get_tutorial_map());
+
+    marshallString(th, species_name(you.species));
+    marshallString(th, you.religion ? god_name(you.religion) : "");
 }
 
 static void tag_construct_you(writer &th)
@@ -1581,6 +1585,26 @@ static void tag_construct_lost_items(writer &th)
                  marshall_item_list);
 }
 
+// Save versions 30-32.26 are readable but don't store the names.
+static const char* old_species[]=
+{
+    "Human", "High Elf", "Deep Elf", "Sludge Elf", "Mountain Dwarf", "Halfling",
+    "Hill Orc", "Kobold", "Mummy", "Naga", "Ogre", "Troll",
+    "Red Draconian", "White Draconian", "Green Draconian", "Yellow Draconian",
+    "Grey Draconian", "Black Draconian", "Purple Draconian", "Mottled Draconian",
+    "Pale Draconian", "Draconian", "Centaur", "Demigod", "Spriggan", "Minotaur",
+    "Demonspawn", "Ghoul", "Kenku", "Merfolk", "Vampire", "Deep Dwarf", "Felid",
+    "Octopode",
+};
+
+static const char* old_gods[]=
+{
+    "", "Zin", "The Shining One", "Kikubaaqudgha", "Yredelemnul", "Xom",
+    "Vehumet", "Okawaru", "Makhleb", "Sif Muna", "Trog", "Nemelex Xobeh",
+    "Elyvilon", "Lugonu", "Beogh", "Jiyva", "Fedhas", "Cheibriados",
+    "Ashenzari",
+};
+
 void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
 {
     you.your_name         = unmarshallString(th);
@@ -1599,6 +1623,23 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
     crawl_state.type = (game_type) unmarshallByte(th);
     if (crawl_state.game_is_tutorial())
         set_tutorial_map(unmarshallString(th));
+
+    if (major > 32 || major == 32 && minor > 26)
+    {
+        you.species_name = unmarshallString(th);
+        you.god_name     = unmarshallString(th);
+    }
+    else
+    {
+        if (you.species >= 0 && you.species < ARRAYSZ(old_species))
+            you.species_name = old_species[you.species];
+        else
+            you.species_name = "Yak";
+        if (you.religion >= 0 && you.religion < ARRAYSZ(old_gods))
+            you.god_name = old_gods[you.religion];
+        else
+            you.god_name = "Marduk";
+    }
 }
 
 static void tag_read_you(reader &th)

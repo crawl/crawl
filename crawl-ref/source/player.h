@@ -32,6 +32,7 @@ public:
   // Permanent data:
   std::string your_name;
   species_type species;
+  std::string species_name;
   job_type char_class;
   std::string class_name;
 
@@ -181,6 +182,7 @@ public:
   FixedVector<uint8_t, 30> branch_stairs;
 
   god_type religion;
+  std::string god_name;
   std::string jiyva_second_name; // Random second name of Jiyva
   uint8_t piety;
   uint8_t piety_hysteresis;       // amount of stored-up docking
@@ -697,8 +699,10 @@ struct player_save_info
     int experience_level;
     bool wizard;
     species_type species;
+    std::string species_name;
     std::string class_name;
     god_type religion;
+    std::string god_name;
     std::string jiyva_second_name;
     game_type saved_game_type;
 
