@@ -575,6 +575,13 @@ ITEM:     (list of items, separated by comma)
             will be ignored, except for "ego" (for weapons only).
           * "mundane" acts as a shortcut for "ego:none" and forces the plusses
              to be +0.
+          * "ident:" will make the item pre-identified.  You need to specify
+            a "|"-separated list of what is to be known:
+            * "curse"
+            * "type"
+            * "pluses"
+            * "properties"
+            * "all"
 
             WARNING: While checks are done to make sure that an armour ego
             isn't given to a weapon, a weapon ego to a missile, and so on, and

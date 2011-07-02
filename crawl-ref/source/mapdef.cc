@@ -4768,6 +4768,34 @@ item_spec item_list::parse_single_spec(std::string s)
         return (result);
     }
 
+    std::string id_str = strip_tag_prefix(s, "ident:");
+    lowercase(id_str);
+    if (id_str == "all")
+        result.props["ident"].get_int() = ISFLAG_IDENT_MASK;
+    else if (!id_str.empty())
+    {
+        std::vector<std::string> ids = split_string("|", id_str);
+        int id = 0;
+        for (std::vector<std::string>::const_iterator is = ids.begin();
+             is != ids.end(); is++)
+        {
+            if (*is == "curse")
+                id |= ISFLAG_KNOW_CURSE;
+            else if (*is == "type")
+                id |= ISFLAG_KNOW_TYPE;
+            else if (*is == "pluses")
+                id |= ISFLAG_KNOW_PLUSES;
+            else if (*is == "properties")
+                id |= ISFLAG_KNOW_PROPERTIES;
+            else
+            {
+                error = make_stringf("Bad identify status: %s", id_str.c_str());
+                return (result);
+            }
+        }
+        result.props["ident"].get_int() = id;
+    }
+
     std::string unrand_str = strip_tag_prefix(s, "unrand:");
 
     if (strip_tag(s, "good_item"))
