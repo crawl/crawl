@@ -1550,14 +1550,11 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 500;
                 break;
 
+            case POT_CURE_MUTATION:
             case POT_GAIN_DEXTERITY:
             case POT_GAIN_INTELLIGENCE:
             case POT_GAIN_STRENGTH:
                 valued += 350;
-                break;
-
-            case POT_CURE_MUTATION:
-                valued += 150;
                 break;
 
             case POT_MAGIC:
@@ -1565,34 +1562,38 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 70;
                 break;
 
+            case POT_SPEED:
             case POT_INVISIBILITY:
                 valued += 55;
                 break;
 
-            case POT_MUTATION:
-            case POT_RESTORE_ABILITIES:
-                valued += 50;
-                break;
-
             case POT_BERSERK_RAGE:
             case POT_HEAL_WOUNDS:
+            case POT_RESTORE_ABILITIES:
+            case POT_LEVITATION:
+            case POT_MUTATION:
                 valued += 30;
                 break;
 
             case POT_MIGHT:
             case POT_AGILITY:
             case POT_BRILLIANCE:
-            case POT_SPEED:
                 valued += 25;
                 break;
 
             case POT_HEALING:
-            case POT_LEVITATION:
+            case POT_DECAY:
+            case POT_DEGENERATION:
+            case POT_STRONG_POISON:
                 valued += 20;
                 break;
 
             case POT_BLOOD:
             case POT_PORRIDGE:
+            case POT_CONFUSION:
+            case POT_PARALYSIS:
+            case POT_POISON:
+            case POT_SLOWING:
                 valued += 10;
                 break;
 
@@ -1600,13 +1601,6 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 5;
                 break;
 
-            case POT_CONFUSION:
-            case POT_DECAY:
-            case POT_DEGENERATION:
-            case POT_PARALYSIS:
-            case POT_POISON:
-            case POT_SLOWING:
-            case POT_STRONG_POISON:
             case POT_WATER:
                 valued++;
                 break;
