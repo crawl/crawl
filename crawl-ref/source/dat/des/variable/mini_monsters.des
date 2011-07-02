@@ -388,8 +388,8 @@ xxxx+xxxxx...xxxxx+xxxx
    xxxxxxx.@.xxxxxxx
 ENDMAP
 
-NAME:  goddamned_bats
-DEPTH: D:3-12, Lair:1-3, Orc:1-2
+NAME:   goddamned_bats
+DEPTH:  D:3-12, Lair:1-3, Orc:1-2
 # Sadly, for size-based ones, only mega, micro and giga exist.  Lack of kilo
 # and tera is understandable, but come on, even mili is lacking.
 KMONS:  1 = bat name:megabat n_rpl n_spe
@@ -431,6 +431,27 @@ xxxxxxx...xxxxx.xx
  xxxx21xx.xxxxx5xx
   xxxxxxx.xxxxxxx
     xxxx@xx
+ENDMAP
+
+NAME:   saegor_snake_ambush
+TAGS:   no_monster_gen no_pool_fixup
+DEPTH:  D:3-5
+KMONS:  S = w:3 snake / w:4 small_snake / w:5 plant / nothing
+KFEAT:  SX = W
+KITEM:  X = gold
+KPROP:  W = no_rtele_into
+MAP
+.xxxxxx.@..
+.xxWStxx+xx
+@+SttctWStx
+.xWtctWttWx
+xxtWtWtctSx
+xtctWXWtctx
+xStctWtWtxx
+xWttWtctWx.
+xxSWtcttS+@
+xx+xxtSWxx.
+..@.xxxxxx.
 ENDMAP
 
 # This vault can be highly OOD, which is why lindwurms are used in the
