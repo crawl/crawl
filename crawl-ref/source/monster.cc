@@ -1304,9 +1304,6 @@ bool monster::pickup_launcher(item_def &launch, int near, bool force)
 
 static bool _is_signature_weapon(monster* mons, const item_def &weapon)
 {
-    if (weapon.base_type == OBJ_STAVES)
-        return (mons->type == MONS_DEEP_DWARF_ARTIFICER);
-
     if (weapon.base_type != OBJ_WEAPONS)
         return (false);
 
@@ -1315,6 +1312,9 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
 
     if (mons->type == MONS_DAEVA)
         return (weapon.sub_type == WPN_EUDEMON_BLADE);
+
+    if (mons->type == MONS_DEEP_DWARF_ARTIFICER)
+        return (weapon.base_type == OBJ_STAVES);
 
     // Some other uniques have a signature weapon, usually because they
     // always spawn with it, or because it is referenced in their speech
@@ -1473,8 +1473,8 @@ bool monster::pickup_melee_weapon(item_def &item, int near)
             if (is_range_weapon(*weap))
                 continue;
 
-            // Don't drop weapons specific to the monster.
-            if (_is_signature_weapon(this, *weap) && !dual_wielding)
+            // Don't swap to a non-signature weapon.
+            if (!_is_signature_weapon(this, item) && !dual_wielding)
                 return (false);
 
             // If we get here, the weapon is a melee weapon.
