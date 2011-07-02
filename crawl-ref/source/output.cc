@@ -633,7 +633,7 @@ static void _get_status_lights(std::vector<status_light>& out)
             out.push_back(sl);
         }
     }
-    if(!allow_control_teleport(true))
+    if(!allow_control_teleport(true) && Options.show_spammy_spoilers)
         out.push_back(status_light(RED,"-cTele"));
 }
 

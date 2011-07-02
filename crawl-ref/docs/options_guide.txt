@@ -68,7 +68,7 @@ The contents of this text are:
                 show_inventory_weights, show_newturn_mark, show_gold_turns,
                 show_game_turns, show_beam, item_stack_summary_minimum,
                 list_rotten, mlist_min_height, msg_min_height, msg_max_height,
-                messages_at_top,
+                messages_at_top, show_spammy_spoilers,
                 mlist_allow_alternate_layout, mlist_targetting, classic_hud,
                 menu_colour, menu_colour_prefix_class, menu_colour_shops,
                 message_colour, force_more_message,
@@ -1531,6 +1531,10 @@ msg_condense_repeats = true
 msg_condense_short = true
         If set, short messages on the same channel don't all start a new
         line.
+
+show_spammy_spoilers = true
+        If unset, some static information experienced players already know
+        will be suppressed.
 
 4-k     Missiles.
 -----------------

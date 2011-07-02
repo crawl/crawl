@@ -3500,11 +3500,12 @@ static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi)
     if (mi.is(MB_HALOED))
         descs.push_back("haloed");
 
-    if (mi.intel() <= I_PLANT)
+    // should probably show only for Evilyon's ability (and then always)
+    if (mi.intel() <= I_PLANT && Options.show_spammy_spoilers)
         descs.push_back("mindless");
 
     // Unknown shapeshifters shouldn't leak "chaotic".
-    if (mi.is(MB_CHAOTIC))
+    if (mi.is(MB_CHAOTIC) && Options.show_spammy_spoilers)
         descs.push_back("chaotic");
 
     if (mi.is(MB_POSSESSABLE))

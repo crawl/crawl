@@ -3515,6 +3515,15 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                  << " is incapable of using stairs.\n";
     }
 
+    if (mi.intel() == I_PLANT)
+        inf.body << mi.pronoun(PRONOUN_CAP) << " is mindless.\n";
+
+    if (mi.is(MB_CHAOTIC))
+    {
+        inf.body << mi.pronoun(PRONOUN_CAP)
+                 << " is vulnerable to silver and hated by Zin.\n";
+    }
+
     if (mi.is(MB_SUMMONED))
     {
         inf.body << "\n" << "This monster has been summoned, and is thus only "
