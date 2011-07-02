@@ -20,7 +20,7 @@ function callback.beogh_warn_stepped(data, triggerable, triggerer, marker, ev)
 -- you that you should not continue towards his altar. (Monsters stepping on this
 -- trap will also activate it.
   if you.god() == "Beogh" and you.piety() > 50 then
-     crawl.god_speaks("Beogh" , "Your presense is welcomed at the altar to your God.")
+     crawl.god_speaks("Beogh" , "Your presence is welcomed at the altar to your God.")
      dgn.grid(x, y, "floor")
   elseif you.race() == "Hill Orc" and you.god() == "No God" then
      crawl.god_speaks("Beogh" , "Beogh will allow you to approach the altar.")
