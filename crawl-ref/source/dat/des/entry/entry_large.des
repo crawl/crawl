@@ -577,3 +577,69 @@ MAP
             .....WWWWW....WWW...
                 .......  .....
 ENDMAP
+
+##############################################################################
+# 25x25
+NAME:   co_entry_hexagon_in_a_hexagon
+TAGS:   entry
+ORIENT: float
+WEIGHT: 1
+MONS:   plant
+MAP
+     xxxxx@xxxxxxxxx     
+    xxxxxx.xxxxxxxxxx    
+   xxxxxxx.xxxxxxxxxxx   
+  xxxxxxxx.xxxxxxxxxxxx  
+ xxxxxxxxx.1111xxxxxxxxx 
+xxxxxxxxx1.....1xxxxxxxxx
+xxxxxxxx1....[..1xxxxxxxx
+xxxxxxx1...WWW...1xxxxxxx
+xxxxxx1...WWWWW...1xxxxxx
+@........WWW{WWW........@
+xxxxxx1...WWWWW...1xxxxxx
+xxxxxxx1...WWW...1xxxxxxx
+xxxxxxxx1..(....1xxxxxxxx
+xxxxxxxxx1.....1xxxxxxxxx
+ xxxxxxxxx1111.xxxxxxxxx 
+  xxxxxxxxxxxx.xxxxxxxx  
+   xxxxxxxxxxx.xxxxxxx   
+    xxxxxxxxxx.xxxxxx    
+     xxxxxxxxx@xxxxx     
+ENDMAP
+
+##############################################################################
+NAME:   co_entry_hall_of_pillars
+TAGS:   entry
+ORIENT: float
+WEIGHT: 1
+SUBST:  c : cccccvvb
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxx.[.(.{.xxxxxxxxxx
+xxxxxxx.............xxxxxxx
+xxxxx...c..c...c..c...xxxxx
+xxxx...................xxxx
+xxxx...................xxxx
+xxx..c..c..c...c..c..c..xxx
+xxx.....................xxx
+xxx.....................xxx
+xxx..c..c..c...c..c..c..xxx
+xxx.....................xxx
+xxx.....................xxx
+xxx..c..c..G...G..c..c..xxx
+xxx.....................xxx
+xxx.....................xxx
+xxx..c..c..c...c..c..c..xxx
+xxx.....................xxx
+xxx.....................xxx
+xxx..c..c..c...c..c..c..xxx
+xxx.....................xxx
+xxx.....................xxx
+xxx..c..c..c...c..c..c..xxx
+xx.......................xx
+x.........................x
+...........................
+...........................
+@...@...@...@@@...@...@...@
+ENDMAP
