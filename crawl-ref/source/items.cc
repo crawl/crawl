@@ -1269,6 +1269,11 @@ void pickup(bool partial_quantity)
     int o = you.visible_igrd(you.pos());
     const int num_nonsquelched = _count_nonsquelched_items(o);
 
+    // Store last_pickup in case we need to restore it.
+    // Then clear it to fill with items picked up.
+    std::map<int,int> tmp_l_p = you.last_pickup;
+    you.last_pickup.clear();
+
     if (o == NON_ITEM)
     {
         mpr("There are no items here.");
@@ -1276,7 +1281,6 @@ void pickup(bool partial_quantity)
     else if (you.form == TRAN_ICE_BEAST && grd(you.pos()) == DNGN_DEEP_WATER)
     {
         mpr("You can't reach the bottom while floating on water.");
-        return;
     }
     else if (mitm[o].link == NON_ITEM)      // just one item?
     {
@@ -1355,6 +1359,8 @@ void pickup(bool partial_quantity)
         if (!pickup_warning.empty())
             mpr(pickup_warning.c_str());
     }
+    if (you.last_pickup.empty())
+        you.last_pickup = tmp_l_p;
 }
 
 bool is_stackable_item(const item_def &item)
@@ -1742,6 +1748,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
                 }
                 you.turn_is_over = true;
 
+                you.last_pickup[m] = quant_got;
                 return (retval);
             }
         }
@@ -1834,6 +1841,8 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     _got_item(item, item.quantity);
 
     you.turn_is_over = true;
+
+    you.last_pickup[item.link] = retval;
 
     return (retval);
 }
@@ -2225,7 +2234,24 @@ bool drop_item(int item_dropped, int quant_drop)
     dec_inv_item_quantity(item_dropped, quant_drop);
     you.turn_is_over = true;
 
+    you.last_pickup.erase(item_dropped);
+
     return (true);
+}
+
+bool drop_last()
+{
+    typedef std::map<int,int> MapType;
+    if (you.last_pickup.empty())
+    {
+        mprf("No item to drop.");
+        return false;
+    }
+    MapType::iterator end = you.last_pickup.end();
+    for (MapType::iterator it = you.last_pickup.begin(); it != end; ++it)
+        drop_item(it->first, it->second);
+
+    return true;
 }
 
 static std::string _drop_menu_invstatus(const Menu *menu)
@@ -2791,6 +2817,11 @@ static void _do_autopickup()
         return;
     }
 
+    // Store last_pickup in case we need to restore it.
+    // Then clear it to fill with items picked up.
+    std::map<int,int> tmp_l_p = you.last_pickup;
+    you.last_pickup.clear();
+
     int o = you.visible_igrd(you.pos());
 
     std::string pickup_warning;
@@ -2864,6 +2895,9 @@ static void _do_autopickup()
 
     if (did_pickup)
         you.turn_is_over = true;
+
+    if (you.last_pickup.empty())
+        you.last_pickup = tmp_l_p;
 
     item_check(false);
 

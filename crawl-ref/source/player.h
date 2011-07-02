@@ -456,6 +456,8 @@ public:
     const item_def *slot_item(equipment_type eq,
                               bool include_melded=false) const;
 
+    std::map<int,int> last_pickup;
+
     // actor
     int mindex() const;
     int       get_experience_level() const;
