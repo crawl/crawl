@@ -1257,7 +1257,7 @@ spell_slot = <regex>:<list of spell letters>
         all letters in the list are occupied for each regex the spell
         matches, it will use the default ordering abc...xyzABC..XYZ.)
 
-        Examples: 
+        Examples:
         * if you want Haste to be placed on H:
             spell_slot = Haste:H
         * if you want Deflect Missiles to be placed on r normally or R if
