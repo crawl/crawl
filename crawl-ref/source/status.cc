@@ -11,6 +11,7 @@
 #include "skills2.h"
 #include "terrain.h"
 #include "transform.h"
+#include "spl-transloc.h"
 
 // Status defaults for durations that are handled straight-forwardly.
 struct duration_def
@@ -266,6 +267,11 @@ void fill_status_info(int status, status_info* inf)
     // completing or overriding the defaults set above.
     switch (status)
     {
+    case DUR_CONTROL_TELEPORT:
+        if(!allow_control_teleport(true))
+            inf->light_colour = DARKGREY;
+        break;
+
     case STATUS_AIRBORNE:
         _describe_airborne(inf);
         break;
