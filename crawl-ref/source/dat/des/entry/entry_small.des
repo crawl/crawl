@@ -2858,8 +2858,7 @@ wwwwwwwwwcccccwwwwwwwww
 ENDMAP
 
 ##############################################################
-# A small-room entry with wooden doors and big ring of trees
-# and rocks.
+# A small-room entry with wooden doors and big ring of trees and rocks.
 NAME:    saegor_entry_under_anarchy
 TAGS:    entry no_trap_gen no_monster_gen
 ORIENT:  float
@@ -2890,4 +2889,38 @@ xX@...........@Xx
   @@XXX.X.XXX@@
    XXXX@.@XXXX
    xxx @@@ xxx
+ENDMAP
+
+##############################################################
+# Moated graveyard entry (oiseaux)
+NAME:    moated_graveyard_entry
+TAGS:    entry no_monster_gen no_item_gen no_trap_gen no_pool_fixup no_rotate
+ORIENT:  float
+FTILE:   t{[(G = FLOOR_PEBBLE_BROWN
+TILE:    ' = FLOOR_PEBBLE_BROWN / FLOOR_PEBBLE_DARKGRAY
+TILE:    t = DNGN_TREE_DEAD
+TILE:    G = DNGN_GRAVESTONE
+COLOUR:  ' = brown / darkgrey
+COLOUR:  t = darkgrey
+COLOUR:  G = white
+SUBST:   t = t.
+: dgn.set_feature_desc_short("granite statue", "adventurer's gravestone")
+: dgn.set_feature_desc_long("granite statue", "The grave of an adventurer who came close to victory.\n")
+MAP
+    ....'....
+  ...'....'..
+ ..'....'...
+  ..'..'.'..
+  ....'''....
+  ..www'www...
+ ..wwt''''ww...
+..ww''G''t'ww..
+.ww't'''''''ww.
+.w'''{'t'('''w.
+.w''t'''''G''w.
+.ww''G'[''t'ww.
+..ww''t''''ww..
+ ..ww'''t'ww..
+  ..wwwwwww..
+   .........
 ENDMAP
