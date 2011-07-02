@@ -768,7 +768,7 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
             dam_dice.num = 0;
         // 1/3 damage to fliers and slimes.
         else if (mons_flies(mon) || mons_is_slime(mon))
-            dam_dice.num = 1;    
+            dam_dice.num = 1;
         // 3/2 damage to ice.
         else if (mon->is_icy())
             dam_dice.num = 4;

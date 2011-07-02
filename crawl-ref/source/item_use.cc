@@ -1287,16 +1287,16 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport)
         return (-1);
     }
 
-	if(Options.auto_switch && you.m_quiver->get_fire_item() == -1
-	   && _autoswitch_to_ranged())
-	{
-	    return (-1);
-	}
+    if(Options.auto_switch && you.m_quiver->get_fire_item() == -1
+       && _autoswitch_to_ranged())
+    {
+        return (-1);
+    }
 
-	if(!_fire_choose_item_and_target(item, target, teleport))
-		return (-1);
+    if(!_fire_choose_item_and_target(item, target, teleport))
+        return (-1);
 
-	std::string warn;
+    std::string warn;
     if (!_fire_validate_item(item, warn))
     {
         mpr(warn.c_str());
