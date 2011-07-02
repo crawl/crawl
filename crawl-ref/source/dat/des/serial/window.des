@@ -6,6 +6,7 @@
 # rare. Made by co.
 #
 # I added a chance to have some additional glass vaults. dpeg
+
 NAME:   serial_co_window_serial
 TAGS:   allow_dup extra luniq
 DEPTH:  D, Elf, Crypt

@@ -1,8 +1,13 @@
 # Corridors, turns etc, with statue and fountain arrangements.
 #
+# By corexii.
+#
 # Place a moderate amount of vaults. Having too many of the vaults seems
 # a bit messy, considering how randomly they are placed, and how the
 # statues stand out (especially in tiles).
+#
+# The maps for this serial vault can turn up as single vaults, but rarely.
+
 NAME:   serial_corexii_hall
 TAGS:   allow_dup extra luniq_serial
 #       Fits best in the rooms layout.

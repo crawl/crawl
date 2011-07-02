@@ -1,4 +1,8 @@
 #       Curved corridors.
+#
+# The maps for this serial vault can also be used normally, but are very rare.
+
+
 NAME:   serial_curves
 TAGS:   allow_dup extra luniq_serial
 #       Suitable for the rooms layout.
