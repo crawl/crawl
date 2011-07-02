@@ -16,7 +16,7 @@ There are shortcuts to quickly select several items in succession:
 <w>'</w>   moves the cursor down without changing selection
 The cursor is usually hidden; pressing <w>.</w> or <w>'</w> makes it appear.
 
-<h>Category shortcuts</w>
+<h>Category shortcuts</h>
 You can quickly select items by type by pressing:
 <w>!</w>   potions      <w>(</w>   weapons         <w>[</w>   armour       <w>=</w> or <w>"</w>   jewellery
 <w>?</w>   scrolls      <w>)</w>   ammunition      <w>/</w>   wands        <w>:</w> or <w>+</w>   books
