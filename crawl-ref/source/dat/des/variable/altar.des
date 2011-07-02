@@ -733,7 +733,7 @@ MAP
 ...
 d_e
 ...
-ENDMAP  
+ENDMAP
 
 
 ### Cheibriados overflow altars ###############################################
@@ -1692,11 +1692,11 @@ ENDMAP
 #           Troves might choose one of these items as their fee, too. Items are
 #           marked as "seen" for acquirement purposes as well. Under Ashenzari,
 #           you won't pick up rings and amulets seen in this vault since having
-#           one is considered enough for most types (this logic is partially 
+#           one is considered enough for most types (this logic is partially
 #           faulty with identification being possible without having the item in
 #           your inventory).
-#           If the second part doesn't scare you, I think merging this 
-#           functionality into current _is_affordable() could be good -- that 
+#           If the second part doesn't scare you, I think merging this
+#           functionality into current _is_affordable() could be good -- that
 #           function contains crude heurestics for items on display.
 #
 NAME:   xom_gifts_altar

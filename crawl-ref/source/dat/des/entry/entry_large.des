@@ -586,11 +586,11 @@ ORIENT: float
 WEIGHT: 1
 MONS:   plant
 MAP
-     xxxxx@xxxxxxxxx     
-    xxxxxx.xxxxxxxxxx    
-   xxxxxxx.xxxxxxxxxxx   
-  xxxxxxxx.xxxxxxxxxxxx  
- xxxxxxxxx.1111xxxxxxxxx 
+     xxxxx@xxxxxxxxx
+    xxxxxx.xxxxxxxxxx
+   xxxxxxx.xxxxxxxxxxx
+  xxxxxxxx.xxxxxxxxxxxx
+ xxxxxxxxx.1111xxxxxxxxx
 xxxxxxxxx1.....1xxxxxxxxx
 xxxxxxxx1....[..1xxxxxxxx
 xxxxxxx1...WWW...1xxxxxxx
@@ -600,11 +600,11 @@ xxxxxx1...WWWWW...1xxxxxx
 xxxxxxx1...WWW...1xxxxxxx
 xxxxxxxx1..(....1xxxxxxxx
 xxxxxxxxx1.....1xxxxxxxxx
- xxxxxxxxx1111.xxxxxxxxx 
-  xxxxxxxxxxxx.xxxxxxxx  
-   xxxxxxxxxxx.xxxxxxx   
-    xxxxxxxxxx.xxxxxx    
-     xxxxxxxxx@xxxxx     
+ xxxxxxxxx1111.xxxxxxxxx
+  xxxxxxxxxxxx.xxxxxxxx
+   xxxxxxxxxxx.xxxxxxx
+    xxxxxxxxxx.xxxxxx
+     xxxxxxxxx@xxxxx
 ENDMAP
 
 ##############################################################################
@@ -666,7 +666,7 @@ MAP
    xxxxx.xxx+xxx.xxxxx
    xxxx.xxx...xxx.xxxx
    xxx.xxxx.{.xxxx.xxx
-   xx.xxxxx...xxxxx.xx 
+   xx.xxxxx...xxxxx.xx
   xx.xxxxxxx+xxxxxxx.xx
   x.xxxxxxxx.xxxxxxxx.x
   x.xx...xxx.xxx...xx.x

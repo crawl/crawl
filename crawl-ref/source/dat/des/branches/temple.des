@@ -2658,7 +2658,7 @@ bbbbb...bbbbbbbbb...bbb...bbbbbbbbb...bbbbb
 ENDMAP
 
 # 10 gods
-NAME:   roderic_octagonal_lattice_temple 
+NAME:   roderic_octagonal_lattice_temple
 PLACE:  Temple
 WEIGHT: 5
 ORIENT: encompass

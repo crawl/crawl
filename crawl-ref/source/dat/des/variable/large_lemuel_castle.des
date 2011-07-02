@@ -28,7 +28,7 @@ function castle_lemuel_subvault_setup(e)
          e.ftile("= = floor_cobble_blood")
          e.kfeat(", = floor")
          e.kfeat("m = iron_grate")
-	 if you.absdepth() < 7 then
+         if you.absdepth() < 7 then
             e.subst("*=*.")
             e.subst("*=$")
             e.subst("|=*")
@@ -47,7 +47,7 @@ function castle_lemuel_subvault_setup(e)
             e.mons("orc sorcerer / orc warlord / orc knight")
             e.mons("warg")
             e.mons("orc")
-            e.mons("warg") 
+            e.mons("warg")
          elseif you.absdepth() < 25 then
             e.subst("*:*$")
             e.subst("|=|.")
@@ -58,7 +58,7 @@ function castle_lemuel_subvault_setup(e)
             e.mons("nothing")
             e.mons("deep elf soldier")
             e.mons("nothing")
-         else 
+         else
             e.subst("*:*$")
             e.subst("w:w1")
             e.mons("red draconian / green draconian / yellow draconian / pale draconian /\
@@ -72,12 +72,12 @@ function castle_lemuel_subvault_setup(e)
                     black draconian / purple draconian")
             e.mons("lindwurm / death drake / swamp drake")
             e.mons("plant / w:1 oklob plant")
-	end
-	e.mons("plant")
+        end
+        e.mons("plant")
  end
  }}
 
-  
+
 ###############################################################################
 # Lemuel Castle Interior Subvaults
 ###############################################################################
@@ -194,4 +194,3 @@ x,,,,wwwwwwwwwwwwwwwwwww????wwwwwwwwwwwwwwwwwww
 x7,,,wwwwwwwwwwwwwwwwwww????wwwwwwwwwwwwwwwwwww
 x,,,,,,,,,,,,,,,,,,656,,,@,,,,656,,,,,,,,,,,,7,
 ENDMAP
-
