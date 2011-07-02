@@ -706,6 +706,7 @@ void game_options::reset_options()
     classic_hud = false;
     msg_condense_repeats = true;
     msg_condense_short = true;
+    show_spammy_spoilers = true;
 
     view_lock_x = true;
     view_lock_y = true;
@@ -2396,6 +2397,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(show_newturn_mark);
     else BOOL_OPTION(show_gold_turns);
     else BOOL_OPTION(show_game_turns);
+    else BOOL_OPTION(show_spammy_spoilers);
 #ifndef USE_TILE
     else BOOL_OPTION(show_beam);
 #endif
