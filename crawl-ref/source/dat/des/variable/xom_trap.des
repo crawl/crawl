@@ -8,41 +8,20 @@
 # spawns a monster at the other end of a corridor. The item you pick up is a wand
 # geared towards escape / saving you options but with a small chance of random effects
 
-
 # XXX: is this function really needed?
 {{
 -- This checks if there's a monster in the player's line of sight and returns true or false
-function callback.see_monster(coord,extra)
-  local _x, _y, see_mons
-  if extra ~= nil then
-    _x = coord
-    _y = extra
-  elseif coord == nil then
-    error("callback.see_monster missing coords")
-  else
-    _x, _y = coord:xy()
+function callback.see_monster(x, y)
+  for _x = x-8,x+8,1 do
+    for _y = y-8,y+8,1 do
+      if you.see_cell(_x,_y) and dgn.mons_at(_x, _y) then
+        return true
+      end
+    end
   end
 
-  for _x = _x-8,_x+8,1 do
-     for _y = _y-8,_y+8,1 do
-       if you.see_cell(_x,_y) then
-         if (dgn.mons_at(_x , _y) ~= nil) then
-           see_mons = true
-          return see_mons
-         else
-          see_mons = false
-         end
-       end
-     end
-  end
-
-  if see_mons == nil then
-     error("see_mons = nil in callback.see_monster")
-  end
-  return see_mons
-
+  return false
 end
-
 
 function callback.xom_item_pickup(data, triggerable, triggerer, marker, ev)
   local x,y = marker:pos()
@@ -52,13 +31,13 @@ function callback.xom_item_pickup(data, triggerable, triggerer, marker, ev)
   local c = dgn.find_marker_positions_by_prop("item", 1) [1]
   local u_x,u_y = you.pos()
   if (u_x ~= c.x) or (u_y ~= c.y) then
-     crawl.god_speaks("Xom", "Xom laughs at your impertinence.")
-     return
+    crawl.god_speaks("Xom", "Xom laughs at your impertinence.")
+    return
   end
 
   -- we check to see if the player's LOS; if there are no monsters in sight we will continue
   -- otherwise we break the function and Xom gives some flavour
-  if callback.see_monster(x,y) == true then
+  if callback.see_monster(x,y) then
     crawl.god_speaks("Xom","You hear laughter all around you.")
     return
   end
@@ -69,20 +48,20 @@ function callback.xom_item_pickup(data, triggerable, triggerer, marker, ev)
 
   -- This enacts the terrain changes; adding the walls and removing the altar
   for slave in iter.slave_iterator("wall_phase", 1) do
-     dgn.terrain_changed(slave.x, slave.y, "rock_wall", false, false, false)
+    dgn.terrain_changed(slave.x, slave.y, "rock_wall", false, false, false)
   end
 
   -- This creates the monsters
   if you.absdepth() <= 7 then
-     dgn.create_monster(b.x, b.y, 'generate_awake ogre')
+    dgn.create_monster(b.x, b.y, 'generate_awake ogre')
   elseif you.absdepth() <= 13 then
-     dgn.create_monster(b.x, b.y, 'generate_awake troll')
+    dgn.create_monster(b.x, b.y, 'generate_awake troll')
   elseif you.absdepth() <= 17 then
-     dgn.create_monster(b.x, b.y, 'generate_awake rock troll')
+    dgn.create_monster(b.x, b.y, 'generate_awake rock troll')
   elseif you.absdepth() <= 22 then
-     dgn.create_monster(b.x, b.y, 'generate_awake iron troll')
+    dgn.create_monster(b.x, b.y, 'generate_awake iron troll')
   elseif you.absdepth() <= 27 then
-     dgn.create_monster(b.x, b.y, 'generate_awake stone giant ; robe')
+    dgn.create_monster(b.x, b.y, 'generate_awake stone giant ; robe')
   end
 
 end
@@ -93,28 +72,20 @@ function callback.xom_trap_step(data, triggerable, triggerer, marker, ev)
 
   -- if you already apported (or otherwise got rid of the item) we need to get rid
   -- of the item
-  local item_exist = true
   local stack = dgn.items_at(c.x,c.y)
-  if #stack == 0 then
-    item_exist = false
-  else
-    item_exist = true
-  end
+  local item_exist = #stack ~= 0
 
-  if item_exist == false then
-     crawl.god_speaks("Xom","You sense Xom watching you.")
-     return
+  if not item_exist then
+    crawl.god_speaks("Xom","You sense Xom watching you.")
   else
-  -- this checks LOS.  if you see a monster the item is destroyed; if not the item will remain
-  -- and Xom warns the player (in his way)
-    if callback.see_monster(x,y) == false then
-      crawl.god_speaks("Xom", "Xom guffaws as you eye the nearby treasure.")
-    elseif callback.see_monster(x,y) == true then
+    -- this checks LOS.  if you see a monster the item is destroyed; if not the item will remain
+    -- and Xom warns the player (in his way)
+    if callback.see_monster(x,y) then
       -- this eliminates the wand
       crawl.god_speaks("Xom", "Xom laughs as a nearby item is destroyed.")
       iter.stack_destroy(c.x,c.y)
     else
-      error("problems")
+      crawl.god_speaks("Xom", "Xom guffaws as you eye the nearby treasure.")
     end
   end
 end
