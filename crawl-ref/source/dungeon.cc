@@ -4069,6 +4069,8 @@ retry:
         }
         if (item.base_type == OBJ_WANDS && props.exists("charges"))
             item.plus = props["charges"].get_int();
+        if (props.exists("ident"))
+            item.flags |= props["ident"].get_int();
 
         return (item_made);
     }
