@@ -678,3 +678,124 @@ MAP
    xx....xxxxxxx....xx
     xxxxxxxxxxxxxxxxx
 ENDMAP
+
+##############################################################################
+NAME:    sevenhm_entry_forest_fort_large_1
+TAGS:    entry no_monster_gen no_pool_fixup no_rotate
+ORIENT:  southeast
+WEIGHT:  3
+SUBST:   z = W., I = IG, r : cccvt., E = wW, ' : @x', ' = @x
+MONS:    rat w:20 / small snake / giant newt / bat / nothing w:25
+SHUFFLE: {[(
+MAP
+xxx'WWWxxxxxxx''xxxxxxxxxxxxxxxxxxx
+xxwwwwWWxxxxxx..xxxxxxxxxxxxxxxtxxx
+wwwwcccccccccc..ccxxxxxxxxxxxxtttxx
+EwwwWc.1..............xxxxxxxtttttx
+EwwWWc...cccc+cc.cc+cccccxxxxcccctx
+EwwwWcc++c.....c.c......cccccc.(ctx
+xxwwwWW..c..1..cIczzz...+....+..ntx
+@+.......cccccccccWWWzz.cccccc..ctx
+.+.............1.cWWWWzzc....c+cctx
+xxwwwwwW.........cccccccc........tx
+WwwwwwwwWWwwwww.................ttx
+wwwwWwwWWwrrrrwWW..............ttxx
+EwwW..wWwrr..rrwwwwWW.........ttxxx
+EwW.1..Wwr.{.................tttxxx
+ E....WWwrr..rrwwwwwwwwW.....tttxxx
+ ...tttwwwrrrrwwwwwwwWW..[.ttttxxxx
+@.ttttttxxxxxxxxxxx........ttxxxxxx
+ xtttttxxxxxxxxxxxxxxxtttttttxxxxxx
+ xxxttxxxxxxxxxxxxxxxxxtttttxxxxxxx
+   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    sevenhm_entry_forest_fort_large_2
+TAGS:    entry no_rotate no_monster_gen
+ORIENT:  northwest
+SUBST:   T : TTTV, p = tt., G = GGGG., z = ...T
+SHUFFLE: {[
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xccccccccccccccccccctttttxxxx
+xc....c...G...c....cttppttxxx
+xc.{..c.G...G.+..[.cttpzpttxx
+xc....c...T...c....cttp...ptx
+xc....+.G...G.c....cttp...ptx
+xccc..c.......c..ccctp....ptx
+xxxcccc..G.G..cccctpp......px
+xxtttcc.......ccttp.........x
+xxp.ttccc...ccctp...........@
+xxp..pptc+++ctpp....pppxxxxxx
+xxp..............pxxxxxx
+xxxxtt.......pttxxx
+xxxxxtttt...pptxx
+xxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    sevenhm_entry_forest_fort_large_3
+TAGS:    entry
+ORIENT:  float
+WEIGHT:  3
+SUBST:   T : TTTV, p = tt., G = GGG.
+NSUBST:  z = + / c, Z = + / c, X = + / c, > = > / .
+SHUFFLE: {[(
+MAP
+            xxxxx@@@@xxxxxx
+           xxtttp....pppp.xxx
+          xx................xxxx
+        xxx...pcccc+cccctt...ppxx
+     xxxxp....cc.......cctp....pxx
+    xxpp....ptc..czzzc..cttp....pxx
+    xtp....ttcc..z...z..ccttp...ptx
+    xtp....ttc>..z.(.z..>cttp....tx
+    xpp....ttc>..z...z..>cttp....tx
+   xxp...pccccccccccccccccccctt..txx
+   xt...ttc....X...G...Z....cttp..txx
+   xt...ttc.{..X.G...G.Z..[.cttp..ttxx
+   xxp..ttc....X...T...Z....cttp...ptx
+    xp..ttc....X.G...G.Z....cttp...ptx
+    xt..ttccc..X.......Z..ccctp....ptx
+    xt...tttcccc..G.G..cccctpp...pptxx
+    xxt...ptttcc.......ccttp....pptxx
+     xtp.....ttccc...ccctp.....pptxx
+     xxxxt....pptc+++ctpp....pppxxx
+        xxxp..............pxxxxxx
+          xxxtt.......pttxxx
+            xxtttt...pptxx
+             xxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    sevenhm_entry_forest_fort_large_4
+TAGS:    entry
+ORIENT:  northwest
+SUBST:   p = 11., G = G..
+NSUBST:  { = { / ., [ = [ / .
+NSUBST:  + = 4:+ / *=+=
+SHUFFLE: {[
+MONS:    plant / bush
+MAP
+xxxxxxxxxxxxxxxxxxxxxxx
+xxccccxxxxxxxxccccxxxxx
+xcc[[cccccccccc{{ccxxxx
+xc{...+......c...[ccxxx
+xc{...c......+...[cxxxx
+xcc..cccccccccc..ccttxx
+xxcc+cG..G...Gcc+c..ttxxxxxx
+xxc..c.p.p.p..c..c...tttxxxx
+xxc..c..p.p.p.c..c.....ttxxx
+xxc..c.p.p.p.Gc..c......ttxx
+xxc..cG.p.p.p.c..c.......txx
+xxc..c.p.p.p..c..c.......txx
+xxc..c..p.p...............xx
+xxc+ccG..G...............xxx
+xcc..ccccccc...............@
+xc{...c....................@
+xc{...+..........ttttxxxxxxx
+xcc[[ccccccc...ttttxxx
+xxccccxxxxxtttttxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
