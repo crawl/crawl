@@ -8,13 +8,13 @@
 
 # The actual maps can be found in the files
 # -----------------------------------------
-# entry_simple.des   Particularly simple maps: no more than five header lines!
-# entry_small.des    Small maps with neither lua nor complicated syntax.
-# entry_twisted.des  Maps which either use a lot of lua or heavy SUBSTing etc.
-# entry_large.des    Sizes of about 30x30 and up.
+# simple.des   Particularly simple maps: no more than five header lines!
+# small.des    Small maps with neither lua nor complicated syntax.
+# twisted.des  Maps which either use a lot of lua or heavy SUBSTing etc.
+# large.des    Sizes of about 30x30 and up.
 #
-#                    If a map is both big and complex, file under twisted.
-#                    If a map is both plain and small, file under simple.
+#              If a map is both big and complex, file under twisted.des.
+#              If a map is both plain and small, file under simple.des.
 
 # Naming conventions
 # ------------------
