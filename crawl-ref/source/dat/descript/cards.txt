@@ -230,6 +230,11 @@ Torment card
 This card calls on the powers of darkness to cause agonising injury to any nearby living creature.
 It is usually found in decks of destruction and war.
 %%%%
+the Orb card
+
+This card unleashes a destructive orb of pure magic, sometimes even multiple ones.
+It is usually found in decks of destruction and war.
+%%%%
 # deck of punishment (along with a few others)
 Wrath card
 
