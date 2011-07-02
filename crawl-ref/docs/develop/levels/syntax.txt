@@ -586,11 +586,11 @@ ITEM:     (list of items, separated by comma)
             the player's hands.  It doesn't actually keep it from doing so,
             just tells that to acquirement and (TODO) troves.
 
-            WARNING: While checks are done to make sure that an armour ego
-            isn't given to a weapon, a weapon ego to a missile, and so on, and
-            also to make sure that egos are only given to armours, weapons and
-            missiles, no other checking is done.  Thus it is possible to create
-            a demonic weapon of holy wrath or a helmet of running.
+          WARNING: While checks are done to make sure that an armour ego
+          isn't given to a weapon, a weapon ego to a missile, and so on, and
+          also to make sure that egos are only given to armours, weapons and
+          missiles, no other checking is done.  Thus it is possible to create
+          a demonic weapon of holy wrath or a helmet of running.
 
           Limitations: You can't specify specific pluses.
 
