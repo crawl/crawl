@@ -6142,11 +6142,11 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
         if (needs_handle_warning(*weapon, OPER_ATTACK))
             weapon_warning = true;
         else if(!_is_melee_weapon(weapon))
-		{
-			weapon_warning = true;
+        {
+            weapon_warning = true;
 
             // We switch to the first available melee weapon.
-			if(Options.auto_switch)
+            if (Options.auto_switch)
                 for (int i = 0; i <= 1; ++i)
                     if(_is_melee_weapon(&you.inv[i]))
                     {
@@ -6154,7 +6154,7 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
                         // This attack is cancelled, but we switched weapons
                         return (false);
                     }
-		}
+                }
     }
     else if (you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
              && you_tran_can_wear(EQ_WEAPON))
