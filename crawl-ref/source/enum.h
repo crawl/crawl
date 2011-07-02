@@ -1647,6 +1647,8 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
     ISFLAG_EMBROIDERED_SHINY = 0x00040000,  // armour: depends on sub-type
     ISFLAG_COSMETIC_MASK     = 0x00070000,  // mask of cosmetic descriptions
 
+    ISFLAG_UNOBTAINABLE      = 0x00080000,  // vault on display
+
     ISFLAG_NO_RACE           = 0x00000000,  // used for clearing these flags
     ISFLAG_ORCISH            = 0x01000000,  // low quality items
     ISFLAG_DWARVEN           = 0x02000000,  // strong and robust items

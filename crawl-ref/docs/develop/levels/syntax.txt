@@ -582,6 +582,9 @@ ITEM:     (list of items, separated by comma)
             * "pluses"
             * "properties"
             * "all"
+          * "unobtainable" hints that the item is supposed to never fall into
+            the player's hands.  It doesn't actually keep it from doing so,
+            just tells that to acquirement and (TODO) troves.
 
             WARNING: While checks are done to make sure that an armour ego
             isn't given to a weapon, a weapon ego to a missile, and so on, and
