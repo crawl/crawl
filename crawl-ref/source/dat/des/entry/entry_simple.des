@@ -506,7 +506,7 @@ MAP
 ENDMAP
 
 ##############################################################################
-NAME:    dpeg_entry_tetris
+NAME:    dpeg_chamrin_entry_tetris
 TAGS:    entry
 ORIENT:  float
 SHUFFLE: bbba
@@ -520,8 +520,8 @@ MAP
     xx..xxxxxxxxx..xx
 xxxxx..xxxxxxxxxxx..xxxxx
 x.......................x
-x.bb.bb..b..b..bb.bbb.b.x
-x..b.bb.bbb.b.bb..b..bb.x
+x.b..bbb.b..b.bb.bbb..b.x
+x.bb.b..bbb.b.bb...b.bb.x
 x..b........b........b..x
 xx...xxxxxx.b.xxxxxx...xx
  xx...xxxxx...xxxxx...xx
