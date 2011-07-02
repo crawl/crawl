@@ -8,7 +8,6 @@
 #           Minivaults with monsters go to mini_monsters.des.
 #           Maps for the Vault branch, including Vaults:8 are in vaults.des.
 #
-# <<0>> Serial vaults            (thematic vaults possibly spawned together)
 # <<1>> Flavour vaults           (no items, no monsters)
 # <<2>> Inaccessible items
 # <<3>> Supply closet vaults     (vaults with items and no risk).
@@ -17,45 +16,11 @@
 #
 # Sometimes, a vault will fit in two categories (for examples, it can have both
 # hidden and revealed items). Choose at your own discretion.
-###############################################################################
+#
+# For serial vaults, read dat/des/serial/serial_guide.txt.
+############################################################################
 
 default-depth: D, Vault, Elf, Crypt
-
-############################################################################
-#
-# <<0>> Serial vaults
-#       Sometimes, we want flavour vaults to be placed several times, so as
-#       to makes the level feel more coherent. The lua calls for such serial
-#       vaults are here.
-#       The vaults eventually could be just copies of one map, or also come
-#       from a list of thematically linked maps. This is mostly for flavour,
-#       although it may later be interesting to created serial vaults around
-#       threats.
-#       In general, we don't want more than one serial vault on a level. Use
-#       the luniq_serial in the serial vault's header map for this.
-#
-#       Elaborate serial vaults should go into their. des files.
-#
-############################################################################
-
-# Glass vaults
-#
-# Single instances of serial_glass vaults can be placed normally, so
-# we only roll numbers between 2 and 12 (non-flat distribution).
-# Sometimes we add a few rarer glass vaults to the level.
-NAME:   serial_glass
-TAGS:   allow_dup extra luniq_serial
-DEPTH:  D, Elf, Vault, Crypt
-CHANCE: 1%
-{{
-  local c = 2 + crawl.random2(3)*crawl.random2(3)*crawl.random2(4)
-  local d = crawl.random2(2)*crawl.random2(2)*crawl.random2(5)
-  hook("post_place", function()
-    dgn.place_maps{tag="serial_glass", count=c}
-    dgn.place_maps{tag="serial_glass_rare", count=d}
-  end)
-}}
-
 
 ############################################################################
 #
@@ -1102,6 +1067,418 @@ MAP
   ..xxxxxxxxxxxxxxxx..
    ...xxxxxxxxxxxx...
      ..............
+ENDMAP
+
+
+NAME:  roderic_Roman_lattice
+DEPTH: D, Elf
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+ccccccccccccccccccccccccc
+vcxcvcxcvcxcvcxcvcxcvcxcv
+@c.c.c.c.c.c.c.c.c.c.c.c@
+v.c.v.c.v.c.v.c.v.c.v.c.v
+@cvc.cvc.cvc.cvc.cvc.cvc@
+v.c.v.c.v.c.v.c.v.c.v.c.v
+@c.c.c.c.c.c.c.c.c.c.c.c@
+vcxcvcxcvcxcvcxcvcxcvcxcv
+ccccccccccccccccccccccccc
+xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   roderic_Aztec_sauvastika
+WEIGHT: 1
+DEPTH:  D 
+MAP
+   ......@..
+  ...xxxxx...
+ ....x...x....
+.....xxx.x.....
+.........x.....
+@xxxxxxxxx.xxx.
+.x...xxxxx.x.x.
+.x.x.xxxxx.x.x.
+.x.x.xxxxx...x.
+.xxx.xxxxxxxxx@
+.....x.........
+.....x.xxx.....
+ ....x...x....
+  ...xxxxx...    
+   ..@......
+ENDMAP
+
+NAME:   roderic_Bali_sauvastika
+TAGS:   extra
+WEIGHT: 1
+DEPTH:  D 
+: if crawl.one_chance_in(5) then
+SUBST:  @ = x
+: else
+SUBST:  + = x+
+: end
+MAP
+...@.......
+...x.......
+...x.......
+...xxx.xxx@
+.....x.x...
+...xx+xx...
+...x.x.....
+@xxx.xxx...
+.......x...
+.......x...
+.......@...
+ENDMAP
+
+NAME:   roderic_Chinese_pattern_swastika
+WEIGHT: 1
+DEPTH:  D
+MAP 
+...............
+.x.xxxx.xxxx.x.
+.x.xxxx.xxxx.x.
+.x.xx.....xx.x.
+.xxxxxx.xxxxxx.
+.xxxxxx.xxxxxx.
+.xxxxxx.xxxxxx.
+...xx.x.x.xx...
+.xxxx.x.x.xxxx.
+.xxxx.x.x.xxxx.
+...............
+ENDMAP
+
+NAME:   roderic_Hopi_sauvastika
+WEIGHT: 1
+TAGS:   extra
+DEPTH:  D
+MAP
+.....@.....
+...xxxx....
+...xxxx....
+....xxx.xx.
+.xxxxxxxxx.
+@xxxxxxxxx@
+.xxxxxxxxx.
+.xx.xxx....
+....xxxx...
+....xxxx...
+.....@.....
+ENDMAP
+
+NAME:   roderic_Greek_sauvastika
+DEPTH:  D
+WEIGHT: 1
+: if crawl.one_chance_in(5) then
+SUBST:  @ = x
+: else
+SUBST:  + = x+
+: end
+MAP
+.........@.
+@xxxxxxx.x.
+.......x.x.
+.xxxxx.x.x.
+.x...x.x.x.
+.x.xx+xx.x.
+.x.x.x...x.
+.x.x.xxxxx.
+.x.x.......
+.x.xxxxxxx@
+.@.........
+ENDMAP
+
+NAME:   roderic_curled_sauvastika
+DEPTH:  D
+WEIGHT: 1
+TAGS:  extra
+: if crawl.one_chance_in(5) then
+SUBST:  @ = x
+: else
+SUBST:  + = x+
+: end
+MAP
+.@.........
+.x.xxx.xxx@
+.x.x.x.x...
+.xxx.x.xxx.
+.....x...x.
+.xxxx+xxxx.
+.x...x.....
+.xxx.x.xxx.
+...x.x.x.x.
+@xxx.xxx.x.
+.........@.
+ENDMAP
+
+NAME:   roderic_bipointed_swastika
+WEIGHT: 1
+TAGS:   extra
+DEPTH:  D 
+: if crawl.one_chance_in(5) then
+SUBST:  @ = x
+: else
+SUBST:  + = x+
+: end
+MAP
+.@.........
+.x.xxx.xxx@
+.x...x.x...
+.xxx.xxx.x.
+...x.x...x.
+.xxxx+xxxx.
+.x...x.x...
+.x.xxx.xxx.
+...x.x...x.
+@xxx.xxx.x.
+.........@.
+ENDMAP
+
+NAME:   roderic_digamma_sauvastika
+DEPTH:  D
+WEIGHT: 1
+: if crawl.one_chance_in(5) then
+SUBST:  @ = x
+: else
+SUBST:  + = x+
+: end
+MAP
+.@.........
+.x.xxx.xxx@
+.x.x...x...
+.xxxxx.xxx.
+.....x.x.x.
+.x.xx+xx.x.
+.x.x.x.....
+.xxx.xxxxx.
+...x...x.x.
+@xxx.xxx.x.
+.........@.
+ENDMAP
+
+#squared St Hans cross, ancient Viking symbol
+NAME:   roderic_st_hans_cross
+WEIGHT: 1
+TAGS:   extra
+DEPTH:  D
+MAP
++xxxxxxxxxx+
+x...xxxx...x
+x.x.xxxx.x.x
+x..........x
+xxx.xxxx.xxx
+xxx.xxxx.xxx
+xxx.xxxx.xxx
+xxx.xxxx.xxx
+x..........x
+x.x.xxxx.x.x
+x...xxxx...x
++xxxxxxxxxx+
+ENDMAP
+
+#cross filled (sun sumbol) in ancient Mid East and Greece
+NAME:   roderic_filled_cross
+WEIGHT: 1
+TAGS:   extra
+DEPTH:  D
+SUBST:  ? = x+
+MAP
+   .......  
+   .xx+xx.
+   .x...x.
+....x.x.x....
+.xxxx.x.xxxx.
+.x....x....x.
+.?.xxxxxxx.?.
+.x....x....x.
+.xxxx.x.xxxx.
+....x.x.x....
+   .x...x.
+   .xx?xx.
+   .......
+ENDMAP
+
+#cross of infinity
+NAME:   roderic_cross_of_infinity
+TAGS:   extra
+WEIGHT: 1
+DEPTH:  D
+MAP
+.............
+.xx+xxxxx+xx.
+.xxx.....xxx.
+.+xxx.x.xxx+.
+.x.xxx.xxx.x.
+.x..x.x.x..x.
+.x.x.xxx.x.x.
+.x..x.x.x..x.
+.x.xxx.xxx.x.
+.+xxx.x.xxx+.
+.xxx.....xxx.
+.xx+xxxxx+xx.
+.............
+ENDMAP
+
+
+#nine men's morris (Roderic)
+NAME:    roderic_nine_men_s_morris
+WEIGHT:  1
+DEPTH:   D, Elf
+SHUFFLE: defgh
+ITEM:    q:1 $, sausage, choko, sultana, stone
+NSUBST:  ' = 9:d / *:.  
+MAP
+'.......'.......'
+.xxxxxxx.xxxxxxx.
+.xxxxxxx.xxxxxxx.
+.xx'....'....'xx.
+.xx.xxxx.xxxx.xx.
+.xx.xxxx.xxxx.xx.
+.xx.xx'.'.'xx.xx.
+.xx.xx.xxx.xx.xx.
+'..'..'xxx'..'..'
+.xx.xx.xxx.xx.xx.
+.xx.xx'.'.'xx.xx.
+.xx.xxxx.xxxx.xx.
+.xx.xxxx.xxxx.xx.
+.xx'....'....'xx.
+.xxxxxxx.xxxxxxx.
+.xxxxxxx.xxxxxxx.
+'.......'.......'
+ENDMAP
+
+# Three-in-row (Roderic)
+NAME:   roderic_three_in_a_row
+WEIGHT: 1
+DEPTH:  D,Elf
+ITEM:   q:1 $, sultana, stone, choko
+SUBST:  ' : TUdefg
+MAP
+@xxxx@xxxx@
+x'...'...'x
+x..xx.xx..x
+x.x.x.x.x.x
+x.xx...xx.x
+@'...'...'@
+x.xx...xx.x
+x.x.x.x.x.x
+x..xx.xx..x
+x'...'...'x
+@xxxx@xxxx@
+ENDMAP
+
+NAME:    roderic_ancient_swastika
+TAGS:    allow_dup extra luniq_mini
+DEPTH:   D
+WEIGHT:  1
+SHUFFLE: '"
+SUBST:   x : xxxxxc 
+SUBST:   ? : xxxxxcm 
+SUBST:   ' : .
+SUBST:   " : x
+
+MAP
+...........
+.x'''x"""x.
+.".?.x...'.
+.".?.x.??'.
+."...x...'.
+.xxxxxxxxx.
+.'...x...".
+.'??.x.?.".
+.'...x.?.".
+.x"""x'''x.
+...........
+ENDMAP  
+
+NAME:  roderic_lattice_a
+DEPTH: D
+MAP
+...........................................
+.xxxxxxxxxxxxx.xxxxxxxxxxxxx.xxxxxxxxxxxxx.
+.x...........x.x...........x.x...........x.
+.x.xxxx.xxxx.x.x.xxxx.xxxx.x.x.xxxx.xxxx.x.
+.x....x.x....x.x....x.x....x.x....x.x....x.
+.xxxx.x.x.xxxx.xxxx.x.x.xxxx.xxxx.x.x.xxxx.
+......x.x...........x.x...........x.x......
+.xxxxxx.xxxxxxxxxxxxx.xxxxxxxxxxxxx.xxxxxx.
+...........................................
+ENDMAP
+
+NAME:  roderic_serpentine_path
+TAGS:  extra
+DEPTH: D
+MAP
+ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ x...........x...........x.....+@
+ x.xxxxxxxxx.x.xxxxxxxxx.x.xxxxx
+ x.....x.....x.....x.....x.....x
+ xxxxx.x.xxxxxxxxx.x.xxxxxxxxx.x
+@+.....x...........x...........x
+ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# Malta's cross 
+NAME:   roderic_malta_cross
+TAGS:   allow_dup extra luniq_mini
+WEIGHT: 1
+DEPTH:  D 
+MAP
+ .........
+...ccccc...
+....ccc....
+.c...c...c.
+.cc..c..cc.
+.ccccccccc.
+.cc..c..cc.
+.c...c...c.
+....ccc....
+...ccccc...
+ .........
+ENDMAP
+
+NAME:   roderic_whirl
+TAGS:   allow_dup extra luniq_mini
+DEPTH:  D, Elf 
+WEIGHT: 1
+SUBST:  ? : ttTTG
+MAP
+ .......
+.?..xx.?.
+...x.....
+.x.x.xx..
+.x..x..x.
+..xx.x.x.
+.....x...
+.?.xx..?.
+ .......
+ENDMAP
+
+NAME:  roderic_lattice_octagonal_star
+TAGS:  float
+MAP
+  .......     .......  
+ ....x..... .....x.... 
+....xxx.........xxx....
+....xxx.........xxx....
+..xxxxxxx.....xxxxxxx..
+.xxxxxxxxx...xxxxxxxxx.
+..xxxxxxx..x..xxxxxxx..
+....xxx...xxx...xxx....
+....xxx.xxxxxxx.xxx....
+ ....x..xxxxxxx..x.... 
+ ......xxxxxxxxx...... 
+  ....xxxxxxxxxxx....  
+ ......xxxxxxxxx...... 
+ ....x..xxxxxxx..x.... 
+....xxx.xxxxxxx.xxx....
+....xxx...xxx...xxx....
+..xxxxxxx..x..xxxxxxx..
+.xxxxxxxxx...xxxxxxxxx.
+..xxxxxxx.....xxxxxxx..
+....xxx.........xxx....
+....xxx.........xxx....
+ ....x..... .....x.... 
+  .......     .......  
 ENDMAP
 
 
