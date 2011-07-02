@@ -1449,8 +1449,8 @@ MARKER: A = lua:fog_machine { cloud_type = "thin mist", pow_min = 2, \
         pow_max = 6, delay = 4, start_clouds = 1, size_min = 2, \
         size_max = 6, spread_rate = 2 }
 SUBST:  A : w
-SUBST:  c : cd'.
-SUBST:  d : d'.
+SUBST:  c : cd"""""""
+SUBST:  " = cd
 FTILE:  B{[( = FLOOR_PEBBLE_BROWN
 FTILE:  t. = FLOOR_SWAMP
 TILE:   d = FLOOR_PEBBLE
