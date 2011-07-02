@@ -727,7 +727,8 @@ ENDMAP
 NAME:   ashenzari_altar_1
 TAGS:   uniq_altar_ahsnezari temple_overflow_ashenzari
 KFEAT:  _ = altar_ashenzari
-ITEM:   cursed mace / cursed trident / cursed flail w:1 / cursed whip w:1
+ITEM:   cursed mace ident:curse / cursed trident ident:curse / \
+        cursed flail ident:curse w:1 / cursed whip ident:curse w:1
 ITEM:   book of cantrips
 MAP
 ...
