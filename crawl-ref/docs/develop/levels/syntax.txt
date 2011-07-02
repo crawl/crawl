@@ -219,7 +219,9 @@ DEPTH:    For random vaults, branch entry vaults, and minivaults, this
             DEPTH: 
 
           if these maps are otherwise chosen, e.g. by TAG. See serial_ponds.des
-          for an example.
+          for an example. When doing this, make sure that there is no
+          default-depth line handing out a depth! (This can mean that you are 
+          better off with a new des file for elaborate vaults.)
 
 CHANCE:   <priority>:<roll> or <roll> [ (<depth-ranges>) ]
 
