@@ -1417,7 +1417,8 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_AIRSTRIKE:
-        airstrike(powc, spd);
+        if (!cast_airstrike(powc, spd))
+            return SPRET_ABORT;
         break;
 
     case SPELL_FRAGMENTATION:

@@ -17,9 +17,7 @@ void cast_refrigeration(int pow, bool non_player = false,
                         bool freeze_potions = true);
 bool vampiric_drain(int pow, monster* mons);
 bool cast_freeze(int pow, monster* mons);
-
-int airstrike(int pow, const dist &beam);
-
+bool cast_airstrike(int pow, const dist &beam);
 void cast_shatter(int pow);
 void cast_ignite_poison(int pow);
 void cast_discharge(int pow);
