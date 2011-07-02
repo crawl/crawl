@@ -1078,3 +1078,56 @@ x.x...............x.x
 x..x.............x..x
 xxxxxxxxxx@xxxxxxxxxx
 ENDMAP
+
+##############################################################################
+NAME:   co_entry_two_rings
+TAGS:   entry
+ORIENT: float
+WEIGHT: 1
+SUBST:  c : ccb
+MAP
+ ..........       
+...ccccccc..      
+..cc.....cc....   
+.cc...(...cc....  
+.c.........c....  
+.c.........c....  
+.c.<....ccc+ccc.. 
+.c.....cc..c..cc..
+.c....cc.>.c...cc.
+.cc...c.>.cc....c.
+..cc..c..cc.....c.
+ ..ccc+ccc....[.c.
+  ....c.........c.
+  ....c.........c.
+  ....cc...{...cc.
+   ....cc.....cc..
+      ..ccccccc...
+       .......... 
+ENDMAP
+
+##############################################################################
+NAME:   co_entry_square_in_a_square_in_a_square
+TAGS:   entry
+ORIENT: float
+MAP
+x@xxxxxxxxxxxxxxx@x
+@.c.c.c.c.c.c.c.c.@
+xc...............cx
+x..........m......x
+xc.......m.......cx
+x......m....m.....x
+xc...m...........cx
+x..m...c.c.{.m....x
+xc...............cx
+x...m..c.(.c..m...x
+xc...............cx
+x....m.[.c.c...m..x
+xc...........m...cx
+x.....m....m......x
+xc.......m.......cx
+x......m..........x
+xc...............cx
+@.c.c.c.c.c.c.c.c.@
+x@xxxxxxxxxxxxxxx@x
+ENDMAP

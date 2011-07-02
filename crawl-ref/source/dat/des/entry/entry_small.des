@@ -2924,3 +2924,37 @@ MAP
   ..wwwwwww..
    .........
 ENDMAP
+
+##############################################################################
+#The maze will allways contain an exit to the rest of D:1, the player won't be
+#forced to D:2.
+NAME:    co_entry_random_square_maze
+TAGS:    entry
+ORIENT:  float
+NSUBST:  A = 3:+ / x
+NSUBST:  B = 1:+ / "
+NSUBST:  C = 11:+ / x
+NSUBST:  D = 1:+ / "
+SHUFFLE: [>{(
+SUBST:   " = xxxxxxxxxxxxxxxxx+
+SUBST:   ! = ....V
+SUBST:   x : cxxx
+MAP
+xxDxxxDxxxDxxxDxx
+x...x...x...x...x
+D.!.C.!.C.!.C.!.D
+x...x...x...x...x
+xxCxxxBxxxBxxxCxx
+x...x...x...x...x
+D.!.B.[.A.>.B.!.D
+x...x...x...x...x
+xxCxxxAxxxAxxxCxx
+x...x...x...x...x
+D.!.B.{.A.(.B.!.D
+x...x...x...x...x
+xxCxxxBxxxBxxxCxx
+x...x...x...x...x
+D.!.C.!.C.!.C.!.D
+x...x...x...x...x
+xxDxxxDxxxDxxxDxx
+ENDMAP
