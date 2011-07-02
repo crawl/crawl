@@ -2958,3 +2958,175 @@ D.!.C.!.C.!.C.!.D
 x...x...x...x...x
 xxDxxxDxxxDxxxDxx
 ENDMAP
+<<<<<<< HEAD
+=======
+
+##############################################################################
+NAME:   sevenhm_entry_forest_fort_small_1
+TAGS:   entry no_monster_gen
+ORIENT: float
+WEIGHT: 1
+NSUBST: { = { / T> , z = + / n+
+SUBST:  T = TTG
+: if crawl.one_chance_in(4) then
+SUBST:  " : +, ' : . , - : ccc.
+: else
+SUBST:  "'- : c
+: end
+MONS:   giant frog / spiny frog / yak / death yak w:1 / elephant / grizzly bear
+MAP
+          xxxxxxxxx
+       xxxxtccccctxxxx
+      xxtt1tc...ct1ttxx
+    xxxtttttc.{.ctttttxxx
+    xcccccccn...ncccccccx
+    WWcc..+.......+..ccWW
+   @WWz..."'-----'"...zWW@
+    WWcc..+.......+..ccWW
+    xcccccccn...ncccccccx
+    xxxtttttc.{.ctttttxxx
+      xxtt1tc...ct1ttxx
+       xxxxtccccctxxxx
+          xxxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    sevenhm_entry_forest_fort_small_2
+TAGS:    entry no_pool_fixup no_monster_gen
+ORIENT:  float
+WEIGHT:  1
+SHUFFLE: rz
+: if crawl.one_chance_in(4) then
+SUBST:   w : x, u : x, z : @
+: else
+SUBST:   z : x, u : w
+NSUBST:  w = @ / w
+SUBST:   w : wwwwwwtt.
+: end
+SUBST:   r : x
+NSUBST:  y = { / ...cc> / .
+KMASK:   W = no_monster_gen
+MONS:    anaconda / death yak / black mamba / elephant / hydra
+MAP
+  xxxxxx
+ xxccccxx
+xxtcyyctxx
+xt1cyyc1tx
+xtcc..cctx
+x.cc++cc.x
+r........z
+xuwwwwwwux
+ENDMAP
+
+##############################################################################
+NAME:   sevenhm_entry_forest_fort_small_3
+TAGS:   entry no_pool_fixup no_monster_gen
+ORIENT: float
+: if crawl.one_chance_in(4) then
+SUBST:  z : @ , + = +== , Z : + =:1 , X = xx. , p : tR , m : c
+: else
+SUBST:  X : @, Z : c, z : x, p : x, m : .
+: end
+NSUBST: {OA = { / . , y = + / c+ / c+ , r = + / c+
+SUBST:  G = GGTTU, R : Ltt1Ww, L : tttw1
+MONS:   plant / bush
+MAP
+xXXxxxxxxxxx
+x..........x
+x..cyyycL.Lx
+x.Rc...cLGLx
+x.Rc...cLLLx
+xGRc...cxxxx
+xxccrrccccx
+ pcm..c{{cx
+ pccc.+{{cx
+  ppcccZccx
+   pppxzxx
+ENDMAP
+
+##############################################################################
+NAME:   sevenhm_entry_forest_fort_small_4
+TAGS:   entry no_monster_gen
+ORIENT: float
+NSUBST: { = { / . , [ = [ / . , @ = @ / t
+SUBST:  X : c@@@ , ' : 'tW
+SUBST:  + = ++. , t = tttW1, W : WWW.
+MONS:   plant / bush
+MAP
+ ccccccccc
+ ccc[[[cccX
+ 'tcc.cct'X
+ WWtc+ctWWX
+@WWWWWWWWWX
+ WWtc+ctWWX
+ 'tcc.cct'X
+ ccc{{{cccX
+ ccccccccc
+ENDMAP
+
+##############################################################################
+NAME:    sevenhm_entry_forest_fort_small_5
+TAGS:    entry no_pool_fixup
+ORIENT:  float
+: if crawl.one_chance_in(4) then
+NSUBST:  o = [ / .
+SUBST:   X : x , Y : @ , p : .
+: else
+NSUBST:  X = @ / @@xx.
+SUBST:   Y = x .:1 , o : . , p : [
+: end
+NSUBST:  { = { / . , ( = ( / . , [ = [ / . , r = + / +c
+: if crawl.one_chance_in(3) then
+NSUBST:  R = + / +c
+NSUBST:  N = n / *=nnc=
+SUBST:   z : c
+: else
+SUBST:   R : c, z : +
+: end
+NSUBST:  H = G / WWW. , J = G / WWW.  , K = G / WWW.
+SUBST:   G = GGGW , N : c
+SHUFFLE: ({[
+MAP
+   xxxxxxxxxxxxx
+  xxtttWWWWttttxx
+  xttWWWHHWWWWttxx
+xxYWWWWJJJJWWWWWtxxx
+xtttWWWWKKWWWWWccccx
+xtt....WWWW.cccc.{cx
+xt...cNNc...np+..{cx
+x...cc((cc..ccc..{cx
+x...z...(c..+....{cx
+xt..cc...c..cccccccx
+xt..tccc+c.....ttttx
+xxx..ttc.ctt......tx
+  x...tc.cccccc....X
+  xxx.tc..r...R..ooX
+    xxtc..r...R..o.X
+     xxcccccccctttxx
+      xxxxxxtttttxx
+           xxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    sevenhm_entry_forest_fort_small_6
+TAGS:    entry
+ORIENT:  float
+KPROP:   zC = no_rtele_into
+SUBST:   z : l:40 G , C : C:40 lG
+KMASK:   l = no_monster_gen
+SUBST:   R : +R
+SUBST:   r : +ccc
+NSUBST:  R = + / ccc+
+SUBST:   = : cccc=+
+SUBST:   t : tT.
+SUBST:   T = tt.
+MAP
+     xxxxxxxx
+xxxxxxccccccxxxxxx
+xcccccc{..[ccccccx
+xc>zll=....=llC>cx
+xcccccc....ccccccx
+ .ttttc....ctt..
+    ..crRRrct.
+     .........
+ENDMAP
