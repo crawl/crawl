@@ -1304,9 +1304,6 @@ bool monster::pickup_launcher(item_def &launch, int near, bool force)
 
 static bool _is_signature_weapon(monster* mons, const item_def &weapon)
 {
-    if (weapon.base_type != OBJ_WEAPONS)
-        return (false);
-
     if (mons->type == MONS_ANGEL || mons->type == MONS_CHERUB)
         return (weapon.sub_type == WPN_SACRED_SCOURGE);
 
