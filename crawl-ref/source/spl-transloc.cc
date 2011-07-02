@@ -89,7 +89,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             mpr(pre_msg->c_str());
         random_blink(false);
     }
-    // The orb degrades controlled blinks to uncontrolled.
+    // The orb sometimes degrades controlled blinks to completely uncontrolled.
     else if (you.char_direction == GDT_ASCENDING && !wizard_blink)
     {
         if (pre_msg)
@@ -247,18 +247,9 @@ void random_blink(bool allow_partial_control, bool override_abyss)
     else if (player_control_teleport() && !you.confused() && allow_partial_control
              && allow_control_teleport())
     {
-        // The orb degrades semicontrolled blinks to uncontrolled.
-        if (you.char_direction == GDT_ASCENDING)
-        {
-            mpr("The orb interferes with your control of the blink!", MSGCH_ORB);
-            random_blink(false);
-        }
-        else
-        {
-            mpr("You may select the general direction of your translocation.");
-            cast_semi_controlled_blink(100);
-            maybe_id_ring_TC();
-        }
+        mpr("You may select the general direction of your translocation.");
+        cast_semi_controlled_blink(100);
+        maybe_id_ring_TC();
     }
     else
     {
@@ -276,11 +267,17 @@ void random_blink(bool allow_partial_control, bool override_abyss)
 bool allow_control_teleport(bool quiet)
 {
     bool retval = !(testbits(env.level_flags, LFLAG_NO_TELE_CONTROL)
-                    || testbits(get_branch_flags(), BFLAG_NO_TELE_CONTROL));
+                    || testbits(get_branch_flags(), BFLAG_NO_TELE_CONTROL)
+                    || you.char_direction == GDT_ASCENDING);
 
     // Tell the player why if they have teleport control.
     if (!quiet && !retval && player_control_teleport())
-        mpr("A powerful magic prevents control of your teleportation.");
+    {
+        if (you.char_direction == GDT_ASCENDING)
+            mpr("The orb prevents control of your teleportation!", MSGCH_ORB);
+        else
+            mpr("A powerful magic prevents control of your teleportation.");
+    }
 
     return (retval);
 }
@@ -417,12 +414,6 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
     const coord_def old_pos = you.pos();
     bool      large_change  = false;
     bool      check_ring_TC = false;
-
-    if (is_controlled && you.char_direction == GDT_ASCENDING)
-    {
-        mpr("You feel the orb preventing control of your teleportation!", MSGCH_ORB);
-        is_controlled = false;
-    }
 
     if (is_controlled)
     {
