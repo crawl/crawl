@@ -216,11 +216,11 @@ DEPTH:    For random vaults, branch entry vaults, and minivaults, this
           cannot be selected as random vaults or minivaults. It can make sense
           to use an empty DEPTH line as in
 
-            DEPTH: 
+            DEPTH:
 
           if these maps are otherwise chosen, e.g. by TAG. See serial_ponds.des
           for an example. When doing this, make sure that there is no
-          default-depth line handing out a depth! (This can mean that you are 
+          default-depth line handing out a depth! (This can mean that you are
           better off with a new des file for elaborate vaults.)
 
 CHANCE:   <priority>:<roll> or <roll> [ (<depth-ranges>) ]
@@ -1165,6 +1165,10 @@ NSUBST:   ? = 3:w / *:l
           occurrences, = to randomly pick for each occurrence). If you
           omit the initial N: or N=, then 1= is assumed, except for the
           last spec where *= is assumed.
+          The parser can get confused with NSUBST specifications like
+          wW / nc=. If you use replacement symbols from * or = (perhaps
+          also for / and numbers), it is safer to spell out the N:
+          preceding the replacement symbols.
 
 KFEAT:    G = C / needle trap / antique armour shop / altar_zin
           The KFEAT: directive allows you to specify a placeholder symbol
