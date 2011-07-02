@@ -21,7 +21,7 @@ function callback.monster_doors_stepped(data, triggerable, triggerer, marker, ev
     if not you.see_cell(x, y) then
       return
     else
-      data.triggered = true 
+      data.triggered = true
       dgn.grid(x,y,"floor")
       crawl.mpr("You hear a faint click.")
       return
@@ -40,7 +40,7 @@ function callback.monster_doors_stepped(data, triggerable, triggerer, marker, ev
        return
      end
   end
-  -- This actually enacts the changes 
+  -- This actually enacts the changes
   for slave in iter.slave_iterator("door", 1) do
   -- We want to make sure that someone hasn't already altered the terrain with dig
   -- if they have removed one of the doors, we cancel the entire thing
@@ -65,12 +65,12 @@ end
 
 }}
 
-NAME:	 trap_monster_doors_1
-DEPTH:   D:5-27
-TAGS: 	 allow_dup extra luniq_monster_door
-ORIENT:	 float
-NSUBST:  ' = q / x
-KFEAT:	 ^ = pressure plate trap
+NAME:   trap_monster_doors_1
+DEPTH:  D:5-27
+TAGS:   allow_dup extra luniq_monster_door
+ORIENT: float
+NSUBST: ' = q / x
+KFEAT:  ^ = pressure plate trap
 {{
 local tm = TriggerableFunction:new{func="callback.monster_doors_stepped",
                                    repeated=true, data={triggered=false} }
@@ -80,17 +80,17 @@ lua_marker(',', props_marker { grate=1 })
 lua_marker('z', props_marker { door=1 })
 lua_marker('q', props_marker { exit=1 })
 }}
-KPROP:	 1q = no_rtele_into
-KMASK:	  , = no_item_gen
-SUBST:	 zq : x 
-NSUBST:   1 = 8 / 111998
+KPROP:  1q = no_rtele_into
+KMASK:  , = no_item_gen
+SUBST:  zq : x
+NSUBST: 1 = 8 / 111998
 MAP
 .............
 .xx'x'x'x'xx.
 .xx1x1x1x1xx.
 .xxzxzxzxzxx.
 @.,...^...,.@
- xxzxzxzxzxx 
- xx1x1x1x1xx 
- xxxxxxxxxxx 
+ xxzxzxzxzxx
+ xx1x1x1x1xx
+ xxxxxxxxxxx
 ENDMAP
