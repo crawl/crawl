@@ -1131,3 +1131,56 @@ xc...............cx
 @.c.c.c.c.c.c.c.c.@
 x@xxxxxxxxxxxxxxx@x
 ENDMAP
+
+##############################################################################
+NAME:   roderic_dead_forest
+TAGS:   entry no_monster_gen
+ORIENT: float   
+SUBST:  T : t.TTTTT
+SUBST:  T = t:66 .:33 >:1 
+COLOUR: . = brown
+COLOUR: t = w:2 darkgrey / w:1 brown
+MAP 
+xxxxxxxx@xxxxxxxx
+xttttttT.TTtttxxx
+xttttttTT.Ttttttx
+xttttttT.TTtttttxx
+xxtttttT.TTttttttx
+xttttttTT.Tttttttx
+xttttttTT.Tttttttx
+xxtttttTT.TTttttx
+ xtttttT...Tttttx
+ xtttttT.{.Tttttx
+ xtttttT...Tttttx
+ xtttttTT.TTtttxx
+ xttttTT.TTttttx
+xxttttT.TTttttxx
+xtttttTT.Ttttttx
+xttttTT.TTttttxx
+xttttT..Tttttttx
+xxxxxx@@xxxxxxxx
+ENDMAP
+
+##############################################################################
+NAME:    roderic_crossed_star
+TAGS:    entry no_mons_gen
+ORIENT:  float
+SHUFFLE: ?', !"
+SUBST:   ?:.x , ':. , !:.x, ":.
+MAP
+   .........
+  ..x.....x..
+  ..xx...xx..
+....xxx.xxx....
+.xxx'xx?xx'xxx.
+..xxx'x?x'xxx..
+...xxx"!"xxx...
+....??!{!??....
+...xxx"!"xxx...
+..xxx'x?x'xxx..
+.xxx'xx?xx'xxx..
+....xxx.xxx....
+  ..xx...xx..
+  ..x.....x..
+   .........
+ENDMAP
