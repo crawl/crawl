@@ -318,6 +318,10 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
     }
     else // just to make sure
         you.redraw_quiver = true;
+
+    // Remove the moved items from last_drop if they're there.
+    you.last_pickup.erase(to_slot);
+    you.last_pickup.erase(from_slot);
 }
 
 static void _adjust_item(void)
@@ -2452,6 +2456,7 @@ static void _add_formatted_keyhelp(column_composer &cols)
     _add_command(cols, 1, CMD_DROP, "Drop an item", 2);
     _add_insert_commands(cols, 1, "<w>%#</w>: Drop exact number of items",
                          CMD_DROP, 0);
+    _add_command(cols, 1, CMD_DROP_LAST, "Drop the last item(s) you picked up", 2);
     _add_command(cols, 1, CMD_BUTCHER, "Chop up a corpse", 2);
 
     {
@@ -2639,6 +2644,7 @@ static void _add_formatted_hints_help(column_composer &cols)
     _add_command(cols, 1, CMD_DISPLAY_INVENTORY, "list inventory (select item to view it)", 2);
     _add_command(cols, 1, CMD_PICKUP, "pick up item from ground (also <w>g</w>)", 2);
     _add_command(cols, 1, CMD_DROP, "drop item", 2);
+    _add_command(cols, 1, CMD_DROP_LAST, "drop the last item(s) you picked up", 2);
 
     cols.add_formatted(
             1,
