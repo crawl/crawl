@@ -6414,7 +6414,7 @@ void player::petrify(actor *who)
 
     if (you.petrifying())
     {
-        mprf("Your limbs have turned to stone.");
+        mpr("Your limbs have turned to stone.");
         you.duration[DUR_PETRIFYING] = 1;
         return;
     }
