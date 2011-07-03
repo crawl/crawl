@@ -20,17 +20,12 @@
 #include "describe.h"
 #include "externs.h"
 #include "fight.h"
-#include "fontwrapper-ft.h"
 #include "godabil.h"
 #include "itemprop.h"
-#include "options.h"
 #include "player.h"
 #include "species.h"
 #include "skill_menu.h"
 #include "skills.h"
-#include "tilepick.h"
-#include "tilereg-crt.h"
-
 
 typedef std::string (*string_fn)();
 typedef std::map<std::string, string_fn> skill_op_map;
@@ -758,7 +753,7 @@ int skill_transfer_amount(skill_type sk)
 // knowledge ability). If simu, it just simulates the transfer and don't
 // change anything. It returns the new level of tsk.
 int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
-                          bool simu)
+                          bool simu, bool boost)
 {
     ASSERT(!is_invalid_skill(fsk) && !is_invalid_skill(tsk));
 
@@ -831,7 +826,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         }
     }
 
-    int new_level = you.skills[tsk];
+    int new_level = boost ? you.skill(tsk) : you.skills[tsk];
     // Restore the level
     you.skills[fsk] = fsk_level;
     you.skills[tsk] = tsk_level;
