@@ -642,11 +642,11 @@ public:
 };
 
 /**
- * Behaves the same as NoSelectTextItem but use formatted text for rendering.
+ * Behaves the same as TextItem but use formatted text for rendering.
  * It ignores bg_colour.
  * TODO: add bg_colour support to formatted_string and merge this with TextItem.
  */
-class FormattedTextItem : public NoSelectTextItem
+class FormattedTextItem : public TextItem
 {
 public:
     virtual void render();
