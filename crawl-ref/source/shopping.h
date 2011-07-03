@@ -14,6 +14,11 @@ int artefact_value(const item_def &item);
 // ident == true overrides the item ident level and gives the price
 // as if the item was fully id'd
 unsigned int item_value(item_def item, bool ident = false);
+// Return true if an item is classified as a worthless consumable.
+// Note that this does not take into account the player's condition:
+// curse scrolls are worthless for everyone, most potions aren't worthless
+// for mummies, etcetera.
+bool is_worthless_consumable(const item_def &item);
 void shop();
 
 shop_struct *get_shop(const coord_def& where);
