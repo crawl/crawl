@@ -600,7 +600,13 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
 
     // item_value() multiplies by quantity.
     const int shop_value = item_value(item) / item.quantity;
-    const int value = (is_worthless_consumable(item) ? 0 : shop_value);
+    // Since the god is taking the items as a sacrifice, they must have at
+    // least minimal value, otherwise they wouldn't be taken.
+    const int value = (is_worthless_consumable(item) ? 1 : shop_value);
+
+#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE)
+        mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d", value);
+#endif
 
     piety_gain_t relative_piety_gain = PIETY_NONE;
     switch (you.religion)
@@ -857,11 +863,6 @@ static bool _offer_items()
             }
         }
 
-
-#if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_SACRIFICE)
-        mprf(MSGCH_DIAGNOSTICS, "Sacrifice item value: %d",
-             item_value(item));
-#endif
 
         piety_gain_t relative_gain = sacrifice_item_stack(item);
         print_sacrifice_message(you.religion, mitm[i], relative_gain);
