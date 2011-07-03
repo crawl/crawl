@@ -840,7 +840,7 @@ ENDMAP
 NAME:   roderic_crop_circles_entry_large
 TAGS:   entry no_item_gen no_trap_gen
 ORIENT: float
-WEUGHT: 1
+WEIGHT: 1
 MONS:   col:green plant, col:yellow plant, col:brown plant
 SUBST:  '=111. 
 COLOUR: . = brown 

@@ -410,7 +410,6 @@ ENDMAP
 NAME:    dpeg_entry_connections
 TAGS:    entry
 ORIENT:  float
-PLACE:D:1
 SHUFFLE: {1/[2/(3/]4, Aa/Bb/Cc/Dd/Ee
 SUBST:   A==, a=...%, BCDEbcde=x
 SUBST:   1=@, 2:2., 3:33., 4:444., 234:x
