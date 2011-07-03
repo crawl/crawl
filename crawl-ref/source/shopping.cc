@@ -1978,6 +1978,49 @@ unsigned int item_value(item_def item, bool ident)
     return (valued);
 }                               // end item_value()
 
+bool is_worthless_consumable(const item_def &item)
+{
+    switch (item.base_type)
+    {
+    case OBJ_POTIONS:
+        switch (item.sub_type)
+        {
+        // Blood potions are worthless because they are easy to make.
+        case POT_BLOOD:
+        case POT_BLOOD_COAGULATED:
+        case POT_CONFUSION:
+        case POT_DECAY:
+        case POT_DEGENERATION:
+        case POT_PARALYSIS:
+        case POT_POISON:
+        case POT_SLOWING:
+        case POT_STRONG_POISON:
+        case POT_WATER:
+            return true;
+        default:
+            return false;
+        }
+    case OBJ_FOOD:
+        return ((item.sub_type == FOOD_CHUNK) && food_is_rotten(item));
+    case OBJ_SCROLLS:
+        switch (item.sub_type)
+        {
+        case SCR_CURSE_ARMOUR:
+        case SCR_CURSE_WEAPON:
+        case SCR_CURSE_JEWELLERY:
+        case SCR_NOISE:
+        case SCR_RANDOM_USELESSNESS:
+            return true;
+        default:
+            return false;
+        }
+    
+    // Only consumables are worthless.
+    default:
+        return false;
+    }
+}
+
 static void _delete_shop(int i)
 {
     grd(you.pos()) = DNGN_ABANDONED_SHOP;

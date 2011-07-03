@@ -598,12 +598,15 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
     if (god_likes_fresh_corpses(you.religion))
         return _sac_corpse(item);
 
+    // item_value() multiplies by quantity.
+    const int shop_value = item_value(item) / item.quantity;
+    const int value = (is_worthless_consumable(item) ? 0 : shop_value);
+
     piety_gain_t relative_piety_gain = PIETY_NONE;
     switch (you.religion)
     {
     case GOD_ELYVILON:
     {
-        const int value = item_value(item) / item.quantity;
         const bool valuable_weapon =
             _destroyed_valuable_weapon(value, item.base_type);
         const bool unholy_weapon = is_unholy_item(item);
@@ -659,9 +662,6 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
 
     case GOD_NEMELEX_XOBEH:
     {
-        // item_value() multiplies by quantity.
-        const int value = item_value(item) / item.quantity;
-
         if (you.attribute[ATTR_CARD_COUNTDOWN] && x_chance_in_y(value, 800))
         {
             you.attribute[ATTR_CARD_COUNTDOWN]--;
@@ -716,8 +716,6 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
 
     case GOD_JIYVA:
     {
-        // item_value() multiplies by quantity.
-        const int value = item_value(item) / item.quantity;
         // compress into range 0..250
         const int stepped = stepdown_value(value, 50, 50, 200, 250);
         gain_piety(stepped, 50);
