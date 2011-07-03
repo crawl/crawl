@@ -236,15 +236,18 @@ static void _genus_factoring(std::map<monster_type, int> &types,
     do
     {
         if (mons_genus(it->first) != genus)
+        {
+            ++it;
             continue;
+        }
 
         // This genus has a single monster type. Can't factor.
         if (it->second == num)
             return;
 
-        types.erase(it->first);
+        types.erase(it++);
 
-    } while (++it != types.end());
+    } while (it != types.end());
 
     types[genus] = num;
 }
