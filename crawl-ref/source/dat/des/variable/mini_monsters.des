@@ -625,6 +625,59 @@ MAP
 ...............................
 ENDMAP
 
+NAME:  roderic_batcave
+TAGS:  no_monster_gen
+DEPTH: D:3-20, Lair, Orc
+: local d = you.absdepth()
+: if d < 7 then d = 0 end
+: mons("bat w:60 / vampire bat w:" .. d .. " / nothing w:10")
+SUBST: ? : x@
+SUBST: 1 = 1:10 .:1
+MAP
+  xxxx?xx
+ xxx1..xxxx
+xxx1...1xxx
+xx11...11xx
+xxx1...1xxx
+ xxx..1xxx
+  xx@xxx
+ENDMAP
+
+# A raven's nest, containing some jewellery.
+# The dungeon version maya be hidden.
+# Could be used as a subvault in some forest vault.
+NAME:     roderic_ravens_nest
+TAGS:     extra mini_float
+DEPTH:    D:6-12, Lair: 3-6, Swamp
+KMONS:    1 = raven
+KITEM:    % = any jewellery
+KITEM:    1 = any jewellery / nothing 
+: if you.branch() == "D" then
+SHUFFLE:  t' / x"
+SUBST:    " = x
+NSUBST:   x = 1:= / *:x
+: end
+SUBST:    ' = .
+: kmons("% = nothing w:10 / raven w:"..you.absdepth())
+MAP
+tttt
+t%1t
+ttt'@
+ENDMAP
+
+# A polar bear lost in the jungle, how odd
+NAME:  roderic_lost_polar_bear
+TAGS:  no_monster_gen mini_float
+DEPTH: Lair: 3-7
+MONS:  plant, polar_bear, bush
+SUBST: ? = 1t
+SUBST: ' = .:80 1 3:3
+MAP
+??'.
+.'2'
+'??.
+ENDMAP
+
 
 ###############################################################################
 #
@@ -1233,6 +1286,35 @@ xxxxxx.xxxxxx
 xxxxxx..xxxxx
 xxxxxxx.....@
 xxxxxxxxxxxxx
+ENDMAP
+
+# Carrion pond
+# Bad water, a lot of carrion and feeders around, yuck! 
+# Has either necrophage or jackal, but the former is more memorable.
+#
+# Perhaps use Sewers style water? 
+# Would also be nice if we could make the corpses fit the branch. 
+# And even better if some corpses could rot (i.e. delayed rotting).
+#                                                          --dpeg
+NAME:  roderic_carrion_pond
+TAGS:  no_monster_gen no_trap_gen mini_float
+DEPTH: Lair: 2-7 , Swamp 
+SUBST: ? = %%.
+KITEM: % = any corpse
+: dgn.delayed_decay(_G, '%', 'any corpse')
+: if you.xl() > 8 then
+MONS:  necrophage
+: else
+MONS:  jackal
+: end
+SUBST: ' = 111.
+MAP
+ ..'..?.. 
+.?'.?.??'.
+'?.www?.?.
+.'wwwww.?.
+?..ww?.?'.
+ .?'.?... 
 ENDMAP
 
 ###############################################################################
