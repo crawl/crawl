@@ -17,7 +17,7 @@ function callback.grate_trap_stepped(data, triggerable, triggerer, marker, ev)
   -- likely to be full.
   if (dgn.mons_at(p.x, p.y) ~= nil or p == you.pos()) then
     if (you.see_cell(x, y)) then
-      crawl.mpr("A part of floor depresses, but nothing seems to happen.")
+      crawl.mpr("A part of the floor depresses, but nothing seems to happen.")
       return
     end
   end
