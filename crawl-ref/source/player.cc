@@ -6409,6 +6409,9 @@ void player::petrify(actor *who)
 {
     ASSERT(!crawl_state.game_is_arena());
 
+    if (you.res_petrify() > 0)
+        return;
+
     if (you.petrifying())
     {
         mprf("Your limbs have turned to stone.");
