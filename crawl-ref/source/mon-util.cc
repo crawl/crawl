@@ -1919,11 +1919,12 @@ uint8_t random_large_abomination_colour()
     // Restricted colours:
     //  MAGENTA = orb guardian
     //  GREEN = tentacled monstrosity
+    //  LIGHTCYAN = octopode
     //  RED, LIGHTRED, BROWN = used for twisted resurrection
     do
         col = random_monster_colour();
-    while (col == MAGENTA || col == GREEN || col == RED || col == LIGHTRED
-           || col == BROWN);
+    while (col == MAGENTA || col == GREEN || col == LIGHTCYAN || col == RED
+           || col == LIGHTRED || col == BROWN);
 
     return (col);
 }
