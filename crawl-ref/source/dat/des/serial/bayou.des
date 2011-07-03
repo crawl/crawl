@@ -1,0 +1,302 @@
+# Bayou by coolio.
+#
+# Bayou is a new serial vault that can appear in Dungeon, Snake Pits and Lair.
+# There are no monster spawns so it can appear on any depth level.
+#
+# A Bayou level has a 'swampy' atmosphere (because everybody loves Swamp) by
+# placing a large number of ponds and lakes with thick vegetation.
+
+NAME:   serial_bayou
+TAGS:   allow_dup extra luniq_serial
+DEPTH:  D, Snake, Lair
+CHANCE: 1%
+{{
+  local c = 4 + crawl.random2(3)*crawl.random2(2)
+  hook("post_place", function()
+    dgn.place_maps{tag="coolio_serial_bayou", count=c}
+  end)
+}}
+
+NAME:	serial_bayou_pond_a
+TAGS:	coolio_serial_bayou allow_dup extra
+DEPTH:	D, Snake, Lair
+MONS:	plant
+SUBST:	? = .WW2
+SUBST:	1 = 11.t
+KFEAT:	2 = swamp_tree
+MAP    
+    1..1..1
+   1..1??....1
+ .1..??2W?...1
+1..1?2WWWW1.1
+...??WWWW?..1
+.1.?WW2W?.11
+ ..1??W?..1
+   ..11..1
+ENDMAP
+
+NAME:	serial_bayou_pond_b
+TAGS:	coolio_serial_bayou allow_dup extra
+DEPTH:  D, Snake, Lair
+MONS:	plant
+SUBST:	? = .WW21
+SUBST:	1 = 11.t
+MAP    
+  ..1..11..
+..1?W?W?WW1
+.1WW?W?W??..
+1W?WWwwwW?W1
+.WW?wwww?W?1
+1WW?WW?WW?1.
+.1WW?WW?WW..
+. 1 .1..1 .
+ENDMAP
+
+NAME:	serial_bayou_pond_c
+#mangrove
+TAGS:	coolio_serial_bayou allow_dup extra
+DEPTH:  D, Snake, Lair
+MONS:	plant
+SUBST:	? = WWtt2
+SUBST:	. = ..W12
+KFEAT:  t = swamp_tree
+KMONS:	2 = plant
+KFEAT:	2 = W
+MAP    
+       1
+    ..1W
+ .11WWWW.
+.WW????WW
+.1?tttt?W.
+1W?tttt?W1
+.W?tttt?W1
+.WW????W1.
+ .1W1W1W.
+  .....
+   .1.
+ENDMAP
+
+NAME:	serial_bayou_pond_d
+#small pond
+TAGS:  coolio_serial_bayou allow_dup extra
+DEPTH:  D, Snake, Lair
+SUBST:	1 = 1W.
+SUBST:	W = WWWt
+KFEAT:	t = swamp_tree
+KMONS:	1 = plant
+KFEAT:	1 = W
+MAP
+ 11
+ WWW1
+1WWW1
+ W11
+ENDMAP
+
+NAME:serial_bayou_pond_e
+#small pond
+TAGS:  coolio_serial_bayou allow_dup extra
+DEPTH: D, Snake, Lair
+SUBST: W = WWW1.
+SUBST: . = ..t
+KFEAT: t = swamp_tree
+KMONS: 1 = plant
+KFEAT: 1 = W
+MAP
+.WWW.
+WWWWW
+.WWW.
+ENDMAP
+
+NAME: serial_bayou_ford_a
+#a small pond that can be forded
+TAGS:  coolio_serial_bayou transparent extra
+DEPTH: D, Snake, Lair
+SUBST: ? = Wt
+SUBST: V = Www
+SUBST: W = WWWW1
+SUBST: ! = W..
+KFEAT: t = swamp_tree
+KMONS: 1 = plant
+KFEAT: 1 = W
+MAP    
+       ttttt
+      tttttttt
+     ??WW??WW??
+    ?tWWWWWWWWW?
+  ??tWWWWWW!!W!.@
+  ?WWW!!.!......@
+ @...............@
+  @..!!.!.!!!!!WW???
+   @?!W!!W?WWWWWWWWW?
+    ?WWWWWWWWWVWWWWWW?
+     ?WWWWWVwwwVWWWW?
+      ?WWWVVwVWWW???
+      ?WWWWWVWW?tt
+      ?WWW?WW?
+       t?ttt?
+ENDMAP
+
+NAME:   serial_bayou_shore_a
+#a shore of a small lake
+TAGS:   coolio_serial_bayou extra
+ORIENT: east
+DEPTH:  D, Snake, Lair
+SUBST:  ? = Wt
+SUBST:  V = Www
+SUBST:  W = WWW1
+SUBST:  ! = W1..
+KFEAT:  t = swamp_tree
+KMONS:  1 = plant
+KFEAT:  1 = W
+MAP    
+ @@      ttttxxxxxx
+@..WWWWWWWWttttxxxx
+ ..!WWWWWWWWWttttxx
+ ..!WWWWWVVVVWWtttx
+ ..!WWWWWVwwwVWWttx
+ ...!WWWVwwwwwVWttx
+ ...!WWWVwwwwwVWttx
+ ..!WWWWVwwwwwVWttx
+ ..!WWWWWVwwwVWtttx
+ ..!WWWWWVwwwVttttx
+@..WWWWWWWVVVWtttxx
+@..WWWWWWWWWtttttxx
+ @@      tttttttxxx
+ENDMAP
+
+NAME:	serial_bayou_shore_b
+#a shore of a small pond, duplicable
+TAGS:   coolio_serial_bayou allow_dup extra
+ORIENT: east
+DEPTH:  D, Snake, Lair
+SUBST:  ? = Wt
+SUBST:  V = Www
+SUBST:  W = WWW1
+SUBST:  ! = W1..
+KFEAT:  t = swamp_tree
+KMONS:  1 = plant
+KFEAT:  1 = W
+MAP    
+  ???xxx
+@.!W??xx
+@.!WWW?x
+@.!WVV?x
+@.!WWW?x
+@.!W??xx
+  ???xxx
+ENDMAP
+
+NAME:	serial_bayou_lagoon_a
+#mangrove
+TAGS:	coolio_serial_bayou transparent extra
+DEPTH:  D, Snake, Lair
+SUBST:	? = W11.
+SUBST:	w = wwt
+KFEAT:  t = swamp_tree
+KMONS:	1 = plant
+KFEAT:	1 = W
+MAP    
+?????????
+?WWt1W11???
+??WWWwwwwW????
+ ?????WtwwW11??
+     ??1WwwtW1??
+      ?11twwWW1?
+      ??11ttwWW?
+       ?1tWwwW1?
+     ??11tWWW1??
+  ????WWtWW????
+ ??1WWWt1???
+??WWtW1???
+?W111???
+?W1???
+????
+ENDMAP
+
+NAME:  serial_bayou_lagoon_b
+#a big lagoon with a bridge thingy going through it
+TAGS:  coolio_serial_bayou
+DEPTH: D, Snake, Lair
+SUBST: ? = Wt
+SUBST: V = Www
+SUBST: W = WWWW1
+KFEAT: t = swamp_tree
+KMONS: 1 = plant
+KFEAT: 1 = W
+FTILE: . = floor_dirt
+MAP    
+    ?????     ???
+   ?WWWWW?????ttt?
+  WWWWWWWttttWVWWt?
+ @WWWWWWWWWWWVwVWWW?@@??
+ @....................WW?
+ @?WWWWWWWWWVwwVWWWw.wWWW?
+   ?WWWWWWWWWVVWWWWw.wWWWW?
+    ?WWWWW???WWWWWWw.VVWWWW?
+     ?????   ?tttWWV.wVVVWWW?
+              ?tttWw.wwVVVWWW?
+               ?ttVw.wwwVVWWtt
+               ?ttWw.wwVVVVWtt
+              ?ttWWV.wVVVWttt
+             ?tttVww.WWWWWtt
+             ?WWVVww.WWWWttt
+             ?WVwwww.WWWWtt
+            ??WWWVww.WWWt?
+           ?WWWWWWVw.WWW?
+            ?WWWWWWV.WW?
+             ?WWWWW?.??
+              ?????@@@
+ENDMAP
+
+NAME:  serial_bayou_lake_a
+#a big lake
+TAGS:  coolio_serial_bayou transparent
+DEPTH: D, Snake, Lair
+SUBST: ? = Wt
+SUBST: V = Www
+SUBST: W = WWWW1
+KFEAT: t = swamp_tree
+KMONS: 1 = plant
+KFEAT: 1 = W
+MAP    
+          ?????????
+      ?????????????????
+     ??????WWW?WWWWW??????
+   ???WWWWWWVVVVV?WW?WW???
+  ??WWW?WWVVwwwwwVVWW?WWW??
+ ??WW?WWWVwwwwwwwwwVWWWWW???
+??WWWWWWVwwwwwwwwwwwVW?WWWW??
+??W?WWWWVwwwwwwwwwwwVWWWWWW??
+??WWW?WWVwwwwwwwwwwwVWWW?WW??
+ ??WW?WW?VwwwwwwwwwVW?WWWW??
+  ??WWWWWWVVwwwwwVV?WW?WW??
+    ???W?WWWWVVVVVWWWWWW???
+     ??????W?WWWWWWW??????
+       ?????????????????
+           ?????????
+ENDMAP
+
+NAME:  serial_bayou_crossing
+#mangrove
+TAGS:  coolio_serial_bayou transparent
+DEPTH: D, Snake, Lair
+SUBST: ? = W1tt
+SUBST: W = WWW.
+KFEAT: t = swamp_tree
+KMONS: 1 = plant
+KFEAT: 1 = W
+MAP    
+    t?@?t
+    t?W?tt
+    t?W?tt
+  ttt?W?t  
+ttttt?W?ttttt
+?????WWW?????
+@WWWWWWWWWWW@
+?????WWW?????
+ttttt?W?ttttt
+  ttt?W?t t
+   tt?W?t 
+    t?W?tt
+    t?@?t
+ENDMAP
