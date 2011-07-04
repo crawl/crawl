@@ -4616,7 +4616,7 @@ bool enchant_monster_with_flavour(monster* mon, actor *foe,
     return dummy.obvious_effect;
 }
 
-bool enchant_monster_invisible(monster* mon, const std::string how)
+bool enchant_monster_invisible(monster* mon, const std::string &how)
 {
     // Store the monster name before it becomes an "it". - bwr
     const std::string monster_name = mon->name(DESC_CAP_THE);

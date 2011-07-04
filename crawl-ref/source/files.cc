@@ -1902,7 +1902,7 @@ bool get_save_version(reader &file, int &major, int &minor)
     {
         file.read(buf, 2);
     }
-    catch (short_read_exception E)
+    catch (short_read_exception& E)
     {
         // Empty file?
         major = minor = -1;

@@ -77,7 +77,7 @@ public:
 
     // statistics
     len_t get_slack();
-    len_t get_size() { return file_len; };
+    len_t get_size() const { return file_len; };
     len_t get_chunk_fragmentation(const std::string name);
     len_t get_chunk_compressed_length(const std::string name);
 private:
