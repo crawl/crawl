@@ -12,7 +12,9 @@
 #include "hints.h"
 #include "menu.h"
 #include "options.h"
+#include "player.h"
 #include "religion.h"
+#include "skills.h"
 #include "skills2.h"
 #include "tilepick.h"
 #include "tilereg-crt.h"
@@ -227,11 +229,11 @@ COLORS SkillMenuEntry::get_colour() const
              && you.skill(m_sk) != you.skills[m_sk])
     {
         if (you.skill(m_sk) < you.skills[m_sk])
-            return you.practise_skill[m_sk] ? LIGHTRED : RED;
+            return (you.training[m_sk] >= 0) ? LIGHTRED : RED;
         else
-            return you.practise_skill[m_sk] ? LIGHTBLUE : BLUE;
+            return (you.training[m_sk] >= 0) ? LIGHTBLUE : BLUE;
     }
-    else if (you.practise_skill[m_sk] == 0 && you.skills[m_sk] < 27)
+    else if (you.training[m_sk] < 0 && you.skills[m_sk] < 27)
         return DARKGREY;
     else if (you.skills[m_sk] == 27)
         return YELLOW;
@@ -256,7 +258,7 @@ std::string SkillMenuEntry::get_prefix()
         letter = ' ';
 
     const int sign = (you.skills[m_sk] == 0 || you.skills[m_sk] == 27) ? ' '
-                                    : (you.practise_skill[m_sk]) ? '+' : '-';
+                                  : (you.training[m_sk] > 0) ? '+' : '-';
 #ifdef USE_TILE
     return make_stringf(" %c %c", letter, sign);
 #else
@@ -339,13 +341,11 @@ void SkillMenuEntry::set_new_level()
         m_progress->set_text("");
 }
 
-#ifdef DEBUG_DIAGNOSTICS
 void SkillMenuEntry::set_points()
 {
     m_progress->set_text(make_stringf("%5d", you.skill_points[m_sk]));
     m_progress->set_fg_colour(LIGHTGREY);
 }
-#endif
 
 void SkillMenuEntry::set_progress()
 {
@@ -409,7 +409,8 @@ void SkillMenuEntry::set_title()
 
 void SkillMenuEntry::set_training()
 {
-    m_progress->set_text(make_stringf("(%2d%%)", 0));
+    m_progress->set_text(make_stringf("(%2d%%)",
+                                      std::max<int>(0, you.training[m_sk])));
     m_progress->set_fg_colour(CYAN);
 }
 
@@ -687,7 +688,11 @@ void SkillMenu::select(skill_type sk, int keyn)
     else if (is_set(SKMF_RESKILL_TO))
         you.transfer_to_skill = sk;
     else if (get_state(SKM_DO) == SKM_DO_PRACTISE)
+    {
         toggle_practise(sk, keyn);
+        if (get_state(SKM_VIEW) == SKM_VIEW_TRAINING)
+            refresh_display();
+    }
     else if (get_state(SKM_DO) == SKM_DO_DESCRIBE)
         show_description(sk);
 }
@@ -700,6 +705,10 @@ void SkillMenu::toggle(skill_menu_switch sw)
     switch (sw)
     {
     case SKM_MODE:
+        you.auto_training = !you.auto_training;
+        reset_training();
+        if (get_state(SKM_VIEW) == SKM_VIEW_TRAINING)
+            refresh_display();
         break;
     case SKM_DO:
         refresh_names();
@@ -797,8 +806,8 @@ void SkillMenu::init_switches()
         m_switches[SKM_MODE] = sw;
         sw->add(SKM_MODE_AUTO);
         sw->add(SKM_MODE_MANUAL);
-        // if (!you.auto_training)
-        //  sw->set_active_state(SKM_MODE_MANUAL);
+        if (!you.auto_training)
+            sw->set_state(SKM_MODE_MANUAL);
         sw->update();
         sw->set_id(SKM_MODE);
         add_item(sw, sw->size(), m_pos);
@@ -843,9 +852,9 @@ void SkillMenu::init_switches()
             sw->add(SKM_VIEW_TRANSFER);
             sw->set_state(SKM_VIEW_TRANSFER);
         }
-#ifdef DEBUG_DIAGNOSTICS
-        sw->add(SKM_VIEW_POINTS);
-#endif
+        if (you.wizard)
+            sw->add(SKM_VIEW_POINTS);
+
         sw->update();
         sw->set_id(SKM_VIEW);
         add_item(sw, sw->size(), m_pos);
@@ -1000,7 +1009,8 @@ void SkillMenu::set_skills()
 
 void SkillMenu::toggle_practise(skill_type sk, int keyn)
 {
-    you.practise_skill[sk] = !you.practise_skill[sk];
+    you.training[sk] = (you.training[sk] >= 0) ? -1 : 0;
+    reset_training();
     SkillMenuEntry* skme = find_entry(sk);
     skme->set_name(true);
     const std::vector<int> hotkeys = skme->get_name_item()->get_hotkeys();

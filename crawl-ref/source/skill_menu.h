@@ -94,9 +94,7 @@ private:
     void set_aptitude();
     void set_level();
     void set_new_level();
-#ifdef DEBUG_DIAGNOSTICS
     void set_points();
-#endif
     void set_progress();
     void set_reskill_progress();
     void set_title();

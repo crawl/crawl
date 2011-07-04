@@ -1110,10 +1110,18 @@ static void tag_construct_you(writer &th)
     for (j = 0; j < NUM_SKILLS; ++j)
     {
         marshallByte(th, you.skills[j]);
-        marshallByte(th, you.practise_skill[j]);
+        marshallByte(th, you.training[j]);
         marshallInt(th, you.skill_points[j]);
         marshallInt(th, you.ct_skill_points[j]);
         marshallByte(th, you.skill_order[j]);   // skills ordering
+    }
+
+    marshallBoolean(th, you.auto_training);
+    marshallByte(th, you.exercises.size());
+    for (std::list<skill_type>::iterator it = you.exercises.begin();
+         it != you.exercises.end(); ++it)
+    {
+        marshallInt(th, *it);
     }
 
     marshallInt(th, you.transfer_from_skill);
@@ -1878,11 +1886,30 @@ static void tag_read_you(reader &th)
     for (j = 0; j < count; ++j)
     {
         you.skills[j]          = unmarshallByte(th);
-        you.practise_skill[j]  = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_MINOR_SKILL_TRAINING)
+        you.training[j]        = unmarshallByte(th) - 1;
+    else
+#endif
+        you.training[j]        = unmarshallByte(th);
         you.skill_points[j]    = unmarshallInt(th);
         you.ct_skill_points[j] = unmarshallInt(th);
         you.skill_order[j]     = unmarshallByte(th);
     }
+
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_SKILL_TRAINING)
+    {
+#endif
+        you.auto_training = unmarshallBoolean(th);
+        count = unmarshallByte(th);
+        for (i = 0; i < count; i++)
+            you.exercises.push_back((skill_type)unmarshallInt(th));
+#if TAG_MAJOR_VERSION == 32
+    }
+    else
+        init_training();
+#endif
 
     you.transfer_from_skill = static_cast<skill_type>(unmarshallInt(th));
     you.transfer_to_skill = static_cast<skill_type>(unmarshallInt(th));
