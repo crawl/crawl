@@ -3454,7 +3454,7 @@ void tag_read_level_tiles(reader &th)
         while (1)
             unmarshallByte(th);
     }
-    catch (short_read_exception E)
+    catch (short_read_exception &E)
     {
     }
 #endif

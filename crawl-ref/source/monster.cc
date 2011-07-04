@@ -3872,7 +3872,7 @@ bool monster::find_home_near_place(const coord_def &c)
     std::queue<coord_def> q;
 
     q.push(c);
-    dist(c - c) = 0;
+    dist(coord_def()) = 0;
     while (!q.empty())
     {
         coord_def p = q.front();

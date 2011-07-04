@@ -1685,7 +1685,8 @@ bool cast_fragmentation(int pow, const dist& spd)
     case DNGN_TRAP_MECHANICAL:
     {
         trap_def* ptrap = find_trap(spd.target);
-        if (ptrap && ptrap->category() != DNGN_TRAP_MECHANICAL)
+        ASSERT(ptrap);
+        if (ptrap->category() != DNGN_TRAP_MECHANICAL)
         {
             // Non-mechanical traps don't explode with this spell. -- bwr
             break;

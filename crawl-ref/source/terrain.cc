@@ -652,7 +652,6 @@ coord_def get_random_stair()
 }
 
 
-typedef FixedArray<bool, GXM, GYM> map_mask_boolean;
 static std::auto_ptr<map_mask_boolean> _slime_wall_precomputed_neighbour_mask;
 
 static void _precompute_slime_wall_neighbours()
