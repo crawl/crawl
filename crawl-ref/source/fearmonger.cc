@@ -84,7 +84,7 @@ monster* player::get_fearmonger(const coord_def &target) const
 
 monster* player::get_any_fearmonger() const
 {
-    if (fearmongers.size() > 0)
+    if (!fearmongers.empty())
         return (&menv[fearmongers[0]]);
     else
         return (NULL);

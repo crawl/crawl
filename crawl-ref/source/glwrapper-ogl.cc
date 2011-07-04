@@ -363,7 +363,7 @@ void OGLShapeBuffer::draw(const GLState &state, const GLW_3VF *pt, const GLW_3VF
 #endif
 void OGLShapeBuffer::draw(const GLState &state)
 {
-    if (m_position_buffer.size() == 0)
+    if (m_position_buffer.empty())
         return;
 
     if (!state.array_vertex)

@@ -62,6 +62,7 @@ public:
 
     void refresh();
 
+    bool empty() const { return !list || list->empty(); };
     int size() const;
 
     static bool items_are_same(const item_def& item_a,

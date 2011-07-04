@@ -107,7 +107,7 @@ monster* player::get_beholder(const coord_def &target) const
 
 monster* player::get_any_beholder() const
 {
-    if (beholders.size() > 0)
+    if (!beholders.empty())
         return (&menv[beholders[0]]);
     else
         return (NULL);

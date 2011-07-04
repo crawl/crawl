@@ -413,7 +413,7 @@ void Stash::update()
         // We knew of nothing on this square, so we'll assume this is the
         // only item here, but mark it as unverified unless we can see nothing
         // under the item.
-        if (items.size() == 0)
+        if (items.empty())
         {
             add_item(item);
             // Note that we could be lying here, since we can have
@@ -776,7 +776,7 @@ void Stash::write(FILE *f, int refx, int refy,
                   std::string place, bool identify)
     const
 {
-    if (!enabled || (items.size() == 0 && verified))
+    if (!enabled || (items.empty() && verified))
         return;
 
     bool note_status = notes_are_active();
@@ -1119,7 +1119,7 @@ void ShopInfo::write(FILE *f, bool identify) const
     bool note_status = notes_are_active();
     activate_notes(false);
     fprintf(f, "[Shop] %s\n", OUTS(name));
-    if (items.size() > 0)
+    if (!items.empty())
     {
         for (unsigned i = 0; i < items.size(); ++i)
         {

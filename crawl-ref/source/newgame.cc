@@ -863,7 +863,7 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
         // We have had a significant input key event
         // construct the return vector
         std::vector<MenuItem*> selection = menu.get_selected_items();
-        if (selection.size() > 0)
+        if (!selection.empty())
         {
             // we have a selection!
             // we only care about the first selection (there should be only one)
@@ -1271,7 +1271,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
         // We have had a significant input key event
         // construct the return vector
         std::vector<MenuItem*> selection = menu.get_selected_items();
-        if (selection.size() > 0)
+        if (!selection.empty())
         {
             // we have a selection!
             // we only care about the first selection (there should be only one)

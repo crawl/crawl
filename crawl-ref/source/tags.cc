@@ -930,7 +930,7 @@ void tag_write(tag_type tagID, writer &outf)
     }
 
     // make sure there is some data to write!
-    if (buf.size() == 0)
+    if (buf.empty())
         return;
 
     // Write tag header.

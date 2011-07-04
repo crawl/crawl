@@ -737,7 +737,7 @@ static bool _get_mem_list(spell_list &mem_spells,
         }
         return (false);
     }
-    else if (book_hash.size() == 0)
+    else if (book_hash.empty())
     {
         if (!just_check)
         {

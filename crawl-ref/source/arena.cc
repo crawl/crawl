@@ -171,7 +171,7 @@ namespace arena
             if (mon->inv[i] != NON_ITEM)
                 items.push_back(mon->inv[i]);
 
-        if (items.size() == 0)
+        if (items.empty())
             return;
 
         fprintf(file, "%s:\n", mon->name(DESC_PLAIN, true).c_str());
@@ -679,7 +679,7 @@ namespace arena
     // back on even footing.
     void balance_spawners()
     {
-        if (a_spawners.size() == 0 || b_spawners.size() == 0)
+        if (a_spawners.empty() || b_spawners.empty())
             return;
 
         if (faction_a.active_members == 0 || faction_b.active_members == 0)

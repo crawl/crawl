@@ -1651,7 +1651,7 @@ static void _stairs_card(int power, deck_rarity_type rarity)
         }
     }
 
-    if (stairs_avail.size() == 0)
+    if (stairs_avail.empty())
     {
         mpr("No stairs available to move.");
         return;

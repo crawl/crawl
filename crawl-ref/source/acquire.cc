@@ -958,7 +958,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
             if (!(seen_levels & (1 << i)))
                 vec.push_back(i);
 
-        if (vec.size() > 0)
+        if (!vec.empty())
             level = vec[random2(vec.size())];
         else
             level = -1;

@@ -2657,7 +2657,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             std::vector<std::string> insplit = split_string(":", thesplit[i]);
             int hp_percent = 100;
 
-            if (insplit.size() == 0 || insplit.size() > 2
+            if (insplit.empty() || insplit.size() > 2
                  || insplit.size() == 1 && i != 0)
             {
                 report_error (
@@ -2681,7 +2681,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             std::vector<std::string> insplit = split_string(":", thesplit[i]);
             int mp_percent = 100;
 
-            if (insplit.size() == 0 || insplit.size() > 2
+            if (insplit.empty() || insplit.size() > 2
                  || insplit.size() == 1 && i != 0)
             {
                 report_error (
@@ -2704,7 +2704,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         {
             std::vector<std::string> insplit = split_string(":", thesplit[i]);
 
-            if (insplit.size() == 0 || insplit.size() > 2
+            if (insplit.empty() || insplit.size() > 2
                 || insplit.size() == 1 && i != 0)
             {
                 report_error (

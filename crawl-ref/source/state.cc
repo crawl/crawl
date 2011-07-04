@@ -312,7 +312,7 @@ bool game_state::is_god_acting() const
     ASSERT(god_act.depth >= 0);
     ASSERT(!(god_act.depth > 0 && god_act.which_god == GOD_NO_GOD));
     ASSERT(!(god_act.depth == 0 && god_act.which_god != GOD_NO_GOD));
-    ASSERT(!(god_act.depth == 0 && god_act_stack.size() > 0));
+    ASSERT(!(god_act.depth == 0 && !god_act_stack.empty()));
 
     return (god_act.depth > 0);
 }
@@ -368,7 +368,7 @@ void game_state::dec_god_acting(god_type which_god)
     if (god_act.depth == 0)
     {
         god_act.reset();
-        if (god_act_stack.size() > 0)
+        if (!god_act_stack.empty())
         {
             god_act = god_act_stack[god_act_stack.size() - 1];
             god_act_stack.pop_back();
@@ -382,7 +382,7 @@ void game_state::dec_god_acting(god_type which_god)
 void game_state::clear_god_acting()
 {
     ASSERT(!is_god_acting());
-    ASSERT(god_act_stack.size() == 0);
+    ASSERT(god_act_stack.empty());
 
     god_act.reset();
 }
@@ -505,7 +505,7 @@ void game_state::dump()
                 god_name(god_act.which_god).c_str(), god_act.depth);
     }
 
-    if (god_act_stack.size() != 0)
+    if (!god_act_stack.empty())
     {
         fprintf(stderr, "Other gods acting:\n");
         for (unsigned int i = 0; i < god_act_stack.size(); i++)
@@ -522,7 +522,7 @@ void game_state::dump()
         debug_dump_mon(mon_act, true);
     }
 
-    if (mon_act_stack.size() != 0)
+    if (!mon_act_stack.empty())
     {
         fprintf(stderr, "Others monsters acting:\n");
         for (unsigned int i = 0; i < mon_act_stack.size(); i++)

@@ -770,7 +770,7 @@ LUAFN(dgn_replace_random)
             if (lines(x, y) == find)
                 loc.push_back(coord_def(x, y));
 
-    if (!loc.size())
+    if (loc.empty())
     {
         if (required)
             return (luaL_error(ls, "Could not find '%c'", find));

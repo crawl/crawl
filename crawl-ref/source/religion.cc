@@ -761,7 +761,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
     }
 
-    if (likes.size() == 0 && really_likes.size() == 0)
+    if (likes.empty() && really_likes.empty())
         text += " %s doesn't like anything? This a bug; please report it.";
     else
     {
@@ -769,7 +769,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         text += comma_separated_line(likes.begin(), likes.end());
         text += ".";
 
-        if (really_likes.size() > 0)
+        if (!really_likes.empty())
         {
             text += " ";
             text += god_name(which_god);
@@ -4211,7 +4211,7 @@ static void _place_delayed_monsters()
         if (midx != -1)
             placed++;
 
-        if (_delayed_done_trigger_pos.size() > 0
+        if (!_delayed_done_trigger_pos.empty()
             && _delayed_done_trigger_pos[0] == i)
         {
             cback = _delayed_done_callbacks[0];

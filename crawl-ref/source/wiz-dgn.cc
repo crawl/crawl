@@ -403,7 +403,7 @@ void wizard_list_branches()
 
         CrawlVector &temples = val.get_vector();
 
-        if (temples.size() == 0)
+        if (temples.empty())
             continue;
 
         std::vector<std::string> god_names;

@@ -791,7 +791,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
 
         } // end proximity check
 
-        if (vault_mon_types.size() > 0)
+        if (!vault_mon_types.empty())
         {
             // XXX: not respecting RANDOM_MOBILE_MONSTER currently.
             int i = choose_random_weighted(vault_mon_weights.begin(),
@@ -3149,7 +3149,7 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
         interesting = true;
     }
     // Don't waste time on moname() if user isn't using this option
-    else if (Options.note_monsters.size() > 0)
+    else if (!Options.note_monsters.empty())
     {
         const std::string iname = mons_type_name(mons->type, DESC_NOCAP_A);
         for (unsigned i = 0; i < Options.note_monsters.size(); ++i)

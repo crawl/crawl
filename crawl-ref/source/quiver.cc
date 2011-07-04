@@ -95,7 +95,7 @@ int player_quiver::get_fire_item(std::string* no_item_reason) const
     {
         std::vector<int> order;
         _get_fire_order(order, false, you.weapon());
-        if (order.size())
+        if (!order.empty())
             slot = order[0];
     }
 
@@ -108,7 +108,7 @@ int player_quiver::get_fire_item(std::string* no_item_reason) const
         {
             // nothing
         }
-        else if (full_fire_order.size() == 0)
+        else if (full_fire_order.empty())
         {
             *no_item_reason = "No suitable missiles.";
         }

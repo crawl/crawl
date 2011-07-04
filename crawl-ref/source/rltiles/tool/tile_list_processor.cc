@@ -395,7 +395,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             else if (m_rim)
                 m_compose.add_rim(tile_colour::black);
 
-            if (m_back.size() > 0)
+            if (!m_back.empty())
             {
                 const unsigned int pseudo_rand = m_page.m_tiles.size() * 54321;
                 tile *back = m_back[pseudo_rand % m_back.size()];
@@ -685,7 +685,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
 
         tile img;
 
-        if (m_back.size() > 0)
+        if (!m_back.empty())
         {
             // compose
             if (!load_image(m_compose, arg, true))
@@ -751,7 +751,7 @@ void tile_list_processor::add_image(tile &img, const char *enumname)
     int weight = m_weight;
     if (enumname)
         m_last_enum = m_page.m_counts.size() - 1;
-    else if (m_last_enum < m_page.m_counts.size() && m_page.m_probs.size() > 0)
+    else if (m_last_enum < m_page.m_counts.size() && !m_page.m_probs.empty())
     {
         m_page.m_counts[m_last_enum]++;
         weight += m_page.m_probs[m_page.m_probs.size() - 1];
@@ -761,7 +761,7 @@ void tile_list_processor::add_image(tile &img, const char *enumname)
 
     m_page.m_probs.push_back(weight);
 
-    if (m_categories.size() > 0)
+    if (!m_categories.empty())
         m_ctg_counts[m_categories.size()-1]++;
 
     if (m_variation_idx != -1)
@@ -861,7 +861,7 @@ void tile_list_processor::add_abstracts(
     const std::vector<std::string> &uc_max_enum)
 {
     assert(lc_enum.size() == uc_max_enum.size());
-    assert(lc_enum.size() > 0);
+    assert(!lc_enum.empty());
 
     size_t count = lc_enum.size();
     if (count == 1)
@@ -904,7 +904,7 @@ bool tile_list_processor::write_data()
         return (false);
     }
 
-    if (m_page.m_tiles.size() > 0 && m_abstract.size() > 0)
+    if (!m_page.m_tiles.empty() && !m_abstract.empty())
     {
         fprintf(stderr, "%s", "Error: can't specify tiles when using %%abstract.\n");
         return (false);
@@ -932,7 +932,7 @@ bool tile_list_processor::write_data()
 
         char filename[1024];
         sprintf(filename, "%s.png", lcname.c_str());
-        if (m_abstract.size() == 0)
+        if (m_abstract.empty())
         {
             if (!m_page.write_image(filename))
                 return (false);
@@ -966,7 +966,7 @@ bool tile_list_processor::write_data()
             return (false);
         }
 
-        if (m_categories.size() > 0)
+        if (!m_categories.empty())
         {
             part_min = new int[m_categories.size()];
             memset(part_min, 0, sizeof(int) * m_categories.size());
@@ -1058,7 +1058,7 @@ bool tile_list_processor::write_data()
             }
         }
 
-        if (m_abstract.size() == 0)
+        if (m_abstract.empty())
             fprintf(fp, "    %s_%s_MAX\n};\n\n", m_prefix.c_str(), ucname.c_str());
         else
         {
@@ -1090,7 +1090,7 @@ bool tile_list_processor::write_data()
         fprintf(fp, "tileidx_t tile_%s_coloured(tileidx_t idx, int col);\n",
             lcname.c_str());
 
-        if (m_categories.size() > 0)
+        if (!m_categories.empty())
         {
             fprintf(fp, "\nenum tile_%s_parts\n{\n", lcname.c_str());
             for (unsigned int i = 0; i < m_categories.size(); i++)
@@ -1117,7 +1117,7 @@ bool tile_list_processor::write_data()
     }
 
     // write "tiledef-%name.cc"
-    if (m_abstract.size() == 0)
+    if (m_abstract.empty())
     {
         char filename[1024];
         sprintf(filename, "tiledef-%s.cc", lcname.c_str());
@@ -1231,7 +1231,7 @@ bool tile_list_processor::write_data()
                 lcname.c_str(), m_start_value.c_str());
         fprintf(fp, "}\n\n");
 
-        if (m_categories.size() > 0)
+        if (!m_categories.empty())
         {
             fprintf(fp, "unsigned int tile_%s_part_count[%s] =\n{\n",
                     lcname.c_str(), ctg_max.c_str());
@@ -1447,7 +1447,7 @@ bool tile_list_processor::write_data()
     }
 
     // write "tile-%name.html"
-    if (m_page.m_tiles.size() > 0)
+    if (!m_page.m_tiles.empty())
     {
         char filename[1024];
         sprintf(filename, "tile-%s.html", lcname.c_str());
@@ -1530,7 +1530,7 @@ bool tile_list_processor::write_data()
 
 
     // Write "%name.d"
-    if (m_abstract.size() == 0)
+    if (m_abstract.empty())
     {
         char filename[1024];
         sprintf(filename, "%s.d", lcname.c_str());
@@ -1542,7 +1542,7 @@ bool tile_list_processor::write_data()
             return (false);
         }
 
-        if (m_page.m_tiles.size() > 0)
+        if (!m_page.m_tiles.empty())
         {
             fprintf(fp, "%s.png: \\\n",
                     lcname.c_str(), lcname.c_str(), lcname.c_str());

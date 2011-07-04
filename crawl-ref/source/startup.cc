@@ -458,7 +458,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
 static void _construct_save_games_menu(MenuScroller* menu,
                        const std::vector<player_save_info>& chars)
 {
-    if (chars.size() == 0)
+    if (chars.empty())
     {
         // no saves
         return;
@@ -793,7 +793,7 @@ again:
         }
         // we had a significant action!
         std::vector<MenuItem*> selected = menu.get_selected_items();
-        if (selected.size() == 0)
+        if (selected.empty())
         {
             // Uninteresting action, poll a new key
             continue;

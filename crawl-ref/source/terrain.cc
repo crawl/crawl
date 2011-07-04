@@ -646,7 +646,7 @@ coord_def get_random_stair()
             st.push_back(*ri);
         }
     }
-    if (!st.size())
+    if (st.empty())
         return coord_def();        // sanity check: shouldn't happen
     return st[random2(st.size())];
 }

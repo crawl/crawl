@@ -2652,7 +2652,7 @@ std::string map_def::validate_temple_map()
         i != b_glyphs.end(); ++i)
     {
         const keyed_mapspec *spec = map.mapspec_at(*i);
-        if (spec != NULL && spec->feat.feats.size() > 0)
+        if (spec != NULL && !spec->feat.feats.empty())
             return ("Can't change feat 'B' in temple (KFEAT)");
     }
 
@@ -3811,7 +3811,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
                 mspec.colour = nspec.colour;
         }
 
-        if (mspec.items.size() > 0)
+        if (!mspec.items.empty())
         {
             monster_type mid = (monster_type)mspec.mid;
             if (mid == RANDOM_DRACONIAN
@@ -5604,7 +5604,7 @@ std::string keyed_mapspec::set_mask(const std::string &s, bool garbage)
     }
 
     // If not also a KFEAT...
-    if (feat.feats.size() == 0)
+    if (feat.feats.empty())
     {
         feature_spec fsp(-1, 10);
         fsp.glyph = key_glyph;
