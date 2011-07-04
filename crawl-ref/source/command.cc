@@ -1541,7 +1541,7 @@ static void _find_description(bool *again, std::string *error_inout)
     {
     case 'M':
         type       = "monster";
-        extra      = "  Enter a single letter to list monsters displayed by "
+        extra      = " Enter a single letter to list monsters displayed by "
                      "that symbol.";
         filter     = _monster_filter;
         recap      = _recap_mon_keys;
@@ -1566,7 +1566,7 @@ static void _find_description(bool *again, std::string *error_inout)
         break;
     case 'I':
         type        = "item";
-        extra       = "  Enter a single letter to list items displayed by "
+        extra       = " Enter a single letter to list items displayed by "
                       "that symbol.";
         filter      = _item_filter;
         doing_items = true;
