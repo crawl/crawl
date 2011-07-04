@@ -349,7 +349,7 @@ void ash_check_bondage(bool msg)
         you.bondage[s] = new_bondage[s];
         std::map<skill_type, char> boosted_skills = ash_get_boosted_skills(eq_type(s));
         for (std::map<skill_type, char>::iterator it = boosted_skills.begin();
-             it != boosted_skills.end(); it++)
+             it != boosted_skills.end(); ++it)
         {
             you.skill_boost[it->first] += it->second;
             if (you.skill_boost[it->first] > 3)

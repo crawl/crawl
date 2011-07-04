@@ -251,7 +251,7 @@ monster_info::monster_info(const monster* m, int milev)
     if (!m->props.empty())
     {
         CrawlHashTable::hash_map_type::const_iterator i = m->props.begin();
-        for (; i != m->props.end(); i++)
+        for (; i != m->props.end(); ++i)
             if (_is_public_key(i->first))
                 props[i->first] = i->second;
     }

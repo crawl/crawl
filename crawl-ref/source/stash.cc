@@ -1347,7 +1347,7 @@ int LevelStashes::_num_enabled_stashes() const
         return (0);
 
     for (stashes_t::const_iterator iter = m_stashes.begin();
-            iter != m_stashes.end(); iter++)
+            iter != m_stashes.end(); ++iter)
     {
         if (!iter->second.enabled)
             --rawcount;
@@ -1392,7 +1392,7 @@ void LevelStashes::get_matching_stashes(
     }
 
     for (stashes_t::const_iterator iter = m_stashes.begin();
-            iter != m_stashes.end(); iter++)
+            iter != m_stashes.end(); ++iter)
     {
         if (iter->second.enabled)
         {
@@ -1419,7 +1419,7 @@ void LevelStashes::get_matching_stashes(
 void LevelStashes::_update_corpses(int rot_time)
 {
     for (stashes_t::iterator iter = m_stashes.begin();
-            iter != m_stashes.end(); iter++)
+            iter != m_stashes.end(); ++iter)
     {
         iter->second._update_corpses(rot_time);
     }
@@ -1428,7 +1428,7 @@ void LevelStashes::_update_corpses(int rot_time)
 void LevelStashes::_update_identification()
 {
     for (stashes_t::iterator iter = m_stashes.begin();
-            iter != m_stashes.end(); iter++)
+            iter != m_stashes.end(); ++iter)
     {
         iter->second._update_identification();
     }
@@ -1451,7 +1451,7 @@ void LevelStashes::write(FILE *f, bool identify) const
         int refx = s.getX(), refy = s.getY();
         std::string levname = short_level_name();
         for (stashes_t::const_iterator iter = m_stashes.begin();
-             iter != m_stashes.end(); iter++)
+             iter != m_stashes.end(); ++iter)
         {
             iter->second.write(f, refx, refy, levname, identify);
         }
@@ -1468,7 +1468,7 @@ void LevelStashes::save(writer& outf) const
 
     // And write the individual stashes
     for (stashes_t::const_iterator iter = m_stashes.begin();
-         iter != m_stashes.end(); iter++)
+         iter != m_stashes.end(); ++iter)
     {
         iter->second.save(outf);
     }
@@ -1611,7 +1611,7 @@ void StashTracker::write(FILE *f, bool identify) const
     else
     {
         for (stash_levels_t::const_iterator iter = levels.begin();
-             iter != levels.end(); iter++)
+             iter != levels.end(); ++iter)
         {
             iter->second.write(f, identify);
         }
@@ -1628,7 +1628,7 @@ void StashTracker::save(writer& outf) const
 
     // And ask each level to write itself to the tag
     stash_levels_t::const_iterator iter = levels.begin();
-    for (; iter != levels.end(); iter++)
+    for (; iter != levels.end(); ++iter)
         iter->second.save(outf);
 }
 
@@ -1908,7 +1908,7 @@ void StashTracker::get_matching_stashes(
     const
 {
     stash_levels_t::const_iterator iter = levels.begin();
-    for (; iter != levels.end(); iter++)
+    for (; iter != levels.end(); ++iter)
     {
         iter->second.get_matching_stashes(search, results);
         if (results.size() > SEARCH_SPAM_THRESHOLD)
@@ -2091,7 +2091,7 @@ void StashTracker::update_corpses()
     last_corpse_update = you.elapsed_time;
 
     for (stash_levels_t::iterator iter = levels.begin();
-            iter != levels.end(); iter++)
+            iter != levels.end(); ++iter)
     {
         iter->second._update_corpses(rot_time);
     }
@@ -2103,7 +2103,7 @@ void StashTracker::update_identification()
         return;
 
     for (stash_levels_t::iterator iter = levels.begin();
-            iter != levels.end(); iter++)
+            iter != levels.end(); ++iter)
     {
         iter->second._update_identification();
     }

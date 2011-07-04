@@ -162,7 +162,7 @@ void package::load_traces()
     free_blocks[sizeof(file_header)] = file_len - sizeof(file_header);
 
     for(directory_t::iterator ch = directory.begin();
-        ch != directory.end(); ch++)
+        ch != directory.end(); ++ch)
     {
         trace_chunk(ch->second);
     }
@@ -292,7 +292,7 @@ len_t package::alloc_block(len_t &size)
 {
     fb_t::iterator bl, best_big, best_small;
     len_t bb_size = (len_t)-1, bs_size = 0;
-    for(bl = free_blocks.begin(); bl!=free_blocks.end(); bl++)
+    for(bl = free_blocks.begin(); bl!=free_blocks.end(); ++bl)
     {
         if (bl->second < bb_size && bl->second >= size + sizeof(block_header))
             best_big = bl, bb_size = bl->second;
@@ -356,7 +356,7 @@ len_t package::write_directory()
 
     std::stringstream dir;
     for (directory_t::iterator i = directory.begin();
-         i != directory.end(); i++)
+         i != directory.end(); ++i)
     {
         uint8_t name_len = i->first.length();
         dir.write((const char*)&name_len, sizeof(name_len));
@@ -404,7 +404,7 @@ void package::free_block(len_t at, len_t size)
     neigh = free_blocks.lower_bound(at);
     if (neigh != free_blocks.begin())
     {
-        neigh--;
+        --neigh;
         ASSERT(neigh->first + neigh->second <= at);
         if (neigh->first + neigh->second == at)
         {
@@ -444,13 +444,13 @@ void package::fsck()
            (unsigned int)free_blocks.size(), file_len);
 
     for(fb_t::const_iterator bl = free_blocks.begin(); bl != free_blocks.end();
-        bl++)
+        ++bl)
     {
         printf("<at %u size %u>\n", bl->first, bl->second);
     }
 #endif
     for(bm_t::const_iterator bl = block_map.begin(); bl != block_map.end();
-        bl++)
+        ++bl)
     {
 #ifdef FSCK_VERBOSE
         printf("[at %u size %u+header]\n", bl->first, bl->second.first);
@@ -526,7 +526,7 @@ std::vector<std::string> package::list_chunks()
     std::vector<std::string> list;
     list.reserve(directory.size());
     for (directory_t::iterator i = directory.begin();
-         i != directory.end(); i++)
+         i != directory.end(); ++i)
     {
         if (!i->first.empty())
             list.push_back(i->first);
@@ -554,7 +554,7 @@ void package::trace_chunk(len_t start)
         fb_t::iterator sp = free_blocks.upper_bound(start);
         if (sp == free_blocks.begin())
             fail("save file corrupted -- overlapping blocks");
-        sp--;
+        --sp;
         len_t sp_start = sp->first;
         len_t sp_size  = sp->second;
         if (sp_start > start || sp_start + sp_size < end)
@@ -592,7 +592,7 @@ len_t package::get_slack()
     load_traces();
 
     len_t slack = 0;
-    for(fb_t::iterator bl = free_blocks.begin(); bl!=free_blocks.end(); bl++)
+    for(fb_t::iterator bl = free_blocks.begin(); bl!=free_blocks.end(); ++bl)
         slack += bl->second;
     return slack;
 }

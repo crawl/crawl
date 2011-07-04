@@ -1638,7 +1638,7 @@ static bool _slot_is_unique(const mutation_type mut[MUTS_IN_SLOT],
     if (k == 0)
         return true;
 
-    for (iter = facets_used.begin() ; iter != facets_used.end() ; iter++)
+    for (iter = facets_used.begin() ; iter != facets_used.end() ; ++iter)
     {
         for (unsigned i = 0; i < ARRAYSZ(_body_facets); i++)
         {
@@ -1894,7 +1894,7 @@ bool balance_demonic_guardian()
     if (tension*3/4 > mutlevel*6 + random2(mutlevel*mutlevel*2))
         return (false);
 
-    for (int i = 0; mons && i <= 20/mutlevel; mons++)
+    for (int i = 0; mons && i <= 20/mutlevel; ++mons)
     {
         mons_val = get_monster_tension(*mons, GOD_NO_GOD);
         const mon_attitude_type att = mons_attitude(*mons);
