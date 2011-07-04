@@ -296,6 +296,10 @@ void cast_liquefaction(int pow)
 
 void cast_shroud_of_golubria(int pow)
 {
-    you.increase_duration(DUR_SHROUD_OF_GOLUBRIA, 7 + roll_dice(2, pow), 50,
-        "Space distorts slightly along a thin shroud covering your body.");
+    if (you.duration[DUR_SHROUD_OF_GOLUBRIA])
+        mpr("Your shroud grows in power.");
+    else
+        mpr("Space distorts slightly along a thin shroud covering your body.");
+
+    you.increase_duration(DUR_SHROUD_OF_GOLUBRIA, 7 + roll_dice(2, pow), 50);
 }
