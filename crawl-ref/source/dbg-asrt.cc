@@ -172,7 +172,7 @@ static void _dump_player(FILE *file)
                 debug_coord_str(you.running.pos).c_str());
     }
 
-    if (you.delay_queue.size() > 0)
+    if (!you.delay_queue.empty())
     {
         fprintf(file, "Delayed (%u):\n",
                 (unsigned int)you.delay_queue.size());
@@ -470,7 +470,7 @@ static void _debug_dump_lua_markers(FILE *file)
 
         std::string result = lua_marker->debug_to_string();
 
-        if (result.size() > 0 && result[result.size() - 1] == '\n')
+        if (!result.empty() && result[result.size() - 1] == '\n')
             result = result.substr(0, result.size() - 1);
 
         fprintf(file, "Lua marker %d at (%d, %d):\n",

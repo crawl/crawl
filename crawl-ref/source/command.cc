@@ -984,9 +984,9 @@ static std::vector<std::string> _get_desc_keys(std::string regex,
     std::vector<std::string> body_matches = getLongDescBodiesByRegex(regex,
                                                                      filter);
 
-    if (key_matches.size() == 0 && body_matches.size() == 0)
+    if (key_matches.empty() && body_matches.empty())
         return (key_matches);
-    else if (key_matches.size() == 0 && body_matches.size() == 1)
+    else if (key_matches.empty() && body_matches.size() == 1)
         return (body_matches);
 
     // Merge key_matches and body_matches, discarding duplicates.
@@ -1659,7 +1659,7 @@ static void _find_description(bool *again, std::string *error_inout)
     if (recap != NULL)
         (*recap)(key_list);
 
-    if (key_list.size() == 0)
+    if (key_list.empty())
     {
         if (by_mon_symbol)
         {

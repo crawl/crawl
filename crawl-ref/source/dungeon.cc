@@ -344,7 +344,7 @@ static bool _build_level_vetoable(int level_number, level_area_type level_type,
         debug_mons_scan();
 #endif
 
-        if (env.level_build_method.size() > 0
+        if (!env.level_build_method.empty()
             && env.level_build_method[0] == ' ')
         {
             env.level_build_method = env.level_build_method.substr(1);
@@ -1835,7 +1835,7 @@ static void _build_overflow_temples(int level_number)
 
     CrawlVector &temples = val.get_vector();
 
-    if (temples.size() == 0)
+    if (temples.empty())
         return;
 
     for (unsigned int i = 0; i < temples.size(); i++)
@@ -3815,7 +3815,7 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
 
     // XXX: Moved this out of dgn_register_place so that vault-set monsters can
     // be accessed with the '9' and '8' glyphs. (due)
-    if (place.map.random_mons.size() > 0)
+    if (!place.map.random_mons.empty())
     {
         dprf("Setting the custom random mons list.");
         set_vault_mon_list(place.map.random_mons);

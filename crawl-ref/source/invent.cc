@@ -1347,7 +1347,7 @@ std::vector<SelItem> prompt_invent_items(
                 need_getch  = true;
             }
 
-            if (items.size())
+            if (!items.empty())
             {
                 if (!crawl_state.doing_prev_cmd_again)
                 {
@@ -1789,7 +1789,7 @@ int prompt_invent_item(const char *prompt,
 
             need_prompt = need_redraw;
 
-            if (items.size())
+            if (!items.empty())
             {
                 if (count)
                     *count = items[0].quantity;

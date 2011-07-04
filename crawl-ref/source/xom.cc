@@ -2618,7 +2618,7 @@ static void _xom_zero_miscast()
     }
 
     if (feat_has_solid_floor(feat)
-        && inv_items.size() > 0)
+        && !inv_items.empty())
     {
         int idx = inv_items[random2(inv_items.size())];
 
@@ -2766,7 +2766,7 @@ static void _xom_zero_miscast()
 
     ////////
     // Misc.
-    if (inv_items.size() > 0)
+    if (!inv_items.empty())
     {
         int idx = inv_items[random2(inv_items.size())];
 
@@ -2838,7 +2838,7 @@ static void _get_hand_type(std::string &hand, bool &can_plural)
     }
 
     ASSERT(hand_vec.size() == plural_vec.size());
-    ASSERT(hand_vec.size() > 0);
+    ASSERT(!hand_vec.empty());
 
     const unsigned int choice = random2(hand_vec.size());
 

@@ -252,7 +252,7 @@ std::string SkillMenuEntry::get_prefix()
     int letter;
     const std::vector<int> hotkeys = m_name->get_hotkeys();
 
-    if (hotkeys.size())
+    if (!hotkeys.empty())
         letter = hotkeys[0];
     else
         letter = ' ';
@@ -1029,7 +1029,7 @@ void SkillMenu::toggle_practise(skill_type sk, int keyn)
     skme->set_name(true);
     const std::vector<int> hotkeys = skme->get_name_item()->get_hotkeys();
 
-    if (hotkeys.size())
+    if (!hotkeys.empty())
     {
         int letter;
         letter = hotkeys[0];

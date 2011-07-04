@@ -1205,7 +1205,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     // Is the player being killed by a direct act of Xom?
     if (crawl_state.is_god_acting()
         && crawl_state.which_god_acting() == GOD_XOM
-        && crawl_state.other_gods_acting().size() == 0)
+        && crawl_state.other_gods_acting().empty())
     {
         you.escaped_death_cause = death_type;
         you.escaped_death_aux   = aux == NULL ? "" : aux;

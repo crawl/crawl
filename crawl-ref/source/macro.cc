@@ -503,11 +503,11 @@ static void macro_buf_add_long(keyseq actions,
     // the sequence "abcdef" and macros "ab", "bcde" and "de"
     // "ab" and "de" are recognised as macros.
 
-    while (actions.size() > 0)
+    while (!actions.empty())
     {
         tmp = actions;
 
-        while (tmp.size() > 0)
+        while (!tmp.empty())
         {
             macromap::const_iterator subst = keymap.find(tmp);
             // Found a macro. Add the expansion (action) of the
@@ -523,7 +523,7 @@ static void macro_buf_add_long(keyseq actions,
             tmp.pop_back();
         }
 
-        if (tmp.size() == 0)
+        if (tmp.empty())
         {
             // Didn't find a macro. Add the first keypress of the sequence
             // into the buffer, remove it from the sequence, and try again.
@@ -592,7 +592,7 @@ static void macro_buf_apply_command_macro()
     keyseq tmp = Buffer;
 
     // find the longest match from the start of the buffer and replace it
-    while (tmp.size() > 0)
+    while (!tmp.empty())
     {
         macromap::const_iterator expansion = Macros.find(tmp);
 
@@ -626,7 +626,7 @@ int macro_buf_get()
 
     _macro_inject_sent_keys();
 
-    if (Buffer.size() == 0)
+    if (Buffer.empty())
     {
         // If we're trying to fetch a new keystroke, then the processing
         // of the previous keystroke is complete.
@@ -765,7 +765,7 @@ int getch_with_command_macros()
 {
     _macro_inject_sent_keys();
 
-    if (Buffer.size() == 0)
+    if (Buffer.empty())
     {
         // Read some keys...
         keyseq keys = _getch_mul();

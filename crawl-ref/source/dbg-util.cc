@@ -211,7 +211,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
         fprintf(stderr, "    travel_path.size() = %u\n",
                 (unsigned int)mon->travel_path.size());
 
-        if (mon->travel_path.size() > 0)
+        if (!mon->travel_path.empty())
         {
             fprintf(stderr, "    next travel step: %s\n",
                     debug_coord_str(mon->travel_path.back()).c_str());

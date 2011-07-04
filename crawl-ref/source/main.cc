@@ -1746,7 +1746,7 @@ static void _do_cycle_quiver(int dir)
 
 static void _do_list_gold()
 {
-    if (shopping_list.size() == 0)
+    if (shopping_list.empty())
         mprf("You have %d gold piece%s.", you.gold, you.gold != 1 ? "s" : "");
     else
         shopping_list.display();
@@ -4446,7 +4446,7 @@ static void _do_prev_cmd_again()
 
     crawl_state.doing_prev_cmd_again = true;
 
-    ASSERT(crawl_state.prev_cmd_keys.size() > 0);
+    ASSERT(!crawl_state.prev_cmd_keys.empty());
 
     if (crawl_state.prev_cmd == CMD_REPEAT_CMD)
     {
@@ -4466,7 +4466,7 @@ static void _update_replay_state()
     if (!crawl_state.is_replaying_keys()
         && crawl_state.prev_cmd != CMD_NO_CMD)
     {
-        if (repeat_again_rec.keys.size() > 0)
+        if (!repeat_again_rec.keys.empty())
             crawl_state.prev_cmd_keys = repeat_again_rec.keys;
     }
 

@@ -491,7 +491,7 @@ static std::string _chooseStrByWeight(std::string entry, int fixed_weight = -1)
         weights.push_back(total_weight);
     }
 
-    if (parts.size() == 0)
+    if (parts.empty())
         return "BUG, EMPTY ENTRY";
 
     int choice = 0;

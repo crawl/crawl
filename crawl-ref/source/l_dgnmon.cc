@@ -73,7 +73,7 @@ static int dgn_set_random_mon_list(lua_State *ls)
     int       list_pos = (map != NULL) ? 2 : 1;
     mons_list mlist    = _lua_get_mlist(ls, list_pos);
 
-    if (mlist.size() == 0)
+    if (mlist.empty())
     {
         luaL_argerror(ls, list_pos, "Mon list is empty.");
         return (0);
@@ -153,13 +153,13 @@ static int dgn_set_random_mon_list(lua_State *ls)
                  "%s being ignored.",
                  name.c_str());
 
-        if (mon.items.size() > 0)
+        if (!mon.items.empty())
             mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : items for "
                  "%s being ignored.",
                  name.c_str());
     } // for (int i = 0; i < num_mons; i++)
 
-    if (mons.size() == 0 && num_lords > 0)
+    if (mons.empty() && num_lords > 0)
     {
         luaL_argerror(ls, list_pos,
                       "Mon list contains only pandemonium lords.");

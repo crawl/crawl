@@ -642,7 +642,7 @@ static void _print_status_lights(int y)
     std::vector<status_light> lights;
     static int last_number_of_lights = 0;
     _get_status_lights(lights);
-    if (lights.size() == 0 && last_number_of_lights == 0)
+    if (lights.empty() && last_number_of_lights == 0)
         return;
     last_number_of_lights = lights.size();
 
@@ -1899,7 +1899,7 @@ static char _get_overview_screen_results()
     overview.add_text(_status_mut_abilities());
 
     std::vector<MenuEntry *> results = overview.show();
-    return (results.size() > 0) ? results[0]->hotkeys[0] : 0;
+    return (!results.empty()) ? results[0]->hotkeys[0] : 0;
 }
 
 std::string dump_overview_screen(bool full_id)

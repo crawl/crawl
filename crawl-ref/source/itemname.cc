@@ -3374,7 +3374,7 @@ void init_item_name_cache()
         }
     }
 
-    ASSERT(item_names_cache.size() > 0);
+    ASSERT(!item_names_cache.empty());
 }
 
 item_types_pair item_types_by_name(std::string name)

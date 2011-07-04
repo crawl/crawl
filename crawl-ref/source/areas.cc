@@ -180,7 +180,7 @@ coord_def find_centre_for (const coord_def& f, area_centre_type at)
     if (_agrid(f) == 0)
         return coord_def(-1, -1);
 
-    if (_agrid_centres.size() == 0)
+    if (_agrid_centres.empty())
         return coord_def(-1, -1);
 
     coord_def possible = coord_def(-1, -1);
