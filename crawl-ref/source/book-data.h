@@ -453,7 +453,7 @@
     SPELL_NO_SPELL,
 },
 
-{   // Book of Chemistry
+{   // Book of Alchemy
     SPELL_FULSOME_DISTILLATION,
     SPELL_LETHAL_INFUSION,
     SPELL_SUBLIMATION_OF_BLOOD,
@@ -464,7 +464,7 @@
     SPELL_NO_SPELL,
 },
 
-{   // Book of Zoology
+{   // Book of Beasts
     SPELL_SUMMON_BUTTERFLIES,
     SPELL_STICKS_TO_SNAKES,
     SPELL_CALL_CANINE_FAMILIAR,

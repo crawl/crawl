@@ -24,7 +24,7 @@ enum tag_minor_version
     TAG_MINOR_MINFO_PROP,          // Add a props hash to monster_info.
     TAG_MINOR_MON_INV_ORDER,       // Change the order of the monster's inventory.
     TAG_MINOR_ASH_PENANCE,         // Ashenzari's wrath counter.
-    TAG_MINOR_BOOK_ZOOLOGY,        // Addition of the book of zoology.
+    TAG_MINOR_BOOK_BEASTS,         // Addition of the book of zoology^Wbeasts.
     TAG_MINOR_CHR_COMPAT,          // Future-compatible chr data.
     TAG_MINOR_ZOT_POINTS,          // Untie ZotDef power points from the xp pool.
     TAG_MINOR_TRAP_KNOWLEDGE,      // Save trap type in map_knowledge.
