@@ -2952,7 +2952,6 @@ void tag_construct_level_tiles(writer &th)
 
 static void tag_read_level(reader &th)
 {
-
     env.floor_colour = unmarshallUByte(th);
     env.rock_colour  = unmarshallUByte(th);
 
