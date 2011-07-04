@@ -428,8 +428,11 @@ void train_skills()
             int exp_pool = you.exp_available;
 #endif
 
-            while (sk_exp[sk] >= calc_skill_cost(you.skill_cost_level))
+            while (sk_exp[sk] >= calc_skill_cost(you.skill_cost_level)
+                   && you.training[sk] > 0)
+            {
                 gain += _train(sk, sk_exp[sk]);
+            }
 
             if (gain && sk > SK_LAST_MUNDANE && sk <= SK_LAST_MAGIC)
                 magic_gain += gain;
