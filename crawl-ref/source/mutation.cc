@@ -1617,17 +1617,18 @@ static int _rank_for_tier(const facet_def& facet, int tier)
     return (k);
 }
 
-static bool _slot_is_unique(const mutation_type mut[],
+#define MUTS_IN_SLOT ARRAYSZ(((facet_def*)0)->muts)
+static bool _slot_is_unique(const mutation_type mut[MUTS_IN_SLOT],
                             std::set<const facet_def *> facets_used)
 {
     std::set<const facet_def *>::const_iterator iter;
-    equipment_type eq[ARRAYSZ(mut)];
+    equipment_type eq[MUTS_IN_SLOT];
 
     int k = 0;
     // find the equipment slot(s) used by mut
     for (unsigned i = 0; i < ARRAYSZ(_body_facets); i++)
     {
-        for (unsigned j = 0; j < ARRAYSZ(mut); j++)
+        for (unsigned j = 0; j < MUTS_IN_SLOT; j++)
         {
             if (_body_facets[i].mut == mut[j])
                 eq[k++] = _body_facets[i].eq;
