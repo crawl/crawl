@@ -38,7 +38,7 @@ enum element_type
     ETC_ELVEN,          // used for colouring elf fabric items
     ETC_DWARVEN,        // used for colouring dwarf fabric items
     ETC_ORCISH,         // used for colouring orc fabric items
-    ETC_GILA,           // gila monster colours
+    ETC_FLASH,          // flashy colours
     ETC_KRAKEN,         // kraken colours
     ETC_FLOOR,          // colour of the area's floor
     ETC_ROCK,           // colour of the area's rock
