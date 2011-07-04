@@ -446,7 +446,7 @@ $(document).ready(
             $("#crt").html("Sadly, your browser does not support WebSockets. <br><br>");
             $("#crt").append("The following browsers can be used to run WebTiles: ");
             $("#crt").append("<ul><li>Chrome 6 and greater</li>" +
-                             "<li>Firefox 4, after disabling the " +
+                             "<li>Firefox 4 and 5, after enabling the " +
                              "network.websocket.override-security-block setting in " +
                              "about:config</li><li>Opera 11, after " +
                              " enabling WebSockets in opera:config#Enable%20WebSockets" +
