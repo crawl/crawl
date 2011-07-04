@@ -448,7 +448,7 @@ void init_element_colours()
                             20,  MAGENTA,
                         0));
     add_element_colour(_create_random_element_colour_calc(
-                            ETC_GILA, "gila",
+                            ETC_FLASH, "flash",
                             30,  LIGHTMAGENTA,
                             30,  MAGENTA,
                             30,  YELLOW,

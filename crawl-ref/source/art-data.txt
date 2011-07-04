@@ -848,7 +848,7 @@ NAME:     cloak of Flash
 APPEAR:   vibrating cloak
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
 PLUS:     +3
-COLOUR:   ETC_GILA
+COLOUR:   ETC_FLASH
 TILE:     urand_flash
 TILE_EQ:  red
 EV:       4
