@@ -482,8 +482,7 @@ LUAFN(you_init)
 }
 
 LUARET1(you_exp_needed, number, exp_needed(luaL_checkint(ls, 1)));
-LUARET1(you_exercise, number,
-        exercise(str_to_skill(luaL_checkstring(ls, 1)), 1));
+LUAWRAP(you_exercise, exercise(str_to_skill(luaL_checkstring(ls, 1)), 1));
 LUARET1(you_skill_cost_level, number, you.skill_cost_level);
 LUARET1(you_skill_points, number,
         you.skill_points[str_to_skill(luaL_checkstring(ls, 1))]);

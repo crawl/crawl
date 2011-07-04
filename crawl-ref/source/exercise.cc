@@ -10,7 +10,6 @@
 
 #include "exercise.h"
 
-#include "godconduct.h"
 #include "itemprop.h"
 #include "player.h"
 #include "random.h"
@@ -190,7 +189,6 @@ static void _exercise_spell(spell_type spell, bool success)
 {
     // (!success) reduces skill increase for miscast spells
     skill_type skill;
-    int exer = 0;
     int workout = 0;
 
     unsigned int disciplines = get_spell_disciplines(spell);
@@ -206,8 +204,8 @@ static void _exercise_spell(spell_type spell, bool success)
     const int diff = spell_difficulty(spell);
 
     // Fill all disciplines into a vector, then shuffle the vector, and
-    // exercise skills in that random order. That way, small xp pools
-    // don't always train exclusively the first skill.
+    // exercise skills in that random order. That way, first skill don't
+    // stay in the queue for a shorter time.
     std::vector<int> disc;
     for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
     {
@@ -227,8 +225,7 @@ static void _exercise_spell(spell_type spell, bool success)
         if (!one_chance_in(5))
             workout++;       // most recently, this was an automatic add {dlb}
 
-        const int exercise_amount = exercise(skill, workout);
-        exer      += exercise_amount;
+        exercise(skill, workout);
     }
 
     /* ******************************************************************
@@ -243,16 +240,8 @@ static void _exercise_spell(spell_type spell, bool success)
        spellcasting had also been generally exercised at the same time
        ****************************************************************** */
 
-    exer += exercise(SK_SPELLCASTING, one_chance_in(3) ? 1
-                                      : random2(1 + random2(diff)));
-
-    // Avoid doubly rewarding spell practise in sprint
-    // (by inflated XP and inflated piety gain)
-    if (crawl_state.game_is_sprint())
-        exer = sprint_modify_exp_inverse(exer);
-
-    if (exer)
-        did_god_conduct(DID_SPELL_PRACTISE, exer);
+    exercise(SK_SPELLCASTING,
+             one_chance_in(3) ? 1 : random2(1 + random2(diff)));
 }
 
 static bool _check_train_armour(int amount)

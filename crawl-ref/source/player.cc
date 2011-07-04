@@ -2783,6 +2783,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
 
     you.exp_available += exp_gained;
 
+    train_skills();
     level_change();
 
     if (actual_gain != NULL)
@@ -5260,11 +5261,13 @@ void player::init()
     deaths = 0;
     xray_vision = false;
 
+    auto_training = true;
     skills.init(0);
-    practise_skill.init(true);
+    training.init(0);
     skill_points.init(0);
     ct_skill_points.init(0);
     skill_order.init(MAX_SKILL_ORDER);
+    exercises.clear();
 
     transfer_from_skill = SK_NONE;
     transfer_to_skill = SK_NONE;

@@ -17,6 +17,7 @@
 
 #include "species.h"
 
+#include <list>
 #include <vector>
 
 #ifdef USE_TILE
@@ -115,10 +116,13 @@ public:
   int deaths;
 
   FixedVector<uint8_t, NUM_SKILLS>  skills;
-  FixedVector<bool, NUM_SKILLS>  practise_skill;
+  FixedVector<char, NUM_SKILLS>  training;
   FixedVector<unsigned int, NUM_SKILLS>   skill_points;
   FixedVector<unsigned int, NUM_SKILLS>   ct_skill_points;
   FixedVector<uint8_t, NUM_SKILLS>  skill_order;
+
+  bool auto_training;
+  std::list<skill_type> exercises;
 
   //Ashenzari transfer knowledge
   skill_type    transfer_from_skill;

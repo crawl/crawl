@@ -40,6 +40,7 @@ enum tag_minor_version
     TAG_MINOR_DECK_RARITY,         // Make item.special=0 not clash with real rarities.
     TAG_MINOR_PIETY_MAX,           // Remember the maximum piety attained with each god.
     TAG_MINOR_CHR_NAMES,           // Store species and god names as strings.
+    TAG_MINOR_SKILL_TRAINING,      // New skill training system.
 
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
