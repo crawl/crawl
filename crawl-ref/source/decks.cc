@@ -50,6 +50,7 @@
 #include "potion.h"
 #include "religion.h"
 #include "godconduct.h"
+#include "skills.h"
 #include "skills2.h"
 #include "spl-cast.h"
 #include "spl-damage.h"
@@ -2075,6 +2076,7 @@ static void _experience_card(int power, deck_rarity_type rarity)
     if (power_level <= 1)
         exp_gain = std::min(exp_gain, power * 50);
     you.exp_available += exp_gain;
+    train_skills();
 
     // After level 27, boosts you get don't get increased (matters for
     // charging V:8 with no rN+++ and for felids).
