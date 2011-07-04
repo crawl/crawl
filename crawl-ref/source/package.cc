@@ -683,7 +683,7 @@ chunk_writer::~chunk_writer()
             fail("save file compression failed: %s", zs.msg);
         raw_write(z_buffer, zs.next_out - z_buffer);
         zs.next_out = z_buffer;
-        zs.avail_out = sizeof(ZB_SIZE);
+        zs.avail_out = ZB_SIZE;
     } while (res != Z_STREAM_END);
     if (deflateEnd(&zs) != Z_OK)
         fail("save file compression failed during clean-up: %s", zs.msg);
