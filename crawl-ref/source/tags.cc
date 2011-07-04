@@ -2434,8 +2434,8 @@ void unmarshallItem(reader &th, item_def &item)
         return;
     item.sub_type    = unmarshallUByte(th);
 #if TAG_MAJOR_VERSION == 32
-    if (th.getMinorVersion() < TAG_MINOR_BOOK_ZOOLOGY
-        && item.base_type == OBJ_BOOKS && item.sub_type >= BOOK_ZOOLOGY)
+    if (th.getMinorVersion() < TAG_MINOR_BOOK_BEASTS
+        && item.base_type == OBJ_BOOKS && item.sub_type >= BOOK_BEASTS)
     {
         ++item.sub_type;
     }
