@@ -469,6 +469,15 @@ static void _zappy(zap_type z_type, int power, bolt &pbolt)
 
 bool bolt::can_affect_actor(const actor *act) const
 {
+    std::map<mid_t, int>::const_iterator cnt = hit_count.find(act->mid);
+    if (cnt != hit_count.end() && cnt->second >= 2)
+    {
+        // Note: this is done for balance, even if it hurts realism a bit.
+        // It is arcane knowledge which wall patterns will cause lightning
+        // to bounce thrice, double damage for ordinary bounces is enough.
+        dprf("skipping beam hit, affected them twice already");
+        return false;
+    }
     // If there's a function that checks whether an actor is affected,
     // bypass any generic beam-affects-X logic:
     if (affect_func)
@@ -599,6 +608,7 @@ void bolt::initialise_fire()
     extra_range_used   = 0;
     in_explosion_phase = false;
     use_target_as_pos  = false;
+    hit_count.clear();
 
     if (special_explosion != NULL)
     {
@@ -3476,6 +3486,8 @@ void bolt::affect_actor(actor *act)
 
 void bolt::affect_player()
 {
+    hit_count[MID_PLAYER]++;
+
     // Explosions only have an effect during their explosion phase.
     // Special cases can be handled here.
     if (is_explosion && !in_explosion_phase)
@@ -4212,6 +4224,7 @@ void bolt::affect_monster(monster* mon)
         return;
     }
 
+    hit_count[mon->mid]++;
     // First some special cases.
 
     // Digging doesn't affect monsters (should it harm earth elementals?)
@@ -5229,6 +5242,9 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
 
     const int r = std::min(ex_size, MAX_EXPLOSION_RADIUS);
     in_explosion_phase = true;
+    // being hit by bounces doesn't exempt you from the explosion (not that it
+    // currently ever matters)
+    hit_count.clear();
 
     if (is_sanctuary(pos()))
     {
