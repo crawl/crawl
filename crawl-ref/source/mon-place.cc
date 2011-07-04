@@ -3307,6 +3307,15 @@ static dungeon_feature_type _monster_secondary_habitat_feature(int mc)
     return (habitat2grid(mons_class_secondary_habitat(mc)));
 }
 
+static bool _valid_spot(coord_def pos)
+{
+    if (actor_at(pos))
+        return false;
+    if (env.level_map_mask(pos) & MMT_NO_MONS)
+        return false;
+    return true;
+}
+
 class newmons_square_find : public travel_pathfind
 {
 private:
@@ -3350,7 +3359,7 @@ public:
                 good_square(dc);
             return (false);
         }
-        if (actor_at(dc) == NULL && one_chance_in(++nfound))
+        if (_valid_spot(dc) && one_chance_in(++nfound))
         {
             greedy_dist = traveled_distance;
             greedy_place = dc;
