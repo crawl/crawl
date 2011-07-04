@@ -1009,6 +1009,20 @@ void SkillMenu::set_skills()
 
 void SkillMenu::toggle_practise(skill_type sk, int keyn)
 {
+    if (you.training[sk] >= 0)
+    {
+        // We are disabling a skill. Just make sure it's not the last one.
+        bool enabled_skill = false;
+        for (int i = 0; i < NUM_SKILLS; ++i)
+            if (sk != i && you.skills[i] && you.training[i] >= 0)
+            {
+                enabled_skill = true;
+                break;
+            }
+        if (!enabled_skill)
+            return;
+    }
+
     you.training[sk] = (you.training[sk] >= 0) ? -1 : 0;
     reset_training();
     SkillMenuEntry* skme = find_entry(sk);
