@@ -1588,9 +1588,6 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     if (type == WPN_QUICK_BLADE && brand == SPWPN_SPEED)
         return (false);
 
-    if (vorp == DVORP_CRUSHING && brand == SPWPN_VENOM)
-        return (false);
-
     if (skill != SK_POLEARMS && brand == SPWPN_DRAGON_SLAYING)
         return (false);
 
