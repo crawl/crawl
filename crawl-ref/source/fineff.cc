@@ -35,7 +35,7 @@ void add_final_effect(final_effect_flavour flavour,
 
     for (std::vector<final_effect>::iterator fi = env.final_effects.begin();
          fi != env.final_effects.end();
-         fi++)
+         ++fi)
     {
         if (fi->flavour == fe.flavour
             && fi->att == fe.att

@@ -141,7 +141,7 @@ static std::string get_userfunction(const keyseq &seq)
 
 static bool userfunc_referenced(int index, const macromap &mm)
 {
-    for (macromap::const_iterator i = mm.begin(); i != mm.end(); i++)
+    for (macromap::const_iterator i = mm.begin(); i != mm.end(); ++i)
     {
         if (userfunc_index(i->second) == index)
             return (true);
@@ -363,7 +363,7 @@ static std::string vtostr(const keyseq &seq)
         v = &dummy;
     }
 
-    for (keyseq::const_iterator i = v->begin(); i != v->end(); i++)
+    for (keyseq::const_iterator i = v->begin(); i != v->end(); ++i)
     {
         if (*i <= 32 || *i > 127)
         {
@@ -652,7 +652,7 @@ int macro_buf_get()
 
 static void write_map(FILE *f, const macromap &mp, const char *key)
 {
-    for (macromap::const_iterator i = mp.begin(); i != mp.end(); i++)
+    for (macromap::const_iterator i = mp.begin(); i != mp.end(); ++i)
     {
         // Need this check, since empty values are added into the
         // macro struct for all used keyboard commands.
@@ -1146,7 +1146,7 @@ void remove_key_recorder(key_recorder* recorder)
 {
     std::vector<key_recorder*>::iterator i;
 
-    for (i = recorders.begin(); i != recorders.end(); i++)
+    for (i = recorders.begin(); i != recorders.end(); ++i)
         if (*i == recorder)
         {
             recorders.erase(i);

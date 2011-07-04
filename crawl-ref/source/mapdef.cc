@@ -4777,7 +4777,7 @@ item_spec item_list::parse_single_spec(std::string s)
         std::vector<std::string> ids = split_string("|", id_str);
         int id = 0;
         for (std::vector<std::string>::const_iterator is = ids.begin();
-             is != ids.end(); is++)
+             is != ids.end(); ++is)
         {
             if (*is == "curse")
                 id |= ISFLAG_KNOW_CURSE;

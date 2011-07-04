@@ -171,7 +171,7 @@ static std::string _desc_mons_type_map(std::map<monster_type, int> types)
     std::string message;
     unsigned int count = 1;
     for (std::map<monster_type, int>::iterator it = types.begin();
-         it != types.end(); it++)
+         it != types.end(); ++it)
     {
         std::string name;
         description_level_type desc;
@@ -216,7 +216,7 @@ static void _genus_factoring(std::map<monster_type, int> &types,
     int num = 0;
     std::map<monster_type, int>::iterator it;
     // Find the most represented genus.
-    for (it = genera.begin(); it != genera.end(); it++)
+    for (it = genera.begin(); it != genera.end(); ++it)
         if (it->second > num)
         {
             genus = it->first;
@@ -245,7 +245,8 @@ static void _genus_factoring(std::map<monster_type, int> &types,
         if (it->second == num)
             return;
 
-        types.erase(it++);
+        types.erase(it);
+        ++it;
 
     } while (it != types.end());
 

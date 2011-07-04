@@ -1300,7 +1300,7 @@ void CrawlHashTable::write(writer &th) const
 
     CrawlHashTable::hash_map_type::const_iterator i = hash_map->begin();
 
-    for (; i != hash_map->end(); i++)
+    for (; i != hash_map->end(); ++i)
     {
         marshallString(th, i->first);
         i->second.write(th);
@@ -1358,7 +1358,7 @@ void CrawlHashTable::assert_validity() const
 
     unsigned long actual_size = 0;
 
-    for (; i != hash_map->end(); i++)
+    for (; i != hash_map->end(); ++i)
     {
         actual_size++;
 

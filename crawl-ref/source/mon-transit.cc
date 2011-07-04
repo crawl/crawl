@@ -201,7 +201,7 @@ void place_transiting_items()
     i_transit_list keep;
     i_transit_list::iterator item;
 
-    for (item = ilist.begin(); item != ilist.end(); item++)
+    for (item = ilist.begin(); item != ilist.end(); ++item)
     {
         coord_def pos = item->pos;
 

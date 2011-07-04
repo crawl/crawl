@@ -219,8 +219,8 @@ void tornado_damage(actor *caster, int dur)
         {
             if (winds.has_wind(*count_i))
                 cnt_open++;
-            cnt_all++;
-            count_i++;
+            ++cnt_all;
+            ++count_i;
         }
         int rpow = pow * cnt_open / cnt_all;
         dprf("at dist %d pow is %d", r, rpow);
@@ -228,7 +228,7 @@ void tornado_damage(actor *caster, int dur)
             break;
 
         std::vector<coord_def> clouds;
-        for (; dam_i && dam_i.radius() == r; dam_i++)
+        for (; dam_i && dam_i.radius() == r; ++dam_i)
         {
             if (feat_is_tree(grd(*dam_i)) && dur > 0 && one_chance_in(20))
             {
