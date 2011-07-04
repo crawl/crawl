@@ -138,6 +138,7 @@ struct bolt
     bool        can_see_invis;   // tracer firer can see invisible?
     mon_attitude_type attitude;  // attitude of whoever fired tracer
     int         foe_ratio;       // 100* foe ratio (see mons_should_fire())
+    std::map<mid_t, int> hit_count; // how many times targets were affected
 
     tracer_info foe_info;
     tracer_info friend_info;
