@@ -28,6 +28,7 @@
 #include "player.h"
 #include "player-equip.h"
 #include "player-stats.h"
+#include "skills.h"
 #include "spl-miscast.h"
 #include "terrain.h"
 #include "transform.h"
@@ -367,6 +368,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         else
             mpr("A flood of memories washes over you.");
         you.exp_available += 750 * you.experience_level;
+        train_skills();
         break;
 
     case POT_MAGIC:
