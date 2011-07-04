@@ -3798,7 +3798,7 @@ mon_body_shape get_mon_shape(const int type)
     {
     case 'a': // ants
         return (MON_SHAPE_INSECT);
-    case 'b':  // bats and butterflies
+    case 'b': // bats and butterflies
         if (type == MONS_BUTTERFLY)
             return (MON_SHAPE_INSECT_WINGED);
         else
@@ -3865,7 +3865,8 @@ mon_body_shape get_mon_shape(const int type)
         {
             return (MON_SHAPE_QUADRUPED_TAILLESS);
         }
-        return (MON_SHAPE_QUADRUPED);
+        else
+            return (MON_SHAPE_QUADRUPED);
     case 'v': // vortices
         return (MON_SHAPE_MISC);
     case 'w': // worms
@@ -3882,10 +3883,8 @@ mon_body_shape get_mon_shape(const int type)
             return (MON_SHAPE_HUMANOID);
         }
         else
-        {
             // constructed type, not enough info to determine shape
             return (MON_SHAPE_MISC);
-        }
     case 'A': // angelic beings
         return (MON_SHAPE_HUMANOID_WINGED);
     case 'B': // beetles
