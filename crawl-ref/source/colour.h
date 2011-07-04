@@ -23,8 +23,10 @@ enum element_type
     ETC_HEAL,           // holy healing (not necromantic stuff)
     ETC_HOLY,           // general "good" god effects
     ETC_DARK,           // darkness
-    ETC_DEATH,          // currently only assassin (and equal to ETC_NECRO)
+    ETC_DEATH,          // assassin/necromancy stuff
+#if TAG_MAJOR_VERSION == 32
     ETC_NECRO,          // necromancy stuff
+#endif
     ETC_UNHOLY,         // demonology stuff
     ETC_VEHUMET,        // vehumet's oddball colours
     ETC_BEOGH,          // Beogh altar colours

@@ -356,18 +356,20 @@ void init_element_colours()
                             80,  DARKGREY,
                             40,  LIGHTGREY,
                         0));
-    // assassin
+    // assassin, necromancer
     add_element_colour(_create_random_element_colour_calc(
                             ETC_DEATH, "death",
                             80,  DARKGREY,
                             40,  MAGENTA,
                         0));
+#if TAG_MAJOR_VERSION == 32
     // necromancer
     add_element_colour(_create_random_element_colour_calc(
                             ETC_NECRO, "necro",
                             80,  DARKGREY,
                             40,  MAGENTA,
                         0));
+#endif
     // ie demonology
     add_element_colour(_create_random_element_colour_calc(
                             ETC_UNHOLY, "unholy",
