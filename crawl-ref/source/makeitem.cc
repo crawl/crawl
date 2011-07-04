@@ -1579,7 +1579,6 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     item.base_type = OBJ_WEAPONS;
     item.sub_type = type;
 
-    int vorp = get_vorpal_type(item);
     int skill = weapon_skill(OBJ_WEAPONS, type);
 
     if (brand <= SPWPN_NORMAL)
