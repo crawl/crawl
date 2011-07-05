@@ -344,15 +344,19 @@ void wizard_set_piety()
         return;
     }
     mprf("Setting piety to %d.", newpiety);
-    int diff = newpiety - you.piety;
-    if (diff > 0)
-        gain_piety(diff, 1, true, false);
-    else
-        lose_piety(-diff);
 
-    // Automatically reduce penance to 0.
-    if (you.penance[you.religion] > 0)
-        dec_penance(you.penance[you.religion]);
+    // We have to set the exact piety value this way, because diff may
+    // be decreased to account for things like penance and gift timeout.
+    int diff;
+    do
+    {
+        diff = newpiety - you.piety;
+        if (diff > 0)
+            gain_piety(diff, 1, true, false);
+        else if (diff < 0)
+            lose_piety(-diff);
+    }
+    while (diff != 0);
 }
 
 //---------------------------------------------------------------
