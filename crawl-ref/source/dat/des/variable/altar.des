@@ -680,7 +680,7 @@ xxxxx
 ENDMAP
 
 NAME:  fedhas_bush_and_centaur_altar
-DEPTH: 3-27
+DEPTH: D:3-27
 KFEAT: _ = altar_fedhas
 MONS:  centaur, bush
 MAP
