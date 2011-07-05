@@ -65,7 +65,7 @@ ENDMAP
 NAME:   evilmike_zot_entry_round
 TAGS:   no_monster_gen zot_entry
 SUBST:  = = nnn=
-SUBST:  c: c:70 v:20 b:10 
+SUBST:  c: c:70 v:20 b:10
 SUBST:  v: vcxlmb, n: nnnnvbcx
 FTILE:  })]O-4G: FLOOR_MARBLE
 SUBST:  - = ^ .:90
@@ -80,7 +80,7 @@ xxxxxxxxcccccccxxxxxxx
 xxxcccccc..3..ccccccxx
 xxcc......vvv......ccx
 xxc.v......3......v.cx
-xxc.2v...nn=nn...v..cx        
+xxc.2v...nn=nn...v..cx
 xxc...nnnn---nnnn...cx
 xxc...n----G----n..3cx
 xcc...n-G--4--G-n...cc
@@ -153,7 +153,7 @@ NAME:   evilmike_zot_entry_gauntlet
 TAGS:   no_monster_gen zot_entry
 SUBST:  b: v.., v: c.
 TILE:   X = WALL_ZOT_MAGENTA
-FTILE:  -OD = FLOOR_HALL 
+FTILE:  -OD = FLOOR_HALL
 COLOUR: X-D = magenta
 KPROP:  O- = no_tele_into
 SUBST:  - = ., D = +
@@ -324,7 +324,7 @@ NSUBST: 2 = 2:2 / *:.
 NSUBST: 1 = 2:1 / *:2
 MONS:   patrolling nonbase draconian
 MONS:   dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
-MONS:   patrolling base draconian  
+MONS:   patrolling base draconian
 MAP
       ..1..
      .2X+X2.
