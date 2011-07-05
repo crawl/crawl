@@ -123,8 +123,10 @@ void _write_abyssal_features()
     {
         const int dist = distance(ABYSS_CENTRE, *ri);
         int chance = pow(0.98, dist) * scalar;
-        if (!map_masked(*ri, MMT_VAULT)) {
-            if (dist < 4 || x_chance_in_y(chance, scalar)) {
+        if (!map_masked(*ri, MMT_VAULT))
+        {
+            if (dist < 4 || x_chance_in_y(chance, scalar))
+            {
                 if (abyssal_features[index] != DNGN_UNSEEN)
                 {
                     grd(*ri) = abyssal_features[index];
@@ -494,9 +496,7 @@ static bool _abyss_check_place_feat(coord_def p,
             *use_map = false;
         }
         else
-        {
             grd(p) = which_feat;
-        }
 
         if (feats_wanted)
             --*feats_wanted;
@@ -573,17 +573,11 @@ public:
         const bool exit_is_near = abyss_exit_nearness();
         const bool rune_is_near = abyss_rune_nearness();
 
-        if (exit_was_near && !exit_is_near
-            || rune_was_near && !rune_is_near)
-        {
+        if (exit_was_near && !exit_is_near || rune_was_near && !rune_is_near)
             xom_is_stimulated(255, "Xom snickers loudly.", true);
-        }
 
-        if (!rune_was_near && rune_is_near
-            || !exit_was_near && exit_is_near)
-        {
+        if (!rune_was_near && rune_is_near || !exit_was_near && exit_is_near)
             xom_is_stimulated(255);
-        }
     }
 };
 
@@ -1014,7 +1008,8 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
     const double scale = 2.2;
 
     const int NUM_CLOUDS = 6;
-    const cloud_type clouds[NUM_CLOUDS] = {
+    const cloud_type clouds[NUM_CLOUDS] =
+    {
         CLOUD_BLACK_SMOKE,
         CLOUD_GREY_SMOKE,
         CLOUD_BLUE_SMOKE,
@@ -1041,22 +1036,20 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
 
         if (grd(p) == DNGN_UNSEEN || applyGlobal)
         {
-
             worley::noise_datum sub_noise =
                 worley::worley(x*17, y*31, abyss_depth);
 
             int dist = noise.distance[0] * 100;
             bool isWall = (dist > 118 || dist < 40);
 
-            if (noise.id[0] + noise.id[1] % 2  == 0) {
+            if (noise.id[0] + noise.id[1] % 2  == 0)
                 isWall = sub_noise.id[0] % 2;
-            }
 
-            if (sub_noise.id[0] % 3 == 0) {
+            if (sub_noise.id[0] % 3 == 0)
                 isWall = isWall ^ true;
-            }
 
-            if (isWall) {
+            if (isWall)
+            {
                 int fuzz = (sub_noise.id[1] % 3 ? 0 : sub_noise.id[1] % 2 + 1);
                 int id = (noise.id[0] + fuzz) % n_terrain_elements;
                 feat = terrain_elements[id];
@@ -1065,9 +1058,7 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
             if (feat != grd(p))
             {
                 if (applyGlobal)
-                {
                     _abyss_wipe_square_at(*ri, true);
-                }
 
                 if (feat == DNGN_FLOOR && in_los_bounds_g(p) && !(noise.id[1] % 3))
                 {
@@ -1112,11 +1103,8 @@ static int _abyss_place_vaults(const map_mask &abyss_genlevel_mask)
         if (!map)
             break;
 
-        if (_abyss_place_map(map)
-            && !one_chance_in(2 + (++vaults_placed)))
-        {
+        if (_abyss_place_map(map) && !one_chance_in(2 + (++vaults_placed)))
             break;
-        }
     }
 
     return (vaults_placed);
@@ -1368,11 +1356,8 @@ static void _initialise_level_corrupt_seeds(int power)
         while (tries-- > 0)
         {
             where = dgn_random_point_from(you.pos(), aux_seed_radius, 2);
-            if (grd(where) == DNGN_FLOOR
-                && !env.markers.find(where, MAT_ANY))
-            {
+            if (grd(where) == DNGN_FLOOR && !env.markers.find(where, MAT_ANY))
                 break;
-            }
             where.reset();
         }
 
