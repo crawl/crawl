@@ -224,7 +224,9 @@ static void _post_init(bool newc)
     if (newc && you.char_direction == GDT_GAME_START)
     {
         // Randomise colours properly for the Abyss.
+#ifdef NEW_ABYSS
         generate_abyss();
+#endif
         init_pandemonium();
     }
 
