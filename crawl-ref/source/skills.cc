@@ -415,6 +415,8 @@ void exercise(skill_type exsk, int deg)
     if (you.skills[exsk] >= 27 || you.training[exsk] < 0)
         return;
 
+    dprf("Exercise %s by %d.", skill_name(exsk), deg);
+
     if (!you.skills[exsk])
         you.training[exsk] += deg;
     else
