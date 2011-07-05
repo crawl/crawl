@@ -890,10 +890,6 @@ static void _place_player_on_stair(level_area_type old_level_type,
         if (player_in_hell())
             stair_taken = DNGN_ENTER_HELL;
     }
-    else if (stair_taken == DNGN_EXIT_ABYSS)
-    {
-        stair_taken = DNGN_STONE_STAIRS_UP_I;
-    }
     else if (stair_taken == DNGN_ENTER_PORTAL_VAULT)
     {
         stair_taken = DNGN_STONE_ARCH;
