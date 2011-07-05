@@ -734,8 +734,10 @@ void SkillMenu::toggle(skill_menu_switch sw)
     case SKM_SHOW:
         set_skills();
         break;
-    case SKM_LEVEL:
     case SKM_VIEW:
+        you.props["skm_view"] = get_state(SKM_VIEW);
+    //fall through.
+    case SKM_LEVEL:
         refresh_display();
     }
     set_help(m_switches[sw]->get_help());
@@ -858,13 +860,16 @@ void SkillMenu::init_switches()
     {
         sw = new SkillMenuSwitch("View", '!');
         m_switches[SKM_VIEW] = sw;
-        sw->add(SKM_VIEW_TRAINING);
         sw->add(SKM_VIEW_PROGRESS);
+        sw->add(SKM_VIEW_TRAINING);
         if (!is_invalid_skill(you.transfer_to_skill))
         {
             sw->add(SKM_VIEW_TRANSFER);
             sw->set_state(SKM_VIEW_TRANSFER);
         }
+        if (you.props.exists("skm_view"))
+            sw->set_state((skill_menu_state)you.props["skm_view"].get_int());
+
         if (you.wizard)
             sw->add(SKM_VIEW_POINTS);
 
