@@ -675,6 +675,17 @@ void SkillMenu::clear_selections()
     _clear_selections();
 }
 
+// Before we exit, make sure there's at least one skill enabled.
+bool SkillMenu::exit()
+{
+    for (int i = 0; i < NUM_SKILLS; ++i)
+        if (you.skills[i] && you.training[i] >= 0)
+            return true;
+
+    set_help("You need to enable at least one skill.");
+    return false;
+}
+
 skill_menu_state SkillMenu::get_state(skill_menu_switch sw)
 {
     if (!m_switches[sw])
@@ -1139,7 +1150,8 @@ void skill_menu(bool reskilling)
             case 1006:
                 continue;
             default:
-                return;
+                if (skm.exit())
+                    return;
             }
         }
         else
