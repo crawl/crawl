@@ -274,7 +274,7 @@ bool mons_class_can_use_stairs(int mc);
 bool mons_can_use_stairs(const monster* mon);
 bool mons_enslaved_body_and_soul(const monster* mon);
 bool mons_enslaved_soul(const monster* mon);
-bool name_zombie(monster* mon, int mc, const std::string mon_name);
+bool name_zombie(monster* mon, int mc, const std::string &mon_name);
 bool name_zombie(monster* mon, const monster* orig);
 
 int mons_power(int mc);

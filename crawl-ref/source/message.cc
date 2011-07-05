@@ -1110,8 +1110,8 @@ unsigned int msgwin_lines()
 
 // mpr() an arbitrarily long list of strings without truncation or risk
 // of overflow.
-void mpr_comma_separated_list(const std::string prefix,
-                              const std::vector<std::string> list,
+void mpr_comma_separated_list(const std::string &prefix,
+                              const std::vector<std::string> &list,
                               const std::string &andc,
                               const std::string &comma,
                               const msg_channel_type channel,

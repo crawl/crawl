@@ -2327,7 +2327,7 @@ std::string god_name_jiyva(bool second_name)
     return (name);
 }
 
-god_type str_to_god(const std::string _name, bool exact)
+god_type str_to_god(const std::string &_name, bool exact)
 {
     std::string target(_name);
     trim_string(target);
