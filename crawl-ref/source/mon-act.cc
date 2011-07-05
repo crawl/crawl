@@ -1462,12 +1462,11 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     // fire/ice and incorrect ammo.  They now have the same restrictions
     // as players.
 
-          int  bow_brand  = SPWPN_NORMAL;
     const int  ammo_brand = get_ammo_brand(item);
 
     if (projected == LRET_LAUNCHED)
     {
-        bow_brand = get_weapon_brand(mitm[weapon]);
+        int bow_brand = get_weapon_brand(mitm[weapon]);
 
         switch (lnchType)
         {

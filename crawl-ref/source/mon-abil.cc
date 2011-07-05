@@ -818,7 +818,7 @@ static bool _orange_statue_effects(monster* mons)
     return (false);
 }
 
-static bool _orc_battle_cry(monster* chief)
+static void _orc_battle_cry(monster* chief)
 {
     const actor *foe = chief->get_foe();
     int affected = 0;
@@ -915,8 +915,6 @@ static bool _orc_battle_cry(monster* chief)
             }
         }
     }
-    // Orc battle cry doesn't cost the monster an action.
-    return (false);
 }
 
 static bool _make_monster_angry(const monster* mon, monster* targ)
@@ -2038,7 +2036,8 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (is_sanctuary(mons->pos()))
             break;
 
-        used = _orc_battle_cry(mons);
+        _orc_battle_cry(mons);
+        // Doesn't cost a turn.
         break;
 
     case MONS_ORANGE_STATUE:

@@ -701,14 +701,12 @@ static void _big_room(int level_number)
 {
     dungeon_feature_type type_floor = DNGN_FLOOR;
     dungeon_feature_type type_2 = DNGN_FLOOR;
-    int i, j, k, l;
 
     dgn_region region;
-    int oblique;
 
     if (one_chance_in(4))
     {
-        oblique = 5 + random2(20);
+        int oblique = 5 + random2(20);
 
         region = dgn_region(8 + random2(30), 8 + random2(22),
                             21 + random2(10), 21 + random2(8));
@@ -765,10 +763,10 @@ static void _big_room(int level_number)
     // Sometimes make an inside room w/ stone wall.
     else if (one_chance_in(6))
     {
-        i = region.pos.x;
-        j = region.pos.y;
-        k = region.end().x;
-        l = region.end().y;
+        int i = region.pos.x;
+        int j = region.pos.y;
+        int k = region.end().x;
+        int l = region.end().y;
 
         do
         {

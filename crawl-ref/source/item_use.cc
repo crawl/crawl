@@ -496,9 +496,6 @@ bool armour_prompt(const std::string & mesg, int *index, operation_types oper)
 {
     ASSERT(index != NULL);
 
-    bool  succeeded = false;
-    int   slot;
-
     if (inv_count() < 1)
         canned_msg(MSG_NOTHING_CARRIED);
     else if (you.berserk())
@@ -508,18 +505,18 @@ bool armour_prompt(const std::string & mesg, int *index, operation_types oper)
         int selector = OBJ_ARMOUR;
         if (oper == OPER_TAKEOFF && !Options.equip_unequip)
             selector = OSEL_WORN_ARMOUR;
-        slot = prompt_invent_item(mesg.c_str(), MT_INVLIST, selector,
-                                   true, true, true, 0, -1, NULL,
-                                   oper);
+        int slot = prompt_invent_item(mesg.c_str(), MT_INVLIST, selector,
+                                      true, true, true, 0, -1, NULL,
+                                      oper);
 
         if (!prompt_failed(slot))
         {
             *index = slot;
-            succeeded = true;
+            return true;
         }
     }
 
-    return (succeeded);
+    return false;
 }
 
 static bool cloak_is_being_removed(void)

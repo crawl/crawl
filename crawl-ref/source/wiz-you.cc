@@ -448,7 +448,6 @@ void wizard_set_skill_level(skill_type skill)
 #ifdef WIZARD
 void wizard_set_all_skills(void)
 {
-    int i;
     int amount = prompt_for_int("Set all skills to what level? ", true);
 
     if (amount < 0)             // cancel returns -1 -- bwr
@@ -458,7 +457,7 @@ void wizard_set_all_skills(void)
         if (amount > 27)
             amount = 27;
 
-        for (i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+        for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
         {
             skill_type sk = static_cast<skill_type>(i);
             if (is_invalid_skill(sk))
