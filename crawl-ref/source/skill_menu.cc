@@ -409,8 +409,10 @@ void SkillMenuEntry::set_title()
 
 void SkillMenuEntry::set_training()
 {
-    m_progress->set_text(make_stringf("(%2d%%)",
-                                      std::max<int>(0, you.training[m_sk])));
+    if (you.training[m_sk] <= 0)
+        m_progress->set_text("");
+    else
+        m_progress->set_text(make_stringf("(%2d%%)", you.training[m_sk]));
     m_progress->set_fg_colour(CYAN);
 }
 
