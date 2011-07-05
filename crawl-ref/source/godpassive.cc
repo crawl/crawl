@@ -486,6 +486,11 @@ bool ash_id_item(item_def& item, bool silent)
     if (you.religion != GOD_ASHENZARI)
         return false;
 
+    // Don't identify runes or the orb, since this has no gameplay purpose
+    // and might mess up other things.
+    if (item_is_rune(item) || item_is_orb(item))
+        return false;
+
     if (item.base_type == OBJ_JEWELLERY && item_needs_autopickup(item))
         item.props["needs_autopickup"] = true;
 
