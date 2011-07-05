@@ -729,7 +729,10 @@ TAGS:   uniq_altar_ahsnezari temple_overflow_ashenzari
 KFEAT:  _ = altar_ashenzari
 ITEM:   cursed mace ident:curse / cursed trident ident:curse / \
         cursed flail ident:curse w:1 / cursed whip ident:curse w:1
-ITEM:   book of cantrips
+### TODO: This still gives book names like "Ashenzari's Almanac of Skeletal cook" and
+###       "Ashenzari's Compendium of Skeletal cook", whereas we just want
+###       "Ashenzari's skeletal cookbook" or similar (no random component)
+ITEM:   randbook owner:Ashenzari desc:necr title:Skeletal_cook spells:animate_skeleton numspells:1
 MAP
 ...
 d_e
