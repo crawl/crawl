@@ -1033,6 +1033,43 @@ ccccccccccccccc
    ccccccccc
 ENDMAP
 
+NAME:   mrperson_orb_statues
+TAGS:   orb_chamber
+MARKER: Z = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="auto" \
+        }
+KITEM:  Z = Orb of Zot
+KMASK:  Z1! = no_item_gen
+SUBST:  ! = ^ .:40
+SUBST:  . = .:500 ^
+COLOUR: G = magenta
+SUBST:  G = G:100 F:1
+KMONS:  F = orange crystal statue / silver statue / ice statue
+KMONS:  1 = patrolling Orb Guardian
+MAP
+   ccccccccc
+  ccccccccccc
+ccccccccccccccc
+ccccccccccccccc
+ ccccccccccccc
+  ccccccccccc
+  ccccccccccc
+ XXXXXXXXXXXXX
+ XX.G.G.G.G.XX
+ .............
+ .1.........1.
+ .............
+ X.G.X...X.G.X
+ XXXXX1.1XXXXX
+  XX...F...XX
+  XG11XXX11GX
+ cXX..!Z!..XXc
+ccXXG.!!!.GXXcc
+cccXXGXFXGXXccc
+  ccXXXXXXXcc
+   ccccccccc
+ENDMAP
+
 
 ##############################################################################
 ##############################################################################
