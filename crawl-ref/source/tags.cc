@@ -1639,11 +1639,11 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
     }
     else
     {
-        if (you.species >= 0 && you.species < ARRAYSZ(old_species))
+        if (you.species >= 0 && you.species < (int)ARRAYSZ(old_species))
             you.species_name = old_species[you.species];
         else
             you.species_name = "Yak";
-        if (you.religion >= 0 && you.religion < ARRAYSZ(old_gods))
+        if (you.religion >= 0 && you.religion < (int)ARRAYSZ(old_gods))
             you.god_name = old_gods[you.religion];
         else
             you.god_name = "Marduk";
