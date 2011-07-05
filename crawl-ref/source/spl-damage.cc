@@ -1822,7 +1822,7 @@ actor* forest_near_enemy(const actor *mon)
 }
 
 // Print a message only if you can see any affected trees.
-void forest_message(const coord_def pos, const std::string msg, msg_channel_type ch)
+void forest_message(const coord_def pos, const std::string &msg, msg_channel_type ch)
 {
     for (radius_iterator ri(pos, LOS_RADIUS); ri; ++ri)
         if (feat_is_tree(grd(*ri))

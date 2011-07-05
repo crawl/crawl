@@ -84,7 +84,7 @@ static void _append_value(std::string & description, int valu, bool plussed)
     description += value_str;
 }
 
-int count_desc_lines(const std::string _desc, const int width)
+int count_desc_lines(const std::string &_desc, const int width)
 {
     std::string desc = get_linebreak_string(_desc, width);
 
