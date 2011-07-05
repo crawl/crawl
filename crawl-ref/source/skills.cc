@@ -523,7 +523,10 @@ void train_skills()
         if (!is_invalid_skill(sk))
             gain = _train(sk, you.exp_available);
         else
-            die("Can't find a skill to train.");
+        {
+            // No skill to train. Can happen if all skills are at 27.
+            return;
+        }
 
         if (you.skill_points[sk] >= skill_exp_needed(27, sk))
         {
