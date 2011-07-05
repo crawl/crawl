@@ -168,6 +168,7 @@ static void _change_skill_level(skill_type exsk, int n)
 {
     ASSERT(n != 0);
     skill_type old_best_skill = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
+    bool reset_training_array = false;
 
     if (-n > you.skills[exsk])
         n = -you.skills[exsk];
@@ -179,7 +180,11 @@ static void _change_skill_level(skill_type exsk, int n)
         take_note(Note(NOTE_LOSE_SKILL, exsk, you.skills[exsk]));
 
     if (you.skills[exsk] == 27)
+    {
         mprf(MSGCH_INTRINSIC_GAIN, "You have mastered %s!", skill_name(exsk));
+        you.training[exsk] = -1;
+        reset_training_array = true;
+    }
     else if (you.skills[exsk] == 1 && n > 0)
     {
         mprf(MSGCH_INTRINSIC_GAIN, "You have gained %s skill!", skill_name(exsk));
@@ -191,7 +196,7 @@ static void _change_skill_level(skill_type exsk, int n)
             you.exercises.push_back(exsk);
             --you.training[exsk];
         }
-        reset_training();
+        reset_training_array = true;
     }
     else if (abs(n) == 1 && you.num_turns)
     {
@@ -208,6 +213,12 @@ static void _change_skill_level(skill_type exsk, int n)
 
     if (n > 0)
         learned_something_new(HINT_SKILL_RAISE);
+
+    if (you.skills[exsk] - n == 27)
+    {
+        you.training[exsk] = 0;
+        reset_training_array = true;
+    }
 
     // Recalculate this skill's order for tie breaking skills
     // at its new level.   See skills2.cc::init_skill_order()
@@ -248,6 +259,9 @@ static void _change_skill_level(skill_type exsk, int n)
     const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     if (best != old_best_skill || old_best_skill == exsk)
         redraw_skill(you.your_name, player_title());
+
+    if (reset_training_array)
+        reset_training();
 
     // TODO: also identify rings of wizardry.
 }
@@ -476,6 +490,9 @@ void train_skills()
                    && you.training[sk] > 0)
             {
                 gain += _train(sk, sk_exp[sk]);
+                // Don't train past level 27.
+                if (you.skill_points[sk] >= skill_exp_needed(27, sk))
+                    sk_exp[sk] = 0;
             }
 
             if (gain && sk > SK_LAST_MUNDANE && sk <= SK_LAST_MAGIC)
@@ -500,6 +517,12 @@ void train_skills()
             gain = _train(sk, you.exp_available);
         else
             die("Can't find a skill to train.");
+
+        if (you.skill_points[sk] >= skill_exp_needed(27, sk))
+        {
+            sk_exp[sk] = 0;
+            you.training[sk] = 0;
+        }
 
         if (gain && sk > SK_LAST_MUNDANE && sk <= SK_LAST_MAGIC)
             magic_gain += gain;
@@ -592,10 +615,6 @@ void change_skill_points(skill_type sk, int points, bool do_level_up)
 
 static int _train(skill_type exsk, int &max_exp)
 {
-    // Don't train past level 27, even if the level hasn't been updated yet.
-    if (you.skill_points[exsk] >= skill_exp_needed(27, exsk))
-        return 0;
-
     // This will be added to you.skill_points[exsk];
     int skill_inc = 10;
 
