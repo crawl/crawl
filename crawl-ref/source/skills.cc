@@ -329,6 +329,12 @@ void init_training()
     _init_exercise_queue();
 }
 
+static bool _cmp_rest(const std::pair<skill_type,int>& a,
+                      const std::pair<skill_type,int>& b)
+{
+    return a.second < b.second;
+}
+
 /*
  * Reset the training array. Unknown skills are not touched and disabled ones
  * are skipped. In automatic mode, we use values from the exercise queue.
@@ -366,9 +372,41 @@ void reset_training()
         }
     }
 
+    const int scale_to = 100 - total_unknown;
+    std::vector<std::pair<skill_type,int> > rests;
+    int scaled_total = 0;
+
     for (int i = 0; i < NUM_SKILLS; ++i)
         if (you.skills[i] && you.training[i] > 0)
-            you.training[i] = you.training[i] * (100 - total_unknown) / total;
+        {
+            int result = you.training[i] * scale_to;
+            const int rest = result % total;
+            if (rest)
+                rests.push_back(std::pair<skill_type,int>(skill_type(i), rest));
+            you.training[i] = result / total;
+            scaled_total += you.training[i];
+        }
+
+    ASSERT(scaled_total <= scale_to);
+
+
+    // In manual mode, it's better to keep selected skills equal than to
+    // to round some up for a total of 100.
+    if (!you.auto_training)
+        return;
+
+    // We ensure that the percentage always add up to 100 by increasing the
+    // training for skills which had the higher rest from the above scaling.
+    std::sort(rests.begin(), rests.end(), _cmp_rest);
+    std::vector<std::pair<skill_type,int> >::iterator it = rests.begin();
+    while (scaled_total < scale_to && it != rests.end())
+    {
+        ++you.training[it->first];
+        ++scaled_total;
+        ++it;
+    }
+
+    ASSERT(scaled_total == scale_to);
 }
 
 // returns total number of skill points gained
