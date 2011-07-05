@@ -357,6 +357,10 @@ void wizard_set_piety()
             lose_piety(-diff);
     }
     while (diff != 0);
+
+    // Automatically reduce penance to 0.
+    if (you.penance[you.religion] > 0)
+        dec_penance(you.penance[you.religion]);
 }
 
 //---------------------------------------------------------------
