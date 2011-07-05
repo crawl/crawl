@@ -2014,7 +2014,7 @@ bool is_worthless_consumable(const item_def &item)
         default:
             return false;
         }
-    
+
     // Only consumables are worthless.
     default:
         return false;
