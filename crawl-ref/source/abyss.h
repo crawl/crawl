@@ -15,8 +15,6 @@ const coord_def ABYSS_CENTRE(GXM / 2, GYM / 2);
 
 struct abyss_state {
     coord_def major_coord;
-    coord_def minor_coord;
-    map_mask mask;
     double depth;
 };
 
@@ -25,6 +23,7 @@ void maybe_shift_abyss_around_player();
 void abyss_morph();
 void abyss_area_shift();
 void abyss_teleport(bool new_area);
+void abyss_maybe_decay_vaults();
 void save_abyss_uniques();
 bool is_level_incorruptible();
 bool lugonu_corrupt_level(int power);
