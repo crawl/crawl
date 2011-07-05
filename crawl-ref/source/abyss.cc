@@ -61,9 +61,9 @@ const int ABYSSAL_RUNE_MAX_ROLL = 200;
 
 static abyss_state abyssal_state;
 
-bool just_banished = false;
-std::vector<dungeon_feature_type> abyssal_features;
-std::list<monster*> displaced_monsters;
+static bool just_banished = false;
+static std::vector<dungeon_feature_type> abyssal_features;
+static std::list<monster*> displaced_monsters;
 
 // If not_seen is true, don't place the feature where it can be seen from
 // the centre.
