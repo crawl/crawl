@@ -1191,7 +1191,7 @@ NAME:   roderic_chinese_lattice_entry
 TAGS:   entry no_monster_gen
 ORIENT: float
 MAP
-    x.xxx.x 
+    x.xxx.x
     x.....x
   xxx.x.x.xxx
   x.........x

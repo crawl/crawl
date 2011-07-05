@@ -804,11 +804,11 @@ ENDMAP
 # Crop circle vaults (Roderic)
 # Season indicated by colouring. Something special for tiles wanted? --dpeg
 NAME:   roderic_crop_circles_entry_small
-TAGS:   entry  no_item_gen no_trap_gen 
+TAGS:   entry  no_item_gen no_trap_gen
 ORIENT: float
 MONS:   col:green plant, col:yellow plant, col:brown plant
-SUBST:  '=111. 
-COLOUR: . = brown 
+SUBST:  '=111.
+COLOUR: . = brown
 : if crawl.one_chance_in(50) then
 SUBST:  1 = 2:100 1:10 3:1
 : elseif crawl.one_chance_in(5) then
@@ -842,8 +842,8 @@ TAGS:   entry no_item_gen no_trap_gen
 ORIENT: float
 WEIGHT: 1
 MONS:   col:green plant, col:yellow plant, col:brown plant
-SUBST:  '=111. 
-COLOUR: . = brown 
+SUBST:  '=111.
+COLOUR: . = brown
 : if crawl.one_chance_in(50) then
 SUBST:  1 = 2:100 1:10 3:1
 : elseif crawl.one_chance_in(5) then
@@ -853,7 +853,7 @@ SUBST:  1 = 1:100 2:5
 : else
 SUBST:  1 = 1:100 3:10
 : end
-MAP 
+MAP
 111111.111111111'111111
 1111.....11111.....1111
 111.11111.111.11111.111
@@ -909,4 +909,3 @@ xxxxx.x.x.xxx.x.x.xxxxx
    xxxx.........xxxx
    xxxx+xxxxxxx+xxx
 ENDMAP
-

@@ -1088,7 +1088,7 @@ ENDMAP
 
 NAME:   roderic_Aztec_sauvastika
 WEIGHT: 1
-DEPTH:  D 
+DEPTH:  D
 MAP
    ......@..
   ...xxxxx...
@@ -1103,14 +1103,14 @@ MAP
 .....x.........
 .....x.xxx.....
  ....x...x....
-  ...xxxxx...    
+  ...xxxxx...
    ..@......
 ENDMAP
 
 NAME:   roderic_Bali_sauvastika
 TAGS:   extra
 WEIGHT: 1
-DEPTH:  D 
+DEPTH:  D
 : if crawl.one_chance_in(5) then
 SUBST:  @ = x
 : else
@@ -1133,7 +1133,7 @@ ENDMAP
 NAME:   roderic_Chinese_pattern_swastika
 WEIGHT: 1
 DEPTH:  D
-MAP 
+MAP
 ...............
 .x.xxxx.xxxx.x.
 .x.xxxx.xxxx.x.
@@ -1213,7 +1213,7 @@ ENDMAP
 NAME:   roderic_bipointed_swastika
 WEIGHT: 1
 TAGS:   extra
-DEPTH:  D 
+DEPTH:  D
 : if crawl.one_chance_in(5) then
 SUBST:  @ = x
 : else
@@ -1282,7 +1282,7 @@ TAGS:   extra
 DEPTH:  D
 SUBST:  ? = x+
 MAP
-   .......  
+   .......
    .xx+xx.
    .x...x.
 ....x.x.x....
@@ -1325,7 +1325,7 @@ WEIGHT:  1
 DEPTH:   D, Elf
 SHUFFLE: defgh
 ITEM:    q:1 $, sausage, choko, sultana, stone
-NSUBST:  ' = 9:d / *:.  
+NSUBST:  ' = 9:d / *:.
 MAP
 '.......'.......'
 .xxxxxxx.xxxxxxx.
@@ -1371,8 +1371,8 @@ TAGS:    allow_dup extra luniq_mini
 DEPTH:   D
 WEIGHT:  1
 SHUFFLE: '"
-SUBST:   x : xxxxxc 
-SUBST:   ? : xxxxxcm 
+SUBST:   x : xxxxxc
+SUBST:   ? : xxxxxcm
 SUBST:   ' : .
 SUBST:   " : x
 
@@ -1388,7 +1388,7 @@ MAP
 .'...x.?.".
 .x"""x'''x.
 ...........
-ENDMAP  
+ENDMAP
 
 NAME:  roderic_lattice_a
 DEPTH: D
@@ -1417,11 +1417,11 @@ MAP
  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# Malta's cross 
+# Malta's cross
 NAME:   roderic_malta_cross
 TAGS:   allow_dup extra luniq_mini
 WEIGHT: 1
-DEPTH:  D 
+DEPTH:  D
 MAP
  .........
 ...ccccc...
@@ -1438,7 +1438,7 @@ ENDMAP
 
 NAME:   roderic_whirl
 TAGS:   allow_dup extra luniq_mini
-DEPTH:  D, Elf 
+DEPTH:  D, Elf
 WEIGHT: 1
 SUBST:  ? : ttTTG
 MAP
@@ -1456,8 +1456,8 @@ ENDMAP
 NAME:  roderic_lattice_octagonal_star
 TAGS:  float
 MAP
-  .......     .......  
- ....x..... .....x.... 
+  .......     .......
+ ....x..... .....x....
 ....xxx.........xxx....
 ....xxx.........xxx....
 ..xxxxxxx.....xxxxxxx..
@@ -1465,11 +1465,11 @@ MAP
 ..xxxxxxx..x..xxxxxxx..
 ....xxx...xxx...xxx....
 ....xxx.xxxxxxx.xxx....
- ....x..xxxxxxx..x.... 
- ......xxxxxxxxx...... 
-  ....xxxxxxxxxxx....  
- ......xxxxxxxxx...... 
- ....x..xxxxxxx..x.... 
+ ....x..xxxxxxx..x....
+ ......xxxxxxxxx......
+  ....xxxxxxxxxxx....
+ ......xxxxxxxxx......
+ ....x..xxxxxxx..x....
 ....xxx.xxxxxxx.xxx....
 ....xxx...xxx...xxx....
 ..xxxxxxx..x..xxxxxxx..
@@ -1477,8 +1477,8 @@ MAP
 ..xxxxxxx.....xxxxxxx..
 ....xxx.........xxx....
 ....xxx.........xxx....
- ....x..... .....x.... 
-  .......     .......  
+ ....x..... .....x....
+  .......     .......
 ENDMAP
 
 

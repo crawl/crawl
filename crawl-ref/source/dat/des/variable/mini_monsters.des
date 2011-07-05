@@ -651,7 +651,7 @@ TAGS:     extra mini_float
 DEPTH:    D:6-12, Lair: 3-6, Swamp
 KMONS:    1 = raven
 KITEM:    % = any jewellery
-KITEM:    1 = any jewellery / nothing 
+KITEM:    1 = any jewellery / nothing
 : if you.branch() == "D" then
 SHUFFLE:  t' / x"
 SUBST:    " = x
@@ -1289,16 +1289,16 @@ xxxxxxxxxxxxx
 ENDMAP
 
 # Carrion pond
-# Bad water, a lot of carrion and feeders around, yuck! 
+# Bad water, a lot of carrion and feeders around, yuck!
 # Has either necrophage or jackal, but the former is more memorable.
 #
-# Perhaps use Sewers style water? 
-# Would also be nice if we could make the corpses fit the branch. 
+# Perhaps use Sewers style water?
+# Would also be nice if we could make the corpses fit the branch.
 # And even better if some corpses could rot (i.e. delayed rotting).
 #                                                          --dpeg
 NAME:  roderic_carrion_pond
 TAGS:  no_monster_gen no_trap_gen mini_float
-DEPTH: Lair: 2-7 , Swamp 
+DEPTH: Lair: 2-7 , Swamp
 SUBST: ? = %%.
 KITEM: % = any corpse
 : dgn.delayed_decay(_G, '%', 'any corpse')
@@ -1309,12 +1309,12 @@ MONS:  jackal
 : end
 SUBST: ' = 111.
 MAP
- ..'..?.. 
+ ..'..?..
 .?'.?.??'.
 '?.www?.?.
 .'wwwww.?.
 ?..ww?.?'.
- .?'.?... 
+ .?'.?...
 ENDMAP
 
 ###############################################################################
