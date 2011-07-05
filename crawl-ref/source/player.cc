@@ -2689,6 +2689,11 @@ int burden_change(void)
     return (you.burden);
 }
 
+void forget_map(bool force)
+{
+    forget_map(100, force);
+}
+
 // force is true for forget_map command on level map.
 void forget_map(int chance_forgotten, bool force)
 {

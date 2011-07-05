@@ -2339,6 +2339,11 @@ void handle_time()
             change_labyrinth();
     }
 
+    if (you.level_type == LEVEL_ABYSS)
+    {
+        forget_map(you.religion == GOD_LUGONU ? 25 : 45);
+    }
+
     if (you.religion == GOD_JIYVA && one_chance_in(10))
     {
         int total_jellies = 1 + random2(5);

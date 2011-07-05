@@ -2934,7 +2934,7 @@ static void _player_reacts()
         else if (you.level_type == LEVEL_ABYSS)
         {
             if (one_chance_in(30))
-                abyss_morph();
+                abyss_maybe_decay_vaults();
             else
                 abyss_morph();
         }
