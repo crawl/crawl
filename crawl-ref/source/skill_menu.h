@@ -136,6 +136,7 @@ public:
 
     void add_item(TextItem* item, const int size, coord_def &coord);
     void clear_selections();
+    bool exit();
     skill_menu_state get_state(skill_menu_switch sw);
     void select(skill_type sk, int keyn);
     void toggle(skill_menu_switch sw);
