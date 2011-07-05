@@ -17,14 +17,14 @@ CHANCE: 1%
   end)
 }}
 
-NAME:	serial_bayou_pond_a
-TAGS:	coolio_serial_bayou allow_dup extra
-DEPTH:	D, Snake, Lair
-MONS:	plant
-SUBST:	? = .WW2
-SUBST:	1 = 11.t
-KFEAT:	2 = swamp_tree
-MAP    
+NAME:   serial_bayou_pond_a
+TAGS:   coolio_serial_bayou allow_dup extra
+DEPTH:  D, Snake, Lair
+MONS:   plant
+SUBST:  ? = .WW2
+SUBST:  1 = 11.t
+KFEAT:  2 = swamp_tree
+MAP
     1..1..1
    1..1??....1
  .1..??2W?...1
@@ -35,13 +35,13 @@ MAP
    ..11..1
 ENDMAP
 
-NAME:	serial_bayou_pond_b
-TAGS:	coolio_serial_bayou allow_dup extra
+NAME:   serial_bayou_pond_b
+TAGS:   coolio_serial_bayou allow_dup extra
 DEPTH:  D, Snake, Lair
-MONS:	plant
-SUBST:	? = .WW21
-SUBST:	1 = 11.t
-MAP    
+MONS:   plant
+SUBST:  ? = .WW21
+SUBST:  1 = 11.t
+MAP
   ..1..11..
 ..1?W?W?WW1
 .1WW?W?W??..
@@ -52,17 +52,17 @@ MAP
 . 1 .1..1 .
 ENDMAP
 
-NAME:	serial_bayou_pond_c
+NAME:   serial_bayou_pond_c
 #mangrove
-TAGS:	coolio_serial_bayou allow_dup extra
+TAGS:   coolio_serial_bayou allow_dup extra
 DEPTH:  D, Snake, Lair
-MONS:	plant
-SUBST:	? = WWtt2
-SUBST:	. = ..W12
+MONS:   plant
+SUBST:  ? = WWtt2
+SUBST:  . = ..W12
 KFEAT:  t = swamp_tree
-KMONS:	2 = plant
-KFEAT:	2 = W
-MAP    
+KMONS:  2 = plant
+KFEAT:  2 = W
+MAP
        1
     ..1W
  .11WWWW.
@@ -76,15 +76,15 @@ MAP
    .1.
 ENDMAP
 
-NAME:	serial_bayou_pond_d
+NAME:   serial_bayou_pond_d
 #small pond
 TAGS:  coolio_serial_bayou allow_dup extra
 DEPTH:  D, Snake, Lair
-SUBST:	1 = 1W.
-SUBST:	W = WWWt
-KFEAT:	t = swamp_tree
-KMONS:	1 = plant
-KFEAT:	1 = W
+SUBST:  1 = 1W.
+SUBST:  W = WWWt
+KFEAT:  t = swamp_tree
+KMONS:  1 = plant
+KFEAT:  1 = W
 MAP
  11
  WWW1
@@ -118,7 +118,7 @@ SUBST: ! = W..
 KFEAT: t = swamp_tree
 KMONS: 1 = plant
 KFEAT: 1 = W
-MAP    
+MAP
        ttttt
       tttttttt
      ??WW??WW??
@@ -148,7 +148,7 @@ SUBST:  ! = W1..
 KFEAT:  t = swamp_tree
 KMONS:  1 = plant
 KFEAT:  1 = W
-MAP    
+MAP
  @@      ttttxxxxxx
 @..WWWWWWWWttttxxxx
  ..!WWWWWWWWWttttxx
@@ -164,7 +164,7 @@ MAP
  @@      tttttttxxx
 ENDMAP
 
-NAME:	serial_bayou_shore_b
+NAME:   serial_bayou_shore_b
 #a shore of a small pond, duplicable
 TAGS:   coolio_serial_bayou allow_dup extra
 ORIENT: east
@@ -176,7 +176,7 @@ SUBST:  ! = W1..
 KFEAT:  t = swamp_tree
 KMONS:  1 = plant
 KFEAT:  1 = W
-MAP    
+MAP
   ???xxx
 @.!W??xx
 @.!WWW?x
@@ -186,16 +186,16 @@ MAP
   ???xxx
 ENDMAP
 
-NAME:	serial_bayou_lagoon_a
+NAME:   serial_bayou_lagoon_a
 #mangrove
-TAGS:	coolio_serial_bayou transparent extra
+TAGS:   coolio_serial_bayou transparent extra
 DEPTH:  D, Snake, Lair
-SUBST:	? = W11.
-SUBST:	w = wwt
+SUBST:  ? = W11.
+SUBST:  w = wwt
 KFEAT:  t = swamp_tree
-KMONS:	1 = plant
-KFEAT:	1 = W
-MAP    
+KMONS:  1 = plant
+KFEAT:  1 = W
+MAP
 ?????????
 ?WWt1W11???
 ??WWWwwwwW????
@@ -224,7 +224,7 @@ KFEAT: t = swamp_tree
 KMONS: 1 = plant
 KFEAT: 1 = W
 FTILE: . = floor_dirt
-MAP    
+MAP
     ?????     ???
    ?WWWWW?????ttt?
   WWWWWWWttttWVWWt?
@@ -258,7 +258,7 @@ SUBST: W = WWWW1
 KFEAT: t = swamp_tree
 KMONS: 1 = plant
 KFEAT: 1 = W
-MAP    
+MAP
           ?????????
       ?????????????????
      ??????WWW?WWWWW??????
@@ -285,18 +285,18 @@ SUBST: W = WWW.
 KFEAT: t = swamp_tree
 KMONS: 1 = plant
 KFEAT: 1 = W
-MAP    
+MAP
     t?@?t
     t?W?tt
     t?W?tt
-  ttt?W?t  
+  ttt?W?t
 ttttt?W?ttttt
 ?????WWW?????
 @WWWWWWWWWWW@
 ?????WWW?????
 ttttt?W?ttttt
   ttt?W?t t
-   tt?W?t 
+   tt?W?t
     t?W?tt
     t?@?t
 ENDMAP

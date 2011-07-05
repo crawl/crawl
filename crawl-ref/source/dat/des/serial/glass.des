@@ -4,7 +4,7 @@
 # we only roll numbers between 2 and 12 (non-flat distribution).
 # Sometimes we add a few rarer glass vaults to the level.
 #
-# The maps for this serial vault are in mini_features.des and can 
+# The maps for this serial vault are in mini_features.des and can
 # also be used individually.
 
 NAME:   serial_glass
