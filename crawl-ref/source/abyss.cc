@@ -61,7 +61,6 @@ const int ABYSSAL_RUNE_MAX_ROLL = 200;
 
 static abyss_state abyssal_state;
 
-static bool just_banished = false;
 static std::vector<dungeon_feature_type> abyssal_features;
 static std::list<monster*> displaced_monsters;
 
@@ -417,7 +416,6 @@ static std::vector<dungeon_feature_type> _abyss_pick_terrain_elements()
 
 void push_features_to_abyss()
 {
-    just_banished = true;
     abyssal_features.clear();
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
@@ -1238,12 +1236,7 @@ void generate_abyss()
 
     // Generate the initial abyss without vaults. Vaults are horrifying.
     _abyss_generate_new_area();
-
-    if (just_banished)
-    {
-        _write_abyssal_features();
-        just_banished = false;
-    }
+    _write_abyssal_features();
 
     // If we're starting out in the Abyss, make sure the starting grid is
     // an altar to Lugonu and there's an exit near-by.
