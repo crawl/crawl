@@ -731,7 +731,7 @@ void print_stats(void)
         cprintf("XP: ");
         textcolor(HUD_VALUE_COLOUR);
         cprintf("%d/%d (%d) ",
-                you.skill_cost_level, you.exp_available, you.experience);
+                you.experience_level, you.skill_cost_level, you.exp_available);
 #else
         cprintf("XL: ");
         textcolor(HUD_VALUE_COLOUR);
