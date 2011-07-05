@@ -282,13 +282,12 @@ void wizard_create_portal()
 void wizard_create_feature()
 {
     char specs[256];
-    int feat_num;
     dungeon_feature_type feat;
     mpr("Create which feature? ", MSGCH_PROMPT);
 
     if (!cancelable_get_line(specs, sizeof(specs)) && specs[0] != 0)
     {
-        if ((feat_num = atoi(specs)))
+        if (int feat_num = atoi(specs))
         {
             feat = static_cast<dungeon_feature_type>(feat_num);
         }

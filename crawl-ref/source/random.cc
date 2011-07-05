@@ -136,7 +136,6 @@ int maybe_roll_dice(int num, int size, bool random)
 int roll_dice(int num, int size)
 {
     int ret = 0;
-    int i;
 
     // If num <= 0 or size <= 0, then we'll just return the default
     // value of zero.  This is good behaviour in that it will be
@@ -145,7 +144,7 @@ int roll_dice(int num, int size)
     {
         ret += num;     // since random2() is zero based
 
-        for (i = 0; i < num; i++)
+        for (int i = 0; i < num; i++)
             ret += random2(size);
     }
 

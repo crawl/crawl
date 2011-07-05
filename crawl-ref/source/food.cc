@@ -679,11 +679,10 @@ bool eat_food(int slot)
     if (!_eat_check())
         return (false);
 
-    int result;
     // Skip the prompts if we already know what we're eating.
     if (slot == -1)
     {
-        result = prompt_eat_chunks();
+        int result = prompt_eat_chunks();
         if (result == 1 || result == -1)
             return (result > 0);
 

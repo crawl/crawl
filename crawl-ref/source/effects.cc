@@ -909,10 +909,9 @@ int recharge_wand(int item_slot, bool known, std::string *pre_msg)
         if (wand.base_type != OBJ_WANDS && !item_is_rod(wand))
             return (0);
 
-        int charge_gain = 0;
         if (wand.base_type == OBJ_WANDS)
         {
-            charge_gain = wand_charge_value(wand.sub_type);
+            int charge_gain = wand_charge_value(wand.sub_type);
 
             const int new_charges =
                 std::max<int>(

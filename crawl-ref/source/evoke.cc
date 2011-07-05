@@ -381,7 +381,6 @@ bool disc_of_storms(bool drac_breath)
 {
     const int fail_rate = (30 - you.skill(SK_EVOCATIONS));
     bool rc = false;
-    int power;
 
     if ((player_res_electricity() || x_chance_in_y(fail_rate, 100))
          && !drac_breath)
@@ -413,7 +412,7 @@ bool disc_of_storms(bool drac_breath)
                                          you.skill(SK_EVOCATIONS)/3 + 5; // 5--14
             beam.source = you.pos();
             beam.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
-            power = (drac_breath) ? 25 + you.experience_level : 30 + you.skill(SK_EVOCATIONS) * 2;
+            int power = (drac_breath) ? 25 + you.experience_level : 30 + you.skill(SK_EVOCATIONS) * 2;
             // Non-controlleable, so no player tracer.
             zapping(which_zap, power, beam);
 
