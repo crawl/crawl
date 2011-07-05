@@ -1,11 +1,23 @@
 ##############################################################################
 # zot.des: The ultimate goal. The Orb must be placed (Z). These maps can and
 #          should be serious challenges! Players dying on Zot:5 are okay :)
+#
+# Content: Zot entry vaults (these are on D:27 and contain the portal)
+#          Zot vaults, mini and not so mini
+#          Zot hall (on Zot:5), with orb chamber subvaults
+#          Vaults that define the floor/wall colours for Zot:1-5
+#
 ##############################################################################
 
-###########################
+
+##############################################################################
+##############################################################################
+#
 # Zot entries (D side)
-###########################
+#
+##############################################################################
+##############################################################################
+
 # Old-style three stairs
 #
 NAME:   zot_entry_traditional
@@ -50,10 +62,298 @@ xxxcccxxx
 xxxxxxxxx
 ENDMAP
 
-###########################
+NAME:   evilmike_zot_entry_round
+TAGS:   no_monster_gen zot_entry
+SUBST:  = = nnn=
+SUBST:  c: c:70 v:20 b:10 
+SUBST:  v: vcxlmb, n: nnnnvbcx
+FTILE:  })]O-4G: FLOOR_MARBLE
+SUBST:  - = ^ .:90
+KFEAT:  O = enter_zot
+SUBST:  4 = 122223
+MONS:   patrolling nonbase draconian
+MONS:   dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
+MONS:   patrolling base draconian
+MAP
+xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxcccccccxxxxxxx
+xxxcccccc..3..ccccccxx
+xxcc......vvv......ccx
+xxc.v......3......v.cx
+xxc.2v...nn=nn...v..cx        
+xxc...nnnn---nnnn...cx
+xxc...n----G----n..3cx
+xcc...n-G--4--G-n...cc
+xc.1.nn----v----nn...c
+xc.v.n----v-v----n.v.+
+xc.v.+-G-v-O-v-G-=.v.+
+xc.v.n----v-v----n.v.+
+xc.1.nn----v----nn...c
+xcc...n-G--4--G-n...cc
+xxc...n----G----n..3cx
+xxc...nnnn---nnnn...cx
+xxc.2v...nn=nn...v..cx
+xxc.v.....3.......v.cx
+xxcc......vvv......ccx
+xxxcccccc.3...ccccccxx
+xxxxxxxxcccccccxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# Sorry, no wand of wishing in this one
+NAME:   evilmike_zot_entry_castle
+TAGS:   no_monster_gen zot_entry
+NSUBST: O = 1:O / *:n
+SUBST:  ^ = ^.
+SUBST:  s = ccc=
+MARKER: = = lua:restrict_door()
+KFEAT:  ^ = alarm trap / blade trap / axe trap / bolt trap
+KFEAT:  O = enter_zot
+KFEAT:  n = stone_arch
+KFEAT:  m = iron_grate
+FTILE:  "OnDx = FLOOR_MARBLE
+COLOUR: " = magenta
+TILE:   x = WALL_ZOT_MAGENTA
+COLOUR: x = magenta
+FTILE:  .+cm^1234$ = FLOOR_HALL
+SUBST:  D = +, "' = .
+MONS:   patrolling nonbase draconian
+MONS:   dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
+MONS:   w:20 patrolling base draconian / nothing
+MONS:   base draconian ; glaive ego:reaching | halberd ego:reaching
+MAP
+'''''''''''''''''''''''''''''''''''''''''
+'wwwwwwwww'''''''''''''''''''''wwwwwwwww'
+'wcccccccwwwwwwwwwwwwwwwwwwwwwwwcccccccw'
+'wc1....cccccmccccccmccccccmccccc....1cw'
+'wc.""".+....2.............2....+.""".cw'
+'wc."O".cccccccccccc+cccccccccccc."O".cw'
+'wc.""".s..3.....=4m.m4=......3.s.""".cw'
+'wc.....c.3...cccccc.cccccc.""".c.....cw'
+'wccccccc3....+...3"""3...+."x"3ccc+cccw'
+'wwwwwwccccccccc.""""""".ccc""".c$$$.ccw'
+''''''wm.......c.""""""".c4=..3.s$$$2mww'
+''''''wc.x3x3x2c"""xxx"""cmcccccccccccw''
+''''''WD"""""""D"""xxx"""+.+^^^^^^^^^+w''
+''''''wc.x3x3x2c"""xxx"""cmcccccccccccw''
+''''''wm.......c.""""""".c4=..3.s$$$2mww'
+'wwwwwwccccccccc.""""""".ccc""".c$$$.ccw'
+'wccccccc3....+...3"""3...+."x"3ccc+cccw'
+'wc.....c.3...cccccc.cccccc.""".c.....cw'
+'wc.""".s..3.....=4m.m4=......3.s.""".cw'
+'wc."O".cccccccccccc+cccccccccccc."O".cw'
+'wc.""".+....2.............2....+.""".cw'
+'wc1....cccccmccccccmccccccmccccc....1cw'
+'wcccccccwwwwwwwwwwwwwwwwwwwwwwwcccccccw'
+'wwwwwwwww'''''''''''''''''''''wwwwwwwww'
+'''''''''''''''''''''''''''''''''''''''''
+ENDMAP
+
+NAME:   evilmike_zot_entry_gauntlet
+TAGS:   no_monster_gen zot_entry
+SUBST:  b: v.., v: c.
+TILE:   X = WALL_ZOT_MAGENTA
+FTILE:  -OD = FLOOR_HALL 
+COLOUR: X-D = magenta
+KPROP:  O- = no_tele_into
+SUBST:  - = ., D = +
+KFEAT:  O = enter_zot
+MARKER: + = lua:restrict_door()
+# easy: 1, 2
+: if crawl.coinflip() then
+MONS:   pale draconian, steam dragon
+: else
+MONS:   grey draconian, wyvern
+: end
+# medium: 3, 4
+: if crawl.coinflip() then
+MONS:   mottled draconian, mottled dragon
+: else
+MONS:   green draconian, swamp dragon
+: end
+# hard: 5, 6
+: if crawl.coinflip() then
+MONS:   red draconian, dragon
+: else
+MONS:   white draconian, ice dragon
+: end
+# harder: 7, 8
+: if crawl.coinflip() then
+MONS:   black draconian
+KMONS:  8 = storm dragon
+: else
+MONS:   purple draconian
+KMONS:  8 = quicksilver dragon
+: end
+# boss: 9, 0
+KMONS:  9 = nonbase draconian
+KMONS:  0 = golden dragon
+MAP
+ccc+ccccccccccccccccccc
+cvb.bvcccvb.bvccccccccc
+cb...bcccb.9.bccccccccc
+c.1.1.ccc.0...+.ccccccc
+cb222bcccb.9.bc..cccccc
+cvb.bvcccvb.bvcc..ccccc
+ccc+ccccccc+ccccc..cccc
+ccc.ccccccc.cccccc..ccc
+ccc+ccccccXDXcccccc+ccc
+cvb.bvcccXX-XXcccvb.bvc
+cb...bccXX---XXccb.8.bc
+c.3.3.ccX--O--Xcc.7.7.c
+cb444bccXX---XXccb...bc
+cvb.bvcccXX-XXcccvb.bvc
+ccc+ccccccXXXcccccc+ccc
+ccc..ccccccccccccc..ccc
+cccc..ccccccccccc..cccc
+ccccc..ccvb.bvcc..ccccc
+cccccc..cb.56bc..cccccc
+ccccccc.+.....+.ccccccc
+cccccccccb.56bccccccccc
+cccccccccvb.bvccccccccc
+ccccccccccccccccccccccc
+ENDMAP
+
+NAME:   evilmike_zot_entry_argh
+TAGS:   no_monster_gen patrolling zot_entry
+KFEAT:  O = enter_zot
+# Grey dracs can escape from the islands if they have water. This is intentional.
+SUBST:  G: GXm., m: mmlw
+SUBST:  x: xcvX
+NSUBST: 2 = 2:2 / *:-
+TILE:   X = WALL_ZOT_MAGENTA
+COLOUR: X = magenta
+COLOUR: . = white
+FTILE:  -23O = FLOOR_HALL
+SUBST:  - = .
+MONS:   draconian zealot / draconian caller
+MONS:   dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
+MONS:   base draconian
+KMONS:  O = nonbase draconian
+MAP
+xxxxxxxxxxxx@xxxxxxxxxxxx
+xxx........---........xxx
+xxmmm.....G.-.G.....mmmxx
+x.m1m.......-.......m1m.x
+x.mmm...G...-...G...mmm.x
+x..........---..........x
+x.....G....---....G.....x
+x..........---..........x
+x...G.....-----.....G...x
+x........XX---XX........x
+x.G.....-X3---3X-.....G.x
+x-...------2-2------...-x
+@-----------O-----------@
+x-...------2-2------...-x
+x.G.....-X3---3X-.....G.x
+x........XX---XX........x
+x...G.....-----.....G...x
+x..........---..........x
+x.....G....---....G.....x
+x..........---..........x
+x.mmm...G...-...G...mmm.x
+x.m1m.......-.......m1m.x
+xxmmm.....G.-.G.....mmmxx
+xxx........---........xxx
+xxxxxxxxxxxx@xxxxxxxxxxxx
+ENDMAP
+
+NAME:   evilmike_zot_entry_hall
+TAGS:   no_monster_gen patrolling zot_entry
+KFEAT:  O = enter_zot
+TILE:   X = WALL_ZOT_MAGENTA
+COLOUR: X+- = magenta
+FTILE:  -O+ = FLOOR_HALL
+KPROP:  O- = no_tele_into
+SUBST:  - = .
+SUBST:  v: ....cnXblw, z:..cnXblw
+NSUBST: d = 5:3 / 2:2 / *:.
+MONS:   nonbase draconian
+MONS:   dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
+MONS:   base draconian
+MAP
+                   cccccccccccc
+                   cc..1....ccc
+cccccccccccccccccccc.........cc
+ccccccdccdccdccdccc..2XXXXX...c
+ccc..............dc..XX---XX..c
++...vv.zz.vv.zz..cc..X-----X..c
++...vv.zz.vv.zz..+...X--O--+..c
++...vv.zz.vv.zz..cc..X-----X..c
+ccc..............dc..XX---XX..c
+ccccccdccdccdccdccc..2XXXXX...c
+cccccccccccccccccccc.........cc
+                  ccc..1....ccc
+                  ccccccccccccc
+ENDMAP
+
+NAME:   evilmike_zot_entry_basic
+TAGS:   no_monster_gen zot_entry
+KFEAT:  O = enter_zot
+TILE:   x = WALL_ZOT_MAGENTA
+COLOUR: x+- = magenta
+FTILE:  O-+ = FLOOR_HALL
+KPROP:  O- = no_tele_into
+SUBST:  - = .
+NSUBST: d = 5:3 / 2:2 / 1:1
+MONS:   patrolling nonbase draconian
+MONS:   dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
+MONS:   patrolling base draconian
+MAP
+....d....
+.dxx+xxd.
+.xx---xx.
+.x-----x.
+dx--O--xd
+.x-----x.
+.xx---xx.
+.dxxxxxd.
+....d....
+ENDMAP
+
+NAME:   evilmike_zot_entry_diamond
+TAGS:   no_monster_gen zot_entry
+KFEAT:  O = enter_zot
+KFEAT:  A = stone_arch
+TILE:   X = WALL_ZOT_MAGENTA
+COLOUR: X+- = magenta
+FTILE:  -O+A = FLOOR_HALL
+KPROP:  -OxA = no_tele_into
+SUBST:  - = .
+NSUBST: 2 = 2:2 / *:.
+NSUBST: 1 = 2:1 / *:2
+MONS:   patrolling nonbase draconian
+MONS:   dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
+MONS:   patrolling base draconian  
+MAP
+      ..1..
+     .2X+X2.
+    ..XX-XX..
+   3.XX---XX.3
+  ..XX--O--XX..
+ ..XXXX---XXXX..
+.2XX-XXX-XXX-XX2.
+.XX---XXXXX---XX.
+1+--A--XXX--A--+1
+.XX---XXXXX---XX.
+.2XX-XXX-XXX-XX2.
+ ..XXXX---XXXX..
+  ..XX--A--XX..
+   3.XX---XX.3
+    ..XX-XX..
+     .2X+X2.
+      ..1..
+ENDMAP
+
+
+##############################################################################
+##############################################################################
 #
 # Zot petite vaults
 #
+##############################################################################
+##############################################################################
+
 NAME:   lemuel_baited_zot_trap
 DEPTH:  Zot:*
 WEIGHT: 20
@@ -470,8 +770,14 @@ WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
 ENDMAP
 
 
+
 ##############################################################################
+##############################################################################
+#
 # hall_of_Zot_5
+#
+##############################################################################
+##############################################################################
 
 NAME:       hall_of_Zot
 PLACE:      Zot:5
@@ -727,8 +1033,14 @@ ccccccccccccccc
    ccccccccc
 ENDMAP
 
-################################################################
+
+##############################################################################
+##############################################################################
+#
 # For colouring the walls and floors of the first four levels
+#
+##############################################################################
+##############################################################################
 
 NAME:       hall_of_Zot_1
 PLACE:      Zot:1
