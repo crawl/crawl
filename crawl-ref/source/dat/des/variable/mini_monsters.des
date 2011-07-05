@@ -899,6 +899,47 @@ MAP
 ............
 ENDMAP
 
+# kobolds around a campfire
+NAME:    lexackson_kobold_supper
+DEPTH:   D:1-6
+TAGS:    unique_kobold_supper_lexackson no_monster_gen
+KPROP:   56' = no_rtele_into
+MONS:    kobold, plant, bush           
+: if you.absdepth() < 4 then
+KMONS:   7 =  kobold ; knife . dart
+: else
+KMONS:   7 =  big kobold ; knife . throwing net q:2
+: end
+KMONS:   1 = kobold name:hungry name_adjective name_species ; nothing
+SUBST:   . = e f .:150
+: dgn.delayed_decay(_G, 'e', 'rat skeleton')
+: dgn.delayed_decay(_G, 'f', 'giant gecko skeleton')
+KMONS:   5 = att:neutral halfling hd:1 name:young name_adjective name_species
+KFEAT:   6 = net trap
+KFEAT:   m = iron_grate
+MARKER:  P = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 10000, pow_max = 10000, delay = 1, \
+             size = 1, walk_dist = 0, start_clouds = 1 }
+MARKER:  P = lua:fog_machine { cloud_type = "grey smoke", \
+             pow_min = 3, pow_max = 3, delay = 100, \
+             size = 1, walk_dist = 1, start_clouds = 1 }
+SUBST:   y = 2 3 x:5
+NSUBST:  W = 5:.
+NSUBST:  t = 6:2 3 / 6:x / *:t              
+MAP                               
+xxxxxxxxxxxxx
+xtttttttttttxxxx
+xtyyWWWyyyyytttx
+xyy.....y3yyyttx                        
+xy..s1s..m'5yytx                       
+@...1P1..m65'ytx                       
+xy..s17..m'5yytx                       
+xyy.....y2yyyttx                      
+xtyyWWWyyyyyttxx
+xttttttttxxttxxx
+xxxxxxxxxxxxxx
+ENDMAP                            
+
 #################################################################
 # checkpoints with guards to alert nearby monsters, by Core Xii
 NAME:   corexii_checkpoint_a
