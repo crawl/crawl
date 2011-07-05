@@ -196,6 +196,9 @@ static void _change_skill_level(skill_type exsk, int n)
             you.exercises.push_back(exsk);
             --you.training[exsk];
         }
+        // In manual mode, we automatically disable learned skills.
+        if (!you.auto_training)
+            you.training[exsk] = -1;
         reset_training_array = true;
     }
     else if (abs(n) == 1 && you.num_turns)
