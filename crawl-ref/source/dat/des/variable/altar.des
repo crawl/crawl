@@ -1717,6 +1717,35 @@ XX,o.o,XX
  XXX@XXX
 ENDMAP
 
+NAME:    xom_monty_hall
+TAGS:    no_item_gen no_monster_gen temple_overflow_xom uniq_altar_xom
+DEPTH:   D:2-7
+WEIGHT:  1
+SHUFFLE: DE,FG
+NSUBST:  M = 1:2 / *:1
+SUBST:   E = x, F = x
+SUBST:   D = ., G = .
+SUBST:   x = ccbbvxX
+KFEAT:   _ = altar_xom
+MONS:    jelly
+MONS:    sheep hd:2 / quokka w:1
+MARKER:  / = lua:props_marker { \
+             door_open_prompt="This door is covered in warnings. Open " .. \
+                                         "it anyway?", \
+             door_description_prefix="warning-scrawled " \
+             }
+SUBST:   / = +
+MAP
+ xnxnxnx
+xn.....nx
+n..._...n
+x.......x
+x+xx+xx+x
+xMDEMFGMx
+x/xx/xx/x
+ENDMAP
+
+
 ### Yredelemnul overflow altars ###############################################
 
 NAME:   yredelemnul_altar_1
