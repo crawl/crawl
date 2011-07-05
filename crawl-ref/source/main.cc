@@ -2931,6 +2931,7 @@ static void _player_reacts()
         // this is instantaneous
         if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
             you_teleport_now(true);
+#ifdef NEW_ABYSS
         else if (you.level_type == LEVEL_ABYSS)
         {
             if (one_chance_in(30))
@@ -2938,6 +2939,10 @@ static void _player_reacts()
             else
                 abyss_morph();
         }
+#else
+        else if (you.level_type == LEVEL_ABYSS && one_chance_in(30))
+            you_teleport_now(false, true); // to new area of the Abyss
+#endif
     }
 
     actor_apply_cloud(&you);

@@ -2689,10 +2689,12 @@ int burden_change(void)
     return (you.burden);
 }
 
+#ifdef NEW_ABYSS
 void forget_map(bool force)
 {
     forget_map(100, force);
 }
+#endif
 
 // force is true for forget_map command on level map.
 void forget_map(int chance_forgotten, bool force)
@@ -2702,11 +2704,16 @@ void forget_map(int chance_forgotten, bool force)
     if (force && !yesno("Really forget level map?", true, 'n'))
         return;
 
+#ifdef NEW_ABYSS
     // Labyrinth and the Abyss use special rotting rules.
     const bool rotting_map = (you.level_type == LEVEL_LABYRINTH
                            || you.level_type == LEVEL_ABYSS);
     const bool rot_resist = you.level_type == LEVEL_LABYRINTH && you.species == SP_MINOTAUR
                          || you.level_type == LEVEL_ABYSS && you.religion == GOD_LUGONU;
+#else
+    const bool rotting_map = (you.level_type == LEVEL_LABYRINTH);
+    const bool rot_resist = you.level_type == LEVEL_LABYRINTH && you.species == SP_MINOTAUR;
+#endif
     const double geometric_chance = 0.97;
     const int radius = (rot_resist ? 60 : 30);
 
