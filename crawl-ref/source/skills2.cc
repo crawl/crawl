@@ -744,7 +744,7 @@ int skill_transfer_amount(skill_type sk)
 {
     ASSERT(!is_invalid_skill(sk));
     if (you.skill_points[sk] < 1000)
-        return you.skill_points[sk];
+        return you.skill_points[sk] - skill_exp_needed(1, sk);
     else
         return std::max<int>(1000, you.skill_points[sk] / 2);
 }
