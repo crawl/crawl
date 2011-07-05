@@ -1117,7 +1117,6 @@
       }
     },
 
-    // Crusader theme.
     {  MST_RUPERT,
       {
        SPELL_PARALYSE,
