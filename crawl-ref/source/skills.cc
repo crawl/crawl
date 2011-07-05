@@ -390,6 +390,10 @@ void reset_training()
         }
     }
 
+    // All skills disabled, nothing to do.
+    if (!total)
+        return;
+
     const int scale_to = 100 - total_unknown;
     std::vector<std::pair<skill_type,int> > rests;
     int scaled_total = 0;
