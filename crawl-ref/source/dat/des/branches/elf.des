@@ -1,11 +1,55 @@
 ##############################################################################
-# elf.des: Special maps for Elf:5, arrival vaults for Elf:1, and (mini)vaults
-#          particular to the Elven Halls.
+# elf.des: Special maps for the Elven Halls.
+# Content: arrival vaults for Elf:1
+#          (mini)vaults particular to the Elven Halls.
+#          Elf:5 branch end vaults
 ##############################################################################
 
+#############################################################
+# Lua functions to simplify Elf:5
+{{
+function elf_setup(e)
+  e.lflags("no_tele_control")
+  e.tags("no_rotate")
+end
+
+function elf_loot_randomisation(e)
+  e.kfeat("$ = $")
+  e.kfeat("* = *")
+  e.kfeat("| = |")
+  e.subst("| = | *:2")
+  e.subst("$ = $:20 *:4 |:1")
+  e.subst("* = * |:3")
+end
+
+-- The standard Elf:5 monster set
+function elf_monsters(e)
+  e.mons("deep elf high priest")
+  e.mons("deep elf demonologist")
+  e.mons("deep elf annihilator")
+  e.mons("deep elf sorcerer")
+  e.mons("deep elf death mage")
+  e.mons("deep elf blademaster")
+  e.mons("deep elf master archer")
+end
+
+-- The standard item defense squad
+function elf_loot_defenders(e)
+  e.kmons("$ = weight:450 nothing / deep elf sorcerer / deep elf annihilator")
+  e.kmons("* = weight:300 nothing / deep elf annihilator / deep elf death mage")
+  e.kmons("| = weight:600 nothing / deep elf demonologist / deep elf death mage")
+end
+}}
+
+
 ##############################################################################
+##############################################################################
+#
 # Elf:1 arrival vaults
 #
+##############################################################################
+##############################################################################
+
 # The concept:
 # There are no entry vaults for the Elven Halls. Instead, there is a "border
 # check" vault on the other side, in the Elf:1 level. Note that elves and orcs
@@ -327,10 +371,14 @@ ENDMAP
 
 
 ##############################################################################
+##############################################################################
+#
 # Elf minivaults
+#
+##############################################################################
 ##############################################################################
 
-# Total weight of these is 30.
+# Total weight of minmay's crystal vaults is 30.
 NAME:   minmay_elf_crystal_square
 DEPTH:  Elf
 ORIENT: float
@@ -609,35 +657,105 @@ x.......1..xfx
 xxxxxxxxxx+xxx
 ENDMAP
 
+# Some orcs on a diplomatic mission (Shiori)
+# They have brought some gold from their mines as a gift
+NAME:    orc_legates
+DEPTH:   Elf:1-2
+SHUFFLE: AB , 34 , 12
+SUBST:   6=4
+SUBST:   0= 0 .:9 9:1
+SUBST:   5= 5 .:9 4:1
+NSUBST:  1= 2:1 / *:.
+NSUBST:  2= 2:2 / *:.
+KITEM:   A= any good_item race:elven
+KITEM:   B= any good_item race:elven
+KMONS:   A= patrolling deep elf knight
+KMONS:   B= patrolling deep elf high priest / patrolling deep elf demonologist
+MONS:    ice dragon, dragon
+MONS:    orc knight / orc sorcerer / orc high priest
+MONS:    orc warrior / orc wizard / orc priest
+MONS:    orc
+ITEM:    q:120 gold / q:60 gold / q:30 gold
+# being able to blink and become invisible, the deep elves do not need a
+# hidden exit in back of their audience chamber.
+MAP
+cccccxxccccc
+c111cGGc222c
+cnnncABcnnnc
+xG00B..A00Gx
+xG00A..B00Gx
+xx00x..x00xx
+xG00.dd.00Gx
+xG...34...Gx
+xx.5x66x5.xx
+xG.555555.Gx
+xG.555555.Gx
+xx++x++x++xx
+ENDMAP
+
+# A high-level negotiation between orc and deep elf leaders (Shiori)
+NAME:     elf_orc_summit_meeting
+DEPTH:    Elf:4-5
+SHUFFLE: 12 , 45
+NSUBST:  7= 1=7 / *= 7:1 .
+NSUBST:  6= 1=6 D:1 / *= 6 .:1
+SUBST:   3 = 3 .:1
+# the deep elf delegation:
+MONS:    deep elf blademaster / deep elf master archer
+MONS:    deep elf annihilator / deep elf sorcerer / deep elf death mage
+MONS:    deep elf knight / w:1 deep elf high priest / \
+         w:1 deep elf demonologist
+# the orcish delegation:
+MONS:    orc warlord / iron troll / w:1 fire giant / w:1 frost giant / \
+         w:1 stone giant / w:1 ettin
+MONS:    orc sorcerer / orc high priest / w:5 ogre mage
+MONS:    orc knight / rock troll / w:1 orc sorcerer / w:1 orc high priest
+# the arbiter(s):
+MONS:    great orb of eyes / sphinx
+# The orcs might have a unique with them. He or she will likely be outclassed
+# by the others in attendance, but perhaps has some special testimony to
+# present. None of the uniques really fits in with the deep elves...
+KMONS:   D = Ijyb / Blork the Orc / Urug / Erolcha / Snorg
+MAP
+     xxxx
+    xxGGxx
+ xxxx3776xxxx
+.GxT33..66TxG.
+.xxx3x..x6xxx.
+@+3+331466+6+@
+@+3+332566+6+@
+.xxx3x..x.xxx.
+.GxT33..66TxG.
+ xxxx3776xxxx
+    xxGGxx
+     xxxx
+ENDMAP
+
 
 ##############################################################################
-# Elf:5 branch endings
 ##############################################################################
+#
+# Elf:5 branch endings
+#
+##############################################################################
+##############################################################################
+
 
 ##############################################################################
 ## Classical elf_hall
 ##
 NAME:    elf_hall
 PLACE:   Elf:5
+WEIGHT:  50
 ORIENT:  northwest
-TAGS:    no_rotate
-LFLAGS:  no_tele_control
-MONS:    deep elf high priest, deep elf demonologist, deep elf annihilator
-MONS:    deep elf sorcerer, deep elf death mage
-MONS:    deep elf blademaster, deep elf master archer
+: elf_setup(_G)
+: elf_monsters(_G)
 SUBST:   1=1., 2=2., 3=3., 4=4., 5=5.
 SHUFFLE: 23, 45
-KMONS:   $ = weight:450 nothing / deep elf sorcerer / deep elf annihilator
-KMONS:   * = weight:300 nothing / deep elf annihilator / deep elf death mage
-KMONS:   | = weight:600 nothing / deep elf demonologist / deep elf death mage
-KFEAT:   $ = $
-KFEAT:   * = *
-KFEAT:   | = |
+: elf_loot_defenders(_G)
 SUBST:   v = v .:2
 SUBST:   v : xvb
-SUBST:   | = | *:2
-SUBST:   $ = $:20 *:4 |:1
-SUBST:   * = * |:3
+: elf_loot_randomisation(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -675,16 +793,14 @@ ENDMAP
 
 ##############################################################################
 ## Alternative elf halls: gauntlets (David)
+## A wide and narrow one, with total weight 20.
 ##
 NAME:    elf_hall_gauntlet_wide
 PLACE:   Elf:5
-TAGS:    no_pool_fixup no_rotate
-LFLAGS:  no_tele_control
 ORIENT:  float
-WEIGHT:  5
-MONS:    deep elf high priest, deep elf demonologist
-MONS:    deep elf annihilator, deep elf sorcerer
-MONS:    deep elf death mage, deep elf blademaster
+TAGS:    no_pool_fixup
+: elf_setup(_G)
+: elf_monsters(_G)
 SHUFFLE: 345
 SUBST:   4=4., 2=2., 5=5., 3=3.
 KMONS:   $ = weight:115 nothing / deep elf annihilator
@@ -727,13 +843,10 @@ ENDMAP
 
 NAME:    elf_hall_gauntlet_narrow
 PLACE:   Elf:5
-TAGS:    no_pool_fixup no_rotate
 ORIENT:  float
-WEIGHT:  5
-MONS:    deep elf high priest, deep elf demonologist
-MONS:    deep elf annihilator, deep elf sorcerer
-MONS:    deep elf death mage, deep elf master archer
-MONS:    deep elf blademaster
+TAGS:    no_pool_fixup
+: elf_setup(_G)
+: elf_monsters(_G)
 SHUFFLE: 345
 SUBST:   4=4., 2=2., 5=5., 3=3.
 SUBST:   l : lww
@@ -754,12 +867,11 @@ KITEM:   6 = |
 KITEM:   7 = |
 KFEAT:   6 = 6
 KFEAT:   7 = 7
-LFLAGS:  no_tele_control
 MAP
 ccccccccccccccccccccccccc
 c2ccccccc.......ccccccccc
 c.cccc2...5...5...2cccccc
-c.cc.................cc7c
+c.cc.................cc6c
 c.c....3....45...3....c3c
 c.+.........U.........+.c
 c.c......2.2.2.2......c.c
@@ -771,10 +883,10 @@ c$$$ccc...ww.ww...ccccc.c
 c$$$ccc.1.ww.ww.5.ccccc.c
 c$$$cccccccc.ccccccc122.c
 ccc+cccccccc2cccccccccc.c
-c7*|*|**|*cc.cc$|$*$|$|.c
+c6*|*|**|*cc.cc$|$*$|$|.c
 c**|*|||||cc.cc|$|$*$*$.c
 c||*||***|cc.cc$*$*$*$|.c
-c|**|*||6*cc.cc6$|$|$|$2c
+c|**|*||7*cc.cc7$|$|$|$2c
 cccccccccccclcccccccccccc
 ccccccccccclllccccccccccc
 cccccccccc..c..cccccccccc
@@ -788,22 +900,12 @@ ENDMAP
 NAME:    minmay_elf_hall
 PLACE:   Elf:5
 ORIENT:  southwest
-TAGS:    no_rotate
-LFLAGS:  no_tele_control
-MONS:    deep elf high priest, deep elf demonologist, deep elf annihilator
-MONS:    deep elf sorcerer, deep elf death mage
-MONS:    deep elf blademaster, deep elf master archer
+: elf_setup(_G)
+: elf_monsters(_G)
 SUBST:   1=11., 2=22., 3=33., 4=44., 5=543, 6=66., 7=77.
 SHUFFLE: 12, 34, 67
-KMONS:   $ = weight:450 nothing / deep elf sorcerer / deep elf annihilator
-KMONS:   * = weight:300 nothing / deep elf annihilator / deep elf death mage
-KMONS:   | = weight:600 nothing / deep elf demonologist / deep elf death mage
-KFEAT:   $ = $
-KFEAT:   * = *
-KFEAT:   | = |
-SUBST:   | = | *:2
-SUBST:   $ = $:20 *:4 |:1
-SUBST:   * = * |:3
+: elf_loot_defenders(_G)
+: elf_loot_randomisation(_G)
 MAP
 xxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
@@ -848,24 +950,14 @@ ENDMAP
 NAME:    minmay_elf_hall_circle
 PLACE:   Elf:5
 ORIENT:  float
-TAGS:    no_rotate
-LFLAGS:  no_tele_control
-MONS:    deep elf high priest, deep elf demonologist, deep elf annihilator
-MONS:    deep elf sorcerer, deep elf death mage
-MONS:    deep elf blademaster, deep elf master archer
+: elf_setup(_G)
+: elf_monsters(_G)
 SHUFFLE: 12345, 67
 SUBST:   1=1., 2=2., 3=3., 4=4., 5=5.
-KMONS:   $ = weight:450 nothing / deep elf sorcerer / deep elf annihilator
-KMONS:   * = weight:300 nothing / deep elf annihilator / deep elf death mage
-KMONS:   | = weight:600 nothing / deep elf demonologist / deep elf death mage
-KFEAT:   $ = $
-KFEAT:   * = *
-KFEAT:   | = |
+: elf_loot_defenders(_G)
 SUBST:   v = v .:2
 SUBST:   v : xvb
-SUBST:   | = | *:2
-SUBST:   $ = $:20 *:4 |:1
-SUBST:   * = * |:3
+: elf_loot_randomisation(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxcccccccccccxxxxxxxxxxx
@@ -899,85 +991,321 @@ xxxxxxxxccc.........cccxxxxxxxxx
 xxxxxxxxxxccccc@cccccxxxxxxxxxxx
 ENDMAP
 
-
 ##############################################################################
-# (Mini)vaults specific to the Elven Halls
-##############################################################################
-
-default-depth: Elf:*
-
-##############################################################################
-# Some orcs on a diplomatic mission (Shiori)
-# They have brought some gold from their mines as a gift
-NAME:    orc_legates
-DEPTH:   Elf:1-2
-SHUFFLE: AB , 34 , 12
-SUBST:   6=4
-SUBST:   0= 0 .:9 9:1
-SUBST:   5= 5 .:9 4:1
-NSUBST:  1= 2:1 / *:.
-NSUBST:  2= 2:2 / *:.
-KITEM:   A= any good_item race:elven
-KITEM:   B= any good_item race:elven
-KMONS:   A= patrolling deep elf knight
-KMONS:   B= patrolling deep elf high priest / patrolling deep elf demonologist
-MONS:    ice dragon, dragon
-MONS:    orc knight / orc sorcerer / orc high priest
-MONS:    orc warrior / orc wizard / orc priest
-MONS:    orc
-ITEM:    q:120 gold / q:60 gold / q:30 gold
-# being able to blink and become invisible, the deep elves do not need a
-# hidden exit in back of their audience chamber.
+## minmay
+# Before transforms: 32x$, 27x*, 29x|, 4x1, 13x2, 10x3, 6x4, 9x5, 4x6, 2x7
+#
+NAME:    minmay_elf_hall_hex
+PLACE:   Elf:5
+WEIGHT:  3
+ORIENT:  northwest
+: elf_setup(_G)
+: elf_monsters(_G)
+SUBST:   1=11., 2=22., 3=33., 4=44., 5=543, 6=66., 7=77.
+SHUFFLE: 12, 34, 67
+: elf_loot_defenders(_G)
+SUBST:   v = v .:2
+SUBST:   v : xvb
+: elf_loot_randomisation(_G)
 MAP
-cccccxxccccc
-c111cGGc222c
-cnnncABcnnnc
-xG00B..A00Gx
-xG00A..B00Gx
-xx00x..x00xx
-xG00.dd.00Gx
-xG...34...Gx
-xx.5x66x5.xx
-xG.555555.Gx
-xG.555555.Gx
-xx++x++x++xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxcccxxxxxxxxxxcccxxxxxxxxxxcccxxxxxx
+xxxxccc*cccxxxxxxccc.cccxxxxxxccc$cccxxxx
+xxxcc*****ccxxxxcc.....ccxxxxcc|$|$|ccxxx
+xccc**ccc$|cccccc....5..cccccc|$ccc$|cccx
+xc***ccccc$|$c.............c$|$ccccc$|$cx
+xc*ccccccccc|c.............c|ccccccccc|cx
+xc*ccccccccc$c..........2..c$ccccccccc$cx
+xc*|ccccccc$|+.....2U......+|$ccccccc||cx
+xc*ccccccccc$c.............c$ccccccccc$cx
+xc*ccccccccc|c..5.......3..c|ccccccccc|cx
+xc***ccccc$|$cccc.......cccc$|$ccccc$|$cx
+xccc**ccc$|ccc..cc..4..cc5.ccc|$ccc$|cccx
+xxxcc*****cc.....ccc.ccc....2cc|$|$|ccxxx
+xxxxccc*ccc....3.....7........ccc$cccxxxx
+xxxxxxccc........6..............cccxxxxxx
+xxxxxxxc.4.............2.........cxxxxxxx
+xxxxxxxc......2..............3...cxxxxxxx
+xxxxxxxc..........4.........2....cxxxxxxx
+xxxxxxxc...5......v...v..........cxxxxxxx
+xxxxxxxc.......3vvv...vvv3...6...cxxxxxxx
+xxxxxxxc.......vvvv...vvvv......4cxxxxxxx
+xxxxxxxc...3.vvvv.......vvvv3....cxxxxxxx
+xxxxxxxc...vvvvv.........vvvvv...cxxxxxxx
+xxxxxxxc...vvv.............vvv...cxxxxxxx
+xxxxxxxc..........1...12.........cxxxxxxx
+xxxxxxcc..6......................ccxxxxxx
+xxxxccc...........................cccxxxx
+xxxcc.......2...1ccc.ccc1...........ccxxx
+xccc............cc.....cc...3...2....cccx
+xc...2....4..3ccc.......ccc............cx
+xc...........cc...........cc.....5..2..cx
+xc.....v.....cc...........cc...4.v.....cx
+xc..5.vvv....cc...........cc....vvv....cx
+xc.....v.....cc...........cc.....v.5...cx
+xc3..7.....5.cc...........cc...........cx
+xc...........cc...........cc...2....6..cx
+xccc...2...cccccc.......cccccc...5...cccx
+xxxcc.....ccxxxxcc.....ccxxxxcc.....ccxxx
+xxxxccc.cccxxxxxxccc.cccxxxxxxccc.cccxxxx
+xxxxxxcccxxxxxxxxxxc.cxxxxxxxxxxcccxxxxxx
+xxxxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-##############################################################################
-# A high-level negotiation between orc and deep elf leaders (Shiori)
-NAME:     elf_orc_summit_meeting
-DEPTH:    Elf:4-5
-SHUFFLE: 12 , 45
-NSUBST:  7= 1=7 / *= 7:1 .
-NSUBST:  6= 1=6 D:1 / *= 6 .:1
-SUBST:   3 = 3 .:1
-# the deep elf delegation:
-MONS:    deep elf blademaster / deep elf master archer
-MONS:    deep elf annihilator / deep elf sorcerer / deep elf death mage
-MONS:    deep elf knight / w:1 deep elf high priest / \
-         w:1 deep elf demonologist
-# the orcish delegation:
-MONS:    orc warlord / iron troll / w:1 fire giant / w:1 frost giant / \
-         w:1 stone giant / w:1 ettin
-MONS:    orc sorcerer / orc high priest / w:5 ogre mage
-MONS:    orc knight / rock troll / w:1 orc sorcerer / w:1 orc high priest
-# the arbiter(s):
-MONS:    great orb of eyes / sphinx
-# The orcs might have a unique with them. He or she will likely be outclassed
-# by the others in attendance, but perhaps has some special testimony to
-# present. None of the uniques really fits in with the deep elves...
-KMONS:   D = Ijyb / Blork the Orc / Urug / Erolcha / Snorg
+# Before transforms: 26x$, 24x*, 24x|, 5x1, 3x2, 8x3, 4x4, 7x5, 2x6, 2x7
+NAME:    minmay_elf_hall_dome
+PLACE:   Elf:5
+WEIGHT:  3
+ORIENT:  northwest
+: elf_setup(_G)
+: elf_monsters(_G)
+SUBST:   1=11., 2=22., 3=33., 4=44., 5=543, 6=66., 7=77.
+SHUFFLE: 12, 34, 67
+: elf_loot_defenders(_G)
+: elf_loot_randomisation(_G)
 MAP
-     xxxx
-    xxGGxx
- xxxx3776xxxx
-.GxT33..66TxG.
-.xxx3x..x6xxx.
-@+3+331466+6+@
-@+3+332566+6+@
-.xxx3x..x.xxx.
-.GxT33..66TxG.
- xxxx3776xxxx
-    xxGGxx
-     xxxx
+cccccccccccccccccccccccccccccc
+ccccccccccc4....5..ccccccccccc
+cccccccc..............cccccccc
+cccccc......1....3......cccccc
+ccccc...............5....ccccc
+cccc....2....bbbb3........cccc
+cccc..2.....bbbbbb........cccc
+ccc4.......bbbbbbbb........ccc
+ccc........bbbbbbbb3..1....ccc
+ccc..5.U..2bbbbbbbb...U....ccc
+cc.........bbbbbbbb.1.......cc
+cc....1.....bbbbbb..........cc
+cc.......3..3bbbb.....4.....cc
+cc.........................5cc
+c5...............5...........c
+c.c3..c..5c...1....c...c...c.c
+c.cc..cc..cc......cc..cc..cc3c
+c.ccc6ccc6ccc....ccc7ccc7ccc.c
+c+cccccccccccc..cccccccccccc+c
+c$**cc*$cc*$cc..cc$|cc$|cc||$c
+c*$*$***$*$**c.4c||$|$|$|||$|c
+c**$*$***$*$*c3.c|||$|||$|$||c
+cc**cc$*cc$*cc..cc|$cc|$cc|$cc
+cccccccccccccc@@cccccccccccccc
+ENDMAP
+
+# Before transforms: 32x$, 27x*, 27x|, 4x1, 8x2, 9x3, 2x4, 10x5, 2x6, 2x7
+NAME:    minmay_elf_hall_spiked
+PLACE:   Elf:5
+ORIENT:  northwest
+: elf_setup(_G)
+: elf_monsters(_G)
+SUBST:   1=11., 2=22., 3=33., 4=44., 5=543, 6=66., 7=77.
+SHUFFLE: 12, 34, 67
+SUBST:   b : bn....
+SUBST:   v = v .:2
+SUBST:   v : xvb
+: elf_loot_defenders(_G)
+: elf_loot_randomisation(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxccccxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxcccc*|ccccxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc|$|$**|$cccxxxxxxxxxxxxxx
+xxxxxxxxxxxxxcc$|$||*$*$|$*ccxxxxxxxxxxxxx
+xxxxxxxxxxxxxc$|$|**$*$|$|$*cxxxxxxxxxxxxx
+xccccxxxxxxxxc+cccccccccccc+cxxxxxxxxccccx
+xc..cccxxxxccc..............cccxxxxccc2.cx
+xc3...cccccc...6...2..........cccccc....cx
+xcc.U.5.cc..........2..2.....6..cc...U.ccx
+xxc.........4..............3...........cxx
+xxcc....2.......U........U....5.......ccxx
+xxxc7........3........5............2..cxxx
+xxxcc...bb.....vvv.3....vvv.....bb...ccxxx
+xxxcc...bb..5...vvvv..vvvv......bb1..ccxxx
+xxxc..............vvvvvv..............cxxx
+xxcc3.....5.........vv......4....3....ccxx
+xxc..........................1.......5.cxx
+xcc1....cc............3.........cc7....ccx
+xc...1cccccc3....2.c..c.......cccccc....cx
+xc5.ccc$*$*ccc....cc..cc...5ccc|*||ccc2.cx
+xc+cc*$*$*$$*ccccccc.5ccccccc*|*$|$|$cc+cx
+xc*$*$*$*$|$*cxxxxxc3.cxxxxxc*|$|$|$|$|$cx
+xcccccc*$*|cccxxxxxc5.cxxxxxccc|$|$ccccccx
+xxxxxxccccccxxxxxxxc..cxxxxxxxccccccxxxxxx
+xxxxxxxxxxxxxxxxxxxx@@xxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# Before transforms: 20x$, 31x*, 28x|, 8x1, 4x2, 8x3, 4x4, 8x5, 4x6, 2x7
+NAME:    minmay_elf_hall_quartered_circle
+PLACE:   Elf:5
+WEIGHT:  3
+ORIENT:  northwest
+: elf_setup(_G)
+: elf_monsters(_G)
+SUBST:   1=11., 2=22., 3=33., 4=44., 5=543, 6=66., 7=77.
+SHUFFLE: 12, 34, 67
+: elf_loot_defenders(_G)
+: elf_loot_randomisation(_G)
+MAP
+xxxxxxxxxxcccccccccccxxxxxxxxxxx
+xxxxxxxxccc*|*|+...1cccxxxxxxxxx
+xxxxxxccc*$|*||c.....6cccxxxxxxx
+xxxxxcc$*|*|cccc........ccxxxxxx
+xxxxcc*|$|ccc*|c....3....ccxxxxx
+xxxcc|$*ccc|$*$+......5...ccxxxx
+xxcc$||cc*$*|$*c..6........ccxxx
+xxc|$$cc*$**cccc............cxxx
+xcc$*cc$**ccc1....3...U.....ccxx
+xc$||c*|$cc.................2cxx
+cc*|cc**cc...5bbb7.......4...ccx
+c$|*c|**c..1bbbbbbb..........2cx
+c|$cc*|cc..bbbbbbbbb..4.......cx
+c*|c|**c..6bbbbbbbbb..........cx
+c|*c$$|c..bbbbbbbbbbb..........@
+c+ccc+cc6.bbbbbbbbbbb...1..3cccx
+c..1......bbbbbbbbbbb......2cxxx
+c..........bbbbbbbbb.......ccxxx
+c.7..5....4bbbbbbbbb.......cxxxx
+c...........bbbbbbb...5...1cxxxx
+cc.5.........5bbb..3.......cxxxx
+xc........2.............1.ccxxxx
+xcc..3..U...........5....ccxxxxx
+xxc........4.............cxxxxxx
+xxcc.............5......ccxxxxxx
+xxxcc.................cccxxxxxxx
+xxxxcc......1........ccxxxxxxxxx
+xxxxxcc3........3cccccxxxxxxxxxx
+xxxxxxccc......cccxxxxxxxxxxxxxx
+xxxxxxxxccc3...cxxxxxxxxxxxxxxxx
+xxxxxxxxxxcccc.cxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxx
+ENDMAP
+
+# The elves have created golems to guard their treasure.
+# Before transforms: 39x$, 26x*, 26x|, 6x1, 8x2, 4x3, 10x4, 6x5, 2x6, 2x7, 16x8
+NAME:    minmay_elf_hall_golems
+PLACE:   Elf:5
+ORIENT:  northwest
+: elf_setup(_G)
+: elf_monsters(_G)
+KMONS:   9 = stone golem
+KMONS:   8 = crystal golem
+SUBST:   1=11., 2=22., 3=33., 4=44., 5=543, 6=66., 7=77.
+SHUFFLE: 12, 34, 67, 8b / 9c / 9c / 9c
+: elf_loot_defenders(_G)
+: elf_loot_randomisation(_G)
+MAP
+xxxxxcccccccccccccccccccccccccxxxxx
+xxxxxc$*|$$$|*$$*$$*$|$|$|$*$cxxxxx
+xxxxcc+cc|*$$*$$$$|$$$|$*$cc+ccxxxx
+xxxcc8.8ccccccccccccccccccc8.8ccxxx
+xccc8.......4.......6......4..8cccx
+xc$+....3.............1......2.+$cx
+xc*c8..4.......2..4.....1.....8c*cx
+xc|cc5....................2...cc*cx
+xc$$cccc......5.......7...5cccc$|cx
+xc*|$*|cc..2.......2......cc|*||$cx
+xc|*$|$*c.........2.....5.c*$$|**cx
+xc*|**|cc.....1...........cc$|*|$cx
+xc$*cccc........1....3.....cccc||cx
+xc$cc4.....bb1........bb.4....cc*cx
+xc|c8.....3bbbbb...3bbbb......8c|cx
+xc*+....2....bbbb7bbbb....2....+$cx
+xccc8..........bbbbb..........8cccx
+xxxcc4.......4...b.....6......ccxxx
+xxxxcccc...4..............5ccccxxxx
+xxxxxxxcccc.........1...ccccxxxxxxx
+xxxxxxxxxxccc5........cccxxxxxxxxxx
+xxxxxxxxxxxxccc....4cccxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc.cccxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxcc...ccxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxc8...8cxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxc8...8cxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccc@cccxxxxxxxxxxxxxx
+ENDMAP
+
+# Before transforms: 28x$, 27x*, 29x|, 4x1, 9x2, 8x3, 6x4, 8x5, 2x6, 2x7
+NAME:    minmay_elf_hall_x
+PLACE:   Elf:5
+ORIENT:  northwest
+: elf_setup(_G)
+: elf_monsters(_G)
+SUBST:   1=11., 2=22., 3=33., 4=44., 5=543, 6=66., 7=77.
+SHUFFLE: 12, 34, 67
+: elf_loot_defenders(_G)
+: elf_loot_randomisation(_G)
+SUBST:   n : nnnb
+MAP
+xxccccccccccccccccccccx
+xcc||*$**cc||$|*$|*|ccx
+xc*|*|$|**cc$|$*$||$|cx
+xc$$|$*cc+ccc*$|$*$|*cx
+xc||$|cc2.54cc*$|$*||cx
+xc$*|cc...U..+*$*|*$*cx
+xc|$cc.......ccc$*|*$cx
+xc*cc3...1..cc4cc$$*$cx
+xccc...1...cc3.2cc|*$cx
+xcc.......cc.....cc$*cx
+cc...n...cc...n...cc|cx
+c...nnn..3...nnn..6cccx
+cc...n..6.....n...ccxxx
+xcc..2....1....2.ccxxxx
+xxcc............ccxxxxx
+xxxcc4...2..3..ccxxxxxx
+xxxxcc........ccxxxxxxx
+xxxcc..3..5....ccxxxxxx
+xxcc5........1..ccxxxxx
+xcc2....4......5.ccxxxx
+cc...n2...3...n.2.ccxxx
+c7..nnn......nnn..4cxxx
+cc...n...5....n...ccxxx
+xcc.....c..c4....ccxxxx
+xxcc5.3cc.2cc...ccxxxxx
+xxxcc3ccc..ccc7ccxxxxxx
+xxxxcccxc.5cxcccxxxxxxx
+xxxxxxxxc5.cxxxxxxxxxxx
+xxxxxxxxx@@xxxxxxxxxxxx
+ENDMAP
+
+# Before transforms: 18x$, 23x*, 31x|, 6x1, 8x2, 7x3, 10x4, 11x5, 2x6, 4x7
+NAME:    minmay_elf_hall_four_x
+PLACE:   Elf:5
+ORIENT:  northwest
+: elf_setup(_G)
+: elf_monsters(_G)
+SUBST:   1=11., 2=22., 3=33., 4=44., 5=543, 6=66., 7=77.
+SHUFFLE: 12, 34, 67
+: elf_loot_defenders(_G)
+: elf_loot_randomisation(_G)
+MAP
+xxxcccccccccccccccccccccccccccccxxxx
+xxxc$||*$|$$|*$+c2c+*$|*$$$|*||cxxxx
+xxccc|$|*$*|*|cc4..cc*|*|**|$*cccxxx
+xcc.cc|*||*|$cc...3.cc*|$|||*cc4ccxx
+cc...cc||*||cc.......cc*||$|cc...ccx
+c..5..cc*$$cc..6...5..cc*|*cc.....cx
+cc.....cc*cc...........cc$cc.7...ccx
+xcc7....ccc5.....b.....2ccc.....ccxx
+xxcc4....c......bbb.1....c....4ccxxx
+xxxcc.3.....4..bbbbb..........ccxxxx
+xxxxcc...2......bbb...5...3..ccxxxxx
+xxxxxcc..........b..........ccxxxxxx
+xxxxcc....5....4.........7...ccxxxxx
+xxxcc.2...b.........2...b.....ccxxxx
+xxcc.....bbb...........bbb.....ccxxx
+xxc..5..bbbbb.3..6.2..bbbbb...1.cxxx
+xxcc.....bbb...........bbb...5.ccxxx
+xxxcc.1...b..........3..b.....ccxxxx
+xxxxcc......7................ccxxxxx
+xxxxxcc..........b...4......ccxxxxxx
+xxxxcc..4....1..bbb.......5..ccxxxxx
+xxxcc..........bbbbb..........ccxxxx
+xxcc3....c......bbb......c.....ccxxx
+xcc.....ccc......b...2..ccc.1...ccxx
+cc.....ccxcc.5.........ccxcc...5.ccx
+c..5..ccxxxcc......4..ccxxxcc.....cx
+cc...ccxxxxxcc.......ccxxxxxcc4..ccx
+xcc1ccxxxxxxxcc.....ccxxxxxxxcc.ccxx
+xxcccxxxxxxxxxcc3..ccxxxxxxxxxcccxxx
+xxxxxxxxxxxxxxxcc.ccxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxc.cxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxc2cxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
 ENDMAP
