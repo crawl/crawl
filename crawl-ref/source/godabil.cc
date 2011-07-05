@@ -3265,6 +3265,9 @@ bool ashenzari_transfer_knowledge()
         break;
     }
 
+    if (you.props.exists("skm_view"))
+        you.props.erase("skm_view");
+
     mprf("As you forget about %s, you feel ready to understand %s.",
          skill_name(you.transfer_from_skill),
          skill_name(you.transfer_to_skill));
