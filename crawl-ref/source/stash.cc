@@ -1747,7 +1747,16 @@ public:
             // Sort by increasing distance
             return (lhs.player_distance < rhs.player_distance);
         }
-        else if (lhs.matches != rhs.matches)
+        else if (lhs.player_distance == 0)
+        {
+            // If on the same level, sort by distance to player.
+            const int lhs_dist = grid_distance(you.pos(), lhs.pos.pos);
+            const int rhs_dist = grid_distance(you.pos(), rhs.pos.pos);
+            if (lhs_dist != rhs_dist)
+                return (lhs_dist < rhs_dist);
+        }
+
+        if (lhs.matches != rhs.matches)
         {
             // Then by decreasing number of matches
             return (lhs.matches > rhs.matches);
