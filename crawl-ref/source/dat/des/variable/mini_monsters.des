@@ -910,7 +910,7 @@ KMONS:   7 =  kobold ; knife . dart
 : else
 KMONS:   7 =  big kobold ; knife . throwing net q:2
 : end
-KMONS:   1 = kobold name:hungry name_adjective name_species ; nothing
+KMONS:   1 = kobold name:hungry name_adjective ; nothing
 SUBST:   . = e f .:150
 : dgn.delayed_decay(_G, 'e', 'rat skeleton')
 : dgn.delayed_decay(_G, 'f', 'giant gecko skeleton')
