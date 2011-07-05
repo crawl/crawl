@@ -396,6 +396,12 @@ void train_skills()
     FixedVector<int, NUM_SKILLS> sk_exp;
     sk_exp.init(0);
     std::vector<skill_type> training_order;
+#ifdef DEBUG_DIAGNOSTICS
+    int exp_pool = you.exp_available;
+    FixedVector<int, NUM_SKILLS> total_gain;
+    total_gain.init(0);
+#endif
+
 
     // We scale the training array to the amount of XP available in the pool.
     // That gives us the amount of XP available to train each skill.
@@ -424,9 +430,6 @@ void train_skills()
         {
             skill_type sk = *it;
             int gain = 0;
-#ifdef DEBUG_DIAGNOSTICS
-            int exp_pool = you.exp_available;
-#endif
 
             while (sk_exp[sk] >= calc_skill_cost(you.skill_cost_level)
                    && you.training[sk] > 0)
@@ -438,13 +441,7 @@ void train_skills()
                 magic_gain += gain;
 
 #ifdef DEBUG_DIAGNOSTICS
-            if (gain && !crawl_state.script)
-            {
-                // Disabled in script mode because it slows down the
-                // training simulator.
-                dprf("Exercised %s by %d cost %d XP.",
-                     skill_name(sk), gain, exp_pool - you.exp_available);
-            }
+           total_gain[sk] += gain;
 #endif
         }
     }
@@ -453,9 +450,6 @@ void train_skills()
     while (you.exp_available >= calc_skill_cost(you.skill_cost_level))
     {
         int gain;
-#ifdef DEBUG_DIAGNOSTICS
-        int exp_pool = you.exp_available;
-#endif
         skill_type sk = SK_NONE;
         if (!skip_first_phase)
             sk = static_cast<skill_type>(random_choose_weighted(sk_exp));
@@ -470,13 +464,25 @@ void train_skills()
             magic_gain += gain;
 
 #ifdef DEBUG_DIAGNOSTICS
-        if (gain && !crawl_state.script)
-        {
-            dprf("Exercised %s by %d cost %d XP.",
-                 skill_name(sk), gain, exp_pool - you.exp_available);
-        }
+        total_gain[sk] += gain;
 #endif
     }
+
+#ifdef DEBUG_DIAGNOSTICS
+    if (!crawl_state.script)
+    {
+        int total = 0;
+        for (int i = 0; i < NUM_SKILLS; ++i)
+        {
+            skill_type sk = static_cast<skill_type>(i);
+            if (total_gain[sk])
+                dprf("Trained %s by %d.", skill_name(sk), total_gain[sk]);
+            total += total_gain[sk];
+        }
+        dprf("Total skill points gained: %d, cost: %d XP.",
+             total, exp_pool - you.exp_available);
+    }
+#endif
 
     // Avoid doubly rewarding spell practise in sprint
     // (by inflated XP and inflated piety gain)
