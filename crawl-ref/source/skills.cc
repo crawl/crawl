@@ -320,11 +320,12 @@ void init_training()
 {
     int total = 0;
     for (int i = 0; i < NUM_SKILLS; ++i)
-        if (you.training[i] >= 0)
+        if (you.training[i] >= 0 && you.skills[i])
             total += you.skill_points[i];
 
     for (int i = 0; i < NUM_SKILLS; ++i)
-        you.training[i] = you.skill_points[i] * 100 / total;
+        if (you.skills[i])
+            you.training[i] = you.skill_points[i] * 100 / total;
 
     _init_exercise_queue();
 }
