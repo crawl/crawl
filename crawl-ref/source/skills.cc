@@ -354,6 +354,61 @@ static bool _cmp_rest(const std::pair<skill_type,int>& a,
 }
 
 /*
+ * Scale the training array.
+ *
+ * @param scale The new scale of the array.
+ * @param known Are we scaling known or unknown skills? Never do both at the
+ *              same time.
+ * @param exact When true, we'll make sure that the sum of the scaled skills
+ *              is equal to the scale.
+ */
+static void _scale_training(int scale, bool known, bool exact)
+{
+    int total = 0;
+    // First, we calculate the sum of the values to be scaled.
+    for (int i = 0; i < NUM_SKILLS; ++i)
+        if (known == (you.skills[i] != 0) && you.training[i] > 0)
+            total += you.training[i];
+
+    std::vector<std::pair<skill_type,int> > rests;
+    int scaled_total = 0;
+
+    // All skills disabled, nothing to do.
+    if (!total)
+        return;
+
+    // Now we scale the values.
+    for (int i = 0; i < NUM_SKILLS; ++i)
+        if (known == (you.skills[i] != 0) && you.training[i] > 0)
+        {
+            int result = you.training[i] * scale;
+            const int rest = result % total;
+            if (rest)
+                rests.push_back(std::pair<skill_type,int>(skill_type(i), rest));
+            you.training[i] = result / total;
+            scaled_total += you.training[i];
+        }
+
+    ASSERT(scaled_total <= scale);
+
+    if (!exact || scaled_total == scale)
+        return;
+
+    // We ensure that the percentage always add up to 100 by increasing the
+    // training for skills which had the higher rest from the above scaling.
+    std::sort(rests.begin(), rests.end(), _cmp_rest);
+    std::vector<std::pair<skill_type,int> >::iterator it = rests.begin();
+    while (scaled_total < scale && it != rests.end())
+    {
+        ++you.training[it->first];
+        ++scaled_total;
+        ++it;
+    }
+
+    ASSERT(scaled_total == scale);
+}
+
+/*
  * Reset the training array. Unknown skills are not touched and disabled ones
  * are skipped. In automatic mode, we use values from the exercise queue.
  * In manual mode, all enabled skills are set to the same value.
@@ -361,19 +416,21 @@ static bool _cmp_rest(const std::pair<skill_type,int>& a,
  */
 void reset_training()
 {
-    int total = 0;
+    const int MAX_TRAINING_UNKNOWN = 50;
     int total_unknown = 0;
+
+    // We clear the values of known skills in the training array. In auto mode
+    // they are set to 0 (and filled later with the content of the queue), in
+    // manual mode, they are all set to 1.
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
         if (!you.skills[i])
             total_unknown += you.training[i];
         else if (you.training[i] >= 0)
-        {
             you.training[i] = !you.auto_training;
-            total += you.training[i];
-        }
     }
 
+    // In automatic mode, we fill the array with the content of the queue.
     if (you.auto_training)
     {
         for (std::list<skill_type>::iterator it = you.exercises.begin();
@@ -385,50 +442,14 @@ void reset_training()
                 // Only known skills should be in the queue.
                 ASSERT(you.skills[sk]);
                 ++you.training[sk];
-                ++total;
             }
         }
     }
 
-    // All skills disabled, nothing to do.
-    if (!total)
-        return;
+    if (total_unknown > MAX_TRAINING_UNKNOWN)
+        _scale_training(MAX_TRAINING_UNKNOWN, false, true);
 
-    const int scale_to = 100 - total_unknown;
-    std::vector<std::pair<skill_type,int> > rests;
-    int scaled_total = 0;
-
-    for (int i = 0; i < NUM_SKILLS; ++i)
-        if (you.skills[i] && you.training[i] > 0)
-        {
-            int result = you.training[i] * scale_to;
-            const int rest = result % total;
-            if (rest)
-                rests.push_back(std::pair<skill_type,int>(skill_type(i), rest));
-            you.training[i] = result / total;
-            scaled_total += you.training[i];
-        }
-
-    ASSERT(scaled_total <= scale_to);
-
-
-    // In manual mode, it's better to keep selected skills equal than to
-    // to round some up for a total of 100.
-    if (!you.auto_training)
-        return;
-
-    // We ensure that the percentage always add up to 100 by increasing the
-    // training for skills which had the higher rest from the above scaling.
-    std::sort(rests.begin(), rests.end(), _cmp_rest);
-    std::vector<std::pair<skill_type,int> >::iterator it = rests.begin();
-    while (scaled_total < scale_to && it != rests.end())
-    {
-        ++you.training[it->first];
-        ++scaled_total;
-        ++it;
-    }
-
-    ASSERT(scaled_total == scale_to);
+    _scale_training(100, true, you.auto_training);
 }
 
 // returns total number of skill points gained
