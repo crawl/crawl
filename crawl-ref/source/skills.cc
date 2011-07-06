@@ -447,9 +447,12 @@ void reset_training()
     }
 
     if (total_unknown > MAX_TRAINING_UNKNOWN)
+    {
         _scale_training(MAX_TRAINING_UNKNOWN, false, true);
+        total_unknown = MAX_TRAINING_UNKNOWN;
+    }
 
-    _scale_training(100, true, you.auto_training);
+    _scale_training(100 - total_unknown, true, you.auto_training);
 }
 
 // returns total number of skill points gained
