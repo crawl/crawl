@@ -30,8 +30,8 @@ comparisons among species, but not necessarily among skills.
 
 The Experience value (Exp) is special and indicates how much experience
 has to be earned in order to gain a new level. Here 100 is the Human
-standard, and all other species (apart from Halfling, Kobold, Hill Orc)
-are slower.
+standard, and all other species (apart from Halfling, Kobold and Hill
+Orc) are slower.
 
 The abbreviations used for the skills are:
 
