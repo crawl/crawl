@@ -4107,6 +4107,7 @@ static void _move_player(coord_def move)
             {
                 monster& mon = menv[i];
                 if (you.can_see(&mon) && !mon.friendly() &&
+                    !mons_is_firewood(&mon) &&
                     (grid_distance(you.pos(), mon.pos()) < 4))
                 {
                     danger = true;
