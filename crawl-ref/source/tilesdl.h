@@ -325,9 +325,9 @@ protected:
 
     bool m_has_overlays;
 
-    CRTTextArea m_text_crt;
-    StatTextArea m_text_stat;
-    MessageTextArea m_text_message;
+    WebTextArea m_text_crt;
+    WebTextArea m_text_stat;
+    WebTextArea m_text_message;
 
     GotoRegion m_cursor_region;
 
