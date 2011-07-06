@@ -5527,13 +5527,11 @@ void monster::apply_enchantment(const mon_enchant &me)
     //This is like Corona, but if silver harms them, it sticky flame levels of damage.
     case ENCH_SILVER_CORONA:
 
-        if ((this->holiness() == MH_UNDEAD && !this->is_insubstantial()) || this->is_chaotic())
+        if (this->is_chaotic())
         {
             bolt beam;
             beam.flavour = BEAM_LIGHT;
             int dam = roll_dice(2, 4) - 1;
-
-            //Double damage to vampires - it's silver and it's light!
 
             int newdam = mons_adjust_flavoured(this, beam, dam, false);
 
