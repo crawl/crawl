@@ -1746,48 +1746,48 @@ unsigned int item_value(item_def item, bool ident)
                     || item.sub_type == RING_SLAYING))
             {
                 if (item.plus > 0)
-                    valued += 10 * item.plus;
+                    valued += 70 * item.plus;
 
                 if (item.sub_type == RING_SLAYING && item.plus2 > 0)
-                    valued += 10 * item.plus2;
+                    valued += 70 * item.plus2;
 
                 if (item.plus < 0)
-                    valued -= 50;
+                    valued -= 350;
 
                 if (item.sub_type == RING_SLAYING && item.plus2 < 0)
-                    valued -= 50;
+                    valued -= 350;
             }
 
             switch (item.sub_type)
             {
             case RING_INVISIBILITY:
-                valued += 100;
+                valued += 700;
                 break;
 
             case RING_REGENERATION:
-                valued += 75;
+                valued += 525;
                 break;
 
             case RING_FIRE:
             case RING_ICE:
-                valued += 62;
+                valued += 434;
                 break;
 
             case RING_LIFE_PROTECTION:
-                valued += 60;
+                valued += 420;
                 break;
 
             case RING_TELEPORT_CONTROL:
-                valued += 42;
+                valued += 294;
                 break;
 
             case RING_MAGICAL_POWER:
             case RING_PROTECTION_FROM_MAGIC:
-                valued += 40;
+                valued += 280;
                 break;
 
             case RING_WIZARDRY:
-                valued += 35;
+                valued += 245;
                 break;
 
             case RING_LEVITATION:
@@ -1795,17 +1795,17 @@ unsigned int item_value(item_def item, bool ident)
             case RING_PROTECTION_FROM_COLD:
             case RING_PROTECTION_FROM_FIRE:
             case RING_SLAYING:
-                valued += 30;
+                valued += 210;
                 break;
 
             case RING_SUSTAIN_ABILITIES:
             case RING_SUSTENANCE:
             case RING_TELEPORTATION: // usually cursed
-                valued += 25;
+                valued += 175;
                 break;
 
             case RING_SEE_INVISIBLE:
-                valued += 20;
+                valued += 140;
                 break;
 
             case RING_DEXTERITY:
@@ -1813,38 +1813,38 @@ unsigned int item_value(item_def item, bool ident)
             case RING_INTELLIGENCE:
             case RING_PROTECTION:
             case RING_STRENGTH:
-                valued += 10;
+                valued += 70;
                 break;
 
             case RING_HUNGER:
-                valued -= 50;
+                valued -= 350;
                 break;
 
             case AMU_THE_GOURMAND:
             case AMU_GUARDIAN_SPIRIT:
             case AMU_FAITH:
-                valued += 35;
+                valued += 245;
                 break;
 
             case AMU_CLARITY:
             case AMU_RESIST_CORROSION:
             case AMU_RESIST_MUTATION:
             case AMU_WARDING:
-                valued += 30;
+                valued += 210;
                 break;
 
             case AMU_CONSERVATION:
             case AMU_CONTROLLED_FLIGHT:
-                valued += 25;
+                valued += 175;
                 break;
 
             case AMU_RAGE:
             case AMU_STASIS:
-                valued += 20;
+                valued += 140;
                 break;
 
             case AMU_INACCURACY:
-                valued -= 50;
+                valued -= 350;
                 break;
                 // got to do delusion!
             }
@@ -1854,12 +1854,10 @@ unsigned int item_value(item_def item, bool ident)
                 // in this branch we're guaranteed to know
                 // the item type!
                 if (valued < 0)
-                    valued = artefact_value(item) - 5;
+                    valued = (artefact_value(item) - 5) * 7;
                 else
-                    valued += artefact_value(item);
+                    valued += artefact_value(item) * 7;
             }
-
-            valued *= 7;
         }
         break;
 
