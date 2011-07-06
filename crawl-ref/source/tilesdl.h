@@ -3,6 +3,7 @@
  * @brief SDL-related functionality for the tiles port
 **/
 
+#ifdef USE_TILE
 #ifndef TILESDL_H
 #define TILESDL_H
 
@@ -32,6 +33,8 @@ class TitleRegion;
 class DollEditRegion;
 class StatRegion;
 class MessageRegion;
+
+struct map_cell;
 
 typedef std::map<int, TabbedRegion*>::iterator tab_iterator;
 
@@ -79,9 +82,7 @@ struct MouseEvent
 };
 
 class FontWrapper;
-
 class crawl_view_buffer;
-class map_cell;
 
 class TilesFramework
 {
@@ -95,6 +96,8 @@ public:
     void load_dungeon(const coord_def &gc);
     int getch_ck();
     void resize();
+    void layout_statcol();
+    void calculate_default_options();
     void clrscr();
 
     void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
@@ -105,6 +108,7 @@ public:
     void update_minimap(const coord_def &gc);
     void clear_minimap();
     void update_minimap_bounds();
+    void toggle_inventory_display();
     void update_tabs();
 
     void set_need_redraw(unsigned int min_tick_delay = 0);
@@ -117,36 +121,41 @@ public:
                       const coord_def &gc);
     void add_text_tag(text_tag_type type, const monster* mon);
 
+    bool initialise_items();
+
     const coord_def &get_cursor() const;
 
     void add_overlay(const coord_def &gc, tileidx_t idx);
     void clear_overlays();
 
-    void draw_doll_edit();
-
-    // SDL tiles-specific
-
-    void layout_statcol();
-    
-    void calculate_default_options(); // XXX: I don't know why this is public
-
-    void toggle_inventory_display(); // XXX: This doesn't seem to ever be called
-
     void draw_title();
     void update_title_msg(std::string load_msg);
     void hide_title();
 
-    int to_lines(int num_tiles);
+    void draw_doll_edit();
 
     MenuRegion *get_menu() { return m_region_menu; }
+    bool is_fullscreen() { return m_fullscreen; }
 
     FontWrapper* get_crt_font() { return m_fonts.at(m_crt_font).font; }
     CRTRegion* get_crt() { return m_region_crt; }
     const ImageManager* get_image_manager() { return m_image; }
-
-    bool is_fullscreen() { return m_fullscreen; }
-
+    int to_lines(int num_tiles);
 protected:
+    int load_font(const char *font_file, int font_size,
+                  bool default_on_fail, bool outline);
+    int handle_mouse(MouseEvent &event);
+
+    void use_control_region(ControlRegion *region);
+
+    // screen pixel dimensions
+    coord_def m_windowsz;
+    // screen pixels per view cell
+    coord_def m_viewsc;
+
+    bool m_fullscreen;
+    bool m_need_redraw;
+
     enum TabID
     {
         TAB_ITEM,
@@ -165,21 +174,6 @@ protected:
         LAYER_TILE_CONTROL,
         LAYER_MAX,
     };
-    LayerID m_active_layer;
-
-    int load_font(const char *font_file, int font_size,
-                  bool default_on_fail, bool outline);
-    int handle_mouse(MouseEvent &event);
-
-    void use_control_region(ControlRegion *region);
-
-    // screen pixel dimensions
-    coord_def m_windowsz;
-    // screen pixels per view cell
-    coord_def m_viewsc;
-
-    bool m_fullscreen;
-    bool m_need_redraw;
 
     class Layer
     {
@@ -188,6 +182,7 @@ protected:
         std::vector<Region*> m_regions;
     };
     Layer m_layers[LAYER_MAX];
+    LayerID m_active_layer;
 
     // Normal layer
     TileRegionInit  m_init;
@@ -277,4 +272,5 @@ protected:
 // Main interface for tiles functions
 extern TilesFramework tiles;
 
+#endif
 #endif
