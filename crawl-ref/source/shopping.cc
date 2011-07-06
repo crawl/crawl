@@ -2270,7 +2270,7 @@ bool ShoppingList::add_thing(const item_def &item, int cost,
 
     if (pos.id.level_type != LEVEL_DUNGEON)
     {
-        mprf("The shopping list can only contain things in the dungeon.",
+        mpr("The shopping list can only contain things in the dungeon.",
              MSGCH_ERROR);
         return (false);
     }
@@ -2301,7 +2301,7 @@ bool ShoppingList::add_thing(std::string desc, std::string buy_verb, int cost,
 
     if (pos.id.level_type != LEVEL_DUNGEON)
     {
-        mprf("The shopping list can only contain things in the dungeon.",
+        mpr("The shopping list can only contain things in the dungeon.",
              MSGCH_ERROR);
         return (false);
     }

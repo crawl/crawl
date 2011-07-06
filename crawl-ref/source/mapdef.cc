@@ -2938,7 +2938,7 @@ coord_def map_def::float_aligned_place() const
     const coord_def fail(-1, -1);
 
     dprf("Aligning floating vault with %u points vs %u reference points",
-         our_anchors.size(), map_anchor_points.size());
+         (unsigned int)our_anchors.size(), (unsigned int)map_anchor_points.size());
 
     // Mismatch in the number of points we have to align, bail.
     if (our_anchors.size() != map_anchor_points.size())

@@ -365,7 +365,7 @@ static void _leaving_level_now(dungeon_feature_type stair_used)
     if (strwidth(newname_abbrev) > MAX_NOTE_PLACE_LEN)
     {
         mprf(MSGCH_ERROR, "'%s' is too long for a portal vault name "
-                          "abbreviation, truncating");
+                          "abbreviation, truncating", newname_abbrev.c_str());
         newname_abbrev = chop_string(newname_abbrev, MAX_NOTE_PLACE_LEN, false);
     }
 

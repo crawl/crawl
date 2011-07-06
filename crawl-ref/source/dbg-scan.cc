@@ -29,7 +29,7 @@ static void _dump_item(const char *name, int num, const item_def &item)
          num, item.base_type, item.sub_type,
          item.plus, item.plus2, item.special);
 
-    mprf("    quant: %d; colour: %d; ident: 0x%08"PRIx64"; ident_type: %d",
+    mprf("    quant: %d; colour: %d; ident: 0x%08"PRIx32"; ident_type: %d",
          item.quantity, item.colour, item.flags,
          get_ident_type(item));
 
@@ -72,7 +72,7 @@ void debug_item_scan(void)
                 }
                 else
                 {
-                    mprf(MSGCH_ERROR, "Item in stack at (%d, %d) has ",
+                    mprf(MSGCH_ERROR, "Item in stack at (%d, %d) has "
                                       "invalid link %d",
                          ri->x, ri->y, obj);
                 }

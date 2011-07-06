@@ -1436,7 +1436,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 if (coinflip())
                 {
                     // Stairs stop fleeing from you now you actually caught one.
-                    mprf("%s settles down.", stair_str.c_str(), verb.c_str());
+                    mprf("%s settles down.", stair_str.c_str());
                     you.duration[DUR_REPEL_STAIRS_MOVE]  = 0;
                     you.duration[DUR_REPEL_STAIRS_CLIMB] = 0;
                 }
@@ -1674,7 +1674,7 @@ bool load_ghost(bool creating_level)
     if (do_diagnostics)
     {
         mprf(MSGCH_DIAGNOSTICS, "Loaded ghost file with %u ghost(s)",
-             ghosts.size());
+             (unsigned int)ghosts.size());
     }
 #endif
 
@@ -1722,7 +1722,7 @@ bool load_ghost(bool creating_level)
     if (do_diagnostics && unplaced_ghosts > 0)
     {
         mprf(MSGCH_DIAGNOSTICS, "Unable to place %u ghost(s)",
-             ghosts.size());
+             (unsigned int)ghosts.size());
         ghost_errors = true;
     }
     if (ghost_errors)

@@ -3432,7 +3432,7 @@ static void _place_door_mimics(int level_number)
 
         door_pos.push_back(*ri);
     }
-    dprf("found %d doors", door_pos.size());
+    dprf("found %u doors", (unsigned int)door_pos.size());
 
     // No doors found at all.
     if (door_pos.empty())
@@ -4828,7 +4828,7 @@ static dungeon_feature_type _pick_temple_altar(vault_placement &place)
     {
         if (_current_temple_hash != NULL)
         {
-            mprf("Ran out of altars for temple!", MSGCH_ERROR);
+            mpr("Ran out of altars for temple!", MSGCH_ERROR);
             return (DNGN_FLOOR);
         }
         // Randomized altar list for mini-temples.
@@ -5043,7 +5043,8 @@ void place_spec_shop(int level_number,
 
     if (spec->use_all && !spec->items.empty())
     {
-        dprf("Shop spec wants all items placed: %d becomes %d.", plojy, spec->items.size());
+        dprf("Shop spec wants all items placed: %d becomes %u.", plojy,
+             (unsigned int)spec->items.size());
         plojy = (int) spec->items.size();
     }
 
