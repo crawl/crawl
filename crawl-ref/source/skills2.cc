@@ -729,7 +729,7 @@ void dump_skills(std::string &text)
             skill_type sk = skill_type(i);
             text += make_stringf(" %c Level %d%s %s\n",
                                  ((you.skills[i] == 27)   ? '*' :
-                                  (you.training[i]) ? '+'
+                                  (you.training[i] >= 0)  ? '+'
                                                           : '-'),
                                  you.skills[i],
                                  you.skill(sk) != you.skills[i]
