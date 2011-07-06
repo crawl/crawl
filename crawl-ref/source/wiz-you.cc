@@ -378,7 +378,7 @@ void wizard_exercise_skill(void)
     else
     {
         mpr("Exercising...");
-        exercise(skill, 100);
+        exercise(skill, 10);
     }
 }
 #endif
