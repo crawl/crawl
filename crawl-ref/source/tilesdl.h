@@ -80,6 +80,9 @@ struct MouseEvent
 
 class FontWrapper;
 
+class crawl_view_buffer;
+class map_cell;
+
 class TilesFramework
 {
 public:
