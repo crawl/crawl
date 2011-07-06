@@ -13,6 +13,7 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "decks.h"
 #include "describe.h"
 #include "env.h"
 #include "godconduct.h"
@@ -61,6 +62,11 @@ int identify(int power, int item_slot, std::string *pre_msg)
 
         if (fully_identified(item))
         {
+            if(is_deck(item) && deck_identify_first(item_slot))
+            {
+                ++identified;
+                continue;
+            }
             mpr("Choose an unidentified item, or Esc to abort.");
             if (Options.auto_list)
                 more();
