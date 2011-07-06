@@ -83,15 +83,24 @@ inline void mprnojoin(std::string text, msg_channel_type channel=MSGCH_PLAIN,
     mpr(text, channel, param, true);
 }
 
+#ifdef __GNUC__
+// show warnings about the format string
+# define PRINTF(x) const char *format, ...) \
+                   __attribute__((format (printf, x+1, x+2))
+#else
+# define PRINTF(x) const char *format, ...
+#endif
+
 // 4.1-style mpr, currently named mprf for minimal disruption.
-void mprf(msg_channel_type channel, int param, const char *format, ...);
-void mprf(msg_channel_type channel, const char *format, ...);
-void mprf(const char *format, ...);
+void mprf(msg_channel_type channel, int param, PRINTF(2));
+void mprf(msg_channel_type channel, PRINTF(1));
+void mprf(PRINTF(0));
 
 #ifdef DEBUG_DIAGNOSTICS
-void dprf(const char *format, ...);
+void dprf(PRINTF(0));
 #else
 # define dprf(...) ((void)0)
 #endif
 
+#undef PRINTF
 #endif
