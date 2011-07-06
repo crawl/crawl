@@ -2,7 +2,7 @@
 #include "AppHdr.h"
 
 #include "tileweb-text.h"
-#include "tilesdl.h"
+#include "tileweb.h"
 
 #include <sstream>
 

@@ -58,7 +58,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "tilemcache.h"
-#include "tilesdl.h"
+#include "tiles.h"
 #include "traps.h"
 #include "travel.h"
 #include "viewmap.h"
