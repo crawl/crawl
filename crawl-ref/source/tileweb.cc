@@ -54,6 +54,9 @@ TilesFramework::TilesFramework()
       m_next_view_br(-1, -1),
       m_current_flash_colour(BLACK),
       m_next_flash_colour(BLACK),
+      m_text_crt("crt"),
+      m_text_stat("stats"),
+      m_text_message("messages"),
       m_print_fg(15)
 {
 }

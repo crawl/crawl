@@ -187,24 +187,3 @@ void WebTextArea::send(bool force)
 void WebTextArea::on_resize()
 {
 }
-
-CRTTextArea::CRTTextArea() : WebTextArea("crt") { }
-
-void CRTTextArea::on_resize()
-{
-    WebTextArea::on_resize();
-}
-
-StatTextArea::StatTextArea() : WebTextArea("stats") { }
-
-void StatTextArea::on_resize()
-{
-    WebTextArea::on_resize();
-}
-
-MessageTextArea::MessageTextArea() : WebTextArea("messages") { }
-
-void MessageTextArea::on_resize()
-{
-    WebTextArea::on_resize();
-}

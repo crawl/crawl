@@ -34,32 +34,5 @@ protected:
     virtual void on_resize();
 };
 
-class CRTTextArea : public WebTextArea
-{
-public:
-    CRTTextArea();
-
-protected:
-    virtual void on_resize();
-};
-
-class StatTextArea : public WebTextArea
-{
-public:
-    StatTextArea();
-
-protected:
-    virtual void on_resize();
-};
-
-class MessageTextArea : public WebTextArea
-{
-public:
-    MessageTextArea();
-
-protected:
-    virtual void on_resize();
-};
-
 #endif
 #endif
