@@ -714,7 +714,10 @@ bool find_mon_place_near_stairs(coord_def& pos,
         }
     }
     const monster_type habitat_target = MONS_BAT;
-    pos = find_newmons_square_contiguous(habitat_target, pos);
+    int distance = 3;
+    if (crawl_state.game_is_zotdef())
+        distance = 9999;
+    pos = find_newmons_square_contiguous(habitat_target, pos, distance);
     return (in_bounds(pos));
 }
 
