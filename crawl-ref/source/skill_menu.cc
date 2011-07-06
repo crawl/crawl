@@ -678,6 +678,9 @@ void SkillMenu::clear_selections()
 // Before we exit, make sure there's at least one skill enabled.
 bool SkillMenu::exit()
 {
+    if (you.wizard)
+        return true;
+
     for (int i = 0; i < NUM_SKILLS; ++i)
         if (you.skills[i] && you.training[i] >= 0)
             return true;
