@@ -2077,7 +2077,7 @@ void setup_environment_effects()
             }
         }
     }
-    dprf("%u environment effect seeds", sfx_seeds.size());
+    dprf("%u environment effect seeds", (unsigned int)sfx_seeds.size());
 }
 
 static void apply_environment_effect(const coord_def &c)

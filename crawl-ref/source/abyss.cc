@@ -823,8 +823,8 @@ static void _abyss_move_entities(coord_def target_centre,
 static void _abyss_expand_mask_to_cover_vault(map_mask *mask,
                                               int map_index)
 {
-    dprf("Expanding mask to cover vault %d (nvaults: %d)",
-         map_index, env.level_vaults.size());
+    dprf("Expanding mask to cover vault %d (nvaults: %u)",
+         map_index, (unsigned int)env.level_vaults.size());
     const vault_placement &vp = *env.level_vaults[map_index];
     for (vault_place_iterator vpi(vp); vpi; ++vpi)
         (*mask)(*vpi) = true;

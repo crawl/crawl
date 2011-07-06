@@ -1309,7 +1309,7 @@ void read_maps()
 void reread_maps()
 {
     dprf("reread_maps:: discarding %u existing maps",
-         vdefs.size());
+         (unsigned int)vdefs.size());
 
     // BOOM!
     vdefs.clear();

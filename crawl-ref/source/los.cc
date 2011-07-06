@@ -446,7 +446,7 @@ static void _create_blockrays()
     smoke_rays = new bit_array(n_min_rays);
 
     dprf("Cellrays: %d Fullrays: %u Minimal cellrays: %u",
-          n_cellrays, fullrays.size(), n_min_rays);
+          n_cellrays, (unsigned int)fullrays.size(), n_min_rays);
 }
 
 static int _gcd(int x, int y)
@@ -578,7 +578,7 @@ static bool _find_ray_se(const coord_def& target, ray_def& ray,
     unsigned int index = 0;
 
     if (cycle)
-        dprf("cycling from %d (total %d)", ray.cycle_idx, min.size());
+        dprf("cycling from %d (total %u)", ray.cycle_idx, (unsigned int)min.size());
 
     unsigned int start = cycle ? ray.cycle_idx + 1 : 0;
     ASSERT(start <= min.size());

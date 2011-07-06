@@ -789,7 +789,7 @@ void noise_grid::propagate_noise()
     if (noises.empty())
         return;
 
-    dprf("noise_grid: %d noises to apply", noises.size());
+    dprf("noise_grid: %u noises to apply", (unsigned int)noises.size());
     std::vector<coord_def> noise_perimeter[2];
     int circ_index = 0;
 

@@ -480,7 +480,7 @@ void spirit_fades (monster *spirit)
     if (mons_near(spirit))
         simple_monster_message(spirit, " fades away with a wail!", MSGCH_TALK);
     else
-        mprf("You hear a distant wailing.", MSGCH_TALK);
+        mpr("You hear a distant wailing.", MSGCH_TALK);
 
     const coord_def c = spirit->pos();
 
@@ -505,7 +505,7 @@ void spirit_fades (monster *spirit)
     if (mons_near(new_mon))
         simple_monster_message(new_mon, " seeks to avenge the fallen spirit!", MSGCH_TALK);
     else
-        mprf("A powerful presence appears to avenge a fallen spirit!", MSGCH_TALK);
+        mpr("A powerful presence appears to avenge a fallen spirit!", MSGCH_TALK);
 
 }
 

@@ -1879,7 +1879,7 @@ static void _monster_add_energy(monster* mons)
     if (mons->speed_increment == old_energy && mons->alive()) \
              mprf(MSGCH_DIAGNOSTICS, \
                   problem " for monster '%s' consumed no energy", \
-                  mons->name(DESC_PLAIN).c_str(), true);
+                  mons->name(DESC_PLAIN).c_str());
 #else
 #    define DEBUG_ENERGY_USE(problem) ((void) 0)
 #endif
@@ -3822,7 +3822,7 @@ static bool _monster_move(monster* mons)
                 mons->flags &= ~MF_TAKING_STAIRS;
 
                 dprf("BUG: %s was marked as follower when not following!",
-                     mons->name(DESC_PLAIN).c_str(), true);
+                     mons->name(DESC_PLAIN).c_str());
             }
             else
             {
@@ -3830,7 +3830,7 @@ static bool _monster_move(monster* mons)
                 mmov.reset();
 
                 dprf("%s is skipping movement in order to follow.",
-                     mons->name(DESC_CAP_THE).c_str(), true);
+                     mons->name(DESC_CAP_THE).c_str());
             }
         }
 

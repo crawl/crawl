@@ -816,7 +816,7 @@ void wizard_edit_durations(void)
         for (unsigned int i = 0; i < durs.size(); ++i)
         {
             int dur = durs[i];
-            mprf(MSGCH_PROMPT, "%c) %-*s : %d", 'a' + i, max_len,
+            mprf(MSGCH_PROMPT, "%c) %-*s : %d", 'a' + i, (int)max_len,
                  dur_names[dur], you.duration[dur]);
         }
         mpr("", MSGCH_PROMPT);
