@@ -1475,66 +1475,66 @@ unsigned int item_value(item_def item, bool ident)
             valued += 200;
         else
         {
+            // true if the wand is of a good type, a type with significant
+            // inherent value even when empty. Good wands are less expensive
+            // per charge.
+            bool good = false;
             switch (item.sub_type)
             {
             case WAND_HASTING:
             case WAND_HEALING:
-                valued += 300;
+                valued += 240;
+                good = true;
                 break;
 
             case WAND_TELEPORTATION:
-                valued += 250;
+                valued += 120;
+                good = true;
                 break;
 
             case WAND_COLD:
             case WAND_FIRE:
             case WAND_FIREBALL:
-                valued += 200;
+            case WAND_DIGGING:
+                valued += 80;
+                good = true;
                 break;
 
             case WAND_INVISIBILITY:
             case WAND_DRAINING:
             case WAND_LIGHTNING:
-                valued += 175;
-                break;
-
             case WAND_DISINTEGRATION:
-                valued += 160;
-                break;
-
-            case WAND_DIGGING:
-            case WAND_PARALYSIS:
-                valued += 100;
-                break;
-
-            case WAND_FLAME:
-            case WAND_FROST:
-                valued += 75;
+                valued += 40;
+                good = true;
                 break;
 
             case WAND_ENSLAVEMENT:
             case WAND_POLYMORPH_OTHER:
-                valued += 90;
+            case WAND_PARALYSIS:
+                valued += 20;
                 break;
 
             case WAND_CONFUSION:
             case WAND_SLOWING:
-                valued += 70;
+                valued += 15;
+                break;
+
+            case WAND_FLAME:
+            case WAND_FROST:
+            case WAND_RANDOM_EFFECTS:
+                valued += 10;
                 break;
 
             case WAND_MAGIC_DARTS:
-            case WAND_RANDOM_EFFECTS:
             default:
-                valued += 45;
+                valued += 6;
                 break;
             }
 
             if (item_ident(item, ISFLAG_KNOW_PLUSES))
             {
-                if (item.plus == 0)
-                    valued -= 50;
-                else
-                    valued = (valued * (item.plus + 45)) / 50;
+                if (good) valued += (valued * item.plus) / 4;
+                else      valued += (valued * item.plus) / 2;
             }
         }
         break;
