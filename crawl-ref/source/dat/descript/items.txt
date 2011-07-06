@@ -1101,6 +1101,8 @@ This scroll calls on the powers of Heaven to cause great damage to any nearby un
 scroll of identify
 
 This useful magic scroll allows you to determine the properties of any object.
+
+If used on a deck of cards, this scroll will also give away the top card.
 %%%%
 scroll of immolation
 
