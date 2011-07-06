@@ -4649,6 +4649,11 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
                 simple_monster_message(this, " is no longer dazed.");
         break;
 
+    case ENCH_INNER_FLAME:
+        if (!quiet && alive())
+            simple_monster_message(this, "'s inner flame fades away.");
+        break;
+
     //The following should never happen, but just in case...
 
     case ENCH_MUTE:
@@ -4790,6 +4795,7 @@ void monster::timeout_enchantments(int levels)
 
         case ENCH_INSANE:
         case ENCH_BERSERK:
+        case ENCH_INNER_FLAME:
             del_ench(i->first);
             break;
 
@@ -4983,6 +4989,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_LIQUEFYING:
     case ENCH_FAKE_ABJURATION:
     case ENCH_RECITE_TIMER:
+    case ENCH_INNER_FLAME:
         decay_enchantment(me);
         break;
 
@@ -6860,6 +6867,8 @@ int mon_enchant::calc_duration(const monster* mons,
         break;
     case ENCH_LIFE_TIMER:
         cturn = 10 * (4 + random2(4)) / _mod_speed(10, mons->speed);
+    case ENCH_INNER_FLAME:
+        return (random_range(75, 125) * 10);
     default:
         break;
     }
