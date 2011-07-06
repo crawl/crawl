@@ -739,7 +739,7 @@ void print_stats(void)
 #endif
         if (crawl_state.game_is_zotdef())
         {
-            cgotoxy(1, 8, GOTO_STAT);
+            cgotoxy(1, 9, GOTO_STAT);
             textcolor(Options.status_caption_colour);
             cprintf("ZP: ");
             textcolor(HUD_VALUE_COLOUR);
