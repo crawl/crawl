@@ -1199,7 +1199,7 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
         if (grd(p) == DNGN_UNSEEN || applyGlobal)
         {
             worley::noise_datum sub_noise =
-                worley::worley(x*17, y*31, abyss_depth);
+                worley::worley(x*17, y*31, abyss_depth / 10);
 
             int dist = noise.distance[0] * 100;
             bool isWall = (dist > 118 || dist < 40);
