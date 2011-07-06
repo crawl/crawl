@@ -1174,7 +1174,7 @@ static bool _learn_spell_checks(spell_type specspell)
     bool undead = false;
     if (you_cannot_memorise(specspell, undead))
     {
-        mprf(desc_cannot_memorise_reason(undead).c_str());
+        mpr(desc_cannot_memorise_reason(undead).c_str());
         return (false);
     }
 
