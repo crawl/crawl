@@ -5281,7 +5281,6 @@ void player::init()
     total_skill_points = 0;
     exp_available = 0; // new games get 25
     zot_points = 0;
-    exp_delta = 0;
 
     item_description.init(255);
     unique_items.init(UNIQ_NOT_EXISTS);

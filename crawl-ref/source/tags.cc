@@ -1077,7 +1077,9 @@ static void tag_construct_you(writer &th)
 
     marshallInt(th, you.exp_available);
     marshallInt(th, you.zot_points);
-    marshallInt(th, you.exp_delta);
+#if TAG_MAJOR_VERSION == 32
+    marshallInt(th, 0);
+#endif
 
     marshallInt(th, you.zigs_completed);
     marshallByte(th, you.zig_max);
@@ -1736,8 +1738,8 @@ static void tag_read_you(reader &th)
         }
 #endif
     you.zot_points                = unmarshallInt(th);
-    you.exp_delta                 = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 32
+        unmarshallInt(th);
     }
     if (th.getMinorVersion() >= TAG_MINOR_ZIG_COUNT)
     {
@@ -1747,8 +1749,8 @@ static void tag_read_you(reader &th)
 #if TAG_MAJOR_VERSION == 32
         if (th.getMinorVersion() < TAG_MINOR_ZIG_FIX)
         {
-        you.zigs_completed = 0;
-        you.zig_max = 0;
+            you.zigs_completed = 0;
+            you.zig_max = 0;
         }
     }
     else
