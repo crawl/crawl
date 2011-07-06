@@ -1871,7 +1871,7 @@ bool prompt_failed(int retval, std::string msg)
             canned_msg(MSG_OK);
     }
     else
-        mprf(MSGCH_PROMPT, msg.c_str());
+        mpr(msg.c_str(), MSGCH_PROMPT);
 
     crawl_state.cancel_cmd_repeat();
 
