@@ -3,14 +3,10 @@
  * @brief SDL-related functionality for the tiles port
 **/
 
-#ifdef USE_TILE
 #ifndef TILESDL_H
 #define TILESDL_H
 
 #include "externs.h"
-
-#ifdef USE_TILE_LOCAL
-
 #include "tilereg.h"
 #include "tiletex.h"
 
@@ -38,15 +34,6 @@ class StatRegion;
 class MessageRegion;
 
 typedef std::map<int, TabbedRegion*>::iterator tab_iterator;
-
-#elif defined(USE_TILE_WEB)
-
-#include "tileweb-text.h"
-#include "tiledoll.h"
-
-#endif
-
-struct map_cell;
 
 enum key_mod
 {
@@ -91,15 +78,7 @@ struct MouseEvent
     unsigned int py;
 };
 
-#ifdef USE_TILE_LOCAL
 class FontWrapper;
-#endif
-
-#ifdef USE_TILE_LOCAL
-class crawl_view_buffer;
-#elif defined(USE_TILE_WEB)
- #include "viewgeom.h"
-#endif
 
 class TilesFramework
 {
@@ -124,7 +103,6 @@ public:
     void clear_minimap();
     void update_minimap_bounds();
     void update_tabs();
-    void layout_statcol();
 
     void set_need_redraw(unsigned int min_tick_delay = 0);
     bool need_redraw() const;
@@ -143,9 +121,10 @@ public:
 
     void draw_doll_edit();
 
-    int to_lines(int num_tiles);
+    // SDL tiles-specific
 
-#ifdef USE_TILE_LOCAL
+    void layout_statcol();
+    
     void calculate_default_options(); // XXX: I don't know why this is public
 
     void toggle_inventory_display(); // XXX: This doesn't seem to ever be called
@@ -154,6 +133,8 @@ public:
     void update_title_msg(std::string load_msg);
     void hide_title();
 
+    int to_lines(int num_tiles);
+
     MenuRegion *get_menu() { return m_region_menu; }
 
     FontWrapper* get_crt_font() { return m_fonts.at(m_crt_font).font; }
@@ -161,21 +142,7 @@ public:
     const ImageManager* get_image_manager() { return m_image; }
 
     bool is_fullscreen() { return m_fullscreen; }
-#endif
 
-#ifdef USE_TILE_WEB
-    void textcolor(int col);
-    void textbackground(int col);
-    void put_string(char *str);
-    void put_ucs_string(ucs_t *str);
-    void clear_to_end_of_line();
-    int wherex() { return m_print_x + 1; }
-    int wherey() { return m_print_y + 1; }
-
-    void write_message(const char *format, ...);
-    void finish_message();
-    void send_message(const char *format, ...);
-#endif
 protected:
     enum TabID
     {
@@ -197,7 +164,6 @@ protected:
     };
     LayerID m_active_layer;
 
-#ifdef USE_TILE_LOCAL
     int load_font(const char *font_file, int font_size,
                   bool default_on_fail, bool outline);
     int handle_mouse(MouseEvent &event);
@@ -303,49 +269,9 @@ protected:
         mouse_mode mode;
     };
     cursor_loc m_cur_loc;
-#elif defined(USE_TILE_WEB)
-    unsigned int m_last_tick_redraw;
-    bool m_need_redraw;
-
-    coord_def m_origin;
-
-    crawl_view_buffer m_current_view;
-    coord_def m_current_gc;
-
-    crawl_view_buffer m_next_view;
-    coord_def m_next_gc;
-    coord_def m_next_view_tl;
-    coord_def m_next_view_br;
-
-    int m_current_flash_colour;
-    int m_next_flash_colour;
-
-    coord_def m_cursor[CURSOR_MAX];
-    coord_def m_last_clicked_grid;
-
-    bool m_has_overlays;
-
-    WebTextArea m_text_crt;
-    WebTextArea m_text_stat;
-    WebTextArea m_text_message;
-
-    GotoRegion m_cursor_region;
-
-    WebTextArea *m_print_area;
-    int m_print_x, m_print_y;
-    int m_print_fg, m_print_bg;
-
-    dolls_data last_player_doll;
-
-    bool _send_cell(int x, int y,
-                    const screen_cell_t *screen_cell, screen_cell_t *old_screen_cell);
-
-    void _send_current_view();
-#endif
 };
 
 // Main interface for tiles functions
 extern TilesFramework tiles;
 
-#endif
 #endif

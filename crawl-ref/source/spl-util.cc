@@ -297,7 +297,7 @@ bool add_spell_to_memory(spell_type spell)
 
     take_note(Note(NOTE_LEARN_SPELL, spell));
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tiles.layout_statcol();
     redraw_screen();
 #endif
@@ -325,7 +325,7 @@ bool del_spell_from_memory_by_slot(int slot)
 
     you.spell_no--;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tiles.layout_statcol();
     redraw_screen();
 #endif

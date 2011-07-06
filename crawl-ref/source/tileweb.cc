@@ -25,7 +25,7 @@
 #include "tilemcache.h"
 #include "tilepick.h"
 #include "tilepick-p.h"
-#include "tilesdl.h"
+#include "tileweb.h"
 #include "tileview.h"
 #include "travel.h"
 #include "unicode.h"
@@ -854,15 +854,6 @@ void TilesFramework::set_need_redraw(unsigned int min_tick_delay)
 bool TilesFramework::need_redraw() const
 {
     return m_need_redraw;
-}
-
-int TilesFramework::to_lines(int num_tiles)
-{
-    return num_tiles;
-}
-
-void TilesFramework::layout_statcol()
-{
 }
 
 void TilesFramework::textcolor(int col)
