@@ -161,5 +161,7 @@ void create_pond(const coord_def& center, int radius, bool allow_deep);
 bool create_altar(bool disallow_no_altar = false);
 
 const std::vector<card_type> get_drawn_cards(const item_def& deck);
+// see and mark the first card with a scroll.
+bool deck_identify_first(int slot);
 
 #endif
