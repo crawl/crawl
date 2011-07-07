@@ -682,7 +682,6 @@ static bool _check_buggy_deck(item_def& deck)
     else if (props["num_marked"].get_byte() != static_cast<char>(num_marked))
     {
 #ifdef WIZARD
-
         strm << "Oops, counted " << static_cast<int>(num_marked)
              << " marked cards, but num_marked is "
              << (static_cast<int>(props["num_marked"].get_byte()));
@@ -872,22 +871,24 @@ bool deck_peek()
     you.wield_change = true;
     return (true);
 }
+
 bool deck_identify_first(int slot)
 {
     item_def& deck(you.inv[slot]);
     if (top_card_is_known(deck))
-        return false;
+        return (false);
 
     uint8_t flags;
-    card_type   card = get_card_and_flags(deck, -1, flags);
+    card_type card = get_card_and_flags(deck, -1, flags);
 
     flags |= CFLAG_SEEN | CFLAG_MARKED;
     _set_card_and_flags(deck, -1, card, flags);
 
-    mprf("You get a glimpse of the first card. It was %s.",card_name(card));
-    return true;
+    mprf("You get a glimpse of the first card. It was %s.", card_name(card));
+    return (true);
 
 }
+
 // Mark a deck: look at the next four cards, mark them, and shuffle
 // them back into the deck. The player won't know what order they're
 // in, and if the top card is non-marked then the player won't
