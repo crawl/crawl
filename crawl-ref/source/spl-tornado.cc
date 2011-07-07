@@ -319,7 +319,7 @@ void tornado_damage(actor *caster, int dur)
                         if (standing)
                             float_player(false);
                     }
-                    int dmg = roll_dice(6, rpow) / 15
+                    int dmg = div_rand_round(roll_dice(6, rpow), 15)
                               - random2(victim->armour_class() / 3 + 1);
                     if (dur < 0)
                         dmg = 0;
