@@ -218,7 +218,7 @@ const int BRANCH_DUNGEON_DEPTH = 27;
 
 const int ANTITRAIN_PENALTY = 2;
 
-#define TORNADO_RADIUS 5
+#define TORNADO_RADIUS 6
 
 #define NUMBER_OF_RUNES_NEEDED    3
 

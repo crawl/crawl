@@ -241,7 +241,7 @@ void tornado_damage(actor *caster, int dur)
             ++count_i;
         }
         // effective age at radius r
-        int rage = age + 8 - r*7;
+        int rage = age - sqr(r) * 5 / 4;
         /* Not just "portion of time affected":
                           **
                         **
