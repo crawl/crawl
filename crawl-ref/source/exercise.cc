@@ -240,8 +240,7 @@ static void _exercise_spell(spell_type spell, bool success)
        spellcasting had also been generally exercised at the same time
        ****************************************************************** */
 
-    exercise(SK_SPELLCASTING,
-             one_chance_in(3) ? 1 : random2(1 + random2(diff)));
+    exercise(SK_SPELLCASTING, 1 + random2(1 + diff) / skillcount);
 }
 
 static bool _check_train_armour(int amount)
