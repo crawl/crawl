@@ -881,8 +881,7 @@ bool deck_identify_first(int slot)
     uint8_t flags;
     card_type card = get_card_and_flags(deck, -1, flags);
 
-    flags |= CFLAG_SEEN | CFLAG_MARKED;
-    _set_card_and_flags(deck, -1, card, flags);
+    _set_card_and_flags(deck, -1, card, flags | CFLAG_SEEN | CFLAG_MARKED);
 
     mprf("You get a glimpse of the first card. It is %s.", card_name(card));
     return (true);
