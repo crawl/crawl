@@ -417,6 +417,19 @@ singing sword silenced
 
 VISUAL:@The_weapon@ struggles and turns.
 
+VISUAL:@The_weapon@ looks @exasperated@.
+
+VISUAL:@The_weapon@ makes a @sad@ impression.
+
+w:5
+VISUAL:@The_weapon@ sulks.
+
+w:1
+VISUAL:@The_weapon@ seems to emit steam.
+
+w:1
+VISUAL:@The_weapon@ turns @crimson@.
+
 ######### no tension ############
 %%%%
 singing sword no_tension
@@ -825,9 +838,15 @@ speaking_low-high_tension
 
 @The_weapon@ shouts, "Onwards! It's kill or die!"
 
+@The_weapon@ shouts, "Kill! Crush! Destroy!"
+
 @The_weapon@ moans, "By @player_god@, you are such a @coward@."
 
 @The_weapon@ wonders, "Who is more incompetent - you or the opposition?"
+
+@The_weapon@ states, "Their screams, my satisfaction."
+
+@The_weapon@ utters, "Their cries, their tears, I cannot stand it anymore."
 
 ############ speaking, high tension ############
 %%%%
@@ -842,7 +861,14 @@ speaking_high_tension
 
 @The_weapon@ @screams@, "IT'S JUDGEMENT DAY AND THE SENTENCE IS DEATH!"
 
-@The_weapon@ @screams@,"I AM THE CREATOR!"
+@The_weapon@ @screams@, "I AM THE CREATOR!"
+
+@The_weapon@ @screams@, "Among all these lost souls, we reign supreme!"
+
+@The_weapon@ @screams@, "THE SWORD GAVE, AND THE SWORD HATH TAKEN AWAY!"
+
+w:1
+@The_weapon@ shouts, "Born from this womb, sliced by this blade!"
 
 # Madness
 @The_weapon@ @screams@, "I AM THE SWORD OF ZOT!!!"
@@ -852,6 +878,9 @@ speaking_high_tension
 @The_weapon@ @screams@, "I love you all! And my gift to you is ARMAGEDDON!"
 
 @The_weapon@ @screams@, "MY LOVE IS ETERNAL!"
+
+w:1
+@The_weapon@ @screams@, "LET'S FONDLE THE @PETS@, FONDLE THEM!"
 
 # Battle frenzy
 @The_weapon@ @screams@, "KILL! KILL!! KILL!!!"
@@ -863,6 +892,28 @@ speaking_high_tension
 @The_weapon@ @screams@, "I revel, I sever!"
 
 @The_weapon@ @screams@, "All those pillows!"
+
+@The_weapon@ @screams@, "No rest until they move no more!"
+
+@The_weapon@ @screams@, "As long as they die, we live!"
+
+@The_weapon@ @screams@, "The future is bloody!"
+
+w:1
+@The_weapon@ @screams@, "The bloody future is ours!"
+
+@The_weapon@ @screams@, "I SMELL BLOOD!""
+
+@The_weapon@ @screams@, "CARNAGE NOT CANTRIPS!"
+
+@The_weapon@ @screams@, "KILL, HATE, MUTILATE!"
+
+@The_weapon@ @screams@, "Dismember the living, dismember the dead!"
+
+@The_weapon@ @screams@, "We will celebrate on a pile of carcasses!"
+
+@The_weapon@ @screams@, "Go for the jugular!"
+
 
 ###############################################################################
 # Lines from real songs.
@@ -1273,3 +1324,67 @@ faintheart
 poltroon
 
 wuss
+
+%%%%
+#### "...makes a @sad@ impression."
+sad
+
+sad
+
+disoriented
+
+forlorn
+
+hopeless
+
+%%%%
+#### "....looks @exasperated@."
+exasperated
+
+exasperated
+
+bugged out
+
+unnerved
+
+irascibly
+
+nervous
+
+unruly
+
+truculent
+
+refractory
+
+recalcitrant
+
+%%%%
+#### "...turns @crimson@."
+crimson
+
+crimson
+
+blood-red
+
+w:1
+purple
+
+w:1
+ensanguined
+
+w:1
+violet
+
+%%%%
+PETS
+
+GUINEA PIGS
+
+CAVIES
+
+PUSSY CATS
+
+POODLES
+
+w:1 SPERM WHALES
