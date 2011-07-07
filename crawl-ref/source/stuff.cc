@@ -464,6 +464,10 @@ void canned_msg(canned_message_type which_message)
     case MSG_EMPTY_HANDED:
         if (you.species == SP_FELID)
             mpr("Your mouth is now empty.");
+        else if (you.has_usable_claws(true))
+            mpr("You are now empty-clawed.");
+        else if (you.has_usable_tentacles(true))
+            mpr("You are now empty-tentacled.");
         else
             mpr("You are now empty-handed.");
         break;
