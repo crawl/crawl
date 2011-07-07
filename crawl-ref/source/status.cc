@@ -139,6 +139,8 @@ static duration_def duration_data[] =
       BLUE, "Dark", "darkness", "You emit darkness." },
     { DUR_SHROUD_OF_GOLUBRIA, true,
       BLUE, "Shroud", "shrouded", "You are protected by a distorting shroud." },
+    { DUR_TORNADO_COOLDOWN, false,
+      YELLOW, "Tornado", "", "" ,},
 };
 
 static int duration_index[NUM_DURATIONS];

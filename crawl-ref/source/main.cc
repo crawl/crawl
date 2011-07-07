@@ -2630,12 +2630,16 @@ static void _decrement_durations()
 #endif
     }
 
+    _decrement_a_duration(DUR_TORNADO_COOLDOWN, delay,
+                          "The winds around you calm down.");
     // Should expire before levitation.
     if (you.duration[DUR_TORNADO])
     {
         tornado_damage(&you, std::min(delay, you.duration[DUR_TORNADO]));
         _decrement_a_duration(DUR_TORNADO, delay,
-                              "The winds around you calm down.");
+                              "The winds around you start to calm down.");
+        if (!you.duration[DUR_TORNADO])
+            you.duration[DUR_TORNADO_COOLDOWN] = random_range(25, 35);
     }
 
     if (you.duration[DUR_LEVITATION])

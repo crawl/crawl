@@ -109,13 +109,6 @@ static void _set_tornado_durations(int powc)
 
 bool cast_tornado(int powc)
 {
-    if (you.duration[DUR_TORNADO])
-    {
-        _set_tornado_durations(powc);
-        mpr("The winds around you grow in strength.");
-        return true;
-    }
-
     bool friendlies = false;
     for (radius_iterator ri(you.pos(), TORNADO_RADIUS, C_ROUND); ri; ++ri)
     {
