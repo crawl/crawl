@@ -882,6 +882,7 @@ bool deck_identify_first(int slot)
     card_type card = get_card_and_flags(deck, -1, flags);
 
     _set_card_and_flags(deck, -1, card, flags | CFLAG_SEEN | CFLAG_MARKED);
+    deck.props["num_marked"]++;
 
     mprf("You get a glimpse of the first card. It is %s.", card_name(card));
     return (true);
