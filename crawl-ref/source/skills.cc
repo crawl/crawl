@@ -663,12 +663,6 @@ static int _train(skill_type exsk, int &max_exp)
     // This will be added to you.skill_points[exsk];
     int skill_inc = 10;
 
-    // skill cost of level 1 has been reduced from 200 to 50. XP cost has
-    // been raised to compensate, and this is to increase the number of needed
-    // exercises to 10 (was 20).
-    if (you.skills[exsk] == 0)
-        skill_inc /= 2;
-
     // This will be deducted from you.exp_available.
     int cost = calc_skill_cost(you.skill_cost_level);
 
