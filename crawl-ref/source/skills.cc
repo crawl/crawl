@@ -168,7 +168,6 @@ static void _change_skill_level(skill_type exsk, int n)
 {
     ASSERT(n != 0);
     skill_type old_best_skill = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
-    bool reset_training_array = false;
 
     if (-n > you.skills[exsk])
         n = -you.skills[exsk];
@@ -182,24 +181,11 @@ static void _change_skill_level(skill_type exsk, int n)
     if (you.skills[exsk] == 27)
     {
         mprf(MSGCH_INTRINSIC_GAIN, "You have mastered %s!", skill_name(exsk));
-        you.training[exsk] = -1;
-        reset_training_array = true;
     }
     else if (you.skills[exsk] == 1 && n > 0)
     {
         mprf(MSGCH_INTRINSIC_GAIN, "You have gained %s skill!", skill_name(exsk));
         hints_gained_new_skill(exsk);
-        while (you.training[exsk] > 0)
-        {
-            you.exercises.pop_front();
-            // XXX: Insert it at a random position instead.
-            you.exercises.push_back(exsk);
-            --you.training[exsk];
-        }
-        // In manual mode, we automatically disable learned skills.
-        if (!you.auto_training)
-            you.training[exsk] = -1;
-        reset_training_array = true;
     }
     else if (abs(n) == 1 && you.num_turns)
     {
@@ -220,7 +206,7 @@ static void _change_skill_level(skill_type exsk, int n)
     if (you.skills[exsk] - n == 27)
     {
         you.training[exsk] = 0;
-        reset_training_array = true;
+        reset_training();
     }
 
     // Recalculate this skill's order for tie breaking skills
@@ -262,9 +248,6 @@ static void _change_skill_level(skill_type exsk, int n)
     const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     if (best != old_best_skill || old_best_skill == exsk)
         redraw_skill(you.your_name, player_title());
-
-    if (reset_training_array)
-        reset_training();
 
     // TODO: also identify rings of wizardry.
 }
@@ -439,8 +422,9 @@ void reset_training()
             skill_type sk = *it;
             if (you.training[sk] >= 0)
             {
-                // Only known skills should be in the queue.
-                ASSERT(you.skills[sk]);
+                // Only known skills should be in the queue, except if you have
+                // lost a skill which is currently only possible in wizmode.
+                ASSERT(you.skills[sk] || you.wizard);
                 ++you.training[sk];
             }
         }
@@ -473,6 +457,37 @@ void exercise(skill_type exsk, int deg)
             deg--;
         }
     reset_training();
+}
+
+// Check if we should stop training this skill immediately.
+// We look at skill points because actual level up comes later.
+static bool _level_up_check(skill_type sk)
+{
+    // New skill learned.
+    const bool skill_learned  = !you.skills[sk]
+                    && you.skill_points[sk] >= skill_exp_needed(1, sk);
+    if (skill_learned)
+    {
+        // We start by inserting the rest of the exercises in the queue.
+        while (you.training[sk] > 0)
+        {
+            you.exercises.pop_front();
+            // XXX: Insert it at a random position instead.
+            you.exercises.push_back(sk);
+            --you.training[sk];
+        }
+    }
+
+    // Don't train past level 27.
+    // In manual mode, we stop training and automatically disable new skills.
+    if (you.skill_points[sk] >= skill_exp_needed(27, sk)
+        || skill_learned && !you.auto_training)
+    {
+        you.training[sk] = -1;
+        return true;
+    }
+
+    return false;
 }
 
 void train_skills()
@@ -521,8 +536,7 @@ void train_skills()
                    && you.training[sk] > 0)
             {
                 gain += _train(sk, sk_exp[sk]);
-                // Don't train past level 27.
-                if (you.skill_points[sk] >= skill_exp_needed(27, sk))
+                if (_level_up_check(sk))
                     sk_exp[sk] = 0;
             }
 
@@ -552,11 +566,8 @@ void train_skills()
             return;
         }
 
-        if (you.skill_points[sk] >= skill_exp_needed(27, sk))
-        {
+        if (_level_up_check(sk))
             sk_exp[sk] = 0;
-            you.training[sk] = 0;
-        }
 
         if (gain && sk > SK_LAST_MUNDANE && sk <= SK_LAST_MAGIC)
             magic_gain += gain;

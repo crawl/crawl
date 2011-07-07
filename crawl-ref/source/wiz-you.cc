@@ -407,6 +407,12 @@ void wizard_set_skill_level(skill_type skill)
             you.ct_skill_points[skill] = 0;
             you.skills[skill] = amount;
 
+            if (amount == 27)
+                you.training[skill] = -1;
+            else if (!amount && you.training[skill] == -1)
+                you.training[skill] = 0;
+
+            reset_training();
             calc_total_skill_points();
 
             redraw_skill(you.your_name, player_title());
