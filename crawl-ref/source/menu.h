@@ -534,6 +534,7 @@ public:
     virtual void set_bounds(const coord_def& min_coord, const coord_def& max_coord);
     virtual void set_bounds_no_multiply(const coord_def& min_coord,
                                          const coord_def& max_coord);
+    virtual void move(const coord_def& delta);
     virtual const coord_def& get_min_coord() const { return m_min_coord; }
     virtual const coord_def& get_max_coord() const { return m_max_coord; }
 

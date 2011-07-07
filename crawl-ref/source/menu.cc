@@ -2280,6 +2280,12 @@ void MenuItem::set_bounds_no_multiply(const coord_def& min_coord,
     m_max_coord = max_coord;
 }
 
+void MenuItem::move(const coord_def& delta)
+{
+    m_min_coord += delta;
+    m_max_coord += delta;
+}
+
 // By default, value does nothing. Override for Items needing it
 void MenuItem::select(bool toggle, int value)
 {

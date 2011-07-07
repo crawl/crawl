@@ -8,6 +8,7 @@
 #include "skill_menu.h"
 
 #include "cio.h"
+#include "command.h"
 #include "fontwrapper-ft.h"
 #include "hints.h"
 #include "menu.h"
@@ -84,7 +85,7 @@ bool SkillMenuEntry::is_selectable(bool keep_hotkey)
     if (you.skills[m_sk] == 0 && m_skm->get_state(SKM_SHOW) == SKM_SHOW_KNOWN)
         return false;
 
-    if (m_skm->get_state(SKM_DO) == SKM_DO_DESCRIBE)
+    if (is_set(SKMF_HELP))
         return true;
 
     if (is_set(SKMF_RESKILL_TO) && you.transfer_from_skill == m_sk)
@@ -215,7 +216,7 @@ void SkillMenuEntry::_clear()
 
 COLORS SkillMenuEntry::get_colour() const
 {
-    if (m_skm->get_state(SKM_DO) == SKM_DO_DESCRIBE)
+    if (is_set(SKMF_HELP))
         return DARKGREY;
     else if (is_set(SKMF_RESKILL_TO) && m_sk == you.transfer_from_skill)
         return WHITE;
@@ -453,10 +454,6 @@ std::string SkillMenuSwitch::get_help()
             return "Press the letter of a skill to choose whether you want to "
                    "practise it. Only selected skills will be trained.";
         }
-    case SKM_DO_DESCRIBE:
-        return m_skm->is_set(SKMF_SIMPLE) ? hints_skills_description_info()
-                                          : "Press the letter of a skill to "
-                                            "read its description.";
     case SKM_LEVEL_ENHANCED:
         if (m_skm->is_set(SKMF_ENHANCED))
         {
@@ -490,7 +487,6 @@ std::string SkillMenuSwitch::get_name(skill_menu_state state)
     case SKM_MODE_AUTO:      return "auto";
     case SKM_MODE_MANUAL:    return "manual";
     case SKM_DO_PRACTISE:    return "practise";
-    case SKM_DO_DESCRIBE:    return "describe";
     case SKM_SHOW_KNOWN:     return "known";
     case SKM_SHOW_ALL:       return "all";
     case SKM_LEVEL_ENHANCED: return m_skm->is_set(SKMF_CHANGED)  ? "changed" :
@@ -546,7 +542,7 @@ void SkillMenuSwitch::update()
 
     const std::vector<int> hotkeys = get_hotkeys();
     ASSERT(hotkeys.size());
-    std::string text = make_stringf("[%s(<yellow>%c</yellow>): ",
+    std::string text = make_stringf("[%s(<yellow>%c</yellow>):",
                                     m_name.c_str(), hotkeys[0]);
     for (std::vector<skill_menu_state>::iterator it = m_states.begin();
          it != m_states.end(); ++it)
@@ -571,7 +567,7 @@ SkillMenu::SkillMenu(bool reskilling) : PrecisionMenu(), m_flags(0),
     init_flags(reskilling);
 
 #ifdef USE_TILE
-    const int limit = tiles.get_crt_font()->char_height() * 5
+    const int limit = tiles.get_crt_font()->char_height() * 4
                       + SK_ARR_LN * TILE_Y;
     if (Options.tile_menu_icons && tiles.get_crt()->wy >= limit)
         set_flag(SKMF_SKILL_ICONS);
@@ -580,18 +576,21 @@ SkillMenu::SkillMenu(bool reskilling) : PrecisionMenu(), m_flags(0),
     m_min_coord.x = 1;
     m_min_coord.y = 1;
     m_pos = m_min_coord;
-
-    m_max_coord.x = MIN_COLS + 1;
-    m_max_coord.y = get_number_of_lines() + 1;
-
     m_ff = new MenuFreeform();
+
 #ifdef USE_TILE
+    m_max_coord.x = MIN_COLS;
+    m_max_coord.y = get_number_of_lines();
     if (is_set(SKMF_SKILL_ICONS))
     {
         m_ff->set_tile_height();
         m_max_coord.x += 2 * TILES_COL;
     }
+#else
+    m_max_coord.x = MIN_COLS + 1;
+    m_max_coord.y = get_number_of_lines() + 1;
 #endif
+
     m_ff->init(m_min_coord, m_max_coord, "freeform");
     attach_object(m_ff);
     set_active_object(m_ff);
@@ -610,20 +609,20 @@ SkillMenu::SkillMenu(bool reskilling) : PrecisionMenu(), m_flags(0),
                                                          m_pos.y + ln));
         }
 
-    m_pos.y += SK_ARR_LN + 1;
+    m_pos.y += SK_ARR_LN;
 #ifdef USE_TILE
     if (is_set(SKMF_SKILL_ICONS))
-    {
-        --m_pos.y;
         m_pos.y = tiles.to_lines(m_pos.y);
-    }
-#else
-    m_pos.y = std::min(m_pos.y, m_max_coord.y + is_set(SKMF_RESKILLING) - 4);
+    else
+        ++m_pos.y;
 #endif
 
     init_help();
     --m_pos.x;
     init_switches();
+
+    if (m_pos.y < m_max_coord.y - 1)
+        shift_bottom_down();
 
     if (is_set(SKMF_RESKILLING))
         set_title();
@@ -657,6 +656,11 @@ void SkillMenu::set_flag(int flag)
     m_flags |= flag;
 }
 
+void SkillMenu::toggle_flag(int flag)
+{
+    m_flags ^= flag;
+}
+
 void SkillMenu::add_item(TextItem* item, const int size, coord_def &coord)
 {
     if (coord.x + size > m_max_coord.x)
@@ -668,6 +672,13 @@ void SkillMenu::add_item(TextItem* item, const int size, coord_def &coord)
     item->set_visible(true);
     m_ff->attach_item(item);
     coord.x += size + 1;
+}
+
+void SkillMenu::cancel_help()
+{
+    clear_flag(SKMF_HELP);
+    refresh_names();
+    set_default_help();
 }
 
 void SkillMenu::clear_selections()
@@ -691,14 +702,43 @@ bool SkillMenu::exit()
 
 skill_menu_state SkillMenu::get_state(skill_menu_switch sw)
 {
+    if (sw == SKM_DO)
+        return SKM_DO_PRACTISE;
     if (!m_switches[sw])
         return SKM_NONE;
     else
         return m_switches[sw]->get_state();
 }
 
+void SkillMenu::help()
+{
+    if (is_set(SKMF_HELP))
+    {
+        show_skill_menu_help();
+        set_default_help();
+        clrscr();
+#ifdef USE_TILE
+        tiles.get_crt()->attach_menu(this);
+#endif
+    }
+    else
+    {
+        std::string text = is_set(SKMF_SIMPLE)
+                           ? hints_skills_description_info()
+                           : "Press the letter of a skill to read its "
+                             "description.";
+        text += " Press ? for an explanation of how skills work and the "
+                "various modes.";
+        set_help(text);
+    }
+    toggle_flag(SKMF_HELP);
+    refresh_names();
+}
+
 void SkillMenu::select(skill_type sk, int keyn)
 {
+    if (is_set(SKMF_HELP))
+        show_description(sk);
     if (is_set(SKMF_RESKILL_FROM))
         you.transfer_from_skill = sk;
     else if (is_set(SKMF_RESKILL_TO))
@@ -709,8 +749,6 @@ void SkillMenu::select(skill_type sk, int keyn)
         if (get_state(SKM_VIEW) == SKM_VIEW_TRAINING)
             refresh_display();
     }
-    else if (get_state(SKM_DO) == SKM_DO_DESCRIBE)
-        show_description(sk);
 }
 
 void SkillMenu::toggle(skill_menu_switch sw)
@@ -830,13 +868,12 @@ void SkillMenu::init_switches()
         sw->set_id(SKM_MODE);
         add_item(sw, sw->size(), m_pos);
 
-        sw = new SkillMenuSwitch("Do", '?');
+        /*sw = new SkillMenuSwitch("Do", '?');
         m_switches[SKM_DO] = sw;
         sw->add(SKM_DO_PRACTISE);
-        sw->add(SKM_DO_DESCRIBE);
         sw->update();
         sw->set_id(SKM_DO);
-        add_item(sw, sw->size(), m_pos);
+        add_item(sw, sw->size(), m_pos);*/
     }
 
     sw = new SkillMenuSwitch("Show", '*');
@@ -879,6 +916,12 @@ void SkillMenu::init_switches()
         sw->update();
         sw->set_id(SKM_VIEW);
         add_item(sw, sw->size(), m_pos);
+
+        m_help_button = new FormattedTextItem();
+        m_help_button->set_text("[Help(<yellow>?</yellow>)]");
+        m_help_button->set_id(SKM_HELP);
+        m_help_button->add_hotkey('?');
+        add_item(m_help_button, 9, m_pos);
     }
 }
 
@@ -905,65 +948,70 @@ void SkillMenu::refresh_names()
             skme.set_name(false);
         }
     set_links();
+    if (m_ff->get_active_item() != NULL
+        && !m_ff->get_active_item()->can_be_highlighted())
+    {
+        m_ff->activate_default_item();
+    }
 }
 
 void SkillMenu::set_default_help()
 {
-    std::string help;
+    std::string text;
     if (is_set(SKMF_RESKILL_FROM))
     {
-        help = "Select a skill as the source of the knowledge transfer. The "
+        text = "Select a skill as the source of the knowledge transfer. The "
                "chosen skill will be reduced to the level shown in "
                "<brown>brown</brown>.";
     }
     else if (is_set(SKMF_RESKILL_TO))
     {
-        help = "Select a skill as the destination of the knowledge transfer. "
+        text = "Select a skill as the destination of the knowledge transfer. "
                "The chosen skill will be raised to the level shown in "
                "<cyan>cyan</cyan>.";
     }
     else if (is_set(SKMF_SIMPLE))
-        m_help->set_text(hints_skills_info());
+        text = hints_skills_info();
     else
     {
         if (!is_set(SKMF_CROSSTRAIN) && !is_set(SKMF_ANTITRAIN))
-            help = m_switches[SKM_VIEW]->get_help();
+            text = m_switches[SKM_VIEW]->get_help();
 
         if (get_state(SKM_LEVEL) == SKM_LEVEL_ENHANCED
             && !(is_set(SKMF_CROSSTRAIN) && is_set(SKMF_ANTITRAIN)))
         {
-            help += m_switches[SKM_LEVEL]->get_help();
+            text += m_switches[SKM_LEVEL]->get_help();
         }
         else
-            help += "The species aptitude is in <red>red</red>. ";
+            text += "The species aptitude is in <red>red</red>. ";
 
         if (is_set(SKMF_CROSSTRAIN))
-            help += "Crosstraining is in <green>green</green>. ";
+            text += "Crosstraining is in <green>green</green>. ";
         if (is_set(SKMF_ANTITRAIN))
-            help += "Antitraining is in <magenta>magenta</magenta>. ";
+            text += "Antitraining is in <magenta>magenta</magenta>. ";
 
         if (is_set(SKMF_CROSSTRAIN) && is_set(SKMF_ANTITRAIN))
         {
-            help += "The skill responsible for the bonus or malus is "
+            text += "The skill responsible for the bonus or malus is "
                     "marked with '*'.";
         }
         else if (is_set(SKMF_CROSSTRAIN))
         {
-            help += "The skill responsible for the bonus is marked with "
+            text += "The skill responsible for the bonus is marked with "
                     "'<green>*</green>'.";
         }
         else if (is_set(SKMF_ANTITRAIN))
         {
-            help += "The skill responsible for the malus is marked with "
+            text += "The skill responsible for the malus is marked with "
                     "'<magenta>*</magenta>'.";
         }
     }
 
     // This one takes priority.
     if (get_state(SKM_VIEW) == SKM_VIEW_TRANSFER)
-        help = m_switches[SKM_VIEW]->get_help();
+        text = m_switches[SKM_VIEW]->get_help();
 
-    m_help->set_text(help);
+    m_help->set_text(text);
 }
 
 void SkillMenu::set_help(std::string msg)
@@ -1063,6 +1111,18 @@ void SkillMenu::set_title()
     m_title->set_text(t);
 }
 
+void SkillMenu::shift_bottom_down()
+{
+    const coord_def down(0, 1);
+    m_help->move(down);
+    for (std::map<skill_menu_switch, SkillMenuSwitch*>::iterator it
+         = m_switches.begin(); it != m_switches.end(); ++it)
+    {
+        it->second->move(down);
+    }
+    m_help_button->move(down);
+}
+
 void SkillMenu::show_description(skill_type sk)
 {
     describe_skill(sk);
@@ -1157,6 +1217,14 @@ void skill_menu(bool reskilling)
             case 1008:
             case 1006:
                 continue;
+            case CK_ESCAPE:
+                if (skm.is_set(SKMF_HELP))
+                {
+                    skm.cancel_help();
+                    continue;
+                }
+                else
+                    return;
             default:
                 if (skm.exit())
                     return;
@@ -1170,7 +1238,9 @@ void skill_menu(bool reskilling)
             if (selection.size() != 1)
                 continue;
             int sel_id = selection.at(0)->get_id();
-            if (sel_id < 0)
+            if (sel_id == SKM_HELP)
+                skm.help();
+            else if (sel_id < 0)
                 skm.toggle((skill_menu_switch)sel_id);
             else
             {
