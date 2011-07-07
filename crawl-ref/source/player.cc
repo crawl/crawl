@@ -2731,10 +2731,10 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
 
     if (crawl_state.game_is_zotdef())
     {
+        you.zot_points += exp_gained;
         // All XP, for some reason Sprint speeds up only skill training,
         // but not levelling, Ash skill transfer, etc.
         exp_gained *= 2;
-        you.zot_points += exp_gained;
     }
 
     if (you.penance[GOD_ASHENZARI])
