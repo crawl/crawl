@@ -47,8 +47,9 @@ ogre_m OGRE
 ogre_f
 troll_f TROLL
 troll_m
-octopode OCTOPODE
+octopode1 OCTOPODE
 octopode2
+octopode3
 
 # draconians
 draconian_f DRACONIAN DRACONIAN_FIRST
