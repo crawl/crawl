@@ -334,7 +334,7 @@ void practise(exer_type ex, int param1)
     case EX_WILL_HIT:
         sk = static_cast<skill_type>(param1);
         _exercise(sk, 1, limit);
-        if (one_chance_in(3))
+        if (coinflip())
             _exercise(SK_FIGHTING, 1, limit);
         break;
 
