@@ -1848,7 +1848,7 @@ unsigned int item_value(item_def item, bool ident)
             }
 
             // Hard minimum, as it's worth 20 to ID a ring.
-            if (valued < 0) valued = 20;
+            valued = std::max(20, valued);
         }
         break;
 
