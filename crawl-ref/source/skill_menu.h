@@ -29,15 +29,17 @@ enum skill_menu_flags
     SKMF_SKILL_ICONS  = 1<<7,
     SKMF_APTITUDE     = 1<<8,
     SKMF_SIMPLE       = 1<<9, // Simple mode for tutorial and hint mode.
+    SKMF_HELP         = 1<<10,
 };
 
+#define SKM_HELP -1
 enum skill_menu_switch
 {
-    SKM_MODE  = -1,
-    SKM_DO    = -2,
-    SKM_SHOW  = -3,
-    SKM_LEVEL = -4,
-    SKM_VIEW  = -5,
+    SKM_MODE  = -2,
+    SKM_DO    = -3,
+    SKM_SHOW  = -4,
+    SKM_LEVEL = -5,
+    SKM_VIEW  = -6,
 };
 
 enum skill_menu_state
@@ -46,7 +48,6 @@ enum skill_menu_state
     SKM_MODE_AUTO,
     SKM_MODE_MANUAL,
     SKM_DO_PRACTISE,
-    SKM_DO_DESCRIBE,
     SKM_SHOW_KNOWN,
     SKM_SHOW_ALL,
     SKM_LEVEL_ENHANCED,
@@ -133,11 +134,14 @@ public:
     void clear_flag(int flag);
     bool is_set(int flag) const;
     void set_flag(int flag);
+    void toggle_flag(int flag);
 
     void add_item(TextItem* item, const int size, coord_def &coord);
+    void cancel_help();
     void clear_selections();
     bool exit();
     skill_menu_state get_state(skill_menu_switch sw);
+    void help();
     void select(skill_type sk, int keyn);
     void toggle(skill_menu_switch sw);
 
@@ -156,6 +160,7 @@ private:
     FormattedTextItem* m_help;
 
     std::map<skill_menu_switch, SkillMenuSwitch*> m_switches;
+    FormattedTextItem* m_help_button;
 
     SkillMenuEntry* find_entry(skill_type sk);
     void init_flags(bool reskilling);
@@ -168,6 +173,7 @@ private:
     void set_help(std::string msg);
     void set_skills();
     void set_title();
+    void shift_bottom_down();
     void show_description(skill_type sk);
     void toggle_practise(skill_type sk, int keyn);
 

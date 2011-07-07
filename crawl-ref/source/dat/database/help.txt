@@ -165,3 +165,45 @@ If you are playing with Tiles you can butcher (or bottle) a single
 corpse on the ground by clicking the <w>left mouse button</w> while pressing
 <w>Shift</w>.
 %%%%
+skill-menu
+
+                           <h>Skill management</h>
+In Crawl, you gain experience for killing monsters (and very few other
+activities). This experience is used to train skills. The skill screen allows
+you to select which skills to train.
+
+Note: you train all activated skills at once whenever you gain some experience.
+It is not a bug if you gain a skill level in Axes after killing a monster with
+a spell.
+
+You can toggle a skill by pressing its letter. If a skill is deselected
+(<darkgrey>darkened</darkgrey>), it will not be trained at all.
+
+Training can be done in two modes:
+* automatic: Skills are trained by your use of them.
+* manual: Experience is spread evenly across all activated skills.
+
+You must always have at least one skill enabled.
+You can switch between automatic and manual training with the <w>/</w> key.
+
+How fast you train a skill is governed by the following factors:
+* aptitude: Shown <red>red</red> in the Apt column. Higher numbers mean that
+      less experience is needed to advance a skill. Depends on species.
+* cross-training: Some skills are easier to learn when you already are
+      proficient with a related one, e.g. Long and Short Blades.
+      The aptitude bonus for crosstraining is indicated in <green>green</green>.
+* magic penalties: It is harder to learn an elemental skill if you are
+      proficient in the opposing element (Air-Earth, Ice-Fire).
+      The aptitude penalty is indicated in <magenta>magenta</magenta>.
+
+On top of that, there are some effects which directly modify a skill, for
+example god powers. These skill modifiers are shown in <blue>blue</blue>.
+
+Apart from (de)selecting skills, you also have the following commands:
+<w>/</w> :  Switch between automatic and manual training.
+<w>?</w> :  Allows you to read the descriptions of skills.
+<w>*</w> :  Shows all skills, even those you don't have yet.
+<w>!</w> :  Switch between progress (how far on the way to the next level) and
+      training rate, i.e. how much experience is spent on a skill.
+<w>_</w> :  Shows/hides skill modifiers, e.g. from god powers.
+%%%%

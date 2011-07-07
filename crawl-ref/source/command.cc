@@ -2137,6 +2137,11 @@ void show_butchering_help()
     show_specific_help(getHelpString("butchering"));
 }
 
+void show_skill_menu_help()
+{
+    show_specific_help(getHelpString("skill-menu"));
+}
+
 static void _add_command(column_composer &cols, const int column,
                          const command_type cmd,
                          const std::string desc,
