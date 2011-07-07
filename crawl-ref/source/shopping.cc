@@ -1734,7 +1734,7 @@ unsigned int item_value(item_def item, bool ident)
             valued -= 10;
 
         if (!item_type_known(item))
-            valued += 50;
+            valued += 250;
         else
         {
             // Variable-strength rings.
@@ -1780,82 +1780,58 @@ unsigned int item_value(item_def item, bool ident)
             {
                 switch (item.sub_type)
                 {
-                case RING_INVISIBILITY:
-                    valued += 700;
-                    break;
-
-                case RING_REGENERATION:
-                    valued += 525;
-                    break;
-
-                case RING_FIRE:
-                case RING_ICE:
-                    valued += 434;
-                    break;
-
-                case RING_LIFE_PROTECTION:
-                    valued += 420;
-                    break;
-
                 case RING_TELEPORT_CONTROL:
-                    valued += 294;
+                    valued += 500;
+                    break;
+
+                case AMU_RESIST_MUTATION:
+                case AMU_RAGE:
+                    valued += 400;
+                    break;
+
+                case RING_INVISIBILITY:
+                case RING_REGENERATION:
+                case RING_WIZARDRY:
+                case AMU_FAITH:
+                case AMU_THE_GOURMAND:
+                    valued += 300;
+                    break;
+
+                case RING_PROTECTION_FROM_COLD:
+                case RING_PROTECTION_FROM_FIRE:
+                case RING_PROTECTION_FROM_MAGIC:
+                case AMU_GUARDIAN_SPIRIT:
+                case AMU_CONSERVATION:
+                    valued += 250;
                     break;
 
                 case RING_MAGICAL_POWER:
-                case RING_PROTECTION_FROM_MAGIC:
-                    valued += 280;
-                    break;
-
-                case RING_WIZARDRY:
-                    valued += 245;
-                    break;
-
-                case RING_LEVITATION:
+                case RING_FIRE:
+                case RING_ICE:
+                case RING_LIFE_PROTECTION:
                 case RING_POISON_RESISTANCE:
-                case RING_PROTECTION_FROM_COLD:
-                case RING_PROTECTION_FROM_FIRE:
-                    valued += 210;
+                case AMU_CLARITY:
+                case AMU_RESIST_CORROSION:
+                    valued += 200;
                     break;
 
                 case RING_SUSTAIN_ABILITIES:
                 case RING_SUSTENANCE:
-                case RING_TELEPORTATION: // usually cursed
+                case RING_TELEPORTATION:
+                case RING_LEVITATION:
+                case AMU_STASIS:
                     valued += 175;
                     break;
 
                 case RING_SEE_INVISIBLE:
-                    valued += 140;
+                case AMU_WARDING:
+                case AMU_CONTROLLED_FLIGHT:
+                    valued += 150;
                     break;
 
                 case RING_HUNGER:
-                    valued -= 350;
-                    break;
-
-                case AMU_THE_GOURMAND:
-                case AMU_GUARDIAN_SPIRIT:
-                case AMU_FAITH:
-                    valued += 245;
-                    break;
-
-                case AMU_CLARITY:
-                case AMU_RESIST_CORROSION:
-                case AMU_RESIST_MUTATION:
-                case AMU_WARDING:
-                    valued += 210;
-                    break;
-
-                case AMU_CONSERVATION:
-                case AMU_CONTROLLED_FLIGHT:
-                    valued += 175;
-                    break;
-
-                case AMU_RAGE:
-                case AMU_STASIS:
-                    valued += 140;
-                    break;
-
                 case AMU_INACCURACY:
-                    valued -= 350;
+                    valued -= 300;
                     break;
                     // got to do delusion!
                 }
@@ -1870,6 +1846,9 @@ unsigned int item_value(item_def item, bool ident)
                 else
                     valued += artefact_value(item) * 7;
             }
+
+            // Hard minimum, as it's worth 20 to ID a ring.
+            if (valued < 0) valued = 20;
         }
         break;
 
