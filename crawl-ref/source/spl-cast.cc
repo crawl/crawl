@@ -1006,6 +1006,13 @@ static bool _spellcasting_aborted(spell_type spell,
         return (true);
     }
 
+    if (spell == SPELL_TORNADO
+        && you.duration[DUR_TORNADO] || you.duration[DUR_TORNADO_COOLDOWN])
+    {
+        mpr("You need to wait for the winds to calm down.");
+        return (true);
+    }
+
     return (false);
 }
 
