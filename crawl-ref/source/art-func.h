@@ -316,11 +316,14 @@ static void _SINGING_SWORD_unequip(item_def *item, bool *show_msgs)
 static void _SINGING_SWORD_world_reacts(item_def *item)
 {
     int tension = get_tension(GOD_NO_GOD);
-    int tier = (tension <= 0) ? 0 : (tension < 40) ? 1 : 2;
+    int tier = (tension <= 0) ? 1 : (tension < 40) ? 2 : 3;
+    bool silent = silenced(you.pos());
 
     std::string old_name = get_artefact_name(*item);
     std::string new_name;
-    if (tier < 2)
+    if (silent)
+        new_name = "Silent Sword";
+    else if (tier < 3)
         new_name = "Singing Sword";
     else
         new_name = "Screaming Sword";
@@ -331,15 +334,17 @@ static void _SINGING_SWORD_world_reacts(item_def *item)
     }
 
     // not as spammy at low tension
-    if (!x_chance_in_y(7, (tier == 0) ? 1000 : (tier == 1) ? 100 : 10))
+    if (!x_chance_in_y(7, (tier == 1) ? 1000 : (tier == 2) ? 100 : 10))
         return;
 
-    const char *tenname[] =  {"no_tension", "low_tension", "high_tension"};
+    // it will still struggle more with higher tension
+    if (silent)
+        tier = 0;
+
+    const char *tenname[] =  {"silenced", "no_tension", "low_tension", "high_tension"};
     std::string key = tenname[tier];
-    if (silenced(you.pos()))
-        key = "silenced";
     const std::string msg = getSpeakString("singing sword " + key);
-    const int loudness[] = {2, 15, 30};
+    const int loudness[] = {0, 2, 15, 30};
     item_noise(*item, msg, loudness[tier]);
 }
 
