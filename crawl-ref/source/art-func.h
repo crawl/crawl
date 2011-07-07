@@ -316,7 +316,7 @@ static void _SINGING_SWORD_unequip(item_def *item, bool *show_msgs)
 static void _SINGING_SWORD_world_reacts(item_def *item)
 {
     int tension = get_tension(GOD_NO_GOD);
-    int tier = (tension <= 0 ) ? 0 : (tension < 40) ? 1 : 2;
+    int tier = (tension <= 0) ? 0 : (tension < 40) ? 1 : 2;
 
     std::string old_name = get_artefact_name(*item);
     std::string new_name;
