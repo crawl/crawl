@@ -337,7 +337,7 @@ static void _SINGING_SWORD_world_reacts(item_def *item)
     const char *tenname[] =  {"no_tension", "low_tension", "high_tension"};
     std::string key = tenname[tier];
     if (silenced(you.pos()))
-        return; //key = "silenced";
+        key = "silenced";
     const std::string msg = getSpeakString("singing sword " + key);
     const int loudness[] = {2, 15, 30};
     item_noise(*item, msg, loudness[tier]);

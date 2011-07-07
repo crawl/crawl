@@ -411,6 +411,12 @@ a flourish of trumpets!
 ###############################################################################
 # Weights for different types of message, depending on tension.
 
+######### silenced, any tension ############
+%%%%
+singing sword silenced
+
+VISUAL:@The_weapon@ struggles and turns.
+
 ######### no tension ############
 %%%%
 singing sword no_tension
