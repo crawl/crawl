@@ -312,7 +312,7 @@ void tornado_damage(actor *caster, int dur)
             clouds.push_back(*dam_i);
             swap_clouds(clouds[random2(clouds.size())], *dam_i);
 
-            if (!leda)
+            if (!leda && !feat_is_solid(grd(*dam_i)))
                 move_avail.push_back(*dam_i);
         }
     }
