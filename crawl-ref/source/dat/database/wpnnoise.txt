@@ -402,64 +402,18 @@ a flourish of trumpets!
 # speaking        20%               20% (10/10)      40% (30/10)     138/700
 # real songs       1%                1% (0.7/0.3)     1% (0.3/0.7)    12/700
 # instruments     12%               16%              20%              90/700
-# noises           7%               23% (7/16)      39% (3/36)        50/700
-# chatter         10%                0%              0%               50/700
+# noises           7%               23% (7/16)       39% (3/36)       50/700
+# chatter         10%                0%               0%              50/700
 #
 ###############################################################################
 
-
-#######
-# Do not add speech to the "screaming sword" sections.
-
-%%%%
-screaming sword no_tension
-
-@singing sword no_tension@
-%%%%
-screaming sword low_tension
-
-@singing sword low_tension@
-%%%%
-screaming sword high_tension
-
-@singing sword high_tension@
-
-###############################################################################
-# Chance for messages, depending on tension.
-
-%%%%
-singing sword no_tension
-
-w:1000
-NONE
-
-w:7
-@sword_active_no_tension@
-
-%%%%
-singing sword low_tension
-
-w:100
-NONE
-
-w:7
-@sword_active_low_tension@
-
-%%%%
-singing sword high_tension
-
-w:10
-NONE
-
-w:7
-@sword_active_high_tension@
 
 ###############################################################################
 # Weights for different types of message, depending on tension.
 
 ######### no tension ############
 %%%%
-sword_active_no_tension
+singing sword no_tension
 
 w:400
 @singing_no_tension@
@@ -484,7 +438,7 @@ w:100
 
 ######### low tension ############
 %%%%
-sword_active_low_tension
+singing sword low_tension
 
 w:400
 @singing_no-low_tension@
@@ -512,7 +466,7 @@ w:160
 
 ######### high tension ############
 %%%%
-sword_active_high_tension
+singing sword high_tension
 
 w:300
 @speaking_low-high_tension@

@@ -171,7 +171,7 @@ COLOUR:  ETC_GOLD
 TILE:    spwpn_singing_sword
 TILE_EQ: singing_sword
 VALUE:   1200
-BOOL:    noises, special
+BOOL:    special
 DESC_ID: This blessed weapon loves nothing more than to sing to its owner,
          whether they want it to or not.
 
