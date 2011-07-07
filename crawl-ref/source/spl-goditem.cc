@@ -62,7 +62,7 @@ int identify(int power, int item_slot, std::string *pre_msg)
 
         if (fully_identified(item))
         {
-            if(is_deck(item) && !top_card_is_known(item))
+            if (is_deck(item) && !top_card_is_known(item))
             {
                 deck_identify_first(item_slot);
                 ++identified;
@@ -83,7 +83,7 @@ int identify(int power, int item_slot, std::string *pre_msg)
         if (Options.autoinscribe_artefacts && is_artefact(item))
             add_autoinscription(item, artefact_auto_inscription(item));
 
-        if(is_deck(item) && !top_card_is_known(item))
+        if (is_deck(item) && !top_card_is_known(item))
             deck_identify_first(item_slot);
 
         // For scrolls, now id the scroll, unless already known.
