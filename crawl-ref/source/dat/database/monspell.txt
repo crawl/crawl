@@ -155,7 +155,7 @@ An intense light blinds you for a moment.
 %%%%
 Summon Holies cast
 
-@The_monster@ calls forth its holy kin!
+@The_monster@ calls forth @possessive@ holy kin!
 %%%%
 unseen Summon Holies cast
 
@@ -447,9 +447,9 @@ guardian serpent cast
 
 @The_monster@ casts a spell.
 
-@The_monster@ gestures with its tail.
+@The_monster@ gestures with @possessive@ tail.
 
-@The_monster@ weaves intricate patterns with the tip of its tongue.
+@The_monster@ weaves intricate patterns with the tip of @possessive@ tongue.
 %%%%
 Bolt of Fire ophan cast
 
@@ -466,7 +466,7 @@ shedu cast
 # Should only be casting spells at each other.
 shedu cast targeted
 
-@The_monster@ beseeches @possessive_God@ to heal its mate!
+@The_monster@ beseeches @possessive_God@ to heal @possessive@ mate!
 ###########################################################################
 # Generic messages for priests and wizards which have been polymorphed into
 # something without hands.
