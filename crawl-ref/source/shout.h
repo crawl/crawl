@@ -8,6 +8,7 @@ bool noisy(int loudness, const coord_def& where, const char *msg = NULL,
            bool fake_noise = false);
 bool fake_noisy(int loudness, const coord_def& where);
 
+void item_noise(const item_def& item, std::string msg, int loudness = 25);
 void noisy_equipment();
 
 void blood_smell(int strength, const coord_def& where);

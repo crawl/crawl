@@ -316,10 +316,11 @@ static void _SINGING_SWORD_unequip(item_def *item, bool *show_msgs)
 static void _SINGING_SWORD_world_reacts(item_def *item)
 {
     int tension = get_tension(GOD_NO_GOD);
+    int tier = (tension <= 0 ) ? 0 : (tension < 40) ? 1 : 2;
 
     std::string old_name = get_artefact_name(*item);
     std::string new_name;
-    if (tension < 40)
+    if (tier < 2)
         new_name = "Singing Sword";
     else
         new_name = "Screaming Sword";
@@ -328,6 +329,18 @@ static void _SINGING_SWORD_world_reacts(item_def *item)
         set_artefact_name(*item, new_name);
         you.wield_change = true;
     }
+
+    // not as spammy at low tension
+    if (!x_chance_in_y(7, (tier == 0) ? 1000 : (tier == 1) ? 100 : 10))
+        return;
+
+    const char *tenname[] =  {"no_tension", "low_tension", "high_tension"};
+    std::string key = tenname[tier];
+    if (silenced(you.pos()))
+        return; //key = "silenced";
+    const std::string msg = getSpeakString("singing sword " + key);
+    const int loudness[] = {2, 15, 30};
+    item_noise(*item, msg, loudness[tier]);
 }
 
 ////////////////////////////////////////////////////
