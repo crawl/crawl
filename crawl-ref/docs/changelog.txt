@@ -1,3 +1,138 @@
+Stone Soup 0.9 (########)
+-------------------------
+
+Disclaimer: These are merely the highlights, not an exhaustive list of changes.
+Breaks save compatibility with the 0.8 release.
+
+0.9 Highlights
+--------------
+* New skill training system. Experience pool and victory dancing are gone.
+* Abyss???
+
+Skills
+......
+* Skill training: longer explanation welcome!
+
+Gods
+----
+* Cheibriados gives full stat boost for fully ponderous, regardless of species.
+* Jiyva is a little less likely to remove mutations.
+* Jiyva: better stat shuffling.
+* Makhleb has a new flavour description.
+* Nerf TSO's and Makhleb's HP and MP on kills.
+* Trog specialises in antimagic weapon gifts.
+* Zin's Vitalisation is cheaper and cures petrification, stat boost stackable.
+* Don't allow avoiding good god wrath by swapping via another good god
+* Ashenzari: ...
+
+Character
+---------
+* +3 base HP for all characters.
+* Racial HP/MP gain is now governed by innate mutation (see ?%).
+* Fighting gives less HP boost.
+* All characters carry a bootknift to dissect corpses.
+* Hill Orc Priests always take on Beogh.
+* Berserkitis mutation triggers less often.
+* Changes to Chaos Knights, Warper, Fighter, Gladiator, Hunter.
+* Draconians are more dextrous.
+* Rename Crusader to Skald, change starting book and skill levels.
+* Conjurers don't need to choose a book (they always get the Air/Ice book).
+* Felids: lose a level on death, gain at most nine lives, improved aptitudes.
+* Berserk speed-up reduced to that of haste (1.5 instead of 2).
+
+Interface
+---------
+* New command: 'D'rop last. Drops the item(s) last picked up.
+* Auto-switch: bumping while wielding launcher switches to weapon in slots a/b.
+* Auto-switch: firing while wielding a melee weapon switches to luancher in a/b.
+* Auto-explore tries to look at unreachable places.
+* Search: allows searching for portals, and for waypoints (Ctrl-F 1, Ctrl-F *).
+* Search: "branded" synonymous with "ego". Better help (Ctrl-F ?).
+* Search: only show items in a stash matching the search.
+* New help for skills screen (m??).
+* Change inventory colours for some potions.
+* Auto-pickup chunks after Aninate Skeleton.
+* Allow toggling hit prediction with ':' in new targetting modes.
+* Cloud glyph in 7-bit ASCII is '0', not '#' anymore.
+* Prompt before leaving Ziggurat.
+* Better butchering messages, less spam.
+
+Spells
+------
+* Tornado balance
+* Shock and Lightning will hit a creature at most twice; damage increased.
+* Removed spells: Teleport Self, Berserk.
+* New spell: Shroud of Golubria (comes in Skald's starting book).
+* New spell: Inner Flame (comes in starting book of Fire Elementalists).
+* Renamed books: Chemistry -> Alchemy, Zoology -> Beasts.
+* Ranges of Throw Frost/Flame and of Bolt of Cold/Fire swapped.
+* Poison Weapon works also on blunt weapons.
+* Condensation Shield buffed.
+* Reduce level of Summon Ice Beast to 4.
+* Sublimation of Blood takes spellpower into account.
+* Statue Form no longer torment immune, only 50% resistance.
+* Statue and Dragon Form balance: give GDR, reduce U&C boost, all melee boost.
+* Apportation takes spellpower into account.
+
+Monsters
+--------
+* AI: Monsters improve even signature weapons (e.g. Sigmund will use Finisher).
+* AI: Confused high intelligence monsters don't move if adjacent to deadly cell.
+* Snapping turtles and Geryon reach diagonally.
+* Vampire bats are undead.
+* Monsters with mutagenic chunks leaves corpses less often.
+* Reaching over a hostile monster may attack the monster between you and target.
+* Kenku monsters come with gear.
+* Rename "beast" to "hell beast".
+* Rename "megabat" to "bat".
+* Pikel: fixed bugs with freed monsters.
+* Replace "gila monster" with "basilisk", complete with petrification.
+* Adjust xp values for some monsters.
+
+Levels
+------
+* Many new vaults, noticeably new Elf:5 maps.
+* Blink in the Abyss only blinks; does not teleport anymore.
+* Baileys are more sane in loot and threat.
+* Troves: fix some bugs, and additional quests.
+* Vestibule of Hell has its own monster set.
+
+Orb run
+-------
+* Disable controlled teleports.
+* Orb run spawns are more likely to spawn near the player.
+* Teleportation may need longer to kick in.
+
+Items
+-----
+* Singing Sword does sonic damage at high tension.
+* Price reform: scrolls, potions, rings. Bad items cost more than 1 gold now.
+* Scroll of identify shows top card when used on deck of cards.
+* Picked up runes are no longer part of the inventory. They are listed in \.
+* Randarts with the *Rage property trigger berserk less often.
+* Modified spellbooks: Conjurations; Frost; Ice.
+* Buckler nerf.
+* Mace of Brilliance comes with a halo.
+* Reflected missiles get their full range on the way back.
+* Randart heavy armours tend to come with better enchantment.
+* Cards: the orb (new card), destruction cards buffed.
+* Wands and rods rely more strongly on Evocations skill.
+* Nerf double swords, buff demon blades.
+* Improved Zonguldrok, Undeadhunter.
+* Remove knives. Change Spriggan's Knife from knift to dagger.
+* Bad unrandarts (Misfortune, Folly, Lear's) get random appearance.
+
+Tiles
+-----
+
+Technical
+---------
+
+Options
+-------
+* Suppress -cTele, Lab, Bazaar announcements: ...
+
+
 Stone Soup 0.8 (20110426)
 -------------------------
 
