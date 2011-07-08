@@ -84,6 +84,26 @@ static void _set_no_path_found(monster* mon)
 #ifdef DEBUG_PATHFIND
     mpr("No path found!");
 #endif
+    if (crawl_state.game_is_zotdef())
+    {
+        if (you.wizard)
+        {
+            // You might have used a wizard power to teleport into a wall or
+            // a loot chamber.
+            mprf(MSGCH_ERROR, "Monster %s failed to pathfind!",
+                 mon->name(DESC_PLAIN).c_str());
+        }
+        else
+        {
+            // None of the maps allows the goal to ever become unreachable,
+            // and when that happens, let's crash rather than a give an
+            // effortless win with all the opposition doing nothing.
+            die("ZotDef: monster %s failed to pathfind to (%d,%d) (%s)",
+                mon->name(DESC_PLAIN).c_str(),
+                zotdef_target().x, zotdef_target().y,
+                orb_position().origin() ? "you" : "the Orb");
+        }
+    }
 
     mon->travel_target = MTRAV_UNREACHABLE;
     // Pass information on to nearby monsters.
