@@ -105,10 +105,7 @@ int calc_skill_cost(int skill_cost_level)
                          240, 248, 250, 250, 250,  // 21-25
                          250, 250 };
 
-    if (crawl_state.game_is_zotdef())
-        return cost[skill_cost_level - 1] / 3 + 1;
-    else
-        return cost[skill_cost_level - 1];
+    return cost[skill_cost_level - 1];
 }
 
 // Characters are actually granted skill points, not skill levels.
