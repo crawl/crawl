@@ -2721,6 +2721,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>_</w>      : gain religion\n"
                        "<w>^</w>      : set piety to a value\n"
                        "<w>@</w>      : set Str Int Dex\n"
+                       "<w>Ctrl-Z</w> : gain lots of Zot Points\n"
                        "\n"
                        "<yellow>Create level features</yellow>\n"
                        "<w>l</w>      : make entrance to labyrinth\n"
