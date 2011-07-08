@@ -493,6 +493,58 @@ void cast_refrigeration(int pow, bool non_player, bool freeze_potions)
     }
 }
 
+// Screaming Sword
+void sonic_damage(bool scream)
+{
+    // First build the message.
+    counted_monster_list affected_monsters;
+
+    for (monster_iterator mi(&you); mi; ++mi)
+        if (cell_see_cell(you.pos(), mi->pos()) && !silenced(mi->pos()))
+            _record_monster_by_name(affected_monsters, *mi);
+
+    /* dpeg sez:
+       * damage applied to everyone but the wielder (reasoning: the sword
+         does not like competitors, so no allies)
+       -- so sorry, Beoghites, Jiyvaites and the rest.
+    */
+
+    if (!affected_monsters.empty())
+    {
+        const std::string message =
+            make_stringf("%s %s hurt by the noise.",
+                         _describe_monsters(affected_monsters).c_str(),
+                         _monster_count(affected_monsters) == 1? "is" : "are");
+        if (strwidth(message) < get_number_of_cols() - 2)
+            mpr(message.c_str());
+        else
+        {
+            // Exclamation mark to suggest that a lot of creatures were
+            // affected.
+            mpr("The monsters around you reel from the noise!");
+        }
+    }
+
+    // Now damage the creatures.
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    {
+        if (!cell_see_cell(you.pos(), mi->pos()) || silenced(mi->pos()))
+            continue;
+        int hurt = (random2(2) + 1) * (random2(2) + 1) * (random2(3) + 1)
+                 + (random2(3) + 1) + 1;
+        if (scream)
+            hurt = std::max(hurt * 2, 16);
+        int cap = scream ? mi->max_hit_points / 2 : mi->max_hit_points * 3 / 10;
+        hurt = std::min(hurt, std::max(cap, 1));
+        /* per dpeg:
+         * damage is universal (well, only to those who can hear, but not sure
+           we can determine that in-game), i.e. smiting, no resists
+        */
+        dprf("damage done: %d", hurt);
+        mi->hurt(&you, hurt);
+    }
+}
+
 bool vampiric_drain(int pow, monster* mons)
 {
     if (mons == NULL || mons->submerged())

@@ -490,9 +490,6 @@ singing sword high_tension
 w:300
 @speaking_low-high_tension@
 
-w:100
-@speaking_high_tension@
-
 w:3
 @real_song_low-high_tension@
 
@@ -507,6 +504,12 @@ w:30
 
 w:360
 @weapon_noises_low-high_tension@
+
+######### SCREAM (high tension + double damage) ############
+%%%%
+singing sword SCREAM
+
+@speaking_high_tension@
 
 ###############################################################################
 # Weapon noises for the Singing Sword at low and high tension.
