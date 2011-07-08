@@ -323,7 +323,7 @@ static void _SINGING_SWORD_world_reacts(item_def *item)
     std::string old_name = get_artefact_name(*item);
     std::string new_name;
     if (silent)
-        new_name = "Silent Sword";
+        new_name = "Sulking Sword";
     else if (tier < 3)
         new_name = "Singing Sword";
     else
@@ -349,7 +349,7 @@ static void _SINGING_SWORD_world_reacts(item_def *item)
                               "high_tension", "SCREAM"};
     std::string key = tenname[tier];
     const std::string msg = getSpeakString("singing sword " + key);
-    const int loudness[] = {0, 2, 15, 25, 30};
+    const int loudness[] = {0, 2, 15, 25, 35};
     item_noise(*item, msg, loudness[tier]);
 
     if (tier < 3)
