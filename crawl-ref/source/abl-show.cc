@@ -2962,7 +2962,7 @@ std::vector<talent> your_talents(bool check_confused)
             _add_talent(talents, ABIL_MAKE_OCS, check_confused);
         if (you.experience_level >= 15)
             _add_talent(talents, ABIL_MAKE_NEEDLE_TRAP, check_confused);
-        if (you.experience_level >= 16)
+        if (you.experience_level >= 16 && you.char_direction != GDT_ASCENDING)
             _add_talent(talents, ABIL_MAKE_TELEPORT, check_confused);
         if (you.experience_level >= 17)
             _add_talent(talents, ABIL_MAKE_WATER, check_confused);

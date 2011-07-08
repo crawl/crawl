@@ -1818,7 +1818,9 @@ static std::vector<formatted_string> _get_overview_resistances(
     cols.add_formatted(1, buf, false);
 
     const int stasis = wearing_amulet(AMU_STASIS, calc_unid);
-    const int notele = scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid);
+    const int notele = scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid)
+                       || crawl_state.game_is_zotdef()
+                          && you.char_direction == GDT_ASCENDING;
     const int rrtel = !!player_teleport(calc_unid);
     if (notele && !stasis)
     {
