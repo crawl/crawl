@@ -1748,13 +1748,15 @@ static int _place_monster_aux(const mgen_data &mg,
             // and it's the disabled branch, pretend to be that one.
             if (you.where_are_you == BRANCH_LAIR)
             {
-                const branch_type lair_branches[3] = {
+                const branch_type lair_branches[3] =
+                {
                     BRANCH_SWAMP,
                     BRANCH_SHOALS,
                     BRANCH_SNAKE_PIT,
                 };
 
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < 3; i++)
+                {
                     if (branches[lair_branches[i]].startdepth == -1)
                     {
                         mon->props["stair_type"] = static_cast<short>(

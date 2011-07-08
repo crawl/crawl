@@ -143,7 +143,6 @@ static void _mons_summon_monster_illusion(monster* caster,
 
 static void _init_player_illusion_properties(monsterentry *me)
 {
-
     me->holiness = you.holiness();
     // [ds] If we're cloning the player, use their base holiness, not
     // the effects of their Necromutation spell. This is important

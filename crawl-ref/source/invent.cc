@@ -1412,7 +1412,6 @@ std::vector<SelItem> prompt_invent_items(
 
 static int _digit_to_index(char digit, operation_types oper)
 {
-
     const char iletter = static_cast<char>(oper);
 
     for (int i = 0; i < ENDOFPACK; ++i)
@@ -1645,7 +1644,6 @@ bool check_warning_inscriptions(const item_def& item,
                 equip = you.equip[EQ_AMULET];
             else
             {
-
                 for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; ++slots)
                 {
                     if (slots == EQ_AMULET)

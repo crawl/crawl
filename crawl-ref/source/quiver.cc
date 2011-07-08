@@ -444,7 +444,6 @@ void player_quiver::_get_fire_order(std::vector<int>& order,
         for (unsigned int i_flags = 0; i_flags < Options.fire_order.size();
              i_flags++)
         {
-
             if (_item_matches(item, (fire_type) Options.fire_order[i_flags],
                               launcher))
             {

@@ -1743,7 +1743,6 @@ static void _drop_tomb(const coord_def& pos, bool premature)
     bool seen_change = false;
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
-
         // "Normal" tomb
         if (grd(*ai) == DNGN_ROCK_WALL &&
             env.markers.property_at(*ai, MAT_ANY, "prison") != "Zin")

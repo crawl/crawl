@@ -6489,7 +6489,6 @@ void monster::react_to_damage(const actor *oppressor, int damage,
         if (!invalid_monster_index(number)
             && mons_base_type(&menv[number]) == MONS_KRAKEN_TENTACLE)
         {
-
             // If we are going to die, monster_die hook will handle
             // purging the tentacle.
             if (hit_points < menv[number].hit_points

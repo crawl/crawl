@@ -99,7 +99,8 @@ public:
                                          100));
     }
 private:
-    int8_t combine(int8_t a, int8_t b, int8_t def = 10) const {
+    int8_t combine(int8_t a, int8_t b, int8_t def = 10) const
+    {
         return (b != def? b : a);
     }
 };

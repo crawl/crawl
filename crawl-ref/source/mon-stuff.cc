@@ -1334,7 +1334,6 @@ static void _monster_die_cloud(const monster* mons, bool corpse, bool silent,
 
 void mons_relocated(monster* mons)
 {
-
     // If the main body teleports get rid of the tentacles
     if (mons_base_type(mons) == MONS_KRAKEN)
     {
@@ -3656,7 +3655,6 @@ bool simple_monster_message(const monster* mons, const char *event,
                             int param,
                             description_level_type descrip)
 {
-
     if (mons_near(mons)
         && (channel == MSGCH_MONSTER_SPELL || channel == MSGCH_FRIEND_SPELL
             || mons->visible_to(&you)))

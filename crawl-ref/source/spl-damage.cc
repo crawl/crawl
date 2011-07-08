@@ -1130,7 +1130,6 @@ static int _ignite_poison_monsters(coord_def where, int pow, int, actor *actor)
 
 static int _ignite_poison_player(coord_def where, int pow, int, actor *actor)
 {
-
     if (actor->is_player() || where != you.pos())
         return (0);
 

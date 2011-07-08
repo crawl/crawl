@@ -763,7 +763,6 @@ int apply_area_within_radius(cell_func cf, const coord_def& where,
                              int pow, int radius, int ctype,
                              actor *agent)
 {
-
     int rv = 0;
 
     for (radius_iterator ri(where, radius, false, false); ri; ++ri)

@@ -2,7 +2,8 @@
 #define __LIB_RNG_ASG_HEADER__
 
 #include <stack>
-class AsgKISS {
+class AsgKISS
+{
     public:
         AsgKISS();
         AsgKISS(uint32_t init_key[], int key_length);

@@ -247,7 +247,8 @@ public:
     bool prompt_stop() const;
 
 private:
-    template <class Z> struct named_thing {
+    template <class Z> struct named_thing
+    {
         std::string name;
         Z thing;
 

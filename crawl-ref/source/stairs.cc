@@ -822,7 +822,8 @@ void down_stairs(dungeon_feature_type force_stair,
     // Up and down both work for portals.
     if (feat_is_bidirectional_portal(stair_find))
     {
-        if (stair_find == DNGN_ENTER_HELL && player_in_hell()) {
+        if (stair_find == DNGN_ENTER_HELL && player_in_hell())
+        {
             up_stairs(force_stair, entry_cause);
             return;
         }

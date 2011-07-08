@@ -2778,7 +2778,6 @@ int place_ring(std::vector<coord_def> &ring_points,
 void collect_radius_points(std::vector<std::vector<coord_def> > &radius_points,
                            const coord_def &origin, const los_base* los)
 {
-
     radius_points.clear();
     radius_points.resize(LOS_RADIUS);
 
@@ -3054,7 +3053,6 @@ int spawn_corpse_mushrooms(item_def &corpse,
                 && in_bounds(temp)
                 && mons_class_can_pass(MONS_TOADSTOOL, grd(temp)))
             {
-
                 visited_indices.insert(index);
                 fringe.push(temp);
             }

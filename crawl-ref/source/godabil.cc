@@ -73,7 +73,6 @@ bool zin_sustenance(bool actual)
 
 std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
 {
-
     // 'prayertype':
     // This is in enum.h; there are currently five prayers.
 

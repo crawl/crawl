@@ -761,7 +761,8 @@ public:
     virtual bool attach_item(MenuItem* item) = 0;
 
 protected:
-    enum Direction{
+    enum Direction
+    {
         UP,
         DOWN,
         LEFT,
@@ -1061,7 +1062,8 @@ public:
     virtual void set_active_object(MenuObject* object);
 protected:
     // These correspond to the Arrow keys when used for browsing the menus
-    enum Direction{
+    enum Direction
+    {
         UP,
         DOWN,
         LEFT,

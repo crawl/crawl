@@ -3582,7 +3582,6 @@ void hints_describe_item(const item_def &item)
                 else if (gives_resistance(item)
                          && wherey() <= get_number_of_lines() - 3)
                 {
-
                     // It grants a resistance.
                     ostr << "\nThis weapon offers its wearer protection from "
                             "certain sources. For an overview of your "

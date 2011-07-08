@@ -245,15 +245,18 @@ private:
 };
 
 void set_terrain_mapped(int x, int y);
-inline void set_terrain_mapped(const coord_def& c) {
+inline void set_terrain_mapped(const coord_def& c)
+{
     set_terrain_mapped(c.x,c.y);
 }
+
 void set_terrain_seen(int x, int y);
-inline void set_terrain_seen(const coord_def& c) {
+inline void set_terrain_seen(const coord_def& c)
+{
     set_terrain_seen(c.x, c.y);
 }
-void set_terrain_changed(int x, int y);
 
+void set_terrain_changed(int x, int y);
 inline void set_terrain_changed(const coord_def &c)
 {
     set_terrain_changed(c.x, c.y);

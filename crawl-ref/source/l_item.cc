@@ -38,7 +38,6 @@ struct item_wrapper
 
 void clua_push_item(lua_State *ls, item_def *item)
 {
-
     item_wrapper *iw = clua_new_userdata<item_wrapper>(ls, ITEM_METATABLE);
     iw->item = item;
     iw->turn = you.num_turns;
