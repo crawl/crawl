@@ -33,6 +33,7 @@
 #include "mon-stuff.h"     // For Scythe of Curses cursing items
 #include "player.h"
 #include "spl-cast.h"      // For evokes
+#include "spl-damage.h"    // For the Singing Sword.
 #include "spl-miscast.h"   // For Staff of Wucad Mu and Scythe of Curses miscasts
 #include "spl-summoning.h" // For Zonguldrok animating dead
 #include "terrain.h"       // For storm bow
@@ -341,11 +342,20 @@ static void _SINGING_SWORD_world_reacts(item_def *item)
     if (silent)
         tier = 0;
 
-    const char *tenname[] =  {"silenced", "no_tension", "low_tension", "high_tension"};
+    if (tier == 3 && one_chance_in(10))
+        tier++; // SCREAM -- double damage
+
+    const char *tenname[] =  {"silenced", "no_tension", "low_tension",
+                              "high_tension", "SCREAM"};
     std::string key = tenname[tier];
     const std::string msg = getSpeakString("singing sword " + key);
-    const int loudness[] = {0, 2, 15, 30};
+    const int loudness[] = {0, 2, 15, 25, 30};
     item_noise(*item, msg, loudness[tier]);
+
+    if (tier < 3)
+        return; // no damage on low tiers
+
+    sonic_damage(tier == 4);
 }
 
 ////////////////////////////////////////////////////
