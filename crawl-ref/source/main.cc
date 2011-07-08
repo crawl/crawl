@@ -720,6 +720,16 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
             mpr("This only makes sense in a labyrinth!");
         break;
 
+    case CONTROL('Z'):
+        if (crawl_state.game_is_zotdef())
+        {
+            you.zot_points = 1000000;
+            you.redraw_experience = true;
+        }
+        else
+            mpr("But you're not in Zot Defence!");
+        break;
+
 
     default:
         if (!silent_fail)
