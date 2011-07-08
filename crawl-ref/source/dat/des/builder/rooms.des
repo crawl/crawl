@@ -138,7 +138,7 @@ end
 ##########################
 
 NAME:   special_room_kobold
-DEPTH:  6-14, !Lair, !Crypt
+DEPTH:  6-14, !Lair, !Crypt, !Geh, !Tar, !Coc, !Dis
 TAGS:   special_room allow_dup unrand
 WEIGHT: 11
 : sroom_kobold_lair(_G)
@@ -146,7 +146,7 @@ MAP
 ENDMAP
 
 NAME:   special_room_orc
-DEPTH:  8-, !Lair, !Crypt
+DEPTH:  8-, !Lair, !Crypt, !Geh, !Tar, !Coc, !Dis
 TAGS:   special_room allow_dup unrand
 WEIGHT: 59 (8-14), 50 (15-16), 40 (17), 25 (18-20), 15 (21-)
 : sroom_orc_lair(_G)
@@ -154,7 +154,7 @@ MAP
 ENDMAP
 
 NAME:   special_room_bee
-DEPTH:  8-, !Crypt
+DEPTH:  8-, !Crypt, !Geh, !Tar, !Coc, !Dis
 TAGS:   special_room allow_dup unrand
 WEIGHT: 30 (8-14), 25 (15-17), 33 (18-20), 8 (21-)
 : sroom_beehive(_G)
@@ -170,7 +170,7 @@ MAP
 ENDMAP
 
 NAME:   special_room_jelly
-DEPTH:  17-, !Crypt
+DEPTH:  17-, !Crypt, !Geh, !Tar, !Coc, !Dis
 TAGS:   special_room allow_dup unrand
 WEIGHT: 9 (17), 13 (18-20), 45 (21-)
 : sroom_jelly_pit(_G)
