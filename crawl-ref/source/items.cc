@@ -2241,10 +2241,10 @@ bool drop_last()
     {
         if (you.inv[it->first].quantity > 0)
         {
-            drop_item(it->first, it->second);
+            std::pair<int,int> pair = *it++;
+            drop_item(pair.first, pair.second);
             dropped = true;
         }
-        ++it;
     }
 
     if (!dropped)
