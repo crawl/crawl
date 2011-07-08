@@ -2042,9 +2042,23 @@ int melee_attack::player_weapon_type_modify(int damage)
 
 void melee_attack::player_exercise_combat_skills()
 {
+    int damage = 10; // Default for unarmed.
+    if (weapon && (weapon->base_type == OBJ_WEAPONS
+                      && !is_range_weapon(*weapon)
+                   || weapon->base_type == OBJ_STAVES))
+    {
+        damage = property(*weapon, PWPN_DAMAGE);
+    }
+
     const bool helpless = defender->cannot_fight();
-    practise(helpless ? EX_WILL_HIT_HELPLESS : EX_WILL_HIT,
-             wpn_skill);
+
+    // Slow down the practise of low damage weapons unless we are trying to
+    // learn the weapon skill or the fighting skill.
+    if (helpless || x_chance_in_y(damage, 20)
+        || !you.skills[wpn_skill] || !you.skills[SK_FIGHTING])
+    {
+        practise(helpless ? EX_WILL_HIT_HELPLESS : EX_WILL_HIT, wpn_skill);
+    }
 }
 
 void melee_attack::player_check_weapon_effects()
