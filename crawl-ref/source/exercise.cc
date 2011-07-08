@@ -206,20 +206,33 @@ static void _exercise_spell(spell_type spell, bool success)
     // Fill all disciplines into a vector, then shuffle the vector, and
     // exercise skills in that random order. That way, first skill don't
     // stay in the queue for a shorter time.
-    std::vector<int> disc;
+    bool conj = false;
+    bool unknown = false;
+    std::vector<skill_type> disc;
     for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
     {
         if (!spell_typematch(spell, 1 << ndx))
             continue;
 
-        disc.push_back(ndx);
+        skill = spell_type2skill(1 << ndx);
+        if (skill == SK_CONJURATIONS)
+            conj = true;
+        if (!you.skills[skill])
+            unknown = true;
+
+        disc.push_back(skill);
     }
+
+    // We slow down the training of spells with
+    //conjuration (except if trying to learn a new skill).
+    if (conj && !unknown && !x_chance_in_y(skillcount, 4))
+        return;
+
     std::random_shuffle(disc.begin(), disc.end());
 
     for (unsigned int k = 0; k < disc.size(); ++k)
     {
-        int ndx = disc[k];
-        skill = spell_type2skill(1 << ndx);
+        skill = disc[k];
         workout = (random2(1 + diff) / skillcount);
 
         if (!one_chance_in(5))
