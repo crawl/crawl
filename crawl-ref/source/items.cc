@@ -2236,13 +2236,16 @@ bool drop_last()
 {
     typedef std::map<int,int> MapType;
     bool dropped = false;
-    MapType::iterator end = you.last_pickup.end();
-    for (MapType::iterator it = you.last_pickup.begin(); it != end; ++it)
+    MapType::iterator it = you.last_pickup.begin();
+    while (it != you.last_pickup.end())
+    {
         if (you.inv[it->first].quantity > 0)
         {
             drop_item(it->first, it->second);
             dropped = true;
         }
+        ++it;
+    }
 
     if (!dropped)
         mprf("No item to drop.");
