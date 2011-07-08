@@ -124,6 +124,12 @@ void trap_def::prepare_ammo()
         // really, turns until it vanishes
         ammo_qty = 30 + random2(20);
         break;
+    case TRAP_TELEPORT:
+        if (crawl_state.game_is_zotdef())
+            this->ammo_qty = 2 + random2(2);
+        else
+            this->ammo_qty = 0;
+        break;
     default:
         ammo_qty = 0;
         break;
@@ -191,10 +197,20 @@ bool trap_def::is_known(const actor* act) const
         }
         else
         {
-            return (intel >= I_NORMAL
-                    && (mons_is_native_in_branch(mons)
-                        || player_knows && mons->wont_attack()
-                        || intel >= I_HIGH && one_chance_in(3)));
+            if (intel < I_NORMAL)
+                return false;
+            if (player_knows && mons->wont_attack())
+                return true;
+
+            // This should ultimately be removed, but only after monsters
+            // learn to make use of the trap being limited in ZotDef if
+            // there is no other way.  Golubria and Malign Gateway are a
+            // problem, too...
+            if (crawl_state.game_is_zotdef())
+                return false;
+
+            return (mons_is_native_in_branch(mons)
+                    || intel >= I_HIGH && one_chance_in(3));
         }
     }
     die("invalid actor type");
@@ -565,6 +581,14 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         // except when it's in sight, it's pretty obvious what happened. -doy
         if (!you_trigger && !you_know && !in_sight)
             hide();
+        if (ammo_qty > 0 && !--ammo_qty)
+        {
+            // can't use trap_destroyed, as we might recurse into a shaft
+            // or be banished by a Zot trap
+            if (in_sight)
+                env.map_knowledge(pos).set_feature(DNGN_FLOOR);
+            disarm();
+        }
         triggerer.teleport(true);
         break;
 
