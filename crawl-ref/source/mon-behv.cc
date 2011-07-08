@@ -401,7 +401,8 @@ void handle_behaviour(monster* mon)
         if (afoe)
             foepos = afoe->pos();
 
-        if (crawl_state.game_is_zotdef() && mon->foe == MHITYOU)
+        if (crawl_state.game_is_zotdef() && mon->foe == MHITYOU
+            && !mon->wont_attack())
         {
             foepos = PLAYER_POS;
             proxFoe = true;
