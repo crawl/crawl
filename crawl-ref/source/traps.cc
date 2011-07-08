@@ -129,7 +129,7 @@ void trap_def::prepare_ammo()
         break;
     }
     // Zot def: traps have 10x as much ammo
-    if (crawl_state.game_is_zotdef())
+    if (crawl_state.game_is_zotdef() && type != TRAP_GOLUBRIA)
         this->ammo_qty *= 10;
 }
 
