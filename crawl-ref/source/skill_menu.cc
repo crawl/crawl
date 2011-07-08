@@ -213,18 +213,17 @@ void SkillMenuEntry::_clear()
         m_name_tile->clear_tile();
 #endif
 }
-
 COLORS SkillMenuEntry::get_colour() const
 {
     if (is_set(SKMF_HELP))
         return DARKGREY;
     else if (is_set(SKMF_RESKILL_TO) && m_sk == you.transfer_from_skill)
-        return WHITE;
+        return BROWN;
     else if (m_skm->get_state(SKM_VIEW) == SKM_VIEW_TRANSFER
              && (m_sk == you.transfer_from_skill
                  || m_sk == you.transfer_to_skill))
     {
-        return WHITE;
+        return CYAN;
     }
     else if (m_skm->get_state(SKM_LEVEL) == SKM_LEVEL_ENHANCED
              && you.skill(m_sk) != you.skills[m_sk])
@@ -376,7 +375,7 @@ void SkillMenuEntry::set_reskill_progress()
         text = "";
 
     m_progress->set_text(text);
-    m_progress->set_fg_colour(WHITE);
+    m_progress->set_fg_colour(CYAN);
 }
 
 void SkillMenuEntry::set_title()
@@ -414,7 +413,7 @@ void SkillMenuEntry::set_training()
         m_progress->set_text("");
     else
         m_progress->set_text(make_stringf("(%2d%%)", you.training[m_sk]));
-    m_progress->set_fg_colour(CYAN);
+    m_progress->set_fg_colour(BROWN);
 }
 
 SkillMenuSwitch::SkillMenuSwitch(std::string name, int hotkey) : m_name(name)
@@ -468,13 +467,13 @@ std::string SkillMenuSwitch::get_help()
         }
     case SKM_VIEW_TRAINING:
         return "The percentage of the experience used to train each skill "
-               "is in <cyan>cyan</cyan>.\n";
+               "is in <brown>brown</brown>.\n";
     case SKM_VIEW_PROGRESS:
         return "The percentage of the progress done before reaching next "
                "level is in <cyan>cyan</cyan>.\n";
     case SKM_VIEW_TRANSFER:
         return "The progress of the knowledge transfer is displayed in "
-               "<white>white</white> in front of the skill receiving the "
+               "<cyan>cyan</cyan> in front of the skill receiving the "
                "knowledge. The donating skill is marked with '*'.";
     default: return "";
     }
