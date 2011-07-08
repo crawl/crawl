@@ -118,7 +118,7 @@ void trap_def::prepare_ammo()
         this->ammo_qty = 1 + random2(3);
         // Zotdef: alarm traps have practically unlimited ammo
         if (crawl_state.game_is_zotdef())
-            this->ammo_qty = 100000;
+            this->ammo_qty = 3276; // *10, stored as short
         break;
     case TRAP_GOLUBRIA:
         // really, turns until it vanishes
