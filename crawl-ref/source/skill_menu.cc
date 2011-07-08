@@ -902,13 +902,21 @@ void SkillMenu::init_switches()
         m_switches[SKM_VIEW] = sw;
         sw->add(SKM_VIEW_PROGRESS);
         sw->add(SKM_VIEW_TRAINING);
-        if (!is_invalid_skill(you.transfer_to_skill))
+        const bool transferring = !is_invalid_skill(you.transfer_to_skill);
+        if (transferring)
         {
             sw->add(SKM_VIEW_TRANSFER);
             sw->set_state(SKM_VIEW_TRANSFER);
         }
+
+        // We restore the last used view unless it's not valid anymore.
         if (you.props.exists("skm_view"))
-            sw->set_state((skill_menu_state)you.props["skm_view"].get_int());
+        {
+            const skill_menu_state state =
+                static_cast<skill_menu_state>(you.props["skm_view"].get_int());
+            if (state != SKM_VIEW_TRANSFER || transferring)
+                sw->set_state((state));
+        }
 
         if (you.wizard)
             sw->add(SKM_VIEW_POINTS);
