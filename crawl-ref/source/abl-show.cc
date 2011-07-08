@@ -2987,8 +2987,18 @@ std::vector<talent> your_talents(bool check_confused)
             _add_talent(talents, ABIL_MAKE_BLADE_TRAP, check_confused);
         if (you.experience_level >= 26)
             _add_talent(talents, ABIL_MAKE_CURSE_SKULL, check_confused);
+#if 0
+        // Disabled, and hard to fix.  Easiest to just replace it.
+        // Before enabling, please check the following:
+        // * monsters don't pathfind through it, sometimes even after I tried
+        //   hard-wiring teleport traps to be always unknown...
+        // * infinite ammo allows permanent blocks.  When changing that, please
+        //   keep in mind that teleporting into a shaft invalidates the whole
+        //   level, instantly.
+        // * placement is buggy (looks at your position)
         if (you.experience_level >= 27)
             _add_talent(talents, ABIL_MAKE_TELEPORT_TRAP, check_confused);
+#endif
     }
 
     // Species-based abilities.

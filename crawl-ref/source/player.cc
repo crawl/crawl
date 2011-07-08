@@ -3321,8 +3321,10 @@ void level_change(bool skip_attribute_increase)
                 mpr("Your Zot abilities now extend through the making of blade traps.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 26)
                 mpr("Your Zot abilities now extend through the making of curse skulls.", MSGCH_INTRINSIC_GAIN);
+#if 0
             if (you.experience_level == 27)
                 mpr("Your Zot abilities now extend through the making of teleport traps.", MSGCH_INTRINSIC_GAIN);
+#endif
         }
 
 #if TAG_MAJOR_VERSION == 32
