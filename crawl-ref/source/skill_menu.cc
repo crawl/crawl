@@ -1232,8 +1232,7 @@ void skill_menu(bool reskilling)
                     skm.cancel_help();
                     continue;
                 }
-                else
-                    return;
+            // Fallthrough
             default:
                 if (skm.exit())
                     return;
