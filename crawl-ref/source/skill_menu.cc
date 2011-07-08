@@ -560,7 +560,7 @@ void SkillMenuSwitch::update()
 
 #define TILES_COL            6
 SkillMenu::SkillMenu(bool reskilling) : PrecisionMenu(), m_flags(0),
-    m_min_coord(), m_max_coord()
+    m_min_coord(), m_max_coord(), m_help_button(NULL)
 {
     SkillMenuEntry::m_skm = this;
     SkillMenuSwitch::m_skm = this;
@@ -1128,7 +1128,8 @@ void SkillMenu::shift_bottom_down()
     {
         it->second->move(down);
     }
-    m_help_button->move(down);
+    if (m_help_button)
+        m_help_button->move(down);
 }
 
 void SkillMenu::show_description(skill_type sk)
