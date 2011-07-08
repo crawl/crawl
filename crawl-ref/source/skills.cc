@@ -690,7 +690,7 @@ static int _train(skill_type exsk, int &max_exp)
     if (skill_inc <= 0)
         return (0);
 
-    if (!you.skills[exsk])
+    if (!you.skills[exsk] && you.training[exsk] > 0)
         --you.training[exsk];
 
     you.skill_points[exsk] += skill_inc;
