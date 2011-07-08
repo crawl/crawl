@@ -51,12 +51,12 @@
 
 bool trap_def::active() const
 {
-    return (this->type != TRAP_UNASSIGNED);
+    return (type != TRAP_UNASSIGNED);
 }
 
 bool trap_def::type_has_ammo() const
 {
-    switch (this->type)
+    switch (type)
     {
     case TRAP_DART:   case TRAP_ARROW:  case TRAP_BOLT:
     case TRAP_NEEDLE: case TRAP_SPEAR:  case TRAP_AXE:
@@ -69,81 +69,81 @@ bool trap_def::type_has_ammo() const
 
 void trap_def::message_trap_entry()
 {
-    if (this->type == TRAP_TELEPORT)
+    if (type == TRAP_TELEPORT)
         mpr("You enter a teleport trap!");
 }
 
 void trap_def::disarm()
 {
-    if (this->type_has_ammo() && this->ammo_qty > 0)
+    if (type_has_ammo() && ammo_qty > 0)
     {
-        item_def trap_item = this->generate_trap_item();
-        trap_item.quantity = this->ammo_qty;
-        copy_item_to_grid(trap_item, this->pos);
+        item_def trap_item = generate_trap_item();
+        trap_item.quantity = ammo_qty;
+        copy_item_to_grid(trap_item, pos);
     }
-    this->destroy();
+    destroy();
 }
 
 void trap_def::destroy()
 {
-    if (!in_bounds(this->pos))
+    if (!in_bounds(pos))
         die("Trap position out of bounds!");
 
-    grd(this->pos) = DNGN_FLOOR;
-    this->ammo_qty = 0;
-    this->pos      = coord_def(-1,-1);
-    this->type     = TRAP_UNASSIGNED;
+    grd(pos) = DNGN_FLOOR;
+    ammo_qty = 0;
+    pos      = coord_def(-1,-1);
+    type     = TRAP_UNASSIGNED;
 }
 
 void trap_def::hide()
 {
-    grd(this->pos) = DNGN_UNDISCOVERED_TRAP;
+    grd(pos) = DNGN_UNDISCOVERED_TRAP;
 }
 
 void trap_def::prepare_ammo()
 {
-    switch (this->type)
+    switch (type)
     {
     case TRAP_DART:
     case TRAP_ARROW:
     case TRAP_BOLT:
     case TRAP_NEEDLE:
-        this->ammo_qty = 3 + random2avg(9, 3);
+        ammo_qty = 3 + random2avg(9, 3);
         break;
     case TRAP_SPEAR:
     case TRAP_AXE:
-        this->ammo_qty = 2 + random2avg(6, 3);
+        ammo_qty = 2 + random2avg(6, 3);
         break;
     case TRAP_ALARM:
-        this->ammo_qty = 1 + random2(3);
+        ammo_qty = 1 + random2(3);
         // Zotdef: alarm traps have practically unlimited ammo
         if (crawl_state.game_is_zotdef())
-            this->ammo_qty = 3276; // *10, stored as short
+            ammo_qty = 3276; // *10, stored as short
         break;
     case TRAP_GOLUBRIA:
         // really, turns until it vanishes
-        this->ammo_qty = 30 + random2(20);
+        ammo_qty = 30 + random2(20);
         break;
     default:
-        this->ammo_qty = 0;
+        ammo_qty = 0;
         break;
     }
     // Zot def: traps have 10x as much ammo
     if (crawl_state.game_is_zotdef() && type != TRAP_GOLUBRIA)
-        this->ammo_qty *= 10;
+        ammo_qty *= 10;
 }
 
 void trap_def::reveal()
 {
-    grd(this->pos) = this->category();
+    grd(pos) = category();
 }
 
 std::string trap_def::name(description_level_type desc) const
 {
-    if (this->type >= NUM_TRAPS)
+    if (type >= NUM_TRAPS)
         return ("buggy");
 
-    const char* basename = trap_name(this->type);
+    const char* basename = trap_name(type);
     if (desc == DESC_CAP_A || desc == DESC_NOCAP_A)
     {
         std::string prefix = (desc == DESC_CAP_A ? "A" : "a");
@@ -179,7 +179,7 @@ bool trap_def::is_known(const actor* act) const
         // * very intelligent monsters can be assumed to have a high T&D
         //   skill (or have memorised part of the dungeon layout ;))
 
-        if (this->category() == DNGN_TRAP_NATURAL)
+        if (category() == DNGN_TRAP_NATURAL)
         {
             // Slightly different rules for shafts:
             // * Lower intelligence requirement for native monsters.
@@ -470,11 +470,11 @@ std::string direction_string(coord_def pos, bool fuzz)
 
 void trap_def::trigger(actor& triggerer, bool flat_footed)
 {
-    const bool you_know = this->is_known();
-    const bool trig_knows = !flat_footed && this->is_known(&triggerer);
+    const bool you_know = is_known();
+    const bool trig_knows = !flat_footed && is_known(&triggerer);
 
     const bool you_trigger = (triggerer.atype() == ACT_PLAYER);
-    const bool in_sight = you.see_cell(this->pos);
+    const bool in_sight = you.see_cell(pos);
 
     // Zot def - player never sets off known traps
     if (crawl_state.game_is_zotdef() && you_trigger && you_know)
@@ -492,7 +492,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     // Smarter monsters and those native to the level will simply
     // side-step known shafts. Unless they are already looking for
     // an exit, of course.
-    if (this->type == TRAP_SHAFT && m)
+    if (type == TRAP_SHAFT && m)
     {
         if (!m->will_trigger_shaft()
             || trig_knows && !mons_is_fleeing(m) && !m->pacified())
@@ -511,7 +511,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         return;
     }
     // Only magical traps affect flying critters.
-    if (!triggerer.ground_level() && this->category() != DNGN_TRAP_MAGICAL)
+    if (!triggerer.ground_level() && category() != DNGN_TRAP_MAGICAL)
     {
         if (you_know && m && triggerer.airborne())
             simple_monster_message(m, " flies safely over a trap.");
@@ -521,18 +521,18 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     // Anything stepping onto a trap almost always reveals it.
     // (We can rehide it later for the exceptions.)
     if (in_sight)
-        this->reveal();
+        reveal();
 
     // OK, something is going to happen.
     if (you_trigger)
-        this->message_trap_entry();
+        message_trap_entry();
 
     // Store the position now in case it gets cleared inbetween.
-    const coord_def p(this->pos);
+    const coord_def p(pos);
 
-    if (this->type_has_ammo())
-        this->shoot_ammo(triggerer, trig_knows);
-    else switch (this->type)
+    if (type_has_ammo())
+        shoot_ammo(triggerer, trig_knows);
+    else switch (type)
     {
     case TRAP_GOLUBRIA:
     {
@@ -564,7 +564,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         // Never revealed by monsters.
         // except when it's in sight, it's pretty obvious what happened. -doy
         if (!you_trigger && !you_know && !in_sight)
-            this->hide();
+            hide();
         triggerer.teleport(true);
         break;
 
@@ -577,14 +577,14 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 mpr("The alarm trap gives no sound.");
             trap_destroyed = true;
         }
-        else if (silenced(this->pos))
+        else if (silenced(pos))
         {
             if (you_know && in_sight)
                 mpr("The alarm trap is silent.");
 
             // If it's silent, you don't know about it.
             if (!you_know)
-                this->hide();
+                hide();
         }
         else if (!(m && m->friendly()))
         {
@@ -595,7 +595,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 msg = "An alarm trap emits a blaring wail!";
             else
             {
-                std::string dir=direction_string(this->pos, !in_sight);
+                std::string dir=direction_string(pos, !in_sight);
                 msg = std::string("You hear a ") +
                     ((in_sight) ? "" : "distant ")
                     + "blaring wail "
@@ -608,7 +608,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
             // Zotdef - Made alarm traps noisier and more noticeable
             int noiselevel = crawl_state.game_is_zotdef() ? 30 : 12;
-            noisy(noiselevel, this->pos, msg.c_str(), source, false);
+            noisy(noiselevel, pos, msg.c_str(), source, false);
             if (crawl_state.game_is_zotdef())
                 more();
         }
@@ -645,7 +645,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                                            " fails to trigger a blade trap.");
                 }
                 else
-                    this->hide();
+                    hide();
             }
             else if (random2(m->ev) > 8 || (trig_knows && random2(m->ev) > 8))
             {
@@ -713,7 +713,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                         xom_is_stimulated(64);
                 }
 
-                item_def item = this->generate_trap_item();
+                item_def item = generate_trap_item();
                 copy_item_to_grid(item, triggerer.pos());
 
                 if (you.attribute[ATTR_HELD])
@@ -732,7 +732,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 if (you_know)
                     simple_monster_message(m, " fails to trigger a net trap.");
                 else
-                    this->hide();
+                    hide();
             }
             else if (random2(m->ev) > 8 || (trig_knows && random2(m->ev) > 8))
             {
@@ -771,7 +771,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
             if (triggered)
             {
-                item_def item = this->generate_trap_item();
+                item_def item = generate_trap_item();
                 copy_item_to_grid(item, triggerer.pos());
 
                 if (m->caught())
@@ -810,7 +810,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
             // Give the player a chance to figure out what happened
             // to their friend.
-            if (player_can_hear(this->pos) && (!targ || !in_sight))
+            if (player_can_hear(pos) && (!targ || !in_sight))
             {
                 mprf(MSGCH_SOUND, "You hear a %s \"Zot\"!",
                      in_sight ? "loud" : "distant");
@@ -847,7 +847,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         // The shafting code in downstairs() needs to know
         // whether it's undiscovered.
         if (!you_know)
-            this->hide();
+            hide();
 
         // Known shafts don't trigger as traps.
         if (trig_knows)
@@ -885,15 +885,15 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
         // Exercise T&D if the trap revealed itself, but not if it ran
         // out of ammo.
-        if (!you_know && this->type != TRAP_UNASSIGNED && this->is_known())
+        if (!you_know && type != TRAP_UNASSIGNED && is_known())
             practise(EX_TRAP_TRIGGER);
     }
 
     if (trap_destroyed)
     {
         if (know_trap_destroyed)
-            env.map_knowledge(this->pos).set_feature(DNGN_FLOOR);
-        this->destroy();
+            env.map_knowledge(pos).set_feature(DNGN_FLOOR);
+        destroy();
     }
 }
 
@@ -908,7 +908,7 @@ int trap_def::max_damage(const actor& act)
     if (act.atype() == ACT_MONSTER)
         level = 0;
 
-    switch (this->type)
+    switch (type)
     {
         case TRAP_NEEDLE: return  0;
         case TRAP_DART:   return  4 + level/2;
@@ -1372,7 +1372,7 @@ item_def trap_def::generate_trap_item()
     object_class_type base;
     int sub;
 
-    switch (this->type)
+    switch (type)
     {
     case TRAP_DART:   base = OBJ_MISSILES; sub = MI_DART;         break;
     case TRAP_ARROW:  base = OBJ_MISSILES; sub = MI_ARROW;        break;
@@ -1405,14 +1405,14 @@ item_def trap_def::generate_trap_item()
 // Shoot a single piece of ammo at the relevant actor.
 void trap_def::shoot_ammo(actor& act, bool was_known)
 {
-    if (this->ammo_qty <= 0)
+    if (ammo_qty <= 0)
     {
         if (was_known && act.atype() == ACT_PLAYER)
             mpr("The trap is out of ammunition!");
-        else if (player_can_hear(this->pos) && you.see_cell(this->pos))
+        else if (player_can_hear(pos) && you.see_cell(pos))
             mpr("You hear a soft click.");
 
-        this->disarm();
+        disarm();
     }
     else
     {
@@ -1420,7 +1420,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         // resetting its position) before the ammo can be dropped.
         const coord_def apos = act.pos();
 
-        item_def shot = this->generate_trap_item();
+        item_def shot = generate_trap_item();
 
         bool force_poison = (env.markers.property_at(pos, MAT_ANY,
                                 "poisoned_needle_trap") == "true");
@@ -1428,13 +1428,13 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         bool force_hit = (env.markers.property_at(pos, MAT_ANY,
                                 "force_hit") == "true");
 
-        bool poison = (this->type == TRAP_NEEDLE
+        bool poison = (type == TRAP_NEEDLE
                        && !act.res_poison()
                        && (x_chance_in_y(50 - (3*act.armour_class()) / 2, 100)
                             || force_poison));
 
         int damage_taken =
-            std::max(this->shot_damage(act) - random2(act.armour_class()+1),0);
+            std::max(shot_damage(act) - random2(act.armour_class()+1),0);
 
         int trap_hit = (20 + (you.absdepth0*2)) * random2(200) / 100;
 
@@ -1443,7 +1443,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
             if (!force_hit && (one_chance_in(5) || was_known && !one_chance_in(4)))
             {
                 mprf("You avoid triggering %s trap.",
-                      this->name(DESC_NOCAP_A).c_str());
+                      name(DESC_NOCAP_A).c_str());
 
                 return;         // no ammo generated either
             }
@@ -1533,7 +1533,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
         if (coinflip())
             copy_item_to_grid(shot, apos);
 
-        this->ammo_qty--;
+        ammo_qty--;
     }
 }
 
