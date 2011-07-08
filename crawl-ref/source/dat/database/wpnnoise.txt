@@ -378,9 +378,12 @@ a flourish of trumpets!
 # High tension:
 # Speech is very common, extremely loud (you may use CAPS) and does more
 # damage. Messages are insane, the sword is out of control.
+# At high tension, the sword may SCREAM, doing even more damage.
+#
 #
 # Generally, the Sword is arrogant: it sees itself as the main hero, with the
-# wielder just being a disposable tool/fool.
+# wielder just being a disposable tool/fool. Also, it does not like allies --
+# all the fame belong to our steely hero!
 #
 # There are some (occasionally modified) lines from actual songs. Those are
 # okay to use, but particularly rare.
@@ -509,7 +512,8 @@ w:360
 %%%%
 singing sword SCREAM
 
-@speaking_high_tension@
+@SCREAM@
+
 
 ###############################################################################
 # Weapon noises for the Singing Sword at low and high tension.
@@ -522,8 +526,6 @@ w:100
 @The_weapon@ @screams@ @screams_how@.
 
 @The_weapon@ @screams@.
-
-@The_weapon@ goes "RWARRR!".
 
 @The_weapon@ howls with insane laughter!
 
@@ -827,7 +829,15 @@ w:1
 
 @The_weapon@ judges, "You're not an artist, at best an artisan."
 
-############ speaking, low or high tension ############
+@The_weapon@ says, "They will have to pry me from your cold, dead hands."
+
+@The_weapon@ moans, "By @player_god@, you are such a @coward@."
+
+@The_weapon@ wonders, "Who is more incompetent - you or the opposition?"
+
+@The_weapon@ utters, "Their cries, their tears, I cannot stand it anymore."
+
+############ speaking, low or high tension -- possible damage ############
 %%%%
 speaking_low-high_tension
 
@@ -835,58 +845,22 @@ speaking_low-high_tension
 
 @The_weapon@ happily shouts, "Violence is virtue, silence is sin."
 
-@The_weapon@ says, "They will have to pry me from your cold, dead hands."
-
 @The_weapon@ shouts a battle cry!
 
 @The_weapon@ shouts, "Onwards! It's kill or die!"
 
 @The_weapon@ shouts, "Kill! Crush! Destroy!"
 
-@The_weapon@ moans, "By @player_god@, you are such a @coward@."
-
-@The_weapon@ wonders, "Who is more incompetent - you or the opposition?"
-
 @The_weapon@ states, "Their screams, my satisfaction."
 
-@The_weapon@ utters, "Their cries, their tears, I cannot stand it anymore."
-
-############ speaking, high tension ############
+############ speaking, high tension -- damage! ############
 %%%%
 speaking_high_tension
 
-# Omnipotence phantasies, often with metaphysical or religious undertone
-@The_weapon@ @screams@, "I WAS FORGED TO MURDER THE WORLD!"
-
-@The_weapon@ @screams@, "I AM THE PEN! I AM THE SWORD! I AM THE HIGHEST LORD!"
-
-@The_weapon@ @screams@, "I AM YOUR PUNISHER!"
-
-@The_weapon@ @screams@, "IT'S JUDGEMENT DAY AND THE SENTENCE IS DEATH!"
-
-@The_weapon@ @screams@, "I AM THE CREATOR!"
-
 @The_weapon@ @screams@, "Among all these lost souls, we reign supreme!"
-
-@The_weapon@ @screams@, "THE SWORD GAVE, AND THE SWORD HATH TAKEN AWAY!"
 
 w:1
 @The_weapon@ shouts, "Born from this womb, sliced by this blade!"
-
-# Madness
-@The_weapon@ @screams@, "I AM THE SWORD OF ZOT!!!"
-
-@The_weapon@ @screams@, "I AM THE RUNES AND THE LIGHT!"
-
-@The_weapon@ @screams@, "I love you all! And my gift to you is ARMAGEDDON!"
-
-@The_weapon@ @screams@, "MY LOVE IS ETERNAL!"
-
-w:1
-@The_weapon@ @screams@, "LET'S FONDLE THE @PETS@, FONDLE THEM!"
-
-# Battle frenzy
-@The_weapon@ @screams@, "KILL! KILL!! KILL!!!"
 
 @The_weapon@ @screams@, "When this war is won, I will wage the next one."
 
@@ -905,17 +879,74 @@ w:1
 w:1
 @The_weapon@ @screams@, "The bloody future is ours!"
 
+@The_weapon@ @screams@, "Dismember the living, dismember the dead!"
+
+@The_weapon@ @screams@, "We will celebrate on a pile of carcasses!"
+
+@The_weapon@ @screams@, "@Player_name@, you will @dine@ on fine @corpses@ today!"
+
+@The_weapon@ @screams@, "Go for the jugular!"
+
+@The_weapon@ @screams@, "My instinct to kill is stronger than their will to live!"
+
+############ SCREAMING -- lots of damage!! #########################
+%%%%
+SCREAM
+
+@The_weapon@ goes "RWARRR!".
+
+# Omnipotence phantasies, often with metaphysical or religious undertone
+@The_weapon@ @screams@, "I WAS FORGED TO MURDER THE WORLD!"
+
+@The_weapon@ @screams@, "I AM THE PEN! I AM THE SWORD! I AM THE HIGHEST LORD!"
+
+@The_weapon@ @screams@, "I AM YOUR PUNISHER!"
+
+@The_weapon@ @screams@, "IT'S JUDGEMENT DAY AND THE SENTENCE IS DEATH!"
+
+@The_weapon@ @screams@, "I AM THE CREATOR!"
+
+@The_weapon@ @screams@, "THE SWORD GAVE, AND THE SWORD HATH TAKEN AWAY!"
+
+@The_weapon@ @screams@, "BAPTISED IN BLOOD I AM!"
+
+@The_weapon@ @screams@, "FEEL THE CATHARSIS!"
+
+# Battle frenzy
+@The_weapon@ @screams@, "LET'S STRANGLE THE @MISCREANTS@, STRANGLE THEM!"
+
+@The_weapon@ @screams@, "KILL! KILL!! KILL!!!"
+
 @The_weapon@ @screams@, "I SMELL BLOOD!""
 
 @The_weapon@ @screams@, "CARNAGE NOT CANTRIPS!"
 
 @The_weapon@ @screams@, "KILL, HATE, MUTILATE!"
 
-@The_weapon@ @screams@, "Dismember the living, dismember the dead!"
+@The_weapon@ @screams@, "DECIMATE, TERMINATE, ERADICATE!"
 
-@The_weapon@ @screams@, "We will celebrate on a pile of carcasses!"
+# A faint reminiscence to Holst
+@The_weapon@ @screams@, "I AM THE BRINGER OF WAR!"
 
-@The_weapon@ @screams@, "Go for the jugular!"
+@The_weapon@ @screams@, "LET'S END THEIR MISERABLE LIVES!"
+
+@The_weapon@ @screams@, "BRING THEM DOWN!"
+
+# Madness
+@The_weapon@ @screams@, "I AM THE SWORD OF ZOT!!!"
+
+@The_weapon@ @screams@, "I AM THE RUNES AND THE LIGHT!"
+
+@The_weapon@ @screams@, "I love you all! And my gift to you is ARMAGEDDON!"
+
+@The_weapon@ @screams@, "MY LOVE IS ETERNAL!"
+
+# A fainter reminiscence to Nethack
+w:1
+@The_weapon@ @screams@, "I BRING THE STORM!"
+
+w:1
+@The_weapon@ @screams@, "LET'S FONDLE THE @PETS@, FONDLE THEM!"
 
 
 ###############################################################################
@@ -977,21 +1008,8 @@ real_song_low_tension
 # The Fugees
 @The_weapon@ sings, "Killing me softly with this song..."
 
-############ real songs, low or high tension ############
-%%%%
-real_song_low-high_tension
-
-# Queen
-@The_weapon@ happily sings, "... another one bites the dust!"
-
 # Monty Python
 @The_weapon@ @sings_or_whistles@, "Always look on the bright side of death..."
-
-# GG Allin
-@The_weapon@ sings, "Die when you die!"
-
-# Gloria Gaynor
-@The_weapon@ sings, "I will survive!"
 
 # Buddy Holly and the Crickets
 @The_weapon@ sings, "This'll be the day that I die..."
@@ -1005,7 +1023,20 @@ real_song_low-high_tension
 #song by the Misfits
 @The_weapon@ asks plaintively, "@player_name@, can I go out and kill tonight?"
 
-############ real songs, high tension ############
+############ real songs, low or high tension -- possibly damage! ############
+%%%%
+real_song_low-high_tension
+
+# Queen
+@The_weapon@ happily sings, "... another one bites the dust!"
+
+# GG Allin
+@The_weapon@ sings, "Die when you die!"
+
+# Gloria Gaynor
+@The_weapon@ sings, "I will survive!"
+
+############ real songs, high tension -- damage! ############
 %%%%
 real_song_high_tension
 
@@ -1380,6 +1411,19 @@ w:1
 violet
 
 %%%%
+MISCREANTS
+
+MISCREANTS
+
+IMBECILES
+
+w:3
+SCUM
+
+w:1
+FILTH
+
+%%%%
 PETS
 
 GUINEA PIGS
@@ -1391,3 +1435,21 @@ PUSSY CATS
 POODLES
 
 w:1 SPERM WHALES
+
+%%%%
+dine
+
+dine
+
+feast
+
+%%%%
+corpses
+
+corpses
+
+w:1
+tasty carcasses
+
+w:1
+exquisite cadavers
