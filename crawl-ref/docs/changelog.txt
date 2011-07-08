@@ -21,6 +21,7 @@ Gods
 * Makhleb has a new flavour description.
 * Nerf TSO's and Makhleb's HP and MP on kills.
 * Trog specialises in antimagic weapon gifts.
+* Yred takes statue kills and forbids Statue Form.
 * Zin's Vitalisation is cheaper and cures petrification, stat boost stackable.
 * Don't allow avoiding good god wrath by swapping via another good god
 * Ashenzari: ...
@@ -66,6 +67,7 @@ Spells
 * New spell: Inner Flame (comes in starting book of Fire Elementalists).
 * Renamed books: Chemistry -> Alchemy, Zoology -> Beasts.
 * Ranges of Throw Frost/Flame and of Bolt of Cold/Fire swapped.
+* Maxwell's Silver Hammer works also on all weapons with bludgeoning damage.
 * Poison Weapon works also on blunt weapons.
 * Condensation Shield buffed.
 * Reduce level of Summon Ice Beast to 4.
@@ -121,6 +123,7 @@ Items
 * Improved Zonguldrok, Undeadhunter.
 * Remove knives. Change Spriggan's Knife from knift to dagger.
 * Bad unrandarts (Misfortune, Folly, Lear's) get random appearance.
+* Large rocks can (rarely) be generated on the dungeon floor.
 
 Tiles
 -----
