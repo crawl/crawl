@@ -23,7 +23,9 @@ AsgKISS::get_uint32()
         m_xorshift ^= m_xorshift << 5;
         m_xorshift ^= m_xorshift >> 7;
         m_xorshift ^= m_xorshift << 22;
-    } else {
+    }
+    else
+    {
         uint64_t t = 4294584393ULL * m_mwcm + m_mwcc;
         m_mwcc = t >> 32;
         m_mwcm = t;

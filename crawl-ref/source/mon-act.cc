@@ -3680,7 +3680,6 @@ static bool _monster_move(monster* mons)
         if (newpos == you.pos() && mons->wont_attack()
             || (mon2 && mons->wont_attack() == mon2->wont_attack()))
         {
-
             simple_monster_message(mons, " flops around on dry land!");
             return (false);
         }

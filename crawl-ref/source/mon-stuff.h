@@ -65,7 +65,8 @@ void alert_nearby_monsters(void);
 beh_type attitude_creation_behavior(mon_attitude_type att);
 beh_type actual_same_attitude(const monster& base);
 
-enum poly_power_type {
+enum poly_power_type
+{
     PPT_LESS,
     PPT_MORE,
     PPT_SAME,

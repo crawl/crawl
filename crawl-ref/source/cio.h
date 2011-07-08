@@ -207,7 +207,8 @@ public:
         enable_smart_cursor(false);
         set_cursor_enabled(cursor_enabled);
     }
-    ~cursor_control() {
+    ~cursor_control()
+    {
         set_cursor_enabled(cstate);
         enable_smart_cursor(smartcstate);
     }

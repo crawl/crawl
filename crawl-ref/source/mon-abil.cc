@@ -59,7 +59,6 @@ void search_dungeon(const coord_def & start,
                     bool exhaustive = true,
                     int connect_mode = 8)
 {
-
     if (connect_mode < 1 || connect_mode > 8)
         connect_mode = 8;
 
@@ -1041,7 +1040,6 @@ static void _establish_connection(int tentacle,
 
     while (current)
     {
-
         // Last monster we visited or placed
         monster* last_mon = monster_at(last->pos);
         if (!last_mon)

@@ -248,7 +248,6 @@ static const char* _number_to_ordinal(int number)
 
 std::string Note::describe(bool when, bool where, bool what) const
 {
-
     std::ostringstream result;
 
     if (when)

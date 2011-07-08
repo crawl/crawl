@@ -49,7 +49,6 @@
  */
 bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 {
-
     bool effect = true;  // current behaviour is all potions id on quaffing
 
     pow = std::min(pow, 150);

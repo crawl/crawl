@@ -1811,7 +1811,6 @@ void StashTracker::search_stashes()
     msgwin_prompt(stash_search_prompt());
     while (true)
     {
-
         int ret = reader.read_line();
         if (!ret)
         {

@@ -13,7 +13,8 @@
 class key_recorder;
 typedef std::deque<int> keyseq;
 
-class key_recorder {
+class key_recorder
+{
 public:
     bool                  paused;
     keyseq                keys;
@@ -25,7 +26,8 @@ public:
     void clear();
 };
 
-class pause_all_key_recorders {
+class pause_all_key_recorders
+{
 public:
     pause_all_key_recorders();
     ~pause_all_key_recorders();

@@ -32,7 +32,6 @@
 
 int mons_tracking_range(const monster* mon)
 {
-
     int range = 0;
     switch (mons_intel(mon))
     {

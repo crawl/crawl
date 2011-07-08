@@ -3973,12 +3973,15 @@ item_info get_item_info(const item_def& item)
     if (item_ident(item, ISFLAG_KNOW_CURSE))
         ii.flags |= (item.flags & ISFLAG_CURSED);
 
-    if (item_type_known(item)) {
+    if (item_type_known(item))
+    {
         if (item.props.exists(ARTEFACT_NAME_KEY))
             ii.props[ARTEFACT_NAME_KEY] = item.props[ARTEFACT_NAME_KEY];
     }
 
-    const char* copy_props[] = {ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY, CORPSE_NAME_KEY, CORPSE_NAME_TYPE_KEY, "jewellery_tried", "drawn_cards"};
+    const char* copy_props[] = {ARTEFACT_APPEAR_KEY, KNOWN_PROPS_KEY,
+                                CORPSE_NAME_KEY, CORPSE_NAME_TYPE_KEY,
+                                "jewellery_tried", "drawn_cards"};
     for (unsigned i = 0; i < (sizeof(copy_props) / sizeof(copy_props[0])); ++i)
     {
         if (item.props.exists(copy_props[i]))
@@ -3990,7 +3993,8 @@ item_info get_item_info(const item_def& item)
         CrawlVector props = item.props[ARTEFACT_PROPS_KEY].get_vector();
         const CrawlVector &known = item.props[KNOWN_PROPS_KEY].get_vector();
 
-        for (unsigned i = 0; i < props.size(); ++i) {
+        for (unsigned i = 0; i < props.size(); ++i)
+        {
             if (i >= known.size() || !known[i].get_bool())
                 props[i] = (short)0;
         }

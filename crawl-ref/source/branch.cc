@@ -86,7 +86,8 @@ branch_type str_to_branch(const std::string &branch, branch_type err)
 
 int current_level_ambient_noise()
 {
-    switch (you.level_type) {
+    switch (you.level_type)
+    {
     case LEVEL_DUNGEON:
         return branches[you.where_are_you].ambient_noise;
     case LEVEL_ABYSS:

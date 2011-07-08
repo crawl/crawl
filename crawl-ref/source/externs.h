@@ -711,7 +711,8 @@ struct message_filter
 
     message_filter(const std::string &s) : channel(-1), pattern(s) { }
 
-    bool is_filtered(int ch, const std::string &s) const {
+    bool is_filtered(int ch, const std::string &s) const
+    {
         bool channel_match = ch == channel || channel == -1;
         if (!channel_match || pattern.empty())
             return channel_match;
