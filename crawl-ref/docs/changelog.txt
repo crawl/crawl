@@ -31,7 +31,7 @@ Character
 * +3 base HP for all characters.
 * Racial HP/MP gain is now governed by innate mutation (see ?%).
 * Fighting gives less HP boost.
-* All characters carry a bootknift to dissect corpses.
+* All characters carry a bootknife to dissect corpses.
 * Hill Orc Priests always take on Beogh.
 * Berserkitis mutation triggers less often.
 * Changes to Chaos Knights, Warper, Fighter, Gladiator, Hunter.
@@ -121,7 +121,7 @@ Items
 * Wands and rods rely more strongly on Evocations skill.
 * Nerf double swords, buff demon blades.
 * Improved Zonguldrok, Undeadhunter.
-* Remove knives. Change Spriggan's Knife from knift to dagger.
+* Remove knives. Change Spriggan's Knife from knife to dagger.
 * Bad unrandarts (Misfortune, Folly, Lear's) get random appearance.
 * Large rocks can (rarely) be generated on the dungeon floor.
 
