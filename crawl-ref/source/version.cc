@@ -5,6 +5,7 @@
 
 #include "AppHdr.h"
 
+#include "version.h"
 #include "build.h"
 #include "compflag.h"
 #include "libutil.h"
@@ -21,9 +22,9 @@ namespace Version
         return std::string(CRAWL_VERSION_LONG);
     }
 
-    bool ReleaseType()
+    rel_type ReleaseType()
     {
-        return CRAWL_VERSION_FINAL;
+        return CRAWL_VERSION_RELEASE;
     }
 
     std::string Compiler()

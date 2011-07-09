@@ -166,8 +166,7 @@ static bool _is_species_valid_choice(species_type species)
         return (false);
 
     if (species == SP_OCTOPODE
-        && numcmp(Version::Long().c_str(), "0.10") == -1
-        && numcmp(Version::Long().c_str(), "0.9-b") == 1)
+        && Version::ReleaseType() != VER_ALPHA)
     {
         // Octopodes are not targetted at 0.9.
         return (false);
