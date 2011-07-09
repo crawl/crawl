@@ -241,6 +241,10 @@ Sticky Flame Splash cast
 unseen Sticky Flame Splash cast
 
 You hear a spitting sound.
+%%%%
+Petrifying Cloud cast
+
+@The_monster@ breathes a plume of calcifying dust @at@ @target@.
 ########################################################################
 # Unique monsters
 ########################################################################

@@ -541,6 +541,7 @@ static beam_type _chaos_beam_flavour()
             10, BEAM_POLYMORPH,
             10, BEAM_BANISH,
             10, BEAM_DISINTEGRATION,
+            10, BEAM_PETRIFY,
             0));
 
     return (flavour);
@@ -2640,6 +2641,9 @@ void bolt::affect_place_clouds()
 
     if (name == "blast of choking fumes")
         place_cloud(CLOUD_STINK, p, random2(4) + 3, agent());
+
+    if (name == "blast of calcifying dust")
+        place_cloud(CLOUD_PETRIFY, p, random2(5) + 2, agent());
 }
 
 void bolt::affect_place_explosion_clouds()
@@ -2687,6 +2691,7 @@ void bolt::affect_place_explosion_clouds()
             case 5:  cl_type = CLOUD_GREY_SMOKE;     break;
             case 6:  cl_type = CLOUD_BLUE_SMOKE;     break;
             case 7:  cl_type = CLOUD_PURPLE_SMOKE;   break;
+            case 8:  cl_type = CLOUD_PETRIFY;        break;
             default: cl_type = CLOUD_STEAM;          break;
             }
             break;
@@ -5791,6 +5796,7 @@ static std::string _beam_type_name(beam_type type)
     case BEAM_HOLY_LIGHT:            return ("holy light");
     case BEAM_AIR:                   return ("air");
     case BEAM_INNER_FLAME:           return ("inner flame");
+    case BEAM_PETRIFYING_CLOUD:      return ("calcifying dust");
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

@@ -340,7 +340,8 @@ enum beam_type                  // beam[].flavour
     BEAM_HOLY_LIGHT,
     BEAM_POTION_RANDOM,
     BEAM_AIR,
-    BEAM_LAST_REAL = BEAM_AIR,
+    BEAM_PETRIFYING_CLOUD,
+    BEAM_LAST_REAL = BEAM_PETRIFYING_CLOUD,
 
     // For getting the visual effect of a beam.
     BEAM_VISUAL,
@@ -528,6 +529,7 @@ enum cloud_type
     CLOUD_MUTAGENIC,
     CLOUD_MAGIC_TRAIL,
     CLOUD_TORNADO,
+    CLOUD_PETRIFY,
     NUM_CLOUD_TYPES,
 
     CLOUD_OPAQUE_FIRST = CLOUD_BLACK_SMOKE,
@@ -2409,6 +2411,7 @@ enum monster_type                      // (int) menv[].type
     MONS_BASILISK,
     MONS_OCTOPODE,
     MONS_LIGHTNING_SPIRE,
+    MONS_CATOBLEPAS,
 
     NUM_MONSTERS,                      // used for polymorph
 
@@ -3152,6 +3155,7 @@ enum spell_type
     SPELL_FIRE_SUMMON,
     SPELL_SHROUD_OF_GOLUBRIA,
     SPELL_INNER_FLAME,
+    SPELL_PETRIFYING_CLOUD,
 
     NUM_SPELLS
 };

@@ -586,6 +586,7 @@ int mons_standard_level(int mcls)
     case MONS_HYDRA:
     case MONS_MOTTLED_DRAGON:
     case MONS_SKELETAL_WARRIOR:
+    case MONS_CATOBLEPAS:
     // feature mimics
     case MONS_PORTAL_MIMIC:
     case MONS_STAIR_MIMIC:
@@ -860,6 +861,7 @@ int mons_standard_rare(int mcls)
     case MONS_BASILISK:
     case MONS_GLOWING_SHAPESHIFTER:
     case MONS_SOLDIER_ANT:
+    case MONS_CATOBLEPAS:
         return 35;
 
     case MONS_BOULDER_BEETLE:
@@ -1346,6 +1348,7 @@ int mons_lair_level(int mcls)
     case MONS_WYVERN:
     case MONS_TRAPDOOR_SPIDER:
     case MONS_ROCK_WORM:
+    case MONS_CATOBLEPAS:
         mlev += 5;
         break;
 
@@ -1425,7 +1428,6 @@ int mons_lair_rare(int mcls)
     case MONS_YAK:
         return 50;
 
-    case MONS_BASILISK:
     case MONS_BLACK_MAMBA:
         return 47;
 
@@ -1437,7 +1439,9 @@ int mons_lair_rare(int mcls)
     case MONS_FIRE_DRAKE:
         return 36;
 
+    case MONS_BASILISK:
     case MONS_WAR_DOG:
+    case MONS_CATOBLEPAS:
         return 35;
 
     case MONS_WORM:
