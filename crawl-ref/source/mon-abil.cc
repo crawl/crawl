@@ -2115,6 +2115,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         break;
 
     case MONS_ELECTRIC_EEL:
+    case MONS_LIGHTNING_SPIRE:
         if (mons->has_ench(ENCH_CONFUSION))
             break;
 

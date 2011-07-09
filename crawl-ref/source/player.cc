@@ -3303,7 +3303,7 @@ void level_change(bool skip_attribute_increase)
             if (you.experience_level == 18)
                 mpr("Your Zot abilities now extend through the making of axe traps.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 19)
-                mpr("Your Zot abilities now extend through the making of electric eels.", MSGCH_INTRINSIC_GAIN);
+                mpr("Your Zot abilities now extend through the making of lightning spires.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 20)
                 mpr("Your Zot abilities now extend through the making of silver statues.", MSGCH_INTRINSIC_GAIN);
             // gold and bazaars gained together

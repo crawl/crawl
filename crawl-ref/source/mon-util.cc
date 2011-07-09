@@ -2953,6 +2953,7 @@ bool mons_has_ranged_ability(const monster* mon)
     case MONS_MANTICORE:
     case MONS_OKLOB_PLANT:
     case MONS_OKLOB_SAPLING:
+    case MONS_LIGHTNING_SPIRE:
         return true;
     default:
         return false;

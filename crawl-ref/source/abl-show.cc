@@ -458,7 +458,7 @@ static const ability_def Ability_List[] =
     { ABIL_MAKE_ACQUIRE_GOLD, "Acquire gold", 0, 0, 0, 0, ABFLAG_LEVEL_DRAIN, 0 },
     { ABIL_MAKE_ACQUIREMENT, "Acquirement", 0, 0, 0, 0, ABFLAG_LEVEL_DRAIN, 0 },
     { ABIL_MAKE_WATER, "Make water", 0, 0, 0, 0, ABFLAG_NONE, 10 },
-    { ABIL_MAKE_ELECTRIC_EEL, "Make electric eel", 0, 0, 0, 0, ABFLAG_NONE, 100},
+    { ABIL_MAKE_LIGHTNING_SPIRE, "Make lightning spire", 0, 0, 0, 0, ABFLAG_NONE, 100},
     { ABIL_MAKE_BAZAAR, "Make bazaar", 0, 30, 0, 0, ABFLAG_PERMANENT_HP, 100 },
     { ABIL_MAKE_ALTAR, "Make altar", 0, 0, 0, 0, ABFLAG_NONE, 2 },
     { ABIL_MAKE_GRENADES, "Make grenades", 0, 0, 0, 0, ABFLAG_NONE, 2 },
@@ -527,7 +527,7 @@ static monster_type _monster_for_ability (const ability_def& abil)
         case ABIL_MAKE_OKLOB_CIRCLE:
         case ABIL_MAKE_OKLOB_PLANT:   mtyp = MONS_OKLOB_PLANT;   break;
         case ABIL_MAKE_BURNING_BUSH:  mtyp = MONS_BURNING_BUSH;  break;
-        case ABIL_MAKE_ELECTRIC_EEL:  mtyp = MONS_ELECTRIC_EEL;  break;
+        case ABIL_MAKE_LIGHTNING_SPIRE:  mtyp = MONS_LIGHTNING_SPIRE;  break;
         case ABIL_MAKE_ICE_STATUE:    mtyp = MONS_ICE_STATUE;    break;
         case ABIL_MAKE_OCS:           mtyp = MONS_ORANGE_STATUE; break;
         case ABIL_MAKE_SILVER_STATUE: mtyp = MONS_SILVER_STATUE; break;
@@ -559,8 +559,8 @@ static std::string _zd_mons_description_for_ability (const ability_def &abil)
         return ("Droplets of mercury fall from the ceiling and turn to silver, congealing into a humanoid shape.");
     case ABIL_MAKE_CURSE_SKULL:
         return ("You sculpt a terrible being from the primitive principle of evil.");
-    case ABIL_MAKE_ELECTRIC_EEL:
-        return ("You fashion an electric eel.");
+    case ABIL_MAKE_LIGHTNING_SPIRE:
+        return ("You mount a charged rod inside a coil.");
     default:
         return ("");
     }
@@ -613,7 +613,7 @@ int zp_cost(const ability_def& abil)
         case ABIL_MAKE_OKLOB_PLANT:
         case ABIL_MAKE_OKLOB_CIRCLE:
         case ABIL_MAKE_BURNING_BUSH:
-        case ABIL_MAKE_ELECTRIC_EEL:
+        case ABIL_MAKE_LIGHTNING_SPIRE:
             num = count_relevant_monsters(abil);
             // special case for oklob circles
             if (abil.ability == ABIL_MAKE_OKLOB_CIRCLE)
@@ -978,7 +978,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_MAKE_ACQUIRE_GOLD:
     case ABIL_MAKE_ACQUIREMENT:
     case ABIL_MAKE_WATER:
-    case ABIL_MAKE_ELECTRIC_EEL:
+    case ABIL_MAKE_LIGHTNING_SPIRE:
     case ABIL_MAKE_BAZAAR:
     case ABIL_MAKE_ALTAR:
     case ABIL_MAKE_GRENADES:
@@ -1768,7 +1768,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_MAKE_OCS:
     case ABIL_MAKE_SILVER_STATUE:
     case ABIL_MAKE_CURSE_SKULL:
-    case ABIL_MAKE_ELECTRIC_EEL:
+    case ABIL_MAKE_LIGHTNING_SPIRE:
         if (!create_zotdef_ally(_monster_for_ability(abil), _zd_mons_description_for_ability(abil).c_str()))
             return (false);
         break;
@@ -2969,7 +2969,7 @@ std::vector<talent> your_talents(bool check_confused)
         if (you.experience_level >= 18)
             _add_talent(talents, ABIL_MAKE_AXE_TRAP, check_confused);
         if (you.experience_level >= 19)
-            _add_talent(talents, ABIL_MAKE_ELECTRIC_EEL, check_confused);
+            _add_talent(talents, ABIL_MAKE_LIGHTNING_SPIRE, check_confused);
         if (you.experience_level >= 20)
             _add_talent(talents, ABIL_MAKE_SILVER_STATUE, check_confused);
         // gain bazaar and gold together
