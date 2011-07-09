@@ -418,10 +418,10 @@ guardian-eyeclosed-flame4
 
 firespitter_statue MONS_FIRESPITTER_STATUE
 obelisk MONS_DIAMOND_OBELISK
-%rim 1
 
 ## Spirey things ('{')
-lighting_spire MONS_LIGHTNING_SPIRE
+lightning_spire MONS_LIGHTNING_SPIRE
+%rim 0
 
 ## Gargoyles ('9')
 %sdir dc-mon/nonliving
