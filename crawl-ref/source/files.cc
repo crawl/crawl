@@ -1327,23 +1327,14 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (just_created_level)
             level_welcome_messages();
 
-        // Centaurs have difficulty with stairs
-        int timeval = ((you.species != SP_CENTAUR) ? player_movement_speed()
-                                                   : 15);
-
-        // new levels have less wary monsters:
+        // new levels have less wary monsters, and we don't
+        // want them to attack players as soon:
         if (just_created_level)
-            timeval /= 2;
+            you.time_taken /= 2;
 
-        timeval -= (stepdown_value(check_stealth(), 50, 50, 150, 150) / 10);
+        dprf("arrival time: %d", you.time_taken);
 
-        dprf("arrival time: %d", timeval);
-
-        if (timeval > 0)
-        {
-            you.time_taken = timeval;
-            handle_monsters();
-        }
+        handle_monsters();
 
         if (just_created_level)
             run_map_epilogues();
