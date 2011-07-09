@@ -191,6 +191,7 @@ sheep MONS_SHEEP
 black_sheep MONS_BLACK_SHEEP
 yak MONS_YAK
 death_yak MONS_DEATH_YAK
+catoblepas MONS_CATOBLEPAS
 elephant MONS_ELEPHANT
 elephant_dire MONS_DIRE_ELEPHANT
 elephant_demonic MONS_HELLEPHANT
