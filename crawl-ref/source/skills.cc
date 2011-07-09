@@ -202,7 +202,7 @@ static void _change_skill_level(skill_type exsk, int n)
 
     if (you.skills[exsk] - n == 27)
     {
-        you.training[exsk] = 0;
+        you.train[exsk] = 1;
         reset_training();
     }
 
@@ -288,7 +288,7 @@ void check_skill_level_change(skill_type sk, bool do_level_up)
 static void _init_exercise_queue()
 {
     ASSERT(you.exercises.empty());
-    FixedVector<char, NUM_SKILLS> prac = you.training;
+    FixedVector<unsigned int, NUM_SKILLS> prac = you.training;
 
     // We remove unknown skills, since we don't want then in the queue.
     for (int i = 0; i < NUM_SKILLS; ++i)
@@ -317,7 +317,7 @@ void init_training()
 {
     int total = 0;
     for (int i = 0; i < NUM_SKILLS; ++i)
-        if (you.training[i] >= 0 && you.skills[i])
+        if (you.train[i] && you.skills[i])
             total += you.skill_points[i];
 
     for (int i = 0; i < NUM_SKILLS; ++i)
@@ -406,10 +406,13 @@ void reset_training()
     {
         if (!you.skills[i])
             total_unknown += you.training[i];
-        else if (you.training[i] >= 0)
-            you.training[i] = !you.auto_training;
+        else if (you.auto_training)
+            you.training[i] = 0;
+        else
+            you.training[i] = you.train[i];
     }
 
+    bool empty = true;
     // In automatic mode, we fill the array with the content of the queue.
     if (you.auto_training)
     {
@@ -417,14 +420,22 @@ void reset_training()
              it != you.exercises.end(); ++it)
         {
             skill_type sk = *it;
-            if (you.training[sk] >= 0)
+            if (you.train[sk])
             {
                 // Only known skills should be in the queue, except if you have
                 // lost a skill which is currently only possible in wizmode.
                 ASSERT(you.skills[sk] || you.wizard);
-                ++you.training[sk];
+                you.training[sk] += you.train[sk];
+                empty = false;
             }
         }
+
+        // The selected skills have not been exercised recently. Give them all
+        // a default weight of 1 (or 2 for focus skills).
+        if (empty)
+            for (int sk = 0; sk < NUM_SKILLS; ++sk)
+                if (you.train[sk] && you.skills[sk])
+                    you.training[sk] = you.train[sk];
     }
 
     if (total_unknown > MAX_TRAINING_UNKNOWN)
@@ -439,7 +450,7 @@ void reset_training()
 // returns total number of skill points gained
 void exercise(skill_type exsk, int deg)
 {
-    if (you.skills[exsk] >= 27 || you.training[exsk] < 0)
+    if (you.skills[exsk] >= 27 || !you.train[exsk])
         return;
 
     dprf("Exercise %s by %d.", skill_name(exsk), deg);
@@ -480,7 +491,7 @@ static bool _level_up_check(skill_type sk)
     if (you.skill_points[sk] >= skill_exp_needed(27, sk)
         || skill_learned && !you.auto_training)
     {
-        you.training[sk] = -1;
+        you.train[sk] = you.training[sk] = 0;
         return true;
     }
 
@@ -530,7 +541,7 @@ void train_skills()
             int gain = 0;
 
             while (sk_exp[sk] >= calc_skill_cost(you.skill_cost_level)
-                   && you.training[sk] > 0)
+                   && you.training[sk])
             {
                 gain += _train(sk, sk_exp[sk]);
                 if (_level_up_check(sk))

@@ -42,6 +42,7 @@ enum skill_menu_switch
     SKM_VIEW  = -6,
 };
 
+// TAG_MAJOR_VERSION. Just sort this enum when bumping major.
 enum skill_menu_state
 {
     SKM_NONE,
@@ -56,6 +57,7 @@ enum skill_menu_state
     SKM_VIEW_PROGRESS,
     SKM_VIEW_TRANSFER,
     SKM_VIEW_POINTS,
+    SKM_DO_FOCUS,
 };
 
 class SkillMenu;

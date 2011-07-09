@@ -83,7 +83,7 @@ int SkillRegion::handle_mouse(MouseEvent &event)
         else
         {
             tiles.set_need_redraw();
-            you.training[skill] = you.training[skill] == -1 ? 0 : -1;
+            you.train[skill] = !you.train[skill];
             reset_training();
         }
         return CK_MOUSE_CMD;
@@ -124,7 +124,7 @@ bool SkillRegion::update_tip_text(std::string& tip)
         const skill_type skill = (skill_type) m_items[item_idx].idx;
 
         tip = "[L-Click] ";
-        if (you.training[skill] >= 0)
+        if (you.train[skill])
             tip += "Disable training";
         else
             tip += "Enable training";
@@ -238,7 +238,7 @@ void SkillRegion::update()
             continue;
 
         InventoryTile desc;
-        desc.tile     = tileidx_skill(skill, you.training[skill] >= 0);
+        desc.tile     = tileidx_skill(skill, you.train[skill]);
         desc.idx      = idx;
         desc.quantity = you.skills[skill];
 

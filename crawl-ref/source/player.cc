@@ -5302,6 +5302,7 @@ void player::init()
 
     auto_training = true;
     skills.init(0);
+    train.init(1);
     training.init(0);
     skill_points.init(0);
     ct_skill_points.init(0);

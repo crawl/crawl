@@ -1111,8 +1111,9 @@ static void tag_construct_you(writer &th)
     marshallByte(th, NUM_SKILLS);
     for (j = 0; j < NUM_SKILLS; ++j)
     {
-        marshallByte(th, you.skills[j]);
-        marshallByte(th, you.training[j]);
+        marshallUByte(th, you.skills[j]);
+        marshallByte(th, you.train[j]);
+        marshallInt(th, you.training[j]);
         marshallInt(th, you.skill_points[j]);
         marshallInt(th, you.ct_skill_points[j]);
         marshallByte(th, you.skill_order[j]);   // skills ordering
@@ -1887,13 +1888,35 @@ static void tag_read_you(reader &th)
     count = unmarshallByte(th);
     for (j = 0; j < count; ++j)
     {
-        you.skills[j]          = unmarshallByte(th);
 #if TAG_MAJOR_VERSION == 32
-    if (th.getMinorVersion() < TAG_MINOR_SKILL_TRAINING)
-        you.training[j]        = unmarshallByte(th) - 1;
-    else
+        if (th.getMinorVersion() < TAG_MINOR_FOCUS_SKILL)
+            you.skills[j]          = unmarshallByte(th);
+        else
 #endif
-        you.training[j]        = unmarshallByte(th);
+            you.skills[j]          = unmarshallUByte(th);
+
+#if TAG_MAJOR_VERSION == 32
+        if (th.getMinorVersion() < TAG_MINOR_SKILL_TRAINING)
+            you.train[j]  = unmarshallByte(th);
+        else if (th.getMinorVersion() < TAG_MINOR_FOCUS_SKILL)
+        {
+            char training = unmarshallByte(th);
+            if (training == -1)
+                you.train[j] = you.training[j] = 0;
+            else
+            {
+                you.train[j] = 1;
+                you.training[j] = training;
+            }
+        }
+        else
+        {
+#endif
+            you.train[j]    = unmarshallByte(th);
+            you.training[j] = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+        }
+#endif
         you.skill_points[j]    = unmarshallInt(th);
         you.ct_skill_points[j] = unmarshallInt(th);
         you.skill_order[j]     = unmarshallByte(th);
