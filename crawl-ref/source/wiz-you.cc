@@ -408,9 +408,9 @@ void wizard_set_skill_level(skill_type skill)
             you.skills[skill] = amount;
 
             if (amount == 27)
-                you.training[skill] = -1;
-            else if (!amount && you.training[skill] == -1)
-                you.training[skill] = 0;
+                you.train[skill] = 0;
+            else if (!amount && !you.train[skill])
+                you.train[skill] = 1;
 
             reset_training();
             calc_total_skill_points();

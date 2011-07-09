@@ -115,10 +115,12 @@ public:
   int lives;
   int deaths;
 
-  FixedVector<uint8_t, NUM_SKILLS>  skills;
-  FixedVector<char, NUM_SKILLS>  training;
-  FixedVector<unsigned int, NUM_SKILLS>   skill_points;
-  FixedVector<unsigned int, NUM_SKILLS>   ct_skill_points;
+  FixedVector<uint8_t, NUM_SKILLS>  skills; //!< skill level
+  FixedVector<char, NUM_SKILLS>  train; //!< 0: disabled, 1: normal, 2: focus.
+  FixedVector<unsigned int, NUM_SKILLS>  training; //<! percentage of XP used
+  FixedVector<unsigned int, NUM_SKILLS> skill_points;
+  FixedVector<unsigned int, NUM_SKILLS> ct_skill_points; //<!track skill points
+                                                    //<!gained by crosstraining
   FixedVector<uint8_t, NUM_SKILLS>  skill_order;
 
   bool auto_training;
