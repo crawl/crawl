@@ -883,7 +883,7 @@ w:1
 
 @The_weapon@ @screams@, "We will celebrate on a pile of carcasses!"
 
-@The_weapon@ @screams@, "@Player_name@, you will @dine@ on fine @corpses@ today!"
+@The_weapon@ @screams@, "@player_name@, you will @dine@ on fine @corpses@ today!"
 
 @The_weapon@ @screams@, "Go for the jugular!"
 
@@ -917,7 +917,7 @@ SCREAM
 
 @The_weapon@ @screams@, "KILL! KILL!! KILL!!!"
 
-@The_weapon@ @screams@, "I SMELL BLOOD!""
+@The_weapon@ @screams@, "I SMELL BLOOD!"
 
 @The_weapon@ @screams@, "CARNAGE NOT CANTRIPS!"
 
