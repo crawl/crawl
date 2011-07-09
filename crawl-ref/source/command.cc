@@ -352,6 +352,8 @@ static void _adjust_item(void)
     }
 
     swap_inv_slots(from_slot, to_slot, true);
+    you.wield_change = true;
+    you.redraw_quiver = true;
 }
 
 static void _adjust_spell(void)
