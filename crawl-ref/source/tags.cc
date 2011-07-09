@@ -1936,6 +1936,9 @@ static void tag_read_you(reader &th)
         init_training();
 #endif
 
+    // If somebody SIGHUP'ed out of the skill menu with all skills disabled.
+    check_selected_skills();
+
     you.transfer_from_skill = static_cast<skill_type>(unmarshallInt(th));
     you.transfer_to_skill = static_cast<skill_type>(unmarshallInt(th));
     you.transfer_skill_points = unmarshallInt(th);

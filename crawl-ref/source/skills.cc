@@ -333,6 +333,28 @@ static bool _cmp_rest(const std::pair<skill_type,int>& a,
     return a.second < b.second;
 }
 
+// Make sure at least one skill is selected.
+void check_selected_skills()
+{
+    skill_type first_selectable = SK_NONE;
+    for (int i = 0; i < NUM_SKILLS; ++i)
+    {
+        skill_type sk = static_cast<skill_type>(i);
+        if (you.train[sk] && you.skills[sk])
+            return;
+        if (!you.skills[sk] || you.skills[sk] == 27)
+            continue;
+        if (is_invalid_skill(first_selectable))
+            first_selectable = sk;
+    }
+
+    if (!is_invalid_skill(first_selectable))
+        you.train[first_selectable] = 1;
+
+    // It's possible to have no selectable skills, if they are all at level 0
+    // or level 27, so we don't assert. XP will just accumulate in the pool.
+}
+
 /*
  * Scale the training array.
  *
@@ -474,6 +496,7 @@ static bool _level_up_check(skill_type sk)
     // New skill learned.
     const bool skill_learned  = !you.skills[sk]
                     && you.skill_points[sk] >= skill_exp_needed(1, sk);
+
     if (skill_learned)
     {
         // We start by inserting the rest of the exercises in the queue.
@@ -492,6 +515,8 @@ static bool _level_up_check(skill_type sk)
         || skill_learned && !you.auto_training)
     {
         you.train[sk] = you.training[sk] = 0;
+        if (!skill_learned)
+            check_selected_skills();
         return true;
     }
 
@@ -571,7 +596,7 @@ void train_skills()
         else
         {
             // No skill to train. Can happen if all skills are at 27.
-            return;
+            break;
         }
 
         if (_level_up_check(sk))

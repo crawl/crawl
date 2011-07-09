@@ -408,7 +408,10 @@ void wizard_set_skill_level(skill_type skill)
             you.skills[skill] = amount;
 
             if (amount == 27)
+            {
                 you.train[skill] = 0;
+                check_selected_skills();
+            }
             else if (!amount && !you.train[skill])
                 you.train[skill] = 1;
 

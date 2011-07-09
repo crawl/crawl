@@ -12,6 +12,7 @@ void calc_total_skill_points(void);
 int calc_skill_cost(int skill_cost_level);
 
 void reassess_starting_skills();
+void check_selected_skills();
 void init_training();
 void reset_training();
 void check_skill_level_change(skill_type sk, bool do_level_up = true);
