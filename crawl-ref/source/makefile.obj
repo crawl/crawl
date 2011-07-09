@@ -14,6 +14,7 @@ beam.o \
 behold.o \
 bitary.o \
 branch.o \
+cellular.o \
 chardump.o \
 cio.o \
 cloud.o \

@@ -18,6 +18,7 @@
 #include "externs.h"
 #include "options.h"
 
+#include "abyss.h"
 #include "areas.h"
 #include "artefact.h"
 #include "beam.h"
@@ -661,6 +662,9 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
         take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
     }
 
+#ifdef NEW_ABYSS
+    push_features_to_abyss();
+#endif
     down_stairs(gate_type, you.entry_cause);  // heh heh
 }
 
@@ -2333,6 +2337,11 @@ void handle_time()
         if (one_chance_in(10))
             change_labyrinth();
     }
+
+#ifdef NEW_ABYSS
+    if (you.level_type == LEVEL_ABYSS)
+        forget_map(you.religion == GOD_LUGONU ? 25 : 45);
+#endif
 
     if (you.religion == GOD_JIYVA && one_chance_in(10))
     {

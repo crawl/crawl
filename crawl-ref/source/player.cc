@@ -2689,6 +2689,13 @@ int burden_change(void)
     return (you.burden);
 }
 
+#ifdef NEW_ABYSS
+void forget_map(bool force)
+{
+    forget_map(100, force);
+}
+#endif
+
 // force is true for forget_map command on level map.
 void forget_map(int chance_forgotten, bool force)
 {
@@ -2697,21 +2704,45 @@ void forget_map(int chance_forgotten, bool force)
     if (force && !yesno("Really forget level map?", true, 'n'))
         return;
 
-    // The radius is only used in labyrinths.
-    const bool use_lab_check = (!force && you.level_type == LEVEL_LABYRINTH
-                                && chance_forgotten < 100);
-    const int radius = (use_lab_check && you.species == SP_MINOTAUR) ? 40*40
-                                                                     : 25*25;
+#ifdef NEW_ABYSS
+    // Labyrinth and the Abyss use special rotting rules.
+    const bool rotting_map = (you.level_type == LEVEL_LABYRINTH
+                           || you.level_type == LEVEL_ABYSS);
+    const bool rot_resist = you.level_type == LEVEL_LABYRINTH && you.species == SP_MINOTAUR
+                         || you.level_type == LEVEL_ABYSS && you.religion == GOD_LUGONU;
+#else
+    const bool rotting_map = (you.level_type == LEVEL_LABYRINTH);
+    const bool rot_resist = you.level_type == LEVEL_LABYRINTH && you.species == SP_MINOTAUR;
+#endif
+    const double geometric_chance = 0.97;
+    const int radius = (rot_resist ? 60 : 30);
+
+    const int scalar = 0xFF;
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (!you.see_cell(*ri)
-            && (force || x_chance_in_y(chance_forgotten, 100)
-                || use_lab_check && (you.pos()-*ri).abs() > radius))
+        if (!you.see_cell(*ri))
         {
-            env.map_knowledge(*ri).clear();
+            const int dist = distance(you.pos(), *ri);
+            bool doDecay = (force || chance_forgotten == 100);
+            if (!doDecay)
+            {
+                if (rotting_map)
+                {
+                    int chance = pow(geometric_chance,
+                                     std::max(1, dist-radius)) * scalar;
+                    doDecay = !x_chance_in_y(chance, scalar);
+                }
+                else
+                    doDecay = !x_chance_in_y(chance_forgotten, 100);
+            }
+
+            if (doDecay)
+            {
+                env.map_knowledge(*ri).clear();
 #ifdef USE_TILE
-            tile_forget_map(*ri);
+                tile_forget_map(*ri);
 #endif
+            }
         }
     }
 
