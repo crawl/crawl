@@ -4213,6 +4213,11 @@ tileidx_t tileidx_cloud(const cloud_struct &cl, bool disturbance)
                 ch = TILE_CLOUD_YELLOW_SMOKE;
                 break;
 
+            case CLOUD_PETRIFY:
+                ch = TILE_CLOUD_PETRIFY;
+                ch += random2(tile_main_count(ch));
+                break;
+
             default:
                 ch = TILE_CLOUD_GREY_SMOKE;
                 break;
