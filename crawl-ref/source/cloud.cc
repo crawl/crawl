@@ -580,6 +580,10 @@ void place_cloud(cloud_type cl_type, const coord_def& ctarget, int cl_range,
 
 static bool _is_opaque_cloud(cloud_type ctype)
 {
+#if TAG_MAJOR_VERSION == 32
+    if (ctype == CLOUD_PETRIFY)
+        return true;
+#endif
     return (ctype >= CLOUD_OPAQUE_FIRST && ctype <= CLOUD_OPAQUE_LAST);
 }
 
@@ -588,8 +592,7 @@ bool is_opaque_cloud(int cloud_idx)
     if (cloud_idx == EMPTY_CLOUD)
         return (false);
 
-    const int ctype = env.cloud[cloud_idx].type;
-    return (ctype >= CLOUD_OPAQUE_FIRST && ctype <= CLOUD_OPAQUE_LAST);
+    return _is_opaque_cloud(env.cloud[cloud_idx].type);
 }
 
 cloud_type cloud_type_at(const coord_def &c)
