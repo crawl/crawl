@@ -702,24 +702,6 @@
     6
 },
 
-#if TAG_MAJOR_VERSION == 32
-{
-    ZAP_ENSLAVE_UNDEAD,
-    "",
-    100,
-    NULL,
-    NULL,
-    BLACK,
-    true,
-    BEAM_ENSLAVE_UNDEAD,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
-#endif
-
 {
     ZAP_ENSLAVE_SOUL,
     "",
@@ -783,40 +765,6 @@
     false,
     0 // Explosion does the noise.
 },
-
-#if TAG_MAJOR_VERSION == 32
-{
-    ZAP_CONTROL_DEMON,
-    "",
-    100,
-    NULL,
-    new tohit_calculator<0, 3, 2>,
-    BLACK,
-    true,
-    BEAM_ENSLAVE_DEMON,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
-
-{
-    ZAP_ORB_OF_FRAGMENTATION,
-    "metal orb",
-    200,
-    new calcdice_calculator<3, 30, 3, 4>,
-    new tohit_calculator<20>,
-    CYAN,
-    false,
-    BEAM_FRAG,
-    DCHAR_FIRED_ZAP,
-    false,
-    false,
-    true,
-    5 // XXX: Seems like it might be louder than this.
-},
-#endif
 
 {
     ZAP_THROW_ICICLE,

@@ -5763,16 +5763,10 @@ static std::string _beam_type_name(beam_type type)
     case BEAM_CHARM:                 return ("enslave");
     case BEAM_BANISH:                return ("banishment");
     case BEAM_DEGENERATE:            return ("degeneration");
-#if TAG_MAJOR_VERSION == 32
-    case BEAM_ENSLAVE_UNDEAD:        return ("enslave undead");
-#endif
     case BEAM_ENSLAVE_SOUL:          return ("enslave soul");
     case BEAM_PAIN:                  return ("pain");
     case BEAM_DISPEL_UNDEAD:         return ("dispel undead");
     case BEAM_DISINTEGRATION:        return ("disintegration");
-#if TAG_MAJOR_VERSION == 32
-    case BEAM_ENSLAVE_DEMON:         return ("enslave demon");
-#endif
     case BEAM_BLINK:                 return ("blink");
     case BEAM_BLINK_CLOSE:           return ("blink close");
     case BEAM_PETRIFY:               return ("petrify");

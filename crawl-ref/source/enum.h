@@ -306,16 +306,10 @@ enum beam_type                  // beam[].flavour
     BEAM_CHARM,
     BEAM_BANISH,
     BEAM_DEGENERATE,
-#if TAG_MAJOR_VERSION == 32
-    BEAM_ENSLAVE_UNDEAD,
-#endif
     BEAM_ENSLAVE_SOUL,
     BEAM_PAIN,
     BEAM_DISPEL_UNDEAD,
     BEAM_DISINTEGRATION,
-#if TAG_MAJOR_VERSION == 32
-    BEAM_ENSLAVE_DEMON,
-#endif
     BEAM_BLINK,
     BEAM_BLINK_CLOSE,
     BEAM_PETRIFY,
@@ -324,12 +318,8 @@ enum beam_type                  // beam[].flavour
     BEAM_HIBERNATION,
     BEAM_BERSERK,
     BEAM_SLEEP,
-#if TAG_MAJOR_VERSION != 32
     BEAM_INNER_FLAME,
     BEAM_LAST_ENCHANTMENT = BEAM_INNER_FLAME,
-#else
-    BEAM_LAST_ENCHANTMENT = BEAM_SLEEP,
-#endif
 
     // new beams for evaporate
     BEAM_POTION_STINKING_CLOUD,
@@ -350,13 +340,7 @@ enum beam_type                  // beam[].flavour
     BEAM_HOLY_LIGHT,
     BEAM_POTION_RANDOM,
     BEAM_AIR,
-#if TAG_MAJOR_VERSION == 32
-    BEAM_INNER_FLAME,
-    BEAM_LAST_REAL = BEAM_INNER_FLAME,
-#else
-
     BEAM_LAST_REAL = BEAM_AIR,
-#endif
 
     // For getting the visual effect of a beam.
     BEAM_VISUAL,
