@@ -167,7 +167,7 @@ enum ability_type
     ABIL_MAKE_ACQUIRE_GOLD,
     ABIL_MAKE_ACQUIREMENT,
     ABIL_MAKE_WATER,
-    ABIL_MAKE_ELECTRIC_EEL,
+    ABIL_MAKE_LIGHTNING_SPIRE,
     ABIL_MAKE_BAZAAR,
     ABIL_MAKE_ALTAR,
     ABIL_MAKE_GRENADES,
@@ -2424,6 +2424,7 @@ enum monster_type                      // (int) menv[].type
     MONS_GIANT,
     MONS_BASILISK,
     MONS_OCTOPODE,
+    MONS_LIGHTNING_SPIRE,
 
     NUM_MONSTERS,                      // used for polymorph
 

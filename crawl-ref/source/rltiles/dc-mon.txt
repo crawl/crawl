@@ -420,6 +420,9 @@ firespitter_statue MONS_FIRESPITTER_STATUE
 obelisk MONS_DIAMOND_OBELISK
 %rim 1
 
+## Spirey things ('{')
+lighting_spire MONS_LIGHTNING_SPIRE
+
 ## Gargoyles ('9')
 %sdir dc-mon/nonliving
 gargoyle MONS_GARGOYLE
