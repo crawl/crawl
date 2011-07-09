@@ -3798,6 +3798,18 @@ bool mons_avoids_cloud(const monster* mons, const cloud_struct& cloud,
         // Locust swarms are too stupid to avoid winds.
         return (mons_intel(mons) >= I_ANIMAL);
 
+    case CLOUD_PETRIFY:
+        if (mons->res_petrify() > 0)
+            return (false);
+
+        if (extra_careful)
+            return (true);
+
+        if (mons_intel(mons) >= I_ANIMAL && mons->res_petrify() < 0)
+            return (true);
+
+        break;
+
     default:
         break;
     }

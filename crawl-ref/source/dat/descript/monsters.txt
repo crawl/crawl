@@ -497,6 +497,10 @@ Cacodemon
 
 A hideously ugly demon of rage and legendary power, it disables its foes before blasting them to pieces.
 %%%%
+catoblepas
+
+A sluggish black buffalo, its hide encrusted with dull scales. It carries its hog-like head just above the ground, protected by a stiff mane of bristles, joined to its body by a neck as long and loose as an emptied intestine. Man and beast alike would be wise to steer clear of this creature, as its fearsome breath is known to turn flesh into stone.
+%%%%
 centaur
 
 A hybrid with the torso of a human atop the body of a large horse.

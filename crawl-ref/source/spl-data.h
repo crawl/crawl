@@ -2955,6 +2955,19 @@ struct spell_desc
 },
 
 {
+    SPELL_PETRIFYING_CLOUD, "Petrifying Cloud",
+    SPTYP_CONJURATION | SPTYP_EARTH | SPTYP_AIR,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+    5,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    NULL,
+    true,
+    false
+},
+
+{
     SPELL_SHROUD_OF_GOLUBRIA, "Shroud of Golubria",
      SPTYP_CHARMS | SPTYP_TRANSLOCATION,
      SPFLAG_NONE,

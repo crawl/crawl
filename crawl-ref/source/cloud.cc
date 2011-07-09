@@ -658,6 +658,8 @@ cloud_type beam2cloud(beam_type flavour)
         return CLOUD_INK;
     case BEAM_HOLY_FLAME:
         return CLOUD_HOLY_FLAMES;
+    case BEAM_PETRIFYING_CLOUD:
+        return CLOUD_PETRIFY;
     }
 }
 
@@ -684,6 +686,7 @@ beam_type cloud2beam(cloud_type flavour)
     case CLOUD_GLOOM:        return BEAM_GLOOM;
     case CLOUD_INK:          return BEAM_INK;
     case CLOUD_HOLY_FLAMES:  return BEAM_HOLY_FLAME;
+    case CLOUD_PETRIFY:      return BEAM_PETRIFYING_CLOUD;
     case CLOUD_RANDOM:       return BEAM_RANDOM;
     }
 }
@@ -717,6 +720,7 @@ bool cloud_has_negative_side_effects(cloud_type cloud)
     case CLOUD_MIASMA:
     case CLOUD_MUTAGENIC:
     case CLOUD_CHAOS:
+    case CLOUD_PETRIFY:
         return true;
     default:
         return false;
@@ -804,6 +808,8 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         return player && act->res_steam() > 0;
     case CLOUD_MIASMA:
         return act->res_rotting() > 0;
+    case CLOUD_PETRIFY:
+        return act->res_petrify() > 0;
     default:
         return (false);
     }
@@ -829,6 +835,9 @@ int actor_cloud_resist(const actor *act, const cloud_struct &cloud)
         return act->res_holy_fire();
     case CLOUD_COLD:
         return act->res_cold();
+    case CLOUD_PETRIFY:
+        return act->res_petrify();
+
     default:
         return 0;
     }
@@ -910,6 +919,31 @@ bool _actor_apply_cloud_side_effects(actor *act,
                 beam.apply_enchantment_to_monster(mons);
                 return true;
             }
+        }
+        break;
+    }
+
+    case CLOUD_PETRIFY:
+    {
+        if (player)
+        {
+            if (1 + random2(27) >= you.experience_level)
+            {
+                you.petrify(act);
+                return true;
+            }
+        }
+        else
+        {
+            bolt beam;
+            beam.flavour = BEAM_PETRIFY;
+            beam.thrower = cloud.killer;
+
+            if (cloud.whose == KC_FRIENDLY)
+                beam.beam_source = ANON_FRIENDLY_MONSTER;
+
+            beam.apply_enchantment_to_monster(mons);
+            return true;
         }
         break;
     }
@@ -1221,7 +1255,7 @@ static const char *_terse_cloud_names[] =
     "purple smoke", "translocational energy", "fire",
     "steam", "gloom", "ink", "blessed fire", "foul pestilence", "thin mist",
     "seething chaos", "rain", "mutagenic fog", "magical condensation",
-    "raging winds",
+    "raging winds", "calcifying dust",
 };
 
 static const char *_verbose_cloud_names[] =
@@ -1232,7 +1266,7 @@ static const char *_verbose_cloud_names[] =
     "purple smoke", "translocational energy", "roaring flames",
     "a cloud of scalding steam", "thick gloom", "ink", "blessed fire",
     "dark miasma", "thin mist", "seething chaos", "the rain",
-    "mutagenic fog", "magical condensation", "raging winds",
+    "mutagenic fog", "magical condensation", "raging winds", "calcifying dust",
 };
 
 std::string cloud_type_name(cloud_type type, bool terse)
@@ -1428,6 +1462,10 @@ int get_cloud_colour(int cloudno)
 
     case CLOUD_TORNADO:
         which_colour = ETC_TORNADO;
+        break;
+
+    case CLOUD_PETRIFY:
+        which_colour = WHITE;
         break;
 
     default:

@@ -461,6 +461,10 @@ std::string pluralise(const std::string &name,
     {
         return name.substr(0, name.length() - 1) + "es";
     }
+    else if (name == "catoblepas")
+    {
+        return "catoblepae";
+    }
     else if (ends_with(name, "s"))
     {
         return name;

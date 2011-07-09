@@ -1704,6 +1704,17 @@
       }
     },
 
+    {  MST_CATOBLEPAS,
+      {
+       SPELL_PETRIFYING_CLOUD,
+       SPELL_PETRIFYING_CLOUD,
+       SPELL_NO_SPELL,
+       SPELL_PETRIFYING_CLOUD,
+       SPELL_PETRIFYING_CLOUD,
+       SPELL_NO_SPELL
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,
