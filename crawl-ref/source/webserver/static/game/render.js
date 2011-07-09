@@ -149,8 +149,19 @@ function display()
         minimap_changed = false;
     }
 
-    for (var x = minimap_bounds.left; x <= minimap_bounds.right; x++)
-        for (var y = minimap_bounds.top; y <= minimap_bounds.bottom; y++)
+    // Make sure we call render_cell at least for the whole visible area
+    // so that the flash covers the whole canvas
+    var l = minimap_bounds.left;
+    if (l > view_x) l = view_x;
+    var r = minimap_bounds.right;
+    if (r < view_x + dungeon_cols) r = view_x + dungeon_cols - 1;
+    var t = minimap_bounds.top;
+    if (t > view_y) t = view_y;
+    var b = minimap_bounds.bottom;
+    if (b < view_y + dungeon_rows) b = view_y + dungeon_rows - 1;
+
+    for (var x = l; x <= r; x++)
+        for (var y = t; y <= b; y++)
     {
         var cell = get_tile_cache(x, y);
         if (!cell || cell.dirty) render_cell(x, y);
