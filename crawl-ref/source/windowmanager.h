@@ -1,7 +1,7 @@
 #ifndef WINDOWMANAGER_H
 #define WINDOWMANAGER_H
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "externs.h"
 #include "glwrapper.h"
@@ -146,5 +146,5 @@ public:
 // Main interface for UI functions
 extern WindowManager *wm;
 
-#endif //USE_TILE
+#endif //USE_TILE_LOCAL
 #endif //include guard

@@ -5,7 +5,7 @@
 
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -205,4 +205,4 @@ char *strlwr(char *str)
 }
 
 #endif // #ifdef UNIX
-#endif // #ifdef USE_TILE
+#endif // #ifdef USE_TILE_LOCAL

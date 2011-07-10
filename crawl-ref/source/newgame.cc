@@ -30,7 +30,7 @@
 #include "stuff.h"
 #include "tutorial.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 #include "tilereg-crt.h"
 #endif
 
@@ -821,7 +821,7 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
         freeform->activate_first_item();
     }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tiles.get_crt()->attach_menu(&menu);
 #endif
 
@@ -1228,7 +1228,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
         freeform->activate_first_item();
     }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tiles.get_crt()->attach_menu(&menu);
 #endif
 
@@ -1532,7 +1532,7 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
     }
     _print_character_info(ng); // calls clrscr() so needs to be before attach()
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tiles.get_crt()->attach_menu(&menu);
 #endif
 
@@ -1963,7 +1963,7 @@ static bool _prompt_wand(const newgame_def* ng, newgame_def* ng_choice,
     }
     _print_character_info(ng); // calls clrscr() so needs to be before attach()
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tiles.get_crt()->attach_menu(&menu);
 #endif
 
@@ -2255,7 +2255,7 @@ static void _prompt_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
 
     _print_character_info(ng); // calls clrscr() so needs to be before attach()
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tiles.get_crt()->attach_menu(&menu);
 #endif
 

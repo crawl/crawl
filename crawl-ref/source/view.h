@@ -9,6 +9,7 @@
 
 #include "externs.h"
 #include "show.h"
+#include "viewgeom.h"
 
 void init_monsters_seens();
 
@@ -29,9 +30,10 @@ bool is_feature(wchar_t feature, const coord_def& where);
 
 std::string screenshot();
 
+int viewmap_flash_colour();
 bool view_update();
 void view_update_at(const coord_def &pos);
-void flash_view(uint8_t colour = BLACK); // inside #ifndef USE_TILE?
+void flash_view(uint8_t colour = BLACK); // inside #ifndef USE_TILE_LOCAL?
 void flash_view_delay(uint8_t colour = BLACK, int delay = 150);
 #ifndef USE_TILE
 void flash_monster_colour(const monster* mon, uint8_t fmc_colour,
@@ -39,6 +41,9 @@ void flash_monster_colour(const monster* mon, uint8_t fmc_colour,
 #endif
 
 void viewwindow(bool show_updates = true);
+void draw_cell(screen_cell_t *cell, const coord_def &gc,
+               bool anim_updates, int flash_colour);
+
 void update_monsters_in_view();
 bool handle_seen_interrupt(monster* mons,
                            std::vector<std::string>* msgs_buf = NULL);

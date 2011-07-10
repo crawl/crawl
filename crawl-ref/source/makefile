@@ -274,6 +274,14 @@ ifndef IPAD
 	FT = YesPlease
 endif
 
+TILES_ANY = YesPlease
+
+endif
+
+ifdef WEBTILES
+
+TILES_ANY = YesPlease
+
 endif
 
 #
@@ -303,7 +311,7 @@ ifdef WIN32
 EXTRA_OBJECTS += icon.o
 endif
 
-ifndef TILES
+ifndef TILES_ANY
 ifdef NEED_LIBW32C
 OBJECTS += libw32c.o
 else
@@ -501,12 +509,19 @@ endif
 
 RLTILES = rltiles
 
+ifdef WEBTILES
+DEFINES_L += -DUSE_TILE
+DEFINES_L += -DUSE_TILE_WEB
+INCLUDES_L += -I$(RLTILES)
+endif
+
 #
 # Tiles build stuff
 #
 ifdef TILES
 
 DEFINES_L += -DUSE_TILE
+DEFINES_L += -DUSE_TILE_LOCAL
 INCLUDES_L += -I$(RLTILES)
 
 ifdef BUILD_SDL
@@ -806,7 +821,7 @@ ifndef V
 endif
 endif
 
-ifdef TILES
+ifdef TILES_ANY
 TILEIMAGEFILES := floor wall feat main player gui icons
 TILEDEFS = $(TILEIMAGEFILES) dngn unrand
 TILEDEFPRES = $(TILEDEFS:%=$(RLTILES)/tiledef-%)
@@ -902,10 +917,40 @@ SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
         profile wizard package-source source build-windows package-windows \
         rest
 
-all: $(GAME) $(GENERATED_DOCS)
+all: $(GAME) $(GENERATED_DOCS) webserver
 
 test:
 	./$(GAME) -test > /dev/null
+
+
+# Webtiles data
+.PHONY: webserver clean-webserver
+
+webserver/static/%.png: dat/tiles/%.png
+	$(COPY) $< webserver/static/
+
+webserver/static/game/%.png: dat/tiles/%.png
+	$(COPY) $< webserver/static/game/
+
+$(RLTILES)/%.js: rltile-build
+
+webserver/static/game/%.js: $(RLTILES)/%.js
+	$(COPY) $< webserver/static/game/
+
+TILEINFOJS = $(TILEIMAGEFILES) dngn
+
+STATICFILES = $(TILEIMAGEFILES:%=webserver/static/game/%.png) \
+              webserver/static/stone_soup_icon-32x32.png \
+              $(TILEINFOJS:%=webserver/static/game/tileinfo-%.js)
+
+clean-webserver:
+	$(RM) $(STATICFILES)
+
+ifdef WEBTILES
+webserver: $(STATICFILES)
+else
+webserver:
+endif
 
 
 ifeq (,$(findstring clean,$(MAKECMDGOALS)))
@@ -1086,7 +1131,7 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 endif
 
-clean: clean-rltiles
+clean: clean-rltiles clean-webserver
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(OBJECTS) $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d) *.ixx  \

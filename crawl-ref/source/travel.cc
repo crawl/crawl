@@ -4043,7 +4043,7 @@ void runrest::stop()
     // run/rest/travel on top of other delays.
     stop_delay();
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (Options.tile_runrest_rate > 0)
         tiles.set_need_redraw();
 #endif

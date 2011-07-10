@@ -5,13 +5,11 @@
 
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "tilereg.h"
 
 #include "glwrapper.h"
-
-coord_def Region::NO_CURSOR(-1, -1);
 
 Region::Region() :
     ox(0),

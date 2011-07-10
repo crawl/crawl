@@ -117,7 +117,7 @@ public:
 
     virtual std::string get_filter_text() const;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual bool get_tiles(std::vector<tile_def>& tiles) const;
 #endif
 

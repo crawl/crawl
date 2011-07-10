@@ -37,7 +37,7 @@
 #include "hiscores.h"
 #include "zotdef.h"
 
-#if defined(USE_TILE) && (defined(TARGET_OS_WINDOWS) || defined(TARGET_COMPILER_MINGW))
+#if defined(USE_TILE_LOCAL) && (defined(TARGET_OS_WINDOWS) || defined(TARGET_COMPILER_MINGW))
 #define NOCOMM            /* Comm driver APIs and definitions */
 #define NOLOGERROR        /* LogError() and related definitions */
 #define NOPROFILER        /* Profiler APIs */
@@ -516,8 +516,10 @@ static void _dump_ver_stuff(FILE* file)
     fprintf(file, "Game mode: %s\n",
             gametype_to_str(crawl_state.type).c_str());
 
-#ifdef USE_TILE
+#if defined(USE_TILE_LOCAL)
     fprintf(file, "Tiles: yes\n\n");
+#elif defined(USE_TILE_WEB)
+    fprintf(file, "Tiles: online\n\n");
 #else
     fprintf(file, "Tiles: no\n\n");
 #endif
@@ -697,7 +699,7 @@ void do_crash_dump()
 //---------------------------------------------------------------
 static NORETURN void _BreakStrToDebugger(const char *mesg, bool assert)
 {
-#if defined(USE_TILE) && (defined(TARGET_COMPILER_MINGW) || defined(TARGET_OS_WINDOWS))
+#if defined(USE_TILE_LOCAL) && (defined(TARGET_COMPILER_MINGW) || defined(TARGET_OS_WINDOWS))
     SDL_SysWMinfo SysInfo;
     SDL_VERSION(&SysInfo.version);
     if (SDL_GetWMInfo(&SysInfo) > 0)
