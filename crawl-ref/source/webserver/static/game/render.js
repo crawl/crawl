@@ -442,7 +442,11 @@ function get_cell_map_feature(cell)
             return MF_MONS_PEACEFUL;
         else if (att_flag == TILE_FLAG_PET)
             return MF_MONS_FRIENDLY;
-        return MF_MONS_HOSTILE;
+
+        if (cell.noexp)
+            return MF_MONS_NO_EXP;
+        else
+            return MF_MONS_HOSTILE;
     }
     else if (fg_idx >= TILE_CLOUD_FIRE_0 && fg_idx <= TILE_CLOUD_RAGING_WINDS_1)
         return MF_FEATURE;
