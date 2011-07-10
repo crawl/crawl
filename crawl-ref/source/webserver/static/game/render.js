@@ -381,7 +381,7 @@ function render_cell(cx, cy)
         render_cursors(cx, cy);
 
         // Redraw the cell below if it overlapped
-        var cell_below = get_tile_cache(x, y + 1);
+        var cell_below = get_tile_cache(cx, cy + 1);
         if (cell_below && cell_below.sy && (cell_below.sy < 0))
             render_cell(cx, cy + 1);
 
@@ -852,7 +852,7 @@ function draw_tile(idx, cx, cy, img_name, info_func, ofsx, ofsy, y_max)
 
     if (sy < 0)
     {
-        var cell = get_tile_cache(cx, cy);
+        var cell = get_tile_cache(cx + view_x, cy + view_y);
         if (sy < (cell.sy || 0))
             cell.sy = sy;
     }
