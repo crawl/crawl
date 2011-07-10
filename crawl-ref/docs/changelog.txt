@@ -87,6 +87,7 @@ Monsters
 * Kenku monsters come with gear.
 * Rename "beast" to "hell beast".
 * Rename "megabat" to "bat".
+* Kobolds can (rarely) get crossbows.
 * Pikel: fixed bugs with freed monsters.
 * Replace "gila monster" with "basilisk", complete with petrification.
 * Adjust xp values for some monsters.
