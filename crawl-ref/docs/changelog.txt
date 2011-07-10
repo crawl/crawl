@@ -52,7 +52,7 @@ Interface
 * Search: only show items in a stash matching the search.
 * New help for skills screen (m??).
 * Change inventory colours for some potions.
-* Auto-pickup chunks after Aninate Skeleton.
+* Auto-pickup chunks after Animate Skeleton.
 * Allow toggling hit prediction with ':' in new targetting modes.
 * Cloud glyph in 7-bit ASCII is '0', not '#' anymore.
 * Prompt before leaving Ziggurat.
