@@ -726,15 +726,25 @@ function draw_foreground(x, y, cell)
             status_shift += 8;
         }
     }
-    else if (fg & TILE_FLAG_STAB)
+
+    if (fg & TILE_FLAG_BEH_MASK)
     {
-        draw_icon(TILEI_STAB_BRAND, x, y);
-        status_shift += 15;
-    }
-    else if (fg & TILE_FLAG_MAY_STAB)
-    {
-        draw_icon(TILEI_MAY_STAB_BRAND, x, y);
-        status_shift += 8;
+        var beh_flag = fg & TILE_FLAG_BEH_MASK;
+        if (beh_flag == TILE_FLAG_STAB)
+        {
+            draw_icon(TILEI_STAB_BRAND, x, y);
+            status_shift += 15;
+        }
+        else if (beh_flag == TILE_FLAG_MAY_STAB)
+        {
+            draw_icon(TILEI_MAY_STAB_BRAND, x, y);
+            status_shift += 8;
+        }
+        else if (beh_flag == TILE_FLAG_FLEEING)
+        {
+            draw_icon(TILEI_FLEEING, x, y);
+            status_shift += 4;
+        }
     }
 
     if (fg & TILE_FLAG_POISON)
