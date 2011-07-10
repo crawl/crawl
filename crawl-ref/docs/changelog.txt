@@ -45,7 +45,7 @@ Interface
 ---------
 * New command: 'D'rop last. Drops the item(s) last picked up.
 * Auto-switch: bumping while wielding launcher switches to weapon in slots a/b.
-* Auto-switch: firing while wielding a melee weapon switches to luancher in a/b.
+* Auto-switch: firing while wielding a melee weapon switches to launcher in a/b.
 * Auto-explore tries to look at unreachable places.
 * Search: allows searching for portals, and for waypoints (Ctrl-F 1, Ctrl-F *).
 * Search: "branded" synonymous with "ego". Better help (Ctrl-F ?).
