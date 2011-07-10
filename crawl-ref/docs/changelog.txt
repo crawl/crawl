@@ -34,7 +34,7 @@ Character
 * All characters carry a bootknife to dissect corpses.
 * Hill Orc Priests always take on Beogh.
 * Berserkitis mutation triggers less often.
-* Changes to Chaos Knights, Warper, Fighter, Gladiator, Hunter.
+* Changes to Chaos Knight, Warper, Fighter, Gladiator, Hunter.
 * Draconians are more dextrous.
 * Rename Crusader to Skald, change starting book and skill levels.
 * Conjurers don't need to choose a book (they always get the Air/Ice book).
