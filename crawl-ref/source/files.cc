@@ -1328,9 +1328,10 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
             level_welcome_messages();
 
         // new levels have less wary monsters, and we don't
-        // want them to attack players as soon:
-        if (just_created_level)
-            you.time_taken /= 2;
+        // want them to attack players quite as soon:
+        you.time_taken *= (just_created_level ? 1 : 2);
+
+        you.time_taken = div_rand_round(you.time_taken, 3);
 
         dprf("arrival time: %d", you.time_taken);
 
