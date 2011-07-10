@@ -417,7 +417,7 @@ void SkillMenuEntry::set_title()
 
 void SkillMenuEntry::set_training()
 {
-    if (!you.train[m_sk])
+    if (!you.train[m_sk] || !you.skills[m_sk] && !you.training[m_sk])
         m_progress->set_text("");
     else
         m_progress->set_text(make_stringf("(%2d%%)", you.training[m_sk]));
