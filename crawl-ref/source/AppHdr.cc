@@ -7,7 +7,7 @@
     #pragma comment (lib, "pcre.lib")
     #pragma comment (lib, "lua.lib")
     #pragma comment (lib, "sqlite.lib")
-        #ifdef USE_TILE
+        #ifdef USE_TILE_LOCAL
             #pragma comment (lib, "freetype.lib")
             #pragma comment (lib, "SDL.lib")
             #pragma comment (lib, "SDL_image.lib")

@@ -1567,5 +1567,163 @@ bool tile_list_processor::write_data()
         fclose(fp);
     }
 
+    // write "tileinfo-%name.js"
+    {
+        char filename[1024];
+        sprintf(filename, "tileinfo-%s.js", lcname.c_str());
+        FILE *fp = tmpfile();
+
+        if (!fp)
+        {
+            fprintf(stderr, "Error: couldn't open '%s' for write.\n", filename);
+            return (false);
+        }
+
+        fprintf(fp, "// This file has been automatically generated.\n\n");
+
+        fprintf(fp, "val = %s;\n", m_start_value.c_str());
+
+        std::string old_enum_name = "";
+        int count = 0;
+        for (unsigned int i = 0; i < m_page.m_tiles.size(); i++)
+        {
+            const std::string &parts_ctg = m_page.m_tiles[i]->parts_ctg();
+            const int enumcount = m_page.m_tiles[i]->enumcount();
+
+            if (enumcount == 0)
+            {
+                if (old_enum_name.empty())
+                {
+                    fprintf(fp, "%s_%s_FILLER_%d = val++;\n", m_prefix.c_str(),
+                            ucname.c_str(), i);
+                }
+                else
+                {
+                    fprintf(fp, "%s_%s_%d = val++;\n", m_prefix.c_str(),
+                            old_enum_name.c_str(), ++count);
+                }
+            }
+            else if (parts_ctg.empty())
+            {
+                const std::string &enumname = m_page.m_tiles[i]->enumname(0);
+                fprintf(fp, "%s_%s = val++;\n", m_prefix.c_str(),
+                        enumname.c_str());
+                old_enum_name = enumname;
+                count = 0;
+            }
+            else
+            {
+                const std::string &enumname = m_page.m_tiles[i]->enumname(0);
+                fprintf(fp, "%s_%s_%s = val++;\n", m_prefix.c_str(),
+                        parts_ctg.c_str(), enumname.c_str());
+                old_enum_name = enumname;
+                count = 0;
+            }
+
+            for (int c = 1; c < enumcount; ++c)
+            {
+                const std::string &basename = m_page.m_tiles[i]->enumname(0);
+                const std::string &enumname = m_page.m_tiles[i]->enumname(c);
+
+                if (parts_ctg.empty())
+                {
+                    fprintf(fp, "val = %s_%s = %s_%s; val++;\n",
+                            m_prefix.c_str(), enumname.c_str(),
+                            m_prefix.c_str(), basename.c_str());
+                }
+                else
+                {
+                    fprintf(fp, "val = %s_%s_%s = %s_%s_%s; val++;\n",
+                            m_prefix.c_str(), parts_ctg.c_str(), enumname.c_str(),
+                            m_prefix.c_str(), parts_ctg.c_str(), basename.c_str());
+                }
+            }
+        }
+
+        if (m_abstract.size() == 0)
+        {
+            fprintf(fp, "%s_%s_MAX = val++;\n\n", m_prefix.c_str(), ucname.c_str());
+
+            fprintf(fp, "var _%s_tile_info = [\n", lcname.c_str());
+            for (unsigned int i = 0; i < m_page.m_offsets.size(); i+=4)
+            {
+                fprintf(fp, "  {w: %d, h: %d, ox: %d, oy: %d, sx: %d, sy: %d, ex: %d, ey: %d},\n",
+                        m_page.m_offsets[i+2], m_page.m_offsets[i+3],
+                        m_page.m_offsets[i], m_page.m_offsets[i+1],
+                        m_page.m_texcoords[i], m_page.m_texcoords[i+1],
+                        m_page.m_texcoords[i+2], m_page.m_texcoords[i+3]);
+            }
+            fprintf(fp, "]\n\n");
+
+            fprintf(fp, "function get_%s_tile_info(idx)\n{\n", lcname.c_str());
+            fprintf(fp, "    return _%s_tile_info[idx - %s];\n",
+                    lcname.c_str(), m_start_value.c_str());
+            fprintf(fp, "}\n\n");
+
+            fprintf(fp, "var _tile_%s_count =\n[\n", lcname.c_str());
+            for (unsigned int i = 0; i < m_page.m_counts.size(); i++)
+                fprintf(fp, "    %u,\n", m_page.m_counts[i]);
+            fprintf(fp, "];\n\n");
+
+            fprintf(fp, "function tile_%s_count(idx)\n{\n", lcname.c_str());
+            fprintf(fp, "    return _tile_%s_count[idx - %s];\n",
+                    lcname.c_str(), m_start_value.c_str());
+            fprintf(fp, "}\n\n");
+        }
+        else
+        {
+            {
+                size_t last_idx = m_abstract.size() - 1;
+
+                std::string max_enum = m_abstract[last_idx].second;
+                max_enum += "_";
+                max_enum += m_abstract[last_idx].first;
+                max_enum += "_MAX";
+
+                for (size_t j = 0; j < max_enum.size(); ++j)
+                    max_enum[j] = std::toupper(max_enum[j]);
+
+                fprintf(fp, "%s_%s_MAX = %s;\n\n",
+                        m_prefix.c_str(), ucname.c_str(), max_enum.c_str());
+            }
+
+            std::vector<std::string> uc_max_enum;
+            for (size_t i = 0; i < m_abstract.size(); ++i)
+            {
+                std::string max_enum = m_abstract[i].second;
+                max_enum += "_";
+                max_enum += m_abstract[i].first;
+                max_enum += "_MAX";
+
+                for (size_t j = 0; j < max_enum.size(); ++j)
+                    max_enum[j] = std::toupper(max_enum[j]);
+
+                uc_max_enum.push_back(max_enum);
+            }
+
+            std::vector<std::string> lc_enum;
+            for (size_t i = 0; i < m_abstract.size(); ++i)
+                lc_enum.push_back(m_abstract[i].first);
+
+            fprintf(fp, "function get_%s_tile_info(idx)\n{\n", lcname.c_str());
+            add_abstracts(fp, "return (get_%s_tile_info(idx));", lc_enum, uc_max_enum);
+            fprintf(fp, "}\n\n");
+
+            fprintf(fp, "function tile_%s_count(idx)\n{\n", lcname.c_str());
+            add_abstracts(fp, "return (tile_%s_count(idx));", lc_enum, uc_max_enum);
+            fprintf(fp, "}\n\n");
+
+            fprintf(fp, "function get_%s_img(idx) {\n", lcname.c_str());
+            add_abstracts(fp, "return \"%s\";", lc_enum, uc_max_enum);
+            fprintf(fp, "}\n\n");
+        }
+
+        fflush(fp);
+        if (!_write_if_changed(filename, fp))
+            return false;
+
+        fclose(fp);
+    }
+
     return (true);
 }

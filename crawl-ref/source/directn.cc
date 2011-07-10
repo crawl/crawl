@@ -227,7 +227,7 @@ bool direction_chooser::choose_compass()
         else if (key_command == CMD_TARGET_MOUSE_SELECT)
         {
             const coord_def &gc = tiles.get_cursor();
-            if (gc == Region::NO_CURSOR)
+            if (gc == NO_CURSOR)
                 continue;
 
             if (!map_bounds(gc))
@@ -266,7 +266,7 @@ bool direction_chooser::choose_compass()
     while (!moves.isCancel && moves.delta.origin());
 
 #ifdef USE_TILE
-    tiles.place_cursor(CURSOR_MOUSE, Region::NO_CURSOR);
+    tiles.place_cursor(CURSOR_MOUSE, NO_CURSOR);
 #endif
 
     return moves.isValid;
@@ -847,7 +847,7 @@ void full_describe_view()
     }
 #else
     // Clear cursor placement.
-    tiles.place_cursor(CURSOR_TUTORIAL, Region::NO_CURSOR);
+    tiles.place_cursor(CURSOR_TUTORIAL, NO_CURSOR);
     tiles.clear_text_tags(TAG_TUTORIAL);
 #endif
 }
@@ -1781,7 +1781,7 @@ bool direction_chooser::tiles_update_target()
 {
 #ifdef USE_TILE
     const coord_def& gc = tiles.get_cursor();
-    if (gc != Region::NO_CURSOR && map_bounds(gc))
+    if (gc != NO_CURSOR && map_bounds(gc))
     {
         set_target(gc);
         return true;
@@ -2011,7 +2011,7 @@ void direction_chooser::finalize_moves()
     _extend_move_to_edge(moves);
 
 #ifdef USE_TILE
-    tiles.place_cursor(CURSOR_MOUSE, Region::NO_CURSOR);
+    tiles.place_cursor(CURSOR_MOUSE, NO_CURSOR);
 #endif
 }
 
@@ -3966,7 +3966,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
         if (crawl_state.game_is_hints() && hints_monster_interesting(mon))
         {
             std::string msg;
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
             msg = "(<w>Right-click</w> for more information.)";
 #else
             msg = "(Press <w>v</w> for more information.)";
@@ -3992,7 +3992,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
     const bool bloody = is_bloodcovered(where);
     if (crawl_state.game_is_hints() && hints_pos_interesting(where.x, where.y))
     {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         feature_desc += " (<w>Right-click</w> for more information.)";
 #else
         feature_desc += " (Press <w>v</w> for more information.)";
@@ -4011,7 +4011,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 
         if (_interesting_feature(feat))
         {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
             feature_desc += " (Right-click for more information.)";
 #else
             feature_desc += " (Press 'v' for more information.)";

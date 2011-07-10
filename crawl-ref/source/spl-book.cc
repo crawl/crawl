@@ -914,7 +914,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
 {
     std::sort(spells.begin(), spells.end(), _sort_mem_spells);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     const bool text_only = false;
 #else
     const bool text_only = true;
@@ -923,7 +923,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
     ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
                     | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
                     text_only);
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // [enne] Hack.  Use a separate title, so the column headers are aligned.
     spell_menu.set_title(
         new MenuEntry(" Your Spells - Memorisation  (toggle to descriptions with '!')",
@@ -981,7 +981,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
                                  num_race > 1 ? "s" : "");
     }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     // Tiles menus get this information in the title.
     more_str += "   Toggle display with '<w>!</w>'";
 #endif
@@ -1039,7 +1039,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
             new MenuEntry(desc.str(), MEL_ITEM, 1,
                           index_to_letter(i % 52));
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
 #endif
 

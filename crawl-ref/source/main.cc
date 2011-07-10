@@ -3071,7 +3071,7 @@ void world_reacts()
     if (crawl_state.game_is_hints())
     {
         tiles.clear_text_tags(TAG_TUTORIAL);
-        tiles.place_cursor(CURSOR_TUTORIAL, Region::NO_CURSOR);
+        tiles.place_cursor(CURSOR_TUTORIAL, NO_CURSOR);
     }
 #endif
 

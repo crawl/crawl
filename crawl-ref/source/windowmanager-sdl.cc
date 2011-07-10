@@ -1,6 +1,6 @@
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 #ifdef USE_SDL
 
 #include "windowmanager-sdl.h"
@@ -822,4 +822,4 @@ SDL_Surface *SDLWrapper::load_image(const char *file) const
 }
 
 #endif // USE_SDL
-#endif // USE_TILE
+#endif // USE_TILE_LOCAL

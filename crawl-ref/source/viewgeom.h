@@ -1,7 +1,7 @@
 #ifndef VIEWGEOM_H
 #define VIEWGEOM_H
 
-#include "tiledgnbuf.h"
+#include "tilecell.h"
 
 struct screen_cell_t
 {

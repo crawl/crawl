@@ -1,0 +1,5 @@
+Play now:
+{% for id in games %}
+<a href="#play-{{ id }}">{{ games[id]["name"] }}</a>
+{% if id != games.keys()[-1] %} | {% end %}
+{% end %}

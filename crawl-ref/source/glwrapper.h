@@ -1,7 +1,7 @@
 #ifndef GL_WRAPPER_H
 #define GL_WRAPPER_H
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "tiletex.h"
 

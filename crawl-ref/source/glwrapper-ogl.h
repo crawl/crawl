@@ -1,7 +1,7 @@
 #ifndef OGL_GL_WRAPPER_H
 #define OGL_GL_WRAPPER_H
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 #ifdef USE_GL
 
 #include "glwrapper.h"
@@ -58,5 +58,5 @@ protected:
 };
 
 #endif // USE_GL
-#endif // USE_TILE
+#endif // USE_TILE_LOCAL
 #endif // OGL_GL_WRAPPER_H

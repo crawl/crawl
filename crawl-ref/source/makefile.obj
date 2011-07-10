@@ -259,7 +259,21 @@ tilereg-text.o \
 tilereg-title.o \
 tilesdl.o \
 tiletex.o \
-tileview.o
+tileview.o \
+tilecell.o
+endif
+
+ifdef WEBTILES
+OBJECTS += \
+libweb.o \
+tiledoll.o \
+tilemcache.o \
+tilepick.o \
+tilepick-p.o \
+tileweb.o \
+tileview.o \
+tilecell.o \
+tileweb-text.o
 endif
 
 ifdef SDL

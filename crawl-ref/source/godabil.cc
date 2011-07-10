@@ -1348,7 +1348,7 @@ bool zin_sanctuary()
 
     holy_word(100, HOLY_WORD_ZIN, you.pos(), true);
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
     delay(1000);
 #endif

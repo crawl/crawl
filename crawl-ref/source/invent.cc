@@ -346,7 +346,7 @@ InvMenu::InvMenu(int mflags)
     : Menu(mflags, "inventory", false), type(MT_INVLIST), pre_select(NULL),
       title_annotate(NULL)
 {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (Options.tile_menu_icons)
 #endif
         mdisplay->set_num_columns(2);
@@ -512,7 +512,7 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
         set_title("");
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
 {
     if (!Options.tile_menu_icons)
@@ -831,18 +831,10 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
             {
                 const std::string str = "Magical Staves and Rods"; // longest string
                 subtitle += std::string(strwidth(str) - strwidth(subtitle) + 1, ' ');
-                subtitle += "(select all with ";
-#ifdef USE_TILE
-                // For some reason, this is only formatted correctly in the
-                // Tiles version.
-                subtitle += "<w>";
-#endif
+                subtitle += "(select all with <w>";
                 for (unsigned int k = 0; k < glyphs.size(); ++k)
                      subtitle += glyphs[k];
-#ifdef USE_TILE
-                subtitle += "</w><blue>";
-#endif
-                subtitle += ")";
+                subtitle += "</w><blue>)";
             }
         }
 
@@ -1033,7 +1025,7 @@ std::vector<SelItem> select_items(const std::vector<const item_def*> &items,
         menu.load_items(items);
         int new_flags = noselect ? MF_NOSELECT
                                  : MF_MULTISELECT | MF_ALLOW_FILTER;
-        new_flags |= MF_SHOW_PAGENUMBERS;
+        new_flags |= MF_SHOW_PAGENUMBERS | MF_ALLOW_FORMATTING;
         menu.set_flags(new_flags);
         menu.show();
         selected = menu.get_selitems();
@@ -1200,7 +1192,7 @@ unsigned char invent_select(const char *title,
                              Menu::selitem_tfn selitemfn,
                              const std::vector<SelItem> *pre_select)
 {
-    InvMenu menu(flags);
+    InvMenu menu(flags | MF_ALLOW_FORMATTING);
 
     menu.set_preselect(pre_select);
     menu.set_title_annotator(titlefn);

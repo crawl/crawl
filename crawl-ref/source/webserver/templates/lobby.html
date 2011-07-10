@@ -1,0 +1,32 @@
+<span>
+  Games currently running:
+  <a href="javascript:lobby_update()">(Refresh)</a>
+</span>
+<div id="player_list">
+  <table>
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Game</th>
+        <th>Where</th>
+        <th>Idle</th>
+        <th>Spectators</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for running_game in running_games %}
+      <tr class="running_game">
+        <td>
+          <a href="#watch-{{ running_game.username }}">
+            {{ running_game.username }}
+          </a>
+        </td>
+        <td>{{ running_game.game_id }}</td>
+        <td>{{ (running_game.where or "").replace(" ", "&nbsp;") }}</td>
+        <td>{{ int(running_game.idle_time()) }}s</td>
+        <td>{{ len(running_game.watchers) }}</td>
+      </tr>
+      {% end %}
+    </tbody>
+  </table>
+</div>

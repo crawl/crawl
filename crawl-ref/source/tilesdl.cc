@@ -1,6 +1,6 @@
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "artefact.h"
 #include "cio.h"
@@ -75,11 +75,11 @@ static int _screen_sizes[4][8] =
 TilesFramework tiles;
 
 TilesFramework::TilesFramework() :
+    m_active_layer(LAYER_CRT),
     m_windowsz(1024, 768),
     m_viewsc(0, 0),
     m_fullscreen(false),
     m_need_redraw(false),
-    m_active_layer(LAYER_CRT),
     m_buttons_held(0),
     m_key_mod(0),
     m_mouse(-1, -1),
@@ -589,7 +589,7 @@ int TilesFramework::getch_ck()
             case WM_KEYDOWN:
                 m_key_mod |= event.key.keysym.key_mod;
                 key        = event.key.keysym.sym;
-                m_region_tile->place_cursor(CURSOR_MOUSE, Region::NO_CURSOR);
+                m_region_tile->place_cursor(CURSOR_MOUSE, NO_CURSOR);
 
                 // If you hit a key, disable tooltips until the mouse
                 // is moved again.
@@ -1334,5 +1334,4 @@ int TilesFramework::to_lines(int num_tiles)
 {
     return num_tiles * TILE_Y / get_crt_font()->char_height();
 }
-
 #endif
