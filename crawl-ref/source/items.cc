@@ -2243,10 +2243,10 @@ bool drop_last()
     MapType::iterator it = you.last_pickup.begin();
     while (it != you.last_pickup.end())
     {
-        if (you.inv[it->first].quantity > 0)
+        std::pair<int,int> curr_item = *it++;
+        if (you.inv[curr_item.first].quantity > 0)
         {
-            std::pair<int,int> pair = *it++;
-            drop_item(pair.first, pair.second);
+            drop_item(curr_item.first, curr_item.second);
             dropped = true;
         }
     }
