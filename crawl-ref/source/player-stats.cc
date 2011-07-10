@@ -148,12 +148,13 @@ void jiyva_stat_action()
             else
                 other_weights += weight;
         }
-        other_weights = std::max(other_weights - magic_weights/2, 0);
+        // If you are in really heavy armour, then you already are getting a
+        // lot of Str and more won't help much, so weight magic more.
+        other_weights = std::max(other_weights - (evp >= 5 ? 4 : 1) * magic_weights/2, 0);
         magic_weights = div_rand_round(remaining * magic_weights, magic_weights + other_weights);
         other_weights = remaining - magic_weights;
         target_stat[1] += magic_weights;
-        // If you are in anything heavier than dragon armour, you probably don't
-        // care much for Dex.
+        // Choose Str or Dex based on how heavy your armour is. 
         target_stat[(evp >= 5) ? 0 : 2] += other_weights;
     }
     // Add a little fuzz to the target.
