@@ -23,7 +23,7 @@ Gods
 * Trog specialises in antimagic weapon gifts.
 * Yred takes statue kills and forbids Statue Form.
 * Zin's Vitalisation is cheaper and cures petrification, stat boost stackable.
-* Don't allow avoiding good god wrath by swapping via another good god
+* Don't allow avoiding good god wrath by swapping via another good god.
 * Ashenzari: ...
 
 Character
@@ -60,7 +60,7 @@ Interface
 
 Spells
 ------
-* Tornado balance
+* Tornado balance.
 * Shock and Lightning will hit a creature at most twice; damage increased.
 * Removed spells: Teleport Self, Berserk.
 * New spell: Shroud of Golubria (comes in Skald's starting book).
@@ -386,7 +386,7 @@ Spells
 * Don't hurt rC- players with condensation shield.
 * Don't prompt for unwielding weapons branded with Warp Weapon.
 * Don't let Mummies/Lichform cast Sublimation on themselves, do let them cast Passwall.
-* Reduce Haunt duration
+* Reduce Haunt duration.
 * Increase Sandblast to range 2 without stones, range 3 with.
 * Boost Stone Arrow damage from 2d12 at 50 power to 3d11.
 * Change several spell levels to be more appropriate.
