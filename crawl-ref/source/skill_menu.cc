@@ -95,6 +95,14 @@ bool SkillMenuEntry::is_selectable(bool keep_hotkey)
         return false;
     }
 
+    if (is_set(SKMF_RESKILL_FROM)
+        && you.skill_points[m_sk] <= skill_exp_needed(1, m_sk))
+    {
+        if (!keep_hotkey)
+            ++m_letter;
+        return false;
+    }
+
     if (you.skills[m_sk] == 0 && !is_set(SKMF_RESKILL_TO))
         return false;
 
