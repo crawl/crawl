@@ -436,14 +436,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.write_message("set_login_cookie(" +
                                tornado.escape.json_encode(cookie) + "," +
                                str(login_token_lifetime) + ");")
-            pass
 
         elif message.startswith("UnRemember: "):
             message = message[len("UnRemember: "):]
             username, _, token = message.partition(' ')
-            token = long(token)
-            if (token, username) in login_tokens:
-                del login_tokens[(token, username)]
+            try:
+                token = long(token)
+                if (token, username) in login_tokens:
+                    del login_tokens[(token, username)]
+            except ValueError:
+                return
 
         elif message.startswith("Play: "):
             if self.p or self.watched_game: return
