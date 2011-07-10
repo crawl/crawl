@@ -205,7 +205,7 @@ function remember_me_click()
     {
         socket.send("Remember");
     }
-    else
+    else if (get_login_cookie())
     {
         socket.send("UnRemember: " + get_login_cookie());
         set_login_cookie(null);
