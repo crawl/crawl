@@ -350,6 +350,16 @@ bool TilesFramework::_send_cell(int x, int y,
         }
     }
 
+    if (fg_changed)
+    {
+        // Send info about no-exp monsters.
+        const map_cell& mcell = env.map_knowledge(gc);
+        if (mcell.monster() != MONS_NO_MONSTER)
+        {
+            write_message("noexp:%d,", mons_class_flag(mcell.monster(), M_NO_EXP_GAIN));
+        }
+    }
+
     bool overlays_changed = false;
 
     if (cell.num_dngn_overlay != old_cell.num_dngn_overlay)
