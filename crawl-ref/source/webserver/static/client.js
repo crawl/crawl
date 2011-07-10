@@ -10,7 +10,7 @@ var message_queue = [];
 
 var logging_in = false;
 
-var received_close_message = false;
+var showing_close_message = false;
 
 function log(text)
 {
@@ -44,7 +44,7 @@ var layers = ["crt", "normal", "lobby"]
 
 function set_layer(layer)
 {
-    if (received_close_message) return;
+    if (showing_close_message) return;
 
     $.each(layers, function (i, l)
            {
@@ -280,8 +280,8 @@ function connection_closed(msg)
 {
     set_layer("crt");
     $("#chat").hide();
-    $("#crt").html(msg);
-    received_close_message = true;
+    $("#crt").html(msg + "<br><br>");
+    showing_close_message = true;
 }
 
 function play_now(id)
@@ -431,12 +431,30 @@ $(document).ready(
                 }
             };
 
-            socket.onclose = function()
+            socket.onerror = function()
             {
-                if (!received_close_message)
+                if (!showing_close_message)
                 {
                     set_layer("crt");
-                    $("#crt").html("The Websocket connection was closed. Reload to try again.");
+                    $("#crt").html("");
+                    $("#crt").append("The WebSocket connection failed.<br>");
+                    showing_close_message = true;
+                }
+            };
+
+            socket.onclose = function(ev)
+            {
+                if (!showing_close_message)
+                {
+                    set_layer("crt");
+                    $("#crt").html("");
+                    $("#crt").append("The Websocket connection was closed.<br>");
+                    if (ev.reason)
+                    {
+                        $("#crt").append("Reason:<br>" + ev.reason + "<br>");
+                    }
+                    $("#crt").append("Reload to try again.<br>");
+                    showing_close_message = true;
                 }
             };
         }
