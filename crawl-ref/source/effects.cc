@@ -3124,6 +3124,9 @@ bool mushroom_spawn_message(int seen_targets, int seen_corpses)
 // skeleton/destroyed on this update.
 static void _maybe_spawn_mushroom(item_def & corpse, int rot_time)
 {
+    if (crawl_state.disables[DIS_SPAWNS])
+        return;
+
     // We won't spawn a mushroom within 10 turns of the corpse's being created
     // or rotting away.
     int low_threshold  = 5;
