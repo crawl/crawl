@@ -97,6 +97,11 @@ MDEF(y)
     PLUARET(number, int(mons->pos().y) - int(you.pos().y));
 }
 
+MDEF(hp)
+{
+    PLUARET(number, int(mons->hit_points));
+}
+
 static const char* _behaviour_name(beh_type beh);
 MDEF(beh)
 {
@@ -518,6 +523,7 @@ static MonsAccessor mons_attrs[] =
     { "beh" , l_mons_beh  },
     { "muse", l_mons_muse },
     { "meat", l_mons_meat },
+    { "hp"  , l_mons_hp   },
 
     { "targetx", l_mons_targetx },
     { "targety", l_mons_targety },
