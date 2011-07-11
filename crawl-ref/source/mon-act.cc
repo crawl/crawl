@@ -100,6 +100,9 @@ static inline bool _mons_natural_regen_roll(monster* mons)
 // Do natural regeneration for monster.
 static void _monster_regenerate(monster* mons)
 {
+    if (crawl_state.disables[DIS_MON_REGEN])
+        return;
+
     if (mons->has_ench(ENCH_SICK) ||
         (!mons_can_regenerate(mons) && !(mons->has_ench(ENCH_REGENERATION))))
     {
@@ -2083,6 +2086,12 @@ void handle_monster_move(monster* mons)
         if (mons->has_ench(ENCH_DAZED) && one_chance_in(5))
         {
             simple_monster_message(mons, " is lost in a daze.");
+            mons->speed_increment -= non_move_energy;
+            continue;
+        }
+
+        if (crawl_state.disables[DIS_MON_ACT])
+        {
             mons->speed_increment -= non_move_energy;
             continue;
         }
