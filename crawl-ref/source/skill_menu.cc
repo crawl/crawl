@@ -465,8 +465,10 @@ std::string SkillMenuSwitch::get_help()
                    "practise it. Skills marked with '-' will not be trained.";
         }
     case SKM_DO_FOCUS:
-        return "Press the letter of a skill to focus your training on it and "
-               "make it train faster.";
+        return "Press the letter of a skill to cycle between "
+               "<darkgrey>disabled</darkgrey> (-), enabled (+) and "
+               "<white>focused</white> (*). Focused skills train twice as "
+               "fast as others.";
     case SKM_LEVEL_ENHANCED:
         if (m_skm->is_set(SKMF_ENHANCED))
         {
@@ -778,6 +780,7 @@ void SkillMenu::toggle(skill_menu_switch sw)
             refresh_display();
         break;
     case SKM_DO:
+        you.props["skm_do"] = get_state(SKM_DO);
         refresh_names();
         if (m_ff->get_active_item() != NULL
             && !m_ff->get_active_item()->can_be_highlighted())
@@ -885,6 +888,11 @@ void SkillMenu::init_switches()
         m_switches[SKM_DO] = sw;
         sw->add(SKM_DO_PRACTISE);
         sw->add(SKM_DO_FOCUS);
+        if (you.props.exists("skm_do"))
+        {
+            sw->set_state(static_cast<skill_menu_state>(
+                          you.props["skm_do"].get_int()));
+        }
         sw->update();
         sw->set_id(SKM_DO);
         add_item(sw, sw->size(), m_pos);
@@ -1103,7 +1111,7 @@ void SkillMenu::toggle_practise(skill_type sk, int keyn)
     if (get_state(SKM_DO) == SKM_DO_PRACTISE)
         you.train[sk] = !you.train[sk];
     else if (get_state(SKM_DO) == SKM_DO_FOCUS)
-        you.train[sk] = (you.train[sk] == 2) ? 1 : 2;
+        you.train[sk] = (you.train[sk] + 1) % 3;
     else
         die("Invalid state.");
     reset_training();
