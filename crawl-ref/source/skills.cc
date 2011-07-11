@@ -503,8 +503,12 @@ static bool _level_up_check(skill_type sk)
         while (you.training[sk] > 0)
         {
             you.exercises.pop_front();
-            // XXX: Insert it at a random position instead.
-            you.exercises.push_back(sk);
+            int pos = you.training[sk]
+                      + random2(you.exercises.size() - you.training[sk]);
+            std::list<skill_type>::iterator it = you.exercises.begin();
+            while (pos--)
+                ++it;
+            you.exercises.insert(it, sk);
             --you.training[sk];
         }
     }
@@ -636,6 +640,9 @@ void train_skills()
 
     for (int i = 0; i < NUM_SKILLS; ++i)
         check_skill_level_change(static_cast<skill_type>(i));
+
+    // We might have disabled some skills on level up.
+    reset_training();
 }
 
 static int _stat_mult(skill_type exsk, int skill_inc)
