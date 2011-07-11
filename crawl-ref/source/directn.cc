@@ -3502,10 +3502,6 @@ static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi)
     if (mi.is(MB_HALOED))
         descs.push_back("haloed");
 
-    // Unknown shapeshifters shouldn't leak "chaotic".
-    if (mi.is(MB_CHAOTIC) && Options.show_spammy_spoilers)
-        descs.push_back("chaotic");
-
     if (mi.is(MB_POSSESSABLE))
         descs.push_back("possessable"); // FIXME: better adjective
     else if (mi.is(MB_ENSLAVED))

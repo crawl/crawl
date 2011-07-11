@@ -979,6 +979,7 @@ public:
     virtual bool should_redraw() const { return need_redraw; }
     virtual void clear_redraw()        { need_redraw = false; }
     virtual void update_top_prompt(std::string* p_top_prompt);
+    virtual std::vector<std::string> get_monster_desc(const monster_info& mi);
 
 public:
     const item_def* active_item() const;
@@ -1124,6 +1125,17 @@ command_type fire_target_behaviour::get_command(int key)
     }
 
     return targeting_behaviour::get_command(key);
+}
+
+std::vector<std::string> fire_target_behaviour::get_monster_desc(const monster_info& mi)
+{
+    std::vector<std::string> descs;
+    if (const item_def* item = active_item())
+    {
+        if (get_ammo_brand(*item) == SPMSL_SILVER && mi.is(MB_CHAOTIC))
+            descs.push_back("chaotic");
+    }
+    return descs;
 }
 
 static bool _fire_choose_item_and_target(int& slot, dist& target,
