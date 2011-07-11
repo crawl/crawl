@@ -971,8 +971,8 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
     monster_type mon = royal_jelly_ejectable_monster();
 
     // Exclude torment damage.
-    const char *ptr = strstr(aux, "torment");
-    if (you.religion == GOD_JIYVA && you.piety > 160 && ptr == NULL)
+    const bool torment = aux && strstr(aux, "torment");
+    if (you.religion == GOD_JIYVA && you.piety > 160 && !torment)
     {
         int how_many = 0;
         if (dam >= you.hp_max * 3 / 4)

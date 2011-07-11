@@ -209,7 +209,7 @@ void handle_behaviour(monster* mon)
                 mpr("Your flesh rots away as the Orb of Zot is desecrated.",
                     MSGCH_DANGER);
                 rot_hp(loss);
-                ouch(1, NON_MONSTER, KILLED_BY_ROTTING);
+                ouch(1, mon->mindex(), KILLED_BY_ROTTING);
             }
         }
     }
