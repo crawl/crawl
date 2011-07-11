@@ -156,22 +156,6 @@ LUAFN(debug_bouncy_beam)
     return (0);
 }
 
-LUAFN(debug_never_die)
-{
-#if defined(WIZARD) || defined(DEBUG)
-    if (lua_isnone(ls, 1))
-    {
-        luaL_argerror(ls, 1, "needs a boolean argument");
-        return (0);
-    }
-    you.never_die = lua_toboolean(ls, 1);
-#else
-    luaL_error(ls, "only works if DEBUG or WIZARD is defined");
-#endif
-
-    return (0);
-}
-
 // If menv[] is full, dismiss all monsters not near the player.
 LUAFN(debug_cull_monsters)
 {
@@ -333,6 +317,7 @@ static const char* disablements[] =
     "mon_regen",
     "player_regen",
     "hunger",
+    "death",
 };
 
 LUAFN(debug_disable)
@@ -367,7 +352,6 @@ const struct luaL_reg debug_dlib[] =
 { "dump_map", debug_dump_map },
 { "test_explore", _debug_test_explore },
 { "bouncy_beam", debug_bouncy_beam },
-{ "never_die", debug_never_die },
 { "cull_monsters", debug_cull_monsters},
 { "dismiss_adjacent", debug_dismiss_adjacent},
 { "god_wrath", debug_god_wrath},
