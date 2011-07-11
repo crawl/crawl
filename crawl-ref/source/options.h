@@ -97,7 +97,7 @@ public:
     bool        show_gold_turns; // Show gold and turns in HUD.
     bool        show_game_turns; // Show game turns instead of player turns.
     bool        show_beam;       // Show targeting beam by default.
-    bool        show_spammy_spoilers;// Show some static information.
+    bool        show_no_ctele;   // Show -cTele in the status light area.
 
     uint32_t    autopickups;     // items to autopickup
     bool        auto_switch;     // switch melee&ranged weapons according to enemy range

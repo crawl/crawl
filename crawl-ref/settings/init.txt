@@ -251,7 +251,7 @@ sort_menus = inv: true : equipped, freshness, charged
 # show_beam                  = false
 # msg_condense_repeats   = false
 # msg_condense_short     = false
-# show_spammy_spoilers   = false
+# show_no_ctele          = false
 
 #####          Colours (messages and menus) #####
 #
