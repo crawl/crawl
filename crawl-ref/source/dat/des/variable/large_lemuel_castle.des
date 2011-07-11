@@ -60,7 +60,7 @@ function castle_lemuel_subvault_setup(e)
             e.mons("nothing")
          else
             e.subst("*:*$")
-            e.subst("w:w1")
+            e.subst("w:wl")
             e.mons("red draconian / green draconian / yellow draconian / pale draconian /\
                     black draconian / purple draconian")
             e.mons("pale draconian knight / green draconian annihilator /\
