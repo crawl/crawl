@@ -507,6 +507,7 @@ direction_chooser::direction_chooser(dist& moves_,
         behaviour = &stock_behaviour;
 
     behaviour->just_looking = just_looking;
+    behaviour->get_desc_func = args.get_desc_func;
 
     if (hitfunc)
         needs_path = true;
@@ -1489,6 +1490,7 @@ std::vector<std::string> direction_chooser::monster_description_suffixes(
     _push_back_if_nonempty(mi.wounds_description(true), &suffixes);
     _append_container(suffixes, mi.attributes());
     _append_container(suffixes, _get_monster_desc_vector(mi));
+    _append_container(suffixes, behaviour->get_monster_desc(mi));
 
     return suffixes;
 }
@@ -3500,10 +3502,6 @@ static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi)
     if (mi.is(MB_HALOED))
         descs.push_back("haloed");
 
-    // should probably show only for Evilyon's ability (and then always)
-    if (mi.intel() <= I_PLANT && Options.show_spammy_spoilers)
-        descs.push_back("mindless");
-
     // Unknown shapeshifters shouldn't leak "chaotic".
     if (mi.is(MB_CHAOTIC) && Options.show_spammy_spoilers)
         descs.push_back("chaotic");
@@ -4078,4 +4076,12 @@ command_type targeting_behaviour::get_command(int key)
         cmd = CMD_TARGET_CANCEL;
 
     return (cmd);
+}
+
+std::vector<std::string> targeting_behaviour::get_monster_desc(const monster_info& mi)
+{
+    std::vector<std::string> descs;
+    if (get_desc_func)
+        _append_container(descs, (*get_desc_func)(mi));
+    return descs;
 }
