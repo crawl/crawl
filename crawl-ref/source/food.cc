@@ -69,6 +69,9 @@ static void _heal_from_food(int hp_amt, int mp_amt = 0, bool unrot = false,
 void make_hungry(int hunger_amount, bool suppress_msg,
                  bool allow_reducing)
 {
+    if (crawl_state.disables[DIS_HUNGER])
+        return;
+
     if (crawl_state.game_is_zotdef() && you.species == SP_SPRIGGAN)
     {
         you.hunger = 6000;

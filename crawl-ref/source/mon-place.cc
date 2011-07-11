@@ -349,6 +349,9 @@ static void _hell_spawn_random_monsters()
 // one_chance_in(value) checks with the new x_chance_in_y(5, value). (jpeg)
 void spawn_random_monsters()
 {
+    if (crawl_state.disables[DIS_SPAWNS])
+        return;
+
     if (crawl_state.game_is_arena()
         || (crawl_state.game_is_sprint()
             && you.level_type == LEVEL_DUNGEON

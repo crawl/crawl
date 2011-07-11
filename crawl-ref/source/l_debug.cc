@@ -326,6 +326,35 @@ LUAFN(debug_seen_monsters_react)
     return (0);
 }
 
+static const char* disablements[] =
+{
+    "spawns",
+    "mon_act",
+    "mon_regen",
+    "player_regen",
+    "hunger",
+};
+
+LUAFN(debug_disable)
+{
+    COMPILE_CHECK(ARRAYSZ(disablements) == NUM_DISABLEMENTS);
+
+    const char* what = luaL_checkstring(ls, 1);
+    for (int dis = 0; dis < NUM_DISABLEMENTS; dis++)
+        if (what && !strcmp(what, disablements[dis]))
+        {
+            bool onoff = true;
+            if (lua_isboolean(ls, 2))
+                onoff = lua_toboolean(ls, 2);
+            crawl_state.disables.set(dis, onoff);
+            return (0);
+        }
+    luaL_argerror(ls, 1,
+                  make_stringf("unknown thing to disable: %s", what).c_str());
+
+    return (0);
+}
+
 const struct luaL_reg debug_dlib[] =
 {
 { "goto_place", debug_goto_place },
@@ -349,5 +378,6 @@ const struct luaL_reg debug_dlib[] =
 { "check_uniques", debug_check_uniques },
 { "viewwindow", debug_viewwindow },
 { "seen_monsters_react", debug_seen_monsters_react },
+{ "disable", debug_disable },
 { NULL, NULL }
 };

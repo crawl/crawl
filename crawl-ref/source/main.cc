@@ -2823,6 +2823,9 @@ static void _check_sanctuary()
 
 static void _regenerate_hp_and_mp(int delay)
 {
+    if (crawl_state.disables[DIS_PLAYER_REGEN])
+        return;
+
     // XXX: using an int tmp to fix the fact that hit_points_regeneration
     // is only an unsigned char and is thus likely to overflow. -- bwr
     int tmp = you.hit_points_regeneration;

@@ -3392,6 +3392,16 @@ enum final_effect_flavour
     FINEFF_MIRROR_DAMAGE,
 };
 
+enum disable_type
+{
+    DIS_SPAWNS,
+    DIS_MON_ACT,
+    DIS_MON_REGEN,
+    DIS_PLAYER_REGEN,
+    DIS_HUNGER,
+    NUM_DISABLEMENTS
+};
+
 #ifdef USE_TILE
 enum screen_mode
 {
