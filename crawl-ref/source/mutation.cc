@@ -1068,7 +1068,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             lose_stat(STAT_RANDOM, 1, false, "mutating");
         else
         {
-            ouch(3, NON_MONSTER, KILLED_BY_ROTTING);
+            ouch(3, NON_MONSTER, KILLED_BY_ROTTING, "mutation");
             rot_hp(roll_dice(1, 3));
         }
 
