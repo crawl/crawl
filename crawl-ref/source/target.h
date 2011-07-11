@@ -2,6 +2,7 @@
 #define TARGET_H
 
 #include "beam.h"
+#include "mon-info.h"
 
 enum aff_type // sign and non-zeroness matters
 {
@@ -85,5 +86,7 @@ public:
     std::map<coord_def, aff_type> seen;
     std::vector<std::vector<coord_def> > queue;
 };
+
+typedef std::vector<std::string> (*desc_filter) (const monster_info& mi);
 
 #endif

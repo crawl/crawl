@@ -139,7 +139,8 @@ bool spell_direction(dist &spelld, bolt &pbolt,
                       const char *target_prefix = NULL,
                       const char *prompt = NULL,
                       bool cancel_at_self = false,
-                      targetter *hitfunc = NULL);
+                      targetter *hitfunc = NULL,
+                      desc_filter get_desc_func = NULL);
 
 skill_type spell_type2skill (unsigned int which_spelltype);
 

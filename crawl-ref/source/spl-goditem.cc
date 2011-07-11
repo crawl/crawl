@@ -195,6 +195,14 @@ static int _can_pacify_monster(const monster* mon, const int healed)
     return (0);
 }
 
+static std::vector<std::string> _desc_mindless(const monster_info& mi)
+{
+    std::vector<std::string> descs;
+    if (mi.intel() <= I_PLANT)
+        descs.push_back("mindless");
+    return descs;
+}
+
 // Returns: 1 -- success, 0 -- failure, -1 -- cancel
 static int _healing_spell(int healed, bool divine_ability,
                           const coord_def& where, bool not_self,
@@ -211,8 +219,8 @@ static int _healing_spell(int healed, bool divine_ability,
                                       mode != TARG_NUM_MODES ? mode :
                                       you.religion == GOD_ELYVILON ?
                                             TARG_ANY : TARG_FRIEND,
-                                      LOS_RADIUS,
-                                      false, true, true, "Heal", NULL);
+                                      LOS_RADIUS, false, true, true, "Heal",
+                                      NULL, false, NULL, _desc_mindless);
     }
     else
     {

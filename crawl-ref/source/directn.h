@@ -40,12 +40,15 @@ public:
     // Update the prompt shown at top.
     virtual void update_top_prompt(std::string* p_top_prompt) {}
 
+    // Add relevant descriptions to the target status.
+    virtual std::vector<std::string> get_monster_desc(const monster_info& mi);
  private:
     std::string prompt;
 
 public:
     bool just_looking;
     bool compass;
+    desc_filter get_desc_func; // Function to add relevant descriptions
 };
 
 // output from direction() function:
@@ -82,6 +85,7 @@ struct direction_chooser_args
     targeting_behaviour *behaviour;
     bool cancel_at_self;
     bool show_floor_desc;
+    desc_filter get_desc_func;
 
     direction_chooser_args() :
         hitfunc(NULL),
@@ -95,7 +99,8 @@ struct direction_chooser_args
         target_prefix(NULL),
         behaviour(NULL),
         cancel_at_self(false),
-        show_floor_desc(false) {}
+        show_floor_desc(false),
+        get_desc_func(NULL) {}
 };
 
 class direction_chooser
