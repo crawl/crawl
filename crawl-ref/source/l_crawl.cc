@@ -648,6 +648,58 @@ static int crawl_err_trace(lua_State *ls)
     return (lua_gettop(ls));
 }
 
+#ifdef WIZARD
+static int crawl_call_dlua(lua_State *ls)
+{
+    if (!you.wizard)
+        luaL_error(ls, "This function is wizard mode only.");
+
+    const char* code = luaL_checkstring(ls, 1);
+    if (!code)
+        return (0);
+
+    luaL_loadbuffer(dlua, code, strlen(code), "call_dlua");
+    int status = lua_pcall(dlua, 0, LUA_MULTRET, 0);
+
+    if (status)
+    {
+        if (!lua_isnil(dlua, -1))
+        {
+            const char *msg = lua_tostring(dlua, -1);
+            if (msg == NULL)
+                msg = "(error object is not a string)";
+            mpr(msg, MSGCH_ERROR);
+        }
+
+        lua_settop(dlua, 0); // don't bother unwinding, just nuke the stack
+        return 0;
+    }
+
+    if (lua_gettop(dlua) > 0)
+    {
+        // TODO: shuttle things other than a single scalar value
+        if (lua_isnil(dlua, -1))
+            lua_pushnil(ls);
+        else if (lua_isboolean(dlua, -1))
+            lua_pushboolean(ls, lua_toboolean(dlua, -1));
+        else if (lua_isnumber(dlua, -1))
+            lua_pushnumber(ls, lua_tonumber(dlua, -1));
+        else if (const char *ret = lua_tostring(dlua, -1))
+            lua_pushstring(ls, ret);
+        else
+        {
+            mpr("call_dlua: cannot pass non-scalars yet (TODO)", MSGCH_ERROR);
+            lua_pushnil(ls);
+        }
+
+        lua_settop(dlua, 0); // clear the stack
+        return 1;
+    }
+
+    return 0;
+}
+#endif
+
 static const struct luaL_reg crawl_clib[] =
 {
     { "mpr",            crawl_mpr },
@@ -697,6 +749,9 @@ static const struct luaL_reg crawl_clib[] =
     { "err_trace",      crawl_err_trace },
     { "get_command",    crawl_get_command },
     { "endgame",        crawl_endgame },
+#ifdef WIZARD
+    { "call_dlua",      crawl_call_dlua },
+#endif
 
     { "tutorial_hunger", crawl_tutorial_hunger },
     { "tutorial_skill",  crawl_tutorial_skill },
