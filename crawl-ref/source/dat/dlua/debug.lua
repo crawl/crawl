@@ -6,7 +6,7 @@
 require('dlua/userbase.lua')
 
 function debug_wrath()
-  debug.never_die(true)
+  debug.disable("death", true)
 
   while crawl.kbhit() == 0 do
     -- Remove non-near monsters if menv[] full.
@@ -25,5 +25,5 @@ function debug_wrath()
   end
 
   crawl.flush_input()
-  debug.never_die(false)
+  debug.disable("death", false)
 end

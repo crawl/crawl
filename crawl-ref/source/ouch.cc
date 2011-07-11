@@ -1246,7 +1246,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     }
 
 #if defined(WIZARD) || defined(DEBUG)
-    if (you.never_die)
+    if (crawl_state.disables[DIS_DEATH])
     {
         _wizard_restore_life();
         return;
