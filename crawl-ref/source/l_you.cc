@@ -134,6 +134,7 @@ LUARET1(you_taking_stairs, boolean,
         current_delay_action() == DELAY_ASCENDING_STAIRS
         || current_delay_action() == DELAY_DESCENDING_STAIRS)
 LUARET1(you_turns, number, you.num_turns)
+LUARET1(you_time, number, you.elapsed_time)
 LUARET1(you_can_smell, boolean, you.can_smell())
 LUARET1(you_has_claws, number, you.has_claws(false))
 LUARET1(you_level_type_tag, string, you.level_type_tag.c_str())
@@ -215,6 +216,7 @@ static const struct luaL_reg you_clib[] =
 {
     { "turn_is_over", you_turn_is_over },
     { "turns"       , you_turns },
+    { "time"        , you_time },
     { "spells"      , l_you_spells },
     { "abilities"   , l_you_abils },
     { "name"        , you_name },
