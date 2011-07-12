@@ -30,6 +30,7 @@
 #include "directn.h"
 #include "effects.h"
 #include "env.h"
+#include "evoke.h"
 #include "food.h"
 #include "godpassive.h"
 #include "godprayer.h"
@@ -2182,6 +2183,9 @@ bool drop_item(int item_dropped, int quant_drop)
         }
     }
 
+    if (you.manual_index == item_dropped)
+        stop_studying_manual();
+
     // [ds] easy_unequip does not apply to weapons.
     //
     // Unwield needs to be done before copy in order to clear things
@@ -3674,7 +3678,7 @@ bool get_item_by_name(item_def *item, char* specs,
             if (skill != SK_NONE)
             {
                 item->plus  = skill;
-                item->plus2 = 3 + random2(15);
+                item->plus2 = random_range(2000, 3000);
             }
             else
                 mpr("Sorry, no books on that skill today.");

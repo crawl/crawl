@@ -135,6 +135,9 @@ public:
   skill_type sage_bonus_skill;  // If Sage is in effect, which skill it affects.
   int sage_bonus_degree;        // How much bonus XP to give in that skill.
 
+  skill_type manual_skill;
+  int manual_index;
+
   int  skill_cost_level;
   int  total_skill_points;
   int  exp_available;
