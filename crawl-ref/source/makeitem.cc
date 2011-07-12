@@ -2890,8 +2890,8 @@ static void _generate_book_item(item_def& item, bool allow_uniques,
             item.plus = SK_SPELLCASTING + random2(NUM_SKILLS - SK_SPELLCASTING);
         else
             item.plus = random2(SK_UNARMED_COMBAT);
-        // Set number of reads possible before it "crumbles to dust".
-        item.plus2 = 3 + random2(15);
+        // Set number of bonus skill points.
+        item.plus2 = random_range(2000, 3000);
     }
 
     // Manuals and books of destruction are rare enough without replacing

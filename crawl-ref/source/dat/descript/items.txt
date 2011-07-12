@@ -668,7 +668,7 @@ A long handle with a heavy lump on one end.
 %%%%
 manual
 
-A valuable book of magic which allows one to practise a certain skill greatly. As it is used, it gradually disintegrates and will eventually fall apart.
+A valuable book which allows one to practise a certain skill more efficiently.
 %%%%
 meat ration
 

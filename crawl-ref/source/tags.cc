@@ -1030,6 +1030,8 @@ static void tag_construct_you(writer &th)
     marshallByte(th, you.berserk_penalty);
     marshallShort(th, you.sage_bonus_skill);
     marshallInt(th, you.sage_bonus_degree);
+    marshallShort(th, you.manual_skill);
+    marshallInt(th, you.manual_index);
     marshallByte(th, you.level_type);
     marshallString(th, you.level_type_name);
     marshallString(th, you.level_type_name_abbrev);
@@ -1679,6 +1681,15 @@ static void tag_read_you(reader &th)
     you.berserk_penalty   = unmarshallByte(th);
     you.sage_bonus_skill  = static_cast<skill_type>(unmarshallShort(th));
     you.sage_bonus_degree = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_MANUAL)
+    {
+#endif
+        you.manual_skill  = static_cast<skill_type>(unmarshallShort(th));
+        you.manual_index  = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+    }
+#endif
     you.level_type        = static_cast<level_area_type>(unmarshallByte(th));
     you.level_type_name   = unmarshallString(th);
 

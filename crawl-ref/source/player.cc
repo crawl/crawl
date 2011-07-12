@@ -5314,6 +5314,9 @@ void player::init()
     sage_bonus_skill = NUM_SKILLS;
     sage_bonus_degree = 0;
 
+    manual_skill = SK_NONE;
+    manual_index = -1;
+
     skill_cost_level = 1;
     total_skill_points = 0;
     exp_available = 0; // new games get 25

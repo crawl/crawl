@@ -11,6 +11,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "evoke.h"
 #include "externs.h"
 #include "godabil.h"
 #include "godconduct.h"
@@ -730,6 +731,17 @@ static int _train(skill_type exsk, int &max_exp)
 
     if (skill_inc <= 0)
         return (0);
+
+    // Bonus from manual
+    if (exsk == you.manual_skill)
+    {
+        item_def& manual(you.inv[you.manual_index]);
+        const int bonus = std::min<int>(skill_inc, manual.plus2);
+        skill_inc += bonus;
+        manual.plus2 -= bonus;
+        if (!manual.plus2)
+            stop_studying_manual(true);
+    }
 
     if (!you.skills[exsk] && you.training[exsk] > 0
         && x_chance_in_y(skill_inc, 10))

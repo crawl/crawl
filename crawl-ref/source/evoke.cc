@@ -534,30 +534,54 @@ void tome_of_power(int slot)
     }
 }
 
+void stop_studying_manual(bool finish)
+{
+    if (finish)
+    {
+        mprf("You have finished your manual of %s and toss it away.",
+             skill_name(you.manual_skill));
+        dec_inv_item_quantity(you.manual_index, 1);
+    }
+    else
+        mprf("You stop studying about %s.", skill_name(you.manual_skill));
+
+    you.manual_skill = SK_NONE;
+    you.manual_index = -1;
+}
+
 void skill_manual(int slot)
 {
-    // Removed confirmation request because you know it's
-    // a manual in advance.
-    you.turn_is_over = true;
     item_def& manual(you.inv[slot]);
     const bool known = item_type_known(manual);
     if (!known)
         set_ident_flags(manual, ISFLAG_KNOW_TYPE);
     const skill_type skill = static_cast<skill_type>(manual.plus);
 
-    mprf("You read about %s.", skill_name(skill));
-
-    practise(EX_READ_MANUAL, skill);
-
-    if (--manual.plus2 <= 0)
+    if (skill == you.manual_skill)
     {
-        mpr("The manual crumbles into dust.");
-        dec_inv_item_quantity(slot, 1);
+        stop_studying_manual();
+        you.turn_is_over = true;
+        return;
     }
-    else
-        mpr("The manual looks somewhat more worn.");
 
-    xom_is_stimulated(known ? 14 : 64);
+    if (!known)
+    {
+        std::string prompt = make_stringf("This is a manual of %s. Do you want "
+                                          "to study it?", skill_name(skill));
+        if (!yesno(prompt.c_str()))
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+    }
+
+    if (!is_invalid_skill(you.manual_skill))
+        stop_studying_manual();
+
+    mprf("You start studying about %s.", skill_name(skill));
+    you.manual_skill = skill;
+    you.manual_index = slot;
+    you.turn_is_over = true;
 }
 
 static bool _box_of_beasts(item_def &box)
