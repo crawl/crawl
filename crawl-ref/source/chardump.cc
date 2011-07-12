@@ -855,13 +855,7 @@ static void _sdump_skills(dump_params &par)
 {
     std::string &text(par.text);
 
-    if (par.se)
-        text += " You had ";
-    else
-        text += " You have ";
-
-    text += make_stringf("%d experience left.\n", you.exp_available);
-    text += "\n   Skills:\n";
+    text += "   Skills:\n";
 
     dump_skills(text);
     text += "\n";
