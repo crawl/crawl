@@ -927,7 +927,7 @@ function center_minimap()
 function set_minimap(cx, cy, colour)
 {
     if (!minimap_enabled) return;
-    
+
     var x = cx - minimap_x;
     var y = cy - minimap_y;
     minimap_ctx.fillStyle = colour;
