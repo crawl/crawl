@@ -172,6 +172,7 @@ death_yak CORPSE_DEATH_YAK
 elephant CORPSE_ELEPHANT
 elephant_dire CORPSE_DIRE_ELEPHANT
 elephant_demonic CORPSE_HELLEPHANT
+catoblepas CORPSE_CATOBLEPAS
 
 ### Non-animals
 %sdir dc-mon
