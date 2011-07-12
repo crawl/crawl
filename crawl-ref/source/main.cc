@@ -687,9 +687,10 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         break;
 
     case '=':
-        mprf("Cost level: %d  Skill points: %d  Next cost level: %d",
+        mprf("Cost level: %d  Skill points: %d  Next cost level: %d Skill cost: %d",
               you.skill_cost_level, you.total_skill_points,
-              skill_cost_needed(you.skill_cost_level + 1));
+              skill_cost_needed(you.skill_cost_level + 1),
+              calc_skill_cost(you.skill_cost_level));
         break;
 
     case 'X':
