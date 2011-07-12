@@ -417,7 +417,7 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
                 draw_cell(cell, coord_def(x, y), false, m_next_flash_colour);
             }
         }
-    
+
     m_next_view_tl = view2grid(coord_def(1, 1));
     m_next_view_br = view2grid(crawl_view.viewsz);
 

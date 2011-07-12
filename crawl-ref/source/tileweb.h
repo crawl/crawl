@@ -73,7 +73,7 @@ protected:
         LAYER_MAX,
     };
     LayerID m_active_layer;
-    
+
     unsigned int m_last_tick_redraw;
     bool m_need_redraw;
 

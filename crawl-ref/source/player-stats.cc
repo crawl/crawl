@@ -154,7 +154,7 @@ void jiyva_stat_action()
         magic_weights = div_rand_round(remaining * magic_weights, magic_weights + other_weights);
         other_weights = remaining - magic_weights;
         target_stat[1] += magic_weights;
-        // Choose Str or Dex based on how heavy your armour is. 
+        // Choose Str or Dex based on how heavy your armour is.
         target_stat[(evp >= 5) ? 0 : 2] += other_weights;
     }
     // Add a little fuzz to the target.
