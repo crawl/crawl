@@ -381,7 +381,7 @@ function render_cell(cx, cy)
         render_cursors(cx, cy);
 
         // Redraw the cell below if it overlapped
-        var cell_below = get_tile_cache(x, y + 1);
+        var cell_below = get_tile_cache(cx, cy + 1);
         if (cell_below && cell_below.sy && (cell_below.sy < 0))
             render_cell(cx, cy + 1);
 
@@ -442,7 +442,11 @@ function get_cell_map_feature(cell)
             return MF_MONS_PEACEFUL;
         else if (att_flag == TILE_FLAG_PET)
             return MF_MONS_FRIENDLY;
-        return MF_MONS_HOSTILE;
+
+        if (cell.noexp)
+            return MF_MONS_NO_EXP;
+        else
+            return MF_MONS_HOSTILE;
     }
     else if (fg_idx >= TILE_CLOUD_FIRE_0 && fg_idx <= TILE_CLOUD_RAGING_WINDS_1)
         return MF_FEATURE;
@@ -726,15 +730,25 @@ function draw_foreground(x, y, cell)
             status_shift += 8;
         }
     }
-    else if (fg & TILE_FLAG_STAB)
+
+    if (fg & TILE_FLAG_BEH_MASK)
     {
-        draw_icon(TILEI_STAB_BRAND, x, y);
-        status_shift += 15;
-    }
-    else if (fg & TILE_FLAG_MAY_STAB)
-    {
-        draw_icon(TILEI_MAY_STAB_BRAND, x, y);
-        status_shift += 8;
+        var beh_flag = fg & TILE_FLAG_BEH_MASK;
+        if (beh_flag == TILE_FLAG_STAB)
+        {
+            draw_icon(TILEI_STAB_BRAND, x, y);
+            status_shift += 15;
+        }
+        else if (beh_flag == TILE_FLAG_MAY_STAB)
+        {
+            draw_icon(TILEI_MAY_STAB_BRAND, x, y);
+            status_shift += 8;
+        }
+        else if (beh_flag == TILE_FLAG_FLEEING)
+        {
+            draw_icon(TILEI_FLEEING, x, y);
+            status_shift += 4;
+        }
     }
 
     if (fg & TILE_FLAG_POISON)
@@ -852,7 +866,7 @@ function draw_tile(idx, cx, cy, img_name, info_func, ofsx, ofsy, y_max)
 
     if (sy < 0)
     {
-        var cell = get_tile_cache(cx, cy);
+        var cell = get_tile_cache(cx + view_x, cy + view_y);
         if (sy < (cell.sy || 0))
             cell.sy = sy;
     }
