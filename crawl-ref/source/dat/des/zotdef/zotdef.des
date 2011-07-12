@@ -26,7 +26,9 @@ LFLAGS:  no_magic_map
 MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
             size = 2, walk_dist = 2, spread_rate= 35 }
-KMASK:  *| = no_monster_gen
+KMASK:  * = no_monster_gen
+KMASK:  | = no_monster_gen
+KPROP: *| = no_rtele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -89,7 +91,9 @@ MARKER:  Z = lua:item_pickup_change_flags { \
 MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
             size = 2, walk_dist = 2, spread_rate= 35 }
-KMASK:  *| = no_monster_gen
+KMASK:  * = no_monster_gen
+KMASK:  | = no_monster_gen
+KPROP: *| = no_rtele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXXXXXXXXxxxxxxxxxx
@@ -152,7 +156,9 @@ LFLAGS:  no_magic_map
 MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
             size = 2, walk_dist = 2, spread_rate= 35 }
-KMASK:  *| = no_monster_gen
+KMASK:  * = no_monster_gen
+KMASK:  | = no_monster_gen
+KPROP: *| = no_rtele_into
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -227,7 +233,9 @@ LFLAGS:  no_magic_map
 MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
             size = 2, walk_dist = 2, spread_rate= 35 }
-KMASK:  *| = no_monster_gen
+KMASK:  * = no_monster_gen
+KMASK:  | = no_monster_gen
+KPROP: *| = no_rtele_into
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 X.......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.......X
