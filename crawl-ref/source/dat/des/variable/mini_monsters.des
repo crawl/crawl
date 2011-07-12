@@ -906,9 +906,9 @@ TAGS:    unique_kobold_supper_lexackson no_monster_gen
 KPROP:   56' = no_rtele_into
 MONS:    kobold, plant, bush
 : if you.absdepth() < 4 then
-KMONS:   7 =  kobold ; knife . dart
+KMONS:   7 =  kobold ; dagger . dart
 : else
-KMONS:   7 =  big kobold ; knife . throwing net q:2
+KMONS:   7 =  big kobold ; dagger . throwing net q:2
 : end
 KMONS:   1 = kobold name:hungry name_adjective ; nothing
 SUBST:   . = e f .:150
