@@ -53,8 +53,9 @@ int skill_cost_needed(int level)
         // and use minotaur as a reference (exp apt: 140). This means that for
         // a species with 140 exp apt, skill_cost_level will be about the same
         // as XL (a bit lower in the beginning).
+        // Changed to exp apt 130 to slightly increase mid and late game prices.
         species_type sp = you.species;
-        you.species = SP_MINOTAUR;
+        you.species = SP_KENKU;
 
         // The average starting skill total is actually lower, but monks get
         // about 1200, and they would start around skill cost level 4 if we
