@@ -1152,15 +1152,6 @@ bool spell_is_empowered(spell_type spell)
 
     switch (spell)
     {
-    case SPELL_SWIFTNESS:
-        // looking at player_movement_speed, this should be correct ~DMB
-        if (player_movement_speed() > 6
-            && you.duration[DUR_CONTROLLED_FLIGHT] > 0
-            && you.duration[DUR_SWIFTNESS] < 1)
-        {
-            return (true);
-        }
-        break;
     case SPELL_STONESKIN:
         if (you.duration[DUR_TRANSFORMATION] > 0
             && you.form == TRAN_STATUE

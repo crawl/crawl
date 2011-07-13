@@ -570,7 +570,7 @@ This spell forms a mystical bond between the caster and a wielded short blade, m
 %%%%
 Swiftness
 
-This spell imbues its caster with the ability to achieve great movement speeds. Flying spellcasters can move even faster.
+This spell imbues its caster with the ability to achieve great movement speeds.
 %%%%
 Teleport Other
 
