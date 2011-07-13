@@ -116,6 +116,7 @@ Items
 * Modified spellbooks: Conjurations; Frost; Ice.
 * Buckler nerf.
 * Mace of Brilliance comes with a halo.
+* Ammo of dispersal only disperses if it does damage.
 * Reflected missiles get their full range on the way back.
 * Randart heavy armours tend to come with better enchantment.
 * Cards: the orb (new card), destruction cards buffed.
