@@ -543,7 +543,7 @@ void stop_studying_manual(bool finish)
         dec_inv_item_quantity(you.manual_index, 1);
     }
     else
-        mprf("You stop studying about %s.", skill_name(you.manual_skill));
+        mprf("You stop studying %s.", skill_name(you.manual_skill));
 
     you.manual_skill = SK_NONE;
     you.manual_index = -1;
@@ -578,7 +578,7 @@ void skill_manual(int slot)
     if (!is_invalid_skill(you.manual_skill))
         stop_studying_manual();
 
-    mprf("You start studying about %s.", skill_name(skill));
+    mprf("You start studying %s.", skill_name(skill));
     you.manual_skill = skill;
     you.manual_index = slot;
     you.turn_is_over = true;
