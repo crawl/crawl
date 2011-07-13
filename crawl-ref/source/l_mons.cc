@@ -206,6 +206,13 @@ MDEF(dancing_weapon)
     return (1);
 }
 
+MDEF(wont_attack)
+{
+    ASSERT_DLUA;
+    lua_pushboolean(ls, mons->wont_attack());
+    return (1);
+}
+
 static const char *_monuse_names[] =
 {
     "nothing", "open_doors", "starting_equipment", "weapons_armour"
@@ -516,6 +523,7 @@ static MonsAccessor mons_attrs[] =
     { "shapeshifter",   l_mons_shapeshifter },
     { "mimic",          l_mons_mimic },
     { "dancing_weapon", l_mons_dancing_weapon },
+    { "wont_attack",    l_mons_wont_attack },
 
     { "x"   , l_mons_x    },
     { "y"   , l_mons_y    },
