@@ -2043,10 +2043,9 @@ int player_movement_speed(bool ignore_burden)
     if (!ignore_burden && you.light_flight())
         mv--;
 
-    // Swiftness is an Air spell, it doesn't work in water, but
-    // flying players will move faster.
+    // Swiftness doesn't work in water.
     if (you.duration[DUR_SWIFTNESS] > 0 && !you.in_water())
-        mv -= (you.flight_mode() == FL_FLY ? 4 : 2);
+        mv -= 2;
 
     // Mutations: -2, -3, -4, unless innate and shapechanged.
     // Not when swimming, since it is "cover the ground quickly".
