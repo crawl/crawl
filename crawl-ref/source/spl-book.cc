@@ -578,8 +578,20 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
     if (you.species == SP_DEEP_DWARF && spell == SPELL_REGENERATION)
         rc = true;
 
-    if (you.species == SP_FELID && spell == SPELL_PORTAL_PROJECTILE)
+    if (you.species == SP_FELID
+        && (spell == SPELL_PORTAL_PROJECTILE
+         // weapon branding is useless
+         || spell == SPELL_FIRE_BRAND
+         || spell == SPELL_FREEZING_AURA
+         || spell == SPELL_LETHAL_INFUSION
+         || spell == SPELL_WARP_BRAND
+         || spell == SPELL_EXCRUCIATING_WOUNDS
+         || spell == SPELL_POISON_WEAPON
+         // could be useful if it didn't require wielding
+         || spell == SPELL_TUKIMAS_DANCE))
+    {
         rc = true;
+    }
 
     return (rc);
 }

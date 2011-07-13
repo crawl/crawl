@@ -1224,10 +1224,6 @@ bool spell_is_useless(spell_type spell, bool transient)
         if (transient && you.is_levitating())
             return (true);
         break;
-    case SPELL_REGENERATION:
-        if (you.species == SP_DEEP_DWARF)
-            return (true);
-        break;
     case SPELL_INVISIBILITY:
         if (transient && (you.duration[DUR_INVIS] > 0 || you.backlit()))
             return (true);
@@ -1240,23 +1236,11 @@ bool spell_is_useless(spell_type spell, bool transient)
         if (you.can_see_invisible(false, false))
             return (true);
         break;
-    // weapon branding is useless
-    case SPELL_FIRE_BRAND:
-    case SPELL_FREEZING_AURA:
-    case SPELL_LETHAL_INFUSION:
-    case SPELL_WARP_BRAND:
-    case SPELL_EXCRUCIATING_WOUNDS:
-    case SPELL_POISON_WEAPON:
-    // could be useful if it didn't require wielding
-    case SPELL_TUKIMAS_DANCE:
-        if (you.species == SP_FELID)
-            return (true);
-        break;
     case SPELL_DARKNESS:
         // mere corona is not enough, but divine light blocks it completely
         if (transient && you.haloed())
             return true;
-        if (you.religion == GOD_SHINING_ONE && player_under_penance())
+        if (you.religion == GOD_SHINING_ONE && !player_under_penance())
             return true;
         break;
     default:
