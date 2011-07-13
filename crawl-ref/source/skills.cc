@@ -460,6 +460,11 @@ void reset_training()
             for (int sk = 0; sk < NUM_SKILLS; ++sk)
                 if (you.train[sk] && you.skills[sk])
                     you.training[sk] = you.train[sk];
+
+        // Focused skills get at least 20% training.
+        for (int sk = 0; sk < NUM_SKILLS; ++sk)
+            if (you.train[sk] == 2 && you.training[sk] < 20)
+                you.training[sk] += 5 * (5 - you.training[sk] / 4);
     }
 
     if (total_unknown > MAX_TRAINING_UNKNOWN)
