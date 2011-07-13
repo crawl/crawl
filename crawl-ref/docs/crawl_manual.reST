@@ -119,8 +119,8 @@ should give you a rough impression of the weaknesses and strengths of the
 different species.
 
 For some combinations of species and background, you must make further choices
-before starting the game. For example, you must pick a starting book for
-Conjurers and a starting weapon for Gladiators.
+before starting the game. For example, you must pick a starting weapon for
+Gladiators and a magical device for Artificers.
 
 When you start a new character (or load an old one) and want to get a rough
 impression, you may examine it with the following commands:
@@ -138,7 +138,7 @@ i
   the text for your god, should you have started with a religion
 
 %
-  a general, if terse, overview over your gear and most attributes
+  a general, if terse, overview of your gear and most attributes
 
 Ctrl-O
   an overview of the part of the dungeon you discovered so far
@@ -171,7 +171,7 @@ Magic
   other special abilities. They are displayed in the same way as hit points;
   nothing bad happens if these drop to zero, except, of course, that you can't
   cast any spells. Resting restores these, too. It is uncommon to have more than
-  50 magic points (without using external devices.)
+  50 magic points (without using external devices).
 
 Next come your defences. For all of them, more is better.
 
@@ -220,13 +220,6 @@ Experience Level
   Abbreviated to "XL". Starting characters have experience level 1; the highest
   possible level is 27. Gaining a level nets additional hit and magic points,
   and will sometimes grant spell slots or primary attributes (see below).
-
-Experience Pool
-  Abbreviated to "Exp". The Experience Pool is increased whenever you gain
-  experience (usually by killing monsters), and it is decreased by various
-  actions, increasing the relevant skills commensurately. Having an eye on the
-  Pool is important if you want to train specific skills. See section E for more
-  details.
 
 Place
   This shows the branch you are currently in, as well as the level within the
@@ -475,16 +468,15 @@ Whenever you are curious about the total amount of experience accumulated so
 far, or how much experience is needed to advance to the next level, press 'E' or
 '%'.
 
-Additionally, the experience you gain goes into your Experience Pool. This pool
-of points is used up whenever you practise a skill. These skills represent
-proficiency with all areas of endeavour an ambitious adventurer might need in
-the dungeons. They range from different weapon skills (both for close and ranged
-combat) to many magical skills and several additional activities like Dodging or
-Stabbing. See Appendix `3. List  of Skills`_ for a detailed description of all
-skills present in Crawl. The ease with which a character learns a skill depends
-solely on species. These aptitudes are hinted at in the list of species (see
-Appendix `1. List of Character Species`_). For the curious, the full table can
-be checked in aptitudes.txt (also from the help screen during play), though it
+Additionally, the experience you gain is used to train your skills. These skills
+represent proficiency with all areas of endeavour an ambitious adventurer might
+need in the dungeons. They range from different weapon skills (both for close
+and ranged combat) to many magical skills and several additional activities like
+Dodging or Stabbing. See Appendix `3. List  of Skills`_ for a detailed description
+of all skills present in Crawl. The ease with which a character learns a skill
+depends solely on species. These aptitudes are hinted at in the list of species
+(see Appendix `1. List of Character Species`_). For the curious, the full table
+can be checked in aptitudes.txt (also from the help screen during play), though it
 is not necessary to bother with the numbers in order to win!
 
 You can see your character's skills by pressing the 'm' key; the higher the
@@ -493,21 +485,21 @@ few skills already trained (which depends essentially on their background),
 those which are not present have to be learned from scratch. Each skill can go
 up to 27.
 
-Each time your character gains experience points, those points become available
-to increase skills. You convert experience points into skill levels by
-practising the skill in question (e.g. fighting with a certain type of weapon,
-casting a certain type of spell, or walking around unnoticed to practise
-stealth). The amount of unassigned experience points is shown on the main screen
-as well as on the skills screen, and the number in blue next to each skill
-counts up from 0% to 100% as you get closer to gaining a level in that skill.
+Each time your character gains experience points, those points will be used to
+increase certain skills. There are two ways to assigning skills to practise: one
+is an automatic mode, which puts experience points into the skills you have used
+recently. The other one is a manual mode, where you specifically select the
+skills to train. You can switch between the modes by pressing '/' in the
+character skill screen ('m'); also be sure to read that screen's help text
+should you want to tweak your skillset. Note to new players: it is generally not
+necessary to finetune the skill selection.
 
 You can elect not to practise a particular skill by selecting it in the skill
 screen (making it turn dark grey). This means that you will be less likely to
 increase that skill when you practise it (and will also not spend as many
 experience points on it). The main use of turning off skills is to spend more
 points on other skills: You will not lose any experience by deselecting skills:
-you will rather spend it elsewhere. It can happen that the pool grows rather
-large in this way.
+you will rather spend it elsewhere.
 
 Occasionally you may find a manual of a skill which allows to make quick
 progress in this area. Whenever you read it, all your free experience is
@@ -587,7 +579,7 @@ adventures, how these are displayed, and what commands there are to use them:
 "        amulets        (use 'P'ut on and 'R'emove)
 \\ or |  staves, rods   (use 'w'ield for staves; 'v' for evoking rods)
 \+ or :  spellbooks     (use 'r'ead and 'M'emorise and 'z'ap)
-}        miscellaneous  (use generally 'w'ield and 'v' for evoking)
+}        miscellaneous  (use 'V' for evoking from the inventory)
 $        gold           (picking it up takes no turns)
 =======  =============  ================================================
 
@@ -748,8 +740,7 @@ skill. On the other hand, body armour will also provide some guaranteed damage
 reduction, and very heavy armours are distinguishedly better at this.
 
 A Shield normally affects neither your AC nor your evasion, but it lets you
-block some of the attacks aimed at you and absorbs some of the damage you would
-otherwise receive from things like dragon breath and lightning bolts. Wearing a
+attempt to block melee attacks and some ranged attacks aimed at you. Wearing a
 shield (especially a large shield) makes you less effective in hand combat and
 hampers your ability to cast spells. Shields are more effective when you're
 fighting a small number of foes than when you're surrounded. There are three
@@ -866,10 +857,9 @@ They hold spells which you can cast without having to memorise them first. You
 must wield a rod like a weapon in order to gain from its power. Rods can be
 invoked with the 'v' command when wielded. They have a pool of magical energy
 which regenerates according to the rod's enchantment (which can be increased
-using scrolls of recharging) and your Evocations skill. It also bears mentioning
-that rods recharge their energies from the available MP of the person who wields
-them. They're shorter than full-length staves and thus use the Maces &amp; Flails
-skill instead of Staves when used as a cudgel.
+using scrolls of recharging) and your Evocations skill. They're shorter than
+full-length staves and thus use the Maces &amp; Flails skill instead of Staves when
+used as a cudgel.
 
 \+ Books
 ========================================
@@ -920,7 +910,7 @@ $ Gold
 ========================================
 
 Gold can be used to buy items should you run across shops. (Shops do not buy, by
-the way.) There are also a few more esoteric uses for gold. Gold coins do not
+the way). There are also a few more esoteric uses for gold. Gold coins do not
 have any weight in Crawl.
 
 Whenever you pick up gold, your total wealth is shown as well. Should you want
@@ -987,7 +977,7 @@ spellcasting.
 There are many skills related to magic, the principal one being Spellcasting.
 Spellcasting determines the number of Magic Points available; it also helps in
 several respects during the actual casting of spells. Next, there are several
-general magical skill areas (Conjuration, Enchantment, Summoning, Necromancy,
+general magical skill areas (Conjuration, Hexes, Charms, Summoning, Necromancy,
 Translocation and Transmutation) as well as several elemental areas (Fire, Ice,
 Air and Earth) and, finally, Poison. A particular spell can belong to (and thus
 train) up to three areas. Being good in the areas of a spell will improve the
@@ -1037,10 +1027,10 @@ spell) before casting anything.
 There is a completely different way to the use spells: via rods. These are
 magical staves holding a number of spells. Rods store a certain number of magic
 points, which are used for powering the spells they contain; when not fully
-charged, they regenerate magic points from their owner's pool (this happens much
-more quickly if the rod is wielded). You can spend scrolls of recharging on rods
-in order to increase the maximal size of their magical reservoir. The
-effectiveness of your rod's spells is governed by your Evocations skill.
+charged, they regenerate magic points gradually. You can spend scrolls of
+recharging on rods in order to increase the maximal size of their magical
+reservoir. The effectiveness of your rod's spells is governed by your
+Evocations skill.
 
 Be careful of magic-using enemies! Some of them can use magic just as well as
 you, if not better, and often use it intelligently.
@@ -1051,8 +1041,8 @@ I. Targeting
 
 When throwing something, evoking certain wands, or casting spells, you are asked
 for a direction. There are several ways to tell Crawl which monster to target.
-(The following list assumes the option setting default_target = true which is
-default.)
+(The following list assumes the option setting default_target = true, which is
+the default.)
 
 You can press '?' when asked for a direction; this will bring up a help screen.
 Otherwise, you use the following commands:
@@ -1162,9 +1152,9 @@ is to quaff a potion of cure mutation, which will attempt to remove one or more
 random mutations.
 
 A special case are Demonspawn. Characters of this species get certain special
-powers during their career; these are listed in red. They are permanent and can
-never be removed. If one of your Demonspawn powers has been augmented by a
-mutation, it is displayed in a lighter red colour.
+powers during their career; these are listed in magenta. They are permanent and
+can never be removed. If one of your Demonspawn powers has been augmented by a
+mutation, it is displayed in a lighter colour.
 
 Many a species starts with some special intrinsic feats, like the greater speed
 of Centaurs or Spriggans, or the eating habits of Trolls, Kobolds and others.
@@ -1483,7 +1473,7 @@ Hill Orcs
 
   Many orcs feel superior to all other species and beings, and they have formed
   a religion around that idea. Only Hill Orcs can worship Beogh, the Orc god,
-  and Hill Orc Priests may start in Beogh's service.
+  and Hill Orc Priests start in Beogh's service.
 
 Merfolk
   The Merfolk are a hybrid species of half-human, half-fish that typically live
@@ -1579,7 +1569,7 @@ Ogres
 
   Their preferred methods of avoiding beatings are dodging and the use of
   shields. Many Ogres find it natural to wield some large and blunt weapon.
-  (Countless lethal incidents have taught them to leave most edged weapons be.)
+  (Countless lethal incidents have taught them to leave most edged weapons be).
   While all sophisticated forms of missile combat are too awkward for them, they
   are good at throwing things, in particular boulders.
 
@@ -1702,7 +1692,7 @@ Sludge Elves
   This is a somewhat degenerate species of Elves. They are mirror images of
   normal Elves in some respects: they have no special proficiency with bows or
   swords (long or short), nor do they have any aptitude in the traditional areas
-  of High Elven magic (enchantments and conjurations). On the other hand, they
+  of High Elven magic (charms and conjurations). On the other hand, they
   are superlative transmuters, and are comfortable dabbling in necromantic,
   poison and elemental magic. As fighters, they are often more dangerous unarmed
   than armed. They advance in levels slightly slower than Humans.
@@ -1894,9 +1884,11 @@ Berserkers
   dungeon with a mace or axe, and dressed in animal skins.
 
 Priests
-  Priests serve either Zin, the ancient and revered God of Law. Hill Orcs may
-  choose to follow the Orc god Beogh instead. Priests enter the dungeon with a
-  traditional weapon and a priestly robe.
+  Priests serve Zin, the ancient and revered God of Law, and are tasked with
+  bringing Zin's teachings to the creatures of the Dungeon. Hill Orcs follow
+  the Orc god Beogh instead, who will eventually allow them to convert an army
+  of orcs to their cause. Priests enter the dungeon with a traditional weapon
+  and a priestly robe.
 
 Healers
   The Healer is a priest of Elyvilon. Healers begin with minor healing powers,
@@ -1919,20 +1911,16 @@ Abyssal Knights
   disorder in return.
 
 Skalds
-  Skalds are warriors whose traditions include chantings songs or even reciting
-  poetry while going into battle. Such chants of more skilled Skalds are nothing
-  else than a form of magic spells, useful for augmenting their melee prowess.
+  Formidable warriors in their own rights, Skalds practice a form of augmenting
+  battle magic that is either chanted or sung. Unique to the highlands in which
+  they originate, these spells and formulae are second nature: they can either
+  inspire greatness in themselves and their allies, or fear in the hearts of their
+  enemies.
 
 Warpers
   Warpers specialise in translocation magic, and are experts in travelling long
   distances and positioning themselves precisely and use this to their advantage
   in melee or missile combat.
-
-Arcane Marksmen
-  Arcane Marksmen specialise in dealing ranged damage via enchanted weapons.
-  Initially, they may choose either elemental damage types or translocation
-  effects. Additionally, they have spells which will aid in staying at a
-  distance and defend against other ranged weapon users.
 
 Assassins
   An Assassin is a stealthy character who is especially good at killing, using
@@ -1985,13 +1973,11 @@ Conjurers
   spells. Like Wizards, the Conjurer starts with the Magic Dart spell.
 
 Enchanters
-  The Enchanter specialises in the more subtle area of enchantment magic.
-  Although not as directly powerful as conjurations, high-level enchantments
-  offer a wide range of very handy effects. The Enchanter begins with lightly
-  enchanted weapons and armour, but no direct damage spell (since enchantments
-  do not deal with direct attacks). Instead, they begin with the Corona spell
-  and some enchanted darts, which should help them out until they can use the
-  higher level enchantment spells.
+  The Enchanter specialises in the subtle art of hexes. Instead of directly
+  damaging foes, hexes disable and debilitate them, allowing the Enchanter to
+  finish the helpless creatures in combat. The Enchanter begins with lightly
+  enchanted weapons and armour, as well as the Corona spell and some enchanted
+  darts, which should help them out until they can use the higher level hexes.
 
 Summoners
   The Summoner specialises in calling creatures from this and other worlds to
@@ -2006,7 +1992,8 @@ Necromancers
 
 Transmuters
   Transmuters specialise in transmutation magic, and can cause strange changes
-  in themselves and others.
+  in themselves and others. They deal damage primarily in unarmed combat, often
+  using transformations to enhance their defensive and offensive capabilities.
 
 Venom Mages
   Venom Mages specialise in poison magic, which is extremely useful in the
@@ -2023,10 +2010,10 @@ Elementalists
 
   Ice Magic
     offers a balance between destructive conjurations and protective
-    enchantments.
+    charms.
 
   Air Magic
-    provides many useful enchantments in addition to some unique destructive
+    provides many useful charms in addition to some unique destructive
     capabilities.
 
   Earth Magic
@@ -2348,7 +2335,7 @@ a
 
 m
   Show skill screen. You can get descriptions of present skills from that
-  screen, as well as the aptitudes.
+  screen, as well as the aptitudes. The screen has its own help text.
 
 i
   Show inventory list. Inside this list, pressing a slot key shows information
@@ -2542,17 +2529,20 @@ R
 Item interaction (floor)
 ========================================
 
-d
-  Drop an item. Within the drop list, you can select slots based on a regular
-  expression by pressing Ctrl-F, followed by the regex.
-
-#d
-  Drop exact number of items, where # is a number.
-
 g or ,
   Pick up items; press twice for pick up menu. Use a prefix to pick up smaller
   quantities. As with dropping, Ctrl-F allows you to  pick up items matching a
   regular expression.
+
+d
+  Drop an item. Within the drop list, you can select slots based on a regular
+  expression by pressing Ctrl-F, followed by the regex.
+
+d#
+  Drop exact number of items, where # is a number.
+
+D
+  Drop item(s) picked up last.
 
 c
   Chop up a corpse. This will switch to the knife in your pack (unless you wield
@@ -2865,7 +2855,7 @@ Conf
   of healing for immediate cure.
 
 Fast
-  All of your actions are twice as fast (this can cause magic contamination).
+  All of your actions are faster (this can cause magic contamination).
 
 Swift
   You move at a somewhat higher speed. This only means movement speed.
@@ -2927,8 +2917,8 @@ DMsl
 Rot
   This is a very harmful, necromantic ailment. You will lose maximum hit points
   over time. Only healing potions and wands or and certain abilities restore
-  these. The rotting itself is cured with potions of healing or by waiting it
-  out.
+  these, once lost. The rotting status itself is cured with potions of healing
+  or by waiting it out.
 
 Ins
   You are insulated, i.e. resistant to electric shocks.
