@@ -1576,7 +1576,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
 {
     const actor* agent = beam.agent();
 
-    if (!victim->alive() || victim == agent)
+    if (!victim->alive() || victim == agent || dmg == 0)
         return (false);
 
     if (beam.is_tracer)
