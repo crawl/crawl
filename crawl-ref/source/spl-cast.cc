@@ -1195,7 +1195,7 @@ spret_type your_spells(spell_type spell, int powc,
 
         if (spfl < spfail_chance)
         {
-            mpr("You miscast the spell.");
+            mprf("You miscast %s.", spell_title(spell));
             flush_input_buffer(FLUSH_ON_FAILURE);
             learned_something_new(HINT_SPELL_MISCAST);
 
