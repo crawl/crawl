@@ -296,7 +296,9 @@ quasit MONS_QUASIT
 lemure MONS_LEMURE
 iron_imp MONS_IRON_IMP
 midge MONS_MIDGE
+%rim 0
 shadow_imp MONS_SHADOW_IMP
+%rim 1
 %start
 %compose dc-mon/unique/grinder
 %compose dc-mon/unique/grinder_cleaver
