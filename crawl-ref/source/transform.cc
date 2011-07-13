@@ -246,7 +246,9 @@ static bool _mutations_prevent_wearing(const item_def& item)
 
     if (eqslot == EQ_HELMET && (player_mutation_level(MUT_HORNS) == 3
         || player_mutation_level(MUT_ANTENNAE) == 3))
+    {
         return (true);
+    }
 
     return (false);
 }
