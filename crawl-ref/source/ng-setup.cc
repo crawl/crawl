@@ -680,7 +680,7 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(3, EQ_NONE, OBJ_SCROLLS, SCR_BLINKING);
         newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20, 1);
 
-        newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 5);
+        newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 10);
         set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_DISPERSAL);
 
         you.skills[SK_FIGHTING]       = 2;
