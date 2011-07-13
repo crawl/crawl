@@ -274,6 +274,11 @@ void fill_status_info(int status, status_info* inf)
             inf->light_colour = DARKGREY;
         break;
 
+    case DUR_SWIFTNESS:
+        if(you.in_water())
+            inf->light_colour = DARKGREY;
+        break;
+
     case STATUS_AIRBORNE:
         _describe_airborne(inf);
         break;
