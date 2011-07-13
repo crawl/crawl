@@ -314,7 +314,7 @@ static void _exercise_passive()
         if (!x_chance_in_y(armour_mass, 1000)
             // Diminishing returns for stealth training by waiting.
             && you.skills[SK_STEALTH] <= 2 + random2(3)
-            && one_chance_in(18))
+            && one_chance_in(15))
         {
             exercise(SK_STEALTH, 1);
         }
