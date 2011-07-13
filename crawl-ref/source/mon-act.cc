@@ -2090,7 +2090,7 @@ void handle_monster_move(monster* mons)
             continue;
         }
 
-        if (crawl_state.disables[DIS_MON_ACT])
+        if (crawl_state.disables[DIS_MON_ACT] && !mons->wont_attack())
         {
             mons->speed_increment -= non_move_energy;
             continue;
