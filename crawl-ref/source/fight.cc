@@ -6153,22 +6153,11 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
 
     if (weapon)
     {
-        if (needs_handle_warning(*weapon, OPER_ATTACK))
-            weapon_warning = true;
-        else if(!_is_melee_weapon(weapon))
+        if (needs_handle_warning(*weapon, OPER_ATTACK)
+            || !_is_melee_weapon(weapon))
         {
             weapon_warning = true;
-
-            // We switch to the first available melee weapon.
-            if (Options.auto_switch)
-                for (int i = 0; i <= 1; ++i)
-                    if(_is_melee_weapon(&you.inv[i]))
-                    {
-                        wield_weapon(true, i);
-                        // This attack is cancelled, but we switched weapons
-                        return (false);
-                    }
-                }
+        }
     }
     else if (you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
              && you_tran_can_wear(EQ_WEAPON))
@@ -6225,6 +6214,15 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
     if (!travel_kill_monster(defender->type))
         interrupt_activity(AI_HIT_MONSTER, defender);
 
+    // Try to switch to a melee weapon in a/b slot if we don't have one
+    // wielded and end the turn.
+     if (Options.auto_switch && !wielded_weapon_check(attk.weapon,true))
+        for (int i = 0; i <= 1; ++i)
+            if(_is_melee_weapon(&you.inv[i]))
+            {
+                if(wield_weapon(true, i))
+                     return (false);
+            }
     // Check if the player is fighting with something unsuitable,
     // or someone unsuitable.
     if (you.can_see(defender)
