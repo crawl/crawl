@@ -14,6 +14,7 @@ msc = $danger:sense of stasis
 msc = $danger:clumsily bash
 msc = $danger:goes berserk!
 msc = $danger:Forgetting.* will destroy the book
+msc = $danger:calcifying dust
 
 msc = $item_dmg:acid corrodes
 msc = $item_dmg:catch(es)? fire
