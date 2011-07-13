@@ -364,12 +364,10 @@ void practise(exer_type ex, int param1)
         switch (sk)
         {
         case SK_SLINGS:
-            deg = 1 + random2avg(3, 2);
-            break;
-        case SK_THROWING:
+        case SK_THROWING: // Probably obsolete.
         case SK_BOWS:
         case SK_CROSSBOWS:
-            deg = coinflip() ? 2 : 1;
+            deg = 1;
             break;
         default:
             break;
@@ -381,15 +379,11 @@ void practise(exer_type ex, int param1)
         switch (param1) // missile subtype
         {
         case MI_DART:
-            deg = 1 + random2avg(3, 2) + coinflip();
-            break;
         case MI_JAVELIN:
-            deg = 1 + coinflip() + coinflip();
-            break;
         case MI_THROWING_NET:
-            deg = 1 + coinflip();
+            deg = 1;
             break;
-        default:
+        default: // Throwing stones and large rocks.
             deg = coinflip();
             break;
         }
