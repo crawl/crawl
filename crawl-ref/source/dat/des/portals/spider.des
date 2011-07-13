@@ -398,8 +398,7 @@ SUBST:   . = .:6 W
 SUBST:   z = W:5 w:50 .:2
 SUBST:   X = w x
 # Monster sets, and some items
-NSUBST:  1 = 1:1 / 2:t / *:w
-KMONS:   1 = ghost moth
+NSUBST:  1 = 2:t / *:w
 SUBST:   2 = 2 *:4
 KMONS:   2 = tarantella / redback w:12 / jumping spider w:8 / wolf spider w:5
 KMONS:   3 = redback
