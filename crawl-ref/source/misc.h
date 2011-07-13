@@ -123,6 +123,8 @@ void swap_with_monster(monster* mon_to_swap);
 
 void maybe_id_ring_TC();
 
+int apply_chunked_AC(int dam, int ac);
+
 void entered_malign_portal(actor* act);
 
 void handle_real_time(time_t t = time(0));

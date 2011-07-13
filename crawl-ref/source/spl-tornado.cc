@@ -322,8 +322,9 @@ void tornado_damage(actor *caster, int dur)
                         if (standing)
                             float_player(false);
                     }
-                    int dmg = div_rand_round(roll_dice(6, rpow), 15)
-                              - random2(victim->armour_class() / 3 + 1);
+                    int dmg = apply_chunked_AC(
+                                div_rand_round(roll_dice(6, rpow), 15),
+                                victim->armour_class());
                     if (dur < 0)
                         dmg = 0;
                     dprf("damage done: %d", dmg);

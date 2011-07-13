@@ -2496,6 +2496,28 @@ void maybe_id_ring_TC()
     }
 }
 
+// Reduce damage by AC.
+// In most cases, we want AC to mostly stop weak attacks completely but affect
+// strong ones less, but the regular formula is too hard to apply well to cases
+// when damage is spread into many small chunks.
+//
+// Every point of damage is processed independently.  Every point of AC has
+// an independent 1/81 chance of blocking that damage.
+//
+// AC 20 stops 22% of damage, AC 40 -- 39%, AC 80 -- 63%.
+int apply_chunked_AC(int dam, int ac)
+{
+    double chance = pow(80.0/81, ac);
+    uint64_t cr = chance * (((uint64_t)1) << 32);
+
+    int hurt = 0;
+    for (int i = 0; i < dam; i++)
+        if (random_int() < cr)
+            hurt++;
+
+    return hurt;
+}
+
 void entered_malign_portal(actor* act)
 {
     if (you.can_see(act))
