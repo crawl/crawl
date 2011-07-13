@@ -10,7 +10,7 @@ function damt.boost_monster_hp()
     "local gxm, gym = dgn.max_bounds();" ..
     "for p in iter.rect_iterator(dgn.point(1, 1), dgn.point(gxm-2, gym-2)) do " ..
     "  local mons = dgn.mons_at(p.x, p.y);" ..
-    "  if mons ~= nil then" ..
+    "  if mons ~= nil and not mons.wont_attack then" ..
     "    mons.set_max_hp(10000);" ..
     "  end;" ..
     "end")
@@ -23,7 +23,7 @@ function damt.calc_total_damage()
     "local gxm, gym = dgn.max_bounds();" ..
     "for p in iter.rect_iterator(dgn.point(1, 1), dgn.point(gxm-2, gym-2)) do " ..
     "  local mons = dgn.mons_at(p.x, p.y);" ..
-    "  if mons ~= nil then" ..
+    "  if mons ~= nil and not mons.wont_attack then" ..
     "    dam = dam + 10000 - mons.hp;" ..
     "  end;" ..
     "end;" ..
@@ -36,7 +36,7 @@ function damt.calc_num_damaged()
     "local gxm, gym = dgn.max_bounds();" ..
     "for p in iter.rect_iterator(dgn.point(1, 1), dgn.point(gxm-2, gym-2)) do " ..
     "  local mons = dgn.mons_at(p.x, p.y);" ..
-    "  if mons ~= nil and mons.hp < 10000 then" ..
+    "  if mons ~= nil and not mons.wont_attack and mons.hp < 10000 then" ..
     "    cnt = cnt + 1;" ..
     "  end;" ..
     "end;" ..
