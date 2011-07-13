@@ -1085,8 +1085,8 @@ void SkillMenu::set_skills()
             ln = 0;
             continue;
         }
-        else if (!is_invalid_skill(sk) && you.skill(sk) == 0
-                 && you.skills[sk] == 0
+        else if (!is_invalid_skill(sk) && !you.skill(sk)
+                 && !you.skills[sk]&& !you.training[sk]
                  && get_state(SKM_SHOW) == SKM_SHOW_KNOWN)
         {
             continue;
