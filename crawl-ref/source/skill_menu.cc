@@ -435,6 +435,7 @@ void SkillMenuEntry::set_training()
 SkillMenuSwitch::SkillMenuSwitch(std::string name, int hotkey) : m_name(name)
 {
     add_hotkey(hotkey);
+    set_highlight_colour(YELLOW);
 }
 
 void SkillMenuSwitch::add(skill_menu_state state)
@@ -951,6 +952,7 @@ void SkillMenu::init_switches()
         m_help_button->set_text("[Help(<yellow>?</yellow>)]");
         m_help_button->set_id(SKM_HELP);
         m_help_button->add_hotkey('?');
+        m_help_button->set_highlight_colour(YELLOW);
         add_item(m_help_button, 9, m_pos);
     }
 }
