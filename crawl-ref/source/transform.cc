@@ -16,6 +16,7 @@
 #include "delay.h"
 #include "env.h"
 #include "godabil.h"
+#include "goditem.h"
 #include "invent.h"
 #include "item_use.h"
 #include "itemprop.h"
@@ -156,11 +157,8 @@ _init_equipment_removal(transformation_type form)
         result.insert(EQ_WEAPON);
 
     // Liches can't wield holy weapons.
-    if (form == TRAN_LICH && you.weapon()
-        && get_weapon_brand(*you.weapon()) == SPWPN_HOLY_WRATH)
-    {
+    if (form == TRAN_LICH && you.weapon() && is_holy_item(*you.weapon()))
         result.insert(EQ_WEAPON);
-    }
 
     for (int i = EQ_WEAPON + 1; i < NUM_EQUIP; ++i)
     {
