@@ -277,6 +277,16 @@ void tornado_damage(actor *caster, int dur)
                     leda = true; // and with fish, too
                     continue;
                 }
+                if (victim == &you && monster_at(*dam_i))
+                {
+                    // A far-fetched case: you're using Fedhas' passthrough
+                    // or standing on a submerged air elemental, there are
+                    // no free spots, and a monster tornado rotates you.
+                    // Plants don't get uprooted, so the logic would be
+                    // really complex.  Let's not go there.
+                    leda = true;
+                    continue;
+                }
 
                 leda = liquefied(victim->pos()) && victim->ground_level()
                     || victim->atype() == ACT_MONSTER
@@ -344,13 +354,37 @@ void tornado_damage(actor *caster, int dur)
     if (dur <= 0)
         return;
 
+    // Gather actors who are to be moved.
+    for (unsigned int i = 0; i < move_act.size(); i++)
+        if (move_act[i]->alive()) // shouldn't ever change...
+        {
+            // Record the old position.
+            move_dest[move_act[i]->mid] = move_act[i]->pos();
+
+            // Temporarily move to (0,0) to allow permutations.
+            if (mgrd(move_act[i]->pos()) == move_act[i]->mindex())
+                mgrd(move_act[i]->pos()) = NON_MONSTER;
+            move_act[i]->moveto(coord_def());
+        }
+
+    // Need to check available positions again, as the damage call could
+    // have spawned something new (like Royal Jelly spawns).
+    for (int i = move_avail.size() - 1; i >= 0; i--)
+        if (actor_at(move_avail[i]))
+        {
+            move_avail[i] = move_avail[move_avail.size() - 1];
+            move_avail.pop_back();
+        }
+
+    // Calculate destinations.
     for (unsigned int i = 0; i < move_act.size(); i++)
     {
+        coord_def pos = move_dest[move_act[i]->mid];
         int r;
         for (r = 0; r <= TORNADO_RADIUS; r++)
-            if ((move_act[i]->pos() - org).abs() < sqr(r + 1) + 1)
+            if ((pos - org).abs() < sqr(r + 1) + 1)
                 break;
-        coord_def dest = _rotate(org, move_act[i]->pos(), move_avail, rdurs[r]);
+        coord_def dest = _rotate(org, pos, move_avail, rdurs[r]);
         for (unsigned int j = 0; j < move_avail.size(); j++)
             if (move_avail[j] == dest)
             {
@@ -361,14 +395,8 @@ void tornado_damage(actor *caster, int dur)
             }
         move_dest[move_act[i]->mid] = dest;
     }
-    for (unsigned int i = 0; i < move_act.size(); i++)
-        if (move_act[i]->alive()) // shouldn't ever change...
-        {
-            // Temporarily move to (0,0) to allow permutations.
-            if (mgrd(move_act[i]->pos()) == move_act[i]->mindex())
-                mgrd(move_act[i]->pos()) = NON_MONSTER;
-            move_act[i]->moveto(coord_def());
-        }
+
+    // Actually move actors into place.
     for (unsigned int i = 0; i < move_act.size(); i++)
         if (move_act[i]->alive())
         {
