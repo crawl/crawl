@@ -743,6 +743,14 @@ d_e
 ...
 ENDMAP
 
+NAME:   ashenzari_altar_2
+TAGS:   uniq_altar_ashenzari temple_overflow_ashenzari
+KFEAT:  _ = altar_ashenzari
+MAP
+b.b
+._.
+b.b
+ENDMAP
 
 ### Cheibriados overflow altars ###############################################
 
