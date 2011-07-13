@@ -2643,7 +2643,7 @@ void bolt::affect_place_clouds()
         place_cloud(CLOUD_STINK, p, random2(4) + 3, agent());
 
     if (name == "blast of calcifying dust")
-        place_cloud(CLOUD_PETRIFY, p, random2(3) + 5, agent());
+        place_cloud(CLOUD_PETRIFY, p, random2(4) + 4, agent());
 }
 
 void bolt::affect_place_explosion_clouds()
