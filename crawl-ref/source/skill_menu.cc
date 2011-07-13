@@ -894,6 +894,7 @@ void SkillMenu::init_switches()
             sw->set_state(static_cast<skill_menu_state>(
                           you.props["skm_do"].get_int()));
         }
+        sw->add_hotkey('\t');
         sw->update();
         sw->set_id(SKM_DO);
         add_item(sw, sw->size(), m_pos);
