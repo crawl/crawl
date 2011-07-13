@@ -12,8 +12,8 @@ bool cast_passwall(const coord_def& delta, int pow);
 void cast_intoxicate(int pow);
 bool cast_fulsome_distillation(int pow, bool check_range = true);
 void remove_condensation_shield();
-void cast_condensation_shield(int pow);
-void cast_stoneskin(int pow);
+bool cast_condensation_shield(int pow);
+bool cast_stoneskin(int pow);
 bool cast_darkness(int pow);
 
 #endif

@@ -4,14 +4,14 @@
 int allowed_deaths_door_hp(void);
 bool cast_deaths_door(int pow);
 void remove_ice_armour();
-void ice_armour(int pow, bool extending);
+bool ice_armour(int pow);
 void missile_prot(int pow);
 void deflection(int pow);
 
 void remove_regen(bool divine_ability = false);
 void cast_regen(int pow, bool divine_ability = false);
 
-void cast_swiftness(int power);
+bool cast_swiftness(int power);
 void cast_fly(int power);
 void cast_insulation(int power);
 

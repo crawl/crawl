@@ -1795,7 +1795,8 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_SWIFTNESS:
-        cast_swiftness(powc);
+        if (!cast_swiftness(powc))
+            return (SPRET_ABORT);
         break;
 
     case SPELL_LEVITATION:
@@ -1820,7 +1821,8 @@ static spret_type _do_cast(spell_type spell, int powc,
         break;
 
     case SPELL_STONESKIN:
-        cast_stoneskin(powc);
+        if (!cast_stoneskin(powc))
+            return (SPRET_ABORT);
         break;
 
 #if TAG_MAJOR_VERSION == 32
@@ -1830,11 +1832,13 @@ static spret_type _do_cast(spell_type spell, int powc,
 #endif
 
     case SPELL_CONDENSATION_SHIELD:
-        cast_condensation_shield(powc);
+        if (!cast_condensation_shield(powc))
+            return (SPRET_ABORT);
         break;
 
     case SPELL_OZOCUBUS_ARMOUR:
-        ice_armour(powc, false);
+        if (!ice_armour(powc))
+            return (SPRET_ABORT);
         break;
 
     case SPELL_PHASE_SHIFT:

@@ -71,22 +71,18 @@ void remove_ice_armour()
     you.duration[DUR_ICY_ARMOUR] = 0;
 }
 
-void ice_armour(int pow, bool extending)
+bool ice_armour(int pow)
 {
     if (!player_effectively_in_light_armour())
     {
-        if (!extending)
-            mpr("You are wearing too much armour.");
-
-        return;
+        mpr("You are wearing too much armour.");
+        return (false);
     }
 
     if (you.duration[DUR_STONESKIN])
     {
-        if (!extending)
-            mpr("The spell conflicts with another spell still in effect.");
-
-        return;
+        mpr("The spell conflicts with another spell still in effect.");
+        return (false);
     }
 
     if (you.duration[DUR_ICY_ARMOUR])
@@ -103,6 +99,8 @@ void ice_armour(int pow, bool extending)
 
     you.increase_duration(DUR_ICY_ARMOUR, 20 + random2(pow) + random2(pow), 50,
                           NULL);
+
+    return (true);
 }
 
 void missile_prot(int pow)
@@ -140,18 +138,18 @@ void cast_regen(int pow, bool divine_ability)
     }
 }
 
-void cast_swiftness(int power)
+bool cast_swiftness(int power)
 {
     if (you.in_water())
     {
         mpr("The water foams!");
-        return;
+        return (false);
     }
 
     if (!you.duration[DUR_SWIFTNESS] && player_movement_speed() <= 6)
     {
         mpr("You can't move any more quickly.");
-        return;
+        return (false);
     }
 
     // [dshaligram] Removed the on-your-feet bit.  Sounds odd when
@@ -159,6 +157,8 @@ void cast_swiftness(int power)
     you.increase_duration(DUR_SWIFTNESS, 20 + random2(power), 100,
                           "You feel quick.");
     did_god_conduct(DID_HASTY, 8, true);
+
+    return (true);
 }
 
 void cast_fly(int power)
