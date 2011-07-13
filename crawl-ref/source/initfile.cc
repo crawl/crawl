@@ -745,7 +745,7 @@ void game_options::reset_options()
                    (1 <<  7) | // jewellery
                    (1 <<  3) | // wands
                    (1 <<  4)); // food
-    auto_switch             = true;
+    auto_switch             = false;
     suppress_startup_errors = false;
 
     show_inventory_weights = false;

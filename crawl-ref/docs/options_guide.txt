@@ -1027,7 +1027,7 @@ auto_list = true
         apply to spell casting... Conjurers would probably find that
         really annoying.
 
-auto_switch = true
+auto_switch = false
         If you've got a melee weapon in slot a and a ranged weapon in
         slot b (or the opposite), this option will allow you to
         automatically switch to the appropriate weapon when firing or

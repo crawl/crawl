@@ -205,7 +205,7 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 ##### 4-i       Command Enhancements ##################
 #
 # auto_list     = false
-# auto_switch   = false
+# auto_switch   = true
 # easy_open     = false
 # easy_unequip  = false
 # equip_unequip = true
