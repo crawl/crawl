@@ -620,7 +620,8 @@ void handle_behaviour(monster* mon)
             if (isHurt && !isSmart && isMobile
                 && (!mons_is_zombified(mon) || mon->type == MONS_SPECTRAL_THING)
                 && mon->holiness() != MH_PLANT
-                && mon->holiness() != MH_NONLIVING)
+                && mon->holiness() != MH_NONLIVING
+                && !mons_class_flag(mon->type, M_NO_FLEE))
             {
                 new_beh = BEH_FLEE;
 
