@@ -986,7 +986,10 @@ void set_gloves_random_desc(item_def &item)
 
     item.plus2 = coinflip() ? TGLOV_DESC_GLOVES : TGLOV_DESC_GAUNTLETS;
     if (get_armour_ego_type(item) == SPARM_ARCHERY)
+    {
         item.plus2 = TGLOV_DESC_BRACERS;
+        set_ident_flags(item, ISFLAG_KNOW_TYPE);
+    }
 }
 
 //

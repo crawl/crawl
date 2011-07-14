@@ -2018,6 +2018,18 @@ bool item_type_known(const item_def& item)
         return (true);
     }
 
+    if (item.base_type == OBJ_MISCELLANY &&
+        (item.sub_type == MISC_BOTTLED_EFREET
+         || item.sub_type == MISC_AIR_ELEMENTAL_FAN
+         || item.sub_type == MISC_LAMP_OF_FIRE
+         || item.sub_type == MISC_STONE_OF_EARTH_ELEMENTALS
+         || item.sub_type == MISC_LANTERN_OF_SHADOWS
+         || item.sub_type == MISC_HORN_OF_GERYON
+         || item.sub_type == MISC_DISC_OF_STORMS))
+    {
+        return (true);
+    }
+
     if (!item_type_has_ids(item.base_type))
         return false;
     return (you.type_ids[item.base_type][item.sub_type] == ID_KNOWN_TYPE);
