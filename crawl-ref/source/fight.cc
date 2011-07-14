@@ -6164,8 +6164,11 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     {
         const int weap = you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] - 1;
         const item_def &wpn = you.inv[weap];
-        if (_is_melee_weapon(&wpn))
+        if (_is_melee_weapon(&wpn)
+            && you.skill(weapon_skill(wpn)) > you.skill(SK_UNARMED_COMBAT))
+        {
             unarmed_warning = true;
+        }
     }
 
     if (!you.received_weapon_warning && !you.confused()
