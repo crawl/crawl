@@ -790,16 +790,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             // low and makes change.
             if (you.religion == GOD_SIF_MUNA)
             {
-                // Old curve: random2(12) <= spell-level, this is
-                // similar, but faster at low levels (to help ease
-                // things for low level spells).  Power averages about
-                // (level * 20 / 3) + 10 / 3 now.  Also note that spell
-                // skill practise comes just after XP gain, so magical
-                // kills tend to do both at the same time (unlike
-                // melee).  This means high level spells probably work
-                // pretty much like they used to (use spell, get piety).
-                piety_change = level + 10;
-                piety_denom = 80;
+                piety_change = level;
+                piety_denom = 40;
                 retval = true;
             }
             break;
