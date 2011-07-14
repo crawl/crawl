@@ -2959,7 +2959,7 @@ static bool _is_trap_safe(const monster* mons, const coord_def& where,
                            : !trap.is_known(mons) || trap.type != TRAP_ZOT);
     }
     else
-        return (!mechanical || mons_flies(mons));
+        return (!mechanical || mons_flies(mons) || !trap.is_known(mons));
 }
 
 static void _mons_open_door(monster* mons, const coord_def &pos)
