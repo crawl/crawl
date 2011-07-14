@@ -750,6 +750,7 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
 void tile_clear_monster(const coord_def &gc)
 {
     env.tile_bk_fg(gc) = get_clean_map_idx(env.tile_bk_fg(gc), true);
+    tile_clear_map(gc);
 }
 
 void tile_place_cloud(const coord_def &gc, const cloud_struct &cl)
