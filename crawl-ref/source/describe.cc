@@ -987,33 +987,20 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             switch (hands_reqd(item, you.body_size()))
             {
             case HANDS_ONE:
-                description += "It is a one handed weapon";
+                description += "It is a one handed weapon.";
                  break;
             case HANDS_HALF:
                 description += "It can be used with one hand, or more "
                        "effectively with two (i.e. when not using a "
-                       "shield)";
+                       "shield).";
                 break;
             case HANDS_TWO:
-                description += "It is a two handed weapon";
+                description += "It is a two handed weapon.";
                 break;
             case HANDS_DOUBLE:
-                description += "It is a buggy weapon";
+                description += "It is a buggy weapon.";
                 break;
             }
-
-            const int str_weight = weapon_str_weight(item.base_type,
-                                                     item.sub_type);
-
-            if (str_weight >= 8)
-                description += ", and it is best used by the strong";
-            else if (str_weight > 5)
-                description += ", and it is better for the strong";
-            else if (str_weight <= 2)
-                description += ", and it is best used by the dexterous";
-            else if (str_weight < 5)
-                description += ", and it is better for the dexterous";
-            description += ".";
         }
         if (!you.could_wield(item, true))
             description += "\nIt is too large for you to wield.";
@@ -1036,14 +1023,6 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
 
             if (race == ISFLAG_ELVEN)
                 description += "\nElves are slightly more accurate with it.";
-
-            if (launcher)
-            {
-                description += " It is most effective when used with ";
-                description += racial_description_string(item);
-                description += "ammunition.";
-            }
-
         }
     }
 
