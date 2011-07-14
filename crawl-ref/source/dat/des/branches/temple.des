@@ -873,45 +873,6 @@ cccnccccccccc
    @
 ENDMAP
 
-NAME:   minmay_temple_entry_from_below_c
-TAGS:   temple_entry
-ORIENT: float
-WEIGHT: 2
-KFEAT:  O = enter_temple
-MAP
-        xx@xxx
-       xxcncxx
-xxxxxxxxcc.ccx
-@..x...cc...cx
-xx.=.O.n..}.cx
-xx.x...cc...cx
-xx.xxxxxcccccx
-xx@xxxxxxxxxxx
-ENDMAP
-
-NAME:   minmay_temple_entry_from_below_d
-TAGS:   temple_entry
-ORIENT: float
-WEIGHT: 1
-KFEAT:  O = enter_temple
-MAP
-        @
-xxxxxxxcnc
-xccccccc.cc
-xc...cc...x
-xc.}..n.T.x
-xc...cc...x
-xcc.ccxx=xx
-xxcncxxx..@
-xx...xxx.xx
-xx.O.xxx.xx
-xx...xxx.xx
-xxx=xxxx.xx
-@...xxxx.xx
-xxx.xxxx.xx
-xxx@xxxx@xx
-ENDMAP
-
 NAME:   minmay_temple_entry_enclosed_plants
 TAGS:   temple_entry
 ORIENT: float
