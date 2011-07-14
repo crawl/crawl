@@ -1725,6 +1725,10 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
         you.can_see(mon) ? apostrophise(mon->name(DESC_CAP_THE))
                          : mon->pronoun(PRONOUN_CAP_POSSESSIVE);
 
+    // Remove the monster's soul-enslaving enchantment, as it's no
+    // longer needed.
+    mon->del_ench(ENCH_SOUL_RIPE, false, false);
+
     // If the monster's held in a net, get it out.
     mons_clear_trapping_net(mon);
 
