@@ -152,7 +152,7 @@ Cure all your mutations - but only once.
 # The Shining One
 Divine Shield
 
-Conjure up a divine shield that stacks with an ordinary shield and can be used even when wielding a two-handed weapon, as the Divine Shield is managed by the Shining One.
+The Shining One grants you a divine shield. Because it is held aloft by godly power, it does not interfere with your equipment. However, it is controlled by your willpower, and your skill with Shields will improve it.
 %%%%
 Cleansing Flame
 
