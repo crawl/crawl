@@ -2724,7 +2724,7 @@ MARKER: X = lua: props_marker { connected_exclude="true" }
 SUBST:  X = =
 MAP
 XXXXXXXXXX
-XxXXXXXXXX
+XXXXXXXXXX
 XXXXXXXXXX
 XXX8888XXX
 XXX8998XXX
@@ -2740,7 +2740,7 @@ NAME:  minivault_12
 DEPTH: D:8-26
 MAP
 ............
-.xxxxxxxxxx.
+.GxxxxxxxxG.
 .x>9$9$9$<x.
 .x.$9$9$.$x.
 .x$.****$.x.
@@ -2749,7 +2749,7 @@ MAP
 .x.$****.$x.
 .x$9$9$9$.x.
 .x<$9$9$9>x.
-.xxxxxxxxxx.
+.GxxxxxxxxG.
 ............
 ENDMAP
 
@@ -2764,7 +2764,7 @@ KMONS: F = orange crystal statue / silver statue / ice statue
 MAP
 ............
 .xxxxxxxxxx.
-.=.Ax.C=.9x.
+.+.Ax.C=.9x.
 .x.B=.Dx..x.
 .xxxxxxxx=x.
 .x.8+|0x8.x.
