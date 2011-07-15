@@ -4611,8 +4611,10 @@ bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
 
     const bool is_cursed = wpn.cursed();
 
-    // Missiles only have one stat.
-    if (wpn.base_type == OBJ_MISSILES)
+    // Missiles and blowguns only have one stat.
+    if (wpn.base_type == OBJ_MISSILES
+        || (wpn.base_type == OBJ_WEAPONS
+            && wpn.sub_type == WPN_BLOWGUN))
     {
         which_stat = ENCHANT_TO_HIT;
         to_hit     = true;
