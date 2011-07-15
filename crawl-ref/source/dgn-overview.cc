@@ -555,6 +555,9 @@ static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
         if (!print_unseen && !strcmp(colour, "darkgrey"))
             continue;
 
+        if (god == GOD_JIYVA && jiyva_is_dead())
+            colour = you.worshipped[god] ? "magenta" : "darkgrey";
+
         snprintf(buffer, sizeof buffer, "<%s>%s</%s>",
                  colour, god_name(god, false).c_str(), colour);
         disp += buffer;
