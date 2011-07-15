@@ -684,7 +684,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         }
 
         // Soft helmets (caps and wizard hats) always fit, otherwise.
-        if (!is_hard_helmet(item))
+        if (!is_hard_helmet(item) && !player_is_shapechanged())
             return (true);
 
         if (player_mutation_level(MUT_HORNS))

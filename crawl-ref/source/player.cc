@@ -741,14 +741,6 @@ bool you_tran_can_wear(const item_def &item)
         else if (item.sub_type == ARM_CENTAUR_BARDING)
             return (you.species == SP_CENTAUR && you_tran_can_wear(EQ_BOOTS));
 
-        if (get_armour_slot(item) == EQ_HELMET
-            && !is_hard_helmet(item)
-            && (you.form == TRAN_SPIDER
-                || you.form == TRAN_ICE_BEAST))
-        {
-            return (true);
-        }
-
         if (fit_armour_size(item, you.body_size()) != 0)
             return (false);
 
