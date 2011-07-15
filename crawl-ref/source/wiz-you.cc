@@ -1000,3 +1000,12 @@ void wizard_god_wrath()
         // Currently only dead Jiyva.
         mpr("You're not eligible for wrath.");
 }
+
+void wizard_god_mollify()
+{
+    for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
+    {
+        if (you.penance[i])
+            dec_penance((god_type) i, you.penance[i]);
+    }
+}
