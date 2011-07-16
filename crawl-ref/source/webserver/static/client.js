@@ -101,6 +101,7 @@ function handle_keydown(e)
         {
             e.preventDefault();
             $("#register").hide();
+            $("#rc_edit").hide();
         }
         return;
     }
@@ -233,12 +234,17 @@ function logout()
     location.reload();
 }
 
+function show_dialog(id)
+{
+    $(id).fadeIn(100);
+    var w = $(id).width();
+    var ww = $(window).width();
+    $(id).offset({ left: ww / 2 - w / 2, top: 50 });
+}
+
 function start_register()
 {
-    $("#register").show();
-    var w = $("#register").width();
-    var ww = $(window).width();
-    $("#register").offset({ left: ww / 2 - w / 2, top: 50 });
+    show_dialog("#register");
     $("#reg_username").focus();
 }
 
@@ -280,6 +286,27 @@ function register()
 function register_failed(message)
 {
     $("#register_message").html(message);
+}
+
+var editing_rc;
+function edit_rc(id)
+{
+    socket.send("GetRC: " + id);
+    editing_rc = id;
+}
+
+function rcfile_contents(contents)
+{
+    $("#rc_file_contents").val(contents);
+    show_dialog("#rc_edit");
+    $("#rc_file_contents").focus();
+}
+
+function send_rc()
+{
+    socket.send("SetRC: " + editing_rc + " " + $("#rc_file_contents").val());
+    $("#rc_edit").hide();
+    return false;
 }
 
 function ping()

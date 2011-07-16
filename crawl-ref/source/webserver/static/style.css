@@ -44,7 +44,7 @@ body {
     background-color: #101010;
 }
 
-#register {
+.floating_dialog {
     position: absolute;
     left: 50px;
     top: 50px;
@@ -67,12 +67,12 @@ body {
     float: right;
 }
 
-input.text {
+.text {
     background-color: black;
     color: white;
     border: 1px solid white;
 }
-input.button {
+.button {
     background-color: #DDDDDD;
     border: 1px solid white;
 }
