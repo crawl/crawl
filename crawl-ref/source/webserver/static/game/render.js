@@ -495,7 +495,7 @@ function set_submerged_clip(cx, cy, water_level)
     var y = dungeon_cell_h * cy;
 
     dungeon_ctx.beginPath();
-    dungeon_ctx.rect(0, y + water_level, dungeon_cell_w * dungeon_cols,
+    dungeon_ctx.rect(0, y + water_level * dungeon_cell_y_scale, dungeon_cell_w * dungeon_cols,
                      dungeon_cell_h * dungeon_cols - y - water_level);
     dungeon_ctx.clip();
 }
@@ -506,7 +506,7 @@ function set_nonsubmerged_clip(cx, cy, water_level)
     var y = dungeon_cell_h * cy;
 
     dungeon_ctx.beginPath();
-    dungeon_ctx.rect(0, 0, dungeon_cell_w * dungeon_cols, y + water_level);
+    dungeon_ctx.rect(0, 0, dungeon_cell_w * dungeon_cols, y + water_level * dungeon_cell_y_scale);
     dungeon_ctx.clip();
 }
 
@@ -882,8 +882,8 @@ function draw_tile(idx, cx, cy, img_name, info_func, ofsx, ofsy, y_max)
     {
         throw ("Tile not found: " + idx);
     }
-    var size_ox = dungeon_cell_w / 2 - info.w / 2;
-    var size_oy = dungeon_cell_h - info.h;
+    var size_ox = 32 / 2 - info.w / 2;
+    var size_oy = 32 - info.h;
     var pos_sy_adjust = (ofsy || 0) + info.oy + size_oy;
     var pos_ey_adjust = pos_sy_adjust + info.ey - info.sy;
     var sy = pos_sy_adjust;
@@ -905,8 +905,10 @@ function draw_tile(idx, cx, cy, img_name, info_func, ofsx, ofsy, y_max)
     dungeon_ctx.drawImage(img,
                           info.sx, info.sy + sy - pos_sy_adjust,
                           w, h + ey - pos_ey_adjust,
-                          x + (ofsx || 0) + info.ox + size_ox, y + sy,
-                          w, h + ey - pos_ey_adjust)
+                          x + ((ofsx || 0) + info.ox + size_ox) * dungeon_cell_x_scale,
+                          y + sy * dungeon_cell_y_scale,
+                          w * dungeon_cell_x_scale,
+                          (h + ey - pos_ey_adjust) * dungeon_cell_y_scale)
 }
 
 function draw_dngn(idx, cx, cy)
