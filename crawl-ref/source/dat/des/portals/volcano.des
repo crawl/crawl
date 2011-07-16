@@ -622,7 +622,7 @@ SUBVAULT:   B : volcano_grotto_subvault
 KMONS:      l = lava snake w:2 / lava fish w:5 / nothing w:120
 KFEAT:      l = l
 :           volcano_setup(_G)
-:           place_large_volcano(_G)
+:           place_tiny_volcano(_G)
 epilogue{{
 volcano_milestone(_G)
 }}
@@ -997,7 +997,7 @@ SUBVAULT:   B : volcano_tomb_subvault
 KFEAT:      u = lava
 KMONS:      u = flying skull
 :           volcano_setup(_G)
-:           place_large_volcano(_G)
+:           place_tiny_volcano(_G)
 epilogue{{
 volcano_milestone(_G)
 }}
