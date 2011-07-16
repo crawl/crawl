@@ -681,6 +681,17 @@ void train_skills(int exp, const int cost)
     reset_training();
 }
 
+void train_skill(skill_type skill, int exp)
+{
+    const int cost = calc_skill_cost(you.skill_cost_level);
+    int gain = 0;
+
+    while (exp >= cost)
+        gain += _train(skill, exp);
+
+    dprf("Trained %s by %d.", skill_name(skill), gain);
+}
+
 static int _stat_mult(skill_type exsk, int skill_inc)
 {
     int stat = 10;

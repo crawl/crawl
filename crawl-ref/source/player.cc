@@ -2800,7 +2800,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
         // Bonus skill training from Sage.
         you.exp_available =
             (exp_gained * you.sage_bonus_degree) / 100 + exp_gained / 2;
-        practise(EX_SAGE, you.sage_bonus_skill);
+        train_skill(you.sage_bonus_skill, you.exp_available);
         you.exp_available = old_avail;
         exp_gained /= 2;
     }
