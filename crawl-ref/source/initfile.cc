@@ -854,6 +854,7 @@ void game_options::reset_options()
     explore_item_greed     = 10;
     explore_greedy         = true;
 
+    explore_wall_bias      = 10;
     explore_improved       = false;
     travel_key_stop        = true;
 
@@ -2916,6 +2917,14 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             explore_item_greed = -1000;
     }
     else BOOL_OPTION(explore_greedy);
+    else if (key == "explore_wall_bias")
+    {
+        explore_wall_bias = atoi(field.c_str());
+        if (explore_wall_bias > 1000)
+            explore_wall_bias = 1000;
+        else if (explore_wall_bias < 0)
+            explore_wall_bias = 0;
+    }
     else BOOL_OPTION(explore_improved);
     else BOOL_OPTION(travel_key_stop);
     else if (key == "stash_filter")
