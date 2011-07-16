@@ -382,11 +382,16 @@ $(document).ready(
                        function (ev)
                        {
                            if (location.hash.match(/^#play-(.+)/i) &&
-                               socket.readyState == WebSocket.OPEN)
+                               socket.readyState == 1)
                            {
                                return "Really quit the game?";
                            }
                        });
+
+        if ("MozWebSocket" in window)
+        {
+            window.WebSocket = MozWebSocket;
+        }
 
         if ("WebSocket" in window)
         {
