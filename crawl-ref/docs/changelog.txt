@@ -2,7 +2,8 @@ Stone Soup 0.9 (########)
 -------------------------
 
 Disclaimer: These are merely the highlights, not an exhaustive list of changes.
-Breaks save compatibility with the 0.8 release.
+Save compatibility with the 0.8 release is retained, although once a game is
+loaded in 0.9, you can not go back to 0.8.
 
 0.9 Highlights
 --------------
