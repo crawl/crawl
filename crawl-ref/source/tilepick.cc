@@ -4560,8 +4560,11 @@ tileidx_t tileidx_command(const command_type cmd)
         return TILEG_CMD_EXPLORE;
     case CMD_INTERLEVEL_TRAVEL:
         return TILEG_CMD_INTERLEVEL_TRAVEL;
+#ifdef CMD_AUTOFIGHT
+    // might not be defined if building without LUA
     case CMD_AUTOFIGHT:
         return TILEG_CMD_AUTOFIGHT;
+#endif
     case CMD_SEARCH:
         return TILEG_CMD_SEARCH;
     case CMD_USE_ABILITY:
