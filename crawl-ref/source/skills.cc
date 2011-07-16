@@ -547,6 +547,12 @@ void train_skills()
     train_skills(std::min(you.exp_available, cost * next_level), cost);
     }
     while (you.exp_available >= cost);
+
+    for (int i = 0; i < NUM_SKILLS; ++i)
+        check_skill_level_change(static_cast<skill_type>(i));
+
+    // We might have disabled some skills on level up.
+    reset_training();
 }
 
 //#define DEBUG_TRAINING_COST
@@ -673,12 +679,6 @@ void train_skills(int exp, const int cost)
 
     if (magic_gain)
         did_god_conduct(DID_SPELL_PRACTISE, magic_gain);
-
-    for (int i = 0; i < NUM_SKILLS; ++i)
-        check_skill_level_change(static_cast<skill_type>(i));
-
-    // We might have disabled some skills on level up.
-    reset_training();
 }
 
 void train_skill(skill_type skill, int exp)
