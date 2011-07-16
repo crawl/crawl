@@ -847,6 +847,7 @@ static bool _is_feature_shift_target(const coord_def &pos, void*)
 // 7. Vault (map) mask
 // 8. Vault id mask
 // 9. Map markers, dungeon listeners, shopping list
+//10. Player's knowledge
 void dgn_move_entities_at(coord_def src, coord_def dst,
                           bool move_player,
                           bool move_monster,
@@ -937,6 +938,9 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
     env.markers.move(src, dst);
     dungeon_events.move_listeners(src, dst);
     shopping_list.move_things(src, dst);
+
+    // Move player's knowledge.
+    env.map_knowledge(dst) = env.map_knowledge(src);
 }
 
 static bool _dgn_shift_feature(const coord_def &pos)

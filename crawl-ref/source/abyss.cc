@@ -844,6 +844,8 @@ static void _abyss_wipe_square_at(coord_def p)
     env.level_map_ids(p)  = INVALID_MAP_INDEX;
 
     remove_markers_and_listeners_at(p);
+
+    env.map_knowledge(p).clear();
 }
 
 // Removes monsters, clouds, dungeon features, and items from the
@@ -1331,12 +1333,6 @@ void abyss_area_shift(void)
     // And allow monsters in transit another chance to return.
     place_transiting_monsters();
     place_transiting_items();
-
-#ifdef WIZARD
-    // Update map, if already mapped.
-    if (!testbits(env.level_flags, LFLAG_NOT_MAPPABLE))
-        wizard_map_level();
-#endif
 }
 
 #ifdef NEW_ABYSS
