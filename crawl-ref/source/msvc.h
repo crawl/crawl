@@ -45,6 +45,9 @@
 // truncating conversions XXX: fix these too!
 #pragma warning(disable : 4244)
 
+// POSIX deprecation warnings
+#pragma warning(disable : 4996)
+
 
 inline double round(double x)
 {
@@ -53,6 +56,37 @@ inline double round(double x)
     else
         return ceil(x - 0.5);
 }
+
+inline double sqrt(int x)
+{
+    return sqrt((double)x);
+}
+
+inline double atan2(int x, int y)
+{
+    return atan2((double)x, (double)y);
+}
+
+inline double pow(int x, double y)
+{
+    return pow((double)x, y);
+}
+
+inline double pow(int x, int y)
+{
+    return pow((double)x, y);
+}
+
+inline double log(int x)
+{
+    return log((double)x);
+}
+
+//this is targeting for struct member name in store.h, nothing else gets affected as of 0.9.0
+#define _int64 var_int64
+
+//missing in sys/types.h
+#define mode_t unsigned short
 
 typedef ptrdiff_t ssize_t;
 

@@ -3384,7 +3384,8 @@ void init_item_name_cache()
 
             if (item_names_cache.find(name) == item_names_cache.end())
             {
-                item_names_cache[name] = (item_types_pair){base_type, sub_type};
+                item_names_cache[name].base_type = base_type;
+                item_names_cache[name].sub_type = sub_type;
                 if (g.ch)
                     item_names_by_glyph_cache[g.ch].push_back(name);
             }

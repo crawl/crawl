@@ -695,7 +695,7 @@ static void _check_skill_cost_change()
 void change_skill_points(skill_type sk, int points, bool do_level_up)
 {
     if (static_cast<int>(you.skill_points[sk]) < -points)
-        points = -you.skill_points[sk];
+        points = -(int)you.skill_points[sk];
 
     you.skill_points[sk] += points;
     you.total_skill_points += points;

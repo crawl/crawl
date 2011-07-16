@@ -19,6 +19,8 @@ Caveats/issues:
   be available immediately -- yet a crash will lose them.
 */
 
+#include "AppHdr.h"
+
 #include <stdio.h>
 
 #include <sys/types.h>
@@ -29,7 +31,6 @@ Caveats/issues:
 #include <stdlib.h>
 #include <sstream>
 
-#include "AppHdr.h"
 #include "package.h"
 #include "endianness.h"
 #include "errors.h"

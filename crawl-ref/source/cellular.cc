@@ -13,6 +13,8 @@
    If you do find interesting uses for this tool, and especially if
    you enhance it, please drop me an email at steve@worley.com. */
 
+#include "AppHdr.h"
+
 #include <math.h>
 #include <stdio.h>
 #include <stdint.h>
