@@ -2820,7 +2820,8 @@ int you_min_hunger()
 
 void handle_starvation()
 {
-    if (you.is_undead != US_UNDEAD && you.hunger <= 500)
+    if (you.is_undead != US_UNDEAD && !you.duration[DUR_DEATHS_DOOR]
+        && you.hunger <= 500)
     {
         if (!you.cannot_act() && one_chance_in(40))
         {
