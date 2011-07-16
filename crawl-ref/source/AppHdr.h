@@ -309,14 +309,6 @@
     #endif
 #endif
 
-
-#ifdef USE_TILE
-    #ifdef __cplusplus
-    #include "libgui.h"
-    #include "tiles.h"
-    #endif
-#endif
-
 // =========================================================================
 //  Lua user scripts (NOTE: this may also be enabled in your makefile!)
 // =========================================================================
@@ -379,15 +371,16 @@
 
 #ifdef __cplusplus
 
-
 template < class T >
 inline void UNUSED(const volatile T &)
 {
 }
 
+#endif // __cplusplus
+
 // And now headers we want precompiled
 #ifdef TARGET_COMPILER_VC
-#include "msvc.h"
+# include "msvc.h"
 #endif
 
 #include "externs.h"
@@ -395,9 +388,14 @@ inline void UNUSED(const volatile T &)
 #include "version.h"
 
 #ifdef TARGET_COMPILER_VC
-#include "libw32c.h"
+# include "libw32c.h"
 #endif
 
-#endif // __cplusplus
+#ifdef USE_TILE
+# ifdef __cplusplus
+#  include "libgui.h"
+#  include "tiles.h"
+# endif
+#endif
 
 #endif // APPHDR_H
