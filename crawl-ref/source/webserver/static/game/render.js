@@ -1,9 +1,11 @@
 var overlaid_locs = [];
 var cursor_locs = [];
-var minimap_bounds;
+var minimap_bounds = undefined;
 var minimap_changed = false;
 var flash = 0;
 var minimap_enabled = true;
+
+var ascii_mode = false;
 
 // Debug helper
 var mark_sent_cells = false;
@@ -79,12 +81,7 @@ function clear_map()
                          $("#minimap").width(),
                          $("#minimap").height());
 
-    minimap_bounds = {
-        left: 100000,
-        right: -100000,
-        top: 100000,
-        bottom: -100000
-    };
+    minimap_bounds = undefined;
 }
 
 function mappable(val)
@@ -116,25 +113,37 @@ function c(x, y, cell)
 
     cell.dirty = true;
 
-    if (minimap_bounds.left > x)
+    if (minimap_bounds)
     {
-        minimap_bounds.left = x;
-        minimap_changed = true;
+        if (minimap_bounds.left > x)
+        {
+            minimap_bounds.left = x;
+            minimap_changed = true;
+        }
+        if (minimap_bounds.right < x)
+        {
+            minimap_bounds.right = x;
+            minimap_changed = true;
+        }
+        if (minimap_bounds.top > y)
+        {
+            minimap_bounds.top = y;
+            minimap_changed = true;
+        }
+        if (minimap_bounds.bottom < y)
+        {
+            minimap_bounds.bottom = y;
+            minimap_changed = true;
+        }
     }
-    if (minimap_bounds.right < x)
+    else
     {
-        minimap_bounds.right = x;
-        minimap_changed = true;
-    }
-    if (minimap_bounds.top > y)
-    {
-        minimap_bounds.top = y;
-        minimap_changed = true;
-    }
-    if (minimap_bounds.bottom < y)
-    {
-        minimap_bounds.bottom = y;
-        minimap_changed = true;
+        minimap_bounds = {
+            left: x,
+            top: y,
+            right: x,
+            bottom: y
+        };
     }
 
     if (mark_sent_cells)
@@ -143,6 +152,9 @@ function c(x, y, cell)
 
 function display()
 {
+    if (minimap_bounds == undefined)
+        return;
+
     if (minimap_changed)
     {
         center_minimap();
@@ -173,12 +185,7 @@ function set_flash(colour)
 {
     if (colour != flash)
     {
-        for (var x = view_x; x < view_x + dungeon_cols; x++)
-            for (var y = view_y; y < view_y + dungeon_rows; y++)
-        {
-            var cell = get_tile_cache(x, y);
-            if (cell) cell.dirty = true;
-        }
+        force_full_render();
     }
     flash = colour;
 }
@@ -232,6 +239,22 @@ function remove_cursor(type)
 }
 
 // Render functions
+function force_full_render(minimap_too)
+{
+    if (minimap_bounds == undefined)
+        return;
+    
+    var xs = minimap_too ? minimap_bounds.left : view_x;
+    var ys = minimap_too ? minimap_bounds.top : view_y;
+    var xe = minimap_too ? minimap_bounds.right : view_x + dungeon_cols - 1;
+    var ye = minimap_too ? minimap_bounds.bottom : view_y + dungeon_rows - 1;
+    for (var x = xs; x <= xe; x++)
+        for (var y = ys; y <= ye; y++)
+    {
+        var cell = get_tile_cache(x, y);
+        if (cell) cell.dirty = true;
+    }
+}
 
 function render_cursors(cx, cy)
 {
