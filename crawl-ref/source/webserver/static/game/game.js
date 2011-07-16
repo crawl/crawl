@@ -165,6 +165,13 @@ function do_layout()
     // Go back to the old layer
     set_layer(layer);
 
+    // Update the view
+    view_x = view_center_x - Math.floor(dungeon_cols / 2);
+    view_y = view_center_y - Math.floor(dungeon_rows / 2);
+    force_full_render(true);
+    display();
+    update_minimap_overlay();
+    
     // Send the layout
     if (current_layout &&
         layout.stats_height == current_layout.stats_height &&
@@ -205,11 +212,6 @@ function view_size(cols, rows)
     canvas.width = dungeon_cols * dungeon_cell_w;
     canvas.height = dungeon_rows * dungeon_cell_h;
     dungeon_ctx = canvas.getContext("2d");
-
-    for (var y = 0; y < dungeon_rows; y++)
-        for (var x = 0; x < dungeon_cols; x++)
-            render_cell(x + view_x, y + view_y);
-    vgrdc(view_center_x, view_center_y);
 }
 
 function vgrdc(x, y)
