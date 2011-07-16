@@ -1,5 +1,6 @@
 var dungeon_ctx;
 var dungeon_cell_w = 32, dungeon_cell_h = 32;
+var dungeon_cell_x_scale = 1, dungeon_cell_y_scale = 1;
 var dungeon_cols = 0, dungeon_rows = 0;
 var view_x = 0, view_y = 0;
 var view_center_x = 0, view_center_y = 0;
@@ -202,6 +203,14 @@ function send_layout(layout)
     socket.send(msg);
 }
 
+function set_dungeon_cell_size(w, h)
+{
+    dungeon_cell_w = w;
+    dungeon_cell_h = h;
+    dungeon_cell_x_scale = w / 32;
+    dungeon_cell_y_scale = h / 32;
+    do_layout();
+}
 // View area -------------------------------------------------------------------
 function view_size(cols, rows)
 {
