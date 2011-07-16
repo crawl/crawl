@@ -536,15 +536,35 @@ static bool _level_up_check(skill_type sk)
 
 void train_skills()
 {
+    int cost;
+    do
+    {
+        cost = calc_skill_cost(you.skill_cost_level);
+        // Amount of skill points needed to reach the next skill cost level
+        // divided by 10 (integer divison rounded up).
+        const int next_level = (skill_cost_needed(you.skill_cost_level + 1)
+                                - you.total_skill_points + 9) / 10;
+    train_skills(std::min(you.exp_available, cost * next_level), cost);
+    }
+    while (you.exp_available >= cost);
+}
+
+//#define DEBUG_TRAINING_COST
+void train_skills(int exp, const int cost)
+{
     bool skip_first_phase = false;
     int magic_gain = 0;
     FixedVector<int, NUM_SKILLS> sk_exp;
     sk_exp.init(0);
     std::vector<skill_type> training_order;
 #ifdef DEBUG_DIAGNOSTICS
-    int exp_pool = you.exp_available;
     FixedVector<int, NUM_SKILLS> total_gain;
     total_gain.init(0);
+#endif
+#ifdef DEBUG_TRAINING_COST
+    int exp_pool = you.exp_available;
+    dprf("skill cost level: %d, cost: %dxp/10skp, max XP usable: %d.",
+         you.skill_cost_level, cost, exp);
 #endif
 
 
@@ -553,8 +573,8 @@ void train_skills()
     for (int i = 0; i < NUM_SKILLS; ++i)
         if (you.training[i] > 0)
         {
-            sk_exp[i] = you.training[i] * you.exp_available / 100;
-            if (sk_exp[i] < calc_skill_cost(you.skill_cost_level))
+            sk_exp[i] = you.training[i] * exp / 100;
+            if (sk_exp[i] < cost)
             {
                 // One skill has a too low training to be trained at all.
                 // We skip the first phase and go directly to the random
@@ -576,10 +596,11 @@ void train_skills()
             skill_type sk = *it;
             int gain = 0;
 
-            while (sk_exp[sk] >= calc_skill_cost(you.skill_cost_level)
-                   && you.training[sk])
+            while (sk_exp[sk] >= cost && you.training[sk])
             {
+                exp -= sk_exp[sk];
                 gain += _train(sk, sk_exp[sk]);
+                exp += sk_exp[sk];
                 if (_level_up_check(sk))
                     sk_exp[sk] = 0;
             }
@@ -594,7 +615,7 @@ void train_skills()
     }
     // If there's enough xp in the pool, we use it to train skills selected
     // with random_choose_weighted.
-    while (you.exp_available >= calc_skill_cost(you.skill_cost_level))
+    while (exp >= cost)
     {
         int gain;
         skill_type sk = SK_NONE;
@@ -603,15 +624,17 @@ void train_skills()
         if (is_invalid_skill(sk))
             sk = static_cast<skill_type>(random_choose_weighted(you.training));
         if (!is_invalid_skill(sk))
-            gain = _train(sk, you.exp_available);
+        {
+            gain = _train(sk, exp);
+            sk_exp[sk] = 0;
+        }
         else
         {
             // No skill to train. Can happen if all skills are at 27.
             break;
         }
 
-        if (_level_up_check(sk))
-            sk_exp[sk] = 0;
+        _level_up_check(sk);
 
         if (gain && sk > SK_LAST_MUNDANE && sk <= SK_LAST_MAGIC)
             magic_gain += gain;
@@ -624,16 +647,22 @@ void train_skills()
 #ifdef DEBUG_DIAGNOSTICS
     if (!crawl_state.script)
     {
+#ifdef DEBUG_TRAINING_COST
         int total = 0;
+#endif
         for (int i = 0; i < NUM_SKILLS; ++i)
         {
             skill_type sk = static_cast<skill_type>(i);
             if (total_gain[sk])
                 dprf("Trained %s by %d.", skill_name(sk), total_gain[sk]);
+#ifdef DEBUG_TRAINING_COST
             total += total_gain[sk];
         }
         dprf("Total skill points gained: %d, cost: %d XP.",
              total, exp_pool - you.exp_available);
+#else
+        }
+#endif
     }
 #endif
 
