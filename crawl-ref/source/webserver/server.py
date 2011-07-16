@@ -513,6 +513,22 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             elif self.watched_game:
                 self.stop_watching()
 
+        elif message.startswith("GetRC: "):
+            game_id = message[len("GetRC: "):]
+            if game_id not in games: return
+            rcfile_path = os.path.join(games[game_id]["rcfile_path"], self.username + ".rc")
+            with open(rcfile_path, 'r') as f:
+                contents = f.read()
+            self.write_message("rcfile_contents(" +
+                               tornado.escape.json_encode(contents) + ");")
+
+        elif message.startswith("SetRC: "):
+            message = message[len("SetRC: "):]
+            game_id, _, contents = message.partition(" ")
+            rcfile_path = os.path.join(games[game_id]["rcfile_path"], self.username + ".rc")
+            with open(rcfile_path, 'w') as f:
+                f.write(contents)
+
         elif self.p is not None:
             self.last_action_time = time.time()
 
