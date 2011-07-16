@@ -1355,6 +1355,8 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
     // next round in next_iter_points, we don't even need to reset the array.
     circumference[circ_index][0] = start;
 
+    bool found_target = false;
+
     for (; points > 0; ++traveled_distance, circ_index = !circ_index,
                         points = next_iter_points, next_iter_points = 0)
     {
@@ -1365,10 +1367,18 @@ coord_def travel_pathfind::pathfind(run_mode_type rmode)
             // and marked as such.
             if (path_examine_point(circumference[circ_index][i]))
             {
-                return (runmode == RMODE_TRAVEL ? travel_move()
-                                                : explore_target());
+                if (runmode == RMODE_TRAVEL)
+                    return travel_move();
+                else if (!Options.explore_wall_bias)
+                    return explore_target();
+                else
+                    found_target = true;
             }
         }
+
+        // Handle exploration with wall bias
+        if (next_iter_points == 0 && found_target)
+            return explore_target();
 
         // If there are no more points to look at, we're done, but we did
         // not find a path to our target.
@@ -1499,8 +1509,19 @@ void travel_pathfind::check_square_greed(const coord_def &c)
         && is_greed_inducing_square(c)
         && is_travelsafe_square(c, ignore_hostile, ignore_danger))
     {
+        int dist = traveled_distance;
+
+        // Penalize distance for negative explore_item_greed
+        if (Options.explore_item_greed < 0)
+          dist -= Options.explore_item_greed;
+
+        // The addition of explore_wall_bias makes items as interesting
+        // as a room's perimeter (with one of four known adjacent walls).
+        if (Options.explore_wall_bias)
+          dist += Options.explore_wall_bias * 3;
+
+        greedy_dist = dist;
         greedy_place = c;
-        greedy_dist  = traveled_distance;
     }
 }
 
@@ -1534,7 +1555,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
                     if (unexplored_dist == 1)
                     {
                         _set_target_square(unexplored_place);
-                        return true;
+                        return (true);
                     }
                 }
 
@@ -1543,21 +1564,42 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
                 if (unexplored_dist < 0)
                     unreachables.insert(dc);
                 else
+                {
                     _set_target_square(unexplored_place);
+                    return (true);
+                }
 
             }
-            else if (!need_for_greed)
+            else
             {
                 // Found explore target!
-                unexplored_place = c;
-                unexplored_dist  = traveled_distance;
-                return (true);
-            }
-            else if (unexplored_dist == UNFOUND_DIST)
-            {
-                unexplored_place = c;
-                unexplored_dist  = traveled_distance
-                                   + Options.explore_item_greed;
+                int dist = traveled_distance;
+
+                if (need_for_greed && Options.explore_item_greed > 0)
+                    // Penalize distance to favor item pickup
+                    dist += Options.explore_item_greed;
+
+                if (Options.explore_wall_bias)
+                {
+                    dist += Options.explore_wall_bias * 4;
+
+                    // Favor squares directly adjacent to walls
+                    for (int dir = 0; dir < 8; dir += 2)
+                    {
+                        const coord_def ddc = dc + Compass[dir];
+
+                        if (feat_is_wall(env.map_knowledge(ddc).feat()))
+                            dist -= Options.explore_wall_bias;
+                    }
+                }
+
+                // Replace old target if nearer (or less penalized)
+                if (dist < unexplored_dist || unexplored_dist < 0)
+                {
+                    unexplored_dist = dist;
+                    unexplored_place = c;
+                    return (true);
+                }
             }
         }
 
@@ -1698,14 +1740,16 @@ bool travel_pathfind::path_examine_point(const coord_def &c)
     if (point_traverse_delay(c))
         return (false);
 
+    bool found_target = false;
+
     // For each point, we look at all surrounding points. Take them orthogonals
     // first so that the travel path doesn't zigzag all over the map. Note the
     // (dir = 1) is intentional assignment.
     for (int dir = 0; dir < 8; (dir += 2) == 8 && (dir = 1))
         if (path_flood(c, c + Compass[dir]))
-            return (true);
+            found_target = true;
 
-    return (false);
+    return (found_target);
 }
 
 /////////////////////////////////////////////////////////////////////////////

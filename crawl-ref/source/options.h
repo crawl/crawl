@@ -251,6 +251,9 @@ public:
     // How much more eager greedy-explore is for items than to explore.
     int         explore_item_greed;
 
+    // How much autoexplore favors visiting squares next to walls.
+    int         explore_wall_bias;
+
     // Some experimental improvements to explore
     bool        explore_improved;
 
