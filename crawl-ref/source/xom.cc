@@ -179,7 +179,7 @@ static std::string _get_xom_speech(const std::string key)
 
 static bool _xom_is_bored()
 {
-    return (you.religion == GOD_XOM && you.gift_timeout == 0);
+    return (you.religion == GOD_XOM && !you.gift_timeout);
 }
 
 static bool _xom_feels_nasty()
@@ -197,7 +197,7 @@ bool xom_is_nice(int tension)
     if (you.religion == GOD_XOM)
     {
         // If you.gift_timeout is 0, then Xom is BORED.  He HATES that.
-        if (you.gift_timeout == 0)
+        if (!you.gift_timeout)
             return (false);
 
         // At high tension Xom is more likely to be nice, at zero
@@ -354,7 +354,7 @@ void xom_tick()
                                           : 5);
 
         // If Xom is bored, the chances for Xom acting are reversed.
-        if (you.gift_timeout == 0 && x_chance_in_y(5-chance,5))
+        if (!you.gift_timeout && x_chance_in_y(5 - chance, 5))
         {
             xom_acts(abs(you.piety - HALF_MAX_PIETY), tension);
             return;
@@ -3673,7 +3673,7 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
     // to the badness of the effect.
     if (done && !debug && _xom_is_bored())
     {
-        const int interest = random2avg(badness*60, 2);
+        const int interest = random2avg(badness * 60, 2);
         you.gift_timeout   = std::min(interest, 255);
         //updating piety status line
         redraw_skill(you.your_name, player_title());

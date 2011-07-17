@@ -1524,7 +1524,7 @@ static std::string _god_powers(bool simple)
     std::string godpowers = simple ? "" : god_name(you.religion) ;
     if (you.religion == GOD_XOM)
     {
-        if (you.gift_timeout == 0)
+        if (!you.gift_timeout)
             godpowers += simple ? "- BORED" : " - BORED";
         else if (you.gift_timeout == 1)
             godpowers += simple ? "- getting BORED" : " - getting BORED";
