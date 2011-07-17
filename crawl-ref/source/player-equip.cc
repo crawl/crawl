@@ -1547,6 +1547,7 @@ bool unwield_item(bool showMsgs)
     unequip_item(EQ_WEAPON, showMsgs);
 
     you.wield_change     = true;
+    you.redraw_quiver    = true;
     you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 
     return (true);
