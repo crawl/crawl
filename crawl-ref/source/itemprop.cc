@@ -35,7 +35,6 @@
 #include "shopping.h"
 #include "xom.h"
 
-
 // XXX: Name strings in most of the following are currently unused!
 struct armour_def
 {
@@ -558,9 +557,11 @@ void do_curse_item(item_def &item, bool quiet)
                 // Redraw the weapon.
                 you.wield_change = true;
             }
+
             ash_check_bondage();
             ash_id_inventory();
         }
+
         xom_is_stimulated(amusement);
     }
 }
