@@ -876,9 +876,6 @@ static bool _ely_protect_ally(monster* mons)
 // be killed by you or one of your friends.
 static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
 {
-    if (you.religion == GOD_ELYVILON)
-        return (false);
-
     god_type god = GOD_ELYVILON;
 
     if (!you.penance[god] || !god_hates_your_god(god))
