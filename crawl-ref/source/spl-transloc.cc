@@ -677,9 +677,9 @@ void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
             || you.level_type != LEVEL_ABYSS && player_in_a_dangerous_place()))
     {
         if (you.level_type == LEVEL_LABYRINTH && you.species == SP_MINOTAUR)
-            xom_is_stimulated(128);
+            xom_is_stimulated(100);
         else
-            xom_is_stimulated(255);
+            xom_is_stimulated(200);
     }
 }
 

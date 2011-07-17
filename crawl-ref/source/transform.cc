@@ -212,7 +212,7 @@ static void _remove_equipment(const std::set<equipment_type>& removed,
             {
                 // A mutation made us not only lose an equipment slot
                 // but actually removed a worn item: Funny!
-                xom_is_stimulated(is_artefact(*equip) ? 255 : 128);
+                xom_is_stimulated(is_artefact(*equip) ? 200 : 100);
             }
         }
         else

@@ -550,9 +550,9 @@ bool melee_attack::attack()
         // ... and thinks fumbling when trying to hit yourself is just
         // hilarious.
         if (attacker == defender)
-            xom_is_stimulated(255);
+            xom_is_stimulated(200);
         else
-            xom_is_stimulated(14);
+            xom_is_stimulated(10);
 
         if (damage_brand == SPWPN_CHAOS)
             chaos_affects_attacker();
@@ -564,7 +564,7 @@ bool melee_attack::attack()
     else if (attacker == defender && attacker->confused())
     {
         // And is still hilarious if it's the player.
-        xom_is_stimulated(attacker->atype() == ACT_PLAYER ? 255 : 128);
+        xom_is_stimulated(attacker->atype() == ACT_PLAYER ? 200 : 100);
     }
 
     // Defending monster protects itself from attacks using the wall
@@ -2663,7 +2663,7 @@ void melee_attack::chaos_affects_defender()
                 clone.mark_summoned(6, true, MON_SUMM_CLONE);
 
             // Monsters being cloned is interesting.
-            xom_is_stimulated(clone.friendly() ? 16 : 32);
+            xom_is_stimulated(clone.friendly() ? 12 : 25);
         }
         break;
     }
@@ -4006,7 +4006,7 @@ int melee_attack::player_to_hit(bool random_factor)
         if (wpn_skill != SK_FIGHTING)
         {
             if (you.skill(wpn_skill) < 1 && player_in_a_dangerous_place())
-                xom_is_stimulated(14); // Xom thinks that is mildly amusing.
+                xom_is_stimulated(10); // Xom thinks that is mildly amusing.
 
             your_to_hit += maybe_random2(you.skill(wpn_skill) + 1,
                                          random_factor);

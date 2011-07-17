@@ -1826,7 +1826,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         mpr("Now all you have to do is get back out of the dungeon!", MSGCH_ORB);
 
         you.char_direction = GDT_ASCENDING;
-        xom_is_stimulated(255, XM_INTRIGUED);
+        xom_is_stimulated(200, XM_INTRIGUED);
     }
 
     if (item.base_type == OBJ_ORBS && you.level_type == LEVEL_DUNGEON)

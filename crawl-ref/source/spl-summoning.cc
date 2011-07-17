@@ -1815,7 +1815,7 @@ int animate_remains(const coord_def &a, corpse_type class_allowed,
                     _display_undead_motions(motions);
 
                 if (was_butchering)
-                    xom_is_stimulated(255);
+                    xom_is_stimulated(200);
             }
 
             break;

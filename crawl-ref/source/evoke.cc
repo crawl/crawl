@@ -465,19 +465,19 @@ void tome_of_power(int slot)
     {
         mpr("A cloud of weird smoke pours from the book's pages!");
         big_cloud(random_smoke_type(), &you, you.pos(), 20, 10 + random2(8));
-        xom_is_stimulated(16);
+        xom_is_stimulated(12);
     }
     else if (x_chance_in_y(2, 43))
     {
         mpr("A cloud of choking fumes pours from the book's pages!");
         big_cloud(CLOUD_POISON, &you, you.pos(), 20, 7 + random2(5));
-        xom_is_stimulated(64);
+        xom_is_stimulated(50);
     }
     else if (x_chance_in_y(2, 41))
     {
         mpr("A cloud of freezing gas pours from the book's pages!");
         big_cloud(CLOUD_COLD, &you, you.pos(), 20, 8 + random2(5));
-        xom_is_stimulated(64);
+        xom_is_stimulated(50);
     }
     else if (x_chance_in_y(3, 39))
     {
@@ -489,7 +489,7 @@ void tome_of_power(int slot)
 
         immolation(15, IMMOLATION_TOME, you.pos(), false, &you);
 
-        xom_is_stimulated(255);
+        xom_is_stimulated(200);
     }
     else if (one_chance_in(36))
     {
@@ -501,7 +501,7 @@ void tome_of_power(int slot)
             mpr("A horrible Thing appears!");
             mpr("It doesn't look too friendly.");
         }
-        xom_is_stimulated(255);
+        xom_is_stimulated(200);
     }
     else
     {
@@ -619,7 +619,7 @@ static bool _box_of_beasts(item_def &box)
             success = true;
 
             mpr("...and something leaps out!");
-            xom_is_stimulated(14);
+            xom_is_stimulated(10);
         }
     }
     else

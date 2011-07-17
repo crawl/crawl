@@ -622,7 +622,7 @@ bool already_learning_spell(int spell)
 static void _xom_check_corpse_waste()
 {
     const int food_need = std::max(7000 - you.hunger, 0);
-    xom_is_stimulated(64 + (191 * food_need / 6000));
+    xom_is_stimulated(50 + (151 * food_need / 6000));
 }
 
 void clear_macro_process_key_delay()
@@ -776,7 +776,7 @@ void handle_delay()
                     if (player_mutation_level(MUT_SAPROVOROUS) == 3)
                         _xom_check_corpse_waste();
                     else
-                        xom_is_stimulated(32);
+                        xom_is_stimulated(25);
                     delay.duration = 0;
                 }
                 else
@@ -1146,7 +1146,7 @@ static void _finish_delay(const delay_queue_item &delay)
                 if (player_mutation_level(MUT_SAPROVOROUS) == 3)
                     _xom_check_corpse_waste();
                 else
-                    xom_is_stimulated(64);
+                    xom_is_stimulated(50);
 
                 break;
             }

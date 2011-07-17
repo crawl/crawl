@@ -3061,10 +3061,10 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         player_angers_monster(mons);
 
     // Xom likes watching monsters being polymorphed.
-    xom_is_stimulated(mons->is_shapeshifter()               ? 16 :
-                      power == PPT_LESS || mons->friendly() ? 32 :
-                      power == PPT_SAME                     ? 64
-                                                            : 128);
+    xom_is_stimulated(mons->is_shapeshifter()               ? 12 :
+                      power == PPT_LESS || mons->friendly() ? 25 :
+                      power == PPT_SAME                     ? 50
+                                                            : 100);
 
     return (player_messaged);
 }

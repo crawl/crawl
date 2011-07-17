@@ -117,7 +117,7 @@ static void _moveto_maybe_repel_stairs()
                  prep.c_str());
 
             if (player_in_a_dangerous_place() && one_chance_in(5))
-                xom_is_stimulated(32);
+                xom_is_stimulated(25);
         }
     }
 }
@@ -3378,7 +3378,7 @@ void level_change(bool skip_attribute_increase)
                 std::min(you.magic_points, note_maxmp), note_maxmp);
         take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
 
-        xom_is_stimulated(16);
+        xom_is_stimulated(12);
 
         learned_something_new(HINT_NEW_LEVEL);
     }
@@ -4375,7 +4375,7 @@ void rot_hp(int hp_loss)
     calc_hp();
 
     if (you.species != SP_GHOUL)
-        xom_is_stimulated(hp_loss * 32);
+        xom_is_stimulated(hp_loss * 25);
 
     you.redraw_hit_points = true;
 }
@@ -4634,7 +4634,7 @@ void contaminate_player(int change, bool controlled, bool msg)
         }
 
         if (change > 0)
-            xom_is_stimulated(new_level * 32);
+            xom_is_stimulated(new_level * 25);
 
         if (old_level > 1 && new_level <= 1
             && you.duration[DUR_INVIS] && !you.backlit())

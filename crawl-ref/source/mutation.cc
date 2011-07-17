@@ -566,7 +566,7 @@ void display_mutations()
 
 static int _calc_mutation_amusement_value(mutation_type which_mutation)
 {
-    int amusement = 16 * (11 - get_mutation_def(which_mutation).rarity);
+    int amusement = 12 * (11 - get_mutation_def(which_mutation).rarity);
 
     switch (which_mutation)
     {
@@ -1073,7 +1073,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
             rot_hp(roll_dice(1, 3));
         }
 
-        xom_is_stimulated(64);
+        xom_is_stimulated(50);
         return (true);
     }
 
@@ -1263,7 +1263,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         break;
     }
 
-    // Amusement value will be 16 * (11-rarity) * Xom's-sense-of-humor.
+    // Amusement value will be 12 * (11-rarity) * Xom's-sense-of-humor.
     xom_is_stimulated(_calc_mutation_amusement_value(mutat));
 
     take_note(Note(NOTE_GET_MUTATION, mutat, you.mutation[mutat]));

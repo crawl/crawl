@@ -734,7 +734,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 {
                     mpr("A large net falls onto you!");
                     if (player_caught_in_net() && player_in_a_dangerous_place())
-                        xom_is_stimulated(64);
+                        xom_is_stimulated(50);
                 }
 
                 item_def item = generate_trap_item();
@@ -812,7 +812,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             mpr((trig_knows) ? "You enter the Zot trap."
                              : "Oh no! You have blundered into a Zot trap!");
             if (!trig_knows)
-                xom_is_stimulated(32);
+                xom_is_stimulated(25);
 
             MiscastEffect(&you, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
                            3, "a Zot trap");

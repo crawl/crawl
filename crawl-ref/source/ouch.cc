@@ -454,7 +454,7 @@ static void _item_corrode(int slot)
     if (!it_resists)
     {
         how_rusty--;
-        xom_is_stimulated(64);
+        xom_is_stimulated(50);
 
         if (item.base_type == OBJ_WEAPONS)
             item.plus2 = how_rusty;
@@ -646,7 +646,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
     if (flavour == BEAM_DEVOUR_FOOD)
         return (true);
 
-    xom_is_stimulated((num_dest > 1) ? 32 : 16);
+    xom_is_stimulated((num_dest > 1) ? 25 : 12);
 
     return (true);
 }
@@ -717,7 +717,7 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
         }
     }
 
-    xom_is_stimulated((num_dest > 1) ? 32 : 16);
+    xom_is_stimulated((num_dest > 1) ? 25 : 12);
 
     return (true);
 }
@@ -773,7 +773,7 @@ void lose_level()
     redraw_skill(you.your_name, player_title());
     you.redraw_experience = true;
 
-    xom_is_stimulated(255);
+    xom_is_stimulated(200);
 
     // Kill the player if maxhp <= 0.  We can't just move the ouch() call past
     // dec_max_hp() since it would decrease hp twice, so here's another one.
@@ -840,7 +840,7 @@ bool drain_exp(bool announce_full)
     if (exp_drained > 0)
     {
         mpr("You feel drained.");
-        xom_is_stimulated(20);
+        xom_is_stimulated(15);
         you.experience -= exp_drained;
         you.exp_available -= pool_drained;
 
@@ -870,7 +870,7 @@ static void _xom_checks_damage(kill_method_type death_type,
         {
             // Xom thinks the player accidentally hurting him/herself is funny.
             // Deliberate damage is only amusing if it's dangerous.
-            int amusement = 255 * dam / (dam + you.hp);
+            int amusement = 200 * dam / (dam + you.hp);
             if (death_type == KILLED_BY_SELF_AIMED)
                 amusement /= 5;
             xom_is_stimulated(amusement);
@@ -880,13 +880,13 @@ static void _xom_checks_damage(kill_method_type death_type,
                  || death_type == KILLED_BY_FALLING_THROUGH_GATE)
         {
             // Xom thinks falling down the stairs is hilarious.
-            xom_is_stimulated(255);
+            xom_is_stimulated(200);
             return;
         }
         else if (death_type == KILLED_BY_DISINT)
         {
             // flying chunks...
-            xom_is_stimulated(128);
+            xom_is_stimulated(100);
             return;
         }
         else if (death_type != KILLED_BY_MONSTER
@@ -906,7 +906,7 @@ static void _xom_checks_damage(kill_method_type death_type,
         if (mons->wont_attack())
         {
             // Xom thinks collateral damage is funny.
-            xom_is_stimulated(255 * dam / (dam + you.hp));
+            xom_is_stimulated(200 * dam / (dam + you.hp));
             return;
         }
 
@@ -920,10 +920,10 @@ static void _xom_checks_damage(kill_method_type death_type,
         amusementvalue += leveldif * leveldif * dam;
 
         if (!mons->visible_to(&you))
-            amusementvalue += 10;
+            amusementvalue += 8;
 
         if (mons->speed < 100/player_movement_speed())
-            amusementvalue += 8;
+            amusementvalue += 7;
 
         if (death_type != KILLED_BY_BEAM
             && you.skill(SK_THROWING) <= (you.experience_level / 4))
