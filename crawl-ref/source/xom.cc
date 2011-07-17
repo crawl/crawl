@@ -360,10 +360,10 @@ void xom_tick()
             return;
         }
         else if (you.gift_timeout <= 1 && chance > 0
-                 && x_chance_in_y(chance-1, 4))
+                 && x_chance_in_y(chance - 1, 4))
         {
             // During tension, Xom may briefly forget about being bored.
-            const int interest = random2(chance*15);
+            const int interest = random2(chance * 15);
             if (interest > 0)
             {
                 if (interest < 25)
