@@ -564,10 +564,7 @@ bool melee_attack::attack()
     else if (attacker == defender && attacker->confused())
     {
         // And is still hilarious if it's the player.
-        if (attacker->atype() == ACT_PLAYER)
-            xom_is_stimulated(255);
-        else
-            xom_is_stimulated(128);
+        xom_is_stimulated(attacker->atype() == ACT_PLAYER ? 255 : 128);
     }
 
     // Defending monster protects itself from attacks using the wall
