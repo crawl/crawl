@@ -504,7 +504,9 @@ static bool _level_up_check(skill_type sk)
     const bool skill_learned  = !you.skills[sk]
                     && you.skill_points[sk] >= skill_exp_needed(1, sk);
 
-    if (skill_learned)
+    if (skill_learned && you.religion == GOD_TROG && sk == SK_SPELLCASTING)
+        you.training[sk] = 0;
+    else if (skill_learned)
     {
         // We start by inserting the rest of the exercises in the queue.
         while (you.training[sk] > 0)
@@ -532,6 +534,17 @@ static bool _level_up_check(skill_type sk)
     }
 
     return false;
+}
+
+static bool _is_magic_skill(skill_type sk)
+{
+    // Learning new skills doesn't count for Trog because punishment has
+    // already been given for casting. And we don't want to punish
+    // learning spellcasting from scrolls.
+    if (you.religion == GOD_TROG && !you.skills[sk])
+        return false;
+
+    return (sk > SK_LAST_MUNDANE && sk <= SK_LAST_MAGIC);
 }
 
 void train_skills()
@@ -611,7 +624,7 @@ void train_skills(int exp, const int cost)
                     sk_exp[sk] = 0;
             }
 
-            if (gain && sk > SK_LAST_MUNDANE && sk <= SK_LAST_MAGIC)
+            if (gain && _is_magic_skill(sk))
                 magic_gain += gain;
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -642,7 +655,7 @@ void train_skills(int exp, const int cost)
 
         _level_up_check(sk);
 
-        if (gain && sk > SK_LAST_MUNDANE && sk <= SK_LAST_MAGIC)
+        if (gain && _is_magic_skill(sk))
             magic_gain += gain;
 
 #ifdef DEBUG_DIAGNOSTICS
