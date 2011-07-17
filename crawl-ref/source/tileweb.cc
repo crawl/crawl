@@ -557,7 +557,8 @@ int TilesFramework::getch_ck()
             m_text_stat.send(true);
             m_text_message.send(true);
             _send_layout_data(false);
-            send_message("vgrdc(%d,%d);", m_current_gc.x, m_current_gc.y);
+            send_message("vgrdc(%d,%d);",
+                         m_current_gc.x - m_origin.x, m_current_gc.y - m_origin.y);
             send_message("set_flash(%d);", m_current_flash_colour);
             _send_current_view();
             switch (m_active_layer)
