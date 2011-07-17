@@ -322,6 +322,10 @@ void init_training()
         if (you.train[i] && you.skills[i])
             total += you.skill_points[i];
 
+    // If no trainable skills, exit.
+    if (!total)
+        return;
+
     for (int i = 0; i < NUM_SKILLS; ++i)
         if (you.skills[i])
             you.training[i] = you.skill_points[i] * 100 / total;
