@@ -68,7 +68,6 @@
 #include "syscalls.h"
 #include "xom.h"
 
-
 static void _end_game(scorefile_entry &se);
 static void _item_corrode(int slot);
 
