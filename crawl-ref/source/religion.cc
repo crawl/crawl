@@ -3398,6 +3398,12 @@ void god_pitch(god_type which_god)
     god_welcome_identify_gear();
     ash_check_bondage();
 
+    // We disable all magical skills to avoid accidentally angering Trog.
+    if (you.religion == GOD_TROG)
+        for (int sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
+            if (you.skills[sk])
+                you.train[sk] = 0;
+
     // When you start worshipping a good god, you make all non-hostile
     // unholy and evil beings hostile; when you start worshipping Zin,
     // you make all non-hostile unclean and chaotic beings hostile; and

@@ -794,6 +794,12 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 piety_denom = 40;
                 retval = true;
             }
+            else if (you.religion == GOD_TROG)
+            {
+                piety_change = -level;
+                piety_denom = 10;
+                retval = true;
+            }
             break;
 
         case DID_CARDS:
