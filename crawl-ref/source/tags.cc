@@ -1944,7 +1944,10 @@ static void tag_read_you(reader &th)
 #if TAG_MAJOR_VERSION == 32
     }
     else
+    {
+        check_selected_skills();
         init_training();
+    }
 #endif
 
     // If somebody SIGHUP'ed out of the skill menu with all skills disabled.
