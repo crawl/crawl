@@ -3014,6 +3014,7 @@ void tag_construct_level_tiles(writer &th)
         }
 
     mcache.construct(th);
+    marshallInt(th, TILEP_PLAYER_MAX);
 
     marshallInt(th, TILE_WALL_MAX);
 #endif
@@ -3480,6 +3481,16 @@ void tag_read_level_tiles(reader &th)
     _debug_count_tiles();
 
     mcache.read(th);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_MINOR_MONSTER_TILES)
+        mcache.clear_all();
+    else
+#endif
+    if (unmarshallInt(th) != TILEP_PLAYER_MAX)
+    {
+        dprf("MON/PLAYER tilecount has changed -- dropping tilemcache.");
+        mcache.clear_all();
+    }
 
     if (unmarshallInt(th) != TILE_WALL_MAX)
     {

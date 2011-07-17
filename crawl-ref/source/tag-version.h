@@ -43,6 +43,7 @@ enum tag_minor_version
     TAG_MINOR_SKILL_TRAINING,      // New skill training system.
     TAG_MINOR_FOCUS_SKILL,         // Add focus skills to skill training system.
     TAG_MINOR_MANUAL,              // New manuals.
+    TAG_MINOR_MONSTER_TILES,       // Throw away monster tiles when their number changes.
 
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
