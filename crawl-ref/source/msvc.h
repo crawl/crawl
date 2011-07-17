@@ -9,7 +9,8 @@
 #if defined(TARGET_COMPILER_VC)
 
 #define __STDC_FORMAT_MACROS
-#include "MSVC/inttypes.h"
+//now included via tweaking include directories
+//#include "MSVC/inttypes.h"
 
 #include <io.h>
 #include <math.h>
