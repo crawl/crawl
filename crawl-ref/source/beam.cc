@@ -3713,10 +3713,8 @@ void bolt::update_hurt_or_helped(monster* mon)
             // Accidentally helped a foe.
             if (!is_tracer && !effect_known)
             {
-                int interest = 128;
-                if (flavour == BEAM_INVISIBILITY && can_see_invis)
-                    interest = 32;
-
+                const int interest =
+                    (flavour == BEAM_INVISIBILITY && can_see_invis) ? 32 : 128;
                 xom_is_stimulated(interest);
             }
         }
