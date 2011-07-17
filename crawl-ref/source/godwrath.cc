@@ -1226,7 +1226,9 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     switch (god)
     {
     // One in ten chance that Xom might do something good...
-    case GOD_XOM: xom_acts(one_chance_in(10), abs(you.piety - 100)); break;
+    case GOD_XOM:
+        xom_acts(one_chance_in(10), abs(you.piety - HALF_MAX_PIETY));
+        break;
     case GOD_SHINING_ONE:   do_more = _tso_retribution(); break;
     case GOD_ZIN:           do_more = _zin_retribution(); break;
     case GOD_MAKHLEB:       do_more = _makhleb_retribution(); break;
