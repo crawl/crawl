@@ -550,13 +550,11 @@ static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
         if (has_altar_been_seen)
             colour = "white";
         if (you.penance[god])
-        {
             colour = (you.penance[god] > 10) ? "red" : "lightred";
-        }  else if (you.religion == god) {
+        else if (you.religion == god)
             colour = "yellow";
-        }  else if (god_likes_your_god(god)) {
+        else if (god_likes_your_god(god))
             colour = "brown";
-        }
 
         if (!print_unseen && !strcmp(colour, "darkgrey"))
             continue;
