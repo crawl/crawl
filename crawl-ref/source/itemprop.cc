@@ -538,7 +538,7 @@ void do_curse_item(item_def &item, bool quiet)
     // they're worn/equipped.
     if (in_inventory(item))
     {
-        int amusement = 64;
+        int amusement = 50;
 
         if (item_is_equipped(item))
         {

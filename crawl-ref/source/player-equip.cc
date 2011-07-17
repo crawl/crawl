@@ -300,7 +300,7 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
     {
         // Xom loves it when you use an unknown random artefact and
         // there is a dangerous monster nearby...
-        xom_is_stimulated(128);
+        xom_is_stimulated(100);
     }
 
     // Let's try this here instead of up there.
@@ -673,9 +673,9 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     // and even more so if he gifted the weapon himself.
                     god_type god;
                     if (origin_is_god_gift(item, &god) && god == GOD_XOM)
-                        xom_is_stimulated(255);
+                        xom_is_stimulated(200);
                     else
-                        xom_is_stimulated(128);
+                        xom_is_stimulated(100);
                 }
                 break;
 

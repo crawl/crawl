@@ -147,7 +147,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
                 {
                     // Full herbivores always become ill from blood.
                     you.sicken(50 + random2(100));
-                    xom_is_stimulated(32 / xom_factor);
+                    xom_is_stimulated(25 / xom_factor);
                 }
                 else
                     lessen_hunger(value, true);
@@ -254,25 +254,25 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
                 poison_player(1 + random2avg(5, 2), "", "a potion of poison");
             else
                 poison_player(3 + random2avg(13, 2), "", "a potion of strong poison");
-            xom_is_stimulated(128 / xom_factor);
+            xom_is_stimulated(100 / xom_factor);
         }
         break;
 
     case POT_SLOWING:
         if (slow_player((10 + random2(pow)) / factor))
-            xom_is_stimulated(64 / xom_factor);
+            xom_is_stimulated(50 / xom_factor);
         break;
 
     case POT_PARALYSIS:
         you.paralyse(NULL,
                      (2 + random2(6 + you.duration[DUR_PARALYSIS]
                                        / BASELINE_DELAY)) / factor);
-        xom_is_stimulated(64 / xom_factor);
+        xom_is_stimulated(50 / xom_factor);
         break;
 
     case POT_CONFUSION:
         if (confuse_player((3 + random2(8)) / factor))
-            xom_is_stimulated(128 / xom_factor);
+            xom_is_stimulated(100 / xom_factor);
         break;
 
     case POT_INVISIBILITY:
@@ -336,14 +336,14 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         if (lose_stat(STAT_RANDOM, (1 + random2avg(4, 2)) / factor, false,
                       "drinking a potion of degeneration"))
         {
-            xom_is_stimulated(64 / xom_factor);
+            xom_is_stimulated(50 / xom_factor);
         }
         break;
 
     // Don't generate randomly - should be rare and interesting.
     case POT_DECAY:
         if (you.rot(&you, (10 + random2(10)) / factor))
-            xom_is_stimulated(64 / xom_factor);
+            xom_is_stimulated(50 / xom_factor);
         break;
 
     case POT_FIZZING:
@@ -400,7 +400,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
         else
         {
             if (go_berserk(was_known, true))
-                xom_is_stimulated(64);
+                xom_is_stimulated(50);
         }
         break;
 

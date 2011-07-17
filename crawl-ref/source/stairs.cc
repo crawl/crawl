@@ -1161,7 +1161,7 @@ void down_stairs(dungeon_feature_type force_stair,
             if (shaft || feat_is_escape_hatch(stair_find))
                 xom_is_stimulated(shaft_depth * 50);
             else
-                xom_is_stimulated(14);
+                xom_is_stimulated(10);
             break;
 
         case LEVEL_PORTAL_VAULT:
@@ -1173,7 +1173,7 @@ void down_stairs(dungeon_feature_type force_stair,
             // Finding the way out of a labyrinth interests Xom,
             // but less so for Minotaurs. (though not now, as they cannot
             // map the labyrinth any more {due})
-            xom_is_stimulated(98);
+            xom_is_stimulated(75);
             break;
 
         case LEVEL_ABYSS:
@@ -1192,18 +1192,18 @@ void down_stairs(dungeon_feature_type force_stair,
                 || entry_cause != EC_SELF_EXPLICIT)
             {
                 if (crawl_state.is_god_acting())
-                    xom_is_stimulated(255);
+                    xom_is_stimulated(200);
                 else if (entry_cause == EC_SELF_EXPLICIT)
                 {
                     // Entering Pandemonium or the Abyss for the first
                     // time *voluntarily* stimulates Xom much more than
                     // entering a normal dungeon level for the first time.
-                    xom_is_stimulated(128, XM_INTRIGUED);
+                    xom_is_stimulated(100, XM_INTRIGUED);
                 }
                 else if (entry_cause == EC_SELF_RISKY)
-                    xom_is_stimulated(128);
+                    xom_is_stimulated(100);
                 else
-                    xom_is_stimulated(255);
+                    xom_is_stimulated(200);
             }
 
             break;

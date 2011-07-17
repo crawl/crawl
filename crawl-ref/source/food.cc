@@ -862,7 +862,7 @@ bool food_change(bool suppress_message)
                 if (you.level_type == LEVEL_LABYRINTH
                     && !_player_has_enough_food())
                 {
-                    xom_is_stimulated(64);
+                    xom_is_stimulated(50);
                 }
 
                 learned_something_new(HINT_YOU_STARVING);
@@ -1672,7 +1672,7 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
     case CE_POISONOUS:
         mpr("Yeeuch - this meat is poisonous!");
         if (poison_player(3 + random2(4), "", "poisonous meat"))
-            xom_is_stimulated(random2(128));
+            xom_is_stimulated(random2(100));
         break;
 
     case CE_ROTTEN:
@@ -2179,7 +2179,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
                     // resistance due to feeding.
                     mpr("Blech - this blood tastes nasty!");
                     if (poison_player(1 + random2(3), "", "poisonous blood"))
-                        xom_is_stimulated(random2(128));
+                        xom_is_stimulated(random2(100));
                     stop_delay();
                     return;
 
@@ -2830,7 +2830,7 @@ void handle_starvation()
 
             you.increase_duration(DUR_PARALYSIS, 5 + random2(8), 13);
             if (you.religion == GOD_XOM)
-                xom_is_stimulated(get_tension() > 0 ? 255 : 128);
+                xom_is_stimulated(get_tension() > 0 ? 200 : 100);
         }
 
         if (you.hunger <= 100)

@@ -1276,7 +1276,7 @@ static int _xom_check_card(item_def &deck, card_type card,
         amusement *= 2;
     // Expecting one type of card but got another, real funny.
     else if (flags & CFLAG_ODDITY)
-        amusement = 255;
+        amusement = 200;
 
     if (player_in_a_dangerous_place())
         amusement *= 2;
@@ -2928,7 +2928,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
             // Being a self-centered deity, Xom *always* finds this
             // maximally hilarious.
             god_speaks(GOD_XOM, "Xom roars with laughter!");
-            you.gift_timeout = 255;
+            you.gift_timeout = 200;
         }
         else if (you.penance[GOD_XOM])
             god_speaks(GOD_XOM, "Xom laughs nastily.");

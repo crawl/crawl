@@ -2648,7 +2648,7 @@ void monster::go_frenzy()
 
     if (simple_monster_message(this, " flies into a frenzy!"))
         // Xom likes monsters going insane.
-        xom_is_stimulated(friendly() ? 32 : 128);
+        xom_is_stimulated(friendly() ? 25 : 100);
 }
 
 void monster::go_berserk(bool /* intentional */, bool /* potion */)
@@ -2669,7 +2669,7 @@ void monster::go_berserk(bool /* intentional */, bool /* potion */)
     add_ench(mon_enchant(ENCH_BERSERK, 0, 0, duration * 10));
     if (simple_monster_message(this, " goes berserk!"))
         // Xom likes monsters going berserk.
-        xom_is_stimulated(friendly() ? 32 : 128);
+        xom_is_stimulated(friendly() ? 25 : 100);
 }
 
 void monster::expose_to_element(beam_type flavour, int strength)
@@ -5256,7 +5256,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                         mon->add_ench(mon_enchant(ENCH_FEAR, dur + random2(20),
                                                   me.agent()));
                         behaviour_event(mon, ME_SCARE, me.who);
-                        xom_is_stimulated(128);
+                        xom_is_stimulated(100);
                     }
                 }
             }

@@ -723,10 +723,10 @@ public:
         const bool rune_is_near = abyss_rune_nearness();
 
         if (exit_was_near && !exit_is_near || rune_was_near && !rune_is_near)
-            xom_is_stimulated(255, "Xom snickers loudly.", true);
+            xom_is_stimulated(200, "Xom snickers loudly.", true);
 
         if (!rune_was_near && rune_is_near || !exit_was_near && exit_is_near)
-            xom_is_stimulated(255);
+            xom_is_stimulated(200);
     }
 };
 

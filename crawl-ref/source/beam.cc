@@ -1448,9 +1448,9 @@ void bolt::do_fire()
     if (!invalid_monster_index(beam_source))
     {
         if (foe_info.hurt == 0 && friend_info.hurt > 0)
-            xom_is_stimulated(128);
+            xom_is_stimulated(100);
         else if (foe_info.helped > 0 && friend_info.helped == 0)
-            xom_is_stimulated(128);
+            xom_is_stimulated(100);
 
         // Allow friendlies to react to projectiles, except when in
         // sanctuary when pet_target can only be explicitly changed by
@@ -3209,7 +3209,7 @@ void bolt::affect_player_enchantment()
         // You *could* have gotten a free teleportation in the Abyss,
         // but no, you resisted.
         if (flavour == BEAM_TELEPORT && you.level_type == LEVEL_ABYSS)
-            xom_is_stimulated(255);
+            xom_is_stimulated(200);
 
         extra_range_used += range_used_on_hit(&you);
         return;
@@ -3306,7 +3306,7 @@ void bolt::affect_player_enchantment()
         if (!mons_att_wont_attack(attitude)
             && you.level_type == LEVEL_ABYSS)
         {
-            xom_is_stimulated(255);
+            xom_is_stimulated(200);
         }
 
         obvious_effect = true;
@@ -3452,12 +3452,12 @@ void bolt::affect_player_enchantment()
             {
                 // Beam from player rebounded and hit player.
                 if (!aimed_at_feet)
-                    xom_is_stimulated(255);
+                    xom_is_stimulated(200);
             }
             else
             {
                 // Beam from an ally or neutral.
-                xom_is_stimulated(128);
+                xom_is_stimulated(100);
             }
         }
         else
@@ -3470,7 +3470,7 @@ void bolt::affect_player_enchantment()
         else
         {
             foe_info.helped++;
-            xom_is_stimulated(128);
+            xom_is_stimulated(100);
         }
     }
 
@@ -3602,7 +3602,7 @@ void bolt::affect_player()
             if (player_caught_in_net())
             {
                 if (beam_source != NON_MONSTER)
-                    xom_is_stimulated(64);
+                    xom_is_stimulated(50);
                 was_affected = true;
             }
         }
@@ -3669,10 +3669,10 @@ void bolt::affect_player()
             if (beam_source == NON_MONSTER)
             {
                 if (!aimed_at_feet)
-                    xom_is_stimulated(255);
+                    xom_is_stimulated(200);
             }
             else if (was_affected)
-                xom_is_stimulated(128);
+                xom_is_stimulated(100);
         }
         else
             foe_info.hurt++;
@@ -3714,7 +3714,7 @@ void bolt::update_hurt_or_helped(monster* mon)
             if (!is_tracer && !effect_known)
             {
                 const int interest =
-                    (flavour == BEAM_INVISIBILITY && can_see_invis) ? 32 : 128;
+                    (flavour == BEAM_INVISIBILITY && can_see_invis) ? 25 : 100;
                 xom_is_stimulated(interest);
             }
         }
@@ -3727,7 +3727,7 @@ void bolt::update_hurt_or_helped(monster* mon)
 
             // Harmful beam from this monster rebounded and hit the monster.
             if (!is_tracer && mon->mindex() == beam_source)
-                xom_is_stimulated(128);
+                xom_is_stimulated(100);
         }
         else if (nice_to(mon))
             friend_info.helped++;

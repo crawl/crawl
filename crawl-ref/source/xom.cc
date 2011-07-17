@@ -238,7 +238,7 @@ static void _xom_is_stimulated(int maxinterestingness,
 
     int interestingness = random2(piety_scale(maxinterestingness));
 
-    interestingness = std::min(255, interestingness);
+    interestingness = std::min(200, interestingness);
 
 #if defined(DEBUG_RELIGION) || defined(DEBUG_GIFTS) || defined(DEBUG_XOM)
     mprf(MSGCH_DIAGNOSTICS,
@@ -247,7 +247,7 @@ static void _xom_is_stimulated(int maxinterestingness,
 #endif
 
     bool was_stimulated = false;
-    if (interestingness > you.gift_timeout && interestingness >= 12)
+    if (interestingness > you.gift_timeout && interestingness >= 10)
     {
         you.gift_timeout = interestingness;
         was_stimulated = true;
@@ -256,11 +256,11 @@ static void _xom_is_stimulated(int maxinterestingness,
     if (was_stimulated || force_message)
     {
         god_speaks(GOD_XOM,
-                   ((interestingness > 200) ? message_array[5] :
-                    (interestingness > 100) ? message_array[4] :
-                    (interestingness >  75) ? message_array[3] :
-                    (interestingness >  50) ? message_array[2] :
-                    (interestingness >  25) ? message_array[1]
+                   ((interestingness > 160) ? message_array[5] :
+                    (interestingness >  80) ? message_array[4] :
+                    (interestingness >  60) ? message_array[3] :
+                    (interestingness >  40) ? message_array[2] :
+                    (interestingness >  20) ? message_array[1]
                                             : message_array[0]));
         //updating piety status line
         redraw_skill(you.your_name, player_title());
@@ -3987,13 +3987,13 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
 void xom_check_lost_item(const item_def& item)
 {
     if (item.base_type == OBJ_ORBS)
-        xom_is_stimulated(255, "Xom laughs nastily.", true);
+        xom_is_stimulated(200, "Xom laughs nastily.", true);
     else if (is_special_unrandom_artefact(item))
-        xom_is_stimulated(128, "Xom snickers.", true);
+        xom_is_stimulated(100, "Xom snickers.", true);
     else if (item_is_rune(item))
     {
         if (item_is_unique_rune(item))
-            xom_is_stimulated(255, "Xom snickers loudly.", true);
+            xom_is_stimulated(200, "Xom snickers loudly.", true);
         else if (you.entry_cause == EC_SELF_EXPLICIT
                  && !(item.flags & ISFLAG_BEEN_IN_INV))
         {
@@ -4007,12 +4007,12 @@ void xom_check_lost_item(const item_def& item)
                 {
                     // Abyssal runes are a lot more trouble to find than
                     // demonic runes, so they get twice the stimulation.
-                    xom_is_stimulated(128, "Xom snickers.", true);
+                    xom_is_stimulated(100, "Xom snickers.", true);
                 }
             }
             else if (item.plus == RUNE_DEMONIC && !you.runes[RUNE_DEMONIC])
             {
-                xom_is_stimulated(64, "Xom snickers softly.", true);
+                xom_is_stimulated(50, "Xom snickers softly.", true);
             }
         }
     }
@@ -4024,22 +4024,22 @@ void xom_check_destroyed_item(const item_def& item, int cause)
 
     if (item.base_type == OBJ_ORBS)
     {
-        xom_is_stimulated(255, "Xom laughs nastily.", true);
+        xom_is_stimulated(200, "Xom laughs nastily.", true);
         return;
     }
     else if (is_special_unrandom_artefact(item))
-        xom_is_stimulated(128, "Xom snickers.", true);
+        xom_is_stimulated(100, "Xom snickers.", true);
     else if (item_is_rune(item))
     {
         if (item_is_unique_rune(item) || item.plus == RUNE_ABYSSAL)
-            amusement = 255;
+            amusement = 200;
         else
-            amusement = 64;
+            amusement = 50;
     }
 
     xom_is_stimulated(amusement,
-                      (amusement > 128) ? "Xom snickers loudly." :
-                      (amusement > 64)  ? "Xom snickers."
+                      (amusement > 100) ? "Xom snickers loudly." :
+                      (amusement > 50)  ? "Xom snickers."
                                         : "Xom snickers softly.",
                       true);
 }
