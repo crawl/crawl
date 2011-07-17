@@ -1215,9 +1215,8 @@ bool melee_attack::player_aux_test_hit()
     const int helpful_evasion =
         defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
 
-    if (you.religion != GOD_ELYVILON
-        && you.penance[GOD_ELYVILON]
-        && god_hates_your_god(GOD_ELYVILON, you.religion)
+    if (you.penance[GOD_ELYVILON]
+        && god_hates_your_god(GOD_ELYVILON)
         && to_hit >= evasion
         && one_chance_in(20))
     {
@@ -1541,9 +1540,8 @@ int melee_attack::player_hits_monster()
         defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
     dprf("your to-hit: %d; defender effective EV: %d", to_hit, evasion);
 
-    if (you.religion != GOD_ELYVILON
-        && you.penance[GOD_ELYVILON]
-        && god_hates_your_god(GOD_ELYVILON, you.religion)
+    if (you.penance[GOD_ELYVILON]
+        && god_hates_your_god(GOD_ELYVILON)
         && to_hit >= evasion
         && one_chance_in(20))
     {

@@ -58,8 +58,8 @@ bool transformed_player_can_join_god(god_type which_god);
 void god_pitch(god_type which_god);
 int piety_rank(int piety = -1);
 int piety_scale(int piety_change);
-bool god_hates_your_god(god_type god,
-                        god_type your_god = you.religion);
+bool god_likes_your_god(god_type god, god_type your_god = you.religion);
+bool god_hates_your_god(god_type god, god_type your_god = you.religion);
 std::string god_hates_your_god_reaction(god_type god,
                                         god_type your_god = you.religion);
 bool god_hates_cannibalism(god_type god);

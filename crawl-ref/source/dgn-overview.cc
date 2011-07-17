@@ -554,7 +554,7 @@ static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
             colour = (you.penance[god] > 10) ? "red" : "lightred";
         }  else if (you.religion == god) {
             colour = "yellow";
-        }  else if (is_good_god(god) && is_good_god(you.religion)) {
+        }  else if (god_likes_your_god(god)) {
             colour = "brown";
         }
 

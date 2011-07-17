@@ -1215,7 +1215,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     // gods don't use divine retribution on followers of gods they don't
     // hate.
     if (!force && ((god == you.religion && is_good_god(god))
-        || (god != you.religion && !god_hates_your_god(god))))
+        || (!god_hates_your_god(god))))
     {
         return (false);
     }
