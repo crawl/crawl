@@ -877,6 +877,7 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
     case GOD_TROG:
         dislikes.push_back("you memorise spells");
         dislikes.push_back("you attempt to cast spells");
+        dislikes.push_back("you train magic skills");
         break;
 
     case GOD_BEOGH:
