@@ -2047,6 +2047,7 @@ bool do_god_gift(bool forced)
                 break;
 
             const bool need_missiles = _need_missile_gift(forced);
+            object_class_type gift_type;
 
             if (forced && (!need_missiles || one_chance_in(4))
                 || (!forced && you.piety > 130 && random2(you.piety) > 120
@@ -2055,43 +2056,35 @@ bool do_god_gift(bool forced)
                 if (you.religion == GOD_TROG
                     || (you.religion == GOD_OKAWARU && coinflip()))
                 {
-                    success = acquirement(OBJ_WEAPONS, you.religion);
+                    gift_type = OBJ_WEAPONS;
                 }
                 else
-                {
-                    success = acquirement(OBJ_ARMOUR, you.religion);
-                    // Okawaru charges extra for armour acquirements.
-                    if (success)
-                        _inc_gift_timeout(30 + random2avg(15, 2));
-                }
+                    gift_type = OBJ_ARMOUR;
+            }
+            else if (need_missiles)
+                gift_type = OBJ_MISSILES;
+            else
+                break;
 
-                if (success)
+            success = acquirement(gift_type, you.religion);
+            if (success)
+            {
+                simple_god_message(" grants you a gift!");
+                more();
+
+                if (gift_type == OBJ_MISSILES)
+                    _inc_gift_timeout(4 + roll_dice(2, 4));
+                else
                 {
-                    simple_god_message(" grants you a gift!");
-                    more();
+                    // Okawaru charges extra for armour acquirements.
+                    if (you.religion == GOD_OKAWARU && gift_type == OBJ_ARMOUR)
+                        _inc_gift_timeout(30 + random2avg(15, 2));
 
                     _inc_gift_timeout(30 + random2avg(19, 2));
-                    you.num_current_gifts[you.religion]++;
-                    you.num_total_gifts[you.religion]++;
-                    take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
-                break;
-            }
-
-            if (need_missiles)
-            {
-                success = acquirement(OBJ_MISSILES, you.religion);
-                if (success)
-                {
-                    simple_god_message(" grants you a gift!");
-                    more();
-
-                    _inc_gift_timeout(4 + roll_dice(2, 4));
-                    you.num_current_gifts[you.religion]++;
-                    you.num_total_gifts[you.religion]++;
-                    take_note(Note(NOTE_GOD_GIFT, you.religion));
-                }
-                break;
+                you.num_current_gifts[you.religion]++;
+                you.num_total_gifts[you.religion]++;
+                take_note(Note(NOTE_GOD_GIFT, you.religion));
             }
             break;
         }
@@ -2117,7 +2110,7 @@ bool do_god_gift(bool forced)
 
         case GOD_JIYVA:
             if (forced || you.piety > 80 && random2(you.piety) > 50
-                         && one_chance_in(4) && you.gift_timeout == 0
+                         && one_chance_in(4) && !you.gift_timeout
                          && you.can_safely_mutate())
             {
                 if (_jiyva_mutate())
@@ -2227,16 +2220,16 @@ bool do_god_gift(bool forced)
                     // meaningless for Kiku. evk
                     if (you.religion != GOD_KIKUBAAQUDGHA)
                     {
+                        // Vehumet gives books less readily.
+                        if (you.religion == GOD_VEHUMET)
+                            _inc_gift_timeout(10 + random2(10));
+
                         _inc_gift_timeout(40 + random2avg(19, 2));
                         you.num_current_gifts[you.religion]++;
                         you.num_total_gifts[you.religion]++;
                     }
                     take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
-
-                // Vehumet gives books less readily.
-                if (you.religion == GOD_VEHUMET && success)
-                    _inc_gift_timeout(10 + random2(10));
             }                   // End of giving books.
             break;              // End of book gods.
         }                       // switch (you.religion)
