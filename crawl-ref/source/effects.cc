@@ -232,7 +232,7 @@ int torment_player(actor *attacker, int taux)
         (you.religion == GOD_KIKUBAAQUDGHA
         && !player_under_penance()
         && you.piety > 80
-        && you.gift_timeout == 0); // no protection during pain branding weapon
+        && !you.gift_timeout); // no protection during pain branding weapon
 
     if (kiku_shielding_player)
     {
