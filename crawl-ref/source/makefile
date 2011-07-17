@@ -927,15 +927,10 @@ test:
 .PHONY: webserver clean-webserver
 
 webserver/static/%.png: dat/tiles/%.png
-	$(COPY) $< webserver/static/
+	$(QUIET_COPY)$(COPY) $< webserver/static/
 
 webserver/static/game/%.png: dat/tiles/%.png
-	$(COPY) $< webserver/static/game/
-
-$(RLTILES)/%.js: rltile-build
-
-webserver/static/game/%.js: $(RLTILES)/%.js
-	$(COPY) $< webserver/static/game/
+	$(QUIET_COPY)$(COPY) $< webserver/static/game/
 
 TILEINFOJS = $(TILEIMAGEFILES) dngn
 
@@ -943,7 +938,13 @@ STATICFILES = $(TILEIMAGEFILES:%=webserver/static/game/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
               $(TILEINFOJS:%=webserver/static/game/tileinfo-%.js)
 
+$(TILEINFOJS:%=$(RLTILES)/tileinfo-%.js): rltile-build
+
+webserver/static/game/%.js: $(RLTILES)/%.js
+	$(QUIET_COPY)$(COPY) $< webserver/static/game/
+
 clean-webserver:
+	echo $(RLTILESJS)
 	$(RM) $(STATICFILES)
 
 ifdef WEBTILES
