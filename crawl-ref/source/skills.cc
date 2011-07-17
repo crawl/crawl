@@ -593,22 +593,23 @@ static bool _is_magic_skill(skill_type sk)
 
 void train_skills()
 {
-    int cost;
+    int cost, exp;
     do
     {
         cost = calc_skill_cost(you.skill_cost_level);
+        exp = you.exp_available;
         if (you.skill_cost_level == 27)
-            train_skills(you.exp_available, cost);
+            train_skills(exp, cost);
         else
         {
             // Amount of skill points needed to reach the next skill cost level
             // divided by 10 (integer divison rounded up).
             const int next_level = (skill_cost_needed(you.skill_cost_level + 1)
                                     - you.total_skill_points + 9) / 10;
-            train_skills(std::min(you.exp_available, cost * next_level), cost);
+            train_skills(std::min(exp, cost * next_level), cost);
         }
     }
-    while (you.exp_available >= cost);
+    while (you.exp_available >= cost && exp != you.exp_available);
 
     for (int i = 0; i < NUM_SKILLS; ++i)
         check_skill_level_change(static_cast<skill_type>(i));
