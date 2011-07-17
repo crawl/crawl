@@ -163,10 +163,43 @@ void reassess_starting_skills()
     }
 }
 
+// When a skill is lost, we clear the queue of leftover exercises and put then
+// in the training array.
+void lose_skill(skill_type sk)
+{
+    int num_exercises = 0;
+    you.training[sk] = 0;
+    you.train[sk] = 1;
+    for (std::list<skill_type>::iterator it = you.exercises.begin();
+         it != you.exercises.end(); ++it)
+    {
+        if (sk == *it)
+            ++num_exercises;
+    }
+
+    if (!num_exercises)
+        return;
+
+    you.exercises.remove(sk);
+
+    FixedVector<unsigned int, NUM_SKILLS> training = you.training;
+    for (int i = 0; i < NUM_SKILLS; ++i)
+        if (!you.skills[i])
+            training[i] = 0;
+
+    for (int i = 0; i < num_exercises; ++i)
+    {
+        you.exercises.push_back(static_cast<skill_type>(
+                                random_choose_weighted(training)));
+    }
+    you.training[sk] = num_exercises;
+}
+
 static void _change_skill_level(skill_type exsk, int n)
 {
     ASSERT(n != 0);
     skill_type old_best_skill = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
+    bool need_reset = false;
 
     if (-n > you.skills[exsk])
         n = -you.skills[exsk];
@@ -185,6 +218,12 @@ static void _change_skill_level(skill_type exsk, int n)
     {
         mprf(MSGCH_INTRINSIC_GAIN, "You have gained %s skill!", skill_name(exsk));
         hints_gained_new_skill(exsk);
+    }
+    else if (!you.skills[exsk])
+    {
+        mprf(MSGCH_INTRINSIC_GAIN, "You have lost %s skill!", skill_name(exsk));
+        lose_skill(exsk);
+        need_reset = true;
     }
     else if (abs(n) == 1 && you.num_turns)
     {
@@ -205,7 +244,7 @@ static void _change_skill_level(skill_type exsk, int n)
     if (you.skills[exsk] - n == 27)
     {
         you.train[exsk] = 1;
-        reset_training();
+        need_reset = true;
     }
 
     // Recalculate this skill's order for tie breaking skills
@@ -248,6 +287,8 @@ static void _change_skill_level(skill_type exsk, int n)
     if (best != old_best_skill || old_best_skill == exsk)
         redraw_skill(you.your_name, player_title());
 
+    if (need_reset)
+        reset_training();
     // TODO: also identify rings of wizardry.
 }
 
@@ -450,9 +491,8 @@ void reset_training()
             skill_type sk = *it;
             if (you.train[sk])
             {
-                // Only known skills should be in the queue, except if you have
-                // lost a skill which is currently only possible in wizmode.
-                ASSERT(you.skills[sk] || you.wizard);
+                // Only known skills should be in the queue.
+                ASSERT(you.skills[sk]);
                 you.training[sk] += you.train[sk];
                 empty = false;
             }

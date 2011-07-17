@@ -23,5 +23,6 @@ void exercise(skill_type exsk, int deg);
 void train_skills();
 void train_skills(int exp, const int cost);
 void train_skill(skill_type skill, int exp);
+void lose_skill(skill_type sk);
 
 #endif

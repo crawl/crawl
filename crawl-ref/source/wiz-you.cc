@@ -412,8 +412,8 @@ void wizard_set_skill_level(skill_type skill)
                 you.train[skill] = 0;
                 check_selected_skills();
             }
-            else if (!amount && !you.train[skill])
-                you.train[skill] = 1;
+            else if (!amount)
+                lose_skill(skill);
 
             reset_training();
             calc_total_skill_points();
