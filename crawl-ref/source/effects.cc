@@ -228,7 +228,7 @@ int torment_player(actor *attacker, int taux)
     }
 
     // Kiku protects you from torment to a degree.
-    bool kiku_shielding_player =
+    const bool kiku_shielding_player =
         (you.religion == GOD_KIKUBAAQUDGHA
         && !player_under_penance()
         && you.piety > 80
