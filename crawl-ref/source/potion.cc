@@ -407,7 +407,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
     case POT_CURE_MUTATION:
         mpr("It has a very clean taste.");
         for (int i = 0; i < 7; i++)
-            if (random2(10) > i)
+            if (random2(9) >= i)
                 delete_mutation(RANDOM_MUTATION, false);
         break;
 
