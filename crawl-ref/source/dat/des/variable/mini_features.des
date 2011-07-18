@@ -2209,7 +2209,7 @@ NAME:  kilobyte_tornado_obelisk
 TAGS:  no_monster_gen
 DEPTH: D:15-27, Elf
 ITEM:  acquire any
-MONS:  statue generate_awake n_rpl name:diamond_obelisk hd:15 hp:10000 \
+MONS:  statue generate_awake n_rpl name:diamond_obelisk hp:10000 \
        col:white tile:mons_diamond_obelisk
 KPROP: .d1 = no_tele_into
 {{
@@ -2223,20 +2223,22 @@ KPROP: .d1 = no_tele_into
   end)
 }}
 MAP
-     ccc
-    ccdcc
-  ccc...ccc
- cc.......cc
- c.........c
-cc.........cc
-c...........c
-c.....1.....c
-c...........c
-cc.........cc
- c.........cc
- cc.......cc
-  ccc...ccc
-    c.@.c
+      ccc
+     ccdcc
+   ccc...ccc
+  cc.......cc
+ cc.........cc
+ c...........c
+cc...........cc
+c.............c
+c......1......c
+c.............c
+cc...........cc
+ c...........c
+ cc.........cc
+  cc.......cc
+   ccc...ccc
+     c.@.c
 ENDMAP
 
 
