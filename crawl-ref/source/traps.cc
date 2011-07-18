@@ -243,8 +243,11 @@ bool trap_def::is_safe(actor* act) const
     if (!is_known(act))
         return false;
 
-    if (type == TRAP_GOLUBRIA || crawl_state.game_is_zotdef())
+    if (type == TRAP_GOLUBRIA || type == TRAP_SHAFT
+        || crawl_state.game_is_zotdef())
+    {
         return true;
+    }
 
     #ifdef CLUA_BINDINGS
      // Prompt for any trap where you might not have enough hp
