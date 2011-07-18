@@ -890,7 +890,10 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         if (!you_trigger)
         {
             if (in_sight)
+            {
                 mpr("The shaft crumbles and collapses.");
+                know_trap_destroyed = true;
+            }
             trap_destroyed = true;
         }
         break;
