@@ -767,7 +767,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
     return (true);
 }                               // end cast_a_spell()
 
-static void _spellcasting_side_effects(spell_type spell, int pow)
+static void _spellcasting_side_effects(spell_type spell, int pow, god_type god)
 {
     // If you are casting while a god is acting, then don't do conducts.
     // (Presumably Xom is forcing you to cast a spell.)
@@ -804,6 +804,10 @@ static void _spellcasting_side_effects(spell_type spell, int pow)
     {
         excommunication();
     }
+
+    // Make some noise if it's actually the player casting.
+    if (god == GOD_NO_GOD)
+        noisy(spell_noise(spell), you.pos());
 
     alert_nearby_monsters();
 }
@@ -1143,12 +1147,6 @@ spret_type your_spells(spell_type spell, int powc,
         (crawl_state.is_god_acting()) ? crawl_state.which_god_acting()
                                       : GOD_NO_GOD;
 
-    const int  loudness        = spell_noise(spell);
-
-    // Make some noise if it's actually the player casting.
-    if (god == GOD_NO_GOD && loudness)
-        noisy(loudness, you.pos());
-
     if (allow_fail)
     {
         int spfl = random2avg(100, 3);
@@ -1228,7 +1226,7 @@ spret_type your_spells(spell_type spell, int powc,
     switch (_do_cast(spell, powc, spd, beam, god, potion, check_range))
     {
     case SPRET_SUCCESS:
-        _spellcasting_side_effects(spell, powc);
+        _spellcasting_side_effects(spell, powc, god);
         return (SPRET_SUCCESS);
 
     case SPRET_FAIL:
