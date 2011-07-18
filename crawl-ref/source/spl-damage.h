@@ -29,7 +29,8 @@ int wielding_rocks();
 bool cast_sandblast(int powc, bolt &beam);
 bool cast_tornado(int powc);
 void tornado_damage(actor *caster, int dur);
-void cancel_tornado();
+void cancel_tornado(bool tloc = false);
+void tornado_move(const coord_def &pos);
 
 actor* forest_near_enemy(const actor *mon);
 void forest_message(const coord_def pos, const std::string &msg,

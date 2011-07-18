@@ -411,7 +411,7 @@ void tornado_damage(actor *caster, int dur)
         fire_final_effects();
 }
 
-void cancel_tornado()
+void cancel_tornado(bool tloc)
 {
     if (!you.duration[DUR_TORNADO])
         return;
@@ -419,14 +419,49 @@ void cancel_tornado()
     dprf("Aborting tornado.");
     if (you.duration[DUR_TORNADO] == you.duration[DUR_LEVITATION])
     {
-        you.duration[DUR_LEVITATION] = 0;
-        you.duration[DUR_CONTROLLED_FLIGHT] = 0;
-        you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
-        burden_change();
-        // NO checking for water, since this is called only during level
-        // change, and being, say, banished from above water shouldn't
-        // kill you.
+        if (tloc)
+        {
+            // it'd be better to abort levitation instantly, but let's first
+            // make damn sure all ways of translocating are prevented from
+            // landing you in water.  Insta-kill due to an arrow of dispersal
+            // is not nice.
+            you.duration[DUR_LEVITATION] = std::min(20,
+                you.duration[DUR_LEVITATION]);
+            you.duration[DUR_CONTROLLED_FLIGHT] = std::min(20,
+                you.duration[DUR_CONTROLLED_FLIGHT]);
+        }
+        else
+        {
+            you.duration[DUR_LEVITATION] = 0;
+            you.duration[DUR_CONTROLLED_FLIGHT] = 0;
+            you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
+            burden_change();
+            // NO checking for water, since this is called only during level
+            // change, and being, say, banished from above water shouldn't
+            // kill you.
+        }
     }
     you.duration[DUR_TORNADO] = 0;
     you.duration[DUR_TORNADO_COOLDOWN] = 0;
+}
+
+void tornado_move(const coord_def &p)
+{
+    if (!you.duration[DUR_TORNADO])
+        return;
+
+    int dist2 = (you.pos() - p).abs();
+    if (dist2 > sqr(TORNADO_RADIUS) + 1)
+        cancel_tornado(true);
+    else if (dist2 > 2)
+    {
+        int dist = 0;
+        while (dist * dist + 1 < dist2)
+            dist++;
+        dist--;
+        if (dist > 0)
+            dprf("Tloc penalty: reducing tornado by %d turns", dist);
+        you.duration[DUR_TORNADO] = std::max(1,
+                     you.duration[DUR_TORNADO] - dist * 10);
+    }
 }
