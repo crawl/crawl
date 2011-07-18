@@ -76,7 +76,7 @@
      CE_CONTAMINATED,    occasionally causes sickness
      CE_POISONOUS,       hazardous to characters without poison resistance
      CE_POISON_CONTAM,   contaminated if poison-resistant, else poisonous
-     CE_HCL,             causes rotting in non-Ghouls
+     CE_ROT,             causes rotting in non-Ghouls
      CE_MUTAGEN_RANDOM,  mutagenic
      CE_MUTAGEN_GOOD,  // may be worth implementing {dlb}
      CE_MUTAGEN_BAD,   // may be worth implementing {dlb}
@@ -1315,7 +1315,7 @@ static monsterentry mondata[] = {
     900, 11, MONS_DRAGON, MONS_DEATH_DRAKE, MH_NATURAL, -3,
     { {AT_BITE, AF_PLAIN, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 9, 5, 7, 0 },
-    6, 14, MST_DEATH_DRAKE, CE_HCL, Z_BIG, S_ROAR,
+    6, 14, MST_DEATH_DRAKE, CE_ROT, Z_BIG, S_ROAR,
     I_ANIMAL, HT_LAND, FL_FLY, 13, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
@@ -1402,7 +1402,7 @@ static monsterentry mondata[] = {
     500, 12, MONS_GHOUL, MONS_NECROPHAGE, MH_UNDEAD, -5,
     { {AT_HIT, AF_ROT, 8}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 5, 3, 5, 0 },
-    2, 10, MST_NO_SPELLS, CE_HCL, Z_NOZOMBIE, S_SILENT,
+    2, 10, MST_NO_SPELLS, CE_ROT, Z_NOZOMBIE, S_SILENT,
     I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, MONEAT_CORPSES, SIZE_MEDIUM
 },
@@ -1414,7 +1414,7 @@ static monsterentry mondata[] = {
     500, 10, MONS_GHOUL, MONS_GHOUL, MH_UNDEAD, -5,
     { {AT_HIT, AF_ROT, 30}, {AT_CLAW, AF_ROT, 30}, AT_NO_ATK, AT_NO_ATK },
     { 14, 8, 5, 0 },
-    4, 10, MST_NO_SPELLS, CE_HCL, Z_NOZOMBIE, S_SILENT,
+    4, 10, MST_NO_SPELLS, CE_ROT, Z_NOZOMBIE, S_SILENT,
     I_NORMAL, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
     MONUSE_WEAPONS_ARMOUR, MONEAT_CORPSES, SIZE_MEDIUM
 },
@@ -1426,7 +1426,7 @@ static monsterentry mondata[] = {
     780, 10, MONS_GHOUL, MONS_ROTTING_HULK, MH_UNDEAD, -5,
     { {AT_HIT, AF_DISEASE, 25}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 10, 3, 5, 0 },
-    5, 7, MST_NO_SPELLS, CE_HCL, Z_NOZOMBIE, S_SILENT,
+    5, 7, MST_NO_SPELLS, CE_ROT, Z_NOZOMBIE, S_SILENT,
     I_NORMAL, HT_LAND, FL_NONE, 8, DEFAULT_ENERGY,
     MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_LARGE
 },
@@ -2276,7 +2276,7 @@ static monsterentry mondata[] = {
     { {AT_BITE, AF_DISEASE, 5}, {AT_BITE, AF_VAMPIRIC, 8}, AT_NO_ATK,
        AT_NO_ATK },
     { 5, 3, 5, 0 },
-    2, 15, MST_NO_SPELLS, CE_HCL, Z_NOZOMBIE, S_BUZZ,
+    2, 15, MST_NO_SPELLS, CE_ROT, Z_NOZOMBIE, S_BUZZ,
     I_PLANT, HT_LAND, FL_FLY, 19, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LITTLE
 },
@@ -2756,7 +2756,7 @@ static monsterentry mondata[] = {
     { {AT_BITE, AF_DRAIN_XP, 20}, {AT_CLAW, AF_PLAIN, 15},
       {AT_CLAW, AF_PLAIN, 15}, AT_NO_ATK },
     { 17, 5, 5, 0 },
-    15, 10, MST_SHADOW_DRAGON, CE_HCL, Z_BIG, S_ROAR,
+    15, 10, MST_SHADOW_DRAGON, CE_ROT, Z_BIG, S_ROAR,
     I_ANIMAL, HT_LAND, FL_FLY, 10, DEFAULT_ENERGY,
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_GIANT
 },

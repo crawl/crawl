@@ -422,7 +422,7 @@ bool cast_fulsome_distillation(int pow, bool check_range)
 
     case CE_MUTAGEN_BAD:    // unused
     case CE_ROTTEN:         // actually this only occurs via mangling
-    case CE_HCL:            // necrophage
+    case CE_ROT:            // necrophage
         pot_type = POT_DECAY;
         break;
 

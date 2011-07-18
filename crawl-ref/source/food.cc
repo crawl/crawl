@@ -1663,7 +1663,7 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
         xom_is_stimulated(random2(200));
         break;
 
-    case CE_HCL:
+    case CE_ROT:
         you.rot(&you, 10 + random2(10));
         if (you.sicken(50 + random2(100)))
             xom_is_stimulated(random2(100));
@@ -2205,7 +2205,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
                     // No healing from bad mutagenic blood.
                     break;
 
-                case CE_HCL:
+                case CE_ROT:
                     you.rot(&you, 5 + random2(5));
                     if (you.sicken(50 + random2(100)))
                         xom_is_stimulated(random2(100));
@@ -2274,7 +2274,7 @@ bool causes_rot(const item_def &food)
     if (you.species == SP_GHOUL)
         return (false);
 
-    return (mons_corpse_effect(food.plus) == CE_HCL);
+    return (mons_corpse_effect(food.plus) == CE_ROT);
 }
 
 // Returns 1 for herbivores, -1 for carnivores and 0 for either.
@@ -2622,7 +2622,7 @@ static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
     // Determine the initial effect of eating a particular chunk. {dlb}
     switch (chunktype)
     {
-    case CE_HCL:
+    case CE_ROT:
     case CE_MUTAGEN_RANDOM:
         if (you.species == SP_GHOUL)
             chunktype = CE_CLEAN;
