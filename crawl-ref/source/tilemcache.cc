@@ -123,7 +123,7 @@ protected:
 class mcache_demon : public mcache_entry
 {
 public:
-    mcache_demon(const monster* mon);
+    mcache_demon(const monster_info& minf);
     mcache_demon(reader &th);
 
     virtual int info(tile_draw_info *dinfo) const;
@@ -179,10 +179,11 @@ unsigned int mcache_manager::register_monster(const monster* mon)
     // TODO enne - is it worth it to search against all mcache entries?
     // TODO enne - pool mcache types to avoid too much alloc/dealloc?
 
+    monster_info minf(mon);
     mcache_entry *entry;
 
     if (mcache_demon::valid(mon))
-        entry = new mcache_demon(mon);
+        entry = new mcache_demon(minf);
     else if (mcache_ghost::valid(mon))
         entry = new mcache_ghost(mon);
     else if (mcache_draco::valid(mon))
@@ -834,26 +835,21 @@ bool mcache_ghost::transparent() const
 /////////////////////////////////////////////////////////////////////////////
 // mcache_demon
 
-mcache_demon::mcache_demon(const monster* mon)
+mcache_demon::mcache_demon(const monster_info& minf)
 {
-    ASSERT(mcache_demon::valid(mon));
+    ASSERT(minf.type == MONS_PANDEMONIUM_LORD);
 
-    const class ghost_demon &ghost = *mon->ghost;
+    const uint32_t seed = hash(&minf.mname[0], minf.mname.size());
+    rng_save_excursion exc;
+    seed_rng(seed);
 
-    unsigned int pseudo_rand1 = ghost.max_hp * 54321 * 54321;
-    unsigned int pseudo_rand2 = ghost.ac * 54321 * 54321;
-    unsigned int pseudo_rand3 = ghost.ev * 54321 * 54321;
+    m_demon.head = TILEP_DEMON_HEAD + random2(tile_player_count(TILEP_DEMON_HEAD));
+    m_demon.body = TILEP_DEMON_BODY + random2(tile_player_count(TILEP_DEMON_BODY));
 
-    int head_offset = pseudo_rand1 % tile_player_count(TILEP_DEMON_HEAD);
-    m_demon.head = TILEP_DEMON_HEAD + head_offset;
-
-    int body_offset = pseudo_rand2 % tile_player_count(TILEP_DEMON_BODY);
-    m_demon.body = TILEP_DEMON_BODY + body_offset;
-
-    if (ghost.ev % 2)
+    if (minf.fly)
     {
-        int wings_offset = pseudo_rand3 % tile_player_count(TILEP_DEMON_WINGS);
-        m_demon.wings = TILEP_DEMON_WINGS + wings_offset;
+        m_demon.wings = TILEP_DEMON_WINGS
+                        + random2(tile_player_count(TILEP_DEMON_WINGS));
     }
     else
         m_demon.wings = 0;
