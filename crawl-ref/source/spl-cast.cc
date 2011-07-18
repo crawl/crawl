@@ -1056,13 +1056,6 @@ spret_type your_spells(spell_type spell, int powc,
     const unsigned int flags = get_spell_flags(spell);
 
     ASSERT(wiz_cast || !(flags & SPFLAG_TESTING));
-    if ((flags & SPFLAG_TESTING) && !wiz_cast)
-    {
-        mprf(MSGCH_ERROR, "Spell %s is a testing spell, but you didn't use "
-                          "the &Z wizard command; please file a bug report.",
-             spell_title(spell));
-        return (SPRET_ABORT);
-    }
 
     int potion = -1;
 
