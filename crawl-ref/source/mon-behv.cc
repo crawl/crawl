@@ -245,10 +245,6 @@ void handle_behaviour(monster* mon)
         }
     }
 
-    const dungeon_feature_type can_move =
-        (mons_habitat(mon) == HT_AMPHIBIOUS) ? DNGN_DEEP_WATER
-                                             : DNGN_SHALLOW_WATER;
-
     // Validate current target exists.
     _mon_check_foe_invalid(mon);
 
@@ -589,7 +585,7 @@ void handle_behaviour(monster* mon)
                     break;
                 }
 
-                if (mon->firing_pos.zero() && try_pathfind(mon, can_move))
+                if (mon->firing_pos.zero() && try_pathfind(mon))
                     break;
 
                 // Whew. If we arrived here, path finding didn't yield anything
@@ -682,7 +678,7 @@ void handle_behaviour(monster* mon)
                 break;
             }
 
-            check_wander_target(mon, isPacified, can_move);
+            check_wander_target(mon, isPacified);
 
             // During their wanderings, monsters will eventually relax
             // their guard (stupid ones will do so faster, smart
@@ -1024,11 +1020,7 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
             if (src == MHITYOU && src_pos == you.pos()
                 && !you.see_cell(mon->pos()))
             {
-                const dungeon_feature_type can_move =
-                    (mons_habitat(mon) == HT_AMPHIBIOUS) ? DNGN_DEEP_WATER
-                                                         : DNGN_SHALLOW_WATER;
-
-                try_pathfind(mon, can_move);
+                try_pathfind(mon);
             }
         }
         break;

@@ -3533,8 +3533,28 @@ void make_mons_leave_level(monster* mon)
     }
 }
 
-// Checks whether there is a straight path from p1 to p2 that passes
-// through features >= allowed.
+static bool _can_safely_go_through(const monster * mon, const coord_def p)
+{
+    const dungeon_feature_type can_move =
+        (mons_habitat(mon) == HT_AMPHIBIOUS) ? DNGN_DEEP_WATER
+                                             : DNGN_SHALLOW_WATER;
+
+    if (env.grid(p) < can_move)
+        return false;
+
+    // Stupid monsters don't pathfind around shallow water
+    // except the clinging ones.
+    if (mon->floundering_at(p)
+        && (mons_intel(mon) >= I_NORMAL || mon->can_cling_to_walls()))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+// Checks whether there is a straight path from p1 to p2 that monster can
+// safely passes through.
 // If it exists, such a path may be missed; on the other hand, it
 // is not guaranteed that p2 is visible from p1 according to LOS rules.
 // Not symmetric.
@@ -3542,7 +3562,7 @@ void make_mons_leave_level(monster* mon)
 //        something like exists_ray(p1, p2, opacity_monmove(mons)),
 //        where opacity_monmove() is fixed to include opacity_immob.
 bool can_go_straight(const monster* mon, const coord_def& p1,
-                     const coord_def& p2, dungeon_feature_type allowed)
+                     const coord_def& p2)
 {
     // If no distance, then trivially true
     if (p1 == p2)
@@ -3556,20 +3576,11 @@ bool can_go_straight(const monster* mon, const coord_def& p1,
     if (!find_ray(p1, p2, ray, opc_immob))
         return (false);
 
-    dungeon_feature_type max_disallowed = DNGN_MAXOPAQUE;
-    if (allowed != DNGN_UNSEEN)
-        max_disallowed = static_cast<dungeon_feature_type>(allowed - 1);
-
     for (ray.advance(); ray.pos() != p2; ray.advance())
     {
         ASSERT(map_bounds(ray.pos()));
-        dungeon_feature_type feat = env.grid(ray.pos());
-        if (feat >= DNGN_UNSEEN && feat <= max_disallowed
-            || (mons_intel(mon) >= I_NORMAL || mon->can_cling_to_walls())
-                && mon->floundering_at(ray.pos()))
-        {
+        if (!_can_safely_go_through(mon, ray.pos()))
             return (false);
-        }
     }
 
     return (true);
