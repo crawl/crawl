@@ -174,7 +174,7 @@ void mons_relocated(monster* mons);
 void mons_att_changed(monster* mons);
 
 bool can_go_straight(const monster* mon, const coord_def& p1,
-                     const coord_def& p2, dungeon_feature_type allowed);
+                     const coord_def& p2);
 
 bool is_item_jelly_edible(const item_def &item);
 
