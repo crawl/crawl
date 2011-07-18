@@ -64,6 +64,7 @@
 #include "skills.h"
 #include "skills2.h"
 #include "species.h"
+#include "spl-damage.h"
 #include "spl-other.h"
 #include "spl-selfench.h"
 #include "spl-transloc.h"
@@ -381,7 +382,10 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
     ASSERT(in_bounds(p));
 
     if (!stepped)
+    {
         you.clear_clinging();
+        tornado_move(p);
+    }
 
     // assuming that entering the same square means coming from above (levitate)
     const coord_def old_pos = you.pos();
