@@ -3524,7 +3524,7 @@ bool god_likes_your_god(god_type god, god_type your_god)
 bool god_hates_your_god(god_type god, god_type your_god)
 {
     // Gods do not hate themselves.
-    if (god != your_god)
+    if (god == your_god)
         return (false);
 
     // Non-good gods always hate your current god.
