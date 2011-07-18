@@ -510,6 +510,9 @@ bool noisy(int original_loudness, const coord_def& where,
            const char *msg, int who,
            bool mermaid, bool message_if_unseen, bool fake_noise)
 {
+    if (original_loudness <= 0)
+        return (false);
+
     // high ambient noise makes sounds harder to hear
     const int ambient = current_level_ambient_noise();
     const int loudness =
