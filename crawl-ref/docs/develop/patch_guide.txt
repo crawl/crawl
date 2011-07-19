@@ -26,11 +26,12 @@ Main steps
     text files.
 
 1.) Make a local clone of the source code:
-    git clone git@gitorious.org:crawl/crawl.git
+    git clone git://gitorious.org/crawl/crawl.git
 
 2.) Compile the code. To do this you might have to install a compiler and/or
     additional libraries. See INSTALL.txt for details. If you have any
-    questions, you can ask for help on crawl-ref-discuss@lists.sourceforge.net.
+    questions, you can ask for help on crawl-ref-discuss@lists.sourceforge.net,
+    or in ##crawl-dev on irc.freenode.net.
 
 3.) Now you can start tweaking the code. Depending on your coding background
     you may want to experiment with smaller changes first. If you intend to
