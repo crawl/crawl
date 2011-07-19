@@ -39,6 +39,10 @@ Using git for Stone Soup development
 
 1. Clone the crawl repository from gitorious (analogous to svn checkout):
 
+   Developers (anyone with commit rights to the git repo):
+   $ git clone git@gitorious.org:crawl/crawl.git
+
+   Other users:
    $ git clone git://gitorious.org/crawl/crawl.git
 
    "git clone" clones Crawl's entire git repository to your machine. When
@@ -64,9 +68,8 @@ Using git for Stone Soup development
 
 3. SSH keys (for core developers):
 
-   Other than for SourceForge, if you want to actually push to the
-   gitorious repository, you will need to create an ssh key and upload
-   your public key to gitorious.org:
+   If you want to actually push to the gitorious repository, you will
+   need to create an ssh key and upload your public key to gitorious.org.
 
    Let's create an ssh key (if you already have a key, skip this
    step):
