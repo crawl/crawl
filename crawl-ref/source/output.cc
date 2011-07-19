@@ -696,6 +696,17 @@ static bool _need_stats_printed()
 }
 #endif
 
+static std::string _get_exp_progress()
+{
+    if (you.experience_level >= 27)
+        return "";
+
+    const int current = exp_needed(you.experience_level);
+    const int next    = exp_needed(you.experience_level + 1);
+    return make_stringf("%2d%%",
+                        (you.experience - current) * 100 / (next - current));
+}
+
 void print_stats(void)
 {
     cursor_control coff(false);
@@ -737,6 +748,13 @@ void print_stats(void)
         cprintf("XL: ");
         textcolor(HUD_VALUE_COLOUR);
         cprintf("%2d ", you.experience_level);
+        if (you.experience_level < 27)
+        {
+            textcolor(Options.status_caption_colour);
+            cprintf("Next: ");
+            textcolor(HUD_VALUE_COLOUR);
+            cprintf("%s", _get_exp_progress().c_str());
+        }
 #endif
         if (crawl_state.game_is_zotdef())
         {
@@ -1714,15 +1732,15 @@ static std::vector<formatted_string> _get_overview_stats()
     else
         lives[0] = 0;
 
-    int xp_needed = (exp_needed(you.experience_level + 1) - you.experience) + 1;
     snprintf(buf, sizeof buf,
-             "Exp: %d/%u (%d)%s\n"
+             "XL: %d%s\n"
              "God: %s\n"
              "Spells: %2d memorised, %2d level%s left\n"
              "%s",
-             you.experience_level, you.experience, you.exp_available,
-             (you.experience_level < 27?
-              make_stringf(", need: %d", xp_needed).c_str() : ""),
+             you.experience_level,
+             (you.experience_level < 27 ? make_stringf("   Next: %s",
+                                           _get_exp_progress().c_str()).c_str()
+                                        : ""),
              godpowers.c_str(),
              you.spell_no, player_spell_levels(),
              (player_spell_levels() == 1) ? "" : "s",
