@@ -39,7 +39,7 @@ Using git for Stone Soup development
 
 1. Clone the crawl repository from gitorious (analogous to svn checkout):
 
-   $ git clone git@gitorious.org:crawl/crawl.git
+   $ git clone git://gitorious.org/crawl/crawl.git
 
    "git clone" clones Crawl's entire git repository to your machine. When
    it's done, you have a full local copy of the crawl repository with all
@@ -128,7 +128,7 @@ Using git for Stone Soup development
       git stash apply will warn you of the conflict and add conflict
       markers to the relevant files.
 
-4. Committing a change to the 'master' branch:
+5. Committing a change to the 'master' branch:
 
    git's master branch is the equivalent of svn trunk. Immediately
    after cloning a repository, the cloned crawl repo will be on the
@@ -208,7 +208,32 @@ Using git for Stone Soup development
    $ git pull
    $ git push
 
-5. Viewing revision history:
+6. Patching (for regular contributors, not core devs):
+
+   Once you have commited and tested a change, you can create a patch for it.
+   You can then send this patch to the devs or upload it to a mantis
+   issue for review and potential addition to the game.
+
+   To start, make and save your changes in whatever text editor you choose.
+   Then, as explained above, commit those changes:
+
+   $ git commit -a
+
+   In most cases, this is a good time to compile and test the change.  Make
+   sure it works correctly, testing in Wizard Mode as appropriate.
+
+   When you're happy with your patch, you can make a patch file with the
+   format-patch command.  For example:
+
+   $ git format-patch -1
+
+   This will create a patch from the most recent commit you've made.  The
+   patch file will be placed in your base Crawl source directory.
+
+   For a more detailed patch creation guide, check out patch_guide.txt in the
+   /docs/develop/ directory.
+
+7. Viewing revision history:
 
    You can see a history of changes with
    $ git log
@@ -238,7 +263,7 @@ Using git for Stone Soup development
 
    $ git blame stuff.cc
 
-6. Committing a change to the 0.5 branch:
+8. Committing a change to the 0.5 branch:
 
    So far we've restricted our attention to 'master', which is the
    easiest branch to work with, since it's selected by default. Now
@@ -339,7 +364,7 @@ from origin.
    with:
    $ git checkout stone_soup-0.5
 
-7. Common operations:
+9. Common operations:
 
    Reverting Changes
    -----------------
@@ -390,7 +415,7 @@ from origin.
    In general, "git status" is your friend. It will usually tell you
    exactly what you need to do.
 
-9. Branching:
+10. Branching:
 
    Let's say it's time to create a stable 0.6 branch. Here's how you'd
    do it:
@@ -438,14 +463,14 @@ from origin.
       up for you when you work with branches that already exist on
       gitorious.
 
-10. Tagging:
+11. Tagging:
 
    Once 0.6 is fit for a release, you'll need to tag it:
 
    $ git checkout stone_soup-0.6
    $ git tag -a release-0.6 -m "0.6: Now with extra kangaroos"
 
-11. Committing changes from one major branch of development to another:
+12. Committing changes from one major branch of development to another:
 
    Once we create a stable branch (say 0.5), we usually make all
    changes to trunk, but apply bugfixes to the 0.5 branch as well.
