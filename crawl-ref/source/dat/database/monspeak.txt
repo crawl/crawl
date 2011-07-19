@@ -5404,7 +5404,7 @@ _Terence_rare_
 
 ## END Terence ###
 %%%%
-############ TUKIMA ### A spectral dancer
+############ TERPSICHORE ### A spectral dancer
 # Cantrip messages
 Terpsichore_self_buff
 
@@ -5425,7 +5425,6 @@ _Terpsichore_self_buff_
 @The_monster@ cartwheels!
 
 @The_monster@ extends @possessive@ arms.
-
 %%%%
 _Terpsichore_other_buff_
 
@@ -5434,7 +5433,6 @@ _Terpsichore_other_buff_
 A look of regret passes over @the_monster@'s face.
 
 @The_monster@ twirls.
-
 %%%%
 _Terpsichore_debuff_
 
@@ -5445,7 +5443,6 @@ You feel strangely compelled to dance the "Siva Afi."
 You feel compelled to twirl your non-existent dancing partner!
 
 Some annoying song lyrics get stuck in your head!
-
 %%%%
 Terpsichore
 
@@ -5453,7 +5450,6 @@ Terpsichore
 
 w:4
 @_terpsichore_rare_@
-
 %%%%
 _terpsichore_common_
 
@@ -5468,19 +5464,16 @@ _terpsichore_common_
 @The_monster@ calls, "Will you, won't you, will you join the dance?"
 
 @The_monster@ asks, "Would you care for a dance?"
-
 %%%%
 _terpsichore_rare_
 
 @The_monster@ wistfully exclaims, "I've searched so long for a dance partner..."
 
 @The_monster@ pleads, "Your soul could dance with me forever!"
-
 %%%%
 Terpsichore killed
 
 @The_monster@ whispers, "I'll be waiting for you..."
-
 ## END Terpsichore ##
 %%%%
 ############ URUG ### An orc hired to kill you
