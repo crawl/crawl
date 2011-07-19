@@ -485,6 +485,8 @@ function get_cell_map_feature(cell)
         return MF_FEATURE;
     else if (bg_idx >= TILE_FLOOR_MAX)
         return MF_WALL;
+    else if (bg_idx == 0)
+        return MF_UNSEEN;
     else
         return MF_FLOOR;
 }
