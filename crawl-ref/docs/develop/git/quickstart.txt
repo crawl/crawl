@@ -17,8 +17,10 @@ Mac: Install git using Mac ports or Fink. The MacPorts port is
 called git-core (sudo port install git-core).
 
 Windows: Install msysgit (http://code.google.com/p/msysgit/).
-TortoiseGit is apparently pretty usable now for those who want
-Windows explorer integration, but I have not used it myself.
+Be sure to download the 'msysGit-netinstall' - this is the only
+installer used and supported by the Crawl team. TortoiseGit is
+apparently pretty usable now for those who want Windows explorer
+integration, but I have not used it myself.
 
 Using git for Stone Soup development
 ------------------------------------
