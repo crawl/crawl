@@ -6457,12 +6457,22 @@ void player::petrify(actor *who)
         return;
     }
 
-    if (you.petrified() || you.petrifying())
+    if (you.petrified())
         return;
 
     you.duration[DUR_PETRIFYING] = 3 * BASELINE_DELAY;
 
+    you.redraw_evasion = true;
     mprf(MSGCH_WARN, "You are slowing down.");
+}
+
+bool player::fully_petrify(actor *foe, bool quiet)
+{
+    you.duration[DUR_PETRIFIED] = 6 * BASELINE_DELAY
+                        + random2(4 * BASELINE_DELAY);
+    you.redraw_evasion = true;
+    mpr("You have turned to stone.");
+    return true;
 }
 
 void player::slow_down(actor *foe, int str)

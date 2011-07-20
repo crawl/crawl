@@ -1942,50 +1942,45 @@ void mass_enchantment(enchant_type wh_enchant, int pow,
 void bolt::apply_bolt_paralysis(monster* mons)
 {
     if (!mons->paralysed()
-        && mons->add_ench(ENCH_PARALYSIS)
-        && (!mons->petrified()
-            || mons->has_ench(ENCH_PETRIFYING)))
+        && mons->add_ench(ENCH_PARALYSIS))
     {
-        if (simple_monster_message(mons, " suddenly stops moving!"))
+        // asleep monsters can still be paralysed, but don't give a message
+        if (!mons_is_immotile(mons)
+            && simple_monster_message(mons, " suddenly stops moving!"))
+        {
             obvious_effect = true;
+        }
 
         mons_check_pool(mons, mons->pos(), killer(), beam_source);
     }
 }
 
 // Petrification works in two stages. First the monster is slowed down in
-// all of its actions and cannot move away (petrifying), and when that times
-// out it remains properly petrified (no movement or actions). The second
-// part is similar to paralysis, except that insubstantial monsters can't be
-// affected and damage is drastically reduced.
+// all of its actions, and when that times out it remains properly petrified
+// (no movement or actions).  The second part is similar to paralysis,
+// except that insubstantial monsters can't be affected and damage is
+// drastically reduced.
 void bolt::apply_bolt_petrify(monster* mons)
 {
-    int petrifying = mons->has_ench(ENCH_PETRIFYING);
     if (mons->petrified())
+        return;
+
+    if (mons->petrifying())
     {
         // If the petrifying is not yet finished, we can force it to happen
         // right away by casting again. Otherwise, the spell has no further
         // effect.
-        if (petrifying > 0)
-        {
-            mons->del_ench(ENCH_PETRIFYING, true);
-            if (!mons->has_ench(ENCH_PARALYSIS)
-                && simple_monster_message(mons, " stops moving altogether!"))
-            {
-                obvious_effect = true;
-            }
-        }
-    }
-    else if (mons->add_ench(ENCH_PETRIFIED)
-             && !mons->has_ench(ENCH_PARALYSIS))
-    {
-        // Add both the petrifying and the petrified enchantment. The former
-        // will run out sooner and result in plain petrification behaviour.
-        mons->add_ench(ENCH_PETRIFYING);
-        if (simple_monster_message(mons, " is moving more slowly."))
+        mons->del_ench(ENCH_PETRIFYING, true);
+        if (mons->fully_petrify(agent()))
             obvious_effect = true;
-
-        mons_check_pool(mons, mons->pos(), killer(), beam_source);
+    }
+    else if (mons->add_ench(mon_enchant(ENCH_PETRIFYING, 0, agent())))
+    {
+        if (!mons_is_immotile(mons)
+            && simple_monster_message(mons, " is moving more slowly."))
+        {
+            obvious_effect = true;
+        }
     }
 }
 
@@ -4812,7 +4807,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
             && !mons_is_stationary(mon)
             && mon->add_ench(ENCH_HASTE))
         {
-            if (!mon->paralysed() && !mon->petrified()
+            if (!mons_is_immotile(mon)
                 && simple_monster_message(mon, " seems to speed up."))
             {
                 obvious_effect = true;
