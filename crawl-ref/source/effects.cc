@@ -998,8 +998,10 @@ int recharge_wand(int item_slot, bool known, std::string *pre_msg)
 // Berserking monsters cannot be ordered around.
 static bool _follows_orders(monster* mon)
 {
-    return (mon->friendly() && mon->type != MONS_GIANT_SPORE
-        && !mon->berserk());
+    return (mon->friendly()
+            && mon->type != MONS_GIANT_SPORE
+            && !mon->berserk()
+            && !mons_is_projectile(mon->type));
 }
 
 // Sets foe target of friendly monsters.
