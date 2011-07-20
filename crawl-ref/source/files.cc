@@ -1756,7 +1756,7 @@ bool restore_game(const std::string& filename)
     if (numcmp(you.prev_save_version.c_str(), Version::Long().c_str(), 2) == -1)
     {
         if (!yesno("This game comes from a previous release of Crawl.  If you "
-                   "load it now, you won't be able to go back.  Continue?",
+                   "load it now, you won't be able to go back. Continue?",
                    true, 'n'))
         {
             you.save->abort(); // don't even rewrite the header
