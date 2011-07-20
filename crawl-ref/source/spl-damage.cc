@@ -812,7 +812,7 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
 
     default:
         const bool petrifying = mon->petrifying();
-        const bool petrified = mon->petrified() && !petrifying;
+        const bool petrified = mon->petrified();
 
         // Extra damage to petrifying/petrified things.
         if (petrifying || petrified)
@@ -1538,7 +1538,7 @@ bool cast_fragmentation(int pow, const dist& spd)
 
         default:
             const bool petrifying = mon->petrifying();
-            const bool petrified = mon->petrified() && !petrifying;
+            const bool petrified = mon->petrified();
 
             // Petrifying or petrified monsters can be exploded.
             if (petrifying || petrified)

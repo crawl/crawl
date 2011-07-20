@@ -2177,10 +2177,10 @@ static void _decrement_petrification(int delay)
         if ((dur -= delay) <= 0)
         {
             dur = 0;
-            you.duration[DUR_PETRIFIED] = 6 * BASELINE_DELAY
-                                + random2(4 * BASELINE_DELAY);
-            you.redraw_evasion = true;
-            mpr("You have turned to stone.");
+            // If we'd kill the player when active flight stops, this will
+            // need to pass the killer.  Unlike monsters, almost all cFly is
+            // magical (sans kenku) so there's no flapping of wings, though.
+            you.fully_petrify(NULL);
         }
         else if (dur < 15 && old_dur >= 15)
             mpr("Your limbs are stiffening.");

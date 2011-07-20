@@ -424,6 +424,7 @@ int scan_mon_inv_randarts(const monster* mon,
                           artefact_prop_type ra_prop);
 
 bool player_or_mon_in_sanct(const monster* mons);
+bool mons_is_immotile(const monster* mons);
 
 int get_dist_to_nearest_monster();
 actor *actor_by_mid(mid_t m);

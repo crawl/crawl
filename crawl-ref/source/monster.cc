@@ -2820,14 +2820,13 @@ bool monster::paralysed() const
 
 bool monster::cannot_act() const
 {
-    return (paralysed()
-            || petrified() && !petrifying()
+    return (paralysed() || petrified()
             || has_ench(ENCH_PREPARING_RESURRECT));
 }
 
 bool monster::cannot_move() const
 {
-    return (cannot_act() || petrifying());
+    return (cannot_act());
 }
 
 bool monster::asleep() const
@@ -2948,7 +2947,7 @@ int monster::melee_evasion(const actor *act, ev_ignore_type evit) const
     if (evit & EV_IGNORE_HELPLESS)
         return (evasion);
 
-    if (paralysed() || petrified() || asleep())
+    if (paralysed() || petrified() || petrifying() || asleep())
         evasion = 0;
     else if (caught())
         evasion /= (body_size(PSIZE_BODY) + 2);
@@ -3634,8 +3633,11 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                 return (0);
         }
 
-        if (amount != INSTANT_DEATH && petrified())
-            amount /= 3;
+        if (amount != INSTANT_DEATH)
+            if (petrified())
+                amount /= 3;
+            else if (petrifying())
+                amount = amount * 1000 / 1732;
 
         if (amount == INSTANT_DEATH)
             amount = hit_points;
@@ -3706,6 +3708,20 @@ void monster::paralyse(actor *atk, int strength)
 void monster::petrify(actor *atk)
 {
     enchant_monster_with_flavour(this, atk, BEAM_PETRIFY);
+}
+
+bool monster::fully_petrify(actor *atk, bool quiet)
+{
+    bool msg = !quiet && simple_monster_message(this, mons_is_immotile(this) ?
+                         " turns to stone!" : " stops moving altogether!");
+
+    add_ench(ENCH_PETRIFIED);
+    mons_check_pool(this, pos(),
+                    atk ? atk == &you ? KILL_YOU_MISSILE
+                                      : KILL_MON_MISSILE
+                        : KILL_NONE,
+                    atk ? atk->mindex() : NON_MONSTER);
+    return msg;
 }
 
 void monster::slow_down(actor *atk, int strength)
@@ -4417,13 +4433,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         break;
 
     case ENCH_PETRIFYING:
-        if (!petrified())
-            break;
+        fully_petrify(me.agent(), quiet);
 
-        if (!quiet)
-            simple_monster_message(this, " stops moving altogether!");
-
-        behaviour_event(this, ME_EVAL);
+        if (alive()) // losing active flight over lava
+            behaviour_event(this, ME_EVAL);
         break;
 
     case ENCH_FEAR:

@@ -1761,7 +1761,6 @@ static bool _handle_throw(monster* mons, bolt & beem)
 {
     // Yes, there is a logic to this ordering {dlb}:
     if (mons->incapacitated()
-        || mons->asleep()
         || mons->submerged())
     {
         return (false);
