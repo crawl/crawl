@@ -442,7 +442,7 @@ void cancel_tornado(bool tloc)
         }
     }
     you.duration[DUR_TORNADO] = 0;
-    you.duration[DUR_TORNADO_COOLDOWN] = tloc ? random_range(25, 35) : 0;
+    you.duration[DUR_TORNADO_COOLDOWN] = 0;
 }
 
 void tornado_move(const coord_def &p)
