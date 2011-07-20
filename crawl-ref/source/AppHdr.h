@@ -326,7 +326,7 @@
 //  Game Play Defines
 // =========================================================================
 // use Abyss morphing
-// #define NEW_ABYSS
+#define NEW_ABYSS
 
 // number of older messages stored during play and in save files
 #define NUM_STORED_MESSAGES   1000
