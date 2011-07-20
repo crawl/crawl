@@ -238,6 +238,7 @@ unsigned char get_invent(int invent_type);
 bool in_inventory(const item_def &i);
 
 std::string item_class_name(int type, bool terse = false);
+std::string item_slot_name(equipment_type type, bool terse);
 
 bool check_old_item_warning(const item_def& item, operation_types oper);
 bool check_warning_inscriptions(const item_def& item, operation_types oper);

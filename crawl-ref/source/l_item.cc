@@ -325,6 +325,8 @@ IDEF(subtype)
                 else
                     s = "spellbook";
             }
+            else if (item->base_type == OBJ_ARMOUR)
+                s = item_slot_name(get_armour_slot(*item), true).c_str();
 
             if (s)
                 lua_pushstring(ls, s);
