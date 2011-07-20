@@ -861,7 +861,6 @@ int mons_standard_rare(int mcls)
     case MONS_BASILISK:
     case MONS_GLOWING_SHAPESHIFTER:
     case MONS_SOLDIER_ANT:
-    case MONS_CATOBLEPAS:
         return 35;
 
     case MONS_BOULDER_BEETLE:
@@ -965,6 +964,9 @@ int mons_standard_rare(int mcls)
     case MONS_ORC_HIGH_PRIEST:
         return 12;
 
+    case MONS_CATOBLEPAS:
+        if (Version::ReleaseType() == VER_ALPHA)
+            return 35;
     case MONS_DEEP_ELF_SOLDIER:
     case MONS_GIANT_ORANGE_BRAIN:
     case MONS_HELL_KNIGHT:
