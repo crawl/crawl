@@ -815,8 +815,9 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
         const bool petrified = mon->petrified();
 
         // Extra damage to petrifying/petrified things.
+        // Undo the damage reduction as well; base damage is 4 : 6.
         if (petrifying || petrified)
-            dam_dice.num = petrifying ? 4 : 6;
+            dam_dice.num = petrifying ? 7 : 18;
         // No damage to insubstantials.
         else if (mon->is_insubstantial())
             dam_dice.num = 0;
