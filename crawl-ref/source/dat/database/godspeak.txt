@@ -792,7 +792,7 @@ w:1
 You feel someone pinching you. As you turn, you see no one.
 
 w:1
-Xom says: "Amen!".
+Xom says: Amen!
 %%%%
 _trout_species_
 
