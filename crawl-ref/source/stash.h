@@ -427,6 +427,9 @@ std::vector<item_def> item_list_in_stash(const coord_def& pos);
 
 std::string userdef_annotate_item(const char *s, const item_def *item,
                                   bool exclusive = false);
+std::string stash_annotate_item(const char *s,
+                                const item_def *item,
+                                bool exclusive = false);
 
 #define STASH_LUA_SEARCH_ANNOTATE "ch_stash_search_annotate_item"
 #define STASH_LUA_DUMP_ANNOTATE   "ch_stash_dump_annotate_item"

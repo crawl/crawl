@@ -1010,6 +1010,36 @@ std::string item_class_name(int type, bool terse)
     return ("");
 }
 
+std::string item_slot_name(equipment_type type, bool terse)
+{
+    if (terse)
+    {
+        switch (type)
+        {
+        case EQ_CLOAK:       return "cloak";
+        case EQ_HELMET:      return "helmet";
+        case EQ_GLOVES:      return "gloves";
+        case EQ_BOOTS:       return "boots";
+        case EQ_SHIELD:      return "shield";
+        case EQ_BODY_ARMOUR: return "body";
+        default:             return "";
+        }
+    }
+    else
+    {
+        switch (type)
+        {
+        case EQ_CLOAK:       return "Cloak";
+        case EQ_HELMET:      return "Helmet";
+        case EQ_GLOVES:      return "Gloves";
+        case EQ_BOOTS:       return "Boots";
+        case EQ_SHIELD:      return "Shield";
+        case EQ_BODY_ARMOUR: return "Body";
+        default:             return "";
+        }
+    }
+}
+
 std::vector<SelItem> select_items(const std::vector<const item_def*> &items,
                                    const char *title, bool noselect,
                                    menu_type mtype)

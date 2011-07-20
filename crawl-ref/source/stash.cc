@@ -81,7 +81,7 @@ std::string userdef_annotate_item(const char *s, const item_def *item,
 
 std::string stash_annotate_item(const char *s,
                                 const item_def *item,
-                                bool exclusive = false)
+                                bool exclusive)
 {
     std::string text = userdef_annotate_item(s, item, exclusive);
 
