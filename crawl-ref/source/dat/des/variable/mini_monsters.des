@@ -1448,6 +1448,7 @@ ENDMAP
 NAME:    hallowed_hall
 TAGS:    no_monster_gen no_trap_gen extra
 PLACE:   D:17-27
+WEIGHT:  0
 MONS:    quokka, shedu band, ophan, plant
 COLOUR:  c = white
 TILE:    c = wall_church
