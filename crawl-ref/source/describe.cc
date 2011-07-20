@@ -57,6 +57,7 @@
 #include "env.h"
 #include "spl-cast.h"
 #include "spl-util.h"
+#include "stash.h"
 #include "transform.h"
 #include "hints.h"
 #include "xom.h"
@@ -1771,7 +1772,9 @@ std::string get_item_description(const item_def &item, bool verbose,
                     << " slot: " << item.slot
                     << " ident_type: "
                     << static_cast<int>(get_ident_type(item))
-                    << " book_number: " << item.book_number();
+                    << " book_number: " << item.book_number()
+                    << "\nannotate: "
+                    << stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
     }
 #endif
 
