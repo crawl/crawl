@@ -1637,21 +1637,6 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
 {
     int re = 0;
 
-    if (temp)
-    {
-        if (you.duration[DUR_INSULATION])
-            re++;
-
-        // transformations:
-        if (you.form == TRAN_STATUE)
-            re += 1;
-
-        if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
-            re = 3;
-        else if (re > 1)
-            re = 1;
-    }
-
     if (items)
     {
         // staff
@@ -1668,6 +1653,21 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
     // mutations:
     re += player_mutation_level(MUT_THIN_METALLIC_SCALES) == 3 ? 1 : 0;
     re += player_mutation_level(MUT_SHOCK_RESISTANCE);
+
+    if (temp)
+    {
+        if (you.duration[DUR_INSULATION])
+            re++;
+
+        // transformations:
+        if (you.form == TRAN_STATUE)
+            re += 1;
+
+        if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
+            re = 3;
+        else if (re > 1)
+            re = 1;
+    }
 
     return (re);
 }
