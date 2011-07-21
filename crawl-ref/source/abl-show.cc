@@ -2254,12 +2254,7 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_YRED_INJURY_MIRROR:
         if (yred_injury_mirror())
-        {
-            // Strictly speaking, since it is random, it is possible it
-            // actually decreases.  The player doesn't know this, and this
-            // way smart-asses won't re-roll it several times before charging.
-            mpr("Your dark aura grows in power.");
-        }
+            mpr("You renew your dark mirror aura.");
         else
         {
             mprf("You %s in prayer and are bathed in unholy energy.",
