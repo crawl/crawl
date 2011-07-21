@@ -869,6 +869,19 @@ bool numcmpstr(const std::string a, const std::string b)
     return numcmp(a.c_str(), b.c_str()) == -1;
 }
 
+bool version_is_stable(const char *v)
+{
+    // vulnerable to changes in the versioning scheme
+    for (;; v++)
+    {
+        if (*v == '.' || isadigit(*v))
+            continue;
+        if (*v == '-')
+            return isadigit(v[1]);
+        return true;
+    }
+}
+
 #ifndef USE_TILE
 coord_def cgettopleft(GotoRegion region)
 {
