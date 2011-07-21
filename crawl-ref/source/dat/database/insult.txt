@@ -330,7 +330,11 @@ droning
 
 ducking
 
+erky
+
 errant
+
+euchred
 
 fawning
 
@@ -339,6 +343,8 @@ feckless
 feeble
 
 fobbing
+
+foisting
 
 foppish
 
@@ -376,9 +382,15 @@ mangled
 
 mewling
 
+obno
+
 odious
 
 paunchy
+
+peaked
+
+peeagling
 
 pribbling
 
@@ -386,11 +398,6 @@ puking
 
 puny
 
-qualling
-
-quaking
-
-rank
 
 pandering
 
@@ -402,11 +409,19 @@ pottle-deep
 
 pox-marked
 
+qualling
+
+quaking
+
+rank
+
 reeling-ripe
 
 rough-hewn
 
 simpering
+
+skyhacking
 
 spongy
 
@@ -478,6 +493,35 @@ puny
 shaky
 
 prissy
+
+underdone
+%%%%
+##########################################################
+# adjective1, Felid special
+##########################################################
+insult felid adj1
+
+matted
+
+grungy
+
+rabid
+
+picayune
+
+weenchy
+
+crummy
+
+daggy
+
+stray
+
+sticky
+
+musky
+
+slinking
 %%%%
 ##########################################################
 # adjective1, Ghoul special
@@ -582,11 +626,17 @@ fen-sucked
 
 flap-mouthed
 
+flat-headed
+
 fly-bitten
+
+fob-snatching
 
 folly-fallen
 
 fool-born
+
+fool-headed
 
 full-gorged
 
@@ -658,15 +708,25 @@ tardy-gaited
 
 tickle-brained
 
+tip-merry
+
 toad-spotted
 
 toenail-biting
+
+toot-wallowing
+
+two-tin-hat
 
 unchin-snouted
 
 weather-bitten
 
+weeb-spouting
+
 weevil-witted
+
+wibble-sucking
 %%%%
 ##########################################################
 # adjective2, Dwarf special
@@ -696,6 +756,31 @@ rhino-raveling
 thigh-biting
 
 dirt-delving
+%%%%
+##########################################################
+# adjective2, Felid special
+##########################################################
+insult felid adj2
+
+worm-riddled
+
+mange-covered
+
+gunky-eyed
+
+death-cheating
+
+cutty-eyed
+
+gristle-gnawing
+
+spot-chasing
+
+chapped-arsed
+
+key-stepping
+
+rot-lapping
 %%%%
 ##########################################################
 # adjective2, Kenku special
@@ -808,6 +893,8 @@ lifeless
 undead
 
 corpse-like
+
+deado
 %%%%
 ###############################################
 # noun of the insult
@@ -831,7 +918,11 @@ barnacle
 
 beggar
 
+blabberskite
+
 bladder
+
+bloater
 
 boar-pig
 
@@ -841,6 +932,8 @@ bugbear
 
 bum-bailey
 
+buzzard-bait
+
 canker-blossom
 
 clack-dish
@@ -849,9 +942,19 @@ clam
 
 clotpole
 
+Cock-Lorel
+
 coxcomb
 
 codpiece
+
+crab-lanthorn
+
+cross-patch
+
+dandiprat
+
+deadneck
 
 death-token
 
@@ -859,19 +962,31 @@ dewberry
 
 dingleberry
 
+efter
+
+erk
+
 flap-bat
 
 flax-wench
 
+fleecer
+
+flim-flammer
+
 flirt-gill
 
 foot-licker
+
+frater
 
 fustilarian
 
 giglet
 
 gnoll-tail
+
+gonus
 
 gudgeon
 
@@ -884,6 +999,8 @@ harpy
 hedge-pig
 
 hugger-mugger
+
+jarkman
 
 joithead
 
@@ -903,7 +1020,11 @@ mendicant
 
 minnow reeky
 
+mish-mash
+
 mule
+
+nert
 
 nightsoil
 
@@ -916,6 +1037,10 @@ pigeon-egg
 pignut
 
 pimple
+
+pot-faker
+
+prigger-of-prances
 
 pustule
 
@@ -935,19 +1060,27 @@ simpleton
 
 skainsmate
 
+slabber
+
 slime mold
 
 snaffler
 
 snake-molt
 
+socdollager
+
 strumpet
 
 surfacer
 
+swadder
+
 tinkerer
 
 tiddler
+
+tiler
 
 urchin
 
@@ -962,6 +1095,8 @@ wastrel
 wagtail
 
 whey-face
+
+whip-jack
 
 wormtrail
 
@@ -1001,6 +1136,41 @@ grub
 mouthful
 
 half-pint
+
+weenchy-treat
+%%%%
+##########################################################
+# noun, Felid special
+##########################################################
+insult felid noun
+
+kitten
+
+fleabag
+
+vermin
+
+loo-gargler
+
+pate-warmer
+
+pander-nanny
+
+hissie
+
+cooking-fat
+
+sand-tounge
+
+scamp
+
+fur-fop
+
+toe-scratcher
+
+filth-coat
+
+gob-dollager
 %%%%
 ##########################################################
 # noun, Halfling special
@@ -1156,6 +1326,10 @@ walking sirloin
 insult mummy noun
 
 dustbag
+
+deado
+
+fogey
 
 linensack
 
