@@ -244,8 +244,7 @@ static void _genus_factoring(std::map<monster_type, int> &types,
         if (it->second == num)
             return;
 
-        types.erase(it);
-        ++it;
+        types.erase(it++);
 
     } while (it != types.end());
 
