@@ -66,8 +66,10 @@ void handle_monster_shouts(monster* mons, bool force)
 
     // Silent monsters can give noiseless "visual shouts" if the
     // player can see them, in which case silence isn't checked for.
+    // Muted monsters can't shout at all.
     if (s_type == S_SILENT && !mons->visible_to(&you)
-        || s_type != S_SILENT && !player_can_hear(mons->pos()))
+        || s_type != S_SILENT && !player_can_hear(mons->pos())
+        || mons->has_ench(ENCH_MUTE))
     {
         return;
     }
