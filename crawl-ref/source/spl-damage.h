@@ -2,32 +2,34 @@
 #define SPL_DAMAGE_H
 
 #include "enum.h"
+#include "spl-cast.h"
 
 struct bolt;
 class dist;
 
-bool fireball(int pow, bolt &beam);
+spret_type fireball(int pow, bolt &beam, bool fail = false);
+spret_type cast_delayed_fireball(bool fail);
 void setup_fire_storm(const actor *source, int pow, bolt &beam);
-bool cast_fire_storm(int pow, bolt &beam);
+spret_type cast_fire_storm(int pow, bolt &beam, bool fail);
 bool cast_hellfire_burst(int pow, bolt &beam);
-void cast_chain_lightning(int pow, const actor *caster);
+spret_type cast_chain_lightning(int pow, const actor *caster, bool fail = false);
 
-void cast_toxic_radiance(bool non_player = false);
-void cast_refrigeration(int pow, bool non_player = false,
-                        bool freeze_potions = true);
+spret_type cast_toxic_radiance(bool non_player = false, bool fail = false);
+spret_type cast_refrigeration(int pow, bool non_player = false,
+                              bool freeze_potions = true, bool fail = false);
 void sonic_damage(bool scream);
-bool vampiric_drain(int pow, monster* mons);
-bool cast_freeze(int pow, monster* mons);
-bool cast_airstrike(int pow, const dist &beam);
-void cast_shatter(int pow);
-void cast_ignite_poison(int pow);
-void cast_discharge(int pow);
+spret_type vampiric_drain(int pow, monster* mons, bool fail);
+spret_type cast_freeze(int pow, monster* mons, bool fail);
+spret_type cast_airstrike(int pow, const dist &beam, bool fail);
+spret_type cast_shatter(int pow, bool fail);
+spret_type cast_ignite_poison(int pow, bool fail);
+spret_type cast_discharge(int pow, bool fail);
 int disperse_monsters(coord_def where, int pow);
-void cast_dispersal(int pow);
-bool cast_fragmentation(int powc, const dist& spd);
+spret_type cast_dispersal(int pow, bool fail = false);
+spret_type cast_fragmentation(int powc, const dist& spd, bool fail);
 int wielding_rocks();
-bool cast_sandblast(int powc, bolt &beam);
-bool cast_tornado(int powc);
+spret_type cast_sandblast(int powc, bolt &beam, bool fail);
+spret_type cast_tornado(int powc, bool fail);
 void tornado_damage(actor *caster, int dur);
 void cancel_tornado(bool tloc = false);
 void tornado_move(const coord_def &pos);

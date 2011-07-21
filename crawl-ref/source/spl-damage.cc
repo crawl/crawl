@@ -40,9 +40,50 @@
 #include "viewchar.h"
 
 
-bool fireball(int pow, bolt &beam)
+spret_type fireball(int pow, bolt &beam, bool fail)
 {
-    return (zapping(ZAP_FIREBALL, pow, beam, true));
+    return (zapping(ZAP_FIREBALL, pow, beam, true, NULL, fail));
+}
+
+// This spell has two main advantages over Fireball:
+//
+// (1) The release is instantaneous, so monsters will not
+//     get an action before the player... this allows the
+//     player to hit monsters with a double fireball (this
+//     is why we only allow one delayed fireball at a time,
+//     if you want to allow for more, then the release should
+//     take at least some amount of time).
+//
+//     The casting of this spell still costs a turn.  So
+//     casting Delayed Fireball and immediately releasing
+//     the fireball is only slightly different from casting
+//     a regular Fireball (monsters act in the middle instead
+//     of at the end).  This is why we allow for the spell
+//     level discount so that Fireball is free with this spell
+//     (so that it only costs 7 levels instead of 13 to have
+//     both).
+//
+// (2) When the fireball is released, it is guaranteed to
+//     go off... the spell only fails at this point.  This can
+//     be a large advantage for characters who have difficulty
+//     casting Fireball in their standard equipment.  However,
+//     the power level for the actual fireball is determined at
+//     release, so if you do swap out your enhancers you'll
+//     get a less powerful ball when it's released. - bwr
+//
+spret_type cast_delayed_fireball(bool fail)
+{
+    if (you.attribute[ATTR_DELAYED_FIREBALL])
+    {
+        mpr("You are already charged.");
+        return SPRET_ABORT;
+    }
+
+    fail_check();
+    // Okay, this message is weak but functional. - bwr
+    mpr("You feel magically charged.");
+    you.attribute[ATTR_DELAYED_FIREBALL] = 1;
+    return SPRET_SUCCESS;
 }
 
 void setup_fire_storm(const actor *source, int pow, bolt &beam)
@@ -67,11 +108,21 @@ void setup_fire_storm(const actor *source, int pow, bolt &beam)
     beam.damage       = calc_dice(8, 5 + pow);
 }
 
-bool cast_fire_storm(int pow, bolt &beam)
+spret_type cast_fire_storm(int pow, bolt &beam, bool fail)
 {
     if (distance(beam.target, beam.source) > dist_range(beam.range))
-        return (false);
+    {
+        mpr("That is beyond the maximum range.");
+        return SPRET_ABORT;
+    }
 
+    if (cell_is_solid(beam.target))
+    {
+        mpr("You can't place the storm on a wall.");
+        return SPRET_ABORT;
+    }
+
+    fail_check();
     setup_fire_storm(&you, pow, beam);
 
     mpr("A raging storm of fire appears!");
@@ -79,7 +130,7 @@ bool cast_fire_storm(int pow, bolt &beam)
     beam.explode(false);
 
     viewwindow();
-    return (true);
+    return SPRET_SUCCESS;
 }
 
 // No setup/cast split here as monster hellfire is completely different.
@@ -133,8 +184,10 @@ static bool _lightning_los(const coord_def& source, const coord_def& target)
                        circle_def(LOS_MAX_RADIUS, C_ROUND)));
 }
 
-void cast_chain_lightning(int pow, const actor *caster)
+// XXX no friendly check
+spret_type cast_chain_lightning(int pow, const actor *caster, bool fail)
 {
+    fail_check();
     bolt beam;
 
     // initialise beam structure
@@ -277,6 +330,7 @@ void cast_chain_lightning(int pow, const actor *caster)
     }
 
     more();
+    return SPRET_SUCCESS;
 }
 
 typedef std::pair<const monster* ,int> counted_monster;
@@ -335,8 +389,9 @@ static std::string _describe_monsters(const counted_monster_list &list)
 // Poisonous light passes right through invisible players
 // and monsters, and so, they are unaffected by this spell --
 // assumes only you can cast this spell (or would want to).
-void cast_toxic_radiance(bool non_player)
+spret_type cast_toxic_radiance(bool non_player, bool fail)
 {
+    fail_check();
     if (non_player)
         mpr("The air is filled with a sickly green light!");
     else
@@ -404,10 +459,13 @@ void cast_toxic_radiance(bool non_player)
                 mpr("The monsters around you are poisoned!");
         }
     }
+    return SPRET_SUCCESS;
 }
 
-void cast_refrigeration(int pow, bool non_player, bool freeze_potions)
+spret_type cast_refrigeration(int pow, bool non_player, bool freeze_potions,
+                              bool fail)
 {
+    fail_check();
     if (non_player)
         mpr("Something drains the heat from around you.");
     else
@@ -491,6 +549,7 @@ void cast_refrigeration(int pow, bool non_player, bool freeze_potions)
             mi->add_ench(ENCH_SLOW);
         }
     }
+    return SPRET_SUCCESS;
 }
 
 // Screaming Sword
@@ -547,28 +606,29 @@ void sonic_damage(bool scream)
     }
 }
 
-bool vampiric_drain(int pow, monster* mons)
+spret_type vampiric_drain(int pow, monster* mons, bool fail)
 {
     if (mons == NULL || mons->submerged())
     {
+        fail_check();
         canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
         // Cost to disallow freely locating invisible/submerged
         // monsters.
-        return (true);
+        return SPRET_SUCCESS;
     }
 
     if (mons->observable() && mons->undead_or_demonic())
     {
         mpr("Draining that being is not a good idea.");
-        return (false);
+        return SPRET_ABORT;
     }
 
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
-    const bool success = !stop_attack_prompt(mons, false, you.pos());
+    const bool abort = stop_attack_prompt(mons, false, you.pos());
 
-    if (success)
+    if (!abort && !fail)
     {
         set_attack_conducts(conducts, mons);
 
@@ -577,13 +637,18 @@ bool vampiric_drain(int pow, monster* mons)
 
     enable_attack_conducts(conducts);
 
-    if (!success)
-        return (false);
+    if (abort)
+    {
+        canned_msg(MSG_OK);
+        return SPRET_ABORT;
+    }
+
+    fail_check();
 
     if (!mons->alive())
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return (true);
+        return SPRET_SUCCESS;
     }
 
     // Monster might be invisible or player misled.
@@ -591,14 +656,14 @@ bool vampiric_drain(int pow, monster* mons)
     {
         mpr("Aaaarggghhhhh!");
         dec_hp(random2avg(39, 2) + 10, false, "vampiric drain backlash");
-        return (true);
+        return SPRET_SUCCESS;
     }
 
     if (mons->holiness() != MH_NATURAL
         || mons->res_negative_energy())
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return (true);
+        return SPRET_SUCCESS;
     }
 
     // The practical maximum of this is about 25 (pow @ 100). - bwr
@@ -610,7 +675,7 @@ bool vampiric_drain(int pow, monster* mons)
     if (!hp_gain)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return (true);
+        return SPRET_SUCCESS;
     }
 
     const bool mons_was_summoned = mons->is_summoned();
@@ -628,27 +693,28 @@ bool vampiric_drain(int pow, monster* mons)
         inc_hp(hp_gain);
     }
 
-    return (true);
+    return SPRET_SUCCESS;
 }
 
-bool cast_freeze(int pow, monster* mons)
+spret_type cast_freeze(int pow, monster* mons, bool fail)
 {
     pow = std::min(25, pow);
 
     if (mons == NULL || mons->submerged())
     {
+        fail_check();
         canned_msg(MSG_NOTHING_CLOSE_ENOUGH);
         // If there's no monster there, you still pay the costs in
         // order to prevent locating invisible/submerged monsters.
-        return (true);
+        return SPRET_SUCCESS;
     }
 
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
-    const bool success = !stop_attack_prompt(mons, false, you.pos());
+    const bool abort = stop_attack_prompt(mons, false, you.pos());
 
-    if (success)
+    if (!abort && !fail)
     {
         set_attack_conducts(conducts, mons);
 
@@ -659,8 +725,13 @@ bool cast_freeze(int pow, monster* mons)
 
     enable_attack_conducts(conducts);
 
-    if (!success)
-        return (false);
+    if (abort)
+    {
+        canned_msg(MSG_OK);
+        return SPRET_ABORT;
+    }
+
+    fail_check();
 
     bolt beam;
     beam.flavour = BEAM_COLD;
@@ -683,10 +754,10 @@ bool cast_freeze(int pow, monster* mons)
         }
     }
 
-    return (true);
+    return SPRET_SUCCESS;
 }
 
-bool cast_airstrike(int pow, const dist &beam)
+spret_type cast_airstrike(int pow, const dist &beam, bool fail)
 {
     monster* mons = monster_at(beam.target);
     if (mons && (mons->submerged() ||
@@ -695,8 +766,9 @@ bool cast_airstrike(int pow, const dist &beam)
 
     if (mons == NULL)
     {
+        fail_check();
         canned_msg(MSG_SPELL_FIZZLES);
-        return true; // still losing a turn
+        return SPRET_SUCCESS; // still losing a turn
     }
 
     if (mons->res_wind() > 0)
@@ -705,20 +777,23 @@ bool cast_airstrike(int pow, const dist &beam)
         {
             mprf("But air would do no harm to %s!",
                  mons->name(DESC_NOCAP_THE).c_str());
-            return false;
+            return SPRET_ABORT;
         }
+
+        fail_check();
         mprf("The air twists arounds and harmlessly tosses %s around.",
              mons->name(DESC_NOCAP_THE).c_str());
         // Bailing out early, no need to upset the gods or the target.
-        return true; // you still did discover the invisible monster
+        return SPRET_SUCCESS; // you still did discover the invisible monster
     }
 
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
     if (stop_attack_prompt(mons, false, you.pos()))
-        return false;
+        return SPRET_ABORT;
 
+    fail_check();
     set_attack_conducts(conducts, mons);
 
     mprf("The air twists around and strikes %s!",
@@ -747,7 +822,7 @@ bool cast_airstrike(int pow, const dist &beam)
     if (mons->alive())
         print_wounds(mons);
 
-    return true;
+    return SPRET_SUCCESS;
 }
 
 // Just to avoid typing this over and over.
@@ -949,8 +1024,9 @@ static int _shatter_walls(coord_def where, int pow, int, actor *)
     return (0);
 }
 
-void cast_shatter(int pow)
+spret_type cast_shatter(int pow, bool fail)
 {
+    fail_check();
     const bool silence = silenced(you.pos());
 
     if (silence)
@@ -970,6 +1046,8 @@ void cast_shatter(int pow)
 
     if (dest && !silence)
         mpr("Ka-crash!", MSGCH_SOUND);
+
+    return SPRET_SUCCESS;
 }
 
 static int _ignite_poison_affect_item(item_def& item, bool in_inv)
@@ -1256,8 +1334,9 @@ static int _ignite_poison_player(coord_def where, int pow, int, actor *actor)
         return (0);
 }
 
-void cast_ignite_poison(int pow)
+spret_type cast_ignite_poison(int pow, bool fail)
 {
+    fail_check();
     flash_view(RED);
 
     apply_area_visible(_ignite_poison_clouds, pow, true, &you);
@@ -1271,6 +1350,7 @@ void cast_ignite_poison(int pow)
     delay(100); // show a brief flash
 #endif
     flash_view(0);
+    return SPRET_SUCCESS;
 }
 
 static int _discharge_monsters(coord_def where, int pow, int, actor *)
@@ -1331,8 +1411,10 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
     return (damage);
 }
 
-void cast_discharge(int pow)
+// XXX no friendly check.
+spret_type cast_discharge(int pow, bool fail)
 {
+    fail_check();
     const int num_targs = 1 + random2(random_range(1, 3) + pow / 20);
     const int dam = apply_random_around_square(_discharge_monsters, you.pos(),
                                                true, pow, num_targs);
@@ -1354,6 +1436,7 @@ void cast_discharge(int pow)
                                       coinflip() ? "behind" : "before"));
         }
     }
+    return SPRET_SUCCESS;
 }
 
 // Really this is just applying the best of Band/Warp weapon/Warp field
@@ -1396,13 +1479,16 @@ static int _disperse_monster(monster* mon, int pow)
     return (0);
 }
 
-void cast_dispersal(int pow)
+spret_type cast_dispersal(int pow, bool fail)
 {
+    fail_check();
     if (!apply_monsters_around_square(_disperse_monster, you.pos(), pow))
         mpr("The air shimmers briefly around you.");
+
+    return SPRET_SUCCESS;
 }
 
-bool cast_fragmentation(int pow, const dist& spd)
+spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
 {
     bool explode = false;
     bool hole    = true;
@@ -1411,8 +1497,10 @@ bool cast_fragmentation(int pow, const dist& spd)
     if (!exists_ray(you.pos(), spd.target))
     {
         mpr("There's something in the way!");
-        return (false);
+        return SPRET_ABORT;
     }
+
+    fail_check();
 
     //FIXME: If (player typed '>' to attack floor) goto do_terrain;
 
@@ -1633,7 +1721,7 @@ bool cast_fragmentation(int pow, const dist& spd)
         mprf("%s seems to be unnaturally hard.",
              feature_description(spd.target, false, DESC_CAP_THE, false).c_str());
         canned_msg(MSG_SPELL_FIZZLES);
-        return (true);
+        return SPRET_SUCCESS;
     }
 
   do_terrain:
@@ -1817,7 +1905,7 @@ bool cast_fragmentation(int pow, const dist& spd)
         canned_msg(MSG_SPELL_FIZZLES);
     }
 
-    return (true);
+    return SPRET_SUCCESS;
 }
 
 int wielding_rocks()
@@ -1833,7 +1921,7 @@ int wielding_rocks()
         return (0);
 }
 
-bool cast_sandblast(int pow, bolt &beam)
+spret_type cast_sandblast(int pow, bolt &beam, bool fail)
 {
     zap_type zap = ZAP_SMALL_SANDBLAST;
     switch (wielding_rocks())
@@ -1848,12 +1936,12 @@ bool cast_sandblast(int pow, bolt &beam)
         break;
     }
 
-    const bool success = zapping(zap, pow, beam, true);
+    const spret_type ret = zapping(zap, pow, beam, true, "", fail);
 
-    if (success && zap != ZAP_SMALL_SANDBLAST)
+    if (ret == SPRET_SUCCESS && zap != ZAP_SMALL_SANDBLAST)
         dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
 
-    return (success);
+    return ret;
 }
 
 // Find an enemy who would suffer from Awaken Forest.

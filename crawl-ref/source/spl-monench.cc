@@ -46,9 +46,11 @@ static int _sleep_monsters(coord_def where, int pow, int, actor *)
     return (1);
 }
 
-void cast_mass_sleep(int pow)
+spret_type cast_mass_sleep(int pow, bool fail)
 {
+    fail_check();
     apply_area_visible(_sleep_monsters, pow, true);
+    return SPRET_SUCCESS;
 }
 
 bool backlight_monsters(coord_def where, int pow, int garbage)
@@ -116,8 +118,10 @@ bool do_slow_monster(monster* mon, const actor* agent)
     return (false);
 }
 
-bool project_noise()
+// XXX: Not sure why you can't exit map and cancel the spell.
+spret_type project_noise(bool fail)
 {
+    fail_check();
     bool success = false;
 
     coord_def pos(1, 0);
@@ -155,5 +159,5 @@ bool project_noise()
         }
     }
 
-    return (success);
+    return SPRET_SUCCESS;
 }

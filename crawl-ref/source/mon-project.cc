@@ -30,13 +30,22 @@
 
 static void _fuzz_direction(monster& mon, int pow);
 
-bool cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy, int foe)
+// XXX: like for summoning spells, miscast is possible even if the spell will
+// abort later due to being unable to create the orbs.
+spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
+                     int foe, bool fail)
 {
+    const bool is_player = caster->atype() == ACT_PLAYER;
+    if (is_player && !player_tracer(ZAP_IOOD, pow, *beam))
+        return SPRET_ABORT;
+
+    fail_check();
+
     int mtarg = !beam ? MHITNOT :
                 beam->target == you.pos() ? MHITYOU : mgrd(beam->target);
 
     int mind = place_monster(mgen_data(MONS_ORB_OF_DESTRUCTION,
-                (caster->atype() == ACT_PLAYER) ? BEH_FRIENDLY :
+                (is_player) ? BEH_FRIENDLY :
                     ((monster*)caster)->friendly() ? BEH_FRIENDLY : BEH_HOSTILE,
                 caster,
                 0,
@@ -49,7 +58,7 @@ bool cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy, int foe)
     {
         mpr("Failed to spawn projectile.", MSGCH_WARN);
         /*canned_msg(MSG_NOTHING_HAPPENS);*/
-        return (false);
+        return SPRET_ABORT;
     }
 
     monster& mon = menv[mind];
@@ -80,7 +89,7 @@ bool cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy, int foe)
         mon.props["iood_vy"].get_float() = vy;
     }
 
-    mon.props["iood_kc"].get_byte() = (caster->atype() == ACT_PLAYER) ? KC_YOU :
+    mon.props["iood_kc"].get_byte() = (is_player) ? KC_YOU :
         ((monster*)caster)->friendly() ? KC_FRIENDLY : KC_OTHER;
     mon.props["iood_pow"].get_short() = pow;
     mon.flags &= ~MF_JUST_SUMMONED;
@@ -101,7 +110,7 @@ bool cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy, int foe)
     if (foe != MHITNOT)
         mon.foe = foe;
 
-    return (true);
+    return SPRET_SUCCESS;
 }
 
 void cast_iood_burst(int pow, coord_def target)

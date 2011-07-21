@@ -50,6 +50,8 @@ enum spret_type
     SPRET_NONE,                 // spell was not handled
 };
 
+#define fail_check() if(fail) return SPRET_FAIL
+
 typedef bool (*spell_selector)(spell_type spell);
 
 int list_spells(bool toggle_with_I = true, bool viewing = false,
