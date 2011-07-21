@@ -68,35 +68,43 @@ static bool _ok_for_launchers(brand_type which_brand)
     }
 }
 
-bool brand_weapon(brand_type which_brand, int power)
+spret_type brand_weapon(brand_type which_brand, int power, bool fail)
 {
     if (!you.weapon())
-        return (false);
+    {
+        mpr("You aren't wielding a weapon.");
+        return SPRET_ABORT;
+    }
 
     bool temp_brand = you.duration[DUR_WEAPON_BRAND];
     item_def& weapon = *you.weapon();
 
     // Can't brand non-weapons, but can brand some launchers (see later).
     if (weapon.base_type != OBJ_WEAPONS)
-        return (false);
+    {
+        mpr("This isn't a weapon.");
+        return SPRET_ABORT;
+    }
 
-    // But not blowguns.
-    if (weapon.sub_type == WPN_BLOWGUN)
-        return (false);
-
-    // Can't brand artefacts.
-    if (is_artefact(weapon))
-        return (false);
+    if (weapon.sub_type == WPN_BLOWGUN || is_artefact(weapon))
+    {
+        mpr("You cannot enchant this weapon.");
+        return SPRET_ABORT;
+    }
 
     // Can't brand already-branded items.
     if (!temp_brand && get_weapon_brand(weapon) != SPWPN_NORMAL)
-        return (false);
+    {
+        mpr("This weapon is already enchanted.");
+        return SPRET_ABORT;
+    }
 
     // Some brandings are restricted to certain damage types.
     if (which_brand == SPWPN_DUMMY_CRUSHING
         && !(get_damage_type(weapon) & DAM_BLUDGEON))
     {
-        return (false);
+        mpr("You cannot enchant this weapon with this spell.");
+        return SPRET_ABORT;
     }
 
     // Can only brand launchers with sensible brands.
@@ -112,16 +120,24 @@ bool brand_weapon(brand_type which_brand, int power)
             missile = MI_SLING_BULLET;
 
         if (!is_missile_brand_ok(missile, _convert_to_missile(which_brand), true))
-            return (false);
+        {
+            mpr("You cannot enchant this weapon with this spell.");
+            return SPRET_ABORT;
+        }
 
         // If the brand isn't appropriate for that launcher, also say no.
         if (!_ok_for_launchers(which_brand))
-            return (false);
+        {
+            mpr("You cannot enchant this weapon with this spell.");
+            return SPRET_ABORT;
+        }
 
         // Otherwise, convert to the correct brand type, most specifically (but
         // not necessarily only) flaming -> flame, freezing -> frost.
         which_brand = _convert_to_launcher(which_brand);
     }
+
+    fail_check();
 
     // Allow rebranding a temporarily-branded item to a different brand.
     if (temp_brand && (get_weapon_brand(weapon) != which_brand))
@@ -242,11 +258,12 @@ bool brand_weapon(brand_type which_brand, int power)
     if (which_brand == SPWPN_ANTIMAGIC)
         calc_mp();
 
-    return (true);
+    return SPRET_SUCCESS;
 }
 
-void cast_confusing_touch(int power)
+spret_type cast_confusing_touch(int power, bool fail)
 {
+    fail_check();
     msg::stream << "Your " << your_hand(true) << " begin to glow "
                 << (you.duration[DUR_CONFUSING_TOUCH] ? "brighter" : "red")
                 << "." << std::endl;
@@ -254,12 +271,11 @@ void cast_confusing_touch(int power)
     you.increase_duration(DUR_CONFUSING_TOUCH, 5 + (random2(power) / 5),
                           50, NULL);
 
+    return SPRET_SUCCESS;
 }
 
-bool cast_sure_blade(int power)
+spret_type cast_sure_blade(int power, bool fail)
 {
-    bool success = false;
-
     if (!you.weapon())
         mpr("You aren't wielding a weapon!");
     else if (weapon_skill(you.weapon()->base_type,
@@ -269,6 +285,7 @@ bool cast_sure_blade(int power)
     }
     else
     {
+        fail_check();
         if (!you.duration[DUR_SURE_BLADE])
             mpr("You become one with your weapon.");
         else if (you.duration[DUR_SURE_BLADE] < 25 * BASELINE_DELAY)
@@ -276,8 +293,8 @@ bool cast_sure_blade(int power)
 
         you.increase_duration(DUR_SURE_BLADE, 8 + (random2(power) / 10),
                               25, NULL);
-        success = true;
+        return SPRET_SUCCESS;
     }
 
-    return (success);
+    return SPRET_ABORT;
 }

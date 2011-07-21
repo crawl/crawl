@@ -5,7 +5,6 @@ int identify(int power, int item_slot = -1, std::string *pre_msg = NULL);
 int cast_healing(int pow, bool divine_ability = false,
                  const coord_def& where = coord_def(0, 0),
                  bool not_self = false, targ_mode_type mode = TARG_NUM_MODES);
-bool cast_revivification(int pow);
 
 void antimagic();
 
