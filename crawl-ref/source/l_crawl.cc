@@ -540,6 +540,17 @@ static int crawl_is_tiles(lua_State *ls)
     return (1);
 }
 
+static int crawl_is_webtiles(lua_State *ls)
+{
+#ifdef USE_TILE_WEB
+    lua_pushboolean(ls, true);
+#else
+    lua_pushboolean(ls, false);
+#endif
+
+    return (1);
+}
+
 static int crawl_get_command (lua_State *ls)
 {
     if (lua_gettop(ls) == 0)
@@ -746,6 +757,7 @@ static const struct luaL_reg crawl_clib[] =
     { "article_a",      crawl_article_a },
     { "game_started",   crawl_game_started },
     { "is_tiles",       crawl_is_tiles },
+    { "is_webtiles",    crawl_is_webtiles },
     { "err_trace",      crawl_err_trace },
     { "get_command",    crawl_get_command },
     { "endgame",        crawl_endgame },
