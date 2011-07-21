@@ -33,6 +33,7 @@
 #include "misc.h"
 #include "player-stats.h"
 #include "godconduct.h"
+#include "skills.h"
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-cast.h"
@@ -536,17 +537,23 @@ void tome_of_power(int slot)
 
 void stop_studying_manual(bool finish)
 {
+    const skill_type sk = you.manual_skill;
     if (finish)
     {
         mprf("You have finished your manual of %s and toss it away.",
-             skill_name(you.manual_skill));
+             skill_name(sk));
         dec_inv_item_quantity(you.manual_index, 1);
     }
     else
-        mprf("You stop studying %s.", skill_name(you.manual_skill));
+        mprf("You stop studying %s.", skill_name(sk));
 
     you.manual_skill = SK_NONE;
     you.manual_index = -1;
+    if (!you.skills[sk])
+    {
+        lose_skill(sk);
+        reset_training();
+    }
 }
 
 void skill_manual(int slot)
@@ -581,6 +588,11 @@ void skill_manual(int slot)
     mprf("You start studying %s.", skill_name(skill));
     you.manual_skill = skill;
     you.manual_index = slot;
+    if (!you.skills[skill])
+    {
+        gain_skill(skill);
+        reset_training();
+    }
     you.turn_is_over = true;
 }
 
