@@ -575,7 +575,7 @@ void skill_manual(int slot)
     {
         std::string prompt = make_stringf("This is a manual of %s. Do you want "
                                           "to study it?", skill_name(skill));
-        if (!yesno(prompt.c_str()))
+        if (!yesno(prompt.c_str(), true, 'n'))
         {
             canned_msg(MSG_OK);
             return;
