@@ -944,7 +944,6 @@ webserver/static/game/%.js: $(RLTILES)/%.js
 	$(QUIET_COPY)$(COPY) $< webserver/static/game/
 
 clean-webserver:
-	echo $(RLTILESJS)
 	$(RM) $(STATICFILES)
 
 ifdef WEBTILES
