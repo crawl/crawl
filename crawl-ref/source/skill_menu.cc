@@ -706,15 +706,27 @@ void SkillMenu::clear_selections()
 // Before we exit, make sure there's at least one skill enabled.
 bool SkillMenu::exit()
 {
-    if (you.wizard)
-        return true;
+    bool maxed_out = true;
 
     for (int i = 0; i < NUM_SKILLS; ++i)
-        if (skill_known(i) && you.train[i])
+    {
+        if (!skill_known(i))
+            continue;
+
+        if (you.train[i])
             return true;
 
-    set_help("You need to enable at least one skill.");
-    return false;
+        if (you.skills[i] < 27)
+            maxed_out = false;
+    }
+
+    if (!maxed_out)
+    {
+        set_help("You need to enable at least one skill.");
+        return false;
+    }
+
+    return true;
 }
 
 skill_menu_state SkillMenu::get_state(skill_menu_switch sw)
