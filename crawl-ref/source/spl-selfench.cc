@@ -388,7 +388,7 @@ spret_type cast_shroud_of_golubria(int pow, bool fail)
 {
     fail_check();
     if (you.duration[DUR_SHROUD_OF_GOLUBRIA])
-        mpr("Your shroud grows in power.");
+        mpr("You renew your shroud.");
     else
         mpr("Space distorts slightly along a thin shroud covering your body.");
 
