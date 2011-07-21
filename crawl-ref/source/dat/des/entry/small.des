@@ -2567,11 +2567,8 @@ TAGS:    entry no_rotate no_monster_gen no_item_gen
 SUBST:   [ = l, ( = l
 : end
 SUBST:   ':l...' , '=l. , l:lllWw , n:nv , v:vvvc
-SHUFFLE: 12
-KMONS:   1 = Ijyb, human
-KMONS:   2 = Psyche, human
+KMONS:   1 = orc / goblin / kobold
 KFEAT:   1 = .
-KFEAT:   2 = .
 MAP
 .....................
 .....................
@@ -2583,7 +2580,7 @@ MAP
 ..vl'...........'lv..
 ..vl.............lv..
 ..vmm..G.vvv.G..mmv..
-..v1m...........m2v..
+..v1m...........m1v..
 ..vvvvvvv+++vvvvvvv..
 ...vv...........vv...
  ..vv...........vv..
