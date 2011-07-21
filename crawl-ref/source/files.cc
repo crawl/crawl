@@ -1753,7 +1753,8 @@ bool restore_game(const std::string& filename)
              you.prev_save_version.c_str());
     }
 
-    if (numcmp(you.prev_save_version.c_str(), Version::Long().c_str(), 2) == -1)
+    if (numcmp(you.prev_save_version.c_str(), Version::Long().c_str(), 2) == -1
+        && version_is_stable(you.prev_save_version.c_str()))
     {
         if (!yesno("This game comes from a previous release of Crawl.  If you "
                    "load it now, you won't be able to go back. Continue?",

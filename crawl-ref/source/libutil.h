@@ -84,6 +84,8 @@ std::string chop_string(const char *s, int width, bool spaces = true);
 std::string chop_string(const std::string &s, int width, bool spaces = true);
 std::string wordwrap_line(std::string &s, int cols, bool tags = false);
 
+bool version_is_stable(const char *ver);
+
 // String "tags"
 #define TAG_UNFOUND -20404
 bool strip_tag(std::string &s, const std::string &tag, bool nopad = false);
