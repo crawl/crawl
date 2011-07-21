@@ -287,9 +287,11 @@ IDEF(subtype)
 {
     if (item)
     {
+        const char *s = NULL;
+        if (item->base_type == OBJ_ARMOUR)
+            s = item_slot_name(get_armour_slot(*item), true).c_str();
         if (item_type_known(*item))
         {
-            const char *s = NULL;
             if (item->base_type == OBJ_JEWELLERY)
             {
                 if (jewellery_is_amulet(*item))
@@ -325,17 +327,15 @@ IDEF(subtype)
                 else
                     s = "spellbook";
             }
-            else if (item->base_type == OBJ_ARMOUR)
-                s = item_slot_name(get_armour_slot(*item), true).c_str();
-
-            if (s)
-                lua_pushstring(ls, s);
-            else
-                lua_pushnil(ls);
-
-            lua_pushnumber(ls, item->sub_type);
-            return (2);
         }
+
+        if (s)
+            lua_pushstring(ls, s);
+        else
+            lua_pushnil(ls);
+
+        lua_pushnumber(ls, item->sub_type);
+        return (2);
     }
 
     lua_pushnil(ls);
