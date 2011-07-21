@@ -82,7 +82,7 @@ bool SkillMenuEntry::is_selectable(bool keep_hotkey)
     if (is_invalid_skill(m_sk))
         return false;
 
-    if (you.skills[m_sk] == 0 && m_skm->get_state(SKM_SHOW) == SKM_SHOW_KNOWN)
+    if (!skill_known(m_sk) && m_skm->get_state(SKM_SHOW) == SKM_SHOW_KNOWN)
         return false;
 
     if (is_set(SKMF_HELP))
@@ -103,7 +103,7 @@ bool SkillMenuEntry::is_selectable(bool keep_hotkey)
         return false;
     }
 
-    if (you.skills[m_sk] == 0 && !is_set(SKMF_RESKILL_TO))
+    if (!skill_known(m_sk) && !is_set(SKMF_RESKILL_TO))
         return false;
 
     if (you.skills[m_sk] == 27)
@@ -248,7 +248,7 @@ COLORS SkillMenuEntry::get_colour() const
     }
     else if (you.skills[m_sk] == 27)
         return YELLOW;
-    else if (!you.train[m_sk] || !you.skills[m_sk])
+    else if (!you.train[m_sk] || !skill_known(m_sk))
         return DARKGREY;
     else if (crosstrain_bonus(m_sk) > 1 && is_set(SKMF_APTITUDE))
         return GREEN;
@@ -270,7 +270,7 @@ std::string SkillMenuEntry::get_prefix()
     else
         letter = ' ';
 
-    const int sign = (you.skills[m_sk] == 0
+    const int sign = (!skill_known(m_sk)
                       || you.skills[m_sk] == 27) ? ' ' :
                      (you.train[m_sk] == 2)   ? '*' :
                      (you.train[m_sk])        ? '+'
@@ -365,7 +365,7 @@ void SkillMenuEntry::set_points()
 
 void SkillMenuEntry::set_progress()
 {
-    if (you.skills[m_sk] == 27 || you.skills[m_sk] == 0)
+    if (you.skills[m_sk] == 27 || !skill_known(m_sk))
         m_progress->set_text("");
     else
     {
@@ -425,7 +425,7 @@ void SkillMenuEntry::set_title()
 
 void SkillMenuEntry::set_training()
 {
-    if (!you.train[m_sk] || !you.skills[m_sk] && !you.training[m_sk])
+    if (!you.train[m_sk] || !skill_known(m_sk) && !you.training[m_sk])
         m_progress->set_text("");
     else
         m_progress->set_text(make_stringf("(%2d%%)", you.training[m_sk]));
@@ -710,7 +710,7 @@ bool SkillMenu::exit()
         return true;
 
     for (int i = 0; i < NUM_SKILLS; ++i)
-        if (you.skills[i] && you.train[i])
+        if (skill_known(i) && you.train[i])
             return true;
 
     set_help("You need to enable at least one skill.");
@@ -1087,7 +1087,7 @@ void SkillMenu::set_skills()
             continue;
         }
         else if (!is_invalid_skill(sk) && !you.skill(sk)
-                 && !you.skills[sk]&& !you.training[sk]
+                 && !skill_known(sk) && !you.training[sk]
                  && get_state(SKM_SHOW) == SKM_SHOW_KNOWN)
         {
             continue;
