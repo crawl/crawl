@@ -20,7 +20,7 @@ function tutorial_msg3.armour ()
                  .. tutorial_get_cmd("CMD_PICKUP") .. " and then wear them with "
                  .. tutorial_get_cmd("CMD_WEAR_ARMOUR") .. "."
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " Or simply <white>mouseclick</white> on them."
     end
 
@@ -37,7 +37,7 @@ function tutorial_msg3.autopickup ()
 
     text = text .. "\nYou can eat this ration with "
                 .. tutorial_get_cmd("CMD_EAT")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>mouseclick</white>"
     end
     text = text .. "."
@@ -51,7 +51,7 @@ function tutorial_msg3.weapon_reminder ()
                  .. "You know the drill: Wield it with "
                  .. tutorial_get_cmd("CMD_WIELD_WEAPON")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or via <white>mouseclick</click>"
     end
 
@@ -65,7 +65,7 @@ function tutorial_msg3.scroll_noautopickup ()
                  .. "You can pick up these scrolls now with "
                  .. tutorial_get_cmd("CMD_PICKUP")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>mouseclick</click>,"
     end
 
@@ -74,7 +74,7 @@ function tutorial_msg3.scroll_noautopickup ()
                 .. "Either way, you can read this scroll with "
                 .. tutorial_get_cmd("CMD_READ")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>mouseclick</click>"
     end
 
@@ -96,7 +96,7 @@ function tutorial_msg3.inventory ()
                  .. "access its description from your inventory with "
                  .. tutorial_get_cmd("CMD_DISPLAY_INVENTORY")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. ", or by <white>mouseover</click> or <white>rightclick</white> "
                     .. "in the inventory panel"
     end
@@ -129,7 +129,7 @@ function tutorial_msg3.command_help ()
                  .. "up in the command help ("
                  .. tutorial_get_cmd("CMD_DISPLAY_COMMANDS")
                  .. "<w>?</w>). "
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. "Also, a number of commands are available in the clickable "
                     .. "<w>command panel</w> to the right of the screen. And, "
                     .. "as usual, you "
@@ -146,7 +146,7 @@ end
 function tutorial_msg3.potion ()
     local text = "You can quaff this potion with "
                  .. tutorial_get_cmd("CMD_QUAFF")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>mouseclick</click>"
     end
     text = text .. "."
@@ -196,7 +196,7 @@ end
 function tutorial_msg3.jewellery ()
     local text = "You can put on jewellery with "
                  .. tutorial_get_cmd("CMD_WEAR_JEWELLERY")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>mouseclick</click>"
     end
     text = text .. "."
@@ -209,7 +209,7 @@ function tutorial_msg3.artefact_armour ()
                  .. "are artefacts, which can have a number of special properties.\n"
                  .. "Wear this cloak with "
                  .. tutorial_get_cmd("CMD_WEAR_ARMOUR")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>mouseclick</click>"
     end
     text = text .. " to find out what those are."
@@ -235,7 +235,7 @@ function tutorial_msg3.enter_shop ()
     local text = "To enter this shop, press "
                  .. tutorial_get_cmd("CMD_GO_UPSTAIRS")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or <white>Shift</white> + <white>mouseclick</white>"
     end
     text = text .. ". You can switch to description mode with <w>!</w> "
@@ -247,7 +247,7 @@ end
 function tutorial_msg3.wand_fire ()
     local text = "You can evoke a wand with "
                  .. tutorial_get_cmd("CMD_EVOKE")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>mouseclick</click>"
     end
     text = text .. "."
@@ -260,7 +260,7 @@ function tutorial_msg3.wand_digging ()
                  .. "press <w>Shift</w> together with the direction keys.\n"
                  .. "Try which of the nearby walls you can destroy! "
                  .. "Use " .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "<w>v</w> "
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. "or <white>mouseover</white>/<white>rightclick</white> "
     end
     text = text .. "to check the wall types. "
@@ -273,7 +273,7 @@ end
 function tutorial_msg3.amulet ()
     local text = "Amulets are another type of jewellery and can be put on with "
                  .. tutorial_get_cmd("CMD_WEAR_JEWELLERY")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>mouseclick</click>"
     end
     text = text .. ".\nSome types of jewellery, when equipped, don't identify "
@@ -294,14 +294,14 @@ function tutorial_msg3.go_shopping ()
                  .. "for it. Type "
                  .. tutorial_get_cmd("CMD_SEARCH_STASHES")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " (or click in the <w>command panel</w>)"
     end
 
     text = text .. ", and then enter \"<w>shop</w>\". Select the result to start "
                 .. "traveling.\n"
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>clicking</white> on the <white>minimap</white>"
     end
     text = text .. "."
@@ -337,7 +337,7 @@ function tutorial_msg3.exit ()
     text = text .. "\nUsage commands are also available from the inventory menu ("
                 .. tutorial_get_cmd("CMD_DISPLAY_INVENTORY") .. "), as are the item descriptions."
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. "\nAnd of course, <white>mouseclicks</white> also work.\n"
     end
 
@@ -349,7 +349,7 @@ function tutorial_msg3.exit ()
                 .. "  " .. tutorial_get_cmd("CMD_WEAPON_SWAP") .. "  swap between weapons in slots <w>a</w> and <w>b</w>\n"
                 .. "  " .. tutorial_get_cmd("CMD_SEARCH_STASHES") .. "  search for items/features previously seen\n"
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. "\nSeveral of these commands can also be executed by clicking in the <w>command panel</w>.\n"
     end
 
