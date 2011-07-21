@@ -354,37 +354,6 @@ int cast_healing(int pow, bool divine_ability, const coord_def& where,
                            not_self, mode));
 }
 
-bool cast_revivification(int pow)
-{
-    if (you.hp == you.hp_max)
-        canned_msg(MSG_NOTHING_HAPPENS);
-    else if (you.hp_max < 21)
-        mpr("You lack the resilience to cast this spell.");
-    else
-    {
-        mpr("Your body is healed in an amazingly painful way.");
-
-        int loss = 2;
-        for (int i = 0; i < 9; ++i)
-            if (x_chance_in_y(8, pow))
-                loss++;
-
-        dec_max_hp(loss * you.hp_max / 100);
-        set_hp(you.hp_max);
-
-        if (you.duration[DUR_DEATHS_DOOR])
-        {
-            mpr("Your life is in your own hands once again.", MSGCH_DURATION);
-            you.paralyse(NULL, 5 + random2(5));
-            confuse_player(10 + random2(10));
-            you.duration[DUR_DEATHS_DOOR] = 0;
-        }
-        return (true);
-    }
-
-    return (false);
-}
-
 // Antimagic is sort of an anti-extension... it sets a lot of magical
 // durations to 1 so it's very nasty at times (and potentially lethal,
 // that's why we reduce levitation to 2, so that the player has a chance

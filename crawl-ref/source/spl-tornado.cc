@@ -107,7 +107,7 @@ static void _set_tornado_durations(int powc)
     you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
 }
 
-bool cast_tornado(int powc)
+spret_type cast_tornado(int powc, bool fail)
 {
     bool friendlies = false;
     for (radius_iterator ri(you.pos(), TORNADO_RADIUS, C_ROUND); ri; ++ri)
@@ -127,8 +127,10 @@ bool cast_tornado(int powc)
         && !yesno("There are friendlies around, are you sure you want to hurt them?",
                   true, 'n'))
     {
-        return false;
+        return SPRET_ABORT;
     }
+
+    fail_check();
 
     mprf("A great vortex of raging winds %s.",
          you.airborne() ? "appears around you"
@@ -141,7 +143,7 @@ bool cast_tornado(int powc)
     _set_tornado_durations(powc);
     burden_change();
 
-    return true;
+    return SPRET_SUCCESS;
 }
 
 static bool _mons_is_unmovable(const monster *mons)
