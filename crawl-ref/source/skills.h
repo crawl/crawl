@@ -7,6 +7,8 @@
 #ifndef SKILLS_H
 #define SKILLS_H
 
+#include "player.h"
+
 int skill_cost_needed(int level);
 void calc_total_skill_points(void);
 int calc_skill_cost(int skill_cost_level);
@@ -23,6 +25,17 @@ void exercise(skill_type exsk, int deg);
 void train_skills();
 void train_skills(int exp, const int cost);
 void train_skill(skill_type skill, int exp);
+void gain_skill(skill_type sk);
 void lose_skill(skill_type sk);
+
+inline bool skill_known(skill_type sk)
+{
+    return (you.skills[sk] || you.manual_skill == sk);
+}
+
+inline bool skill_known(int i)
+{
+    return skill_known(static_cast<skill_type>(i));
+}
 
 #endif

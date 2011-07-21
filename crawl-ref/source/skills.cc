@@ -163,6 +163,30 @@ void reassess_starting_skills()
     }
 }
 
+// When a skill is gained, we insert in the queue the exercises left in the
+// training array.
+void gain_skill(skill_type sk)
+{
+
+    if (you.religion == GOD_TROG && sk == SK_SPELLCASTING)
+        you.training[sk] = 0;
+    else
+    {
+        // We insert the rest of the exercises in the queue.
+        while (you.training[sk] > 0)
+        {
+            you.exercises.pop_front();
+            int pos = you.training[sk]
+                      + random2(you.exercises.size() - you.training[sk]);
+            std::list<skill_type>::iterator it = you.exercises.begin();
+            while (pos--)
+                ++it;
+            you.exercises.insert(it, sk);
+            --you.training[sk];
+        }
+    }
+}
+
 // When a skill is lost, we clear the queue of leftover exercises and put then
 // in the training array.
 void lose_skill(skill_type sk)
@@ -184,7 +208,7 @@ void lose_skill(skill_type sk)
 
     FixedVector<unsigned int, NUM_SKILLS> training = you.training;
     for (int i = 0; i < NUM_SKILLS; ++i)
-        if (!you.skills[i])
+        if (!skill_known(i))
             training[i] = 0;
 
     for (int i = 0; i < num_exercises; ++i)
@@ -335,7 +359,7 @@ static void _init_exercise_queue()
 
     // We remove unknown skills, since we don't want then in the queue.
     for (int i = 0; i < NUM_SKILLS; ++i)
-        if (!you.skills[i])
+        if (!skill_known(i))
             prac[i] = 0;
 
     for (int i = 0; i < EXERCISE_QUEUE_SIZE; ++i)
@@ -344,7 +368,7 @@ static void _init_exercise_queue()
         if (is_invalid_skill(sk))
             sk = static_cast<skill_type>(random_choose_weighted(you.training));
 
-        if (!you.skills[sk])
+        if (!skill_known(sk))
             continue;
 
         you.exercises.push_back(sk);
@@ -360,7 +384,7 @@ void init_training()
 {
     int total = 0;
     for (int i = 0; i < NUM_SKILLS; ++i)
-        if (you.train[i] && you.skills[i])
+        if (you.train[i] && skill_known(i))
             total += you.skill_points[i];
 
     // If no trainable skills, exit.
@@ -368,7 +392,7 @@ void init_training()
         return;
 
     for (int i = 0; i < NUM_SKILLS; ++i)
-        if (you.skills[i])
+        if (skill_known(i))
             you.training[i] = you.skill_points[i] * 100 / total;
 
     _init_exercise_queue();
@@ -387,9 +411,9 @@ void check_selected_skills()
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
         skill_type sk = static_cast<skill_type>(i);
-        if (you.train[sk] && you.skills[sk])
+        if (you.train[sk] && skill_known(sk))
             return;
-        if (!you.skills[sk] || you.skills[sk] == 27)
+        if (!skill_known(sk) || you.skills[sk] == 27)
             continue;
         if (is_invalid_skill(first_selectable))
             first_selectable = sk;
@@ -416,7 +440,7 @@ static void _scale_training(int scale, bool known, bool exact)
     int total = 0;
     // First, we calculate the sum of the values to be scaled.
     for (int i = 0; i < NUM_SKILLS; ++i)
-        if (known == (you.skills[i] != 0) && you.training[i] > 0)
+        if (known == skill_known(i) && you.training[i] > 0)
             total += you.training[i];
 
     std::vector<std::pair<skill_type,int> > rests;
@@ -428,7 +452,7 @@ static void _scale_training(int scale, bool known, bool exact)
 
     // Now we scale the values.
     for (int i = 0; i < NUM_SKILLS; ++i)
-        if (known == (you.skills[i] != 0) && you.training[i] > 0)
+        if (known == skill_known(i) && you.training[i] > 0)
         {
             int result = you.training[i] * scale;
             const int rest = result % total;
@@ -473,7 +497,7 @@ void reset_training()
     // manual mode, they are all set to 1.
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
-        if (!you.skills[i])
+        if (!skill_known(i))
             total_unknown += you.training[i];
         else if (you.auto_training)
             you.training[i] = 0;
@@ -492,7 +516,7 @@ void reset_training()
             if (you.train[sk])
             {
                 // Only known skills should be in the queue.
-                ASSERT(you.skills[sk]);
+                ASSERT(skill_known(sk));
                 you.training[sk] += you.train[sk];
                 empty = false;
             }
@@ -502,7 +526,7 @@ void reset_training()
         // a default weight of 1 (or 2 for focus skills).
         if (empty)
             for (int sk = 0; sk < NUM_SKILLS; ++sk)
-                if (you.train[sk] && you.skills[sk])
+                if (you.train[sk] && skill_known(sk))
                     you.training[sk] = you.train[sk];
 
         // Focused skills get at least 20% training.
@@ -528,7 +552,7 @@ void exercise(skill_type exsk, int deg)
 
     dprf("Exercise %s by %d.", skill_name(exsk), deg);
 
-    if (!you.skills[exsk])
+    if (!skill_known(exsk))
         you.training[exsk] += deg;
     else
         while (deg > 0)
@@ -545,26 +569,11 @@ void exercise(skill_type exsk, int deg)
 static bool _level_up_check(skill_type sk)
 {
     // New skill learned.
-    const bool skill_learned  = !you.skills[sk]
+    const bool skill_learned  = !skill_known(sk)
                     && you.skill_points[sk] >= skill_exp_needed(1, sk);
 
-    if (skill_learned && you.religion == GOD_TROG && sk == SK_SPELLCASTING)
-        you.training[sk] = 0;
-    else if (skill_learned)
-    {
-        // We start by inserting the rest of the exercises in the queue.
-        while (you.training[sk] > 0)
-        {
-            you.exercises.pop_front();
-            int pos = you.training[sk]
-                      + random2(you.exercises.size() - you.training[sk]);
-            std::list<skill_type>::iterator it = you.exercises.begin();
-            while (pos--)
-                ++it;
-            you.exercises.insert(it, sk);
-            --you.training[sk];
-        }
-    }
+    if (skill_learned)
+        gain_skill(sk);
 
     // Don't train past level 27.
     // In manual mode, we stop training and automatically disable new skills.
@@ -585,7 +594,7 @@ static bool _is_magic_skill(skill_type sk)
     // Learning new skills doesn't count for Trog because punishment has
     // already been given for casting. And we don't want to punish
     // learning spellcasting from scrolls.
-    if (you.religion == GOD_TROG && !you.skills[sk])
+    if (you.religion == GOD_TROG && !skill_known(sk))
         return false;
 
     return (sk > SK_LAST_MUNDANE && sk <= SK_LAST_MAGIC);
@@ -851,7 +860,7 @@ static int _train(skill_type exsk, int &max_exp)
             stop_studying_manual(true);
     }
 
-    if (!you.skills[exsk] && you.training[exsk] > 0
+    if (!skill_known(exsk) && you.training[exsk] > 0
         && x_chance_in_y(skill_inc, 10))
     {
         --you.training[exsk];
