@@ -1854,6 +1854,12 @@ static bool _monster_resists_mass_enchantment(monster* mons,
             return (true);
         }
 
+        if (wh_enchant == ENCH_FEAR
+            && mons->friendly())
+        {
+            return (true);
+        }
+
         int res_margin = mons->check_res_magic(pow);
         if (res_margin > 0)
         {
