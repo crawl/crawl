@@ -40,7 +40,7 @@
 #define MAX_COST_LIMIT           250
 #define MAX_SPENDING_LIMIT       250
 
-static int _train(skill_type exsk, int &max_exp);
+static int _train(skill_type exsk, int &max_exp, bool simu = false);
 
 int skill_cost_needed(int level)
 {
@@ -600,7 +600,7 @@ static bool _is_magic_skill(skill_type sk)
     return (sk > SK_LAST_MUNDANE && sk <= SK_LAST_MAGIC);
 }
 
-void train_skills()
+void train_skills(bool simu)
 {
     int cost, exp;
     do
@@ -608,27 +608,27 @@ void train_skills()
         cost = calc_skill_cost(you.skill_cost_level);
         exp = you.exp_available;
         if (you.skill_cost_level == 27)
-            train_skills(exp, cost);
+            train_skills(exp, cost, simu);
         else
         {
             // Amount of skill points needed to reach the next skill cost level
             // divided by 10 (integer divison rounded up).
             const int next_level = (skill_cost_needed(you.skill_cost_level + 1)
                                     - you.total_skill_points + 9) / 10;
-            train_skills(std::min(exp, cost * next_level), cost);
+            train_skills(std::min(exp, cost * next_level), cost, simu);
         }
     }
     while (you.exp_available >= cost && exp != you.exp_available);
 
     for (int i = 0; i < NUM_SKILLS; ++i)
-        check_skill_level_change(static_cast<skill_type>(i));
+        check_skill_level_change(static_cast<skill_type>(i), !simu);
 
     // We might have disabled some skills on level up.
     reset_training();
 }
 
 //#define DEBUG_TRAINING_COST
-void train_skills(int exp, const int cost)
+void train_skills(int exp, const int cost, const bool simu)
 {
     bool skip_first_phase = false;
     int magic_gain = 0;
@@ -677,7 +677,7 @@ void train_skills(int exp, const int cost)
             while (sk_exp[sk] >= cost && you.training[sk])
             {
                 exp -= sk_exp[sk];
-                gain += _train(sk, sk_exp[sk]);
+                gain += _train(sk, sk_exp[sk], simu);
                 exp += sk_exp[sk];
                 if (_level_up_check(sk))
                     sk_exp[sk] = 0;
@@ -703,7 +703,7 @@ void train_skills(int exp, const int cost)
             sk = static_cast<skill_type>(random_choose_weighted(you.training));
         if (!is_invalid_skill(sk))
         {
-            gain = _train(sk, exp);
+            gain = _train(sk, exp, simu);
             sk_exp[sk] = 0;
         }
         else
@@ -731,7 +731,7 @@ void train_skills(int exp, const int cost)
         for (int i = 0; i < NUM_SKILLS; ++i)
         {
             skill_type sk = static_cast<skill_type>(i);
-            if (total_gain[sk])
+            if (total_gain[sk] && !simu)
                 dprf("Trained %s by %d.", skill_name(sk), total_gain[sk]);
 #ifdef DEBUG_TRAINING_COST
             total += total_gain[sk];
@@ -817,7 +817,7 @@ void change_skill_points(skill_type sk, int points, bool do_level_up)
     check_skill_level_change(sk, do_level_up);
 }
 
-static int _train(skill_type exsk, int &max_exp)
+static int _train(skill_type exsk, int &max_exp, bool simu)
 {
     // This will be added to you.skill_points[exsk];
     int skill_inc = 10;
@@ -856,7 +856,7 @@ static int _train(skill_type exsk, int &max_exp)
         const int bonus = std::min<int>(skill_inc, manual.plus2);
         skill_inc += bonus;
         manual.plus2 -= bonus;
-        if (!manual.plus2)
+        if (!manual.plus2 && !simu)
             stop_studying_manual(true);
     }
 

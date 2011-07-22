@@ -145,18 +145,13 @@ void SkillMenuEntry::set_display()
     if (is_invalid_skill(m_sk))
         return;
 
-    if (is_set(SKMF_RESKILLING))
-    {
-        set_new_level();
-        return;
-    }
-
     switch (m_skm->get_state(SKM_VIEW))
     {
-    case SKM_VIEW_TRAINING: set_training();         break;
-    case SKM_VIEW_PROGRESS: set_progress();         break;
-    case SKM_VIEW_TRANSFER: set_reskill_progress(); break;
-    case SKM_VIEW_POINTS:   set_points();           break;
+    case SKM_VIEW_TRAINING:  set_training();         break;
+    case SKM_VIEW_PROGRESS:  set_progress();         break;
+    case SKM_VIEW_TRANSFER:  set_reskill_progress(); break;
+    case SKM_VIEW_NEW_LEVEL: set_new_level();        break;
+    case SKM_VIEW_POINTS:    set_points();           break;
     default: die("Invalid view state.");
     }
 }
@@ -324,17 +319,34 @@ void SkillMenuEntry::set_aptitude()
 
 void SkillMenuEntry::set_level()
 {
+    int level;
     const bool changed = m_skm->get_state(SKM_LEVEL) == SKM_LEVEL_ENHANCED
                          && you.skill(m_sk) != you.skills[m_sk];
-    m_level->set_text(make_stringf("%2d",
-                      changed ? you.skill(m_sk) : you.skills[m_sk]));
+
+    if (is_set(SKMF_EXPERIENCE))
+        level = m_skm->get_saved_skill_level(m_sk, changed);
+    else if (changed)
+        level = you.skill(m_sk);
+    else
+        level = you.skills[m_sk];
+
+    m_level->set_text(make_stringf("%2d", level));
     m_level->set_fg_colour(get_colour());
 }
 
 void SkillMenuEntry::set_new_level()
 {
-    int new_level = 0;
     const bool skill_boost = m_skm->get_state(SKM_LEVEL) == SKM_LEVEL_ENHANCED;
+    if (is_set(SKMF_EXPERIENCE) && is_selectable())
+    {
+        m_progress->set_fg_colour(CYAN);
+        m_progress->set_text(make_stringf("-> %2d",
+                                          skill_boost ? you.skill(m_sk)
+                                                      : you.skills[m_sk]));
+        return;
+    }
+
+    int new_level = 0;
     if (you.skills[m_sk] > 0 && is_set(SKMF_RESKILL_FROM)
         || m_sk == you.transfer_from_skill)
     {
@@ -415,10 +427,11 @@ void SkillMenuEntry::set_title()
 
     switch (m_skm->get_state(SKM_VIEW))
     {
-    case SKM_VIEW_TRAINING: m_progress->set_text("Train"); break;
-    case SKM_VIEW_PROGRESS: m_progress->set_text("Progr"); break;
-    case SKM_VIEW_TRANSFER: m_progress->set_text("Trnsf"); break;
-    case SKM_VIEW_POINTS:   m_progress->set_text("Pnts");  break;
+    case SKM_VIEW_TRAINING:  m_progress->set_text("Train"); break;
+    case SKM_VIEW_PROGRESS:  m_progress->set_text("Progr"); break;
+    case SKM_VIEW_TRANSFER:  m_progress->set_text("Trnsf"); break;
+    case SKM_VIEW_POINTS:    m_progress->set_text("Pnts");  break;
+    case SKM_VIEW_NEW_LEVEL: m_progress->set_text("New");   break;
     default: die("Invalid view state.");
     }
 }
@@ -516,6 +529,7 @@ std::string SkillMenuSwitch::get_name(skill_menu_state state)
     case SKM_VIEW_PROGRESS:  return "progress";
     case SKM_VIEW_TRANSFER:  return "transfer";
     case SKM_VIEW_POINTS:    return "points";
+    case SKM_VIEW_NEW_LEVEL: return "new level";
     default: die ("Invalid switch state.");
     }
 }
@@ -586,13 +600,25 @@ void SkillMenuSwitch::update()
     set_text(text);
 }
 
-#define TILES_COL            6
-SkillMenu::SkillMenu(bool reskilling) : PrecisionMenu(), m_flags(0),
-    m_min_coord(), m_max_coord(), m_help_button(NULL)
+#define TILES_COL 6
+SkillMenu::SkillMenu(int flag, int exp) : PrecisionMenu(), m_flags(flag),
+    m_min_coord(), m_max_coord(), m_help_button(NULL), m_exp(exp)
 {
     SkillMenuEntry::m_skm = this;
     SkillMenuSwitch::m_skm = this;
-    init_flags(reskilling);
+    init_flags();
+    if (is_set(SKMF_EXPERIENCE))
+    {
+        m_skill_backup.save();
+        you.auto_training = false;
+
+        // We're not training unknown skills.
+        for (int i = 0; i < NUM_SKILLS; i++)
+            if (!skill_known(i))
+                you.training[i] = 0;
+
+        reset_training();
+    }
 
 #ifdef USE_TILE_LOCAL
     const int limit = tiles.get_crt_font()->char_height() * 4
@@ -623,7 +649,7 @@ SkillMenu::SkillMenu(bool reskilling) : PrecisionMenu(), m_flags(0),
     attach_object(m_ff);
     set_active_object(m_ff);
 
-    if (is_set(SKMF_RESKILLING))
+    if (is_set(SKMF_SPECIAL))
         init_title();
 
     m_pos.x++;
@@ -652,10 +678,13 @@ SkillMenu::SkillMenu(bool reskilling) : PrecisionMenu(), m_flags(0),
     if (m_pos.y < m_max_coord.y - 1)
         shift_bottom_down();
 
-    if (is_set(SKMF_RESKILLING))
+    if (is_set(SKMF_SPECIAL))
         set_title();
     set_skills();
     set_default_help();
+
+    if (is_set(SKMF_EXPERIENCE))
+        refresh_display();
 
 #ifdef USE_TILE_LOCAL
     tiles.get_crt()->attach_menu(this);
@@ -718,6 +747,7 @@ void SkillMenu::clear_selections()
 bool SkillMenu::exit()
 {
     bool maxed_out = true;
+    bool enabled_skill = false;
 
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
@@ -725,24 +755,55 @@ bool SkillMenu::exit()
             continue;
 
         if (you.train[i])
-            return true;
+        {
+            enabled_skill = true;
+            break;
+        }
 
         if (you.skills[i] < 27)
             maxed_out = false;
     }
 
-    if (!maxed_out)
+    if (!enabled_skill && !maxed_out)
     {
         set_help("You need to enable at least one skill.");
         return false;
     }
 
+    if (is_set(SKMF_EXPERIENCE))
+    {
+        you.exp_available += m_exp;
+        clrscr();
+        train_skills();
+        m_skill_backup.restore_training();
+    }
+
     return true;
+}
+
+int SkillMenu::get_saved_skill_level(skill_type sk, bool changed)
+{
+    if (changed)
+        return m_skill_backup.changed_skills[sk];
+    else
+        return m_skill_backup.skills[sk];
 }
 
 skill_menu_state SkillMenu::get_state(skill_menu_switch sw)
 {
-    if (!m_switches[sw])
+    if (is_set(SKMF_EXPERIENCE) && !m_switches[sw])
+    {
+        switch (sw)
+        {
+        case SKM_MODE:  return SKM_MODE_MANUAL;
+        case SKM_DO:    return SKM_DO_FOCUS;
+        case SKM_SHOW:  return SKM_SHOW_KNOWN;
+        case SKM_LEVEL: return SKM_LEVEL_NORMAL;
+        case SKM_VIEW:  return SKM_VIEW_NEW_LEVEL;
+        default:        return SKM_NONE;
+        }
+    }
+    else if (!m_switches[sw])
         return SKM_NONE;
     else
         return m_switches[sw]->get_state();
@@ -785,7 +846,7 @@ void SkillMenu::select(skill_type sk, int keyn)
              || get_state(SKM_DO) == SKM_DO_FOCUS)
     {
         toggle_practise(sk, keyn);
-        if (get_state(SKM_VIEW) == SKM_VIEW_TRAINING)
+        if (get_state(SKM_VIEW) == SKM_VIEW_TRAINING || is_set(SKMF_EXPERIENCE))
             refresh_display();
     }
 }
@@ -835,18 +896,8 @@ SkillMenuEntry* SkillMenu::find_entry(skill_type sk)
     return NULL;
 }
 
-void SkillMenu::init_flags(bool reskilling)
+void SkillMenu::init_flags()
 {
-    if (reskilling)
-    {
-        if (is_invalid_skill(you.transfer_from_skill))
-            set_flag(SKMF_RESKILL_FROM);
-        else
-            set_flag(SKMF_RESKILL_TO);
-
-        set_flag(SKMF_RESKILLING);
-    }
-
     if (crawl_state.game_is_hints_tutorial())
         set_flag(SKMF_SIMPLE);
     else
@@ -896,7 +947,7 @@ void SkillMenu::init_help()
 void SkillMenu::init_switches()
 {
     SkillMenuSwitch* sw;
-    if (!is_set(SKMF_RESKILLING))
+    if (!is_set(SKMF_SPECIAL))
     {
         sw = new SkillMenuSwitch("Mode", '/');
         m_switches[SKM_MODE] = sw;
@@ -919,14 +970,17 @@ void SkillMenu::init_switches()
         add_item(sw, sw->size(), m_pos);
     }
 
-    sw = new SkillMenuSwitch("Show", '*');
-    m_switches[SKM_SHOW] = sw;
-    sw->add(SKM_SHOW_KNOWN);
-    if (!is_set(SKMF_SIMPLE))
-        sw->add(SKM_SHOW_ALL);
-    sw->update();
-    sw->set_id(SKM_SHOW);
-    add_item(sw, sw->size(), m_pos);
+    if (!is_set(SKMF_EXPERIENCE))
+    {
+        sw = new SkillMenuSwitch("Show", '*');
+        m_switches[SKM_SHOW] = sw;
+        sw->add(SKM_SHOW_KNOWN);
+        if (!is_set(SKMF_SIMPLE))
+            sw->add(SKM_SHOW_ALL);
+        sw->update();
+        sw->set_id(SKM_SHOW);
+        add_item(sw, sw->size(), m_pos);
+    }
 
     if (is_set(SKMF_CHANGED))
     {
@@ -939,28 +993,38 @@ void SkillMenu::init_switches()
         add_item(sw, sw->size(), m_pos);
     }
 
-    if (!is_set(SKMF_RESKILLING))
+
+    sw = new SkillMenuSwitch("View", '!');
+    m_switches[SKM_VIEW] = sw;
+    const bool transferring = !is_invalid_skill(you.transfer_to_skill);
+    if (!is_set(SKMF_SPECIAL) || you.wizard)
     {
-        sw = new SkillMenuSwitch("View", '!');
-        m_switches[SKM_VIEW] = sw;
         sw->add(SKM_VIEW_PROGRESS);
         sw->add(SKM_VIEW_TRAINING);
-        const bool transferring = !is_invalid_skill(you.transfer_to_skill);
         if (transferring)
         {
             sw->add(SKM_VIEW_TRANSFER);
             sw->set_state(SKM_VIEW_TRANSFER);
         }
+    }
 
+    if (you.wizard)
+        sw->add(SKM_VIEW_POINTS);
 
-        if (you.wizard)
-            sw->add(SKM_VIEW_POINTS);
-
+    if (is_set(SKMF_SPECIAL))
+    {
+        sw->add(SKM_VIEW_NEW_LEVEL);
+        sw->set_state(SKM_VIEW_NEW_LEVEL);
+    }
+    else
         sw->set_state(you.skill_menu_view);
-        sw->update();
-        sw->set_id(SKM_VIEW);
-        add_item(sw, sw->size(), m_pos);
 
+    sw->update();
+    sw->set_id(SKM_VIEW);
+    add_item(sw, sw->size(), m_pos);
+
+    if (!is_set(SKMF_SPECIAL))
+    {
         m_help_button = new FormattedTextItem();
         m_help_button->set_text("[Help(<yellow>?</yellow>)]");
         m_help_button->set_id(SKM_HELP);
@@ -972,9 +1036,18 @@ void SkillMenu::init_switches()
 
 void SkillMenu::refresh_display()
 {
+    if (is_set(SKMF_EXPERIENCE))
+    {
+        you.exp_available += m_exp;
+        train_skills(true);
+    }
+
     for (int ln = 0; ln < SK_ARR_LN; ++ln)
         for (int col = 0; col < SK_ARR_COL; ++col)
                 m_skills[ln][col].refresh(true);
+
+    if (is_set(SKMF_EXPERIENCE))
+        m_skill_backup.restore_levels();
 }
 
 void SkillMenu::refresh_names()
@@ -1013,6 +1086,12 @@ void SkillMenu::set_default_help()
     {
         text = "Select a skill as the destination of the knowledge transfer. "
                "The chosen skill will be raised to the level shown in "
+               "<cyan>cyan</cyan>.";
+    }
+    else if (is_set(SKMF_EXPERIENCE))
+    {
+        text = "Select the skills you want to be trained. "
+               "The chosen skills will be raised to the level shown in "
                "<cyan>cyan</cyan>.";
     }
     else if (is_set(SKMF_SIMPLE))
@@ -1151,12 +1230,18 @@ void SkillMenu::toggle_practise(skill_type sk, int keyn)
 
 void SkillMenu::set_title()
 {
-    const char* format = "Transfer Knowledge: select the %s skill";
+    const char* format = is_set(SKMF_RESKILLING)
+                                ? "Transfer Knowledge: select the %s skill"
+                                : "You have %s. Select the skills to train.";
     std::string t;
     if (is_set(SKMF_RESKILL_FROM))
         t = make_stringf(format, "source");
     else if (is_set(SKMF_RESKILL_TO))
         t = make_stringf(format, "destination");
+    else if (is_set(SKMF_EXPERIENCE_CARD))
+        t = make_stringf(format, "drawn an Experience card");
+    else if (is_set(SKMF_EXPERIENCE_POTION))
+        t = make_stringf(format, "quaffed a potion of experience");
 
     m_title->set_text(t);
 }
@@ -1243,10 +1328,10 @@ void SkillMenu::set_links()
     }
 }
 
-void skill_menu(bool reskilling)
+void skill_menu(int flag, int exp)
 {
     clrscr();
-    SkillMenu skm(reskilling);
+    SkillMenu skm(flag, exp);
     int keyn;
 
     while (true)
@@ -1262,12 +1347,15 @@ void skill_menu(bool reskilling)
             case CK_DOWN:
             case CK_LEFT:
             case CK_RIGHT:
-            case CK_ENTER:
             case 1004:
             case 1002:
             case 1008:
             case 1006:
                 continue;
+            case CK_ENTER:
+                if (!skm.is_set(SKMF_EXPERIENCE))
+                    continue;
+            // Fallthrough. In experience mode, you can exit with enter.
             case CK_ESCAPE:
                 if (skm.is_set(SKMF_HELP))
                 {
@@ -1297,7 +1385,7 @@ void skill_menu(bool reskilling)
                 skill_type sk = static_cast<skill_type>(sel_id);
                 ASSERT(!is_invalid_skill(sk));
                 skm.select(sk, keyn);
-                if (reskilling)
+                if (skm.is_set(SKMF_RESKILLING))
                     return;
             }
         }
