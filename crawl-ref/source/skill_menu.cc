@@ -506,9 +506,11 @@ std::string SkillMenuSwitch::get_name(skill_menu_state state)
     case SKM_DO_FOCUS:       return "focus";
     case SKM_SHOW_KNOWN:     return "known";
     case SKM_SHOW_ALL:       return "all";
-    case SKM_LEVEL_ENHANCED: return m_skm->is_set(SKMF_CHANGED)  ? "changed" :
-                                    m_skm->is_set(SKMF_ENHANCED) ? "enhanced"
-                                                                 : "reduced";
+    case SKM_LEVEL_ENHANCED:
+        return (m_skm->is_set(SKMF_ENHANCED)
+                && m_skm->is_set(SKMF_REDUCED)) ? "changed" :
+                   m_skm->is_set(SKMF_ENHANCED) ? "enhanced"
+                                                : "reduced";
     case SKM_LEVEL_NORMAL:   return "normal";
     case SKM_VIEW_TRAINING:  return "training";
     case SKM_VIEW_PROGRESS:  return "progress";
@@ -921,7 +923,7 @@ void SkillMenu::init_switches()
     sw->set_id(SKM_SHOW);
     add_item(sw, sw->size(), m_pos);
 
-    if (is_set(SKMF_ENHANCED) || is_set(SKMF_REDUCED))
+    if (is_set(SKMF_CHANGED))
     {
         sw = new SkillMenuSwitch("Level", '_');
         m_switches[SKM_LEVEL] = sw;
