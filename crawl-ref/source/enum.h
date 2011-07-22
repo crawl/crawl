@@ -2876,6 +2876,7 @@ enum skill_menu_state
     SKM_VIEW_TRANSFER,
     SKM_VIEW_POINTS,
     SKM_DO_FOCUS,
+    SKM_VIEW_NEW_LEVEL,
 };
 
 // order is important on these (see player_speed())
