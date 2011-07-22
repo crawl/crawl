@@ -12,6 +12,26 @@ const int MAX_SKILL_ORDER = 100;
 #include "enum.h"
 #include "player.h"
 
+struct skill_state
+{
+    FixedVector<uint8_t, NUM_SKILLS>      skills;
+    FixedVector<uint8_t, NUM_SKILLS>      changed_skills;
+    FixedVector<char, NUM_SKILLS>         train;
+    FixedVector<unsigned int, NUM_SKILLS> training;
+    FixedVector<unsigned int, NUM_SKILLS> skill_points;
+    FixedVector<unsigned int, NUM_SKILLS> ct_skill_points;
+    FixedVector<uint8_t, NUM_SKILLS>      skill_order;
+    int skill_cost_level;
+    int total_skill_points;
+    bool auto_training;
+    int exp_available;
+    int manual_charges;
+
+    void save();
+    void restore_levels();
+    void restore_training();
+};
+
 int get_skill_percentage(const skill_type x);
 const char *skill_name(skill_type which_skill);
 skill_type str_to_skill(const std::string &skill);
@@ -48,7 +68,7 @@ bool crosstrain_other(skill_type sk, bool show_zero);
 bool is_antitrained(skill_type sk);
 bool antitrain_other(skill_type sk, bool show_zero);
 
-void skill_menu(bool reskilling = false);
+void skill_menu(int flag = 0, int exp = 0);
 bool is_invalid_skill(skill_type skill);
 void dump_skills(std::string &text);
 int skill_transfer_amount(skill_type sk);

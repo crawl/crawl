@@ -45,7 +45,7 @@
 #include "player-stats.h"
 #include "random.h"
 #include "religion.h"
-#include "skills.h"
+#include "skill_menu.h"
 #include "skills2.h"
 #include "shopping.h"
 #include "shout.h"
@@ -3247,7 +3247,7 @@ bool ashenzari_transfer_knowledge()
 
     while(true)
     {
-        skill_menu(true);
+        skill_menu(SKMF_RESKILL_FROM);
         if (is_invalid_skill(you.transfer_from_skill))
         {
             redraw_screen();
@@ -3257,7 +3257,7 @@ bool ashenzari_transfer_knowledge()
         you.transfer_skill_points = skill_transfer_amount(
                                                     you.transfer_from_skill);
 
-        skill_menu(true);
+        skill_menu(SKMF_RESKILL_TO);
         if (is_invalid_skill(you.transfer_to_skill))
         {
             you.transfer_from_skill = SK_NONE;

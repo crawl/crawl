@@ -16,20 +16,24 @@
 enum skill_menu_flags
 {
     //Ashenzari transfer knowledge ability.
-    SKMF_RESKILLING   = 1<<0,
-    SKMF_RESKILL_FROM = 1<<1,
-    SKMF_RESKILL_TO   = 1<<2,
+    SKMF_RESKILL_FROM      = 1<<0,
+    SKMF_RESKILL_TO        = 1<<1,
+    SKMF_RESKILLING        = SKMF_RESKILL_FROM | SKMF_RESKILL_TO,
+    SKMF_EXPERIENCE_CARD   = 1<<2,
+    SKMF_EXPERIENCE_POTION = 1<<3,
+    SKMF_EXPERIENCE        = SKMF_EXPERIENCE_CARD | SKMF_EXPERIENCE_POTION,
+    SKMF_SPECIAL           = SKMF_RESKILLING | SKMF_EXPERIENCE,
 
-    SKMF_CROSSTRAIN   = 1<<3,
-    SKMF_ANTITRAIN    = 1<<4,
-    SKMF_ENHANCED     = 1<<5,
-    SKMF_REDUCED      = 1<<6,
-    SKMF_CHANGED      = SKMF_ENHANCED | SKMF_REDUCED,
+    SKMF_CROSSTRAIN        = 1<<4,
+    SKMF_ANTITRAIN         = 1<<5,
+    SKMF_ENHANCED          = 1<<6,
+    SKMF_REDUCED           = 1<<7,
+    SKMF_CHANGED           = SKMF_ENHANCED | SKMF_REDUCED,
 
-    SKMF_SKILL_ICONS  = 1<<7,
-    SKMF_APTITUDE     = 1<<8,
-    SKMF_SIMPLE       = 1<<9, // Simple mode for tutorial and hint mode.
-    SKMF_HELP         = 1<<10,
+    SKMF_SKILL_ICONS       = 1<<8,
+    SKMF_APTITUDE          = 1<<9,
+    SKMF_SIMPLE            = 1<<10, // Simple mode for tutorial and hint mode.
+    SKMF_HELP              = 1<<11,
 };
 
 #define SKM_HELP -1
@@ -113,7 +117,7 @@ static const int SK_ARR_COL =  2;
 class SkillMenu : public PrecisionMenu
 {
 public:
-    SkillMenu(bool reskilling);
+    SkillMenu(int flag, int exp);
 
     void clear_flag(int flag);
     bool is_set(int flag) const;
@@ -124,6 +128,7 @@ public:
     void cancel_help();
     void clear_selections();
     bool exit();
+    int get_saved_skill_level(skill_type sk, bool changed);
     skill_menu_state get_state(skill_menu_switch sw);
     void help();
     void select(skill_type sk, int keyn);
@@ -146,8 +151,11 @@ private:
     std::map<skill_menu_switch, SkillMenuSwitch*> m_switches;
     FormattedTextItem* m_help_button;
 
+    skill_state m_skill_backup;
+    int m_exp;
+
     SkillMenuEntry* find_entry(skill_type sk);
-    void init_flags(bool reskilling);
+    void init_flags();
     void init_help();
     void init_title();
     void init_switches();

@@ -862,3 +862,45 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
     }
     return new_level;
 }
+
+void skill_state::save()
+{
+    skills             = you.skills;
+    train              = you.train;
+    training           = you.training;
+    skill_points       = you.skill_points;
+    ct_skill_points    = you.ct_skill_points;
+    skill_cost_level   = you.skill_cost_level;
+    total_skill_points = you.total_skill_points;
+    skill_order        = you.skill_order;
+    auto_training      = you.auto_training;
+    exp_available      = you.exp_available;
+    if (!is_invalid_skill(you.manual_skill))
+        manual_charges  = you.inv[you.manual_index].plus2;
+    for (int i = 0; i < NUM_SKILLS; i++)
+        changed_skills[i] = you.skill((skill_type)i);
+}
+
+void skill_state::restore_levels()
+{
+    you.skills                      = skills;
+    you.skill_points                = skill_points;
+    you.ct_skill_points             = ct_skill_points;
+    you.skill_cost_level            = skill_cost_level;
+    you.total_skill_points          = total_skill_points;
+    you.skill_order                 = skill_order;
+    you.exp_available               = exp_available;
+    if (!is_invalid_skill(you.manual_skill))
+        you.inv[you.manual_index].plus2 = manual_charges;
+}
+
+void skill_state::restore_training()
+{
+    you.train                       = train;
+    you.auto_training               = auto_training;
+    for (int i = 0; i < NUM_SKILLS; i++)
+        if (!skill_known(i))
+            you.training[i] = training[i];
+
+    reset_training();
+}
