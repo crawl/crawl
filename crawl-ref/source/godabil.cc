@@ -3268,8 +3268,8 @@ bool ashenzari_transfer_knowledge()
         break;
     }
 
-    if (you.props.exists("skm_view"))
-        you.props.erase("skm_view");
+    // We reset the view to force view transfer next time.
+    you.skill_menu_view = SKM_NONE;
 
     mprf("As you forget about %s, you feel ready to understand %s.",
          skill_name(you.transfer_from_skill),
