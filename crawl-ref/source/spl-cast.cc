@@ -562,31 +562,51 @@ void inspect_spells()
     list_spells(true, true);
 }
 
-void do_cast_spell_cmd(bool force)
+bool _can_cast()
 {
     if (player_in_bat_form() || you.form == TRAN_PIG)
     {
         canned_msg(MSG_PRESENT_FORM);
-        return;
+        return false;
     }
 
     if (you.stat_zero[STAT_INT])
     {
         mpr("You lack the mental capacity to cast spells.");
-        return;
+        return false;
     }
 
     // Randart weapons.
     if (scan_artefacts(ARTP_PREVENT_SPELLCASTING))
     {
         mpr("Something interferes with your magic!");
-        flush_input_buffer(FLUSH_ON_FAILURE);
-        return;
+        return false;
     }
 
-    if (crawl_state.game_is_hints())
-        Hints.hints_spell_counter++;
+    if (!you.spell_no)
+    {
+        canned_msg(MSG_NO_SPELLS);
+        return false;
+    }
 
+    if (you.berserk())
+    {
+        canned_msg(MSG_TOO_BERSERK);
+        return false;
+    }
+
+    if (silenced(you.pos()))
+    {
+        mpr("You cannot cast spells when silenced!");
+        more();
+        return false;
+    }
+
+    return true;
+}
+
+void do_cast_spell_cmd(bool force)
+{
     if (!cast_a_spell(!force))
         flush_input_buffer(FLUSH_ON_FAILURE);
 }
@@ -594,26 +614,14 @@ void do_cast_spell_cmd(bool force)
 // Returns false if spell failed, and true otherwise.
 bool cast_a_spell(bool check_range, spell_type spell)
 {
-    if (!you.spell_no)
+    if (!_can_cast())
     {
-        canned_msg(MSG_NO_SPELLS);
         crawl_state.zero_turns_taken();
-        return (false);
+        return false;
     }
 
-    if (you.berserk())
-    {
-        canned_msg(MSG_TOO_BERSERK);
-        return (false);
-    }
-
-    if (silenced(you.pos()))
-    {
-        mpr("You cannot cast spells when silenced!");
-        crawl_state.zero_turns_taken();
-        more();
-        return (false);
-    }
+    if (crawl_state.game_is_hints())
+        Hints.hints_spell_counter++;
 
     const int minRange = get_dist_to_nearest_monster();
 
