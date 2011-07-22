@@ -560,6 +560,7 @@ int TilesFramework::getch_ck()
             send_message("vgrdc(%d,%d);",
                          m_current_gc.x - m_origin.x, m_current_gc.y - m_origin.y);
             send_message("set_flash(%d);", m_current_flash_colour);
+            write_message("mappable(%u);", player_in_mappable_area());
             _send_current_view();
             switch (m_active_layer)
             {
