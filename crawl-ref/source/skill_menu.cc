@@ -522,7 +522,16 @@ std::string SkillMenuSwitch::get_name(skill_menu_state state)
 
 void SkillMenuSwitch::set_state(skill_menu_state state)
 {
-    m_state = state;
+    // We only set it if it's a valid state.
+    for (std::vector<skill_menu_state>::iterator it = m_states.begin();
+         it != m_states.end(); ++it)
+    {
+        if (*it == state)
+        {
+            m_state = state;
+            return;
+        }
+    }
 }
 
 int SkillMenuSwitch::size() const
@@ -795,7 +804,7 @@ void SkillMenu::toggle(skill_menu_switch sw)
             refresh_display();
         break;
     case SKM_DO:
-        you.props["skm_do"] = get_state(SKM_DO);
+        you.skill_menu_do = get_state(SKM_DO);
         refresh_names();
         if (m_ff->get_active_item() != NULL
             && !m_ff->get_active_item()->can_be_highlighted())
@@ -807,7 +816,7 @@ void SkillMenu::toggle(skill_menu_switch sw)
         set_skills();
         break;
     case SKM_VIEW:
-        you.props["skm_view"] = get_state(SKM_VIEW);
+        you.skill_menu_view = get_state(SKM_VIEW);
     //fall through.
     case SKM_LEVEL:
         refresh_display();
@@ -903,11 +912,7 @@ void SkillMenu::init_switches()
         m_switches[SKM_DO] = sw;
         sw->add(SKM_DO_PRACTISE);
         sw->add(SKM_DO_FOCUS);
-        if (you.props.exists("skm_do"))
-        {
-            sw->set_state(static_cast<skill_menu_state>(
-                          you.props["skm_do"].get_int()));
-        }
+        sw->set_state(you.skill_menu_do);
         sw->add_hotkey('\t');
         sw->update();
         sw->set_id(SKM_DO);
@@ -947,18 +952,11 @@ void SkillMenu::init_switches()
             sw->set_state(SKM_VIEW_TRANSFER);
         }
 
-        // We restore the last used view unless it's not valid anymore.
-        if (you.props.exists("skm_view"))
-        {
-            const skill_menu_state state =
-                static_cast<skill_menu_state>(you.props["skm_view"].get_int());
-            if (state != SKM_VIEW_TRANSFER || transferring)
-                sw->set_state((state));
-        }
 
         if (you.wizard)
             sw->add(SKM_VIEW_POINTS);
 
+        sw->set_state(you.skill_menu_view);
         sw->update();
         sw->set_id(SKM_VIEW);
         add_item(sw, sw->size(), m_pos);
