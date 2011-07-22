@@ -14,7 +14,6 @@
 #include "package.h"
 #include "place-info.h"
 #include "religion-enum.h"
-
 #include "species.h"
 
 #include <list>
@@ -125,6 +124,10 @@ public:
 
   bool auto_training;
   std::list<skill_type> exercises;
+
+  // Skill menu states
+  skill_menu_state skill_menu_do;
+  skill_menu_state skill_menu_view;
 
   //Ashenzari transfer knowledge
   skill_type    transfer_from_skill;

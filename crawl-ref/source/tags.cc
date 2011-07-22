@@ -1129,6 +1129,9 @@ static void tag_construct_you(writer &th)
         marshallInt(th, *it);
     }
 
+    marshallByte(th, you.skill_menu_do);
+    marshallByte(th, you.skill_menu_view);
+
     marshallInt(th, you.transfer_from_skill);
     marshallInt(th, you.transfer_to_skill);
     marshallInt(th, you.transfer_skill_points);
@@ -1953,6 +1956,15 @@ static void tag_read_you(reader &th)
     // If somebody SIGHUP'ed out of the skill menu with all skills disabled.
     check_selected_skills();
 
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_SKILL_MENU_STATES)
+    {
+#endif
+    you.skill_menu_do = static_cast<skill_menu_state>(unmarshallByte(th));
+    you.skill_menu_view = static_cast<skill_menu_state>(unmarshallByte(th));
+#if TAG_MAJOR_VERSION == 32
+    }
+#endif
     you.transfer_from_skill = static_cast<skill_type>(unmarshallInt(th));
     you.transfer_to_skill = static_cast<skill_type>(unmarshallInt(th));
     you.transfer_skill_points = unmarshallInt(th);
@@ -2116,6 +2128,25 @@ static void tag_read_you(reader &th)
 
     you.props.clear();
     you.props.read(th);
+
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_SKILL_MENU_STATES)
+    {
+        if (you.props.exists("skm_do"))
+        {
+            you.skill_menu_do =
+                static_cast<skill_menu_state>(you.props["skm_do"].get_int());
+            you.props.erase("skm_do");
+        }
+        if (you.props.exists("skm_view"))
+        {
+            you.skill_menu_view =
+                static_cast<skill_menu_state>(you.props["skm_view"].get_int());
+            you.props.erase("skm_view");
+        }
+
+    }
+#endif
 }
 
 static void tag_read_you_items(reader &th)
