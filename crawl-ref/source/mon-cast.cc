@@ -2251,23 +2251,13 @@ static int _mons_cause_fear(monster* mons, bool actual)
                 continue;
 
             // Magic-immune, unnatural and "firewood" monsters are
-            // immune to being scared.
+            // immune to being scared. Same-aligned monsters are
+            // never affected, even though they aren't immune.
             if (mons_immune_magic(m)
                 || m->holiness() != MH_NATURAL
-                || mons_is_firewood(m))
+                || mons_is_firewood(m)
+                || mons_atts_aligned(m->attitude, mons->attitude))
             {
-                if (actual)
-                    simple_monster_message(m, " is unaffected.");
-                continue;
-            }
-
-            // A same-aligned intelligent monster is never scared, even
-            // though it's not immune.
-            if (mons_intel(m) > I_ANIMAL
-                && mons_atts_aligned(m->attitude, mons->attitude))
-            {
-                if (actual)
-                    simple_monster_message(m, " resists.");
                 continue;
             }
 
