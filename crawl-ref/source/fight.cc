@@ -1888,6 +1888,18 @@ int melee_attack::player_weapon_type_modify(int damage)
                     attack_verb = "eviscerate";
                 break;
             }
+            else if (you.has_usable_tentacles())
+            {
+                if (damage < HIT_WEAK)
+                    attack_verb = "tentacle-slap";
+                else if (damage < HIT_MED)
+                    attack_verb = "bludgeon";
+                else if (damage < HIT_STRONG)
+                    attack_verb = "batter";
+                else
+                    attack_verb = "thrash";
+                break;
+            }
             // or fall-through
         case TRAN_ICE_BEAST:
             if (damage < HIT_WEAK)
@@ -2004,8 +2016,7 @@ int melee_attack::player_weapon_type_modify(int damage)
             else
                 attack_verb = "eviscerate";
         }
-
-        if (you.damage_type() == DVORP_TENTACLE)
+        else if (you.damage_type() == DVORP_TENTACLE)
         {
             if (damage < HIT_WEAK)
                 attack_verb = "tentacle-slap";
@@ -2016,7 +2027,6 @@ int melee_attack::player_weapon_type_modify(int damage)
             else
                 attack_verb = "thrash";
         }
-
         else
         {
             if (damage < HIT_MED)
