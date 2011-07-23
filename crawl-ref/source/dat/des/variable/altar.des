@@ -725,7 +725,8 @@ ENDMAP
 ### Ashenzari overflow altars #################################################
 
 NAME:   ashenzari_altar_1
-TAGS:   uniq_altar_ahsnezari temple_overflow_ashenzari
+TAGS:   uniq_altar_ashenzari temple_overflow_ashenzari
+WEIGHT: 5
 KFEAT:  _ = altar_ashenzari
 ITEM:   cursed mace ident:curse / cursed trident ident:curse / \
         cursed flail ident:curse w:1 / cursed whip ident:curse w:1
