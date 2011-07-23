@@ -1585,7 +1585,7 @@ static spret_type _do_cast(spell_type spell, int powc,
 
     // General enhancement.
     case SPELL_REGENERATION:
-        return cast_regen(powc, fail);
+        return cast_regen(powc, false, fail);
 
     case SPELL_REPEL_MISSILES:
         return missile_prot(powc, fail);
