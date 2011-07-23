@@ -1704,13 +1704,6 @@ MAP
       @
 ENDMAP
 
-# kilobyte: obviously, it lacks handling of shafts and hatches. Troves might
-#           choose one of these items as their fee, too.  Under Ashenzari,
-#           you won't pick up rings and amulets seen in this vault since having
-#           one is considered enough for most types (this logic is partially
-#           faulty with identification being possible without having the item in
-#           your inventory).
-#
 NAME:   xom_gifts_altar
 TAGS:   temple_overflow_xom uniq_altar_xom
 CHANCE: 3
@@ -1718,8 +1711,7 @@ KFEAT:  _ = altar_xom
 KPROP:  _ = bloody
 KPROP:  , = no_ctele_into
 KPROP:  , = no_rtele_into
-KITEM:  , = unobtainable superb_item
-KFEAT:  , = teleport trap
+KMONS:  , = mimic
 MAP
  XXXXXXX
 XX,,,,,XX
