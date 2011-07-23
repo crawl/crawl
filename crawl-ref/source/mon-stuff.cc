@@ -2669,6 +2669,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
 
     // Various inappropriate polymorph targets.
     if (mons_class_holiness(new_mclass) != mons->holiness()
+        || mons_class_flag(new_mclass, M_UNFINISHED)  // no unfinished monsters
         || mons_class_flag(new_mclass, M_NO_POLY_TO)  // explicitly disallowed
         || mons_class_flag(new_mclass, M_UNIQUE)      // no uniques
         || mons_class_flag(new_mclass, M_NO_EXP_GAIN) // not helpless
