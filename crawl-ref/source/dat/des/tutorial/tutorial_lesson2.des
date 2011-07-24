@@ -71,13 +71,7 @@ function tutorial_msg2.resting ()
 end
 
 function tutorial_msg2.chop_corpses ()
-    return tutorial_message("You can chop up corpses into edible meat chunks. "
-                            .. "For that you'll need a sharp-edged weapon, such "
-                            .. "as that short sword.")
-end
-
-function tutorial_msg2.butchery_weapon ()
-    local text = "Now that you have a sharp-edged weapon, you can chop a corpse "
+    local text = "You can chop up corpses into edible meat chunks "
                  .. "with " .. tutorial_get_cmd("CMD_BUTCHER")
 
     if crawl.is_tiles() then
@@ -288,7 +282,6 @@ KFEAT:   n = iron_grate
 COLOUR:  deABCDEFG = blue
 FTILE:   deABCDEFG = tutorial_pad
 ITEM:    quarterstaff mundane not_cursed
-ITEM:    short sword mundane not_cursed
 SHUFFLE: 456
 MONS:    training dummy hp:15
 MONS:    training dummy hp:30 ; whip mundane not_cursed
@@ -299,7 +292,6 @@ MARKER:  A = lua:tutorial_msg2.melee()
 MARKER:  B = lua:tutorial_msg2.examine()
 MARKER:  C = lua:tutorial_msg2.resting()
 MARKER:  D = lua:tutorial_msg2.chop_corpses()
-MARKER:  e = lua:tutorial_msg2.butchery_weapon()
 MARKER:  E = lua:tutorial_msg2.wait()
 MARKER:  F = lua:tutorial_msg2.resting_reminder()
 MARKER:  G = lua:tutorial_msg2.compare_monster_desc()
@@ -333,7 +325,7 @@ xxxxxxxxxGxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxx.xxxxxxxxxxxxxxxxxx..+....C.2..B..xxx
 xxxxxxxxx.xxxxxxxxxxxxxxxxxx3.xxxxxxxxxxxx.xxx
 xxxxxxxxx.xxxxxxxxxxxxxxxxxxDxxxxxxxxxxxxx.xxx
-xxxxxxxxx.xxxxxxx...3..xxxxxexxxxxxxxxxxxx.xxx
+xxxxxxxxx.xxxxxxx...3..xxxxx.xxxxxxxxxxxxx.xxx
 xxxxxxxxx.xxxxxx........xxxx.xxxxxxxxxxxxx.xxx
 xxxxxxxxx.....F+..3....E+....xxxxxxxxxxxxx1xxx
 xxxxxxxxxxxxxxxx....3...xxxxxxxxxxxxxxxxxx.xxx

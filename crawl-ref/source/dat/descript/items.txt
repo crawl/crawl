@@ -600,10 +600,6 @@ katana
 
 A very rare and extremely effective imported weapon, featuring a long single-edged blade.
 %%%%
-knife
-
-A simple survival knife. Designed more for utility than combat, it looks quite capable of butchering a corpse.
-%%%%
 lajatang
 
 A very rare and extremely effective imported weapon, featuring a pole with half-moon blades at both ends.
