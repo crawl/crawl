@@ -17,6 +17,7 @@
 #include "religion.h"
 #include "skills.h"
 #include "skills2.h"
+#include "stuff.h"
 #include "tilepick.h"
 #include "tilereg-crt.h"
 
@@ -773,7 +774,7 @@ bool SkillMenu::exit()
     if (is_set(SKMF_EXPERIENCE))
     {
         you.exp_available += m_exp;
-        clrscr();
+        redraw_screen();
         train_skills();
         m_skill_backup.restore_training();
     }
