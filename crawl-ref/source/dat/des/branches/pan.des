@@ -587,20 +587,21 @@ ENDMAP
 
 NAME:  rand_demon_1
 TAGS:  pan allow_dup
-MONS:  pandemonium lord, random, random, random, random, random
-SUBST: P = .:8 O:1
+MONS:  pandemonium lord, greater demon
+SUBST: P = .:7 O:1 N:1
 KITEM: O = demonic rune of Zot
+KFEAT: N = exit_pandemonium
 MAP
 ............
 .xx.xx.x.xx.
-..x.x..x.x..
+..x.x2.x.x..
 ..x.x..x.x..
 ..x.x..x.x..
 ..x.x..x.x..
 ..x.x1Px.x..
 ..x.x..x.x..
 ..x.x..x.x..
-..x.x..x.x..
+..x.x.2x.x..
 .xx.x.xx.xx.
 ............
 ENDMAP
@@ -610,9 +611,10 @@ ENDMAP
 NAME:  rand_demon_2
 TAGS:  pan allow_dup
 MONS:  greater demon, common demon, common demon
-SUBST: P = P:8 O:1
-KMONS: PO = pandemonium lord
+SUBST: P = P:7 O:1 N:1
+KMONS: PON = pandemonium lord
 KITEM: O = demonic rune of Zot
+KFEAT: N = exit_pandemonium
 MAP
 ............
 .xxxxxxxx2x.
@@ -633,9 +635,10 @@ ENDMAP
 NAME:  rand_demon_3
 TAGS:  pan allow_dup
 MONS:  common demon, common demon
-SUBST: P = P:8 O:1
-KMONS: PO = pandemonium lord
+SUBST: P = P:7 O:1 N:1
+KMONS: PON = pandemonium lord
 KITEM: O = demonic rune of Zot
+KFEAT: N = exit_pandemonium
 MAP
 ............
 .x.x.x2x.x..
@@ -656,8 +659,9 @@ ENDMAP
 NAME:  rand_demon_4
 TAGS:  pan allow_dup
 MONS:  pandemonium lord, any demon, any demon
-SUBST: P = .:8 O:1
+SUBST: P = .:7 O:1 N:1
 KITEM: O = demonic rune of Zot
+KFEAT: N = exit_pandemonium
 MAP
 ............
 .xxxxxxxxx..
@@ -678,8 +682,9 @@ ENDMAP
 NAME:  rand_demon_5
 TAGS:  pan allow_dup
 MONS:  pandemonium lord, any demon, any demon
-SUBST: P = .:8 O:1
+SUBST: P = .:7 O:1 N:1
 KITEM: O = demonic rune of Zot
+KFEAT: N = exit_pandemonium
 MAP
 ............
 ...xxxxxx...
@@ -700,8 +705,9 @@ ENDMAP
 NAME:  rand_demon_6
 TAGS:  pan allow_dup
 MONS:  pandemonium lord, any demon, any demon
-SUBST: P = .:8 O:1
+SUBST: P = .:7 O:1 N:1
 KITEM: O = demonic rune of Zot
+KFEAT: N = exit_pandemonium
 MAP
 ............
 ............
@@ -722,9 +728,10 @@ ENDMAP
 NAME:  rand_demon_7
 TAGS:  pan allow_dup
 MONS:  any demon, greater demon
-SUBST: P = P:8 O:1
-KMONS: PO = pandemonium lord
+SUBST: P = P:7 O:1 N:1
+KMONS: PON = pandemonium lord
 KITEM: O = demonic rune of Zot
+KFEAT: N = exit_pandemonium
 MAP
 ............
 .xxx....xxx.
@@ -745,8 +752,9 @@ ENDMAP
 NAME:  rand_demon_8
 TAGS:  pan allow_dup
 MONS:  pandemonium lord, greater demon, any demon
-SUBST: P = .:8 O:1
+SUBST: P = .:7 O:1 N:1
 KITEM: O = demonic rune of Zot
+KFEAT: N = exit_pandemonium
 MAP
 ............
 ....xxxxxxx.
@@ -767,8 +775,9 @@ ENDMAP
 NAME:  rand_demon_9
 TAGS:  pan allow_dup
 MONS:  pandemonium lord, any demon, greater demon
-SUBST: P = .:8 O:1
+SUBST: P = .:7 O:1 N:1
 KITEM: O = demonic rune of Zot
+KFEAT: N = exit_pandemonium
 MAP
 ............
 .xxxxxxxxxx.
