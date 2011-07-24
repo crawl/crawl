@@ -1318,6 +1318,7 @@ void abyss_area_shift(void)
         _abyss_shift_level_contents_around_player(
             ABYSS_AREA_SHIFT_RADIUS, ABYSS_CENTRE, abyss_genlevel_mask);
 #ifdef NEW_ABYSS
+        forget_map(true);
         _generate_area(abyss_genlevel_mask);
 #else
         _generate_area(abyss_genlevel_mask, true);
