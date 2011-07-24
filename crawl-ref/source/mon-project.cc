@@ -36,7 +36,7 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
                      int foe, bool fail)
 {
     const bool is_player = caster->atype() == ACT_PLAYER;
-    if (is_player && !player_tracer(ZAP_IOOD, pow, *beam))
+    if (beam && is_player && !player_tracer(ZAP_IOOD, pow, *beam))
         return SPRET_ABORT;
 
     fail_check();
