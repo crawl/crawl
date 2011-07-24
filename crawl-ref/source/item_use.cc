@@ -1059,9 +1059,8 @@ void fire_target_behaviour::set_prompt()
             << "</" << colour << ">";
     }
 
-    formatted_string cut(msg.str());
     // Write it out.
-    internal_prompt += cut.chop(crawl_view.msgsz.x);
+    internal_prompt += msg.str();
 
     // Never unset need_redraw here, because we might have cleared the
     // screen or something else which demands a redraw.
