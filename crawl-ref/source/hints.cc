@@ -1225,25 +1225,6 @@ static bool _cant_butcher()
     return (wpn->cursed() && !can_cut_meat(*wpn));
 }
 
-static int _num_butchery_tools()
-{
-    int num = 0;
-
-    for (int i = 0; i < ENDOFPACK; ++i)
-    {
-        const item_def& tool(you.inv[i]);
-
-        if (tool.defined()
-            && tool.base_type == OBJ_WEAPONS
-            && can_cut_meat(tool))
-        {
-            num++;
-        }
-    }
-
-    return (num);
-}
-
 static std::string _describe_portal(const coord_def &gc)
 {
     const std::string desc = feature_description(gc);
@@ -1670,7 +1651,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         }
 
         text << " When a corpse is lying on the ground, you "
-                "can <w>%</w>hop it up with a sharp implement";
+                "can <w>%</w>hop it up";
         cmd.push_back(CMD_BUTCHER);
 
         if (_cant_butcher())
@@ -1679,12 +1660,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                     "since the cursed weapon you're wielding can't slice up "
                     "meat, and you can't let go of it to wield one that "
                     "can)";
-        }
-        else if (_num_butchery_tools() == 0)
-        {
-            text << " (but you currently possess nothing which can do this, "
-                    "so you should pick up the first knife, dagger, sword "
-                    "or axe you find)";
         }
         text << ". Once hungry you can then <w>%</w>at the resulting chunks "
                 "(though they may not be healthful).";
@@ -2323,8 +2298,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_YOU_HUNGRY:
         text << "There are two ways to overcome hunger: food you started "
                 "with or found, and self-made chunks from corpses. To get the "
-                "latter, all you need to do is <w>%</w>hop up a corpse "
-                "with a sharp implement. ";
+                "latter, all you need to do is <w>%</w>hop up a corpse ";
         cmd.push_back(CMD_BUTCHER);
 
         if (_cant_butcher())
@@ -2336,22 +2310,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         }
         else
         {
-            const int num = _num_butchery_tools();
-            if (num == 0)
-            {
-                text << "However, you currently possess no sharp implements, "
-                        "so you should pick up the first knife, dagger, sword "
-                        "or axe you find. ";
-            }
-            else if (Hints.hints_type != HINT_MAGIC_CHAR)
-                text << "Your starting weapon will do nicely. ";
-            else if (num == 1)
-                text << "The slicing weapon you picked up will do nicely. ";
-            else
-            {
-                text << "One of the slicing weapons you picked up will do "
-                        "nicely. ";
-            }
+            text << "Luckily, all adventurers carry a pocket knife with them"
+                    "which is perfect for butchering";
         }
 
         text << "Try to dine on chunks in order to save permanent food.";
@@ -2451,13 +2411,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
             text << "(or which you <w>could</w> chop up if it weren't for "
                     "the fact that you can't let go of your cursed "
                     "non-chopping weapon)";
-        }
-        else if (_num_butchery_tools() == 0)
-        {
-            text << "(or which you <w>could</w> chop up if you had a "
-                    "chopping weapon; you should pick up the first knife, "
-                    "dagger, sword or axe you find if you want to be able "
-                    "to chop up corpses)";
         }
         text << ". One or more chunks will appear that you can then "
                 "<w>%</w>at. Beware that some chunks may be, sometimes or "
@@ -4115,9 +4068,8 @@ void hints_describe_item(const item_def &item)
                 break;
             }
 
-            ostr << "Corpses lying on the floor can be <w>%</w>hopped up with "
-                    "a sharp implement to produce chunks for food (though they "
-                    "may not be healthy)";
+            ostr << "Corpses lying on the floor can be <w>%</w>hopped up to "
+                    "produce chunks for food (though they may be unhealthy)";
             cmd.push_back(CMD_BUTCHER);
 
             if (!food_is_rotten(item) && god_likes_fresh_corpses(you.religion))
