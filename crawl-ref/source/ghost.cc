@@ -270,8 +270,13 @@ void ghost_demon::init_random_demon()
             spells[5] = SPELL_TELEPORT_SELF;
 
         // Convert the player spell indices to monster spell ones.
+        // Pan lords also get their Agony upgraded to Torment.
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        {
             spells[i] = translate_spell(spells[i]);
+            if (spells[i] == SPELL_AGONY)
+                spells[i] = SPELL_SYMBOL_OF_TORMENT;
+        }
 
         // Give demon a chance for some monster-only spells.
         // Demon-summoning should be fairly common.
