@@ -551,7 +551,7 @@ void SkillMenuSwitch::set_state(skill_menu_state state)
 int SkillMenuSwitch::size() const
 {
     if (m_states.size() <= 1)
-        return 0;
+        return -1;
     else
         return formatted_string::parse_string(m_text).width();
 }
@@ -947,40 +947,37 @@ void SkillMenu::init_help()
 void SkillMenu::init_switches()
 {
     SkillMenuSwitch* sw;
-    if (!is_set(SKMF_SPECIAL))
-    {
-        sw = new SkillMenuSwitch("Mode", '/');
-        m_switches[SKM_MODE] = sw;
-        sw->add(SKM_MODE_AUTO);
+    sw = new SkillMenuSwitch("Mode", '/');
+    m_switches[SKM_MODE] = sw;
+    sw->add(SKM_MODE_AUTO);
+    if (!is_set(SKMF_SPECIAL) && !is_set(SKMF_SIMPLE))
         sw->add(SKM_MODE_MANUAL);
-        if (!you.auto_training)
-            sw->set_state(SKM_MODE_MANUAL);
-        sw->update();
-        sw->set_id(SKM_MODE);
-        add_item(sw, sw->size(), m_pos);
+    if (!you.auto_training)
+        sw->set_state(SKM_MODE_MANUAL);
+    sw->update();
+    sw->set_id(SKM_MODE);
+    add_item(sw, sw->size(), m_pos);
 
-        sw = new SkillMenuSwitch("Do", '|');
-        m_switches[SKM_DO] = sw;
-        sw->add(SKM_DO_PRACTISE);
-        sw->add(SKM_DO_FOCUS);
-        sw->set_state(you.skill_menu_do);
-        sw->add_hotkey('\t');
-        sw->update();
-        sw->set_id(SKM_DO);
-        add_item(sw, sw->size(), m_pos);
-    }
-
+    sw = new SkillMenuSwitch("Do", '|');
+    m_switches[SKM_DO] = sw;
     if (!is_set(SKMF_EXPERIENCE))
-    {
-        sw = new SkillMenuSwitch("Show", '*');
-        m_switches[SKM_SHOW] = sw;
-        sw->add(SKM_SHOW_KNOWN);
-        if (!is_set(SKMF_SIMPLE))
-            sw->add(SKM_SHOW_ALL);
-        sw->update();
-        sw->set_id(SKM_SHOW);
-        add_item(sw, sw->size(), m_pos);
-    }
+        sw->add(SKM_DO_PRACTISE);
+    if (!is_set(SKMF_RESKILLING) && !is_set(SKMF_SIMPLE))
+        sw->add(SKM_DO_FOCUS);
+    sw->set_state(you.skill_menu_do);
+    sw->add_hotkey('\t');
+    sw->update();
+    sw->set_id(SKM_DO);
+    add_item(sw, sw->size(), m_pos);
+
+    sw = new SkillMenuSwitch("Show", '*');
+    m_switches[SKM_SHOW] = sw;
+    sw->add(SKM_SHOW_KNOWN);
+    if (!is_set(SKMF_SIMPLE) && !is_set(SKMF_EXPERIENCE))
+        sw->add(SKM_SHOW_ALL);
+    sw->update();
+    sw->set_id(SKM_SHOW);
+    add_item(sw, sw->size(), m_pos);
 
     if (is_set(SKMF_CHANGED))
     {
