@@ -1631,9 +1631,8 @@ inline static bool _monster_warning(activity_interrupt_type ai,
     if (!you.can_see(mon))
         return false;
 
-    // Disable message for summons. It also disable message for monsters
-    // created with &M, so you might want to comment it when debugging.
-    if (testbits(mon->flags, MF_JUST_SUMMONED) && atype == DELAY_NOT_DELAYED)
+    // Disable message for summons.
+    if (mon->is_summoned() && atype == DELAY_NOT_DELAYED)
         return false;
 
     if (at.context == "already seen" || at.context == "uncharm")
