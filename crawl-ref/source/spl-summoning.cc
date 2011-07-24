@@ -1933,7 +1933,7 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
             if (Options.chunks_autopickup)
                 request_autopickup();
             // Only convert the top one.
-            return SPRET_SUCCESS;
+            break;
         }
     }
 
