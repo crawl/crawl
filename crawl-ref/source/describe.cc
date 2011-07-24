@@ -2728,7 +2728,8 @@ bool describe_item(item_def &item, bool allow_inscribe, bool shopping)
         allow_inscribe = false;
 
     // Don't ask if there aren't enough rows left
-    if (wherey() <= get_number_of_lines() - 2 && in_inventory(item))
+    if (wherey() <= get_number_of_lines() - 2
+        && crawl_state.prev_cmd == CMD_DISPLAY_INVENTORY)
     {
         cgotoxy(1, wherey() + 2);
         return _actions_prompt(item, allow_inscribe);
