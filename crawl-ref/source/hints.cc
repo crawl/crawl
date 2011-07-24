@@ -1658,8 +1658,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         {
             text << " (though unfortunately you can't do that right now, "
                     "since the cursed weapon you're wielding can't slice up "
-                    "meat, and you can't let go of it to wield one that "
-                    "can)";
+                    "meat, and you can't let go of it to wield your pocket "
+                    "knife)";
         }
         text << ". Once hungry you can then <w>%</w>at the resulting chunks "
                 "(though they may not be healthful).";
@@ -2298,20 +2298,20 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_YOU_HUNGRY:
         text << "There are two ways to overcome hunger: food you started "
                 "with or found, and self-made chunks from corpses. To get the "
-                "latter, all you need to do is <w>%</w>hop up a corpse ";
+                "latter, all you need to do is <w>%</w>hop up a corpse. ";
         cmd.push_back(CMD_BUTCHER);
 
         if (_cant_butcher())
         {
             text << "Unfortunately you can't butcher corpses right now, "
                     "since the cursed weapon you're wielding can't slice up "
-                    "meat, and you can't let go of it to wield one that "
-                    "can.";
+                    "meat, and you can't let go of it to wield your pocket "
+                    "knife. ";
         }
         else
         {
-            text << "Luckily, all adventurers carry a pocket knife with them"
-                    "which is perfect for butchering";
+            text << "Luckily, all adventurers carry a pocket knife with them "
+                    "which is perfect for butchering. ";
         }
 
         text << "Try to dine on chunks in order to save permanent food.";
@@ -2325,8 +2325,8 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "<w>%</w>at something quickly, or you'll die. The safest "
                 "way to deal with this is to simply eat something from your "
                 "inventory, rather than wait for a monster to leave a corpse. "
-                "In a pinch, potions and fountains also can provide some "
-                "nutrition, though not as much as food.";
+                "In an emergency, potions can also provide a very small amount "
+                "of nutrition.";
         cmd.push_back(CMD_EAT);
 
         if (Hints.hints_type == HINT_MAGIC_CHAR)
@@ -2961,10 +2961,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         tiles.add_text_tag(TAG_TUTORIAL, m->name(DESC_CAP_A), gc);
 #endif
         text << "That monster is friendly to you and will attack your "
-                "enemies, though you'll get only half the experience for "
-                "monsters killed by allies of what you'd get for killing them "
-                "yourself. You can command your allies by pressing <w>%</w> "
-                "to talk to them.";
+                "enemies, though you'll get only part of the experience for "
+                "monsters damaged by allies, compared to what you'd get for "
+                "doing all the work yourself. You can command your allies by "
+                "pressing <w>%</w> to talk to them.";
         cmd.push_back(CMD_SHOUT);
 
         if (!mons_att_wont_attack(m->attitude))
@@ -3099,10 +3099,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "bother picking up any items on the ground. If you're "
                 "encumbered or overburdened, then lighten up your load, and if "
                 "the monsters are closing in, try to use items of speed to get "
-                "away. Also, wherever possible, move in a direction slightly "
-                "off from a compass direction (for example, north-by-northwest "
-                "instead of north or northwest), as you're more likely to miss "
-                "the exit if you keep heading solely in a compass direction.";
+                "away.";
         break;
 
     case HINT_SPELL_MISCAST:
@@ -4149,18 +4146,12 @@ void hints_describe_item(const item_def &item)
             }
             else
             {
-                ostr << "This staff can enhance your spellcasting of specific "
-                        "spell schools. ";
+                ostr << "This staff can enhance your spellcasting, possibly "
+                        "making a certain spell school more powerful, or "
+                        "making difficult magic easier to cast. ";
 
                 bool gives_resist = false;
-                if (you.spell_no && !item_ident(item, ISFLAG_KNOW_TYPE))
-                {
-                    ostr << "You can find out which one by casting spells "
-                            "while wielding this staff. Eventually, the staff "
-                            "might react to a spell of its school and identify "
-                            "itself.";
-                }
-                else if (gives_resistance(item))
+                if (gives_resistance(item))
                 {
                     ostr << "It also offers its wielder protection from "
                             "certain sources. For an overview of your "
@@ -4191,13 +4182,16 @@ void hints_describe_item(const item_def &item)
        case OBJ_MISCELLANY:
             if (is_deck(item))
             {
-                ostr << "Decks of cards are powerful magical items. Try "
-                        "<w>%</w>ielding and e<w>%</w>oking it"
+                ostr << "Decks of cards are powerful but dangerous magical "
+                        "items. Try <w>%</w>ielding and e<w>%</w>oking it"
 #ifdef USE_TILE
                         ", either of which can be done by clicking on it"
 #endif
-                        ". You can read about the effect of a card by "
-                        "searching the game's database with <w>%/c</w>.";
+                        ". If you use a scroll of identify on the deck you "
+                        "can discover the name of the top card, making the "
+                        "deck less risky to draw from. You can read about the "
+                        "effect of a card by searching the game's database "
+                        "with <w>%/c</w>.";
                 cmd.push_back(CMD_WIELD_WEAPON);
                 cmd.push_back(CMD_EVOKE_WIELDED);
                 cmd.push_back(CMD_DISPLAY_COMMANDS);
