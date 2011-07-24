@@ -1613,6 +1613,7 @@ MAP
 ENDMAP
 
 NAME:    xom_obstacle_run
+DEPTH:   !D:1
 TAGS:    temple_overflow_xom uniq_altar_xom
 KFEAT:   _ = altar_xom
 SHUFFLE: ABCDEFG
