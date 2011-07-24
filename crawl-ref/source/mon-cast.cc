@@ -905,7 +905,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
     case SPELL_PETRIFYING_CLOUD:
         beam.name     = "blast of calcifying dust";
         beam.colour   = WHITE;
-        beam.damage   = dice_def(1, 0);
+        beam.damage   = dice_def(2, 6);
         beam.hit      = AUTOMATIC_HIT;
         beam.flavour  = BEAM_PETRIFYING_CLOUD;
         beam.is_beam  = true;
