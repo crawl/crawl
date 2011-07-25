@@ -325,7 +325,7 @@ int torment_monsters(coord_def where, actor *attacker, int taux)
 
     int hploss = std::max(0, mons->hit_points / 2 - 1);
 
-    if (hploss)
+    if (hploss && !mons_is_firewood(mons))
     {
         simple_monster_message(mons, " convulses!");
 
