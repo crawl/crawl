@@ -2417,6 +2417,7 @@ enum monster_type                      // (int) menv[].type
     MONS_OCTOPODE,
     MONS_LIGHTNING_SPIRE,
     MONS_CATOBLEPAS,
+    MONS_GOLEM,
 
     NUM_MONSTERS,                      // used for polymorph
 

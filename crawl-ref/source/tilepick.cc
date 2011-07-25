@@ -1648,6 +1648,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
 
     // non-living creatures
     // golems ('8')
+    case MONS_GOLEM:
     case MONS_CLAY_GOLEM:
         return TILEP_MONS_CLAY_GOLEM;
     case MONS_WOOD_GOLEM:
