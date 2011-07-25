@@ -1617,7 +1617,7 @@ struct spell_desc
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      1,
      40,                           // cap for range; damage cap is at 25
-     1, 4,
+     2, 5,
      0,
      NULL,
      true,
