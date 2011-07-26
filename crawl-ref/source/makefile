@@ -390,10 +390,14 @@ ifeq ($(MARCH),i386)
 	SDK_VER := 10.4
 endif
 ifeq ($(MARCH),x86_64)
+ifeq ($(uname_R),11.0.0)
+	SDK_VER := 10.7
+else
 ifdef TILES
 	SDK_VER := 10.6
 else
 	SDK_VER := 10.5
+endif
 endif
 endif
 
