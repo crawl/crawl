@@ -725,12 +725,12 @@ static bool _get_mem_list(spell_list &mem_spells,
         {
             if (num_unknown > 1)
             {
-                mpr("You must pick those books before reading them.",
+                mpr("You must pick up those books before reading them.",
                     MSGCH_PROMPT);
             }
             else if (num_unknown == 1)
             {
-                mpr("You must pick this book before reading it.",
+                mpr("You must pick up this book before reading it.",
                     MSGCH_PROMPT);
             }
             else
