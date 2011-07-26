@@ -30,8 +30,6 @@
 
 static void _fuzz_direction(monster& mon, int pow);
 
-// XXX: like for summoning spells, miscast is possible even if the spell will
-// abort later due to being unable to create the orbs.
 spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
                      int foe, bool fail)
 {
@@ -58,7 +56,7 @@ spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
     {
         mpr("Failed to spawn projectile.", MSGCH_WARN);
         /*canned_msg(MSG_NOTHING_HAPPENS);*/
-        return SPRET_ABORT;
+        return SPRET_SUCCESS;
     }
 
     monster& mon = menv[mind];
