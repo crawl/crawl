@@ -60,14 +60,9 @@ int identify(int power, int item_slot, std::string *pre_msg)
 
         item_def& item(you.inv[item_slot]);
 
-        if (fully_identified(item))
+        if (fully_identified(item)
+            && (!is_deck(item) || top_card_is_known(item)))
         {
-            if (is_deck(item) && !top_card_is_known(item))
-            {
-                deck_identify_first(item_slot);
-                ++identified;
-                continue;
-            }
             mpr("Choose an unidentified item, or Esc to abort.");
             if (Options.auto_list)
                 more();
