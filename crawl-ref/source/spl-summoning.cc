@@ -98,8 +98,6 @@ bool summon_animals(int pow)
     return (success);
 }
 
-// XXX: All summoning spells. You can get a miscast even if the spell
-// woud have aborted later because create_monster failed.
 spret_type cast_summon_butterflies(int pow, god_type god, bool fail)
 {
     fail_check();
@@ -120,10 +118,7 @@ spret_type cast_summon_butterflies(int pow, god_type god, bool fail)
     }
 
     if (!success)
-    {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return SPRET_ABORT;
-    }
 
     return SPRET_SUCCESS;
 }
@@ -156,10 +151,7 @@ spret_type cast_summon_small_mammals(int pow, god_type god, bool fail)
     }
 
     if (!success)
-    {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return SPRET_ABORT;
-    }
 
     return SPRET_SUCCESS;
 }
@@ -300,7 +292,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
     if (!count)
     {
         mpr(abort_msg);
-        return SPRET_ABORT;
+        return SPRET_SUCCESS;
     }
 
     dec_inv_item_quantity(you.equip[EQ_WEAPON], count);
@@ -332,10 +324,7 @@ spret_type cast_summon_scorpions(int pow, god_type god, bool fail)
     }
 
     if (!success)
-    {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return SPRET_ABORT;
-    }
 
     return SPRET_SUCCESS;
 }
@@ -380,10 +369,7 @@ spret_type cast_summon_swarm(int pow, god_type god, bool fail)
     }
 
     if (!success)
-    {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return SPRET_ABORT;
-    }
 
     return SPRET_SUCCESS;
 }
@@ -432,13 +418,12 @@ spret_type cast_call_canine_familiar(int pow, god_type god, bool fail)
                       dur, SPELL_CALL_CANINE_FAMILIAR,
                       you.pos(),
                       MHITYOU,
-                      0, god)) != -1)
+                      0, god)) == -1)
     {
-        return SPRET_SUCCESS;
+        canned_msg(MSG_NOTHING_HAPPENS);
     }
 
-    canned_msg(MSG_NOTHING_HAPPENS);
-    return SPRET_ABORT;
+    return SPRET_SUCCESS;
 }
 
 static int _count_summons(monster_type type)
@@ -641,7 +626,7 @@ spret_type cast_summon_elemental(int pow, god_type god,
                       0, god)) == -1)
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return SPRET_ABORT;
+        return SPRET_SUCCESS;
     }
 
     mpr("An elemental appears!");
@@ -664,11 +649,11 @@ spret_type cast_summon_ice_beast(int pow, god_type god, bool fail)
                       0, god)) != -1)
     {
         mpr("A chill wind blows around you.");
-        return SPRET_SUCCESS;
     }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
 
-    canned_msg(MSG_NOTHING_HAPPENS);
-    return SPRET_ABORT;
+    return SPRET_SUCCESS;
 }
 
 spret_type cast_summon_ugly_thing(int pow, god_type god, bool fail)
@@ -698,12 +683,11 @@ spret_type cast_summon_ugly_thing(int pow, god_type god, bool fail)
 
         if (!friendly)
             mpr("It doesn't look very happy.");
-
-        return SPRET_SUCCESS;
     }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
 
-    canned_msg(MSG_NOTHING_HAPPENS);
-    return SPRET_ABORT;
+    return SPRET_SUCCESS;
 }
 
 spret_type cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
@@ -735,13 +719,11 @@ spret_type cast_summon_hydra(actor *caster, int pow, god_type god, bool fail)
         if (you.see_cell(menv[midx].pos()))
             mpr("A hydra appears.");
         player_angers_monster(&menv[midx]); // currently no-op
-        return SPRET_SUCCESS;
     }
-
-    if (caster == &you)
+    else if (caster == &you)
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    return SPRET_ABORT;
+    return SPRET_SUCCESS;
 }
 
 spret_type cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
@@ -809,13 +791,10 @@ spret_type cast_summon_dragon(actor *caster, int pow, god_type god, bool fail)
         }
     }
 
-    if (success)
-        return SPRET_SUCCESS;
-
-    if (caster == &you)
+    if (!success && caster == &you)
         canned_msg(MSG_NOTHING_HAPPENS);
 
-    return SPRET_ABORT;
+    return SPRET_SUCCESS;
 }
 
 // This assumes that the specified monster can go berserk.
@@ -1158,13 +1137,11 @@ spret_type cast_conjure_ball_lightning(int pow, god_type god, bool fail)
         }
     }
 
-    if (!success)
-    {
+    if (success)
+        mpr("You create some ball lightning!");
+    else
         canned_msg(MSG_NOTHING_HAPPENS);
-        return SPRET_ABORT;
-    }
 
-    mpr("You create some ball lightning!");
     return SPRET_SUCCESS;
 }
 
@@ -1193,11 +1170,11 @@ spret_type cast_call_imp(int pow, god_type god, bool fail)
                                      : "A beastly little devil appears in a puff of flame.");
 
         player_angers_monster(&menv[mons]);
-        return SPRET_SUCCESS;
     }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
 
-    canned_msg(MSG_NOTHING_HAPPENS);
-    return SPRET_ABORT;
+    return SPRET_SUCCESS;
 }
 
 static bool _summon_demon_wrapper(int pow, god_type god, int spell,
@@ -1284,11 +1261,10 @@ spret_type cast_summon_demon(int pow, god_type god, bool fail)
     fail_check();
     mpr("You open a gate to Pandemonium!");
 
-    if (summon_common_demon(pow, god, SPELL_SUMMON_DEMON))
-        return SPRET_SUCCESS;
+    if (!summon_common_demon(pow, god, SPELL_SUMMON_DEMON))
+        canned_msg(MSG_NOTHING_HAPPENS);
 
-    canned_msg(MSG_NOTHING_HAPPENS);
-    return SPRET_ABORT;
+    return SPRET_SUCCESS;
 }
 
 spret_type cast_demonic_horde(int pow, god_type god, bool fail)
@@ -1306,11 +1282,10 @@ spret_type cast_demonic_horde(int pow, god_type god, bool fail)
             success = true;
     }
 
-    if (success)
-        return SPRET_SUCCESS;
+    if (!success)
+        canned_msg(MSG_NOTHING_HAPPENS);
 
-    canned_msg(MSG_NOTHING_HAPPENS);
-    return SPRET_ABORT;
+    return SPRET_SUCCESS;
 }
 
 spret_type cast_summon_greater_demon(int pow, god_type god, bool fail)
@@ -1318,11 +1293,10 @@ spret_type cast_summon_greater_demon(int pow, god_type god, bool fail)
     fail_check();
     mpr("You open a gate to Pandemonium!");
 
-    if (summon_greater_demon(pow, god, SPELL_SUMMON_GREATER_DEMON))
-        return SPRET_SUCCESS;
+    if (!summon_greater_demon(pow, god, SPELL_SUMMON_GREATER_DEMON))
+        canned_msg(MSG_NOTHING_HAPPENS);
 
-    canned_msg(MSG_NOTHING_HAPPENS);
-    return SPRET_ABORT;
+    return SPRET_SUCCESS;
 }
 
 spret_type cast_shadow_creatures(god_type god, bool fail)
@@ -1338,13 +1312,11 @@ spret_type cast_shadow_creatures(god_type god, bool fail)
                       MG_FORCE_BEH, god), false);
 
     if (mons != -1)
-    {
         player_angers_monster(&menv[mons]);
-        return SPRET_SUCCESS;
-    }
+    else
+        mpr("The shadows disperse without effect.");
 
-    mpr("The shadows disperse without effect.");
-    return SPRET_ABORT;
+    return SPRET_SUCCESS;
 }
 
 bool can_cast_malign_gateway()
@@ -1431,15 +1403,12 @@ spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
             // Messages the same as for SHT, as they are currently (10/10) generic.
             lose_stat(STAT_INT, 1 + random2(3), false, "opening a malign portal");
         }
-
-        return SPRET_SUCCESS;
     }
-
     // We don't care if monsters fail to cast it.
-    if (is_player)
+    else if (is_player)
         mpr("A gateway cannot be opened in this cramped space!");
 
-    return SPRET_ABORT;
+    return SPRET_SUCCESS;
 }
 
 
@@ -1503,11 +1472,10 @@ spret_type cast_summon_horrible_things(int pow, god_type god, bool fail)
         }
     }
 
-    if (count > 0)
-        return SPRET_SUCCESS;
+    if (!count)
+        canned_msg(MSG_NOTHING_HAPPENS);
 
-    canned_msg(MSG_NOTHING_HAPPENS);
-    return SPRET_ABORT;
+    return SPRET_SUCCESS;
 }
 
 static bool _animatable_remains(const item_def& item)
@@ -1941,7 +1909,6 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
                         MHITYOU, &you, "", god) < 0)
     {
         mpr("There is no skeleton here to animate!");
-        return SPRET_ABORT;
     }
 
     return SPRET_SUCCESS;
@@ -1952,11 +1919,10 @@ spret_type cast_animate_dead(int pow, god_type god, bool fail)
     fail_check();
     mpr("You call on the dead to rise...");
 
-    if (animate_dead(&you, pow + 1, BEH_FRIENDLY, MHITYOU, &you, "", god))
-        return SPRET_SUCCESS;
+    if (!animate_dead(&you, pow + 1, BEH_FRIENDLY, MHITYOU, &you, "", god))
+        canned_msg(MSG_NOTHING_HAPPENS);
 
-    canned_msg(MSG_NOTHING_HAPPENS);
-    return SPRET_ABORT;
+    return SPRET_SUCCESS;
 }
 
 // Simulacrum
@@ -2026,19 +1992,17 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
             }
         }
 
-        if (count > 0)
-            return SPRET_SUCCESS;
-        else
+        if (!count)
             canned_msg(MSG_NOTHING_HAPPENS);
 
+        return SPRET_SUCCESS;
     }
     else
     {
         mpr("You need to wield a piece of raw flesh for this spell to be "
             "effective!");
+        return SPRET_ABORT;
     }
-
-    return SPRET_ABORT;
 }
 
 // Return the minimum mass for the specified undead abomination type.
@@ -2151,7 +2115,6 @@ static bool _make_undead_abomination(int mass, int strength,
 
 spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
 {
-    fail_check();
     int how_many_corpses = 0;
     int how_many_orcs = 0;
     int how_many_holy = 0;
@@ -2162,6 +2125,7 @@ spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
     {
         if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
         {
+            fail_check();
             total_mass += mons_weight(si->plus);
             how_many_corpses++;
             if (mons_genus(si->plus) == MONS_ORC)
@@ -2266,7 +2230,7 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
     else
     {
         canned_msg(MSG_NOTHING_HAPPENS);
-        return SPRET_ABORT;
+        return SPRET_SUCCESS;
     }
 
     //jmf: Kiku sometimes deflects this
