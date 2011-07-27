@@ -398,6 +398,25 @@ void wizard_spawn_control()
         canned_msg(MSG_OK);
 }
 
+void wizard_abyss_speed()
+{
+    char specs[256];
+    mprf(MSGCH_PROMPT, "Set abyss speed to what? (now %d, lower value = "
+                       "higher speed) ", you.abyss_speed);
+
+    if (!cancelable_get_line(specs, sizeof(specs)))
+    {
+        const int speed = atoi(specs);
+        if (speed)
+        {
+            you.abyss_speed = speed;
+            return;
+        }
+    }
+
+    canned_msg(MSG_OK);
+}
+
 // Prints a number of useful (for debugging, that is) stats on monsters.
 void debug_stethoscope(int mon)
 {
