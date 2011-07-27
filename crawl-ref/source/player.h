@@ -333,6 +333,9 @@ public:
   entry_cause_type entry_cause;
   god_type         entry_cause_god;
 
+  // For now, only control the speed of abyss morphing.
+  int abyss_speed;
+
   int           old_hunger;  // used for hunger delta-meter (see output.cc)
 
   // Set when the character is going to a new level, to guard against levgen
