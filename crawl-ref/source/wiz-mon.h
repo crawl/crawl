@@ -11,6 +11,7 @@
 void wizard_create_spec_monster(void);
 void wizard_create_spec_monster_name(void);
 void wizard_spawn_control();
+void wizard_abyss_speed();
 void wizard_detect_creatures();
 void wizard_dismiss_all_monsters(bool force_all = false);
 void debug_list_monsters();

@@ -2752,6 +2752,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>B</w>      : banish yourself to the Abyss\n"
                        "<w>k</w>      : shift section of a labyrinth\n"
                        "<w>R</w>      : change monster spawn rate\n"
+                       "<w>Ctrl-S</w> : change Abyss speed\n"
                        "<w>u</w>/<w>d</w>    : shift up/down one level\n"
                        "<w>~</w>      : go to a specific level\n"
                        "<w>:</w>      : find branches and overflow\n"
