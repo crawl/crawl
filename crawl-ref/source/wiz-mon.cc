@@ -350,7 +350,7 @@ void wizard_spawn_control()
         if (!cancelable_get_line(specs, sizeof(specs)))
         {
             const int rate = atoi(specs);
-            if (rate)
+            if (rate || specs[0] == '0')
             {
                 env.spawn_random_rate = rate;
                 done = true;
@@ -407,7 +407,7 @@ void wizard_abyss_speed()
     if (!cancelable_get_line(specs, sizeof(specs)))
     {
         const int speed = atoi(specs);
-        if (speed)
+        if (speed || specs[0] == '0')
         {
             you.abyss_speed = speed;
             return;
