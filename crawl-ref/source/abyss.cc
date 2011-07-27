@@ -806,6 +806,10 @@ static void _abyss_wipe_square_at(coord_def p)
     destroy_shop_at(p);
     destroy_trap(p);
 
+    // Nuke vault flag.
+    if (map_masked(p, MMT_VAULT))
+        env.level_map_mask(p) &= ~MMT_VAULT;
+
     grd(p) = DNGN_UNSEEN;
 
     // Nuke items.
@@ -1193,6 +1197,17 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
         if (!abyss_genlevel_mask(p) || map_masked(p, MMT_VAULT))
             continue;
 
+        // Dont' decay vaults until the player is close, and they are a bit
+        // resilient to morphing.
+        if (map_masked(p, MMT_VAULT) && (you.pos().distance_from(p) > 10
+                                         || coinflip()))
+        {
+            continue;
+        }
+
+        if (!one_chance_in(you.abyss_speed) && applyGlobal)
+            continue;
+
         double x = (p.x + major_coord.x);
         double y = (p.y + major_coord.y);
         worley::noise_datum noise = worley::worley(x/scale, y/scale, abyss_depth);
@@ -1421,47 +1436,6 @@ void generate_abyss()
 
     generate_random_blood_spatter_on_level();
     setup_environment_effects();
-}
-
-void _mulch_vault_item(const coord_def &pos)
-{
-    int item_count = 0;
-    for (stack_iterator si(pos); si; ++si)
-    {
-        ++item_count;
-        if (si->defined() && (si->flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED)))
-        {
-            --item_count;
-            item_was_lost(*si);
-            si->clear();
-        }
-    }
-
-    if (!item_count)
-        igrd(pos) = NON_ITEM;
-}
-
-void _decay_vaults()
-{
-    for (rectangle_iterator ri(MAPGEN_BORDER); ri; ++ri)
-    {
-        if (map_masked(*ri, MMT_VAULT))
-        {
-            _mulch_vault_item(*ri);
-            env.level_map_mask(*ri) &= ~MMT_VAULT;
-        }
-    }
-}
-
-void abyss_maybe_decay_vaults()
-{
-    if (coinflip())
-        _decay_vaults();
-    else
-    {
-        push_features_to_abyss();
-        _abyss_generate_new_area();
-    }
 }
 
 void abyss_morph()

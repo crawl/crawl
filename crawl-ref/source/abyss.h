@@ -20,7 +20,6 @@ struct abyss_state
     double depth;
 };
 void abyss_morph();
-void abyss_maybe_decay_vaults();
 void push_features_to_abyss();
 #endif
 

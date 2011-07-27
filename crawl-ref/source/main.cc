@@ -2951,17 +2951,12 @@ static void _player_reacts()
         if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
             you_teleport_now(true);
 #ifdef NEW_ABYSS
-        else if (you.level_type == LEVEL_ABYSS)
-        {
-            if (one_chance_in(30))
-                abyss_maybe_decay_vaults();
-            else
-                abyss_morph();
-        }
+#define SHIFT_PERIOD 80
 #else
-        else if (you.level_type == LEVEL_ABYSS && one_chance_in(30))
-            you_teleport_now(false, true); // to new area of the Abyss
+#define SHIFT_PERIOD 30
 #endif
+        else if (you.level_type == LEVEL_ABYSS && one_chance_in(SHIFT_PERIOD))
+            you_teleport_now(false, true); // to new area of the Abyss
     }
 
     actor_apply_cloud(&you);
@@ -3091,6 +3086,11 @@ void world_reacts()
 
     apply_noises();
     handle_monsters(true);
+
+#ifdef NEW_ABYSS
+    if (you.level_type == LEVEL_ABYSS)
+        abyss_morph();
+#endif
 
     _check_banished();
 
