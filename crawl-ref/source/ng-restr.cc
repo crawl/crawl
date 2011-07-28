@@ -14,6 +14,10 @@
 
 char_choice_restriction job_allowed(species_type speci, job_type job)
 {
+    // Octopodes are not targetted at 0.9.
+    if (speci == SP_OCTOPODE && Version::ReleaseType() != VER_ALPHA)
+        return (CC_BANNED);
+
     switch (job)
     {
         case JOB_FIGHTER:
