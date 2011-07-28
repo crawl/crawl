@@ -1080,7 +1080,7 @@ This scroll places an enchantment on the wielded weapon or stack of missiles, ma
 %%%%
 scroll of enchant weapon iii
 
-This scroll enchants the wielded weapon or stack of missiles to be far more effective in combat. Although it can be used in the creation of especially enchanted weapons, it may fail to affect those already heavily enchanted, and only allows enchantment up to +9. When used on ammunition this will also decrease the chances of missiles breaking upon impact.
+This scroll enchants the wielded weapon or stack of missiles to be far more effective in combat. It may fail to affect weapons or ammunition already heavily enchanted, and only allows enchantment up to +9. When used on ammunition this will also decrease the chances of missiles breaking upon impact.
 %%%%
 scroll of fear
 
