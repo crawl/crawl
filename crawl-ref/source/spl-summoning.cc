@@ -1885,11 +1885,21 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
     return (number_raised);
 }
 
+// XXX: we could check if there's any corpse or skeleton and abort
+// freely before doing any butchering and dead raising.
 spret_type cast_animate_skeleton(god_type god, bool fail)
 {
     fail_check();
     mpr("You attempt to give life to the dead...");
 
+    // First, we try to animate a skeleton if there is one.
+    if (animate_remains(you.pos(), CORPSE_SKELETON, BEH_FRIENDLY,
+                        MHITYOU, &you, "", god) != -1)
+    {
+        return SPRET_SUCCESS;
+    }
+
+    // If not, look for a corpse and butcher it.
     for (stack_iterator si(you.pos(), true); si; ++si)
     {
         if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY
@@ -1905,6 +1915,7 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
         }
     }
 
+    // Now we try again to animate a skeleton.
     if (animate_remains(you.pos(), CORPSE_SKELETON, BEH_FRIENDLY,
                         MHITYOU, &you, "", god) < 0)
     {
