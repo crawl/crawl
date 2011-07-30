@@ -1448,6 +1448,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_TENTACLED_MONSTROSITY;
     case MONS_ORB_GUARDIAN:
         return TILEP_MONS_ORB_GUARDIAN;
+    case MONS_OCTOPODE:
+        return TILEP_MONS_OCTOPODE;
     case MONS_TEST_SPAWNER:
         return TILEP_MONS_TEST_SPAWNER;
 
@@ -3652,6 +3654,12 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     case MONS_BLACK_BEAR:
         return TILE_CORPSE_BLACK_BEAR;
 
+    // seafood ('X')
+    case MONS_OCTOPODE:
+        return TILE_CORPSE_OCTOPODE;
+    case MONS_KRAKEN:
+        return TILE_CORPSE_KRAKEN;
+
     // yaks, sheep and elephants ('Y')
     case MONS_SHEEP:
         return TILE_CORPSE_SHEEP;
@@ -3677,8 +3685,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_ELECTRIC_EEL;
     case MONS_SHARK:
         return TILE_CORPSE_SHARK;
-    case MONS_KRAKEN:
-        return TILE_CORPSE_KRAKEN;
     case MONS_JELLYFISH:
         return TILE_CORPSE_JELLYFISH;
 
