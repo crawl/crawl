@@ -307,6 +307,9 @@ rock_troll CORPSE_ROCK_TROLL
 iron_troll CORPSE_IRON_TROLL
 deep_troll CORPSE_DEEP_TROLL
 
+## Cephalopods ('X')
+../player/base/octopode1 CORPSE_OCTOPODE
+
 ## Human shaped ('@')
 human CORPSE_HUMAN
 demonspawn CORPSE_DEMONSPAWN

@@ -689,6 +689,7 @@ eidolon MONS_EIDOLON
 %rim 0
 orb_guardian MONS_ORB_GUARDIAN /*'X'*/
 %rim 1
+../player/base/octopode1 MONS_OCTOPODE
 
 ## Centaurs ('c')
 %sdir dc-mon/unique
