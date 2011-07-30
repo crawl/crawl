@@ -168,7 +168,7 @@ KMONS:   R = felid
 KMONS:   S = ghoul ; nothing
 KMONS:   T = vampire spells:. ; nothing
 KMONS:   U = demigod ; nothing
-#KMONS:  V = a new race!
+KMONS:   V = octopode ; nothing
 KFEAT:   m = iron_grate
 MAP
 ccccccc
