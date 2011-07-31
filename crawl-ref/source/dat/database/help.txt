@@ -184,8 +184,13 @@ Training can be done in two modes:
 * automatic: Skills are trained by your use of them.
 * manual: Experience is spread evenly across all activated skills.
 
+The training percentage (in <brown>brown</brown>) shows the relative amount of experience
+which will be used to train this skill.
 You must always have at least one skill enabled.
 You can switch between automatic and manual training with the <w>/</w> key.
+
+You can active focus mode with <w>|</w> key (or <w>tab</w>). A skill set to
+focus (marked with <w>*</w>) will be trained faster than others.
 
 How fast you train a skill is governed by the following factors:
 * aptitude: Shown <red>red</red> in the Apt column. Higher numbers mean that
