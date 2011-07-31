@@ -3470,11 +3470,6 @@ static void _builder_monsters(int level_number, level_area_type level_type, int 
     const bool in_shoals = player_in_branch(BRANCH_SHOALS);
     if (in_shoals)
         dgn_shoals_generate_flora();
-    else if (player_in_branch(BRANCH_MAIN_DUNGEON)
-             || player_in_branch(BRANCH_VAULTS))
-    {
-        _place_door_mimics(level_number);
-    }
 
     // Try to place Shoals monsters on floor where possible instead of
     // letting all the merfolk be generated in the middle of the
