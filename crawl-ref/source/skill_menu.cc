@@ -497,8 +497,13 @@ std::string SkillMenuSwitch::get_help()
                    "<red>red</red>. ";
         }
     case SKM_VIEW_TRAINING:
-        return "The percentage of the experience used to train each skill "
-               "is in <brown>brown</brown>.\n";
+        if (m_skm->is_set(SKMF_SIMPLE))
+            return hints_skill_training_info();
+        else
+        {
+            return "The percentage of the experience used to train each skill "
+                   "is in <brown>brown</brown>.\n";
+        }
     case SKM_VIEW_PROGRESS:
         return "The percentage of the progress done before reaching next "
                "level is in <cyan>cyan</cyan>.\n";
@@ -812,24 +817,28 @@ skill_menu_state SkillMenu::get_state(skill_menu_switch sw)
 
 void SkillMenu::help()
 {
-    if (is_set(SKMF_HELP))
+    if (!is_set(SKMF_HELP))
     {
-        show_skill_menu_help();
-        set_default_help();
-        clrscr();
-#ifdef USE_TILE_LOCAL
-        tiles.get_crt()->attach_menu(this);
-#endif
+        std::string text;
+        if (is_set(SKMF_SIMPLE))
+            text = hints_skills_description_info();
+        else
+            text = "Press the letter of a skill to read its description. "
+                   "Press ? for an explanation of how skills work and the "
+                   "various modes.";
+        set_help(text);
     }
     else
     {
-        std::string text = is_set(SKMF_SIMPLE)
-                           ? hints_skills_description_info()
-                           : "Press the letter of a skill to read its "
-                             "description.";
-        text += " Press ? for an explanation of how skills work and the "
-                "various modes.";
-        set_help(text);
+        if (!is_set(SKMF_SIMPLE))
+        {
+            show_skill_menu_help();
+            clrscr();
+#ifdef USE_TILE_LOCAL
+            tiles.get_crt()->attach_menu(this);
+#endif
+        }
+        set_default_help();
     }
     toggle_flag(SKMF_HELP);
     refresh_names();
