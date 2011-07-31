@@ -1544,12 +1544,11 @@ static void _experience_check()
 
     if (you.experience_level < 27)
     {
-        int xp_needed = (exp_needed(you.experience_level+1)-you.experience)+1;
-        mprf("Level %d requires %d experience (%d point%s to go!)",
-              you.experience_level + 1,
-              exp_needed(you.experience_level + 1) + 1,
+        int xp_needed = (you.experience - exp_needed(you.experience_level)) * 100 /
+                        (exp_needed(you.experience_level + 1) - exp_needed(you.experience_level));
+        mprf("You are %d%% of the way to level %d.",
               xp_needed,
-              (xp_needed > 1) ? "s" : "");
+              you.experience_level + 1);
     }
     else
     {
