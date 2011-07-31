@@ -978,7 +978,7 @@ DESC_END: According to legend, this robe was the gift of Ratri the Goddess
           of the Night to one of her followers.
 
 NAME:    armour of the Dragon King
-APPEAR:  shiny dragon armour
+APPEAR:  shiny gold dragon armour
 OBJ:     OBJ_ARMOUR/ARM_GOLD_DRAGON_ARMOUR
 PLUS:    +5
 COLOUR:  ETC_GOLD
