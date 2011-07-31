@@ -3,6 +3,7 @@
 #include "rng.h"
 #include "dgn-voronoi.h"
 #include "dgn-nolithius.h"
+#include "dgn-forest.h"
 #include <locale.h>
 
 static wchar_t dchar(dungeon_feature_type g)
@@ -43,7 +44,7 @@ int main()
     setlocale(LC_CTYPE, "");
     grd.init(DNGN_ROCK_WALL);
     seed_rng();
-    layout_nolithius();
+    layout_forest();
     draw();
     return 0;
 }
