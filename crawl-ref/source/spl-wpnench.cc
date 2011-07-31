@@ -99,14 +99,6 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
         return SPRET_ABORT;
     }
 
-    // Some brandings are restricted to certain damage types.
-    if (which_brand == SPWPN_DUMMY_CRUSHING
-        && !(get_damage_type(weapon) & DAM_BLUDGEON))
-    {
-        mpr("You cannot enchant this weapon with this spell.");
-        return SPRET_ABORT;
-    }
-
     // Can only brand launchers with sensible brands.
     if (is_range_weapon(weapon))
     {
@@ -225,12 +217,6 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
 
     case SPWPN_CHAOS:
         msg += " glistens with random hues.";
-        break;
-
-    case SPWPN_DUMMY_CRUSHING:  // Maxwell's Silver Hammer.
-        which_brand = SPWPN_VORPAL;
-        msg += " glows silver and feels heavier.";
-        duration_affected = 7;
         break;
 
     case SPWPN_RETURNING:

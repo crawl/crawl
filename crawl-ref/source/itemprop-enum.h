@@ -116,7 +116,6 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
     SPWPN_ACID,    // acid bite only for the moment
     SPWPN_DEBUG_RANDART,
     NUM_SPECIAL_WEAPONS,
-    SPWPN_DUMMY_CRUSHING,        // ONLY TEMPORARY USAGE -- converts to VORPAL
 };
 
 enum corpse_type
