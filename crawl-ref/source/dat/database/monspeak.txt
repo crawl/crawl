@@ -5641,6 +5641,10 @@ death yak
 
 @yak@
 %%%%
+deep elf high priest
+
+@_high_priest_@
+%%%%
 deep elf sorcerer
 
 @_wizard_@
@@ -6308,6 +6312,26 @@ _friendly_beogh_speech_rare_
 ################################################
 # Make this work for other predefined orcs!
 #################################################
+related beogh orc high priest
+
+__NONE
+
+w:5
+@_high_priest_@
+
+w:3
+@related beogh orc@
+%%%%
+orc high priest
+
+@_high_priest_@
+
+w:1
+@_generic_orc_speech_@
+
+w:1
+__NONE
+%%%%
 related beogh orc sorcerer
 
 __NONE
