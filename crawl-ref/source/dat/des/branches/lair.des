@@ -92,8 +92,7 @@ MONS:    w:100 nothing / w:40 yak / sheep / death yak
 MONS:    w:100 nothing / w:20 iguana / w:20 crocodile /\
          komodo dragon / basilisk w:5
 MONS:    green rat / porcupine / orange rat / quokka / rat
-MONS:    w:90 nothing / w:30 giant frog / blink frog / giant toad /\
-         spiny frog
+MONS:    w:90 nothing / w:30 giant frog / blink frog / spiny frog
 MONS:    elephant
 SHUFFLE: 123456
 KFEAT:   O = enter_lair
@@ -1465,7 +1464,7 @@ ENDMAP
 NAME:   minmay_lair_end_frog_pond
 PLACE:  Lair:$
 ORIENT: float
-MONS:   giant frog / giant toad / spiny frog
+MONS:   giant frog / spiny frog
 MONS:   blink frog
 MONS:   vampire mosquito
 MONS:   plant

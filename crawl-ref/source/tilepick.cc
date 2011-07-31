@@ -1247,8 +1247,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     // frogs ('F')
     case MONS_GIANT_FROG:
         return TILEP_MONS_GIANT_FROG;
-    case MONS_GIANT_TOAD:
-        return TILEP_MONS_GIANT_TOAD;
     case MONS_SPINY_FROG:
         return TILEP_MONS_SPINY_FROG;
     case MONS_BLINK_FROG:
@@ -3553,8 +3551,6 @@ static tileidx_t _tileidx_corpse(const item_def &item)
     // frogs ('F')
     case MONS_GIANT_FROG:
         return TILE_CORPSE_GIANT_FROG;
-    case MONS_GIANT_TOAD:
-        return TILE_CORPSE_GIANT_TOAD;
     case MONS_SPINY_FROG:
         return TILE_CORPSE_SPINY_FROG;
     case MONS_BLINK_FROG:

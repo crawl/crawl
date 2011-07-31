@@ -491,7 +491,7 @@ ENDMAP
 NAME:  pond
 DEPTH: D:10-27, Lair
 MONS:  plant w:30 / fungus
-MONS:  giant frog w:30 / giant toad / snake / rat / green rat / swamp drake w:2
+MONS:  giant frog w:30 / snake / rat / green rat / swamp drake w:2
 MONS:  vampire mosquito
 SUBST: ! : w.
 SUBST: 2 : 23
