@@ -12,7 +12,12 @@ loaded in 0.9, you can not go back to 0.8.
 
 Skills
 ......
-* Skill training: longer explanation welcome!
+* Skill training: skills are trained immediately when XP is gained. The skills
+trained are the ones that have been used recently (auto) or the ones which have
+been selected (manual).
+* Skill costs: The XP to skill point ration no longer depends on the skill
+* level.
+* Magic school skills early game discount removed.
 
 Gods
 ----
