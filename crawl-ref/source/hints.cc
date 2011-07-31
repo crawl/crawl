@@ -3363,7 +3363,7 @@ formatted_string hints_abilities_info()
 }
 
 // Explains the basics of the skill screen. Don't bother the player with the
-// aptitude information. (Toggling is still possible, of course.)
+// aptitude information.
 std::string hints_skills_info()
 {
     textcolor(channel_to_colour(MSGCH_TUTORIAL));
@@ -3374,9 +3374,25 @@ std::string hints_skills_info()
         "better. The <cyan>cyan percent value</cyan> shows your progress "
         "towards the next skill level. You can toggle which skills to train by "
         "pressing their slot letters. A <darkgrey>greyish</darkgrey> skill "
-        "will increase at a decidedly slower rate and ease training of others. "
-        "Press <w>?</w> to read your skills' descriptions.";
-    linebreak_string(broken, std::min(80, _get_hints_cols()));
+        "will not be trained and ease the training of others. "
+        "Press <w>!</w> to learn about skill training and <w>?</w> to read "
+        "your skills' descriptions.";
+    text << broken;
+    text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+
+    return text.str();
+}
+
+std::string hints_skill_training_info()
+{
+    textcolor(channel_to_colour(MSGCH_TUTORIAL));
+    std::ostringstream text;
+    text << "<" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
+    std::string broken = "The training percentage (in <brown>brown</brown>) "
+        "shows the relative amount of the experience gained which will be "
+        "used to train each skill. It is automatically set depending on "
+        "which skills you have used recently. Disabling a skill sets the "
+        "training rate to 0.";
     text << broken;
     text << "</" << colour_to_str(channel_to_colour(MSGCH_TUTORIAL)) << ">";
 
