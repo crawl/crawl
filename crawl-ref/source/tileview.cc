@@ -1030,19 +1030,23 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
     if (haloed(gc))
     {
         monster* mon = monster_at(gc);
-        if (you.see_cell(gc) && mon)
+        if (you.see_cell(gc))
         {
-            if (!mons_class_flag(mon->type, M_NO_EXP_GAIN)
+            if (mon && !mons_class_flag(mon->type, M_NO_EXP_GAIN)
                  && (!mons_is_mimic(mon->type)
                      || testbits(mon->flags, MF_KNOWN_MIMIC)))
             {
-                cell.is_haloed = true;
+                cell.halo = HALO_MONSTER;
                 print_blood = false;
+            }
+            else
+            {
+                cell.halo = HALO_RANGE;
             }
         }
     }
     else
-        cell.is_haloed = false;
+        cell.halo = HALO_NONE;
 
     if (liquefied(gc, true))
         cell.is_liquefied = true;
