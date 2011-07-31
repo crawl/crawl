@@ -1543,8 +1543,11 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_FREEZING_AURA:
         return brand_weapon(SPWPN_FREEZING, powc, fail);
 
+#if TAG_MAJOR_VERSION == 32
     case SPELL_MAXWELLS_SILVER_HAMMER:
-        return brand_weapon(SPWPN_DUMMY_CRUSHING, powc, fail);
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
 
     case SPELL_POISON_WEAPON:
         return brand_weapon(SPWPN_VENOM, powc, fail);

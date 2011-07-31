@@ -338,10 +338,6 @@ Mass Confusion
 
 This spell causes confusion in all who gaze upon the caster.
 %%%%
-Maxwell's Silver Hammer
-
-This spell bestows a lethal but temporary gravitic field to a crushing implement held by the caster. It will not affect weapons otherwise subject to special enchantments.
-%%%%
 Mephitic Cloud
 
 This spell conjures up a large but short-lived cloud of vile fumes.
