@@ -70,7 +70,8 @@ be branded. Skill names (such as <w>Polearms</w> or <w>Long Blades</w>) will fin
 weapons that train that skill.
 
 If you're using stash.lua and have set annotate_item_class = true in your
-initfile, you can also search by item types such as <w>book</w> or <w>jewellery</w>.
+initfile, you can also search by item types such as <w>book</w> or <w>jewellery</w>. For
+armour slots, you can use <w>helmet</w> (all head gear), <w>gloves</w>, <w>shield</w>, and <w>body</w>.
 
 <h>Finding Dungeon Features:</h>
 
