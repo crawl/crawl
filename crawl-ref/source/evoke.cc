@@ -350,7 +350,9 @@ static bool _ball_of_seeing(void)
 
     int use = random2(you.skill(SK_EVOCATIONS) * 6);
 
-    if (use < 2)
+    if (you.level_type == LEVEL_LABYRINTH)
+        mpr("You see a maze of twisty little passages, all alike.");
+    else if (use < 2)
         lose_stat(STAT_INT, 1, false, "using a ball of seeing");
     else if (use < 5 && enough_mp(1, true))
     {
@@ -358,12 +360,8 @@ static bool _ball_of_seeing(void)
         set_mp(0);
         // if you're out of mana, the switch chain falls through to confusion
     }
-    else if (use < 10 || you.level_type == LEVEL_LABYRINTH)
-    {
-        if (you.level_type == LEVEL_LABYRINTH)
-            mpr("You see a maze of twisty little passages, all alike.");
+    else if (use < 10)
         confuse_player(10 + random2(10));
-    }
     else if (use < 15 || coinflip())
         mpr("You see nothing.");
     else if (magic_mapping(6 + you.skill(SK_EVOCATIONS),
@@ -657,22 +655,15 @@ static bool _ball_of_energy(void)
     int use = random2(you.skill(SK_EVOCATIONS) * 6);
 
     if (use < 2)
-    {
-        const int loss = roll_dice(1, 2 * you.max_intel() / 3);
-        lose_stat(STAT_INT, loss, false, "using a ball of energy");
-    }
-    else if (use < 4 && enough_mp(1, true))
+        lose_stat(STAT_INT, 1 + random2avg(7, 2), false, "using a ball of energy");
+    else if (use < 5 && enough_mp(1, true))
     {
         mpr("You feel your power drain away!");
         set_mp(0);
     }
-    else if (use < 6)
+    else if (use < 10)
     {
         confuse_player(10 + random2(10));
-    }
-    else if (use < 8)
-    {
-        you.paralyse(NULL, 2 + random2(2));
     }
     else
     {
@@ -687,7 +678,7 @@ static bool _ball_of_energy(void)
         else
         {
             mpr("You are suffused with power!");
-            inc_mp(6 + roll_dice(2, you.skill(SK_EVOCATIONS)));
+            inc_mp(5 + random2avg(you.skill(SK_EVOCATIONS), 2));
 
             ret = true;
         }
