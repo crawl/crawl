@@ -1751,6 +1751,15 @@ static int _blowgun_power_roll(bolt &beam)
 
 static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
 {
+    if (victim->holiness() == MH_UNDEAD || victim->holiness() == MH_NONLIVING)
+    {
+        if (victim->atype() == ACT_MONSTER)
+            simple_monster_message(victim->as_monster(), " is unaffected.");
+        else
+            mpr("You are unaffected.");
+        return (false);
+    }
+
     actor* agent = beam.agent();
 
     if (!agent || agent->atype() == ACT_MONSTER || beam.reflections > 0)
