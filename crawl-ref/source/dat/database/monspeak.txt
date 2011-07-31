@@ -497,7 +497,7 @@ _hell_lord_taunt_
 @The_monster@ @says@ @to_foe@, "@demon_taunt@"
 
 w:1
-@The_monster@ proclaims, "For the glory of @God@!"
+@The_monster@ proclaims, "For the glory of @my_God@!"
 %%%%
 _demon_taunt_
 
@@ -3879,7 +3879,7 @@ _Grinder_rare_
 
 @The_monster@ says, "My boss said I was rubbish. His entrails said otherwise."
 
-@The_monster@ says, "At least @God@ appreciates what I do."
+@The_monster@ says, "At least @my_God@ appreciates what I do."
 
 VISUAL:@The_monster@ rolls @possessive@ eyes.
 %%%%

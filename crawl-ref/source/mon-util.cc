@@ -3684,12 +3684,18 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     }
 
     // The monster's god, not the player's.  Atheists get
-    // "NO GOD"/"NO GOD", and worshippers of nameless gods get
-    // "a god"/"its god".
+    // "NO GOD"/"NO GOD"/"NO_GOD"/"NO_GOD", and worshippers of nameless
+    // gods get "a god"/"its god/my God/My God".
+    //
+    // XXX: Crawl currently has no first-person possessive pronoun;
+    // if it gets one, it should be used for the last two entries.
     if (mons->god == GOD_NO_GOD)
     {
         msg = replace_all(msg, "@God@", "NO GOD");
         msg = replace_all(msg, "@possessive_God@", "NO GOD");
+
+        msg = replace_all(msg, "@my_God@", "NO GOD");
+        msg = replace_all(msg, "@My_God@", "NO GOD");
     }
     else if (mons->god == GOD_NAMELESS)
     {
@@ -3697,11 +3703,17 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         std::string possessive = mons->pronoun(PRONOUN_NOCAP_POSSESSIVE);
         possessive += " god";
         msg = replace_all(msg, "@possessive_God@", possessive.c_str());
+
+        msg = replace_all(msg, "@my_God@", "my God");
+        msg = replace_all(msg, "@My_God@", "My God");
     }
     else
     {
         msg = replace_all(msg, "@God@", god_name(mons->god));
         msg = replace_all(msg, "@possessive_God@", god_name(mons->god));
+
+        msg = replace_all(msg, "@my_God@", god_name(mons->god));
+        msg = replace_all(msg, "@My_God@", god_name(mons->god));
     }
 
     // Replace with species specific insults.
