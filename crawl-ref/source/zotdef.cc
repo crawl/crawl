@@ -374,8 +374,7 @@ static void _hell_beast_wave(int power)
 static void _frog_wave(int power)
 {
     wave_name("FROG WAVE");
-    monster_type frogs[] = {MONS_GIANT_FROG, MONS_GIANT_TOAD,
-                MONS_SPINY_FROG, MONS_BLINK_FROG, END};
+    monster_type frogs[] = {MONS_GIANT_FROG, MONS_SPINY_FROG, MONS_BLINK_FROG, END};
     monster_type boss[] = {MONS_PRINCE_RIBBIT, MONS_SPINY_FROG, MONS_BLINK_FROG, END};
     _zotdef_fill_from_list(frogs, 0, power); // full
     _zotdef_choose_boss(boss, power);
