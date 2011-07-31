@@ -611,10 +611,9 @@ void handle_behaviour(monster* mon)
                 mon->target = menv[mon->foe].pos();
             }
 
-            // Smart monsters, zombified monsters other than spectral
-            // things, plants, and nonliving monsters cannot flee.
+            // Smart monsters, undead, plants, and nonliving monsters cannot flee.
             if (isHurt && !isSmart && isMobile
-                && (!mons_is_zombified(mon) || mon->type == MONS_SPECTRAL_THING)
+                && mon->holiness() != MH_UNDEAD
                 && mon->holiness() != MH_PLANT
                 && mon->holiness() != MH_NONLIVING
                 && !mons_class_flag(mon->type, M_NO_FLEE))
