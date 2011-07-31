@@ -50,7 +50,7 @@
 #include "potion.h"
 #include "religion.h"
 #include "godconduct.h"
-#include "skill_menu.h"
+#include "skills.h"
 #include "skills2.h"
 #include "spl-cast.h"
 #include "spl-damage.h"
@@ -2087,8 +2087,9 @@ static void _experience_card(int power, deck_rarity_type rarity)
     else
         mpr("You feel knowledgeable.");
 
-    more();
-    skill_menu(SKMF_EXPERIENCE_CARD, std::min(power * 50, HIGH_EXP_POOL));
+    // Put some free XP into pool
+    you.exp_available += std::min(power * 50, HIGH_EXP_POOL);
+    train_skills();
 
     // After level 27, boosts you get don't get increased (matters for
     // charging V:8 with no rN+++ and for felids).
