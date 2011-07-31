@@ -289,8 +289,8 @@ bool TilesFramework::_send_cell(int x, int y,
     if (cell.is_silenced != old_cell.is_silenced)
         write_message("silenced:%u,", cell.is_silenced);
 
-    if (cell.is_haloed != old_cell.is_haloed)
-        write_message("haloed:%u,", cell.is_haloed);
+    if (cell.halo != old_cell.halo)
+        write_message("halo:%u,", cell.halo);
 
     if (cell.is_moldy != old_cell.is_moldy)
         write_message("moldy:%u,", cell.is_moldy);

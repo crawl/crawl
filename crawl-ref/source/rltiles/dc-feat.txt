@@ -458,6 +458,8 @@ wall_blood7_e
 wall_blood8_e
 %sdir dc-misc
 halo HALO
+effect/halo_range HALO_RANGE
+effect/halo_range_silenced HALO_RANGE_SILENCED
 ray RAY
 ray_out_of_range RAY_OUT_OF_RANGE
 travel_exclusion TRAVEL_EXCLUSION_BG

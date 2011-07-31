@@ -637,7 +637,7 @@ function draw_background(x, y, cell)
                 draw_dngn(TILE_ELDRITCH_OVERLAY_SW, x, y);
         }
 
-        if (cell.haloed)
+        if (cell.halo == HALO_MONSTER)
             draw_dngn(TILE_HALO, x, y);
 
         if (!(bg & TILE_FLAG_UNSEEN))
@@ -645,8 +645,12 @@ function draw_background(x, y, cell)
         {
             if (cell.sanctuary)
                 draw_dngn(TILE_SANCTUARY, x, y);
-            if (cell.silenced)
+            if (cell.silenced && (cell.halo == HALO_RANGE))
+                draw_dngn(TILE_HALO_RANGE_SILENCED, x, y);
+            else if (cell.silenced)
                 draw_dngn(TILE_SILENCED, x, y);
+            else if (cell.halo == HALO_RANGE)
+                draw_dngn(TILE_HALO_RANGE, x, y);
 
             // Apply the travel exclusion under the foreground if the cell is
             // visible.  It will be applied later if the cell is unseen.

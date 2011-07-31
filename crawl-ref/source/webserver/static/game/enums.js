@@ -11,6 +11,11 @@ CURSOR_TUTORIAL = 1;
 CURSOR_MAP = 2;
 CURSOR_MAX = 3;
 
+// Halo flags
+HALO_NONE = 0;
+HALO_RANGE = 1;
+HALO_MONSTER = 2;
+
 // Foreground flags
 
 // 3 mutually exclusive flags for attitude.
