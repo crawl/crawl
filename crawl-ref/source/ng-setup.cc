@@ -1143,6 +1143,10 @@ static void _setup_tutorial_miscs()
     // No need for Shields skill without shield.
     you.skills[SK_SHIELDS] = 0;
 
+    // Some spellcasting for the magic tutorial.
+    if (get_tutorial_map().find("tutorial_lesson4") != std::string::npos)
+        you.skills[SK_SPELLCASTING] = 1;
+
     // Set Str low enough for the burdened tutorial.
     you.base_stats[STAT_STR] = 12;
 }
