@@ -2389,7 +2389,7 @@ void drop()
     }
 
     std::vector<SelItem> tmp_items;
-    tmp_items = prompt_invent_items("Drop what?  (Press _ for help.)", MT_DROP,
+    tmp_items = prompt_invent_items("Drop what? (Press _ for help.)", MT_DROP,
                                      -1, _drop_menu_title, true, true, 0,
                                      &Options.drop_filter, _drop_selitem_text,
                                      &items_for_multidrop);
