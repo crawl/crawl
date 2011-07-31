@@ -1951,19 +1951,19 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow,
 
 void bolt::apply_bolt_paralysis(monster* mons)
 {
-    const bool was_immotile = mons_is_immotile(mons);
-    if (!mons->paralysed()
-        && mons->add_ench(ENCH_PARALYSIS))
+    if (mons->paralysed())
+        return;
+    // asleep monsters can still be paralysed (and will be always woken by
+    // trying to resist); the message might seem wrong but paralysis is
+    // always visible.
+    if (!mons_is_immotile(mons)
+        && simple_monster_message(mons, " suddenly stops moving!"))
     {
-        // asleep monsters can still be paralysed, but don't give a message
-        if (!was_immotile
-            && simple_monster_message(mons, " suddenly stops moving!"))
-        {
-            obvious_effect = true;
-        }
-
-        mons_check_pool(mons, mons->pos(), killer(), beam_source);
+        obvious_effect = true;
     }
+
+    mons->add_ench(ENCH_PARALYSIS);
+    mons_check_pool(mons, mons->pos(), killer(), beam_source);
 }
 
 // Petrification works in two stages. First the monster is slowed down in
