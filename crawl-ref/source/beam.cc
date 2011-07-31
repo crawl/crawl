@@ -1951,11 +1951,12 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow,
 
 void bolt::apply_bolt_paralysis(monster* mons)
 {
+    const bool was_immotile = mons_is_immotile(mons);
     if (!mons->paralysed()
         && mons->add_ench(ENCH_PARALYSIS))
     {
         // asleep monsters can still be paralysed, but don't give a message
-        if (!mons_is_immotile(mons)
+        if (!was_immotile
             && simple_monster_message(mons, " suddenly stops moving!"))
         {
             obvious_effect = true;
