@@ -16,18 +16,6 @@ function tutorial_msg4.start ()
     crawl.tutorial_hint("HINT_NEW_LEVEL")
 end
 
-function tutorial_msg4.train_spellcasting ()
-    local text = "You cannot cast spells yet because you don't have the Spellcasting "
-                 .. "skill yet. Read some scrolls (with "
-                 .. tutorial_get_cmd("CMD_READ")
-    if crawl.is_tiles() then
-        text = text .. " or by <white>mouseclick</white>"
-    end
-    text = text .. ") to train it to level 1, then continue to the left."
-
-    return tutorial_message(text)
-end
-
 function tutorial_msg4.spellbook ()
     local text = "You can memorise a spell from carried spellbooks with "
                  .. tutorial_get_cmd("CMD_MEMORISE_SPELL")
@@ -242,8 +230,6 @@ function tutorial_msg4.exit ()
     text = text .. "  " .. tutorial_get_cmd("CMD_READ") .. "  read a book, for descriptions or to forget a spell\n"
                 .. "  " .. tutorial_get_cmd("CMD_REST") .. "  rest up to 100 turns to regain magic points and health\n"
                 .. "  " .. tutorial_get_cmd("CMD_SHOUT") .. "  order allies\n"
-                .. "  " .. tutorial_get_cmd("CMD_DISPLAY_SKILLS") .. "  manage your skills\n"
-                .. "\n<yellow>Other commands</yellow>\n"
                 .. "  " .. tutorial_get_cmd("CMD_REMOVE_ARMOUR") .. "  take off armour\n"
     text = text .. "                                 <cyan>Press <white>any key</white> to clear this screen...</cyan>\n"
 
@@ -266,8 +252,6 @@ KFEAT:   S = distillery shop count:8 ; \
          potion of slowing | w:20 potion of confusion | potion of poison | potion of paralysis
 COLOUR:  ABCDdefh = blue
 FTILE:   ABCDdefh = tutorial_pad
-KITEM:   A = scroll of fog q:4, scroll of random uselessness q:4, scroll of curse armour q:4, \
-         scroll of remove curse q:4
 ITEM:    randbook numspells:2 spells:magic_dart|evaporate title:Introduction_to_Spellcasting owner:player
 ITEM:    ring of magical power not_cursed
 ITEM:    staff of wizardry not_cursed
@@ -276,7 +260,6 @@ ITEM:    bread ration
 MONS:    training dummy ; stone q:20
 MONS:    bat skeleton, goblin skeleton
 MONS:    rat, goblin
-MARKER:  A = lua:tutorial_msg4.train_spellcasting()
 MARKER:  d = lua:tutorial_msg4.spellbook()
 MARKER:  B = lua:tutorial_msg4.spellcasting()
 MARKER:  e = lua:tutorial_msg4.ring_power()
@@ -292,11 +275,11 @@ epilogue{{
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx...xxxxxxx...xxxxx...xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx.d.........A.......{..xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx...xxxxxxx...xxxxx...xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...xxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.d.........{.xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...xxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxx.xxxxxxxxxxxx...x.2.xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxx.xxxxxxxxxxx.....xxx..f.xxxxxxxxxxxxxxx
