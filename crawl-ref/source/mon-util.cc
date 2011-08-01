@@ -3700,8 +3700,8 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     else if (mons->god == GOD_NAMELESS)
     {
         msg = replace_all(msg, "@God@", "a god");
-        std::string possessive = mons->pronoun(PRONOUN_NOCAP_POSSESSIVE);
-        possessive += " god";
+        std::string possessive =
+            mons->pronoun(PRONOUN_NOCAP_POSSESSIVE) + "god";
         msg = replace_all(msg, "@possessive_God@", possessive.c_str());
 
         msg = replace_all(msg, "@my_God@", "my God");
