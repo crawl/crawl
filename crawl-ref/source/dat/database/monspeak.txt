@@ -1330,7 +1330,7 @@ VISUAL:@The_monster@ quickly assembles and disassembles an arrow trap before you
 @The_monster@ says @to_foe@, "With tracks like that, I knew you had to be a @foe_genus@."
 
 w:1
-@The_monster@ giggles, and steps all the way around you, then returns to @possessive@ position; suddenly you realize that this is only a game to it.
+@The_monster@ giggles, and steps all the way around you, then returns to @possessive@ position; suddenly you realise that this is only a game to it.
 
 w:1
 @The_monster@ whirls like a shadow given life, stepping faster than you can keep track, before standing precisely still, watching, waiting for your next assault.
@@ -1344,7 +1344,7 @@ w:1
 w:1
 @The_monster@ whispers, "I have found a way out of unlife even Necromancers could not discover."
 
-@The_monster@ strategizes, and dematerializes before your eyes, reforming brighter.
+@The_monster@ strategises, and dematerialises before your eyes, reforming brighter.
 
 @The_monster@ rises to @possessive@ full height, drawing on the power of @possessive@ mind.
 
