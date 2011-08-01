@@ -1781,6 +1781,8 @@ std::string get_item_description(const item_def &item, bool verbose,
     {
         description << "\n\n";
 
+        bool need_base_desc = false;
+
         if (dump)
         {
             description << "["
@@ -1798,8 +1800,11 @@ std::string get_item_description(const item_def &item, bool verbose,
                 description << desc_id << "\n";
             else if (desc[0] != '\0')
                 description << desc << "\n";
+            else
+                need_base_desc = true;
         }
-        else
+
+        if (need_base_desc)
         {
             std::string db_name = item.name(DESC_DBNAME, true, false, false);
             std::string db_desc = getLongDescription(db_name);
