@@ -220,7 +220,7 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
         break;
 
     case SPWPN_RETURNING:
-        msg += " wiggles in your hand.";
+        msg += " wiggles in your " + your_hand(false) + ".";
         duration_affected = 5;
         break;
 
