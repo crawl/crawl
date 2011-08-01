@@ -1543,7 +1543,7 @@ static std::string _describe_jewellery(const item_def &item, bool verbose)
     }
 
     return (description);
-}                               // end describe_jewellery()
+}
 
 static bool _compare_card_names(card_type a, card_type b)
 {

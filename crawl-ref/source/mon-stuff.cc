@@ -1746,7 +1746,7 @@ int monster_die(monster* mons, killer_type killer,
         if (!silent && !mons_reset && !was_banished)
         {
             simple_monster_message(mons, " vapourises!",
-                                   MSGCH_MONSTER_DAMAGE,  MDAM_DEAD);
+                                   MSGCH_MONSTER_DAMAGE, MDAM_DEAD);
             silent = true;
         }
 

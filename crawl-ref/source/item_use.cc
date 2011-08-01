@@ -5563,7 +5563,7 @@ void examine_object(void)
     describe_item(you.inv[item_slot], true);
     redraw_screen();
     mesclr();
-}                               // end original_name()
+}
 
 bool wearing_slot(int inv_slot)
 {

@@ -949,7 +949,7 @@ skill_type spell_type2skill(unsigned int spelltype)
         dprf("spell_type2skill: called with spelltype %u", spelltype);
         return (SK_NONE);
     }
-}                               // end spell_type2skill()
+}
 
 /*
  **************************************************

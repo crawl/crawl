@@ -3964,8 +3964,7 @@ static void _do_berserk_no_combat_penalty(void)
             you.duration[DUR_BERSERK] = 1;
     }
     return;
-}                               // end do_berserk_no_combat_penalty()
-
+}
 
 // Called when the player moves by walking/running. Also calls attack
 // function etc when necessary.

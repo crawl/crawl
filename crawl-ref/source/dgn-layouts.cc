@@ -784,7 +784,7 @@ static void _big_room(int level_number)
         }
         while (level_number < 1500);       // ie forever
     }
-}                               // end big_room()
+}
 
 static void _diamond_rooms(int level_number)
 {
@@ -1014,7 +1014,7 @@ static void _place_pool(dungeon_feature_type pool_type, uint8_t pool_x1,
             right_edge -= random2(3);
         }
     }
-}                               // end place_pool()
+}
 
 static void _many_pools(dungeon_feature_type pool_type)
 {
@@ -1044,7 +1044,7 @@ static void _many_pools(dungeon_feature_type pool_type)
             pools++;
         }
     }
-}                               // end many_pools()
+}
 
 // Used for placement of rivers/lakes.
 static bool _may_overwrite_pos(coord_def c)
