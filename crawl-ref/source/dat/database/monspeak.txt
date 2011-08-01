@@ -34,6 +34,8 @@ shouts
 shouts
 
 yells
+
+roars
 %%%%
 yells
 
@@ -44,6 +46,8 @@ wails
 cries
 
 screams
+
+howls
 %%%%
 # for ghosts
 wails
@@ -55,12 +59,20 @@ shouts
 says
 
 screams
+
+shrieks
 %%%%
 begs
 
 begs
 
 pleads
+
+w:3
+supplicates
+
+w:1
+supplicates abjectly
 %%%%
 almost
 
@@ -73,12 +85,17 @@ moans
 moans
 
 wails
+
+cries
 %%%%
 mutters
 
 mutters
 
 mumbles
+
+w:2
+susurrates
 %%%%
 blubbers
 
@@ -91,12 +108,24 @@ Mommeee
 Mommeee
 
 Daddeee
+
+Meeeeep
+
+Help meeeeeeee
+
+Eeeeekkkk
+
+Oh nooooooo
+
+Waaaaaa
 %%%%
 rattled
 
 rattled
 
 scared stiff
+
+petrified
 %%%%
 pointless
 
@@ -111,12 +140,18 @@ ploy
 ploy
 
 trick
+
+gambit
+
+strategy
 %%%%
 smoke_or_steam
 
 smoke
 
 steam
+
+mist
 %%%%
 ############################################################
 # Library of speeches for types of monsters, like priests,
@@ -141,10 +176,9 @@ SPELL:@The_monster@ mumbles some strange prayers.
 
 SPELL:@The_monster@ intones a terrible prayer.
 
+SPELL:@The_monster@ invokes a dire malice against @foe@. @player_only@
+
 @The_monster@ starts to sing a prayer.
-
-@The_monster@ says @to_foe@, "All sinners must die."
-
 %%%%
 _high_priest_medium_
 
@@ -152,11 +186,17 @@ VISUAL:@The_monster@ looks excited.
 
 VISUAL:@The_monster@ performs a strange gesture.
 
+VISUAL:@The_monster@ gazes, communing with @possessive@ divine master.
+
 @The_monster@ shouts @at_foe@, "You are a heretic and must be destroyed!"
 
 @The_monster@ says @to_foe@, "You will make a fine sacrifice."
 
 @The_monster@ shouts @at_foe@, "You must be punished!"
+
+@The_monster@ says @to_foe@, "All sinners must die."
+
+@The_monster@ says @to_foe@, "Oblivion to the unbeliever."
 %%%%
 _high_priest_rare_
 
@@ -164,8 +204,18 @@ _high_priest_rare_
 
 @The_monster@ says @to_foe@, "The wages of sin are death, you know."
 
+@The_monster@ whispers @to_foe@, "I'll spare you if you take my job."
+
 # Mother Theresa
 @The_monster@ whispers @to_foe@, "Deep inside, it's sometimes so empty."
+
+@The_monster@ says @to_foe@, "The wrath of @my_God@ will be yours."
+
+@The_monster@ says @to_foe@, "Taste sacred energy, fool."
+
+@The_monster@ says @to_foe@, "Feel the grace of @my_God@ course like acid through your form, @foe@."
+
+@The_monster@ says @to_foe@, "Your suffering will please @my_God@ as it cleanses you of grand heresy."
 ## END _high_priest_ ##
 %%%%
 _mercenary_guard_
@@ -242,6 +292,8 @@ SPELL:@The_monster@ wildly gestures.
 SPELL:@The_monster@ mumbles some strange words.
 
 SPELL:@The_monster@ casts a spell.
+
+SPELL:@The_monster@ howls an incantation.
 %%%%
 _fake_spell_effect_
 
@@ -251,7 +303,7 @@ w:20
 w:15
 __YOU_RESIST
 
-ENCHANT:@The_monster@ shimmers violently.
+ENCHANT:@The_monster@ becomes transparent for a moment.
 
 ENCHANT:@The_monster@ glows brightly for a moment.
 
@@ -264,7 +316,7 @@ ENCHANT:@The_monster@ becomes larger for a moment.
 
 VISUAL SPELL:@The_monster@'s eyes start to glow.
 
-VISUAL SPELL:@The_monster@ tries to enchant @foe@ with @possessive@ gaze.
+VISUAL SPELL:@The_monster@ tries to paralyse @foe@ with @possessive@ gaze.
 
 @The_monster@ shouts @at_foe@, "You can't withstand my power!"
 
@@ -273,6 +325,8 @@ VISUAL SPELL:@The_monster@ tries to enchant @foe@ with @possessive@ gaze.
 _wizard_rare_
 
 VISUAL SPELL:@The_monster@ throws some strange powder towards @foe@.
+
+SPELL:@The_monster@ laughs, and in @possessive@ laughter burns the force of the arcane.
 
 SPELL:@The_monster@ says @to_foe@, "Argatax netranoch dertex."
 
@@ -587,6 +641,8 @@ VISUAL:@The_monster@ waves at you.
 
 VISUAL:@The_monster@ smiles happily.
 
+VISUAL:@The_monster@ jumps up and down, looking for your attention.
+
 VISUAL:@The_monster@ winks at you.
 ## END friendly silenced humanoid ##
 %%%%
@@ -597,6 +653,8 @@ w:6
 
 w:4
 @_silenced_humanoid_rare_@
+
+@The_monster@ stomps in frustration.
 %%%%
 _silenced_humanoid_common_
 
@@ -619,10 +677,10 @@ default friendly confused humanoid
 
 @_friendly_confused_common_@
 
-w:8
+w:5
 @_friendly_confused_medium_@
 
-w:3
+w:1
 @_friendly_confused_rare_@
 %%%%
 _friendly_confused_common_
@@ -631,17 +689,15 @@ _friendly_confused_common_
 
 @The_monster@ shouts, "What's happening?!"
 
-VISUAL:@The_monster@ cries.
+@The_monster@ mumbles something.
 
 @The_monster@ laughs crazily.
-%%%%
-_friendly_confused_medium_
 
-VISUAL:@The_monster@ grins madly.
+VISUAL:@The_monster@ cries.
 
 VISUAL:@The_monster@ looks very confused.
-
-@The_monster@ mumbles something.
+%%%%
+_friendly_confused_medium_
 
 @The_monster@ giggles crazily.
 
@@ -649,7 +705,15 @@ VISUAL:@The_monster@ looks very confused.
 
 @The_monster@ prays for help.
 
+@The_monster@ smirks at the air and says, "Can't catch me!"
+
+@The_monster@ tries to explode, but succeeds only in making a *splort* sound.
+
+VISUAL:@The_monster@ grins madly.
+
 VISUAL:@The_monster@ ponders the situation.
+
+VISUAL:@The_monster@ stomps to and fro like a catoblepas.
 %%%%
 _friendly_confused_rare_
 
@@ -659,19 +723,23 @@ _friendly_confused_rare_
 
 @The_monster@ sings.
 
+@The_monster@ says, "I'm a rizard!"
+
 @The_monster@ screams, "@player_name@! Help!"
 
 @The_monster@ says, "@player_name@, I'm a little confused!"
+
+VISUAL: @The_monster@ seems enamored of @foe@.
 ## END friendly confused humanoid ##
 %%%%
 default confused humanoid
 
 @_confused_humanoid_common_@
 
-w:7
+w:5
 @_confused_humanoid_medium_@
 
-w:4
+w:1
 @_confused_humanoid_rare_@
 %%%%
 _confused_humanoid_common_
@@ -687,6 +755,10 @@ VISUAL:@The_monster@ cries.
 
 VISUAL:@The_monster@ grins madly.
 
+VISUAL:@The_monster@ laughs at nothing.
+
+VISUAL:@The_monster@ chortles and stares into space.
+
 VISUAL:@The_monster@ looks very confused.
 
 @The_monster@ mumbles something.
@@ -698,6 +770,8 @@ VISUAL:@The_monster@ ponders the situation.
 @The_monster@ says, "I'm a little confused."
 
 @The_monster@ asks, "Where am I?"
+
+@The_monster@ wonders, "What am I doing in here?"
 
 @The_monster@ says, "Why is everything spinning?"
 
@@ -711,9 +785,13 @@ _confused_humanoid_rare_
 
 @The_monster@ shouts, "NO!"
 
+@The_monster@ howls, "My nostrils!"
+
 @The_monster@ shouts, "YES!"
 
 VISUAL:@The_monster@ shakes.
+
+VISUAL:@The_monster@ suddenly looks very angry at the Dungeon.
 
 @The_monster@ asks @foe,@ "Who are you?"
 
@@ -729,7 +807,7 @@ default friendly fleeing humanoid
 
 @_friendly_fleeing_common_@
 
-w:5
+w:1
 @_friendly_fleeing_rare_@
 %%%%
 _friendly_fleeing_common_
@@ -759,7 +837,7 @@ default fleeing humanoid
 
 @_fleeing_humanoid_common_@
 
-w:5
+w:3
 @_fleeing_humanoid_rare_@
 %%%%
 _fleeing_humanoid_common_
@@ -775,7 +853,15 @@ VISUAL:@The_monster@ @almost@ stumbles in trying to escape.
 
 @The_monster@ prays for help.
 
-@The_monster@ @mutters@, "Of all the rotten luck!"
+@The_monster@ cowers, then darts away.
+
+@The_monster@ starts to cry.
+
+@The_monster@ yells at you, "GO AWAY!"
+
+@The_monster@ gibbers meaninglessly.
+
+@The_monster@ howls in fear.
 
 @The_monster@ @moans@, "Oh dear! Oh dear!"
 
@@ -784,8 +870,6 @@ VISUAL:@The_monster@ @almost@ stumbles in trying to escape.
 @The_monster@ begs for mercy.
 
 @The_monster@ cries @to_foe@, "Mercy!"
-
-VISUAL:@The_monster@ tries to recover @possessive@ lost courage.
 %%%%
 _fleeing_humanoid_rare_
 
@@ -797,9 +881,21 @@ _fleeing_humanoid_rare_
 
 @The_monster@ @blubbers@, "@Mommeee@!"
 
-@The_monster@ @begs@ @to_foe@, "Please! I have a lot of children..."
+@The_monster@ @begs@ @to_foe@, "Please! I have an infinite number of identical children..."
 
 VISUAL:@The_monster@ looks really @rattled@.
+
+@The_monster@ weeps quietly, if able.
+
+@The_monster@ looks in an agony of indecision for an escape route...
+
+@The_monster@ hums to @reflexive@ desperately, trying to calm.
+
+@The_monster attempts to regain @possessive@ composure.
+
+@The_monster@ @mutters@, "Of all the rotten luck!"
+
+VISUAL:@The_monster@ tries to recover @possessive@ lost courage.
 ## END fleeing humanoid ##
 %%%%
 friendly_family
@@ -867,7 +963,6 @@ _friendly_humanoid_medium_
 VISUAL:@The_monster@ smiles happily.
 
 @The_monster@ shouts, "Beware of monsters!"
-
 %%%%
 _friendly_humanoid_rare_
 
@@ -889,10 +984,14 @@ stops
 hound
 
 @The_monster@ @pauses_or_stops@ to sniff the @surface@.
+
+@The_monster@ gazes forward, looking utterly alone.
 %%%%
 friendly hound
 
 @The_monster@ wags @possessive@ tail.
+
+@The_monster@ barks softly, and nuzzles your face.
 
 @hound@
 %%%%
@@ -1052,7 +1151,11 @@ silenced player ghost
 
 w:15
 VISUAL SPELL:@The_monster@ stares at you.
-VISUAL WARN:You feel frightened.
+VISUAL WARN:You feel nameless woe.
+
+w:15
+VISUAL SPELL:@The_monster@ stares at you.
+VISUAL WARN:You feel a chill.
 
 VISUAL:@The_monster@ points at @foe@ threateningly.
 
@@ -1074,6 +1177,8 @@ VISUAL:@The_monster@ takes a fighting stance.
 
 @The_monster@ sneers, "Do you call that fighting?"
 
+@The_monster@ laughs, "And you think you're capable of finding the legendary Orb of Zot. I had it, you know. Then I gave it away so I could steal it AGAIN."
+
 %%%%
 Short Blades player ghost
 
@@ -1090,7 +1195,7 @@ VISUAL:@The_monster@ holds @possessive@ blade at the ready.
 
 @The_monster@ says, "Live by the sword, die by the sword."
 
-@The_monster@ says, "My hard blade and your soft body, they will meet soon."
+@The_monster@ says, "My hard blade and your soft body. They will meet - soon."
 
 %%%%
 Axes player ghost
@@ -1223,6 +1328,27 @@ Traps & Doors player ghost
 VISUAL:@The_monster@ quickly assembles and disassembles an arrow trap before your eyes, then grins. @player_only@
 
 @The_monster@ says @to_foe@, "With tracks like that, I knew you had to be a @foe_genus@."
+
+w:1
+@The_monster@ giggles, and steps all the way around you, then returns to @possessive@ position; suddenly you realize that this is only a game to it.
+
+w:1
+@The_monster@ whirls like a shadow given life, stepping faster than you can keep track, before standing precisely still, watching, waiting for your next assault.
+
+w:1
+VISUAL_SPELL: @The_monster@ produces a bizarre clockwork butterfly, ethereal and luminous, from @possessive@ pack, and hurls it at you - so perfect is @possessive@ making that it comes to life and darts away before touching you.
+
+w:1
+@The_monster@ regards you luminously, comprehending your nature, and seems resigned. It shouts, "Do you know what I know, @foe@..."
+
+w:1
+@The_monster@ whispers, "I have found a way out of unlife even Necromancers could not discover."
+
+@The_monster@ strategizes, and dematerializes before your eyes, reforming brighter.
+
+@The_monster@ rises to @possessive@ full height, drawing on the power of @possessive@ mind.
+
+@The_monster@ regards you with anger at your presumption in entering @possessive@ workshop - the Dungeon.
 
 %%%%
 Unarmed Combat player ghost
@@ -1479,6 +1605,8 @@ WARN:You feel cold.
 
 @The_monster@ wails.
 
+@The_monster@ ripples.
+
 @The_monster@ @wails@, "What do you have that I didn't have?"
 
 @The_monster@ says very slowly, "There's no hope."
@@ -1537,7 +1665,7 @@ _player_ghost_rare_
 # Hamlet
 @The_monster@ @wails@, "To die, to sleep, no more."
 
-@The_monster@ whispers, "Everlasting silence awaits you."
+@The_monster@ whispers, "Everlasting silence awaits you..."
 
 @The_monster@ whispers, "Death doesn't hurt. What you feel is life."
 
@@ -1653,6 +1781,8 @@ adj_flammable
 flammable
 
 inflammable
+
+feeling hot
 %%%%
 _Azrael_common_
 
@@ -2007,7 +2137,7 @@ screams
 
 yells
 
-burps
+grits
 %%%%
 _crazy_yiuf_sentence_
 
@@ -2343,7 +2473,7 @@ w:1
 @The_monster@ presages, "An acid flood will etch off all the scum!"
 
 w:2
-@The_monster@ says, "There is a problem solver and @possessive@ name is Dissolver!"
+@The_monster@ says, "There is a problem's solution. Dissolution..."
 ## END Dissolution ##
 %%%%
 ############ DONALD ### An adventurer hating competition
@@ -2379,7 +2509,7 @@ VISUAL:@The_monster@ kicks a rock and scowls.
 
 @The_monster@ says, "I asked for directions to the rune, but they belched at me."
 
-@The_monster@ says, "I prefer the Lair of Beasts, to be honest. At least animals don't complain."
+@The_monster@ says, "I prefer the Lair of the Beasts, to be honest. At least animals don't complain."
 
 @The_monster@ says, "I hate complainers so much."
 %%%%
@@ -2387,6 +2517,8 @@ Elven Halls Donald
 
 w:50
 @_generic_Donald_@
+
+@The_monster@ says, "They're so pretty, I think it must be a glamour."
 
 @The_monster@ says, "This place goes on forever. I hate that."
 
@@ -2407,8 +2539,6 @@ w:50
 @The_monster@ says, "I don't get the difference between high elves and deep elves."
 
 @The_monster@ says, "What sort of sludge, anyway?"
-
-@The_monster@ says, "What a garish colour scheme."
 
 @The_monster@ says, "None of these elves know how to fight. I hate that."
 %%%%
@@ -2448,7 +2578,7 @@ Shoals Donald
 w:50
 @_generic_Donald_@
 
-@The_monster@ says, "Tides? I hate tides!"
+@The_monster@ says, "Tides? I despise tides. No, wait, I hate tides!"
 
 @The_monster@ says, "I like turtle soup. I hate turtles."
 
@@ -2495,7 +2625,7 @@ w:50
 
 @The_monster@ says, "I forgot to wear corrosion-proof armour. Damn, I hate that!"
 
-@The_monster@ says, "Those eyeballs are creepy."
+@The_monster@ says, "Those eyeballs look tasty."
 
 @The_monster@ says, "Where's all the loot?"
 
@@ -2503,7 +2633,7 @@ w:50
 
 @The_monster@ says, "I feel like a jelly sandwich, now."
 
-@The_monster@ says, "This place is the pits."
+@The_monster@ says, "This place is the Pits."
 
 @The_monster@ says, "I hate the colour green."
 
@@ -2550,7 +2680,7 @@ w:50
 
 @The_monster@ says, "I'd like to make these snakes into gloves, but I hate gloves."
 
-@The_monster@ says, "This place is the pits."
+@The_monster@ says, "This place is the Pits."
 
 @The_monster@ says, "What do I need a naga barding for?"
 
@@ -2681,7 +2811,7 @@ w:50
 
 @The_monster@ says, "Have you seen a sarcophagus full of treasure around? Me neither."
 
-@The_monster@ says, "I just hope the loot isn't guarded by liches. I hate liches."
+@The_monster@ says, "I just hope the loot is guarded by liches. I love liches."
 
 @The_monster@ says, "The mummy wasn't that great."
 
@@ -2736,6 +2866,8 @@ w:50
 
 @The_monster@ says, "Didn't you like your horns?"
 
+@The_monster@ says, "Don't you hate it when everyone gets mad at you?"
+
 @The_monster@ says, "Damn, I left my potions of berserk rage outside."
 
 @The_monster@ says, "If I give you twenty gold pieces, can you get rid of this nasty case of scales I've got?"
@@ -2747,7 +2879,7 @@ w:50
 
 @The_monster@ says, "What's the point of being chivalric if nobody's going to be chivalric back?"
 
-@The_monster@ says, "I opened the door for a goblin; he punched me in the face. I hate chivalry."
+@The_monster@ says, "I open the door for a goblin; he punches me in the face. I hate chivalry."
 
 @The_monster@ says, "I think I'll have a nap."
 
@@ -2784,7 +2916,7 @@ w:50
 
 @The_monster@ says, "I'm hungry. Can you summon some snacks?"
 
-@The_monster@ says, "Yuck, you smell of miasma."
+@The_monster@ says, "Yuck, you smell of miasma!"
 %%%%
 Yredelemnul Donald
 
@@ -2807,9 +2939,12 @@ w:50
 
 @The_monster@ says, "A flaming corpse just burned my scrolls. I hate that."
 
-@The_monster@ says, "Zombies? Skeletons? Don't you get bored without any real company?"
+w:2
+@The_monster@ says, "Bone dragons? Death cobs? Does your god just put random words together and see what pops into existence?"
 
 @The_monster@ says, "Maybe you can tell me! What exactly is a 'death cob'?"
+
+@The_monster@ says, "Zombies? Skeletons? Don't you get bored without any real company?" 
 %%%%
 Okawaru Donald
 
@@ -2823,6 +2958,8 @@ w:50
 @The_monster@ says, "Oh, hey! I could use a new animal skin. Have you got any spares?"
 
 @The_monster@ says, "Nice kit."
+
+@The_monster@ says, "Can I have your spare potions?"
 
 VISUAL:@The_monster@ yawns.
 
@@ -2881,6 +3018,8 @@ w:50
 @The_monster@ says, "I hate books."
 
 @The_monster@ says, "Surely there's a limit to the number of books you can carry. Right?"
+
+@The_monster@ says, "It's good how you can learn magic as if by magic."
 
 @The_monster@ says, "I hate spells."
 
@@ -2945,6 +3084,8 @@ w:50
 @The_monster@ says, "You need to come to terms with your gambling problem, mate."
 
 @The_monster@ says, "How about a game of 52 card pickup?"
+
+@The_monster@ laughs, "An explosive gambit... I hate that."
 %%%%
 Elyvilon Donald
 
@@ -3290,6 +3431,8 @@ VISUAL:@The_monster@ shakes with grief.
 @The_monster@ says, "Her death will not be in vain!"
 
 @The_monster@ says, "How can I live without her?"
+
+@The_monster@ breathes, "And she was my only..." 
 %%%%
 twin_banished Dowan
 
@@ -3327,7 +3470,9 @@ VISUAL:@The_monster@ throws and catches a handful of magical flame, then smirks.
 
 VISUAL:@The_monster@'s robes are whipped around by a magical breeze.
 
-@The_monster@ goes cross-eyed from fumbling a word in a spell.
+VISUAL:@The_monster@'s feet meld with the ground, briefly.
+
+VISUAL:@The_monster@ generates a fountain of clear water, and laughs cruelly.
 
 @The_monster@ whispers @to_foe@, "It won't be long now."
 
@@ -3343,9 +3488,11 @@ _Dowan_Duvessa_dies_
 
 @The_monster@ screams, "No! No!"
 
-@The_monster@ seems overcome with grief, but rights @reflexive@ soon after.
+@The_monster@ seems overcome with grief, but rights @reflexive@ reflexively soon after.
 
 @The_monster@ screams, "No! Oh no!"
+
+@The_monster@'s eyes darken. "You have made a black mistake."
 %%%%
 _Dowan_Duvessa_dies_invisible_
 
@@ -3495,7 +3642,7 @@ VISUAL:@The_monster@ gestures @at_foe@ with @possessive@ flail.
 
 @The_monster@ says, "You wouldn't believe how much I paid for this flail."
 
-@The_monster@ asks @foe,@ "Have you met my brother?"
+@The_monster@ asks @foe,@ "Have you met my wondrous brother?"
 
 @The_monster@ says @to_foe@, "I might not be good at magic, but I can still kill you!"
 
@@ -3555,7 +3702,7 @@ VISUAL:@The_monster@ looks angry.
 %%%%
 _Erica_rare_
 
-@The_monster@ screams @at_foe@, "Hurry, death awaits!"
+@The_monster@ screams @at_foe@, "Hurry, death AWAITS you!"
 
 @The_monster@ screams @at_foe@, "I'll never tell where it is!"
 
@@ -3636,7 +3783,7 @@ VISUAL:@The_monster@ twirls @possessive@ moustache.
 # doesn't really work if there are no summons nearby
 #VISUAL:@The_monster@ strokes @possessive@ familiar.
 
-SPELL:@The_monster@ calls on the powers of darkness!
+SPELL:@The_monster@ calls on the powers of shadow!
 
 @The_monster@ brags, "I can call spirits from the vasty deep."
 ## END Eustachio ##
@@ -3666,6 +3813,9 @@ ENCHANT:@The_monster@ mutters a nigh-unspeakable word.
 @The_monster@ says, "I value strength and power. I see none of this in you." @player_only@
 
 @The_monster@ says, "I speak the language of demons!"
+
+@The_monster@ howls an indescribable curse.
+VISUAL WARN: You feel fear.
 
 @The_monster@ says, "I have seen worlds and universes beyond all imagining."
 %%%%
@@ -3869,6 +4019,12 @@ VISUAL:@The_monster@ grins, showing sharp teeth.
 
 @The_monster@ says, "FISH!"
 
+@The_monster@ says, "Wait up."
+
+@The_monster@ says, "Just stop there for a second..."
+
+@The_monster@ says, "Don't move a muscle."
+
 @The_monster@ says, "Tell me all your secrets, or I'll kill you."
 %%%%
 _Grinder_rare_
@@ -3879,7 +4035,7 @@ _Grinder_rare_
 
 @The_monster@ says, "My boss said I was rubbish. His entrails said otherwise."
 
-@The_monster@ says, "At least @my_God@ appreciates what I do."
+@The_monster@ says, "At least @my_God@ appreciates what I'm doing."
 
 VISUAL:@The_monster@ rolls @possessive@ eyes.
 %%%%
@@ -3928,7 +4084,7 @@ VISUAL:@The_monster@ looks nervous.
 
 @The_monster@ screams @at_foe@, "DIE! Now!"
 
-@The_monster@ says @to_foe@, "Only a few hits and it's over."
+@The_monster@ says @to_foe@, "I'm in a hurry."
 
 @The_monster@ sighs, "I don't have time for this!"
 
@@ -4574,6 +4730,82 @@ __NONE
 w:5
 @The_monster@ sings off-key, "You got some money for me?"
 %%%%
+############ MENKAURE ### A mummy whose rest you've disturbed
+Menkaure
+
+@_Menkaure_common_@
+
+w:2
+@_Menkaure_rare_@
+%%%%
+_Menkaure_common_
+
+VISUAL:@The_monster@'s bandages flutter.
+
+@The_monster@ @Menkaure_verb@ in an indecipherable tongue.
+
+@The_monster@ @wails@, "Why can't you leave me to my rest?"
+
+@The_monster giggles, "These cerements are ticklish..."
+
+@The_monster rustles, @menkaure_verb@, "Let me perform the rites..." 
+
+@The_monster breathes soot at you.
+
+VISUAL SPELL: The_monster blazes with dark energy!
+VISUAL WARN: You feel utter despair.
+
+VISUAL SPELL: The_monster @Menkaure_verb@ a few words.
+VISUAL WARN: You feel lassitude.
+
+VISUAL SPELL: @The_monster@ @Menkaure_verb@ dryly.
+VISUAL ENCHANT: @The_monster@ glows. 
+
+@The_monster@ @Menkaure_verb@, "It doesn't hurt if you pull your brain out of your nose yourself."
+
+VISUAL: @The_monster@ grins. 
+
+VISUAL: @The_monster@ strides towards you, then pauses, indecisive.
+%%%%
+_Menkaure_rare_
+
+@The_monster@ informs you, "There isn't any cookies on this side."
+
+VISUAL: @The_monster@ dances in synchronized motion with an invisible, intangible group of backing mummies.
+
+@Possessive@ ankle releases a plume of dust as @pronoun@ confides, "I'm not really a mummy, you know."
+
+VISUAL:@The_monster@ forgets how to to speak, silenced by the ages.
+
+VISUAL:@The_monster@ gestures ominously @at_foe@.
+
+@The_monster@ shouts @at_foe@, "You disturbed my rest! Die!"
+
+@The_monster@ @Menkaure_verb@ @to_foe@, "From dust you came, to dust you will return."
+
+@The_monster@ shouts @at_foe@, "The sands of time shall wipe you from history!"
+
+@The_monster@ shouts @at_foe@, "The curse of the Pharaohs be upon you!"
+
+VISUAL:@The_monster@ draws the symbol "Udjat" in the dust.
+%%%%
+Menkaure_verb
+
+hums
+
+murmurs
+
+softly says
+
+sighs
+
+mumbles
+
+rustles
+
+whispers
+## END Menkaure ##
+%%%%
 ############ MENNAS ### A silent Angel.
 Mennas
 
@@ -4587,40 +4819,10 @@ VISUAL:@The_monster@ is caught in a moment of prayer.
 %%%%
 silenced Mennas
 
+VISUAL:@The_monster@ gestures frantically.
+
+A booming voice calls from the heavens, "You cannot keep ME silent!"
 @Mennas@
-%%%%
-############ MENKAURE ### A mummy whose rest you've disturbed
-Menkaure
-
-@_Menkaure_common_@
-
-w:2
-@_Menkaure_rare_@
-%%%%
-_Menkaure_common_
-
-VISUAL:@The_monster@'s bandages flutter.
-
-@The_monster@ whispers in an indecipherable tongue.
-
-@The_monster@ @wails@, "Why can't you leave me to my rest?"
-%%%%
-_Menkaure_rare_
-
-VISUAL:@The_monster@ forgets how to to speak, silenced by the ages.
-
-VISUAL:@The_monster@ gestures ominously @at_foe@.
-
-@The_monster@ shouts @at_foe@, "You disturbed my rest! Die!"
-
-@The_monster@ says @to_foe@, "From dust you came, to dust you will return."
-
-@The_monster@ shouts @at_foe@, "The sands of time shall wipe you from history!"
-
-@The_monster@ shouts @at_foe@, "The curse of the Pharaohs be upon you!"
-
-VISUAL:@The_monster@ draws the symbol "Udjat" in the dust.
-## END Menkaure ##
 %%%%
 ############ MURRAY ### A disembodied skull.
 Murray
@@ -4698,6 +4900,8 @@ _Nellie_common_
 VISUAL:@The_monster@ stomps the ground.
 
 VISUAL:@The_monster@ stares at you suspiciously.
+
+VISUAL: @The_monster@ flaps @possessive@ ears in an attempt at flight.
 %%%%
 _Nellie_rare_
 
@@ -4721,7 +4925,7 @@ _Nergalle_common_
 
 VISUAL:@The_monster@ grimaces horribly.
 
-@The_monster@ mutters something to @reflexive@.
+@The_monster@ mutters something.
 
 @The_monster@ asks @foe,@ "There's a tasty morsel, hm?"
 %%%%
@@ -5042,10 +5246,22 @@ Psyche
 
 @_Psyche_common_@
 
-w:5
+w:7
+
+@_Psyche_medium_@
+
+w:3
 @_Psyche_rare_@
 %%%%
-_Psyche_common_
+_psyche_common_
+
+@The_monster@ laughs secretively.
+%%%%
+_Psyche_medium_
+
+VISUAL:@The_monster@ glows with a rainbow of weird force.
+
+VISUAL:@The_monster@ toys with @possessive@ hair.
 
 @The_monster@ giggles crazily.
 
@@ -5113,7 +5329,7 @@ VISUAL:@The_monster@ looks around nervously.
 %%%%
 _Purgy_rare_
 
-VISUAL:@The_monster@ grits @possessive@ teeth.
+VISUAL:@The_monster@ clenches @possessive@ teeth.
 
 VISUAL:@The_monster@ clenches @possessive@ claws.
 
@@ -5184,6 +5400,7 @@ __NONE
 
 @The_monster@ says, "I keep my friends close, but my enemies closer."
 
+@The_monster@ says, "Please, won't you take my hand."
 w:5
 @The_monster@ says @to_foe@, "Don't just stand there! You can move, can't you?"
 ## END Roxanne ##
@@ -5232,7 +5449,7 @@ w:7
 
 @The_monster@ says @to_foe@, "Down here, you're an orc or you're nobody."
 
-@The_monster@ says @to_foe@, "In the orcish mines, orcs kill the likes of you."
+@The_monster@ says @to_foe@, "In the orcish mines, orcs kill the likes of YOU!"
 %%%%
 Saint Roka generic
 
@@ -5260,7 +5477,11 @@ w:2
 %%%%
 Saint Roka rival
 
+@The_monster@ shouts @at_foe@, "You dare challenge my right as the Messiah?"
+
 @The_monster@ shouts @at_foe@, "There can only be one messiah: ME!"
+
+@The_monster@ despairs, @at_foe@, "False prophets abound here!"
 
 @The_monster@ shouts, "Orcs, take notice: this deceiver is a mere Hill Orc!"
 %%%%
@@ -5284,16 +5505,24 @@ Sigmund
 
 @_Sigmund_common_@
 
-w:4
+w:2
 @_Sigmund_rare_@
 %%%%
 _Sigmund_common_
 
 w:20
-@The_monster@ laughs crazily.
+@The_monster@ laughs darkly.
 
-VISUAL:@The_monster@ grinds @possessive@ teeth.
+VISUAL: @The_monster@ looks at you with fury.
 
+@The_monster@ flickers, as though insubstantial.
+
+@The_monster@ says @to_foe@, "Your kind have come here before. I understand now why. You desire death..."
+
+@The_monster@ says @to_foe@, "Now you see me, now you don't..." 
+
+@The_monster@ giggles girlishly @at_foe@!
+ 
 @The_monster@ says @to_foe@, "Don't worry, I'll kill you fast."
 
 @The_monster@ says @to_foe@, "You will soon forget everything."
@@ -5306,25 +5535,50 @@ VISUAL:@The_monster@ grinds @possessive@ teeth.
 
 @The_monster@ screams @at_foe@, "Don't try to resist!"
 
+@The_monster@ giggles. "Time to reap what you sow."
+
 SPELL:@The_monster@ casts a spell.
 ENCHANT:@The_monster@'s eyes start glowing with a red light.
+
+SPELL:@The_monster@ calls forth an indictment against all sane reality.
+ENCHANT:@The_monster@'s form glitters.
+
+SPELL:@The_monster@ breathes a few words.
+ENCHANT:@The_monster@'s hands start flickering wildly.
 
 SPELL:@The_monster@ casts a spell.
 ENCHANT:@The_monster@ is suddenly surrounded by pale @spell_colour@ light.
 %%%%
 _Sigmund_rare_
 
+w:1
 VISUAL:@The_monster@ tries to bite @foe@.
+
+w:1
+VISUAL:@The_monster@ grinds @possessive@ teeth. @Possessive@ @sigmund_speech_nouns@ send tremors through the floor, unheard but felt.
+
+In the wake of @possessive@ scythe you hear the echo of oblivion.
 
 @The_monster@ asks @foe,@ "Do you like me?"
 
 @The_monster@ screams @at_foe@, "You will never... NEVER!!!"
 
-@The_monster@ screams @at_foe@, "I am the angel of Death!"
+@The_monster@ screams @at_foe@, "I am the angel of ZOT!!!"
+
+w:3
+VISUAL: Angered, @the_monster@ rams the haft of @possessive@ scythe on the dungeon floor.
 
 @The_monster@ screams @at_foe@, "Only death can liberate you!"
 
 @The_monster@ whispers @to_foe@, "You'll know eternity soon."
+
+VISUAL:@The_monster@ smiles chillingly.
+%%%%
+sigmund_speech_nouns
+
+howls
+
+laughing cries
 ## END Sigmund ##
 %%%%
 ############ SONJA ### female kobold assassin
@@ -5351,6 +5605,7 @@ _Sonja_rare_
 
 @The_monster@ shouts @at_foe@, "Hah! Missed me again!"
 
+w:1
 @The_monster@ says @to_foe@, "The Royal Ballet doesn't accept kobolds. That's why I went into killing people."
 
 @The_monster@ says @to_foe@, "If only old Madame Brzewit could see me now!"
@@ -5457,8 +5712,6 @@ _terpsichore_common_
 
 @The_monster@ asks, "Have you ever felt haunted by the need to dance?"
 
-@The_monster@ explains, "If I could tell you what I felt, there would be no point in dancing it..."
-
 @The_monster@ chuckles, "Your body is so clumsy! Shall I rid you of it?"
 
 @The_monster@ calls, "Will you, won't you, will you join the dance?"
@@ -5470,6 +5723,12 @@ _terpsichore_rare_
 @The_monster@ wistfully exclaims, "I've searched so long for a dance partner..."
 
 @The_monster@ pleads, "Your soul could dance with me forever!"
+
+@The_monster@ whispers, "Love my way..."
+
+@The_monster@ explains, "If I could tell you what I felt, there would be no point in dancing it..."
+
+@The_monster@ smiles, "If you only knew what your memories absorbed to me would do for us, love."
 %%%%
 Terpsichore killed
 
@@ -5600,6 +5859,8 @@ _Xtahua_rare_
 
 @The_monster@ rumbles @at_foe@, "YOU'RE BARELY A SNACK."
 
+@The_monster@ rumbles @at_foe@, "YOU LOOK DELICIOUS."
+
 @The_monster@ roars @at_foe@, "I HATE BEING BOTHERED!"
 
 @The_monster@ roars @at_foe@, "I HOPE YOU'RE TASTY!"
@@ -5610,6 +5871,8 @@ _Xtahua_rare_
 ##########################################
 # Specific non-unique monsters
 ##########################################
+
+################## Chaos spawn #############################
 %%%%
 # Chaos spawns shouldn't have coherent speech, since that would be too
 # orderly for beings of pure chaos.
@@ -5617,17 +5880,77 @@ chaos spawn
 
 VISUAL:@The_monster@ grows dozens of eye stalks in order to get a better look at @foe@.
 
-VISUAL:@The_monster@ splits into many small globs of multi-coloured light, then recombines.
+VISUAL:@The_monster@ splatters into many small globs of multi-coloured light, then recombines.
 
 VISUAL:@The_monster@ briefly grows a face disturbingly similar to your own.
 
 @The_monster@ ululates chillingly with @possessive@ many mouths.
 
 @The_monster@ gibbers incoherently in a cacophony of voices.
+
+################## Catoblepas ##############################
+%%%%
+catoblepas
+
+@The_monster@ roars fiercely, eyes lowered.
+
+@The_monster@ stomps with a crash on the ground.
+
+@The_monster@ smashes @possessive@ foot into the earth.
+
+@The_monster@ rams the ground with @possessive@ head heavily.
+
+@The_monster@ carves a crescent into the ground, and seems achingly sad.
+
+@The_monster@ claws at the earth roughly with @possessive@ hoof, venting @possessive@ fury.
+
+@The_monster@ breathes in.
+
+VISUAL: @The_monster@ stares balefully at the ground. 
+
+@The_monster@ breathes heavily, in and out, plumes of crystalline dust staining its snout.
+
+@The_monster@ snorts, and paws the ground, preparing.
+
+@The_monster@ lumbers forward and raises @possessive@ head, exhaling.
+
+VISUAL: @The_monster@ basks in @possessive@ own plume of deadly dust.
+
+@The_monster@ snuffles in challenge.
+
+@The_monster@ stomps on the ground.
+WARN: You hear tremors.
+
+@The_monster@ closes @possessive@ eyes.
+WARN: You feel like you are being watched from above.
+
+@The_monster@ bares @possessive@ teeth, and the ground turns slowly to stone.
+
+@The_monster@ stomps toward you, implacably.
+
+@The_monster@ prepares to charge at you.
+
+@The_monster@ wanders slowly into a prime firing position.
+
+w:1
+@The_monster@ readies @possessive@ vast lungs of living stone to calcify you where you stand.
+
+w:1
+@The_monster@ sculpts the ground into a sphere of stone suspended by the thinnest support in the sky.
+
+w:1
+@The_monster@ breathes on the earth until a ridged crescent appears, raises @possessive@ hoof in rage, then stops.
+
+w_1
+Tears glisten in @possessive@ eyes as @pronoun@ regards a sphere of stone @pronoun@ breathed into being on the floor.
+
+################## Crystal golem ###########################
 %%%%
 crystal golem
 
-VISUAL:@The_monster@ glitters in the dim dungeon light.
+VISUAL:@The_monster@ glitters, brittle, in the dim dungeon light. Its facets promise deadly secrets.
+
+################## Death cob ###############################
 %%%%
 death cob
 
@@ -5636,6 +5959,8 @@ The death cob makes a corny joke.
 
 w:1999
 __NONE
+
+################## Death yak ###############################
 %%%%
 death yak
 
@@ -5644,22 +5969,40 @@ death yak
 deep elf high priest
 
 @_high_priest_@
+
+################## Deep elf sorceror #######################
 %%%%
 deep elf sorcerer
 
 @_wizard_@
+
+################## #########################################
 %%%%
 default electric golem
 
 SOUND:@The_monster@ crackles and sizzles.
+
+################## #########################################
 %%%%
 default ice statue
 
-VISUAL:@The_monster@ glitters in the dim dungeon light.
+VISUAL:@The_monster@ glitters chillingly in the dim dungeon light.
+
+################## #########################################
 %%%%
 hell lord
 
 @_hell_lord_taunt_@
+
+################## #########################################
+%%%%
+butterfly
+
+VISUAL SPELL: The butterfly flaps @possessive@ wings in an oddly mesmeric pattern.
+
+VISUAL WARN: You feel entranced by its movement.
+
+################## Imps#####################################
 %%%%
 imp
 
@@ -5668,6 +6011,7 @@ w:1
 
 w:2
 @_hostile_imp_@
+
 %%%%
 iron imp
 
@@ -5676,15 +6020,35 @@ w:1
 
 w:2
 @_hostile_imp_@
+
 %%%%
-##################################
+shadow imp
+
+w:1
+@_imp_taunt_@
+
+w:2
+@_hostile_imp_@
+
+%%%%
+white imp
+
+w:1
+@_imp_taunt_@
+
+w:2
+@_hostile_imp_@
+
+################## Reaper ##################################
 # The reaper has come for you!
-##################################
+%%%%
 reaper
 
 @The_monster@ whispers, "Time's up, @foe_name@!"
 
 VISUAL:@The_monster@ beckons to @foe@.
+
+VISUAL:@The_monster@ smiles without lips.
 
 @The_monster@ shouts @at_foe@, "I have come for you, @foe_name@!"
 
@@ -5697,16 +6061,18 @@ VISUAL:@The_monster@ draws a finger across @possessive@ throat.
 @The_monster@ shouts @at_foe@, "You must die NOW!"
 
 @The_monster@ shouts @at_foe@, "Die, @foe_name@!"
+
+################## Killer bees #############################
 %%%%
 # Too many killer bees in the hive to have them give messages, unless
 # they're confused or fleeing.
 killer bee
 
 __NONE
-%%%%
-########################
+
+################## Killer Klown ############################
 # Welcome to the circus!
-########################
+%%%%
 Killer Klown
 
 @_Killer_Klown_common_@
@@ -5729,7 +6095,7 @@ VISUAL:@The_monster@ smiles at @foe@.
 
 VISUAL:@The_monster@ grins with merry abandon.
 
-VISUAL:@The_monster@ pulls ten torches out of @possessive@ hat and starts juggling.
+VISUAL:@The_monster@ pulls ten torches off @possessive@ hat and starts juggling.
 
 VISUAL:@The_monster@ sprays water @at_foe@.
 
@@ -5751,6 +6117,8 @@ VISUAL:@The_monster@ skips for a moment.
 
 @The_monster@ says, "Trust me, I'm a doctor."
 ## END Killer Klown ##
+
+################## Moth of wrath ###########################
 %%%%
 moth of wrath
 
@@ -5760,23 +6128,52 @@ VISUAL:@The_monster@ angrily waves @possessive@ antennae.
 # with it being a moth.
 default confused moth of wrath
 
+VISUAL:@The_monster@ salivates at the thought of eating you, but forgets you're only a short distance away.
+
+@The_monster@ scrapes its wings on the ground slowly, weirdly suspended on a wingtip.
+
 VISUAL:@The_monster@ flutters around in erratic circles.
+
+VISUAL:@The_monster@ collides with @possessive@ own huge wings.
+
+VISUAL:Dropping a few feet, @the_monster@ flutters unhappily.
+
+VISUAL SPELL: @The_monster@ flaps its wings at @foe@!
+
+VISUAL ENCHANT: @Foe@ looks confused.
+
+VISUAL:@The_monster@ slowly flaps @possessive@ antennae at @reflexive@.
+
+VISUAL:@The_monster@ stares wrathfully at the floor.
+
+VISUAL SPELL: @The_monster@ flicks @possessive@ antennae at the ground!
+
+VISUAL WARN: The ground rattles!
+
+VISUAL: @The_monster@ tries to bite you, but has no teeth.
+
+VISUAL: @The_monster@ forgets @pronoun@ is a moth of wrath and starts meditating mothfully.
+
+VISUAL ENCHANT: The Dungeon calms.
+
+################## Statues ##################
 %%%%
 default orange crystal statue
 
-VISUAL:@The_monster@ glitters in the dim dungeon light.
+VISUAL:@The_monster@ glitters topaz in the dim dungeon light.
+
 %%%%
-shadow imp
+default silver statue
 
-w:1
-@_imp_taunt_@
+VISUAL:@The_monster@ glitters argentine in the dim dungeon light.
 
-w:2
-@_hostile_imp_@
+################## Sheep ###################################
 %%%%
 sheep
 
 @The_monster@ "Baaaas" balefully.
+
+################## Silent spectre ##########################
 %%%%
 silenced silent spectre
 
@@ -5791,12 +6188,10 @@ VISUAL:@The_monster@ fades in and out of visibility.
 VISUAL:@The_monster@ flickers into the darkness.
 
 VISUAL:@The_monster@ grins at you slowly.
-%%%%
-default silver statue
 
-VISUAL:@The_monster@ glitters in the dim dungeon light.
-%%%%
+################## Tormentor ###############################
 # A cruel demon
+%%%%
 tormentor
 
 w:1
@@ -5850,26 +6245,23 @@ _tormentor_rare_
 
 @The_monster@ shouts @at_foe@, "I'll tear you apart!"
 ## END _tormentor_ ##
-%%%%
-white imp
 
-w:1
-@_imp_taunt_@
-
-w:2
-@_hostile_imp_@
+################## Wizard ##################################
 %%%%
 wizard
 
 @_wizard_@
+
+################## Yak #####################################
 %%%%
 yak
 
 @The_monster@ snorts and paws the @surface@.
+
 %%%%
-################################################
+########################################################################
 # Religious messaging
-################################################
+########################################################################
 good_god
 
 Zin
@@ -6405,7 +6797,7 @@ beogh_converted_orc_reaction_battle
 %%%%
 beogh_converted_orc_speech_battle
 
-@Pronoun@ shouts, "I'll follow you; let me live!"
+@Pronoun@ shouts, "I'll follow you! Let me live!"
 
 @Pronoun@ says, "You must be the Messiah, I see it now!"
 
@@ -6517,9 +6909,11 @@ VISUAL:@The_monster@'s flesh secretes a thick mucus.
 
 VISUAL:Hollow, blind eyes appear on the @monster@'s head.
 
+VISUAL:Suppurating sores blossom under the @monster@'s eyelids.
+
 @The_monster@ begs you to kill @pronoun@.
 
-VISUAL:@The_monster@ looks at @reflexive@ and cries without tears.
+VISUAL:@The_monster@ looks at @possessive@ body and cries without tears.
 
 # Pungent Stench
 @The_monster@ screams, "I am only a sick, bizarre, defaced creation."
