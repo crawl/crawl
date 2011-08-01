@@ -1339,7 +1339,7 @@ w:1
 VISUAL_SPELL:@The_monster@ produces a bizarre clockwork butterfly, ethereal and luminous, from @possessive@ pack, and hurls it at you - so perfect is its making that it comes to life and darts away before touching you.
 
 w:1
-@The_monster@ regards you luminously, comprehending your nature, and seems resigned. It shouts, "Do you know what I know, @foe@..."
+@The_monster@ regards you luminously, comprehending your nature, and seems resigned. @Pronoun@ shouts, "Do you know what I know, @foe@..."
 
 w:1
 @The_monster@ whispers, "I have found a way out of unlife even Necromancers could not discover."
@@ -5940,7 +5940,7 @@ Tears glisten in @possessive@ eyes as @pronoun@ regards a sphere of stone @prono
 %%%%
 crystal golem
 
-VISUAL:@The_monster@ glitters, brittle, in the dim dungeon light. Its facets promise deadly secrets.
+VISUAL:@The_monster@ glitters, brittle, in the dim dungeon light. @Possessive@ facets promise deadly secrets.
 
 ################## Death cob ###############################
 %%%%
