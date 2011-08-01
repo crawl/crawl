@@ -1977,7 +1977,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
             const int mons =
                 create_monster(
                     mgen_data(mon, BEH_FRIENDLY, &you,
-                              6, SPELL_SIMULACRUM,
+                              0, SPELL_SIMULACRUM,
                               you.pos(), MHITYOU,
                               MG_FORCE_BEH, god,
                               static_cast<monster_type>(monnum)));
@@ -1989,6 +1989,9 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
                 dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);
 
                 player_angers_monster(&menv[mons]);
+
+                monster* sim = &menv[mons];
+                sim->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
             }
         }
 
