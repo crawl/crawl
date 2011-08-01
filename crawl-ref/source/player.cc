@@ -222,16 +222,19 @@ static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
     return (true);
 }
 
-static bool _check_moveto_dangerous(const coord_def& p)
+static bool _check_moveto_dangerous(const coord_def& p, const std::string& msg,
+                                    bool cling = true)
 {
     if (you.can_swim() && feat_is_water(env.grid(p))
-        || you.airborne() || you.can_cling_to(p)
+        || you.airborne() || cling && you.can_cling_to(p)
         || !is_feat_dangerous(env.grid(p)))
     {
         return (true);
     }
 
-    if (you.species == SP_MERFOLK && feat_is_water(env.grid(p)))
+    if (msg != "")
+        mpr(msg.c_str());
+    else if (you.species == SP_MERFOLK && feat_is_water(env.grid(p)))
         mpr("You cannot swim in your current form.");
     else
         canned_msg(MSG_UNTHINKING_ACT);
@@ -240,17 +243,26 @@ static bool _check_moveto_dangerous(const coord_def& p)
 }
 
 static bool _check_moveto_terrain(const coord_def& p,
-                                  const std::string &move_verb)
+                                  const std::string &move_verb,
+                                  const std::string &msg)
 {
-    if (you.is_wall_clinging() && move_verb == "blink")
-        return (_check_moveto_dangerous(p));
+    if (you.is_wall_clinging()
+        && (move_verb == "blink" || move_verb == "passwall"))
+    {
+        return (_check_moveto_dangerous(p, msg, false));
+    }
 
     if (!need_expiration_warning() && need_expiration_warning(p))
     {
-        if (!_check_moveto_dangerous(p))
+        if (!_check_moveto_dangerous(p, msg))
             return false;
 
-        std::string prompt = "Are you sure you want to " + move_verb;
+        std::string prompt;
+
+        if (msg != "")
+            prompt = msg + " ";
+
+        prompt += "Are you sure you want to " + move_verb;
 
         if (you.ground_level())
             prompt += " into ";
@@ -270,12 +282,13 @@ static bool _check_moveto_terrain(const coord_def& p,
         }
     }
 
-    return _check_moveto_dangerous(p);
+    return _check_moveto_dangerous(p, msg);
 }
 
-bool check_moveto(const coord_def& p, const std::string &move_verb)
+bool check_moveto(const coord_def& p, const std::string &move_verb,
+                  const std::string &msg)
 {
-    return (_check_moveto_terrain(p, move_verb)
+    return (_check_moveto_terrain(p, move_verb, msg)
             && _check_moveto_cloud(p, move_verb)
             && _check_moveto_trap(p, move_verb));
 }

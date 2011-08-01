@@ -298,24 +298,23 @@ spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
         mpr("You sense an overwhelming volume of rock.");
     else if (feat_is_solid(grd(dest)))
         mpr("Something is blocking your path through the rock.");
-    else if (is_feat_dangerous(grd(dest), true))
-    {
-        if (grd(dest) == DNGN_DEEP_WATER)
-            mpr("You sense a large body of water on the other side of the rock.");
-        else if (grd(dest) == DNGN_LAVA)
-            mpr("You sense an intense heat on the other side of the rock.");
-        else
-            mprf(MSGCH_ERROR, "Unhandled dangerous feature: %s",
-                 feature_description(dest, false, DESC_PLAIN).c_str());
-    }
     else if (walls > maxrange)
         mpr("This rock feels extremely deep.");
     else if (walls > range)
         mpr("You fail to penetrate the rock.");
     else
     {
-        // Passwall delay is reduced, and the delay cannot be interrupted.
-        start_delay(DELAY_PASSWALL, 1 + walls, dest.x, dest.y);
+        std::string msg;
+        if (grd(dest) == DNGN_DEEP_WATER)
+            msg = "You sense a large body of water on the other side of the rock.";
+        else if (grd(dest) == DNGN_LAVA)
+            msg = "You sense an intense heat on the other side of the rock.";
+
+        if (check_moveto(dest, "passwall", msg))
+        {
+            // Passwall delay is reduced, and the delay cannot be interrupted.
+            start_delay(DELAY_PASSWALL, 1 + walls, dest.x, dest.y);
+        }
     }
     return SPRET_SUCCESS;
 }
