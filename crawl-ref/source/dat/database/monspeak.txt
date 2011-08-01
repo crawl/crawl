@@ -2944,7 +2944,7 @@ w:2
 
 @The_monster@ says, "Maybe you can tell me! What exactly is a 'death cob'?"
 
-@The_monster@ says, "Zombies? Skeletons? Don't you get bored without any real company?" 
+@The_monster@ says, "Zombies? Skeletons? Don't you get bored without any real company?"
 %%%%
 Okawaru Donald
 
@@ -3432,7 +3432,7 @@ VISUAL:@The_monster@ shakes with grief.
 
 @The_monster@ says, "How can I live without her?"
 
-@The_monster@ breathes, "And she was my only..." 
+@The_monster@ breathes, "And she was my only..."
 %%%%
 twin_banished Dowan
 
@@ -4748,7 +4748,7 @@ VISUAL:@The_monster@'s bandages flutter.
 
 @The_monster giggles, "These cerements are ticklish..."
 
-@The_monster rustles, @menkaure_verb@, "Let me perform the rites..." 
+@The_monster rustles, @menkaure_verb@, "Let me perform the rites..."
 
 @The_monster breathes soot at you.
 
@@ -4759,11 +4759,11 @@ VISUAL SPELL: The_monster @Menkaure_verb@ a few words.
 VISUAL WARN: You feel lassitude.
 
 VISUAL SPELL: @The_monster@ @Menkaure_verb@ dryly.
-VISUAL ENCHANT: @The_monster@ glows. 
+VISUAL ENCHANT: @The_monster@ glows.
 
 @The_monster@ @Menkaure_verb@, "It doesn't hurt if you pull your brain out of your nose yourself."
 
-VISUAL: @The_monster@ grins. 
+VISUAL: @The_monster@ grins.
 
 VISUAL: @The_monster@ strides towards you, then pauses, indecisive.
 %%%%
@@ -5519,10 +5519,10 @@ VISUAL: @The_monster@ looks at you with fury.
 
 @The_monster@ says @to_foe@, "Your kind have come here before. I understand now why. You desire death..."
 
-@The_monster@ says @to_foe@, "Now you see me, now you don't..." 
+@The_monster@ says @to_foe@, "Now you see me, now you don't..."
 
 @The_monster@ giggles girlishly @at_foe@!
- 
+
 @The_monster@ says @to_foe@, "Don't worry, I'll kill you fast."
 
 @The_monster@ says @to_foe@, "You will soon forget everything."
@@ -5906,7 +5906,7 @@ catoblepas
 
 @The_monster@ breathes in.
 
-VISUAL: @The_monster@ stares balefully at the ground. 
+VISUAL: @The_monster@ stares balefully at the ground.
 
 @The_monster@ breathes heavily, in and out, plumes of crystalline dust staining @possessive@ snout.
 
