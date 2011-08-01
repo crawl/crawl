@@ -410,7 +410,7 @@ ORIENT: float
 MONS:   kobold; dart ego:dispersal q:3
 MAP
 .............
-.xxxxxxxxx=x.
+.x=xxxxxxx=x.
 .x.llllll{.l@
 .x.llllll>.l.
 .x.xxxxxxx=x.
