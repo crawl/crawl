@@ -2124,7 +2124,7 @@ std::string get_item_description(const item_def &item, bool verbose,
     }
 
     if (is_unrandom_artefact(item)
-        && strlen(unrandart_descrip(2, item)) != 0)
+        && unrandart_descrip(2, item)[0] != '\0')
     {
         description << "\n\n";
         description << unrandart_descrip(2, item);
