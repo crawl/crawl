@@ -749,7 +749,7 @@ void train_skills(int exp, const int cost, const bool simu)
     if (crawl_state.game_is_sprint())
         magic_gain = sprint_modify_exp_inverse(magic_gain);
 
-    if (magic_gain)
+    if (magic_gain && !simu)
         did_god_conduct(DID_SPELL_PRACTISE, magic_gain);
 }
 
