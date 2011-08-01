@@ -4748,7 +4748,7 @@ VISUAL:@The_monster@'s bandages flutter.
 
 @The_monster@ giggles, "These cerements are ticklish..."
 
-@The_monster@ rustles, @menkaure_verb@, "Let me perform the rites..."
+@The_monster@ @Menkaure_verb@, "Let me perform the rites..."
 
 @The_monster@ breathes soot at you.
 
