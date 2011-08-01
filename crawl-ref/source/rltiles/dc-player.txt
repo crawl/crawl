@@ -50,6 +50,9 @@ troll_m
 octopode1 OCTOPODE
 octopode2
 octopode3
+octopode4
+octopode5
+octopode6
 
 # draconians
 draconian_f DRACONIAN DRACONIAN_FIRST
