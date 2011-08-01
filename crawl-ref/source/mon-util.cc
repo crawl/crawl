@@ -1455,7 +1455,7 @@ bool mons_immune_magic(const monster* mon)
 std::string mons_resist_string(const monster* mon, int res_margin)
 {
     if (mons_immune_magic(mon))
-        return " is unaffected";
+        return " is unaffected.";
     else
         return resist_margin_phrase(res_margin);
 }
