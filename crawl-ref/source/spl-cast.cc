@@ -427,8 +427,7 @@ int spell_fail(spell_type spell)
         chance2 = 100;
 
     return (chance2);
-}                               // end spell_fail()
-
+}
 
 int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
                      bool cap_power, bool rod)
@@ -547,7 +546,7 @@ int spell_enhancement(unsigned int typeflags)
         enhanced = -3;
 
     return (enhanced);
-}                               // end spell_enhancement()
+}
 
 void inspect_spells()
 {
@@ -773,7 +772,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
     alert_nearby_monsters();
 
     return (true);
-}                               // end cast_a_spell()
+}
 
 static void _spellcasting_side_effects(spell_type spell, int pow, god_type god)
 {

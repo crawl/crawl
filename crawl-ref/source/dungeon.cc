@@ -2241,7 +2241,7 @@ static void _prepare_water(int level_number)
             }
         }
     }
-}                               // end prepare_water()
+}
 
 static void _pan_level(int level_number)
 {
@@ -3859,7 +3859,7 @@ static bool _build_vault_impl(int level_number, const map_def *vault,
                                  + place.map.name);
 
     return (true);
-}                               // end build_vaults()
+}
 
 static void _build_postvault_level(vault_placement &place)
 {
@@ -5163,7 +5163,7 @@ void place_spec_shop(int level_number,
     grd(where) = DNGN_ENTER_SHOP;
 
     activate_notes(note_status);
-}                               // end place_spec_shop()
+}
 
 static object_class_type _item_in_shop(shop_type shop_type)
 {
@@ -5207,7 +5207,7 @@ static object_class_type _item_in_shop(shop_type shop_type)
     }
 
     return (OBJ_RANDOM);
-}                               // end item_in_shop()
+}
 
 // Keep seeds away from the borders so we don't end up with a
 // straight wall.

@@ -3374,7 +3374,7 @@ void get_system_environment(void)
     // The user's home directory (used to look for ~/.crawlrc file)
     SysEnv.home = check_string(getenv("HOME"));
 #endif
-}                               // end get_system_environment()
+}
 
 static void set_crawl_base_dir(const char *arg)
 {

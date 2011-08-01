@@ -641,7 +641,7 @@ static void _sdump_location(dump_params &par)
 
     par.text += ".";
     par.text += "\n";
-}                               // end dump_location()
+}
 
 static void _sdump_religion(dump_params &par)
 {
@@ -877,7 +877,7 @@ static std::string spell_type_shortname(int spell_class, bool slash)
     ret += spelltype_short_name(spell_class);
 
     return (ret);
-}                               // end spell_type_shortname()
+}
 
 //---------------------------------------------------------------
 //
@@ -994,8 +994,7 @@ static void _sdump_spells(dump_params &par)
         }
         text += "\n\n";
     }
-}                               // end dump_spells()
-
+}
 
 static void _sdump_kills(dump_params &par)
 {
@@ -1145,7 +1144,7 @@ static void _sdump_mutations(dump_params &par)
         text += describe_mutations();
         text += "\n\n";
     }
-}                               // end dump_mutations()
+}
 
 // ========================================================================
 //      Public Functions

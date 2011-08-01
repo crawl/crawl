@@ -1965,7 +1965,7 @@ unsigned int item_value(item_def item, bool ident)
     valued *= item.quantity;
 
     return (valued);
-}                               // end item_value()
+}
 
 bool is_worthless_consumable(const item_def &item)
 {
