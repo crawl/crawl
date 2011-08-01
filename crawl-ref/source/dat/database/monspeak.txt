@@ -303,7 +303,7 @@ w:20
 w:15
 __YOU_RESIST
 
-ENCHANT:@The_monster@ becomes transparent for a moment.
+ENCHANT:@The_monster@ shimmers violently.
 
 ENCHANT:@The_monster@ glows brightly for a moment.
 
@@ -316,7 +316,7 @@ ENCHANT:@The_monster@ becomes larger for a moment.
 
 VISUAL SPELL:@The_monster@'s eyes start to glow.
 
-VISUAL SPELL:@The_monster@ tries to paralyse @foe@ with @possessive@ gaze.
+VISUAL SPELL:@The_monster@ tries to enchant @foe@ with @possessive@ gaze.
 
 @The_monster@ shouts @at_foe@, "You can't withstand my power!"
 
@@ -881,15 +881,15 @@ _fleeing_humanoid_rare_
 
 @The_monster@ @blubbers@, "@Mommeee@!"
 
-@The_monster@ @begs@ @to_foe@, "Please! I have an infinite number of identical children..."
+@The_monster@ @begs@ @to_foe@, "Please! I have a lot of children!"
 
 VISUAL:@The_monster@ looks really @rattled@.
 
-@The_monster@ weeps quietly, if able.
+@The_monster@ weeps quietly.
 
 @The_monster@ looks in an agony of indecision for an escape route...
 
-@The_monster@ hums to @reflexive@ desperately, trying to calm.
+@The_monster@ hums to @reflexive@ desperately, trying to keep calm.
 
 @The_monster attempts to regain @possessive@ composure.
 
@@ -4746,16 +4746,16 @@ VISUAL:@The_monster@'s bandages flutter.
 
 @The_monster@ @wails@, "Why can't you leave me to my rest?"
 
-@The_monster giggles, "These cerements are ticklish..."
+@The_monster@ giggles, "These cerements are ticklish..."
 
-@The_monster rustles, @menkaure_verb@, "Let me perform the rites..."
+@The_monster@ rustles, @menkaure_verb@, "Let me perform the rites..."
 
-@The_monster breathes soot at you.
+@The_monster@ breathes soot at you.
 
-VISUAL SPELL: The_monster blazes with dark energy!
+VISUAL SPELL: @The_monster@ blazes with dark energy!
 VISUAL WARN: You feel utter despair.
 
-VISUAL SPELL: The_monster @Menkaure_verb@ a few words.
+VISUAL SPELL: @The_monster@ @Menkaure_verb@ a few words.
 VISUAL WARN: You feel lassitude.
 
 VISUAL SPELL: @The_monster@ @Menkaure_verb@ dryly.
@@ -4768,10 +4768,6 @@ VISUAL: @The_monster@ grins.
 VISUAL: @The_monster@ strides towards you, then pauses, indecisive.
 %%%%
 _Menkaure_rare_
-
-@The_monster@ informs you, "There isn't any cookies on this side."
-
-VISUAL: @The_monster@ dances in synchronized motion with an invisible, intangible group of backing mummies.
 
 @Possessive@ ankle releases a plume of dust as @pronoun@ confides, "I'm not really a mummy, you know."
 
@@ -5521,8 +5517,6 @@ VISUAL: @The_monster@ looks at you with fury.
 
 @The_monster@ says @to_foe@, "Now you see me, now you don't..."
 
-@The_monster@ giggles girlishly @at_foe@!
-
 @The_monster@ says @to_foe@, "Don't worry, I'll kill you fast."
 
 @The_monster@ says @to_foe@, "You will soon forget everything."
@@ -5970,7 +5964,7 @@ deep elf high priest
 
 @_high_priest_@
 
-################## Deep elf sorceror #######################
+################## Deep elf sorcerer #######################
 %%%%
 deep elf sorcerer
 
@@ -5999,7 +5993,6 @@ hell lord
 butterfly
 
 VISUAL SPELL: The butterfly flaps @possessive@ wings in an oddly mesmeric pattern.
-
 VISUAL WARN: You feel entranced by @possessive@ movement.
 
 ################## Imps#####################################
