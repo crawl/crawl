@@ -1208,7 +1208,7 @@ static bool _fire_validate_item(int slot, std::string &err)
             || you.inv[slot].base_type == OBJ_STAVES)
         && you.inv[slot].cursed())
     {
-        err = "That weapon is stuck to your hand!";
+        err = "That weapon is stuck to your " + your_hand(false) + "!";
         return (false);
     }
     else if (wearing_slot(slot))
