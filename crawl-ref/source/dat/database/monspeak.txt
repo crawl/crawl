@@ -1336,7 +1336,7 @@ w:1
 @The_monster@ whirls like a shadow given life, stepping faster than you can keep track, before standing precisely still, watching, waiting for your next assault.
 
 w:1
-VISUAL_SPELL: @The_monster@ produces a bizarre clockwork butterfly, ethereal and luminous, from @possessive@ pack, and hurls it at you - so perfect is @possessive@ making that it comes to life and darts away before touching you.
+VISUAL_SPELL: @The_monster@ produces a bizarre clockwork butterfly, ethereal and luminous, from @possessive@ pack, and hurls it at you - so perfect is its making that it comes to life and darts away before touching you.
 
 w:1
 @The_monster@ regards you luminously, comprehending your nature, and seems resigned. It shouts, "Do you know what I know, @foe@..."
@@ -5908,7 +5908,7 @@ catoblepas
 
 VISUAL: @The_monster@ stares balefully at the ground. 
 
-@The_monster@ breathes heavily, in and out, plumes of crystalline dust staining its snout.
+@The_monster@ breathes heavily, in and out, plumes of crystalline dust staining @possessive@ snout.
 
 @The_monster@ snorts, and paws the ground, preparing.
 
@@ -6000,7 +6000,7 @@ butterfly
 
 VISUAL SPELL: The butterfly flaps @possessive@ wings in an oddly mesmeric pattern.
 
-VISUAL WARN: You feel entranced by its movement.
+VISUAL WARN: You feel entranced by @possessive@ movement.
 
 ################## Imps#####################################
 %%%%
@@ -6130,7 +6130,7 @@ default confused moth of wrath
 
 VISUAL:@The_monster@ salivates at the thought of eating you, but forgets you're only a short distance away.
 
-@The_monster@ scrapes its wings on the ground slowly, weirdly suspended on a wingtip.
+@The_monster@ scrapes @possessive@ wings on the ground slowly, weirdly suspended on a wingtip.
 
 VISUAL:@The_monster@ flutters around in erratic circles.
 
@@ -6138,7 +6138,7 @@ VISUAL:@The_monster@ collides with @possessive@ own huge wings.
 
 VISUAL:Dropping a few feet, @the_monster@ flutters unhappily.
 
-VISUAL SPELL: @The_monster@ flaps its wings at @foe@!
+VISUAL SPELL: @The_monster@ flaps @possessive@ wings at @foe@!
 
 VISUAL ENCHANT: @Foe@ looks confused.
 
