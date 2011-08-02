@@ -5306,7 +5306,7 @@ void player::init()
     deaths = 0;
     xray_vision = false;
 
-    auto_training = true;
+    auto_training = !(Options.default_manual_training);
     skills.init(0);
     train.init(1);
     training.init(0);

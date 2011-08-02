@@ -68,6 +68,7 @@
 # random_pick = true
 # good_random = false
 # restart_after_game = true
+# default_manual_training = true
 
 ##### 2-  File System ###############################################
 #
