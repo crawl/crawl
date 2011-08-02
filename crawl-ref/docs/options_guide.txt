@@ -47,7 +47,7 @@ The contents of this text are:
 4-g     Travel and Exploration.
                 travel_delay, explore_delay, travel_avoid_terrain,
                 explore_greedy, explore_stop, explore_stop_pickup_ignore,
-                explore_improved, travel_key_stop,
+                explore_wall_bias, explore_improved, travel_key_stop,
                 tc_reachable, tc_dangerous, tc_disconnected,
                 tc_excluded, tc_exclude_circle,
                 runrest_ignore_message, runrest_stop_message,
@@ -881,6 +881,12 @@ explore_stop_pickup_ignore = <regex list>
 
         This options has no affect on items which were thrown by the
         player.
+
+explore_wall_bias = 0
+        Adjusts how much autoexplore favours attempting to discover room
+        perimeters and corners. At higher values, autoexplore will more
+        heavily favour visiting squares that are next to walls; at 0 it
+        will not favour them at all.
 
 explore_improved = false
         If set to true explore will attempt to reduce zig-zagging during
