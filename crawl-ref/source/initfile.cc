@@ -854,7 +854,7 @@ void game_options::reset_options()
     explore_item_greed     = 10;
     explore_greedy         = true;
 
-    explore_wall_bias      = 10;
+    explore_wall_bias      = 0;
     explore_improved       = false;
     travel_key_stop        = true;
 
