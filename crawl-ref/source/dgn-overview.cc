@@ -549,8 +549,13 @@ static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
         colour = "darkgrey";
         if (has_altar_been_seen)
             colour = "white";
-        if (you.penance[god])
+        // Good gods don't inflict penance unless they hate your god.
+        if (you.penance[god]
+            && (!is_good_god(god) || god_hates_your_god(god)))
             colour = (you.penance[god] > 10) ? "red" : "lightred";
+        // Indicate good gods that you've abandoned, though.
+        else if (you.penance[god])
+            colour = "magenta";
         else if (you.religion == god)
             colour = "yellow";
         else if (god_likes_your_god(god))
@@ -560,7 +565,7 @@ static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
             continue;
 
         if (is_unavailable_god(god))
-            colour = you.worshipped[god] ? "magenta" : "darkgrey";
+            colour = "darkgrey";
 
         snprintf(buffer, sizeof buffer, "<%s>%s</%s>",
                  colour, god_name(god, false).c_str(), colour);
