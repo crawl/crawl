@@ -15,7 +15,8 @@ The contents of this text are:
 0-d     Aliases and variables.
 1-  Starting Screen.
                 name, remember_name, weapon, wand, species, background,
-                random_pick, good_random, restart_after_game
+                random_pick, good_random, restart_after_game,
+                default_manual_training
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound
 3-  Lua files.
@@ -302,6 +303,10 @@ restart_after_game = true/false
         When a game ends, Crawl will return to the main menu if
         restart_after_game is set. This option is enabled by default
         for tiles builds and disabled by default for other builds.
+
+default_manual_training = false
+        When set to true, new characters will start with skill training
+        set to manual mode instead of automatic mode.
 
 2-  File System.
 ================

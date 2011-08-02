@@ -92,6 +92,7 @@ public:
 
     int         autopickup_on;
     int         default_friendly_pickup;
+    bool        default_manual_training;
 
     bool        show_newturn_mark;// Show underscore prefix in messages for new turn
     bool        show_gold_turns; // Show gold and turns in HUD.

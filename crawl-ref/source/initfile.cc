@@ -720,6 +720,7 @@ void game_options::reset_options()
 
     autopickup_on    = 1;
     default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
+    default_manual_training = false;
 
     show_newturn_mark = true;
 #ifdef EUCLIDEAN
@@ -2210,6 +2211,13 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             default_friendly_pickup = FRIENDLY_PICKUP_PLAYER;
         else if (field == "all")
             default_friendly_pickup = FRIENDLY_PICKUP_ALL;
+    }
+    else if (key == "default_manual_training")
+    {
+        if (_read_bool(field, true))
+            default_manual_training = true;
+        else
+            default_manual_training = false;
     }
 #ifndef DGAMELAUNCH
     else BOOL_OPTION(restart_after_game);
