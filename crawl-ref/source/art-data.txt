@@ -1061,7 +1061,6 @@ TILE:    urand_air
 EV:      3
 STEALTH: 50
 BOOL:    elec, lev
-DESC:    A sky-blue amulet.
 
 NAME:    ring of Shadows
 APPEAR:  black ring
@@ -1133,7 +1132,6 @@ COLOUR:   ETC_MAGIC
 TILE:     urand_brooch_of_shielding
 AC:       4
 EV:       4
-DESC:     A shield-shaped amulet.
 DESC_END: Back in the good old days, every adventurer had one of these
           handy devices. That, and a pony.
 
