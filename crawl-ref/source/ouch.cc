@@ -362,7 +362,10 @@ void splash_with_acid(int acid_strength, bool corrode_items,
 
 void weapon_acid(int acid_strength)
 {
-    int hand_thing = you.equip[EQ_WEAPON];
+    int hand_thing = -1;
+
+    if (!you.melded[EQ_WEAPON])
+        hand_thing = you.equip[EQ_WEAPON];
 
     if (hand_thing == -1 && !you.melded[EQ_GLOVES])
         hand_thing = you.equip[EQ_GLOVES];
