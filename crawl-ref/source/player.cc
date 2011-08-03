@@ -477,10 +477,13 @@ bool player_can_open_doors()
             && you.form != TRAN_PIG);
 }
 
-bool player_can_reach_floor(std::string feat)
+bool player_can_reach_floor(std::string feat, bool quiet)
 {
     if (you.flight_mode() != FL_LEVITATE)
         return true;
+
+    if (quiet)
+        return false;
 
     if (feat == "")
         mpr("You can't reach the floor from up here.");
