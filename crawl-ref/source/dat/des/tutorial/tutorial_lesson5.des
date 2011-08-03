@@ -185,14 +185,13 @@ BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   bABCDEHIJ = .
 KFEAT:   F = +
-COLOUR:  ABCDEHIJ = blue
+COLOUR:  ABCDEHIJ = lightred
 FTILE:   ABCDEHIJ = tutorial_pad
 KPROP:   b_ = bloody / nothing
 KFEAT:   _ = altar_trog
 NSUBST:  M = 2:= / *:m
 ITEM:    mace ego:none not_cursed
 ITEM:    book of clouds
-ITEM:    dagger ego:none not_cursed
 MONS:    rat always_corpse
 MONS:    hobgoblin ; short sword ego:none not_cursed | w:5 mace ego:none not_cursed
 MONS:    gnoll ; flail ego:none not_cursed
@@ -241,7 +240,7 @@ xxxxxxBxxxxxxxxxxxx.xxxxxxxxxxxxxxx.xxxxxxx..4.xxx
 xtt..G.G..ttxxxxxxx.xxxxxxxxxxxxxxxx..xxxxxx.]xxxx
 xt........txxxxxxxx.xxxxxxxxxxxxxxxxxx.xxxxxxxxxxx
 x..mmmMmmm..xxxxxxx.xxxxxxxxxxxxxxxxxxx...xxxxxxxx
-x..mYbbbYm..xxxxxxxExxxxxxxxxxxxxxxxxx..1.f.xxxxxx
+x..mYbbbYm..xxxxxxxExxxxxxxxxxxxxxxxxx..1...xxxxxx
 x..Mbb_bbM..xxxxxxx.xxxxxxxxxxxxxxxxxxx..1...xxxxx
 x..mVbbbVm..xxxxxxx.xxxxxxxxxxxxxxxxxxxx....xxxxxx
 x..mmmmmmm..xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxx.xxxxx
