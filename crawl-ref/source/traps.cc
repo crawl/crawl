@@ -1107,13 +1107,6 @@ trap_type get_trap_type(const coord_def& pos)
     if (trap_def* ptrap = find_trap(pos))
         return (ptrap->type);
 
-    if (feature_mimic_at(pos))
-    {
-        monster *mimic = monster_at(pos);
-        if (mimic->props.exists("trap_type"))
-            return static_cast<trap_type>(mimic->props["trap_type"].get_short());
-    }
-
     return (TRAP_UNASSIGNED);
 }
 
