@@ -61,8 +61,8 @@ function tutorial_msg4.ring_power ()
 end
 
 function tutorial_msg4.undead ()
-    local text = "Other than for other monsters, with undead it is "
-                 .. "impossible to tell how wounded they are."
+    local text = "Unlike most other monsters, undead do not regenerate "
+                 .. "health and it is impossible to tell how wounded they are."
 
     if crawl.is_tiles() then
         text = text .. "\nIncidentally, you can also cast spells by pressing "
@@ -250,12 +250,12 @@ ORIENT:  encompass
 KFEAT:   ABCDE = .
 KFEAT:   S = distillery shop count:8 ; \
          potion of slowing | w:20 potion of confusion | potion of poison | potion of paralysis
-COLOUR:  ABCDdefh = blue
+COLOUR:  ABCDdefh = lightred
 FTILE:   ABCDdefh = tutorial_pad
 ITEM:    randbook numspells:2 spells:magic_dart|evaporate title:Introduction_to_Spellcasting owner:player
 ITEM:    ring of magical power not_cursed
 ITEM:    staff of wizardry not_cursed
-ITEM:    gold q:20
+ITEM:    gold q:100
 ITEM:    bread ration
 MONS:    training dummy ; stone q:20
 MONS:    bat skeleton, goblin skeleton
@@ -314,7 +314,7 @@ PLACE:   D:2
 BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   ABCDE = .
-COLOUR:  dABCDE = blue
+COLOUR:  dABCDE = lightred
 FTILE:   dABCDE = tutorial_pad
 ITEM:    randbook numspells:1 spells:animate_skeleton title:Necromancy_for_Newbies owner:player
 ITEM:    never_decay bat skeleton

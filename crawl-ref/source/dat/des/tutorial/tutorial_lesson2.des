@@ -19,8 +19,10 @@ function tutorial_msg2.start ()
 end
 
 function tutorial_msg2.pickup_weapon ()
-    local text = "Pick up this weapon with " .. tutorial_get_cmd("CMD_PICKUP")
-                 .. " and then wield it with " .. tutorial_get_cmd("CMD_WIELD_WEAPON") .. "."
+    local text = "Pick up this weapon with "
+                 .. tutorial_get_cmd("CMD_PICKUP") .. " or <white>g</white> "
+                 .. "and then wield it with "
+                 .. tutorial_get_cmd("CMD_WIELD_WEAPON") .. "."
 
     if crawl.is_tiles() then
         text = text .. " Alternatively, you can perform either action by "
@@ -143,7 +145,7 @@ end
 
 function tutorial_msg2.darts ()
     local text = "Now, for ranged combat! Pick up these darts with "
-                 .. tutorial_get_cmd("CMD_PICKUP")
+                 .. tutorial_get_cmd("CMD_PICKUP") .. " or <white>g</white>"
 
     if crawl.is_tiles() then
         text = text .. " or by <white>mouseclick</white>,"
@@ -279,7 +281,7 @@ BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   ABCFG = .
 KFEAT:   n = iron_grate
-COLOUR:  deABCDEFG = blue
+COLOUR:  deABCDEFG = lightred
 FTILE:   deABCDEFG = tutorial_pad
 ITEM:    quarterstaff mundane not_cursed
 SHUFFLE: 456
@@ -352,7 +354,7 @@ ORIENT:  encompass
 TILE:    G = dngn_statue_centaur
 RTILE:   x = wall_lair, c = wall_vines
 KFEAT:   ABCDEFH = .
-COLOUR:  deABCDEH = blue
+COLOUR:  deABCDEH = lightred
 FTILE:   deABCDEH = tutorial_pad
 MONS:    training dummy hp:10 ; stone q:15
 MONS:    bat
