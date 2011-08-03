@@ -713,7 +713,8 @@ static bool _get_mem_list(spell_list &mem_spells,
 
         num_books++;
         num_on_ground++;
-        _index_book(book, book_hash, num_unreadable, book_errors);
+        if (player_can_reach_floor("", true))
+            _index_book(book, book_hash, num_unreadable, book_errors);
     }
 
     if (book_errors)
@@ -740,6 +741,11 @@ static bool _get_mem_list(spell_list &mem_spells,
             }
         }
         return (false);
+    }
+    else if (num_on_ground && num_on_ground == num_books
+             && !player_can_reach_floor("", just_check))
+    {
+        return false;
     }
     else if (num_unreadable == num_books)
     {
