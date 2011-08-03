@@ -1160,7 +1160,7 @@ hissie
 
 cooking-fat
 
-sand-tounge
+sand-tongue
 
 scamp
 
