@@ -1191,10 +1191,7 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
 
         const coord_def p(*ri);
 
-        if (you.pos() == p)
-            continue;
-
-        if (!abyss_genlevel_mask(p) || map_masked(p, MMT_VAULT))
+        if (you.pos() == p || !abyss_genlevel_mask(p))
             continue;
 
         // Dont' decay vaults until the player is close, and they are a bit
