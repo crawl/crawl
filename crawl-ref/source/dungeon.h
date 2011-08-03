@@ -62,6 +62,7 @@ enum map_mask_type
     MMT_NO_WALL    = 0x20,    // Wall fixup should not be applied here.
     MMT_OPAQUE     = 0x40,    // Vault may impede connectivity.
     MMT_NO_TRAP    = 0x80,    // No trap generation
+    MMT_MIMIC      = 0x100,   // Mimic
 };
 
 class dgn_region;
