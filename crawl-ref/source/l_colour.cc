@@ -43,6 +43,11 @@ int lua_element_colour_calc::get(const coord_def& loc, bool non_random)
 
 static int next_colour = ETC_FIRST_LUA;
 
+void reset_next_colour()
+{
+    next_colour = ETC_FIRST_LUA;
+}
+
 static int _lua_element_colour(int rand, const coord_def& loc,
                                lua_datum function)
 {
