@@ -891,7 +891,7 @@ VISUAL:@The_monster@ looks really @rattled@.
 
 @The_monster@ hums to @reflexive@ desperately, trying to keep calm.
 
-@The_monster attempts to regain @possessive@ composure.
+@The_monster@ attempts to regain @possessive@ composure.
 
 @The_monster@ @mutters@, "Of all the rotten luck!"
 
