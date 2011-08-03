@@ -1505,8 +1505,8 @@ static void marshall_level_map_masks(writer &th)
 {
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        marshallShort(th, env.level_map_mask(*ri));
-        marshallShort(th, env.level_map_ids(*ri));
+        marshallInt(th, env.level_map_mask(*ri));
+        marshallInt(th, env.level_map_ids(*ri));
     }
 }
 
@@ -1514,8 +1514,20 @@ static void unmarshall_level_map_masks(reader &th)
 {
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        env.level_map_mask(*ri) = unmarshallShort(th);
-        env.level_map_ids(*ri)  = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 32
+        if (th.getMinorVersion() < TAG_MINOR_NEW_MIMICS)
+        {
+            env.level_map_mask(*ri) = unmarshallShort(th);
+            env.level_map_ids(*ri)  = unmarshallShort(th);
+        }
+        else
+        {
+#endif
+            env.level_map_mask(*ri) = unmarshallInt(th);
+            env.level_map_ids(*ri)  = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+        }
+#endif
     }
 }
 
