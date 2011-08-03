@@ -1405,11 +1405,13 @@ static void _go_upstairs()
     if (leaving_dungeon)
     {
         bool stay = true;
+        std::string prompt = make_stringf("Are you sure you want to leave the "
+                                          "Dungeon?%s",
+                                          crawl_state.game_is_tutorial() ? "" :
+                                          " This will make you lose the game!");
         if (_has_orb())
             stay = !yesno("Are you sure you want to win?");
-        else if (yesno("Are you sure you want to leave the Dungeon? "
-                       "This will make you lose the game!",
-                       false, 'n'))
+        else if (yesno(prompt.c_str(), false, 'n'))
         {
             // You did pick up the Orb but are not carrying it, this deserves
             // another warning due to automatism.

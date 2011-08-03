@@ -17,7 +17,8 @@ end
 
 function tutorial_msg3.armour ()
     local text = "Pick up these boots with "
-                 .. tutorial_get_cmd("CMD_PICKUP") .. " and then wear them with "
+                 .. tutorial_get_cmd("CMD_PICKUP") .. " or <white>g</white> "
+                 .. "and then wear them with "
                  .. tutorial_get_cmd("CMD_WEAR_ARMOUR") .. "."
 
     if crawl.is_tiles() then
@@ -45,25 +46,10 @@ function tutorial_msg3.autopickup ()
     return tutorial_message(text)
 end
 
-function tutorial_msg3.weapon_reminder ()
-    local text = "This dagger was picked up automatically because you didn't "
-                 .. "have a sharp-edged butchering tool yet. "
-                 .. "You know the drill: Wield it with "
-                 .. tutorial_get_cmd("CMD_WIELD_WEAPON")
-
-    if crawl.is_tiles() then
-        text = text .. " or via <white>mouseclick</click>"
-    end
-
-    text = text .. "."
-
-    return tutorial_message(text)
-end
-
 function tutorial_msg3.scroll_noautopickup ()
     local text = "Autopickup doesn't happen if there's a monster around. "
                  .. "You can pick up these scrolls now with "
-                 .. tutorial_get_cmd("CMD_PICKUP")
+                 .. tutorial_get_cmd("CMD_PICKUP") .. " or <white>g</white>"
 
     if crawl.is_tiles() then
         text = text .. " or by <white>mouseclick</click>,"
@@ -311,7 +297,7 @@ end
 
 function tutorial_msg3.item_use ()
     return tutorial_message("There are some nasty monsters behind that door. "
-                            .. "Remember to use the items you just bought!")
+                            .. "Remember to use the items you hopefully just bought!")
 end
 
 function tutorial_msg3.tutorial_end ()
@@ -371,7 +357,7 @@ BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   AC = .
 KFEAT:   B = +
-COLOUR:  defghAC = blue
+COLOUR:  defghAC = lightred
 FTILE:   defghAC = tutorial_pad
 ITEM:    pair of boots race:no_race mundane not_cursed
 ITEM:    bread ration
@@ -382,7 +368,6 @@ MONS:    goblin ; nothing
 MONS:    rat, giant cockroach, hobgoblin ; nothing
 MARKER:  d = lua:tutorial_msg3.armour()
 MARKER:  e = lua:tutorial_msg3.autopickup()
-MARKER:  f = lua:tutorial_msg3.weapon_reminder()
 MARKER:  g = lua:tutorial_msg3.scroll_noautopickup()
 MARKER:  h = lua:tutorial_msg3.ego_weapon()
 MARKER:  A = lua:tutorial_msg3.inventory()
@@ -401,11 +386,11 @@ epilogue{{
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxx...xxxx.....xxxxxxxxxxx
-xxxxx.....xxxxxxxx.........e..xxxxxxxxxxx
-xxxxx1....xxxxxxxx.f.xxxx.....xxxx..(..xx
-xxxxx....g+..........xxxxxxx......d...{xx
-xxxxxxx.xxxxxxxxxx...xxxxxxxxxxxxx..[..xx
+xxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxx
+xxxxx.....xxxxxxxxxx.......e..xxxxxxxxxxx
+xxxxx1....xxxxxxxx...xxxx.....xxxx..(..xx
+xxxxx....g+........xxxxxxxxx......d...{xx
+xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxx..[..xx
 xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -436,7 +421,7 @@ BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   ^ = needle trap
 KFEAT:   ABCD = .
-COLOUR:  ABCDdefg = blue
+COLOUR:  ABCDdefg = lightred
 COLOUR:  .1234h = brown
 FTILE:   .{})^1234h = floor_swamp, t = floor_grass
 FTILE:   ABCDdefg = tutorial_pad
@@ -504,7 +489,7 @@ PLACE:   D:3
 BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   ABC = .
-COLOUR:  ABCdefgh = blue
+COLOUR:  ABCdefgh = lightred
 FTILE:   ABCdefgh = tutorial_pad
 # TODO: Highlight tiles.
 KFEAT:   ' = .
