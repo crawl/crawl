@@ -64,7 +64,8 @@ function ch_stash_search_annotate_item(it)
 
   if ch_annotate_item_class then
     if it.class(true) == "armour" then
-        annot = annot .. "{" .. it.subtype .. " "
+        st, _ = it.subtype()
+        annot = annot .. "{" .. st .. " "
     else
         annot = annot .. "{"
     end
