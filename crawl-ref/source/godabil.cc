@@ -495,7 +495,7 @@ int zin_check_recite_to_single_monster(const coord_def& where,
             eligibility[RECITE_HERETIC]++;
 
         // ...but chaotic gods are worse...
-        if (is_evil_god(mon->god))
+        if (is_chaotic_god(mon->god))
             eligibility[RECITE_HERETIC]++;
 
         // ...as are evil gods.
