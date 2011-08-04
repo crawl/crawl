@@ -254,7 +254,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_HILL_ORC,        SK_AIR_MAGIC,      -2),
     APT(SP_HILL_ORC,        SK_EARTH_MAGIC,     0),
     APT(SP_HILL_ORC,        SK_POISON_MAGIC,   -1),
-    APT(SP_HILL_ORC,        SK_INVOCATIONS,     0),
+    APT(SP_HILL_ORC,        SK_INVOCATIONS,     2),
     APT(SP_HILL_ORC,        SK_EVOCATIONS,      0),
 
     // SP_KOBOLD
