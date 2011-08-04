@@ -753,6 +753,11 @@ void tile_clear_monster(const coord_def &gc)
     tile_clear_map(gc);
 }
 
+void tile_reset_feat(const coord_def &gc)
+{
+    env.tile_bk_bg(gc) = tileidx_feature(gc);
+}
+
 void tile_place_cloud(const coord_def &gc, const cloud_struct &cl)
 {
     // In the Shoals, ink is handled differently. (jpeg)
