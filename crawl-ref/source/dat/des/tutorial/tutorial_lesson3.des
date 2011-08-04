@@ -357,19 +357,18 @@ BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   AC = .
 KFEAT:   B = +
-COLOUR:  defghAC = lightred
-FTILE:   defghAC = tutorial_pad
+COLOUR:  defgAC = lightred
+FTILE:   defgAC = tutorial_pad
 ITEM:    pair of boots race:no_race mundane not_cursed
 ITEM:    bread ration
-ITEM:    dagger mundane cursed
 ITEM:    scroll of remove curse q:2
 ITEM:    scimitar race:none ego:venom not_cursed
 MONS:    goblin ; nothing
 MONS:    rat, giant cockroach, hobgoblin ; nothing
 MARKER:  d = lua:tutorial_msg3.armour()
 MARKER:  e = lua:tutorial_msg3.autopickup()
-MARKER:  g = lua:tutorial_msg3.scroll_noautopickup()
-MARKER:  h = lua:tutorial_msg3.ego_weapon()
+MARKER:  f = lua:tutorial_msg3.scroll_noautopickup()
+MARKER:  g = lua:tutorial_msg3.ego_weapon()
 MARKER:  A = lua:tutorial_msg3.inventory()
 MARKER:  B = lua:tutorial_msg3.battle()
 MARKER:  } = lua:tutorial_msg3.downstairs()
@@ -389,7 +388,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxx.....xxxxxxxxxxx
 xxxxx.....xxxxxxxxxx.......e..xxxxxxxxxxx
 xxxxx1....xxxxxxxx...xxxx.....xxxx..(..xx
-xxxxx....g+........xxxxxxxxx......d...{xx
+xxxxx....f+........xxxxxxxxx......d...{xx
 xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxx..[..xx
 xxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxx..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -399,7 +398,7 @@ xxxxxxxxxxxxx.xxxxxxxxxxtttttttttttttttxx
 xxxxxxxxxxttx+xttxxxxxxxtttttttttttttttxx
 xxxxxxxxxttt...tttttttttttt....3.t..tttxx
 xxxxxxxxxtt.T.G.tttttttttt..3.t.t..2}ttxx
-xxxxxxxxxtt..h..A.......B......T.4..tttxx
+xxxxxxxxxtt..g..A.......B......T.4..tttxx
 xxxxxxxxxtt.G.T.tttttttttt2...t.t.3.]ttxx
 xxxxxxxxxttt...tttttttttttt..3...t..tttxx
 xxxxxxxxxtttttttttxxxxxxtttttttttttttttxx
