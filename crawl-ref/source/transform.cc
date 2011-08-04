@@ -761,6 +761,9 @@ bool transform(int pow, transformation_type which_trans, bool force,
     // running around or butchering corpses.
     stop_delay();
 
+    if (crawl_state.which_god_acting() == GOD_XOM)
+       you.transform_uncancellable = true;
+
     if (you.species != SP_VAMPIRE || which_trans != TRAN_BAT)
         transformation_expiration_warning();
 
