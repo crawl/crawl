@@ -767,10 +767,10 @@ bool do_wear_armour(int item, bool quiet)
     {
         if (!quiet)
         {
-            if (you.has_tentacles(false) == 3)
-                mpr("You'd need nine tentacles to do that!");
-            else
-                mpr("You'd need three hands to do that!");
+            const char *how_many = you.has_tentacles(false) == 3 ? "nine"
+                                                                 : "three";
+            mprf("You'd need %s %s to do that!", how_many,
+                 your_hand(true).c_str());
         }
         return (false);
     }

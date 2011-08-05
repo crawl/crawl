@@ -620,13 +620,17 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     break;
 
                 case SPWPN_PAIN:
+                {
+                    const char *your_arm =
+                        you.has_tentacles(false) == 3 ? "tentacle" : "arm";
                     if (you.skill(SK_NECROMANCY) == 0)
                         mpr("You have a feeling of ineptitude.");
                     else if (you.skill(SK_NECROMANCY) <= 6)
-                        mpr("Pain shudders through your arm!");
+                        mprf("Pain shudders through your %s!", your_arm);
                     else
-                        mpr("A searing pain shoots up your arm!");
+                        mprf("A searing pain shoots up your %s!", your_arm);
                     break;
+                }
 
                 case SPWPN_CHAOS:
                     mpr("It is briefly surrounded by a scintillating aura "
