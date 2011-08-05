@@ -1784,13 +1784,14 @@ std::string get_item_description(const item_def &item, bool verbose,
     {
         description << "\n\n";
 
-        bool need_base_desc = false;
+        bool need_base_desc = true;
 
         if (dump)
         {
             description << "["
                         << item.name(DESC_DBNAME, true, false, false)
                         << "]";
+            need_base_desc = false;
         }
         else if (is_unrandom_artefact(item)
                  && (unrandart_descrip(0, item)[0] != '\0'
@@ -1800,11 +1801,15 @@ std::string get_item_description(const item_def &item, bool verbose,
             const char *desc_id = unrandart_descrip(1, item);
 
             if (item_type_known(item) && desc_id[0] != '\0')
+            {
                 description << desc_id << "\n";
+                need_base_desc = false;
+            }
             else if (desc[0] != '\0')
+            {
                 description << desc << "\n";
-            else
-                need_base_desc = true;
+                need_base_desc = false;
+            }
         }
 
         if (need_base_desc)
