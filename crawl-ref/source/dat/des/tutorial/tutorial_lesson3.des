@@ -168,8 +168,10 @@ function tutorial_msg3.retreat_reminder ()
 end
 
 function tutorial_msg3.quantified_drop ()
-    local text = "These meat rations weigh too much. Note the <lightred>burden status</lightred> "
-                 .. "to the right of the screen!\n"
+    local text = "These meat rations weigh too much to carry all at once. If you "
+                 .. "pick up the rest of the stack (with "
+                 .. tutorial_get_cmd("CMD_PICKUP")
+                 .. "), you'll become <lightred>burdened</lightred>!\n"
                  .. "You can drop them again with "
                  .. tutorial_get_cmd("CMD_DROP") .. ", or you can only drop "
                  .. "e.g. 20, by typing "
@@ -244,7 +246,7 @@ end
 function tutorial_msg3.wand_digging ()
     local text = "If you simply want to shoot into a straight direction, you can "
                  .. "press <w>Shift</w> together with the direction keys.\n"
-                 .. "Try which of the nearby walls you can destroy! "
+                 .. "Find out which of the nearby walls you can destroy! "
                  .. "Use " .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "<w>v</w> "
     if crawl.is_tiles() then
         text = text .. "or <white>mouseover</white>/<white>rightclick</white> "
@@ -270,8 +272,12 @@ end
 
 function tutorial_msg3.scroll_id ()
     return tutorial_message("These three scrolls can be used to enchant armour, "
-                            .. "recharge wands, and identify items. Try working "
-                            .. "out which is which.")
+                            .. "recharge wands, and identify unknown items. Try "
+                            .. "working out which is which by using them on "
+                            .. "different items that they might be able to "
+                            .. "affect. Note that artefacts cannot be further "
+                            .. "enchanted by enchant armour scrolls, but that "
+                            .. "your robe can!")
 end
 
 function tutorial_msg3.go_shopping ()
