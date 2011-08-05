@@ -886,7 +886,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             break;
 
         case SPARM_MAGIC_RESISTANCE:
-            mpr("You feel resistant to magic.");
+            mpr("You feel resistant to hostile enchantments.");
             break;
 
         case SPARM_PROTECTION:
@@ -1037,7 +1037,7 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         break;
 
     case SPARM_MAGIC_RESISTANCE:
-        mpr("You feel less resistant to magic.");
+        mpr("You feel less resistant to hostile enchantments.");
         break;
 
     case SPARM_PROTECTION:
