@@ -910,6 +910,11 @@ static bool _is_chaos_upgradeable(const item_def &item,
     if (is_unrandom_artefact(item))
        return (false);
 
+    // Staves can't be changed either, since they don't have brands in
+    // the way other weapons do.
+    if (item.base_type == OBJ_STAVES)
+       return (false);
+
     // Only upgrade permanent items, since the player should get a
     // chance to use the item if he or she can defeat the monster.
     if (item.flags & ISFLAG_SUMMONED)
