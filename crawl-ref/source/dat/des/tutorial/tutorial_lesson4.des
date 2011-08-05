@@ -124,13 +124,26 @@ function tutorial_msg4.forget_spell ()
     local text = "Gaining an experience level and raising your Spellcasting "
                  .. "skill gives you spell slots to spend on spells. You can "
                  .. "also <w>forget a memorised spell</w> to make space for "
-                 .. "a new one. For example, to forget \"Magic Dart\", you "
+                 .. "a new one. The easiest way to do this is with a scroll "
+                 .. "of amnesia. Simply read the scroll (with "
+                 .. tutorial_get_cmd("CMD_READ")
+    if crawl.is_tiles() then
+        text = text .. " or by <white>clicking</click> on it"
+    end
+    text = text .. "), and then select the spell you want to forget."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg4.destroy_spellbook ()
+    local text = "You can also forget a spell by using a spellbook containing "
+                 .. "that spell. For example, to forget \"Magic Dart\", you "
                  .. "need to read a spellbook containing the spell (with "
                  .. tutorial_get_cmd("CMD_READ")
     if crawl.is_tiles() then
-        text = text .. " or by <white>rightclicking</click> on it)"
+        text = text .. " or by <white>rightclicking</click> on it"
     end
-    text = text .. ", select \"Magic Dart\", type <w>f</w> and confirm. This "
+    text = text .. "), select \"Magic Dart\", type <w>f</w> and confirm. This "
                 .. "will destroy the book, so you'll need other spellbooks "
                 .. "to learn new spells, such as the one lying over there."
 
@@ -316,17 +329,17 @@ ORIENT:  encompass
 KFEAT:   ABCDE = .
 COLOUR:  dABCDE = lightred
 FTILE:   dABCDE = tutorial_pad
+ITEM:    scroll of amnesia
 ITEM:    randbook numspells:1 spells:animate_skeleton title:Necromancy_for_Newbies owner:player
-ITEM:    never_decay bat skeleton
-ITEM:    never_decay goblin; nothing skeleton
-ITEM:    never_decay small snake skeleton
-ITEM:    never_decay jackal skeleton
+ITEM:    never_decay bat skeleton / never_decay goblin; nothing skeleton
+ITEM:    never_decay small snake skeleton / never_decay jackal skeleton
 MONS:    hobgoblin always_corpse; shield not_cursed . ring mail race:none not_cursed
 MONS:    rat
 MONS:    goblin
 MONS:    gnoll; nothing
-MARKER:  A = lua:tutorial_msg4.forget_spell()
-MARKER:  d = lua:tutorial_msg4.memorise2()
+MARKER:  d = lua:tutorial_msg4.forget_spell()
+MARKER:  A = lua:tutorial_msg4.destroy_spellbook()
+MARKER:  e = lua:tutorial_msg4.memorise2()
 MARKER:  B = lua:tutorial_msg4.displace_allies()
 MARKER:  C = lua:tutorial_msg4.order_allies()
 MARKER:  D = lua:tutorial_msg4.heavy_armour()
@@ -352,11 +365,11 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx......B.xxxx.T..xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxx......B...x.egf.xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxCCCxxxx...+.gde.....xxxxxxxxxxxxxxx
-xxxxxxxxxxx+++xxxxx..x.fhh.xxxx.Axxxxxxxxxxxxx
+xxxxxxxxxxx......B...x.fgf.xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxCCCxxxx...+.geg.....xxxxxxxxxxxxxxx
+xxxxxxxxxxx+++xxxxx..x.fgf.xxxx.Axxxxxxxxxxxxx
 xxxxxxxxxx.....xxxxxxxx.T..xxxxxx.xxxxxxxxxxxx
-xxxxxxxxxx.....xxxxxxxxx..xxxxxxxx.xxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxxx..xxxxxxxxdxxxxxxxxxxx
 xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxx.xxxxxxxxxxx
 xxxxxxxxxx.....xxxxxxxxxxxxxxxxxx...xxxxxxxxxx
 xxxxxxxxxx.....xxxxxxxxxxxxxxxxxx{([xxxxxxxxxx
@@ -364,8 +377,8 @@ xxxxxxxxxx..1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxDxxxxxxx.2..xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxx.xxxxGx.....4]xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxx.xxxGf+...2....xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxx...Eeg+......3.)xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxGh+...3....xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx...Efg+......3.)xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxGg+...3....xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxGx.....2}xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxx2...xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
