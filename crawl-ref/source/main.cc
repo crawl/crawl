@@ -2490,7 +2490,7 @@ static void _decrement_durations()
 
     _decrement_a_duration(DUR_BARGAIN, delay, "You feel less charismatic.");
     _decrement_a_duration(DUR_CONF, delay, "You feel less confused.");
-    _decrement_a_duration(DUR_LOWERED_MR, delay, "You feel more resistant to magic.");
+    _decrement_a_duration(DUR_LOWERED_MR, delay, "You feel less vulnerable to hostile enchantments.");
     _decrement_a_duration(DUR_SLIMIFY, delay, "You feel less slimy.",
                           coinflip(), "Your slime is starting to congeal.");
     _decrement_a_duration(DUR_MISLED, delay, "Your thoughts are your own once more.");
