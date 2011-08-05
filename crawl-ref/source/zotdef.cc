@@ -401,7 +401,7 @@ static void _wraith_wave(int power)
                 MONS_SPECTRAL_THING, END};
     _zotdef_fill_from_list(wraiths, 0, power); // full
     _zotdef_choose_boss(boss, power);
-    _zotdef_danger_msg("The hair rises on the back of your neck!");
+    _zotdef_danger_msg("You shudder with fear!");
 }
 
 static void _giant_wave(int power)
