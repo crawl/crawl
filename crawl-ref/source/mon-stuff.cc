@@ -4288,7 +4288,7 @@ bool is_item_jelly_edible(const item_def &item)
     return (true);
 }
 
-static bool _monster_space_valid(const monster* mons, coord_def& target,
+static bool _monster_space_valid(const monster* mons, coord_def target,
                                  bool forbid_sanctuary)
 {
     if (!in_bounds(target))
@@ -4322,6 +4322,22 @@ bool monster_random_space(const monster* mons, coord_def& target,
     }
 
     return (false);
+}
+
+// Move the monster to the nearest valid space.
+bool shove_monster(monster* mons)
+{
+    const coord_def pos = mons->pos();
+    for (distance_iterator di(pos); di; ++di)
+        if (_monster_space_valid(mons, *di, false))
+        {
+            mons->moveto(*di);
+            mgrd(pos) = NON_MONSTER;
+            mgrd(*di) = mons->mindex();
+            return true;
+        }
+
+    return false;
 }
 
 bool monster_random_space(monster_type mon, coord_def& target,

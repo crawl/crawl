@@ -3437,17 +3437,9 @@ static void _place_door_mimics(int level_number)
     if (count == 0)
         return;
 
-    mgen_data mg;
-    mg.behaviour = BEH_SLEEP;
-    mg.cls       = MONS_DOOR_MIMIC;
-
     std::random_shuffle(door_pos.begin(), door_pos.end());
     for (int i = 0; i < count; ++i)
-    {
-        mg.pos      = door_pos[i];
-        grd(mg.pos) = DNGN_FLOOR;
-        place_monster(mg);
-    }
+        env.level_map_mask(door_pos[i]) |= MMT_MIMIC;
 }
 
 static void _builder_monsters(int level_number, level_area_type level_type, int mon_wanted)
@@ -3461,6 +3453,11 @@ static void _builder_monsters(int level_number, level_area_type level_type, int 
     const bool in_shoals = player_in_branch(BRANCH_SHOALS);
     if (in_shoals)
         dgn_shoals_generate_flora();
+    else if (player_in_branch(BRANCH_MAIN_DUNGEON)
+             || player_in_branch(BRANCH_VAULTS))
+    {
+        _place_door_mimics(level_number);
+    }
 
     // Try to place Shoals monsters on floor where possible instead of
     // letting all the merfolk be generated in the middle of the

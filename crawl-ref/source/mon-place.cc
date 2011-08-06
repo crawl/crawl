@@ -1001,7 +1001,8 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
                                                                   : mg.cls);
     if (!monster_habitable_grid(montype, grd(mg_pos), mg.preferred_grid_feature,
                                 mons_class_flies(montype), false)
-        || (mg.behaviour != BEH_FRIENDLY && is_sanctuary(mg_pos)))
+        || (mg.behaviour != BEH_FRIENDLY && !mons_is_mimic(montype)
+            && is_sanctuary(mg_pos)))
     {
         return (false);
     }
@@ -1441,7 +1442,8 @@ static int _place_monster_aux(const mgen_data &mg,
         fpos.reset();
     }
     else if (first_band_member && in_bounds(mg.pos)
-        && (mg.behaviour == BEH_FRIENDLY || !is_sanctuary(mg.pos))
+        && (mg.behaviour == BEH_FRIENDLY || !is_sanctuary(mg.pos)
+            || mons_is_mimic(montype))
         && !monster_at(mg.pos)
         && (you.pos() != mg.pos || fedhas_passthrough_class(mg.cls))
         && (force_pos || monster_habitable_grid(montype, grd(mg.pos))))
@@ -1845,7 +1847,8 @@ static int _place_monster_aux(const mgen_data &mg,
     if (monster_can_submerge(mon, grd(fpos)) && !one_chance_in(5))
         mon->add_ench(ENCH_SUBMERGED);
 
-    mon->flags |= MF_JUST_SUMMONED;
+    if (mg.cls != MONS_DOOR_MIMIC)
+        mon->flags |= MF_JUST_SUMMONED;
 
     // Don't leave shifters in their starting shape.
     if (mg.cls == MONS_SHAPESHIFTER || mg.cls == MONS_GLOWING_SHAPESHIFTER)

@@ -125,6 +125,13 @@ void wizard_create_spec_monster_name()
         return;
     }
 
+    if (type == MONS_DOOR_MIMIC)
+    {
+        grd(place) = DNGN_CLOSED_DOOR;
+        env.level_map_mask(place) |= MMT_MIMIC;
+        return;
+    }
+
     // Wizmode users should be able to conjure up uniques even if they
     // were already created. Yay, you can meet 3 Sigmunds at once! :p
     if (mons_is_unique(mspec.mid) && you.unique_creatures[mspec.mid])

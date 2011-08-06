@@ -18,6 +18,7 @@
 #include "debug.h"
 #include "dgn-overview.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "env.h"
 #include "fight.h"
 #include "food.h"
@@ -28,6 +29,7 @@
 #include "libutil.h"
 #include "mapmark.h"
 #include "mislead.h"
+#include "mgen_data.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-clone.h"
@@ -47,6 +49,7 @@
 #include "terrain.h"
 #include "traps.h"
 #include "unicode.h"
+#include "view.h"
 #include "viewchar.h"
 
 static FixedVector < int, NUM_MONSTERS > mon_entry;
@@ -861,6 +864,67 @@ bool mons_is_item_mimic(int mc)
 bool mons_is_feat_mimic(int mc)
 {
     return (mons_genus(mc) == MONS_DOOR_MIMIC);
+}
+
+static monster_type _get_feature_mimic_type(dungeon_feature_type feat)
+{
+    switch (feat)
+    {
+    case DNGN_OPEN_DOOR:
+    case DNGN_CLOSED_DOOR:
+        return MONS_DOOR_MIMIC;
+    default:
+        return MONS_PROGRAM_BUG;
+    }
+}
+
+bool discover_mimic(const coord_def& pos)
+{
+    // Is there really a mimic here?
+    if (!map_masked(pos, MMT_MIMIC))
+        return false;
+
+    const dungeon_feature_type feat = grd(pos);
+
+    // If a monster is standing on top of the mimic, move it out of the way.
+    monster* mon = monster_at(pos);
+    if (mon && shove_monster(mon))
+    {
+        simple_monster_message(mon,
+                               make_stringf(" is pushed out of the %s.",
+                                            feat_type_name(feat)).c_str());
+        dprf("Moved to (%d, %d).", mon->pos().x, mon->pos().y);
+    }
+    else if (mon)
+        die("Cannot move monster out of the way.");
+
+    // Remove the feature and clear the flag.
+    grd(pos) = DNGN_FLOOR;
+    env.level_map_mask(pos) &= !MMT_MIMIC;
+
+    // Generate and place the monster.
+    mgen_data mg;
+    mg.behaviour = BEH_WANDER;
+    mg.cls       = _get_feature_mimic_type(feat);
+    mg.pos      = pos;
+    const int mid = place_monster(mg, true);
+    ASSERT(mid != -1);
+    monster* mimic = &menv[mid];
+    ASSERT(mimic->pos() == pos);
+    mimic->flags |= MF_KNOWN_MIMIC;
+    behaviour_event(mimic, ME_ALERT, MHITYOU);
+
+    // Friendly monsters don't appreciate being pushed away.
+    if (mon && mon->friendly())
+        behaviour_event(mon, ME_WHACK, mid);
+
+    // Announce the mimic.
+    if (feat == DNGN_OPEN_DOOR)
+        simple_monster_message(mimic, " slams shut!", MSGCH_WARN);
+    else if (mons_near(mimic))
+        mprf(MSGCH_WARN, "It was %s!", mimic->name(DESC_NOCAP_A).c_str());
+
+    return true;
 }
 
 void discover_mimic(monster* mimic)

@@ -182,6 +182,7 @@ bool monster_random_space(const monster* mons, coord_def& target,
                           bool forbid_sanctuary = false);
 bool monster_random_space(monster_type mon, coord_def& target,
                           bool forbid_sanctuary = false);
+bool shove_monster(monster* mons);
 void monster_teleport(monster* mons, bool instan, bool silent = false);
 void mons_clear_trapping_net(monster* mon);
 
