@@ -316,5 +316,7 @@ bool dgn_square_travel_ok(const coord_def &c);
 bool join_the_dots(const coord_def &from, const coord_def &to, unsigned mmask);
 int count_feature_in_box(int x0, int y0, int x1, int y1,
                          dungeon_feature_type feat);
+bool door_vetoed(const coord_def pos);
+monster_type get_feature_mimic_type(dungeon_feature_type feat);
 
 #endif

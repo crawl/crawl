@@ -866,18 +866,6 @@ bool mons_is_feat_mimic(int mc)
     return (mons_genus(mc) == MONS_DOOR_MIMIC);
 }
 
-static monster_type _get_feature_mimic_type(dungeon_feature_type feat)
-{
-    switch (feat)
-    {
-    case DNGN_OPEN_DOOR:
-    case DNGN_CLOSED_DOOR:
-        return MONS_DOOR_MIMIC;
-    default:
-        return MONS_PROGRAM_BUG;
-    }
-}
-
 bool discover_mimic(const coord_def& pos)
 {
     // Is there really a mimic here?
@@ -905,7 +893,7 @@ bool discover_mimic(const coord_def& pos)
     // Generate and place the monster.
     mgen_data mg;
     mg.behaviour = BEH_WANDER;
-    mg.cls       = _get_feature_mimic_type(feat);
+    mg.cls       = get_feature_mimic_type(feat);
     mg.pos      = pos;
     const int mid = place_monster(mg, true);
     ASSERT(mid != -1);

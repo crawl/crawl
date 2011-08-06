@@ -3392,54 +3392,49 @@ static void _place_aquatic_monsters(int level_number, level_area_type level_type
     }
 }
 
+bool door_vetoed(const coord_def pos)
+{
+    return env.markers.property_at(pos, MAT_ANY, "veto_open") == "veto";
+}
+
+monster_type get_feature_mimic_type(dungeon_feature_type feat)
+{
+    switch (feat)
+    {
+    case DNGN_OPEN_DOOR:
+    case DNGN_CLOSED_DOOR:
+        return MONS_DOOR_MIMIC;
+    default:
+        return MONS_PROGRAM_BUG;
+    }
+}
+
+//#define DEBUG_MIMIC
 static void _place_door_mimics(int level_number)
 {
-    const int mlevel = 15; // other feature mimics' depth
-    const int diff   = mlevel - level_number;
-
-    if (std::abs(diff) > 7)
+    if (level_number < 10)
         return;
 
-    const int rarity = 35; // higher than other feature mimics' rarity
-                           // because placement requires non-secret doors
-    const int chance = rarity - (diff * diff) / 2;
+    const int chance = 100;
 
-    // How many door mimics are we trying to place? Up to 2 per level.
-    int count = 0;
-    for (int i = 0; i < 2; ++i)
-        if (random2avg(100, 2) <= chance)
-            count++;
-
-    dprf("door mimic chance: %d, count = %d", chance, count);
-    if (count == 0)
-        return;
-
-    // Okay, we're trying to place door mimics.
-    std::vector<coord_def> door_pos;
     for (rectangle_iterator ri(1); ri; ++ri)
     {
-        // Don't replace doors within vaults.
-        if (map_masked(*ri, MMT_VAULT) || !feat_is_door(grd(*ri)))
+        // Only features valid for mimicing.
+        if (get_feature_mimic_type(grd(*ri)) == MONS_PROGRAM_BUG)
             continue;
 
-        door_pos.push_back(*ri);
+        // Don't replace vetoed doors.
+        if (door_vetoed(*ri))
+            continue;
+
+#ifndef DEBUG_MIMIC
+        if(!one_chance_in(chance))
+            continue;
+#endif
+
+        dprf("Placed mimic at (%d,%d).", ri->x, ri->y);
+        env.level_map_mask(*ri) |= MMT_MIMIC;
     }
-    dprf("found %u doors", (unsigned int)door_pos.size());
-
-    // No doors found at all.
-    if (door_pos.empty())
-        return;
-
-    // Reduce count if there are few doors.
-    if (door_pos.size() < (unsigned int) count * 3)
-        count = door_pos.size() / 3 + (coinflip() ? 1 : 0);
-    dprf("place %d door mimics", count);
-    if (count == 0)
-        return;
-
-    std::random_shuffle(door_pos.begin(), door_pos.end());
-    for (int i = 0; i < count; ++i)
-        env.level_map_mask(door_pos[i]) |= MMT_MIMIC;
 }
 
 static void _builder_monsters(int level_number, level_area_type level_type, int mon_wanted)
@@ -3453,11 +3448,8 @@ static void _builder_monsters(int level_number, level_area_type level_type, int 
     const bool in_shoals = player_in_branch(BRANCH_SHOALS);
     if (in_shoals)
         dgn_shoals_generate_flora();
-    else if (player_in_branch(BRANCH_MAIN_DUNGEON)
-             || player_in_branch(BRANCH_VAULTS))
-    {
-        _place_door_mimics(level_number);
-    }
+
+    _place_door_mimics(level_number);
 
     // Try to place Shoals monsters on floor where possible instead of
     // letting all the merfolk be generated in the middle of the
