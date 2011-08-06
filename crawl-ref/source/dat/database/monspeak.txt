@@ -4935,7 +4935,7 @@ VISUAL:@The_monster@ scowls and wipes @possessive@ hands on @possessive@ robe.
 # Kinky Pikel
 @The_monster@ says @to_foe@, "I'm sure you'll love being tied up!"
 
-@The_monster@ sighs. "I should go into elves, they're easier to handle. And prettier!"
+@The_monster@ sighs. "I should go into elves; they're easier to handle. And prettier!"
 %%%%
 ############ POLYPHEMUS ### The King of the Cyclopes from Homer's Odyssey!
 # (A cyclops watching over a herd of yaks.)
