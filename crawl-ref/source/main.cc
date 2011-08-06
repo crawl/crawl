@@ -50,6 +50,7 @@
 #include "dgn-shoals.h"
 #include "dlua.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "effects.h"
 #include "env.h"
 #include "errors.h"
@@ -3527,10 +3528,9 @@ static void _open_door(coord_def move, bool check_confused)
     }
 
     // Allow doors to be locked.
-    bool door_vetoed = env.markers.property_at(doorpos, MAT_ANY, "veto_open") == "veto";
     const std::string door_veto_message = env.markers.property_at(doorpos, MAT_ANY,
                                 "veto_reason");
-    if (door_vetoed)
+    if (door_vetoed(doorpos))
     {
         if (door_veto_message.empty())
             mpr("The door is shut tight!");
