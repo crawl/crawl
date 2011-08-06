@@ -277,9 +277,14 @@ static std::string _shop_print_stock(const std::vector<int>& stock,
         else
             textcolor(i % 2 ? LIGHTGREY : WHITE);
 
-        cprintf("%s%5d gold",
-                chop_string(item.name(DESC_NOCAP_A, false, id), 56).c_str(),
-                gp_value);
+        std::string item_name = item.name(DESC_NOCAP_A, false, id);
+        if (item_type_has_ids(item.base_type) && item_type_known(item)
+            && get_ident_type(item) == ID_UNKNOWN_TYPE)
+        {
+            item_name += " (unknown)";
+        }
+
+        cprintf("%s%5d gold", chop_string(item_name, 56).c_str(), gp_value);
 
         si.add_item(item, gp_value);
     }
