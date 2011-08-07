@@ -464,8 +464,8 @@ void canned_msg(canned_message_type which_message)
     case MSG_EMPTY_HANDED_ALREADY:
     case MSG_EMPTY_HANDED_NOW:
     {
-        const char* when = (which_message == MSG_EMPTY_HANDED_NOW ? "now"
-                                                                  : "already");
+        const char* when =
+            (which_message == MSG_EMPTY_HANDED_ALREADY ? "already" : "now");
         if (you.species == SP_FELID)
             mprf("Your mouth is %s empty.", when);
         else if (you.has_usable_claws(true))
