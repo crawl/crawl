@@ -461,16 +461,21 @@ void canned_msg(canned_message_type which_message)
         mpr("Huh?", MSGCH_EXAMINE_FILTER);
         crawl_state.cancel_cmd_repeat();
         break;
-    case MSG_EMPTY_HANDED:
+    case MSG_EMPTY_HANDED_ALREADY:
+    case MSG_EMPTY_HANDED_NOW:
+    {
+        const char* when = (which_message == MSG_EMPTY_HANDED_NOW ? "now"
+                                                                  : "already");
         if (you.species == SP_FELID)
-            mpr("Your mouth is now empty.");
+            mprf("Your mouth is %s empty.", when);
         else if (you.has_usable_claws(true))
-            mpr("You are now empty-clawed.");
+            mprf("You are %s empty-clawed.", when);
         else if (you.has_usable_tentacles(true))
-            mpr("You are now empty-tentacled.");
+            mprf("You are %s empty-tentacled.", when);
         else
-            mpr("You are now empty-handed.");
+            mprf("You are %s empty-handed.", when);
         break;
+    }
     case MSG_YOU_BLINK:
         mpr("You blink.");
         break;

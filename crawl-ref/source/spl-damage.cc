@@ -1134,7 +1134,7 @@ static int _ignite_poison_affect_item(item_def& item, bool in_inv)
             if (in_inv && &item == you.weapon())
             {
                 unwield_item();
-                canned_msg(MSG_EMPTY_HANDED);
+                canned_msg(MSG_EMPTY_HANDED_NOW);
             }
             item_was_destroyed(item);
             if (in_inv)

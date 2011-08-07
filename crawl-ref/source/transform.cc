@@ -202,7 +202,7 @@ static void _remove_equipment(const std::set<equipment_type>& removed,
             {
                 const int slot = you.equip[EQ_WEAPON];
                 unwield_item(!you.berserk());
-                canned_msg(MSG_EMPTY_HANDED);
+                canned_msg(MSG_EMPTY_HANDED_NOW);
                 you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = slot + 1;
             }
             else

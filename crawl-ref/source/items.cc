@@ -307,7 +307,7 @@ bool dec_inv_item_quantity(int obj, int amount, bool suppress_burden)
                 if (i == EQ_WEAPON)
                 {
                     unwield_item();
-                    canned_msg(MSG_EMPTY_HANDED);
+                    canned_msg(MSG_EMPTY_HANDED_NOW);
                 }
                 you.equip[i] = -1;
             }
