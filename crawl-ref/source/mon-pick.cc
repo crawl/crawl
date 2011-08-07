@@ -1448,14 +1448,14 @@ int mons_lair_rare(int mcls)
     case MONS_WYVERN:
         return 20;
 
+    case MONS_CATOBLEPAS:
+        if (Version::ReleaseType() == VER_ALPHA)
+            return 47;
     case MONS_BLACK_BEAR:
     case MONS_GRIZZLY_BEAR:
     case MONS_POLAR_BEAR:
         return 15;
 
-    case MONS_CATOBLEPAS:
-        if (Version::ReleaseType() == VER_ALPHA)
-            return 47;
     case MONS_GOLIATH_BEETLE:
     case MONS_SCORPION:
     case MONS_OKLOB_PLANT:
