@@ -621,8 +621,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
 
                 case SPWPN_PAIN:
                 {
-                    const char *your_arm =
-                        you.has_tentacles(false) == 3 ? "tentacle" : "arm";
+                    const char* your_arm = you.arm_name(false).c_str();
                     if (you.skill(SK_NECROMANCY) == 0)
                         mpr("You have a feeling of ineptitude.");
                     else if (you.skill(SK_NECROMANCY) <= 6)
