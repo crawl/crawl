@@ -795,6 +795,9 @@ static int _handle_conflicting_mutations(mutation_type mutation,
 
             if (mutation == a && you.mutation[b] > 0)
             {
+                if (you.innate_mutations[b] >= you.mutation[b])
+                    return -1;
+
                 int res = conflict[i][2];
                 switch (res)
                 {
