@@ -1254,7 +1254,7 @@ static void _finish_delay(const delay_queue_item &delay)
         if (delay.parm1 == you.equip[EQ_WEAPON])
         {
             unwield_item();
-            canned_msg(MSG_EMPTY_HANDED);
+            canned_msg(MSG_EMPTY_HANDED_NOW);
         }
 
         if (!copy_item_to_grid(you.inv[ delay.parm1 ],

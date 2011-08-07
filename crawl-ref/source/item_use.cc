@@ -360,7 +360,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
                 return (false);
 
             if (show_unwield_msg)
-                canned_msg(MSG_EMPTY_HANDED);
+                canned_msg(MSG_EMPTY_HANDED_NOW);
 
             // Switching to bare hands is extra fast.
             you.turn_is_over = true;
@@ -368,7 +368,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             you.time_taken /= 10;
         }
         else
-            canned_msg(MSG_EMPTY_HANDED);
+            canned_msg(MSG_EMPTY_HANDED_ALREADY);
 
         return (true);
     }
@@ -3136,7 +3136,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
         }
         dec_inv_item_quantity(throw_2, 1);
         if (unwielded)
-            canned_msg(MSG_EMPTY_HANDED);
+            canned_msg(MSG_EMPTY_HANDED_NOW);
     }
 
     throw_noise(&you, pbolt, thrown);
