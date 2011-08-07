@@ -58,7 +58,7 @@ function callback.monster_doors_stepped(data, triggerable, triggerer, marker, ev
       dgn.terrain_changed(slave.x, slave.y, "floor", false, false, false)
   end
   -- and then announce the changes
-  crawl.mpr("You step on to a pressure plate and iron grates slams shut around you!")
+  crawl.mpr("You step on to a pressure plate and iron grates slam shut around you!")
   crawl.mpr("You now see doors in the wall!")
 
 end
