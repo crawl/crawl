@@ -8,7 +8,8 @@ loaded in 0.9, you can not go back to 0.8.
 0.9 Highlights
 --------------
 * New skill training system. Experience pool and victory dancing are gone.
-* Ashenzari: ...
+* Ashenzari: Remove passive XP boost, add a skill boost depending on level
+of boundedness and which equipment is bound.
 * Rename Crusader to Skald, change starting book and skill levels.
 * New spells: Inner Flame, Shroud of Golubria.
 * Removed spells: Teleport Self, Berserker Rage, Resist Poison.
@@ -29,27 +30,35 @@ Gods
 * Improve Jiyva's stat shuffling, take skills and armour into account.
 * Makhleb has a new flavour description.
 * Nerf TSO's and Makhleb's HP and MP on kills.
-* Trog specialises in antimagic weapon gifts.
+* Trog specialises in antimagic weapon gifts, gives fewer artefacts.
+* Trog dislikes it when you train magic skills.
 * Yred takes statue kills and forbids Statue Form.
 * Zin's Vitalisation is cheaper and cures petrification, stat boost stackable.
 * Don't allow avoiding good god wrath by swapping via another good god.
-* Ashenzari: ...
+* Ashenzari: Remove passive XP boost, add a skill boost depending on level
+of boundedness and which equipment is bound.
+* Ashenzari: reduce reskilling XP penalty and some ability piety costs.
+* Ashenzari wrath: reduce all skills for the duration of wrath.
 
 Character
 ---------
 * +3 base HP for all characters.
-* Racial HP/MP gain is now governed by innate mutation (see ?%).
+* Racial HP/MP gain is now displayed on a -3 to +3 scale (see ?%).
 * Fighting gives less HP boost.
 * All characters carry a bootknife to dissect corpses.
 * Hill Orc Priests always take on Beogh.
 * Berserkitis mutation triggers less often.
-* Changes to Chaos Knight, Warper, Fighter, Gladiator, Hunter.
+* Tweak starting skills for a few backgrounds (Fi, Gl, Wr, CK).
+* Give Warpers a few more darts of dispersal.
+* Let Gladiators start with a cap if they can't wear helmets.
+* Start all Hunters with the same melee weapon.
 * Start Artificers with quarterstaves, instead of letting Monks choose them.
-* Draconians are more dextrous.
 * Rename Crusader to Skald, change starting book and skill levels.
 * Conjurers don't need to choose a book (they always get an Air/Ice book).
 * Felids: lose a level on death, gain at most nine lives, improved aptitudes.
+* Draconians are more dextrous.
 * Berserk speed-up reduced to that of haste (1.5 instead of 2).
+* All species take the same amount of time to use stairs.
 
 Interface
 ---------
@@ -60,6 +69,7 @@ Interface
 * Search: allows searching for portals, and for waypoints (Ctrl-F 1, Ctrl-F *).
 * Search: "branded" synonymous with "ego". Better help (Ctrl-F ?).
 * Search: only show items in a stash matching the search.
+* Search: allow searching for armour by equipment slot.
 * New help for skills screen (m??).
 * Change inventory colours for some potions.
 * Auto-pickup chunks after Animate Skeleton.
@@ -69,14 +79,21 @@ Interface
 * Better butchering messages, less spam.
 * Abort spellcasting in many cases where spells are guaranteed to fail.
 * Display -cTele on the status line where controlled teleports are blocked.
+* Allow redefining mimic glyphs, once identified.
+* Show percentage progress to the next level, instead of number of XP points.
+* Show 'chaotic' in monster status only when aiming silver ammo at them.
+* Show 'mindless' in monster status only when using Ely's healing abilities.
 
 Spells
 ------
 * New spell: Shroud of Golubria (comes in Skald and Warper starting books).
+Prevents some melee damage, but likely to break against more damaging attacks.
 * New spell: Inner Flame (comes in starting book of Fire Elementalists).
+Causes targeted enemy to explode in a fireball when killed.
 * Removed spells: Teleport Self, Berserker Rage, Resist Poison.
 * Tornado: radius starts low, increases over time, add cooldown, adjust damage.
 * Tornado moves monsters within its radius around.
+* Blinking with Tornado active reduces its duration, teleporting cancels it.
 * Make Fire Storm, Ice Storm, Bolt of Magma and Throw Icicle more resistible.
 * Increase Bolt of Magma damage.
 * Give Summon Dragon a longer duration, summon two dragons at high power.
@@ -93,6 +110,7 @@ Spells
 * Maxwell's Silver Hammer works also on all weapons with bludgeoning damage.
 * Poison Weapon works also on blunt weapons.
 * Condensation Shield duration increased.
+* Simulacra from the spell are no longer abjurable.
 * Renamed books: Chemistry -> Alchemy, Zoology -> Beasts.
 
 Monsters
@@ -110,20 +128,23 @@ Monsters
 * Vampire bats are undead.
 * Monsters with mutagenic chunks leaves corpses less often.
 * Reaching over a hostile monster may hit the monster between you and target.
-* Kenku monsters come with gear.
+* Kenku monsters come with gear, may spawn in the Abyss.
 * Rename "beast" to "hell beast".
 * Rename "megabat" to "bat".
 * Kobolds can (rarely) get crossbows.
 * Pikel: fixed bugs with freed monsters.
 * Adjust xp values for some monsters.
+* Disable feature mimics.
 
 Levels
 ------
-* Many new vaults, noticeably new Elf:5 maps and Zot entry vaults.
+* New branch endings: multiple Elf:5 maps, Zot entry vaults on D:27.
+* Many other new vaults, including serial vaults, traps, Abyss vaults.
 * Blink in the Abyss only blinks; does not teleport anymore.
 * Baileys are more sane in loot and threat.
 * Troves: fix some bugs, and additional quests.
 * Vestibule of Hell has its own monster set.
+* Don't place kobold/orc/jelly/bee special rooms in the Hells.
 
 Orb run
 -------
@@ -159,6 +180,7 @@ Items
 * Mace of Brilliance comes with a halo.
 * Singing Sword does sonic damage at high tension.
 * Bad unrandarts (Misfortune, Folly, Lear's) get a random appearance.
+* Make potions of berserk rage more common.
 
 Tiles
 -----
