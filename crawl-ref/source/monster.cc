@@ -2538,24 +2538,44 @@ std::string monster::arm_name(bool plural, bool *can_plural) const
     if (can_plural != NULL)
         *can_plural = true;
 
-    std::string str;
+    std::string adj = "";
+    std::string str = "arm";
+
     switch (mons_genus(type))
     {
+    case MONS_DRACONIAN:
     case MONS_NAGA:
-    case MONS_DRACONIAN: str = "scaled arm"; break;
+        adj = "scaled";
+        break;
 
-    case MONS_MUMMY: str = "bandaged wrapped arm"; break;
+    case MONS_KENKU:
+        adj = "feathered";
+        break;
 
+    case MONS_MUMMY:
+        adj = "bandage-wrapped";
+        break;
+
+    case MONS_OCTOPODE:
+        str = "tentacle";
+        break;
+
+    case MONS_LICH:
     case MONS_SKELETAL_WARRIOR:
-    case MONS_LICH:  str = "bony arm"; break;
+        adj = "bony";
+        break;
 
-    default: str = "arm"; break;
+    default:
+        break;
     }
 
-   if (plural)
-       str = pluralise(str);
+    if (!adj.empty())
+        str = adj + " " + str;
 
-   return (str);
+    if (plural)
+        str = pluralise(str);
+
+    return (str);
 }
 
 int monster::mindex() const
