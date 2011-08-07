@@ -443,16 +443,23 @@ std::string player::arm_name(bool plural, bool *can_plural) const
     if (can_plural != NULL)
         *can_plural = true;
 
+    std::string adj = "";
     std::string str = "arm";
 
     if (player_genus(GENPC_DRACONIAN) || species == SP_NAGA)
-        str = "scaled arm";
+        adj = "scaled";
     else if (species == SP_KENKU)
-        str = "feathered arm";
+        adj = "feathered";
     else if (species == SP_MUMMY)
-        str = "bandage-wrapped arm";
+        adj = "bandage-wrapped";
     else if (species == SP_OCTOPODE)
         str = "tentacle";
+
+    if (form == TRAN_LICH)
+        adj = "bony";
+
+    if (!adj.empty())
+        str = adj + " " + str;
 
     if (plural)
         str = pluralise(str);
