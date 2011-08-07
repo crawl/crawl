@@ -796,7 +796,7 @@ static int _handle_conflicting_mutations(mutation_type mutation,
             if (mutation == a && you.mutation[b] > 0)
             {
                 int res = conflict[i][2];
-                switch(res)
+                switch (res)
                 {
                 case -1:
                     // Fail if not forced, otherwise override.
@@ -1160,7 +1160,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     }
 
     // God gifts and forced mutations clear away conflicting mutations.
-    int rc =_handle_conflicting_mutations(mutat, god_gift || force_mutation);
+    int rc = _handle_conflicting_mutations(mutat, god_gift || force_mutation);
     if (rc == 1)
         return (true);
     if (rc == -1)
@@ -1933,7 +1933,7 @@ void check_demonic_guardian()
     {
         monster_type mt;
 
-        switch(mutlevel)
+        switch (mutlevel)
         {
         case 1:
             mt = random_mons(MONS_WHITE_IMP, MONS_LEMURE, MONS_UFETUBUS,
