@@ -5,8 +5,8 @@
 static double fhash3(int x, int y, int z)
 {
     // Some compilers choke on big unsigneds, need to give them in hex.
-    uint64_t hash=0xcbf29ce484222325; // 14695981039346656037
-#define FNV64 1099511628211
+    uint64_t hash=0xcbf29ce484222325ULL; // 14695981039346656037
+#define FNV64 1099511628211ULL
     hash^=x;
     hash*=FNV64;
     hash^=y;
