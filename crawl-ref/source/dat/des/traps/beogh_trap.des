@@ -27,11 +27,11 @@ function callback.beogh_warn_stepped(data, triggerable, triggerer, marker, ev)
      dgn.grid(x, y, "floor")
   else
      if you.race() == "Demigod" then
-        crawl.god_speaks("Beogh" , "The orc god booms: STAY AWAY HOLY BEING!")
+        crawl.god_speaks("Beogh" , "The orc god booms: STAY AWAY, HOLY BEING!")
      elseif you.race() == "Demonspawn" then
-        crawl.god_speaks("Beogh", "The orc god booms: STAY AWAY FOUL BEING!")
+        crawl.god_speaks("Beogh", "The orc god booms: STAY AWAY, FOUL BEING!")
      else
-        crawl.god_speaks("Beogh" , "The orc god booms: STAY AWAY MORTAL!")
+        crawl.god_speaks("Beogh" , "The orc god booms: STAY AWAY, MORTAL!")
      end
   end
 end
@@ -57,8 +57,8 @@ end
 }}
 
 NAME:   trap_god_beogh
-TAGS:   uniq_altar_beogh temple_overflow_beogh no_monster_gen
-DEPTH:  Orc: 2-4
+TAGS:   no_monster_gen
+DEPTH:  Orc:2-4
 ORIENT: float
 
 # t gives you a warning not to come closer
