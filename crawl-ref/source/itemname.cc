@@ -28,6 +28,7 @@
 #include "items.h"
 #include "macro.h"
 #include "makeitem.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "notes.h"
 #include "player.h"
@@ -257,13 +258,15 @@ std::string item_def::name(description_level_type descrip,
                     buff << " (worn)";
                     break;
                 case EQ_LEFT_RING:
-                    buff << (you.species != SP_FELID ? " (left hand)"
-                                                     : " (left paw)");
-                    break;
                 case EQ_RIGHT_RING:
-                    buff << (you.species != SP_FELID ? " (right hand)"
-                                                     : " (right paw)");
+                {
+                    buff << " (";
+                    buff << (eq == EQ_LEFT_RING ? "left" : "right");
+                    buff << " ";
+                    buff << your_hand(false);
+                    buff << ")";
                     break;
+                }
                 case EQ_AMULET:
                     if (you.species == SP_OCTOPODE)
                         buff << " (around mantle)";
@@ -274,11 +277,22 @@ std::string item_def::name(description_level_type descrip,
                 case EQ_RING_TWO:
                 case EQ_RING_THREE:
                 case EQ_RING_FOUR:
+                    if (you.form == TRAN_SPIDER)
+                    {
+                        buff << " (on front leg)";
+                        break;
+                    }
                 case EQ_RING_FIVE:
                 case EQ_RING_SIX:
                 case EQ_RING_SEVEN:
                 case EQ_RING_EIGHT:
-                    buff << " (on tentacle)";
+                    if (you.form == TRAN_SPIDER)
+                    {
+                        buff << " (on hindleg)";
+                        break;
+                    }
+                    else
+                        buff << " (on tentacle)";
                 break;
                 default:
                     die("Item in an invalid slot");
