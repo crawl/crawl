@@ -486,6 +486,7 @@ scorefile_entry &scorefile_entry::operator = (const scorefile_entry &se)
 void scorefile_entry::init_from(const scorefile_entry &se)
 {
     version           = se.version;
+    tiles             = se.tiles;
     points            = se.points;
     name              = se.name;
     race              = se.race;
@@ -656,6 +657,7 @@ static int _job_by_name(const std::string& name)
 void scorefile_entry::init_with_fields()
 {
     version = fields->str_field("v");
+    tiles   = fields->int_field("tiles");
     points  = fields->long_field("sc");
 
     name    = fields->str_field("name");
@@ -739,6 +741,7 @@ void scorefile_entry::set_base_xlog_fields() const
         score_version += "-zotdef.1";
     fields->add_field("v", "%s", Version::Short().c_str());
     fields->add_field("lv", score_version.c_str());
+    fields->add_field("tiles", "%d", tiles);
     fields->add_field("name", "%s", name.c_str());
     fields->add_field("race", "%s", species_name(race).c_str());
     fields->add_field("cls",  "%s", _job_name(job));
@@ -1037,6 +1040,7 @@ void scorefile_entry::reset()
 {
     // simple init
     version.clear();
+    tiles                = 0;
     points               = -1;
     name.clear();
     race                 = SP_UNKNOWN;
@@ -1131,6 +1135,11 @@ void scorefile_entry::init(time_t dt)
     // 4.2      - stats and god info
 
     version = Version::Short();
+#ifdef USE_TILE
+    tiles   = 1;
+#else
+    tiles   = 0;
+#endif
     name    = you.your_name;
 
     /*
