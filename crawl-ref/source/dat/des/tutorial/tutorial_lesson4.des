@@ -19,7 +19,7 @@ end
 function tutorial_msg4.spellbook ()
     local text = "You can memorise a spell from carried spellbooks with "
                  .. tutorial_get_cmd("CMD_MEMORISE_SPELL")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>clicking</white> on the memorisation tab "
                     .. "and selecting the spell tile"
     end
@@ -33,7 +33,7 @@ function tutorial_msg4.spellcasting ()
     local text = "You can cast spells with "
                  .. tutorial_get_cmd("CMD_CAST_SPELL")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>clicking</white> on the spell tile"
     end
     text = text .. ". Press "
@@ -41,7 +41,7 @@ function tutorial_msg4.spellcasting ()
                 .. "<w>?</w> to get a list of your spells.\n"
                 .. "Once you are out of magic points, retreat and rest with "
                 .. tutorial_get_cmd("CMD_REST")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>mouseclick</white> in the command panel"
     end
     text = text .. " to regain them."
@@ -52,7 +52,7 @@ end
 function tutorial_msg4.ring_power ()
     local text = "Put on this ring with "
                  .. tutorial_get_cmd("CMD_WEAR_JEWELLERY")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>mouseclick</click>"
     end
     text = text .. ", and then rest up to your new full potential."
@@ -64,7 +64,7 @@ function tutorial_msg4.undead ()
     local text = "Unlike most other monsters, undead do not regenerate "
                  .. "health and it is impossible to tell how wounded they are."
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. "\nIncidentally, you can also cast spells by pressing "
                     .. "<white>Ctrl + leftclick</white> on the monster."
     end
@@ -76,7 +76,7 @@ function tutorial_msg4.spell_success ()
     local text = "To check your spell proficiency, press "
                  .. tutorial_get_cmd("CMD_DISPLAY_SPELLS")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or <white>mouseover</white> over your memorised spells"
     end
 
@@ -98,7 +98,7 @@ function tutorial_msg4.aiming_clouds ()
     local text = "When casting Evaporate (with "
                  .. tutorial_get_cmd("CMD_CAST_SPELL")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>clicking</white> on the spell tile"
     end
 
@@ -140,7 +140,7 @@ function tutorial_msg4.destroy_spellbook ()
                  .. "that spell. For example, to forget \"Magic Dart\", you "
                  .. "need to read a spellbook containing the spell (with "
                  .. tutorial_get_cmd("CMD_READ")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>rightclicking</click> on it"
     end
     text = text .. "), select \"Magic Dart\", type <w>f</w> and confirm. This "
@@ -153,7 +153,7 @@ end
 function tutorial_msg4.memorise2 ()
     local text = "Again, memorise a new spell with "
                  .. tutorial_get_cmd("CMD_MEMORISE_SPELL")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>clicking</white> on the memorisation tab "
                     .. "and selecting the spell tile"
     end
@@ -184,21 +184,21 @@ function tutorial_msg4.heavy_armour ()
                  .. "mail and shield (with "
                  .. tutorial_get_cmd("CMD_WEAR_ARMOUR")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>clicking</white> on them)"
     end
 
     text = text .. ", and compare your spellcasting success rates with "
                 .. tutorial_get_cmd("CMD_DISPLAY_SPELLS")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>mouseovering</white> your memorised spells"
     end
 
     text = text .. ". You can take armour off again with "
                 .. tutorial_get_cmd("CMD_REMOVE_ARMOUR")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or, again, via <white>mouseclick</white>"
     end
     text = text .. "."
@@ -210,7 +210,7 @@ function tutorial_msg4.resting_reminder ()
     text = "Make sure you are at full health and magic points before "
            .. "entering a new area. If necessary, rest up with "
            .. tutorial_get_cmd("CMD_REST")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>mouseclick</white> in the command panel"
     end
     text = text .. ".\n"
@@ -234,7 +234,7 @@ function tutorial_msg4.exit ()
                  .. "  " .. tutorial_get_cmd("CMD_DISPLAY_SPELLS") .. "  check spell proficiency\n"
                  .. "  " .. tutorial_get_cmd("CMD_CAST_SPELL") .. "  cast a spell\n"
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. "\nYou can also learn new spells via the <w>memorisation tab</w>.\n"
                     .. "You can cast memorised spells via <w>leftclick</w>, and read their descriptions\n"
                     .. "and check your spell proficiency by <w>mouseover</w> or <w>rightclick</w>.\n\n"

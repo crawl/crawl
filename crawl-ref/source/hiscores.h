@@ -65,6 +65,7 @@ private:
     std::string raw_line;
 
     std::string version;
+    uint8_t     tiles;
     int         points;
     std::string name;
     species_type race;

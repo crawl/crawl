@@ -192,6 +192,7 @@ function logged_in(username)
     $("#register").hide();
     $("#login_form").hide();
     $("#reg_link").hide();
+    $("#logout_link").show();
 
     if ($("#remember_me").attr("checked"))
     {
@@ -220,6 +221,16 @@ function set_login_cookie(value, expires)
 function get_login_cookie()
 {
     return $.cookie("login");
+}
+
+function logout()
+{
+    if (get_login_cookie())
+    {
+        socket.send("UnRemember: " + get_login_cookie());
+        set_login_cookie(null);
+    }
+    location.reload();
 }
 
 function start_register()

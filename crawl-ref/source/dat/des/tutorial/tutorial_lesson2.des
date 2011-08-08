@@ -24,7 +24,7 @@ function tutorial_msg2.pickup_weapon ()
                  .. "and then wield it with "
                  .. tutorial_get_cmd("CMD_WIELD_WEAPON") .. "."
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " Alternatively, you can perform either action by "
                     .. "<white>clicking</white> on it in the inventory panel."
     end
@@ -41,7 +41,13 @@ function tutorial_msg2.examine ()
     local text = "A monster wielding a weapon is more dangerous than the same "
                  .. "monster when unarmed. "
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and crawl.is_webtiles() then
+        text = text .. "Most monsters will be displayed with their wielded weapon, "
+                    .. "but you can also check this by examining a monster via "
+                    .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "<white>+</white>."
+                    .. "To return from the e<w>x</w>amination mode to the game "
+                    .. "mode, press <white>Escape</white>."
+    elseif crawl.is_tiles() then
         text = text .. "Most monsters will be displayed with their wielded weapon, "
                     .. "but you can also check this by examining a monster via "
                     .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "<white>+</white>, "
@@ -76,14 +82,14 @@ function tutorial_msg2.chop_corpses ()
     local text = "You can chop up corpses into edible meat chunks "
                  .. "with " .. tutorial_get_cmd("CMD_BUTCHER")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or <white>Shift + mouseclick</white>,"
     end
 
     text = text .. " and then eat the resulting chunks with "
                 .. tutorial_get_cmd("CMD_EAT")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>mouseclick</white>"
     end
     text = text .. "."
@@ -106,7 +112,7 @@ end
 function tutorial_msg2.compare_monster_desc ()
     local text = "Examine these monsters ("
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. "via <white>mouseover</white>"
     else
         text = text .. "with " .. tutorial_get_cmd("CMD_LOOK_AROUND")
@@ -115,7 +121,7 @@ function tutorial_msg2.compare_monster_desc ()
 
     text = text .. ") and compare their descriptions ("
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. "<white>right mouseclick</white>"
     else
         text = text .. tutorial_get_cmd("CMD_LOOK_AROUND") .. "<w>v</w>"
@@ -147,7 +153,7 @@ function tutorial_msg2.darts ()
     local text = "Now, for ranged combat! Pick up these darts with "
                  .. tutorial_get_cmd("CMD_PICKUP") .. " or <white>g</white>"
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>mouseclick</white>,"
     end
     text = text .. " and continue."
@@ -158,7 +164,7 @@ end
 function tutorial_msg2.throwing ()
     local text = "You can fire your darts at a monster with "
                  .. tutorial_get_cmd("CMD_FIRE")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>clicking</white> on them in the inventory panel"
     end
     text = text .. ". To confirm the auto-targeted monster, press <white>f</white> "
@@ -171,7 +177,7 @@ function tutorial_msg2.wield_bow ()
     local text = "Pick up this bow and wield it with "
                  .. tutorial_get_cmd("CMD_WIELD_WEAPON")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>mouseclick</white>"
     end
     text = text .. "."
@@ -183,7 +189,7 @@ function tutorial_msg2.firing ()
     local text = "Firing some arrows from your wielded bow works exactly the "
                  .. "same as throwing darts: via "
                  .. tutorial_get_cmd("CMD_FIRE")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or <white>mouseclick</white>"
     end
     text = text .. ". You can change the targeted monster by pressing <white>+</white> "
@@ -196,7 +202,7 @@ end
 function tutorial_msg2.quiver ()
     local text = "To conserve ammunition, you might sometimes want to switch "
                  .. "ammunition, which you can do by pressing <white>(</white>"
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or simply <white>clicking</white> on another ammunition "
                     .. "tile"
     end
@@ -229,13 +235,13 @@ function tutorial_msg2.exit ()
                 .. "  " .. tutorial_get_cmd("CMD_PICKUP") .. "  pick up an item\n"
                 .. "  " .. tutorial_get_cmd("CMD_WIELD_WEAPON") .. "  wield a weapon\n"
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. "\nYou also can do this by <white>clicking</white> on the weapon in your inventory.\n"
     end
 
     text = text .. "\n<yellow>Monsters</yellow>\n"
                 .. "  attack by moving into a monster\n"
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. "  <white>mouseover</white>  examine a monster\n"
                     .. "  <white>rightclick</white>  read a more detailed description\n"
     else
@@ -247,7 +253,7 @@ function tutorial_msg2.exit ()
                 .. "  " .. tutorial_get_cmd("CMD_FIRE") .. "<w>(</w>  fire another item\n"
                 .. "  " .. tutorial_get_cmd("CMD_FIRE") .. "<w>+</w>  target another monster\n"
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. "\nYou can also fire an item by <white>clicking</white> on it and then confirming the target with <w>Enter</w>.\n"
     end
 

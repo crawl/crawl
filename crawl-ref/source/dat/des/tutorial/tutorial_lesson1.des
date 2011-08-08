@@ -20,7 +20,7 @@ function tutorial_msg.start ()
                    .. "explore a level.")
 
     local text = "You can move "
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. "by clicking somewhere with your <white>mouse</white>, or "
     end
     text = text .. "with the <white>arrow keys</white>. "
@@ -45,7 +45,7 @@ function tutorial_msg.diagonal1 ()
                  .. tutorial_get_cmd("CMD_MOVE_DOWN") .. " " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT") .. "\n"
                  .. "For example, you can move down that corridor with <white>3</white> or " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. ", or again, via <white>mouse click</white>"
     end
 
@@ -75,7 +75,7 @@ function tutorial_msg.downstairs ()
     local text = "When standing on a staircase leading downwards, you can enter "
                  .. "the next level with "
                  .. tutorial_get_cmd("CMD_GO_DOWNSTAIRS")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
       text = text .. " or with <white>Shift-Click</white> on your character"
     end
 
@@ -89,7 +89,10 @@ function tutorial_msg.levelmap ()
     local text = "What's this? You've arrived in a completely different part of "
                  .. "the level! To find out where you are, "
 
-    if crawl.is_tiles() then
+    if crawl.is_webtiles() then
+        text = text .. "have a look at the <white>minimap</white> to the right of "
+                    .. "the screen."
+    elseif crawl.is_tiles() then
         text = text .. "have a look at the <white>minimap</white> to the right of "
                     .. "the screen. You can have a closer look at a part of the "
                     .. "map with a <white>right mouseclick</white> and also can "
@@ -127,7 +130,7 @@ function tutorial_msg.exclusion ()
     end
 
     text = text .. " You cannot autotravel "
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. "(including by mouseclick!) "
     end
 
@@ -143,7 +146,7 @@ end
 function tutorial_msg.autoexplore_announce ()
     local text = "Autoexplore will stop to announce features and items. To travel "
                  .. "directly to the stairs, you can "
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. "click on them or you can "
     end
     text = text .. "press "
@@ -155,7 +158,7 @@ function tutorial_msg.tutorial_end ()
     local text = "Congratulations! You've completed the first lesson!\n"
                  .. "To exit the tutorial, simply go up these stairs with "
                  .. tutorial_get_cmd("CMD_GO_UPSTAIRS")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
       text = text .. " or by <white>Shift-clicking</white> on your character"
     end
 
@@ -229,7 +232,7 @@ function tutorial_msg.upstairs ()
     local text = "When standing on a staircase leading upwards, you can enter "
                  .. "the previous level with "
                  .. tutorial_get_cmd("CMD_GO_UPSTAIRS")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
       text = text .. " or by <white>Shift-clicking</white> on your character"
     end
 
@@ -252,7 +255,7 @@ function tutorial_msg.exit ()
                  .. tutorial_get_cmd("CMD_MOVE_DOWN") .. " " .. tutorial_get_cmd("CMD_MOVE_DOWN_RIGHT") .. "\n\n"
                  .. "<white>Shift + direction</white> moves you several squares into this direction.\n"
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. "You also can move by <white>clicking</white> somewhere in sight or on the <white>minimap</white>.\n"
     end
 
@@ -267,7 +270,7 @@ function tutorial_msg.exit ()
                 .. "  " .. tutorial_get_cmd("CMD_REST") .. "  search for secret doors\n"
 
     text = text .. "\n<yellow>Travel</yellow>\n"
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. "  mouseclick on the <white>minimap</white>\n"
     else
         text = text .. "  " .. tutorial_get_cmd("CMD_DISPLAY_MAP") .. "  enter the level map, travel with <white>Enter</white>\n"
