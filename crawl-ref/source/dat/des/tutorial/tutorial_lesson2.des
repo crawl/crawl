@@ -281,7 +281,7 @@ BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   ABCFG = .
 KFEAT:   n = iron_grate
-COLOUR:  deABCDEFG = lightred
+COLOUR:  deABCDEFG = lightblue
 FTILE:   deABCDEFG = tutorial_pad
 ITEM:    quarterstaff mundane not_cursed
 SHUFFLE: 456
@@ -354,7 +354,7 @@ ORIENT:  encompass
 TILE:    G = dngn_statue_centaur
 RTILE:   x = wall_lair, c = wall_vines
 KFEAT:   ABCDEFH = .
-COLOUR:  deABCDEH = lightred
+COLOUR:  deABCDEH = lightblue
 FTILE:   deABCDEH = tutorial_pad
 MONS:    training dummy hp:10 ; stone q:15
 MONS:    bat
