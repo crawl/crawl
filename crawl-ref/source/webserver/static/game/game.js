@@ -137,6 +137,8 @@ function do_layout()
 
     // Position controls
     set_layer("normal");
+    var minimap_display = $("#minimap").css("display");
+    $("#minimap, #minimap_overlay").show();
     view_size(view_width, view_height);
 
     var dungeon_offset = $("#dungeon").offset();
@@ -162,7 +164,8 @@ function do_layout()
     minimap_overlay.width = minimap_canvas.width;
     minimap_overlay.height = minimap_canvas.height;
 
-    // Go back to the old layer
+    // Go back to the old layer, re-hide the minimap if necessary
+    $("#minimap, #minimap_overlay").css("display", minimap_display);
     set_layer(layer);
 
     // Update the view

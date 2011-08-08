@@ -1,5 +1,6 @@
 var overlaid_locs = [];
 var cursor_locs = [];
+var dirty_locs = [];
 var minimap_bounds = undefined;
 var minimap_changed = false;
 var flash = 0;
@@ -96,8 +97,7 @@ function c(x, y, cell)
 
     if (old_cell && old_cell.sy && (old_cell.sy < 0))
     {
-        var above = get_tile_cache(x, y - 1) || {};
-        above.dirty = true;
+        set_dirty(x, y-1);
     }
 
     if (!old_cell || cell.c)
@@ -111,7 +111,7 @@ function c(x, y, cell)
         cell = old_cell;
     }
 
-    cell.dirty = true;
+    set_dirty(x, y);
 
     if (minimap_bounds)
     {
@@ -161,24 +161,11 @@ function display()
         minimap_changed = false;
     }
 
-    // Make sure we call render_cell at least for the whole visible area
-    // so that the flash covers the whole canvas
-    var l = minimap_bounds.left;
-    if (l > view_x) l = view_x;
-    var r = minimap_bounds.right;
-    if (r < view_x + dungeon_cols) r = view_x + dungeon_cols - 1;
-    var t = minimap_bounds.top;
-    if (t > view_y) t = view_y;
-    var b = minimap_bounds.bottom;
-    if (b < view_y + dungeon_rows) b = view_y + dungeon_rows - 1;
-
-    for (var x = l; x <= r; x++)
-        for (var y = t; y <= b; y++)
+    for (var i = 0; i < dirty_locs.length; i++)
     {
-        var cell = get_tile_cache(x, y);
-        if (!cell || cell.dirty) render_cell(x, y);
-        if (cell) cell.dirty = false;
+        render_cell(dirty_locs[i].x, dirty_locs[i].y);
     }
+    dirty_locs = [];
 }
 
 function set_flash(colour)
@@ -239,6 +226,16 @@ function remove_cursor(type)
 }
 
 // Render functions
+function set_dirty(x, y)
+{
+    var cell = get_tile_cache(x, y);
+    if (cell && !cell.dirty)
+    {
+        cell.dirty = true;
+        dirty_locs.push({x: x, y: y});
+    }
+}
+
 function force_full_render(minimap_too)
 {
     if (minimap_bounds == undefined)
@@ -251,8 +248,7 @@ function force_full_render(minimap_too)
     for (var x = xs; x <= xe; x++)
         for (var y = ys; y <= ye; y++)
     {
-        var cell = get_tile_cache(x, y);
-        if (cell) cell.dirty = true;
+        set_dirty(x, y);
     }
 }
 
@@ -307,6 +303,8 @@ function render_cell(cx, cy)
             render_cursors(cx, cy);
             return;
         }
+
+        cell.dirty = false;
 
         cell.sy = undefined; // Will be set by the tile rendering functions
                              // to indicate if the cell is oversized
@@ -485,6 +483,8 @@ function get_cell_map_feature(cell)
         return MF_FEATURE;
     else if (bg_idx >= TILE_FLOOR_MAX)
         return MF_WALL;
+    else if (bg_idx == 0)
+        return MF_UNSEEN;
     else
         return MF_FLOOR;
 }

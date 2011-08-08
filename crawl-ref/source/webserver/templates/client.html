@@ -30,6 +30,7 @@
                onclick="remember_me_click()">Stay logged in</input>
         |
         <a id="reg_link" href="javascript:start_register()">Register</a>
+        <a id="logout_link" href="javascript:logout()" style="display: none;">Logout</a>
       </div>
 
       <div id="register" style="display: none;">
@@ -56,6 +57,8 @@
       <div id="banner">{% include banner.html %}</div>
 
       <div id="play_now"></div>
+
+      <br>
 
       <div id="lobby_body"></div>
 
