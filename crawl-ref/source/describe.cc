@@ -3863,7 +3863,7 @@ std::string describe_favour(god_type which_god)
         const int penance = you.penance[which_god];
         return (penance >= 50) ? "Godly wrath is upon you!" :
                (penance >= 20) ? "You've transgressed heavily! Be penitent!" :
-               (penance >= 5) ? "You are under penance."
+               (penance >=  5) ? "You are under penance."
                                : "You should show more discipline.";
     }
 
