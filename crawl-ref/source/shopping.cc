@@ -1872,11 +1872,9 @@ unsigned int item_value(item_def item, bool ident)
             break;
 
         case MISC_EMPTY_EBONY_CASKET:
-            if (item_type_known(item))
-            {
-                valued += 20;
-                break;
-            }
+            valued += 20;
+            break;
+
         default:
             if (is_deck(item))
                 valued += 200 + item.special * 150;

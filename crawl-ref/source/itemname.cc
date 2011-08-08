@@ -870,80 +870,50 @@ static const char* deck_rarity_name(deck_rarity_type rarity)
 
 static const char* misc_type_name(int type, bool known)
 {
-    if (known)
+    if (!known)
     {
-        switch (static_cast<misc_item_type>(type))
-        {
-        case MISC_DECK_OF_ESCAPE:      return "deck of escape";
-        case MISC_DECK_OF_DESTRUCTION: return "deck of destruction";
-        case MISC_DECK_OF_DUNGEONS:    return "deck of dungeons";
-        case MISC_DECK_OF_SUMMONING:   return "deck of summonings";
-        case MISC_DECK_OF_WONDERS:     return "deck of wonders";
-        case MISC_DECK_OF_PUNISHMENT:  return "deck of punishment";
-        case MISC_DECK_OF_WAR:         return "deck of war";
-        case MISC_DECK_OF_CHANGES:     return "deck of changes";
-        case MISC_DECK_OF_DEFENCE:     return "deck of defence";
-
-        case MISC_CRYSTAL_BALL_OF_ENERGY:   return "crystal ball of energy";
-#if TAG_MAJOR_VERSION == 32
-        case MISC_CRYSTAL_BALL_OF_FIXATION: return "old crystal ball";
-#endif
-        case MISC_CRYSTAL_BALL_OF_SEEING:   return "crystal ball of seeing";
-        case MISC_BOX_OF_BEASTS:            return "box of beasts";
-        case MISC_EMPTY_EBONY_CASKET:       return "empty ebony casket";
-        case MISC_AIR_ELEMENTAL_FAN:        return "air elemental fan";
-        case MISC_LAMP_OF_FIRE:             return "lamp of fire";
-        case MISC_LANTERN_OF_SHADOWS:       return "lantern of shadows";
-        case MISC_HORN_OF_GERYON:           return "horn of Geryon";
-        case MISC_DISC_OF_STORMS:           return "disc of storms";
-        case MISC_BOTTLED_EFREET:           return "bottled efreet";
-        case MISC_STONE_OF_EARTH_ELEMENTALS:
-            return "stone of earth elementals";
-        case MISC_QUAD_DAMAGE:              return "quad damage";
-
-        case MISC_RUNE_OF_ZOT:
-        case NUM_MISCELLANY:
-            return "buggy miscellaneous item";
-        }
-    }
-    else
-    {
-        switch (static_cast<misc_item_type>(type))
-        {
-        case MISC_DECK_OF_ESCAPE:
-        case MISC_DECK_OF_DESTRUCTION:
-        case MISC_DECK_OF_DUNGEONS:
-        case MISC_DECK_OF_SUMMONING:
-        case MISC_DECK_OF_WONDERS:
-        case MISC_DECK_OF_PUNISHMENT:
-        case MISC_DECK_OF_WAR:
-        case MISC_DECK_OF_CHANGES:
-        case MISC_DECK_OF_DEFENCE:
+        if (type >= MISC_FIRST_DECK && type <= MISC_LAST_DECK)
             return "deck of cards";
-        case MISC_CRYSTAL_BALL_OF_ENERGY:
-#if TAG_MAJOR_VERSION == 32
-        case MISC_CRYSTAL_BALL_OF_FIXATION:
-#endif
-        case MISC_CRYSTAL_BALL_OF_SEEING:
+        if (type == MISC_CRYSTAL_BALL_OF_ENERGY
+            || type == MISC_CRYSTAL_BALL_OF_SEEING)
+        {
             return "crystal ball";
-        case MISC_BOX_OF_BEASTS:
-        case MISC_EMPTY_EBONY_CASKET:
-            return "small ebony casket";
-        case MISC_AIR_ELEMENTAL_FAN:         return "gauzy fan";
-        case MISC_LAMP_OF_FIRE:              return "blazing lamp";
-        case MISC_LANTERN_OF_SHADOWS:        return "bone lantern";
-        case MISC_HORN_OF_GERYON:            return "silver horn";
-        case MISC_DISC_OF_STORMS:            return "grey disc";
-        case MISC_STONE_OF_EARTH_ELEMENTALS: return "nondescript stone";
-        case MISC_BOTTLED_EFREET:            return "sealed bronze flask";
-        case MISC_QUAD_DAMAGE:               return "quad damage";
-
-        case MISC_RUNE_OF_ZOT:
-        case NUM_MISCELLANY:
-            return "buggy miscellaneous item";
         }
     }
-    return "very buggy miscellaneous item";
+
+    switch (static_cast<misc_item_type>(type))
+    {
+    case MISC_DECK_OF_ESCAPE:      return "deck of escape";
+    case MISC_DECK_OF_DESTRUCTION: return "deck of destruction";
+    case MISC_DECK_OF_DUNGEONS:    return "deck of dungeons";
+    case MISC_DECK_OF_SUMMONING:   return "deck of summonings";
+    case MISC_DECK_OF_WONDERS:     return "deck of wonders";
+    case MISC_DECK_OF_PUNISHMENT:  return "deck of punishment";
+    case MISC_DECK_OF_WAR:         return "deck of war";
+    case MISC_DECK_OF_CHANGES:     return "deck of changes";
+    case MISC_DECK_OF_DEFENCE:     return "deck of defence";
+
+    case MISC_CRYSTAL_BALL_OF_ENERGY:   return "crystal ball of energy";
+#if TAG_MAJOR_VERSION == 32
+    case MISC_CRYSTAL_BALL_OF_FIXATION: return "old crystal ball";
+#endif
+    case MISC_CRYSTAL_BALL_OF_SEEING:   return "crystal ball of seeing";
+    case MISC_BOX_OF_BEASTS:            return "box of beasts";
+    case MISC_EMPTY_EBONY_CASKET:       return "empty ebony casket";
+    case MISC_AIR_ELEMENTAL_FAN:        return "air elemental fan";
+    case MISC_LAMP_OF_FIRE:             return "lamp of fire";
+    case MISC_LANTERN_OF_SHADOWS:       return "lantern of shadows";
+    case MISC_HORN_OF_GERYON:           return "horn of Geryon";
+    case MISC_DISC_OF_STORMS:           return "disc of storms";
+    case MISC_BOTTLED_EFREET:           return "bottled efreet";
+    case MISC_STONE_OF_EARTH_ELEMENTALS:
+        return "stone of earth elementals";
+    case MISC_QUAD_DAMAGE:              return "quad damage";
+
+    case MISC_RUNE_OF_ZOT:
+    default:
+        return "buggy miscellaneous item";
+    }
 }
 
 static const char* book_secondary_string(int s)
