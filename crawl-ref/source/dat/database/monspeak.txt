@@ -1724,7 +1724,6 @@ Agnes
 
 w:5
 @_Agnes_rare_@
-
 %%%%
 _Agnes_common_
 
@@ -4137,7 +4136,6 @@ Ijyb
 
 w:5
 @_Ijyb_rare_@
-
 %%%%
 _Ijyb_common_
 
@@ -4288,7 +4286,6 @@ w:100
 
 w:2
 @The_monster@ says, "My wife rejected me, but I had my revenge."
-VISUAL:
 %%%%
 _Jory_silent_
 
@@ -4497,7 +4494,6 @@ Mara
 @_Mara_common_@
 
 w:5
-
 @_Mara_rare_@
 %%%%
 _Mara_common_
@@ -5073,7 +5069,6 @@ Pikel
 @_Pikel_common_@
 
 w:5
-
 @_Pikel_rare_@
 %%%%
 _Pikel_common_
@@ -5230,7 +5225,6 @@ Psyche
 @_Psyche_common_@
 
 w:7
-
 @_Psyche_medium_@
 
 w:3
