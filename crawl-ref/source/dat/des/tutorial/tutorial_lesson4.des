@@ -142,6 +142,7 @@ function tutorial_msg4.destroy_spellbook ()
                  .. tutorial_get_cmd("CMD_READ")
     if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>rightclicking</click> on it"
+    end
     text = text .. "), select \"Magic Dart\", type <w>f</w> and confirm. This "
                 .. "will destroy the book, so you'll need other spellbooks "
                 .. "to learn new spells, such as the one lying over there."
