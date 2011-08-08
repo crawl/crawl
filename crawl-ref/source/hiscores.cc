@@ -741,7 +741,8 @@ void scorefile_entry::set_base_xlog_fields() const
         score_version += "-zotdef.1";
     fields->add_field("v", "%s", Version::Short().c_str());
     fields->add_field("lv", score_version.c_str());
-    fields->add_field("tiles", "%d", tiles);
+    if (tiles)
+        fields->add_field("tiles", "%d", tiles);
     fields->add_field("name", "%s", name.c_str());
     fields->add_field("race", "%s", species_name(race).c_str());
     fields->add_field("cls",  "%s", _job_name(job));
