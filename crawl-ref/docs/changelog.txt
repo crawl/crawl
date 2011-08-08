@@ -184,11 +184,10 @@ Items
 
 Tiles
 -----
-* ...
-
-Technical
----------
-* ...
+* Display halo radius, fix information disparity between tiles and console.
+* Don't allow casting spells in -CAST equipment by clicking on spell icons.
+* Only flying pan lords have tiles with wings.
+* Many new or improved monster, dungeon and interface tiles.
 
 Options
 -------
