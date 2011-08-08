@@ -3079,6 +3079,7 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
 #if TAG_MAJOR_VERSION == 32
              || item.sub_type == MISC_CRYSTAL_BALL_OF_FIXATION
 #endif
+             || item.sub_type == MISC_EMPTY_EBONY_CASKET
              // Pure decks are rare in the dungeon.
              || (item.sub_type == MISC_DECK_OF_ESCAPE
                     || item.sub_type == MISC_DECK_OF_DESTRUCTION
@@ -3086,10 +3087,6 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
                     || item.sub_type == MISC_DECK_OF_SUMMONING
                     || item.sub_type == MISC_DECK_OF_WONDERS)
                  && !one_chance_in(5));
-
-        // filling those silly empty boxes -- bwr
-        if (item.sub_type == MISC_EMPTY_EBONY_CASKET && !one_chance_in(20))
-            item.sub_type = MISC_BOX_OF_BEASTS;
     }
 
     if (is_deck(item))
