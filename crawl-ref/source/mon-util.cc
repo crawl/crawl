@@ -3217,6 +3217,9 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
 
 bool mons_class_can_pass(int mc, const dungeon_feature_type grid)
 {
+    if (grid == DNGN_TEMP_PORTAL)
+        return (mc == MONS_ELDRITCH_TENTACLE || mc == MONS_ELDRITCH_TENTACLE_SEGMENT);
+
     if (mons_class_wall_shielded(mc))
     {
         // Permanent walls can't be passed through.
