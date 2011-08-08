@@ -263,7 +263,7 @@ ORIENT:  encompass
 KFEAT:   ABCDE = .
 KFEAT:   S = distillery shop count:8 ; \
          potion of slowing | w:20 potion of confusion | potion of poison | potion of paralysis
-COLOUR:  ABCDdefh = lightred
+COLOUR:  ABCDdefh = lightblue
 FTILE:   ABCDdefh = tutorial_pad
 ITEM:    randbook numspells:2 spells:magic_dart|evaporate title:Introduction_to_Spellcasting owner:player
 ITEM:    ring of magical power not_cursed
@@ -327,7 +327,7 @@ PLACE:   D:2
 BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   ABCDE = .
-COLOUR:  dABCDE = lightred
+COLOUR:  dABCDE = lightblue
 FTILE:   dABCDE = tutorial_pad
 ITEM:    scroll of amnesia
 ITEM:    randbook numspells:1 spells:animate_skeleton title:Necromancy_for_Newbies owner:player
