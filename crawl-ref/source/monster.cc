@@ -2538,7 +2538,7 @@ std::string monster::arm_name(bool plural, bool *can_plural) const
     if (can_plural != NULL)
         *can_plural = true;
 
-    std::string adj = "";
+    std::string adj;
     std::string str = "arm";
 
     switch (mons_genus(type))

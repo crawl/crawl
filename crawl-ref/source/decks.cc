@@ -1962,7 +1962,7 @@ static void _blade_card(int power, deck_rarity_type rarity)
                      wpn->quantity == 1 ? "s" : "");
             }
             else
-                mprf("Your %s twitch.", your_hand(true).c_str());
+                mprf("Your %s twitch.", you.hand_name(true).c_str());
         }
     }
 }

@@ -2185,50 +2185,6 @@ void reveal_secret_door(const coord_def& p)
     learned_something_new(HINT_FOUND_SECRET_DOOR, p);
 }
 
-// A feeble attempt at Nethack-like completeness for cute messages.
-std::string your_hand(bool plural)
-{
-    std::string result;
-
-    switch (you.form)
-    {
-    default:
-        mpr("ERROR: unknown transformation in your_hand() (misc.cc)",
-            MSGCH_ERROR);
-    case TRAN_NONE:
-    case TRAN_STATUE:
-    case TRAN_LICH:
-        if (you.species == SP_FELID)
-            result = "paw";
-        else if (you.has_usable_claws())
-            result = "claw";
-        else if (you.has_usable_tentacles())
-            result = "tentacle";
-        else
-            result = "hand";
-        break;
-    case TRAN_ICE_BEAST:
-        result = "paw";
-        break;
-    case TRAN_SPIDER:
-    case TRAN_PIG:
-        result = "front leg";
-        break;
-    case TRAN_DRAGON:
-    case TRAN_BAT:
-        result = "foreclaw";
-        break;
-    case TRAN_BLADE_HANDS:
-        result = "scythe-like blade";
-        break;
-    }
-
-    if (plural)
-        result += 's';
-
-    return result;
-}
-
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool autohit_first)
 {

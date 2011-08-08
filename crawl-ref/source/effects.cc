@@ -833,7 +833,7 @@ void random_uselessness(int scroll_slot)
 
     case 1:
         mprf("The scroll reassembles itself in your %s!",
-             your_hand(true).c_str());
+             you.hand_name(true).c_str());
         inc_inv_item_quantity(scroll_slot, 1);
         break;
 
@@ -847,7 +847,7 @@ void random_uselessness(int scroll_slot)
         else
         {
             mprf("Your %s glow %s for a moment.",
-                 your_hand(true).c_str(), weird_glowing_colour().c_str());
+                 you.hand_name(true).c_str(), weird_glowing_colour().c_str());
         }
         break;
 
