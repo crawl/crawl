@@ -1803,14 +1803,9 @@ std::string item_def::name_aux(description_level_type desc,
             buff << (item_typ == BOOK_MANUAL ? "manual" : "book");
         else if (!know_type)
         {
-            if (item_typ == BOOK_DESTRUCTION)
-                buff << "ancient heavily glowing book";
-            else
-            {
-                buff << book_secondary_string(this->special / NDSC_BOOK_PRI)
-                     << book_primary_string(this->special % NDSC_BOOK_PRI)
-                     << (item_typ == BOOK_MANUAL ? "manual" : "book");
-            }
+            buff << book_secondary_string(this->special / NDSC_BOOK_PRI)
+                 << book_primary_string(this->special % NDSC_BOOK_PRI)
+                 << (item_typ == BOOK_MANUAL ? "manual" : "book");
         }
         else if (item_typ == BOOK_MANUAL)
         {
@@ -2037,6 +2032,9 @@ bool item_type_known(const item_def& item)
     {
         return (true);
     }
+
+    if (item.base_type == OBJ_BOOKS && item.sub_type == BOOK_DESTRUCTION)
+        return (true);
 
     if (!item_type_has_ids(item.base_type))
         return false;
