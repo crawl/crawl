@@ -6301,10 +6301,10 @@ w:20
 @_demon_taunt_@
 
 w:1
-@The_monster@ screams @at_foe@, "@foe_god@ won't protect you, @foe_name@!"
+@The_monster@ screams @at_foe@, "@Foe_god@ won't protect you, @foe_name@!"
 
 w:1
-@The_monster@ screams @at_foe@, "@foe_god@ is but a nuisance to me, mortal!"
+@The_monster@ screams @at_foe@, "@Foe_god@ is but a nuisance to me, mortal!"
 %%%%
 ##############################################
 # Special orc speech
