@@ -190,8 +190,8 @@ Shield
 Your hero's primary attributes are Strength, Dexterity, Intelligence:
 
 Strength
-  Abbreviated to "Str". Affects how much stuff you can carry and also the amount
-  of damage you do in combat.
+  Abbreviated to "Str". Affects how much stuff you can carry and also your
+  ability to use heavy armours effectively.
 
 Intelligence
   Abbreviated to "Int". Affects how well you can cast spells as well as how much
@@ -199,9 +199,9 @@ Intelligence
   influenced by your intelligence.
 
 Dexterity
-  Abbreviated to "Dex". Affects your accuracy in combat, your ability to dodge
-  attacks aimed at you, your general effectiveness with missile weapons, and
-  your ability to use thiefly skills such as backstabbing and disarming traps.
+  Abbreviated to "Dex". Affects your ability to dodge attacks aimed at you, your
+  general effectiveness with missile weapons, and your ability to use thiefly
+  skills such as backstabbing and disarming traps.
 
 They grow permanently from gaining levels, and may increase or decrease
 temporarily from mutations or using appropriate artefacts or abilities.
@@ -495,16 +495,14 @@ should you want to tweak your skillset. Note to new players: it is generally not
 necessary to finetune the skill selection.
 
 You can elect not to practise a particular skill by selecting it in the skill
-screen (making it turn dark grey). This means that you will be less likely to
-increase that skill when you practise it (and will also not spend as many
-experience points on it). The main use of turning off skills is to spend more
-points on other skills: You will not lose any experience by deselecting skills:
-you will rather spend it elsewhere.
+screen (making it turn dark grey). This means that the skill will remain static
+and no experience points will be used to increase it. As a consequence, more
+experience will be spent on your other skills (and thus they will increase more
+quickly).
 
-Occasionally you may find a manual of a skill which allows to make quick
-progress in this area. Whenever you read it, all your free experience is
-transferred into exercising this particular skill. This can be done till the
-manual crumbles, which will occur after a random number of uses.
+Occasionally you may find a manual of a skill which allows you to make quick
+progress in this area. For a while after you read it, experience used to
+practise the given skill will have twice the usual effect.
 
 ****************************************
 F. Monsters
@@ -733,20 +731,21 @@ This is also rather important. Most worn armour improves your Armour Class,
 which decreases the amount of damage you take when something injures you. The
 heavier an armour is, the more AC (armour class) it will provide, at the expense
 of your EV (evasion) and stealth. Heavier types of armour also hamper your melee
-speed, making it harder for you to hit monsters. These effects can be mitigated
-by a high Armour skill. Wearing heavy armour also increases your chances of
-miscasting spells, an effect which is only slightly reduced by your Armour
-skill. On the other hand, body armour will also provide some guaranteed damage
-reduction, and very heavy armours are distinguishedly better at this.
+accuracy, making it harder for you to hit monsters. Wearing heavy armour also
+increases your chances of miscasting spells, an effect which is only slightly
+reduced by your Armour skill. These penalties are smaller if you have a high
+Armour skill, but larger if you have insufficient Strength. On the other hand,
+body armour will also provide some guaranteed damage reduction, and heavier
+armours are better at this.
 
 A Shield normally affects neither your AC nor your evasion, but it lets you
 attempt to block melee attacks and some ranged attacks aimed at you. Wearing a
-shield (especially a large shield) makes you less effective in hand combat and
+shield (especially larger shields) makes you less effective in hand combat and
 hampers your ability to cast spells. Shields are more effective when you're
 fighting a small number of foes than when you're surrounded. There are three
 types: bucklers, shields, and large shields. While it is possible to use bows or
-other launchers and rods while wearing a shield, you'll be less effective at
-doing so.
+crossbows while wearing a shield, you'll be less effective at doing so. Slings
+can be used with a shield without penalty, however.
 
 Some magical armours have special powers. These powers are sometimes automatic,
 affecting you whenever you wear the armour, and sometimes must be activated with
@@ -799,8 +798,9 @@ they can also bottle potions of blood from corpses. This is done using the
 Scrolls have many different magical spells inscribed on them, some good and some
 bad. One of the most useful scrolls is the scroll of identify, which will tell
 you the function of any item you have in your inventory; save these up for the
-more powerful and inscrutable magic items, such as rings. You can read scrolls
-(and by doing so invoke their magic) with the 'r' command.
+more powerful and inscrutable magic items, such as rings or amulets, or for
+items that are dangerous to use when unidentified, such as potions. You can read
+scrolls (and by doing so invoke their magic) with the 'r' command.
 
 ! Magical Potions
 ========================================
@@ -892,7 +892,7 @@ Some books have other special effects, and powerful spellbooks have been known
 to resent the attentions of incompetent magicians.
 
 Occasionally you will find manuals of some skill. Reading these will cause your
-free experience to go straight into that skill.
+experience to have twice the effect as usual when used for training that skill.
 
 { Miscellaneous
 ========================================
@@ -910,7 +910,7 @@ $ Gold
 ========================================
 
 Gold can be used to buy items should you run across shops. (Shops do not buy, by
-the way). There are also a few more esoteric uses for gold. Gold coins do not
+the way.) There are also a few more esoteric uses for gold. Gold coins do not
 have any weight in Crawl.
 
 Whenever you pick up gold, your total wealth is shown as well. Should you want
@@ -987,7 +987,7 @@ Spells are stored in books, which you will occasionally find in the dungeon. You
 can read books with 'r' to check what spells they contain; doing so will allow
 you to read the individual spells' descriptions. In order to try to memorise a
 certain spell, use the 'M' command. Memorising can take a while and, for
-high-level spells, be hazardous.
+spells in certain books, be hazardous.
 
 Each spell has a level. A spell's level denotes the amount of skill required to
 use it and indicates how powerful it may be. You can only memorise a certain
@@ -1017,14 +1017,12 @@ High level spells are difficult to cast, and you may miscast them every once in
 a while (resulting in a waste of magic and possibly dangerous side-effects).
 Your chance of failing to cast a spell properly depends on your skills, your
 intelligence, the level of the spell and whether you are wearing heavy armour.
-Failing to cast a spell exercises your spell skills, but not by as much as
-casting it successfully.
 
 Many of the more powerful spells carry disadvantages or risks; you should read
 the spell description (obtained by reading the spellbook in which you found the
 spell) before casting anything.
 
-There is a completely different way to the use spells: via rods. These are
+There is a completely different way to use spells: via rods. These are
 magical staves holding a number of spells. Rods store a certain number of magic
 points, which are used for powering the spells they contain; when not fully
 charged, they regenerate magic points gradually. You can spend scrolls of
@@ -1492,11 +1490,11 @@ Merfolk
   they can also use longer swords quite well.
 
   As spellcasters, they tend to be quite good in specific areas. Their mystical
-  relationship with water makes it easier for them to use poison and ice magics,
+  relationship with water makes it easier for them to use poison and ice magic,
   which use water occasionally as a material component. The legendary water
   magic of the Merfolk was lost in ancient times, but some of that affinity
   still remains. The instability of their own morphogenic matrix has made them
-  very accomplished transmuters, but most other magics seem foreign to them.
+  very accomplished transmuters, but most other magic seems foreign to them.
 
 Halflings
   Halflings, who are named for being about half the size of Humans, live in
@@ -1569,7 +1567,7 @@ Ogres
 
   Their preferred methods of avoiding beatings are dodging and the use of
   shields. Many Ogres find it natural to wield some large and blunt weapon.
-  (Countless lethal incidents have taught them to leave most edged weapons be).
+  (Countless lethal incidents have taught them to leave most edged weapons be.)
   While all sophisticated forms of missile combat are too awkward for them, they
   are good at throwing things, in particular boulders.
 
@@ -1716,7 +1714,7 @@ Mountain Dwarves
   comfortably and so make quite bad weapons for Mountain Dwarves.
 
   In general, they are rather more resistant to magic than capable of using it
-  themselves. However, they are very proficient at earth and fire magics. Thus,
+  themselves. However, they are very proficient at earth and fire magic. Thus,
   many a Mountain Dwarf started a career as an elementalist in those schools.
   They advance in levels at a similar rate to Deep Elves.
 
@@ -1739,7 +1737,7 @@ Deep Dwarves
   their ground most often go with ranged combat (except for bows, which are too
   unwieldy for them) or spells. Deep Dwarves are highly spiritual beings, often
   portrayed as actual spirits by outsiders. They are most at home with the
-  magics of earth and death.
+  magic of earth and death.
 
   Like all other Dwarves, they are gifted forgers. In addition, Deep Dwarves can
   tinker with gadgets so as to recharge them. However, each time they do so,
@@ -2009,8 +2007,7 @@ Elementalists
     tends towards destructive conjurations.
 
   Ice Magic
-    offers a balance between destructive conjurations and protective
-    charms.
+    offers a balance between destructive conjurations and protective charms.
 
   Air Magic
     provides many useful charms in addition to some unique destructive
