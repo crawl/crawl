@@ -111,8 +111,6 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
 
 void reveal_secret_door(const coord_def& p);
 
-std::string your_hand(bool plural);
-
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool autohit_first = false);
 

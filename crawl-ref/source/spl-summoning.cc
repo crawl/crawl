@@ -196,7 +196,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
 {
     if (!you.weapon())
     {
-        mprf("Your %s feel slithery!", your_hand(true).c_str());
+        mprf("Your %s feel slithery!", you.hand_name(true).c_str());
         return SPRET_ABORT;
     }
 
@@ -1030,7 +1030,7 @@ spret_type cast_tukimas_dance(int pow, god_type god, bool force_hostile,
                  wpn->quantity > 1 ? "" : "s");
         }
         else
-            mprf("Your %s twitch.", your_hand(true).c_str());
+            mprf("Your %s twitch.", you.hand_name(true).c_str());
 
         return SPRET_ABORT;
     }

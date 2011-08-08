@@ -13,7 +13,6 @@
 #include "itemprop.h"
 #include "makeitem.h"
 #include "message.h"
-#include "misc.h"
 #include "shout.h"
 #include "skills2.h"
 
@@ -220,7 +219,7 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
         break;
 
     case SPWPN_RETURNING:
-        msg += " wiggles in your " + your_hand(false) + ".";
+        msg += " wiggles in your " + you.hand_name(false) + ".";
         duration_affected = 5;
         break;
 
@@ -250,7 +249,7 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
 spret_type cast_confusing_touch(int power, bool fail)
 {
     fail_check();
-    msg::stream << "Your " << your_hand(true) << " begin to glow "
+    msg::stream << "Your " << you.hand_name(true) << " begin to glow "
                 << (you.duration[DUR_CONFUSING_TOUCH] ? "brighter" : "red")
                 << "." << std::endl;
 

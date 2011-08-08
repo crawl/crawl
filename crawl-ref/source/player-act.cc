@@ -387,9 +387,39 @@ std::string player::conj_verb(const std::string &verb) const
 
 std::string player::hand_name(bool plural, bool *can_plural) const
 {
-    if (can_plural != NULL)
-        *can_plural = true;
-    return your_hand(plural);
+    bool _can_plural;
+    if (can_plural == NULL)
+        can_plural = &_can_plural;
+    *can_plural = true;
+
+    std::string str;
+
+    if (form == TRAN_BAT || form == TRAN_DRAGON)
+        str = "foreclaw";
+    else if (form == TRAN_PIG || form == TRAN_SPIDER)
+        str = "front leg";
+    else if (form == TRAN_ICE_BEAST)
+        str = "paw";
+    else if (form == TRAN_BLADE_HANDS)
+        str = "scythe-like blade";
+    else if (form == TRAN_LICH || form == TRAN_STATUE
+             || !form_changed_physiology())
+    {
+        if (species == SP_FELID)
+            str = "paw";
+        else if (you.has_usable_claws())
+            str = "claw";
+        else if (you.has_usable_tentacles())
+            str = "tentacle";
+    }
+
+    if (str.empty())
+        return (plural ? "hands" : "hand");
+
+    if (plural && *can_plural)
+        str = pluralise(str);
+
+    return str;
 }
 
 std::string player::foot_name(bool plural, bool *can_plural) const
@@ -403,20 +433,21 @@ std::string player::foot_name(bool plural, bool *can_plural) const
 
     if (form == TRAN_SPIDER)
         str = "hind leg";
-    else if (!form_changed_physiology())
+    else if (form == TRAN_LICH || form == TRAN_STATUE
+             || !form_changed_physiology())
     {
         if (player_mutation_level(MUT_HOOVES) >= 3)
             str = "hoof";
-        else if (player_mutation_level(MUT_TALONS) >= 3)
+        else if (you.has_usable_talons())
             str = "talon";
+        else if (you.has_usable_tentacles())
+        {
+            str         = "tentacles";
+            *can_plural = false;
+        }
         else if (species == SP_NAGA)
         {
             str         = "underbelly";
-            *can_plural = false;
-        }
-        else if (species == SP_OCTOPODE)
-        {
-            str         = "tentacles";
             *can_plural = false;
         }
         else if (fishtail)
@@ -443,7 +474,7 @@ std::string player::arm_name(bool plural, bool *can_plural) const
     if (can_plural != NULL)
         *can_plural = true;
 
-    std::string adj = "";
+    std::string adj;
     std::string str = "arm";
 
     if (player_genus(GENPC_DRACONIAN) || species == SP_NAGA)

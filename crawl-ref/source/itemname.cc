@@ -28,7 +28,6 @@
 #include "items.h"
 #include "macro.h"
 #include "makeitem.h"
-#include "misc.h"
 #include "mon-util.h"
 #include "notes.h"
 #include "player.h"
@@ -245,7 +244,7 @@ std::string item_def::name(description_level_type descrip,
                     else if (you.species == SP_FELID)
                         buff << " (in mouth)";
                     else
-                        buff << " (in " << your_hand(false) << ")";
+                        buff << " (in " << you.hand_name(false) << ")";
                     break;
                 case EQ_CLOAK:
                 case EQ_HELMET:
@@ -260,7 +259,7 @@ std::string item_def::name(description_level_type descrip,
                     buff << " (";
                     buff << (eq == EQ_LEFT_RING ? "left" : "right");
                     buff << " ";
-                    buff << your_hand(false);
+                    buff << you.hand_name(false);
                     buff << ")";
                     break;
                 case EQ_AMULET:

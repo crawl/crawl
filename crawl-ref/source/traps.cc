@@ -1151,7 +1151,7 @@ void remove_net_from(monster* mon)
             if (mitm[net].plus < -7)
             {
                 mprf("Whoops! The net comes apart in your %s!",
-                     your_hand(true).c_str());
+                     you.hand_name(true).c_str());
                 mon->del_ench(ENCH_HELD, true);
                 destroy_item(net);
                 net_destroyed = true;

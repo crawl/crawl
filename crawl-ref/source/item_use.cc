@@ -767,10 +767,10 @@ bool do_wear_armour(int item, bool quiet)
     {
         if (!quiet)
         {
-            const char *how_many = you.has_tentacles(false) == 3 ? "nine"
+            const char* how_many = you.has_tentacles(false) == 3 ? "nine"
                                                                  : "three";
             mprf("You'd need %s %s to do that!", how_many,
-                 your_hand(true).c_str());
+                 you.hand_name(true).c_str());
         }
         return (false);
     }
@@ -1208,7 +1208,7 @@ static bool _fire_validate_item(int slot, std::string &err)
             || you.inv[slot].base_type == OBJ_STAVES)
         && you.inv[slot].cursed())
     {
-        err = "That weapon is stuck to your " + your_hand(false) + "!";
+        err = "That weapon is stuck to your " + you.hand_name(false) + "!";
         return (false);
     }
     else if (wearing_slot(slot))
@@ -5300,7 +5300,7 @@ void read_scroll(int slot)
         break;
 
     case SCR_IMMOLATION:
-        mprf("The scroll explodes in your %s!", your_hand(true).c_str());
+        mprf("The scroll explodes in your %s!", you.hand_name(true).c_str());
 
         // Doesn't destroy scrolls anymore, so no special check needed. (jpeg)
         immolation(10, IMMOLATION_SCROLL, you.pos(), alreadyknown, &you);

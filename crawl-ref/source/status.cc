@@ -339,7 +339,7 @@ void fill_status_info(int status, status_info* inf)
         const int high = 40 * BASELINE_DELAY;
         const int low  = 20 * BASELINE_DELAY;
         inf->long_text = std::string("Your ")
-                         + your_hand(true)
+                         + you.hand_name(true)
                          + " are glowing ";
         if (dur > high)
             inf->long_text += "an extremely bright ";
