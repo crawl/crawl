@@ -363,7 +363,7 @@ BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   AC = .
 KFEAT:   B = +
-COLOUR:  defgAC = lightred
+COLOUR:  defgAC = lightblue
 FTILE:   defgAC = tutorial_pad
 ITEM:    pair of boots race:no_race mundane not_cursed
 ITEM:    bread ration
@@ -426,7 +426,7 @@ BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   ^ = needle trap
 KFEAT:   ABCD = .
-COLOUR:  ABCDdefg = lightred
+COLOUR:  ABCDdefg = lightblue
 COLOUR:  .1234h = brown
 FTILE:   .{})^1234h = floor_swamp, t = floor_grass
 FTILE:   ABCDdefg = tutorial_pad
@@ -494,7 +494,7 @@ PLACE:   D:3
 BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   ABC = .
-COLOUR:  ABCdefgh = lightred
+COLOUR:  ABCdefgh = lightblue
 FTILE:   ABCdefgh = tutorial_pad
 # TODO: Highlight tiles.
 KFEAT:   ' = .

@@ -24,13 +24,13 @@ function tutorial_msg.start ()
         text = text .. "by clicking somewhere with your <white>mouse</white>, or "
     end
     text = text .. "with the <white>arrow keys</white>. "
-           .. "To begin with, head over to that <lightred>red</lightred> square to the right!"
+           .. "To begin with, head over to that <lightblue>blue</lightblue> square to the right!"
     crawl.mpr(text, "tutorial")
 end
 
 function tutorial_msg.go_on ()
     return tutorial_message("You're doing great! Now, explore a bit until you "
-                            .. "reach the next red square.")
+                            .. "reach the next blue square.")
 end
 
 function tutorial_msg.diagonal1 ()
@@ -291,7 +291,7 @@ BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   ABCDEF = .
 KFEAT:   HI$ = '
-COLOUR:  ABCDEFHI$ = lightred
+COLOUR:  ABCDEFHI$ = lightblue
 COLOUR:  ' = brown
 FTILE:   G'[ = floor_swamp, t = floor_grass
 FTILE:   ABCDEFHI$ = tutorial_pad
@@ -364,7 +364,7 @@ PLACE:   D:2
 BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   ABCDEFGH = .
-COLOUR:  ABCDEFGH = lightred
+COLOUR:  ABCDEFGH = lightblue
 FTILE:   ABCDEFGH = tutorial_pad
 MARKER:  A = lua:tutorial_msg.door()
 MARKER:  B = lua:tutorial_msg.shiftmove()

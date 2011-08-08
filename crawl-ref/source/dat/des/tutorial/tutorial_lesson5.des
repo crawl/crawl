@@ -185,7 +185,7 @@ BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   bABCDEHIJ = .
 KFEAT:   F = +
-COLOUR:  ABCDEHIJ = lightred
+COLOUR:  ABCDEHIJ = lightblue
 FTILE:   ABCDEHIJ = tutorial_pad
 KPROP:   b_ = bloody / nothing
 KFEAT:   _ = altar_trog
