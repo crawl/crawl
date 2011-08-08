@@ -271,7 +271,6 @@ _mercenary_guard_rare_
 @The_monster@ shouts @at_foe@, "It's the end of the party!"
 
 @The_monster@ shouts @at_foe@, "Surrender and die!"
-
 ## END _mercenary_guard_ ##
 %%%%
 _wizard_
@@ -333,7 +332,6 @@ SPELL:@The_monster@ says @to_foe@, "Argatax netranoch dertex."
 SPELL:@The_monster@ says @to_foe@, "Dogrw nutew berg."
 
 SPELL:@The_monster@ shouts @at_foe@, "Entram moth deg ulag!"
-
 ## END _wizard_ ##
 %%%%
 _hostile_adventurer_
@@ -406,7 +404,6 @@ _friendly_imp_rare_
 @The_monster@ shouts, "Over here! I found it!"
 
 @The_monster@ says, "Just tell me who NOT to kill."
-
 ## END _friendly_imp_ ##
 %%%%
 _friendly_imp_greeting
@@ -800,7 +797,6 @@ VISUAL:@The_monster@ suddenly looks very angry at the Dungeon.
 @The_monster@ cries, "My head! MY HEAD!!!"
 
 @The_monster@ screams, "NO! I can't bear this much noise."
-
 ## END confused humanoid ##
 %%%%
 default friendly fleeing humanoid
@@ -830,7 +826,6 @@ _friendly_fleeing_rare_
 @The_monster@ cries, "Don't forget your friends!"
 
 @The_monster@ shouts, "Please protect me!"
-
 ## END friendly fleeing humanoid ##
 %%%%
 default fleeing humanoid
@@ -1658,7 +1653,6 @@ VISUAL:@The_monster@ grins evilly.
 @The_monster@ whispers, "They're coming for you..."
 
 @The_monster@ whispers, "Trust me. Just give in."
-
 %%%%
 _player_ghost_rare_
 
@@ -1677,7 +1671,6 @@ _player_ghost_rare_
 @The_monster@ whispers, "Soon you will have time, lots of time..."
 
 @The_monster@ @wails@, "You must not fail where I succeeded!"
-
 %%%%
 ## END player ghost ##
 #######################################
@@ -1690,7 +1683,6 @@ Aizul
 @_Aizul_common_@
 
 w:5
-
 @_Aizul_rare_@
 %%%%
 _Aizul_common_
@@ -1759,7 +1751,6 @@ _Agnes_rare_
 @The_monster@ screams @at_foe@, "I want your rings! And amulets! And... EVERYTHING!"
 
 @The_monster@ screams, "I hate dirty adventurers like you!" @player_only@
-
 ## END Agnes ##
 %%%%
 ############ ANTAEUS ### A titan demonically corrupted into a hell lord.
@@ -2834,7 +2825,6 @@ w:50
 @The_monster@ says, "The Crypt, the Tomb, what's next? The Coffin?"
 %%%%
 ######################################################################## GODS #
-%%%%
 Zin Donald
 
 w:50
@@ -4663,7 +4653,6 @@ _Maud_rare_
 @The_monster@ screams @at_foe@, "If you give me 'Entarex', I'll let you live!"
 
 @The_monster@ asks @foe,@ "Will you think of me as you die?"
-
 ## END Maud ##
 %%%%
 ############ MAURICE ### A thief.
@@ -5174,7 +5163,7 @@ VISUAL:@The_monster@ looks around for something heavy to throw at @foe@.
 @The_monster@ says @to_foe@, "Do you like to play 'catch'?"
 
 #I suppose this line may not fit if the player is of certain species...
-@The_monster@ says @to_foe@, "@foe_genus@ for dinner? Sounds delicious!"
+@The_monster@ says @to_foe@, "@Foe_genus@ for dinner? Sounds delicious!"
 ## END Polyphemus ##
 %%%%
 ############ PRINCE RIBBIT ### Prince turned into frog
@@ -5395,6 +5384,7 @@ __NONE
 @The_monster@ says, "I keep my friends close, but my enemies closer."
 
 @The_monster@ says, "Please, won't you take my hand."
+
 w:5
 @The_monster@ says @to_foe@, "Don't just stand there! You can move, can't you?"
 ## END Roxanne ##
@@ -5864,8 +5854,8 @@ _Xtahua_rare_
 # Specific non-unique monsters
 ##########################################
 
-################## Chaos spawn #############################
 %%%%
+################## Chaos spawn #############################
 # Chaos spawns shouldn't have coherent speech, since that would be too
 # orderly for beings of pure chaos.
 chaos spawn
@@ -5879,9 +5869,8 @@ VISUAL:@The_monster@ briefly grows a face disturbingly similar to your own.
 @The_monster@ ululates chillingly with @possessive@ many mouths.
 
 @The_monster@ gibbers incoherently in a cacophony of voices.
-
-################## Catoblepas ##############################
 %%%%
+################## Catoblepas ##############################
 catoblepas
 
 @The_monster@ roars fiercely, eyes lowered.
@@ -5935,15 +5924,13 @@ w:1
 
 w_1
 Tears glisten in @possessive@ eyes as @pronoun@ regards a sphere of stone @pronoun@ breathed into being on the floor.
-
-################## Crystal golem ###########################
 %%%%
+################## Crystal golem ###########################
 crystal golem
 
 VISUAL:@The_monster@ glitters, brittle, in the dim dungeon light. @Possessive@ facets promise deadly secrets.
-
-################## Death cob ###############################
 %%%%
+################## Death cob ###############################
 death cob
 
 w:1
@@ -5951,9 +5938,8 @@ The death cob makes a corny joke.
 
 w:1999
 __NONE
-
-################## Death yak ###############################
 %%%%
+################## Death yak ###############################
 death yak
 
 @yak@
@@ -5961,40 +5947,34 @@ death yak
 deep elf high priest
 
 @_high_priest_@
-
 ################## Deep elf sorcerer #######################
 %%%%
 deep elf sorcerer
 
 @_wizard_@
-
-################## #########################################
 %%%%
+################## #########################################
 default electric golem
 
 SOUND:@The_monster@ crackles and sizzles.
-
-################## #########################################
 %%%%
+################## #########################################
 default ice statue
 
 VISUAL:@The_monster@ glitters chillingly in the dim dungeon light.
-
-################## #########################################
 %%%%
+################## #########################################
 hell lord
 
 @_hell_lord_taunt_@
-
-################## #########################################
 %%%%
+################## #########################################
 butterfly
 
 VISUAL SPELL:The butterfly flaps @possessive@ wings in an oddly mesmeric pattern.
 VISUAL WARN:You feel entranced by @possessive@ movement.
-
-################## Imps#####################################
 %%%%
+################## Imps#####################################
 imp
 
 w:1
@@ -6029,10 +6009,9 @@ w:1
 
 w:2
 @_hostile_imp_@
-
+%%%%
 ################## Reaper ##################################
 # The reaper has come for you!
-%%%%
 reaper
 
 @The_monster@ whispers, "Time's up, @foe_name@!"
@@ -6052,18 +6031,16 @@ VISUAL:@The_monster@ draws a finger across @possessive@ throat.
 @The_monster@ shouts @at_foe@, "You must die NOW!"
 
 @The_monster@ shouts @at_foe@, "Die, @foe_name@!"
-
-################## Killer bees #############################
 %%%%
+################## Killer bees #############################
 # Too many killer bees in the hive to have them give messages, unless
 # they're confused or fleeing.
 killer bee
 
 __NONE
-
+%%%%
 ################## Killer Klown ############################
 # Welcome to the circus!
-%%%%
 Killer Klown
 
 @_Killer_Klown_common_@
@@ -6108,9 +6085,8 @@ VISUAL:@The_monster@ skips for a moment.
 
 @The_monster@ says, "Trust me, I'm a doctor."
 ## END Killer Klown ##
-
-################## Moth of wrath ###########################
 %%%%
+################## Moth of wrath ###########################
 moth of wrath
 
 VISUAL:@The_monster@ angrily waves @possessive@ antennae.
@@ -6143,26 +6119,22 @@ VISUAL:@The_monster@ tries to bite you, but has no teeth.
 
 VISUAL:@The_monster@ forgets @pronoun@ is a moth of wrath and starts meditating mothfully.
 VISUAL ENCHANT:The Dungeon calms.
-
-################## Statues ##################
 %%%%
+################## Statues ##################
 default orange crystal statue
 
 VISUAL:@The_monster@ glitters topaz in the dim dungeon light.
-
 %%%%
 default silver statue
 
 VISUAL:@The_monster@ glitters argentine in the dim dungeon light.
-
-################## Sheep ###################################
 %%%%
+################## Sheep ###################################
 sheep
 
 @The_monster@ "Baaaas" balefully.
-
-################## Silent spectre ##########################
 %%%%
+################## Silent spectre ##########################
 silenced silent spectre
 
 VISUAL:@The_monster@ gestures at you to be quiet.
@@ -6176,10 +6148,9 @@ VISUAL:@The_monster@ fades in and out of visibility.
 VISUAL:@The_monster@ flickers into the darkness.
 
 VISUAL:@The_monster@ grins at you slowly.
-
+%%%%
 ################## Tormentor ###############################
 # A cruel demon
-%%%%
 tormentor
 
 w:1
@@ -6233,19 +6204,16 @@ _tormentor_rare_
 
 @The_monster@ shouts @at_foe@, "I'll tear you apart!"
 ## END _tormentor_ ##
-
-################## Wizard ##################################
 %%%%
+################## Wizard ##################################
 wizard
 
 @_wizard_@
-
-################## Yak #####################################
 %%%%
+################## Yak #####################################
 yak
 
 @The_monster@ snorts and paws the @surface@.
-
 %%%%
 ########################################################################
 # Religious messaging
@@ -6595,10 +6563,10 @@ _hostile_orc_beogh_believer_speech_rare_
 VISUAL:@The_monster@ shakes @possessive@ head.
 
 VISUAL:@The_monster@ stares at you quizzically. @player_only@
+%%%%
 ###################################################
 # Orcish followers of Beogh's messiah
 ###################################################
-%%%%
 friendly related beogh orc
 
 # As they'll be constantly around you, don't let them talk too much.
