@@ -161,7 +161,11 @@ int fdatasync(int fd)
     // Sane systems might have this problem only on disks that do write caching
     // but ignore flush requests.  fsync() should never return before the disk
     // claims the flush completed, but this is not the case on OS X.
-    return fcntl(fd, F_FULLFSYNC, 0);
+    //
+    // Except, this is the case for internal drives only.  For "external" ones,
+    // F_FULLFSYNC is said to fail (at least on some versions of OS X), while
+    // fsync() actually works.  Thus, we need to try both.
+    return fcntl(fd, F_FULLFSYNC, 0) && fsync(fd);
 # else
     return fsync(fd);
 # endif
