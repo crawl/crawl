@@ -1010,7 +1010,7 @@ std::string item_class_name(int type, bool terse)
     return ("");
 }
 
-std::string item_slot_name(equipment_type type, bool terse)
+const char* item_slot_name(equipment_type type, bool terse)
 {
     if (terse)
     {
