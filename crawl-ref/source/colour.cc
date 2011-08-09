@@ -537,6 +537,10 @@ void init_element_colours()
     add_element_colour(new element_colour_calc(
                             ETC_RANDOM, "random", _etc_random
                        ));
+    // redefined by Lua later
+    add_element_colour(new element_colour_calc(
+                            ETC_DISCO, "disco", _etc_random
+                       ));
 }
 
 void clear_colours_on_exit()
