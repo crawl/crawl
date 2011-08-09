@@ -5916,7 +5916,7 @@ w:1
 w:1
 @The_monster@ breathes on the earth until a ridged crescent appears, raises @possessive@ hoof in rage, then stops.
 
-w_1
+w:1
 Tears glisten in @possessive@ eyes as @pronoun@ regards a sphere of stone @pronoun@ breathed into being on the floor.
 %%%%
 ################## Crystal golem ###########################
