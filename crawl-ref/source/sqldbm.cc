@@ -9,6 +9,7 @@
 #include "stuff.h"
 #include "syscalls.h"
 #include <fcntl.h>
+#include <unistd.h>
 #include <cstring>
 
 #ifdef USE_SQLITE_DBM
