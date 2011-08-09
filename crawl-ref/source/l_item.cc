@@ -289,7 +289,7 @@ IDEF(subtype)
     {
         const char *s = NULL;
         if (item->base_type == OBJ_ARMOUR)
-            s = item_slot_name(get_armour_slot(*item), true).c_str();
+            s = item_slot_name(get_armour_slot(*item), true);
         if (item_type_known(*item))
         {
             if (item->base_type == OBJ_JEWELLERY)
