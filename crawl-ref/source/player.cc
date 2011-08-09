@@ -5318,8 +5318,8 @@ void player::init()
     skill_order.init(MAX_SKILL_ORDER);
     exercises.clear();
 
-    you.skill_menu_do = SKM_NONE;
-    you.skill_menu_view = SKM_NONE;
+    skill_menu_do = SKM_NONE;
+    skill_menu_view = SKM_NONE;
 
     transfer_from_skill = SK_NONE;
     transfer_to_skill = SK_NONE;
