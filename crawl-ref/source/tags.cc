@@ -28,6 +28,7 @@
 
 #include "artefact.h"
 #include "branch.h"
+#include "colour.h"
 #include "coord.h"
 #include "coordit.h"
 #include "describe.h"
@@ -2680,6 +2681,8 @@ void unmarshallMapCell(reader &th, map_cell& cell)
 
     if (flags & MAP_SERIALIZE_FEATURE_COLOUR)
         feat_colour = unmarshallUnsigned(th);
+    if (feat_colour > ETC_FIRST_LUA)
+        feat_colour = ETC_FIRST_LUA;
 
     if (feat_is_trap(feature))
 #if TAG_MAJOR_VERSION == 32
@@ -3085,6 +3088,9 @@ static void tag_read_level(reader &th)
 
     env.grid_colours.init(BLACK);
     _run_length_decode(th, unmarshallByte, env.grid_colours, GXM, GYM);
+    for (rectangle_iterator ri(0); ri; ++ri)
+        if (env.grid_colours(*ri) > ETC_FIRST_LUA)
+            env.grid_colours(*ri) = ETC_FIRST_LUA;
 
     env.cloud_no = 0;
 
