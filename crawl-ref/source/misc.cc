@@ -1846,7 +1846,7 @@ void timeout_malign_gateways (int duration)
             if (mmark->monster_summoned && !mons)
             {
                 // The marker hangs around until later.
-                if (env.grid(mmark->pos) == DNGN_TEMP_PORTAL)
+                if (env.grid(mmark->pos) == DNGN_MALIGN_GATEWAY)
                     env.grid(mmark->pos) = DNGN_FLOOR;
 
                 env.markers.remove(mmark);

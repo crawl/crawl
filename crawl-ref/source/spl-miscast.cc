@@ -641,7 +641,7 @@ bool MiscastEffect::_malign_gateway()
                                 GOD_NO_GOD,
                                 200));
         env.markers.clear_need_activate();
-        env.grid(point) = DNGN_TEMP_PORTAL;
+        env.grid(point) = DNGN_MALIGN_GATEWAY;
 
         noisy(10, point);
         all_msg = "The dungeon shakes, a horrible noise fills the air, and a portal to some otherworldly place is opened!";
