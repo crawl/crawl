@@ -59,7 +59,8 @@ enum element_type
     ETC_TORNADO,        // twisting swirls of gray
     ETC_LIQUEFIED,      // ripples of yellow and brown.
     ETC_SWAMP_TREE,     // colour of trees on water
-    ETC_FIRST_LUA = 96, // colour indices have to be <128
+    ETC_DISCO = 96,
+    ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128
 };
 
 typedef int (*element_colour_calculator)(int, const coord_def&);
