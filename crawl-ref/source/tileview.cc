@@ -863,7 +863,7 @@ static bool _suppress_blood(const coord_def pos)
     if (feat_stair_direction(feat) != CMD_NO_CMD)
         return (true);
 
-    if (feat == DNGN_TEMP_PORTAL)
+    if (feat == DNGN_MALIGN_GATEWAY)
         return (true);
 
     const trap_def *trap = find_trap(pos);

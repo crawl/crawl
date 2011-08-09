@@ -2437,7 +2437,7 @@ int monster_die(monster* mons, killer_type killer,
         {
             coord_def base_pos = mons->props["base_position"].get_coord();
 
-            if (env.grid(base_pos) == DNGN_TEMP_PORTAL)
+            if (env.grid(base_pos) == DNGN_MALIGN_GATEWAY)
             {
                 env.grid(base_pos) = DNGN_FLOOR;
             }

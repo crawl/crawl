@@ -5439,7 +5439,7 @@ void monster::apply_enchantment(const mon_enchant &me)
                 mprf("The portal closes; %s is severed.", name(DESC_NOCAP_THE).c_str());
             }
 
-            if (env.grid(base_position) == DNGN_TEMP_PORTAL)
+            if (env.grid(base_position) == DNGN_MALIGN_GATEWAY)
             {
                 env.grid(base_position) = DNGN_FLOOR;
             }

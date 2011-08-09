@@ -152,7 +152,7 @@ bool feat_sealable_portal(dungeon_feature_type feat)
 bool feat_is_portal(dungeon_feature_type feat)
 {
     return (feat == DNGN_ENTER_PORTAL_VAULT || feat == DNGN_EXIT_PORTAL_VAULT
-            || feat == DNGN_TEMP_PORTAL);
+            || feat == DNGN_MALIGN_GATEWAY);
 }
 
 // Returns true if the given dungeon feature is a stair, i.e., a level
@@ -345,7 +345,7 @@ bool feat_is_opaque(dungeon_feature_type feat)
 
 bool feat_is_solid(dungeon_feature_type feat)
 {
-    return (feat <= DNGN_MAXSOLID || feat == DNGN_TEMP_PORTAL);
+    return (feat <= DNGN_MAXSOLID || feat == DNGN_MALIGN_GATEWAY);
 }
 
 bool cell_is_solid(int x, int y)
@@ -816,7 +816,7 @@ bool is_critical_feature(dungeon_feature_type feat)
 {
     return (feat_stair_direction(feat) != CMD_NO_CMD
             || feat_altar_god(feat) != GOD_NO_GOD
-            || feat == DNGN_TEMP_PORTAL);
+            || feat == DNGN_MALIGN_GATEWAY);
 }
 
 bool is_valid_border_feat(dungeon_feature_type feat)

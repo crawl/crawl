@@ -131,7 +131,7 @@ int player::get_experience_level() const
 
 bool player::can_pass_through_feat(dungeon_feature_type grid) const
 {
-    return !feat_is_solid(grid) && grid != DNGN_TEMP_PORTAL;
+    return !feat_is_solid(grid) && grid != DNGN_MALIGN_GATEWAY;
 }
 
 bool player::is_habitable_feat(dungeon_feature_type actual_grid) const
