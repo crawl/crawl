@@ -623,5 +623,6 @@ int click_travel(const coord_def &gc, bool force);
 #endif
 
 bool check_for_interesting_features();
+void clear_level_target();
 
 #endif // TRAVEL_H
