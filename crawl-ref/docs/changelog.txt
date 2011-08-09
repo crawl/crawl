@@ -14,6 +14,7 @@ loaded in 0.9, you can not go back to 0.8.
 * New spells: Inner Flame, Shroud of Golubria.
 * Removed spells: Teleport Self, Berserker Rage, Resist Poison.
 * New monsters: Ignacio (unique executioner), catoblepas, basilisk.
+* New subgame: Zot Defence.  Consider it of experimental quality, though.
 
 Skills
 ------
