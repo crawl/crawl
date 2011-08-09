@@ -4482,3 +4482,9 @@ bool check_for_interesting_features()
     env.map_shadow = env.map_knowledge;
     return discoveries.prompt_stop();
 }
+
+void clear_level_target()
+{
+    level_target.clear();
+    trans_travel_dest.clear();
+}
