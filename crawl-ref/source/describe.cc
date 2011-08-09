@@ -3802,7 +3802,8 @@ static bool _print_final_god_abil_desc(int god, const std::string &final_msg,
     {
         // XXX: Handle the display better when the description and cost
         // are too long for the screen.
-        int spacesleft = 79 - strwidth(buf) - strwidth(cost);
+        int spacesleft =
+            get_number_of_cols() - 1 - strwidth(buf) - strwidth(cost);
         for (; spacesleft > 0; --spacesleft)
             buf += ' ';
         buf += cost;
