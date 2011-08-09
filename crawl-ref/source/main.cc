@@ -314,7 +314,6 @@ static void _reset_game()
     crawl_state.title_screen = false;
     tiles.clear_text_tags(TAG_NAMED_MONSTER);
 #endif
-    reset_next_colour();
 }
 
 static void _launch_game_loop()

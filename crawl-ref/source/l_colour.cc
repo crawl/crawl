@@ -41,13 +41,6 @@ int lua_element_colour_calc::get(const coord_def& loc, bool non_random)
     return (*real_calc)(rand(non_random), loc, function);
 }
 
-static int next_colour = ETC_FIRST_LUA;
-
-void reset_next_colour()
-{
-    next_colour = ETC_FIRST_LUA;
-}
-
 static int _lua_element_colour(int rand, const coord_def& loc,
                                lua_datum function)
 {
@@ -78,8 +71,9 @@ LUAFN(l_add_colour)
     CLua& vm(CLua::get_vm(ls));
     lua_datum function(vm, 2);
 
+    // FIXME: kludged to handle only one occurence!
     add_element_colour(
-        new lua_element_colour_calc((element_type)(next_colour++),
+        new lua_element_colour_calc((element_type)(ETC_FIRST_LUA),
                                     name, function)
   );
 
