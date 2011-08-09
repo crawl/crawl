@@ -73,6 +73,7 @@ LUAFN(l_add_colour)
     CLua& vm(CLua::get_vm(ls));
     lua_datum function(vm, 2);
 
+    ASSERT(next_colour < 128);
     add_element_colour(
         new lua_element_colour_calc((element_type)(next_colour++),
                                     name, function)
