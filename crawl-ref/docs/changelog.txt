@@ -9,7 +9,7 @@ loaded in 0.9, you can not go back to 0.8.
 --------------
 * New skill training system. Experience pool and victory dancing are gone.
 * Ashenzari: Remove passive XP boost, add a skill boost depending on level
-of boundedness and which equipment is bound.
+  of boundedness and which equipment is bound.
 * Rename Crusader to Skald, change starting book and skill levels.
 * New spells: Inner Flame, Shroud of Golubria.
 * Removed spells: Teleport Self, Berserker Rage, Resist Poison.
@@ -18,8 +18,8 @@ of boundedness and which equipment is bound.
 Skills
 ------
 * Skill training: skills are trained immediately when XP is gained. The skills
-trained are the ones that have been used recently (auto) or the ones which have
-been selected (manual).
+  trained are the ones that have been used recently (auto) or the ones which
+  have been selected (manual).
 * Skill costs: the XP to skill point ratio no longer depends on skill level.
 * Magic school skills early game discount removed.
 
@@ -36,7 +36,7 @@ Gods
 * Zin's Vitalisation is cheaper and cures petrification, stat boost stackable.
 * Don't allow avoiding good god wrath by swapping via another good god.
 * Ashenzari: Remove passive XP boost, add a skill boost depending on level
-of boundedness and which equipment is bound.
+  of boundedness and which equipment is bound.
 * Ashenzari: reduce reskilling XP penalty and some ability piety costs.
 * Ashenzari wrath: reduce all skills for the duration of wrath.
 
@@ -87,9 +87,10 @@ Interface
 Spells
 ------
 * New spell: Shroud of Golubria (comes in Skald and Warper starting books).
-Prevents some melee damage, but likely to break against more damaging attacks.
+  Prevents some melee damage, but likely to break against more damaging
+  attacks.
 * New spell: Inner Flame (comes in starting book of Fire Elementalists).
-Causes targeted enemy to explode in a fireball when killed.
+  Causes targeted enemy to explode in a fireball when killed.
 * Removed spells: Teleport Self, Berserker Rage, Resist Poison.
 * Tornado: radius starts low, increases over time, add cooldown, adjust damage.
 * Tornado moves monsters within its radius around.
