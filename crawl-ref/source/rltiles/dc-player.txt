@@ -543,6 +543,7 @@ mace MACE2
 mace3 MACE
 mace2 GREAT_MACE
 mace_ruby MACE_RUBY
+ankus ANKUS
 morningstar MORNINGSTAR2
 morningstar2 MORNINGSTAR
 eveningstar EVENINGSTAR

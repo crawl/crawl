@@ -92,7 +92,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_EVENINGSTAR:       return TILEP_HAND1_EVENINGSTAR;
     case WPN_GIANT_CLUB:        return TILEP_HAND1_GIANT_CLUB_PLAIN;
     case WPN_GIANT_SPIKED_CLUB: return TILEP_HAND1_GIANT_CLUB_SPIKE_SLANT;
-    case WPN_ANKUS:             return TILEP_HAND1_MACE;
+    case WPN_ANKUS:             return TILEP_HAND1_ANKUS;
     case WPN_WHIP:              return TILEP_HAND1_WHIP;
     case WPN_DEMON_WHIP:        return TILEP_HAND1_BLACK_WHIP;
     case WPN_SACRED_SCOURGE:    return TILEP_HAND1_SACRED_SCOURGE;
