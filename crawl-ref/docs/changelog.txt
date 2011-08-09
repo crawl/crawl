@@ -13,7 +13,7 @@ of boundedness and which equipment is bound.
 * Rename Crusader to Skald, change starting book and skill levels.
 * New spells: Inner Flame, Shroud of Golubria.
 * Removed spells: Teleport Self, Berserker Rage, Resist Poison.
-* New monsters: Ignatio (unique executioner), catoblepas, basilisk.
+* New monsters: Ignacio (unique executioner), catoblepas, basilisk.
 
 Skills
 ------
