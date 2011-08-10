@@ -219,7 +219,6 @@ A: If you are in the Abyss for the first time, chances of getting out are slim. 
 
 * You need to find a gateway leading out of the Abyss. These are rare!
 * Don't stick around to fight; move as much as possible!
-* The Abyss wraps around, so avoid going straight in one direction.
 * If you have it, use defensive equipment (weapons of protection, etc.).
 * Use teleportation to hopefully end up in a completely new part of the Abyss.
 * Teleportation might take much longer to kick in than in the Dungeon.
