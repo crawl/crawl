@@ -156,8 +156,6 @@
     #ifndef REGEX_PCRE
     #define REGEX_PCRE
     #endif
-
-    #define NEED_USLEEP
 #else
     #error Missing platform #define or unsupported compiler.
 #endif
