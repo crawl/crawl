@@ -20,6 +20,7 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
+#include "tiledef-player.h"
 #include "tilemcache.h"
 #include "tilepick.h"
 #include "traps.h"
@@ -662,6 +663,27 @@ void tile_place_item_marker(const coord_def &gc, const item_def &item)
         if (item_needs_autopickup(item))
             env.tile_bk_bg(gc) |= TILE_FLAG_CURSOR3;
     }
+}
+
+/**
+ * Place the tile for an unseen monster's disturbance.
+ *
+ * @param where    The disturbance's map position.
+**/
+void tile_place_invisible_monster(const coord_def &gc)
+{
+    const coord_def ep = grid2show(gc);
+
+    tileidx_t t = TILE_UNSEEN_MONSTER;
+    if (!you.see_cell(gc))
+    {
+        env.tile_bk_fg(gc) = t;
+        return;
+    }
+    if (you.visible_igrd(gc) != NON_ITEM)
+        t |= TILE_FLAG_S_UNDER;
+
+    env.tile_fg(ep) = t;
 }
 
 // Called from show_def::_update_monster() in show.cc
