@@ -332,6 +332,23 @@ static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
 }
 
 /**
+ * Mark the estimated position of an invisible monster.
+ *
+ * Marks a spot on the map as possibly containing an unseen monster
+ * (showing up as a disturbance in the air), and also places the
+ * corresponding tile.
+ *
+ * @param where    The disturbance's map position.
+**/
+static void _mark_invisible_monster(const coord_def &where)
+{
+    env.map_knowledge(where).set_invisible_monster();
+#ifdef USE_TILE
+    tile_place_invisible_monster(where);
+#endif
+}
+
+/**
  * Update map knowledge for monsters
  *
  * This function updates the map_knowledge grid with a monster_info if relevant.
@@ -403,11 +420,11 @@ static void _update_monster(const monster* mons)
             // Otherwise just indicate that there's a monster nearby
             coord_def new_pos = gp + Compass[_hashed_rand(mons, 3, 8)];
             if (_valid_invis_spot(new_pos, mons) && _hashed_rand(mons, 4, 2))
-                env.map_knowledge(new_pos).set_invisible_monster();
+                _mark_invisible_monster(new_pos);
 
             new_pos = gp + Compass[_hashed_rand(mons, 5, 8)];
             if (_valid_invis_spot(new_pos, mons) && !_hashed_rand(mons, 6, 3))
-                env.map_knowledge(new_pos).set_invisible_monster();
+                _mark_invisible_monster(new_pos);
         }
 
         return;
