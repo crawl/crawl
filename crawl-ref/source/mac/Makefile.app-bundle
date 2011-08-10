@@ -22,7 +22,7 @@ BUNDLE_NAME := Dungeon\ Crawl\ Stone\ Soup\ -\ Terminal
 EXECUTABLE_PATH := crawl
 endif
 
-ZIP_NAME = stone_soup-$(SRC_VERSION_SHORT)$(ZIP_QUALIFIER)-macosx$(ZIP_ARCH).zip
+ZIP_NAME = stone_soup-$(SRC_VERSION)$(ZIP_QUALIFIER)-macosx$(ZIP_ARCH).zip
 
 STAGING_DIR := $(CRAWL_SRC)/build/app-bundle-stage
 ZIPPED_APP_DIR := $(CRAWL_SRC)/mac-app-zips
@@ -81,7 +81,7 @@ ifdef TILE_APP
 endif
 
 copy-info-plist:
-	perl -lpe "s/%VERSION%/$(SRC_VERSION_SHORT)/g;" \
+	perl -lpe "s/%VERSION%/$(SRC_VERSION)/g;" \
 	     -e "s/%NAME%/$(APP_NAME)/g;" \
 	     -e "s/%YEAR%/(localtime)[5] + 1900/ge" \
 	     Crawl-Info.plist >$(BUNDLE_DIRNAME)/Contents/Info.plist
