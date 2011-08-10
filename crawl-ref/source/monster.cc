@@ -5588,9 +5588,10 @@ void monster::apply_enchantment(const mon_enchant &me)
     }
 }
 
-void monster::mark_summoned(int longevity, bool mark_items, int summon_type)
+void monster::mark_summoned(int longevity, bool mark_items, int summon_type, bool abj)
 {
-    add_ench(mon_enchant(ENCH_ABJ, longevity));
+    if (abj)
+        add_ench(mon_enchant(ENCH_ABJ, longevity));
     if (summon_type != 0)
         add_ench(mon_enchant(ENCH_SUMMON, summon_type, 0, INT_MAX));
 

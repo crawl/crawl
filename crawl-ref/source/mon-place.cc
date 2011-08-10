@@ -1945,6 +1945,11 @@ static int _place_monster_aux(const mgen_data &mg,
                            mark_items,
                            mg.summon_type);
     }
+
+    // Perm summons shouldn't leave gear either.
+    if (mg.extra_flags & MF_HARD_RESET && mg.extra_flags & MF_NO_REWARD)
+        mon->mark_summoned(0, true, 0, false);
+
     ASSERT(!invalid_monster_index(mg.foe)
            || mg.foe == MHITYOU || mg.foe == MHITNOT);
     mon->foe = mg.foe;
