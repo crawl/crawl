@@ -4,6 +4,9 @@ use warnings;
 undef $/;
 $_=<>;
 
+# Undo Windows newlines.
+s/\r\n/\n/sg;
+
 # URLs have damn inconsistent handling in reST.
 s|:http: ``(.+)``|$1|g;
 s|:telnet: ``(.+)``|telnet:  $1|g;
