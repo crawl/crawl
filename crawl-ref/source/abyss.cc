@@ -478,7 +478,7 @@ void push_features_to_abyss()
         if (feat_is_altar(feature))
             feature = (one_chance_in(9) ? DNGN_ALTAR_XOM : DNGN_FLOOR);
 
-        if (feat_is_trap(feature, true))
+        if (feat_is_trap(feature, true) || feature == DNGN_ENTER_SHOP)
             feature = DNGN_FLOOR;
 
         switch (feature)
