@@ -1794,6 +1794,7 @@ enum map_marker_type
     MAT_TOMB,
     MAT_MALIGN,
     MAT_PHOENIX,
+    MAT_POSITION,
     NUM_MAP_MARKER_TYPES,
     MAT_ANY,
 };

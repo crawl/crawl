@@ -1756,6 +1756,8 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
                 mprf("%s falls through the shaft.",
                      mitm[o].name(DESC_INVENTORY).c_str());
             }
+            // Item will be randomly placed on the destination level.
+            mitm[o].pos = INVALID_COORD;
             add_item_to_transit(dest, mitm[o]);
 
             mitm[o].base_type = OBJ_UNASSIGNED;
