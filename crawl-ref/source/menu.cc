@@ -2576,6 +2576,9 @@ void FormattedTextItem::render()
     if (!m_visible)
         return;
 
+    if (m_max_coord.x == m_min_coord.x || m_max_coord.y == m_min_coord.y)
+        return;
+
 #ifdef USE_TILE_LOCAL
     if (m_dirty)
     {
@@ -2591,6 +2594,8 @@ void FormattedTextItem::render()
 #else
     // Clean the drawing area first
     // clear_to_end_of_line does not work for us
+    ASSERT(m_max_coord.x > m_min_coord.x);
+    ASSERT(m_max_coord.y > m_min_coord.y);
     std::string white_space(m_max_coord.x - m_min_coord.x, ' ');
     for (int i = 0; i < (m_max_coord.y - m_min_coord.y); ++i)
     {
