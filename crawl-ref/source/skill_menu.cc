@@ -557,7 +557,7 @@ void SkillMenuSwitch::set_state(skill_menu_state state)
 int SkillMenuSwitch::size() const
 {
     if (m_states.size() <= 1)
-        return -1;
+        return 0;
     else
         return formatted_string::parse_string(m_text).width();
 }
@@ -734,7 +734,8 @@ void SkillMenu::add_item(TextItem* item, const int size, coord_def &coord)
     item->set_bounds(coord, coord_def(coord.x + size, coord.y + 1));
     item->set_visible(true);
     m_ff->attach_item(item);
-    coord.x += size + 1;
+    if (size)
+        coord.x += size + 1;
 }
 
 void SkillMenu::cancel_help()
