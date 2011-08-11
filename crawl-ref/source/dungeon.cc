@@ -1803,6 +1803,13 @@ static void _dgn_verify_connectivity(unsigned nvaults)
         throw dgn_veto_exception("Failed to ensure interlevel connectivity.");
 }
 
+static void _fixup_hatches_dest()
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+        if (feat_is_escape_hatch(grd(*ri)))
+            env.markers.add(new map_position_marker(*ri, random_in_bounds()));
+}
+
 // Structure of OVERFLOW_TEMPLES:
 //
 // * A vector, with one cell per dungeon level (unset if there's no
@@ -2084,6 +2091,7 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
 
         _fixup_walls();
         _fixup_branch_stairs();
+        _fixup_hatches_dest();
     }
 
     _fixup_misplaced_items();
