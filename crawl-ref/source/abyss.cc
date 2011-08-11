@@ -1410,6 +1410,9 @@ void generate_abyss()
     // Generate the initial abyss without vaults. Vaults are horrifying.
     _abyss_generate_new_area();
     _write_abyssal_features();
+    map_mask abyss_genlevel_mask;
+    _abyss_invert_mask(&abyss_genlevel_mask);
+    _abyss_apply_terrain(abyss_genlevel_mask);
 
     // If we're starting out in the Abyss, make sure the starting grid is
     // an altar to Lugonu and there's an exit near-by.
