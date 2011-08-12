@@ -812,11 +812,13 @@ void bolt::fake_flavour()
 void bolt::digging_wall_effect()
 {
     const dungeon_feature_type feat = grd(pos());
-    if (feat == DNGN_ROCK_WALL || feat == DNGN_CLEAR_ROCK_WALL
-        || feat == DNGN_SLIMY_WALL || feat == DNGN_GRATE)
+    switch (feat)
     {
+    case DNGN_ROCK_WALL:
+    case DNGN_CLEAR_ROCK_WALL:
+    case DNGN_SLIMY_WALL:
+    case DNGN_GRATE:
         nuke_wall(pos());
-
         if (!msg_generated)
         {
             obvious_effect = true;
@@ -837,9 +839,19 @@ void bolt::digging_wall_effect()
             mprf("The %s liquefies and sinks out of sight.", wall.c_str());
             // This is silent.
         }
-    }
-    else if (feat_is_wall(feat))
+        break;
+
+    case DNGN_SECRET_DOOR:
+        obvious_effect = true;
+        mpr("There is a secret door!");
+        reveal_secret_door(pos());
         finish_beam();
+        break;
+
+    default:
+        if (feat_is_wall(feat))
+            finish_beam();
+    }
 }
 
 void bolt::fire_wall_effect()
@@ -2543,7 +2555,8 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
     // digging
     if (flavour == BEAM_DIGGING
         && (wall == DNGN_ROCK_WALL || wall == DNGN_CLEAR_ROCK_WALL
-            || wall == DNGN_SLIMY_WALL || wall == DNGN_GRATE))
+            || wall == DNGN_SLIMY_WALL || wall == DNGN_GRATE)
+            || wall == DNGN_SECRET_DOOR)
     {
         return (B_TRUE);
     }
