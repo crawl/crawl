@@ -872,6 +872,7 @@ static bool _cmd_is_repeatable(command_type cmd, bool is_again = false)
     case CMD_DISPLAY_SKILLS:
     case CMD_DISPLAY_OVERMAP:
     case CMD_DISPLAY_RELIGION:
+    case CMD_DISPLAY_RUNES:
     case CMD_DISPLAY_CHARACTER_STATUS:
     case CMD_DISPLAY_SPELLS:
     case CMD_EXPERIENCE_CHECK:
@@ -1938,6 +1939,7 @@ void process_command(command_type cmd)
     case CMD_DISPLAY_INVENTORY:        get_invent(OSEL_ANY);           break;
     case CMD_DISPLAY_KNOWN_OBJECTS:    check_item_knowledge();         break;
     case CMD_DISPLAY_MUTATIONS: display_mutations(); redraw_screen();  break;
+    case CMD_DISPLAY_RUNES:            display_runes();                break;
     case CMD_DISPLAY_SKILLS:           skill_menu(); redraw_screen();  break;
     case CMD_EXPERIENCE_CHECK:         _experience_check();            break;
     case CMD_FULL_VIEW:                full_describe_view();           break;
