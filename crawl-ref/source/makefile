@@ -906,8 +906,8 @@ SRC_VERSION   := $(shell git describe --tags $(MERGE_BASE) 2>/dev/null || cat ut
 export SRC_VERSION
 
 PKG_SRC_DIR   := $(SRC_PKG_BASE)-$(SRC_VERSION)
-SRC_PKG_TAR   := $(PKG_SRC_DIR).tar.bz2
-SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.bz2
+SRC_PKG_TAR   := $(PKG_SRC_DIR).tar.xz
+SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.xz
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
 .PHONY: all test install clean clean-contrib clean-rltiles distclean debug \
@@ -1282,7 +1282,7 @@ source: removeold prebuildyacc
 	cd build && mv crawl-ref $(PKG_SRC_DIR)
 
 package-tarball-deps: source
-	cd build && tar cfj ../../../$(SRC_PKG_TAR) $(PKG_SRC_DIR)
+	cd build && tar cfJ ../../../$(SRC_PKG_TAR) $(PKG_SRC_DIR)
 
 package-zipball-deps: source
 	@if which zip >/dev/null; then \
@@ -1293,7 +1293,7 @@ package-zipball-deps: source
 	fi
 
 package-tarball-nodeps: source
-	cd build && tar cjf ../../../$(SRC_PKG_TAR_NODEPS) --exclude contrib $(PKG_SRC_DIR)
+	cd build && tar cfJ ../../../$(SRC_PKG_TAR_NODEPS) --exclude contrib $(PKG_SRC_DIR)
 
 package-source: package-tarball-deps package-zipball-deps package-tarball-nodeps
 	rm -rf build
