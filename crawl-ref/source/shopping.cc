@@ -1755,8 +1755,10 @@ unsigned int item_value(item_def item, bool ident)
                 // n is the power. (The base variable is equal to 2n.)
                 int base = 0;
                 int coefficient = 0;
-                if (item.sub_type == RING_SLAYING) base = item.plus + 2 * item.plus2;
-                else base = 2 * item.plus;
+                if (item.sub_type == RING_SLAYING)
+                    base = item.plus + 2 * item.plus2;
+                else
+                    base = 2 * item.plus;
 
                 switch (item.sub_type)
                 {
