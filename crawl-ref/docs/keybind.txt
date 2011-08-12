@@ -102,9 +102,10 @@ I         CMD_DISPLAY_SPELLS
 "         CMD_LIST_JEWELLERY
 [         CMD_LIST_ARMOUR
 ]         CMD_LIST_EQUIPMENT
-}         CMD_LIST_WEAPONS
+^V        CMD_LIST_WEAPONS
 $         CMD_LIST_GOLD
 \         CMD_DISPLAY_KNOWN_OBJECTS
+}         CMD_DISPLAY_RUNES
 #         CMD_CHARACTER_DUMP
 
 Meta-commands
