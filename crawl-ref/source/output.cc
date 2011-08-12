@@ -753,7 +753,7 @@ void print_stats(void)
             textcolor(Options.status_caption_colour);
             cprintf("Next: ");
             textcolor(HUD_VALUE_COLOUR);
-            cprintf("%s", _get_exp_progress().c_str());
+            cprintf("%s ", _get_exp_progress().c_str());
         }
 #endif
         if (crawl_state.game_is_zotdef())
