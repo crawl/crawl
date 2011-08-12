@@ -793,7 +793,7 @@ static bool _handle_reaching(monster* mons)
         && (grd(middle) > DNGN_MAX_NONREACH
             || mons->see_cell_no_trans(foepos))
         // The foe should be on the map (not stepped from time).
-        && !foepos.zero())
+        && in_bounds(foepos))
     {
         ret = true;
         monster_attack_actor(mons, foe, false);
