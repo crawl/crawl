@@ -791,7 +791,9 @@ static bool _handle_reaching(monster* mons)
         // And with no dungeon furniture in the way of the reaching
         // attack; if the middle square is empty, skip the LOS check.
         && (grd(middle) > DNGN_MAX_NONREACH
-            || mons->see_cell_no_trans(foepos)))
+            || mons->see_cell_no_trans(foepos))
+        // The foe should be on the map (not stepped from time).
+        && !foepos.zero())
     {
         ret = true;
         monster_attack_actor(mons, foe, false);
