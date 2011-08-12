@@ -593,9 +593,6 @@ enum command_type
     CMD_EVOKE,
     CMD_EVOKE_WIELDED,
     CMD_WIELD_WEAPON,
-#if TAG_MAJOR_VERSION > 32
-    CMD_UNWIELD_WEAPON,
-#endif
     CMD_WEAPON_SWAP,
     CMD_FIRE,
     CMD_QUIVER_ITEM,
@@ -633,6 +630,7 @@ enum command_type
     CMD_DISPLAY_MAP,
     CMD_DISPLAY_OVERMAP,
     CMD_DISPLAY_RELIGION,
+    CMD_DISPLAY_RUNES,
     CMD_DISPLAY_CHARACTER_STATUS,
     CMD_DISPLAY_SPELLS,
     CMD_EXPERIENCE_CHECK,
@@ -836,13 +834,10 @@ enum command_type
     CMD_DISABLE_MORE,
     CMD_MIN_SYNTHETIC = CMD_DISABLE_MORE,
     CMD_ENABLE_MORE,
+    CMD_UNWIELD_WEAPON,
 
     // [ds] Silently ignored, requests another round of input.
     CMD_NEXT_CMD,
-
-#if TAG_MAJOR_VERSION == 32
-    CMD_UNWIELD_WEAPON,
-#endif
 
     // Must always be last
     CMD_MAX_CMD
@@ -1836,6 +1831,7 @@ enum menu_type
     MT_DROP,
     MT_PICKUP,
     MT_KNOW,
+    MT_RUNES,
 };
 
 enum mon_holy_type

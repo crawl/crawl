@@ -1634,6 +1634,8 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
             }
             else if (nrunes > 1)
                 mprf("You now have %d runes.", nrunes);
+
+            mpr("Press } to see all the runes you have collected.");
         }
 
         dungeon_events.fire_position_event(

@@ -2241,6 +2241,48 @@ void check_item_knowledge(bool unknown_items)
         check_item_knowledge(!unknown_items);
 }
 
+void display_runes()
+{
+    std::vector<const item_def*> items;
+    for (int i = 0; i < NUM_RUNE_TYPES; i++)
+    {
+        if (!you.runes[i])
+            continue;
+
+        item_def* ptmp = new item_def;
+        if (ptmp != 0)
+        {
+            ptmp->base_type = OBJ_MISCELLANY;
+            ptmp->sub_type  = MISC_RUNE_OF_ZOT;
+            ptmp->quantity  = 1;
+            ptmp->plus      = i;
+            item_colour(*ptmp);
+            items.push_back(ptmp);
+        }
+    }
+
+    if (items.empty())
+    {
+        mpr("You haven't found any rune yet.");
+        return;
+    }
+
+    InvMenu menu;
+
+    menu.set_title("Runes of Zot");
+    menu.set_flags(MF_NOSELECT);
+    menu.set_type(MT_RUNES);
+    menu.load_items(items, discoveries_item_mangle);
+    menu.show();
+    menu.getkey();
+    redraw_screen();
+
+    for (std::vector<const item_def*>::iterator iter = items.begin();
+         iter != items.end(); ++iter)
+    {
+         delete *iter;
+    }
+}
 
 // Used for: Pandemonium demonlords, shopkeepers, scrolls, random artefacts
 std::string make_name(uint32_t seed, bool all_cap, int maxlen, char start)
