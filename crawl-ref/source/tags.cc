@@ -3529,6 +3529,9 @@ void tag_read_level_tiles(reader &th)
         mcache.clear_all();
     }
 
+    if (mcache.empty())
+        env.tile_bk_fg.init(0);
+
     if (unmarshallInt(th) != TILE_WALL_MAX)
     {
         dprf("DNGN tilecount has changed -- recreating tile data.");
