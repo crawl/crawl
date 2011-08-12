@@ -279,7 +279,7 @@ static std::string _shop_print_stock(const std::vector<int>& stock,
 
         std::string item_name = item.name(DESC_NOCAP_A, false, id);
         if (item_type_has_ids(item.base_type) && item_type_known(item)
-            && get_ident_type(item) == ID_UNKNOWN_TYPE)
+            && get_ident_type(item) == ID_UNKNOWN_TYPE && !is_artefact(item))
         {
             item_name += " (unknown)";
         }
