@@ -5508,6 +5508,14 @@ bool melee_attack::do_trample()
         if (grd(new_pos) < DNGN_SHALLOW_WATER && !defender->is_habitable(new_pos))
             break;
 
+        if (trap_def *trap = find_trap(new_pos))
+        {
+            // Being trampled into a shaft causes nasty problems.  Being
+            // trampled into a teleport trap into a shaft is no better.
+            if (trap->category() != DNGN_TRAP_MECHANICAL)
+                break;
+        }
+
         // don't trample into a monster - or do we want to cause a chain
         // reaction here?
         if (actor_at(new_pos))
