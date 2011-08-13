@@ -1513,7 +1513,9 @@ void equip_undead(const coord_def &a, int corps, int mons, int monnum)
         objl = item.link;
     }
 
-    ASSERT(objl == corps);
+    // If the corpse was being drained when it was raised the item is
+    // already destroyed.
+    ASSERT(objl == corps || objl == NON_ITEM);
 
     if (first_obj == NON_ITEM)
         return;
@@ -1669,6 +1671,13 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     const int number = (item.props.exists(MONSTER_NUMBER)) ?
                            item.props[MONSTER_NUMBER].get_short() : 0;
 
+    // Save the corpse name before because it can get destroyed if it is
+    // being drained and the raising interrupts it.
+    uint64_t name_type = 0;
+    std::string name;
+    if (is_named_corpse(item))
+        name = get_corpse_name(item, &name_type);
+
     // Headless hydras cannot be raised, sorry.
     if (zombie_type == MONS_HYDRA && number == 0)
     {
@@ -1728,13 +1737,10 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     if (item.props.exists("ac"))
         menv[mons].ac = item.props["ac"].get_int();
 
-    if (is_named_corpse(item))
+    if (!name.empty()
+        && (name_type == 0 || (name_type & MF_NAME_MASK) == MF_NAME_REPLACE))
     {
-        uint64_t name_type = 0;
-        std::string name = get_corpse_name(item, &name_type);
-
-        if (name_type == 0 || (name_type & MF_NAME_MASK) == MF_NAME_REPLACE)
-            name_zombie(&menv[mons], monnum, name);
+        name_zombie(&menv[mons], monnum, name);
     }
 
     // Re-equip the zombie.
