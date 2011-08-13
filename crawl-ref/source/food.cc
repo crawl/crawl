@@ -2159,7 +2159,11 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
             {
                 case CE_CLEAN:
                     if (start_feeding)
-                        mpr("This warm blood tastes delicious!");
+                    {
+                        mprf("This %sblood tastes delicious!",
+                             mons_class_flag(mons_type, M_WARM_BLOOD) ? "warm "
+                                                                      : "");
+                    }
                     else if (end_feeding && corpse.special > 150)
                         _heal_from_food(1);
                     break;
