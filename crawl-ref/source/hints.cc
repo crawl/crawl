@@ -2167,9 +2167,11 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_SKILL_RAISE:
-        text << "One of your skills just got raised. You can train your skills "
-                "or pick up new ones by performing the corresponding actions. "
-                "To view or manage your skill set, type <w>%</w>.";
+        text << "One of your skills just got raised. The skills you use are "
+                "automatically trained whenever you gain experience (by killing"
+                " monsters). You can train your skills or pick up new ones by "
+                "performing the corresponding actions. To view or manage your "
+                "skill set, type <w>%</w>.";
         cmd.push_back(CMD_DISPLAY_SKILLS);
         break;
 
