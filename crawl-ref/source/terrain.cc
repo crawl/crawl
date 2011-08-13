@@ -1346,6 +1346,9 @@ static bool _ok_dest_cell(const actor* orig_actor,
     if (is_notable_terrain(dest_feat))
         return (false);
 
+    if (find_trap(dest_pos))
+        return (false);
+
     actor* dest_actor = actor_at(dest_pos);
 
     if (orig_actor && !orig_actor->is_habitable_feat(dest_feat))
