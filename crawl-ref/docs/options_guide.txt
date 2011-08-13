@@ -1858,7 +1858,8 @@ tile_layout_priority = minimap, inventory, gold_turn, command, spell, monster
         tab before it on the option line, the tab will still be placed above it,
         but it will have priority over it so the inventory might not be able to
         expand to its maximum size (6 lines). The minimap is always placed
-        between the stat area and the tabs.
+        between the stat area and the tabs. The memorisation and skill tabs can
+        be added to the list too, but are not by default.
 
 tile_force_regenerate_levels = false
 
