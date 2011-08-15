@@ -426,7 +426,7 @@ spret_type cast_toxic_radiance(bool non_player, bool fail)
                 const actor* agent = non_player ? 0 : &you;
                 bool affected = poison_monster(*mi, agent, 1, false, false);
 
-                if (coinflip() && poison_monster(*mi, agent, false, false))
+                if (coinflip() && poison_monster(*mi, agent, 1, false, false))
                     affected = true;
 
                 if (affected)
