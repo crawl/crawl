@@ -256,7 +256,6 @@ static void _resolve_species(newgame_def* ng, const newgame_def* ng_choice)
             do
                 ng->species = get_species(random2(ng_num_species()));
             while (!_is_species_valid_choice(ng->species));
-
         }
         else
         {
