@@ -664,7 +664,7 @@ ENDMAP
 
 NAME:    dis_old
 ORIENT:  north
-MONS:    Dispater, Fiend, Ice Fiend, iron devil, metal gargoyle, iron dragon
+MONS:    patrolling Dispater, Fiend, Ice Fiend, iron devil, metal gargoyle, iron dragon
 : serpent_of_hell_setup(_G)
 SHUFFLE: 23
 SUBST:   4 = 4446
@@ -716,7 +716,7 @@ ENDMAP
 NAME:    dis_mu
 ORIENT:  north
 KFEAT:   o = granite_statue
-MONS:    Dispater, fiend, ice fiend, iron devil, metal gargoyle, iron dragon
+MONS:    patrolling Dispater, fiend, ice fiend, iron devil, metal gargoyle, iron dragon
 MONS:    iron troll
 KMONS:   8 = iron golem
 KFEAT:   8 = .
@@ -777,7 +777,7 @@ ENDMAP
 
 NAME:   geh_old
 ORIENT: encompass
-MONS:   Asmodeus, Fiend, Balrug, molten gargoyle
+MONS:   patrolling Asmodeus, Fiend, Balrug, molten gargoyle
 MONS:   nothing, random, random
 : serpent_of_hell_setup(_G)
 : geh_setup(_G)
@@ -851,7 +851,7 @@ ENDMAP
 
 NAME:   geh_mu
 ORIENT: encompass
-MONS:   Asmodeus, Fiend
+MONS:   patrolling Asmodeus, Fiend
 MONS:   Balrug, sun demon, hellion, fire giant
 KMONS:  7 = molten gargoyle
 KMONS:  8 = imp
@@ -937,7 +937,7 @@ ENDMAP
 
 NAME:    coc_dpeg
 ORIENT:  encompass
-MONS:    Antaeus, Ice Fiend, ice dragon / nothing
+MONS:    patrolling Antaeus, Ice Fiend, ice dragon / nothing
 : serpent_of_hell_setup(_G)
 ITEM:    any, any misc, any misc, any misc
 SHUFFLE: O1dD / e0%H / f9*H / g8|H
@@ -1017,7 +1017,7 @@ NAME:    coc_old
 ORIENT:  encompass
 SHUFFLE: $|, 2X
 SUBST:   X=., 3=3.
-MONS:    Antaeus, Ice Fiend, ice dragon, Ice Fiend
+MONS:    patrolling Antaeus, Ice Fiend, ice dragon, Ice Fiend
 : serpent_of_hell_setup(_G)
 KFEAT:   D = deep_water
 NSUBST:  H = 1:D / *:w
@@ -1092,7 +1092,7 @@ ENDMAP
 
 NAME:    coc_mu
 ORIENT:  encompass
-MONS:    Antaeus, ice fiend
+MONS:    patrolling Antaeus, ice fiend
 MONS:    ice devil, blue devil, white imp, ice dragon, freezing wraith
 KMONS:   8 = ice statue
 KMONS:   9 = frost giant
@@ -1179,7 +1179,7 @@ ENDMAP
 
 NAME:   tar_old
 ORIENT: encompass
-MONS:   Ereshkigal, necrophage, wraith, shadow, small zombie
+MONS:   patrolling Ereshkigal, necrophage, wraith, shadow, small zombie
 MONS:   small skeleton, Shadow Fiend
 : serpent_of_hell_setup(_G)
 : tar_setup(_G)
@@ -1253,7 +1253,7 @@ ENDMAP
 
 NAME:    tar_mu
 ORIENT:  encompass
-MONS:    Ereshkigal, shadow fiend, reaper, soul eater, shadow demon
+MONS:    patrolling Ereshkigal, shadow fiend, reaper, soul eater, shadow demon
 MONS:    shadow dragon, shadow wraith
 KMONS:   8 = shadow imp
 : serpent_of_hell_setup(_G)
