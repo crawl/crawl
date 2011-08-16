@@ -815,7 +815,7 @@ struct tile_ray
     coord_def ep;
     aff_type in_range;
 };
-FixedVector<tile_ray, 30> tile_ray_vec;
+FixedVector<tile_ray, 40> tile_ray_vec;
 
 void tile_place_ray(const coord_def &gc, aff_type in_range)
 {
