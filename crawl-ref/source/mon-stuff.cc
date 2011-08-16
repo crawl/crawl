@@ -3394,13 +3394,13 @@ mon_dam_level_type mons_get_damage_level(const monster* mons)
         return MDAM_OKAY;
     }
 
-    if (mons->hit_points <= mons->max_hit_points / 6)
+    if (mons->hit_points <= mons->max_hit_points / 5)
         return MDAM_ALMOST_DEAD;
-    else if (mons->hit_points <= mons->max_hit_points / 4)
+    else if (mons->hit_points <= mons->max_hit_points * 2 / 5)
         return MDAM_SEVERELY_DAMAGED;
-    else if (mons->hit_points <= mons->max_hit_points / 3)
+    else if (mons->hit_points <= mons->max_hit_points * 3 / 5)
         return MDAM_HEAVILY_DAMAGED;
-    else if (mons->hit_points <= mons->max_hit_points * 3 / 4)
+    else if (mons->hit_points <= mons->max_hit_points * 4 / 5)
         return MDAM_MODERATELY_DAMAGED;
     else if (mons->hit_points < mons->max_hit_points)
         return MDAM_LIGHTLY_DAMAGED;
