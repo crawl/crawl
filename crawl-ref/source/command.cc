@@ -589,7 +589,7 @@ void list_armour()
 void list_jewellery(void)
 {
     std::string jstr;
-    int cols = get_number_of_cols();
+    int cols = get_number_of_cols() - 1;
     bool split = you.species == SP_OCTOPODE && cols > 84;
 
     for (int i = EQ_LEFT_RING; i < NUM_EQUIP; i++)
