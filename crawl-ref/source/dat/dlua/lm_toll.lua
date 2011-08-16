@@ -38,6 +38,7 @@ function TollStair:check_shopping_list(marker, first_time)
     ask_name = "" .. self.props.amount .. " gp " .. ask_name
   end
 
+  crawl.redraw_screen()
   if crawl.yesno("Add " .. ask_name .. " to shopping list? (y/N)",
                  true, "n")
   then
