@@ -2433,15 +2433,6 @@ int monster_die(monster* mons, killer_type killer,
                 monster_die(*mit, KILL_MISC, NON_MONSTER, true);
             }
         }
-        if (mons->has_ench(ENCH_PORTAL_TIMER))
-        {
-            coord_def base_pos = mons->props["base_position"].get_coord();
-
-            if (env.grid(base_pos) == DNGN_MALIGN_GATEWAY)
-            {
-                env.grid(base_pos) = DNGN_FLOOR;
-            }
-        }
     }
     else if (mons->type == MONS_ELDRITCH_TENTACLE_SEGMENT
              && killer != KILL_MISC)
