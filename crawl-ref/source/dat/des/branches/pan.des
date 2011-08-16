@@ -78,6 +78,16 @@ colour.add_colour("disco", function(rand, x, y)
     local cycle = disco_choices[math.floor((you.turns() % (16 * #disco_choices)) / 16) + 1]
     return cycle(x, y, ballx, bally, you.turns() % 16, rand)
 end)
+
+function pan_demonic_rune(e, glyph, place_lord)
+    e.subst(glyph .. ' = ' .. (place_lord and glyph or '.') .. ':7 O:1 N:1')
+    e.kitem('O = demonic rune of Zot')
+    e.kfeat('N = exit_pandemonium')
+    if place_lord then
+        e.kmons(glyph .. 'ON = pandemonium lord')
+    end
+end
+
 }}
 
 # 25% chance to appear on D:21-27, and guaranteed on D:24.
@@ -588,9 +598,7 @@ ENDMAP
 NAME:  rand_demon_1
 TAGS:  pan allow_dup
 MONS:  pandemonium lord, greater demon
-SUBST: P = .:7 O:1 N:1
-KITEM: O = demonic rune of Zot
-KFEAT: N = exit_pandemonium
+: pan_demonic_rune(_G, 'P')
 MAP
 ............
 .xx.xx.x.xx.
@@ -611,10 +619,7 @@ ENDMAP
 NAME:  rand_demon_2
 TAGS:  pan allow_dup
 MONS:  greater demon, common demon, common demon
-SUBST: P = P:7 O:1 N:1
-KMONS: PON = pandemonium lord
-KITEM: O = demonic rune of Zot
-KFEAT: N = exit_pandemonium
+: pan_demonic_rune(_G, 'P', true)
 MAP
 ............
 .xxxxxxxx2x.
@@ -635,10 +640,7 @@ ENDMAP
 NAME:  rand_demon_3
 TAGS:  pan allow_dup
 MONS:  common demon, common demon
-SUBST: P = P:7 O:1 N:1
-KMONS: PON = pandemonium lord
-KITEM: O = demonic rune of Zot
-KFEAT: N = exit_pandemonium
+: pan_demonic_rune(_G, 'P', true)
 MAP
 ............
 .x.x.x2x.x..
@@ -659,9 +661,7 @@ ENDMAP
 NAME:  rand_demon_4
 TAGS:  pan allow_dup
 MONS:  pandemonium lord, any demon, any demon
-SUBST: P = .:7 O:1 N:1
-KITEM: O = demonic rune of Zot
-KFEAT: N = exit_pandemonium
+: pan_demonic_rune(_G, 'P')
 MAP
 ............
 .xxxxxxxxx..
@@ -682,9 +682,7 @@ ENDMAP
 NAME:  rand_demon_5
 TAGS:  pan allow_dup
 MONS:  pandemonium lord, any demon, any demon
-SUBST: P = .:7 O:1 N:1
-KITEM: O = demonic rune of Zot
-KFEAT: N = exit_pandemonium
+: pan_demonic_rune(_G, 'P')
 MAP
 ............
 ...xxxxxx...
@@ -705,9 +703,7 @@ ENDMAP
 NAME:  rand_demon_6
 TAGS:  pan allow_dup
 MONS:  pandemonium lord, any demon, any demon
-SUBST: P = .:7 O:1 N:1
-KITEM: O = demonic rune of Zot
-KFEAT: N = exit_pandemonium
+: pan_demonic_rune(_G, 'P')
 MAP
 ............
 ............
@@ -728,10 +724,7 @@ ENDMAP
 NAME:  rand_demon_7
 TAGS:  pan allow_dup
 MONS:  any demon, greater demon
-SUBST: P = P:7 O:1 N:1
-KMONS: PON = pandemonium lord
-KITEM: O = demonic rune of Zot
-KFEAT: N = exit_pandemonium
+: pan_demonic_rune(_G, 'P', true)
 MAP
 ............
 .xxx....xxx.
@@ -752,9 +745,7 @@ ENDMAP
 NAME:  rand_demon_8
 TAGS:  pan allow_dup
 MONS:  pandemonium lord, greater demon, any demon
-SUBST: P = .:7 O:1 N:1
-KITEM: O = demonic rune of Zot
-KFEAT: N = exit_pandemonium
+: pan_demonic_rune(_G, 'P')
 MAP
 ............
 ....xxxxxxx.
@@ -775,9 +766,7 @@ ENDMAP
 NAME:  rand_demon_9
 TAGS:  pan allow_dup
 MONS:  pandemonium lord, any demon, greater demon
-SUBST: P = .:7 O:1 N:1
-KITEM: O = demonic rune of Zot
-KFEAT: N = exit_pandemonium
+: pan_demonic_rune(_G, 'P')
 MAP
 ............
 .xxxxxxxxxx.
