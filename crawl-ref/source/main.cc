@@ -756,7 +756,7 @@ static void _handle_wizard_command(void)
     // WIZ_NEVER gives protection for those who have wiz compiles,
     // and don't want to risk their characters. Also, and hackishly,
     // it's used to prevent access for non-authorised users to wizard
-    // builds in dgamelaunch builds unlses the game is started with the
+    // builds in dgamelaunch builds unless the game is started with the
     // -wizard flag.
     if (Options.wiz_mode == WIZ_NEVER)
         return;
@@ -4132,7 +4132,7 @@ static void _move_player(coord_def move)
     {
         if (crawl_state.game_is_zotdef() && you.pos() == orb_position())
         {
-            // Aree you standing on the Orb? If so, are the critters near?
+            // Are you standing on the Orb? If so, are the critters near?
             bool danger = false;
             for (int i = 0; i < MAX_MONSTERS; ++i)
             {
