@@ -615,6 +615,7 @@ void train_skills(bool simu)
             // divided by 10 (integer divison rounded up).
             const int next_level = (skill_cost_needed(you.skill_cost_level + 1)
                                     - you.total_skill_points + 9) / 10;
+            ASSERT(next_level > 0);
             train_skills(std::min(exp, cost * next_level), cost, simu);
         }
     }
@@ -679,6 +680,7 @@ void train_skills(int exp, const int cost, const bool simu)
                 exp -= sk_exp[sk];
                 gain += _train(sk, sk_exp[sk], simu);
                 exp += sk_exp[sk];
+                ASSERT(exp >= 0);
                 if (_level_up_check(sk))
                     sk_exp[sk] = 0;
             }
@@ -704,6 +706,7 @@ void train_skills(int exp, const int cost, const bool simu)
         if (!is_invalid_skill(sk))
         {
             gain = _train(sk, exp, simu);
+            ASSERT(exp >= 0);
             sk_exp[sk] = 0;
         }
         else
@@ -874,7 +877,8 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     you.total_skill_points += skill_inc;
 
     _check_skill_cost_change();
-    you.exp_available = std::max(0, you.exp_available);
+    ASSERT(you.exp_available >= 0);
+    ASSERT(max_exp >= 0);
     you.redraw_experience = true;
 
     return (skill_inc);
