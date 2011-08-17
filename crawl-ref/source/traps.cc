@@ -1769,11 +1769,6 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
     }
 }
 
-static int _num_traps_default(int level_number, const level_id &place)
-{
-    return random2avg(9, 2);
-}
-
 int num_traps_for_place(int level_number, const level_id &place)
 {
     if (level_number == -1)
@@ -1782,12 +1777,10 @@ int num_traps_for_place(int level_number, const level_id &place)
     switch (place.level_type)
     {
     case LEVEL_DUNGEON:
-        if (branches[place.branch].num_traps_function != NULL)
-            return branches[place.branch].num_traps_function(level_number);
-        else
-            return _num_traps_default(level_number, place);
+        if (place.branch == BRANCH_ECUMENICAL_TEMPLE)
+            return 0;
     case LEVEL_PANDEMONIUM:
-        return _num_traps_default(level_number, place);
+        return random2avg(9, 2);
     case LEVEL_LABYRINTH:
     case LEVEL_PORTAL_VAULT:
         die("invalid place for traps");
@@ -1800,7 +1793,7 @@ int num_traps_for_place(int level_number, const level_id &place)
     return 0;
 }
 
-trap_type random_trap_slime(int level_number)
+static trap_type _random_trap_slime(int level_number)
 {
     trap_type type = NUM_TRAPS;
 
@@ -1867,16 +1860,10 @@ trap_type random_trap_for_place(int level_number, const level_id &place)
     if (level_number == -1)
         level_number = place.absdepth();
 
-    if (place.level_type == LEVEL_DUNGEON)
-        if (branches[place.branch].rand_trap_function != NULL)
-            return branches[place.branch].rand_trap_function(level_number);
+    if (place == BRANCH_SLIME_PITS)
+        return _random_trap_slime(level_number);
 
     return _random_trap_default(level_number, place);
-}
-
-int traps_zero_number(int level_number)
-{
-    return 0;
 }
 
 int count_traps(trap_type ttyp)
