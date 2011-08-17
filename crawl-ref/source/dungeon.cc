@@ -1378,12 +1378,12 @@ static void _fixup_misplaced_items()
             if (feat >= DNGN_MINITEM)
                 continue;
 
-            dprf("Item buggily placed in feature at (%d, %d).",
+            mprf(MSGCH_ERROR, "Item buggily placed in feature at (%d, %d).",
                  item.pos.x, item.pos.y);
         }
         else
         {
-            dprf("Item buggily placed out of bounds at (%d, %d).",
+            mprf(MSGCH_ERROR, "Item buggily placed out of bounds at (%d, %d).",
                  item.pos.x, item.pos.y);
         }
 
