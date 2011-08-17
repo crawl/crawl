@@ -4,8 +4,6 @@
 bool in_bounds_x(int x);
 bool in_bounds_y(int y);
 bool in_bounds(int x, int y);
-bool map_bounds_x(int x);
-bool map_bounds_y(int y);
 bool map_bounds(int x, int y);
 coord_def random_in_bounds();
 

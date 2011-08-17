@@ -61,6 +61,85 @@ static int _actual_spread_rate(cloud_type type, int spread_rate)
     }
 }
 
+cloud_type beam2cloud(beam_type flavour)
+{
+    switch (flavour)
+    {
+    default:
+    case BEAM_NONE:
+        return CLOUD_NONE;
+    case BEAM_FIRE:
+    case BEAM_POTION_FIRE:
+        return CLOUD_FIRE;
+    case BEAM_POTION_STINKING_CLOUD:
+        return CLOUD_STINK;
+    case BEAM_COLD:
+    case BEAM_POTION_COLD:
+        return CLOUD_COLD;
+    case BEAM_POISON:
+    case BEAM_POTION_POISON:
+        return CLOUD_POISON;
+    case BEAM_POTION_BLACK_SMOKE:
+        return CLOUD_BLACK_SMOKE;
+    case BEAM_POTION_GREY_SMOKE:
+        return CLOUD_GREY_SMOKE;
+    case BEAM_POTION_BLUE_SMOKE:
+        return CLOUD_BLUE_SMOKE;
+    case BEAM_POTION_PURPLE_SMOKE:
+        return CLOUD_PURPLE_SMOKE;
+    case BEAM_STEAM:
+    case BEAM_POTION_STEAM:
+        return CLOUD_STEAM;
+    case BEAM_MIASMA:
+    case BEAM_POTION_MIASMA:
+        return CLOUD_MIASMA;
+    case BEAM_CHAOS:
+        return CLOUD_CHAOS;
+    case BEAM_POTION_RAIN:
+        return CLOUD_RAIN;
+    case BEAM_POTION_MUTAGENIC:
+        return CLOUD_MUTAGENIC;
+    case BEAM_GLOOM:
+        return CLOUD_GLOOM;
+    case BEAM_RANDOM:
+        return CLOUD_RANDOM;
+    case BEAM_INK:
+        return CLOUD_INK;
+    case BEAM_HOLY_FLAME:
+        return CLOUD_HOLY_FLAMES;
+    case BEAM_PETRIFYING_CLOUD:
+        return CLOUD_PETRIFY;
+    }
+}
+
+static beam_type _cloud2beam(cloud_type flavour)
+{
+    switch (flavour)
+    {
+    default:
+    case CLOUD_NONE:         return BEAM_NONE;
+    case CLOUD_FIRE:         return BEAM_FIRE;
+    case CLOUD_FOREST_FIRE:  return BEAM_FIRE;
+    case CLOUD_STINK:        return BEAM_POTION_STINKING_CLOUD;
+    case CLOUD_COLD:         return BEAM_COLD;
+    case CLOUD_POISON:       return BEAM_POISON;
+    case CLOUD_BLACK_SMOKE:  return BEAM_POTION_BLACK_SMOKE;
+    case CLOUD_GREY_SMOKE:   return BEAM_POTION_GREY_SMOKE;
+    case CLOUD_BLUE_SMOKE:   return BEAM_POTION_BLUE_SMOKE;
+    case CLOUD_PURPLE_SMOKE: return BEAM_POTION_PURPLE_SMOKE;
+    case CLOUD_STEAM:        return BEAM_STEAM;
+    case CLOUD_MIASMA:       return BEAM_MIASMA;
+    case CLOUD_CHAOS:        return BEAM_CHAOS;
+    case CLOUD_RAIN:         return BEAM_POTION_RAIN;
+    case CLOUD_MUTAGENIC:    return BEAM_POTION_MUTAGENIC;
+    case CLOUD_GLOOM:        return BEAM_GLOOM;
+    case CLOUD_INK:          return BEAM_INK;
+    case CLOUD_HOLY_FLAMES:  return BEAM_HOLY_FLAME;
+    case CLOUD_PETRIFY:      return BEAM_PETRIFYING_CLOUD;
+    case CLOUD_RANDOM:       return BEAM_RANDOM;
+    }
+}
+
 #ifdef ASSERTS
 static bool _killer_whose_match(kill_category whose, killer_type killer)
 {
@@ -228,26 +307,23 @@ static void _spread_fire(const cloud_struct &cloud)
     }
 }
 
-static void _cloud_fire_interacts_with_terrain(const cloud_struct &cloud)
-{
-    for (adjacent_iterator ai(cloud.pos); ai; ++ai)
-    {
-        const coord_def p(*ai);
-        if (in_bounds(p)
-            && feat_is_watery(grd(p))
-            && env.cgrid(p) == EMPTY_CLOUD
-            && one_chance_in(5))
-        {
-            _place_new_cloud(CLOUD_STEAM, p, cloud.decay / 2 + 1,
-                             cloud.whose, cloud.killer, cloud.source);
-        }
-    }
-}
-
-void cloud_interacts_with_terrain(const cloud_struct &cloud)
+static void _cloud_interacts_with_terrain(const cloud_struct &cloud)
 {
     if (cloud.type == CLOUD_FIRE || cloud.type == CLOUD_FOREST_FIRE)
-        _cloud_fire_interacts_with_terrain(cloud);
+    {
+        for (adjacent_iterator ai(cloud.pos); ai; ++ai)
+        {
+            const coord_def p(*ai);
+            if (in_bounds(p)
+                && feat_is_watery(grd(p))
+                && env.cgrid(p) == EMPTY_CLOUD
+                && one_chance_in(5))
+            {
+                _place_new_cloud(CLOUD_STEAM, p, cloud.decay / 2 + 1,
+                                 cloud.whose, cloud.killer, cloud.source);
+            }
+        }
+    }
 }
 
 static void _dissipate_cloud(int cloudidx, int dissipate)
@@ -307,8 +383,8 @@ void manage_clouds()
                 dissipate /= 20;
         }
 
-        cloud_interacts_with_terrain(cloud);
-        expose_items_to_element(cloud2beam(cloud.type), cloud.pos, 2);
+        _cloud_interacts_with_terrain(cloud);
+        expose_items_to_element(_cloud2beam(cloud.type), cloud.pos, 2);
 
         _dissipate_cloud(i, dissipate);
     }
@@ -456,12 +532,7 @@ void check_place_cloud(cloud_type cl_type, const coord_def& p, int lifetime,
     place_cloud(cl_type, p, lifetime, agent, spread_rate, colour, name, tile);
 }
 
-int steam_cloud_damage(const cloud_struct &cloud)
-{
-    return steam_cloud_damage(cloud.decay);
-}
-
-int steam_cloud_damage(int decay)
+static int _steam_cloud_damage(int decay)
 {
     decay = std::min(decay, 60);
     decay = std::max(decay, 10);
@@ -615,85 +686,6 @@ cloud_type random_smoke_type()
     return CLOUD_DEBUGGING;
 }
 
-cloud_type beam2cloud(beam_type flavour)
-{
-    switch (flavour)
-    {
-    default:
-    case BEAM_NONE:
-        return CLOUD_NONE;
-    case BEAM_FIRE:
-    case BEAM_POTION_FIRE:
-        return CLOUD_FIRE;
-    case BEAM_POTION_STINKING_CLOUD:
-        return CLOUD_STINK;
-    case BEAM_COLD:
-    case BEAM_POTION_COLD:
-        return CLOUD_COLD;
-    case BEAM_POISON:
-    case BEAM_POTION_POISON:
-        return CLOUD_POISON;
-    case BEAM_POTION_BLACK_SMOKE:
-        return CLOUD_BLACK_SMOKE;
-    case BEAM_POTION_GREY_SMOKE:
-        return CLOUD_GREY_SMOKE;
-    case BEAM_POTION_BLUE_SMOKE:
-        return CLOUD_BLUE_SMOKE;
-    case BEAM_POTION_PURPLE_SMOKE:
-        return CLOUD_PURPLE_SMOKE;
-    case BEAM_STEAM:
-    case BEAM_POTION_STEAM:
-        return CLOUD_STEAM;
-    case BEAM_MIASMA:
-    case BEAM_POTION_MIASMA:
-        return CLOUD_MIASMA;
-    case BEAM_CHAOS:
-        return CLOUD_CHAOS;
-    case BEAM_POTION_RAIN:
-        return CLOUD_RAIN;
-    case BEAM_POTION_MUTAGENIC:
-        return CLOUD_MUTAGENIC;
-    case BEAM_GLOOM:
-        return CLOUD_GLOOM;
-    case BEAM_RANDOM:
-        return CLOUD_RANDOM;
-    case BEAM_INK:
-        return CLOUD_INK;
-    case BEAM_HOLY_FLAME:
-        return CLOUD_HOLY_FLAMES;
-    case BEAM_PETRIFYING_CLOUD:
-        return CLOUD_PETRIFY;
-    }
-}
-
-beam_type cloud2beam(cloud_type flavour)
-{
-    switch (flavour)
-    {
-    default:
-    case CLOUD_NONE:         return BEAM_NONE;
-    case CLOUD_FIRE:         return BEAM_FIRE;
-    case CLOUD_FOREST_FIRE:  return BEAM_FIRE;
-    case CLOUD_STINK:        return BEAM_POTION_STINKING_CLOUD;
-    case CLOUD_COLD:         return BEAM_COLD;
-    case CLOUD_POISON:       return BEAM_POISON;
-    case CLOUD_BLACK_SMOKE:  return BEAM_POTION_BLACK_SMOKE;
-    case CLOUD_GREY_SMOKE:   return BEAM_POTION_GREY_SMOKE;
-    case CLOUD_BLUE_SMOKE:   return BEAM_POTION_BLUE_SMOKE;
-    case CLOUD_PURPLE_SMOKE: return BEAM_POTION_PURPLE_SMOKE;
-    case CLOUD_STEAM:        return BEAM_STEAM;
-    case CLOUD_MIASMA:       return BEAM_MIASMA;
-    case CLOUD_CHAOS:        return BEAM_CHAOS;
-    case CLOUD_RAIN:         return BEAM_POTION_RAIN;
-    case CLOUD_MUTAGENIC:    return BEAM_POTION_MUTAGENIC;
-    case CLOUD_GLOOM:        return BEAM_GLOOM;
-    case CLOUD_INK:          return BEAM_INK;
-    case CLOUD_HOLY_FLAMES:  return BEAM_HOLY_FLAME;
-    case CLOUD_PETRIFY:      return BEAM_PETRIFYING_CLOUD;
-    case CLOUD_RANDOM:       return BEAM_RANDOM;
-    }
-}
-
 // Returns by how much damage gets divided due to elemental resistances.
 // Damage is reduced to, level 1 -> 1/2, level 2 -> 1/3, level 3 -> 1/5, or
 // for "boolean" attacks (which use bonus_res = 1, sticky flame/electricity)
@@ -715,7 +707,7 @@ int max_cloud_damage(cloud_type cl_type, int power)
 
 // Returns true if the cloud type has negative side effects beyond
 // plain damage and inventory destruction effects.
-bool cloud_has_negative_side_effects(cloud_type cloud)
+static bool _cloud_has_negative_side_effects(cloud_type cloud)
 {
     switch (cloud)
     {
@@ -747,7 +739,7 @@ static int _cloud_base_damage(const actor *act,
     switch (cloud.type)
     {
     case CLOUD_RAIN:
-        // Only applies to fiery actors: see actor_cloud_resist.
+        // Only applies to fiery actors: see _actor_cloud_resist.
         return _cloud_damage_calc(9, 1, 0, maximum_damage);
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
@@ -770,7 +762,7 @@ static int _cloud_base_damage(const actor *act,
     case CLOUD_MIASMA:
         return _cloud_damage_calc(12, 3, 0, maximum_damage);
     case CLOUD_STEAM:
-        return _cloud_damage_calc(steam_cloud_damage(cloud), 2, 0,
+        return _cloud_damage_calc(_steam_cloud_damage(cloud.decay), 2, 0,
                                   maximum_damage);
     default:
         return 0;
@@ -821,7 +813,7 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
 // Returns a numeric resistance value for the actor's resistance to
 // the cloud's effects. If the actor is immune to the cloud's damage,
 // returns MAG_IMMUNE.
-int actor_cloud_resist(const actor *act, const cloud_struct &cloud)
+static int _actor_cloud_resist(const actor *act, const cloud_struct &cloud)
 {
     if (_actor_cloud_immune(act, cloud))
         return MAG_IMMUNE;
@@ -1061,7 +1053,7 @@ static int _actor_cloud_damage(actor *act,
                                const cloud_struct &cloud,
                                bool maximum_damage)
 {
-    const int resist = actor_cloud_resist(act, cloud);
+    const int resist = _actor_cloud_resist(act, cloud);
     const int cloud_base_damage = _actor_cloud_base_damage(act, cloud,
                                                            resist,
                                                            maximum_damage);
@@ -1075,7 +1067,7 @@ static int _actor_cloud_damage(actor *act,
     case CLOUD_COLD:
     case CLOUD_STEAM:
         final_damage =
-            _cloud_damage_output(act, cloud2beam(cloud.type), resist,
+            _cloud_damage_output(act, _cloud2beam(cloud.type), resist,
                                  cloud_base_damage,
                                  maximum_damage);
         break;
@@ -1106,14 +1098,14 @@ int actor_apply_cloud(actor *act)
     if (_actor_cloud_immune(act, cloud))
         return 0;
 
-    const int resist = actor_cloud_resist(act, cloud);
+    const int resist = _actor_cloud_resist(act, cloud);
     const int cloud_max_base_damage =
         _actor_cloud_base_damage(act, cloud, resist, true);
     const int final_damage = _actor_cloud_damage(act, cloud, false);
-    const beam_type cloud_flavour = cloud2beam(cloud.type);
+    const beam_type cloud_flavour = _cloud2beam(cloud.type);
 
     if (player || final_damage > 0
-        || cloud_has_negative_side_effects(cloud.type))
+        || _cloud_has_negative_side_effects(cloud.type))
     {
         cloud.announce_actor_engulfed(act);
     }
@@ -1154,7 +1146,7 @@ static bool _cloud_is_harmful(actor *act, cloud_struct &cloud,
                               int maximum_negligible_damage)
 {
     return (!_actor_cloud_immune(act, cloud)
-            && (cloud_has_negative_side_effects(cloud.type)
+            && (_cloud_has_negative_side_effects(cloud.type)
                 || (_actor_cloud_damage(act, cloud, true) >
                     maximum_negligible_damage)));
 }
@@ -1179,7 +1171,9 @@ bool is_damaging_cloud(cloud_type type, bool accept_temp_resistances)
     }
 }
 
-bool cloud_is_smoke(cloud_type type)
+// Is the cloud purely cosmetic with no gameplay effect? If so, <foo>
+// is engulfed in <cloud> messages will be suppressed.
+static bool _cloud_is_cosmetic(cloud_type type)
 {
     switch (type)
     {
@@ -1187,17 +1181,11 @@ bool cloud_is_smoke(cloud_type type)
     case CLOUD_GREY_SMOKE:
     case CLOUD_BLUE_SMOKE:
     case CLOUD_PURPLE_SMOKE:
+    case CLOUD_MIST:
         return true;
     default:
         return false;
     }
-}
-
-// Is the cloud purely cosmetic with no gameplay effect? If so, <foo>
-// is engulfed in <cloud> messages will be suppressed.
-bool cloud_is_cosmetic(cloud_type type)
-{
-    return (type == CLOUD_MIST || cloud_is_smoke(type));
 }
 
 bool is_harmless_cloud(cloud_type type)
@@ -1212,7 +1200,7 @@ bool is_harmless_cloud(cloud_type type)
     case CLOUD_DEBUGGING:
         return (true);
     default:
-        return (cloud_is_cosmetic(type));
+        return (_cloud_is_cosmetic(type));
     }
 }
 
@@ -1354,7 +1342,7 @@ std::string cloud_struct::cloud_name(const std::string &defname,
 void cloud_struct::announce_actor_engulfed(const actor *act,
                                            bool beneficial) const
 {
-    if (cloud_is_cosmetic(type))
+    if (_cloud_is_cosmetic(type))
         return;
 
     if (you.can_see(act))
@@ -1575,11 +1563,8 @@ int num_fogs_for_place(int level_number, const level_id &place)
         return branch.num_fogs_function(level_number);
     }
     case LEVEL_ABYSS:
-        return fogs_abyss_number(level_number);
     case LEVEL_PANDEMONIUM:
-        return fogs_pan_number(level_number);
     case LEVEL_LABYRINTH:
-        return fogs_lab_number(level_number);
     default:
         return 0;
     }
@@ -1605,48 +1590,10 @@ fog_machine_data random_fog_for_place(int level_number, const level_id &place)
         return data;
     }
     case LEVEL_ABYSS:
-        return fogs_abyss_type(level_number);
     case LEVEL_PANDEMONIUM:
-        return fogs_pan_type(level_number);
     case LEVEL_LABYRINTH:
-        return fogs_lab_type(level_number);
+        return data;
     default:
         die("fog type not assigned");
     }
-}
-
-int fogs_pan_number(int level_number)
-{
-    return 0;
-}
-
-fog_machine_data fogs_pan_type(int level_number)
-{
-    fog_machine_data data = {NUM_FOG_MACHINE_TYPES, CLOUD_NONE, -1, -1};
-
-    return data;
-}
-
-int fogs_abyss_number(int level_number)
-{
-    return 0;
-}
-
-fog_machine_data fogs_abyss_type(int level_number)
-{
-    fog_machine_data data = {NUM_FOG_MACHINE_TYPES, CLOUD_NONE, -1, -1};
-
-    return data;
-}
-
-int fogs_lab_number(int level_number)
-{
-    return 0;
-}
-
-fog_machine_data fogs_lab_type(int level_number)
-{
-    fog_machine_data data = {NUM_FOG_MACHINE_TYPES, CLOUD_NONE, -1, -1};
-
-    return data;
 }

@@ -229,11 +229,6 @@ int actor::body_weight(bool base) const
     }
 }
 
-kill_category actor_kill_alignment(const actor *act)
-{
-    return (act? act->kill_alignment() : KC_OTHER);
-}
-
 bool actor_slime_wall_immune(const actor *act)
 {
     return (act->atype() == ACT_PLAYER?

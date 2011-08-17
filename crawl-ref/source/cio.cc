@@ -135,7 +135,7 @@ void nowrap_eol_cprintf(const char *s, ...)
 }
 
 // cprintf that knows how to wrap down lines
-void wrapcprintf(int wrapcol, const char *s, ...)
+static void wrapcprintf(int wrapcol, const char *s, ...)
 {
     va_list args;
     va_start(args, s);
@@ -599,12 +599,6 @@ int line_reader::process_key(int ch)
 // Of mice and other mice.
 
 static std::queue<c_mouse_event> mouse_events;
-
-coord_def get_mouse_pos()
-{
-    // lib$(OS) has to maintain mousep. This function is just the messenger.
-    return (crawl_view.mousep);
-}
 
 c_mouse_event get_mouse_event()
 {

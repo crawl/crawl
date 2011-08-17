@@ -104,10 +104,12 @@ uint8_t make_high_colour(uint8_t colour)
 }
 
 // returns if a colour is one of the special element colours (ie not regular)
-bool is_element_colour(int col)
+static bool _is_element_colour(int col)
 {
     // stripping any COLFLAGS (just in case)
-    return ((col & 0x007f) >= ETC_FIRE);
+    col = col & 0x007f;
+    ASSERT(col < NUM_COLOURS);
+    return (col >= ETC_FIRE);
 }
 
 static int _randomized_element_colour(int rand, const coord_def&,
@@ -564,7 +566,7 @@ void clear_colours_on_exit()
 int element_colour(int element, bool no_random, const coord_def& loc)
 {
     // pass regular colours through for safety.
-    if (!is_element_colour(element))
+    if (!_is_element_colour(element))
         return (element);
 
     // Strip COLFLAGs just in case.
@@ -573,7 +575,7 @@ int element_colour(int element, bool no_random, const coord_def& loc)
     ASSERT(element_colours[element]);
     int ret = element_colours[element]->get(loc, no_random);
 
-    ASSERT(!is_element_colour(ret));
+    ASSERT(!_is_element_colour(ret));
 
     return ((ret == BLACK) ? GREEN : ret);
 }
@@ -783,7 +785,7 @@ unsigned real_colour(unsigned raw_colour, const coord_def& loc)
     const int colflags = raw_colour & 0xFF00;
 
     // Evaluate any elemental colours to guarantee vanilla colour is returned
-    if (is_element_colour(raw_colour))
+    if (_is_element_colour(raw_colour))
         raw_colour = colflags | element_colour(raw_colour, false, loc);
 
 #if defined(TARGET_OS_WINDOWS) || defined(USE_TILE)

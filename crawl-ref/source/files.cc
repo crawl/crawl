@@ -287,15 +287,6 @@ std::string change_file_extension(const std::string &filename,
             + ext);
 }
 
-// Sets the access and modification times of the given file to the current
-// time. This is not yet implemented for every supported platform.
-void file_touch(const std::string &file)
-{
-#ifdef HAVE_UTIMES
-    utimes(file.c_str(), NULL);
-#endif
-}
-
 time_t file_modtime(const std::string &file)
 {
     struct stat filestat;
@@ -372,19 +363,6 @@ void assert_read_safe_path(const std::string &path) throw (std::string)
 #endif
 
     // Path is okay.
-}
-
-bool is_read_safe_path(const std::string &path)
-{
-    try
-    {
-        assert_read_safe_path(path);
-    }
-    catch (const std::string &)
-    {
-        return (false);
-    }
-    return (true);
 }
 
 std::string canonicalise_file_separator(const std::string &path)

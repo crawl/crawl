@@ -2096,7 +2096,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
     return cmd_help.getkey();
 }
 
-void show_specific_help(const std::string &help)
+static void _show_specific_help(const std::string &help)
 {
     std::vector<std::string> lines = split_string("\n", help, false, true);
     std::vector<formatted_string> formatted_lines;
@@ -2111,12 +2111,12 @@ void show_specific_help(const std::string &help)
 
 void show_levelmap_help()
 {
-    show_specific_help(getHelpString("level-map"));
+    _show_specific_help(getHelpString("level-map"));
 }
 
 void show_pickup_menu_help()
 {
-    show_specific_help(getHelpString("pick-up"));
+    _show_specific_help(getHelpString("pick-up"));
 }
 
 void show_targeting_help()
@@ -2131,27 +2131,27 @@ void show_targeting_help()
 }
 void show_interlevel_travel_branch_help()
 {
-    show_specific_help(getHelpString("interlevel-travel.branch.prompt"));
+    _show_specific_help(getHelpString("interlevel-travel.branch.prompt"));
 }
 
 void show_interlevel_travel_depth_help()
 {
-    show_specific_help(getHelpString("interlevel-travel.depth.prompt"));
+    _show_specific_help(getHelpString("interlevel-travel.depth.prompt"));
 }
 
 void show_stash_search_help()
 {
-    show_specific_help(getHelpString("stash-search.prompt"));
+    _show_specific_help(getHelpString("stash-search.prompt"));
 }
 
 void show_butchering_help()
 {
-    show_specific_help(getHelpString("butchering"));
+    _show_specific_help(getHelpString("butchering"));
 }
 
 void show_skill_menu_help()
 {
-    show_specific_help(getHelpString("skill-menu"));
+    _show_specific_help(getHelpString("skill-menu"));
 }
 
 static void _add_command(column_composer &cols, const int column,
