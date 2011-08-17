@@ -1827,7 +1827,7 @@ bool kiku_receive_corpses(int pow, coord_def where)
         monster dummy;
         dummy.type = mon_type;
         define_monster(&dummy);
-        int index_of_corpse_created = get_item_slot();
+        int index_of_corpse_created = get_mitm_slot();
 
         if (index_of_corpse_created == NON_ITEM)
             break;

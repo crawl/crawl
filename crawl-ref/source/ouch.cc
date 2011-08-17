@@ -1045,7 +1045,7 @@ static void _place_player_corpse(bool explode)
     if (explode && explode_corpse(corpse, you.pos()))
         return;
 
-    int o = get_item_slot();
+    int o = get_mitm_slot();
     if (o == NON_ITEM)
     {
         item_was_destroyed(corpse);

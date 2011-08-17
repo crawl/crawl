@@ -150,7 +150,7 @@ void wizard_create_spec_object()
     msgwin_reply(make_stringf("%c", keyin));
 
     // Allocate an item to play with.
-    thing_created = get_item_slot();
+    thing_created = get_mitm_slot();
     if (thing_created == NON_ITEM)
     {
         mpr("Could not allocate item.");
@@ -602,7 +602,7 @@ void wizard_create_all_artefacts()
         if (entry->base_type == OBJ_UNASSIGNED)
             continue;
 
-        int islot = get_item_slot();
+        int islot = get_mitm_slot();
         if (islot == NON_ITEM)
             break;
 
@@ -618,7 +618,7 @@ void wizard_create_all_artefacts()
     }
 
     // Create Horn of Geryon
-    int islot = get_item_slot();
+    int islot = get_mitm_slot();
     if (islot != NON_ITEM)
     {
         item_def& item = mitm[islot];
@@ -862,7 +862,7 @@ void wizard_list_items()
 //---------------------------------------------------------------
 static void _debug_acquirement_stats(FILE *ostat)
 {
-    int p = get_item_slot(11);
+    int p = get_mitm_slot(11);
     if (p == NON_ITEM)
     {
         mpr("Too many items on level.");

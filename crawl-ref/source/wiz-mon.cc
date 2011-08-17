@@ -843,7 +843,7 @@ void wizard_give_monster_item(monster* mon)
         }
     }
 
-    int index = get_item_slot(10);
+    int index = get_mitm_slot(10);
     if (index == NON_ITEM)
     {
         mpr("Too many items on level, bailing.");

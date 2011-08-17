@@ -2997,7 +2997,7 @@ static bool _make_zombie(monster* mon, int corpse_class, int corpse_index,
     // First attempt to raise zombie fitted out with all its old
     // equipment.
     int zombie_index = -1;
-    int idx = get_item_slot(0);
+    int idx = get_mitm_slot(0);
     if (idx != NON_ITEM && last_item != NON_ITEM)
     {
         mitm[idx]     = fake_corpse;
@@ -5031,7 +5031,7 @@ static void _steal_item_from_player(monster* mon)
     ASSERT(mon->inv[mslot] == NON_ITEM);
 
     // Create new item.
-    int index = get_item_slot(10);
+    int index = get_mitm_slot(10);
     if (index == NON_ITEM)
         return;
 

@@ -388,7 +388,7 @@ void init_item(int item)
 // Returns an unused mitm slot, or NON_ITEM if none available.
 // The reserve is the number of item slots to not check.
 // Items may be culled if a reserve <= 10 is specified.
-int get_item_slot(int reserve)
+int get_mitm_slot(int reserve)
 {
     ASSERT(reserve >= 0);
 
@@ -2014,7 +2014,7 @@ bool copy_item_to_grid(const item_def &item, const coord_def& p,
     }
 
     // Item not found in current stack, add new item to top.
-    int new_item_idx = get_item_slot(10);
+    int new_item_idx = get_mitm_slot(10);
     if (new_item_idx == NON_ITEM)
         return (false);
     item_def& new_item = mitm[new_item_idx];

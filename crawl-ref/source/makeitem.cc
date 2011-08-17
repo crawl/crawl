@@ -3132,7 +3132,7 @@ int items(bool allow_uniques,
               && force_type <= MISC_LAST_DECK);
 
     // Find an empty slot for the item (with culling if required).
-    int p = get_item_slot(10);
+    int p = get_mitm_slot(10);
     if (p == NON_ITEM)
         return (NON_ITEM);
 

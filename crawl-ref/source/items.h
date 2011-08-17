@@ -60,7 +60,7 @@ void link_items(void);
 
 void fix_item_coordinates(void);
 
-int get_item_slot(int reserve = 50);
+int get_mitm_slot(int reserve = 50);
 
 void unlink_item(int dest);
 void destroy_item(item_def &item, bool never_created = false);

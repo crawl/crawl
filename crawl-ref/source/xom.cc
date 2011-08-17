@@ -1618,7 +1618,7 @@ static int _xom_swap_weapons(bool debug = false)
 
     item_def &myweapon = you.inv[mywpn];
 
-    int index = get_item_slot(10);
+    int index = get_mitm_slot(10);
     if (index == NON_ITEM)
         return (XOM_DID_NOTHING);
 
