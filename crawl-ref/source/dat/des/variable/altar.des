@@ -1174,7 +1174,7 @@ ENDMAP
 NAME:    demons_altar
 DEPTH:   3-11
 TAGS:    no_monster_gen patrolling temple_overflow_makhleb
-TAGS:    layout_rooms layout_city layout_open layout_cross
+TAGS:    layout_rooms layout_city layout_open layout_cross mini_float
 KFEAT:   _ = altar_makhleb
 # Either one slow type 3 or s or 4 demon (iron devil or demonic crawler or
 #     smoke demon) or three slow type 5 demons (iron imp).
