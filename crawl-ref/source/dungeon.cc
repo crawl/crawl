@@ -89,8 +89,10 @@
 
 // DUNGEON BUILDERS
 static bool _build_level_vetoable(int level_number, level_area_type level_type,
-                                  bool enable_random_maps);
-static void _build_dungeon_level(int level_number, level_area_type level_type);
+                                  bool enable_random_maps,
+                                  dungeon_feature_type dest_stairs_type);
+static void _build_dungeon_level(int level_number, level_area_type level_type,
+                                 dungeon_feature_type dest_stairs_type);
 static bool _valid_dungeon_level(int level_number, level_area_type level_type);
 
 static bool _builder_by_type(int level_number, level_area_type level_type);
@@ -248,7 +250,8 @@ static callback_map level_type_post_callbacks;
 /**********************************************************************
  * builder() - kickoff for the dungeon generator.
  *********************************************************************/
-bool builder(int level_number, level_area_type level_type, bool enable_random_maps)
+bool builder(int level_number, level_area_type level_type,
+             bool enable_random_maps, dungeon_feature_type dest_stairs_type)
 {
     const std::set<std::string> uniq_tags  = you.uniq_map_tags;
     const std::set<std::string> uniq_names = you.uniq_map_names;
@@ -272,7 +275,7 @@ bool builder(int level_number, level_area_type level_type, bool enable_random_ma
         try
         {
             if (_build_level_vetoable(level_number, level_type,
-                                      enable_random_maps))
+                                      enable_random_maps, dest_stairs_type))
                 return (true);
         }
         catch (map_load_exception &mload)
@@ -307,7 +310,8 @@ bool builder(int level_number, level_area_type level_type, bool enable_random_ma
 }
 
 static bool _build_level_vetoable(int level_number, level_area_type level_type,
-                                  bool enable_random_maps)
+                                  bool enable_random_maps,
+                                  dungeon_feature_type dest_stairs_type)
 {
 #ifdef DEBUG_DIAGNOSTICS
     mapgen_report_map_build_start();
@@ -320,7 +324,7 @@ static bool _build_level_vetoable(int level_number, level_area_type level_type,
 
     try
     {
-        _build_dungeon_level(level_number, level_type);
+        _build_dungeon_level(level_number, level_type, dest_stairs_type);
     }
     catch (dgn_veto_exception& e)
     {
@@ -1410,8 +1414,11 @@ static void _fixup_branch_stairs()
             if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
                 && grd(*ri) <= DNGN_ESCAPE_HATCH_UP)
             {
-                if (grd(*ri) == DNGN_STONE_STAIRS_UP_I)
+                if (grd(*ri) == DNGN_STONE_STAIRS_UP_I
+                    && !feature_mimic_at(*ri))
+                {
                     env.markers.add(new map_feature_marker(*ri, grd(*ri)));
+                }
 
                 grd(*ri) = exit;
             }
@@ -1451,6 +1458,9 @@ static bool _fixup_stone_stairs(bool preserve_vault_stairs)
     for (rectangle_iterator ri(1); ri; ++ri)
     {
         const coord_def& c = *ri;
+        if (feature_mimic_at(c))
+            continue;
+
         if (grd(c) >= DNGN_STONE_STAIRS_DOWN_I
             && grd(c) <= DNGN_STONE_STAIRS_DOWN_III
             && num_down_stairs < max_stairs)
@@ -2021,7 +2031,75 @@ static void _ruin_level(Iterator ri,
     }
 }
 
-static void _build_dungeon_level(int level_number, level_area_type level_type)
+//#define DEBUG_MIMIC
+#ifdef DEBUG_MIMIC
+// Missing stairs are replaced in fixup_branch_stairs, but replacing
+// too many breaks interlevel connectivity, so we don't use a chance of 1.
+  #define FEATURE_MIMIC_CHANCE 2
+#else
+  #define FEATURE_MIMIC_CHANCE 100
+#endif
+static void _place_feature_mimics(int level_number,
+                                  dungeon_feature_type dest_stairs_type)
+{
+    if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
+        || player_in_branch(BRANCH_VESTIBULE_OF_HELL))
+    {
+        return;
+    }
+
+#ifndef DEBUG_MIMIC
+    if (level_number < 10)
+        return;
+#endif
+
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        const coord_def pos = *ri;
+        const dungeon_feature_type feat = grd(pos);
+        // Only features valid for mimicing.
+        if (get_feature_mimic_type(feat) == MONS_PROGRAM_BUG)
+            continue;
+
+        // Don't mimic the stairs the player is going to be placed on.
+        if (feat == dest_stairs_type)
+            continue;
+
+        // Don't mimic vetoed doors.
+        if (door_vetoed(pos))
+            continue;
+
+        // Don't mimic escape hatches in vaults since they are often used
+        // to prevent trapping the player.
+        if (feat_is_escape_hatch(feat) && map_masked(pos, MMT_VAULT))
+            continue;
+
+        // Dont mimic guaranteed portals.
+        if (feat == DNGN_ENTER_ABYSS && you.absdepth0 == 24)
+                continue;
+
+        if (feat == DNGN_ENTER_PANDEMONIUM && you.absdepth0 == 23)
+                continue;
+
+        // If this is the real branch entry, don't mimic it.
+        if (feat_is_branch_stairs(feat)
+            && player_branch_depth() == branches[get_branch_at(pos)].startdepth)
+        {
+            continue;
+        }
+
+        // If it is a branch entry, it's been put there for mimicing.
+        if (feat_is_branch_stairs(feat) || one_chance_in(FEATURE_MIMIC_CHANCE))
+        {
+            dprf("Placed %s mimic at (%d,%d).",
+                 feat_type_name(feat), ri->x, ri->y);
+            env.level_map_mask(*ri) |= MMT_MIMIC;
+        }
+    }
+}
+
+static void _build_dungeon_level(int level_number, level_area_type level_type,
+                                 dungeon_feature_type dest_stairs_type)
 {
     _build_layout_skeleton(level_number, level_type);
 
@@ -2075,6 +2153,8 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
         // XXX: Moved this here from builder_monsters so that
         //      connectivity can be ensured
         _place_uniques(level_number, level_type);
+
+        _place_feature_mimics(level_number, dest_stairs_type);
 
         // Any vault-placement activity must happen before this check.
         _dgn_verify_connectivity(nvaults);
@@ -3153,18 +3233,31 @@ static void _place_branch_entrances(int dlevel, level_area_type level_type)
     // Place actual branch entrances.
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
-        if (branches[i].entry_stairs != NUM_FEATURES
-            && player_in_branch(branches[i].parent_branch)
-            && player_branch_depth() == branches[i].startdepth)
+        // Vestibule of Hell startdepth is set only to prevent mimics.
+        // Entries are placed with vaults.
+        if (i == BRANCH_VESTIBULE_OF_HELL)
+            continue;
+
+        Branch *b = &branches[i];
+
+        const bool mimic = !branch_is_unfinished(b->id)
+                           && !is_hell_subbranch(b->id)
+                           && player_branch_depth() >= b->mindepth
+                           && player_branch_depth() <= b->maxdepth
+                           && one_chance_in(FEATURE_MIMIC_CHANCE);
+
+        if (b->entry_stairs != NUM_FEATURES
+            && player_in_branch(b->parent_branch)
+            && (player_branch_depth() == b->startdepth || mimic))
         {
             // Place a stair.
-            dprf("Placing stair to %s", branches[i].shortname);
+            dprf("Placing stair to %s", b->shortname);
 
-            std::string entry_tag = std::string(branches[i].abbrevname);
+            std::string entry_tag = std::string(b->abbrevname);
             entry_tag += "_entry";
             lowercase(entry_tag);
 
-            _place_specific_stair(branches[i].entry_stairs, entry_tag, dlevel);
+            _place_specific_stair(b->entry_stairs, entry_tag, dlevel);
         }
     }
 }
@@ -3399,42 +3492,29 @@ bool door_vetoed(const coord_def pos)
 
 monster_type get_feature_mimic_type(dungeon_feature_type feat)
 {
-    switch (feat)
-    {
-    case DNGN_OPEN_DOOR:
-    case DNGN_CLOSED_DOOR:
-        return MONS_DOOR_MIMIC;
-    default:
+    // Don't risk trapping the player inside a portal vault.
+    if (feat == DNGN_EXIT_PORTAL_VAULT)
         return MONS_PROGRAM_BUG;
-    }
-}
 
-//#define DEBUG_MIMIC
-static void _place_door_mimics(int level_number)
-{
-    if (level_number < 10)
-        return;
+    if (feat_is_portal(feat) || feat_is_gate(feat))
+        return MONS_PORTAL_MIMIC;
 
-    const int chance = 100;
-
-    for (rectangle_iterator ri(1); ri; ++ri)
+    if (feat_is_stone_stair(feat) || feat_is_escape_hatch(feat)
+        || feat_is_branch_stairs(feat))
     {
-        // Only features valid for mimicing.
-        if (get_feature_mimic_type(grd(*ri)) == MONS_PROGRAM_BUG)
-            continue;
-
-        // Don't replace vetoed doors.
-        if (door_vetoed(*ri))
-            continue;
-
-#ifndef DEBUG_MIMIC
-        if(!one_chance_in(chance))
-            continue;
-#endif
-
-        dprf("Placed mimic at (%d,%d).", ri->x, ri->y);
-        env.level_map_mask(*ri) |= MMT_MIMIC;
+        return MONS_STAIR_MIMIC;
     }
+
+    if (feat_is_fountain(feat))
+        return MONS_FOUNTAIN_MIMIC;
+
+    if (feat_is_door(feat))
+        return MONS_DOOR_MIMIC;
+
+    if (feat == DNGN_ENTER_SHOP)
+        return MONS_SHOP_MIMIC;
+
+    return MONS_PROGRAM_BUG;
 }
 
 static void _builder_monsters(int level_number, level_area_type level_type, int mon_wanted)
@@ -3448,8 +3528,6 @@ static void _builder_monsters(int level_number, level_area_type level_type, int 
     const bool in_shoals = player_in_branch(BRANCH_SHOALS);
     if (in_shoals)
         dgn_shoals_generate_flora();
-
-    _place_door_mimics(level_number);
 
     // Try to place Shoals monsters on floor where possible instead of
     // letting all the merfolk be generated in the middle of the
@@ -5884,6 +5962,9 @@ static bool _fixup_interlevel_connectivity()
     int max_region = 0;
     for (rectangle_iterator ri(0); ri; ++ri)
     {
+        if (feature_mimic_at(*ri))
+            continue;
+
         dungeon_feature_type feat = grd(*ri);
         switch (feat)
         {

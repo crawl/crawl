@@ -21,6 +21,7 @@
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dlua.h"
+#include "dungeon.h"
 #include "env.h"
 #include "exclude.h"
 #include "fprop.h"
@@ -183,51 +184,19 @@ item_def &get_mimic_item(const monster* mimic)
 
 dungeon_feature_type get_mimic_feat(const monster* mimic)
 {
-    switch (mimic->type)
-    {
-    case MONS_DOOR_MIMIC:
-        return (DNGN_CLOSED_DOOR);
-    case MONS_PORTAL_MIMIC:
-        if (mimic->props.exists("portal_desc"))
-            return (DNGN_ENTER_PORTAL_VAULT);
-        else
-            return (DNGN_ENTER_LABYRINTH);
-    case MONS_STAIR_MIMIC:
-        if (mimic->props.exists("stair_type"))
-        {
-            return static_cast<dungeon_feature_type>(mimic->props[
-                "stair_type"].get_short());
-        }
-        else
-        {
-            return (DNGN_STONE_STAIRS_DOWN_I);
-        }
-    case MONS_SHOP_MIMIC:
-        return (DNGN_ENTER_SHOP);
-    case MONS_FOUNTAIN_MIMIC:
-        if (mimic->props.exists("fountain_type"))
-        {
-            return static_cast<dungeon_feature_type>(mimic->props[
-                "fountain_type"].get_short());
-        }
-        else
-        {
-            return (DNGN_FOUNTAIN_BLUE);
-        }
-    default:
-        die("invalid feature mimic type");
-    }
-
-    return (DNGN_UNSEEN);
+    ASSERT(mimic->props.exists("feat_type"));
+    return static_cast<dungeon_feature_type>(mimic->props["feat_type"].get_short());
 }
 
 bool feature_mimic_at(const coord_def &c)
 {
-    const monster* mons = monster_at(c);
-    if (mons != NULL)
-        return mons_is_feat_mimic(mons->type);
+    return map_masked(c, MMT_MIMIC);
+}
 
-    return (false);
+// Will have item mimics too later.
+bool mimic_at(const coord_def &c)
+{
+    return feature_mimic_at(c);
 }
 
 // Sets the colour of a mimic to match its description... should be called
@@ -1570,10 +1539,6 @@ int monster_die(monster* mons, killer_type killer,
 
     // Same for silencers.
     mons->del_ench(ENCH_SILENCE);
-
-    // For the case when shop mimic was killed before player discovered him.
-    if (mons->type == MONS_SHOP_MIMIC)
-        StashTrack.remove_shop(mons->pos());
 
     crawl_state.inc_mon_acting(mons);
 
@@ -3117,13 +3082,8 @@ static coord_def _random_monster_nearby_habitable_space(const monster& mon,
 
 static void _mimic_update_stash(const monster* mons)
 {
-    if (mons_is_mimic(mons->type))
-    {
-        if (mons->type == MONS_SHOP_MIMIC)
-            StashTrack.remove_shop(mons->pos());
-        else
-            StashTrack.update_stash(mons->pos());
-    }
+    if (mons_is_item_mimic(mons->type))
+        StashTrack.update_stash(mons->pos());
 }
 
 bool monster_blink(monster* mons, bool quiet)

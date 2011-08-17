@@ -62,9 +62,9 @@ void initialise_branch_depths()
     for (int branch = BRANCH_ECUMENICAL_TEMPLE; branch < NUM_BRANCHES; ++branch)
     {
         Branch *b = &branches[branch];
-        if (crawl_state.game_is_sprint())
+        if (crawl_state.game_is_sprint() || branch_is_unfinished(b->id))
             b->startdepth = -1;
-        else if (branch < BRANCH_VESTIBULE_OF_HELL || branch > BRANCH_LAST_HELL)
+        else if (branch <= BRANCH_VESTIBULE_OF_HELL || branch > BRANCH_LAST_HELL)
             b->startdepth = random_range(b->mindepth, b->maxdepth);
     }
 
@@ -75,10 +75,6 @@ void initialise_branch_depths()
 
     dprf("Disabling branch: %s", branches[disabled_branch].shortname);
     branches[disabled_branch].startdepth = -1;
-
-    branches[BRANCH_SPIDER_NEST].startdepth = -1;
-    branches[BRANCH_FOREST].startdepth = -1;
-    branches[BRANCH_DWARVEN_HALL].startdepth = -1;
 
     initialise_branches_for_game_type();
 }

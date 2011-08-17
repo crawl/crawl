@@ -123,17 +123,6 @@ static void _update_feat_at(const coord_def &gp)
     if (feat_is_trap(feat))
         trap = get_trap_type(gp);
 
-    // Check for mimics
-    if (monster_at(gp))
-    {
-        const monster* mmimic = monster_at(gp);
-        if (mons_is_feat_mimic(mmimic->type) && mons_is_unknown_mimic(mmimic))
-        {
-            feat = get_mimic_feat(mmimic);
-            colour = mmimic->colour;
-        }
-    }
-
     env.map_knowledge(gp).set_feature(feat, colour, trap);
 
     if (haloed(gp))

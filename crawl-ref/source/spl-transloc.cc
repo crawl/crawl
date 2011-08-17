@@ -342,7 +342,7 @@ void you_teleport(void)
 static bool _cell_vetoes_teleport (const coord_def cell, bool  check_monsters = true)
 {
     // Monsters always veto teleport.
-    if (monster_at(cell) && check_monsters)
+    if ((monster_at(cell) || mimic_at(cell)) && check_monsters)
         return (true);
 
     // As do all clouds; this may change.

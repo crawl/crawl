@@ -28,6 +28,7 @@
 #include "skills2.h"
 #include "state.h"
 #include "tagstring.h"
+#include "terrain.h"
 
 #include <algorithm>
 #include <sstream>
@@ -288,7 +289,7 @@ monster_info::monster_info(const monster* m, int milev)
         if (testbits(m->flags, MF_HARD_RESET) && testbits(m->flags, MF_NO_REWARD))
             mb.set(MB_PERM_SUMMON);
 
-        if (mons_is_known_mimic(m) && mons_genus(type) == MONS_DOOR_MIMIC)
+        if (mons_is_feat_mimic(type))
             mimic_feature = get_mimic_feat(m);
     }
     else
@@ -592,6 +593,8 @@ std::string monster_info::_core_name() const
         s = "royal jelly";
     else if (nametype == MONS_SERPENT_OF_HELL)
         s = "Serpent of Hell";
+    else if (mons_is_feat_mimic(nametype))
+        s = make_stringf("%s mimic", feat_type_name(mimic_feature));
     else if (invalid_monster_type(nametype) && nametype != MONS_PROGRAM_BUG)
         s = "INVALID MONSTER";
     else
@@ -950,7 +953,7 @@ void monster_info::to_string(int count, std::string& desc,
 
     if (count == 1)
     {
-        if (mons_is_mimic(type))
+        if (mons_is_item_mimic(type))
             out << mons_type_name(type, DESC_PLAIN);
         else
             out << full_name();

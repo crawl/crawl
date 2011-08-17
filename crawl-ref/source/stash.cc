@@ -1505,22 +1505,8 @@ void LevelStashes::load(reader& inf)
 
 void LevelStashes::remove_shop(const coord_def& c)
 {
-    const monster* mon = monster_at(c);
-    std::string mimic_name;
-    bool mimic_shop = false;
-
-    // If there are both shop mimic and normal shop here, then we want to erase
-    // just mimic entry.
-    if (mon && mon->type == MONS_SHOP_MIMIC)
-    {
-        mimic_shop = true;
-        if (mon->props.exists("shop_name"))
-            mimic_name = mon->props["shop_name"].get_string();
-    }
-
     for (unsigned i = 0; i < m_shops.size(); ++i)
-        if (m_shops[i].isAt(c)
-            && (!mimic_shop || m_shops[i].description() == mimic_name))
+        if (m_shops[i].isAt(c))
         {
             m_shops.erase(m_shops.begin() + i);
             return;
@@ -1708,11 +1694,11 @@ std::string StashTracker::stash_search_prompt()
     return (make_stringf("Search for what%s? ", prompt_qual.c_str()));
 }
 
-void StashTracker::remove_shop(const coord_def& c)
+void StashTracker::remove_shop(const level_pos &pos)
 {
-    LevelStashes *lev = find_current_level();
+    LevelStashes *lev = find_level(pos.id);
     if (lev)
-        lev->remove_shop(c);
+        lev->remove_shop(pos.pos);
 }
 
 class stash_search_reader : public line_reader

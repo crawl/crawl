@@ -492,6 +492,11 @@ bool feat_is_bidirectional_portal(dungeon_feature_type feat)
             && feat != DNGN_EXIT_HELL);
 }
 
+bool feat_is_fountain(dungeon_feature_type feat)
+{
+    return feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_PERMADRY_FOUNTAIN;
+}
+
 // Find all connected cells containing ft, starting at d.
 void find_connected_identical(const coord_def &d, dungeon_feature_type ft,
                               std::set<coord_def>& out)
@@ -1066,8 +1071,6 @@ void dungeon_terrain_changed(const coord_def &pos,
             _dgn_shift_feature(pos);
 
         unnotice_feature(level_pos(level_id::current(), pos));
-        if (grd(pos) == DNGN_ENTER_SHOP)
-            StashTrack.remove_shop(pos);
 
         grd(pos) = nfeat;
         env.grid_colours(pos) = BLACK;
@@ -1808,10 +1811,16 @@ const char* feat_type_name(dungeon_feature_type feat)
         return "altar";
     if (feat_is_trap(feat))
         return "trap";
-    if (feat_is_stair(feat))
-        return "stair";
-    if (feat_is_portal(feat))
+    if (feat_is_escape_hatch(feat))
+        return "escape hatch";
+    if (feat_is_portal(feat) || feat_is_gate(feat))
         return "portal";
+    if (feat_is_travelable_stair(feat))
+        return "stair";
+    if (feat == DNGN_ENTER_SHOP)
+        return "shop";
+    if (feat_is_fountain(feat))
+        return "fountain";
     if (feat == DNGN_UNSEEN)
         return "unknown terrain";
     return "floor";

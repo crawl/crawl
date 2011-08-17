@@ -564,12 +564,8 @@ void full_describe_view()
         const bool unknown_mimic = (mon && mons_is_unknown_mimic(mon));
 
         if (unknown_mimic)      // It'll be on top.
-        {
             if (mons_is_item_mimic(mon->type))
                 list_items.push_back(get_mimic_item(mon));
-            else if (mons_is_feat_mimic(mon->type))
-                list_features.push_back(*ri);
-        }
 
         const int oid = you.visible_igrd(*ri);
         if (oid == NON_ITEM)
@@ -2820,13 +2816,6 @@ static void _describe_feature(const coord_def& where, bool oos)
     if (grid == DNGN_SECRET_DOOR)
         grid = grid_secret_door_appearance(where);
 
-    if (feature_mimic_at(where))
-    {
-        monster* mimic_mons = monster_at(where);
-        if (mons_is_unknown_mimic(mimic_mons))
-            grid = get_mimic_feat(mimic_mons);
-    }
-
     std::string desc;
     desc = feature_description(grid);
 
@@ -3329,27 +3318,6 @@ std::string feature_description(const coord_def& where, bool covering,
     }
 
     dungeon_feature_type grid = grd(where);
-    bool mimic = false;
-    monster* mimic_mons = NULL;
-
-    if (feature_mimic_at(where))
-    {
-        mimic_mons = monster_at(where);
-        if (mons_is_unknown_mimic(mimic_mons))
-        {
-            grid = get_mimic_feat(mimic_mons);
-            mimic = true;
-        }
-    }
-
-    if (mimic)
-    {
-        if (feat_is_closed_door(grid))
-            return thing_do_grammar(dtype, add_stop, false, "closed door");
-        if (grid == DNGN_ENTER_PORTAL_VAULT)
-            return (thing_do_grammar(dtype,add_stop, false, mimic_mons->props["portal_desc"].get_string()));
-    }
-
 
     if (grid == DNGN_SECRET_DOOR)
         grid = grid_secret_door_appearance(where);
@@ -3724,8 +3692,7 @@ std::string get_monster_equipment_desc(const monster_info& mi,
 
             if (mi.type == MONS_DANCING_WEAPON
                 || mi.type == MONS_PANDEMONIUM_LORD
-                || mi.type == MONS_PLAYER_GHOST
-                || mons_is_mimic(mi.type))
+                || mi.type == MONS_PLAYER_GHOST)
             {
                 if (!str.empty())
                     str += " ";
@@ -3738,8 +3705,6 @@ std::string get_monster_equipment_desc(const monster_info& mi,
                     str += "ghost";
                 else if (mi.type == MONS_PLAYER_ILLUSION)
                     str += "illusion";
-                else
-                    str += "mimic";
             }
             if (!str.empty())
                 desc += " (" + str + ")";

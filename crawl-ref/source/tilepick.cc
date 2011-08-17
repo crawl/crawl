@@ -120,9 +120,9 @@ static tileidx_t _tileidx_shop(coord_def where)
     const shop_struct *shop = get_shop(where);
     shop_type stype;
 
-    if (feature_mimic_at(where))
+    const monster *mimic = monster_at(where);
+    if (mimic && mimic->type == MONS_SHOP_MIMIC)
     {
-        monster *mimic = monster_at(where);
         if (mimic->props.exists("shop_type"))
             stype = static_cast<shop_type>(mimic->props["shop_type"].get_short());
         else
@@ -382,8 +382,9 @@ tileidx_t tileidx_feature(const coord_def &gc)
     if (override && can_override)
         return (override);
 
-    if (feature_mimic_at(gc))
-        feat = get_mimic_feat(monster_at(gc));
+    const monster* mimic = monster_at(gc);
+    if (mimic && mons_is_feat_mimic(mimic->type))
+        feat = get_mimic_feat(mimic);
 
     // Any grid-specific tiles.
     switch (feat)
@@ -409,22 +410,6 @@ tileidx_t tileidx_feature(const coord_def &gc)
 
         bool door_left  = feat_is_closed_door(grd(left));
         bool door_right = feat_is_closed_door(grd(right));
-
-        if ((!door_left || !door_right))
-        {
-            monster* m_left  = monster_at(left);
-            monster* m_right = monster_at(right);
-            if (m_left && m_left->type == MONS_DOOR_MIMIC
-                && mons_is_unknown_mimic(m_left))
-            {
-                door_left = true;
-            }
-            if (m_right && m_right->type == MONS_DOOR_MIMIC
-                && mons_is_unknown_mimic(m_right))
-            {
-                door_right = true;
-            }
-        }
 
         if (door_left || door_right)
         {

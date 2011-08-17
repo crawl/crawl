@@ -869,10 +869,15 @@ bool mons_is_feat_mimic(int mc)
 bool discover_mimic(const coord_def& pos)
 {
     // Is there really a mimic here?
-    if (!map_masked(pos, MMT_MIMIC))
+    if (!mimic_at(pos))
         return false;
 
     const dungeon_feature_type feat = grd(pos);
+    const feature_def feat_d = get_feature_def(feat);
+    shop_type stype = SHOP_UNASSIGNED;
+    if (feat == DNGN_ENTER_SHOP)
+        stype = get_shop(pos)->type;
+
 
     // If a monster is standing on top of the mimic, move it out of the way.
     monster* mon = monster_at(pos);
@@ -887,6 +892,7 @@ bool discover_mimic(const coord_def& pos)
         die("Cannot move monster out of the way.");
 
     // Remove the feature and clear the flag.
+    unnotice_feature(level_pos(level_id::current(), pos));
     grd(pos) = DNGN_FLOOR;
     env.level_map_mask(pos) &= !MMT_MIMIC;
 
@@ -899,7 +905,21 @@ bool discover_mimic(const coord_def& pos)
     ASSERT(mid != -1);
     monster* mimic = &menv[mid];
     ASSERT(mimic->pos() == pos);
+
     mimic->flags |= MF_KNOWN_MIMIC;
+    mimic->flags &= ~MF_JUST_SUMMONED;
+
+    if (feat_is_stone_stair(feat))
+        mimic->colour = feat_d.em_colour;
+    else
+        mimic->colour = feat_d.colour;
+
+    mimic->props["feat_type"] = static_cast<short>(
+            (feat == DNGN_OPEN_DOOR) ? DNGN_CLOSED_DOOR : feat);
+
+    if (stype != SHOP_UNASSIGNED)
+        mimic->props["shop_type"] = static_cast<short>(stype);
+
     behaviour_event(mimic, ME_ALERT, MHITYOU);
 
     // Friendly monsters don't appreciate being pushed away.
@@ -921,12 +941,6 @@ void discover_mimic(monster* mimic)
         return;
 
     mimic->flags |= MF_KNOWN_MIMIC;
-    if (mons_is_feat_mimic(mimic->type))
-    {
-        unnotice_feature(level_pos(level_id::current(), mimic->pos()));
-        if (mimic->type == MONS_SHOP_MIMIC)
-            StashTrack.remove_shop(mimic->pos());
-    }
 }
 
 bool mons_is_demon(int mc)

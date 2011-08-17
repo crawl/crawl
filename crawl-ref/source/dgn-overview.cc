@@ -57,8 +57,7 @@ annotation_map_type level_uniques;
 std::set<monster_annotation> auto_unique_annotations;
 
 static void _seen_altar(god_type god, const coord_def& pos);
-static void _seen_staircase(dungeon_feature_type which_staircase,
-                            const coord_def& pos);
+static void _seen_staircase(const coord_def& pos);
 static void _seen_other_thing(dungeon_feature_type which_thing,
                               const coord_def& pos);
 
@@ -91,16 +90,11 @@ void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
     if (you.level_type != LEVEL_DUNGEON)
         return;
 
-    // Or mimics. This could provide mimic information leak, but is safer
-    // than storing the mimic as a branch stair, etc.
-    if (feature_mimic_at(pos))
-        return;
-
     const god_type god = feat_altar_god(which_thing);
     if (god != GOD_NO_GOD)
         _seen_altar(god, pos);
     else if (feat_is_branch_stairs(which_thing))
-        _seen_staircase(which_thing, pos);
+        _seen_staircase(pos);
     else
         _seen_other_thing(which_thing, pos);
 }
@@ -782,6 +776,7 @@ static bool _unnotice_stair(const level_pos &pos)
 
 bool unnotice_feature(const level_pos &pos)
 {
+    StashTrack.remove_shop(pos);
     shopping_list.forget_pos(pos);
     return (_unnotice_portal(pos)
             || _unnotice_portal_vault(pos)
@@ -800,25 +795,14 @@ void display_overview()
     redraw_screen();
 }
 
-static void _seen_staircase(dungeon_feature_type which_staircase,
-                             const coord_def& pos)
+static void _seen_staircase(const coord_def& pos)
 {
     // which_staircase holds the grid value of the stair, must be converted
     // Only handles stairs, not gates or arches
     // Don't worry about:
     //   - stairs returning to dungeon - predictable
     //   - entrances to the hells - always in vestibule
-
-    int i;
-    for (i = 0; i < NUM_BRANCHES; ++i)
-    {
-        if (branches[i].entry_stairs == which_staircase)
-        {
-            stair_level[branches[i].id] = level_id::current();
-            break;
-        }
-    }
-    ASSERT(i != NUM_BRANCHES);
+    stair_level[get_branch_at(pos)] = level_id::current();
 }
 
 // If player has seen an altar; record it.
@@ -850,20 +834,10 @@ static void _seen_other_thing(dungeon_feature_type which_thing,
 {
     level_pos where(level_id::current(), pos);
 
-    monster* mimic = monster_at(pos);
-
     switch (which_thing)
     {
     case DNGN_ENTER_SHOP:
-        if (mimic && mons_is_feat_mimic(mimic->type)
-            && mimic->props.exists("shop_type"))
-        {
-            shops_present[where] = static_cast<shop_type>(mimic->props[
-                                       "shop_type"].get_short());
-        }
-        else
-            shops_present[where] = static_cast<shop_type>(get_shop(pos)->type);
-
+        shops_present[where] = static_cast<shop_type>(get_shop(pos)->type);
         break;
 
     case DNGN_ENTER_PORTAL_VAULT:
@@ -871,12 +845,6 @@ static void _seen_other_thing(dungeon_feature_type which_thing,
         std::string portal_name;
 
         portal_name = env.markers.property_at(pos, MAT_ANY, "overview");
-
-        if (mimic && mons_is_feat_mimic(mimic->type)
-            && mimic->props.exists("portal_desc"))
-        {
-            portal_name = (mimic->props["portal_desc"].get_string());
-        }
 
         if (portal_name.empty())
             portal_name = env.markers.property_at(pos, MAT_ANY, "dstname");
@@ -893,14 +861,8 @@ static void _seen_other_thing(dungeon_feature_type which_thing,
             col = env.grid_colours(pos);
         else
             col = get_feature_def(which_thing).colour;
+
         portal_vault_colours[where] = element_colour(col, true);
-
-        if (mimic && mons_is_feat_mimic(mimic->type)
-            && mimic->props.exists("portal_desc"))
-        {
-            portal_vault_colours[where] = mimic->colour;
-        }
-
         portal_vault_notes[where] =
             env.markers.property_at(pos, MAT_ANY, "overview_note");
 
