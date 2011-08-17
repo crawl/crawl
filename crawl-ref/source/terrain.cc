@@ -731,7 +731,7 @@ bool feat_virtually_destroys_item(dungeon_feature_type feat, const item_def &ite
 
     case DNGN_DEEP_WATER:
         if (noisy)
-        mprf(MSGCH_SOUND, "You hear a splash.");
+            mprf(MSGCH_SOUND, "You hear a splash.");
         return (true);
 
     case DNGN_LAVA:
