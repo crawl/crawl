@@ -920,7 +920,7 @@ runrest_stop_message = <list of regexes>
         Use these to force messages to interrupt travel and resting, or
         not. These are matched against full message text. To limit a
         substring match to a message channel, prefix the substring with
-        the channel name and a colon (see section 4-k below on Message
+        the channel name and a colon (see section 4-l below on Message
         Channels). For instance, if you want travel to stop when you're
         hit by divine retribution, you could use:
              runrest_stop_message = god:wrath finds you
