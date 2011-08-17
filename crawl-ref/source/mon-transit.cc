@@ -296,7 +296,7 @@ void follower::restore_mons_items(monster& m)
             m.inv[i] = NON_ITEM;
         else
         {
-            const int islot = get_item_slot(0);
+            const int islot = get_mitm_slot(0);
             m.inv[i] = islot;
             if (islot == NON_ITEM)
                 continue;

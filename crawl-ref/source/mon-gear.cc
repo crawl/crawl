@@ -92,7 +92,7 @@ static void _give_monster_item(monster* mon, int thing,
 
 void give_specific_item(monster* mon, const item_def& tpl)
 {
-    int thing = get_item_slot();
+    int thing = get_mitm_slot();
     if (thing == NON_ITEM)
         return;
 
@@ -1241,7 +1241,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     // force_item is set... otherwise we're just going to take the base
     // and subtype and create a new item. - bwr
     const int thing_created =
-        ((force_item) ? get_item_slot() : items(0, xitc, xitt, true,
+        ((force_item) ? get_mitm_slot() : items(0, xitc, xitt, true,
                                                 level, item_race));
 
     if (thing_created == NON_ITEM)
@@ -1489,7 +1489,7 @@ static bool make_item_for_monster(
     item_make_species_type race = MAKE_ITEM_NO_RACE,
     int allow_uniques = 0)
 {
-    const int bp = get_item_slot();
+    const int bp = get_mitm_slot();
     if (bp == NON_ITEM)
         return (false);
 
@@ -2027,7 +2027,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     // force_item is set... otherwise we're just going to take the base
     // and subtype and create a new item. - bwr
     const int thing_created =
-        ((force_item) ? get_item_slot() : items(0, xitc, xitt, true,
+        ((force_item) ? get_mitm_slot() : items(0, xitc, xitt, true,
                                                 level, item_race));
 
     if (thing_created == NON_ITEM)

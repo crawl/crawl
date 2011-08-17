@@ -560,14 +560,14 @@ int place_monster_corpse(const monster* mons, bool silent,
     you.montiers[4]++;
 #endif
 
-    int o = get_item_slot();
+    int o = get_mitm_slot();
 
     // Zotdef corpse creation forces cleanup, otherwise starvation
     // kicks in. The magic number 9 is less than the magic number of
-    // 10 in get_item_slot which indicates that a cull will be initiated
+    // 10 in get_mitm_slot which indicates that a cull will be initiated
     // if a free slot can't be found.
     if (o == NON_ITEM && crawl_state.game_is_zotdef())
-        o = get_item_slot(9);
+        o = get_mitm_slot(9);
 
     if (o == NON_ITEM)
     {

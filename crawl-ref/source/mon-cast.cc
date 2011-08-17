@@ -2446,7 +2446,7 @@ static void _clone_monster(monster* mons, monster_type clone_type,
         if (old_index == NON_ITEM)
             continue;
 
-        const int new_index = get_item_slot(0);
+        const int new_index = get_mitm_slot(0);
         if (new_index == NON_ITEM)
         {
             new_fake->unequip(mitm[old_index], i, 0, true);

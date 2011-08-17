@@ -1374,7 +1374,7 @@ static bool _do_description(std::string key, std::string type,
         }
         else
         {
-            int thing_created = get_item_slot();
+            int thing_created = get_mitm_slot();
             if (thing_created != NON_ITEM
                 && (type == "item" || type == "spell"))
             {

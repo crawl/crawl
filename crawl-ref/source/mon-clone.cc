@@ -314,7 +314,7 @@ int clone_mons(const monster* orig, bool quiet, bool* obvious,
         if (old_index == NON_ITEM)
             continue;
 
-        const int new_index = get_item_slot(0);
+        const int new_index = get_mitm_slot(0);
         if (new_index == NON_ITEM)
         {
             mons->unequip(mitm[old_index], i, 0, true);
