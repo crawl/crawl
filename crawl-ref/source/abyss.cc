@@ -57,7 +57,7 @@
  #include "wiz-dgn.h"
 #endif
 
-const int ABYSSAL_RUNE_MAX_ROLL = 200;
+static const int ABYSSAL_RUNE_MAX_ROLL = 200;
 
 #ifdef NEW_ABYSS
 static abyss_state abyssal_state;
@@ -65,6 +65,8 @@ static abyss_state abyssal_state;
 static std::vector<dungeon_feature_type> abyssal_features;
 static std::list<monster*> displaced_monsters;
 #endif
+
+static void abyss_area_shift(void);
 
 // If not_seen is true, don't place the feature where it can be seen from
 // the centre.
@@ -114,7 +116,7 @@ static dungeon_feature_type _abyss_proto_feature()
 }
 
 #ifdef NEW_ABYSS
-void _write_abyssal_features()
+static void _write_abyssal_features()
 {
     if (abyssal_features.empty())
         return;
@@ -1314,7 +1316,7 @@ static void _generate_area(const map_mask &abyss_genlevel_mask)
 }
 #endif
 
-void abyss_area_shift(void)
+static void abyss_area_shift(void)
 {
 #ifdef DEBUG_ABYSS
     dprf("area_shift() - player at pos (%d, %d)",
@@ -1349,7 +1351,7 @@ void abyss_area_shift(void)
 }
 
 #ifdef NEW_ABYSS
-void _initialize_abyss_state()
+static void _initialize_abyss_state()
 {
     abyssal_state.major_coord.x = random2(0x7FFFFFFF);
     abyssal_state.major_coord.y = random2(0x7FFFFFFF);
