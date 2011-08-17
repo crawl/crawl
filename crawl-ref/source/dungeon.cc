@@ -19,7 +19,6 @@
 #include "artefact.h"
 #include "branch.h"
 #include "chardump.h"
-#include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
 #include "defines.h"
@@ -108,7 +107,6 @@ static void _place_chance_vaults();
 static void _place_minivaults(void);
 static int _place_uniques(int level_number, level_area_type level_type);
 static void _place_traps(int level_number);
-static void _place_fog_machines(int level_number);
 static void _prepare_water(int level_number);
 static void _check_doors();
 static void _hide_doors();
@@ -2079,8 +2077,6 @@ static void _build_dungeon_level(int level_number, level_area_type level_type)
 
         _place_traps(level_number);
 
-        _place_fog_machines(level_number);
-
         // Place items.
         _builder_items(level_number, _num_items_wanted(level_number));
 
@@ -2958,41 +2954,6 @@ static void _place_traps(int level_number)
         if (ts.type == TRAP_SHAFT && shaft_known(level_number, true))
             ts.reveal();
         ts.prepare_ammo();
-    }
-}
-
-static void _place_fog_machines(int level_number)
-{
-    int i;
-    int num_fogs = num_fogs_for_place(level_number);
-
-    ASSERT(num_fogs >= 0);
-
-    for (i = 0; i < num_fogs; i++)
-    {
-        fog_machine_data data = random_fog_for_place(level_number);
-
-        if (!valid_fog_machine_data(data))
-        {
-            mpr("Invalid fog machine data, bailing.", MSGCH_DIAGNOSTICS);
-            return;
-        }
-
-        int tries = 200;
-        int x, y;
-        dungeon_feature_type feat;
-        do
-        {
-            x = random2(GXM);
-            y = random2(GYM);
-            feat = grd[x][y];
-        }
-        while (feat <= DNGN_MAXWALL && --tries > 0);
-
-        if (tries <= 0)
-            break;
-
-        place_fog_machine(data, x, y);
     }
 }
 

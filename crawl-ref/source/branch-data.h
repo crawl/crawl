@@ -13,7 +13,6 @@ Branch branches[] = {
     //  entry message
     //  has_uniques, floor colour, rock colour
     //  mons rarity function, mons level function
-    //  num_traps_function, rand_trap_function, num_fogs_function, rand_fog_function
     //  travel shortcut, upstairs exit branch, dangerous branch end, ambient noise level
 
     { BRANCH_MAIN_DUNGEON, BRANCH_MAIN_DUNGEON, -1, -1,
@@ -23,7 +22,6 @@ Branch branches[] = {
       NULL,
       true, LIGHTGREY, BROWN,
       mons_standard_rare, mons_standard_level,
-      NULL, NULL, NULL, NULL,
       'D', false, false, 0 },
 
     { BRANCH_ECUMENICAL_TEMPLE, BRANCH_MAIN_DUNGEON, 4, 7, 1, 5, 0, 0,
@@ -32,7 +30,6 @@ Branch branches[] = {
       NULL,
       false, LIGHTGREY, BROWN,
       mons_standard_rare, mons_standard_level,
-      traps_zero_number, NULL, NULL, NULL, // No traps in temple
       'T', false, false, 0 },
 
     { BRANCH_ORCISH_MINES, BRANCH_MAIN_DUNGEON, 6, 11, 4, 6, 0, 0,
@@ -41,7 +38,6 @@ Branch branches[] = {
       NULL,
       true, BROWN, BROWN,
       mons_mineorc_rare, mons_mineorc_level,
-      NULL, NULL, NULL, NULL,
       'O', false, false, 4 },
 
     { BRANCH_ELVEN_HALLS, BRANCH_ORCISH_MINES, 3, 4, 5, 4, 0, 0,
@@ -50,7 +46,6 @@ Branch branches[] = {
       NULL,
       true, WHITE, ETC_ELVEN_BRICK,
       mons_hallelf_rare, mons_hallelf_level,
-      NULL, NULL, NULL, NULL,
       'E', false, true, 0 },
 
     { BRANCH_LAIR, BRANCH_MAIN_DUNGEON, 8, 13, 8, 8, 0, 0,
@@ -59,7 +54,6 @@ Branch branches[] = {
       NULL,
       true, GREEN, BROWN,
       mons_lair_rare, mons_lair_level,
-      NULL, NULL, NULL, NULL,
       'L', false, false, 4 },
 
     { BRANCH_SWAMP, BRANCH_LAIR, 2, 5, 5, 3, BFLAG_ISLANDED, 0,
@@ -68,7 +62,6 @@ Branch branches[] = {
       NULL,
       true, BROWN, BROWN,
       mons_swamp_rare, mons_swamp_level,
-      NULL, NULL, NULL, NULL,
       'S', false, true, 0 },
 
     { BRANCH_SHOALS, BRANCH_LAIR, 3, 6, 5, 4, BFLAG_ISLANDED, 0,
@@ -77,7 +70,6 @@ Branch branches[] = {
       NULL,
       true, BROWN, BROWN,
       mons_shoals_rare, mons_shoals_level,
-      NULL, NULL, NULL, NULL,
       'A', false, true, 3 },
 
     { BRANCH_SLIME_PITS, BRANCH_LAIR, 6, 8, 6, 4, 0, 0,
@@ -86,7 +78,6 @@ Branch branches[] = {
       NULL,
       true, GREEN, BROWN,
       mons_pitslime_rare, mons_pitslime_level,
-      NULL, random_trap_slime, NULL, NULL,
       'M', false, true, -5 },
 
     { BRANCH_SNAKE_PIT, BRANCH_LAIR, 3, 6, 5, 7, 0, 0,
@@ -95,7 +86,6 @@ Branch branches[] = {
       NULL,
       true, LIGHTGREEN, YELLOW,
       mons_pitsnake_rare, mons_pitsnake_level,
-      NULL, NULL, NULL, NULL,
       'P', false, true, 0 },
 
     { BRANCH_HIVE, BRANCH_MAIN_DUNGEON, 11, 16, 2, 15, 0, 0,
@@ -104,7 +94,6 @@ Branch branches[] = {
       "You hear a buzzing sound coming from all directions.",
       false, YELLOW, BROWN,
       mons_hive_rare, mons_hive_level,
-      NULL, NULL, NULL, NULL,
       'H', false, true, 5 },
 
     { BRANCH_VAULTS, BRANCH_MAIN_DUNGEON, 14, 19, 8, 17, 0, 0,
@@ -113,7 +102,6 @@ Branch branches[] = {
       NULL,
       true, LIGHTGREY, BROWN,
       mons_standard_rare, mons_standard_level,
-      NULL, NULL, NULL, NULL,
       'V', false, true, 0 },
 
     { BRANCH_HALL_OF_BLADES, BRANCH_VAULTS, 4, 6, 1, 4, 0, 0,
@@ -122,7 +110,6 @@ Branch branches[] = {
       NULL,
       true, LIGHTGREY, BROWN,
       mons_hallblade_rare, mons_hallblade_level,
-      NULL, NULL, NULL, NULL,
       'B', false, false, -7 },
 
     { BRANCH_CRYPT, BRANCH_VAULTS, 2, 4, 5, 3, 0, 0,
@@ -131,7 +118,6 @@ Branch branches[] = {
       NULL,
       true, LIGHTGREY, BROWN,
       mons_crypt_rare, mons_crypt_level,
-      NULL, NULL, NULL, NULL,
       'C', false, false, -20 },
 
     { BRANCH_TOMB, BRANCH_CRYPT, 2, 3, 3, 5,
@@ -141,7 +127,6 @@ Branch branches[] = {
       NULL,
       true, YELLOW, BROWN,
       mons_tomb_rare, mons_tomb_level,
-      NULL, NULL, NULL, NULL,
       'W', false, true, -10 },
 
     { BRANCH_VESTIBULE_OF_HELL, BRANCH_MAIN_DUNGEON, 21, 27, 1, -1, 0, 0,
@@ -150,7 +135,6 @@ Branch branches[] = {
       NULL,
       true, LIGHTGREY, LIGHTRED,
       mons_vestibule_rare, mons_vestibule_level,
-      NULL, NULL, NULL, NULL,
       'U', false, false, 0 },
 
     { BRANCH_DIS, BRANCH_VESTIBULE_OF_HELL, 1, 1, 7, -1, BFLAG_ISLANDED, 0,
@@ -159,7 +143,6 @@ Branch branches[] = {
       NULL,
       false, CYAN, BROWN,
       mons_dis_rare, mons_dis_level,
-      NULL, NULL, NULL, NULL,
       'I', true, true, 0 },
 
     { BRANCH_GEHENNA, BRANCH_VESTIBULE_OF_HELL, 1, 1, 7, -1, BFLAG_ISLANDED, 0,
@@ -168,7 +151,6 @@ Branch branches[] = {
       NULL,
       false, YELLOW, RED,
       mons_gehenna_rare, mons_gehenna_level,
-      NULL, NULL, NULL, NULL,
       'G', true, true, 0 },
 
     { BRANCH_COCYTUS, BRANCH_VESTIBULE_OF_HELL, 1, 1, 7, -1, BFLAG_ISLANDED, 0,
@@ -177,7 +159,6 @@ Branch branches[] = {
       NULL,
       false, LIGHTBLUE, LIGHTCYAN,
       mons_cocytus_rare, mons_cocytus_level,
-      NULL, NULL, NULL, NULL,
       'X', true, true, 0 },
 
     { BRANCH_TARTARUS, BRANCH_VESTIBULE_OF_HELL, 1, 1, 7, -1, BFLAG_ISLANDED, 0,
@@ -186,7 +167,6 @@ Branch branches[] = {
       NULL,
       false, MAGENTA, MAGENTA,
       mons_tartarus_rare, mons_tartarus_level,
-      NULL, NULL, NULL, NULL,
       'Y', true, true, 0 },
 
     { BRANCH_HALL_OF_ZOT, BRANCH_MAIN_DUNGEON, 27, 27, 5, 27, BFLAG_HAS_ORB, 0,
@@ -195,7 +175,6 @@ Branch branches[] = {
       NULL,
       true, BLACK, BLACK,
       mons_hallzot_rare, mons_hallzot_level,
-      NULL, NULL, NULL, NULL,
       'Z', false, true, 0 },
 
     { BRANCH_FOREST, BRANCH_MAIN_DUNGEON, 3, 6, 5, 7, 0, 0,
@@ -204,7 +183,6 @@ Branch branches[] = {
       NULL,
       true, BROWN, BROWN,
       mons_forest_rare, mons_forest_level,
-      NULL, NULL, NULL, NULL,
       'F', false, true, 0 },
 
     { BRANCH_SPIDER_NEST, BRANCH_LAIR, 3, 6, 5, 7, 0, 0,
@@ -213,7 +191,6 @@ Branch branches[] = {
       NULL,
       true, BROWN, YELLOW,
       mons_spidernest_rare, mons_spidernest_level,
-      NULL, NULL, NULL, NULL,
       'N', false, true, 0 },
 
     { BRANCH_DWARVEN_HALL, BRANCH_MAIN_DUNGEON, 5, 7, 1, 6, 0, 0,
@@ -222,7 +199,6 @@ Branch branches[] = {
       NULL,
       true, YELLOW, BROWN,
       mons_dwarf_rare, mons_dwarf_level,
-      NULL, NULL, NULL, NULL,
       'K', false, false, 0 },
 };
 
