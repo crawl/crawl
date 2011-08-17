@@ -14,7 +14,7 @@
 #include <utility>
 #include <math.h>
 
-static std::map<element_type, element_colour_calc*> element_colours;
+static element_colour_calc* element_colours[NUM_COLOURS] = {};
 static std::map<std::string, element_colour_calc*> element_colours_str;
 
 typedef std::vector< std::pair<int, int> > random_colour_map;
@@ -272,6 +272,7 @@ void add_element_colour(element_colour_calc *colour)
 {
     // or else lookups won't work: we strip high bits (because of colflags)
     ASSERT(colour->type < 128);
+    COMPILE_CHECK(NUM_COLOURS <= 128);
     if (colour->type >= ETC_FIRST_LUA)
     {
         ASSERT(element_colours[colour->type] == element_colours_str[colour->name]);
@@ -279,7 +280,7 @@ void add_element_colour(element_colour_calc *colour)
     }
     else
     {
-        ASSERT(element_colours.find(colour->type) == element_colours.end());
+        ASSERT(!element_colours[colour->type]);
         ASSERT(element_colours_str.find(colour->name) == element_colours_str.end());
     }
     element_colours[colour->type] = colour;
@@ -551,10 +552,12 @@ void init_element_colours()
 
 void clear_colours_on_exit()
 {
-    for (std::map<element_type, element_colour_calc*>::const_iterator it = element_colours.begin(); it != element_colours.end(); ++it)
-        delete it->second;
+    for (int i = 0; i < NUM_COLOURS; i++)
+    {
+        delete element_colours[i];
+        element_colours[i] = 0;
+    }
 
-    element_colours.clear();
     element_colours_str.clear();
 }
 
@@ -567,12 +570,8 @@ int element_colour(int element, bool no_random, const coord_def& loc)
     // Strip COLFLAGs just in case.
     element &= 0x007f;
 
-    std::map<element_type, element_colour_calc*>::const_iterator colour_it
-        = element_colours.find((element_type)element);
-    ASSERT(colour_it != element_colours.end());
-    ASSERT(colour_it->second);
-
-    int ret = colour_it->second->get(loc, no_random);
+    ASSERT(element_colours[element]);
+    int ret = element_colours[element]->get(loc, no_random);
 
     ASSERT(!is_element_colour(ret));
 

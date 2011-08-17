@@ -61,6 +61,8 @@ enum element_type
     ETC_SWAMP_TREE,     // colour of trees on water
     ETC_DISCO = 96,
     ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128
+
+    NUM_COLOURS
 };
 
 typedef int (*element_colour_calculator)(int, const coord_def&);
