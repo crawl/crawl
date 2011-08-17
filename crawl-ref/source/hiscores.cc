@@ -1510,12 +1510,10 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
                  _job_name(job));
         desc += scratch;
 
-        if (birth_time > 0)
-        {
-            desc += " on ";
-            _hiscore_date_string(birth_time, scratch);
-            desc += scratch;
-        }
+        ASSERT(birth_time);
+        desc += " on ";
+        _hiscore_date_string(birth_time, scratch);
+        desc += scratch;
 
         desc = _append_sentence_delimiter(desc, ".");
         desc += _hiscore_newline_string();
