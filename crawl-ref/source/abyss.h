@@ -25,7 +25,6 @@ void push_features_to_abyss();
 
 void generate_abyss();
 void maybe_shift_abyss_around_player();
-void abyss_area_shift();
 void abyss_teleport(bool new_area);
 void save_abyss_uniques();
 bool is_level_incorruptible();
