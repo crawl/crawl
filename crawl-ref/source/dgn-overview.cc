@@ -66,6 +66,7 @@ static std::string _get_portals();
 static std::string _get_notes();
 static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
                                           bool print_unseen, bool display);
+static const std::string _get_coloured_level_annotation(int col, level_id li);
 
 void overview_clear()
 {
@@ -717,9 +718,9 @@ static std::string _get_notes()
                     disp += depth_str;
                     disp += " ";
                     if (level_annotation_has("!", li))
-                        disp += get_coloured_level_annotation(LIGHTRED, li);
+                        disp += _get_coloured_level_annotation(LIGHTRED, li);
                     else
-                        disp += get_coloured_level_annotation(LIGHTMAGENTA, li);
+                        disp += _get_coloured_level_annotation(LIGHTMAGENTA, li);
                     disp += "\n";
                 }
             }
@@ -831,15 +832,7 @@ static void _seen_altar(god_type god, const coord_def& pos)
     altars_present[where] = god;
 }
 
-void unnotice_altar()
-{
-    const level_pos curpos(level_id::current(), you.pos());
-    // Hmm, what happens when erasing a nonexistent key directly?
-    if (altars_present.find(curpos) != altars_present.end())
-        altars_present.erase(curpos);
-}
-
-portal_type feature_to_portal(dungeon_feature_type feat)
+static portal_type _feature_to_portal(dungeon_feature_type feat)
 {
     switch (feat)
     {
@@ -915,7 +908,7 @@ static void _seen_other_thing(dungeon_feature_type which_thing,
     }
 
     default:
-        const portal_type portal = feature_to_portal(which_thing);
+        const portal_type portal = _feature_to_portal(which_thing);
         if (portal != PORTAL_NONE)
             portals_present[where] = portal;
         break;
@@ -927,17 +920,9 @@ static void _seen_other_thing(dungeon_feature_type which_thing,
 void set_level_annotation(std::string str, level_id li)
 {
     if (str.empty())
-    {
-        clear_level_annotation(li);
-        return;
-    }
-
-    level_annotations[li] = str;
-}
-
-void clear_level_annotation(level_id li)
-{
-    level_annotations.erase(li);
+        level_annotations.erase(li);
+    else
+        level_annotations[li] = str;
 }
 
 void set_level_exclusion_annotation(std::string str, level_id li)
@@ -981,18 +966,9 @@ std::string get_level_annotation(level_id li, bool skip_excl)
     return (i->second + ", " + j->second);
 }
 
-std::string get_coloured_level_annotation(int col, level_id li, bool skip_excl)
+static const std::string _get_coloured_level_annotation(int col, level_id li)
 {
     annotation_map_type::const_iterator i = level_annotations.find(li);
-
-    if (skip_excl)
-    {
-        if (i == level_annotations.end())
-            return "";
-
-        return (colour_string(i->second, col));
-    }
-
     annotation_map_type::const_iterator j = level_exclusions.find(li);
 
     if (i == level_annotations.end() && j == level_exclusions.end())
@@ -1054,20 +1030,13 @@ void annotate_level()
     if (msgwin_get_line_autohist(prompt, buf, sizeof(buf)))
         return;
 
-    if (buf[0] == 0)
+    if (*buf)
+        level_annotations[li] = buf;
+    else if (get_level_annotation(li, true).empty())
+        canned_msg(MSG_OK);
+    else if (yesno("Really clear the annotation?", true, 'n'))
     {
-        if (!get_level_annotation(li, true).empty())
-        {
-            if (!yesno("Really clear the annotation?", true, 'n'))
-                return;
-            mpr("Cleared.");
-        }
-        else
-        {
-            canned_msg(MSG_OK);
-            return;
-        }
+        mpr("Cleared.");
+        level_annotations.erase(li);
     }
-
-    set_level_annotation(buf, li);
 }

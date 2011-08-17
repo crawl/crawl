@@ -326,9 +326,6 @@ protected:
     los_glob los_no_trans;
 };
 
-// Identical to actor->kill_alignment(), but returns KC_OTHER if the actor
-// is NULL.
-kill_category actor_kill_alignment(const actor *actor);
 bool actor_slime_wall_immune(const actor *actor);
 
 #endif

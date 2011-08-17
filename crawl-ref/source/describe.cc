@@ -161,7 +161,7 @@ void print_quote (const describe_info &inf)
     process_quote<default_desc_proc>(proc, inf);
 }
 
-const char* jewellery_base_ability_string(int subtype)
+static const char* _jewellery_base_ability_string(int subtype)
 {
     switch (subtype)
     {
@@ -255,8 +255,8 @@ static std::vector<std::string> _randart_propnames(const item_def& item,
     if (item.base_type == OBJ_JEWELLERY
         && item_ident(item, ISFLAG_KNOW_PROPERTIES))
     {
-        const std::string type = jewellery_base_ability_string(item.sub_type);
-        if (!type.empty())
+        const char* type = _jewellery_base_ability_string(item.sub_type);
+        if (type)
             propnames.push_back(type);
     }
     else if (item_ident(item, ISFLAG_KNOW_TYPE)
@@ -3837,18 +3837,6 @@ static bool _print_god_abil_desc(int god, int numpower)
     return (true);
 }
 
-static const std::string _describe_favour_generic(god_type which_god)
-{
-    const std::string godname = god_name(which_god);
-    return (you.piety > 130) ? "A prized avatar of " + godname + ".":
-           (you.piety > 100) ? "A shining star in the eyes of " + godname + "." :
-           (you.piety >  70) ? "A rising star in the eyes of " + godname + "." :
-           (you.piety >  40) ? godname + " is most pleased with you." :
-           (you.piety >  20) ? godname + " has noted your presence." :
-           (you.piety >   5) ? godname + " is noncommittal."
-                             : "You are beneath notice.";
-}
-
 //---------------------------------------------------------------
 //
 // describe_god
@@ -3857,7 +3845,7 @@ static const std::string _describe_favour_generic(god_type which_god)
 //
 //---------------------------------------------------------------
 
-std::string describe_favour(god_type which_god)
+static std::string _describe_favour(god_type which_god)
 {
     if (player_under_penance())
     {
@@ -3868,8 +3856,17 @@ std::string describe_favour(god_type which_god)
                                : "You should show more discipline.";
     }
 
-    return (which_god == GOD_XOM) ? describe_xom_favour(true)
-                                  : _describe_favour_generic(which_god);
+    if (which_god == GOD_XOM)
+        return describe_xom_favour(true);
+
+    const std::string godname = god_name(which_god);
+    return (you.piety > 130) ? "A prized avatar of " + godname + ".":
+           (you.piety > 100) ? "A shining star in the eyes of " + godname + "." :
+           (you.piety >  70) ? "A rising star in the eyes of " + godname + "." :
+           (you.piety >  40) ? godname + " is most pleased with you." :
+           (you.piety >  20) ? godname + " has noted your presence." :
+           (you.piety >   5) ? godname + " is noncommittal."
+                             : "You are beneath notice.";
 }
 
 static std::string _religion_help(god_type god)
@@ -4099,7 +4096,7 @@ std::string god_title(god_type which_god, species_type which_species)
     return (title);
 }
 
-std::string _describe_ash_skill_boost()
+static std::string _describe_ash_skill_boost()
 {
     if (!you.bondage_level)
     {
@@ -4415,7 +4412,7 @@ void describe_god(god_type which_god, bool give_title)
     }
     else
     {
-        cprintf(describe_favour(which_god).c_str());
+        cprintf(_describe_favour(which_god).c_str());
         if (which_god == GOD_ASHENZARI)
             cprintf("\n%s", ash_describe_bondage(ETF_ALL, true).c_str());
 
