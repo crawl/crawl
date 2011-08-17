@@ -759,16 +759,6 @@ void debug_test_explore()
     mprf("Explore took %d turns.", explore_turns);
 }
 
-void debug_shift_labyrinth()
-{
-    if (you.level_type != LEVEL_LABYRINTH)
-    {
-        mpr("This only makes sense in a labyrinth!");
-        return;
-    }
-    change_labyrinth(true);
-}
-
 void wizard_list_levels()
 {
     travel_cache.update_da_counters();
