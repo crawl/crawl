@@ -246,7 +246,7 @@ void wizard_interlevel_travel()
     _wizard_go_to_level(pos);
 }
 
-void wizard_create_portal()
+void wizard_create_portal(const coord_def& pos)
 {
     mpr("Destination for portal (defaults to 'bazaar')? ", MSGCH_PROMPT);
     char specs[256];
@@ -275,7 +275,7 @@ void wizard_create_portal()
                              "wizard portal, dest = " + dst);
         env.markers.add(marker);
         env.markers.clear_need_activate();
-        dungeon_terrain_changed(you.pos(), DNGN_ENTER_PORTAL_VAULT, false);
+        dungeon_terrain_changed(pos, DNGN_ENTER_PORTAL_VAULT, false);
     }
 }
 
@@ -534,10 +534,10 @@ void debug_make_trap()
         mpr("NOTE: Shaft traps aren't valid on this level.");
 }
 
-void debug_make_shop()
+void debug_make_shop(const coord_def& pos)
 {
     char requested_shop[80];
-    int gridch = grd(you.pos());
+    int gridch = grd(pos);
     bool have_shop_slots = false;
     int new_shop_type = SHOP_UNASSIGNED;
     bool representative = false;
@@ -580,8 +580,7 @@ void debug_make_shop()
 
     representative = !!strchr(requested_shop, '*');
 
-    place_spec_shop(you.absdepth0, you.pos(),
-                    new_shop_type, representative);
+    place_spec_shop(you.absdepth0, pos, new_shop_type, representative);
     link_items();
     mprf("Done.");
 }

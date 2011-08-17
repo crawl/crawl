@@ -366,7 +366,7 @@ public:
 
     void dump(const char *filename, bool identify = false) const;
 
-    void remove_shop(const coord_def& c);
+    void remove_shop(const level_pos &pos);
 private:
     void get_matching_stashes(const base_pattern &search,
                               std::vector<stash_search_result> &results) const;

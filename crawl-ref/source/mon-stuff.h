@@ -59,6 +59,7 @@ item_def &get_mimic_item(const monster* mimic);
 int  get_mimic_colour(const monster* mimic);
 dungeon_feature_type get_mimic_feat (const monster* mimic);
 bool feature_mimic_at (const coord_def &c);
+bool mimic_at(const coord_def &c);
 
 void alert_nearby_monsters(void);
 

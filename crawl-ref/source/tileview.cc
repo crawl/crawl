@@ -1019,12 +1019,9 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
         else
             *bg = orig + std::min((int)flv.special, 3);
 
-        if (feature_mimic_at(gc))
-        {
-            dungeon_feature_type feat = get_mimic_feat(monster_at(gc));
-            if (feat == DNGN_CLOSED_DOOR)
-                *bg = orig;
-        }
+        const monster *mimic = monster_at(gc);
+        if (mimic && mimic->type == MONS_DOOR_MIMIC)
+            *bg = orig;
     }
     else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB
              || orig == TILE_DNGN_ALTAR_CHEIBRIADOS)

@@ -139,10 +139,7 @@ bool is_feature(wchar_t feature, const coord_def& where)
     if (!env.map_knowledge(where).known() && !you.see_cell(where))
         return (false);
 
-    dungeon_feature_type grid = grd(where);
-
-    if (feature_mimic_at(where))
-        grid = get_mimic_feat(monster_at(where));
+    dungeon_feature_type grid = grid_appearance(where);
 
     switch (feature)
     {

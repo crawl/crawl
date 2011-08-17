@@ -197,7 +197,8 @@ void read_level_connectivity(reader &th);
 void write_level_connectivity(writer &th);
 
 bool builder(int level_number, level_area_type level_type,
-             bool enable_random_maps = true);
+             bool enable_random_maps = true,
+             dungeon_feature_type dest_stairs_type = NUM_FEATURES);
 void dgn_veto_level();
 
 void dgn_clear_vault_placements(vault_placement_refv &vps);
@@ -318,5 +319,4 @@ int count_feature_in_box(int x0, int y0, int x1, int y1,
                          dungeon_feature_type feat);
 bool door_vetoed(const coord_def pos);
 monster_type get_feature_mimic_type(dungeon_feature_type feat);
-
 #endif

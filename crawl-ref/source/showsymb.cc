@@ -367,8 +367,11 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc,
 
     if (cls == SH_MONSTER)
     {
-        if (show.mons == MONS_SENSED)
-            g.ch = mons_char(cell.monsterinfo()->base_type);
+        const monster_info* mi = cell.monsterinfo();
+        if (mi->mimic_feature != DNGN_UNSEEN)
+            g.ch = get_feature_def(mi->mimic_feature).symbol;
+        else if (show.mons == MONS_SENSED)
+            g.ch = mons_char(mi->base_type);
         else
             g.ch = mons_char(show.mons);
     }
@@ -405,7 +408,9 @@ glyph get_item_glyph(const item_def *item)
 glyph get_mons_glyph(const monster_info& mi, bool realcol)
 {
     glyph g;
-    if (mi.type == MONS_SLIME_CREATURE && mi.number > 1)
+    if (mi.mimic_feature != DNGN_UNSEEN)
+        g.ch = get_feature_def(mi.mimic_feature).symbol;
+    else if (mi.type == MONS_SLIME_CREATURE && mi.number > 1)
         g.ch = mons_char(MONS_MERGED_SLIME_CREATURE);
     else if (mi.type == MONS_SENSED)
         g.ch = mons_char(mi.base_type);
