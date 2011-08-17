@@ -1359,7 +1359,7 @@ static const char* _determine_colour_string(int level, int max_level)
     }
 }
 
-static std::string _status_mut_abilities(void);
+static std::string _status_mut_abilities(int sw);
 
 // helper for print_overview_screen
 static void _print_overview_screen_equip(column_composer& cols,
@@ -1470,7 +1470,7 @@ static void _print_overview_screen_equip(column_composer& cols,
     }
 }
 
-static std::string _overview_screen_title()
+static std::string _overview_screen_title(int sw)
 {
     char title[50];
     snprintf(title, sizeof title, " the %s ", player_title().c_str());
@@ -1490,7 +1490,7 @@ static std::string _overview_screen_title()
 
     int linelength = strwidth(you.your_name) + strwidth(title)
                      + strwidth(species_job) + strwidth(time_turns);
-    for (int count = 0; linelength >= get_number_of_cols() && count < 2;
+    for (int count = 0; linelength >= sw && count < 2;
          count++)
     {
         switch (count)
@@ -1517,7 +1517,7 @@ static std::string _overview_screen_title()
     text += title;
     text += species_job;
 
-    const int num_spaces = get_number_of_cols() - linelength - 1;
+    const int num_spaces = sw - linelength - 1;
     if (num_spaces > 0)
         text += std::string(num_spaces, ' ');
 
@@ -1892,7 +1892,7 @@ static char _get_overview_screen_results()
 #endif
     overview.set_tag("resists");
 
-    overview.add_text(_overview_screen_title());
+    overview.add_text(_overview_screen_title(get_number_of_cols()));
 
     {
         std::vector<formatted_string> blines = _get_overview_stats();
@@ -1917,7 +1917,7 @@ static char _get_overview_screen_results()
     }
 
     overview.add_text(" ");
-    overview.add_text(_status_mut_abilities());
+    overview.add_text(_status_mut_abilities(get_number_of_cols()));
 
     std::vector<MenuEntry *> results = overview.show();
     return (!results.empty()) ? results[0]->hotkeys[0] : 0;
@@ -1925,7 +1925,7 @@ static char _get_overview_screen_results()
 
 std::string dump_overview_screen(bool full_id)
 {
-    std::string text = formatted_string::parse_string(_overview_screen_title());
+    std::string text = formatted_string::parse_string(_overview_screen_title(80));
     text += "\n";
 
     std::vector<formatted_string> blines = _get_overview_stats();
@@ -1945,7 +1945,7 @@ std::string dump_overview_screen(bool full_id)
     }
     text += "\n";
 
-    text += formatted_string::parse_string(_status_mut_abilities());
+    text += formatted_string::parse_string(_status_mut_abilities(80));
     text += "\n";
 
     return text;
@@ -2001,7 +2001,7 @@ std::string magic_res_adjective(int mr)
 
 // Creates rows of short descriptions for current
 // status, mutations and abilities.
-std::string _status_mut_abilities()
+static std::string _status_mut_abilities(int sw)
 {
     //----------------------------
     // print status information
@@ -2430,7 +2430,7 @@ std::string _status_mut_abilities()
                                          ", ", ", ").c_str());
     }
 
-    linebreak_string(text, get_number_of_cols());
+    linebreak_string(text, sw);
 
     return text;
 }
