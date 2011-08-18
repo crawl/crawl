@@ -505,6 +505,10 @@ enum weapon_type
     WPN_UNKNOWN = 1000,                // 1000
     WPN_RANDOM,
     WPN_VIABLE,
+    WPN_THROWN,
+    WPN_ROCKS,
+    WPN_JAVELINS,
+    WPN_DARTS,
 };
 
 enum weapon_property_type
