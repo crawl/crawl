@@ -256,7 +256,7 @@ static std::vector<std::string> _randart_propnames(const item_def& item,
         && item_ident(item, ISFLAG_KNOW_PROPERTIES))
     {
         const char* type = _jewellery_base_ability_string(item.sub_type);
-        if (type)
+        if (*type)
             propnames.push_back(type);
     }
     else if (item_ident(item, ISFLAG_KNOW_TYPE)
