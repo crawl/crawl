@@ -436,10 +436,10 @@ monster_info::monster_info(const monster* m, int milev)
     }
 
     // fake enchantment (permanent)
-    if (mons_class_flag(m->type, M_DEFLECT_MISSILES))
+    if (mons_class_flag(type, M_DEFLECT_MISSILES))
         mb.set(MB_DEFLECT_MSL);
 
-    if (m->type == MONS_SILENT_SPECTRE)
+    if (type == MONS_SILENT_SPECTRE)
         mb.set(MB_SILENCING);
 
     if (you.beheld_by(m))
