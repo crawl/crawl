@@ -1695,7 +1695,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             //friendly monsters cannot cast tukima's ball for now.
             if (mons->friendly())
                 return false;
-            if (!cast_tukimas_ball(mons, 100, GOD_NO_GOD ,true))
+            if (!cast_tukimas_ball(mons, 100, GOD_NO_GOD, true))
                 return false;
         }
 
@@ -2843,6 +2843,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
             mpr("Tentacles burst out of the water!");
         return;
     }
+
     case SPELL_FAKE_MARA_SUMMON:
         // We only want there to be two fakes, which, plus Mara, means
         // a total of three Maras; if we already have two, give up, otherwise
