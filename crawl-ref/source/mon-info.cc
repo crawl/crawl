@@ -221,15 +221,7 @@ monster_info::monster_info(const monster* m, int milev)
 
     mimic_feature = DNGN_UNSEEN;
 
-    // XXX: this doesn't take into account ENCH_TEMP_PACIF, but that's probably
-    // a bug for mons_attitude, not this.
-    // XXX: also, mons_attitude_type should be sorted hostile/neutral/friendly;
-    // will break saves a little bit though.
     attitude = mons_attitude(m);
-    if (m->has_ench(ENCH_CHARM))
-        attitude = ATT_FRIENDLY;
-    else if (m->has_ench(ENCH_TEMP_PACIF))
-        attitude = ATT_GOOD_NEUTRAL;
 
     bool type_known = false;
     bool nomsg_wounds = false;
