@@ -1149,6 +1149,10 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
             case MDAM_OKAY:               dam_color = GREEN;     break;
             default:                      dam_color = CYAN;      break;
             }
+
+            if (!mons_class_can_display_wounds(mi.type))
+                dam_color = BLACK;
+
             cprintf(" ");
             textbackground(dam_color);
             textcolor(dam_color);
