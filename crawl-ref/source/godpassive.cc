@@ -689,9 +689,6 @@ int ash_detect_portals(bool all)
 
 monster_type ash_monster_tier(const monster *mon)
 {
-    double factor = sqrt(exp_needed(you.experience_level) / 30.0);
-    int tension = exper_value(mon) / (1 + factor);
-
     if (mon->friendly())
         return MONS_SENSED_FRIENDLY;
 
