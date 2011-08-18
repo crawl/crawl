@@ -1266,6 +1266,20 @@ static bool _is_physiological_spell(spell_type spell)
         || spell == SPELL_FIRE_BREATH;
 }
 
+static void _mons_set_priest_wizard_god(monster* mons, bool& priest,
+                                        bool& wizard, god_type& god)
+{
+    priest = mons->is_priest();
+    wizard = mons->is_actual_spellcaster();
+
+    // If the monster's a priest, assume summons come from priestly
+    // abilities, in which case they'll have the same god. If the
+    // monster is neither a priest nor a wizard, assume summons come
+    // from intrinsic abilities, in which case they'll also have the
+    // same god.
+    god = (priest || !(priest || wizard)) ? mons->god : GOD_NO_GOD;
+}
+
 //---------------------------------------------------------------
 //
 // handle_spell
@@ -1306,14 +1320,11 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         return (false);
     }
 
-    // If the monster's a priest, assume summons come from priestly
-    // abilities, in which case they'll have the same god.  If the
-    // monster is neither a priest nor a wizard, assume summons come
-    // from intrinsic abilities, in which case they'll also have the
-    // same god.
-    const bool priest = mons->is_priest();
-    const bool wizard = mons->is_actual_spellcaster();
-    god_type god = (priest || !(priest || wizard)) ? mons->god : GOD_NO_GOD;
+    bool priest;
+    bool wizard;
+    god_type god;
+
+    _mons_set_priest_wizard_god(mons, priest, wizard, god);
 
     if ((silenced(mons->pos()) || mons->has_ench(ENCH_MUTE))
         && (priest || wizard || spellcasting_poly
@@ -2534,14 +2545,11 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     if (do_noise)
         mons_cast_noise(mons, pbolt, spell_cast, special_ability);
 
-    // If the monster's a priest, assume summons come from priestly
-    // abilities, in which case they'll have the same god.  If the
-    // monster is neither a priest nor a wizard, assume summons come
-    // from intrinsic abilities, in which case they'll also have the
-    // same god.
-    const bool priest = mons->is_priest();
-    const bool wizard = mons->is_actual_spellcaster();
-    god_type god = (priest || !(priest || wizard)) ? mons->god : GOD_NO_GOD;
+    bool priest;
+    bool wizard;
+    god_type god;
+
+    _mons_set_priest_wizard_god(mons, priest, wizard, god);
 
     // Used for summon X elemental and nothing else. {bookofjude}
     monster_type summon_type = MONS_NO_MONSTER;
