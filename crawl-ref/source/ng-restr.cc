@@ -686,6 +686,15 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             case SP_OCTOPODE:
                 return (CC_UNRESTRICTED);
 
+            case SP_SPRIGGAN:
+            case SP_HALFLING:
+            case SP_KOBOLD:
+                // Can't use them with a shield, terrible upgrade path;
+                // jobs with other benefits like Warper, Skald or godlies
+                // are better with two-handers.
+                if (ng.job == JOB_FIGHTER || ng.job == JOB_GLADIATOR)
+                    return (CC_BANNED);
+
             default:
                 return (species_genus(ng.species) == GENPC_DRACONIAN ? CC_UNRESTRICTED
                         : CC_RESTRICTED);
