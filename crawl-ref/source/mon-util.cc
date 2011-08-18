@@ -5,6 +5,8 @@
 
 #include "AppHdr.h"
 
+#include <math.h>
+
 #include "mon-util.h"
 
 #include "act-iter.h"
@@ -4186,4 +4188,23 @@ bool mons_is_tentacle_end(const int mtype)
 {
     return (mtype == MONS_KRAKEN_TENTACLE
             || mtype == MONS_ELDRITCH_TENTACLE);
+}
+
+int mons_threat_level(const monster *mon)
+{
+    double factor = sqrt(exp_needed(you.experience_level) / 30.0);
+    int tension = exper_value(mon) / (1 + factor);
+
+    if (tension <= 0)
+        // Conjurators use melee to conserve mana, MDFis switch plates...
+        return 0;
+    else if (tension <= 5)
+        // An easy fight but not ignorable.
+        return 1;
+    else if (tension <= 32)
+        // Hard but reasonable.
+        return 2;
+    else
+        // Check all wands/jewels several times, wear brown pants...
+        return 3;
 }
