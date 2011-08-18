@@ -1278,6 +1278,12 @@ static void _mons_set_priest_wizard_god(monster* mons, bool& priest,
     // from intrinsic abilities, in which case they'll also have the
     // same god.
     god = (priest || !(priest || wizard)) ? mons->god : GOD_NO_GOD;
+
+    // Permanent wizard summons of Yred should have the same god even
+    // though they aren't priests. This is so that the zombies of Yred's
+    // skeletal warriors will properly turn on you if you abandon Yred.
+    if (mons->god == GOD_YREDELEMNUL)
+        god = mons->god;
 }
 
 //---------------------------------------------------------------
