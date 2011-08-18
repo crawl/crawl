@@ -753,7 +753,92 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case WPN_ANKUS:
             if (species_genus(ng.species) == GENPC_OGREISH)
                 return (CC_UNRESTRICTED);
-            // intentional fall-through
+        case WPN_CROSSBOW:
+            switch(ng.species)
+            {
+            case SP_DEEP_ELF:
+            case SP_HIGH_ELF:
+            case SP_HALFLING:
+            case SP_MERFOLK:
+            case SP_OGRE:
+            case SP_HILL_ORC:
+            case SP_SPRIGGAN:
+            case SP_TROLL:
+            case SP_SLUDGE_ELF:
+                return CC_RESTRICTED;
+            case SP_FELID:
+                return CC_BANNED;
+            default:
+                return CC_UNRESTRICTED;
+            }
+        case WPN_BOW:
+            switch(ng.species)
+            {
+            case SP_DEEP_DWARF:
+            case SP_MOUNTAIN_DWARF:
+            case SP_KOBOLD:
+            case SP_MERFOLK:
+            case SP_OGRE:
+            case SP_TROLL:
+            case SP_HILL_ORC:
+            case SP_SLUDGE_ELF:
+                return CC_RESTRICTED;
+            case SP_FELID:
+                return CC_BANNED;
+            default:
+                return CC_UNRESTRICTED;
+            }
+        case WPN_SLING:
+            switch(ng.species)
+            {
+            case SP_MOUNTAIN_DWARF:
+            case SP_DEEP_ELF:
+            case SP_HIGH_ELF:
+            case SP_SLUDGE_ELF:
+            case SP_KENKU:
+            case SP_MERFOLK:
+            case SP_OGRE:
+            case SP_HILL_ORC:
+            case SP_TROLL:
+                return CC_RESTRICTED;
+            case SP_FELID:
+                return CC_BANNED;
+            default:
+                return CC_UNRESTRICTED;
+            }
+        case WPN_ROCKS:
+            switch(ng.species)
+            {
+            case SP_OGRE:
+            case SP_TROLL:
+                return CC_UNRESTRICTED;
+            default:
+                return CC_BANNED;
+            }
+        case WPN_JAVELINS:
+            switch(ng.species)
+            {
+            case SP_DEEP_DWARF:
+            case SP_MOUNTAIN_DWARF:
+                return CC_RESTRICTED;
+            case SP_SPRIGGAN:
+            case SP_FELID:
+                return CC_BANNED;
+            default:
+                return CC_UNRESTRICTED;
+            }
+        case WPN_DARTS:
+            switch(ng.species)
+            {
+            case SP_DEEP_DWARF:
+            case SP_MOUNTAIN_DWARF:
+                return CC_RESTRICTED;
+            case SP_FELID:
+                return CC_BANNED;
+            default:
+                return CC_UNRESTRICTED;
+            }
+        // intentional fall-through
         default:
             return (CC_BANNED);
     }

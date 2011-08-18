@@ -449,7 +449,46 @@ static void _update_weapon(const newgame_def& ng)
     if (ng.weapon == WPN_UNARMED)
         _newgame_clear_item(0);
     else if (ng.weapon != WPN_UNKNOWN)
-        you.inv[0].sub_type = ng.weapon;
+    {
+        switch(ng.weapon)
+        {
+            case WPN_ROCKS:
+                newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1,
+                                  5, 1);
+                break;
+            case WPN_JAVELINS:
+                newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1,
+                                  5, 1);
+                break;
+            case WPN_DARTS:
+                newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
+                                  10, 1);
+                break;
+            case WPN_BOW:
+                newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW);
+                newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 25, 1);
+
+                // Wield the bow instead.
+                you.equip[EQ_WEAPON] = 1;
+                break;
+            case WPN_CROSSBOW:
+                newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW);
+                newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 25, 1);
+
+                // Wield the crossbow instead.
+                you.equip[EQ_WEAPON] = 1;
+                break;
+            case WPN_SLING:
+                newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
+                newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 25, 1);
+
+                // Wield the sling instead.
+                you.equip[EQ_WEAPON] = 1;
+                break;
+            default:
+                you.inv[0].sub_type = ng.weapon;
+        }
+    }
 }
 
 static void _give_items_skills(const newgame_def& ng)
@@ -935,53 +974,7 @@ static void _give_items_skills(const newgame_def& ng)
 
         if (you.has_claws())
             _newgame_clear_item(0);
-
-        switch (you.species)
-        {
-        case SP_SLUDGE_ELF:
-        case SP_HILL_ORC:
-        case SP_MERFOLK:
-            newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6, 1);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
-                               2);
-            break;
-
-        case SP_OGRE:
-        case SP_TROLL:
-            newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5,
-                               1);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
-                               3);
-            break;
-
-        case SP_HALFLING:
-        case SP_SPRIGGAN:
-            newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1,
-                               30, 1);
-
-            // Wield the sling instead.
-            you.equip[EQ_WEAPON] = 1;
-            break;
-
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-        case SP_KOBOLD:
-            newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 25, 1);
-
-            // Wield the crossbow instead.
-            you.equip[EQ_WEAPON] = 1;
-            break;
-
-        default:
-            newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 25, 1);
-
-            // Wield the bow instead.
-            you.equip[EQ_WEAPON] = 1;
-            break;
-        }
+        _update_weapon(ng);
 
         newgame_make_item(3, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ANIMAL_SKIN);
