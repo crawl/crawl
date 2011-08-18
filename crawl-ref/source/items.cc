@@ -80,6 +80,7 @@ static bool _invisible_to_player(const item_def& item);
 static void _autoinscribe_item(item_def& item);
 static void _autoinscribe_floor_items();
 static void _autoinscribe_inventory();
+static void _multidrop(std::vector<SelItem> tmp_items);
 
 static inline std::string _autopickup_item_name(const item_def &item);
 
@@ -2234,26 +2235,25 @@ bool drop_item(int item_dropped, int quant_drop)
     return (true);
 }
 
-bool drop_last()
+void drop_last()
 {
-    typedef std::map<int,int> MapType;
-    bool dropped = false;
-    MapType::iterator it = you.last_pickup.begin();
-    while (it != you.last_pickup.end())
+    std::vector<SelItem> items_to_drop;
+
+    for (std::map<int,int>::iterator it = you.last_pickup.begin();
+        it != you.last_pickup.end(); ++it)
     {
-        std::pair<int,int> curr_item = *it++;
-        if (you.inv[curr_item.first].quantity > 0)
-        {
-            drop_item(curr_item.first, curr_item.second);
-            dropped = true;
-        }
+        const item_def* item = &you.inv[it->first];
+        if (item->quantity > 0)
+            items_to_drop.push_back(SelItem(it->first, it->second, item));
     }
 
-    if (!dropped)
+    if (items_to_drop.empty())
         mprf("No item to drop.");
-
-    you.last_pickup.clear();
-    return dropped;
+    else
+    {
+        you.last_pickup.clear();
+        _multidrop(items_to_drop);
+    }
 }
 
 static std::string _drop_menu_invstatus(const Menu *menu)
@@ -2398,6 +2398,11 @@ void drop()
         return;
     }
 
+    _multidrop(tmp_items);
+}
+
+static void _multidrop(std::vector<SelItem> tmp_items)
+{
     // Sort the dropped items so we don't see weird behaviour when
     // dropping a worn robe before a cloak (old behaviour: remove
     // cloak, remove robe, wear cloak, drop robe, remove cloak, drop
