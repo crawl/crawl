@@ -1205,6 +1205,12 @@ bool pickup_single_item(int link, int qty)
         return (false);
 
     item_def* item = &mitm[link];
+    if (item->base_type == OBJ_GOLD && !i_feel_safe()
+        && !yesno("Are you sure you want to pick up this pile of gold now?",
+                  true, 'n'))
+    {
+        return (false);
+    }
     if (qty == 0 && item->quantity > 1 && item->base_type != OBJ_GOLD)
     {
         const std::string prompt
