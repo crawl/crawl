@@ -52,6 +52,10 @@
 #include "view.h"
 #include "viewchar.h"
 
+#ifdef USE_TILE
+  #include "tilepick.h"
+#endif
+
 static FixedVector < int, NUM_MONSTERS > mon_entry;
 
 mon_display monster_symbols[NUM_MONSTERS];
@@ -878,6 +882,9 @@ bool discover_mimic(const coord_def& pos)
     if (feat == DNGN_ENTER_SHOP)
         stype = get_shop(pos)->type;
 
+#ifdef USE_TILE
+    tileidx_t tile = tileidx_feature(pos);
+#endif
 
     // If a monster is standing on top of the mimic, move it out of the way.
     monster* mon = monster_at(pos);
@@ -919,6 +926,10 @@ bool discover_mimic(const coord_def& pos)
 
     if (stype != SHOP_UNASSIGNED)
         mimic->props["shop_type"] = static_cast<short>(stype);
+
+#ifdef USE_TILE
+    mimic->props["tile_idx"] = static_cast<int>(tile);
+#endif
 
     behaviour_event(mimic, ME_ALERT, MHITYOU);
 
