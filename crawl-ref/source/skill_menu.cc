@@ -266,7 +266,7 @@ COLORS SkillMenuEntry::get_colour() const
              && you.skill(m_sk, 10, true) != you.skill(m_sk, 10, false))
     {
         if (you.skill(m_sk, 10, true) > you.skill(m_sk, 10, false))
-            return you.train[m_sk] ? LIGHTRED : RED;
+            return you.train[m_sk] ? LIGHTMAGENTA : MAGENTA;
         else
             return you.train[m_sk] ? LIGHTBLUE : BLUE;
     }
@@ -283,7 +283,7 @@ COLORS SkillMenuEntry::get_colour() const
     else if (crosstrain_bonus(m_sk) > 1 && is_set(SKMF_APTITUDE))
         return GREEN;
     else if (is_antitrained(m_sk) && is_set(SKMF_APTITUDE))
-        return MAGENTA;
+        return RED;
     else if (you.train[m_sk] == 2)
        return WHITE;
     else
@@ -313,7 +313,7 @@ std::string SkillMenuEntry::get_prefix()
 
 void SkillMenuEntry::set_aptitude()
 {
-    std::string text = "<red>";
+    std::string text = "<white>";
 
     const bool manual = you.manual_skill == m_sk;
     const int apt = species_apt(m_sk, you.species);
@@ -330,17 +330,17 @@ void SkillMenuEntry::set_aptitude()
     else
         text += make_stringf(" %d", apt);
 
-    text += "</red>";
+    text += "</white>";
 
     if (antitrain_other(m_sk, show_all) || is_antitrained(m_sk))
     {
         m_skm->set_flag(SKMF_ANTITRAIN);
-        text += "<magenta>";
+        text += "<red>";
         text += antitrain_other(m_sk, show_all) ? "*" : " ";
         if (is_antitrained(m_sk))
             text += make_stringf("%d", ct_bonus - 4);
 
-        text += "</magenta>";
+        text += "</red>";
     }
     else if (crosstrain_other(m_sk, show_all) || ct_bonus)
     {
@@ -539,7 +539,7 @@ std::string SkillMenuSwitch::get_help()
         else
         {
             return "Skills reduced by the power of Ashenzari are in "
-                   "<red>red</red>. ";
+                   "<magenta>magenta</magenta>. ";
         }
     case SKM_VIEW_TRAINING:
         if (m_skm->is_set(SKMF_SIMPLE))
@@ -1174,12 +1174,12 @@ void SkillMenu::set_default_help()
             text += m_switches[SKM_LEVEL]->get_help();
         }
         else
-            text += "The species aptitude is in <red>red</red>. ";
+            text += "The species aptitude is in <white>white</white>. ";
 
         if (is_set(SKMF_CROSSTRAIN))
             text += "Crosstraining is in <green>green</green>. ";
         if (is_set(SKMF_ANTITRAIN))
-            text += "Antitraining is in <magenta>magenta</magenta>. ";
+            text += "Antitraining is in <red>red</red>. ";
 
         if (is_set(SKMF_CROSSTRAIN) && is_set(SKMF_ANTITRAIN))
         {
@@ -1194,7 +1194,7 @@ void SkillMenu::set_default_help()
         else if (is_set(SKMF_ANTITRAIN))
         {
             text += "The skill responsible for the malus is marked with "
-                    "'<magenta>*</magenta>'.";
+                    "'<red>*</red>'.";
         }
     }
 
