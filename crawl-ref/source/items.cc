@@ -1204,37 +1204,38 @@ bool pickup_single_item(int link, int qty)
     if (!player_can_reach_floor())
         return (false);
 
-    if (qty == 0 && mitm[link].quantity > 1 && mitm[link].base_type != OBJ_GOLD)
+    item_def* item = &mitm[link];
+    if (qty == 0 && item->quantity > 1 && item->base_type != OBJ_GOLD)
     {
         const std::string prompt
                 = make_stringf("Pick up how many of %s (; or enter for all)? ",
-                               mitm[link].name(DESC_NOCAP_THE,
+                               item->name(DESC_NOCAP_THE,
                                     false, false, false).c_str());
 
         qty = prompt_for_quantity(prompt.c_str());
         if (qty == -1)
-            qty = mitm[link].quantity;
+            qty = item->quantity;
         else if (qty == 0)
         {
             canned_msg(MSG_OK);
             return (false);
         }
-        else if (qty < mitm[link].quantity)
+        else if (qty < item->quantity)
         {
             // Mark rest item as not eligible for autopickup.
-            mitm[link].flags |= ISFLAG_DROPPED;
-            mitm[link].flags &= ~ISFLAG_THROWN;
+            item->flags |= ISFLAG_DROPPED;
+            item->flags &= ~ISFLAG_THROWN;
         }
     }
 
-    if (qty < 1 || qty > mitm[link].quantity)
-        qty = mitm[link].quantity;
+    if (qty < 1 || qty > item->quantity)
+        qty = item->quantity;
 
-    iflags_t oldflags = mitm[link].flags;
-    mitm[link].flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
+    iflags_t oldflags = item->flags;
+    item->flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
     int num = move_item_to_player(link, qty);
-    if (mitm[link].defined())
-        mitm[link].flags = oldflags;
+    if (item->defined())
+        item->flags = oldflags;
 
     if (num == -1)
     {
