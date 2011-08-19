@@ -898,6 +898,13 @@ bool discover_mimic(const coord_def& pos)
     else if (mon)
         die("Cannot move monster out of the way.");
 
+    // If we took a note of this feature, then note that it was a mimic.
+    if (!is_boring_terrain(feat))
+    {
+        std::string desc = feature_description(pos, false, DESC_CAP_THE, false);
+        take_note(Note(NOTE_FEAT_MIMIC, 0, 0, desc.c_str()));
+    }
+
     // Remove the feature and clear the flag.
     unnotice_feature(level_pos(level_id::current(), pos));
     grd(pos) = DNGN_FLOOR;
