@@ -1,0 +1,28 @@
+# Performance of sleepimg monsters.
+#
+# Wizmode is needed.
+
+name = CPU_hog
+species = mu
+background = st
+restart_after_game = false
+show_gold_turns = true
+show_more = false
+
+: bot_start = true
+: function ready()
+:   local esc = string.char(27)
+:   local eol = string.char(13)
+:   if you.turns() == 0 and bot_start then
+:     bot_start = false
+:     crawl.enable_more(false)
+:     crawl.process_keys("&Y" .. esc)
+:     crawl.call_dlua("require('dlua/stress.lua');" ..
+:                     "stress.entomb()")
+:     crawl.sendkeys("5")
+:   elseif you.turns() < 1000 then
+:     crawl.sendkeys("5")
+:   else
+:     crawl.sendkeys("*qyes" .. eol .. esc .. esc)
+:   end
+: end
