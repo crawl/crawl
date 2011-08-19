@@ -434,11 +434,8 @@ static std::string _get_unseen_branches()
         if (i == BRANCH_VESTIBULE_OF_HELL)
             continue;
 
-        if (i == BRANCH_FOREST || i == BRANCH_SPIDER_NEST
-            || i == BRANCH_DWARVEN_HALL)
-        {
+        if (branch_is_unfinished(branch))
             continue;
-        }
 
         if (stair_level.find(branch) == stair_level.end())
         {
