@@ -223,7 +223,7 @@ static std::string _shop_print_stock(const std::vector<int>& stock,
                                       const std::vector<bool>& in_list,
                                       const shop_struct& shop,
                                       int total_cost,
-				      bool viewing)
+                                      bool viewing)
 {
     ShopInfo &si  = StashTrack.get_shop(shop.pos);
     const bool id = shoptype_identifies_stock(shop.type);
@@ -267,18 +267,13 @@ static std::string _shop_print_stock(const std::vector<int>& stock,
         else
             cprintf("%c - ", c);
 
+        const bool unknown = item_type_has_ids(item.base_type)
+                             && item_type_known(item)
+                             && get_ident_type(item) == ID_UNKNOWN_TYPE
+                             && !is_artefact(item);
         if (viewing)
-	{
-	    if (item_type_has_ids(item.base_type)
-	       && item_type_known(item)
-	       && get_ident_type(item) == ID_UNKNOWN_TYPE
-	       && !is_artefact(item))
-	        textcolor(WHITE);
-            else
-	        textcolor(LIGHTGREY);
-
-	}
-	else if (Options.menu_colour_shops)
+            textcolor((unknown || is_artefact(item))? WHITE : LIGHTGREY);
+        else if (Options.menu_colour_shops)
         {
             // Colour stock according to menu colours.
             const std::string colprf = menu_colour_item_prefix(item);
@@ -290,11 +285,8 @@ static std::string _shop_print_stock(const std::vector<int>& stock,
             textcolor(i % 2 ? LIGHTGREY : WHITE);
 
         std::string item_name = item.name(DESC_NOCAP_A, false, id);
-        if (item_type_has_ids(item.base_type) && item_type_known(item)
-            && get_ident_type(item) == ID_UNKNOWN_TYPE && !is_artefact(item))
-        {
+        if (unknown)
             item_name += " (unknown)";
-        }
 
         cprintf("%s%5d gold", chop_string(item_name, 56).c_str(), gp_value);
 
@@ -413,7 +405,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
         const std::string purchasable = _shop_print_stock(stock, selected,
                                                           in_list, shop,
                                                           total_cost,
-							  viewing);
+                                                          viewing);
         _list_shop_keys(purchasable, viewing, stock.size(), num_selected,
                         num_in_list);
 
