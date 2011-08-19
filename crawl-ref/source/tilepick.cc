@@ -384,7 +384,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
 
     const monster* mimic = monster_at(gc);
     if (mimic && mons_is_feat_mimic(mimic->type))
-        feat = get_mimic_feat(mimic);
+        return mimic->props["tile_idx"].get_int();
 
     // Any grid-specific tiles.
     switch (feat)
@@ -2557,9 +2557,7 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
         case MONS_DOOR_MIMIC:
         case MONS_STAIR_MIMIC:
         case MONS_FOUNTAIN_MIMIC:
-            if (mons_is_known_mimic(mon))
-                return TILE_FLAG_MIMIC;
-            return 0;
+            return TILE_FLAG_MIMIC;
 
         case MONS_DANCING_WEAPON:
         {
