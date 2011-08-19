@@ -222,7 +222,8 @@ static std::string _shop_print_stock(const std::vector<int>& stock,
                                       const std::vector<bool>& selected,
                                       const std::vector<bool>& in_list,
                                       const shop_struct& shop,
-                                      int total_cost)
+                                      int total_cost,
+				      bool viewing)
 {
     ShopInfo &si  = StashTrack.get_shop(shop.pos);
     const bool id = shoptype_identifies_stock(shop.type);
@@ -266,7 +267,18 @@ static std::string _shop_print_stock(const std::vector<int>& stock,
         else
             cprintf("%c - ", c);
 
-        if (Options.menu_colour_shops)
+        if (viewing)
+	{
+	    if (item_type_has_ids(item.base_type)
+	       && item_type_known(item)
+	       && get_ident_type(item) == ID_UNKNOWN_TYPE
+	       && !is_artefact(item))
+	        textcolor(WHITE);
+            else
+	        textcolor(LIGHTGREY);
+
+	}
+	else if (Options.menu_colour_shops)
         {
             // Colour stock according to menu colours.
             const std::string colprf = menu_colour_item_prefix(item);
@@ -400,7 +412,8 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
 
         const std::string purchasable = _shop_print_stock(stock, selected,
                                                           in_list, shop,
-                                                          total_cost);
+                                                          total_cost,
+							  viewing);
         _list_shop_keys(purchasable, viewing, stock.size(), num_selected,
                         num_in_list);
 
