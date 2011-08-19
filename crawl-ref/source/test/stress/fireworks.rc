@@ -1,0 +1,48 @@
+# Fireworks, benchmark version.  Tests performance of display code.
+#
+# Wizmode is needed.
+
+name = CPU_hog
+species = mu
+background = st
+restart_after_game = false
+show_gold_turns = true
+show_more = false
+#message_colour = mute:.*
+
+: bot_start = true
+: function ready()
+:   local esc = string.char(27)
+:   local eol = string.char(13)
+:   if you.turns() == 0 and bot_start then
+:     bot_start = false
+:     crawl.enable_more(false)
+:     crawl.sendkeys("&Y" .. esc)
+:     crawl.sendkeys("&_nemelex" .. eol .. eol .. "Y" .. eol .. eol .. eol)
+:     crawl.sendkeys("&~T")
+:     crawl.sendkeys("&Lcircular_temple_12" .. eol)
+:     crawl.sendkeys("&" .. string.char(20) ..
+:                    "require('dlua/stress.lua')" .. eol ..
+:                    "stress.fill_level('floor')" .. eol ..
+:                    "dgn.create_monster(40, 40, 'statue hp:10000')" .. eol ..
+:                    "you.teleport_to(40, 32)" .. eol .. esc)
+:     crawl.sendkeys("X" .. string.char(6) .. "y" .. esc)
+:     crawl.sendkeys("&" .. string.char(12) .. "27" .. eol)
+:     crawl.sendkeys("&A27" .. eol)
+:     for i = 1, 40 do
+:       crawl.sendkeys("&H")
+:     end
+:   end
+:   if (you.turns() % 7) == 1 then
+:     crawl.sendkeys("&^200" .. eol .. eol .. eol)
+:     crawl.sendkeys("&" .. string.char(20) ..
+:                    "require('dlua/stress.lua')" .. eol ..
+:                    "stress.boost_monster_hp()" .. eol .. esc)
+:     crawl.sendkeys("&corb" .. eol .. eol .. esc .. esc)
+:   end
+:   if you.turns() < 1000 then
+:     crawl.sendkeys(".")
+:   else
+:     crawl.sendkeys("*qyes" .. eol .. esc .. esc)
+:   end
+: end
