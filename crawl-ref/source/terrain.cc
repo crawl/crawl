@@ -1825,3 +1825,33 @@ const char* feat_type_name(dungeon_feature_type feat)
         return "unknown terrain";
     return "floor";
 }
+
+bool is_boring_terrain(dungeon_feature_type feat)
+{
+    if (!is_notable_terrain(feat))
+        return true;
+
+    // A portal deeper into the Ziggurat is boring.
+    if (feat == DNGN_ENTER_PORTAL_VAULT && you.level_type == LEVEL_PORTAL_VAULT)
+        return true;
+
+    // Altars in the temple are boring.
+    if (feat_is_altar(feat) && player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
+        return true;
+
+    // Only note the first entrance to the Abyss/Pan/Hell
+    // which is found.
+    if ((feat == DNGN_ENTER_ABYSS || feat == DNGN_ENTER_PANDEMONIUM
+         || feat == DNGN_ENTER_HELL)
+         && overview_knows_num_portals(feat) > 1)
+    {
+        return true;
+    }
+
+    // There are at least three Zot entrances, and they're always
+    // on D:27, so ignore them.
+    if (feat == DNGN_ENTER_ZOT)
+        return true;
+
+    return false;
+}

@@ -140,28 +140,10 @@ void set_terrain_seen(int x, int y)
     {
         _automap_from(x, y, _map_quality());
 
-        const bool boring = !is_notable_terrain(feat)
-            // A portal deeper into the Ziggurat is boring.
-            || (feat == DNGN_ENTER_PORTAL_VAULT
-                && you.level_type == LEVEL_PORTAL_VAULT)
-            // Altars in the temple are boring.
-            || (feat_is_altar(feat)
-                && player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
-            // Only note the first entrance to the Abyss/Pan/Hell
-            // which is found.
-            || ((feat == DNGN_ENTER_ABYSS || feat == DNGN_ENTER_PANDEMONIUM
-                 || feat == DNGN_ENTER_HELL)
-                && overview_knows_num_portals(feat) > 1)
-            // There are at least three Zot entrances, and they're always
-            // on D:27, so ignore them.
-            || feat == DNGN_ENTER_ZOT;
-
-        if (!boring)
+        if (!is_boring_terrain(feat))
         {
             coord_def pos(x, y);
-            std::string desc =
-                feature_description(pos, false, DESC_NOCAP_A);
-
+            std::string desc = feature_description(pos, false, DESC_NOCAP_A);
             take_note(Note(NOTE_SEEN_FEAT, 0, 0, desc.c_str()));
         }
     }
