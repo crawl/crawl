@@ -1263,12 +1263,12 @@ enum dungeon_feature_type
     DNGN_DRY_FOUNTAIN_SPARKLING,
     DNGN_DRY_FOUNTAIN_BLOOD,           //  205
     DNGN_PERMADRY_FOUNTAIN,
-    DNGN_ABANDONED_SHOP,
+    DNGN_ABANDONED_SHOP,               //  207
 
     // Values below should never be saved.
     DNGN_EXPLORE_HORIZON = 210, // dummy for redefinition
 
-    NUM_FEATURES                       //  208
+    NUM_FEATURES
 };
 
 enum duration_type
