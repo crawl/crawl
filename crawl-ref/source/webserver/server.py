@@ -534,7 +534,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 f.write(contents)
 
         elif self.p is not None:
-            self.last_action_time = time.time()
+            if not message.startswith("^"):
+                self.last_action_time = time.time()
 
             logging.debug("Message: %s (user: %s)", message, self.username)
             self.poll_crawl()
