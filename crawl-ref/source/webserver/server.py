@@ -655,6 +655,7 @@ def shutdown():
         socket.shutdown()
 
 def handler(signum, frame):
+    logging.info("Received signal %i, shutting down.", signum)
     shutdown()
     if len(sockets) == 0:
         ioloop.stop()
@@ -697,6 +698,7 @@ if dgl_mode:
 try:
     ioloop.start()
 except KeyboardInterrupt:
+    logging.info("Received keyboard interrupt, shutting down.")
     shutdown()
     if len(sockets) > 0:
         ioloop.start() # We'll wait until all crawl processes have ended.
