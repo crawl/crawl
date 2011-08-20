@@ -210,12 +210,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 return
 
             if game_id not in games: return
-
-            if not self.init_user():
-                self.write_message("set_layer('crt'); $('#crt').html('Could not initialize" +
-                                   " your rc and morgue!');")
-                return
-
+        
         self.last_action_time = time.time()
 
         self.game_id = game_id
@@ -393,6 +388,21 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 # The last crawl process has ended, now we can go
                 self.ioloop.stop()
 
+    def login(self, username):
+        self.username = username
+        if not self.init_user():
+            self.write_message("connection_closed('Could not initialize your rc and morgue!<br>" +
+                               "This probably means there is something wrong with the server " +
+                               "configuration.');")
+            logging.warn("User initialization returned an error for user %s!",
+                         self.username)
+            self.username = None
+            self.close()
+            return
+        self.write_message("logged_in(" +
+                           tornado.escape.json_encode(username) + ");")
+        self.send_game_links()
+
     def on_message(self, message):
         login_start = "Login: "
         if message.startswith(login_start):
@@ -401,11 +411,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             real_username = user_passwd_match(username, password)
             if real_username:
                 logging.info("User %s logged in from ip %s.",
-                             username, self.request.remote_ip)
-                self.username = real_username
-                self.write_message("logged_in(" +
-                                   tornado.escape.json_encode(real_username) + ");")
-                self.send_game_links()
+                             real_username, self.request.remote_ip)
+                self.login(real_username)
             else:
                 logging.warn("Failed login for user %s from ip %s.",
                              username, self.request.remote_ip)
@@ -419,10 +426,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 del login_tokens[(token, username)]
                 logging.info("User %s logged in from ip %s (via token).",
                              username, self.request.remote_ip)
-                self.username = username
-                self.write_message("logged_in(" +
-                                   tornado.escape.json_encode(username) + ");")
-                self.send_game_links()
+                self.login(username)
             else:
                 logging.warn("Wrong login token for user %s from ip %s.",
                              username, self.request.remote_ip)
