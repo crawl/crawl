@@ -29,6 +29,7 @@
 #include "misc.h"
 #include "player.h"
 #include "random.h"
+#include "random-weight.h"
 #include "religion.h"
 #include "skills2.h"
 #include "spl-book.h"
@@ -577,12 +578,20 @@ static missile_type _acquirement_missile_subtype()
     case SK_CROSSBOWS: result = MI_BOLT; break;
 
     case SK_THROWING:
-        // Assuming that blowgun in inventory means that they
-        // may want needles for it (but darts might also be
-        // wanted).  Maybe expand this... see above comment.
-        result =
-            (_have_item_with_types(OBJ_WEAPONS, WPN_BLOWGUN) && coinflip())
-            ? MI_NEEDLE : MI_DART;
+        {
+            // Choose from among all usable missile types.
+            // Only give needles if they have a blowgun in inventory.
+            std::vector<std::pair<missile_type, int> > missile_weights;
+            missile_weights.push_back(std::make_pair(MI_DART, 100));
+            missile_weights.push_back(std::make_pair(MI_NEEDLE,
+                        _have_item_with_types(OBJ_WEAPONS, WPN_BLOWGUN) ?
+                        100 : 0));
+            missile_weights.push_back(std::make_pair(MI_JAVELIN,
+                        you.body_size() >= SIZE_MEDIUM ? 100 : 0));
+            missile_weights.push_back(std::make_pair(MI_LARGE_ROCK,
+                        you.can_throw_large_rocks() ? 100 : 0));
+            result = *random_choose_weighted(missile_weights);
+        }
         break;
 
     default:
