@@ -1122,8 +1122,11 @@ void maybe_shift_abyss_around_player()
 void save_abyss_uniques()
 {
     for (monster_iterator mi; mi; ++mi)
-        if (mi->needs_abyss_transit())
+        if (mi->needs_abyss_transit()
+            && !testbits(mi->flags, MF_TAKING_STAIRS))
+        {
             mi->set_transit(level_id(LEVEL_ABYSS));
+        }
 }
 
 #ifdef NEW_ABYSS
