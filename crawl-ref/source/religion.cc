@@ -1090,8 +1090,10 @@ static void _inc_penance(int val)
 
 static void _inc_gift_timeout(int val)
 {
-    you.gift_timeout += val;
-    you.gift_timeout = std::min((uint8_t)200, you.gift_timeout);
+    if (200 - you.gift_timeout < val)
+        you.gift_timeout = 200;
+    else
+        you.gift_timeout += val;
 }
 
 // These are sorted in order of power.
