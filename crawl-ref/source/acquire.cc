@@ -582,14 +582,18 @@ static missile_type _acquirement_missile_subtype()
             // Choose from among all usable missile types.
             // Only give needles if they have a blowgun in inventory.
             std::vector<std::pair<missile_type, int> > missile_weights;
+
             missile_weights.push_back(std::make_pair(MI_DART, 100));
-            missile_weights.push_back(std::make_pair(MI_NEEDLE,
-                        _have_item_with_types(OBJ_WEAPONS, WPN_BLOWGUN) ?
-                        100 : 0));
-            missile_weights.push_back(std::make_pair(MI_JAVELIN,
-                        you.body_size() >= SIZE_MEDIUM ? 100 : 0));
-            missile_weights.push_back(std::make_pair(MI_LARGE_ROCK,
-                        you.can_throw_large_rocks() ? 100 : 0));
+
+            if (_have_item_with_types(OBJ_WEAPONS, WPN_BLOWGUN))
+                missile_weights.push_back(std::make_pair(MI_NEEDLE,100));
+
+            if (you.body_size() >= SIZE_MEDIUM)
+                missile_weights.push_back(std::make_pair(MI_JAVELIN, 100));
+
+            if (you.can_throw_large_rocks())
+                missile_weights.push_back(std::make_pair(MI_LARGE_ROCK, 100));
+
             result = *random_choose_weighted(missile_weights);
         }
         break;
