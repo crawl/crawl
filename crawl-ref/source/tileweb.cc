@@ -752,6 +752,12 @@ void TilesFramework::update_minimap(const coord_def& gc)
         gc.y < 0 || gc.y >= m_next_view.size().y)
         return;
 
+    if (you.see_cell(gc))
+        return; // This will get updated by load_dungeon.
+                // Also, it's possible that tile_bg is not yet
+                // initialized, which could lead to problems
+                // if we try to draw in-los cells.
+
     screen_cell_t *cell = &m_next_view[gc.x + gc.y * GXM];
 
     draw_cell(cell, gc, false, m_next_flash_colour);
