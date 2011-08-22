@@ -188,7 +188,8 @@ public:
                           bool wizard_tele = false) = 0;
     virtual void poison(actor *attacker, int amount = 1, bool force = false) = 0;
     virtual bool sicken(int amount, bool allow_hint = true) = 0;
-    virtual void paralyse(actor *attacker, int strength) = 0;
+    virtual void paralyse(actor *attacker, int strength,
+                          std::string source = "") = 0;
     virtual void petrify(actor *attacker) = 0;
     virtual bool fully_petrify(actor *foe, bool quiet = false) = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;

@@ -213,7 +213,7 @@ static bool _zin_retribution()
             you.hibernate();
             break;
         case 2:
-            you.paralyse(NULL, 3 + random2(10));
+            paralyse_player("the wrath of Zin", 3 + random2(10));
             break;
         }
         break;

@@ -2173,7 +2173,12 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
                     desc += _hiscore_newline_string();
 
                 if (you.duration[DUR_PARALYSIS])
-                    desc += "... while paralysed" + _hiscore_newline_string();
+                {
+                    desc += "... while paralysed";
+                    if (you.props.exists("paralysed_by"))
+                        desc += " by " + you.props["paralysed_by"].get_string();
+                    desc += _hiscore_newline_string();
+                }
 
             }
         }

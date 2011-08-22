@@ -2160,6 +2160,8 @@ static void _decrement_paralysis(int delay)
             you.redraw_evasion = true;
             you.duration[DUR_PARALYSIS_IMMUNITY] = roll_dice(1, 3)
                                                    * BASELINE_DELAY;
+            if (you.props.exists("paralysed_by"))
+                you.props.erase("paralysed_by");
         }
     }
 }
