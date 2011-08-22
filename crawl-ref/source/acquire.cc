@@ -1050,7 +1050,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
             }
 #if TAG_MAJOR_VERSION == 32
             if (bk == BOOK_MINOR_MAGIC_II || bk == BOOK_MINOR_MAGIC_III
-                || bk == BOOK_CONJURATIONS_I || bk == BOOK_BRANDS)
+                || bk == BOOK_CONJURATIONS_I)
             {
                 weights[bk] = 0;
                 continue;

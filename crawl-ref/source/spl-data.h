@@ -40,7 +40,7 @@ struct spell_desc
     SPELL_CAUSE_FEAR, "Cause Fear",
      SPTYP_HEXES,
      SPFLAG_AREA,
-     5,
+     4,
      200,
      LOS_RADIUS, LOS_RADIUS,
      0,

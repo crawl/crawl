@@ -1031,20 +1031,20 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
         },
         {
             "Zealot",
-            coord_def(17, 0), 20,
+            coord_def(15, 0), 20,
             {JOB_BERSERKER, JOB_ABYSSAL_KNIGHT, JOB_CHAOS_KNIGHT,
              JOB_DEATH_KNIGHT, JOB_PRIEST, JOB_HEALER, JOB_UNKNOWN,
              JOB_UNKNOWN, JOB_UNKNOWN}
         },
         {
-            "Warrior-mage",    // XXX: Arcane Marksmen are temporarily disabled
-            coord_def(39, 0), 17,
-            {JOB_SKALD, JOB_ENCHANTER, JOB_TRANSMUTER, JOB_STALKER,
-             JOB_WARPER, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN}
+            "Warrior-mage",
+            coord_def(35, 0), 21,
+            {JOB_SKALD, JOB_TRANSMUTER, JOB_WARPER, JOB_ARCANE_MARKSMAN,
+             JOB_ENCHANTER, JOB_STALKER, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN}
         },
         {
             "Mage",
-            coord_def(57, 0), 22,
+            coord_def(56, 0), 23,
             {JOB_WIZARD, JOB_CONJURER, JOB_SUMMONER, JOB_NECROMANCER,
              JOB_FIRE_ELEMENTALIST, JOB_ICE_ELEMENTALIST,
              JOB_AIR_ELEMENTALIST, JOB_EARTH_ELEMENTALIST, JOB_VENOM_MAGE}
