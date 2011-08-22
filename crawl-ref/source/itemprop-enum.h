@@ -505,6 +505,8 @@ enum weapon_type
     WPN_UNKNOWN = 1000,                // 1000
     WPN_RANDOM,
     WPN_VIABLE,
+
+// thrown weapons (for hunter weapon selection)
     WPN_THROWN,
     WPN_ROCKS,
     WPN_JAVELINS,

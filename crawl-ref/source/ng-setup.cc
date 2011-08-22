@@ -446,48 +446,45 @@ static void _update_weapon(const newgame_def& ng)
 {
     ASSERT(ng.weapon != NUM_WEAPONS);
 
-    if (ng.weapon == WPN_UNARMED)
-        _newgame_clear_item(0);
-    else if (ng.weapon != WPN_UNKNOWN)
+    switch(ng.weapon)
     {
-        switch(ng.weapon)
-        {
-            case WPN_ROCKS:
-                newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1,
-                                  5, 1);
-                break;
-            case WPN_JAVELINS:
-                newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1,
-                                  5, 1);
-                break;
-            case WPN_DARTS:
-                newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_DART, -1,
-                                  10, 1);
-                break;
-            case WPN_BOW:
-                newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW);
-                newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 25, 1);
+    case WPN_ROCKS:
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5, 1);
+        break;
+    case WPN_JAVELINS:
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 5, 1);
+        break;
+    case WPN_DARTS:
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 10, 1);
+        break;
+    case WPN_BOW:
+        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 25, 1);
 
-                // Wield the bow instead.
-                you.equip[EQ_WEAPON] = 1;
-                break;
-            case WPN_CROSSBOW:
-                newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW);
-                newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 25, 1);
+        // Wield the bow instead.
+        you.equip[EQ_WEAPON] = 1;
+        break;
+    case WPN_CROSSBOW:
+        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 25, 1);
 
-                // Wield the crossbow instead.
-                you.equip[EQ_WEAPON] = 1;
-                break;
-            case WPN_SLING:
-                newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
-                newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 25, 1);
+        // Wield the crossbow instead.
+        you.equip[EQ_WEAPON] = 1;
+        break;
+    case WPN_SLING:
+        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 25, 1);
 
-                // Wield the sling instead.
-                you.equip[EQ_WEAPON] = 1;
-                break;
-            default:
-                you.inv[0].sub_type = ng.weapon;
-        }
+        // Wield the sling instead.
+        you.equip[EQ_WEAPON] = 1;
+        break;
+    case WPN_UNARMED:
+        _newgame_clear_item(0);
+        break;
+    case WPN_UNKNOWN:
+        break;
+    default:
+        you.inv[0].sub_type = ng.weapon;
     }
 }
 
