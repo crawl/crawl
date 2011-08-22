@@ -736,10 +736,23 @@ static void _give_items_skills(const newgame_def& ng)
 
         switch (you.species)
         {
+        case SP_SLUDGE_ELF:
+        case SP_HILL_ORC:
+        case SP_MERFOLK:
+            newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6);
+            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
+            break;
+
+        case SP_OGRE:
+        case SP_TROLL:
+            newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5);
+            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 3);
+            break;
+
         case SP_HALFLING:
+        case SP_SPRIGGAN:
             newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1,
-                               30);
+            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 30);
 
             // Wield the sling instead.
             you.equip[EQ_WEAPON] = 1;
@@ -767,10 +780,11 @@ static void _give_items_skills(const newgame_def& ng)
         // And give them a book
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_BRANDS);
 
+        you.skills[SK_FIGHTING]             = 1;
         you.skills[range_skill(you.inv[1])] = 2;
-        you.skills[SK_DODGING]              = 1;
+        you.skills[SK_DODGING]              = 2;
         you.skills[SK_SPELLCASTING]         = 2;
-        you.skills[SK_HEXES]                = 2;
+        you.skills[SK_HEXES]                = 3;
         break;
 
     case JOB_WIZARD:
@@ -1200,6 +1214,7 @@ static void _give_basic_spells(job_type which_job)
         which_spell = SPELL_PAIN;
         break;
     case JOB_ENCHANTER:
+    case JOB_ARCANE_MARKSMAN:
         which_spell = SPELL_CORONA;
         break;
     case JOB_FIRE_ELEMENTALIST:
