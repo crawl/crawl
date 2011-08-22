@@ -171,7 +171,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def update_lobby(self):
         running_games = [game for game in sockets if game.is_running()]
         lobby_html = self.render_string("lobby.html", running_games = running_games)
-        self.write_message("$('#lobby_body').html(" +
+        self.write_message("lobby_data(" +
                            tornado.escape.json_encode(lobby_html) + ");")
 
     def send_game_links(self):

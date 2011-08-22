@@ -23,24 +23,23 @@ body {
     display: inline-block;
 }
 
+#lobby_body {
+    text-align: center;
+}
+
 #player_list {
     width: 100%;
     text-align: left;
 }
 
-#lobby_body {
-    text-align: center;
+#player_list th.header {
+}
+#player_list th.headerSortDown,
+#player_list th.headerSortUp {
+    background-color: #111111;
 }
 
-#player_list table {
-    width: 100%;
-}
-
-#player_list table th {
-    text-align: left;
-}
-
-#player_list table tr:hover {
+#player_list tr:hover {
     background-color: #101010;
 }
 

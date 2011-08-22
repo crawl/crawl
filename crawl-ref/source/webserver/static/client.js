@@ -365,6 +365,11 @@ function lobby_update()
 {
     socket.send("UpdateLobby");
 }
+function lobby_data(data)
+{
+    $("#player_list tbody").html(data);
+    $("#player_list").trigger("update");
+}
 
 var watching = false;
 function set_watching(val)
@@ -500,6 +505,10 @@ $(document).ready(
                     showing_close_message = true;
                 }
             };
+
+            $("#player_list").tablesorter({
+                sortList: [[0, 0]]
+            });
         }
         else
         {

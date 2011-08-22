@@ -5,6 +5,7 @@
     <link rel="icon" href="/static/stone_soup_icon-32x32.png" type="image/png">
     <script type="text/javascript" src="/static/jquery.js"></script>
     <script type="text/javascript" src="/static/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/static/jquery.tablesorter.min.js"></script>
     <script type="text/javascript" src="/static/key_conversion.js"></script>
     <script type="text/javascript" src="/static/client.js"></script>
     <script type="text/javascript" src="/static/chat.js"></script>
@@ -71,7 +72,25 @@
 
       <br>
 
-      <div id="lobby_body"></div>
+      <div id="lobby_body">
+        <span>
+          Games currently running:
+          <a href="javascript:lobby_update()">(Refresh)</a>
+        </span>
+        <table id="player_list">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Game</th>
+              <th>Where</th>
+              <th>Idle</th>
+              <th>Spectators</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
 
       <div id="footer">{% include footer.html %}</div>
     </div>
