@@ -586,7 +586,7 @@ static missile_type _acquirement_missile_subtype()
             missile_weights.push_back(std::make_pair(MI_DART, 100));
 
             if (_have_item_with_types(OBJ_WEAPONS, WPN_BLOWGUN))
-                missile_weights.push_back(std::make_pair(MI_NEEDLE,100));
+                missile_weights.push_back(std::make_pair(MI_NEEDLE, 100));
 
             if (you.body_size() >= SIZE_MEDIUM)
                 missile_weights.push_back(std::make_pair(MI_JAVELIN, 100));
