@@ -4752,6 +4752,15 @@ bool curare_hits_player(int death_source, int amount, const bolt &beam)
     return (hurted > 0);
 }
 
+void paralyse_player(std::string source, int amount, int factor)
+{
+    if (!amount)
+        amount = 2 + random2(6 + you.duration[DUR_PARALYSIS] / BASELINE_DELAY);
+
+    amount /= factor;
+    you.paralyse(NULL, amount, source);
+}
+
 bool poison_player(int amount, std::string source, std::string source_aux,
                    bool force)
 {
@@ -6427,8 +6436,9 @@ void player::confuse(actor *who, int str)
  *
  * @param who Pointer to the actor who paralysed the player.
  * @param str The number of turns the paralysis will last.
+ * @param source Description of the source of the paralysis.
  */
-void player::paralyse(actor *who, int str)
+void player::paralyse(actor *who, int str, std::string source)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -6445,10 +6455,13 @@ void player::paralyse(actor *who, int str)
 
     int &paralysis(duration[DUR_PARALYSIS]);
 
-    if (!paralysis && who)
+    if (source.empty() && who)
+        source = who->name(DESC_NOCAP_A);
+
+    if (!paralysis && !source.empty())
     {
-        take_note(Note(NOTE_PARALYSIS, str, 0,
-                       who->name(DESC_NOCAP_A).c_str()));
+        take_note(Note(NOTE_PARALYSIS, str, 0, source.c_str()));
+        you.props["paralysed_by"] = source;
     }
 
 

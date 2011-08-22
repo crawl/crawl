@@ -556,7 +556,7 @@ public:
     void make_hungry(int nutrition, bool silent = true);
     void poison(actor *agent, int amount = 1, bool force = false);
     bool sicken(int amount, bool allow_hint = true);
-    void paralyse(actor *, int str);
+    void paralyse(actor *, int str, std::string source = "");
     void petrify(actor *);
     bool fully_petrify(actor *foe, bool quiet = false);
     void slow_down(actor *, int str);
@@ -936,6 +936,7 @@ bool confuse_player(int amount, bool resistable = true);
 bool curare_hits_player(int death_source, int amount, const bolt &beam);
 bool poison_player(int amount, std::string source,
                    std::string source_aux = "", bool force = false);
+void paralyse_player(std::string source, int amount = 0, int factor = 1);
 void dec_poison_player();
 void reduce_poison_player(int amount);
 bool miasma_player(std::string source, std::string source_aux = "");

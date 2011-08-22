@@ -3720,7 +3720,7 @@ void monster::confuse(actor *atk, int strength)
     enchant_monster_with_flavour(this, atk, BEAM_CONFUSION, strength);
 }
 
-void monster::paralyse(actor *atk, int strength)
+void monster::paralyse(actor *atk, int strength, std::string cause)
 {
     enchant_monster_with_flavour(this, atk, BEAM_PARALYSIS, strength);
 }
