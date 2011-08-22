@@ -1513,12 +1513,12 @@ void travel_pathfind::check_square_greed(const coord_def &c)
 
         // Penalize distance for negative explore_item_greed
         if (Options.explore_item_greed < 0)
-          dist -= Options.explore_item_greed;
+            dist -= Options.explore_item_greed;
 
         // The addition of explore_wall_bias makes items as interesting
         // as a room's perimeter (with one of four known adjacent walls).
         if (Options.explore_wall_bias)
-          dist += Options.explore_wall_bias * 3;
+            dist += Options.explore_wall_bias * 3;
 
         greedy_dist = dist;
         greedy_place = c;
@@ -1564,11 +1564,7 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
                 if (unexplored_dist < 0)
                     unreachables.insert(dc);
                 else
-                {
                     _set_target_square(unexplored_place);
-                    return (true);
-                }
-
             }
             else
             {
@@ -1598,7 +1594,6 @@ bool travel_pathfind::path_flood(const coord_def &c, const coord_def &dc)
                 {
                     unexplored_dist = dist;
                     unexplored_place = c;
-                    return (true);
                 }
             }
         }
