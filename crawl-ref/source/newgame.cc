@@ -1394,21 +1394,21 @@ static void _construct_weapon_menu(const weapon_type& defweapon,
         text += " - ";
         switch(weapons[i].first)
         {
-            case WPN_UNARMED:
-                text += "claws";
-                break;
-            case WPN_JAVELINS:
-                text += "javelins";
-                break;
-            case WPN_ROCKS:
-                text += "large rocks";
-                break;
-            case WPN_DARTS:
-                text += "darts";
-                break;
-            default:
-                text += weapon_base_name(weapons[i].first);
-                break;
+        case WPN_UNARMED:
+            text += "claws";
+            break;
+        case WPN_JAVELINS:
+            text += "javelins";
+            break;
+        case WPN_ROCKS:
+            text += "large rocks";
+            break;
+        case WPN_DARTS:
+            text += "darts";
+            break;
+        default:
+            text += weapon_base_name(weapons[i].first);
+            break;
         }
         // Fill to column width to give extra padding for the highlight
         text.append(COLUMN_WIDTH - text.size() - 1 , ' ');
@@ -1650,39 +1650,32 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
 static std::vector<weapon_choice> _get_weapons(const newgame_def* ng)
 {
     std::vector<weapon_choice> weapons;
-    if(ng->job == JOB_HUNTER)
+    if (ng->job == JOB_HUNTER)
     {
-        weapon_type startwep[4] = { WPN_THROWN, WPN_SLING, WPN_BOW, WPN_CROSSBOW };
+        weapon_type startwep[4] = { WPN_THROWN, WPN_SLING, WPN_BOW,
+                                    WPN_CROSSBOW };
 
         for (int i = 0; i < 4; i++)
         {
             weapon_choice wp;
             wp.first = startwep[i];
 
-            switch (wp.first)
+            if (wp.first == WPN_THROWN)
             {
-            case WPN_THROWN:
                 if (species_size(ng->species, PSIZE_TORSO) == SIZE_LARGE)
-                {
                     wp.first = WPN_ROCKS;
-                } else if (species_size(ng->species, PSIZE_TORSO) <= SIZE_SMALL)
-                {
+                else if (species_size(ng->species, PSIZE_TORSO) <= SIZE_SMALL)
                     wp.first = WPN_DARTS;
-                } else
-                {
+                else
                     wp.first = WPN_JAVELINS;
-                }
-                break;
-            default:
-                break;
             }
+
             wp.second = weapon_restriction(wp.first, *ng);
             if (wp.second != CC_BANNED)
-            {
                 weapons.push_back(wp);
-            }
         }
-    } else
+    }
+    else
     {
         weapon_type startwep[6] = { WPN_UNARMED, WPN_SHORT_SWORD, WPN_MACE,
                                     WPN_HAND_AXE, WPN_SPEAR, WPN_FALCHION };
@@ -1715,9 +1708,7 @@ static std::vector<weapon_choice> _get_weapons(const newgame_def* ng)
 
             wp.second = weapon_restriction(wp.first, *ng);
             if (wp.second != CC_BANNED)
-            {
                 weapons.push_back(wp);
-            }
         }
     }
     return weapons;

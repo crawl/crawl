@@ -16,579 +16,579 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
 {
     switch (job)
     {
-        case JOB_FIGHTER:
-            switch (speci)
+    case JOB_FIGHTER:
+        switch (speci)
         {
-            case SP_DEEP_ELF:
-            case SP_SLUDGE_ELF:
-            case SP_MERFOLK:
-            case SP_HALFLING:
-            case SP_KOBOLD:
-            case SP_SPRIGGAN:
-            case SP_NAGA:
-            case SP_OGRE:
-            case SP_BASE_DRACONIAN:
-            case SP_DEMIGOD:
-            case SP_MUMMY:
-            case SP_VAMPIRE:
-            case SP_OCTOPODE:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_DEEP_ELF:
+        case SP_SLUDGE_ELF:
+        case SP_MERFOLK:
+        case SP_HALFLING:
+        case SP_KOBOLD:
+        case SP_SPRIGGAN:
+        case SP_NAGA:
+        case SP_OGRE:
+        case SP_BASE_DRACONIAN:
+        case SP_DEMIGOD:
+        case SP_MUMMY:
+        case SP_VAMPIRE:
+        case SP_OCTOPODE:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_GLADIATOR:
-            switch (speci)
+    case JOB_GLADIATOR:
+        switch (speci)
         {
-            case SP_FELID:
-                return (CC_BANNED);
-            case SP_DEEP_ELF:
-            case SP_SLUDGE_ELF:
-            case SP_HALFLING:
-            case SP_KOBOLD:
-            case SP_SPRIGGAN:
-            case SP_NAGA:
-            case SP_OGRE:
-            case SP_BASE_DRACONIAN:
-            case SP_DEMIGOD:
-            case SP_MUMMY:
-            case SP_VAMPIRE:
-            case SP_OCTOPODE:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_FELID:
+            return (CC_BANNED);
+        case SP_DEEP_ELF:
+        case SP_SLUDGE_ELF:
+        case SP_HALFLING:
+        case SP_KOBOLD:
+        case SP_SPRIGGAN:
+        case SP_NAGA:
+        case SP_OGRE:
+        case SP_BASE_DRACONIAN:
+        case SP_DEMIGOD:
+        case SP_MUMMY:
+        case SP_VAMPIRE:
+        case SP_OCTOPODE:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_MONK:
-            switch (speci)
+    case JOB_MONK:
+        switch (speci)
         {
-            case SP_FELID:
-                return (CC_BANNED);
-            case SP_HIGH_ELF:
-            case SP_DEEP_ELF:
-            case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_DWARF:
-            case SP_MERFOLK:
-            case SP_HALFLING:
-            case SP_KOBOLD:
-            case SP_SPRIGGAN:
-            case SP_NAGA:
-            case SP_OGRE:
-            case SP_DEMIGOD:
-            case SP_MUMMY:
-            case SP_OCTOPODE:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_FELID:
+            return (CC_BANNED);
+        case SP_HIGH_ELF:
+        case SP_DEEP_ELF:
+        case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
+        case SP_MERFOLK:
+        case SP_HALFLING:
+        case SP_KOBOLD:
+        case SP_SPRIGGAN:
+        case SP_NAGA:
+        case SP_OGRE:
+        case SP_DEMIGOD:
+        case SP_MUMMY:
+        case SP_OCTOPODE:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_BERSERKER:
-            switch (speci)
+    case JOB_BERSERKER:
+        switch (speci)
         {
-            case SP_DEMIGOD:
-                return (CC_BANNED);
-            case SP_HIGH_ELF:
-            case SP_DEEP_ELF:
-            case SP_SLUDGE_ELF:
-            case SP_SPRIGGAN:
-            case SP_MUMMY:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
-            case SP_OCTOPODE:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_DEMIGOD:
+            return (CC_BANNED);
+        case SP_HIGH_ELF:
+        case SP_DEEP_ELF:
+        case SP_SLUDGE_ELF:
+        case SP_SPRIGGAN:
+        case SP_MUMMY:
+        case SP_GHOUL:
+        case SP_VAMPIRE:
+        case SP_OCTOPODE:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_CHAOS_KNIGHT:
-            switch (speci)
+    case JOB_CHAOS_KNIGHT:
+        switch (speci)
         {
-            case SP_DEMIGOD:
-                return (CC_BANNED);
-            default:
-                return (CC_RESTRICTED);
+        case SP_DEMIGOD:
+            return (CC_BANNED);
+        default:
+            return (CC_RESTRICTED);
         }
 
-        case JOB_DEATH_KNIGHT:
-            switch (speci)
+    case JOB_DEATH_KNIGHT:
+        switch (speci)
         {
-            case SP_DEMIGOD:
-                return (CC_BANNED);
-            case SP_HIGH_ELF:
-            case SP_DEEP_ELF:
-            case SP_SLUDGE_ELF:
-            case SP_DEEP_DWARF:
-            case SP_HALFLING:
-            case SP_KOBOLD:
-            case SP_SPRIGGAN:
-            case SP_OGRE:
-            case SP_MUMMY:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
-            case SP_FELID:
-            case SP_OCTOPODE:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_DEMIGOD:
+            return (CC_BANNED);
+        case SP_HIGH_ELF:
+        case SP_DEEP_ELF:
+        case SP_SLUDGE_ELF:
+        case SP_DEEP_DWARF:
+        case SP_HALFLING:
+        case SP_KOBOLD:
+        case SP_SPRIGGAN:
+        case SP_OGRE:
+        case SP_MUMMY:
+        case SP_GHOUL:
+        case SP_VAMPIRE:
+        case SP_FELID:
+        case SP_OCTOPODE:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_ABYSSAL_KNIGHT:
-            switch (speci)
+    case JOB_ABYSSAL_KNIGHT:
+        switch (speci)
         {
-            case SP_DEMIGOD:
-                return (CC_BANNED);
-            case SP_HIGH_ELF:
-            case SP_DEEP_ELF:
-            case SP_SLUDGE_ELF:
-            case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_DWARF:
-            case SP_HILL_ORC:
-            case SP_HALFLING:
-            case SP_KOBOLD:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-            case SP_KENKU:
-            case SP_MUMMY:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
-            case SP_FELID:
-            case SP_OCTOPODE:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_DEMIGOD:
+            return (CC_BANNED);
+        case SP_HIGH_ELF:
+        case SP_DEEP_ELF:
+        case SP_SLUDGE_ELF:
+        case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
+        case SP_HILL_ORC:
+        case SP_HALFLING:
+        case SP_KOBOLD:
+        case SP_OGRE:
+        case SP_TROLL:
+        case SP_MINOTAUR:
+        case SP_KENKU:
+        case SP_MUMMY:
+        case SP_GHOUL:
+        case SP_VAMPIRE:
+        case SP_FELID:
+        case SP_OCTOPODE:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
-        case JOB_PRIEST:
-            switch (speci)
+    case JOB_PRIEST:
+        switch (speci)
         {
-            case SP_DEMIGOD:
-            case SP_DEMONSPAWN:
-            case SP_MUMMY:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
-                return (CC_BANNED);
-            case SP_DEEP_ELF:
-            case SP_SLUDGE_ELF:
-            case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_DWARF:
-            case SP_MERFOLK:
-            case SP_HALFLING:
-            case SP_KOBOLD:
-            case SP_SPRIGGAN:
-            case SP_NAGA:
-            case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_KENKU:
-            case SP_BASE_DRACONIAN:
-            case SP_FELID:
-            case SP_OCTOPODE:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
-        }
-
-        case JOB_HEALER:
-            switch (speci)
-        {
-            case SP_DEMIGOD:
-            case SP_DEMONSPAWN:
-            case SP_MUMMY:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
-                return (CC_BANNED);
-            case SP_HIGH_ELF:
-            case SP_DEEP_ELF:
-            case SP_HALFLING:
-            case SP_SPRIGGAN:
-            case SP_OGRE:
-            case SP_MINOTAUR:
-            case SP_KENKU:
-            case SP_FELID:
-            case SP_OCTOPODE:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_DEMIGOD:
+        case SP_DEMONSPAWN:
+        case SP_MUMMY:
+        case SP_GHOUL:
+        case SP_VAMPIRE:
+            return (CC_BANNED);
+        case SP_DEEP_ELF:
+        case SP_SLUDGE_ELF:
+        case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
+        case SP_MERFOLK:
+        case SP_HALFLING:
+        case SP_KOBOLD:
+        case SP_SPRIGGAN:
+        case SP_NAGA:
+        case SP_CENTAUR:
+        case SP_OGRE:
+        case SP_TROLL:
+        case SP_KENKU:
+        case SP_BASE_DRACONIAN:
+        case SP_FELID:
+        case SP_OCTOPODE:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_SKALD:
-            switch (speci)
+    case JOB_HEALER:
+        switch (speci)
         {
-            case SP_DEEP_ELF:
-            case SP_SLUDGE_ELF:
-            case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_DWARF:
-            case SP_KOBOLD:
-            case SP_SPRIGGAN:
-            case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-            case SP_KENKU:
-            case SP_MUMMY:
-            case SP_GHOUL:
-            case SP_FELID:
-            case SP_OCTOPODE:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_DEMIGOD:
+        case SP_DEMONSPAWN:
+        case SP_MUMMY:
+        case SP_GHOUL:
+        case SP_VAMPIRE:
+            return (CC_BANNED);
+        case SP_HIGH_ELF:
+        case SP_DEEP_ELF:
+        case SP_HALFLING:
+        case SP_SPRIGGAN:
+        case SP_OGRE:
+        case SP_MINOTAUR:
+        case SP_KENKU:
+        case SP_FELID:
+        case SP_OCTOPODE:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_WARPER:
-            switch (speci)
+    case JOB_SKALD:
+        switch (speci)
         {
-            case SP_DEEP_ELF:
-            case SP_SLUDGE_ELF:
-            case SP_MOUNTAIN_DWARF:
-            case SP_HILL_ORC:
-            case SP_MERFOLK:
-            case SP_KOBOLD:
-            case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-            case SP_KENKU:
-            case SP_BASE_DRACONIAN:
-            case SP_DEMIGOD:
-            case SP_MUMMY:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
-            case SP_OCTOPODE:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_DEEP_ELF:
+        case SP_SLUDGE_ELF:
+        case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
+        case SP_KOBOLD:
+        case SP_SPRIGGAN:
+        case SP_CENTAUR:
+        case SP_OGRE:
+        case SP_TROLL:
+        case SP_MINOTAUR:
+        case SP_KENKU:
+        case SP_MUMMY:
+        case SP_GHOUL:
+        case SP_FELID:
+        case SP_OCTOPODE:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_WIZARD:
-            switch (speci)
+    case JOB_WARPER:
+        switch (speci)
         {
-            case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_DWARF:
-            case SP_HILL_ORC:
-            case SP_MERFOLK:
-            case SP_HALFLING:
-            case SP_KOBOLD:
-            case SP_CENTAUR:
-            case SP_MINOTAUR:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
-            case SP_FELID:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_DEEP_ELF:
+        case SP_SLUDGE_ELF:
+        case SP_MOUNTAIN_DWARF:
+        case SP_HILL_ORC:
+        case SP_MERFOLK:
+        case SP_KOBOLD:
+        case SP_CENTAUR:
+        case SP_OGRE:
+        case SP_TROLL:
+        case SP_MINOTAUR:
+        case SP_KENKU:
+        case SP_BASE_DRACONIAN:
+        case SP_DEMIGOD:
+        case SP_MUMMY:
+        case SP_GHOUL:
+        case SP_VAMPIRE:
+        case SP_OCTOPODE:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_CONJURER:
-            switch (speci)
+    case JOB_WIZARD:
+        switch (speci)
         {
-            case SP_SLUDGE_ELF:
-            case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_DWARF:
-            case SP_HILL_ORC:
-            case SP_MERFOLK:
-            case SP_HALFLING:
-            case SP_KOBOLD:
-            case SP_SPRIGGAN:
-            case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
-            case SP_FELID:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
+        case SP_HILL_ORC:
+        case SP_MERFOLK:
+        case SP_HALFLING:
+        case SP_KOBOLD:
+        case SP_CENTAUR:
+        case SP_MINOTAUR:
+        case SP_GHOUL:
+        case SP_VAMPIRE:
+        case SP_FELID:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_ENCHANTER:
-            switch (speci)
+    case JOB_CONJURER:
+        switch (speci)
         {
-            case SP_HIGH_ELF:
-            case SP_SLUDGE_ELF:
-            case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_DWARF:
-            case SP_HILL_ORC:
-            case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-            case SP_KENKU:
-            case SP_BASE_DRACONIAN:
-            case SP_DEMIGOD:
-            case SP_DEMONSPAWN:
-            case SP_MUMMY:
-            case SP_GHOUL:
-            case SP_FELID:
-            case SP_OCTOPODE:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_SLUDGE_ELF:
+        case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
+        case SP_HILL_ORC:
+        case SP_MERFOLK:
+        case SP_HALFLING:
+        case SP_KOBOLD:
+        case SP_SPRIGGAN:
+        case SP_CENTAUR:
+        case SP_OGRE:
+        case SP_TROLL:
+        case SP_MINOTAUR:
+        case SP_GHOUL:
+        case SP_VAMPIRE:
+        case SP_FELID:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_SUMMONER:
-            switch (speci)
+    case JOB_ENCHANTER:
+        switch (speci)
         {
-            case SP_HIGH_ELF:
-            case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_DWARF:
-            case SP_HILL_ORC:
-            case SP_MERFOLK:
-            case SP_HALFLING:
-            case SP_SPRIGGAN:
-            case SP_NAGA:
-            case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-            case SP_GHOUL:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_HIGH_ELF:
+        case SP_SLUDGE_ELF:
+        case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
+        case SP_HILL_ORC:
+        case SP_CENTAUR:
+        case SP_OGRE:
+        case SP_TROLL:
+        case SP_MINOTAUR:
+        case SP_KENKU:
+        case SP_BASE_DRACONIAN:
+        case SP_DEMIGOD:
+        case SP_DEMONSPAWN:
+        case SP_MUMMY:
+        case SP_GHOUL:
+        case SP_FELID:
+        case SP_OCTOPODE:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_NECROMANCER:
-            switch (speci)
+    case JOB_SUMMONER:
+        switch (speci)
         {
-            case SP_HIGH_ELF:
-            case SP_MOUNTAIN_DWARF:
-            case SP_MERFOLK:
-            case SP_HALFLING:
-            case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_HIGH_ELF:
+        case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
+        case SP_HILL_ORC:
+        case SP_MERFOLK:
+        case SP_HALFLING:
+        case SP_SPRIGGAN:
+        case SP_NAGA:
+        case SP_CENTAUR:
+        case SP_OGRE:
+        case SP_TROLL:
+        case SP_MINOTAUR:
+        case SP_GHOUL:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_TRANSMUTER:
-            switch (speci)
+    case JOB_NECROMANCER:
+        switch (speci)
         {
-            case SP_HIGH_ELF:
-            case SP_DEEP_ELF:
-            case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_DWARF:
-            case SP_HILL_ORC:
-            case SP_HALFLING:
-            case SP_KOBOLD:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-            case SP_KENKU:
-            case SP_MUMMY:
-            case SP_GHOUL:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_HIGH_ELF:
+        case SP_MOUNTAIN_DWARF:
+        case SP_MERFOLK:
+        case SP_HALFLING:
+        case SP_CENTAUR:
+        case SP_OGRE:
+        case SP_TROLL:
+        case SP_MINOTAUR:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_FIRE_ELEMENTALIST:
-            switch (speci)
+    case JOB_TRANSMUTER:
+        switch (speci)
         {
-            case SP_DEEP_DWARF:
-            case SP_MERFOLK:
-            case SP_HALFLING:
-            case SP_SPRIGGAN:
-            case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-            case SP_MUMMY:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
-            case SP_FELID:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_HIGH_ELF:
+        case SP_DEEP_ELF:
+        case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
+        case SP_HILL_ORC:
+        case SP_HALFLING:
+        case SP_KOBOLD:
+        case SP_OGRE:
+        case SP_TROLL:
+        case SP_MINOTAUR:
+        case SP_KENKU:
+        case SP_MUMMY:
+        case SP_GHOUL:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_ICE_ELEMENTALIST:
-            switch (speci)
+    case JOB_FIRE_ELEMENTALIST:
+        switch (speci)
         {
-            case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_DWARF:
-            case SP_HALFLING:
-            case SP_SPRIGGAN:
-            case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-            case SP_KENKU:
-            case SP_FELID:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_DEEP_DWARF:
+        case SP_MERFOLK:
+        case SP_HALFLING:
+        case SP_SPRIGGAN:
+        case SP_CENTAUR:
+        case SP_OGRE:
+        case SP_TROLL:
+        case SP_MINOTAUR:
+        case SP_MUMMY:
+        case SP_GHOUL:
+        case SP_VAMPIRE:
+        case SP_FELID:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_AIR_ELEMENTALIST:
-            switch (speci)
+    case JOB_ICE_ELEMENTALIST:
+        switch (speci)
         {
-            case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_DWARF:
-            case SP_HILL_ORC:
-            case SP_MERFOLK:
-            case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-            case SP_MUMMY:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
-            case SP_FELID:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
+        case SP_HALFLING:
+        case SP_SPRIGGAN:
+        case SP_CENTAUR:
+        case SP_OGRE:
+        case SP_TROLL:
+        case SP_MINOTAUR:
+        case SP_KENKU:
+        case SP_FELID:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_EARTH_ELEMENTALIST:
-            switch (speci)
+    case JOB_AIR_ELEMENTALIST:
+        switch (speci)
         {
-            case SP_HIGH_ELF:
-            case SP_MERFOLK:
-            case SP_HALFLING:
-            case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-            case SP_KENKU:
-            case SP_MUMMY:
-            case SP_VAMPIRE:
-            case SP_FELID:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
+        case SP_HILL_ORC:
+        case SP_MERFOLK:
+        case SP_CENTAUR:
+        case SP_OGRE:
+        case SP_TROLL:
+        case SP_MINOTAUR:
+        case SP_MUMMY:
+        case SP_GHOUL:
+        case SP_VAMPIRE:
+        case SP_FELID:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_VENOM_MAGE:
-            switch (speci)
+    case JOB_EARTH_ELEMENTALIST:
+        switch (speci)
         {
-            case SP_HIGH_ELF:
-            case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_DWARF:
-            case SP_HILL_ORC:
-            case SP_HALFLING:
-            case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-            case SP_MUMMY:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_HIGH_ELF:
+        case SP_MERFOLK:
+        case SP_HALFLING:
+        case SP_CENTAUR:
+        case SP_OGRE:
+        case SP_TROLL:
+        case SP_MINOTAUR:
+        case SP_KENKU:
+        case SP_MUMMY:
+        case SP_VAMPIRE:
+        case SP_FELID:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_STALKER:
-            switch (speci)
+    case JOB_VENOM_MAGE:
+        switch (speci)
         {
-            case SP_HIGH_ELF:
-            case SP_DEEP_ELF:
-            case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_DWARF:
-            case SP_HILL_ORC:
-            case SP_MERFOLK:
-            case SP_HALFLING:
-            case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-            case SP_KENKU:
-            case SP_BASE_DRACONIAN:
-            case SP_DEMIGOD:
-            case SP_DEMONSPAWN:
-            case SP_MUMMY:
-            case SP_GHOUL:
-            case SP_FELID:
-            case SP_OCTOPODE:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_HIGH_ELF:
+        case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
+        case SP_HILL_ORC:
+        case SP_HALFLING:
+        case SP_CENTAUR:
+        case SP_OGRE:
+        case SP_TROLL:
+        case SP_MINOTAUR:
+        case SP_MUMMY:
+        case SP_GHOUL:
+        case SP_VAMPIRE:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_ASSASSIN:
-            switch (speci)
+    case JOB_STALKER:
+        switch (speci)
         {
-            case SP_FELID:
-                return (CC_BANNED);
-            case SP_HIGH_ELF:
-            case SP_DEEP_ELF:
-            case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_DWARF:
-            case SP_HILL_ORC:
-            case SP_NAGA:
-            case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-            case SP_BASE_DRACONIAN:
-            case SP_DEMIGOD:
-            case SP_DEMONSPAWN:
-            case SP_MUMMY:
-            case SP_GHOUL:
-            case SP_OCTOPODE:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_HIGH_ELF:
+        case SP_DEEP_ELF:
+        case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
+        case SP_HILL_ORC:
+        case SP_MERFOLK:
+        case SP_HALFLING:
+        case SP_CENTAUR:
+        case SP_OGRE:
+        case SP_TROLL:
+        case SP_MINOTAUR:
+        case SP_KENKU:
+        case SP_BASE_DRACONIAN:
+        case SP_DEMIGOD:
+        case SP_DEMONSPAWN:
+        case SP_MUMMY:
+        case SP_GHOUL:
+        case SP_FELID:
+        case SP_OCTOPODE:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_HUNTER:
-            switch (speci)
+    case JOB_ASSASSIN:
+        switch (speci)
         {
-            case SP_FELID:
-                return (CC_BANNED);
-            case SP_DEEP_ELF:
-            case SP_HILL_ORC:
-            case SP_MERFOLK:
-            case SP_SPRIGGAN:
-            case SP_NAGA:
-            case SP_KENKU:
-            case SP_BASE_DRACONIAN:
-            case SP_DEMIGOD:
-            case SP_MUMMY:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
-            case SP_OCTOPODE:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_FELID:
+            return (CC_BANNED);
+        case SP_HIGH_ELF:
+        case SP_DEEP_ELF:
+        case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
+        case SP_HILL_ORC:
+        case SP_NAGA:
+        case SP_CENTAUR:
+        case SP_OGRE:
+        case SP_TROLL:
+        case SP_MINOTAUR:
+        case SP_BASE_DRACONIAN:
+        case SP_DEMIGOD:
+        case SP_DEMONSPAWN:
+        case SP_MUMMY:
+        case SP_GHOUL:
+        case SP_OCTOPODE:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
-        case JOB_ARTIFICER:
-            switch (speci)
+    case JOB_HUNTER:
+        switch (speci)
         {
-            case SP_FELID:
-                return (CC_BANNED);
-            case SP_HIGH_ELF:
-            case SP_DEEP_ELF:
-            case SP_SLUDGE_ELF:
-            case SP_NAGA:
-            case SP_CENTAUR:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_MINOTAUR:
-            case SP_KENKU:
-            case SP_DEMIGOD:
-            case SP_MUMMY:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
-            case SP_OCTOPODE:
-                return (CC_RESTRICTED);
-            default:
-                return (CC_UNRESTRICTED);
+        case SP_FELID:
+            return (CC_BANNED);
+        case SP_DEEP_ELF:
+        case SP_HILL_ORC:
+        case SP_MERFOLK:
+        case SP_SPRIGGAN:
+        case SP_NAGA:
+        case SP_KENKU:
+        case SP_BASE_DRACONIAN:
+        case SP_DEMIGOD:
+        case SP_MUMMY:
+        case SP_GHOUL:
+        case SP_VAMPIRE:
+        case SP_OCTOPODE:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
+        }
+
+    case JOB_ARTIFICER:
+        switch (speci)
+        {
+        case SP_FELID:
+            return (CC_BANNED);
+        case SP_HIGH_ELF:
+        case SP_DEEP_ELF:
+        case SP_SLUDGE_ELF:
+        case SP_NAGA:
+        case SP_CENTAUR:
+        case SP_OGRE:
+        case SP_TROLL:
+        case SP_MINOTAUR:
+        case SP_KENKU:
+        case SP_DEMIGOD:
+        case SP_MUMMY:
+        case SP_GHOUL:
+        case SP_VAMPIRE:
+        case SP_OCTOPODE:
+            return (CC_RESTRICTED);
+        default:
+            return (CC_UNRESTRICTED);
         }
 
 // XXX: Arcane Marksmen are temporarily disabled
-        case JOB_ARCANE_MARKSMAN:
-            return (CC_BANNED);
+    case JOB_ARCANE_MARKSMAN:
+        return (CC_BANNED);
 
-        case JOB_WANDERER:
-            return (CC_RESTRICTED);
+    case JOB_WANDERER:
+        return (CC_RESTRICTED);
 
-        default:
-            return (CC_BANNED);
+    default:
+        return (CC_BANNED);
     }
 }
 
@@ -611,235 +611,242 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
     ASSERT(is_valid_job(ng.job));
     switch (wpn)
     {
-        case WPN_UNARMED:
-            if (species_has_claws(ng.species))
-                return (CC_UNRESTRICTED);
-            return (CC_BANNED);
+    case WPN_UNARMED:
+        if (species_has_claws(ng.species))
+            return (CC_UNRESTRICTED);
+        return (CC_BANNED);
 
-        case WPN_SHORT_SWORD:
-            switch (ng.species)
-            {
-            case SP_NAGA:
-            case SP_VAMPIRE:
-                // The fighter's heavy armour hinders stabbing.
-                if (ng.job == JOB_FIGHTER)
-                    return (CC_RESTRICTED);
-                // else fall through
-            case SP_HIGH_ELF:
-            case SP_DEEP_ELF:
-                // Sludge elves have bad aptitudes with short swords (-1), but
-                // are still better with them than any other starting weapon.
-            case SP_SLUDGE_ELF:
-            case SP_HALFLING:
-            case SP_KOBOLD:
-            case SP_SPRIGGAN:
-                return (CC_UNRESTRICTED);
-
-            default:
+    case WPN_SHORT_SWORD:
+        switch (ng.species)
+        {
+        case SP_NAGA:
+        case SP_VAMPIRE:
+            // The fighter's heavy armour hinders stabbing.
+            if (ng.job == JOB_FIGHTER)
                 return (CC_RESTRICTED);
-            }
+            // else fall through
+        case SP_HIGH_ELF:
+        case SP_DEEP_ELF:
+            // Sludge elves have bad aptitudes with short swords (-1), but
+            // are still better with them than any other starting weapon.
+        case SP_SLUDGE_ELF:
+        case SP_HALFLING:
+        case SP_KOBOLD:
+        case SP_SPRIGGAN:
+            return (CC_UNRESTRICTED);
 
-            // Maces and hand axes usually share the same restrictions.
-        case WPN_MACE:
-            if (ng.species == SP_TROLL)
-                return (CC_UNRESTRICTED);
-            if (ng.species == SP_VAMPIRE)
-                return (CC_RESTRICTED);
-            // else fall-through
-        case WPN_HAND_AXE:
-            switch (ng.species)
-            {
-            case SP_HUMAN:
-            case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_DWARF:
-            case SP_HILL_ORC:
-            case SP_MUMMY:
-            case SP_CENTAUR:
-            case SP_NAGA:
-            case SP_MINOTAUR:
-            case SP_KENKU:
-            case SP_DEMIGOD:
-            case SP_DEMONSPAWN:
-            case SP_VAMPIRE:
-            case SP_OCTOPODE:
-                return (CC_UNRESTRICTED);
-
-            default:
-                return (species_genus(ng.species) == GENPC_DRACONIAN ? CC_UNRESTRICTED
-                        : CC_RESTRICTED);
-            }
-
-        case WPN_SPEAR:
-            switch (ng.species)
-            {
-            case SP_HUMAN:
-            case SP_HILL_ORC:
-            case SP_MERFOLK:
-            case SP_NAGA:
-            case SP_OGRE:
-            case SP_CENTAUR:
-            case SP_MINOTAUR:
-            case SP_KENKU:
-            case SP_DEMIGOD:
-            case SP_DEMONSPAWN:
-            case SP_MUMMY:
-            case SP_OCTOPODE:
-                return (CC_UNRESTRICTED);
-
-            case SP_SPRIGGAN:
-            case SP_HALFLING:
-            case SP_KOBOLD:
-                // Can't use them with a shield, terrible upgrade path;
-                // jobs with other benefits like Warper, Skald or godlies
-                // are better with two-handers.
-                if (ng.job == JOB_FIGHTER || ng.job == JOB_GLADIATOR)
-                    return (CC_BANNED);
-
-            default:
-                return (species_genus(ng.species) == GENPC_DRACONIAN ? CC_UNRESTRICTED
-                        : CC_RESTRICTED);
-            }
-        case WPN_FALCHION:
-            if (ng.job != JOB_FIGHTER && ng.job != JOB_GLADIATOR)
-                return (CC_BANNED);
-            switch (ng.species)
-            {
-            case SP_HUMAN:
-            case SP_HILL_ORC:
-            case SP_MERFOLK:
-            case SP_NAGA:
-            case SP_CENTAUR:
-            case SP_MINOTAUR:
-            case SP_HIGH_ELF:
-            case SP_SLUDGE_ELF:
-            case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_DWARF:
-            case SP_KENKU:
-            case SP_DEMIGOD:
-            case SP_DEMONSPAWN:
-            case SP_MUMMY:
-            case SP_VAMPIRE:
-            case SP_OCTOPODE:
-                return (CC_UNRESTRICTED);
-
-            default:
-                return (species_genus(ng.species) == GENPC_DRACONIAN ? CC_UNRESTRICTED
-                        : CC_RESTRICTED);
-            }
-
-        case WPN_TRIDENT:
-            if (ng.job != JOB_FIGHTER && ng.job != JOB_GLADIATOR
-                || species_size(ng.species, PSIZE_BODY) < SIZE_MEDIUM)
-            {
-                return (CC_BANNED);
-            }
-
-            // Tridents are strictly better than spears, so unrestrict them
-            // for some species whose Polearm aptitudes are not too bad.
-            switch (ng.species)
-            {
-            case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_DWARF:
-            case SP_GHOUL:
-            case SP_VAMPIRE:
-                return (CC_UNRESTRICTED);
-            default:
-                break;
-            }
-
-            // Both are polearms, right?
-            return (weapon_restriction(WPN_SPEAR, ng));
-
-        case WPN_ANKUS:
-            if (species_genus(ng.species) == GENPC_OGREISH)
-                return (CC_UNRESTRICTED);
-        case WPN_CROSSBOW:
-            switch(ng.species)
-            {
-            case SP_DEEP_ELF:
-            case SP_HIGH_ELF:
-            case SP_HALFLING:
-            case SP_MERFOLK:
-            case SP_OGRE:
-            case SP_HILL_ORC:
-            case SP_SPRIGGAN:
-            case SP_TROLL:
-            case SP_SLUDGE_ELF:
-                return CC_RESTRICTED;
-            case SP_FELID:
-                return CC_BANNED;
-            default:
-                return CC_UNRESTRICTED;
-            }
-        case WPN_BOW:
-            switch(ng.species)
-            {
-            case SP_DEEP_DWARF:
-            case SP_MOUNTAIN_DWARF:
-            case SP_KOBOLD:
-            case SP_MERFOLK:
-            case SP_OGRE:
-            case SP_TROLL:
-            case SP_HILL_ORC:
-            case SP_SLUDGE_ELF:
-                return CC_RESTRICTED;
-            case SP_FELID:
-                return CC_BANNED;
-            default:
-                return CC_UNRESTRICTED;
-            }
-        case WPN_SLING:
-            switch(ng.species)
-            {
-            case SP_MOUNTAIN_DWARF:
-            case SP_DEEP_ELF:
-            case SP_HIGH_ELF:
-            case SP_SLUDGE_ELF:
-            case SP_KENKU:
-            case SP_MERFOLK:
-            case SP_OGRE:
-            case SP_HILL_ORC:
-            case SP_TROLL:
-                return CC_RESTRICTED;
-            case SP_FELID:
-                return CC_BANNED;
-            default:
-                return CC_UNRESTRICTED;
-            }
-        case WPN_ROCKS:
-            switch(ng.species)
-            {
-            case SP_OGRE:
-            case SP_TROLL:
-                return CC_UNRESTRICTED;
-            default:
-                return CC_BANNED;
-            }
-        case WPN_JAVELINS:
-            switch(ng.species)
-            {
-            case SP_DEEP_DWARF:
-            case SP_MOUNTAIN_DWARF:
-                return CC_RESTRICTED;
-            case SP_SPRIGGAN:
-            case SP_FELID:
-                return CC_BANNED;
-            default:
-                return CC_UNRESTRICTED;
-            }
-        case WPN_DARTS:
-            switch(ng.species)
-            {
-            case SP_DEEP_DWARF:
-            case SP_MOUNTAIN_DWARF:
-                return CC_RESTRICTED;
-            case SP_FELID:
-                return CC_BANNED;
-            default:
-                return CC_UNRESTRICTED;
-            }
-        // intentional fall-through
         default:
+            return (CC_RESTRICTED);
+        }
+
+        // Maces and hand axes usually share the same restrictions.
+    case WPN_MACE:
+        if (ng.species == SP_TROLL)
+            return (CC_UNRESTRICTED);
+        if (ng.species == SP_VAMPIRE)
+            return (CC_RESTRICTED);
+        // else fall-through
+    case WPN_HAND_AXE:
+        switch (ng.species)
+        {
+        case SP_HUMAN:
+        case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
+        case SP_HILL_ORC:
+        case SP_MUMMY:
+        case SP_CENTAUR:
+        case SP_NAGA:
+        case SP_MINOTAUR:
+        case SP_KENKU:
+        case SP_DEMIGOD:
+        case SP_DEMONSPAWN:
+        case SP_VAMPIRE:
+        case SP_OCTOPODE:
+            return (CC_UNRESTRICTED);
+
+        default:
+            return (species_genus(ng.species) == GENPC_DRACONIAN ? CC_UNRESTRICTED
+                    : CC_RESTRICTED);
+        }
+
+    case WPN_SPEAR:
+        switch (ng.species)
+        {
+        case SP_HUMAN:
+        case SP_HILL_ORC:
+        case SP_MERFOLK:
+        case SP_NAGA:
+        case SP_OGRE:
+        case SP_CENTAUR:
+        case SP_MINOTAUR:
+        case SP_KENKU:
+        case SP_DEMIGOD:
+        case SP_DEMONSPAWN:
+        case SP_MUMMY:
+        case SP_OCTOPODE:
+            return (CC_UNRESTRICTED);
+
+        case SP_SPRIGGAN:
+        case SP_HALFLING:
+        case SP_KOBOLD:
+            // Can't use them with a shield, terrible upgrade path;
+            // jobs with other benefits like Warper, Skald or godlies
+            // are better with two-handers.
+            if (ng.job == JOB_FIGHTER || ng.job == JOB_GLADIATOR)
+                return (CC_BANNED);
+
+        default:
+            return (species_genus(ng.species) == GENPC_DRACONIAN ? CC_UNRESTRICTED
+                    : CC_RESTRICTED);
+        }
+    case WPN_FALCHION:
+        if (ng.job != JOB_FIGHTER && ng.job != JOB_GLADIATOR)
             return (CC_BANNED);
+        switch (ng.species)
+        {
+        case SP_HUMAN:
+        case SP_HILL_ORC:
+        case SP_MERFOLK:
+        case SP_NAGA:
+        case SP_CENTAUR:
+        case SP_MINOTAUR:
+        case SP_HIGH_ELF:
+        case SP_SLUDGE_ELF:
+        case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
+        case SP_KENKU:
+        case SP_DEMIGOD:
+        case SP_DEMONSPAWN:
+        case SP_MUMMY:
+        case SP_VAMPIRE:
+        case SP_OCTOPODE:
+            return (CC_UNRESTRICTED);
+
+        default:
+            return (species_genus(ng.species) == GENPC_DRACONIAN ? CC_UNRESTRICTED
+                    : CC_RESTRICTED);
+        }
+
+    case WPN_TRIDENT:
+        if (ng.job != JOB_FIGHTER && ng.job != JOB_GLADIATOR
+            || species_size(ng.species, PSIZE_BODY) < SIZE_MEDIUM)
+        {
+            return (CC_BANNED);
+        }
+
+        // Tridents are strictly better than spears, so unrestrict them
+        // for some species whose Polearm aptitudes are not too bad.
+        switch (ng.species)
+        {
+        case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_DWARF:
+        case SP_GHOUL:
+        case SP_VAMPIRE:
+            return (CC_UNRESTRICTED);
+        default:
+            break;
+        }
+
+        // Both are polearms, right?
+        return (weapon_restriction(WPN_SPEAR, ng));
+
+    case WPN_ANKUS:
+        if (species_genus(ng.species) == GENPC_OGREISH)
+            return (CC_UNRESTRICTED);
+
+    case WPN_CROSSBOW:
+        switch(ng.species)
+        {
+        case SP_DEEP_ELF:
+        case SP_HIGH_ELF:
+        case SP_HALFLING:
+        case SP_MERFOLK:
+        case SP_OGRE:
+        case SP_HILL_ORC:
+        case SP_SPRIGGAN:
+        case SP_TROLL:
+        case SP_SLUDGE_ELF:
+            return CC_RESTRICTED;
+        case SP_FELID:
+            return CC_BANNED;
+        default:
+            return CC_UNRESTRICTED;
+        }
+
+    case WPN_BOW:
+        switch(ng.species)
+        {
+        case SP_DEEP_DWARF:
+        case SP_MOUNTAIN_DWARF:
+        case SP_KOBOLD:
+        case SP_MERFOLK:
+        case SP_OGRE:
+        case SP_TROLL:
+        case SP_HILL_ORC:
+        case SP_SLUDGE_ELF:
+            return CC_RESTRICTED;
+        case SP_FELID:
+            return CC_BANNED;
+        default:
+            return CC_UNRESTRICTED;
+        }
+
+    case WPN_SLING:
+        switch(ng.species)
+        {
+        case SP_MOUNTAIN_DWARF:
+        case SP_DEEP_ELF:
+        case SP_HIGH_ELF:
+        case SP_SLUDGE_ELF:
+        case SP_KENKU:
+        case SP_MERFOLK:
+        case SP_OGRE:
+        case SP_HILL_ORC:
+        case SP_TROLL:
+            return CC_RESTRICTED;
+        case SP_FELID:
+            return CC_BANNED;
+        default:
+            return CC_UNRESTRICTED;
+        }
+
+    case WPN_ROCKS:
+        switch(ng.species)
+        {
+        case SP_OGRE:
+        case SP_TROLL:
+            return CC_UNRESTRICTED;
+        default:
+            return CC_BANNED;
+        }
+
+    case WPN_JAVELINS:
+        switch(ng.species)
+        {
+        case SP_DEEP_DWARF:
+        case SP_MOUNTAIN_DWARF:
+            return CC_RESTRICTED;
+        case SP_SPRIGGAN:
+        case SP_FELID:
+            return CC_BANNED;
+        default:
+            return CC_UNRESTRICTED;
+        }
+
+    case WPN_DARTS:
+        switch(ng.species)
+        {
+        case SP_DEEP_DWARF:
+        case SP_MOUNTAIN_DWARF:
+            return CC_RESTRICTED;
+        case SP_FELID:
+            return CC_BANNED;
+        default:
+            return CC_UNRESTRICTED;
+        }
+
+    // intentional fall-through
+    default:
+        return (CC_BANNED);
     }
 }
