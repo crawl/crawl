@@ -2250,9 +2250,6 @@ static void _decrement_durations()
     if (_decrement_a_duration(DUR_BUILDING_RAGE, delay))
         go_berserk(false);
 
-    if (_decrement_a_duration(DUR_SLEEP, delay))
-        you.awake();
-
     dec_napalm_player(delay);
 
     if (_decrement_a_duration(DUR_ICY_ARMOUR, delay,
@@ -3037,6 +3034,9 @@ static void _player_reacts_to_monsters()
     handle_starvation();
     _decrement_paralysis(you.time_taken);
     _decrement_petrification(you.time_taken);
+    if (_decrement_a_duration(DUR_SLEEP, you.time_taken))
+        you.awake();
+
 }
 
 static void _update_golubria_traps()
