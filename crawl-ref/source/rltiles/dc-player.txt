@@ -504,7 +504,6 @@ long_sword_slant LONG_SWORD_SLANT
 blessed_blade BLESSED_BLADE
 great_sword GREAT_SWORD
 great_sword_slant GREAT_SWORD_SLANT
-katana KATANA
 katana_slant KATANA_SLANT
 scimitar SCIMITAR
 falchion FALCHION

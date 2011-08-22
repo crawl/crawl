@@ -110,7 +110,10 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_SABRE:                return TILEP_HAND1_SABRE;
     case WPN_DEMON_BLADE:          return TILEP_HAND1_DEMON_BLADE;
     case WPN_QUICK_BLADE:          return TILEP_HAND1_DAGGER;
+#if TAG_MAJOR_VERSION == 32
     case WPN_KATANA:               return TILEP_HAND1_KATANA_SLANT;
+    case WPN_BLESSED_KATANA:       return TILEP_HAND1_KATANA_SLANT;
+#endif
     case WPN_DOUBLE_SWORD:         return TILEP_HAND1_DOUBLE_SWORD;
     case WPN_TRIPLE_SWORD:         return TILEP_HAND1_TRIPLE_SWORD;
     case WPN_EUDEMON_BLADE:        return TILEP_HAND1_BLESSED_BLADE;
@@ -119,7 +122,6 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_BLESSED_GREAT_SWORD:  return TILEP_HAND1_GREAT_SWORD_SLANT;
     case WPN_BLESSED_SCIMITAR:     return TILEP_HAND1_SCIMITAR;
     case WPN_BLESSED_FALCHION:     return TILEP_HAND1_FALCHION;
-    case WPN_BLESSED_KATANA:       return TILEP_HAND1_KATANA_SLANT;
     case WPN_BLESSED_DOUBLE_SWORD: return TILEP_HAND1_DOUBLE_SWORD;
     case WPN_BLESSED_TRIPLE_SWORD: return TILEP_HAND1_TRIPLE_SWORD;
 

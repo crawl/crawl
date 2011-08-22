@@ -85,9 +85,6 @@ sabre2
 
 quickblade WPN_QUICK_BLADE
 
-katana1 WPN_KATANA
-katana2
-
 double_sword WPN_DOUBLE_SWORD
 triple_sword WPN_TRIPLE_SWORD
 demon_blade WPN_DEMON_BLADE
