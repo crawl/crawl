@@ -1010,10 +1010,12 @@ unsigned int item_value(item_def item, bool ident)
             valued += 150;
             break;
 
+#if TAG_MAJOR_VERSION == 32
         case WPN_KATANA:
+        case WPN_BLESSED_KATANA:
+#endif
         case WPN_DEMON_BLADE:
         case WPN_TRIPLE_SWORD:
-        case WPN_BLESSED_KATANA:
         case WPN_EUDEMON_BLADE:
         case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:

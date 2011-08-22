@@ -2741,9 +2741,6 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_FALCHION:
         return TILE_WPN_FALCHION;
 
-    case WPN_KATANA:
-        return TILE_WPN_KATANA;
-
     case WPN_LONG_SWORD:
         if (race == ISFLAG_ORCISH)
             return TILE_WPN_LONG_SWORD_ORC;
@@ -2754,6 +2751,9 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
             return TILE_WPN_GREAT_SWORD_ORC;
         return TILE_WPN_GREAT_SWORD;
 
+#if TAG_MAJOR_VERSION == 32
+    case WPN_KATANA:
+#endif
     case WPN_SCIMITAR:
         return TILE_WPN_SCIMITAR;
 
@@ -2882,11 +2882,11 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
     case WPN_BLESSED_LONG_SWORD:
         return TILE_WPN_LONG_SWORD;
 
+#if TAG_MAJOR_VERSION == 32
+    case WPN_BLESSED_KATANA:
+#endif
     case WPN_BLESSED_SCIMITAR:
         return TILE_WPN_SCIMITAR;
-
-    case WPN_BLESSED_KATANA:
-        return TILE_WPN_KATANA;
 
     case WPN_BLESSED_GREAT_SWORD:
         return TILE_WPN_GREAT_SWORD;

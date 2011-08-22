@@ -357,9 +357,9 @@ DESC:    Faerie dragons used to be a race of the same species as mottled ones.
 
 ##################### End of old fixed arts.
 
-NAME:    katana "Bloodbane"
-APPEAR:  blackened katana
-OBJ:     OBJ_WEAPONS/WPN_KATANA
+NAME:    demon blade "Bloodbane"
+APPEAR:  blackened demon blade
+OBJ:     OBJ_WEAPONS/WPN_DEMON_BLADE
 PLUS:    +7/+8
 COLOUR:  ETC_DARK
 TILE:    urand_bloodbane
