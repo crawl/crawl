@@ -598,8 +598,6 @@ void full_describe_view()
 
     // Get monsters via the monster_info, sorted by difficulty.
     get_monster_info(list_mons);
-    std::sort(list_mons.begin(), list_mons.end(),
-              monster_info::less_than_wrapper);
 
     if (list_mons.empty() && list_items.empty() && list_features.empty())
     {
