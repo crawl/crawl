@@ -1056,7 +1056,6 @@ std::string mpr_monster_list(bool past)
         return (msg);
     }
 
-    std::sort(mons.begin(), mons.end(), monster_info::less_than_wrapper);
     std::vector<std::string> describe;
 
     int count = 0;
@@ -1207,7 +1206,6 @@ int update_monster_pane()
 
     std::vector<monster_info> mons;
     get_monster_info(mons);
-    std::sort(mons.begin(), mons.end(), monster_info::less_than_wrapper);
 
     // Count how many groups of monsters there are.
     unsigned int lines_needed = mons.size();
@@ -1222,9 +1220,6 @@ int update_monster_pane()
 
         // Use type names rather than full names ("small zombie" vs
         // "rat zombie") in order to take up fewer lines.
-
-        std::sort(mons.begin(), mons.end(),
-                  monster_info::less_than_wrapper);
 
         lines_needed = mons.size();
         for (unsigned int i = 1; i < mons.size(); i++)
