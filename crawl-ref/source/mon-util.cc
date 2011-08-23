@@ -1494,6 +1494,17 @@ flight_type mons_flies(const monster* mon, bool temp)
         ret = FL_LEVITATE;
     }
 
+    if (temp && ret == FL_NONE)
+    {
+        const int armour = mon->inv[MSLOT_ARMOUR];
+        if (armour != NON_ITEM
+            && mitm[armour].base_type == OBJ_ARMOUR
+            && mitm[armour].special == SPARM_LEVITATION)
+        {
+            ret = FL_LEVITATE;
+        }
+    }
+
     if (temp && ret == FL_NONE && mon->has_ench(ENCH_LEVITATION))
         ret = FL_LEVITATE;
 

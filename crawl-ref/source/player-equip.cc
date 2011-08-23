@@ -1035,7 +1035,10 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         if (you.attribute[ATTR_PERM_LEVITATION] == 0)
             break;
         else if (you.species != SP_KENKU || you.experience_level < 15)
-            you.attribute[ATTR_PERM_LEVITATION] = 0;
+        {
+            if (!player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION))
+                you.attribute[ATTR_PERM_LEVITATION] = 0;
+        }
         land_player();
         break;
 

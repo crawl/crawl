@@ -1123,7 +1123,7 @@ bool player_equip_unrand(int unrand_index)
 int player_evokable_levitation()
 {
     return player_equip(EQ_RINGS, RING_LEVITATION)
-           + player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION)
+           + player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION)
            + scan_artefacts(ARTP_LEVITATE);
 }
 
@@ -6281,7 +6281,7 @@ flight_type player::flight_mode() const
 bool player::permanent_levitation() const
 {
     return you.attribute[ATTR_PERM_LEVITATION]
-           && player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION);
+           && player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION);
 }
 
 bool player::permanent_flight() const

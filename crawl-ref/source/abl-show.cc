@@ -2132,7 +2132,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_LEVITATE:           // ring, boots, randarts
-        if (player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION))
+        if (player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION))
         {
             bool standing = !you.airborne();
             you.attribute[ATTR_PERM_LEVITATION] = 1;
@@ -3203,7 +3203,7 @@ std::vector<talent> your_talents(bool check_confused)
             // You can still evoke perm levitation if you have temporary one.
             if (!you.is_levitating()
                 || !you.attribute[ATTR_PERM_LEVITATION]
-                   && player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION))
+                   && player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION))
             {
                 _add_talent(talents, ABIL_EVOKE_LEVITATE, check_confused);
             }
