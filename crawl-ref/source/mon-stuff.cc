@@ -1653,7 +1653,7 @@ int monster_die(monster* mons, killer_type killer,
 
 #if TAG_MAJOR_VERSION == 32
     if (gives_xp)
-        you.montiers[mons_threat_level(mons)]++;
+        you.montiers[mons_threat_level(mons, true)]++;
 #endif
 
     // Take note!

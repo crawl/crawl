@@ -958,6 +958,12 @@ const CrawlVector& CrawlStoreValue::get_vector() const
     return *((CrawlVector*)val.ptr);
 }
 
+const monster& CrawlStoreValue::get_monster() const
+{
+    GET_CONST_SETUP(SV_MONST);
+    return *((monster*)val.ptr);
+}
+
 level_id CrawlStoreValue::get_level_id() const
 {
     GET_CONST_SETUP(SV_LEV_ID);
