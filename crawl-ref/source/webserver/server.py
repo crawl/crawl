@@ -111,7 +111,8 @@ class MainHandler(tornado.web.RequestHandler):
             protocol = "wss://"
         else:
             protocol = "ws://"
-        self.render("client.html", socket_server = protocol + host + "/socket")
+        self.render("client.html", socket_server = protocol + host + "/socket",
+                    username = None)
 
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def __init__(self, app, req, **kwargs):
@@ -175,6 +176,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                            tornado.escape.json_encode(lobby_html) + ");")
 
     def send_game_links(self):
+        # Rerender Banner
+        banner_html = self.render_string("banner.html", username = self.username)
+        self.write_message("$('#banner').html(" +
+                           tornado.escape.json_encode(banner_html) + ");");
         play_html = self.render_string("game_links.html", games = games)
         self.write_message("$('#play_now').html(" +
                            tornado.escape.json_encode(play_html) + ");")
