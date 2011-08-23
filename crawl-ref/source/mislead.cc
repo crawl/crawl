@@ -67,10 +67,13 @@ bool update_mislead_monster(monster* mons)
         return (false);
     }
 
-    short misled_as = get_misled_monster(mons);
+    monster misled_as;
+    misled_as.type = get_misled_monster(mons);
+    misled_as.mid = mons->mid;
+    define_monster(&misled_as);
     mons->props["mislead_as"] = misled_as;
 
-    if (misled_as == MONS_BAT)
+    if (misled_as.type == MONS_BAT)
         return (false);
 
     return (true);
@@ -85,6 +88,19 @@ int update_mislead_monsters(monster* caster)
             count++;
 
     return count;
+}
+
+void end_mislead(bool level_change)
+{
+    if (level_change)
+    {
+        mpr("Away from their source, illusions no longer mislead you.",
+            MSGCH_DURATION);
+    }
+    you.duration[DUR_MISLED] = 0;
+    for (monster_iterator mi; mi; ++mi)
+        if (mi->props.exists("mislead_as"))
+            mi->props.erase("mislead_as");
 }
 
 void mons_cast_mislead(monster* mons)

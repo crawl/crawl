@@ -4205,8 +4205,10 @@ int mons_threat_level(const monster *mon, bool real)
 {
     int exp = exper_value(mon);
 
-    // Don't leak info about fake clones.
-    if (!real && mon->props.exists("faking"))
+    // Don't leak info about fake clones and when misled.
+    if (!real && mon->props.exists("mislead_as"))
+        exp = exper_value(&mon->props["mislead_as"].get_monster());
+    else if (!real && mon->props.exists("faking"))
         exp = exper_value(&mon->props["faking"].get_monster());
 
     const double factor = sqrt(exp_needed(you.experience_level) / 30.0);
