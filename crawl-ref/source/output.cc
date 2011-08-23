@@ -1986,7 +1986,11 @@ std::string stealth_desc(int stealth)
 
 std::string magic_res_adjective(int mr)
 {
-    return ((mr <  10) ? "not" :
+    if (mr == MAG_IMMUNE)
+        return "immune";
+
+    std::string prefix =
+            (mr <  10) ? "not" :
             (mr <  30) ? "slightly" :
             (mr <  60) ? "somewhat" :
             (mr <  90) ? "quite" :
@@ -1995,7 +1999,8 @@ std::string magic_res_adjective(int mr)
             (mr < 190) ? "extraordinarily" :
             (mr < 240) ? "incredibly" :
             (mr < 300) ? "uncannily"
-                       : "almost entirely");
+                       : "almost entirely";
+    return prefix + " resistant";
 }
 
 // Creates rows of short descriptions for current
@@ -2087,7 +2092,7 @@ static std::string _status_mut_abilities(int sw)
     }
 
     status.push_back(magic_res_adjective(player_res_magic(false))
-                     + " resistant to hostile enchantments");
+                     + " to hostile enchantments");
 
     // character evaluates their ability to sneak around:
     status.push_back(stealth_desc(check_stealth()));

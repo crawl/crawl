@@ -3252,15 +3252,11 @@ static std::string _monster_stat_description(const monster_info& mi)
     }
 
     int mr = mi.res_magic();
-    if (mr == MAG_IMMUNE)
-        result << pronoun << " is immune to hostile enchantments.\n";
-    else // How resistant is it? Same scale as the player.
+    // How resistant is it? Same scale as the player.
+    if (mr >= 10)
     {
-        if (mr >= 10)
-        {
-            result << pronoun << make_stringf(" is %s resistant to hostile enchantments.\n",
-                    magic_res_adjective(mr).c_str());
-        }
+        result << pronoun << make_stringf(" is %s to hostile enchantments.\n",
+                                          magic_res_adjective(mr).c_str());
     }
 
     if (mons_class_flag(mi.type, M_STATIONARY) && !mons_is_tentacle(mi.type))
