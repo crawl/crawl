@@ -2482,6 +2482,7 @@ static void _clone_monster(monster* mons, monster_type clone_type,
     }
 
     new_fake->props = mons->props;
+    new_fake->props["faking"] = *mons;
 }
 
 void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,

@@ -4190,10 +4190,16 @@ bool mons_is_tentacle_end(const int mtype)
             || mtype == MONS_ELDRITCH_TENTACLE);
 }
 
-int mons_threat_level(const monster *mon)
+int mons_threat_level(const monster *mon, bool real)
 {
-    double factor = sqrt(exp_needed(you.experience_level) / 30.0);
-    int tension = exper_value(mon) / (1 + factor);
+    int exp = exper_value(mon);
+
+    // Don't leak info about fake clones.
+    if (!real && mon->props.exists("faking"))
+        exp = exper_value(&mon->props["faking"].get_monster());
+
+    const double factor = sqrt(exp_needed(you.experience_level) / 30.0);
+    const int tension = exp / (1 + factor);
 
     if (tension <= 0)
         // Conjurators use melee to conserve mana, MDFis switch plates...

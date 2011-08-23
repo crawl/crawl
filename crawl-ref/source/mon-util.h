@@ -437,6 +437,6 @@ actor *find_agent(mid_t m, kill_category kc);
 const char* mons_class_name(monster_type mc);
 void check_clinging();
 bool mons_is_tentacle_end(const int mtype);
-int mons_threat_level(const monster *mon);
+int mons_threat_level(const monster *mon, bool real = false);
 
 #endif
