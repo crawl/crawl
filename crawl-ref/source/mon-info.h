@@ -89,6 +89,7 @@ struct monster_info_base
     unsigned number;
     unsigned colour;
     mon_attitude_type attitude;
+    mon_threat_level_type threat;
     mon_dam_level_type dam;
     // TODO: maybe we should store the position instead
     dungeon_feature_type fire_blocker;

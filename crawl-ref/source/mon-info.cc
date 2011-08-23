@@ -226,17 +226,22 @@ monster_info::monster_info(const monster* m, int milev)
     bool type_known = false;
     bool nomsg_wounds = false;
 
-    // CHANGE: now friendly fake Rakshasas/Maras are known (before you could still tell by equipment)
     if (m->props.exists("mislead_as") && you.misled())
+    {
         type = m->get_mislead_type();
-    else if (attitude != ATT_FRIENDLY && (m->type == MONS_RAKSHASA || m->type == MONS_RAKSHASA_FAKE))
-        type = MONS_RAKSHASA;
-    else if (attitude != ATT_FRIENDLY && (m->type == MONS_MARA || m->type == MONS_MARA_FAKE))
-        type = MONS_MARA;
+        threat = mons_threat_level(&m->props["mislead_as"].get_monster());
+    }
+    // friendly fake Rakshasas/Maras are known
+    else if (attitude != ATT_FRIENDLY && m->props.exists("faking"))
+    {
+        type = m->props["faking"].get_monster().type;
+        threat = mons_threat_level(&m->props["faking"].get_monster());
+    }
     else
     {
         type_known = true;
         type = m->type;
+        threat = mons_threat_level(m);
     }
 
     props.clear();

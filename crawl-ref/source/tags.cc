@@ -2855,6 +2855,7 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallUnsigned(th, mi.number);
     marshallUnsigned(th, mi.colour);
     marshallUnsigned(th, mi.attitude);
+    marshallUnsigned(th, mi.threat);
     marshallUnsigned(th, mi.dam);
     marshallUnsigned(th, mi.fire_blocker);
     marshallString(th, mi.description);
@@ -2887,6 +2888,10 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     unmarshallUnsigned(th, mi.number);
     unmarshallUnsigned(th, mi.colour);
     unmarshallUnsigned(th, mi.attitude);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_MONS_THREAT_LEVEL)
+#endif
+        unmarshallUnsigned(th, mi.threat);
     unmarshallUnsigned(th, mi.dam);
     unmarshallUnsigned(th, mi.fire_blocker);
     mi.description = unmarshallString(th);

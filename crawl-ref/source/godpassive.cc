@@ -692,7 +692,7 @@ monster_type ash_monster_tier(const monster *mon)
     if (mon->friendly())
         return MONS_SENSED_FRIENDLY;
 
-    return monster_type(MONS_SENSED_TRIVIAL + mons_threat_level(mon));
+    return monster_type(MONS_SENSED_TRIVIAL + monster_info(mon).threat);
 }
 
 std::map<skill_type, char> ash_get_boosted_skills(eq_type type)
