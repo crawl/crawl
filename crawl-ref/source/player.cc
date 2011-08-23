@@ -3976,7 +3976,7 @@ void display_char_status()
     _display_attack_delay();
 
     // magic resistance
-    mprf("You are %s resistant to hostile enchantments.",
+    mprf("You are %s to hostile enchantments.",
          magic_res_adjective(player_res_magic(false)).c_str());
 
     // character evaluates their ability to sneak around:
