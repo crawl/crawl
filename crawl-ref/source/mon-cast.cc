@@ -2423,20 +2423,12 @@ static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
 }
 
 static void _clone_monster(monster* mons, monster_type clone_type,
-                           int summon_type, bool clone_hp = false,
-                           std::string name = "")
+                           int summon_type, bool clone_hp = false)
 {
     mgen_data summ_mon =
         mgen_data(clone_type, SAME_ATTITUDE(mons),
                   mons, 3, summon_type, mons->pos(),
                   mons->foe, 0, mons->god);
-    // This is somewhat hacky, to prevent "A Mara", and such,
-    // as MONS_FAKE_MARA is not M_UNIQUE.
-    if (name != "")
-    {
-        summ_mon.mname = name;
-        summ_mon.extra_flags |= MF_NAME_REPLACE;
-    }
 
     int created = create_monster(summ_mon);
     if (created == -1)
@@ -2867,7 +2859,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         sumcount2 = 2 - count_mara_fakes();
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
-            _clone_monster(mons, MONS_MARA_FAKE, spell_cast, true, "Mara");
+            _clone_monster(mons, MONS_MARA_FAKE, spell_cast, true);
         return;
 
     case SPELL_FAKE_RAKSHASA_SUMMON:
