@@ -3161,6 +3161,17 @@ static const char* _get_resist_name(mon_resist_flags res_type)
     }
 }
 
+static const char* _get_threat_desc(mon_threat_level_type threat)
+{
+    switch (threat)
+    {
+    case MTHRT_TRIVIAL: return "harmless";
+    case MTHRT_EASY:    return "easy";
+    case MTHRT_TOUGH:   return "dangerous";
+    case MTHRT_NASTY:   return "extremely dangerous";
+    }
+}
+
 // Describe a monster's (intrinsic) resistances, speed and a few other
 // attributes.
 static std::string _monster_stat_description(const monster_info& mi)
@@ -3233,6 +3244,8 @@ static std::string _monster_stat_description(const monster_info& mi)
     }
 
     const char* pronoun = mi.pronoun(PRONOUN_CAP);
+
+    result << pronoun << " looks " << _get_threat_desc(mi.threat) << ".\n";
 
     if (!resist_descriptions.empty())
     {
