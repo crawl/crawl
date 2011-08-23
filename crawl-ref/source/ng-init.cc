@@ -64,7 +64,7 @@ void initialise_branch_depths()
         Branch *b = &branches[branch];
         if (crawl_state.game_is_sprint())
             b->startdepth = -1;
-        else if (branch < BRANCH_VESTIBULE_OF_HELL)
+        else if (branch < BRANCH_VESTIBULE_OF_HELL || branch > BRANCH_LAST_HELL)
             b->startdepth = random_range(b->mindepth, b->maxdepth);
     }
 
