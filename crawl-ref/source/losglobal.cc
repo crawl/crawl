@@ -8,6 +8,8 @@
 #include "libutil.h"
 #include "los_def.h"
 
+#define LOS_KNOWN 4
+
 typedef uint8_t losfield_t;
 typedef losfield_t halflos_t[LOS_MAX_RANGE+1][2*LOS_MAX_RANGE+1];
 static const int o_half_x = 0;
@@ -18,10 +20,12 @@ static globallos_t globallos;
 
 static losfield_t* _lookup_globallos(const coord_def& p, const coord_def& q)
 {
+    COMPILE_CHECK(LOS_KNOWN * 2 <= sizeof(losfield_t) * 8);
+
     if (!map_bounds(p) || !map_bounds(q))
         return (NULL);
     coord_def diff = q - p;
-    if (diff.rdist() > LOS_MAX_RANGE)
+    if (diff.abs() > LOS_MAX_RADIUS_SQ)
         return (NULL);
     // p < q iff p.x < q.x || p.x == q.x && p.y < q.y
     if (diff < coord_def(0, 0))
@@ -33,14 +37,12 @@ static losfield_t* _lookup_globallos(const coord_def& p, const coord_def& q)
 static void _save_los(los_def* los, los_type l)
 {
     const coord_def o = los->get_center();
-    for (radius_iterator ri(o, LOS_MAX_RANGE, C_SQUARE); ri; ++ri)
+    for (radius_iterator ri(o, LOS_MAX_RANGE, C_ROUND); ri; ++ri)
     {
         losfield_t* flags = _lookup_globallos(o, *ri);
         if (!flags)
             continue;
-        // XXX: we're assuming that if one type of LOS is updated,
-        //      all will be.
-        *flags &= ~LOS_FLAG_INVALID;
+        *flags |= l << LOS_KNOWN;
         if (los->see_cell(*ri))
             *flags |= l;
         else
@@ -58,23 +60,36 @@ void invalidate_los_around(const coord_def& p)
     for (int y = y1; y <= y2; y++)
         for (int x = x1; x <= x2; x++)
             if (sqr(p.x - x) + sqr(p.y - y) <= sqr(LOS_MAX_RANGE) + 1)
-                memset(globallos[x][y], LOS_FLAG_INVALID, sizeof(halflos_t));
+                memset(globallos[x][y], 0, sizeof(halflos_t));
 }
 
 void invalidate_los()
 {
     for (rectangle_iterator ri(0); ri; ++ri)
-        memset(globallos[ri->x][ri->y], LOS_FLAG_INVALID, sizeof(halflos_t));
+        memset(globallos[ri->x][ri->y], 0, sizeof(halflos_t));
 }
 
-static void _update_globallos_at(const coord_def& p)
+static void _update_globallos_at(const coord_def& p, los_type l)
 {
-    los_def los(p, opc_default);
-    los.update();
-    _save_los(&los, LOS_DEFAULT);
-    los.set_opacity(opc_no_trans);
-    los.update();
-    _save_los(&los, LOS_NO_TRANS);
+    switch(l)
+    {
+    case LOS_DEFAULT:
+        {
+            los_def los(p, opc_default);
+            los.update();
+            _save_los(&los, l);
+            break;
+        }
+    case LOS_NO_TRANS:
+        {
+            los_def los(p, opc_no_trans);
+            los.update();
+            _save_los(&los, l);
+            break;
+        }
+    default:
+        die("invalid opacity");
+    }
 }
 
 bool cell_see_cell(const coord_def& p, const coord_def& q, los_type l)
@@ -87,10 +102,10 @@ bool cell_see_cell(const coord_def& p, const coord_def& q, los_type l)
     if (!flags)
         return (false); // outside range
 
-    if (*flags & LOS_FLAG_INVALID)
-        _update_globallos_at(p);
+    if (!(*flags & (l << LOS_KNOWN)))
+        _update_globallos_at(p, l);
 
-    ASSERT(!(*flags & LOS_FLAG_INVALID));
+    ASSERT(*flags & (l << LOS_KNOWN));
 
     return (*flags & l);
 }
