@@ -76,6 +76,7 @@
 #include "maps.h"
 #include "message.h"
 #include "misc.h"
+#include "mislead.h"
 #include "mon-act.h"
 #include "mon-cast.h"
 #include "mon-iter.h"
@@ -1431,10 +1432,7 @@ static void _go_upstairs()
     }
 
     if (you.duration[DUR_MISLED])
-    {
-        mpr("Away from their source, illusions no longer mislead you.", MSGCH_DURATION);
-        you.duration[DUR_MISLED] = 0;
-    }
+        end_mislead(true);
 
     you.clear_clinging();
 
@@ -1518,10 +1516,7 @@ static void _go_downstairs()
     }
 
     if (you.duration[DUR_MISLED])
-    {
-        mpr("Away from their source, illusions no longer mislead you.", MSGCH_DURATION);
-        you.duration[DUR_MISLED] = 0;
-    }
+        end_mislead(true);
 
     you.clear_clinging();
 
@@ -2495,7 +2490,11 @@ static void _decrement_durations()
     _decrement_a_duration(DUR_LOWERED_MR, delay, "You feel less vulnerable to hostile enchantments.");
     _decrement_a_duration(DUR_SLIMIFY, delay, "You feel less slimy.",
                           coinflip(), "Your slime is starting to congeal.");
-    _decrement_a_duration(DUR_MISLED, delay, "Your thoughts are your own once more.");
+    if (_decrement_a_duration(DUR_MISLED, delay,
+                              "Your thoughts are your own once more."))
+    {
+        end_mislead();
+    }
     _decrement_a_duration(DUR_QUAD_DAMAGE, delay, NULL, 0,
                           "Quad Damage is wearing off.");
     _decrement_a_duration(DUR_MIRROR_DAMAGE, delay,
