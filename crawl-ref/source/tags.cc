@@ -1960,7 +1960,7 @@ static void tag_read_you(reader &th)
     check_selected_skills();
 
 #if TAG_MAJOR_VERSION == 32
-    if (th.getMinorVersion() >= TAG_SKILL_MENU_STATES)
+    if (th.getMinorVersion() >= TAG_MINOR_SKILL_MENU_STATES)
     {
 #endif
     you.skill_menu_do = static_cast<skill_menu_state>(unmarshallByte(th));
@@ -2133,7 +2133,7 @@ static void tag_read_you(reader &th)
     you.props.read(th);
 
 #if TAG_MAJOR_VERSION == 32
-    if (th.getMinorVersion() < TAG_SKILL_MENU_STATES)
+    if (th.getMinorVersion() < TAG_MINOR_SKILL_MENU_STATES)
     {
         if (you.props.exists("skm_do"))
         {
@@ -2684,7 +2684,7 @@ void unmarshallMapCell(reader &th, map_cell& cell)
     if (flags & MAP_SERIALIZE_FEATURE_COLOUR)
         feat_colour = unmarshallUnsigned(th);
 #if TAG_MAJOR_VERSION == 32
-    if (feat_colour > ETC_DISCO && th.getMinorVersion() < TAG_SKILL_MENU_STATES)
+    if (feat_colour > ETC_DISCO && th.getMinorVersion() < TAG_MINOR_SKILL_MENU_STATES)
         feat_colour = ETC_DISCO;
 #endif
 
@@ -3093,7 +3093,7 @@ static void tag_read_level(reader &th)
     env.grid_colours.init(BLACK);
     _run_length_decode(th, unmarshallByte, env.grid_colours, GXM, GYM);
 #if TAG_MAJOR_VERSION == 32
-    if (th.getMinorVersion() <= TAG_SKILL_MENU_STATES)
+    if (th.getMinorVersion() <= TAG_MINOR_SKILL_MENU_STATES)
     {
         for (rectangle_iterator ri(0); ri; ++ri)
             if (env.grid_colours(*ri) > ETC_DISCO)
