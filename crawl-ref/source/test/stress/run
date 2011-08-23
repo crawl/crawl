@@ -10,7 +10,7 @@ run_one()
         $CRAWL -rc test/stress/woken_rest.rc -sprint -sprint-map dungeon_sprint_1
     ;;
     2|unwoken_rest)
-        $CRAWL -rc test/stress/woken_rest.rc -sprint -sprint-map dungeon_sprint_1
+        $CRAWL -rc test/stress/unwoken_rest.rc -sprint -sprint-map dungeon_sprint_1
     ;;
     3|fireworks)
         $CRAWL -rc test/stress/fireworks.rc
