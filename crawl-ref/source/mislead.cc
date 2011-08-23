@@ -61,7 +61,8 @@ bool update_mislead_monster(monster* mons)
     if (mons_is_unique(mons->type) || !mons->mname.empty()
         || mons->props.exists("monster_tile")
         || mons->props.exists("mislead_as")
-        || mons->type == MONS_ORB_OF_DESTRUCTION)
+        || mons->type == MONS_ORB_OF_DESTRUCTION
+        || mons->type == MONS_MARA_FAKE)
     {
         return (false);
     }
