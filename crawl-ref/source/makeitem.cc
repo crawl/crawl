@@ -2357,8 +2357,10 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_NORMAL:
         return (true);
 
-    case SPARM_RUNNING:
     case SPARM_LEVITATION:
+        if (slot == EQ_BODY_ARMOUR)
+            return (true);
+    case SPARM_RUNNING:
     case SPARM_STEALTH:
         return (slot == EQ_BOOTS);
 
