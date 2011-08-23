@@ -45,6 +45,7 @@ enum tag_minor_version
     TAG_MINOR_MANUAL,              // New manuals.
     TAG_MINOR_MONSTER_TILES,       // Throw away monster tiles when their number changes.
     TAG_MINOR_SKILL_MENU_STATES,   // Move the saved states out of props.
+    TAG_MINOR_MONS_THREAT_LEVEL,   // Save threat level in monster_info.
 
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
