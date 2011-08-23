@@ -728,10 +728,13 @@ iflags_t full_ident_mask(const item_def& item)
         flagset = 0;
         break;
     case OBJ_MISCELLANY:
-        if (item.sub_type == MISC_RUNE_OF_ZOT)
-            flagset = 0;
-        else
+        if (item.sub_type == MISC_CRYSTAL_BALL_OF_SEEING
+            || item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY)
+        {
             flagset = ISFLAG_KNOW_TYPE;
+        }
+        else
+            flagset = 0;
         break;
     case OBJ_BOOKS:
     case OBJ_ORBS:
