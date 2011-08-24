@@ -1,30 +1,26 @@
 var overlaid_locs = [];
 var cursor_locs = [];
-var dirty_locs = [];
-var minimap_bounds = undefined;
-var minimap_changed = false;
 var flash = 0;
 var minimap_enabled = true;
 
 var ascii_mode = false;
 
 // Debug helper
-var mark_sent_cells = false;
 function mark_cell(x, y, mark)
 {
     mark = mark || "m";
 
-    if (get_tile_cache(x, y))
-        get_tile_cache(x, y).mark = mark;
+    if (map_knowledge.get(x, y).t)
+        get_tile_cache(x, y).t.mark = mark;
 
     render_cell(x, y);
 }
 function unmark_cell(x, y)
 {
-    var cell = get_tile_cache(x, y);
+    var cell = map_knowledge.get(x, y);
     if (cell)
     {
-        delete cell.mark;
+        delete cell.t.mark;
     }
 
     render_cell(x, y);
@@ -71,7 +67,8 @@ var flash_colours =
 // This gets called by the messages sent by crawl
 function clear_map()
 {
-    clear_tile_cache();
+    map_knowledge.clear();
+    
     dungeon_ctx.fillStyle = "black";
     dungeon_ctx.fillRect(0, 0,
                          dungeon_cols * dungeon_cell_w,
@@ -81,8 +78,6 @@ function clear_map()
     minimap_ctx.fillRect(0, 0,
                          $("#minimap").width(),
                          $("#minimap").height());
-
-    minimap_bounds = undefined;
 }
 
 function mappable(val)
@@ -91,81 +86,38 @@ function mappable(val)
     $("#minimap,#minimap_overlay").toggle(!!val);
 }
 
-function c(x, y, cell)
+function m(data)
 {
-    var old_cell = get_tile_cache(x, y);
+    map_knowledge.merge(data);
+    
+    // Mark cells above high cells as dirty
+    $.each(map_knowledge.dirty().slice(),
+           function (i, loc)
+           {
+               var cell = map_knowledge.get(loc.x, loc.y);
+               if (cell.t && cell.t.sy && cell.t.sy < 0)
+                   touch(loc.x, loc.y - 1);
+           });
 
-    if (old_cell && old_cell.sy && (old_cell.sy < 0))
-    {
-        set_dirty(x, y-1);
-    }
-
-    if (!old_cell || cell.c)
-    {
-        set_tile_cache(x, y, cell);
-    }
-    else
-    {
-        for (attr in cell)
-            old_cell[attr] = cell[attr];
-        cell = old_cell;
-    }
-
-    set_dirty(x, y);
-
-    if (minimap_bounds)
-    {
-        if (minimap_bounds.left > x)
-        {
-            minimap_bounds.left = x;
-            minimap_changed = true;
-        }
-        if (minimap_bounds.right < x)
-        {
-            minimap_bounds.right = x;
-            minimap_changed = true;
-        }
-        if (minimap_bounds.top > y)
-        {
-            minimap_bounds.top = y;
-            minimap_changed = true;
-        }
-        if (minimap_bounds.bottom < y)
-        {
-            minimap_bounds.bottom = y;
-            minimap_changed = true;
-        }
-    }
-    else
-    {
-        minimap_bounds = {
-            left: x,
-            top: y,
-            right: x,
-            bottom: y
-        };
-    }
-
-    if (mark_sent_cells)
-        cell.mark = x + "/" + y;
+    display();
 }
 
 function display()
 {
-    if (minimap_bounds == undefined)
+    if (!map_knowledge.bounds())
         return;
 
-    if (minimap_changed)
+    if (map_knowledge.reset_bounds_changed())
     {
         center_minimap();
-        minimap_changed = false;
     }
 
+    var dirty_locs = map_knowledge.dirty();
     for (var i = 0; i < dirty_locs.length; i++)
     {
         render_cell(dirty_locs[i].x, dirty_locs[i].y);
     }
-    dirty_locs = [];
+    map_knowledge.reset_dirty();
 }
 
 function set_flash(colour)
@@ -226,29 +178,19 @@ function remove_cursor(type)
 }
 
 // Render functions
-function set_dirty(x, y)
-{
-    var cell = get_tile_cache(x, y);
-    if (cell && !cell.dirty)
-    {
-        cell.dirty = true;
-        dirty_locs.push({x: x, y: y});
-    }
-}
-
 function force_full_render(minimap_too)
 {
-    if (minimap_bounds == undefined)
-        return;
-
-    var xs = minimap_too ? minimap_bounds.left : view_x;
-    var ys = minimap_too ? minimap_bounds.top : view_y;
-    var xe = minimap_too ? minimap_bounds.right : view_x + dungeon_cols - 1;
-    var ye = minimap_too ? minimap_bounds.bottom : view_y + dungeon_rows - 1;
+    var b = map_knowledge.bounds();
+    if (!b) return;
+    
+    var xs = minimap_too ? b.left : view_x;
+    var ys = minimap_too ? b.top : view_y;
+    var xe = minimap_too ? b.right : view_x + dungeon_cols - 1;
+    var ye = minimap_too ? b.bottom : view_y + dungeon_rows - 1;
     for (var x = xs; x <= xe; x++)
         for (var y = ys; y <= ye; y++)
     {
-        set_dirty(x, y);
+        map_knowledge.touch(x, y);
     }
 }
 
@@ -294,7 +236,8 @@ function render_cell(cx, cy)
                                  dungeon_cell_w, dungeon_cell_h);
         }
 
-        var cell = get_tile_cache(cx, cy);
+        var map_cell = map_knowledge.get(cx, cy);
+        var cell = map_cell.t;
 
         if (!cell)
         {
@@ -304,7 +247,7 @@ function render_cell(cx, cy)
             return;
         }
 
-        cell.dirty = false;
+        map_cell.dirty = false;
 
         cell.sy = undefined; // Will be set by the tile rendering functions
                              // to indicate if the cell is oversized
@@ -315,7 +258,7 @@ function render_cell(cx, cy)
         cell.flv.f = cell.flv.f || 0;
         cell.flv.s = cell.flv.s || 0;
 
-        var minimap_feat = get_cell_map_feature(cell);
+        var minimap_feat = get_cell_map_feature(map_cell);
         set_minimap(cx, cy, minimap_colours[minimap_feat]);
 
         if (!in_view(cx, cy))
@@ -402,8 +345,8 @@ function render_cell(cx, cy)
         render_cursors(cx, cy);
 
         // Redraw the cell below if it overlapped
-        var cell_below = get_tile_cache(cx, cy + 1);
-        if (cell_below && cell_below.sy && (cell_below.sy < 0))
+        var cell_below = map_knowledge.get(cx, cy + 1);
+        if (cell_below.t && cell_below.t.sy && (cell_below.t.sy < 0))
             render_cell(cx, cy + 1);
 
         // Debug helper
@@ -444,8 +387,9 @@ function render_flash(x, y)
     }
 }
 
-function get_cell_map_feature(cell)
+function get_cell_map_feature(map_cell)
 {
+    var cell = map_cell.t;
     var fg_idx = cell.fg & TILE_FLAG_MASK;
     var bg_idx = cell.bg & TILE_FLAG_MASK;
 
@@ -464,7 +408,7 @@ function get_cell_map_feature(cell)
         else if (att_flag == TILE_FLAG_PET)
             return MF_MONS_FRIENDLY;
 
-        if (cell.noexp)
+        if (map_cell.mon && map_cell.mon.no_exp)
             return MF_MONS_NO_EXP;
         else
             return MF_MONS_HOSTILE;
@@ -936,16 +880,17 @@ function center_minimap()
     if (!minimap_enabled) return;
 
     var minimap = $("#minimap")[0];
-    var mm_w = minimap_bounds.right - minimap_bounds.left;
-    var mm_h = minimap_bounds.bottom - minimap_bounds.top;
+    var bounds = map_knowledge.bounds();
+    var mm_w = bounds.right - bounds.left;
+    var mm_h = bounds.bottom - bounds.top;
 
     if (mm_w < 0 || mm_h < 0) return;
 
     var old_x = minimap_display_x - minimap_x * minimap_cell_w;
     var old_y = minimap_display_y - minimap_y * minimap_cell_h;
 
-    minimap_x = minimap_bounds.left;
-    minimap_y = minimap_bounds.top;
+    minimap_x = bounds.left;
+    minimap_y = bounds.top;
     minimap_display_x = Math.floor((minimap.width - minimap_cell_w * mm_w) / 2);
     minimap_display_y = Math.floor((minimap.height - minimap_cell_h * mm_h) / 2);
 

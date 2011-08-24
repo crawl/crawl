@@ -2433,6 +2433,10 @@ static void _clone_monster(monster* mons, monster_type clone_type,
     int created = create_monster(summ_mon);
     if (created == -1)
         return;
+    
+    // Reset client id so that no information about who the original monster
+    // is is leaked to the client
+    mons->reset_client_id(); 
 
     // Mara's clones are special; they have the same stats as him, and
     // are exact clones, so they are created damaged if necessary.

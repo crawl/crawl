@@ -66,7 +66,7 @@ monster::monster()
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
       enchantments(), flags(0), experience(0), base_monster(MONS_NO_MONSTER),
       number(0), colour(BLACK), foe_memory(0), shield_blocks(0),
-      god(GOD_NO_GOD), ghost(), seen_context("")
+      god(GOD_NO_GOD), ghost(), seen_context(""), client_id(0)
 
 {
     type = MONS_NO_MONSTER;
@@ -127,6 +127,8 @@ void monster::reset()
     ghost.reset(NULL);
     seen_context = "";
     props.clear();
+
+    client_id = 0;
 }
 
 void monster::init_with(const monster& mon)
@@ -171,6 +173,26 @@ void monster::init_with(const monster& mon)
         ghost.reset(new ghost_demon(*mon.ghost));
     else
         ghost.reset(NULL);
+}
+
+uint32_t monster::last_client_id = 0;
+
+uint32_t monster::get_client_id() const
+{
+    return client_id;
+}
+
+void monster::reset_client_id()
+{
+    client_id = 0;
+}
+
+void monster::ensure_has_client_id()
+{
+    if (client_id == 0)
+    {
+        client_id = ++last_client_id;
+    }
 }
 
 mon_attitude_type monster::temp_attitude() const
