@@ -41,6 +41,7 @@ MIRET1(number, damage_level, dam)
 MIRET1(boolean, is_safe, is(MB_SAFE))
 MIRET1(number, holiness, holi)
 MIRET1(number, attitude, attitude)
+MIRET1(number, threat, threat)
 MIRET1(string, mname, mname.c_str())
 MIRET1(number, type, type)
 MIRET1(number, base_type, base_type)
@@ -95,6 +96,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(is_safe),
     MIREG(holiness),
     MIREG(attitude),
+    MIREG(threat),
     MIREG(is_unique),
     MIREG(damage_level),
     MIREG(damage_desc),
