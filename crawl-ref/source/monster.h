@@ -72,8 +72,15 @@ public:
     int damage_friendly;               // Damage taken, x2 you, x1 pets, x0 else.
     int damage_total;
 
+    uint32_t client_id;                // for ID of monster_info between turns
+    static uint32_t last_client_id;
+
 public:
     void set_new_monster_id();
+
+    uint32_t get_client_id() const;
+    void reset_client_id();
+    void ensure_has_client_id();
 
     mon_attitude_type temp_attitude() const;
 

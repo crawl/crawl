@@ -104,6 +104,8 @@ struct monster_info_base
     bool two_weapons;
     bool no_regen;
     CrawlHashTable props;
+
+    uint32_t client_id;
 };
 
 // Monster info used by the pane; precomputes some data
@@ -120,7 +122,7 @@ struct monster_info : public monster_info_base
 #define MILEV_ALL 0
 #define MILEV_SKIP_SAFE -1
 #define MILEV_NAME -2
-    monster_info() {}
+    monster_info() { client_id = 0; }
     monster_info(const monster* m, int level = MILEV_ALL);
     monster_info(monster_type p_type,
                  monster_type p_base_type = MONS_NO_MONSTER);

@@ -215,6 +215,8 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
         base_type = type;
 
     props.clear();
+
+    client_id = 0;
 }
 
 monster_info::monster_info(const monster* m, int milev)
@@ -544,6 +546,8 @@ monster_info::monster_info(const monster* m, int milev)
         else
             mb.set(MB_UNSAFE);
     }
+
+    client_id = m->get_client_id();
 }
 
 monster* monster_info::mon() const

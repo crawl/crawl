@@ -10,6 +10,8 @@
 #include "tileweb-text.h"
 #include "tiledoll.h"
 #include "viewgeom.h"
+#include "map_knowledge.h"
+#include <map>
 
 class TilesFramework
 {
@@ -64,7 +66,18 @@ public:
     void write_message(const char *format, ...);
     void finish_message();
     void send_message(const char *format, ...);
+    
+    /* Adds a prefix that will be written before any other
+       data that is sent after this call, unless no other
+       data is sent until pop_prefix is called. The suffix
+       passed to pop_prefix will only be sent if the prefix
+       was sent. */
+    void push_prefix(std::string prefix);
+    void pop_prefix(std::string suffix);
+    bool prefix_popped();
 protected:
+    std::vector<std::string> m_prefixes;
+
     enum LayerID
     {
         LAYER_NORMAL,
@@ -79,16 +92,22 @@ protected:
 
     coord_def m_origin;
 
-    crawl_view_buffer m_current_view;
+    bool m_view_loaded;
+
+    FixedArray<screen_cell_t, GXM, GYM> m_current_view;
     coord_def m_current_gc;
 
-    crawl_view_buffer m_next_view;
+    FixedArray<screen_cell_t, GXM, GYM> m_next_view;
     coord_def m_next_gc;
     coord_def m_next_view_tl;
     coord_def m_next_view_br;
 
     int m_current_flash_colour;
     int m_next_flash_colour;
+
+    FixedArray<map_cell, GXM, GYM> m_current_map_knowledge;
+    std::map<uint32_t, coord_def> m_monster_locs;
+    bool m_need_full_map;
 
     coord_def m_cursor[CURSOR_MAX];
     coord_def m_last_clicked_grid;
@@ -107,10 +126,15 @@ protected:
 
     dolls_data last_player_doll;
 
-    bool _send_cell(int x, int y,
-                    const screen_cell_t *screen_cell, screen_cell_t *old_screen_cell);
-
-    void _send_current_view();
+    void _send_map(bool force_full = false);
+    void _send_cell(const coord_def &gc,
+                    const screen_cell_t &current_sc, const screen_cell_t &next_sc,
+                    const map_cell &current_mc, const map_cell &next_mc,
+                    std::map<uint32_t, coord_def>& new_monster_locs,
+                    bool force_full);
+    void _send_monster(const coord_def &gc, const monster_info* m,
+                       std::map<uint32_t, coord_def>& new_monster_locs,
+                       bool force_full);
 };
 
 // Main interface for tiles functions

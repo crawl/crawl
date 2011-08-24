@@ -49,16 +49,21 @@ static unsigned int get_milliseconds()
 TilesFramework tiles;
 
 TilesFramework::TilesFramework()
-    : m_next_view(),
+    : m_view_loaded(false),
       m_next_view_tl(0, 0),
       m_next_view_br(-1, -1),
       m_current_flash_colour(BLACK),
       m_next_flash_colour(BLACK),
+      m_need_full_map(true),
       m_text_crt("crt"),
       m_text_stat("stats"),
       m_text_message("messages"),
       m_print_fg(15)
 {
+    screen_cell_t default_cell;
+    default_cell.tile.bg = TILE_FLAG_UNSEEN;
+    m_next_view.init(default_cell);
+    m_current_view.init(default_cell);
 }
 
 TilesFramework::~TilesFramework()
@@ -89,6 +94,10 @@ bool TilesFramework::initialise()
 
 void TilesFramework::write_message(const char *format, ...)
 {
+    for (unsigned int i = 0; i < m_prefixes.size(); ++i)
+        fputs(m_prefixes[i].c_str(), stdout);
+    m_prefixes.clear();
+
     va_list  argp;
     va_start(argp, format);
     vfprintf(stdout, format, argp);
@@ -99,15 +108,43 @@ void TilesFramework::finish_message()
 {
     fprintf(stdout, "\n");
     fflush(stdout);
+    m_prefixes.clear();
 }
 
 void TilesFramework::send_message(const char *format, ...)
 {
+    for (unsigned int i = 0; i < m_prefixes.size(); ++i)
+        fputs(m_prefixes[i].c_str(), stdout);
+    m_prefixes.clear();
+
     va_list  argp;
     va_start(argp, format);
     vfprintf(stdout, format, argp);
     va_end(argp);
+    
     finish_message();
+}
+
+void TilesFramework::push_prefix(std::string prefix)
+{
+    m_prefixes.push_back(prefix);
+}
+
+void TilesFramework::pop_prefix(std::string suffix)
+{
+    if (!m_prefixes.empty())
+    {
+        m_prefixes.pop_back();
+    }
+    else
+    {
+        write_message(suffix.c_str());
+    }
+}
+
+bool TilesFramework::prefix_popped()
+{
+    return m_prefixes.empty();
 }
 
 static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
@@ -230,166 +267,270 @@ static bool _needs_flavour(const packed_cell &cell)
     return false;
 }
 
-bool TilesFramework::_send_cell(int x, int y,
-                                const screen_cell_t *screen_cell, screen_cell_t *old_screen_cell)
+void TilesFramework::_send_cell(const coord_def &gc,
+                                const screen_cell_t &current_sc, const screen_cell_t &next_sc,
+                                const map_cell &current_mc, const map_cell &next_mc,
+                                std::map<uint32_t, coord_def>& new_monster_locs,
+                                bool force_full)
 {
-    const packed_cell &cell = screen_cell->tile;
-    packed_cell &old_cell = old_screen_cell->tile;
-    coord_def gc(x, y);
+    if ((force_full && next_mc.feat()) || current_mc.feat() != next_mc.feat())
+        write_message("f:%d,", next_mc.feat());
 
-    ASSERT(map_bounds(gc));
+    if (next_mc.monsterinfo())
+        _send_monster(gc, next_mc.monsterinfo(), new_monster_locs, force_full);
+    else if (!force_full && current_mc.monsterinfo())
+        write_message("mon:null,");
 
-    tileidx_t fg_idx = cell.fg & TILE_FLAG_MASK;
-
-    bool is_changed_player_doll = false;
-    if (fg_idx == TILEP_PLAYER)
+    push_prefix("t:{");
     {
-        dolls_data result = player_doll;
-        fill_doll_equipment(result);
-        if (result != last_player_doll)
+        // Tile data
+        const packed_cell &next_pc = next_sc.tile;
+        const packed_cell &current_pc = current_sc.tile;
+
+        const tileidx_t fg_idx = next_pc.fg & TILE_FLAG_MASK;
+
+        const bool in_water = _in_water(next_pc);
+        bool fg_changed = false;
+
+        if ((force_full && next_pc.fg) || next_pc.fg != current_pc.fg)
         {
-            is_changed_player_doll = true;
-            last_player_doll = result;
-        }
-    }
-    if (old_cell == cell &&
-        !is_changed_player_doll)
-        return false;
+            fg_changed = true;
 
-    const bool in_water = _in_water(cell);
-    bool fg_changed = false;
-
-    if (m_origin.equals(-1, -1))
-        m_origin = gc;
-
-    write_message("c(%d,%d,{", x - m_origin.x, y - m_origin.y);
-
-    if (old_cell.bg == TILE_FLAG_UNSEEN)
-    {
-        write_message("c:1,"); // Clears the cell on the client side
-    }
-
-    if (cell.fg != old_cell.fg)
-    {
-        fg_changed = true;
-
-        write_message("fg:%u,", cell.fg);
-        if (fg_idx && fg_idx <= TILE_MAIN_MAX)
-        {
-            write_message("base:%d,", tileidx_known_base_item(fg_idx));
-        }
-    }
-
-    if (cell.bg != old_cell.bg)
-        write_message("bg:%u,", cell.bg);
-
-    if (cell.is_bloody != old_cell.is_bloody)
-        write_message("bloody:%u,", cell.is_bloody);
-
-    if (cell.is_silenced != old_cell.is_silenced)
-        write_message("silenced:%u,", cell.is_silenced);
-
-    if (cell.halo != old_cell.halo)
-        write_message("halo:%u,", cell.halo);
-
-    if (cell.is_moldy != old_cell.is_moldy)
-        write_message("moldy:%u,", cell.is_moldy);
-
-    if (cell.glowing_mold != old_cell.glowing_mold)
-        write_message("glowing_mold:%u,", cell.glowing_mold);
-
-    if (cell.is_sanctuary != old_cell.is_sanctuary)
-        write_message("sanctuary:%u,", cell.is_sanctuary);
-
-    if (cell.is_liquefied != old_cell.is_liquefied)
-        write_message("liquefied:%u,", cell.is_liquefied);
-
-    if (cell.orb_glow != old_cell.orb_glow)
-        write_message("orb_glow:%u,", cell.orb_glow);
-
-    if (cell.swamp_tree_water != old_cell.swamp_tree_water)
-        write_message("swtree:%u,", cell.swamp_tree_water);
-
-    if (cell.blood_rotation != old_cell.blood_rotation)
-        write_message("bloodrot:%d,", cell.blood_rotation);
-
-    if (_needs_flavour(cell) &&
-        ((cell.flv.floor != old_cell.flv.floor)
-         || (cell.flv.special != old_cell.flv.special)
-         || !_needs_flavour(old_cell)))
-    {
-        write_message("flv:{f:%d,", cell.flv.floor);
-        if (cell.flv.special)
-            write_message("s:%d,", cell.flv.special);
-        write_message("},");
-    }
-
-    if (fg_idx >= TILEP_MCACHE_START)
-    {
-        if (fg_changed)
-        {
-            mcache_entry *entry = mcache.get(fg_idx);
-            if (entry)
+            write_message("fg:%u,", next_pc.fg);
+            if (fg_idx && fg_idx <= TILE_MAIN_MAX)
             {
-                _send_mcache(entry, in_water);
+                write_message("base:%d,", tileidx_known_base_item(fg_idx));
+            }
+        }
+
+        if ((force_full && next_pc.bg != TILE_FLAG_UNSEEN)
+            || next_pc.bg != current_pc.bg)
+            write_message("bg:%u,", next_pc.bg);
+
+        if ((force_full && next_pc.is_bloody)
+            || next_pc.is_bloody != current_pc.is_bloody)
+            write_message("bloody:%u,", next_pc.is_bloody);
+
+        if ((force_full && next_pc.is_silenced)
+            || next_pc.is_silenced != current_pc.is_silenced)
+            write_message("silenced:%u,", next_pc.is_silenced);
+
+        if ((force_full && next_pc.halo)
+            || next_pc.halo != current_pc.halo)
+            write_message("halo:%u,", next_pc.halo);
+
+        if ((force_full && next_pc.is_moldy)
+            || next_pc.is_moldy != current_pc.is_moldy)
+            write_message("moldy:%u,", next_pc.is_moldy);
+
+        if ((force_full && next_pc.glowing_mold)
+            || next_pc.glowing_mold != current_pc.glowing_mold)
+            write_message("glowing_mold:%u,", next_pc.glowing_mold);
+
+        if ((force_full && next_pc.is_sanctuary)
+            || next_pc.is_sanctuary != current_pc.is_sanctuary)
+            write_message("sanctuary:%u,", next_pc.is_sanctuary);
+
+        if ((force_full && next_pc.is_liquefied)
+            || next_pc.is_liquefied != current_pc.is_liquefied)
+            write_message("liquefied:%u,", next_pc.is_liquefied);
+
+        if ((force_full && next_pc.orb_glow)
+            || next_pc.orb_glow != current_pc.orb_glow)
+            write_message("orb_glow:%u,", next_pc.orb_glow);
+
+        if ((force_full && next_pc.swamp_tree_water)
+            || next_pc.swamp_tree_water != current_pc.swamp_tree_water)
+            write_message("swtree:%u,", next_pc.swamp_tree_water);
+
+        if ((force_full && next_pc.blood_rotation)
+            || next_pc.blood_rotation != current_pc.blood_rotation)
+            write_message("bloodrot:%d,", next_pc.blood_rotation);
+
+        if (_needs_flavour(next_pc) &&
+            ((next_pc.flv.floor != current_pc.flv.floor)
+             || (next_pc.flv.special != current_pc.flv.special)
+             || !_needs_flavour(current_pc)
+             || force_full))
+        {
+            write_message("flv:{f:%d,", next_pc.flv.floor);
+            if (next_pc.flv.special)
+                write_message("s:%d,", next_pc.flv.special);
+            write_message("},");
+        }
+
+        if (fg_idx >= TILEP_MCACHE_START)
+        {
+            if (fg_changed)
+            {
+                mcache_entry *entry = mcache.get(fg_idx);
+                if (entry)
+                {
+                    _send_mcache(entry, in_water);
+                }
+                else
+                    write_message("doll:[[%d,%d]],", TILEP_MONS_UNKNOWN, TILE_Y);
+            }
+        }
+        else if (fg_idx == TILEP_PLAYER)
+        {
+            bool player_doll_changed = false;
+            dolls_data result = player_doll;
+            fill_doll_equipment(result);
+            if (result != last_player_doll)
+            {
+                player_doll_changed = true;
+                last_player_doll = result;
+            }
+            if (fg_changed || player_doll_changed)
+            {
+                _send_doll(last_player_doll, in_water, false);
+            }
+        }
+        else if (fg_idx >= TILE_MAIN_MAX)
+        {
+            if (fg_changed)
+            {
+                write_message("doll:[[%d,%d]],", fg_idx, TILE_Y);
+                // TODO: _transform_add_weapon
+            }
+        }
+
+        bool overlays_changed = false;
+
+        if (next_pc.num_dngn_overlay != current_pc.num_dngn_overlay)
+            overlays_changed = true;
+        else
+        {
+            for (int i = 0; i < next_pc.num_dngn_overlay; i++)
+            {
+                if (next_pc.dngn_overlay[i] != current_pc.dngn_overlay[i])
+                {
+                    overlays_changed = true;
+                    break;
+                }
+            }
+        }
+
+        if ((force_full && next_pc.num_dngn_overlay)
+            || overlays_changed)
+        {
+            write_message("ov:[");
+            for (int i = 0; i < next_pc.num_dngn_overlay; ++i)
+                write_message("%d,", next_pc.dngn_overlay[i]);
+            write_message("],");
+        }
+    }
+    pop_prefix("},");
+}
+
+void TilesFramework::_send_map(bool force_full)
+{
+    std::map<uint32_t, coord_def> new_monster_locs;
+
+    force_full = force_full || m_need_full_map;
+    m_need_full_map = false;
+
+    if (force_full)
+    {
+        write_message("clear_map();");
+        write_message("mappable(%u);", player_in_mappable_area());
+    }
+
+    coord_def last_gc(0, 0);
+    bool send_gc = true;
+
+    write_message("m([");
+    for (int y = 0; y < GYM; y++)
+        for (int x = 0; x < GXM; x++)
+        {
+            coord_def gc(x, y);
+
+            if (m_origin.equals(-1, -1))
+                m_origin = gc;
+
+            if (send_gc
+                || last_gc.x + 1 != gc.x
+                || last_gc.y != gc.y)
+            {
+                std::ostringstream xy;
+                xy << "{x:" << (x - m_origin.x) << ",y:" << (y - m_origin.y) << ",";
+                push_prefix(xy.str());
             }
             else
-                write_message("doll:[[%d,%d]],", TILEP_MONS_UNKNOWN, TILE_Y);
-        }
-    }
-    else if (fg_idx == TILEP_PLAYER)
-    {
-        if (fg_changed || is_changed_player_doll)
-        {
-            _send_doll(last_player_doll, in_water, false);
-        }
-    }
-    else if (fg_idx >= TILE_MAIN_MAX)
-    {
-        if (fg_changed)
-        {
-            write_message("doll:[[%d,%d]],", fg_idx, TILE_Y);
-            // TODO: _transform_add_weapon
-        }
-    }
+            {
+                push_prefix("{");
+            }
 
-    if (fg_changed)
-    {
-        // Send info about no-exp monsters.
-        const map_cell& mcell = env.map_knowledge(gc);
-        if (mcell.monster() != MONS_NO_MONSTER)
-        {
-            write_message("noexp:%d,", mons_class_flag(mcell.monster(), M_NO_EXP_GAIN));
+            _send_cell(gc, m_current_view(gc), m_next_view(gc),
+                       m_current_map_knowledge(gc), env.map_knowledge(gc),
+                       new_monster_locs, force_full);
+            
+            if (prefix_popped())
+            {
+                send_gc = false;
+                last_gc = gc;
+            }
+            pop_prefix("},");
         }
+    send_message("]);");
+
+    m_current_map_knowledge = env.map_knowledge;
+    m_current_view = m_next_view;
+
+    m_monster_locs = new_monster_locs;
+}
+
+void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
+                                   std::map<uint32_t, coord_def>& new_monster_locs,
+                                   bool force_full)
+{
+    if (m->client_id)
+    {
+        std::ostringstream id;
+        id << "mon:{id:" << m->client_id << ",";
+        push_prefix(id.str());
+        new_monster_locs[m->client_id] = gc;
     }
+    else
+        push_prefix("mon:{");
 
-    bool overlays_changed = false;
+    const monster_info* last = NULL;
+    std::map<uint32_t, coord_def>::const_iterator it =
+        m_monster_locs.find(m->client_id);
+    if (m->client_id == 0 || it == m_monster_locs.end())
+    {
+        last = m_current_map_knowledge(gc).monsterinfo();
 
-    if (cell.num_dngn_overlay != old_cell.num_dngn_overlay)
-        overlays_changed = true;
+        if (last && (last->client_id != m->client_id))
+            write_message(""); // Force sending at least the id
+    }
     else
     {
-        for (int i = 0; i < cell.num_dngn_overlay; i++)
-        {
-            if (cell.dngn_overlay[i] != old_cell.dngn_overlay[i])
-            {
-                overlays_changed = true;
-                break;
-            }
-        }
+        last = m_current_map_knowledge(it->second).monsterinfo();
+        
+        if (it->second != gc)
+            write_message(""); // As above
     }
+    
+    if (last == NULL)
+        force_full = true;
 
-    if (overlays_changed)
-    {
-        write_message("ov:[");
-        for (int i = 0; i < cell.num_dngn_overlay; ++i)
-            write_message("%d,", cell.dngn_overlay[i]);
-        write_message("],");
-    }
+    if (force_full || (last->full_name() != m->full_name()))
+        write_message("name:'%s',", m->full_name().c_str());
 
-    write_message("});");
+    if (force_full || (last->type != m->type))
+        write_message("type:%d,", m->type);
+    
+    if (force_full || (last->base_type != m->base_type))
+        write_message("btype:%d,", m->base_type);
 
-    return true;
+    bool no_exp = mons_class_flag(m->type, M_NO_EXP_GAIN);
+    if ((force_full && no_exp)
+        || (last && mons_class_flag(last->type, M_NO_EXP_GAIN) != no_exp))
+        write_message("no_exp:%u,", no_exp);
+    
+    pop_prefix("},");
 }
 
 void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
@@ -398,13 +539,7 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
     if (vbuf.size().equals(0, 0))
         return;
 
-    if (m_next_view.size().equals(0, 0))
-    {
-        m_next_view.resize(coord_def(GXM, GYM));
-        // Make sure the whole map is rendered below
-        m_next_view_tl = coord_def(0, 0);
-        m_next_view_br = coord_def(GXM - 1, GYM - 1);
-    }
+    m_view_loaded = true;
 
     if (m_active_layer != LAYER_NORMAL)
     {
@@ -425,9 +560,12 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
 
             if (!crawl_view.in_viewport_g(coord_def(x, y)))
             {
-                screen_cell_t *cell = &m_next_view[x + y * GXM];
+                coord_def grid(x, y);
+                screen_cell_t *cell = &m_next_view(grid);
 
-                draw_cell(cell, coord_def(x, y), false, m_next_flash_colour);
+                draw_cell(cell, grid, false, m_next_flash_colour);
+                cell->tile.flv = env.tile_flv(grid);
+                pack_cell_overlays(grid, &(cell->tile));
             }
         }
 
@@ -444,8 +582,11 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
             if (grid.x < 0 || grid.x >= GXM || grid.y < 0 || grid.y >= GYM)
                 continue;
 
-            ((screen_cell_t *) m_next_view)[grid.x + GXM * grid.y] =
-                ((const screen_cell_t *) vbuf)[x + vbuf.size().x * y];
+            screen_cell_t *cell = &m_next_view(grid);
+
+            *cell = ((const screen_cell_t *) vbuf)[x + vbuf.size().x * y];
+            cell->tile.flv = env.tile_flv(grid);
+            pack_cell_overlays(grid, &(cell->tile));
         }
 
     m_next_gc = gc;
@@ -564,8 +705,7 @@ int TilesFramework::getch_ck()
             send_message("vgrdc(%d,%d);",
                          m_current_gc.x - m_origin.x, m_current_gc.y - m_origin.y);
             send_message("set_flash(%d);", m_current_flash_colour);
-            write_message("mappable(%u);", player_in_mappable_area());
-            _send_current_view();
+            _send_map(true);
             switch (m_active_layer)
             {
             case LAYER_CRT:
@@ -653,35 +793,11 @@ GotoRegion TilesFramework::get_cursor_region() const
     return m_cursor_region;
 }
 
-void TilesFramework::_send_current_view()
-{
-    screen_cell_t old_cell_dummy; // _send_cell needs a cell to compare to
-
-    screen_cell_t *cell = (screen_cell_t *) m_current_view;
-    for (int y = 0; y < m_current_view.size().y; y++)
-        for (int x = 0; x < m_current_view.size().x; x++)
-        {
-            // Don't send data for default black tiles
-            old_cell_dummy.tile.bg |= TILE_FLAG_UNSEEN;
-            old_cell_dummy.tile.flv = env.tile_flv(coord_def(x, y));
-
-            _send_cell(x, y, cell, &old_cell_dummy);
-
-            old_cell_dummy.tile.clear();
-            cell++;
-        }
-
-    send_message("display();");
-}
-
 void TilesFramework::redraw()
 {
     m_text_crt.send();
     m_text_stat.send();
     m_text_message.send();
-
-    if (m_next_view.size().equals(0, 0))
-        return; // Nothing yet to draw
 
     if (m_current_gc != m_next_gc)
     {
@@ -699,52 +815,9 @@ void TilesFramework::redraw()
                       m_next_flash_colour);
         m_current_flash_colour = m_next_flash_colour;
     }
-
-    if ((m_next_view.size() != m_current_view.size()))
-    {
-        // The view buffer size changed, we need to do a full redraw
-        m_current_view = m_next_view;
-
-        write_message("clear_map();");
-        write_message("mappable(%u);", player_in_mappable_area());
-
-        screen_cell_t *cell = (screen_cell_t *) m_current_view;
-        for (int y = 0; y < m_current_view.size().y; y++)
-            for (int x = 0; x < m_current_view.size().x; x++)
-            {
-                coord_def gc(x, y);
-                cell->tile.flv = env.tile_flv(gc);
-                pack_cell_overlays(gc, &(cell->tile));
-
-                cell++;
-            }
-
-        _send_current_view();
-    }
-    else
-    {
-        // Find differences
-
-        const screen_cell_t *cell = (const screen_cell_t *) m_next_view;
-        screen_cell_t *old_cell = (screen_cell_t *) m_current_view;
-        for (int y = 0; y < m_current_view.size().y; y++)
-            for (int x = 0; x < m_current_view.size().x; x++)
-            {
-                screen_cell_t new_cell = *cell;
-                coord_def gc(x, y);
-                new_cell.tile.flv = env.tile_flv(gc);
-                pack_cell_overlays(gc, &(new_cell.tile));
-
-                _send_cell(x, y, &new_cell, old_cell);
-
-                *old_cell = new_cell;
-
-                cell++;
-                old_cell++;
-            }
-
-        send_message("display();");
-    }
+    
+    if (m_view_loaded)
+        _send_map(false);
 
     m_need_redraw = false;
     m_last_tick_redraw = get_milliseconds();
@@ -752,8 +825,8 @@ void TilesFramework::redraw()
 
 void TilesFramework::update_minimap(const coord_def& gc)
 {
-    if (gc.x < 0 || gc.x >= m_next_view.size().x ||
-        gc.y < 0 || gc.y >= m_next_view.size().y)
+    if (gc.x < 0 || gc.x >= GXM ||
+        gc.y < 0 || gc.y >= GYM)
         return;
 
     if (you.see_cell(gc))
@@ -762,15 +835,17 @@ void TilesFramework::update_minimap(const coord_def& gc)
                 // initialized, which could lead to problems
                 // if we try to draw in-los cells.
 
-    screen_cell_t *cell = &m_next_view[gc.x + gc.y * GXM];
+    screen_cell_t *cell = &m_next_view(gc);
 
     draw_cell(cell, gc, false, m_next_flash_colour);
+    cell->tile.flv = env.tile_flv(gc);
+    pack_cell_overlays(gc, &(cell->tile));
 }
 
 void TilesFramework::clear_minimap()
 {
-    m_current_view = crawl_view_buffer();
     m_origin = coord_def(-1, -1);
+    m_need_full_map = true;
 }
 
 void TilesFramework::update_minimap_bounds()

@@ -348,7 +348,7 @@ static void _mark_invisible_monster(const coord_def &where)
  *
  * @param mons    The monster at the relevant location.
 **/
-static void _update_monster(const monster* mons)
+static void _update_monster(monster* mons)
 {
     _check_monster_pos(mons);
 
@@ -418,6 +418,7 @@ static void _update_monster(const monster* mons)
         return;
     }
 
+    mons->ensure_has_client_id();
     monster_info mi(mons);
     env.map_knowledge(gp).set_monster(mi);
 
@@ -446,7 +447,7 @@ void show_update_at(const coord_def &gp, bool terrain_only)
     if (!in_bounds(gp))
         return;
 
-    const monster* mons = monster_at(gp);
+    monster* mons = monster_at(gp);
     if (mons && mons->alive())
         _update_monster(mons);
 
