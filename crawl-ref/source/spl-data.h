@@ -66,7 +66,7 @@ struct spell_desc
     SPELL_FIREBALL, "Fireball",
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_DIR_OR_TARGET,
-     6,
+     5,
      200,
      6, 6,
      0,
