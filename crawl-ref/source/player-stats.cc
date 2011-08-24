@@ -68,6 +68,7 @@ static void _handle_stat_change(const char *aux = NULL, bool see_source = true);
 
 void attribute_increase()
 {
+    crawl_state.stat_gain_prompt = true;
     mpr("Your experience leads to an increase in your attributes!",
         MSGCH_INTRINSIC_GAIN);
     learned_something_new(HINT_CHOOSE_STAT);
