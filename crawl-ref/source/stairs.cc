@@ -316,9 +316,7 @@ static void _clear_golubria_traps()
     {
         trap_def *trap = find_trap(*it);
         if (trap && trap->type == TRAP_GOLUBRIA)
-        {
             trap->destroy();
-        }
     }
 }
 
@@ -788,11 +786,7 @@ static void _maybe_destroy_trap(const coord_def &p)
 {
     trap_def* trap = find_trap(p);
     if (trap)
-    {
         trap->destroy();
-        env.map_knowledge(p).set_feature(DNGN_FLOOR);
-        maybe_update_stashes();
-    }
 }
 
 static bool _is_portal_exit(dungeon_feature_type stair)

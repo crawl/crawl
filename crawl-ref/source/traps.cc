@@ -37,6 +37,7 @@
 #include "skills.h"
 #include "spl-miscast.h"
 #include "spl-util.h"
+#include "stash.h"
 #include "state.h"
 #include "stuff.h"
 #include "travel.h"
@@ -84,15 +85,22 @@ void trap_def::disarm()
     destroy();
 }
 
-void trap_def::destroy()
+void trap_def::destroy(bool known)
 {
     if (!in_bounds(pos))
         die("Trap position out of bounds!");
 
     grd(pos) = DNGN_FLOOR;
     ammo_qty = 0;
-    pos      = coord_def(-1,-1);
     type     = TRAP_UNASSIGNED;
+
+    if (known)
+    {
+        env.map_knowledge(pos).set_feature(DNGN_FLOOR);
+        StashTrack.update_stash(pos);
+    }
+
+    pos      = coord_def(-1,-1);
 }
 
 void trap_def::hide()
@@ -920,11 +928,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     }
 
     if (trap_destroyed)
-    {
-        if (know_trap_destroyed)
-            env.map_knowledge(pos).set_feature(DNGN_FLOOR);
-        destroy();
-    }
+        destroy(know_trap_destroyed);
 }
 
 int trap_def::max_damage(const actor& act)
