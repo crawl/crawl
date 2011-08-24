@@ -1908,10 +1908,6 @@ very ugly thing
 
 A very ugly thing. According to legend, this hideously mutated creature is the otherworldly spawn of a wizard's breeding experiment. Double yuck.
 %%%%
-viper
-
-A snake with a painful venom. It's not as fast as some other snakes, but still fairly quick.
-%%%%
 wandering mushroom
 
 A large, fat mushroom.

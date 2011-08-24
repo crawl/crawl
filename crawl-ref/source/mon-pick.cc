@@ -1745,7 +1745,6 @@ int mons_pitsnake_level(int mcls)
 
     case MONS_WATER_MOCCASIN:
     case MONS_BLACK_MAMBA:
-    case MONS_VIPER:
     case MONS_ANACONDA:
     case MONS_NAGA:
         mlev += 2;
@@ -1789,7 +1788,6 @@ int mons_pitsnake_rare(int mcls)
     case MONS_NAGA_MAGE:
         return 34;
 
-    case MONS_VIPER:
     case MONS_ANACONDA:
         return 32;
 
