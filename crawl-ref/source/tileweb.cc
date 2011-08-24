@@ -471,7 +471,8 @@ force_overlay:%u,show_diameter:%u,msg_min_height:%u,stat_width:%u,   \
 min_stat_height:%u,gxm:%u,gym:%u},%u);",
                        Options.view_max_width, Options.view_max_height,
                        Options.tile_force_overlay, ENV_SHOW_DIAMETER,
-                       Options.msg_min_height, stat_width, min_stat_height,
+                       Options.msg_min_height, stat_width,
+                       min_stat_height + (Options.show_gold_turns ? 1 : 0),
                        GXM, GYM,
                        need_response);
 }
