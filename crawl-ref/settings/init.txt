@@ -368,6 +368,7 @@ include = tiles_options.txt
 # dump_order  = header, hiscore, stats, misc, notes, inventory,
 # dump_order += turns_by_place, skills, spells, overview, mutations,
 # dump_order += messages, screenshot, monlist, kills_by_place, kills
+# dump_order += spell_usage
 # dump_book_spells = false
 
 ##### 5-b       Notes #################################

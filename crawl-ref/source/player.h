@@ -284,6 +284,8 @@ public:
   // The biggest assigned monster id so far.
   mid_t last_mid;
 
+  // Count of spells cast.
+  std::map<spell_type, FixedVector<int, 27> > spell_usage;
 
   // Non-saved UI state:
   unsigned short prev_targ;

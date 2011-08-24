@@ -751,9 +751,16 @@ bool cast_a_spell(bool check_range, spell_type spell)
             return (false);
         }
 
-        practise(cast_result == SPRET_SUCCESS ? EX_DID_CAST : EX_DID_MISCAST,
-                 spell);
-        did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
+        if (cast_result == SPRET_SUCCESS)
+        {
+            practise(EX_DID_CAST, spell);
+            did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
+            if (you.spell_usage.find(spell) == you.spell_usage.end())
+                you.spell_usage[spell].init(0);
+            you.spell_usage[spell][you.experience_level - 1]++;
+        }
+        else
+            practise(EX_DID_MISCAST, spell);
     }
 
     dec_mp(spell_mana(spell));

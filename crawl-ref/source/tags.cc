@@ -1247,6 +1247,21 @@ static void tag_construct_you(writer &th)
         marshallInt(th, you.montiers[k]);
 #endif
 
+    j = 0;
+    for (std::map<spell_type, FixedVector<int, 27> >::const_iterator sp =
+         you.spell_usage.begin(); sp != you.spell_usage.end(); ++sp)
+    {
+        j++;
+    }
+    marshallShort(th, j);
+    for (std::map<spell_type, FixedVector<int, 27> >::const_iterator sp =
+         you.spell_usage.begin(); sp != you.spell_usage.end(); ++sp)
+    {
+        marshallShort(th, sp->first);
+        for (int k = 0; k < 27; k++)
+            marshallInt(th, sp->second[k]);
+    }
+
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
 
@@ -2120,6 +2135,20 @@ static void tag_read_you(reader &th)
     if (th.getMinorVersion() >= TAG_MINOR_MON_TIER_STATS)
         for (unsigned int k = 0; k < ARRAYSZ(you.montiers); k++)
             you.montiers[k] = unmarshallInt(th);
+
+    if (th.getMinorVersion() >= TAG_MINOR_SPELL_USAGE)
+    {
+#endif
+    // Counts of spells cast, per level.
+    count = unmarshallShort(th);
+    for (i = 0; i < count; i++)
+    {
+        spell_type spell = (spell_type)unmarshallShort(th);
+        for (j = 0; j < 27; j++)
+            you.spell_usage[spell][j] = unmarshallInt(th);
+    }
+#if TAG_MAJOR_VERSION == 32
+    }
 #endif
 
     if (!dlua.callfn("dgn_load_data", "u", &th))
