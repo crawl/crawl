@@ -1006,14 +1006,14 @@ DEPTH:   D:10-13, Lair, Snake
 ORIENT:  float
 MONS:    giant gecko / giant newt, crocodile, iguana
 MONS:    fire drake / swamp drake
-MONS:    snake, water moccasin, viper
+MONS:    snake, water moccasin
 SUBST:   4 = 34
 SUBST:   3 = 3:20 2
 SUBST:   2 = 2:20 1
 SUBST:   1 = 1.
 SHUFFLE: ab/cd
 SUBST:   a = w, b = x, c = x, d = .
-SHUFFLE: 123/567
+SHUFFLE: 123/566
 SUBST:   X=x.
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx

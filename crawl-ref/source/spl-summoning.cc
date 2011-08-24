@@ -267,8 +267,8 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
         if (pow > 20 && one_chance_in(3))
             mon = MONS_WATER_MOCCASIN;
 
-        if (pow > 40 && one_chance_in(3))
-            mon = MONS_VIPER;
+        if (pow > 40 && coinflip())
+            mon = MONS_WATER_MOCCASIN;
 
         if (pow > 70 && one_chance_in(3))
             mon = MONS_BLACK_MAMBA;

@@ -1871,7 +1871,9 @@ enum monster_type                      // (int) menv[].type
     MONS_SMALL_SNAKE,
     MONS_SNAKE,
     MONS_WATER_MOCCASIN,
+#if TAG_MAJOR_VERSION == 32
     MONS_VIPER,
+#endif
     MONS_BLACK_MAMBA,
     MONS_ANACONDA,
     MONS_SEA_SNAKE,

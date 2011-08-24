@@ -156,7 +156,6 @@ snake CORPSE_SNAKE
 black_mamba CORPSE_BLACK_MAMBA
 water_moccasin CORPSE_WATER_MOCCASIN
 anaconda CORPSE_ANACONDA
-viper CORPSE_VIPER
 sea_snake CORPSE_SEA_SNAKE
 
 ## Bears ('U')
