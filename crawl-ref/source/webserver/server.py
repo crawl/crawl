@@ -215,7 +215,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 return
 
             if game_id not in games: return
-        
+
         self.last_action_time = time.time()
 
         self.game_id = game_id
