@@ -514,6 +514,7 @@ static int crawl_article_a(lua_State *ls)
 }
 
 LUARET1(crawl_game_started, boolean, crawl_state.need_save)
+LUARET1(crawl_stat_gain_prompt, boolean, crawl_state.stat_gain_prompt)
 LUARET1(crawl_random2, number, random2(luaL_checkint(ls, 1)))
 LUARET1(crawl_one_chance_in, boolean, one_chance_in(luaL_checkint(ls, 1)))
 LUARET1(crawl_random2avg, number,
@@ -756,6 +757,7 @@ static const struct luaL_reg crawl_clib[] =
     { "grammar",        _crawl_grammar },
     { "article_a",      crawl_article_a },
     { "game_started",   crawl_game_started },
+    { "stat_gain_prompt", crawl_stat_gain_prompt },
     { "is_tiles",       crawl_is_tiles },
     { "is_webtiles",    crawl_is_webtiles },
     { "err_trace",      crawl_err_trace },
