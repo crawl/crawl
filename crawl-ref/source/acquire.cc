@@ -1617,20 +1617,21 @@ bool acquirement(object_class_type class_wanted, int agent,
         mprf("%-24s[g] Miscellaneous  [h] %s [i] Gold",
             you.species == SP_FELID ? "" : "[e] Staff   [f] Wand",
             you.religion == GOD_FEDHAS ? "Fruit" : "Food ");
-        mpr("What kind of item would you like to acquire? ", MSGCH_PROMPT);
+        mpr("What kind of item would you like to acquire? (\\ to view known items)", MSGCH_PROMPT);
 
         const int keyin = tolower(get_ch());
         switch (keyin)
         {
-        case 'a': case ')':            class_wanted = OBJ_WEAPONS;    break;
-        case 'b': case '[':  case ']': class_wanted = OBJ_ARMOUR;     break;
-        case 'c': case '=':  case '"': class_wanted = OBJ_JEWELLERY;  break;
-        case 'd': case '+':  case ':': class_wanted = OBJ_BOOKS;      break;
-        case 'e': case '\\': case '|': class_wanted = OBJ_STAVES;     break;
-        case 'f': case '/':            class_wanted = OBJ_WANDS;      break;
-        case 'g': case '}':  case '{': class_wanted = OBJ_MISCELLANY; break;
-        case 'h': case '%':            class_wanted = OBJ_FOOD;       break;
-        case 'i': case '$':            class_wanted = OBJ_GOLD;       break;
+        case 'a':    class_wanted = OBJ_WEAPONS;    break;
+        case 'b':    class_wanted = OBJ_ARMOUR;     break;
+        case 'c':    class_wanted = OBJ_JEWELLERY;  break;
+        case 'd':    class_wanted = OBJ_BOOKS;      break;
+        case 'e':    class_wanted = OBJ_STAVES;     break;
+        case 'f':    class_wanted = OBJ_WANDS;      break;
+        case 'g':    class_wanted = OBJ_MISCELLANY; break;
+        case 'h':    class_wanted = OBJ_FOOD;       break;
+        case 'i':    class_wanted = OBJ_GOLD;       break;
+        case '\\':   check_item_knowledge();        break;
         default:
             // Lets wizards escape out of accidently choosing acquirement.
             if (agent == AQ_WIZMODE)
