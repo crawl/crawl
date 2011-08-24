@@ -85,6 +85,7 @@ static void _sdump_overview(dump_params &);
 static void _sdump_hiscore(dump_params &);
 static void _sdump_monster_list(dump_params &);
 static void _sdump_vault_list(dump_params &);
+static void _sdump_spell_usage(dump_params &);
 static void _sdump_separator(dump_params &);
 #ifdef CLUA_BINDINGS
 static void _sdump_lua(dump_params &);
@@ -140,6 +141,7 @@ static dump_section_handler dump_handlers[] = {
     { "hiscore",        _sdump_hiscore       },
     { "monlist",        _sdump_monster_list  },
     { "vaults",         _sdump_vault_list    },
+    { "spell_usage",    _sdump_spell_usage   },
 
     // Conveniences for the .crawlrc artist.
     { "",               _sdump_newline       },
@@ -1132,6 +1134,50 @@ static void _sdump_vault_list(dump_params &par)
         par.text += "Vault maps used:\n\n";
         par.text += dump_vault_maps();
     }
+}
+
+static void _sdump_spell_usage(dump_params &par)
+{
+    if (you.spell_usage.empty())
+        return;
+
+    int max_lt = (std::min<int>(you.max_level, 27) - 1) / 3;
+
+    // Don't show both a total and 1..3 when there's only one tier.
+    if (max_lt)
+        max_lt++;
+
+    par.text += make_stringf("\n%-24s | %5s", "Spells cast", "total");
+    for (int lt = 0; lt < max_lt; lt++)
+        par.text += make_stringf(" | %2d-%2d", lt * 3 + 1, lt * 3 + 3);
+    par.text += "\n-------------------------+-------";
+    for (int lt = 0; lt < max_lt; lt++)
+        par.text += "+-------";
+    par.text += "\n";
+
+    for (std::map<spell_type, FixedVector<int, 27> >::const_iterator sp =
+         you.spell_usage.begin(); sp != you.spell_usage.end(); ++sp)
+    {
+        par.text += chop_string(spell_title(sp->first), 24);
+
+        int total = 0;
+        for (int i = 0; i < 27; i++)
+            total += sp->second[i];
+        ASSERT(total > 0);
+        par.text += make_stringf(" |%6d", total);
+
+        for (int lt = 0; lt < max_lt; lt++)
+        {
+            int ltotal = 0;
+            for (int i = lt * 3; i < lt * 3 + 3; i++)
+                ltotal += sp->second[i];
+            par.text += make_stringf(" |%6d", ltotal);
+        }
+
+        par.text += "\n";
+    }
+
+    par.text += "\n";
 }
 
 static void _sdump_mutations(dump_params &par)

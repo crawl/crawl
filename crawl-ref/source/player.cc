@@ -5453,6 +5453,8 @@ void player::init()
         montiers[i] = 0;
 #endif
 
+    spell_usage.clear();
+
 
     // Volatile (same-turn) state:
     turn_is_over     = false;

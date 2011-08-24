@@ -1942,6 +1942,9 @@ dump_order += monlist,kills
         which happens when you die, quit or win (or in ordinary dumps
         while in wizard mode).
 
+        Also, "spell_usage" will count spells you have used, in total and
+        per every three experience levels.
+
 dump_book_spells = true
         By default all randart spellbooks in inventory will have all their
         spells listed in the dump. If this option is set to true, spells will
