@@ -4033,6 +4033,9 @@ int runes_in_pack()
 
 bool player_has_orb()
 {
+    if (you.char_direction != GDT_ASCENDING)
+        return false;
+
     for (int i = 0; i < ENDOFPACK; i++)
     {
         if (you.inv[i].defined()
