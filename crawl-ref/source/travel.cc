@@ -1845,7 +1845,7 @@ static branch_type _find_parent_branch(branch_type br)
     return branches[br].parent_branch;
 }
 
-extern std::map<branch_type, level_id> stair_level;
+extern std::map<branch_type, std::set<level_id> > stair_level;
 
 static void _find_parent_branch(branch_type br, int depth,
                                 branch_type *pb, int *pd)
@@ -1854,7 +1854,7 @@ static void _find_parent_branch(branch_type br, int depth,
     if (stair_level.find(br) == stair_level.end())
         *pd = 0;
     else
-        *pd = stair_level[br].depth;
+        *pd = stair_level[br].begin()->depth;
 }
 
 // Appends the passed in branch/depth to the given vector, then attempts to
@@ -2294,6 +2294,13 @@ level_id find_deepest_explored(level_id curr)
     }
 
     return (curr);
+}
+
+bool branch_entered(branch_type branch)
+{
+    const level_id lid(branch, 1);
+    LevelInfo *linf = travel_cache.find_level_info(lid);
+    return linf && !linf->empty();
 }
 
 static level_id _find_down_level()

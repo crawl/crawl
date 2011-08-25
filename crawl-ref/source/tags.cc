@@ -70,7 +70,7 @@
 #include "travel.h"
 
 // defined in dgn-overview.cc
-extern std::map<branch_type, level_id> stair_level;
+extern std::map<branch_type, std::set<level_id> > stair_level;
 extern std::map<level_pos, shop_type> shops_present;
 extern std::map<level_pos, god_type> altars_present;
 extern std::map<level_pos, portal_type> portals_present;
@@ -564,6 +564,11 @@ void marshall_level_id(writer& th, const level_id& id)
     marshallByte(th, id.level_type);
 }
 
+void marshall_level_id_set(writer& th, const std::set<level_id>& id)
+{
+    marshallSet(th, id, marshall_level_id);
+}
+
 // XXX: Redundant with level_pos.save()/load().
 void marshall_level_pos(writer& th, const level_pos& lpos)
 {
@@ -610,6 +615,20 @@ level_id unmarshall_level_id(reader& th)
     id.depth      = unmarshallInt(th);
     id.level_type = static_cast<level_area_type>(unmarshallByte(th));
     return (id);
+}
+
+std::set<level_id> unmarshall_level_id_set(reader& th)
+{
+    std::set<level_id> id;
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_NEW_MIMICS)
+#endif
+        unmarshallSet(th, id, unmarshall_level_id);
+#if TAG_MAJOR_VERSION == 32
+    else
+        id.insert(unmarshall_level_id(th));
+#endif
+    return id;
 }
 
 level_pos unmarshall_level_pos(reader& th)
@@ -1391,7 +1410,7 @@ static void tag_construct_you_dungeon(writer &th)
     marshallSet(th, Generated_Levels, marshall_level_id);
 
     marshallMap(th, stair_level,
-                _marshall_as_int<branch_type>, marshall_level_id);
+                _marshall_as_int<branch_type>, marshall_level_id_set);
     marshallMap(th, shops_present,
                 marshall_level_pos, _marshall_as_int<shop_type>);
     marshallMap(th, altars_present,
@@ -2378,7 +2397,7 @@ static void tag_read_you_dungeon(reader &th)
 
     unmarshallMap(th, stair_level,
                   unmarshall_long_as<branch_type>,
-                  unmarshall_level_id);
+                  unmarshall_level_id_set);
     unmarshallMap(th, shops_present,
                   unmarshall_level_pos, unmarshall_long_as<shop_type>);
     unmarshallMap(th, altars_present,
