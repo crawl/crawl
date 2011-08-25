@@ -153,7 +153,7 @@ int holy_word_monsters(coord_def where, int pow, int caster,
     if (attacker == mons)
         hploss = std::max(0, mons->hit_points / 2 - 1);
     else
-        hploss = roll_dice(3, 15) + (random2(pow) / 3);
+        hploss = roll_dice(3, 15) + (random2(pow) / 10);
 
     if (hploss && caster != HOLY_WORD_ZIN)
         simple_monster_message(mons, " convulses!");
@@ -205,7 +205,7 @@ int holy_word(int pow, int caster, const coord_def& where, bool silent,
     los.update();
     int r = 0;
     for (radius_iterator ri(&los); ri; ++ri)
-        r += holy_word_monsters(*ri, 0, caster, attacker);
+        r += holy_word_monsters(*ri, pow, caster, attacker);
     return (r);
 }
 
