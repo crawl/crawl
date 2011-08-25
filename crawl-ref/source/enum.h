@@ -1014,6 +1014,14 @@ enum level_flag_type
     LFLAG_NO_MAGIC_MAP    = (1 << 2), // Level can't be magic mapped.
 };
 
+enum level_state_type
+{
+    LSTATE_NONE = 0,
+
+    LSTATE_GOLUBRIA       = (1 << 0), // A Golubria trap exists.
+    LSTATE_GLOW_MOLD      = (1 << 1), // Any glowing mold exists.
+};
+
 // NOTE: The order of these is very important to their usage!
 // [dshaligram] If adding/removing from this list, also update view.cc!
 enum dungeon_char_type

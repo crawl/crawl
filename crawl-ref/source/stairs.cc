@@ -8,11 +8,13 @@
 #include "areas.h"
 #include "branch.h"
 #include "chardump.h"
+#include "coordit.h"
 #include "delay.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "env.h"
 #include "files.h"
+#include "fprop.h"
 #include "hints.h"
 #include "hiscores.h"
 #include "itemname.h"
@@ -22,6 +24,7 @@
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-iter.h"
 #include "notes.h"
 #include "options.h"
 #include "ouch.h"
@@ -1272,12 +1275,38 @@ void down_stairs(dungeon_feature_type force_stair,
 
 }
 
+static bool _any_glowing_mold()
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+        if (glowing_mold(*ri))
+            return true;
+    for (monster_iterator mon_it; mon_it; ++mon_it)
+        if (mon_it->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
+            return true;
+
+    return false;
+}
+
+static void _update_level_state()
+{
+    env.level_state = 0;
+
+    std::vector<coord_def> golub = find_golubria_on_level();
+    if (!golub.empty())
+        env.level_state += LSTATE_GOLUBRIA;
+
+    if (_any_glowing_mold())
+        env.level_state += LSTATE_GLOW_MOLD;
+}
+
 void new_level(bool restore)
 {
     print_stats_level();
 #ifdef DGL_WHEREIS
     whereis_record();
 #endif
+
+    _update_level_state();
 
     if (restore)
         return;
