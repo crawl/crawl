@@ -2859,5 +2859,6 @@ void activate_ballistomycetes(monster* mons, const coord_def & origin,
 
             thread = thread->last;
         }
+        env.level_state |= LSTATE_GLOW_MOLD;
     }
 }

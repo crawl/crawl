@@ -1024,6 +1024,7 @@ spret_type cast_golubrias_passage(const coord_def& where, bool fail)
 
     fail_check();
     place_specific_trap(randomized_where, TRAP_GOLUBRIA);
+    env.level_state |= LSTATE_GOLUBRIA;
 
     trap_def *trap = find_trap(randomized_where);
     if (!trap)
