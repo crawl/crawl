@@ -242,6 +242,12 @@ static int _etc_tornado(int, const coord_def& loc)
     }
 }
 
+static int _etc_orb_glow(int, const coord_def& loc)
+{
+    int dist = (loc - env.orb_pos).abs();
+    return ((you.frame_no - dist*2/3)&4) ? LIGHTMAGENTA : MAGENTA;
+}
+
 static int _etc_random(int, const coord_def&)
 {
     return random_colour();
@@ -542,6 +548,9 @@ void init_element_colours()
                        ));
     add_element_colour(new element_colour_calc(
                             ETC_LIQUEFIED, "liquefied", _etc_liquefied
+                       ));
+    add_element_colour(new element_colour_calc(
+                            ETC_ORB_GLOW, "orb_glow", _etc_orb_glow
                        ));
     add_element_colour(new element_colour_calc(
                             ETC_RANDOM, "random", _etc_random
