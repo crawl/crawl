@@ -18,6 +18,7 @@
 #include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "items.h"
 #include "libutil.h"
 #include "misc.h"
 #include "monster.h"
@@ -66,6 +67,9 @@ void player::moveto(const coord_def &c, bool clear_net)
 
     crawl_view.set_player_at(c);
     set_position(c);
+
+    if (player_has_orb())
+        env.orb_pos = c;
 }
 
 bool player::move_to_pos(const coord_def &c, bool clear_net)

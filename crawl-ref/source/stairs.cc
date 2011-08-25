@@ -1297,6 +1297,10 @@ static void _update_level_state()
 
     if (_any_glowing_mold())
         env.level_state += LSTATE_GLOW_MOLD;
+
+    env.orb_pos = orb_position();
+    if (player_has_orb())
+        env.orb_pos = you.pos();
 }
 
 void new_level(bool restore)

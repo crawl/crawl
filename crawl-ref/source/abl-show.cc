@@ -1778,7 +1778,7 @@ static bool _do_ability(const ability_def& abil)
 
     // ZotDef traps
     case ABIL_MAKE_TELEPORT_TRAP:
-        if (you.pos().distance_from(orb_position()) < 10)
+        if ((you.pos() - env.orb_pos).abs() < 100)
         {
             mpr("Radiation from the Orb interferes with the trap's magic!");
             return false;
