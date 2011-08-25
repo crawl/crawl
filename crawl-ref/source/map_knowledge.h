@@ -28,6 +28,7 @@
 #define MAP_SANCTUARY_2     0x100000
 #define MAP_WITHHELD        0x200000
 #define MAP_LIQUEFIED       0x400000
+#define MAP_ORB_HALOED      0x800000
 
 /*
  * A map_cell stores what the player knows about a cell.

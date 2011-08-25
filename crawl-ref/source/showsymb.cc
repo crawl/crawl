@@ -106,6 +106,8 @@ unsigned short _cell_feat_show_colour(const map_cell& cell, bool coloured)
         }
         else if (cell.flags & MAP_SILENCED)
             colour = CYAN;
+        else if (cell.flags & MAP_ORB_HALOED)
+            colour = ETC_MUTAGENIC;
     }
     return (colour);
 }

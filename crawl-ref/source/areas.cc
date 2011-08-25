@@ -39,6 +39,7 @@ enum areaprop_flag
     APROP_HALO          = (1 << 3),
     APROP_LIQUID        = (1 << 4),
     APROP_ACTUAL_LIQUID = (1 << 5),
+    APROP_ORB           = (1 << 6),
 };
 
 struct area_centre
@@ -142,6 +143,19 @@ static void _update_agrid()
             }
             no_areas = false;
         }
+    }
+
+    if (you.char_direction == GDT_ASCENDING && !env.orb_pos.origin())
+    {
+        const int r = 5;
+        _agrid_centres.push_back(area_centre(AREA_ORB, env.orb_pos, r));
+        los_glob los(env.orb_pos, LOS_DEFAULT);
+        for (radius_iterator ri(env.orb_pos, r, C_CIRCLE, &los);
+             ri; ++ri)
+        {
+            _set_agrid_flag(*ri, APROP_ORB);
+        }
+        no_areas = false;
     }
 
     // TODO: update sanctuary here.
@@ -609,4 +623,17 @@ bool liquefied(const coord_def& p, bool check_actual)
     // just recoloured for consistency
     else
         return (_check_agrid_flag(p, APROP_LIQUID));
+}
+
+/////////////
+// Orb's glow
+//
+
+bool orb_haloed(const coord_def& p)
+{
+    if (!map_bounds(p))
+        return (false);
+    if (!_agrid_valid)
+        _update_agrid();
+    return (_check_agrid_flag(p, APROP_ORB));
 }

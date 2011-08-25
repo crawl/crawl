@@ -1831,12 +1831,14 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         // Take a note!
         _check_note_item(item);
 
+        env.orb_pos = you.pos(); // can be wrong in wizmode
         orb_pickup_noise(you.pos(), 30);
 
         mpr("Now all you have to do is get back out of the dungeon!", MSGCH_ORB);
 
         you.char_direction = GDT_ASCENDING;
         xom_is_stimulated(200, XM_INTRIGUED);
+        invalidate_agrid(true);
     }
 
     if (item.base_type == OBJ_ORBS && you.level_type == LEVEL_DUNGEON)

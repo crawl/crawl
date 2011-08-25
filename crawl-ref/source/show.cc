@@ -145,6 +145,9 @@ static void _update_feat_at(const coord_def &gp)
     if (liquefied(gp, false))
         env.map_knowledge(gp).flags |= MAP_LIQUEFIED;
 
+    if (orb_haloed(gp))
+        env.map_knowledge(gp).flags |= MAP_ORB_HALOED;
+
     if (is_sanctuary(gp))
     {
         if (testbits(env.pgrid(gp), FPROP_SANCTUARY_1))

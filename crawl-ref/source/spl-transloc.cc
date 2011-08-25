@@ -9,6 +9,7 @@
 #include "externs.h"
 
 #include "abyss.h"
+#include "areas.h"
 #include "branch.h"
 #include "cloud.h"
 #include "coord.h"
@@ -906,7 +907,10 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
         move_top_item(where, new_spot);
 
     if (item_is_orb(item))
+    {
         env.orb_pos = new_spot;
+        invalidate_agrid();
+    }
 
     // Mark the item as found now.
     origin_set(new_spot);
