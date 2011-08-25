@@ -34,7 +34,7 @@
 #include "terrain.h"
 #include "travel.h"
 
-typedef std::map<branch_type, level_id> stair_map_type;
+typedef std::map<branch_type, std::set<level_id> > stair_map_type;
 typedef std::map<level_pos, shop_type> shop_map_type;
 typedef std::map<level_pos, god_type> altar_map_type;
 typedef std::map<level_pos, portal_type> portal_map_type;
@@ -383,20 +383,27 @@ static std::string _get_seen_branches(bool display)
             level_id lid(branch, 0);
             lid = find_deepest_explored(lid);
 
+            std::string entry_desc;
+            for (std::set<level_id>::iterator it = stair_level[branch].begin();
+                 it != stair_level[branch].end(); ++it)
+            {
+                entry_desc += " " + it->describe(false, true);
+            }
+
             snprintf(buffer, sizeof buffer,
-                "<yellow>%7s</yellow> <darkgrey>(%d/%d)</darkgrey> %s",
+                "<yellow>%7s</yellow> <darkgrey>(%d/%d)</darkgrey>%s",
                      branches[branch].abbrevname,
                      lid.depth,
                      branches[branch].depth,
-                     stair_level[branch].describe(false, true).c_str());
+                     entry_desc.c_str());
 
             disp += buffer;
             num_printed_branches++;
 
             disp += (num_printed_branches % 3) == 0
                     ? "\n"
-                    // Each branch entry takes up 26 spaces
-                    : std::string(26 + 38 - strlen(buffer), ' ');
+                    // Each branch entry takes up 26 spaces + 38 for tags.
+                    : std::string(std::max<int>(64 - strlen(buffer), 0), ' ');
         }
     }
 
@@ -757,18 +764,23 @@ static bool _unnotice_shop(const level_pos &pos)
 static bool _unnotice_stair(const level_pos &pos)
 {
     const dungeon_feature_type feat = grd(pos.pos);
-    if (feat_is_branch_stairs(feat))
-    {
-        for (int i = 0; i < NUM_BRANCHES; ++i)
+    if (!feat_is_branch_stairs(feat))
+        return false;
+
+    for (int i = 0; i < NUM_BRANCHES; ++i)
+        if (branches[i].entry_stairs == feat)
         {
-            if (branches[i].entry_stairs == feat)
+            const branch_type br = static_cast<branch_type>(i);
+            if (stair_level.find(br) != stair_level.end())
             {
-                const branch_type br = static_cast<branch_type>(i);
-                return (_find_erase(stair_level, br));
+                stair_level[br].erase(level_id::current());
+                if (stair_level[br].empty())
+                    stair_level.erase(br);
+                return true;
             }
         }
-    }
-    return (false);
+
+    return false;
 }
 
 bool unnotice_feature(const level_pos &pos)
@@ -794,12 +806,16 @@ void display_overview()
 
 static void _seen_staircase(const coord_def& pos)
 {
-    // which_staircase holds the grid value of the stair, must be converted
     // Only handles stairs, not gates or arches
     // Don't worry about:
     //   - stairs returning to dungeon - predictable
     //   - entrances to the hells - always in vestibule
-    stair_level[get_branch_at(pos)] = level_id::current();
+
+    // If the branch has already been entered, then the new entry is obviously
+    // a mimic, don't add it.
+    const branch_type branch = get_branch_at(pos);
+    if (!branch_entered(branch))
+        stair_level[branch].insert(level_id::current());
 }
 
 // If player has seen an altar; record it.
