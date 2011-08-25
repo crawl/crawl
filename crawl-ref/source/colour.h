@@ -59,6 +59,7 @@ enum element_type
     ETC_TORNADO,        // twisting swirls of gray
     ETC_LIQUEFIED,      // ripples of yellow and brown.
     ETC_SWAMP_TREE,     // colour of trees on water
+    ETC_ORB_GLOW,       // halo coming from the Orb of Zot
     ETC_DISCO = 96,
     ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128
 
