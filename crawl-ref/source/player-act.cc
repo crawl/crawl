@@ -69,7 +69,10 @@ void player::moveto(const coord_def &c, bool clear_net)
     set_position(c);
 
     if (player_has_orb())
+    {
         env.orb_pos = c;
+        invalidate_agrid(true);
+    }
 }
 
 bool player::move_to_pos(const coord_def &c, bool clear_net)

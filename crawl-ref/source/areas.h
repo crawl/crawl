@@ -8,6 +8,7 @@ enum area_centre_type
     AREA_SILENCE,
     AREA_HALO,
     AREA_LIQUID,
+    AREA_ORB,
 };
 
 void invalidate_agrid(bool recheck_new = false);
@@ -29,4 +30,6 @@ bool haloed(const coord_def& p);
 // or is the ground there liquified?
 bool liquefied(const coord_def& p, bool check_actual = true);
 
+// Is it enlightened by the orb?
+bool orb_haloed(const coord_def& p);
 #endif
