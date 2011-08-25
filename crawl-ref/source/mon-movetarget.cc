@@ -100,7 +100,7 @@ static void _set_no_path_found(monster* mon)
             // effortless win with all the opposition doing nothing.
             die("ZotDef: monster %s failed to pathfind to (%d,%d) (%s)",
                 mon->name(DESC_PLAIN).c_str(),
-                zotdef_target().x, zotdef_target().y,
+                env.orb_pos.x, env.orb_pos.y,
                 orb_position().origin() ? "you" : "the Orb");
         }
     }

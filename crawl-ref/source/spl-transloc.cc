@@ -905,6 +905,9 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     else
         move_top_item(where, new_spot);
 
+    if (item_is_orb(item))
+        env.orb_pos = new_spot;
+
     // Mark the item as found now.
     origin_set(new_spot);
 

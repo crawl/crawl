@@ -1317,20 +1317,6 @@ static bool _prompt_dangerous_portal(dungeon_feature_type ftype)
     }
 }
 
-static bool _has_orb()
-{
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        if (you.inv[i].defined()
-            && you.inv[i].base_type == OBJ_ORBS
-            && you.inv[i].sub_type == ORB_ZOT)
-        {
-            return (true);
-        }
-    }
-    return false;
-}
-
 static void _go_downstairs();
 static void _go_upstairs()
 {
@@ -1412,7 +1398,7 @@ static void _go_upstairs()
                                           "Dungeon?%s",
                                           crawl_state.game_is_tutorial() ? "" :
                                           " This will make you lose the game!");
-        if (_has_orb())
+        if (player_has_orb())
             stay = !yesno("Are you sure you want to win?");
         else if (yesno(prompt.c_str(), false, 'n'))
         {
@@ -4142,7 +4128,7 @@ static void _move_player(coord_def move)
 
     if (!attacking && targ_pass && moving && !beholder && !fmonger)
     {
-        if (crawl_state.game_is_zotdef() && you.pos() == orb_position())
+        if (crawl_state.game_is_zotdef() && you.pos() == env.orb_pos)
         {
             // Aree you standing on the Orb? If so, are the critters near?
             bool danger = false;
@@ -4157,7 +4143,7 @@ static void _move_player(coord_def move)
                 }
             }
 
-            if (danger)
+            if (danger && !player_has_orb())
             {
                 std::string prompt = "Are you sure you want to leave the Orb unguarded?";
                 if (!yesno(prompt.c_str(), false, 'n'))

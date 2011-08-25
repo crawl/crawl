@@ -1935,7 +1935,7 @@ void bring_to_safety()
     if (crawl_state.game_is_zotdef() && !orb_position().origin())
     {
         // In ZotDef, it's not the safety of your sorry butt that matters.
-        for (distance_iterator di(orb_position(), true, false); di; ++di)
+        for (distance_iterator di(env.orb_pos, true, false); di; ++di)
             if (!monster_at(*di)
                 && !(env.pgrid(*di) & FPROP_NO_TELE_INTO))
             {

@@ -200,7 +200,7 @@ void handle_behaviour(monster* mon)
     // Zotdef rotting
     if (crawl_state.game_is_zotdef())
     {
-        if (!isFriendly && !isNeutral && orb_position() == mon->pos()
+        if (!isFriendly && !isNeutral && env.orb_pos == mon->pos()
             && mon->speed)
         {
             const int loss = div_rand_round(10, mon->speed);
@@ -1163,14 +1163,4 @@ void make_mons_stop_fleeing(monster* mon)
 {
     if (mons_is_fleeing(mon))
         behaviour_event(mon, ME_CORNERED);
-}
-
-// Returns the position of the Orb, or you.pos() if
-// the Orb's not found.
-coord_def zotdef_target()
-{
-    coord_def tgt = orb_position();
-    if (tgt.origin())
-        tgt = you.pos();
-    return tgt;
 }
