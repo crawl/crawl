@@ -477,7 +477,7 @@ static mon_attack_flavour _very_ugly_thing_flavour_upgrade(mon_attack_flavour u_
     return (u_att_flav);
 }
 
-mon_attack_flavour ugly_thing_colour_to_flavour(uint8_t u_colour)
+static mon_attack_flavour _ugly_thing_colour_to_flavour(uint8_t u_colour)
 {
     mon_attack_flavour u_att_flav = AF_PLAIN;
 
@@ -559,7 +559,7 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
                                                    : BLACK);
 
     // Pick a compatible attack flavour for this colour.
-    att_flav = ugly_thing_colour_to_flavour(colour);
+    att_flav = _ugly_thing_colour_to_flavour(colour);
 
     // Pick a compatible resistance for this attack flavour.
     ugly_thing_add_resistance(false, att_flav);
@@ -595,7 +595,7 @@ void ghost_demon::ugly_thing_to_very_ugly_thing()
     ugly_thing_add_resistance(true, att_flav);
 }
 
-mon_resist_def ugly_thing_resists(bool very_ugly, mon_attack_flavour u_att_flav)
+static mon_resist_def _ugly_thing_resists(bool very_ugly, mon_attack_flavour u_att_flav)
 {
     mon_resist_def resists;
     resists.elec = 0;
@@ -645,7 +645,7 @@ mon_resist_def ugly_thing_resists(bool very_ugly, mon_attack_flavour u_att_flav)
 void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
                                             mon_attack_flavour u_att_flav)
 {
-    resists = ::ugly_thing_resists(very_ugly, u_att_flav);
+    resists = _ugly_thing_resists(very_ugly, u_att_flav);
 }
 
 void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
@@ -1079,7 +1079,7 @@ static const uint8_t labrat_colour_values[] = {
     CYAN, YELLOW, RED, LIGHTCYAN, LIGHTRED, LIGHTBLUE, LIGHTMAGENTA, MAGENTA, GREEN
 };
 
-uint8_t _labrat_random_colour()
+static uint8_t _labrat_random_colour()
 {
     return (RANDOM_ELEMENT(labrat_colour_values));
 }

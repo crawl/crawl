@@ -629,7 +629,7 @@ bool item_is_stationary(const item_def &item)
             && item.plus2);
 }
 
-bool _is_affordable(const item_def &item)
+static bool _is_affordable(const item_def &item)
 {
     // Temp items never count.
     if (item.flags & ISFLAG_SUMMONED)
