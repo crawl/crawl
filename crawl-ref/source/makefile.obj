@@ -36,6 +36,7 @@ decks.o \
 delay.o \
 describe.o \
 dgl-message.o \
+dgn-delve.o \
 dgn-height.o \
 dgn-labyrinth.o \
 dgn-layouts.o \
