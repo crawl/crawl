@@ -112,8 +112,8 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
     }
     else if (lev == LEVEL_LABYRINTH)
     {
-        flv.wall  = TILE_WALL_UNDEAD;
-        flv.floor = TILE_FLOOR_TOMB;
+        flv.wall  = TILE_WALL_LAB_ROCK;
+        flv.floor = TILE_FLOOR_LABYRINTH;
         return;
     }
     else if (lev == LEVEL_PORTAL_VAULT)
@@ -965,6 +965,14 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
 {
     tileidx_t orig = (*bg) & TILE_FLAG_MASK;
     tileidx_t flag = (*bg) & (~TILE_FLAG_MASK);
+
+    if (you.level_type == LEVEL_LABYRINTH)
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_WALL_LAB_STONE;
+        else if (orig == TILE_DNGN_METAL_WALL)
+            orig = TILE_WALL_LAB_METAL;
+    }
 
     // TODO enne - expose this as an option, so ziggurat can use it too.
     // Alternatively, allow the stone type to be set.
