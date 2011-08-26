@@ -973,6 +973,18 @@ runes/rune_gloorx_vloq MISC_RUNE_GLOORX_VLOQ
 runes/rune_mnoleg MISC_RUNE_MNOLEG
 runes/rune_lom_lobon MISC_RUNE_LOM_LOBON
 runes/rune_snake MISC_RUNE_SNAKE
+runes/rune_swamp MISC_RUNE_SWAMP
+runes/rune_shoals MISC_RUNE_SHOALS
+runes/rune_slime MISC_RUNE_SLIME
+runes/rune_vaults MISC_RUNE_VAULTS
+runes/rune_tomb MISC_RUNE_TOMB
+runes/rune_abyss MISC_RUNE_ABYSS
+runes/rune_demonic_1 MISC_RUNE_DEMONIC
+runes/rune_demonic_2
+runes/rune_demonic_3
+runes/rune_demonic_4
+runes/rune_demonic_5
+runes/rune_demonic_6
 %rim 0
 misc_quad MISC_QUAD_DAMAGE
 %rim 1

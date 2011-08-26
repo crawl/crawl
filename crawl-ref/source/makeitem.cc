@@ -783,6 +783,7 @@ void item_colour(item_def &item)
                      ETC_KRAKEN};
 
                 item.colour = RANDOM_ELEMENT(types);
+                item.special = random_int();
                 break;
             }
 

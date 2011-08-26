@@ -3721,19 +3721,20 @@ static tileidx_t _tileidx_rune(const item_def &item)
     case RUNE_CEREBOV:     return TILE_MISC_RUNE_CEREBOV;
     case RUNE_GLOORX_VLOQ: return TILE_MISC_RUNE_GLOORX_VLOQ;
 
+    case RUNE_DEMONIC:     return TILE_MISC_RUNE_DEMONIC
+        + ((uint32_t)item.special) % tile_main_count(TILE_MISC_RUNE_DEMONIC);
+    case RUNE_ABYSSAL:     return TILE_MISC_RUNE_ABYSS;
+
     case RUNE_SNAKE_PIT:   return TILE_MISC_RUNE_SNAKE;
+    case RUNE_SLIME_PITS:  return TILE_MISC_RUNE_SLIME;
+    case RUNE_VAULTS:      return TILE_MISC_RUNE_VAULTS;
+    case RUNE_TOMB:        return TILE_MISC_RUNE_TOMB;
+    case RUNE_SWAMP:       return TILE_MISC_RUNE_SWAMP;
+    case RUNE_SHOALS:      return TILE_MISC_RUNE_SHOALS;
 
-    // Most others use the default rune for now.
-    case RUNE_SLIME_PITS:
-    case RUNE_VAULTS:
     case RUNE_ELVEN_HALLS:
-    case RUNE_TOMB:
-    case RUNE_SWAMP:
-    case RUNE_SHOALS:
-
-    // pandemonium and abyss runes:
-    case RUNE_DEMONIC:
-    case RUNE_ABYSSAL:
+    case RUNE_FOREST:
+    case RUNE_SPIDER_NEST:
     default:               return TILE_MISC_RUNE_OF_ZOT;
     }
 }
