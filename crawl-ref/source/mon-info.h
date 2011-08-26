@@ -86,7 +86,6 @@ struct monster_info_base
     monster_type type;
     monster_type base_type;
     monster_type draco_type;
-    dungeon_feature_type mimic_feature;
     unsigned number;
     unsigned colour;
     mon_attitude_type attitude;
@@ -183,6 +182,7 @@ struct monster_info : public monster_info_base
 
     std::string db_name() const;
     bool has_proper_name() const;
+    dungeon_feature_type get_mimic_feature() const;
     std::string common_name(description_level_type desc = DESC_PLAIN) const;
     std::string proper_name(description_level_type desc = DESC_PLAIN) const;
     std::string full_name(description_level_type desc = DESC_PLAIN, bool use_comma = false) const;
