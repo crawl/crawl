@@ -583,3 +583,9 @@ infernal13
 infernal14
 infernal15
 infernal_blank FLOOR_INFERNAL_BLANK
+
+%weight 10
+labyrinth0 FLOOR_LABYRINTH
+labyrinth1
+labyrinth2
+labyrinth3
