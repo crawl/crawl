@@ -154,13 +154,17 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_TARTARUS:
-    case BRANCH_CRYPT:
         flv.wall  = TILE_WALL_UNDEAD;
         flv.floor = TILE_FLOOR_TOMB;
         return;
 
+    case BRANCH_CRYPT:
+        flv.wall  = TILE_WALL_BRICK_GRAY;
+        flv.floor = TILE_FLOOR_TOMB;
+        return;
+
     case BRANCH_TOMB:
-        flv.wall  = TILE_WALL_TOMB;
+        flv.wall  = TILE_WALL_LAB_ROCK;
         flv.floor = TILE_FLOOR_TOMB;
         return;
 
@@ -966,6 +970,7 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
     tileidx_t orig = (*bg) & TILE_FLAG_MASK;
     tileidx_t flag = (*bg) & (~TILE_FLAG_MASK);
 
+    // TODO: allow the stone type to be set in a cleaner way.
     if (you.level_type == LEVEL_LABYRINTH)
     {
         if (orig == TILE_DNGN_STONE_WALL)
@@ -973,16 +978,13 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
         else if (orig == TILE_DNGN_METAL_WALL)
             orig = TILE_WALL_LAB_METAL;
     }
-
-    // TODO enne - expose this as an option, so ziggurat can use it too.
-    // Alternatively, allow the stone type to be set.
-    //
-    // Hack: Swap rock/stone in crypt and tomb, because there are
-    //       only stone walls.
-    if ((you.where_are_you == BRANCH_CRYPT || you.where_are_you == BRANCH_TOMB)
-        && orig == TILE_DNGN_STONE_WALL)
+    else if (you.level_type == LEVEL_DUNGEON
+             && orig == TILE_DNGN_STONE_WALL)
     {
-        orig = TILE_WALL_NORMAL;
+        if (you.where_are_you == BRANCH_CRYPT)
+            orig = TILE_WALL_UNDEAD;
+        else if (you.where_are_you == BRANCH_TOMB)
+            orig = TILE_WALL_TOMB;
     }
 
     if (orig == TILE_FLOOR_NORMAL)
