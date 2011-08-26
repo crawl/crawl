@@ -89,3 +89,10 @@ const coord_def& coord_def::step(int dir)
     }
     return *this;
 }
+
+const struct coord_def Compass[9] =
+{
+    coord_def(0, -1), coord_def(1, -1), coord_def(1, 0), coord_def(1, 1),
+    coord_def(0, 1), coord_def(-1, 1), coord_def(-1, 0), coord_def(-1, -1),
+    coord_def(0, 0)
+};
