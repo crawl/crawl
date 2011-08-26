@@ -890,6 +890,15 @@ static void _seen_other_thing(dungeon_feature_type which_thing,
     }
 }
 
+void enter_branch(branch_type branch, level_id from)
+{
+    if (stair_level[branch].size() > 1)
+    {
+        stair_level[branch].clear();
+        stair_level[branch].insert(from);
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////
 
 static void _update_unique_annotation(level_id level)

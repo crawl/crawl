@@ -19,6 +19,7 @@ int  overview_knows_num_portals(dungeon_feature_type portal);
 void display_overview();
 bool unnotice_feature(const level_pos &pos);
 std::string overview_description_string(bool display);
+void enter_branch(branch_type branch, level_id from);
 
 ///////////////////////////////////////////////////////////
 void set_level_exclusion_annotation(std::string str,
