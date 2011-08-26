@@ -2252,6 +2252,12 @@ void handle_time()
         mutagenic_randart = true;
     }
 
+    // The Orb adds .25 points per turn (effectively halving dissipation),
+    // but won't cause glow on its own -- otherwise it'd spam the player
+    // with messages about contamination oscillating near zero.
+    if (you.magic_contamination && orb_haloed(you.pos()) && one_chance_in(4))
+        added_contamination++;
+
     // We take off about .5 points per turn.
     if (!you.duration[DUR_INVIS] && !you.duration[DUR_HASTE] && coinflip())
         added_contamination--;
