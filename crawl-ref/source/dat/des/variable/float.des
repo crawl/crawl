@@ -1153,7 +1153,7 @@ NAME:    protected_by_tso_1
 ORIENT:  float
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup allow_dup luniq_protected_by_tso
 WEIGHT:  4
-DEPTH:   23-27
+DEPTH:   D:23-27, Vault
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 COLOUR:  - : yellow
 SUBST:   - : +
@@ -1198,7 +1198,7 @@ NAME:    protected_by_tso_2
 ORIENT:  float
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup allow_dup luniq_protected_by_tso
 WEIGHT:  4
-DEPTH:   18-27
+DEPTH:   D:18-27, Vault
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 KFEAT:   A = altar_shining_one
 KITEM:   A = w:1 acquire:the_shining_one any / nothing
@@ -1256,7 +1256,7 @@ NAME:    protected_by_tso_3
 ORIENT:  float
 TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup allow_dup luniq_protected_by_tso
 WEIGHT:  4
-DEPTH:   18-27
+DEPTH:   D:18-27, Vault
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
 KFEAT:   A = altar_shining_one
 KITEM:   A = w:1 acquire:the_shining_one any / nothing
