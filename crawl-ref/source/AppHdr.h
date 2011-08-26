@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 
+#define USE_MORE_SECURE_SEED
+
 #ifdef __cplusplus
 
 template < class T >
