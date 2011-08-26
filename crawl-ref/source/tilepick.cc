@@ -104,6 +104,8 @@ static tileidx_t _tileidx_trap(trap_type type)
         return TILE_DNGN_TRAP_NEEDLE;
     case TRAP_SHAFT:
         return TILE_DNGN_TRAP_SHAFT;
+    case TRAP_GOLUBRIA:
+        return TILE_DNGN_TRAP_GOLUBRIA;
     case TRAP_PLATE:
         return TILE_DNGN_TRAP_PLATE;
     default:
