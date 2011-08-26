@@ -73,9 +73,6 @@ void find_travel_pos(const coord_def& youpos, int *move_x, int *move_y,
 
 bool is_stair_exclusion(const coord_def &p);
 
-bool is_travelsafe_square(const coord_def& c, bool ignore_hostile = false,
-                          bool ignore_danger = false);
-
 /* ***********************************************************************
  * Initiates explore - the character runs around the level to map it. Note
  * that the caller has to ensure that the level is mappable before calling
@@ -94,7 +91,6 @@ struct travel_target;
 level_id find_up_level(level_id curr, bool up_branch = false);
 level_id find_down_level(level_id curr);
 
-void start_translevel_travel_prompt();
 void start_translevel_travel(const travel_target &pos);
 
 void start_travel(const coord_def& p);
@@ -112,7 +108,6 @@ level_id find_deepest_explored(level_id curr);
 
 bool can_travel_to(const level_id &lid);
 bool can_travel_interlevel();
-bool prompt_stop_explore(int es_why);
 
 bool travel_kill_monster(monster_type mons);
 
