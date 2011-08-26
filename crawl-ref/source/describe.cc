@@ -3169,6 +3169,7 @@ static const char* _get_threat_desc(mon_threat_level_type threat)
     case MTHRT_EASY:    return "easy";
     case MTHRT_TOUGH:   return "dangerous";
     case MTHRT_NASTY:   return "extremely dangerous";
+    default:            return "buggily threatening";
     }
 }
 
