@@ -65,6 +65,8 @@
 #include "tiledef-main.h"
 #endif
 
+static void _zin_saltify(monster* mon);
+
 bool zin_sustenance(bool actual)
 {
     return (you.piety >= piety_breakpoint(0)
@@ -380,8 +382,8 @@ typedef FixedVector<int, NUM_RECITE_TYPES> recite_counts;
 // Returns 0, if no monster found.
 // Returns 1, if eligible monster found.
 // Returns -1, if monster already affected or too dumb to understand.
-int zin_check_recite_to_single_monster(const coord_def& where,
-                                       recite_counts &eligibility)
+static int _zin_check_recite_to_single_monster(const coord_def& where,
+                                               recite_counts &eligibility)
 {
     monster* mon = monster_at(where);
 
@@ -593,7 +595,7 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
         recite_counts retval;
-        switch (zin_check_recite_to_single_monster(*ri, retval))
+        switch (_zin_check_recite_to_single_monster(*ri, retval))
         {
         case -1:
             found_ineligible = true;
@@ -709,7 +711,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
     recite_counts eligibility;
     bool affected = false;
 
-    if (zin_check_recite_to_single_monster(where, eligibility) < 1)
+    if (_zin_check_recite_to_single_monster(where, eligibility) < 1)
         return (false);
 
     // First check: are they even eligible for this kind of recitation?
@@ -1129,7 +1131,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
         break;
 
     case ZIN_SALTIFY:
-        zin_saltify(mon);
+        _zin_saltify(mon);
         break;
 
     case ZIN_ROT:
@@ -1172,7 +1174,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
     return (true);
 }
 
-void zin_saltify(monster* mon)
+static void _zin_saltify(monster* mon)
 {
     const coord_def where = mon->pos();
     const monster_type pillar_type =
@@ -2304,7 +2306,7 @@ bool fedhas_sunlight()
 }
 
 template<typename T>
-bool less_second(const T & left, const T & right)
+static bool less_second(const T & left, const T & right)
 {
     return (left.second < right.second);
 }

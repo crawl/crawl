@@ -561,7 +561,7 @@ void inspect_spells()
     list_spells(true, true);
 }
 
-bool _can_cast()
+static bool _can_cast()
 {
     if (player_in_bat_form() || you.form == TRAN_PIG)
     {
@@ -1034,7 +1034,7 @@ static bool _spellcasting_aborted(spell_type spell,
     return (false);
 }
 
-targetter* _spell_targetter(spell_type spell, int pow, int range)
+static targetter* _spell_targetter(spell_type spell, int pow, int range)
 {
     switch(spell)
     {

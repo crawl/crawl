@@ -11,9 +11,6 @@
 #include "mon-enum.h"
 #include "mon_resist_def.h"
 
-mon_attack_flavour ugly_thing_colour_to_flavour(uint8_t u_colour);
-mon_resist_def ugly_thing_resists(bool very_ugly, mon_attack_flavour u_att_flav);
-
 #ifdef USE_TILE
 int tile_offset_for_labrat_colour(uint8_t l_colour);
 #endif
