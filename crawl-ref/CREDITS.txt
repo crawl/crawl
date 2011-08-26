@@ -67,6 +67,6 @@ Rob Grant                    Eva Myers                    Steven Wheeler
 John Greenberg               Erkki Nurmi                  Thomas Willem
 GreyKnight                   Mattias Nyberg               Evan Williams
 Joshua Gross                 nyra                         Jeremey Wilson
-Brian Haase                  Dylan O'Donnell              Yelve Yakut
-Shayne Halvorson             Yuuma Oohara                 Zooko
-Sophie Hamilton              Malwyn P
+Brian Haase                  Dylan O'Donnell              Samuel Wilson
+Shayne Halvorson             Yuuma Oohara                 Yelve Yakut
+Sophie Hamilton              Malwyn P                     Zooko
