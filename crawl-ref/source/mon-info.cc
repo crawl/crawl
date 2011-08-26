@@ -150,7 +150,7 @@ static bool _blocked_ray(const coord_def &where,
 
 static bool _is_public_key(std::string key)
 {
-    if (key == "helpless" || key == "wand_known")
+    if (key == "helpless" || key == "wand_known" || key == "feat_type")
         return true;
     else
         return false;
@@ -161,8 +161,6 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     mb.reset();
     attitude = ATT_HOSTILE;
     pos = coord_def(0, 0);
-
-    mimic_feature = DNGN_UNSEEN;
 
     type = p_type;
     base_type = p_base_type;
@@ -219,8 +217,6 @@ monster_info::monster_info(const monster* m, int milev)
     mb.reset();
     attitude = ATT_HOSTILE;
     pos = grid2player(m->pos());
-
-    mimic_feature = DNGN_UNSEEN;
 
     attitude = mons_attitude(m);
 
@@ -288,9 +284,6 @@ monster_info::monster_info(const monster* m, int milev)
 
         if (testbits(m->flags, MF_HARD_RESET) && testbits(m->flags, MF_NO_REWARD))
             mb.set(MB_PERM_SUMMON);
-
-        if (mons_is_feat_mimic(type))
-            mimic_feature = get_mimic_feat(m);
     }
     else
     {
@@ -594,7 +587,7 @@ std::string monster_info::_core_name() const
     else if (nametype == MONS_SERPENT_OF_HELL)
         s = "Serpent of Hell";
     else if (mons_is_feat_mimic(nametype))
-        s = make_stringf("%s mimic", feat_type_name(mimic_feature));
+        s = make_stringf("%s mimic", feat_type_name(get_mimic_feature()));
     else if (invalid_monster_type(nametype) && nametype != MONS_PROGRAM_BUG)
         s = "INVALID MONSTER";
     else
@@ -762,6 +755,13 @@ std::string monster_info::common_name(description_level_type desc) const
         s = apostrophise(s);
 
     return (s);
+}
+
+dungeon_feature_type monster_info::get_mimic_feature() const
+{
+    if (!props.exists("feat_type"))
+        return DNGN_UNSEEN;
+    return static_cast<dungeon_feature_type>(props["feat_type"].get_short());
 }
 
 bool monster_info::has_proper_name() const

@@ -2935,7 +2935,6 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallString(th, mi.description);
     marshallString(th, mi.quote);
     marshallUnsigned(th, mi.fly);
-    marshallUnsigned(th, mi.mimic_feature);
 
     mi.props.write(th);
 }
@@ -2971,7 +2970,10 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     mi.description = unmarshallString(th);
     mi.quote = unmarshallString(th);
     unmarshallUnsigned(th, mi.fly);
-    unmarshallUnsigned(th, mi.mimic_feature);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_MINOR_NEW_MIMICS)
+        unmarshallUnsigned(th);
+#endif
 
     mi.props.clear();
 #if TAG_MAJOR_VERSION == 32
