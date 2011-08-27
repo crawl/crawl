@@ -2094,6 +2094,11 @@ static void _place_feature_mimics(int level_number,
             dprf("Placed %s mimic at (%d,%d).",
                  feat_type_name(feat), ri->x, ri->y);
             env.level_map_mask(*ri) |= MMT_MIMIC;
+
+            // If we're mimicing a labyrinth entrance, give a chance for
+            // another one to spawn.
+            if (feat == DNGN_ENTER_LABYRINTH)
+                you.uniq_map_tags.erase("uniq_lab");
         }
     }
 }
