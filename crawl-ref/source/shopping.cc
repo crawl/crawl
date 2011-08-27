@@ -269,7 +269,7 @@ static std::string _shop_print_stock(const std::vector<int>& stock,
 
         const bool unknown = item_type_has_ids(item.base_type)
                              && item_type_known(item)
-                             && get_ident_type(item) == ID_UNKNOWN_TYPE
+                             && get_ident_type(item) != ID_KNOWN_TYPE
                              && !is_artefact(item);
         if (viewing)
             textcolor((unknown || is_artefact(item))? WHITE : LIGHTGREY);
