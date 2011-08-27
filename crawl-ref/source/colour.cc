@@ -242,10 +242,15 @@ static int _etc_tornado(int, const coord_def& loc)
     }
 }
 
-static int _etc_orb_glow(int, const coord_def& loc)
+bool get_orb_phase(const coord_def& loc)
 {
     int dist = (loc - env.orb_pos).abs();
-    return ((you.frame_no - dist*2/3)&4) ? LIGHTMAGENTA : MAGENTA;
+    return (you.frame_no - dist*2/3)&4;
+}
+
+static int _etc_orb_glow(int, const coord_def& loc)
+{
+    return get_orb_phase(loc) ? LIGHTMAGENTA : MAGENTA;
 }
 
 static int _etc_random(int, const coord_def&)

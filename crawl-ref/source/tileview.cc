@@ -5,6 +5,7 @@
 
 #include "areas.h"
 #include "cloud.h"
+#include "colour.h"
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
@@ -1120,6 +1121,9 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
 
     if (feat == DNGN_SWAMP_TREE)
         cell.swamp_tree_water = true;
+
+    if (orb_haloed(gc))
+        cell.orb_glow = get_orb_phase(gc) ? 2 : 1;
 }
 
 void tile_clear_map(const coord_def& gc)
