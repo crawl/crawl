@@ -118,22 +118,11 @@ static tileidx_t _tileidx_trap(trap_type type)
 static tileidx_t _tileidx_shop(coord_def where)
 {
     const shop_struct *shop = get_shop(where);
-    shop_type stype;
 
-    const monster *mimic = monster_at(where);
-    if (mimic && mimic->type == MONS_SHOP_MIMIC)
-    {
-        if (mimic->props.exists("shop_type"))
-            stype = static_cast<shop_type>(mimic->props["shop_type"].get_short());
-        else
-            return TILE_DNGN_ERROR;
-    }
-    else if (shop)
-       stype = shop->type;
-    else
+    if (!shop)
         return TILE_DNGN_ERROR;
 
-    switch (stype)
+    switch (shop->type)
     {
         case SHOP_WEAPON:
         case SHOP_WEAPON_ANTIQUE:

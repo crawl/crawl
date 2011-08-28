@@ -878,9 +878,6 @@ bool discover_mimic(const coord_def& pos)
 
     const dungeon_feature_type feat = grd(pos);
     const feature_def feat_d = get_feature_def(feat);
-    shop_type stype = SHOP_UNASSIGNED;
-    if (feat == DNGN_ENTER_SHOP)
-        stype = get_shop(pos)->type;
 
 #ifdef USE_TILE
     tileidx_t tile = tileidx_feature(pos);
@@ -930,9 +927,6 @@ bool discover_mimic(const coord_def& pos)
 
     mimic->props["feat_type"] = static_cast<short>(
             (feat == DNGN_OPEN_DOOR) ? DNGN_CLOSED_DOOR : feat);
-
-    if (stype != SHOP_UNASSIGNED)
-        mimic->props["shop_type"] = static_cast<short>(stype);
 
 #ifdef USE_TILE
     mimic->props["tile_idx"] = static_cast<int>(tile);
