@@ -43,7 +43,7 @@ Whoever built that castle on the other side, they wanted to sort their treasure 
 %%%%
 A fountain of clear blue water
 
-Press 'q' to drink from this fountain. But it's far more pretty than useful, unless you're trying to fetch the Orb without eating, I guess.
+Press 'q' to drink from this fountain. Not that it would have any effect, though...
 %%%%
 A fountain of blood
 
