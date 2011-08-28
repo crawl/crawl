@@ -791,7 +791,7 @@ static int _stat_mult(skill_type exsk, int skill_inc)
     return (skill_inc * std::max<int>(5, stat) / 10);
 }
 
-static void _check_skill_cost_change()
+void check_skill_cost_change()
 {
     if (you.skill_cost_level < 27
         && you.total_skill_points
@@ -814,8 +814,6 @@ void change_skill_points(skill_type sk, int points, bool do_level_up)
 
     you.skill_points[sk] += points;
     you.total_skill_points += points;
-
-    _check_skill_cost_change();
 
     check_skill_level_change(sk, do_level_up);
 }
@@ -876,7 +874,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     max_exp -= cost;
     you.total_skill_points += skill_inc;
 
-    _check_skill_cost_change();
+    check_skill_cost_change();
     ASSERT(you.exp_available >= 0);
     ASSERT(max_exp >= 0);
     you.redraw_experience = true;

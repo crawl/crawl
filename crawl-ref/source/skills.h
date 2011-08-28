@@ -12,6 +12,7 @@
 int skill_cost_needed(int level);
 void calc_total_skill_points(void);
 int calc_skill_cost(int skill_cost_level);
+void check_skill_cost_change();
 
 void reassess_starting_skills();
 void check_selected_skills();
