@@ -845,6 +845,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         // Perform the real level up
         check_skill_level_change(fsk);
         check_skill_level_change(tsk);
+        check_skill_cost_change();
         if ((int)you.transfer_skill_points < total_skp_lost)
             you.transfer_skill_points = 0;
         else
