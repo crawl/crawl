@@ -906,6 +906,8 @@ bool discover_mimic(const coord_def& pos)
     unnotice_feature(level_pos(level_id::current(), pos));
     grd(pos) = DNGN_FLOOR;
     env.level_map_mask(pos) &= !MMT_MIMIC;
+    set_terrain_changed(pos);
+    remove_markers_and_listeners_at(pos);
 
     // Generate and place the monster.
     mgen_data mg;
