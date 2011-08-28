@@ -304,6 +304,9 @@ bool TilesFramework::_send_cell(int x, int y,
     if (cell.is_liquefied != old_cell.is_liquefied)
         write_message("liquefied:%u,", cell.is_liquefied);
 
+    if (cell.orb_glow != old_cell.orb_glow)
+        write_message("orb_glow:%u,", cell.orb_glow);
+
     if (cell.swamp_tree_water != old_cell.swamp_tree_water)
         write_message("swtree:%u,", cell.swamp_tree_water);
 
