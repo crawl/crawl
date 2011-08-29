@@ -787,6 +787,21 @@ TAGS: overwritable layout allow_dup unrand
 MAP
 ENDMAP
 
+NAME: layout_delve
+DEPTH: Spider
+CHANCE: 100%
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym, fill = 'X'}
+    fill_area{fill = 'X'}
+    fill_area{x1=1, y1=1, x2=gxm-2, y2=gym-2, fill = 'x'}
+
+    delve()
+    _G.subst('X = x')
+}}
+
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
 DEPTH: 1-, !Vault

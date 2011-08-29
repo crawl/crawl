@@ -5,6 +5,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "directn.h"
+#include "mapdef.h"
 #include "random.h"
 #include "dgn-delve.h"
 
@@ -88,22 +89,34 @@ static coord_def _rndpull(store_type& store, int top)
     return c;
 }
 
-static bool _diggable(coord_def c)
+static inline bool _in_map(map_lines *map, coord_def c)
 {
+    return map ? map->in_map(c) : in_bounds(c);
+}
+
+static bool _diggable(map_lines *map, coord_def c)
+{
+    if (map)
+        return (*map)(c) == 'x';
     return (grd(c) == DNGN_ROCK_WALL);
 }
 
-static bool _dug(coord_def c)
+static bool _dug(map_lines *map, coord_def c)
 {
+    if (map)
+        return strchr(traversable_glyphs, (*map)(c));
     return (grd(c) == DNGN_FLOOR);
 }
 
-static void _digcell(store_type& store, coord_def c)
+static void _digcell(map_lines *map, store_type& store, coord_def c)
 {
-    ASSERT(in_bounds(c));
-    if (!_diggable(c))
+    ASSERT(_in_map(map, c));
+    if (!_diggable(map, c))
         return;
-    grd(c) = DNGN_FLOOR;
+    if (map)
+        (*map)(c) = '.';
+    else
+        grd(c) = DNGN_FLOOR;
 
     int order[8] = {0, 1, 2, 3, 4, 5, 6, 7};
     for (unsigned int d = 8; d > 0; d--)
@@ -112,7 +125,7 @@ static void _digcell(store_type& store, coord_def c)
         coord_def neigh = c + Compass[order[ornd]];
         order[ornd] = order[d - 1];
 
-        if (!in_bounds(neigh) || !_diggable(neigh))
+        if (!_in_map(map, neigh) || !_diggable(map, neigh))
             continue;
 
         store.push_back(neigh);
@@ -120,30 +133,30 @@ static void _digcell(store_type& store, coord_def c)
 }
 
 // Count dug out neighbours.
-static int ngb_count(coord_def c)
+static int ngb_count(map_lines *map, coord_def c)
 {
-    ASSERT(in_bounds(c));
+    ASSERT(_in_map(map, c));
 
     int cnt = 0;
     for (unsigned int d = 0; d < 8; d++)
     {
         coord_def neigh = c + Compass[d];
-        if (_dug(neigh))
+        if (_dug(map, neigh))
             cnt++;
     }
     return cnt;
 }
 
 // Count disjoint groups of dug out neighbours.
-static int ngb_groups(coord_def c)
+static int ngb_groups(map_lines *map, coord_def c)
 {
-    ASSERT(in_bounds(c));
+    ASSERT(_in_map(map, c));
 
-    bool prev2, prev = _dug(c + Compass[0]);
+    bool prev2, prev = _dug(map, c + Compass[0]);
     int cnt = 0;
     for (int d = 7; d >= 0; d--)
     {
-        bool cur = _dug(c + Compass[d]);
+        bool cur = _dug(map, c + Compass[d]);
         // Diagonal connectivity counts, too -- but only cardinal directions
         // (even Compass indices) can reach their predecessors.
         if (cur && !prev && (d&1 || !prev2))
@@ -170,19 +183,58 @@ static int cellnum_est(int world, int ngb_min, int ngb_max)
     return world / denom[ngb_min + ngb_max];
 }
 
-// Ensure there's something in the store.
-static void _make_seed(store_type& store)
+static bool _is_seed(map_lines *map, coord_def c)
 {
-    // We'll want to put connectors here if available instead.
-
-    // If you add disjoint seeds, you need to alter the seed thickening
-    // part to be smarter!  Every seed must have enough meat on it to allow
-    // depositing more around it.
-    coord_def center(GXM / 2, GYM / 2);
-    store.push_back(center);
+    for (adjacent_iterator ai(c); ai; ++ai)
+        if (_dug(map, *ai))
+            return true;
+    return false;
 }
 
-void layout_delve(int ngb_min, int ngb_max, int connchance, int cellnum, int top)
+// Ensure there's something in the store.
+static int _make_seed(map_lines *map, store_type& store)
+{
+    rectangle_iterator rect = map ? map->get_iter() : rectangle_iterator(1);
+
+    int x = 0, y = 0, cnt = 0;
+    for (rectangle_iterator ri = rect; ri; ++ri)
+        if (_diggable(map, *ri))
+        {
+            if (_is_seed(map, *ri))
+                store.push_back(*ri);
+            x += ri->x;
+            y += ri->y;
+            cnt++;
+        }
+
+    // Note: every seed must have enough meat on it to allow depositing more
+    // around it; this is not checked for here.
+
+    if (!store.empty())
+        return cnt;
+
+    if (!cnt)
+        return 0;
+
+    // No existing seed, pick a point nearest to the center.
+
+    coord_def center(x / cnt, y / cnt);
+    coord_def best;
+    int bdist = INT_MAX;
+    for (rectangle_iterator ri = rect; ri; ++ri)
+        if (_diggable(map, *ri))
+        {
+            int dist = (*ri - center).abs();
+            if (dist < bdist)
+                best = *ri, bdist = dist;
+        }
+    ASSERT(bdist != INT_MAX);
+    store.push_back(best);
+
+    return cnt;
+}
+
+void delve(map_lines *map, int ngb_min, int ngb_max, int connchance, int cellnum, int top)
 {
     ASSERT(ngb_min >= 1);
     ASSERT(ngb_min <= 3);
@@ -191,35 +243,31 @@ void layout_delve(int ngb_min, int ngb_max, int connchance, int cellnum, int top
     ASSERT(connchance >= 0);
     ASSERT(connchance <= 100);
 
-    int world = 0;
-    for (rectangle_iterator ri(1); ri; ++ri)
-        if (_diggable(*ri))
-            world++;
+    store_type store;
+    int world = _make_seed(map, store);
 
     if (cellnum < 0)
         cellnum = cellnum_est(world, ngb_min, ngb_max);
 
     ASSERT(cellnum <= world);
 
-    store_type store;
-    _make_seed(store);
-
     int delved = 0;
 
     coord_def center = _rndpull(store, 999999);
-    ASSERT(!center.origin());
+    if (center.origin()) // can't do anything
+        return;
     store.push_back(center);
     while (delved < 2 * ngb_min && delved < cellnum)
     {
         coord_def c = _rndpull(store, top);
         if (c.origin())
             break;
-        if (!_diggable(c))
+        if (!_diggable(map, c))
             continue;
 
         if ((c - center).abs() > 2
-            || ngb_count(c) > ngb_max
-            || (ngb_groups(c) > 1 && !x_chance_in_y(connchance, 100)))
+            || ngb_count(map, c) > ngb_max
+            || (ngb_groups(map, c) > 1 && !x_chance_in_y(connchance, 100)))
         {
             // Original algorithm:
             // * ignore ngb_min
@@ -231,7 +279,7 @@ void layout_delve(int ngb_min, int ngb_max, int connchance, int cellnum, int top
             continue;
         }
 
-        _digcell(store, c);
+        _digcell(map, store, c);
         delved++;
     }
 
@@ -240,18 +288,18 @@ void layout_delve(int ngb_min, int ngb_max, int connchance, int cellnum, int top
         coord_def c = _rndpull(store, top);
         if (c.origin())
             break;
-        if (!_diggable(c))
+        if (!_diggable(map, c))
             continue;
 
-        int ngbcount = ngb_count(c);
+        int ngbcount = ngb_count(map, c);
 
         if (ngbcount < ngb_min || ngbcount > ngb_max
-            || (ngb_groups(c) > 1 && !x_chance_in_y(connchance, 100)))
+            || (ngb_groups(map, c) > 1 && !x_chance_in_y(connchance, 100)))
         {
             continue;
         }
 
-        _digcell(store, c);
+        _digcell(map, store, c);
         delved++;
     }
 }
