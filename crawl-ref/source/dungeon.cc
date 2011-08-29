@@ -781,6 +781,8 @@ static bool _is_upwards_exit_stair(const coord_def &c)
     case DNGN_RETURN_FROM_TOMB:
     case DNGN_RETURN_FROM_SWAMP:
     case DNGN_RETURN_FROM_SHOALS:
+    case DNGN_RETURN_FROM_SPIDER_NEST:
+    case DNGN_RETURN_FROM_FOREST:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_EXIT_ABYSS:
@@ -821,6 +823,8 @@ static bool _is_exit_stair(const coord_def &c)
     case DNGN_RETURN_FROM_TOMB:
     case DNGN_RETURN_FROM_SWAMP:
     case DNGN_RETURN_FROM_SHOALS:
+    case DNGN_RETURN_FROM_SPIDER_NEST:
+    case DNGN_RETURN_FROM_FOREST:
     case DNGN_EXIT_PANDEMONIUM:
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_EXIT_ABYSS:
@@ -1394,18 +1398,21 @@ static void _fixup_misplaced_items()
 
 static void _fixup_branch_stairs()
 {
+    dprf("in _fixup_branch_stairs()");
     // Top level of branch levels - replaces up stairs with stairs back to
     // dungeon or wherever:
     if (your_branch().exit_stairs != NUM_FEATURES
         && player_branch_depth() == 1
         && you.level_type == LEVEL_DUNGEON)
     {
+        dprf("doing replacement");
         const dungeon_feature_type exit = your_branch().exit_stairs;
         for (rectangle_iterator ri(1); ri; ++ri)
         {
             if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
                 && grd(*ri) <= DNGN_ESCAPE_HATCH_UP)
             {
+                dprf("did it!");
                 if (grd(*ri) == DNGN_STONE_STAIRS_UP_I)
                     env.markers.add(new map_feature_marker(*ri, grd(*ri)));
 

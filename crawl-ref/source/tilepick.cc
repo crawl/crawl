@@ -280,6 +280,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ENTER_TOMB:
     case DNGN_ENTER_SWAMP:
     case DNGN_ENTER_SHOALS:
+    case DNGN_ENTER_SNAKE_NEST:
+    case DNGN_ENTER_FOREST:
         return TILE_DNGN_ENTER;
 
     case DNGN_ENTER_ZOT:
@@ -301,6 +303,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_RETURN_FROM_TOMB:
     case DNGN_RETURN_FROM_SWAMP:
     case DNGN_RETURN_FROM_SHOALS:
+    case DNGN_RETURN_FROM_SPIDER_NEST:
+    case DNGN_RETURN_FROM_FOREST:
         return TILE_DNGN_RETURN;
     case DNGN_RETURN_FROM_ZOT:
         return TILE_DNGN_RETURN_ZOT;

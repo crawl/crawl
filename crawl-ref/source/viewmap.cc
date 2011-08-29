@@ -224,6 +224,8 @@ bool is_feature(wchar_t feature, const coord_def& where)
         case DNGN_RETURN_FROM_TOMB:
         case DNGN_RETURN_FROM_SWAMP:
         case DNGN_RETURN_FROM_SHOALS:
+        case DNGN_RETURN_FROM_SPIDER_NEST:
+        case DNGN_RETURN_FROM_FOREST:
         case DNGN_EXIT_PORTAL_VAULT:
             return (true);
         default:
@@ -250,6 +252,8 @@ bool is_feature(wchar_t feature, const coord_def& where)
         case DNGN_ENTER_TOMB:
         case DNGN_ENTER_SWAMP:
         case DNGN_ENTER_SHOALS:
+        case DNGN_ENTER_SPIDER_NEST:
+        case DNGN_ENTER_FOREST:
             return (true);
         default:
             return (false);

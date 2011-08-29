@@ -3085,6 +3085,10 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("staircase to the Swamp");
     case DNGN_ENTER_SHOALS:
         return ("staircase to the Shoals");
+    case DNGN_ENTER_SPIDER_NEST:
+        return ("hole to the Spider Nest");
+    case DNGN_ENTER_FOREST:
+        return ("staircase to the Enchanted Forest");
     case DNGN_ENTER_PORTAL_VAULT:
         // The bazaar description should be set in the bazaar marker; this
         // is the description for a portal of unknown type.
@@ -3099,12 +3103,15 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_VAULTS:
     case DNGN_RETURN_FROM_TEMPLE:
+    case DNGN_RETURN_FROM_FOREST:
         return ("staircase back to the Dungeon");
     case DNGN_RETURN_FROM_SLIME_PITS:
     case DNGN_RETURN_FROM_SNAKE_PIT:
     case DNGN_RETURN_FROM_SWAMP:
     case DNGN_RETURN_FROM_SHOALS:
         return ("staircase back to the Lair");
+    case DNGN_RETURN_FROM_SPIDER_NEST:
+        return ("crawl-hole back to the Lair");
     case DNGN_RETURN_FROM_CRYPT:
     case DNGN_RETURN_FROM_HALL_OF_BLADES:
         return ("staircase back to the Vaults");

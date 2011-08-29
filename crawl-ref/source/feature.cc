@@ -431,6 +431,8 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
         case DNGN_ENTER_TOMB:
         case DNGN_ENTER_SWAMP:
         case DNGN_ENTER_SHOALS:
+        case DNGN_ENTER_SPIDER_NEST:
+        case DNGN_ENTER_FOREST:
             f.colour      = YELLOW;
             f.dchar       = DCHAR_STAIRS_DOWN;
             f.flags      |= FFT_NOTABLE;
@@ -462,6 +464,8 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
         case DNGN_RETURN_FROM_TOMB:
         case DNGN_RETURN_FROM_SWAMP:
         case DNGN_RETURN_FROM_SHOALS:
+        case DNGN_RETURN_FROM_SPIDER_NEST:
+        case DNGN_RETURN_FROM_FOREST:
             f.colour      = YELLOW;
             f.dchar       = DCHAR_STAIRS_UP;
             f.map_colour  = GREEN;

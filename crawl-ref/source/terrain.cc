@@ -197,6 +197,8 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_ENTER_TOMB:
     case DNGN_ENTER_SWAMP:
     case DNGN_ENTER_SHOALS:
+    case DNGN_ENTER_SPIDER_NEST:
+    case DNGN_ENTER_FOREST:
     case DNGN_RETURN_FROM_DWARVEN_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
@@ -212,6 +214,8 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_RETURN_FROM_TOMB:
     case DNGN_RETURN_FROM_SWAMP:
     case DNGN_RETURN_FROM_SHOALS:
+    case DNGN_RETURN_FROM_SPIDER_NEST:
+    case DNGN_RETURN_FROM_FOREST:
         return (true);
     default:
         return (false);
@@ -295,6 +299,8 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_RETURN_FROM_TOMB:
     case DNGN_RETURN_FROM_SWAMP:
     case DNGN_RETURN_FROM_SHOALS:
+    case DNGN_RETURN_FROM_SPIDER_NEST:
+    case DNGN_RETURN_FROM_FOREST:
     case DNGN_ENTER_SHOP:
     case DNGN_EXIT_HELL:
     case DNGN_EXIT_PORTAL_VAULT:
@@ -331,6 +337,8 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_ENTER_TOMB:
     case DNGN_ENTER_SWAMP:
     case DNGN_ENTER_SHOALS:
+    case DNGN_ENTER_SPIDER_NEST:
+    case DNGN_ENTER_FOREST:
         return (CMD_GO_DOWNSTAIRS);
 
     default:
@@ -1633,16 +1641,16 @@ const char *dngn_feature_names[] =
 "enter_slime_pits", "enter_vaults", "enter_crypt",
 "enter_hall_of_blades", "enter_zot", "enter_temple",
 "enter_snake_pit", "enter_elven_halls", "enter_tomb",
-"enter_swamp", "enter_shoals", "enter_reserved_2",
-"enter_reserved_3", "enter_reserved_4", "", "",
+"enter_swamp", "enter_shoals", "enter_spider_nest",
+"enter_forest", "enter_reserved_1", "", "",
 "return_from_dwarven_hall", "return_from_orcish_mines", "return_from_hive",
 "return_from_lair", "return_from_slime_pits",
 "return_from_vaults", "return_from_crypt",
 "return_from_hall_of_blades", "return_from_zot",
 "return_from_temple", "return_from_snake_pit",
 "return_from_elven_halls", "return_from_tomb",
-"return_from_swamp", "return_from_shoals", "return_reserved_2",
-"return_reserved_3", "return_reserved_4", "", "", "", "", "",
+"return_from_swamp", "return_from_shoals", "return_from_spider_nest",
+"return_from_forest", "return_reserved_1", "", "", "", "", "",
 "", "", "", "", "", "", "", "enter_portal_vault", "exit_portal_vault",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
 "", "", "altar_zin", "altar_shining_one", "altar_kikubaaqudgha",
