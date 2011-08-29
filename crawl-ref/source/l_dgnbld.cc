@@ -8,6 +8,7 @@
 #include <cmath>
 
 #include "dungeon.h"
+#include "dgn-delve.h"
 #include "dgn-shoals.h"
 #include "dgn-swamp.h"
 #include "dgn-layouts.h"
@@ -17,9 +18,6 @@
 #include "l_libs.h"
 #include "mapdef.h"
 #include "random.h"
-
-static const char *traversable_glyphs =
-    ".+=w@{}()[]<>BC^~TUVY$%*|Odefghijk0123456789";
 
 static const char *exit_glyphs = "{}()[]<>@";
 
@@ -899,6 +897,20 @@ LUAFN(dgn_layout_type)
     return 0;
 }
 
+LUAFN(dgn_delve)
+{
+    LINES(ls, 1, lines);
+
+    TABLE_INT(ls, ngb_min, 2);
+    TABLE_INT(ls, ngb_max, 3);
+    TABLE_INT(ls, connchance, 0);
+    TABLE_INT(ls, cellnum, -1);
+    TABLE_INT(ls, top, 125);
+
+    delve(&lines, ngb_min, ngb_max, connchance, cellnum, top);
+    return (0);
+}
+
 /* Wrappers for C++ layouts, to facilitate choosing of layouts by weight and
  * depth */
 
@@ -959,6 +971,7 @@ const struct luaL_reg dgn_build_dlib[] =
     { "replace_random", &dgn_replace_random },
     { "smear_map", &dgn_smear_map },
     { "spotty_map", &dgn_spotty_map },
+    { "delve", &dgn_delve },
     { "width", dgn_width },
     { "layout_type", &dgn_layout_type },
 

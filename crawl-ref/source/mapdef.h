@@ -26,6 +26,8 @@
 #include "makeitem.h"
 #include "travel_defs.h"
 
+extern const char *traversable_glyphs;
+
 // Invalid heightmap height.
 static const int INVALID_HEIGHT = -31999;
 
