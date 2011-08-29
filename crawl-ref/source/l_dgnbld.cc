@@ -104,6 +104,9 @@ static bool _table_bool(lua_State *ls, int idx, const char *name, bool defval)
 #define TABLE_STR(ls, val, def) const char *val = _table_str(ls, -1, #val, def);
 #define TABLE_BOOL(ls, val, def) bool val = _table_bool(ls, -1, #val, def);
 
+#define ARG_INT(ls, num, val, def) int val = lua_isnone(ls, num) ? \
+                                             def : lua_tointeger(ls, num)
+
 // Read a set of box coords (x1, y1, x2, y2) from the table.
 // Return true if coords are valid.
 static bool _coords(lua_State *ls, map_lines &lines,
@@ -901,11 +904,11 @@ LUAFN(dgn_delve)
 {
     LINES(ls, 1, lines);
 
-    TABLE_INT(ls, ngb_min, 2);
-    TABLE_INT(ls, ngb_max, 3);
-    TABLE_INT(ls, connchance, 0);
-    TABLE_INT(ls, cellnum, -1);
-    TABLE_INT(ls, top, 125);
+    ARG_INT(ls, 2, ngb_min, 2);
+    ARG_INT(ls, 3, ngb_max, 3);
+    ARG_INT(ls, 4, connchance, 0);
+    ARG_INT(ls, 5, cellnum, -1);
+    ARG_INT(ls, 6, top, 125);
 
     delve(&lines, ngb_min, ngb_max, connchance, cellnum, top);
     return (0);
