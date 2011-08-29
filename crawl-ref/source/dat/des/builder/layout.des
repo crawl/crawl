@@ -798,7 +798,15 @@ TAGS: overwritable layout allow_dup unrand
     fill_area{fill = 'X'}
     fill_area{x1=1, y1=1, x2=gxm-2, y2=gym-2, fill = 'x'}
 
-    delve()
+    local ngb_min = crawl.random_range(1, 3)
+    local ngb_max = crawl.random_range(ngb_min, 8)
+    local connchance = crawl.random_element
+        { [0] = 2, [5] = 1, [20] = 1, [50] = 1, [100] = 1 }
+    local top = crawl.random_element
+        { [1] = 1, [20] = 1, [125] = 1, [500] = 1, [999999] =1 }
+    crawl.mpr("delve(" .. ngb_min .. ", " .. ngb_max .. ", " .. connchance ..
+              ", -1, " .. top .. ")")
+    delve(ngb_min, ngb_max, connchance, -1, top)
     _G.subst('X = x')
 }}
 
