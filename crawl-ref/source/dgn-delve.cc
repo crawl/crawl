@@ -5,6 +5,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "mapdef.h"
 #include "random.h"
 #include "dgn-delve.h"
@@ -98,7 +99,7 @@ static bool _diggable(map_lines *map, coord_def c)
 {
     if (map)
         return (*map)(c) == 'x';
-    return (grd(c) == DNGN_ROCK_WALL);
+    return (grd(c) == DNGN_ROCK_WALL) && !map_masked(c, MMT_VAULT);
 }
 
 static bool _dug(map_lines *map, coord_def c)
