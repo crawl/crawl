@@ -1843,7 +1843,7 @@ const char* feat_type_name(dungeon_feature_type feat)
     if (feat_is_portal(feat) || feat_is_gate(feat))
         return "portal";
     if (feat_is_travelable_stair(feat))
-        return "stair";
+        return "staircase";
     if (feat == DNGN_ENTER_SHOP)
         return "shop";
     if (feat_is_fountain(feat))
