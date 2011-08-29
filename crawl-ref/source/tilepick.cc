@@ -280,7 +280,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ENTER_TOMB:
     case DNGN_ENTER_SWAMP:
     case DNGN_ENTER_SHOALS:
-    case DNGN_ENTER_SNAKE_NEST:
+    case DNGN_ENTER_SPIDER_NEST:
     case DNGN_ENTER_FOREST:
         return TILE_DNGN_ENTER;
 
