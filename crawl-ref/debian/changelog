@@ -1,3 +1,14 @@
+crawl (2:0.9.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * Drop debian/NEWS warning about save compatibility -- not only 0.8 saves
+    can be loaded in 0.9, but incompatible saves produce user-friendly
+    messages as well.
+  * Fix handling of {build,binary}-{arch,indep}.
+  * Support cross-compiling.
+
+ -- Adam Borowski <kilobyte@angband.pl>  Fri, 12 Aug 2011 18:47:47 +0200
+
 crawl (2:0.8.1-1) unstable; urgency=low
 
   * New upstream bugfix release.
