@@ -29,6 +29,10 @@ A corrupted altar of Lugonu
 
 An altar to Lugonu the Unformed, possibly dedicated to some other power before it was irrevocably corrupted.
 %%%%
+A crawl-hole back to the Lair
+
+You can climb it to get back to less cramped spaces with less cobwebs.
+%%%%
 A deep blue altar of Sif Muna
 
 An altar of the deepest blue, covered in intricate patterns and writings in long forgotten scripts, devoted to Sif Muna the Loreminder.
@@ -118,6 +122,10 @@ An altar to Zin the Law-Giver, made from silver as pristine as Zin's followers a
 A granite statue
 
 Despite the hardness of the stone, this statue's features have long withered away.
+%%%%
+A hole to the Spider Nest
+
+This is more of a natural sloped shaft than a stairway, but it will do. If you want to die from most potent venoms of this world, that is.
 %%%%
 A labyrinth entrance
 
@@ -246,6 +254,10 @@ An entrance to the mines of the orcs, filled with their gold, but treacherous an
 A staircase to the Dwarven Hall
 
 An entrance to the well-worked hall of the dwarves. You think you can smell ale.
+%%%%
+A staircase to the Enchanted Forest
+
+An entrance to the spriggan forest. Snap a twig and you're dead. Actually, they won't wait until you do that.
 %%%%
 A staircase to the Shoals
 
