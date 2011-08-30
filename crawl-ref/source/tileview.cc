@@ -994,11 +994,14 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
             orig = TILE_WALL_TOMB;
     }
 
+    const bool mimic = monster_at(gc) && mons_is_feat_mimic(monster_at(gc)->type);
+
     if (orig == TILE_FLOOR_NORMAL)
         *bg = flv.floor;
     else if (orig == TILE_WALL_NORMAL)
         *bg = flv.wall;
-    else if (orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR)
+    else if ((orig == TILE_DNGN_CLOSED_DOOR || orig == TILE_DNGN_OPEN_DOOR)
+             && !mimic)
     {
         tileidx_t override = flv.feat;
         // Setting an override on a door specifically for undetected secret
@@ -1018,10 +1021,6 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
         }
         else
             *bg = orig + std::min((int)flv.special, 3);
-
-        const monster *mimic = monster_at(gc);
-        if (mimic && mimic->type == MONS_DOOR_MIMIC)
-            *bg = orig;
     }
     else if (orig == TILE_DNGN_PORTAL_WIZARD_LAB
              || orig == TILE_DNGN_ALTAR_CHEIBRIADOS)

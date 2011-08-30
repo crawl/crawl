@@ -246,14 +246,14 @@ void wizard_interlevel_travel()
     _wizard_go_to_level(pos);
 }
 
-void wizard_create_portal(const coord_def& pos)
+bool wizard_create_portal(const coord_def& pos)
 {
     mpr("Destination for portal (defaults to 'bazaar')? ", MSGCH_PROMPT);
     char specs[256];
     if (cancelable_get_line(specs, sizeof(specs)))
     {
         canned_msg(MSG_OK);
-        return;
+        return false;
     }
 
     std::string dst = specs;
@@ -266,105 +266,119 @@ void wizard_create_portal(const coord_def& pos)
     if (!find_map_by_name(dst) && !random_map_for_tag(dst))
     {
         mprf("No map named '%s' or tagged '%s'.", dst.c_str(), dst.c_str());
+        return false;
     }
-    else
-    {
-        map_wiz_props_marker *marker = new map_wiz_props_marker(you.pos());
-        marker->set_property("dst", dst);
-        marker->set_property("feature_description",
-                             "wizard portal, dest = " + dst);
-        env.markers.add(marker);
-        env.markers.clear_need_activate();
-        dungeon_terrain_changed(pos, DNGN_ENTER_PORTAL_VAULT, false);
-    }
+
+    map_wiz_props_marker *marker = new map_wiz_props_marker(you.pos());
+    marker->set_property("dst", dst);
+    marker->set_property("feature_description",
+                         "wizard portal, dest = " + dst);
+    env.markers.add(marker);
+    env.markers.clear_need_activate();
+    dungeon_terrain_changed(pos, DNGN_ENTER_PORTAL_VAULT, false);
+    return true;
 }
 
-void wizard_create_feature()
+bool wizard_create_feature(const coord_def& pos)
 {
+    const bool mimic = (pos != you.pos());
     char specs[256];
     dungeon_feature_type feat;
-    mpr("Create which feature? ", MSGCH_PROMPT);
+    if (mimic)
+        mpr("Create what kind of feature mimic? ", MSGCH_PROMPT);
+    else
+        mpr("Create which feature? ", MSGCH_PROMPT);
 
-    if (!cancelable_get_line(specs, sizeof(specs)) && specs[0] != 0)
+    if (cancelable_get_line(specs, sizeof(specs)) || specs[0] == 0)
     {
-        if (int feat_num = atoi(specs))
-        {
-            feat = static_cast<dungeon_feature_type>(feat_num);
-        }
-        else
-        {
-            std::string name = lowercase_string(specs);
-            name = replace_all(name, " ", "_");
-            feat = dungeon_feature_by_name(name);
-            if (feat == DNGN_UNSEEN) // no exact match
-            {
-                std::vector<std::string> matches =
-                    dungeon_feature_matches(name);
+        canned_msg(MSG_OK);
+        return false;
+    }
 
-                if (matches.empty())
-                {
-                    const feature_property_type fprop(str_to_fprop(name));
-                    if (fprop != FPROP_NONE)
-                    {
-                        env.pgrid(you.pos()) |= fprop;
-                        mprf("Set fprops \"%s\" at (%d,%d)",
-                             name.c_str(), you.pos().x, you.pos().y);
-                    }
-                    else
-                    {
-                        mprf(MSGCH_DIAGNOSTICS, "No features matching '%s'",
-                             name.c_str());
-                    }
-                    return;
-                }
-
-                // Only one possible match, use that.
-                if (matches.size() == 1)
-                {
-                    name = matches[0];
-                    feat = dungeon_feature_by_name(name);
-                }
-                // Multiple matches, list them to wizard
-                else
-                {
-                    std::string prefix = "No exact match for feature '" +
-                        name +  "', possible matches are: ";
-
-                    // Use mpr_comma_separated_list() because the list
-                    // might be *LONG*.
-                    mpr_comma_separated_list(prefix, matches, " and ", ", ",
-                                             MSGCH_DIAGNOSTICS);
-                    return;
-                }
-            }
-        }
-
-        if (feat == DNGN_ENTER_SHOP)
-        {
-            debug_make_shop();
-            return;
-        }
-
-#ifdef USE_TILE
-        env.tile_flv(you.pos()).special = 0;
-        const dungeon_feature_type old_feat = grd(you.pos());
-#endif
-        dungeon_terrain_changed(you.pos(), feat, false);
-#ifdef USE_TILE
-        // Update gate tiles, if existing.
-        if (feat_is_door(old_feat) || feat_is_door(feat))
-        {
-            const coord_def left  = you.pos() - coord_def(1, 0);
-            const coord_def right = you.pos() + coord_def(1, 0);
-            if (map_bounds(left) && feat_is_door(grd(left)))
-                tile_init_flavour(left);
-            if (map_bounds(right) && feat_is_door(grd(right)))
-                tile_init_flavour(right);
-        }
-#endif
+    if (int feat_num = atoi(specs))
+    {
+        feat = static_cast<dungeon_feature_type>(feat_num);
     }
     else
+    {
+        std::string name = lowercase_string(specs);
+        name = replace_all(name, " ", "_");
+        feat = dungeon_feature_by_name(name);
+        if (feat == DNGN_UNSEEN) // no exact match
+        {
+            std::vector<std::string> matches =
+                dungeon_feature_matches(name);
+
+            if (matches.empty())
+            {
+                const feature_property_type fprop(str_to_fprop(name));
+                if (fprop != FPROP_NONE)
+                {
+                    env.pgrid(you.pos()) |= fprop;
+                    mprf("Set fprops \"%s\" at (%d,%d)",
+                         name.c_str(), you.pos().x, you.pos().y);
+                }
+                else
+                {
+                    mprf(MSGCH_DIAGNOSTICS, "No features matching '%s'",
+                         name.c_str());
+                }
+                return false;
+            }
+
+            // Only one possible match, use that.
+            if (matches.size() == 1)
+            {
+                name = matches[0];
+                feat = dungeon_feature_by_name(name);
+            }
+            // Multiple matches, list them to wizard
+            else
+            {
+                std::string prefix = "No exact match for feature '" +
+                    name +  "', possible matches are: ";
+
+                // Use mpr_comma_separated_list() because the list
+                // might be *LONG*.
+                mpr_comma_separated_list(prefix, matches, " and ", ", ",
+                                         MSGCH_DIAGNOSTICS);
+                return false;
+            }
+        }
+    }
+
+    if (mimic && !is_valid_mimic_feat(feat)
+        && !yesno("This isn't a valid feature mimic. Create it anyway? "))
+    {
         canned_msg(MSG_OK);
+        return false;
+    }
+
+    if (feat == DNGN_ENTER_SHOP)
+        return debug_make_shop(pos);
+
+    if (feat_is_portal(feat))
+        return wizard_create_portal(pos);
+
+#ifdef USE_TILE
+    env.tile_flv(pos).special = 0;
+    const dungeon_feature_type old_feat = grd(pos);
+#endif
+    dungeon_terrain_changed(pos, feat, false);
+#ifdef USE_TILE
+    // Update gate tiles, if existing.
+    if (feat_is_door(old_feat) || feat_is_door(feat))
+    {
+        const coord_def left  = pos - coord_def(1, 0);
+        const coord_def right = pos + coord_def(1, 0);
+        if (map_bounds(left) && feat_is_door(grd(left)))
+            tile_init_flavour(left);
+        if (map_bounds(right) && feat_is_door(grd(right)))
+            tile_init_flavour(right);
+    }
+#endif
+
+    return true;
 }
 
 void wizard_list_branches()
@@ -534,7 +548,7 @@ void debug_make_trap()
         mpr("NOTE: Shaft traps aren't valid on this level.");
 }
 
-void debug_make_shop(const coord_def& pos)
+bool debug_make_shop(const coord_def& pos)
 {
     char requested_shop[80];
     int gridch = grd(pos);
@@ -545,7 +559,7 @@ void debug_make_shop(const coord_def& pos)
     if (gridch != DNGN_FLOOR)
     {
         mpr("Insufficient floor-space for new Wal-Mart.");
-        return;
+        return false;
     }
 
     for (int i = 0; i < MAX_SHOPS; ++i)
@@ -560,13 +574,13 @@ void debug_make_shop(const coord_def& pos)
     if (!have_shop_slots)
     {
         mpr("There are too many shops on this level.");
-        return;
+        return false;
     }
 
     msgwin_get_line("What kind of shop? ",
                     requested_shop, sizeof(requested_shop));
     if (!*requested_shop)
-        return;
+        return false;
 
     strlwr(requested_shop);
     std::string s = replace_all_of(requested_shop, "*", "");
@@ -575,7 +589,7 @@ void debug_make_shop(const coord_def& pos)
     if (new_shop_type == SHOP_UNASSIGNED || new_shop_type == -1)
     {
         mprf("Bad shop type: \"%s\"", requested_shop);
-        return;
+        return false;
     }
 
     representative = !!strchr(requested_shop, '*');
@@ -583,6 +597,7 @@ void debug_make_shop(const coord_def& pos)
     place_spec_shop(you.absdepth0, pos, new_shop_type, representative);
     link_items();
     mprf("Done.");
+    return true;
 }
 
 static void debug_load_map_by_name(std::string name)

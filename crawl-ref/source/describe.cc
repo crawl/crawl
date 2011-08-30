@@ -58,6 +58,7 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stash.h"
+#include "terrain.h"
 #include "transform.h"
 #include "hints.h"
 #include "xom.h"
@@ -3339,17 +3340,13 @@ static std::string _monster_stat_description(const monster_info& mi)
         "huge",
     };
 
-    const char *mimic_sizes[6]= {
-        "as big as a fountain",
-        "as big as a shop",
-        "as big as a staircase",
-        "as big as a trap",
-        "as big as a portal",
-        "as big as a door",
-    };
-
     if (mons_is_feat_mimic(mi.type))
-        result << pronoun << " is " << mimic_sizes[MONS_FOUNTAIN_MIMIC-mi.type] << ".\n";
+    {
+        result << pronoun << " is as big as "
+               << thing_do_grammar(DESC_NOCAP_A, true, false,
+                                   feat_type_name(mi.get_mimic_feature()))
+               << "\n";
+    }
     else if (sizes[mi.body_size()])
         result << pronoun << " is " << sizes[mi.body_size()] << ".\n";
 

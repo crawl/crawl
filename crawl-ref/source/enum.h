@@ -2058,14 +2058,14 @@ enum monster_type                      // (int) menv[].type
     MONS_ARMOUR_MIMIC,
     MONS_SCROLL_MIMIC,
     MONS_POTION_MIMIC,
-    MONS_DOOR_MIMIC,
-    MONS_PORTAL_MIMIC,
+    MONS_FEATURE_MIMIC,
 #if TAG_MAJOR_VERSION == 32
+    MONS_PORTAL_MIMIC,
     MONS_TRAP_MIMIC,
-#endif
     MONS_STAIR_MIMIC,
     MONS_SHOP_MIMIC,
     MONS_FOUNTAIN_MIMIC,
+#endif
 
     // Plants:
     MONS_TOADSTOOL,

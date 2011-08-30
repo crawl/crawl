@@ -1562,11 +1562,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
 
     // Feature mimics actually get drawn with the dungeon code.
     // See tileidx_feature.
-    case MONS_DOOR_MIMIC:
-    case MONS_PORTAL_MIMIC:
-    case MONS_STAIR_MIMIC:
-    case MONS_SHOP_MIMIC:
-    case MONS_FOUNTAIN_MIMIC:
+    case MONS_FEATURE_MIMIC:
         return 0;
 
     // '5' demons
@@ -2541,11 +2537,7 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
         }
 
         // Feature mimics get drawn with the dungeon, see tileidx_feature.
-        case MONS_SHOP_MIMIC:
-        case MONS_PORTAL_MIMIC:
-        case MONS_DOOR_MIMIC:
-        case MONS_STAIR_MIMIC:
-        case MONS_FOUNTAIN_MIMIC:
+        case MONS_FEATURE_MIMIC:
             return TILE_FLAG_MIMIC;
 
         case MONS_DANCING_WEAPON:

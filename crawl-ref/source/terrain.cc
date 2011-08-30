@@ -841,6 +841,33 @@ bool is_valid_border_feat(dungeon_feature_type feat)
                || feat == DNGN_LAVA_SEA));
 }
 
+bool is_valid_mimic_feat(dungeon_feature_type feat)
+{
+    // Don't risk trapping the player inside a portal vault.
+    if (feat == DNGN_EXIT_PORTAL_VAULT)
+        return false;
+
+    if (feat_is_portal(feat) || feat_is_gate(feat))
+        return true;
+
+    if (feat_is_stone_stair(feat) || feat_is_escape_hatch(feat)
+        || feat_is_branch_stairs(feat))
+    {
+        return true;
+    }
+
+    if (feat_is_fountain(feat))
+        return true;
+
+    if (feat_is_door(feat))
+        return true;
+
+    if (feat == DNGN_ENTER_SHOP)
+        return true;
+
+    return false;
+}
+
 static bool _is_feature_shift_target(const coord_def &pos, void*)
 {
     return (grd(pos) == DNGN_FLOOR && !dungeon_events.has_listeners_at(pos));

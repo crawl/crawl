@@ -67,20 +67,6 @@ void wizard_create_spec_monster(void)
     }
 }
 
-static dungeon_feature_type _get_random_stairs()
-{
-    return static_cast<dungeon_feature_type>(
-        coinflip()
-        ? random_range(DNGN_STONE_STAIRS_DOWN_I, DNGN_ESCAPE_HATCH_UP)
-        : random_range(DNGN_ENTER_FIRST_BRANCH, DNGN_ENTER_LAST_BRANCH));
-}
-
-static dungeon_feature_type _get_random_fountain()
-{
-    return static_cast<dungeon_feature_type>(
-        random_range(DNGN_FOUNTAIN_BLUE, DNGN_PERMADRY_FOUNTAIN));
-}
-
 // Creates a specific monster by name. Uses the same patterns as
 // map definitions.
 void wizard_create_spec_monster_name()
@@ -142,28 +128,8 @@ void wizard_create_spec_monster_name()
 
     if (mons_is_feat_mimic(type))
     {
-        switch (type)
-        {
-        case MONS_DOOR_MIMIC:
-            dungeon_terrain_changed(place, DNGN_CLOSED_DOOR, false);
-            break;
-        case MONS_PORTAL_MIMIC:
-            wizard_create_portal(place);
-            break;
-        case MONS_STAIR_MIMIC:
-            dungeon_terrain_changed(place, _get_random_stairs(), false);
-            break;
-        case MONS_SHOP_MIMIC:
-            debug_make_shop(place);
-            break;
-        case MONS_FOUNTAIN_MIMIC:
-            dungeon_terrain_changed(place, _get_random_fountain(), false);
-            break;
-        default:
-            die("Invalid feature mimic type.");
-        }
-
-        env.level_map_mask(place) |= MMT_MIMIC;
+        if (wizard_create_feature(place))
+            env.level_map_mask(place) |= MMT_MIMIC;
         return;
     }
 
