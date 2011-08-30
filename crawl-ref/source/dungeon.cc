@@ -1398,21 +1398,18 @@ static void _fixup_misplaced_items()
 
 static void _fixup_branch_stairs()
 {
-    dprf("in _fixup_branch_stairs()");
     // Top level of branch levels - replaces up stairs with stairs back to
     // dungeon or wherever:
     if (your_branch().exit_stairs != NUM_FEATURES
         && player_branch_depth() == 1
         && you.level_type == LEVEL_DUNGEON)
     {
-        dprf("doing replacement");
         const dungeon_feature_type exit = your_branch().exit_stairs;
         for (rectangle_iterator ri(1); ri; ++ri)
         {
             if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
                 && grd(*ri) <= DNGN_ESCAPE_HATCH_UP)
             {
-                dprf("did it!");
                 if (grd(*ri) == DNGN_STONE_STAIRS_UP_I)
                     env.markers.add(new map_feature_marker(*ri, grd(*ri)));
 
