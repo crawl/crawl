@@ -3273,6 +3273,7 @@ void god_welcome_identify_gear()
         mpr("Your amulet flashes!", MSGCH_GOD);
         flash_view_delay(god_colour(you.religion), 300);
         set_ident_type(*amulet, ID_KNOWN_TYPE);
+        set_ident_flags(*amulet, ISFLAG_KNOW_TYPE);
     }
 
     if (you.religion == GOD_ASHENZARI)
