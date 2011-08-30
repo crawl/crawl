@@ -582,9 +582,11 @@ static void _construct_species_menu(const newgame_def* ng,
                                     MenuFreeform* menu)
 {
     ASSERT(menu != NULL);
-    int ITEMS_IN_COLUMN = 8;
-    if (is_valid_species(SP_OCTOPODE))
-        ITEMS_IN_COLUMN++;
+    int items_in_column = 0;
+    for (int i = 0; i < NUM_SPECIES; ++i)
+        if (_is_species_valid_choice((species_type)i))
+            items_in_column++;
+    items_in_column = (items_in_column + 2) / 3;
     // Construct the menu, 3 columns
     TextItem* tmp = NULL;
     std::string text;
@@ -629,9 +631,9 @@ static void _construct_species_menu(const newgame_def* ng,
         // Fill to column width - 1
         text.append(COLUMN_WIDTH - text.size() - 1 , ' ');
         tmp->set_text(text);
-        ASSERT(i < ITEMS_IN_COLUMN * 3);
-        min_coord.x = X_MARGIN + (i / ITEMS_IN_COLUMN) * COLUMN_WIDTH;
-        min_coord.y = 3 + i % ITEMS_IN_COLUMN;
+        ASSERT(i < items_in_column * 3);
+        min_coord.x = X_MARGIN + (i / items_in_column) * COLUMN_WIDTH;
+        min_coord.y = 3 + i % items_in_column;
         max_coord.x = min_coord.x + text.size();
         max_coord.y = min_coord.y + 1;
         tmp->set_bounds(min_coord, max_coord);
