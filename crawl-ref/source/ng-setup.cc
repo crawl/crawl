@@ -683,7 +683,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.equip[EQ_WEAPON] = -1;
 
         newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1, 1, 1);
-        newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEALING);
+        newgame_make_item(1, EQ_NONE, OBJ_POTIONS, POT_HEALING);
         newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEAL_WOUNDS);
 
         you.skills[SK_FIGHTING]       = 2;
