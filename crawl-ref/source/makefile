@@ -909,9 +909,11 @@ SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.xz
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
 .PHONY: all test install clean clean-contrib clean-rltiles distclean debug \
-        profile package-source source build-windows package-windows rest
+        profile package-source source build-windows package-windows rest docs
 
-all: $(GAME) $(GENERATED_DOCS) webserver
+all: $(GAME) docs webserver
+
+docs: $(GENERATED_DOCS)
 
 test:
 	./$(GAME) -test > /dev/null
