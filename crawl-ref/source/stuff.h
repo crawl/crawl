@@ -9,6 +9,15 @@
 
 #include <map>
 
+// nearly copied from "mpr.h"...
+#ifdef __GNUC__
+// show warnings about the format string
+# define PRINTF(x, dfmt) const char *format dfmt, ...) \
+                   __attribute__((format (printf, x+1, x+2))
+#else
+# define PRINTF(x, dfmt) const char *format dfmt, ...
+#endif
+
 std::string make_time_string(time_t abs_time, bool terse = false);
 std::string make_file_time(time_t when);
 
@@ -21,17 +30,16 @@ unsigned char get_ch();
 void cio_init();
 void cio_cleanup();
 void clear_globals_on_exit();
-NORETURN void end(int exit_code, bool print_err = false,
-         const char *format = NULL, ...);
+NORETURN void end(int exit_code, bool print_err = false, PRINTF(2, = NULL));
 NORETURN void game_ended();
 NORETURN void game_ended_with_error(const std::string &message);
 
-bool print_error_screen(const char *message, ...);
+bool print_error_screen(PRINTF(0, ));
 void redraw_screen();
 
 void canned_msg(canned_message_type which_message);
 
-bool yes_or_no(const char* fmt, ...);
+bool yes_or_no(PRINTF(0, ));
 typedef std::map<int, int> explicit_keymap;
 bool yesno(const char * str, bool safe = true, int safeanswer = 0,
             bool clear_after = true, bool interrupt_delays = true,
@@ -58,4 +66,5 @@ class game_ended_condition : public std::exception
 int prompt_for_quantity(const char *prompt);
 int prompt_for_int(const char *prompt, bool nonneg);
 
+#undef PRINTF
 #endif
