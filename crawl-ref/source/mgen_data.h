@@ -36,7 +36,7 @@ struct mgen_data
 
     // For summoned monsters this is their type of summoning, either the
     // spell which summoned them or one of the values of the enumeration
-    // mon_summon_type in mon-util.h.
+    // mon_summon_type in mon-enum.h.
     int             summon_type;
 
     // Where the monster will be created.
