@@ -1,5 +1,5 @@
-# vim:ft=conf
-# The above comment makes vim treat this file as a configuration file
+# -*- conf-unix -*- vim:ft=conf
+# The above comment makes Emacs and vim treat this file as a configuration file
 
 *.[oa]
 *.ann
@@ -45,6 +45,9 @@ DEADJOE
 /docs/aptitudes.txt
 /docs/FAQ.html
 /docs/crawl_manual.txt
+
+# Doxygen documentation
+/source/html/
 
 # Crawl generated junk
 arena.result
