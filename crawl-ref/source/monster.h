@@ -355,6 +355,7 @@ public:
     flight_type flight_mode() const;
     bool is_levitating() const;
     bool can_cling_to_walls() const;
+    bool is_web_immune() const;
     bool invisible() const;
     bool can_see_invisible() const;
     bool visible_to(const actor *looker) const;

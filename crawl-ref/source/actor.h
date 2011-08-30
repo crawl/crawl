@@ -262,6 +262,7 @@ public:
     virtual bool can_cling_to(const coord_def& p) const;
     virtual bool check_clinging(bool stepped, bool door = false);
     virtual void clear_clinging();
+    virtual bool is_web_immune() const = 0;
     virtual bool airborne() const;
     virtual bool ground_level() const;
     virtual bool stand_on_solid_ground() const;

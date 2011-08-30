@@ -4306,6 +4306,7 @@ static bool _hints_feat_interesting(dungeon_feature_type feat)
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_NATURAL:
+    case DNGN_TRAP_WEB:
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:

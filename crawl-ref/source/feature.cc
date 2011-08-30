@@ -244,6 +244,13 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap    = MF_TRAP;
             break;
 
+        case DNGN_TRAP_WEB:
+            f.colour     = LIGHTGREY;
+            f.dchar      = DCHAR_TRAP;
+            f.map_colour = LIGHTGREY;
+            f.minimap    = MF_TRAP;
+            break;
+
         case DNGN_UNDISCOVERED_TRAP:
             f.dchar        = DCHAR_FLOOR;
             f.colour       = ETC_FLOOR;

@@ -1166,6 +1166,7 @@ enum dungeon_feature_type
     DNGN_TRAP_MAGICAL,
     DNGN_TRAP_NATURAL,
     DNGN_UNDISCOVERED_TRAP,            //   78
+    DNGN_TRAP_WEB,                     //   79
 
     DNGN_ENTER_SHOP = 80,              //   80
     DNGN_ENTER_LABYRINTH,
@@ -3249,6 +3250,7 @@ enum trap_type                         // env.trap_type[]
     TRAP_SHAFT,
     TRAP_GOLUBRIA,
     TRAP_PLATE,
+    TRAP_WEB,
     NUM_TRAPS,                         // must remain last 'regular' member {dlb}
     TRAP_MAX_REGULAR = TRAP_SHAFT,
     TRAP_UNASSIGNED = 100,
