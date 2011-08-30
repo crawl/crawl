@@ -1748,22 +1748,19 @@ static int _place_monster_aux(const mgen_data &mg,
             bool got_stair = false;
 
             // If we're in lair, and we're in one of the suitable levels,
-            // and it's the disabled branch, pretend to be that one.
+            // and it's a disabled branch, pretend to be one of them.
             if (you.where_are_you == BRANCH_LAIR)
             {
-                const branch_type lair_branches[3] =
-                {
-                    BRANCH_SWAMP,
-                    BRANCH_SHOALS,
-                    BRANCH_SNAKE_PIT,
-                };
+                int cnt = 0;
 
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < NUM_BRANCHES; i++)
                 {
-                    if (branches[lair_branches[i]].startdepth == -1)
+                    if (is_random_lair_subbranch(branches[i].id)
+                        && branches[i].startdepth == -1
+                        && one_chance_in(++cnt))
                     {
                         mon->props["stair_type"] = static_cast<short>(
-                            branches[lair_branches[i]].entry_stairs);
+                            branches[i].entry_stairs);
                         got_stair = true;
                     }
                 }
