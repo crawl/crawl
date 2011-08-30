@@ -2939,6 +2939,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
             return ("passage of Golubria");
         case TRAP_PLATE:
             return ("pressure plate");
+        case TRAP_WEB:
+            return ("web trap");
         default:
             error_message_to_player();
             return ("undefined trap");
@@ -3029,6 +3031,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("magical trap");
     case DNGN_TRAP_NATURAL:
         return ("natural trap");
+    case DNGN_TRAP_WEB:
+        return ("web trap");
     case DNGN_ENTER_SHOP:
         return ("shop");
     case DNGN_ABANDONED_SHOP:
@@ -3368,6 +3372,7 @@ std::string feature_description(const coord_def& where, bool covering,
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
+    case DNGN_TRAP_WEB:
         return (feature_description(grid, get_trap_type(where),
                                     covering_description, dtype,
                                     add_stop, base_desc));

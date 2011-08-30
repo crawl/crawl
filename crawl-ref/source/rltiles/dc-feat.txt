@@ -137,6 +137,22 @@ teleport DNGN_TRAP_TELEPORT
 zot DNGN_TRAP_ZOT
 passage_of_golubria DNGN_TRAP_GOLUBRIA
 pressure_plate DNGN_TRAP_PLATE
+cobweb_none DNGN_TRAP_WEB
+cobweb_NS DNGN_TRAP_WEB_N
+cobweb_EW DNGN_TRAP_WEB_E
+cobweb_NS DNGN_TRAP_WEB_S
+cobweb_EW DNGN_TRAP_WEB_W
+cobweb_NS DNGN_TRAP_WEB_NS
+cobweb_EW DNGN_TRAP_WEB_EW
+cobweb_NE DNGN_TRAP_WEB_NE
+cobweb_ES DNGN_TRAP_WEB_ES
+cobweb_SW DNGN_TRAP_WEB_SW
+cobweb_NW DNGN_TRAP_WEB_NW
+cobweb_NES DNGN_TRAP_WEB_NES
+cobweb_NEW DNGN_TRAP_WEB_NEW
+cobweb_NSW DNGN_TRAP_WEB_NSW
+cobweb_ESW DNGN_TRAP_WEB_ESW
+cobweb_NESW DNGN_TRAP_WEB_NESW
 
 ## stairs
 %sdir dc-dngn/gateways

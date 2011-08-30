@@ -688,3 +688,9 @@ bool player::can_cling_to_walls() const
 {
     return you.form == TRAN_SPIDER;
 }
+
+bool player::is_web_immune() const
+{
+    // Spider form
+    return (can_cling_to_walls());
+}

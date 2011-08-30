@@ -533,7 +533,7 @@ static const char *trap_names[] =
     "dart", "arrow", "spear", "axe",
     "teleport", "alarm", "blade",
     "bolt", "net", "zot", "needle",
-    "shaft", "passage", "pressure plate",
+    "shaft", "passage", "pressure plate", "web",
 };
 
 const char *trap_name(trap_type trap)

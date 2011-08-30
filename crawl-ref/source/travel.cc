@@ -542,8 +542,11 @@ void initialise_travel()
 {
     for (int feat = DNGN_FLOOR_MIN; feat < NUM_FEATURES; feat++)
     {
-        if (feat >= DNGN_TRAP_MECHANICAL && feat <= DNGN_TRAP_NATURAL)
+        if ((feat >= DNGN_TRAP_MECHANICAL && feat <= DNGN_TRAP_NATURAL)
+            || feat == DNGN_TRAP_WEB)
+        {
             continue;
+        }
 
         traversable_terrain[feat] = TRAVERSABLE;
     }

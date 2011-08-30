@@ -30,6 +30,28 @@ W.WW.WW.W
 .WWW.WWW.
 ENDMAP
 
+##########################
+# Web trappy entry
+NAME:   spiders_nest_entry_webs
+TAGS:   spider_entry patrolling no_monster_gen
+KFEAT:  O = enter_spider_nest
+KFEAT:  ^ = web trap
+MONS:   trapdoor spider
+MAP
+.......x.....
+..^...xxx.^..
+...1.^xxx....
+.^..^xx^x....
+....xx^^^....
+.1..x^^^...^.
+..^..^O^..1..
+.x...^^^^....
+xx^.1.x^^^...
+x^^^^..xxx...
+.xx^^...xxx..
+..xxx........
+ENDMAP
+
 ##############################################################################
 # Rune vaults
 ##############################################################################

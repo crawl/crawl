@@ -108,6 +108,8 @@ static tileidx_t _tileidx_trap(trap_type type)
         return TILE_DNGN_TRAP_GOLUBRIA;
     case TRAP_PLATE:
         return TILE_DNGN_TRAP_PLATE;
+    case TRAP_WEB:
+        return TILE_DNGN_TRAP_WEB;
     default:
         return TILE_DNGN_ERROR;
     }
@@ -222,6 +224,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
         return TILE_DNGN_TRAP_ZOT;
     case DNGN_TRAP_NATURAL:
         return TILE_DNGN_TRAP_SHAFT;
+    case DNGN_TRAP_WEB:
+        return TILE_DNGN_TRAP_WEB;
     case DNGN_ENTER_SHOP:
         return TILE_SHOP_GENERAL;
     case DNGN_ABANDONED_SHOP:
@@ -436,7 +440,81 @@ tileidx_t tileidx_feature(const coord_def &gc)
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
-        return (_tileidx_trap(get_trap_type(gc)));
+                return (_tileidx_trap(get_trap_type(gc)));
+
+    case DNGN_TRAP_WEB:
+    {
+        /*
+        trap_type this_trap_type = get_trap_type(gc);
+        // There's room here to have different types of webs (acid? fire? ice? different strengths?)
+        if (this_trap_type==TRAP_WEB) {*/
+
+        // Determine web connectivity on all sides
+        const coord_def left(gc.x - 1, gc.y);
+        const coord_def right(gc.x + 1, gc.y);
+        const coord_def up(gc.x, gc.y - 1);
+        const coord_def down(gc.x, gc.y + 1);
+
+        bool solid_left = feat_is_solid(grd(left))
+                          || (grd(left) != DNGN_UNDISCOVERED_TRAP
+                              && get_trap_type(left) == TRAP_WEB);
+        bool solid_right = feat_is_solid(grd(right))
+                          || (grd(left) != DNGN_UNDISCOVERED_TRAP
+                              && get_trap_type(right) == TRAP_WEB);
+        bool solid_up = feat_is_solid(grd(up))
+                          || (grd(left) != DNGN_UNDISCOVERED_TRAP
+                              && get_trap_type(up) == TRAP_WEB);
+        bool solid_down = feat_is_solid(grd(down))
+                          || (grd(left) != DNGN_UNDISCOVERED_TRAP
+                              && get_trap_type(down) == TRAP_WEB);
+        if (solid_up)
+        {
+            if (solid_right) {
+                    if (solid_down) {
+                            if (solid_left) {
+                                    return TILE_DNGN_TRAP_WEB_NESW;
+                            }
+                            return TILE_DNGN_TRAP_WEB_NES;
+                    }
+                    if (solid_left) {
+                            return TILE_DNGN_TRAP_WEB_NEW;
+                    }
+                    return TILE_DNGN_TRAP_WEB_NE;
+            }
+            if (solid_down) {
+                    if (solid_left) {
+                            return TILE_DNGN_TRAP_WEB_NSW;
+                    }
+                    return TILE_DNGN_TRAP_WEB_NS;
+            }
+            if (solid_left) {
+                    return TILE_DNGN_TRAP_WEB_NW;
+            }
+            return TILE_DNGN_TRAP_WEB_N;
+        }
+        if (solid_right) {
+                if (solid_down) {
+                        if (solid_left) {
+                                return TILE_DNGN_TRAP_WEB_ESW;
+                        }
+                        return TILE_DNGN_TRAP_WEB_ES;
+                }
+                if (solid_left) {
+                        return TILE_DNGN_TRAP_WEB_EW;
+                }
+                return TILE_DNGN_TRAP_WEB_E;
+        }
+        if (solid_down) {
+                if (solid_left) {
+                        return TILE_DNGN_TRAP_WEB_SW;
+                }
+                return TILE_DNGN_TRAP_WEB_S;
+        }
+        if (solid_left) {
+                return TILE_DNGN_TRAP_WEB_W;
+        }
+        return TILE_DNGN_TRAP_WEB;
+    }
     case DNGN_ENTER_SHOP:
         return (_tileidx_shop(gc));
     case DNGN_DEEP_WATER:

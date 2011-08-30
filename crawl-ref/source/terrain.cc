@@ -415,7 +415,7 @@ bool feat_is_permarock(dungeon_feature_type feat)
 bool feat_is_trap(dungeon_feature_type feat, bool undiscovered_too)
 {
     return (feat == DNGN_TRAP_MECHANICAL || feat == DNGN_TRAP_MAGICAL
-            || feat == DNGN_TRAP_NATURAL
+            || feat == DNGN_TRAP_NATURAL || feat == DNGN_TRAP_WEB
             || undiscovered_too && feat == DNGN_UNDISCOVERED_TRAP);
 }
 

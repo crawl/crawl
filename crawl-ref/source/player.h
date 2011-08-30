@@ -410,6 +410,7 @@ public:
     int visible_igrd(const coord_def&) const;
     bool is_levitating() const;
     bool can_cling_to_walls() const;
+    bool is_web_immune() const;
     bool cannot_speak() const;
     bool invisible() const;
     bool misled() const;

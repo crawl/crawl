@@ -6145,6 +6145,7 @@ bool monster::do_shaft()
         case DNGN_TRAP_MECHANICAL:
         case DNGN_TRAP_MAGICAL:
         case DNGN_TRAP_NATURAL:
+        case DNGN_TRAP_WEB:
         case DNGN_UNDISCOVERED_TRAP:
         case DNGN_ENTER_SHOP:
             break;
@@ -6641,6 +6642,19 @@ bool monster::can_cling_to_walls() const
     return (mons_genus(type) == MONS_SPIDER || type == MONS_GIANT_GECKO
             || type == MONS_GIANT_COCKROACH || type == MONS_GIANT_MITE
             || type == MONS_DEMONIC_CRAWLER);
+}
+
+bool monster::is_web_immune() const
+{
+    // Spiders (and other clingers)
+    // Ghosts and other incorporeals
+    // Oozes
+    // All 'I' (ice / sky beast)
+    return (can_cling_to_walls()
+         || is_insubstantial()
+         || mons_genus(type) == MONS_JELLY
+         || mons_genus(type) == MONS_ICE_BEAST
+         || mons_genus(type) == MONS_SKY_BEAST);
 }
 
 /////////////////////////////////////////////////////////////////////////

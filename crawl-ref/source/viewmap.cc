@@ -264,6 +264,7 @@ bool is_feature(wchar_t feature, const coord_def& where)
         case DNGN_TRAP_MECHANICAL:
         case DNGN_TRAP_MAGICAL:
         case DNGN_TRAP_NATURAL:
+        case DNGN_TRAP_WEB:
             return (true);
         default:
             return (false);

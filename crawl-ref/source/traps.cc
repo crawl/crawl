@@ -236,6 +236,10 @@ bool trap_def::is_safe(actor* act) const
         return true;
     }
 
+    // Web traps are safe for spiders and spider forms, and certain others
+    if (category()==DNGN_TRAP_WEB && act->is_web_immune())
+        return true;
+
     if (act->atype() != ACT_PLAYER)
         return false;
 
@@ -817,6 +821,95 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         }
         break;
 
+    case TRAP_WEB:
+        if ((you_trigger && you.is_web_immune()) || ((m)&&m->is_web_immune()))
+            break;
+
+        if (you_trigger)
+        {
+            if (trig_knows && one_chance_in(3))
+                mpr("You pick your way through the web.");
+            else
+            {
+                if (random2limit(player_evasion(), 40)
+                    + (random2(you.dex()) / 3) + (trig_knows ? 3 : 0) > 12)
+                {
+                    mpr("You notice a web but duck past it!");
+                }
+                else
+                {
+                    mpr("You are caught in the web!");
+                    if (player_caught_in_net() && player_in_a_dangerous_place())
+                        xom_is_stimulated(50);
+                }
+                /*
+                if (you.attribute[ATTR_HELD])
+                    _mark_net_trapping(you.pos());
+                */
+            }
+        }
+        else if (m)
+        {
+            bool triggered = false;
+            if (one_chance_in(3) || (trig_knows && coinflip()))
+            {
+                // Not triggered, trap stays.
+                triggered = false;
+                if (you_know)
+                    simple_monster_message(m, " evades a web.");
+                else
+                    hide();
+            }
+            else if (random2(m->ev) > 8 || (trig_knows && random2(m->ev) > 8))
+            {
+                // Triggered but evaded.
+                triggered = true;
+
+                if (in_sight)
+                {
+                    if (!simple_monster_message(m,
+                                                " nimbly jumps through "
+                                                "a gap in a web."))
+                    {
+                        mpr("A web waves in the air!");
+                    }
+                }
+            }
+            else
+            {
+                // Triggered and hit.
+                triggered = true;
+
+                if (in_sight)
+                {
+                    if (m->visible_to(&you))
+                    {
+                        msg::stream << m->name(DESC_NOCAP_THE);
+                        msg::stream << " is caught in a web!" << std::endl;
+                    }
+                    else
+                    {
+                        msg::stream << "A web moves frantically as something is caught in it!" << std::endl;
+                    }
+                }
+                // FIXME: Fake a beam for monster_caught_in_net().
+                bolt beam;
+                beam.flavour = BEAM_MISSILE;
+                beam.thrower = KILL_MISC;
+                beam.beam_source = NON_MONSTER;
+                monster_caught_in_net(m, beam);
+            }
+
+            if (triggered)
+            {
+                /*
+                if (m->caught())
+                    _mark_net_trapping(m->pos());
+                */
+            }
+        }
+        break;
+
     case TRAP_ZOT:
         if (you_trigger)
         {
@@ -1097,7 +1190,8 @@ void disarm_trap(const coord_def& where)
             practise(EX_TRAP_DISARM_FAIL, you.absdepth0);
         else
         {
-            if (trap.type == TRAP_NET && trap.pos != you.pos())
+            if ((trap.type == TRAP_NET || trap.type==TRAP_WEB)
+                && trap.pos != you.pos())
             {
                 if (coinflip())
                 {
@@ -1581,6 +1675,8 @@ dungeon_feature_type trap_category(trap_type type)
 {
     switch (type)
     {
+    case TRAP_WEB:
+        return (DNGN_TRAP_WEB);
     case TRAP_SHAFT:
         return (DNGN_TRAP_NATURAL);
 
