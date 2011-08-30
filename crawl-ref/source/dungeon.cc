@@ -2057,6 +2057,11 @@ static void _place_feature_mimics(int level_number,
     {
         const coord_def pos = *ri;
         const dungeon_feature_type feat = grd(pos);
+
+        // Vault tag prevents mimic.
+        if (map_masked(pos, MMT_NO_MIMIC))
+            continue;
+
         // Only features valid for mimicing.
         if (!is_valid_mimic_feat(feat))
             continue;
@@ -4562,6 +4567,10 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
     else if (f.feat >= 0)
     {
         grd(where) = static_cast<dungeon_feature_type>(f.feat);
+        if (f.mimic)
+            env.level_map_mask(where) |= MMT_MIMIC;
+        else if (f.no_mimic)
+            env.level_map_mask(where) |= MMT_NO_MIMIC;
     }
     else if (f.glyph >= 0)
     {

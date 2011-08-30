@@ -63,6 +63,7 @@ enum map_mask_type
     MMT_OPAQUE     = 0x40,    // Vault may impede connectivity.
     MMT_NO_TRAP    = 0x80,    // No trap generation
     MMT_MIMIC      = 0x100,   // Feature mimics
+    MMT_NO_MIMIC   = 0x200,   // This feature shouldn't be turned into a mimic.
 };
 
 class dgn_region;
