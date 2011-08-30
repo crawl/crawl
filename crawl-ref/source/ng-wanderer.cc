@@ -610,8 +610,8 @@ static void _give_wanderer_spell(skill_type skill)
     // Doing a rejection loop for this because I am lazy.
     while (skill == SK_SPELLCASTING || skill == SK_CHARMS)
     {
-        int value = SK_POISON_MAGIC-SK_CONJURATIONS + 1;
-        skill = skill_type(SK_CONJURATIONS + random2(value));
+        int value = SK_LAST_MAGIC - SK_FIRST_MAGIC_SCHOOL + 1;
+        skill = skill_type(SK_FIRST_MAGIC_SCHOOL + random2(value));
     }
 
     switch ((int)skill)
@@ -684,7 +684,7 @@ static void _wanderer_decent_equipment(skill_type & skill,
     }
 
     // Give the player knowledge of only one spell.
-    if (skill >= SK_SPELLCASTING && skill <= SK_POISON_MAGIC)
+    if (skill >= SK_SPELLCASTING && skill <= SK_LAST_MAGIC)
     {
         for (unsigned i = 0; i < you.spells.size(); ++i)
         {

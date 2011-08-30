@@ -763,7 +763,7 @@ std::map<skill_type, char> ash_get_boosted_skills(eq_type type)
 
     // Boost all spell schools and evoc (to give some appeal to melee).
     case (ET_JEWELS):
-        for (int i = SK_CONJURATIONS; i <= SK_POISON_MAGIC; ++i)
+        for (int i = SK_FIRST_MAGIC_SCHOOL; i <= SK_LAST_MAGIC; ++i)
             boost[skill_type(i)] = bondage;
         boost[SK_EVOCATIONS] = bondage;
         break;

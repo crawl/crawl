@@ -87,7 +87,7 @@ spell_type which_spell_in_book(int sbook_type, int spl)
 int player_spell_skills()
 {
     int sum = 0;
-    for (int i = SK_SPELLCASTING; i <= SK_POISON_MAGIC; i++)
+    for (int i = SK_SPELLCASTING; i <= SK_LAST_MAGIC; i++)
         sum += you.skills[i];
 
     return (sum);

@@ -299,7 +299,7 @@ static void _change_skill_level(skill_type exsk, int n)
     }
 
     const skill_type best_spell = best_skill(SK_SPELLCASTING,
-                                             SK_POISON_MAGIC);
+                                             SK_LAST_MAGIC);
     if (exsk == SK_SPELLCASTING && you.skills[exsk] == 1
         && best_spell == SK_SPELLCASTING && n > 0)
     {
@@ -782,7 +782,7 @@ static int _stat_mult(skill_type exsk, int skill_inc)
         // Note: Armour is handled above.
         stat = you.dex();
     }
-    else if (exsk >= SK_SPELLCASTING && exsk <= SK_POISON_MAGIC)
+    else if (exsk >= SK_SPELLCASTING && exsk <= SK_LAST_MAGIC)
     {
         // These skills are easier for the smart.
         stat = you.intel();
