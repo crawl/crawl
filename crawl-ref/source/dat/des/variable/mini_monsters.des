@@ -2735,6 +2735,28 @@ XXXXXXXXXX
 XXXXXXXXXX
 ENDMAP
 
+# No, John. You are the door vault
+NAME:   reverse_minivault_9
+DEPTH:  D:15-27, Elf, Vault, Crypt, Dis, Geh, Tar, Coc
+MARKER: X = lua: props_marker { connected_exclude="true" }
+SUBST:  X = =
+MAP
+xxxxxxxxxxxxxx
+x8...8..8.9.8x
+x.XXXXXXXXXX.x
+x9XXXXXXXXXX.x
+x.XXXXXXXXXX.x
+x8XXX....XXX8x
+x.XXX.{..XXX.x
+x.XXX....XXX.x
+x8XXX....XXX8x
+x.XXXXXXXXXX.x
+x.XXXXXXXXXX9x
+x.XXXXXXXXXX.x
+x8.9.8..8...8x
+xxxxxxxxxxxxxx
+ENDMAP
+
 # Closed-box minivault
 NAME:  minivault_12
 DEPTH: D:8-26
