@@ -244,12 +244,12 @@ bool can_wield(item_def *weapon, bool say_reason,
 static bool _valid_weapon_swap(const item_def &item)
 {
     // Weapons and staves are valid weapons.
-    // Also allow missiles to enchant them.
-    if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES
-        || item.base_type == OBJ_MISSILES)
-    {
+    if (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES)
         return (you.species != SP_FELID);
-    }
+
+    // Also allow missiles to enchant them.
+    if (item.base_type == OBJ_MISSILES)
+        return (true);
 
     // Some misc. items need to be wielded to be evoked.
     if (is_deck(item) || item.base_type == OBJ_MISCELLANY
