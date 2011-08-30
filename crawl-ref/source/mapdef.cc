@@ -5543,12 +5543,14 @@ feature_spec_list keyed_mapspec::parse_feature(const std::string &str)
         return (list);
     }
 
+    const bool mimic = strip_tag(s, "mimic");
+    const bool no_mimic = strip_tag(s, "no_mimic");
     const dungeon_feature_type ftype = dungeon_feature_by_name(s);
+
     if (ftype == DNGN_UNSEEN)
-        err = make_stringf("no features matching \"%s\"",
-                           str.c_str());
+        err = make_stringf("no features matching \"%s\"", str.c_str());
     else
-        list.push_back(feature_spec(ftype, weight));
+        list.push_back(feature_spec(ftype, weight, mimic, no_mimic));
 
     return (list);
 }
@@ -5662,15 +5664,19 @@ feature_spec::feature_spec ()
     glyph = -1;
     shop.reset(NULL);
     trap.reset(NULL);
+    mimic = false;
+    no_mimic = false;
 }
 
-feature_spec::feature_spec (int f, int wt)
+feature_spec::feature_spec(int f, int wt, bool _mimic, bool _no_mimic)
 {
     genweight = wt;
     feat = f;
     glyph = -1;
     shop.reset(NULL);
     trap.reset(NULL);
+    mimic = _mimic;
+    no_mimic = _no_mimic;
 }
 
 feature_spec::feature_spec(const feature_spec &other)
@@ -5690,6 +5696,8 @@ void feature_spec::init_with (const feature_spec& other)
     genweight = other.genweight;
     feat = other.feat;
     glyph = other.glyph;
+    mimic = other.mimic;
+    no_mimic = other.no_mimic;
 
     if (other.trap.get())
         trap.reset(new trap_spec(*other.trap));
