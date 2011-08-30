@@ -2058,7 +2058,7 @@ static void _place_feature_mimics(int level_number,
         const coord_def pos = *ri;
         const dungeon_feature_type feat = grd(pos);
         // Only features valid for mimicing.
-        if (get_feature_mimic_type(feat) == MONS_PROGRAM_BUG)
+        if (!is_valid_mimic_feat(feat))
             continue;
 
         // Don't mimic the stairs the player is going to be placed on.
@@ -3493,33 +3493,6 @@ static void _place_aquatic_monsters(int level_number, level_area_type level_type
 bool door_vetoed(const coord_def pos)
 {
     return env.markers.property_at(pos, MAT_ANY, "veto_open") == "veto";
-}
-
-monster_type get_feature_mimic_type(dungeon_feature_type feat)
-{
-    // Don't risk trapping the player inside a portal vault.
-    if (feat == DNGN_EXIT_PORTAL_VAULT)
-        return MONS_PROGRAM_BUG;
-
-    if (feat_is_portal(feat) || feat_is_gate(feat))
-        return MONS_PORTAL_MIMIC;
-
-    if (feat_is_stone_stair(feat) || feat_is_escape_hatch(feat)
-        || feat_is_branch_stairs(feat))
-    {
-        return MONS_STAIR_MIMIC;
-    }
-
-    if (feat_is_fountain(feat))
-        return MONS_FOUNTAIN_MIMIC;
-
-    if (feat_is_door(feat))
-        return MONS_DOOR_MIMIC;
-
-    if (feat == DNGN_ENTER_SHOP)
-        return MONS_SHOP_MIMIC;
-
-    return MONS_PROGRAM_BUG;
 }
 
 static void _builder_monsters(int level_number, level_area_type level_type, int mon_wanted)

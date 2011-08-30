@@ -895,6 +895,17 @@ void losight(los_grid& sh, const coord_def& center,
     losight(sh, los_param_funcs(center, opc, bounds));
 }
 
+opacity_type mons_opacity(const monster* mon)
+{
+    if (mon->type == MONS_BUSH)
+        return OPC_HALF;
+
+    if (mons_is_feat_mimic(mon->type) && feat_is_opaque(get_mimic_feat(mon)))
+        return OPC_OPAQUE;
+
+    return OPC_CLEAR;
+}
+
 /////////////////////////////////////
 // A start at tracking LOS changes.
 
@@ -907,7 +918,7 @@ static void _handle_los_change()
 
 static bool _mons_block_sight(const monster* mons)
 {
-    return (mons->type == MONS_BUSH || mons->type == MONS_DOOR_MIMIC);
+    return mons_opacity(mons) != OPC_CLEAR;
 }
 
 void los_actor_moved(const actor* act, const coord_def& oldpos)

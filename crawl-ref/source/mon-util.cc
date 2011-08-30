@@ -185,11 +185,7 @@ void init_mon_name_cache()
                 || mon == MONS_ARMOUR_MIMIC
                 || mon == MONS_SCROLL_MIMIC
                 || mon == MONS_POTION_MIMIC
-                || mon == MONS_DOOR_MIMIC
-                || mon == MONS_PORTAL_MIMIC
-                || mon == MONS_SHOP_MIMIC
-                || mon == MONS_STAIR_MIMIC
-                || mon == MONS_FOUNTAIN_MIMIC
+                || mon == MONS_FEATURE_MIMIC
                 || mon == MONS_MARA_FAKE)
             {
                 // Keep previous entry.
@@ -867,7 +863,7 @@ bool mons_is_item_mimic(int mc)
 
 bool mons_is_feat_mimic(int mc)
 {
-    return (mons_genus(mc) == MONS_DOOR_MIMIC);
+    return (mc == MONS_FEATURE_MIMIC);
 }
 
 bool discover_mimic(const coord_def& pos)
@@ -912,7 +908,7 @@ bool discover_mimic(const coord_def& pos)
     // Generate and place the monster.
     mgen_data mg;
     mg.behaviour = BEH_WANDER;
-    mg.cls       = get_feature_mimic_type(feat);
+    mg.cls       = MONS_FEATURE_MIMIC;
     mg.pos      = pos;
     const int mid = place_monster(mg, true);
     ASSERT(mid != -1);
@@ -939,6 +935,9 @@ bool discover_mimic(const coord_def& pos)
     // Friendly monsters don't appreciate being pushed away.
     if (mon && mon->friendly())
         behaviour_event(mon, ME_WHACK, mid);
+
+    // Necessary for door mimics to force LOS update.
+    mimic->set_position(pos);
 
     // Announce the mimic.
     if (feat == DNGN_OPEN_DOOR)

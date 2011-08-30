@@ -55,4 +55,5 @@ void los_monster_died(const monster* mon);
 void los_terrain_changed(const coord_def& p);
 void los_cloud_changed(const coord_def& p);
 void los_changed();
+opacity_type mons_opacity(const monster* mon);
 #endif

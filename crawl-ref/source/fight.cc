@@ -4675,6 +4675,17 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
     if (attacker->type == MONS_KILLER_KLOWN && attk.type == AT_HIT)
         return (RANDOM_ELEMENT(klown_attack));
 
+    mon_attack_type type = attk.type;
+
+    if (mons_is_feat_mimic(attacker->type))
+    {
+        const dungeon_feature_type feat = get_mimic_feat(attacker->as_monster());
+        if (feat_is_door(feat))
+            type = AT_SNAP;
+        else if (feat_is_fountain(feat))
+            type = AT_SPLASH;
+    }
+
     if (attk.type == AT_TENTACLE_SLAP
         && (attacker->type == MONS_KRAKEN_TENTACLE
             || attacker->type == MONS_ELDRITCH_TENTACLE))
@@ -4711,7 +4722,7 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
 
     ASSERT(attk.type <
            static_cast<int>(sizeof(attack_types) / sizeof(const char *)));
-    return (attack_types[attk.type]);
+    return (attack_types[type]);
 }
 
 std::string melee_attack::mons_attack_desc(const mon_attack_def &attk)

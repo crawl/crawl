@@ -184,8 +184,10 @@ item_def &get_mimic_item(const monster* mimic)
 
 dungeon_feature_type get_mimic_feat(const monster* mimic)
 {
-    ASSERT(mimic->props.exists("feat_type"));
-    return static_cast<dungeon_feature_type>(mimic->props["feat_type"].get_short());
+    if (mimic->props.exists("feat_type"))
+        return static_cast<dungeon_feature_type>(mimic->props["feat_type"].get_short());
+    else
+        return DNGN_FLOOR;
 }
 
 bool feature_mimic_at(const coord_def &c)

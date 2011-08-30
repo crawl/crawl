@@ -491,13 +491,8 @@ static std::vector<monster_type> _find_valid_monster_types(const level_id &place
     valid_monster_types.clear();
     for (int i = 0; i < NUM_MONSTERS; ++i)
         if (mons_rarity(static_cast<monster_type>(i), place) > 0)
-        {
-            if (i == MONS_STAIR_MIMIC && your_branch().depth == 1)
-                continue;
-            if (i == MONS_SHOP_MIMIC && !_is_valid_shop_level())
-                continue;
             valid_monster_types.push_back(static_cast<monster_type>(i));
-        }
+
     last_monster_type_place = place;
     return (valid_monster_types);
 }
