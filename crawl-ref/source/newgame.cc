@@ -1653,7 +1653,7 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
 static std::vector<weapon_choice> _get_weapons(const newgame_def* ng)
 {
     std::vector<weapon_choice> weapons;
-    if (ng->job == JOB_HUNTER)
+    if (ng->job == JOB_HUNTER || ng->job == JOB_ARCANE_MARKSMAN)
     {
         weapon_type startwep[4] = { WPN_THROWN, WPN_SLING, WPN_BOW,
                                     WPN_CROSSBOW };
@@ -1780,6 +1780,7 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
     case JOB_SKALD:
     case JOB_WARPER:
     case JOB_HUNTER:
+    case JOB_ARCANE_MARKSMAN:
         break;
     default:
         return (true);
