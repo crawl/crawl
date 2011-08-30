@@ -163,12 +163,13 @@ static bool _is_species_valid_choice(species_type species)
     if (species >= SP_ELF) // These are all invalid.
         return (false);
 
-    if (species == SP_OCTOPODE
+#if 0
+    if (species == SP_MY_NEW_TRUNK_ONLY_EXPERIMENT
         && Version::ReleaseType() != VER_ALPHA)
     {
-        // Octopodes are not targetted at 0.9.
         return (false);
     }
+#endif
 
     // Non-base draconians cannot be selected either.
     if (species >= SP_RED_DRACONIAN && species < SP_BASE_DRACONIAN)
