@@ -953,8 +953,6 @@ int mons_standard_rare(int mcls)
         return 12;
 
     case MONS_CATOBLEPAS:
-        if (Version::ReleaseType() == VER_ALPHA)
-            return 35;
     case MONS_DEEP_ELF_SOLDIER:
     case MONS_GIANT_ORANGE_BRAIN:
     case MONS_HELL_KNIGHT:
@@ -1415,9 +1413,6 @@ int mons_lair_rare(int mcls)
     case MONS_YAK:
         return 50;
 
-    case MONS_BASILISK:
-        if (Version::ReleaseType() == VER_ALPHA)
-            return 35;
     case MONS_BLACK_MAMBA:
         return 47;
 
@@ -1429,6 +1424,7 @@ int mons_lair_rare(int mcls)
     case MONS_FIRE_DRAKE:
         return 36;
 
+    case MONS_BASILISK:
     case MONS_WAR_DOG:
         return 35;
 
@@ -1449,8 +1445,6 @@ int mons_lair_rare(int mcls)
         return 20;
 
     case MONS_CATOBLEPAS:
-        if (Version::ReleaseType() == VER_ALPHA)
-            return 47;
     case MONS_BLACK_BEAR:
     case MONS_GRIZZLY_BEAR:
     case MONS_POLAR_BEAR:
