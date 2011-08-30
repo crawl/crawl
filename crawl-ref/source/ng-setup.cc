@@ -446,37 +446,39 @@ static void _update_weapon(const newgame_def& ng)
 {
     ASSERT(ng.weapon != NUM_WEAPONS);
 
+    const int plus = you.char_class == JOB_HUNTER ? 1 : 0;
+
     switch(ng.weapon)
     {
     case WPN_ROCKS:
-        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5, 1);
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5, plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
         break;
     case WPN_JAVELINS:
-        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6, 1);
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6, plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
         break;
     case WPN_DARTS:
-        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 30, 1);
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 30, plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
         break;
     case WPN_BOW:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW);
-        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 25, 1);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 25, plus);
 
         // Wield the bow instead.
         you.equip[EQ_WEAPON] = 1;
         break;
     case WPN_CROSSBOW:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW);
-        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 25, 1);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 25, plus);
 
         // Wield the crossbow instead.
         you.equip[EQ_WEAPON] = 1;
         break;
     case WPN_SLING:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
-        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 25, 1);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 25, plus);
 
         // Wield the sling instead.
         you.equip[EQ_WEAPON] = 1;
@@ -733,49 +735,7 @@ static void _give_items_skills(const newgame_def& ng)
 
     case JOB_ARCANE_MARKSMAN:
         newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-
-        switch (you.species)
-        {
-        case SP_SLUDGE_ELF:
-        case SP_HILL_ORC:
-        case SP_MERFOLK:
-            newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
-            break;
-
-        case SP_OGRE:
-        case SP_TROLL:
-            newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 3);
-            break;
-
-        case SP_HALFLING:
-        case SP_SPRIGGAN:
-            newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 30);
-
-            // Wield the sling instead.
-            you.equip[EQ_WEAPON] = 1;
-            break;
-
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-        case SP_KOBOLD:
-            newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 25);
-
-            // Wield the crossbow instead.
-            you.equip[EQ_WEAPON] = 1;
-            break;
-
-        default:
-            newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 25);
-
-            // Wield the bow instead.
-            you.equip[EQ_WEAPON] = 1;
-            break;
-        }
+        _update_weapon(ng);
 
         // And give them a book
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_BRANDS);
