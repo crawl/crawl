@@ -189,6 +189,7 @@ sub load_aptitudes {
     else {
       if (/APT\(\s*SP_(\w+)\s*,\s*SK_(\w+)\s*,\s*(-?\d+)\s*\)/) {
         $species = propercase_string(fix_underscores($1));
+        next if $species eq "Octopode";
         if (!$SEEN_SPECIES{$species}) {
           $SEEN_SPECIES{$species} = 1;
           push @SPECIES, $species;
