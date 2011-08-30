@@ -1514,11 +1514,11 @@ int find_free_slot(const item_def &i)
     if (slotisfree(slot))
         return slot;
 
-    int disliked = -1;
+    FixedBitArray<ENDOFPACK> disliked;
     if (i.base_type == OBJ_FOOD)
-        disliked = 'e' - 'a';
+        disliked.set('e' - 'a'), disliked.set('y' - 'a');
     else if (i.base_type == OBJ_POTIONS)
-        disliked = 'y' - 'a';
+        disliked.set('y' - 'a');
 
     if (!searchforward)
     {
@@ -1529,7 +1529,7 @@ int find_free_slot(const item_def &i)
             if (you.inv[slot].defined())
             {
                 if (slot + 1 < ENDOFPACK && !you.inv[slot + 1].defined()
-                    && slot + 1 != disliked)
+                    && !disliked[slot + 1])
                 {
                     return (slot + 1);
                 }
@@ -1537,7 +1537,7 @@ int find_free_slot(const item_def &i)
             else
             {
                 if (slot + 1 < ENDOFPACK && you.inv[slot + 1].defined()
-                    && slot != disliked)
+                    && !disliked[slot])
                 {
                     return (slot);
                 }
@@ -1548,16 +1548,17 @@ int find_free_slot(const item_def &i)
     // Either searchforward is true, or search backwards failed and
     // we re-try searching the oposite direction.
 
+    int badslot = -1;
     // Return first free slot
     for (slot = 0; slot < ENDOFPACK; ++slot)
-        if (slot != disliked && !you.inv[slot].defined())
-            return slot;
+        if (!you.inv[slot].defined())
+            if (disliked[slot])
+                badslot = slot;
+            else
+                return slot;
 
     // If the least preferred slot is the only choice, so be it.
-    if (disliked != -1 && !you.inv[disliked].defined())
-        return disliked;
-
-    return (-1);
+    return (badslot);
 #undef slotisfree
 }
 
