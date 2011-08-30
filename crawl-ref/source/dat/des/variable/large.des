@@ -50,6 +50,7 @@ ENDMAP
 
 ###############################################################################
 # Castle of kobolds and goblins
+#
 NAME:    minmay_goblin_kobold_castle
 TAGS:    no_rotate
 ORIENT:  north
