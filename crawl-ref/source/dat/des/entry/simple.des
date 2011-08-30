@@ -1217,22 +1217,22 @@ ORIENT:  float
 WEIGHT:  6
 MONS:    plant
 SHUFFLE: {[
-MAP         
+MAP
           ......
-        ..xx==xx..  
+        ..xx==xx..
       ...xx1~~1xx...
      ..xxxxt11txxxx..
     ..xxccccccccccxx..
-    .xxcc1tt1t111ccxx. 
-    .xxc11..{[..t1cxx. 
-    .xxc..........cxx. 
-    .xxc+cc...1cc+cxx. 
-   ..xcc..cc++cc1.ccx.. 
-  ..xxct.1c....c.t1cxx.. 
- ..xxxccccc...1cccccxxx.. 
- .xxx11..............xxx. 
- .xt....t..1t...1t.....x. 
- .....1.........t........ 
+    .xxcc1tt1t111ccxx.
+    .xxc11..{[..t1cxx.
+    .xxc..........cxx.
+    .xxc+cc...1cc+cxx.
+   ..xcc..cc++cc1.ccx..
+  ..xxct.1c....c.t1cxx..
+ ..xxxccccc...1cccccxxx..
+ .xxx11..............xxx.
+ .xt....t..1t...1t.....x.
+ .....1.........t........
    ...tt...1t.....t1.
       .......1........
         ... ...
@@ -1263,7 +1263,7 @@ MAP
 ..W.. ..WWW..xxWWx...W...
  ...  .Wxx....WW... ...
       .....  .Wxx.
-             ..... 
+             .....
 ENDMAP
 
 NAME:    denvon_entry_hothouse
