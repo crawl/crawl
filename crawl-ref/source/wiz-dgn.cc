@@ -377,7 +377,7 @@ void wizard_list_branches()
                  i, branches[i].longname, branches[i].startdepth,
                  branches[branches[i].parent_branch].abbrevname);
         }
-        else if (i == BRANCH_SWAMP || i == BRANCH_SHOALS)
+        else if (is_random_lair_subbranch((branch_type)i))
         {
             mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) was not generated "
                  "this game", i, branches[i].longname);
