@@ -181,9 +181,8 @@ static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
             viewwindow();
 
             mprf(MSGCH_WARN,
-                 "Wait a moment, %s! Do you really want to %s there?",
-                 you.your_name.c_str(),
-                 move_verb.c_str());
+                 "You found %s trap!",
+                 trap->name(DESC_NOCAP_A).c_str());
 
             if (!you.running.is_any_travel())
                 more();
