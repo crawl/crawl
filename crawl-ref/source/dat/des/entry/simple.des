@@ -1207,3 +1207,88 @@ xxx.x.x.x.x.xxx
     x.....x
     x.xxx.x
 ENDMAP
+
+##############################################################################
+# denvon's houses (hot, water, plant)
+
+NAME:    denvon_entry_planthouse
+TAGS:    entry no_monster_gen
+ORIENT:  float
+WEIGHT:  6
+MONS:    plant
+SHUFFLE: {[
+MAP         
+          ......
+        ..xx==xx..  
+      ...xx1~~1xx...
+     ..xxxxt11txxxx..
+    ..xxccccccccccxx..
+    .xxcc1tt1t111ccxx. 
+    .xxc11..{[..t1cxx. 
+    .xxc..........cxx. 
+    .xxc+cc...1cc+cxx. 
+   ..xcc..cc++cc1.ccx.. 
+  ..xxct.1c....c.t1cxx.. 
+ ..xxxccccc...1cccccxxx.. 
+ .xxx11..............xxx. 
+ .xt....t..1t...1t.....x. 
+ .....1.........t........ 
+   ...tt...1t.....t1.
+      .......1........
+        ... ...
+ENDMAP
+
+NAME:    denvon_entry_waterhouse
+TAGS:    entry no_monster_gen no_pool_fixup
+ORIENT:  float
+WEIGHT:  3
+SHUFFLE: {[
+MAP
+         ........
+        ..xx==xx..
+      ...xxW~~Wxx...
+     ..xxxxWWWWxxxx..
+    ..xxccccccccccxx..
+    .xxccwWWWWWWwccxx.
+    .xxcWWW.{[.WWWcxx.
+    .xxc..........cxx.
+    .xxc+cc....cc+cxx.
+   ..xcc..cc++cc..ccx..
+  ..xxcT..c....c..Tcxx..
+ ..xxxccccc....cccccxxx..
+ .xxxwWW..........WWwxxx.
+ .xwwwW........x...Wwwwx.
+..WWWW...xxW........WWWW.
+.WWW.....Wxx...xx....WW..
+..W.. ..WWW..xxWWx...W...
+ ...  .Wxx....WW... ...
+      .....  .Wxx.
+             ..... 
+ENDMAP
+
+NAME:    denvon_entry_hothouse
+TAGS:    entry no_monster_gen no_pool_fixup
+ORIENT:  float
+WEIGHT:  1
+SHUFFLE: {[
+MAP
+         ........
+        ..xx==xx..
+      ...xxl~~lxx...
+     ..xxxxllllxxxx..
+    ..xxccccccccccxx..
+    .xxccllllllllccxx.
+    .xxclll.{[.lllcxx.
+    .xxc..........cxx.
+    .xxc+cc....cc+cxx.
+   ..xcc..cc++cc..ccx..
+  ..xxcV..c....c..Vcxx..
+ ..xxxccccc....cccccxxx..
+ .xxxlll.....x....lllxxx.
+ .xllll...x........llllx.
+....ll...x...x..x...ll....
+.x..........lx.........lx.
+.....x....xxl..xxl.....xl.
+ .xl.....x....xl....x..lx.
+ ....   ...  ....  .......
+ENDMAP
