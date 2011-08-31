@@ -4385,6 +4385,21 @@ static void _hints_describe_feature(int x, int y)
             Hints.hints_events[HINT_SEEN_TRAP] = false;
             break;
 
+       case DNGN_TRAP_WEB:
+            ostr << "Some areas of the dungeon, such as Spiders Nest, may "
+                    "be strewn with giant webs that may ensnare you for a short "
+                    "time and notify local spiders of your location. "
+                    "You can attempt to clear away the web by "
+                    "standing next to it and then pressing <w>Ctrl</w> "
+                    "and the direction of the web. Note that this often "
+                    "results in just getting entangled anyway, so it can be "
+                    "quite a dangerous task.\n\n"
+
+                    "Players in Spider Form can safely navigate the webs (as "
+                    "can incorporeal entities and various oozes). ";
+            Hints.hints_events[HINT_SEEN_WEB] = false;
+            break;
+
        case DNGN_STONE_STAIRS_DOWN_I:
        case DNGN_STONE_STAIRS_DOWN_II:
        case DNGN_STONE_STAIRS_DOWN_III:
