@@ -446,9 +446,6 @@ void check_net_will_hold_monster(monster* mons)
 
 bool player_caught_in_web()
 {
-    if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
-        return (false);
-
     if (you.attribute[ATTR_HELD])
         return false;
 
@@ -840,8 +837,28 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         break;
 
     case TRAP_WEB:
-        if ((you_trigger && you.is_web_immune()) || ((m)&&m->is_web_immune()))
+        if (triggerer.body_size(PSIZE_BODY) >= SIZE_GIANT)
+        {
+            trap_destroyed = true;
+            if (you_trigger)
+                mprf("You tear through %s web.", you_know ? "the" : "a");
+            else if (m)
+                simple_monster_message(m, " tears through a web.");
             break;
+        }
+
+        if (triggerer.is_web_immune())
+        {
+            if (m)
+            {
+                if (m->is_insubstantial())
+                    simple_monster_message(m, " passes through a web.");
+                else if (mons_genus(m->type))
+                    simple_monster_message(m, " oozes through a web.");
+                // too spammy for spiders, and expected
+            }
+            break;
+        }
 
         if (you_trigger)
         {
