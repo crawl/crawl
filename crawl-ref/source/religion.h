@@ -56,6 +56,7 @@ uint8_t god_message_altar_colour(god_type god);
 bool player_can_join_god(god_type which_god);
 bool transformed_player_can_join_god(god_type which_god);
 void god_pitch(god_type which_god);
+int had_gods();
 int piety_rank(int piety = -1);
 int piety_scale(int piety_change);
 bool god_likes_your_god(god_type god, god_type your_god = you.religion);

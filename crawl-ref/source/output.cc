@@ -934,6 +934,14 @@ void redraw_skill(const std::string &your_name, const std::string &job_name)
             nowrap_eol_cprintf("%s", piety.c_str());
         }
     }
+    else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
+             && !had_gods())
+    {
+        std::string godpiety = "**....";
+        textcolor(DARKGREY);
+        if ((unsigned int)(strwidth(species) + strwidth(godpiety) + 1) <= WIDTH)
+            nowrap_eol_cprintf(" %s", godpiety.c_str());
+    }
 
     clear_to_end_of_line();
 
