@@ -1842,7 +1842,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     case MONS_GASTRONOK:
-        if (one_chance_in(10))
+        if (one_chance_in(10) && !get_unique_item_status(UNRAND_PONDERING))
         {
             force_item = true;
             make_item_unrandart(item, UNRAND_PONDERING);
