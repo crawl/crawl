@@ -173,12 +173,16 @@ $user =~ s/scintilla/greensnark/;
 $user =~ s/burnhamrobertp/Cryp71c/;
 $user =~ s/^muu+$/Mu/i;
 $user =~ s/raphael.langella/galehar/;
+$user =~ s/flodiebold/edlothiol/;
 
 # Other regular contributorss
 $user =~ s/chriscampbell89/MarvinPA/;
 $user =~ s/homelesspete/Twinge/;
 $user =~ s/yobbobandana/yobbo/;
 $user =~ s/thevalrus/valrus/;
+$user =~ s/akbecker/GreatZebu/;
+$user =~ s/pete/mumra/;
+$user =~ s/bstriegs/Wensley/;
 
 $rev = substr($commit, 0, 12);
 
