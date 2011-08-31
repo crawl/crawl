@@ -869,13 +869,18 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 if (random2limit(player_evasion(), 40)
                     + (random2(you.dex()) / 3) + (trig_knows ? 3 : 0) > 12)
                 {
-                    mpr("You notice a web but duck past it!");
+                    mpr("A web is hanging here but you duck past it!");
                 }
                 else
                 {
                     mpr("You are caught in the web!");
-                    if (player_caught_in_web() && player_in_a_dangerous_place())
-                        xom_is_stimulated(50);
+
+                    if (player_caught_in_web())
+                    {
+                        check_monsters_sense(SENSE_WEB_VIBRATION, 100, you.pos());
+                        if (player_in_a_dangerous_place())
+                            xom_is_stimulated(50);
+                    }
                 }
             }
         }
@@ -914,6 +919,10 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
 
                 // If somehow already caught, make it worse.
                 m->add_ench(ENCH_HELD);
+
+                // Alert both monsters and player
+                check_monsters_sense(SENSE_WEB_VIBRATION, 100, triggerer.position);
+                check_player_sense(SENSE_WEB_VIBRATION, 100, triggerer.position);
             }
         }
         break;

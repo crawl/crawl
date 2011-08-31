@@ -594,6 +594,144 @@ static const char* _player_vampire_smells_blood(int dist)
     return "";
 }
 
+static const char* _player_spider_senses_web(int dist)
+{
+    if (dist < 4)
+        return " near-by";
+
+    if (dist > LOS_RADIUS)
+        return " in the distance";
+
+    return "";
+}
+
+void check_player_sense(sense_type sense, int range, const coord_def& where)
+{
+    const int player_distance = distance(you.pos(), where);
+
+    if (player_distance <= range)
+    {
+        switch(sense)
+        {
+        case SENSE_SMELL_BLOOD:
+             dprf("Player smells blood, pos: (%d, %d), dist = %d)",
+                  you.pos().x, you.pos().y, player_distance);
+             you.check_awaken(range - player_distance);
+             // Don't message if you can see the square.
+             if (!you.see_cell(where))
+             {
+                 mprf("You smell fresh blood%s.",
+                      _player_vampire_smells_blood(player_distance));
+             }
+             break;
+
+        case SENSE_WEB_VIBRATION:
+             // Spider form
+             if (you.can_cling_to_walls())
+             {
+                 you.check_awaken(range - player_distance);
+                 // Don't message if you can see the square.
+                 if (!you.see_cell(where))
+                 {
+                     mprf("You hear a 'twang'%s.",
+                          _player_spider_senses_web(player_distance));
+                 }
+             }
+             break;
+        }
+    }
+}
+
+void check_monsters_sense(sense_type sense, int range, const coord_def& where)
+{
+    circle_def c(where, range, C_CIRCLE);
+    for (monster_iterator mi(&c); mi; ++mi)
+    {
+        switch(sense)
+        {
+        case SENSE_SMELL_BLOOD:
+            if (!mons_class_flag(mi->type, M_BLOOD_SCENT))
+                break;
+
+            // Let sleeping hounds lie.
+            if (mi->asleep()
+                && mons_species(mi->type) != MONS_VAMPIRE
+                && mi->type != MONS_SHARK)
+            {
+                // 33% chance of sleeping on
+                // 33% of being disturbed (start BEH_WANDER)
+                // 33% of being alerted   (start BEH_SEEK)
+                if (!one_chance_in(3))
+                {
+                    if (coinflip())
+                    {
+                        dprf("disturbing %s (%d, %d)",
+                             mi->name(DESC_PLAIN).c_str(),
+                             mi->pos().x, mi->pos().y);
+                        behaviour_event(*mi, ME_DISTURB, MHITNOT, where);
+                    }
+                    break;
+                }
+            }
+            dprf("alerting %s (%d, %d)",
+                            mi->name(DESC_PLAIN).c_str(),
+                            mi->pos().x, mi->pos().y);
+            behaviour_event(*mi, ME_ALERT, MHITNOT, where);
+
+            if (mi->type == MONS_SHARK)
+            {
+                // Sharks go into a battle frenzy if they smell blood.
+                monster_pathfind mp;
+                if (mp.init_pathfind(*mi, where))
+                {
+                    mon_enchant ench = mi->get_ench(ENCH_BATTLE_FRENZY);
+                    const int dist = 15 - (mi->pos() - where).rdist();
+                    const int dur  = random_range(dist, dist*2)
+                                     * speed_to_duration(mi->speed);
+
+                    if (ench.ench != ENCH_NONE)
+                    {
+                        int level = ench.degree;
+                        if (level < 4 && one_chance_in(2*level))
+                            ench.degree++;
+                        ench.duration = std::max(ench.duration, dur);
+                        mi->update_ench(ench);
+                    }
+                    else
+                    {
+                        mi->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1, 0, dur));
+                        simple_monster_message(*mi, " is consumed with "
+                                                    "blood-lust!");
+                    }
+                }
+            }
+            break;
+
+        case SENSE_WEB_VIBRATION:
+            if (!mons_class_flag(mi->type, M_WEB_SENSE))
+                break;
+            if (!one_chance_in(4))
+            {
+                if (coinflip())
+                {
+                    dprf("disturbing %s (%d, %d)",
+                         mi->name(DESC_PLAIN).c_str(),
+                         mi->pos().x, mi->pos().y);
+                    behaviour_event(*mi, ME_DISTURB, MHITNOT, where);
+                }
+                else
+                {
+                    dprf("alerting %s (%d, %d)",
+                         mi->name(DESC_PLAIN).c_str(),
+                         mi->pos().x, mi->pos().y);
+                    behaviour_event(*mi, ME_ALERT, MHITNOT, where);
+                }
+            }
+            break;
+        }
+    }
+}
+
 void blood_smell(int strength, const coord_def& where)
 {
     const int range = strength * strength;
@@ -608,83 +746,9 @@ void blood_smell(int strength, const coord_def& where)
         if (vamp_strength > 0)
         {
             int vamp_range = vamp_strength * vamp_strength;
-
-            const int player_distance = distance(you.pos(), where);
-
-            if (player_distance <= vamp_range)
-            {
-                dprf("Player smells blood, pos: (%d, %d), dist = %d)",
-                     you.pos().x, you.pos().y, player_distance);
-                you.check_awaken(range - player_distance);
-                // Don't message if you can see the square.
-                if (!you.see_cell(where))
-                {
-                    mprf("You smell fresh blood%s.",
-                         _player_vampire_smells_blood(player_distance));
-                }
-            }
+            check_player_sense(SENSE_SMELL_BLOOD, vamp_range, where);
         }
-    }
-
-    circle_def c(where, range, C_CIRCLE);
-    for (monster_iterator mi(&c); mi; ++mi)
-    {
-        if (!mons_class_flag(mi->type, M_BLOOD_SCENT))
-            continue;
-
-        // Let sleeping hounds lie.
-        if (mi->asleep()
-            && mons_species(mi->type) != MONS_VAMPIRE
-            && mi->type != MONS_SHARK)
-        {
-            // 33% chance of sleeping on
-            // 33% of being disturbed (start BEH_WANDER)
-            // 33% of being alerted   (start BEH_SEEK)
-            if (!one_chance_in(3))
-            {
-                if (coinflip())
-                {
-                    dprf("disturbing %s (%d, %d)",
-                         mi->name(DESC_PLAIN).c_str(),
-                         mi->pos().x, mi->pos().y);
-                    behaviour_event(*mi, ME_DISTURB, MHITNOT, where);
-                }
-                continue;
-            }
-        }
-        dprf("alerting %s (%d, %d)",
-             mi->name(DESC_PLAIN).c_str(),
-             mi->pos().x, mi->pos().y);
-        behaviour_event(*mi, ME_ALERT, MHITNOT, where);
-
-        if (mi->type == MONS_SHARK)
-        {
-            // Sharks go into a battle frenzy if they smell blood.
-            monster_pathfind mp;
-            if (mp.init_pathfind(*mi, where))
-            {
-                mon_enchant ench = mi->get_ench(ENCH_BATTLE_FRENZY);
-                const int dist = 15 - (mi->pos() - where).rdist();
-                const int dur  = random_range(dist, dist*2)
-                                 * speed_to_duration(mi->speed);
-
-                if (ench.ench != ENCH_NONE)
-                {
-                    int level = ench.degree;
-                    if (level < 4 && one_chance_in(2*level))
-                        ench.degree++;
-                    ench.duration = std::max(ench.duration, dur);
-                    mi->update_ench(ench);
-                }
-                else
-                {
-                    mi->add_ench(mon_enchant(ENCH_BATTLE_FRENZY, 1,
-                                             0, dur));
-                    simple_monster_message(*mi, " is consumed with "
-                                                "blood-lust!");
-                }
-            }
-        }
+        check_monsters_sense(SENSE_SMELL_BLOOD, range, where);
     }
 }
 
