@@ -1165,8 +1165,13 @@ enum dungeon_feature_type
     DNGN_TRAP_MECHANICAL = 75,         //   75
     DNGN_TRAP_MAGICAL,
     DNGN_TRAP_NATURAL,
+#if TAG_MAJOR_VERSION == 32
     DNGN_UNDISCOVERED_TRAP,            //   78
     DNGN_TRAP_WEB,                     //   79
+#else
+    DNGN_TRAP_WEB,
+    DNGN_UNDISCOVERED_TRAP,
+#endif
 
     DNGN_ENTER_SHOP = 80,              //   80
     DNGN_ENTER_LABYRINTH,
