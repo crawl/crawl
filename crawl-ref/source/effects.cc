@@ -2402,6 +2402,9 @@ void handle_time()
 
     if (you.religion == GOD_JIYVA && one_chance_in(25))
         jiyva_eat_offlevel_items();
+
+    if (player_in_branch(BRANCH_SPIDER_NEST) && coinflip())
+        place_webs(random2(10));
 }
 
 // Move monsters around to fake them walking around while player was

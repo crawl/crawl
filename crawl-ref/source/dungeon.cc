@@ -2911,50 +2911,6 @@ static bool _shaft_is_in_corridor(const coord_def& c)
     return (false);
 }
 
-static void _place_webs(int num)
-{
-    int slot = 0;
-    for (int j = 0; j < num; j++)
-    {
-        for (;; slot++)
-        {
-            if (slot >= MAX_TRAPS)
-                return;
-            if (env.trap[++slot].type == TRAP_UNASSIGNED)
-                break;
-        };
-        trap_def& ts(env.trap[slot]);
-
-        int tries;
-        // TODO: reuse this logic to place new traps at regular intervals (out of LOS)
-        for (tries = 0; tries < 200; ++tries)
-        {
-            ts.pos.x = random2(GXM);
-            ts.pos.y = random2(GYM);
-            if (in_bounds(ts.pos)
-                && grd(ts.pos) == DNGN_FLOOR
-                && !map_masked(ts.pos, MMT_NO_TRAP))
-            {
-                // Calculate weight
-                int weight = 0;
-                for (adjacent_iterator ai(ts.pos); ai; ++ai)
-                    if (feat_is_solid(grd(*ai)))
-                        weight++;
-                if (one_chance_in(10 - weight))
-                    break;
-            }
-        }
-
-        if (tries >= 200)
-            break;
-
-        ts.type = TRAP_WEB;
-        grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
-        env.tgrid(ts.pos) = slot;
-        ts.prepare_ammo();
-    }
-}
-
 static void _place_traps(int level_number)
 {
     const int num_traps = num_traps_for_place(level_number);
@@ -3010,9 +2966,9 @@ static void _place_traps(int level_number)
     }
 
     if (player_in_branch(BRANCH_SPIDER_NEST))
-        _place_webs(400 - num_traps) / 2);
+        place_webs((400 - num_traps) / 2);
     else if (player_in_branch(BRANCH_CRYPT))
-        _place_webs(random2(20));
+        place_webs(random2(20));
 }
 
 static void _dgn_place_feature_at_random_floor_square(dungeon_feature_type feat,

@@ -20,6 +20,7 @@
 #include "delay.h"
 #include "describe.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "exercise.h"
 #include "map_knowledge.h"
 #include "itemname.h"
@@ -1990,4 +1991,49 @@ int count_traps(trap_type ttyp)
         if (env.trap[tcount].type == ttyp)
             num++;
     return num;
+}
+
+void place_webs(int num)
+{
+    int slot = 0;
+    for (int j = 0; j < num; j++)
+    {
+        for (;; slot++)
+        {
+            if (slot >= MAX_TRAPS)
+                return;
+            if (env.trap[++slot].type == TRAP_UNASSIGNED)
+                break;
+        };
+        trap_def& ts(env.trap[slot]);
+
+        int tries;
+        // this is hardly ever enough to place many webs, most of the time
+        // it will fail prematurely.  Which is fine.
+        for (tries = 0; tries < 200; ++tries)
+        {
+            ts.pos.x = random2(GXM);
+            ts.pos.y = random2(GYM);
+            if (in_bounds(ts.pos)
+                && grd(ts.pos) == DNGN_FLOOR
+                && !map_masked(ts.pos, MMT_NO_TRAP))
+            {
+                // Calculate weight
+                int weight = 0;
+                for (adjacent_iterator ai(ts.pos); ai; ++ai)
+                    if (feat_is_solid(grd(*ai)))
+                        weight++;
+                if (one_chance_in(10 - weight))
+                    break;
+            }
+        }
+
+        if (tries >= 200)
+            break;
+
+        ts.type = TRAP_WEB;
+        grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
+        env.tgrid(ts.pos) = slot;
+        ts.prepare_ammo();
+    }
 }
