@@ -2966,7 +2966,13 @@ static void _place_traps(int level_number)
     }
 
     if (player_in_branch(BRANCH_SPIDER_NEST))
-        place_webs((400 - num_traps) / 2);
+    {
+        int max_webs = 400 - num_traps - 50;
+        // Adjust for branch depth
+        max_webs = max_webs / (6 - player_branch_depth()) / 2;
+        // Vary from 1/2 to full max amount
+        place_webs(max_webs + random2(max_webs));
+    }
     else if (player_in_branch(BRANCH_CRYPT))
         place_webs(random2(20));
 }
