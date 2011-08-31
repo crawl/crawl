@@ -2036,8 +2036,10 @@ static void _ruin_level(Iterator ri,
 // Missing stairs are replaced in fixup_branch_stairs, but replacing
 // too many breaks interlevel connectivity, so we don't use a chance of 1.
   #define FEATURE_MIMIC_CHANCE 2
+  #define FEATURE_MIMIC_DEPTH 1
 #else
   #define FEATURE_MIMIC_CHANCE 100
+  #define FEATURE_MIMIC_DEPTH 10
 #endif
 static void _place_feature_mimics(int level_number,
                                   dungeon_feature_type dest_stairs_type)
@@ -2048,10 +2050,8 @@ static void _place_feature_mimics(int level_number,
         return;
     }
 
-#ifndef DEBUG_MIMIC
-    if (level_number < 10)
+    if (level_number < FEATURE_MIMIC_DEPTH)
         return;
-#endif
 
     for (rectangle_iterator ri(1); ri; ++ri)
     {
@@ -3252,6 +3252,7 @@ static void _place_branch_entrances(int dlevel, level_area_type level_type)
 
         const bool mimic = !branch_is_unfinished(b->id)
                            && !is_hell_subbranch(b->id)
+                           && dlevel >= FEATURE_MIMIC_DEPTH
                            && player_branch_depth() >= b->mindepth
                            && player_branch_depth() <= b->maxdepth
                            && one_chance_in(FEATURE_MIMIC_CHANCE);
