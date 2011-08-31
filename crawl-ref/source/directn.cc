@@ -2940,7 +2940,7 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         case TRAP_PLATE:
             return ("pressure plate");
         case TRAP_WEB:
-            return ("web trap");
+            return ("web");
         default:
             error_message_to_player();
             return ("undefined trap");
@@ -3032,7 +3032,7 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_TRAP_NATURAL:
         return ("natural trap");
     case DNGN_TRAP_WEB:
-        return ("web trap");
+        return ("web");
     case DNGN_ENTER_SHOP:
         return ("shop");
     case DNGN_ABANDONED_SHOP:
