@@ -100,6 +100,7 @@ static void _builder_normal(int level_number);
 static void _builder_items(int level_number, int items_wanted);
 static void _builder_monsters(int level_number, level_area_type level_type,
                               int mon_wanted);
+static coord_def _place_specific_feature(dungeon_feature_type feat);
 static void _place_specific_stair(dungeon_feature_type stair,
                                   const std::string &tag = "",
                                   int dl = 0);
@@ -2096,6 +2097,19 @@ static void _place_feature_mimics(int level_number,
         // If it is a branch entry, it's been put there for mimicing.
         if (feat_is_branch_stairs(feat) || one_chance_in(FEATURE_MIMIC_CHANCE))
         {
+            // For normal stairs, there is a chance to create another mimics
+            // elsewhere instead of turning this one. That way, when the 3
+            // stairs are grouped and there is another isolated one, any of
+            // the 4 staircase can be the mimic.
+            if (feat_is_stone_stair(feat) && one_chance_in(4))
+            {
+                const coord_def new_pos = _place_specific_feature(feat);
+                dprf("Placed %s mimic at (%d,%d).",
+                     feat_type_name(feat), new_pos.x, new_pos.y);
+                env.level_map_mask(new_pos) |= MMT_MIMIC;
+                continue;
+            }
+
             dprf("Placed %s mimic at (%d,%d).",
                  feat_type_name(feat), ri->x, ri->y);
             env.level_map_mask(*ri) |= MMT_MIMIC;
@@ -3205,7 +3219,7 @@ static coord_def _dgn_random_point_in_bounds(dungeon_feature_type searchfeat,
     }
 }
 
-static void _place_specific_feature(dungeon_feature_type feat)
+static coord_def _place_specific_feature(dungeon_feature_type feat)
 {
     /* Only overwrite vaults when absolutely necessary. */
     coord_def c = _dgn_random_point_in_bounds(DNGN_FLOOR, MMT_VAULT, DNGN_UNSEEN, true);
@@ -3216,6 +3230,8 @@ static void _place_specific_feature(dungeon_feature_type feat)
         env.grid(c) = feat;
     else
         throw dgn_veto_exception("Cannot place specific feature.");
+
+    return c;
 }
 
 static bool _place_vault_by_tag(const std::string &tag, int dlevel)
