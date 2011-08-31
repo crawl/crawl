@@ -542,7 +542,12 @@ void initialise_travel()
 {
     for (int feat = DNGN_FLOOR_MIN; feat < NUM_FEATURES; feat++)
     {
+#if TAG_MAJOR_VERSION == 32
+        if ((feat >= DNGN_TRAP_MECHANICAL && feat <= DNGN_TRAP_NATURAL)
+            || feat == DNGN_TRAP_WEB)
+#else
         if (feat >= DNGN_TRAP_MECHANICAL && feat <= DNGN_TRAP_WEB)
+#endif
             continue;
 
         traversable_terrain[feat] = TRAVERSABLE;
