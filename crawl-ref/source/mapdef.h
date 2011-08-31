@@ -1140,6 +1140,7 @@ private:
     bool            index_only;
     mutable long    cache_offset;
     std::string     file;
+    std::string     cache_name;
 
     typedef Matrix<bool> subvault_mask;
     subvault_mask *svmask;

@@ -54,6 +54,7 @@ std::string datafile_path(
 bool get_dos_compatible_file_name(std::string *fname);
 std::string get_parent_directory(const std::string &filename);
 std::string get_base_filename(const std::string &filename);
+std::string get_cache_name(const std::string &filename);
 std::string get_path_relative_to(const std::string &referencefile,
                                  const std::string &relativepath);
 std::string catpath(const std::string &first, const std::string &second);
