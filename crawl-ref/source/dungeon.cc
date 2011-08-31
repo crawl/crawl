@@ -3009,8 +3009,10 @@ static void _place_traps(int level_number)
         ts.prepare_ammo();
     }
 
-    if (player_in_branch(BRANCH_SPIDER_NEST) || player_in_branch(BRANCH_CRYPT))
-        _place_webs(std::min(MAX_TRAPS - num_traps, (400 - num_traps) / 2));
+    if (player_in_branch(BRANCH_SPIDER_NEST))
+        _place_webs(400 - num_traps) / 2);
+    else if (player_in_branch(BRANCH_CRYPT))
+        _place_webs(random2(20));
 }
 
 static void _dgn_place_feature_at_random_floor_square(dungeon_feature_type feat,
