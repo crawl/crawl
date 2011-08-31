@@ -11,6 +11,9 @@ bool fake_noisy(int loudness, const coord_def& where);
 void item_noise(const item_def& item, std::string msg, int loudness = 25);
 void noisy_equipment();
 
+void check_player_sense(sense_type sense, int range, const coord_def& where);
+void check_monsters_sense(sense_type sense, int range, const coord_def& where);
+
 void blood_smell(int strength, const coord_def& where);
 void handle_monster_shouts(monster* mons, bool force = false);
 bool check_awaken(monster* mons);

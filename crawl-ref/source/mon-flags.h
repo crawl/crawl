@@ -137,6 +137,8 @@ const uint64_t M_HERD              = (uint64_t)1<<41;
 // will not flee
 const uint64_t M_NO_FLEE           = (uint64_t)1<<42;
 
+// can sense vibrations in web traps
+const uint64_t M_WEB_SENSE         = (uint64_t)1<<43;
 
 // Same for flags for actual monsters.
 typedef uint64_t monster_flag_type;

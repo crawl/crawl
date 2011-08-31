@@ -1920,7 +1920,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_SPIDER, 's', CYAN, "spider",
-    M_NO_SKELETON,
+    M_NO_SKELETON | M_WEB_SENSE,
     MR_VUL_POISON,
     250, 10, MONS_SPIDER, MONS_SPIDER, MH_NATURAL, -3,
     { {AT_BITE, AF_POISON_MEDIUM, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1932,7 +1932,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_TARANTELLA, 's', LIGHTMAGENTA, "tarantella",
-    M_NO_SKELETON,
+    M_NO_SKELETON | M_WEB_SENSE,
     MR_VUL_POISON,
     300, 10, MONS_SPIDER, MONS_TARANTELLA, MH_NATURAL, -3,
     { {AT_BITE, AF_CONFUSE, 8}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1944,7 +1944,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_JUMPING_SPIDER, 's', LIGHTBLUE, "jumping spider",
-    M_NO_SKELETON | M_SPELLCASTER | M_FAKE_SPELLS,
+    M_NO_SKELETON | M_SPELLCASTER | M_FAKE_SPELLS | M_WEB_SENSE,
     MR_VUL_POISON,
     300, 10, MONS_SPIDER, MONS_JUMPING_SPIDER, MH_NATURAL, -3,
     { {AT_BITE, AF_POISON_MEDIUM, 16}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1956,7 +1956,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_WOLF_SPIDER, 's', WHITE, "wolf spider",
-    M_NO_SKELETON,
+    M_NO_SKELETON | M_WEB_SENSE,
     MR_VUL_POISON,
     900, 10, MONS_SPIDER, MONS_WOLF_SPIDER, MH_NATURAL, -3,
     { {AT_BITE, AF_POISON_MEDIUM, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1968,7 +1968,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_TRAPDOOR_SPIDER, 's', LIGHTCYAN, "trapdoor spider",
-    M_NO_SKELETON | M_SUBMERGES,
+    M_NO_SKELETON | M_SUBMERGES | M_WEB_SENSE,
     MR_VUL_POISON,
     240, 10, MONS_SPIDER, MONS_TRAPDOOR_SPIDER, MH_NATURAL, -3,
     { {AT_BITE, AF_POISON_MEDIUM, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
@@ -1982,7 +1982,7 @@ static monsterentry mondata[] = {
 
 {
     MONS_REDBACK, 's', RED, "redback",
-    M_NO_SKELETON,
+    M_NO_SKELETON | M_WEB_SENSE,
     MR_VUL_POISON,
     130, 14, MONS_SPIDER, MONS_REDBACK, MH_NATURAL, -3,
     { {AT_BITE, AF_POISON_STRONG, 18}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
