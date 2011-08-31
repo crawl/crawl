@@ -336,6 +336,10 @@ A white marble altar of Elyvilon
 
 An altar to Elyvilon the Healer, made from purest white marble and topped by a sculpture of the Chalice of Purification.
 %%%%
+A web
+
+The spider who left this web must have been huge, as it seems to be made for trapping {{ return you.genus(true) }} rather than flies.
+%%%%
 An abandoned shop
 
 This shop has been abandoned.

@@ -149,6 +149,17 @@ LUARET1(you_piety_rank, number, piety_rank(you.piety) - 1)
 LUARET1(you_max_burden, number, carrying_capacity(BS_UNENCUMBERED))
 LUARET1(you_burden, number, you.burden)
 
+static int l_you_genus(lua_State *ls)
+{
+    bool plural = lua_toboolean(ls, 1);
+    std::string genus = species_name(you.species, true);
+    lowercase(genus);
+    if (plural)
+        genus = pluralise(genus);
+    lua_pushstring(ls, genus.c_str());
+    return (1);
+}
+
 void lua_push_floor_items(lua_State *ls, int link);
 static int you_floor_items(lua_State *ls)
 {
@@ -264,6 +275,7 @@ static const struct luaL_reg you_clib[] =
     { "name"        , you_name },
     { "race"        , you_race },
     { "class"       , you_class },
+    { "genus"       , l_you_genus },
     { "god"         , you_god },
     { "good_god"    , you_good_god },
     { "evil_god"    , you_evil_god },
