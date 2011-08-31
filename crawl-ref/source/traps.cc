@@ -794,12 +794,14 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 triggered = true;
 
                 if (in_sight)
-                {
-                    msg::stream << "A large net falls down";
                     if (m->visible_to(&you))
-                        msg::stream << " onto " << m->name(DESC_NOCAP_THE);
-                    msg::stream << "!" << std::endl;
-                }
+                    {
+                        mprf("A large net falls down onto %s!",
+                             m->name(DESC_NOCAP_THE).c_str());
+                    }
+                    else
+                        mpr("A large net falls down!");
+
                 // FIXME: Fake a beam for monster_caught_in_net().
                 bolt beam;
                 beam.flavour = BEAM_MISSILE;
@@ -868,8 +870,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 if (in_sight)
                 {
                     if (!simple_monster_message(m,
-                                                " nimbly jumps through "
-                                                "a gap in a web."))
+                            " nimbly jumps through a gap in a web."))
                     {
                         mpr("A web waves in the air!");
                     }
@@ -883,14 +884,9 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 if (in_sight)
                 {
                     if (m->visible_to(&you))
-                    {
-                        msg::stream << m->name(DESC_NOCAP_THE);
-                        msg::stream << " is caught in a web!" << std::endl;
-                    }
+                        simple_monster_message(m, " is caught in a web!");
                     else
-                    {
-                        msg::stream << "A web moves frantically as something is caught in it!" << std::endl;
-                    }
+                        mpr("A web moves frantically as something is caught in it!");
                 }
                 // FIXME: Fake a beam for monster_caught_in_net().
                 bolt beam;
