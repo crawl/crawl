@@ -807,6 +807,13 @@ TAGS: overwritable layout allow_dup unrand
     crawl.mpr("delve(" .. ngb_min .. ", " .. ngb_max .. ", " .. connchance ..
               ", -1, " .. top .. ")")
     delve(ngb_min, ngb_max, connchance, -1, top)
+    if crawl.coinflip() then
+      crawl.mpr("delve: adding water");
+      _G.subst('. = @')
+      delve(ngb_min, ngb_max, 100, 100, top)
+      _G.subst('. = w')
+      _G.subst('@ = .')
+    end
     _G.subst('X = x')
 }}
 
