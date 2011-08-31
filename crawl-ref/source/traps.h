@@ -47,4 +47,5 @@ trap_type random_trap_for_place(int level_number = -1,
                                 const level_id &place = level_id::current());
 
 int count_traps(trap_type ttyp);
+void place_webs(int num);
 #endif
