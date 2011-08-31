@@ -1162,10 +1162,10 @@ static bool load_map_index(const std::string& cache, const std::string &base)
     return (true);
 }
 
-static bool load_map_cache(const std::string &filename)
+static bool load_map_cache(const std::string &filename, const std::string &cachename)
 {
     check_des_index_dir();
-    const std::string descache_base = get_descache_path(filename, "");
+    const std::string descache_base = get_descache_path(cachename, "");
 
     file_lock deslock(descache_base + ".lk", "rb", false);
 
@@ -1190,7 +1190,7 @@ static bool load_map_cache(const std::string &filename)
     if (!verify_map_index(descache_base) || !verify_map_full(descache_base))
         return (false);
 
-    return load_map_index(filename, descache_base);
+    return load_map_index(cachename, descache_base);
 }
 
 static void write_map_prelude(const std::string &filebase)
@@ -1263,7 +1263,7 @@ static void parse_maps(const std::string &s)
 
     map_files_read.insert(cache_name);
 
-    if (load_map_cache(cache_name))
+    if (load_map_cache(s, cache_name))
         return;
 
     FILE *dat = fopen_u(s.c_str(), "r");
