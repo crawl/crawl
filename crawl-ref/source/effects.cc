@@ -2404,7 +2404,7 @@ void handle_time()
         jiyva_eat_offlevel_items();
 
     if (player_in_branch(BRANCH_SPIDER_NEST) && coinflip())
-        place_webs(random2(10));
+        place_webs(random2(10), true);
 }
 
 // Move monsters around to fake them walking around while player was

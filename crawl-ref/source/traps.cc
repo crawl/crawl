@@ -1996,7 +1996,7 @@ int count_traps(trap_type ttyp)
     return num;
 }
 
-void place_webs(int num)
+void place_webs(int num, bool is_second_phase)
 {
     int slot = 0;
     for (int j = 0; j < num; j++)
@@ -2019,7 +2019,9 @@ void place_webs(int num)
             ts.pos.y = random2(GYM);
             if (in_bounds(ts.pos)
                 && grd(ts.pos) == DNGN_FLOOR
-                && !map_masked(ts.pos, MMT_NO_TRAP))
+                && !map_masked(ts.pos, MMT_NO_TRAP)
+                               // During play, only generate out of LOS
+                               && (!is_second_phase || !you.see_cell(ts.pos)))
             {
                 // Calculate weight
                 int weight = 0;
