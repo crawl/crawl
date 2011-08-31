@@ -1122,7 +1122,7 @@ static bool verify_map_full(const std::string &base)
     return verify_file_version(base + ".dsc");
 }
 
-static bool load_map_index(const std::string &base)
+static bool load_map_index(const std::string& cache, const std::string &base)
 {
     // If there's a global prelude, load that first.
     {
@@ -1153,7 +1153,7 @@ static bool load_map_index(const std::string &base)
         vdef.read_index(inf);
         vdef.description = unmarshallString(inf);
 
-        vdef.set_file(base);
+        vdef.set_file(cache);
         lc_loaded_maps[vdef.name] = vdef.place_loaded_from;
         vdef.place_loaded_from.clear();
     }
@@ -1190,7 +1190,7 @@ static bool load_map_cache(const std::string &filename)
     if (!verify_map_index(descache_base) || !verify_map_full(descache_base))
         return (false);
 
-    return load_map_index(descache_base);
+    return load_map_index(filename, descache_base);
 }
 
 static void write_map_prelude(const std::string &filebase)
@@ -1257,13 +1257,13 @@ static void write_map_cache(const std::string &filename, size_t vs, size_t ve)
 
 static void parse_maps(const std::string &s)
 {
-    const std::string base = get_base_filename(s);
-    if (map_files_read.find(base) != map_files_read.end())
+    std::string cache_name = get_cache_name(s);
+    if (map_files_read.find(cache_name) != map_files_read.end())
         return;
 
-    map_files_read.insert(base);
+    map_files_read.insert(cache_name);
 
-    if (load_map_cache(s))
+    if (load_map_cache(cache_name))
         return;
 
     FILE *dat = fopen_u(s.c_str(), "r");
@@ -1281,7 +1281,8 @@ static void parse_maps(const std::string &s)
     fclose(dat);
 
     global_preludes.push_back(lc_global_prelude);
-    write_map_cache(s, file_start, vdefs.size());
+
+    write_map_cache(cache_name, file_start, vdefs.size());
 }
 
 void read_map(const std::string &file)
