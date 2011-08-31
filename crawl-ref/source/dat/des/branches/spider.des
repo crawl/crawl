@@ -35,7 +35,7 @@ ENDMAP
 NAME:   spiders_nest_entry_webs
 TAGS:   spider_entry patrolling no_monster_gen
 KFEAT:  O = enter_spider_nest
-KFEAT:  ^ = web trap
+KFEAT:  ^ = web
 MONS:   trapdoor spider
 MAP
 .......x.....
