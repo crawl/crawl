@@ -28,6 +28,7 @@
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
+#include "math.h"
 #include "message.h"
 #include "misc.h"
 #include "mon-util.h"
@@ -2024,11 +2025,30 @@ void place_webs(int num, bool is_second_phase)
                                && (!is_second_phase || !you.see_cell(ts.pos)))
             {
                 // Calculate weight
-                int weight = 0;
+                float weight = 0;
                 for (adjacent_iterator ai(ts.pos); ai; ++ai)
+                {
+                    // Solid wall?
+                    float solid_weight = 0;
                     if (feat_is_solid(grd(*ai)))
-                        weight++;
-                if (one_chance_in(10 - weight))
+                        solid_weight = 1;
+                    // During play, adjacent webs also count slightly
+                    else if (is_second_phase
+                             && feat_is_trap(grd(*ai))
+                             && (get_trap_type(*ai) == TRAP_WEB))
+                    {
+                        // Adjacent webs
+                        solid_weight = 0.5;
+                    }
+                    // Orthogonals weight three, diagonals 1
+                    int orth_weight = (ai->x == ts.pos.x || ai->y == ts.pos.y)
+                                      ? 3 : 1;
+                    weight = weight + solid_weight * orth_weight;
+                }
+
+                // Maximum weight is 4*3+4*1 = 16
+                // *But* that would imply completely surrounded by rock (no point there)
+                if (weight <= 16 && x_chance_in_y(floor(weight) + 2, 34))
                     break;
             }
         }
