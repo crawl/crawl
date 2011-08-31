@@ -844,19 +844,13 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                     if (player_caught_in_net() && player_in_a_dangerous_place())
                         xom_is_stimulated(50);
                 }
-                /*
-                if (you.attribute[ATTR_HELD])
-                    _mark_net_trapping(you.pos());
-                */
             }
         }
         else if (m)
         {
-            bool triggered = false;
             if (one_chance_in(3) || (trig_knows && coinflip()))
             {
                 // Not triggered, trap stays.
-                triggered = false;
                 if (you_know)
                     simple_monster_message(m, " evades a web.");
                 else
@@ -865,8 +859,6 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             else if (random2(m->ev) > 8 || (trig_knows && random2(m->ev) > 8))
             {
                 // Triggered but evaded.
-                triggered = true;
-
                 if (in_sight)
                 {
                     if (!simple_monster_message(m,
@@ -879,8 +871,6 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             else
             {
                 // Triggered and hit.
-                triggered = true;
-
                 if (in_sight)
                 {
                     if (m->visible_to(&you))
@@ -888,20 +878,9 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                     else
                         mpr("A web moves frantically as something is caught in it!");
                 }
-                // FIXME: Fake a beam for monster_caught_in_net().
-                bolt beam;
-                beam.flavour = BEAM_MISSILE;
-                beam.thrower = KILL_MISC;
-                beam.beam_source = NON_MONSTER;
-                monster_caught_in_net(m, beam);
-            }
 
-            if (triggered)
-            {
-                /*
-                if (m->caught())
-                    _mark_net_trapping(m->pos());
-                */
+                // If somehow already caught, make it worse.
+                m->add_ench(ENCH_HELD);
             }
         }
         break;
