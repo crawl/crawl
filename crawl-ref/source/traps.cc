@@ -444,6 +444,22 @@ void check_net_will_hold_monster(monster* mons)
         mons->add_ench(ENCH_HELD);
 }
 
+bool player_caught_in_web()
+{
+    if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
+        return (false);
+
+    if (you.attribute[ATTR_HELD])
+        return false;
+
+    you.attribute[ATTR_HELD] = 10;
+    mpr("You become entangled in the net!");
+    stop_running();
+    stop_delay(true); // even stair delays
+    redraw_screen(); // Account for changes in display.
+    return (true);
+}
+
 std::vector<coord_def> find_golubria_on_level()
 {
     std::vector<coord_def> ret;
@@ -841,7 +857,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 else
                 {
                     mpr("You are caught in the web!");
-                    if (player_caught_in_net() && player_in_a_dangerous_place())
+                    if (player_caught_in_web() && player_in_a_dangerous_place())
                         xom_is_stimulated(50);
                 }
             }
