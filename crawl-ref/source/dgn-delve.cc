@@ -153,7 +153,7 @@ static int ngb_groups(map_lines *map, coord_def c)
 {
     ASSERT(_in_map(map, c));
 
-    bool prev2, prev = _dug(map, c + Compass[0]);
+    bool prev2 = 0, prev = _dug(map, c + Compass[0]);
     int cnt = 0;
     for (int d = 7; d >= 0; d--)
     {
