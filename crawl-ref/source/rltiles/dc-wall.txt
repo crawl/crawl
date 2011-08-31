@@ -559,6 +559,19 @@ lab-metal4
 lab-metal5
 lab-metal6
 
+crypt0 WALL_CRYPT
+crypt1
+crypt2
+crypt3
+crypt4
+%weight 2
+crypt5
+crypt6
+crypt7
+crypt8
+crypt9
+%weight 10
+
 stone2_gray0 DNGN_STONE_WALL DNGN_STONE_WALL_LIGHTGRAY
 stone2_gray1
 stone2_gray2

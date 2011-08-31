@@ -161,7 +161,7 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
 
     case BRANCH_CRYPT:
         flv.wall  = TILE_WALL_BRICK_GRAY;
-        flv.floor = TILE_FLOOR_TOMB;
+        flv.floor = TILE_FLOOR_CRYPT;
         return;
 
     case BRANCH_TOMB:
@@ -983,7 +983,7 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
              && orig == TILE_DNGN_STONE_WALL)
     {
         if (you.where_are_you == BRANCH_CRYPT)
-            orig = TILE_WALL_UNDEAD;
+            orig = TILE_WALL_CRYPT;
         else if (you.where_are_you == BRANCH_TOMB)
             orig = TILE_WALL_TOMB;
     }

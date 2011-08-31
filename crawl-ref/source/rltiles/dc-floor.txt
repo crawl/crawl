@@ -589,3 +589,12 @@ labyrinth0 FLOOR_LABYRINTH
 labyrinth1
 labyrinth2
 labyrinth3
+
+crypt0 FLOOR_CRYPT
+crypt1
+crypt2
+crypt3
+crypt4
+crypt5
+crypt6
+crypt7
