@@ -450,70 +450,21 @@ tileidx_t tileidx_feature(const coord_def &gc)
         if (this_trap_type==TRAP_WEB) {*/
 
         // Determine web connectivity on all sides
-        const coord_def left(gc.x - 1, gc.y);
-        const coord_def right(gc.x + 1, gc.y);
-        const coord_def up(gc.x, gc.y - 1);
-        const coord_def down(gc.x, gc.y + 1);
-
-        bool solid_left = feat_is_solid(grd(left))
-                          || (grd(left) != DNGN_UNDISCOVERED_TRAP
-                              && get_trap_type(left) == TRAP_WEB);
-        bool solid_right = feat_is_solid(grd(right))
-                          || (grd(left) != DNGN_UNDISCOVERED_TRAP
-                              && get_trap_type(right) == TRAP_WEB);
-        bool solid_up = feat_is_solid(grd(up))
-                          || (grd(left) != DNGN_UNDISCOVERED_TRAP
-                              && get_trap_type(up) == TRAP_WEB);
-        bool solid_down = feat_is_solid(grd(down))
-                          || (grd(left) != DNGN_UNDISCOVERED_TRAP
-                              && get_trap_type(down) == TRAP_WEB);
-        if (solid_up)
-        {
-            if (solid_right) {
-                    if (solid_down) {
-                            if (solid_left) {
-                                    return TILE_DNGN_TRAP_WEB_NESW;
-                            }
-                            return TILE_DNGN_TRAP_WEB_NES;
-                    }
-                    if (solid_left) {
-                            return TILE_DNGN_TRAP_WEB_NEW;
-                    }
-                    return TILE_DNGN_TRAP_WEB_NE;
+        const coord_def neigh[4] = {
+            coord_def(gc.x, gc.y - 1),
+            coord_def(gc.x + 1, gc.y),
+            coord_def(gc.x, gc.y + 1),
+            coord_def(gc.x - 1, gc.y),
+        };
+        int solid = 0;
+        for (int i = 0; i < 4; i++)
+            if (feat_is_solid(grd(neigh[i]))
+                || grd(neigh[i]) != DNGN_UNDISCOVERED_TRAP
+                   && get_trap_type(neigh[i]) == TRAP_WEB)
+            {
+                solid |= 1 << i;
             }
-            if (solid_down) {
-                    if (solid_left) {
-                            return TILE_DNGN_TRAP_WEB_NSW;
-                    }
-                    return TILE_DNGN_TRAP_WEB_NS;
-            }
-            if (solid_left) {
-                    return TILE_DNGN_TRAP_WEB_NW;
-            }
-            return TILE_DNGN_TRAP_WEB_N;
-        }
-        if (solid_right) {
-                if (solid_down) {
-                        if (solid_left) {
-                                return TILE_DNGN_TRAP_WEB_ESW;
-                        }
-                        return TILE_DNGN_TRAP_WEB_ES;
-                }
-                if (solid_left) {
-                        return TILE_DNGN_TRAP_WEB_EW;
-                }
-                return TILE_DNGN_TRAP_WEB_E;
-        }
-        if (solid_down) {
-                if (solid_left) {
-                        return TILE_DNGN_TRAP_WEB_SW;
-                }
-                return TILE_DNGN_TRAP_WEB_S;
-        }
-        if (solid_left) {
-                return TILE_DNGN_TRAP_WEB_W;
-        }
-        return TILE_DNGN_TRAP_WEB;
+        return TILE_DNGN_TRAP_WEB + solid;
     }
     case DNGN_ENTER_SHOP:
         return (_tileidx_shop(gc));
