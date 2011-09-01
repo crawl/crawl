@@ -1388,8 +1388,11 @@ void free_self_from_net()
 {
     int net = get_trapping_net(you.pos());
 
-    if (net == NON_ITEM) // really shouldn't happen!
+    if (net == NON_ITEM)
     {
+        if (trap_def *trap = find_trap(you.pos()))
+            if (trap->type == TRAP_WEB)
+                maybe_destroy_web(&you);
         you.attribute[ATTR_HELD] = 0;
         you.redraw_quiver = true;
         return;
@@ -2036,4 +2039,21 @@ void place_webs(int num)
         env.tgrid(ts.pos) = slot;
         ts.prepare_ammo();
     }
+}
+
+bool maybe_destroy_web(actor *oaf)
+{
+    trap_def *trap = find_trap(oaf->pos());
+    if (!trap || trap->type != TRAP_WEB)
+        return false;
+
+    if (coinflip())
+        return false;
+
+    if (oaf->atype() == ACT_MONSTER)
+        simple_monster_message(oaf->as_monster(), " tears the web.");
+    else
+        mpr("The web tears apart.");
+    destroy_trap(oaf->pos());
+    return true;
 }

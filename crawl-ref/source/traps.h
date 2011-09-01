@@ -48,4 +48,5 @@ trap_type random_trap_for_place(int level_number = -1,
 
 int count_traps(trap_type ttyp);
 void place_webs(int num);
+bool maybe_destroy_web(actor *oaf);
 #endif

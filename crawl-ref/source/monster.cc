@@ -5064,8 +5064,11 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         int net = get_trapping_net(pos(), true);
 
-        if (net == NON_ITEM) // Really shouldn't happen!
+        if (net == NON_ITEM)
         {
+            if (trap_def *trap = find_trap(pos()))
+                if (trap->type == TRAP_WEB)
+                    maybe_destroy_web(this);
             del_ench(ENCH_HELD);
             break;
         }
