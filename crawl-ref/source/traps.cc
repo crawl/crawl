@@ -558,8 +558,9 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         simple_monster_message(m," carefully avoids a trap.");
         return;
     }
-    // Only magical traps affect flying critters.
-    if (!triggerer.ground_level() && category() != DNGN_TRAP_MAGICAL)
+    // Only magical traps and webs affect flying critters.
+    if (!triggerer.ground_level() && category() != DNGN_TRAP_MAGICAL
+                                  && category() != DNGN_TRAP_WEB)
     {
         if (you_know && m && triggerer.airborne())
             simple_monster_message(m, " flies safely over a trap.");
