@@ -1,0 +1,446 @@
+###############################################################################
+# altar.des: This contains the generic altar vaults.
+#            Vaults particular to a specific branch (Beogh altar minivaults
+#            for Orc:*, for example), should go in the corresponding des-file.
+#            A few entry vaults contain altars; these should always be in an
+#            entry_foo.des file.
+#
+#            Overflow altars, i.e. altars dedicated to a single Temple god
+#            which can be used if the god does not show up in the Temple,
+#            should go to overflow.des.
+#
+#            For a particularly elaborate altar map, using lots of lua, use a 
+#            single, new file.
+###############################################################################
+
+default-depth: D
+
+##############################################################################
+# I    Temples (Multi-altar vaults, containing two or more C)
+##############################################################################
+
+NAME:    jmf_multi_god_temple
+SHUFFLE: abc
+SUBST:   a:=, b:x, c:x
+DEPTH:   D:8-21, Vault
+MAP
+............
+.axxxxxxxxa.
+.x9......9x.
+.bT......Tb.
+.x..C..C..x.
+.cT......Tc.
+.xxxxmmxxxx.
+.xxx$$$$xxx.
+.xx8....8xx.
+..xx....xx..
+...xG..Gx...
+............
+ENDMAP
+
+NAME:  jmf_multi_god_temple2
+DEPTH: D:8-21, Vault
+MAP
+............
+..vvvvvvvv..
+.vv......vv.
+.v..x..x..v.
+.v.Cx..xC.v.
+.v..x..x..v.
+.vT8x..x8Tv.
+.vvvx==xvvv.
+...Gx99xG...
+...+*99*+...
+...GxxxxG...
+............
+ENDMAP
+
+
+##############################################################################
+# II   General altars (containing a single C)
+##############################################################################
+
+NAME:   basic_altar
+TAGS:   allow_dup extra no_monster_gen transparent
+DEPTH:  5-
+CHANCE: 20% (Orc)
+CHANCE: 10% (Snake, Forest, Dwarf)
+CHANCE: 8% (D, Elf)
+CHANCE: 5% (Lair, Slime, Vault, Crypt)
+CHANCE: 1% (Zot)
+CHANCE: 0
+MAP
+.....
+.....
+..C..
+.....
+.....
+ENDMAP
+
+NAME:    old_standard_altar
+TAGS:    allow_dup
+SHUFFLE: cvxxxx
+MAP
+...........
+.xxxx.xxxx.
+.xx.....xx.
+.x.......x.
+.x.......x.
+.....C.....
+.x.......x.
+.x.......x.
+.xx.....xx.
+.xxxx.xxxx.
+...........
+ENDMAP
+
+NAME:    lemuel_round_altar
+TAGS:    allow_dup
+SHUFFLE: cvxx
+SUBST:   X:x.
+MAP
+   xxXxx
+  xx...xx
+ xx.....xx
+ x.......x
+ X...C...@
+ x.......x
+ xx.....xx
+  xx...xx
+   xxXxx
+ENDMAP
+
+NAME: lemuel_crystal_altar
+TAGS: allow_dup
+MAP
+b.b
+.C.
+b.b
+ENDMAP
+
+NAME:   lemuel_altar_in_water
+DEPTH:  D:2-18, Swamp, Shoals
+WEIGHT: 9
+: local brnd = crawl.random2(13)
+: if brnd > 10 then
+TAGS:   no_monster_gen no_rotate
+# this case almost always has altar access
+: else
+TAGS:   no_monster_gen no_pool_fixup no_rotate
+: end
+KPROP:  C = no_rtele_into
+MAP
+   .........
+  ...wwwww...
+ ..wwwwwwwww..
+..wwwwwwwwwww..
+.wwwwwwwwwwwww.
+.wwwwwwCwwwwww.
+.wwwwwwwwwwwww.
+..wwwwwwwwwww..
+ .wwwwwwwww..
+ ...wwwww...
+   ........
+ENDMAP
+
+NAME:   lemuel_altar_in_water2
+TAGS:   no_pool_fixup no_monster_gen
+DEPTH:  D:2-18, Lair, Snake, Swamp, Shoals
+WEIGHT: 1
+MAP
+   www
+  wwwww
+ wwwwwww
+ @..Cwww
+ wwwwwww
+  wwwww
+   www
+ENDMAP
+
+NAME:  lemuel_oklob_altar
+DEPTH: D:6-18, Lair, Snake, Shoals
+MONS:  oklob plant, plant
+MAP
+ 2
+2C1
+ 2
+ENDMAP
+
+NAME:    lemuel_hidden_altar
+DEPTH:   D:1-18, Vault, Lair, Elf, Crypt
+SHUFFLE: XY
+SUBST:   X = .
+SUBST:   Y = =
+MAP
+.........
+.xxxXxxx.
+.xxx.xxx.
+.xxxYxxx.
+.X.YCY.X.
+.xxxYxxx.
+.xxx.xxx.
+.xxxXxxx.
+.........
+ENDMAP
+
+NAME:   lemuel_sealed_altar_a
+WEIGHT: 3
+DEPTH:  D:2-18, Vault, Elf, Crypt
+MAP
+xxxxxxxxxxxxx
+x...........x
+x...........x
+x...........x
+x...........x
+x.....>.....x
+x.....C.....x
+x...........x
+x...........x
+x...........x
+x...........x
+xxxxxxxxxxxxx
+ENDMAP
+
+NAME: lemuel_sealed_altar_b
+WEIGHT: 7
+DEPTH: D:2-18, Vault, Elf, Crypt
+MAP
+xxxxxxxxxxx
+x.........x
+x.........x
+x....>....x
+x....C....x
+x.........x
+x.........x
+xxxxxxxxxxx
+ENDMAP
+
+NAME:  lemuel_tele_altar
+DEPTH: D:2-18, Vault
+SUBST: Y = X x
+KFEAT: X = teleport trap
+MAP
+.............
+.xxxxxXxxxxx.
+.x.........x.
+.x.........x.
+.x.........x.
+.Y....C....Y.
+.x.........x.
+.x.........x.
+.x.........x.
+.xxxxxYxxxxx.
+.............
+ENDMAP
+
+NAME:  lemuel_statue_altar
+DEPTH: 2-18, Vault, Elf
+: if you.absdepth() < 10 then
+SUBST: F = G
+: end
+SUBST: F = G:99 F:1
+KMONS: F = orange crystal statue / silver statue / ice statue
+MAP
+.........
+.ccccccc.
+.F...>Cc.
+.ccccccc.
+.........
+ENDMAP
+
+NAME:   lemuel_coloured_pillars_altar
+DEPTH:  D:2-18, Vault, Elf
+TAGS:   no_rotate
+COLOUR: c = blue / yellow / red / cyan
+MAP
+xxxxxxxxxxxxxxxxxxxx
+...................x
+c...c...c...c...c..x
+@.................Cx
+c...c...c...c...c..x
+...................x
+xxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   lemuel_upstairs_altar
+DEPTH:  D:2-12, Vault, Elf, Crypt
+ORIENT: float
+SUBST:  T:T., )=)}], c:ccx
+KMASK:  T = no_monster_gen
+MAP
+ccccccc
+cT...Tc
+c.....ccccccc
+c..C..+....)c
+c.....ccccccc
+cT...Tc
+ccccccc
+ENDMAP
+
+# This is the generic version. A special version may occur for Orc, almost always
+# to Beogh. Only one of these can come up.
+NAME:  david_defended_altar_elf
+DEPTH: D:7-14, Elf
+MONS:  patrolling deep elf priest / w:30 nothing
+TAGS:  uniq_defended_altar
+MAP
+ccccc...
+c1..c...
+c1C.+.G@
+c1..c...
+ccccc...
+ENDMAP
+
+# The mix of deep and shallow water is intended to keep the centaurs from
+# escaping without requiring the player to be able to cross deep water.
+NAME:  lemuel_centaur_altar
+DEPTH: D:7-15, Shoals, Lair
+TAGS:  no_pool_fixup no_monster_gen
+MONS:  patrolling centaur
+MAP
+xxxxxxxxxxxxx
+xxxxxxxxxxwxx
+xxwx.1.1.xxwx
+xwxx1.C.1xwwx
+xwwxWwwWwWwxx
+xwwWwwwwwwxxx
+xxwWwWWwwWxxx
+xxxwWwwWwxxxx
+xxxwwwWwWxxxx
+xxx...@..xxxx
+ENDMAP
+
+
+##############################################################################
+# III   Altars to minor gods
+#
+# These are non-Temple gods like Beogh, Jiyva, Lugonu.
+##############################################################################
+
+### Altars possibly to Lugonu ################################################
+
+# Hell themed, to Lugonu, Yredelemnul, Kikubaaqudgha or Makhleb
+# Note: This altar would not make a decent overflow altar, it is too hard to
+#       access the altar early.
+#
+NAME:  lemuel_hellish_altar
+DEPTH: D:2-21, Crypt, Geh
+TAGS:  no_monster_gen
+MONS:  iron devil/orange demon
+MONS:  hell beast/rotting devil
+MONS:  lemure/iron imp
+MONS:  hellion
+SUBST: 2 = 23
+SUBST: 2 = 12
+SUBST: 3 = 3L
+: if you.absdepth() >14 then
+SUBST: 1 = 1:20 4
+: end
+SUBST: L = l.
+SUBST: _ = _ P:1
+KFEAT: _ = altar_lugonu/altar_yredelemnul/altar_kikubaaqudgha/altar_makhleb
+KFEAT: P = enter_abyss
+KPROP: 1234_ = no_rtele_into
+MAP
+  ..LLllLL....
+  .LllllllLLL..
+..Lll323lllLLL.
+.LLl32123lllLL.
+.LLl33_33llLL..
+..Lll323llLL...
+..LLll3llL.....
+...LLlllL...
+....LLLL....
+   ..LLLLL..
+   ....LLLL.
+ENDMAP
+
+# Distorted/chaotic kobolds, to Lugonu or Xom (Jude)
+# Note: This altar is too deep to be of use as a Xom overflow altar.
+#
+NAME:       due_chaos_kobolds
+DEPTH:      D:13-27, Vault, Elf, Crypt
+TAGS:       no_rotate
+ORIENT:     float
+SUBST:      y  = c.
+COLOUR:     1. = random
+MARKER:     P  = lua:fog_machine { cloud_type="blue smoke", walk_dist=1, \
+            size=9, pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
+            spread_rate=3, start_clouds=1, colour="blue" }
+: if crawl.coinflip() then
+KFEAT:      _ = altar_lugonu
+KFEAT:      P = enter_abyss
+: kmons("1 = kobold w:" .. you.absdepth() .. " ; quick blade ego:distortion " ..
+:       "w:6 | sabre ego:distortion | short sword ego:distortion / kobold "   ..
+:       "w:80 ; short sword | sabre | quick blade w:3")
+: else
+KFEAT:      _ = altar_xom
+:   if crawl.one_chance_in(4) then
+KMONS:      P = orange crystal statue
+:   else
+KFEAT:      P = enter_abyss / fountain_sparkling / stone_arch
+:   end
+: kmons("1 = kobold w:" .. you.absdepth() .. " ; quick blade ego:chaos " ..
+:       "w:6 | sabre ego:chaos | short sword ego:chaos / kobold w:80 ;"  ..
+:       "short sword | sabre | quick blade w:3")
+: end
+MAP
+  ccccc
+ cc...cc
+cc..P..cc
+ cc...cc
+ ccc.cccc
+ccyy.yyyccc
+cy..111.yyc
+cc..1_1..cc
+cyy.111..yc
+cccyy..yycc
+  ccc..ccc
+    c++c
+     @@
+ENDMAP
+
+
+### Altars possibly to Beogh #################################################
+
+NAME:  david_defended_altar_orc
+DEPTH: D:7-14, Orc
+MONS:  patrolling orc priest
+TAGS:  uniq_defended_altar
+KFEAT: _ = altar_beogh / w:1 altar_okawaru / w:1 altar_makhleb / w:1 altar_trog
+MAP
+ccccc...
+c1..c...
+c1_.+.I@
+c1..c...
+ccccc...
+ENDMAP
+
+
+### Altars to Jiyva ##########################################################
+
+NAME:  jiyva_altar_1
+DEPTH: D:2-20
+KFEAT: _ = altar_jiyva
+MONS:  jelly
+MAP
+.....
+..1..
+.1_1.
+..1..
+.....
+ENDMAP
+
+NAME:  jiyva_altar_2
+DEPTH: D:2-20
+KFEAT: _ = altar_jiyva
+KITEM: 1 = dart
+KMONS: 1 = jelly
+ITEM:  dart
+MAP
+xxxxx
+xdddx
+x<_1x
+xdddx
+xxxxx
+ENDMAP
