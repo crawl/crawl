@@ -4124,9 +4124,9 @@ std::string _describe_ash_skill_boost()
             desc << bondage_parts[i];
 
         std::string skills;
-        std::map<skill_type, char> boosted_skills = ash_get_boosted_skills(eq_type(i));
-        int bonus = boosted_skills.begin()->second;
-        std::map<skill_type, char>::iterator it = boosted_skills.begin();
+        std::map<skill_type, int8_t> boosted_skills = ash_get_boosted_skills(eq_type(i));
+        int8_t bonus = boosted_skills.begin()->second;
+        std::map<skill_type, int8_t>::iterator it = boosted_skills.begin();
 
         // First, we keep only one magic school skill (conjuration).
         // No need to list all of them since we boost all or none.
