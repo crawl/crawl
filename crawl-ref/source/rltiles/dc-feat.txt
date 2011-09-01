@@ -139,15 +139,19 @@ passage_of_golubria DNGN_TRAP_GOLUBRIA
 pressure_plate DNGN_TRAP_PLATE
 
 # order matters (tilepick.c tileidx_feature())
-cobweb_none DNGN_TRAP_WEB
-cobweb_NS   DNGN_TRAP_WEB_N
-cobweb_EW   DNGN_TRAP_WEB_E
+cobweb_none_0 DNGN_TRAP_WEB
+cobweb_none_1
+cobweb_none_2
+cobweb_none_3
+cobweb_none_4
+cobweb_N    DNGN_TRAP_WEB_N
+cobweb_E    DNGN_TRAP_WEB_E
 cobweb_NE   DNGN_TRAP_WEB_NE
-cobweb_NS   DNGN_TRAP_WEB_S
+cobweb_S    DNGN_TRAP_WEB_S
 cobweb_NS   DNGN_TRAP_WEB_NS
 cobweb_ES   DNGN_TRAP_WEB_ES
 cobweb_NES  DNGN_TRAP_WEB_NES
-cobweb_EW   DNGN_TRAP_WEB_W
+cobweb_W    DNGN_TRAP_WEB_W
 cobweb_NW   DNGN_TRAP_WEB_NW
 cobweb_EW   DNGN_TRAP_WEB_EW
 cobweb_NEW  DNGN_TRAP_WEB_NEW
