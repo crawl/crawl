@@ -1985,7 +1985,7 @@ ORIENT: north
 DEPTH:  D:9-20
 SUBST:  W = wW
 # Only the dragon can fly; depth is consistent with dragon1_lemuel.
-MONS:   ice statue, patrolling ice dragon, frost giant, ice beast
+MONS:   ice statue, patrolling ice dragon, patrolling frost giant, ice beast
 KMONS:  w = w:490 nothing / ice beast
 KFEAT:  w = w
 MAP
