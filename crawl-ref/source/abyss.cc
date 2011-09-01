@@ -1199,13 +1199,9 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
         if (you.pos() == p || !abyss_genlevel_mask(p))
             continue;
 
-        // Dont' decay vaults until the player is close, and they are a bit
-        // resilient to morphing.
-        if (map_masked(p, MMT_VAULT) && (you.pos().distance_from(p) > 10
-                                         || coinflip()))
-        {
+        // Dont' decay vaults.
+        if (map_masked(p, MMT_VAULT))
             continue;
-        }
 
         if (!one_chance_in(you.abyss_speed) && applyGlobal)
             continue;
