@@ -1,9 +1,5 @@
 ###############################################################################
-# altar.des: This is the place where minivaults (and floating vaults)
-#            containing altars should go. Vaults particular to a specific
-#            branch (Beogh altar minivaults for Orc:*, for example), may
-#            go in the corresponding des-file. A few entry vaults contain
-#            altars; these should always be in entry.des.
+# overflow.des: This is the place where vaults containing overflow altars go.
 #
 # Altar vaults do not just provide flavour. They are crucial for ensuring
 # that granted gods without altars in the Temple will be present in the
@@ -34,693 +30,12 @@
 #
 ###############################################################################
 
-{{
-function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
-                                                 triggerer, marker, ev)
-
-  if data.triggered == true then
-    return
-  end
-
-  local m = dgn.find_marker_positions_by_prop("slave_name", "altar")[1]
-  if m ~= nil then
-    local x, y = m:xy()
-
-    if not you.see_cell(x, y) then
-      return
-    end
-
-  local weapon = util.random_from({"short sword", "sabre",
-                 "long sword", "scimitar", "glaive", "bardiche",
-                 "broad axe", "battleaxe", "quarterstaff",
-                 "lajatang", "morningstar", "great mace"})
-  local item = { Beogh="good_item battleaxe ego:orc_slaying / disc of storms \
-         / good_item broad axe ego:orc_slaying w:5 / scroll of immolation q:3-6 / scroll of fear q:3-6",
-         Cheibriados="wand of hasting w:5 / potion of speed q:2-4 / potion of berserk rage q:2-4 \
-         / good_item quick blade",
-         Elyvilon="lantern of shadows / book of Necromancy w:5 / book of Death w:5 \
-         / book of Unlife w:5",
-         Fedhas="randbook owner:Lugonu spells:necromutation numspells:1 \
-         / randbook owner:Lugonu spells:simulacrum|twisted_resurrection numspells:2 \
-         / randbook owner:Lugonu spells:animate_dead|sublimation_of_blood numspells:2",
-         Jiyva="stone q:10-20 / large rock q:2-4",
-         Kikubaaqudgha="book of Necromancy / rat corpse w:5 / kobold corpse w:5 / snake corpse w:5",
-         Lugonu="no",
-         Makhleb="tome of destruction / rod of demonology",
-         ["Nemelex Xobeh"]="scroll of random uselessness q:5-10",
-         Okawaru="book of Callings / randbook owner:Lugonu spells:summon_butterflies numspells:1 \
-         / scroll of summoning q:2-3",
-         ["Sif Muna"]="staff of channeling / good_item plate mail",
-         ["The Shining One"]="wand of invisibility w:20 / book of Envenomations \
-         / Young Poisoner's Handbook / rod of venom / potion of invisibility q:3-6",
-         Trog="manual of Spellcasting w:100 / manual of Air Magic / manual of Earth Magic \
-         / manual of Fire Magic / manual of Ice Magic / manual of Poison Magic / any staff / ring of wizardry",
-         Vehumet="book of Callings w:5 / book of Power w:5 \
-         / randbook owner:Lugonu spells:magic_dart numspells:1",
-         Xom="manual of Invocations",
-         Yredelemnul= "scroll of holy word q:2-4 / good_item " .. weapon .. " ego:holy_wrath",
-         Zin="good_item " .. weapon .. " ego:draining / good_item " .. weapon .. " ego:pain \
-         / good_item " .. weapon .. " ego:chaos / wand of draining w:7 / wand of polymorph other w:14",
-         Ashenzari="scroll of detect curse q:5-10 / amulet of clarity / ring of see invisible",
-         ["No God"]="amulet of Faith",
-       }
-         data.triggered = true
-         if item[you.god()] == "no" then return else
-            dgn.place_cloud(x, y, "purple smoke", 1)
-            dgn.create_item(x, y, item[you.god()])
-            crawl.god_speaks("Lugonu", "An item emerges from the Abyss! Perhaps it is an incitement to worship... or even an insult?")
-         end
-  end
-end
-
-function callback.tgw_kikubaaqudgha_kill_human(data, triggerable,
-                                                triggerer, marker, ev)
-  if data.turns ~= you.turns() then
-    data.tc = data.tc + 1
-    data.turns = you.turns()
-  end
-
-  if data.tc < 3 then
-    return
-  end
-
-  if data.triggered == true then
-    return
-  end
-
-  local m = dgn.find_marker_positions_by_prop("slave_name", "zombie")[1]
-  if m ~= nil then
-    local _x, _y = m:xy()
-
-    if not you.see_cell(_x, _y) then
-      return
-    end
-        dgn.place_cloud(_x, _y, "foul pestilence", 4)
-        crawl.god_speaks("Kikubaaqudgha",
-                         "Miasma emanates from the human's flesh.")
-    data.triggered = true
-  end
-end
-
-function callback.tgw_kikubaaqudgha_zombify(data, triggerable,
-                                            triggerer, marker, ev)
-  local pt = dgn.find_marker_positions_by_prop("slave_name", "zombie")
-  if #pt == 0 then
-    return
-  end
-
-  for carrion in iter.stash_iterator(pt[1].x, pt[1].y) do
-    if string.find(carrion.name(), 'human corpse') then
-      carrion.destroy()
-    end
-  end
-
-  -- Won't place the monster if there's a cloud there
-  dgn.delete_cloud(pt[1].x, pt[1].y)
-
-  dgn.create_monster(pt[1].x, pt[1].y, "generate_awake human zombie")
-  if you.see_cell(pt[1].x, pt[1].y) then
-    crawl.god_speaks("Kikubaaqudgha", "The human rises from the dead!")
-  end
-end
-
-function callback.trog_book_convert_book(data, triggerable,
-                                          triggerer, marker, ev)
-  if data.turns ~= you.turns() then
-    data.tc = data.tc + 1
-    data.turns = you.turns()
-  end
-
-  if data.tc < 3 then
-    return
-  end
-
-  if data.triggered == true then
-    return
-  end
-
-  local m = dgn.find_marker_positions_by_prop("slave_name", "trog_book")[1]
-  if m ~= nil then
-    local _x, _y = m:xy()
-
-    -- Only burn the book when you see both the altar and the book. This gives
-    -- sneaky players the opportunity to apport the book.
-    if not you.see_cell(_x, _y) then
-      return
-    end
-
-    for book in iter.stash_iterator(_x, _y) do
-      if string.find(book.name(), 'book') then
-        book.destroy()
-        dgn.place_cloud(_x, _y, "flame", 15)
-        crawl.god_speaks("Trog", "The spellbook bursts into flames! "
-                              .. "Trog roars with delight!")
-      end
-    end
-    data.triggered = true
-  end
-end
-
-}}
-
 default-depth: D
 
-######################################
-# I    Temples (Multi-altar vaults)
-######################################
-
-NAME:    jmf_multi_god_temple
-SHUFFLE: abc
-SUBST:   a:=, b:x, c:x
-DEPTH:   D:8-21, Vault
-MAP
-............
-.axxxxxxxxa.
-.x9......9x.
-.bT......Tb.
-.x..C..C..x.
-.cT......Tc.
-.xxxxmmxxxx.
-.xxx$$$$xxx.
-.xx8....8xx.
-..xx....xx..
-...xG..Gx...
-............
-ENDMAP
-
-NAME:  jmf_multi_god_temple2
-DEPTH: D:8-21, Vault
-MAP
-............
-..vvvvvvvv..
-.vv......vv.
-.v..x..x..v.
-.v.Cx..xC.v.
-.v..x..x..v.
-.vT8x..x8Tv.
-.vvvx==xvvv.
-...Gx99xG...
-...+*99*+...
-...GxxxxG...
-............
-ENDMAP
-
-
-######################################
-# II   General altars
-######################################
-
-NAME: basic_altar
-TAGS: allow_dup extra no_monster_gen transparent
-DEPTH: 5-
-CHANCE: 20% (Orc)
-CHANCE: 10% (Snake, Forest, Dwarf)
-CHANCE: 8% (D, Elf)
-CHANCE: 5% (Lair, Slime, Vault, Crypt)
-CHANCE: 1% (Zot)
-CHANCE: 0
-MAP
-.....
-.....
-..C..
-.....
-.....
-ENDMAP
-
-NAME: old_standard_altar
-TAGS: allow_dup
-SHUFFLE: cvxxxx
-MAP
-...........
-.xxxx.xxxx.
-.xx.....xx.
-.x.......x.
-.x.......x.
-.....C.....
-.x.......x.
-.x.......x.
-.xx.....xx.
-.xxxx.xxxx.
-...........
-ENDMAP
-
-NAME:    lemuel_round_altar
-TAGS:    allow_dup
-SHUFFLE: cvxx
-SUBST:   X:x.
-MAP
-   xxXxx
-  xx...xx
- xx.....xx
- x.......x
- X...C...@
- x.......x
- xx.....xx
-  xx...xx
-   xxXxx
-ENDMAP
-
-NAME: lemuel_crystal_altar
-TAGS: allow_dup
-MAP
-b.b
-.C.
-b.b
-ENDMAP
-
-NAME:   lemuel_altar_in_water
-DEPTH:  D:2-18, Swamp, Shoals
-WEIGHT: 9
-: local brnd = crawl.random2(13)
-: if brnd > 10 then
-TAGS:   no_monster_gen no_rotate
-# this case almost always has altar access
-: else
-TAGS:   no_monster_gen no_pool_fixup no_rotate
-: end
-KPROP:  C = no_rtele_into
-MAP
-   .........
-  ...wwwww...
- ..wwwwwwwww..
-..wwwwwwwwwww..
-.wwwwwwwwwwwww.
-.wwwwwwCwwwwww.
-.wwwwwwwwwwwww.
-..wwwwwwwwwww..
- .wwwwwwwww..
- ...wwwww...
-   ........
-ENDMAP
-
-NAME:   lemuel_altar_in_water2
-TAGS:   no_pool_fixup no_monster_gen
-DEPTH:  D:2-18, Lair, Snake, Swamp, Shoals
-WEIGHT: 1
-MAP
-   www
-  wwwww
- wwwwwww
- @..Cwww
- wwwwwww
-  wwwww
-   www
-ENDMAP
-
-NAME:  lemuel_oklob_altar
-DEPTH: D:6-18, Lair, Snake, Shoals
-MONS:  oklob plant, plant
-MAP
- 2
-2C1
- 2
-ENDMAP
-
-NAME:    lemuel_hidden_altar
-DEPTH:   D:1-18, Vault, Lair, Elf, Crypt
-SHUFFLE: XY
-SUBST:   X = .
-SUBST:   Y = =
-MAP
-.........
-.xxxXxxx.
-.xxx.xxx.
-.xxxYxxx.
-.X.YCY.X.
-.xxxYxxx.
-.xxx.xxx.
-.xxxXxxx.
-.........
-ENDMAP
-
-NAME:   lemuel_sealed_altar_a
-WEIGHT: 3
-DEPTH:  D:2-18, Vault, Elf, Crypt
-MAP
-xxxxxxxxxxxxx
-x...........x
-x...........x
-x...........x
-x...........x
-x.....>.....x
-x.....C.....x
-x...........x
-x...........x
-x...........x
-x...........x
-xxxxxxxxxxxxx
-ENDMAP
-
-NAME: lemuel_sealed_altar_b
-WEIGHT: 7
-DEPTH: D:2-18, Vault, Elf, Crypt
-MAP
-xxxxxxxxxxx
-x.........x
-x.........x
-x....>....x
-x....C....x
-x.........x
-x.........x
-xxxxxxxxxxx
-ENDMAP
-
-NAME:  lemuel_tele_altar
-DEPTH: D:2-18, Vault
-SUBST: Y = X x
-KFEAT: X = teleport trap
-MAP
-.............
-.xxxxxXxxxxx.
-.x.........x.
-.x.........x.
-.x.........x.
-.Y....C....Y.
-.x.........x.
-.x.........x.
-.x.........x.
-.xxxxxYxxxxx.
-.............
-ENDMAP
-
-NAME:  lemuel_statue_altar
-DEPTH: 2-18, Vault, Elf
-: if you.absdepth() < 10 then
-SUBST: F = G
-: end
-SUBST: F = G:99 F:1
-KMONS: F = orange crystal statue / silver statue / ice statue
-MAP
-.........
-.ccccccc.
-.F...>Cc.
-.ccccccc.
-.........
-ENDMAP
-
-NAME:   lemuel_coloured_pillars_altar
-DEPTH:  D:2-18, Vault, Elf
-TAGS:   no_rotate
-COLOUR: c = blue / yellow / red / cyan
-MAP
-xxxxxxxxxxxxxxxxxxxx
-...................x
-c...c...c...c...c..x
-@.................Cx
-c...c...c...c...c..x
-...................x
-xxxxxxxxxxxxxxxxxxxx
-ENDMAP
-
-NAME:   lemuel_upstairs_altar
-DEPTH:  D:2-12, Vault, Elf, Crypt
-ORIENT: float
-SUBST:  T:T., )=)}], c:ccx
-KMASK:  T = no_monster_gen
-MAP
-ccccccc
-cT...Tc
-c.....ccccccc
-c..C..+....)c
-c.....ccccccc
-cT...Tc
-ccccccc
-ENDMAP
-
-######################################
-# III  Special altars
-######################################
-
-NAME:  lemuel_angel_altar
-DEPTH: D:3-18, Vault
-TAGS:  no_trap_gen
-: if you.absdepth() > 12 then
-MONS: patrolling Daeva / patrolling Angel
-: else
-MONS:  patrolling Angel
-: end
-KFEAT: _ = altar_elyvilon / altar_zin / altar_shining_one
-KPROP: >"1_ = no_rtele_into
-SUBST: " = .
-MAP
-   .....
-  ..xmx..
- ..xx>xx..
-..xxx"xxx..
-.xxxx1xxxx.
-.m>""_"">m.
-.xxxx"xxxx.
-..xxx"xxx..
- ..xx>xx..
-  ..xmx..
-   .....
-ENDMAP
-
-NAME:  lemuel_hellish_altar
-DEPTH: D:2-21, Crypt, Geh
-TAGS:  no_monster_gen
-MONS:  iron devil/orange demon, hell beast/rotting devil, lemure/iron imp, hellion
-SUBST: 2 = 23
-SUBST: 2 = 12
-SUBST: 3 = 3L
-: if you.absdepth() >14 then
-SUBST: 1 = 1:20 4
-: end
-SUBST: L = l.
-SUBST: _ = _ P:1
-KFEAT: _ = altar_lugonu/altar_yredelemnul/altar_kikubaaqudgha/altar_makhleb
-KFEAT: P = enter_abyss
-KPROP: 1234_ = no_rtele_into
-MAP
-  ..LLllLL....
-  .LllllllLLL..
-..Lll323lllLLL.
-.LLl32123lllLL.
-.LLl33_33llLL..
-..Lll323llLL...
-..LLll3llL.....
-...LLlllL...
-....LLLL....
-   ..LLLLL..
-   ....LLLL.
-ENDMAP
-
-NAME:  david_defended_altar_orc
-DEPTH: D:7-20, Orc
-MONS:  patrolling orc priest
-TAGS:  uniq_defended_altar
-KFEAT: _ = altar_beogh / w:1 altar_okawaru / w:1 altar_makhleb / w:1 altar_trog
-MAP
-ccccc...
-c1..c...
-c1_.+.I@
-c1..c...
-ccccc...
-ENDMAP
-
-NAME:  david_defended_altar_elf
-DEPTH: D:7-20, Elf
-MONS:  patrolling deep elf priest / w:30 nothing
-TAGS:  uniq_defended_altar
-MAP
-ccccc...
-c1..c...
-c1C.+.G@
-c1..c...
-ccccc...
-ENDMAP
-
-# The mix of deep and shallow water is intended to keep the centaurs from
-# escaping without requiring the player to be able to cross deep water.
-NAME:  lemuel_centaur_altar
-DEPTH: D:7-20, Shoals, Lair
-TAGS:  no_pool_fixup no_monster_gen
-MONS:  patrolling centaur
-MAP
-xxxxxxxxxxxxx
-xxxxxxxxxxwxx
-xxwx.1.1.xxwx
-xwxx1.C.1xwwx
-xwwxWwwWwWwxx
-xwwWwwwwwwxxx
-xxwWwWWwwWxxx
-xxxwWwwWwxxxx
-xxxwwwWwWxxxx
-xxx...@..xxxx
-ENDMAP
-
-NAME:   lemuel_mausoleum_altar
-DEPTH:  D:7-20, Crypt
-MONS:   w:50 human zombie/orc zombie/elf zombie/w:5 ogre zombie/w:5 troll zombie
-MONS:   w:50 human skeleton/orc skeleton/elf skeleton/w:5 ogre skeleton/\
-        w:5 troll skeleton
-MONS:   mummy, wight, wraith, necrophage
-NSUBST: ? = 1:_ / *:1
-SUBST:  1 = 1:25 2 3 4:8 5:7 6:5
-KFEAT:  _ = altar_kikubaaqudgha / altar_yredelemnul
-KMONS:  _ = human zombie
-MAP
-ccccccccccccccc
-c?c?c?c?c?c?ccG
-c+c+c+c+c+c+ccc
-c............+@
-c+c+c+c+c+c+ccc
-c?c?c?c?c?c?ccG
-ccccccccccccccc
-ENDMAP
-
-###################################################################
-# Nemelex altar (Shiori)
-# Perhaps could have different parameters for the two types of clouds,
-# and different patterns.
-NAME:   nemelex_altar_shiori
-DEPTH:  !Lair, !Orc
-TAGS:   no_pool_fixup no_monster_gen no_item_gen
-TAGS:   generate_awake patrolling no_rotate
-TAGS:   layout_rooms layout_city layout_open layout_cross
-KPROP:  abcdefghBR' = no_rtele_into
-KFEAT:  _ = altar_nemelex_xobeh
-SUBST:  b:aa. , a:n. , d:c. , c:nn. , f:ee. , e:nn. , h:g. , g:n.
-SUBST:  G:GTUVblw> , C=c
-KFEAT:  z = teleport trap
-MARKER: R = lua:fog_machine { cloud_type="flame", walk_dist=1, size=9, \
-            pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
-            spread_rate=3, start_clouds=1 }
-MARKER: B = lua:fog_machine { cloud_type="foul pestilence", walk_dist=1, \
-            size=9,  pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
-            spread_rate=3, start_clouds=1 }
-MAP
-CCCCCCCC+++CCCCCCCC
-Cnnnnnnn...nnnnnnnC
-Cnab'ban...ncd'dcnC
-Cnb...bn.G.nd...dnC
-Cn'.B..n...n..R.'nC
-Cnb...bn...nd...dnC
-Cnab.ban...ncd.dcnC
-Cnnnnnnn...nnnnnnnC
-CG......._.......GC
-Cnnnnnnn...nnnnnnnC
-Cnef.fen...ngh.hgnC
-Cnf...fn...nh...hnC
-Cn'.R..n...n..B.'nC
-Cnf...fn.G.nh...hnC
-Cnef'fen...ngh'hgnC
-Cnnnnnnn...nnnnnnnC
-CCCCCCCC+++CCCCCCCC
-ENDMAP
-
-###################################################################
-# Distorted/chaotic kobolds (Jude)
-NAME:       due_chaos_kobolds
-DEPTH:      D:13-27, Vault, Elf, Crypt
-TAGS:       no_rotate
-ORIENT:     float
-SUBST:      y  = c.
-COLOUR:     1. = random
-MARKER:     P  = lua:fog_machine { cloud_type="blue smoke", walk_dist=1, \
-            size=9, pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
-            spread_rate=3, start_clouds=1, colour="blue" }
-: if crawl.coinflip() then
-KFEAT:      _ = altar_lugonu
-KFEAT:      P = enter_abyss
-: kmons("1 = kobold w:" .. you.absdepth() .. " ; quick blade ego:distortion " ..
-:       "w:6 | sabre ego:distortion | short sword ego:distortion / kobold "   ..
-:       "w:80 ; short sword | sabre | quick blade w:3")
-: else
-KFEAT:      _ = altar_xom
-:   if crawl.one_chance_in(4) then
-KMONS:      P = orange crystal statue
-:   else
-KFEAT:      P = enter_abyss / fountain_sparkling / stone_arch
-:   end
-: kmons("1 = kobold w:" .. you.absdepth() .. " ; quick blade ego:chaos " ..
-:       "w:6 | sabre ego:chaos | short sword ego:chaos / kobold w:80 ;"  ..
-:       "short sword | sabre | quick blade w:3")
-: end
-MAP
-  ccccc
- cc...cc
-cc..P..cc
- cc...cc
- ccc.cccc
-ccyy.yyyccc
-cy..111.yyc
-cc..1_1..cc
-cyy.111..yc
-cccyy..yycc
-  ccc..ccc
-    c++c
-     @@
-ENDMAP
-
-NAME:  jiyva_altar_1
-DEPTH: D:2-20
-KFEAT: _ = altar_jiyva
-MONS:  jelly
-MAP
-.....
-..1..
-.1_1.
-..1..
-.....
-ENDMAP
-
-NAME:  jiyva_altar_2
-DEPTH: D:2-20
-KFEAT: _ = altar_jiyva
-KITEM: 1 = dart
-KMONS: 1 = jelly
-ITEM:  dart
-MAP
-xxxxx
-xdddx
-x<_1x
-xdddx
-xxxxx
-ENDMAP
-
-NAME:  fedhas_bush_and_centaur_altar
-DEPTH: D:3-27
-KFEAT: _ = altar_fedhas
-MONS:  centaur, bush
-MAP
-......
-.2222..
-.21222.
-.22_22.
-...22..
-.222..
-ENDMAP
-
-NAME:   tgw_lugonu_bribe
-DEPTH:  D:12-27
-KFEAT:  _ = altar_lugonu
-MARKER: _ = lua:portal_desc {slave_name="altar"}
-
-{{
-local tm = TriggerableFunction:new{
-  func="callback.tgw_lugonu_bribe_lugonu_item",
-  repeated=true,
-  data={turns=you.turns(),
-  tc=0, triggered=false} }
-tm:add_triggerer(DgnTriggerer:new{type="player_los"})
-lua_marker('_', tm)
-}}
-
-MAP
-_
-ENDMAP
-
-######################################
-# IV   Overflow altars
-######################################
-#
 # These must feature one of the temple_overflow_* TAGs (see header).
 # Altars are sorted alphabetically by god, with The Shining One coming
 # after Zin. At the end, there are altar vaults which can be used for
 # more than just one god.
-#
-######################################
 
 ### Ashenzari overflow altars #################################################
 
@@ -730,14 +45,20 @@ WEIGHT: 5
 KFEAT:  _ = altar_ashenzari
 ITEM:   cursed mace ident:curse / cursed trident ident:curse / \
         cursed flail ident:curse w:1 / cursed whip ident:curse w:1
+#
 ### TODO: This still gives book names like "Ashenzari's Almanac of Skeletal
 ###       Cooking" and "Ashenzari's Compendium of Skeletal Cooking", whereas
 ###       we just want "Ashenzari's Skeletal Cookbook" or similar (no random
 ###       component).
-ITEM:   randbook owner:Ashenzari desc:necr title:Skeletal_Cooking spells:animate_skeleton numspells:1 /\
-        randbook owner:Ashenzari desc:necr title:Culinary_Necromancy spells:animate_skeleton numspells:1 /\
-        randbook owner:Ashenzari desc:necr title:Culinary_Dark_Arts spells:animate_skeleton numspells:1 /\
-        randbook owner:Ashenzari desc:necr title:Rapid_Deboning spells:animate_skeleton numspells:1
+#
+ITEM:   randbook owner:Ashenzari desc:necr title:Skeletal_Cooking \
+                 spells:animate_skeleton numspells:1 /\
+        randbook owner:Ashenzari desc:necr title:Culinary_Necromancy \
+                 spells:animate_skeleton numspells:1 /\
+        randbook owner:Ashenzari desc:necr title:Culinary_Dark_Arts \
+                 spells:animate_skeleton numspells:1 /\
+        randbook owner:Ashenzari desc:necr title:Rapid_Deboning \
+                 spells:animate_skeleton numspells:1
 MAP
 ...
 d_e
@@ -752,6 +73,7 @@ b.b
 ._.
 b.b
 ENDMAP
+
 
 ### Cheibriados overflow altars ###############################################
 
@@ -937,6 +259,35 @@ MAP
 .............
 ENDMAP
 
+# There are versions of this overflow altar for all good gods. 
+# Currently, this duplication is unavoidable for technical reasons.
+#
+NAME:  lemuel_angel_altar_elyvilon
+DEPTH: D:3-18, Vault
+TAGS:  uniq_altar_elyvilon temple_overflow_elyvilon
+TAGS:  no_trap_gen uniq_angel_altar
+: if you.absdepth() > 12 then
+MONS: patrolling Daeva / patrolling Angel
+: else
+MONS:  patrolling Angel
+: end
+KFEAT: _ = altar_elyvilon
+KPROP: >"1_ = no_rtele_into
+SUBST: " = .
+MAP
+   .....
+  ..xmx..
+ ..xx>xx..
+..xxx"xxx..
+.xxxx1xxxx.
+.m>""_"">m.
+.xxxx"xxxx.
+..xxx"xxx..
+ ..xx>xx..
+  ..xmx..
+   .....
+ENDMAP
+
 
 ### Fedhas overflow altars ####################################################
 
@@ -1109,49 +460,23 @@ ttttttdddtttttt
 tttttdd@ddttttt
 ENDMAP
 
+NAME:  fedhas_bush_and_centaur_altar
+TAGS:  temple_overflow_fedhas uniq_altar_fedhas
+DEPTH: D:3-15
+KFEAT: _ = altar_fedhas
+MONS:  centaur, bush
+MAP
+......
+.2222..
+.21222.
+.22_22.
+...22..
+.222..
+ENDMAP
 
 ### Kikubaaqudgha overflow altars #############################################
 
-# This vault contains a caged human who is killed with miasma once you see it
-# and then is turned into a zombie.
-#
-# The show's end is not clear: the chance for getting a corpse (and then a
-# zombie) is 50%. Very rarely, the human survives -- this is also okay. All of
-# these shows still point out how Kikubaaqudgha enjoys suffering.
-NAME:   tgw_kikubaaqudgha
-TAGS:   uniq_altar_kikubaaqudgha temple_overflow_kikubaaqudgha
-DEPTH:  D:2-10
-KFEAT:  _ = altar_kikubaaqudgha
-{{
-local tm = TriggerableFunction:new{
-  func="callback.tgw_kikubaaqudgha_kill_human",
-  repeated=true,
-  data={turns=you.turns(), tc=0, triggered=false} }
-tm:add_triggerer(DgnTriggerer:new{type="player_los"})
-lua_marker('_', tm)
-}}
-
-{{
-local tm = TriggerableFunction:new{
-  func="callback.tgw_kikubaaqudgha_zombify", repeated=false}
-tm:add_triggerer(DgnTriggerer:new{type="monster_dies", target="dslave"})
-lua_marker('_', tm)
-}}
-MARKER: h = lua:portal_desc {slave_name="zombie"}
-MARKER: h = lua:MonPropsMarker:new{dslave="dslave"}
-KFEAT:  h = .
-KMONS:  h = generate_awake Human hp:12 ; nothing
-KPROP:  h = no_rtele_into
-TILE:   m = dngn_transparent_wall_darkgray
-MAP
-xxxxxxx
-@..mmmx
-@_.mhmx
-@..mmmx
-xxxxxxx
-ENDMAP
-
-NAME:   lemuel_zombie_altar_kiku
+NAME:   lemuel_zombie_altar_kikubaaqudgha
 DEPTH:  D:2-18, Crypt
 TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen temple_overflow_kikubaaqudgha
 KFEAT:  _ = altar_kikubaaqudgha
@@ -1166,6 +491,27 @@ xxxx11111111xxxx
 xxxx11111111xxxx
 xxxxwwwwwwwwxxxx
 xxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   lemuel_mausoleum_altar_kikubaaqudgha
+TAGS:   uniq_altar_kikubaaqudgha temple_overflow_kikubaaqudgha uniq_mausoleum_altar
+DEPTH:  D:7-20, Crypt
+MONS:   w:50 human zombie/orc zombie/elf zombie/w:5 ogre zombie/w:5 troll zombie
+MONS:   w:50 human skeleton/orc skeleton/elf skeleton/w:5 ogre skeleton/\
+        w:5 troll skeleton
+MONS:   mummy, wight, wraith, necrophage
+NSUBST: ? = 1:_ / *:1
+SUBST:  1 = 1:25 2 3 4:8 5:7 6:5
+KFEAT:  _ = altar_kikubaaqudgha
+KMONS:  _ = human zombie
+MAP
+ccccccccccccccc
+c?c?c?c?c?c?ccG
+c+c+c+c+c+c+ccc
+c............+@
+c+c+c+c+c+c+ccc
+c?c?c?c?c?c?ccG
+ccccccccccccccc
 ENDMAP
 
 
@@ -1233,6 +579,48 @@ KFEAT: _ = altar_nemelex_xobeh
 KITEM: _ = plain deck
 MAP
 _
+ENDMAP
+
+
+###################################################################
+# Nemelex altar (Shiori)
+# Perhaps could have different parameters for the two types of clouds,
+# and different patterns.
+NAME:   nemelex_altar_shiori
+DEPTH:  !Lair, !Orc
+TAGS:   temple_overflow_nemelex_xobeh uniq_altar_nemelex_xobeh
+TAGS:   no_pool_fixup no_monster_gen no_item_gen
+TAGS:   generate_awake patrolling no_rotate
+TAGS:   layout_rooms layout_city layout_open layout_cross
+KPROP:  abcdefghBR' = no_rtele_into
+KFEAT:  _ = altar_nemelex_xobeh
+SUBST:  b:aa. , a:n. , d:c. , c:nn. , f:ee. , e:nn. , h:g. , g:n.
+SUBST:  G:GTUVblw> , C=c
+KFEAT:  z = teleport trap
+MARKER: R = lua:fog_machine { cloud_type="flame", walk_dist=1, size=9, \
+            pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
+            spread_rate=3, start_clouds=1 }
+MARKER: B = lua:fog_machine { cloud_type="foul pestilence", walk_dist=1, \
+            size=9,  pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
+            spread_rate=3, start_clouds=1 }
+MAP
+CCCCCCCC+++CCCCCCCC
+Cnnnnnnn...nnnnnnnC
+Cnab'ban...ncd'dcnC
+Cnb...bn.G.nd...dnC
+Cn'.B..n...n..R.'nC
+Cnb...bn...nd...dnC
+Cnab.ban...ncd.dcnC
+Cnnnnnnn...nnnnnnnC
+CG......._.......GC
+Cnnnnnnn...nnnnnnnC
+Cnef.fen...ngh.hgnC
+Cnf...fn...nh...hnC
+Cn'.R..n...n..B.'nC
+Cnf...fn.G.nh...hnC
+Cnef'fen...ngh'hgnC
+Cnnnnnnn...nnnnnnnC
+CCCCCCCC+++CCCCCCCC
 ENDMAP
 
 
@@ -1442,27 +830,6 @@ MAP
     xx.......xx
      xxxx+xxxx
        xx@xx
-ENDMAP
-
-NAME:   trog_book
-TAGS:   uniq_altar_trog temple_overflow_trog
-DEPTH:  D:2-10, Orc
-KFEAT:  _ = altar_trog
-{{
-local tm = TriggerableFunction:new{func="callback.trog_book_convert_book",
-  repeated=true, data={turns=you.turns(), tc=0, triggered=false} }
-tm:add_triggerer(DgnTriggerer:new{type="player_los"})
-lua_marker('_', tm)
-}}
-MARKER: b = lua:portal_desc {slave_name="trog_book"}
-KFEAT:  b = .
-KITEM:  b = any book
-MAP
-xxxxxxx
-x.....xxx
-x._.b....@
-x.....xxx
-xxxxxxx
 ENDMAP
 
 
@@ -1754,7 +1121,7 @@ ENDMAP
 
 ### Yredelemnul overflow altars ###############################################
 
-NAME:   yredelemnul_altar_1
+NAME:   yredelemnul_altar_generic
 TAGS:   uniq_altar_yredelemnul temple_overflow_yredelemnul
 DEPTH:  D:2-20
 KFEAT:  C = altar_yredelemnul
@@ -1769,7 +1136,7 @@ MAP
 .....
 ENDMAP
 
-NAME:   lemuel_zombie_altar_yred
+NAME:   lemuel_zombie_altar_yredelemnul
 DEPTH:  D:2-18, Crypt
 TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen temple_overflow_yredelemnul
 KFEAT:  _ = altar_yredelemnul
@@ -1786,6 +1153,27 @@ xxxx11111111xxxx
 xxxx11111111xxxx
 xxxxwwwwwwwwxxxx
 xxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   lemuel_mausoleum_altar_yredelemnul
+TAGS:   uniq_altar_yredelemnul temple_overflow_yredelemnul uniq_mausoleum_altar
+DEPTH:  D:7-20, Crypt
+MONS:   w:50 human zombie/orc zombie/elf zombie/w:5 ogre zombie/w:5 troll zombie
+MONS:   w:50 human skeleton/orc skeleton/elf skeleton/w:5 ogre skeleton/\
+        w:5 troll skeleton
+MONS:   mummy, wight, wraith, necrophage
+NSUBST: ? = 1:_ / *:1
+SUBST:  1 = 1:25 2 3 4:8 5:7 6:5
+KFEAT:  _ = altar_yredelemnul
+KMONS:  _ = human zombie
+MAP
+ccccccccccccccc
+c?c?c?c?c?c?ccG
+c+c+c+c+c+c+ccc
+c............+@
+c+c+c+c+c+c+ccc
+c?c?c?c?c?c?ccG
+ccccccccccccccc
 ENDMAP
 
 
@@ -1815,6 +1203,35 @@ xccc+cccx
     @
 ENDMAP
 
+# There are versions of this overflow altar for all good gods. 
+# Currently, this duplication is unavoidable for technical reasons.
+#
+NAME:  lemuel_angel_altar_zin
+DEPTH: D:3-18, Vault
+TAGS:  uniq_altar_zin temple_overflow_zin
+TAGS:  no_trap_gen uniq_angel_altar
+: if you.absdepth() > 12 then
+MONS: patrolling Daeva / patrolling Angel
+: else
+MONS:  patrolling Angel
+: end
+KFEAT: _ = altar_zin
+KPROP: >"1_ = no_rtele_into
+SUBST: " = .
+MAP
+   .....
+  ..xmx..
+ ..xx>xx..
+..xxx"xxx..
+.xxxx1xxxx.
+.m>""_"">m.
+.xxxx"xxxx.
+..xxx"xxx..
+ ..xx>xx..
+  ..xmx..
+   .....
+ENDMAP
+
 
 ### The Shining One overflow altars ###########################################
 
@@ -1838,6 +1255,35 @@ xct._.tcx
 xc.._..cx
 xct...tcx
 xccc+cccx
+ENDMAP
+
+# There are versions of this overflow altar for all good gods. 
+# Currently, this duplication is unavoidable for technical reasons.
+#
+NAME:  lemuel_angel_altar_tso
+DEPTH: D:3-18, Vault
+TAGS:  uniq_altar_the_shining_one temple_overflow_the_shining_one
+TAGS:  no_trap_gen uniq_angel_altar
+: if you.absdepth() > 12 then
+MONS: patrolling Daeva / patrolling Angel
+: else
+MONS:  patrolling Angel
+: end
+KFEAT: _ = altar_shining_one
+KPROP: >"1_ = no_rtele_into
+SUBST: " = .
+MAP
+   .....
+  ..xmx..
+ ..xx>xx..
+..xxx"xxx..
+.xxxx1xxxx.
+.m>""_"">m.
+.xxxx"xxxx.
+..xxx"xxx..
+ ..xx>xx..
+  ..xmx..
+   .....
 ENDMAP
 
 
