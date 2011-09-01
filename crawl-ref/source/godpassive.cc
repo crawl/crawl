@@ -307,7 +307,7 @@ void ash_check_bondage(bool msg)
         }
     }
 
-    char new_bondage[NUM_ET];
+    int8_t new_bondage[NUM_ET];
     int old_level = you.bondage_level;
     for (int s = ET_WEAPON; s < NUM_ET; s++)
     {
@@ -347,8 +347,8 @@ void ash_check_bondage(bool msg)
     for (int s = ET_WEAPON; s < NUM_ET; s++)
     {
         you.bondage[s] = new_bondage[s];
-        std::map<skill_type, char> boosted_skills = ash_get_boosted_skills(eq_type(s));
-        for (std::map<skill_type, char>::iterator it = boosted_skills.begin();
+        std::map<skill_type, int8_t> boosted_skills = ash_get_boosted_skills(eq_type(s));
+        for (std::map<skill_type, int8_t>::iterator it = boosted_skills.begin();
              it != boosted_skills.end(); ++it)
         {
             you.skill_boost[it->first] += it->second;
@@ -695,10 +695,10 @@ monster_type ash_monster_tier(const monster *mon)
     return monster_type(MONS_SENSED_TRIVIAL + monster_info(mon).threat);
 }
 
-std::map<skill_type, char> ash_get_boosted_skills(eq_type type)
+std::map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
 {
     const int bondage = you.bondage[type];
-    std::map<skill_type, char> boost;
+    std::map<skill_type, int8_t> boost;
     if (bondage <= 0)
         return boost;
 

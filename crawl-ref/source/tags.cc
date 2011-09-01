@@ -1932,7 +1932,7 @@ static void tag_read_you(reader &th)
             you.train[j]  = unmarshallByte(th);
         else if (th.getMinorVersion() < TAG_MINOR_FOCUS_SKILL)
         {
-            char training = unmarshallByte(th);
+            int8_t training = unmarshallByte(th);
             if (training == -1)
                 you.train[j] = you.training[j] = 0;
             else
