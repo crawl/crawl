@@ -37,10 +37,10 @@ MAP
 O
 ENDMAP
 
-################################################################################
+##############################################################################
 # Generic Lair entry
 #
-NAME:    david_lair_1
+NAME:    david_lair_generic
 TAGS:    lair_entry
 MONS:    crocodile / sheep, agate snail / elephant slug / nothing
 MONS:    nothing / yak / weight:2 death yak, plant / fungus / w:20 nothing
@@ -60,10 +60,10 @@ xx.........xx
 xxxx..@..xxxx
 ENDMAP
 
-################################################################################
+##############################################################################
 # Shrubbed Lair entry
 #
-NAME:   david_lair_2
+NAME:   david_lair_shrubbed
 TAGS:   lair_entry
 MONS:   plant, fire drake
 SUBST:  ' = 1.
@@ -81,10 +81,10 @@ xx.''..'...xx
 xxxx..@..xxxx
 ENDMAP
 
-################################################################################
+##############################################################################
 # Lair monsters near stair
 #
-NAME:    david_lair_3
+NAME:    dpeg_lair_monsters
 TAGS:    lair_entry
 ORIENT:  float
 MONS:    w:50 nothing / w:30 giant slug / w:30 agate snail
@@ -108,10 +108,10 @@ MAP
 ....@........
 ENDMAP
 
-################################################################################
+##############################################################################
 # Obligatory Oklob Plant Lair Entry Vault,
 #
-NAME:   oklobed_lair
+NAME:   dpeg_oklobed_lair
 TAGS:   lair_entry no_monster_gen no_pool_fixup no_rotate
 ORIENT: float
 : if you.absdepth() >= 12 then
@@ -137,10 +137,10 @@ MAP
 ...xxxxxxx...
 ENDMAP
 
-################################################################################
+##############################################################################
 # A boring Lair entry vault.
 #
-NAME: erik_lair_2
+NAME: erik_lair_boring
 TAGS: lair_entry
 MONS: generate_awake boring beetle / nothing / rat
 MONS: generate_awake boring beetle
@@ -160,7 +160,7 @@ x?xxxx?xxxxx?x
 xxxxxxxxx?xxxx
 ENDMAP
 
-################################################################################
+##############################################################################
 # Grove Lair entry
 #
 NAME:   minmay_lair_entry_grove
@@ -194,7 +194,7 @@ MAP
      .....
 ENDMAP
 
-################################################################################
+##############################################################################
 # Lava Lair entry
 #
 NAME:   minmay_lair_entry_lava
@@ -217,10 +217,10 @@ MAP
 .........
 ENDMAP
 
-################################################################################
+##############################################################################
 # Welcome to Lair Island. We make great pancakes.
 #
-NAME:   erik_lair_3
+NAME:   erik_lair_island
 TAGS:   lair_entry
 ORIENT: float
 MONS:   w:60 troll / Snorg
@@ -245,10 +245,10 @@ MAP
 ...........?...@......
 ENDMAP
 
-################################################################################
+##############################################################################
 # Dragon's Lair, for generous values of Dragon
 #
-NAME:    erik_lair_4
+NAME:    erik_lair_dragon
 TAGS:    lair_entry no_rotate
 ORIENT:  float
 MONS:    steam dragon / mottled dragon / swamp drake
@@ -274,10 +274,10 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-################################################################################
+##############################################################################
 # Orcish Takeover!
 #
-NAME:   erik_lair_5
+NAME:   erik_lair_orcish_takeover
 TAGS:   lair_entry
 ORIENT: float
 MONS:   orc
@@ -340,7 +340,7 @@ ENDMAP
 # Lair-specific non-entry/ending vaults
 ################################################################################
 
-################################################################################
+##############################################################################
 # Rats! (Lemuel), special Lair version
 # There another, easier version for the shallow dungeon
 #
@@ -377,7 +377,7 @@ xxxxxxxx.xxxxx111.xxxx.xxxxxxxxxxxxxxxxx
              xxxx@xx                   x
 ENDMAP
 
-################################################################################
+##############################################################################
 # A comfortable, reclusive cottage for the summer holidays (Eino)
 #
 NAME:    pond_and_an_island_with_a_cottage
@@ -411,7 +411,7 @@ wwwwwwwww...........wwwwwwwwww
          www
 ENDMAP
 
-################################################################################
+##############################################################################
 # Pointless little "vaults" by Lemuel
 #
 NAME:   strawberry_fields_big
@@ -540,7 +540,7 @@ MAP
      ..
 ENDMAP
 
-################################################################################
+##############################################################################
 # Plantages
 #
 NAME:   fruit_tree_single
@@ -588,7 +588,7 @@ _......'....._
    ________
 ENDMAP
 
-#############################################
+##############################################################################
 # A number of fruity vaults, by blue_anna
 #
 # The "fruiting_plant" tag was used originally for subvault use in
@@ -812,10 +812,10 @@ MAP
 ENDMAP
 
 
-################################################################################
+##############################################################################
 # Ice dragon lair with assorted imp pets
 #
-NAME:   ice_dragon_lair_bobbens
+NAME:   bobbens_ice_dragon_lair
 DEPTH:  Lair:4-8
 TAGS:   no_monster_gen
 MONS:   ice dragon
@@ -847,10 +847,10 @@ MAP
 ;;   ;;;....w..;
 ENDMAP
 
-################################################################################
+##############################################################################
 # Dragon lair embedded in wall
 #
-NAME:   dragon_lair_wall_bobbens
+NAME:   bobbens_dragon_lair_wall
 DEPTH:  Lair:4-8
 TAGS:   no_monster_gen mini_float
 : if you.absdepth() >= 18 then
@@ -887,7 +887,7 @@ x?//.././///x??xl/x
 ./........./.......
 ENDMAP
 
-################################################################################
+##############################################################################
 # Drake nest (minmay)
 #
 NAME:   minmay_lair_drake_nest
@@ -907,7 +907,7 @@ MAP
    ...
 ENDMAP
 
-################################################################################
+##############################################################################
 # Venomous thicket (minmay)
 #
 NAME:   minmay_lair_venomous_thicket
@@ -938,7 +938,7 @@ xx44..........3.xx
 ..3..3....3.......
 ENDMAP
 
-################################################################################
+##############################################################################
 #       Hibernating monster in a tunnel, can be pretty dangerous
 #
 NAME:   hibernation_bobbens
@@ -968,7 +968,7 @@ xxxx..;xxx
 xxx....xxx
 ENDMAP
 
-################################################################################
+##############################################################################
 # Stranded yaks
 #
 NAME:   Lemuel_yak_island_a
@@ -1012,7 +1012,7 @@ MAP
 ENDMAP
 
 
-################################################################################
+##############################################################################
 # Oklob tunnel
 #
 NAME:   minmay_lair_oklob_tunnel
@@ -1038,7 +1038,7 @@ xxxlllxxxx
 xxxxxxxx
 ENDMAP
 
-################################################################################
+##############################################################################
 # Hidden items, with an oklob, naturally
 #
 NAME:   minmay_lair_hidden_items
@@ -1059,7 +1059,7 @@ XxxxxxXXX
 XXXXXXX
 ENDMAP
 
-################################################################################
+##############################################################################
 # Oklob-based vaults.
 #
 NAME:   minmay_lair_oklob_chamber_tiny
@@ -1208,7 +1208,7 @@ MAP
        ...
 ENDMAP
 
-################################################################################
+##############################################################################
 # Goldilocks: three bears
 #
 NAME:   minmay_lair_goldilocks
@@ -1230,11 +1230,12 @@ ENDMAP
 # Lair endings
 ###############################################################################
 
-#######################################################################
+##############################################################################
 # Vaguely Jungle Book (R. Kipling) inspired. Map by due.
 # Could do with some nice tiles, I guess. Does require elephant statue
 # tiles!
-NAME:   jungle_book
+#
+NAME:   due_jungle_book
 ORIENT: north
 PLACE:  Lair:$
 TAGS:   no_pool_fixup no_wall_fixup no_monster_gen
@@ -1291,7 +1292,9 @@ xxcccccccct....cccP.P.P1P...P1P.P.Pccc....tcccccccc.
    @........@@...........@@@....T......@@..........@
 ENDMAP
 
-#######################################################################
+##############################################################################
+# Evil forest
+#
 NAME:   evil_forest
 PLACE:  Lair:$
 TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen
@@ -1341,8 +1344,9 @@ MAP
  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxLLLLLLLLLLLLLLLLLL
 ENDMAP
 
-#######################################################################
+##############################################################################
 # Oh worms!
+#
 NAME:   wormcave
 PLACE:  Lair:$
 TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen
@@ -1392,8 +1396,9 @@ xxxxxxxxxxXxx41.xxXxxxxxxxxx....xxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-#######################################################################
+##############################################################################
 # Bear with us...
+#
 NAME:   bearwithus
 PLACE:  Lair:$
 TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen
@@ -1426,8 +1431,9 @@ XxxxxxxxxxxXx3%.2xxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-#######################################################################
+##############################################################################
 # Who let the dogs out?
+#
 NAME:   kennels
 PLACE:  Lair:$
 TAGS:   no_pool_fixup no_wall_fixup no_monster_gen no_rotate no_item_gen patrolling
@@ -1458,7 +1464,7 @@ xxxxxxxx.....xxxxxxxxx.3....xxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-#######################################################################
+##############################################################################
 # Frog pond
 #
 NAME:   minmay_lair_end_frog_pond
@@ -1504,7 +1510,7 @@ MAP
         ...........
 ENDMAP
 
-################################################################################
+##############################################################################
 # See https://crawl.develz.org/wiki/doku.php?id=dcss:brainstorm:branch:forest.
 #
 NAME:   minmay_lair_end_enchanted_forest
@@ -1544,4 +1550,58 @@ ttttttT
 tttT
 tT
 t
+ENDMAP
+
+##############################################################################
+# Catoblepas ending by evilmike.
+#
+# Contains 3 catoblepas with one being semi-randomly placed. The last 
+# one is likely to breathe on you in an area that is hard to escape from.
+#
+NAME:   evilmike_catoblepas_cave
+PLACE:  Lair:$
+TAGS:   no_monster_gen no_rotate no_item_gen
+ORIENT: northwest
+FTILE:  d|*$1c- = floor_cobble_blood
+COLOUR: d|*$1c- = lightgrey
+ITEM:   acquire any
+MONS:   patrolling catoblepas
+MONS:   death yak / w:5 yak, death yak w:5 / yak
+MONS:   sheep / yak / death yak
+NSUBST: 3 = 1:1 / *:2
+# These are still living plants for all intents and purposes...
+MONS:   plant name:petrified n_adj col:lightgrey tile:mons_withered_plant / nothing
+SUBST:  - = .
+MAP
+xxxxxxcccxxxxxxxxxxxxxxxx
+xxxxccc*cccxxxxxxxxxxxxxxx
+xxxxcd|$$-cxxxxxxxxxxxxxxxx
+xxxxcc$--1ccxxxxxxxxxxxxxxx
+xxxxxcc----ccxxxxxxxxxxxxxxxxx
+xxxxxxccc---cxxx%5xx5xxxxxxxxxxx
+xxxxxxxxcc-ccxx5......5xxxxxxxxxxx
+xxxxxxxxxc-cxx..3.3.x...xxxxxxxxxxx
+xxxxxxxxxc-cx5.2.2.xxx5..xxxx55.%xxxx
+xxxxxxxxxx.cxx5...xxxxx...xxxx4.4xxxx
+xxxxxxxxxx.xxxxx..xxxxxxx...xx.4.4xxx
+xxxxxxxxxx.xxxxxx...xxxxxxx......xxxx
+xxxxxxxxxx.xxxxxxxx..xxxxxx...xx55xxx
+xxxxxxx.....xxxxxxx..5xxxx..xxxxxxxxxx
+xxxxxx32.x..xxxxxx5..xxxx..xxxxcccxxxx
+xxxxxx2xxxx..xxxxxx..5xxx.xxxccc1ccxxx
+xxxxxxxxxx..xxxxxx........xxcc----ccxx
+xxxxxxxxx5..5xxxx32xxx5...5cc------cxx
+xxxxxxxxx.....xx.3xxxxxx5..c------ccx
+xxxxxxxx5.G.G.....xxxxxxx..---cc--cxx
+xxx%xxx..G.54.G.xxxxxxxxxxx-ccc---cxx
+x%525xx..4..G....xxxxxxxxxxxxc---ccxx
+xx2..3....5..G..55xxxxxx55xxx...xxxx
+xxx53...xxx5..5xxxxxxxxxx5.....xxxxx
+xxxxx55xxxxxxxxxxxxxxxxxxx......xxx
+xxxxxxxxxxxxxxxxxxxxxxxx......G...
+xxxxxxxxxxxxxxxxxxxxxx....G.......
+xxxxxxxxxxxxxxxx     ........G....
+xxxxxxxxx             ..G........
+xxx                   .........G.
+x                           .....
 ENDMAP
