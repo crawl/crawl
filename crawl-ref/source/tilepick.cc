@@ -464,7 +464,9 @@ tileidx_t tileidx_feature(const coord_def &gc)
             {
                 solid |= 1 << i;
             }
-        return TILE_DNGN_TRAP_WEB + solid;
+        if (solid)
+            return TILE_DNGN_TRAP_WEB_N - 1 + solid;
+        return TILE_DNGN_TRAP_WEB;
     }
     case DNGN_ENTER_SHOP:
         return (_tileidx_shop(gc));
