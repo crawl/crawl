@@ -3,8 +3,8 @@
 #            are defined as vaults with an ORIENT: float line. Vaults with
 #            other ORIENT arguments (encompassing, north, northwest etc.)
 #            are considered big and reside in large.des. Vaults without any
-#            ORIENT line are minivaults and behave somewhat differenty; these
-#            are stored in mini.des.
+#            ORIENT line are minivaults and behave somewhat differently; these
+#            are stored in the files listed in mini.des.
 #
 #            All maps dealing with the Vault branch system, including Vaults:8
 #            reside in vaults.des.
@@ -102,7 +102,7 @@ MAP
 x
 ENDMAP
 
-################################################################################
+##############################################################################
 # Elevator
 #
 NAME:    lemuel_elevator
@@ -367,7 +367,7 @@ ENDMAP
 
 
 ################################################################################
-# Staircase flavor vaults.
+# Staircase flavour vaults.
 #
 NAME:    minmay_staircase_windowed_small
 TAGS:    extra luniq_staircase
@@ -579,7 +579,6 @@ ENDMAP
 
 ##############################################################################
 # Sometimes You Just Gotta Run
-# Moved deeper and minor changes.
 #
 NAME:    erik_ogre
 DEPTH:   D:6-10
@@ -614,13 +613,14 @@ xxxxxx...xxx...xxxxxx
      xxxxx xxxxx
 ENDMAP
 
-################################
+##############################################################################
 # Starter slime pit
 #
-# The slime creature or amoeba may seem too tough for the level where this appears,
-# but since they are normal speed with no range attacks, they can be escaped.
+# The slime creature or amoeba may seem too tough for the level where this
+# appears, but since they are normal speed with no range attacks, they can
+# be escaped.
 #
-NAME:   slime_lemuel
+NAME:   lemuel_slime
 DEPTH:  D:6-16, Lair
 ORIENT: float
 MONS:   w:20 ooze / jelly / fungus
@@ -638,7 +638,7 @@ ENDMAP
 ##############################################################################
 # Beware the mummy's curse (Lemuel)
 #
-NAME:    MiniTomb
+NAME:    lemuel_MiniTomb
 ORIENT:  float
 DEPTH:   D:15-26, Crypt
 MONS:    large zombie / nothing
@@ -664,10 +664,10 @@ xxxxxxxxxxx3$$xxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-####################################
+##############################################################################
 # An old-fashioned vault, by Lemuel
 #
-NAME: traditional_vault_lemuel
+NAME:  lemuel_traditional_vault
 DEPTH: D:12-27, Vault
 ORIENT: float
 SUBST: 9 = 9 0 8:2
@@ -703,7 +703,7 @@ wwwwwwwwwwwwwwwwwwwwwwww
 ........................
 ENDMAP
 
-#############################################################################
+##############################################################################
 # Anthole (zaba)
 # Intentionally used ORIENT: float in order to enforce rooms+corridors.
 #
@@ -726,7 +726,7 @@ ENDMAP
 #############################################################################
 # Insect pit (Lemuel)
 #
-NAME:   insect_pit
+NAME:   lemuel_insect_pit
 TAGS:   no_rotate
 ORIENT: float
 DEPTH:  D:5-12, Elf, Vault
@@ -751,7 +751,7 @@ ENDMAP
 #############################################################################
 # Troll bridge (Lemuel)
 #
-NAME:   troll_bridge
+NAME:   lemuel_troll_bridge
 DEPTH:  D:9-18
 ORIENT: float
 TAGS:   no_pool_fixup patrolling
@@ -777,10 +777,10 @@ xxxxx...........................xxwwwx
 xxxxx...........................xxxxxx
 ENDMAP
 
-#################################
+##############################################################################
 # An Ice Statue vault
 #
-NAME:    ice1_lemuel
+NAME:    lemuel_ice_statue
 MONS:    ice statue
 TAGS:    no_pool_fixup
 ORIENT:  float
@@ -809,7 +809,7 @@ xbbbbbbbbbbbbbbbb
 xxxxxxxxxxxxxxxxx
 ENDMAP
 
-#####################################################
+##############################################################################
 # Lions and Tigers and Bears, oh my! (or at least bears)
 #
 NAME:   lemuel_bear_cage
@@ -839,10 +839,10 @@ cnn++++nnc
 xxxxxxxxxx
 ENDMAP
 
-##################################
+##############################################################################
 # Vampire Tower by Lemuel Pitkin
 #
-NAME:    vampire
+NAME:    lemuel_vampire_tower
 ORIENT:  float
 DEPTH:   D:12-26, Vault, Crypt
 MONS:    rat / porcupine / w:6 green rat / w:3 orange rat / w:20 bat
@@ -891,7 +891,8 @@ ENDMAP
 #############################################################################
 # Oklob gauntlet
 # average of 2.3 oklobs, and at most 5 of them
-NAME:    oklob_2
+#
+NAME:    dpeg_oklob_gauntlet
 DEPTH:   D:18-26, Lair, Snake, Elf
 MONS:    plant, oklob plant
 ORIENT:  float
@@ -923,7 +924,7 @@ ENDMAP
 # Rarely (2.5% chance) the whole vault is enclosed. This is the hardest case,
 # and the walls are always diggable then.
 #
-NAME:    oklob_3
+NAME:    dpeg_oklob_shooting_range
 DEPTH:   D:18-26, Lair:2-, Elf:2-5
 WEIGHT:  2
 ORIENT:  float
@@ -955,28 +956,28 @@ xxxx...1...xxxx
 xxxxxxxxxxxxxxx
 ENDMAP
 
-#############################################################################
+##############################################################################
 # Swampy vault
 #
-NAME:    onia_ninara_012_swampy_vault
+NAME:    onia_ninara_swampy_vault
 TAGS:    no_pool_fixup no_monster_gen
 DEPTH:   D:16-20, Lair:3-, Snake
 ORIENT:  float
 SHUFFLE: AB@
-SUBST: x = .:30 W x:4
-SUBST: A : x, B : x
-SUBST: D = .:30 W
-KFEAT: E = w:20 . / x / w:50 W / w:30 w / ~
-KFEAT: F = w:150 w / w:70 W / ~ / . / x
-KFEAT: G = x / . / w / W
-KFEAT: H = . / W
-KMONS: D = Plant / w:200 nothing
-KMONS: E = w:2 slime creature / swamp worm /\
-           w:2 vampire mosquito / w:1 electric eel / w:1000 nothing
-KMONS: F = w:2 slime creature / swamp worm /\
-           w:2 vampire mosquito / w:2 electric eel / w:1000 nothing
-KMONS: H = swamp drake / swamp dragon / hydra / w:20 nothing
-KITEM: H = any good_item / any potion / w:20 nothing / gold
+SUBST:   x = .:30 W x:4
+SUBST:   A : x, B : x
+SUBST:   D = .:30 W
+KFEAT:   E = w:20 . / x / w:50 W / w:30 w / ~
+KFEAT:   F = w:150 w / w:70 W / ~ / . / x
+KFEAT:   G = x / . / w / W
+KFEAT:   H = . / W
+KMONS:   D = Plant / w:200 nothing
+KMONS:   E = w:2 slime creature / swamp worm /\
+             w:2 vampire mosquito / w:1 electric eel / w:1000 nothing
+KMONS:   F = w:2 slime creature / swamp worm /\
+             w:2 vampire mosquito / w:2 electric eel / w:1000 nothing
+KMONS:   H = swamp drake / swamp dragon / hydra / w:20 nothing
+KITEM:   H = any good_item / any potion / w:20 nothing / gold
 MAP
 xxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxx
 xxxxxxGGGxxxxxxGEDEExxxxGGxxxxxxx
@@ -998,10 +999,10 @@ xxxxxxxxGFDEGGxxxxxxxxxGxxxxxxxxx
 xxxxxxxxxxAxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-###########################
+##############################################################################
 # Another low-level vault - LP
-
-NAME:    reptile_caves
+#
+NAME:    lemuel_reptile_caves
 DEPTH:   D:10-13, Lair, Snake
 ORIENT:  float
 MONS:    giant gecko / giant newt, crocodile, iguana
@@ -1036,8 +1037,6 @@ ENDMAP
 
 ##############################################################################
 # A guard of gargoyles
-#
-# ORIENT: float ensures correct stair generation.
 #
 NAME:    gargoyle_guard
 ORIENT:  float
@@ -1104,8 +1103,8 @@ ENDMAP
 ##############################################################################
 # Slaugherhouse (Zaba)
 #
-# Butchers have either knives or hand axes. They have some chance of opening
-# the doors so animals can go for a walk, that's intended.
+# Butchers have either knives (daggers) or hand axes. They have some chance
+# of opening the doors so animals can go for a walk, that's intended.
 #
 NAME:   slaughterhouse
 DEPTH:  Lair:7-, D:11-18
@@ -1144,14 +1143,15 @@ MAP
 ENDMAP
 
 ##############################################################################
-# The Shining One Protects a Powerful Item 1 (by abrahamwl)
+# The Shining One Protects a Powerful Item, vault series by abrahamwl
 #
-# The basic theme of this vault is that the the Shining one has placed a
-# powerful item under the guard of an angel or daeva
-#
-NAME:    protected_by_tso_1
+# The basic theme of these vaults is that tthe Shining One has placed a
+# powerful item under the guard of an angel or daeva.
+
+NAME:    abrahamwl_protected_by_tso_1
 ORIENT:  float
-TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup allow_dup luniq_protected_by_tso
+TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup allow_dup
+TAGS:    luniq_protected_by_tso
 WEIGHT:  4
 DEPTH:   D:23-27, Vault
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
@@ -1188,15 +1188,10 @@ MAP
            @
 ENDMAP
 
-##############################################################################
-# The Shining One Protects a Powerful Item 2 (by abrahamwl)
-#
-# The basic theme of this vault is that the the Shining one has placed a
-# powerful item under the guard of an angel or daeva
-#
-NAME:    protected_by_tso_2
+NAME:    abrahamwl_protected_by_tso_2
 ORIENT:  float
-TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup allow_dup luniq_protected_by_tso
+TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup allow_dup
+TAGS:    luniq_protected_by_tso
 WEIGHT:  4
 DEPTH:   D:18-27, Vault
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
@@ -1210,7 +1205,6 @@ SUBST:   ? = =
 SUBST:   % = X
 SUBST:   ? = X
 : end
-
 COLOUR:  _ : yellow
 SUBST:   _ : .
 SUBST:   T = T F:1
@@ -1221,7 +1215,6 @@ MARKER:  ! = lua:message_at_spot ( "You almost think you hear a voice: \
                                    \"Seek not undue power, mortal.\"", \
                                    "warning" )
 SUBST:   ! : .
-
 MAP
     xxxxxxxxxxxxxx
   xxxXXXXXXXXXXXXXxxx
@@ -1246,15 +1239,10 @@ MAP
            @
 ENDMAP
 
-##############################################################################
-# The Shining One Protects a Powerful Item 3 (by abrahamwl)
-#
-# The basic theme of this vault is that the the Shining one has placed a
-# powerful item under the guard of an angel or daeva
-#
-NAME:    protected_by_tso_3
+NAME:    abrahamwl_protected_by_tso_3
 ORIENT:  float
-TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup allow_dup luniq_protected_by_tso
+TAGS:    patrolling no_monster_gen no_item_gen no_pool_fixup allow_dup
+TAGS:    luniq_protected_by_tso
 WEIGHT:  4
 DEPTH:   D:18-27, Vault
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
@@ -1304,8 +1292,9 @@ MAP
            @
 ENDMAP
 
-###########################################################################
+##############################################################################
 # Eyes! by Minmay
+#
 NAME:   minmay_eyes
 DEPTH:  D:14-24
 ORIENT: float
@@ -1353,7 +1342,7 @@ ENDMAP
 ##############################################################################
 # Elemental Laboratory (by Mu.)
 #
-NAME:   elemental_lab_mu
+NAME:   mu_elemental_laboratory
 DEPTH:  D:13-26, Elf:1-4
 ORIENT: float
 TAGS:   no_monster_gen no_item_gen no_pool_fixup
@@ -1440,7 +1429,10 @@ ENDMAP
 ##############################################################################
 # Ancient Champions (by Mu., lua by due)
 #
-NAME:   ancient_champions_mu
+# Together with the lua functions at the top of this file, this should
+# perhaps go into a dedicated .des file. (dpeg)
+#
+NAME:   mu_ancient_champions
 DEPTH:  D:15-26, Vault:1-7, Crypt:1-4
 ORIENT: float
 TAGS:   no_item_gen no_monster_gen
@@ -1523,8 +1515,10 @@ v.."..v4."..v.."..v
 vvvvvvvvvvvvvvvvvvv
 ENDMAP
 
+##############################################################################
 # Guardian serpents guard a snake-like passage. (nrook)
-NAME:    guardian_serpent_snake_passage
+#
+NAME:    nrook_guardian_serpent_snake_passage
 ORIENT:  float
 DEPTH:   D:9-27
 TAGS:    no_monster_gen no_rotate
@@ -1554,6 +1548,7 @@ ENDMAP
 ##############################################################################
 # Shantytown, noun: An area containing a collection of shacks,
 #                   shanties or makeshift dwellings. By Core Xii
+#
 NAME:   corexii_shantytown
 DEPTH:  D:4-13
 ORIENT: float
@@ -1597,7 +1592,9 @@ MAP
 .......................
 ENDMAP
 
+##############################################################################
 # Cluster of small buildings with basic monsters and loot, by Core Xii
+#
 NAME:   corexii_shack_village
 DEPTH:  D:3-9
 ORIENT: float
@@ -1625,11 +1622,13 @@ MAP
 ....................
 ENDMAP
 
-# Ice Spiral I (Lemuel)
-#
+##############################################################################
+# Ice Spiral vaults by Lemuel
+
 # There is a path to the center that the freezing clouds never appear on.
 # It's pretty obvious. -LP
-NAME:    ice_spiral
+#
+NAME:    lemuel_ice_spiral_1
 WEIGHT:  1
 ORIENT:  float
 TAGS:    no_item_gen no_monster_gen
@@ -1672,11 +1671,10 @@ mf..1..e..f..e..f..e..m
 mmmmmmmmmmmmmmmmmmmmmmm
 ENDMAP
 
-# Ice Spiral II (Lemuel)
-#
 # Wait for the freezing cloud to disappear, then run to the next gap,
 # then wait. It creates an agreeable sense of tension. -LP
-NAME:    ice_spiral_2
+#
+NAME:    lemuel_ice_spiral_2
 ORIENT:  float
 DEPTH:   D:5-27, Vault
 TAGS:    no_item_gen uniq_spiral layout_rooms layout_city
@@ -1703,7 +1701,10 @@ m*****eeeeeee111B111m
 mmmmmmmmmmmmmmmmmmmmm
 ENDMAP
 
-NAME:   Flame_loot_2_lemuel
+##############################################################################
+# Flame loot (Lemuel)
+#
+NAME:   lemuel_Flame_loot_2
 DEPTH:  D:9-27
 ORIENT: float
 ITEM:   nothing
@@ -1737,6 +1738,9 @@ c..LLlllLL..c
 ccccccccccccc
 ENDMAP
 
+##############################################################################
+# Firewalk (Lemuel)
+#
 NAME:    lemuel_firewalk_3
 DEPTH:   D:16-27
 TAGS:    uniq_firewalk abyss ruin_abyss
@@ -1783,7 +1787,7 @@ ENDMAP
 #############################################################################
 # The Elephants' Graveyard (by Mu.)
 #
-NAME:   elephants_graveyard_mu
+NAME:   mu_elephants_graveyard
 ORIENT: float
 TAGS:   no_monster_gen no_rotate no_vmirror
 DEPTH:  D:13-26, Lair:1-7
@@ -1841,15 +1845,18 @@ MAP
 .............@@.............
 ENDMAP
 
-NAME: megacathedral
+##############################################################################
+# Megacathedral, for the bats on the brink of extinction. Or beyond. (due)
+#
+NAME:   due_megacathedral
 ORIENT: float
-DEPTH: D:8-14
-MONS: wraith / freezing wraith w:2
-MONS: eidolon
-TAGS: no_rotate no_vmirror no_hmirror
+DEPTH:  D:8-14
+MONS:   wraith / freezing wraith w:2
+MONS:   eidolon
+TAGS:   no_rotate no_vmirror no_hmirror
 NSUBST: C = 5:C / *:.
-SUBST: X = C
-SUBST: D = V..
+SUBST:  X = C
+SUBST:  D = V..
 MARKER: = = lua:restrict_door()
 {{
 local cathedral_bats = TriggerableFunction:new {
@@ -1889,4 +1896,240 @@ cc.....ccc..cc.......cc..ccc.....cc
          ccc..1cc2cc...ccc
           cccccc|||cccccc
              ccccccccc
+ENDMAP
+
+##############################################################################
+# Marble ring (evilmike)
+# outer ring contains 10 to 30 monsters, mean of 16.7
+#
+NAME:   evilmike_marble_ring
+DEPTH:  D:14-, Vault:1-7
+ORIENT: float
+COLOUR: b-+89*| = white
+FTILE:  b-+89*| = FLOOR_MARBLE
+TILE:   b = WALL_MARBLE
+SUBST:  0 = 3:9 / 7:0 / 20:0.. / *:.
+# can rarely be a statue gallery, otherwise use stone pillars
+: if crawl.one_chance_in(4) then
+SUBST:  c = G, v = .
+: else
+SUBST:  v: ...c
+: end
+SUBST:  b = c, - = .
+MAP
+xxxxxxxxxxx@xxxxxxxxxxx
+x.....................x
+x.c.c.c.c.c.c.c.c.c.c.x
+x..v.v.v.v.v.v.v.v.v..x
+x.c.................c.x
+x..v...............v..x
+x.c...00000000000...c.x
+x..v..0bbbbbbbbb0..v..x
+x.c...0b---8---b0...c.x
+x..v..0b-b---b-b0..v..x
+x.c...0b--|||--b0...c.x
+x..v..0b9-***-9b0..v..x
+x.c...0b--***--b0...c.x
+x..v..0b-b---b-b0..v..x
+x.c...0b---^---b0...c.x
+x..v..0bbbb+bbbb0..v..x
+x.c...00000000000...c.x
+x..v......T.T......v..x
+x.c.................c.x
+x..v.v.v.v.v.v.v.v.v..x
+x.c.c.c.c.c.c.c.c.c.c.x
+x.....................x
+xxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# evilmike's hourglass vault 
+#
+NAME:   evilmike_hourglass
+DEPTH:  D:14-
+ORIENT: float
+NSUBST: . = 7:0 / 2:9 / 1:8 / *:.
+NSUBST: ' = 7:0 / 2:9 / 1:8 / *:.
+SUBST:  . = .:90 ~
+NSUBST: % = 6:* / 3:| / *:%$
+SUBST:  - = .
+MAP
+xxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+xx%%xxxxxxxxxxxxxx-xxxxxxxxxxxxxx$$xx
+xx%%%%xxxxxxxxxxxx-xxxxxxxxxxxx$$$$xx
+xx%%%%%%xxxxxxxxxx-xxxxxxxxxx$$$$$$xx
+xx''''''''xxxxxxxx-xxxxxxxx........xx
+xx''''''''''xxxxxx-xxxxxx..........xx
+xx''''''''''''xxxx-xxxx............xx
+xx'''''''''''''-xx-xx-.............xx
+xx'''''''''''''-------.............xx
+xx'''''''''''''-------.............xx
+xx'''''''''''''-xx-xx-.............xx
+xx''''''''''''xxxx-xxxx............xx
+xx''''''''''xxxxxx-xxxxxx..........xx
+xx''''''''xxxxxxxx-xxxxxxxx........xx
+xx$$$$$$xxxxxxxxxx-xxxxxxxxxx%%%%%%xx
+xx$$$$xxxxxxxxxxxx-xxxxxxxxxxxx%%%%xx
+xx$$xxxxxxxxxxxxxx-xxxxxxxxxxxxxx%%xx
+xxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Inaccessible box (evilmike)
+#
+NAME:   evilmike_inaccessible_box
+DEPTH:  D:14-
+ORIENT: float
+SUBST:  x : xxxm
+NSUBST: 9 = 6:. / *:9
+NSUBST: 0 = 6:. / *:0
+KPROP:  .089*| = no_rtele_into
+SUBST:  ' = .
+MAP
+'''''''''''''''''''''
+'cccmcccccccccccmccc'
+'c.....x.....x.....c'
+'c..0..x..9..x..0..c'
+'m.000.m.999.m.000.m'
+'c..0..x..9..x..0..c'
+'c.....x.....x.....c'
+'cxxmxxcxxmxxcxxmxxc'
+'c.....x..*..x.....c'
+'c..9..x.|8|.x..9..c'
+'c.999.m*8|8*m.999.c'
+'c..9..x.|8|.x..9..c'
+'c.....x..*..x.....c'
+'cxxmxxcxxmxxcxxmxxc'
+'c.....x.....x.....c'
+'c..0..x..9..x..0..c'
+'m.000.m.999.m.000.m'
+'c..0..x..9..x..0..c'
+'c.....x.....x.....c'
+'cccmcccccccccccmccc'
+'''''''''''''''''''''
+ENDMAP
+
+##############################################################################
+# Path along pillars (evilmike)
+#
+NAME:   evilmike_pillar_path
+DEPTH:  D:14-
+ORIENT: float
+SUBST:  c: cvxbwl.t
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxx......xvvvvvx......x
+xxxxxxx...0..xv*|*vx..8...x
+@.x...x.0cc..xv|c*+...cc8.x
+x...x....cc0.xv*|*vx.8cc..x
+xxxxxxx..0...xvvvvvx...8..x
+xxxxxxx......xxxxxxx......x
+xxxxxxxxxx.xxxxxxxxxxx.xxxx
+      xxx..xxxxxxxxxxx..xxx
+      xxx.xxxxxxxxxxxxx.xxx
+      xxx..xxxxxxxxxxx..xxx
+      xxxx.xxxxxxxxxxx.xxxx
+      xxx..xxxxxxxxxxx..xxx
+      xxx.xxxxxxxxxxxxx.xxx
+      x......xxxxxxx......x
+      x...0..xxxxxxx..9...x
+      x.9cc..x...x....cc9.x
+      x..cc9...x...x.9cc..x
+      x..0...xxxxxxx...9..x
+      x......xxxxxxx......x
+      xxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Boring beetle workplace (evilmike)
+#
+NAME:   evilmike_boring_beetle
+DEPTH:  D:14-
+ORIENT: float
+NSUBST: m = 4:| / 4:* / 9:0 / 4:9 / 2:8 / 10:. / 150:x / *:m
+SUBST:  n = m
+MONS:   generate_awake boring beetle
+MAP
+vvvvvvvvvvvvvvvvvvv
+vmmmmmmmmmmmmmmmmmv
+vmmmmmmmmmmmmmmmmmv
+vmmmmmmmmmmmmmmmmmv
+vmmmmmmmmmmmmmmmmmv
+vmmmmmmmmmmmmmmmmmv
+vmmmmmmmmmmmmmmmmmv
+vnmmmmmmmmmmmmmmmmv
+vnnmmmmmmmmmmmmmmmv
+@nnnmmmmmmmmmmmmm1v
+vnnmmmmmmmmmmmmmmmv
+vnmmmmmmmmmmmmmmmmv
+vmmmmmmmmmmmmmmmmmv
+vmmmmmmmmmmmmmmmmmv
+vmmmmmmmmmmmmmmmmmv
+vmmmmmmmmmmmmmmmmmv
+vmmmmmmmmmmmmmmmmmv
+vmmmmmmmmmmmmmmmmmv
+vvvvvvvvvvvvvvvvvvv
+ENDMAP
+
+##############################################################################
+# Cross vault (evilmike)
+#
+NAME:   evilmike_cross
+DEPTH:  D:14-, Vault:1-7
+ORIENT: float
+MAP
+...................
+.......xxxxx.......
+.......x...x.......
+.......+.8.+.......
+.......x...x.......
+.......xx.xx.......
+.......0x.x0.......
+.xx+xx0cc+cc0xx+xx.
+.x...xxc*%*cxx...x.
+.x.9.xxc%G%cxx.9.x.
+.x...xxc*%*cxx...x.
+.xx+xx0ccccc0xx+xx.
+.......0xxx0.......
+.......xxxxx.......
+.......x...x.......
+.......+.9.+.......
+.......x...x.......
+.......xxxxx.......
+...................
+ENDMAP
+
+##############################################################################
+# Lava path (evilmike)
+# Has mostly lava and sometimes water, a bit sewer-like.
+#
+NAME:   evilmike_lava_path
+DEPTH:  D:14-
+ORIENT: float
+TAGS:   no_pool_fixup
+SUBST:  w: wlll
+NSUBST: . = 10:0 / 4:9 / *:.
+SUBST:  . = .:90 ~
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+wwwwwwwwwwxxxxxxwwwxxxxxxxxxxxx
+@........wwxxxxxw|wxxxxxxxxxxxx
+wwwwwwww..wwxxxxw*wxxxxxxxxxxxx
+@......ww..wwxxxw8wwwwwwwwwwwwx
+wwwwww..ww..wwxxw............wx
+xxxxxww..ww..wwxw8www.wwwwww.wx
+xxxxxxww..ww..wxw*wxw.w......wx
+xxxxxxxww..ww.wxw|wxw.w.wwwwwwx
+xxxxxxxxww..w.wxwwwxw.w.wxxxxxx
+xxwwwxxxxww.w.wxxxxxw.w.wxxxxxx
+xxw|wxxxxxw.w.wxxxxww.w.wxxxxxx
+xxw|wxxxxxw.w.wxxxww..w.wxxxxxx
+xxw*wxxxxxw.w.wxxww..ww.wxxxxxx
+xxw*wxxxxxw.w.wxww..ww..wxxxxxx
+xxw8wwwwwww.w.www..ww..wwxxxxxx
+xxw.........w.....ww..wwxxxxxxx
+xxwwwwwwwww.wwwwwww..wwxxxxxxxx
+xxxxxxxxxxw.........wwxxxxxxxxx
+xxxxxxxxxxwwwwwwwwwwwxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
