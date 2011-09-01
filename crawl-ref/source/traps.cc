@@ -869,21 +869,13 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 mpr("You pick your way through the web.");
             else
             {
-                if (random2limit(player_evasion(), 40)
-                    + (random2(you.dex()) / 3) + (trig_knows ? 3 : 0) > 12)
-                {
-                    mpr("A web is hanging here but you duck past it!");
-                }
-                else
-                {
-                    mpr("You are caught in the web!");
+                mpr("You are caught in the web!");
 
-                    if (player_caught_in_web())
-                    {
-                        check_monsters_sense(SENSE_WEB_VIBRATION, 100, you.pos());
-                        if (player_in_a_dangerous_place())
-                            xom_is_stimulated(50);
-                    }
+                if (player_caught_in_web())
+                {
+                    check_monsters_sense(SENSE_WEB_VIBRATION, 100, you.pos());
+                    if (player_in_a_dangerous_place())
+                        xom_is_stimulated(50);
                 }
             }
         }
@@ -896,18 +888,6 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                     simple_monster_message(m, " evades a web.");
                 else
                     hide();
-            }
-            else if (random2(m->ev) > 8 || (trig_knows && random2(m->ev) > 8))
-            {
-                // Triggered but evaded.
-                if (in_sight)
-                {
-                    if (!simple_monster_message(m,
-                            " nimbly jumps through a gap in a web."))
-                    {
-                        mpr("A web waves in the air!");
-                    }
-                }
             }
             else
             {
