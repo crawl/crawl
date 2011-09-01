@@ -238,8 +238,9 @@ bool trap_def::is_safe(actor* act) const
         return true;
     }
 
-    // Web traps are safe for spiders and spider forms, and certain others
-    if (category()==DNGN_TRAP_WEB && act->is_web_immune())
+    // TODO: For now, just assume they're safe; they don't damage outright,
+    // and the messages get old very quickly
+    if (category() == DNGN_TRAP_WEB) // && act->is_web_immune()
         return true;
 
     if (act->atype() != ACT_PLAYER)
