@@ -1555,7 +1555,7 @@ ENDMAP
 ##############################################################################
 # Catoblepas ending by evilmike.
 #
-# Contains 3 catoblepas with one being semi-randomly placed. The last 
+# Contains 3 catoblepas with one being semi-randomly placed. The last
 # one is likely to breathe on you in an area that is hard to escape from.
 #
 NAME:   evilmike_catoblepas_cave
