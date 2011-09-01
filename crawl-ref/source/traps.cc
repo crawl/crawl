@@ -79,10 +79,11 @@ void trap_def::message_trap_entry()
 
 void trap_def::disarm()
 {
-    if (type_has_ammo() && ammo_qty > 0)
+    if (type_has_ammo() && ammo_qty > 0 || type == TRAP_NET)
     {
         item_def trap_item = generate_trap_item();
-        trap_item.quantity = ammo_qty;
+        if (type != TRAP_NET)
+            trap_item.quantity = ammo_qty;
         copy_item_to_grid(trap_item, pos);
     }
     destroy();
