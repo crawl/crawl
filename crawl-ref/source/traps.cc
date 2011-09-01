@@ -35,6 +35,7 @@
 #include "mon-stuff.h"
 #include "mon-transit.h"
 #include "ouch.h"
+#include "place.h"
 #include "player.h"
 #include "skills.h"
 #include "spl-miscast.h"
@@ -2041,6 +2042,9 @@ void place_webs(int num, bool is_second_phase)
         grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
         env.tgrid(ts.pos) = slot;
         ts.prepare_ammo();
+        // Reveal some webs (less the deeper you are)
+        if (shaft_known((player_branch_depth() + 4) * 2, true))
+            ts.reveal();
     }
 }
 
