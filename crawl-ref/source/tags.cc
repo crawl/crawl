@@ -2324,6 +2324,10 @@ static void tag_read_you_dungeon(reader &th)
         branches[j].startdepth   = unmarshallInt(th);
         branches[j].branch_flags = unmarshallInt(th);
     }
+#if TAG_MAJOR_VERSION == 32
+    if (crawl_state.game_is_normal())
+        branches[BRANCH_HALL_OF_ZOT].startdepth = 27;
+#endif
 
     unmarshallSet(th, Generated_Levels, unmarshall_level_id);
 
