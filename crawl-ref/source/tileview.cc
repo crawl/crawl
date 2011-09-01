@@ -980,11 +980,17 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
             orig = TILE_WALL_LAB_METAL;
     }
     else if (you.level_type == LEVEL_DUNGEON
-             && orig == TILE_DNGN_STONE_WALL)
+             && you.where_are_you == BRANCH_CRYPT)
     {
-        if (you.where_are_you == BRANCH_CRYPT)
+        if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_WALL_CRYPT;
-        else if (you.where_are_you == BRANCH_TOMB)
+        else if (orig == TILE_DNGN_METAL_WALL)
+            orig = TILE_WALL_CRYPT_METAL;
+    }
+    else if (you.level_type == LEVEL_DUNGEON
+             && you.where_are_you == BRANCH_TOMB)
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_WALL_TOMB;
     }
 
