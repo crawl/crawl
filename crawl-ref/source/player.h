@@ -115,7 +115,7 @@ public:
   int deaths;
 
   FixedVector<uint8_t, NUM_SKILLS>  skills; //!< skill level
-  FixedVector<char, NUM_SKILLS>  train; //!< 0: disabled, 1: normal, 2: focus.
+  FixedVector<int8_t, NUM_SKILLS>  train; //!< 0: disabled, 1: normal, 2: focus.
   FixedVector<unsigned int, NUM_SKILLS>  training; //<! percentage of XP used
   FixedVector<unsigned int, NUM_SKILLS> skill_points;
   FixedVector<unsigned int, NUM_SKILLS> ct_skill_points; //<!track skill points
@@ -304,9 +304,9 @@ public:
 
   time_t last_keypress_time;
   bool xray_vision;
-  char bondage_level;  // how much an Ash worshipper is into bondage
-  char bondage[NUM_ET];
-  std::map<skill_type, char> skill_boost; // Skill bonuses.
+  int8_t bondage_level;  // how much an Ash worshipper is into bondage
+  int8_t bondage[NUM_ET];
+  std::map<skill_type, int8_t> skill_boost; // Skill bonuses.
 
   // Volatile (same-turn) state:
   bool turn_is_over; // flag signaling that player has performed a timed action

@@ -16,7 +16,7 @@ struct skill_state
 {
     FixedVector<uint8_t, NUM_SKILLS>      skills;
     FixedVector<uint8_t, NUM_SKILLS>      changed_skills;
-    FixedVector<char, NUM_SKILLS>         train;
+    FixedVector<int8_t, NUM_SKILLS>       train;
     FixedVector<unsigned int, NUM_SKILLS> training;
     FixedVector<unsigned int, NUM_SKILLS> skill_points;
     FixedVector<unsigned int, NUM_SKILLS> ct_skill_points;
