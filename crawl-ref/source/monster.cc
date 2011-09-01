@@ -6655,9 +6655,7 @@ bool monster::is_web_immune() const
     // All 'I' (ice / sky beast)
     return (can_cling_to_walls()
          || is_insubstantial()
-         || mons_genus(type) == MONS_JELLY
-         || mons_genus(type) == MONS_ICE_BEAST
-         || mons_genus(type) == MONS_SKY_BEAST);
+         || mons_genus(type) == MONS_JELLY);
 }
 
 /////////////////////////////////////////////////////////////////////////
