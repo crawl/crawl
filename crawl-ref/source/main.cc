@@ -2999,6 +2999,10 @@ static void _player_reacts()
 
     recharge_rods(you.time_taken, false);
 
+    // Reveal adjacent mimics.
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        discover_mimic(*ai);
+
     // Player stealth check.
     seen_monsters_react();
 
@@ -3600,12 +3604,6 @@ static void _open_door(coord_def move, bool check_confused)
         }
     }
 
-    if (discover_mimic(doorpos))
-    {
-        you.turn_is_over = true;
-        return;
-    }
-
     int skill = you.dex()
                 + (you.skill(SK_TRAPS_DOORS) + you.skill(SK_STEALTH)) / 2;
 
@@ -3840,12 +3838,6 @@ static void _close_door(coord_def move)
                 mprf("There's a thick-headed creature in the %s!", waynoun);
                 return;
             }
-        }
-
-        if (discover_mimic(doorpos))
-        {
-            you.turn_is_over = true;
-            return;
         }
 
         int skill = you.dex()
@@ -4206,12 +4198,6 @@ static void _move_player(coord_def move)
             return;
         }
 
-        if (discover_mimic(targ))
-        {
-            move.reset();
-            swap = false;
-        }
-
         if (swap)
             swap_places(targ_monst, mon_swap_dest);
         else if (you.duration[DUR_COLOUR_SMOKE_TRAIL])
@@ -4228,8 +4214,7 @@ static void _move_player(coord_def move)
             you.time_taken *= 1.4;
 #endif
 
-        if (!move.zero())
-            move_player_to_grid(targ, true, false);
+        move_player_to_grid(targ, true, false);
 
         you.walking = move.abs();
         you.prev_move = move;

@@ -866,11 +866,11 @@ bool mons_is_feat_mimic(int mc)
     return (mc == MONS_FEATURE_MIMIC);
 }
 
-bool discover_mimic(const coord_def& pos)
+void discover_mimic(const coord_def& pos)
 {
     // Is there really a mimic here?
     if (!mimic_at(pos))
-        return false;
+        return;
 
     const dungeon_feature_type feat = grd(pos);
     const feature_def feat_d = get_feature_def(feat);
@@ -944,8 +944,6 @@ bool discover_mimic(const coord_def& pos)
         simple_monster_message(mimic, " slams shut!", MSGCH_WARN);
     else if (mons_near(mimic))
         mprf(MSGCH_WARN, "It was %s!", mimic->name(DESC_NOCAP_A).c_str());
-
-    return true;
 }
 
 void discover_mimic(monster* mimic)
