@@ -267,13 +267,8 @@ KFEAT: X = altar_xom
 KFEAT: M = altar_makhleb
 KMONS: l = patrolling spatial vortex
 KFEAT: ? = altar_jiyva / w:5 altar_lugonu / w:25 floor
-KMONS: m = chaos spawn
+KMONS: m = demigod
 KMONS: j = patrolling jelly
-MARKER:  X = lua:fog_machine { \
-                 pow_max = 10, delay_min = 10, delay_max = 40, \
-                 size = 2, size_buildup_amnt = 5, \
-                 size_buildup_time = 25, cloud_type = "seething chaos" \
-             }
 KITEM: * = royal jelly
 COLOUR: # = yellow
 KFEAT: # = closed_door
@@ -291,7 +286,7 @@ xxx+x+xxx+x
 x..........
 #.f........
 x...xxxxxx+
-x.f.xllxm..
+x.f.x.lxm..
 x...xN.x...
 x+xxxX?x...
 x.s5xM.x..*
