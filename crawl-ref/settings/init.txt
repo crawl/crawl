@@ -174,7 +174,7 @@ drop_filter = useless_item
 # travel_key_stop = false
 #
 # explore_stop_pickup_ignore = curare
-auto_exclude = oklob plant,statue,curse skull,roxanne, hyperactive
+auto_exclude = oklob,statue,curse skull,roxanne, hyperactive
 
 # tc_reachable      = blue
 # tc_dangerous      = cyan
