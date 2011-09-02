@@ -3820,6 +3820,8 @@ static bool _print_cloud_desc(const coord_def where)
         areas.push_back("is lit by a halo");
     if (liquefied(where))
         areas.push_back("is liquefied");
+    if (orb_haloed(where))
+        areas.push_back("is covered in magical glow");
     if (!areas.empty())
     {
         mprf("This square %s.",
