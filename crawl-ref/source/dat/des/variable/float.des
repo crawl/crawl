@@ -555,11 +555,12 @@ MONS:    fungus, plant
 MONS:    giant mite, scorpion
 MONS:    rat / porcupine, green rat / orange rat
 MONS:    bat
+KFEAT:   w = web
 SHUFFLE: ?!+
 SUBST:   c:cccvvb , b=cc.
 SUBST:   1 : 1112
 SUBST:   1=1. , 2=2.... , 3=3. , 4=4. , 5=5. , 6=6.
-SUBST:   ':.x''' , '=.x , .=........17
+SUBST:   ':.x''' , '=.x , .=......ww17
 MAP
               xxxxxxxxxxxxxxxx
              xxx11'cccccccxxxx
