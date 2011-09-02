@@ -1230,7 +1230,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_GOLIATH_BEETLE:
         return TILEP_MONS_GOLIATH_BEETLE;
     case MONS_BOULDER_BEETLE:
-        return TILEP_MONS_BOULDER_BEETLE;
+		return TILEP_MONS_BOULDER_BEETLE;
     case MONS_BORING_BEETLE:
         return TILEP_MONS_BORING_BEETLE;
 
@@ -2454,6 +2454,11 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_AGATE_SNAIL:
             return TILEP_MONS_AGATE_SNAIL
                     + (mon.is(MB_WITHDRAWN) ? 1 : 0);
+
+        case MONS_BOULDER_BEETLE:
+            return mon->has_ench(ENCH_ROLLING)
+                ? _mon_random(TILEP_MONS_BOULDER_BEETLE_ROLLING)
+                : TILEP_MONS_BOULDER_BEETLE;
 
         case MONS_ITEM_MIMIC:
         {

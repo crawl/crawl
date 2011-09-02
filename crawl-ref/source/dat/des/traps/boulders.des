@@ -1,0 +1,100 @@
+#########################################################
+# Boulder traps
+# Using the new rolling behaviour of boulder beetles,
+# a number of traps in no way affiliated with Lucasfilm.
+#########################################################
+
+{{
+function callback.boulder_grate_trap_stepped(data, triggerable, triggerer, marker, ev)
+  local x, y = marker:pos()
+  local p = dgn.find_marker_positions_by_prop("grate", 1)[1]
+  if (p == nil) then
+    crawl.mpr("Error: no grate to close!")
+    dgn.grid(x, y, "floor")
+    return -- uh oh
+  end
+  -- It might be better to shove them away instead.  Since followers won't
+  -- have a chance to get there yet, this means the monster came another way:
+  -- most likely you displaced it, and that suggests the surroundings are
+  -- likely to be full.
+  if (dgn.mons_at(p.x, p.y) ~= nil or p == you.pos()) then
+    if (you.see_cell(x, y)) then
+      crawl.mpr("A part of the floor depresses, but nothing seems to happen.")
+      return
+    end
+  end
+  dgn.grid(p.x, p.y, "iron_grate")
+  -- remove the trap
+  dgn.grid(x, y, "floor")
+  if (you.see_cell(p.x, p.y)) then
+    crawl.mpr("An iron grate slams shut!")
+  end
+  for slave in iter.slave_iterator("boulder", 1) do
+   	dgn.create_monster(slave.x, slave.y, 'generate_awake boulder beetle')
+  end
+end
+}}
+
+######################################
+# Simple boulder corridor
+# by mumra
+# A grate slams shut, meaning you have to run from the boulder
+# (or destroy it)
+#
+NAME: 	boulder_corridor_run
+DEPTH: 	Lair:1-6
+ORIENT: float
+KFEAT: 	^ = pressure plate trap
+{{
+local tm = TriggerableFunction:new{func="callback.boulder_grate_trap_stepped",
+                                   repeated=true}
+tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
+lua_marker('^', tm)
+lua_marker(',', props_marker { grate=1 })
+lua_marker('A', props_marker { boulder=1 })
+}}
+KFEAT: A=floor
+KITEM: ^=*
+MAP
+xxxxxxxxxxxxxxxxxx
+xA..*.............@
+xxx,xxxxxxxxxxxxxx
+   @
+ENDMAP
+
+########################################
+# Quad boulder room
+# by mumra
+# Four boulders all go for you in the center of the room
+#
+NAME: 	boulder_quad_collide
+DEPTH: 	Lair:4-8
+ORIENT: float
+KFEAT: 	^ = pressure plate trap
+{{
+local tm = TriggerableFunction:new{func="callback.boulder_grate_trap_stepped",
+                                   repeated=true}
+tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
+lua_marker('^', tm)
+lua_marker(',', props_marker { grate=1 })
+lua_marker('A', props_marker { boulder=1 })
+}}
+KFEAT: A=floor
+KITEM: ^=*
+MAP
+xxxxxx@xxxxxx
+x...........x
+x.A.......A.x
+x...........x
+x...........x
+x...........x
+@.....^.....@
+x...........x
+x...........x
+x...........x
+x.A.......A.x
+x...........x
+xxxxxx@xxxxxx
+ENDMAP
+
+

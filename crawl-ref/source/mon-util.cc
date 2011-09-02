@@ -536,6 +536,11 @@ bool mons_is_projectile(int mc)
     return (mc == MONS_ORB_OF_DESTRUCTION);
 }
 
+bool mons_is_boulder(const monster* mon)
+{
+	return (mon->type == MONS_BOULDER_BEETLE && mon->rolling());
+}
+
 // Conjuration or Hexes.  Summoning and Necromancy make the monster a creature
 // at least in some degree, golems have a chem granting them that.
 bool mons_is_object(int mc)

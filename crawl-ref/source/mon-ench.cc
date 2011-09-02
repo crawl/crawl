@@ -259,6 +259,10 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         invalidate_agrid(true);
         break;
 
+    case ENCH_ROLLING:
+        calc_speed();
+        break;
+
     default:
         break;
     }
@@ -695,6 +699,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             simple_monster_message(this, "'s inner flame fades away.");
         break;
 
+    case ENCH_ROLLING:
+        calc_speed();
+        if (!quiet && alive())
+            simple_monster_message(this, " stops rolling.");
+        break;
+
     //The following should never happen, but just in case...
 
     case ENCH_MUTE:
@@ -850,6 +860,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_INSANE:
         case ENCH_BERSERK:
         case ENCH_INNER_FLAME:
+        case ENCH_ROLLING:
             del_ench(i->first);
             break;
 
@@ -1044,6 +1055,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_MAD:
     case ENCH_BREATH_WEAPON:
     case ENCH_DEATHS_DOOR:
+    // case ENCH_ROLLING:
         decay_enchantment(me);
         break;
 
@@ -1745,7 +1757,7 @@ static const char *enchant_names[] =
 #endif
     "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
-    "inner_flame", "roused", "breath timer", "deaths_door", "buggy",
+    "inner_flame", "roused", "breath timer", "deaths_door", "rolling", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -1995,6 +2007,9 @@ int mon_enchant::calc_duration(const monster* mons,
         return (random_range(75, 125) * 10);
     case ENCH_BERSERK:
         return (16 + random2avg(13, 2)) * 10;
+    case ENCH_ROLLING:
+        cturn = 10000 / _mod_speed(25, mons->speed);
+        break;
     default:
         break;
     }

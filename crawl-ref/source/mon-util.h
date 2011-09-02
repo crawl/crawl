@@ -365,6 +365,7 @@ bool herd_monster(const monster* mon);
 int cheibriados_monster_player_speed_delta(const monster* mon);
 bool cheibriados_thinks_mons_is_fast(const monster* mon);
 bool mons_is_projectile(int mc);
+bool mons_is_boulder(const monster * mon);
 bool mons_is_object(int mc);
 bool mons_has_blood(int mc);
 bool mons_is_sensed(int mc);

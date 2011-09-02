@@ -538,3 +538,306 @@ void iood_catchup(monster* mons, int pturns)
         if (_iood_catchup_move(mon))
             return;
 }
+
+bool boulder_start(monster *mon, bolt *beam)
+{
+	mon->add_ench(ENCH_ROLLING);
+	simple_monster_message(mon, " curls into a ball and rolls at you!");
+	// Work out x/y/vx/vy from beam
+	beam->choose_ray();
+    mon->props["boulder_x"].get_float() = beam->ray.r.start.x - 0.5;
+    mon->props["boulder_y"].get_float() = beam->ray.r.start.y - 0.5;
+    mon->props["boulder_vx"].get_float() = beam->ray.r.dir.x;
+    mon->props["boulder_vy"].get_float() = beam->ray.r.dir.y;
+	boulder_act(*mon);
+	return true;
+}
+bool boulder_flee(monster *mon, bolt *beam)
+{
+	mon->add_ench(ENCH_ROLLING);
+	simple_monster_message(mon, " curls into a ball and rolls away!");
+	// Work out x/y/vx/vy from beam
+	beam->choose_ray();
+    mon->props["boulder_x"].get_float() = beam->ray.r.start.x - 0.5;
+    mon->props["boulder_y"].get_float() = beam->ray.r.start.y - 0.5;
+    mon->props["boulder_vx"].get_float() = -beam->ray.r.dir.x;
+    mon->props["boulder_vy"].get_float() = -beam->ray.r.dir.y;
+	boulder_act(*mon);
+	return true;
+}
+
+static void _boulder_stop(monster& mon, bool msg = true)
+{
+	if (mon.type==MONS_BOULDER_BEETLE) {
+		/*
+		if (msg)
+		    simple_monster_message(&mon, " comes to a halt.");
+		*/
+
+		mon.del_ench(ENCH_ROLLING,!msg);
+	}
+}
+
+// Alas, too much differs to reuse beam shield blocks :(
+static bool _boulder_shielded(monster& mon, actor &victim)
+{
+    if (!victim.shield() || victim.incapacitated())
+        return (false);
+
+    const int to_hit = 15 + mon.props["iood_pow"].get_short()/12;
+    const int con_block = random2(to_hit + victim.shield_block_penalty());
+    const int pro_block = victim.shield_bonus();
+    dprf("boulder shield: pro %d, con %d", pro_block, con_block);
+    return (pro_block >= con_block);
+}
+
+static bool _boulder_hit(monster& mon, const coord_def &pos)
+{
+    bolt beam;
+    beam.name = "rolling boulder";
+	beam.flavour = BEAM_DISINTEGRATION;
+    beam.attitude = mon.attitude;
+
+    actor *caster = &mon;
+    beam.set_agent(caster);
+    beam.colour = WHITE;
+    beam.glyph = dchar_glyph(DCHAR_FIRED_BURST);
+    beam.range = 1;
+    beam.source = pos;
+    beam.target = pos;
+    beam.hit = AUTOMATIC_HIT;
+	beam.source_name = mon.name(DESC_PLAIN, true);
+
+	int pow = mon.hit_dice * 6;
+    pow = stepdown_value(pow, 30, 30, 200, -1);
+    beam.damage = dice_def(3, pow / 4);
+
+    beam.ex_size = 1;
+    beam.loudness = 5;
+
+//    monster_die(&mon, KILL_DISMISSED, NON_MONSTER);
+
+    beam.fire();
+
+	return (true);
+}
+
+bool boulder_act(monster& mon)
+{
+	// Handles Boulder Beetle in Rolling form
+	// returns true if stopped rolling
+
+    float x = mon.props["boulder_x"];
+    float y = mon.props["boulder_y"];
+    float vx = mon.props["boulder_vx"];
+    float vy = mon.props["boulder_vy"];
+
+    dprf("boulder_act: pos=(%d,%d) rpos=(%f,%f) v=(%f,%f) foe=%d",
+         mon.pos().x, mon.pos().y,
+         x, y, vx, vy, mon.foe);
+
+    if (!vx && !vy) // not initialized
+    {
+        _boulder_stop(mon);
+        return (true);
+    }
+
+    _normalize(vx, vy);
+	/* IOOD swerving code, could reinstigate if it make boulders more fun
+    const actor *foe = mon.get_foe();
+    // If the target is gone, the orb continues on a ballistic course since
+    // picking a new one would require intelligence.
+
+    if (foe)
+    {
+        const coord_def target = foe->pos();
+        float dx = target.x - x;
+        float dy = target.y - y;
+        _normalize(dx, dy);
+
+        // Special case:
+        // Moving diagonally when the orb is just about to hit you
+        //      2
+        //    ->*1
+        // (from 1 to 2) would be a guaranteed escape.  This may be
+        // realistic (strafing!), but since the game has no non-cheesy
+        // means of waiting a small fraction of a turn, we don't want it.
+        const int old_t_pos = mon.props["iood_tpos"].get_short();
+        const coord_def rpos(static_cast<int>(round(x)), static_cast<int>(round(y)));
+        if (old_t_pos && old_t_pos != (256 * target.x + target.y)
+            && (rpos - target).rdist() <= 1
+            // ... but following an orb is ok.
+            && _in_front(vx, vy, dx, dy, 1.5)) // ~97 degrees
+        {
+            vx = dx;
+            vy = dy;
+        }
+        mon.props["iood_tpos"].get_short() = 256 * target.x + target.y;
+
+        if (!_in_front(vx, vy, dx, dy, 0.3)) // ~17 degrees
+        {
+            float ax, ay;
+            if (dy*vx < dx*vy)
+                ax = vy, ay = -vx, dprf("iood: veering left");
+            else
+                ax = -vy, ay = vx, dprf("iood: veering right");
+            vx += ax * 0.3;
+            vy += ay * 0.3;
+        }
+        else
+            dprf("iood: keeping course");
+
+        _normalize(vx, vy);
+        mon.props["iood_vx"] = vx;
+        mon.props["iood_vy"] = vy;
+    }
+	*/
+move_again:
+
+    x += vx;
+    y += vy;
+
+    mon.props["boulder_x"] = x;
+    mon.props["boulder_y"] = y;
+//    mon.props["iood_distance"].get_int()++;
+
+    const coord_def pos(static_cast<int>(round(x)), static_cast<int>(round(y)));
+    if (!in_bounds(pos))
+    {
+        _boulder_stop(mon);
+        return (true);
+    }
+
+    if (pos == mon.pos())
+        return (false);
+
+    actor *victim = actor_at(pos);
+    if (cell_is_solid(pos) || victim)
+    {
+        if (cell_is_solid(pos))
+        {
+            if (you.see_cell(pos))
+                mprf("%s hits %s", mon.name(DESC_THE, true).c_str(),
+                     feature_description(pos, false, DESC_A).c_str());
+	        _boulder_stop(mon,you.see_cell(pos));
+        }
+
+        monster* mons = (victim && victim->atype() == ACT_MONSTER) ?
+            (monster*) victim : 0;
+
+		if (mons && mons_is_boulder(mons))
+        {
+            if (mon.observable())
+                mpr("The boulders collide with a stupendous crash!");
+            else
+                noisy(20, pos, "You hear a loud crashing sound!");
+
+			// Remove ROLLING and add DAZED
+			mon.del_ench(ENCH_ROLLING,true);
+			mons->del_ench(ENCH_ROLLING,true);
+			mon.add_ench(ENCH_CONFUSION);
+			mons->add_ench(ENCH_CONFUSION);
+            return (true);
+        }
+
+        if (mons && mons->submerged())
+        {
+            // Try to swap with the submerged creature.
+            if (mons->is_habitable(mon.pos()))
+            {
+                dprf("boulder: Swapping with a submerged monster.");
+                mons->set_position(mon.pos());
+                mon.set_position(pos);
+                mgrd(mons->pos()) = mons->mindex();
+                mgrd(pos) = mon.mindex();
+
+                return (false);
+            }
+            else // if swap fails, move ahead
+            {
+                dprf("boulder: Boosting above a submerged monster (can't swap).");
+                mon.lose_energy(EUT_MOVE);
+                goto move_again;
+            }
+        }
+
+        if (victim && _boulder_shielded(mon, *victim))
+        {
+            item_def *shield = victim->shield();
+            if (!shield_reflects(*shield))
+            {
+                if (victim->atype() == ACT_PLAYER)
+                {
+                    mprf("You block %s.", mon.name(DESC_THE, true).c_str());
+                }
+                else
+                {
+                    simple_monster_message(mons, (" blocks "
+                        + mon.name(DESC_THE, true) + ".").c_str());
+                }
+                victim->shield_block_succeeded(&mon);
+                _boulder_stop(mon);
+                return (true);
+            }
+
+            if (victim->atype() == ACT_PLAYER)
+            {
+                mprf("Your %s reflects %s!",
+                    shield->name(DESC_PLAIN).c_str(),
+                    mon.name(DESC_THE, true).c_str());
+                ident_reflector(shield);
+            }
+            else if (you.see_cell(pos))
+            {
+                if (victim->observable())
+                {
+                    mprf("%s reflects %s with %s %s!",
+                        victim->name(DESC_THE, true).c_str(),
+                        mon.name(DESC_THE, true).c_str(),
+                        mon.pronoun(PRONOUN_POSSESSIVE).c_str(),
+                        shield->name(DESC_PLAIN).c_str());
+                    ident_reflector(shield);
+                }
+                else
+                {
+                    mprf("%s bounces off thin air!",
+                        mon.name(DESC_THE, true).c_str());
+                }
+            }
+            victim->shield_block_succeeded(&mon);
+
+            mon.props["boulder_vx"] = vx = -vx;
+            mon.props["boulder_vy"] = vy = -vy;
+
+            // Need to get out of the victim's square.
+
+            // If you're next to the caster and both of you wear shields of
+            // reflection, this can lead to a brief game of ping-pong, but
+            // rapidly increasing shield penalties will make it short.
+            mon.lose_energy(EUT_MOVE);
+            goto move_again;
+        }
+
+        // Yay for inconsistencies in beam-vs-player and beam-vs-monsters.
+        if (victim == &you)
+            mprf("%s hits you!", mon.name(DESC_THE, true).c_str());
+
+        if (_boulder_hit(mon, pos)){
+			if ((victim && victim->alive()))
+				_boulder_stop(mon);
+            return (true);
+		}
+    }
+
+    if (!mon.move_to_pos(pos))
+    {
+		_boulder_stop(mon);
+        return (true);
+    }
+
+    // move_to_pos() just trashed the coords, set them again
+    mon.props["boulder_x"] = x;
+    mon.props["boulder_y"] = y;
+
+    return (false);
+}
