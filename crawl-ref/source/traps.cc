@@ -455,7 +455,6 @@ bool player_caught_in_web()
         return false;
 
     you.attribute[ATTR_HELD] = 10;
-    mpr("You become entangled in the net!");
     stop_running();
     stop_delay(true); // even stair delays
     redraw_screen(); // Account for changes in display.
