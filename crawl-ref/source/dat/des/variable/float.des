@@ -1195,7 +1195,7 @@ TAGS:    luniq_protected_by_tso
 WEIGHT:  4
 DEPTH:   D:18-27, Vault
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
-KFEAT:   A = altar_shining_one
+KFEAT:   A = altar_the_shining_one
 KITEM:   A = w:1 acquire:the_shining_one any / nothing
 : if crawl.one_chance_in(3) then
 SUBST:   | = .
@@ -1246,7 +1246,7 @@ TAGS:    luniq_protected_by_tso
 WEIGHT:  4
 DEPTH:   D:18-27, Vault
 MONS:    generate_awake angel / generate_awake daeva / w:1 angel / w:1 daeva
-KFEAT:   A = altar_shining_one
+KFEAT:   A = altar_the_shining_one
 KITEM:   A = w:1 acquire:the_shining_one any / nothing
 : if crawl.one_chance_in(3) then
 SUBST:   | = .

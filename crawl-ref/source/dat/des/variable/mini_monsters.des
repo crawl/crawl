@@ -1454,7 +1454,7 @@ TILE:    c = wall_church
 FTILE:   .+23GtABC = floor_limestone
 COLOUR:  .23 = white
 SHUFFLE: ABC
-KFEAT:   A = altar_shining_one
+KFEAT:   A = altar_the_shining_one
 KFEAT:   B = altar_elyvilon
 KFEAT:   C = altar_zin
 MAP

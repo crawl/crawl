@@ -9,7 +9,7 @@
 #            which can be used if the god does not show up in the Temple,
 #            should go to overflow.des.
 #
-#            For a particularly elaborate altar map, using lots of lua, use a 
+#            For a particularly elaborate altar map, using lots of lua, use a
 #            single, new file.
 ###############################################################################
 

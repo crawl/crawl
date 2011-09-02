@@ -210,7 +210,7 @@ NAME:   sprint2_temple
 TAGS:   sprint2_nice no_item_gen no_trap_gen no_monster_gen no_pool_fixup
 SHUFFLE: abdefghijklmnopqr
 KFEAT:  a = altar_zin
-KFEAT:  b = altar_shining_one
+KFEAT:  b = altar_the_shining_one
 KFEAT:  d = altar_kikubaaqudgha
 KFEAT:  e = altar_yredelemnul
 KFEAT:  f = altar_xom
