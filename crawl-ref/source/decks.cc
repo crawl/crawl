@@ -2594,7 +2594,7 @@ static void _crusade_card(int power, deck_rarity_type rarity)
             }
         }
     }
-    abjuration(power/4);
+    cast_mass_abjuration(power/4);
 }
 
 static void _summon_demon_card(int power, deck_rarity_type rarity)

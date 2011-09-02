@@ -3868,7 +3868,7 @@ void melee_attack::player_apply_staff_damage()
         if (x_chance_in_y(you.skill(SK_SUMMONINGS) + 1, 8))
         {
             emit_nodmg_hit_message();
-            abjuration(random2(5*(you.skill(SK_SUMMONINGS) + you.skill(SK_EVOCATIONS))/4));
+            cast_abjuration(5*(you.skill(SK_SUMMONINGS) + you.skill(SK_EVOCATIONS))/4, defender->as_monster());
         }
         break;
 

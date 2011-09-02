@@ -1502,12 +1502,10 @@ static spret_type _do_cast(spell_type spell, int powc,
         return mass_enchantment(ENCH_CHARM, powc, NULL, NULL, fail);
 
     case SPELL_ABJURATION:
-        return abjuration(powc,
-                          monster_at(spd.isTarget ? beam.target : you.pos() + spd.delta),
-                          fail)
+        return cast_abjuration(powc, monster_at(target), fail);
 
     case SPELL_MASS_ABJURATION:
-        return abjuration(powc, NULL, fail);
+        return cast_mass_abjuration(powc, fail);
 
     case SPELL_OLGREBS_TOXIC_RADIANCE:
         return cast_toxic_radiance(false, fail);
