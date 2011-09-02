@@ -2382,17 +2382,20 @@ void swap_with_monster(monster* mon_to_swap)
     {
         if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
         {
-            mpr("The net rips apart!");
-            you.attribute[ATTR_HELD] = 0;
-            you.redraw_quiver = true;
             int net = get_trapping_net(you.pos());
             if (net != NON_ITEM)
                 destroy_item(net);
+            mprf("The %s rips apart!", (net == NON_ITEM) ? "web" : "net");
+            you.attribute[ATTR_HELD] = 0;
+            you.redraw_quiver = true;
         }
         else
         {
             you.attribute[ATTR_HELD] = 10;
-            mpr("You become entangled in the net!");
+            if (get_trapping_net(you.pos()) != NON_ITEM)
+                mpr("You become entangled in the net!");
+            else
+                mpr("You get stuck in the web!");
             you.redraw_quiver = true; // Account for being in a net.
             // Xom thinks this is hilarious if you trap yourself this way.
             if (you_caught)
