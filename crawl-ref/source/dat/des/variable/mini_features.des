@@ -1715,8 +1715,6 @@ wwxdxwwxcxww
   wwwwwwww
 ENDMAP
 
-
-
 NAME:  minmay_trapped_gold
 TAGS:  extra luniq_mini no_monster_gen
 DEPTH: D:16-, Crypt
@@ -1730,6 +1728,31 @@ xxxx$$$x
 xxxx$$$x
    xxxxx
 ENDMAP
+
+# Transporter accident (mumra)
+# This might be quite hard to find (unless you're an Ash worshipper)
+NAME:   mumra_transporter_accident
+TAGS:   extra
+WEIGHT:	1
+DEPTH:	D:5-,Lair,Elf:1-4,Orc
+SUBST:	X = x.
+ : dgn.delayed_decay(_G,'B', 'human skeleton')
+KITEM:  A : wand of teleportation charges:0 / wand of digging charges:0
+# Prevent random teleportation getting you stuck
+KPROP:  AB = no_rtele_into
+KFEAT:  AB = floor
+MAP
+     ....
+    .XXXX.
+   .XxxxxX.
+  .XxxxxxxX.
+  .XxxABxxX.
+  .XxxxxxxX.
+   .XxxxxX.
+    .XXXX.
+     ....
+ENDMAP
+
 
 
 ####################################################################

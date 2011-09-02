@@ -5,66 +5,11 @@
 #            are considered big and reside in large.des. Vaults without any
 #            ORIENT line are minivaults and behave somewhat differently; these
 #            are stored in the files listed in mini.des.
+#            Vaults using global lua functions go into individual .des files.
 #
 #            All maps dealing with the Vault branch system, including Vaults:8
 #            reside in vaults.des.
 ###############################################################################
-
-{{
-function callback.ancient_champions_mu_skele_death(data, triggerable,
-                                                    triggerer, marker, ev)
-  data.skele_number = data.skele_number + 1
-
-  -- Only 7 skeles!
-  if data.skele_number > 7 then
-    return
-  end
-
-  local function get_slave (slavenum)
-    local myslaves = dgn.find_marker_positions_by_prop("skele_slave", slavenum)
-    return myslaves[1]
-  end
-
-  local wall_pos = get_slave(data.skele_number)
-  if wall_pos == nil then
-    crawl.mpr("Couldn't find a slave!")
-  end
-
-  dgn.terrain_changed(wall_pos.x, wall_pos.y, "floor", false, false, false)
-
-  if you.see_cell(wall_pos.x, wall_pos.y) then
-    crawl.mpr("As the champion is destroyed, a metal wall slides away!")
-  else
-    crawl.mpr("As the champion is destroyed, you hear a distant grinding noise.")
-  end
-end
-
-function callback.cathedral_bats (data, triggerable, triggerer, marker, ev)
-  if triggerer.type ~= "turn" or triggerer.sub_type ~= "countdown" then
-    return
-  end
-
-  if data.bat_count > 10 then
-    return
-  end
-
-  local x, y = marker:pos()
-  local you_x, you_y = you.pos()
-
-  if (you_x == x and you_y == y) then return end
-  if dgn.mons_at(x, y) then return end
-
-  if (not dgn.create_monster(x, y, "generate_awake bat name:megabat n_rpl n_spe / generate_awake w:2 fire bat")) then
-    return
-  end
-
-  data.bat_count = data.bat_count + 1
-
-  if you.see_cell(x, y) then
-    crawl.mpr("A bat flies out of a crevice!")
-  end
-end
-}}
 
 # Set the default depth for vaults. Be sure to adapt the DEPTH of particulary
 # easy or tough vaults. Also, exclude unthemely branches with !Lair etc.
@@ -1428,95 +1373,6 @@ cc..!1.!1c...c.6..6..cc
 ENDMAP
 
 ##############################################################################
-# Ancient Champions (by Mu., lua by due)
-#
-# Together with the lua functions at the top of this file, this should
-# perhaps go into a dedicated .des file. (dpeg)
-#
-NAME:   mu_ancient_champions
-DEPTH:  D:15-26, Vault:1-7, Crypt:1-4
-ORIENT: float
-TAGS:   no_item_gen no_monster_gen
-KFEAT:  ABCDEFG = metal_wall
- ## This is for Gretell's benefit, not actually used.
- KMONS: Z = col:gold skeletal warrior name:ancient_champion name_replace \
- name_descriptor spells:iron_shot;.;haste;pain;.;. \
- spells:bolt_of_draining;.;haste;throw_frost;.;. \
- spells:venom_bolt;.;haste;haunt;.;. \
- spells:iskenderun's_mystic_blast;slow;haste;.;.;. actual_spells
-KMONS:  1 = col:gold skeletal warrior name:ancient_champion name_replace \
-        name_descriptor spells:iron_shot;.;haste;pain;.;. actual_spells \
-        ; plate mail ego:fire_resistance | plate mail ego:cold_resistance . \
-        great sword ego:pain | great sword ego:draining | great sword \
-        ego:flaming | w:3 triple sword ego:vorpal
-KMONS:  2 = col:gold skeletal warrior name:ancient_champion name_replace \
-        name_descriptor spells:bolt_of_draining;.;haste;throw_frost;.;. \
-        actual_spells ; plate mail ego:fire_resistance | plate mail \
-        ego:cold_resistance . great mace ego:vorpal | great mace ego:draining
-KMONS:  3 = col:gold skeletal warrior name:ancient_champion name_replace \
-        name_descriptor spells:venom_bolt;.;haste;haunt;.;. actual_spells \
-        ; plate mail ego:fire_resistance | plate mail ego:cold_resistance . \
-        battleaxe ego:vorpal | battleaxe ego:pain | \
-        w:3 executioner's axe ego:vorpal
-KMONS:  4 = col:gold skeletal warrior name:ancient_champion name_replace \
-        name_descriptor spells:iskenderun's_mystic_blast;slow;haste;.;.;. \
-        actual_spells ; plate mail ego:fire_resistance | plate mail \
-        ego:cold_resistance . great sword ego:pain | great sword ego:draining \
-        | great sword ego:flaming | battleaxe ego:vorpal | battleaxe ego:pain \
-        | triple sword ego:vorpal | executioner's axe ego:vorpal
-SHUFFLE: 123
-KPROP:  ]v.1234+ABCDEFG!n$wr|" = no_tele_into
-KITEM:  w = acquire weapon
-KITEM:  r = acquire armour
-NSUBST: $ = 1:w / 1:r / 4:| / *:$
-COLOUR: " = yellow
-KFEAT:  " = .
-{{
-
--- First off, slave marker magic.
-lua_marker("A", portal_desc { skele_slave=1 })
-lua_marker("B", portal_desc { skele_slave=2 })
-lua_marker("C", portal_desc { skele_slave=3 })
-lua_marker("D", portal_desc { skele_slave=4 })
-lua_marker("E", portal_desc { skele_slave=5 })
-lua_marker("F", portal_desc { skele_slave=6 })
-lua_marker("G", portal_desc { skele_slave=7 })
-
-local skele_death_marker = TriggerableFunction:new {
-  func="callback.ancient_champions_mu_skele_death",
-  repeated=true,
-  data={skele_number=0} }
-
-skele_death_marker:add_triggerer(DgnTriggerer:new {
-  type="monster_dies",
-  target="ancient champion" })
-
-lua_marker("]", skele_death_marker)
-}}
-
-MAP
-vvvvvvvvvvvvvvvvvvv
-v..".1v.."..v.."..v
-v.""".v.""".v.""".v
-v"""""C"""""B"""""v
-v.""".v.""".v.""".v
-v.."..v..".3v..".2v
-vvvDvvvvvvvvvvvAvvv
-v..".2v$$$$$v.."..v
-v.""".v$$$$$v.""".v
-v"""""v$$.$$v"""""v
-v.""".v$$.$$v.""".v
-v.."..v$...$v1."..v
-vvvEvvvvvGvvvvv+vvv
-v3."..v.."..v.."..v
-v.""".v.""".v.""".v
-v"""""F"""""v""]""v
-v.""".v.""".v.""".v
-v.."..v4."..v.."..v
-vvvvvvvvvvvvvvvvvvv
-ENDMAP
-
-##############################################################################
 # Guardian serpents guard a snake-like passage. (nrook)
 #
 NAME:    nrook_guardian_serpent_snake_passage
@@ -1847,59 +1703,6 @@ MAP
 ENDMAP
 
 ##############################################################################
-# Megacathedral, for the bats on the brink of extinction. Or beyond. (due)
-#
-NAME:   due_megacathedral
-ORIENT: float
-DEPTH:  D:8-14
-MONS:   wraith / freezing wraith w:2
-MONS:   eidolon
-TAGS:   no_rotate no_vmirror no_hmirror
-NSUBST: C = 5:C / *:.
-SUBST:  X = C
-SUBST:  D = V..
-MARKER: = = lua:restrict_door()
-{{
-local cathedral_bats = TriggerableFunction:new {
-    func = "callback.cathedral_bats",
-    repeated = true,
-    data = {bat_count=0},
-}
-
-cathedral_bats:add_triggerer(DgnTriggerer:new {
-    type="turn",
-    delay_min=500,
-    delay_max=800
-})
-
-lua_marker('C', cathedral_bats)
-lua_marker('V', cathedral_bats)
-}}
-MAP
-             cccc.cccc
-          ccccccG.Gcccccc
-         ccc...cc+cc1..ccc
-      ccccc..C..c.c..D..ccccc
-     ccc.ccc...cc.cc...ccc.ccc
-     cc1..ccc+cc...cc=ccc...cc
-  ccccc.D.ccc.........ccc.C.ccccc
- cccccc...=c..ccc+ccc..c+...cccccc
- cc...cc.cc..ccc...ccc..cc.cc..1cc
-cc.....ccc..cc.......cc..ccc.....cc
-cc..C...+....+...X...+....=...D..cc
-cc.....ccc..cc.......cc..ccc.....cc
- cc...cc.cc..ccc...ccc..cc.cc...cc
- cccccc...=c..ccc+ccc..c+...cccccc
-  ccccc.D.ccc.........ccc.C.ccccc
-     cc1..ccc=ccG.Gcc+ccc...cc
-     ccc.ccc...cc=cc...ccc.ccc
-      ccccc..D..c.c..C..ccccc
-         ccc..1cc2cc...ccc
-          cccccc|||cccccc
-             ccccccccc
-ENDMAP
-
-##############################################################################
 # Marble ring (evilmike)
 # outer ring contains 10 to 30 monsters, mean of 16.7
 #
@@ -2133,4 +1936,40 @@ xxwwwwwwwww.wwwwwww..wwxxxxxxxx
 xxxxxxxxxxw.........wwxxxxxxxxx
 xxxxxxxxxxwwwwwwwwwwwxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Celtic spiral tile pattern (rotated 45 degrees)
+# http://en.wikipedia.org/wiki/Celtic_maze
+NAME:   mumra_celtic_spiral_tile
+ORIENT: float
+TAGS:   allow_dup
+DEPTH:  D:1-10
+WEIGHT: 2
+MAP
+            xxxxxxxxxxxxx
+            x...........x
+            x.xxxxx.xxx.x
+            x.x...x.x.x.x
+            x.xxx.x.x.x.x
+            x.....x.x...x
+      xxxxxxxxxxxxx.xxxxxx@xxxx
+      x...........x...........x
+      x.xxxxx.xxx.x.xxx.xxxxx.x
+      x.x...x.x.x.x.x.x.x...x.x
+      x.xxx.x.x.x.x.x.x.x.xxx.x
+      x.....x.x...x...x.x.....x
+xxxxxxxxxxx.x.xxxxxxxxx.xxxxxxx
+x...........x...........x
+x.xxxxx.xxx.x.xxx.xxxxx.x
+x.x...x.x.x.x.x.x.x...x.x
+x.xxx.x.x.x.x.x.x.x.xxx.x
+x.....x.x...x...x.x.....x
+xxxx@xx.xxxxxxxxx.xxxxxxx
+      x...........x
+      x.xxxxxxxxx.x
+      x.x...x...x.x
+      x.xxx.x.xxx.x
+      x.....x.....x
+      xxxxxxxxxxxxx
 ENDMAP
