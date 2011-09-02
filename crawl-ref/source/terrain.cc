@@ -1653,7 +1653,7 @@ const char *dngn_feature_names[] =
 "return_from_forest", "return_reserved_1", "", "", "", "", "",
 "", "", "", "", "", "", "", "enter_portal_vault", "exit_portal_vault",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-"", "", "altar_zin", "altar_shining_one", "altar_kikubaaqudgha",
+"", "", "altar_zin", "altar_the_shining_one", "altar_kikubaaqudgha",
 "altar_yredelemnul", "altar_xom", "altar_vehumet",
 "altar_okawaru", "altar_makhleb", "altar_sif_muna", "altar_trog",
 "altar_nemelex_xobeh", "altar_elyvilon", "altar_lugonu",

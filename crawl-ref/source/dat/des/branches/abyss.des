@@ -58,7 +58,7 @@ SHUFFLE: ABCDEFHIJKLMNOP
 KFEAT:   A = altar_makhleb
 KFEAT:   B = altar_xom
 KFEAT:   C = altar_zin
-KFEAT:   D = altar_shining_one
+KFEAT:   D = altar_the_shining_one
 KFEAT:   E = altar_kikubaaqudgha
 KFEAT:   F = altar_yredelemnul
 KFEAT:   H = altar_vehumet
@@ -354,7 +354,7 @@ ENDMAP
 NAME:  evilmike_abyss_rune_tso_outpost
 TAGS:  abyss_rune allow_dup no_monster_gen
 KITEM: O = abyssal rune of Zot
-KFEAT: _ = altar_shining_one
+KFEAT: _ = altar_the_shining_one
 MONS:  angel, daeva, ophan
 MAP
 .......................

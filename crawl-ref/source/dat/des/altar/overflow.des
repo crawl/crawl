@@ -259,7 +259,7 @@ MAP
 .............
 ENDMAP
 
-# There are versions of this overflow altar for all good gods. 
+# There are versions of this overflow altar for all good gods.
 # Currently, this duplication is unavoidable for technical reasons.
 #
 NAME:  lemuel_angel_altar_elyvilon
@@ -1203,7 +1203,7 @@ xccc+cccx
     @
 ENDMAP
 
-# There are versions of this overflow altar for all good gods. 
+# There are versions of this overflow altar for all good gods.
 # Currently, this duplication is unavoidable for technical reasons.
 #
 NAME:  lemuel_angel_altar_zin
@@ -1245,7 +1245,7 @@ FTILE:    _A = floor_limestone
 SUBST:    _ = .
 COLOUR:   c = white
 TILE:     c = wall_church
-KFEAT:    A = altar_shining_one
+KFEAT:    A = altar_the_shining_one
 MAP
   xxxxx
 xxxcccxxx
@@ -1257,7 +1257,7 @@ xct...tcx
 xccc+cccx
 ENDMAP
 
-# There are versions of this overflow altar for all good gods. 
+# There are versions of this overflow altar for all good gods.
 # Currently, this duplication is unavoidable for technical reasons.
 #
 NAME:  lemuel_angel_altar_tso
@@ -1269,7 +1269,7 @@ MONS: patrolling Daeva / patrolling Angel
 : else
 MONS:  patrolling Angel
 : end
-KFEAT: _ = altar_shining_one
+KFEAT: _ = altar_the_shining_one
 KPROP: >"1_ = no_rtele_into
 SUBST: " = .
 MAP

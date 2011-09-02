@@ -234,7 +234,7 @@ ENDMAP
 NAME: sprint_mu_temple_rooms
 TAGS: sprint_mu_temple no_rotate no_hmirror no_vmirror no_dup
 KFEAT: E = altar_elyvilon
-KFEAT: 1 = altar_shining_one
+KFEAT: 1 = altar_the_shining_one
 KFEAT: Z = altar_zin
 KMONS: e = patrolling deep elf priest ; long sword ego:holy_wrath
 KITEM: e = potion of healing / potion of heal wounds / potion of cure mutation
