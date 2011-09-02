@@ -52,6 +52,7 @@
 #include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
+#include "monster.h"
 #include "mutation.h"
 #include "ouch.h"
 #include "player.h"
@@ -281,6 +282,7 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
     pbolt.is_tracer      = true;
     pbolt.source         = you.pos();
     pbolt.can_see_invis  = you.can_see_invisible();
+    pbolt.nightvision    = you.nightvision();
     pbolt.smart_monster  = true;
     pbolt.attitude       = ATT_FRIENDLY;
     pbolt.thrower        = KILL_YOU_MISSILE;
@@ -2145,6 +2147,7 @@ void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only)
     pbolt.source        = mons->pos();
     pbolt.beam_source   = mons->mindex();
     pbolt.can_see_invis = mons->can_see_invisible();
+    pbolt.nightvision   = mons->nightvision();
     pbolt.smart_monster = (mons_intel(mons) >= I_NORMAL);
     pbolt.attitude      = mons_attitude(mons);
 
@@ -3103,8 +3106,13 @@ bool bolt::misses_player()
         if (you.invisible() && !can_see_invis)
             real_tohit /= 2;
 
+        // Backlit is easier to hit:
         if (you.backlit(true, false))
             real_tohit += 2 + random2(8);
+
+        // Umbra is harder to hit:
+        if (!nightvision && you.umbra(true, true))
+            real_tohit -= 2 + random2(4);
     }
 
     bool train_shields_more = false;
@@ -4389,8 +4397,13 @@ void bolt::affect_monster(monster* mon)
         if (mon->invisible() && !can_see_invis)
             beam_hit /= 2;
 
+        // Backlit is easier to hit:
         if (mon->backlit(true, false))
             beam_hit += 2 + random2(8);
+
+        // Umbra is harder to hit:
+        if (!nightvision && mon->umbra(true, true))
+            beam_hit -= 2 + random2(4);
     }
 
     defer_rand r;
@@ -5592,7 +5605,7 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                aimed_at_feet(false), msg_generated(false),
                noise_generated(false), passed_target(false),
                in_explosion_phase(false), smart_monster(false),
-               can_see_invis(false), attitude(ATT_HOSTILE), foe_ratio(0),
+               can_see_invis(false), nightvision(false), attitude(ATT_HOSTILE), foe_ratio(0),
                chose_ray(false), beam_cancelled(false),
                dont_stop_player(false), bounces(false), bounce_pos(),
                reflections(0), reflector(-1), auto_hit(false)

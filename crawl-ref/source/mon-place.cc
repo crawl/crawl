@@ -1549,6 +1549,9 @@ static int _place_monster_aux(const mgen_data &mg,
             case MONS_JELLY:
                 mon->god = GOD_JIYVA;
                 break;
+            case MONS_PROFANE_SERVITOR:
+                mon->god = GOD_YREDELEMNUL;
+                break;
             case MONS_MUMMY:
             case MONS_DRACONIAN:
             case MONS_ELF:
@@ -1606,7 +1609,7 @@ static int _place_monster_aux(const mgen_data &mg,
     // Holy monsters need their halo!
     if (mon->holiness() == MH_HOLY)
         invalidate_agrid(true);
-    if (mg.cls == MONS_SILENT_SPECTRE)
+    if (mg.cls == MONS_SILENT_SPECTRE || mg.cls == MONS_PROFANE_SERVITOR)
         invalidate_agrid(true);
 
     // If the caller requested a specific colour for this monster, apply

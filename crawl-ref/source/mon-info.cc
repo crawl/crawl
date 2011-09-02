@@ -386,8 +386,10 @@ monster_info::monster_info(const monster* m, int milev)
     else
         no_regen = !mons_class_can_regenerate(type);
 
-    if (m->haloed())
+    if (m->haloed() && !m->antihaloed())
         mb.set(MB_HALOED);
+    if (!m->haloed() && m->antihaloed())
+        mb.set(MB_ANTIHALOED);
     if (mons_looks_stabbable(m))
         mb.set(MB_STABBABLE);
     if (mons_looks_distracted(m))

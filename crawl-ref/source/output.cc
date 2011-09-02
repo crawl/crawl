@@ -599,7 +599,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         STATUS_SICK,
         STATUS_ROT,
         STATUS_NET,
-        STATUS_GLOW,
+        STATUS_CONTAMINATION,
         DUR_SWIFTNESS,
         STATUS_SPEED,
         DUR_DEATH_CHANNEL,
@@ -622,6 +622,8 @@ static void _get_status_lights(std::vector<status_light>& out)
         STATUS_FIREBALL,
         DUR_SHROUD_OF_GOLUBRIA,
         DUR_TORNADO_COOLDOWN,
+        STATUS_BACKLIT,
+        STATUS_UMBRA,
     };
 
     status_info inf;
@@ -2060,7 +2062,7 @@ static std::string _status_mut_abilities(int sw)
         DUR_FIRE_SHIELD,
         DUR_POISONING,
         STATUS_SICK,
-        STATUS_GLOW,
+        STATUS_CONTAMINATION,
         STATUS_ROT,
         DUR_CONFUSING_TOUCH,
         DUR_SLIMIFY,
@@ -2078,6 +2080,8 @@ static std::string _status_mut_abilities(int sw)
         STATUS_FIREBALL,
         DUR_SHROUD_OF_GOLUBRIA,
         DUR_TORNADO_COOLDOWN,
+        STATUS_BACKLIT,
+        STATUS_UMBRA,
     };
 
     status_info inf;
