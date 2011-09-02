@@ -222,7 +222,8 @@ static std::string _shop_print_stock(const std::vector<int>& stock,
                                       const std::vector<bool>& selected,
                                       const std::vector<bool>& in_list,
                                       const shop_struct& shop,
-                                      int total_cost)
+                                      int total_cost,
+                                      bool viewing)
 {
     ShopInfo &si  = StashTrack.get_shop(shop.pos);
     const bool id = shoptype_identifies_stock(shop.type);
@@ -266,7 +267,13 @@ static std::string _shop_print_stock(const std::vector<int>& stock,
         else
             cprintf("%c - ", c);
 
-        if (Options.menu_colour_shops)
+        const bool unknown = item_type_has_ids(item.base_type)
+                             && item_type_known(item)
+                             && get_ident_type(item) != ID_KNOWN_TYPE
+                             && !is_artefact(item);
+        if (viewing)
+            textcolor((unknown || is_artefact(item))? WHITE : LIGHTGREY);
+        else if (Options.menu_colour_shops)
         {
             // Colour stock according to menu colours.
             const std::string colprf = menu_colour_item_prefix(item);
@@ -277,9 +284,11 @@ static std::string _shop_print_stock(const std::vector<int>& stock,
         else
             textcolor(i % 2 ? LIGHTGREY : WHITE);
 
-        cprintf("%s%5d gold",
-                chop_string(item.name(DESC_NOCAP_A, false, id), 56).c_str(),
-                gp_value);
+        std::string item_name = item.name(DESC_NOCAP_A, false, id);
+        if (unknown)
+            item_name += " (unknown)";
+
+        cprintf("%s%5d gold", chop_string(item_name, 56).c_str(), gp_value);
 
         si.add_item(item, gp_value);
     }
@@ -395,7 +404,8 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
 
         const std::string purchasable = _shop_print_stock(stock, selected,
                                                           in_list, shop,
-                                                          total_cost);
+                                                          total_cost,
+                                                          viewing);
         _list_shop_keys(purchasable, viewing, stock.size(), num_selected,
                         num_in_list);
 
@@ -1000,10 +1010,12 @@ unsigned int item_value(item_def item, bool ident)
             valued += 150;
             break;
 
+#if TAG_MAJOR_VERSION == 32
         case WPN_KATANA:
+        case WPN_BLESSED_KATANA:
+#endif
         case WPN_DEMON_BLADE:
         case WPN_TRIPLE_SWORD:
-        case WPN_BLESSED_KATANA:
         case WPN_EUDEMON_BLADE:
         case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
@@ -1475,66 +1487,66 @@ unsigned int item_value(item_def item, bool ident)
             valued += 200;
         else
         {
+            // true if the wand is of a good type, a type with significant
+            // inherent value even when empty. Good wands are less expensive
+            // per charge.
+            bool good = false;
             switch (item.sub_type)
             {
             case WAND_HASTING:
             case WAND_HEALING:
-                valued += 300;
+                valued += 240;
+                good = true;
                 break;
 
             case WAND_TELEPORTATION:
-                valued += 250;
+                valued += 120;
+                good = true;
                 break;
 
             case WAND_COLD:
             case WAND_FIRE:
             case WAND_FIREBALL:
-                valued += 200;
+            case WAND_DIGGING:
+                valued += 80;
+                good = true;
                 break;
 
             case WAND_INVISIBILITY:
             case WAND_DRAINING:
             case WAND_LIGHTNING:
-                valued += 175;
-                break;
-
             case WAND_DISINTEGRATION:
-                valued += 160;
-                break;
-
-            case WAND_DIGGING:
-            case WAND_PARALYSIS:
-                valued += 100;
-                break;
-
-            case WAND_FLAME:
-            case WAND_FROST:
-                valued += 75;
+                valued += 40;
+                good = true;
                 break;
 
             case WAND_ENSLAVEMENT:
             case WAND_POLYMORPH_OTHER:
-                valued += 90;
+            case WAND_PARALYSIS:
+                valued += 20;
                 break;
 
             case WAND_CONFUSION:
             case WAND_SLOWING:
-                valued += 70;
+                valued += 15;
+                break;
+
+            case WAND_FLAME:
+            case WAND_FROST:
+            case WAND_RANDOM_EFFECTS:
+                valued += 10;
                 break;
 
             case WAND_MAGIC_DARTS:
-            case WAND_RANDOM_EFFECTS:
             default:
-                valued += 45;
+                valued += 6;
                 break;
             }
 
             if (item_ident(item, ISFLAG_KNOW_PLUSES))
             {
-                if (item.plus == 0)
-                    valued -= 50;
-                else
-                    valued = (valued * (item.plus + 45)) / 50;
+                if (good) valued += (valued * item.plus) / 4;
+                else      valued += (valued * item.plus) / 2;
             }
         }
         break;
@@ -1550,14 +1562,11 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 500;
                 break;
 
+            case POT_CURE_MUTATION:
             case POT_GAIN_DEXTERITY:
             case POT_GAIN_INTELLIGENCE:
             case POT_GAIN_STRENGTH:
                 valued += 350;
-                break;
-
-            case POT_CURE_MUTATION:
-                valued += 150;
                 break;
 
             case POT_MAGIC:
@@ -1565,34 +1574,38 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 70;
                 break;
 
+            case POT_SPEED:
             case POT_INVISIBILITY:
                 valued += 55;
                 break;
 
-            case POT_MUTATION:
-            case POT_RESTORE_ABILITIES:
-                valued += 50;
-                break;
-
             case POT_BERSERK_RAGE:
             case POT_HEAL_WOUNDS:
+            case POT_RESTORE_ABILITIES:
+            case POT_LEVITATION:
+            case POT_MUTATION:
                 valued += 30;
                 break;
 
             case POT_MIGHT:
             case POT_AGILITY:
             case POT_BRILLIANCE:
-            case POT_SPEED:
                 valued += 25;
                 break;
 
             case POT_HEALING:
-            case POT_LEVITATION:
+            case POT_DECAY:
+            case POT_DEGENERATION:
+            case POT_STRONG_POISON:
                 valued += 20;
                 break;
 
             case POT_BLOOD:
             case POT_PORRIDGE:
+            case POT_CONFUSION:
+            case POT_PARALYSIS:
+            case POT_POISON:
+            case POT_SLOWING:
                 valued += 10;
                 break;
 
@@ -1600,13 +1613,6 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 5;
                 break;
 
-            case POT_CONFUSION:
-            case POT_DECAY:
-            case POT_DEGENERATION:
-            case POT_PARALYSIS:
-            case POT_POISON:
-            case POT_SLOWING:
-            case POT_STRONG_POISON:
             case POT_WATER:
                 valued++;
                 break;
@@ -1698,53 +1704,38 @@ unsigned int item_value(item_def item, bool ident)
                 valued += 75;
                 break;
 
+            case SCR_RECHARGING:
+            case SCR_AMNESIA:
+            case SCR_ENCHANT_ARMOUR:
+            case SCR_ENCHANT_WEAPON_I:
             case SCR_ENCHANT_WEAPON_II:
+            case SCR_BLINKING:
                 valued += 55;
                 break;
 
-            case SCR_RECHARGING:
-            case SCR_AMNESIA:
-                valued += 50;
-                break;
-
-            case SCR_ENCHANT_ARMOUR:
-            case SCR_ENCHANT_WEAPON_I:
-                valued += 48;
-                break;
-
             case SCR_FEAR:
-                valued += 45;
-                break;
-
             case SCR_MAGIC_MAPPING:
                 valued += 35;
                 break;
 
-            case SCR_BLINKING:
             case SCR_REMOVE_CURSE:
             case SCR_TELEPORTATION:
                 valued += 30;
                 break;
 
+            case SCR_FOG:
             case SCR_DETECT_CURSE:
             case SCR_IDENTIFY:
+            case SCR_CURSE_ARMOUR:
+            case SCR_CURSE_WEAPON:
+            case SCR_CURSE_JEWELLERY:
                 valued += 20;
-                break;
-
-            case SCR_FOG:
-                valued += 10;
                 break;
 
             case SCR_NOISE:
             case SCR_RANDOM_USELESSNESS:
-                valued += 2;
-                break;
-
-            case SCR_CURSE_ARMOUR:
-            case SCR_CURSE_WEAPON:
-            case SCR_CURSE_JEWELLERY:
             case SCR_IMMOLATION:
-                valued++;
+                valued += 10;
                 break;
             }
         }
@@ -1755,9 +1746,10 @@ unsigned int item_value(item_def item, bool ident)
             valued -= 10;
 
         if (!item_type_known(item))
-            valued += 50;
+            valued += 250;
         else
         {
+            // Variable-strength rings.
             if (item_ident(item, ISFLAG_KNOW_PLUSES)
                 && (item.sub_type == RING_PROTECTION
                     || item.sub_type == RING_STRENGTH
@@ -1766,108 +1758,97 @@ unsigned int item_value(item_def item, bool ident)
                     || item.sub_type == RING_INTELLIGENCE
                     || item.sub_type == RING_SLAYING))
             {
-                if (item.plus > 0)
-                    valued += 10 * item.plus;
+                // Formula: price = kn(n+1) / 2, where k depends on the subtype,
+                // n is the power. (The base variable is equal to 2n.)
+                int base = 0;
+                int coefficient = 0;
+                if (item.sub_type == RING_SLAYING)
+                    base = item.plus + 2 * item.plus2;
+                else
+                    base = 2 * item.plus;
 
-                if (item.sub_type == RING_SLAYING && item.plus2 > 0)
-                    valued += 10 * item.plus2;
+                switch (item.sub_type)
+                {
+                case RING_SLAYING:
+                    coefficient = 100;
+                    break;
+                case RING_PROTECTION:
+                case RING_EVASION:
+                    coefficient = 40;
+                    break;
+                case RING_STRENGTH:
+                case RING_DEXTERITY:
+                case RING_INTELLIGENCE:
+                    coefficient = 30;
+                    break;
+                default:
+                    break;
+                }
 
-                if (item.plus < 0)
-                    valued -= 50;
-
-                if (item.sub_type == RING_SLAYING && item.plus2 < 0)
-                    valued -= 50;
+                if (base <= 0)
+                    valued += 25 * base;
+                else
+                    valued += (coefficient * base * (base + 1)) / 8;
             }
-
-            switch (item.sub_type)
+            else
             {
-            case RING_INVISIBILITY:
-                valued += 100;
-                break;
+                switch (item.sub_type)
+                {
+                case RING_TELEPORT_CONTROL:
+                    valued += 500;
+                    break;
 
-            case RING_REGENERATION:
-                valued += 75;
-                break;
+                case AMU_RESIST_MUTATION:
+                case AMU_RAGE:
+                    valued += 400;
+                    break;
 
-            case RING_FIRE:
-            case RING_ICE:
-                valued += 62;
-                break;
+                case RING_INVISIBILITY:
+                case RING_REGENERATION:
+                case RING_WIZARDRY:
+                case AMU_FAITH:
+                case AMU_THE_GOURMAND:
+                    valued += 300;
+                    break;
 
-            case RING_LIFE_PROTECTION:
-                valued += 60;
-                break;
+                case RING_PROTECTION_FROM_COLD:
+                case RING_PROTECTION_FROM_FIRE:
+                case RING_PROTECTION_FROM_MAGIC:
+                case AMU_GUARDIAN_SPIRIT:
+                case AMU_CONSERVATION:
+                    valued += 250;
+                    break;
 
-            case RING_TELEPORT_CONTROL:
-                valued += 42;
-                break;
+                case RING_MAGICAL_POWER:
+                case RING_FIRE:
+                case RING_ICE:
+                case RING_LIFE_PROTECTION:
+                case RING_POISON_RESISTANCE:
+                case AMU_CLARITY:
+                case AMU_RESIST_CORROSION:
+                    valued += 200;
+                    break;
 
-            case RING_MAGICAL_POWER:
-            case RING_PROTECTION_FROM_MAGIC:
-                valued += 40;
-                break;
+                case RING_SUSTAIN_ABILITIES:
+                case RING_SUSTENANCE:
+                case RING_TELEPORTATION:
+                case RING_LEVITATION:
+                case AMU_STASIS:
+                    valued += 175;
+                    break;
 
-            case RING_WIZARDRY:
-                valued += 35;
-                break;
+                case RING_SEE_INVISIBLE:
+                case AMU_WARDING:
+                case AMU_CONTROLLED_FLIGHT:
+                    valued += 150;
+                    break;
 
-            case RING_LEVITATION:
-            case RING_POISON_RESISTANCE:
-            case RING_PROTECTION_FROM_COLD:
-            case RING_PROTECTION_FROM_FIRE:
-            case RING_SLAYING:
-                valued += 30;
-                break;
-
-            case RING_SUSTAIN_ABILITIES:
-            case RING_SUSTENANCE:
-            case RING_TELEPORTATION: // usually cursed
-                valued += 25;
-                break;
-
-            case RING_SEE_INVISIBLE:
-                valued += 20;
-                break;
-
-            case RING_DEXTERITY:
-            case RING_EVASION:
-            case RING_INTELLIGENCE:
-            case RING_PROTECTION:
-            case RING_STRENGTH:
-                valued += 10;
-                break;
-
-            case RING_HUNGER:
-                valued -= 50;
-                break;
-
-            case AMU_THE_GOURMAND:
-            case AMU_GUARDIAN_SPIRIT:
-            case AMU_FAITH:
-                valued += 35;
-                break;
-
-            case AMU_CLARITY:
-            case AMU_RESIST_CORROSION:
-            case AMU_RESIST_MUTATION:
-            case AMU_WARDING:
-                valued += 30;
-                break;
-
-            case AMU_CONSERVATION:
-            case AMU_CONTROLLED_FLIGHT:
-                valued += 25;
-                break;
-
-            case AMU_RAGE:
-            case AMU_STASIS:
-                valued += 20;
-                break;
-
-            case AMU_INACCURACY:
-                valued -= 50;
-                break;
-                // got to do delusion!
+                case RING_HUNGER:
+                case AMU_INACCURACY:
+                    valued -= 300;
+                    break;
+                    // got to do delusion!
+                }
             }
 
             if (is_artefact(item))
@@ -1875,73 +1856,44 @@ unsigned int item_value(item_def item, bool ident)
                 // in this branch we're guaranteed to know
                 // the item type!
                 if (valued < 0)
-                    valued = artefact_value(item) - 5;
+                    valued = (artefact_value(item) - 5) * 7;
                 else
-                    valued += artefact_value(item);
+                    valued += artefact_value(item) * 7;
             }
 
-            valued *= 7;
+            // Hard minimum, as it's worth 20 to ID a ring.
+            valued = std::max(20, valued);
         }
         break;
 
     case OBJ_MISCELLANY:
-        if (item_type_known(item))
+        switch (item.sub_type)
         {
-            switch (item.sub_type)
-            {
-            case MISC_RUNE_OF_ZOT:  // upped from 1200 to encourage collecting
-                valued += 10000;
-                break;
+        case MISC_RUNE_OF_ZOT:  // upped from 1200 to encourage collecting
+            valued += 10000;
+            break;
 
-            case MISC_HORN_OF_GERYON:
-                valued += 5000;
-                break;
+        case MISC_HORN_OF_GERYON:
+            valued += 5000;
+            break;
 
-            case MISC_DISC_OF_STORMS:
-                valued += 2000;
-                break;
+        case MISC_DISC_OF_STORMS:
+            valued += 2000;
+            break;
 
-            case MISC_CRYSTAL_BALL_OF_SEEING:
+        case MISC_BOTTLED_EFREET:
+            valued += 400;
+            break;
+
+        case MISC_EMPTY_EBONY_CASKET:
+            valued += 20;
+            break;
+
+        default:
+            if (is_deck(item))
+                valued += 200 + item.special * 150;
+            else
                 valued += 500;
-                break;
-
-            case MISC_BOTTLED_EFREET:
-                valued += 400;
-                break;
-
-            case MISC_EMPTY_EBONY_CASKET:
-                valued += 20;
-                break;
-            default:
-                if (is_deck(item))
-                    valued += 200 + item.special * 150;
-                else
-                    valued += 500;
-            }
-        }
-        else
-        {
-            switch (item.sub_type)
-            {
-            case MISC_RUNE_OF_ZOT:
-                valued += 5000;
-                break;
-
-            case MISC_HORN_OF_GERYON:
-                valued += 1000;
-                break;
-
-            case MISC_CRYSTAL_BALL_OF_SEEING:
-                valued += 450;
-                break;
-
-            case MISC_BOTTLED_EFREET:
-                valued += 350;
-                break;
-
-            default:
-                valued += 400;
-            }
         }
         break;
 
@@ -2025,7 +1977,50 @@ unsigned int item_value(item_def item, bool ident)
     valued *= item.quantity;
 
     return (valued);
-}                               // end item_value()
+}
+
+bool is_worthless_consumable(const item_def &item)
+{
+    switch (item.base_type)
+    {
+    case OBJ_POTIONS:
+        switch (item.sub_type)
+        {
+        // Blood potions are worthless because they are easy to make.
+        case POT_BLOOD:
+        case POT_BLOOD_COAGULATED:
+        case POT_CONFUSION:
+        case POT_DECAY:
+        case POT_DEGENERATION:
+        case POT_PARALYSIS:
+        case POT_POISON:
+        case POT_SLOWING:
+        case POT_STRONG_POISON:
+        case POT_WATER:
+            return true;
+        default:
+            return false;
+        }
+    case OBJ_FOOD:
+        return ((item.sub_type == FOOD_CHUNK) && food_is_rotten(item));
+    case OBJ_SCROLLS:
+        switch (item.sub_type)
+        {
+        case SCR_CURSE_ARMOUR:
+        case SCR_CURSE_WEAPON:
+        case SCR_CURSE_JEWELLERY:
+        case SCR_NOISE:
+        case SCR_RANDOM_USELESSNESS:
+            return true;
+        default:
+            return false;
+        }
+
+    // Only consumables are worthless.
+    default:
+        return false;
+    }
+}
 
 static void _delete_shop(int i)
 {
@@ -2276,7 +2271,7 @@ bool ShoppingList::add_thing(const item_def &item, int cost,
 
     if (pos.id.level_type != LEVEL_DUNGEON)
     {
-        mprf("The shopping list can only contain things in the dungeon.",
+        mpr("The shopping list can only contain things in the dungeon.",
              MSGCH_ERROR);
         return (false);
     }
@@ -2307,7 +2302,7 @@ bool ShoppingList::add_thing(std::string desc, std::string buy_verb, int cost,
 
     if (pos.id.level_type != LEVEL_DUNGEON)
     {
-        mprf("The shopping list can only contain things in the dungeon.",
+        mpr("The shopping list can only contain things in the dungeon.",
              MSGCH_ERROR);
         return (false);
     }
@@ -2817,7 +2812,7 @@ void ShoppingList::display()
             }
 
             del_thing_at_index(index);
-            if (list->size() == 0)
+            if (list->empty())
                 break;
 
             shopmenu.clear();

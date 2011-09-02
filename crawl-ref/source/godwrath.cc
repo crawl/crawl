@@ -213,7 +213,7 @@ static bool _zin_retribution()
             you.hibernate();
             break;
         case 2:
-            you.paralyse(NULL, 3 + random2(10));
+            paralyse_player("the wrath of Zin", 3 + random2(10));
             break;
         }
         break;
@@ -399,7 +399,7 @@ static bool _cheibriados_retribution()
             break;
     // No tension wrath.
     case 0:
-        if (curse_an_item(true, false))
+        if (curse_an_item())
             simple_god_message(" makes up for lost time.", god);
         else
             glammer = true;
@@ -496,7 +496,7 @@ static bool _kikubaaqudgha_retribution()
     {
         // torment, or 3 necromancy miscasts
         if (!player_res_torment(false))
-            torment(TORMENT_KIKUBAAQUDGHA, you.pos());
+            torment(NULL, TORMENT_KIKUBAAQUDGHA, you.pos());
         else
         {
             for (int i = 0; i < 3; ++i)
@@ -1208,14 +1208,14 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
 {
     ASSERT(god != GOD_NO_GOD);
 
-    if (god == GOD_JIYVA && jiyva_is_dead())
+    if (is_unavailable_god(god))
         return (false);
 
     // Good gods don't use divine retribution on their followers, and
     // gods don't use divine retribution on followers of gods they don't
     // hate.
     if (!force && ((god == you.religion && is_good_god(god))
-        || (god != you.religion && !god_hates_your_god(god))))
+        || (!god_hates_your_god(god))))
     {
         return (false);
     }
@@ -1226,7 +1226,9 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     switch (god)
     {
     // One in ten chance that Xom might do something good...
-    case GOD_XOM: xom_acts(one_chance_in(10), abs(you.piety - 100)); break;
+    case GOD_XOM:
+        xom_acts(one_chance_in(10), abs(you.piety - HALF_MAX_PIETY));
+        break;
     case GOD_SHINING_ONE:   do_more = _tso_retribution(); break;
     case GOD_ZIN:           do_more = _zin_retribution(); break;
     case GOD_MAKHLEB:       do_more = _makhleb_retribution(); break;
@@ -1459,20 +1461,16 @@ static void _god_smites_you(god_type god, const char *message,
     }
 }
 
-int ash_reduce_xp(int amount)
+void ash_reduce_penance(int amount)
 {
     if (!you.penance[GOD_ASHENZARI] || !you.exp_docked_total)
-        return 0;
+        return;
 
     int lost = std::min(amount / 2, you.exp_docked);
     you.exp_docked -= lost;
-    dprf("Ashenzari: exp stolen: %d, %d/%d to go", lost, you.exp_docked,
-         you.exp_docked_total);
 
     int new_pen = (((int64_t)you.exp_docked * 50) + you.exp_docked_total - 1)
                 / you.exp_docked_total;
     if (new_pen < you.penance[GOD_ASHENZARI])
         dec_penance(GOD_ASHENZARI, you.penance[GOD_ASHENZARI] - new_pen);
-
-    return lost;
 }

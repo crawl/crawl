@@ -16,6 +16,7 @@
 #include "items.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "libutil.h"
 #include "math.h"
 #include "mon-stuff.h"
 #include "options.h"
@@ -25,14 +26,13 @@
 #include "skills2.h"
 #include "spl-book.h"
 #include "state.h"
-#include "stuff.h"
 
 int che_boost_level()
 {
     if (you.religion != GOD_CHEIBRIADOS || you.penance[GOD_CHEIBRIADOS])
         return (0);
 
-    return (std::min(player_ponderousness(), piety_rank() - 1));
+    return (std::min(player_ponderousness(), 2*(piety_rank() - 1)));
 }
 
 int che_boost(che_boost_type bt, int level)
@@ -43,13 +43,13 @@ int che_boost(che_boost_type bt, int level)
     switch (bt)
     {
     case CB_RNEG:
-        return (level > 0 ? 1 : 0);
-    case CB_RCOLD:
         return (level > 1 ? 1 : 0);
+    case CB_RCOLD:
+        return (level > 3 ? 1 : 0);
     case CB_RFIRE:
-        return (level > 2 ? 1 : 0);
+        return (level > 5 ? 1 : 0);
     case CB_STATS:
-        return (level * (level + 1)) / 2;
+        return ((level * 3)/2);
     default:
         return (0);
     }
@@ -60,21 +60,36 @@ void che_handle_change(che_change_type ct, int diff)
     if (you.religion != GOD_CHEIBRIADOS)
         return;
 
-    const std::string typestr = (ct == CB_PIETY ? "piety" : "ponderous");
+    const std::string typestr = (ct == CB_PIETY ? "piety" :
+                (ct == CB_PONDEROUSNESS ? "ponderousness" :
+            (ct == CB_PONDEROUS_COUNT ? "ponderous count" : "slots")));
 
     // Values after the change.
     const int ponder = player_ponderousness();
     const int prank = piety_rank() - 1;
-    const int newlev = std::min(ponder, prank);
+    const int newlev = std::min(ponder, 2 * prank);
 
     // Reconstruct values before the change.
     int oldponder = ponder;
     int oldprank = prank;
+    int slots = player_armour_slots();
     if (ct == CB_PIETY)
         oldprank -= diff;
-    else // ct == CB_PONDEROUS
+    else if (ct == CB_PONDEROUSNESS)
         oldponder -= diff;
-    const int oldlev = std::min(oldponder, oldprank);
+    else if (ct == CB_PONDEROUS_COUNT)
+    {
+        if (slots != 0)
+            oldponder = ((player_ponderous_count() - diff) * 10)/slots;
+    }
+    else // ct == CB_SLOTS
+    {
+        if (slots - diff == 0)
+            oldponder = 0;
+        else
+            oldponder = (player_ponderous_count() * 10)/(slots - diff);
+    }
+    const int oldlev = std::min(oldponder, 2 * oldprank);
     dprf("Che %s %+d: %d/%d -> %d/%d", typestr.c_str(), diff,
          oldponder, oldprank,
          ponder, prank);
@@ -198,7 +213,7 @@ void jiyva_slurp_bonus(int item_value, int *js)
         && x_chance_in_y(you.piety, MAX_PIETY)
         && you.magic_points < you.max_magic_points)
     {
-         inc_mp(std::max(random2(item_value), 1), false);
+         inc_mp(std::max(random2(item_value), 1));
          *js |= JS_MP;
      }
 
@@ -206,7 +221,7 @@ void jiyva_slurp_bonus(int item_value, int *js)
         && x_chance_in_y(you.piety, MAX_PIETY)
         && you.hp < you.hp_max)
     {
-         inc_hp(std::max(random2(item_value), 1), false);
+         inc_hp(std::max(random2(item_value), 1));
          *js |= JS_HP;
      }
 }
@@ -224,18 +239,28 @@ void jiyva_slurp_message(int js)
     }
 }
 
-enum eq_type
+void ash_init_bondage(player *y)
 {
-    ET_WEAPON,
-    ET_ARMOUR,
-    ET_JEWELS,
-    NUM_ET
-};
+    y->bondage_level = 0;
+    for (int i = ET_WEAPON; i < NUM_ET; ++i)
+        y->bondage[i] = 0;
+}
 
-int ash_bondage_level(int type_only)
+static bool _two_handed()
+{
+    const item_def* wpn = you.slot_item(EQ_WEAPON, true);
+    if (!wpn)
+        return false;
+
+    hands_reqd_type wep_type = hands_reqd(*wpn, you.body_size());
+    return wep_type == HANDS_TWO || wep_type == HANDS_HALF
+                                    && you.has_usable_offhand();
+}
+
+void ash_check_bondage(bool msg)
 {
     if (you.religion != GOD_ASHENZARI)
-        return (0);
+        return;
 
     int cursed[NUM_ET] = {0}, slots[NUM_ET] = {0};
 
@@ -244,19 +269,19 @@ int ash_bondage_level(int type_only)
         eq_type s;
         if (i == EQ_WEAPON)
             s = ET_WEAPON;
+        else if (i == EQ_SHIELD)
+            s= ET_SHIELD;
         else if (i <= EQ_MAX_ARMOUR)
             s = ET_ARMOUR;
+        // Octopodes don't count these slots:
+        else if (you.species == SP_OCTOPODE &&
+                 (i == EQ_LEFT_RING || i == EQ_RIGHT_RING))
+            continue;
+        // *Only* octopodes count these slots:
+        else if (you.species != SP_OCTOPODE && i > EQ_AMULET)
+            continue;
         else
             s = ET_JEWELS;
-
-        // kittehs don't obey hoomie rules!
-        if (you.species == SP_CAT)
-        {
-            if (i >= EQ_LEFT_RING)
-                s = (eq_type)(i - EQ_LEFT_RING);
-            else
-                ASSERT(!you_can_wear(i, true));
-        }
 
         // transformed away slots are still considered to be possibly bound
         if (you_can_wear(i, true))
@@ -270,39 +295,143 @@ int ash_bondage_level(int type_only)
                         || item.base_type == OBJ_WEAPONS
                         || item.base_type == OBJ_STAVES))
                 {
-                    cursed[s]++;
+                    if (s == ET_WEAPON && _two_handed())
+                    {
+                        cursed[ET_WEAPON] = 3;
+                        cursed[ET_SHIELD] = 3;
+                    }
+                    else
+                        cursed[s]++;
                 }
             }
         }
     }
 
-    int bonus = 0;
+    int8_t new_bondage[NUM_ET];
+    int old_level = you.bondage_level;
     for (int s = ET_WEAPON; s < NUM_ET; s++)
     {
-        if (type_only && s+1 != type_only)
-            continue;
-        if (cursed[s] > slots[s] / 2)
-            bonus++;
+        if (slots[s] == 0)
+            new_bondage[s] = -1;
+        // That's only for 2 handed weapons.
+        else if (cursed[s] > slots[s])
+            new_bondage[s] = 3;
+        else if (cursed[s] == slots[s])
+            new_bondage[s] = 2;
+        else if (cursed[s] > slots[s] / 2)
+            new_bondage[s] = 1;
+        else
+            new_bondage[s] = 0;
     }
-    return bonus;
+
+    you.bondage_level = 0;
+    // kittehs don't obey hoomie rules!
+    if (you.species == SP_FELID)
+    {
+        for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
+            if (you.equip[i] != -1 && you.inv[you.equip[i]].cursed())
+                ++you.bondage_level;
+    }
+    else
+        for (int i = ET_WEAPON; i < NUM_ET; ++i)
+            if (new_bondage[i] > 0)
+                ++you.bondage_level;
+
+    int flags = 0;
+    if (msg)
+        for (int s = ET_WEAPON; s < NUM_ET; s++)
+            if (new_bondage[s] != you.bondage[s])
+                flags |= 1 << s;
+
+    you.skill_boost.clear();
+    for (int s = ET_WEAPON; s < NUM_ET; s++)
+    {
+        you.bondage[s] = new_bondage[s];
+        std::map<skill_type, int8_t> boosted_skills = ash_get_boosted_skills(eq_type(s));
+        for (std::map<skill_type, int8_t>::iterator it = boosted_skills.begin();
+             it != boosted_skills.end(); ++it)
+        {
+            you.skill_boost[it->first] += it->second;
+            if (you.skill_boost[it->first] > 3)
+                you.skill_boost[it->first] = 3;
+        }
+
+    }
+
+    if (msg)
+    {
+        std::string desc = ash_describe_bondage(flags,
+                                                you.bondage_level != old_level);
+        if (!desc.empty())
+            mpr(desc, MSGCH_GOD);
+    }
 }
 
-void ash_check_bondage()
+std::string ash_describe_bondage(int flags, bool level)
 {
-    int new_level = ash_bondage_level();
+    std::string desc;
+    if (flags & ETF_WEAPON && flags & ETF_SHIELD
+        && you.bondage[ET_WEAPON] != -1)
+    {
+        if (you.bondage[ET_WEAPON] == you.bondage[ET_SHIELD])
+        {
+            desc = make_stringf("Your hands are %sbound. ",
+                                you.bondage[ET_WEAPON] ? "" : "not ");
+        }
+        else
+        {
+            desc = make_stringf("Your %s hand is bound but not your %s hand. ",
+                                you.bondage[ET_WEAPON] ? "weapon" : "shield",
+                                you.bondage[ET_WEAPON] ? "shield" : "weapon");
+        }
+    }
+    else if (flags & ETF_WEAPON && you.bondage[ET_WEAPON] != -1)
+    {
+        desc = make_stringf("Your weapon hand is %sbound. ",
+                            you.bondage[ET_WEAPON] ? "" : "not ");
+    }
+    else if (flags & ETF_SHIELD && you.bondage[ET_SHIELD] != -1)
+    {
+        desc = make_stringf("Your shield hand is %sbound. ",
+                            you.bondage[ET_SHIELD] ? "" : "not ");
+    }
 
-    if (new_level == you.bondage_level)
-        return;
-
-    if (new_level > you.bondage_level)
-        mprf(MSGCH_GOD, "You feel %s bound.",
-             (new_level == 1) ? "slightly" :
-             (new_level == 2) ? "seriously" :
-             (new_level == 3) ? "completely" :
-                                "buggily");
+    if (flags & ETF_ARMOUR && flags & ETF_JEWELS
+        && you.bondage[ET_ARMOUR] == you.bondage[ET_JEWELS]
+        && you.bondage[ET_ARMOUR] != -1)
+    {
+        desc += make_stringf("You are %s bound in armour and magic. ",
+                             you.bondage[ET_ARMOUR] == 0 ? "not" :
+                             you.bondage[ET_ARMOUR] == 1 ? "partially"
+                                                         : "fully");
+    }
     else
-        mprf(MSGCH_GOD, "You feel less bound.");
-    you.bondage_level = new_level;
+    {
+        if (flags & ETF_ARMOUR && you.bondage[ET_ARMOUR] != -1)
+            desc += make_stringf("You are %s bound in armour. ",
+                                 you.bondage[ET_ARMOUR] == 0 ? "not" :
+                                 you.bondage[ET_ARMOUR] == 1 ? "partially"
+                                                             : "fully");
+
+        if (flags & ETF_JEWELS && you.bondage[ET_JEWELS] != -1)
+            desc += make_stringf("You are %s bound in magic. ",
+                                 you.bondage[ET_JEWELS] == 0 ? "not" :
+                                 you.bondage[ET_JEWELS] == 1 ? "partially"
+                                                             : "fully");
+    }
+
+    if (level)
+    {
+        desc += make_stringf("You are %s bound.",
+                             you.bondage_level == 0 ? "not" :
+                             you.bondage_level == 1 ? "slightly" :
+                             you.bondage_level == 2 ? "moderately" :
+                             you.bondage_level == 3 ? "seriously" :
+                             you.bondage_level == 4 ? "fully"
+                                                    : "buggily");
+    }
+
+    return trim_string(desc);
 }
 
 static bool _is_slot_cursed(equipment_type eq)
@@ -352,21 +481,14 @@ static bool _jewel_auto_id(const item_def& item)
     }
 }
 
-bool ash_id_item(const coord_def p)
-{
-    if (const monster* mons = monster_at(p))
-        if (mons_is_unknown_mimic(mons) && mons_is_item_mimic(mons->type))
-            return ash_id_item(get_mimic_item(mons));
-
-    if (you.visible_igrd(p) != NON_ITEM)
-        return ash_id_item(mitm[you.visible_igrd(p)]);
-
-    return false;
-}
-
 bool ash_id_item(item_def& item, bool silent)
 {
     if (you.religion != GOD_ASHENZARI)
+        return false;
+
+    // Don't identify runes or the orb, since this has no gameplay purpose
+    // and might mess up other things.
+    if (item_is_rune(item) || item_is_orb(item))
         return false;
 
     if (item.base_type == OBJ_JEWELLERY && item_needs_autopickup(item))
@@ -402,11 +524,23 @@ bool ash_id_item(item_def& item, bool silent)
         ided |= ISFLAG_KNOW_PLUSES;
     }
 
-    if (item.base_type == OBJ_JEWELLERY
+    if (you.species != SP_OCTOPODE && item.base_type == OBJ_JEWELLERY
         && you.piety >= piety_breakpoint(1)
         && (jewellery_is_amulet(item) ?
              _is_slot_cursed(EQ_AMULET) :
              (_is_slot_cursed(EQ_LEFT_RING) && _is_slot_cursed(EQ_RIGHT_RING))
+         ))
+    {
+        ided |= ISFLAG_EQ_JEWELLERY_MASK;
+    }
+    else if (you.species == SP_OCTOPODE && item.base_type == OBJ_JEWELLERY
+        && you.piety >= piety_breakpoint(1)
+        && (jewellery_is_amulet(item) ?
+             _is_slot_cursed(EQ_AMULET) :
+             (_is_slot_cursed(EQ_RING_ONE) && _is_slot_cursed(EQ_RING_TWO) &&
+              _is_slot_cursed(EQ_RING_THREE) && _is_slot_cursed(EQ_RING_FOUR) &&
+              _is_slot_cursed(EQ_RING_FIVE) && _is_slot_cursed(EQ_RING_SIX) &&
+              _is_slot_cursed(EQ_RING_SEVEN) && _is_slot_cursed(EQ_RING_EIGHT))
          ))
     {
         ided |= ISFLAG_EQ_JEWELLERY_MASK;
@@ -450,40 +584,6 @@ void ash_id_inventory()
     }
 }
 
-static bool _is_offensive_wand(const item_def& item)
-{
-    switch (item.sub_type)
-    {
-    // Monsters don't use those, so no need to warn the player about them.
-    case WAND_ENSLAVEMENT:
-    case WAND_RANDOM_EFFECTS:
-    case WAND_DIGGING:
-
-    // Monsters will use them on themselves.
-    case WAND_HASTING:
-    case WAND_HEALING:
-    case WAND_INVISIBILITY:
-        return false;
-
-    case WAND_FLAME:
-    case WAND_FROST:
-    case WAND_SLOWING:
-    case WAND_MAGIC_DARTS:
-    case WAND_PARALYSIS:
-    case WAND_FIRE:
-    case WAND_COLD:
-    case WAND_CONFUSION:
-    case WAND_FIREBALL:
-    case WAND_TELEPORTATION:
-    case WAND_LIGHTNING:
-    case WAND_POLYMORPH_OTHER:
-    case WAND_DRAINING:
-    case WAND_DISINTEGRATION:
-        return true;
-    }
-    return false;
-}
-
 void ash_id_monster_equipment(monster* mon)
 {
     if (you.religion != GOD_ASHENZARI)
@@ -497,13 +597,13 @@ void ash_id_monster_equipment(monster* mon)
             continue;
 
         item_def &item = mitm[mon->inv[i]];
-        if ((i != MSLOT_WAND || !_is_offensive_wand(item))
+        if ((i != MSLOT_WAND || !is_offensive_wand(item))
             && !item_is_branded(item))
         {
             continue;
         }
 
-        if (x_chance_in_y(you.bondage_level, 3))
+        if (x_chance_in_y(you.bondage_level, 4))
         {
             if (i == MSLOT_WAND)
             {
@@ -589,89 +689,104 @@ int ash_detect_portals(bool all)
 
 monster_type ash_monster_tier(const monster *mon)
 {
-    double factor = sqrt(exp_needed(you.experience_level) / 30.0);
-    int tension = exper_value(mon) / (1 + factor);
-
     if (mon->friendly())
         return MONS_SENSED_FRIENDLY;
-    else if (tension <= 0)
-        // Conjurators use melee to conserve mana, MDFis switch plates...
-        return MONS_SENSED_TRIVIAL;
-    else if (tension <= 5)
-        // An easy fight but not ignorable.
-        return MONS_SENSED_EASY;
-    else if (tension <= 32)
-        // Hard but reasonable.
-        return MONS_SENSED_TOUGH;
-    else
-        // Check all wands/jewels several times, wear brown pants...
-        return MONS_SENSED_NASTY;
+
+    return monster_type(MONS_SENSED_TRIVIAL + monster_info(mon).threat);
 }
 
-#if 0
-int ash_skill_boost(skill_type sk)
+std::map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
 {
-    int level = you.skills[sk];
-    std::set<skill_type> boosted_skills;
+    const int bondage = you.bondage[type];
+    std::map<skill_type, int8_t> boost;
+    if (bondage <= 0)
+        return boost;
 
-    bool bondage_types[NUM_ET];
-    for (int i = 0; i < NUM_ET; i++)
-        bondage_types[i] = ash_bondage_level(i+1);
-
-    const item_def* wpn = you.weapon();
-    if (wpn && bondage_types[ET_WEAPON])
+    // Include melded.
+    const item_def* wpn = you.slot_item(EQ_WEAPON, true);
+    const item_def* armour = you.slot_item(EQ_BODY_ARMOUR, true);
+    const int evp = armour ? -property(*armour, PARM_EVASION) : 0;
+    switch (type)
     {
-        // Boost your weapon skill.
+    case (ET_WEAPON):
+        ASSERT(wpn);
+
+        // Boost weapon skill.
         if(wpn->base_type == OBJ_WEAPONS)
         {
-            boosted_skills.insert(is_range_weapon(*wpn) ? range_skill(*wpn)
-                                                        : weapon_skill(*wpn));
+            boost[is_range_weapon(*wpn) ? range_skill(*wpn)
+                                        : weapon_skill(*wpn)] = bondage;
         }
+
         // Those staves don't benefit from evocation.
         //Boost spellcasting instead.
-        else if (item_is_staff(*wpn)
-                 && (wpn->sub_type == STAFF_POWER
-                     || wpn->sub_type == STAFF_CONJURATION
-                     || wpn->sub_type == STAFF_ENCHANTMENT
-                     || wpn->sub_type == STAFF_ENERGY
-                     || wpn->sub_type == STAFF_WIZARDRY))
+        if (item_is_staff(*wpn) && (wpn->sub_type == STAFF_POWER
+                                    || wpn->sub_type == STAFF_CONJURATION
+                                    || wpn->sub_type == STAFF_ENCHANTMENT
+                                    || wpn->sub_type == STAFF_ENERGY
+                                    || wpn->sub_type == STAFF_WIZARDRY))
         {
-            boosted_skills.insert(SK_SPELLCASTING);
+            boost[SK_SPELLCASTING] = 2;
         }
-        // Those staves and rods use evocation. Boost it.
-        else if (item_is_staff(*wpn) || item_is_rod(*wpn))
+        // Other staves use evocation.
+        else if (item_is_staff(*wpn))
         {
-            boosted_skills.insert(SK_EVOCATIONS);
+            boost[SK_EVOCATIONS] = 1;
+            boost[SK_STAVES] = 1;
+
         }
+        else if (item_is_rod(*wpn))
+            boost[SK_EVOCATIONS] = 2;
+
+        break;
+
+    case (ET_SHIELD):
+        if (bondage == 2)
+            boost[SK_SHIELDS] = 1;
+        break;
+
+    // Bonus for bounded armour depends on body armour type.
+    case (ET_ARMOUR):
+        if (evp < 2)
+        {
+            boost[SK_STEALTH] = bondage;
+            boost[SK_DODGING] = bondage;
+        }
+        else if (evp < 4)
+        {
+            boost[SK_DODGING] = bondage;
+            boost[SK_ARMOUR] = bondage;
+        }
+        else
+            boost[SK_ARMOUR] = bondage + 1;
+        break;
+
+    // Boost all spell schools and evoc (to give some appeal to melee).
+    case (ET_JEWELS):
+        for (int i = SK_FIRST_MAGIC_SCHOOL; i <= SK_LAST_MAGIC; ++i)
+            boost[skill_type(i)] = bondage;
+        boost[SK_EVOCATIONS] = bondage;
+        break;
+
+    default:
+        die("Unknown equipment type.");
     }
 
-    if (bondage_types[ET_ARMOUR])
-    {
-        // Boost armour or dodging, whichever is higher.
-        boosted_skills.insert(compare_skills(SK_ARMOUR, SK_DODGING)
-                              ? SK_ARMOUR
-                              : SK_DODGING);
-    }
-
-    if (bondage_types[ET_JEWELS])
-    {
-        // Boost your highest magical skill.
-        skill_type highest = SK_NONE;
-        for (int i = SK_CONJURATIONS; i <= SK_POISON_MAGIC; ++i)
-            if (compare_skills(skill_type(i), highest))
-                highest = skill_type(i);
-
-        boosted_skills.insert(highest);
-    }
-
-    // Apply the skill boost.
-    if (boosted_skills.find(sk) != boosted_skills.end())
-        level += std::max(0, piety_rank() - 3);
-
-    // If not wearing uncursed items, boost low skills.
-    if (!you.wear_uncursed && you.skills[sk])
-        level = std::max(level, piety_rank() - 1);
-
-    return std::min(level, 27);
+    return boost;
 }
-#endif
+
+int ash_skill_boost(skill_type sk)
+{
+    const int level = you.skills[sk];
+    if (!level || !you.skill_boost[sk] || piety_rank() <= 2)
+        return level;
+
+    // 1 = low bonus    -> factor = 1
+    // 2 = medium bonus -> factor = 1.25
+    // 3 = high bonus   -> factor = 1.5
+    const float piety_factor = (you.skill_boost[sk] + 3) / 4.0;
+    const int base = std::min(piety_rank() - 1, level);
+    const int bonus = std::max<int>(0, base * piety_factor - level / 4.0);
+
+    return std::min(level + bonus, 27);
+}

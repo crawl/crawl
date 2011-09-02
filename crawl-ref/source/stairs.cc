@@ -8,11 +8,13 @@
 #include "areas.h"
 #include "branch.h"
 #include "chardump.h"
+#include "coordit.h"
 #include "delay.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "env.h"
 #include "files.h"
+#include "fprop.h"
 #include "hints.h"
 #include "hiscores.h"
 #include "itemname.h"
@@ -22,6 +24,7 @@
 #include "mapmark.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-iter.h"
 #include "notes.h"
 #include "options.h"
 #include "ouch.h"
@@ -316,14 +319,19 @@ static void _clear_golubria_traps()
     {
         trap_def *trap = find_trap(*it);
         if (trap && trap->type == TRAP_GOLUBRIA)
-        {
             trap->destroy();
-        }
     }
 }
 
-static void _leaving_level_now()
+static void _leaving_level_now(dungeon_feature_type stair_used)
 {
+    if (you.level_type == LEVEL_PORTAL_VAULT
+        && stair_used == DNGN_EXIT_PORTAL_VAULT
+        && you.level_type_name_abbrev == "Zig:27") // yay no depth
+    {
+        you.zigs_completed++;
+    }
+
     // Note the name ahead of time because the events may cause markers
     // to be discarded.
     const std::string newtype =
@@ -358,7 +366,7 @@ static void _leaving_level_now()
     if (strwidth(newname_abbrev) > MAX_NOTE_PLACE_LEN)
     {
         mprf(MSGCH_ERROR, "'%s' is too long for a portal vault name "
-                          "abbreviation, truncating");
+                          "abbreviation, truncating", newname_abbrev.c_str());
         newname_abbrev = chop_string(newname_abbrev, MAX_NOTE_PLACE_LEN, false);
     }
 
@@ -620,7 +628,7 @@ void up_stairs(dungeon_feature_type force_stair,
     clear_trapping_net();
 
     // Checks are done, the character is committed to moving between levels.
-    _leaving_level_now();
+    _leaving_level_now(stair_find);
 
     // Interlevel travel data.
     const bool collect_travel_data = can_travel_interlevel();
@@ -706,25 +714,7 @@ void up_stairs(dungeon_feature_type force_stair,
 
     viewwindow();
 
-    // Checking new squares for interesting features.
-    if (!you.running)
-        check_for_interesting_features();
-
     seen_monsters_react();
-
-    // Left Zot without enough runes to get back in (because they were
-    // destroyed), but need to get back in Zot to get the Orb?
-    // Xom finds that funny.
-    if (stair_find == DNGN_RETURN_FROM_ZOT
-        && branches[BRANCH_HALL_OF_ZOT].branch_flags & BFLAG_HAS_ORB)
-    {
-        int runes_avail = you.attribute[ATTR_UNIQUE_RUNES]
-                          + you.attribute[ATTR_DEMONIC_RUNES]
-                          + you.attribute[ATTR_ABYSSAL_RUNES];
-
-        if (runes_avail < NUMBER_OF_RUNES_NEEDED)
-            xom_is_stimulated(255, "Xom snickers loudly.", true);
-    }
 
     if (!allow_control_teleport(true))
         mpr("You sense a powerful magical force warping space.", MSGCH_WARN);
@@ -802,28 +792,6 @@ static void _maybe_destroy_trap(const coord_def &p)
         trap->destroy();
 }
 
-int runes_in_pack(std::vector<int> &runes)
-{
-    int num_runes = 0;
-
-    for (int i = 0; i < ENDOFPACK; i++)
-    {
-        if (you.inv[i].defined()
-            && you.inv[i].base_type == OBJ_MISCELLANY
-            && you.inv[i].sub_type == MISC_RUNE_OF_ZOT)
-        {
-            num_runes += you.inv[i].quantity;
-            for (int q = 1;
-                 runes.size() < 3 && q <= you.inv[i].quantity; ++q)
-            {
-                runes.push_back(i);
-            }
-        }
-    }
-
-    return num_runes;
-}
-
 static bool _is_portal_exit(dungeon_feature_type stair)
 {
     return stair == DNGN_EXIT_HELL
@@ -855,7 +823,8 @@ void down_stairs(dungeon_feature_type force_stair,
     // Up and down both work for portals.
     if (feat_is_bidirectional_portal(stair_find))
     {
-        if (stair_find == DNGN_ENTER_HELL && player_in_hell()) {
+        if (stair_find == DNGN_ENTER_HELL && player_in_hell())
+        {
             up_stairs(force_stair, entry_cause);
             return;
         }
@@ -950,9 +919,11 @@ void down_stairs(dungeon_feature_type force_stair,
     if (stair_find == DNGN_ENTER_ZOT && !you.opened_zot)
     {
         std::vector<int> runes;
-        const int num_runes = runes_in_pack(runes);
+        for (int i = 0; i < NUM_RUNE_TYPES; i++)
+            if (you.runes[i])
+                runes.push_back(i);
 
-        if (num_runes < NUMBER_OF_RUNES_NEEDED)
+        if (runes.size() < NUMBER_OF_RUNES_NEEDED)
         {
             switch (NUMBER_OF_RUNES_NEEDED)
             {
@@ -969,8 +940,8 @@ void down_stairs(dungeon_feature_type force_stair,
 
         ASSERT(runes.size() >= 3);
 
-        mprf("You insert %s into the lock.",
-             you.inv[runes[0]].name(DESC_NOCAP_THE).c_str());
+        std::random_shuffle(runes.begin(), runes.end());
+        mprf("You insert the %s rune into the lock.", rune_type_name(runes[0]));
 #ifdef USE_TILE
         tiles.add_overlay(you.pos(), tileidx_zap(GREEN));
         update_screen();
@@ -980,15 +951,13 @@ void down_stairs(dungeon_feature_type force_stair,
         mpr("The lock glows an eerie green colour!");
         more();
 
-        mprf("You insert %s into the lock.",
-             you.inv[runes[1]].name(DESC_NOCAP_THE).c_str());
+        mprf("You insert the %s rune into the lock.", rune_type_name(runes[1]));
         big_cloud(CLOUD_BLUE_SMOKE, &you, you.pos(), 20, 7 + random2(7));
         viewwindow();
         mpr("Heavy smoke blows from the lock!");
         more();
 
-        mprf("You insert %s into the lock.",
-             you.inv[runes[2]].name(DESC_NOCAP_THE).c_str());
+        mprf("You insert the %s rune into the lock.", rune_type_name(runes[2]));
 
         if (silenced(you.pos()))
             mpr("The gate opens wide!");
@@ -1013,7 +982,7 @@ void down_stairs(dungeon_feature_type force_stair,
     clear_trapping_net();
 
     // Fire level-leaving trigger.
-    _leaving_level_now();
+    _leaving_level_now(stair_find);
 
     if (!force_stair && !crawl_state.game_is_arena())
     {
@@ -1193,7 +1162,7 @@ void down_stairs(dungeon_feature_type force_stair,
             if (shaft || feat_is_escape_hatch(stair_find))
                 xom_is_stimulated(shaft_depth * 50);
             else
-                xom_is_stimulated(14);
+                xom_is_stimulated(10);
             break;
 
         case LEVEL_PORTAL_VAULT:
@@ -1205,7 +1174,7 @@ void down_stairs(dungeon_feature_type force_stair,
             // Finding the way out of a labyrinth interests Xom,
             // but less so for Minotaurs. (though not now, as they cannot
             // map the labyrinth any more {due})
-            xom_is_stimulated(98);
+            xom_is_stimulated(75);
             break;
 
         case LEVEL_ABYSS:
@@ -1224,18 +1193,18 @@ void down_stairs(dungeon_feature_type force_stair,
                 || entry_cause != EC_SELF_EXPLICIT)
             {
                 if (crawl_state.is_god_acting())
-                    xom_is_stimulated(255);
+                    xom_is_stimulated(200);
                 else if (entry_cause == EC_SELF_EXPLICIT)
                 {
                     // Entering Pandemonium or the Abyss for the first
                     // time *voluntarily* stimulates Xom much more than
                     // entering a normal dungeon level for the first time.
-                    xom_is_stimulated(128, XM_INTRIGUED);
+                    xom_is_stimulated(100, XM_INTRIGUED);
                 }
                 else if (entry_cause == EC_SELF_RISKY)
-                    xom_is_stimulated(128);
+                    xom_is_stimulated(100);
                 else
-                    xom_is_stimulated(255);
+                    xom_is_stimulated(200);
             }
 
             break;
@@ -1294,10 +1263,6 @@ void down_stairs(dungeon_feature_type force_stair,
 
     viewwindow();
 
-    // Checking new squares for interesting features.
-    if (!you.running)
-        check_for_interesting_features();
-
     maybe_update_stashes();
 
     request_autopickup();
@@ -1310,12 +1275,44 @@ void down_stairs(dungeon_feature_type force_stair,
 
 }
 
+static bool _any_glowing_mold()
+{
+    for (rectangle_iterator ri(0); ri; ++ri)
+        if (glowing_mold(*ri))
+            return true;
+    for (monster_iterator mon_it; mon_it; ++mon_it)
+        if (mon_it->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
+            return true;
+
+    return false;
+}
+
+static void _update_level_state()
+{
+    env.level_state = 0;
+
+    std::vector<coord_def> golub = find_golubria_on_level();
+    if (!golub.empty())
+        env.level_state += LSTATE_GOLUBRIA;
+
+    if (_any_glowing_mold())
+        env.level_state += LSTATE_GLOW_MOLD;
+
+    env.orb_pos = orb_position();
+    if (player_has_orb())
+        env.orb_pos = you.pos();
+    if (you.char_direction == GDT_ASCENDING)
+        invalidate_agrid(true);
+}
+
 void new_level(bool restore)
 {
     print_stats_level();
 #ifdef DGL_WHEREIS
     whereis_record();
 #endif
+
+    _update_level_state();
 
     if (restore)
         return;
@@ -1329,6 +1326,14 @@ void new_level(bool restore)
         std::string desc = "Entered " + place_name(get_packed_place(), true, true);
         take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE, 0, 0, NULL,
                       desc.c_str()));
+
+        // Ziggurat code is a big steaming pile of duplicating in an
+        // incompatible and buggy way things which are already done
+        // elsewhere.  So, instead of having a branch enum and proper
+        // depth like everything else, all you can do is parse strings.
+        int zig_depth;
+        if (sscanf(you.level_type_name_abbrev.c_str(), "Zig:%d", &zig_depth) == 1)
+            you.zig_max = zig_depth;
     }
     else
         take_note(Note(NOTE_DUNGEON_LEVEL_CHANGE));

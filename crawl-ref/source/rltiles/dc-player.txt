@@ -47,6 +47,12 @@ ogre_m OGRE
 ogre_f
 troll_f TROLL
 troll_m
+octopode1 OCTOPODE
+octopode2
+octopode3
+octopode4
+octopode5
+octopode6
 
 # draconians
 draconian_f DRACONIAN DRACONIAN_FIRST
@@ -498,7 +504,6 @@ long_sword_slant LONG_SWORD_SLANT
 blessed_blade BLESSED_BLADE
 great_sword GREAT_SWORD
 great_sword_slant GREAT_SWORD_SLANT
-katana KATANA
 katana_slant KATANA_SLANT
 scimitar SCIMITAR
 falchion FALCHION
@@ -537,6 +542,7 @@ mace MACE2
 mace3 MACE
 mace2 GREAT_MACE
 mace_ruby MACE_RUBY
+ankus ANKUS
 morningstar MORNINGSTAR2
 morningstar2 MORNINGSTAR
 eveningstar EVENINGSTAR

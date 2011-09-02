@@ -110,7 +110,9 @@ void monster::upgrade_type(monster_type after, bool adjust_hd,
 
     // Initialise a dummy monster to save work.
     monster dummy;
-    dummy.type = after;
+    dummy.type         = after;
+    dummy.base_monster = base_monster;
+    dummy.number       = number;
     define_monster(&dummy);
 
     colour = dummy.colour;

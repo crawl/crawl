@@ -22,10 +22,6 @@
 #include <unistd.h>
 #endif
 
-#ifdef TARGET_COMPILER_MINGW
-#include <io.h>
-#endif
-
 #ifdef HAVE_UTIMES
 #include <sys/time.h>
 #endif
@@ -46,7 +42,7 @@
 #include "coordit.h"
 #include "debug.h"
 #include "delay.h"
-#include "dgn-actions.h"
+#include "dactions.h"
 #include "dgn-overview.h"
 #include "directn.h"
 #include "dungeon.h"
@@ -81,7 +77,6 @@
 #include "show.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
 #include "syscalls.h"
 #include "tags.h"
 #ifdef USE_TILE
@@ -243,6 +238,27 @@ std::string get_base_filename(const std::string &filename)
     return (filename);
 }
 
+std::string get_cache_name(const std::string &filename)
+{
+    std::string::size_type pos = filename.rfind(FILE_SEPARATOR);
+    while (pos != std::string::npos && filename.find("/des", pos) != pos)
+    {
+        pos = filename.rfind(FILE_SEPARATOR, pos - 1);
+    }
+    if (pos != std::string::npos)
+        return replace_all_of(filename.substr(pos + 5), " /\\:", "_");
+#ifdef ALT_FILE_SEPARATOR
+    pos = filename.rfind(ALT_FILE_SEPARATOR);
+    while (pos != std::string::npos && filename.find("/des", pos) != pos)
+    {
+        pos = filename.rfind(ALT_FILE_SEPARATOR, pos - 1);
+    }
+    if (pos != std::string::npos)
+        return replace_all_of(filename.substr(pos + 5), " /\\:", "_");
+#endif
+    return (filename);
+}
+
 bool is_absolute_path(const std::string &path)
 {
     return (!path.empty()
@@ -290,15 +306,6 @@ std::string change_file_extension(const std::string &filename,
     const std::string::size_type pos = filename.rfind('.');
     return ((pos == std::string::npos? filename : filename.substr(0, pos))
             + ext);
-}
-
-// Sets the access and modification times of the given file to the current
-// time. This is not yet implemented for every supported platform.
-void file_touch(const std::string &file)
-{
-#ifdef HAVE_UTIMES
-    utimes(file.c_str(), NULL);
-#endif
 }
 
 time_t file_modtime(const std::string &file)
@@ -379,19 +386,6 @@ void assert_read_safe_path(const std::string &path) throw (std::string)
     // Path is okay.
 }
 
-bool is_read_safe_path(const std::string &path)
-{
-    try
-    {
-        assert_read_safe_path(path);
-    }
-    catch (const std::string &)
-    {
-        return (false);
-    }
-    return (true);
-}
-
 std::string canonicalise_file_separator(const std::string &path)
 {
     const std::string sep(1, FILE_SEPARATOR);
@@ -415,7 +409,7 @@ static std::vector<std::string> _get_base_dirs()
 
     const std::string prefixes[] = {
         std::string("dat") + FILE_SEPARATOR,
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         std::string("dat/tiles") + FILE_SEPARATOR,
 #endif
         std::string("docs") + FILE_SEPARATOR,
@@ -423,7 +417,7 @@ static std::vector<std::string> _get_base_dirs()
 #ifndef DATA_DIR_PATH
         std::string("..") + FILE_SEPARATOR + "docs" + FILE_SEPARATOR,
         std::string("..") + FILE_SEPARATOR + "dat" + FILE_SEPARATOR,
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         std::string("..") + FILE_SEPARATOR + "dat/tiles" + FILE_SEPARATOR,
 #endif
         std::string("..") + FILE_SEPARATOR + "settings" + FILE_SEPARATOR,
@@ -823,7 +817,7 @@ static void _write_tagged_chunk(const std::string &chunkname, tag_type tag)
 
 static void _place_player_on_stair(level_area_type old_level_type,
                                    branch_type old_branch,
-                                   int stair_taken, const coord_def& old_pos)
+                                   int stair_taken, const coord_def& dest_pos)
 {
     bool find_first = true;
 
@@ -895,10 +889,6 @@ static void _place_player_on_stair(level_area_type old_level_type,
         if (player_in_hell())
             stair_taken = DNGN_ENTER_HELL;
     }
-    else if (stair_taken == DNGN_EXIT_ABYSS)
-    {
-        stair_taken = DNGN_STONE_STAIRS_UP_I;
-    }
     else if (stair_taken == DNGN_ENTER_PORTAL_VAULT)
     {
         stair_taken = DNGN_STONE_ARCH;
@@ -929,7 +919,7 @@ static void _place_player_on_stair(level_area_type old_level_type,
 
     const coord_def where_to_go =
         dgn_find_nearby_stair(static_cast<dungeon_feature_type>(stair_taken),
-                              old_pos, find_first);
+                              dest_pos, find_first);
     you.moveto(where_to_go);
 }
 
@@ -1004,7 +994,6 @@ static void _grab_followers()
     int non_stair_using_allies = 0;
     monster* dowan = NULL;
     monster* duvessa = NULL;
-    monster* pikel = NULL;
 
     // Handle nearby ghosts.
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
@@ -1029,10 +1018,6 @@ static void _grab_followers()
                 mpr("The ghost fades into the shadows.");
             monster_teleport(fmenv, true);
         }
-
-        // From here, we can't fail, so check to see if we've got Pikel
-        if (mons_is_pikel(fmenv))
-            pikel = fmenv;
     }
 
     // Deal with Dowan and Duvessa here.
@@ -1098,9 +1083,6 @@ static void _grab_followers()
             continue;
         mons->flags &= ~MF_TAKING_STAIRS;
     }
-
-    if (pikel && !pikel->alive())
-        pikel_band_neutralise(true);
 }
 
 // Should be called after _grab_followers(), so that items carried by
@@ -1125,6 +1107,16 @@ static void _do_lost_items(level_area_type old_level_type)
     }
 }
 
+static coord_def _stair_destination_pos()
+{
+    map_marker *marker = env.markers.find(you.pos(), MAT_POSITION);
+    if (!marker)
+        return INVALID_COORD;
+
+    map_position_marker *posm = dynamic_cast<map_position_marker*>(marker);
+    return posm->dest;
+}
+
 bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
           const level_id& old_level)
 {
@@ -1138,8 +1130,12 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
                             you.level_type, you.where_are_you, you.absdepth0);
 #endif
 
-    // Save player position for shaft, hatch destination.
-    const coord_def old_pos = you.pos();
+    // Destination position for hatch.
+    coord_def dest_pos = _stair_destination_pos();
+
+    // Shaft destination is random.
+    if (dest_pos == INVALID_COORD)
+        dest_pos = random_in_bounds();
 
     // Going up/down stairs, going through a portal, or being banished
     // means the previous x/y movement direction is no longer valid.
@@ -1293,7 +1289,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (you.level_type != LEVEL_ABYSS)
         {
             _place_player_on_stair(old_level.level_type,
-                                   old_level.branch, stair_taken, old_pos);
+                                   old_level.branch, stair_taken, dest_pos);
         }
         else
             you.moveto(ABYSS_CENTRE);
@@ -1344,23 +1340,15 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         if (just_created_level)
             level_welcome_messages();
 
-        // Centaurs have difficulty with stairs
-        int timeval = ((you.species != SP_CENTAUR) ? player_movement_speed()
-                                                   : 15);
+        // new levels have less wary monsters, and we don't
+        // want them to attack players quite as soon:
+        you.time_taken *= (just_created_level ? 1 : 2);
 
-        // new levels have less wary monsters:
-        if (just_created_level)
-            timeval /= 2;
+        you.time_taken = div_rand_round(you.time_taken, 3);
 
-        timeval -= (stepdown_value(check_stealth(), 50, 50, 150, 150) / 10);
+        dprf("arrival time: %d", you.time_taken);
 
-        dprf("arrival time: %d", timeval);
-
-        if (timeval > 0)
-        {
-            you.time_taken = timeval;
-            handle_monsters();
-        }
+        handle_monsters();
 
         if (just_created_level)
             run_map_epilogues();
@@ -1453,7 +1441,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
                 if (coinflip())
                 {
                     // Stairs stop fleeing from you now you actually caught one.
-                    mprf("%s settles down.", stair_str.c_str(), verb.c_str());
+                    mprf("%s settles down.", stair_str.c_str());
                     you.duration[DUR_REPEL_STAIRS_MOVE]  = 0;
                     you.duration[DUR_REPEL_STAIRS_CLIMB] = 0;
                 }
@@ -1691,7 +1679,7 @@ bool load_ghost(bool creating_level)
     if (do_diagnostics)
     {
         mprf(MSGCH_DIAGNOSTICS, "Loaded ghost file with %u ghost(s)",
-             ghosts.size());
+             (unsigned int)ghosts.size());
     }
 #endif
 
@@ -1739,7 +1727,7 @@ bool load_ghost(bool creating_level)
     if (do_diagnostics && unplaced_ghosts > 0)
     {
         mprf(MSGCH_DIAGNOSTICS, "Unable to place %u ghost(s)",
-             ghosts.size());
+             (unsigned int)ghosts.size());
         ghost_errors = true;
     }
     if (ghost_errors)
@@ -1778,10 +1766,11 @@ bool restore_game(const std::string& filename)
              you.prev_save_version.c_str());
     }
 
-    if (numcmp(you.prev_save_version.c_str(), Version::Long().c_str(), 2) == -1)
+    if (numcmp(you.prev_save_version.c_str(), Version::Long().c_str(), 2) == -1
+        && version_is_stable(you.prev_save_version.c_str()))
     {
         if (!yesno("This game comes from a previous release of Crawl.  If you "
-                   "load it now, you won't be able to go back.  Continue?",
+                   "load it now, you won't be able to go back. Continue?",
                    true, 'n'))
         {
             you.save->abort(); // don't even rewrite the header
@@ -1915,7 +1904,7 @@ bool get_save_version(reader &file, int &major, int &minor)
     {
         file.read(buf, 2);
     }
-    catch (short_read_exception E)
+    catch (short_read_exception& E)
     {
         // Empty file?
         major = minor = -1;
@@ -2311,13 +2300,9 @@ void sighup_save_and_exit()
     if (crawl_state.saving_game || crawl_state.updating_scores)
         return;
 
-#ifdef UNIX
     // Set up an alarm to force-kill Crawl if it rudely ignores the
     // hangup signal.
     alarm(10);
-#else
-    #warning FIXME -- hanging process if anything bad happens during shutdown
-#endif
 
     interrupt_activity(AI_FORCE_INTERRUPT);
 

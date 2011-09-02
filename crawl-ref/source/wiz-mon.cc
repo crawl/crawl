@@ -39,7 +39,6 @@
 #include "showsymb.h"
 #include "spl-miscast.h"
 #include "spl-util.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "view.h"
 #include "viewmap.h"
@@ -351,7 +350,7 @@ void wizard_spawn_control()
         if (!cancelable_get_line(specs, sizeof(specs)))
         {
             const int rate = atoi(specs);
-            if (rate)
+            if (rate || specs[0] == '0')
             {
                 env.spawn_random_rate = rate;
                 done = true;
@@ -397,6 +396,25 @@ void wizard_spawn_control()
 
     if (!done)
         canned_msg(MSG_OK);
+}
+
+void wizard_abyss_speed()
+{
+    char specs[256];
+    mprf(MSGCH_PROMPT, "Set abyss speed to what? (now %d, lower value = "
+                       "higher speed) ", you.abyss_speed);
+
+    if (!cancelable_get_line(specs, sizeof(specs)))
+    {
+        const int speed = atoi(specs);
+        if (speed || specs[0] == '0')
+        {
+            you.abyss_speed = speed;
+            return;
+        }
+    }
+
+    canned_msg(MSG_OK);
 }
 
 // Prints a number of useful (for debugging, that is) stats on monsters.
@@ -467,6 +485,14 @@ void debug_stethoscope(int mon)
          mons.base_monster != MONS_NO_MONSTER ?
          get_monster_data(mons.base_monster)->name : "",
          mons.mid, mons.number, mons.stealth(), mons.flags);
+
+    if (mons.damage_total)
+    {
+        mprf(MSGCH_DIAGNOSTICS,
+             "pdam=%1.1f/%d (%d%%)",
+             0.5 * mons.damage_friendly, mons.damage_total,
+             50 * mons.damage_friendly / mons.damage_total);
+    }
 
     // Print habitat and behaviour information.
     const habitat_type hab = mons_habitat(&mons);
@@ -817,7 +843,7 @@ void wizard_give_monster_item(monster* mon)
         }
     }
 
-    int index = get_item_slot(10);
+    int index = get_mitm_slot(10);
     if (index == NON_ITEM)
     {
         mpr("Too many items on level, bailing.");
@@ -1116,7 +1142,7 @@ void debug_pathfind(int mid)
             path_str += info;
         }
         mpr(path_str.c_str());
-        mprf("-> path length: %d", path.size());
+        mprf("-> path length: %u", (unsigned int)path.size());
 
         mpr("");
         path = mp.calc_waypoints();
@@ -1129,7 +1155,7 @@ void debug_pathfind(int mid)
             path_str += info;
         }
         mpr(path_str.c_str());
-        mprf("-> #waypoints: %d", path.size());
+        mprf("-> #waypoints: %u", (unsigned int)path.size());
     }
 }
 

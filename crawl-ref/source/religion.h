@@ -27,11 +27,14 @@ bool is_chaotic_god(god_type god);
 // Returns true if the god is not present in the current game. This is
 // orthogonal to whether the player can worship the god in question.
 bool is_unavailable_god(god_type god);
+
+god_type random_god(bool disallow_no_god = false);
+
 void simple_god_message(const char *event, god_type which_deity = you.religion);
 int piety_breakpoint(int i);
 std::string god_name(god_type which_god, bool long_name = false);
 std::string god_name_jiyva(bool second_name = false);
-god_type str_to_god(const std::string name, bool exact = true);
+god_type str_to_god(const std::string &name, bool exact = true);
 
 std::string get_god_powers(god_type which_god);
 std::string get_god_likes(god_type which_god, bool verbose = false);
@@ -53,10 +56,11 @@ uint8_t god_message_altar_colour(god_type god);
 bool player_can_join_god(god_type which_god);
 bool transformed_player_can_join_god(god_type which_god);
 void god_pitch(god_type which_god);
+int had_gods();
 int piety_rank(int piety = -1);
 int piety_scale(int piety_change);
-bool god_hates_your_god(god_type god,
-                        god_type your_god = you.religion);
+bool god_likes_your_god(god_type god, god_type your_god = you.religion);
+bool god_hates_your_god(god_type god, god_type your_god = you.religion);
 std::string god_hates_your_god_reaction(god_type god,
                                         god_type your_god = you.religion);
 bool god_hates_cannibalism(god_type god);
@@ -105,6 +109,7 @@ void religion_turn_end();
 
 int get_tension(god_type god = you.religion);
 int get_monster_tension(const monster* mons, god_type god = you.religion);
+int get_fuzzied_monster_difficulty(const monster *mons);
 
 bool do_god_gift(bool forced = false);
 bool do_zin_sustenance();

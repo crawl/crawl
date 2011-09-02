@@ -44,7 +44,7 @@ CLua::CLua(bool managed)
       throttle_sleep_end(800), n_throttle_sleeps(0), mixed_call_depth(0),
       lua_call_depth(0), max_mixed_call_depth(8),
       max_lua_call_depth(100), memory_used(0),
-      _state(NULL), sourced_files(), uniqindex(0L)
+      _state(NULL), sourced_files(), uniqindex(0)
 {
 }
 
@@ -666,14 +666,14 @@ void CLua::init_lua()
 
     lua_register(_state, "require", _clua_require);
 
-    execfile("clua/util.lua", true, true);
-    execfile("clua/iter.lua", true, true);
-    execfile("clua/init.lua", true, true);
+    execfile("dlua/util.lua", true, true);
+    execfile("dlua/iter.lua", true, true);
+    execfile("dlua/init.lua", true, true);
 
     if (managed_vm)
     {
         lua_register(_state, "pcall", _clua_guarded_pcall);
-        execfile("clua/userbase.lua", true, true);
+        execfile("dlua/userbase.lua", true, true);
     }
 
     lua_pushboolean(_state, managed_vm);
@@ -712,7 +712,7 @@ void CLua::load_chooks()
 
 void CLua::load_cmacro()
 {
-    execfile("clua/macro.lua", true, true);
+    execfile("dlua/macro.lua", true, true);
 }
 
 void CLua::add_shutdown_listener(lua_shutdown_listener *listener)

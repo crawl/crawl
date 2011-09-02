@@ -54,7 +54,6 @@
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
 #include "hints.h"
@@ -101,6 +100,9 @@ static inline bool _mons_natural_regen_roll(monster* mons)
 // Do natural regeneration for monster.
 static void _monster_regenerate(monster* mons)
 {
+    if (crawl_state.disables[DIS_MON_REGEN])
+        return;
+
     if (mons->has_ench(ENCH_SICK) ||
         (!mons_can_regenerate(mons) && !(mons->has_ench(ENCH_REGENERATION))))
     {
@@ -176,7 +178,9 @@ static bool _swap_monsters(monster* mover, monster* moved)
     }
 
     if (!monster_habitable_grid(mover, grd(moved->pos()))
-        || !monster_habitable_grid(moved, grd(mover->pos())))
+            && !mover->can_cling_to(moved->pos())
+        || !monster_habitable_grid(moved, grd(mover->pos()))
+            && !moved->can_cling_to(mover->pos()))
     {
         return (false);
     }
@@ -189,7 +193,7 @@ static bool _swap_monsters(monster* mover, monster* moved)
     moved->set_position(mover_pos);
 
     mover->check_clinging(true);
-    moved->check_clinging(false);
+    moved->check_clinging(true);
 
     mgrd(mover->pos()) = mover->mindex();
     mgrd(moved->pos()) = moved->mindex();
@@ -256,11 +260,8 @@ static bool _ranged_allied_monster_in_dir(monster* mon, coord_def p)
                 return (false);
             }
 
-            if (mons_has_ranged_attack(ally)
-                || mons_has_ranged_spell(ally, true))
-            {
+            if (mons_has_ranged_attack(ally))
                 return (true);
-            }
         }
         break;
     }
@@ -346,6 +347,14 @@ static bool _mon_on_interesting_grid(monster* mon)
     // Killer bees always return to their hive.
     case DNGN_ENTER_HIVE:
         return (mons_is_native_in_branch(mon, BRANCH_HIVE));
+
+    // Spiders...
+    case DNGN_ENTER_SPIDER_NEST:
+        return (mons_is_native_in_branch(mon, BRANCH_SPIDER_NEST));
+
+    // And spriggans.
+    case DNGN_ENTER_FOREST:
+        return (mons_is_native_in_branch(mon, BRANCH_FOREST));
 
     default:
         return (false);
@@ -785,15 +794,14 @@ static bool _handle_reaching(monster* mons)
     if (grid_distance == 2
         // The monster has to be attacking the correct position.
         && mons->target == foepos
-        // With a reaching weapon OR ...
-        && (range > REACH_KNIGHT
-            // ... with a native reaching attack, provided the attack
-            // is not on a full diagonal.
-            || delta.abs() <= 5)
+        // With a reaching attack with a large enough range:
+        && (delta.abs() <= (range == REACH_TWO ? 8 : range == REACH_KNIGHT ? 5 : 2))
         // And with no dungeon furniture in the way of the reaching
         // attack; if the middle square is empty, skip the LOS check.
         && (grd(middle) > DNGN_MAX_NONREACH
-            || mons->see_cell_no_trans(foepos)))
+            || mons->see_cell_no_trans(foepos))
+        // The foe should be on the map (not stepped from time).
+        && in_bounds(foepos))
     {
         ret = true;
         monster_attack_actor(mons, foe, false);
@@ -1467,12 +1475,11 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     // fire/ice and incorrect ammo.  They now have the same restrictions
     // as players.
 
-          int  bow_brand  = SPWPN_NORMAL;
     const int  ammo_brand = get_ammo_brand(item);
 
     if (projected == LRET_LAUNCHED)
     {
-        bow_brand = get_weapon_brand(mitm[weapon]);
+        int bow_brand = get_weapon_brand(mitm[weapon]);
 
         switch (lnchType)
         {
@@ -1538,11 +1545,11 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
 
         // Vorpal brand increases damage dice size.
         if (bow_brand == SPWPN_VORPAL)
-            diceMult = diceMult * 130 / 100;
+            diceMult = diceMult * 120 / 100;
 
         // As do steel ammo.
         if (ammo_brand == SPMSL_STEEL)
-            diceMult = diceMult * 150 / 100;
+            diceMult = diceMult * 130 / 100;
 
         // Note: we already have throw_energy taken off.  -- bwr
         int speed_delta = 0;
@@ -1553,6 +1560,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
                 // Speed crossbows take 50% less time to use than
                 // ordinary crossbows.
                 speed_delta = div_rand_round(throw_energy * 2, 5);
+                speed_brand = true;
             }
             else
             {
@@ -1572,7 +1580,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
         mons->speed_increment += speed_delta;
     }
 
-    // Chaos overides flame and frost
+    // Chaos, flame, and frost.
     if (pbolt.flavour != BEAM_MISSILE)
     {
         baseHit    += 2;
@@ -1763,7 +1771,6 @@ static bool _handle_throw(monster* mons, bolt & beem)
 {
     // Yes, there is a logic to this ordering {dlb}:
     if (mons->incapacitated()
-        || mons->asleep()
         || mons->submerged())
     {
         return (false);
@@ -1884,7 +1891,7 @@ static void _monster_add_energy(monster* mons)
     if (mons->speed_increment == old_energy && mons->alive()) \
              mprf(MSGCH_DIAGNOSTICS, \
                   problem " for monster '%s' consumed no energy", \
-                  mons->name(DESC_PLAIN).c_str(), true);
+                  mons->name(DESC_PLAIN).c_str());
 #else
 #    define DEBUG_ENERGY_USE(problem) ((void) 0)
 #endif
@@ -2078,8 +2085,8 @@ void handle_monster_move(monster* mons)
         _monster_regenerate(mons);
 
         if (mons->cannot_act()
-            || mons->type == MONS_SIXFIRHY // these move only 4 of 12 turns
-               && ++mons->number / 4 % 3 != 2)  // but are not helpless
+            || mons->type == MONS_SIXFIRHY // these move only 8 of 24 turns
+               && ++mons->number / 8 % 3 != 2)  // but are not helpless
         {
             mons->speed_increment -= non_move_energy;
             continue;
@@ -2088,6 +2095,12 @@ void handle_monster_move(monster* mons)
         if (mons->has_ench(ENCH_DAZED) && one_chance_in(5))
         {
             simple_monster_message(mons, " is lost in a daze.");
+            mons->speed_increment -= non_move_energy;
+            continue;
+        }
+
+        if (crawl_state.disables[DIS_MON_ACT] && !mons->wont_attack())
+        {
             mons->speed_increment -= non_move_energy;
             continue;
         }
@@ -2192,8 +2205,17 @@ void handle_monster_move(monster* mons)
                 int pfound = 0;
                 for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
                     if (mons->can_pass_through(*ai))
-                        if (one_chance_in(++pfound))
+                    {
+                        // Intelligent monsters don't move if they might drown.
+                        if (mons_intel(mons) == I_HIGH
+                            && !mons->is_habitable(*ai))
+                        {
+                            mmov.reset();
+                            break;
+                        }
+                        else if (one_chance_in(++pfound))
                             mmov = *ai - mons->pos();
+                    }
 
                 // OK, mmov determined.
                 const coord_def newcell = mmov + mons->pos();
@@ -2660,8 +2682,10 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
     monster_type mt = static_cast<monster_type>(item.plus);
     if (do_heal)
     {
+        int base_max = mons_avg_hp(mons->type);
         mons->hit_points += 1 + random2(mons_weight(mt)) / 100;
-        mons->hit_points = std::min(MAX_MONSTER_HP, mons->hit_points);
+        mons->hit_points = std::min(MAX_MONSTER_HP,
+                           std::min(base_max * 2, mons->hit_points));
         mons->max_hit_points = std::max(mons->hit_points,
                                            mons->max_hit_points);
     }
@@ -2944,7 +2968,7 @@ static bool _is_trap_safe(const monster* mons, const coord_def& where,
                            : !trap.is_known(mons) || trap.type != TRAP_ZOT);
     }
     else
-        return (!mechanical || mons_flies(mons));
+        return (!mechanical || mons_flies(mons) || !trap.is_known(mons));
 }
 
 static void _mons_open_door(monster* mons, const coord_def &pos)
@@ -3191,7 +3215,7 @@ bool mon_can_move_to_pos(const monster* mons, const coord_def& delta,
     {
         // If the monster somehow ended up in this habitat (and is
         // not dead by now), give it a chance to get out again.
-        if (grd(mons->pos()) == target_grid
+        if (grd(mons->pos()) == target_grid && mons->ground_level()
             && _no_habitable_adjacent_grids(mons))
         {
             return (true);
@@ -3412,8 +3436,8 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     const coord_def c = mon->pos();
     const coord_def n = mon->pos() + delta;
 
-    if (!monster_habitable_grid(mon, grd(n))
-        || !monster_habitable_grid(m2, grd(c)))
+    if (!monster_habitable_grid(mon, grd(n)) && !mon->can_cling_to(n)
+        || !monster_habitable_grid(m2, grd(c)) && !m2->can_cling_to(c))
     {
         return (false);
     }
@@ -3434,9 +3458,16 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
     immobile_monster[m2i] = true;
 
     mon->check_redraw(c, false);
-    mon->apply_location_effects(c);
+    if (mon->is_wall_clinging())
+        mon->check_clinging(true);
+    else
+        mon->apply_location_effects(c);
+
     m2->check_redraw(n, false);
-    m2->apply_location_effects(n);
+    if (m2->is_wall_clinging())
+        m2->check_clinging(true);
+    else
+        m2->apply_location_effects(n);
 
     // The seen context no longer applies if the monster is moving normally.
     mon->seen_context.clear();
@@ -3667,7 +3698,6 @@ static bool _monster_move(monster* mons)
         if (newpos == you.pos() && mons->wont_attack()
             || (mon2 && mons->wont_attack() == mon2->wont_attack()))
         {
-
             simple_monster_message(mons, " flops around on dry land!");
             return (false);
         }
@@ -3809,7 +3839,7 @@ static bool _monster_move(monster* mons)
                 mons->flags &= ~MF_TAKING_STAIRS;
 
                 dprf("BUG: %s was marked as follower when not following!",
-                     mons->name(DESC_PLAIN).c_str(), true);
+                     mons->name(DESC_PLAIN).c_str());
             }
             else
             {
@@ -3817,7 +3847,7 @@ static bool _monster_move(monster* mons)
                 mmov.reset();
 
                 dprf("%s is skipping movement in order to follow.",
-                     mons->name(DESC_CAP_THE).c_str(), true);
+                     mons->name(DESC_CAP_THE).c_str());
             }
         }
 

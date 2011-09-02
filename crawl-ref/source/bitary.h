@@ -65,7 +65,7 @@ public:
         return get(i);
     }
 
-    inline void set(unsigned int i, bool value)
+    inline void set(unsigned int i, bool value = true)
     {
 #ifdef ASSERTS
         if (i >= SIZE)
@@ -75,6 +75,20 @@ public:
             data[i / LONGSIZE] |= 1UL << i % LONGSIZE;
         else
             data[i / LONGSIZE] &= ~(1UL << i % LONGSIZE);
+    }
+
+    inline FixedBitArray<SIZE>& operator|=(const FixedBitArray<SIZE>&x)
+    {
+        for (unsigned int i = 0; i < sizeof(data) / sizeof(unsigned long); i++)
+            data[i] |= x.data[i];
+        return *this;
+    }
+
+    inline FixedBitArray<SIZE>& operator&=(const FixedBitArray<SIZE>&x)
+    {
+        for (unsigned int i = 0; i < sizeof(data) / sizeof(unsigned long); i++)
+            data[i] &= x.data[i];
+        return *this;
     }
 };
 

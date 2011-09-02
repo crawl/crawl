@@ -7,7 +7,7 @@
 #  * trigger on "might hit yourself" prompt
 #
 {{
-require("clua/tutorial.lua")
+require("dlua/tutorial.lua")
 
 tutorial_msg4 = {}
 
@@ -16,22 +16,10 @@ function tutorial_msg4.start ()
     crawl.tutorial_hint("HINT_NEW_LEVEL")
 end
 
-function tutorial_msg4.train_spellcasting ()
-    local text = "You cannot cast spells yet because you don't have the Spellcasting "
-                 .. "skill yet. Read some scrolls (with "
-                 .. tutorial_get_cmd("CMD_READ")
-    if crawl.is_tiles() then
-        text = text .. " or by <white>mouseclick</white>"
-    end
-    text = text .. ") to train it to level 1, then continue to the left."
-
-    return tutorial_message(text)
-end
-
 function tutorial_msg4.spellbook ()
     local text = "You can memorise a spell from carried spellbooks with "
                  .. tutorial_get_cmd("CMD_MEMORISE_SPELL")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>clicking</white> on the memorisation tab "
                     .. "and selecting the spell tile"
     end
@@ -45,7 +33,7 @@ function tutorial_msg4.spellcasting ()
     local text = "You can cast spells with "
                  .. tutorial_get_cmd("CMD_CAST_SPELL")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>clicking</white> on the spell tile"
     end
     text = text .. ". Press "
@@ -53,7 +41,7 @@ function tutorial_msg4.spellcasting ()
                 .. "<w>?</w> to get a list of your spells.\n"
                 .. "Once you are out of magic points, retreat and rest with "
                 .. tutorial_get_cmd("CMD_REST")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>mouseclick</white> in the command panel"
     end
     text = text .. " to regain them."
@@ -64,7 +52,7 @@ end
 function tutorial_msg4.ring_power ()
     local text = "Put on this ring with "
                  .. tutorial_get_cmd("CMD_WEAR_JEWELLERY")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>mouseclick</click>"
     end
     text = text .. ", and then rest up to your new full potential."
@@ -73,10 +61,10 @@ function tutorial_msg4.ring_power ()
 end
 
 function tutorial_msg4.undead ()
-    local text = "Other than for other monsters, with undead it is "
-                 .. "impossible to tell how wounded they are."
+    local text = "Unlike most other monsters, undead do not regenerate "
+                 .. "health and it is impossible to tell how wounded they are."
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. "\nIncidentally, you can also cast spells by pressing "
                     .. "<white>Ctrl + leftclick</white> on the monster."
     end
@@ -88,7 +76,7 @@ function tutorial_msg4.spell_success ()
     local text = "To check your spell proficiency, press "
                  .. tutorial_get_cmd("CMD_DISPLAY_SPELLS")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or <white>mouseover</white> over your memorised spells"
     end
 
@@ -110,7 +98,7 @@ function tutorial_msg4.aiming_clouds ()
     local text = "When casting Evaporate (with "
                  .. tutorial_get_cmd("CMD_CAST_SPELL")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>clicking</white> on the spell tile"
     end
 
@@ -136,13 +124,26 @@ function tutorial_msg4.forget_spell ()
     local text = "Gaining an experience level and raising your Spellcasting "
                  .. "skill gives you spell slots to spend on spells. You can "
                  .. "also <w>forget a memorised spell</w> to make space for "
-                 .. "a new one. For example, to forget \"Magic Dart\", you "
-                 .. "need to read a spellbook containing the spell (with "
+                 .. "a new one. The easiest way to do this is with a scroll "
+                 .. "of amnesia. Simply read the scroll (with "
                  .. tutorial_get_cmd("CMD_READ")
     if crawl.is_tiles() then
-        text = text .. " or by <white>rightclicking</click> on it)"
+        text = text .. " or by <white>clicking</click> on it"
     end
-    text = text .. ", select \"Magic Dart\", type <w>f</w> and confirm. This "
+    text = text .. "), and then select the spell you want to forget."
+
+    return tutorial_message(text)
+end
+
+function tutorial_msg4.destroy_spellbook ()
+    local text = "You can also forget a spell by using a spellbook containing "
+                 .. "that spell. For example, to forget \"Magic Dart\", you "
+                 .. "need to read a spellbook containing the spell (with "
+                 .. tutorial_get_cmd("CMD_READ")
+    if crawl.is_tiles() and not crawl.is_webtiles() then
+        text = text .. " or by <white>rightclicking</click> on it"
+    end
+    text = text .. "), select \"Magic Dart\", type <w>f</w> and confirm. This "
                 .. "will destroy the book, so you'll need other spellbooks "
                 .. "to learn new spells, such as the one lying over there."
 
@@ -152,7 +153,7 @@ end
 function tutorial_msg4.memorise2 ()
     local text = "Again, memorise a new spell with "
                  .. tutorial_get_cmd("CMD_MEMORISE_SPELL")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>clicking</white> on the memorisation tab "
                     .. "and selecting the spell tile"
     end
@@ -183,21 +184,21 @@ function tutorial_msg4.heavy_armour ()
                  .. "mail and shield (with "
                  .. tutorial_get_cmd("CMD_WEAR_ARMOUR")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>clicking</white> on them)"
     end
 
     text = text .. ", and compare your spellcasting success rates with "
                 .. tutorial_get_cmd("CMD_DISPLAY_SPELLS")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>mouseovering</white> your memorised spells"
     end
 
     text = text .. ". You can take armour off again with "
                 .. tutorial_get_cmd("CMD_REMOVE_ARMOUR")
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or, again, via <white>mouseclick</white>"
     end
     text = text .. "."
@@ -209,7 +210,7 @@ function tutorial_msg4.resting_reminder ()
     text = "Make sure you are at full health and magic points before "
            .. "entering a new area. If necessary, rest up with "
            .. tutorial_get_cmd("CMD_REST")
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. " or by <white>mouseclick</white> in the command panel"
     end
     text = text .. ".\n"
@@ -233,7 +234,7 @@ function tutorial_msg4.exit ()
                  .. "  " .. tutorial_get_cmd("CMD_DISPLAY_SPELLS") .. "  check spell proficiency\n"
                  .. "  " .. tutorial_get_cmd("CMD_CAST_SPELL") .. "  cast a spell\n"
 
-    if crawl.is_tiles() then
+    if crawl.is_tiles() and not crawl.is_webtiles() then
         text = text .. "\nYou can also learn new spells via the <w>memorisation tab</w>.\n"
                     .. "You can cast memorised spells via <w>leftclick</w>, and read their descriptions\n"
                     .. "and check your spell proficiency by <w>mouseover</w> or <w>rightclick</w>.\n\n"
@@ -242,8 +243,6 @@ function tutorial_msg4.exit ()
     text = text .. "  " .. tutorial_get_cmd("CMD_READ") .. "  read a book, for descriptions or to forget a spell\n"
                 .. "  " .. tutorial_get_cmd("CMD_REST") .. "  rest up to 100 turns to regain magic points and health\n"
                 .. "  " .. tutorial_get_cmd("CMD_SHOUT") .. "  order allies\n"
-                .. "  " .. tutorial_get_cmd("CMD_DISPLAY_SKILLS") .. "  manage your skills\n"
-                .. "\n<yellow>Other commands</yellow>\n"
                 .. "  " .. tutorial_get_cmd("CMD_REMOVE_ARMOUR") .. "  take off armour\n"
     text = text .. "                                 <cyan>Press <white>any key</white> to clear this screen...</cyan>\n"
 
@@ -264,19 +263,16 @@ ORIENT:  encompass
 KFEAT:   ABCDE = .
 KFEAT:   S = distillery shop count:8 ; \
          potion of slowing | w:20 potion of confusion | potion of poison | potion of paralysis
-COLOUR:  ABCDdefh = blue
+COLOUR:  ABCDdefh = lightblue
 FTILE:   ABCDdefh = tutorial_pad
-KITEM:   A = scroll of fog q:4, scroll of random uselessness q:4, scroll of curse armour q:4, \
-         scroll of remove curse q:4
 ITEM:    randbook numspells:2 spells:magic_dart|evaporate title:Introduction_to_Spellcasting owner:player
 ITEM:    ring of magical power not_cursed
 ITEM:    staff of wizardry not_cursed
-ITEM:    gold q:20
+ITEM:    gold q:100
 ITEM:    bread ration
 MONS:    training dummy ; stone q:20
-MONS:    megabat skeleton, goblin skeleton
+MONS:    bat skeleton, goblin skeleton
 MONS:    rat, goblin
-MARKER:  A = lua:tutorial_msg4.train_spellcasting()
 MARKER:  d = lua:tutorial_msg4.spellbook()
 MARKER:  B = lua:tutorial_msg4.spellcasting()
 MARKER:  e = lua:tutorial_msg4.ring_power()
@@ -292,11 +288,11 @@ epilogue{{
 }}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx...xxxxxxx...xxxxx...xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx.d.........A.......{..xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxx...xxxxxxx...xxxxx...xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...xxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx.d.........{.xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxx...xxxxxxx...xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxx.xxxxxxxxxxxx...x.2.xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxx.xxxxxxxxxxx.....xxx..f.xxxxxxxxxxxxxxx
@@ -331,19 +327,19 @@ PLACE:   D:2
 BFLAGS:  islanded
 ORIENT:  encompass
 KFEAT:   ABCDE = .
-COLOUR:  dABCDE = blue
+COLOUR:  dABCDE = lightblue
 FTILE:   dABCDE = tutorial_pad
+ITEM:    scroll of amnesia
 ITEM:    randbook numspells:1 spells:animate_skeleton title:Necromancy_for_Newbies owner:player
-ITEM:    never_decay megabat skeleton
-ITEM:    never_decay goblin; nothing skeleton
-ITEM:    never_decay small snake skeleton
-ITEM:    never_decay jackal skeleton
+ITEM:    never_decay bat skeleton / never_decay goblin; nothing skeleton
+ITEM:    never_decay small snake skeleton / never_decay jackal skeleton
 MONS:    hobgoblin always_corpse; shield not_cursed . ring mail race:none not_cursed
 MONS:    rat
 MONS:    goblin
 MONS:    gnoll; nothing
-MARKER:  A = lua:tutorial_msg4.forget_spell()
-MARKER:  d = lua:tutorial_msg4.memorise2()
+MARKER:  d = lua:tutorial_msg4.forget_spell()
+MARKER:  A = lua:tutorial_msg4.destroy_spellbook()
+MARKER:  e = lua:tutorial_msg4.memorise2()
 MARKER:  B = lua:tutorial_msg4.displace_allies()
 MARKER:  C = lua:tutorial_msg4.order_allies()
 MARKER:  D = lua:tutorial_msg4.heavy_armour()
@@ -369,11 +365,11 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx..xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx......B.xxxx.T..xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxx......B...x.egf.xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxCCCxxxx...+.gde.....xxxxxxxxxxxxxxx
-xxxxxxxxxxx+++xxxxx..x.fhh.xxxx.Axxxxxxxxxxxxx
+xxxxxxxxxxx......B...x.fgf.xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxCCCxxxx...+.geg.....xxxxxxxxxxxxxxx
+xxxxxxxxxxx+++xxxxx..x.fgf.xxxx.Axxxxxxxxxxxxx
 xxxxxxxxxx.....xxxxxxxx.T..xxxxxx.xxxxxxxxxxxx
-xxxxxxxxxx.....xxxxxxxxx..xxxxxxxx.xxxxxxxxxxx
+xxxxxxxxxx.....xxxxxxxxx..xxxxxxxxdxxxxxxxxxxx
 xxxxxxxxxx.....xxxxxxxxxxxxxxxxxxx.xxxxxxxxxxx
 xxxxxxxxxx.....xxxxxxxxxxxxxxxxxx...xxxxxxxxxx
 xxxxxxxxxx.....xxxxxxxxxxxxxxxxxx{([xxxxxxxxxx
@@ -381,8 +377,8 @@ xxxxxxxxxx..1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxDxxxxxxx.2..xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxx.xxxxGx.....4]xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxx.xxxGf+...2....xxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxx...Eeg+......3.)xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxGh+...3....xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxx...Efg+......3.)xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxGg+...3....xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxGx.....2}xxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxx2...xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

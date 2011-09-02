@@ -213,7 +213,15 @@ DEPTH:    For random vaults, branch entry vaults, and minivaults, this
           constraints from the closest preceding default-depth: line. If there
           is no preceding default-depth directive in the .des file, the map will
           have no DEPTH: constraint. Note that maps without a DEPTH: constraint
-          cannot be selected as random vaults or minivaults.
+          cannot be selected as random vaults or minivaults. It can make sense
+          to use an empty DEPTH line as in
+
+            DEPTH:
+
+          if these maps are otherwise chosen, e.g. by TAG. See serial_ponds.des
+          for an example. When doing this, make sure that there is no
+          default-depth line handing out a depth! (This can mean that you are
+          better off with a new des file for elaborate vaults.)
 
 CHANCE:   <priority>:<roll> or <roll> [ (<depth-ranges>) ]
 
@@ -567,12 +575,22 @@ ITEM:     (list of items, separated by comma)
             will be ignored, except for "ego" (for weapons only).
           * "mundane" acts as a shortcut for "ego:none" and forces the plusses
              to be +0.
+          * "ident:" will make the item pre-identified.  You need to specify
+            a "|"-separated list of what is to be known:
+            * "curse"
+            * "type"
+            * "pluses"
+            * "properties"
+            * "all"
+          * "unobtainable" hints that the item is supposed to never fall into
+            the player's hands.  It doesn't actually keep it from doing so,
+            just tells that to acquirement and (TODO) troves.
 
-            WARNING: While checks are done to make sure that an armour ego
-            isn't given to a weapon, a weapon ego to a missile, and so on, and
-            also to make sure that egos are only given to armours, weapons and
-            missiles, no other checking is done.  Thus it is possible to create
-            a demonic weapon of holy wrath or a helmet of running.
+          WARNING: While checks are done to make sure that an armour ego
+          isn't given to a weapon, a weapon ego to a missile, and so on, and
+          also to make sure that egos are only given to armours, weapons and
+          missiles, no other checking is done.  Thus it is possible to create
+          a demonic weapon of holy wrath or a helmet of running.
 
           Limitations: You can't specify specific pluses.
 
@@ -720,7 +738,10 @@ MONS:     (list of monsters)
           * att:good_neutral -- hostile to att:hostile
           * att:fellow_slime -- tame, won't follow you
 
-          Note that 8, 9, 0 also place monsters (see the table).
+          Note that the glyphs 8, 9, 0 (without MONS) also place monsters:
+             0 - normal monster (this is equivalent to MONS: random)
+             9 - +5 depth monster
+             8 - (+2) * 2 depth monster.
 
           If you want to place a random monster suitable for the level
           the map is generated on, you can use
@@ -1157,6 +1178,10 @@ NSUBST:   ? = 3:w / *:l
           occurrences, = to randomly pick for each occurrence). If you
           omit the initial N: or N=, then 1= is assumed, except for the
           last spec where *= is assumed.
+          The parser can get confused with NSUBST specifications like
+          wW / nc=. If you use replacement symbols from * or = (perhaps
+          also for / and numbers), it is safer to spell out the N:
+          preceding the replacement symbols.
 
 KFEAT:    G = C / needle trap / antique armour shop / altar_zin
           The KFEAT: directive allows you to specify a placeholder symbol
@@ -1311,7 +1336,7 @@ MARKER:   A = feat:<feature_name> or lua:<marker_expr>
 
           Here's a Lua marker that creates a cloud generator (for a
           full explanation of the various parameters, read the header
-          of dat/clua/lm_fog.lua):
+          of dat/dlua/lm_fog.lua):
 
           MARKER:  A = lua:fog_machine { \
                        pow_max = 15, delay_min = 100, delay_max = 150, \

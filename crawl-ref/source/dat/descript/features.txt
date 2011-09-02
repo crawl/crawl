@@ -29,6 +29,10 @@ A corrupted altar of Lugonu
 
 An altar to Lugonu the Unformed, possibly dedicated to some other power before it was irrevocably corrupted.
 %%%%
+A crawl-hole back to the Lair
+
+You can climb it to get back to less cramped spaces with less cobwebs.
+%%%%
 A deep blue altar of Sif Muna
 
 An altar of the deepest blue, covered in intricate patterns and writings in long forgotten scripts, devoted to Sif Muna the Loreminder.
@@ -43,7 +47,7 @@ Whoever built that castle on the other side, they wanted to sort their treasure 
 %%%%
 A fountain of clear blue water
 
-Press 'q' to drink from this fountain. But it's far more pretty than useful, unless you're trying to fetch the Orb without eating, I guess.
+Press 'q' to drink from this fountain. Not that it would have any effect, though...
 %%%%
 A fountain of blood
 
@@ -119,6 +123,10 @@ A granite statue
 
 Despite the hardness of the stone, this statue's features have long withered away.
 %%%%
+A hole to the Spider Nest
+
+This is more of a natural sloped shaft than a stairway, but it will do. If you want to die from most potent venoms of this world, that is.
+%%%%
 A labyrinth entrance
 
 A gateway to an intricate maze designed by subtle and malicious minds, its exit guarded by a fearsome monster. Many a hapless adventurer has lost his way in the twisted, shifting passages, and starved to death.
@@ -142,6 +150,10 @@ A wall of bluish-grey metal. As every dungeon electrician knows, this stuff will
 A one-way gate to the infinite horrors of the Abyss
 
 A one-way gate to a demon-haunted realm, riven by chaos, its very substance impermanent and whimsical, filled with creatures out of nightmare.
+%%%%
+A passage of Golubria
+
+This unstable gateway allows instantaneous travel to another nearby passage of Golubria, and will close behind anything passing through it.
 %%%%
 A portal to somewhere
 
@@ -243,6 +255,10 @@ A staircase to the Dwarven Hall
 
 An entrance to the well-worked hall of the dwarves. You think you can smell ale.
 %%%%
+A staircase to the Enchanted Forest
+
+An entrance to the spriggan forest. Snap a twig and you're dead. Actually, they won't wait until you do that.
+%%%%
 A staircase to the Shoals
 
 Here be the Shoals: exotic underground beaches, salty spray and creatures that bite, stab and maul.
@@ -319,6 +335,10 @@ This wall is made from the weird stuff which makes up Pandemonium, but seems to 
 A white marble altar of Elyvilon
 
 An altar to Elyvilon the Healer, made from purest white marble and topped by a sculpture of the Chalice of Purification.
+%%%%
+A web
+
+The spider who left this web must have been huge, as it seems to be made for trapping {{ return you.genus(true) }} rather than flies.
 %%%%
 An abandoned shop
 

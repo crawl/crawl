@@ -15,7 +15,8 @@ Branch& your_branch()
 
 bool at_branch_bottom()
 {
-    return your_branch().depth == player_branch_depth();
+    return your_branch().depth == player_branch_depth()
+           && you.level_type == LEVEL_DUNGEON;
 }
 
 level_id branch_entry_level(branch_type branch)
@@ -74,6 +75,12 @@ bool is_hell_subbranch(branch_type branch)
             && branch != BRANCH_VESTIBULE_OF_HELL);
 }
 
+bool is_random_lair_subbranch(branch_type branch)
+{
+    return branches[branch].parent_branch == BRANCH_LAIR
+        && branch != BRANCH_SLIME_PITS;
+}
+
 branch_type str_to_branch(const std::string &branch, branch_type err)
 {
     for (int i = 0; i < NUM_BRANCHES; ++i)
@@ -85,7 +92,8 @@ branch_type str_to_branch(const std::string &branch, branch_type err)
 
 int current_level_ambient_noise()
 {
-    switch (you.level_type) {
+    switch (you.level_type)
+    {
     case LEVEL_DUNGEON:
         return branches[you.where_are_you].ambient_noise;
     case LEVEL_ABYSS:

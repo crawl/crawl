@@ -224,6 +224,8 @@ bool is_feature(wchar_t feature, const coord_def& where)
         case DNGN_RETURN_FROM_TOMB:
         case DNGN_RETURN_FROM_SWAMP:
         case DNGN_RETURN_FROM_SHOALS:
+        case DNGN_RETURN_FROM_SPIDER_NEST:
+        case DNGN_RETURN_FROM_FOREST:
         case DNGN_EXIT_PORTAL_VAULT:
             return (true);
         default:
@@ -250,6 +252,8 @@ bool is_feature(wchar_t feature, const coord_def& where)
         case DNGN_ENTER_TOMB:
         case DNGN_ENTER_SWAMP:
         case DNGN_ENTER_SHOALS:
+        case DNGN_ENTER_SPIDER_NEST:
+        case DNGN_ENTER_FOREST:
             return (true);
         default:
             return (false);
@@ -260,6 +264,7 @@ bool is_feature(wchar_t feature, const coord_def& where)
         case DNGN_TRAP_MECHANICAL:
         case DNGN_TRAP_MAGICAL:
         case DNGN_TRAP_NATURAL:
+        case DNGN_TRAP_WEB:
             return (true);
         default:
             return (false);
@@ -1239,24 +1244,14 @@ bool show_map(level_pos &lpos,
             if (!map_alive)
                 break;
 
-#ifdef USE_TILE
-            {
-                const coord_def oldp = lpos.pos;
-                lpos.pos.x += move_x;
-                lpos.pos.y += move_y;
-                lpos.pos.x = std::min(std::max(lpos.pos.x, 1), GXM);
-                lpos.pos.y = std::min(std::max(lpos.pos.y, 1), GYM);
-                curs_x += lpos.pos.x - oldp.x;
-                curs_y += lpos.pos.y - oldp.y;
-            }
-#else
-            if (curs_x + move_x < 1)
-                move_x = 1 - curs_x;
-            else if (curs_x + move_x > crawl_view.termsz.x)
-                move_x = crawl_view.termsz.x - curs_x;
-
-            curs_x += move_x;
-
+            const coord_def oldp = lpos.pos;
+            lpos.pos.x += move_x;
+            lpos.pos.y += move_y;
+            lpos.pos.x = std::min(std::max(lpos.pos.x, min_x), max_x);
+            lpos.pos.y = std::min(std::max(lpos.pos.y, min_y), max_y);
+            move_x = lpos.pos.x - oldp.x;
+            move_y = lpos.pos.y - oldp.y;
+#ifndef USE_TILE
             if (num_lines < map_lines)
             {
                 // Scrolling only happens when we don't have a large enough
@@ -1272,50 +1267,21 @@ bool show_map(level_pos &lpos,
                     curs_y -= (screen_y - old_screen_y);
                     scroll_y = 0;
                 }
-
-                if (curs_y + move_y < 1)
+                if (curs_y + move_y < 1 || curs_y + move_y > num_lines)
                 {
                     screen_y += move_y;
-
-                    if (screen_y < min_y + half_screen)
-                    {
-                        move_y   = screen_y - (min_y + half_screen);
-                        screen_y = min_y + half_screen;
-                    }
-                    else
-                        move_y = 0;
-                }
-
-                if (curs_y + move_y > num_lines)
-                {
-                    screen_y += move_y;
-
-                    if (screen_y > max_y - half_screen)
-                    {
-                        move_y   = screen_y - (max_y - half_screen);
-                        screen_y = max_y - half_screen;
-                    }
-                    else
-                        move_y = 0;
+                    curs_y -= move_y;
                 }
             }
             start_y = screen_y - half_screen;
-
-            if (curs_y + move_y < 1)
-                move_y = 1 - curs_y;
-            else if (curs_y + move_y > num_lines)
-                move_y = num_lines - curs_y;
-
-            curs_y += move_y;
-
-            lpos.pos.x = start_x + curs_x - 1;
-            lpos.pos.y = start_y + curs_y - 1;
 #endif
+            curs_x += move_x;
+            curs_y += move_y;
         }
     }
 
 #ifdef USE_TILE
-    tiles.place_cursor(CURSOR_MAP, Region::NO_CURSOR);
+    tiles.place_cursor(CURSOR_MAP, NO_CURSOR);
 #endif
 
     redraw_screen();

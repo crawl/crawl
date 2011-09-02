@@ -3,10 +3,9 @@
 
 struct level_exit;
 
-bool try_pathfind(monster* mon, const dungeon_feature_type can_move);
+bool try_pathfind(monster* mon);
 bool find_wall_target(monster* mon);
-void check_wander_target(monster* mon, bool isPacified = false,
-                         dungeon_feature_type can_move = DNGN_UNSEEN);
+void check_wander_target(monster* mon, bool isPacified = false);
 int mons_find_nearest_level_exit(const monster* mon,
                                  std::vector<level_exit> &e,
                                  bool reset = false);

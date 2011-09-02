@@ -525,6 +525,59 @@ church3
 #%weight 1
 #church4
 
+hell01 WALL_HELL
+hell02
+hell03
+hell04
+hell05
+hell06
+hell07
+hell08
+hell09
+hell10
+hell11
+
+lab-rock0 WALL_LAB_ROCK
+lab-rock1
+lab-rock2
+lab-rock3
+
+lab-stone0 WALL_LAB_STONE
+lab-stone1
+lab-stone2
+lab-stone3
+lab-stone4
+lab-stone5
+
+lab-metal0 WALL_LAB_METAL
+%weight 2
+lab-metal1
+lab-metal2
+lab-metal3
+lab-metal4
+%weight 10
+lab-metal5
+lab-metal6
+
+crypt0 WALL_CRYPT
+crypt1
+crypt2
+crypt3
+crypt4
+%weight 2
+crypt5
+crypt6
+crypt7
+crypt8
+crypt9
+%weight 10
+
+crypt-metal0 WALL_CRYPT_METAL
+crypt-metal1
+crypt-metal2
+crypt-metal3
+crypt-metal4
+
 stone2_gray0 DNGN_STONE_WALL DNGN_STONE_WALL_LIGHTGRAY
 stone2_gray1
 stone2_gray2

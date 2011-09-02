@@ -33,6 +33,8 @@ end
 -- All set up!
 ok("hydra corpse")
 ok("hippogriff skeleton")
-ok("any corpse", "corpse")
+for i = 1,100 do
+  ok("any corpse", "corpse")
+end
 ok("rat chunk", "chunk of rat")
 fail("zombie chunk")

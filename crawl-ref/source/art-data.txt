@@ -89,9 +89,7 @@
 # * rnd_tele: Induces random teleportation.
 # * seeinv:   Lets wearer see invisible.
 # * special:  Artefact is "special": can't be picked up by monsters,
-#             can't be affected by Tukima's Dance, generated less
-#             frequently than normal randarts, can be generated in the
-#             Abyss if its been lost elsewhere.
+#             can't be affected by Tukima's Dance.
 # * tilerim:  Adds a black outline to the tile, see above section.
 
 # ENUM: Forces the artefact's enumeration literal to something specific.
@@ -173,7 +171,7 @@ COLOUR:  ETC_GOLD
 TILE:    spwpn_singing_sword
 TILE_EQ: singing_sword
 VALUE:   1200
-BOOL:    noises, special
+BOOL:    special
 DESC_ID: This blessed weapon loves nothing more than to sing to its owner,
          whether they want it to or not.
 
@@ -185,7 +183,6 @@ COLOUR:  ETC_BLOOD
 TILE:    spwpn_wrath_of_trog
 TILE_EQ: axe_trog
 VALUE:   1000
-BOOL:    special
 BRAND:   SPWPN_ANTIMAGIC
 DESC_ID: This was the favourite weapon of the old god Trog, before it was
          lost one day. It induces a bloodthirsty berserker rage in anyone
@@ -206,12 +203,13 @@ DESC_ID: It is rather unreliable.
 NAME:    Glaive of Prune
 APPEAR:  purple glaive
 OBJ:     OBJ_WEAPONS/WPN_GLAIVE
-PLUS:    0/+12
+PLUS:    +4/+12
 COLOUR:  MAGENTA
 TILE:    spwpn_glaive_of_prune
 TILE_EQ: glaive_of_prune
 VALUE:   1000
-BOOL:    special
+BOOL:    chaotic
+BRAND:   SPWPN_VORPAL
 DESC_ID: It is the creation of a mad god, and carries a curse which
          transforms anyone possessing it into a prune. Fortunately, the
          curse works very slowly, and one can use it briefly with no
@@ -236,7 +234,7 @@ COLOUR:  ETC_POISON
 TILE:    spwpn_staff_of_olgreb
 TILE_EQ: olgreb
 VALUE:   1000
-BOOL:    poison, special
+BOOL:    poison
 DESC_ID: It was the magical weapon wielded by the mighty wizard Olgreb
          before he met his fate somewhere within these dungeons. It
          increases the ability of its wielder to use venomous magic, and
@@ -277,9 +275,10 @@ PLUS:    +13/+13
 COLOUR:  ETC_NECRO
 TILE:    spwpn_scythe_of_curses
 TILE_EQ: finisher
+BRAND:   SPWPN_DRAINING
 VALUE:   800
 CURSED:  3
-BOOL:    special, evil
+BOOL:    evil
 DESC_ID: This weapon carries a terrible and highly irritating curse.
 
 NAME:    Sceptre of Torment
@@ -295,12 +294,14 @@ DESC_ID: This truly accursed weapon is an instrument of Hell.
 
 NAME:    Sword of Zonguldrok
 APPEAR:  bone long sword
-OBJ:     OBJ_WEAPONS/WPN_LONG_SWORD
+OBJ:     OBJ_WEAPONS/WPN_DOUBLE_SWORD
 PLUS:    +9/+9
 COLOUR:  ETC_BONE
 TILE:    spwpn_sword_of_zonguldrok
 TILE_EQ: zonguldrok
+BRAND:   SPWPN_REAPING
 VALUE:   1250
+CURSED:  3
 BOOL:    tilerim, special, evil, corpse_violating
 DESC_ID: This dreadful weapon is used at the user's peril.
 
@@ -313,7 +314,7 @@ TILE:    spwpn_sword_of_cerebov
 TILE_EQ: sword_twist
 VALUE:   2000
 BRAND:   SPWPN_FLAMING
-BOOL:    cursed, tilerim, special, evil, nogen
+BOOL:    cursed, tilerim, evil, nogen
 DESC:    Eerie flames cover its twisted blade.
 
 NAME:    Staff of Dispater
@@ -356,9 +357,9 @@ DESC:    Faerie dragons used to be a race of the same species as mottled ones.
 
 ##################### End of old fixed arts.
 
-NAME:    katana "Bloodbane"
-APPEAR:  blackened katana
-OBJ:     OBJ_WEAPONS/WPN_KATANA
+NAME:    demon blade "Bloodbane"
+APPEAR:  blackened demon blade
+OBJ:     OBJ_WEAPONS/WPN_DEMON_BLADE
 PLUS:    +7/+8
 COLOUR:  ETC_DARK
 TILE:    urand_bloodbane
@@ -682,15 +683,16 @@ CURSED:  1
 STEALTH: -20
 DESC:    A triple sword made of weird glowing metal.
 
-NAME:    great mace "Undeadhunter"
-APPEAR:  great steel mace
-OBJ:     OBJ_WEAPONS/WPN_GREAT_MACE
-PLUS:    +7/+7
-COLOUR:  LIGHTGREY
-TILE:    urand_undeadhunter
-TILE_EQ: undeadhunter
-BRAND:   SPWPN_HOLY_WRATH
-BOOL:    life
+NAME:     great mace "Undeadhunter"
+APPEAR:   great steel mace
+OBJ:      OBJ_WEAPONS/WPN_GREAT_MACE
+PLUS:     +7/+7
+COLOUR:   LIGHTGREY
+TILE:     urand_undeadhunter
+TILE_EQ:  undeadhunter
+BOOL:     life
+DESC_END: This weapon is imbued with magic that can counter and disrupt the
+          magic holding undead together, inflicting great damage.
 
 NAME:    whip "Snakebite"
 APPEAR:  forked whip
@@ -750,7 +752,6 @@ COLOUR:   BLUE
 TILE:     urand_storm_bow
 TILE_EQ:  bow_blue
 BRAND:    SPWPN_ELECTROCUTION
-BOOL:     special
 DESC:     This bow has the color of dark rain clouds, and the smell of wet ozone.
 
 NAME:    shield of Ignorance
@@ -773,9 +774,9 @@ PLUS:    +4
 COLOUR:  LIGHTRED
 TILE:    urand_augmentation
 TILE_EQ: robe_white_blue
-STR:     2
-INT:     2
-DEX:     2
+STR:     4
+INT:     4
+DEX:     4
 DESC:    A robe made of the finest silk.
 
 NAME:     cloak of the Thief
@@ -847,7 +848,7 @@ NAME:     cloak of Flash
 APPEAR:   vibrating cloak
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
 PLUS:     +3
-COLOUR:   ETC_GILA
+COLOUR:   ETC_FLASH
 TILE:     urand_flash
 TILE_EQ:  red
 EV:       4
@@ -977,7 +978,7 @@ DESC_END: According to legend, this robe was the gift of Ratri the Goddess
           of the Night to one of her followers.
 
 NAME:    armour of the Dragon King
-APPEAR:  shiny dragon armour
+APPEAR:  shiny gold dragon armour
 OBJ:     OBJ_ARMOUR/ARM_GOLD_DRAGON_ARMOUR
 PLUS:    +5
 COLOUR:  ETC_GOLD
@@ -1060,7 +1061,6 @@ TILE:    urand_air
 EV:      3
 STEALTH: 50
 BOOL:    elec, lev
-DESC:    A sky-blue amulet.
 
 NAME:    ring of Shadows
 APPEAR:  black ring
@@ -1132,7 +1132,6 @@ COLOUR:   ETC_MAGIC
 TILE:     urand_brooch_of_shielding
 AC:       4
 EV:       4
-DESC:     A shield-shaped amulet.
 DESC_END: Back in the good old days, every adventurer had one of these
           handy devices. That, and a pony.
 

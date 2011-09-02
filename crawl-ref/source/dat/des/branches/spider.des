@@ -1,0 +1,79 @@
+###############################################################################
+# spider.des: All maps and branch endings relating to the Spider Nest.
+# Bring lots of Raid!
+###############################################################################
+
+##############################################################################
+# Spider Nest entry vaults
+##############################################################################
+
+NAME:   dummy_spider_entry
+TAGS:   spider_entry
+KFEAT:  O = enter_spider_nest
+MAP
+O
+ENDMAP
+
+NAME:   spiders_nest_entry_a
+TAGS:   spider_entry patrolling no_monster_gen
+KFEAT:  O = enter_spider_nest
+MONS:   spider
+MAP
+.WWW.WWW.
+W.WW.WW.W
+WW.W.W.WW
+WWW111WWW
+...1O1...
+WWW111WWW
+WW.W.W.WW
+W.WW.WW.W
+.WWW.WWW.
+ENDMAP
+
+##########################
+# Web trappy entry
+NAME:   spiders_nest_entry_webs
+TAGS:   spider_entry patrolling no_monster_gen
+KFEAT:  O = enter_spider_nest
+KFEAT:  ^ = web
+MONS:   trapdoor spider
+MAP
+.......x.....
+..^...xxx.^..
+...1.^xxx....
+.^..^xx^x....
+....xx^^^....
+.1..x^^^...^.
+..^..^O^..1..
+.x...^^^^....
+xx^.1.x^^^...
+x^^^^..xxx...
+.xx^^...xxx..
+..xxx........
+ENDMAP
+
+##############################################################################
+# Rune vaults
+##############################################################################
+
+# Too primitive to exist, but I need something for tests.
+NAME:  spider_rune_test
+PLACE: Spider:5
+KITEM: O = gossamer rune of Zot
+MONS:  ghost moth, tarantella, jumping spider
+SUBST: . = 0.....
+MAP
+      ccccccc
+     cc.....cc
+    cc.......cc
+   cc.........cc
+   c2.........2c
+   c..3..1.....c
+   @.....1....Oc
+   c..3..1.....c
+   c2.........2c
+   cc.........cc
+    cc.......cc
+     cc.....cc
+      ccccccc
+ENDMAP

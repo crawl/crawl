@@ -1,6 +1,6 @@
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "artefact.h"
 #include "cio.h"
@@ -17,7 +17,6 @@
 #include "options.h"
 #include "player.h"
 #include "state.h"
-#include "stuff.h"
 #include "tiledef-dngn.h"
 #include "tiledef-gui.h"
 #include "tiledef-main.h"
@@ -590,7 +589,7 @@ int TilesFramework::getch_ck()
             case WM_KEYDOWN:
                 m_key_mod |= event.key.keysym.key_mod;
                 key        = event.key.keysym.sym;
-                m_region_tile->place_cursor(CURSOR_MOUSE, Region::NO_CURSOR);
+                m_region_tile->place_cursor(CURSOR_MOUSE, NO_CURSOR);
 
                 // If you hit a key, disable tooltips until the mouse
                 // is moved again.
@@ -605,9 +604,8 @@ int TilesFramework::getch_ck()
             case WM_MOUSEMOTION:
                 {
                     // Record mouse pos for tooltip timer
-                    // FIXME: This compares signed and unsigned ints
-                    if (m_mouse.x != abs(event.mouse_event.px)
-                        || m_mouse.y != abs(event.mouse_event.py))
+                    if (m_mouse.x != (int)event.mouse_event.px
+                        || m_mouse.y != (int)event.mouse_event.py)
                     {
                         m_last_tick_moved = ticks;
                     }
@@ -1285,7 +1283,7 @@ void TilesFramework::add_text_tag(text_tag_type type, const std::string &tag,
 void TilesFramework::add_text_tag(text_tag_type type, const monster* mon)
 {
     // HACK.  Large-tile monsters don't interact well with name tags.
-    if (mon->type == MONS_PANDEMONIUM_DEMON
+    if (mon->type == MONS_PANDEMONIUM_LORD
         || mon->type == MONS_LERNAEAN_HYDRA)
     {
         return;
@@ -1336,5 +1334,4 @@ int TilesFramework::to_lines(int num_tiles)
 {
     return num_tiles * TILE_Y / get_crt_font()->char_height();
 }
-
 #endif

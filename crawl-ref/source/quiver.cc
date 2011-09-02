@@ -37,7 +37,7 @@ static bool _items_similar(const item_def& a, const item_def& b,
 player_quiver::player_quiver()
     : m_last_used_type(AMMO_THROW)
 {
-    COMPILE_CHECK(ARRAYSZ(m_last_used_of_type) == NUM_AMMO, a);
+    COMPILE_CHECK(ARRAYSZ(m_last_used_of_type) == NUM_AMMO);
 }
 
 // Return:
@@ -79,7 +79,7 @@ void player_quiver::get_desired_item(const item_def** item_out, int* slot_out) c
 int player_quiver::get_fire_item(std::string* no_item_reason) const
 {
     // Felids have no use for the quiver.
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
     {
         if (no_item_reason != NULL)
             *no_item_reason = "You can't grasp things well enough to throw them.";
@@ -95,7 +95,7 @@ int player_quiver::get_fire_item(std::string* no_item_reason) const
     {
         std::vector<int> order;
         _get_fire_order(order, false, you.weapon());
-        if (order.size())
+        if (!order.empty())
             slot = order[0];
     }
 
@@ -108,7 +108,7 @@ int player_quiver::get_fire_item(std::string* no_item_reason) const
         {
             // nothing
         }
-        else if (full_fire_order.size() == 0)
+        else if (full_fire_order.empty())
         {
             *no_item_reason = "No suitable missiles.";
         }
@@ -178,7 +178,7 @@ void quiver_item(int slot)
 
 void choose_item_for_quiver()
 {
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
     {
         mpr("You can't grasp things well enough to throw them.");
         return;
@@ -323,7 +323,7 @@ void player_quiver::on_inv_quantity_changed(int slot, int amt)
 void player_quiver::_maybe_fill_empty_slot()
 {
     // Felids have no use for the quiver.
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
         return;
 
     const item_def* weapon = you.weapon();
@@ -444,7 +444,6 @@ void player_quiver::_get_fire_order(std::vector<int>& order,
         for (unsigned int i_flags = 0; i_flags < Options.fire_order.size();
              i_flags++)
         {
-
             if (_item_matches(item, (fire_type) Options.fire_order[i_flags],
                               launcher))
             {
@@ -503,7 +502,7 @@ preserve_quiver_slots::preserve_quiver_slots()
         return;
 
     COMPILE_CHECK(ARRAYSZ(m_last_used_of_type) ==
-                  ARRAYSZ(you.m_quiver->m_last_used_of_type), a);
+                  ARRAYSZ(you.m_quiver->m_last_used_of_type));
 
     for (unsigned int i = 0; i < ARRAYSZ(m_last_used_of_type); i++)
     {

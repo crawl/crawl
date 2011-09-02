@@ -11,6 +11,7 @@
 
 class monster;
 class mon_acting;
+class targetter;
 
 struct god_act_state
 {
@@ -81,6 +82,8 @@ struct game_state
     command_type    prev_repeat_cmd;
     int             prev_cmd_repeat_goal;
     bool            cmd_repeat_started_unsafe;
+    int             lua_calls_no_turn;
+    bool            stat_gain_prompt;
 
     std::vector<std::string> startup_errors;
 
@@ -95,11 +98,13 @@ struct game_state
     bool title_screen;
 #endif
 
-    // Range beyond which view should be darkend, -1 == disabled.
-    int darken_range;
+    // Area beyond which view should be darkened,  0 = disabled.
+    targetter *darken_range;
 
     // Any changes to macros that need to be changed?
     bool unsaved_macros;
+
+    FixedBitArray<NUM_DISABLEMENTS> disables;
 
     // Version of the last character save.
     int minorVersion;

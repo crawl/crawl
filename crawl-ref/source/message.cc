@@ -23,7 +23,6 @@
 #include "showsymb.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
 #include "areas.h"
 #include "tags.h"
 #include "tagstring.h"
@@ -250,16 +249,16 @@ glyph prefix_glyph(prefix_type p)
     switch (p)
     {
     case P_TURN_START:
-        g.ch = '-';
+        g.ch = Options.show_newturn_mark ? '-' : ' ';
         g.col = LIGHTGRAY;
         break;
     case P_TURN_END:
     case P_NEW_TURN:
-        g.ch = '_';
+        g.ch = Options.show_newturn_mark ? '_' : ' ';
         g.col = LIGHTGRAY;
         break;
     case P_NEW_CMD:
-        g.ch = '_';
+        g.ch = Options.show_newturn_mark ? '_' : ' ';
         g.col = DARKGRAY;
         break;
     case P_FULL_MORE:
@@ -1111,8 +1110,8 @@ unsigned int msgwin_lines()
 
 // mpr() an arbitrarily long list of strings without truncation or risk
 // of overflow.
-void mpr_comma_separated_list(const std::string prefix,
-                              const std::vector<std::string> list,
+void mpr_comma_separated_list(const std::string &prefix,
+                              const std::vector<std::string> &list,
                               const std::string &andc,
                               const std::string &comma,
                               const msg_channel_type channel,
@@ -1402,7 +1401,7 @@ void replay_messages(void)
     formatted_scroller hist(MF_START_AT_END | MF_ALWAYS_SHOW_MORE, "");
     hist.set_more(formatted_string::parse_string(
                         "<cyan>[up/<< : Page up.    down/Space/> : Page down."
-                        "                           Esc exits.]</cyan>"));
+                        "                         Esc exits.]</cyan>"));
 
     const store_t msgs = messages.get_store();
     for (int i = 0; i < msgs.size(); ++i)

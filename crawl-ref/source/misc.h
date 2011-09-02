@@ -111,8 +111,6 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
 
 void reveal_secret_door(const coord_def& p);
 
-std::string your_hand(bool plural);
-
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool autohit_first = false);
 
@@ -122,6 +120,8 @@ bool is_dragonkind(const actor *act);
 void swap_with_monster(monster* mon_to_swap);
 
 void maybe_id_ring_TC();
+
+int apply_chunked_AC(int dam, int ac);
 
 void entered_malign_portal(actor* act);
 

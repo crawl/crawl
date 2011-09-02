@@ -13,9 +13,11 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "decks.h"
 #include "describe.h"
 #include "env.h"
 #include "godconduct.h"
+#include "godpassive.h"
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -58,7 +60,8 @@ int identify(int power, int item_slot, std::string *pre_msg)
 
         item_def& item(you.inv[item_slot]);
 
-        if (fully_identified(item))
+        if (fully_identified(item)
+            && (!is_deck(item) || top_card_is_known(item)))
         {
             mpr("Choose an unidentified item, or Esc to abort.");
             if (Options.auto_list)
@@ -74,6 +77,9 @@ int identify(int power, int item_slot, std::string *pre_msg)
         set_ident_flags(item, ISFLAG_IDENT_MASK);
         if (Options.autoinscribe_artefacts && is_artefact(item))
             add_autoinscription(item, artefact_auto_inscription(item));
+
+        if (is_deck(item) && !top_card_is_known(item))
+            deck_identify_first(item_slot);
 
         // For scrolls, now id the scroll, unless already known.
         if (power == -1
@@ -184,6 +190,14 @@ static int _can_pacify_monster(const monster* mon, const int healed)
     return (0);
 }
 
+static std::vector<std::string> _desc_mindless(const monster_info& mi)
+{
+    std::vector<std::string> descs;
+    if (mi.intel() <= I_PLANT)
+        descs.push_back("mindless");
+    return descs;
+}
+
 // Returns: 1 -- success, 0 -- failure, -1 -- cancel
 static int _healing_spell(int healed, bool divine_ability,
                           const coord_def& where, bool not_self,
@@ -200,8 +214,8 @@ static int _healing_spell(int healed, bool divine_ability,
                                       mode != TARG_NUM_MODES ? mode :
                                       you.religion == GOD_ELYVILON ?
                                             TARG_ANY : TARG_FRIEND,
-                                      LOS_RADIUS,
-                                      false, true, true, "Heal", NULL);
+                                      LOS_RADIUS, false, true, true, "Heal",
+                                      NULL, false, NULL, _desc_mindless);
     }
     else
     {
@@ -221,7 +235,7 @@ static int _healing_spell(int healed, bool divine_ability,
         }
 
         mpr("You are healed.");
-        inc_hp(healed, false);
+        inc_hp(healed);
         return (1);
     }
 
@@ -335,37 +349,6 @@ int cast_healing(int pow, bool divine_ability, const coord_def& where,
                            not_self, mode));
 }
 
-bool cast_revivification(int pow)
-{
-    if (you.hp == you.hp_max)
-        canned_msg(MSG_NOTHING_HAPPENS);
-    else if (you.hp_max < 21)
-        mpr("You lack the resilience to cast this spell.");
-    else
-    {
-        mpr("Your body is healed in an amazingly painful way.");
-
-        int loss = 2;
-        for (int i = 0; i < 9; ++i)
-            if (x_chance_in_y(8, pow))
-                loss++;
-
-        dec_max_hp(loss * you.hp_max / 100);
-        set_hp(you.hp_max, false);
-
-        if (you.duration[DUR_DEATHS_DOOR])
-        {
-            mpr("Your life is in your own hands once again.", MSGCH_DURATION);
-            you.paralyse(NULL, 5 + random2(5));
-            confuse_player(10 + random2(10));
-            you.duration[DUR_DEATHS_DOOR] = 0;
-        }
-        return (true);
-    }
-
-    return (false);
-}
-
 // Antimagic is sort of an anti-extension... it sets a lot of magical
 // durations to 1 so it's very nasty at times (and potentially lethal,
 // that's why we reduce levitation to 2, so that the player has a chance
@@ -375,13 +358,15 @@ void antimagic()
 {
     duration_type dur_list[] = {
         DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE, DUR_MIGHT, DUR_AGILITY,
-        DUR_BRILLIANCE, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
-        DUR_REGENERATION, DUR_SWIFTNESS, DUR_CONTROL_TELEPORT,
+        DUR_BRILLIANCE, DUR_CONFUSING_TOUCH, DUR_SURE_BLADE, DUR_CORONA,
+        DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
+        DUR_REGENERATION, DUR_SWIFTNESS, DUR_TELEPORT, DUR_CONTROL_TELEPORT,
         DUR_TRANSFORMATION, DUR_DEATH_CHANNEL, DUR_DEFLECT_MISSILES,
         DUR_PHASE_SHIFT, DUR_SEE_INVISIBLE, DUR_WEAPON_BRAND, DUR_SILENCE,
-        DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_BARGAIN,
-        DUR_INSULATION, DUR_RESIST_POISON, DUR_RESIST_FIRE, DUR_RESIST_COLD,
-        DUR_SLAYING, DUR_STEALTH, DUR_MAGIC_SHIELD, DUR_SAGE, DUR_PETRIFIED
+        DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_INSULATION, DUR_RESIST_POISON,
+        DUR_RESIST_FIRE, DUR_RESIST_COLD, DUR_SLAYING, DUR_STEALTH,
+        DUR_MAGIC_SHIELD, DUR_PETRIFIED, DUR_LIQUEFYING, DUR_DARKNESS,
+        DUR_PETRIFYING, DUR_SHROUD_OF_GOLUBRIA
     };
 
     if (!you.permanent_levitation() && !you.permanent_flight()
@@ -608,7 +593,7 @@ static bool _selectively_remove_curse(std::string *pre_msg)
         if (!used && pre_msg)
             mpr(*pre_msg);
 
-        do_uncurse_item(item);
+        do_uncurse_item(item, true, false, false);
         used = true;
     }
 }
@@ -616,7 +601,15 @@ static bool _selectively_remove_curse(std::string *pre_msg)
 bool remove_curse(bool alreadyknown, std::string *pre_msg)
 {
     if (you.religion == GOD_ASHENZARI && alreadyknown)
-        return _selectively_remove_curse(pre_msg);
+    {
+        if (_selectively_remove_curse(pre_msg))
+        {
+            ash_check_bondage();
+            return true;
+        }
+        else
+            return false;
+    }
 
     bool success = false;
 
@@ -703,7 +696,7 @@ bool curse_item(bool armour, bool alreadyknown, std::string *pre_msg)
     if (armour)
         min_type = EQ_MIN_ARMOUR, max_type = EQ_MAX_ARMOUR;
     else
-        min_type = EQ_LEFT_RING, max_type = EQ_AMULET;
+        min_type = EQ_LEFT_RING, max_type = EQ_RING_EIGHT;
     for (int i = min_type; i <= max_type; i++)
     {
         if (you.equip[i] != -1 && !you.inv[you.equip[i]].cursed())

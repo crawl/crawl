@@ -18,12 +18,6 @@ ignore = Eating a chunk
 ignore = This .*flesh tastes
 ignore = You .* eating
 
-# Expiring spells
-#
-stop = Your icy armour evaporates
-stop = You feel less protected from missiles
-stop = falls from the air
-
 # Traps
 #
 stop = found a trap

@@ -33,9 +33,7 @@
 #include "quiver.h"
 #include "random.h"
 #include "shopping.h"
-#include "stuff.h"
 #include "xom.h"
-
 
 // XXX: Name strings in most of the following are currently unused!
 struct armour_def
@@ -146,7 +144,7 @@ static armour_def Armour_prop[NUM_ARMOURS] =
 
     // Note: shields use ac-value as sh-value, EV pen is used as the basis
     // to calculate adjusted shield penalty.
-    { ARM_BUCKLER,              "buckler",                5,  -1,   90,
+    { ARM_BUCKLER,              "buckler",                3,  -1,   90,
         true,  EQ_SHIELD,      SIZE_LITTLE, SIZE_MEDIUM },
     { ARM_SHIELD,               "shield",                 8,  -3,  150,
         false, EQ_SHIELD,      SIZE_SMALL,  SIZE_BIG    },
@@ -247,49 +245,51 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_FALCHION,              "falchion",               8,  2, 13, 170,  4,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL, MI_NONE, false,
         DAMV_SLICING, 10 },      // or perhaps DAMV_CHOPPING is more apt?
-    { WPN_BLESSED_FALCHION,      "blessed falchion",      10,  2, 11, 170,  4,
+    { WPN_BLESSED_FALCHION,      "blessed falchion",       9,  2, 12, 170,  4,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_SMALL, MI_NONE, false,
         DAMV_SLICING, 0 },       // or perhaps DAMV_CHOPPING is more apt?
     { WPN_LONG_SWORD,            "long sword",            10,  1, 14, 160,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 10 },
-    { WPN_BLESSED_LONG_SWORD,    "blessed long sword",    12,  0, 12, 160,  3,
+    { WPN_BLESSED_LONG_SWORD,    "blessed long sword",    11,  0, 13, 160,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 0 },
     { WPN_SCIMITAR,              "scimitar",              11, -1, 14, 170,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 10 },
-    { WPN_BLESSED_SCIMITAR,      "blessed scimitar",      13, -1, 13, 170,  3,
+    { WPN_BLESSED_SCIMITAR,      "blessed scimitar",      12, -2, 13, 170,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 0 },
+#if TAG_MAJOR_VERSION == 32
     { WPN_KATANA,                "katana",                14,  3, 12, 160,  3,
         SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 0 },
     { WPN_BLESSED_KATANA,        "blessed katana",        15,  2, 12, 160,  3,
         SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 0 },
-    { WPN_DEMON_BLADE,           "demon blade",           13, -1, 15, 200,  4,
+#endif
+    { WPN_DEMON_BLADE,           "demon blade",           13, -1, 13, 200,  4,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 2 },
-    { WPN_EUDEMON_BLADE,         "eudemon blade",         14, -2, 14, 200,  4,
+    { WPN_EUDEMON_BLADE,         "eudemon blade",         14, -2, 12, 200,  4,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 0 },
-    { WPN_DOUBLE_SWORD,          "double sword",          16, -1, 15, 220,  5,
+    { WPN_DOUBLE_SWORD,          "double sword",          15, -1, 15, 220,  5,
         SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 2 },
-    { WPN_BLESSED_DOUBLE_SWORD,  "blessed double sword",  16, -1, 14, 220,  5,
+    { WPN_BLESSED_DOUBLE_SWORD,  "blessed double sword",  16, -2, 14, 220,  5,
         SK_LONG_BLADES,  HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 0 },
     { WPN_GREAT_SWORD,           "great sword",           16, -3, 17, 250,  6,
         SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_SLICING, 10 },
-    { WPN_BLESSED_GREAT_SWORD,   "blessed great sword",   17, -3, 17, 250,  6,
+    { WPN_BLESSED_GREAT_SWORD,   "blessed great sword",   17, -4, 16, 250,  6,
         SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_SLICING, 0 },
     { WPN_TRIPLE_SWORD,          "triple sword",          19, -4, 19, 260,  6,
         SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_SLICING, 2 },
-    { WPN_BLESSED_TRIPLE_SWORD,  "blessed triple sword",  19, -4, 18, 260,  6,
+    { WPN_BLESSED_TRIPLE_SWORD,  "blessed triple sword",  20, -5, 18, 260,  6,
         SK_LONG_BLADES,  HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_SLICING, 0 },
 
@@ -297,7 +297,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_HAND_AXE,          "hand axe",            7,  3, 13,  80,  6,
         SK_AXES,         HANDS_ONE,    SIZE_SMALL,  MI_NONE, true,
         DAMV_CHOPPING, 10 },
-    { WPN_WAR_AXE,           "war axe",            11,  0, 16, 180,  7,
+    { WPN_WAR_AXE,           "war axe",            11,  0, 15, 180,  7,
         SK_AXES,         HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_CHOPPING, 10 },
     { WPN_BROAD_AXE,         "broad axe",          14, -2, 16, 230,  8,
@@ -448,11 +448,12 @@ static food_def Food_prop[NUM_FOODS] =
 // be accessed correctly.
 void init_properties()
 {
-    // Compare with enum comments, to catch changes.
-    COMPILE_CHECK(NUM_ARMOURS  == 39, c1);
-    COMPILE_CHECK(NUM_WEAPONS  == 56, c2);
-    COMPILE_CHECK(NUM_MISSILES ==  9, c3);
-    COMPILE_CHECK(NUM_FOODS    == 23, c4);
+    // The compiler would complain about too many initializers but not
+    // about too few, check it by hand:
+    COMPILE_CHECK(NUM_ARMOURS  == ARRAYSZ(Armour_prop));
+    COMPILE_CHECK(NUM_WEAPONS  == ARRAYSZ(Weapon_prop));
+    COMPILE_CHECK(NUM_MISSILES == ARRAYSZ(Missile_prop));
+    COMPILE_CHECK(NUM_FOODS    == ARRAYSZ(Food_prop));
 
     int i;
 
@@ -492,6 +493,12 @@ void do_curse_item(item_def &item, bool quiet)
     // Already cursed?
     if (item.flags & ISFLAG_CURSED)
         return;
+
+    if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_ARMOUR
+        && item.base_type != OBJ_JEWELLERY && item.base_type != OBJ_STAVES)
+    {
+        return;
+    }
 
     // Holy wrath weapons cannot be cursed.
     if (item.base_type == OBJ_WEAPONS
@@ -533,7 +540,7 @@ void do_curse_item(item_def &item, bool quiet)
     // they're worn/equipped.
     if (in_inventory(item))
     {
-        int amusement = 64;
+        int amusement = 50;
 
         if (item_is_equipped(item))
         {
@@ -552,14 +559,17 @@ void do_curse_item(item_def &item, bool quiet)
                 // Redraw the weapon.
                 you.wield_change = true;
             }
+
             ash_check_bondage();
             ash_id_inventory();
         }
+
         xom_is_stimulated(amusement);
     }
 }
 
-void do_uncurse_item(item_def &item, bool inscribe, bool no_ash)
+void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
+                     bool check_bondage)
 {
     if (!item.cursed())
     {
@@ -595,7 +605,8 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash)
     item.flags &= (~ISFLAG_CURSED);
     item.flags &= (~ISFLAG_SEEN_CURSED);
 
-    ash_check_bondage();
+    if (check_bondage)
+        ash_check_bondage();
 }
 
 // Is item stationary (cannot be picked up)?
@@ -618,7 +629,7 @@ bool item_is_stationary(const item_def &item)
             && item.plus2);
 }
 
-bool _is_affordable(const item_def &item)
+static bool _is_affordable(const item_def &item)
 {
     // Temp items never count.
     if (item.flags & ISFLAG_SUMMONED)
@@ -632,18 +643,11 @@ bool _is_affordable(const item_def &item)
     if (in_shop(item))
         return (int)item_value(item) < you.gold;
 
-    // An ugly special case for items on display.
-    if (in_bounds(item.pos))
-    {
-        for (adjacent_iterator ai(item.pos); ai; ++ai)
-            if (you.can_pass_through(*ai))
-                return true;
-        //dprf("Seen item %s seems to be un(easily)obtainable.",
-        //     item.name(DESC_PLAIN).c_str());
+    // Explicitely marked by a vault.
+    if (item.flags & ISFLAG_UNOBTAINABLE)
         return false;
-    }
 
-    // A monster has it.  Violence is the answer.
+    // On the ground or a monster has it.  Violence is the answer.
     return true;
 }
 
@@ -703,6 +707,8 @@ void set_ident_flags(item_def &item, iflags_t flags)
             you.seen_weapon[item.sub_type] |= 1 << item.special;
         if (item.base_type == OBJ_ARMOUR)
             you.seen_armour[item.sub_type] |= 1 << item.special;
+        if (item.base_type == OBJ_MISCELLANY)
+            you.seen_misc.set(item.sub_type);
     }
 }
 
@@ -724,10 +730,13 @@ iflags_t full_ident_mask(const item_def& item)
         flagset = 0;
         break;
     case OBJ_MISCELLANY:
-        if (item.sub_type == MISC_RUNE_OF_ZOT)
-            flagset = 0;
-        else
+        if (item.sub_type == MISC_CRYSTAL_BALL_OF_SEEING
+            || item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY)
+        {
             flagset = ISFLAG_KNOW_TYPE;
+        }
+        else
+            flagset = 0;
         break;
     case OBJ_BOOKS:
     case OBJ_ORBS:
@@ -983,7 +992,10 @@ void set_gloves_random_desc(item_def &item)
 
     item.plus2 = coinflip() ? TGLOV_DESC_GLOVES : TGLOV_DESC_GAUNTLETS;
     if (get_armour_ego_type(item) == SPARM_ARCHERY)
+    {
         item.plus2 = TGLOV_DESC_BRACERS;
+        set_ident_flags(item, ISFLAG_KNOW_TYPE);
+    }
 }
 
 //
@@ -1279,6 +1291,40 @@ int wand_max_charges(int type)
     return wand_charge_value(type) * 3;
 }
 
+bool is_offensive_wand(const item_def& item)
+{
+    switch (item.sub_type)
+    {
+    // Monsters don't use those, so no need to warn the player about them.
+    case WAND_ENSLAVEMENT:
+    case WAND_RANDOM_EFFECTS:
+    case WAND_DIGGING:
+
+    // Monsters will use them on themselves.
+    case WAND_HASTING:
+    case WAND_HEALING:
+    case WAND_INVISIBILITY:
+        return false;
+
+    case WAND_FLAME:
+    case WAND_FROST:
+    case WAND_SLOWING:
+    case WAND_MAGIC_DARTS:
+    case WAND_PARALYSIS:
+    case WAND_FIRE:
+    case WAND_COLD:
+    case WAND_CONFUSION:
+    case WAND_FIREBALL:
+    case WAND_TELEPORTATION:
+    case WAND_LIGHTNING:
+    case WAND_POLYMORPH_OTHER:
+    case WAND_DRAINING:
+    case WAND_DISINTEGRATION:
+        return true;
+    }
+    return false;
+}
+
 bool is_enchantable_weapon(const item_def &wpn, bool uncurse, bool first)
 {
     if (wpn.base_type != OBJ_WEAPONS
@@ -1290,11 +1336,6 @@ bool is_enchantable_weapon(const item_def &wpn, bool uncurse, bool first)
 
     if (uncurse && wpn.cursed() && you.religion != GOD_ASHENZARI)
         return true;
-
-    // Blowguns don't have any to-dam.
-    // but they can be uncursed. -doy
-    if (!first && wpn.base_type == OBJ_WEAPONS && wpn.sub_type == WPN_BLOWGUN)
-        return false;
 
     // Artefacts or highly enchanted weapons cannot be enchanted,
     // only uncursed.
@@ -1408,10 +1449,13 @@ int weapon_rarity(int w_type)
     case WPN_BARDICHE:
         return (1);
 
+#if TAG_MAJOR_VERSION == 32
+    case WPN_KATANA:
+    case WPN_BLESSED_KATANA:
+#endif
     case WPN_DOUBLE_SWORD:
     case WPN_EVENINGSTAR:
     case WPN_EXECUTIONERS_AXE:
-    case WPN_KATANA:
     case WPN_QUICK_BLADE:
     case WPN_TRIPLE_SWORD:
     case WPN_DEMON_WHIP:
@@ -1420,7 +1464,6 @@ int weapon_rarity(int w_type)
     case WPN_BLESSED_FALCHION:
     case WPN_BLESSED_LONG_SWORD:
     case WPN_BLESSED_SCIMITAR:
-    case WPN_BLESSED_KATANA:
     case WPN_EUDEMON_BLADE:
     case WPN_BLESSED_DOUBLE_SWORD:
     case WPN_BLESSED_GREAT_SWORD:
@@ -1530,10 +1573,7 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size)
         }
 
         // Adjust handedness for size only for non-whip melee weapons.
-        if (!is_range_weapon(item)
-            && item.sub_type != WPN_WHIP
-            && item.sub_type != WPN_DEMON_WHIP
-            && item.sub_type != WPN_SACRED_SCOURGE)
+        if (!is_range_weapon(item) && !is_whip_type(item.sub_type))
         {
             fit = cmp_weapon_size(item, size);
 
@@ -1582,6 +1622,13 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size)
     return (static_cast< hands_reqd_type >(ret));
 }
 
+bool is_whip_type(int wpn_type)
+{
+    return (wpn_type == WPN_WHIP
+            || wpn_type == WPN_DEMON_WHIP
+            || wpn_type == WPN_SACRED_SCOURGE);
+}
+
 bool is_demonic(const item_def &item)
 {
     if (item.base_type == OBJ_WEAPONS)
@@ -1610,7 +1657,9 @@ bool is_blessed(const item_def &item)
         case WPN_BLESSED_FALCHION:
         case WPN_BLESSED_LONG_SWORD:
         case WPN_BLESSED_SCIMITAR:
+#if TAG_MAJOR_VERSION == 32
         case WPN_BLESSED_KATANA:
+#endif
         case WPN_EUDEMON_BLADE:
         case WPN_BLESSED_DOUBLE_SWORD:
         case WPN_BLESSED_GREAT_SWORD:
@@ -1672,11 +1721,13 @@ bool convert2good(item_def &item, bool allow_blessed)
             item.sub_type = WPN_EUDEMON_BLADE;
         break;
 
+#if TAG_MAJOR_VERSION == 32
     case WPN_KATANA:
         if (!allow_blessed)
             return (false);
         item.sub_type = WPN_BLESSED_KATANA;
         break;
+#endif
 
     case WPN_DOUBLE_SWORD:
         if (!allow_blessed)
@@ -1743,9 +1794,11 @@ bool convert2bad(item_def &item)
         item.sub_type = WPN_DEMON_BLADE;
         break;
 
+#if TAG_MAJOR_VERSION == 32
     case WPN_BLESSED_KATANA:
         item.sub_type = WPN_KATANA;
         break;
+#endif
 
     case WPN_BLESSED_DOUBLE_SWORD:
         item.sub_type = WPN_DOUBLE_SWORD;
@@ -1818,12 +1871,8 @@ skill_type range_skill(const item_def &item)
         return (Weapon_prop[ Weapon_index[item.sub_type] ].skill);
     else if (item.base_type == OBJ_MISSILES)
     {
-        switch (item.sub_type)
-        {
-        case MI_DART:    return (SK_THROWING);
-        case MI_JAVELIN: return (SK_POLEARMS);
-        default:         break;
-        }
+        if (!has_launcher(item))
+            return (SK_THROWING);
     }
 
     return (SK_THROWING);
@@ -1851,7 +1900,7 @@ int weapon_ev_bonus(const item_def &wpn, int skill, size_type body, int dex,
     int ret = 0;
 
     // Note: ret currently measured in halves (see skill factor).
-    if (wpn.sub_type == WPN_WHIP || wpn.sub_type == WPN_DEMON_WHIP)
+    if (is_whip_type(wpn.sub_type))
         ret = 3 + (dex / 5);
     else if (weapon_skill(wpn) == SK_POLEARMS)
         ret = 2 + (dex / 5);
@@ -2676,7 +2725,7 @@ int item_mass(const item_def &item)
         break;
 
     case OBJ_ORBS:
-        unit_mass = 300;
+        unit_mass = 600;
         break;
 
     case OBJ_MISCELLANY:
@@ -2896,6 +2945,13 @@ void seen_item(const item_def &item)
             you.seen_weapon[item.sub_type] |= 1 << SP_UNKNOWN_BRAND;
         if (item.base_type == OBJ_ARMOUR)
             you.seen_armour[item.sub_type] |= 1 << SP_UNKNOWN_BRAND;
+        if (item.base_type == OBJ_MISCELLANY
+            && item.sub_type != MISC_CRYSTAL_BALL_OF_SEEING
+            && item.sub_type != MISC_CRYSTAL_BALL_OF_ENERGY
+            && !is_deck(item))
+        {
+            you.seen_misc.set(item.sub_type);
+        }
     }
 
     // major hack.  Deconstify should be safe here, but it's still repulsive.

@@ -223,14 +223,10 @@ NOTE: You cannot build Windows binaries on Windows 9x/ME using MinGW. On
 Windows NT/2k/XP system (although it would require a good bit of porting to
 run on 9x).
 
-* To install MinGW, you have two options. You can install via the installer
-  provided by the MinGW project (http://www.mingw.org), but this is not
-  officially supported by the Crawl team.  If you have problems with it, we
-  will not help you until you get a supported version of MinGW, which can be
-  obtained from the msysgit project.  msysgit is a full MinGW setup that
-  even includes Git (which happens to be the source code management system
-  used by the Crawl team).  To get msysgit, be sure to download the
-  'netinstall' from here:
+* To build Crawl on Windows, first download and install msysgit. msysgit is
+  a full MinGW setup that even includes Git (which happens to be the source
+  code management system used by the Crawl team). To get msysgit, be sure to
+  download the 'msysGit-netinstall' from here:
 
     http://code.google.com/p/msysgit/downloads/list
 
@@ -312,7 +308,7 @@ Data files
 Crawl looks for several data files when starting up. They include:
 
 * Special level and vault layout (dat/*.des) files.
-* Core Lua code (dat/clua/*.lua).
+* Core Lua code (dat/dlua/*.lua).
 * Descriptions for monsters and game features (dat/descript/*.txt).
 * Definitions for monster dialogue and randart names (dat/database/*.txt).
 

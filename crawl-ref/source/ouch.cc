@@ -21,10 +21,6 @@
 
 #include "ouch.h"
 
-#ifdef TARGET_COMPILER_MINGW
-#include <io.h>
-#endif
-
 #include "externs.h"
 #include "options.h"
 
@@ -71,7 +67,6 @@
 #include "shout.h"
 #include "syscalls.h"
 #include "xom.h"
-
 
 static void _end_game(scorefile_entry &se);
 static void _item_corrode(int slot);
@@ -367,14 +362,17 @@ void splash_with_acid(int acid_strength, bool corrode_items,
 
 void weapon_acid(int acid_strength)
 {
-    int hand_thing = you.equip[EQ_WEAPON];
+    int hand_thing = -1;
+
+    if (!you.melded[EQ_WEAPON])
+        hand_thing = you.equip[EQ_WEAPON];
 
     if (hand_thing == -1 && !you.melded[EQ_GLOVES])
         hand_thing = you.equip[EQ_GLOVES];
 
     if (hand_thing == -1)
     {
-        msg::stream << "Your " << your_hand(true) << " burn!" << std::endl;
+        msg::stream << "Your " << you.hand_name(true) << " burn!" << std::endl;
         ouch(roll_dice(1, acid_strength), NON_MONSTER, KILLED_BY_ACID);
     }
     else if (x_chance_in_y(acid_strength + 1, 20))
@@ -459,7 +457,7 @@ static void _item_corrode(int slot)
     if (!it_resists)
     {
         how_rusty--;
-        xom_is_stimulated(64);
+        xom_is_stimulated(50);
 
         if (item.base_type == OBJ_WEAPONS)
             item.plus2 = how_rusty;
@@ -651,7 +649,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
     if (flavour == BEAM_DEVOUR_FOOD)
         return (true);
 
-    xom_is_stimulated((num_dest > 1) ? 32 : 16);
+    xom_is_stimulated((num_dest > 1) ? 25 : 12);
 
     return (true);
 }
@@ -722,7 +720,7 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
         }
     }
 
-    xom_is_stimulated((num_dest > 1) ? 32 : 16);
+    xom_is_stimulated((num_dest > 1) ? 25 : 12);
 
     return (true);
 }
@@ -764,13 +762,8 @@ void lose_level()
     mprf(MSGCH_WARN,
          "You are now level %d!", you.experience_level);
 
-    // Constant value to avoid grape jelly trick... see level_change() for
-    // where these HPs and MPs are given back.  -- bwr
     ouch(4, NON_MONSTER, KILLED_BY_DRAINING);
-    dec_max_hp(4);
-
     dec_mp(1);
-    dec_max_mp(1);
 
     calc_hp();
     calc_mp();
@@ -783,7 +776,7 @@ void lose_level()
     redraw_skill(you.your_name, player_title());
     you.redraw_experience = true;
 
-    xom_is_stimulated(255);
+    xom_is_stimulated(200);
 
     // Kill the player if maxhp <= 0.  We can't just move the ouch() call past
     // dec_max_hp() since it would decrease hp twice, so here's another one.
@@ -850,7 +843,7 @@ bool drain_exp(bool announce_full)
     if (exp_drained > 0)
     {
         mpr("You feel drained.");
-        xom_is_stimulated(20);
+        xom_is_stimulated(15);
         you.experience -= exp_drained;
         you.exp_available -= pool_drained;
 
@@ -880,7 +873,7 @@ static void _xom_checks_damage(kill_method_type death_type,
         {
             // Xom thinks the player accidentally hurting him/herself is funny.
             // Deliberate damage is only amusing if it's dangerous.
-            int amusement = 255 * dam / (dam + you.hp);
+            int amusement = 200 * dam / (dam + you.hp);
             if (death_type == KILLED_BY_SELF_AIMED)
                 amusement /= 5;
             xom_is_stimulated(amusement);
@@ -890,13 +883,13 @@ static void _xom_checks_damage(kill_method_type death_type,
                  || death_type == KILLED_BY_FALLING_THROUGH_GATE)
         {
             // Xom thinks falling down the stairs is hilarious.
-            xom_is_stimulated(255);
+            xom_is_stimulated(200);
             return;
         }
         else if (death_type == KILLED_BY_DISINT)
         {
             // flying chunks...
-            xom_is_stimulated(128);
+            xom_is_stimulated(100);
             return;
         }
         else if (death_type != KILLED_BY_MONSTER
@@ -916,7 +909,7 @@ static void _xom_checks_damage(kill_method_type death_type,
         if (mons->wont_attack())
         {
             // Xom thinks collateral damage is funny.
-            xom_is_stimulated(255 * dam / (dam + you.hp));
+            xom_is_stimulated(200 * dam / (dam + you.hp));
             return;
         }
 
@@ -930,10 +923,10 @@ static void _xom_checks_damage(kill_method_type death_type,
         amusementvalue += leveldif * leveldif * dam;
 
         if (!mons->visible_to(&you))
-            amusementvalue += 10;
+            amusementvalue += 8;
 
         if (mons->speed < 100/player_movement_speed())
-            amusementvalue += 8;
+            amusementvalue += 7;
 
         if (death_type != KILLED_BY_BEAM
             && you.skill(SK_THROWING) <= (you.experience_level / 4))
@@ -956,6 +949,11 @@ static void _yred_mirrors_injury(int dam, int death_source)
 {
     if (yred_injury_mirror())
     {
+        // Cap damage to what was enough to kill you.  Can matter if
+        // Yred saves your life or you have an extra kitty.
+        if (you.hp < 0)
+            dam += you.hp;
+
         if (dam <= 0 || invalid_monster_index(death_source))
             return;
 
@@ -975,8 +973,8 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
     monster_type mon = royal_jelly_ejectable_monster();
 
     // Exclude torment damage.
-    const char *ptr = strstr(aux, "torment");
-    if (you.religion == GOD_JIYVA && you.piety > 160 && ptr == NULL)
+    const bool torment = aux && strstr(aux, "torment");
+    if (you.religion == GOD_JIYVA && you.piety > 160 && !torment)
     {
         int how_many = 0;
         if (dam >= you.hp_max * 3 / 4)
@@ -1030,7 +1028,7 @@ static void _pain_recover_mp(int dam)
             int gain_mp = roll_dice(3, 2 + 3 * player_mutation_level(MUT_POWERED_BY_PAIN));
 
             mpr("You focus.");
-            inc_mp(gain_mp, false);
+            inc_mp(gain_mp);
         }
     }
 }
@@ -1047,7 +1045,7 @@ static void _place_player_corpse(bool explode)
     if (explode && explode_corpse(corpse, you.pos()))
         return;
 
-    int o = get_item_slot();
+    int o = get_mitm_slot();
     if (o == NON_ITEM)
     {
         item_was_destroyed(corpse);
@@ -1071,7 +1069,7 @@ static void _place_player_corpse(bool explode)
 static void _wizard_restore_life()
 {
     if (you.hp <= 0)
-        set_hp(you.hp_max, false);
+        set_hp(you.hp_max);
     for (int i = 0; i < NUM_STATS; ++i)
     {
         if (you.stat(static_cast<stat_type>(i)) <= 0)
@@ -1115,6 +1113,12 @@ void ouch(int dam, int death_source, kill_method_type death_type,
             dam = 0;
         }
     }
+
+    if (dam != INSTANT_DEATH)
+        if (you.petrified())
+            dam /= 3;
+        else if (you.petrifying())
+            dam = dam * 1000 / 1732;
 
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity(AI_HP_LOSS, &hpl);
@@ -1206,7 +1210,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     // Is the player being killed by a direct act of Xom?
     if (crawl_state.is_god_acting()
         && crawl_state.which_god_acting() == GOD_XOM
-        && crawl_state.other_gods_acting().size() == 0)
+        && crawl_state.other_gods_acting().empty())
     {
         you.escaped_death_cause = death_type;
         you.escaped_death_aux   = aux == NULL ? "" : aux;
@@ -1247,7 +1251,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     }
 
 #if defined(WIZARD) || defined(DEBUG)
-    if (you.never_die)
+    if (!non_death && crawl_state.disables[DIS_DEATH])
     {
         _wizard_restore_life();
         return;
@@ -1383,7 +1387,7 @@ void screen_end_game(std::string text)
 void _end_game(scorefile_entry &se)
 {
     for (int i = 0; i < ENDOFPACK; i++)
-        if (item_type_unknown(you.inv[i]))
+        if (you.inv[i].defined() && item_type_unknown(you.inv[i]))
             add_inscription(you.inv[i], "unknown");
 
     for (int i = 0; i < ENDOFPACK; i++)
@@ -1422,8 +1426,10 @@ void _end_game(scorefile_entry &se)
             break;
 
         case GOD_KIKUBAAQUDGHA:
-            if (you.is_undead
-                && you.form != TRAN_LICH)
+        {
+            const mon_holy_type holi = you.holiness();
+
+            if (holi == MH_NONLIVING || holi == MH_UNDEAD)
             {
                 simple_god_message(" rasps: \"You have failed me! "
                                    "Welcome... oblivion!\"");
@@ -1434,6 +1440,7 @@ void _end_game(scorefile_entry &se)
                                    "Welcome... death!\"");
             }
             break;
+        }
 
         case GOD_YREDELEMNUL:
             if (you.is_undead)

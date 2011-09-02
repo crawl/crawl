@@ -136,6 +136,7 @@ enum hints_event_type
     HINT_CLOUD_WARNING,
     HINT_MEMORISE_FAILURE,
     HINT_ANIMATE_CORPSE_SKELETON,
+    HINT_SEEN_WEB,
     HINT_EVENTS_NUM
 };
 
@@ -165,6 +166,7 @@ void learned_something_new(hints_event_type seen_what,
                            coord_def gc = coord_def());
 formatted_string hints_abilities_info(void);
 std::string hints_skills_info(void);
+std::string hints_skill_training_info();
 std::string hints_skills_description_info(void);
 
 // Additional information for tutorial players.

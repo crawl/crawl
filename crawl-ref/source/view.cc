@@ -18,7 +18,6 @@
 
 #include "map_knowledge.h"
 #include "viewchar.h"
-#include "viewgeom.h"
 #include "showsymb.h"
 
 #include "attitude-change.h"
@@ -59,7 +58,8 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "tilemcache.h"
-#include "tilesdl.h"
+#include "tiles.h"
+#include "traps.h"
 #include "travel.h"
 #include "viewmap.h"
 #include "xom.h"
@@ -170,7 +170,7 @@ static std::string _desc_mons_type_map(std::map<monster_type, int> types)
     std::string message;
     unsigned int count = 1;
     for (std::map<monster_type, int>::iterator it = types.begin();
-         it != types.end(); it++)
+         it != types.end(); ++it)
     {
         std::string name;
         description_level_type desc;
@@ -215,7 +215,7 @@ static void _genus_factoring(std::map<monster_type, int> &types,
     int num = 0;
     std::map<monster_type, int>::iterator it;
     // Find the most represented genus.
-    for (it = genera.begin(); it != genera.end(); it++)
+    for (it = genera.begin(); it != genera.end(); ++it)
         if (it->second > num)
         {
             genus = it->first;
@@ -235,15 +235,18 @@ static void _genus_factoring(std::map<monster_type, int> &types,
     do
     {
         if (mons_genus(it->first) != genus)
+        {
+            ++it;
             continue;
+        }
 
         // This genus has a single monster type. Can't factor.
         if (it->second == num)
             return;
 
-        types.erase(it->first);
+        types.erase(it++);
 
-    } while (++it != types.end());
+    } while (it != types.end());
 
     types[genus] = num;
 }
@@ -356,7 +359,7 @@ void update_monsters_in_view()
         && you.attribute[ATTR_ABYSS_ENTOURAGE] < num_hostile)
     {
         you.attribute[ATTR_ABYSS_ENTOURAGE] = num_hostile;
-        xom_is_stimulated(16 * num_hostile);
+        xom_is_stimulated(12 * num_hostile);
     }
 }
 
@@ -460,7 +463,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
             || testbits(get_branch_flags(), BFLAG_NO_MAGIC_MAP)))
     {
         if (!suppress_msg)
-            mpr("You feel momentarily disoriented.");
+            canned_msg(MSG_DISORIENTED);
 
         return (false);
     }
@@ -534,11 +537,15 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         if (open)
         {
             if (wizard_map)
-                env.map_knowledge(*ri).set_feature(grd(*ri));
+            {
+                env.map_knowledge(*ri).set_feature(grd(*ri), 0,
+                    feat_is_trap(grd(*ri)) ? get_trap_type(*ri)
+                                           : TRAP_UNASSIGNED);
+            }
             else if (!env.map_knowledge(*ri).feat())
                 env.map_knowledge(*ri).set_feature(magic_map_base_feat(grd(*ri)));
-	    if (emphasise(*ri))
-	        env.map_knowledge(*ri).flags |= MAP_EMPHASIZE;
+            if (emphasise(*ri))
+                env.map_knowledge(*ri).flags |= MAP_EMPHASIZE;
 
             if (wizard_map)
             {
@@ -566,8 +573,10 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
     if (!suppress_msg)
     {
-        mpr(did_map ? "You feel aware of your surroundings."
-                    : "You feel momentarily disoriented.");
+        if (did_map)
+            mpr("You feel aware of your surroundings.");
+        else
+            canned_msg(MSG_DISORIENTED);
 
         std::vector<std::string> sensed;
 
@@ -600,7 +609,8 @@ void fully_map_level()
         if (!ok)
             continue;
         set_terrain_visible(*ri);
-        env.map_knowledge(*ri).set_feature(grd(*ri));
+        env.map_knowledge(*ri).set_feature(grd(*ri), 0,
+            feat_is_trap(grd(*ri)) ? get_trap_type(*ri) : TRAP_UNASSIGNED);
         if (igrd(*ri) != NON_ITEM)
             env.map_knowledge(*ri).set_detected_item();
         env.pgrid(*ri) |= FPROP_SEEN_OR_NOEXP;
@@ -692,7 +702,7 @@ std::string screenshot()
     return (ss.str());
 }
 
-static int _viewmap_flash_colour()
+int viewmap_flash_colour()
 {
     if (you.attribute[ATTR_SHADOWS])
         return (DARKGREY);
@@ -717,7 +727,7 @@ void view_update_at(const coord_def &pos)
     glyph g = get_cell_glyph(pos);
 
     int flash_colour = you.flash_colour == BLACK
-        ? _viewmap_flash_colour()
+        ? viewmap_flash_colour()
         : you.flash_colour;
     int mons = env.map_knowledge(pos).monster();
     int cell_colour =
@@ -1044,84 +1054,16 @@ void viewwindow(bool show_updates)
 
     int flash_colour = you.flash_colour;
     if (flash_colour == BLACK)
-        flash_colour = _viewmap_flash_colour();
+        flash_colour = viewmap_flash_colour();
 
     const coord_def tl = coord_def(1, 1);
     const coord_def br = crawl_view.viewsz;
     for (rectangle_iterator ri(tl, br); ri; ++ri)
     {
-#ifdef USE_TILE
-        cell->tile.clear();
-#endif
-
         // in grid coords
         const coord_def gc = view2grid(*ri);
-        const coord_def ep = grid2show(gc);
 
-        if (!map_bounds(gc))
-            _draw_out_of_bounds(cell);
-        else if (!crawl_view.in_los_bounds_g(gc))
-            _draw_outside_los(cell, gc);
-        else if (gc == you.pos() && you.on_current_level && !_show_terrain
-                 && !crawl_state.game_is_arena()
-                 && !crawl_state.arena_suspended)
-        {
-            _draw_player(cell, gc, ep, anim_updates);
-        }
-        else if (you.see_cell(gc) && you.on_current_level)
-            _draw_los(cell, gc, ep, anim_updates);
-        else
-            _draw_outside_los(cell, gc);
-
-        cell->flash_colour = BLACK;
-
-        // Alter colour if flashing the characters vision.
-        if (flash_colour)
-        {
-            if (you.see_cell(gc))
-            {
-#ifdef USE_TILE
-                cell->colour = real_colour(flash_colour);
-#else
-                monster_type mons = env.map_knowledge(gc).monster();
-                if (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons) ||
-                    !you.berserk())
-                {
-                    cell->colour = real_colour(flash_colour);
-                }
-#endif
-            }
-            else
-            {
-                cell->colour = DARKGREY;
-            }
-            cell->flash_colour = cell->colour;
-        }
-        else if (crawl_state.darken_range >= 0)
-        {
-            const int rsq = (crawl_state.darken_range
-                             * crawl_state.darken_range) + 1;
-            bool out_of_range = distance(you.pos(), gc) > rsq
-                                || !you.see_cell(gc);
-            if (out_of_range)
-            {
-                cell->colour = DARKGREY;
-#ifdef USE_TILE
-                if (you.see_cell(gc))
-                    cell->tile.bg |= TILE_FLAG_OOR;
-#endif
-            }
-        }
-#ifdef USE_TILE
-        // Grey out grids that cannot be reached due to beholders.
-        else if (you.get_beholder(gc))
-            cell->tile.bg |= TILE_FLAG_OOR;
-
-        else if (you.get_fearmonger(gc))
-            cell->tile.bg |= TILE_FLAG_OOR;
-
-        tile_apply_properties(gc, cell->tile);
-#endif
+        draw_cell(cell, gc, anim_updates, flash_colour);
 
         cell++;
     }
@@ -1144,6 +1086,85 @@ void viewwindow(bool show_updates)
         show_init();
 
     _debug_pane_bounds();
+}
+
+void draw_cell(screen_cell_t *cell, const coord_def &gc,
+               bool anim_updates, int flash_colour)
+{
+#ifdef USE_TILE
+    cell->tile.clear();
+#endif
+    const coord_def ep = grid2show(gc);
+
+    if (!map_bounds(gc))
+        _draw_out_of_bounds(cell);
+    else if (!crawl_view.in_los_bounds_g(gc))
+        _draw_outside_los(cell, gc);
+    else if (gc == you.pos() && you.on_current_level && !_show_terrain
+             && !crawl_state.game_is_arena()
+             && !crawl_state.arena_suspended)
+    {
+        _draw_player(cell, gc, ep, anim_updates);
+    }
+    else if (you.see_cell(gc) && you.on_current_level)
+        _draw_los(cell, gc, ep, anim_updates);
+    else
+        _draw_outside_los(cell, gc);
+
+    cell->flash_colour = BLACK;
+
+    // Alter colour if flashing the characters vision.
+    if (flash_colour)
+    {
+        if (you.see_cell(gc))
+        {
+#ifdef USE_TILE
+            cell->colour = real_colour(flash_colour);
+#else
+            monster_type mons = env.map_knowledge(gc).monster();
+            if (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons) ||
+                !you.berserk())
+            {
+                cell->colour = real_colour(flash_colour);
+            }
+#endif
+        }
+        else
+        {
+            cell->colour = DARKGREY;
+        }
+        cell->flash_colour = cell->colour;
+    }
+    else if (crawl_state.darken_range)
+    {
+        if (!crawl_state.darken_range->valid_aim(gc))
+        {
+            cell->colour = DARKGREY;
+#ifdef USE_TILE
+            if (you.see_cell(gc))
+                cell->tile.bg |= TILE_FLAG_OOR;
+#endif
+        }
+    }
+#ifdef USE_TILE_LOCAL
+    // Grey out grids that cannot be reached due to beholders.
+    else if (you.get_beholder(gc))
+        cell->tile.bg |= TILE_FLAG_OOR;
+
+    else if (you.get_fearmonger(gc))
+        cell->tile.bg |= TILE_FLAG_OOR;
+
+    tile_apply_properties(gc, cell->tile);
+#elif defined(USE_TILE_WEB)
+    // For webtiles, we only grey out visible tiles
+    else if (you.get_beholder(gc) && you.see_cell(gc))
+        cell->tile.bg |= TILE_FLAG_OOR;
+
+    else if (you.get_fearmonger(gc) && you.see_cell(gc))
+        cell->tile.bg |= TILE_FLAG_OOR;
+
+    tile_apply_properties(gc, cell->tile);
+#endif
 }
 
 void toggle_show_terrain()

@@ -8,6 +8,13 @@
 
 #define CRAWL "Dungeon Crawl Stone Soup"
 
+enum rel_type
+{
+    VER_ALPHA,
+    VER_BETA,
+    VER_FINAL,
+};
+
 namespace Version
 {
     //! The short version string.
@@ -35,7 +42,7 @@ namespace Version
     /*!
      * Indicates whether it's a devel or a stable version.
      */
-    bool ReleaseType();
+    rel_type ReleaseType();
 
     //! The compiler used.
     /*!

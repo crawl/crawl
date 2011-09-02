@@ -258,6 +258,7 @@ struct coord_def
 };
 
 const coord_def INVALID_COORD(-1, -1);
+const coord_def NO_CURSOR(-1, -1);
 
 typedef bool (*coord_predicate)(const coord_def &c);
 
@@ -542,7 +543,7 @@ struct item_def
 
 public:
     item_def() : base_type(OBJ_UNASSIGNED), sub_type(0), plus(0), plus2(0),
-                 special(0L), colour(0), rnd(0), quantity(0), flags(0L),
+                 special(0), colour(0), rnd(0), quantity(0), flags(0),
                  pos(), link(NON_ITEM), slot(0), orig_place(0),
                  orig_monnum(0), inscription()
     {
@@ -711,7 +712,8 @@ struct message_filter
 
     message_filter(const std::string &s) : channel(-1), pattern(s) { }
 
-    bool is_filtered(int ch, const std::string &s) const {
+    bool is_filtered(int ch, const std::string &s) const
+    {
         bool channel_match = ch == channel || channel == -1;
         if (!channel_match || pattern.empty())
             return channel_match;
@@ -796,5 +798,7 @@ struct final_effect
     coord_def pos;
     int x;
 };
+
+typedef FixedArray<item_type_id_state_type, NUM_OBJECT_CLASSES, MAX_SUBTYPES> id_arr;
 
 #endif // EXTERNS_H

@@ -621,11 +621,8 @@ bool already_learning_spell(int spell)
 // more amused the hungrier you are.
 static void _xom_check_corpse_waste()
 {
-    int food_need = 7000 - you.hunger;
-    if (food_need < 0)
-        food_need = 0;
-
-    xom_is_stimulated(64 + (191 * food_need / 6000));
+    const int food_need = std::max(7000 - you.hunger, 0);
+    xom_is_stimulated(50 + (151 * food_need / 6000));
 }
 
 void clear_macro_process_key_delay()
@@ -779,7 +776,7 @@ void handle_delay()
                     if (player_mutation_level(MUT_SAPROVOROUS) == 3)
                         _xom_check_corpse_waste();
                     else
-                        xom_is_stimulated(32);
+                        xom_is_stimulated(25);
                     delay.duration = 0;
                 }
                 else
@@ -1149,7 +1146,7 @@ static void _finish_delay(const delay_queue_item &delay)
                 if (player_mutation_level(MUT_SAPROVOROUS) == 3)
                     _xom_check_corpse_waste();
                 else
-                    xom_is_stimulated(64);
+                    xom_is_stimulated(50);
 
                 break;
             }
@@ -1257,7 +1254,7 @@ static void _finish_delay(const delay_queue_item &delay)
         if (delay.parm1 == you.equip[EQ_WEAPON])
         {
             unwield_item();
-            canned_msg(MSG_EMPTY_HANDED);
+            canned_msg(MSG_EMPTY_HANDED_NOW);
         }
 
         if (!copy_item_to_grid(you.inv[ delay.parm1 ],
@@ -1350,8 +1347,7 @@ static void _armour_wear_effects(const int item_slot)
 static command_type _get_running_command()
 {
     if (Options.travel_key_stop && kbhit()
-        || !in_bounds(you.pos() + you.running.pos)
-        || check_for_interesting_features())
+        || !in_bounds(you.pos() + you.running.pos))
     {
         stop_running();
         return CMD_NO_CMD;
@@ -1634,7 +1630,9 @@ inline static bool _monster_warning(activity_interrupt_type ai,
     const monster* mon = static_cast<const monster* >(at.data);
     if (!you.can_see(mon))
         return false;
-    if (testbits(mon->flags, MF_JUST_SUMMONED) && atype == DELAY_NOT_DELAYED)
+
+    // Disable message for summons.
+    if (mon->is_summoned() && atype == DELAY_NOT_DELAYED)
         return false;
 
     if (at.context == "already seen" || at.context == "uncharm")

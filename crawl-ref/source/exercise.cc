@@ -10,7 +10,6 @@
 
 #include "exercise.h"
 
-#include "godconduct.h"
 #include "itemprop.h"
 #include "player.h"
 #include "random.h"
@@ -190,7 +189,6 @@ static void _exercise_spell(spell_type spell, bool success)
 {
     // (!success) reduces skill increase for miscast spells
     skill_type skill;
-    int exer = 0;
     int workout = 0;
 
     unsigned int disciplines = get_spell_disciplines(spell);
@@ -206,29 +204,41 @@ static void _exercise_spell(spell_type spell, bool success)
     const int diff = spell_difficulty(spell);
 
     // Fill all disciplines into a vector, then shuffle the vector, and
-    // exercise skills in that random order. That way, small xp pools
-    // don't always train exclusively the first skill.
-    std::vector<int> disc;
+    // exercise skills in that random order. That way, first skill don't
+    // stay in the queue for a shorter time.
+    bool conj = false;
+    bool unknown = false;
+    std::vector<skill_type> disc;
     for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
     {
         if (!spell_typematch(spell, 1 << ndx))
             continue;
 
-        disc.push_back(ndx);
+        skill = spell_type2skill(1 << ndx);
+        if (skill == SK_CONJURATIONS)
+            conj = true;
+        if (!you.skills[skill])
+            unknown = true;
+
+        disc.push_back(skill);
     }
+
+    // We slow down the training of spells with
+    //conjuration (except if trying to learn a new skill).
+    if (conj && !unknown && !x_chance_in_y(skillcount, 4))
+        return;
+
     std::random_shuffle(disc.begin(), disc.end());
 
     for (unsigned int k = 0; k < disc.size(); ++k)
     {
-        int ndx = disc[k];
-        skill = spell_type2skill(1 << ndx);
+        skill = disc[k];
         workout = (random2(1 + diff) / skillcount);
 
         if (!one_chance_in(5))
             workout++;       // most recently, this was an automatic add {dlb}
 
-        const int exercise_amount = exercise(skill, workout);
-        exer      += exercise_amount;
+        exercise(skill, workout);
     }
 
     /* ******************************************************************
@@ -243,16 +253,7 @@ static void _exercise_spell(spell_type spell, bool success)
        spellcasting had also been generally exercised at the same time
        ****************************************************************** */
 
-    exer += exercise(SK_SPELLCASTING, one_chance_in(3) ? 1
-                                      : random2(1 + random2(diff)));
-
-    // Avoid doubly rewarding spell practise in sprint
-    // (by inflated XP and inflated piety gain)
-    if (crawl_state.game_is_sprint())
-        exer = sprint_modify_exp_inverse(exer);
-
-    if (exer)
-        did_god_conduct(DID_SPELL_PRACTISE, exer);
+    exercise(SK_SPELLCASTING, 1 + random2(1 + diff) / skillcount);
 }
 
 static bool _check_train_armour(int amount)
@@ -313,7 +314,7 @@ static void _exercise_passive()
         if (!x_chance_in_y(armour_mass, 1000)
             // Diminishing returns for stealth training by waiting.
             && you.skills[SK_STEALTH] <= 2 + random2(3)
-            && one_chance_in(18))
+            && one_chance_in(15))
         {
             exercise(SK_STEALTH, 1);
         }
@@ -345,7 +346,7 @@ void practise(exer_type ex, int param1)
     case EX_WILL_HIT:
         sk = static_cast<skill_type>(param1);
         _exercise(sk, 1, limit);
-        if (one_chance_in(3))
+        if (coinflip())
             _exercise(SK_FIGHTING, 1, limit);
         break;
 
@@ -363,12 +364,10 @@ void practise(exer_type ex, int param1)
         switch (sk)
         {
         case SK_SLINGS:
-            deg = 1 + random2avg(3, 2);
-            break;
-        case SK_THROWING:
+        case SK_THROWING: // Probably obsolete.
         case SK_BOWS:
         case SK_CROSSBOWS:
-            deg = coinflip() ? 2 : 1;
+            deg = 1;
             break;
         default:
             break;
@@ -380,15 +379,11 @@ void practise(exer_type ex, int param1)
         switch (param1) // missile subtype
         {
         case MI_DART:
-            deg = 1 + random2avg(3, 2) + coinflip();
-            break;
         case MI_JAVELIN:
-            deg = 1 + coinflip() + coinflip();
-            break;
         case MI_THROWING_NET:
-            deg = 1 + coinflip();
+            deg = 1;
             break;
-        default:
+        default: // Throwing stones and large rocks.
             deg = coinflip();
             break;
         }

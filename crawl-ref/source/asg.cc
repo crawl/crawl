@@ -23,7 +23,9 @@ AsgKISS::get_uint32()
         m_xorshift ^= m_xorshift << 5;
         m_xorshift ^= m_xorshift >> 7;
         m_xorshift ^= m_xorshift << 22;
-    } else {
+    }
+    else
+    {
         uint64_t t = 4294584393ULL * m_mwcm + m_mwcc;
         m_mwcc = t >> 32;
         m_mwcm = t;
@@ -84,5 +86,6 @@ uint32_t get_uint32()
 
 void seed_asg(uint32_t seed_array[], int seed_len)
 {
+    delete asg_rng;
     asg_rng = new AsgKISS(seed_array, seed_len);
 }

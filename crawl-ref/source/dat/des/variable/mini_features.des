@@ -8,7 +8,6 @@
 #           Minivaults with monsters go to mini_monsters.des.
 #           Maps for the Vault branch, including Vaults:8 are in vaults.des.
 #
-# <<0>> Serial vaults            (thematic vaults possibly spawned together)
 # <<1>> Flavour vaults           (no items, no monsters)
 # <<2>> Inaccessible items
 # <<3>> Supply closet vaults     (vaults with items and no risk).
@@ -17,45 +16,11 @@
 #
 # Sometimes, a vault will fit in two categories (for examples, it can have both
 # hidden and revealed items). Choose at your own discretion.
-###############################################################################
+#
+# For serial vaults, read dat/des/serial/serial_guide.txt.
+############################################################################
 
 default-depth: D, Vault, Elf, Crypt
-
-############################################################################
-#
-# <<0>> Serial vaults
-#       Sometimes, we want flavour vaults to be placed several times, so as
-#       to makes the level feel more coherent. The lua calls for such serial
-#       vaults are here.
-#       The vaults eventually could be just copies of one map, or also come
-#       from a list of thematically linked maps. This is mostly for flavour,
-#       although it may later be interesting to created serial vaults around
-#       threats.
-#       In general, we don't want more than one serial vault on a level. Use
-#       the luniq_serial in the serial vault's header map for this.
-#
-#       Elaborate serial vaults should go into their. des files.
-#
-############################################################################
-
-# Glass vaults
-#
-# Single instances of serial_glass vaults can be placed normally, so
-# we only roll numbers between 2 and 12 (non-flat distribution).
-# Sometimes we add a few rarer glass vaults to the level.
-NAME:   serial_glass
-TAGS:   allow_dup extra luniq_serial
-DEPTH:  D, Elf, Vault, Crypt
-CHANCE: 1%
-{{
-  local c = 2 + crawl.random2(3)*crawl.random2(3)*crawl.random2(4)
-  local d = crawl.random2(2)*crawl.random2(2)*crawl.random2(5)
-  hook("post_place", function()
-    dgn.place_maps{tag="serial_glass", count=c}
-    dgn.place_maps{tag="serial_glass_rare", count=d}
-  end)
-}}
-
 
 ############################################################################
 #
@@ -1105,6 +1070,418 @@ MAP
 ENDMAP
 
 
+NAME:  roderic_Roman_lattice
+DEPTH: D, Elf
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxx
+ccccccccccccccccccccccccc
+vcxcvcxcvcxcvcxcvcxcvcxcv
+@c.c.c.c.c.c.c.c.c.c.c.c@
+v.c.v.c.v.c.v.c.v.c.v.c.v
+@cvc.cvc.cvc.cvc.cvc.cvc@
+v.c.v.c.v.c.v.c.v.c.v.c.v
+@c.c.c.c.c.c.c.c.c.c.c.c@
+vcxcvcxcvcxcvcxcvcxcvcxcv
+ccccccccccccccccccccccccc
+xxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:   roderic_Aztec_sauvastika
+WEIGHT: 1
+DEPTH:  D
+MAP
+   ......@..
+  ...xxxxx...
+ ....x...x....
+.....xxx.x.....
+.........x.....
+@xxxxxxxxx.xxx.
+.x...xxxxx.x.x.
+.x.x.xxxxx.x.x.
+.x.x.xxxxx...x.
+.xxx.xxxxxxxxx@
+.....x.........
+.....x.xxx.....
+ ....x...x....
+  ...xxxxx...
+   ..@......
+ENDMAP
+
+NAME:   roderic_Bali_sauvastika
+TAGS:   extra
+WEIGHT: 1
+DEPTH:  D
+: if crawl.one_chance_in(5) then
+SUBST:  @ = x
+: else
+SUBST:  + = x+
+: end
+MAP
+...@.......
+...x.......
+...x.......
+...xxx.xxx@
+.....x.x...
+...xx+xx...
+...x.x.....
+@xxx.xxx...
+.......x...
+.......x...
+.......@...
+ENDMAP
+
+NAME:   roderic_Chinese_pattern_swastika
+WEIGHT: 1
+DEPTH:  D
+MAP
+...............
+.x.xxxx.xxxx.x.
+.x.xxxx.xxxx.x.
+.x.xx.....xx.x.
+.xxxxxx.xxxxxx.
+.xxxxxx.xxxxxx.
+.xxxxxx.xxxxxx.
+...xx.x.x.xx...
+.xxxx.x.x.xxxx.
+.xxxx.x.x.xxxx.
+...............
+ENDMAP
+
+NAME:   roderic_Hopi_sauvastika
+WEIGHT: 1
+TAGS:   extra
+DEPTH:  D
+MAP
+.....@.....
+...xxxx....
+...xxxx....
+....xxx.xx.
+.xxxxxxxxx.
+@xxxxxxxxx@
+.xxxxxxxxx.
+.xx.xxx....
+....xxxx...
+....xxxx...
+.....@.....
+ENDMAP
+
+NAME:   roderic_Greek_sauvastika
+DEPTH:  D
+WEIGHT: 1
+: if crawl.one_chance_in(5) then
+SUBST:  @ = x
+: else
+SUBST:  + = x+
+: end
+MAP
+.........@.
+@xxxxxxx.x.
+.......x.x.
+.xxxxx.x.x.
+.x...x.x.x.
+.x.xx+xx.x.
+.x.x.x...x.
+.x.x.xxxxx.
+.x.x.......
+.x.xxxxxxx@
+.@.........
+ENDMAP
+
+NAME:   roderic_curled_sauvastika
+DEPTH:  D
+WEIGHT: 1
+TAGS:  extra
+: if crawl.one_chance_in(5) then
+SUBST:  @ = x
+: else
+SUBST:  + = x+
+: end
+MAP
+.@.........
+.x.xxx.xxx@
+.x.x.x.x...
+.xxx.x.xxx.
+.....x...x.
+.xxxx+xxxx.
+.x...x.....
+.xxx.x.xxx.
+...x.x.x.x.
+@xxx.xxx.x.
+.........@.
+ENDMAP
+
+NAME:   roderic_bipointed_swastika
+WEIGHT: 1
+TAGS:   extra
+DEPTH:  D
+: if crawl.one_chance_in(5) then
+SUBST:  @ = x
+: else
+SUBST:  + = x+
+: end
+MAP
+.@.........
+.x.xxx.xxx@
+.x...x.x...
+.xxx.xxx.x.
+...x.x...x.
+.xxxx+xxxx.
+.x...x.x...
+.x.xxx.xxx.
+...x.x...x.
+@xxx.xxx.x.
+.........@.
+ENDMAP
+
+NAME:   roderic_digamma_sauvastika
+DEPTH:  D
+WEIGHT: 1
+: if crawl.one_chance_in(5) then
+SUBST:  @ = x
+: else
+SUBST:  + = x+
+: end
+MAP
+.@.........
+.x.xxx.xxx@
+.x.x...x...
+.xxxxx.xxx.
+.....x.x.x.
+.x.xx+xx.x.
+.x.x.x.....
+.xxx.xxxxx.
+...x...x.x.
+@xxx.xxx.x.
+.........@.
+ENDMAP
+
+#squared St Hans cross, ancient Viking symbol
+NAME:   roderic_st_hans_cross
+WEIGHT: 1
+TAGS:   extra
+DEPTH:  D
+MAP
++xxxxxxxxxx+
+x...xxxx...x
+x.x.xxxx.x.x
+x..........x
+xxx.xxxx.xxx
+xxx.xxxx.xxx
+xxx.xxxx.xxx
+xxx.xxxx.xxx
+x..........x
+x.x.xxxx.x.x
+x...xxxx...x
++xxxxxxxxxx+
+ENDMAP
+
+#cross filled (sun sumbol) in ancient Mid East and Greece
+NAME:   roderic_filled_cross
+WEIGHT: 1
+TAGS:   extra
+DEPTH:  D
+SUBST:  ? = x+
+MAP
+   .......
+   .xx+xx.
+   .x...x.
+....x.x.x....
+.xxxx.x.xxxx.
+.x....x....x.
+.?.xxxxxxx.?.
+.x....x....x.
+.xxxx.x.xxxx.
+....x.x.x....
+   .x...x.
+   .xx?xx.
+   .......
+ENDMAP
+
+#cross of infinity
+NAME:   roderic_cross_of_infinity
+TAGS:   extra
+WEIGHT: 1
+DEPTH:  D
+MAP
+.............
+.xx+xxxxx+xx.
+.xxx.....xxx.
+.+xxx.x.xxx+.
+.x.xxx.xxx.x.
+.x..x.x.x..x.
+.x.x.xxx.x.x.
+.x..x.x.x..x.
+.x.xxx.xxx.x.
+.+xxx.x.xxx+.
+.xxx.....xxx.
+.xx+xxxxx+xx.
+.............
+ENDMAP
+
+
+#nine men's morris (Roderic)
+NAME:    roderic_nine_men_s_morris
+WEIGHT:  1
+DEPTH:   D, Elf
+SHUFFLE: defgh
+ITEM:    q:1 $, sausage, choko, sultana, stone
+NSUBST:  ' = 9:d / *:.
+MAP
+'.......'.......'
+.xxxxxxx.xxxxxxx.
+.xxxxxxx.xxxxxxx.
+.xx'....'....'xx.
+.xx.xxxx.xxxx.xx.
+.xx.xxxx.xxxx.xx.
+.xx.xx'.'.'xx.xx.
+.xx.xx.xxx.xx.xx.
+'..'..'xxx'..'..'
+.xx.xx.xxx.xx.xx.
+.xx.xx'.'.'xx.xx.
+.xx.xxxx.xxxx.xx.
+.xx.xxxx.xxxx.xx.
+.xx'....'....'xx.
+.xxxxxxx.xxxxxxx.
+.xxxxxxx.xxxxxxx.
+'.......'.......'
+ENDMAP
+
+# Three-in-row (Roderic)
+NAME:   roderic_three_in_a_row
+WEIGHT: 1
+DEPTH:  D,Elf
+ITEM:   q:1 $, sultana, stone, choko
+SUBST:  ' : TUdefg
+MAP
+@xxxx@xxxx@
+x'...'...'x
+x..xx.xx..x
+x.x.x.x.x.x
+x.xx...xx.x
+@'...'...'@
+x.xx...xx.x
+x.x.x.x.x.x
+x..xx.xx..x
+x'...'...'x
+@xxxx@xxxx@
+ENDMAP
+
+NAME:    roderic_ancient_swastika
+TAGS:    allow_dup extra luniq_mini
+DEPTH:   D
+WEIGHT:  1
+SHUFFLE: '"
+SUBST:   x : xxxxxc
+SUBST:   ? : xxxxxcm
+SUBST:   ' : .
+SUBST:   " : x
+
+MAP
+...........
+.x'''x"""x.
+.".?.x...'.
+.".?.x.??'.
+."...x...'.
+.xxxxxxxxx.
+.'...x...".
+.'??.x.?.".
+.'...x.?.".
+.x"""x'''x.
+...........
+ENDMAP
+
+NAME:  roderic_lattice_a
+DEPTH: D
+MAP
+...........................................
+.xxxxxxxxxxxxx.xxxxxxxxxxxxx.xxxxxxxxxxxxx.
+.x...........x.x...........x.x...........x.
+.x.xxxx.xxxx.x.x.xxxx.xxxx.x.x.xxxx.xxxx.x.
+.x....x.x....x.x....x.x....x.x....x.x....x.
+.xxxx.x.x.xxxx.xxxx.x.x.xxxx.xxxx.x.x.xxxx.
+......x.x...........x.x...........x.x......
+.xxxxxx.xxxxxxxxxxxxx.xxxxxxxxxxxxx.xxxxxx.
+...........................................
+ENDMAP
+
+NAME:  roderic_serpentine_path
+TAGS:  extra
+DEPTH: D
+MAP
+ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ x...........x...........x.....+@
+ x.xxxxxxxxx.x.xxxxxxxxx.x.xxxxx
+ x.....x.....x.....x.....x.....x
+ xxxxx.x.xxxxxxxxx.x.xxxxxxxxx.x
+@+.....x...........x...........x
+ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+# Malta's cross
+NAME:   roderic_malta_cross
+TAGS:   allow_dup extra luniq_mini
+WEIGHT: 1
+DEPTH:  D
+MAP
+ .........
+...ccccc...
+....ccc....
+.c...c...c.
+.cc..c..cc.
+.ccccccccc.
+.cc..c..cc.
+.c...c...c.
+....ccc....
+...ccccc...
+ .........
+ENDMAP
+
+NAME:   roderic_whirl
+TAGS:   allow_dup extra luniq_mini
+DEPTH:  D, Elf
+WEIGHT: 1
+SUBST:  ? : ttTTG
+MAP
+ .......
+.?..xx.?.
+...x.....
+.x.x.xx..
+.x..x..x.
+..xx.x.x.
+.....x...
+.?.xx..?.
+ .......
+ENDMAP
+
+NAME:  roderic_lattice_octagonal_star
+TAGS:  float
+MAP
+  .......     .......
+ ....x..... .....x....
+....xxx.........xxx....
+....xxx.........xxx....
+..xxxxxxx.....xxxxxxx..
+.xxxxxxxxx...xxxxxxxxx.
+..xxxxxxx..x..xxxxxxx..
+....xxx...xxx...xxx....
+....xxx.xxxxxxx.xxx....
+ ....x..xxxxxxx..x....
+ ......xxxxxxxxx......
+  ....xxxxxxxxxxx....
+ ......xxxxxxxxx......
+ ....x..xxxxxxx..x....
+....xxx.xxxxxxx.xxx....
+....xxx...xxx...xxx....
+..xxxxxxx..x..xxxxxxx..
+.xxxxxxxxx...xxxxxxxxx.
+..xxxxxxx.....xxxxxxx..
+....xxx.........xxx....
+....xxx.........xxx....
+ ....x..... .....x....
+  .......     .......
+ENDMAP
+
+
 #####################################################################
 #
 # <<2>> Inaccessible items
@@ -1493,7 +1870,7 @@ DEPTH:  D:12-27, Vault, Elf, Geh
 TAGS:   allow_dup abyss ruin_abyss
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 20, pow_max = 40, delay = 150, \
-            size = 1, walk_dist = 0, spread_rate= 75 }
+            size = 2, walk_dist = 0, spread_rate= 75 }
 COLOUR: * = red
 SUBST:  * = .
 MAP
@@ -1511,7 +1888,7 @@ DEPTH:  D:5-27, Vault, Elf, Geh
 TAGS:   abyss ruin_abyss
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 20, pow_max = 40, delay_min = 100, delay_max=200, \
-            size = 1, walk_dist = 0, spread_rate= 75 }
+            size = 2, walk_dist = 0, spread_rate= 75 }
 COLOUR: n = red
 SUBST:  * = .
 MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
@@ -1535,7 +1912,7 @@ DEPTH:  D:5-27, Vault, Elf, Geh
 TAGS:   layout_rooms layout_city
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 20, pow_max = 40, delay = 150, \
-            size = 1, walk_dist = 0, spread_rate= 75 }
+            size = 2, walk_dist = 0, spread_rate= 75 }
 COLOUR: * = red
 SUBST:  * = .
 MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
@@ -1567,7 +1944,7 @@ TAGS:   uniq_geyser no_monster_gen
 MONS:   nothing,nothing
 MARKER: 1 = lua:fog_machine { cloud_type="steam", \
             pow_min = 2, pow_max = 5, delay = 25, \
-            size = 1, walk_dist = 3, spread_rate= 10 }
+            size = 2, walk_dist = 3, spread_rate= 10 }
 MARKER: 2 = lua:fog_machine { cloud_type="steam", \
             pow_min = 10, pow_max = 20, delay = 750, \
             size = 10, walk_dist = 1, spread_rate= 75 }
@@ -1625,7 +2002,7 @@ DEPTH: D:11-27, Crypt, Tar
 TAGS:  allow_dup
 MARKER: Y = lua:fog_machine { cloud_type = "foul pestilence", \
              pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
-             size = 1, walk_dist = 1, spread_rate= 33 }
+             size = 2, walk_dist = 1, spread_rate= 33 }
 MAP
 Y
 ENDMAP
@@ -1638,7 +2015,7 @@ SUBST:  * : *$
 NSUBST: @ = 2:@ / *:@.
 MARKER: d = lua:fog_machine { cloud_type = "flame", \
              pow_min = 10, pow_max = 10, delay = 10, \
-             size = 1, walk_dist = 0, spread_rate= 0 }
+             size = 2, walk_dist = 0, spread_rate= 0 }
 SUBST:  ' = .
 MAP
 ccccc.@.ccccc
@@ -1666,16 +2043,16 @@ MONS:    nothing, nothing, nothing, nothing
 SHUFFLE: 1234
 MARKER:  1 = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 1, pow_max = 10, delay = 85, \
-             size = 1, walk_dist = 2, spread_rate= 20 }
+             size = 2, walk_dist = 2, spread_rate= 20 }
 MARKER:  2 = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 1, pow_max = 10, delay = 95, \
-             size = 1, walk_dist = 2, spread_rate= 20 }
+             size = 2, walk_dist = 2, spread_rate= 20 }
 MARKER:  3 = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 1, pow_max = 10, delay = 105, \
-             size = 1, walk_dist = 2, spread_rate= 20 }
+             size = 2, walk_dist = 2, spread_rate= 20 }
 MARKER:  4 = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 1, pow_max = 10, delay = 115, \
-             size = 1, walk_dist = 2, spread_rate= 20 }
+             size = 2, walk_dist = 2, spread_rate= 20 }
 SUBST:   1=w, 2=w, 3=w, 4=w
 MAP
    .wwwww.
@@ -1701,13 +2078,13 @@ ITEM:   nothing, nothing, nothing
 NSUBST: . = 4:d / 4:e / 4:f / *:.
 MARKER: d = lua:fog_machine { cloud_type = "flame", \
              pow_min = 2, pow_max = 4, delay = 29, start_clouds = 1, \
-             size = 1, walk_dist = 2, spread_rate= 0 }
+             size = 2, walk_dist = 2, spread_rate= 0 }
 MARKER: e = lua:fog_machine { cloud_type = "flame", \
              pow_min = 2, pow_max = 4, delay = 31, start_clouds = 1, \
-             size = 1, walk_dist = 2, spread_rate= 0 }
+             size = 2, walk_dist = 2, spread_rate= 0 }
 MARKER: f = lua:fog_machine { cloud_type = "flame", \
              pow_min = 2, pow_max = 4, delay = 37, start_clouds = 1, \
-             size = 1, walk_dist = 2, spread_rate= 0 }
+             size = 2, walk_dist = 2, spread_rate= 0 }
 MARKER: G = lua:props_marker { stop_explore = "a scorch-marked granite statue."\
         , feature_description = "scorch-marked granite statue" }
 MAP
@@ -1735,7 +2112,7 @@ ITEM:    nothing
 SHUFFLE: {[ / ]}
 MARKER:  d = lua:fog_machine { cloud_type = "flame", \
              pow_min = 10, pow_max = 10, delay = 10, \
-             size = 1, walk_dist = 0, spread_rate= 0 }
+             size = 2, walk_dist = 0, spread_rate= 0 }
 MAP
 ccccccccccc
 cccccc...{c
@@ -1752,7 +2129,7 @@ ITEM:    nothing
 SHUFFLE: {[ / ]}
 MARKER:  d = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 10, pow_max = 10, delay = 10, \
-             size = 1, walk_dist = 0, spread_rate= 0 }
+             size = 2, walk_dist = 0, spread_rate= 0 }
 MAP
 ccccccccccccc
 cccccccc...{c
@@ -1769,7 +2146,7 @@ DEPTH:  D:9-27, Vault, Elf, Geh
 TAGS:   layout_rooms layout_city no_item_gen abyss ruin_abyss
 MARKER: * = lua:fog_machine { cloud_type="flame", \
             pow_min = 25, pow_max = 50, delay = 150, \
-            size = 2, walk_dist = 0, spread_rate= 40 }
+            size = 3, walk_dist = 0, spread_rate= 40 }
 COLOUR: * = red
 SUBST:  * = .
 SUBST:  $ : $$*|.c
@@ -1826,6 +2203,42 @@ MAP
 .ttmmmtt.
 .tttttt..
 .......
+ENDMAP
+
+NAME:  kilobyte_tornado_obelisk
+TAGS:  no_monster_gen
+DEPTH: D:15-27, Elf
+ITEM:  acquire any
+MONS:  statue generate_awake n_rpl name:diamond_obelisk hp:10000 \
+       col:white tile:mons_diamond_obelisk
+KPROP: .d1 = no_tele_into
+{{
+  hook("post_place", function()
+    for mons in iter.mons_rect_iterator(dgn.point(1, 1),
+                         dgn.point(dgn.GXM - 2, dgn.GYM - 2)) do
+      if mons.name == "diamond obelisk" then
+        mons.add_ench("perm_tornado", 1, 1)
+      end
+    end
+  end)
+}}
+MAP
+      ccc
+     ccdcc
+   ccc...ccc
+  cc.......cc
+ cc.........cc
+ c...........c
+cc...........cc
+c.............c
+c......1......c
+c.............c
+cc...........cc
+ c...........c
+ cc.........cc
+  cc.......cc
+   ccc...ccc
+     c.@.c
 ENDMAP
 
 

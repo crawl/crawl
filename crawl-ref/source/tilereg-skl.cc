@@ -1,11 +1,12 @@
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "tilereg-skl.h"
 
 #include "cio.h"
 #include "libutil.h"
+#include "skills.h"
 #include "skills2.h"
 #include "stuff.h"
 #include "tiledef-icons.h"
@@ -82,7 +83,8 @@ int SkillRegion::handle_mouse(MouseEvent &event)
         else
         {
             tiles.set_need_redraw();
-            you.practise_skill[skill] = !you.practise_skill[skill];
+            you.train[skill] = !you.train[skill];
+            reset_training();
         }
         return CK_MOUSE_CMD;
     }
@@ -122,10 +124,10 @@ bool SkillRegion::update_tip_text(std::string& tip)
         const skill_type skill = (skill_type) m_items[item_idx].idx;
 
         tip = "[L-Click] ";
-        if (you.practise_skill[skill])
-            tip += "Lower the rate of training";
+        if (you.train[skill])
+            tip += "Disable training";
         else
-            tip += "Increase the rate of training";
+            tip += "Enable training";
     }
 #ifdef WIZARD
     if (you.wizard)
@@ -236,8 +238,7 @@ void SkillRegion::update()
             continue;
 
         InventoryTile desc;
-        desc.tile     = tileidx_skill(skill,
-                                      you.practise_skill[skill]);
+        desc.tile     = tileidx_skill(skill, you.train[skill]);
         desc.idx      = idx;
         desc.quantity = you.skills[skill];
 

@@ -479,7 +479,7 @@ ENDMAP
 NAME:  lemuel_hellish_altar
 DEPTH: D:2-21, Crypt, Geh
 TAGS:  no_monster_gen
-MONS:  iron devil/orange demon, beast/rotting devil, lemure/iron imp, hellion
+MONS:  iron devil/orange demon, hell beast/rotting devil, lemure/iron imp, hellion
 SUBST: 2 = 23
 SUBST: 2 = 12
 SUBST: 3 = 3L
@@ -680,7 +680,7 @@ xxxxx
 ENDMAP
 
 NAME:  fedhas_bush_and_centaur_altar
-DEPTH: 3-27
+DEPTH: D:3-27
 KFEAT: _ = altar_fedhas
 MONS:  centaur, bush
 MAP
@@ -721,6 +721,37 @@ ENDMAP
 # more than just one god.
 #
 ######################################
+
+### Ashenzari overflow altars #################################################
+
+NAME:   ashenzari_altar_1
+TAGS:   uniq_altar_ashenzari temple_overflow_ashenzari
+WEIGHT: 5
+KFEAT:  _ = altar_ashenzari
+ITEM:   cursed mace ident:curse / cursed trident ident:curse / \
+        cursed flail ident:curse w:1 / cursed whip ident:curse w:1
+### TODO: This still gives book names like "Ashenzari's Almanac of Skeletal
+###       Cooking" and "Ashenzari's Compendium of Skeletal Cooking", whereas
+###       we just want "Ashenzari's Skeletal Cookbook" or similar (no random
+###       component).
+ITEM:   randbook owner:Ashenzari desc:necr title:Skeletal_Cooking spells:animate_skeleton numspells:1 /\
+        randbook owner:Ashenzari desc:necr title:Culinary_Necromancy spells:animate_skeleton numspells:1 /\
+        randbook owner:Ashenzari desc:necr title:Culinary_Dark_Arts spells:animate_skeleton numspells:1 /\
+        randbook owner:Ashenzari desc:necr title:Rapid_Deboning spells:animate_skeleton numspells:1
+MAP
+...
+d_e
+...
+ENDMAP
+
+NAME:   ashenzari_altar_2
+TAGS:   uniq_altar_ashenzari temple_overflow_ashenzari
+KFEAT:  _ = altar_ashenzari
+MAP
+b.b
+._.
+b.b
+ENDMAP
 
 ### Cheibriados overflow altars ###############################################
 
@@ -1047,6 +1078,37 @@ MAP
      .....
 ENDMAP
 
+NAME:   fedhas_altar_fruit_tree
+TAGS:   uniq_altar_fedhas temple_overflow_fedhas mini_float no_item_gen no_rotate
+DEPTH:  D:2-20
+NSUBST: g = 4:f/*:.
+NSUBST: f = 5:A/*:.
+NSUBST: w = 2:4 / *:w
+KFEAT:  C = altar_fedhas
+KFEAT:  A = .
+KITEM:  A = apple / apricot / orange / pear
+FTILE:  . = floor_moss
+FTILE:  t = floor_moss
+FTILE:  d = floor_hall
+FTILE:  f = floor_moss
+COLOUR: f = brown
+COLOUR: . = green
+COLOUR: d = brown
+MAP
+ttttttttttttttt
+ttttttttttttttt
+ttttttgfgtttttt
+tttttgf.fgttttt
+ttttgf.f.fgtttt
+tttgf..C..fgttt
+tttgf.f.f.fgttt
+ttgfffffffffgtt
+ttgt.......tgtt
+ttttttdddtttttt
+ttttttdddtttttt
+tttttdd@ddttttt
+ENDMAP
+
 
 ### Kikubaaqudgha overflow altars #############################################
 
@@ -1089,13 +1151,30 @@ xxxxxxx
 xxxxxxx
 ENDMAP
 
+NAME:   lemuel_zombie_altar_kiku
+DEPTH:  D:2-18, Crypt
+TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen temple_overflow_kikubaaqudgha
+KFEAT:  _ = altar_kikubaaqudgha
+MONS:   rat zombie / bat zombie / nothing w:200
+KMONS:  w = giant goldfish zombie / big fish zombie / nothing w:200
+KFEAT:  w = deep_water
+MAP
+xxxxxxxxxxxxxxxx
+xxxxwwwwwwwwxxxx
+xxxx11111111xxxx
+@............._x
+xxxx11111111xxxx
+xxxxwwwwwwwwxxxx
+xxxxxxxxxxxxxxxx
+ENDMAP
+
 
 ### Makhleb overflow altars ###################################################
 
 NAME:    demons_altar
 DEPTH:   3-11
 TAGS:    no_monster_gen patrolling temple_overflow_makhleb
-TAGS:    layout_rooms layout_city layout_open layout_cross
+TAGS:    layout_rooms layout_city layout_open layout_cross mini_float
 KFEAT:   _ = altar_makhleb
 # Either one slow type 3 or s or 4 demon (iron devil or demonic crawler or
 #     smoke demon) or three slow type 5 demons (iron imp).
@@ -1122,6 +1201,18 @@ x.............x
 x.............x
 x.............x
 x.............x
+ENDMAP
+
+NAME:  bloody_makhleb
+TAGS:  uniq_altar_makhleb temple_overflow_makhleb
+DEPTH: D:2-12, Orc, Vault
+KPROP: . = bloody / nothing
+KFEAT: _ = altar_makhleb
+KITEM: _ = robe, whip
+MAP
+...
+._.
+...
 ENDMAP
 
 
@@ -1269,8 +1360,6 @@ NSUBST:     M = 1:1 / *:"
 SUBST:      ' : "'., ' = ''.
 COLOUR:     . = blue
 SUBST:      ' = ., " = .
-ITEM:       potion of gain intelligence w:2 / potion of brilliance /\
-            potion of magic / any book w:1
 MAP
         xx@xx
         x...x
@@ -1286,7 +1375,7 @@ MAP
    xx''.wwwww.''xx
     x'''.www.'''x
     xx'''...'''xx
-     xx''d'd''xx
+     xx'''''''xx
       xxx...xxx
         x._.x
         x...x
@@ -1389,7 +1478,7 @@ WEIGHT: 8
 TAGS:   temple_overflow_vehumet
 MARKER: _ = lua:fog_machine { cloud_type = "flame", \
                pow_min = 6, pow_max = 8, delay_min = 35, delay_max = 55, \
-               size = 1, walk_dist = 0, spread_rate= 0 }
+               size = 2, walk_dist = 0, spread_rate= 0 }
 KFEAT:  _ = altar_vehumet
 MAP
 .....
@@ -1408,12 +1497,12 @@ WEIGHT: 2
 TAGS:   temple_overflow_vehumet
 MARKER: _ = lua:fog_machine { cloud_type = "freezing vapour", \
                pow_min = 6, pow_max = 8, delay_min = 35, delay_max = 55, \
-               size = 1, walk_dist = 0, spread_rate= 0 }
+               size = 2, walk_dist = 0, spread_rate= 0 }
 KFEAT:  _ = altar_vehumet
 MARKER: + = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 10, pow_max = 12, delay = 30, \
              size = 3, walk_dist = 1, spread_rate= 0 }
-KITEM:  + = book of conjurations [Fire+Earth] / book of conjurations [Ice+Air]
+KITEM:  + = book of conjurations
 MAP
 ......
 ._....
@@ -1524,6 +1613,7 @@ MAP
 ENDMAP
 
 NAME:    xom_obstacle_run
+DEPTH:   !D:1
 TAGS:    temple_overflow_xom uniq_altar_xom
 KFEAT:   _ = altar_xom
 SHUFFLE: ABCDEFG
@@ -1532,7 +1622,7 @@ KFEAT:   B = needle trap
 KFEAT:   C = shaft trap
 MARKER:  E = lua:fog_machine { cloud_type = "flame", \
                pow_min = 5, pow_max = 8, delay_min = 80, delay_max = 150, \
-               size = 1, walk_dist = 0, spread_rate= 0 }
+               size = 2, walk_dist = 0, spread_rate= 0 }
 SUBST:   D = 1, EFG = .
 MONS:    kobold; dagger ego:chaos / gnoll; spear ego:chaos / orc; short sword ego:chaos
 MAP
@@ -1616,6 +1706,52 @@ MAP
       @
 ENDMAP
 
+NAME:   xom_gifts_altar
+TAGS:   temple_overflow_xom uniq_altar_xom
+CHANCE: 3
+KFEAT:  _ = altar_xom
+KPROP:  _ = bloody
+KPROP:  , = no_ctele_into
+KPROP:  , = no_rtele_into
+KMONS:  , = mimic
+MAP
+ XXXXXXX
+XX,,,,,XX
+X,,ooo,,X
+X,,o_o,,X
+XX,o.o,XX
+ XXX@XXX
+ENDMAP
+
+NAME:    xom_monty_hall
+TAGS:    no_item_gen no_monster_gen temple_overflow_xom uniq_altar_xom
+DEPTH:   D:2-7
+WEIGHT:  1
+SHUFFLE: DE,FG
+NSUBST:  M = 1:2 / *:1
+SUBST:   E = x, F = x
+SUBST:   D = ., G = .
+SUBST:   x = ccbbvxX
+KFEAT:   _ = altar_xom
+MONS:    jelly
+MONS:    sheep hd:2 / quokka w:1
+MARKER:  / = lua:props_marker { \
+             door_open_prompt="This door is covered in warnings. Open " .. \
+                                         "it anyway?", \
+             door_description_prefix="warning-scrawled " \
+             }
+SUBST:   / = +
+MAP
+ xnxnxnx
+xn.....nx
+n..._...n
+x.......x
+x+xx+xx+x
+xMDEMFGMx
+x/xx/xx/x
+ENDMAP
+
+
 ### Yredelemnul overflow altars ###############################################
 
 NAME:   yredelemnul_altar_1
@@ -1633,6 +1769,25 @@ MAP
 .....
 ENDMAP
 
+NAME:   lemuel_zombie_altar_yred
+DEPTH:  D:2-18, Crypt
+TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen temple_overflow_yredelemnul
+KFEAT:  _ = altar_yredelemnul
+SUBST:  1 : 1Ww
+SUBST:  1 = WWw
+NSUBST: w = 2:1 / *:w
+KMONS:  1 = giant goldfish zombie / big fish zombie
+KFEAT:  1 = deep_water
+MAP
+xxxxxxxxxxxxxxxx
+xxxxwwwwwwwwxxxx
+xxxx11111111xxxx
+@............._x
+xxxx11111111xxxx
+xxxxwwwwwwwwxxxx
+xxxxxxxxxxxxxxxx
+ENDMAP
+
 
 ### Zin overflow altars #######################################################
 
@@ -1644,11 +1799,10 @@ COLOUR: G = lightgray
 COLOUR: c = white
 TILE:   c = wall_church
 FTILE: _.G1m+ = floor_limestone
-MONS:   angel god:zin name:glowing name_adjective
-: local za_desc = "A divine agent of Zin, it is a towering winged figure " ..
-:   "with an aura of brilliant white light. This angel's face, though, " ..
-:   "is marked by a scowl, as if its zeal against any real or perceived " ..
-:   "vice overshadows its goodness.\n"
+MONS:   angel god:zin name:glowing n_adj / \
+        angel god:zin name:glowing n_adj ; any weapon level:20 ego:holy_wrath / \
+        angel god:zin name:glowing n_adj ; long sword ego:holy_wrath / \
+        angel god:zin name:glowing n_adj ; mace ego:holy_wrath
 DEPTH:  2-27
 MAP
 xxxxxxxxx
@@ -1688,42 +1842,6 @@ ENDMAP
 
 
 ### Variable overflow altars ##################################################
-
-NAME:   lemuel_zombie_altar_kiku
-DEPTH:  D:2-18, Crypt
-TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen temple_overflow_kikubaaqudgha
-KFEAT:  _ = altar_kikubaaqudgha
-MONS:   rat zombie / megabat zombie / nothing w:200
-KMONS:  w = giant goldfish zombie / big fish zombie / nothing w:200
-KFEAT:  w = deep_water
-MAP
-xxxxxxxxxxxxxxxx
-xxxxwwwwwwwwxxxx
-xxxx11111111xxxx
-@............._x
-xxxx11111111xxxx
-xxxxwwwwwwwwxxxx
-xxxxxxxxxxxxxxxx
-ENDMAP
-
-NAME:   lemuel_zombie_altar_yred
-DEPTH:  D:2-18, Crypt
-TAGS:   no_pool_fixup uniq_zombie_altar no_monster_gen temple_overflow_yredelemnul
-KFEAT:  _ = altar_yredelemnul
-SUBST:  1 : 1Ww
-SUBST:  1 = WWw
-NSUBST: w = 2:1 / *:w
-KMONS:  1 = giant goldfish zombie / big fish zombie
-KFEAT:  1 = deep_water
-MAP
-xxxxxxxxxxxxxxxx
-xxxxwwwwwwwwxxxx
-xxxx11111111xxxx
-@............._x
-xxxx11111111xxxx
-xxxxwwwwwwwwxxxx
-xxxxxxxxxxxxxxxx
-ENDMAP
 
 # General overflow vault, can be used for all gods.
 # B places the altar to a guaranteed god.

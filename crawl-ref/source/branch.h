@@ -8,8 +8,6 @@
 
 #include "enum.h"
 
-struct fog_machine_data;
-
 enum branch_flag_type
 {
     BFLAG_NONE = 0,
@@ -46,10 +44,6 @@ struct Branch
     uint8_t rock_colour;
     int       (*mons_rarity_function)(int);
     int       (*mons_level_function)(int);
-    int       (*num_traps_function)(int);
-    trap_type (*rand_trap_function)(int);
-    int       (*num_fogs_function)(int);
-    void      (*rand_fog_function)(int,fog_machine_data&);
     int travel_shortcut;         // Which key to press for travel.
     bool any_upstair_exits;      // any upstair exits the branch (Hell branches)
     bool dangerous_bottom_level; // bottom level is more dangerous than normal
@@ -62,6 +56,7 @@ Branch& your_branch();
 
 bool at_branch_bottom();
 bool is_hell_subbranch(branch_type branch);
+bool is_random_lair_subbranch(branch_type branch);
 level_id branch_entry_level(branch_type branch);
 level_id current_level_parent();
 

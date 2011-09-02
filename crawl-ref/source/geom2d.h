@@ -1,7 +1,8 @@
 #ifndef GEOM2D_H
 #define GEOM2D_H
 
-namespace geom {
+namespace geom
+{
 
 struct vector
 {

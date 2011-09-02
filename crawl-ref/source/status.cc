@@ -11,6 +11,7 @@
 #include "skills2.h"
 #include "terrain.h"
 #include "transform.h"
+#include "spl-transloc.h"
 
 // Status defaults for durations that are handled straight-forwardly.
 struct duration_def
@@ -40,7 +41,7 @@ static duration_def duration_data[] =
     { DUR_CONFUSING_TOUCH, true,
       BLUE, "Touch", "confusing touch", "" },
     { DUR_CONTROL_TELEPORT, true,
-      MAGENTA, "cTele", "", "You can control teleporation." },
+      MAGENTA, "cTele", "", "You can control teleportations." },
     { DUR_DEATH_CHANNEL, true,
       MAGENTA, "DChan", "death channel", "You are channeling the dead." },
     { DUR_DEFLECT_MISSILES, true,
@@ -48,13 +49,13 @@ static duration_def duration_data[] =
     { DUR_DIVINE_STAMINA, false,
       0, "", "divinely fortified", "You are divinely fortified." },
     { DUR_DIVINE_VIGOUR, false,
-      0, "", "divinely vigorous", "You are divinely vigorous." },
+      0, "", "divinely vigorous", "You are imbued with divine vigour." },
     { DUR_EXHAUSTED, false,
       YELLOW, "Exh", "exhausted", "You are exhausted." },
     { DUR_FIRE_SHIELD, true,
       BLUE, "RoF", "immune to fire clouds", "" },
     { DUR_ICY_ARMOUR, true,
-      0, "", "icy armour", "You get protected by an icy armour." },
+      0, "", "icy armour", "You are protected by a layer of icy armour." },
     { DUR_LIQUID_FLAMES, false,
       RED, "Fire", "liquid flames", "You are covered in liquid flames." },
     { DUR_LOWERED_MR, false,
@@ -66,9 +67,11 @@ static duration_def duration_data[] =
     { DUR_MISLED, true,
       LIGHTMAGENTA, "Misled", "", "" },
     { DUR_PARALYSIS, false,
-      0, "", "paralysed", "You are paralysed." },
+      RED, "Para", "paralysed", "You are paralysed." },
     { DUR_PETRIFIED, false,
-      0, "", "petrified", "You are petrified." },
+      RED, "Stone", "petrified", "You are petrified." },
+    { DUR_PETRIFYING, true,
+      MAGENTA, "Petr", "petrifying", "You are turning to stone." },
     { DUR_JELLY_PRAYER, false,
       WHITE, "Pray", "praying", "You are praying." },
     { DUR_REPEL_MISSILES, true,
@@ -127,13 +130,17 @@ static duration_def duration_data[] =
       YELLOW, "Liquid", "liquefying",
       "The ground has become liquefied beneath your feet." },
     { DUR_HEROISM, false,
-      LIGHTBLUE, "Hero", "heroism", "You posess the skills of a mighty hero." },
+      LIGHTBLUE, "Hero", "heroism", "You possess the skills of a mighty hero." },
     { DUR_FINESSE, false,
       LIGHTBLUE, "Finesse", "finesse", "Your blows are lightning fast." },
     { DUR_LIFESAVING, true,
       LIGHTGREY, "Prot", "protection", "You ask for being saved." },
     { DUR_DARKNESS, true,
       BLUE, "Dark", "darkness", "You emit darkness." },
+    { DUR_SHROUD_OF_GOLUBRIA, true,
+      BLUE, "Shroud", "shrouded", "You are protected by a distorting shroud." },
+    { DUR_TORNADO_COOLDOWN, false,
+      YELLOW, "Tornado", "", "" ,},
 };
 
 static int duration_index[NUM_DURATIONS];
@@ -262,6 +269,16 @@ void fill_status_info(int status, status_info* inf)
     // completing or overriding the defaults set above.
     switch (status)
     {
+    case DUR_CONTROL_TELEPORT:
+        if(!allow_control_teleport(true))
+            inf->light_colour = DARKGREY;
+        break;
+
+    case DUR_SWIFTNESS:
+        if(you.in_water())
+            inf->light_colour = DARKGREY;
+        break;
+
     case STATUS_AIRBORNE:
         _describe_airborne(inf);
         break;
@@ -322,7 +339,7 @@ void fill_status_info(int status, status_info* inf)
         const int high = 40 * BASELINE_DELAY;
         const int low  = 20 * BASELINE_DELAY;
         inf->long_text = std::string("Your ")
-                         + your_hand(true)
+                         + you.hand_name(true)
                          + " are glowing ";
         if (dur > high)
             inf->long_text += "an extremely bright ";
@@ -439,6 +456,16 @@ void fill_status_info(int status, status_info* inf)
         break;
     case STATUS_DEX_ZERO:
         _describe_stat_zero(inf, STAT_DEX);
+        break;
+
+    case STATUS_FIREBALL:
+        if (you.attribute[ATTR_DELAYED_FIREBALL])
+        {
+            inf->light_colour = LIGHTMAGENTA;
+            inf->light_text   = "Fball";
+            inf->short_text   = "delayed fireball";
+            inf->long_text    = "You have a stored fireball ready to release.";
+        }
         break;
 
     default:

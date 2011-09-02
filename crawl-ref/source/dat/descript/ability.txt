@@ -152,7 +152,7 @@ Cure all your mutations - but only once.
 # The Shining One
 Divine Shield
 
-Conjure up a divine shield that stacks with an ordinary shield and can be used even when wielding a two-handed weapon, as the Divine Shield is managed by the Shining One.
+The Shining One grants you a divine shield. Because it is held aloft by godly power, it does not interfere with your equipment. However, it is controlled by your willpower, and your skill with Shields will improve it.
 %%%%
 Cleansing Flame
 
@@ -279,7 +279,7 @@ Depending on your Invocations skill, heal a small amount of hit points.
 %%%%
 Purification
 
-Purge your body of bad effects such as sickness, poisoning, slowness, confusion and rotting.
+Purge your body of bad effects such as sickness, poisoning, slowness, petrification, confusion and rotting.
 %%%%
 Greater Healing
 
@@ -376,7 +376,7 @@ Turn plants and fungi adjacent to you into stronger species. Upgrading fungi req
 # Cheibriados
 Make Ponderous
 
-Alter a piece of body armour of your choice so it slows the wearer down. This is generally bad for hasty people, those who appreciate taking the time may benefit from Cheibriados's favour when they are not so fast.
+Alter a piece of body armour of your choice so it slows the wearer down. This is generally bad for hasty people, those who appreciate taking the time may benefit from Cheibriados' favour when they are not so fast.
 %%%%
 Bend Time
 

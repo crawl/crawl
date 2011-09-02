@@ -50,6 +50,7 @@ enum NOTE_TYPES
     NOTE_PARALYSIS,             /* needs: paralysis source (string) */
     NOTE_NAMED_ALLY,            /* needs: ally name (string) */
     NOTE_ALLY_DEATH,            /* needs: ally name (string) */
+    NOTE_BANISH_MONSTER,        /* needs: monster name (string) */
     NOTE_NUM_TYPES
 };
 

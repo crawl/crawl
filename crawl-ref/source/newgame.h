@@ -18,7 +18,6 @@ bool choose_game(newgame_def *ng, newgame_def* choice,
 
 void make_rod(item_def &item, stave_type rod_type, int ncharges);
 int start_to_wand(int wandtype, bool& is_rod);
-int start_to_book(int firstbook, int booktype);
 
 #define JOB_GROUP_SIZE 9
 /*

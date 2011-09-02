@@ -31,6 +31,7 @@ skeleton_humanoid_small MONS_SKELETON_SMALL
 skeleton_humanoid_large MONS_SKELETON_LARGE
 skeleton_quadruped_small MONS_SKELETON_QUADRUPED_SMALL
 skeleton_quadruped_large MONS_SKELETON_QUADRUPED_LARGE
+skeleton_toad MONS_SKELETON_TOAD
 skeleton_bat MONS_SKELETON_BAT
 skeleton_fish MONS_SKELETON_FISH
 skeleton_centaur MONS_SKELETON_CENTAUR
@@ -54,6 +55,7 @@ spectral_thing MONS_SPECTRAL_SMALL
 spectral_thing MONS_SPECTRAL_LARGE
 spectral_quadruped_small MONS_SPECTRAL_QUADRUPED_SMALL
 spectral_quadruped_large MONS_SPECTRAL_QUADRUPED_LARGE
+spectral_toad MONS_SPECTRAL_TOAD
 spectral_bat MONS_SPECTRAL_BAT
 spectral_bee MONS_SPECTRAL_BEE
 spectral_ant MONS_SPECTRAL_BEETLE

@@ -42,7 +42,6 @@
 #include "sprint.h"
 #include "stairs.h"
 #include "state.h"
-#include "stuff.h"
 #include "env.h"
 #include "terrain.h"
 #include "traps.h"
@@ -192,10 +191,13 @@ bool monster_habitable_grid(monster_type mt,
     if (mt == MONS_FIRE_ELEMENTAL && feat_is_watery(actual_grid))
         return (false);
 
-    if (actual_grid == DNGN_TEMP_PORTAL)
+    if (actual_grid == DNGN_MALIGN_GATEWAY)
     {
-        if (mt == MONS_ELDRITCH_TENTACLE || mt == MONS_ELDRITCH_TENTACLE_SEGMENT)
+        if (mt == MONS_ELDRITCH_TENTACLE
+            || mt == MONS_ELDRITCH_TENTACLE_SEGMENT)
+        {
             return (true);
+        }
         else
             return (false);
     }
@@ -347,6 +349,9 @@ static void _hell_spawn_random_monsters()
 // one_chance_in(value) checks with the new x_chance_in_y(5, value). (jpeg)
 void spawn_random_monsters()
 {
+    if (crawl_state.disables[DIS_SPAWNS])
+        return;
+
     if (crawl_state.game_is_arena()
         || (crawl_state.game_is_sprint()
             && you.level_type == LEVEL_DUNGEON
@@ -395,7 +400,7 @@ void spawn_random_monsters()
 
         // The rules change once the player has picked up the Orb...
         if (you.char_direction == GDT_ASCENDING)
-            prox = (one_chance_in(6) ? PROX_CLOSE_TO_PLAYER : PROX_ANYWHERE);
+            prox = (one_chance_in(3) ? PROX_CLOSE_TO_PLAYER : PROX_ANYWHERE);
 
         mgen_data mg(WANDERING_MONSTER);
         mg.proximity = prox;
@@ -711,8 +716,11 @@ bool find_mon_place_near_stairs(coord_def& pos,
             break;
         }
     }
-    const monster_type habitat_target = MONS_MEGABAT;
-    pos = find_newmons_square_contiguous(habitat_target, pos);
+    const monster_type habitat_target = MONS_BAT;
+    int distance = 3;
+    if (crawl_state.game_is_zotdef())
+        distance = 9999;
+    pos = find_newmons_square_contiguous(habitat_target, pos, distance);
     return (in_bounds(pos));
 }
 
@@ -789,7 +797,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
 
         } // end proximity check
 
-        if (vault_mon_types.size() > 0)
+        if (!vault_mon_types.empty())
         {
             // XXX: not respecting RANDOM_MOBILE_MONSTER currently.
             int i = choose_random_weighted(vault_mon_weights.begin(),
@@ -1557,9 +1565,14 @@ static int _place_monster_aux(const mgen_data &mg,
     // Mennas belongs to Zin.
     else if (mg.cls == MONS_MENNAS)
         mon->god = GOD_ZIN;
-    // Ignacio belongs to Makhleb.
-    else if (mg.cls == MONS_IGNACIO)
+    // The hell lords, Grinder and Ignacio belong to Makhleb.
+    else if (mons_species(mg.cls) == MONS_HELL_LORD
+             || mg.cls == MONS_ANTAEUS
+             || mg.cls == MONS_GRINDER
+             || mg.cls == MONS_IGNACIO)
+    {
         mon->god = GOD_MAKHLEB;
+    }
     // 1 out of 7 non-priestly orcs are unbelievers.
     else if (mons_genus(mg.cls) == MONS_ORC)
     {
@@ -1575,11 +1588,19 @@ static int _place_monster_aux(const mgen_data &mg,
         else
             mon->god = GOD_XOM;
     }
-    // 6 out of 7 demons in the Abyss belong to Lugonu.
+    // 6 out of 7 demons in the Abyss belong to Lugonu, and 6 out of 7
+    // demons in hell belong to Makhleb.
     else if (mons_class_holiness(mg.cls) == MH_DEMONIC)
     {
         if (mg.level_type == LEVEL_ABYSS && !one_chance_in(7))
             mon->god = GOD_LUGONU;
+        else if (mg.level_type == LEVEL_DUNGEON
+                 && (you.where_are_you == BRANCH_VESTIBULE_OF_HELL
+                     || player_in_hell())
+                 && !one_chance_in(7))
+        {
+            mon->god = GOD_MAKHLEB;
+        }
     }
 
     // Holy monsters need their halo!
@@ -1645,7 +1666,7 @@ static int _place_monster_aux(const mgen_data &mg,
     if (mg.cls == MONS_SPIRIT)
         mon->add_ench(ENCH_FADING_AWAY);
 
-    if (mg.cls == MONS_TOADSTOOL || mg.cls == MONS_SALT_PILLAR)
+    if (mg.cls == MONS_TOADSTOOL || mg.cls == MONS_PILLAR_OF_SALT)
     {
         // This enchantment is a timer that counts down until death.
         // It should last longer than the lifespan of a corpse, to avoid
@@ -1660,7 +1681,10 @@ static int _place_monster_aux(const mgen_data &mg,
     }
 
     if (mg.cls == MONS_TWISTER)
+    {
+        mon->props["tornado_since"].get_int() = you.elapsed_time;
         mon->add_ench(ENCH_PERM_TORNADO);
+    }
 
     if (mons_is_feat_mimic(mg.cls))
     {
@@ -1724,20 +1748,19 @@ static int _place_monster_aux(const mgen_data &mg,
             bool got_stair = false;
 
             // If we're in lair, and we're in one of the suitable levels,
-            // and it's the disabled branch, pretend to be that one.
+            // and it's a disabled branch, pretend to be one of them.
             if (you.where_are_you == BRANCH_LAIR)
             {
-                const branch_type lair_branches[3] = {
-                    BRANCH_SWAMP,
-                    BRANCH_SHOALS,
-                    BRANCH_SNAKE_PIT,
-                };
+                int cnt = 0;
 
-                for (int i = 0; i < 3; i++) {
-                    if (branches[lair_branches[i]].startdepth == -1)
+                for (int i = 0; i < NUM_BRANCHES; i++)
+                {
+                    if (is_random_lair_subbranch(branches[i].id)
+                        && branches[i].startdepth == -1
+                        && one_chance_in(++cnt))
                     {
                         mon->props["stair_type"] = static_cast<short>(
-                            branches[lair_branches[i]].entry_stairs);
+                            branches[i].entry_stairs);
                         got_stair = true;
                     }
                 }
@@ -1919,6 +1942,11 @@ static int _place_monster_aux(const mgen_data &mg,
                            mark_items,
                            mg.summon_type);
     }
+
+    // Perm summons shouldn't leave gear either.
+    if (mg.extra_flags & MF_HARD_RESET && mg.extra_flags & MF_NO_REWARD)
+        mon->mark_summoned(0, true, 0, false);
+
     ASSERT(!invalid_monster_index(mg.foe)
            || mg.foe == MHITYOU || mg.foe == MHITNOT);
     mon->foe = mg.foe;
@@ -1926,9 +1954,7 @@ static int _place_monster_aux(const mgen_data &mg,
     std::string blame_prefix;
 
     if (mg.flags & MG_BAND_MINION)
-    {
         blame_prefix = "led by ";
-    }
     else if (mg.abjuration_duration > 0)
     {
         blame_prefix = "summoned by ";
@@ -1937,29 +1963,26 @@ static int _place_monster_aux(const mgen_data &mg,
             && mg.summoner->atype() == ACT_MONSTER
             && static_cast<const monster* >(mg.summoner)->type == MONS_MARA)
         {
-                blame_prefix = "woven by ";
+            blame_prefix = "woven by ";
         }
     }
     else if (mons_class_is_zombified(mg.cls))
-    {
         blame_prefix = "animated by ";
-    }
     else if (mg.summon_type == SPELL_STICKS_TO_SNAKES)
-    {
         blame_prefix = "transmuted by ";
-    }
     else
     {
         blame_prefix = "created by ";
 
-        if (mg.cls == MONS_ELDRITCH_TENTACLE || mg.cls == MONS_ELDRITCH_TENTACLE_SEGMENT)
+        if (mg.cls == MONS_ELDRITCH_TENTACLE
+            || mg.cls == MONS_ELDRITCH_TENTACLE_SEGMENT)
+        {
             blame_prefix = "called by ";
+        }
     }
 
     if (!mg.non_actor_summoner.empty())
-    {
         mons_add_blame(mon, blame_prefix + mg.non_actor_summoner);
-    }
     // NOTE: The summoner might be dead if the summoned is placed by a
     // beam which killed the summoner first (like fire vortexes placed
     // by the Fire Storm spell); a deceased summoner's mindex might also
@@ -1970,9 +1993,7 @@ static int _place_monster_aux(const mgen_data &mg,
     {
         ASSERT(mg.summoner->alive());
         if (mg.summoner->atype() == ACT_PLAYER)
-        {
             mons_add_blame(mon, blame_prefix + "the player character");
-        }
         else
         {
             monster* sum = mg.summoner->as_monster();
@@ -2397,8 +2418,11 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         band_size = 4 + random2(4);
         break;
     case MONS_GNOLL:
-        band = BAND_GNOLLS;
-        band_size = (coinflip() ? 3 : 2);
+        if (you.absdepth0 != 0)
+        {
+            band = BAND_GNOLLS;
+            band_size = (coinflip() ? 3 : 2);
+        }
         break;
     case MONS_DEEP_DWARF_SCION:
         band = BAND_DEEP_DWARF;
@@ -2471,9 +2495,9 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
         }
         break;
 
-    case MONS_PANDEMONIUM_DEMON:
+    case MONS_PANDEMONIUM_LORD:
         natural_leader = true;
-        band = BAND_PANDEMONIUM_DEMON;
+        band = BAND_PANDEMONIUM_LORD;
         band_size = random_range(1, 3);
         break;
 
@@ -2874,7 +2898,7 @@ static monster_type _band_member(band_type band, int power)
                                : MONS_ABOMINATION_LARGE);
         break;
 
-    case BAND_PANDEMONIUM_DEMON:
+    case BAND_PANDEMONIUM_LORD:
         if (one_chance_in(7))
         {
             mon_type = static_cast<monster_type>(
@@ -3138,7 +3162,7 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
         interesting = true;
     }
     // Don't waste time on moname() if user isn't using this option
-    else if (Options.note_monsters.size() > 0)
+    else if (!Options.note_monsters.empty())
     {
         const std::string iname = mons_type_name(mons->type, DESC_NOCAP_A);
         for (unsigned i = 0; i < Options.note_monsters.size(); ++i)
@@ -3162,9 +3186,9 @@ static monster_type _pick_zot_exit_defender()
     if (one_chance_in(11))
     {
 #ifdef DEBUG_MON_CREATION
-        mpr("Create a pandemonium demon!", MSGCH_DIAGNOSTICS);
+        mpr("Create a pandemonium lord!", MSGCH_DIAGNOSTICS);
 #endif
-        return (MONS_PANDEMONIUM_DEMON);
+        return (MONS_PANDEMONIUM_LORD);
     }
 
     const int temp_rand = random2(276);
@@ -3296,6 +3320,15 @@ static dungeon_feature_type _monster_secondary_habitat_feature(int mc)
     return (habitat2grid(mons_class_secondary_habitat(mc)));
 }
 
+static bool _valid_spot(coord_def pos)
+{
+    if (actor_at(pos))
+        return false;
+    if (env.level_map_mask(pos) & MMT_NO_MONS)
+        return false;
+    return true;
+}
+
 class newmons_square_find : public travel_pathfind
 {
 private:
@@ -3339,7 +3372,7 @@ public:
                 good_square(dc);
             return (false);
         }
-        if (actor_at(dc) == NULL && one_chance_in(++nfound))
+        if (_valid_spot(dc) && one_chance_in(++nfound))
         {
             greedy_dist = traveled_distance;
             greedy_place = dc;
@@ -3620,7 +3653,8 @@ monster_type summon_any_demon(demon_class_type dct)
         break;
 
     case DEMON_COMMON:
-        if (x_chance_in_y(6, 10)) {
+        if (x_chance_in_y(6, 10))
+        {
             // tier 4
             mon = static_cast<monster_type>(random_choose_weighted(
                 1, MONS_BLUE_DEVIL,
@@ -3633,7 +3667,8 @@ monster_type summon_any_demon(demon_class_type dct)
                 1, MONS_HELLWING,
                 0));
         }
-        else {
+        else
+        {
             // tier 3
             mon = static_cast<monster_type>(random_choose_weighted(
                 1, MONS_SUN_DEMON,
@@ -3649,21 +3684,23 @@ monster_type summon_any_demon(demon_class_type dct)
         break;
 
     case DEMON_GREATER:
-        if (x_chance_in_y(6, 10)) {
+        if (x_chance_in_y(6, 10))
+        {
             // tier 2
             mon = static_cast<monster_type>(random_choose_weighted(
                 1, MONS_GREEN_DEATH,
                 1, MONS_BLIZZARD_DEMON,
                 1, MONS_BALRUG,
                 1, MONS_CACODEMON,
-                1, MONS_BEAST,
+                1, MONS_HELL_BEAST,
                 1, MONS_HELLION,
                 1, MONS_REAPER,
                 1, MONS_LOROCYPROCA,
                 1, MONS_TORMENTOR,
                 0));
         }
-        else {
+        else
+        {
             // tier 1
             mon = static_cast<monster_type>(random_choose_weighted(
                 1, MONS_FIEND,

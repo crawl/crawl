@@ -60,7 +60,7 @@ void link_items(void);
 
 void fix_item_coordinates(void);
 
-int get_item_slot(int reserve = 50);
+int get_mitm_slot(int reserve = 50);
 
 void unlink_item(int dest);
 void destroy_item(item_def &item, bool never_created = false);
@@ -98,10 +98,13 @@ bool multiple_items_at(const coord_def& where, bool allow_mimic_item);
 void drop(void);
 
 int inv_count(void);
+int runes_in_pack();
+bool player_has_orb();
 
 bool pickup_single_item(int link, int qty);
 
 bool drop_item(int item_dropped, int quant_drop);
+void drop_last();
 
 int          get_equip_slot(const item_def *item);
 mon_inv_type get_mon_equip_slot(const monster* mon, const item_def &item);
@@ -148,5 +151,27 @@ bool get_item_by_name(item_def *item, char* specs,
 void move_items(const coord_def r, const coord_def p);
 // Returns the Orb's position on the ground, or origin()
 coord_def orb_position();
+
+// stack_iterator guarantees validity so long as you don't manually
+// mess with item_def.link: i.e., you can kill the item you're
+// examining but you can't kill the item linked to it.
+class stack_iterator : public std::iterator<std::forward_iterator_tag,
+                                            item_def>
+{
+public:
+    explicit stack_iterator(const coord_def& pos, bool accessible = false);
+    explicit stack_iterator(int start_link);
+
+    operator bool() const;
+    item_def& operator *() const;
+    item_def* operator->() const;
+    int link() const;
+
+    const stack_iterator& operator ++ ();
+    stack_iterator operator ++ (int);
+private:
+    int cur_link;
+    int next_link;
+};
 
 #endif

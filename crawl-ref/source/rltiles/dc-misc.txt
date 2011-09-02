@@ -76,6 +76,11 @@ cloud_gloom CLOUD_GLOOM
 tornado1 CLOUD_RAGING_WINDS_0
 tornado2 CLOUD_RAGING_WINDS_1
 
+cloud_calc_dust0 CLOUD_PETRIFY
+cloud_calc_dust1
+cloud_calc_dust2
+cloud_calc_dust3
+
 %sdir dc-mon
 fungi_plants/giant_spore SPORE_OVERLAY
 

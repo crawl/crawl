@@ -34,7 +34,6 @@
 #include "mon-util.h"
 #include "jobs.h"
 #include "player.h"
-#include "religion.h"
 #include "species.h"
 #include "spl-util.h"
 #include "stash.h"
@@ -125,21 +124,7 @@ std::string channel_to_str(int channel)
     return message_channel_names[channel];
 }
 
-static startup_book_type _str_to_book(const std::string& str)
-{
-    if (str == "flame" || str == "fire")
-        return (SBT_FIRE);
-    if (str == "frost" || str == "cold" || str == "ice")
-        return (SBT_COLD);
-    if (str == "random")
-        return (SBT_RANDOM);
-    if (str == "viable")
-        return (SBT_VIABLE);
-
-    return (SBT_NONE);
-}
-
-static weapon_type _str_to_weapon(const std::string &str)
+weapon_type str_to_weapon(const std::string &str)
 {
     if (str == "shortsword" || str == "short sword")
         return (WPN_SHORT_SWORD);
@@ -639,19 +624,19 @@ std::string user_home_subpath(const std::string subpath)
     return catpath(user_home_dir(), subpath);
 }
 
-#if defined(SAVE_DIR_PATH) || defined(SHARED_DIR_PATH)
 static std::string _resolve_dir(const char* path, const char* suffix)
 {
 #if defined(DGAMELAUNCH)
     return catpath(path, "");
 #else
+    if (!path[0])
+        return suffix;
     if (path[0] != '~')
-        return std::string(path) + suffix;
+        return std::string(path) + "/" + suffix;
     else
-        return user_home_subpath(std::string(path + 1) + suffix);
+        return user_home_subpath(std::string(path + 1) + "/" + suffix);
 #endif
 }
-#endif
 
 void game_options::reset_options()
 {
@@ -661,7 +646,7 @@ void game_options::reset_options()
 
     set_default_activity_interrupts();
 
-#if defined(USE_TILE)
+#if defined(USE_TILE_LOCAL)
     restart_after_game = true;
 #else
     restart_after_game = false;
@@ -680,10 +665,7 @@ void game_options::reset_options()
     }
 #endif
 
-#if defined(SAVE_DIR_PATH)
-    save_dir   = _resolve_dir(SAVE_DIR_PATH, "/saves/");
-    morgue_dir = _resolve_dir(SAVE_DIR_PATH, "/morgue/");
-#elif defined(TARGET_OS_MACOSX)
+#if defined(TARGET_OS_MACOSX)
     const std::string tmp_path_base =
         user_home_subpath("Library/Application Support/" CRAWL);
     save_dir   = tmp_path_base + "/saves/";
@@ -691,15 +673,15 @@ void game_options::reset_options()
     if (SysEnv.macro_dir.empty())
         macro_dir  = tmp_path_base;
 #else
-    save_dir   = "saves/";
+        save_dir   = _resolve_dir(SysEnv.crawl_dir.c_str(), "saves/");
 #endif
 
-#if !defined(SAVE_DIR_PATH) && !defined(TARGET_OS_MACOSX)
-    morgue_dir = "morgue/";
+#if !defined(TARGET_OS_MACOSX)
+        morgue_dir = _resolve_dir(SysEnv.crawl_dir.c_str(), "morgue/");
 #endif
 
 #if defined(SHARED_DIR_PATH)
-    shared_dir = _resolve_dir(SHARED_DIR_PATH, "/");
+    shared_dir = _resolve_dir(SHARED_DIR_PATH, "");
 #else
     shared_dir = save_dir;
 #endif
@@ -724,6 +706,7 @@ void game_options::reset_options()
     classic_hud = false;
     msg_condense_repeats = true;
     msg_condense_short = true;
+    show_no_ctele = true;
 
     view_lock_x = true;
     view_lock_y = true;
@@ -737,11 +720,14 @@ void game_options::reset_options()
 
     autopickup_on    = 1;
     default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
+    default_manual_training = false;
 
-    show_gold_turns = false;
+    show_newturn_mark = true;
 #ifdef EUCLIDEAN
+    show_gold_turns = true;
     show_game_turns = true;
 #else
+    show_gold_turns = false;
     show_game_turns = false;
 #endif
     show_beam       = true;
@@ -750,13 +736,7 @@ void game_options::reset_options()
 
     remember_name = true;
 
-#ifdef USE_TILE
-    // NOTE: Tiles relies on the IBM character set for evaluating glyphs
-    //       of magic mapped dungeon cells.
-    char_set      = CSET_IBM;
-#else
     char_set      = CSET_DEFAULT;
-#endif
 
     // set it to the .crawlrc default
     autopickups = ((1 << 15) | // gold
@@ -766,7 +746,7 @@ void game_options::reset_options()
                    (1 <<  7) | // jewellery
                    (1 <<  3) | // wands
                    (1 <<  4)); // food
-
+    auto_switch             = false;
     suppress_startup_errors = false;
 
     show_inventory_weights = false;
@@ -874,9 +854,9 @@ void game_options::reset_options()
     explore_item_greed     = 10;
     explore_greedy         = true;
 
+    explore_wall_bias      = 0;
     explore_improved       = false;
     travel_key_stop        = true;
-    trap_prompt            = true;
 
     target_unshifted_dirs  = false;
     darken_beyond_range    = true;
@@ -944,7 +924,9 @@ void game_options::reset_options()
     strcpy(tile_show_items, "!?/%=([)x}+\\_.");
     tile_skip_title      = false;
     tile_menu_icons      = true;
+#endif
 
+#ifdef USE_TILE_LOCAL
     // minimap colours
     tile_player_col      = MAP_WHITE;
     tile_monster_col     = MAP_RED;
@@ -979,16 +961,23 @@ void game_options::reset_options()
     tile_font_tip_size   = 0;
     tile_font_lbl_file   = PROPORTIONAL_FONT;
     tile_font_lbl_size   = 0;
+#ifdef USE_FT
+    // TODO: init this from system settings.  This would probably require
+    // using fontconfig, but that's planned.
+    tile_font_ft_light   = false;
+#endif
 
     // window layout
     tile_full_screen      = SCREENMODE_AUTO;
     tile_window_width     = -90;
     tile_window_height    = -90;
     tile_map_pixels       = 0;
-    tile_force_overlay    = false;
     tile_layout_priority = split_string(",", "minimap, inventory, gold_turn, "
                                              "command, spell, monster");
+#endif
 
+#ifdef USE_TILE
+    tile_force_overlay    = false;
     // delays
     tile_update_rate      = 1000;
     tile_runrest_rate     = 100;
@@ -1052,6 +1041,7 @@ void game_options::reset_options()
     autoinscribe_cursed = true;
     note_items.clear();
     note_skill_levels.clear();
+    auto_spell_letters.clear();
     force_more_message.clear();
     sound_mappings.clear();
     menu_colour_mappings.clear();
@@ -1107,7 +1097,10 @@ ucs_t get_glyph_override(int c)
             c = (c & 0x80) ? charset_vt100[c & 0x7f] : c;
     }
     if (wcwidth(c) != 1)
+    {
+        mprf(MSGCH_ERROR, "Invalid glyph override: %X", c);
         c = 0;
+    }
     return c;
 }
 
@@ -1286,18 +1279,7 @@ void game_options::add_cset_override(
 void game_options::add_cset_override(char_set_type set, dungeon_char_type dc,
                                      int symbol)
 {
-    if (symbol >= 0)
-    {
-        cset_override[dc] = symbol;
-        return;
-    }
-
-    symbol = -symbol;
-    if (set == CSET_IBM)
-        symbol = (symbol &~ 0xff) ? 0 : charset_cp437[symbol & 0xff];
-    else if (set == CSET_DEC && symbol & 0xff)
-        symbol = charset_vt100[symbol & 0x7f];
-    cset_override[dc] = symbol;
+    cset_override[dc] = get_glyph_override(symbol);
 }
 
 static std::string _find_crawlrc()
@@ -1442,16 +1424,6 @@ static void write_newgame_options(const newgame_def& prefs, FILE *f)
         fprintf(f, "background = %s\n", _job_to_str(prefs.job).c_str());
     if (prefs.weapon != WPN_UNKNOWN)
         fprintf(f, "weapon = %s\n", _weapon_to_str(prefs.weapon).c_str());
-    if (prefs.religion != GOD_NO_GOD)
-        fprintf(f, "religion = %s\n", god_name(prefs.religion).c_str());
-    if (prefs.book != SBT_NONE)
-    {
-        fprintf(f, "book = %s\n",
-                prefs.book == SBT_FIRE ? "fire" :
-                prefs.book == SBT_COLD ? "cold" :
-                prefs.book == SBT_RANDOM ? "random" :
-                "viable");
-    }
     if (prefs.wand != SWT_NO_SELECTION)
         fprintf(f, "wand = %s\n", _wand_to_str(prefs.wand).c_str());
     fprintf(f, "fully_random = %s\n", prefs.fully_random ? "yes" : "no");
@@ -2139,6 +2111,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         && key != "message_colour" && key != "message_color"
         && key != "levels" && key != "level" && key != "entries"
         && key != "include" && key != "bindkey"
+        && key != "spell_slot"
         && key.find("font") == std::string::npos)
     {
         lowercase(field);
@@ -2207,7 +2180,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         game.name = field;
     }
 #endif
-#ifndef USE_TILE
     else if (key == "char_set")
     {
         if (field == "ascii")
@@ -2223,7 +2195,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else
             fprintf(stderr, "Bad character set: %s\n", field.c_str());
     }
-#endif
     else if (key == "default_autopickup")
     {
         if (_read_bool(field, true))
@@ -2242,10 +2213,18 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         else if (field == "all")
             default_friendly_pickup = FRIENDLY_PICKUP_ALL;
     }
+    else if (key == "default_manual_training")
+    {
+        if (_read_bool(field, true))
+            default_manual_training = true;
+        else
+            default_manual_training = false;
+    }
 #ifndef DGAMELAUNCH
     else BOOL_OPTION(restart_after_game);
 #endif
     else BOOL_OPTION(show_inventory_weights);
+    else BOOL_OPTION(auto_switch);
     else BOOL_OPTION(suppress_startup_errors);
     else BOOL_OPTION(clean_map);
     else BOOL_OPTION(colour_map);
@@ -2387,22 +2366,12 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "weapon")
     {
         // Choose this weapon for backgrounds that get choice.
-        game.weapon = _str_to_weapon(field);
-    }
-    else if (key == "book")
-    {
-        // Choose this book for backgrounds that get choice.
-        game.book = _str_to_book(field);
+        game.weapon = str_to_weapon(field);
     }
     else if (key == "wand")
     {
         // Choose this wand for backgrounds that get choice.
         game.wand = _str_to_wand(field);
-    }
-    else if (key == "religion")
-    {
-        // Choose god for Priests.
-        game.religion = (field == "random") ? GOD_RANDOM : str_to_god(field);
     }
     BOOL_OPTION_NAMED("fully_random", game.fully_random);
     else if (key == "fire_items_start")
@@ -2433,21 +2402,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(remember_name);
 #endif
 #ifndef DGAMELAUNCH
-#ifndef SAVE_DIR_PATH
     else if (key == "save_dir")
-    {
-        // If SAVE_DIR_PATH was defined, there are very likely security issues
-        // with allowing the user to specify a different directory.
         save_dir = field;
-    }
-#endif
-#ifndef SAVE_DIR_PATH
     else if (key == "morgue_dir")
         morgue_dir = field;
 #endif
-#endif
+    else BOOL_OPTION(show_newturn_mark);
     else BOOL_OPTION(show_gold_turns);
     else BOOL_OPTION(show_game_turns);
+    else BOOL_OPTION(show_no_ctele);
 #ifndef USE_TILE
     else BOOL_OPTION(show_beam);
 #endif
@@ -2707,7 +2670,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             std::vector<std::string> insplit = split_string(":", thesplit[i]);
             int hp_percent = 100;
 
-            if (insplit.size() == 0 || insplit.size() > 2
+            if (insplit.empty() || insplit.size() > 2
                  || insplit.size() == 1 && i != 0)
             {
                 report_error (
@@ -2731,7 +2694,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             std::vector<std::string> insplit = split_string(":", thesplit[i]);
             int mp_percent = 100;
 
-            if (insplit.size() == 0 || insplit.size() > 2
+            if (insplit.empty() || insplit.size() > 2
                  || insplit.size() == 1 && i != 0)
             {
                 report_error (
@@ -2754,7 +2717,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         {
             std::vector<std::string> insplit = split_string(":", thesplit[i]);
 
-            if (insplit.size() == 0 || insplit.size() > 2
+            if (insplit.empty() || insplit.size() > 2
                 || insplit.size() == 1 && i != 0)
             {
                 report_error (
@@ -2787,6 +2750,20 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 continue;
             }
         }
+    }
+    else if (key == "spell_slot")
+    {
+        std::vector<std::string> thesplit = split_string(":", field);
+        if (thesplit.size() != 2)
+            {
+                report_error(
+                    make_stringf("Error parsing spell lettering string: %s\n",
+                    field.c_str()));
+                return;
+            }
+        lowercase(thesplit[0]);
+        auto_spell_letters.push_back(
+            std::pair<text_pattern,std::string>(thesplit[0], thesplit[1]));
     }
     else BOOL_OPTION(pickup_thrown);
     else BOOL_OPTION(pickup_dropped);
@@ -2940,9 +2917,16 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             explore_item_greed = -1000;
     }
     else BOOL_OPTION(explore_greedy);
+    else if (key == "explore_wall_bias")
+    {
+        explore_wall_bias = atoi(field.c_str());
+        if (explore_wall_bias > 1000)
+            explore_wall_bias = 1000;
+        else if (explore_wall_bias < 0)
+            explore_wall_bias = 0;
+    }
     else BOOL_OPTION(explore_improved);
     else BOOL_OPTION(travel_key_stop);
-    else BOOL_OPTION(trap_prompt);
     else if (key == "stash_filter")
     {
         std::vector<std::string> seg = split_string(",", field);
@@ -3121,6 +3105,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         strncpy(tile_show_items, field.c_str(), 18);
     else BOOL_OPTION(tile_skip_title);
     else BOOL_OPTION(tile_menu_icons);
+#endif
+#ifdef USE_TILE_LOCAL
     else if (key == "tile_player_col")
         tile_player_col = str_to_tile_colour(field);
     else if (key == "tile_monster_col")
@@ -3176,12 +3162,17 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else if (key == "tile_font_lbl_file")
         tile_font_lbl_file = field;
     else INT_OPTION(tile_font_lbl_size, 1, INT_MAX);
+#ifdef USE_FT
+    else BOOL_OPTION(tile_font_ft_light);
+#endif
     else INT_OPTION(tile_key_repeat_delay, 0, INT_MAX);
     else if (key == "tile_full_screen")
         tile_full_screen = (screen_mode)_read_bool(field, tile_full_screen);
     else INT_OPTION(tile_window_width, INT_MIN, INT_MAX);
     else INT_OPTION(tile_window_height, INT_MIN, INT_MAX);
     else INT_OPTION(tile_map_pixels, 1, INT_MAX);
+#endif // USE_TILE_LOCAL
+#ifdef USE_TILE
     else BOOL_OPTION(tile_force_overlay);
     else INT_OPTION(tile_tooltip_ms, 0, INT_MAX);
     else INT_OPTION(tile_update_rate, 50, INT_MAX);
@@ -3194,7 +3185,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         tile_layout_priority = split_string(",", field.c_str());
     else if (key == "tile_tag_pref")
         tile_tag_pref = _str_to_tag_pref(field.c_str());
-#endif // USE_TILE
+#endif
 
     else if (key == "bindkey")
         _bindkey(field);
@@ -3378,6 +3369,11 @@ void get_system_environment(void)
     // This should end with the appropriate path delimiter.
     SysEnv.crawl_dir = check_string(getenv("CRAWL_DIR"));
 
+#ifdef SAVE_DIR_PATH
+    if (SysEnv.crawl_dir == "")
+        SysEnv.crawl_dir = SAVE_DIR_PATH;
+#endif
+
 #ifdef DGL_SIMPLE_MESSAGING
     // Enable DGL_SIMPLE_MESSAGING only if SIMPLEMAIL and MAIL are set.
     const char *simplemail = getenv("SIMPLEMAIL");
@@ -3395,7 +3391,7 @@ void get_system_environment(void)
     // The user's home directory (used to look for ~/.crawlrc file)
     SysEnv.home = check_string(getenv("HOME"));
 #endif
-}                               // end get_system_environment()
+}
 
 static void set_crawl_base_dir(const char *arg)
 {
@@ -3526,6 +3522,7 @@ enum es_command_type
     ES_GET,
     ES_PUT,
     ES_REPACK,
+    ES_INFO,
     NUM_ES
 };
 
@@ -3542,6 +3539,7 @@ static struct es_command
     { ES_PUT,     "put",     true,  1, 2, },
     { ES_RM,      "rm",      true,  1, 1, },
     { ES_REPACK,  "repack",  false, 0, 0, },
+    { ES_INFO,    "info",    false, 0, 0, },
 };
 
 #define ERR(...) do { fprintf(stderr, __VA_ARGS__); return; } while(0)
@@ -3589,6 +3587,7 @@ static void _edit_save(int argc, char **argv)
         if (cmd == ES_LS)
         {
             std::vector<std::string> list = save.list_chunks();
+            std::sort(list.begin(), list.end(), numcmpstr);
             for (size_t i = 0; i < list.size(); i++)
                 printf("%s\n", list[i].c_str());
         }
@@ -3672,6 +3671,36 @@ static void _edit_save(int argc, char **argv)
             save.unlink();
             rename_u((filename + ".tmp").c_str(), filename.c_str());
         }
+        else if (cmd == ES_INFO)
+        {
+            std::vector<std::string> list = save.list_chunks();
+            std::sort(list.begin(), list.end(), numcmpstr);
+            len_t nchunks = list.size();
+            len_t frag = save.get_chunk_fragmentation("");
+            len_t flen = save.get_size();
+            len_t slack = save.get_slack();
+            printf("Chunks: (size compressed/uncompressed, fragments, name)\n");
+            for (size_t i = 0; i < list.size(); i++)
+            {
+                int cfrag = save.get_chunk_fragmentation(list[i]);
+                frag += cfrag;
+                int cclen = save.get_chunk_compressed_length(list[i]);
+
+                char buf[16384];
+                chunk_reader in(&save, list[i]);
+                len_t clen = 0;
+                while(len_t s = in.read(buf, sizeof(buf)))
+                    clen += s;
+                printf("%7u/%7u %3u %s\n", cclen, clen, cfrag, list[i].c_str());
+            }
+            // the directory is not a chunk visible from the outside
+            printf("Fragmentation:    %u/%u (%4.2f)\n", frag, nchunks + 1,
+                   ((float)frag) / (nchunks + 1));
+            printf("Unused space:     %u/%u (%u%%)\n", slack, flen,
+                   100 - (100 * (flen - slack) / flen));
+            // there's also wasted space due to fragmentation, but since
+            // it's linear, there's no need to print it
+        }
     }
     catch (ext_fail_exception &fe)
     {
@@ -3720,7 +3749,7 @@ static bool _check_extra_opt(char* _opt)
 
 bool parse_args(int argc, char **argv, bool rc_only)
 {
-    COMPILE_CHECK(ARRAYSZ(cmd_ops) == CLO_NOPS, c1);
+    COMPILE_CHECK(ARRAYSZ(cmd_ops) == CLO_NOPS);
 
     if (crawl_state.command_line_arguments.empty())
     {

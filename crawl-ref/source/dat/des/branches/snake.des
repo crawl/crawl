@@ -73,10 +73,10 @@ ENDMAP
 NAME:   minmay_snake_entry_six_corridors
 TAGS:   snake_entry ruin_lair
 ORIENT: float
-MONS:   small snake, snake, water moccasin, viper, black mamba
+MONS:   small snake, snake, water moccasin, black mamba
 KMONS:  P = plant / fungus w:1 / nothing
 SUBST:  1 = 1., 2 = 2., 3 = 3.
-SUBST:  1 = 1222233334, 2 = 122333345, 3 = 33455
+SUBST:  1 = 122223333, 2 = 122333344, 3 = 33444
 KFEAT:  O = enter_snake_pit
 MAP
 xxxx.@1xxxxxxP@xxxxx
@@ -136,7 +136,7 @@ NAME:   minmay_snake_river
 TAGS:   no_monster_gen generate_awake
 DEPTH:  Snake
 ORIENT: south
-# Black mambas and vipers can't swim, so none of those
+# Black mambas can't swim, so none of those
 MONS:   small snake w:3 / snake / water moccasin / nothing w:5
 MONS:   anaconda / nothing w:5
 SUBST:  w = wwW
@@ -189,8 +189,8 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxx''''''x4O4x""""""xxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxcccccxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx''''''c4O4c""""""xxxxxxxxxxx
 xxxxxxxxxxx''''''xxxx664z466xxxx""""""xxxxxx
 xxxxxxxx''''xxxxxxxx.5665665.xxxxxxxx""""xxx
 xxxxxxx''xxxx''''xxx..45554..xxx""""xxxx""xx
@@ -284,7 +284,7 @@ TAGS:    no_rotate
 ORIENT:  southwest
 MONS:    naga, naga warrior, naga mage, greater naga
 SUBST:   1 = 11., 2 = 23., 4 = 444123..
-SUBST:   c : c:20 x:4 v:1
+SUBST:   c : c:20 v:5
 KITEM:   O = serpentine rune of Zot
 MAP
 xxxxxxxxxxxxxxxxxc.@..cxxxxxxxxxxxxxxxxxx
@@ -332,4 +332,65 @@ xxccc..........1.....4......1...ccccxxxxx
 xxxxcccc.4...2..4..........12.4....cccxxx
 xxxxxxxccccc..1.....2..1....1....4..Ocxxx
 xxxxxxxxxxxcccccccccccccccccccccccccccxxx
+ENDMAP
+
+################################################################################
+# Salamanders (by Mu.)
+# by popular request
+#
+NAME:   snake_pit_salamanders_mu
+PLACE:  Snake:5
+ORIENT: north
+TAGS:   no_rotate
+MONS:   naga
+MONS:   naga mage / nothing
+MONS:   naga warrior / nothing
+MONS:   greater naga / nothing
+MONS:   guardian serpent / nothing
+MONS:   w:7 anaconda / black mamba / nothing
+KITEM:  O = serpentine rune of Zot
+KMONS:  O = guardian serpent
+KMONS:  S = guardian serpent
+KFEAT:  7 = lava
+KMONS:  7 = salamander / w:5 lava snake / nothing
+KMASK:  l7 = no_monster_gen
+NSUBST: l = 8:7
+NSUBST: . = 6:1 / .
+MAP
+              cccccc
+            ccc2452ccc
+           cc..2232..cc
+          cc..llllll..cc
+          c..llllllll..c  ccccc
+   ccccc cc.ll7llll7ll.cccc666cc
+  cc...ccc..llllllllll..cc66666cc
+ cc.222.cc.llllllllllll.+666S666c
+ c..444..c3llllllllllll.+666O666c
+ c.42443.+5llllllllllll.+666S666c
+ c.43323.c3llllllllllll.cc66666cc
+ cc.....cc..llllllllll..ccc666cc
+ @cc...+ccc.ll7llll7ll.ccccccccccc
+c+cccccc..c..llllllll..c...+.....c
+c..lllc.3.cc..llllll..cc...cl.33.c
+c.3lllcc...cc..2232..cc...ccll...c
+cc..lllcc...ccc2452ccc...cclll..cc
+ cc..l7lcc....cccccc....ccl7l..cc
+  cc..lllcc.....44.....cclll..cc
+   cc..lllcc....54....cclll..cc
+    cc..lllccc..44..ccclll..cc
+     cc...lllcccccccclll...cc
+      cc...llllllllllll...cc
+       cc..lllll77lllll..cc
+        c....llllllll....c
+        c......llll......c
+        c.2242..ll..2452.c
+        c.3222..ll..2223.c
+        c......llll......c
+        cccc+cllllllc+cccc
+         c....ll77ll....c
+         cc.3.llllll.3.cc
+          cc..4llll4..cc
+           cc..4224..cc
+            cc......cc
+             cccccccc
 ENDMAP

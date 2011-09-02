@@ -14,11 +14,15 @@ msc = $danger:sense of stasis
 msc = $danger:clumsily bash
 msc = $danger:goes berserk!
 msc = $danger:Forgetting.* will destroy the book
+msc = $danger:The blast of calcifying dust hits you!
+msc = $danger:You are engulfed in calcifying dust
+msc = $danger:is moving more slowly
 
 msc = $item_dmg:acid corrodes
 msc = $item_dmg:catch(es)? fire
 msc = $item_dmg:freezes? and shatters?
 msc = $item_dmg:covered with spores
+msc = $item_dmg:devours some of your food
 msc = $item_dmg:rots? away
 
 # Less urgent, but still significant messages

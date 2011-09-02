@@ -733,15 +733,15 @@ TAGS: overwritable layout allow_dup unrand
 
     for y = 0, cols - 1 do
         for x = 0, rows - 1 do
+            local base_x, base_y = x * 13 + 8, y * 11 + 8
+
             local room = {
-                x1 = x * 13 + 8 + crawl.random2(4),
-                y1 = y * 11 + 8 + crawl.random2(4),
+                x1 = base_x + crawl.random2(4),
+                y1 = base_y + crawl.random2(4),
+                x2 = base_x + 6 + crawl.random2(5),
+                y2 = base_y + 6 + crawl.random2(3),
+                fill = '.',
             }
-
-            room.x2 = room.x1 + 3 + crawl.random2(8)
-            room.y2 = room.y1 + 3 + crawl.random2(6)
-
-            room.fill = '.'
 
             table.insert(rooms, room)
         end
@@ -777,12 +777,45 @@ TAGS: overwritable layout allow_dup unrand
         end
     end
 
+    -- Prevent staircases from being placed in special or inner rooms.
+    _G.nsubst('. = { / ( / [ / < / } / ) / ] / > / .')
+
     if special ~= -1 then
         _G.subvault('O : special_room')
     end
 }}
 MAP
 ENDMAP
+
+NAME: layout_delve
+DEPTH: Spider
+CHANCE: 100%
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym, fill = 'X'}
+    fill_area{fill = 'X'}
+    fill_area{x1=1, y1=1, x2=gxm-2, y2=gym-2, fill = 'x'}
+
+    local ngb_min = crawl.random_range(1, 3)
+    local ngb_max = crawl.random_range(ngb_min, 8)
+    local connchance = crawl.random_element
+        { [0] = 2, [5] = 1, [20] = 1, [50] = 1, [100] = 1 }
+    local top = crawl.random_element
+        { [1] = 1, [20] = 1, [125] = 1, [500] = 1, [999999] =1 }
+    crawl.mpr("delve(" .. ngb_min .. ", " .. ngb_max .. ", " .. connchance ..
+              ", -1, " .. top .. ")")
+    delve(ngb_min, ngb_max, connchance, -1, top)
+    if crawl.coinflip() then
+      crawl.mpr("delve: adding water");
+      _G.subst('. = @')
+      delve(ngb_min, ngb_max, 100, 100, top)
+      _G.subst('. = w')
+      _G.subst('@ = .')
+    end
+    _G.subst('X = x')
+}}
 
 # Dummy layouts that just call C++ functions that do all the work.
 NAME: layout_basic
@@ -807,13 +840,13 @@ TAGS: overwritable layout allow_dup unrand
 MAP
 ENDMAP
 
-NAME: layout_plan_4
+NAME: layout_chaotic_city
 DEPTH: Vault, Pan, 4-
 WEIGHT: 1 (Pan), 2 (Vault), 10
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
-    if not is_validating() then layout_plan_4() end
+    if not is_validating() then layout_chaotic_city() end
 }}
 MAP
 ENDMAP

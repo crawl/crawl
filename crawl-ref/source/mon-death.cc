@@ -10,6 +10,7 @@
 #include "areas.h"
 #include "coordit.h"
 #include "database.h"
+#include "dactions.h"
 #include "env.h"
 #include "items.h"
 #include "message.h"
@@ -23,7 +24,6 @@
 #include "random.h"
 #include "religion.h"
 #include "state.h"
-#include "stuff.h"
 #include "transform.h"
 #include "view.h"
 
@@ -47,40 +47,27 @@ bool mons_is_pikel (monster* mons)
  * Perform neutralisation for members of Pikel's band upon Pikel's 'death'.
  *
  * This neutralisation occurs in multiple instances: when Pikel is neutralised,
- * enslaved, leaves the level and leaves behind some slaves, when Pikel dies,
- * when Pikel is banished.
- *
- * @param check_tagged    If True, monsters leaving the level are ignored.
+ * enslaved, when Pikel dies, when Pikel is banished.
 **/
-void pikel_band_neutralise (bool check_tagged)
+void pikel_band_neutralise()
 {
-    bool message_made = false;
+    bool any_vis = false;
 
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->type == MONS_SLAVE
             && testbits(mi->flags, MF_BAND_MEMBER)
             && mi->props.exists("pikel_band")
-            && mi->mname != "freed slave")
+            && mi->mname != "freed slave"
+            && mi->observable())
         {
-            // Don't neutralise band members that are leaving the level with us.
-            if (check_tagged && testbits(mi->flags, MF_TAKING_STAIRS))
-                continue;
-
-            if (mi->observable() && !message_made)
-            {
-                if (check_tagged)
-                    mprf("With Pikel's spell partly broken, some of the slaves are set free!");
-                else
-                    mprf("With Pikel's spell broken, the former slaves thank you for their freedom.");
-
-                message_made = true;
-            }
-            mi->flags |= MF_NAME_REPLACE | MF_NAME_DESCRIPTOR;
-            mi->mname = "freed slave";
-            mons_pacify(*mi);
+            any_vis = true;
         }
     }
+    if (any_vis)
+        mprf("With Pikel's spell broken, the former slaves thank you for their freedom.");
+
+    add_daction(DACT_PIKEL_SLAVES);
 }
 
 /**
@@ -489,11 +476,10 @@ void elven_twins_unpacify (monster* twin)
 **/
 void spirit_fades (monster *spirit)
 {
-
     if (mons_near(spirit))
         simple_monster_message(spirit, " fades away with a wail!", MSGCH_TALK);
     else
-        mprf("You hear a distant wailing.", MSGCH_TALK);
+        mpr("You hear a distant wailing.", MSGCH_TALK);
 
     const coord_def c = spirit->pos();
 
@@ -518,7 +504,7 @@ void spirit_fades (monster *spirit)
     if (mons_near(new_mon))
         simple_monster_message(new_mon, " seeks to avenge the fallen spirit!", MSGCH_TALK);
     else
-        mprf("A powerful presence appears to avenge a fallen spirit!", MSGCH_TALK);
+        mpr("A powerful presence appears to avenge a fallen spirit!", MSGCH_TALK);
 
 }
 

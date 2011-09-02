@@ -352,7 +352,7 @@
 
     {  MST_WIZARD_III,
       {
-       SPELL_PARALYSE,
+       SPELL_PETRIFY,
        SPELL_LEHUDIBS_CRYSTAL_SPEAR,
        SPELL_BLINK,
        SPELL_BOLT_OF_FIRE,
@@ -1117,7 +1117,6 @@
       }
     },
 
-    // Crusader theme.
     {  MST_RUPERT,
       {
        SPELL_PARALYSE,
@@ -1520,7 +1519,7 @@
 
     { MST_THE_ENCHANTRESS,
       {
-       SPELL_PARALYSE,
+       SPELL_CORONA,
        SPELL_SLEEP,
        SPELL_HASTE,
        SPELL_BANISHMENT,
@@ -1691,6 +1690,28 @@
        SPELL_CAUSE_FEAR,
        SPELL_NO_SPELL,
        SPELL_NO_SPELL,
+      }
+    },
+
+    {  MST_BASILISK,
+      {
+       SPELL_NO_SPELL,
+       SPELL_PETRIFY,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+      }
+    },
+
+    {  MST_CATOBLEPAS,
+      {
+       SPELL_PETRIFYING_CLOUD,
+       SPELL_PETRIFYING_CLOUD,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL
       }
     },
 

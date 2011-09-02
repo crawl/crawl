@@ -167,7 +167,7 @@ void wizard_change_species(void)
             perma_mutate(MUT_PASSIVE_MAPPING, 1);
         break;
 
-    case SP_CAT:
+    case SP_FELID:
         if (you.experience_level >= 6)
             perma_mutate(MUT_SHAGGY_FUR, 1);
         if (you.experience_level >= 12)
@@ -177,6 +177,9 @@ void wizard_change_species(void)
     default:
         break;
     }
+
+    calc_hp();
+    calc_mp();
 
     burden_change();
     update_player_symbol();
@@ -231,7 +234,7 @@ void wizard_heal(bool super_heal)
         you.magic_contamination = 0;
         you.duration[DUR_LIQUID_FLAMES] = 0;
         you.clear_beholders();
-        inc_hp(10, true);
+        inc_max_hp(10);
     }
 
     // Clear most status ailments.
@@ -240,8 +243,8 @@ void wizard_heal(bool super_heal)
     you.duration[DUR_CONF]      = 0;
     you.duration[DUR_MISLED]    = 0;
     you.duration[DUR_POISONING] = 0;
-    set_hp(you.hp_max, false);
-    set_mp(you.max_magic_points, false);
+    set_hp(you.hp_max);
+    set_mp(you.max_magic_points);
     set_hunger(10999, true);
     you.redraw_hit_points = true;
 }
@@ -341,11 +344,19 @@ void wizard_set_piety()
         return;
     }
     mprf("Setting piety to %d.", newpiety);
-    int diff = newpiety - you.piety;
-    if (diff > 0)
-        gain_piety(diff, 1, true, false);
-    else
-        lose_piety(-diff);
+
+    // We have to set the exact piety value this way, because diff may
+    // be decreased to account for things like penance and gift timeout.
+    int diff;
+    do
+    {
+        diff = newpiety - you.piety;
+        if (diff > 0)
+            gain_piety(diff, 1, true, false);
+        else if (diff < 0)
+            lose_piety(-diff);
+    }
+    while (diff != 0);
 
     // Automatically reduce penance to 0.
     if (you.penance[you.religion] > 0)
@@ -367,7 +378,7 @@ void wizard_exercise_skill(void)
     else
     {
         mpr("Exercising...");
-        exercise(skill, 100);
+        exercise(skill, 10);
     }
 }
 #endif
@@ -396,6 +407,15 @@ void wizard_set_skill_level(skill_type skill)
             you.ct_skill_points[skill] = 0;
             you.skills[skill] = amount;
 
+            if (amount == 27)
+            {
+                you.train[skill] = 0;
+                check_selected_skills();
+            }
+            else if (!amount)
+                lose_skill(skill);
+
+            reset_training();
             calc_total_skill_points();
 
             redraw_skill(you.your_name, player_title());
@@ -445,7 +465,6 @@ void wizard_set_skill_level(skill_type skill)
 #ifdef WIZARD
 void wizard_set_all_skills(void)
 {
-    int i;
     int amount = prompt_for_int("Set all skills to what level? ", true);
 
     if (amount < 0)             // cancel returns -1 -- bwr
@@ -455,7 +474,7 @@ void wizard_set_all_skills(void)
         if (amount > 27)
             amount = 27;
 
-        for (i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+        for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
         {
             skill_type sk = static_cast<skill_type>(i);
             if (is_invalid_skill(sk))
@@ -591,7 +610,7 @@ bool wizard_add_mutation()
     {
         crawl_state.cancel_cmd_repeat();
 
-        if (partial_matches.size() == 0)
+        if (partial_matches.empty())
             mpr("No matching mutation names.");
         else
         {
@@ -672,8 +691,7 @@ void wizard_get_religion(void)
         mpr("That god doesn't seem to be taking followers today.");
     else
     {
-        dungeon_feature_type feat =
-            static_cast<dungeon_feature_type>(DNGN_ALTAR_FIRST_GOD + god - 1);
+        dungeon_feature_type feat = altar_for_god(god);
         dungeon_terrain_changed(you.pos(), feat, false);
 
         pray();
@@ -783,11 +801,14 @@ static const char* dur_names[] =
     "lifesaving",
     "paralysis immunity",
     "darkness",
+    "petrifying",
+    "shrouded",
+    "tornado cooldown",
 };
 
 void wizard_edit_durations(void)
 {
-    COMPILE_CHECK(ARRAYSZ(dur_names) == NUM_DURATIONS, dur_names_size);
+    COMPILE_CHECK(ARRAYSZ(dur_names) == NUM_DURATIONS);
     std::vector<int> durs;
     size_t max_len = 0;
 
@@ -800,12 +821,12 @@ void wizard_edit_durations(void)
         durs.push_back(i);
     }
 
-    if (durs.size() > 0)
+    if (!durs.empty())
     {
         for (unsigned int i = 0; i < durs.size(); ++i)
         {
             int dur = durs[i];
-            mprf(MSGCH_PROMPT, "%c) %-*s : %d", 'a' + i, max_len,
+            mprf(MSGCH_PROMPT, "%c) %-*s : %d", 'a' + i, (int)max_len,
                  dur_names[dur], you.duration[dur]);
         }
         mpr("", MSGCH_PROMPT);
@@ -832,7 +853,7 @@ void wizard_edit_durations(void)
 
     if (strlen(buf) == 1)
     {
-        if (durs.size() == 0)
+        if (durs.empty())
         {
             mpr("No existing durations to choose from.", MSGCH_PROMPT);
             return;
@@ -869,7 +890,7 @@ void wizard_edit_durations(void)
             ;
         else if (matches.size() == 1)
             choice = matches[0];
-        else if (matches.size() == 0)
+        else if (matches.empty())
         {
             mprf(MSGCH_PROMPT, "No durations matching '%s'.", buf);
             return;
@@ -907,22 +928,22 @@ static void debug_uptick_xl(int newxl)
 static void debug_downtick_xl(int newxl)
 {
     you.hp = you.hp_max;
-    while (newxl < you.experience_level)
-    {
-        // Each lose_level() subtracts 4 HP, so do this to avoid death
-        // and/or negative HP when going from a high level to a low level.
-        you.hp     = std::max(5, you.hp);
-        you.hp_max = std::max(5, you.hp_max);
+    you.hp_max_perm += 1000; // boost maxhp so we don't die if heavily rotted
+    you.experience = exp_needed(newxl);
+    level_change();
 
-        you.experience = exp_needed(you.experience_level) - 1;
-        level_change();
+    // restore maxhp loss
+    you.hp_max_perm -= 1000;
+    calc_hp();
+    if (you.hp_max <= 0)
+    {
+        // ... but remove it completely if unviable
+        you.hp_max_temp = std::max(you.hp_max_temp, 0);
+        you.hp_max_perm = std::max(you.hp_max_perm, 0);
+        calc_hp();
     }
 
     you.hp       = std::max(1, you.hp);
-    you.hp_max   = std::max(1, you.hp_max);
-
-    you.base_hp  = std::max(5000,              you.base_hp);
-    you.base_hp2 = std::max(5000 + you.hp_max, you.base_hp2);
 }
 
 void wizard_set_xl()
@@ -978,4 +999,13 @@ void wizard_god_wrath()
     if (!divine_retribution(you.religion, true, true))
         // Currently only dead Jiyva.
         mpr("You're not eligible for wrath.");
+}
+
+void wizard_god_mollify()
+{
+    for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
+    {
+        if (you.penance[i])
+            dec_penance((god_type) i, you.penance[i]);
+    }
 }

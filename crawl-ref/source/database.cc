@@ -73,9 +73,7 @@ static TextDB AllDBs[] =
             "descript/skills.txt",
             "descript/ability.txt",
             "descript/cards.txt",
-#ifdef USE_TILE
             "descript/commands.txt",
-#endif
             NULL),
 
     TextDB("gamestart",
@@ -345,7 +343,7 @@ std::vector<std::string> database_find_bodies(DBM *database,
 
 ///////////////////////////////////////////////////////////////////////////
 // Internal DB utility functions
-static void _execute_embedded_lua(std::string &str)
+void execute_embedded_lua(std::string &str)
 {
     // Execute any lua code found between "{{" and "}}".  The lua code
     // is expected to return a string, with which the lua code and
@@ -493,7 +491,7 @@ static std::string _chooseStrByWeight(std::string entry, int fixed_weight = -1)
         weights.push_back(total_weight);
     }
 
-    if (parts.size() == 0)
+    if (parts.empty())
         return "BUG, EMPTY ENTRY";
 
     int choice = 0;
@@ -657,7 +655,7 @@ static std::string _query_database(DBM *db, std::string key,
     std::string str((const char *)result.dptr, result.dsize);
 
     if (run_lua)
-        _execute_embedded_lua(str);
+        execute_embedded_lua(str);
 
     return (str);
 }

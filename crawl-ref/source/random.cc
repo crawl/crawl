@@ -1,5 +1,6 @@
 #include "AppHdr.h"
 
+#include <math.h>
 #include "random.h"
 
 int random_range(int low, int high)
@@ -136,7 +137,6 @@ int maybe_roll_dice(int num, int size, bool random)
 int roll_dice(int num, int size)
 {
     int ret = 0;
-    int i;
 
     // If num <= 0 or size <= 0, then we'll just return the default
     // value of zero.  This is good behaviour in that it will be
@@ -145,7 +145,7 @@ int roll_dice(int num, int size)
     {
         ret += num;     // since random2() is zero based
 
-        for (i = 0; i < num; i++)
+        for (int i = 0; i < num; i++)
             ret += random2(size);
     }
 
@@ -262,6 +262,21 @@ int binomial_generator(unsigned n_trials, unsigned trial_prob)
             count++;
 
     return count;
+}
+
+// range [0..1)
+double random_real()
+{
+    return random_int() / 4294967296.0;
+}
+
+// Roll n_trials, return true if at least one succeeded.  n_trials might be
+// not integer.
+bool bernoulli(double n_trials, double trial_prob)
+{
+    if (n_trials <= 0 || trial_prob <= 0)
+        return false;
+    return random_real() >= pow(1 - trial_prob, n_trials);
 }
 
 bool one_chance_in(int a_million)

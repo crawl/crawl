@@ -13,8 +13,8 @@
 #include "itemprop.h"
 #include "makeitem.h"
 #include "message.h"
-#include "misc.h"
 #include "shout.h"
+#include "skills2.h"
 
 
 // We need to know what brands equate with what missile brands to know if
@@ -41,7 +41,8 @@ static brand_type _convert_to_launcher(brand_type which_brand)
 {
     switch (which_brand)
     {
-    case SPWPN_FREEZING: return SPWPN_FROST; case SPWPN_FLAMING: return SPWPN_FLAME;
+    case SPWPN_FREEZING: return SPWPN_FROST;
+    case SPWPN_FLAMING: return SPWPN_FLAME;
     default: return (which_brand);
     }
 }
@@ -59,44 +60,42 @@ static bool _ok_for_launchers(brand_type which_brand)
     //case SPWPN_PAIN: -- no pain missile type yet
     case SPWPN_RETURNING:
     case SPWPN_CHAOS:
+    case SPWPN_VORPAL:
         return (true);
     default:
         return (false);
     }
 }
 
-bool brand_weapon(brand_type which_brand, int power)
+spret_type brand_weapon(brand_type which_brand, int power, bool fail)
 {
     if (!you.weapon())
-        return (false);
+    {
+        mpr("You aren't wielding a weapon.");
+        return SPRET_ABORT;
+    }
 
     bool temp_brand = you.duration[DUR_WEAPON_BRAND];
     item_def& weapon = *you.weapon();
 
     // Can't brand non-weapons, but can brand some launchers (see later).
     if (weapon.base_type != OBJ_WEAPONS)
-        return (false);
+    {
+        mpr("This isn't a weapon.");
+        return SPRET_ABORT;
+    }
 
-    // But not blowguns.
-    if (weapon.sub_type == WPN_BLOWGUN)
-        return (false);
-
-    // Can't brand artefacts.
-    if (is_artefact(weapon))
-        return (false);
+    if (weapon.sub_type == WPN_BLOWGUN || is_artefact(weapon))
+    {
+        mpr("You cannot enchant this weapon.");
+        return SPRET_ABORT;
+    }
 
     // Can't brand already-branded items.
     if (!temp_brand && get_weapon_brand(weapon) != SPWPN_NORMAL)
-        return (false);
-
-    // Some brandings are restricted to certain damage types.
-    const int wpn_type = get_vorpal_type(weapon);
-    if (which_brand == SPWPN_VENOM && wpn_type == DVORP_CRUSHING
-        || which_brand == SPWPN_VORPAL && wpn_type != DVORP_SLICING
-                                       && wpn_type != DVORP_STABBING
-        || which_brand == SPWPN_DUMMY_CRUSHING && wpn_type != DVORP_CRUSHING)
     {
-        return (false);
+        mpr("This weapon is already enchanted.");
+        return SPRET_ABORT;
     }
 
     // Can only brand launchers with sensible brands.
@@ -112,16 +111,24 @@ bool brand_weapon(brand_type which_brand, int power)
             missile = MI_SLING_BULLET;
 
         if (!is_missile_brand_ok(missile, _convert_to_missile(which_brand), true))
-            return (false);
+        {
+            mpr("You cannot enchant this weapon with this spell.");
+            return SPRET_ABORT;
+        }
 
         // If the brand isn't appropriate for that launcher, also say no.
         if (!_ok_for_launchers(which_brand))
-            return (false);
+        {
+            mpr("You cannot enchant this weapon with this spell.");
+            return SPRET_ABORT;
+        }
 
         // Otherwise, convert to the correct brand type, most specifically (but
         // not necessarily only) flaming -> flame, freezing -> frost.
         which_brand = _convert_to_launcher(which_brand);
     }
+
+    fail_check();
 
     // Allow rebranding a temporarily-branded item to a different brand.
     if (temp_brand && (get_weapon_brand(weapon) != which_brand))
@@ -134,7 +141,7 @@ bool brand_weapon(brand_type which_brand, int power)
     std::string msg = weapon.name(DESC_CAP_YOUR);
 
     bool emit_special_message = !temp_brand;
-    int duration_affected = 0;
+    int duration_affected = 10;
     switch (which_brand)
     {
     case SPWPN_FLAME:
@@ -168,7 +175,7 @@ bool brand_weapon(brand_type which_brand, int power)
         duration_affected = 10;
         break;
 
-    case SPWPN_DISTORTION:      //jmf: Added for Warp Weapon.
+    case SPWPN_DISTORTION:
         msg += " seems to ";
         msg += random_choose_string("twist", "bend", "vibrate",
                                     "flex", "wobble", "twang", NULL);
@@ -195,14 +202,24 @@ bool brand_weapon(brand_type which_brand, int power)
         emit_special_message = true;
         break;
 
-    case SPWPN_DUMMY_CRUSHING:  //jmf: Added for Maxwell's Silver Hammer.
-        which_brand = SPWPN_VORPAL;
-        msg += " glows silver and feels heavier.";
-        duration_affected = 7;
+    case SPWPN_HOLY_WRATH:
+        msg += " shines with holy light.";
+        break;
+
+    case SPWPN_ELECTROCUTION:
+        msg += " starts to spark.";
+        break;
+
+    case SPWPN_ANTIMAGIC:
+        msg += " depletes magic around it.";
+        break;
+
+    case SPWPN_CHAOS:
+        msg += " glistens with random hues.";
         break;
 
     case SPWPN_RETURNING:
-        msg += " wiggles in your hand.";
+        msg += " wiggles in your " + you.hand_name(false) + ".";
         duration_affected = 5;
         break;
 
@@ -223,25 +240,27 @@ bool brand_weapon(brand_type which_brand, int power)
 
     you.increase_duration(DUR_WEAPON_BRAND,
                           duration_affected + roll_dice(2, power), 50);
+    if (which_brand == SPWPN_ANTIMAGIC)
+        calc_mp();
 
-    return (true);
+    return SPRET_SUCCESS;
 }
 
-void cast_confusing_touch(int power)
+spret_type cast_confusing_touch(int power, bool fail)
 {
-    msg::stream << "Your " << your_hand(true) << " begin to glow "
+    fail_check();
+    msg::stream << "Your " << you.hand_name(true) << " begin to glow "
                 << (you.duration[DUR_CONFUSING_TOUCH] ? "brighter" : "red")
                 << "." << std::endl;
 
     you.increase_duration(DUR_CONFUSING_TOUCH, 5 + (random2(power) / 5),
                           50, NULL);
 
+    return SPRET_SUCCESS;
 }
 
-bool cast_sure_blade(int power)
+spret_type cast_sure_blade(int power, bool fail)
 {
-    bool success = false;
-
     if (!you.weapon())
         mpr("You aren't wielding a weapon!");
     else if (weapon_skill(you.weapon()->base_type,
@@ -251,6 +270,7 @@ bool cast_sure_blade(int power)
     }
     else
     {
+        fail_check();
         if (!you.duration[DUR_SURE_BLADE])
             mpr("You become one with your weapon.");
         else if (you.duration[DUR_SURE_BLADE] < 25 * BASELINE_DELAY)
@@ -258,8 +278,8 @@ bool cast_sure_blade(int power)
 
         you.increase_duration(DUR_SURE_BLADE, 8 + (random2(power) / 10),
                               25, NULL);
-        success = true;
+        return SPRET_SUCCESS;
     }
 
-    return (success);
+    return SPRET_ABORT;
 }

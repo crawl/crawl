@@ -64,6 +64,7 @@
 #include "skills.h"
 #include "skills2.h"
 #include "species.h"
+#include "spl-damage.h"
 #include "spl-other.h"
 #include "spl-selfench.h"
 #include "spl-transloc.h"
@@ -117,7 +118,7 @@ static void _moveto_maybe_repel_stairs()
                  prep.c_str());
 
             if (player_in_a_dangerous_place() && one_chance_in(5))
-                xom_is_stimulated(32);
+                xom_is_stimulated(25);
         }
     }
 }
@@ -152,6 +153,11 @@ static bool _check_moveto_cloud(const coord_def& p,
 
 static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
 {
+    // If there's no trap, let's go.
+    trap_def* trap = find_trap(p);
+    if (!trap)
+        return true;
+
     // If we're walking along, give a chance to avoid traps.
     const dungeon_feature_type new_grid = env.grid(p);
     if (new_grid == DNGN_UNDISCOVERED_TRAP)
@@ -163,113 +169,99 @@ static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
 
         if (random2(skill) > 6)
         {
-            if (trap_def* ptrap = find_trap(p))
-                ptrap->reveal();
+            // We check the safety before revealing it.
+            const bool safe = trap->is_safe();
+            trap->reveal();
+            practise(EX_TRAP_PASSIVE);
+            print_stats();
+
+            if (safe)
+                return true;
 
             viewwindow();
 
             mprf(MSGCH_WARN,
-                 "Wait a moment, %s! Do you really want to %s there?",
-                 you.your_name.c_str(),
-                 move_verb.c_str());
+                 "You found %s trap!",
+                 trap->name(DESC_NOCAP_A).c_str());
 
             if (!you.running.is_any_travel())
                 more();
 
-            practise(EX_TRAP_PASSIVE);
-            print_stats();
             return (false);
         }
     }
-    else if (new_grid == DNGN_TRAP_MAGICAL
-#ifdef CLUA_BINDINGS
-             || new_grid == DNGN_TRAP_MECHANICAL
-                && Options.trap_prompt
-#endif
-             || new_grid == DNGN_TRAP_NATURAL)
+    else if (trap->type == TRAP_ZOT)
     {
-        const trap_type type = get_trap_type(p);
-        if (type == TRAP_ZOT)
-        {
-            std::string prompt = make_stringf(
-                "Do you really want to %s into the Zot trap",
-                move_verb.c_str()
-          );
-            if (!yes_or_no(prompt.c_str()))
-            {
-                canned_msg(MSG_OK);
-                return (false);
-            }
-        }
-        else if (new_grid != DNGN_TRAP_MAGICAL &&
-                 (you.airborne() || you.can_cling_to(p)))
-        {
-            // No prompt (shaft and mechanical traps
-            // ineffective, if flying)
-        }
-        else if (type == TRAP_TELEPORT
-                 && (player_equip(EQ_AMULET, AMU_STASIS, true)
-                     || scan_artefacts(ARTP_PREVENT_TELEPORTATION,
-                                       false)))
-        {
-            // No prompt (teleport traps are ineffective if
-            // wearing an amulet of stasis)
-        }
-        else
-#ifdef CLUA_BINDINGS
-             // Prompt for any trap where you might not have enough hp
-             // as defined in init.txt (see trapwalk.lua)
-             if (type != TRAP_SHAFT // Known shafts aren't traps
-                 && type != TRAP_GOLUBRIA // don't need a warning here
-                 && (new_grid != DNGN_TRAP_MECHANICAL
-                 || !clua.callbooleanfn(false, "ch_cross_trap",
-                                        "s", trap_name_at(p)))
-                && !crawl_state.game_is_zotdef())
-#endif
-        {
-            std::string prompt = make_stringf(
-                "Really %s %s that %s?",
-                move_verb.c_str(),
-                (type == TRAP_ALARM || type == TRAP_PLATE) ? "onto" : "into",
-                feature_description(new_grid, type,
-                                    "", DESC_BASENAME,
-                                    false).c_str());
+        std::string prompt = make_stringf(
+            "Do you really want to %s into the Zot trap",
+            move_verb.c_str());
 
-            if (!yesno(prompt.c_str(), true, 'n'))
-            {
-                canned_msg(MSG_OK);
-                return (false);
-            }
+        if (!yes_or_no(prompt.c_str()))
+        {
+            canned_msg(MSG_OK);
+            return (false);
+        }
+    }
+    else if (!trap->is_safe())
+    {
+        std::string prompt = make_stringf(
+            "Really %s %s that %s?",
+            move_verb.c_str(),
+            (trap->type == TRAP_ALARM || trap->type == TRAP_PLATE) ? "onto"
+                                                                   : "into",
+            feature_description(new_grid, trap->type, "",
+                                DESC_BASENAME, false).c_str());
+
+        if (!yesno(prompt.c_str(), true, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return (false);
         }
     }
     return (true);
 }
 
-static bool _check_moveto_dangerous(const coord_def& p,
-                                    const std::string move_verb)
+static bool _check_moveto_dangerous(const coord_def& p, const std::string& msg,
+                                    bool cling = true)
 {
     if (you.can_swim() && feat_is_water(env.grid(p))
-        || you.can_cling_to(p)
+        || you.airborne() || cling && you.can_cling_to(p)
         || !is_feat_dangerous(env.grid(p)))
     {
         return (true);
     }
+
+    if (msg != "")
+        mpr(msg.c_str());
     else if (you.species == SP_MERFOLK && feat_is_water(env.grid(p)))
         mpr("You cannot swim in your current form.");
     else
         canned_msg(MSG_UNTHINKING_ACT);
+
     return (false);
 }
 
 static bool _check_moveto_terrain(const coord_def& p,
-                                  const std::string &move_verb)
+                                  const std::string &move_verb,
+                                  const std::string &msg)
 {
-    if (you.is_wall_clinging() && move_verb == "blink")
-        return (_check_moveto_dangerous(p, move_verb));
+    if (you.is_wall_clinging()
+        && (move_verb == "blink" || move_verb == "passwall"))
+    {
+        return (_check_moveto_dangerous(p, msg, false));
+    }
 
     if (!need_expiration_warning() && need_expiration_warning(p))
     {
-        std::string prompt = "Are you sure you want to " + move_verb;
+        if (!_check_moveto_dangerous(p, msg))
+            return false;
+
+        std::string prompt;
+
+        if (msg != "")
+            prompt = msg + " ";
+
+        prompt += "Are you sure you want to " + move_verb;
 
         if (you.ground_level())
             prompt += " into ";
@@ -289,16 +281,13 @@ static bool _check_moveto_terrain(const coord_def& p,
         }
     }
 
-    // Only consider terrain if player is not levitating.
-    if (you.airborne() || you.can_cling_to(p))
-        return (true);
-
-    return (_check_moveto_dangerous(p, move_verb));
+    return _check_moveto_dangerous(p, msg);
 }
 
-bool check_moveto(const coord_def& p, const std::string &move_verb)
+bool check_moveto(const coord_def& p, const std::string &move_verb,
+                  const std::string &msg)
 {
-    return (_check_moveto_terrain(p, move_verb)
+    return (_check_moveto_terrain(p, move_verb, msg)
             && _check_moveto_cloud(p, move_verb)
             && _check_moveto_trap(p, move_verb));
 }
@@ -405,7 +394,10 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
     ASSERT(in_bounds(p));
 
     if (!stepped)
+    {
         you.clear_clinging();
+        tornado_move(p);
+    }
 
     // assuming that entering the same square means coming from above (levitate)
     const coord_def old_pos = you.pos();
@@ -423,10 +415,6 @@ void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift)
     // Move the player to new location.
     you.moveto(p);
     viewwindow();
-
-    // Checking new squares for interesting features.
-    if (!you.running)
-        check_for_interesting_features();
 
     moveto_location_effects(old_grid, stepped, allow_shift, old_pos);
 }
@@ -488,6 +476,23 @@ bool player_can_open_doors()
             && you.form != TRAN_PIG);
 }
 
+bool player_can_reach_floor(std::string feat, bool quiet)
+{
+    if (you.flight_mode() != FL_LEVITATE)
+        return true;
+
+    if (quiet)
+        return false;
+
+    if (feat == "")
+        mpr("You can't reach the floor from up here.");
+    else
+        mprf("You are floating high above the %s.", feat.c_str());
+
+    learned_something_new(HINT_LEVITATING);
+    return false;
+}
+
 bool player_under_penance(void)
 {
     if (you.religion != GOD_NO_GOD)
@@ -516,7 +521,7 @@ bool is_player_same_species(const int mon, bool transform)
         {
         // Unique monsters.
         case TRAN_BAT:
-            return (mon == MONS_MEGABAT);
+            return (mon == MONS_BAT);
         case TRAN_ICE_BEAST:
             return (mon == MONS_ICE_BEAST);
         // Compare with monster *species*.
@@ -620,8 +625,18 @@ void update_vision_range()
 // ---------------------------------------------------
 bool you_can_wear(int eq, bool special_armour)
 {
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
         return (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET);
+
+    // Octopodes can wear soft helmets, eight rings, and an amulet.
+    if (you.species == SP_OCTOPODE)
+    {
+        if (special_armour && eq == EQ_HELMET)
+            return (true);
+        else
+            return (eq >= EQ_RING_ONE && eq <= EQ_RING_EIGHT
+                    || eq == EQ_AMULET || eq == EQ_SHIELD || eq == EQ_WEAPON);
+    }
 
     switch (eq)
     {
@@ -639,7 +654,7 @@ bool you_can_wear(int eq, bool special_armour)
         {
             return (false);
         }
-        if (player_mutation_level(MUT_CLAWS) >= 3)
+        if (player_mutation_level(MUT_CLAWS) == 3)
             return (false);
         return (true);
 
@@ -647,8 +662,8 @@ bool you_can_wear(int eq, bool special_armour)
         // Bardings.
         if (you.species == SP_NAGA || you.species == SP_CENTAUR)
             return (special_armour);
-        if (player_mutation_level(MUT_HOOVES) >= 3
-            || player_mutation_level(MUT_TALONS) >= 3)
+        if (player_mutation_level(MUT_HOOVES) == 3
+            || player_mutation_level(MUT_TALONS) == 3)
         {
             return (false);
         }
@@ -706,11 +721,16 @@ bool you_can_wear(int eq, bool special_armour)
 
 bool player_has_feet()
 {
-    if (you.species == SP_NAGA || you.species == SP_CAT || you.fishtail)
+    if (you.species == SP_NAGA
+        || you.species == SP_FELID
+        || you.species == SP_OCTOPODE
+        || you.fishtail)
+    {
         return (false);
+    }
 
-    if (player_mutation_level(MUT_HOOVES) >= 3
-        || player_mutation_level(MUT_TALONS) >= 3)
+    if (player_mutation_level(MUT_HOOVES) == 3
+        || player_mutation_level(MUT_TALONS) == 3)
     {
         return (false);
     }
@@ -740,14 +760,6 @@ bool you_tran_can_wear(const item_def &item)
         else if (item.sub_type == ARM_CENTAUR_BARDING)
             return (you.species == SP_CENTAUR && you_tran_can_wear(EQ_BOOTS));
 
-        if (get_armour_slot(item) == EQ_HELMET
-            && !is_hard_helmet(item)
-            && (you.form == TRAN_SPIDER
-                || you.form == TRAN_ICE_BEAST))
-        {
-            return (true);
-        }
-
         if (fit_armour_size(item, you.body_size()) != 0)
             return (false);
 
@@ -765,8 +777,10 @@ bool you_tran_can_wear(int eq, bool check_mutation)
 
     if (eq == EQ_STAFF)
         eq = EQ_WEAPON;
-    else if (eq >= EQ_RINGS && eq <= EQ_RINGS_PLUS2)
+    else if (eq >= EQ_RINGS && eq <= EQ_RINGS_PLUS2 && you.species != SP_OCTOPODE)
         eq = EQ_LEFT_RING;
+    else if (eq >= EQ_RINGS && eq <= EQ_RINGS_PLUS2 && you.species == SP_OCTOPODE)
+        eq = EQ_RING_ONE;
 
     // Everybody can wear at least some type of armour.
     if (eq == EQ_ALL_ARMOUR)
@@ -775,19 +789,19 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     // Not a transformation, but also temporary -> check first.
     if (check_mutation)
     {
-        if (eq == EQ_GLOVES && you.has_claws(false) >= 3)
+        if (eq == EQ_GLOVES && you.has_claws(false) == 3)
             return (false);
 
-        if (eq == EQ_HELMET && player_mutation_level(MUT_HORNS) >= 3)
+        if (eq == EQ_HELMET && player_mutation_level(MUT_HORNS) == 3)
             return (false);
 
-        if (eq == EQ_HELMET && player_mutation_level(MUT_ANTENNAE) >= 3)
+        if (eq == EQ_HELMET && player_mutation_level(MUT_ANTENNAE) == 3)
             return (false);
 
         if (eq == EQ_BOOTS
             && (you.fishtail
-                || player_mutation_level(MUT_HOOVES) >= 3
-                || player_mutation_level(MUT_TALONS) >= 3))
+                || player_mutation_level(MUT_HOOVES) == 3
+                || player_mutation_level(MUT_TALONS) == 3))
         {
             return (false);
         }
@@ -802,7 +816,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
         return (false);
 
     // Everyone else can wear jewellery, at least.
-    if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET)
+    if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET || eq == EQ_RING_ONE)
         return (true);
 
     // These cannot use anything but jewellery.
@@ -912,56 +926,50 @@ int player_equip(equipment_type slot, int sub_type, bool calc_unid)
         break;
 
     case EQ_RINGS:
-        if ((item = you.slot_item(EQ_LEFT_RING))
-            && item->sub_type == sub_type
-            && (calc_unid
-                || item_type_known(*item)))
+        for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; slots++)
         {
-            ret++;
-        }
+            if (slots == EQ_AMULET)
+                continue;
 
-        if ((item = you.slot_item(EQ_RIGHT_RING))
-            && item->sub_type == sub_type
-            && (calc_unid
-                || item_type_known(*item)))
-        {
-            ret++;
+            if ((item = you.slot_item(static_cast<equipment_type>(slots), true))
+                && item->sub_type == sub_type
+                && (calc_unid
+                    || item_type_known(*item)))
+            {
+                ret++;
+            }
         }
         break;
 
     case EQ_RINGS_PLUS:
-        if ((item = you.slot_item(EQ_LEFT_RING))
-            && item->sub_type == sub_type
-            && (calc_unid
-                || item_type_known(*item)))
+        for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; slots++)
         {
-            ret += item->plus;
-        }
+            if (slots == EQ_AMULET)
+                continue;
 
-        if ((item = you.slot_item(EQ_RIGHT_RING))
-            && item->sub_type == sub_type
-            && (calc_unid
-                || item_type_known(*item)))
-        {
-            ret += item->plus;
+            if ((item = you.slot_item(static_cast<equipment_type>(slots), true))
+                && item->sub_type == sub_type
+                && (calc_unid
+                    || item_type_known(*item)))
+            {
+                ret += item->plus;
+            }
         }
         break;
 
     case EQ_RINGS_PLUS2:
-        if ((item = you.slot_item(EQ_LEFT_RING))
-            && item->sub_type == sub_type
-            && (calc_unid
-                || item_type_known(*item)))
+        for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; ++slots)
         {
-            ret += item->plus2;
-        }
+            if (slots == EQ_AMULET)
+                continue;
 
-        if ((item = you.slot_item(EQ_RIGHT_RING))
-            && item->sub_type == sub_type
-            && (calc_unid
-                || item_type_known(*item)))
-        {
-            ret += item->plus2;
+            if ((item = you.slot_item(static_cast<equipment_type>(slots), true))
+                && item->sub_type == sub_type
+                && (calc_unid
+                    || item_type_known(*item)))
+            {
+                ret += item->plus2;
+            }
         }
         break;
 
@@ -1071,18 +1079,17 @@ bool player_equip_unrand(int unrand_index)
         break;
 
     case EQ_RINGS:
-        if ((item = you.slot_item(EQ_LEFT_RING))
-            && is_unrandom_artefact(*item)
-            && item->special == unrand_index)
+        for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; ++slots)
         {
-            return (true);
-        }
+            if (slots == EQ_AMULET)
+                continue;
 
-        if ((item = you.slot_item(EQ_RIGHT_RING))
-            && is_unrandom_artefact(*item)
-            && item->special == unrand_index)
-        {
-            return (true);
+            if ((item = you.slot_item(static_cast<equipment_type>(slots)))
+                && is_unrandom_artefact(*item)
+                && item->special == unrand_index)
+            {
+                return (true);
+            }
         }
         break;
 
@@ -1115,7 +1122,7 @@ bool player_equip_unrand(int unrand_index)
 int player_evokable_levitation()
 {
     return player_equip(EQ_RINGS, RING_LEVITATION)
-           + player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION)
+           + player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION)
            + scan_artefacts(ARTP_LEVITATE);
 }
 
@@ -1139,6 +1146,13 @@ bool player_can_hit_monster(const monster* mon)
 
     const item_def *weapon = you.weapon();
     return (weapon && weapon_skill(*weapon) == SK_POLEARMS);
+}
+
+bool player_can_hear(const coord_def& p, int hear_distance)
+{
+    return (!silenced(p)
+            && !silenced(you.pos())
+            && you.pos().distance_from(p) <= hear_distance);
 }
 
 int player_teleport(bool calc_unid)
@@ -1168,22 +1182,22 @@ int player_teleport(bool calc_unid)
     return tp;
 }
 
-int player_regen()
+// Computes bonuses to regeneration from most sources. Does not handle
+// slow healing, vampireness, or Trog's Hand.
+int player_bonus_regen()
 {
-    int rr = you.hp_max / 3;
+    int rr = 0;
 
-    if (rr > 20)
-        rr = 20 + ((rr - 20) / 2);
-
-    // Rings.
-    rr += 40 * player_equip(EQ_RINGS, RING_REGENERATION);
-
-    // Spell.
+    // Trog's Hand is handled separately so that it will bypass slow healing,
+    // and it overrides the spell.
     if (you.duration[DUR_REGENERATION]
         && !you.attribute[ATTR_DIVINE_REGENERATION])
     {
         rr += 100;
     }
+
+    // Rings.
+    rr += 40 * player_equip(EQ_RINGS, RING_REGENERATION);
 
     // Troll leather (except for trolls).
     if (player_equip(EQ_BODY_ARMOUR, ARM_TROLL_LEATHER_ARMOUR)
@@ -1194,6 +1208,26 @@ int player_regen()
 
     // Fast heal mutation.
     rr += player_mutation_level(MUT_REGENERATION) * 20;
+
+    // Powered By Death mutation, boosts regen by 10 per corpse in
+    // a mutation_level * 3 (3/6/9) radius, to a maximum of 7
+    // corpses.  If and only if the duration of the effect is
+    // still active.
+    if (you.duration[DUR_POWERED_BY_DEATH])
+        rr += handle_pbd_corpses(false) * 100;
+
+    return (rr);
+}
+
+int player_regen()
+{
+    int rr = you.hp_max / 3;
+
+    if (rr > 20)
+        rr = 20 + ((rr - 20) / 2);
+
+    // Add in miscellaneous bonuses
+    rr += player_bonus_regen();
 
     // Before applying other effects, make sure that there's something
     // to heal.
@@ -1216,13 +1250,6 @@ int player_regen()
             // Bonus regeneration for full vampires.
             rr += 10;
     }
-
-    // Powered By Death mutation, boosts regen by 10 per corpse in
-    // a mutation_level * 3 (3/6/9) radius, to a maximum of 7
-    // corpses.  If and only if the duration of the effect is
-    // still active.
-    if (you.duration[DUR_POWERED_BY_DEATH])
-        rr += handle_pbd_corpses(false) * 100;
 
     // Slow heal mutation.  Each level reduces your natural healing by
     // one third.
@@ -1625,21 +1652,6 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
 {
     int re = 0;
 
-    if (temp)
-    {
-        if (you.duration[DUR_INSULATION])
-            re++;
-
-        // transformations:
-        if (you.form == TRAN_STATUE)
-            re += 1;
-
-        if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
-            re = 3;
-        else if (re > 1)
-            re = 1;
-    }
-
     if (items)
     {
         // staff
@@ -1657,6 +1669,21 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
     re += player_mutation_level(MUT_THIN_METALLIC_SCALES) == 3 ? 1 : 0;
     re += player_mutation_level(MUT_SHOCK_RESISTANCE);
 
+    if (temp)
+    {
+        if (you.duration[DUR_INSULATION])
+            re++;
+
+        // transformations:
+        if (you.form == TRAN_STATUE)
+            re += 1;
+
+        if (you.attribute[ATTR_DIVINE_LIGHTNING_PROTECTION])
+            re = 3;
+        else if (re > 1)
+            re = 1;
+    }
+
     return (re);
 }
 
@@ -1673,6 +1700,7 @@ int player_res_torment(bool, bool temp)
     return (player_mutation_level(MUT_TORMENT_RESISTANCE)
             || you.form == TRAN_LICH
             || you.species == SP_VAMPIRE && you.hunger_state == HS_STARVING
+            || you.petrified()
             || (temp &&
                 (20 * player_mutation_level(MUT_STOCHASTIC_TORMENT_RESISTANCE)
                  > random2(100))));
@@ -1731,6 +1759,9 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         default:
             break;
         }
+
+        if (you.petrified())
+            rp++;
     }
 
     if (rp > 1)
@@ -1799,10 +1830,6 @@ int player_spec_fire()
 
     if (you.duration[DUR_FIRE_SHIELD])
         sf++;
-
-    // if it's raining... {due}
-    if (in_what_cloud(CLOUD_RAIN))
-        sf--;
 
     return sf;
 }
@@ -1941,6 +1968,10 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         default:
            break;
         }
+
+        // completely stoned, unlike statue which has some life force
+        if (you.petrified())
+            pl += 3;
     }
 
     if (items)
@@ -1956,6 +1987,7 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 
         // pearl dragon counts
         pl += player_equip(EQ_BODY_ARMOUR, ARM_PEARL_DRAGON_ARMOUR);
+        pl += player_equip(EQ_BODY_ARMOUR, ARM_PEARL_DRAGON_HIDE);
 
         // randart wpns
         pl += scan_artefacts(ARTP_NEGATIVE_ENERGY, calc_unid);
@@ -2005,7 +2037,7 @@ int player_movement_speed(bool ignore_burden)
         mv -= 2;
 
     // ponderous brand and artefact property
-    mv += 2 * player_ponderousness();
+    mv += player_ponderousness();
 
     // In the air, can fly fast (should be lightly burdened).
     if (!ignore_burden && you.light_flight())
@@ -2057,6 +2089,10 @@ int player_speed(void)
 {
     int ps = 10;
 
+    // When paralysed, speed is irrelevant.
+    if (you.cannot_act())
+        return ps;
+
     for (int i = 0; i < NUM_STATS; ++i)
         if (you.stat_zero[i] > 0)
             ps *= 2;
@@ -2065,11 +2101,11 @@ int player_speed(void)
         ps = haste_mul(ps);
 
     if (you.duration[DUR_BERSERK] && you.religion != GOD_CHEIBRIADOS)
-        ps /= 2;
+        ps = berserk_div(ps);
     else if (you.duration[DUR_HASTE])
         ps = haste_div(ps);
 
-    if (you.form == TRAN_STATUE)
+    if (you.form == TRAN_STATUE || you.duration[DUR_PETRIFYING])
     {
         ps *= 15;
         ps /= 10;
@@ -2078,10 +2114,27 @@ int player_speed(void)
     return ps;
 }
 
-int player_ponderousness()
+int player_armour_slots()
+{
+    int armour_slot_count = 0;
+    for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
+        if (i != EQ_SHIELD && you_can_wear(i, true))
+            armour_slot_count++;
+    return armour_slot_count;
+}
+
+int player_ponderous_count()
 {
     return (scan_artefacts(ARTP_PONDEROUS)
             + player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS));
+}
+
+int player_ponderousness()
+{
+    int slots = player_armour_slots();
+    if (slots == 0)
+        return 0;
+    return ((player_ponderous_count() * 10)/slots);
 }
 
 static int _player_armour_racial_bonus(const item_def& item)
@@ -2293,14 +2346,17 @@ int player_evasion_bonuses(ev_ignore_type evit)
 
     // transformation penalties/bonuses not covered by size alone:
     if (you.form == TRAN_STATUE)
-        evbonus -= 5;                // stiff
+        evbonus -= 10;               // stiff and slow
 
     return (evbonus);
 }
 
 // Player EV scaling for being flying kenku or swimming merfolk.
-int player_scale_evasion(const int prescaled_ev, const int scale)
+int player_scale_evasion(int prescaled_ev, const int scale)
 {
+    if (you.duration[DUR_PETRIFYING])
+        prescaled_ev /= 2;
+
     switch (you.species)
     {
     case SP_MERFOLK:
@@ -2471,7 +2527,7 @@ int player_mag_abil(bool is_weighted)
     return ((is_weighted) ? ((ma * you.intel()) / 10) : ma);
 }
 
-int player_shield_class(void)   //jmf: changes for new spell
+int player_shield_class(void)
 {
     int shield = 0;
     int stat = 0;
@@ -2482,14 +2538,16 @@ int player_shield_class(void)   //jmf: changes for new spell
     if (player_wearing_slot(EQ_SHIELD))
     {
         const item_def& item = you.inv[you.equip[EQ_SHIELD]];
-        int base_shield = property(item, PARM_AC);
+        int size_factor = (you.body_size(PSIZE_TORSO) - SIZE_MEDIUM)
+                        * (item.sub_type - ARM_LARGE_SHIELD);
+        int base_shield = property(item, PARM_AC) * 2 + size_factor;
 
         int racial_bonus = _player_armour_racial_bonus(item);
 
         // bonus applied only to base, see above for effect:
-        shield += base_shield * 100;
-        shield += base_shield * 5 * you.skill(SK_SHIELDS);
-        shield += base_shield * racial_bonus * 10 / 3;
+        shield += base_shield * 50;
+        shield += base_shield * 5 * you.skill(SK_SHIELDS) / 2;
+        shield += base_shield * racial_bonus * 10 / 6;
 
         shield += item.plus * 100;
 
@@ -2499,6 +2557,7 @@ int player_shield_class(void)   //jmf: changes for new spell
             stat = you.dex() * 12 + you.strength() * 26;
         else
             stat = you.dex() * 19 + you.strength() * 19;
+        stat = stat * (base_shield + 13) / 26;
     }
     else
     {
@@ -2536,6 +2595,9 @@ int player_sust_abil(bool calc_unid)
     int sa = 0;
 
     sa += player_equip(EQ_RINGS, RING_SUSTAIN_ABILITIES, calc_unid);
+
+    if (sa > 2)
+        sa = 2;
 
     return (sa);
 }
@@ -2638,6 +2700,13 @@ int burden_change(void)
     return (you.burden);
 }
 
+#ifdef NEW_ABYSS
+void forget_map(bool force)
+{
+    forget_map(100, force);
+}
+#endif
+
 // force is true for forget_map command on level map.
 void forget_map(int chance_forgotten, bool force)
 {
@@ -2646,21 +2715,45 @@ void forget_map(int chance_forgotten, bool force)
     if (force && !yesno("Really forget level map?", true, 'n'))
         return;
 
-    // The radius is only used in labyrinths.
-    const bool use_lab_check = (!force && you.level_type == LEVEL_LABYRINTH
-                                && chance_forgotten < 100);
-    const int radius = (use_lab_check && you.species == SP_MINOTAUR) ? 40*40
-                                                                     : 25*25;
+#ifdef NEW_ABYSS
+    // Labyrinth and the Abyss use special rotting rules.
+    const bool rotting_map = (you.level_type == LEVEL_LABYRINTH
+                           || you.level_type == LEVEL_ABYSS);
+    const bool rot_resist = you.level_type == LEVEL_LABYRINTH && you.species == SP_MINOTAUR
+                         || you.level_type == LEVEL_ABYSS && you.religion == GOD_LUGONU;
+#else
+    const bool rotting_map = (you.level_type == LEVEL_LABYRINTH);
+    const bool rot_resist = you.level_type == LEVEL_LABYRINTH && you.species == SP_MINOTAUR;
+#endif
+    const double geometric_chance = 0.97;
+    const int radius = (rot_resist ? 60 : 30);
+
+    const int scalar = 0xFF;
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (!you.see_cell(*ri)
-            && (force || x_chance_in_y(chance_forgotten, 100)
-                || use_lab_check && (you.pos()-*ri).abs() > radius))
+        if (!you.see_cell(*ri))
         {
-            env.map_knowledge(*ri).clear();
+            const int dist = distance(you.pos(), *ri);
+            bool doDecay = (force || chance_forgotten == 100);
+            if (!doDecay)
+            {
+                if (rotting_map)
+                {
+                    int chance = pow(geometric_chance,
+                                     std::max(1, dist-radius)) * scalar;
+                    doDecay = !x_chance_in_y(chance, scalar);
+                }
+                else
+                    doDecay = !x_chance_in_y(chance_forgotten, 100);
+            }
+
+            if (doDecay)
+            {
+                env.map_knowledge(*ri).clear();
 #ifdef USE_TILE
-            tile_forget_map(*ri);
+                tile_forget_map(*ri);
 #endif
+            }
         }
     }
 
@@ -2678,9 +2771,16 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
     if (crawl_state.game_is_sprint() && you.level_type == LEVEL_ABYSS)
         return;
 
-    if (you.religion == GOD_ASHENZARI && you.piety > piety_breakpoint(0))
-        exp_gained = div_rand_round(exp_gained * (8 + ash_bondage_level()), 8);
-    exp_gained -= ash_reduce_xp(exp_gained);
+    if (crawl_state.game_is_zotdef())
+    {
+        you.zot_points += exp_gained;
+        // All XP, for some reason Sprint speeds up only skill training,
+        // but not levelling, Ash skill transfer, etc.
+        exp_gained *= 2;
+    }
+
+    if (you.penance[GOD_ASHENZARI])
+        ash_reduce_penance(exp_gained);
 
     const unsigned int  old_exp   = you.experience;
     const int           old_avail = you.exp_available;
@@ -2699,8 +2799,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
         else
         {
             int amount = exp_gained * 10
-                                / calc_skill_cost(you.skill_cost_level,
-                                            you.skills[you.transfer_to_skill]);
+                                / calc_skill_cost(you.skill_cost_level);
             if (amount >= 20 || one_chance_in(20 - amount))
             {
                 amount = std::max(20, amount);
@@ -2720,7 +2819,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
         // Bonus skill training from Sage.
         you.exp_available =
             (exp_gained * you.sage_bonus_degree) / 100 + exp_gained / 2;
-        practise(EX_SAGE, you.sage_bonus_skill);
+        train_skill(you.sage_bonus_skill, you.exp_available);
         you.exp_available = old_avail;
         exp_gained /= 2;
     }
@@ -2732,6 +2831,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
 
     you.exp_available += exp_gained;
 
+    train_skills();
     level_change();
 
     if (actual_gain != NULL)
@@ -2806,7 +2906,15 @@ static void _draconian_scale_colour_message()
 
 static void _felid_extra_life()
 {
-    if (you.lives + you.deaths < you.max_level/3 && you.lives < 2)
+    int xl = you.max_level;
+    int liv = 0;
+    while (xl > 3 + liv / 2)
+    {
+        xl -= 3 + liv / 2;
+        liv++;
+    }
+
+    if (you.lives + you.deaths < liv && you.lives < 2)
     {
         you.lives++;
         mpr("Extra life!", MSGCH_INTRINSIC_GAIN);
@@ -2837,12 +2945,6 @@ void level_change(bool skip_attribute_increase)
                 flush_input_buffer(FLUSH_ABORT_MACRO);
         }
 
-        const int old_hp = you.hp;
-        const int old_maxhp = you.hp_max;
-
-        int hp_adjust = 0;
-        int mp_adjust = 0;
-
         // [ds] Make sure we increment you.experience_level and apply
         // any stat/hp increases only after we've cleared all prompts
         // for this experience level. If we do part of the work before
@@ -2860,9 +2962,6 @@ void level_change(bool skip_attribute_increase)
             // No more prompts for this XL past this point.
 
             you.experience_level = new_exp;
-            // Gain back the hp and mp we lose in lose_level().  -- bwr
-            inc_hp(4, true);
-            inc_mp(1, true);
         }
         else  // Character has gained a new level
         {
@@ -2880,18 +2979,9 @@ void level_change(bool skip_attribute_increase)
             if (!(new_exp % 3) && !skip_attribute_increase)
                 attribute_increase();
 
-            int brek = 0;
-
-            if (new_exp > 21)
-                brek = 2 + new_exp % 2;
-            else if (new_exp > 12)
-                brek = 4;                  // up from 2 + rand(3) -- bwr
-            else
-                brek = 5 + new_exp % 2;    // up from 3 + rand(4) -- bwr
-
+            crawl_state.stat_gain_prompt = false;
             you.experience_level = new_exp;
-            inc_hp(brek, true);
-            inc_mp(1, true);
+            you.max_level = you.experience_level;
 
             switch (you.species)
             {
@@ -2901,12 +2991,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_HIGH_ELF:
-                if (you.experience_level % 3)
-                    hp_adjust--;
-
-                if (!(you.experience_level % 2))
-                    mp_adjust++;
-
                 if (!(you.experience_level % 3))
                 {
                     modify_stat((coinflip() ? STAT_INT
@@ -2916,24 +3000,11 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_DEEP_ELF:
-                if (you.experience_level < 17)
-                    hp_adjust--;
-
-                if (!(you.experience_level % 3))
-                    hp_adjust--;
-
-                mp_adjust++;
-
                 if (!(you.experience_level % 4))
                     modify_stat(STAT_INT, 1, false, "level gain");
                 break;
 
             case SP_SLUDGE_ELF:
-                if (you.experience_level % 3)
-                    hp_adjust--;
-                else
-                    mp_adjust++;
-
                 if (!(you.experience_level % 4))
                 {
                     modify_stat((coinflip() ? STAT_INT
@@ -2943,19 +3014,11 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_MOUNTAIN_DWARF:
-                if (!(you.experience_level % 2))
-                    hp_adjust++;
-
-                if (!(you.experience_level % 3))
-                    mp_adjust--;
-
                 if (!(you.experience_level % 4))
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
             case SP_DEEP_DWARF:
-                hp_adjust++;
-
                 if (you.experience_level == 14)
                 {
                     mpr("You feel somewhat more resistant.",
@@ -2980,10 +3043,6 @@ void level_change(bool skip_attribute_increase)
             case SP_HALFLING:
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_DEX, 1, false, "level gain");
-
-                if (you.experience_level % 3)
-                    hp_adjust--;
-
                 break;
 
             case SP_KOBOLD:
@@ -2993,25 +3052,9 @@ void level_change(bool skip_attribute_increase)
                                             : STAT_DEX), 1, false,
                                 "level gain");
                 }
-
-                if (you.experience_level < 17)
-                    hp_adjust--;
-
-                if (!(you.experience_level % 2))
-                    hp_adjust--;
                 break;
 
             case SP_HILL_ORC:
-                // lower because of HD raise -- bwr
-                // if (you.experience_level < 17)
-                //     hp_adjust++;
-
-                if (!(you.experience_level % 2))
-                    hp_adjust++;
-
-                if (!(you.experience_level % 3))
-                    mp_adjust--;
-
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
@@ -3052,8 +3095,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_NAGA:
-                hp_adjust++;
-
                 if (!(you.experience_level % 4))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
 
@@ -3065,21 +3106,11 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_TROLL:
-                hp_adjust++;
-
-                if (!(you.experience_level % 2))
-                    hp_adjust++;
-
-                if (you.experience_level % 3)
-                    mp_adjust--;
-
                 if (!(you.experience_level % 3))
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
             case SP_OGRE:
-                hp_adjust += 2;
-
                 if (!(you.experience_level % 3))
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
@@ -3110,18 +3141,13 @@ void level_change(bool skip_attribute_increase)
             case SP_MOTTLED_DRACONIAN:
             case SP_PALE_DRACONIAN:
                 if (!(you.experience_level % 3))
-                    hp_adjust++;
-
-                if (!(you.experience_level % 3))
                 {
                     mpr("Your scales feel tougher.", MSGCH_INTRINSIC_GAIN);
                     you.redraw_armour_class = true;
                 }
 
-                if (!(you.experience_level % 4) && you.experience_level > 7)
-                {
+                if (!(you.experience_level % 4))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
-                }
 
                 if (you.experience_level == 14)
                 {
@@ -3149,42 +3175,14 @@ void level_change(bool skip_attribute_increase)
                                             : STAT_DEX), 1, false,
                                 "level gain");
                 }
-
-                // lowered because of HD raise -- bwr
-                // if (you.experience_level < 17)
-                //     hp_adjust++;
-
-                if (!(you.experience_level % 2))
-                    hp_adjust++;
-
-                if (!(you.experience_level % 3))
-                    mp_adjust--;
                 break;
 
             case SP_DEMIGOD:
                 if (!(you.experience_level % 2))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
-
-                // lowered because of HD raise -- bwr
-                // if (you.experience_level < 17)
-                //    hp_adjust++;
-
-                if (!(you.experience_level % 2))
-                    hp_adjust++;
-
-                if (you.experience_level % 3)
-                    mp_adjust++;
                 break;
 
             case SP_SPRIGGAN:
-                if (you.experience_level < 17)
-                    hp_adjust--;
-
-                if (you.experience_level % 3)
-                    hp_adjust--;
-
-                mp_adjust++;
-
                 if (!(you.experience_level % 5))
                 {
                     modify_stat((coinflip() ? STAT_INT
@@ -3194,16 +3192,6 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_MINOTAUR:
-                // lowered because of HD raise -- bwr
-                // if (you.experience_level < 17)
-                //     hp_adjust++;
-
-                if (!(you.experience_level % 2))
-                    hp_adjust++;
-
-                if (!(you.experience_level % 2))
-                    mp_adjust--;
-
                 if (!(you.experience_level % 4))
                 {
                     modify_stat((coinflip() ? STAT_STR
@@ -3270,27 +3258,11 @@ void level_change(bool skip_attribute_increase)
             }
 
             case SP_GHOUL:
-                // lowered because of HD raise -- bwr
-                // if (you.experience_level < 17)
-                //     hp_adjust++;
-
-                if (!(you.experience_level % 2))
-                    hp_adjust++;
-
-                if (!(you.experience_level % 3))
-                    mp_adjust--;
-
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
             case SP_KENKU:
-                if (you.experience_level < 17)
-                    hp_adjust--;
-
-                if (!(you.experience_level % 3))
-                    hp_adjust--;
-
                 if (!(you.experience_level % 4))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
 
@@ -3308,13 +3280,7 @@ void level_change(bool skip_attribute_increase)
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
                 break;
 
-            case SP_CAT:
-                hp_adjust--;
-                hp_adjust--;
-
-                if (you.experience_level % 2)
-                    mp_adjust++;
-
+            case SP_FELID:
                 if (!(you.experience_level % 5))
                 {
                     modify_stat((coinflip() ? STAT_INT
@@ -3328,6 +3294,10 @@ void level_change(bool skip_attribute_increase)
                 _felid_extra_life();
                 break;
 
+            case SP_OCTOPODE:
+                if (!(you.experience_level % 5))
+                    modify_stat(STAT_RANDOM, 1, false, "level gain");
+                break;
 
             default:
                 break;
@@ -3376,7 +3346,7 @@ void level_change(bool skip_attribute_increase)
             if (you.experience_level == 18)
                 mpr("Your Zot abilities now extend through the making of axe traps.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 19)
-                mpr("Your Zot abilities now extend through the making of electric eels.", MSGCH_INTRINSIC_GAIN);
+                mpr("Your Zot abilities now extend through the making of lightning spires.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 20)
                 mpr("Your Zot abilities now extend through the making of silver statues.", MSGCH_INTRINSIC_GAIN);
             // gold and bazaars gained together
@@ -3394,21 +3364,28 @@ void level_change(bool skip_attribute_increase)
                 mpr("Your Zot abilities now extend through the making of blade traps.", MSGCH_INTRINSIC_GAIN);
             if (you.experience_level == 26)
                 mpr("Your Zot abilities now extend through the making of curse skulls.", MSGCH_INTRINSIC_GAIN);
+#if 0
             if (you.experience_level == 27)
                 mpr("Your Zot abilities now extend through the making of teleport traps.", MSGCH_INTRINSIC_GAIN);
+#endif
         }
 
 #if TAG_MAJOR_VERSION == 32
         note_montiers();
 #endif
-        // add hp and mp adjustments - GDL
-        inc_max_hp(hp_adjust);
-        inc_max_mp(mp_adjust);
 
-        deflate_hp(you.hp_max, false);
+        const int old_hp = you.hp;
+        const int old_maxhp = you.hp_max;
+        const int old_mp = you.magic_points;
+        const int old_maxmp = you.max_magic_points;
+
+        // recalculate for game
+        calc_hp();
+        calc_mp();
 
         you.hp = old_hp * you.hp_max / old_maxhp;
-        you.magic_points = std::max(0, you.magic_points);
+        you.magic_points = old_maxmp > 0 ?
+          old_mp * you.max_magic_points / old_maxmp : you.max_magic_points;
 
         // Get "real" values for note-taking, i.e. ignore Berserk,
         // transformations or equipped items.
@@ -3421,14 +3398,7 @@ void level_change(bool skip_attribute_increase)
                 std::min(you.magic_points, note_maxmp), note_maxmp);
         take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
 
-        // recalculate for game
-        calc_hp();
-        calc_mp();
-
-        if (you.experience_level > you.max_level)
-            you.max_level = you.experience_level;
-
-        xom_is_stimulated(16);
+        xom_is_stimulated(12);
 
         learned_something_new(HINT_NEW_LEVEL);
     }
@@ -3438,7 +3408,7 @@ void level_change(bool skip_attribute_increase)
         ASSERT(you.experience_level == 27);
         ASSERT(you.max_level < 127);
         you.max_level++;
-        if (you.species == SP_CAT)
+        if (you.species == SP_FELID)
             _felid_extra_life();
     }
 
@@ -3536,7 +3506,8 @@ int check_stealth(void)
         case SP_SPRIGGAN:
         case SP_GREY_DRACONIAN:
         case SP_NAGA:       // not small but very good at stealth
-        case SP_CAT:
+        case SP_FELID:
+        case SP_OCTOPODE:
             race_mod = 18;
             break;
         default:
@@ -3567,7 +3538,7 @@ int check_stealth(void)
             race_mod = 17;
         break;
     case TRAN_BLADE_HANDS:
-        if (you.species == SP_CAT && !you.airborne())
+        if (you.species == SP_FELID && !you.airborne())
             stealth -= 50; // a constant penalty
         break;
     case TRAN_LICH:
@@ -3617,7 +3588,7 @@ int check_stealth(void)
     else if (you.in_water())
     {
         // Merfolk can sneak up on monsters underwater -- bwr
-        if (you.fishtail)
+        if (you.fishtail || you.species == SP_OCTOPODE)
             stealth += 50;
         else if (!you.can_swim() && !you.extra_balanced())
             stealth /= 2;       // splashy-splashy
@@ -3633,7 +3604,7 @@ int check_stealth(void)
             stealth += 20;
     }
 
-    else if (you.species == SP_CAT && !you.form)
+    else if (you.species == SP_FELID && !you.form)
         stealth += 20;  // paws
 
     // Radiating silence is the negative complement of shouting all the
@@ -3650,6 +3621,7 @@ int check_stealth(void)
     // Mutations.
     stealth += 25 * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
     stealth += 40 * player_mutation_level(MUT_NIGHTSTALKER);
+    stealth += 40 * player_mutation_level(MUT_CAMOUFLAGE);
     if (player_mutation_level(MUT_TRANSLUCENT_SKIN) > 1)
         stealth += 20 * (player_mutation_level(MUT_TRANSLUCENT_SKIN) - 1);
 
@@ -3670,6 +3642,9 @@ int get_expiration_threshold(duration_type dur)
 {
     switch (dur)
     {
+    case DUR_PETRIFYING:
+        return (1 * BASELINE_DELAY);
+
     case DUR_QUAD_DAMAGE:
         return (3 * BASELINE_DELAY); // per client.qc
 
@@ -3689,10 +3664,12 @@ int get_expiration_threshold(duration_type dur)
     case DUR_HASTE:
     case DUR_BERSERK:
     case DUR_ICY_ARMOUR:
+    case DUR_CONDENSATION_SHIELD:
     case DUR_PHASE_SHIFT:
     case DUR_CONTROL_TELEPORT:
     case DUR_DEATH_CHANNEL:
     case DUR_SEE_INVISIBLE:
+    case DUR_SHROUD_OF_GOLUBRIA:
         return (6 * BASELINE_DELAY);
 
     case DUR_LEVITATION:
@@ -3931,6 +3908,7 @@ void display_char_status()
 
     static int statuses[] = {
         STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
+        DUR_PETRIFYING,
         DUR_TRANSFORMATION,
         STATUS_BURDEN,
         DUR_SAGE,
@@ -3981,6 +3959,8 @@ void display_char_status()
         DUR_MIRROR_DAMAGE,
         DUR_SCRYING,
         STATUS_CLINGING,
+        STATUS_FIREBALL,
+        DUR_SHROUD_OF_GOLUBRIA,
     };
 
     status_info inf;
@@ -3996,7 +3976,7 @@ void display_char_status()
     _display_attack_delay();
 
     // magic resistance
-    mprf("You are %s resistant to hostile enchantments.",
+    mprf("You are %s to hostile enchantments.",
          magic_res_adjective(player_res_magic(false)).c_str());
 
     // character evaluates their ability to sneak around:
@@ -4067,47 +4047,6 @@ bool wearing_amulet(jewellery_type amulet, bool calc_unid, bool ignore_extrinsic
 
     const item_def& amu(you.inv[you.equip[EQ_AMULET]]);
     return (amu.sub_type == amulet && (calc_unid || item_type_known(amu)));
-}
-
-static int _species_exp_mod(species_type species)
-{
-    if (player_genus(GENPC_DRACONIAN, species))
-        return 14;
-    else if (player_genus(GENPC_DWARVEN, species))
-        return 13;
-    switch (species)
-    {
-        case SP_HUMAN:
-        case SP_HALFLING:
-        case SP_HILL_ORC:
-        case SP_KOBOLD:
-            return 10;
-        case SP_OGRE:
-            return 11;
-        case SP_SLUDGE_ELF:
-        case SP_NAGA:
-        case SP_GHOUL:
-        case SP_MERFOLK:
-            return 12;
-        case SP_SPRIGGAN:
-        case SP_KENKU:
-            return 13;
-        case SP_DEEP_ELF:
-        case SP_CENTAUR:
-        case SP_MINOTAUR:
-        case SP_MUMMY:
-            return 14;
-        case SP_HIGH_ELF:
-        case SP_VAMPIRE:
-        case SP_TROLL:
-        case SP_DEMONSPAWN:
-            return 15;
-        case SP_DEMIGOD:
-        case SP_CAT:
-            return 16;
-        default:
-            return 0;
-    }
 }
 
 unsigned int exp_needed(int lev)
@@ -4189,7 +4128,7 @@ unsigned int exp_needed(int lev)
         break;
     }
 
-    return ((level - 1) * _species_exp_mod(you.species) / 10);
+    return ((level - 1) * species_exp_modifier(you.species) / 10);
 }
 
 // returns bonuses from rings of slaying, etc.
@@ -4236,13 +4175,14 @@ bool items_give_ability(const int slot, artefact_prop_type abil)
         if (i == EQ_WEAPON && you.inv[ eq ].base_type != OBJ_WEAPONS)
             continue;
 
-        if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING)
+        if (eq >= EQ_LEFT_RING && eq < NUM_EQUIP && eq != EQ_AMULET)
         {
             if (abil == ARTP_LEVITATE && you.inv[eq].sub_type == RING_LEVITATION)
                 return (true);
             if (abil == ARTP_INVISIBLE && you.inv[eq].sub_type == RING_INVISIBILITY)
                 return (true);
         }
+
         else if (eq == EQ_AMULET)
         {
             if (abil == ARTP_BERSERK && you.inv[eq].sub_type == AMU_RAGE)
@@ -4390,14 +4330,14 @@ bool enough_mp(int minimum, bool suppress_msg, bool include_items)
     return (rc);
 }
 
-bool enough_xp(int minimum, bool suppress_msg)
+bool enough_zp(int minimum, bool suppress_msg)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (you.exp_available < minimum)
+    if (you.zot_points < minimum)
     {
         if (!suppress_msg)
-            mpr("You haven't enough experience in your experience pool.");
+            mpr("You haven't enough Zot Points.");
 
         crawl_state.cancel_cmd_again();
         crawl_state.cancel_cmd_repeat();
@@ -4406,9 +4346,7 @@ bool enough_xp(int minimum, bool suppress_msg)
     return (true);
 }
 
-// Note that "max_too" refers to the base potential, the actual
-// resulting max value is subject to penalties, bonuses, and scalings.
-void inc_mp(int mp_gain, bool max_too)
+void inc_mp(int mp_gain)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -4419,23 +4357,19 @@ void inc_mp(int mp_gain, bool max_too)
 
     you.magic_points += mp_gain;
 
-    if (max_too)
-        inc_max_mp(mp_gain);
-
     if (you.magic_points > you.max_magic_points)
         you.magic_points = you.max_magic_points;
 
     if (wasnt_max && you.magic_points == you.max_magic_points)
         interrupt_activity(AI_FULL_MP);
 
-    take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
     you.redraw_magic_points = true;
 }
 
 // Note that "max_too" refers to the base potential, the actual
 // resulting max value is subject to penalties, bonuses, and scalings.
 // To avoid message spam, don't take notes when HP increases.
-void inc_hp(int hp_gain, bool max_too)
+void inc_hp(int hp_gain)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -4445,9 +4379,6 @@ void inc_hp(int hp_gain, bool max_too)
     bool wasnt_max = (you.hp < you.hp_max);
 
     you.hp += hp_gain;
-
-    if (max_too)
-        inc_max_hp(hp_gain);
 
     if (you.hp > you.hp_max)
         you.hp = you.hp_max;
@@ -4460,21 +4391,20 @@ void inc_hp(int hp_gain, bool max_too)
 
 void rot_hp(int hp_loss)
 {
-    you.base_hp -= hp_loss;
+    you.hp_max_temp -= hp_loss;
     calc_hp();
 
     if (you.species != SP_GHOUL)
-        xom_is_stimulated(hp_loss * 32);
+        xom_is_stimulated(hp_loss * 25);
 
     you.redraw_hit_points = true;
 }
 
 void unrot_hp(int hp_recovered)
 {
-    if (hp_recovered >= 5000 - you.base_hp)
-        you.base_hp = 5000;
-    else
-        you.base_hp += hp_recovered;
+    you.hp_max_temp += hp_recovered;
+    if (you.hp_max_temp > 0)
+        you.hp_max_temp = 0;
 
     calc_hp();
 
@@ -4483,12 +4413,12 @@ void unrot_hp(int hp_recovered)
 
 int player_rotted()
 {
-    return (5000 - you.base_hp);
+    return -you.hp_max_temp;
 }
 
 void rot_mp(int mp_loss)
 {
-    you.base_magic_points -= mp_loss;
+    you.mp_max_temp -= mp_loss;
     calc_mp();
 
     you.redraw_magic_points = true;
@@ -4496,7 +4426,8 @@ void rot_mp(int mp_loss)
 
 void inc_max_hp(int hp_gain)
 {
-    you.base_hp2 += hp_gain;
+    you.hp += hp_gain;
+    you.hp_max_perm += hp_gain;
     calc_hp();
 
     take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
@@ -4505,7 +4436,7 @@ void inc_max_hp(int hp_gain)
 
 void dec_max_hp(int hp_loss)
 {
-    you.base_hp2 -= hp_loss;
+    you.hp_max_perm -= hp_loss;
     calc_hp();
 
     take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
@@ -4514,7 +4445,8 @@ void dec_max_hp(int hp_loss)
 
 void inc_max_mp(int mp_gain)
 {
-    you.base_magic_points2 += mp_gain;
+    you.magic_points += mp_gain;
+    you.mp_max_perm += mp_gain;
     calc_mp();
 
     take_note(Note(NOTE_MAXMP_CHANGE, you.max_magic_points));
@@ -4523,7 +4455,7 @@ void inc_max_mp(int mp_gain)
 
 void dec_max_mp(int mp_loss)
 {
-    you.base_magic_points2 -= mp_loss;
+    you.mp_max_perm -= mp_loss;
     calc_mp();
 
     take_note(Note(NOTE_MAXMP_CHANGE, you.max_magic_points));
@@ -4544,51 +4476,29 @@ void deflate_hp(int new_level, bool floor)
     you.redraw_hit_points = true;
 }
 
-// Note that "max_too" refers to the base potential, the actual
-// resulting max value is subject to penalties, bonuses, and scalings.
-void set_hp(int new_amount, bool max_too)
+void set_hp(int new_amount)
 {
     ASSERT(!crawl_state.game_is_arena());
 
     you.hp = new_amount;
 
-    if (max_too && you.hp_max != new_amount)
-    {
-        you.base_hp2 = 5000 + new_amount;
-        calc_hp();
-    }
-
     if (you.hp > you.hp_max)
         you.hp = you.hp_max;
-
-    if (max_too)
-        take_note(Note(NOTE_MAXHP_CHANGE, you.hp_max));
 
     // Must remain outside conditional, given code usage. {dlb}
     you.redraw_hit_points = true;
 }
 
-// Note that "max_too" refers to the base potential, the actual
-// resulting max value is subject to penalties, bonuses, and scalings.
-void set_mp(int new_amount, bool max_too)
+void set_mp(int new_amount)
 {
     ASSERT(!crawl_state.game_is_arena());
 
     you.magic_points = new_amount;
 
-    if (max_too && you.max_magic_points != new_amount)
-    {
-        // Note that this gets scaled down for values > 18.
-        you.base_magic_points2 = 5000 + new_amount;
-        calc_mp();
-    }
-
     if (you.magic_points > you.max_magic_points)
         you.magic_points = you.max_magic_points;
 
     take_note(Note(NOTE_MP_CHANGE, you.magic_points, you.max_magic_points));
-    if (max_too)
-        take_note(Note(NOTE_MAXMP_CHANGE, you.max_magic_points));
 
     // Must remain outside conditional, given code usage. {dlb}
     you.redraw_magic_points = true;
@@ -4601,39 +4511,14 @@ int get_real_hp(bool trans, bool rotted)
 {
     int hitp;
 
-    hitp  = (you.base_hp - 5000) + (you.base_hp2 - 5000);
+    hitp  = you.experience_level * 11 / 2;
+    hitp += you.hp_max_perm;
     // Important: we shouldn't add Heroism boosts here.
-    hitp += (you.experience_level * you.skills[SK_FIGHTING]) /
-            (you.species == SP_CAT ? 8 : 5);
+    hitp += (you.experience_level * you.skills[SK_FIGHTING]) / 8;
 
-    // Being berserk makes you resistant to damage. I don't know why.
-    if (trans && you.berserk())
-        hitp = hitp * 3 / 2;
-
-    if (trans)
-    {
-        // Some transformations give you extra hp.
-        switch (you.form)
-        {
-        case TRAN_STATUE:
-            hitp *= 15;
-            hitp /= 10;
-            break;
-        case TRAN_ICE_BEAST:
-            hitp *= 12;
-            hitp /= 10;
-            break;
-        case TRAN_DRAGON:
-            hitp *= 16;
-            hitp /= 10;
-            break;
-        default:
-            break;
-        }
-    }
-
-    if (rotted)
-        hitp += player_rotted();
+    // Racial modifier.
+    hitp *= 10 + species_hp_modifier(you.species);
+    hitp /= 10;
 
     // Frail and robust mutations, divine vigour, and rugged scale mut.
     hitp *= 100 + (player_mutation_level(MUT_ROBUST) * 10)
@@ -4642,13 +4527,23 @@ int get_real_hp(bool trans, bool rotted)
                 - (player_mutation_level(MUT_FRAIL) * 10);
     hitp /= 100;
 
+    if (!rotted)
+        hitp += you.hp_max_temp;
+
+    // Being berserk makes you resistant to damage. I don't know why.
+    if (trans && you.berserk())
+        hitp = hitp * 3 / 2;
+
+    if (trans) // Some transformations give you extra hp.
+        hitp = hitp * form_hp_mod() / 10;
+
     return (hitp);
 }
 
 int get_real_mp(bool include_items)
 {
-    // base_magic_points2 accounts for species
-    int enp = (you.base_magic_points2 - 5000);
+    int enp = you.experience_level + you.mp_max_perm;
+    enp += (you.experience_level * species_mp_modifier(you.species) + 1) / 3;
 
     int spell_extra = (you.experience_level * you.skills[SK_SPELLCASTING]) / 4;
     int invoc_extra = (you.experience_level * you.skills[SK_INVOCATIONS]) / 6;
@@ -4657,7 +4552,7 @@ int get_real_mp(bool include_items)
     enp = stepdown_value(enp, 9, 18, 45, 100);
 
     // This is our "rotted" base (applied after scaling):
-    enp += (you.base_magic_points - 5000);
+    enp += you.mp_max_temp;
 
     // Yes, we really do want this duplication... this is so the stepdown
     // doesn't truncate before we apply the rotted base.  We're doing this
@@ -4759,7 +4654,7 @@ void contaminate_player(int change, bool controlled, bool msg)
         }
 
         if (change > 0)
-            xom_is_stimulated(new_level * 32);
+            xom_is_stimulated(new_level * 25);
 
         if (old_level > 1 && new_level <= 1
             && you.duration[DUR_INVIS] && !you.backlit())
@@ -4855,6 +4750,15 @@ bool curare_hits_player(int death_source, int amount, const bolt &beam)
     potion_effect(POT_SLOWING, 2 + random2(4 + amount));
 
     return (hurted > 0);
+}
+
+void paralyse_player(std::string source, int amount, int factor)
+{
+    if (!amount)
+        amount = 2 + random2(6 + you.duration[DUR_PARALYSIS] / BASELINE_DELAY);
+
+    amount /= factor;
+    you.paralyse(NULL, amount, source);
 }
 
 bool poison_player(int amount, std::string source, std::string source_aux,
@@ -5176,27 +5080,22 @@ void dec_disease_player(int delay)
 {
     if (you.disease > 0)
     {
-        // If Cheibriados has slowed your life processes, there's a
-        // chance that your disease level is unaffected.
-        if (GOD_CHEIBRIADOS == you.religion
-            && you.piety >= piety_breakpoint(0)
-            && coinflip())
-        {
-          return;
-        }
+        int rr = 50;
 
-        you.disease -= delay;
+        // Extra regeneration means faster recovery from disease.
+        rr += player_bonus_regen();
+
+        // Trog's Hand.
+        if (you.attribute[ATTR_DIVINE_REGENERATION])
+            rr += 100;
+
+        // Kobolds get a bonus too.
+        if (you.species == SP_KOBOLD)
+            rr += 100;
+
+        you.disease -= div_rand_round(rr * delay, 50);
         if (you.disease < 0)
             you.disease = 0;
-
-        // kobolds and regenerators recuperate quickly
-        if (you.disease > 5 * BASELINE_DELAY
-            && (you.species == SP_KOBOLD
-                || you.duration[DUR_REGENERATION]
-                || player_mutation_level(MUT_REGENERATION) == 3))
-        {
-            you.disease -= 2 * BASELINE_DELAY;
-        }
 
         if (you.disease == 0)
             mpr("You feel your health improve.", MSGCH_RECOVERY);
@@ -5332,6 +5231,7 @@ void player::init()
     // Permanent data:
     your_name.clear();
     species          = SP_UNKNOWN;
+    species_name.clear();
     char_class       = JOB_UNKNOWN;
     class_name.clear();
     type             = MONS_PLAYER;
@@ -5351,13 +5251,13 @@ void player::init()
 
     hp               = 0;
     hp_max           = 0;
-    base_hp          = 5000;
-    base_hp2         = 5000;
+    hp_max_temp      = 0;
+    hp_max_perm      = 0;
 
     magic_points       = 0;
     max_magic_points   = 0;
-    base_magic_points  = 5000;
-    base_magic_points2 = 5000;
+    mp_max_temp      = 0;
+    mp_max_perm      = 0;
 
     stat_loss.init(0);
     base_stats.init(0);
@@ -5374,6 +5274,8 @@ void player::init()
     experience       = 0;
     experience_level = 1;
     gold             = 0;
+    zigs_completed   = 0;
+    zig_max          = 0;
 
     equip.init(-1);
     melded.init(false);
@@ -5384,6 +5286,8 @@ void player::init()
 
     for (int i = 0; i < ENDOFPACK; i++)
         inv[i].clear();
+    runes.reset();
+    obtainable_runes = 15;
 
     burden          = 0;
     burden_state    = BS_UNENCUMBERED;
@@ -5409,20 +5313,22 @@ void player::init()
     is_undead       = US_ALIVE;
 
     friendly_pickup = 0;
-#if defined(WIZARD) || defined(DEBUG)
-    never_die = false;
-#endif
     dead = false;
     lives = 0;
     deaths = 0;
     xray_vision = false;
 
+    auto_training = !(Options.default_manual_training);
     skills.init(0);
-    // In Zot def we turn off all skills with non-zero skill level later
-    practise_skill.init(true);
+    train.init(1);
+    training.init(0);
     skill_points.init(0);
     ct_skill_points.init(0);
     skill_order.init(MAX_SKILL_ORDER);
+    exercises.clear();
+
+    skill_menu_do = SKM_NONE;
+    skill_menu_view = SKM_NONE;
 
     transfer_from_skill = SK_NONE;
     transfer_to_skill = SK_NONE;
@@ -5432,9 +5338,13 @@ void player::init()
     sage_bonus_skill = NUM_SKILLS;
     sage_bonus_degree = 0;
 
+    manual_skill = SK_NONE;
+    manual_index = -1;
+
     skill_cost_level = 1;
     total_skill_points = 0;
-    exp_available = 0; // new games get 25 or 80 later
+    exp_available = 0; // new games get 25
+    zot_points = 0;
 
     item_description.init(255);
     unique_items.init(UNIQ_NOT_EXISTS);
@@ -5457,6 +5367,7 @@ void player::init()
 
     religion         = GOD_NO_GOD;
     jiyva_second_name.clear();
+    god_name.clear();
     piety            = 0;
     piety_hysteresis = 0;
     gift_timeout     = 0;
@@ -5464,6 +5375,7 @@ void player::init()
     worshipped.init(0);
     num_current_gifts.init(0);
     num_total_gifts.init(0);
+    piety_max.init(0);
     exp_docked       = 0;
     exp_docked_total = 0;
 
@@ -5478,6 +5390,7 @@ void player::init()
     seen_spell.init(false);
     seen_weapon.init(0);
     seen_armour.init(0);
+    seen_misc.reset();
 
     normal_vision    = LOS_RADIUS;
     current_vision   = LOS_RADIUS;
@@ -5510,6 +5423,8 @@ void player::init()
     beholders.clear();
     fearmongers.clear();
     dactions.clear();
+    type_ids.init(ID_UNKNOWN_TYPE);
+    type_id_props.clear();
 
     zotdef_wave_name.clear();
     last_mid = 0;
@@ -5527,7 +5442,7 @@ void player::init()
 
     running.clear();
     received_weapon_warning = false;
-    bondage_level = 0;
+    ash_init_bondage(this);
 
     delay_queue.clear();
 
@@ -5537,6 +5452,8 @@ void player::init()
     for (unsigned int i = 0; i < ARRAYSZ(montiers); i++)
         montiers[i] = 0;
 #endif
+
+    spell_usage.clear();
 
 
     // Volatile (same-turn) state:
@@ -5561,6 +5478,7 @@ void player::init()
 
     entry_cause         = EC_SELF_EXPLICIT;
     entry_cause_god     = GOD_NO_GOD;
+    abyss_speed         = 40;
 
     old_hunger          = hunger;
     transit_stair       = DNGN_UNSEEN;
@@ -5591,16 +5509,18 @@ void player::init()
     }
 }
 
-player_save_info player_save_info::operator=(const player& rhs)
+player_save_info& player_save_info::operator=(const player& rhs)
 {
     name             = rhs.your_name;
     experience       = rhs.experience;
     experience_level = rhs.experience_level;
     wizard           = rhs.wizard;
     species          = rhs.species;
+    species_name     = rhs.species_name;
     class_name       = rhs.class_name;
     religion         = rhs.religion;
-    jiyva_second_name  = rhs.jiyva_second_name;
+    god_name         = rhs.god_name;
+    jiyva_second_name= rhs.jiyva_second_name;
 
     // [ds] Perhaps we should move game type to player?
     saved_game_type  = crawl_state.type;
@@ -5628,12 +5548,12 @@ std::string player_save_info::short_desc() const
         desc << "[" << qualifier << "] ";
 
     desc << name << ", a level " << experience_level << ' '
-         << species_name(species) << ' ' << class_name;
+         << species_name << ' ' << class_name;
 
     if (religion == GOD_JIYVA)
-        desc << " of " << god_name_jiyva(true);
+        desc << " of " << god_name << " " << jiyva_second_name;
     else if (religion != GOD_NO_GOD)
-        desc << " of " << god_name(religion);
+        desc << " of " << god_name;
 
 #ifdef WIZARD
     if (wizard)
@@ -5671,7 +5591,7 @@ bool player::can_swim(bool permanently) const
 {
     // Transforming could be fatal if it would cause unequipment of
     // stat-boosting boots or heavy armour.
-    return (species == SP_MERFOLK
+    return (species == SP_MERFOLK || species == SP_OCTOPODE
             || body_size(PSIZE_BODY) >= SIZE_GIANT
             || !permanently)
                 && form_can_swim();
@@ -5681,7 +5601,8 @@ int player::visible_igrd(const coord_def &where) const
 {
     if (grd(where) == DNGN_LAVA
         || (grd(where) == DNGN_DEEP_WATER
-            && species != SP_MERFOLK && species != SP_GREY_DRACONIAN))
+            && species != SP_MERFOLK && species != SP_GREY_DRACONIAN
+            && species != SP_OCTOPODE))
     {
         return (NON_ITEM);
     }
@@ -5725,7 +5646,7 @@ std::string player::shout_verb() const
     case TRAN_PIG:
         return "squeal";
     default:
-        if (you.species == SP_CAT)
+        if (you.species == SP_FELID)
             return coinflip() ? "meow" : "yowl";
         // depends on SCREAM mutation
         int level = player_mutation_level(MUT_SCREAM);
@@ -5790,6 +5711,11 @@ bool player::caught() const
     return (attribute[ATTR_HELD]);
 }
 
+bool player::petrifying() const
+{
+    return (duration[DUR_PETRIFYING]);
+}
+
 bool player::petrified() const
 {
     return (duration[DUR_PETRIFIED]);
@@ -5824,12 +5750,15 @@ void player::shield_block_succeeded(actor *foe)
 
 int player::skill(skill_type sk) const
 {
+    int level = skills[sk];
     if (you.duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
-        return std::min(skills[sk] + 5, 27);
-//    else if (you.religion == GOD_ASHENZARI)
-//        return ash_skill_boost(sk);
+        level = std::min(level + 5, 27);
+    if (you.penance[GOD_ASHENZARI])
+        level = std::max(level - std::min(4, level / 2), 0);
+    else if (you.religion == GOD_ASHENZARI)
+        level = ash_skill_boost(sk);
 
-    return skills[sk];
+    return level;
 }
 
 // only for purposes of detection, not disarming
@@ -6000,6 +5929,16 @@ int player::armour_class() const
   **/
 int player::gdr_perc() const
 {
+    switch(you.form)
+    {
+    case TRAN_DRAGON:
+        return 34; // base AC 8
+    case TRAN_STATUE:
+        return 39; // like plate (AC 10)
+    default:
+        break;
+    }
+
     const item_def *body_armour = slot_item(EQ_BODY_ARMOUR, false);
 
     if (!body_armour)
@@ -6021,12 +5960,16 @@ int player::melee_evasion(const actor *act, ev_ignore_type evit) const
 
 bool player::heal(int amount, bool max_too)
 {
-    ::inc_hp(amount, max_too);
+    ASSERT(!max_too);
+    ::inc_hp(amount);
     return true; /* TODO Check whether the player was healed. */
 }
 
 mon_holy_type player::holiness() const
 {
+    if (form == TRAN_STATUE || petrified())
+        return (MH_NONLIVING);
+
     if (is_undead)
         return (MH_UNDEAD);
 
@@ -6077,7 +6020,7 @@ bool player::is_chaotic() const
 
 bool player::is_artificial() const
 {
-    return (false);
+    return (form == TRAN_STATUE || petrified());
 }
 
 bool player::is_unbreathing() const
@@ -6090,6 +6033,9 @@ bool player::is_unbreathing() const
     default:
         break;
     }
+
+    if (petrified())
+        return (true);
 
     return (player_mutation_level(MUT_UNBREATHING));
 }
@@ -6174,6 +6120,9 @@ int player::res_poison(bool temp) const
 
 int player::res_rotting(bool temp) const
 {
+    if (temp && (petrified() || form == TRAN_STATUE))
+        return 3;
+
     switch (is_undead)
     {
         default:
@@ -6228,6 +6177,13 @@ int player::res_wind() const
     return you.duration[DUR_TORNADO] ? 1 : 0;
 }
 
+int player::res_petrify(bool temp) const
+{
+    if (temp && you.form == TRAN_STATUE)
+        return 1;
+    return 0;
+}
+
 int player::res_magic() const
 {
     return player_res_magic();
@@ -6257,7 +6213,7 @@ int player_res_magic(bool calc_unid, bool temp)
         break;
     case SP_PURPLE_DRACONIAN:
     case SP_DEEP_DWARF:
-    case SP_CAT:
+    case SP_FELID:
         rm = you.experience_level * 6;
         break;
     case SP_SPRIGGAN:
@@ -6327,7 +6283,7 @@ flight_type player::flight_mode() const
 bool player::permanent_levitation() const
 {
     return you.attribute[ATTR_PERM_LEVITATION]
-           && player_equip_ego_type(EQ_BOOTS, SPARM_LEVITATION);
+           && player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION);
 }
 
 bool player::permanent_flight() const
@@ -6482,8 +6438,9 @@ void player::confuse(actor *who, int str)
  *
  * @param who Pointer to the actor who paralysed the player.
  * @param str The number of turns the paralysis will last.
+ * @param source Description of the source of the paralysis.
  */
-void player::paralyse(actor *who, int str)
+void player::paralyse(actor *who, int str, std::string source)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -6500,10 +6457,13 @@ void player::paralyse(actor *who, int str)
 
     int &paralysis(duration[DUR_PARALYSIS]);
 
-    if (!paralysis && who)
+    if (source.empty() && who)
+        source = who->name(DESC_NOCAP_A);
+
+    if (!paralysis && !source.empty())
     {
-        take_note(Note(NOTE_PARALYSIS, str, 0,
-                       who->name(DESC_NOCAP_A).c_str()));
+        take_note(Note(NOTE_PARALYSIS, str, 0, source.c_str()));
+        you.props["paralysed_by"] = source;
     }
 
 
@@ -6518,23 +6478,36 @@ void player::paralyse(actor *who, int str)
         paralysis = 13 * BASELINE_DELAY;
 }
 
-void player::petrify(actor *who, int str)
+void player::petrify(actor *who)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (stasis_blocks_effect(true, true, "%s gives you a mild electric shock."))
+    if (you.res_petrify() > 0)
         return;
 
-    str *= BASELINE_DELAY;
-    int &petrif(duration[DUR_PETRIFIED]);
+    if (you.petrifying())
+    {
+        mpr("Your limbs have turned to stone.");
+        you.duration[DUR_PETRIFYING] = 1;
+        return;
+    }
 
-    mprf("You %s the ability to move!",
-         petrif ? "still haven't" : "suddenly lose");
+    if (you.petrified())
+        return;
 
-    if (str > petrif && (petrif < 3 || one_chance_in(petrif)))
-        petrif = str;
+    you.duration[DUR_PETRIFYING] = 3 * BASELINE_DELAY;
 
-    petrif = std::min(13 * BASELINE_DELAY, petrif);
+    you.redraw_evasion = true;
+    mprf(MSGCH_WARN, "You are slowing down.");
+}
+
+bool player::fully_petrify(actor *foe, bool quiet)
+{
+    you.duration[DUR_PETRIFIED] = 6 * BASELINE_DELAY
+                        + random2(4 * BASELINE_DELAY);
+    you.redraw_evasion = true;
+    mpr("You have turned to stone.");
+    return true;
 }
 
 void player::slow_down(actor *foe, int str)
@@ -6704,6 +6677,27 @@ int player::has_pseudopods(bool allow_tran) const
 int player::has_usable_pseudopods(bool allow_tran) const
 {
     return (has_pseudopods(allow_tran));
+}
+
+int player::has_tentacles(bool allow_tran) const
+{
+    if (allow_tran)
+    {
+        if (form != TRAN_NONE
+            && form != TRAN_BLADE_HANDS
+            && form != TRAN_STATUE
+            && form != TRAN_LICH)
+        {
+            return (0);
+        }
+    }
+
+    return (player_mutation_level(MUT_TENTACLES));
+}
+
+int player::has_usable_tentacles(bool allow_tran) const
+{
+    return (has_tentacles(allow_tran));
 }
 
 bool player::sicken(int amount, bool allow_hint)

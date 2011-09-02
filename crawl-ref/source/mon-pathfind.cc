@@ -32,7 +32,6 @@
 
 int mons_tracking_range(const monster* mon)
 {
-
     int range = 0;
     switch (mons_intel(mon))
     {
@@ -356,10 +355,6 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
     if (path.empty())
         return path;
 
-    dungeon_feature_type can_move =
-        (mons_habitat(mons) == HT_AMPHIBIOUS) ? DNGN_DEEP_WATER
-                                              : DNGN_SHALLOW_WATER;
-
     std::vector<coord_def> waypoints;
     pos = path[0];
 
@@ -368,7 +363,7 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
 #endif
     for (unsigned int i = 1; i < path.size(); i++)
     {
-        if (can_go_straight(mons, pos, path[i], can_move)
+        if (can_go_straight(mons, pos, path[i])
             && mons_traversable(path[i]))
         {
             continue;

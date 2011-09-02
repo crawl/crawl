@@ -15,6 +15,7 @@
 #include "command.h"
 #include "env.h"
 #include "enum.h"
+#include "food.h"
 #include "invent.h"
 #include "item_use.h"
 #include "itemprop.h"
@@ -38,7 +39,6 @@ struct item_wrapper
 
 void clua_push_item(lua_State *ls, item_def *item)
 {
-
     item_wrapper *iw = clua_new_userdata<item_wrapper>(ls, ITEM_METATABLE);
     iw->item = item;
     iw->turn = you.num_turns;
@@ -173,7 +173,7 @@ static int l_item_do_remove(lua_State *ls)
     bool result = false;
     if (eq == EQ_WEAPON)
         result = wield_weapon(true, SLOT_BARE_HANDS);
-    else if (eq == EQ_LEFT_RING || eq == EQ_RIGHT_RING || eq == EQ_AMULET)
+    else if (eq >= EQ_LEFT_RING && eq < NUM_EQUIP)
         result = remove_ring(item->link);
     else
         result = takeoff_armour(item->link);
@@ -284,13 +284,17 @@ static const char *amulet_types[] =
     "resist mutation"
 };
 
-IDEF(subtype)
+static int l_item_do_subtype (lua_State *ls)
 {
+    UDATA_ITEM(item);
+
     if (item)
     {
+        const char *s = NULL;
+        if (item->base_type == OBJ_ARMOUR)
+            s = item_slot_name(get_armour_slot(*item), true);
         if (item_type_known(*item))
         {
-            const char *s = NULL;
             if (item->base_type == OBJ_JEWELLERY)
             {
                 if (jewellery_is_amulet(*item))
@@ -326,15 +330,15 @@ IDEF(subtype)
                 else
                     s = "spellbook";
             }
-
-            if (s)
-                lua_pushstring(ls, s);
-            else
-                lua_pushnil(ls);
-
-            lua_pushnumber(ls, item->sub_type);
-            return (2);
         }
+
+        if (s)
+            lua_pushstring(ls, s);
+        else
+            lua_pushnil(ls);
+
+        lua_pushnumber(ls, item->sub_type);
+        return (2);
     }
 
     lua_pushnil(ls);
@@ -342,11 +346,20 @@ IDEF(subtype)
     return (2);
 }
 
+IDEFN(subtype, do_subtype);
+
 IDEF(cursed)
 {
     bool cursed = item && item_ident(*item, ISFLAG_KNOW_CURSE)
                        && item->cursed();
     lua_pushboolean(ls, cursed);
+    return (1);
+}
+
+IDEF(tried)
+{
+    bool tried = item && item_type_tried(*item);
+    lua_pushboolean(ls, tried);
     return (1);
 }
 
@@ -487,6 +500,16 @@ IDEF(is_ranged)
     return (1);
 }
 
+IDEF(is_throwable)
+{
+    if (!item || !item->defined())
+        return (0);
+
+    lua_pushboolean(ls, is_throwable(&you, *item));
+
+    return (1);
+}
+
 IDEF(dropped)
 {
     if (!item || !item->defined())
@@ -507,6 +530,16 @@ IDEF(can_cut_meat)
     return (1);
 }
 
+IDEF(is_bad_food)
+{
+    if (!item || !item->defined())
+        return (0);
+
+    lua_pushboolean(ls, is_bad_food(*item));
+
+    return (1);
+}
+
 IDEF(artefact)
 {
     if (!item || !item->defined())
@@ -519,10 +552,12 @@ IDEF(artefact)
 
 IDEF(branded)
 {
-    if (!item || !item->defined() || !item_type_known(*item))
+    if (!item || !item->defined())
         return (0);
 
-    lua_pushboolean(ls, item_is_branded(*item));
+    lua_pushboolean(ls, item_is_branded(*item)
+                        || item->flags & ISFLAG_COSMETIC_MASK
+                           && !item_type_known(*item));
     return (1);
 }
 
@@ -894,6 +929,21 @@ static int l_item_equipped_at(lua_State *ls)
     return (1);
 }
 
+static int l_item_fired_item(lua_State *ls)
+{
+    int q = you.m_quiver->get_fire_item();
+
+    if (q < 0 || q >= ENDOFPACK)
+        return (0);
+
+    if (q != -1 && !fire_warn_if_impossible(true))
+        clua_push_item(ls, &you.inv[q]);
+    else
+        lua_pushnil(ls);
+
+    return (1);
+}
+
 static int l_item_inslot(lua_State *ls)
 {
     int index = luaL_checkint(ls, 1);
@@ -918,6 +968,7 @@ static ItemAccessor item_attrs[] =
     { "class",             l_item_class },
     { "subtype",           l_item_subtype },
     { "cursed",            l_item_cursed },
+    { "tried",             l_item_tried },
     { "worn",              l_item_worn },
     { "name",              l_item_name },
     { "name_coloured",     l_item_name_coloured },
@@ -933,8 +984,10 @@ static ItemAccessor item_attrs[] =
     { "equip_type",        l_item_equip_type },
     { "weap_skill",        l_item_weap_skill },
     { "is_ranged",         l_item_is_ranged },
+    { "is_throwable",      l_item_is_throwable },
     { "dropped",           l_item_dropped },
     { "can_cut_meat",      l_item_can_cut_meat },
+    { "is_bad_food",       l_item_is_bad_food },
     { "pluses",            l_item_pluses },
     { "destroy",           l_item_destroy },
     { "dec_quantity",      l_item_dec_quantity },
@@ -972,6 +1025,7 @@ static const struct luaL_reg item_lib[] =
     { "swap_slots",        l_item_swap_slots },
     { "pickup",            l_item_pickup },
     { "equipped_at",       l_item_equipped_at },
+    { "fired_item",        l_item_fired_item },
     { "inslot",            l_item_inslot },
     { NULL, NULL },
 };

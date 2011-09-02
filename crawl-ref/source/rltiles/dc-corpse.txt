@@ -52,7 +52,7 @@ giant_firefly CORPSE_FIREFLY
 giant_newt CORPSE_GIANT_NEWT
 giant_gecko CORPSE_GIANT_GECKO
 iguana CORPSE_IGUANA
-gila_monster CORPSE_GILA_MONSTER
+basilisk CORPSE_BASILISK
 komodo_dragon CORPSE_KOMODO_DRAGON
 
 ## Slugs ('j')
@@ -144,7 +144,6 @@ boulder_beetle CORPSE_BOULDER_BEETLE
 ## Frogs ('F')
 %back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 giant_frog CORPSE_GIANT_FROG
-giant_toad CORPSE_GIANT_TOAD
 blink_frog CORPSE_BLINK_FROG
 spiny_frog CORPSE_SPINY_FROG
 
@@ -157,7 +156,6 @@ snake CORPSE_SNAKE
 black_mamba CORPSE_BLACK_MAMBA
 water_moccasin CORPSE_WATER_MOCCASIN
 anaconda CORPSE_ANACONDA
-viper CORPSE_VIPER
 sea_snake CORPSE_SEA_SNAKE
 
 ## Bears ('U')
@@ -172,6 +170,7 @@ death_yak CORPSE_DEATH_YAK
 elephant CORPSE_ELEPHANT
 elephant_dire CORPSE_DIRE_ELEPHANT
 elephant_demonic CORPSE_HELLEPHANT
+catoblepas CORPSE_CATOBLEPAS
 
 ### Non-animals
 %sdir dc-mon
@@ -306,6 +305,9 @@ troll CORPSE_TROLL
 rock_troll CORPSE_ROCK_TROLL
 iron_troll CORPSE_IRON_TROLL
 deep_troll CORPSE_DEEP_TROLL
+
+## Cephalopods ('X')
+../player/base/octopode1 CORPSE_OCTOPODE
 
 ## Human shaped ('@')
 human CORPSE_HUMAN

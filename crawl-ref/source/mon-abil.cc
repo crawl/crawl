@@ -59,7 +59,6 @@ void search_dungeon(const coord_def & start,
                     bool exhaustive = true,
                     int connect_mode = 8)
 {
-
     if (connect_mode < 1 || connect_mode > 8)
         connect_mode = 8;
 
@@ -818,7 +817,7 @@ static bool _orange_statue_effects(monster* mons)
     return (false);
 }
 
-static bool _orc_battle_cry(monster* chief)
+static void _orc_battle_cry(monster* chief)
 {
     const actor *foe = chief->get_foe();
     int affected = 0;
@@ -915,8 +914,6 @@ static bool _orc_battle_cry(monster* chief)
             }
         }
     }
-    // Orc battle cry doesn't cost the monster an action.
-    return (false);
 }
 
 static bool _make_monster_angry(const monster* mon, monster* targ)
@@ -1021,8 +1018,8 @@ static void _establish_connection(int tentacle,
             mgen_data(connector_type, SAME_ATTITUDE(main), main,
                       0, 0, last->pos, main->foe,
                       MG_FORCE_PLACE, main->god, MONS_NO_MONSTER, tentacle,
-                      main->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER,
-                      you.level_type));
+                      main->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER));
+
         if (connect < 0)
         {
             // Big failure mode.
@@ -1043,7 +1040,6 @@ static void _establish_connection(int tentacle,
 
     while (current)
     {
-
         // Last monster we visited or placed
         monster* last_mon = monster_at(last->pos);
         if (!last_mon)
@@ -1069,8 +1065,7 @@ static void _establish_connection(int tentacle,
             mgen_data(connector_type, SAME_ATTITUDE(main), main,
                       0, 0, current->pos, main->foe,
                       MG_FORCE_PLACE, main->god, MONS_NO_MONSTER, tentacle,
-                      main->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER,
-                      you.level_type));
+                      main->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER));
 
         if (connect >= 0)
         {
@@ -2039,7 +2034,8 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (is_sanctuary(mons->pos()))
             break;
 
-        used = _orc_battle_cry(mons);
+        _orc_battle_cry(mons);
+        // Doesn't cost a turn.
         break;
 
     case MONS_ORANGE_STATUE:
@@ -2119,6 +2115,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         break;
 
     case MONS_ELECTRIC_EEL:
+    case MONS_LIGHTNING_SPIRE:
         if (mons->has_ench(ENCH_CONFUSION))
             break;
 
@@ -2655,7 +2652,7 @@ void mon_nearby_ability(monster* mons)
             mons->add_ench(ENCH_SUBMERGED);
         break;
 
-    case MONS_PANDEMONIUM_DEMON:
+    case MONS_PANDEMONIUM_LORD:
         if (mons->ghost->cycle_colours)
             mons->colour = random_colour();
         break;
@@ -2862,5 +2859,6 @@ void activate_ballistomycetes(monster* mons, const coord_def & origin,
 
             thread = thread->last;
         }
+        env.level_state |= LSTATE_GLOW_MOLD;
     }
 }

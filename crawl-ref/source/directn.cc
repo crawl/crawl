@@ -33,6 +33,7 @@
 #include "godabil.h"
 #include "invent.h"
 #include "itemname.h"
+#include "itemprop.h"
 #include "items.h"
 #include "l_defs.h"
 #include "los.h"
@@ -51,7 +52,6 @@
 #include "show.h"
 #include "showsymb.h"
 #include "state.h"
-#include "stuff.h"
 #include "env.h"
 #include "areas.h"
 #include "stash.h"
@@ -102,7 +102,8 @@ static void _wizard_make_friendly(monster* m);
 #endif
 static void _describe_feature(const coord_def& where, bool oos);
 static void _describe_cell(const coord_def& where, bool in_range = true);
-static void _print_cloud_desc(const coord_def where, bool &cloud_described);
+static bool _print_cloud_desc(const coord_def where);
+static bool _print_item_desc(const coord_def where, bool under_mimic);
 
 static bool _find_object(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc);
@@ -226,7 +227,7 @@ bool direction_chooser::choose_compass()
         else if (key_command == CMD_TARGET_MOUSE_SELECT)
         {
             const coord_def &gc = tiles.get_cursor();
-            if (gc == Region::NO_CURSOR)
+            if (gc == NO_CURSOR)
                 continue;
 
             if (!map_bounds(gc))
@@ -265,7 +266,7 @@ bool direction_chooser::choose_compass()
     while (!moves.isCancel && moves.delta.origin());
 
 #ifdef USE_TILE
-    tiles.place_cursor(CURSOR_MOUSE, Region::NO_CURSOR);
+    tiles.place_cursor(CURSOR_MOUSE, NO_CURSOR);
 #endif
 
     return moves.isValid;
@@ -413,7 +414,8 @@ void direction_chooser::describe_cell() const
         if (just_looking || show_floor_desc)
         {
             print_floor_description(true);
-            _print_cloud_desc(target(), did_cloud);
+            if (!did_cloud)
+                _print_cloud_desc(target());
         }
     }
 
@@ -449,28 +451,21 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
 // (Unless flying!)
 static bool _mon_exposed_in_water(const monster* mon)
 {
-    if (!mon)
-        return (false);
-
     return (grd(mon->pos()) == DNGN_SHALLOW_WATER
-            && you.see_cell(mon->pos())
-            && !mon->visible_to(&you)
             && !mons_flies(mon));
 }
 
 static bool _mon_exposed_in_cloud(const monster* mon)
 {
-    if (!mon)
-        return (false);
-
-    return (!mon->visible_to(&you)
-            && you.see_cell(mon->pos())
-            && is_opaque_cloud(env.cgrid(mon->pos()))
+    return (is_opaque_cloud(env.cgrid(mon->pos()))
             && !mon->is_insubstantial());
 }
 
 static bool _mon_exposed(const monster* mon)
 {
+    if (!mon || !you.see_cell(mon->pos()) || mon->visible_to(&you))
+        return (false);
+
     return (_mon_exposed_in_water(mon) || _mon_exposed_in_cloud(mon));
 }
 
@@ -512,6 +507,10 @@ direction_chooser::direction_chooser(dist& moves_,
         behaviour = &stock_behaviour;
 
     behaviour->just_looking = just_looking;
+    behaviour->get_desc_func = args.get_desc_func;
+
+    if (hitfunc)
+        needs_path = true;
 
     show_beam = Options.show_beam && !just_looking && needs_path;
     need_beam_redraw = show_beam;
@@ -599,8 +598,6 @@ void full_describe_view()
 
     // Get monsters via the monster_info, sorted by difficulty.
     get_monster_info(list_mons);
-    std::sort(list_mons.begin(), list_mons.end(),
-              monster_info::less_than_wrapper);
 
     if (list_mons.empty() && list_items.empty() && list_features.empty())
     {
@@ -849,7 +846,7 @@ void full_describe_view()
     }
 #else
     // Clear cursor placement.
-    tiles.place_cursor(CURSOR_TUTORIAL, Region::NO_CURSOR);
+    tiles.place_cursor(CURSOR_TUTORIAL, NO_CURSOR);
     tiles.clear_text_tags(TAG_TUTORIAL);
 #endif
 }
@@ -946,9 +943,9 @@ char mlist_index_to_letter(int index)
 }
 #endif
 
-range_view_annotator::range_view_annotator(int range)
+range_view_annotator::range_view_annotator(targetter *range)
 {
-    if (Options.darken_beyond_range && range >= 0)
+    if (Options.darken_beyond_range && range)
     {
         crawl_state.darken_range = range;
         viewwindow(false);
@@ -957,9 +954,9 @@ range_view_annotator::range_view_annotator(int range)
 
 range_view_annotator::~range_view_annotator()
 {
-    if (Options.darken_beyond_range && crawl_state.darken_range >= 0)
+    if (Options.darken_beyond_range && crawl_state.darken_range)
     {
-        crawl_state.darken_range = -1;
+        crawl_state.darken_range = NULL;
         viewwindow(false);
     }
 }
@@ -1166,6 +1163,16 @@ void direction_chooser::draw_beam_if_needed()
 
     need_beam_redraw = false;
 
+    if (!show_beam)
+    {
+        viewwindow(
+#ifndef USE_TILE
+            false
+#endif
+            );
+        return;
+    }
+
     // Clear the old beam if necessary.
     viewwindow(false);
 
@@ -1191,9 +1198,9 @@ void direction_chooser::draw_beam_if_needed()
                 if (aff < 0)
                     bcol = DARKGREY;
                 else if (aff < AFF_YES)
-                    bcol = MAGENTA;
+                    bcol = (*ri == target()) ? RED : MAGENTA;
                 else
-                    bcol = LIGHTMAGENTA;
+                    bcol = (*ri == target()) ? LIGHTRED : LIGHTMAGENTA;
                 _draw_ray_glyph(*ri, bcol, '*', bcol | COLFLAG_REVERSE);
 #endif
             }
@@ -1204,7 +1211,7 @@ void direction_chooser::draw_beam_if_needed()
     }
 
     // If we don't have a new beam to show, we're done.
-    if (!show_beam || !have_beam)
+    if (!have_beam)
     {
 #ifdef USE_TILE
         // Clear the old beam if we're not drawing anything else.
@@ -1481,6 +1488,7 @@ std::vector<std::string> direction_chooser::monster_description_suffixes(
     _push_back_if_nonempty(mi.wounds_description(true), &suffixes);
     _append_container(suffixes, mi.attributes());
     _append_container(suffixes, _get_monster_desc_vector(mi));
+    _append_container(suffixes, behaviour->get_monster_desc(mi));
 
     return suffixes;
 }
@@ -1673,7 +1681,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
     case CMD_TARGET_WIZARD_HURT_MONSTER:
         if (looking_at_you())
         {
-            set_hp(1, false);
+            set_hp(1);
             print_stats();
         }
     default:
@@ -1773,7 +1781,7 @@ bool direction_chooser::tiles_update_target()
 {
 #ifdef USE_TILE
     const coord_def& gc = tiles.get_cursor();
-    if (gc != Region::NO_CURSOR && map_bounds(gc))
+    if (gc != NO_CURSOR && map_bounds(gc))
     {
         set_target(gc);
         return true;
@@ -2003,7 +2011,7 @@ void direction_chooser::finalize_moves()
     _extend_move_to_edge(moves);
 
 #ifdef USE_TILE
-    tiles.place_cursor(CURSOR_MOUSE, Region::NO_CURSOR);
+    tiles.place_cursor(CURSOR_MOUSE, NO_CURSOR);
 #endif
 }
 
@@ -2023,7 +2031,9 @@ bool direction_chooser::choose_direction()
     cursor_control ccon(!Options.use_fake_cursor);
     mouse_control mc(needs_path && !just_looking ? MOUSE_MODE_TARGET_PATH
                                                  : MOUSE_MODE_TARGET);
-    range_view_annotator rva(range);
+    targetter_smite legacy_range(&you, range, 0, 0, true);
+    range_view_annotator rva(hitfunc ? hitfunc :
+                             (range >= 0) ? &legacy_range : NULL);
 
 
     // init
@@ -2929,6 +2939,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
             return ("passage of Golubria");
         case TRAP_PLATE:
             return ("pressure plate");
+        case TRAP_WEB:
+            return ("web");
         default:
             error_message_to_player();
             return ("undefined trap");
@@ -3019,6 +3031,8 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("magical trap");
     case DNGN_TRAP_NATURAL:
         return ("natural trap");
+    case DNGN_TRAP_WEB:
+        return ("web");
     case DNGN_ENTER_SHOP:
         return ("shop");
     case DNGN_ABANDONED_SHOP:
@@ -3075,13 +3089,17 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("staircase to the Swamp");
     case DNGN_ENTER_SHOALS:
         return ("staircase to the Shoals");
+    case DNGN_ENTER_SPIDER_NEST:
+        return ("hole to the Spider Nest");
+    case DNGN_ENTER_FOREST:
+        return ("staircase to the Enchanted Forest");
     case DNGN_ENTER_PORTAL_VAULT:
         // The bazaar description should be set in the bazaar marker; this
         // is the description for a portal of unknown type.
         return ("gate leading to a distant place");
     case DNGN_EXIT_PORTAL_VAULT:
         return ("gate leading back to the Dungeon");
-    case DNGN_TEMP_PORTAL:
+    case DNGN_MALIGN_GATEWAY:
         return ("portal to somewhere");
     case DNGN_RETURN_FROM_DWARVEN_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
@@ -3089,12 +3107,15 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_VAULTS:
     case DNGN_RETURN_FROM_TEMPLE:
+    case DNGN_RETURN_FROM_FOREST:
         return ("staircase back to the Dungeon");
     case DNGN_RETURN_FROM_SLIME_PITS:
     case DNGN_RETURN_FROM_SNAKE_PIT:
     case DNGN_RETURN_FROM_SWAMP:
     case DNGN_RETURN_FROM_SHOALS:
         return ("staircase back to the Lair");
+    case DNGN_RETURN_FROM_SPIDER_NEST:
+        return ("crawl-hole back to the Lair");
     case DNGN_RETURN_FROM_CRYPT:
     case DNGN_RETURN_FROM_HALL_OF_BLADES:
         return ("staircase back to the Vaults");
@@ -3351,6 +3372,7 @@ std::string feature_description(const coord_def& where, bool covering,
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
+    case DNGN_TRAP_WEB:
         return (feature_description(grid, get_trap_type(where),
                                     covering_description, dtype,
                                     add_stop, base_desc));
@@ -3490,13 +3512,6 @@ static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi)
     if (mi.is(MB_HALOED))
         descs.push_back("haloed");
 
-    if (mi.intel() <= I_PLANT)
-        descs.push_back("mindless");
-
-    // Unknown shapeshifters shouldn't leak "chaotic".
-    if (mi.is(MB_CHAOTIC))
-        descs.push_back("chaotic");
-
     if (mi.is(MB_POSSESSABLE))
         descs.push_back("possessable"); // FIXME: better adjective
     else if (mi.is(MB_ENSLAVED))
@@ -3504,6 +3519,9 @@ static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi)
 
     if (mi.is(MB_MIRROR_DAMAGE))
         descs.push_back("reflecting injuries");
+
+    if (mi.is(MB_INNER_FLAME))
+        descs.push_back("inner flame");
 
     if (mi.fire_blocker)
     {
@@ -3574,6 +3592,9 @@ static std::string _get_monster_desc(const monster_info& mi)
 
     if (mi.is(MB_MIRROR_DAMAGE))
         text += pronoun + " is reflecting injuries back at attackers.\n";
+
+    if (mi.is(MB_INNER_FLAME))
+        text += pronoun + " is filled with an inner flame.\n";
 
     if (mi.fire_blocker)
     {
@@ -3649,7 +3670,7 @@ std::string get_monster_equipment_desc(const monster_info& mi,
             }
 
             if (mi.type == MONS_DANCING_WEAPON
-                || mi.type == MONS_PANDEMONIUM_DEMON
+                || mi.type == MONS_PANDEMONIUM_LORD
                 || mi.type == MONS_PLAYER_GHOST
                 || mons_is_mimic(mi.type))
             {
@@ -3658,8 +3679,8 @@ std::string get_monster_equipment_desc(const monster_info& mi,
 
                 if (mi.type == MONS_DANCING_WEAPON)
                     str += "dancing weapon";
-                else if (mi.type == MONS_PANDEMONIUM_DEMON)
-                    str += "pandemonium demon";
+                else if (mi.type == MONS_PANDEMONIUM_LORD)
+                    str += "pandemonium lord";
                 else if (mi.type == MONS_PLAYER_GHOST)
                     str += "ghost";
                 else if (mi.type == MONS_PLAYER_ILLUSION)
@@ -3701,16 +3722,22 @@ std::string get_monster_equipment_desc(const monster_info& mi,
         item_def* mon_alt = mi.inv[MSLOT_ALT_WEAPON].get();
         item_def* mon_wnd = mi.inv[MSLOT_WAND].get();
 
+#define no_warn(x) (!item_type_known(*x) || !item_is_branded(*x))
+        // For Ashenzari warnings, we only care about ided and branded stuff.
         if (level == DESC_IDENTIFIED)
         {
-            if (mon_arm && !item_type_known(*mon_arm))
+            if (mon_arm && no_warn(mon_arm))
                 mon_arm = 0;
-            if (mon_shd && !item_type_known(*mon_shd))
+            if (mon_shd && no_warn(mon_shd))
                 mon_shd = 0;
-            if (mon_qvr && !item_type_known(*mon_qvr))
+            if (mon_qvr && no_warn(mon_qvr))
                 mon_qvr = 0;
-            if (mon_alt && !item_type_known(*mon_alt))
+            if (mon_alt && (!item_type_known(*mon_alt)
+                            || mon_alt->base_type == OBJ_WANDS
+                               && !is_offensive_wand(*mon_alt)))
+            {
                 mon_alt = 0;
+            }
         }
 
         // _describe_monster_weapon already took care of this
@@ -3782,7 +3809,7 @@ std::string get_monster_equipment_desc(const monster_info& mi,
     return desc;
 }
 
-static void _print_cloud_desc(const coord_def where, bool &cloud_described)
+static bool _print_cloud_desc(const coord_def where)
 {
     if (is_sanctuary(where))
     {
@@ -3792,15 +3819,37 @@ static void _print_cloud_desc(const coord_def where, bool &cloud_described)
     else if (silenced(where))
         mpr("This square is shrouded in silence.");
 
-    if (!cloud_described && env.cgrid(where) != EMPTY_CLOUD)
+    if (env.cgrid(where) == EMPTY_CLOUD)
+        return false;
+
+    mprf(MSGCH_EXAMINE, "There is a cloud of %s here.",
+         cloud_name_at_index(env.cgrid(where)).c_str());
+    return true;
+}
+
+static bool _print_item_desc(const coord_def where, bool under_mimic)
+{
+    int targ_item = you.visible_igrd(where);
+
+    if (targ_item == NON_ITEM)
+        return false;
+
+    // If a mimic is on this square, we pretend it's the first item - bwr
+    if (under_mimic)
+        mpr("There is something else lying underneath.", MSGCH_FLOOR_ITEMS);
+    else
     {
-        const int cloud_inspected = env.cgrid(where);
+        std::string name = get_menu_colour_prefix_tags(mitm[targ_item],
+                                                       DESC_NOCAP_A);
+        mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
 
-        mprf(MSGCH_EXAMINE, "There is a cloud of %s here.",
-             cloud_name_at_index(cloud_inspected).c_str());
-
-        cloud_described = true;
+        if (mitm[ targ_item ].link != NON_ITEM)
+        {
+            mprf(MSGCH_FLOOR_ITEMS,
+                 "There is something else lying underneath.");
+        }
     }
+    return true;
 }
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -3853,32 +3902,38 @@ static void _describe_cell(const coord_def& where, bool in_range)
 {
     bool mimic_item = false;
     bool mimic_feat = false;
+#ifndef DEBUG_DIAGNOSTICS
     bool monster_described = false;
-    bool cloud_described = false;
-    bool item_described = false;
+#endif
 
     if (where == you.pos() && !crawl_state.arena_suspended)
         mpr("You.", MSGCH_EXAMINE_FILTER);
 
     if (const monster* mon = monster_at(where))
     {
-        if (_mon_exposed_in_water(mon))
-        {
-            mpr("There is a strange disturbance in the water here.",
-                MSGCH_EXAMINE_FILTER);
-        }
-        else if (_mon_exposed_in_cloud(mon))
-        {
-            mpr("There is a strange disturbance in the cloud here.",
-                MSGCH_EXAMINE_FILTER);
-        }
-
 #ifdef DEBUG_DIAGNOSTICS
         if (!mon->visible_to(&you))
-            mpr("There is a non-visible monster here.", MSGCH_DIAGNOSTICS);
+        {
+            mprf(MSGCH_DIAGNOSTICS, "There is a non-visible %smonster here.",
+                 _mon_exposed_in_water(mon) ? "exposed by water " :
+                 _mon_exposed_in_cloud(mon) ? "exposed by cloud " : "");
+        }
 #else
         if (!mon->visible_to(&you))
+        {
+            if (_mon_exposed_in_water(mon))
+            {
+                mpr("There is a strange disturbance in the water here.",
+                    MSGCH_EXAMINE_FILTER);
+            }
+            else if (_mon_exposed_in_cloud(mon))
+            {
+                mpr("There is a strange disturbance in the cloud here.",
+                    MSGCH_EXAMINE_FILTER);
+            }
+
             goto look_clouds;
+        }
 #endif
 
         if (mons_is_unknown_mimic(mon))
@@ -3890,12 +3945,9 @@ static void _describe_cell(const coord_def& where, bool in_range)
                                                     DESC_NOCAP_A);
                 mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
                 mimic_item = true;
-                item_described = true;
             }
             else
-            {
                 mimic_feat = true;
-            }
         }
         else
         {
@@ -3907,7 +3959,9 @@ static void _describe_cell(const coord_def& where, bool in_range)
                 mprf(MSGCH_EXAMINE_FILTER, "%s is out of range.",
                      mon->pronoun(PRONOUN_CAP).c_str());
             }
+#ifndef DEBUG_DIAGNOSTICS
             monster_described = true;
+#endif
         }
 
 #if defined(DEBUG_DIAGNOSTICS) && defined(WIZARD)
@@ -3916,7 +3970,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
         if (crawl_state.game_is_hints() && hints_monster_interesting(mon))
         {
             std::string msg;
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
             msg = "(<w>Right-click</w> for more information.)";
 #else
             msg = "(Press <w>v</w> for more information.)";
@@ -3925,43 +3979,24 @@ static void _describe_cell(const coord_def& where, bool in_range)
         }
     }
 
-#ifndef DEBUG_DIAGNOSTICS
-  // removing warning
-  look_clouds:
-#endif
-
-    _print_cloud_desc(where, cloud_described);
-
-    int targ_item = you.visible_igrd(where);
-
-    if (targ_item != NON_ITEM)
-    {
-        // If a mimic is on this square, we pretend it's the first item - bwr
-        if (mimic_item)
-            mpr("There is something else lying underneath.", MSGCH_FLOOR_ITEMS);
-        else
-        {
-            std::string name = get_menu_colour_prefix_tags(mitm[targ_item],
-                                                           DESC_NOCAP_A);
-            mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
-
-            if (mitm[ targ_item ].link != NON_ITEM)
-            {
-                mprf(MSGCH_FLOOR_ITEMS,
-                     "There is something else lying underneath.");
-            }
-        }
-        item_described = true;
-    }
-
 #ifdef DEBUG_DIAGNOSTICS
+    _print_cloud_desc(where);
+    _print_item_desc(where, mimic_item);
+    if (mimic_feat)
+        mprf("Feature mimic: %s", feature_description(where, true).c_str());
     _debug_describe_feature_at(where);
 #else
+  // removing warning
+  look_clouds:
+
+    bool cloud_described = _print_cloud_desc(where);
+    bool item_described = _print_item_desc(where, mimic_item) || mimic_item;
+
     std::string feature_desc = feature_description(where, true);
     const bool bloody = is_bloodcovered(where);
     if (crawl_state.game_is_hints() && hints_pos_interesting(where.x, where.y))
     {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         feature_desc += " (<w>Right-click</w> for more information.)";
 #else
         feature_desc += " (Press <w>v</w> for more information.)";
@@ -3980,7 +4015,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 
         if (_interesting_feature(feat))
         {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
             feature_desc += " (Right-click for more information.)";
 #else
             feature_desc += " (Press 'v' for more information.)";
@@ -3997,9 +4032,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
 
         msg_channel_type channel = MSGCH_EXAMINE;
         if (feat == DNGN_FLOOR || feat_is_water(feat))
-        {
             channel = MSGCH_EXAMINE_FILTER;
-        }
 
         mpr(feature_desc.c_str(), channel);
     }
@@ -4049,4 +4082,12 @@ command_type targeting_behaviour::get_command(int key)
         cmd = CMD_TARGET_CANCEL;
 
     return (cmd);
+}
+
+std::vector<std::string> targeting_behaviour::get_monster_desc(const monster_info& mi)
+{
+    std::vector<std::string> descs;
+    if (get_desc_func)
+        _append_container(descs, (*get_desc_func)(mi));
+    return descs;
 }

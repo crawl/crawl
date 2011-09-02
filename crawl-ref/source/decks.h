@@ -26,6 +26,7 @@
 
 enum deck_rarity_type
 {
+    DECK_RARITY_RANDOM,
     DECK_RARITY_COMMON,
     DECK_RARITY_RARE,
     DECK_RARITY_LEGENDARY,
@@ -70,6 +71,9 @@ enum card_type
     CARD_SPARK,                 // lightning damage
     CARD_PAIN,                  // single target, like spell of agony
     CARD_TORMENT,               // Symbol of Torment
+#if TAG_MAJOR_VERSION != 32
+    CARD_ORB,
+#endif
 
     CARD_ELIXIR,                // healing
     CARD_BATTLELUST,            // melee boosts
@@ -116,6 +120,10 @@ enum card_type
     CARD_SWINE,                 // *oink*
     CARD_ALCHEMIST,
 
+#if TAG_MAJOR_VERSION == 32
+    CARD_ORB,
+#endif
+
     NUM_CARDS
 };
 
@@ -147,10 +155,13 @@ int cards_in_deck(const item_def &deck);
 card_type get_card_and_flags(const item_def& deck, int idx,
                              uint8_t& _flags);
 
-// Used elsewhere in Zotdef
-void create_pond(const coord_def& center, int radius, bool allow_deep);
+// Used elsewhere in ZotDef.
 void sage_card(int power, deck_rarity_type rarity);
+void create_pond(const coord_def& center, int radius, bool allow_deep);
+bool create_altar(bool disallow_no_altar = false);
 
 const std::vector<card_type> get_drawn_cards(const item_def& deck);
+// see and mark the first card with a scroll.
+bool deck_identify_first(int slot);
 
 #endif

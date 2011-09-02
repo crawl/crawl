@@ -116,7 +116,7 @@ DEPTH:  4-9, !Lair, !Slime
 
 ###############################################################################
 # Do *not* change the name of this vault without changing the relevant section
-# in monstuff.cc:monster_die. If wishing to alter Boris's weights by using
+# in monstuff.cc:monster_die. If wishing to alter Boris' weights by using
 # multiple uniq_boris TAG'd maps, ensure that you add the relevant line to
 # remove the tag in monstuff.cc:monster_die.
 NAME:   uniq_boris

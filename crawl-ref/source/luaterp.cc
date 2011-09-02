@@ -101,7 +101,7 @@ static int _report(lua_State *ls, int status)
         const char *msg = lua_tostring(ls, -1);
         if (msg == NULL)
             msg = "(error object is not a string)";
-        mprf(MSGCH_ERROR, msg);
+        mpr(msg, MSGCH_ERROR);
         lua_pop(ls, 1);
     }
     return status;
@@ -147,7 +147,7 @@ void debug_terp_dlua()
 {
     if (!_loaded_terp_files)
     {
-        dlua.execfile("clua/debug.lua", false, false);
+        dlua.execfile("dlua/debug.lua", false, false);
         for (unsigned int i = 0; i < Options.terp_files.size(); i++)
         {
             dlua.execfile(Options.terp_files[i].c_str(), false, false);

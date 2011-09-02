@@ -24,14 +24,13 @@
 #include "ng-restr.h"
 #include "options.h"
 #include "random.h"
-#include "religion.h"
 #include "species.h"
 #include "sprint.h"
 #include "state.h"
 #include "stuff.h"
 #include "tutorial.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 #include "tilereg-crt.h"
 #endif
 
@@ -39,10 +38,6 @@ static void _choose_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
                                  const newgame_def& defaults);
 static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
                           const newgame_def& defaults);
-static bool _choose_book(newgame_def* ng, newgame_def* ng_choice,
-                         const newgame_def& defaults);
-static bool _choose_god(newgame_def* ng, newgame_def* ng_choice,
-                        const newgame_def& defaults);
 static bool _choose_wand(newgame_def* ng, newgame_def* ng_choice,
                          const newgame_def& defaults);
 
@@ -53,8 +48,7 @@ static bool _choose_wand(newgame_def* ng, newgame_def* ng_choice,
 newgame_def::newgame_def()
     : name(), type(GAME_TYPE_NORMAL),
       species(SP_UNKNOWN), job(JOB_UNKNOWN),
-      weapon(WPN_UNKNOWN), book(SBT_NONE),
-      religion(GOD_NO_GOD), wand(SWT_NO_SELECTION),
+      weapon(WPN_UNKNOWN), wand(SWT_NO_SELECTION),
       fully_random(false)
 {
 }
@@ -64,8 +58,6 @@ void newgame_def::clear_character()
     species  = SP_UNKNOWN;
     job      = JOB_UNKNOWN;
     weapon   = WPN_UNKNOWN;
-    book     = SBT_NONE;
-    religion = GOD_NO_GOD;
     wand     = SWT_NO_SELECTION;
 }
 
@@ -162,9 +154,7 @@ static void _print_character_info(const newgame_def* ng)
     cprintf("%s\n", _welcome(ng).c_str());
 }
 
-// Determines if a species is valid. If 'display' is true, returns if
-// the species is displayable in the new game screen - this is
-// primarily used to suppress the display of the draconian variants.
+// Determines if a species is valid.
 static bool _is_species_valid_choice(species_type species)
 {
     if (species < 0 || species > NUM_SPECIES)
@@ -173,9 +163,31 @@ static bool _is_species_valid_choice(species_type species)
     if (species >= SP_ELF) // These are all invalid.
         return (false);
 
+#if 0
+    if (species == SP_MY_NEW_TRUNK_ONLY_EXPERIMENT
+        && Version::ReleaseType() != VER_ALPHA)
+    {
+        return (false);
+    }
+#endif
+
     // Non-base draconians cannot be selected either.
     if (species >= SP_RED_DRACONIAN && species < SP_BASE_DRACONIAN)
         return (false);
+
+    return (true);
+}
+
+// Determines if a job is valid.
+static bool _is_job_valid_choice(job_type job)
+{
+    if (job < 0 || job > NUM_JOBS)
+        return (false);
+
+#if TAG_MAJOR_VERSION == 32
+    if (job == JOB_PALADIN || job == JOB_REAVER)
+        return (false);
+#endif
 
     return (true);
 }
@@ -241,8 +253,10 @@ static void _resolve_species(newgame_def* ng, const newgame_def* ng_choice)
     case SP_RANDOM:
         if (ng->job == JOB_UNKNOWN)
         {
-            // any species will do
-            ng->species = get_species(random2(ng_num_species()));
+            // any valid species will do
+            do
+                ng->species = get_species(random2(ng_num_species()));
+            while (!_is_species_valid_choice(ng->species));
         }
         else
         {
@@ -298,8 +312,10 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
     case JOB_RANDOM:
         if (ng->species == SP_UNKNOWN)
         {
-            // any job will do
-            ng->job = job_type(random2(NUM_JOBS));
+            // any valid job will do
+            do
+                ng->job = job_type(random2(NUM_JOBS));
+            while (_is_job_valid_choice(ng->job));
         }
         else
         {
@@ -428,8 +444,6 @@ static void _choose_char(newgame_def* ng, newgame_def* choice,
         }
 
         if (_choose_weapon(ng, choice, defaults)
-            && _choose_book(ng, choice, defaults)
-            && _choose_god(ng, choice, defaults)
             && _choose_wand(ng, choice, defaults))
         {
             // We're done!
@@ -512,28 +526,6 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
     return (false);
 }
 
-int start_to_book(int firstbook, int booktype)
-{
-    switch (firstbook)
-    {
-    case BOOK_CONJURATIONS_I:
-        switch (booktype)
-        {
-        case SBT_FIRE:
-            return (BOOK_CONJURATIONS_I);
-
-        case SBT_COLD:
-            return (BOOK_CONJURATIONS_II);
-
-        default:
-            return (-1);
-        }
-
-    default:
-        return (-1);
-    }
-}
-
 void make_rod(item_def &item, stave_type rod_type, int ncharges)
 {
     item.base_type = OBJ_STAVES;
@@ -591,7 +583,11 @@ static void _construct_species_menu(const newgame_def* ng,
                                     MenuFreeform* menu)
 {
     ASSERT(menu != NULL);
-    static const int ITEMS_IN_COLUMN = 8;
+    int items_in_column = 0;
+    for (int i = 0; i < NUM_SPECIES; ++i)
+        if (_is_species_valid_choice((species_type)i))
+            items_in_column++;
+    items_in_column = (items_in_column + 2) / 3;
     // Construct the menu, 3 columns
     TextItem* tmp = NULL;
     std::string text;
@@ -636,8 +632,9 @@ static void _construct_species_menu(const newgame_def* ng,
         // Fill to column width - 1
         text.append(COLUMN_WIDTH - text.size() - 1 , ' ');
         tmp->set_text(text);
-        min_coord.x = X_MARGIN + (i / ITEMS_IN_COLUMN) * COLUMN_WIDTH;
-        min_coord.y = 3 + i % ITEMS_IN_COLUMN;
+        ASSERT(i < items_in_column * 3);
+        min_coord.x = X_MARGIN + (i / items_in_column) * COLUMN_WIDTH;
+        min_coord.y = 3 + i % items_in_column;
         max_coord.x = min_coord.x + text.size();
         max_coord.y = min_coord.y + 1;
         tmp->set_bounds(min_coord, max_coord);
@@ -843,7 +840,7 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
         freeform->activate_first_item();
     }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tiles.get_crt()->attach_menu(&menu);
 #endif
 
@@ -884,7 +881,7 @@ static void _prompt_species(newgame_def* ng, newgame_def* ng_choice,
         // We have had a significant input key event
         // construct the return vector
         std::vector<MenuItem*> selection = menu.get_selected_items();
-        if (selection.size() > 0)
+        if (!selection.empty())
         {
             // we have a selection!
             // we only care about the first selection (there should be only one)
@@ -1042,7 +1039,7 @@ static void _construct_backgrounds_menu(const newgame_def* ng,
         {
             "Warrior-mage",    // XXX: Arcane Marksmen are temporarily disabled
             coord_def(39, 0), 17,
-            {JOB_CRUSADER, JOB_ENCHANTER, JOB_TRANSMUTER, JOB_STALKER,
+            {JOB_SKALD, JOB_ENCHANTER, JOB_TRANSMUTER, JOB_STALKER,
              JOB_WARPER, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN, JOB_UNKNOWN}
         },
         {
@@ -1250,7 +1247,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
         freeform->activate_first_item();
     }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tiles.get_crt()->attach_menu(&menu);
 #endif
 
@@ -1292,7 +1289,7 @@ static void _prompt_job(newgame_def* ng, newgame_def* ng_choice,
         // We have had a significant input key event
         // construct the return vector
         std::vector<MenuItem*> selection = menu.get_selected_items();
-        if (selection.size() > 0)
+        if (!selection.empty())
         {
             // we have a selection!
             // we only care about the first selection (there should be only one)
@@ -1398,8 +1395,24 @@ static void _construct_weapon_menu(const weapon_type& defweapon,
 
         text += letter;
         text += " - ";
-        text += weapons[i].first == WPN_UNARMED
-                ? "claws" : weapon_base_name(weapons[i].first);
+        switch(weapons[i].first)
+        {
+        case WPN_UNARMED:
+            text += "claws";
+            break;
+        case WPN_JAVELINS:
+            text += "javelins";
+            break;
+        case WPN_ROCKS:
+            text += "large rocks";
+            break;
+        case WPN_DARTS:
+            text += "darts";
+            break;
+        default:
+            text += weapon_base_name(weapons[i].first);
+            break;
+        }
         // Fill to column width to give extra padding for the highlight
         text.append(COLUMN_WIDTH - text.size() - 1 , ' ');
         tmp->set_text(text);
@@ -1554,7 +1567,7 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
     }
     _print_character_info(ng); // calls clrscr() so needs to be before attach()
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tiles.get_crt()->attach_menu(&menu);
 #endif
 
@@ -1640,38 +1653,66 @@ static bool _prompt_weapon(const newgame_def* ng, newgame_def* ng_choice,
 static std::vector<weapon_choice> _get_weapons(const newgame_def* ng)
 {
     std::vector<weapon_choice> weapons;
-
-    weapon_type startwep[6] = { WPN_UNARMED, WPN_SHORT_SWORD, WPN_MACE,
-                                WPN_HAND_AXE, WPN_SPEAR, WPN_FALCHION };
-    for (int i = 0; i < 6; ++i)
+    if (ng->job == JOB_HUNTER)
     {
-        weapon_choice wp;
-        wp.first = startwep[i];
+        weapon_type startwep[4] = { WPN_THROWN, WPN_SLING, WPN_BOW,
+                                    WPN_CROSSBOW };
 
-        switch (wp.first)
+        for (int i = 0; i < 4; i++)
         {
-        case WPN_UNARMED:
-            if (ng->job == JOB_GLADIATOR || !species_has_claws(ng->species))
-                continue;
-            break;
-        case WPN_SPEAR:
-            // Non-small fighters and gladiators get tridents.
-            if ((ng->job == JOB_FIGHTER || ng->job == JOB_GLADIATOR)
-                  && species_size(ng->species, PSIZE_BODY) >= SIZE_MEDIUM)
+            weapon_choice wp;
+            wp.first = startwep[i];
+
+            if (wp.first == WPN_THROWN)
             {
-                wp.first = WPN_TRIDENT;
+                if (species_size(ng->species, PSIZE_TORSO) == SIZE_LARGE)
+                    wp.first = WPN_ROCKS;
+                else if (species_size(ng->species, PSIZE_TORSO) <= SIZE_SMALL)
+                    wp.first = WPN_DARTS;
+                else
+                    wp.first = WPN_JAVELINS;
             }
-            break;
-        case WPN_MACE:
-            if (ng->species == SP_OGRE)
-                wp.first = WPN_ANKUS;
-            break;
-        default:
-            break;
+
+            wp.second = weapon_restriction(wp.first, *ng);
+            if (wp.second != CC_BANNED)
+                weapons.push_back(wp);
         }
-        wp.second = weapon_restriction(wp.first, *ng);
-        if (wp.second != CC_BANNED)
-            weapons.push_back(wp);
+    }
+    else
+    {
+        weapon_type startwep[6] = { WPN_UNARMED, WPN_SHORT_SWORD, WPN_MACE,
+                                    WPN_HAND_AXE, WPN_SPEAR, WPN_FALCHION };
+        for (int i = 0; i < 6; ++i)
+        {
+            weapon_choice wp;
+            wp.first = startwep[i];
+
+            switch (wp.first)
+            {
+            case WPN_UNARMED:
+                if (!species_has_claws(ng->species))
+                    continue;
+                break;
+            case WPN_SPEAR:
+                // Non-small fighters and gladiators get tridents.
+                if ((ng->job == JOB_FIGHTER || ng->job == JOB_GLADIATOR)
+                      && species_size(ng->species, PSIZE_BODY) >= SIZE_MEDIUM)
+                {
+                    wp.first = WPN_TRIDENT;
+                }
+                break;
+            case WPN_MACE:
+                if (ng->species == SP_OGRE)
+                    wp.first = WPN_ANKUS;
+                break;
+            default:
+                break;
+            }
+
+            wp.second = weapon_restriction(wp.first, *ng);
+            if (wp.second != CC_BANNED)
+                weapons.push_back(wp);
+        }
     }
     return weapons;
 }
@@ -1726,7 +1767,7 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
                            const newgame_def& defaults)
 {
     // No weapon use at all.  The actual item will be removed later.
-    if (ng->species == SP_CAT)
+    if (ng->species == SP_FELID)
         return (true);
 
     switch (ng->job)
@@ -1736,8 +1777,9 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
     case JOB_CHAOS_KNIGHT:
     case JOB_DEATH_KNIGHT:
     case JOB_ABYSSAL_KNIGHT:
-    case JOB_CRUSADER:
+    case JOB_SKALD:
     case JOB_WARPER:
+    case JOB_HUNTER:
         break;
     default:
         return (true);
@@ -1757,747 +1799,6 @@ static bool _choose_weapon(newgame_def* ng, newgame_def* ng_choice,
             return (false);
 
     _resolve_weapon(ng, ng_choice, weapons);
-    return (true);
-}
-
-static startup_book_type _fixup_book(startup_book_type book, int numbooks)
-{
-    if (book == SBT_RANDOM)
-        return (SBT_RANDOM);
-    else if (book == SBT_VIABLE)
-        return (SBT_VIABLE);
-    else if (book >= 0 && book < numbooks)
-        return (book);
-    else
-        return (SBT_NONE);
-}
-
-static std::string _startup_book_name(startup_book_type book)
-{
-    switch (book)
-    {
-    case SBT_FIRE:
-        return "Fire";
-    case SBT_COLD:
-        return "Cold";
-    case SBT_RANDOM:
-        return "Random";
-    case SBT_VIABLE:
-        return "Viable";
-    default:
-        return "Buggy";
-    }
-}
-
-static void _construct_book_menu(const newgame_def& ng,
-                                 const book_type& firstbook,
-                                 const startup_book_type& defbook,
-                                 int numbooks,
-                                 MenuFreeform* menu)
-{
-    static const int ITEMS_START_Y = 5;
-    TextItem* tmp = NULL;
-    std::string text;
-    coord_def min_coord(0,0);
-    coord_def max_coord(0,0);
-
-    item_def book;
-    book.base_type = OBJ_BOOKS;
-    book.quantity  = 1;
-    book.plus      = 0;
-    book.plus2     = 0;
-    book.special   = 1;
-
-    for (int i = 0; i < numbooks; ++i)
-    {
-        tmp = new TextItem();
-        text.clear();
-
-        book.sub_type = firstbook + i;
-        startup_book_type sb = static_cast<startup_book_type>(i);
-        if (book_restriction(sb, ng) == CC_UNRESTRICTED)
-        {
-            tmp->set_fg_colour(LIGHTGREY);
-            tmp->set_highlight_colour(GREEN);
-        }
-        else
-        {
-            tmp->set_fg_colour(DARKGREY);
-            tmp->set_highlight_colour(YELLOW);
-        }
-        const char letter = 'a' + i;
-        text += letter;
-        text += " - ";
-        text += book.name(DESC_PLAIN, false, true);
-
-        //book name is longer than COLUMN_WIDTH
-        //text.append(COLUMN_WIDTH - text.size() - 1 , ' ');
-        tmp->set_text(text);
-
-        tmp->add_hotkey(letter);
-        tmp->set_id(sb);
-
-        min_coord.x = X_MARGIN;
-        min_coord.y = ITEMS_START_Y + i;
-        max_coord.x = min_coord.x + text.size();
-        max_coord.y = min_coord.y + 1;
-        tmp->set_bounds(min_coord, max_coord);
-
-        menu->attach_item(tmp);
-        tmp->set_visible(true);
-        // Is this item our default book?
-        if (sb == defbook)
-        {
-            menu->set_active_item(tmp);
-        }
-
-    }
-
-    // Add all the special button entries
-    tmp = new TextItem();
-    tmp->set_text("+ - Viable random choice");
-    min_coord.x = X_MARGIN;
-    min_coord.y = SPECIAL_KEYS_START_Y;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey('+');
-    tmp->set_id(M_VIABLE);
-    tmp->set_highlight_colour(LIGHTGRAY);
-    tmp->set_description_text("Picks a random viable book");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
-
-    tmp = new TextItem();
-    tmp->set_text("% - List aptitudes");
-    min_coord.x = X_MARGIN;
-    min_coord.y = SPECIAL_KEYS_START_Y + 1;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey('%');
-    tmp->set_id(M_APTITUDES);
-    tmp->set_highlight_colour(LIGHTGRAY);
-    tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
-
-    tmp = new TextItem();
-    tmp->set_text("? - Help");
-    min_coord.x = X_MARGIN;
-    min_coord.y = SPECIAL_KEYS_START_Y + 2;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey('?');
-    tmp->set_id(M_HELP);
-    tmp->set_highlight_colour(LIGHTGRAY);
-    tmp->set_description_text("Opens the help screen");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
-
-    tmp = new TextItem();
-    tmp->set_text("* - Random book");
-    min_coord.x = X_MARGIN + COLUMN_WIDTH;
-    min_coord.y = SPECIAL_KEYS_START_Y;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey('*');
-    tmp->set_id(M_RANDOM);
-    tmp->set_highlight_colour(LIGHTGRAY);
-    tmp->set_description_text("Picks a random book");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
-
-    // Adjust the end marker to align the - because Bksp text is longer by 3
-    tmp = new TextItem();
-    tmp->set_text("Bksp - Return to character menu");
-    tmp->set_description_text("Lets you return back to Character choice menu");
-    min_coord.x = X_MARGIN + COLUMN_WIDTH - 3;
-    min_coord.y = SPECIAL_KEYS_START_Y + 1;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey(CK_BKSP);
-    tmp->set_id(M_ABORT);
-    tmp->set_highlight_colour(LIGHTGRAY);
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
-
-    // Only add tab entry if we have a previous book choice
-    if (defbook != SBT_NONE)
-    {
-        tmp = new TextItem();
-        text.clear();
-        text = "Tab - ";
-
-        text +=  _startup_book_name(defbook);
-
-        // Adjust the end marker to aling the - because
-        // Tab text is longer by 2
-        tmp = new TextItem();
-        tmp->set_text(text);
-        min_coord.x = X_MARGIN + COLUMN_WIDTH - 2;
-        min_coord.y = SPECIAL_KEYS_START_Y + 2;
-        max_coord.x = min_coord.x + tmp->get_text().size();
-        max_coord.y = min_coord.y + 1;
-        tmp->set_bounds(min_coord, max_coord);
-        tmp->set_fg_colour(BROWN);
-        tmp->add_hotkey('\t');
-        tmp->set_id(M_DEFAULT_CHOICE);
-        tmp->set_highlight_colour(LIGHTGRAY);
-        tmp->set_description_text("Select your previous book choice");
-        menu->attach_item(tmp);
-        tmp->set_visible(true);
-    }
-}
-
-// Returns false if the user aborted.
-static bool _prompt_book(const newgame_def* ng, newgame_def* ng_choice,
-                         const newgame_def& defaults,
-                         book_type firstbook, int numbooks)
-{
-    PrecisionMenu menu;
-    menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
-    MenuFreeform* freeform = new MenuFreeform();
-    freeform->init(coord_def(1,1), coord_def(get_number_of_cols(),
-                   get_number_of_lines()), "freeform");
-    menu.attach_object(freeform);
-    menu.set_active_object(freeform);
-
-    startup_book_type defbook = _fixup_book(defaults.book, numbooks);
-    _construct_book_menu(*ng, firstbook, defbook, numbooks, freeform);
-
-    BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
-    highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
-    menu.attach_object(highlighter);
-
-    // Did we have a previous book?
-    if (menu.get_active_item() == NULL)
-    {
-        freeform->activate_first_item();
-    }
-    _print_character_info(ng); // calls clrscr() so needs to be before attach()
-
-#ifdef USE_TILE
-    tiles.get_crt()->attach_menu(&menu);
-#endif
-
-    freeform->set_visible(true);
-    highlighter->set_visible(true);
-
-    textcolor(CYAN);
-    cprintf("\nYou have a choice of books:");
-
-    while (true)
-    {
-        menu.draw_menu();
-
-        int keyn = getch_ck();
-
-        // First process menu entries
-        if (!menu.process_key(keyn))
-        {
-            // Process all the keys that are not attached to items
-            switch (keyn)
-            {
-            case 'X':
-                cprintf("\nGoodbye!");
-                end(0);
-                break;
-            case ' ':
-            CASE_ESCAPE
-                return false;
-            default:
-                // if we get this far, we did not get a significant selection
-                // from the menu, nor did we get an escape character
-                // continue the while loop from the beginning and poll a new key
-                continue;
-            }
-        }
-        // We have a significant key input!
-        // Construct selection vector
-        std::vector<MenuItem*> selection = menu.get_selected_items();
-        // There should only be one selection, otherwise something broke
-        if (selection.size() != 1)
-        {
-            // poll a new key
-            continue;
-        }
-
-        // Get the stored id from the selection
-        int selection_ID = selection.at(0)->get_id();
-        switch (selection_ID)
-        {
-        case M_ABORT:
-            return false;
-        case M_APTITUDES:
-            list_commands('%', false, _highlight_pattern(ng));
-            return _prompt_book(ng, ng_choice, defaults, firstbook, numbooks);
-        case M_HELP:
-            list_commands('?');
-            return _prompt_book(ng, ng_choice, defaults, firstbook, numbooks);
-        case M_DEFAULT_CHOICE:
-            if (defbook != SBT_NONE)
-            {
-                ng_choice->book = defbook;
-                return true;
-            }
-            // This case should not happen if defbook == SBT_NONE
-            continue;
-        case M_VIABLE:
-            ng_choice->book = SBT_VIABLE;
-            return true;
-        case M_RANDOM:
-            ng_choice->book = SBT_RANDOM;
-            return true;
-        default:
-            // We got an item selection
-            ng_choice->book = static_cast<startup_book_type> (selection_ID);
-            return true;
-        }
-    }
-    return false;
-}
-
-static void _resolve_book(newgame_def* ng, const newgame_def* ng_choice,
-                          int numbooks)
-{
-    switch (ng_choice->book)
-    {
-    case SBT_NONE:
-        ng->book = SBT_NONE;
-        return;
-
-    case SBT_VIABLE:
-    {
-        int good_choices = 0;
-        for (int i = 0; i < numbooks; i++)
-        {
-            startup_book_type sb = static_cast<startup_book_type>(i);
-            if (book_restriction(sb, *ng) == CC_UNRESTRICTED
-                && one_chance_in(++good_choices))
-            {
-                ng->book = sb;
-            }
-        }
-        if (good_choices)
-            return;
-    }
-        // intentional fall-through
-    case SBT_RANDOM:
-        ng->book = static_cast<startup_book_type>(random2(numbooks));
-        return;
-
-    default:
-        if (ng_choice->book >= 0 && ng_choice->book < numbooks)
-            ng->book = ng_choice->book;
-        else
-        {
-            // Either an invalid combination was passed in through options,
-            // or we messed up.
-            end(1, false,
-                "Incompatible book specified in options file.");
-        }
-        return;
-    }
-}
-
-static bool _choose_book(newgame_def* ng, newgame_def* ng_choice,
-                         const newgame_def& defaults,
-                         book_type firstbook, int numbooks)
-{
-    if (ng_choice->book == SBT_NONE
-        && !_prompt_book(ng, ng_choice, defaults, firstbook, numbooks))
-    {
-        return (false);
-    }
-    _resolve_book(ng, ng_choice, numbooks);
-    return (true);
-}
-
-static bool _choose_book(newgame_def* ng, newgame_def* ng_choice,
-                         const newgame_def& defaults)
-{
-    switch (ng->job)
-    {
-    case JOB_CONJURER:
-        return (_choose_book(ng, ng_choice, defaults, BOOK_CONJURATIONS_I, 2));
-    default:
-        return (true);
-    }
-}
-
-// Covers both chaos knight and priest choices.
-static std::string _god_text(god_type god)
-{
-    switch (god)
-    {
-    case GOD_ZIN:
-        return "Zin (for traditional priests)";
-    case GOD_BEOGH:
-        return "Beogh (for priests of Orcs)";
-    default:
-        die("invalid priestly god: %d", god);
-    }
-}
-
-typedef std::pair<god_type, char_choice_restriction> god_choice;
-
-static god_type _fixup_god(god_type god, const std::vector<god_choice>& gods)
-{
-    if (god == GOD_NO_GOD || god == GOD_RANDOM || god == GOD_VIABLE)
-        return (god);
-    for (unsigned int i = 0; i < gods.size(); ++i)
-        if (god == gods[i].first)
-            return (god);
-    return (GOD_NO_GOD);
-}
-
-static void _construct_god_menu(const god_type& defgod,
-                                const std::vector<god_choice>& gods,
-                                MenuFreeform* menu)
-{
-    static const int ITEMS_START_Y = 5;
-    TextItem* tmp = NULL;
-    std::string text;
-    coord_def min_coord(0,0);
-    coord_def max_coord(0,0);
-
-    for (unsigned int i = 0; i < gods.size(); ++i)
-    {
-        tmp = new TextItem();
-        text.clear();
-
-        if (gods[i].second == CC_UNRESTRICTED)
-        {
-            tmp->set_fg_colour(LIGHTGREY);
-            tmp->set_highlight_colour(GREEN);
-        }
-        else
-        {
-            tmp->set_fg_colour(DARKGREY);
-            tmp->set_highlight_colour(YELLOW);
-
-        }
-        const char letter = 'a' + i;
-        text += letter;
-        text += " - ";
-        text += _god_text(gods[i].first);
-        //god text is longer than COLUMN_WIDTH
-        //text.append(COLUMN_WIDTH - text.size() - 1 , ' ');
-        tmp->set_text(text);
-
-        tmp->add_hotkey(letter);
-        tmp->set_id(gods[i].first);
-
-        min_coord.x = X_MARGIN;
-        min_coord.y = ITEMS_START_Y + i;
-        max_coord.x = min_coord.x + text.size();
-        max_coord.y = min_coord.y + 1;
-        tmp->set_bounds(min_coord, max_coord);
-
-        menu->attach_item(tmp);
-        tmp->set_visible(true);
-        // Is this item our default god?
-        if (gods[i].first == defgod)
-        {
-            menu->set_active_item(tmp);
-        }
-    }
-
-    // Add all the special button entries
-    tmp = new TextItem();
-    tmp->set_text("+ - Viable random choice");
-    min_coord.x = X_MARGIN;
-    min_coord.y = SPECIAL_KEYS_START_Y;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey('+');
-    tmp->set_id(M_VIABLE);
-    tmp->set_highlight_colour(LIGHTGRAY);
-    tmp->set_description_text("Picks a random viable god");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
-
-    tmp = new TextItem();
-    tmp->set_text("% - List aptitudes");
-    min_coord.x = X_MARGIN;
-    min_coord.y = SPECIAL_KEYS_START_Y + 1;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey('%');
-    tmp->set_id(M_APTITUDES);
-    tmp->set_highlight_colour(LIGHTGRAY);
-    tmp->set_description_text("Lists the numerical skill train aptitudes for all races");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
-
-    tmp = new TextItem();
-    tmp->set_text("? - Help");
-    min_coord.x = X_MARGIN;
-    min_coord.y = SPECIAL_KEYS_START_Y + 2;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey('?');
-    tmp->set_id(M_HELP);
-    tmp->set_highlight_colour(LIGHTGRAY);
-    tmp->set_description_text("Opens the help screen");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
-
-    tmp = new TextItem();
-    tmp->set_text("* - Random god");
-    min_coord.x = X_MARGIN + COLUMN_WIDTH;
-    min_coord.y = SPECIAL_KEYS_START_Y;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey('*');
-    tmp->set_id(M_RANDOM);
-    tmp->set_highlight_colour(LIGHTGRAY);
-    tmp->set_description_text("Picks a random god");
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
-
-    // Adjust the end marker to align the - because Bksp text is longer by 3
-    tmp = new TextItem();
-    tmp->set_text("Bksp - Return to character menu");
-    tmp->set_description_text("Lets you return back to Character choice menu");
-    min_coord.x = X_MARGIN + COLUMN_WIDTH - 3;
-    min_coord.y = SPECIAL_KEYS_START_Y + 1;
-    max_coord.x = min_coord.x + tmp->get_text().size();
-    max_coord.y = min_coord.y + 1;
-    tmp->set_bounds(min_coord, max_coord);
-    tmp->set_fg_colour(BROWN);
-    tmp->add_hotkey(CK_BKSP);
-    tmp->set_id(M_ABORT);
-    tmp->set_highlight_colour(LIGHTGRAY);
-    menu->attach_item(tmp);
-    tmp->set_visible(true);
-
-    // Only add tab entry if we have a previous god choice
-    if (defgod != GOD_NO_GOD)
-    {
-        tmp = new TextItem();
-        text.clear();
-        text = "Tab - ";
-
-        text += defgod == GOD_RANDOM ? "Random" :
-                defgod == GOD_VIABLE ? "Viable" :
-                god_name(defgod);
-
-        // Adjust the end marker to align the - because
-        // Tab text is longer by 2
-        tmp = new TextItem();
-        tmp->set_text(text);
-        min_coord.x = X_MARGIN + COLUMN_WIDTH - 2;
-        min_coord.y = SPECIAL_KEYS_START_Y + 2;
-        max_coord.x = min_coord.x + tmp->get_text().size();
-        max_coord.y = min_coord.y + 1;
-        tmp->set_bounds(min_coord, max_coord);
-        tmp->set_fg_colour(BROWN);
-        tmp->add_hotkey('\t');
-        tmp->set_id(M_DEFAULT_CHOICE);
-        tmp->set_highlight_colour(LIGHTGRAY);
-        tmp->set_description_text("Select your previous god choice");
-        menu->attach_item(tmp);
-        tmp->set_visible(true);
-    }
-}
-
-static bool _prompt_god(const newgame_def* ng, newgame_def* ng_choice,
-                        const newgame_def& defaults,
-                        const std::vector<god_choice>& gods)
-{
-    PrecisionMenu menu;
-    menu.set_select_type(PrecisionMenu::PRECISION_SINGLESELECT);
-    MenuFreeform* freeform = new MenuFreeform();
-    freeform->init(coord_def(1,1), coord_def(get_number_of_cols(),
-                   get_number_of_lines()), "freeform");
-    menu.attach_object(freeform);
-    menu.set_active_object(freeform);
-
-    const god_type defgod = _fixup_god(defaults.religion, gods);
-    _construct_god_menu(defgod, gods, freeform);
-
-    BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
-    highlighter->init(coord_def(0,0), coord_def(0,0), "highlighter");
-    menu.attach_object(highlighter);
-
-    // Did we have a previous god?
-    if (menu.get_active_item() == NULL)
-    {
-        freeform->activate_first_item();
-    }
-    _print_character_info(ng); // calls clrscr() so needs to be before attach()
-
-#ifdef USE_TILE
-    tiles.get_crt()->attach_menu(&menu);
-#endif
-
-    freeform->set_visible(true);
-    highlighter->set_visible(true);
-
-    textcolor(CYAN);
-    cprintf("\nWhich god do you wish to serve?");
-
-    while (true)
-    {
-        menu.draw_menu();
-
-        int keyn = getch_ck();
-
-        // First process menu entries
-        if (!menu.process_key(keyn))
-        {
-            // Process all the keys that are not attached to items
-            switch (keyn)
-            {
-            case 'X':
-                cprintf("\nGoodbye!");
-                end(0);
-                break;
-            case ' ':
-            CASE_ESCAPE
-                return false;
-            default:
-                // if we get this far, we did not get a significant selection
-                // from the menu, nor did we get an escape character
-                // continue the while loop from the beginning and poll a new key
-                continue;
-            }
-        }
-        // We have a significant key input!
-        // Construct selection vector
-        std::vector<MenuItem*> selection = menu.get_selected_items();
-        // There should only be one selection, otherwise something broke
-        if (selection.size() != 1)
-        {
-            // poll a new key
-            continue;
-        }
-
-        // Get the stored id from the selection
-        int selection_ID = selection.at(0)->get_id();
-        switch (selection_ID)
-        {
-        case M_ABORT:
-            return false;
-        case M_APTITUDES:
-            list_commands('%', false, _highlight_pattern(ng));
-            return _prompt_god(ng, ng_choice, defaults, gods);
-        case M_HELP:
-            list_commands('?');
-            return _prompt_god(ng, ng_choice, defaults, gods);
-        case M_DEFAULT_CHOICE:
-            if (defgod != GOD_NO_GOD)
-            {
-                ng_choice->religion = defgod;
-                return true;
-            }
-            // This case should not happen when defgod == god_no_god
-            continue;
-        case M_VIABLE:
-            ng_choice->religion = GOD_VIABLE;
-            return true;
-        case M_RANDOM:
-            ng_choice->religion = GOD_RANDOM;
-            return true;
-        default:
-            // We got an item selection
-            ng_choice->religion = static_cast<god_type> (selection_ID);
-            return true;
-        }
-    }
-    return false;
-}
-
-static void _resolve_god(newgame_def* ng, const newgame_def* ng_choice,
-                         const std::vector<god_choice>& gods)
-{
-    switch (ng_choice->religion)
-    {
-    case GOD_NO_GOD:
-        ng->religion = GOD_NO_GOD;
-        return;
-
-    case GOD_VIABLE:
-    {
-        int good_choices = 0;
-        for (unsigned int i = 0; i < gods.size(); i++)
-        {
-            if (gods[i].second == CC_UNRESTRICTED
-                && one_chance_in(++good_choices))
-            {
-                ng->religion = gods[i].first;
-            }
-        }
-        if (good_choices)
-            return;
-    }
-        // intentional fall-through
-    case GOD_RANDOM:
-        ng->religion = gods[random2(gods.size())].first;
-        return;
-
-    default:
-        // Check this is a legal choice, in case it came
-        // through command line options.
-        ng->religion = _fixup_god(ng_choice->religion, gods);
-        if (ng->religion == GOD_NO_GOD)
-        {
-            // Either an invalid combination was passed in through options,
-            // or we messed up.
-            end(1, false,
-                "Incompatible god specified in options file.");
-        }
-        return;
-    }
-}
-
-static bool _choose_god(newgame_def* ng, newgame_def* ng_choice,
-                        const newgame_def& defaults)
-{
-    if (ng->job != JOB_PRIEST)
-        return (true);
-
-    std::vector<god_choice> gods;
-    for (unsigned int i = 0; i < NUM_GODS; ++i)
-    {
-        god_choice god;
-        god.first = static_cast<god_type>(i);
-        god.second = religion_restriction(god.first, *ng);
-        if (god.second != CC_BANNED)
-            gods.push_back(god);
-    }
-
-    ASSERT(!gods.empty());
-    if (gods.size() == 1)
-    {
-        ng->religion = ng_choice->religion = gods[0].first;
-        return (true);
-    }
-
-    // XXX: assumes we can never choose between a god and no god.
-    if (ng_choice->religion == GOD_NO_GOD)
-        if (!_prompt_god(ng, ng_choice, defaults, gods))
-            return (false);
-
-    _resolve_god(ng, ng_choice, gods);
     return (true);
 }
 
@@ -2581,7 +1882,7 @@ static void _construct_wand_menu(const startup_wand_type& defwand,
 
         menu->attach_item(tmp);
         tmp->set_visible(true);
-        // Is this item our default god?
+        // Is this item our default wand?
         if (sw == defwand)
         {
             menu->set_active_item(tmp);
@@ -2599,7 +1900,6 @@ static void _construct_wand_menu(const startup_wand_type& defwand,
     //tmp->set_bounds(min_coord, max_coord);
     //tmp->set_fg_colour(BROWN);
     //tmp->add_hotkey('+');
-    //tmp->set_id(SBT_VIABLE);
     //tmp->set_highlight_colour(LIGHTGRAY);
     //tmp->set_description_text("Picks a random viable god");
     //menu->attach_item(tmp);
@@ -2727,7 +2027,7 @@ static bool _prompt_wand(const newgame_def* ng, newgame_def* ng_choice,
     }
     _print_character_info(ng); // calls clrscr() so needs to be before attach()
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tiles.get_crt()->attach_menu(&menu);
 #endif
 
@@ -3019,7 +2319,7 @@ static void _prompt_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
 
     _print_character_info(ng); // calls clrscr() so needs to be before attach()
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tiles.get_crt()->attach_menu(&menu);
 #endif
 

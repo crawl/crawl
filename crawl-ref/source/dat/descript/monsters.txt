@@ -251,7 +251,7 @@ A withered sorceress, exceptionally ugly even by orc standards.
 %%%%
 Nessos
 
-A black centaur warrior with a malicious look in the eyes.
+A black centaur warrior with a malicious look in his eyes.
 %%%%
 Nikola
 
@@ -289,7 +289,7 @@ A beautiful sapphire statue of a famous earth mage who disappeared after a catas
 %%%%
 Rupert
 
-A mighty crusader, far less interested in converting heathens than killing them.
+A man of very bad manners whose roars can make an ogre envious.
 %%%%
 Saint Roka
 
@@ -409,9 +409,9 @@ Balrug
 
 A huge and very powerful demon, wreathed in fire and shadows.
 %%%%
-beast
+basilisk
 
-A weird and hideous cross between beast and human.
+A large lizard with a terrible, petrifying gaze.
 %%%%
 big fish
 
@@ -496,6 +496,10 @@ A large multicoloured butterfly with beautifully patterned wings, fluttering inc
 Cacodemon
 
 A hideously ugly demon of rage and legendary power, it disables its foes before blasting them to pieces.
+%%%%
+catoblepas
+
+A sluggish black buffalo, its hide encrusted with dull scales. It carries its hog-like head just above the ground, protected by a stiff mane of bristles, joined to its body by a neck as long and loose as an emptied intestine. Man and beast alike would be wise to steer clear of this creature, as its fearsome breath is known to turn flesh into stone.
 %%%%
 centaur
 
@@ -657,6 +661,10 @@ A long and bloated body, supported by dozens of short legs and topped with an ev
 demonspawn
 
 This creature could almost pass for human... yet you sense something evil about it.
+%%%%
+diamond obelisk
+
+This obelisk seems to be for all practical purposes indestructible. You'd better find a way around... it might even provide one.
 %%%%
 dire elephant
 
@@ -844,6 +852,10 @@ worker ant
 
 A black ant with poisonous pincers, about the size of a large dog.
 %%%%
+bat
+
+A huge black bat.
+%%%%
 megabat
 
 A huge black bat.
@@ -851,10 +863,6 @@ A huge black bat.
 goliath beetle
 
 A huge black beetle with great crunching mandibles and very hard chitinous armour.
-%%%%
-giant toad
-
-A very large and vicious-looking carnivorous toad. Its knobbly brown skin blends in with the rough rock of your surroundings.
 %%%%
 giant centipede
 
@@ -892,10 +900,6 @@ giant mite
 
 A large arachnid with vicious poisoned mouth-parts.
 %%%%
-vampire mosquito
-
-This unfortunate and now massive creature once fed upon the blood of a vampire. Now it wants to feed upon yours.
-%%%%
 giant newt
 
 Several times the size of a normal newt, but still not really impressive.
@@ -920,10 +924,6 @@ giga bat
 
 A huge, bloated bat.
 %%%%
-gila monster
-
-A large lizard with brightly coloured stripes and splotches.
-%%%%
 glowing shapeshifter
 
 A shapeshifter which has lost control over its transformations, and is constantly changing form.
@@ -938,7 +938,7 @@ A small, stout humanoid said to be good at finding its way through underground p
 %%%%
 goblin
 
-A short, ugly and unfriendly humanoid:  squat, broad, flat-nosed, sallow-skinned, with a wide mouth and pistachio-shaped eyes.
+A short, ugly and unfriendly humanoid: squat, broad, flat-nosed, sallow-skinned, with a wide mouth and pistachio-shaped eyes.
 %%%%
 golden dragon
 
@@ -1023,6 +1023,10 @@ A heavily armoured warrior, in league with the powers of Hell, usually accompani
 hell hog
 
 A large, fat and very ugly pig, suckled in the pits of Hell. Roast suckling pig technology will never be the same.
+%%%%
+hell beast
+
+A weird and hideous cross between beast and human.
 %%%%
 hellephant
 
@@ -1228,6 +1232,10 @@ lich
 
 A wizard who didn't want to die, a lich is a skeletal, desiccated corpse kept alive by a mighty exercise of necromancy. This undead creature can wield great magic and is best avoided by all but the most confident.
 %%%%
+lightning spire
+
+This contraption, made from a coil and a rod, is buzzing with electricity and can shoot it far, zapping anyone who comes into range.
+%%%%
 lindwurm
 
 A small serpentine dragon with a pair of strong forelimbs. Its thick scales give off an eerie green glow.
@@ -1327,6 +1335,10 @@ A vile undead creation of the most unholy necromancy, these creatures are made f
 neqoxec
 
 A weirdly shaped demon, pulsing and shifting with mutagenic energies, its belly distended with the devoured brains of its victims.
+%%%%
+octopode
+
+A more intelligent cousin of the mighty kraken, capable of using tools and spells. They are fully amphibious, but most of their species choose to stay beneath the waves and serve their King.
 %%%%
 ogre
 
@@ -1832,6 +1844,10 @@ tormentor
 
 This malign devil is covered in all manner of claws, spines and cruel hooks.
 %%%%
+training dummy
+
+A mannequin used for battle practice.
+%%%%
 trapdoor spider
 
 A sneaky arachnid that surprises its prey by hiding underneath the dungeon floor.
@@ -1864,6 +1880,10 @@ vampire
 
 A powerful blood-drinking undead.
 %%%%
+vampire bat
+
+The preferred form for vampires in disguise: a blood-sucking undead bat.
+%%%%
 vampire knight
 
 A powerful warrior, with skills undiminished by undeath. It complements its combat prowess with powerful enchantments.
@@ -1871,6 +1891,10 @@ A powerful warrior, with skills undiminished by undeath. It complements its comb
 vampire mage
 
 Undeath has not lessened this powerful mage.
+%%%%
+vampire mosquito
+
+This unfortunate and now massive creature once fed upon the blood of a vampire. Now it wants to feed upon yours.
 %%%%
 vapour
 
@@ -1883,10 +1907,6 @@ A heavily armed and armoured guardian of the Vaults.
 very ugly thing
 
 A very ugly thing. According to legend, this hideously mutated creature is the otherworldly spawn of a wizard's breeding experiment. Double yuck.
-%%%%
-viper
-
-A snake with a painful venom. It's not as fast as some other snakes, but still fairly quick.
 %%%%
 wandering mushroom
 

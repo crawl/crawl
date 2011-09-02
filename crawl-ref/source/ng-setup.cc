@@ -88,9 +88,10 @@ static void _species_stat_init(species_type which_species)
     case SP_PURPLE_DRACONIAN:
     case SP_MOTTLED_DRACONIAN:
     case SP_PALE_DRACONIAN:
-    case SP_BASE_DRACONIAN:     sb =  9; ib =  6; db =  2;      break;  // 17
+    case SP_BASE_DRACONIAN:     sb =  8; ib =  6; db =  4;      break;  // 18
 
-    case SP_CAT:                sb =  2; ib =  7; db =  9;      break;  // 18
+    case SP_FELID:              sb =  2; ib =  7; db =  9;      break;  // 18
+    case SP_OCTOPODE:           sb =  5; ib =  8; db =  5;      break;  // 18
     }
 
     you.base_stats[STAT_STR] = sb + 2;
@@ -153,7 +154,7 @@ static void _jobs_stat_init(job_type which_job)
     case JOB_BERSERKER:         s =  9; i = -1; d =  4; hp = 15; mp = 0; break;
     case JOB_GLADIATOR:         s =  7; i =  0; d =  5; hp = 14; mp = 0; break;
 
-    case JOB_CRUSADER:          s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
+    case JOB_SKALD:             s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
     case JOB_CHAOS_KNIGHT:      s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
     case JOB_DEATH_KNIGHT:      s =  5; i =  3; d =  4; hp = 13; mp = 2; break;
     case JOB_ABYSSAL_KNIGHT:    s =  4; i =  4; d =  4; hp = 13; mp = 1; break;
@@ -201,8 +202,8 @@ static void _jobs_stat_init(job_type which_job)
     // experience level 3.
     you.last_chosen = (stat_type) random2(NUM_STATS);
 
-    set_hp(hp, true);
-    set_mp(mp, true);
+    you.hp_max_perm = hp - 2;
+    you.mp_max_perm = mp - 1;
 }
 
 // Make sure no stats are unacceptably low
@@ -245,7 +246,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_MUTATION_RESISTANCE] = 1;
         break;
     case SP_MINOTAUR:
-        you.mutation[MUT_HORNS] = 2;
+        you.mutation[MUT_HORNS]  = 2;
         break;
     case SP_SPRIGGAN:
         you.mutation[MUT_ACUTE_VISION]    = 1;
@@ -308,13 +309,19 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_ACUTE_VISION] = 1;
         you.mutation[MUT_UNBREATHING]  = 1;
         break;
-    case SP_CAT:
+    case SP_FELID:
         you.mutation[MUT_FANGS]           = 3;
         you.mutation[MUT_SHAGGY_FUR]      = 1;
         you.mutation[MUT_ACUTE_VISION]    = 1;
         you.mutation[MUT_FAST]            = 1;
         you.mutation[MUT_CARNIVOROUS]     = 3;
         you.mutation[MUT_SLOW_METABOLISM] = 2;
+        break;
+    case SP_OCTOPODE:
+        you.mutation[MUT_TENTACLES]       = 3;
+        you.mutation[MUT_BEAK]            = 1;
+        you.mutation[MUT_CAMOUFLAGE]      = 1;
+        you.mutation[MUT_GELATINOUS_BODY] = 1;
         break;
     default:
         break;
@@ -439,10 +446,49 @@ static void _update_weapon(const newgame_def& ng)
 {
     ASSERT(ng.weapon != NUM_WEAPONS);
 
-    if (ng.weapon == WPN_UNARMED)
+    switch(ng.weapon)
+    {
+    case WPN_ROCKS:
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5, 1);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
+        break;
+    case WPN_JAVELINS:
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6, 1);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
+        break;
+    case WPN_DARTS:
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 30, 1);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
+        break;
+    case WPN_BOW:
+        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 25, 1);
+
+        // Wield the bow instead.
+        you.equip[EQ_WEAPON] = 1;
+        break;
+    case WPN_CROSSBOW:
+        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 25, 1);
+
+        // Wield the crossbow instead.
+        you.equip[EQ_WEAPON] = 1;
+        break;
+    case WPN_SLING:
+        newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 25, 1);
+
+        // Wield the sling instead.
+        you.equip[EQ_WEAPON] = 1;
+        break;
+    case WPN_UNARMED:
         _newgame_clear_item(0);
-    else if (ng.weapon != WPN_UNKNOWN)
+        break;
+    case WPN_UNKNOWN:
+        break;
+    default:
         you.inv[0].sub_type = ng.weapon;
+    }
 }
 
 static void _give_items_skills(const newgame_def& ng)
@@ -463,9 +509,9 @@ static void _give_items_skills(const newgame_def& ng)
 
         // Skills.
         you.skills[SK_FIGHTING] = 3;
-        you.skills[SK_SHIELDS]  = 2;
+        you.skills[SK_SHIELDS]  = 3;
 
-        weap_skill = (you.species == SP_CAT) ? 4 : 2;
+        weap_skill = (you.species == SP_FELID) ? 4 : 2;
 
         you.skills[(player_effectively_in_light_armour()
                    ? SK_DODGING : SK_ARMOUR)] = 3;
@@ -473,41 +519,31 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_GLADIATOR:
-    {
         // Equipment.
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
         _update_weapon(ng);
 
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ANIMAL_SKIN);
-
         newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_BUCKLER, ARM_SHIELD);
-
-        curr = 3;
-        if (you_can_wear(EQ_HELMET))
-        {
-            newgame_make_item(3, EQ_HELMET, OBJ_ARMOUR, ARM_HELMET);
-            curr++;
-        }
+        newgame_make_item(3, EQ_HELMET, OBJ_ARMOUR, ARM_HELMET, ARM_CAP);
 
         // Small species get darts, the others nets.
         if (you.body_size(PSIZE_BODY) < SIZE_MEDIUM)
-            newgame_make_item(curr, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
+            newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20);
         else
-        {
-            newgame_make_item(curr, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
-                               4);
-        }
+            newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 4);
 
         // Skills.
         you.skills[SK_FIGHTING] = 2;
         you.skills[SK_THROWING] = 2;
         you.skills[SK_DODGING]  = 2;
-        you.skills[SK_SHIELDS]  = 2;
-        you.skills[SK_UNARMED_COMBAT] = 2;
+        you.skills[SK_SHIELDS]  = 1;
+        // Gladiators with weapons also get some unarmed skill for offhand attacks.
+        if (you.weapon())
+            you.skills[SK_UNARMED_COMBAT] = 2;
         weap_skill = 3;
         break;
-    }
 
     case JOB_MONK:
         you.equip[EQ_WEAPON] = -1; // Monks fight unarmed.
@@ -555,7 +591,11 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_PRIEST:
-        you.religion = ng.religion;
+        if (you.species == SP_HILL_ORC)
+            you.religion = GOD_BEOGH;
+        else
+            you.religion = GOD_ZIN;
+
         you.piety = 45;
 
         if (you.religion == GOD_BEOGH)
@@ -583,14 +623,14 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ROBE, 1, 2);
 
-        you.skills[SK_FIGHTING] = 4;
+        you.skills[SK_FIGHTING] = 3;
         you.skills[SK_ARMOUR]   = 1;
         you.skills[SK_DODGING]  = 1;
         if (species_apt(SK_ARMOUR) < species_apt(SK_DODGING))
             you.skills[SK_DODGING]++;
         else
             you.skills[SK_ARMOUR]++;
-        weap_skill = 2;
+        weap_skill = 3;
         break;
 
     case JOB_DEATH_KNIGHT:
@@ -643,7 +683,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.equip[EQ_WEAPON] = -1;
 
         newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1, 1, 1);
-        newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEALING);
+        newgame_make_item(1, EQ_NONE, OBJ_POTIONS, POT_HEALING);
         newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEAL_WOUNDS);
 
         you.skills[SK_FIGHTING]       = 2;
@@ -651,7 +691,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_INVOCATIONS]    = 4;
         break;
 
-    case JOB_CRUSADER:
+    case JOB_SKALD:
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
         _update_weapon(ng);
 
@@ -663,7 +703,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_ARMOUR]       = 1;
         you.skills[SK_DODGING]      = 1;
         you.skills[SK_SPELLCASTING] = 2;
-        you.skills[SK_CHARMS]       = 2;
+        you.skills[SK_CHARMS]       = 3;
         weap_skill = 2;
         break;
 
@@ -679,16 +719,16 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(3, EQ_NONE, OBJ_SCROLLS, SCR_BLINKING);
         newgame_make_item(4, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 20, 1);
 
-        newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 5);
+        newgame_make_item(5, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 10);
         set_item_ego_type(you.inv[5], OBJ_MISSILES, SPMSL_DISPERSAL);
 
-        you.skills[SK_FIGHTING]       = 1;
+        you.skills[SK_FIGHTING]       = 2;
         you.skills[SK_ARMOUR]         = 1;
         you.skills[SK_DODGING]        = 2;
         you.skills[SK_SPELLCASTING]   = 2;
         you.skills[SK_TRANSLOCATIONS] = 3;
         you.skills[SK_THROWING]       = 1;
-        weap_skill = 3;
+        weap_skill = 2;
     break;
 
     case JOB_ARCANE_MARKSMAN:
@@ -750,8 +790,7 @@ static void _give_items_skills(const newgame_def& ng)
     case JOB_CONJURER:
         newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
 
-        newgame_make_item(2, EQ_NONE, OBJ_BOOKS,
-                           start_to_book(BOOK_CONJURATIONS_I, ng.book));
+        newgame_make_item(2, EQ_NONE, OBJ_BOOKS, BOOK_CONJURATIONS_II);
 
         you.skills[SK_CONJURATIONS] = 4;
         you.skills[SK_SPELLCASTING] = 1;
@@ -931,72 +970,11 @@ static void _give_items_skills(const newgame_def& ng)
 
     case JOB_HUNTER:
         // Equipment.
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
 
-        switch (you.species)
-        {
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-        case SP_HILL_ORC:
-        case SP_CENTAUR:
-            you.inv[0].sub_type = WPN_HAND_AXE;
-            break;
-        case SP_OGRE:
-            you.inv[0].sub_type = WPN_CLUB;
-            break;
-        case SP_GHOUL:
-        case SP_TROLL:
+        if (you.has_claws())
             _newgame_clear_item(0);
-            break;
-        default:
-            break;
-        }
-
-        switch (you.species)
-        {
-        case SP_SLUDGE_ELF:
-        case SP_HILL_ORC:
-        case SP_MERFOLK:
-            newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6, 1);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
-                               2);
-            break;
-
-        case SP_OGRE:
-        case SP_TROLL:
-            newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5,
-                               1);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1,
-                               3);
-            break;
-
-        case SP_HALFLING:
-            newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1,
-                               30, 1);
-
-            // Wield the sling instead.
-            you.equip[EQ_WEAPON] = 1;
-            break;
-
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-        case SP_KOBOLD:
-            newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 25, 1);
-
-            // Wield the crossbow instead.
-            you.equip[EQ_WEAPON] = 1;
-            break;
-
-        default:
-            newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 25, 1);
-
-            // Wield the bow instead.
-            you.equip[EQ_WEAPON] = 1;
-            break;
-        }
+        _update_weapon(ng);
 
         newgame_make_item(3, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ANIMAL_SKIN);
@@ -1007,10 +985,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_STEALTH]  = 1;
         weap_skill = 1;
 
-        if (is_range_weapon(you.inv[1]))
-            you.skills[range_skill(you.inv[1])] = 4;
-        else
-            you.skills[SK_THROWING] = 4;
+        you.skills[range_skill(you.inv[1])] = 4;
         break;
 
     case JOB_WANDERER:
@@ -1063,7 +1038,7 @@ static void _give_items_skills(const newgame_def& ng)
             you.skills[weapon_skill(*you.weapon())] = weap_skill;
     }
 
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
     {
         for (int i = SK_SHORT_BLADES; i <= SK_CROSSBOWS; i++)
         {
@@ -1080,56 +1055,8 @@ static void _give_items_skills(const newgame_def& ng)
     {
         you.worshipped[you.religion] = 1;
         set_god_ability_slots();
-    }
-}
-
-static void _give_species_bonus_hp()
-{
-    if (player_genus(GENPC_DRACONIAN) || player_genus(GENPC_DWARVEN))
-        inc_max_hp(1);
-    else
-    {
-        switch (you.species)
-        {
-        case SP_CENTAUR:
-        case SP_OGRE:
-        case SP_TROLL:
-            inc_max_hp(3);
-            break;
-
-        case SP_GHOUL:
-        case SP_MINOTAUR:
-        case SP_NAGA:
-        case SP_DEMIGOD:
-            inc_max_hp(2);
-            break;
-
-        case SP_HILL_ORC:
-        case SP_MUMMY:
-        case SP_MERFOLK:
-            inc_max_hp(1);
-            break;
-
-        case SP_HIGH_ELF:
-        case SP_VAMPIRE:
-            dec_max_hp(1);
-            break;
-
-        case SP_DEEP_ELF:
-        case SP_HALFLING:
-        case SP_KENKU:
-        case SP_KOBOLD:
-        case SP_SPRIGGAN:
-            dec_max_hp(2);
-            break;
-
-        case SP_CAT:
-            dec_max_hp(3);
-            break;
-
-        default:
-            break;
-        }
+        if (you.religion != GOD_XOM)
+            you.piety_max[you.religion] = you.piety;
     }
 }
 
@@ -1139,9 +1066,7 @@ static void _give_species_bonus_mp()
     switch (you.species)
     {
     case SP_VAMPIRE:
-    case SP_SPRIGGAN:
     case SP_DEMIGOD:
-    case SP_DEEP_ELF:
         inc_max_mp(1);
         break;
 
@@ -1174,7 +1099,7 @@ static void _give_starting_food()
         item.base_type = OBJ_FOOD;
         if (you.species == SP_HILL_ORC || you.species == SP_KOBOLD
             || player_genus(GENPC_OGREISH) || you.species == SP_TROLL
-            || you.species == SP_CAT)
+            || you.species == SP_FELID)
         {
             item.sub_type = FOOD_MEAT_RATION;
         }
@@ -1210,6 +1135,10 @@ static void _setup_tutorial_miscs()
 
     // No need for Shields skill without shield.
     you.skills[SK_SHIELDS] = 0;
+
+    // Some spellcasting for the magic tutorial.
+    if (get_tutorial_map().find("tutorial_lesson4") != std::string::npos)
+        you.skills[SK_SPELLCASTING] = 1;
 
     // Set Str low enough for the burdened tutorial.
     you.base_stats[STAT_STR] = 12;
@@ -1478,7 +1407,6 @@ static void _setup_generic(const newgame_def& ng)
     // This function depends on stats and mutations being finalised.
     _give_items_skills(ng);
 
-    _give_species_bonus_hp();
     _give_species_bonus_mp();
 
     if (you.species == SP_DEMONSPAWN)
@@ -1504,7 +1432,12 @@ static void _setup_generic(const newgame_def& ng)
     reassess_starting_skills();
     calc_total_skill_points();
     init_skill_order();
-    you.exp_available = crawl_state.game_is_zotdef()? 80 : 25;
+    init_training();
+    you.exp_available = 25;
+    train_skills();
+
+    if (crawl_state.game_is_zotdef())
+        you.zot_points = 80;
 
     for (int i = 0; i < ENDOFPACK; ++i)
         if (you.inv[i].defined())
@@ -1537,8 +1470,8 @@ static void _setup_generic(const newgame_def& ng)
     calc_mp();
 
     // Make sure the starting player is fully charged up.
-    set_hp(you.hp_max, false);
-    set_mp(you.max_magic_points, false);
+    set_hp(you.hp_max);
+    set_mp(you.max_magic_points);
 
     // tmpfile purging removed in favour of marking
     Generated_Levels.clear();

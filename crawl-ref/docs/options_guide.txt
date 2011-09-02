@@ -14,10 +14,9 @@ The contents of this text are:
 0-c     Options and how to set them.
 0-d     Aliases and variables.
 1-  Starting Screen.
-                name, remember_name, weapon, book, wand,
-                religion,
-                species, background, random_pick, good_random,
-                restart_after_game
+                name, remember_name, weapon, wand, species, background,
+                random_pick, good_random, restart_after_game,
+                default_manual_training
 2-  File System and Sound.
                 crawl_dir, morgue_dir, save_dir, macro_dir, sound
 3-  Lua files.
@@ -48,29 +47,29 @@ The contents of this text are:
 4-g     Travel and Exploration.
                 travel_delay, explore_delay, travel_avoid_terrain,
                 explore_greedy, explore_stop, explore_stop_pickup_ignore,
-                explore_improved, travel_key_stop,
+                explore_wall_bias, explore_improved, travel_key_stop,
                 tc_reachable, tc_dangerous, tc_disconnected,
                 tc_excluded, tc_exclude_circle,
                 runrest_ignore_message, runrest_stop_message,
                 runrest_ignore_poison, runrest_ignore_monster,
-                trapwalk_safe_hp, trap_prompt, rest_wait_both, auto_exclude
+                trapwalk_safe_hp, rest_wait_both, auto_exclude
 4-h     Stashes.
                 stash_filter, annotate_item_class,
                 annotate_item_dropped
 4-i     Command Enhancements.
-                auto_list, easy_open, easy_unequip, equip_unequip,
-                easy_confirm, allow_self_target,
+                auto_list, auto_switch, easy_open, easy_unequip,
+                equip_unequip, easy_confirm, allow_self_target,
                 easy_butcher, always_confirm_butcher, prefer_safe_chunks,
                 easy_eat_chunks, easy_eat_gourmand, easy_eat_contaminated,
                 prompt_for_swap, easy_quit_item_prompts,
-                easy_exit_menu, sort_menus
+                easy_exit_menu, sort_menus, spell_slot
 4-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, clear_messages, show_more, small_more,
-                show_inventory_weights, show_gold_turns, show_game_turns,
-                show_beam, item_stack_summary_minimum, list_rotten,
-                mlist_min_height, msg_min_height, msg_max_height,
-                messages_at_top,
+                show_inventory_weights, show_newturn_mark, show_gold_turns,
+                show_game_turns, show_beam, item_stack_summary_minimum,
+                list_rotten, mlist_min_height, msg_min_height, msg_max_height,
+                messages_at_top, show_no_ctele,
                 mlist_allow_alternate_layout, mlist_targetting, classic_hud,
                 menu_colour, menu_colour_prefix_class, menu_colour_shops,
                 message_colour, force_more_message,
@@ -103,9 +102,9 @@ The contents of this text are:
                 tile_font_stat_file, tile_font_msg_file, tile_font_tip_file,
                 tile_font_lbl_file, tile_font_crt_size, tile_font_stat_size,
                 tile_font_msg_size, tile_font_tip_size, tile_font_lbl_size,
-                tile_show_minihealthbar, tile_show_minimagicbar,
-                tile_show_demon_tier, tile_layout_priority,
-                tile_force_regenerate_levels
+                tile_font_ft_light, tile_show_minihealthbar,
+                tile_show_minimagicbar, tile_show_demon_tier,
+                tile_layout_priority, tile_force_regenerate_levels
 5-  Character Dump.
 5-a     Items and Kills.
                 kill_map, dump_kill_places, dump_item_origins,
@@ -223,7 +222,6 @@ are as follows:
    clear_messages      = true
    auto_list           = true
    weapon              = hand axe, for Berserkers
-   book                = random, for Conjurers
 and, for Tiles,
    tile_tag_pref       = tutorial
 
@@ -280,24 +278,16 @@ weapon = (short sword | falchion | hand axe | spear | mace | trident
         claws. The standard weapon prompt will be shown if an illegal choice
         for the selected background is specified.
 
-book = (flame | fire | ice | cold | random)
-        Conjurers can choose their starting spellbook. Note flame=fire and
-        ice=cold.
-
 wand = (enslavement | confusion | magic darts | frost | flame | striking | random)
         Artificers can start with either a wand of random effects and another
         wand out of enslavement, confusion, magic darts, frost, or flame, or
         with a rod of striking.
 
-religion = (Zin | Beogh | random)
-        Hill Orc priests may choose between worshipping Zin and Beogh, specifying
-        the religion option allows them to bypass this prompt.
-
 species = (Human |...| Vampire | random)
         The usual abbreviations (Hu, HE, etc.) work.
 
 background = (Fighter |...| Wanderer | random)
-        Here again the abbreviations (Fi, Wi, Pr, etc.) can be used.
+        Here again the abbreviations (Fi, Wz, Pr, etc.) can be used.
 
 random_pick = false
         The random_pick option will randomly generate a character.
@@ -313,6 +303,10 @@ restart_after_game = true/false
         When a game ends, Crawl will return to the main menu if
         restart_after_game is set. This option is enabled by default
         for tiles builds and disabled by default for other builds.
+
+default_manual_training = false
+        When set to true, new characters will start with skill training
+        set to manual mode instead of automatic mode.
 
 2-  File System.
 ================
@@ -888,6 +882,12 @@ explore_stop_pickup_ignore = <regex list>
         This options has no affect on items which were thrown by the
         player.
 
+explore_wall_bias = 0
+        Adjusts how much autoexplore favours attempting to discover room
+        perimeters and corners. At higher values, autoexplore will more
+        heavily favour visiting squares that are next to walls; at 0 it
+        will not favour them at all.
+
 explore_improved = false
         If set to true explore will attempt to reduce zig-zagging during
         auto-explore.  On average it increases the number of turns taken
@@ -920,10 +920,13 @@ runrest_stop_message = <list of regexes>
         Use these to force messages to interrupt travel and resting, or
         not. These are matched against full message text. To limit a
         substring match to a message channel, prefix the substring with
-        the channel name and a colon (see section 4-k below on Message
+        the channel name and a colon (see section 4-l below on Message
         Channels). For instance, if you want travel to stop when you're
         hit by divine retribution, you could use:
              runrest_stop_message = god:wrath finds you
+        Or to remind yourself to renew expiring spells:
+             runrest_stop_message = Your transformation is almost over
+             runrest_stop_message = You are starting to lose your buoyancy
         Or you can explicitly ignore some messages:
              runrest_ignore_message = offer a prayer,prayer is over
              runrest_ignore_message = pleased with you,exalted
@@ -972,12 +975,6 @@ trapwalk_safe_hp = <trap_name>:<minimum_hp>, ...
         blade) make sense. Note that travel tries to avoid traps if this
         is easily possible. Defaults to none. For example,
               trapwalk_safe_hp = dart:15, needle:25, spear:50
-
-trap_prompt = true
-        If trap_prompt is set to true Crawl will use the trapwalk_safe_hp
-        values to decide whether the player should be prompted before
-        stepping on a mechnical trap. Note that you'll always be prompted
-        before stepping on non-mechanical traps.
 
 rest_wait_both = false
         If rest_wait_both is set to true then resting will only stop
@@ -1040,6 +1037,12 @@ auto_list = true
         because they won't get to see the prompts. This option does not
         apply to spell casting... Conjurers would probably find that
         really annoying.
+
+auto_switch = false
+        If you've got a melee weapon in slot a and a ranged weapon in
+        slot b (or the opposite), this option will allow you to
+        automatically switch to the appropriate weapon when firing or
+        attacking in melee.
 
 easy_open = true
         Open doors by moving on to them. Highly convenient. Note that
@@ -1259,6 +1262,23 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
         the last one matching will always take precedence, i.e. "any"
         as last setting would override any of the others.
 
+spell_slot = <regex>:<list of spell letters>
+        When you memorise any spell that matches the regex, it will
+        assign itself to the first available letter in the list. (If
+        all letters in the list are occupied for each regex the spell
+        matches, it will use the default ordering abc...xyzABC..XYZ.)
+
+        Examples:
+        * if you want Haste to be placed on H:
+            spell_slot = Haste:H
+        * if you want Deflect Missiles to be placed on r normally or R if
+          r is unavailable:
+            spell_slot = Deflect:rR
+        * if you want to change the default spell slot assignment
+          to use capital letters: (place this after all other
+          spell_slot lines):
+            spell_slot = .*:ABCDEFGHIJKLMNOPQRSTUVWXYZ
+
 4-j     Messages and Display Enhancements.
 ------------------------------------------
 
@@ -1301,7 +1321,7 @@ clear_messages = false
 show_more = true
         Setting this option to false will cause the game not to prompt
         if more than a window-full of messages are output at once. This
-        options has no effect if clear_messages is set.
+        option has no effect if clear_messages is set.
 
 small_more = false
         With small_more = false (default), the --more-- prompt is on a
@@ -1314,6 +1334,10 @@ show_inventory_weights = false
         weight of each item.
         Note: This option doesn't currently work for Tiles unless you use
               tile_menu_icons = false.
+
+show_newturn_mark = true
+        When set to false, this option disable the underscore (_) displayed in
+        front of the first line of a turn.
 
 show_gold_turns = false
         If set to true, this option adds an extra line to the stat area
@@ -1518,6 +1542,10 @@ msg_condense_repeats = true
 msg_condense_short = true
         If set, short messages on the same channel don't all start a new
         line.
+
+show_no_ctele = true
+        If set, -cTele will be displayed in the status light area when
+        teleport control is not possible.
 
 4-k     Missiles.
 -----------------
@@ -1813,6 +1841,9 @@ tile_font_tip_size  = 15
 tile_font_lbl_size  = 14
         Font size for the screen regions listed above.
 
+tile_font_ft_light = false
+        Selects 'light' font hinting.
+
 tile_show_minihealthbar = true
 tile_show_minimagicbar  = true
         Will show health and magic bars on top of the player tile when the
@@ -1833,7 +1864,8 @@ tile_layout_priority = minimap, inventory, gold_turn, command, spell, monster
         tab before it on the option line, the tab will still be placed above it,
         but it will have priority over it so the inventory might not be able to
         expand to its maximum size (6 lines). The minimap is always placed
-        between the stat area and the tabs.
+        between the stat area and the tabs. The memorisation and skill tabs can
+        be added to the list too, but are not by default.
 
 tile_force_regenerate_levels = false
 
@@ -1909,6 +1941,9 @@ dump_order += monlist,kills
         in the game.  This will only be included in the final dump
         which happens when you die, quit or win (or in ordinary dumps
         while in wizard mode).
+
+        Also, "spell_usage" will count spells you have used, in total and
+        per every three experience levels.
 
 dump_book_spells = true
         By default all randart spellbooks in inventory will have all their
@@ -2197,6 +2232,7 @@ mon_glyph = <monster name or symbol> : <colour> <glyph>
 
              player
              sensed monster
+             {trivial,easy,tough,nasty,friendly} sensed monster
              merged slime creature
              vampire bat
              kenku

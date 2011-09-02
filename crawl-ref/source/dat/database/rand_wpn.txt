@@ -638,6 +638,8 @@ Polytheism
 
 Atheism
 
+Autotheism
+
 Pantheism
 
 Panentheism
@@ -826,6 +828,12 @@ Giant
 Beetle
 
 Jelly
+
+w:1
+Testudine
+
+w:1
+Pirate
 %%%%
 monster_name
 
@@ -990,6 +998,10 @@ Bingo
 
 # from the crawl.akrasiac.org patch
 Cookie Cutter
+
+ETAOIN SHRDLU
+
+Lorem Ipsum
 %%%%
 plain_weapon_name
 

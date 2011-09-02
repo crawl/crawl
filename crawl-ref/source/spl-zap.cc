@@ -93,6 +93,8 @@ zap_type spell_to_zap(spell_type spell)
         return ZAP_POLYMORPH_OTHER;
     case SPELL_TELEPORT_OTHER:
         return ZAP_TELEPORTATION;
+    case SPELL_INNER_FLAME:
+        return ZAP_INNER_FLAME;
     case SPELL_HASTE:
         return ZAP_HASTING;
     case SPELL_INVISIBILITY:
