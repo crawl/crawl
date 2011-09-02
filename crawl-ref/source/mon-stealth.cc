@@ -70,6 +70,10 @@ int monster::stealth() const
     if (glows_naturally() || halo_radius2() != -1)
         actual_stealth -= 3;
 
+    // Having an antihalo makes you more stealthy, on the other hand.
+    if (antihalo_radius2() != -1)
+        actual_stealth += 3;
+
     // Some specific overrides
     if (type == MONS_UNSEEN_HORROR)
         actual_stealth = 3;

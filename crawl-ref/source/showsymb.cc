@@ -99,13 +99,24 @@ unsigned short _cell_feat_show_colour(const map_cell& cell, bool coloured)
     {
         if (cell.flags & MAP_HALOED)
         {
-            if (cell.flags & MAP_SILENCED)
+            if (cell.flags & MAP_SILENCED && cell.flags & MAP_ANTIHALOED)
+                colour = CYAN; // Default for silence.
+            else if (cell.flags & MAP_SILENCED)
                 colour = LIGHTCYAN;
+            else if (cell.flags & MAP_ANTIHALOED)
+                colour = fdef.colour; // Cancels out!
             else
                 colour = YELLOW;
         }
+        else if (cell.flags & MAP_ANTIHALOED)
+        {
+           if (cell.flags & MAP_SILENCED)
+                colour = BLUE; // Silence gets darker
+           else
+                colour = ETC_DEATH; // If no holy or silence
+        }
         else if (cell.flags & MAP_SILENCED)
-            colour = CYAN;
+            colour = CYAN; // Silence but no holy/unholy
         else if (cell.flags & MAP_ORB_HALOED)
             colour = ETC_ORB_GLOW;
     }

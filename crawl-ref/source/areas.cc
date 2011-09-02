@@ -40,6 +40,7 @@ enum areaprop_flag
     APROP_LIQUID        = (1 << 4),
     APROP_ACTUAL_LIQUID = (1 << 5),
     APROP_ORB           = (1 << 6),
+    APROP_ANTIHALO      = (1 << 7),
 };
 
 struct area_centre
@@ -82,7 +83,7 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
     if (act->alive() &&
         (you.entering_level
          || act->halo_radius2() > -1 || act->silence_radius2() > -1
-         || act->liquefying_radius2() > -1))
+         || act->liquefying_radius2() > -1 || act->antihalo_radius2() > -1))
     {
         // Not necessarily new, but certainly potentially interesting.
         invalidate_agrid(true);
@@ -143,6 +144,19 @@ static void _update_agrid()
             }
             no_areas = false;
         }
+
+        if ((r = ai->antihalo_radius2()) >= 0)
+        {
+            _agrid_centres.push_back(area_centre(AREA_ANTIHALO, ai->pos(), r));
+
+            for (radius_iterator ri(ai->pos(), r, C_CIRCLE, ai->get_los());
+                 ri; ++ri)
+            {
+                _set_agrid_flag(*ri, APROP_ANTIHALO);
+            }
+            no_areas = false;
+        }
+
     }
 
     if (you.char_direction == GDT_ASCENDING && !env.orb_pos.origin())
@@ -174,6 +188,8 @@ static area_centre_type _get_first_area (const coord_def& f)
         return AREA_SILENCE;
     if (a & APROP_HALO)
         return AREA_HALO;
+    if (a & APROP_ANTIHALO)
+        return AREA_ANTIHALO;
     // liquid is always applied; actual_liquid is on top
     // of this. If we find the first, we don't care about
     // the second.
@@ -625,9 +641,9 @@ bool liquefied(const coord_def& p, bool check_actual)
         return (_check_agrid_flag(p, APROP_LIQUID));
 }
 
+
 /////////////
-// Orb's glow
-//
+// Orb's glow //
 
 bool orb_haloed(const coord_def& p)
 {
@@ -635,5 +651,45 @@ bool orb_haloed(const coord_def& p)
         return (false);
     if (!_agrid_valid)
         _update_agrid();
+
     return (_check_agrid_flag(p, APROP_ORB));
+}
+
+/////////////
+// Antihalo!
+
+bool antihaloed(const coord_def& p)
+{
+    if (!map_bounds(p))
+        return (false);
+    if (!_agrid_valid)
+        _update_agrid();
+
+    return (_check_agrid_flag(p, APROP_ANTIHALO));
+}
+
+// Whether actor is in an antihalo.
+bool actor::antihaloed() const
+{
+    return (::antihaloed(pos()));
+}
+
+// Stub for player antihalo.
+int player::antihalo_radius2() const
+{
+    return (-1);
+}
+
+int monster::antihalo_radius2() const
+{
+    if (holiness() != MH_UNDEAD)
+        return (-1);
+
+    switch (type)
+    {
+    case MONS_PROFANE_SERVITOR:
+        return (40); // Very unholy!
+    default:
+        return (-1);
+    }
 }

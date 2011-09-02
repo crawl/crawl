@@ -148,6 +148,7 @@ public:
     virtual bool berserk() const = 0;
     virtual bool can_see_invisible() const = 0;
     virtual bool invisible() const = 0;
+    virtual bool nightvision() const = 0;
 
     // Would looker be able to see the actor when in LOS?
     virtual bool visible_to(const actor *looker) const = 0;
@@ -281,14 +282,20 @@ public:
     //            purpose)
     virtual bool backlit(bool check_haloed = true,
                          bool self_halo = true) const = 0;
+    virtual bool umbra(bool check_haloed = true,
+                         bool self_halo = true) const = 0;
     // Within any actor's halo?
     virtual bool haloed() const;
+    // Within an antihalo?
+    virtual bool antihaloed() const;
     // Squared halo radius.
     virtual int halo_radius2() const = 0;
     // Squared silence radius.
     virtual int silence_radius2() const = 0;
     // Squared liquefying radius
     virtual int liquefying_radius2 () const = 0;
+    virtual int antihalo_radius2 () const = 0;
+
     virtual bool glows_naturally() const = 0;
 
     virtual bool petrifying() const = 0;

@@ -2859,7 +2859,16 @@ bool monster::backlit(bool check_haloed, bool self_halo) const
     if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME) || has_ench(ENCH_SILVER_CORONA))
         return (true);
     if (check_haloed)
-        return (haloed() && (self_halo || halo_radius2() == -1));
+        return (!antihaloed() && haloed() &&
+                (self_halo || halo_radius2() == -1));
+    return (false);
+}
+
+bool monster::umbra(bool check_haloed, bool self_halo) const
+{
+    if (check_haloed)
+        return (antihaloed() && !haloed() &&
+                (self_halo || antihalo_radius2() == -1));
     return (false);
 }
 
@@ -3392,6 +3401,9 @@ int monster::res_rotting(bool temp) const
 
 int monster::res_holy_energy(const actor *attacker) const
 {
+    if (type == MONS_PROFANE_SERVITOR)
+        return (1);
+
     if (undead_or_demonic())
         return (-2);
 
@@ -6656,6 +6668,13 @@ bool monster::is_web_immune() const
     return (can_cling_to_walls()
          || is_insubstantial()
          || mons_genus(type) == MONS_JELLY);
+}
+
+// Undead and demonic monsters have nightvision, as do all followers
+// of Yredelemnul.
+bool monster::nightvision() const
+{
+    return (undead_or_demonic() || god == GOD_YREDELEMNUL);
 }
 
 /////////////////////////////////////////////////////////////////////////

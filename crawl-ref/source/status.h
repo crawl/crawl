@@ -11,7 +11,7 @@ enum status_type
     STATUS_AIRBORNE = NUM_DURATIONS + 1,
     STATUS_BEHELD,
     STATUS_BURDEN,
-    STATUS_GLOW,
+    STATUS_CONTAMINATION,
     STATUS_NET,
     STATUS_HUNGER,
     STATUS_REGENERATION,
@@ -23,6 +23,8 @@ enum status_type
     STATUS_INT_ZERO,
     STATUS_DEX_ZERO,
     STATUS_FIREBALL,
+    STATUS_BACKLIT,
+    STATUS_UMBRA,
 };
 
 struct status_info
