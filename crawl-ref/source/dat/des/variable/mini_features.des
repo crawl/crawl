@@ -1733,9 +1733,9 @@ ENDMAP
 # This might be quite hard to find (unless you're an Ash worshipper)
 NAME:   mumra_transporter_accident
 TAGS:   extra
-WEIGHT:	1
-DEPTH:	D:5-,Lair,Elf:1-4,Orc
-SUBST:	X = x.
+WEIGHT: 1
+DEPTH:  D:5-,Lair,Elf:1-4,Orc
+SUBST:  X = x.
  : dgn.delayed_decay(_G,'B', 'human skeleton')
 KITEM:  A : wand of teleportation charges:0 / wand of digging charges:0
 # Prevent random teleportation getting you stuck
