@@ -3811,44 +3811,19 @@ std::string get_monster_equipment_desc(const monster_info& mi,
 
 static bool _print_cloud_desc(const coord_def where)
 {
-    if (is_sanctuary(where) || silenced(where)
-        || haloed(where) || liquefied(where))
+    std::vector<std::string> areas;
+    if (is_sanctuary(where))
+        areas.push_back("lies inside a sanctuary");
+    if (silenced(where))
+        areas.push_back("is shrouded in silence");
+    if (haloed(where))
+        areas.push_back("is lit by a halo");
+    if (liquefied(where))
+        areas.push_back("is liquefied");
+    if (!areas.empty())
     {
-        std::string desc = "This square";
-        bool found_sth = false;
-
-        if (is_sanctuary(where))
-        {
-            desc += " lies inside a sanctuary";
-            found_sth = true;
-        }
-        if (silenced(where))
-        {
-            if (found_sth)
-                desc += ", and";
-            else
-                found_sth = true;
-
-            desc += " is shrouded in silence";
-        }
-        if (haloed(where))
-        {
-            if (found_sth)
-                desc += ", and";
-            else
-                found_sth = true;
-
-            desc += " is lit by a halo";
-        }
-        if (liquefied(where))
-        {
-            if (found_sth)
-                desc += ", and";
-
-            desc += " is liquefied";
-        }
-        desc += ".";
-        mpr(desc);
+        mprf("This square %s.",
+             comma_separated_line(areas.begin(), areas.end()).c_str());
     }
 
     if (env.cgrid(where) == EMPTY_CLOUD)
