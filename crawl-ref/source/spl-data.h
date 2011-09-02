@@ -445,7 +445,7 @@ struct spell_desc
 {
     SPELL_ABJURATION, "Abjuration",
      SPTYP_SUMMONING,
-     SPFLAG_DIR_OR_TARGET | SPFLAG_ESCAPE,
+     SPFLAG_TARGET | SPFLAG_ESCAPE,
      3,
      200,
      LOS_RADIUS, LOS_RADIUS,

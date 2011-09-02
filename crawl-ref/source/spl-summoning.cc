@@ -2300,21 +2300,28 @@ static int _abjuration(int pow, monster *mon)
     return (true);
 }
 
-spret_type abjuration(int pow, monster *mon, bool fail)
+spret_type cast_abjuration(int pow, monster *mon, bool fail)
+{
+    fail_check();
+    if (mon)
+    {
+        mpr("Send 'em back where they came from!");
+        _abjuration(pow, mon);
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return SPRET_SUCCESS;
+}
+
+spret_type cast_mass_abjuration(int pow, bool fail)
 {
     fail_check();
     mpr("Send 'em back where they came from!");
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    {
+        _abjuration(pow, *mi);
+    }
 
-    if (mon)
-    {
-        _abjuration(pow, mon);
-    }
-    else 
-    {
-        for (monster_iterator mi(you.get_los()); mi; ++mi)
-        {
-            _abjuration(pow, *mi);
-        }
-    }
     return SPRET_SUCCESS;
 }
