@@ -1490,6 +1490,20 @@ ENDMAP
 #
 #####################################################################
 
+NAME:  corner_web_ring
+DEPTH: D, Elf, Crypt
+KFEAT: d = web
+ITEM:  any jewellery
+MAP
+xxxxxxx
+xd....@
+x.xxxxx
+x.x
+x.x
+x.x
+x@x
+ENDMAP
+
 NAME:  feat_on_display
 DEPTH: D, Elf, Crypt, Vault
 TAGS:  serial_glass_rare allow_dup
