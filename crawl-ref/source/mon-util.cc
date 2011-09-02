@@ -26,6 +26,7 @@
 #include "ghost.h"
 #include "goditem.h"
 #include "itemname.h"
+#include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
 #include "mislead.h"
@@ -868,12 +869,17 @@ bool mons_is_feat_mimic(int mc)
 
 void discover_mimic(const coord_def& pos)
 {
+    item_def* item = item_mimic_at(pos);
+    const bool feature_mimic = !item && feature_mimic_at(pos);
     // Is there really a mimic here?
-    if (!mimic_at(pos))
+    if (!item && !feature_mimic)
         return;
 
     const dungeon_feature_type feat = grd(pos);
     const feature_def feat_d = get_feature_def(feat);
+    const std::string name = feature_mimic ? feat_type_name(feat) :
+               item->base_type == OBJ_GOLD ? "pile of gold coins"
+                                           : item->name(DESC_BASENAME);
 
 #ifdef USE_TILE
     tileidx_t tile = tileidx_feature(pos);
@@ -884,51 +890,64 @@ void discover_mimic(const coord_def& pos)
     if (mon && shove_monster(mon))
     {
         simple_monster_message(mon,
-                               make_stringf(" is pushed out of the %s.",
-                                            feat_type_name(feat)).c_str());
+            make_stringf(" is pushed out of the %s.", name.c_str()).c_str());
         dprf("Moved to (%d, %d).", mon->pos().x, mon->pos().y);
     }
     else if (mon)
         die("Cannot move monster out of the way.");
 
-    // If we took a note of this feature, then note that it was a mimic.
-    if (!is_boring_terrain(feat))
+    if (feature_mimic)
     {
-        std::string desc = feature_description(pos, false, DESC_CAP_THE, false);
-        take_note(Note(NOTE_FEAT_MIMIC, 0, 0, desc.c_str()));
-    }
+        // If we took a note of this feature, then note that it was a mimic.
+        if (!is_boring_terrain(feat))
+        {
+            std::string desc = feature_description(pos, false, DESC_CAP_THE, false);
+            take_note(Note(NOTE_FEAT_MIMIC, 0, 0, desc.c_str()));
+        }
 
-    // Remove the feature and clear the flag.
-    unnotice_feature(level_pos(level_id::current(), pos));
-    grd(pos) = DNGN_FLOOR;
-    env.level_map_mask(pos) &= !MMT_MIMIC;
-    set_terrain_changed(pos);
-    remove_markers_and_listeners_at(pos);
+        // Remove the feature and clear the flag.
+        unnotice_feature(level_pos(level_id::current(), pos));
+        grd(pos) = DNGN_FLOOR;
+        env.level_map_mask(pos) &= !MMT_MIMIC;
+        set_terrain_changed(pos);
+        remove_markers_and_listeners_at(pos);
+    }
 
     // Generate and place the monster.
     mgen_data mg;
     mg.behaviour = BEH_WANDER;
-    mg.cls       = MONS_FEATURE_MIMIC;
-    mg.pos      = pos;
+    mg.cls = item ? get_item_mimic_type(*item) : MONS_FEATURE_MIMIC;
+    mg.pos = pos;
     const int mid = place_monster(mg, true);
     ASSERT(mid != -1);
     monster* mimic = &menv[mid];
     ASSERT(mimic->pos() == pos);
 
+    if (item && !mimic->pickup_misc(*item, 0))
+        die("Mimic failed to pickup its item.");
+
     mimic->flags |= MF_KNOWN_MIMIC;
     mimic->flags &= ~MF_JUST_SUMMONED;
 
-    if (feat_is_stone_stair(feat))
-        mimic->colour = feat_d.em_colour;
-    else
-        mimic->colour = feat_d.colour;
+    if (feature_mimic)
+    {
+        if (feat_is_stone_stair(feat))
+            mimic->colour = feat_d.em_colour;
+        else
+            mimic->colour = feat_d.colour;
 
-    mimic->props["feat_type"] = static_cast<short>(
-            (feat == DNGN_OPEN_DOOR) ? DNGN_CLOSED_DOOR : feat);
+        mimic->props["feat_type"] = static_cast<short>(
+                (feat == DNGN_OPEN_DOOR) ? DNGN_CLOSED_DOOR : feat);
+
+        // Necessary for door mimics to force LOS update.
+        mimic->set_position(pos);
 
 #ifdef USE_TILE
-    mimic->props["tile_idx"] = static_cast<int>(tile);
+        mimic->props["tile_idx"] = static_cast<int>(tile);
 #endif
+    }
+    else
+        mimic->colour = get_mimic_colour(mimic);
 
     behaviour_event(mimic, ME_ALERT, MHITYOU);
 
@@ -936,14 +955,15 @@ void discover_mimic(const coord_def& pos)
     if (mon && mon->friendly())
         behaviour_event(mon, ME_WHACK, mid);
 
-    // Necessary for door mimics to force LOS update.
-    mimic->set_position(pos);
-
     // Announce the mimic.
-    if (feat == DNGN_OPEN_DOOR)
+    if (feature_mimic && feat == DNGN_OPEN_DOOR)
         simple_monster_message(mimic, " slams shut!", MSGCH_WARN);
     else if (mons_near(mimic))
-        mprf(MSGCH_WARN, "It was %s!", mimic->name(DESC_NOCAP_A).c_str());
+        mprf(MSGCH_WARN, "The %s is a mimic!", name.c_str());
+
+    // Just in case there's another one.
+    if (mimic_at(pos))
+        discover_mimic(pos);
 }
 
 void discover_mimic(monster* mimic)
@@ -2166,8 +2186,6 @@ void define_monster(monster* mons)
     }
 
     default:
-        if (mons_is_item_mimic(mcls))
-            col = get_mimic_colour(mons);
         break;
     }
 

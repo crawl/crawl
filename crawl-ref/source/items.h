@@ -149,6 +149,7 @@ bool get_item_by_name(item_def *item, char* specs,
                       bool create_for_real = false);
 
 void move_items(const coord_def r, const coord_def p);
+monster_type get_item_mimic_type(const item_def &item);
 // Returns the Orb's position on the ground, or origin()
 coord_def orb_position();
 

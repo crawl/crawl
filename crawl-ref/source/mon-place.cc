@@ -1484,17 +1484,6 @@ static int _place_monster_aux(const mgen_data &mg,
         return (-1);
     }
 
-    if (mons_is_item_mimic(mg.cls))
-    {
-        // Mimics who mimic thin air get the axe.
-        if (!give_mimic_item(mon))
-        {
-            mon->reset();
-            mgrd(fpos) = NON_MONSTER;
-            return (-1);
-        }
-    }
-
     if (mg.props.exists("serpent_of_hell_flavour"))
         mon->props["serpent_of_hell_flavour"] =
             mg.props["serpent_of_hell_flavour"].get_int();

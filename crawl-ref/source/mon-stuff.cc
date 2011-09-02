@@ -69,110 +69,6 @@
 
 static bool _wounded_damaged(mon_holy_type holi);
 
-static int _make_mimic_item(monster_type type)
-{
-    int it = items(0, OBJ_RANDOM, OBJ_RANDOM, true, 0, 0);
-
-    if (it == NON_ITEM)
-        return NON_ITEM;
-
-    item_def &item = mitm[it];
-
-    item.base_type = OBJ_UNASSIGNED;
-    item.sub_type  = 0;
-    item.special   = 0;
-    item.colour    = 0;
-    item.flags     = 0;
-    item.quantity  = 1;
-    item.plus      = 0;
-    item.plus2     = 0;
-    item.link      = NON_ITEM;
-
-    int prop;
-    switch (type)
-    {
-    case MONS_WEAPON_MIMIC:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = random2(WPN_MAX_NONBLESSED + 1);
-
-        prop = random2(100);
-
-        if (prop < 20)
-            make_item_randart(item);
-        else if (prop < 50)
-            set_equip_desc(item, ISFLAG_GLOWING);
-        else if (prop < 80)
-            set_equip_desc(item, ISFLAG_RUNED);
-        else if (prop < 85)
-            set_equip_race(item, ISFLAG_ORCISH);
-        else if (prop < 90)
-            set_equip_race(item, ISFLAG_DWARVEN);
-        else if (prop < 95)
-            set_equip_race(item, ISFLAG_ELVEN);
-        break;
-
-    case MONS_ARMOUR_MIMIC:
-        item.base_type = OBJ_ARMOUR;
-        do
-            item.sub_type = random2(NUM_ARMOURS);
-        while (armour_is_hide(item));
-
-        prop = random2(100);
-
-        if (prop < 20)
-            make_item_randart(item);
-        else if (prop < 40)
-            set_equip_desc(item, ISFLAG_GLOWING);
-        else if (prop < 60)
-            set_equip_desc(item, ISFLAG_RUNED);
-        else if (prop < 80)
-            set_equip_desc(item, ISFLAG_EMBROIDERED_SHINY);
-        else if (prop < 85)
-            set_equip_race(item, ISFLAG_ORCISH);
-        else if (prop < 90)
-            set_equip_race(item, ISFLAG_DWARVEN);
-        else if (prop < 95)
-            set_equip_race(item, ISFLAG_ELVEN);
-        break;
-
-    case MONS_SCROLL_MIMIC:
-        item.base_type = OBJ_SCROLLS;
-        item.sub_type = random2(NUM_SCROLLS);
-        break;
-
-    case MONS_POTION_MIMIC:
-        item.base_type = OBJ_POTIONS;
-        do
-            item.sub_type = random2(NUM_POTIONS);
-        while (is_blood_potion(item) || is_fizzing_potion(item));
-        break;
-
-    case MONS_GOLD_MIMIC:
-    default:
-        item.base_type = OBJ_GOLD;
-        item.quantity = 5 + random2(1000);
-        break;
-    }
-
-    item_colour(item); // also sets special vals for scrolls/potions
-
-    return (it);
-}
-
-const item_def *give_mimic_item(monster* mimic)
-{
-    ASSERT(mimic != NULL && mons_is_item_mimic(mimic->type));
-
-    mimic->destroy_inventory();
-    int it = _make_mimic_item(mimic->type);
-    if (it == NON_ITEM)
-        return 0;
-    if (!mimic->pickup_misc(mitm[it], 0))
-        die("Mimic failed to pickup its item.");
-    ASSERT(mimic->inv[MSLOT_MISCELLANY] != NON_ITEM);
-    return (&mitm[mimic->inv[MSLOT_MISCELLANY]]);
-}
-
 item_def &get_mimic_item(const monster* mimic)
 {
     ASSERT(mimic != NULL && mons_is_item_mimic(mimic->type));
@@ -195,10 +91,17 @@ bool feature_mimic_at(const coord_def &c)
     return map_masked(c, MMT_MIMIC);
 }
 
-// Will have item mimics too later.
+item_def* item_mimic_at(const coord_def &c)
+{
+    for (stack_iterator si(c); si; ++si)
+        if (si->flags & ISFLAG_MIMIC)
+            return &*si;
+    return NULL;
+}
+
 bool mimic_at(const coord_def &c)
 {
-    return feature_mimic_at(c);
+    return (feature_mimic_at(c) || item_mimic_at(c));
 }
 
 // Sets the colour of a mimic to match its description... should be called
@@ -3082,15 +2985,8 @@ static coord_def _random_monster_nearby_habitable_space(const monster& mon,
     return (target);
 }
 
-static void _mimic_update_stash(const monster* mons)
-{
-    if (mons_is_item_mimic(mons->type))
-        StashTrack.update_stash(mons->pos());
-}
-
 bool monster_blink(monster* mons, bool quiet)
 {
-    _mimic_update_stash(mons);
     coord_def near = _random_monster_nearby_habitable_space(*mons, false,
                                                             true);
 
@@ -4377,7 +4273,6 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     if (!silent)
         simple_monster_message(mons, " disappears!");
 
-    _mimic_update_stash(mons);
     const coord_def oldplace = mons->pos();
 
     // Pick the monster up.
@@ -4388,27 +4283,6 @@ void monster_teleport(monster* mons, bool instan, bool silent)
 
     // And slot it back into the grid.
     mgrd(mons->pos()) = mons->mindex();
-
-    // Mimics change form/colour when teleported.
-    if (mons_is_mimic(mons->type))
-    {
-        monster_type old_type = mons->type;
-        // Feature mimics also turn into item mimics on teleport. This is
-        // probably not intentional, but new features randomly appearing
-        // would be even more of a give-away than new items. (jpeg)
-        mons->type = static_cast<monster_type>(
-                                         MONS_GOLD_MIMIC + random2(5));
-        mons->destroy_inventory();
-        give_mimic_item(mons);
-        mons->colour = get_mimic_colour(mons);
-        was_seen = false;
-
-        // If it's changed form, you won't recognise it.
-        // This assumes that a non-gold mimic turning into another item of
-        // the same description is really, really unlikely.
-        if (old_type != MONS_GOLD_MIMIC || mons->type != MONS_GOLD_MIMIC)
-            was_seen = false;
-    }
 
     const bool now_visible = mons_near(mons);
     if (!silent && now_visible)
@@ -4439,16 +4313,6 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     mons->apply_location_effects(oldplace);
 
     mons_relocated(mons);
-
-    // Teleporting mimics change form - if they reappear out of LOS, they are
-    // no longer known.
-    if (mons_is_mimic(mons->type))
-    {
-        if (now_visible)
-            discover_mimic(mons);
-        else
-            mons->flags &= ~MF_KNOWN_MIMIC;
-    }
 }
 
 void mons_clear_trapping_net(monster* mon)

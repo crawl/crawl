@@ -551,12 +551,6 @@ int mons_standard_level(int mcls)
     case MONS_MANTICORE:
     case MONS_PLANT:
     case MONS_WYVERN:
-    // item mimics
-    case MONS_ARMOUR_MIMIC:
-    case MONS_GOLD_MIMIC:
-    case MONS_POTION_MIMIC:
-    case MONS_SCROLL_MIMIC:
-    case MONS_WEAPON_MIMIC:
         return 12;
 
     case MONS_BIG_KOBOLD:
