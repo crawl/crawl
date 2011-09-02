@@ -725,7 +725,7 @@ int letter_to_index(int the_letter)
         // returns range [26-51] {dlb}
         the_letter -= ('A' - 26);
 
-    return (-1);
+    return (the_letter);
 }
 
 maybe_bool frombool(bool b)
