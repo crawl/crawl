@@ -1,0 +1,290 @@
+###################################
+# Growing Garden of Fedhas (mumra)
+
+#####################################################
+# This version has saplings morph from plants
+# (and adjusted timings to make it vaguely fair!)
+
+{{
+
+function callback.fedhas_growing_garden_grow(data, triggerable,
+                                             triggerer, marker, ev)
+ local growth_slaves = {}
+
+-- TODO: additionally, squares outside the vault could "grow" to become
+--       green (i.e. grass). This is currently possible, but only with
+--       a lot of hassle.
+
+ local function grow_plants (gslaves,chance,seen_plants)
+   local yp = dgn.point(you.pos())
+   local plants = 0
+   for _, p in ipairs(gslaves) do
+     -- Grow a plant?
+     if dgn.mons_at(p.x, p.y) == nil and p ~= yp and
+        dgn.is_passable(p.x, p.y) and crawl.one_chance_in(chance)
+     then
+       if dgn.create_monster(p.x, p.y, "plant") and you.see_cell(p.x,p.y) then
+         plants = plants + 1
+       end
+     end
+   end
+   if seen_plants ~= true and plants>0 then
+     crawl.mpr("Green shoots are pushing up through the earth!")
+     return true
+   end
+   return seen_plants
+ end
+
+ local function grow_bushes (gslaves,chance,seen_plants)
+   local yp = dgn.point(you.pos())
+   local plants = 0
+   for _, p in ipairs(gslaves) do
+     -- Grow a bush?
+     if dgn.mons_at(p.x, p.y) == nil and p ~= yp and
+        dgn.is_passable(p.x, p.y) and crawl.one_chance_in(chance)
+     then
+       if dgn.create_monster(p.x, p.y, "bush") and you.see_cell(p.x,p.y) then
+         plants = plants + 1
+       end
+     end
+   end
+   if seen_plants ~= true and plants>0 then
+     crawl.mpr("Bushes burst out of the ground!")
+     return true
+   end
+   return seen_plants
+ end
+
+ local function grow_trees (gslaves,chance,seen_plants)
+   local yp = dgn.point(you.pos())
+   local plants = 0
+   for _, p in ipairs(gslaves) do
+     -- Grow a tree?
+     if dgn.mons_at(p.x, p.y) == nil and p ~= yp and
+        dgn.is_passable(p.x, p.y) and crawl.one_chance_in(chance)
+     then
+       if dgn.terrain_changed(p.x, p.y, "tree",false,false,false) and
+          you.see_cell(p.x,p.y)
+       then
+         plants = plants + 1
+       end
+     end
+   end
+   if seen_plants ~= true and plants>0 then
+     crawl.mpr("Huge trees erupt suddenly from the floor!")
+     return true
+   end
+   return seen_plants
+ end
+
+ local function grow_saplings (gslaves)
+   local plants = 0
+   local sapling
+   for _, p in ipairs(gslaves) do
+     -- Grow sapling into oklob
+     sapling = dgn.mons_at(p.x, p.y)
+     if sapling ~= nil and sapling.name == "plant" then
+       sapling.dismiss()
+       if dgn.create_monster(p.x, p.y, "oklob sapling") and
+          you.see_cell(p.x,p.y)
+       then
+         plants = plants + 1
+       end
+     end
+   end
+   if plants == 1 then
+     crawl.mpr("A plant begins to grow acid sacs!")
+   end
+   if plants > 1 then
+     crawl.mpr("Some of the plants begin to grow acid sacs!")
+   end
+ end
+
+ local function grow_oklobs (gslaves)
+   local plants = 0
+   local sapling
+   for _, p in ipairs(gslaves) do
+     -- Grow sapling into oklob
+     sapling = dgn.mons_at(p.x, p.y)
+     if sapling ~= nil and sapling.name == "oklob sapling" then
+       sapling.dismiss()
+       if dgn.create_monster(p.x, p.y, "oklob plant") and
+          you.see_cell(p.x,p.y)
+       then
+         plants = plants + 1
+       end
+     end
+   end
+   if plants == 1 then
+     crawl.mpr("The sapling grows bigger and tougher!")
+   end
+   if plants > 1 then
+     crawl.mpr("The saplings grow bigger and tougher!")
+   end
+ end
+
+ local function grow_fruit (gslaves)
+   local fruits = 0
+   for _, p in ipairs(gslaves) do
+     if dgn.feature_name(dgn.grid(p.x,p.y)) == "tree" then
+       -- Iterate
+       for p2 in iter.rect_iterator(dgn.point(p.x-1, p.y-1), 
+                                    dgn.point(p.x+1, p.y+1))
+       do
+         if dgn.is_passable(p2.x, p2.y) and crawl.one_chance_in(10) then
+           local fruit = "apple"
+           if fruits > 0 then
+             fruit = "pear / apple / choko / snozzcumber / apricot / orange / " ..
+                     "banana / strawberry / rambutan / lychee / sultana"
+           end
+           dgn.create_item(p2.x,p2.y, fruit)
+           if you.see_cell(p2.x,p2.y) then
+             fruits = fruits + 1
+           end
+         end
+       end
+     end
+   end
+   if fruits==1 then
+     crawl.mpr("An apple falls from the tree!")
+   end
+   if fruits>1 then
+     crawl.mpr("Fruits fall from the boughs of the trees!")
+   end
+ end
+
+ if data.turns ~= you.turns() then
+   data.tc = data.tc + 1
+   data.turns = you.turns()
+ end
+
+ if data.triggered == true then
+   return
+ end
+
+-- Phase 1 (plants)
+ if (data.tc > 2) and data.plants1 ~= true then
+   growth_slaves = dgn.find_marker_positions_by_prop("growth_phase", 1)
+   data.seen_plants = grow_plants(growth_slaves,3,data.seen_plants)
+   data.plants1 = true
+ end
+ -- Plants that will become saplings here 
+ if (data.tc > 3) and data.protosaplings ~= true then
+    growth_slaves = dgn.find_marker_positions_by_prop("growth_sapling", 1)
+    data.seen_plants = grow_plants(growth_slaves,1,data.seen_plants)
+    data.protosaplings = true
+ end
+
+-- Phase 2 (plants)
+ if (data.tc > 5) and data.plants2 ~= true then
+   growth_slaves = dgn.find_marker_positions_by_prop("growth_phase", 2)
+   data.seen_plants = grow_plants(growth_slaves,2,data.seen_plants)
+   data.plants2 = true
+ end
+ -- Saplings here 
+ if (data.tc > 7) and data.saplings ~= true then
+   growth_slaves = dgn.find_marker_positions_by_prop("growth_sapling", 1)
+   grow_saplings(growth_slaves)
+   data.saplings = true
+ end
+
+-- Phase 3 (plants)
+ if (data.tc > 9) and data.plants3 ~= true then
+   growth_slaves = dgn.find_marker_positions_by_prop("growth_phase", 3)
+   data.seen_plants = grow_plants(growth_slaves,3,data.seen_plants)
+   data.plants3 = true
+ end
+
+-- Phase 4 (plants)
+ if (data.tc > 10) and data.plants4 ~= true then
+   growth_slaves = dgn.find_marker_positions_by_prop("growth_phase", 4)
+   data.seen_plants = grow_plants(growth_slaves,4,data.seen_plants)
+   data.plants4 = true
+ end
+ -- Oklobs at this point
+ if (data.tc > 11) and data.oklobs ~= true then
+   growth_slaves = dgn.find_marker_positions_by_prop("growth_sapling", 1)
+   grow_oklobs(growth_slaves)
+   data.oklobs = true
+ end
+
+-- Phase 5 (bushes)
+ if (data.tc > 13) and data.plants5 ~= true then
+   growth_slaves = dgn.find_marker_positions_by_prop("growth_phase", 5)
+   grow_bushes(growth_slaves,3,false)
+   data.plants5 = true
+ end
+
+-- Phase 6 (trees)
+ if (data.tc > 16) and data.plants6 ~= true then
+   growth_slaves = dgn.find_marker_positions_by_prop("growth_phase", 6)
+   grow_trees(growth_slaves,2,false)
+   data.plants6 = true
+ end
+
+-- Final phase (fruit)
+ if (data.tc > 20) then
+   growth_slaves = dgn.find_marker_positions_by_prop("growth_phase", 6)
+   grow_fruit(growth_slaves)
+   data.triggered = true
+ end
+
+end
+
+}}
+
+NAME:	fedhas_growing_garden
+TAGS:   uniq_altar_fedhas temple_overflow_fedhas mini_float
+TAGS:   no_item_gen no_monster_gen no_rotate
+DEPTH:	D:8-16,Lair:2-6,Snake:2-4
+# Shuffle the growth stages
+SUBST:	2 = 1:10 2:50
+SUBST:	3 = 2:20 3:50
+SUBST:	4 = 2:5 3:15 4:50
+SUBST:	5 = .:5 3:5 6:5 4:20 5:50
+SUBST:	6 = .:20 5:10 6:50
+SUBST:  X = x:20 .:10 6:10
+{{
+	-- 2-4 saplings
+	local num_saplings = crawl.random2(3)+2
+	nsubst("2 = " .. num_saplings .. ":A / *:2")
+}}
+# Setup the markers
+{{
+lua_marker("1", portal_desc { growth_phase=1 })
+lua_marker("2", portal_desc { growth_phase=2 })
+lua_marker("3", portal_desc { growth_phase=3 })
+lua_marker("4", portal_desc { growth_phase=4 })
+lua_marker("5", portal_desc { growth_phase=5 })
+lua_marker("6", portal_desc { growth_phase=6 })
+lua_marker("A", portal_desc { growth_sapling=1 })
+-- Setup the trigger (either altar or sapling LOS)
+local tm = TriggerableFunction:new{func="callback.fedhas_growing_garden_grow",
+  repeated=true, data={turns=you.turns(), tc=1, triggered=false, plants1=false,plants2=false,plants3=false,plants4=false,plants5=false,plants6=false,seen_plants=false,saplings=false,protosaplings=false,oklobs=false} }
+tm:add_triggerer(DgnTriggerer:new{type="player_los"})
+lua_marker('_', tm)
+}}
+KFEAT:	_ = altar_fedhas
+# Bait
+KITEM:	B = pear / apple / choko / snozzcumber / apricot / orange / banana / rambutan / lychee
+# Replace it all with floor
+KFEAT:	  BA123456 = floor
+FTILE:  BA._123456 = FLOOR_DIRT
+COLOUR: BA._123456 = BROWN
+MAP
+   xxxx@xxxx
+  xxXXX.XXXxx
+ xxX6655566Xxx
+xxX655444556Xxx
+xX65443334456Xx
+xX65432223456Xx
+xX54322122345Xx
+@.54321_12345.@
+xX54322B22345Xx
+xX65432223456Xx
+xX65443334456Xx
+xxX655444556Xxx
+ xxX6655566Xxx
+  xxXXX.XXXxx
+   xxxx@xxxx
+ENDMAP
