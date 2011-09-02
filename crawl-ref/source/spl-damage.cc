@@ -799,8 +799,6 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
     noisy(4, beam.target);
 
     behaviour_event(mons, ME_ANNOY, MHITYOU);
-    if (mons_is_mimic(mons->type))
-        mimic_alert(mons);
 
     enable_attack_conducts(conducts);
 

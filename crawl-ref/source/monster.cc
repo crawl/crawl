@@ -1146,6 +1146,9 @@ bool monster::pickup(item_def &item, int slot, int near, bool force_merge)
         return (false);
     }
 
+    if (item.flags & ISFLAG_MIMIC && !mons_is_item_mimic(type))
+        return (false);
+
     dungeon_events.fire_position_event(
         dgn_event(DET_ITEM_PICKUP, pos(), 0, item.index(),
                   mindex()),

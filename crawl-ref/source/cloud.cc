@@ -1091,11 +1091,6 @@ int actor_apply_cloud(actor *act)
     const bool player = act->is_player();
     monster *mons = !player? act->as_monster() : NULL;
 
-    // [ds] Old code made mimics cloud-immune always. New code treats
-    // them like any other critter.
-    if (!player && mons_is_mimic(mons->type))
-        mimic_alert(mons);
-
     if (_actor_cloud_immune(act, cloud))
         return 0;
 

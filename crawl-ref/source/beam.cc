@@ -2186,35 +2186,6 @@ void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only)
     pbolt.is_tracer = false;
 }
 
-// When a mimic is hit by a ranged attack, it teleports away (the slow
-// way) and changes its appearance - the appearance change is in
-// monster_teleport() in mon-stuff.cc.
-void mimic_alert(monster* mimic)
-{
-    if (!mimic->alive())
-        return;
-
-    bool should_id = !testbits(mimic->flags, MF_KNOWN_MIMIC)
-                     && mimic->observable();
-
-    // If we got here, we at least got a resists message, if not
-    // a full wounds printing. Thus, might as well id the mimic.
-    if (mimic->has_ench(ENCH_TP) || mons_is_feat_mimic(mimic->type))
-    {
-        if (should_id)
-            discover_mimic(mimic);
-
-        return;
-    }
-
-    const bool instant_tele = !one_chance_in(3);
-    monster_teleport(mimic, instant_tele);
-
-    // At least for this short while, we know it's a mimic.
-    if (!instant_tele && should_id)
-        discover_mimic(mimic);
-}
-
 static void _create_feat_at(coord_def center,
                             dungeon_feature_type overwriteable,
                             dungeon_feature_type newfeat)
@@ -4062,10 +4033,6 @@ void bolt::enchantment_affect_monster(monster* mon)
 
     if (mon->alive())           // Aftereffects.
     {
-        // Mimics become known.
-        if (mons_is_mimic(mon->type))
-            mimic_alert(mon);
-
         // Message or record the success/failure.
         switch (ench_result)
         {
@@ -4126,31 +4093,20 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         }
     }
 
-    bool wake_mimic = true;
-
     // Handle missile effects.
     if (item && item->base_type == OBJ_MISSILES)
     {
         // SPMSL_POISONED handled via callback _poison_hit_victim() in
         // item_use.cc
-        if (item->special == SPMSL_CURARE)
-        {
-            if (ench_power == AUTOMATIC_HIT
-                && _curare_hits_monster(agent(), mon, 2)
-                && !mon->alive())
-            {
-                wake_mimic = false;
-            }
-        }
+        if (item->special == SPMSL_CURARE && ench_power == AUTOMATIC_HIT)
+            _curare_hits_monster(agent(), mon, 2);
     }
 
     if (name == "bolt of energy"
         || origin_spell == SPELL_QUICKSILVER_BOLT) // purple draconian breath
         debuff_monster(mon);
 
-    if (wake_mimic && mons_is_mimic(mon->type))
-        mimic_alert(mon);
-    else if (dmg)
+    if (dmg)
         beogh_follower_convert(mon, true);
 
     if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE) ||

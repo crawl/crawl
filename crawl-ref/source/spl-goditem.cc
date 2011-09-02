@@ -975,8 +975,6 @@ bool cast_smiting(int pow, monster* mons)
         mprf("You smite %s!", mons->name(DESC_NOCAP_THE).c_str());
 
         behaviour_event(mons, ME_ANNOY, MHITYOU);
-        if (mons_is_mimic(mons->type))
-            mimic_alert(mons);
     }
 
     enable_attack_conducts(conducts);

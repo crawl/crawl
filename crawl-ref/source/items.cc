@@ -4048,3 +4048,16 @@ bool player_has_orb()
     }
     return false;
 }
+
+monster_type get_item_mimic_type(const item_def &item)
+{
+    switch (item.base_type)
+    {
+    case OBJ_GOLD:    return MONS_GOLD_MIMIC;
+    case OBJ_WEAPONS: return MONS_WEAPON_MIMIC;
+    case OBJ_ARMOUR:  return MONS_ARMOUR_MIMIC;
+    case OBJ_SCROLLS: return MONS_SCROLL_MIMIC;
+    case OBJ_POTIONS: return MONS_POTION_MIMIC;
+    default:          return MONS_PROGRAM_BUG;
+    }
+}

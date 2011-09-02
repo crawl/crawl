@@ -320,7 +320,6 @@ bool napalm_monster(monster* mons, const actor* who, int levels = 1,
                     bool verbose = true);
 void fire_tracer(const monster* mons, struct bolt &pbolt,
                   bool explode_only = false);
-void mimic_alert(monster* mimic);
 spret_type zapping(zap_type ztype, int power, bolt &pbolt,
                    bool needs_tracer = false, const char* msg = NULL,
                    bool fail = false);

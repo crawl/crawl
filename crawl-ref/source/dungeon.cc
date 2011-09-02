@@ -2037,10 +2037,14 @@ static void _ruin_level(Iterator ri,
 // Missing stairs are replaced in fixup_branch_stairs, but replacing
 // too many breaks interlevel connectivity, so we don't use a chance of 1.
   #define FEATURE_MIMIC_CHANCE 2
-  #define FEATURE_MIMIC_DEPTH 1
+  #define ITEM_MIMIC_CHANCE    1
+  #define FEATURE_MIMIC_DEPTH  1
+  #define ITEM_MIMIC_DEPTH     1
 #else
   #define FEATURE_MIMIC_CHANCE 100
-  #define FEATURE_MIMIC_DEPTH 10
+  #define ITEM_MIMIC_CHANCE    500
+  #define FEATURE_MIMIC_DEPTH   10
+  #define ITEM_MIMIC_DEPTH       7
 #endif
 static void _place_feature_mimics(int level_number,
                                   dungeon_feature_type dest_stairs_type)
@@ -2122,6 +2126,28 @@ static void _place_feature_mimics(int level_number,
     }
 }
 
+static void _place_item_mimics(int level_number)
+{
+
+    if (level_number < ITEM_MIMIC_DEPTH)
+        return;
+
+    for (int i = 0; i < MAX_ITEMS; i++)
+    {
+        item_def& item(mitm[i]);
+        if (!item.defined() || !in_bounds(item.pos)
+            || get_item_mimic_type(item) == MONS_PROGRAM_BUG
+            || mimic_at(item.pos))
+        {
+            continue;
+        }
+
+        if (one_chance_in(ITEM_MIMIC_CHANCE))
+            item.flags |= ISFLAG_MIMIC;
+    }
+
+}
+
 static void _build_dungeon_level(int level_number, level_area_type level_type,
                                  dungeon_feature_type dest_stairs_type)
 {
@@ -2201,6 +2227,7 @@ static void _build_dungeon_level(int level_number, level_area_type level_type,
     _fixup_misplaced_items();
 
     link_items();
+    _place_item_mimics(level_number);
 
     if (!player_in_branch(BRANCH_COCYTUS)
         && !player_in_branch(BRANCH_SWAMP)

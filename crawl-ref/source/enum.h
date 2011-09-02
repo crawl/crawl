@@ -1652,6 +1652,8 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 
     ISFLAG_UNOBTAINABLE      = 0x00080000,  // vault on display
 
+    ISFLAG_MIMIC             = 0x00100000,  // mimic
+
     ISFLAG_NO_RACE           = 0x00000000,  // used for clearing these flags
     ISFLAG_ORCISH            = 0x01000000,  // low quality items
     ISFLAG_DWARVEN           = 0x02000000,  // strong and robust items

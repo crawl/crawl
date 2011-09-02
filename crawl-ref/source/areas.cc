@@ -415,27 +415,15 @@ void create_sanctuary(const coord_def& center, int time)
                 mon->behaviour = BEH_SEEK;
                 behaviour_event(mon, ME_EVAL, MHITYOU);
             }
-            else if (!mon->wont_attack())
+            else if (!mon->wont_attack() && mons_is_influenced_by_sanctuary(mon))
             {
-                if (mons_is_mimic(mon->type))
-                {
-                    mimic_alert(mon);
-                    if (you.can_see(mon))
-                    {
-                        scare_count++;
-                        seen_mon = mon;
-                    }
-                }
-                else if (mons_is_influenced_by_sanctuary(mon))
-                {
-                    mons_start_fleeing_from_sanctuary(mon);
+                mons_start_fleeing_from_sanctuary(mon);
 
-                    // Check to see that monster is actually fleeing.
-                    if (mons_is_fleeing(mon) && you.can_see(mon))
-                    {
-                        scare_count++;
-                        seen_mon = mon;
-                    }
+                // Check to see that monster is actually fleeing.
+                if (mons_is_fleeing(mon) && you.can_see(mon))
+                {
+                    scare_count++;
+                    seen_mon = mon;
                 }
             }
         }
