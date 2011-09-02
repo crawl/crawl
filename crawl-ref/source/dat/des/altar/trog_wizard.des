@@ -54,7 +54,7 @@ lua_marker('#', tm)
 FTILE:  .#_ = FLOOR_PEBBLE_BROWN
 FTILE:  1 = FLOOR_PEBBLE_DARKGRAY
 COLOUR: .#_ = brown
-COLOUR:	1 = darkgray
+COLOUR: 1 = darkgray
 KFEAT:  1 = .
 # A terrified wizard whose spells have been taken away
 # (he refused to convert)
@@ -62,7 +62,7 @@ MARKER: 1 = lua:portal_desc {slave_name="trog_wizard"}
 MARKER: 1 = lua:MonPropsMarker:new {description="With wild eyes, the wizard frantically mouths words and waves his arms, but is unable to cast a single spell"}
 KMONS:  1 = wizard name:terrified name_adjective spells:.
 KPROP:  1 = no_rtele_into
-KFEAT:	# = iron_grate
+KFEAT:  # = iron_grate
 MAP
 ccccccccc
 c.......c
