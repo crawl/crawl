@@ -258,7 +258,7 @@ int book_rarity(uint8_t which_book)
     case BOOK_YOUNG_POISONERS:
     case BOOK_STALKING:
     case BOOK_WAR_CHANTS:
-    case BOOK_BRANDS:
+    case BOOK_DEBILITATION:
         return 5;
 
     case BOOK_CLOUDS:

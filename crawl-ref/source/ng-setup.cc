@@ -738,7 +738,7 @@ static void _give_items_skills(const newgame_def& ng)
         _update_weapon(ng);
 
         // And give them a book
-        newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_BRANDS);
+        newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_DEBILITATION);
 
         you.skills[SK_FIGHTING]             = 1;
         you.skills[range_skill(you.inv[1])] = 2;
