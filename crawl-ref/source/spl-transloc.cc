@@ -871,6 +871,9 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
             return SPRET_SUCCESS;
         }
     }
+    // Item mimics land in front of you (and they will be revealed).
+    else if (item.flags & ISFLAG_MIMIC)
+        new_spot =  beam.path_taken[0];
     // If power is high enough it'll just come straight to you.
     else
         new_spot = you.pos();
