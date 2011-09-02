@@ -1963,7 +1963,7 @@ static int _serpent_of_hell_color(const monster* mon)
         return ETC_IRON;
         break;
     case BRANCH_TARTARUS:
-        return ETC_NECRO;
+        return ETC_DEATH;
         break;
     default:
         return ETC_FIRE;
