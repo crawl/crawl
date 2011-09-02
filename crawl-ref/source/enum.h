@@ -1511,6 +1511,7 @@ enum enchant_type
     ENCH_ROUSED,        // Monster has been roused to greatness
     ENCH_BREATH_WEAPON, // just a simple timer for dragon breathweapon spam
     ENCH_DEATHS_DOOR,
+    ENCH_ROLLING,       // Boulder Beetle in ball form
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

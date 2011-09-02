@@ -81,6 +81,7 @@ enum monster_info_flags
     MB_FIREWOOD,
     MB_TWO_WEAPONS,
     MB_NO_REGEN,
+    MB_ROLLING,
     NUM_MB_FLAGS
 };
 
