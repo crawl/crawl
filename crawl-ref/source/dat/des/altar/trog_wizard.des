@@ -1,0 +1,74 @@
+##############################################################################
+# Variation on classic trog_book - this time he's caught a real live wizard.
+# (mumra)
+
+{{
+
+function callback.trog_wizard_convert_wizard(data, triggerable,
+                                          triggerer, marker, ev)
+  if data.turns ~= you.turns() then
+    data.tc = data.tc + 1
+    data.turns = you.turns()
+  end
+
+-- Allow slightly longer than trog_book for the situation to sink in
+-- since there's nothing to apport
+  if data.tc < 5 then
+    return
+  end
+
+  if data.triggered == true then
+    return
+  end
+
+  local m = dgn.find_marker_positions_by_prop("slave_name", "trog_wizard")[1]
+  if m ~= nil then
+    local _x, _y = m:xy()
+
+    -- Only burn the wizard when you see both the altar and the wizard.
+    if not you.see_cell(_x, _y) then
+      return
+    end
+
+    dgn.place_cloud(_x, _y, "flame", 15)
+    crawl.god_speaks("Trog", "Flames erupt from the bowels of the wizard! "
+                          .. "Trog roars with satisfaction!")
+    data.triggered = true
+  end
+end
+
+}}
+
+
+NAME:   trog_wizard
+TAGS:   uniq_altar_trog temple_overflow_trog generate_awake
+TAGS:   no_item_gen no_monster_gen no_trap_gen
+DEPTH:  D:3-17
+KFEAT:  _ = altar_trog
+{{
+local tm = TriggerableFunction:new{func="callback.trog_wizard_convert_wizard",
+  repeated=true, data={turns=you.turns(), tc=0, triggered=false} }
+tm:add_triggerer(DgnTriggerer:new{type="player_los"})
+lua_marker('#', tm)
+}}
+FTILE:  .#_ = FLOOR_PEBBLE_BROWN
+FTILE:  1 = FLOOR_PEBBLE_DARKGRAY
+COLOUR: .#_ = brown
+COLOUR:	1 = darkgray
+KFEAT:  1 = .
+# A terrified wizard whose spells have been taken away
+# (he refused to convert)
+MARKER: 1 = lua:portal_desc {slave_name="trog_wizard"}
+MARKER: 1 = lua:MonPropsMarker:new {description="With wild eyes, the wizard frantically mouths words and waves his arms, but is unable to cast a single spell"}
+KMONS:  1 = wizard name:terrified name_adjective spells:.
+KPROP:  1 = no_rtele_into
+KFEAT:	# = iron_grate
+MAP
+ccccccccc
+c.......c
+c.ccc...ccc
+c.c1#._....@
+c.ccc...ccc
+c.......c
+ccccccccc
+ENDMAP
