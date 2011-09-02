@@ -24,7 +24,6 @@
 #include "player.h"
 #include "random.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
 #include "libutil.h"
@@ -144,7 +143,7 @@ static int _mon_strength(monster_type mon_type)
         case MONS_ZOMBIE_LARGE:
             strength += 4;
             break;
-        case MONS_PANDEMONIUM_DEMON:        // base init has 4HD (!)
+        case MONS_PANDEMONIUM_LORD: // base init has 4HD (!)
             strength = 30;
             break;
         default:
@@ -364,10 +363,10 @@ static void _butterfly_wave(int power)
     _zotdef_danger_msg("You feel a sudden sense of peace!");
 }
 
-static void _beast_wave(int power)
+static void _hell_beast_wave(int power)
 {
-    wave_name("BEAST WAVE");
-    monster_type bst[] = {MONS_BEAST, END};
+    wave_name("HELL BEAST WAVE");
+    monster_type bst[] = {MONS_HELL_BEAST, END};
     _zotdef_fill_from_list(bst, 0, power); // full
     _zotdef_danger_msg("A hideous howling noise can be heard in the distance!");
 }
@@ -375,8 +374,7 @@ static void _beast_wave(int power)
 static void _frog_wave(int power)
 {
     wave_name("FROG WAVE");
-    monster_type frogs[] = {MONS_GIANT_FROG, MONS_GIANT_TOAD,
-                MONS_SPINY_FROG, MONS_BLINK_FROG, END};
+    monster_type frogs[] = {MONS_GIANT_FROG, MONS_SPINY_FROG, MONS_BLINK_FROG, END};
     monster_type boss[] = {MONS_PRINCE_RIBBIT, MONS_SPINY_FROG, MONS_BLINK_FROG, END};
     _zotdef_fill_from_list(frogs, 0, power); // full
     _zotdef_choose_boss(boss, power);
@@ -403,7 +401,7 @@ static void _wraith_wave(int power)
                 MONS_SPECTRAL_THING, END};
     _zotdef_fill_from_list(wraiths, 0, power); // full
     _zotdef_choose_boss(boss, power);
-    _zotdef_danger_msg("The hair rises on the back of your neck!");
+    _zotdef_danger_msg("You shudder with fear!");
 }
 
 static void _giant_wave(int power)
@@ -457,8 +455,8 @@ static void _pan_wave(int power)
     // Lobon in particular is almost unkillable
     monster_type boss[] = {MONS_MNOLEG, MONS_LOM_LOBON, MONS_CEREBOV,
                 MONS_GLOORX_VLOQ, MONS_GERYON, MONS_DISPATER,
-                MONS_ASMODEUS, MONS_ERESHKIGAL, MONS_PANDEMONIUM_DEMON, END};
-    monster_type weakboss[] = {MONS_PANDEMONIUM_DEMON, MONS_FIEND,
+                MONS_ASMODEUS, MONS_ERESHKIGAL, MONS_PANDEMONIUM_LORD, END};
+    monster_type weakboss[] = {MONS_PANDEMONIUM_LORD, MONS_FIEND,
                 MONS_PIT_FIEND, MONS_ICE_FIEND, MONS_BLIZZARD_DEMON, END};
 
     for (int i = 0; i <= NSLOTS; i++)
@@ -507,7 +505,7 @@ static void _zotdef_set_special_wave(int power)
             case 8: wave_fn = _golem_wave; wpow = 22; break;
             case 9: wave_fn = _human_wave; wpow = 12; break;
             case 10: wave_fn = _butterfly_wave; wpow = 1; break;
-            case 11: wave_fn = _beast_wave; wpow = 12; break;
+            case 11: wave_fn = _hell_beast_wave; wpow = 12; break;
             case 12: wave_fn = _frog_wave; wpow = 4; break;
             case 13: wave_fn = _bear_wave; wpow = 6; break;
             case 14: wave_fn = _wraith_wave; wpow = 8; break;

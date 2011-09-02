@@ -156,22 +156,6 @@ LUAFN(debug_bouncy_beam)
     return (0);
 }
 
-LUAFN(debug_never_die)
-{
-#if defined(WIZARD) || defined(DEBUG)
-    if (lua_isnone(ls, 1))
-    {
-        luaL_argerror(ls, 1, "needs a boolean argument");
-        return (0);
-    }
-    you.never_die = lua_toboolean(ls, 1);
-#else
-    luaL_error(ls, "only works if DEBUG or WIZARD is defined");
-#endif
-
-    return (0);
-}
-
 // If menv[] is full, dismiss all monsters not near the player.
 LUAFN(debug_cull_monsters)
 {
@@ -326,6 +310,36 @@ LUAFN(debug_seen_monsters_react)
     return (0);
 }
 
+static const char* disablements[] =
+{
+    "spawns",
+    "mon_act",
+    "mon_regen",
+    "player_regen",
+    "hunger",
+    "death",
+};
+
+LUAFN(debug_disable)
+{
+    COMPILE_CHECK(ARRAYSZ(disablements) == NUM_DISABLEMENTS);
+
+    const char* what = luaL_checkstring(ls, 1);
+    for (int dis = 0; dis < NUM_DISABLEMENTS; dis++)
+        if (what && !strcmp(what, disablements[dis]))
+        {
+            bool onoff = true;
+            if (lua_isboolean(ls, 2))
+                onoff = lua_toboolean(ls, 2);
+            crawl_state.disables.set(dis, onoff);
+            return (0);
+        }
+    luaL_argerror(ls, 1,
+                  make_stringf("unknown thing to disable: %s", what).c_str());
+
+    return (0);
+}
+
 const struct luaL_reg debug_dlib[] =
 {
 { "goto_place", debug_goto_place },
@@ -338,7 +352,6 @@ const struct luaL_reg debug_dlib[] =
 { "dump_map", debug_dump_map },
 { "test_explore", _debug_test_explore },
 { "bouncy_beam", debug_bouncy_beam },
-{ "never_die", debug_never_die },
 { "cull_monsters", debug_cull_monsters},
 { "dismiss_adjacent", debug_dismiss_adjacent},
 { "god_wrath", debug_god_wrath},
@@ -349,5 +362,6 @@ const struct luaL_reg debug_dlib[] =
 { "check_uniques", debug_check_uniques },
 { "viewwindow", debug_viewwindow },
 { "seen_monsters_react", debug_seen_monsters_react },
+{ "disable", debug_disable },
 { NULL, NULL }
 };

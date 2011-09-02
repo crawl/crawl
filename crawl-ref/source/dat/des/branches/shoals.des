@@ -16,6 +16,15 @@ function shoals_atoll_kraken_death(data, triggerable, triggerer, marker, ev)
     -- Force tide effects to be applied immediately.
     dgn.apply_tide()
 end
+
+function shoals_atoll_place_items(data, triggerable, triggerer, marker, ev)
+    local points = dgn.find_marker_positions_by_prop("tide_seed", 1)
+    for _, point in ipairs(points) do
+        for i = 1, 5 do
+            dgn.create_item(point.x, point.y, "star_item")
+        end
+    end
+end
 }}
 
 ##############################################################################
@@ -208,7 +217,6 @@ NAME:   shoals_atoll
 DEPTH:  Shoals
 KMONS:  1 = patrolling kraken
 KFEAT:  1 = deep_water
-KITEM:  1 = star_item, star_item, star_item, star_item, star_item
 KPROP:  1Wgw. = no_tide
 FHEIGHT: gw1 = 40
 MARKER: 1 = lua:MonPropsMarker:new {ancient_kraken="ancient_kraken"}
@@ -228,6 +236,14 @@ kraken_death_marker:add_triggerer(DgnTriggerer:new {
   target="ancient_kraken" })
 
 lua_marker("*", kraken_death_marker)
+
+local place_items_marker = TriggerableFunction:new {
+  func="shoals_atoll_place_items",
+  repeated=false,
+  props= {water_marker="1"} }
+
+place_items_marker:add_triggerer(DgnTriggerer:new { type="entered_level" })
+lua_marker("1", place_items_marker)
 }}
 MAP
      XXXXXXXX

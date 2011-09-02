@@ -28,11 +28,6 @@ int sprint_modify_exp_inverse(int exp)
     return div_rand_round(exp, 9);
 }
 
-int sprint_modify_skills(int skill_gain)
-{
-    return skill_gain * 27;
-}
-
 int sprint_modify_piety(int piety)
 {
     return piety * 9;

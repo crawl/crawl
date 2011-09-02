@@ -67,7 +67,7 @@ function sewer_setup(e)
   e.lrocktile("wall_slime")
   e.lfloortile("floor_slime")
 -- Random monster list and milestone.
-  e.set_random_mon_list("megabat w:20 / giant newt w:20 / small snake / \
+  e.set_random_mon_list("bat w:20 / giant newt w:20 / small snake / \
                          ooze / worm / snake / giant cockroach / giant mite / \
                          giant gecko")
 end
@@ -535,7 +535,7 @@ SUBST:    2 = 23
 KMONS:    2 = crocodile
 KMONS:    3 = Purgy, crocodile
 ITEM:     potion of berserk rage / potion of speed w:5
-MONS:     megabat
+MONS:     bat
 epilogue{{
 sewer_milestone(_G)
 }}
@@ -727,21 +727,21 @@ NSUBST:   h = 3:h / *:'
 #       some random monsters I: flying or big fish
 NSUBST:   w = 4:" / *:w
 KFEAT:    " = w
-KMONS:    " = big fish w:2 / megabat / nothing
+KMONS:    " = big fish w:2 / bat / nothing
 COLOUR:   " = green
 #       some random monsters II: standard Sewers set
 NSUBST:   W = 4:? / *:W
 KFEAT:    ? = W
-KMONS:    ? = megabat / giant newt / small snake / giant cockroach / \
+KMONS:    ? = bat / giant newt / small snake / giant cockroach / \
               giant mite / giant gecko / ooze w:4 / worm w:4 / snake w:2
 COLOUR:   ? = lightgreen
 #       a little more random shallow water
 SUBST:    - = W..
 : sewer_setup(_G)
-MONS:     megabat / giant newt / small snake / giant cockroach / \
+MONS:     bat / giant newt / small snake / giant cockroach / \
           giant mite / giant gecko / ooze w:4 / worm w:4 / snake w:2
 SHUFFLE:  23
-MONS:     megabat / nothing w:2
+MONS:     bat / nothing w:2
 MONS:     patrolling jackal
 MONS:     worm / nothing w:3
 MONS:     ooze / nothing w:2

@@ -22,7 +22,7 @@ enum item_make_species_type
 int create_item_named(std::string name, coord_def pos,
                       std::string *error);
 
-int items(int allow_uniques, object_class_type force_class, int force_type,
+int items(bool allow_uniques, object_class_type force_class, int force_type,
            bool dont_place, int item_level, int item_race,
            uint32_t mapmask = 0, int force_ego = 0, int agent = -1,
            bool mundane = false);
@@ -34,6 +34,7 @@ jewellery_type get_random_ring_type();
 jewellery_type get_random_amulet_type();
 armour_type get_random_body_armour_type(int level);
 armour_type get_random_armour_type(int item_level);
+stave_type get_random_rod_type();
 void item_set_appearance(item_def &item);
 
 bool is_weapon_brand_ok(int type, int brand, bool strict);

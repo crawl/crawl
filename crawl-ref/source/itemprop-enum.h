@@ -24,7 +24,7 @@ enum armour_type
 
     ARM_BOOTS,
 
-    ARM_BUCKLER,
+    ARM_BUCKLER, // order of shields matters
     ARM_SHIELD,
     ARM_LARGE_SHIELD,
     ARM_MAX_RACIAL = ARM_LARGE_SHIELD,
@@ -116,7 +116,6 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
     SPWPN_ACID,    // acid bite only for the moment
     SPWPN_DEBUG_RANDART,
     NUM_SPECIAL_WEAPONS,
-    SPWPN_DUMMY_CRUSHING,        // ONLY TEMPORARY USAGE -- converts to VORPAL
 };
 
 enum corpse_type
@@ -247,7 +246,9 @@ enum misc_item_type
 
     MISC_QUAD_DAMAGE, // Sprint only
 
-    NUM_MISCELLANY // mv: used for random generation
+    NUM_MISCELLANY, // mv: used for random generation
+    MISC_FIRST_DECK = MISC_DECK_OF_ESCAPE,
+    MISC_LAST_DECK  = MISC_DECK_OF_DEFENCE,
 };
 
 enum missile_type
@@ -469,9 +470,9 @@ enum weapon_type
 
 #if TAG_MAJOR_VERSION == 32
     WPN_KNIFE,
+    WPN_KATANA,
 #endif
 
-    WPN_KATANA,
     WPN_DEMON_BLADE,
     WPN_DOUBLE_SWORD,
     WPN_TRIPLE_SWORD,
@@ -490,7 +491,9 @@ enum weapon_type
     WPN_BLESSED_LONG_SWORD,
     WPN_BLESSED_SCIMITAR,
     WPN_BLESSED_GREAT_SWORD,
+#if TAG_MAJOR_VERSION == 32
     WPN_BLESSED_KATANA,
+#endif
     WPN_EUDEMON_BLADE,
     WPN_BLESSED_DOUBLE_SWORD,
     WPN_BLESSED_TRIPLE_SWORD,
@@ -504,6 +507,12 @@ enum weapon_type
     WPN_UNKNOWN = 1000,                // 1000
     WPN_RANDOM,
     WPN_VIABLE,
+
+// thrown weapons (for hunter weapon selection)
+    WPN_THROWN,
+    WPN_ROCKS,
+    WPN_JAVELINS,
+    WPN_DARTS,
 };
 
 enum weapon_property_type

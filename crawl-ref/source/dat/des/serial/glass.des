@@ -1,0 +1,21 @@
+# Glass vaults
+#
+# Single instances of serial_glass vaults can be placed normally, so
+# we only roll numbers between 2 and 12 (non-flat distribution).
+# Sometimes we add a few rarer glass vaults to the level.
+#
+# The maps for this serial vault are in mini_features.des and can
+# also be used individually.
+
+NAME:   serial_glass
+TAGS:   allow_dup extra luniq_serial
+DEPTH:  D, Elf, Vault, Crypt
+CHANCE: 1%
+{{
+  local c = 2 + crawl.random2(3)*crawl.random2(3)*crawl.random2(4)
+  local d = crawl.random2(2)*crawl.random2(2)*crawl.random2(5)
+  hook("post_place", function()
+    dgn.place_maps{tag="serial_glass", count=c}
+    dgn.place_maps{tag="serial_glass_rare", count=d}
+  end)
+}}

@@ -36,7 +36,7 @@ int allowed_deaths_door_hp(void)
     return std::max(hp, 1);
 }
 
-bool cast_deaths_door(int pow)
+spret_type cast_deaths_door(int pow, bool fail)
 {
     if (you.is_undead)
         mpr("You're already dead!");
@@ -46,11 +46,12 @@ bool cast_deaths_door(int pow)
         mpr("Your appeal for an extension has been denied.");
     else
     {
+        fail_check();
         mpr("You feel invincible!");
         mpr("You seem to hear sand running through an hourglass...",
             MSGCH_SOUND);
 
-        set_hp(allowed_deaths_door_hp(), false);
+        set_hp(allowed_deaths_door_hp());
         deflate_hp(you.hp_max, false);
 
         you.set_duration(DUR_DEATHS_DOOR, 10 + random2avg(13, 3)
@@ -58,10 +59,10 @@ bool cast_deaths_door(int pow)
 
         if (you.duration[DUR_DEATHS_DOOR] > 25 * BASELINE_DELAY)
             you.duration[DUR_DEATHS_DOOR] = (23 + random2(5)) * BASELINE_DELAY;
-        return true;
+        return SPRET_SUCCESS;
     }
 
-    return false;
+    return SPRET_ABORT;
 }
 
 void remove_ice_armour()
@@ -71,23 +72,21 @@ void remove_ice_armour()
     you.duration[DUR_ICY_ARMOUR] = 0;
 }
 
-void ice_armour(int pow, bool extending)
+spret_type ice_armour(int pow, bool fail)
 {
     if (!player_effectively_in_light_armour())
     {
-        if (!extending)
-            mpr("You are wearing too much armour.");
-
-        return;
+        mpr("You are wearing too much armour.");
+        return SPRET_ABORT;
     }
 
     if (you.duration[DUR_STONESKIN])
     {
-        if (!extending)
-            mpr("The spell conflicts with another spell still in effect.");
-
-        return;
+        mpr("The spell conflicts with another spell still in effect.");
+        return SPRET_ABORT;
     }
+
+    fail_check();
 
     if (you.duration[DUR_ICY_ARMOUR])
         mpr("Your icy armour thickens.");
@@ -103,18 +102,24 @@ void ice_armour(int pow, bool extending)
 
     you.increase_duration(DUR_ICY_ARMOUR, 20 + random2(pow) + random2(pow), 50,
                           NULL);
+
+    return SPRET_SUCCESS;
 }
 
-void missile_prot(int pow)
+spret_type missile_prot(int pow, bool fail)
 {
+    fail_check();
     you.increase_duration(DUR_REPEL_MISSILES, 8 + roll_dice(2, pow), 100,
                           "You feel protected from missiles.");
+    return SPRET_SUCCESS;
 }
 
-void deflection(int pow)
+spret_type deflection(int pow, bool fail)
 {
+    fail_check();
     you.increase_duration(DUR_DEFLECT_MISSILES, 15 + random2(pow), 100,
                           "You feel very safe from missiles.");
+    return SPRET_SUCCESS;
 }
 
 void remove_regen(bool divine_ability)
@@ -123,51 +128,106 @@ void remove_regen(bool divine_ability)
     you.duration[DUR_REGENERATION] = 0;
     if (divine_ability)
     {
-        mpr("You feel less resistant to magic.", MSGCH_DURATION);
+        mpr("You feel less resistant to hostile enchantments.", MSGCH_DURATION);
         you.attribute[ATTR_DIVINE_REGENERATION] = 0;
     }
 }
 
-void cast_regen(int pow, bool divine_ability)
+spret_type cast_regen(int pow, bool divine_ability, bool fail)
 {
+    fail_check();
     you.increase_duration(DUR_REGENERATION, 5 + roll_dice(2, pow / 3 + 1), 100,
                           "Your skin crawls.");
 
     if (divine_ability)
     {
-        mpr("You feel resistant to magic.");
+        mpr("You feel resistant to hostile enchantments.");
         you.attribute[ATTR_DIVINE_REGENERATION] = 1;
     }
+    return SPRET_SUCCESS;
 }
 
-void cast_berserk(void)
+spret_type cast_revivification(int pow, bool fail)
 {
-    go_berserk(true);
+    if (you.hp == you.hp_max)
+        canned_msg(MSG_NOTHING_HAPPENS);
+    else if (you.hp_max < 21)
+        mpr("You lack the resilience to cast this spell.");
+    else
+    {
+        fail_check();
+        mpr("Your body is healed in an amazingly painful way.");
+
+        int loss = 2;
+        for (int i = 0; i < 9; ++i)
+            if (x_chance_in_y(8, pow))
+                loss++;
+
+        dec_max_hp(loss * you.hp_max / 100);
+        set_hp(you.hp_max);
+
+        if (you.duration[DUR_DEATHS_DOOR])
+        {
+            mpr("Your life is in your own hands once again.", MSGCH_DURATION);
+            // XXX: better cause name?
+            paralyse_player("Death's Door abortion", 5 + random2(5));
+            confuse_player(10 + random2(10));
+            you.duration[DUR_DEATHS_DOOR] = 0;
+        }
+        return SPRET_SUCCESS;
+    }
+
+    return SPRET_ABORT;
 }
 
-void cast_swiftness(int power)
+spret_type cast_swiftness(int power, bool fail)
 {
     if (you.in_water())
     {
         mpr("The water foams!");
-        return;
+        return SPRET_ABORT;
     }
 
     if (!you.duration[DUR_SWIFTNESS] && player_movement_speed() <= 6)
     {
         mpr("You can't move any more quickly.");
-        return;
+        return SPRET_ABORT;
     }
+
+    fail_check();
 
     // [dshaligram] Removed the on-your-feet bit.  Sounds odd when
     // you're levitating, for instance.
     you.increase_duration(DUR_SWIFTNESS, 20 + random2(power), 100,
                           "You feel quick.");
     did_god_conduct(DID_HASTY, 8, true);
+
+    return SPRET_SUCCESS;
 }
 
-void cast_fly(int power)
+spret_type cast_levitation(int power, bool fail)
 {
+    if (liquefied(you.pos()) && you.ground_level())
+    {
+        mpr("Such puny magic can't pull you from the ground!", MSGCH_WARN);
+        return SPRET_ABORT;
+    }
+
+    fail_check();
+    you.attribute[ATTR_LEV_UNCANCELLABLE] = 1;
+    levitate_player(power);
+    return SPRET_SUCCESS;
+}
+
+spret_type cast_fly(int power, bool fail)
+{
+    if (liquefied(you.pos()) && you.ground_level())
+    {
+        mpr("Such puny magic can't pull you from the ground!", MSGCH_WARN);
+        return SPRET_ABORT;
+    }
+
+    fail_check();
     const int dur_change = 25 + random2(power) + random2(power);
     const bool was_levitating = you.airborne();
 
@@ -180,18 +240,23 @@ void cast_fly(int power)
         float_player(true);
     else
         mpr("You feel more buoyant.");
+    return SPRET_SUCCESS;
 }
 
-void cast_insulation(int power)
+spret_type cast_insulation(int power, bool fail)
 {
+    fail_check();
     you.increase_duration(DUR_INSULATION, 10 + random2(power), 100,
                           "You feel insulated.");
+    return SPRET_SUCCESS;
 }
 
-void cast_teleport_control(int power)
+spret_type cast_teleport_control(int power, bool fail)
 {
+    fail_check();
     you.increase_duration(DUR_CONTROL_TELEPORT, 10 + random2(power), 50,
                           "You feel in control.");
+    return SPRET_SUCCESS;
 }
 
 int cast_selective_amnesia(std::string *pre_msg)
@@ -247,7 +312,7 @@ int cast_selective_amnesia(std::string *pre_msg)
 
     if (ep_gain > 0)
     {
-        inc_mp(ep_gain, false);
+        inc_mp(ep_gain);
         mpr("The spell releases its latent energy back to you as "
             "it unravels.");
     }
@@ -255,8 +320,9 @@ int cast_selective_amnesia(std::string *pre_msg)
     return (1);
 }
 
-void cast_see_invisible(int pow)
+spret_type cast_see_invisible(int pow, bool fail)
 {
+    fail_check();
     if (you.can_see_invisible())
         mpr("You feel as though your vision will be sharpened longer.");
     else
@@ -264,34 +330,50 @@ void cast_see_invisible(int pow)
         mpr("Your vision seems to sharpen.");
 
         // We might have to turn autopickup back on again.
-        // TODO: Once the spell times out we might want to check all monsters
-        //       in LOS for invisibility and turn autopickup off again, if
-        //       needed.
         autotoggle_autopickup(false);
     }
 
     // No message if you already are under the spell.
     you.increase_duration(DUR_SEE_INVISIBLE, 10 + random2(2 + pow/2), 100);
+    return SPRET_SUCCESS;
 }
 
-void cast_silence(int pow)
+spret_type cast_silence(int pow, bool fail)
 {
+    fail_check();
     if (!you.attribute[ATTR_WAS_SILENCED])
         mpr("A profound silence engulfs you.");
 
     you.attribute[ATTR_WAS_SILENCED] = 1;
 
-    you.increase_duration(DUR_SILENCE, 10 + random2avg(pow, 2), 100);
+    you.increase_duration(DUR_SILENCE, 10 + pow/4 + random2avg(pow/2, 2), 100);
     invalidate_agrid(true);
 
     if (you.beheld())
         you.update_beholders();
 
     learned_something_new(HINT_YOU_SILENCE);
+    return SPRET_SUCCESS;
 }
 
-void cast_liquefaction(int pow)
+spret_type cast_liquefaction(int pow, bool fail)
 {
+    if (!you.stand_on_solid_ground())
+    {
+        if (!you.ground_level())
+            mpr("You can't cast this spell without touching the ground.");
+        else
+            mpr("You need to be on clear, solid ground to cast this spell.");
+        return (SPRET_ABORT);
+    }
+
+    if (you.duration[DUR_LIQUEFYING] || liquefied(you.pos()))
+    {
+        mpr("The ground here is already liquefied! You'll have to wait.");
+        return (SPRET_ABORT);
+    }
+
+    fail_check();
     flash_view_delay(BROWN, 80);
     flash_view_delay(YELLOW, 80);
     flash_view_delay(BROWN, 140);
@@ -300,4 +382,27 @@ void cast_liquefaction(int pow)
 
     you.increase_duration(DUR_LIQUEFYING, 10 + random2avg(pow, 2), 100);
     invalidate_agrid(true);
+    return SPRET_SUCCESS;
+}
+
+spret_type cast_shroud_of_golubria(int pow, bool fail)
+{
+    fail_check();
+    if (you.duration[DUR_SHROUD_OF_GOLUBRIA])
+        mpr("You renew your shroud.");
+    else
+        mpr("Space distorts slightly along a thin shroud covering your body.");
+
+    you.increase_duration(DUR_SHROUD_OF_GOLUBRIA, 7 + roll_dice(2, pow), 50);
+    return SPRET_SUCCESS;
+}
+
+spret_type cast_transform(int pow, transformation_type which_trans, bool fail)
+{
+    if (!transform(pow, which_trans, false, true))
+        return SPRET_ABORT;
+
+    fail_check();
+    transform(pow, which_trans);
+    return SPRET_SUCCESS;
 }

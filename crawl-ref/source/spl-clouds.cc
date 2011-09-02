@@ -35,8 +35,7 @@
 #include "viewchar.h"
 #include "shout.h"
 
-// Returns whether the spell was actually cast.
-bool conjure_flame(int pow, const coord_def& where)
+spret_type conjure_flame(int pow, const coord_def& where, bool fail)
 {
     // FIXME: This would be better handled by a flag to enforce max range.
     if (distance(where, you.pos()) > dist_range(spell_range(SPELL_CONJURE_FLAME,
@@ -44,13 +43,13 @@ bool conjure_flame(int pow, const coord_def& where)
         || !in_bounds(where))
     {
         mpr("That's too far away.");
-        return (false);
+        return SPRET_ABORT;
     }
 
     if (you.trans_wall_blocking(where))
     {
         mpr("A translucent wall is in the way.");
-        return (false);
+        return SPRET_ABORT;
     }
 
     if (cell_is_solid(where))
@@ -74,7 +73,7 @@ bool conjure_flame(int pow, const coord_def& where)
             mpr("You can't ignite solid rock!");
             break;
         }
-        return (false);
+        return SPRET_ABORT;
     }
 
     const int cloud = env.cgrid(where);
@@ -82,7 +81,7 @@ bool conjure_flame(int pow, const coord_def& where)
     if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
     {
         mpr("There's already a cloud there!");
-        return (false);
+        return SPRET_ABORT;
     }
 
     // Note that self-targeting is handled by SPFLAG_NOT_SELF.
@@ -92,15 +91,17 @@ bool conjure_flame(int pow, const coord_def& where)
         if (you.can_see(mons) && !mons_is_unknown_mimic(mons))
         {
             mpr("You can't place the cloud on a creature.");
-            return (false);
+            return SPRET_ABORT;
         }
-        else
-        {
-            // FIXME: maybe should do _paranoid_option_disable() here?
-            mpr("You see a ghostly outline there, and the spell fizzles.");
-            return (true);      // Don't give free detection!
-        }
+
+        fail_check();
+
+        // FIXME: maybe should do _paranoid_option_disable() here?
+        mpr("You see a ghostly outline there, and the spell fizzles.");
+        return SPRET_SUCCESS;      // Don't give free detection!
     }
+
+    fail_check();
 
     if (cloud != EMPTY_CLOUD)
     {
@@ -119,11 +120,11 @@ bool conjure_flame(int pow, const coord_def& where)
     }
     noisy(2, where);
 
-    return (true);
+    return SPRET_SUCCESS;
 }
 
 // Assumes beem.range has already been set. -cao
-bool stinking_cloud(int pow, bolt &beem)
+spret_type stinking_cloud(int pow, bolt &beem, bool fail)
 {
     beem.name        = "stinking cloud";
     beem.colour      = GREEN;
@@ -151,34 +152,39 @@ bool stinking_cloud(int pow, bolt &beem)
     {
         // We don't want to fire through friendlies.
         canned_msg(MSG_OK);
-        return (false);
+        return SPRET_ABORT;
     }
+
+    fail_check();
 
     // Really fire.
     beem.is_tracer = false;
     beem.fire();
 
-    return (true);
+    return SPRET_SUCCESS;
 }
 
-bool cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam)
+spret_type cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam,
+                      bool fail)
 {
     if (distance(beam.target, you.pos()) > dist_range(beam.range)
         || !in_bounds(beam.target))
     {
         mpr("That is beyond the maximum range.");
-        return false;
+        return SPRET_ABORT;
     }
 
     if (cell_is_solid(beam.target))
     {
         mpr("You can't place clouds on a wall.");
-        return false;
+        return SPRET_ABORT;
     }
+
+    fail_check();
 
     big_cloud(cty, caster, beam.target, pow, 8 + random2(3), -1);
     noisy(2, beam.target);
-    return true;
+    return SPRET_SUCCESS;
 }
 
 void big_cloud(cloud_type cl_type, const actor *agent,
@@ -189,18 +195,21 @@ void big_cloud(cloud_type cl_type, const actor *agent,
                      cl_type, agent, spread_rate, colour, name, tile);
 }
 
-void cast_ring_of_flames(int power)
+spret_type cast_ring_of_flames(int power, bool fail)
 {
     // You shouldn't be able to cast this in the rain. {due}
     if (in_what_cloud(CLOUD_RAIN))
     {
         mpr("Your spell sizzles in the rain.");
-        return;
+        return SPRET_ABORT;
     }
+
+    fail_check();
     you.increase_duration(DUR_FIRE_SHIELD,
                           5 + (power / 10) + (random2(power) / 5), 50,
                           "The air around you leaps into flame!");
     manage_fire_shield(1);
+    return SPRET_SUCCESS;
 }
 
 void manage_fire_shield(int delay)
@@ -234,6 +243,13 @@ void manage_fire_shield(int delay)
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
         if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD)
             place_cloud(CLOUD_FIRE, *ai, 1 + random2(6), &you);
+}
+
+spret_type cast_corpse_rot(bool fail)
+{
+    fail_check();
+    corpse_rot(&you);
+    return SPRET_SUCCESS;
 }
 
 void corpse_rot(actor* caster)
@@ -393,7 +409,7 @@ std::string get_evaporate_result_list(int potion)
 
 
 // Assumes beem.range is already set -cao
-bool cast_evaporate(int pow, bolt& beem, int pot_idx)
+spret_type cast_evaporate(int pow, bolt& beem, int pot_idx, bool fail)
 {
     ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
     item_def& potion = you.inv[pot_idx];
@@ -525,9 +541,10 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
     {
         // We don't want to fire through friendlies or at ourselves.
         canned_msg(MSG_OK);
-        return (false);
+        return SPRET_ABORT;
     }
 
+    fail_check();
     // Really fire.
     beem.flavour = real_flavour;
     beem.is_tracer = false;
@@ -539,7 +556,7 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
 
     dec_inv_item_quantity(pot_idx, 1);
 
-    return (true);
+    return SPRET_SUCCESS;
 }
 
 int holy_flames(monster* caster, actor* defender)

@@ -156,10 +156,13 @@
     #ifndef REGEX_PCRE
     #define REGEX_PCRE
     #endif
-
-    #define NEED_USLEEP
 #else
     #error Missing platform #define or unsupported compiler.
+#endif
+
+#ifndef _WIN32_WINNT
+// Allow using Win2000 syscalls.
+# define _WIN32_WINNT 0x501
 #endif
 
 #if defined(__GNUC__)
@@ -198,11 +201,6 @@
     // starts up and notices that a db file is out-of-date, it updates
     // it in-place, instead of torching the old file.
     #define DGL_REWRITE_PROTECT_DB_FILES
-
-    // This secures the PRNG itself by hashing the values with SHA256.
-    // PRNG will be about 15 times slower when this is turned on, but
-    // even with that the cpu time used by the PRNG is relatively small.
-    #define MORE_HARDENED_PRNG
 
     // Startup preferences are saved by player name rather than uid,
     // since all players use the same uid in dgamelaunch.
@@ -309,14 +307,6 @@
     #endif
 #endif
 
-
-#ifdef USE_TILE
-    #ifdef __cplusplus
-    #include "libgui.h"
-    #include "tilesdl.h"
-    #endif
-#endif
-
 // =========================================================================
 //  Lua user scripts (NOTE: this may also be enabled in your makefile!)
 // =========================================================================
@@ -333,6 +323,9 @@
 // =========================================================================
 //  Game Play Defines
 // =========================================================================
+// use Abyss morphing
+#define NEW_ABYSS
+
 // number of older messages stored during play and in save files
 #define NUM_STORED_MESSAGES   1000
 
@@ -376,15 +369,16 @@
 
 #ifdef __cplusplus
 
-
 template < class T >
 inline void UNUSED(const volatile T &)
 {
 }
 
+#endif // __cplusplus
+
 // And now headers we want precompiled
 #ifdef TARGET_COMPILER_VC
-#include "msvc.h"
+# include "msvc.h"
 #endif
 
 #include "externs.h"
@@ -392,9 +386,14 @@ inline void UNUSED(const volatile T &)
 #include "version.h"
 
 #ifdef TARGET_COMPILER_VC
-#include "libw32c.h"
+# include "libw32c.h"
 #endif
 
-#endif // __cplusplus
+#ifdef USE_TILE
+# ifdef __cplusplus
+#  include "libgui.h"
+#  include "tiles.h"
+# endif
+#endif
 
 #endif // APPHDR_H

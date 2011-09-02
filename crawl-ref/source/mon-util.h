@@ -18,8 +18,6 @@
 
 struct bolt;
 
-// ($pellbinder) (c) D.G.S.E. 1998
-
 struct mon_attack_def
 {
     mon_attack_type     type;
@@ -101,7 +99,8 @@ public:
                                          100));
     }
 private:
-    int8_t combine(int8_t a, int8_t b, int8_t def = 10) const {
+    int8_t combine(int8_t a, int8_t b, int8_t def = 10) const
+    {
         return (b != def? b : a);
     }
 };
@@ -158,6 +157,14 @@ struct monsterentry
     size_type size;
 };
 
+enum mon_threat_level_type
+{
+    MTHRT_TRIVIAL,
+    MTHRT_EASY,
+    MTHRT_TOUGH,
+    MTHRT_NASTY,
+};
+
 habitat_type grid2habitat(dungeon_feature_type grid);
 dungeon_feature_type habitat2grid(habitat_type ht);
 
@@ -198,7 +205,7 @@ bool mons_is_ghost_demon(int mc);
 bool mons_is_unique(int mc);
 bool mons_is_pghost(int mc);
 
-int mons_difficulty(int mc);
+int mons_avg_hp(int mc);
 int exper_value(const monster* mon);
 
 int hit_points(int hit_dice, int min_hp, int rand_hp);
@@ -258,7 +265,6 @@ mon_resist_def serpent_of_hell_resists(int flavour);
 int mons_class_base_speed(int mc);
 int mons_class_zombie_base_speed(int zombie_base_mc);
 int mons_base_speed(const monster* mon);
-int mons_real_base_speed(int mc);
 
 bool mons_class_can_regenerate(int mc);
 bool mons_can_regenerate(const monster* mon);
@@ -277,7 +283,7 @@ bool mons_class_can_use_stairs(int mc);
 bool mons_can_use_stairs(const monster* mon);
 bool mons_enslaved_body_and_soul(const monster* mon);
 bool mons_enslaved_soul(const monster* mon);
-bool name_zombie(monster* mon, int mc, const std::string mon_name);
+bool name_zombie(monster* mon, int mc, const std::string &mon_name);
 bool name_zombie(monster* mon, const monster* orig);
 
 int mons_power(int mc);
@@ -297,19 +303,13 @@ void mons_pacify(monster* mon, mon_attitude_type att = ATT_GOOD_NEUTRAL);
 
 bool mons_should_fire(struct bolt &beam);
 
-bool ms_direct_nasty(spell_type monspell);
-
-bool ms_useful_fleeing_out_of_sight(const monster* mon, spell_type monspell);
-bool ms_quick_get_away(const monster* mon, spell_type monspell);
-bool ms_waste_of_time(const monster* mon, spell_type monspell);
-bool ms_low_hitpoint_cast(const monster* mon, spell_type monspell);
-
 bool mons_has_los_ability(monster_type mon_type);
 bool mons_has_los_attack(const monster* mon);
 bool mons_has_ranged_spell(const monster* mon, bool attack_only = false,
                            bool ench_too = true);
-bool mons_has_ranged_attack(const monster* mon);
+bool mons_has_ranged_weapon(const monster* mon);
 bool mons_has_ranged_ability(const monster* mon);
+bool mons_has_ranged_attack(const monster* mon);
 
 const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
                          bool visible = true);
@@ -432,6 +432,7 @@ int scan_mon_inv_randarts(const monster* mon,
                           artefact_prop_type ra_prop);
 
 bool player_or_mon_in_sanct(const monster* mons);
+bool mons_is_immotile(const monster* mons);
 
 int get_dist_to_nearest_monster();
 actor *actor_by_mid(mid_t m);
@@ -443,5 +444,8 @@ void init_anon();
 actor *find_agent(mid_t m, kill_category kc);
 const char* mons_class_name(monster_type mc);
 void check_clinging();
+bool mons_is_tentacle_end(const int mtype);
+mon_threat_level_type mons_threat_level(const monster *mon,
+                                        bool real = false);
 
 #endif

@@ -1,6 +1,6 @@
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "tilereg-dgn.h"
 
@@ -466,7 +466,7 @@ static const bool _is_appropriate_evokable(const item_def& item,
 static const bool _have_appropriate_evokable(const actor* target)
 {
     // Felids cannot use wands.
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
         return (false);
 
     for (int i = 0; i < ENDOFPACK; i++)
@@ -667,7 +667,7 @@ static const bool _have_appropriate_spell(const actor* target)
 
 static bool _can_fire_item()
 {
-    return (you.species != SP_CAT
+    return (you.species != SP_FELID
             && you.m_quiver->get_fire_item() != -1);
 }
 
@@ -1090,7 +1090,7 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
                 }
             }
 
-            if (you.species != SP_CAT
+            if (you.species != SP_FELID
                 && you.see_cell_no_trans(target->pos())
                 && you.m_quiver->get_fire_item() != -1)
             {

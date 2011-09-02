@@ -34,7 +34,6 @@
 #include "options.h"
 #include "files.h"
 #include "state.h"
-#include "stuff.h"
 #include "unicode.h"
 #include "view.h"
 #include "viewgeom.h"
@@ -493,6 +492,7 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
 // C++ string class.  -- bwr
 void update_screen(void)
 {
+    refresh();
 }
 
 void clear_to_end_of_line(void)

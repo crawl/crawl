@@ -97,6 +97,11 @@ MDEF(y)
     PLUARET(number, int(mons->pos().y) - int(you.pos().y));
 }
 
+MDEF(hp)
+{
+    PLUARET(number, int(mons->hit_points));
+}
+
 static const char* _behaviour_name(beh_type beh);
 MDEF(beh)
 {
@@ -201,6 +206,13 @@ MDEF(dancing_weapon)
     return (1);
 }
 
+MDEF(wont_attack)
+{
+    ASSERT_DLUA;
+    lua_pushboolean(ls, mons->wont_attack());
+    return (1);
+}
+
 static const char *_monuse_names[] =
 {
     "nothing", "open_doors", "starting_equipment", "weapons_armour"
@@ -208,7 +220,7 @@ static const char *_monuse_names[] =
 
 static const char *_monuse_to_str(mon_itemuse_type utyp)
 {
-    COMPILE_CHECK(ARRAYSZ(_monuse_names) == NUM_MONUSE, c1);
+    COMPILE_CHECK(ARRAYSZ(_monuse_names) == NUM_MONUSE);
     return _monuse_names[utyp];
 }
 
@@ -228,7 +240,7 @@ static const char *_moneat_names[] =
 
 static const char *_moneat_to_str(mon_itemeat_type etyp)
 {
-    COMPILE_CHECK(ARRAYSZ(_moneat_names) == NUM_MONEAT, c1);
+    COMPILE_CHECK(ARRAYSZ(_moneat_names) == NUM_MONEAT);
     return _moneat_names[etyp];
 }
 
@@ -256,6 +268,44 @@ static int l_mons_do_dismiss(lua_State *ls)
     return (0);
 }
 MDEFN(dismiss, do_dismiss)
+
+static int l_mons_set_hp(lua_State *ls)
+{
+    ASSERT_DLUA;
+
+    monster* mons =
+        clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1));
+
+    int hp = luaL_checkint(ls, 1);
+    if (hp <= 0)
+    {
+        luaL_argerror(ls, 1, "hp must be positive");
+        return 0;
+    }
+    hp = std::min(hp, mons->max_hit_points);
+    mons->hit_points = std::min(hp, MAX_MONSTER_HP);
+    return 0;
+}
+MDEFN(set_hp, set_hp)
+
+static int l_mons_set_max_hp(lua_State *ls)
+{
+    ASSERT_DLUA;
+
+    monster* mons =
+        clua_get_lightuserdata<monster>(ls, lua_upvalueindex(1));
+
+    int maxhp = luaL_checkint(ls, 1);
+    if (maxhp <= 0)
+    {
+        luaL_argerror(ls, 1, "maxhp must be positive");
+        return 0;
+    }
+    mons->max_hit_points = std::min(maxhp, MAX_MONSTER_HP);
+    mons->hit_points = mons->max_hit_points;
+    return 0;
+}
+MDEFN(set_max_hp, set_max_hp)
 
 // Run the monster AI code.
 static int l_mons_do_run_ai(lua_State *ls)
@@ -473,6 +523,7 @@ static MonsAccessor mons_attrs[] =
     { "shapeshifter",   l_mons_shapeshifter },
     { "mimic",          l_mons_mimic },
     { "dancing_weapon", l_mons_dancing_weapon },
+    { "wont_attack",    l_mons_wont_attack },
 
     { "x"   , l_mons_x    },
     { "y"   , l_mons_y    },
@@ -480,6 +531,7 @@ static MonsAccessor mons_attrs[] =
     { "beh" , l_mons_beh  },
     { "muse", l_mons_muse },
     { "meat", l_mons_meat },
+    { "hp"  , l_mons_hp   },
 
     { "targetx", l_mons_targetx },
     { "targety", l_mons_targety },
@@ -490,6 +542,8 @@ static MonsAccessor mons_attrs[] =
     { "energy",          l_mons_energy          },
     { "add_energy",      l_mons_add_energy      },
     { "dismiss",         l_mons_dismiss         },
+    { "set_hp",          l_mons_set_hp          },
+    { "set_max_hp",      l_mons_set_max_hp      },
     { "run_ai",          l_mons_run_ai          },
     { "handle_behaviour",l_mons_handle_behaviour },
     { "experience",      l_mons_experience      },

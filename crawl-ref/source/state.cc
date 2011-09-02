@@ -20,6 +20,7 @@
 #include "religion.h"
 #include "showsymb.h"
 #include "state.h"
+#include "target.h"
 #include "hints.h"
 
 game_state::game_state()
@@ -35,13 +36,14 @@ game_state::game_state()
       terminal_resize_handler(NULL), terminal_resize_check(NULL),
       doing_prev_cmd_again(false), prev_cmd(CMD_NO_CMD),
       repeat_cmd(CMD_NO_CMD),cmd_repeat_started_unsafe(false),
+      lua_calls_no_turn(0), stat_gain_prompt(false),
       level_annotation_shown(false),
 #ifndef USE_TILE
       mlist_targeting(false),
 #else
       title_screen(true),
 #endif
-      darken_range(-1), unsaved_macros(false), mon_act(NULL)
+      darken_range(NULL), unsaved_macros(false), mon_act(NULL)
 {
     reset_cmd_repeat();
     reset_cmd_again();
@@ -311,7 +313,7 @@ bool game_state::is_god_acting() const
     ASSERT(god_act.depth >= 0);
     ASSERT(!(god_act.depth > 0 && god_act.which_god == GOD_NO_GOD));
     ASSERT(!(god_act.depth == 0 && god_act.which_god != GOD_NO_GOD));
-    ASSERT(!(god_act.depth == 0 && god_act_stack.size() > 0));
+    ASSERT(!(god_act.depth == 0 && !god_act_stack.empty()));
 
     return (god_act.depth > 0);
 }
@@ -367,7 +369,7 @@ void game_state::dec_god_acting(god_type which_god)
     if (god_act.depth == 0)
     {
         god_act.reset();
-        if (god_act_stack.size() > 0)
+        if (!god_act_stack.empty())
         {
             god_act = god_act_stack[god_act_stack.size() - 1];
             god_act_stack.pop_back();
@@ -381,7 +383,7 @@ void game_state::dec_god_acting(god_type which_god)
 void game_state::clear_god_acting()
 {
     ASSERT(!is_god_acting());
-    ASSERT(god_act_stack.size() == 0);
+    ASSERT(god_act_stack.empty());
 
     god_act.reset();
 }
@@ -504,7 +506,7 @@ void game_state::dump()
                 god_name(god_act.which_god).c_str(), god_act.depth);
     }
 
-    if (god_act_stack.size() != 0)
+    if (!god_act_stack.empty())
     {
         fprintf(stderr, "Other gods acting:\n");
         for (unsigned int i = 0; i < god_act_stack.size(); i++)
@@ -521,7 +523,7 @@ void game_state::dump()
         debug_dump_mon(mon_act, true);
     }
 
-    if (mon_act_stack.size() != 0)
+    if (!mon_act_stack.empty())
     {
         fprintf(stderr, "Others monsters acting:\n");
         for (unsigned int i = 0; i < mon_act_stack.size(); i++)

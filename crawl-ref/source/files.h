@@ -32,7 +32,6 @@ extern level_id_set Generated_Levels;
 bool file_exists(const std::string &name);
 bool dir_exists(const std::string &dir);
 bool is_absolute_path(const std::string &path);
-bool is_read_safe_path(const std::string &path);
 void assert_read_safe_path(const std::string &path) throw (std::string);
 unsigned long file_size(FILE *handle);
 
@@ -55,6 +54,7 @@ std::string datafile_path(
 bool get_dos_compatible_file_name(std::string *fname);
 std::string get_parent_directory(const std::string &filename);
 std::string get_base_filename(const std::string &filename);
+std::string get_cache_name(const std::string &filename);
 std::string get_path_relative_to(const std::string &referencefile,
                                  const std::string &relativepath);
 std::string catpath(const std::string &first, const std::string &second);
@@ -80,7 +80,6 @@ std::string get_prefs_filename();
 std::string change_file_extension(const std::string &file,
                                   const std::string &ext);
 
-void file_touch(const std::string &file);
 time_t file_modtime(const std::string &file);
 bool is_newer(const std::string &a, const std::string &b);
 std::vector<std::string> get_title_files();

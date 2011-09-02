@@ -46,9 +46,9 @@ MAP
  ......
 ENDMAP
 
-NAME:  minmay_butterfly_box
-DEPTH: D:1-4
-MONS:  butterfly
+NAME:  minmay_bat_box
+DEPTH: D:2-4
+MONS:  bat / nothing w:5
 MAP
     ....
    ......
@@ -388,11 +388,11 @@ xxxx+xxxxx...xxxxx+xxxx
    xxxxxxx.@.xxxxxxx
 ENDMAP
 
-NAME:  goddamned_bats
-DEPTH: D:3-12, Lair:1-3, Orc:1-2
+NAME:   goddamned_bats
+DEPTH:  D:3-12, Lair:1-3, Orc:1-2
 # Sadly, for size-based ones, only mega, micro and giga exist.  Lack of kilo
 # and tera is understandable, but come on, even mili is lacking.
-KMONS:  1 = megabat
+KMONS:  1 = bat name:megabat n_rpl n_spe
 KMONS:  2 = bat name:microbat n_rpl n_spe col:magenta tile:mons_microbat
 # Can we spell them this way?  Please?
 KMONS:  3 = bat name:fruity n_adj n_spe col:lightmagenta tile:mons_fruity_bat
@@ -433,6 +433,27 @@ xxxxxxx...xxxxx.xx
     xxxx@xx
 ENDMAP
 
+NAME:   saegor_snake_ambush
+TAGS:   no_monster_gen no_pool_fixup
+DEPTH:  D:3-5
+KMONS:  S = w:3 snake / w:4 small_snake / w:5 plant / nothing
+KFEAT:  SX = W
+KITEM:  X = gold
+KPROP:  W = no_rtele_into
+MAP
+.xxxxxx.@..
+.xxWStxx+xx
+@+SttctWStx
+.xWtctWttWx
+xxtWtWtctSx
+xtctWXWtctx
+xStctWtWtxx
+xWttWtctWx.
+xxSWtcttS+@
+xx+xxtSWxx.
+..@.xxxxxx.
+ENDMAP
+
 # This vault can be highly OOD, which is why lindwurms are used in the
 # first place; unlike most dragon-types, lindwurms are flightless.
 NAME:   minmay_lindwurm_lava
@@ -470,7 +491,7 @@ ENDMAP
 NAME:  pond
 DEPTH: D:10-27, Lair
 MONS:  plant w:30 / fungus
-MONS:  giant frog w:30 / giant toad / snake / rat / green rat / swamp drake w:2
+MONS:  giant frog w:30 / snake / rat / green rat / swamp drake w:2
 MONS:  vampire mosquito
 SUBST: ! : w.
 SUBST: 2 : 23
@@ -582,7 +603,7 @@ NAME:  minmay_serpent_palace
 TAGS:  no_monster_gen no_item_gen
 DEPTH: D:18-
 MONS:  naga / naga warrior w:2 / naga mage w:1, greater naga / guardian serpent
-MONS:  small snake / snake / water moccasin / viper / black mamba / anaconda
+MONS:  small snake / snake / water moccasin / black mamba / anaconda
 MONS:  lindwurm
 SUBST: 1 = 11., 3 = ...3
 SUBST: c : cv
@@ -602,6 +623,59 @@ MAP
 .c32..33.1.33c4l..l4c..1.2.1.c.
 .cccccccccccccll..llcccccccccc.
 ...............................
+ENDMAP
+
+NAME:  roderic_batcave
+TAGS:  no_monster_gen
+DEPTH: D:3-20, Lair, Orc
+: local d = you.absdepth()
+: if d < 7 then d = 0 end
+: mons("bat w:60 / vampire bat w:" .. d .. " / nothing w:10")
+SUBST: ? : x@
+SUBST: 1 = 1:10 .:1
+MAP
+  xxxx?xx
+ xxx1..xxxx
+xxx1...1xxx
+xx11...11xx
+xxx1...1xxx
+ xxx..1xxx
+  xx@xxx
+ENDMAP
+
+# A raven's nest, containing some jewellery.
+# The dungeon version maya be hidden.
+# Could be used as a subvault in some forest vault.
+NAME:     roderic_ravens_nest
+TAGS:     extra mini_float
+DEPTH:    D:6-12, Lair: 3-6, Swamp
+KMONS:    1 = raven
+KITEM:    % = any jewellery
+KITEM:    1 = any jewellery / nothing
+: if you.branch() == "D" then
+SHUFFLE:  t' / x"
+SUBST:    " = x
+NSUBST:   x = 1:= / *:x
+: end
+SUBST:    ' = .
+: kmons("% = nothing w:10 / raven w:"..you.absdepth())
+MAP
+tttt
+t%1t
+ttt'@
+ENDMAP
+
+# A polar bear lost in the jungle, how odd
+NAME:  roderic_lost_polar_bear
+TAGS:  no_monster_gen mini_float
+DEPTH: Lair: 3-7
+MONS:  plant, polar_bear, bush
+SUBST: ? = 1t
+SUBST: ' = .:80 1 3:3
+MAP
+??'.
+.'2'
+'??.
 ENDMAP
 
 
@@ -825,6 +899,47 @@ MAP
 ............
 ENDMAP
 
+# kobolds around a campfire
+NAME:    lexackson_kobold_supper
+DEPTH:   D:1-6
+TAGS:    unique_kobold_supper_lexackson no_monster_gen
+KPROP:   56' = no_rtele_into
+MONS:    kobold, plant, bush
+: if you.absdepth() < 4 then
+KMONS:   7 =  kobold ; dagger . dart
+: else
+KMONS:   7 =  big kobold ; dagger . throwing net q:2
+: end
+KMONS:   1 = kobold name:hungry name_adjective ; nothing
+SUBST:   . = e f .:150
+: dgn.delayed_decay(_G, 'e', 'rat skeleton')
+: dgn.delayed_decay(_G, 'f', 'giant gecko skeleton')
+KMONS:   5 = att:neutral halfling hd:1 name:young name_adjective name_species
+KFEAT:   6 = net trap
+KFEAT:   m = iron_grate
+MARKER:  P = lua:fog_machine { cloud_type = "flame", \
+             pow_min = 10000, pow_max = 10000, delay = 1, \
+             size = 1, walk_dist = 0, start_clouds = 1 }
+MARKER:  P = lua:fog_machine { cloud_type = "grey smoke", \
+             pow_min = 3, pow_max = 3, delay = 100, \
+             size = 1, walk_dist = 1, start_clouds = 1 }
+SUBST:   y = 2 3 x:5
+NSUBST:  W = 5:.
+NSUBST:  t = 6:2 3 / 6:x / *:t
+MAP
+xxxxxxxxxxxxx
+xtttttttttttxxxx
+xtyyWWWyyyyytttx
+xyy.....y3yyyttx
+xy..s1s..m'5yytx
+@...1P1..m65'ytx
+xy..s17..m'5yytx
+xyy.....y2yyyttx
+xtyyWWWyyyyyttxx
+xttttttttxxttxxx
+xxxxxxxxxxxxxx
+ENDMAP
+
 #################################################################
 # checkpoints with guards to alert nearby monsters, by Core Xii
 NAME:   corexii_checkpoint_a
@@ -921,7 +1036,7 @@ ENDMAP
 NAME:   kilobyte_rumbling_trees
 DEPTH:  D:14-20, Elf, Lair:4-8
 MONS:   patrolling spriggan druid
-MONS:   black bear / grizzly bear w:20 / megabat w:20
+MONS:   black bear / grizzly bear w:20 / bat w:20
 FTILE:  .t1@ = floor_moss
 MAP
 ttttt       tttt@t
@@ -1214,6 +1329,35 @@ xxxxxxx.....@
 xxxxxxxxxxxxx
 ENDMAP
 
+# Carrion pond
+# Bad water, a lot of carrion and feeders around, yuck!
+# Has either necrophage or jackal, but the former is more memorable.
+#
+# Perhaps use Sewers style water?
+# Would also be nice if we could make the corpses fit the branch.
+# And even better if some corpses could rot (i.e. delayed rotting).
+#                                                          --dpeg
+NAME:  roderic_carrion_pond
+TAGS:  no_monster_gen no_trap_gen mini_float
+DEPTH: Lair: 2-7 , Swamp
+SUBST: ? = %%.
+KITEM: % = any corpse
+: dgn.delayed_decay(_G, '%', 'any corpse')
+: if you.xl() > 8 then
+MONS:  necrophage
+: else
+MONS:  jackal
+: end
+SUBST: ' = 111.
+MAP
+ ..'..?..
+.?'.?.??'.
+'?.www?.?.
+.'wwwww.?.
+?..ww?.?'.
+ .?'.?...
+ENDMAP
+
 ###############################################################################
 # Kobold demonologist guarded by invisible demons. (nrook)
 # Added "evil rite" looking colours, so players expect some nastiness.
@@ -1301,11 +1445,10 @@ x1.1x
 xx+xx
 ENDMAP
 
-# disabled for 0.8
 NAME:    hallowed_hall
 TAGS:    no_monster_gen no_trap_gen extra
-WEIGHT:  0
-MONS:    pearl dragon, shedu band, ophan, plant
+PLACE:   D:17-27
+MONS:    quokka, shedu band, ophan, plant
 COLOUR:  c = white
 TILE:    c = wall_church
 FTILE:   .+23GtABC = floor_limestone
@@ -1954,34 +2097,6 @@ xx...xx
 xxxxxxx
 ENDMAP
 
-NAME:  minmay_layered_prison
-DEPTH: D:2-, Vault, Crypt
-TAGS:  no_monster_gen no_item_gen
-KPROP: 789. = no_rtele_into
-KITEM: 8 = acquire any
-KMONS: 8 = 8
-KITEM: 9 = |
-KMONS: 9 = 9
-KITEM: 7 = %
-KMONS: 7 = random
-MAP
-...............
-.mmmmmmmmmmmmm.
-.m7....7....7m.
-.m.bbbbbbbbb.m.
-.m.b9..9..9b.m.
-.m.b.vvvvv.b.m.
-.m.b.v888v.b.m.
-.m7b9v888v9b7m.
-.m.b.v888v.b.m.
-.m.b.vvvvv.b.m.
-.m.b9..9..9b.m.
-.m.bbbbbbbbb.m.
-.m7....7....7m.
-.mmmmmmmmmmmmm.
-...............
-ENDMAP
-
 NAME:  kb_rosetta
 DEPTH: D:6-, Vault, Elf
 SUBST: x : xcvmnot
@@ -2073,7 +2188,7 @@ DEPTH:   D:14-24, Vault, Crypt:1-4
 TAGS:    no_monster_gen no_item_gen
 MARKER:  a = lua:fog_machine { \
                  pow_max = 10, delay_min = 10, delay_max = 40, \
-                 size = 1, size_buildup_amnt = 5, \
+                 size = 2, size_buildup_amnt = 5, \
                  size_buildup_time = 25, cloud_type = "black smoke" \
              }
 KMONS:   a = vampire mosquito
@@ -2272,20 +2387,20 @@ DEPTH:  D:10-, Vault
 TAGS:   no_monster_gen no_item_gen
 WEIGHT: 3
 # Iron golems are speed 7, so even a naga can outrun them.
-MONS:   patrolling iron golem
+MONS:   patrolling iron golem, patrolling metal gargoyle
 ITEM:   ring of protection unrand:ring_of_robustness
 MAP
 ...............
 .vvvvv.@.vvvvv.
 .v1.........1v.
 .v.vvvvvvvvv.v.
-.v.v1..1..1v.v.
+.v.v2..2..2v.v.
 .v.v.vv.vv.v.v.
 .v...v1.1v...v.
-.v.1.v.d.v.1.v.
+.v.2.v.d.v.2.v.
 .v...v1.1v...v.
 .v.v.vv.vv.v.v.
-.v.v1..1..1v.v.
+.v.v2..2..2v.v.
 .v.vvvvvvvvv.v.
 .v1.........1v.
 .vvvvv.@.vvvvv.
@@ -2354,9 +2469,10 @@ ENDMAP
 #
 NAME:   minmay_guarded_unrand_dyrovepreva
 TAGS:   no_monster_gen no_item_gen
-DEPTH:  D:10-
+DEPTH:  D:14-
 WEIGHT: 3
-MONS:   crystal golem, orange crystal statue
+MONS:   patrolling crystal golem name:crystal_guardian n_rpl spells:bolt_of_fire;bolt_of_cold
+MONS:   orange crystal statue
 ITEM:   cap unrand:crown_of_dyrovepreva
 KPROP:  12d' = no_rtele_into
 SUBST:  ' = .
@@ -2373,19 +2489,19 @@ MAP
 ..bbbb'''''b'''''b'''''bbbb..
 ..bbbbb'''bbb'''bbb'''bbbbb..
 ...bbbbb'bbbbbbbbbbb'bbbbb...
-....bbb''.bbb'1'bbb'''bbb....
+....bbb''.bbb'''bbb'''bbb....
 .....b'''''b'1'1'b'''''b.....
-....2b1'''1b1'd'1b1'''1b2....
+.....b''1''b''d''b''1''b.....
 .....b'''''b'1'1'b'''''b.....
-....bbb'''bbb'1'bbb'''bbb....
+....bbb'''bbb'''bbb'''bbb....
 ...bbbbb'bbbbb2bbbbb'bbbbb...
-..bbbbb'''bbb'1'bbb'''bbbbb..
+..bbbbb'''bbb'''bbb'''bbbbb..
 ..bbbb'''''b'''''b'''''bbbb..
-...bbb1'''1'''''''1'''1bbb...
+...bbb''1'''''1'''''1''bbb...
  ...bb'''''b'''''b'''''bb...
-  ...bb'1'bbb'1'bbb'1'bb...
+  ...bb'''bbb'''bbb'''bb...
    ...bbbbbbbbbbbbbbbbb...
-    ...bbbbbb.2.bbbbbb...
+    ...bbbbbb...bbbbbb...
      ...bbbb.....bbbb...
       ...bb.......bb...
        ...............
@@ -2608,7 +2724,7 @@ MARKER: X = lua: props_marker { connected_exclude="true" }
 SUBST:  X = =
 MAP
 XXXXXXXXXX
-XxXXXXXXXX
+XXXXXXXXXX
 XXXXXXXXXX
 XXX8888XXX
 XXX8998XXX
@@ -2619,12 +2735,34 @@ XXXXXXXXXX
 XXXXXXXXXX
 ENDMAP
 
+# No, John. You are the door vault
+NAME:   reverse_minivault_9
+DEPTH:  D:15-27, Elf, Vault, Crypt, Dis, Geh, Tar, Coc
+MARKER: X = lua: props_marker { connected_exclude="true" }
+SUBST:  X = =
+MAP
+xxxxxxxxxxxxxx
+x8...8..8.9.8x
+x.XXXXXXXXXX.x
+x9XXXXXXXXXX.x
+x.XXXXXXXXXX.x
+x8XXX....XXX8x
+x.XXX.{..XXX.x
+x.XXX....XXX.x
+x8XXX....XXX8x
+x.XXXXXXXXXX.x
+x.XXXXXXXXXX9x
+x.XXXXXXXXXX.x
+x8.9.8..8...8x
+xxxxxxxxxxxxxx
+ENDMAP
+
 # Closed-box minivault
 NAME:  minivault_12
 DEPTH: D:8-26
 MAP
 ............
-.xxxxxxxxxx.
+.GxxxxxxxxG.
 .x>9$9$9$<x.
 .x.$9$9$.$x.
 .x$.****$.x.
@@ -2633,7 +2771,7 @@ MAP
 .x.$****.$x.
 .x$9$9$9$.x.
 .x<$9$9$9>x.
-.xxxxxxxxxx.
+.GxxxxxxxxG.
 ............
 ENDMAP
 
@@ -2648,7 +2786,7 @@ KMONS: F = orange crystal statue / silver statue / ice statue
 MAP
 ............
 .xxxxxxxxxx.
-.=.Ax.C=.9x.
+.+.Ax.C=.9x.
 .x.B=.Dx..x.
 .xxxxxxxx=x.
 .x.8+|0x8.x.

@@ -118,6 +118,18 @@ static int crawl_set_more_autoclear(lua_State *ls)
     return (0);
 }
 
+static int crawl_enable_more(lua_State *ls)
+{
+    if (lua_isnone(ls, 1))
+    {
+        luaL_argerror(ls, 1, "needs a boolean argument");
+        return (0);
+    }
+    crawl_state.show_more_prompt = lua_toboolean(ls, 1);
+
+    return (0);
+}
+
 static int crawl_c_input_line(lua_State *ls)
 {
     char linebuf[500];
@@ -502,6 +514,7 @@ static int crawl_article_a(lua_State *ls)
 }
 
 LUARET1(crawl_game_started, boolean, crawl_state.need_save)
+LUARET1(crawl_stat_gain_prompt, boolean, crawl_state.stat_gain_prompt)
 LUARET1(crawl_random2, number, random2(luaL_checkint(ls, 1)))
 LUARET1(crawl_one_chance_in, boolean, one_chance_in(luaL_checkint(ls, 1)))
 LUARET1(crawl_random2avg, number,
@@ -520,6 +533,17 @@ LUARET1(crawl_x_chance_in_y, boolean, x_chance_in_y(luaL_checkint(ls, 1),
 static int crawl_is_tiles(lua_State *ls)
 {
 #ifdef USE_TILE
+    lua_pushboolean(ls, true);
+#else
+    lua_pushboolean(ls, false);
+#endif
+
+    return (1);
+}
+
+static int crawl_is_webtiles(lua_State *ls)
+{
+#ifdef USE_TILE_WEB
     lua_pushboolean(ls, true);
 #else
     lua_pushboolean(ls, false);
@@ -636,6 +660,58 @@ static int crawl_err_trace(lua_State *ls)
     return (lua_gettop(ls));
 }
 
+#ifdef WIZARD
+static int crawl_call_dlua(lua_State *ls)
+{
+    if (!you.wizard)
+        luaL_error(ls, "This function is wizard mode only.");
+
+    const char* code = luaL_checkstring(ls, 1);
+    if (!code)
+        return (0);
+
+    luaL_loadbuffer(dlua, code, strlen(code), "call_dlua");
+    int status = lua_pcall(dlua, 0, LUA_MULTRET, 0);
+
+    if (status)
+    {
+        if (!lua_isnil(dlua, -1))
+        {
+            const char *msg = lua_tostring(dlua, -1);
+            if (msg == NULL)
+                msg = "(error object is not a string)";
+            mpr(msg, MSGCH_ERROR);
+        }
+
+        lua_settop(dlua, 0); // don't bother unwinding, just nuke the stack
+        return 0;
+    }
+
+    if (lua_gettop(dlua) > 0)
+    {
+        // TODO: shuttle things other than a single scalar value
+        if (lua_isnil(dlua, -1))
+            lua_pushnil(ls);
+        else if (lua_isboolean(dlua, -1))
+            lua_pushboolean(ls, lua_toboolean(dlua, -1));
+        else if (lua_isnumber(dlua, -1))
+            lua_pushnumber(ls, lua_tonumber(dlua, -1));
+        else if (const char *ret = lua_tostring(dlua, -1))
+            lua_pushstring(ls, ret);
+        else
+        {
+            mpr("call_dlua: cannot pass non-scalars yet (TODO)", MSGCH_ERROR);
+            lua_pushnil(ls);
+        }
+
+        lua_settop(dlua, 0); // clear the stack
+        return 1;
+    }
+
+    return 0;
+}
+#endif
+
 static const struct luaL_reg crawl_clib[] =
 {
     { "mpr",            crawl_mpr },
@@ -643,6 +719,7 @@ static const struct luaL_reg crawl_clib[] =
     { "stderr",  crawl_stderr },
     { "more",           crawl_more },
     { "more_autoclear", crawl_set_more_autoclear },
+    { "enable_more",    crawl_enable_more },
     { "flush_prev_message", crawl_flush_prev_message },
     { "mesclr",         crawl_mesclr },
     { "delay",          crawl_delay },
@@ -680,10 +757,15 @@ static const struct luaL_reg crawl_clib[] =
     { "grammar",        _crawl_grammar },
     { "article_a",      crawl_article_a },
     { "game_started",   crawl_game_started },
+    { "stat_gain_prompt", crawl_stat_gain_prompt },
     { "is_tiles",       crawl_is_tiles },
+    { "is_webtiles",    crawl_is_webtiles },
     { "err_trace",      crawl_err_trace },
     { "get_command",    crawl_get_command },
     { "endgame",        crawl_endgame },
+#ifdef WIZARD
+    { "call_dlua",      crawl_call_dlua },
+#endif
 
     { "tutorial_hunger", crawl_tutorial_hunger },
     { "tutorial_skill",  crawl_tutorial_skill },
@@ -807,6 +889,16 @@ static int _crawl_god_speaks(lua_State *ls)
     return (0);
 }
 
+LUAFN(_crawl_set_max_runes)
+{
+    int max_runes = luaL_checkinteger(ls, 1);
+    if (max_runes < 0 || max_runes > NUM_RUNE_TYPES)
+        luaL_error(ls, make_stringf("Bad number of max runes: %d", max_runes).c_str());
+    else
+        you.obtainable_runes = max_runes;
+    return (0);
+}
+
 static const struct luaL_reg crawl_dlib[] =
 {
 { "args", _crawl_args },
@@ -818,6 +910,7 @@ static const struct luaL_reg crawl_dlib[] =
 { "millis", _crawl_millis },
 #endif
 { "make_name", crawl_make_name },
+{ "set_max_runes", _crawl_set_max_runes },
 { NULL, NULL }
 };
 

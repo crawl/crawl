@@ -16,6 +16,7 @@
 #include "delay.h"
 #include "env.h"
 #include "godabil.h"
+#include "goditem.h"
 #include "invent.h"
 #include "item_use.h"
 #include "itemprop.h"
@@ -60,6 +61,9 @@ bool form_can_swim(transformation_type form)
     if (you.species == SP_MERFOLK && !form_changed_physiology(form))
         return (true);
 
+    if (you.species == SP_OCTOPODE)
+        return (true);
+
     size_type size = you.transform_size(form, PSIZE_BODY);
     if (size == SIZE_CHARACTER)
         size = you.body_size(PSIZE_BODY, true);
@@ -70,7 +74,7 @@ bool form_can_swim(transformation_type form)
 bool form_likes_water(transformation_type form)
 {
     return (form_can_swim(form) || you.species == SP_GREY_DRACONIAN
-                                   && !form_changed_physiology(form));
+            || you.species == SP_OCTOPODE && !form_changed_physiology(form));
 }
 
 bool form_can_butcher_barehanded(transformation_type form)
@@ -153,11 +157,8 @@ _init_equipment_removal(transformation_type form)
         result.insert(EQ_WEAPON);
 
     // Liches can't wield holy weapons.
-    if (form == TRAN_LICH && you.weapon()
-        && get_weapon_brand(*you.weapon()) == SPWPN_HOLY_WRATH)
-    {
+    if (form == TRAN_LICH && you.weapon() && is_holy_item(*you.weapon()))
         result.insert(EQ_WEAPON);
-    }
 
     for (int i = EQ_WEAPON + 1; i < NUM_EQUIP; ++i)
     {
@@ -201,7 +202,7 @@ static void _remove_equipment(const std::set<equipment_type>& removed,
             {
                 const int slot = you.equip[EQ_WEAPON];
                 unwield_item(!you.berserk());
-                canned_msg(MSG_EMPTY_HANDED);
+                canned_msg(MSG_EMPTY_HANDED_NOW);
                 you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = slot + 1;
             }
             else
@@ -211,7 +212,7 @@ static void _remove_equipment(const std::set<equipment_type>& removed,
             {
                 // A mutation made us not only lose an equipment slot
                 // but actually removed a worn item: Funny!
-                xom_is_stimulated(is_artefact(*equip) ? 255 : 128);
+                xom_is_stimulated(is_artefact(*equip) ? 200 : 100);
             }
         }
         else
@@ -245,7 +246,9 @@ static bool _mutations_prevent_wearing(const item_def& item)
 
     if (eqslot == EQ_HELMET && (player_mutation_level(MUT_HORNS) == 3
         || player_mutation_level(MUT_ANTENNAE) == 3))
+    {
         return (true);
+    }
 
     return (false);
 }
@@ -393,8 +396,10 @@ monster_type transform_mons()
 
 std::string blade_parts(bool terse)
 {
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
         return terse ? "paws" : "front paws";
+    if (you.species == SP_OCTOPODE)
+        return "tentacles";
     return "hands";
 }
 
@@ -421,6 +426,22 @@ monster_type dragon_form_dragon_type()
         case SP_RED_DRACONIAN:
         default:
              return MONS_DRAGON;
+    }
+}
+
+// with a denominator of 10
+int form_hp_mod()
+{
+    switch(you.form)
+    {
+    case TRAN_STATUE:
+        return 13;
+    case TRAN_ICE_BEAST:
+        return 12;
+    case TRAN_DRAGON:
+        return 15;
+    default:
+        return 10;
     }
 }
 
@@ -558,7 +579,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     std::set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
-    int str = 0, dex = 0, xhp = 0, dur = 0;
+    int str = 0, dex = 0, dur = 0;
     const char* tran_name = "buggy";
     std::string msg;
 
@@ -581,9 +602,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         break;
 
     case TRAN_BLADE_HANDS:
-        tran_name = "Blade Hands";
-        if (you.species == SP_CAT)
-            tran_name = "Blade Paws";
+        tran_name = ("Blade " + uppercase_first(blade_parts(true))).c_str();
         dur       = std::min(10 + random2(pow), 100);
         msg       = "Your " + blade_parts()
                     + " turn into razor-sharp scythe blades.";
@@ -593,7 +612,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
         tran_name = "statue";
         str       = 2;
         dex       = -2;
-        xhp       = 15;
         dur       = std::min(20 + random2(pow) + random2(pow), 100);
         if (player_genus(GENPC_DWARVEN) && one_chance_in(10))
             msg = "You inwardly fear your resemblance to a lawn ornament.";
@@ -603,7 +621,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     case TRAN_ICE_BEAST:
         tran_name = "ice beast";
-        xhp       = 12;
         dur       = std::min(30 + random2(pow) + random2(pow), 100);
         msg      += "a creature of crystalline ice.";
         break;
@@ -611,7 +628,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
     case TRAN_DRAGON:
         tran_name = "dragon";
         str       = 10;
-        xhp       = 16;
         dur       = std::min(20 + random2(pow) + random2(pow), 100);
         msg      += "a fearsome dragon!";
         break;
@@ -691,8 +707,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
                                  tran_name).c_str());
     }
 
-    if (xhp)
-        _extra_hp(xhp);
+    _extra_hp(form_hp_mod());
 
     // Extra effects
     switch (which_trans)
@@ -746,6 +761,9 @@ bool transform(int pow, transformation_type which_trans, bool force,
     // running around or butchering corpses.
     stop_delay();
 
+    if (crawl_state.which_god_acting() == GOD_XOM)
+       you.transform_uncancellable = true;
+
     if (you.species != SP_VAMPIRE || which_trans != TRAN_BAT)
         transformation_expiration_warning();
 
@@ -771,6 +789,7 @@ void untransform(bool skip_wielding, bool skip_move)
 
     // Must be unset first or else infinite loops might result. -- bwr
     const transformation_type old_form = you.form;
+    int hp_downscale = form_hp_mod();
 
     // We may have to unmeld a couple of equipment types.
     std::set<equipment_type> melded = _init_equipment_removal(old_form);
@@ -780,8 +799,6 @@ void untransform(bool skip_wielding, bool skip_move)
     update_player_symbol();
 
     burden_change();
-
-    int hp_downscale = 10;
 
     switch (old_form)
     {
@@ -818,8 +835,6 @@ void untransform(bool skip_wielding, bool skip_move)
         // but the reverse isn't true. -- bwr
         if (you.duration[DUR_STONESKIN])
             you.duration[DUR_STONESKIN] = 1;
-
-        hp_downscale = 15;
         break;
 
     case TRAN_ICE_BEAST:
@@ -829,15 +844,12 @@ void untransform(bool skip_wielding, bool skip_move)
         // but the reverse isn't true. -- bwr
         if (you.duration[DUR_ICY_ARMOUR])
             you.duration[DUR_ICY_ARMOUR] = 1;
-
-        hp_downscale = 12;
         break;
 
     case TRAN_DRAGON:
         mpr("Your transformation has ended.", MSGCH_DURATION);
         notify_stat_change(STAT_STR, -10, true,
                     "losing the dragon transformation");
-        hp_downscale = 16;
         break;
 
     case TRAN_LICH:

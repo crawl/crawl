@@ -30,12 +30,12 @@ KFEAT:  ' = net trap / needle trap / bolt trap / axe trap / arrow trap
 MONS:   Menkaure, baby alligator, crocodile, big fish, kraken, shark
 MARKER: a = lua:fog_machine { \
              pow_min = 1, pow_max = 2, delay = 3, \
-             size = 1, walk_dist = 8, spread_rate= -1, \
+             size = 2, walk_dist = 8, spread_rate= -1, \
              cloud_type= "steam" }
 KFEAT:  a = shallow_water
 MARKER: d = lua:fog_machine { \
              pow_min = 3, pow_max = 6, delay = 3, \
-             size = 1, walk_dist = 16, spread_rate= -1, \
+             size = 2, walk_dist = 16, spread_rate= -1, \
              cloud_type= "grey smoke" }
 KFEAT:  d = shallow_water
 KMONS:  b = orange rat / scorpion / vampire mosquito / blink frog
@@ -895,7 +895,7 @@ SHUFFLE: 123
 MONS:   deep elf blademaster, eye of devastation, harpy
 MARKER: d = lua:fog_machine { \
              pow_min = 3, pow_max = 6, delay = 3, \
-             size = 1, walk_dist = 8, spread_rate= -1, \
+             size = 2, walk_dist = 8, spread_rate= -1, \
              cloud_type= "thin mist" }
 SUBST:  d = .
 SUBST:  . = %

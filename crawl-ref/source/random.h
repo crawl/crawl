@@ -19,11 +19,13 @@ int random_range(int low, int high, int nrolls);
 const char* random_choose_string(const char* first, ...);
 int random_choose(int first, ...);
 int random_choose_weighted(int weight, int first, ...);
+double random_real();
 
 int random2avg(int max, int rolls);
 int bestroll(int max, int rolls);
 int random2limit(int max, int limit);
 int binomial_generator(unsigned n_trials, unsigned trial_prob);
+bool bernoulli(double n_trials, double trial_prob);
 int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage = 2);
 int roll_dice(int num, int size);
 

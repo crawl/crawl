@@ -7,6 +7,8 @@
 
 #include "player.h"
 
+#include <math.h>
+
 #include "areas.h"
 #include "artefact.h"
 #include "dgnevent.h"
@@ -16,6 +18,7 @@
 #include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "items.h"
 #include "libutil.h"
 #include "misc.h"
 #include "monster.h"
@@ -64,6 +67,12 @@ void player::moveto(const coord_def &c, bool clear_net)
 
     crawl_view.set_player_at(c);
     set_position(c);
+
+    if (player_has_orb())
+    {
+        env.orb_pos = c;
+        invalidate_agrid(true);
+    }
 }
 
 bool player::move_to_pos(const coord_def &c, bool clear_net)
@@ -129,7 +138,7 @@ int player::get_experience_level() const
 
 bool player::can_pass_through_feat(dungeon_feature_type grid) const
 {
-    return !feat_is_solid(grid) && grid != DNGN_TEMP_PORTAL;
+    return !feat_is_solid(grid) && grid != DNGN_MALIGN_GATEWAY;
 }
 
 bool player::is_habitable_feat(dungeon_feature_type actual_grid) const
@@ -196,6 +205,8 @@ int player::damage_type(int)
         return (DVORP_SLICING);
     else if (has_usable_claws())
         return (DVORP_CLAWING);
+    else if (has_usable_tentacles())
+        return (DVORP_TENTACLE);
 
     return (DVORP_CRUSHING);
 }
@@ -245,7 +256,7 @@ int player::damage_brand(int)
 // eq must be in [EQ_WEAPON, EQ_AMULET], or bad things will happen.
 item_def *player::slot_item(equipment_type eq, bool include_melded)
 {
-    ASSERT(eq >= EQ_WEAPON && eq <= EQ_AMULET);
+    ASSERT(eq >= EQ_WEAPON && eq < NUM_EQUIP);
 
     const int item = equip[eq];
     if (item == -1 || !include_melded && melded[eq])
@@ -256,7 +267,7 @@ item_def *player::slot_item(equipment_type eq, bool include_melded)
 // const variant of the above...
 const item_def *player::slot_item(equipment_type eq, bool include_melded) const
 {
-    ASSERT(eq >= EQ_WEAPON && eq <= EQ_AMULET);
+    ASSERT(eq >= EQ_WEAPON && eq < NUM_EQUIP);
 
     const int item = equip[eq];
     if (item == -1 || !include_melded && melded[eq])
@@ -296,10 +307,17 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
 bool player::could_wield(const item_def &item, bool ignore_brand,
                          bool /* ignore_transform */) const
 {
-    if (species == SP_CAT)
+    if (species == SP_FELID)
         return (false);
-    if (body_size() < SIZE_LARGE && item_mass(item) >= 300)
+    if (body_size() < SIZE_LARGE
+            && (item_mass(item) >= 500
+                || item.base_type == OBJ_WEAPONS
+                    && item_mass(item) >= 300))
         return (false);
+
+    // Anybody can wield missiles to enchant, item_mass permitting
+    if (item.base_type == OBJ_MISSILES)
+        return (true);
 
     // Small species wielding large weapons...
     if (body_size(PSIZE_BODY) < SIZE_MEDIUM
@@ -376,9 +394,39 @@ std::string player::conj_verb(const std::string &verb) const
 
 std::string player::hand_name(bool plural, bool *can_plural) const
 {
-    if (can_plural != NULL)
-        *can_plural = true;
-    return your_hand(plural);
+    bool _can_plural;
+    if (can_plural == NULL)
+        can_plural = &_can_plural;
+    *can_plural = true;
+
+    std::string str;
+
+    if (form == TRAN_BAT || form == TRAN_DRAGON)
+        str = "foreclaw";
+    else if (form == TRAN_PIG || form == TRAN_SPIDER)
+        str = "front leg";
+    else if (form == TRAN_ICE_BEAST)
+        str = "paw";
+    else if (form == TRAN_BLADE_HANDS)
+        str = "scythe-like blade";
+    else if (form == TRAN_LICH || form == TRAN_STATUE
+             || !form_changed_physiology())
+    {
+        if (species == SP_FELID)
+            str = "paw";
+        else if (you.has_usable_claws())
+            str = "claw";
+        else if (you.has_usable_tentacles())
+            str = "tentacle";
+    }
+
+    if (str.empty())
+        return (plural ? "hands" : "hand");
+
+    if (plural && *can_plural)
+        str = pluralise(str);
+
+    return str;
 }
 
 std::string player::foot_name(bool plural, bool *can_plural) const
@@ -392,12 +440,18 @@ std::string player::foot_name(bool plural, bool *can_plural) const
 
     if (form == TRAN_SPIDER)
         str = "hind leg";
-    else if (!form_changed_physiology())
+    else if (form == TRAN_LICH || form == TRAN_STATUE
+             || !form_changed_physiology())
     {
         if (player_mutation_level(MUT_HOOVES) >= 3)
             str = "hoof";
-        else if (player_mutation_level(MUT_TALONS) >= 3)
+        else if (you.has_usable_talons())
             str = "talon";
+        else if (you.has_usable_tentacles())
+        {
+            str         = "tentacles";
+            *can_plural = false;
+        }
         else if (species == SP_NAGA)
         {
             str         = "underbelly";
@@ -427,14 +481,23 @@ std::string player::arm_name(bool plural, bool *can_plural) const
     if (can_plural != NULL)
         *can_plural = true;
 
+    std::string adj;
     std::string str = "arm";
 
     if (player_genus(GENPC_DRACONIAN) || species == SP_NAGA)
-        str = "scaled arm";
+        adj = "scaled";
     else if (species == SP_KENKU)
-        str = "feathered arm";
+        adj = "feathered";
     else if (species == SP_MUMMY)
-        str = "bandage-wrapped arm";
+        adj = "bandage-wrapped";
+    else if (species == SP_OCTOPODE)
+        str = "tentacle";
+
+    if (form == TRAN_LICH)
+        adj = "bony";
+
+    if (!adj.empty())
+        str = adj + " " + str;
 
     if (plural)
         str = pluralise(str);
@@ -467,7 +530,7 @@ bool player::cannot_fight() const
 }
 
 // If you have a randart equipped that has the ARTP_ANGRY property,
-// there's a 1/20 chance of it becoming activated whenever you
+// there's a 1/100 chance of it becoming activated whenever you
 // attack a monster. (Same as the berserk mutation at level 1.)
 // The probabilities for actually going berserk are cumulative!
 static bool _equipment_make_berserk()
@@ -481,7 +544,7 @@ static bool _equipment_make_berserk()
         if (!is_artefact(*item))
             continue;
 
-        if (artefact_wpn_property(*item, ARTP_ANGRY) && one_chance_in(20))
+        if (artefact_wpn_property(*item, ARTP_ANGRY) && one_chance_in(100))
             return (true);
     }
 
@@ -500,8 +563,8 @@ void player::attacking(actor *other)
             pet_target = mon->mindex();
     }
 
-    if (player_mutation_level(MUT_BERSERK)
-            && x_chance_in_y(player_mutation_level(MUT_BERSERK) * 10 - 5, 100)
+    const int chance = pow(3, player_mutation_level(MUT_BERSERK) - 1);
+    if (player_mutation_level(MUT_BERSERK) && x_chance_in_y(chance, 100)
         || _equipment_make_berserk())
     {
         go_berserk(false);
@@ -624,4 +687,10 @@ bool player::berserk() const
 bool player::can_cling_to_walls() const
 {
     return you.form == TRAN_SPIDER;
+}
+
+bool player::is_web_immune() const
+{
+    // Spider form
+    return (can_cling_to_walls());
 }

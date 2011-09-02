@@ -66,7 +66,6 @@
 #include "message.h"
 #include "options.h"
 #include "state.h"
-#include "stuff.h"
 #include "unicode.h"
 #include "view.h"
 #include "viewgeom.h"

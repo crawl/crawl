@@ -65,6 +65,7 @@ private:
     std::string raw_line;
 
     std::string version;
+    uint8_t     tiles;
     int         points;
     std::string name;
     species_type race;
@@ -107,12 +108,17 @@ private:
     int         kills;              // number of monsters killed
     std::string maxed_skills;       // comma-separated list of skills
                                     // at level 27
+    std::string fifteen_skills;     // comma-separated list of skills
+                                    // at level >= 15
     std::string status_effects;     // comma-separated list of status effects
     int         gold;               // Remaining gold.
     int         gold_found;         // Gold found.
     int         gold_spent;         // Gold spent shopping.
 
     uint32_t    fruit_found_mask;   // Mask of fruits found.
+
+    int         zigs;               // Ziggurats completed.
+    int         zigmax;             // Max level reached in a ziggurat.
 
     mutable std::auto_ptr<xlog_fields> fields;
 

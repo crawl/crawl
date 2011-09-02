@@ -119,6 +119,7 @@ CHOWN = chown 2>/dev/null
 PNGCRUSH = $(COPY)
 PNGCRUSH_LABEL = COPY
 ADVPNG = advpng -z -4
+PKGCONFIG = pkg-config
 DOXYGEN = doxygen
 DOXYGEN_SIMPLE_CONF = crawl_simple.doxy
 DOXYGEN_ALL_CONF = crawl_all.doxy
@@ -134,24 +135,6 @@ export MAKEFLAGS
 export CONFIGURE_FLAGS
 export uname_S
 
-LIBPCRE := contrib/install/lib/libpcre.a
-LIBSDL := contrib/install/lib/libSDL.a
-LIBPNG := contrib/install/lib/libpng.a
-LIBSDLIMAGE := contrib/install/lib/libSDL_image.a
-LIBFREETYPE := contrib/install/lib/libfreetype.a
-LIBSQLITE := contrib/install/lib/libsqlite3.a
-ifdef USE_LUAJIT
-LIBLUA := contrib/install/lib/libluajit.a
-else
-LIBLUA := contrib/install/lib/liblua.a
-endif
-LIBZ := contrib/install/lib/libz.a
-
-LUA_INCLUDE_DIR := /usr/include/lua5.1
-LUA_LIB := -llua5.1
-SQLITE_INCLUDE_DIR := /usr/include
-SQLITE_LIB := -lsqlite3
-
 #
 # Platform Detection
 #
@@ -162,18 +145,25 @@ uname_R := $(shell sh -c 'uname -r 2>/dev/null || echo not')
 uname_P := $(shell sh -c 'uname -p 2>/dev/null || echo not')
 uname_V := $(shell sh -c 'uname -v 2>/dev/null || echo not')
 
-HOST = $(shell sh -c 'cc -dumpmachine || echo unknown')
-ARCH = $(HOST)
+HOST := $(shell sh -c 'cc -dumpmachine || echo unknown')
+ARCH := $(HOST)
 
 ifdef CROSSHOST
-	ARCH = $(CROSSHOST)
-	NO_PKGCONFIG = YesPlease
+	ARCH := $(CROSSHOST)
+	ifneq (,$($shell which $(ARCH)-pkg-config 2>/dev/null))
+	  PKGCONFIG = $(ARCH)-pkg-config
+	else
+	  ifneq (,$(wildcard /usr/$(ARCH)/lib/pkgconfig))
+	    PKGCONFIG = PKG_CONFIG_LIBDIR=/usr/$(ARCH)/lib/pkgconfig pkg-config
+	  else
+	    NO_PKGCONFIG = YesPlease
+	    BUILD_LUA = yes
+	    BUILD_SQLITE = yes
+	    BUILD_ZLIB = YesPlease
+	  endif
+	endif
 	NO_AUTO_OPT = YesPlease
-	NEED_STATIC = YesPlease
 	CONFIGURE_FLAGS += --host=$(CROSSHOST)
-	BUILD_LUA = yes
-	BUILD_SQLITE = yes
-	BUILD_ZLIB = YesPlease
 
 	# If needed, override uname_S so we get the appropriate
 	# things compiled.
@@ -194,7 +184,7 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 	DEFINES_L += -DWINMM_PLAY_SOUNDS
 	EXTRA_LIBS += -lwinmm
 	ifdef TILES
-		EXTRA_LIBS += -lmingw32 -lgdi32 -lwinmm contrib/install/lib/libSDLmain.a -mwindows
+		EXTRA_LIBS += -lmingw32 -lgdi32 -lwinmm contrib/install/$(ARCH)/lib/libSDLmain.a -mwindows
 		BUILD_FREETYPE = YesPlease
 		BUILD_SDL = YesPlease
 		BUILD_SDLIMAGE = YesPlease
@@ -209,7 +199,7 @@ ifeq ($(uname_S),Darwin)
 	BUILD_SQLITE = YesPlease
 	BUILD_ZLIB = YesPlease
 	ifdef TILES
-		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework Carbon -framework IOKit -framework OpenGL contrib/install/lib/libSDLmain.a
+		EXTRA_LIBS += -framework AppKit -framework AudioUnit -framework Carbon -framework IOKit -framework OpenGL contrib/install/$(ARCH)/lib/libSDLmain.a
 		BUILD_FREETYPE = YesPlease
 		BUILD_SDL = YesPlease
 		BUILD_SDLIMAGE = YesPlease
@@ -239,6 +229,38 @@ ifdef BUILD_ALL
 	BUILD_ZLIB = YesPlease
 endif
 
+LIBPCRE := contrib/install/$(ARCH)/lib/libpcre.a
+LIBSDL := contrib/install/$(ARCH)/lib/libSDL.a
+LIBPNG := contrib/install/$(ARCH)/lib/libpng.a
+LIBSDLIMAGE := contrib/install/$(ARCH)/lib/libSDL_image.a
+LIBFREETYPE := contrib/install/$(ARCH)/lib/libfreetype.a
+LIBSQLITE := contrib/install/$(ARCH)/lib/libsqlite3.a
+ifdef USE_LUAJIT
+LIBLUA := contrib/install/$(ARCH)/lib/libluajit.a
+else
+LIBLUA := contrib/install/$(ARCH)/lib/liblua.a
+endif
+LIBZ := contrib/install/$(ARCH)/lib/libz.a
+
+ifndef CROSSHOST
+	LUA_INCLUDE_DIR := /usr/include/lua5.1
+	SQLITE_INCLUDE_DIR := /usr/include
+else
+	# This is totally wrong, works only with some old-style setups, and
+	# on some architectures of Debian/new FHS multiarch -- excluding, for
+	# example, i386.  Fortunately, i386 is rarely cross-compiled to.
+	# There's no support for /usr/local/ too, without thorough handholding.
+	# It's still an improvement over Crawl 0.8 which had no cross-compiling
+	# to non-win32 at all.
+	#
+	# Needs to be replaced by compile checks.  Guessing the paths is fragile,
+	# while the compiler knows them already.
+	LUA_INCLUDE_DIR := /usr/$(ARCH)/include/lua5.1
+	SQLITE_INCLUDE_DIR := /usr/$(ARCH)/include
+endif
+LUA_LIB := -llua5.1
+SQLITE_LIB := -lsqlite3
+
 #
 # Set up the TILES variant
 #
@@ -251,6 +273,14 @@ ifndef IPAD
 	GL = YesPlease
 	FT = YesPlease
 endif
+
+TILES_ANY = YesPlease
+
+endif
+
+ifdef WEBTILES
+
+TILES_ANY = YesPlease
 
 endif
 
@@ -281,7 +311,7 @@ ifdef WIN32
 EXTRA_OBJECTS += icon.o
 endif
 
-ifndef TILES
+ifndef TILES_ANY
 ifdef NEED_LIBW32C
 OBJECTS += libw32c.o
 else
@@ -293,9 +323,6 @@ endif
 # Note that MinGW doesn't support -rdynamic.
 ifndef NO_RDYNAMIC
 LDFLAGS := -rdynamic
-endif
-ifdef NEED_STATIC
-LDFLAGS += -static
 endif
 
 ifdef USE_MERGE_BASE
@@ -347,27 +374,30 @@ SAVEDIR := ~/.crawl
 endif
 
 
-INCLUDES_L += -Icontrib/install/include
-LIBS += -Lcontrib/install/lib
+INCLUDES_L += -Icontrib/install/$(ARCH)/include
+LIBS += -Lcontrib/install/$(ARCH)/lib
 
 INCLUDES_L += -Iutil -I.
 
 ifdef APPLE_GCC
 
-ARCH := $(uname_M)
-export ARCH
+MARCH := $(uname_M)
 
-ifeq ($(ARCH),ppc)
+ifeq ($(MARCH),ppc)
 	SDK_VER := 10.4
 endif
-ifeq ($(ARCH),i386)
+ifeq ($(MARCH),i386)
 	SDK_VER := 10.4
 endif
-ifeq ($(ARCH),x86_64)
+ifeq ($(MARCH),x86_64)
+ifeq ($(uname_R),11.0.0)
+	SDK_VER := 10.7
+else
 ifdef TILES
 	SDK_VER := 10.6
 else
 	SDK_VER := 10.5
+endif
 endif
 endif
 
@@ -386,7 +416,7 @@ ifdef BUILD_UNIVERSAL
 CFLAGS_ARCH := -arch i386 -arch ppc -faltivec
 CFLAGS_DEPCC_ARCH := -arch i386
 else
-CFLAGS_ARCH := -arch $(ARCH)
+CFLAGS_ARCH := -arch $(MARCH)
 endif
 
 CC = $(GCC) $(CFLAGS_ARCH) -isysroot $(SDKROOT) -mmacosx-version-min=$(SDK_VER)
@@ -483,19 +513,26 @@ endif
 
 RLTILES = rltiles
 
+ifdef WEBTILES
+DEFINES_L += -DUSE_TILE
+DEFINES_L += -DUSE_TILE_WEB
+INCLUDES_L += -I$(RLTILES)
+endif
+
 #
 # Tiles build stuff
 #
 ifdef TILES
 
 DEFINES_L += -DUSE_TILE
+DEFINES_L += -DUSE_TILE_LOCAL
 INCLUDES_L += -I$(RLTILES)
 
 ifdef BUILD_SDL
-INCLUDES_L += -Icontrib/install/include/SDL
+INCLUDES_L += -Icontrib/install/$(ARCH)/include/SDL
 endif
 ifdef BUILD_FREETYPE
-INCLUDES_L += -Icontrib/install/include/freetype2
+INCLUDES_L += -Icontrib/install/$(ARCH)/include/freetype2
 endif
 
 ifdef SDL
@@ -523,24 +560,24 @@ endif
 #
 
 ifndef NO_PKGCONFIG
-ifneq ($(shell which pkg-config 2> /dev/null),)
-PKGCONFIG = YesPlease
+ifeq ($(shell which pkg-config 2> /dev/null),)
+NO_PKGCONFIG = YesPlease
 endif
 endif
 
-ifdef PKGCONFIG
+ifndef NO_PKGCONFIG
 
 # If pkg-config is available, it's the surest way to find where
 # the contributing libraries are located.
 #
 
-FREETYPE_INCLUDE := $(shell pkg-config freetype2 --cflags-only-I)
-FREETYPE_CFLAGS  := $(shell pkg-config freetype2 --cflags-only-other)
-FREETYPE_LDFLAGS := $(shell pkg-config freetype2 --libs-only-L) $(shell pkg-config freetype2 --libs-only-l)
+FREETYPE_INCLUDE := $(shell $(PKGCONFIG) freetype2 --cflags-only-I)
+FREETYPE_CFLAGS  := $(shell $(PKGCONFIG) freetype2 --cflags-only-other)
+FREETYPE_LDFLAGS := $(shell $(PKGCONFIG) freetype2 --libs-only-L) $(shell $(PKGCONFIG) freetype2 --libs-only-l)
 
-SDL_INCLUDE := $(shell pkg-config sdl --cflags-only-I)
-SDL_CFLAGS  := $(shell pkg-config sdl --cflags-only-other)
-SDL_LDFLAGS := $(shell pkg-config sdl --libs-only-L) $(shell pkg-config sdl --libs-only-l)
+SDL_INCLUDE := $(shell $(PKGCONFIG) sdl --cflags-only-I)
+SDL_CFLAGS  := $(shell $(PKGCONFIG) sdl --cflags-only-other)
+SDL_LDFLAGS := $(shell $(PKGCONFIG) sdl --libs-only-L) $(shell $(PKGCONFIG) sdl --libs-only-l)
 
 LIBS += -pthread -lSDL_image $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS)
 
@@ -705,7 +742,11 @@ datadir_fp := $(abspath $(strip $(DESTDIR))$(strip $(DATADIR)))
 
 ifndef NO_NCURSES
 
-NC_PREFIX = /usr
+ifndef CROSSHOST
+	NC_PREFIX = /usr
+else
+	NC_PREFIX = /usr/$(ARCH)
+endif
 
 # Include path for (n)curses with Unicode support.
 
@@ -784,7 +825,7 @@ ifndef V
 endif
 endif
 
-ifdef TILES
+ifdef TILES_ANY
 TILEIMAGEFILES := floor wall feat main player gui icons
 TILEDEFS = $(TILEIMAGEFILES) dngn unrand
 TILEDEFPRES = $(TILEDEFS:%=$(RLTILES)/tiledef-%)
@@ -854,35 +895,59 @@ LIBS += $(CONTRIB_LIBS) $(EXTRA_LIBS)
 
 DOC_BASE        := ../docs
 DOC_TEMPLATES   := $(DOC_BASE)/template
-GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/FAQ.html
+GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/crawl_manual.txt
 GENERATED_HEADERS := art-enum.h #the rest are private
 GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mon-mst.h $(RLTILES)/dc-unrand.txt build.h compflag.h
 
 GAME_DEPENDS  := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 SRC_PKG_BASE  := stone_soup
-SRC_VERSION   := $(shell git describe --tags --long $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
+SRC_VERSION   := $(shell git describe --tags $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
 
-# when making release builds, use just the bare tag
-SRC_VERSION_SHORT := $(shell git describe --tags $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
-ifneq (,$(SRC_VERSION_SHORT))
-  ifeq (,$(findstring -,$(SRC_VERSION_SHORT)))
-    SRC_VERSION := $(SRC_VERSION_SHORT)
-  endif
-endif
-export SRC_VERSION_SHORT
+export SRC_VERSION
 
 PKG_SRC_DIR   := $(SRC_PKG_BASE)-$(SRC_VERSION)
-SRC_PKG_TAR   := $(PKG_SRC_DIR).tar.bz2
-SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.bz2
+SRC_PKG_TAR   := $(PKG_SRC_DIR).tar.xz
+SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.xz
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
 .PHONY: all test install clean clean-contrib clean-rltiles distclean debug \
-        profile wizard package-source source build-windows package-windows
+        profile wizard package-source source build-windows package-windows \
+        rest
 
-all: $(GAME) $(GENERATED_DOCS)
+all: $(GAME) $(GENERATED_DOCS) webserver
 
 test:
 	./$(GAME) -test > /dev/null
+
+
+# Webtiles data
+.PHONY: webserver clean-webserver
+
+webserver/static/%.png: dat/tiles/%.png
+	$(QUIET_COPY)$(COPY) $< webserver/static/
+
+webserver/static/game/%.png: dat/tiles/%.png
+	$(QUIET_COPY)$(COPY) $< webserver/static/game/
+
+TILEINFOJS = $(TILEIMAGEFILES) dngn
+
+STATICFILES = $(TILEIMAGEFILES:%=webserver/static/game/%.png) \
+              webserver/static/stone_soup_icon-32x32.png \
+              $(TILEINFOJS:%=webserver/static/game/tileinfo-%.js)
+
+$(TILEINFOJS:%=$(RLTILES)/tileinfo-%.js): rltile-build
+
+webserver/static/game/%.js: $(RLTILES)/%.js
+	$(QUIET_COPY)$(COPY) $< webserver/static/game/
+
+clean-webserver:
+	$(RM) $(STATICFILES)
+
+ifdef WEBTILES
+webserver: $(STATICFILES)
+else
+webserver:
+endif
 
 
 ifeq (,$(findstring clean,$(MAKECMDGOALS)))
@@ -938,12 +1003,19 @@ version.o: build.h compflag.h
 ##########################################################################
 # Documentation
 #
-$(DOC_BASE)/aptitudes.txt: $(DOC_TEMPLATES)/apt-tmpl.txt player.cc aptitudes.h \
+$(DOC_BASE)/aptitudes.txt: $(DOC_TEMPLATES)/apt-tmpl.txt species.cc aptitudes.h \
 						   util/gen-apt.pl
 	$(QUIET_GEN)./util/gen-apt.pl $@ $^
 
 $(DOC_BASE)/FAQ.html: dat/database/FAQ.txt util/FAQ2html.pl
 	$(QUIET_GEN)./util/FAQ2html.pl $< $@
+
+rest:
+	wget -O - https://crawl.develz.org/wiki/doku.php?id=dcss:manual:rest \
+	| sed -f util/undoku.sed > $(DOC_BASE)/crawl_manual.reST
+
+$(DOC_BASE)/crawl_manual.txt: $(DOC_BASE)/crawl_manual.reST util/unrest.pl
+	$(QUIET_GEN)util/unrest.pl <$< >$@
 
 ##########################################################################
 # The level compiler
@@ -995,7 +1067,7 @@ endif
 	$(COPY) $(GAME) $(prefix_fp)/$(bin_prefix)/
 	$(STRIP) $(prefix_fp)/$(bin_prefix)/$(GAME)
 	mkdir -p $(datadir_fp)/dat/des
-	mkdir -p $(datadir_fp)/dat/clua
+	mkdir -p $(datadir_fp)/dat/dlua
 	mkdir -p $(datadir_fp)/dat/lua
 	mkdir -p $(datadir_fp)/dat/database
 	mkdir -p $(datadir_fp)/dat/descript
@@ -1004,7 +1076,13 @@ endif
 	mkdir -p $(datadir_fp)/docs/license
 	mkdir -p $(datadir_fp)/settings
 	$(COPY_R) dat/des/* $(datadir_fp)/dat/des/
-	$(COPY)   dat/clua/*.lua $(datadir_fp)/dat/clua/
+	$(COPY)   dat/dlua/*.lua $(datadir_fp)/dat/dlua/
+	echo "-- Autogenerated list of maps to load and compile:" \
+	    >$(datadir_fp)/dat/dlua/loadmaps.lua
+	find dat -name '*.des'|sed s:dat/::| \
+          while read x; \
+	    do echo "dgn.load_des_file('$$x')"; \
+	    done >>$(datadir_fp)/dat/dlua/loadmaps.lua
 	$(COPY)   dat/lua/*.lua $(datadir_fp)/dat/lua/
 	$(COPY)   dat/database/*.txt $(datadir_fp)/dat/database/
 	$(COPY)   dat/descript/*.txt $(datadir_fp)/dat/descript/
@@ -1056,7 +1134,7 @@ ifeq ($(USE_DGAMELAUNCH),)
 endif
 endif
 
-clean: clean-rltiles
+clean: clean-rltiles clean-webserver
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(OBJECTS) $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d) *.ixx  \
@@ -1137,7 +1215,7 @@ $(CONTRIB_LIBS): .contrib-libs
 
 .contrib-libs: .cflags
 ifneq (,$(CONTRIBS))
-	  +@$(MAKE) -C contrib $(CONTRIBS)
+	  +@$(MAKE) -C contrib $(CONTRIBS) ARCH=$(ARCH)
 endif
 	@touch $@
 
@@ -1164,7 +1242,7 @@ mon-util.d: mon-mst.h
 
 .PHONY: rltile-build
 rltile-build: .contrib-libs $(RLTILES)/dc-unrand.txt
-	+$(MAKE) -C $(RLTILES) all
+	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH)
 
 $(TILEDEFSRCS): rltile-build
 $(TILEDEFHDRS): rltile-build
@@ -1186,10 +1264,7 @@ clean-rltiles:
 
 # To package, you *must* have lex and yacc to generate the intermediates.
 BSRC = build/crawl-ref/source/
-package-source: prebuildyacc
-	+@$(MAKE) source
-
-source: removeold
+source: removeold prebuildyacc
 	@git branch >/dev/null 2>/dev/null || (echo You can package source only from git. && false)
 	rm -rf build
 	mkdir build
@@ -1203,19 +1278,24 @@ source: removeold
 		tar xf - -C $(BSRC)contrib/$$x; \
 	  done
 	find build -name .gitignore -execdir rm -f '{}' +
-	(git describe --tags --long $(MERGE_BASE) 2> /dev/null || \
-	  git describe --tags $(MERGE_BASE) 2> /dev/null) \
-	  > $(BSRC)util/release_ver
+	git describe --tags $(MERGE_BASE) > $(BSRC)util/release_ver
 	cd build && mv crawl-ref $(PKG_SRC_DIR)
-	cd build && tar cfj ../../../$(SRC_PKG_TAR) $(PKG_SRC_DIR)
+
+package-tarball-deps: source
+	cd build && tar cfJ ../../../$(SRC_PKG_TAR) $(PKG_SRC_DIR)
+
+package-zipball-deps: source
 	@if which zip >/dev/null; then \
 	  echo "cd build && zip -rq ../../../$(SRC_PKG_ZIP) $(PKG_SRC_DIR)"; \
 	  cd build && zip -rq ../../../$(SRC_PKG_ZIP) $(PKG_SRC_DIR); \
 	else \
 	  echo "**** No ZIP installed -- not creating the zipball."; \
 	fi
-	cd build && rm -rf $(PKG_SRC_DIR)/source/contrib \
-		 && tar cjf ../../../$(SRC_PKG_TAR_NODEPS) $(PKG_SRC_DIR)
+
+package-tarball-nodeps: source
+	cd build && tar cfJ ../../../$(SRC_PKG_TAR_NODEPS) --exclude contrib $(PKG_SRC_DIR)
+
+package-source: package-tarball-deps package-zipball-deps package-tarball-nodeps
 	rm -rf build
 
 removeold:
@@ -1228,10 +1308,10 @@ removeold:
 
 # You need to have NSIS installed.
 package-windows:
-ifneq (x$(SRC_VERSION_SHORT),x$(shell cat build-win/version.txt 2>/dev/null))
+ifneq (x$(SRC_VERSION),x$(shell cat build-win/version.txt 2>/dev/null))
 	+$(MAKE) build-windows
 endif
-	makensis -NOCD -DVERSION=$(SRC_VERSION_SHORT) util/crawl.nsi
+	makensis -NOCD -DVERSION=$(SRC_VERSION) util/crawl.nsi
 
 build-windows:
 ifneq ($(GAME),crawl.exe)
@@ -1242,7 +1322,7 @@ endif
 	mv build-win/crawl.exe build-win/crawl-tiles.exe
 	+$(MAKE) TILES=  DESTDIR=build-win SAVEDIR='~/crawl' install
 	mv build-win/crawl.exe build-win/crawl-console.exe
-	echo $(SRC_VERSION_SHORT) >build-win/version.txt
+	echo $(SRC_VERSION) >build-win/version.txt
 
 #############################################################################
 # Building Mac app bundles

@@ -509,7 +509,7 @@ bool MiscastEffect::_ouch(int dam, beam_type flavour)
 
         beem.flavour = flavour;
         dam = mons_adjust_flavoured(mon_target, beem, dam, true);
-        mon_target->hurt(NULL, dam, BEAM_MISSILE, false);
+        mon_target->hurt(guilty, dam, BEAM_MISSILE, false);
 
         if (!mon_target->alive())
             monster_die(mon_target, kt, kill_source);
@@ -603,7 +603,7 @@ void MiscastEffect::_potion_effect(potion_type pot_eff, int pot_pow)
             target->slow_down(act_source, pot_pow);
             break;
         case POT_PARALYSIS:
-            target->paralyse(act_source, pot_pow);
+            target->paralyse(act_source, pot_pow, cause);
             break;
         case POT_CONFUSION:
             target->confuse(act_source, pot_pow);
@@ -641,7 +641,7 @@ bool MiscastEffect::_malign_gateway()
                                 GOD_NO_GOD,
                                 200));
         env.markers.clear_need_activate();
-        env.grid(point) = DNGN_TEMP_PORTAL;
+        env.grid(point) = DNGN_MALIGN_GATEWAY;
 
         noisy(10, point);
         all_msg = "The dungeon shakes, a horrible noise fills the air, and a portal to some otherworldly place is opened!";
@@ -741,6 +741,7 @@ bool MiscastEffect::_create_monster(monster_type what, int abj_deg,
     return (create_monster(data) != -1);
 }
 
+// hair or hair-equivalent (like bandages)
 static bool _has_hair(actor* target)
 {
     // Don't bother for monsters.
@@ -748,6 +749,7 @@ static bool _has_hair(actor* target)
         return (false);
 
     return (!form_changed_physiology() && you.species != SP_GHOUL
+            && you.species != SP_OCTOPODE
             && you.species != SP_KENKU && !player_genus(GENPC_DRACONIAN));
 }
 
@@ -1024,7 +1026,7 @@ void MiscastEffect::_enchantment(int severity)
             if (target->atype() == ACT_PLAYER)
             {
                 mpr("You sense a malignant aura.");
-                curse_an_item(false);
+                curse_an_item();
                 break;
             }
             // Intentional fall-through for monsters.
@@ -1044,7 +1046,7 @@ void MiscastEffect::_enchantment(int severity)
         switch (random2(target->atype() == ACT_PLAYER ? 4 : 2))
         {
         case 0:
-            _potion_effect(POT_PARALYSIS, 10);
+            paralyse_player(cause, 10);
             break;
         case 1:
             _potion_effect(POT_CONFUSION, 10);
@@ -1054,7 +1056,7 @@ void MiscastEffect::_enchantment(int severity)
             break;
         case 3:
             do
-                curse_an_item(false);
+                curse_an_item();
             while (!one_chance_in(3));
             mpr("You sense an overwhelmingly malignant aura!");
             break;
@@ -1965,7 +1967,7 @@ void MiscastEffect::_transmutation(int severity)
             _ouch(3 + random2avg(23, 2));
             break;
         case 1:
-            _potion_effect(POT_PARALYSIS, 10);
+            target->petrify(guilty);
             break;
         case 2:
             _potion_effect(POT_CONFUSION, 10);

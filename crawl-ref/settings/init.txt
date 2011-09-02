@@ -61,7 +61,6 @@
 # remember_name = false
 # weapon = (short sword | falchion | hand axe | spear | mace | trident
 #           | unarmed | random)
-# book = (fire | ice | random)
 # wand = (enslavement | confusion | magic darts | frost | flame | striking | random)
 # species = (Human |...| Vampire | random)
 # job     = (Fighter |...| Wanderer | random)
@@ -69,6 +68,7 @@
 # random_pick = true
 # good_random = false
 # restart_after_game = true
+# default_manual_training = true
 
 ##### 2-  File System ###############################################
 #
@@ -170,6 +170,7 @@ drop_filter = useless_item
 # explore_stop     = items,greedy_pickup_smart,stairs,shops,altars,gates
 # explore_stop    += greedy_visited_item_stack
 # explore_improved = true
+# explore_wall_bias = 0
 # travel_key_stop = false
 #
 # explore_stop_pickup_ignore = curare
@@ -193,7 +194,6 @@ runrest_ignore_monster = butterfly:1
 # runrest_ignore_message = Jiyva's power touches on your attributes
 include = runrest_messages.txt
 
-# trap_prompt = false
 trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 
 #rest_wait_both = true
@@ -207,6 +207,7 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 ##### 4-i       Command Enhancements ##################
 #
 # auto_list     = false
+# auto_switch   = true
 # easy_open     = false
 # easy_unequip  = false
 # equip_unequip = true
@@ -242,7 +243,7 @@ sort_menus = inv: true : equipped, freshness, charged
 # mlist_targetting             = true
 # show_gold_turns              = true
 # show_game_turns              = true
-
+# show_newturn_mark            = false
 # clear_messages             = true
 # small_more                 = true
 # show_more                  = false
@@ -252,6 +253,7 @@ sort_menus = inv: true : equipped, freshness, charged
 # show_beam                  = false
 # msg_condense_repeats   = false
 # msg_condense_short     = false
+# show_no_ctele          = false
 
 #####          Colours (messages and menus) #####
 #
@@ -366,6 +368,7 @@ include = tiles_options.txt
 # dump_order  = header, hiscore, stats, misc, notes, inventory,
 # dump_order += turns_by_place, skills, spells, overview, mutations,
 # dump_order += messages, screenshot, monlist, kills_by_place, kills
+# dump_order += spell_usage
 # dump_book_spells = false
 
 ##### 5-b       Notes #################################

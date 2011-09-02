@@ -30,15 +30,11 @@
 #include "player.h"
 #include "random.h"
 #include "religion.h"
+#include "shout.h"
 #include "species.h"
 #include "spl-book.h"
 #include "stuff.h"
 #include "view.h" // Elemental colours for unrandarts
-#include "shout.h"
-
-// The initial generation of a randart is very simple - it occurs in
-// dungeon.cc and consists of giving it a few random things - plus &
-// plus2 mainly.
 
 static bool _god_fits_artefact(const god_type which_god, const item_def &item,
                                bool name_check_only = false)
@@ -233,7 +229,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     return (true);
 }
 
-std::string replace_name_parts(const std::string name_in, const item_def& item)
+std::string replace_name_parts(const std::string &name_in, const item_def& item)
 {
     std::string name = name_in;
 
@@ -320,7 +316,7 @@ std::string replace_name_parts(const std::string name_in, const item_def& item)
         else
         {
             do
-                which_god = static_cast<god_type>(random2(NUM_GODS - 1) + 1);
+                which_god = random_god(true);
             while (!_god_fits_artefact(which_god, item, true));
         }
 
@@ -432,6 +428,14 @@ void artefact_desc_properties(const item_def &item,
         return;
 
     artefact_wpn_properties(item, proprt, known);
+
+    if (item.base_type == OBJ_ARMOUR
+        && item.sub_type == ARM_GOLD_DRAGON_ARMOUR)
+    {
+        ++proprt[ARTP_POISON];
+        ++proprt[ARTP_FIRE];
+        ++proprt[ARTP_COLD];
+    }
 
     if (!force_fake_props && item_ident(item, ISFLAG_KNOW_PROPERTIES))
         return;
@@ -701,7 +705,7 @@ void static _get_randart_properties(const item_def &item,
     int power_level = 0;
 
     if (aclass == OBJ_ARMOUR)
-        power_level = item.plus / 2 + 2;
+        power_level = item.plus * 2 / (armour_max_enchant(item) + 2) + 2;
     else if (aclass == OBJ_JEWELLERY)
         power_level = 1 + random2(3) + random2(2);
     else // OBJ_WEAPON
@@ -1430,7 +1434,7 @@ static bool _artefact_name_lookup(std::string &result,
     return (!result.empty());
 }
 
-std::string artefact_name(const item_def &item, bool appearance)
+std::string make_artefact_name(const item_def &item, bool appearance)
 {
     ASSERT(is_artefact(item));
 
@@ -1548,12 +1552,12 @@ std::string get_artefact_name(const item_def &item, bool force_known)
         // print artefact's real name
         if (item.props.exists(ARTEFACT_NAME_KEY))
             return item.props[ARTEFACT_NAME_KEY].get_string();
-        return artefact_name(item, false);
+        return make_artefact_name(item, false);
     }
     // print artefact appearance
     if (item.props.exists(ARTEFACT_APPEAR_KEY))
         return item.props[ARTEFACT_APPEAR_KEY].get_string();
-    return artefact_name(item, false);
+    return make_artefact_name(item, false);
 }
 
 void set_artefact_name(item_def &item, const std::string &name)
@@ -1940,14 +1944,14 @@ bool make_item_randart(item_def &item, bool force_mundane)
     if (item.props.exists(ARTEFACT_NAME_KEY))
         ASSERT(item.props[ARTEFACT_NAME_KEY].get_type() == SV_STR);
     else
-        set_artefact_name(item, artefact_name(item, false));
+        set_artefact_name(item, make_artefact_name(item, false));
 
     // get artefact appearance
     if (item.props.exists(ARTEFACT_APPEAR_KEY))
         ASSERT(item.props[ARTEFACT_APPEAR_KEY].get_type() == SV_STR);
     else
         item.props[ARTEFACT_APPEAR_KEY].get_string() =
-            artefact_name(item, true);
+            make_artefact_name(item, true);
 
     return (true);
 }
@@ -2020,7 +2024,7 @@ bool make_item_unrandart(item_def &item, int unrand_index)
         item.props[ARTEFACT_APPEAR_KEY].get_string() = unrand->unid_name;
     else
     {
-        item.props[ARTEFACT_APPEAR_KEY].get_string() = artefact_name(item, true);
+        item.props[ARTEFACT_APPEAR_KEY].get_string() = make_artefact_name(item, true);
         item_colour(item);
     }
 

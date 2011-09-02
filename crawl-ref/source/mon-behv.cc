@@ -81,11 +81,8 @@ static void _mon_check_foe_invalid(monster* mon)
 static bool _mon_tries_regain_los(monster* mon)
 {
     // Only intelligent monsters with ranged attack will try to regain LOS.
-    if (mons_intel(mon) < I_NORMAL
-        || !mons_has_ranged_spell(mon, true) && !mons_has_ranged_attack(mon))
-    {
+    if (mons_intel(mon) < I_NORMAL || !mons_has_ranged_attack(mon))
         return false;
-    }
 
     // Any special case should go here.
     if (mons_class_flag(mon->type, M_FIGHTER)
@@ -108,8 +105,7 @@ static void _set_firing_pos(monster* mon, coord_def target)
 {
     const int ideal_range = LOS_RADIUS / 2;
     const int current_distance = mon->pos().distance_from(target);
-    const los_type los = mons_has_los_ability(mon->type) ? LOS_DEFAULT
-                                                         : LOS_NO_TRANS;
+    const los_type los = mons_has_los_attack(mon) ? LOS_DEFAULT : LOS_NO_TRANS;
 
     // We don't consider getting farther away unless already very close.
     const int max_range = std::max(ideal_range, current_distance);
@@ -204,7 +200,7 @@ void handle_behaviour(monster* mon)
     // Zotdef rotting
     if (crawl_state.game_is_zotdef())
     {
-        if (!isFriendly && !isNeutral && orb_position() == mon->pos()
+        if (!isFriendly && !isNeutral && env.orb_pos == mon->pos()
             && mon->speed)
         {
             const int loss = div_rand_round(10, mon->speed);
@@ -213,7 +209,7 @@ void handle_behaviour(monster* mon)
                 mpr("Your flesh rots away as the Orb of Zot is desecrated.",
                     MSGCH_DANGER);
                 rot_hp(loss);
-                ouch(1, NON_MONSTER, KILLED_BY_ROTTING);
+                ouch(1, mon->mindex(), KILLED_BY_ROTTING);
             }
         }
     }
@@ -248,10 +244,6 @@ void handle_behaviour(monster* mon)
             mon->behaviour = BEH_FLEE;
         }
     }
-
-    const dungeon_feature_type can_move =
-        (mons_habitat(mon) == HT_AMPHIBIOUS) ? DNGN_DEEP_WATER
-                                             : DNGN_SHALLOW_WATER;
 
     // Validate current target exists.
     _mon_check_foe_invalid(mon);
@@ -405,7 +397,8 @@ void handle_behaviour(monster* mon)
         if (afoe)
             foepos = afoe->pos();
 
-        if (crawl_state.game_is_zotdef() && mon->foe == MHITYOU)
+        if (crawl_state.game_is_zotdef() && mon->foe == MHITYOU
+            && !mon->wont_attack())
         {
             foepos = PLAYER_POS;
             proxFoe = true;
@@ -579,7 +572,7 @@ void handle_behaviour(monster* mon)
                 // If monster is currently getting into firing position and
                 // see the player and can attack him, clear firing_pos.
                 if (!mon->firing_pos.zero()
-                    && (mons_has_los_ability(mon->type)
+                    && (mons_has_los_attack(mon)
                         || mon->see_cell_no_trans(mon->target)))
                 {
                     mon->firing_pos.reset();
@@ -592,7 +585,7 @@ void handle_behaviour(monster* mon)
                     break;
                 }
 
-                if (mon->firing_pos.zero() && try_pathfind(mon, can_move))
+                if (mon->firing_pos.zero() && try_pathfind(mon))
                     break;
 
                 // Whew. If we arrived here, path finding didn't yield anything
@@ -618,12 +611,12 @@ void handle_behaviour(monster* mon)
                 mon->target = menv[mon->foe].pos();
             }
 
-            // Smart monsters, zombified monsters other than spectral
-            // things, plants, and nonliving monsters cannot flee.
+            // Smart monsters, undead, plants, and nonliving monsters cannot flee.
             if (isHurt && !isSmart && isMobile
-                && (!mons_is_zombified(mon) || mon->type == MONS_SPECTRAL_THING)
+                && mon->holiness() != MH_UNDEAD
                 && mon->holiness() != MH_PLANT
-                && mon->holiness() != MH_NONLIVING)
+                && mon->holiness() != MH_NONLIVING
+                && !mons_class_flag(mon->type, M_NO_FLEE))
             {
                 new_beh = BEH_FLEE;
 
@@ -684,7 +677,7 @@ void handle_behaviour(monster* mon)
                 break;
             }
 
-            check_wander_target(mon, isPacified, can_move);
+            check_wander_target(mon, isPacified);
 
             // During their wanderings, monsters will eventually relax
             // their guard (stupid ones will do so faster, smart
@@ -1026,11 +1019,7 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
             if (src == MHITYOU && src_pos == you.pos()
                 && !you.see_cell(mon->pos()))
             {
-                const dungeon_feature_type can_move =
-                    (mons_habitat(mon) == HT_AMPHIBIOUS) ? DNGN_DEEP_WATER
-                                                         : DNGN_SHALLOW_WATER;
-
-                try_pathfind(mon, can_move);
+                try_pathfind(mon);
             }
         }
         break;
@@ -1174,14 +1163,4 @@ void make_mons_stop_fleeing(monster* mon)
 {
     if (mons_is_fleeing(mon))
         behaviour_event(mon, ME_CORNERED);
-}
-
-// Returns the position of the Orb, or you.pos() if
-// the Orb's not found.
-coord_def zotdef_target()
-{
-    coord_def tgt = orb_position();
-    if (tgt.origin())
-        tgt = you.pos();
-    return tgt;
 }

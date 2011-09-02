@@ -29,12 +29,12 @@
 #include "misc.h"
 #include "player.h"
 #include "random.h"
+#include "random-weight.h"
 #include "religion.h"
 #include "skills2.h"
 #include "spl-book.h"
 #include "spl-util.h"
 #include "state.h"
-#include "stuff.h"
 
 static armour_type _random_nonbody_armour_type()
 {
@@ -317,17 +317,14 @@ static bool _try_give_plain_armour(item_def &arm)
     static const equipment_type armour_slots[] =
         {  EQ_SHIELD, EQ_CLOAK, EQ_HELMET, EQ_GLOVES, EQ_BOOTS  };
 
-    equipment_type picked = EQ_BODY_ARMOUR;
+    armour_type picked = NUM_ARMOURS;
     const int num_slots = ARRAYSZ(armour_slots);
     for (int i = 0, count = 0; i < num_slots; ++i)
     {
         if (!you_can_wear(armour_slots[i], true))
             continue;
 
-        if (you.equip[armour_slots[i]] != -1)
-            continue;
-
-        // Consider shield slot filled in some cases.
+        // Consider shield uninteresting in some cases.
         if (armour_slots[i] == EQ_SHIELD)
         {
             const item_def* weapon = you.weapon();
@@ -345,34 +342,38 @@ static bool _try_give_plain_armour(item_def &arm)
             }
         }
 
+        armour_type result;
+        switch (armour_slots[i])
+        {
+        case EQ_SHIELD:
+            result = ARM_SHIELD; break;
+        case EQ_CLOAK:
+            result = ARM_CLOAK;  break;
+        case EQ_HELMET:
+            result = ARM_HELMET; break;
+        case EQ_GLOVES:
+            result = ARM_GLOVES; break;
+        case EQ_BOOTS:
+            result = ARM_BOOTS;  break;
+        default:
+            continue;
+        }
+        result = _pick_wearable_armour(result);
+        if (result == NUM_ARMOURS || you.seen_armour[result])
+            continue;
+
         if (one_chance_in(++count))
-            picked = armour_slots[i];
+            picked = result;
     }
 
     // All available secondary slots already filled.
-    if (picked == EQ_BODY_ARMOUR)
+    if (picked == NUM_ARMOURS)
         return (false);
 
-    armour_type result = NUM_ARMOURS;
-    switch (picked)
-    {
-    case EQ_SHIELD:
-        result = ARM_SHIELD; break;
-    case EQ_CLOAK:
-        result = ARM_CLOAK;  break;
-    case EQ_HELMET:
-        result = ARM_HELMET; break;
-    case EQ_GLOVES:
-        result = ARM_GLOVES; break;
-    case EQ_BOOTS:
-        result = ARM_BOOTS;  break;
-    default:
-        return (false);
-    }
     arm.clear();
     arm.quantity = 1;
     arm.base_type = OBJ_ARMOUR;
-    arm.sub_type = _pick_wearable_armour(result);
+    arm.sub_type = picked;
     arm.plus = random2(5) - 2;
 
     const int max_ench = armour_max_enchant(arm);
@@ -577,12 +578,24 @@ static missile_type _acquirement_missile_subtype()
     case SK_CROSSBOWS: result = MI_BOLT; break;
 
     case SK_THROWING:
-        // Assuming that blowgun in inventory means that they
-        // may want needles for it (but darts might also be
-        // wanted).  Maybe expand this... see above comment.
-        result =
-            (_have_item_with_types(OBJ_WEAPONS, WPN_BLOWGUN) && coinflip())
-            ? MI_NEEDLE : MI_DART;
+        {
+            // Choose from among all usable missile types.
+            // Only give needles if they have a blowgun in inventory.
+            std::vector<std::pair<missile_type, int> > missile_weights;
+
+            missile_weights.push_back(std::make_pair(MI_DART, 100));
+
+            if (_have_item_with_types(OBJ_WEAPONS, WPN_BLOWGUN))
+                missile_weights.push_back(std::make_pair(MI_NEEDLE, 100));
+
+            if (you.body_size() >= SIZE_MEDIUM)
+                missile_weights.push_back(std::make_pair(MI_JAVELIN, 100));
+
+            if (you.can_throw_large_rocks())
+                missile_weights.push_back(std::make_pair(MI_LARGE_ROCK, 100));
+
+            result = *random_choose_weighted(missile_weights);
+        }
         break;
 
     default:
@@ -599,7 +612,8 @@ static int _acquirement_jewellery_subtype()
     for (int i = 0; i < 10; i++)
     {
         // 1/3 amulets, 2/3 rings.
-        result = (one_chance_in(3) ? get_random_amulet_type()
+        result = (one_chance_in(you.species == SP_OCTOPODE ? 9 : 3)
+                                   ? get_random_amulet_type()
                                    : get_random_ring_type());
 
         // If we haven't seen this yet, we're done.
@@ -652,7 +666,7 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
 
     case SK_EVOCATIONS:
         if (!one_chance_in(4))
-            result = random_rod_subtype();
+            result = get_random_rod_type();
         break;
 
     default: // Invocations and leftover spell schools.
@@ -676,7 +690,7 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
             && result < STAFF_FIRST_ROD
             && !one_chance_in(4)))
     {
-        result = random_rod_subtype();
+        result = get_random_rod_type();
     }
 
     return (result);
@@ -684,19 +698,49 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
 
 static int _acquirement_misc_subtype()
 {
-    int result = NUM_MISCELLANY;
-    do
+    // Note: items listed early are less likely due to chances of being
+    // overwritten.
+    int result = random_range(MISC_FIRST_DECK, MISC_LAST_DECK);
+    if (result == MISC_DECK_OF_PUNISHMENT)
+        result = MISC_BOX_OF_BEASTS;
+    if (one_chance_in(4))
+        result = MISC_BOTTLED_EFREET;
+    if (one_chance_in(4) && !you.seen_misc[MISC_DISC_OF_STORMS])
+        result = MISC_DISC_OF_STORMS;
+    if (x_chance_in_y(you.skills[SK_FIRE_MAGIC], 27)
+        && !you.seen_misc[MISC_LAMP_OF_FIRE]
+        && you.skills[SK_EVOCATIONS])
     {
-        result = random2(NUM_MISCELLANY);
+        result = MISC_LAMP_OF_FIRE; // useless with no skill
     }
-    while (result == MISC_HORN_OF_GERYON
-           || result == MISC_RUNE_OF_ZOT
-#if TAG_MAJOR_VERSION == 32
-           || result == MISC_CRYSTAL_BALL_OF_FIXATION
-#endif
-           || result == MISC_EMPTY_EBONY_CASKET
-           || result == MISC_QUAD_DAMAGE
-           || result == MISC_DECK_OF_PUNISHMENT);
+    if (x_chance_in_y(you.skills[SK_AIR_MAGIC], 27)
+        && !you.seen_misc[MISC_AIR_ELEMENTAL_FAN]
+        && you.skills[SK_EVOCATIONS])
+    {
+        result = MISC_AIR_ELEMENTAL_FAN; // useless with no skill
+    }
+    if (one_chance_in(4)
+        && !you.seen_misc[MISC_STONE_OF_EARTH_ELEMENTALS]
+        && you.skills[SK_EVOCATIONS])
+    {   // useful for anyone with >= 1 skill, can't practice otherwise
+        result = MISC_STONE_OF_EARTH_ELEMENTALS;
+    }
+    if (one_chance_in(4) && !you.seen_misc[MISC_LANTERN_OF_SHADOWS])
+        result = MISC_LANTERN_OF_SHADOWS;
+    if (x_chance_in_y(you.skills[SK_EVOCATIONS], 27)
+        && (x_chance_in_y(std::max(you.skills[SK_SPELLCASTING],
+                                    you.skills[SK_INVOCATIONS]), 27)
+            || player_spirit_shield())
+        && !you.seen_misc[MISC_CRYSTAL_BALL_OF_ENERGY])
+    {
+        result = MISC_CRYSTAL_BALL_OF_ENERGY;
+    }
+    if (x_chance_in_y(you.skills[SK_EVOCATIONS], 27)
+        && !you.seen_misc[MISC_CRYSTAL_BALL_OF_SEEING]
+        && you.religion != GOD_ASHENZARI)
+    {
+        result = MISC_CRYSTAL_BALL_OF_SEEING;
+    }
 
     return (result);
 }
@@ -779,9 +823,8 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
                       || class_wanted == OBJ_MISCELLANY);
     int useless_count = 0;
 
-    do
+    while (1)
     {
-        again:
         switch (class_wanted)
         {
         case OBJ_FOOD:
@@ -808,18 +851,17 @@ static int _find_acquirement_subtype(object_class_type class_wanted,
         dummy.flags |= ISFLAG_IDENT_MASK;
 
         if (is_useless_item(dummy, false) && useless_count++ < 200)
-            goto again;
+            continue;
 
-        if (try_again)
-        {
-            ASSERT(type_wanted < max_has_value);
-            if (!already_has[type_wanted])
-                try_again = false;
-            if (one_chance_in(200))
-                try_again = false;
-        }
+        if (!try_again)
+            break;
+
+        ASSERT(type_wanted < max_has_value);
+        if (!already_has[type_wanted])
+            break;
+        if (one_chance_in(200))
+            break;
     }
-    while (try_again);
 
     return (type_wanted);
 }
@@ -929,7 +971,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
             if (!(seen_levels & (1 << i)))
                 vec.push_back(i);
 
-        if (vec.size() > 0)
+        if (!vec.empty())
             level = vec[random2(vec.size())];
         else
             level = -1;
@@ -1007,7 +1049,8 @@ static bool _do_book_acquirement(item_def &book, int agent)
                 continue;
             }
 #if TAG_MAJOR_VERSION == 32
-            if (bk == BOOK_MINOR_MAGIC_II || bk == BOOK_MINOR_MAGIC_III)
+            if (bk == BOOK_MINOR_MAGIC_II || bk == BOOK_MINOR_MAGIC_III
+                || bk == BOOK_CONJURATIONS_I || bk == BOOK_BRANDS)
             {
                 weights[bk] = 0;
                 continue;
@@ -1098,8 +1141,8 @@ static bool _do_book_acquirement(item_def &book, int agent)
 
         book.sub_type = BOOK_MANUAL;
         book.plus     = choose_random_weighted(weights, weights + NUM_SKILLS);
-        // Set number of reads possible before it "crumbles to dust".
-        book.plus2    = 3 + random2(15);
+        // Set number of bonus skill points.
+        book.plus2    = random_range(2000, 3000);
         break;
     } // manuals
     } // switch book choice
@@ -1139,7 +1182,30 @@ static int _weapon_brand_quality(int brand, bool range)
     }
 }
 
-static int _is_armour_plain(const item_def &item)
+static bool _armour_slot_seen(armour_type arm)
+{
+    item_def item;
+    item.base_type = OBJ_ARMOUR;
+    item.quantity = 1;
+
+    for (int i = 0; i < NUM_ARMOURS; i++)
+    {
+        if (get_armour_slot(arm) != get_armour_slot((armour_type)i))
+            continue;
+        item.sub_type = i;
+
+        // having seen a helmet means nothing about your decision to go
+        // bare-headed if you have horns
+        if (!can_wear_armour(item, false, true))
+            continue;
+
+        if (you.seen_armour[i])
+            return true;
+    }
+    return false;
+}
+
+static bool _is_armour_plain(const item_def &item)
 {
     ASSERT(item.base_type == OBJ_ARMOUR);
     if (is_artefact(item))
@@ -1180,7 +1246,9 @@ int acquirement_create_item(object_class_type class_wanted,
 
         // Don't generate randart books in items(), we do that
         // ourselves.
-        int want_arts = (class_wanted == OBJ_BOOKS ? 0 : 1);
+        bool want_arts = (class_wanted != OBJ_BOOKS);
+        if (agent == GOD_TROG && !one_chance_in(3))
+            want_arts = false;
 
         thing_created = items(want_arts, class_wanted, type_wanted, true,
                                ITEM_LEVEL, MAKE_ITEM_RANDOM_RACE,
@@ -1219,7 +1287,6 @@ int acquirement_create_item(object_class_type class_wanted,
         // matching a currently unfilled equipment slot.
         if (doodad.base_type == OBJ_ARMOUR && !is_artefact(doodad))
         {
-            const equipment_type eq = get_armour_slot(doodad);
             const special_armour_type sparm = get_armour_ego_type(doodad);
 
             if (agent != GOD_XOM
@@ -1239,16 +1306,13 @@ int acquirement_create_item(object_class_type class_wanted,
                 continue;
             }
 
-            // Don't try to replace an item if it would already fill a
-            // currently unfilled secondary armour slot.
-            if (eq == EQ_BODY_ARMOUR || you.equip[eq] != -1
-                && _is_armour_plain(doodad))
+            // Try to fill empty slots.
+            if ((_is_armour_plain(doodad)
+                 || get_armour_slot(doodad) == EQ_BODY_ARMOUR)
+                && _armour_slot_seen((armour_type)doodad.sub_type))
             {
                 if (_try_give_plain_armour(doodad))
                 {
-                    // Make sure the item is plain.
-                    doodad.special = SPARM_NORMAL;
-
                     // Only Xom gives negatively enchanted items (75% if not 0).
                     if (doodad.plus < 0 && agent != GOD_XOM)
                         doodad.plus = 0;
@@ -1281,7 +1345,7 @@ int acquirement_create_item(object_class_type class_wanted,
         if (agent == GOD_TROG)
         {
             // ... but he loves the antimagic brand specially.
-            if (one_chance_in(10) && doodad.base_type == OBJ_WEAPONS
+            if (coinflip() && doodad.base_type == OBJ_WEAPONS
                 && !is_range_weapon(doodad) && !is_unrandom_artefact(doodad))
             {
                 set_item_ego_type(doodad, OBJ_WEAPONS, SPWPN_ANTIMAGIC);
@@ -1549,24 +1613,25 @@ bool acquirement(object_class_type class_wanted, int agent,
         ASSERT(!quiet);
         mesclr();
         mprf("%-24s[c] Jewellery      [d] Book",
-            you.species == SP_CAT ? "" : "[a] Weapon  [b] Armour");
+            you.species == SP_FELID ? "" : "[a] Weapon  [b] Armour");
         mprf("%-24s[g] Miscellaneous  [h] %s [i] Gold",
-            you.species == SP_CAT ? "" : "[e] Staff   [f] Wand",
+            you.species == SP_FELID ? "" : "[e] Staff   [f] Wand",
             you.religion == GOD_FEDHAS ? "Fruit" : "Food ");
-        mpr("What kind of item would you like to acquire? ", MSGCH_PROMPT);
+        mpr("What kind of item would you like to acquire? (\\ to view known items)", MSGCH_PROMPT);
 
         const int keyin = tolower(get_ch());
         switch (keyin)
         {
-        case 'a': case ')':            class_wanted = OBJ_WEAPONS;    break;
-        case 'b': case '[':  case ']': class_wanted = OBJ_ARMOUR;     break;
-        case 'c': case '=':  case '"': class_wanted = OBJ_JEWELLERY;  break;
-        case 'd': case '+':  case ':': class_wanted = OBJ_BOOKS;      break;
-        case 'e': case '\\': case '|': class_wanted = OBJ_STAVES;     break;
-        case 'f': case '/':            class_wanted = OBJ_WANDS;      break;
-        case 'g': case '}':  case '{': class_wanted = OBJ_MISCELLANY; break;
-        case 'h': case '%':            class_wanted = OBJ_FOOD;       break;
-        case 'i': case '$':            class_wanted = OBJ_GOLD;       break;
+        case 'a':    class_wanted = OBJ_WEAPONS;    break;
+        case 'b':    class_wanted = OBJ_ARMOUR;     break;
+        case 'c':    class_wanted = OBJ_JEWELLERY;  break;
+        case 'd':    class_wanted = OBJ_BOOKS;      break;
+        case 'e':    class_wanted = OBJ_STAVES;     break;
+        case 'f':    class_wanted = OBJ_WANDS;      break;
+        case 'g':    class_wanted = OBJ_MISCELLANY; break;
+        case 'h':    class_wanted = OBJ_FOOD;       break;
+        case 'i':    class_wanted = OBJ_GOLD;       break;
+        case '\\':   check_item_knowledge();        break;
         default:
             // Lets wizards escape out of accidently choosing acquirement.
             if (agent == AQ_WIZMODE)
@@ -1586,7 +1651,7 @@ bool acquirement(object_class_type class_wanted, int agent,
             break;
         }
 
-        if (you.species == SP_CAT
+        if (you.species == SP_FELID
             && (class_wanted == OBJ_WEAPONS || class_wanted == OBJ_ARMOUR
              || class_wanted == OBJ_STAVES  || class_wanted == OBJ_WANDS))
         {

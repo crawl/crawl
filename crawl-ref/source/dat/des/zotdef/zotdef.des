@@ -17,7 +17,7 @@
 # hall_of_Zot_5
 
 NAME:    zotvault
-TAGS:    zotdef no_monster_gen
+TAGS:    zotdef
 ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
@@ -26,6 +26,9 @@ LFLAGS:  no_magic_map
 MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
             size = 2, walk_dist = 2, spread_rate= 35 }
+KMASK:  * = no_monster_gen
+KMASK:  | = no_monster_gen
+KPROP: *| = no_rtele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -76,7 +79,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    zotvault2
-TAGS:    zotdef no_monster_gen
+TAGS:    zotdef
 ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
@@ -88,6 +91,9 @@ MARKER:  Z = lua:item_pickup_change_flags { \
 MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
             size = 2, walk_dist = 2, spread_rate= 35 }
+KMASK:  * = no_monster_gen
+KMASK:  | = no_monster_gen
+KPROP: *| = no_rtele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXXXXXXXXxxxxxxxxxx
@@ -116,22 +122,22 @@ xxxxxxxxxXXX..............XXXxxxxxxxxxxxxxxxxxxxxxXXX..............XXXxxxxxxxxx
 xxxxxxxxxxxXXX..........XXXxxxxxxxxxxxxxxxxxxxxxxxxxXXX..........XXXxxxxxxxxxxx
 xxxxxxxxxxxxxXX.......XXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXX.......XXxxxxxxxxxxxxx
 xxxxxxxxxxxxxxXX.....XXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXX.....XXxxxxxxxxxxxxxx
-xxxxxxxxxxxccccXX...XXcccccccccxxxxxxxxxxxxxxxxxccccxccccXX...XXccccxxxxxxxxxxx
-xxxxxxxxxccc..................cccccccxxxxxccccccc..................cccxxxxxxxxx
-xxxxxxxccc......ccccccc.............cccxccc.............ccccccc......cccxxxxxxx
-xxxxxxcc.......cccxxxxcccccccc........ccc........ccccccccxxxxccc.......ccxxxxxx
-xxxxxxc..........ccxxxxxxxxxcc.........c.........ccxxxxxxxxxcc..........cxxxxxx
-xxxxxxcc..........ccxxxxxxxxc.....................cxxxxxxxxcc..........ccxxxxxx
-xxxxxxxcc..........ccxxxxxxxc.....................cxxxxxxxcc..........ccxxxxxxx
-xxxxxxxxcc..........cxxxxxxxc.....................cxxxxxxxc..........ccxxxxxxxx
-xxxxxxxxxc..........cxxxxxxxcc...................ccxxxxxxxc..........cxxxxxxxxx
-xxxxxxxccc..........cxxxxxxxxcc.................ccxxxxxxxxc..........cccxxxxxxx
-xxxxxccc..........cccxxxxxxxxxcc...............ccxxxxxxxxxccc..........cccxxxxx
-xxxxxc..........cccxxxxxxxxxxxxcc.............ccxxxxxxxxxxxxccc..........cxxxxx
-xxxxxc........cccxxxxxxxxxxxxxxxccc.........cccxxxxxxxxxxxxxxxccc........cxxxxx
-xxxxxc........cxxxxxxxxxxxxxxxxxxxccc..[..cccxxxxxxxxxxxxxxxxxxxc........cxxxxx
-xxxxxc...{....cxxxxxxxxxxxxxxxxxxxxxc..F..cxxxxxxxxxxxxxxxxxxxxxc....(...cxxxxx
-xxxxxc...F....cxxxxxxxxxxxxxxxxxxxxxcccccccxxxxxxxxxxxxxxxxxxxxxc....F...cxxxxx
+xxxxxxxxxxxxxxxXX...XXcccccccccxxxxxxxxxxxxxxxxxcccccccccXX...XXxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxc.............cccccccxxxxxccccccc.............cxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxccccccc.............cccxccc.............cccccccxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxcccccccc........ccc........ccccccccxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxcc.........c.........ccxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxc.....................cxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccccccxxxxxxc.....................cxxxxxxccccccccxxxxxxxxxxxxxx
+xxxxxxxxxxxxxcc......cccccxxc.....................cxxccccc......ccxxxxxxxxxxxxx
+xxxxxxxxxxxccc...........ccxcc...................ccxcc...........cccxxxxxxxxxxx
+xxxxxxxxxxcc..............ccc.....................ccc..............ccxxxxxxxxxx
+xxxxxcccccc....................c...............cc...................ccccccxxxxx
+xxxxxc......................ccccc.............ccccc......................cxxxxx
+xxxxxc.........ccc........cccxxxccc.........cccxxxccc........ccc.........cxxxxx
+xxxxxcF{.......cxcc.....cccxxxxxxxccc..[..cccxxxxxxxccc.....ccxc.......(Fcxxxxx
+xxxxxc........ccxxcc..cccxxxxxxxxxxxc..F..cxxxxxxxxxxxccc..ccxxcc........cxxxxx
+xxxxxc........cxxxxccccxxxxxxxxxxxxxcccccccxxxxxxxxxxxxxccccxxxxc........cxxxxx
 xxxxxccccccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccccccxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -141,7 +147,7 @@ ENDMAP
 # doesn't work (all critters enter the Orb chamber from the south). Needs
 # reworking before use, so the 'zotdef' tag has been replaced with '_zotdef'.
 NAME:    zotvault3
-TAGS:    _zotdef no_monster_gen no_rotate
+TAGS:    zotdef no_rotate
 ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
@@ -150,6 +156,9 @@ LFLAGS:  no_magic_map
 MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
             size = 2, walk_dist = 2, spread_rate= 35 }
+KMASK:  * = no_monster_gen
+KMASK:  | = no_monster_gen
+KPROP: *| = no_rtele_into
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -159,18 +168,18 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.....XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.....Y.....XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXX..........Z..........XXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXX....................X..XXX...........XXX..X....................XXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXX.........Z.........XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXX..................XX...XX...........XX...XX..................XXXXXXXX
 XXXXXXX....................X..XXXXX.......XXXXX..X....................XXXXXXX
 XXXXXXX....................X..XXXXXX.....XXXXXX..X....................XXXXXXX
 XXXXXXX....................X..XXXXXXX...XXXXXXX..X....................XXXXXXX
 XXXXXXX....................X..XXXXXXX...XXXXXXX..X....................XXXXXXX
 XXXXXXX..............XX....X..XXXXXXXX.XXXXXXXX..X....XX..............XXXXXXX
 XXXXXXX...............XX...X..XXXXXXXX.XXXXXXXX..X...XX...............XXXXXXX
-XXXXXXX...............XX...X..XXXXXXXX.XXXXXXXX..X...XX...............XXXXXXX
+XXXXXXXX..............XX...X..XXXXXXXX.XXXXXXXX..X...XX..............XXXXXXXX
 XXXXXXXXXXXXXXX.......XX...XX...................XX...XX.......XXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXX.....XX.....X.................X.....XX.....XXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXX...XX.....X.................X.....XX...XXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXX...XXX....X.................X....XXX...XXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.XXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXX.........XXXXXXXXXXXXXXXXXXXXXXXXX.........XXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXX....XXXXX....XXXXXXX.......XXXXXXX....XXXXX....XXXXXXXXXXXXXXX
@@ -215,7 +224,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ENDMAP
 
 NAME:    zotvault4
-TAGS:    zotdef no_monster_gen no_rotate
+TAGS:    zotdef no_rotate
 ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
@@ -224,6 +233,9 @@ LFLAGS:  no_magic_map
 MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
             size = 2, walk_dist = 2, spread_rate= 35 }
+KMASK:  * = no_monster_gen
+KMASK:  | = no_monster_gen
+KPROP: *| = no_rtele_into
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 X.......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.......X
@@ -273,7 +285,7 @@ ENDMAP
 
 # Currently under development and testing, so commented out in the tags.
 NAME:    zotvault5
-TAGS:    _zotdef no_monster_gen no_rotate
+TAGS:    _zotdef no_rotate
 ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta

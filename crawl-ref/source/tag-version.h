@@ -24,8 +24,29 @@ enum tag_minor_version
     TAG_MINOR_MINFO_PROP,          // Add a props hash to monster_info.
     TAG_MINOR_MON_INV_ORDER,       // Change the order of the monster's inventory.
     TAG_MINOR_ASH_PENANCE,         // Ashenzari's wrath counter.
-    TAG_MINOR_BOOK_ZOOLOGY,        // Addition of the book of zoology.
+    TAG_MINOR_BOOK_BEASTS,         // Addition of the book of zoology^Wbeasts.
     TAG_MINOR_CHR_COMPAT,          // Future-compatible chr data.
+    TAG_MINOR_ZOT_POINTS,          // Untie ZotDef power points from the xp pool.
+    TAG_MINOR_TRAP_KNOWLEDGE,      // Save trap type in map_knowledge.
+    TAG_MINOR_NEW_HP,              // New HP formula.
+    TAG_MINOR_HP_MP_CALC,          // HP and MP recalculated rather than stored +5000.
+    TAG_MINOR_64_MB,               // More than 64 monster info flags.
+    TAG_MINOR_SEEN_MISC,           // Record misc items seen.
+    TAG_MINOR_SPECIES_HP_NO_MUT,   // Species HP modifier is independant from frail/robust.
+    TAG_MINOR_GOLDIFIED_RUNES,     // Runes are undroppable and don't take space.
+    TAG_MINOR_ZIG_COUNT,           // Count completed Ziggurats and max level of partials.
+    TAG_MINOR_ZIG_FIX,             // Zero out junk ziggurat variable values.
+    TAG_MINOR_XP_POOL_FIX,         // Clamp possibly junk values of XP pool.
+    TAG_MINOR_DECK_RARITY,         // Make item.special=0 not clash with real rarities.
+    TAG_MINOR_PIETY_MAX,           // Remember the maximum piety attained with each god.
+    TAG_MINOR_CHR_NAMES,           // Store species and god names as strings.
+    TAG_MINOR_SKILL_TRAINING,      // New skill training system.
+    TAG_MINOR_FOCUS_SKILL,         // Add focus skills to skill training system.
+    TAG_MINOR_MANUAL,              // New manuals.
+    TAG_MINOR_MONSTER_TILES,       // Throw away monster tiles when their number changes.
+    TAG_MINOR_SKILL_MENU_STATES,   // Move the saved states out of props.
+    TAG_MINOR_MONS_THREAT_LEVEL,   // Save threat level in monster_info.
+    TAG_MINOR_SPELL_USAGE,         // Spell usage counts in char dumps.
 
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

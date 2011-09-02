@@ -15,10 +15,6 @@
 #include <unistd.h>
 #endif
 
-#ifdef TARGET_COMPILER_MINGW
-#include <io.h>
-#endif
-
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>
@@ -91,14 +87,14 @@
 static void _create_monster_hide(const item_def corpse)
 {
     // kiku_receive_corpses() creates corpses that are easily scummed
-    // for hides.  We prevent this by setting "DoNotDropHide" as an item
+    // for hides.  We prevent this by setting "never_hide" as an item
     // property of corpses it creates.
-    if (corpse.props.exists("DoNotDropHide"))
+    if (corpse.props.exists("never_hide"))
         return;
 
     int mons_class = corpse.plus;
 
-    int o = get_item_slot();
+    int o = get_mitm_slot();
     if (o == NON_ITEM)
         return;
 
@@ -174,7 +170,9 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
     item.quantity  = 1 + random2(max_chunks);
     item.quantity  = stepdown_value(item.quantity, 4, 4, 12, 12);
 
-    if (you.species != SP_VAMPIRE)
+    if (is_bad_food(item))
+        item.flags |= ISFLAG_DROPPED;
+    else if (you.species != SP_VAMPIRE)
         item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
     // Happens after the corpse has been butchered.
@@ -192,7 +190,7 @@ void turn_corpse_into_skeleton_and_chunks(item_def &item)
     if (mons_skeleton(item.plus))
         turn_corpse_into_skeleton(item);
 
-    int o = get_item_slot();
+    int o = get_mitm_slot();
     if (o != NON_ITEM)
     {
         turn_corpse_into_chunks(chunks);
@@ -394,7 +392,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
     }
 
     // Else, create a new stack of potions.
-    int o = get_item_slot(20);
+    int o = get_mitm_slot(20);
     if (o == NON_ITEM)
         return;
 
@@ -732,7 +730,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     // If we got here nothing was found!
 
     // Create a new stack of potions.
-    o = get_item_slot();
+    o = get_mitm_slot();
     if (o == NON_ITEM)
         return (false);
 
@@ -958,7 +956,7 @@ void turn_corpse_into_skeleton_and_blood_potions(item_def &item)
     if (mons_skeleton(item.plus))
         turn_corpse_into_skeleton(item);
 
-    int o = get_item_slot();
+    int o = get_mitm_slot();
     if (o != NON_ITEM)
     {
         turn_corpse_into_blood_potions(blood_potions);
@@ -1244,7 +1242,8 @@ void search_around(bool only_adjacent)
                 if (ptrap)
                 {
                     ptrap->reveal();
-                    mpr("You found a trap!");
+                    mprf("You found %s trap!",
+                         ptrap->name(DESC_NOCAP_A).c_str());
                     learned_something_new(HINT_SEEN_TRAP, *ri);
                     practise(EX_TRAP_FOUND);
                 }
@@ -1391,6 +1390,7 @@ bool go_berserk(bool intentional, bool potion)
     // Cutting the duration in half since berserk causes haste and hasted
     // actions have half the usual delay. This keeps player turns
     // approximately consistent withe previous versions. -cao
+    // Only 1.5 now, but I'm keeping the reduction as a nerf. -1KB
     int berserk_duration = (20 + random2avg(19,2)) / 2;
 
     you.increase_duration(DUR_BERSERK, berserk_duration);
@@ -1421,7 +1421,7 @@ static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
     if (mon->asleep())
         return (true);
 
-    if (mons_is_stationary(mon))
+    if (mons_is_stationary(mon) && !mons_is_tentacle_end(mon->type))
     {
         int dist = grid_distance(you.pos(), mon->pos());
         if (want_move)
@@ -1476,8 +1476,7 @@ bool mons_can_hurt_player(const monster* mon, const bool want_move)
     // still use some ranged form of attack.
     if (you.see_cell_no_trans(mon->pos())
         && (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT
-            || mons_has_ranged_ability(mon)
-            || mons_has_ranged_spell(mon)))
+            || mons_has_ranged_attack(mon)))
     {
         return (true);
     }
@@ -1491,7 +1490,7 @@ static bool _mons_is_always_safe(const monster *mon)
 {
     return (mon->wont_attack()
             || mons_class_flag(mon->type, M_NO_EXP_GAIN)
-               && mon->type != MONS_KRAKEN_TENTACLE
+               && !mons_is_tentacle_end(mon->type)
             || mon->withdrawn()
             || mon->type == MONS_BALLISTOMYCETE && mon->number == 0);
 }
@@ -1745,7 +1744,6 @@ static void _drop_tomb(const coord_def& pos, bool premature)
     bool seen_change = false;
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
-
         // "Normal" tomb
         if (grd(*ai) == DNGN_ROCK_WALL &&
             env.markers.property_at(*ai, MAT_ANY, "prison") != "Zin")
@@ -1793,7 +1791,8 @@ static void _drop_tomb(const coord_def& pos, bool premature)
             (mon) ? "releases" : "dismisses",
             (mon) ? mon->name(DESC_NOCAP_THE).c_str() : "the silver walls,",
             (mon) ? "from its prison" : "but there is nothing inside them");
-        else {
+        else
+        {
             if (!silenced(you.pos()))
                 mpr("You hear a deep rumble.", MSGCH_SOUND);
             else
@@ -1848,7 +1847,7 @@ void timeout_malign_gateways (int duration)
             if (mmark->monster_summoned && !mons)
             {
                 // The marker hangs around until later.
-                if (env.grid(mmark->pos) == DNGN_TEMP_PORTAL)
+                if (env.grid(mmark->pos) == DNGN_MALIGN_GATEWAY)
                     env.grid(mmark->pos) = DNGN_FLOOR;
 
                 env.markers.remove(mmark);
@@ -1936,7 +1935,7 @@ void bring_to_safety()
     if (crawl_state.game_is_zotdef() && !orb_position().origin())
     {
         // In ZotDef, it's not the safety of your sorry butt that matters.
-        for (distance_iterator di(orb_position(), true, false); di; ++di)
+        for (distance_iterator di(env.orb_pos, true, false); di; ++di)
             if (!monster_at(*di)
                 && !(env.pgrid(*di) & FPROP_NO_TELE_INTO))
             {
@@ -1994,6 +1993,8 @@ void bring_to_safety()
 // This includes ALL afflictions, unlike wizard/Xom revive.
 void revive()
 {
+    adjust_level(-1);
+
     you.disease = 0;
     you.magic_contamination = 0;
     set_hunger(6000, true);
@@ -2012,6 +2013,11 @@ void revive()
     if (you.form)
         untransform();
     you.clear_beholders();
+    you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
+    you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
+    you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
+    if (you.duration[DUR_SCRYING])
+        you.xray_vision = false;
 
     for(int dur = 0; dur < NUM_DURATIONS; dur++)
         if (dur != DUR_GOURMAND && dur != DUR_PIETY_POOL)
@@ -2025,12 +2031,20 @@ void revive()
     you.stat_zero.init(0);
 
     unrot_hp(9999);
-    set_hp(9999, false);
-    set_mp(9999, false);
+    set_hp(9999);
+    set_mp(9999);
     you.dead = false;
 
     // Remove silence.
     invalidate_agrid();
+
+    if (you.hp_max <= 0)
+    {
+        you.lives = 0;
+        mpr("You are too frail to live.");
+        // possible only with an extreme abuse of Borgnjor's
+        ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_DRAINING);
+    }
 
     mpr("You rejoin the land of the living...");
     more();
@@ -2063,7 +2077,7 @@ void setup_environment_effects()
             }
         }
     }
-    dprf("%u environment effect seeds", sfx_seeds.size());
+    dprf("%u environment effect seeds", (unsigned int)sfx_seeds.size());
 }
 
 static void apply_environment_effect(const coord_def &c)
@@ -2170,47 +2184,6 @@ void reveal_secret_door(const coord_def& p)
     set_terrain_changed(p);
     viewwindow();
     learned_something_new(HINT_FOUND_SECRET_DOOR, p);
-}
-
-// A feeble attempt at Nethack-like completeness for cute messages.
-std::string your_hand(bool plural)
-{
-    std::string result;
-
-    switch (you.form)
-    {
-    default:
-        mpr("ERROR: unknown transformation in your_hand() (misc.cc)",
-            MSGCH_ERROR);
-    case TRAN_NONE:
-    case TRAN_STATUE:
-    case TRAN_LICH:
-        result = (you.has_usable_claws()) ? "claw" : "hand";
-        if (you.species == SP_CAT)
-            result = "paw";
-        break;
-    case TRAN_ICE_BEAST:
-        result = "hand";
-        if (you.species == SP_CAT)
-            result = "paw";
-        break;
-    case TRAN_SPIDER:
-    case TRAN_PIG:
-        result = "front leg";
-        break;
-    case TRAN_DRAGON:
-    case TRAN_BAT:
-        result = "foreclaw";
-        break;
-    case TRAN_BLADE_HANDS:
-        result = "scythe-like blade";
-        break;
-    }
-
-    if (plural)
-        result += 's';
-
-    return result;
 }
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
@@ -2423,9 +2396,9 @@ void swap_with_monster(monster* mon_to_swap)
             you.redraw_quiver = true; // Account for being in a net.
             // Xom thinks this is hilarious if you trap yourself this way.
             if (you_caught)
-                xom_is_stimulated(16);
+                xom_is_stimulated(12);
             else
-                xom_is_stimulated(255);
+                xom_is_stimulated(200);
         }
 
         if (!you_caught)
@@ -2444,8 +2417,11 @@ void maybe_id_ring_TC()
     }
 
     int num_unknown = 0;
-    for (int i = EQ_LEFT_RING; i <= EQ_RIGHT_RING; ++i)
+    for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
     {
+        if (i == EQ_AMULET)
+            continue;
+
         if (player_wearing_slot(i)
             && !item_ident(you.inv[you.equip[i]], ISFLAG_KNOW_PROPERTIES))
         {
@@ -2453,10 +2429,14 @@ void maybe_id_ring_TC()
         }
     }
 
-    if (num_unknown != 1)
+    if (num_unknown == 0)
         return;
 
-    for (int i = EQ_LEFT_RING; i <= EQ_RIGHT_RING; ++i)
+    for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
+    {
+        if (i == EQ_AMULET)
+            continue;
+
         if (player_wearing_slot(i))
         {
             item_def& ring = you.inv[you.equip[i]];
@@ -2469,6 +2449,29 @@ void maybe_id_ring_TC()
                      ring.name(DESC_INVENTORY_EQUIP).c_str());
             }
         }
+    }
+}
+
+// Reduce damage by AC.
+// In most cases, we want AC to mostly stop weak attacks completely but affect
+// strong ones less, but the regular formula is too hard to apply well to cases
+// when damage is spread into many small chunks.
+//
+// Every point of damage is processed independently.  Every point of AC has
+// an independent 1/81 chance of blocking that damage.
+//
+// AC 20 stops 22% of damage, AC 40 -- 39%, AC 80 -- 63%.
+int apply_chunked_AC(int dam, int ac)
+{
+    double chance = pow(80.0/81, ac);
+    uint64_t cr = chance * (((uint64_t)1) << 32);
+
+    int hurt = 0;
+    for (int i = 0; i < dam; i++)
+        if (random_int() < cr)
+            hurt++;
+
+    return hurt;
 }
 
 void entered_malign_portal(actor* act)

@@ -64,7 +64,7 @@ void initialise_branch_depths()
         Branch *b = &branches[branch];
         if (crawl_state.game_is_sprint())
             b->startdepth = -1;
-        else if (branch < BRANCH_VESTIBULE_OF_HELL)
+        else if (branch < BRANCH_VESTIBULE_OF_HELL || branch > BRANCH_LAST_HELL)
             b->startdepth = random_range(b->mindepth, b->maxdepth);
     }
 
@@ -165,7 +165,7 @@ void initialise_temples()
     }
 
 #ifdef DEBUG_TEMPLES
-    mprf(MSGCH_DIAGNOSTICS, "%u overflow altars", overflow_gods.size());
+    mprf(MSGCH_DIAGNOSTICS, "%u overflow altars", (unsigned int)overflow_gods.size());
 #endif
 
     CrawlVector &temple_gods

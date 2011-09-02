@@ -104,14 +104,14 @@ first of these allows for the storage of any function-required data persistently
 to collapse, etc).
 
 Note that the function to be triggered must be defined as a global
-function in the .des file prelude (or in a .lua file in dat/clua that
+function in the .des file prelude (or in a .lua file in dat/dlua that
 is required() by the .des file prelude), and that the function must be
 specified by its global name.
 
 "Triggerer" is regularly used in randomised functions to determine whether or
 not the function is actually being fired. For example, if the Triggerer is not
 of the "turns" type and "countdown" subtype; see the WarningMachines in
-dat/clua/lm_fog.lua for examples of functions being triggered randomly, and
+dat/dlua/lm_fog.lua for examples of functions being triggered randomly, and
 being triggered a certain number of turns before a FogMachine is fired).
 
 Finally, "marker" is usually used to determine the position of the Triggerable
@@ -452,7 +452,7 @@ Currently, convenience functions for Triggerables include:
 E.    List of triggerers
 ========================
 
-This list taken from dat/clua/lm_trig.lua, listing the different "type"
+This list taken from dat/dlua/lm_trig.lua, listing the different "type"
 parameters that an instance of DgnTriggerer may accept, and the required
 parameters for each.
 

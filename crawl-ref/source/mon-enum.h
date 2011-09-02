@@ -20,7 +20,7 @@ enum corpse_effect_type
     CE_CONTAMINATED,    //    2
     CE_POISONOUS,       //    3
     CE_POISON_CONTAM,   //    4
-    CE_HCL,             //    5
+    CE_ROT,             //    5
     CE_MUTAGEN_RANDOM,  //    6
     CE_MUTAGEN_GOOD,    //    7 - may be worth implementing {dlb}
     CE_MUTAGEN_BAD,     //    8 - may be worth implementing {dlb}

@@ -20,16 +20,16 @@
 
 // Synch with MSVC.
 #ifdef TARGET_COMPILER_VC
-#if _MSC_VER >= 1100 && DEBUG != defined(_DEBUG)
+#if _MSC_VER >= 1100 && defined(DEBUG) != defined(_DEBUG)
 #error DEBUG and _DEBUG are out of sync!
 #endif
 #endif
 
 
 #ifndef _lint
-#define COMPILE_CHECK(expr, tag) typedef char compile_check_ ## tag[(expr) ? 1 : -1]
+#define COMPILE_CHECK(expr) typedef char compile_check_ ## __LINE__[(expr) ? 1 : -1]
 #else
-#define COMPILE_CHECK(expr, tag)
+#define COMPILE_CHECK(expr)
 #endif
 
 #if defined(DEBUG) && !defined(ASSERTS)

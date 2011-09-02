@@ -14,6 +14,7 @@ beam.o \
 behold.o \
 bitary.o \
 branch.o \
+cellular.o \
 chardump.o \
 cio.o \
 cloud.o \
@@ -25,6 +26,7 @@ coord.o \
 coord-circle.o \
 coordit.o \
 ctest.o \
+dactions.o \
 database.o \
 dbg-asrt.o \
 dbg-maps.o \
@@ -34,8 +36,10 @@ decks.o \
 delay.o \
 describe.o \
 dgl-message.o \
-dgn-actions.o \
+dgn-delve.o \
 dgn-height.o \
+dgn-labyrinth.o \
+dgn-layouts.o \
 dgn-overview.o \
 dgn-shoals.o \
 dgn-swamp.o \
@@ -173,6 +177,7 @@ shopping.o \
 shout.o \
 show.o \
 showsymb.o \
+skill_menu.o \
 skills.o \
 skills2.o \
 species.o \
@@ -255,7 +260,21 @@ tilereg-text.o \
 tilereg-title.o \
 tilesdl.o \
 tiletex.o \
-tileview.o
+tileview.o \
+tilecell.o
+endif
+
+ifdef WEBTILES
+OBJECTS += \
+libweb.o \
+tiledoll.o \
+tilemcache.o \
+tilepick.o \
+tilepick-p.o \
+tileweb.o \
+tileview.o \
+tilecell.o \
+tileweb-text.o
 endif
 
 ifdef SDL

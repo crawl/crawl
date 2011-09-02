@@ -3,7 +3,6 @@
  * @brief Random and unrandom artefact functions.
 **/
 
-
 #ifndef RANDART_H
 #define RANDART_H
 
@@ -43,8 +42,6 @@ enum setup_missile_type
     SM_CANCEL,
 };
 
-// The following unrandart bits were taken from $pellbinder's mon-util
-// code (see mon-util.h & mon-util.cc) and modified (LRH).
 struct unrandart_entry
 {
     const char *name;        // true name of unrandart
@@ -67,14 +64,14 @@ struct unrandart_entry
     const char *desc_end; // appended to ided
 
     void (*equip_func)(item_def* item, bool* show_msgs, bool unmeld);
-    void (*unequip_func)(const item_def* item, bool* show_msgs);
+    void (*unequip_func)(item_def* item, bool* show_msgs);
     void (*world_reacts_func)(item_def* item);
     // An item can't be a melee weapon and launcher at the same time, so have
     // the functions relevant to those item types share a union.
     union
     {
         void (*melee_effects)(item_def* item, actor* attacker,
-                              actor* defender, bool mondied);
+                              actor* defender, bool mondied, int damage);
         setup_missile_type (*launch)(item_def* item, bolt* beam,
                                      std::string* ammo_name, bool* returning);
     } fight_func;
@@ -102,8 +99,8 @@ std::string get_artefact_name(const item_def &item, bool force_known = false);
 
 void set_artefact_name(item_def &item, const std::string &name);
 
-std::string artefact_name(const item_def &item, bool appearance = false);
-std::string replace_name_parts(const std::string name_in, const item_def& item);
+std::string make_artefact_name(const item_def &item, bool appearance = false);
+std::string replace_name_parts(const std::string &name_in, const item_def& item);
 
 const char *unrandart_descrip(int which_descrip, const item_def &item);
 

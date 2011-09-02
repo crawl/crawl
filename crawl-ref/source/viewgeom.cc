@@ -372,7 +372,8 @@ void crawl_view_geometry::init_geometry()
 {
     termsz = coord_def(get_number_of_cols(), get_number_of_lines());
     hudsz  = coord_def(HUD_WIDTH,
-                       HUD_HEIGHT + (Options.show_gold_turns ? 1 : 0));
+                       HUD_HEIGHT + (Options.show_gold_turns ? 1 : 0)
+                                  + crawl_state.game_is_zotdef());
 
     const _inline_layout lay_inline(termsz, hudsz);
     const _mlist_col_layout lay_mlist(termsz, hudsz);

@@ -346,7 +346,7 @@ InvMenu::InvMenu(int mflags)
     : Menu(mflags, "inventory", false), type(MT_INVLIST), pre_select(NULL),
       title_annotate(NULL)
 {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (Options.tile_menu_icons)
 #endif
         mdisplay->set_num_columns(2);
@@ -512,7 +512,7 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
         set_title("");
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
 {
     if (!Options.tile_menu_icons)
@@ -818,34 +818,33 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
         if (!inv_class[i])
             continue;
 
-        std::string subtitle = item_class_name(i);
-
-        // Mention the class selection shortcuts.
-        if (is_set(MF_MULTISELECT) && inv_class[i] > 1)
+        if (type != MT_RUNES)
         {
-            std::vector<char> glyphs;
-            _get_class_hotkeys(i, glyphs);
-            if (!glyphs.empty())
-            {
-                const std::string str = "Magical Staves and Rods"; // longest string
-                subtitle += std::string(strwidth(str) - strwidth(subtitle) + 1, ' ');
-                subtitle += "(select all with ";
-#ifdef USE_TILE
-                // For some reason, this is only formatted correctly in the
-                // Tiles version.
-                subtitle += "<w>";
-#endif
-                for (unsigned int k = 0; k < glyphs.size(); ++k)
-                     subtitle += glyphs[k];
-#ifdef USE_TILE
-                subtitle += "</w><blue>";
-#endif
-                subtitle += ")";
-            }
-        }
+            std::string subtitle = item_class_name(i);
+            if (type == MT_KNOW && i == OBJ_MISCELLANY)
+                subtitle = "Runes"; // hack
 
-        add_entry(new MenuEntry(subtitle, MEL_SUBTITLE));
-        items_in_class.clear();
+            // Mention the class selection shortcuts.
+            if (is_set(MF_MULTISELECT) && inv_class[i] > 1)
+            {
+                std::vector<char> glyphs;
+                _get_class_hotkeys(i, glyphs);
+                if (!glyphs.empty())
+                {
+                    // longest string
+                    const std::string str = "Magical Staves and Rods";
+                    subtitle += std::string(strwidth(str)
+                                            - strwidth(subtitle) + 1, ' ');
+                    subtitle += "(select all with <w>";
+                    for (unsigned int k = 0; k < glyphs.size(); ++k)
+                         subtitle += glyphs[k];
+                    subtitle += "</w><blue>)";
+                }
+            }
+
+            add_entry(new MenuEntry(subtitle, MEL_SUBTITLE));
+            items_in_class.clear();
+        }
 
         for (int j = 0, count = mitems.size(); j < count; ++j)
         {
@@ -1016,6 +1015,36 @@ std::string item_class_name(int type, bool terse)
     return ("");
 }
 
+const char* item_slot_name(equipment_type type, bool terse)
+{
+    if (terse)
+    {
+        switch (type)
+        {
+        case EQ_CLOAK:       return "cloak";
+        case EQ_HELMET:      return "helmet";
+        case EQ_GLOVES:      return "gloves";
+        case EQ_BOOTS:       return "boots";
+        case EQ_SHIELD:      return "shield";
+        case EQ_BODY_ARMOUR: return "body";
+        default:             return "";
+        }
+    }
+    else
+    {
+        switch (type)
+        {
+        case EQ_CLOAK:       return "Cloak";
+        case EQ_HELMET:      return "Helmet";
+        case EQ_GLOVES:      return "Gloves";
+        case EQ_BOOTS:       return "Boots";
+        case EQ_SHIELD:      return "Shield";
+        case EQ_BODY_ARMOUR: return "Body";
+        default:             return "";
+        }
+    }
+}
+
 std::vector<SelItem> select_items(const std::vector<const item_def*> &items,
                                    const char *title, bool noselect,
                                    menu_type mtype)
@@ -1031,7 +1060,7 @@ std::vector<SelItem> select_items(const std::vector<const item_def*> &items,
         menu.load_items(items);
         int new_flags = noselect ? MF_NOSELECT
                                  : MF_MULTISELECT | MF_ALLOW_FILTER;
-        new_flags |= MF_SHOW_PAGENUMBERS;
+        new_flags |= MF_SHOW_PAGENUMBERS | MF_ALLOW_FORMATTING;
         menu.set_flags(new_flags);
         menu.show();
         selected = menu.get_selitems();
@@ -1060,7 +1089,7 @@ static bool _item_class_selected(const item_def &i, int selector)
         return (itype == OBJ_ARMOUR && item_is_equipped(i));
 
     case OSEL_UNIDENT:
-        return !fully_identified(i);
+        return !fully_identified(i) || (is_deck(i) && !top_card_is_known(i));
 
     case OBJ_MISSILES:
         return (itype == OBJ_MISSILES || itype == OBJ_WEAPONS);
@@ -1198,7 +1227,7 @@ unsigned char invent_select(const char *title,
                              Menu::selitem_tfn selitemfn,
                              const std::vector<SelItem> *pre_select)
 {
-    InvMenu menu(flags);
+    InvMenu menu(flags | MF_ALLOW_FORMATTING);
 
     menu.set_preselect(pre_select);
     menu.set_title_annotator(titlefn);
@@ -1345,7 +1374,7 @@ std::vector<SelItem> prompt_invent_items(
                 need_getch  = true;
             }
 
-            if (items.size())
+            if (!items.empty())
             {
                 if (!crawl_state.doing_prev_cmd_again)
                 {
@@ -1410,7 +1439,6 @@ std::vector<SelItem> prompt_invent_items(
 
 static int _digit_to_index(char digit, operation_types oper)
 {
-
     const char iletter = static_cast<char>(oper);
 
     for (int i = 0; i < ENDOFPACK; ++i)
@@ -1643,16 +1671,16 @@ bool check_warning_inscriptions(const item_def& item,
                 equip = you.equip[EQ_AMULET];
             else
             {
-                equip = you.equip[EQ_LEFT_RING];
-                if (equip != -1 && item.link == equip)
-                    return (check_old_item_warning(item, oper));
+                for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; ++slots)
+                {
+                    if (slots == EQ_AMULET)
+                    continue;
 
-                // Or maybe the other ring?
-                equip = you.equip[EQ_RIGHT_RING];
+                    equip = you.equip[slots];
+                    if (equip != -1 && item.link == equip)
+                        return (check_old_item_warning(item, oper));
+                }
             }
-
-            if (equip != -1 && item.link == equip)
-                return (check_old_item_warning(item, oper));
         }
         else if (oper == OPER_REMOVE || oper == OPER_TAKEOFF)
         {
@@ -1786,7 +1814,7 @@ int prompt_invent_item(const char *prompt,
 
             need_prompt = need_redraw;
 
-            if (items.size())
+            if (!items.empty())
             {
                 if (count)
                     *count = items[0].quantity;
@@ -1868,7 +1896,7 @@ bool prompt_failed(int retval, std::string msg)
             canned_msg(MSG_OK);
     }
     else
-        mprf(MSGCH_PROMPT, msg.c_str());
+        mpr(msg.c_str(), MSGCH_PROMPT);
 
     crawl_state.cancel_cmd_repeat();
 

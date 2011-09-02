@@ -69,6 +69,9 @@ static void _heal_from_food(int hp_amt, int mp_amt = 0, bool unrot = false,
 void make_hungry(int hunger_amount, bool suppress_msg,
                  bool allow_reducing)
 {
+    if (crawl_state.disables[DIS_HUNGER])
+        return;
+
     if (crawl_state.game_is_zotdef() && you.species == SP_SPRIGGAN)
     {
         you.hunger = 6000;
@@ -245,6 +248,14 @@ static bool _butcher_corpse(int corpse_id, int butcher_tool,
     {
         return false;
     }
+    else if (!bottle_blood && you.species == SP_VAMPIRE
+             && !you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
+             && !you.has_spell(SPELL_SIMULACRUM)
+             && !yesno("You'd want to drain or bottle this corpse instead. "
+                       "Continue anyway?", true, 'n'))
+    {
+        return false;
+    }
 
     // Start work on the first corpse we butcher.
     if (first_corpse)
@@ -354,12 +365,8 @@ bool butchery(int which_corpse, bool bottle_blood)
         return (false);
     }
 
-    if (you.flight_mode() == FL_LEVITATE)
-    {
-        mpr("You can't reach the floor from up here.");
-        learned_something_new(HINT_LEVITATING);
+    if (!player_can_reach_floor())
         return (false);
-    }
 
     // Vampires' fangs are optimised for biting, not for tearing flesh.
     // (Not that they really need to.) Other species with this mutation
@@ -377,9 +384,10 @@ bool butchery(int which_corpse, bool bottle_blood)
     bool gloved_butcher   = (you.has_claws() && player_wearing_slot(EQ_GLOVES)
                              && !you.inv[you.equip[EQ_GLOVES]].cursed());
 
-    bool knife_butcher    = !barehand_butcher && !gloved_butcher && !you.weapon();
+    bool knife_butcher    = !barehand_butcher && !you.weapon() && form_can_wield();
 
-    bool can_butcher      = (teeth_butcher || barehand_butcher || birdie_butcher
+    bool can_butcher      = (teeth_butcher || barehand_butcher
+                             || birdie_butcher || knife_butcher
                              || you.weapon() && can_cut_meat(*you.weapon()));
 
     if (!Options.easy_butcher && !can_butcher)
@@ -438,15 +446,15 @@ bool butchery(int which_corpse, bool bottle_blood)
 
     if (!can_butcher)
     {
-        if (gloved_butcher)
+        if (you.weapon() && you.weapon()->cursed() && gloved_butcher)
             removed_gloves = true;
-        else if (you.equip[EQ_WEAPON] != SLOT_BARE_HANDS)
+        else
             wpn_switch = true;
     }
 
     int butcher_tool;
 
-    if (barehand_butcher || gloved_butcher)
+    if (barehand_butcher || removed_gloves)
         butcher_tool = SLOT_CLAWS;
     else if (teeth_butcher)
         butcher_tool = SLOT_TEETH;
@@ -674,11 +682,10 @@ bool eat_food(int slot)
     if (!_eat_check())
         return (false);
 
-    int result;
     // Skip the prompts if we already know what we're eating.
     if (slot == -1)
     {
-        result = prompt_eat_chunks();
+        int result = prompt_eat_chunks();
         if (result == 1 || result == -1)
             return (result > 0);
 
@@ -855,7 +862,7 @@ bool food_change(bool suppress_message)
                 if (you.level_type == LEVEL_LABYRINTH
                     && !_player_has_enough_food())
                 {
-                    xom_is_stimulated(64);
+                    xom_is_stimulated(50);
                 }
 
                 learned_something_new(HINT_YOU_STARVING);
@@ -1656,7 +1663,7 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
         xom_is_stimulated(random2(200));
         break;
 
-    case CE_HCL:
+    case CE_ROT:
         you.rot(&you, 10 + random2(10));
         if (you.sicken(50 + random2(100)))
             xom_is_stimulated(random2(100));
@@ -1665,7 +1672,7 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
     case CE_POISONOUS:
         mpr("Yeeuch - this meat is poisonous!");
         if (poison_player(3 + random2(4), "", "poisonous meat"))
-            xom_is_stimulated(random2(128));
+            xom_is_stimulated(random2(100));
         break;
 
     case CE_ROTTEN:
@@ -2152,7 +2159,11 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
             {
                 case CE_CLEAN:
                     if (start_feeding)
-                        mpr("This warm blood tastes delicious!");
+                    {
+                        mprf("This %sblood tastes delicious!",
+                             mons_class_flag(mons_type, M_WARM_BLOOD) ? "warm "
+                                                                      : "");
+                    }
                     else if (end_feeding && corpse.special > 150)
                         _heal_from_food(1);
                     break;
@@ -2171,8 +2182,8 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
                     // Always print this message - maybe you lost poison
                     // resistance due to feeding.
                     mpr("Blech - this blood tastes nasty!");
-                    if (poison_player(1 + random2(3), "", "poisoned blood"))
-                        xom_is_stimulated(random2(128));
+                    if (poison_player(1 + random2(3), "", "poisonous blood"))
+                        xom_is_stimulated(random2(100));
                     stop_delay();
                     return;
 
@@ -2198,7 +2209,7 @@ void vampire_nutrition_per_turn(const item_def &corpse, int feeding)
                     // No healing from bad mutagenic blood.
                     break;
 
-                case CE_HCL:
+                case CE_ROT:
                     you.rot(&you, 5 + random2(5));
                     if (you.sicken(50 + random2(100)))
                         xom_is_stimulated(random2(100));
@@ -2267,7 +2278,7 @@ bool causes_rot(const item_def &food)
     if (you.species == SP_GHOUL)
         return (false);
 
-    return (mons_corpse_effect(food.plus) == CE_HCL);
+    return (mons_corpse_effect(food.plus) == CE_ROT);
 }
 
 // Returns 1 for herbivores, -1 for carnivores and 0 for either.
@@ -2517,7 +2528,7 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
             }
             else if (kindof_thing == FOOD_CHUNK)
             {
-                if (rotten && !_player_can_eat_rotten_meat(true))
+                if (rotten && !_player_can_eat_rotten_meat(!suppress_msg))
                     return (false);
 
                 if (ur_chunkslover)
@@ -2615,7 +2626,7 @@ static corpse_effect_type _determine_chunk_effect(corpse_effect_type chunktype,
     // Determine the initial effect of eating a particular chunk. {dlb}
     switch (chunktype)
     {
-    case CE_HCL:
+    case CE_ROT:
     case CE_MUTAGEN_RANDOM:
         if (you.species == SP_GHOUL)
             chunktype = CE_CLEAN;
@@ -2767,10 +2778,10 @@ static void _heal_from_food(int hp_amt, int mp_amt, bool unrot,
                             bool restore_str)
 {
     if (hp_amt > 0)
-        inc_hp(hp_amt, false);
+        inc_hp(hp_amt);
 
     if (mp_amt > 0)
-        inc_mp(mp_amt, false);
+        inc_mp(mp_amt);
 
     if (unrot && player_rotted())
     {
@@ -2813,7 +2824,8 @@ int you_min_hunger()
 
 void handle_starvation()
 {
-    if (you.is_undead != US_UNDEAD && you.hunger <= 500)
+    if (you.is_undead != US_UNDEAD && !you.duration[DUR_DEATHS_DOOR]
+        && you.hunger <= 500)
     {
         if (!you.cannot_act() && one_chance_in(40))
         {
@@ -2822,7 +2834,7 @@ void handle_starvation()
 
             you.increase_duration(DUR_PARALYSIS, 5 + random2(8), 13);
             if (you.religion == GOD_XOM)
-                xom_is_stimulated(get_tension() > 0 ? 255 : 128);
+                xom_is_stimulated(get_tension() > 0 ? 200 : 100);
         }
 
         if (you.hunger <= 100)

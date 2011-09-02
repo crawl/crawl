@@ -188,8 +188,10 @@ public:
                           bool wizard_tele = false) = 0;
     virtual void poison(actor *attacker, int amount = 1, bool force = false) = 0;
     virtual bool sicken(int amount, bool allow_hint = true) = 0;
-    virtual void paralyse(actor *attacker, int strength) = 0;
-    virtual void petrify(actor *attacker, int strength) = 0;
+    virtual void paralyse(actor *attacker, int strength,
+                          std::string source = "") = 0;
+    virtual void petrify(actor *attacker) = 0;
+    virtual bool fully_petrify(actor *foe, bool quiet = false) = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;
     virtual void confuse(actor *attacker, int strength) = 0;
     virtual void put_to_sleep(actor *attacker, int strength) = 0;
@@ -249,6 +251,7 @@ public:
     virtual int res_negative_energy() const = 0;
     virtual int res_torment() const = 0;
     virtual int res_wind() const = 0;
+    virtual int res_petrify(bool temp = true) const = 0;
     virtual int res_magic() const = 0;
     virtual int check_res_magic(int power);
 
@@ -259,6 +262,7 @@ public:
     virtual bool can_cling_to(const coord_def& p) const;
     virtual bool check_clinging(bool stepped, bool door = false);
     virtual void clear_clinging();
+    virtual bool is_web_immune() const = 0;
     virtual bool airborne() const;
     virtual bool ground_level() const;
     virtual bool stand_on_solid_ground() const;
@@ -287,6 +291,7 @@ public:
     virtual int liquefying_radius2 () const = 0;
     virtual bool glows_naturally() const = 0;
 
+    virtual bool petrifying() const = 0;
     virtual bool petrified() const = 0;
 
     virtual bool handle_trap();
@@ -295,7 +300,11 @@ public:
 
     virtual bool incapacitated() const
     {
-        return cannot_move() || asleep() || confused() || caught();
+        return cannot_move()
+            || asleep()
+            || confused()
+            || caught()
+            || petrifying();
     }
 
     virtual int warding() const
@@ -319,9 +328,6 @@ protected:
     los_glob los_no_trans;
 };
 
-// Identical to actor->kill_alignment(), but returns KC_OTHER if the actor
-// is NULL.
-kill_category actor_kill_alignment(const actor *actor);
 bool actor_slime_wall_immune(const actor *actor);
 
 #endif

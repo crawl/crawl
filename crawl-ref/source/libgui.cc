@@ -5,7 +5,7 @@
 
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,7 +19,6 @@
 #include "message.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "tiledef-main.h"
 #include "travel.h"
@@ -206,4 +205,4 @@ char *strlwr(char *str)
 }
 
 #endif // #ifdef UNIX
-#endif // #ifdef USE_TILE
+#endif // #ifdef USE_TILE_LOCAL

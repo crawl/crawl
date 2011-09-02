@@ -1,7 +1,7 @@
 #ifndef SDL_WINDOWMANAGER_H
 #define SDL_WINDOWMANAGER_H
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 #ifdef USE_SDL
 
 #include "windowmanager.h"
@@ -65,6 +65,6 @@ protected:
 };
 
 #endif // USE_SDL
-#endif // USE_TILE
+#endif // USE_TILE_LOCAL
 
 #endif // SDL_WINDOWMANAGER_H

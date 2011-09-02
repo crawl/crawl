@@ -109,9 +109,12 @@ function trove.get_trove_item(e, value, base_item)
        {base="armour", type="ice dragon armour", quant=2+d(3), weight=2},
        {base="armour", type="dragon armour", quant=2+d(3), weight=2},
 
-       {base="weapon", type="demon whip", quant=3+d(3), weight=2},
-       {base="weapon", type="demon trident", quant=3+d(3), weight=2},
-       {base="weapon", type="demon blade", quant=3+d(3), weight=2},
+       {base="weapon", type="demon whip", quant=3+d(3),
+                                          quant2=3+d(3), weight=2},
+       {base="weapon", type="demon trident", quant=3+d(3),
+                                             quant2=3+d(3), weight=2},
+       {base="weapon", type="demon blade", quant=3+d(3),
+                                           quant2=3+d(3), weight=2},
 
        {base="wand", type="healing", quant=7+d(2), weight=1},
        {base="potion", type="healing", quant=12+d(4)+d(4), weight=1},
@@ -136,7 +139,7 @@ function trove.get_trove_item(e, value, base_item)
     item.plus1 = chosen.quant
   elseif chosen.base == "weapon" then
     item.plus1 = chosen.quant
-    item.plus2 = chosen.quant
+    item.plus2 = chosen.quant2
   elseif chosen.base == "scroll" or chosen.base == "potion" then
     item.quantity = chosen.quant
   end
@@ -279,9 +282,9 @@ TAGS:   uniq_trove no_monster_gen no_wall_fixup chance_trove
 CHANCE: 5%
 : trove.portal(_G)
 COLOUR: .cx = blue
-TILE:   cx = wall_stone_dark
-FTILE:  .cxO = floor_marble
 SUBST:  x = c:20 =:6
+TILE:   cx = wall_stone_dark
+FTILE:  =.cxO = floor_marble
 MAP
 cxxxc
 x...x
@@ -616,7 +619,7 @@ ENDMAP
 NAME:   trove_armour_1
 WEIGHT: 15
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
 # Loot: once again, 16 items.
 COLOUR: o = blue
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
@@ -645,7 +648,7 @@ ENDMAP
 NAME:   trove_armour_2
 WEIGHT: 15
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
 # Loot: 15 items.
 COLOUR: x = blue
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
@@ -667,7 +670,7 @@ ENDMAP
 NAME:    trove_hunter_1
 WEIGHT:  5
 ORIENT:  encompass
-TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
 # Loot:  15 items, this time.
 COLOUR:  x = blue
 COLOUR:  o = blue
@@ -937,7 +940,7 @@ ENDMAP
 
 # 16 pieces of armour
 NAME:   trove_armour_six_rooms
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
 ORIENT: encompass
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
 : trove.setup_features(_G)

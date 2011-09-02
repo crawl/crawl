@@ -122,7 +122,7 @@ void init_pandemonium(void)
                                     MONS_HAIRY_DEVIL,
                                     MONS_ICE_DEVIL,
                                     MONS_BLUE_DEVIL,
-                                    MONS_BEAST,
+                                    MONS_HELL_BEAST,
                                     MONS_IRON_DEVIL,
                                     -1);
         }

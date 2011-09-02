@@ -8,7 +8,7 @@
 # in view of the player. Zero experience monsters like plants are exempt.
 ###############################################################################
 
-: require("clua/sprint.lua")
+: require("dlua/sprint.lua")
 
 {{
 function sprint_mu_zot_mons_gen(data, triggerable, triggerer, marker, ev)
@@ -69,6 +69,11 @@ SUBST:    ETOF = x
 SUBST:    HLVM = x
 SUBST:    BYUG = x
 SUBST:    NIRCZ = x
+{{
+  hook("post_place", function()
+    crawl.set_max_runes(10)
+  end)
+}}
 
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -266,7 +271,7 @@ KMONS: m = chaos spawn
 KMONS: j = patrolling jelly
 MARKER:  X = lua:fog_machine { \
                  pow_max = 10, delay_min = 10, delay_max = 40, \
-                 size = 1, size_buildup_amnt = 5, \
+                 size = 2, size_buildup_amnt = 5, \
                  size_buildup_time = 25, cloud_type = "seething chaos" \
              }
 KITEM: * = royal jelly
@@ -319,7 +324,7 @@ KFEAT: & = closed_door
 MARKER: & = lua:restrict_door()
 MARKER:  ! = lua:fog_machine { \
                  pow_max = 10, delay_min = 10, delay_max = 40, \
-                 size = 1, size_buildup_amnt = 5, \
+                 size = 2, size_buildup_amnt = 5, \
                  size_buildup_time = 25, cloud_type = "black smoke" \
              }
 
@@ -519,12 +524,12 @@ KMONS: s = patrolling maud
 KMONS: u = death drake
 MARKER:  ? = lua:fog_machine { \
                  pow_max = 10, delay_min = 10, delay_max = 40, \
-                 size = 1, size_buildup_amnt = 5, \
+                 size = 2, size_buildup_amnt = 5, \
                  size_buildup_time = 25, cloud_type = "thin mist" \
              }
 MARKER:  * = lua:fog_machine { \
                  pow_max = 10, delay_min = 10, delay_max = 40, \
-                 size = 1, size_buildup_amnt = 5, \
+                 size = 2, size_buildup_amnt = 5, \
                  size_buildup_time = 25, cloud_type = "freezing vapour" \
              }
 KFEAT: ~ = closed_door
@@ -739,14 +744,14 @@ TAGS: sprint_mu_swamp no_rotate no_hmirror no_vmirror no_dup
 MONS: swamp drake, swamp dragon, hydra, the Lernaean hydra
 MARKER:  ! = lua:fog_machine { \
                  pow_max = 3, delay_min = 5, delay_max = 5, \
-                 size = 1, size_buildup_amnt = 3, \
+                 size = 2, size_buildup_amnt = 3, \
                  size_buildup_time = 5, cloud_type = "thin mist" \
              }
 : elseif swamprnd == 1 then
 MONS: death drake, swamp dragon skeleton, hydra, spectral hydra
 MARKER:  ! = lua:fog_machine { \
                  pow_max = 3, delay_min = 5, delay_max = 5, \
-                 size = 1, size_buildup_amnt = 3, \
+                 size = 2, size_buildup_amnt = 3, \
                  size_buildup_time = 5, cloud_type = "foul pestilence" \
              }
 COLOUR: t = darkgrey, w:8 lightgrey
@@ -754,14 +759,14 @@ COLOUR: t = darkgrey, w:8 lightgrey
 MONS: swamp drake simulacrum, ice dragon, hydra, hydra simulacrum
 MARKER:  ! = lua:fog_machine { \
                  pow_max = 3, delay_min = 5, delay_max = 5, \
-                 size = 1, size_buildup_amnt = 3, \
+                 size = 2, size_buildup_amnt = 3, \
                  size_buildup_time = 5, cloud_type = "freezing vapour" \
              }
 : else
 MONS: fire drake, dragon, hydra, Xtahua
 MARKER:  ! = lua:fog_machine { \
                  pow_max = 3, delay_min = 5, delay_max = 5, \
-                 size = 1, size_buildup_amnt = 3, \
+                 size = 2, size_buildup_amnt = 3, \
                  size_buildup_time = 5, cloud_type = "flame" \
              }
 : end
@@ -848,12 +853,12 @@ KITEM: " = any weapon, any armour, any wand, gold, strawberry
 
 MARKER:  ! = lua:fog_machine { \
                 pow_max = 15, delay_min = 100, delay_max = 150, \
-                size = 1, size_buildup_amnt = 29, \
+                size = 2, size_buildup_amnt = 29, \
                 size_buildup_time = 1000, cloud_type = "foul pestilence" }
 
 MARKER:  ? = lua:fog_machine { \
                 pow_max = 25, delay_min = 100, delay_max = 150, \
-                size = 1, size_buildup_amnt = 29, \
+                size = 2, size_buildup_amnt = 29, \
                 size_buildup_time = 1000, cloud_type = "grey smoke" }
 SUBST: G : GtTUVY
 SUBST: Y : TUY
@@ -940,7 +945,7 @@ KFEAT: - = axe trap
 NSUBST: - = 3:- / *:.
 MARKER:  ! = lua:fog_machine { \
                 pow_max = 25, delay_min = 100, delay_max = 150, \
-                size = 1, size_buildup_amnt = 29, \
+                size = 2, size_buildup_amnt = 29, \
                 size_buildup_time = 1000, cloud_type = "grey smoke" }
 SUBST: x = cn.
 NSUBST: A = 1:+ / *:v
@@ -1190,7 +1195,7 @@ KMONS: z = oklob plant
 KFEAT: ! = wand shop / armour shop / distillery shop / food shop
 KITEM: $ = any food / wand of disintegration w:2 / potion of healing / star_item
 KMONS: C = patrolling ice devil
-KMONS: D = patrolling beast
+KMONS: D = patrolling hell beast
 KMONS: E = patrolling sun demon
 KMONS: F = patrolling soul eater
 KMONS: G = iron troll simulacrum hd:20
@@ -1210,7 +1215,7 @@ KFEAT: " = floor
 COLOUR: " = yellow
 MARKER: L = lua:fog_machine { \
                  pow_max = 10, delay_min = 10, delay_max = 40, \
-                 size = 1, size_buildup_amnt = 5, \
+                 size = 2, size_buildup_amnt = 5, \
                  size_buildup_time = 25, cloud_type = "freezing vapour" \
              }
 COLOUR: # = red
@@ -1320,7 +1325,7 @@ KITEM: ? = superb_item, superb_item, scroll of enchant weapon III q:4
 : acq_on_sight(_G, '!', {"weapon","weapon"})
 MARKER:  G = lua:fog_machine { \
                 pow_max = 25, delay_min = 100, delay_max = 150, \
-                size = 1, size_buildup_amnt = 29, \
+                size = 2, size_buildup_amnt = 29, \
                 size_buildup_time = 1000, cloud_type = "flame" }
 COLOUR: #vG = red
 KFEAT: # = closed_door
@@ -1449,7 +1454,7 @@ KMONS: T = col:magenta statue name:zot n_adj \
         summon_small_mammals;summon_eyeballs hd:30 hp:300
 MARKER: T = lua:fog_machine { \
         pow_max = 15, delay_min = 100, delay_max = 150, \
-        size = 1, size_buildup_amnt = 29, \
+        size = 2, size_buildup_amnt = 29, \
         size_buildup_time = 1000, cloud_type = "mutagenic fog" }
 KFEAT: T = zot trap
 KMONS: * = orb of fire
@@ -1457,7 +1462,7 @@ MONS: Tiamat, yellow draconian caller / yellow draconian shifter
 MONS: white draconian scorcher
 MARKER: i = lua:fog_machine { \
         pow_max = 10, delay_min = 100, delay_max = 150, \
-        size = 1, size_buildup_amnt = 15, \
+        size = 2, size_buildup_amnt = 15, \
         size_buildup_time = 1000, cloud_type = "freezing vapour" }
 MONS: patrolling storm dragon / patrolling electric golem
 MONS: red draconian zealot

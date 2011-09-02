@@ -25,13 +25,13 @@ chomp;
 
 my ($tag, $pretyp) = ($1, $2);
 
-my $stable = defined($pretyp) ? "false" : "true";
+my $rel = defined($pretyp) ? $pretyp le "b" ? "ALPHA" : "BETA" : "FINAL";
 
 my $prefix = "CRAWL";
 
 open OUT, ">", "$outfile" or die $!;
 print OUT <<__eof__;
-#define ${prefix}_VERSION_FINAL $stable
+#define ${prefix}_VERSION_RELEASE VER_$rel
 #define ${prefix}_VERSION_SHORT "$tag"
 #define ${prefix}_VERSION_LONG "$_"
 __eof__

@@ -50,6 +50,8 @@ enum spret_type
     SPRET_NONE,                 // spell was not handled
 };
 
+#define fail_check() if(fail) return SPRET_FAIL
+
 typedef bool (*spell_selector)(spell_type spell);
 
 int list_spells(bool toggle_with_I = true, bool viewing = false,
@@ -69,7 +71,7 @@ void inspect_spells();
 void do_cast_spell_cmd(bool force);
 
 spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
-                       bool check_range = true, int range_power = 0);
+                       bool check_range = true);
 
 const char* failure_rate_to_string(int fail);
 

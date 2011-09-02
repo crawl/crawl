@@ -3,7 +3,6 @@
 
 #include "los_def.h"
 
-bool need_auto_exclude(const monster* mon, bool sleepy = false);
 void set_auto_exclude(const monster* mon);
 void remove_auto_exclude(const monster* mon, bool sleepy = false);
 

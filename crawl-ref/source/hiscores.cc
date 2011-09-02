@@ -20,7 +20,7 @@
  *
  */
 
-
+#include "AppHdr.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -30,8 +30,6 @@
 #include <unistd.h>
 #endif
 
-#include "AppHdr.h"
-
 #include "branch.h"
 #include "files.h"
 #include "dungeon.h"
@@ -39,6 +37,7 @@
 #include "initfile.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "items.h"
 #include "kills.h"
 #include "libutil.h"
 #include "message.h"
@@ -54,7 +53,6 @@
 #include "species.h"
 #include "state.h"
 #include "status.h"
-#include "stuff.h"
 #include "env.h"
 #include "tags.h"
 
@@ -488,6 +486,7 @@ scorefile_entry &scorefile_entry::operator = (const scorefile_entry &se)
 void scorefile_entry::init_from(const scorefile_entry &se)
 {
     version           = se.version;
+    tiles             = se.tiles;
     points            = se.points;
     name              = se.name;
     race              = se.race;
@@ -529,11 +528,14 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     num_runes         = se.num_runes;
     kills             = se.kills;
     maxed_skills      = se.maxed_skills;
+    fifteen_skills    = se.fifteen_skills;
     status_effects    = se.status_effects;
     gold              = se.gold;
     gold_spent        = se.gold_spent;
     gold_found        = se.gold_found;
     fruit_found_mask  = se.fruit_found_mask;
+    zigs              = se.zigs;
+    zigmax            = se.zigmax;
     fixup_char_name();
 }
 
@@ -655,6 +657,7 @@ static int _job_by_name(const std::string& name)
 void scorefile_entry::init_with_fields()
 {
     version = fields->str_field("v");
+    tiles   = fields->int_field("tiles");
     points  = fields->long_field("sc");
 
     name    = fields->str_field("name");
@@ -709,12 +712,16 @@ void scorefile_entry::init_with_fields()
 
     kills = fields->long_field("kills");
     maxed_skills = fields->str_field("maxskills");
+    fifteen_skills = fields->str_field("fifteenskills");
     status_effects = fields->str_field("status");
 
     gold       = fields->int_field("gold");
     gold_found = fields->int_field("goldfound");
     gold_spent = fields->int_field("goldspent");
     fruit_found_mask = fields->int_field("fruit");
+
+    zigs       = fields->int_field("zigscompleted");
+    zigmax     = fields->int_field("zigdeepest");
 
     fixup_char_name();
 }
@@ -734,6 +741,8 @@ void scorefile_entry::set_base_xlog_fields() const
         score_version += "-zotdef.1";
     fields->add_field("v", "%s", Version::Short().c_str());
     fields->add_field("lv", score_version.c_str());
+    if (tiles)
+        fields->add_field("tiles", "%d", tiles);
     fields->add_field("name", "%s", name.c_str());
     fields->add_field("race", "%s", species_name(race).c_str());
     fields->add_field("cls",  "%s", _job_name(job));
@@ -788,6 +797,8 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("kills", "%d", kills);
     if (!maxed_skills.empty())
         fields->add_field("maxskills", "%s", maxed_skills.c_str());
+    if (!fifteen_skills.empty())
+        fields->add_field("fifteenskills", "%s", fifteen_skills.c_str());
     if (!status_effects.empty())
         fields->add_field("status", "%s", status_effects.c_str());
 
@@ -796,6 +807,10 @@ void scorefile_entry::set_base_xlog_fields() const
     fields->add_field("goldspent", "%d", gold_spent);
     if (fruit_found_mask)
         fields->add_field("fruit", "%d", fruit_found_mask);
+    if (zigs)
+        fields->add_field("zigscompleted", "%d", zigs);
+    if (zigmax)
+        fields->add_field("zigdeepest", "%d", zigmax);
 }
 
 void scorefile_entry::set_score_fields() const
@@ -913,6 +928,7 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             || death_type == KILLED_BY_DISINT
             || death_type == KILLED_BY_SPORE
             || death_type == KILLED_BY_CLOUD
+            || death_type == KILLED_BY_ROTTING
             || death_type == KILLED_BY_REFLECTION)
         && !invalid_monster_index(death_source)
         && menv[death_source].type != -1)
@@ -1025,6 +1041,7 @@ void scorefile_entry::reset()
 {
     // simple init
     version.clear();
+    tiles                = 0;
     points               = -1;
     name.clear();
     race                 = SP_UNKNOWN;
@@ -1064,13 +1081,16 @@ void scorefile_entry::reset()
     num_turns            = -1;
     num_diff_runes       = 0;
     num_runes            = 0;
-    kills                = 0L;
+    kills                = 0;
     maxed_skills.clear();
+    fifteen_skills.clear();
     status_effects.clear();
     gold                 = 0;
     gold_found           = 0;
     gold_spent           = 0;
     fruit_found_mask     = 0;
+    zigs                 = 0;
+    zigmax               = 0;
 }
 
 static int _award_modified_experience()
@@ -1116,6 +1136,11 @@ void scorefile_entry::init(time_t dt)
     // 4.2      - stats and god info
 
     version = Version::Short();
+#ifdef USE_TILE
+    tiles   = 1;
+#else
+    tiles   = 0;
+#endif
     name    = you.your_name;
 
     /*
@@ -1136,74 +1161,33 @@ void scorefile_entry::init(time_t dt)
      *    + 0.1 * Experience above 3,000,000
      *    + (distinct Runes +2)^2 * 1000, winners with distinct runes >= 3 only
      *    + value of Inventory, for winners only
+     *      changed to 250k (Orb) + 10k per rune
      *    + (250,000 * d. runes) * (25,000/(turns/d. runes)), for winners only
      *
      */
 
     // do points first.
-    points = you.gold;
-    points += _award_modified_experience();
+    uint64_t pt = you.gold; // sprint games could overflow a 32 bit value
+    pt += _award_modified_experience();
 
-    num_runes      = 0;
-    num_diff_runes = 0;
+    num_runes      = runes_in_pack();
+    num_diff_runes = num_runes;
 
-    FixedVector< int, NUM_RUNE_TYPES >  rune_array;
-    rune_array.init(0);
-
-    // inventory value is only calculated for winners
-    const bool calc_item_values = (death_type == KILLED_BY_WINNING);
-
-    // Calculate value of pack and runes when character leaves dungeon
-    for (int d = 0; d < ENDOFPACK; d++)
+    // There's no point in rewarding lugging artefacts.  Thus, no points
+    // for the value of the inventory. -- 1KB
+    if (death_type == KILLED_BY_WINNING)
     {
-        if (you.inv[d].defined())
-        {
-            if (calc_item_values)
-                points += item_value(you.inv[d], true);
-
-            if (you.inv[d].base_type == OBJ_MISCELLANY
-                && you.inv[d].sub_type == MISC_RUNE_OF_ZOT)
-            {
-                num_runes += you.inv[d].quantity;
-
-                // Don't assert in rune_array[] due to buggy runes,
-                // since checks for buggy runes are already done
-                // elsewhere.
-                if (you.inv[d].plus < 0 || you.inv[d].plus >= NUM_RUNE_TYPES)
-                {
-                    mpr("WARNING: Buggy rune in pack!", MSGCH_ERROR);
-                    // Be nice and assume the buggy rune was originally
-                    // different from any of the other rune types.
-                    num_diff_runes++;
-                    continue;
-                }
-
-                if (rune_array[ you.inv[d].plus ] == 0)
-                    num_diff_runes++;
-
-                rune_array[ you.inv[d].plus ] += you.inv[d].quantity;
-            }
-        }
-    }
-
-    // Bonus for exploring different areas, not for collecting a
-    // huge stack of demonic runes in Pandemonium (gold value
-    // is enough for those). -- bwr
-
-    if (calc_item_values && num_diff_runes >= 3)
-        points += ((num_diff_runes + 2) * (num_diff_runes + 2) * 1000);
-
-    if (calc_item_values) // winners only
-    {
-        points +=
-            static_cast<long>(
-                (250000 * num_diff_runes)
-                * ((25000.0 * num_diff_runes) / (1+you.num_turns)));
+        pt += 250000; // the Orb
+        pt += num_runes * 10000;
+        pt += (num_runes + 2) * (num_runes + 2) * 1000;
+        pt += ((uint64_t)250000) * 25000 * num_runes * num_runes
+            / (1+you.num_turns);
     }
 
     // Players will have a hard time getting 1/10 of this (see XP cap):
-    if (points > 99999999)
-        points = 99999999;
+    if (pt > 99999999)
+        pt = 99999999;
+    points = pt;
 
     race = you.species;
     job  = you.char_class;
@@ -1215,7 +1199,7 @@ void scorefile_entry::init(time_t dt)
     best_skill     = ::best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     best_skill_lvl = you.skills[ best_skill ];
 
-    // Note all skills at level 27.
+    // Note all skills at level 27, and also all skills at level >= 15.
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
         skill_type sk = static_cast<skill_type>(i);
@@ -1224,6 +1208,12 @@ void scorefile_entry::init(time_t dt)
             if (!maxed_skills.empty())
                 maxed_skills += ",";
             maxed_skills += skill_name(sk);
+        }
+        if (you.skills[sk] >= 15)
+        {
+            if (!fifteen_skills.empty())
+                fifteen_skills += ",";
+            fifteen_skills += skill_name(sk);
         }
     }
 
@@ -1236,7 +1226,7 @@ void scorefile_entry::init(time_t dt)
         DUR_DEATH_CHANNEL, DUR_PHASE_SHIFT, DUR_SILENCE, DUR_INVIS, DUR_CONF,
         DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERK, STATUS_AIRBORNE,
         DUR_POISONING, STATUS_NET, STATUS_SPEED, DUR_AFRAID, DUR_MIRROR_DAMAGE,
-        DUR_SCRYING,
+        DUR_SCRYING, STATUS_FIREBALL, DUR_SHROUD_OF_GOLUBRIA,
     };
 
     status_info inf;
@@ -1298,6 +1288,9 @@ void scorefile_entry::init(time_t dt)
     gold_spent = you.attribute[ATTR_PURCHASES];
 
     fruit_found_mask = you.attribute[ATTR_FRUIT_FOUND];
+
+    zigs       = you.zigs_completed;
+    zigmax     = you.zig_max;
 
     wiz_mode = (you.wizard ? 1 : 0);
 }
@@ -1517,12 +1510,10 @@ scorefile_entry::character_description(death_desc_verbosity verbosity) const
                  _job_name(job));
         desc += scratch;
 
-        if (birth_time > 0)
-        {
-            desc += " on ";
-            _hiscore_date_string(birth_time, scratch);
-            desc += scratch;
-        }
+        ASSERT(birth_time);
+        desc += " on ";
+        _hiscore_date_string(birth_time, scratch);
+        desc += scratch;
 
         desc = _append_sentence_delimiter(desc, ".");
         desc += _hiscore_newline_string();
@@ -1782,7 +1773,7 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         break;
 
     case KILLED_BY_WEAKNESS:
-        desc += terse? "collapsed " : "Collapsed under their own weight";
+        desc += terse? "collapsed" : "Collapsed under their own weight";
         break;
 
     case KILLED_BY_CLUMSINESS:
@@ -1874,6 +1865,10 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
 
     case KILLED_BY_ROTTING:
         desc += terse? "rotting" : "Rotted away";
+        if (!auxkilldata.empty())
+            desc += " (" + auxkilldata + ")";
+        if (!death_source_desc().empty())
+            desc += " (" + death_source_desc() + ")";
         break;
 
     case KILLED_BY_TARGETING:
@@ -2090,13 +2085,6 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
                           num_runes, (num_runes > 1) ? "s" : "");
                 desc += scratch;
 
-                if (!semiverbose && num_diff_runes > 1)
-                {
-                    snprintf(scratch, INFO_SIZE, " (of %d types)",
-                             num_diff_runes);
-                    desc += scratch;
-                }
-
                 if (!semiverbose
                     && death_time > 0
                     && !_hiscore_same_day(birth_time, death_time))
@@ -2185,7 +2173,12 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
                     desc += _hiscore_newline_string();
 
                 if (you.duration[DUR_PARALYSIS])
-                    desc += "... while paralysed" + _hiscore_newline_string();
+                {
+                    desc += "... while paralysed";
+                    if (you.props.exists("paralysed_by"))
+                        desc += " by " + you.props["paralysed_by"].get_string();
+                    desc += _hiscore_newline_string();
+                }
 
             }
         }

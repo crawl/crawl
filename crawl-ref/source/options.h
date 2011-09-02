@@ -92,12 +92,16 @@ public:
 
     int         autopickup_on;
     int         default_friendly_pickup;
+    bool        default_manual_training;
 
+    bool        show_newturn_mark;// Show underscore prefix in messages for new turn
     bool        show_gold_turns; // Show gold and turns in HUD.
     bool        show_game_turns; // Show game turns instead of player turns.
     bool        show_beam;       // Show targeting beam by default.
+    bool        show_no_ctele;   // Show -cTele in the status light area.
 
     uint32_t    autopickups;     // items to autopickup
+    bool        auto_switch;     // switch melee&ranged weapons according to enemy range
     bool        show_inventory_weights; // show weights in inventory listings
     bool        colour_map;      // add colour to the map
     bool        clean_map;       // remove unseen clouds/monsters
@@ -183,6 +187,7 @@ public:
     std::vector<std::pair<text_pattern, std::string> > autoinscriptions;
     std::vector<text_pattern> note_items;     // Objects to note
     std::vector<int> note_skill_levels;       // Skill levels to note
+    std::vector<std::pair<text_pattern, std::string> > auto_spell_letters;
 
     bool        autoinscribe_artefacts; // Auto-inscribe identified artefacts.
     bool        autoinscribe_cursed; // Auto-inscribe previosly cursed items.
@@ -228,9 +233,6 @@ public:
     unsigned    feature_item_brand; // Highlight features covered by items.
     unsigned    trap_item_brand;    // Highlight traps covered by items.
 
-    bool        trap_prompt;        // Prompt when stepping on mechnical traps
-                                    // without enough hp (using trapwalk.lua)
-
     // What is the minimum number of items in a stack for which
     // you show summary (one-line) information
     int         item_stack_summary_minimum;
@@ -248,6 +250,9 @@ public:
 
     // How much more eager greedy-explore is for items than to explore.
     int         explore_item_greed;
+
+    // How much autoexplore favors visiting squares next to walls.
+    int         explore_wall_bias;
 
     // Some experimental improvements to explore
     bool        explore_improved;
@@ -325,6 +330,8 @@ public:
     char        tile_show_items[20]; // show which item types in tile inventory
     bool        tile_skip_title;     // wait for a key at title screen?
     bool        tile_menu_icons;     // display icons in menus?
+#endif
+#ifdef USE_TILE_LOCAL
     // minimap colours
     char        tile_player_col;
     char        tile_monster_col;
@@ -358,11 +365,17 @@ public:
     int         tile_font_lbl_size;
     std::string tile_font_tip_file;
     int         tile_font_tip_size;
+#ifdef USE_FT
+    bool        tile_font_ft_light;
+#endif
     // window settings
     screen_mode tile_full_screen;
     int         tile_window_width;
     int         tile_window_height;
     int         tile_map_pixels;
+#endif
+
+#ifdef USE_TILE
     bool        tile_force_overlay;
     // display settings
     int         tile_update_rate;

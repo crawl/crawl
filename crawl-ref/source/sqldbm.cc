@@ -5,10 +5,11 @@
 
 #include "AppHdr.h"
 
-#include "libutil.h"
 #include "sqldbm.h"
 #include "stuff.h"
+#include "syscalls.h"
 #include <fcntl.h>
+#include <unistd.h>
 #include <cstring>
 
 #ifdef USE_SQLITE_DBM
@@ -268,8 +269,7 @@ std::auto_ptr<std::string> SQL_DBM::nextkey()
     std::auto_ptr<std::string> result;
     if (s_iterator)
     {
-        int err = SQLITE_OK;
-        if ((err = ec(sqlite3_step(s_iterator))) == SQLITE_ROW)
+        if (ec(sqlite3_step(s_iterator)) == SQLITE_ROW)
             result.reset(
                 new std::string(
                     (const char *) sqlite3_column_text(s_iterator, 0)));

@@ -720,7 +720,7 @@ CrawlVector &CrawlStoreValue::new_vector(store_val_type _type,
     ASSERT(flags & SFLAG_UNSET);
     ASSERT(type == SV_NONE
            || (type == SV_VEC
-               && old_vec->size() == 0
+               && old_vec->empty()
                && old_vec->get_type() == SV_NONE
                && old_vec->get_default_flags() == 0
                && old_vec->get_max_size() == VEC_MAX_SIZE));
@@ -956,6 +956,12 @@ const CrawlVector& CrawlStoreValue::get_vector() const
 {
     GET_CONST_SETUP(SV_VEC);
     return *((CrawlVector*)val.ptr);
+}
+
+const monster& CrawlStoreValue::get_monster() const
+{
+    GET_CONST_SETUP(SV_MONST);
+    return *((monster*)val.ptr);
 }
 
 level_id CrawlStoreValue::get_level_id() const
@@ -1300,7 +1306,7 @@ void CrawlHashTable::write(writer &th) const
 
     CrawlHashTable::hash_map_type::const_iterator i = hash_map->begin();
 
-    for (; i != hash_map->end(); i++)
+    for (; i != hash_map->end(); ++i)
     {
         marshallString(th, i->first);
         i->second.write(th);
@@ -1358,7 +1364,7 @@ void CrawlHashTable::assert_validity() const
 
     unsigned long actual_size = 0;
 
-    for (; i != hash_map->end(); i++)
+    for (; i != hash_map->end(); ++i)
     {
         actual_size++;
 
@@ -1782,7 +1788,7 @@ bool CrawlVector::empty() const
 CrawlStoreValue& CrawlVector::pop_back()
 {
     assert_validity();
-    ASSERT(vec.size() > 0);
+    ASSERT(!vec.empty());
 
     CrawlStoreValue& val = vec[vec.size() - 1];
     vec.pop_back();

@@ -1,6 +1,6 @@
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "tilereg-menu.h"
 
@@ -179,7 +179,7 @@ void MenuRegion::place_entries()
 
             int entry_height;
 
-            if (m_entries[i].tiles.size() > 0)
+            if (!m_entries[i].tiles.empty())
             {
                 m_entries[i].sx = entry_start + tile_indent;
                 entry_height = std::max(max_tile_height, text_height);
@@ -325,7 +325,7 @@ void MenuRegion::set_entry(int idx, const std::string &str, int colour,
 
     e.heading  = (me->level == MEL_TITLE || me->level == MEL_SUBTITLE);
     e.selected = me->selected();
-    e.key      = me->hotkeys.size() > 0 ? me->hotkeys[0] : 0;
+    e.key      = !me->hotkeys.empty() ? me->hotkeys[0] : 0;
     e.sx = e.sy = e.ex = e.ey = 0;
     e.tiles.clear();
     me->get_tiles(e.tiles);

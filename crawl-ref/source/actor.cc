@@ -197,7 +197,7 @@ void actor::shield_block_succeeded(actor *foe)
         && (unrand_entry = get_unrand_entry(sh->special))
         && unrand_entry->fight_func.melee_effects)
     {
-       unrand_entry->fight_func.melee_effects(sh, this, foe, false);
+       unrand_entry->fight_func.melee_effects(sh, this, foe, false, 0);
     }
 }
 
@@ -227,11 +227,6 @@ int actor::body_weight(bool base) const
         end(0);
         return (0);
     }
-}
-
-kill_category actor_kill_alignment(const actor *act)
-{
-    return (act? act->kill_alignment() : KC_OTHER);
 }
 
 bool actor_slime_wall_immune(const actor *act)

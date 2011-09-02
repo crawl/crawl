@@ -17,7 +17,7 @@
 #include "cio.h"
 #include "coordit.h"
 #include "database.h"
-#include "dgn-actions.h"
+#include "dactions.h"
 #include "dungeon.h"
 #include "effects.h"
 #include "env.h"
@@ -36,6 +36,7 @@
 #include "misc.h"
 #include "mon-iter.h"
 #include "mon-place.h"
+#include "mon-project.h"
 #include "mon-util.h"
 #include "mgen_data.h"
 #include "coord.h"
@@ -49,6 +50,7 @@
 #include "potion.h"
 #include "religion.h"
 #include "godconduct.h"
+#include "skill_menu.h"
 #include "skills2.h"
 #include "spl-cast.h"
 #include "spl-damage.h"
@@ -61,7 +63,6 @@
 #include "spl-util.h"
 #include "spl-wpnench.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
@@ -121,6 +122,7 @@ const deck_archetype deck_of_destruction[] = {
     { CARD_HAMMER,  {5, 5, 5} },
     { CARD_SPARK,   {5, 5, 5} },
     { CARD_PAIN,    {5, 5, 5} },
+    { CARD_ORB,     {5, 5, 5} },
     { CARD_TORMENT, {0, 2, 4} },
     END_OF_DECK
 };
@@ -350,6 +352,7 @@ const char* card_name(card_type card)
     case CARD_CURSE:           return "the Curse";
     case CARD_SWINE:           return "the Swine";
     case CARD_ALCHEMIST:       return "the Alchemist";
+    case CARD_ORB:             return "the Orb";
     case NUM_CARDS:            return "a buggy card";
     }
     return "a very buggy card";
@@ -679,7 +682,6 @@ static bool _check_buggy_deck(item_def& deck)
     else if (props["num_marked"].get_byte() != static_cast<char>(num_marked))
     {
 #ifdef WIZARD
-
         strm << "Oops, counted " << static_cast<int>(num_marked)
              << " marked cards, but num_marked is "
              << (static_cast<int>(props["num_marked"].get_byte()));
@@ -870,6 +872,23 @@ bool deck_peek()
     return (true);
 }
 
+bool deck_identify_first(int slot)
+{
+    item_def& deck(you.inv[slot]);
+    if (top_card_is_known(deck))
+        return (false);
+
+    uint8_t flags;
+    card_type card = get_card_and_flags(deck, -1, flags);
+
+    _set_card_and_flags(deck, -1, card, flags | CFLAG_SEEN | CFLAG_MARKED);
+    deck.props["num_marked"]++;
+
+    mprf("You get a glimpse of the first card. It is %s.", card_name(card));
+    return (true);
+
+}
+
 // Mark a deck: look at the next four cards, mark them, and shuffle
 // them back into the deck. The player won't know what order they're
 // in, and if the top card is non-marked then the player won't
@@ -973,7 +992,7 @@ static void _describe_cards(std::vector<card_type> cards)
 
         name = uppercase_first(name);
         data << "<w>" << name << "</w>\n"
-             << get_linebreak_string(desc, get_number_of_cols())
+             << get_linebreak_string(desc, get_number_of_cols() - 1)
              << "\n";
     }
     formatted_string fs = formatted_string::parse_string(data.str());
@@ -1257,7 +1276,7 @@ static int _xom_check_card(item_def &deck, card_type card,
         amusement *= 2;
     // Expecting one type of card but got another, real funny.
     else if (flags & CFLAG_ODDITY)
-        amusement = 255;
+        amusement = 200;
 
     if (player_in_a_dangerous_place())
         amusement *= 2;
@@ -1415,6 +1434,8 @@ int get_power_level(int power, deck_rarity_type rarity)
         if (x_chance_in_y(power, 700))
             ++power_level;
         break;
+    case DECK_RARITY_RANDOM:
+        die("unset deck rarity");
     }
     return power_level;
 }
@@ -1646,7 +1667,7 @@ static void _stairs_card(int power, deck_rarity_type rarity)
         }
     }
 
-    if (stairs_avail.size() == 0)
+    if (stairs_avail.empty())
     {
         mpr("No stairs available to move.");
         return;
@@ -1700,6 +1721,7 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
     const zap_type sparkzaps[3]  = { ZAP_ELECTRICITY, ZAP_LIGHTNING,
                                      ZAP_ORB_OF_ELECTRICITY };
     const zap_type painzaps[2]   = { ZAP_AGONY, ZAP_NEGATIVE_ENERGY };
+    const zap_type orbzaps[3]    = { ZAP_MYSTIC_BLAST, ZAP_IOOD, ZAP_IOOD };
 
     switch (card)
     {
@@ -1715,6 +1737,7 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
     case CARD_HAMMER: ztype = hammerzaps[power_level]; break;
     case CARD_VENOM:  ztype = venomzaps[power_level];  break;
     case CARD_SPARK:  ztype = sparkzaps[power_level];  break;
+    case CARD_ORB:    ztype = orbzaps[power_level];    break;
 
     case CARD_PAIN:
         if (power_level == 2)
@@ -1739,9 +1762,23 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
     beam.range = LOS_RADIUS;
     if (spell_direction(target, beam, DIR_NONE, TARG_HOSTILE,
                         LOS_RADIUS, true, true, false, NULL, prompt.c_str())
-        && player_tracer(ZAP_DEBUGGING_RAY, power/4, beam))
+        && player_tracer(ZAP_DEBUGGING_RAY, power/6, beam))
     {
-        zapping(ztype, random2(power/4), beam);
+        if (ztype == ZAP_IOOD)
+        {
+            if (power_level == 1)
+                cast_iood(&you, power/6, &beam);
+            else
+                cast_iood_burst(power/6, beam.target);
+        }
+        else
+            zapping(ztype, power/6, beam);
+    }
+    else if (ztype == ZAP_IOOD && power_level == 2)
+    {
+        // cancelled orb bursts just become uncontrolled
+        cast_iood_burst(power/6, coord_def(-1, -1));
+        return true;
     }
     else
         rc = false;
@@ -1765,12 +1802,12 @@ static void _elixir_card(int power, deck_rarity_type rarity)
     }
     else if (power_level == 1)
     {
-        set_hp(you.hp_max, false);
+        set_hp(you.hp_max);
         you.magic_points = 0;
     }
     else if (power_level >= 2)
     {
-        set_hp(you.hp_max, false);
+        set_hp(you.hp_max);
         you.magic_points = you.max_magic_points;
     }
     you.redraw_hit_points = true;
@@ -1885,7 +1922,7 @@ static void _helm_card(int power, deck_rarity_type rarity)
 
 static void _blade_card(int power, deck_rarity_type rarity)
 {
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
     {
         mpr("You feel like a smilodon for a moment.");
         return;
@@ -1910,7 +1947,8 @@ static void _blade_card(int power, deck_rarity_type rarity)
     {
         const brand_type brands[] = {
             SPWPN_FLAMING, SPWPN_FREEZING, SPWPN_VENOM, SPWPN_DRAINING,
-            SPWPN_VORPAL, SPWPN_DISTORTION, SPWPN_PAIN, SPWPN_DUMMY_CRUSHING
+            SPWPN_VORPAL, SPWPN_DISTORTION, SPWPN_PAIN, SPWPN_ANTIMAGIC,
+            SPWPN_CHAOS,
         };
 
         if (!brand_weapon(RANDOM_ELEMENT(brands), random2(power/4)))
@@ -1924,7 +1962,7 @@ static void _blade_card(int power, deck_rarity_type rarity)
                      wpn->quantity == 1 ? "s" : "");
             }
             else
-                mprf("Your %s twitch.", your_hand(true).c_str());
+                mprf("Your %s twitch.", you.hand_name(true).c_str());
         }
     }
 }
@@ -2049,12 +2087,8 @@ static void _experience_card(int power, deck_rarity_type rarity)
     else
         mpr("You feel knowledgeable.");
 
-    // Put some free XP into pool; power_level 2 means +20k
-    int exp_gain = HIGH_EXP_POOL;
-    if (power_level <= 1)
-        exp_gain = std::min(exp_gain, power * 50);
-    exp_gain -= ash_reduce_xp(exp_gain);
-    you.exp_available += exp_gain;
+    more();
+    skill_menu(SKMF_EXPERIENCE_CARD, std::min(power * 50, HIGH_EXP_POOL));
 
     // After level 27, boosts you get don't get increased (matters for
     // charging V:8 with no rN+++ and for felids).
@@ -2324,6 +2358,30 @@ static void _dowsing_card(int power, deck_rarity_type rarity)
     }
 }
 
+bool create_altar(bool disallow_no_altar)
+{
+    // Generate an altar.
+    if (grd(you.pos()) == DNGN_FLOOR)
+    {
+        god_type god;
+
+        do
+            god = random_god(disallow_no_altar);
+        while (is_unavailable_god(god));
+
+        grd(you.pos()) = altar_for_god(god);
+
+        if (grd(you.pos()) != DNGN_FLOOR)
+        {
+            mprf("An altar to %s grows from the floor before you!",
+                 god_name(god).c_str());
+            return (true);
+        }
+    }
+
+    return (false);
+}
+
 static void _trowel_card(int power, deck_rarity_type rarity)
 {
     // Early exit: don't clobber important features.
@@ -2417,26 +2475,7 @@ static void _trowel_card(int power, deck_rarity_type rarity)
         }
     }
     else
-    {
-        // Generate an altar.
-        if (grd(you.pos()) == DNGN_FLOOR)
-        {
-            // Might get GOD_NO_GOD and no altar.
-            god_type rgod = static_cast<god_type>(random2(NUM_GODS));
-
-            if (rgod == GOD_JIYVA && jiyva_is_dead())
-                rgod = GOD_NO_GOD;
-
-            grd(you.pos()) = altar_for_god(rgod);
-
-            if (grd(you.pos()) != DNGN_FLOOR)
-            {
-                done_stuff = true;
-                mprf("An altar to %s grows from the floor before you!",
-                     god_name(rgod).c_str());
-            }
-        }
-    }
+        done_stuff = create_altar();
 
     if (!done_stuff)
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -2465,7 +2504,7 @@ static void _godly_wrath()
     int tries = 100;
     while (tries-- > 0)
     {
-        god_type god = static_cast<god_type>(random2(NUM_GODS - 1) + 1);
+        god_type god = random_god(true);
 
         // Don't recursively make player draw from the Deck of Punishment.
         if (god == GOD_NEMELEX_XOBEH)
@@ -2487,23 +2526,23 @@ static void _curse_card(int power, deck_rarity_type rarity)
     mpr("You feel a malignant aura surround you.");
     if (power_level >= 2)
     {
-        // Curse (almost) everything + chance of decay.
-        while (curse_an_item(one_chance_in(6), true) && !one_chance_in(1000))
+        // Curse (almost) everything.
+        while (curse_an_item(true) && !one_chance_in(1000))
             ;
     }
     else if (power_level == 1)
     {
         // Curse an average of four items.
         do
-            curse_an_item(false);
+            curse_an_item();
         while (!one_chance_in(4));
     }
     else
     {
         // Curse 1.5 items on average.
-        curse_an_item(false);
+        curse_an_item();
         if (coinflip())
-            curse_an_item(false);
+            curse_an_item();
     }
 }
 
@@ -2797,7 +2836,7 @@ static void _alchemist_card(int power, deck_rarity_type rarity)
     int hp = std::min(gold_used / 3, you.hp_max - you.hp);
     if (hp > 0)
     {
-        inc_hp(hp, false);
+        inc_hp(hp);
         gold_used -= hp * 2;
         done_stuff = true;
         mpr("You feel better.");
@@ -2807,11 +2846,11 @@ static void _alchemist_card(int power, deck_rarity_type rarity)
     // Maybe spend some more gold to regain magic
     if (x_chance_in_y(power_level + 1, 5))
     {
-        int mp = std::min(gold_used / 6, you.max_magic_points - you.magic_points);
+        int mp = std::min(gold_used / 5, you.max_magic_points - you.magic_points);
         if (mp > 0)
         {
-            inc_mp(mp, false);
-            gold_used -= mp * 4;
+            inc_mp(mp);
+            gold_used -= mp * 5;
             done_stuff = true;
             mpr("You feel your power returning.");
             dprf("Gained %d magic, %d gold remaining.", mp, gold_used);
@@ -2875,7 +2914,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
         if (which_card != CARD_VITRIOL && which_card != CARD_FLAME
             && which_card != CARD_FROST && which_card != CARD_HAMMER
             && which_card != CARD_SPARK && which_card != CARD_PAIN
-            && which_card != CARD_VENOM)
+            && which_card != CARD_VENOM && which_card != CARD_ORB)
         {
            mprf("You have drawn %s.", card_name(which_card));
         }
@@ -2888,7 +2927,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
             // Being a self-centered deity, Xom *always* finds this
             // maximally hilarious.
             god_speaks(GOD_XOM, "Xom roars with laughter!");
-            you.gift_timeout = 255;
+            you.gift_timeout = 200;
         }
         else if (you.penance[GOD_XOM])
             god_speaks(GOD_XOM, "Xom laughs nastily.");
@@ -2938,7 +2977,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_TROWEL:           _trowel_card(power, rarity); break;
     case CARD_SPADE:            your_spells(SPELL_DIG, random2(power/4), false); break;
     case CARD_BANSHEE:          mass_enchantment(ENCH_FEAR, power); break;
-    case CARD_TORMENT:          torment(TORMENT_CARDS, you.pos()); break;
+    case CARD_TORMENT:          torment(&you, TORMENT_CARDS, you.pos()); break;
     case CARD_ALCHEMIST:        _alchemist_card(power, rarity); break;
 
     case CARD_VENOM:
@@ -2957,6 +2996,7 @@ bool card_effect(card_type which_card, deck_rarity_type rarity,
     case CARD_HAMMER:
     case CARD_SPARK:
     case CARD_PAIN:
+    case CARD_ORB:
         rc = _damaging_card(which_card, power, rarity);
         break;
 
@@ -3038,8 +3078,8 @@ card_type top_card(const item_def &deck)
 bool is_deck(const item_def &item)
 {
     return (item.base_type == OBJ_MISCELLANY
-            && item.sub_type >= MISC_DECK_OF_ESCAPE
-            && item.sub_type <= MISC_DECK_OF_DEFENCE);
+            && item.sub_type >= MISC_FIRST_DECK
+            && item.sub_type <= MISC_LAST_DECK);
 }
 
 bool bad_deck(const item_def &item)
@@ -3075,6 +3115,9 @@ uint8_t deck_rarity_to_color(deck_rarity_type rarity)
 
     case DECK_RARITY_LEGENDARY:
         return LIGHTMAGENTA;
+
+    case DECK_RARITY_RANDOM:
+        die("unset deck rarity");
     }
 
     return (WHITE);

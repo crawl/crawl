@@ -243,11 +243,11 @@ TAGS:   abyss_rune allow_dup
 KITEM:  O = abyssal rune of Zot
 MARKER: ! = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 1, size_buildup_amnt = 5, \
+                size = 2, size_buildup_amnt = 5, \
                 size_buildup_time = 25, cloud_type = "seething chaos" \
             }
 SUBST:  ! = ., X = x., x = xc
-MONS:   megabat, chaos spawn, dragon / ice dragon
+MONS:   bat, chaos spawn, dragon / ice dragon
 MONS:   ogre mage, hill giant
 MAP
  cccX X X
@@ -723,7 +723,7 @@ TAGS:   abyss_exit allow_dup
 KFEAT:  O = exit_abyss
 MARKER: O = lua:fog_machine {                               \
                 pow_min = 8, pow_max = 12, delay = 25,      \
-                size = 1, walk_dist = 1, spread_rate = 33,  \
+                size = 2, walk_dist = 1, spread_rate = 33,  \
                 cloud_type = "mutagenic fog"                \
             }
 MAP
@@ -848,4 +848,27 @@ cccyy..yycc
   ccc..ccc
     c++c
      @@
+ENDMAP
+
+###################################################################
+# < bmh> I got the idea after I introduced a bug where the whole floor of
+#        the abyss turned into altars
+NAME: abyss_xom_lugonu_altar
+TAGS: abyss allow_dup
+COLOUR: " : magenta w:2 / white
+KFEAT: _ = altar_lugonu
+KFEAT: X = altar_xom
+SUBST: a = XXX"
+SUBST: b = X"
+SUBST: c = XX"
+SUBST: d = X""
+SUBST: e = X"""
+MAP
+   ebe
+  dcacd
+ ec"""ce
+ ba"_"ab
+ ec"""ce
+  dcacd
+   ebe
 ENDMAP

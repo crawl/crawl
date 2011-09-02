@@ -126,6 +126,8 @@ targetter_reach::targetter_reach(const actor* act, reach_type ran) :
 
 bool targetter_reach::valid_aim(coord_def a)
 {
+    if (origin == a)
+        return notify_fail("That would be overly suicidal.");
     if (!cell_see_cell(origin, a))
         return notify_fail("You cannot see that place.");
     if (!agent->see_cell_no_trans(a))
@@ -147,10 +149,11 @@ aff_type targetter_reach::is_affected(coord_def loc)
     if (loc == aim)
         return AFF_YES;
 
-    // Knight move reach "slips through" and can't be blocked by either
-    // square in the middle.
-    if ((loc - origin) * 2 == (aim - origin))
+    if (((loc - origin) * 2 - (aim - origin)).abs() <= 1
+        && grd(loc) > DNGN_MAX_NONREACH)
+    {
         return AFF_TRACER;
+    }
 
     return AFF_NO;
 }
@@ -179,13 +182,16 @@ bool targetter_cloud::valid_aim(coord_def a)
 {
     if (agent && (origin - a).abs() > range2)
         return notify_fail("Out of range.");
-    if (!in_bounds(a) || feat_is_solid(grd(a)))
-        return notify_fail(_wallmsg(a));
-    if (env.cgrid(a) != EMPTY_CLOUD)
-        return notify_fail("There's already a cloud there.");
-    ASSERT(_cloudable(a));
-    if (agent && !cell_see_cell(origin, a))
+    if (!map_bounds(a) || agent && origin != a && !cell_see_cell(origin, a))
         return notify_fail("You cannot see that place.");
+    if (feat_is_solid(grd(a)))
+        return notify_fail(_wallmsg(a));
+    if (agent)
+    {
+        if (env.cgrid(a) != EMPTY_CLOUD)
+            return notify_fail("There's already a cloud there.");
+        ASSERT(_cloudable(a));
+    }
     return true;
 }
 
@@ -200,7 +206,6 @@ bool targetter_cloud::set_aim(coord_def a)
 
     int placed = 0;
     queue[0].push_back(a);
-    ASSERT(_cloudable(a));
 
     for (unsigned int d1 = 0; d1 < queue.size() && placed < cnt_max; d1++)
     {

@@ -114,6 +114,7 @@ static spell_type search_order_misc[] = {
     SPELL_CONFUSE,
     SPELL_MEPHITIC_CLOUD,
     SPELL_SLOW,
+    SPELL_PETRIFY,
     SPELL_POLYMORPH_OTHER,
     SPELL_TELEPORT_OTHER,
     SPELL_EVAPORATE, // replaced with Mephitic Cloud, though at lower priority
@@ -269,8 +270,13 @@ void ghost_demon::init_random_demon()
             spells[5] = SPELL_TELEPORT_SELF;
 
         // Convert the player spell indices to monster spell ones.
+        // Pan lords also get their Agony upgraded to Torment.
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        {
             spells[i] = translate_spell(spells[i]);
+            if (spells[i] == SPELL_AGONY)
+                spells[i] = SPELL_SYMBOL_OF_TORMENT;
+        }
 
         // Give demon a chance for some monster-only spells.
         // Demon-summoning should be fairly common.
@@ -471,7 +477,7 @@ static mon_attack_flavour _very_ugly_thing_flavour_upgrade(mon_attack_flavour u_
     return (u_att_flav);
 }
 
-mon_attack_flavour ugly_thing_colour_to_flavour(uint8_t u_colour)
+static mon_attack_flavour _ugly_thing_colour_to_flavour(uint8_t u_colour)
 {
     mon_attack_flavour u_att_flav = AF_PLAIN;
 
@@ -553,7 +559,7 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
                                                    : BLACK);
 
     // Pick a compatible attack flavour for this colour.
-    att_flav = ugly_thing_colour_to_flavour(colour);
+    att_flav = _ugly_thing_colour_to_flavour(colour);
 
     // Pick a compatible resistance for this attack flavour.
     ugly_thing_add_resistance(false, att_flav);
@@ -589,7 +595,7 @@ void ghost_demon::ugly_thing_to_very_ugly_thing()
     ugly_thing_add_resistance(true, att_flav);
 }
 
-mon_resist_def ugly_thing_resists(bool very_ugly, mon_attack_flavour u_att_flav)
+static mon_resist_def _ugly_thing_resists(bool very_ugly, mon_attack_flavour u_att_flav)
 {
     mon_resist_def resists;
     resists.elec = 0;
@@ -639,7 +645,7 @@ mon_resist_def ugly_thing_resists(bool very_ugly, mon_attack_flavour u_att_flav)
 void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
                                             mon_attack_flavour u_att_flav)
 {
-    resists = ::ugly_thing_resists(very_ugly, u_att_flav);
+    resists = _ugly_thing_resists(very_ugly, u_att_flav);
 }
 
 void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
@@ -665,7 +671,6 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
 
     // Giant spiked club: speed 12, 44+22 damage, 35 AC, 70 HP, 16 EV
     // Bardiche:          speed 10, 40+20 damage, 20 AC, 40 HP, 15 EV
-    // Katana:            speed 17, 26+13 damage, 16 AC, 32 HP, 18 EV
     // Dagger:            speed 20,  8+ 4 damage,  2 AC,  4 HP, 20 EV
     // Quick blade:       speed 23, 10+ 5 damage,  5 AC, 10 HP, 22 EV
     // Sabre:             speed 18, 14+ 7 damage,  9 AC, 18 HP, 19 EV
@@ -693,7 +698,6 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
 
     // Giant spiked club: speed 7,  22+22 damage, 17 AC, 35 HP, 11 EV
     // Bardiche:          speed 5,  20+20 damage, 10 AC, 20 HP, 10 EV
-    // Katana:            speed 12, 13+13 damage,  8 AC, 16 HP, 13 EV
     // Dagger:            speed 15,  4+4  damage,  1 AC,  5 HP, 15 EV
     // Quick blade:       speed 18,  5+5  damage,  2 AC,  5 HP, 17 EV
     // Sabre:             speed 13,  7+7  damage,  4 AC,  9 HP, 14 EV
@@ -702,7 +706,6 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
 
     // Giant spiked club: speed 5, 11+22 damage, 8 AC, 17 HP,  9 EV
     // Bardiche:          speed 3, 10+20 damage, 5 AC, 10 HP,  8 EV
-    // Katana:            speed 10, 6+13 damage, 4 AC,  8 HP, 11 EV
     // Dagger:            speed 13, 2+4  damage, 0 AC,  5 HP, 13 EV
     // Quick blade:       speed 16, 2+5  damage, 1 AC,  5 HP, 15 EV
     // Sabre:             speed 11, 3+7  damage, 2 AC,  5 HP, 12 EV
@@ -826,8 +829,6 @@ spell_type ghost_demon::translate_spell(spell_type spel) const
         return (SPELL_CALL_IMP);
     case SPELL_DELAYED_FIREBALL:
         return (SPELL_FIREBALL);
-    case SPELL_PETRIFY:
-        return (SPELL_PARALYSE);
     case SPELL_EVAPORATE:
         return (SPELL_MEPHITIC_CLOUD);
     case SPELL_STICKY_FLAME:
@@ -1078,7 +1079,7 @@ static const uint8_t labrat_colour_values[] = {
     CYAN, YELLOW, RED, LIGHTCYAN, LIGHTRED, LIGHTBLUE, LIGHTMAGENTA, MAGENTA, GREEN
 };
 
-uint8_t _labrat_random_colour()
+static uint8_t _labrat_random_colour()
 {
     return (RANDOM_ELEMENT(labrat_colour_values));
 }

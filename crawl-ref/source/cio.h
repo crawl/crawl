@@ -127,7 +127,6 @@ struct c_mouse_event
     }
 };
 
-coord_def     get_mouse_pos();
 c_mouse_event get_mouse_event();
 void          new_mouse_event(const c_mouse_event &ce);
 void          c_input_reset(bool enable_mouse, bool flush = false);
@@ -207,7 +206,8 @@ public:
         enable_smart_cursor(false);
         set_cursor_enabled(cursor_enabled);
     }
-    ~cursor_control() {
+    ~cursor_control()
+    {
         set_cursor_enabled(cstate);
         enable_smart_cursor(smartcstate);
     }

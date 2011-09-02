@@ -203,6 +203,11 @@ static int dgn_stash_items(lua_State *ls)
 
     for (ST_ItemIterator stii; stii; ++stii)
     {
+        // if this function is added to clua or used for something else than
+        // troves, we'll might need to parametrize this
+        if (stii->flags & ISFLAG_UNOBTAINABLE)
+            continue;
+
         if (skip_stackable && is_stackable_item(*stii))
             continue;
         if (min_value > 0)

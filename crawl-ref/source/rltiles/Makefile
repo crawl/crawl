@@ -4,20 +4,26 @@ ifneq (,$(findstring MINGW,$(uname_S)))
 LDFLAGS += -lmingw32
 endif
 
+# Note: since generation of tiles is done on the host, we don't care about
+# cross-compilation here.
+#
+# Also, cross-compilation with no system libraries for host rather than target
+# is not supported.  If host=target, contribs are enough.
+
 ifndef CONTRIB_SDL
-SDL_CFLAGS := $(shell sdl-config --cflags 2> /dev/null || echo "-I../contrib/install/include/SDL")
-SDL_LDFLAGS := $(shell sdl-config --libs 2> /dev/null && echo "-lSDL_image" || echo "../contrib/install/lib/libSDL.a ../contrib/install/lib/libSDLmain.a ../contrib/install/lib/libSDL_image.a")
+SDL_CFLAGS := $(shell sdl-config --cflags 2> /dev/null || echo "-I../contrib/install/$(ARCH)/include/SDL")
+SDL_LDFLAGS := $(shell sdl-config --libs 2> /dev/null && echo "-lSDL_image" || echo "../contrib/install/$(ARCH)/lib/libSDL.a ../contrib/install/$(ARCH)/lib/libSDLmain.a ../contrib/install/$(ARCH)/lib/libSDL_image.a")
 else
-SDL_CFLAGS := -I../contrib/install/include/SDL
-SDL_LDFLAGS := ../contrib/install/lib/libSDL.a ../contrib/install/lib/libSDLmain.a ../contrib/install/lib/libSDL_image.a
+SDL_CFLAGS := -I../contrib/install/$(ARCH)/include/SDL
+SDL_LDFLAGS := ../contrib/install/$(ARCH)/lib/libSDL.a ../contrib/install/$(ARCH)/lib/libSDLmain.a ../contrib/install/$(ARCH)/lib/libSDL_image.a
 endif
 
 ifndef NO_PKGCONFIG
-PNG_INCLUDE := $(shell pkg-config libpng --cflags 2> /dev/null || echo "-I../contrib/install/include")
-PNG_LIB := $(shell pkg-config libpng --libs 2> /dev/null || echo "../contrib/install/lib/libpng.a ../contrib/install/lib/libz.a")
+PNG_INCLUDE := $(shell pkg-config libpng --cflags 2> /dev/null || echo "-I../contrib/install/$(ARCH)/include")
+PNG_LIB := $(shell pkg-config libpng --libs 2> /dev/null || echo "../contrib/install/$(ARCH)/lib/libpng.a ../contrib/install/$(ARCH)/lib/libz.a")
 else
-PNG_INCLUDE := -I../contrib/install/include
-PNG_LIB := ../contrib/install/lib/libpng.a ../contrib/install/lib/libz.a
+PNG_INCLUDE := -I../contrib/install/$(ARCH)/include
+PNG_LIB := ../contrib/install/$(ARCH)/lib/libpng.a ../contrib/install/$(ARCH)/lib/libz.a
 endif
 
 CFLAGS := -O2 $(SDL_CFLAGS) $(PNG_INCLUDE)
@@ -43,10 +49,6 @@ ifeq ($(shell which $(LMACH)gcc > /dev/null 2> /dev/null && echo "Yes"),)
 LMACH :=
 endif
 CXX = $(LMACH)g++
-ifdef ARCH
-CF_ARCHS := $(patsubst %,-arch %,$(ARCH))
-CXX += $(CF_ARCHS)
-endif
 
 DELETE = rm -f
 
@@ -59,6 +61,7 @@ HEADERS := $(INPUTS:%=tiledef-%.h)
 HTML := $(INPUTS:%=tile-%.html)
 SOURCE := $(INPUTS:%=tiledef-%.cc)
 IMAGES := $(INPUTS:%=%.png)
+JAVASCRIPT := $(INPUTS:%=tileinfo-%.js)
 
 ifneq ($(findstring $(MAKEFLAGS),s),s)
 ifndef V
@@ -72,9 +75,9 @@ endif
 BASE_OBJECTS := tile_colour.o tile.o tile_page.o tile_list_processor.o main.o
 OBJECTS := $(BASE_OBJECTS:%=$(TOOLDIR)/%)
 
-all: $(TILEGEN) $(HEADERS) $(SOURCE) $(IMAGES)
+all: $(TILEGEN) $(HEADERS) $(SOURCE) $(IMAGES) $(JAVASCRIPT)
 
-%.png tiledef-%.h tiledef-%.cc: dc-%.txt | $(TILEGEN)
+%.png tiledef-%.h tiledef-%.cc tileinfo-%.js: dc-%.txt | $(TILEGEN)
 	$(QUIET_GEN)$(TILEGEN) $<
 
 DEPS := $(shell ls $(OBJECTS:%.o=%.d) $(INPUTS:%=%.d) 2> /dev/null)
@@ -84,7 +87,7 @@ ifneq ($(DEPS),)
 endif
 
 clean:
-	$(DELETE) $(HEADERS) $(OBJECTS) $(TILEGEN) $(SOURCE) $(IMAGES) $(HTML) $(DEPS)
+	$(DELETE) $(HEADERS) $(OBJECTS) $(TILEGEN) $(SOURCE) $(IMAGES) $(HTML) $(DEPS) $(JAVASCRIPT)
 
 distclean: clean
 

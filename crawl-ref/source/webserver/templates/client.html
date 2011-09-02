@@ -1,0 +1,120 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>WebTiles - Dungeon Crawl Stone Soup</title>
+    <link rel="icon" href="/static/stone_soup_icon-32x32.png" type="image/png">
+    <script type="text/javascript" src="/static/jquery.js"></script>
+    <script type="text/javascript" src="/static/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/static/jquery.tablesorter.min.js"></script>
+    <script type="text/javascript" src="/static/key_conversion.js"></script>
+    <script type="text/javascript" src="/static/client.js"></script>
+    <script type="text/javascript" src="/static/chat.js"></script>
+    <script type="text/javascript">
+      var socket_server = "{{ socket_server }}";
+    </script>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+  </head>
+  <body>
+    <noscript>Please enable javascript!</noscript>
+
+    <div id="lobby" style="display: none;">
+      <div id="login">
+        <span id="login_message"></span>
+        <form action="" id="login_form" onsubmit="return login();">
+          <label for="username">User:</label>
+          <input class="text" type="text" name="username" id="username"></input>
+          <label for="password">Pass:</label>
+          <input class="text" type="password" name="password" id="password"></input>
+          <input class="button" type="submit" name="submit" id="submit" value="Login"></input>
+        </form>
+        <input type="checkbox" name="remember_me" id="remember_me"
+               onclick="remember_me_click()">Stay logged in</input>
+        |
+        <a id="reg_link" href="javascript:start_register()">Register</a>
+        <a id="logout_link" href="javascript:logout()" style="display: none;">Logout</a>
+      </div>
+
+      <div id="register" class="floating_dialog" style="display: none;">
+        <span id="register_message"></span>
+        <form action="" id="register_form" onsubmit="return register();">
+          <label for="username">Username:</label>
+          <input class="text" type="text" name="username" id="reg_username"></input>
+          <br>
+          <label for="password">Password:</label>
+          <input class="text" type="password" name="password" id="reg_password"></input>
+          <br>
+          <label for="repeat_password">Repeat password:</label>
+          <input class="text" type="password" name="repeat_password" id="reg_repeat_password"></input>
+          <br>
+          <label for="email">Email address:</label>
+          <input class="text" type="text" name="email" id="reg_email"></input>
+          <br>
+          <input class="button" type="button" name="cancel" id="reg_cancel"
+                 onclick="javascript:cancel_register()" value="Cancel"></input>
+          <input class="button" type="submit" name="submit" id="reg_submit" value="Submit"></input>
+        </form>
+      </div>
+
+      <div id="rc_edit" class="floating_dialog" style="display: none;">
+        <form action="" id="rc_edit_form" onsubmit="return send_rc();">
+          <textarea class="text" name="rc_file_contents" id="rc_file_contents"
+                    cols="80" rows="25">
+          </textarea>
+          <br>
+          <input class="button" type="submit" name="submit" id="rc_submit" value="Save"
+                 style="float: right;"></input>
+        </form>
+      </div>
+
+      <div id="banner">{% include banner.html %}</div>
+
+      <div id="play_now"></div>
+
+      <br>
+
+      <div id="lobby_body">
+        <span>
+          Games currently running:
+          <a href="javascript:lobby_update()">(Refresh)</a>
+        </span>
+        <table id="player_list">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Game</th>
+              <th>Where</th>
+              <th>Idle</th>
+              <th>Spectators</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="footer">{% include footer.html %}</div>
+    </div>
+
+    <div id="game">
+      <div id="crt" style="display: none;"></div>
+    </div>
+
+    <div id="chat" style="display: none;">
+      <a href="javascript:toggle_chat();" id="chat_caption">
+        <span id="spectator_count">0 spectators</span>
+        <span id="message_count">0 new messages</span>
+      </a>
+
+      <div id="chat_body" style="display: none;">
+        <span id="spectator_list">&nbsp;</span>
+
+        <div id="chat_history_container">
+          <span id="chat_history"></span>
+        </div>
+
+        <input class="text" type="text" name="chat_input"
+               id="chat_input" onkeydown="chat_message_send(event)"></input>
+      </div>
+    </div>
+  </body>
+</html>

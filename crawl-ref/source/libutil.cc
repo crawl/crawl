@@ -12,7 +12,6 @@
 #include "files.h"
 #include "macro.h"
 #include "message.h"
-#include "stuff.h"
 #include "unicode.h"
 #include "viewgeom.h"
 
@@ -462,6 +461,10 @@ std::string pluralise(const std::string &name,
     {
         return name.substr(0, name.length() - 1) + "es";
     }
+    else if (name == "catoblepas")
+    {
+        return "catoblepae";
+    }
     else if (ends_with(name, "s"))
     {
         return name;
@@ -635,6 +638,7 @@ std::string replace_all(std::string s,
                         const std::string &find,
                         const std::string &repl)
 {
+    ASSERT(!find.empty());
     std::string::size_type start = 0;
     std::string::size_type found;
 
@@ -653,6 +657,7 @@ std::string replace_all_of(std::string s,
                            const std::string &tofind,
                            const std::string &replacement)
 {
+    ASSERT(!tofind.empty());
     std::string::size_type start = 0;
     std::string::size_type found;
 
@@ -667,6 +672,7 @@ std::string replace_all_of(std::string s,
 
 int count_occurrences(const std::string &text, const std::string &s)
 {
+    ASSERT(!s.empty());
     int nfound = 0;
     std::string::size_type pos = 0;
 
@@ -860,34 +866,24 @@ not_numeric:
     return 0;
 }
 
-// The old school way of doing short delays via low level I/O sync.
-// Good for systems like old versions of Solaris that don't have usleep.
-#ifdef NEED_USLEEP
-
-# ifdef TARGET_OS_WINDOWS
-void usleep(unsigned long time)
+// make STL sort happy
+bool numcmpstr(const std::string a, const std::string b)
 {
-    ASSERT(time > 0);
-    ASSERT(!(time % 1000));
-    Sleep(time/1000);
+    return numcmp(a.c_str(), b.c_str()) == -1;
 }
-# else
 
-#include <sys/time.h>
-#include <sys/types.h>
-#include <sys/unistd.h>
-
-void usleep(unsigned long time)
+bool version_is_stable(const char *v)
 {
-    struct timeval timer;
-
-    timer.tv_sec  = (time / 1000000L);
-    timer.tv_usec = (time % 1000000L);
-
-    select(0, NULL, NULL, NULL, &timer);
+    // vulnerable to changes in the versioning scheme
+    for (;; v++)
+    {
+        if (*v == '.' || isadigit(*v))
+            continue;
+        if (*v == '-')
+            return isadigit(v[1]);
+        return true;
+    }
 }
-# endif
-#endif
 
 #ifndef USE_TILE
 coord_def cgettopleft(GotoRegion region)

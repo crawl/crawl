@@ -18,7 +18,11 @@
 
 // for getpid()
 #include <sys/types.h>
-#include <unistd.h>
+#ifndef TARGET_COMPILER_VC
+# include <unistd.h>
+#else
+# include <process.h>
+#endif
 
 void seed_rng(uint32_t* seed_key, size_t num_keys)
 {

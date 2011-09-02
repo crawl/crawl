@@ -1,5 +1,5 @@
 ## used for Detect Creatures
-dc-mon/panlord/pandemonium_demon MONS_PANDEMONIUM_DEMON
+dc-mon/panlord/pandemonium_lord MONS_PANDEMONIUM_LORD
 
 dc-misc/error MONS_PROGRAM_BUG
 
@@ -59,7 +59,7 @@ giant_firefly MONS_FIREFLY
 giant_newt MONS_GIANT_NEWT
 giant_gecko MONS_GIANT_GECKO
 iguana MONS_IGUANA
-gila_monster MONS_GILA_MONSTER
+basilisk MONS_BASILISK
 komodo_dragon MONS_KOMODO_DRAGON
 
 ## Slugs ('j')
@@ -164,7 +164,6 @@ prince_ribbit MONS_PRINCE_RIBBIT
 %rim 1
 %sdir dc-mon/animals
 giant_frog MONS_GIANT_FROG
-giant_toad MONS_GIANT_TOAD
 %rim 0
 blink_frog MONS_BLINK_FROG
 %rim 1
@@ -177,7 +176,6 @@ black_mamba MONS_BLACK_MAMBA
 water_moccasin MONS_WATER_MOCCASIN
 anaconda MONS_ANACONDA
 lava_snake MONS_LAVA_SNAKE
-viper MONS_VIPER
 sea_snake MONS_SEA_SNAKE
 salamander MONS_SALAMANDER
 
@@ -191,6 +189,7 @@ sheep MONS_SHEEP
 black_sheep MONS_BLACK_SHEEP
 yak MONS_YAK
 death_yak MONS_DEATH_YAK
+catoblepas MONS_CATOBLEPAS
 elephant MONS_ELEPHANT
 elephant_dire MONS_DIRE_ELEPHANT
 elephant_demonic MONS_HELLEPHANT
@@ -261,7 +260,7 @@ ignacio MONS_IGNACIO
 %sdir dc-mon/demons
 
 # type '2' demons
-beast MONS_BEAST
+hell_beast MONS_HELL_BEAST
 ice_devil MONS_ICE_DEVIL
 lorocyproca MONS_LOROCYPROCA
 reaper MONS_REAPER
@@ -295,7 +294,9 @@ quasit MONS_QUASIT
 lemure MONS_LEMURE
 iron_imp MONS_IRON_IMP
 midge MONS_MIDGE
+%rim 0
 shadow_imp MONS_SHADOW_IMP
+%rim 1
 %start
 %compose dc-mon/unique/grinder
 %compose dc-mon/unique/grinder_cleaver
@@ -362,7 +363,7 @@ flesh_golem MONS_FLESH_GOLEM
 # For the Erinya WizLab
 vine-covered_golem MONS_VINE_GOLEM
 
-## Statues (also '8')
+## Statues and statue-like things (also '8')
 %sdir dc-mon/unique
 roxanne MONS_ROXANNE
 %sdir dc-mon/statues
@@ -417,7 +418,11 @@ guardian-eyeclosed-flame3
 guardian-eyeclosed-flame4
 
 firespitter_statue MONS_FIRESPITTER_STATUE
-%rim 1
+obelisk MONS_DIAMOND_OBELISK
+
+## Spirey things ('{')
+lightning_spire MONS_LIGHTNING_SPIRE
+%rim 0
 
 ## Gargoyles ('9')
 %sdir dc-mon/nonliving
@@ -683,6 +688,7 @@ eidolon MONS_EIDOLON
 %rim 0
 orb_guardian MONS_ORB_GUARDIAN /*'X'*/
 %rim 1
+../player/base/octopode1 MONS_OCTOPODE
 
 ## Centaurs ('c')
 %sdir dc-mon/unique

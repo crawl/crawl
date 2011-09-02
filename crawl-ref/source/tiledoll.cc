@@ -13,7 +13,9 @@
 
 #include "files.h"
 #include "syscalls.h"
-#include "tilebuf.h"
+#ifdef USE_TILE_LOCAL
+ #include "tilebuf.h"
+#endif
 #include "tiledef-player.h"
 #include "tilepick-p.h"
 #include "transform.h"
@@ -40,6 +42,15 @@ dolls_data::~dolls_data()
 {
     delete[] parts;
     parts = NULL;
+}
+
+bool dolls_data::operator==(const dolls_data& other) const
+{
+    for (unsigned int i = 0; i < TILEP_PART_MAX; i++)
+    {
+        if (parts[i] != other.parts[i]) return false;
+    }
+    return true;
 }
 
 dolls_data player_doll;
@@ -251,7 +262,7 @@ static tileidx_t _random_trousers()
                  + static_cast<int>(you.char_class) * 8719;
     const char *name = you.your_name.c_str();
     for (int i = 0; i < 8 && *name; ++i, ++name)
-        offset += name[i] * 4643;
+        offset += *name * 4643;
 
     const int range = TILEP_LEG_LAST_NORM - TILEP_LEG_FIRST_NORM + 1;
     return (TILEP_LEG_FIRST_NORM + offset % range);
@@ -406,6 +417,7 @@ void save_doll_file(writer &dollf)
         dollf.write("net\n", 4);
 }
 
+#ifdef USE_TILE_LOCAL
 void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll, int x, int y, bool submerged, bool ghost)
 {
     // Ordered from back to front.
@@ -487,5 +499,6 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll, int x, int 
         buf.add(doll.parts[p], x, y, i, submerged, ghost, 0, 0, ymax);
     }
 }
+#endif
 
 #endif

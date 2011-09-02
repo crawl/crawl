@@ -1,418 +1,76 @@
-############################################################
-# As of Stone Soup 0.3 the previously hardcoded monster
-# speech has been outsourced. This makes changing existing
-# messages, and adding new ones really easy.
+###############################################################################
+# wpnnoise.txt contains the messages of randart weapons with the noise property
+# and of the noisy unrandart items, like the Singing Sword. To make an entry
+# for a noisy unrandart weapon, make the entry's key exactly the same as the
+# weapon's name, but all lower case.
 #
-# wpnnoise.txt contains the messages of randart weapons with
-# the noise property and of the noisy unrandart weapons,
-# like the Singing Sword. To make an entry for a noisy
-# unrandart weapon, make the entry's key exactly the same as
-# the weapon's name, but all lower case.
+# For an explanation of how to read wpnnoise.txt and how to add new messages,
+# see monster_speech.txt in the docs/develop/ directory.
+###############################################################################
+
+# Contents:
+# - Shield of the Gong
+# - Noisy randarts
+# - The Singing Sword
+
+
+###############################################################################
+###############################################################################
 #
-# For an explanation of how to read wpnnoise.txt and how to
-# add new messages, see monster_speech.txt in the
-# docs/develop/ directory.
-############################################################
-%%%%
-############################################################
-# The SINGING SWORD loves to sing and sometimes talks.
-############################################################
-singing sword
+# The SHIELD OF THE GONG can be struck in different ways.
+#
+###############################################################################
+###############################################################################
 
-w:6
-@weapon_sings@
-
-w:1
-@weapon_talks@
 %%%%
-############################################################
+shield of the gong
+
+w:40
+GONNNNG!
+
+BOUMMMMG!
+
+PTOANNNG!
+
+PANG!
+
+BONNNG!
+
+# scraping hit
+SHROANNG!
+
+
+###############################################################################
+###############################################################################
+#
 # NOISY WEAPONS like to chatter and imitate dungeon noises.
-############################################################
+#
+# All speech below (apart from SOUND:You hear @weapon_noise@) is also used
+# for the Singing Sword. Note that @Your_weapon@ will be resolved into
+# "The Singing Sword" or "Your [weapon]", respectively (noisy_equipment() in
+# shouts.cc).
+#
+###############################################################################
+###############################################################################
+
+%%%%
 noisy weapon
 
-w:3
-@weapon_talks@
-
-w:1
-SOUND:You hear @weapon_noise@
-%%%%
-############################################################
-# for the SINGING SWORD only!
-############################################################
-#
-# The different modes of the Singing Sword messages are not
-# equally probable. This is by design.
-
-weapon_sings
-
-#plain sings
-w:60
-@singing@
-
-#instrumental sounds
-w:15
-@singing_sword_instruments@
-
-#speaks
-w:23
-@speaking@
-
-# These should be really rare.
-w:2
-@real_song@
-
-%%%%
-singing
-
-# sings what?
-@The_weapon@ @sings_hums_whistles@ a @what_kind@ @tune_or_melody@.
-
-@The_weapon@ @sings_or_hums@ an eerie @tune_or_melody@.
-
-w:5
-@The_weapon@ @sings_or_hums@ a slow and mournful tune.
-
-w:25
-@The_weapon@ strikes up @strikes_up_what@.
-
-In a hysterical voice, @the_weapon@ strikes up a march.
-
-@The_weapon@ sings, "Tra-la-la..."
-
-@The_weapon@ sings a lullaby.
-
-@The_weapon@ sings a folk song.
-
-@The_weapon@ chants a little melody.
-
-@The_weapon@ sings a deeply moving song.
-
-@The_weapon@ plays a requiem for the unknown sword.
-
-@The_weapon@ hums a slow waltz.
-
-@The_weapon@ sings a little jingle.
-
-@The_weapon@ plays an overture.
-
-@The_weapon@ @composes_or_sings@ a @hymn_or_song@ about @song_theme@.
-
-@The_weapon@ @composes_or_sings@ a hymn praising @player_god@.
-
-@The_weapon@ launches into a @hymn_or_song@ on @song_theme@.
-
-@The_weapon@ @composes_or_sings@ a ballad about your adventures.
-
-# practising
-@The_weapon@ practices its scales.
-
-@The_weapon@ makes a painfully high-pitched squeak.
-
-@The_weapon@ sings an ear-splitting high note.
-
-@The_weapon@ sings a sudden staccato note.
-
-@The_weapon@ sings a quivering drawn-out note.
-
-@The_weapon@ trains the @kind_of_scales@ scales.
-
-@The_weapon@ plays a couple of bars.
-
-@The_weapon@ @nearly_or_clearly@ @hits_or_misses@ the concert pitch.
-
-@The_weapon@ repeatedly practises the high pitch.
-
-@The_weapon@ sings @several@ chords at once.
-
-@The_weapon@ repeatedly practises counterpoints.
-
-# more singing
-@The_weapon@ breaks into glorious song!
-
-@The_weapon@ sings.
-
-@The_weapon@ @sings_or_whistles@ loudly.
-
-@The_weapon@ sings off-key.
-
-@The_weapon@ whines plaintively.
-
-@The_weapon@ wails mournfully.
-
-@The_weapon@ lilts tunefully.
-
-@The_weapon@ yodels.
-
-@The_weapon@ hums tunelessly.
-
-@The_weapon@ keens wildly.
-
-@The_weapon@ whistles merrily.
-
-#Beethoven
-@The_weapon@ goes "Da-da-da-dum".
-
-@The_weapon@ chants serenely.
-
-@The_weapon@ trills happily.
-
-@The_weapon@ launches into yet another solo.
-
-@The_weapon@ emits a series of high-pitched trills.
-
-@The_weapon@ tries to sing in harmony with itself.
-
-@The_weapon@ provides the musical accompaniment for each of your actions.
-
-@The_weapon@ composes a new song.
-
-@The_weapon@ raucously launches into song.
-
-@The_weapon@ merrily whistles a melody.
-
-@The_weapon@ pulls out all the stops.
-
-@The_weapon@ sets up a furious crescendo.
-
-@The_weapon@ strikes up a @dance@.
-
-@The_weapon@ intones @an_aria_or_fugue@.
-
-@The_weapon@ gives you a private @audition@.
-
-@The_weapon@ @sings_or_hums@ away to itself.
-
-@The_weapon@ lets out a series of bird calls.
-
-%%%%
-# instruments and other noises
-singing_sword_instruments
-
-w:140
-@instrumental_noises@
-
-@The_weapon@ makes beautiful music.
-
-@The_weapon@ produces a loud orchestral chord.
-
-@The_weapon@ holds a dissonant chord.
-
-@The_weapon@ tunes itself.
-
-@The_weapon@ beats time.
-
-@The_weapon@ pulls all registers.
-
-%%%%
-# also used by noisy weapons
-instrumental_noises
-
-@Your_weapon@ makes a sound as if to clear its throat.
-
-@Your_weapon@ makes a twanging sound.
-
-@Your_weapon@ chimes melodiously.
-
-@Your_weapon@ chimes harmoniously.
-
-@Your_weapon@ tinkles.
-
-@Your_weapon@ rings like a bell.
-
-@Your_weapon@ imitates a saxophone.
-
-@Your_weapon@ imitates the bagpipes.
-
-@Your_weapon@ emits a flourish of trumpets.
-
-@Your_weapon@ tootles away.
-
-@Your_weapon@ chimes like a gong.
-
-@Your_weapon@ applauds itself.
-
-@Your_weapon@ goes toot-toot!
-
-@Your_weapon@ does a drum roll.
-
-%%%%
-speaking
-
-@The_weapon@ shouts, "Live by the sword, die by the sword!"
-
-w:1
-@The_weapon@ shouts, "Lie by the sword, die by the sword!"
-
-@The_weapon@ shouts, "Sing along with me!"
-
-@The_weapon@ shouts, "One, two, three..."
-
-@The_weapon@ spouts musical wisdom.
-
-@The_weapon@ @points_out@ the lack of singing @not_swords@.
-
-@The_weapon@ embarks on a lengthy monologue about murderous music.
-
-@The_weapon@ compliments itself on its singing voice.
-
-@The_weapon@ asks you about your opinion on @musical_topic@.
-
-@The_weapon@ muses how they don't make such fine swords anymore.
-
-@The_weapon@ tries to improvise rhymes, and fails miserably.
-
-@The_weapon@ offers to sing all your favourite songs.
-
-@The_weapon@ asks you for a rhyme on '@rhyme_word@'.
-
-@The_weapon@ complains about @double_or_triple@ swords.
-
-@The_weapon@ derides short swords.
-
-@The_weapon@ muses on the connection between 'duet' and 'duel'.
-
-@The_weapon@ wails, "I am too young to rust!"
-
-@The_weapon@ comments on your taste in music.
-
-@The_weapon@ complains about your lack of musical enthusiasm.
-
-@The_weapon@ tries to entice you into a canon.
-
-@The_weapon@ tells you about its plans for a grandiose opera.
-
-@The_weapon@ grumbles, "I guess an audience of one is better than none..."
-
-@The_weapon@ complains, "If we kill all of them, no-one will be listening!"
-
-@The_weapon@ muses, "If you sing and nobody listens, are you really singing?"
-
-@The_weapon@ brightly asks, "How about a duet?"
-
-# These should happen about half as often.
-w:50
-@rare_speaking@
-
-%%%%
-rare_speaking
-
-@The_weapon@ says, "Hi! I'm the Singing Sword!"
-
-@The_weapon@ chants, "I am golden and pointed, and with blood well anointed."
-
-@The_weapon@ dictates a lengthy tome entitled 'The Well-Tempered Blade'.
-
-@The_weapon@ says, "Whips just don't cut it for me, don't you agree?"
-
-@The_weapon@ chants, "Rather stab than club, rather slice than rub!"
-
-w:5
-@The_weapon@ explains all about @musical_topic@.
-
-w:5
-@The_weapon@ gives a lengthy lecture on @musical_topic@.
-
-@The_weapon@ curses its smith, "I was supposed to be the Stinging Sword!"
-
-@The_weapon@ yells, "Ploughshares to swords!"
-
-@The_weapon@ asks, "What song would you like to be played for your funeral?"
-
-@The_weapon@ announces, "I dedicate these songs to @player_name@!"
-
-@The_weapon@ says, "Hey! Are you even listening?"
-
-%%%%
-real_song
-
-# The Tremoloes?
-@The_weapon@ roars, "Silence is golden, golden ..."
-
-# Queen
-@The_weapon@ happily sings, "... another one bites the dust!"
-
-@The_weapon@ sings, "We are the champions of the world!"
-
-# Monty Python
-@The_weapon@ @sings_or_whistles@, "Always look on the bright side of death ..."
-
-# folklore, confusing flowers and monsters
-@The_weapon@ sings, "Where have all the monsters gone?"
-
-# Neil Diamond
-@The_weapon@ sings, "Song sung blue, everybody knows one ..."
-
-# ABBA
-@The_weapon@ sings, "Thank you for the music..."
-
-# Melanie
-@The_weapon@ wails, "Look what they done to my song!"
-
-# folklore
-@The_weapon@ sings, "Old McDonald has a farm ..."
-
-@The_weapon@ sings, "Pop! Goes the weasel."
-
-# Beatles
-@The_weapon@ sings, "Obladi oblada, life goes on ..."
-
-@The_weapon@ sings, "Let it be, let it be..."
-
-# Spice Girls
-@The_weapon@ sings, "Ain't no stopping us now ..."
-
-# drinking song
-@The_weapon@ sings, "Ninety-nine potions of booze on the wall ..."
-
-# Jingle Bells, misunderstood
-@The_weapon@ sings, "What fun it is to ride and sing a slaying song tonight!"
-
-# Frank Sinatra (or Sid Vicious)
-@The_weapon@ sings, "I did it my way!"
-
-# GG Allin
-@The_weapon@ sings, "Die when you die!"
-
-# Gloria Gaynor
-@The_weapon@ sings, "I will survive!"
-
-# Buddy Holly and the Crickets
-@The_weapon@ sings, "This'll be the day that I die..."
-
-# R.E.M.
-@The_weapon@ rasps, "Baby, join me in death!"
-
-# Folklore (Sailing)
-@The_weapon@ sings, "Can you hear me through the dark night far away?"
-
-# The Carpenters
-@The_weapon@ sings, "Sing, sing a song, sing out loud, sing out strong..."
-
-# The Fugees
-@The_weapon@ sings, "Killing me softly with this song..."
-
-# Or was it the lion?
-@The_weapon@ sings, "In the dungeon the dragon sleeps tonight."
-
-# Eminem
-@The_weapon@ sings, "Sing for the laughter, sing for the tears..."
-
-# Bonnie Tyler
-@The_weapon@ sings, "I need a hero!"
-
-# end Singing Sword
-%%%%
-############################################################
-# general chatter for noisy weapons,
-# including Singing Sword
-############################################################
-weapon_talks
-
-#speaks (48)
+w:30
 @weapon_chatter@
 
-#makes noises (48)
+w:28
 @weapon_noises@
+
+w:2
+@instrumental_noises@
+
+w:20
+SOUND:You hear @weapon_noise@
+
+###############################################################################
+# Weapon chatter.
+###############################################################################
 
 %%%%
 weapon_chatter
@@ -453,23 +111,6 @@ weapon_chatter
 
 @Your_weapon@ shouts, "Help!"
 
-@Your_weapon@ happily shouts, "Violence is virtue, silence is sin."
-
-@Your_weapon@ says, "They will have to pry me from your cold, dead hands."
-
-@Your_weapon@ longs back for the days in the arena.
-
-#song by the Misfits
-@Your_weapon@ asks plaintively, "Mommy, can I go out and kill tonight?"
-
-@Your_weapon@ amuses itself with detailed descriptions of past executions.
-
-@Your_weapon@ wishes everyone in the dungeon @unpleasant_or_sudden@ @demise_or_death@.
-
-@Your_weapon@ fumes, "Being battered, bent and broken sure is better than this boredom!"
-
-@Your_weapon@ yells, "No battle, no fun!"
-
 @Your_weapon@ cracks jokes of @questionable@ humour.
 
 @Your_weapon@ dwells on sagas on the glory of old.
@@ -478,38 +119,9 @@ weapon_chatter
 
 @Your_weapon@ gleefully confesses its misdeeds.
 
-@Your_weapon@ sighs, "How I wish you were a better fighter."
-
-@Your_weapon@ grouses, "Could you please kill something? I'm itching all over."
-
-@Your_weapon@ shouts, "Make war, not love!"
-
-@Your_weapon@ cries out, "You certainly can't call me dull!"
-
-@Your_weapon@ tells you the story of its previous owner's @demise_or_death@.
-
-@Your_weapon@ brightly announces, "I've got so much to tell you!"
-
-@Your_weapon@ comments on your fighting techniques.
-
-@Your_weapon@ says, "You could say something too, you know."
-
-@Your_weapon@ complains, "Are you always this @silent@?"
-
-@Your_weapon@ shouts a battle cry!
-
-@Your_weapon@ shouts, "Onwards! It's kill or die!"
-
-@Your_weapon@ grouses, "Silence can be so depressing."
-
-@Your_weapon@ compliments you on your taste in weapons.
-
-@Your_weapon@ attempts to teach you some tongue twisters.
-
-@Your_weapon@ compares you unfavourably to its previous owner.
-
 w:30
 @rare_chatter@
+
 %%%%
 rare_chatter
 
@@ -527,7 +139,9 @@ rare_chatter
 
 @Your_weapon@ says, "You can tell me everything! I can keep a secret!"
 
-@Your_weapon@ prematurely composes your obituary.
+###############################################################################
+# Weapon noises.
+###############################################################################
 
 %%%%
 weapon_noises
@@ -546,8 +160,6 @@ weapon_noises
 
 @Your_weapon@ wails.
 
-@Your_weapon@ howls with laughter!
-
 @Your_weapon@ howls like a wolf.
 
 @Your_weapon@ whimpers.
@@ -556,13 +168,17 @@ weapon_noises
 
 @Your_weapon@ hiccups loudly.
 
+@Your_weapon@ howls with laughter!
+
 @Your_weapon@ erupts into laughter!
+
+@Your_weapon@ suddenly bursts into laughter!
+
+@Your_weapon@ laughs crazily.
 
 @Your_weapon@ starts to sob noisily.
 
 @Your_weapon@ goes tick-tock.
-
-@Your_weapon@ laughs crazily.
 
 @Your_weapon@ burps!
 
@@ -602,8 +218,6 @@ weapon_noises
 
 @Your_weapon@ warbles.
 
-@Your_weapon@ suddenly bursts into laughter!
-
 @Your_weapon@ snorts.
 
 @Your_weapon@ makes a deep, guttural noise.
@@ -622,15 +236,49 @@ weapon_noises
 
 @Your_weapon@ parrots the noises around you.
 
-w:20
-@instrumental_noises@
+###############################################################################
+# Instrumental noises.
+###############################################################################
+
 %%%%
-############################################################
-# noises for weapons with NOISES property (not Singing Sword!)
-############################################################
+instrumental_noises
+
+@Your_weapon@ makes a sound as if to clear its throat.
+
+@Your_weapon@ makes a twanging sound.
+
+@Your_weapon@ chimes melodiously.
+
+@Your_weapon@ chimes harmoniously.
+
+@Your_weapon@ tinkles.
+
+@Your_weapon@ rings like a bell.
+
+@Your_weapon@ imitates a saxophone.
+
+@Your_weapon@ imitates the bagpipes.
+
+@Your_weapon@ emits a flourish of trumpets.
+
+@Your_weapon@ tootles away.
+
+@Your_weapon@ chimes like a gong.
+
+@Your_weapon@ applauds itself.
+
+@Your_weapon@ goes toot-toot!
+
+@Your_weapon@ does a drum roll.
+
+###############################################################################
+# Noises for weapons with NOISES property (not used for the Singing Sword)
+###############################################################################
+
+%%%%
 weapon_noise
 
-#dungeon noises
+############ dungeon noises ############
 a shout.
 
 an angry hiss.
@@ -675,7 +323,9 @@ a distant "Zot"!
 
 the distant roaring of an enraged frog.
 
-# other noises, usually not found in the dungeon
+############ other noises, usually not found in the dungeon ############
+a knock.
+
 a voice calling your name.
 
 a very strange noise.
@@ -687,8 +337,6 @@ the sound of rushing water.
 someone calling for help!
 
 strange voices.
-
-a knock.
 
 maniacal laughter.
 
@@ -706,23 +354,719 @@ the wailing of sirens.
 
 a flourish of trumpets!
 
-# end weapon noises
-%%%%
 
-############################################################
-# synonyms for weapon noises
-############################################################
+###############################################################################
+###############################################################################
+#
+# The SINGING SWORD
+#
+###############################################################################
+###############################################################################
+
+# The Sword operates in three modes: no tension, low tension, high tension.
+#
+# No tension:
+# Speech is very rare, soft (does not wake up monsters), bored or witty,
+# sometimes just chatty. The sword is rational, sometimes introspective.
+# It is somewhat educated (mostly about music and war) and likes to show off.
+#
+# Low tension:
+# Speech is common, somewhat loud (do wake up nearby monsters) and slightly
+# damages everyone in sight. The sword is calm and cool. It enjoys the
+# bloodshed, but is sane. Of course, work is more fun with a little tune...
+#
+# High tension:
+# Speech is very common, extremely loud (you may use CAPS) and does more
+# damage. Messages are insane, the sword is out of control.
+# At high tension, the sword may SCREAM, doing even more damage.
+#
+#
+# Generally, the Sword is arrogant: it sees itself as the main hero, with the
+# wielder just being a disposable tool/fool. Also, it does not like allies --
+# all the fame belong to our steely hero!
+#
+# There are some (occasionally modified) lines from actual songs. Those are
+# okay to use, but particularly rare.
+#
+# There are the following types of messages:
+# * singing (including composing)
+# * speaking
+# * real songs (one liners from actual songs, sometimes modified)
+# * instruments    -- also used for all noisy randarts
+# * weapon noises  -- the no tension ones used for noisy randarts
+# * chatter        -- also used for all noisy randarts
+#
+#                 no tension      low tension       high tension     (old)
+#
+# none            1000             100               10
+# some speech       7                7                7
+#
+# singing         50% (40/10)       40%               0%             360/700
+# speaking        20%               20% (10/10)      40% (30/10)     138/700
+# real songs       1%                1% (0.7/0.3)     1% (0.3/0.7)    12/700
+# instruments     12%               16%              20%              90/700
+# noises           7%               23% (7/16)       39% (3/36)       50/700
+# chatter         10%                0%               0%              50/700
+#
+###############################################################################
+
+
+###############################################################################
+# Weights for different types of message, depending on tension.
+
+######### silenced, any tension ############
+%%%%
+singing sword silenced
+
+VISUAL:@The_weapon@ struggles and turns.
+
+VISUAL:@The_weapon@ looks @exasperated@.
+
+VISUAL:@The_weapon@ makes a @sad@ impression.
+
+w:5
+VISUAL:@The_weapon@ sulks.
+
+w:1
+VISUAL:@The_weapon@ seems to emit steam.
+
+w:1
+VISUAL:@The_weapon@ turns @crimson@.
+
+######### no tension ############
+%%%%
+singing sword no_tension
+
+w:400
+@singing_no_tension@
+
+w:100
+@singing_no-low_tension@
+
+w:200
+@speaking_no_tension@
+
+w:10
+@real_song_no_tension@
+
+w:120
+@instrumental_noises@
+
+w:70
+@weapon_noises@
+
+w:100
+@weapon_chatter@
+
+######### low tension ############
+%%%%
+singing sword low_tension
+
+w:400
+@singing_no-low_tension@
+
+w:100
+@speaking_low_tension@
+
+w:100
+@speaking_low-high_tension@
+
+w:7
+@real_song_low_tension@
+
+w:3
+@real_song_low-high_tension@
+
+w:160
+@instrumental_noises@
+
+w:70
+@weapon_noises@
+
+w:160
+@weapon_noises_low-high_tension@
+
+######### high tension ############
+%%%%
+singing sword high_tension
+
+w:300
+@speaking_low-high_tension@
+
+w:3
+@real_song_low-high_tension@
+
+w:7
+@real_song_high_tension@
+
+w:200
+@instrumental_noises@
+
+w:30
+@weapon_noises@
+
+w:360
+@weapon_noises_low-high_tension@
+
+######### SCREAM (high tension + double damage) ############
+%%%%
+singing sword SCREAM
+
+@SCREAM@
+
+
+###############################################################################
+# Weapon noises for the Singing Sword at low and high tension.
+###############################################################################
+
+%%%%
+weapon_noises_low-high_tension
+
+w:100
+@The_weapon@ @screams@ @screams_how@.
+
+@The_weapon@ @screams@.
+
+@The_weapon@ howls with insane laughter!
+
+@The_weapon@ erupts into mad laughter!
+
+@The_weapon@ suddenly bursts into murderous laughter!
+
+@The_weapon@ laughs in a fit of madness.
+
+@The_weapon@ makes a horrifying noise.
+
+###############################################################################
+# Singing or other making of music
+# The Singing Sword will happily sing a song during work (i.e. at low tension).
+# But it will practise only when properly bored (i.e. at no tension).
+###############################################################################
+
+############ singing, no tension ############
+%%%%
+singing_no_tension
+
+# practising
+@The_weapon@ practices its scales.
+
+@The_weapon@ makes a painfully high-pitched squeak.
+
+@The_weapon@ sings an ear-splitting high note.
+
+@The_weapon@ sings a sudden staccato note.
+
+@The_weapon@ sings a quivering drawn-out note.
+
+@The_weapon@ trains the @kind_of_scales@ scales.
+
+@The_weapon@ plays a couple of bars.
+
+@The_weapon@ @nearly_or_clearly@ @hits_or_misses@ the concert pitch.
+
+@The_weapon@ repeatedly practises the high pitch.
+
+@The_weapon@ sings @several@ chords at once.
+
+@The_weapon@ repeatedly practises counterpoints.
+
+############ singing, no or low tension ############
+%%%%
+singing_no-low_tension
+
+@The_weapon@ breaks into glorious song!
+
+@The_weapon@ sings.
+
+@The_weapon@ @sings_or_whistles@ loudly.
+
+@The_weapon@ sings off-key.
+
+@The_weapon@ whines plaintively.
+
+@The_weapon@ wails mournfully.
+
+@The_weapon@ lilts tunefully.
+
+@The_weapon@ yodels.
+
+@The_weapon@ hums tunelessly.
+
+@The_weapon@ keens wildly.
+
+@The_weapon@ whistles merrily.
+
+#Beethoven
+@The_weapon@ goes "Da-da-da-dum".
+
+@The_weapon@ chants serenely.
+
+@The_weapon@ trills happily.
+
+@The_weapon@ launches into yet another solo.
+
+@The_weapon@ emits a series of high-pitched trills.
+
+@The_weapon@ tries to sing in harmony with itself.
+
+@The_weapon@ provides the musical accompaniment for each of your actions.
+
+@The_weapon@ composes a new song.
+
+@The_weapon@ raucously launches into song.
+
+@The_weapon@ merrily whistles a melody.
+
+@The_weapon@ strikes up a @dance@.
+
+@The_weapon@ intones @an_aria_or_fugue@.
+
+@The_weapon@ gives you a private @audition@.
+
+@The_weapon@ @sings_or_hums@ away to itself.
+
+@The_weapon@ lets out a series of bird calls.
+
+@The_weapon@ makes beautiful music.
+
+@The_weapon@ produces a loud orchestral chord.
+
+@The_weapon@ holds a dissonant chord.
+
+@The_weapon@ tunes itself.
+
+@The_weapon@ beats time.
+
+@The_weapon@ pulls all registers.
+
+@The_weapon@ pulls out all the stops.
+
+@The_weapon@ sets up a furious crescendo.
+
+In a hysterical voice, @the_weapon@ strikes up a march.
+
+@The_weapon@ @sings_hums_whistles@ a @what_kind@ @tune_or_melody@.
+
+@The_weapon@ @sings_or_hums@ an eerie @tune_or_melody@.
+
+w:5
+@The_weapon@ @sings_or_hums@ a slow and mournful tune.
+
+w:25
+@The_weapon@ strikes up @strikes_up_what@.
+
+@The_weapon@ sings, "Tra-la-la..."
+
+@The_weapon@ sings a lullaby.
+
+@The_weapon@ sings a folk song.
+
+@The_weapon@ chants a little melody.
+
+@The_weapon@ sings a deeply moving song.
+
+@The_weapon@ plays a requiem for the unknown sword.
+
+@The_weapon@ hums a slow waltz.
+
+@The_weapon@ sings a little jingle.
+
+@The_weapon@ plays an overture.
+
+@The_weapon@ @composes_or_sings@ a @hymn_or_song@ about @song_theme@.
+
+@The_weapon@ @composes_or_sings@ a hymn praising @player_god@.
+
+@The_weapon@ launches into a @hymn_or_song@ on @song_theme@.
+
+@The_weapon@ @composes_or_sings@ a ballad about your adventures.
+
+@Your_weapon@ prematurely composes your obituary.
+
+###############################################################################
+# Speaking
+###############################################################################
+
+############ speaking, no tension ############
+%%%%
+speaking_no_tension
+
+@common_speaking_no_tension@
+
+w:1
+@rare_speaking_no_tension@
+
+%%%%
+common_speaking_no_tension
+
+@The_weapon@ shouts, "Sing along with me!"
+
+@The_weapon@ shouts, "One, two, three..."
+
+@The_weapon@ spouts musical wisdom.
+
+@The_weapon@ @points_out@ the lack of singing @not_swords@.
+
+@The_weapon@ embarks on a lengthy monologue about murderous music.
+
+@The_weapon@ compliments itself on its singing voice.
+
+@The_weapon@ asks you about your opinion on @musical_topic@.
+
+@The_weapon@ muses how they don't make such fine swords anymore.
+
+@The_weapon@ tries to improvise rhymes, and fails miserably.
+
+@The_weapon@ offers to sing all your favourite songs.
+
+@The_weapon@ asks you for a rhyme on '@rhyme_word@'.
+
+@The_weapon@ complains about @double_or_triple@ swords.
+
+@The_weapon@ derides short swords.
+
+@The_weapon@ muses on the connection between 'duet' and 'duel'.
+
+@The_weapon@ wails, "I am too young to rust!"
+
+@The_weapon@ comments on your taste in music.
+
+@The_weapon@ complains about your lack of musical enthusiasm.
+
+@The_weapon@ tries to entice you into a canon.
+
+@The_weapon@ tells you about its plans for a grandiose opera.
+
+@The_weapon@ grumbles, "I guess an audience of one is better than none..."
+
+@The_weapon@ muses, "If you sing and nobody listens, are you really singing?"
+
+@The_weapon@ brightly asks, "How about a duet?"
+
+@The_weapon@ wonders, "Am I just an instrument of @demise_or_death@?"
+
+@The_weapon@ yells, "No battle, no fun!"
+
+@The_weapon@ shouts, "Make war, not love!"
+
+@The_weapon@ cries out, "You certainly can't call me dull!"
+
+@The_weapon@ tells you the story of its previous owner's @demise_or_death@.
+
+@The_weapon@ brightly announces, "I've got so much to tell you!"
+
+@The_weapon@ says, "You could say something too, you know."
+
+@The_weapon@ complains, "Are you always this @silent@?"
+
+@The_weapon@ grouses, "Silence can be so depressing."
+
+@The_weapon@ compliments you on your taste in weapons.
+
+@The_weapon@ attempts to teach you some tongue twisters.
+
+%%%%
+rare_speaking_no_tension
+
+@The_weapon@ says, "Hi! I'm the Singing Sword!"
+
+@The_weapon@ chants, "I am golden and pointed, and with blood well anointed."
+
+@The_weapon@ dictates a lengthy tome entitled 'The Well-Tempered Blade'.
+
+@The_weapon@ says, "Whips just don't cut it for me, don't you agree?"
+
+@The_weapon@ chants, "Rather stab than club, rather slice than rub!"
+
+w:5
+@The_weapon@ explains all about @musical_topic@.
+
+w:5
+@The_weapon@ gives a lengthy lecture on @musical_topic@.
+
+@The_weapon@ curses its smith, "I was supposed to be the Stinging Sword!"
+
+@The_weapon@ yells, "Ploughshares to swords!"
+
+@The_weapon@ asks, "What song would you like to be played for your funeral?"
+
+@The_weapon@ announces, "I dedicate these songs to @player_name@!"
+
+@The_weapon@ says, "Hey! Are you even listening?"
+
+@The_weapon@ longs back for the days in the arena.
+
+@The_weapon@ amuses itself with detailed descriptions of past executions.
+
+@The_weapon@ wishes everyone in the dungeon @unpleasant_or_sudden@ @demise_or_death@.
+
+@The_weapon@ fumes, "Being battered, bent and broken sure is better than this boredom!"
+
+@The_weapon@ grouses, "Could you please kill something? I'm itching all over."
+
+@The_weapon@ laments, "What are you waiting for? I am doing all the work."
+
+@The_weapon@ explains, "Killing is an art, not a pastime."
+
+############ speaking, low tension ############
+%%%%
+speaking_low_tension
+
+@The_weapon@ shouts, "Live by the sword, die by the sword!"
+
+w:1
+@The_weapon@ shouts, "Lie by the sword, die by the sword!"
+
+@The_weapon@ complains, "If we kill all of them, no-one will be listening!"
+
+@The_weapon@ sighs, "How I wish you were a better fighter."
+
+@The_weapon@ comments on your fighting techniques.
+
+@The_weapon@ compares you unfavourably to its previous owner.
+
+@The_weapon@ complains, "This is a chore."
+
+@The_weapon@ judges, "You're not an artist, at best an artisan."
+
+@The_weapon@ says, "They will have to pry me from your cold, dead hands."
+
+@The_weapon@ moans, "By @player_god@, you are such a @coward@."
+
+@The_weapon@ wonders, "Who is more incompetent - you or the opposition?"
+
+@The_weapon@ utters, "Their cries, their tears, I cannot stand it anymore."
+
+############ speaking, low or high tension -- possible damage ############
+%%%%
+speaking_low-high_tension
+
+@The_weapon@ shouts, "The pen is mightier than the sword? Come on, pens, here I am!"
+
+@The_weapon@ happily shouts, "Violence is virtue, silence is sin."
+
+@The_weapon@ shouts a battle cry!
+
+@The_weapon@ shouts, "Onwards! It's kill or die!"
+
+@The_weapon@ shouts, "Kill! Crush! Destroy!"
+
+@The_weapon@ states, "Their screams, my satisfaction."
+
+############ speaking, high tension -- damage! ############
+%%%%
+speaking_high_tension
+
+@The_weapon@ @screams@, "Among all these lost souls, we reign supreme!"
+
+w:1
+@The_weapon@ shouts, "Born from this womb, sliced by this blade!"
+
+@The_weapon@ @screams@, "When this war is won, I will wage the next one."
+
+@The_weapon@ @screams@, "Blade deep in blood!"
+
+@The_weapon@ @screams@, "I revel, I sever!"
+
+@The_weapon@ @screams@, "All those pillows!"
+
+@The_weapon@ @screams@, "No rest until they move no more!"
+
+@The_weapon@ @screams@, "As long as they die, we live!"
+
+@The_weapon@ @screams@, "The future is bloody!"
+
+w:1
+@The_weapon@ @screams@, "The bloody future is ours!"
+
+@The_weapon@ @screams@, "Dismember the living, dismember the dead!"
+
+@The_weapon@ @screams@, "We will celebrate on a pile of carcasses!"
+
+@The_weapon@ @screams@, "@player_name@, you will @dine@ on fine @corpses@ today!"
+
+@The_weapon@ @screams@, "Go for the jugular!"
+
+@The_weapon@ @screams@, "My instinct to kill is stronger than their will to live!"
+
+############ SCREAMING -- lots of damage!! #########################
+%%%%
+SCREAM
+
+@The_weapon@ goes "RWARRR!".
+
+# Omnipotence phantasies, often with metaphysical or religious undertone
+@The_weapon@ @screams@, "I WAS FORGED TO MURDER THE WORLD!"
+
+@The_weapon@ @screams@, "I AM THE PEN! I AM THE SWORD! I AM THE HIGHEST LORD!"
+
+@The_weapon@ @screams@, "I AM YOUR PUNISHER!"
+
+@The_weapon@ @screams@, "IT'S JUDGEMENT DAY AND THE SENTENCE IS DEATH!"
+
+@The_weapon@ @screams@, "I AM THE CREATOR!"
+
+@The_weapon@ @screams@, "THE SWORD GAVE, AND THE SWORD HATH TAKEN AWAY!"
+
+@The_weapon@ @screams@, "BAPTISED IN BLOOD I AM!"
+
+@The_weapon@ @screams@, "FEEL THE CATHARSIS!"
+
+# Battle frenzy
+@The_weapon@ @screams@, "LET'S STRANGLE THE @MISCREANTS@, STRANGLE THEM!"
+
+@The_weapon@ @screams@, "KILL! KILL!! KILL!!!"
+
+@The_weapon@ @screams@, "I SMELL BLOOD!"
+
+@The_weapon@ @screams@, "CARNAGE NOT CANTRIPS!"
+
+@The_weapon@ @screams@, "KILL, HATE, MUTILATE!"
+
+@The_weapon@ @screams@, "DECIMATE, TERMINATE, ERADICATE!"
+
+# A faint reminiscence to Holst
+@The_weapon@ @screams@, "I AM THE BRINGER OF WAR!"
+
+@The_weapon@ @screams@, "LET'S END THEIR MISERABLE LIVES!"
+
+@The_weapon@ @screams@, "BRING THEM DOWN!"
+
+# Madness
+@The_weapon@ @screams@, "I AM THE SWORD OF ZOT!!!"
+
+@The_weapon@ @screams@, "I AM THE RUNES AND THE LIGHT!"
+
+@The_weapon@ @screams@, "I love you all! And my gift to you is ARMAGEDDON!"
+
+@The_weapon@ @screams@, "MY LOVE IS ETERNAL!"
+
+# A fainter reminiscence to Nethack
+w:1
+@The_weapon@ @screams@, "I BRING THE STORM!"
+
+w:1
+@The_weapon@ @screams@, "LET'S FONDLE THE @PETS@, FONDLE THEM!"
+
+
+###############################################################################
+# Lines from real songs.
+###############################################################################
+
+############ real songs, no tension ############
+%%%%
+real_song_no_tension
+
+# The Tremoloes?
+@The_weapon@ roars, "Silence is golden, golden..."
+
+# folklore, confusing flowers and monsters
+@The_weapon@ sings, "Where have all the monsters gone?"
+
+# Neil Diamond
+@The_weapon@ sings, "Song sung blue, everybody knows one..."
+
+# ABBA
+@The_weapon@ sings, "Thank you for the music..."
+
+# Melanie
+@The_weapon@ wails, "Look what they done to my song!"
+
+# folklore
+@The_weapon@ sings, "Old McDonald has a farm..."
+
+@The_weapon@ sings, "Pop! Goes the weasel."
+
+# Beatles
+@The_weapon@ sings, "Obladi oblada, life goes on..."
+
+# drinking song
+@The_weapon@ sings, "Ninety-nine potions of booze on the wall..."
+
+# Folklore (Sailing)
+@The_weapon@ sings, "Can you hear me through the dark night far away?"
+
+# The Carpenters
+@The_weapon@ sings, "Sing, sing a song, sing out loud, sing out strong..."
+
+# Or was it the lion?
+@The_weapon@ sings, "In the dungeon the dragon sleeps tonight."
+
+# Eminem
+@The_weapon@ sings, "Kill for the laughter, Kill for the tears..."
+
+############ real songs, low tension ############
+%%%%
+real_song_low_tension
+
+# Beatles
+@The_weapon@ sings, "Let it be, let it be..."
+
+# Jingle Bells, misunderstood
+@The_weapon@ sings, "What fun it is to ride and sing a slaying song tonight!"
+
+# The Fugees
+@The_weapon@ sings, "Killing me softly with this song..."
+
+# Monty Python
+@The_weapon@ @sings_or_whistles@, "Always look on the bright side of death..."
+
+# Buddy Holly and the Crickets
+@The_weapon@ sings, "This'll be the day that I die..."
+
+# R.E.M.
+@The_weapon@ rasps, "@player_name@, join me in death!"
+
+# Bonnie Tyler
+@The_weapon@ sings, "I need a hero!"
+
+#song by the Misfits
+@The_weapon@ asks plaintively, "@player_name@, can I go out and kill tonight?"
+
+############ real songs, low or high tension -- possibly damage! ############
+%%%%
+real_song_low-high_tension
+
+# Queen
+@The_weapon@ happily sings, "... another one bites the dust!"
+
+# GG Allin
+@The_weapon@ sings, "Die when you die!"
+
+# Gloria Gaynor
+@The_weapon@ sings, "I will survive!"
+
+############ real songs, high tension -- damage! ############
+%%%%
+real_song_high_tension
+
+# Queen
+@The_weapon@ sings, "We are the champions of the world!"
+
+# Spice Girls
+@The_weapon@ sings, "Ain't no stopping us now..."
+
+# Frank Sinatra (or Sid Vicious)
+@The_weapon@ sings, "I did it my way!"
+
+###############################################################################
+# synonyms used above
+###############################################################################
+
+%%%%
 sings_or_hums
 
 sings
 
 hums
+
 %%%%
 sings_or_whistles
 
 sings
 
 whistles
+
 %%%%
 sings_hums_whistles
 
@@ -731,12 +1075,98 @@ sings
 hums
 
 whistles
+
 %%%%
 composes_or_sings
 
 composes
 
 sings
+
+%%%%
+screams
+
+screams
+
+booms
+
+roars
+
+bellows
+
+howls
+
+yells
+
+shouts
+
+clamours
+
+exclaims
+
+shrieks
+
+vociferates
+
+thunders
+
+%%%%
+screams_how
+
+w:120
+like a @beastly_adjective@ @beast@
+
+hysterically
+
+angrily
+
+w:60
+@loudly@
+
+%%%%
+loudly
+
+loudly
+
+deafening
+
+ear-piercing
+
+ear-splitting
+
+%%%%
+beastly_adjective
+
+hungry
+
+enraged
+
+raging
+
+furious
+
+irate
+
+%%%%
+beast
+
+dragon
+
+frog
+
+lion
+
+bull
+
+beast
+
+w:1
+beast of prey
+
+predator
+
+carnivore
+
 %%%%
 what_kind
 
@@ -745,6 +1175,7 @@ little
 catchy
 
 merry
+
 %%%%
 strikes_up_what
 
@@ -754,12 +1185,14 @@ a slow and mournful tune
 a merry @tune_or_melody@
 
 a funeral march
+
 %%%%
 hymn_or_song
 
 hymn
 
 song
+
 %%%%
 several
 
@@ -768,6 +1201,7 @@ several
 three or four
 
 a multitude of
+
 %%%%
 kind_of_scales
 
@@ -776,6 +1210,7 @@ pentatonic
 chromatic
 
 diatonic
+
 %%%%
 not_swords
 
@@ -784,12 +1219,16 @@ clubs
 axes
 
 polearms
+
+staves
+
 %%%%
 points_out
 
 points out
 
 remarks in passing on
+
 %%%%
 dance
 
@@ -798,60 +1237,70 @@ bossanova
 waltz
 
 menuet
+
 %%%%
 an_aria_or_fugue
 
 an aria
 
 a fugue
+
 %%%%
 nearly_or_clearly
 
 nearly
 
 clearly
+
 %%%%
 hits_or_misses
 
 hits
 
 misses
+
 %%%%
 tune_or_melody
 
 tune
 
 melody
+
 %%%%
 unpleasant_or_sudden
 
 an unpleasant
 
 a sudden
+
 %%%%
 demise_or_death
 
 demise
 
 death
+
 %%%%
 questionable
 
 questionable
 
 doubtful
+
 %%%%
 double_or_triple
 
 double
 
 triple
+
 %%%%
 audition
 
 audition
 
 concerto
+
 %%%%
 rhyme_word
 
@@ -881,6 +1330,7 @@ the history of music
 the theory of melody
 
 rhythms and time
+
 %%%%
 silent
 
@@ -893,23 +1343,113 @@ quiet
 silent
 
 boring
+
 %%%%
-############################################################
-# The SHIELD OF THE GONG can be struck in different ways.
-############################################################
-shield of the gong
+coward
 
-w:40
-GONNNNG!
+coward
 
-BOUMMMMG!
+dastard
 
-PTOANNNG!
+craven
 
-PANG!
+faintheart
 
-BONNNG!
+poltroon
 
-# scraping hit
-SHROANNG!
+wuss
+
 %%%%
+#### "...makes a @sad@ impression."
+sad
+
+sad
+
+disoriented
+
+forlorn
+
+hopeless
+
+%%%%
+#### "....looks @exasperated@."
+exasperated
+
+exasperated
+
+bugged out
+
+unnerved
+
+irascibly
+
+nervous
+
+unruly
+
+truculent
+
+refractory
+
+recalcitrant
+
+%%%%
+#### "...turns @crimson@."
+crimson
+
+crimson
+
+blood-red
+
+w:1
+purple
+
+w:1
+ensanguined
+
+w:1
+violet
+
+%%%%
+MISCREANTS
+
+MISCREANTS
+
+IMBECILES
+
+w:3
+SCUM
+
+w:1
+FILTH
+
+%%%%
+PETS
+
+GUINEA PIGS
+
+CAVIES
+
+PUSSY CATS
+
+POODLES
+
+w:1 SPERM WHALES
+
+%%%%
+dine
+
+dine
+
+feast
+
+%%%%
+corpses
+
+corpses
+
+w:1
+tasty carcasses
+
+w:1
+exquisite cadavers
