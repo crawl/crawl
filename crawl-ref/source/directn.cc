@@ -3811,13 +3811,45 @@ std::string get_monster_equipment_desc(const monster_info& mi,
 
 static bool _print_cloud_desc(const coord_def where)
 {
-    if (is_sanctuary(where))
+    if (is_sanctuary(where) || silenced(where)
+        || haloed(where) || liquefied(where))
     {
-        mprf("This square lies inside a sanctuary%s.",
-             silenced(where) ? ", and is shrouded in silence" : "");
+        std::string desc = "This square";
+        bool found_sth = false;
+
+        if (is_sanctuary(where))
+        {
+            desc += " lies inside a sanctuary";
+            found_sth = true;
+        }
+        if (silenced(where))
+        {
+            if (found_sth)
+                desc += ", and";
+            else
+                found_sth = true;
+
+            desc += " is shrouded in silence";
+        }
+        if (haloed(where))
+        {
+            if (found_sth)
+                desc += ", and";
+            else
+                found_sth = true;
+
+            desc += " is lit by a halo";
+        }
+        if (liquefied(where))
+        {
+            if (found_sth)
+                desc += ", and";
+
+            desc += " is liquefied";
+        }
+        desc += ".";
+        mpr(desc);
     }
-    else if (silenced(where))
-        mpr("This square is shrouded in silence.");
 
     if (env.cgrid(where) == EMPTY_CLOUD)
         return false;
