@@ -2136,6 +2136,7 @@ static void _place_item_mimics(int level_number)
     {
         item_def& item(mitm[i]);
         if (!item.defined() || !in_bounds(item.pos)
+            || item.flags & ISFLAG_NO_MIMIC
             || get_item_mimic_type(item) == MONS_PROGRAM_BUG
             || mimic_at(item.pos))
         {
@@ -3974,8 +3975,19 @@ static const object_class_type _acquirement_item_classes[] =
     OBJ_WANDS,
     OBJ_STAVES,
 };
+
+static const object_class_type _mimic_item_classes[] =
+{
+    OBJ_GOLD,
+    OBJ_WEAPONS,
+    OBJ_ARMOUR,
+    OBJ_SCROLLS,
+    OBJ_POTIONS,
+};
+
 #define NC_KITTEHS           3
 #define NC_LESSER_LIFE_FORMS ARRAYSZ(_acquirement_item_classes)
+#define NC_MIMICS ARRAYSZ(_mimic_item_classes)
 
 int dgn_item_corpse(const item_spec &ispec, const coord_def where)
 {
@@ -4059,7 +4071,9 @@ int dgn_place_item(const item_spec &spec,
             break;
         }
 
-        if (adjust_type && base_type == OBJ_RANDOM)
+        if (spec.props.exists("mimic") && base_type == OBJ_RANDOM)
+            base_type = _mimic_item_classes[random2(NC_MIMICS)];
+        else if (adjust_type && base_type == OBJ_RANDOM)
         {
             base_type = _acquirement_item_classes[random2(
                             you.species == SP_FELID ? NC_KITTEHS :
@@ -4154,6 +4168,10 @@ retry:
             item.flags |= props["ident"].get_int();
         if (props.exists("unobtainable"))
             item.flags |= ISFLAG_UNOBTAINABLE;
+        if (props.exists("mimic"))
+            item.flags |= ISFLAG_MIMIC;
+        if (props.exists("no_mimic"))
+            item.flags |= ISFLAG_NO_MIMIC;
 
         return (item_made);
     }
