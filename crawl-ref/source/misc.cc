@@ -2208,6 +2208,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
                                    && (mon->attitude != ATT_HOSTILE
                                        || testbits(mon->flags, MF_NO_REWARD)
                                        || testbits(mon->flags, MF_WAS_NEUTRAL));
+    const bool isSlime       = mons_is_slime(mon);
 
     if (isFriendly)
     {
@@ -2248,8 +2249,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
         prompt = true;
     }
     else if (inSanctuary || wontAttack
-             || (you.religion == GOD_JIYVA && mons_is_slime(mon)
-                 && !mon->is_shapeshifter())
+             || (isSlime && you.religion == GOD_JIYVA)
              || (isNeutral || isHoly) && is_good_god(you.religion)
              || isUnchivalric
                 && you.religion == GOD_SHINING_ONE
