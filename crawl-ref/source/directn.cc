@@ -369,6 +369,8 @@ void direction_chooser::print_key_hints() const
         if (you.see_cell(target()))
             prompt += ", v - describe";
         prompt += ", . - travel";
+        if (in_bounds(target()) && env.map_knowledge(target()).item())
+            prompt += ", g - get item";
     }
     else
     {
@@ -1338,6 +1340,49 @@ bool direction_chooser::select(bool allow_out_of_range, bool endpoint)
     return true;
 }
 
+bool direction_chooser::pickup_item()
+{
+    item_info *ii = 0;
+    if (in_bounds(target()))
+        ii = env.map_knowledge(target()).item();
+    if (!ii || !ii->is_valid())
+    {
+        mpr("You can't see any item there.", MSGCH_EXAMINE_FILTER);
+        return false;
+    }
+    ii->flags |= ISFLAG_THROWN; // make autoexplore greedy
+
+    // From this point, if there's no item, we'll fake one.  False info means
+    // it's out of bounds and taken, or a mimic.
+    item_def *item = 0;
+    unsigned short it = env.igrid(target());
+    monster *mon = monster_at(target());
+    if (mon && mons_is_item_mimic(mon->type))
+        item = &get_mimic_item(mon);
+    if (it != NON_ITEM && !item)
+    {
+        item = &mitm[it];
+        // Check if it appears to be the same item.
+        if (!item->is_valid()
+            || ii->base_type != item->base_type
+            || ii->sub_type != item->sub_type
+            || ii->colour != item->colour)
+        {
+            item = 0;
+        }
+    }
+    if (item)
+        item->flags |= ISFLAG_THROWN;
+
+    if (!just_looking) // firing/casting prompt
+        return false;
+
+    moves.isValid  = true;
+    moves.isTarget = true;
+    update_previous_target();
+    return true;
+}
+
 bool direction_chooser::handle_signals()
 {
     // If we've received a HUP signal then the user can't choose a
@@ -1938,6 +1983,8 @@ bool direction_chooser::do_main_loop()
 
     case CMD_TARGET_MOUSE_MOVE: tiles_update_target(); break;
 #endif
+
+    case CMD_TARGET_GET:             loop_done = pickup_item(); break;
 
     case CMD_TARGET_CYCLE_BACK:
         if (restricts != DIR_TARGET_OBJECT)
