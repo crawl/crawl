@@ -1241,9 +1241,17 @@ static const char *_terse_cloud_names[] =
     "flame", "noxious fumes", "freezing vapour", "poison gas",
     "black smoke", "grey smoke", "blue smoke",
     "purple smoke", "translocational energy", "fire",
-    "steam", "gloom", "ink", "blessed fire", "foul pestilence", "thin mist",
+    "steam", "gloom", "ink", 
+#if TAG_MAJOR_VERSION > 32
+    "calcifying dust",
+#endif
+	"blessed fire", "foul pestilence", "thin mist",
     "seething chaos", "rain", "mutagenic fog", "magical condensation",
-    "raging winds", "calcifying dust", "sparse dust",
+    "raging winds",
+#if TAG_MAJOR_VERSION == 32
+    "calcifying dust", 
+#endif
+	"sparse dust",
 };
 
 static const char *_verbose_cloud_names[] =
@@ -1252,9 +1260,16 @@ static const char *_verbose_cloud_names[] =
     "roaring flames", "noxious fumes", "freezing vapours", "poison gas",
     "black smoke", "grey smoke", "blue smoke",
     "purple smoke", "translocational energy", "roaring flames",
-    "a cloud of scalding steam", "thick gloom", "ink", "blessed fire",
-    "dark miasma", "thin mist", "seething chaos", "the rain",
-    "mutagenic fog", "magical condensation", "raging winds", "calcifying dust", "sparse dust",
+    "a cloud of scalding steam", "thick gloom", "ink",
+#if TAG_MAJOR_VERSION > 32
+    "calcifying dust",
+#endif
+	"blessed fire", "dark miasma", "thin mist", "seething chaos", "the rain",
+    "mutagenic fog", "magical condensation", "raging winds",
+#if TAG_MAJOR_VERSION == 32
+    "calcifying dust", 
+#endif
+	"sparse dust",
 };
 
 std::string cloud_type_name(cloud_type type, bool terse)
