@@ -100,6 +100,14 @@ LUAFN(crawl_stderr)
     return (0);
 }
 
+LUAFN(crawl_dpr)
+{
+    const char *text = luaL_checkstring(ls, 1);
+    if (crawl_state.io_inited)
+        dprf("%s", text);
+    return (0);
+}
+
 LUAWRAP(crawl_delay, delay(luaL_checkint(ls, 1)))
 LUAWRAP(crawl_more, more())
 LUAWRAP(crawl_flush_prev_message, flush_prev_message())
@@ -716,7 +724,8 @@ static const struct luaL_reg crawl_clib[] =
 {
     { "mpr",            crawl_mpr },
     { "formatted_mpr",  crawl_formatted_mpr },
-    { "stderr",  crawl_stderr },
+    { "dpr",            crawl_dpr },
+    { "stderr",         crawl_stderr },
     { "more",           crawl_more },
     { "more_autoclear", crawl_set_more_autoclear },
     { "enable_more",    crawl_enable_more },
