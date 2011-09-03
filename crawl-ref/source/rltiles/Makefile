@@ -95,6 +95,6 @@ distclean: clean
 	$(QUIET_HOSTCXX)$(HOSTCXX) $(CFLAGS) -Wp,-MD,$*.d,-MT,$@ -c $< -o $@
 
 $(TILEGEN): $(OBJECTS)
-	$(QUIET_LINK)$(HOSTCXX) $(OBJECTS) -o $@ $(LDFLAGS)
+	$(QUIET_HOSTLINK)$(HOSTCXX) $(OBJECTS) -o $@ $(LDFLAGS)
 
 .PHONY: all clean distclean
