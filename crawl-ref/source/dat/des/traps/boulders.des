@@ -5,32 +5,46 @@
 #########################################################
 
 {{
+
+-- Generates a boulder rolling at the target x and y
+function boulder_generate(x, y, targetx, targety)
+  local boulder = dgn.create_monster(x, y, 'generate_awake boulder beetle')
+
+  -- Set x, y, velocity
+  x = x - 0.5
+  y = y - 0.5	
+  targetx = targetx - 0.5
+  targety = targety - 0.5
+  boulder.set_prop("boulder_x",x)
+  boulder.set_prop("boulder_y",y)
+  boulder.set_prop("boulder_vx",targetx - x)
+  boulder.set_prop("boulder_vy",targety - y)
+  -- Let it roll!
+  boulder.add_ench("rolling",1,50)
+
+end
+
+-- TODO: Avoid enemies triggering it (altho allow summons)
 function callback.boulder_grate_trap_stepped(data, triggerable, triggerer, marker, ev)
   local x, y = marker:pos()
   local p = dgn.find_marker_positions_by_prop("grate", 1)[1]
-  if (p == nil) then
-    crawl.mpr("Error: no grate to close!")
-    dgn.grid(x, y, "floor")
-    return -- uh oh
-  end
-  -- It might be better to shove them away instead.  Since followers won't
-  -- have a chance to get there yet, this means the monster came another way:
-  -- most likely you displaced it, and that suggests the surroundings are
-  -- likely to be full.
-  if (dgn.mons_at(p.x, p.y) ~= nil or p == you.pos()) then
-    if (you.see_cell(x, y)) then
-      crawl.mpr("A part of the floor depresses, but nothing seems to happen.")
-      return
+  if (p ~= nil) then
+    if (dgn.mons_at(p.x, p.y) ~= nil or p == you.pos()) then
+      if (you.see_cell(x, y)) then
+        crawl.mpr("A part of the floor depresses, but nothing seems to happen.")
+        return
+      end
+    end
+    dgn.grid(p.x, p.y, "iron_grate")
+    if (you.see_cell(p.x, p.y)) then
+      crawl.mpr("An iron grate slams shut!")
     end
   end
-  dgn.grid(p.x, p.y, "iron_grate")
   -- remove the trap
   dgn.grid(x, y, "floor")
-  if (you.see_cell(p.x, p.y)) then
-    crawl.mpr("An iron grate slams shut!")
-  end
   for slave in iter.slave_iterator("boulder", 1) do
-   	dgn.create_monster(slave.x, slave.y, 'generate_awake boulder beetle')
+    local target = dgn.find_marker_positions_by_prop("target",1)[1]
+    boulder_generate(slave.x, slave.y, target.x,target.y)
   end
 end
 }}
@@ -44,7 +58,8 @@ end
 NAME: 	boulder_corridor_run
 DEPTH: 	Lair:1-6
 ORIENT: float
-KFEAT: 	^ = pressure plate trap
+KFEAT: ^ = pressure plate trap
+KITEM: ^ = *
 {{
 local tm = TriggerableFunction:new{func="callback.boulder_grate_trap_stepped",
                                    repeated=true}
@@ -52,12 +67,12 @@ tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
 lua_marker('^', tm)
 lua_marker(',', props_marker { grate=1 })
 lua_marker('A', props_marker { boulder=1 })
+lua_marker('B', props_marker { target=1 })
 }}
-KFEAT: A=floor
-KITEM: ^=*
+KFEAT: AB=floor
 MAP
 xxxxxxxxxxxxxxxxxx
-xA..*.............@
+xA..^............B@
 xxx,xxxxxxxxxxxxxx
    @
 ENDMAP
@@ -66,7 +81,7 @@ ENDMAP
 # Quad boulder room
 # by mumra
 # Four boulders all go for you in the center of the room
-#
+# -- TODO: Make all the boulders slightly miss each other
 NAME: 	boulder_quad_collide
 DEPTH: 	Lair:4-8
 ORIENT: float
@@ -76,25 +91,72 @@ local tm = TriggerableFunction:new{func="callback.boulder_grate_trap_stepped",
                                    repeated=true}
 tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
 lua_marker('^', tm)
+lua_marker('^', props_marker { target=1})
 lua_marker(',', props_marker { grate=1 })
 lua_marker('A', props_marker { boulder=1 })
 }}
 KFEAT: A=floor
 KITEM: ^=*
 MAP
-xxxxxx@xxxxxx
-x...........x
-x.A.......A.x
-x...........x
+   xxx@xxx   
+ xxx.....xxx 
+ xA.......Ax 
+xx.........xx
 x...........x
 x...........x
 @.....^.....@
 x...........x
 x...........x
-x...........x
-x.A.......A.x
-x...........x
-xxxxxx@xxxxxx
+xx.........xx
+ xA.......Ax 
+ xxx....xxxx 
+   xxx@xx    
 ENDMAP
 
+###################################################
+# "Indie" (mumra)
+# ZorbaBeta's fault
+NAME:   boulder_indie
+DEPTH: 	D:7-14, Snake:1-4
+ORIENT: float
+{{
+local tm = TriggerableFunction:new{func="callback.boulder_grate_trap_stepped",
+                                   repeated=true}
+tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
+lua_marker('^', tm)
+lua_marker(',', props_marker { grate=1 })
+lua_marker('A', props_marker { boulder=1 })
+lua_marker('B', props_marker { target=1 })
+}}
+KFEAT: 	^ = pressure plate trap
+SUBST: 2 = x 1 2
+SUBST: 1 = 1 2 .:5
+KMONS: 1 = ball python
+KMONS: 2 = adder
+ : dgn.delayed_decay(_G,'a', 'human skeleton')
+KFEAT: abAB=floor
+#KITEM: b = whip w:50 / cursed whip w:10 / whip of reaching w:1
+MAP
+   xxxxx
+  xx222xx
+ xx21112xx   
+ x211ab12x   
+ xx2..12xx   
+  xx...xx    
+   xx.xx       
+    x.xxxxxx 
+    x......x 
+    xxxxxx.x  
+         x.x 
+xxxxxxx  x.x 
+xB....x  x.x 
+x^xxx.x  x.x 
+x^x x.x  x.x 
+x^x x.xxxx.x 
+x.x x......x 
+x.x xxxxxxxx 
+xAx          
+x.x          
+x@x           
+ENDMAP
 
