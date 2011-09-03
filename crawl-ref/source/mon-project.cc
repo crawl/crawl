@@ -825,7 +825,7 @@ move_again:
         if (_boulder_hit(mon, pos)){
 			if ((victim && victim->alive()))
 				_boulder_stop(mon);
-            return (true);
+        //    return (true);
 		}
     }
 
