@@ -4130,6 +4130,12 @@ tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
                 ch = TILE_CLOUD_MAGIC_TRAIL_0 + dur;
                 break;
 
+			case CLOUD_DUST_TRAIL:
+                if (decay/20 > 2)
+                    dur = 3;
+                ch = TILE_CLOUD_DUST_TRAIL_0 + dur;
+                break;
+
             case CLOUD_INK:
                 ch = TILE_CLOUD_INK;
                 break;
