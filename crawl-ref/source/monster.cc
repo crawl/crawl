@@ -3169,7 +3169,7 @@ bool monster::is_known_chaotic() const
         return (true);
     }
 
-    if (is_shapeshifter() && (flags & MF_KNOWN_MIMIC))
+    if (is_shapeshifter() && (flags & MF_KNOWN_SHIFTER))
         return (true);
 
     // Knowing chaotic spells is not enough to make you "essentially"

@@ -231,8 +231,7 @@ bool mons_is_mimic(int mc);
 bool mons_is_item_mimic(int mc);
 bool mons_is_feat_mimic(int mc);
 void discover_mimic(const coord_def& pos);
-void discover_mimic(monster* mimic);
-
+void discover_shifter(monster* shifter);
 
 bool mons_is_statue(int mc, bool allow_disintegrate = false);
 bool mons_is_demon(int mc);
@@ -342,8 +341,6 @@ bool mons_is_batty(const monster* m);
 bool mons_is_influenced_by_sanctuary(const monster* m);
 bool mons_is_fleeing_sanctuary(const monster* m);
 bool mons_was_seen(const monster* m);
-bool mons_is_known_mimic(const monster* m);
-bool mons_is_unknown_mimic(const monster* m);
 bool mons_class_is_slime(int mc);
 bool mons_is_slime(const monster* mon);
 bool mons_class_is_plant(int mc);

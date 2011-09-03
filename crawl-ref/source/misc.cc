@@ -58,7 +58,6 @@
 #include "mon-pathfind.h"
 #include "mon-info.h"
 #include "mon-iter.h"
-#include "mon-util.h"
 #include "mon-stuff.h"
 #include "ng-setup.h"
 #include "ouch.h"
@@ -1498,9 +1497,6 @@ static bool _mons_is_always_safe(const monster *mon)
 bool mons_is_safe(const monster* mon, const bool want_move,
                   const bool consider_user_options, bool check_dist)
 {
-    if (mons_is_unknown_mimic(mon))
-        return (true);
-
     int  dist    = grid_distance(you.pos(), mon->pos());
 
     bool is_safe = (_mons_is_always_safe(mon)
@@ -1572,7 +1568,6 @@ std::vector<monster* > get_nearby_monsters(bool want_move,
             if (mon->alive()
                 && (!require_visible || mon->visible_to(&you))
                 && !mon->submerged()
-                && !mons_is_unknown_mimic(mon)
                 && (!dangerous_only || !mons_is_safe(mon, want_move,
                                                      consider_user_options,
                                                      check_dist)))

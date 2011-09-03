@@ -500,23 +500,8 @@ bool melee_attack::check_unrand_effects(bool mondied)
     return (false);
 }
 
-void melee_attack::identify_mimic(actor *act)
-{
-    if (act
-        && act->atype() == ACT_MONSTER
-        && mons_is_mimic(act->type)
-        && you.can_see(act))
-    {
-        monster* mon = act->as_monster();
-        discover_mimic(mon);
-    }
-}
-
 bool melee_attack::attack()
 {
-    // If a mimic is attacking or defending, it is thereafter known.
-    identify_mimic(attacker);
-
     coord_def defender_pos = defender->pos();
 
     if (attacker->atype() == ACT_PLAYER && defender->atype() == ACT_MONSTER)
@@ -629,7 +614,6 @@ bool melee_attack::attack()
     bool retval = ((attacker->atype() == ACT_PLAYER) ? player_attack() :
                    (defender->atype() == ACT_PLAYER) ? mons_attack_you()
                                                      : mons_attack_mons());
-    identify_mimic(defender);
 
     if (env.sanctuary_time > 0 && retval && !cancel_attack
         && attacker != defender && !attacker->confused())
@@ -4153,10 +4137,8 @@ int melee_attack::player_to_hit(bool random_factor)
 
 void melee_attack::player_stab_check()
 {
-    // Unknown mimics cannot be stabbed.
     // Confusion and having dex of 0 disallow stabs.
-    if (mons_is_unknown_mimic(defender->as_monster()) || you.stat_zero[STAT_DEX]
-        || you.confused())
+    if (you.stat_zero[STAT_DEX] || you.confused())
     {
         stab_attempt = false;
         stab_bonus = 0;
@@ -6254,9 +6236,7 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
             }
     // Check if the player is fighting with something unsuitable,
     // or someone unsuitable.
-    if (you.can_see(defender)
-        && !mons_is_unknown_mimic(defender)
-        && !wielded_weapon_check(attk.weapon))
+    if (you.can_see(defender) && !wielded_weapon_check(attk.weapon))
     {
         you.turn_is_over = false;
         return (false);

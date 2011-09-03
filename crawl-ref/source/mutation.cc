@@ -2003,8 +2003,6 @@ void check_antennae_detect()
             const monster_type remembered_monster = cell.monster();
             if (remembered_monster != mon->type)
             {
-                if (mons_is_unknown_mimic(mon))
-                    discover_mimic(mon);
                 monster_type mc = MONS_SENSED;
                 if (you.religion == GOD_ASHENZARI && !player_under_penance())
                     mc = ash_monster_tier(mon);

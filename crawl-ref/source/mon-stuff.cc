@@ -2414,7 +2414,7 @@ int monster_die(monster* mons, killer_type killer,
         && !fake_abjuration
         && !timeout
         && !unsummoned
-        && !(mons->flags & MF_KNOWN_MIMIC)
+        && !(mons->flags & MF_KNOWN_SHIFTER)
         && mons->is_shapeshifter())
     {
         simple_monster_message(mons, "'s shape twists and changes as "
@@ -2726,7 +2726,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     // the actual polymorphing:
     uint64_t flags =
         mons->flags & ~(MF_INTERESTING | MF_SEEN | MF_ATT_CHANGE_ATTEMPT
-                           | MF_WAS_IN_VIEW | MF_BAND_MEMBER | MF_KNOWN_MIMIC
+                           | MF_WAS_IN_VIEW | MF_BAND_MEMBER | MF_KNOWN_SHIFTER
                            | MF_SPELLCASTER);
 
     std::string name;
@@ -2905,7 +2905,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         // If the player saw both the beginning and end results of a
         // shifter changing, then s/he knows it must be a shifter.
         if (can_see && shifter.ench != ENCH_NONE)
-            discover_mimic(mons);
+            discover_shifter(mons);
     }
 
     if (old_mon_caught)
@@ -3231,8 +3231,7 @@ bool monster_can_hit_monster(monster* mons, const monster* targ)
 mon_dam_level_type mons_get_damage_level(const monster* mons)
 {
     if (!mons_can_display_wounds(mons)
-        || !mons_class_can_display_wounds(mons->get_mislead_type())
-        || mons_is_unknown_mimic(mons))
+        || !mons_class_can_display_wounds(mons->get_mislead_type()))
     {
         return MDAM_OKAY;
     }

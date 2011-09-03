@@ -43,7 +43,6 @@
 #include "menu.h"
 #include "message.h"
 #include "mon-stuff.h"
-#include "mon-util.h"
 #include "output.h"
 #include "player.h"
 #include "quiver.h"
@@ -2201,18 +2200,7 @@ static std::string _get_feature_description_wide(int feat)
 void get_feature_desc(const coord_def &pos, describe_info &inf)
 {
     dungeon_feature_type feat = grd(pos);
-    bool mimic = false;
-    monster* mimic_mons = NULL;
 
-    if (monster_at(pos))
-    {
-        mimic_mons = monster_at(pos);
-        if (mons_is_feat_mimic(mimic_mons->type) && mons_is_unknown_mimic(mimic_mons))
-        {
-            mimic = true;
-            feat = get_mimic_feat(mimic_mons);
-        }
-    }
     std::string desc      = feature_description(pos, false, DESC_CAP_A, false);
     std::string db_name   = feat == DNGN_ENTER_SHOP ? "A shop" : desc;
     std::string long_desc = getLongDescription(db_name);
@@ -2243,7 +2231,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
         custom_desc = true;
     }
 
-    if (feat == DNGN_ENTER_PORTAL_VAULT && !custom_desc && !mimic)
+    if (feat == DNGN_ENTER_PORTAL_VAULT && !custom_desc)
     {
         long_desc = "UNDESCRIBED PORTAL VAULT ENTRANCE.";
         custom_desc = true;

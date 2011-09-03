@@ -611,30 +611,13 @@ static bool _prompt_stop_explore(int es_why)
 inline static void _check_interesting_square(const coord_def pos,
                                              explore_discoveries &ed)
 {
-    if (ES_item || ES_greedy || ES_glow || ES_art || ES_rune)
+    if ((ES_item || ES_greedy || ES_glow || ES_art || ES_rune)
+        && you.visible_igrd(pos) != NON_ITEM)
     {
-        if (const monster* mons = monster_at(pos))
-        {
-            if (mons_is_unknown_mimic(mons) && mons_is_item_mimic(mons->type))
-                ed.found_item(pos, get_mimic_item(mons));
-        }
-
-        if (you.visible_igrd(pos) != NON_ITEM)
-            ed.found_item(pos, mitm[ you.visible_igrd(pos) ]);
+        ed.found_item(pos, mitm[ you.visible_igrd(pos) ]);
     }
 
-    dungeon_feature_type feat = grd(pos);
-    if (monster_at(pos))
-    {
-        monster* mimic_mons = monster_at(pos);
-        if (mons_is_feat_mimic(mimic_mons->type)
-            && mons_is_unknown_mimic(mimic_mons))
-        {
-            feat = get_mimic_feat(mimic_mons);
-        }
-    }
-
-    ed.found_feature(pos, feat);
+    ed.found_feature(pos, grd(pos));
 }
 
 static void _userdef_run_stoprunning_hook(void)
@@ -1175,19 +1158,7 @@ travel_pathfind::~travel_pathfind()
 static bool _is_greed_inducing_square(const LevelStashes *ls,
                                       const coord_def &c)
 {
-    if (ls && ls->needs_visit(c))
-        return (true);
-
-    if (const monster* mons = monster_at(c))
-    {
-        if (mons_is_unknown_mimic(mons) && mons_was_seen(mons)
-            && mons_is_item_mimic(mons->type))
-        {
-            if (item_needs_autopickup(get_mimic_item(mons)))
-                return (true);
-        }
-    }
-    return (false);
+    return (ls && ls->needs_visit(c));
 }
 
 bool travel_pathfind::is_greed_inducing_square(const coord_def &c) const

@@ -44,7 +44,6 @@
 #include "misc.h"
 #include "mon-stuff.h"
 #include "mon-info.h"
-#include "mon-util.h"
 #include "output.h"
 #include "place.h"
 #include "player.h"
@@ -103,7 +102,7 @@ static void _wizard_make_friendly(monster* m);
 static void _describe_feature(const coord_def& where, bool oos);
 static void _describe_cell(const coord_def& where, bool in_range = true);
 static bool _print_cloud_desc(const coord_def where);
-static bool _print_item_desc(const coord_def where, bool under_mimic);
+static bool _print_item_desc(const coord_def where);
 
 static bool _find_object(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc);
@@ -324,7 +323,7 @@ actor* direction_chooser::targeted_actor() const
 monster* direction_chooser::targeted_monster() const
 {
     monster* m = monster_at(target());
-    if (m && you.can_see(m) && !mons_is_unknown_mimic(m))
+    if (m && you.can_see(m))
         return m;
     else
         return NULL;
@@ -430,8 +429,7 @@ static void _draw_ray_glyph(const coord_def &pos, int colour,
 {
     if (const monster* mons = monster_at(pos))
     {
-        if (mons->alive() && mons->visible_to(&you)
-            && !mons_is_unknown_mimic(mons))
+        if (mons->alive() && mons->visible_to(&you))
         {
             glych  = get_cell_glyph(pos).ch;
             colour = mcol;
@@ -560,13 +558,6 @@ void full_describe_view()
             list_features.push_back(*ri);
         }
 
-        const monster* mon = monster_at(*ri);
-        const bool unknown_mimic = (mon && mons_is_unknown_mimic(mon));
-
-        if (unknown_mimic)      // It'll be on top.
-            if (mons_is_item_mimic(mon->type))
-                list_items.push_back(get_mimic_item(mon));
-
         const int oid = you.visible_igrd(*ri);
         if (oid == NON_ITEM)
             continue;
@@ -575,8 +566,7 @@ void full_describe_view()
         {
             // On levels with no stashtracker, you can still see the top
             // item.
-            if (!unknown_mimic)
-                list_items.push_back(mitm[oid]);
+            list_items.push_back(mitm[oid]);
         }
         else
         {
@@ -1466,7 +1456,7 @@ void direction_chooser::print_target_monster_description(bool &did_cloud) const
 {
     // Do we see anything?
     const monster* mon = monster_at(target());
-    if (mon == NULL || mons_is_unknown_mimic(mon))
+    if (!mon)
         return;
 
     const bool visible = you.can_see(mon);
@@ -1539,7 +1529,7 @@ void direction_chooser::print_target_object_description() const
     if (!you.see_cell(target()))
         return;
 
-    const item_def* item = top_item_at(target(), true);
+    const item_def* item = top_item_at(target());
     if (!item)
         return;
 
@@ -1554,7 +1544,7 @@ void direction_chooser::print_items_description() const
     if (!in_bounds(target()))
         return;
 
-    const item_def* item = top_item_at(target(), true);
+    const item_def* item = top_item_at(target());
     if (!item)
         return;
 
@@ -1562,7 +1552,7 @@ void direction_chooser::print_items_description() const
     mprf(MSGCH_FLOOR_ITEMS, "%s.",
          get_menu_colour_prefix_tags(*item, DESC_CAP_A).c_str());
 
-    if (multiple_items_at(target(), true))
+    if (multiple_items_at(target()))
         mprf(MSGCH_FLOOR_ITEMS, "There is something else lying underneath.");
 }
 
@@ -2134,16 +2124,7 @@ std::string get_terse_square_desc(const coord_def &gc)
             desc = unseen_desc;
     }
     else if (monster_at(gc) && you.can_see(monster_at(gc)))
-    {
-        const monster& mons = *monster_at(gc);
-
-        if (mons_is_item_mimic(mons.type) && mons_is_unknown_mimic(&mons))
-            desc = get_mimic_item(&mons).name(DESC_PLAIN);
-        else if (mons_is_feat_mimic(mons.type) && mons_is_unknown_mimic(&mons))
-            desc = feature_description(gc, false, DESC_PLAIN, false);
-        else
-            desc = mons.full_name(DESC_PLAIN, true);
-    }
+            desc = monster_at(gc)->full_name(DESC_PLAIN, true);
     else if (you.visible_igrd(gc) != NON_ITEM)
     {
         if (mitm[you.visible_igrd(gc)].defined())
@@ -2177,30 +2158,23 @@ void get_square_desc(const coord_def &c, describe_info &inf,
 
     if (mons && mons->visible_to(&you))
     {
-        if (mons_is_item_mimic(mons->type) && mons_is_unknown_mimic(mons))
-            get_item_desc(get_mimic_item(mons), inf, examine_mons);
-        else if (mons_is_feat_mimic(mons->type) && mons_is_unknown_mimic(mons))
-            get_feature_desc(c, inf);
-        else
+        monster_info mi(mons);
+        // First priority: monsters.
+        if (examine_mons)
         {
-            monster_info mi(mons);
-            // First priority: monsters.
-            if (examine_mons)
-            {
-                // If examine_mons is true (currently only for the Tiles
-                // mouse-over information), set monster's
-                // equipment/woundedness/enchantment description as title.
-                std::string desc         = get_monster_equipment_desc(mi) + ".\n";
-                const std::string wounds = mi.wounds_description_sentence();
-                if (!wounds.empty())
-                    desc += wounds + "\n";
-                desc += _get_monster_desc(mi);
+            // If examine_mons is true (currently only for the Tiles
+            // mouse-over information), set monster's
+            // equipment/woundedness/enchantment description as title.
+            std::string desc         = get_monster_equipment_desc(mi) + ".\n";
+            const std::string wounds = mi.wounds_description_sentence();
+            if (!wounds.empty())
+                desc += wounds + "\n";
+            desc += _get_monster_desc(mi);
 
-                inf.title = desc;
-            }
-            bool temp = false;
-            get_monster_db_desc(mi, inf, temp);
+            inf.title = desc;
         }
+        bool temp = false;
+        get_monster_db_desc(mi, inf, temp);
     }
     else if (oid != NON_ITEM)
     {
@@ -2238,19 +2212,9 @@ void full_describe_square(const coord_def &c)
 
     if (mons && mons->visible_to(&you))
     {
-        if (mons_is_unknown_mimic(mons))
-        {
-            if (mons_is_item_mimic(mons->type))
-                describe_item(const_cast<item_def&>(get_mimic_item(mons)));
-            else
-                describe_feature_wide(c);
-        }
-        else
-        {
-            monster_info mi(mons);
-            // First priority: monsters.
-            describe_monsters(mi);
-        }
+        monster_info mi(mons);
+        // First priority: monsters.
+        describe_monsters(mi);
     }
     else if (oid != NON_ITEM)
     {
@@ -2329,10 +2293,6 @@ static bool _mons_is_valid_target(const monster* mon, int mode, int range)
     {
         return (false);
     }
-
-    // Unknown mimics don't count as monsters, either.
-    if (mons_is_unknown_mimic(mon))
-        return (false);
 
     // Don't target submerged monsters.
     if (mode != TARG_HOSTILE_SUBMERGED && mon->submerged())
@@ -2462,9 +2422,6 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
     if (mon == NULL || !cell_see_cell(you.pos(), where, LOS_DEFAULT))
         return (false);
 
-    if (mons_is_unknown_mimic(mon))
-        return (false);
-
     // Monster in LOS but only via glass walls, so no direct path.
     if (need_path && !you.see_cell_no_trans(where))
         return (false);
@@ -2520,7 +2477,7 @@ static bool _find_object(const coord_def& where, int mode,
         return (false);
 
     return (env.map_knowledge(where).item()
-            || (you.see_cell(where) && top_item_at(where, true)));
+            || (you.see_cell(where) && top_item_at(where)));
 }
 
 static int _next_los(int dir, int los, bool wrap)
@@ -3856,28 +3813,23 @@ static bool _print_cloud_desc(const coord_def where)
     return true;
 }
 
-static bool _print_item_desc(const coord_def where, bool under_mimic)
+static bool _print_item_desc(const coord_def where)
 {
     int targ_item = you.visible_igrd(where);
 
     if (targ_item == NON_ITEM)
         return false;
 
-    // If a mimic is on this square, we pretend it's the first item - bwr
-    if (under_mimic)
-        mpr("There is something else lying underneath.", MSGCH_FLOOR_ITEMS);
-    else
-    {
-        std::string name = get_menu_colour_prefix_tags(mitm[targ_item],
-                                                       DESC_NOCAP_A);
-        mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
+    std::string name = get_menu_colour_prefix_tags(mitm[targ_item],
+                                                   DESC_NOCAP_A);
+    mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
 
-        if (mitm[ targ_item ].link != NON_ITEM)
-        {
-            mprf(MSGCH_FLOOR_ITEMS,
-                 "There is something else lying underneath.");
-        }
+    if (mitm[ targ_item ].link != NON_ITEM)
+    {
+        mprf(MSGCH_FLOOR_ITEMS,
+             "There is something else lying underneath.");
     }
+
     return true;
 }
 
@@ -3929,8 +3881,6 @@ static void _debug_describe_feature_at(const coord_def &where)
 // Describe a cell, guaranteed to be in view.
 static void _describe_cell(const coord_def& where, bool in_range)
 {
-    bool mimic_item = false;
-    bool mimic_feat = false;
 #ifndef DEBUG_DIAGNOSTICS
     bool monster_described = false;
 #endif
@@ -3965,33 +3915,17 @@ static void _describe_cell(const coord_def& where, bool in_range)
         }
 #endif
 
-        if (mons_is_unknown_mimic(mon))
-        {
-            if (mons_is_item_mimic(mon->type))
-            {
-                const std::string name =
-                        get_menu_colour_prefix_tags(get_mimic_item(mon),
-                                                    DESC_NOCAP_A);
-                mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
-                mimic_item = true;
-            }
-            else
-                mimic_feat = true;
-        }
-        else
-        {
-            monster_info mi(mon);
-            _describe_monster(mi);
+        monster_info mi(mon);
+        _describe_monster(mi);
 
-            if (!in_range)
-            {
-                mprf(MSGCH_EXAMINE_FILTER, "%s is out of range.",
-                     mon->pronoun(PRONOUN_CAP).c_str());
-            }
-#ifndef DEBUG_DIAGNOSTICS
-            monster_described = true;
-#endif
+        if (!in_range)
+        {
+            mprf(MSGCH_EXAMINE_FILTER, "%s is out of range.",
+                 mon->pronoun(PRONOUN_CAP).c_str());
         }
+#ifndef DEBUG_DIAGNOSTICS
+        monster_described = true;
+#endif
 
 #if defined(DEBUG_DIAGNOSTICS) && defined(WIZARD)
         debug_stethoscope(mgrd(where));
@@ -4010,16 +3944,14 @@ static void _describe_cell(const coord_def& where, bool in_range)
 
 #ifdef DEBUG_DIAGNOSTICS
     _print_cloud_desc(where);
-    _print_item_desc(where, mimic_item);
-    if (mimic_feat)
-        mprf("Feature mimic: %s", feature_description(where, true).c_str());
+    _print_item_desc(where);
     _debug_describe_feature_at(where);
 #else
   // removing warning
   look_clouds:
 
     bool cloud_described = _print_cloud_desc(where);
-    bool item_described = _print_item_desc(where, mimic_item) || mimic_item;
+    bool item_described = _print_item_desc(where);
 
     std::string feature_desc = feature_description(where, true);
     const bool bloody = is_bloodcovered(where);
@@ -4035,12 +3967,6 @@ static void _describe_cell(const coord_def& where, bool in_range)
     else
     {
         dungeon_feature_type feat = grd(where);
-
-        if (mimic_feat)
-        {
-            monster* mons = monster_at(where);
-            feat = get_mimic_feat(mons);
-        }
 
         if (_interesting_feature(feat))
         {

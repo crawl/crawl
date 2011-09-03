@@ -761,19 +761,6 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     const int item_idx = igrd(where);
     if (item_idx == NON_ITEM || !in_bounds(where))
     {
-        // Maybe the player *thought* there was something there (a mimic.)
-        if (monster* m = monster_at(where))
-        {
-            if (mons_is_item_mimic(m->type) && you.can_see(m))
-            {
-                fail_check();
-                mprf("%s twitches.", m->name(DESC_CAP_THE).c_str());
-                // Nothing else gives this message, so identify the mimic.
-                discover_mimic(m);
-                return SPRET_SUCCESS;  // otherwise you get free mimic ID
-            }
-        }
-
         mpr("There are no items there.");
         return SPRET_ABORT;
     }

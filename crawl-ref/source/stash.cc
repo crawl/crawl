@@ -324,23 +324,14 @@ bool Stash::is_boring_feature(dungeon_feature_type feature)
     }
 }
 
-static bool _grid_has_mimic_item(const coord_def& pos)
-{
-    const monster* mon = monster_at(pos);
-    return (mon && mons_is_unknown_mimic(mon) && mons_is_item_mimic(mon->type));
-}
-
 static bool _grid_has_perceived_item(const coord_def& pos)
 {
-    return (you.visible_igrd(pos) != NON_ITEM || _grid_has_mimic_item(pos));
+    return (you.visible_igrd(pos) != NON_ITEM);
 }
 
 static bool _grid_has_perceived_multiple_items(const coord_def& pos)
 {
     int count = 0;
-
-    if (_grid_has_mimic_item(pos))
-        ++count;
 
     for (stack_iterator si(pos, true); si && count < 2; ++si)
         ++count;
@@ -353,10 +344,6 @@ void Stash::update()
     coord_def p(x,y);
     feat = grd(p);
     trap = NUM_TRAPS;
-
-    const monster* mon = monster_at(p);
-    if ((mon && mons_is_unknown_mimic(mon) && mons_is_feat_mimic(mon->type)))
-        feat = get_mimic_feat(mon);
 
     if (is_boring_feature(feat))
         feat = DNGN_FLOOR;
@@ -388,14 +375,8 @@ void Stash::update()
         }
 
         // There's something on this square. Take a squint at it.
-        item_def *pitem;
-        if (_grid_has_mimic_item(p))
-            pitem = &get_mimic_item(monster_at(p));
-        else
-        {
-            pitem = &mitm[you.visible_igrd(p)];
-            hints_first_item(*pitem);
-        }
+        item_def *pitem = &mitm[you.visible_igrd(p)];
+        hints_first_item(*pitem);
 
         ash_id_item(*pitem);
         const item_def& item = *pitem;
@@ -1635,11 +1616,7 @@ void StashTracker::update_visible_stashes(
     coord_def c;
     for (radius_iterator ri(you.get_los()); ri; ++ri)
     {
-        dungeon_feature_type feat = grd(*ri);
-
-        const monster* mon = monster_at(*ri);
-        if (mon && mons_is_unknown_mimic(mon) && mons_is_feat_mimic(mon->type))
-            feat = get_mimic_feat(mon);
+        const dungeon_feature_type feat = grd(*ri);
 
         if ((!lev || !lev->update_stash(*ri))
             && mode == ST_AGGRESSIVE
