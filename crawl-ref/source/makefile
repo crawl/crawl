@@ -429,6 +429,13 @@ CC += -gcc-name=gcc-$(GCC_VER) -gxx-name=g++-$(GCC_VER)
 CXX += -gcc-name=gcc-$(GCC_VER) -gxx-name=g++-$(GCC_VER)
 endif
 
+ifndef CROSSHOST
+HOSTCC = $(CC)
+HOSTCXX = $(CXX)
+export HOSTCC
+export HOSTCXX
+endif
+
 endif # MacOS
 
 ifndef CROSSHOST
