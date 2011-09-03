@@ -804,11 +804,11 @@ TAGS: overwritable layout allow_dup unrand
         { [0] = 2, [5] = 1, [20] = 1, [50] = 1, [100] = 1 }
     local top = crawl.random_element
         { [1] = 1, [20] = 1, [125] = 1, [500] = 1, [999999] =1 }
-    crawl.mpr("delve(" .. ngb_min .. ", " .. ngb_max .. ", " .. connchance ..
+    crawl.dpr("delve(" .. ngb_min .. ", " .. ngb_max .. ", " .. connchance ..
               ", -1, " .. top .. ")")
     delve(ngb_min, ngb_max, connchance, -1, top)
     if crawl.coinflip() then
-      crawl.mpr("delve: adding water");
+      crawl.dpr("delve: adding water");
       _G.subst('. = @')
       delve(ngb_min, ngb_max, 100, 100, top)
       _G.subst('. = w')
