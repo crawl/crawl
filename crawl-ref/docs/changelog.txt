@@ -1,3 +1,15 @@
+Stone Soup 0.9.1 (20110904)
+---------------------------
+* Fix missing portals to Zot on D:27 with restart_after_game after Sprint.
+* Fix most large special maps not being generated.
+* Fix mad amounts of divine gifts in certain cases.
+* Don't duplicate monsters when exiting the Abyss.
+* Fix a lock-up on selecting a random character.
+* A number of crash fixes.
+* Some documentation amendments.
+* Don't stop butchering on unimportant messages.
+* Add a command "show runes" ('}') that was documented but not implemented.
+
 Stone Soup 0.9 (20110812)
 -------------------------
 
