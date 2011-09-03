@@ -63,9 +63,8 @@ function callback.fedhas_growing_garden_grow(data, triggerable,
      if dgn.mons_at(p.x, p.y) == nil and p ~= yp and
         dgn.is_passable(p.x, p.y) and crawl.one_chance_in(chance)
      then
-       if dgn.terrain_changed(p.x, p.y, "tree",false,false,false) and
-          you.see_cell(p.x,p.y)
-       then
+       dgn.terrain_changed(p.x, p.y, "tree",false,false,false)
+       if you.see_cell(p.x,p.y) then
          plants = plants + 1
        end
      end
@@ -77,50 +76,67 @@ function callback.fedhas_growing_garden_grow(data, triggerable,
    return seen_plants
  end
 
- local function grow_saplings (gslaves)
+ local function grow_saplings (gslaves, seen_oklob)
    local plants = 0
    local sapling
+   -- Test loop to see which saplings we can see, for message purposes
+   -- (travel exclusions caused message spam otherwise)
    for _, p in ipairs(gslaves) do
-     -- Grow sapling into oklob
+     sapling = dgn.mons_at(p.x, p.y)
+     if sapling ~= nil and sapling.name == "plant"
+                       and you.see_cell(p.x,p.y) then
+       plants = plants + 1
+     end
+   end
+   if seen_oklob ~= true and plants > 0 then
+     if plants == 1 then
+       crawl.mpr("A plant begins to grow acid sacs!")
+     end
+     if plants > 1 then
+       crawl.mpr("Some of the plants begin to grow acid sacs!")
+     end
+   end
+   for _, p in ipairs(gslaves) do
+     -- Grow plant into sapling
      sapling = dgn.mons_at(p.x, p.y)
      if sapling ~= nil and sapling.name == "plant" then
        sapling.dismiss()
-       if dgn.create_monster(p.x, p.y, "oklob sapling") and
-          you.see_cell(p.x,p.y)
-       then
-         plants = plants + 1
-       end
+       dgn.create_monster(p.x, p.y, "oklob sapling")
      end
    end
-   if plants == 1 then
-     crawl.mpr("A plant begins to grow acid sacs!")
-   end
-   if plants > 1 then
-     crawl.mpr("Some of the plants begin to grow acid sacs!")
-   end
+   return seen_oklob
  end
 
- local function grow_oklobs (gslaves)
+ local function grow_oklobs (gslaves, seen_oklob)
    local plants = 0
    local sapling
+   -- Test loop to see which saplings we can see, for message purposes
+   -- (travel exclusions caused message spam otherwise)
+   for _, p in ipairs(gslaves) do
+     sapling = dgn.mons_at(p.x, p.y)
+     if sapling ~= nil and sapling.name == "oklob sapling" 
+                       and you.see_cell(p.x,p.y) then
+       plants = plants + 1
+     end
+   end
+   if seen_oklob ~= true and plants > 0 then
+     seen_oklob = true
+     if plants == 1 then
+       crawl.mpr("The sapling grows bigger and tougher!")
+     end
+     if plants > 1 then
+       crawl.mpr("The saplings grow bigger and tougher!")
+     end
+   end
    for _, p in ipairs(gslaves) do
      -- Grow sapling into oklob
      sapling = dgn.mons_at(p.x, p.y)
      if sapling ~= nil and sapling.name == "oklob sapling" then
        sapling.dismiss()
-       if dgn.create_monster(p.x, p.y, "oklob plant") and
-          you.see_cell(p.x,p.y)
-       then
-         plants = plants + 1
-       end
+       dgn.create_monster(p.x, p.y, "oklob plant")
      end
    end
-   if plants == 1 then
-     crawl.mpr("The sapling grows bigger and tougher!")
-   end
-   if plants > 1 then
-     crawl.mpr("The saplings grow bigger and tougher!")
-   end
+   return seen_oklob
  end
 
  local function grow_fruit (gslaves)
@@ -132,11 +148,8 @@ function callback.fedhas_growing_garden_grow(data, triggerable,
                                     dgn.point(p.x+1, p.y+1))
        do
          if dgn.is_passable(p2.x, p2.y) and crawl.one_chance_in(10) then
-           local fruit = "apple"
-           if fruits > 0 then
-             fruit = "pear / apple / choko / snozzcumber / apricot / orange / " ..
+           local fruit = "pear / apple / choko / snozzcumber / apricot / orange / " ..
                      "banana / strawberry / rambutan / lychee / sultana"
-           end
            dgn.create_item(p2.x,p2.y, fruit)
            if you.see_cell(p2.x,p2.y) then
              fruits = fruits + 1
@@ -146,7 +159,7 @@ function callback.fedhas_growing_garden_grow(data, triggerable,
      end
    end
    if fruits==1 then
-     crawl.mpr("An apple falls from the tree!")
+     crawl.mpr("A fruit falls from the tree!")
    end
    if fruits>1 then
      crawl.mpr("Fruits fall from the boughs of the trees!")
@@ -163,29 +176,30 @@ function callback.fedhas_growing_garden_grow(data, triggerable,
  end
 
 -- Phase 1 (plants)
- if (data.tc > 2) and data.plants1 ~= true then
+ if (data.tc > 4) and data.plants1 ~= true then
    growth_slaves = dgn.find_marker_positions_by_prop("growth_phase", 1)
    data.seen_plants = grow_plants(growth_slaves,3,data.seen_plants)
    data.plants1 = true
  end
  -- Plants that will become saplings here 
- if (data.tc > 3) and data.protosaplings ~= true then
+ if (data.tc > 4) and data.protosaplings ~= true then
     growth_slaves = dgn.find_marker_positions_by_prop("growth_sapling", 1)
     data.seen_plants = grow_plants(growth_slaves,1,data.seen_plants)
     data.protosaplings = true
  end
 
 -- Phase 2 (plants)
- if (data.tc > 5) and data.plants2 ~= true then
+ if (data.tc > 6) and data.plants2 ~= true then
    growth_slaves = dgn.find_marker_positions_by_prop("growth_phase", 2)
    data.seen_plants = grow_plants(growth_slaves,2,data.seen_plants)
    data.plants2 = true
  end
+
  -- Saplings here 
  if (data.tc > 7) and data.saplings ~= true then
-   growth_slaves = dgn.find_marker_positions_by_prop("growth_sapling", 1)
-   grow_saplings(growth_slaves)
    data.saplings = true
+   growth_slaves = dgn.find_marker_positions_by_prop("growth_sapling", 1)
+   data.seen_saplings = grow_saplings(growth_slaves,data.seen_saplings)
  end
 
 -- Phase 3 (plants)
@@ -203,9 +217,9 @@ function callback.fedhas_growing_garden_grow(data, triggerable,
  end
  -- Oklobs at this point
  if (data.tc > 11) and data.oklobs ~= true then
-   growth_slaves = dgn.find_marker_positions_by_prop("growth_sapling", 1)
-   grow_oklobs(growth_slaves)
    data.oklobs = true
+   growth_slaves = dgn.find_marker_positions_by_prop("growth_sapling", 1)
+   data.seen_oklobs = grow_oklobs(growth_slaves,data.seen_oklobs)
  end
 
 -- Phase 5 (bushes)
@@ -260,7 +274,10 @@ lua_marker("6", portal_desc { growth_phase=6 })
 lua_marker("A", portal_desc { growth_sapling=1 })
 -- Setup the trigger (either altar or sapling LOS)
 local tm = TriggerableFunction:new{func="callback.fedhas_growing_garden_grow",
-  repeated=true, data={turns=you.turns(), tc=1, triggered=false, plants1=false,plants2=false,plants3=false,plants4=false,plants5=false,plants6=false,seen_plants=false,saplings=false,protosaplings=false,oklobs=false} }
+  repeated=true, data={turns=you.turns(), tc=1, triggered=false, plants1=false,
+    plants2=false,plants3=false,plants4=false,plants5=false,plants6=false,
+    seen_plants=false,saplings=false,protosaplings=false,oklobs=false,
+    seen_oklobs=false,seen_saplings=false} }
 tm:add_triggerer(DgnTriggerer:new{type="player_los"})
 lua_marker('_', tm)
 }}
