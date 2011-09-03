@@ -925,8 +925,6 @@ void discover_mimic(const coord_def& pos)
     if (item && !mimic->pickup_misc(*item, 0))
         die("Mimic failed to pickup its item.");
 
-    mimic->flags &= ~MF_JUST_SUMMONED;
-
     if (feature_mimic)
     {
         if (feat_is_stone_stair(feat))
