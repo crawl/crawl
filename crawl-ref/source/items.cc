@@ -1505,11 +1505,8 @@ int find_free_slot(const item_def &i)
 
     // See if the item remembers where it's been. Lua code can play with
     // this field so be extra careful.
-    if (i.slot >= 'a' && i.slot <= 'z'
-        || i.slot >= 'A' && i.slot <= 'Z')
-    {
+    if (isaalpha(i.slot))
         slot = letter_to_index(i.slot);
-    }
 
     if (slotisfree(slot))
         return slot;

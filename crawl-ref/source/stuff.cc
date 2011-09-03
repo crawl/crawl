@@ -41,6 +41,7 @@
 #include "output.h"
 #include "player.h"
 #include "view.h"
+#include "viewchar.h"
 #include "viewgeom.h"
 
 
@@ -713,6 +714,7 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
 
 char index_to_letter(int the_index)
 {
+    ASSERT(the_index >= 0 && the_index < ENDOFPACK);
     return (the_index + ((the_index < 26) ? 'a' : ('A' - 26)));
 }
 
@@ -720,12 +722,13 @@ int letter_to_index(int the_letter)
 {
     if (the_letter >= 'a' && the_letter <= 'z')
         // returns range [0-25] {dlb}
-        the_letter -= 'a';
+        return (the_letter - 'a');
     else if (the_letter >= 'A' && the_letter <= 'Z')
         // returns range [26-51] {dlb}
-        the_letter -= ('A' - 26);
+        return (the_letter - 'A' + 26);
 
-    return (the_letter);
+    die("slot not a letter: %s (%d)", the_letter ?
+        stringize_glyph(the_letter).c_str() : "null", the_letter);
 }
 
 maybe_bool frombool(bool b)

@@ -2646,7 +2646,8 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
 
     keyin = tolower(getch_ck());
     command_type action = _get_action(keyin, actions);
-    int slot = letter_to_index(item.link);
+    int slot = item.link;
+    ASSERT(slot >= 0 && slot < ENDOFPACK);
 
     switch (action)
     {
