@@ -4603,6 +4603,7 @@ static void _hints_describe_cloud(int x, int y)
     case CLOUD_PURPLE_SMOKE:
     case CLOUD_MIST:
     case CLOUD_MAGIC_TRAIL:
+    case CLOUD_DUST_TRAIL:
         ostr << "harmless. ";
         break;
 

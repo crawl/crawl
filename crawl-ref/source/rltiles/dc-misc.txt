@@ -65,6 +65,11 @@ cloud_magic_trail0 CLOUD_MAGIC_TRAIL_0
 cloud_magic_trail1 CLOUD_MAGIC_TRAIL_1
 cloud_magic_trail2 CLOUD_MAGIC_TRAIL_2
 cloud_magic_trail3 CLOUD_MAGIC_TRAIL_3
+# rolling boulder dust
+cloud_dust_trail0 CLOUD_DUST_TRAIL_0
+cloud_dust_trail1 CLOUD_DUST_TRAIL_1
+cloud_dust_trail2 CLOUD_DUST_TRAIL_2
+cloud_dust_trail3 CLOUD_DUST_TRAIL_3
 cloud_rain1 CLOUD_RAIN
 cloud_rain2
 cloud_grey_smoke CLOUD_MIST

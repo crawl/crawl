@@ -710,6 +710,9 @@ move_again:
 
     if (pos == mon.pos())
         return (false);
+	
+	// Place a dust trail (so we can see which way it's rolling)
+	place_cloud(CLOUD_DUST_TRAIL, mon.pos(), 2 + random2(3), &mon);
 
     actor *victim = actor_at(pos);
     if (cell_is_solid(pos) || victim)
