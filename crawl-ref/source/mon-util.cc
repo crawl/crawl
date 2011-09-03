@@ -572,7 +572,6 @@ bool mons_class_is_stationary(int mc)
 bool mons_is_stationary(const monster* mon)
 {
     return (mons_class_is_stationary(mon->type)
-            || mons_is_feat_mimic(mon->type) && mons_is_unknown_mimic(mon)
             || mon->has_ench(ENCH_WITHDRAWN));
 }
 
@@ -926,7 +925,6 @@ void discover_mimic(const coord_def& pos)
     if (item && !mimic->pickup_misc(*item, 0))
         die("Mimic failed to pickup its item.");
 
-    mimic->flags |= MF_KNOWN_MIMIC;
     mimic->flags &= ~MF_JUST_SUMMONED;
 
     if (feature_mimic)
@@ -966,12 +964,9 @@ void discover_mimic(const coord_def& pos)
         discover_mimic(pos);
 }
 
-void discover_mimic(monster* mimic)
+void discover_shifter(monster* shifter)
 {
-    if (mons_is_known_mimic(mimic))
-        return;
-
-    mimic->flags |= MF_KNOWN_MIMIC;
+    shifter->flags |= MF_KNOWN_SHIFTER;
 }
 
 bool mons_is_demon(int mc)
@@ -2738,16 +2733,6 @@ bool mons_was_seen(const monster* m)
     return testbits(m->flags, MF_SEEN);
 }
 
-bool mons_is_known_mimic(const monster* m)
-{
-    return mons_is_mimic(m->type) && testbits(m->flags, MF_KNOWN_MIMIC);
-}
-
-bool mons_is_unknown_mimic(const monster* m)
-{
-    return mons_is_mimic(m->type) && !mons_is_known_mimic(m);
-}
-
 bool mons_looks_stabbable(const monster* m)
 {
     const unchivalric_attack_type uat = is_unchivalric_attack(&you, m);
@@ -4198,7 +4183,7 @@ int get_dist_to_nearest_monster()
         if (mon == NULL)
             continue;
 
-        if (!mon->visible_to(&you) || mons_is_unknown_mimic(mon))
+        if (!mon->visible_to(&you))
             continue;
 
         // Plants/fungi don't count.

@@ -148,8 +148,7 @@ const uint64_t MF_TAKING_STAIRS      = BIT(2);  // is following player through s
 const uint64_t MF_INTERESTING        = BIT(3);  // Player finds monster interesting
 
 const uint64_t MF_SEEN               = BIT(4);  // Player has already seen monster
-const uint64_t MF_KNOWN_MIMIC        = BIT(5);  // Mimic that has taken a swing at the PC,
-                                     // or that the player has inspected with ?
+const uint64_t MF_KNOWN_SHIFTER      = BIT(5);  // A known shapeshifter.
 const uint64_t MF_BANISHED           = BIT(6);  // Monster that has been banished.
 
 const uint64_t MF_HARD_RESET         = BIT(7);  // Summoned, should not drop gear on reset

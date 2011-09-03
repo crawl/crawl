@@ -44,7 +44,6 @@
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-util.h"
 #include "mon-stuff.h"
 #include "mutation.h"
 #include "notes.h"
@@ -2078,15 +2077,8 @@ bool move_top_item(const coord_def &pos, const coord_def &dest)
     return (true);
 }
 
-const item_def* top_item_at(const coord_def& where, bool allow_mimic_item)
+const item_def* top_item_at(const coord_def& where)
 {
-    if (allow_mimic_item)
-    {
-        const monster* mon = monster_at(where);
-        if (mon && mons_is_unknown_mimic(mon) && mons_is_item_mimic(mon->type))
-            return &get_mimic_item(mon);
-    }
-
     const int link = you.visible_igrd(where);
     return (link == NON_ITEM) ? NULL : &mitm[link];
 }
@@ -2114,16 +2106,9 @@ item_def *corpse_at(coord_def pos, int *num_corpses)
     return (corpse);
 }
 
-bool multiple_items_at(const coord_def& where, bool allow_mimic_item)
+bool multiple_items_at(const coord_def& where)
 {
     int found_count = 0;
-
-    if (allow_mimic_item)
-    {
-        const monster* mon = monster_at(where);
-        if (mon && mons_is_unknown_mimic(mon))
-            ++found_count;
-    }
 
     for (stack_iterator si(where); si && found_count < 2; ++si)
         ++found_count;

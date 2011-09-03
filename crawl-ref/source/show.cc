@@ -220,11 +220,7 @@ static void _update_item_at(const coord_def &gp)
 
     if (you.see_cell(gp))
     {
-        // Check for mimics.
-        const monster* m = monster_at(gp);
-        if (m && mons_is_unknown_mimic(m) && mons_is_item_mimic(m->type))
-            eitem = get_mimic_item(m);
-        else if (you.visible_igrd(gp) != NON_ITEM)
+        if (you.visible_igrd(gp) != NON_ITEM)
             eitem = mitm[you.visible_igrd(gp)];
         else
             return;
@@ -357,14 +353,6 @@ static void _update_monster(const monster* mons)
     _check_monster_pos(mons);
 
     const coord_def gp = mons->pos();
-
-    if (mons_is_unknown_mimic(mons))
-    {
-#ifdef USE_TILE
-        tile_place_monster(mons->pos(), mons);
-#endif
-        return;
-    }
 
     if (!mons->visible_to(&you))
     {

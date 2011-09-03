@@ -512,10 +512,6 @@ static bool _mark_detected_creature(coord_def where, monster* mon,
             where = place;
     }
 
-    // Mimics are too obvious by now, even out of LOS.
-    if (mons_is_unknown_mimic(mon))
-        discover_mimic(mon);
-
     env.map_knowledge(where).set_detected_monster(mons_detected_base(mon->type));
 
     return (found_good);

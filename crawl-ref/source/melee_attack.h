@@ -105,7 +105,6 @@ private:
     void check_autoberserk();
     bool check_unrand_effects(bool mondied = false);
     void emit_nodmg_hit_message();
-    void identify_mimic(actor *mon);
 
     std::string debug_damage_number();
     std::string special_attack_punctuation();

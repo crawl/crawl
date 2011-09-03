@@ -76,9 +76,6 @@ crawl_view_geometry crawl_view;
 
 bool handle_seen_interrupt(monster* mons, std::vector<std::string>* msgs_buf)
 {
-    if (mons_is_unknown_mimic(mons))
-        return false;
-
     activity_interrupt_data aid(mons);
     if (!mons->seen_context.empty())
         aid.context = mons->seen_context;
@@ -265,14 +262,7 @@ void update_monsters_in_view()
             if (mi->attitude == ATT_HOSTILE)
                 num_hostile++;
 
-            if (mons_is_unknown_mimic(*mi))
-            {
-                // For unknown mimics, don't mark as seen,
-                // but do mark it as in view for later messaging.
-                // FIXME: is this correct?
-                mi->flags |= MF_WAS_IN_VIEW;
-            }
-            else if (mi->visible_to(&you))
+            if (mi->visible_to(&you))
             {
                 if (handle_seen_interrupt(*mi, &msgs))
                     monsters.push_back(*mi);

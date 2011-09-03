@@ -703,24 +703,7 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
     tileidx_t t0   = t & TILE_FLAG_MASK;
     tileidx_t flag = t & (~TILE_FLAG_MASK);
 
-    if (mons_is_item_mimic(mon->type))
-    {
-        if (mons_is_unknown_mimic(mon))
-        {
-            // If necessary add item brand.
-            if (you.visible_igrd(gc) != NON_ITEM)
-                t |= TILE_FLAG_S_UNDER;
-
-            if (item_needs_autopickup(get_mimic_item(mon)))
-            {
-                if (you.see_cell(gc))
-                    env.tile_bg(ep) |= TILE_FLAG_CURSOR3;
-                else
-                    env.tile_bk_bg(gc) |= TILE_FLAG_CURSOR3;
-            }
-        }
-    }
-    else if (mons_is_stationary(mon) && mon->type != MONS_TRAINING_DUMMY)
+    if (mons_is_stationary(mon) && mon->type != MONS_TRAINING_DUMMY)
     {
         // If necessary add item brand.
         if (you.visible_igrd(gc) != NON_ITEM)
@@ -742,7 +725,6 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
     // Add name tags.
     if (!mon->visible_to(&you)
         || mons_is_lurking(mon)
-        || mons_is_unknown_mimic(mon)
         || mons_class_flag(mon->type, M_NO_EXP_GAIN))
     {
         return;
@@ -1072,9 +1054,7 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell)
         monster* mon = monster_at(gc);
         if (you.see_cell(gc))
         {
-            if (mon && !mons_class_flag(mon->type, M_NO_EXP_GAIN)
-                 && (!mons_is_mimic(mon->type)
-                     || testbits(mon->flags, MF_KNOWN_MIMIC)))
+            if (mon && !mons_class_flag(mon->type, M_NO_EXP_GAIN))
             {
                 cell.halo = HALO_MONSTER;
                 print_blood = false;
