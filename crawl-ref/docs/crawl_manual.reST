@@ -1656,6 +1656,21 @@ Felids
 
   The tale of a Felid who had nine lives isn't far from truth, as well.
 
+Octopodes
+  These land-capable relatives of common octopuses can walk about as fast as humans
+  and yet retain the ability to swim underwater, although their dual adaptation
+  is not as good as that of the shapechanging merfolk.
+
+  Octopodes have eight tentacle-shaped legs, and need four of them to walk. While a
+  tentacle lacks fingers, two tentacles are a rough equivalent of a human's arm where
+  item manipulation is concerned - including wielding two-handed weapons with four.
+  They can use no armour other than loose hats, but can handle shields just fine.
+
+  Another peculiarity is the ability to wear eight rings, one on each tentacle.
+
+  Their natural camouflage makes them excel at stealth, and they have good knowledge
+  of poisons as well.
+
 Elves
 ========================================
 
@@ -1873,7 +1888,8 @@ Monks
   The Monk is a member of an ascetic order dedicated to the perfection of one's
   body and soul through the discipline of the martial arts. Monks start with
   very little equipment, but can survive without the weighty weapons and
-  spellbooks needed by characters of other backgrounds.
+  spellbooks needed by characters of other backgrounds. When they choose a god
+  for the first time their spiritual training gives them a piety boost.
 
 Berserkers
   Berserkers are hardy warriors who worship Trog the Wrathful, from whom they
