@@ -1078,9 +1078,8 @@ TAGS:   temple_overflow_xom uniq_altar_xom
 CHANCE: 3
 KFEAT:  _ = altar_xom
 KPROP:  _ = bloody
-KPROP:  , = no_ctele_into
-KPROP:  , = no_rtele_into
-KMONS:  , = mimic
+KPROP:  , = no_tele_into
+KITEM:  , = any mimic
 MAP
  XXXXXXX
 XX,,,,,XX
