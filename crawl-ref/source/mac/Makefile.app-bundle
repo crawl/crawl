@@ -15,14 +15,25 @@ APP_NAME := Dungeon Crawl Stone Soup
 ifneq (,$(findstring tiles,$(MAKECMDGOALS)))
 BUNDLE_NAME := Dungeon\ Crawl\ Stone\ Soup\ -\ Tiles
 TILE_APP := y
+ifdef RELEASE
+ZIP_QUALIFIER := -tiles
+else
 ZIP_QUALIFIER := _tiles
+endif
 EXECUTABLE_PATH := $(CRAWL_SRC)/crawl
 else
 BUNDLE_NAME := Dungeon\ Crawl\ Stone\ Soup\ -\ Console
 EXECUTABLE_PATH := crawl
+ifdef RELEASE
+ZIP_QUALIFIER := -console
+endif
 endif
 
-ZIP_NAME = crawl$(ZIP_QUALIFIER)_osx-$(SRC_VERSION)$(ZIP_ARCH).zip
+ifdef RELEASE
+ZIP_NAME = stone_soup-$(SRC_VERSION)$(ZIP_QUALIFIER)-macosx.zip
+else
+ZIP_NAME = crawl$(ZIP_QUALIFIER)_osx-$(SRC_VERSION).zip
+endif
 
 STAGING_DIR := $(CRAWL_SRC)/build/app-bundle-stage
 ZIPPED_APP_DIR := $(CRAWL_SRC)/mac-app-zips
@@ -90,5 +101,6 @@ copy-resources:
 copy-info-plist:
 	perl -lpe "s/%VERSION%/$(SRC_VERSION)/g;" \
 	     -e "s/%NAME%/$(APP_NAME)/g;" \
-	     -e "s/%YEAR%/(localtime)[5] + 1900/ge" \
+	     -e "s/%YEAR%/(localtime)[5] + 1900/ge;" \
+	     -e "s/%EXECUTABLE%/$(BUNDLE_NAME)/g;" \
 	     Crawl-Info.plist >$(BUNDLE_DIRNAME)/Contents/Info.plist
