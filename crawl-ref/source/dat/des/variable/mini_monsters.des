@@ -580,21 +580,22 @@ ENDMAP
 # real. (dp)
 NAME:  fake_guardian_serpent_vault
 DEPTH: D:15-26, Vault, Elf, Snake
-MONS:  mimic, patrolling guardian serpent
-ITEM:  any good_item
+MONS:  patrolling guardian serpent
 : local b = crawl.random2(10)
 : if b > 7 then
-SUBST: 1 = 1d
+ITEM:  any good_item / any mimic
 : elseif b > 1 then
-SUBST: 1 = 111d
+ITEM:  any good_item w:1 / any mimic w:3
+: else
+ITEM:  any mimic
 : end
 MAP
 ...........
 .xxxxxxxxx.
-.x1111111x.
-.x1111111x.
-.x1111111x.
-.x11.2.11x.
+.xdddddddx.
+.xdddddddx.
+.xdddddddx.
+.xdd.1.ddx.
 .xxxx+xxxx.
 ...........
 ENDMAP
