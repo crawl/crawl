@@ -42,6 +42,7 @@ typedef std::map<level_pos, std::string> portal_vault_map_type;
 typedef std::map<level_pos, std::string> portal_note_map_type;
 typedef std::map<level_pos, uint8_t> portal_vault_colour_map_type;
 typedef std::map<level_id, std::string> annotation_map_type;
+typedef std::pair<std::string, level_id> monster_annotation;
 
 stair_map_type stair_level;
 shop_map_type shops_present;
@@ -52,6 +53,8 @@ portal_note_map_type portal_vault_notes;
 portal_vault_colour_map_type portal_vault_colours;
 annotation_map_type level_annotations;
 annotation_map_type level_exclusions;
+annotation_map_type level_uniques;
+std::set<monster_annotation> auto_unique_annotations;
 
 static void _seen_altar(god_type god, const coord_def& pos);
 static void _seen_staircase(dungeon_feature_type which_staircase,
@@ -79,6 +82,7 @@ void overview_clear()
     portal_vault_colours.clear();
     level_annotations.clear();
     level_exclusions.clear();
+    level_uniques.clear();
 }
 
 void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
@@ -913,6 +917,65 @@ static void _seen_other_thing(dungeon_feature_type which_thing,
 
 ////////////////////////////////////////////////////////////////////////
 
+static void _update_unique_annotation(level_id level)
+{
+    std::string note = "";
+    std::string sep = ", ";
+    for (std::set<monster_annotation>::iterator i = auto_unique_annotations.begin();
+         i != auto_unique_annotations.end(); ++i)
+    {
+        if (i->first.find(',') != std::string::npos)
+            sep = "; ";
+    }
+    for (std::set<monster_annotation>::iterator i = auto_unique_annotations.begin();
+         i != auto_unique_annotations.end(); ++i)
+    {
+        if (i->second == level)
+        {
+            if (note.length() > 0)
+                note += sep;
+            note += i->first;
+        }
+    }
+    set_level_unique_annotation(note, level);
+}
+
+void set_unique_annotation(monster* mons)
+{
+    if (!mons_is_unique(mons->type) && mons->type != MONS_PLAYER_GHOST)
+        return;
+
+    remove_unique_annotation(mons);
+    std::string name = mons->name(DESC_PLAIN, true);
+    if (mons->type == MONS_PLAYER_GHOST)
+        name += ", " + short_ghost_description(mons, true);
+    auto_unique_annotations.insert(std::make_pair(
+                name, level_id::current()));
+    _update_unique_annotation(level_id::current());
+}
+
+void remove_unique_annotation(monster* mons)
+{
+    std::set<level_id> affected_levels;
+    std::string name = mons->name(DESC_PLAIN, true);
+    if (mons->type == MONS_PLAYER_GHOST)
+        name += ", " + short_ghost_description(mons, true);
+    for (std::set<monster_annotation>::iterator i = auto_unique_annotations.begin();
+         i != auto_unique_annotations.end();)
+    {
+        if (i->first == name)
+        {
+            affected_levels.insert(i->second);
+            auto_unique_annotations.erase(i++);
+        }
+        else
+            ++i;
+    }
+    for (std::set<level_id>::iterator i = affected_levels.begin();
+         i != affected_levels.end(); ++i)
+        _update_unique_annotation(*i);
+}
+
 void set_level_annotation(std::string str, level_id li)
 {
     if (str.empty())
@@ -932,50 +995,56 @@ void set_level_exclusion_annotation(std::string str, level_id li)
     level_exclusions[li] = str;
 }
 
+void set_level_unique_annotation(std::string str, level_id li)
+{
+    if (str.empty())
+        level_uniques.erase(li);
+    else
+        level_uniques[li] = str;
+}
+
 void clear_level_exclusion_annotation(level_id li)
 {
     level_exclusions.erase(li);
 }
 
-std::string get_level_annotation(level_id li, bool skip_excl)
+std::string get_level_annotation(level_id li, bool skip_excl,
+                                 bool skip_uniq, bool use_colour, int colour)
 {
     annotation_map_type::const_iterator i = level_annotations.find(li);
+    annotation_map_type::const_iterator j = level_exclusions.find(li);
+    annotation_map_type::const_iterator k = level_uniques.find(li);
 
-    if (skip_excl)
+    std::string note = "";
+
+    if (i != level_annotations.end())
     {
-        if (i == level_annotations.end())
-            return "";
-
-        return (i->second);
+        if (use_colour)
+            note += colour_string(i->second, colour);
+        else
+            note += i->second;
     }
 
-    annotation_map_type::const_iterator j = level_exclusions.find(li);
+    if (!skip_excl && j != level_exclusions.end())
+    {
+        if (note.length() > 0)
+            note += ", ";
+        note += j->second;
+    }
 
-    if (i == level_annotations.end() && j == level_exclusions.end())
-        return "";
+    if (!skip_uniq && k != level_uniques.end())
+    {
+        if (note.length() > 0)
+            note += ", ";
+        note += k->second;
+    }
 
-    if (i == level_annotations.end())
-        return (j->second);
-    if (j == level_exclusions.end())
-        return (i->second);
-
-    return (i->second + ", " + j->second);
+    return note;
 }
 
 static const std::string _get_coloured_level_annotation(int col, level_id li)
 {
-    annotation_map_type::const_iterator i = level_annotations.find(li);
-    annotation_map_type::const_iterator j = level_exclusions.find(li);
-
-    if (i == level_annotations.end() && j == level_exclusions.end())
-        return "";
-
-    if (i == level_annotations.end())
-        return (j->second);
-    if (j == level_exclusions.end())
-        return (colour_string(i->second, col));
-
-    return (colour_string(i->second, col) + ", " + j->second);
+    return get_level_annotation(li, false, false, true, col);
 }
 
 bool level_annotation_has(std::string find, level_id li)
@@ -1015,7 +1084,7 @@ void annotate_level()
     if (!get_level_annotation(li).empty())
     {
         mpr("Current level annotation: " +
-            colour_string(get_level_annotation(li, true), LIGHTGREY),
+            colour_string(get_level_annotation(li, true, true), LIGHTGREY),
             MSGCH_PROMPT);
     }
 
@@ -1034,5 +1103,29 @@ void annotate_level()
     {
         mpr("Cleared.");
         level_annotations.erase(li);
+    }
+}
+
+void marshallUniqueAnnotations(writer& outf)
+{
+    marshallShort(outf, auto_unique_annotations.size());
+    for (std::set<monster_annotation>::iterator i = auto_unique_annotations.begin();
+         i != auto_unique_annotations.end(); ++i)
+    {
+        marshallString(outf, i->first);
+        i->second.save(outf);
+    }
+}
+
+void unmarshallUniqueAnnotations(reader& inf)
+{
+    auto_unique_annotations.clear();
+    int num_notes = unmarshallShort(inf);
+    for (int i = 0; i < num_notes; ++i)
+    {
+        std::string name = unmarshallString(inf);
+        level_id level;
+        level.load(inf);
+        auto_unique_annotations.insert(std::make_pair(name, level));
     }
 }

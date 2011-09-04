@@ -47,6 +47,7 @@ enum tag_minor_version
     TAG_MINOR_SKILL_MENU_STATES,   // Move the saved states out of props.
     TAG_MINOR_MONS_THREAT_LEVEL,   // Save threat level in monster_info.
     TAG_MINOR_SPELL_USAGE,         // Spell usage counts in char dumps.
+    TAG_MINOR_UNIQUE_NOTES,        // Automatic annotations for uniques.
 
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
