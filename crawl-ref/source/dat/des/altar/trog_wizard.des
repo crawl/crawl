@@ -53,7 +53,7 @@ lua_marker('#', tm)
 }}
 FTILE:  .#_ = FLOOR_PEBBLE_BROWN
 FTILE:  1 = FLOOR_PEBBLE_DARKGRAY
-COLOUR: .#_ = brown
+COLOUR: . = brown
 COLOUR: 1 = darkgray
 KFEAT:  1 = .
 # A terrified wizard whose spells have been taken away
