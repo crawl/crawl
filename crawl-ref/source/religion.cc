@@ -682,7 +682,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     switch (which_god)
     {
-    case GOD_SHINING_ONE: case GOD_MAKHLEB:
+    case GOD_SHINING_ONE: case GOD_MAKHLEB: case GOD_LUGONU:
         likes.push_back("you or your allies kill demons");
         break;
 
