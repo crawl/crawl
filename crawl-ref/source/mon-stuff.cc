@@ -18,6 +18,7 @@
 #include "delay.h"
 #include "dactions.h"
 #include "dgnevent.h"
+#include "dgn-overview.h"
 #include "directn.h"
 #include "dlua.h"
 #include "env.h"
@@ -1609,7 +1610,10 @@ int monster_die(monster* mons, killer_type killer,
 
     // Clear auto exclusion now the monster is killed - if we know about it.
     if (mons_near(mons) || wizard)
+    {
         remove_auto_exclude(mons);
+        remove_unique_annotation(mons);
+    }
 
           int  summon_type   = 0;
           int  duration      = 0;
@@ -3505,8 +3509,10 @@ void make_mons_leave_level(monster* mon)
 {
     if (mon->pacified())
     {
-        if (you.can_see(mon))
+        if (you.can_see(mon)) {
             _mons_indicate_level_exit(mon);
+            remove_unique_annotation(mon);
+        }
 
         // Pacified monsters leaving the level take their stuff with
         // them.
@@ -4099,6 +4105,7 @@ void seen_monster(monster* mons)
     // If the monster is in the auto_exclude list, automatically
     // set an exclusion.
     set_auto_exclude(mons);
+    set_unique_annotation(mons);
 
     // Monster was viewed this turn
     mons->flags |= MF_WAS_IN_VIEW;

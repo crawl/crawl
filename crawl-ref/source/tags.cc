@@ -34,6 +34,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "describe.h"
+#include "dgn-overview.h"
 #include "dungeon.h"
 #include "enum.h"
 #include "errors.h"
@@ -78,6 +79,8 @@ extern std::map<level_pos, std::string> portal_vault_notes;
 extern std::map<level_pos, uint8_t> portal_vault_colours;
 extern std::map<level_id, std::string> level_annotations;
 extern std::map<level_id, std::string> level_exclusions;
+extern std::map<level_id, std::string> level_uniques;
+extern std::set<std::pair<std::string, level_id> > auto_unique_annotations;
 
 // temp file pairs used for file level cleanup
 
@@ -1405,6 +1408,9 @@ static void tag_construct_you_dungeon(writer &th)
                 marshall_level_id, marshallStringNoMax);
     marshallMap(th, level_exclusions,
                 marshall_level_id, marshallStringNoMax);
+    marshallMap(th, level_uniques,
+            marshall_level_id, marshallStringNoMax);
+    marshallUniqueAnnotations(th);
 
     marshallPlaceInfo(th, you.global_info);
     std::vector<PlaceInfo> list = you.get_all_place_info();
@@ -2377,6 +2383,14 @@ static void tag_read_you_dungeon(reader &th)
                   unmarshall_level_id, unmarshallStringNoMax);
     unmarshallMap(th, level_exclusions,
                   unmarshall_level_id, unmarshallStringNoMax);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_UNIQUE_NOTES)
+    {
+        unmarshallMap(th, level_uniques,
+                unmarshall_level_id, unmarshallStringNoMax);
+        unmarshallUniqueAnnotations(th);
+    }
+#endif
 
     PlaceInfo place_info = unmarshallPlaceInfo(th);
     ASSERT(place_info.is_global());

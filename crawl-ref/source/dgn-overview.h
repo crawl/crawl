@@ -24,13 +24,24 @@ std::string overview_description_string(bool display);
 void set_level_exclusion_annotation(std::string str,
                                     level_id li = level_id::current());
 void clear_level_exclusion_annotation(level_id li = level_id::current());
+void set_level_unique_annotation(std::string str,
+                                 level_id li = level_id::current());
+void set_unique_annotation(monster* mons);
+void remove_unique_annotation(monster* mons);
 
 std::string get_level_annotation(level_id li = level_id::current(),
-                                 bool skip_excl = false);
+                                 bool skip_excl = false,
+                                 bool skip_uniq = false,
+                                 bool use_colour = false,
+                                 int colour = LIGHTRED);
 
 bool level_annotation_has(std::string str,
                           level_id li = level_id::current());
 
 void annotate_level();
 
+class writer;
+class reader;
+void marshallUniqueAnnotations(writer& outf);
+void unmarshallUniqueAnnotations(reader& inf);
 #endif
