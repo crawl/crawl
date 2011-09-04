@@ -114,7 +114,7 @@ function callback.fedhas_growing_garden_grow(data, triggerable,
    -- (travel exclusions caused message spam otherwise)
    for _, p in ipairs(gslaves) do
      sapling = dgn.mons_at(p.x, p.y)
-     if sapling ~= nil and sapling.name == "oklob sapling" 
+     if sapling ~= nil and sapling.name == "oklob sapling"
                        and you.see_cell(p.x,p.y) then
        plants = plants + 1
      end
@@ -144,7 +144,7 @@ function callback.fedhas_growing_garden_grow(data, triggerable,
    for _, p in ipairs(gslaves) do
      if dgn.feature_name(dgn.grid(p.x,p.y)) == "tree" then
        -- Iterate
-       for p2 in iter.rect_iterator(dgn.point(p.x-1, p.y-1), 
+       for p2 in iter.rect_iterator(dgn.point(p.x-1, p.y-1),
                                     dgn.point(p.x+1, p.y+1))
        do
          if dgn.is_passable(p2.x, p2.y) and crawl.one_chance_in(10) then
@@ -181,7 +181,7 @@ function callback.fedhas_growing_garden_grow(data, triggerable,
    data.seen_plants = grow_plants(growth_slaves,3,data.seen_plants)
    data.plants1 = true
  end
- -- Plants that will become saplings here 
+ -- Plants that will become saplings here
  if (data.tc > 4) and data.protosaplings ~= true then
     growth_slaves = dgn.find_marker_positions_by_prop("growth_sapling", 1)
     data.seen_plants = grow_plants(growth_slaves,1,data.seen_plants)
@@ -195,7 +195,7 @@ function callback.fedhas_growing_garden_grow(data, triggerable,
    data.plants2 = true
  end
 
- -- Saplings here 
+ -- Saplings here
  if (data.tc > 7) and data.saplings ~= true then
    data.saplings = true
    growth_slaves = dgn.find_marker_positions_by_prop("growth_sapling", 1)
@@ -247,21 +247,21 @@ end
 
 }}
 
-NAME:	fedhas_growing_garden
+NAME:   fedhas_growing_garden
 TAGS:   uniq_altar_fedhas temple_overflow_fedhas mini_float
 TAGS:   no_item_gen no_monster_gen no_rotate
-DEPTH:	D:8-16,Lair:2-6,Snake:2-4
+DEPTH:  D:8-16,Lair:2-6,Snake:2-4
 # Shuffle the growth stages
-SUBST:	2 = 1:10 2:50
-SUBST:	3 = 2:20 3:50
-SUBST:	4 = 2:5 3:15 4:50
-SUBST:	5 = .:5 3:5 6:5 4:20 5:50
-SUBST:	6 = .:20 5:10 6:50
+SUBST:  2 = 1:10 2:50
+SUBST:  3 = 2:20 3:50
+SUBST:  4 = 2:5 3:15 4:50
+SUBST:  5 = .:5 3:5 6:5 4:20 5:50
+SUBST:  6 = .:20 5:10 6:50
 SUBST:  X = x:20 .:10 6:10
 {{
-	-- 2-4 saplings
-	local num_saplings = crawl.random2(3)+2
-	nsubst("2 = " .. num_saplings .. ":A / *:2")
+    -- 2-4 saplings
+    local num_saplings = crawl.random2(3)+2
+    nsubst("2 = " .. num_saplings .. ":A / *:2")
 }}
 # Setup the markers
 {{
@@ -281,11 +281,11 @@ local tm = TriggerableFunction:new{func="callback.fedhas_growing_garden_grow",
 tm:add_triggerer(DgnTriggerer:new{type="player_los"})
 lua_marker('_', tm)
 }}
-KFEAT:	_ = altar_fedhas
+KFEAT:  _ = altar_fedhas
 # Bait
-KITEM:	B = pear / apple / choko / snozzcumber / apricot / orange / banana / rambutan / lychee
+KITEM:  B = pear / apple / choko / snozzcumber / apricot / orange / banana / rambutan / lychee
 # Replace it all with floor
-KFEAT:	  BA123456 = floor
+KFEAT:  BA123456 = floor
 FTILE:  BA._123456 = FLOOR_DIRT
 COLOUR: BA._123456 = BROWN
 MAP
