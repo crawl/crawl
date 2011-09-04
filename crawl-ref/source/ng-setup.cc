@@ -1438,7 +1438,7 @@ static void _setup_generic(const newgame_def& ng)
     // because you ran out of needles for your blowgun!)
     // FIXME: It ought to be possible to override this with autoinscribe rules.
     if (you.inv[0].base_type == OBJ_WEAPONS
-	&& is_throwable(&you, you.inv[0]))
+        && is_throwable(&you, you.inv[0]))
     {
         you.inv[0].inscription = "=f";
     }
