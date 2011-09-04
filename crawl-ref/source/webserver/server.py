@@ -550,7 +550,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         except:
             logging.warn("Exception trying to send message to %s.",
                          self.request.remote_ip, exc_info = True)
-            self._abort()
+            self.ws_connection._abort()
 
     def write_message_all(self, msg):
         if not self.client_terminated:
