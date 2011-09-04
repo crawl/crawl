@@ -506,10 +506,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if error is None:
                 logging.info("Registered user: %s (ip: %s)", username,
                              self.request.remote_ip)
-                self.username = username
-                self.write_message("logged_in(" +
-                                   tornado.escape.json_encode(username) + ");")
-                self.send_game_links()
+                self.login(username)
             else:
                 logging.info("Registration attempt failed for username %s: %s (ip: %s)",
                              username, error, self.request.remote_ip)
