@@ -83,5 +83,6 @@ endif
 copy-info-plist:
 	perl -lpe "s/%VERSION%/$(SRC_VERSION)/g;" \
 	     -e "s/%NAME%/$(APP_NAME)/g;" \
-	     -e "s/%YEAR%/(localtime)[5] + 1900/ge" \
+	     -e "s/%YEAR%/(localtime)[5] + 1900/ge;" \
+	     -e "s/%EXECUTABLE%/$(BUNDLE_NAME)/g;" \
 	     Crawl-Info.plist >$(BUNDLE_DIRNAME)/Contents/Info.plist
