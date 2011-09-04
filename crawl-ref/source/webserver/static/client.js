@@ -369,6 +369,9 @@ function lobby_data(data)
 {
     $("#player_list tbody").html(data);
     $("#player_list").trigger("update");
+    setTimeout(function () {
+        $("#player_list").trigger("sorton", [$("#player_list")[0].config.sortList]);
+    }, 2);
 }
 
 var watching = false;
