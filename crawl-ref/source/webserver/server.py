@@ -690,10 +690,15 @@ application = tornado.web.Application([
     (r"/socket", CrawlWebSocket),
 ], **settings)
 
+kwargs = {}
+if http_connection_timeout is not None:
+    kwargs["connection_timeout"] = http_connection_timeout
+
 if bind_nonsecure:
-    application.listen(bind_port, bind_address)
+    application.listen(bind_port, bind_address, **kwargs)
 if ssl_options:
-    application.listen(ssl_port, ssl_address, ssl_options = ssl_options)
+    application.listen(ssl_port, ssl_address, ssl_options = ssl_options,
+                       **kwargs)
 
 ioloop = tornado.ioloop.IOLoop.instance()
 ioloop.set_blocking_log_threshold(0.5)
