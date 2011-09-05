@@ -4041,6 +4041,8 @@ static const object_class_type _mimic_item_classes[] =
     OBJ_ARMOUR,
     OBJ_SCROLLS,
     OBJ_POTIONS,
+    OBJ_BOOKS,
+    OBJ_STAVES,
 };
 
 object_class_type get_random_item_mimic_type()

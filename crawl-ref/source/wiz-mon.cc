@@ -142,6 +142,14 @@ static int _make_mimic_item(monster_type type)
         while (is_blood_potion(item) || is_fizzing_potion(item));
         break;
 
+    case OBJ_BOOKS:
+        item.sub_type = random2(MAX_NORMAL_BOOK);
+        break;
+
+    case OBJ_STAVES:
+        item.sub_type = random2(STAFF_FIRST_ROD - 1);
+        break;
+
     case OBJ_GOLD:
     default:
         item.quantity = 5 + random2(1000);
