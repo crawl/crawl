@@ -429,14 +429,12 @@ NAME:   lemuel_lich_library
 DEPTH:  Zot:1-4
 TAGS:   no_monster_gen
 MONS:   flying skull, lich, ancient lich, necromancer, vampire mage
-ITEM:   any book, any scroll, any scroll mimic
+ITEM:   any book w:20 / any scroll / any book mimic w:2 / any scroll mimic w:1
 SUBST:  w:w?
 SUBST:  ?=. 1:1
 SUBST:  x:xc
 SUBST:  +=+=
-SUBST:  d = d f:1
 SUBST:  4 = 4 5:2 .:4
-SUBST:  d = d:20 e
 MAP
 wwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwww
