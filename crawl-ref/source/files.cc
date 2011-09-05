@@ -1085,6 +1085,18 @@ static void _grab_followers()
     }
 }
 
+static void _do_lost_monsters()
+{
+    // Uniques can be considered wandering Pan just like you, so they're not
+    // gone forever.  The likes of Cerebov won't be generated elsewhere, but
+    // there's no need to special-case that, and if in the future we'll want
+    // to know whether they're alive, the data will be accurate.
+    if (you.level_type == LEVEL_PANDEMONIUM)
+        for (monster_iterator mi; mi; ++mi)
+            if (mons_is_unique(mi->type))
+                you.unique_creatures[mi->type] = false;
+}
+
 // Should be called after _grab_followers(), so that items carried by
 // followers won't be considered lost.
 static void _do_lost_items()
@@ -1184,6 +1196,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         }
         else
         {
+            _do_lost_monsters();
             _do_lost_items();
         }
 
