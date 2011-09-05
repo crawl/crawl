@@ -468,11 +468,12 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 32
 {
     SPELL_LEVITATION, "Levitation",
      SPTYP_CHARMS | SPTYP_AIR,
      SPFLAG_NONE,
-     2,
+     3,
      150,
      -1, -1,
      0,
@@ -480,6 +481,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_BOLT_OF_DRAINING, "Bolt of Draining",
@@ -1246,7 +1248,7 @@ struct spell_desc
     SPELL_FLY, "Flight",
      SPTYP_CHARMS | SPTYP_AIR,
      SPFLAG_NONE,
-     4,
+     3,
      200,
      -1, -1,
      0,

@@ -4322,7 +4322,9 @@ tileidx_t tileidx_spell(spell_type spell)
     // Air
     case SPELL_SHOCK:                    return TILEG_SHOCK;
     case SPELL_SWIFTNESS:                return TILEG_SWIFTNESS;
+#if TAG_MAJOR_VERSION == 32
     case SPELL_LEVITATION:               return TILEG_LEVITATION;
+#endif
     case SPELL_REPEL_MISSILES:           return TILEG_REPEL_MISSILES;
     case SPELL_MEPHITIC_CLOUD:           return TILEG_MEPHITIC_CLOUD;
     case SPELL_DISCHARGE:                return TILEG_STATIC_DISCHARGE;
