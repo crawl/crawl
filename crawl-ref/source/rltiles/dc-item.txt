@@ -405,6 +405,10 @@ helmet1_visored THELM_HELM
 helmet2_etched
 helmet3
 helmet4_visor
+helmet_horned THELM_HELM_HORNED
+helmet_spiked THELM_HELM_SPIKED
+helmet_plumed THELM_HELM_PLUMED
+helmet_winged THELM_HELM_WINGED
 
 %sdir item/armour
 ###### GLOVES
