@@ -356,7 +356,7 @@ DEPTH:  Zot
 
 NAME:   uniq_ignacio
 DEPTH:  Pan
-TAGS:   pan transparent extra
+TAGS:   pan transparent extra allow_dup
 MONS:   Ignacio
 MAP
 1
