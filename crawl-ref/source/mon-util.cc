@@ -43,6 +43,7 @@
 #include "options.h"
 #include "random.h"
 #include "religion.h"
+#include "showsymb.h"
 #include "species.h"
 #include "spl-util.h"
 #include "state.h"
@@ -176,18 +177,18 @@ void init_mon_name_cache()
         const int          mtype = mondata[i].mc;
         const monster_type mon   = monster_type(mtype);
 
+        if (mon == MONS_ITEM_MIMIC)
+            name = "item mimic";
+        else if (mon == MONS_FEATURE_MIMIC)
+            name = "feature mimic";
+
         // Deal sensibly with duplicate entries; refuse or allow the
         // insert, depending on which should take precedence.  Mostly we
         // don't care, except looking up "rakshasa" and getting _FAKE
         // breaks ?/M rakshasa.
         if (Mon_Name_Cache.find(name) != Mon_Name_Cache.end())
         {
-            if (mon == MONS_RAKSHASA_FAKE
-                || mon == MONS_ARMOUR_MIMIC
-                || mon == MONS_SCROLL_MIMIC
-                || mon == MONS_POTION_MIMIC
-                || mon == MONS_FEATURE_MIMIC
-                || mon == MONS_MARA_FAKE)
+            if (mon == MONS_RAKSHASA_FAKE || mon == MONS_MARA_FAKE)
             {
                 // Keep previous entry.
                 continue;
@@ -858,12 +859,18 @@ bool mons_is_mimic(int mc)
 
 bool mons_is_item_mimic(int mc)
 {
-    return (mons_genus(mc) == MONS_GOLD_MIMIC);
+    return (mc == MONS_ITEM_MIMIC);
 }
 
 bool mons_is_feat_mimic(int mc)
 {
     return (mc == MONS_FEATURE_MIMIC);
+}
+
+static bool _mons_is_weapon_mimic(const monster* mon)
+{
+    return (mons_is_item_mimic(mon->type)
+            && get_mimic_item(mon).base_type == OBJ_WEAPONS);
 }
 
 void discover_mimic(const coord_def& pos)
@@ -915,7 +922,7 @@ void discover_mimic(const coord_def& pos)
     // Generate and place the monster.
     mgen_data mg;
     mg.behaviour = BEH_WANDER;
-    mg.cls = item ? get_item_mimic_type(*item) : MONS_FEATURE_MIMIC;
+    mg.cls = item ? MONS_ITEM_MIMIC : MONS_FEATURE_MIMIC;
     mg.pos = pos;
     const int mid = place_monster(mg, true);
     ASSERT(mid != -1);
@@ -932,8 +939,10 @@ void discover_mimic(const coord_def& pos)
         else
             mimic->colour = feat_d.colour;
 
-        mimic->props["feat_type"] = static_cast<short>(
-                (feat == DNGN_OPEN_DOOR) ? DNGN_CLOSED_DOOR : feat);
+        dungeon_feature_type mimic_feat =
+                (feat == DNGN_OPEN_DOOR) ? DNGN_CLOSED_DOOR : feat;
+        mimic->props["feat_type"] = static_cast<short>(mimic_feat);
+        mimic->props["glyph"] = static_cast<int>(get_feat_symbol(mimic_feat));
 
         // Necessary for door mimics to force LOS update.
         mimic->set_position(pos);
@@ -943,7 +952,15 @@ void discover_mimic(const coord_def& pos)
 #endif
     }
     else
+    {
         mimic->colour = get_mimic_colour(mimic);
+        mimic->props["glyph"] = static_cast<int>(get_item_glyph(item).ch);
+        if (item->base_type == OBJ_ARMOUR)
+            mimic->ac += 10;
+    }
+
+    mimic->flags |= MF_NAME_ADJECTIVE;
+    mimic->mname = get_mimic_name(mimic);
 
     behaviour_event(mimic, ME_ALERT, MHITYOU);
 
@@ -1517,6 +1534,9 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
     // Slime creature attacks are multiplied by the number merged.
     if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
         attk.damage *= mon->number;
+
+    if (_mons_is_weapon_mimic(mon))
+        attk.damage += 5;
 
     return (zombified ? _downscale_zombie_attack(mon, attk) : attk);
 }

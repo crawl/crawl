@@ -2137,7 +2137,7 @@ static void _place_item_mimics(int level_number)
         item_def& item(mitm[i]);
         if (!item.defined() || !in_bounds(item.pos)
             || item.flags & ISFLAG_NO_MIMIC
-            || get_item_mimic_type(item) == MONS_PROGRAM_BUG
+            || !is_valid_mimic_item(item.base_type)
             || mimic_at(item.pos))
         {
             continue;
@@ -3976,18 +3976,8 @@ static const object_class_type _acquirement_item_classes[] =
     OBJ_STAVES,
 };
 
-static const object_class_type _mimic_item_classes[] =
-{
-    OBJ_GOLD,
-    OBJ_WEAPONS,
-    OBJ_ARMOUR,
-    OBJ_SCROLLS,
-    OBJ_POTIONS,
-};
-
 #define NC_KITTEHS           3
 #define NC_LESSER_LIFE_FORMS ARRAYSZ(_acquirement_item_classes)
-#define NC_MIMICS ARRAYSZ(_mimic_item_classes)
 
 int dgn_item_corpse(const item_spec &ispec, const coord_def where)
 {
@@ -4072,7 +4062,7 @@ int dgn_place_item(const item_spec &spec,
         }
 
         if (spec.props.exists("mimic") && base_type == OBJ_RANDOM)
-            base_type = _mimic_item_classes[random2(NC_MIMICS)];
+            base_type = get_random_item_mimic_type();
         else if (adjust_type && base_type == OBJ_RANDOM)
         {
             base_type = _acquirement_item_classes[random2(

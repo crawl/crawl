@@ -740,7 +740,6 @@ private:
     void parse_mons_spells(mons_spec &slot, std::vector<std::string> &spells);
     mons_spec pick_monster(mons_spec_slot &slot);
     int fix_demon(int id) const;
-    bool check_mimic(const std::string &s, int *mid, bool *fix) const;
 
 private:
     std::vector< mons_spec_slot > mons;

@@ -69,13 +69,14 @@
 
 static bool _wounded_damaged(mon_holy_type holi);
 
-item_def &get_mimic_item(const monster* mimic)
+const item_def &get_mimic_item(const monster* mimic)
 {
     ASSERT(mimic != NULL && mons_is_item_mimic(mimic->type));
 
-    ASSERT(mimic->inv[MSLOT_MISCELLANY] != NON_ITEM);
-
-    return (mitm[mimic->inv[MSLOT_MISCELLANY]]);
+    if (mimic->inv[MSLOT_MISCELLANY] != NON_ITEM)
+        return (mitm[mimic->inv[MSLOT_MISCELLANY]]);
+    else
+        return item_def();
 }
 
 dungeon_feature_type get_mimic_feat(const monster* mimic)
@@ -84,6 +85,20 @@ dungeon_feature_type get_mimic_feat(const monster* mimic)
         return static_cast<dungeon_feature_type>(mimic->props["feat_type"].get_short());
     else
         return DNGN_FLOOR;
+}
+
+std::string get_mimic_name(const monster* mimic)
+{
+    if (mons_is_feat_mimic(mimic->type))
+        return feat_type_name(get_mimic_feat(mimic));
+
+    ASSERT(mons_is_item_mimic(mimic->type));
+    item_def* item = &mitm[mimic->inv[MSLOT_MISCELLANY]];
+    ASSERT(item);
+    if (item->base_type == OBJ_GOLD)
+        return "pile of gold";
+    else
+        return item->name(DESC_BASENAME);
 }
 
 bool feature_mimic_at(const coord_def &c)

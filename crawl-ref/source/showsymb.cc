@@ -368,8 +368,8 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc,
     if (cls == SH_MONSTER)
     {
         const monster_info* mi = cell.monsterinfo();
-        if (mi->props.exists("feat_type"))
-            g.ch = get_feature_def(mi->get_mimic_feature()).symbol;
+        if (mi->props.exists("glyph"))
+            g.ch = mi->props["glyph"].get_int();
         else if (show.mons == MONS_SENSED)
             g.ch = mons_char(mi->base_type);
         else
@@ -387,12 +387,12 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc,
     return g;
 }
 
-wchar_t get_feat_symbol(dungeon_feature_type feat)
+ucs_t get_feat_symbol(dungeon_feature_type feat)
 {
     return (get_feature_def(feat).symbol);
 }
 
-wchar_t get_item_symbol(show_item_type it)
+ucs_t get_item_symbol(show_item_type it)
 {
     return (get_feature_def(show_type(it)).symbol);
 }
@@ -408,8 +408,8 @@ glyph get_item_glyph(const item_def *item)
 glyph get_mons_glyph(const monster_info& mi, bool realcol)
 {
     glyph g;
-    if (mi.props.exists("feat_type"))
-        g.ch = get_feature_def(mi.get_mimic_feature()).symbol;
+    if (mi.props.exists("glyph"))
+        g.ch = mi.props["glyph"].get_int();
     else if (mi.type == MONS_SLIME_CREATURE && mi.number > 1)
         g.ch = mons_char(MONS_MERGED_SLIME_CREATURE);
     else if (mi.type == MONS_SENSED)

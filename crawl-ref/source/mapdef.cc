@@ -3342,9 +3342,6 @@ mons_spec mons_list::pick_monster(mons_spec_slot &slot)
         slot.fix_slot = false;
     }
 
-    if (pick.mid == MONS_WEAPON_MIMIC && !pick.fix_mons)
-        pick.mid = random_range(MONS_GOLD_MIMIC, MONS_POTION_MIMIC);
-
     return (pick);
 }
 
@@ -3384,31 +3381,6 @@ void mons_list::set_from_slot(const mons_list &list, int slot_index)
         return;
 
     mons.push_back(list.mons[slot_index]);
-}
-
-bool mons_list::check_mimic(const std::string &s, int *mid, bool *fix) const
-{
-    if (s == "mimic")
-    {
-        *mid = MONS_WEAPON_MIMIC;
-        *fix = false;
-        return (true);
-    }
-    else if (s == "gold mimic")
-        *mid = MONS_GOLD_MIMIC;
-    else if (s == "weapon mimic")
-        *mid = MONS_WEAPON_MIMIC;
-    else if (s == "armour mimic")
-        *mid = MONS_ARMOUR_MIMIC;
-    else if (s == "scroll mimic")
-        *mid = MONS_SCROLL_MIMIC;
-    else if (s == "potion mimic")
-        *mid = MONS_POTION_MIMIC;
-    else
-        return (false);
-
-    *fix = true;
-    return (true);
 }
 
 void mons_list::parse_mons_spells(mons_spec &spec, std::vector<std::string> &spells)
@@ -3779,8 +3751,6 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             mspec.mlevel = -8;
         else if (mon_str == "9")
             mspec.mlevel = -9;
-        else if (check_mimic(mon_str, &mspec.mid, &mspec.fix_mons))
-            ;
         else if (mspec.place.is_valid())
         {
             // For monster specs such as place:Orc:4 zombie, we may

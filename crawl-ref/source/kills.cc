@@ -661,10 +661,6 @@ kill_monster_desc::kill_monster_desc(const monster* mon)
 
     if (mon->is_shapeshifter())
         modifier = M_SHAPESHIFTER;
-
-    // XXX: Ugly hack - merge all mimics into one mimic record.
-    if (monnum >= MONS_GOLD_MIMIC && monnum <= MONS_POTION_MIMIC)
-        monnum = MONS_WEAPON_MIMIC;
 }
 
 void kill_monster_desc::save(writer& outf) const

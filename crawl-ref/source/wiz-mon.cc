@@ -77,7 +77,7 @@ static int _make_mimic_item(monster_type type)
 
     item_def &item = mitm[it];
 
-    item.base_type = OBJ_UNASSIGNED;
+    item.base_type = get_random_item_mimic_type();
     item.sub_type  = 0;
     item.special   = 0;
     item.colour    = 0;
@@ -88,10 +88,9 @@ static int _make_mimic_item(monster_type type)
     item.link      = NON_ITEM;
 
     int prop;
-    switch (type)
+    switch (item.base_type)
     {
-    case MONS_WEAPON_MIMIC:
-        item.base_type = OBJ_WEAPONS;
+    case OBJ_WEAPONS:
         item.sub_type = random2(WPN_MAX_NONBLESSED + 1);
 
         prop = random2(100);
@@ -110,8 +109,7 @@ static int _make_mimic_item(monster_type type)
             set_equip_race(item, ISFLAG_ELVEN);
         break;
 
-    case MONS_ARMOUR_MIMIC:
-        item.base_type = OBJ_ARMOUR;
+    case OBJ_ARMOUR:
         do
             item.sub_type = random2(NUM_ARMOURS);
         while (armour_is_hide(item));
@@ -134,21 +132,18 @@ static int _make_mimic_item(monster_type type)
             set_equip_race(item, ISFLAG_ELVEN);
         break;
 
-    case MONS_SCROLL_MIMIC:
-        item.base_type = OBJ_SCROLLS;
+    case OBJ_SCROLLS:
         item.sub_type = random2(NUM_SCROLLS);
         break;
 
-    case MONS_POTION_MIMIC:
-        item.base_type = OBJ_POTIONS;
+    case OBJ_POTIONS:
         do
             item.sub_type = random2(NUM_POTIONS);
         while (is_blood_potion(item) || is_fizzing_potion(item));
         break;
 
-    case MONS_GOLD_MIMIC:
+    case OBJ_GOLD:
     default:
-        item.base_type = OBJ_GOLD;
         item.quantity = 5 + random2(1000);
         break;
     }
