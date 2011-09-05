@@ -69,14 +69,14 @@
 
 static bool _wounded_damaged(mon_holy_type holi);
 
-const item_def &get_mimic_item(const monster* mimic)
+const item_def* get_mimic_item(const monster* mimic)
 {
     ASSERT(mimic != NULL && mons_is_item_mimic(mimic->type));
 
     if (mimic->inv[MSLOT_MISCELLANY] != NON_ITEM)
-        return (mitm[mimic->inv[MSLOT_MISCELLANY]]);
+        return &mitm[mimic->inv[MSLOT_MISCELLANY]];
     else
-        return item_def();
+        return NULL;
 }
 
 dungeon_feature_type get_mimic_feat(const monster* mimic)
@@ -126,7 +126,7 @@ int get_mimic_colour(const monster* mimic)
     ASSERT(mimic != NULL);
 
     if (mons_is_item_mimic(mimic->type))
-        return (get_mimic_item(mimic).colour);
+        return (get_mimic_item(mimic)->colour);
     else
         return (mimic->colour);
 }

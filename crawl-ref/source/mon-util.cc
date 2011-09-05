@@ -870,7 +870,8 @@ bool mons_is_feat_mimic(int mc)
 static bool _mons_is_weapon_mimic(const monster* mon)
 {
     return (mons_is_item_mimic(mon->type)
-            && get_mimic_item(mon).base_type == OBJ_WEAPONS);
+            && get_mimic_item(mon)
+            && get_mimic_item(mon)->base_type == OBJ_WEAPONS);
 }
 
 void discover_mimic(const coord_def& pos)
