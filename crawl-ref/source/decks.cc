@@ -2570,26 +2570,7 @@ static void _crusade_card(int power, deck_rarity_type rarity)
             if (mi->hit_dice * 35 < random2(power))
             {
                 simple_monster_message(*mi, " is converted.");
-
-                if (one_chance_in(5 - power_level))
-                {
-                    mi->attitude = ATT_FRIENDLY;
-
-                    // If you worship a god that lets you recruit
-                    // permanent followers, or a god allied with one,
-                    // count this as a recruitment.
-                    if (is_good_god(you.religion)
-                        || you.religion == GOD_BEOGH
-                            && mons_genus(mi->type) == MONS_ORC
-                            && !mi->is_summoned()
-                            && !mi->is_shapeshifter())
-                    {
-                        mons_make_god_gift(*mi, is_good_god(you.religion) ?
-                                           GOD_SHINING_ONE : GOD_BEOGH);
-                    }
-                }
-                else
-                    mi->add_ench(ENCH_CHARM);
+                mi->add_ench(ENCH_CHARM);
                 mons_att_changed(*mi);
             }
         }
