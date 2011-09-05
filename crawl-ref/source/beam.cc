@@ -2223,6 +2223,23 @@ static void _create_feat_at(coord_def center,
         dungeon_terrain_changed(center, newfeat, true, false, true);
 }
 
+static coord_def _random_point_visible_from(const coord_def &c,
+                                            int radius,
+                                            int margin = 1,
+                                            int tries = 5)
+{
+    while (tries-- > 0)
+    {
+        const coord_def point = dgn_random_point_from(c, radius, margin);
+        if (point.origin())
+            continue;
+        if (!cell_see_cell(c, point, LOS_SOLID))
+            continue;
+        return point;
+    }
+    return coord_def();
+}
+
 static void _create_feat_splash(coord_def center,
                                 dungeon_feature_type overwriteable,
                                 dungeon_feature_type newfeat,
@@ -2233,7 +2250,7 @@ static void _create_feat_splash(coord_def center,
     _create_feat_at(center, overwriteable, newfeat);
     for (int i = 0; i < nattempts; ++i)
     {
-        const coord_def newp(dgn_random_point_visible_from(center, radius));
+        const coord_def newp(_random_point_visible_from(center, radius));
         if (newp.origin() || grd(newp) != overwriteable)
             continue;
         _create_feat_at(newp, overwriteable, newfeat);

@@ -765,7 +765,7 @@ int num_feats_between(const coord_def& source, const coord_def& target,
 }
 
 // Is p2 visible from p1, disregarding half-opaque objects?
-bool cell_see_cell(const coord_def& p1, const coord_def& p2)
+bool cell_see_cell_nocache(const coord_def& p1, const coord_def& p2)
 {
     return exists_ray(p1, p2, opc_fullyopaque);
 }

@@ -2200,7 +2200,7 @@ static void _check_invisibles()
 {
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
     {
-        if (!cell_see_cell(you.pos(), *ri))
+        if (!cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
             continue;
         const monster* mons = monster_at(*ri);
         if (mons && !mons->visible_to(&you) && !mons->submerged())

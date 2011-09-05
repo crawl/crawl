@@ -5442,23 +5442,6 @@ coord_def dgn_random_point_from(const coord_def &c, int radius, int margin)
     return coord_def();
 }
 
-coord_def dgn_random_point_visible_from(const coord_def &c,
-                                        int radius,
-                                        int margin,
-                                        int tries)
-{
-    while (tries-- > 0)
-    {
-        const coord_def point = dgn_random_point_from(c, radius, margin);
-        if (point.origin())
-            continue;
-        if (!cell_see_cell(c, point))
-            continue;
-        return point;
-    }
-    return coord_def();
-}
-
 coord_def dgn_find_feature_marker(dungeon_feature_type feat)
 {
     std::vector<map_marker*> markers = env.markers.get_all();
