@@ -798,8 +798,18 @@ TAGS: overwritable layout allow_dup unrand
     fill_area{fill = 'X'}
     fill_area{x1=1, y1=1, x2=gxm-2, y2=gym-2, fill = 'x'}
 
-    local ngb_min = crawl.random_range(1, 3)
-    local ngb_max = crawl.random_range(ngb_min, 8)
+    local ngb_min = 2
+    local ngb_max = crawl.random_range(3, 8)
+    if crawl.one_chance_in(10) then
+      -- sometimes use a more cramped layout
+      ngb_min = 1
+      ngb_max = crawl.random_range(5, 7)
+    end
+    if crawl.one_chance_in(20) then
+      -- or a wider one
+      ngb_min = 3
+      ngb_max = 4
+    end
     local connchance = crawl.random_element
         { [0] = 2, [5] = 1, [20] = 1, [50] = 1, [100] = 1 }
     local top = crawl.random_element
