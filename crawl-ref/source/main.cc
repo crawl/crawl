@@ -4203,7 +4203,7 @@ static void _move_player(coord_def move)
         }
 
         you.time_taken *= player_movement_speed();
-        you.time_taken /= 10;
+        you.time_taken = div_rand_round(you.time_taken, 10);
 
 #ifdef EUCLIDEAN
         if (move.abs() == 2)
