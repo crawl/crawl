@@ -1,3 +1,66 @@
+Stone Soup 0.10 (????????)
+--------------------------
+
+0.10 Highlights
+---------------
+* New species: Octopodes, sentient land-capable octopuses.
+
+Branches
+--------
+* Reworked Abyss transformations.
+
+Gods
+----
+* Ammo gifts can include large rocks and javelins.
+
+Spells
+------
+* Ozocubu's Refrigeration no longer works through glass walls.
+* Flame Tongue has slightly longer range.
+* Removed: Maxwell's Silver Hammer.
+
+Backgrounds
+-----------
+* Arcane Marksmen are back, with a Hex-based spellbook.
+
+Interface
+---------
+* Experience points are no longer shown directly, just a percentage to the
+  next level.
+* Throwable starting weapons are autoinscribed with "=f".
+* Leaving an unique Pan level without the rune asks for confirmation.
+
+Monsters
+--------
+* Ignacio no longer uses Torment, he'll appear repeatedly until killed.
+* New monster: profane servitor -- angel corrupted by Yredelemnul.
+* Removed: giant toads, vipers.
+
+Items
+-----
+* Acquirement allows choosing missiles.
+* Misc items start identified when there's no doubts about them.
+* The Orb of Zot has a slightly mutagenic glow.
+
+Technical
+---------
+* Tarballs use xz rather than bz2 compression.
+* Wizard mode is compiled in by default unless you specify NOWIZARD=y.
+
+
+Stone Soup 0.9.1 (20110904)
+---------------------------
+* Fix missing portals to Zot on D:27 with restart_after_game after Sprint.
+* Fix most large special maps not being generated.
+* Fix mad amounts of divine gifts in certain cases.
+* Don't duplicate monsters when exiting the Abyss.
+* Fix a lock-up on selecting a random character.
+* A number of crash fixes.
+* Some documentation amendments.
+* Don't stop butchering on unimportant messages.
+* Add a command "show runes" ('}') that was documented but not implemented.
+
+
 Stone Soup 0.9 (20110812)
 -------------------------
 
