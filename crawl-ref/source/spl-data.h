@@ -1850,7 +1850,7 @@ struct spell_desc
      SPTYP_TRANSMUTATION | SPTYP_POISON,
      SPFLAG_NONE,
      4,
-     0,
+     100,
      -1, -1,
      0,
      NULL,
