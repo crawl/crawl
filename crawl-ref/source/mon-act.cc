@@ -2653,8 +2653,10 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         {
             // This is done manually instead of using heal_monster(),
             // because that function doesn't work quite this way. - bwr
+            int base_max = mons_avg_hp(mons->type);
             mons->hit_points += hps_changed;
-            mons->hit_points = std::min(mons->hit_points, MAX_MONSTER_HP);
+            mons->hit_points = std::min(MAX_MONSTER_HP,
+                               std::min(base_max * 2, mons->hit_points));
             mons->max_hit_points = std::max(mons->hit_points,
                                                mons->max_hit_points);
         }
