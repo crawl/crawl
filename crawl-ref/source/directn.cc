@@ -1342,10 +1342,7 @@ bool direction_chooser::pickup_item()
     // it's out of bounds and taken, or a mimic.
     item_def *item = 0;
     unsigned short it = env.igrid(target());
-    monster *mon = monster_at(target());
-    if (mon && mons_is_item_mimic(mon->type))
-        item = &get_mimic_item(mon);
-    if (it != NON_ITEM && !item)
+    if (it != NON_ITEM)
     {
         item = &mitm[it];
         // Check if it appears to be the same item.
