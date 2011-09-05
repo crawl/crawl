@@ -1547,16 +1547,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_PALADIN;
 
     // mimics
-    case MONS_GOLD_MIMIC:
-        return TILE_UNSEEN_GOLD;
-    case MONS_WEAPON_MIMIC:
-        return TILE_UNSEEN_WEAPON;
-    case MONS_ARMOUR_MIMIC:
-        return TILE_UNSEEN_ARMOUR;
-    case MONS_SCROLL_MIMIC:
-        return TILE_UNSEEN_SCROLL;
-    case MONS_POTION_MIMIC:
-        return TILE_UNSEEN_POTION;
+    case MONS_ITEM_MIMIC:
+        return 0;
     case MONS_DANCING_WEAPON:
         return TILE_UNSEEN_WEAPON;
 
@@ -2524,11 +2516,7 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
             return TILEP_MONS_AGATE_SNAIL
                     + (mon->has_ench(ENCH_WITHDRAWN) ? 1 : 0);
 
-        case MONS_GOLD_MIMIC:
-        case MONS_WEAPON_MIMIC:
-        case MONS_ARMOUR_MIMIC:
-        case MONS_SCROLL_MIMIC:
-        case MONS_POTION_MIMIC:
+        case MONS_ITEM_MIMIC:
         {
             tileidx_t t = tileidx_item(get_mimic_item(mon));
             if (mons_is_mimic(mon->type))

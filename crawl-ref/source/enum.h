@@ -2056,11 +2056,13 @@ enum monster_type                      // (int) menv[].type
     MONS_VAPOUR,
 
     // Mimics:
-    MONS_GOLD_MIMIC,
+    MONS_ITEM_MIMIC,
+#if TAG_MAJOR_VERSION == 32
     MONS_WEAPON_MIMIC,
     MONS_ARMOUR_MIMIC,
     MONS_SCROLL_MIMIC,
     MONS_POTION_MIMIC,
+#endif
     MONS_FEATURE_MIMIC,
 #if TAG_MAJOR_VERSION == 32
     MONS_PORTAL_MIMIC,
@@ -2502,12 +2504,12 @@ enum mon_inv_type           // (int) menv[].inv[]
     MSLOT_ARMOUR,
     MSLOT_SHIELD,
     MSLOT_WAND,
+    MSLOT_MISCELLANY,
 
     // [ds] Last monster gear slot that the player can observe by examining
     // the monster; i.e. the last slot that goes into monster_info.
-    MSLOT_LAST_VISIBLE_SLOT = MSLOT_WAND,
+    MSLOT_LAST_VISIBLE_SLOT = MSLOT_MISCELLANY,
 
-    MSLOT_MISCELLANY,
     MSLOT_POTION,
     MSLOT_SCROLL,
     MSLOT_GOLD,

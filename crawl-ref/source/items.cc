@@ -4034,15 +4034,24 @@ bool player_has_orb()
     return false;
 }
 
-monster_type get_item_mimic_type(const item_def &item)
+static const object_class_type _mimic_item_classes[] =
 {
-    switch (item.base_type)
-    {
-    case OBJ_GOLD:    return MONS_GOLD_MIMIC;
-    case OBJ_WEAPONS: return MONS_WEAPON_MIMIC;
-    case OBJ_ARMOUR:  return MONS_ARMOUR_MIMIC;
-    case OBJ_SCROLLS: return MONS_SCROLL_MIMIC;
-    case OBJ_POTIONS: return MONS_POTION_MIMIC;
-    default:          return MONS_PROGRAM_BUG;
-    }
+    OBJ_GOLD,
+    OBJ_WEAPONS,
+    OBJ_ARMOUR,
+    OBJ_SCROLLS,
+    OBJ_POTIONS,
+};
+
+object_class_type get_random_item_mimic_type()
+{
+    return _mimic_item_classes[random2(ARRAYSZ(_mimic_item_classes))];
+}
+
+bool is_valid_mimic_item(object_class_type type)
+{
+    for (unsigned int i = 0; i < ARRAYSZ(_mimic_item_classes); ++i)
+        if (type == _mimic_item_classes[i])
+            return true;
+    return false;
 }

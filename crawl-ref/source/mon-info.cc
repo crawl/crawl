@@ -150,10 +150,13 @@ static bool _blocked_ray(const coord_def &where,
 
 static bool _is_public_key(std::string key)
 {
-    if (key == "helpless" || key == "wand_known" || key == "feat_type")
+    if (key == "helpless" || key == "wand_known" || key == "feat_type"
+        || key == "glyph")
+    {
         return true;
-    else
-        return false;
+    }
+
+    return false;
 }
 
 monster_info::monster_info(monster_type p_type, monster_type p_base_type)
@@ -340,6 +343,11 @@ monster_info::monster_info(const monster* m, int milev)
         {
             inv[MSLOT_WEAPON].reset(
                 new item_def(get_item_info(mitm[m->inv[MSLOT_WEAPON]])));
+        }
+        if (type_known && mons_is_item_mimic(type))
+        {
+            inv[MSLOT_MISCELLANY].reset(
+                new item_def(get_item_info(mitm[m->inv[MSLOT_MISCELLANY]])));
         }
         return;
     }
@@ -586,8 +594,6 @@ std::string monster_info::_core_name() const
         s = "royal jelly";
     else if (nametype == MONS_SERPENT_OF_HELL)
         s = "Serpent of Hell";
-    else if (mons_is_feat_mimic(nametype))
-        s = make_stringf("%s mimic", feat_type_name(get_mimic_feature()));
     else if (invalid_monster_type(nametype) && nametype != MONS_PROGRAM_BUG)
         s = "INVALID MONSTER";
     else
@@ -952,12 +958,7 @@ void monster_info::to_string(int count, std::string& desc,
     std::ostringstream out;
 
     if (count == 1)
-    {
-        if (mons_is_item_mimic(type))
-            out << mons_type_name(type, DESC_PLAIN);
-        else
-            out << full_name();
-    }
+        out << full_name();
     else
     {
         // TODO: this should be done in a much cleaner way, with code to merge multiple monster_infos into a single common structure
@@ -1225,6 +1226,16 @@ size_type monster_info::body_size() const
             ret = SIZE_BIG;
         else if (number == 5)
             ret = SIZE_GIANT;
+    }
+    else if (mons_is_item_mimic(type))
+    {
+        const int mass = item_mass(*inv[MSLOT_MISCELLANY].get());
+        if (mass < 50)
+            ret = SIZE_TINY;
+        else if (mass < 100)
+            ret = SIZE_LITTLE;
+        else
+            ret = SIZE_SMALL;
     }
 
     return (ret);

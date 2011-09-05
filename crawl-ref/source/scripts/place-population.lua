@@ -17,11 +17,6 @@ local function canonical_name(mons)
     return shapeshifter
   end
 
-  local mimic = mons.mimic
-  if mimic then
-    return mimic
-  end
-
   local dancing_weapon = mons.dancing_weapon
   if dancing_weapon then
     return dancing_weapon

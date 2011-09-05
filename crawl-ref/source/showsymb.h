@@ -18,8 +18,8 @@ struct glyph
 
 std::string glyph_to_tagstr(const glyph& g);
 
-wchar_t get_feat_symbol(dungeon_feature_type feat);
-wchar_t get_item_symbol(show_item_type it);
+ucs_t get_feat_symbol(dungeon_feature_type feat);
+ucs_t get_item_symbol(show_item_type it);
 glyph get_item_glyph(const item_def *item);
 glyph get_mons_glyph(const monster_info& mi, bool realcol=true);
 

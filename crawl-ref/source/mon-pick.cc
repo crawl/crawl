@@ -900,12 +900,6 @@ int mons_standard_rare(int mcls)
     case MONS_RED_WASP:
     case MONS_SIMULACRUM_SMALL:
     case MONS_SIMULACRUM_LARGE:
-    // item mimics
-    case MONS_ARMOUR_MIMIC:
-    case MONS_GOLD_MIMIC:
-    case MONS_POTION_MIMIC:
-    case MONS_SCROLL_MIMIC:
-    case MONS_WEAPON_MIMIC:
         return 25;
 
     case MONS_BUTTERFLY:

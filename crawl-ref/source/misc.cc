@@ -1536,8 +1536,7 @@ bool mons_is_safe(const monster* mon, const bool want_move,
 }
 
 // Return all nearby monsters in range (default: LOS) that the player
-// is able to recognise as being monsters (i.e. no unknown mimics or
-// submerged creatures.)
+// is able to recognise as being monsters (i.e. no submerged creatures.)
 //
 // want_move       (??) Somehow affects what monsters are considered dangerous
 // just_check      Return zero or one monsters only

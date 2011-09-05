@@ -1162,7 +1162,8 @@ bool monster::pickup(item_def &item, int slot, int near, bool force_merge)
     item.set_holding_monster(mindex());
 
     pickup_message(item, near);
-    equip(item, slot, near);
+    if (!mons_is_item_mimic(type))
+        equip(item, slot, near);
     lose_pickup_energy();
     return (true);
 }
