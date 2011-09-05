@@ -2518,7 +2518,7 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
 
         case MONS_ITEM_MIMIC:
         {
-            tileidx_t t = tileidx_item(get_mimic_item(mon));
+            tileidx_t t = tileidx_item(*get_mimic_item(mon));
             if (mons_is_mimic(mon->type))
                 t |= TILE_FLAG_MIMIC;
             return t;
