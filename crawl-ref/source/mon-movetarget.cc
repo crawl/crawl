@@ -148,7 +148,7 @@ bool try_pathfind(monster* mon)
     if ((!crawl_state.game_is_zotdef()) && need_pathfind
         && mons_intel(mon) >= I_NORMAL && !mon->friendly()
         && mons_has_ranged_attack(mon)
-        && exists_ray(mon->pos(), PLAYER_POS, opc_solid))
+        && cell_see_cell(mon->pos(), PLAYER_POS, LOS_SOLID))
     {
         need_pathfind = false;
     }

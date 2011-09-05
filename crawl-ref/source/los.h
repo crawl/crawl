@@ -40,7 +40,7 @@ int num_feats_between(const coord_def& source, const coord_def& target,
                       dungeon_feature_type max_feat,
                       bool exclude_endpoints = true,
                       bool just_check = false);
-bool cell_see_cell(const coord_def& p1, const coord_def& p2);
+bool cell_see_cell_nocache(const coord_def& p1, const coord_def& p2);
 
 typedef SquareArray<bool, LOS_MAX_RANGE> los_grid;
 

@@ -1512,7 +1512,8 @@ struct complicated_sight_check
     coord_def base_position;
     bool operator()(monster* mons, actor * test)
     {
-        return (test->visible_to(mons) && cell_see_cell(base_position, test->pos()));
+        return (test->visible_to(mons)
+                && cell_see_cell(base_position, test->pos(), LOS_SOLID));
     }
 };
 
