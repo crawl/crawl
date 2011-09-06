@@ -4584,10 +4584,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     {
         int net = get_trapping_net(pos());
         if (net != NON_ITEM)
+        {
             remove_item_stationary(mitm[net]);
 
-        if (!quiet)
-            simple_monster_message(this, " breaks free.");
+            if (!quiet)
+                simple_monster_message(this, " breaks free.");
+        }
         break;
     }
     case ENCH_FAKE_ABJURATION:
@@ -5085,9 +5087,22 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         if (net == NON_ITEM)
         {
-            if (trap_def *trap = find_trap(pos()))
-                if (trap->type == TRAP_WEB)
-                    maybe_destroy_web(this);
+            trap_def *trap = find_trap(pos());
+            if (trap && trap->type == TRAP_WEB)
+            {
+                if (coinflip())
+                {
+                    if (mons_near(this) && !visible_to(&you))
+                        mpr("Something you can't see is thrashing in a web.");
+                    else
+                    {
+                        simple_monster_message(this,
+                            " struggles to get unstuck from the web.");
+                    }
+                    break;
+                }
+                maybe_destroy_web(this);
+            }
             del_ench(ENCH_HELD);
             break;
         }
