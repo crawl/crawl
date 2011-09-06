@@ -4050,6 +4050,30 @@ object_class_type get_random_item_mimic_type()
     return _mimic_item_classes[random2(ARRAYSZ(_mimic_item_classes))];
 }
 
+object_class_type get_item_mimic_type()
+{
+    mesclr();
+    std::map<char, object_class_type> choices;
+    char letter = 'a';
+    for (unsigned int i = 0; i < ARRAYSZ(_mimic_item_classes); ++i)
+    {
+        mprf("[%c] %s ", letter,
+             item_class_name(_mimic_item_classes[i], true).c_str());
+        choices[letter++] = _mimic_item_classes[i];
+    }
+    mprf("[%c] random", letter);
+    choices[letter] = OBJ_RANDOM;
+    mpr("\nWhat kind of item mimic? ", MSGCH_PROMPT);
+    const int keyin = tolower(get_ch());
+
+    if (choices.find(keyin) == choices.end())
+        return OBJ_UNASSIGNED;
+    else if (choices[keyin] == OBJ_RANDOM)
+        return get_random_item_mimic_type();
+    else
+        return choices[keyin];
+}
+
 bool is_valid_mimic_item(object_class_type type)
 {
     for (unsigned int i = 0; i < ARRAYSZ(_mimic_item_classes); ++i)
