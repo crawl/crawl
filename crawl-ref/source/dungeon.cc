@@ -4159,7 +4159,11 @@ retry:
         if (props.exists("unobtainable"))
             item.flags |= ISFLAG_UNOBTAINABLE;
         if (props.exists("mimic"))
-            item.flags |= ISFLAG_MIMIC;
+        {
+            const int chance = props["mimic"];
+            if (chance > 0 && one_chance_in(chance))
+                item.flags |= ISFLAG_MIMIC;
+        }
         if (props.exists("no_mimic"))
             item.flags |= ISFLAG_NO_MIMIC;
 
@@ -4619,7 +4623,7 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
     else if (f.feat >= 0)
     {
         grd(where) = static_cast<dungeon_feature_type>(f.feat);
-        if (f.mimic)
+        if (f.mimic > 0 && one_chance_in(f.mimic))
             env.level_map_mask(where) |= MMT_MIMIC;
         else if (f.no_mimic)
             env.level_map_mask(where) |= MMT_NO_MIMIC;
