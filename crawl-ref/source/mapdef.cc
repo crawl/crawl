@@ -4808,8 +4808,12 @@ item_spec item_list::parse_single_spec(std::string s)
         result.props["useful"] = bool(true);
     if (strip_tag(s, "unobtainable"))
         result.props["unobtainable"] = true;
+
+    const int mimic = strip_number_tag(s, "mimic:");
+    if (mimic != TAG_UNFOUND)
+        result.props["mimic"] = mimic;
     if (strip_tag(s, "mimic"))
-        result.props["mimic"] = true;
+        result.props["mimic"] = 1;
     if (strip_tag(s, "no_mimic"))
         result.props["no_mimic"] = true;
 
@@ -5517,7 +5521,9 @@ feature_spec_list keyed_mapspec::parse_feature(const std::string &str)
         return (list);
     }
 
-    const bool mimic = strip_tag(s, "mimic");
+    int mimic = strip_number_tag(s, "mimic:");
+    if (mimic == TAG_UNFOUND && strip_tag(s, "mimic"))
+        mimic = 1;
     const bool no_mimic = strip_tag(s, "no_mimic");
     const dungeon_feature_type ftype = dungeon_feature_by_name(s);
 
@@ -5638,11 +5644,11 @@ feature_spec::feature_spec ()
     glyph = -1;
     shop.reset(NULL);
     trap.reset(NULL);
-    mimic = false;
+    mimic = 0;
     no_mimic = false;
 }
 
-feature_spec::feature_spec(int f, int wt, bool _mimic, bool _no_mimic)
+feature_spec::feature_spec(int f, int wt, int _mimic, bool _no_mimic)
 {
     genweight = wt;
     feat = f;

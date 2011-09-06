@@ -824,11 +824,11 @@ struct feature_spec
     std::auto_ptr<shop_spec> shop; /**> A pointer to a shop_spec. */
     std::auto_ptr<trap_spec> trap; /**> A pointer to a trap_spec. */
     int glyph;                     /**> What glyph to use instead. */
-    bool mimic;                    /**> This is a feature mimic. */
+    int mimic;                     /**> 1 chance in x to be a feature mimic. */
     bool no_mimic;                 /**> Prevents random feature mimic here. */
 
     feature_spec();
-    feature_spec(int f, int wt = 10, bool _mimic = false, bool _no_mimic = false);
+    feature_spec(int f, int wt = 10, int _mimic = 0, bool _no_mimic = false);
     feature_spec(const feature_spec& other);
     feature_spec& operator = (const feature_spec& other);
     void init_with (const feature_spec& other);
