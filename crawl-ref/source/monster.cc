@@ -2137,7 +2137,7 @@ item_def *monster::shield()
 
 bool monster::is_named() const
 {
-    return (!mname.empty() && !mons_is_mimic(this->type) || mons_is_unique(type));
+    return (!mname.empty() || mons_is_unique(type));
 }
 
 bool monster::has_base_name() const

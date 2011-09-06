@@ -4393,7 +4393,7 @@ static monsterentry mondata[] = {
 
 // mimics
 {
-    MONS_ITEM_MIMIC, 'X', BLACK, "mimic",
+    MONS_ITEM_MIMIC, 'X', BLACK, "item mimic",
     M_NO_FLAGS,
     MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
     0, 13, MONS_ITEM_MIMIC, MONS_ITEM_MIMIC, MH_NONLIVING, -3,
@@ -4406,7 +4406,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_FEATURE_MIMIC, '+', LIGHTGRAY, "mimic",
+    MONS_FEATURE_MIMIC, 'X', BLACK, "feature mimic",
     M_FIGHTER,
     MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE | MR_RES_COLD,
     0, 13, MONS_FEATURE_MIMIC, MONS_FEATURE_MIMIC, MH_NONLIVING, -3,

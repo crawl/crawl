@@ -87,20 +87,6 @@ dungeon_feature_type get_mimic_feat(const monster* mimic)
         return DNGN_FLOOR;
 }
 
-std::string get_mimic_name(const monster* mimic)
-{
-    if (mons_is_feat_mimic(mimic->type))
-        return feat_type_name(get_mimic_feat(mimic));
-
-    ASSERT(mons_is_item_mimic(mimic->type));
-    item_def* item = &mitm[mimic->inv[MSLOT_MISCELLANY]];
-    ASSERT(item);
-    if (item->base_type == OBJ_GOLD)
-        return "pile of gold";
-    else
-        return item->name(DESC_BASENAME);
-}
-
 bool feature_mimic_at(const coord_def &c)
 {
     return map_masked(c, MMT_MIMIC);

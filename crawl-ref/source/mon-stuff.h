@@ -58,7 +58,6 @@ const item_def *give_mimic_item(monster* mimic);
 const item_def* get_mimic_item(const monster* mimic);
 int  get_mimic_colour(const monster* mimic);
 dungeon_feature_type get_mimic_feat (const monster* mimic);
-std::string get_mimic_name(const monster* mimic);
 bool feature_mimic_at (const coord_def &c);
 item_def* item_mimic_at(const coord_def &c);
 bool mimic_at(const coord_def &c);

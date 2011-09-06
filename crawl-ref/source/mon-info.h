@@ -129,7 +129,7 @@ struct monster_info : public monster_info_base
     : monster_info_base(mi)
     {
         u = mi.u;
-        for (unsigned i = 0; i < 6; ++i)
+        for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
         {
             if (mi.inv[i].get())
                 inv[i].reset(new item_def(*mi.inv[i]));
@@ -183,7 +183,7 @@ struct monster_info : public monster_info_base
     std::string db_name() const;
     bool has_proper_name() const;
     dungeon_feature_type get_mimic_feature() const;
-    const std::string mimic_name() const;
+    std::string mimic_name() const;
     std::string common_name(description_level_type desc = DESC_PLAIN) const;
     std::string proper_name(description_level_type desc = DESC_PLAIN) const;
     std::string full_name(description_level_type desc = DESC_PLAIN, bool use_comma = false) const;
