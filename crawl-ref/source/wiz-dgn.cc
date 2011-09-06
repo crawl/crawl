@@ -342,7 +342,7 @@ bool wizard_create_feature(const coord_def& pos)
                 // might be *LONG*.
                 mpr_comma_separated_list(prefix, matches, " and ", ", ",
                                          MSGCH_DIAGNOSTICS);
-                return false;
+                return wizard_create_feature(pos);
             }
         }
     }
