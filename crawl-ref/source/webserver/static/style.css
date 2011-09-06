@@ -33,10 +33,22 @@ body {
 }
 
 #player_list th.header {
+    padding-left: 1px;
+    padding-right: 17px;
 }
-#player_list th.headerSortDown,
+#player_list th.headerSortDown {
+    background-image: url("asc.gif");
+    background-repeat: no-repeat;
+    background-position: center left;
+    padding-left: 17px;
+    padding-right: 1px;
+}
 #player_list th.headerSortUp {
-    background-color: #111111;
+    background-image: url("desc.gif");
+    background-repeat: no-repeat;
+    background-position: center left;
+    padding-left: 17px;
+    padding-right: 1px;
 }
 
 #player_list tr:hover {
