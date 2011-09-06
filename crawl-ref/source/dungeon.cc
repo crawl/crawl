@@ -5518,8 +5518,11 @@ static coord_def _dgn_find_closest_to_stone_stairs(coord_def base_pos)
     nearest_point np(base_pos);
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (!travel_point_distance[ri->x][ri->y] && feat_is_stone_stair(grd(*ri)))
+        if (!travel_point_distance[ri->x][ri->y]
+            && feat_is_stone_stair(grd(*ri)) && !feature_mimic_at(*ri))
+        {
             _dgn_fill_zone(*ri, 1, np, dgn_square_travel_ok);
+        }
     }
 
     return (np.nearest);
@@ -5693,7 +5696,8 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
             const int dist = (xpos-basex)*(xpos-basex)
                              + (ypos-basey)*(ypos-basey);
 
-            if (grd[xpos][ypos] == stair_to_find)
+            if (grd[xpos][ypos] == stair_to_find
+                && !feature_mimic_at(coord_def(xpos, ypos)))
             {
                 found++;
                 if (find_closest)
@@ -5752,7 +5756,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
             const int dist = (xpos-basex)*(xpos-basex)
                              + (ypos-basey)*(ypos-basey);
 
-            if (good_stair)
+            if (good_stair && !feature_mimic_at(coord_def(xpos, ypos)))
             {
                 found++;
                 if (find_closest && dist < best_dist)
