@@ -1367,9 +1367,16 @@ void free_self_from_net()
 
     if (net == NON_ITEM)
     {
-        if (trap_def *trap = find_trap(you.pos()))
-            if (trap->type == TRAP_WEB)
-                maybe_destroy_web(&you);
+        trap_def *trap = find_trap(you.pos());
+        if (trap && trap->type == TRAP_WEB)
+        {
+            if (x_chance_in_y(40 - you.stat(STAT_STR), 66))
+            {
+                mpr("You struggle to detach yourself from the web.");
+                return;
+            }
+            maybe_destroy_web(&you);
+        }
         you.attribute[ATTR_HELD] = 0;
         you.redraw_quiver = true;
         return;
@@ -2049,7 +2056,13 @@ bool maybe_destroy_web(actor *oaf)
         return false;
 
     if (coinflip())
+    {
+        if (oaf->atype() == ACT_MONSTER)
+            simple_monster_message(oaf->as_monster(), " pulls away from the web.");
+        else
+            mpr("You disentangle yourself.");
         return false;
+    }
 
     if (oaf->atype() == ACT_MONSTER)
         simple_monster_message(oaf->as_monster(), " tears the web.");
