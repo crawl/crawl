@@ -594,6 +594,8 @@ std::string monster_info::_core_name() const
         s = "royal jelly";
     else if (nametype == MONS_SERPENT_OF_HELL)
         s = "Serpent of Hell";
+    else if (mons_is_mimic(nametype))
+        s = mimic_name();
     else if (invalid_monster_type(nametype) && nametype != MONS_PROGRAM_BUG)
         s = "INVALID MONSTER";
     else
@@ -768,6 +770,25 @@ dungeon_feature_type monster_info::get_mimic_feature() const
     if (!props.exists("feat_type"))
         return DNGN_UNSEEN;
     return static_cast<dungeon_feature_type>(props["feat_type"].get_short());
+}
+
+std::string monster_info::mimic_name() const
+{
+    std::string s;
+    if (props.exists("feat_type"))
+        s = feat_type_name(get_mimic_feature());
+    else if (item_def* item = inv[MSLOT_MISCELLANY].get())
+    {
+        if (item->base_type == OBJ_GOLD)
+            s = "pile of gold";
+        else
+            s = item->name(DESC_BASENAME);
+    }
+
+    if (!s.empty())
+        s += " ";
+
+    return (s + "mimic");
 }
 
 bool monster_info::has_proper_name() const

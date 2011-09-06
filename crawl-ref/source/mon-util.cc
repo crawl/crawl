@@ -177,11 +177,6 @@ void init_mon_name_cache()
         const int          mtype = mondata[i].mc;
         const monster_type mon   = monster_type(mtype);
 
-        if (mon == MONS_ITEM_MIMIC)
-            name = "item mimic";
-        else if (mon == MONS_FEATURE_MIMIC)
-            name = "feature mimic";
-
         // Deal sensibly with duplicate entries; refuse or allow the
         // insert, depending on which should take precedence.  Mostly we
         // don't care, except looking up "rakshasa" and getting _FAKE
@@ -959,9 +954,6 @@ void discover_mimic(const coord_def& pos)
         if (item->base_type == OBJ_ARMOUR)
             mimic->ac += 10;
     }
-
-    mimic->flags |= MF_NAME_ADJECTIVE;
-    mimic->mname = get_mimic_name(mimic);
 
     behaviour_event(mimic, ME_ALERT, MHITYOU);
 
