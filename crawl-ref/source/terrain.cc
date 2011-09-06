@@ -865,6 +865,9 @@ bool is_valid_mimic_feat(dungeon_feature_type feat)
     if (feat == DNGN_ENTER_SHOP)
         return true;
 
+    if (feat_is_statue_or_idol(feat))
+        return true;
+
     return false;
 }
 
