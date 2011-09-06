@@ -368,12 +368,17 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc,
     if (cls == SH_MONSTER)
     {
         const monster_info* mi = cell.monsterinfo();
-        if (mi->props.exists("glyph"))
+        const bool override = Options.mon_glyph_overrides.find(mi->type)
+                              != Options.mon_glyph_overrides.end();
+        if (mi->props.exists("glyph") && !override)
             g.ch = mi->props["glyph"].get_int();
         else if (show.mons == MONS_SENSED)
             g.ch = mons_char(mi->base_type);
         else
             g.ch = mons_char(show.mons);
+
+        if (mi->props.exists("glyph") && override)
+            g.col = mons_class_colour(mi->type);
     }
     else
     {
@@ -405,10 +410,12 @@ glyph get_item_glyph(const item_def *item)
     return (g);
 }
 
-glyph get_mons_glyph(const monster_info& mi, bool realcol)
+glyph get_mons_glyph(const monster_info& mi)
 {
     glyph g;
-    if (mi.props.exists("glyph"))
+    const bool override = Options.mon_glyph_overrides.find(mi.type)
+                          != Options.mon_glyph_overrides.end();
+    if (mi.props.exists("glyph") && !override)
         g.ch = mi.props["glyph"].get_int();
     else if (mi.type == MONS_SLIME_CREATURE && mi.number > 1)
         g.ch = mons_char(MONS_MERGED_SLIME_CREATURE);
@@ -416,9 +423,12 @@ glyph get_mons_glyph(const monster_info& mi, bool realcol)
         g.ch = mons_char(mi.base_type);
     else
         g.ch = mons_char(mi.type);
-    g.col = _get_mons_colour(mi);
-    if (realcol)
-        g.col = real_colour(g.col);
+
+    if (mi.props.exists("glyph") && override)
+        g.col = mons_class_colour(mi.type);
+    else
+        g.col = _get_mons_colour(mi);
+    g.col = real_colour(g.col);
     return (g);
 }
 

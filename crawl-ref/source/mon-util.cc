@@ -250,7 +250,6 @@ void init_monsters()
 void init_monster_symbols()
 {
     std::map<unsigned, monster_type> base_mons;
-    std::map<unsigned, monster_type>::iterator it;
     for (int i = 0; i < NUM_MONSTERS; ++i)
     {
         mon_display &md = monster_symbols[i];
@@ -259,24 +258,25 @@ void init_monster_symbols()
         {
             md.glyph  = me->showchar;
             md.colour = me->colour;
-            it = base_mons.find(md.glyph);
+            std::map<unsigned, monster_type>::iterator it = base_mons.find(md.glyph);
             if (it == base_mons.end() || it->first == MONS_PROGRAM_BUG)
                 base_mons[md.glyph] = static_cast<monster_type>(i);
             md.detected = base_mons[md.glyph];
         }
     }
 
-    for (int i = 0, size = Options.mon_glyph_overrides.size();
-         i < size; ++i)
+    for (mon_glyph_map::iterator it = Options.mon_glyph_overrides.begin();
+         it != Options.mon_glyph_overrides.end(); ++it)
     {
-        const mon_display &md = Options.mon_glyph_overrides[i];
-        if (md.type == MONS_PROGRAM_BUG)
+        if (it->first == MONS_PROGRAM_BUG)
             continue;
 
+        const mon_display &md = it->second;
+
         if (md.glyph)
-            monster_symbols[md.type].glyph = get_glyph_override(md.glyph);
+            monster_symbols[it->first].glyph = get_glyph_override(md.glyph);
         if (md.colour)
-            monster_symbols[md.type].colour = md.colour;
+            monster_symbols[it->first].colour = md.colour;
     }
 
     // Validate all glyphs, even those which didn't come from an override.
