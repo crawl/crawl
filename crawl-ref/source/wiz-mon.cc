@@ -68,7 +68,7 @@ void wizard_create_spec_monster(void)
     }
 }
 
-static int _make_mimic_item(monster_type type)
+static int _make_mimic_item(object_class_type type)
 {
     int it = items(0, OBJ_RANDOM, OBJ_RANDOM, true, 0, 0);
 
@@ -77,7 +77,7 @@ static int _make_mimic_item(monster_type type)
 
     item_def &item = mitm[it];
 
-    item.base_type = get_random_item_mimic_type();
+    item.base_type = type;
     item.sub_type  = 0;
     item.special   = 0;
     item.colour    = 0;
@@ -88,7 +88,7 @@ static int _make_mimic_item(monster_type type)
     item.link      = NON_ITEM;
 
     int prop;
-    switch (item.base_type)
+    switch (type)
     {
     case OBJ_WEAPONS:
         item.sub_type = random2(WPN_MAX_NONBLESSED + 1);
@@ -229,10 +229,16 @@ void wizard_create_spec_monster_name()
 
     if (mons_is_item_mimic(type))
     {
-        int it = _make_mimic_item(static_cast<monster_type>(type));
+        object_class_type item_type = get_item_mimic_type();
+        if (item_type == OBJ_UNASSIGNED)
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+        int it = _make_mimic_item(item_type);
         if (it == NON_ITEM)
         {
-            mpr("Cannot create item.");
+            mpr("Cannot create item.", MSGCH_DIAGNOSTICS);
             return;
         }
         move_item_to_grid(&it, place);
