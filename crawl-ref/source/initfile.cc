@@ -1148,13 +1148,6 @@ void game_options::add_fire_order_slot(const std::string &s)
         fire_order.push_back(flags);
 }
 
-void game_options::add_mon_glyph_override(monster_type mtype,
-                                          mon_display &mdisp)
-{
-    mdisp.type = mtype;
-    mon_glyph_overrides.push_back(mdisp);
-}
-
 void game_options::add_mon_glyph_overrides(const std::string &mons,
                                            mon_display &mdisp)
 {
@@ -1173,7 +1166,7 @@ void game_options::add_mon_glyph_overrides(const std::string &mons,
         if (me->showchar == letter || me->name == mons)
         {
             found = true;
-            add_mon_glyph_override(static_cast<monster_type>(i), mdisp);
+            mon_glyph_overrides[static_cast<monster_type>(i)] = mdisp;
         }
     }
     if (!found)
