@@ -619,7 +619,7 @@ public:
     int halo_radius2() const;
     int silence_radius2() const;
     int liquefying_radius2 () const;
-    int antihalo_radius2 () const;
+    int umbra_radius2 () const;
     bool glows_naturally() const;
     bool petrifying() const;
     bool petrified() const;

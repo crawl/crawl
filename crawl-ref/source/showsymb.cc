@@ -99,16 +99,16 @@ unsigned short _cell_feat_show_colour(const map_cell& cell, bool coloured)
     {
         if (cell.flags & MAP_HALOED)
         {
-            if (cell.flags & MAP_SILENCED && cell.flags & MAP_ANTIHALOED)
+            if (cell.flags & MAP_SILENCED && cell.flags & MAP_UMBRAED)
                 colour = CYAN; // Default for silence.
             else if (cell.flags & MAP_SILENCED)
                 colour = LIGHTCYAN;
-            else if (cell.flags & MAP_ANTIHALOED)
+            else if (cell.flags & MAP_UMBRAED)
                 colour = fdef.colour; // Cancels out!
             else
                 colour = YELLOW;
         }
-        else if (cell.flags & MAP_ANTIHALOED)
+        else if (cell.flags & MAP_UMBRAED)
         {
            if (cell.flags & MAP_SILENCED)
                 colour = BLUE; // Silence gets darker

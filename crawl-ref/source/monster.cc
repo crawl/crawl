@@ -2864,7 +2864,7 @@ bool monster::backlit(bool check_haloed, bool self_halo) const
     if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME) || has_ench(ENCH_SILVER_CORONA))
         return (true);
     if (check_haloed)
-        return (!antihaloed() && haloed() &&
+        return (!umbraed() && haloed() &&
                 (self_halo || halo_radius2() == -1));
     return (false);
 }
@@ -2872,8 +2872,8 @@ bool monster::backlit(bool check_haloed, bool self_halo) const
 bool monster::umbra(bool check_haloed, bool self_halo) const
 {
     if (check_haloed)
-        return (antihaloed() && !haloed() &&
-                (self_halo || antihalo_radius2() == -1));
+        return (umbraed() && !haloed() &&
+                (self_halo || umbra_radius2() == -1));
     return (false);
 }
 
