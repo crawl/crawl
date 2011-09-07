@@ -109,7 +109,7 @@ struct monsterentry
 {
     short mc;            // monster number
 
-    char showchar;
+    char basechar;
     uint8_t colour;
     const char *name;
 

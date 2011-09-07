@@ -256,7 +256,7 @@ void init_monster_symbols()
         const monsterentry *me = get_monster_data(i);
         if (me)
         {
-            md.glyph  = me->showchar;
+            md.glyph  = me->basechar;
             md.colour = me->colour;
             std::map<unsigned, monster_type>::iterator it = base_mons.find(md.glyph);
             if (it == base_mons.end() || it->first == MONS_PROGRAM_BUG)
@@ -1202,7 +1202,7 @@ wchar_t mons_char(int mc)
 char mons_base_char(int mc)
 {
     const monsterentry *me = get_monster_data(mc);
-    return (me ? me->showchar : 0);
+    return (me ? me->basechar : 0);
 }
 
 mon_itemuse_type mons_class_itemuse(int mc)
@@ -3240,7 +3240,7 @@ bool monster_shover(const monster* m)
     if (_mons_has_smite_attack(m))
         return (false);
 
-    char mchar = me->showchar;
+    char mchar = me->basechar;
 
     // Somewhat arbitrary: giants and dragons are too big to get past anything,
     // beetles are too dumb (arguable), dancing weapons can't communicate, eyes
@@ -3277,8 +3277,8 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
             return (false);
     }
 
-    char mchar1 = me1->showchar;
-    char mchar2 = me2->showchar;
+    char mchar1 = me1->basechar;
+    char mchar2 = me2->basechar;
 
     // If both are demons, the smaller number is the nastier demon.
     if (isadigit(mchar1) && isadigit(mchar2))

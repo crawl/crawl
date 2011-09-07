@@ -3374,7 +3374,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.quote = getQuoteString(db_name);
 
     std::string symbol;
-    symbol += get_monster_data(mi.type)->showchar;
+    symbol += get_monster_data(mi.type)->basechar;
     if (isaupper(symbol[0]))
         symbol = "cap-" + symbol;
 

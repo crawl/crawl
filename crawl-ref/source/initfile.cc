@@ -1163,7 +1163,7 @@ void game_options::add_mon_glyph_overrides(const std::string &mons,
         if (!me || me->mc == MONS_PROGRAM_BUG)
             continue;
 
-        if (me->showchar == letter || me->name == mons)
+        if (me->basechar == letter || me->name == mons)
         {
             found = true;
             mon_glyph_overrides[static_cast<monster_type>(i)] = mdisp;
