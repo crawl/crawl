@@ -65,53 +65,6 @@ static const char * Species_Abbrev_List[NUM_SPECIES] =
       // placeholders
       "El", "HD", "OM", "GE", "Gn" };
 
-int get_species_index_by_abbrev(const char *abbrev)
-{
-    COMPILE_CHECK(ARRAYSZ(Species_Abbrev_List) == NUM_SPECIES);
-
-    for (unsigned i = 0; i < ARRAYSZ(species_order); i++)
-    {
-        const int sp = species_order[i];
-
-        if (tolower(abbrev[0]) == tolower(Species_Abbrev_List[sp][0])
-            && tolower(abbrev[1]) == tolower(Species_Abbrev_List[sp][1]))
-        {
-            return (i);
-        }
-    }
-
-    return (-1);
-}
-
-int get_species_index_by_name(const char *name)
-{
-    unsigned int i;
-    int sp = -1;
-
-    std::string::size_type pos = std::string::npos;
-    char lowered_buff[80];
-
-    strncpy(lowered_buff, name, sizeof(lowered_buff));
-    strlwr(lowered_buff);
-
-    for (i = 0; i < ARRAYSZ(species_order); i++)
-    {
-        const species_type real_sp = species_order[i];
-
-        const std::string lowered_species =
-            lowercase_string(species_name(real_sp));
-        pos = lowered_species.find(lowered_buff);
-        if (pos != std::string::npos)
-        {
-            sp = i;
-            if (pos == 0)  // prefix takes preference
-                break;
-        }
-    }
-
-    return (sp);
-}
-
 const char *get_species_abbrev(species_type which_species)
 {
     ASSERT(which_species >= 0 && which_species < NUM_SPECIES);

@@ -326,6 +326,7 @@ skill_type debug_prompt_for_skill(const char *prompt)
 
     if (specs[0] == '\0')
         return (SK_NONE);
+    std::string spec = lowercase_string(specs);
 
     skill_type skill = SK_NONE;
 
@@ -336,20 +337,15 @@ skill_type debug_prompt_for_skill(const char *prompt)
         if (is_invalid_skill(sk))
             continue;
 
-        char sk_name[80];
-        strncpy(sk_name, skill_name(sk), sizeof(sk_name));
+        std::string sk_name = lowercase_string(skill_name(sk));
 
-        char *ptr = strstr(strlwr(sk_name), strlwr(specs));
-        if (ptr != NULL)
+        size_t pos = sk_name.find(spec);
+        if (pos != std::string::npos)
         {
-            if (ptr == sk_name && strlen(specs) > 0)
-            {
-                // We prefer prefixes over partial matches.
-                skill = sk;
+            skill = sk;
+            // We prefer prefixes over partial matches.
+            if (!pos)
                 break;
-            }
-            else
-                skill = sk;
         }
     }
 

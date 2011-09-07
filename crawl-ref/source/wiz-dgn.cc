@@ -499,19 +499,19 @@ void debug_make_trap()
     if (!*requested_trap)
         return;
 
-    strlwr(requested_trap);
+    std::string spec = lowercase_string(requested_trap);
     std::vector<trap_type>   matches;
     std::vector<std::string> match_names;
     for (int t = TRAP_DART; t < NUM_TRAPS; ++t)
     {
         const trap_type tr = static_cast<trap_type>(t);
         const char* tname  = trap_name(tr);
-        if (strstr(requested_trap, tname))
+        if (spec.find(tname) != spec.npos)
         {
             trap = tr;
             break;
         }
-        else if (strstr(tname, requested_trap))
+        else if (strstr(tname, spec.c_str()))
         {
             matches.push_back(tr);
             match_names.push_back(tname);
@@ -522,7 +522,7 @@ void debug_make_trap()
     {
         if (matches.empty())
         {
-            mprf("I know no traps named \"%s\"", requested_trap);
+            mprf("I know no traps named \"%s\"", spec.c_str());
             return;
         }
         // Only one match, use that
@@ -531,7 +531,7 @@ void debug_make_trap()
         else
         {
             std::string prefix = "No exact match for trap '";
-            prefix += requested_trap;
+            prefix += spec;
             prefix += "', possible matches are: ";
             mpr_comma_separated_list(prefix, match_names);
 
@@ -582,8 +582,7 @@ bool debug_make_shop(const coord_def& pos)
     if (!*requested_shop)
         return false;
 
-    strlwr(requested_shop);
-    std::string s = replace_all_of(requested_shop, "*", "");
+    std::string s = replace_all_of(lowercase_string(requested_shop), "*", "");
     new_shop_type = str_to_shoptype(s);
 
     if (new_shop_type == SHOP_UNASSIGNED || new_shop_type == -1)

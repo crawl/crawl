@@ -19,7 +19,6 @@
 #define strcasecmp _strcasecmp
 #define strdup _strdup
 #define strcasecmp _strcasecmp
-#define strlwr _strlwr
 #define strncasecmp _strnicmp
 #define strnicmp _strnicmp
 #define ftruncate _chsize

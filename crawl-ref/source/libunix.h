@@ -45,9 +45,5 @@ inline void enable_smart_cursor(bool) { }
 inline bool is_smart_cursor_enabled() { return (false); }
 
 void set_mouse_enabled(bool enabled);
-
-char *strlwr(char *str);
-
-
 #endif
 #endif

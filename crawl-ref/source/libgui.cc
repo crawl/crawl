@@ -191,18 +191,4 @@ bool kbhit()
     int count = wm->get_event_count(WM_KEYDOWN);
     return (count > 0);
 }
-
-#ifdef UNIX
-// Convert string to lowercase.
-char *strlwr(char *str)
-{
-    unsigned int i;
-
-    for (i = 0; i < strlen(str); i++)
-        str[i] = tolower(str[i]);
-
-    return (str);
-}
-
-#endif // #ifdef UNIX
 #endif // #ifdef USE_TILE_LOCAL

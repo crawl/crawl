@@ -794,14 +794,3 @@ bool kbhit()
         return false;
     }
 }
-
-// Convert string to lowercase.
-char *strlwr(char *str)
-{
-    unsigned int i;
-
-    for (i = 0; i < strlen(str); i++)
-        str[i] = tolower(str[i]);
-
-    return (str);
-}
