@@ -5497,12 +5497,18 @@ feature_spec_list keyed_mapspec::parse_feature(const std::string &str)
     int weight = find_weight(s);
     if (weight == TAG_UNFOUND || weight <= 0)
         weight = 10;
+
+    int mimic = strip_number_tag(s, "mimic:");
+    if (mimic == TAG_UNFOUND && strip_tag(s, "mimic"))
+        mimic = 1;
+    const bool no_mimic = strip_tag(s, "no_mimic");
+
     trim_string(s);
 
     feature_spec_list list;
     if (s.length() == 1)
     {
-        feature_spec fsp(-1, weight);
+        feature_spec fsp(-1, weight, mimic, no_mimic);
         fsp.glyph = s[0];
         list.push_back(fsp);
         return (list);
@@ -5521,10 +5527,6 @@ feature_spec_list keyed_mapspec::parse_feature(const std::string &str)
         return (list);
     }
 
-    int mimic = strip_number_tag(s, "mimic:");
-    if (mimic == TAG_UNFOUND && strip_tag(s, "mimic"))
-        mimic = 1;
-    const bool no_mimic = strip_tag(s, "no_mimic");
     const dungeon_feature_type ftype = dungeon_feature_by_name(s);
 
     if (ftype == DNGN_UNSEEN)
