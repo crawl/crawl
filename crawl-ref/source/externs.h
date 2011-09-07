@@ -780,7 +780,7 @@ private:
 
 struct mon_display
 {
-    wchar_t      glyph;
+    ucs_t        glyph;
     unsigned     colour;
     monster_type detected; // What a monster of type "type" is detected as.
 

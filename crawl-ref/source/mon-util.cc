@@ -1194,7 +1194,7 @@ bool mons_sense_invis(const monster* mon)
     return (mons_class_flag(mon->type, M_SENSE_INVIS));
 }
 
-wchar_t mons_char(int mc)
+ucs_t mons_char(int mc)
 {
     return monster_symbols[mc].glyph;
 }

@@ -833,8 +833,8 @@ static int kill_lualc_symbol(lua_State *ls)
     kill_exp *ke = static_cast<kill_exp*>(lua_touserdata(ls, 1));
     if (ke)
     {
-        wchar_t ch = ke->monnum != -1?
-                     mons_char(ke->monnum) :
+        ucs_t ch = ke->monnum != -1?
+                   mons_char(ke->monnum) :
               is_ghost(ke)? 'p' : '&';
 
         if (ke->monnum == MONS_PROGRAM_BUG)
