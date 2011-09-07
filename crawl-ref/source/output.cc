@@ -1337,7 +1337,7 @@ const char *equip_slot_to_name(int equip)
 int equip_name_to_slot(const char *s)
 {
     for (int i = 0; i < NUM_EQUIP; ++i)
-        if (!stricmp(s_equip_slot_names[i], s))
+        if (!strcasecmp(s_equip_slot_names[i], s))
             return i;
 
     return -1;

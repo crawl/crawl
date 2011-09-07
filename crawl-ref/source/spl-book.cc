@@ -897,7 +897,7 @@ static bool _sort_mem_spells(spell_type a, spell_type b)
     if (spell_difficulty(a) != spell_difficulty(b))
         return (spell_difficulty(a) < spell_difficulty(b));
 
-    return (stricmp(spell_title(a), spell_title(b)) < 0);
+    return (strcasecmp(spell_title(a), spell_title(b)) < 0);
 }
 
 std::vector<spell_type> get_mem_spell_list(std::vector<int> &books)
