@@ -5,7 +5,7 @@
 
 struct screen_cell_t
 {
-    wchar_t glyph;
+    ucs_t glyph;
     unsigned short colour; // TODO: check if this is real colour (8 bit)
     unsigned short flash_colour;
 #ifdef USE_TILE

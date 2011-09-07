@@ -288,7 +288,7 @@ bool name_zombie(monster* mon, const monster* orig);
 
 int mons_power(int mc);
 
-wchar_t mons_char(int mc);
+ucs_t mons_char(int mc);
 char mons_base_char(int mc);
 
 int mons_class_colour(int mc);
