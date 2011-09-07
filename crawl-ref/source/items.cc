@@ -3268,7 +3268,6 @@ bool item_def::is_mundane() const
 static void _rune_from_specs(const char* _specs, item_def &item)
 {
     char specs[80];
-    char obj_name[ ITEMNAME_SIZE ];
 
     item.sub_type = MISC_RUNE_OF_ZOT;
 
@@ -3284,9 +3283,7 @@ static void _rune_from_specs(const char* _specs, item_def &item)
         {
             item.plus = i;
 
-            strlcpy(obj_name, item.name(DESC_PLAIN).c_str(), sizeof(obj_name));
-
-            if (strstr(strlwr(obj_name), specs))
+            if (lowercase_string(item.name(DESC_PLAIN)).find(specs) != std::string::npos)
                 return;
         }
     }
@@ -3501,9 +3498,6 @@ static bool _book_from_spell(const char* specs, item_def &item)
 bool get_item_by_name(item_def *item, char* specs,
                       object_class_type class_wanted, bool create_for_real)
 {
-    char           obj_name[ ITEMNAME_SIZE ];
-    char*          ptr;
-    int            best_index;
     int            type_wanted    = -1;
     int            special_wanted = 0;
 
@@ -3535,23 +3529,21 @@ bool get_item_by_name(item_def *item, char* specs,
     if (!item->sub_type)
     {
         type_wanted = -1;
-        best_index  = 10000;
+        size_t best_index  = 10000;
 
         for (int i = 0; i < get_max_subtype(item->base_type); ++i)
         {
             item->sub_type = i;
-            strlcpy(obj_name, item->name(DESC_PLAIN).c_str(), sizeof(obj_name));
-
-            ptr = strstr(strlwr(obj_name), specs);
-            if (ptr != NULL)
+            size_t pos = lowercase_string(item->name(DESC_PLAIN)).find(specs);
+            if (pos != std::string::npos)
             {
                 // Earliest match is the winner.
-                if (ptr - obj_name < best_index)
+                if (pos < best_index)
                 {
                     if (create_for_real)
-                        mpr(obj_name);
+                        mpr(item->name(DESC_PLAIN).c_str());
                     type_wanted = i;
-                    best_index = ptr - obj_name;
+                    best_index = pos;
                 }
             }
         }
@@ -3582,10 +3574,8 @@ bool get_item_by_name(item_def *item, char* specs,
                     int index = unrand + UNRAND_START;
                     unrandart_entry* entry = get_unrand_entry(index);
 
-                    strlcpy(obj_name, entry->name, sizeof(obj_name));
-
-                    ptr = strstr(strlwr(obj_name), specs);
-                    if (ptr != NULL && entry->base_type == class_wanted)
+                    size_t pos = lowercase_string(entry->name).find(specs);
+                    if (pos != std::string::npos && entry->base_type == class_wanted)
                     {
                         make_item_unrandart(*item, index);
                         if (create_for_real)
@@ -3638,24 +3628,23 @@ bool get_item_by_name(item_def *item, char* specs,
 
         if (buf[0] != '\0')
         {
+            std::string buf_lwr = lowercase_string(buf);
             special_wanted = 0;
-            best_index = 10000;
+            size_t best_index = 10000;
 
             for (int i = SPWPN_NORMAL + 1; i < SPWPN_DEBUG_RANDART; ++i)
             {
                 item->special = i;
-                strlcpy(obj_name, item->name(DESC_PLAIN).c_str(), sizeof(obj_name));
-
-                ptr = strstr(strlwr(obj_name), strlwr(buf));
-                if (ptr != NULL)
+                size_t pos = lowercase_string(item->name(DESC_PLAIN)).find(buf_lwr);
+                if (pos != std::string::npos)
                 {
                     // earliest match is the winner
-                    if (ptr - obj_name < best_index)
+                    if (pos < best_index)
                     {
                         if (create_for_real)
-                            mpr(obj_name);
+                            mpr(item->name(DESC_PLAIN).c_str());
                         special_wanted = i;
-                        best_index = ptr - obj_name;
+                        best_index = pos;
                     }
                 }
             }

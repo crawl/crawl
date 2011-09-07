@@ -2,6 +2,7 @@
 
 #include "jobs.h"
 
+#include "libutil.h"
 #include "options.h"
 
 static const char * Job_Abbrev_List[ NUM_JOBS ] =
@@ -79,23 +80,17 @@ job_type get_job_by_name(const char *name)
     int i;
     job_type cl = JOB_UNKNOWN;
 
-    char *ptr;
-    char lowered_buff[80];
-    char lowered_job[80];
-
-    strncpy(lowered_buff, name, sizeof(lowered_buff));
-    strlwr(lowered_buff);
+    std::string low_name = lowercase_string(name);
 
     for (i = 0; i < NUM_JOBS; i++)
     {
-        strncpy(lowered_job, Job_Name_List[i], sizeof(lowered_job));
-        strlwr(lowered_job);
+        std::string low_job = lowercase_string(Job_Name_List[i]);
 
-        ptr = strstr(lowered_job, lowered_buff);
-        if (ptr != NULL)
+        size_t pos = low_job.find(low_name);
+        if (pos != std::string::npos)
         {
             cl = static_cast<job_type>(i);
-            if (ptr == lowered_job)  // prefix takes preference
+            if (!pos)  // prefix takes preference
                 break;
         }
     }

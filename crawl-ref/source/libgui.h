@@ -55,10 +55,5 @@ GotoRegion get_cursor_region();
 void delay(int ms);
 void update_screen();
 bool kbhit();
-
-#ifdef UNIX
-char *strlwr(char *str);
-#endif
-
 #endif // USE_TILE
 #endif // LIBGUI_H

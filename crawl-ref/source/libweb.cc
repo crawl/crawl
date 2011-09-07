@@ -201,56 +201,5 @@ bool kbhit()
     select(STDIN_FILENO+1, &fds, NULL, NULL, &tv);
     return FD_ISSET(STDIN_FILENO, &fds) != 0;
 }
-
-#ifdef UNIX
-int itoa(int value, char *strptr, int radix)
-{
-    unsigned int bitmask = 32768;
-    int ctr = 0;
-    int startflag = 0;
-
-    if (radix == 10)
-    {
-        sprintf(strptr, "%i", value);
-    }
-    else if (radix == 2)             /* int to "binary string" */
-    {
-        while (bitmask)
-        {
-            if (value & bitmask)
-            {
-                startflag = 1;
-                sprintf(strptr + ctr, "1");
-            }
-            else if (startflag)
-            {
-                sprintf(strptr + ctr, "0");
-            }
-
-            bitmask = bitmask >> 1;
-            if (startflag)
-                ctr++;
-        }
-
-        if (!startflag)         /* Special case if value == 0 */
-            sprintf((strptr + ctr++), "0");
-
-        strptr[ctr] = (char) NULL;
-    }
-    return (0);                /* Me? Fail? Nah. */
-}
-
-
-// Convert string to lowercase.
-char *strlwr(char *str)
-{
-    unsigned int i;
-
-    for (i = 0; i < strlen(str); i++)
-        str[i] = tolower(str[i]);
-
-    return (str);
-}
-
 #endif // #ifdef UNIX
 #endif // #ifdef USE_TILE_WEB
