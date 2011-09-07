@@ -3159,6 +3159,7 @@ static const char* _get_threat_desc(mon_threat_level_type threat)
     case MTHRT_EASY:    return "easy";
     case MTHRT_TOUGH:   return "dangerous";
     case MTHRT_NASTY:   return "extremely dangerous";
+    case MTHRT_UNDEF:
     default:            return "buggily threatening";
     }
 }
@@ -3236,7 +3237,8 @@ static std::string _monster_stat_description(const monster_info& mi)
 
     const char* pronoun = mi.pronoun(PRONOUN_CAP);
 
-    result << pronoun << " looks " << _get_threat_desc(mi.threat) << ".\n";
+    if (mi.threat != MTHRT_UNDEF)
+        result << pronoun << " looks " << _get_threat_desc(mi.threat) << ".\n";
 
     if (!resist_descriptions.empty())
     {
