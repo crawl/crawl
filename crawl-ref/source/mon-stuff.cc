@@ -1478,13 +1478,12 @@ int monster_die(monster* mons, killer_type killer,
 
     you.remove_beholder(mons);
     you.remove_fearmonger(mons);
+    // Uniques leave notes and milestones, so this information is already leaked.
+    remove_unique_annotation(mons);
 
     // Clear auto exclusion now the monster is killed - if we know about it.
-    if (mons_near(mons) || wizard)
-    {
+    if (mons_near(mons) || wizard || mons_is_unique(mons->type))
         remove_auto_exclude(mons);
-        remove_unique_annotation(mons);
-    }
 
           int  summon_type   = 0;
           int  duration      = 0;
