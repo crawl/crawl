@@ -163,6 +163,7 @@ enum mon_threat_level_type
     MTHRT_EASY,
     MTHRT_TOUGH,
     MTHRT_NASTY,
+    MTHRT_UNDEF,
 };
 
 habitat_type grid2habitat(dungeon_feature_type grid);

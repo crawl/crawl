@@ -195,6 +195,8 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     if (!no_regen)
         no_regen = !mons_class_can_regenerate(base_type);
 
+    threat = MTHRT_UNDEF;
+
     dam = MDAM_OKAY;
 
     fire_blocker = DNGN_UNSEEN;
