@@ -570,7 +570,7 @@ static void _describe_backlit(status_info* inf)
         inf->light_colour = LIGHTBLUE;
     else if (you.duration[DUR_LIQUID_FLAMES])
         inf->light_colour = RED;
-    else if (!you.antihaloed() && you.haloed())
+    else if (!you.umbraed() && you.haloed())
         inf->light_colour = YELLOW;
 
     inf->light_text   = "Glow";

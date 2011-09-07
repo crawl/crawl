@@ -2396,7 +2396,7 @@ int monster_die(monster* mons, killer_type killer,
     // Monsters haloes should be removed when they die.
     if (mons->holiness() == MH_HOLY)
         invalidate_agrid();
-    // Likewise silence and antihalos
+    // Likewise silence and umbras
     if (mons->type == MONS_SILENT_SPECTRE
         || mons->type == MONS_PROFANE_SERVITOR)
         invalidate_agrid();
