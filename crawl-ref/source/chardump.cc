@@ -1172,7 +1172,7 @@ static void _sdump_spell_usage(dump_params &par)
             v[i] = sp->second[i];
             v[27] += v[i];
         }
-        usage_vec.push_back(std::pair<spell_type, FixedVector<int, 28> >::pair(sp->first, v));
+        usage_vec.push_back(std::pair<spell_type, FixedVector<int, 28> >(sp->first, v));
     }
     std::sort(usage_vec.begin(), usage_vec.end(), _sort_by_casts);
 
