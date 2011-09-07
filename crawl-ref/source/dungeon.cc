@@ -4621,21 +4621,18 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
             grd(where) = trap_category(spec->tr_type);
     }
     else if (f.feat >= 0)
-    {
         grd(where) = static_cast<dungeon_feature_type>(f.feat);
-        if (f.mimic > 0 && one_chance_in(f.mimic))
-            env.level_map_mask(where) |= MMT_MIMIC;
-        else if (f.no_mimic)
-            env.level_map_mask(where) |= MMT_NO_MIMIC;
-    }
     else if (f.glyph >= 0)
-    {
         _vault_grid_glyph(place, where, f.glyph);
-    }
     else if (f.shop.get())
         place_spec_shop(place.level_number, where, f.shop.get());
     else
         grd(where) = DNGN_FLOOR;
+
+    if (f.mimic > 0 && one_chance_in(f.mimic))
+        env.level_map_mask(where) |= MMT_MIMIC;
+    else if (f.no_mimic)
+        env.level_map_mask(where) |= MMT_NO_MIMIC;
 
     mons_list &mons = mapsp.get_monsters();
     _dgn_place_one_monster(place, mons, place.level_number, where);
