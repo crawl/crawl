@@ -46,16 +46,7 @@ inline bool is_smart_cursor_enabled() { return (false); }
 
 void set_mouse_enabled(bool enabled);
 
-#ifndef _LIBUNIX_IMPLEMENTATION
-/* Some stuff from curses, to remove compiling warnings.. */
-extern "C"
-{
-    int getch(void);
-    int noecho(void);
-    int echo(void);
-    char *strlwr(char *str);
-}
-#endif
+char *strlwr(char *str);
 
 
 #endif
