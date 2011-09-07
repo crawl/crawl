@@ -7,7 +7,7 @@ while(<FLIST>)
 {
     chomp;
     next unless -f $_;
-    next if /\.(png|ttf|ico|icns|fig|tex|eps|pdf)$/i;
+    next if /\.(png|gif|ttf|ico|icns|fig|tex|eps|pdf)$/i;
     next if /\.(sln|vim|pbxproj|vsprops|plist)$/i;
     next if /vcproj/;
     next if /^\.gitmodules$/;
