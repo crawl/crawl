@@ -95,7 +95,7 @@ static bool w32_smart_cursor = true;
 
 // we can do straight translation of DOS color to win32 console color.
 #define WIN32COLOR(col) (WORD)(col)
-static void writeChar(wchar_t c);
+static void writeChar(ucs_t c);
 static void bFlush(void);
 static void _setcursortype_internal(bool curstype);
 
@@ -123,7 +123,7 @@ static DWORD crawlColorData[16] =
 };
  */
 
-void writeChar(wchar_t c)
+void writeChar(ucs_t c)
 {
     if (c == '\t')
     {
@@ -150,6 +150,10 @@ void writeChar(wchar_t c)
 
         return;
     }
+
+    // check for upper Unicode which Windows can't handle
+    if (c > 0xFFFF)
+        c = 0xBF; // '¿'
 
     int tc = WIN32COLOR(current_color);
     pci = &screen[SCREENINDEX(cx,cy)];
@@ -598,7 +602,7 @@ int wherey(void)
     return cy+1;
 }
 
-void putwch(wchar_t c)
+void putwch(ucs_t c)
 {
     if (c == 0)
         c = ' ';
