@@ -453,9 +453,9 @@ LUAFN(you_in_branch)
 
     for (int i = 0; i < NUM_BRANCHES; i++)
     {
-        if (stricmp(name, branches[i].shortname) == 0
-            || stricmp(name, branches[i].longname) == 0
-            || stricmp(name, branches[i].abbrevname) == 0)
+        if (strcasecmp(name, branches[i].shortname) == 0
+            || strcasecmp(name, branches[i].longname) == 0
+            || strcasecmp(name, branches[i].abbrevname) == 0)
         {
             if (br != NUM_BRANCHES)
             {
