@@ -150,20 +150,7 @@ static void _give_wand(monster* mon, int level)
         {
             // Technically these wands will be undercharged, but it
             // doesn't really matter.
-            if (wand.sub_type == WAND_FIRE)
-                wand.sub_type = WAND_FLAME;
-
-            if (wand.sub_type == WAND_COLD)
-                wand.sub_type = WAND_FROST;
-
-            if (wand.sub_type == WAND_LIGHTNING)
-                wand.sub_type = (coinflip() ? WAND_FLAME : WAND_FROST);
-
-            if (wand.sub_type == WAND_PARALYSIS)
-                wand.sub_type = WAND_SLOWING;
-
-            if (wand.sub_type == WAND_DRAINING)
-                wand.sub_type = WAND_POLYMORPH_OTHER;
+            wand.sub_type = degrade_high_tier_wand(wand.sub_type);
         }
 
         wand.flags = 0;
