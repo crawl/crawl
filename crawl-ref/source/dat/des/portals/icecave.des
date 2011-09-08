@@ -64,7 +64,7 @@ function ice_cave_portal(e)
         desc_long = desc_long,
         entity = 'archway',
         dst = difficulty,
-        dstname = "ice cave",
+        dstname = "ice_cave",
         dstname_abbrev = "IceCv",
         dstorigin = "in an ice cave",
         overview = "frozen archway",

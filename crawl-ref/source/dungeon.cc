@@ -2118,10 +2118,17 @@ static void _place_feature_mimics(int level_number,
                  feat_type_name(feat), ri->x, ri->y);
             env.level_map_mask(*ri) |= MMT_MIMIC;
 
-            // If we're mimicing a labyrinth entrance, give a chance for
+            // If we're mimicing a unique portal vault, give a chance for
             // another one to spawn.
-            if (feat == DNGN_ENTER_LABYRINTH)
-                you.uniq_map_tags.erase("uniq_lab");
+            std::string dst = env.markers.property_at(pos, MAT_ANY, "dstname");
+            if (dst.empty())
+                dst = env.markers.property_at(pos, MAT_ANY, "dst");
+            if (!dst.empty())
+            {
+                const std::string tag = "uniq_" + dst;
+                if (you.uniq_map_tags.find(tag) != you.uniq_map_tags.end())
+                    you.uniq_map_tags.erase(tag);
+            }
         }
     }
 }
