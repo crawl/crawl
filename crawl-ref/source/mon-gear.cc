@@ -703,12 +703,19 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         }
         break;
 
-    case MONS_REAPER:
-        level = MAKE_GOOD_ITEM;
-        // intentional fall-through...
     case MONS_SIGMUND:
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = WPN_SCYTHE;
+        break;
+
+    case MONS_REAPER:
+        force_item     = true;
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_SCYTHE;
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_REACHING);
+        item.plus      = random2(5);
+        item.plus2     = random2(5);
         break;
 
     case MONS_BALRUG:
