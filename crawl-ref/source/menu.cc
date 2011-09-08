@@ -51,7 +51,7 @@ void MenuDisplayText::draw_stock_item(int index, const MenuEntry *me)
         return;
 
     const int col = m_menu->item_colour(index, me);
-    textattr(col);
+    textcolor(col);
     const bool needs_cursor = (m_menu->get_cursor() == index
                                && m_menu->is_set(MF_MULTISELECT));
 
@@ -1262,7 +1262,7 @@ void Menu::write_title()
     if (!first)
         ASSERT(title2);
 
-    textattr(item_colour(-1, first ? title : title2));
+    textcolor(item_colour(-1, first ? title : title2));
 
     std::string text = (first ? title->get_text() : title2->get_text());
     cprintf("%s", text.c_str());

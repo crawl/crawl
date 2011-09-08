@@ -203,12 +203,6 @@ inline bool testbits(uint64_t flags, uint64_t test)
     return ((flags & test) == test);
 }
 
-#ifndef USE_TILE
-coord_def cgettopleft(GotoRegion region = GOTO_CRT);
-coord_def cgetpos(GotoRegion region = GOTO_CRT);
-void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
-GotoRegion get_cursor_region();
-#endif
 coord_def cgetsize(GotoRegion region = GOTO_CRT);
 void cscroll(int n, GotoRegion region);
 

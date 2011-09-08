@@ -19,13 +19,6 @@
 
 #include <stack>
 
-#ifdef UNIX
- #ifndef USE_TILE
- #include "libunix.h"
- #endif
-#endif
-
-
 #include "cio.h"
 #include "colour.h"
 #include "database.h"
@@ -96,22 +89,9 @@ unsigned char get_ch()
 void cio_init()
 {
     crawl_state.io_inited = true;
-
-#if defined(UNIX) && !defined(USE_TILE)
-    unixcurses_startup();
-#endif
-
-#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
-    init_libw32c();
-#endif
-
+    console_startup();
     set_cursor_enabled(false);
-
     crawl_view.init_geometry();
-
-#ifdef USE_TILE
-    tiles.resize();
-#endif
 }
 
 void cio_cleanup()
@@ -119,16 +99,7 @@ void cio_cleanup()
     if (!crawl_state.io_inited)
         return;
 
-#if defined(USE_TILE)
-    tiles.shutdown();
-#elif defined(UNIX)
-    unixcurses_shutdown();
-#endif
-
-#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
-    deinit_libw32c();
-#endif
-
+    console_shutdown();
     crawl_state.io_inited = false;
 }
 

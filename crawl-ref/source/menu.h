@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <stdio.h>
 #include <time.h>
 #include "externs.h"
 #include "format.h"

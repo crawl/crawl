@@ -733,7 +733,7 @@ void view_update_at(const coord_def &pos)
 
     // Force colour back to normal, else clrscr() will flood screen
     // with this colour on DOS.
-    textattr(LIGHTGREY);
+    textcolor(LIGHTGREY);
 #endif
 }
 
