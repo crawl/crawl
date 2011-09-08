@@ -585,6 +585,10 @@ ITEM:     (list of items, separated by comma)
           * "unobtainable" hints that the item is supposed to never fall into
             the player's hands.  It doesn't actually keep it from doing so,
             just tells that to acquirement and (TODO) troves.
+          * "mimic:N" gives the item one chance in N of being turned into a
+            mimic. The ":N" can also be omitted for a guaranteed mimic.
+          * "no_mimic" prevents the item from being randomly turned into a
+            mimic by the dungeon builder.
 
           WARNING: While checks are done to make sure that an armour ego
           isn't given to a weapon, a weapon ego to a missile, and so on, and
@@ -1210,6 +1214,13 @@ KFEAT:    G = C / needle trap / antique armour shop / altar_zin
           to the trap name:
 
           KFEAT: A = known needle trap
+
+          You can also place feature mimic using the same syntax as item
+          mimics (or prevent random placement of feature mimics). For
+          example this altar has one chance in 10 of being turned into an
+          altar mimic:
+
+          KFEAT: C = C mimic:10
 
           The placeholder used by KFEAT can be shared by KITEM and KMONS;
           see below. If the placeholder is shared, all defined Kxxxx
