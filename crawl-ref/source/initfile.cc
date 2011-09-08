@@ -362,10 +362,6 @@ static job_type _str_to_job(const std::string &str)
         job = JOB_UNKNOWN;
 #endif
 
-// XXX: Arcane Marksmen are temporarily disabled
-    if (job == JOB_ARCANE_MARKSMAN)
-        job = JOB_UNKNOWN;
-
     if (job == JOB_UNKNOWN)
         fprintf(stderr, "Unknown background choice: %s\n", str.c_str());
 
@@ -450,7 +446,7 @@ static tag_pref _str_to_tag_pref(const char *opt)
 {
     for (int i = 0; i < TAGPREF_MAX; i++)
     {
-        if (!stricmp(opt, tag_prefs[i]))
+        if (!strcasecmp(opt, tag_prefs[i]))
             return ((tag_pref)i);
     }
 
@@ -1152,13 +1148,6 @@ void game_options::add_fire_order_slot(const std::string &s)
         fire_order.push_back(flags);
 }
 
-void game_options::add_mon_glyph_override(monster_type mtype,
-                                          mon_display &mdisp)
-{
-    mdisp.type = mtype;
-    mon_glyph_overrides.push_back(mdisp);
-}
-
 void game_options::add_mon_glyph_overrides(const std::string &mons,
                                            mon_display &mdisp)
 {
@@ -1174,10 +1163,10 @@ void game_options::add_mon_glyph_overrides(const std::string &mons,
         if (!me || me->mc == MONS_PROGRAM_BUG)
             continue;
 
-        if (me->showchar == letter || me->name == mons)
+        if (me->basechar == letter || me->name == mons)
         {
             found = true;
-            add_mon_glyph_override(static_cast<monster_type>(i), mdisp);
+            mon_glyph_overrides[static_cast<monster_type>(i)] = mdisp;
         }
     }
     if (!found)
@@ -3816,7 +3805,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
 
         int o;
         for (o = 0; o < num_cmd_ops; o++)
-            if (stricmp(cmd_ops[o], arg) == 0)
+            if (strcasecmp(cmd_ops[o], arg) == 0)
                 break;
 
         // Print the list of commandline options for "--help".

@@ -127,7 +127,8 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_PARALYSIS
         || note.type == NOTE_NAMED_ALLY
         || note.type == NOTE_ALLY_DEATH
-        || note.type == NOTE_BANISH_MONSTER)
+        || note.type == NOTE_BANISH_MONSTER
+        || note.type == NOTE_FEAT_MIMIC)
     {
         return (true);
     }
@@ -384,6 +385,9 @@ std::string Note::describe(bool when, bool where, bool what) const
             break;
         case NOTE_SEEN_FEAT:
             result << "Found " << name;
+            break;
+        case NOTE_FEAT_MIMIC:
+            result << name <<" was a mimic.";
             break;
         case NOTE_XOM_EFFECT:
             result << "XOM: " << name;

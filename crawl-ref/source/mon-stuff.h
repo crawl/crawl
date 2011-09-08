@@ -55,10 +55,12 @@ struct level_exit
 
 
 const item_def *give_mimic_item(monster* mimic);
-item_def &get_mimic_item(const monster* mimic);
+const item_def* get_mimic_item(const monster* mimic);
 int  get_mimic_colour(const monster* mimic);
 dungeon_feature_type get_mimic_feat (const monster* mimic);
 bool feature_mimic_at (const coord_def &c);
+item_def* item_mimic_at(const coord_def &c);
+bool mimic_at(const coord_def &c);
 
 void alert_nearby_monsters(void);
 
@@ -182,6 +184,7 @@ bool monster_random_space(const monster* mons, coord_def& target,
                           bool forbid_sanctuary = false);
 bool monster_random_space(monster_type mon, coord_def& target,
                           bool forbid_sanctuary = false);
+bool shove_monster(monster* mons);
 void monster_teleport(monster* mons, bool instan, bool silent = false);
 void mons_clear_trapping_net(monster* mon);
 

@@ -51,7 +51,7 @@ void MenuDisplayText::draw_stock_item(int index, const MenuEntry *me)
         return;
 
     const int col = m_menu->item_colour(index, me);
-    textattr(col);
+    textcolor(col);
     const bool needs_cursor = (m_menu->get_cursor() == index
                                && m_menu->is_set(MF_MULTISELECT));
 
@@ -925,8 +925,18 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     }
     else if (mons_is_mimic(m->type))
     {
-        tileidx_t idx = tileidx_monster(m) & TILE_FLAG_MASK;
-        tileset.push_back(tile_def(idx, TEX_DEFAULT));
+        tileidx_t idx;
+        if (mons_is_feat_mimic(m->type))
+        {
+            idx = m->props["tile_idx"].get_int();
+            tileset.push_back(tile_def(idx, TEX_FEAT));
+        }
+        else
+        {
+            idx = tileidx_monster(m) & TILE_FLAG_MASK;
+            tileset.push_back(tile_def(idx, TEX_DEFAULT));
+        }
+        tileset.push_back(tile_def(TILEI_MIMIC, TEX_ICONS));
     }
     else
     {
@@ -1252,7 +1262,7 @@ void Menu::write_title()
     if (!first)
         ASSERT(title2);
 
-    textattr(item_colour(-1, first ? title : title2));
+    textcolor(item_colour(-1, first ? title : title2));
 
     std::string text = (first ? title->get_text() : title2->get_text());
     cprintf("%s", text.c_str());

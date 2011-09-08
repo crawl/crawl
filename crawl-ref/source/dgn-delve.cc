@@ -253,12 +253,15 @@ void delve(map_lines *map, int ngb_min, int ngb_max, int connchance, int cellnum
     ASSERT(cellnum <= world);
 
     int delved = 0;
+    int retries = 0;
 
+retry:
+    int minseed = delved + 2 * ngb_min;
     coord_def center = _rndpull(store, 999999);
     if (center.origin()) // can't do anything
         return;
     store.push_back(center);
-    while (delved < 2 * ngb_min && delved < cellnum)
+    while (delved < minseed && delved < cellnum)
     {
         coord_def c = _rndpull(store, top);
         if (c.origin())
@@ -302,5 +305,13 @@ void delve(map_lines *map, int ngb_min, int ngb_max, int connchance, int cellnum
 
         _digcell(map, store, c);
         delved++;
+    }
+
+    // Certain parameters (2,2 and sometimes 3,3) tend to get stuck.
+    if (delved < cellnum && retries++ < 50)
+    {
+        dprf("delve() try %d: only %d/%d done", retries, delved, cellnum);
+        _make_seed(map, store);
+        goto retry;
     }
 }

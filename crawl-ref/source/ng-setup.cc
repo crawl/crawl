@@ -446,37 +446,39 @@ static void _update_weapon(const newgame_def& ng)
 {
     ASSERT(ng.weapon != NUM_WEAPONS);
 
+    const int plus = you.char_class == JOB_HUNTER ? 1 : 0;
+
     switch(ng.weapon)
     {
     case WPN_ROCKS:
-        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5, 1);
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5, plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
         break;
     case WPN_JAVELINS:
-        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6, 1);
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_JAVELIN, -1, 6, plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
         break;
     case WPN_DARTS:
-        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 30, 1);
+        newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 30, plus);
         newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_THROWING_NET, -1, 2);
         break;
     case WPN_BOW:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW);
-        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 25, 1);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 25, plus);
 
         // Wield the bow instead.
         you.equip[EQ_WEAPON] = 1;
         break;
     case WPN_CROSSBOW:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW);
-        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 25, 1);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 25, plus);
 
         // Wield the crossbow instead.
         you.equip[EQ_WEAPON] = 1;
         break;
     case WPN_SLING:
         newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
-        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 25, 1);
+        newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1, 25, plus);
 
         // Wield the sling instead.
         you.equip[EQ_WEAPON] = 1;
@@ -733,44 +735,16 @@ static void _give_items_skills(const newgame_def& ng)
 
     case JOB_ARCANE_MARKSMAN:
         newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
-
-        switch (you.species)
-        {
-        case SP_HALFLING:
-            newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_SLING);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_SLING_BULLET, -1,
-                               30);
-
-            // Wield the sling instead.
-            you.equip[EQ_WEAPON] = 1;
-            break;
-
-        case SP_MOUNTAIN_DWARF:
-        case SP_DEEP_DWARF:
-        case SP_KOBOLD:
-            newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_CROSSBOW);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_BOLT, -1, 25);
-
-            // Wield the crossbow instead.
-            you.equip[EQ_WEAPON] = 1;
-            break;
-
-        default:
-            newgame_make_item(1, EQ_NONE, OBJ_WEAPONS, WPN_BOW);
-            newgame_make_item(2, EQ_NONE, OBJ_MISSILES, MI_ARROW, -1, 25);
-
-            // Wield the bow instead.
-            you.equip[EQ_WEAPON] = 1;
-            break;
-        }
+        _update_weapon(ng);
 
         // And give them a book
-        newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_BRANDS);
+        newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_DEBILITATION);
 
+        you.skills[SK_FIGHTING]             = 1;
         you.skills[range_skill(you.inv[1])] = 2;
-        you.skills[SK_DODGING]              = 1;
+        you.skills[SK_DODGING]              = 2;
         you.skills[SK_SPELLCASTING]         = 2;
-        you.skills[SK_HEXES]                = 2;
+        you.skills[SK_HEXES]                = 3;
         break;
 
     case JOB_WIZARD:
@@ -1200,6 +1174,7 @@ static void _give_basic_spells(job_type which_job)
         which_spell = SPELL_PAIN;
         break;
     case JOB_ENCHANTER:
+    case JOB_ARCANE_MARKSMAN:
         which_spell = SPELL_CORONA;
         break;
     case JOB_FIRE_ELEMENTALIST:
@@ -1456,6 +1431,17 @@ static void _setup_generic(const newgame_def& ng)
             item_colour(you.inv[i]);  // set correct special and colour
             _apply_job_colour(you.inv[i]);
         }
+
+    // If the item in slot 'a' is a throwable weapon like a dagger,
+    // inscribe it with {=f} to prevent it being autoquivered.
+    // (It's no fun to discover you've just thrown your +2 dagger
+    // because you ran out of needles for your blowgun!)
+    // FIXME: It ought to be possible to override this with autoinscribe rules.
+    if (you.inv[0].base_type == OBJ_WEAPONS
+        && is_throwable(&you, you.inv[0]))
+    {
+        you.inv[0].inscription = "=f";
+    }
 
     // Apply autoinscribe rules to inventory.
     request_autoinscribe();

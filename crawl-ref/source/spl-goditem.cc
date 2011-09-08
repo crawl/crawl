@@ -512,10 +512,6 @@ static bool _mark_detected_creature(coord_def where, monster* mon,
             where = place;
     }
 
-    // Mimics are too obvious by now, even out of LOS.
-    if (mons_is_unknown_mimic(mon))
-        discover_mimic(mon);
-
     env.map_knowledge(where).set_detected_monster(mons_detected_base(mon->type));
 
     return (found_good);
@@ -537,6 +533,7 @@ int detect_creatures(int pow, bool telepathic)
 
     for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
     {
+        discover_mimic(*ri);
         if (monster* mon = monster_at(*ri))
         {
             // If you can see the monster, don't "detect" it elsewhere.
@@ -974,8 +971,6 @@ bool cast_smiting(int pow, monster* mons)
         mprf("You smite %s!", mons->name(DESC_NOCAP_THE).c_str());
 
         behaviour_event(mons, ME_ANNOY, MHITYOU);
-        if (mons_is_mimic(mons->type))
-            mimic_alert(mons);
     }
 
     enable_attack_conducts(conducts);

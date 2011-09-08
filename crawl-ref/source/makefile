@@ -8,10 +8,8 @@
 
 # Typical targets:
 #    make
-#    make wizard
 #    make debug
 #    make install
-#    make wizard install
 #    make debug install
 #    -- note, unlike most programs, you need to specify build type when
 #       installing even if you just built it.
@@ -42,6 +40,8 @@
 #
 #    USE_ICC       -- set to use Intel's compiler
 #    ASSERTS       -- set to enable assertion checks (implied in debug mode)
+#    NOWIZARD      -- set to disable wizard mode.  Use if you have untrusted
+#                     remote players without DGL.
 #
 #
 # Requirements:
@@ -429,6 +429,13 @@ CC += -gcc-name=gcc-$(GCC_VER) -gxx-name=g++-$(GCC_VER)
 CXX += -gcc-name=gcc-$(GCC_VER) -gxx-name=g++-$(GCC_VER)
 endif
 
+ifndef CROSSHOST
+HOSTCC = $(CC)
+HOSTCXX = $(CXX)
+export HOSTCC
+export HOSTCXX
+endif
+
 endif # MacOS
 
 ifndef CROSSHOST
@@ -629,23 +636,14 @@ endif
 # No optimization, full debugging.
 ifneq (,$(findstring debug,$(MAKECMDGOALS)))
 	FULLDEBUG=YesPlease
-	WIZARD=YesPlease
 	DEBUG=YesPlease
 	NO_OPTIMIZE=YesPlease
-endif
-
-# Wizard
-# Optimized, with wizard mode.
-ifneq (,$(findstring wizard,$(MAKECMDGOALS)))
-	WIZARD=YesPlease
-	DEBUG=YesPlease
 endif
 
 # Profile
 # Optimized, with full debugging.
 ifneq (,$(findstring profile,$(MAKECMDGOALS)))
 	FULLDEBUG=YesPlease
-	WIZARD=YesPlease
 	DEBUG=YesPlease
 endif
 
@@ -660,7 +658,7 @@ ifdef DEBUG
 CFOTHERS := -ggdb $(CFOTHERS)
 DEFINES += -DDEBUG
 endif
-ifdef WIZARD
+ifndef NOWIZARD
 DEFINES += -DWIZARD
 endif
 ifdef NO_OPTIMIZE
@@ -911,8 +909,7 @@ SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.xz
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
 .PHONY: all test install clean clean-contrib clean-rltiles distclean debug \
-        profile wizard package-source source build-windows package-windows \
-        rest
+        profile package-source source build-windows package-windows rest
 
 all: $(GAME) $(GENERATED_DOCS) webserver
 
@@ -1156,7 +1153,6 @@ $(GAME): $(GAME_DEPENDS)
 
 debug: all
 profile: all
-wizard: all
 
 doxy-simple: doxygen-simple
 doxygen-simple:

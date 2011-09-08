@@ -418,6 +418,7 @@ public:
     bool can_see_invisible(bool unid, bool transient = true) const;
     bool visible_to(const actor *looker) const;
     bool can_see(const actor* a) const;
+    bool nightvision() const;
 
     bool see_cell(const coord_def& p) const;
     const los_base* get_los();
@@ -614,9 +615,11 @@ public:
     bool confused() const;
     bool caught() const;
     bool backlit(bool check_haloed = true, bool self_halo = true) const;
+    bool umbra(bool check_haloed = true, bool self_halo = true) const;
     int halo_radius2() const;
     int silence_radius2() const;
     int liquefying_radius2 () const;
+    int umbra_radius2 () const;
     bool glows_naturally() const;
     bool petrifying() const;
     bool petrified() const;

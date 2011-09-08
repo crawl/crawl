@@ -63,7 +63,7 @@ targetter_smite::targetter_smite(const actor* act, int ran,
 
 bool targetter_smite::valid_aim(coord_def a)
 {
-    if (a != origin && !cell_see_cell(origin, a))
+    if (a != origin && !cell_see_cell(origin, a, LOS_DEFAULT))
         return notify_fail("You cannot see that place.");
     if ((origin - a).abs() > range2)
         return notify_fail("Out of range.");
@@ -128,7 +128,7 @@ bool targetter_reach::valid_aim(coord_def a)
 {
     if (origin == a)
         return notify_fail("That would be overly suicidal.");
-    if (!cell_see_cell(origin, a))
+    if (!cell_see_cell(origin, a, LOS_DEFAULT))
         return notify_fail("You cannot see that place.");
     if (!agent->see_cell_no_trans(a))
         return notify_fail("You can't get through.");
@@ -182,8 +182,13 @@ bool targetter_cloud::valid_aim(coord_def a)
 {
     if (agent && (origin - a).abs() > range2)
         return notify_fail("Out of range.");
-    if (!map_bounds(a) || agent && origin != a && !cell_see_cell(origin, a))
+    if (!map_bounds(a)
+        || agent
+           && origin != a
+           && !cell_see_cell(origin, a, LOS_DEFAULT))
+    {
         return notify_fail("You cannot see that place.");
+    }
     if (feat_is_solid(grd(a)))
         return notify_fail(_wallmsg(a));
     if (agent)

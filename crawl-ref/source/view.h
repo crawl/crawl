@@ -18,7 +18,7 @@ bool mon_enemies_around(const monster* mons);
 void seen_monsters_react();
 
 void find_features(const std::vector<coord_def>& features,
-        wchar_t feature, std::vector<coord_def> *found);
+                   ucs_t feature, std::vector<coord_def> *found);
 
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force = false, bool deterministic = false,
@@ -26,7 +26,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 void reautomap_level();
 void fully_map_level();
 
-bool is_feature(wchar_t feature, const coord_def& where);
+bool is_feature(ucs_t feature, const coord_def& where);
 
 std::string screenshot();
 

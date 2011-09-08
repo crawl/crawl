@@ -740,7 +740,6 @@ private:
     void parse_mons_spells(mons_spec &slot, std::vector<std::string> &spells);
     mons_spec pick_monster(mons_spec_slot &slot);
     int fix_demon(int id) const;
-    bool check_mimic(const std::string &s, int *mid, bool *fix) const;
 
 private:
     std::vector< mons_spec_slot > mons;
@@ -825,9 +824,11 @@ struct feature_spec
     std::auto_ptr<shop_spec> shop; /**> A pointer to a shop_spec. */
     std::auto_ptr<trap_spec> trap; /**> A pointer to a trap_spec. */
     int glyph;                     /**> What glyph to use instead. */
+    int mimic;                     /**> 1 chance in x to be a feature mimic. */
+    bool no_mimic;                 /**> Prevents random feature mimic here. */
 
     feature_spec();
-    feature_spec(int f, int wt = 10);
+    feature_spec(int f, int wt = 10, int _mimic = 0, bool _no_mimic = false);
     feature_spec(const feature_spec& other);
     feature_spec& operator = (const feature_spec& other);
     void init_with (const feature_spec& other);

@@ -109,7 +109,7 @@ struct monsterentry
 {
     short mc;            // monster number
 
-    char showchar;
+    char basechar;
     uint8_t colour;
     const char *name;
 
@@ -163,6 +163,7 @@ enum mon_threat_level_type
     MTHRT_EASY,
     MTHRT_TOUGH,
     MTHRT_NASTY,
+    MTHRT_UNDEF,
 };
 
 habitat_type grid2habitat(dungeon_feature_type grid);
@@ -230,8 +231,8 @@ mon_holy_type mons_class_holiness(int mc);
 bool mons_is_mimic(int mc);
 bool mons_is_item_mimic(int mc);
 bool mons_is_feat_mimic(int mc);
-void discover_mimic(monster* mimic);
-
+void discover_mimic(const coord_def& pos);
+void discover_shifter(monster* shifter);
 
 bool mons_is_statue(int mc, bool allow_disintegrate = false);
 bool mons_is_demon(int mc);
@@ -288,7 +289,7 @@ bool name_zombie(monster* mon, const monster* orig);
 
 int mons_power(int mc);
 
-wchar_t mons_char(int mc);
+ucs_t mons_char(int mc);
 char mons_base_char(int mc);
 
 int mons_class_colour(int mc);
@@ -341,8 +342,6 @@ bool mons_is_batty(const monster* m);
 bool mons_is_influenced_by_sanctuary(const monster* m);
 bool mons_is_fleeing_sanctuary(const monster* m);
 bool mons_was_seen(const monster* m);
-bool mons_is_known_mimic(const monster* m);
-bool mons_is_unknown_mimic(const monster* m);
 bool mons_class_is_slime(int mc);
 bool mons_is_slime(const monster* mon);
 bool mons_class_is_plant(int mc);

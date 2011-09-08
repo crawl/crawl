@@ -2,6 +2,7 @@
 
 #include "branch.h"
 #include "externs.h"
+#include "files.h"
 #include "place.h"
 #include "player.h"
 #include "spl-transloc.h"
@@ -210,4 +211,15 @@ uint32_t get_branch_flags(branch_type branch)
     }
 
     return branches[branch].branch_flags;
+}
+
+branch_type get_branch_at(const coord_def& pos)
+{
+    return level_id::current().get_next_level_id(pos).branch;
+}
+
+bool branch_is_unfinished(branch_type branch)
+{
+    return branch == BRANCH_SPIDER_NEST || branch == BRANCH_FOREST
+           || branch == BRANCH_DWARVEN_HALL;
 }

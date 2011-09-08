@@ -1916,7 +1916,7 @@ void handle_monster_move(monster* mons)
     fedhas_neutralise(mons);
 
     // Monster just summoned (or just took stairs), skip this action.
-    if (testbits(mons->flags, MF_JUST_SUMMONED))
+    if (!mons_is_mimic(mons->type) && testbits(mons->flags, MF_JUST_SUMMONED))
     {
         mons->flags &= ~MF_JUST_SUMMONED;
         return;
@@ -1924,7 +1924,14 @@ void handle_monster_move(monster* mons)
 
     mon_acting mact(mons);
 
-    _monster_add_energy(mons);
+    // Mimics get enough energy to act immediately when revealed.
+    if (mons_is_mimic(mons->type) && testbits(mons->flags, MF_JUST_SUMMONED))
+    {
+        mons->speed_increment = 80;
+        mons->flags &= ~MF_JUST_SUMMONED;
+    }
+    else
+        _monster_add_energy(mons);
 
     // Handle clouds on nonmoving monsters.
     if (mons->speed == 0)
@@ -2653,8 +2660,10 @@ static bool _monster_eat_item(monster* mons, bool nearby)
         {
             // This is done manually instead of using heal_monster(),
             // because that function doesn't work quite this way. - bwr
+            int base_max = mons_avg_hp(mons->type);
             mons->hit_points += hps_changed;
-            mons->hit_points = std::min(mons->hit_points, MAX_MONSTER_HP);
+            mons->hit_points = std::min(MAX_MONSTER_HP,
+                               std::min(base_max * 2, mons->hit_points));
             mons->max_hit_points = std::max(mons->hit_points,
                                                mons->max_hit_points);
         }

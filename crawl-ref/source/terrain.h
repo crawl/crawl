@@ -78,6 +78,7 @@ bool feat_is_player_altar(dungeon_feature_type grid);
 
 bool feat_is_branch_stairs(dungeon_feature_type feat);
 bool feat_is_bidirectional_portal(dungeon_feature_type feat);
+bool feat_is_fountain(dungeon_feature_type feat);
 void find_connected_identical(const coord_def& d, dungeon_feature_type ft,
                               std::set<coord_def>& out);
 std::set<coord_def> connected_doors(const coord_def& d);
@@ -121,6 +122,7 @@ bool slide_feature_over(const coord_def &src,
 
 bool is_critical_feature(dungeon_feature_type feat);
 bool is_valid_border_feat(dungeon_feature_type feat);
+bool is_valid_mimic_feat(dungeon_feature_type feat);
 
 void                 init_feat_desc_cache();
 dungeon_feature_type feat_by_desc(std::string desc);
@@ -132,5 +134,6 @@ const char *dungeon_feature_name(dungeon_feature_type rfeat);
 void nuke_wall(const coord_def& p);
 bool cell_is_clingable(const coord_def pos);
 bool cell_can_cling_to(const coord_def& from, const coord_def to);
+bool is_boring_terrain(dungeon_feature_type feat);
 
 #endif

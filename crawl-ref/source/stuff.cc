@@ -19,13 +19,6 @@
 
 #include <stack>
 
-#ifdef UNIX
- #ifndef USE_TILE
- #include "libunix.h"
- #endif
-#endif
-
-
 #include "cio.h"
 #include "colour.h"
 #include "database.h"
@@ -41,6 +34,7 @@
 #include "output.h"
 #include "player.h"
 #include "view.h"
+#include "viewchar.h"
 #include "viewgeom.h"
 
 
@@ -95,22 +89,9 @@ unsigned char get_ch()
 void cio_init()
 {
     crawl_state.io_inited = true;
-
-#if defined(UNIX) && !defined(USE_TILE)
-    unixcurses_startup();
-#endif
-
-#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
-    init_libw32c();
-#endif
-
+    console_startup();
     set_cursor_enabled(false);
-
     crawl_view.init_geometry();
-
-#ifdef USE_TILE
-    tiles.resize();
-#endif
 }
 
 void cio_cleanup()
@@ -118,16 +99,7 @@ void cio_cleanup()
     if (!crawl_state.io_inited)
         return;
 
-#if defined(USE_TILE)
-    tiles.shutdown();
-#elif defined(UNIX)
-    unixcurses_shutdown();
-#endif
-
-#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
-    deinit_libw32c();
-#endif
-
+    console_shutdown();
     crawl_state.io_inited = false;
 }
 
@@ -713,6 +685,7 @@ int yesnoquit(const char* str, bool safe, int safeanswer, bool allow_all,
 
 char index_to_letter(int the_index)
 {
+    ASSERT(the_index >= 0 && the_index < ENDOFPACK);
     return (the_index + ((the_index < 26) ? 'a' : ('A' - 26)));
 }
 
@@ -720,12 +693,13 @@ int letter_to_index(int the_letter)
 {
     if (the_letter >= 'a' && the_letter <= 'z')
         // returns range [0-25] {dlb}
-        the_letter -= 'a';
+        return (the_letter - 'a');
     else if (the_letter >= 'A' && the_letter <= 'Z')
         // returns range [26-51] {dlb}
-        the_letter -= ('A' - 26);
+        return (the_letter - 'A' + 26);
 
-    return (the_letter);
+    die("slot not a letter: %s (%d)", the_letter ?
+        stringize_glyph(the_letter).c_str() : "null", the_letter);
 }
 
 maybe_bool frombool(bool b)

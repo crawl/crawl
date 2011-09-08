@@ -367,8 +367,18 @@ function lobby_update()
 }
 function lobby_data(data)
 {
-    $("#player_list tbody").html(data);
-    $("#player_list").trigger("update");
+    var old_list = $("#player_list");
+    var l = old_list.clone();
+    l.find("tbody").html(data);
+    l.tablesorter({
+        sortList: old_list[0].config.sortList,
+        headers: {
+            3: {
+                sorter: "timespan"
+            }
+        }
+    });
+    old_list.replaceWith(l);
 }
 
 var watching = false;
@@ -505,6 +515,18 @@ $(document).ready(
                     showing_close_message = true;
                 }
             };
+
+            $.tablesorter.addParser({
+		id: 'timespan',
+		is: function(s) {
+		    return false;
+		},
+		format: function(s) {
+                    return s.substring(0, s.length - 1);
+		},
+		type: 'numeric'
+	    });
+
 
             $("#player_list").tablesorter({
                 sortList: [[0, 0]]

@@ -71,10 +71,6 @@
 #include "traps.h"
 #include "zotdef.h"
 
-#ifdef UNIX
-#include "libunix.h"
-#endif
-
 enum ability_flag_type
 {
     ABFLAG_NONE           = 0x00000000,

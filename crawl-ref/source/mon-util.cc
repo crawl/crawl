@@ -18,6 +18,7 @@
 #include "debug.h"
 #include "dgn-overview.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "env.h"
 #include "fight.h"
 #include "food.h"
@@ -25,9 +26,11 @@
 #include "ghost.h"
 #include "goditem.h"
 #include "itemname.h"
+#include "items.h"
 #include "libutil.h"
 #include "mapmark.h"
 #include "mislead.h"
+#include "mgen_data.h"
 #include "mon-abil.h"
 #include "mon-behv.h"
 #include "mon-clone.h"
@@ -40,6 +43,7 @@
 #include "options.h"
 #include "random.h"
 #include "religion.h"
+#include "showsymb.h"
 #include "species.h"
 #include "spl-util.h"
 #include "state.h"
@@ -47,7 +51,12 @@
 #include "terrain.h"
 #include "traps.h"
 #include "unicode.h"
+#include "view.h"
 #include "viewchar.h"
+
+#ifdef USE_TILE
+  #include "tilepick.h"
+#endif
 
 static FixedVector < int, NUM_MONSTERS > mon_entry;
 
@@ -174,16 +183,7 @@ void init_mon_name_cache()
         // breaks ?/M rakshasa.
         if (Mon_Name_Cache.find(name) != Mon_Name_Cache.end())
         {
-            if (mon == MONS_RAKSHASA_FAKE
-                || mon == MONS_ARMOUR_MIMIC
-                || mon == MONS_SCROLL_MIMIC
-                || mon == MONS_POTION_MIMIC
-                || mon == MONS_DOOR_MIMIC
-                || mon == MONS_PORTAL_MIMIC
-                || mon == MONS_SHOP_MIMIC
-                || mon == MONS_STAIR_MIMIC
-                || mon == MONS_FOUNTAIN_MIMIC
-                || mon == MONS_MARA_FAKE)
+            if (mon == MONS_RAKSHASA_FAKE || mon == MONS_MARA_FAKE)
             {
                 // Keep previous entry.
                 continue;
@@ -250,33 +250,33 @@ void init_monsters()
 void init_monster_symbols()
 {
     std::map<unsigned, monster_type> base_mons;
-    std::map<unsigned, monster_type>::iterator it;
     for (int i = 0; i < NUM_MONSTERS; ++i)
     {
         mon_display &md = monster_symbols[i];
         const monsterentry *me = get_monster_data(i);
         if (me)
         {
-            md.glyph  = me->showchar;
+            md.glyph  = me->basechar;
             md.colour = me->colour;
-            it = base_mons.find(md.glyph);
+            std::map<unsigned, monster_type>::iterator it = base_mons.find(md.glyph);
             if (it == base_mons.end() || it->first == MONS_PROGRAM_BUG)
                 base_mons[md.glyph] = static_cast<monster_type>(i);
             md.detected = base_mons[md.glyph];
         }
     }
 
-    for (int i = 0, size = Options.mon_glyph_overrides.size();
-         i < size; ++i)
+    for (mon_glyph_map::iterator it = Options.mon_glyph_overrides.begin();
+         it != Options.mon_glyph_overrides.end(); ++it)
     {
-        const mon_display &md = Options.mon_glyph_overrides[i];
-        if (md.type == MONS_PROGRAM_BUG)
+        if (it->first == MONS_PROGRAM_BUG)
             continue;
 
+        const mon_display &md = it->second;
+
         if (md.glyph)
-            monster_symbols[md.type].glyph = get_glyph_override(md.glyph);
+            monster_symbols[it->first].glyph = get_glyph_override(md.glyph);
         if (md.colour)
-            monster_symbols[md.type].colour = md.colour;
+            monster_symbols[it->first].colour = md.colour;
     }
 
     // Validate all glyphs, even those which didn't come from an override.
@@ -568,7 +568,6 @@ bool mons_class_is_stationary(int mc)
 bool mons_is_stationary(const monster* mon)
 {
     return (mons_class_is_stationary(mon->type)
-            || mons_is_feat_mimic(mon->type) && mons_is_unknown_mimic(mon)
             || mon->has_ench(ENCH_WITHDRAWN));
 }
 
@@ -855,26 +854,127 @@ bool mons_is_mimic(int mc)
 
 bool mons_is_item_mimic(int mc)
 {
-    return (mons_genus(mc) == MONS_GOLD_MIMIC);
+    return (mc == MONS_ITEM_MIMIC);
 }
 
 bool mons_is_feat_mimic(int mc)
 {
-    return (mons_genus(mc) == MONS_DOOR_MIMIC);
+    return (mc == MONS_FEATURE_MIMIC);
 }
 
-void discover_mimic(monster* mimic)
+static bool _mons_is_weapon_mimic(const monster* mon)
 {
-    if (mons_is_known_mimic(mimic))
+    return (mons_is_item_mimic(mon->type)
+            && get_mimic_item(mon)
+            && get_mimic_item(mon)->base_type == OBJ_WEAPONS);
+}
+
+void discover_mimic(const coord_def& pos)
+{
+    item_def* item = item_mimic_at(pos);
+    const bool feature_mimic = !item && feature_mimic_at(pos);
+    // Is there really a mimic here?
+    if (!item && !feature_mimic)
         return;
 
-    mimic->flags |= MF_KNOWN_MIMIC;
-    if (mons_is_feat_mimic(mimic->type))
+    const dungeon_feature_type feat = grd(pos);
+    const feature_def feat_d = get_feature_def(feat);
+    const std::string name = feature_mimic ? feat_type_name(feat) :
+               item->base_type == OBJ_GOLD ? "pile of gold coins"
+                                           : item->name(DESC_BASENAME);
+
+#ifdef USE_TILE
+    tileidx_t tile = tileidx_feature(pos);
+#endif
+
+    // If a monster is standing on top of the mimic, move it out of the way.
+    monster* mon = monster_at(pos);
+    if (mon && shove_monster(mon))
     {
-        unnotice_feature(level_pos(level_id::current(), mimic->pos()));
-        if (mimic->type == MONS_SHOP_MIMIC)
-            StashTrack.remove_shop(mimic->pos());
+        simple_monster_message(mon,
+            make_stringf(" is pushed out of the %s.", name.c_str()).c_str());
+        dprf("Moved to (%d, %d).", mon->pos().x, mon->pos().y);
     }
+    else if (mon)
+        die("Cannot move monster out of the way.");
+
+    if (feature_mimic)
+    {
+        // If we took a note of this feature, then note that it was a mimic.
+        if (!is_boring_terrain(feat))
+        {
+            std::string desc = feature_description(pos, false, DESC_CAP_THE, false);
+            take_note(Note(NOTE_FEAT_MIMIC, 0, 0, desc.c_str()));
+        }
+
+        // Remove the feature and clear the flag.
+        unnotice_feature(level_pos(level_id::current(), pos));
+        grd(pos) = DNGN_FLOOR;
+        env.level_map_mask(pos) &= !MMT_MIMIC;
+        set_terrain_changed(pos);
+        remove_markers_and_listeners_at(pos);
+    }
+
+    // Generate and place the monster.
+    mgen_data mg;
+    mg.behaviour = BEH_WANDER;
+    mg.cls = item ? MONS_ITEM_MIMIC : MONS_FEATURE_MIMIC;
+    mg.pos = pos;
+    const int mid = place_monster(mg, true);
+    ASSERT(mid != -1);
+    monster* mimic = &menv[mid];
+    ASSERT(mimic->pos() == pos);
+
+    if (item && !mimic->pickup_misc(*item, 0))
+        die("Mimic failed to pickup its item.");
+
+    if (feature_mimic)
+    {
+        if (feat_is_stone_stair(feat))
+            mimic->colour = feat_d.em_colour;
+        else
+            mimic->colour = feat_d.colour;
+
+        dungeon_feature_type mimic_feat =
+                (feat == DNGN_OPEN_DOOR) ? DNGN_CLOSED_DOOR : feat;
+        mimic->props["feat_type"] = static_cast<short>(mimic_feat);
+        mimic->props["glyph"] = static_cast<int>(get_feat_symbol(mimic_feat));
+
+        // Necessary for door mimics to force LOS update.
+        mimic->set_position(pos);
+
+#ifdef USE_TILE
+        mimic->props["tile_idx"] = static_cast<int>(tile);
+#endif
+    }
+    else
+    {
+        mimic->colour = get_mimic_colour(mimic);
+        mimic->props["glyph"] = static_cast<int>(get_item_glyph(item).ch);
+        if (item->base_type == OBJ_ARMOUR)
+            mimic->ac += 10;
+    }
+
+    behaviour_event(mimic, ME_ALERT, MHITYOU);
+
+    // Friendly monsters don't appreciate being pushed away.
+    if (mon && mon->friendly())
+        behaviour_event(mon, ME_WHACK, mid);
+
+    // Announce the mimic.
+    if (feature_mimic && feat == DNGN_OPEN_DOOR)
+        simple_monster_message(mimic, " slams shut!", MSGCH_WARN);
+    else if (mons_near(mimic))
+        mprf(MSGCH_WARN, "The %s is a mimic!", name.c_str());
+
+    // Just in case there's another one.
+    if (mimic_at(pos))
+        discover_mimic(pos);
+}
+
+void discover_shifter(monster* shifter)
+{
+    shifter->flags |= MF_KNOWN_SHIFTER;
 }
 
 bool mons_is_demon(int mc)
@@ -1094,7 +1194,7 @@ bool mons_sense_invis(const monster* mon)
     return (mons_class_flag(mon->type, M_SENSE_INVIS));
 }
 
-wchar_t mons_char(int mc)
+ucs_t mons_char(int mc)
 {
     return monster_symbols[mc].glyph;
 }
@@ -1102,7 +1202,7 @@ wchar_t mons_char(int mc)
 char mons_base_char(int mc)
 {
     const monsterentry *me = get_monster_data(mc);
-    return (me ? me->showchar : 0);
+    return (me ? me->basechar : 0);
 }
 
 mon_itemuse_type mons_class_itemuse(int mc)
@@ -1427,6 +1527,9 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
     // Slime creature attacks are multiplied by the number merged.
     if (mon->type == MONS_SLIME_CREATURE && mon->number > 1)
         attk.damage *= mon->number;
+
+    if (_mons_is_weapon_mimic(mon))
+        attk.damage += 5;
 
     return (zombified ? _downscale_zombie_attack(mon, attk) : attk);
 }
@@ -1963,7 +2066,7 @@ static int _serpent_of_hell_color(const monster* mon)
         return ETC_IRON;
         break;
     case BRANCH_TARTARUS:
-        return ETC_NECRO;
+        return ETC_DEATH;
         break;
     default:
         return ETC_FIRE;
@@ -2089,8 +2192,6 @@ void define_monster(monster* mons)
     }
 
     default:
-        if (mons_is_item_mimic(mcls))
-            col = get_mimic_colour(mons);
         break;
     }
 
@@ -2643,16 +2744,6 @@ bool mons_was_seen(const monster* m)
     return testbits(m->flags, MF_SEEN);
 }
 
-bool mons_is_known_mimic(const monster* m)
-{
-    return mons_is_mimic(m->type) && testbits(m->flags, MF_KNOWN_MIMIC);
-}
-
-bool mons_is_unknown_mimic(const monster* m)
-{
-    return mons_is_mimic(m->type) && !mons_is_known_mimic(m);
-}
-
 bool mons_looks_stabbable(const monster* m)
 {
     const unchivalric_attack_type uat = is_unchivalric_attack(&you, m);
@@ -3149,7 +3240,7 @@ bool monster_shover(const monster* m)
     if (_mons_has_smite_attack(m))
         return (false);
 
-    char mchar = me->showchar;
+    char mchar = me->basechar;
 
     // Somewhat arbitrary: giants and dragons are too big to get past anything,
     // beetles are too dumb (arguable), dancing weapons can't communicate, eyes
@@ -3186,8 +3277,8 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
             return (false);
     }
 
-    char mchar1 = me1->showchar;
-    char mchar2 = me2->showchar;
+    char mchar1 = me1->basechar;
+    char mchar2 = me2->basechar;
 
     // If both are demons, the smaller number is the nastier demon.
     if (isadigit(mchar1) && isadigit(mchar2))
@@ -4103,7 +4194,7 @@ int get_dist_to_nearest_monster()
         if (mon == NULL)
             continue;
 
-        if (!mon->visible_to(&you) || mons_is_unknown_mimic(mon))
+        if (!mon->visible_to(&you))
             continue;
 
         // Plants/fungi don't count.

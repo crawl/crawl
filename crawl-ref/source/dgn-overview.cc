@@ -34,7 +34,7 @@
 #include "terrain.h"
 #include "travel.h"
 
-typedef std::map<branch_type, level_id> stair_map_type;
+typedef std::map<branch_type, std::set<level_id> > stair_map_type;
 typedef std::map<level_pos, shop_type> shop_map_type;
 typedef std::map<level_pos, god_type> altar_map_type;
 typedef std::map<level_pos, portal_type> portal_map_type;
@@ -42,6 +42,7 @@ typedef std::map<level_pos, std::string> portal_vault_map_type;
 typedef std::map<level_pos, std::string> portal_note_map_type;
 typedef std::map<level_pos, uint8_t> portal_vault_colour_map_type;
 typedef std::map<level_id, std::string> annotation_map_type;
+typedef std::pair<std::string, level_id> monster_annotation;
 
 stair_map_type stair_level;
 shop_map_type shops_present;
@@ -52,10 +53,11 @@ portal_note_map_type portal_vault_notes;
 portal_vault_colour_map_type portal_vault_colours;
 annotation_map_type level_annotations;
 annotation_map_type level_exclusions;
+annotation_map_type level_uniques;
+std::set<monster_annotation> auto_unique_annotations;
 
 static void _seen_altar(god_type god, const coord_def& pos);
-static void _seen_staircase(dungeon_feature_type which_staircase,
-                            const coord_def& pos);
+static void _seen_staircase(const coord_def& pos);
 static void _seen_other_thing(dungeon_feature_type which_thing,
                               const coord_def& pos);
 
@@ -79,6 +81,7 @@ void overview_clear()
     portal_vault_colours.clear();
     level_annotations.clear();
     level_exclusions.clear();
+    level_uniques.clear();
 }
 
 void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
@@ -87,16 +90,11 @@ void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
     if (you.level_type != LEVEL_DUNGEON)
         return;
 
-    // Or mimics. This could provide mimic information leak, but is safer
-    // than storing the mimic as a branch stair, etc.
-    if (feature_mimic_at(pos))
-        return;
-
     const god_type god = feat_altar_god(which_thing);
     if (god != GOD_NO_GOD)
         _seen_altar(god, pos);
     else if (feat_is_branch_stairs(which_thing))
-        _seen_staircase(which_thing, pos);
+        _seen_staircase(pos);
     else
         _seen_other_thing(which_thing, pos);
 }
@@ -385,20 +383,27 @@ static std::string _get_seen_branches(bool display)
             level_id lid(branch, 0);
             lid = find_deepest_explored(lid);
 
+            std::string entry_desc;
+            for (std::set<level_id>::iterator it = stair_level[branch].begin();
+                 it != stair_level[branch].end(); ++it)
+            {
+                entry_desc += " " + it->describe(false, true);
+            }
+
             snprintf(buffer, sizeof buffer,
-                "<yellow>%7s</yellow> <darkgrey>(%d/%d)</darkgrey> %s",
+                "<yellow>%7s</yellow> <darkgrey>(%d/%d)</darkgrey>%s",
                      branches[branch].abbrevname,
                      lid.depth,
                      branches[branch].depth,
-                     stair_level[branch].describe(false, true).c_str());
+                     entry_desc.c_str());
 
             disp += buffer;
             num_printed_branches++;
 
             disp += (num_printed_branches % 3) == 0
                     ? "\n"
-                    // Each branch entry takes up 26 spaces
-                    : std::string(26 + 38 - strlen(buffer), ' ');
+                    // Each branch entry takes up 26 spaces + 38 for tags.
+                    : std::string(std::max<int>(64 - strlen(buffer), 0), ' ');
         }
     }
 
@@ -436,11 +441,8 @@ static std::string _get_unseen_branches()
         if (i == BRANCH_VESTIBULE_OF_HELL)
             continue;
 
-        if (i == BRANCH_FOREST || i == BRANCH_SPIDER_NEST
-            || i == BRANCH_DWARVEN_HALL)
-        {
+        if (branch_is_unfinished(branch))
             continue;
-        }
 
         if (stair_level.find(branch) == stair_level.end())
         {
@@ -762,22 +764,28 @@ static bool _unnotice_shop(const level_pos &pos)
 static bool _unnotice_stair(const level_pos &pos)
 {
     const dungeon_feature_type feat = grd(pos.pos);
-    if (feat_is_branch_stairs(feat))
-    {
-        for (int i = 0; i < NUM_BRANCHES; ++i)
+    if (!feat_is_branch_stairs(feat))
+        return false;
+
+    for (int i = 0; i < NUM_BRANCHES; ++i)
+        if (branches[i].entry_stairs == feat)
         {
-            if (branches[i].entry_stairs == feat)
+            const branch_type br = static_cast<branch_type>(i);
+            if (stair_level.find(br) != stair_level.end())
             {
-                const branch_type br = static_cast<branch_type>(i);
-                return (_find_erase(stair_level, br));
+                stair_level[br].erase(level_id::current());
+                if (stair_level[br].empty())
+                    stair_level.erase(br);
+                return true;
             }
         }
-    }
-    return (false);
+
+    return false;
 }
 
 bool unnotice_feature(const level_pos &pos)
 {
+    StashTrack.remove_shop(pos);
     shopping_list.forget_pos(pos);
     return (_unnotice_portal(pos)
             || _unnotice_portal_vault(pos)
@@ -796,25 +804,18 @@ void display_overview()
     redraw_screen();
 }
 
-static void _seen_staircase(dungeon_feature_type which_staircase,
-                             const coord_def& pos)
+static void _seen_staircase(const coord_def& pos)
 {
-    // which_staircase holds the grid value of the stair, must be converted
     // Only handles stairs, not gates or arches
     // Don't worry about:
     //   - stairs returning to dungeon - predictable
     //   - entrances to the hells - always in vestibule
 
-    int i;
-    for (i = 0; i < NUM_BRANCHES; ++i)
-    {
-        if (branches[i].entry_stairs == which_staircase)
-        {
-            stair_level[branches[i].id] = level_id::current();
-            break;
-        }
-    }
-    ASSERT(i != NUM_BRANCHES);
+    // If the branch has already been entered, then the new entry is obviously
+    // a mimic, don't add it.
+    const branch_type branch = get_branch_at(pos);
+    if (!branch_entered(branch))
+        stair_level[branch].insert(level_id::current());
 }
 
 // If player has seen an altar; record it.
@@ -846,20 +847,10 @@ static void _seen_other_thing(dungeon_feature_type which_thing,
 {
     level_pos where(level_id::current(), pos);
 
-    monster* mimic = monster_at(pos);
-
     switch (which_thing)
     {
     case DNGN_ENTER_SHOP:
-        if (mimic && mons_is_feat_mimic(mimic->type)
-            && mimic->props.exists("shop_type"))
-        {
-            shops_present[where] = static_cast<shop_type>(mimic->props[
-                                       "shop_type"].get_short());
-        }
-        else
-            shops_present[where] = static_cast<shop_type>(get_shop(pos)->type);
-
+        shops_present[where] = static_cast<shop_type>(get_shop(pos)->type);
         break;
 
     case DNGN_ENTER_PORTAL_VAULT:
@@ -867,12 +858,6 @@ static void _seen_other_thing(dungeon_feature_type which_thing,
         std::string portal_name;
 
         portal_name = env.markers.property_at(pos, MAT_ANY, "overview");
-
-        if (mimic && mons_is_feat_mimic(mimic->type)
-            && mimic->props.exists("portal_desc"))
-        {
-            portal_name = (mimic->props["portal_desc"].get_string());
-        }
 
         if (portal_name.empty())
             portal_name = env.markers.property_at(pos, MAT_ANY, "dstname");
@@ -889,14 +874,8 @@ static void _seen_other_thing(dungeon_feature_type which_thing,
             col = env.grid_colours(pos);
         else
             col = get_feature_def(which_thing).colour;
+
         portal_vault_colours[where] = element_colour(col, true);
-
-        if (mimic && mons_is_feat_mimic(mimic->type)
-            && mimic->props.exists("portal_desc"))
-        {
-            portal_vault_colours[where] = mimic->colour;
-        }
-
         portal_vault_notes[where] =
             env.markers.property_at(pos, MAT_ANY, "overview_note");
 
@@ -911,7 +890,75 @@ static void _seen_other_thing(dungeon_feature_type which_thing,
     }
 }
 
+void enter_branch(branch_type branch, level_id from)
+{
+    if (stair_level[branch].size() > 1)
+    {
+        stair_level[branch].clear();
+        stair_level[branch].insert(from);
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////
+
+static void _update_unique_annotation(level_id level)
+{
+    std::string note = "";
+    std::string sep = ", ";
+    for (std::set<monster_annotation>::iterator i = auto_unique_annotations.begin();
+         i != auto_unique_annotations.end(); ++i)
+    {
+        if (i->first.find(',') != std::string::npos)
+            sep = "; ";
+    }
+    for (std::set<monster_annotation>::iterator i = auto_unique_annotations.begin();
+         i != auto_unique_annotations.end(); ++i)
+    {
+        if (i->second == level)
+        {
+            if (note.length() > 0)
+                note += sep;
+            note += i->first;
+        }
+    }
+    set_level_unique_annotation(note, level);
+}
+
+void set_unique_annotation(monster* mons)
+{
+    if (!mons_is_unique(mons->type) && mons->type != MONS_PLAYER_GHOST)
+        return;
+
+    remove_unique_annotation(mons);
+    std::string name = mons->name(DESC_PLAIN, true);
+    if (mons->type == MONS_PLAYER_GHOST)
+        name += ", " + short_ghost_description(mons, true);
+    auto_unique_annotations.insert(std::make_pair(
+                name, level_id::current()));
+    _update_unique_annotation(level_id::current());
+}
+
+void remove_unique_annotation(monster* mons)
+{
+    std::set<level_id> affected_levels;
+    std::string name = mons->name(DESC_PLAIN, true);
+    if (mons->type == MONS_PLAYER_GHOST)
+        name += ", " + short_ghost_description(mons, true);
+    for (std::set<monster_annotation>::iterator i = auto_unique_annotations.begin();
+         i != auto_unique_annotations.end();)
+    {
+        if (i->first == name)
+        {
+            affected_levels.insert(i->second);
+            auto_unique_annotations.erase(i++);
+        }
+        else
+            ++i;
+    }
+    for (std::set<level_id>::iterator i = affected_levels.begin();
+         i != affected_levels.end(); ++i)
+        _update_unique_annotation(*i);
+}
 
 void set_level_annotation(std::string str, level_id li)
 {
@@ -932,50 +979,56 @@ void set_level_exclusion_annotation(std::string str, level_id li)
     level_exclusions[li] = str;
 }
 
+void set_level_unique_annotation(std::string str, level_id li)
+{
+    if (str.empty())
+        level_uniques.erase(li);
+    else
+        level_uniques[li] = str;
+}
+
 void clear_level_exclusion_annotation(level_id li)
 {
     level_exclusions.erase(li);
 }
 
-std::string get_level_annotation(level_id li, bool skip_excl)
+std::string get_level_annotation(level_id li, bool skip_excl,
+                                 bool skip_uniq, bool use_colour, int colour)
 {
     annotation_map_type::const_iterator i = level_annotations.find(li);
+    annotation_map_type::const_iterator j = level_exclusions.find(li);
+    annotation_map_type::const_iterator k = level_uniques.find(li);
 
-    if (skip_excl)
+    std::string note = "";
+
+    if (i != level_annotations.end())
     {
-        if (i == level_annotations.end())
-            return "";
-
-        return (i->second);
+        if (use_colour)
+            note += colour_string(i->second, colour);
+        else
+            note += i->second;
     }
 
-    annotation_map_type::const_iterator j = level_exclusions.find(li);
+    if (!skip_excl && j != level_exclusions.end())
+    {
+        if (note.length() > 0)
+            note += ", ";
+        note += j->second;
+    }
 
-    if (i == level_annotations.end() && j == level_exclusions.end())
-        return "";
+    if (!skip_uniq && k != level_uniques.end())
+    {
+        if (note.length() > 0)
+            note += ", ";
+        note += k->second;
+    }
 
-    if (i == level_annotations.end())
-        return (j->second);
-    if (j == level_exclusions.end())
-        return (i->second);
-
-    return (i->second + ", " + j->second);
+    return note;
 }
 
 static const std::string _get_coloured_level_annotation(int col, level_id li)
 {
-    annotation_map_type::const_iterator i = level_annotations.find(li);
-    annotation_map_type::const_iterator j = level_exclusions.find(li);
-
-    if (i == level_annotations.end() && j == level_exclusions.end())
-        return "";
-
-    if (i == level_annotations.end())
-        return (j->second);
-    if (j == level_exclusions.end())
-        return (colour_string(i->second, col));
-
-    return (colour_string(i->second, col) + ", " + j->second);
+    return get_level_annotation(li, false, false, true, col);
 }
 
 bool level_annotation_has(std::string find, level_id li)
@@ -1015,7 +1068,7 @@ void annotate_level()
     if (!get_level_annotation(li).empty())
     {
         mpr("Current level annotation: " +
-            colour_string(get_level_annotation(li, true), LIGHTGREY),
+            colour_string(get_level_annotation(li, true, true), LIGHTGREY),
             MSGCH_PROMPT);
     }
 
@@ -1034,5 +1087,29 @@ void annotate_level()
     {
         mpr("Cleared.");
         level_annotations.erase(li);
+    }
+}
+
+void marshallUniqueAnnotations(writer& outf)
+{
+    marshallShort(outf, auto_unique_annotations.size());
+    for (std::set<monster_annotation>::iterator i = auto_unique_annotations.begin();
+         i != auto_unique_annotations.end(); ++i)
+    {
+        marshallString(outf, i->first);
+        i->second.save(outf);
+    }
+}
+
+void unmarshallUniqueAnnotations(reader& inf)
+{
+    auto_unique_annotations.clear();
+    int num_notes = unmarshallShort(inf);
+    for (int i = 0; i < num_notes; ++i)
+    {
+        std::string name = unmarshallString(inf);
+        level_id level;
+        level.load(inf);
+        auto_unique_annotations.insert(std::make_pair(name, level));
     }
 }

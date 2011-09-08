@@ -62,6 +62,8 @@ enum map_mask_type
     MMT_NO_WALL    = 0x20,    // Wall fixup should not be applied here.
     MMT_OPAQUE     = 0x40,    // Vault may impede connectivity.
     MMT_NO_TRAP    = 0x80,    // No trap generation
+    MMT_MIMIC      = 0x100,   // Feature mimics
+    MMT_NO_MIMIC   = 0x200,   // This feature shouldn't be turned into a mimic.
 };
 
 class dgn_region;
@@ -196,7 +198,8 @@ void read_level_connectivity(reader &th);
 void write_level_connectivity(writer &th);
 
 bool builder(int level_number, level_area_type level_type,
-             bool enable_random_maps = true);
+             bool enable_random_maps = true,
+             dungeon_feature_type dest_stairs_type = NUM_FEATURES);
 void dgn_veto_level();
 
 void dgn_clear_vault_placements(vault_placement_refv &vps);
@@ -207,10 +210,6 @@ double dgn_degrees_to_radians(int degrees);
 bool dgn_has_adjacent_feat(coord_def c, dungeon_feature_type feat);
 coord_def dgn_random_point_in_margin(int margin);
 coord_def dgn_random_point_from(const coord_def &c, int radius, int margin = 1);
-coord_def dgn_random_point_visible_from(const coord_def &c,
-                                        int radius,
-                                        int margin = 1,
-                                        int tries = 5);
 coord_def dgn_find_feature_marker(dungeon_feature_type feat);
 
 // Generate 3 stone stairs in both directions.
@@ -319,5 +318,5 @@ bool dgn_square_travel_ok(const coord_def &c);
 bool join_the_dots(const coord_def &from, const coord_def &to, unsigned mmask);
 int count_feature_in_box(int x0, int y0, int x1, int y1,
                          dungeon_feature_type feat);
-
+bool door_vetoed(const coord_def pos);
 #endif

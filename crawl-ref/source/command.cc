@@ -760,6 +760,7 @@ static const char *targeting_help_1 =
     "<w>Esc</w> : cancel (also <w>Space</w>, <w>x</w>)\n"
     "<w>Dir.</w>: move cursor in that direction\n"
     "<w>.</w> : move to cursor (also <w>Enter</w>, <w>Del</w>)\n"
+    "<w>g</w> : pick up item at cursor\n"
     "<w>v</w> : describe monster under cursor\n"
     "<w>+</w> : cycle monsters forward (also <w>=</w>)\n"
     "<w>-</w> : cycle monsters backward\n"
@@ -779,7 +780,7 @@ static const char *targeting_help_1 =
     " \n"
     "<h>Wizard targeting commands:</h>\n"
     "<w>D</w>: get debugging information about the monster\n"
-    "<w>g</w>: give item to monster\n"
+    "<w>o</w>: give item to monster\n"
     "<w>F</w>: cycle monster friendly/good neutral/neutral/hostile\n"
     "<w>Ctrl-H</w>: heal the monster to full hit points\n"
     "<w>P</w>: apply divine blessing to monster\n"
@@ -1013,7 +1014,7 @@ static std::vector<std::string> _get_desc_keys(std::string regex,
     return (all_matches);
 }
 
-static std::vector<std::string> _get_monster_keys(wchar_t showchar)
+static std::vector<std::string> _get_monster_keys(ucs_t showchar)
 {
     std::vector<std::string> mon_keys;
 
@@ -1033,7 +1034,7 @@ static std::vector<std::string> _get_monster_keys(wchar_t showchar)
         if (getLongDescription(me->name).empty())
             continue;
 
-        if (me->showchar == showchar)
+        if ((ucs_t)me->basechar == showchar)
             mon_keys.push_back(me->name);
     }
 

@@ -13,6 +13,7 @@
 #include "coordit.h"
 #include "delay.h"
 #include "dgnevent.h"
+#include "dgn-overview.h"
 #include "dgn-shoals.h"
 #include "directn.h"
 #include "env.h"
@@ -1145,6 +1146,9 @@ bool monster::pickup(item_def &item, int slot, int near, bool force_merge)
         return (false);
     }
 
+    if (item.flags & ISFLAG_MIMIC && !mons_is_item_mimic(type))
+        return (false);
+
     dungeon_events.fire_position_event(
         dgn_event(DET_ITEM_PICKUP, pos(), 0, item.index(),
                   mindex()),
@@ -1158,7 +1162,8 @@ bool monster::pickup(item_def &item, int slot, int near, bool force_merge)
     item.set_holding_monster(mindex());
 
     pickup_message(item, near);
-    equip(item, slot, near);
+    if (!mons_is_item_mimic(type))
+        equip(item, slot, near);
     lose_pickup_energy();
     return (true);
 }
@@ -2859,7 +2864,16 @@ bool monster::backlit(bool check_haloed, bool self_halo) const
     if (has_ench(ENCH_CORONA) || has_ench(ENCH_STICKY_FLAME) || has_ench(ENCH_SILVER_CORONA))
         return (true);
     if (check_haloed)
-        return (haloed() && (self_halo || halo_radius2() == -1));
+        return (!umbraed() && haloed() &&
+                (self_halo || halo_radius2() == -1));
+    return (false);
+}
+
+bool monster::umbra(bool check_haloed, bool self_halo) const
+{
+    if (check_haloed)
+        return (umbraed() && !haloed() &&
+                (self_halo || umbra_radius2() == -1));
     return (false);
 }
 
@@ -3156,7 +3170,7 @@ bool monster::is_known_chaotic() const
         return (true);
     }
 
-    if (is_shapeshifter() && (flags & MF_KNOWN_MIMIC))
+    if (is_shapeshifter() && (flags & MF_KNOWN_SHIFTER))
         return (true);
 
     // Knowing chaotic spells is not enough to make you "essentially"
@@ -3392,6 +3406,9 @@ int monster::res_rotting(bool temp) const
 
 int monster::res_holy_energy(const actor *attacker) const
 {
+    if (type == MONS_PROFANE_SERVITOR)
+        return (1);
+
     if (undead_or_demonic())
         return (-2);
 
@@ -3994,6 +4011,8 @@ bool monster::needs_abyss_transit() const
 void monster::set_transit(const level_id &dest)
 {
     add_monster_to_transit(dest, *this);
+    if (you.can_see(this))
+        remove_unique_annotation(this);
 }
 
 void monster::load_ghost_spells()
@@ -4565,10 +4584,12 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     {
         int net = get_trapping_net(pos());
         if (net != NON_ITEM)
+        {
             remove_item_stationary(mitm[net]);
 
-        if (!quiet)
-            simple_monster_message(this, " breaks free.");
+            if (!quiet)
+                simple_monster_message(this, " breaks free.");
+        }
         break;
     }
     case ENCH_FAKE_ABJURATION:
@@ -5066,9 +5087,22 @@ void monster::apply_enchantment(const mon_enchant &me)
 
         if (net == NON_ITEM)
         {
-            if (trap_def *trap = find_trap(pos()))
-                if (trap->type == TRAP_WEB)
-                    maybe_destroy_web(this);
+            trap_def *trap = find_trap(pos());
+            if (trap && trap->type == TRAP_WEB)
+            {
+                if (coinflip())
+                {
+                    if (mons_near(this) && !visible_to(&you))
+                        mpr("Something you can't see is thrashing in a web.");
+                    else
+                    {
+                        simple_monster_message(this,
+                            " struggles to get unstuck from the web.");
+                    }
+                    break;
+                }
+                maybe_destroy_web(this);
+            }
             del_ench(ENCH_HELD);
             break;
         }
@@ -6655,9 +6689,14 @@ bool monster::is_web_immune() const
     // All 'I' (ice / sky beast)
     return (can_cling_to_walls()
          || is_insubstantial()
-         || mons_genus(type) == MONS_JELLY
-         || mons_genus(type) == MONS_ICE_BEAST
-         || mons_genus(type) == MONS_SKY_BEAST);
+         || mons_genus(type) == MONS_JELLY);
+}
+
+// Undead and demonic monsters have nightvision, as do all followers
+// of Yredelemnul.
+bool monster::nightvision() const
+{
+    return (undead_or_demonic() || god == GOD_YREDELEMNUL);
 }
 
 /////////////////////////////////////////////////////////////////////////

@@ -478,7 +478,7 @@ void formatted_string::fs_op::display() const
     switch (type)
     {
     case FSOP_COLOUR:
-        ::textattr(x);
+        ::textcolor(x);
         break;
     case FSOP_TEXT:
         ::cprintf("%s", text.c_str());

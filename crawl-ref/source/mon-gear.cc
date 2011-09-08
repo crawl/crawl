@@ -888,6 +888,19 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.plus2 = 1 + random2(3);
         break;
 
+    case MONS_PROFANE_SERVITOR:
+        force_item     = true;
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+
+        item.sub_type  = (one_chance_in(4) ? WPN_DEMON_WHIP
+                                           : WPN_WHIP);
+
+        set_equip_desc(item, ISFLAG_GLOWING);
+        item.plus  = 1 + random2(3);
+        item.plus2 = 1 + random2(3);
+        break;
+
     case MONS_DONALD:
         force_item = true;
         item.base_type = OBJ_WEAPONS;

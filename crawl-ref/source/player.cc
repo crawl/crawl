@@ -2043,10 +2043,9 @@ int player_movement_speed(bool ignore_burden)
     if (!ignore_burden && you.light_flight())
         mv--;
 
-    // Swiftness is an Air spell, it doesn't work in water, but
-    // flying players will move faster.
+    // Swiftness doesn't work in water.
     if (you.duration[DUR_SWIFTNESS] > 0 && !you.in_water())
-        mv -= (you.flight_mode() == FL_FLY ? 4 : 2);
+        mv -= 2;
 
     // Mutations: -2, -3, -4, unless innate and shapechanged.
     // Not when swimming, since it is "cover the ground quickly".
@@ -3952,7 +3951,7 @@ void display_char_status()
         DUR_POISONING,
         STATUS_SICK,
         STATUS_ROT,
-        STATUS_GLOW,
+        STATUS_CONTAMINATION,
         DUR_CONFUSING_TOUCH,
         DUR_SURE_BLADE,
         DUR_AFRAID,
@@ -3961,6 +3960,8 @@ void display_char_status()
         STATUS_CLINGING,
         STATUS_FIREBALL,
         DUR_SHROUD_OF_GOLUBRIA,
+        STATUS_BACKLIT,
+        STATUS_UMBRA,
     };
 
     status_info inf;
@@ -6304,6 +6305,12 @@ bool player::travelling_light() const
     return (burden < carrying_capacity(BS_UNENCUMBERED) * 70 / 100);
 }
 
+bool player::nightvision() const
+{
+    return (undead_or_demonic() ||
+           (religion == GOD_YREDELEMNUL && piety > piety_breakpoint(2)));
+}
+
 int player::mons_species() const
 {
     if (player_genus(GENPC_DRACONIAN))
@@ -6809,7 +6816,19 @@ bool player::backlit(bool check_haloed, bool self_halo) const
         return (true);
     }
     if (check_haloed)
-        return (haloed() && (self_halo || halo_radius2() == -1));
+        return (!umbraed() && haloed()
+                && (self_halo || halo_radius2() == -1));
+    return (false);
+}
+
+bool player::umbra(bool check_haloed, bool self_halo) const
+{
+    if (backlit())
+        return (false);
+
+    if (check_haloed)
+        return (umbraed() && !haloed()
+                && (self_halo || umbra_radius2() == -1));
     return (false);
 }
 

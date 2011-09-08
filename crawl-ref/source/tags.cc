@@ -34,6 +34,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "describe.h"
+#include "dgn-overview.h"
 #include "dungeon.h"
 #include "enum.h"
 #include "errors.h"
@@ -69,7 +70,7 @@
 #include "travel.h"
 
 // defined in dgn-overview.cc
-extern std::map<branch_type, level_id> stair_level;
+extern std::map<branch_type, std::set<level_id> > stair_level;
 extern std::map<level_pos, shop_type> shops_present;
 extern std::map<level_pos, god_type> altars_present;
 extern std::map<level_pos, portal_type> portals_present;
@@ -78,6 +79,8 @@ extern std::map<level_pos, std::string> portal_vault_notes;
 extern std::map<level_pos, uint8_t> portal_vault_colours;
 extern std::map<level_id, std::string> level_annotations;
 extern std::map<level_id, std::string> level_exclusions;
+extern std::map<level_id, std::string> level_uniques;
+extern std::set<std::pair<std::string, level_id> > auto_unique_annotations;
 
 // temp file pairs used for file level cleanup
 
@@ -561,6 +564,11 @@ void marshall_level_id(writer& th, const level_id& id)
     marshallByte(th, id.level_type);
 }
 
+void marshall_level_id_set(writer& th, const std::set<level_id>& id)
+{
+    marshallSet(th, id, marshall_level_id);
+}
+
 // XXX: Redundant with level_pos.save()/load().
 void marshall_level_pos(writer& th, const level_pos& lpos)
 {
@@ -607,6 +615,20 @@ level_id unmarshall_level_id(reader& th)
     id.depth      = unmarshallInt(th);
     id.level_type = static_cast<level_area_type>(unmarshallByte(th));
     return (id);
+}
+
+std::set<level_id> unmarshall_level_id_set(reader& th)
+{
+    std::set<level_id> id;
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_NEW_MIMICS)
+#endif
+        unmarshallSet(th, id, unmarshall_level_id);
+#if TAG_MAJOR_VERSION == 32
+    else
+        id.insert(unmarshall_level_id(th));
+#endif
+    return id;
 }
 
 level_pos unmarshall_level_pos(reader& th)
@@ -1388,7 +1410,7 @@ static void tag_construct_you_dungeon(writer &th)
     marshallSet(th, Generated_Levels, marshall_level_id);
 
     marshallMap(th, stair_level,
-                _marshall_as_int<branch_type>, marshall_level_id);
+                _marshall_as_int<branch_type>, marshall_level_id_set);
     marshallMap(th, shops_present,
                 marshall_level_pos, _marshall_as_int<shop_type>);
     marshallMap(th, altars_present,
@@ -1405,6 +1427,9 @@ static void tag_construct_you_dungeon(writer &th)
                 marshall_level_id, marshallStringNoMax);
     marshallMap(th, level_exclusions,
                 marshall_level_id, marshallStringNoMax);
+    marshallMap(th, level_uniques,
+            marshall_level_id, marshallStringNoMax);
+    marshallUniqueAnnotations(th);
 
     marshallPlaceInfo(th, you.global_info);
     std::vector<PlaceInfo> list = you.get_all_place_info();
@@ -1499,8 +1524,8 @@ static void marshall_level_map_masks(writer &th)
 {
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        marshallShort(th, env.level_map_mask(*ri));
-        marshallShort(th, env.level_map_ids(*ri));
+        marshallInt(th, env.level_map_mask(*ri));
+        marshallInt(th, env.level_map_ids(*ri));
     }
 }
 
@@ -1508,8 +1533,20 @@ static void unmarshall_level_map_masks(reader &th)
 {
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        env.level_map_mask(*ri) = unmarshallShort(th);
-        env.level_map_ids(*ri)  = unmarshallShort(th);
+#if TAG_MAJOR_VERSION == 32
+        if (th.getMinorVersion() < TAG_MINOR_NEW_MIMICS)
+        {
+            env.level_map_mask(*ri) = unmarshallShort(th);
+            env.level_map_ids(*ri)  = unmarshallShort(th);
+        }
+        else
+        {
+#endif
+            env.level_map_mask(*ri) = unmarshallInt(th);
+            env.level_map_ids(*ri)  = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+        }
+#endif
     }
 }
 
@@ -2360,7 +2397,7 @@ static void tag_read_you_dungeon(reader &th)
 
     unmarshallMap(th, stair_level,
                   unmarshall_long_as<branch_type>,
-                  unmarshall_level_id);
+                  unmarshall_level_id_set);
     unmarshallMap(th, shops_present,
                   unmarshall_level_pos, unmarshall_long_as<shop_type>);
     unmarshallMap(th, altars_present,
@@ -2377,6 +2414,14 @@ static void tag_read_you_dungeon(reader &th)
                   unmarshall_level_id, unmarshallStringNoMax);
     unmarshallMap(th, level_exclusions,
                   unmarshall_level_id, unmarshallStringNoMax);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_UNIQUE_NOTES)
+    {
+        unmarshallMap(th, level_uniques,
+                unmarshall_level_id, unmarshallStringNoMax);
+        unmarshallUniqueAnnotations(th);
+    }
+#endif
 
     PlaceInfo place_info = unmarshallPlaceInfo(th);
     ASSERT(place_info.is_global());
@@ -2890,7 +2935,6 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallString(th, mi.description);
     marshallString(th, mi.quote);
     marshallUnsigned(th, mi.fly);
-    marshallUnsigned(th, mi.mimic_feature);
 
     mi.props.write(th);
 }
@@ -2926,7 +2970,10 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     mi.description = unmarshallString(th);
     mi.quote = unmarshallString(th);
     unmarshallUnsigned(th, mi.fly);
-    unmarshallUnsigned(th, mi.mimic_feature);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_MINOR_NEW_MIMICS)
+        unmarshallUnsigned(th);
+#endif
 
     mi.props.clear();
 #if TAG_MAJOR_VERSION == 32

@@ -599,7 +599,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         STATUS_SICK,
         STATUS_ROT,
         STATUS_NET,
-        STATUS_GLOW,
+        STATUS_CONTAMINATION,
         DUR_SWIFTNESS,
         STATUS_SPEED,
         DUR_DEATH_CHANNEL,
@@ -622,6 +622,8 @@ static void _get_status_lights(std::vector<status_light>& out)
         STATUS_FIREBALL,
         DUR_SHROUD_OF_GOLUBRIA,
         DUR_TORNADO_COOLDOWN,
+        STATUS_BACKLIT,
+        STATUS_UMBRA,
     };
 
     status_info inf;
@@ -1335,7 +1337,7 @@ const char *equip_slot_to_name(int equip)
 int equip_name_to_slot(const char *s)
 {
     for (int i = 0; i < NUM_EQUIP; ++i)
-        if (!stricmp(s_equip_slot_names[i], s))
+        if (!strcasecmp(s_equip_slot_names[i], s))
             return i;
 
     return -1;
@@ -1401,10 +1403,7 @@ static void _print_overview_screen_equip(column_composer& cols,
         if (you.species != SP_OCTOPODE && eqslot > EQ_AMULET)
             continue;
 
-        char slot_name_lwr[15];
-        snprintf(slot_name_lwr, sizeof slot_name_lwr, "%s",
-                 equip_slot_to_name(eqslot));
-        strlwr(slot_name_lwr);
+        const std::string slot_name_lwr = lowercase_string(equip_slot_to_name(eqslot));
 
         char slot[15] = "";
         // uncomment (and change 42 to 33) to bring back slot names
@@ -1450,28 +1449,28 @@ static void _print_overview_screen_equip(column_composer& cols,
                  && (you.species == SP_NAGA || you.species == SP_CENTAUR))
         {
             snprintf(buf, sizeof buf,
-                     "<darkgrey>(no %s)</darkgrey>", slot_name_lwr);
+                     "<darkgrey>(no %s)</darkgrey>", slot_name_lwr.c_str());
         }
         else if (!you_can_wear(e_order[i], true))
         {
             snprintf(buf, sizeof buf,
-                     "<darkgrey>(%s unavailable)</darkgrey>", slot_name_lwr);
+                     "<darkgrey>(%s unavailable)</darkgrey>", slot_name_lwr.c_str());
         }
         else if (!you_tran_can_wear(e_order[i], true))
         {
             snprintf(buf, sizeof buf,
                      "<darkgrey>(%s currently unavailable)</darkgrey>",
-                     slot_name_lwr);
+                     slot_name_lwr.c_str());
         }
         else if (!you_can_wear(e_order[i]))
         {
             snprintf(buf, sizeof buf,
-                     "<darkgrey>(%s restricted)</darkgrey>", slot_name_lwr);
+                     "<darkgrey>(%s restricted)</darkgrey>", slot_name_lwr.c_str());
         }
         else
         {
             snprintf(buf, sizeof buf,
-                     "<darkgrey>(no %s)</darkgrey>", slot_name_lwr);
+                     "<darkgrey>(no %s)</darkgrey>", slot_name_lwr.c_str());
         }
         cols.add_formatted(2, buf, false);
     }
@@ -2060,7 +2059,7 @@ static std::string _status_mut_abilities(int sw)
         DUR_FIRE_SHIELD,
         DUR_POISONING,
         STATUS_SICK,
-        STATUS_GLOW,
+        STATUS_CONTAMINATION,
         STATUS_ROT,
         DUR_CONFUSING_TOUCH,
         DUR_SLIMIFY,
@@ -2078,6 +2077,8 @@ static std::string _status_mut_abilities(int sw)
         STATUS_FIREBALL,
         DUR_SHROUD_OF_GOLUBRIA,
         DUR_TORNADO_COOLDOWN,
+        STATUS_BACKLIT,
+        STATUS_UMBRA,
     };
 
     status_info inf;

@@ -1608,9 +1608,9 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_SWIFTNESS:
         return cast_swiftness(powc, fail);
 
+#if TAG_MAJOR_VERSION == 32
     case SPELL_LEVITATION:
-        return cast_levitation(powc, fail);
-
+#endif
     case SPELL_FLY:
         return cast_fly(powc, fail);
 

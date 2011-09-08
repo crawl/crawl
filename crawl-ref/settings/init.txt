@@ -64,7 +64,6 @@
 # wand = (enslavement | confusion | magic darts | frost | flame | striking | random)
 # species = (Human |...| Vampire | random)
 # job     = (Fighter |...| Wanderer | random)
-# religion = (Beogh | Zin | random)
 # random_pick = true
 # good_random = false
 # restart_after_game = true
@@ -174,7 +173,7 @@ drop_filter = useless_item
 # travel_key_stop = false
 #
 # explore_stop_pickup_ignore = curare
-auto_exclude = oklob plant,statue,curse skull,roxanne, hyperactive
+auto_exclude = oklob,statue,curse skull,roxanne,hyperactive,lightning spire
 
 # tc_reachable      = blue
 # tc_dangerous      = cyan

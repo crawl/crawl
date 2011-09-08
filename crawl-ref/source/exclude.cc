@@ -27,15 +27,9 @@
 
 static bool _mon_needs_auto_exclude(const monster* mon, bool sleepy = false)
 {
-    if (mons_is_stationary(mon))
-    {
-        if (sleepy)
+    if (mons_is_stationary(mon) && sleepy)
             return (false);
 
-        // Don't give away mimics unless already known.
-        return (!mons_is_mimic(mon->type)
-                || testbits(mon->flags, MF_KNOWN_MIMIC));
-    }
     // Auto exclusion only makes sense if the monster is still asleep.
     return (mon->asleep());
 }

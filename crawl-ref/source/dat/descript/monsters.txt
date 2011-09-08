@@ -1474,6 +1474,10 @@ porcupine
 
 While it may look cute and harmless, its bite is painful and its spikes are sharp!
 %%%%
+profane servitor
+
+This blasphemous being used to be an angel of the Shining One. Now it stands as unliving proof that not even the holiest of beings are beyond Yredelemnul's grasp.
+%%%%
 program bug
 
 A ravenous and incredibly buggy monster. Please report its existence to the DevTeam.

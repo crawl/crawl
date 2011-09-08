@@ -137,6 +137,7 @@ struct bolt
     bool     in_explosion_phase; // explosion phase (as opposed to beam phase)
     bool        smart_monster;   // tracer firer can guess at other mons. resists?
     bool        can_see_invis;   // tracer firer can see invisible?
+    bool        nightvision;     // tracer firer has nightvision?
     mon_attitude_type attitude;  // attitude of whoever fired tracer
     int         foe_ratio;       // 100* foe ratio (see mons_should_fire())
     std::map<mid_t, int> hit_count; // how many times targets were affected
@@ -319,7 +320,6 @@ bool napalm_monster(monster* mons, const actor* who, int levels = 1,
                     bool verbose = true);
 void fire_tracer(const monster* mons, struct bolt &pbolt,
                   bool explode_only = false);
-void mimic_alert(monster* mimic);
 spret_type zapping(zap_type ztype, int power, bolt &pbolt,
                    bool needs_tracer = false, const char* msg = NULL,
                    bool fail = false);

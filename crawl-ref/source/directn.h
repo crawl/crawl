@@ -144,6 +144,9 @@ private:
     bool select_compass_direction(const coord_def& delta);
     bool select_previous_target();
 
+    // Mark item for pickup, initiate movement.
+    bool pickup_item();
+
     // Return true if we need to abort targeting due to a signal.
     bool handle_signals();
 

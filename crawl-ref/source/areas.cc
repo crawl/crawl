@@ -40,6 +40,7 @@ enum areaprop_flag
     APROP_LIQUID        = (1 << 4),
     APROP_ACTUAL_LIQUID = (1 << 5),
     APROP_ORB           = (1 << 6),
+    APROP_UMBRA         = (1 << 7),
 };
 
 struct area_centre
@@ -82,7 +83,7 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
     if (act->alive() &&
         (you.entering_level
          || act->halo_radius2() > -1 || act->silence_radius2() > -1
-         || act->liquefying_radius2() > -1))
+         || act->liquefying_radius2() > -1 || act->umbra_radius2() > -1))
     {
         // Not necessarily new, but certainly potentially interesting.
         invalidate_agrid(true);
@@ -143,6 +144,19 @@ static void _update_agrid()
             }
             no_areas = false;
         }
+
+        if ((r = ai->umbra_radius2()) >= 0)
+        {
+            _agrid_centres.push_back(area_centre(AREA_UMBRA, ai->pos(), r));
+
+            for (radius_iterator ri(ai->pos(), r, C_CIRCLE, ai->get_los());
+                 ri; ++ri)
+            {
+                _set_agrid_flag(*ri, APROP_UMBRA);
+            }
+            no_areas = false;
+        }
+
     }
 
     if (you.char_direction == GDT_ASCENDING && !env.orb_pos.origin())
@@ -174,6 +188,8 @@ static area_centre_type _get_first_area (const coord_def& f)
         return AREA_SILENCE;
     if (a & APROP_HALO)
         return AREA_HALO;
+    if (a & APROP_UMBRA)
+        return AREA_UMBRA;
     // liquid is always applied; actual_liquid is on top
     // of this. If we find the first, we don't care about
     // the second.
@@ -336,6 +352,10 @@ void create_sanctuary(const coord_def& center, int time)
     int       cloud_count = 0;
     monster* seen_mon    = NULL;
 
+    // Since revealing mimics can move monsters, we do it first.
+    for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
+        discover_mimic(*ri);
+
     int shape = random2(4);
     for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
     {
@@ -395,27 +415,15 @@ void create_sanctuary(const coord_def& center, int time)
                 mon->behaviour = BEH_SEEK;
                 behaviour_event(mon, ME_EVAL, MHITYOU);
             }
-            else if (!mon->wont_attack())
+            else if (!mon->wont_attack() && mons_is_influenced_by_sanctuary(mon))
             {
-                if (mons_is_mimic(mon->type))
-                {
-                    mimic_alert(mon);
-                    if (you.can_see(mon))
-                    {
-                        scare_count++;
-                        seen_mon = mon;
-                    }
-                }
-                else if (mons_is_influenced_by_sanctuary(mon))
-                {
-                    mons_start_fleeing_from_sanctuary(mon);
+                mons_start_fleeing_from_sanctuary(mon);
 
-                    // Check to see that monster is actually fleeing.
-                    if (mons_is_fleeing(mon) && you.can_see(mon))
-                    {
-                        scare_count++;
-                        seen_mon = mon;
-                    }
+                // Check to see that monster is actually fleeing.
+                if (mons_is_fleeing(mon) && you.can_see(mon))
+                {
+                    scare_count++;
+                    seen_mon = mon;
                 }
             }
         }
@@ -625,6 +633,7 @@ bool liquefied(const coord_def& p, bool check_actual)
         return (_check_agrid_flag(p, APROP_LIQUID));
 }
 
+
 /////////////
 // Orb's glow
 //
@@ -635,5 +644,46 @@ bool orb_haloed(const coord_def& p)
         return (false);
     if (!_agrid_valid)
         _update_agrid();
+
     return (_check_agrid_flag(p, APROP_ORB));
+}
+
+/////////////
+// Umbra
+//
+
+bool umbraed(const coord_def& p)
+{
+    if (!map_bounds(p))
+        return (false);
+    if (!_agrid_valid)
+        _update_agrid();
+
+    return (_check_agrid_flag(p, APROP_UMBRA));
+}
+
+// Whether actor is in an umbra.
+bool actor::umbraed() const
+{
+    return (::umbraed(pos()));
+}
+
+// Stub for player umbra.
+int player::umbra_radius2() const
+{
+    return (-1);
+}
+
+int monster::umbra_radius2() const
+{
+    if (holiness() != MH_UNDEAD)
+        return (-1);
+
+    switch (type)
+    {
+    case MONS_PROFANE_SERVITOR:
+        return (40); // Very unholy!
+    default:
+        return (-1);
+    }
 }

@@ -3342,9 +3342,6 @@ mons_spec mons_list::pick_monster(mons_spec_slot &slot)
         slot.fix_slot = false;
     }
 
-    if (pick.mid == MONS_WEAPON_MIMIC && !pick.fix_mons)
-        pick.mid = random_range(MONS_GOLD_MIMIC, MONS_POTION_MIMIC);
-
     return (pick);
 }
 
@@ -3384,31 +3381,6 @@ void mons_list::set_from_slot(const mons_list &list, int slot_index)
         return;
 
     mons.push_back(list.mons[slot_index]);
-}
-
-bool mons_list::check_mimic(const std::string &s, int *mid, bool *fix) const
-{
-    if (s == "mimic")
-    {
-        *mid = MONS_WEAPON_MIMIC;
-        *fix = false;
-        return (true);
-    }
-    else if (s == "gold mimic")
-        *mid = MONS_GOLD_MIMIC;
-    else if (s == "weapon mimic")
-        *mid = MONS_WEAPON_MIMIC;
-    else if (s == "armour mimic")
-        *mid = MONS_ARMOUR_MIMIC;
-    else if (s == "scroll mimic")
-        *mid = MONS_SCROLL_MIMIC;
-    else if (s == "potion mimic")
-        *mid = MONS_POTION_MIMIC;
-    else
-        return (false);
-
-    *fix = true;
-    return (true);
 }
 
 void mons_list::parse_mons_spells(mons_spec &spec, std::vector<std::string> &spells)
@@ -3779,8 +3751,6 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             mspec.mlevel = -8;
         else if (mon_str == "9")
             mspec.mlevel = -9;
-        else if (check_mimic(mon_str, &mspec.mid, &mspec.fix_mons))
-            ;
         else if (mspec.place.is_valid())
         {
             // For monster specs such as place:Orc:4 zombie, we may
@@ -4839,6 +4809,14 @@ item_spec item_list::parse_single_spec(std::string s)
     if (strip_tag(s, "unobtainable"))
         result.props["unobtainable"] = true;
 
+    const int mimic = strip_number_tag(s, "mimic:");
+    if (mimic != TAG_UNFOUND)
+        result.props["mimic"] = mimic;
+    if (strip_tag(s, "mimic"))
+        result.props["mimic"] = 1;
+    if (strip_tag(s, "no_mimic"))
+        result.props["no_mimic"] = true;
+
     const short charges = strip_number_tag(s, "charges:");
     if (charges >= 0)
         result.props["charges"].get_int() = charges;
@@ -5519,12 +5497,18 @@ feature_spec_list keyed_mapspec::parse_feature(const std::string &str)
     int weight = find_weight(s);
     if (weight == TAG_UNFOUND || weight <= 0)
         weight = 10;
+
+    int mimic = strip_number_tag(s, "mimic:");
+    if (mimic == TAG_UNFOUND && strip_tag(s, "mimic"))
+        mimic = 1;
+    const bool no_mimic = strip_tag(s, "no_mimic");
+
     trim_string(s);
 
     feature_spec_list list;
     if (s.length() == 1)
     {
-        feature_spec fsp(-1, weight);
+        feature_spec fsp(-1, weight, mimic, no_mimic);
         fsp.glyph = s[0];
         list.push_back(fsp);
         return (list);
@@ -5544,11 +5528,11 @@ feature_spec_list keyed_mapspec::parse_feature(const std::string &str)
     }
 
     const dungeon_feature_type ftype = dungeon_feature_by_name(s);
+
     if (ftype == DNGN_UNSEEN)
-        err = make_stringf("no features matching \"%s\"",
-                           str.c_str());
+        err = make_stringf("no features matching \"%s\"", str.c_str());
     else
-        list.push_back(feature_spec(ftype, weight));
+        list.push_back(feature_spec(ftype, weight, mimic, no_mimic));
 
     return (list);
 }
@@ -5662,15 +5646,19 @@ feature_spec::feature_spec ()
     glyph = -1;
     shop.reset(NULL);
     trap.reset(NULL);
+    mimic = 0;
+    no_mimic = false;
 }
 
-feature_spec::feature_spec (int f, int wt)
+feature_spec::feature_spec(int f, int wt, int _mimic, bool _no_mimic)
 {
     genweight = wt;
     feat = f;
     glyph = -1;
     shop.reset(NULL);
     trap.reset(NULL);
+    mimic = _mimic;
+    no_mimic = _no_mimic;
 }
 
 feature_spec::feature_spec(const feature_spec &other)
@@ -5690,6 +5678,8 @@ void feature_spec::init_with (const feature_spec& other)
     genweight = other.genweight;
     feat = other.feat;
     glyph = other.glyph;
+    mimic = other.mimic;
+    no_mimic = other.no_mimic;
 
     if (other.trap.get())
         trap.reset(new trap_spec(*other.trap));

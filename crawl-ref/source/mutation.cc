@@ -13,10 +13,6 @@
 
 #include <sstream>
 
-#if defined(UNIX) && !defined(USE_TILE)
-#include "libunix.h"
-#endif
-
 #include "externs.h"
 
 #include "abl-show.h"
@@ -1982,6 +1978,7 @@ void check_antennae_detect()
 
     for (radius_iterator ri(you.pos(), radius, C_ROUND); ri; ++ri)
     {
+        discover_mimic(*ri);
         monster* mon = monster_at(*ri);
         map_cell& cell = env.map_knowledge(*ri);
         if (!mon)
@@ -2002,8 +1999,6 @@ void check_antennae_detect()
             const monster_type remembered_monster = cell.monster();
             if (remembered_monster != mon->type)
             {
-                if (mons_is_unknown_mimic(mon))
-                    discover_mimic(mon);
                 monster_type mc = MONS_SENSED;
                 if (you.religion == GOD_ASHENZARI && !player_under_penance())
                     mc = ash_monster_tier(mon);

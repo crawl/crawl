@@ -539,15 +539,10 @@ static int _base_cost(skill_type sk)
     {
     case SK_SPELLCASTING:
         return 130;
+    case SK_STEALTH:
     case SK_INVOCATIONS:
     case SK_EVOCATIONS:
         return 80;
-    // Quick fix for the fact that stealth can't be gained fast enough
-    // to keep up with the monster levels. This was a skill points bonus
-    // in _exercise2 and was changed to a reduced base_cost to keep
-    // total_skill_points progression the same for all skills.
-    case SK_STEALTH:
-        return 50;
     default:
         return 100;
     }

@@ -661,10 +661,6 @@ kill_monster_desc::kill_monster_desc(const monster* mon)
 
     if (mon->is_shapeshifter())
         modifier = M_SHAPESHIFTER;
-
-    // XXX: Ugly hack - merge all mimics into one mimic record.
-    if (monnum >= MONS_GOLD_MIMIC && monnum <= MONS_POTION_MIMIC)
-        monnum = MONS_WEAPON_MIMIC;
 }
 
 void kill_monster_desc::save(writer& outf) const
@@ -837,8 +833,8 @@ static int kill_lualc_symbol(lua_State *ls)
     kill_exp *ke = static_cast<kill_exp*>(lua_touserdata(ls, 1));
     if (ke)
     {
-        wchar_t ch = ke->monnum != -1?
-                     mons_char(ke->monnum) :
+        ucs_t ch = ke->monnum != -1?
+                   mons_char(ke->monnum) :
               is_ghost(ke)? 'p' : '&';
 
         if (ke->monnum == MONS_PROGRAM_BUG)

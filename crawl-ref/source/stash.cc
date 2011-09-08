@@ -324,30 +324,14 @@ bool Stash::is_boring_feature(dungeon_feature_type feature)
     }
 }
 
-static bool _grid_has_mimic_item(const coord_def& pos)
-{
-    const monster* mon = monster_at(pos);
-    return (mon && mons_is_unknown_mimic(mon) && mons_is_item_mimic(mon->type));
-}
-
-static bool _grid_has_mimic_shop(const coord_def& pos)
-{
-    const monster* mon = monster_at(pos);
-    return (mon && mons_is_unknown_mimic(mon)
-            && mon->type == MONS_SHOP_MIMIC);
-}
-
 static bool _grid_has_perceived_item(const coord_def& pos)
 {
-    return (you.visible_igrd(pos) != NON_ITEM || _grid_has_mimic_item(pos));
+    return (you.visible_igrd(pos) != NON_ITEM);
 }
 
 static bool _grid_has_perceived_multiple_items(const coord_def& pos)
 {
     int count = 0;
-
-    if (_grid_has_mimic_item(pos))
-        ++count;
 
     for (stack_iterator si(pos, true); si && count < 2; ++si)
         ++count;
@@ -360,10 +344,6 @@ void Stash::update()
     coord_def p(x,y);
     feat = grd(p);
     trap = NUM_TRAPS;
-
-    const monster* mon = monster_at(p);
-    if ((mon && mons_is_unknown_mimic(mon) && mons_is_feat_mimic(mon->type)))
-        feat = get_mimic_feat(mon);
 
     if (is_boring_feature(feat))
         feat = DNGN_FLOOR;
@@ -395,14 +375,8 @@ void Stash::update()
         }
 
         // There's something on this square. Take a squint at it.
-        item_def *pitem;
-        if (_grid_has_mimic_item(p))
-            pitem = &get_mimic_item(monster_at(p));
-        else
-        {
-            pitem = &mitm[you.visible_igrd(p)];
-            hints_first_item(*pitem);
-        }
+        item_def *pitem = &mitm[you.visible_igrd(p)];
+        hints_first_item(*pitem);
 
         ash_id_item(*pitem);
         const item_def& item = *pitem;
@@ -1230,9 +1204,6 @@ const ShopInfo *LevelStashes::find_shop(const coord_def& c) const
 
 bool LevelStashes::shop_needs_visit(const coord_def& c) const
 {
-    if (_grid_has_mimic_shop(c))
-        return true;
-
     const ShopInfo *shop = find_shop(c);
     return (shop && !shop->is_visited());
 }
@@ -1505,22 +1476,8 @@ void LevelStashes::load(reader& inf)
 
 void LevelStashes::remove_shop(const coord_def& c)
 {
-    const monster* mon = monster_at(c);
-    std::string mimic_name;
-    bool mimic_shop = false;
-
-    // If there are both shop mimic and normal shop here, then we want to erase
-    // just mimic entry.
-    if (mon && mon->type == MONS_SHOP_MIMIC)
-    {
-        mimic_shop = true;
-        if (mon->props.exists("shop_name"))
-            mimic_name = mon->props["shop_name"].get_string();
-    }
-
     for (unsigned i = 0; i < m_shops.size(); ++i)
-        if (m_shops[i].isAt(c)
-            && (!mimic_shop || m_shops[i].description() == mimic_name))
+        if (m_shops[i].isAt(c))
         {
             m_shops.erase(m_shops.begin() + i);
             return;
@@ -1659,11 +1616,7 @@ void StashTracker::update_visible_stashes(
     coord_def c;
     for (radius_iterator ri(you.get_los()); ri; ++ri)
     {
-        dungeon_feature_type feat = grd(*ri);
-
-        const monster* mon = monster_at(*ri);
-        if (mon && mons_is_unknown_mimic(mon) && mons_is_feat_mimic(mon->type))
-            feat = get_mimic_feat(mon);
+        const dungeon_feature_type feat = grd(*ri);
 
         if ((!lev || !lev->update_stash(*ri))
             && mode == ST_AGGRESSIVE
@@ -1708,11 +1661,11 @@ std::string StashTracker::stash_search_prompt()
     return (make_stringf("Search for what%s? ", prompt_qual.c_str()));
 }
 
-void StashTracker::remove_shop(const coord_def& c)
+void StashTracker::remove_shop(const level_pos &pos)
 {
-    LevelStashes *lev = find_current_level();
+    LevelStashes *lev = find_level(pos.id);
     if (lev)
-        lev->remove_shop(c);
+        lev->remove_shop(pos.pos);
 }
 
 class stash_search_reader : public line_reader

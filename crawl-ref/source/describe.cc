@@ -43,7 +43,6 @@
 #include "menu.h"
 #include "message.h"
 #include "mon-stuff.h"
-#include "mon-util.h"
 #include "output.h"
 #include "player.h"
 #include "quiver.h"
@@ -58,6 +57,7 @@
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "stash.h"
+#include "terrain.h"
 #include "transform.h"
 #include "hints.h"
 #include "xom.h"
@@ -2200,18 +2200,7 @@ static std::string _get_feature_description_wide(int feat)
 void get_feature_desc(const coord_def &pos, describe_info &inf)
 {
     dungeon_feature_type feat = grd(pos);
-    bool mimic = false;
-    monster* mimic_mons = NULL;
 
-    if (monster_at(pos))
-    {
-        mimic_mons = monster_at(pos);
-        if (mons_is_feat_mimic(mimic_mons->type) && mons_is_unknown_mimic(mimic_mons))
-        {
-            mimic = true;
-            feat = get_mimic_feat(mimic_mons);
-        }
-    }
     std::string desc      = feature_description(pos, false, DESC_CAP_A, false);
     std::string db_name   = feat == DNGN_ENTER_SHOP ? "A shop" : desc;
     std::string long_desc = getLongDescription(db_name);
@@ -2242,7 +2231,7 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
         custom_desc = true;
     }
 
-    if (feat == DNGN_ENTER_PORTAL_VAULT && !custom_desc && !mimic)
+    if (feat == DNGN_ENTER_PORTAL_VAULT && !custom_desc)
     {
         long_desc = "UNDESCRIBED PORTAL VAULT ENTRANCE.";
         custom_desc = true;
@@ -2646,7 +2635,8 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
 
     keyin = tolower(getch_ck());
     command_type action = _get_action(keyin, actions);
-    int slot = letter_to_index(item.link);
+    int slot = item.link;
+    ASSERT(slot >= 0 && slot < ENDOFPACK);
 
     switch (action)
     {
@@ -3169,6 +3159,7 @@ static const char* _get_threat_desc(mon_threat_level_type threat)
     case MTHRT_EASY:    return "easy";
     case MTHRT_TOUGH:   return "dangerous";
     case MTHRT_NASTY:   return "extremely dangerous";
+    case MTHRT_UNDEF:
     default:            return "buggily threatening";
     }
 }
@@ -3246,7 +3237,8 @@ static std::string _monster_stat_description(const monster_info& mi)
 
     const char* pronoun = mi.pronoun(PRONOUN_CAP);
 
-    result << pronoun << " looks " << _get_threat_desc(mi.threat) << ".\n";
+    if (mi.threat != MTHRT_UNDEF)
+        result << pronoun << " looks " << _get_threat_desc(mi.threat) << ".\n";
 
     if (!resist_descriptions.empty())
     {
@@ -3338,17 +3330,13 @@ static std::string _monster_stat_description(const monster_info& mi)
         "huge",
     };
 
-    const char *mimic_sizes[6]= {
-        "as big as a fountain",
-        "as big as a shop",
-        "as big as a staircase",
-        "as big as a trap",
-        "as big as a portal",
-        "as big as a door",
-    };
-
     if (mons_is_feat_mimic(mi.type))
-        result << pronoun << " is " << mimic_sizes[MONS_FOUNTAIN_MIMIC-mi.type] << ".\n";
+    {
+        result << pronoun << " is as big as "
+               << thing_do_grammar(DESC_NOCAP_A, true, false,
+                                   feat_type_name(mi.get_mimic_feature()))
+               << "\n";
+    }
     else if (sizes[mi.body_size()])
         result << pronoun << " is " << sizes[mi.body_size()] << ".\n";
 
@@ -3388,7 +3376,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.quote = getQuoteString(db_name);
 
     std::string symbol;
-    symbol += get_monster_data(mi.type)->showchar;
+    symbol += get_monster_data(mi.type)->basechar;
     if (isaupper(symbol[0]))
         symbol = "cap-" + symbol;
 

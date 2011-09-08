@@ -2241,3 +2241,74 @@ tt""M""""Ttttttttttttttttttttttttttttttt...ttt..t..ttttttttxxxxx......xx.exx..xx
 ttt""""TTTtttttttttttttttttttttttttttttttttttttt.tttttttxxxxxxxxxx....xxx.d.xxxx
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+################################################################################
+# Wizard Prison
+#
+NAME:   evilmike_wizard_prison
+TAGS:   no_monster_gen
+DEPTH:  D:17-27, Vault:3-7, Crypt:1-4
+ORIENT: southeast
+SUBST:  ~ = ~:2 .:3
+SUBST:  . = ~:1 .:9
+NSUBST: 3 = 3:. / *:3
+SUBST:  ^ : ^mmm
+KFEAT:  ^ = teleport trap
+KFEAT:  m = iron_grate
+KFEAT:  ! = closed_door
+KFEAT:  y = rock_wall
+KMASK:  y = no_wall_fixup
+MARKER: ! = lua:restrict_door()
+KPROP:  -d|*$14567^ = no_rtele_into
+FTILE:  -mcyd|*$14567^! = FLOOR_PEBBLE_DARKGRAY
+FTILE:  .@~+23 = FLOOR_HALL
+TILE:   c = DNGN_STONE_WALL_DARKGRAY
+# This is to mark the wall clearly diggable.
+TILE:   y = WALL_NORMAL
+COLOUR: c = darkgrey
+COLOUR: -d|*$14567^ = darkgrey
+MONS:   patrolling silent spectre
+MONS:   curse skull, soul eater
+# Inmates are monsters capable of blinking, summoning or airstriking.
+MONS:   ogre mage / deep elf mage / wizard / necromancer / \
+        merfolk aquamancer / spriggan air mage / deep dwarf necromancer / \
+        orc sorcerer / deep elf sorcerer / kobold demonologist / \
+        deep elf summoner
+MONS:   draconian shifter / draconian annihilator / lich  / \
+        deep elf annihilator / deep elf demonologist
+NSUBST: 4 = 6:5 / *:4
+MONS:   ancient lich
+MONS:   human name:innocent n_adj att:neutral
+NSUBST: 4 = 1:7 / *:4
+ITEM:   acquire any
+SUBST:  - = .
+MAP
+xxxxxxxxxxxc.@.cxxxxxxxxxxxx
+xxxxxxxxxxxc~~~cxxxxxxxxxxxx
+xxxxxxxxxxxc~c.cxxxxxxxxxxxx
+xxxxxxxxxxxc~~~cxxxxxxxxxxxx
+xxxxcccccccc.c~ccccccccxxxxx
+xxxxc-4cc--c~~~c4-cc--cxxxxx
+xxxxc--cc4-c3~3c--cc-4cxxxxx
+xxxccmmccmmcc+ccmmccmmccxxxx
+xxxc3..................cxxxx
+xxxc3................3.cxxxx
+xxxcmmcmmc!cmmcmmcmmc..ccccx
+xxxc--c-4c-c4-c4-c-4c..m--cx
+xxxc-4c--c-cccccccccc..m-4cx
+xxxccccccc--^1y||c--m.3ccccx
+xxxccccccc-ccccc|c-4m..m4-cx
+xxxc4-c--c-c-4cc|cccc..m--cx
+xxxc--c-4c-c--cddc-4c..ccccx
+xxxcmmcmmc!cmmccccmmc..cxxxx
+xxxc3..................cxxxx
+xxxc3.................3cxxxx
+xxxccmmcmmcmmc..cmmcmmccxxxx
+xxxxc4-c-4c--c..c--c-4cxxxxx
+xxxxc--c--c4-c..c4-c--cxxxxx
+xccccccccccccc.2cccccccxxxxx
+xc|$*$*$ccc6-m..cxxxxxxxxxxx
+xc$|$*$*yyy--m..cxxxxxxxxxxx
+xccccccccccccccccxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP

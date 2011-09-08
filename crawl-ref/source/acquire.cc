@@ -1050,7 +1050,7 @@ static bool _do_book_acquirement(item_def &book, int agent)
             }
 #if TAG_MAJOR_VERSION == 32
             if (bk == BOOK_MINOR_MAGIC_II || bk == BOOK_MINOR_MAGIC_III
-                || bk == BOOK_CONJURATIONS_I || bk == BOOK_BRANDS)
+                || bk == BOOK_CONJURATIONS_I)
             {
                 weights[bk] = 0;
                 continue;
@@ -1419,6 +1419,8 @@ int acquirement_create_item(object_class_type class_wanted,
                                    * roll_dice(1, 8)
                                    * roll_dice(1, 8)));
     }
+    else if (class_wanted == OBJ_MISSILES && !divine)
+        thing.quantity *= 2;
     else if (quant > 1)
         thing.quantity = quant;
 
@@ -1612,11 +1614,13 @@ bool acquirement(object_class_type class_wanted, int agent,
     {
         ASSERT(!quiet);
         mesclr();
-        mprf("%-24s[c] Jewellery      [d] Book",
-            you.species == SP_FELID ? "" : "[a] Weapon  [b] Armour");
-        mprf("%-24s[g] Miscellaneous  [h] %s [i] Gold",
-            you.species == SP_FELID ? "" : "[e] Staff   [f] Wand",
-            you.religion == GOD_FEDHAS ? "Fruit" : "Food ");
+        mprf("%-29s[c] Jewellery [d] Book%s",
+            you.species == SP_FELID ? "" : "[a] Weapon [b] Armour",
+            you.species == SP_FELID ? "" : " [e] Staff");
+        mprf("%-11s[g] Miscellaneous [h] %-5s     [i] Gold %s",
+            you.species == SP_FELID ? "" : "[f] Wand",
+            you.religion == GOD_FEDHAS ? "Fruit" : "Food ",
+            you.species == SP_FELID ? "" : "[j] Ammunition");
         mpr("What kind of item would you like to acquire? (\\ to view known items)", MSGCH_PROMPT);
 
         const int keyin = tolower(get_ch());
@@ -1631,6 +1635,7 @@ bool acquirement(object_class_type class_wanted, int agent,
         case 'g':    class_wanted = OBJ_MISCELLANY; break;
         case 'h':    class_wanted = OBJ_FOOD;       break;
         case 'i':    class_wanted = OBJ_GOLD;       break;
+        case 'j':    class_wanted = OBJ_MISSILES;   break;
         case '\\':   check_item_knowledge();        break;
         default:
             // Lets wizards escape out of accidently choosing acquirement.

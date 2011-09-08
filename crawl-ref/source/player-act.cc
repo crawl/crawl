@@ -305,11 +305,11 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
 }
 
 bool player::could_wield(const item_def &item, bool ignore_brand,
-                         bool /* ignore_transform */) const
+                         bool ignore_transform) const
 {
     if (species == SP_FELID)
         return (false);
-    if (body_size() < SIZE_LARGE
+    if (body_size(PSIZE_TORSO, ignore_transform) < SIZE_LARGE
             && (item_mass(item) >= 500
                 || item.base_type == OBJ_WEAPONS
                     && item_mass(item) >= 300))
@@ -320,8 +320,9 @@ bool player::could_wield(const item_def &item, bool ignore_brand,
         return (true);
 
     // Small species wielding large weapons...
-    if (body_size(PSIZE_BODY) < SIZE_MEDIUM
-        && !check_weapon_wieldable_size(item, body_size(PSIZE_BODY)))
+    if (body_size(PSIZE_BODY, ignore_transform) < SIZE_MEDIUM
+        && !check_weapon_wieldable_size(item,
+               body_size(PSIZE_BODY, ignore_transform)))
     {
         return (false);
     }

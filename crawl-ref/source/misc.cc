@@ -58,7 +58,6 @@
 #include "mon-pathfind.h"
 #include "mon-info.h"
 #include "mon-iter.h"
-#include "mon-util.h"
 #include "mon-stuff.h"
 #include "ng-setup.h"
 #include "ouch.h"
@@ -1498,9 +1497,6 @@ static bool _mons_is_always_safe(const monster *mon)
 bool mons_is_safe(const monster* mon, const bool want_move,
                   const bool consider_user_options, bool check_dist)
 {
-    if (mons_is_unknown_mimic(mon))
-        return (true);
-
     int  dist    = grid_distance(you.pos(), mon->pos());
 
     bool is_safe = (_mons_is_always_safe(mon)
@@ -1540,8 +1536,7 @@ bool mons_is_safe(const monster* mon, const bool want_move,
 }
 
 // Return all nearby monsters in range (default: LOS) that the player
-// is able to recognise as being monsters (i.e. no unknown mimics or
-// submerged creatures.)
+// is able to recognise as being monsters (i.e. no submerged creatures.)
 //
 // want_move       (??) Somehow affects what monsters are considered dangerous
 // just_check      Return zero or one monsters only
@@ -1572,7 +1567,6 @@ std::vector<monster* > get_nearby_monsters(bool want_move,
             if (mon->alive()
                 && (!require_visible || mon->visible_to(&you))
                 && !mon->submerged()
-                && !mons_is_unknown_mimic(mon)
                 && (!dangerous_only || !mons_is_safe(mon, want_move,
                                                      consider_user_options,
                                                      check_dist)))
@@ -2208,6 +2202,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
                                    && (mon->attitude != ATT_HOSTILE
                                        || testbits(mon->flags, MF_NO_REWARD)
                                        || testbits(mon->flags, MF_WAS_NEUTRAL));
+    const bool isSlime       = mons_is_slime(mon);
 
     if (isFriendly)
     {
@@ -2248,8 +2243,7 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
         prompt = true;
     }
     else if (inSanctuary || wontAttack
-             || (you.religion == GOD_JIYVA && mons_is_slime(mon)
-                 && !mon->is_shapeshifter())
+             || (isSlime && you.religion == GOD_JIYVA)
              || (isNeutral || isHoly) && is_good_god(you.religion)
              || isUnchivalric
                 && you.religion == GOD_SHINING_ONE
@@ -2382,17 +2376,20 @@ void swap_with_monster(monster* mon_to_swap)
     {
         if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
         {
-            mpr("The net rips apart!");
-            you.attribute[ATTR_HELD] = 0;
-            you.redraw_quiver = true;
             int net = get_trapping_net(you.pos());
             if (net != NON_ITEM)
                 destroy_item(net);
+            mprf("The %s rips apart!", (net == NON_ITEM) ? "web" : "net");
+            you.attribute[ATTR_HELD] = 0;
+            you.redraw_quiver = true;
         }
         else
         {
             you.attribute[ATTR_HELD] = 10;
-            mpr("You become entangled in the net!");
+            if (get_trapping_net(you.pos()) != NON_ITEM)
+                mpr("You become entangled in the net!");
+            else
+                mpr("You get stuck in the web!");
             you.redraw_quiver = true; // Account for being in a net.
             // Xom thinks this is hilarious if you trap yourself this way.
             if (you_caught)
