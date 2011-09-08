@@ -64,7 +64,7 @@ void gui_init_view_params(crawl_view_geometry &geom)
     geom.viewsz.y = 17;
 }
 
-int putwch(ucs_t chr)
+void putwch(ucs_t chr)
 {
     if (!chr)
         chr = ' ';
@@ -72,7 +72,6 @@ int putwch(ucs_t chr)
     buf[0] = chr;
     buf[1] = 0;
     tiles.put_ucs_string(buf);
-    return 0;
 }
 
 void clear_to_end_of_line()
@@ -80,7 +79,7 @@ void clear_to_end_of_line()
     tiles.clear_to_end_of_line();
 }
 
-int cprintf(const char *format,...)
+void cprintf(const char *format,...)
 {
     char buffer[2048];          // One full screen if no control seq...
     va_list argp;
@@ -88,7 +87,6 @@ int cprintf(const char *format,...)
     vsnprintf(buffer, sizeof(buffer), format, argp);
     va_end(argp);
     tiles.put_string(buffer);
-    return 0;
 }
 
 void textcolor(int color)
@@ -117,6 +115,15 @@ bool is_cursor_enabled()
     return (false);
 }
 
+bool is_smart_cursor_enabled()
+{
+    return false;
+}
+
+void enable_smart_cursor(bool dummy)
+{
+}
+
 int wherex()
 {
     return tiles.wherex();
@@ -137,12 +144,6 @@ int get_number_of_cols()
     return tiles.get_number_of_cols();
 }
 
-void put_colour_ch(int colour, ucs_t ch)
-{
-    textcolor(colour);
-    putwch(ch);
-}
-
 int getch_ck()
 {
     return (tiles.getch_ck());
@@ -153,10 +154,9 @@ int getchk()
     return getch_ck();
 }
 
-int clrscr()
+void clrscr()
 {
     tiles.clrscr();
-    return 0;
 }
 
 void cgotoxy(int x, int y, GotoRegion region)
@@ -175,7 +175,7 @@ GotoRegion get_cursor_region()
     return (tiles.get_cursor_region());
 }
 
-void delay(int ms)
+void delay(unsigned int ms)
 {
     tiles.redraw();
     fprintf(stdout, "delay(%d);\n", ms);
@@ -201,5 +201,12 @@ bool kbhit()
     select(STDIN_FILENO+1, &fds, NULL, NULL, &tv);
     return FD_ISSET(STDIN_FILENO, &fds) != 0;
 }
-#endif // #ifdef UNIX
+
+void console_startup()
+{
+}
+
+void console_shutdown()
+{
+}
 #endif // #ifdef USE_TILE_WEB

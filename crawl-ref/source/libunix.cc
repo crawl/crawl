@@ -62,9 +62,6 @@ static struct termios game_term;
     #include CURSES_INCLUDE_FILE
 #endif
 
-void unixcurses_startup();
-void unixcurses_shutdown();
-
 // Globals holding current text/backg. colors
 static short FG_COL = WHITE;
 static short BG_COL = BLACK;
@@ -303,8 +300,8 @@ static void handle_sigwinch(int)
 
 static void unix_handle_terminal_resize()
 {
-    unixcurses_shutdown();
-    unixcurses_startup();
+    console_shutdown();
+    console_startup();
 }
 
 static void unixcurses_defkeys(void)
@@ -378,7 +375,7 @@ int unixcurses_get_vi_key(int keyin)
 #define KPADAPP "\033[?1051l\033[?1052l\033[?1060l\033[?1061h"
 #define KPADCUR "\033[?1051l\033[?1052l\033[?1060l\033[?1061l"
 
-void unixcurses_startup(void)
+void console_startup(void)
 {
     termio_init();
 
@@ -420,7 +417,7 @@ void unixcurses_startup(void)
     set_mouse_enabled(false);
 }
 
-void unixcurses_shutdown()
+void console_shutdown()
 {
     // resetty();
     endwin();
@@ -454,19 +451,13 @@ void cprintf(const char *format, ...)
     }
 }
 
-int putwch(ucs_t chr)
+void putwch(ucs_t chr)
 {
     wchar_t c = chr;
     if (!c)
         c = ' ';
     // TODO: recognize unsupported characters and try to transliterate
-    return (addnwstr(&c, 1));
-}
-
-void put_colour_ch(int colour, ucs_t ch)
-{
-    textattr(colour);
-    putwch(ch);
+    addnwstr(&c, 1);
 }
 
 void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
@@ -502,13 +493,6 @@ void clear_to_end_of_line(void)
     clrtoeol();
 }
 
-void clear_to_end_of_screen(void)
-{
-    textcolor(LIGHTGREY);
-    textbackground(BLACK);
-    clrtobot();
-}
-
 int get_number_of_lines(void)
 {
     return (LINES);
@@ -519,18 +503,15 @@ int get_number_of_cols(void)
     return (COLS);
 }
 
-int clrscr()
+void clrscr()
 {
-    int retval;
-
     textcolor(LIGHTGREY);
     textbackground(BLACK);
-    retval = clear();
+    clear();
 #ifdef DGAMELAUNCH
     printf("%s", DGL_CLEAR_SCREEN);
     fflush(stdout);
 #endif
-    return (retval);
 }
 
 void set_cursor_enabled(bool enabled)
@@ -541,6 +522,15 @@ void set_cursor_enabled(bool enabled)
 bool is_cursor_enabled()
 {
     return (cursor_is_enabled);
+}
+
+bool is_smart_cursor_enabled()
+{
+    return false;
+}
+
+void enable_smart_cursor(bool dummy)
+{
 }
 
 inline unsigned get_brand(int col)
@@ -555,13 +545,6 @@ inline unsigned get_brand(int col)
            (col & COLFLAG_REVERSE)          ? CHATTR_REVERSE
                                             : CHATTR_NORMAL;
 }
-
-#ifndef USE_TILE
-void textattr(int col)
-{
-    textcolor(col);
-}
-#endif
 
 static int curs_fg_attr(int col)
 {
@@ -683,9 +666,9 @@ void textbackground(int col)
 }
 
 
-int gotoxy_sys(int x, int y)
+void gotoxy_sys(int x, int y)
 {
-    return (move(y - 1, x - 1));
+    move(y - 1, x - 1);
 }
 
 typedef cchar_t char_info;
@@ -761,7 +744,7 @@ int wherey()
     return getcury(stdscr) + 1;
 }
 
-void delay(unsigned long time)
+void delay(unsigned int time)
 {
     refresh();
     if (time)

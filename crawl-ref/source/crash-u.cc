@@ -123,7 +123,7 @@ static void _crash_signal_handler(int sig_num)
     // to stderr.
 #ifndef USE_TILE
     if (crawl_state.io_inited)
-        unixcurses_shutdown();
+        console_shutdown();
 #endif
 
     do_crash_dump();

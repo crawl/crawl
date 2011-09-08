@@ -2033,9 +2033,9 @@ void process_command(command_type cmd)
         // and unfortunately they tend to be stuck together.
         clrscr();
 #ifndef USE_TILE
-        unixcurses_shutdown();
+        console_shutdown();
         kill(0, SIGTSTP);
-        unixcurses_startup();
+        console_startup();
 #endif
         redraw_screen();
         break;

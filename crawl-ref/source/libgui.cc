@@ -64,12 +64,11 @@ void gui_init_view_params(crawl_view_geometry &geom)
     geom.viewsz.y = 17;
 }
 
-int putwch(ucs_t chr)
+void putwch(ucs_t chr)
 {
     if (!chr)
         chr = ' ';
     TextRegion::text_mode->putwch(chr);
-    return 0;
 }
 
 void clear_to_end_of_line()
@@ -78,7 +77,7 @@ void clear_to_end_of_line()
     TextRegion::text_mode->clear_to_end_of_line();
 }
 
-int cprintf(const char *format,...)
+void cprintf(const char *format,...)
 {
     char buffer[2048];          // One full screen if no control seq...
     va_list argp;
@@ -87,7 +86,6 @@ int cprintf(const char *format,...)
     va_end(argp);
     // object's method
     TextRegion::text_mode->addstr(buffer);
-    return 0;
 }
 
 void textcolor(int color)
@@ -116,6 +114,15 @@ bool is_cursor_enabled()
     return (false);
 }
 
+bool is_smart_cursor_enabled()
+{
+    return false;
+}
+
+void enable_smart_cursor(bool dummy)
+{
+}
+
 int wherex()
 {
     return TextRegion::wherex();
@@ -136,12 +143,6 @@ int get_number_of_cols()
     return tiles.get_number_of_cols();
 }
 
-void put_colour_ch(int colour, ucs_t ch)
-{
-    textcolor(colour);
-    putwch(ch);
-}
-
 int getch_ck()
 {
     return (tiles.getch_ck());
@@ -152,10 +153,9 @@ int getchk()
     return getch_ck();
 }
 
-int clrscr()
+void clrscr()
 {
     tiles.clrscr();
-    return 0;
 }
 
 void cgotoxy(int x, int y, GotoRegion region)
@@ -174,7 +174,7 @@ GotoRegion get_cursor_region()
     return (tiles.get_cursor_region());
 }
 
-void delay(int ms)
+void delay(unsigned int ms)
 {
     tiles.redraw();
     wm->delay(ms);
@@ -190,5 +190,15 @@ bool kbhit()
     // Look for the presence of any keyboard events in the queue.
     int count = wm->get_event_count(WM_KEYDOWN);
     return (count > 0);
+}
+
+void console_startup()
+{
+    tiles.resize();
+}
+
+void console_shutdown()
+{
+    tiles.shutdown();
 }
 #endif // #ifdef USE_TILE_LOCAL

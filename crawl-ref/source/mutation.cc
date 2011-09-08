@@ -13,10 +13,6 @@
 
 #include <sstream>
 
-#if defined(UNIX) && !defined(USE_TILE)
-#include "libunix.h"
-#endif
-
 #include "externs.h"
 
 #include "abl-show.h"
