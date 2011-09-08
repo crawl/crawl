@@ -3155,7 +3155,6 @@ bool god_likes_items(god_type god)
 
     switch (god)
     {
-    case GOD_ZIN:
     case GOD_BEOGH:
     case GOD_NEMELEX_XOBEH:
     case GOD_ASHENZARI:
@@ -3184,9 +3183,6 @@ bool god_likes_item(god_type god, const item_def& item)
 
     switch (god)
     {
-    case GOD_ZIN:
-        return (item.base_type == OBJ_GOLD);
-
     case GOD_ELYVILON:
         if (item_is_stationary(item)) // Held in a net?
             return false;
