@@ -376,7 +376,7 @@ bool check_awaken(monster* mons)
 
     // On the other hand, shrouding has the reverse effect:
     if (you.umbra() && you.visible_to(mons))
-        mons_perc -= 50 * LOS_RADIUS / you.current_vision;
+        mons_perc -= 30 * LOS_RADIUS / you.current_vision;
 
     if (mons_perc < 0)
         mons_perc = 0;
