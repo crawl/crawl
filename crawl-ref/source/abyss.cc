@@ -1156,6 +1156,14 @@ static bool _abyss_teleport_within_level()
     return (false);
 }
 
+static bool _rune_at(const coord_def p)
+{
+    for (stack_iterator si(p); si; ++si)
+        if (item_is_rune(*si, RUNE_ABYSSAL))
+            return true;
+    return false;
+}
+
 static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
         bool applyGlobal=false)
 {
@@ -1201,6 +1209,10 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
 
         // Dont' decay vaults.
         if (map_masked(p, MMT_VAULT))
+            continue;
+
+        // Don't morph a cell with the Rune or the exit.
+        if (_rune_at(p) || grd(p) == DNGN_EXIT_ABYSS)
             continue;
 
         if (!one_chance_in(you.abyss_speed) && applyGlobal)
