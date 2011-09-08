@@ -1062,7 +1062,8 @@ void monster_info::to_string(int count, std::string& desc,
         case MTHRT_TRIVIAL: desc_color = DARKGREY;  break;
         case MTHRT_EASY:    desc_color = LIGHTGREY; break;
         case MTHRT_TOUGH:   desc_color = YELLOW;    break;
-        case MTHRT_NASTY:   desc_color = LIGHTRED;
+        case MTHRT_NASTY:   desc_color = LIGHTRED;  break;
+        default:;
         }
         break;
     }
