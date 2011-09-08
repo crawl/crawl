@@ -68,7 +68,7 @@ static std::string _get_portals();
 static std::string _get_notes();
 static std::string _print_altars_for_gods(const std::vector<god_type>& gods,
                                           bool print_unseen, bool display);
-static const std::string _get_coloured_level_annotation(int col, level_id li);
+static const std::string _get_coloured_level_annotation(level_id li);
 
 void overview_clear()
 {
@@ -669,63 +669,14 @@ static std::string _get_portals()
 static std::string _get_notes()
 {
     std::string disp;
-    char depth_str[3];
-    bool notes_exist = false;
-    bool has_notes[NUM_BRANCHES];
 
-    for (int i = 0; i < NUM_BRANCHES; ++i)
-    {
-        Branch branch = branches[i];
+    for (level_id_iterator i; i; ++i)
+        if (!get_level_annotation(*i).empty())
+            disp += _get_coloured_level_annotation(*i) + "\n";
 
-        has_notes[i] = false;
-        for (int depth = 1; depth <= branch.depth; depth++)
-        {
-            const level_id li(branch.id, depth);
-
-            if (!get_level_annotation(li).empty())
-            {
-                notes_exist  = true;
-                has_notes[i] = true;
-                break;
-            }
-        }
-    }
-
-    if (notes_exist)
-    {
-        disp += "\n<green>Annotations</green>\n" ;
-
-        for (int i = 0; i < NUM_BRANCHES; ++i)
-        {
-            if (!has_notes[i])
-                continue;
-
-            Branch branch = branches[i];
-
-            for (int depth = 1; depth <= branch.depth; depth++)
-            {
-                const level_id li(branch.id, depth);
-
-                if (!get_level_annotation(li).empty())
-                {
-                    sprintf(depth_str, "%d", depth);
-
-                    disp += "<yellow>";
-                    disp += branch.abbrevname;
-                    disp += "</yellow>:";
-                    disp += depth_str;
-                    disp += " ";
-                    if (level_annotation_has("!", li))
-                        disp += _get_coloured_level_annotation(LIGHTRED, li);
-                    else
-                        disp += _get_coloured_level_annotation(LIGHTMAGENTA, li);
-                    disp += "\n";
-                }
-            }
-        }
-    }
-
-    return disp;
+    if (disp.empty())
+        return disp;
+    return "\n<green>Annotations</green>\n" + disp;
 }
 
 template <typename Z, typename Key>
@@ -924,10 +875,10 @@ static void _update_unique_annotation(level_id level)
     set_level_unique_annotation(note, level);
 }
 
-void set_unique_annotation(monster* mons)
+void set_unique_annotation(monster* mons, const level_id level)
 {
     // Abyss persists its denizens.
-    if (you.level_type != LEVEL_DUNGEON && you.level_type != LEVEL_ABYSS)
+    if (level.level_type != LEVEL_DUNGEON && level.level_type != LEVEL_ABYSS)
         return;
     if (!mons_is_unique(mons->type) && mons->type != MONS_PLAYER_GHOST)
         return;
@@ -937,8 +888,8 @@ void set_unique_annotation(monster* mons)
     if (mons->type == MONS_PLAYER_GHOST)
         name += ", " + short_ghost_description(mons, true);
     auto_unique_annotations.insert(std::make_pair(
-                name, level_id::current()));
-    _update_unique_annotation(level_id::current());
+                name, level));
+    _update_unique_annotation(level);
 }
 
 void remove_unique_annotation(monster* mons)
@@ -1029,9 +980,14 @@ std::string get_level_annotation(level_id li, bool skip_excl,
     return note;
 }
 
-static const std::string _get_coloured_level_annotation(int col, level_id li)
+static const std::string _get_coloured_level_annotation(level_id li)
 {
-    return get_level_annotation(li, false, false, true, col);
+    std::string place = "<yellow>" + li.describe();
+    place = replace_all(place, ":", "</yellow>:");
+    if (place.find("</yellow>") == std::string::npos)
+        place += "</yellow>";
+    int col = level_annotation_has("!", li) ? LIGHTRED : MAGENTA;
+    return place + " " + get_level_annotation(li, false, false, true, col);
 }
 
 bool level_annotation_has(std::string find, level_id li)

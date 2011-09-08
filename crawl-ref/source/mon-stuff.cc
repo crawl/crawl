@@ -2188,6 +2188,7 @@ int monster_die(monster* mons, killer_type killer,
             // Monster goes to the Abyss.
             mons->flags |= MF_BANISHED;
             mons->set_transit(level_id(LEVEL_ABYSS));
+            set_unique_annotation(mons, LEVEL_ABYSS);
             in_transit = true;
             drop_items = false;
             mons->firing_pos.reset();
@@ -3366,7 +3367,8 @@ void make_mons_leave_level(monster* mon)
 {
     if (mon->pacified())
     {
-        if (you.can_see(mon)) {
+        if (you.can_see(mon))
+        {
             _mons_indicate_level_exit(mon);
             remove_unique_annotation(mon);
         }
