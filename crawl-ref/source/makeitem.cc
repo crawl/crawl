@@ -2601,13 +2601,37 @@ static int _wand_max_initial_charges(int subtype)
     }
 }
 
-static void _generate_wand_item(item_def& item, int force_type)
+int degrade_high_tier_wand(int type)
+{
+    if (type == WAND_FIRE)
+        return WAND_FLAME;
+
+    if (type == WAND_COLD)
+        return WAND_FROST;
+
+    if (type == WAND_LIGHTNING)
+        return (coinflip() ? WAND_FLAME : WAND_FROST);
+
+    if (type == WAND_PARALYSIS)
+        return WAND_SLOWING;
+
+    if (type == WAND_DRAINING)
+        return WAND_POLYMORPH_OTHER;
+
+    return type;
+}
+
+static void _generate_wand_item(item_def& item, int force_type, int item_level)
 {
     // Determine sub_type.
     if (force_type != OBJ_RANDOM)
         item.sub_type = force_type;
     else
+    {
         item.sub_type = _random_wand_subtype();
+        if (item_level < 2)
+            item.sub_type = degrade_high_tier_wand(item.sub_type);
+    }
 
     // Generate charges randomly...
     item.plus = random2avg(_wand_max_initial_charges(item.sub_type), 3);
@@ -3234,7 +3258,7 @@ int items(bool allow_uniques,
         break;
 
     case OBJ_WANDS:
-        _generate_wand_item(item, force_type);
+        _generate_wand_item(item, force_type, item_level);
         break;
 
     case OBJ_FOOD:
