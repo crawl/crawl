@@ -1926,15 +1926,21 @@ int melee_attack::player_weapon_type_modify(int damage)
             attack_verb = "impale";
         else
         {
-            attack_verb = "spit";
             if (defender->atype() == ACT_MONSTER
                 && defender_visible
                 && mons_genus(defender->as_monster()->type) == MONS_HOG)
             {
-                verb_degree = " like the proverbial pig";
+                attack_verb = "spit";
+                verb_degree = "like the proverbial pig";
             }
             else
-                verb_degree = " like a pig";
+            {
+                const char* pierce_desc[][2] = {{"spit",   "like a pig"},
+                                                {"skewer", "like a kebab"}};
+                const int choice = random2(ARRAYSZ(pierce_desc));
+                attack_verb = pierce_desc[choice][0];
+                verb_degree = pierce_desc[choice][1];
+            }
         }
         break;
 
@@ -1946,12 +1952,16 @@ int melee_attack::player_weapon_type_modify(int damage)
         else if (mons_genus(defender->as_monster()->type) == MONS_OGRE)
         {
             attack_verb = "dice";
-            verb_degree = " like an onion";
+            verb_degree = "like an onion";
         }
         else
         {
-            attack_verb = "open";
-            verb_degree = " like a pillowcase";
+            const char* slice_desc[][2] = {{"open",  "like a pillowcase"},
+                                           {"slice", "like a ripe choko"},
+                                           {"cut",   "into ribbons"}};
+            const int choice = random2(ARRAYSZ(slice_desc));
+            attack_verb = slice_desc[choice][0];
+            verb_degree = slice_desc[choice][1];
         }
         break;
 
@@ -1962,8 +1972,13 @@ int melee_attack::player_weapon_type_modify(int damage)
             attack_verb = "bludgeon";
         else
         {
-            attack_verb = "crush";
-            verb_degree = " like a grape";
+            const char* bash_desc[][2] = {{"crush",  "like a grape"},
+                                          {"beat",   "like a drum"},
+                                          {"hammer", "like a gong"},
+                                          {"pound",  "like an anvil"}};
+            const int choice = random2(ARRAYSZ(bash_desc));
+            attack_verb = bash_desc[choice][0];
+            verb_degree = bash_desc[choice][1];
         }
         break;
 
@@ -1980,7 +1995,7 @@ int melee_attack::player_weapon_type_modify(int damage)
             case MH_NATURAL:
             case MH_DEMONIC:
                 attack_verb = "punish";
-                verb_degree = " causing immense pain";
+                verb_degree = "causing immense pain";
                 break;
             default:
                 attack_verb = "devastate";
