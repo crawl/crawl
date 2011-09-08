@@ -356,8 +356,18 @@ DEPTH:  Zot
 
 NAME:   uniq_ignacio
 DEPTH:  Pan
-TAGS:   pan transparent extra allow_dup
-MONS:   Ignacio
+CHANCE: 50%
+TAGS:   pan transparent extra allow_dup luniq_ignacio
+{{
+  if not dgn.persist.ignacio_spawned then
+    if crawl.one_chance_in(10) then
+      dgn.persist.ignacio_spawned = true
+    else
+      return
+    end
+  end
+  mons("Ignacio")
+}}
 MAP
 1
 ENDMAP
