@@ -926,6 +926,9 @@ static void _update_unique_annotation(level_id level)
 
 void set_unique_annotation(monster* mons)
 {
+    // Abyss persists its denizens.
+    if (you.level_type != LEVEL_DUNGEON && you.level_type != LEVEL_ABYSS)
+        return;
     if (!mons_is_unique(mons->type) && mons->type != MONS_PLAYER_GHOST)
         return;
 
