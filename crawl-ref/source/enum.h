@@ -394,7 +394,7 @@ enum book_type
     BOOK_CANTRIPS,
     BOOK_PARTY_TRICKS,
     BOOK_STALKING,
-    BOOK_BRANDS,
+    BOOK_DEBILITATION,
     BOOK_DRAGON,
     BOOK_BURGLARY,
     BOOK_DREAMS,
@@ -766,6 +766,7 @@ enum command_type
     CMD_TARGET_SELECT_ENDPOINT,
     CMD_TARGET_SELECT_FORCE,
     CMD_TARGET_SELECT_FORCE_ENDPOINT,
+    CMD_TARGET_GET,
     CMD_TARGET_OBJ_CYCLE_BACK,
     CMD_TARGET_OBJ_CYCLE_FORWARD,
     CMD_TARGET_CYCLE_FORWARD,
@@ -1651,6 +1652,9 @@ enum item_status_flag_type  // per item flags: ie. ident status, cursed status
 
     ISFLAG_UNOBTAINABLE      = 0x00080000,  // vault on display
 
+    ISFLAG_MIMIC             = 0x00100000,  // mimic
+    ISFLAG_NO_MIMIC          = 0x00200000,  // Can't be turned into a mimic
+
     ISFLAG_NO_RACE           = 0x00000000,  // used for clearing these flags
     ISFLAG_ORCISH            = 0x01000000,  // low quality items
     ISFLAG_DWARVEN           = 0x02000000,  // strong and robust items
@@ -2052,19 +2056,21 @@ enum monster_type                      // (int) menv[].type
     MONS_VAPOUR,
 
     // Mimics:
-    MONS_GOLD_MIMIC,
+    MONS_ITEM_MIMIC,
+#if TAG_MAJOR_VERSION == 32
     MONS_WEAPON_MIMIC,
     MONS_ARMOUR_MIMIC,
     MONS_SCROLL_MIMIC,
     MONS_POTION_MIMIC,
-    MONS_DOOR_MIMIC,
-    MONS_PORTAL_MIMIC,
-#if TAG_MAJOR_VERSION == 32
-    MONS_TRAP_MIMIC,
 #endif
+    MONS_FEATURE_MIMIC,
+#if TAG_MAJOR_VERSION == 32
+    MONS_PORTAL_MIMIC,
+    MONS_TRAP_MIMIC,
     MONS_STAIR_MIMIC,
     MONS_SHOP_MIMIC,
     MONS_FOUNTAIN_MIMIC,
+#endif
 
     // Plants:
     MONS_TOADSTOOL,
@@ -2434,6 +2440,7 @@ enum monster_type                      // (int) menv[].type
     MONS_LIGHTNING_SPIRE,
     MONS_CATOBLEPAS,
     MONS_GOLEM,
+    MONS_PROFANE_SERVITOR,
 
     NUM_MONSTERS,                      // used for polymorph
 
@@ -2497,12 +2504,12 @@ enum mon_inv_type           // (int) menv[].inv[]
     MSLOT_ARMOUR,
     MSLOT_SHIELD,
     MSLOT_WAND,
+    MSLOT_MISCELLANY,
 
     // [ds] Last monster gear slot that the player can observe by examining
     // the monster; i.e. the last slot that goes into monster_info.
-    MSLOT_LAST_VISIBLE_SLOT = MSLOT_WAND,
+    MSLOT_LAST_VISIBLE_SLOT = MSLOT_MISCELLANY,
 
-    MSLOT_MISCELLANY,
     MSLOT_POTION,
     MSLOT_SCROLL,
     MSLOT_GOLD,
@@ -2998,7 +3005,9 @@ enum spell_type
     SPELL_SUMMON_SMALL_MAMMALS,
     SPELL_ABJURATION,
     SPELL_SUMMON_SCORPIONS,
+#if TAG_MAJOR_VERSION == 32
     SPELL_LEVITATION,
+#endif
     SPELL_BOLT_OF_DRAINING,
     SPELL_LEHUDIBS_CRYSTAL_SPEAR,
     SPELL_BOLT_OF_INACCURACY,

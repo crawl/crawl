@@ -500,23 +500,8 @@ bool melee_attack::check_unrand_effects(bool mondied)
     return (false);
 }
 
-void melee_attack::identify_mimic(actor *act)
-{
-    if (act
-        && act->atype() == ACT_MONSTER
-        && mons_is_mimic(act->type)
-        && you.can_see(act))
-    {
-        monster* mon = act->as_monster();
-        discover_mimic(mon);
-    }
-}
-
 bool melee_attack::attack()
 {
-    // If a mimic is attacking or defending, it is thereafter known.
-    identify_mimic(attacker);
-
     coord_def defender_pos = defender->pos();
 
     if (attacker->atype() == ACT_PLAYER && defender->atype() == ACT_MONSTER)
@@ -629,7 +614,6 @@ bool melee_attack::attack()
     bool retval = ((attacker->atype() == ACT_PLAYER) ? player_attack() :
                    (defender->atype() == ACT_PLAYER) ? mons_attack_you()
                                                      : mons_attack_mons());
-    identify_mimic(defender);
 
     if (env.sanctuary_time > 0 && retval && !cancel_attack
         && attacker != defender && !attacker->confused())
@@ -1942,15 +1926,21 @@ int melee_attack::player_weapon_type_modify(int damage)
             attack_verb = "impale";
         else
         {
-            attack_verb = "spit";
             if (defender->atype() == ACT_MONSTER
                 && defender_visible
                 && mons_genus(defender->as_monster()->type) == MONS_HOG)
             {
-                verb_degree = " like the proverbial pig";
+                attack_verb = "spit";
+                verb_degree = "like the proverbial pig";
             }
             else
-                verb_degree = " like a pig";
+            {
+                const char* pierce_desc[][2] = {{"spit",   "like a pig"},
+                                                {"skewer", "like a kebab"}};
+                const int choice = random2(ARRAYSZ(pierce_desc));
+                attack_verb = pierce_desc[choice][0];
+                verb_degree = pierce_desc[choice][1];
+            }
         }
         break;
 
@@ -1962,12 +1952,16 @@ int melee_attack::player_weapon_type_modify(int damage)
         else if (mons_genus(defender->as_monster()->type) == MONS_OGRE)
         {
             attack_verb = "dice";
-            verb_degree = " like an onion";
+            verb_degree = "like an onion";
         }
         else
         {
-            attack_verb = "open";
-            verb_degree = " like a pillowcase";
+            const char* slice_desc[][2] = {{"open",  "like a pillowcase"},
+                                           {"slice", "like a ripe choko"},
+                                           {"cut",   "into ribbons"}};
+            const int choice = random2(ARRAYSZ(slice_desc));
+            attack_verb = slice_desc[choice][0];
+            verb_degree = slice_desc[choice][1];
         }
         break;
 
@@ -1978,8 +1972,13 @@ int melee_attack::player_weapon_type_modify(int damage)
             attack_verb = "bludgeon";
         else
         {
-            attack_verb = "crush";
-            verb_degree = " like a grape";
+            const char* bash_desc[][2] = {{"crush",  "like a grape"},
+                                          {"beat",   "like a drum"},
+                                          {"hammer", "like a gong"},
+                                          {"pound",  "like an anvil"}};
+            const int choice = random2(ARRAYSZ(bash_desc));
+            attack_verb = bash_desc[choice][0];
+            verb_degree = bash_desc[choice][1];
         }
         break;
 
@@ -1996,7 +1995,7 @@ int melee_attack::player_weapon_type_modify(int damage)
             case MH_NATURAL:
             case MH_DEMONIC:
                 attack_verb = "punish";
-                verb_degree = " causing immense pain";
+                verb_degree = "causing immense pain";
                 break;
             default:
                 attack_verb = "devastate";
@@ -4134,11 +4133,18 @@ int melee_attack::player_to_hit(bool random_factor)
     // Check for backlight (Corona).
     if (defender && defender->atype() == ACT_MONSTER)
     {
-        if (defender->backlit(true, false))
-            your_to_hit += 2 + random2(8);
         // Invisible monsters are hard to hit.
-        else if (!defender->visible_to(&you))
+        if (!defender->visible_to(&you))
             your_to_hit -= 6;
+        else
+        {
+            if (defender->backlit(true, false))
+                your_to_hit += 2 + random2(8);
+
+            else if (!attacker->nightvision()
+                     && defender->umbra(true, true))
+                your_to_hit -= 2 + random2(4);
+        }
     }
 
     return (your_to_hit);
@@ -4146,10 +4152,8 @@ int melee_attack::player_to_hit(bool random_factor)
 
 void melee_attack::player_stab_check()
 {
-    // Unknown mimics cannot be stabbed.
     // Confusion and having dex of 0 disallow stabs.
-    if (mons_is_unknown_mimic(defender->as_monster()) || you.stat_zero[STAT_DEX]
-        || you.confused())
+    if (you.stat_zero[STAT_DEX] || you.confused())
     {
         stab_attempt = false;
         stab_bonus = 0;
@@ -4668,6 +4672,17 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
     if (attacker->type == MONS_KILLER_KLOWN && attk.type == AT_HIT)
         return (RANDOM_ELEMENT(klown_attack));
 
+    mon_attack_type type = attk.type;
+
+    if (mons_is_feat_mimic(attacker->type))
+    {
+        const dungeon_feature_type feat = get_mimic_feat(attacker->as_monster());
+        if (feat_is_door(feat))
+            type = AT_SNAP;
+        else if (feat_is_fountain(feat))
+            type = AT_SPLASH;
+    }
+
     if (attk.type == AT_TENTACLE_SLAP
         && (attacker->type == MONS_KRAKEN_TENTACLE
             || attacker->type == MONS_ELDRITCH_TENTACLE))
@@ -4704,7 +4719,7 @@ std::string melee_attack::mons_attack_verb(const mon_attack_def &attk)
 
     ASSERT(attk.type <
            static_cast<int>(sizeof(attack_types) / sizeof(const char *)));
-    return (attack_types[attk.type]);
+    return (attack_types[type]);
 }
 
 std::string melee_attack::mons_attack_desc(const mon_attack_def &attk)
@@ -5454,9 +5469,7 @@ void melee_attack::mons_do_spines()
     if (body)
         evp = -property(*body, PARM_EVASION);
 
-    if (you.mutation[MUT_SPINY]
-        && attacker->alive()
-        && one_chance_in(evp + 1))
+    if (you.mutation[MUT_SPINY] && attacker->alive() && one_chance_in(evp + 1))
     {
         if (test_melee_hit(2 + 4 * mut, attacker->melee_evasion(defender), r)
             < 0)
@@ -5468,7 +5481,6 @@ void melee_attack::mons_do_spines()
 
         int dmg = roll_dice(mut, 6);
         int ac = random2(1 + attacker->armour_class());
-
         int hurt = dmg - ac - evp;
 
         dprf("Spiny: dmg = %d ac = %d hurt = %d", dmg, ac, hurt);
@@ -6100,19 +6112,26 @@ int melee_attack::mons_to_hit()
     if (attacker->confused())
         mhit -= 5;
 
-    if (defender->backlit(true, false))
-        mhit += 2 + random2(8);
-
-     if (defender->atype() == ACT_PLAYER
-         && player_mutation_level(MUT_TRANSLUCENT_SKIN) >= 3)
-         mhit -= 5;
-
     // Invisible defender is hard to hit if you can't see invis. Note
     // that this applies only to monsters vs monster and monster vs
     // player. Does not apply to a player fighting an invisible
     // monster.
     if (!defender->visible_to(attacker))
         mhit = mhit * 65 / 100;
+    else
+    {
+         // This can only help if you're visible!
+         if (defender->atype() == ACT_PLAYER
+             && player_mutation_level(MUT_TRANSLUCENT_SKIN) >= 3)
+             mhit -= 5;
+
+         if (defender->backlit(true, false))
+             mhit += 2 + random2(8);
+
+         else if (!attacker->nightvision() &&
+                  defender->umbra(true, true))
+             mhit -= 2 + random2(4);
+    }
 
 #ifdef DEBUG_DIAGNOSTICS
     mprf(MSGCH_DIAGNOSTICS, "%s: Base to-hit: %d, Final to-hit: %d",
@@ -6232,9 +6251,7 @@ bool you_attack(int monster_attacked, bool unarmed_attacks)
             }
     // Check if the player is fighting with something unsuitable,
     // or someone unsuitable.
-    if (you.can_see(defender)
-        && !mons_is_unknown_mimic(defender)
-        && !wielded_weapon_check(attk.weapon))
+    if (you.can_see(defender) && !wielded_weapon_check(attk.weapon))
     {
         you.turn_is_over = false;
         return (false);

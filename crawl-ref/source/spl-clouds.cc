@@ -88,7 +88,7 @@ spret_type conjure_flame(int pow, const coord_def& where, bool fail)
     monster* mons = monster_at(where);
     if (mons)
     {
-        if (you.can_see(mons) && !mons_is_unknown_mimic(mons))
+        if (you.can_see(mons))
         {
             mpr("You can't place the cloud on a creature.");
             return SPRET_ABORT;

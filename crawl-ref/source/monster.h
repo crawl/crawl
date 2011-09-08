@@ -361,6 +361,7 @@ public:
     bool visible_to(const actor *looker) const;
     bool near_foe() const;
     reach_type reach_range() const;
+    bool nightvision() const;
 
     bool is_icy() const;
     bool is_fiery() const;
@@ -373,9 +374,11 @@ public:
     bool caught() const;
     bool asleep() const;
     bool backlit(bool check_haloed = true, bool self_halo = true) const;
+    bool umbra(bool check_haloed = true, bool self_halo = true) const;
     int halo_radius2() const;
     int silence_radius2() const;
     int liquefying_radius2 () const;
+    int umbra_radius2 () const;
     bool glows_naturally() const;
     bool petrified() const;
     bool petrifying() const;

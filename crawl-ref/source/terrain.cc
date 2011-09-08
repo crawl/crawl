@@ -492,6 +492,11 @@ bool feat_is_bidirectional_portal(dungeon_feature_type feat)
             && feat != DNGN_EXIT_HELL);
 }
 
+bool feat_is_fountain(dungeon_feature_type feat)
+{
+    return feat >= DNGN_FOUNTAIN_BLUE && feat <= DNGN_PERMADRY_FOUNTAIN;
+}
+
 // Find all connected cells containing ft, starting at d.
 void find_connected_identical(const coord_def &d, dungeon_feature_type ft,
                               std::set<coord_def>& out)
@@ -836,6 +841,36 @@ bool is_valid_border_feat(dungeon_feature_type feat)
                || feat == DNGN_LAVA_SEA));
 }
 
+bool is_valid_mimic_feat(dungeon_feature_type feat)
+{
+    // Don't risk trapping the player inside a portal vault.
+    if (feat == DNGN_EXIT_PORTAL_VAULT)
+        return false;
+
+    if (feat_is_portal(feat) || feat_is_gate(feat))
+        return true;
+
+    if (feat_is_stone_stair(feat) || feat_is_escape_hatch(feat)
+        || feat_is_branch_stairs(feat))
+    {
+        return true;
+    }
+
+    if (feat_is_fountain(feat))
+        return true;
+
+    if (feat_is_door(feat))
+        return true;
+
+    if (feat == DNGN_ENTER_SHOP)
+        return true;
+
+    if (feat_is_statue_or_idol(feat))
+        return true;
+
+    return false;
+}
+
 static bool _is_feature_shift_target(const coord_def &pos, void*)
 {
     return (grd(pos) == DNGN_FLOOR && !dungeon_events.has_listeners_at(pos));
@@ -1066,8 +1101,6 @@ void dungeon_terrain_changed(const coord_def &pos,
             _dgn_shift_feature(pos);
 
         unnotice_feature(level_pos(level_id::current(), pos));
-        if (grd(pos) == DNGN_ENTER_SHOP)
-            StashTrack.remove_shop(pos);
 
         grd(pos) = nfeat;
         env.grid_colours(pos) = BLACK;
@@ -1653,7 +1686,7 @@ const char *dngn_feature_names[] =
 "return_from_forest", "return_reserved_1", "", "", "", "", "",
 "", "", "", "", "", "", "", "enter_portal_vault", "exit_portal_vault",
 "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
-"", "", "altar_zin", "altar_shining_one", "altar_kikubaaqudgha",
+"", "", "altar_zin", "altar_the_shining_one", "altar_kikubaaqudgha",
 "altar_yredelemnul", "altar_xom", "altar_vehumet",
 "altar_okawaru", "altar_makhleb", "altar_sif_muna", "altar_trog",
 "altar_nemelex_xobeh", "altar_elyvilon", "altar_lugonu",
@@ -1808,11 +1841,47 @@ const char* feat_type_name(dungeon_feature_type feat)
         return "altar";
     if (feat_is_trap(feat))
         return "trap";
-    if (feat_is_stair(feat))
-        return "stair";
-    if (feat_is_portal(feat))
+    if (feat_is_escape_hatch(feat))
+        return "escape hatch";
+    if (feat_is_portal(feat) || feat_is_gate(feat))
         return "portal";
+    if (feat_is_travelable_stair(feat))
+        return "staircase";
+    if (feat == DNGN_ENTER_SHOP)
+        return "shop";
+    if (feat_is_fountain(feat))
+        return "fountain";
     if (feat == DNGN_UNSEEN)
         return "unknown terrain";
     return "floor";
+}
+
+bool is_boring_terrain(dungeon_feature_type feat)
+{
+    if (!is_notable_terrain(feat))
+        return true;
+
+    // A portal deeper into the Ziggurat is boring.
+    if (feat == DNGN_ENTER_PORTAL_VAULT && you.level_type == LEVEL_PORTAL_VAULT)
+        return true;
+
+    // Altars in the temple are boring.
+    if (feat_is_altar(feat) && player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
+        return true;
+
+    // Only note the first entrance to the Abyss/Pan/Hell
+    // which is found.
+    if ((feat == DNGN_ENTER_ABYSS || feat == DNGN_ENTER_PANDEMONIUM
+         || feat == DNGN_ENTER_HELL)
+         && overview_knows_num_portals(feat) > 1)
+    {
+        return true;
+    }
+
+    // There are at least three Zot entrances, and they're always
+    // on D:27, so ignore them.
+    if (feat == DNGN_ENTER_ZOT)
+        return true;
+
+    return false;
 }

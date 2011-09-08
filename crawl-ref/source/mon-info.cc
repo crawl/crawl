@@ -28,6 +28,7 @@
 #include "skills2.h"
 #include "state.h"
 #include "tagstring.h"
+#include "terrain.h"
 
 #include <algorithm>
 #include <sstream>
@@ -149,10 +150,13 @@ static bool _blocked_ray(const coord_def &where,
 
 static bool _is_public_key(std::string key)
 {
-    if (key == "helpless" || key == "wand_known")
+    if (key == "helpless" || key == "wand_known" || key == "feat_type"
+        || key == "glyph")
+    {
         return true;
-    else
-        return false;
+    }
+
+    return false;
 }
 
 monster_info::monster_info(monster_type p_type, monster_type p_base_type)
@@ -160,8 +164,6 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     mb.reset();
     attitude = ATT_HOSTILE;
     pos = coord_def(0, 0);
-
-    mimic_feature = DNGN_UNSEEN;
 
     type = p_type;
     base_type = p_base_type;
@@ -193,6 +195,8 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     if (!no_regen)
         no_regen = !mons_class_can_regenerate(base_type);
 
+    threat = MTHRT_UNDEF;
+
     dam = MDAM_OKAY;
 
     fire_blocker = DNGN_UNSEEN;
@@ -218,8 +222,6 @@ monster_info::monster_info(const monster* m, int milev)
     mb.reset();
     attitude = ATT_HOSTILE;
     pos = grid2player(m->pos());
-
-    mimic_feature = DNGN_UNSEEN;
 
     attitude = mons_attitude(m);
 
@@ -287,9 +289,6 @@ monster_info::monster_info(const monster* m, int milev)
 
         if (testbits(m->flags, MF_HARD_RESET) && testbits(m->flags, MF_NO_REWARD))
             mb.set(MB_PERM_SUMMON);
-
-        if (mons_is_known_mimic(m) && mons_genus(type) == MONS_DOOR_MIMIC)
-            mimic_feature = get_mimic_feat(m);
     }
     else
     {
@@ -347,6 +346,11 @@ monster_info::monster_info(const monster* m, int milev)
             inv[MSLOT_WEAPON].reset(
                 new item_def(get_item_info(mitm[m->inv[MSLOT_WEAPON]])));
         }
+        if (type_known && mons_is_item_mimic(type))
+        {
+            inv[MSLOT_MISCELLANY].reset(
+                new item_def(get_item_info(mitm[m->inv[MSLOT_MISCELLANY]])));
+        }
         return;
     }
 
@@ -386,8 +390,10 @@ monster_info::monster_info(const monster* m, int milev)
     else
         no_regen = !mons_class_can_regenerate(type);
 
-    if (m->haloed())
+    if (m->haloed() && !m->umbraed())
         mb.set(MB_HALOED);
+    if (!m->haloed() && m->umbraed())
+        mb.set(MB_UMBRAED);
     if (mons_looks_stabbable(m))
         mb.set(MB_STABBABLE);
     if (mons_looks_distracted(m))
@@ -469,7 +475,7 @@ monster_info::monster_info(const monster* m, int milev)
     if (testbits(m->flags, MF_ENSLAVED_SOUL))
         mb.set(MB_ENSLAVED);
 
-    if (m->is_shapeshifter() && (m->flags & MF_KNOWN_MIMIC))
+    if (m->is_shapeshifter() && (m->flags & MF_KNOWN_SHIFTER))
         mb.set(MB_SHAPESHIFTER);
 
     if (m->is_known_chaotic())
@@ -590,6 +596,8 @@ std::string monster_info::_core_name() const
         s = "royal jelly";
     else if (nametype == MONS_SERPENT_OF_HELL)
         s = "Serpent of Hell";
+    else if (mons_is_mimic(nametype))
+        s = mimic_name();
     else if (invalid_monster_type(nametype) && nametype != MONS_PROGRAM_BUG)
         s = "INVALID MONSTER";
     else
@@ -757,6 +765,32 @@ std::string monster_info::common_name(description_level_type desc) const
         s = apostrophise(s);
 
     return (s);
+}
+
+dungeon_feature_type monster_info::get_mimic_feature() const
+{
+    if (!props.exists("feat_type"))
+        return DNGN_UNSEEN;
+    return static_cast<dungeon_feature_type>(props["feat_type"].get_short());
+}
+
+std::string monster_info::mimic_name() const
+{
+    std::string s;
+    if (props.exists("feat_type"))
+        s = feat_type_name(get_mimic_feature());
+    else if (item_def* item = inv[MSLOT_MISCELLANY].get())
+    {
+        if (item->base_type == OBJ_GOLD)
+            s = "pile of gold";
+        else
+            s = item->name(DESC_BASENAME);
+    }
+
+    if (!s.empty())
+        s += " ";
+
+    return (s + "mimic");
 }
 
 bool monster_info::has_proper_name() const
@@ -947,12 +981,7 @@ void monster_info::to_string(int count, std::string& desc,
     std::ostringstream out;
 
     if (count == 1)
-    {
-        if (mons_is_mimic(type))
-            out << mons_type_name(type, DESC_PLAIN);
-        else
-            out << full_name();
-    }
+        out << full_name();
     else
     {
         // TODO: this should be done in a much cleaner way, with code to merge multiple monster_infos into a single common structure
@@ -1032,8 +1061,8 @@ void monster_info::to_string(int count, std::string& desc,
         {
         case MTHRT_TRIVIAL: desc_color = DARKGREY;  break;
         case MTHRT_EASY:    desc_color = LIGHTGREY; break;
-        case MTHRT_TOUGH:   desc_color = LIGHTRED;  break;
-        case MTHRT_NASTY:   desc_color = MAGENTA;
+        case MTHRT_TOUGH:   desc_color = YELLOW;    break;
+        case MTHRT_NASTY:   desc_color = LIGHTRED;
         }
         break;
     }
@@ -1220,6 +1249,16 @@ size_type monster_info::body_size() const
             ret = SIZE_BIG;
         else if (number == 5)
             ret = SIZE_GIANT;
+    }
+    else if (mons_is_item_mimic(type))
+    {
+        const int mass = item_mass(*inv[MSLOT_MISCELLANY].get());
+        if (mass < 50)
+            ret = SIZE_TINY;
+        else if (mass < 100)
+            ret = SIZE_LITTLE;
+        else
+            ret = SIZE_SMALL;
     }
 
     return (ret);

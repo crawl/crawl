@@ -516,9 +516,13 @@ static void _give_sac_group_feedback(int which)
 
 static void _ashenzari_sac_scroll(const item_def& item)
 {
-    int scr = (you.species == SP_FELID) ? SCR_CURSE_JEWELLERY :
-              random_choose(SCR_CURSE_WEAPON, SCR_CURSE_ARMOUR,
+    int scr = SCR_CURSE_JEWELLERY;
+    if (you.species != SP_FELID
+        && (you.species != SP_OCTOPODE || one_chance_in(4)))
+    {
+        scr = random_choose(SCR_CURSE_WEAPON, SCR_CURSE_ARMOUR,
                             SCR_CURSE_JEWELLERY, -1);
+    }
     int it = items(0, OBJ_SCROLLS, scr, true, 0, MAKE_ITEM_NO_RACE,
                    0, 0, GOD_ASHENZARI);
     if (it == NON_ITEM)

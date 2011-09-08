@@ -467,7 +467,7 @@ static void _pan_wave(int power)
             monster_type mon_type = static_cast<monster_type>(random2(NUM_MONSTERS));
             monsterentry *mentry = get_monster_data(mon_type);
             int pow = random2avg(power, 2);
-            switch (mentry->showchar)
+            switch (mentry->basechar)
             {
             case '5': if (pow > 4) continue; break;
             case '4': if (pow > 4) continue; break;

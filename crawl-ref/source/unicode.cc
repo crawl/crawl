@@ -7,6 +7,7 @@
 #include "AppHdr.h"
 
 #include <locale.h>
+#include <stdio.h>
 #include <string>
 #include <string.h>
 #include <limits.h>

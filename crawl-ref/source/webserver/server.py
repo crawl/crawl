@@ -506,10 +506,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if error is None:
                 logging.info("Registered user: %s (ip: %s)", username,
                              self.request.remote_ip)
-                self.username = username
-                self.write_message("logged_in(" +
-                                   tornado.escape.json_encode(username) + ");")
-                self.send_game_links()
+                self.login(username)
             else:
                 logging.info("Registration attempt failed for username %s: %s (ip: %s)",
                              username, error, self.request.remote_ip)
@@ -553,7 +550,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         except:
             logging.warn("Exception trying to send message to %s.",
                          self.request.remote_ip, exc_info = True)
-            self._abort()
+            self.ws_connection._abort()
 
     def write_message_all(self, msg):
         if not self.client_terminated:
@@ -693,10 +690,15 @@ application = tornado.web.Application([
     (r"/socket", CrawlWebSocket),
 ], **settings)
 
+kwargs = {}
+if http_connection_timeout is not None:
+    kwargs["connection_timeout"] = http_connection_timeout
+
 if bind_nonsecure:
-    application.listen(bind_port, bind_address)
+    application.listen(bind_port, bind_address, **kwargs)
 if ssl_options:
-    application.listen(ssl_port, ssl_address, ssl_options = ssl_options)
+    application.listen(ssl_port, ssl_address, ssl_options = ssl_options,
+                       **kwargs)
 
 ioloop = tornado.ioloop.IOLoop.instance()
 ioloop.set_blocking_log_threshold(0.5)

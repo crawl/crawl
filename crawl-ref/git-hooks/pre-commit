@@ -49,7 +49,7 @@ while (<DIFF>)
         was_last;
         $filename = $1;
 
-        $skip = $filename =~ /\.(png|ttf|ico|icns|fig|tex|eps|pdf)$/i
+        $skip = $filename =~ /\.(png|gif|ttf|ico|icns|fig|tex|eps|pdf)$/i
              || $filename =~ /\.(sln|vim|pbxproj|vsprops|plist)$/i
              || $filename =~ /vcproj/
              || $filename =~ /^\.gitmodules$/

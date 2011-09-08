@@ -1,0 +1,22 @@
+#!/usr/bin/perl -w
+use strict;
+
+my @TESTS = 1..5;
+my $NTRIES = 5;
+
+my (%results, %times, $test);
+for $test (@TESTS)
+{
+    my @times;
+    for (1..$NTRIES)
+    {
+        my $u0 = (times)[2];
+        system("test/stress/run " . $test);
+        my $u1 = (times)[2];
+        push @times, $u1 - $u0;
+    }
+    $results{$test} = $times[($NTRIES+1)/2];
+}
+
+print "Version: "; system("git describe 2>/dev/null || cat util/release_ver");
+printf "%s %10.2f\n", $_, $results{$_} for sort keys %results;

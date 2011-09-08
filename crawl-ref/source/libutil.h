@@ -71,9 +71,6 @@ static inline int isaalnum(int c)
 
 bool ends_with(const std::string &s, const std::string &suffix);
 
-#ifdef UNIX
-extern "C" int stricmp(const char *str1, const char *str2);
-#endif
 int numcmp(const char *a, const char *b, int limit = 0);
 bool numcmpstr(std::string a, std::string b);
 size_t strlcpy(char *dst, const char *src, size_t n);
@@ -206,12 +203,6 @@ inline bool testbits(uint64_t flags, uint64_t test)
     return ((flags & test) == test);
 }
 
-#ifndef USE_TILE
-coord_def cgettopleft(GotoRegion region = GOTO_CRT);
-coord_def cgetpos(GotoRegion region = GOTO_CRT);
-void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
-GotoRegion get_cursor_region();
-#endif
 coord_def cgetsize(GotoRegion region = GOTO_CRT);
 void cscroll(int n, GotoRegion region);
 

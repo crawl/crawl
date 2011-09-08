@@ -342,7 +342,7 @@ void you_teleport(void)
 static bool _cell_vetoes_teleport (const coord_def cell, bool  check_monsters = true)
 {
     // Monsters always veto teleport.
-    if (monster_at(cell) && check_monsters)
+    if ((monster_at(cell) || mimic_at(cell)) && check_monsters)
         return (true);
 
     // As do all clouds; this may change.
@@ -761,19 +761,6 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
     const int item_idx = igrd(where);
     if (item_idx == NON_ITEM || !in_bounds(where))
     {
-        // Maybe the player *thought* there was something there (a mimic.)
-        if (monster* m = monster_at(where))
-        {
-            if (mons_is_item_mimic(m->type) && you.can_see(m))
-            {
-                fail_check();
-                mprf("%s twitches.", m->name(DESC_CAP_THE).c_str());
-                // Nothing else gives this message, so identify the mimic.
-                discover_mimic(m);
-                return SPRET_SUCCESS;  // otherwise you get free mimic ID
-            }
-        }
-
         mpr("There are no items there.");
         return SPRET_ABORT;
     }
@@ -884,6 +871,9 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
             return SPRET_SUCCESS;
         }
     }
+    // Item mimics land in front of you (and they will be revealed).
+    else if (item.flags & ISFLAG_MIMIC)
+        new_spot =  beam.path_taken[0];
     // If power is high enough it'll just come straight to you.
     else
         new_spot = you.pos();

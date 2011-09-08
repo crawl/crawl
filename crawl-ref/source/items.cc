@@ -44,7 +44,6 @@
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
-#include "mon-util.h"
 #include "mon-stuff.h"
 #include "mutation.h"
 #include "notes.h"
@@ -1505,11 +1504,8 @@ int find_free_slot(const item_def &i)
 
     // See if the item remembers where it's been. Lua code can play with
     // this field so be extra careful.
-    if (i.slot >= 'a' && i.slot <= 'z'
-        || i.slot >= 'A' && i.slot <= 'Z')
-    {
+    if (isaalpha(i.slot))
         slot = letter_to_index(i.slot);
-    }
 
     if (slotisfree(slot))
         return slot;
@@ -2081,15 +2077,8 @@ bool move_top_item(const coord_def &pos, const coord_def &dest)
     return (true);
 }
 
-const item_def* top_item_at(const coord_def& where, bool allow_mimic_item)
+const item_def* top_item_at(const coord_def& where)
 {
-    if (allow_mimic_item)
-    {
-        const monster* mon = monster_at(where);
-        if (mon && mons_is_unknown_mimic(mon) && mons_is_item_mimic(mon->type))
-            return &get_mimic_item(mon);
-    }
-
     const int link = you.visible_igrd(where);
     return (link == NON_ITEM) ? NULL : &mitm[link];
 }
@@ -2117,16 +2106,9 @@ item_def *corpse_at(coord_def pos, int *num_corpses)
     return (corpse);
 }
 
-bool multiple_items_at(const coord_def& where, bool allow_mimic_item)
+bool multiple_items_at(const coord_def& where)
 {
     int found_count = 0;
-
-    if (allow_mimic_item)
-    {
-        const monster* mon = monster_at(where);
-        if (mon && mons_is_unknown_mimic(mon))
-            ++found_count;
-    }
 
     for (stack_iterator si(where); si && found_count < 2; ++si)
         ++found_count;
@@ -3286,7 +3268,6 @@ bool item_def::is_mundane() const
 static void _rune_from_specs(const char* _specs, item_def &item)
 {
     char specs[80];
-    char obj_name[ ITEMNAME_SIZE ];
 
     item.sub_type = MISC_RUNE_OF_ZOT;
 
@@ -3302,9 +3283,7 @@ static void _rune_from_specs(const char* _specs, item_def &item)
         {
             item.plus = i;
 
-            strlcpy(obj_name, item.name(DESC_PLAIN).c_str(), sizeof(obj_name));
-
-            if (strstr(strlwr(obj_name), specs))
+            if (lowercase_string(item.name(DESC_PLAIN)).find(specs) != std::string::npos)
                 return;
         }
     }
@@ -3519,9 +3498,6 @@ static bool _book_from_spell(const char* specs, item_def &item)
 bool get_item_by_name(item_def *item, char* specs,
                       object_class_type class_wanted, bool create_for_real)
 {
-    char           obj_name[ ITEMNAME_SIZE ];
-    char*          ptr;
-    int            best_index;
     int            type_wanted    = -1;
     int            special_wanted = 0;
 
@@ -3553,23 +3529,21 @@ bool get_item_by_name(item_def *item, char* specs,
     if (!item->sub_type)
     {
         type_wanted = -1;
-        best_index  = 10000;
+        size_t best_index  = 10000;
 
         for (int i = 0; i < get_max_subtype(item->base_type); ++i)
         {
             item->sub_type = i;
-            strlcpy(obj_name, item->name(DESC_PLAIN).c_str(), sizeof(obj_name));
-
-            ptr = strstr(strlwr(obj_name), specs);
-            if (ptr != NULL)
+            size_t pos = lowercase_string(item->name(DESC_PLAIN)).find(specs);
+            if (pos != std::string::npos)
             {
                 // Earliest match is the winner.
-                if (ptr - obj_name < best_index)
+                if (pos < best_index)
                 {
                     if (create_for_real)
-                        mpr(obj_name);
+                        mpr(item->name(DESC_PLAIN).c_str());
                     type_wanted = i;
-                    best_index = ptr - obj_name;
+                    best_index = pos;
                 }
             }
         }
@@ -3600,10 +3574,8 @@ bool get_item_by_name(item_def *item, char* specs,
                     int index = unrand + UNRAND_START;
                     unrandart_entry* entry = get_unrand_entry(index);
 
-                    strlcpy(obj_name, entry->name, sizeof(obj_name));
-
-                    ptr = strstr(strlwr(obj_name), specs);
-                    if (ptr != NULL && entry->base_type == class_wanted)
+                    size_t pos = lowercase_string(entry->name).find(specs);
+                    if (pos != std::string::npos && entry->base_type == class_wanted)
                     {
                         make_item_unrandart(*item, index);
                         if (create_for_real)
@@ -3656,24 +3628,23 @@ bool get_item_by_name(item_def *item, char* specs,
 
         if (buf[0] != '\0')
         {
+            std::string buf_lwr = lowercase_string(buf);
             special_wanted = 0;
-            best_index = 10000;
+            size_t best_index = 10000;
 
             for (int i = SPWPN_NORMAL + 1; i < SPWPN_DEBUG_RANDART; ++i)
             {
                 item->special = i;
-                strlcpy(obj_name, item->name(DESC_PLAIN).c_str(), sizeof(obj_name));
-
-                ptr = strstr(strlwr(obj_name), strlwr(buf));
-                if (ptr != NULL)
+                size_t pos = lowercase_string(item->name(DESC_PLAIN)).find(buf_lwr);
+                if (pos != std::string::npos)
                 {
                     // earliest match is the winner
-                    if (ptr - obj_name < best_index)
+                    if (pos < best_index)
                     {
                         if (create_for_real)
-                            mpr(obj_name);
+                            mpr(item->name(DESC_PLAIN).c_str());
                         special_wanted = i;
-                        best_index = ptr - obj_name;
+                        best_index = pos;
                     }
                 }
             }
@@ -4049,5 +4020,53 @@ bool player_has_orb()
             return (true);
         }
     }
+    return false;
+}
+
+static const object_class_type _mimic_item_classes[] =
+{
+    OBJ_GOLD,
+    OBJ_WEAPONS,
+    OBJ_ARMOUR,
+    OBJ_SCROLLS,
+    OBJ_POTIONS,
+    OBJ_BOOKS,
+    OBJ_STAVES,
+};
+
+object_class_type get_random_item_mimic_type()
+{
+    return _mimic_item_classes[random2(ARRAYSZ(_mimic_item_classes))];
+}
+
+object_class_type get_item_mimic_type()
+{
+    mesclr();
+    std::map<char, object_class_type> choices;
+    char letter = 'a';
+    for (unsigned int i = 0; i < ARRAYSZ(_mimic_item_classes); ++i)
+    {
+        mprf("[%c] %s ", letter,
+             item_class_name(_mimic_item_classes[i], true).c_str());
+        choices[letter++] = _mimic_item_classes[i];
+    }
+    mprf("[%c] random", letter);
+    choices[letter] = OBJ_RANDOM;
+    mpr("\nWhat kind of item mimic? ", MSGCH_PROMPT);
+    const int keyin = tolower(get_ch());
+
+    if (choices.find(keyin) == choices.end())
+        return OBJ_UNASSIGNED;
+    else if (choices[keyin] == OBJ_RANDOM)
+        return get_random_item_mimic_type();
+    else
+        return choices[keyin];
+}
+
+bool is_valid_mimic_item(object_class_type type)
+{
+    for (unsigned int i = 0; i < ARRAYSZ(_mimic_item_classes); ++i)
+        if (type == _mimic_item_classes[i])
+            return true;
     return false;
 }

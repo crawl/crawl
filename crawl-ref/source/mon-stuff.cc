@@ -18,8 +18,10 @@
 #include "delay.h"
 #include "dactions.h"
 #include "dgnevent.h"
+#include "dgn-overview.h"
 #include "directn.h"
 #include "dlua.h"
+#include "dungeon.h"
 #include "env.h"
 #include "exclude.h"
 #include "fprop.h"
@@ -67,166 +69,40 @@
 
 static bool _wounded_damaged(mon_holy_type holi);
 
-static int _make_mimic_item(monster_type type)
-{
-    int it = items(0, OBJ_RANDOM, OBJ_RANDOM, true, 0, 0);
-
-    if (it == NON_ITEM)
-        return NON_ITEM;
-
-    item_def &item = mitm[it];
-
-    item.base_type = OBJ_UNASSIGNED;
-    item.sub_type  = 0;
-    item.special   = 0;
-    item.colour    = 0;
-    item.flags     = 0;
-    item.quantity  = 1;
-    item.plus      = 0;
-    item.plus2     = 0;
-    item.link      = NON_ITEM;
-
-    int prop;
-    switch (type)
-    {
-    case MONS_WEAPON_MIMIC:
-        item.base_type = OBJ_WEAPONS;
-        item.sub_type = random2(WPN_MAX_NONBLESSED + 1);
-
-        prop = random2(100);
-
-        if (prop < 20)
-            make_item_randart(item);
-        else if (prop < 50)
-            set_equip_desc(item, ISFLAG_GLOWING);
-        else if (prop < 80)
-            set_equip_desc(item, ISFLAG_RUNED);
-        else if (prop < 85)
-            set_equip_race(item, ISFLAG_ORCISH);
-        else if (prop < 90)
-            set_equip_race(item, ISFLAG_DWARVEN);
-        else if (prop < 95)
-            set_equip_race(item, ISFLAG_ELVEN);
-        break;
-
-    case MONS_ARMOUR_MIMIC:
-        item.base_type = OBJ_ARMOUR;
-        do
-            item.sub_type = random2(NUM_ARMOURS);
-        while (armour_is_hide(item));
-
-        prop = random2(100);
-
-        if (prop < 20)
-            make_item_randart(item);
-        else if (prop < 40)
-            set_equip_desc(item, ISFLAG_GLOWING);
-        else if (prop < 60)
-            set_equip_desc(item, ISFLAG_RUNED);
-        else if (prop < 80)
-            set_equip_desc(item, ISFLAG_EMBROIDERED_SHINY);
-        else if (prop < 85)
-            set_equip_race(item, ISFLAG_ORCISH);
-        else if (prop < 90)
-            set_equip_race(item, ISFLAG_DWARVEN);
-        else if (prop < 95)
-            set_equip_race(item, ISFLAG_ELVEN);
-        break;
-
-    case MONS_SCROLL_MIMIC:
-        item.base_type = OBJ_SCROLLS;
-        item.sub_type = random2(NUM_SCROLLS);
-        break;
-
-    case MONS_POTION_MIMIC:
-        item.base_type = OBJ_POTIONS;
-        do
-            item.sub_type = random2(NUM_POTIONS);
-        while (is_blood_potion(item) || is_fizzing_potion(item));
-        break;
-
-    case MONS_GOLD_MIMIC:
-    default:
-        item.base_type = OBJ_GOLD;
-        item.quantity = 5 + random2(1000);
-        break;
-    }
-
-    item_colour(item); // also sets special vals for scrolls/potions
-
-    return (it);
-}
-
-const item_def *give_mimic_item(monster* mimic)
+const item_def* get_mimic_item(const monster* mimic)
 {
     ASSERT(mimic != NULL && mons_is_item_mimic(mimic->type));
 
-    mimic->destroy_inventory();
-    int it = _make_mimic_item(mimic->type);
-    if (it == NON_ITEM)
-        return 0;
-    if (!mimic->pickup_misc(mitm[it], 0))
-        die("Mimic failed to pickup its item.");
-    ASSERT(mimic->inv[MSLOT_MISCELLANY] != NON_ITEM);
-    return (&mitm[mimic->inv[MSLOT_MISCELLANY]]);
-}
-
-item_def &get_mimic_item(const monster* mimic)
-{
-    ASSERT(mimic != NULL && mons_is_item_mimic(mimic->type));
-
-    ASSERT(mimic->inv[MSLOT_MISCELLANY] != NON_ITEM);
-
-    return (mitm[mimic->inv[MSLOT_MISCELLANY]]);
+    if (mimic->inv[MSLOT_MISCELLANY] != NON_ITEM)
+        return &mitm[mimic->inv[MSLOT_MISCELLANY]];
+    else
+        return NULL;
 }
 
 dungeon_feature_type get_mimic_feat(const monster* mimic)
 {
-    switch (mimic->type)
-    {
-    case MONS_DOOR_MIMIC:
-        return (DNGN_CLOSED_DOOR);
-    case MONS_PORTAL_MIMIC:
-        if (mimic->props.exists("portal_desc"))
-            return (DNGN_ENTER_PORTAL_VAULT);
-        else
-            return (DNGN_ENTER_LABYRINTH);
-    case MONS_STAIR_MIMIC:
-        if (mimic->props.exists("stair_type"))
-        {
-            return static_cast<dungeon_feature_type>(mimic->props[
-                "stair_type"].get_short());
-        }
-        else
-        {
-            return (DNGN_STONE_STAIRS_DOWN_I);
-        }
-    case MONS_SHOP_MIMIC:
-        return (DNGN_ENTER_SHOP);
-    case MONS_FOUNTAIN_MIMIC:
-        if (mimic->props.exists("fountain_type"))
-        {
-            return static_cast<dungeon_feature_type>(mimic->props[
-                "fountain_type"].get_short());
-        }
-        else
-        {
-            return (DNGN_FOUNTAIN_BLUE);
-        }
-    default:
-        die("invalid feature mimic type");
-    }
-
-    return (DNGN_UNSEEN);
+    if (mimic->props.exists("feat_type"))
+        return static_cast<dungeon_feature_type>(mimic->props["feat_type"].get_short());
+    else
+        return DNGN_FLOOR;
 }
 
 bool feature_mimic_at(const coord_def &c)
 {
-    const monster* mons = monster_at(c);
-    if (mons != NULL)
-        return mons_is_feat_mimic(mons->type);
+    return map_masked(c, MMT_MIMIC);
+}
 
-    return (false);
+item_def* item_mimic_at(const coord_def &c)
+{
+    for (stack_iterator si(c); si; ++si)
+        if (si->flags & ISFLAG_MIMIC)
+            return &*si;
+    return NULL;
+}
+
+bool mimic_at(const coord_def &c)
+{
+    return (feature_mimic_at(c) || item_mimic_at(c));
 }
 
 // Sets the colour of a mimic to match its description... should be called
@@ -236,7 +112,7 @@ int get_mimic_colour(const monster* mimic)
     ASSERT(mimic != NULL);
 
     if (mons_is_item_mimic(mimic->type))
-        return (get_mimic_item(mimic).colour);
+        return (get_mimic_item(mimic)->colour);
     else
         return (mimic->colour);
 }
@@ -1570,10 +1446,6 @@ int monster_die(monster* mons, killer_type killer,
     // Same for silencers.
     mons->del_ench(ENCH_SILENCE);
 
-    // For the case when shop mimic was killed before player discovered him.
-    if (mons->type == MONS_SHOP_MIMIC)
-        StashTrack.remove_shop(mons->pos());
-
     crawl_state.inc_mon_acting(mons);
 
     ASSERT(!(YOU_KILL(killer) && crawl_state.game_is_arena()));
@@ -1606,9 +1478,11 @@ int monster_die(monster* mons, killer_type killer,
 
     you.remove_beholder(mons);
     you.remove_fearmonger(mons);
+    // Uniques leave notes and milestones, so this information is already leaked.
+    remove_unique_annotation(mons);
 
     // Clear auto exclusion now the monster is killed - if we know about it.
-    if (mons_near(mons) || wizard)
+    if (mons_near(mons) || wizard || mons_is_unique(mons->type))
         remove_auto_exclude(mons);
 
           int  summon_type   = 0;
@@ -2521,8 +2395,9 @@ int monster_die(monster* mons, killer_type killer,
     // Monsters haloes should be removed when they die.
     if (mons->holiness() == MH_HOLY)
         invalidate_agrid();
-    // Likewise silence
-    if (mons->type == MONS_SILENT_SPECTRE)
+    // Likewise silence and umbras
+    if (mons->type == MONS_SILENT_SPECTRE
+        || mons->type == MONS_PROFANE_SERVITOR)
         invalidate_agrid();
 
     const coord_def mwhere = mons->pos();
@@ -2539,7 +2414,7 @@ int monster_die(monster* mons, killer_type killer,
         && !fake_abjuration
         && !timeout
         && !unsummoned
-        && !(mons->flags & MF_KNOWN_MIMIC)
+        && !(mons->flags & MF_KNOWN_SHIFTER)
         && mons->is_shapeshifter())
     {
         simple_monster_message(mons, "'s shape twists and changes as "
@@ -2851,7 +2726,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     // the actual polymorphing:
     uint64_t flags =
         mons->flags & ~(MF_INTERESTING | MF_SEEN | MF_ATT_CHANGE_ATTEMPT
-                           | MF_WAS_IN_VIEW | MF_BAND_MEMBER | MF_KNOWN_MIMIC
+                           | MF_WAS_IN_VIEW | MF_BAND_MEMBER | MF_KNOWN_SHIFTER
                            | MF_SPELLCASTER);
 
     std::string name;
@@ -3030,7 +2905,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         // If the player saw both the beginning and end results of a
         // shifter changing, then s/he knows it must be a shifter.
         if (can_see && shifter.ench != ENCH_NONE)
-            discover_mimic(mons);
+            discover_shifter(mons);
     }
 
     if (old_mon_caught)
@@ -3110,20 +2985,8 @@ static coord_def _random_monster_nearby_habitable_space(const monster& mon,
     return (target);
 }
 
-static void _mimic_update_stash(const monster* mons)
-{
-    if (mons_is_mimic(mons->type))
-    {
-        if (mons->type == MONS_SHOP_MIMIC)
-            StashTrack.remove_shop(mons->pos());
-        else
-            StashTrack.update_stash(mons->pos());
-    }
-}
-
 bool monster_blink(monster* mons, bool quiet)
 {
-    _mimic_update_stash(mons);
     coord_def near = _random_monster_nearby_habitable_space(*mons, false,
                                                             true);
 
@@ -3368,8 +3231,7 @@ bool monster_can_hit_monster(monster* mons, const monster* targ)
 mon_dam_level_type mons_get_damage_level(const monster* mons)
 {
     if (!mons_can_display_wounds(mons)
-        || !mons_class_can_display_wounds(mons->get_mislead_type())
-        || mons_is_unknown_mimic(mons))
+        || !mons_class_can_display_wounds(mons->get_mislead_type()))
     {
         return MDAM_OKAY;
     }
@@ -3504,8 +3366,10 @@ void make_mons_leave_level(monster* mon)
 {
     if (mon->pacified())
     {
-        if (you.can_see(mon))
+        if (you.can_see(mon)) {
             _mons_indicate_level_exit(mon);
+            remove_unique_annotation(mon);
+        }
 
         // Pacified monsters leaving the level take their stuff with
         // them.
@@ -4098,6 +3962,7 @@ void seen_monster(monster* mons)
     // If the monster is in the auto_exclude list, automatically
     // set an exclusion.
     set_auto_exclude(mons);
+    set_unique_annotation(mons);
 
     // Monster was viewed this turn
     mons->flags |= MF_WAS_IN_VIEW;
@@ -4280,7 +4145,7 @@ bool is_item_jelly_edible(const item_def &item)
     return (true);
 }
 
-static bool _monster_space_valid(const monster* mons, coord_def& target,
+static bool _monster_space_valid(const monster* mons, coord_def target,
                                  bool forbid_sanctuary)
 {
     if (!in_bounds(target))
@@ -4314,6 +4179,22 @@ bool monster_random_space(const monster* mons, coord_def& target,
     }
 
     return (false);
+}
+
+// Move the monster to the nearest valid space.
+bool shove_monster(monster* mons)
+{
+    const coord_def pos = mons->pos();
+    for (distance_iterator di(pos); di; ++di)
+        if (_monster_space_valid(mons, *di, false))
+        {
+            mons->moveto(*di);
+            mgrd(pos) = NON_MONSTER;
+            mgrd(*di) = mons->mindex();
+            return true;
+        }
+
+    return false;
 }
 
 bool monster_random_space(monster_type mon, coord_def& target,
@@ -4391,7 +4272,6 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     if (!silent)
         simple_monster_message(mons, " disappears!");
 
-    _mimic_update_stash(mons);
     const coord_def oldplace = mons->pos();
 
     // Pick the monster up.
@@ -4402,27 +4282,6 @@ void monster_teleport(monster* mons, bool instan, bool silent)
 
     // And slot it back into the grid.
     mgrd(mons->pos()) = mons->mindex();
-
-    // Mimics change form/colour when teleported.
-    if (mons_is_mimic(mons->type))
-    {
-        monster_type old_type = mons->type;
-        // Feature mimics also turn into item mimics on teleport. This is
-        // probably not intentional, but new features randomly appearing
-        // would be even more of a give-away than new items. (jpeg)
-        mons->type = static_cast<monster_type>(
-                                         MONS_GOLD_MIMIC + random2(5));
-        mons->destroy_inventory();
-        give_mimic_item(mons);
-        mons->colour = get_mimic_colour(mons);
-        was_seen = false;
-
-        // If it's changed form, you won't recognise it.
-        // This assumes that a non-gold mimic turning into another item of
-        // the same description is really, really unlikely.
-        if (old_type != MONS_GOLD_MIMIC || mons->type != MONS_GOLD_MIMIC)
-            was_seen = false;
-    }
 
     const bool now_visible = mons_near(mons);
     if (!silent && now_visible)
@@ -4453,16 +4312,6 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     mons->apply_location_effects(oldplace);
 
     mons_relocated(mons);
-
-    // Teleporting mimics change form - if they reappear out of LOS, they are
-    // no longer known.
-    if (mons_is_mimic(mons->type))
-    {
-        if (now_visible)
-            discover_mimic(mons);
-        else
-            mons->flags &= ~MF_KNOWN_MIMIC;
-    }
 }
 
 void mons_clear_trapping_net(monster* mon)

@@ -27,7 +27,7 @@ NAME:   feat_test
 WEIGHT: 0
 KFEAT:  d = open_sea
 KFEAT:  1 = altar_zin
-KFEAT:  2 = altar_shining_one
+KFEAT:  2 = altar_the_shining_one
 KFEAT:  3 = altar_kikubaaqudgha
 KFEAT:  4 = altar_yredelemnul
 KFEAT:  5 = altar_xom

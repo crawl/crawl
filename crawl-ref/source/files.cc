@@ -815,95 +815,100 @@ static void _write_tagged_chunk(const std::string &chunkname, tag_type tag)
     tag_write(tag, outf);
 }
 
-static void _place_player_on_stair(level_area_type old_level_type,
-                                   branch_type old_branch,
-                                   int stair_taken, const coord_def& dest_pos)
+int get_dest_stair_type(level_area_type old_level_type, branch_type old_branch,
+                        dungeon_feature_type stair_taken, bool &find_first)
 {
-    bool find_first = true;
-
     // Order is important here.
     if (stair_taken == DNGN_EXIT_PANDEMONIUM)
     {
-        stair_taken = DNGN_ENTER_PANDEMONIUM;
         find_first = false;
+        return DNGN_ENTER_PANDEMONIUM;
     }
-    else if (stair_taken == DNGN_EXIT_ABYSS)
+
+    if (stair_taken == DNGN_EXIT_ABYSS)
     {
-        stair_taken = DNGN_ENTER_ABYSS;
         find_first = false;
+        return DNGN_ENTER_ABYSS;
     }
-    else if (stair_taken == DNGN_EXIT_HELL)
+
+    if (stair_taken == DNGN_EXIT_HELL)
+        return DNGN_ENTER_HELL;
+
+    if (stair_taken == DNGN_ENTER_HELL)
+        return DNGN_EXIT_HELL;
+
+    if (stair_taken == DNGN_EXIT_PORTAL_VAULT
+        || (old_level_type == LEVEL_LABYRINTH
+            || old_level_type == LEVEL_PORTAL_VAULT)
+           && feat_is_escape_hatch(stair_taken))
     {
-        stair_taken = DNGN_ENTER_HELL;
+        return DNGN_EXIT_PORTAL_VAULT;
     }
-    else if (stair_taken == DNGN_ENTER_HELL)
+
+    if (player_in_hell() && stair_taken >= DNGN_STONE_STAIRS_DOWN_I
+                         && stair_taken <= DNGN_STONE_STAIRS_DOWN_III)
     {
-        // The vestibule and labyrinth always start from this stair.
-        stair_taken = DNGN_EXIT_HELL;
+        return DNGN_ENTER_HELL;
     }
-    else if (stair_taken == DNGN_EXIT_PORTAL_VAULT
-             || ((old_level_type == LEVEL_LABYRINTH
-                  || old_level_type == LEVEL_PORTAL_VAULT)
-                 && (stair_taken == DNGN_ESCAPE_HATCH_DOWN
-                     || stair_taken == DNGN_ESCAPE_HATCH_UP)))
-    {
-        stair_taken = DNGN_EXIT_PORTAL_VAULT;
-    }
-    else if (player_in_hell() &&
-             stair_taken >= DNGN_STONE_STAIRS_DOWN_I &&
-             stair_taken <= DNGN_STONE_STAIRS_DOWN_III)
-    {
-        stair_taken = DNGN_ENTER_HELL;
-    }
-    else if (stair_taken >= DNGN_STONE_STAIRS_DOWN_I
-             && stair_taken <= DNGN_ESCAPE_HATCH_DOWN)
+
+    if (stair_taken >= DNGN_STONE_STAIRS_DOWN_I
+        && stair_taken <= DNGN_ESCAPE_HATCH_DOWN)
     {
         // Look for corresponding up stair.
-        stair_taken += (DNGN_STONE_STAIRS_UP_I - DNGN_STONE_STAIRS_DOWN_I);
+        return stair_taken + DNGN_STONE_STAIRS_UP_I - DNGN_STONE_STAIRS_DOWN_I;
     }
-    else if (stair_taken >= DNGN_STONE_STAIRS_UP_I
-             && stair_taken <= DNGN_ESCAPE_HATCH_UP)
+
+    if (stair_taken >= DNGN_STONE_STAIRS_UP_I
+        && stair_taken <= DNGN_ESCAPE_HATCH_UP)
     {
         // Look for coresponding down stair.
-        stair_taken += (DNGN_STONE_STAIRS_DOWN_I - DNGN_STONE_STAIRS_UP_I);
+        return stair_taken + DNGN_STONE_STAIRS_DOWN_I - DNGN_STONE_STAIRS_UP_I;
     }
-    else if (stair_taken >= DNGN_RETURN_FROM_FIRST_BRANCH
-             && stair_taken < 150) // 20 slots reserved
+
+    if (stair_taken >= DNGN_RETURN_FROM_FIRST_BRANCH
+        && stair_taken < 150) // 20 slots reserved
     {
         // Find entry point to subdungeon when leaving.
-        stair_taken += (DNGN_ENTER_FIRST_BRANCH
-                        - DNGN_RETURN_FROM_FIRST_BRANCH);
+        return stair_taken + DNGN_ENTER_FIRST_BRANCH
+                           - DNGN_RETURN_FROM_FIRST_BRANCH;
     }
-    else if (stair_taken >= DNGN_ENTER_FIRST_BRANCH
-             && stair_taken < DNGN_RETURN_FROM_FIRST_BRANCH)
+
+    if (stair_taken >= DNGN_ENTER_FIRST_BRANCH
+        && stair_taken < DNGN_RETURN_FROM_FIRST_BRANCH)
     {
         // Find exit staircase from subdungeon when entering.
-        stair_taken += (DNGN_RETURN_FROM_FIRST_BRANCH
-                        - DNGN_ENTER_FIRST_BRANCH);
+        return stair_taken + DNGN_RETURN_FROM_FIRST_BRANCH
+                           - DNGN_ENTER_FIRST_BRANCH;
     }
-    else if (stair_taken >= DNGN_ENTER_DIS
-             && stair_taken <= DNGN_ENTER_TARTARUS)
-    {
-        // Only when entering a hell - when exiting, go back to the
-        // entry stair.
-        if (player_in_hell())
-            stair_taken = DNGN_ENTER_HELL;
-    }
-    else if (stair_taken == DNGN_ENTER_PORTAL_VAULT)
-    {
-        stair_taken = DNGN_STONE_ARCH;
-    }
-    else if (stair_taken == DNGN_ENTER_LABYRINTH)
+
+    if (stair_taken >= DNGN_ENTER_DIS && stair_taken <= DNGN_ENTER_TARTARUS)
+        return player_in_hell() ? DNGN_ENTER_HELL : stair_taken;
+
+    if (stair_taken == DNGN_ENTER_PORTAL_VAULT)
+        return DNGN_STONE_ARCH;
+
+    if (stair_taken == DNGN_ENTER_LABYRINTH)
     {
         // dgn_find_nearby_stair uses special logic for labyrinths.
-        stair_taken = DNGN_ENTER_LABYRINTH;
+        return DNGN_ENTER_LABYRINTH;
     }
-    else // Note: stair_taken can equal things like DNGN_FLOOR
-    {
-        // Just find a nice empty square.
-        stair_taken = DNGN_FLOOR;
-        find_first = false;
-    }
+
+    // Note: stair_taken can equal things like DNGN_FLOOR
+    // Just find a nice empty square.
+    find_first = false;
+    return DNGN_FLOOR;
+}
+
+static void _place_player_on_stair(level_area_type old_level_type,
+                                   branch_type old_branch,
+                                   int stair_taken, const coord_def& dest_pos)
+
+{
+    bool find_first = true;
+    dungeon_feature_type stair_type = static_cast<dungeon_feature_type>(
+            get_dest_stair_type(old_level_type, old_branch,
+                                static_cast<dungeon_feature_type>(stair_taken),
+                                find_first));
 
     if (crawl_state.game_is_zotdef())
     {
@@ -917,10 +922,7 @@ static void _place_player_on_stair(level_area_type old_level_type,
         }
     }
 
-    const coord_def where_to_go =
-        dgn_find_nearby_stair(static_cast<dungeon_feature_type>(stair_taken),
-                              dest_pos, find_first);
-    you.moveto(where_to_go);
+    you.moveto(dgn_find_nearby_stair(stair_type, dest_pos, find_first));
 }
 
 static void _close_level_gates()
@@ -1085,13 +1087,22 @@ static void _grab_followers()
     }
 }
 
+static void _do_lost_monsters()
+{
+    // Uniques can be considered wandering Pan just like you, so they're not
+    // gone forever.  The likes of Cerebov won't be generated elsewhere, but
+    // there's no need to special-case that, and if in the future we'll want
+    // to know whether they're alive, the data will be accurate.
+    if (you.level_type == LEVEL_PANDEMONIUM)
+        for (monster_iterator mi; mi; ++mi)
+            if (mons_is_unique(mi->type))
+                you.unique_creatures[mi->type] = false;
+}
+
 // Should be called after _grab_followers(), so that items carried by
 // followers won't be considered lost.
-static void _do_lost_items(level_area_type old_level_type)
+static void _do_lost_items()
 {
-    if (old_level_type == LEVEL_DUNGEON)
-        return;
-
     for (int i = 0; i < MAX_ITEMS; i++)
     {
         item_def& item(mitm[i]);
@@ -1174,8 +1185,10 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
     dungeon_events.clear();
 
     // This block is to grab followers and save the old level to disk.
-    if (load_mode == LOAD_ENTER_LEVEL && old_level.depth != -1)
+    if (load_mode == LOAD_ENTER_LEVEL)
     {
+        ASSERT(old_level.depth != -1); // what's this for?
+
         _grab_followers();
 
         if (old_level.level_type == LEVEL_DUNGEON
@@ -1183,11 +1196,11 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         {
             _save_level(old_level);
         }
-    }
-
-    if (load_mode == LOAD_ENTER_LEVEL)
-    {
-        _do_lost_items(old_level.level_type);
+        else
+        {
+            _do_lost_monsters();
+            _do_lost_items();
+        }
 
         // The player is now between levels.
         you.position.reset();
@@ -1227,8 +1240,15 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         env.tile_names.clear();
 #endif
 
+        // XXX: This is ugly.
+        bool dummy;
+        dungeon_feature_type stair_type = static_cast<dungeon_feature_type>(
+            get_dest_stair_type(old_level.level_type, old_level.branch,
+                                static_cast<dungeon_feature_type>(stair_taken),
+                                dummy));
+
         _clear_env_map();
-        builder(you.absdepth0, you.level_type);
+        builder(you.absdepth0, you.level_type, true, stair_type);
         just_created_level = true;
 
         if (!crawl_state.game_is_tutorial()

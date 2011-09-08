@@ -11,9 +11,7 @@
 
 #include <stdio.h>
 
-#include "defines.h"
-
-void set_mouse_enabled(bool enabled);
+#include "libconsole.h"
 
 struct coord_def;
 struct crawl_view_geometry;
@@ -23,42 +21,5 @@ void gui_init_view_params(crawl_view_geometry &geom);
 // If mouse on dungeon map, returns true and sets gc.
 // Otherwise, it just returns false.
 bool gui_get_mouse_grid_pos(coord_def &gc);
-
-/* text display */
-void textcolor(int color);
-int wherex();
-int wherey();
-int cprintf(const char *format,...);
-void clear_to_end_of_line(void);
-void clear_to_end_of_screen(void);
-int get_number_of_lines(void);
-int get_number_of_cols(void);
-void _setcursortype(int curstype);
-void textbackground(int bg);
-void textcolor(int col);
-int putwch(ucs_t chr);
-void put_colour_ch(int colour, ucs_t ch);
-
-#define textattr(x) textcolor(x)
-void set_cursor_enabled(bool enabled);
-bool is_cursor_enabled();
-inline void enable_smart_cursor(bool) { }
-inline bool is_smart_cursor_enabled() { return false; }
-
-
-extern "C" int getchk();
-int getch_ck();
-int clrscr();
-void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
-coord_def cgetpos(GotoRegion region = GOTO_CRT);
-GotoRegion get_cursor_region();
-void delay(int ms);
-void update_screen();
-bool kbhit();
-
-#ifdef UNIX
-extern "C" char *strlwr(char *str);
-#endif
-
 #endif // USE_TILE
 #endif // LIBGUI_H

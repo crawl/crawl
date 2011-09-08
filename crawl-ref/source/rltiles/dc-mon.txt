@@ -487,6 +487,8 @@ paladin MONS_PALADIN
 angel MONS_ANGEL
 daeva MONS_DAEVA
 cherub MONS_CHERUB
+%sdir dc-mon/undead
+profane_servitor MONS_PROFANE_SERVITOR
 %sdir dc-mon/unique
 mennas MONS_MENNAS
 

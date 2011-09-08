@@ -35,6 +35,7 @@
 #include "mon-stuff.h"
 #include "mon-transit.h"
 #include "ouch.h"
+#include "place.h"
 #include "player.h"
 #include "skills.h"
 #include "spl-miscast.h"
@@ -78,10 +79,11 @@ void trap_def::message_trap_entry()
 
 void trap_def::disarm()
 {
-    if (type_has_ammo() && ammo_qty > 0)
+    if (type_has_ammo() && ammo_qty > 0 || type == TRAP_NET)
     {
         item_def trap_item = generate_trap_item();
-        trap_item.quantity = ammo_qty;
+        if (type != TRAP_NET)
+            trap_item.quantity = ammo_qty;
         copy_item_to_grid(trap_item, pos);
     }
     destroy();
@@ -238,8 +240,9 @@ bool trap_def::is_safe(actor* act) const
         return true;
     }
 
-    // Web traps are safe for spiders and spider forms, and certain others
-    if (category()==DNGN_TRAP_WEB && act->is_web_immune())
+    // TODO: For now, just assume they're safe; they don't damage outright,
+    // and the messages get old very quickly
+    if (category() == DNGN_TRAP_WEB) // && act->is_web_immune()
         return true;
 
     if (act->atype() != ACT_PLAYER)
@@ -452,7 +455,6 @@ bool player_caught_in_web()
         return false;
 
     you.attribute[ATTR_HELD] = 10;
-    mpr("You become entangled in the net!");
     stop_running();
     stop_delay(true); // even stair delays
     redraw_screen(); // Account for changes in display.
@@ -556,8 +558,9 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         simple_monster_message(m," carefully avoids a trap.");
         return;
     }
-    // Only magical traps affect flying critters.
-    if (!triggerer.ground_level() && category() != DNGN_TRAP_MAGICAL)
+    // Only magical traps and webs affect flying critters.
+    if (!triggerer.ground_level() && category() != DNGN_TRAP_MAGICAL
+                                  && category() != DNGN_TRAP_WEB)
     {
         if (you_know && m && triggerer.airborne())
             simple_monster_message(m, " flies safely over a trap.");
@@ -868,21 +871,13 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 mpr("You pick your way through the web.");
             else
             {
-                if (random2limit(player_evasion(), 40)
-                    + (random2(you.dex()) / 3) + (trig_knows ? 3 : 0) > 12)
-                {
-                    mpr("A web is hanging here but you duck past it!");
-                }
-                else
-                {
-                    mpr("You are caught in the web!");
+                mpr("You are caught in the web!");
 
-                    if (player_caught_in_web())
-                    {
-                        check_monsters_sense(SENSE_WEB_VIBRATION, 100, you.pos());
-                        if (player_in_a_dangerous_place())
-                            xom_is_stimulated(50);
-                    }
+                if (player_caught_in_web())
+                {
+                    check_monsters_sense(SENSE_WEB_VIBRATION, 100, you.pos());
+                    if (player_in_a_dangerous_place())
+                        xom_is_stimulated(50);
                 }
             }
         }
@@ -895,18 +890,6 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                     simple_monster_message(m, " evades a web.");
                 else
                     hide();
-            }
-            else if (random2(m->ev) > 8 || (trig_knows && random2(m->ev) > 8))
-            {
-                // Triggered but evaded.
-                if (in_sight)
-                {
-                    if (!simple_monster_message(m,
-                            " nimbly jumps through a gap in a web."))
-                    {
-                        mpr("A web waves in the air!");
-                    }
-                }
             }
             else
             {
@@ -1123,13 +1106,6 @@ trap_type get_trap_type(const coord_def& pos)
 {
     if (trap_def* ptrap = find_trap(pos))
         return (ptrap->type);
-
-    if (feature_mimic_at(pos))
-    {
-        monster *mimic = monster_at(pos);
-        if (mimic->props.exists("trap_type"))
-            return static_cast<trap_type>(mimic->props["trap_type"].get_short());
-    }
 
     return (TRAP_UNASSIGNED);
 }
@@ -1391,9 +1367,16 @@ void free_self_from_net()
 
     if (net == NON_ITEM)
     {
-        if (trap_def *trap = find_trap(you.pos()))
-            if (trap->type == TRAP_WEB)
-                maybe_destroy_web(&you);
+        trap_def *trap = find_trap(you.pos());
+        if (trap && trap->type == TRAP_WEB)
+        {
+            if (x_chance_in_y(40 - you.stat(STAT_STR), 66))
+            {
+                mpr("You struggle to detach yourself from the web.");
+                return;
+            }
+            maybe_destroy_web(&you);
+        }
         you.attribute[ATTR_HELD] = 0;
         you.redraw_quiver = true;
         return;
@@ -2060,6 +2043,9 @@ void place_webs(int num, bool is_second_phase)
         grd(ts.pos) = DNGN_UNDISCOVERED_TRAP;
         env.tgrid(ts.pos) = slot;
         ts.prepare_ammo();
+        // Reveal some webs
+        if (coinflip())
+            ts.reveal();
     }
 }
 
@@ -2070,7 +2056,13 @@ bool maybe_destroy_web(actor *oaf)
         return false;
 
     if (coinflip())
+    {
+        if (oaf->atype() == ACT_MONSTER)
+            simple_monster_message(oaf->as_monster(), " pulls away from the web.");
+        else
+            mpr("You disentangle yourself.");
         return false;
+    }
 
     if (oaf->atype() == ACT_MONSTER)
         simple_monster_message(oaf->as_monster(), " tears the web.");

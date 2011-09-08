@@ -48,7 +48,7 @@ endif
 ifeq ($(shell which $(LMACH)gcc > /dev/null 2> /dev/null && echo "Yes"),)
 LMACH :=
 endif
-CXX = $(LMACH)g++
+HOSTCXX ?= $(LMACH)g++
 
 DELETE = rm -f
 
@@ -65,9 +65,9 @@ JAVASCRIPT := $(INPUTS:%=tileinfo-%.js)
 
 ifneq ($(findstring $(MAKEFLAGS),s),s)
 ifndef V
-        QUIET_CXX      = @echo '   ' CXX $@;
+        QUIET_HOSTCXX  = @echo '   ' HOSTCXX $@;
         QUIET_GEN      = @echo '   ' GEN $(lastword $(subst -, ,$*));
-        QUIET_LINK     = @echo '   ' LINK $@;
+        QUIET_HOSTLINK = @echo '   ' HOSTLINK $@;
         export V
 endif
 endif
@@ -92,9 +92,9 @@ clean:
 distclean: clean
 
 %.o: %.cc
-	$(QUIET_CXX)$(CXX) $(CFLAGS) -Wp,-MD,$*.d,-MT,$@ -c $< -o $@
+	$(QUIET_HOSTCXX)$(HOSTCXX) $(CFLAGS) -Wp,-MD,$*.d,-MT,$@ -c $< -o $@
 
 $(TILEGEN): $(OBJECTS)
-	$(QUIET_LINK)$(CXX) $(OBJECTS) -o $@ $(LDFLAGS)
+	$(QUIET_HOSTLINK)$(HOSTCXX) $(OBJECTS) -o $@ $(LDFLAGS)
 
 .PHONY: all clean distclean

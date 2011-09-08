@@ -2157,18 +2157,8 @@ std::string shop_name(const coord_def& where)
 {
     const shop_struct *cshop = get_shop(where);
 
-    // paranoia and shop mimics
-    if (grd(where) != DNGN_ENTER_SHOP)
-    {
-        if (monster_at(where))
-        {
-            monster* mmimic = monster_at(where);
-            if (mons_is_feat_mimic(mmimic->type) && mmimic->props.exists("shop_name"))
-                return mmimic->props["shop_name"].get_string();
-        }
-
-        return ("");
-    }
+    // paranoia
+    ASSERT(grd(where) == DNGN_ENTER_SHOP);
 
     if (!cshop)
     {

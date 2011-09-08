@@ -796,7 +796,7 @@ static int l_item_letter_to_index(lua_State *ls)
     const char *s = luaL_checkstring(ls, 1);
     if (!s || !*s || s[1])
         return (0);
-    lua_pushnumber(ls, letter_to_index(*s));
+    lua_pushnumber(ls, isaalpha(*s) ? letter_to_index(*s) : -1);
     return (1);
 }
 

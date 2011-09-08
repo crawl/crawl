@@ -5,6 +5,8 @@
 #include "pattern.h"
 #include "newgame_def.h"
 
+typedef std::map<monster_type, mon_display> mon_glyph_map;
+
 class LineInput;
 struct game_options
 {
@@ -37,7 +39,7 @@ public:
 
     // View options
     std::vector<feature_override> feature_overrides;
-    std::vector<mon_display>      mon_glyph_overrides;
+    mon_glyph_map mon_glyph_overrides;
     ucs_t cset_override[NUM_DCHAR_TYPES];
 
     std::string save_dir;       // Directory where saves and bones go.
@@ -447,7 +449,6 @@ private:
 
     void split_parse(const std::string &s, const std::string &separator,
                      void (game_options::*add)(const std::string &));
-    void add_mon_glyph_override(monster_type mtype, mon_display &mdisp);
     void add_mon_glyph_overrides(const std::string &mons, mon_display &mdisp);
     void add_mon_glyph_override(const std::string &);
     mon_display parse_mon_glyph(const std::string &s) const;

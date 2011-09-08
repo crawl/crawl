@@ -1136,6 +1136,12 @@ static void _sdump_vault_list(dump_params &par)
     }
 }
 
+static bool _sort_by_casts(std::pair<spell_type, FixedVector<int, 28> > a,
+                           std::pair<spell_type, FixedVector<int, 28> > b)
+{
+    return (a.second[27] > b.second[27]);
+}
+
 static void _sdump_spell_usage(dump_params &par)
 {
     if (you.spell_usage.empty())
@@ -1155,16 +1161,28 @@ static void _sdump_spell_usage(dump_params &par)
         par.text += "+-------";
     par.text += "\n";
 
+    std::vector<std::pair<spell_type, FixedVector<int, 28> > > usage_vec;
     for (std::map<spell_type, FixedVector<int, 27> >::const_iterator sp =
          you.spell_usage.begin(); sp != you.spell_usage.end(); ++sp)
     {
+        FixedVector<int, 28> v;
+        v[27] = 0;
+        for (int i = 0; i < 27; i++)
+        {
+            v[i] = sp->second[i];
+            v[27] += v[i];
+        }
+        usage_vec.push_back(std::pair<spell_type, FixedVector<int, 28> >(sp->first, v));
+    }
+    std::sort(usage_vec.begin(), usage_vec.end(), _sort_by_casts);
+
+    for (std::vector<std::pair<spell_type, FixedVector<int, 28> > >::const_iterator sp =
+         usage_vec.begin(); sp != usage_vec.end(); ++sp)
+    {
         par.text += chop_string(spell_title(sp->first), 24);
 
-        int total = 0;
-        for (int i = 0; i < 27; i++)
-            total += sp->second[i];
-        ASSERT(total > 0);
-        par.text += make_stringf(" |%6d", total);
+        ASSERT(sp->second[27] > 0);
+        par.text += make_stringf(" |%6d", sp->second[27]);
 
         for (int lt = 0; lt < max_lt; lt++)
         {

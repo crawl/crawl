@@ -1128,10 +1128,12 @@ void down_stairs(dungeon_feature_type force_stair,
 
     if (entered_branch)
     {
-        if (branches[you.where_are_you].entry_message)
-            mpr(branches[you.where_are_you].entry_message);
+        const branch_type branch = you.where_are_you;
+        if (branches[branch].entry_message)
+            mpr(branches[branch].entry_message);
         else
-            mprf("Welcome to %s!", branches[you.where_are_you].longname);
+            mprf("Welcome to %s!", branches[branch].longname);
+        enter_branch(branch, old_level);
     }
 
     if (stair_find == DNGN_ENTER_HELL)

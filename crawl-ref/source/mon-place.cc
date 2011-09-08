@@ -455,31 +455,6 @@ monster_type pick_random_monster(const level_id &place,
     return pick_random_monster(place, level, level, chose_ood_monster);
 }
 
-// HACK: The shop probabilities are defined in dat/des/builders/shops.des.
-// Once mimics replace actual features, this sort of hackery will become
-// unnecessary.
-static bool _is_valid_shop_level()
-{
-    if (you.absdepth0 < 5)
-        return (false);
-
-    switch (your_branch().id)
-    {
-    case BRANCH_MAIN_DUNGEON:
-    case BRANCH_ORCISH_MINES:
-    case BRANCH_ELVEN_HALLS:
-    case BRANCH_SHOALS:
-    case BRANCH_SNAKE_PIT:
-    case BRANCH_VAULTS:
-    case BRANCH_FOREST:
-    case BRANCH_SPIDER_NEST:
-    case BRANCH_DWARVEN_HALL:
-        return (true);
-    default:
-        return (false);
-    }
-}
-
 static std::vector<monster_type> _find_valid_monster_types(const level_id &place)
 {
     static std::vector<monster_type> valid_monster_types;
@@ -491,13 +466,8 @@ static std::vector<monster_type> _find_valid_monster_types(const level_id &place
     valid_monster_types.clear();
     for (int i = 0; i < NUM_MONSTERS; ++i)
         if (mons_rarity(static_cast<monster_type>(i), place) > 0)
-        {
-            if (i == MONS_STAIR_MIMIC && your_branch().depth == 1)
-                continue;
-            if (i == MONS_SHOP_MIMIC && !_is_valid_shop_level())
-                continue;
             valid_monster_types.push_back(static_cast<monster_type>(i));
-        }
+
     last_monster_type_place = place;
     return (valid_monster_types);
 }
@@ -1001,7 +971,8 @@ static bool _valid_monster_generation_location(const mgen_data &mg,
                                                                   : mg.cls);
     if (!monster_habitable_grid(montype, grd(mg_pos), mg.preferred_grid_feature,
                                 mons_class_flies(montype), false)
-        || (mg.behaviour != BEH_FRIENDLY && is_sanctuary(mg_pos)))
+        || (mg.behaviour != BEH_FRIENDLY && !mons_is_mimic(montype)
+            && is_sanctuary(mg_pos)))
     {
         return (false);
     }
@@ -1441,7 +1412,8 @@ static int _place_monster_aux(const mgen_data &mg,
         fpos.reset();
     }
     else if (first_band_member && in_bounds(mg.pos)
-        && (mg.behaviour == BEH_FRIENDLY || !is_sanctuary(mg.pos))
+        && (mg.behaviour == BEH_FRIENDLY || !is_sanctuary(mg.pos)
+            || mons_is_mimic(montype))
         && !monster_at(mg.pos)
         && (you.pos() != mg.pos || fedhas_passthrough_class(mg.cls))
         && (force_pos || monster_habitable_grid(montype, grd(mg.pos))))
@@ -1485,17 +1457,6 @@ static int _place_monster_aux(const mgen_data &mg,
     {
         mon->reset();
         return (-1);
-    }
-
-    if (mons_is_item_mimic(mg.cls))
-    {
-        // Mimics who mimic thin air get the axe.
-        if (!give_mimic_item(mon))
-        {
-            mon->reset();
-            mgrd(fpos) = NON_MONSTER;
-            return (-1);
-        }
     }
 
     if (mg.props.exists("serpent_of_hell_flavour"))
@@ -1548,6 +1509,9 @@ static int _place_monster_aux(const mgen_data &mg,
                 break;
             case MONS_JELLY:
                 mon->god = GOD_JIYVA;
+                break;
+            case MONS_PROFANE_SERVITOR:
+                mon->god = GOD_YREDELEMNUL;
                 break;
             case MONS_MUMMY:
             case MONS_DRACONIAN:
@@ -1606,7 +1570,7 @@ static int _place_monster_aux(const mgen_data &mg,
     // Holy monsters need their halo!
     if (mon->holiness() == MH_HOLY)
         invalidate_agrid(true);
-    if (mg.cls == MONS_SILENT_SPECTRE)
+    if (mg.cls == MONS_SILENT_SPECTRE || mg.cls == MONS_PROFANE_SERVITOR)
         invalidate_agrid(true);
 
     // If the caller requested a specific colour for this monster, apply
@@ -1686,156 +1650,6 @@ static int _place_monster_aux(const mgen_data &mg,
         mon->add_ench(ENCH_PERM_TORNADO);
     }
 
-    if (mons_is_feat_mimic(mg.cls))
-    {
-        switch (mg.cls)
-        {
-        case MONS_DOOR_MIMIC:
-            // Requires no initialisation.
-            break;
-
-        case MONS_PORTAL_MIMIC:
-        {
-            if (coinflip())
-            {
-                const char *portals[3] = {
-                    "gateway to a bazaar",
-                    "glowing drain",
-                    "sand-covered staircase",
-                };
-
-                int colors[3] = {
-                    ETC_SHIMMER_BLUE,
-                    LIGHTGREEN,
-                    BROWN
-                };
-
-                int portal_choice = random2(3);
-
-                mon->props["portal_desc"] = std::string(portals[portal_choice]);
-                mon->colour = colors[portal_choice];
-            }
-            else
-            {
-                mon->colour = CYAN;
-            }
-            break;
-        }
-
-        // Needs a more complicated block.
-        case MONS_SHOP_MIMIC:
-        {
-            // Otherwise we need to make a random name.
-            shop_type type = static_cast<shop_type>(SHOP_WEAPON+random2(NUM_SHOPS-1));
-
-            std::string sh_name = apostrophise(make_name(random_int(), false)) +
-                    " " + shop_type_name(type);
-            std::string sh_suffix = shop_type_suffix(type, fpos);
-            if (!sh_suffix.empty())
-                sh_name += " " + sh_suffix;
-
-            mon->props["shop_name"] = sh_name;
-            mon->props["shop_type"] = static_cast<short>(type);
-            break;
-        }
-
-        // Uses complicated logic!
-        case MONS_STAIR_MIMIC:
-        {
-            // So far, branch stairs.
-            mon->colour = YELLOW;
-
-            bool got_stair = false;
-
-            // If we're in lair, and we're in one of the suitable levels,
-            // and it's a disabled branch, pretend to be one of them.
-            if (you.where_are_you == BRANCH_LAIR)
-            {
-                int cnt = 0;
-
-                for (int i = 0; i < NUM_BRANCHES; i++)
-                {
-                    if (is_random_lair_subbranch(branches[i].id)
-                        && branches[i].startdepth == -1
-                        && one_chance_in(++cnt))
-                    {
-                        mon->props["stair_type"] = static_cast<short>(
-                            branches[i].entry_stairs);
-                        got_stair = true;
-                    }
-                }
-            }
-
-            // If we're in the vaults, pick a suitable branch.
-            if (you.where_are_you == BRANCH_VAULTS)
-            {
-                mon->props["stair_type"] = static_cast<short>(random_choose(
-                    DNGN_ENTER_HALL_OF_BLADES, DNGN_ENTER_CRYPT, -1));
-                break;
-            }
-
-            // Tantalise the player with an early temple.
-            if (you.where_are_you == BRANCH_MAIN_DUNGEON && you.absdepth0 <= 7
-                && you.absdepth0 >= 4)
-            {
-                mon->props["stair_type"] = static_cast<short>(DNGN_ENTER_TEMPLE);
-                break;
-            }
-
-            // Otherwise, give a seemingly valid branch.
-            if (you.where_are_you == BRANCH_MAIN_DUNGEON)
-            {
-                for (int branch = BRANCH_ORCISH_MINES; branch < NUM_BRANCHES; ++branch)
-                {
-                    Branch *b = &branches[branch];
-                    if (b->parent_branch == BRANCH_MAIN_DUNGEON
-                        && you.absdepth0 >= b->mindepth
-                        && you.absdepth0 <= b->maxdepth
-                        && one_chance_in(4))
-                    {
-                        mon->props["stair_type"] = static_cast<short>(b->entry_stairs);
-                        got_stair = true;
-                        break;
-                    }
-                }
-            }
-
-            if (got_stair)
-                break;
-
-            // If we get to here, we've not got a stair yet...
-            // So either choose a stone stair, or an escape hatch.
-            dungeon_feature_type stair = random_stair();
-            mon->props["stair_type"] = static_cast<short>(stair);
-            const feature_def stair_d = get_feature_def(stair);
-
-            if (stair == DNGN_ESCAPE_HATCH_DOWN
-                || stair == DNGN_ESCAPE_HATCH_UP)
-            {
-                mon->colour = stair_d.colour;
-            }
-            else
-                mon->colour = stair_d.seen_em_colour;
-            break;
-        }
-
-        // Just needs a selection of random fountains.
-        case MONS_FOUNTAIN_MIMIC:
-        {
-            dungeon_feature_type fount = static_cast<dungeon_feature_type>(
-                DNGN_FOUNTAIN_BLUE+random2(DNGN_PERMADRY_FOUNTAIN-DNGN_FOUNTAIN_BLUE));
-            const feature_def fount_d = get_feature_def(fount);
-            mon->props["fountain_type"] = static_cast<short>(fount);
-            mon->colour = fount_d.colour;
-            break;
-        }
-        default:
-            break;
-        }
-    }
-
-
-
     if (!crawl_state.game_is_arena() && you.misled())
         update_mislead_monster(mon);
 
@@ -1852,7 +1666,7 @@ static int _place_monster_aux(const mgen_data &mg,
 
         // It's not actually a known shapeshifter if it happened to be
         // placed in LOS of the player.
-        mon->flags &= ~MF_KNOWN_MIMIC;
+        mon->flags &= ~MF_KNOWN_SHIFTER;
     }
 
     // dur should always be 1-6 for monsters that can be abjured.

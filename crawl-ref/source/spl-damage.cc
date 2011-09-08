@@ -176,14 +176,6 @@ bool cast_hellfire_burst(int pow, bolt &beam)
     return (true);
 }
 
-static bool _lightning_los(const coord_def& source, const coord_def& target)
-{
-    // XXX: currently bounded by circular LOS radius;
-    // XXX: adapt opacity -- allow passing clouds.
-    return (exists_ray(source, target, opc_solid,
-                       circle_def(LOS_MAX_RADIUS, C_ROUND)));
-}
-
 // XXX no friendly check
 spret_type cast_chain_lightning(int pow, const actor *caster, bool fail)
 {
@@ -242,7 +234,7 @@ spret_type cast_chain_lightning(int pow, const actor *caster, bool fail)
             if (dist > min_dist)
                 continue;
 
-            if (!_lightning_los(source, mi->pos()))
+            if (!cell_see_cell(source, mi->pos(), LOS_SOLID))
                 continue;
 
             count++;
@@ -279,7 +271,7 @@ spret_type cast_chain_lightning(int pow, const actor *caster, bool fail)
             if ((target.x == -1
                     || dist < min_dist
                     || (dist == min_dist && one_chance_in(count + 1)))
-                && _lightning_los(source, you.pos()))
+                && cell_see_cell(source, you.pos(), LOS_SOLID))
             {
                 target = you.pos();
             }
@@ -498,7 +490,7 @@ spret_type cast_refrigeration(int pow, bool non_player, bool freeze_potions,
     counted_monster_list affected_monsters;
 
     for (monster_iterator mi(&you); mi; ++mi)
-        if (cell_see_cell(you.pos(), mi->pos())) // not just you.can_see (Scry)
+        if (cell_see_cell(you.pos(), mi->pos(), LOS_SOLID)) // not just you.can_see (Scry)
             _record_monster_by_name(affected_monsters, *mi);
 
     if (!affected_monsters.empty())
@@ -531,7 +523,7 @@ spret_type cast_refrigeration(int pow, bool non_player, bool freeze_potions,
         // about it.
 
         // ... but not ones you see only via Scrying.
-        if (!cell_see_cell(you.pos(), mi->pos()))
+        if (!cell_see_cell(you.pos(), mi->pos(), LOS_SOLID))
             continue;
         // Calculate damage and apply.
         int hurt = mons_adjust_flavoured(*mi, beam, dam_dice.roll());
@@ -559,8 +551,11 @@ void sonic_damage(bool scream)
     counted_monster_list affected_monsters;
 
     for (monster_iterator mi(&you); mi; ++mi)
-        if (cell_see_cell(you.pos(), mi->pos()) && !silenced(mi->pos()))
+        if (cell_see_cell(you.pos(), mi->pos(), LOS_SOLID)
+            && !silenced(mi->pos()))
+        {
             _record_monster_by_name(affected_monsters, *mi);
+        }
 
     /* dpeg sez:
        * damage applied to everyone but the wielder (reasoning: the sword
@@ -587,8 +582,11 @@ void sonic_damage(bool scream)
     // Now damage the creatures.
     for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
-        if (!cell_see_cell(you.pos(), mi->pos()) || silenced(mi->pos()))
+        if (!cell_see_cell(you.pos(), mi->pos(), LOS_SOLID)
+            || silenced(mi->pos()))
+        {
             continue;
+        }
         int hurt = (random2(2) + 1) * (random2(2) + 1) * (random2(3) + 1)
                  + (random2(3) + 1) + 1;
         if (scream)
@@ -801,8 +799,6 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
     noisy(4, beam.target);
 
     behaviour_event(mons, ME_ANNOY, MHITYOU);
-    if (mons_is_mimic(mons->type))
-        mimic_alert(mons);
 
     enable_attack_conducts(conducts);
 
@@ -1494,7 +1490,7 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
     bool hole    = true;
     const char *what = NULL;
 
-    if (!exists_ray(you.pos(), spd.target))
+    if (!cell_see_cell(you.pos(), spd.target, LOS_SOLID))
     {
         mpr("There's something in the way!");
         return SPRET_ABORT;

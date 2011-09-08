@@ -8,8 +8,10 @@
 
 #include <string>
 
-void wizard_create_portal();
-void wizard_create_feature();
+#include "player.h"
+
+bool wizard_create_portal(const coord_def& pos = you.pos());
+bool wizard_create_feature(const coord_def& pos = you.pos());
 void wizard_list_branches();
 void wizard_reveal_traps();
 void wizard_map_level();
@@ -20,7 +22,7 @@ void wizard_interlevel_travel();
 void wizard_list_levels();
 void wizard_recreate_level();
 void debug_make_trap(void);
-void debug_make_shop(void);
+bool debug_make_shop(const coord_def& pos = you.pos());
 void debug_place_map();
 void debug_test_explore();
 

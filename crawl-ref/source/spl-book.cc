@@ -258,6 +258,7 @@ int book_rarity(uint8_t which_book)
     case BOOK_YOUNG_POISONERS:
     case BOOK_STALKING:
     case BOOK_WAR_CHANTS:
+    case BOOK_DEBILITATION:
         return 5;
 
     case BOOK_CLOUDS:
@@ -308,7 +309,6 @@ int book_rarity(uint8_t which_book)
     case BOOK_DESTRUCTION:
         return 30;
 
-    case BOOK_BRANDS:        // XXX: Temporarily disabled along with AM
 #if TAG_MAJOR_VERSION == 32
     case BOOK_MINOR_MAGIC_II:
     case BOOK_MINOR_MAGIC_III:
@@ -897,7 +897,7 @@ static bool _sort_mem_spells(spell_type a, spell_type b)
     if (spell_difficulty(a) != spell_difficulty(b))
         return (spell_difficulty(a) < spell_difficulty(b));
 
-    return (stricmp(spell_title(a), spell_title(b)) < 0);
+    return (strcasecmp(spell_title(a), spell_title(b)) < 0);
 }
 
 std::vector<spell_type> get_mem_spell_list(std::vector<int> &books)

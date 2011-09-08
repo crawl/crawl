@@ -19,7 +19,7 @@ run_one()
         $CRAWL -arena 'cerebov v test spawner delay:0'
     ;;
     5|pan_lords)
-        $CRAWL -arena 'cerebov, lom lobon, mnoleg, gloorx vloq v ereshkigal, asmodeus, antaeus, dispater delay:0 t:20'
+        $CRAWL -arena 'cerebov, lom lobon, mnoleg, gloorx vloq v ereshkigal, asmodeus, antaeus, dispater delay:0 t:6'
     ;;
     *)
         echo "No such test."

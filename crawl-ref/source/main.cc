@@ -50,6 +50,7 @@
 #include "dgn-shoals.h"
 #include "dlua.h"
 #include "directn.h"
+#include "dungeon.h"
 #include "effects.h"
 #include "env.h"
 #include "errors.h"
@@ -758,7 +759,7 @@ static void _handle_wizard_command(void)
     // WIZ_NEVER gives protection for those who have wiz compiles,
     // and don't want to risk their characters. Also, and hackishly,
     // it's used to prevent access for non-authorised users to wizard
-    // builds in dgamelaunch builds unlses the game is started with the
+    // builds in dgamelaunch builds unless the game is started with the
     // -wizard flag.
     if (Options.wiz_mode == WIZ_NEVER)
         return;
@@ -1317,6 +1318,21 @@ static bool _prompt_dangerous_portal(dungeon_feature_type ftype)
     }
 }
 
+static bool _prompt_unique_pan_rune(dungeon_feature_type ygrd)
+{
+    if (ygrd != DNGN_TRANSIT_PANDEMONIUM && ygrd != DNGN_EXIT_PANDEMONIUM)
+        return true;
+    item_def* rune = find_floor_item(OBJ_MISCELLANY, MISC_RUNE_OF_ZOT);
+    if (rune && (rune->plus == RUNE_CEREBOV || rune->plus == RUNE_LOM_LOBON
+                || rune->plus == RUNE_MNOLEG || rune->plus == RUNE_GLOORX_VLOQ))
+    {
+        return yesno("An item of great power still resides in this realm, "
+                "and once you leave you can never return. "
+                "Are you sure you want to leave?");
+    }
+    return true;
+}
+
 static void _go_downstairs();
 static void _go_upstairs()
 {
@@ -1386,6 +1402,9 @@ static void _go_upstairs()
         if (!yesno("Are you sure you want to leave this Ziggurat?"))
             return;
     }
+
+    if (!_prompt_unique_pan_rune(ygrd))
+        return;
 
     const bool leaving_dungeon =
         level_id::current() == level_id(BRANCH_MAIN_DUNGEON, 1)
@@ -1500,6 +1519,9 @@ static void _go_downstairs()
         if (!yesno("Are you sure you want to leave this Ziggurat?"))
             return;
     }
+
+    if (!_prompt_unique_pan_rune(ygrd))
+        return;
 
     if (you.duration[DUR_MISLED])
         end_mislead(true);
@@ -2011,9 +2033,9 @@ void process_command(command_type cmd)
         // and unfortunately they tend to be stuck together.
         clrscr();
 #ifndef USE_TILE
-        unixcurses_shutdown();
+        console_shutdown();
         kill(0, SIGTSTP);
-        unixcurses_startup();
+        console_startup();
 #endif
         redraw_screen();
         break;
@@ -2179,7 +2201,7 @@ static void _check_invisibles()
 {
     for (radius_iterator ri(you.pos(), LOS_RADIUS, C_ROUND); ri; ++ri)
     {
-        if (!cell_see_cell(you.pos(), *ri))
+        if (!cell_see_cell(you.pos(), *ri, LOS_DEFAULT))
             continue;
         const monster* mons = monster_at(*ri);
         if (mons && !mons->visible_to(&you) && !mons->submerged())
@@ -2977,6 +2999,10 @@ static void _player_reacts()
 
     recharge_rods(you.time_taken, false);
 
+    // Reveal adjacent mimics.
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+        discover_mimic(*ai);
+
     // Player stealth check.
     seen_monsters_react();
 
@@ -3506,10 +3532,9 @@ static void _open_door(coord_def move, bool check_confused)
     }
 
     // Allow doors to be locked.
-    bool door_vetoed = env.markers.property_at(doorpos, MAT_ANY, "veto_open") == "veto";
     const std::string door_veto_message = env.markers.property_at(doorpos, MAT_ANY,
                                 "veto_reason");
-    if (door_vetoed)
+    if (door_vetoed(doorpos))
     {
         if (door_veto_message.empty())
             mpr("The door is shut tight!");
@@ -4130,7 +4155,7 @@ static void _move_player(coord_def move)
     {
         if (crawl_state.game_is_zotdef() && you.pos() == env.orb_pos)
         {
-            // Aree you standing on the Orb? If so, are the critters near?
+            // Are you standing on the Orb? If so, are the critters near?
             bool danger = false;
             for (int i = 0; i < MAX_MONSTERS; ++i)
             {
@@ -4182,7 +4207,7 @@ static void _move_player(coord_def move)
         }
 
         you.time_taken *= player_movement_speed();
-        you.time_taken /= 10;
+        you.time_taken = div_rand_round(you.time_taken, 10);
 
 #ifdef EUCLIDEAN
         if (move.abs() == 2)

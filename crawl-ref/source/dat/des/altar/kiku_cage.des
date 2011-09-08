@@ -1,0 +1,95 @@
+# Kikubaaqudgha's caged human altar vault by tgw
+
+# This vault contains a caged human who is killed with miasma once you see it
+# and then is turned into a zombie.
+#
+# The show's end is not clear: the chance for getting a corpse (and then a
+# zombie) is 50%. Very rarely, the human survives -- this is also okay. All of
+# these shows still point out how Kikubaaqudgha enjoys suffering.
+
+{{
+function callback.tgw_kikubaaqudgha_kill_human(data, triggerable,
+                                                triggerer, marker, ev)
+  if data.turns ~= you.turns() then
+    data.tc = data.tc + 1
+    data.turns = you.turns()
+  end
+
+  if data.tc < 3 then
+    return
+  end
+
+  if data.triggered == true then
+    return
+  end
+
+  local m = dgn.find_marker_positions_by_prop("slave_name", "zombie")[1]
+  if m ~= nil then
+    local _x, _y = m:xy()
+
+    if not you.see_cell(_x, _y) then
+      return
+    end
+        dgn.place_cloud(_x, _y, "foul pestilence", 4)
+        crawl.god_speaks("Kikubaaqudgha",
+                         "Miasma emanates from the human's flesh.")
+    data.triggered = true
+  end
+end
+
+function callback.tgw_kikubaaqudgha_zombify(data, triggerable,
+                                            triggerer, marker, ev)
+  local pt = dgn.find_marker_positions_by_prop("slave_name", "zombie")
+  if #pt == 0 then
+    return
+  end
+
+  for carrion in iter.stash_iterator(pt[1].x, pt[1].y) do
+    if string.find(carrion.name(), 'human corpse') then
+      carrion.destroy()
+    end
+  end
+
+  -- Won't place the monster if there's a cloud there
+  dgn.delete_cloud(pt[1].x, pt[1].y)
+
+  dgn.create_monster(pt[1].x, pt[1].y, "generate_awake human zombie")
+  if you.see_cell(pt[1].x, pt[1].y) then
+    crawl.god_speaks("Kikubaaqudgha", "The human rises from the dead!")
+  end
+end
+}}
+
+NAME:   tgw_kikubaaqudgha
+TAGS:   uniq_altar_kikubaaqudgha temple_overflow_kikubaaqudgha
+DEPTH:  D:2-10
+KFEAT:  _ = altar_kikubaaqudgha
+{{
+local tm = TriggerableFunction:new{
+  func="callback.tgw_kikubaaqudgha_kill_human",
+  repeated=true,
+  data={turns=you.turns(), tc=0, triggered=false} }
+tm:add_triggerer(DgnTriggerer:new{type="player_los"})
+lua_marker('_', tm)
+}}
+
+{{
+local tm = TriggerableFunction:new{
+  func="callback.tgw_kikubaaqudgha_zombify", repeated=false}
+tm:add_triggerer(DgnTriggerer:new{type="monster_dies", target="dslave"})
+lua_marker('_', tm)
+}}
+
+MARKER: h = lua:portal_desc {slave_name="zombie"}
+MARKER: h = lua:MonPropsMarker:new{dslave="dslave"}
+KFEAT:  h = .
+KMONS:  h = generate_awake Human hp:12 ; nothing
+KPROP:  h = no_rtele_into
+TILE:   m = dngn_transparent_wall_darkgray
+MAP
+xxxxxxx
+@..mmmx
+@_.mhmx
+@..mmmx
+xxxxxxx
+ENDMAP

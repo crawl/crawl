@@ -224,6 +224,7 @@ static void _mark_expiring(status_info* inf, bool expiring)
 static void _describe_airborne(status_info* inf);
 static void _describe_burden(status_info* inf);
 static void _describe_glow(status_info* inf);
+static void _describe_backlit(status_info* inf);
 static void _describe_hunger(status_info* inf);
 static void _describe_regen(status_info* inf);
 static void _describe_rotting(status_info* inf);
@@ -297,9 +298,23 @@ void fill_status_info(int status, status_info* inf)
         _describe_burden(inf);
         break;
 
-    case STATUS_GLOW:
-        // includes corona
+    case STATUS_CONTAMINATION:
         _describe_glow(inf);
+        break;
+
+    case STATUS_BACKLIT:
+        if (you.backlit())
+            _describe_backlit(inf);
+        break;
+
+    case STATUS_UMBRA:
+        if (you.umbra())
+        {
+            inf->light_colour = MAGENTA;
+            inf->light_text   = "Umbra";
+            inf->short_text   = "wreathed by umbra";
+            inf->long_text    = "You are wreathed by an unholy umbra.";
+        }
         break;
 
     case STATUS_NET:
@@ -523,14 +538,12 @@ static void _describe_hunger(status_info* inf)
 static void _describe_glow(status_info* inf)
 {
     const int cont = get_contamination_level();
-    if (cont > 0 || you.backlit(false))
+    if (cont > 0)
     {
         inf->light_colour = DARKGREY;
-        if (you.backlit(false))
-            inf->light_colour = LIGHTBLUE;
         if (cont > 1)
             inf->light_colour = _bad_ench_colour(cont, 2, 3);
-        inf->light_text = "Glow";
+        inf->light_text = "Contam";
     }
 
     if (cont > 0)
@@ -542,9 +555,28 @@ static void _describe_glow(status_info* inf)
                  (cont == 4) ? "moderately " :
                  (cont == 5) ? "heavily "
                              : "really heavily ";
-        inf->short_text += "glowing";
+        inf->short_text += "contaminated";
         inf->long_text = describe_contamination(cont);
     }
+}
+
+static void _describe_backlit(status_info* inf)
+{
+    if (get_contamination_level() > 1)
+        inf->light_colour = _bad_ench_colour(get_contamination_level(), 2, 3);
+    else if (you.duration[DUR_QUAD_DAMAGE])
+        inf->light_colour = BLUE;
+    else if (you.duration[DUR_CORONA])
+        inf->light_colour = LIGHTBLUE;
+    else if (you.duration[DUR_LIQUID_FLAMES])
+        inf->light_colour = RED;
+    else if (!you.umbraed() && you.haloed())
+        inf->light_colour = YELLOW;
+
+    inf->light_text   = "Glow";
+    inf->short_text   = "glowing";
+    inf->long_text    = "You are glowing.";
+
 }
 
 static void _describe_regen(status_info* inf)

@@ -52,6 +52,7 @@
 #include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
+#include "monster.h"
 #include "mutation.h"
 #include "ouch.h"
 #include "player.h"
@@ -281,6 +282,7 @@ bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range)
     pbolt.is_tracer      = true;
     pbolt.source         = you.pos();
     pbolt.can_see_invis  = you.can_see_invisible();
+    pbolt.nightvision    = you.nightvision();
     pbolt.smart_monster  = true;
     pbolt.attitude       = ATT_FRIENDLY;
     pbolt.thrower        = KILL_YOU_MISSILE;
@@ -2145,6 +2147,7 @@ void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only)
     pbolt.source        = mons->pos();
     pbolt.beam_source   = mons->mindex();
     pbolt.can_see_invis = mons->can_see_invisible();
+    pbolt.nightvision   = mons->nightvision();
     pbolt.smart_monster = (mons_intel(mons) >= I_NORMAL);
     pbolt.attitude      = mons_attitude(mons);
 
@@ -2183,41 +2186,29 @@ void fire_tracer(const monster* mons, bolt &pbolt, bool explode_only)
     pbolt.is_tracer = false;
 }
 
-// When a mimic is hit by a ranged attack, it teleports away (the slow
-// way) and changes its appearance - the appearance change is in
-// monster_teleport() in mon-stuff.cc.
-void mimic_alert(monster* mimic)
-{
-    if (!mimic->alive())
-        return;
-
-    bool should_id = !testbits(mimic->flags, MF_KNOWN_MIMIC)
-                     && mimic->observable();
-
-    // If we got here, we at least got a resists message, if not
-    // a full wounds printing. Thus, might as well id the mimic.
-    if (mimic->has_ench(ENCH_TP) || mons_is_feat_mimic(mimic->type))
-    {
-        if (should_id)
-            discover_mimic(mimic);
-
-        return;
-    }
-
-    const bool instant_tele = !one_chance_in(3);
-    monster_teleport(mimic, instant_tele);
-
-    // At least for this short while, we know it's a mimic.
-    if (!instant_tele && should_id)
-        discover_mimic(mimic);
-}
-
 static void _create_feat_at(coord_def center,
                             dungeon_feature_type overwriteable,
                             dungeon_feature_type newfeat)
 {
     if (grd(center) == overwriteable)
         dungeon_terrain_changed(center, newfeat, true, false, true);
+}
+
+static coord_def _random_point_visible_from(const coord_def &c,
+                                            int radius,
+                                            int margin = 1,
+                                            int tries = 5)
+{
+    while (tries-- > 0)
+    {
+        const coord_def point = dgn_random_point_from(c, radius, margin);
+        if (point.origin())
+            continue;
+        if (!cell_see_cell(c, point, LOS_SOLID))
+            continue;
+        return point;
+    }
+    return coord_def();
 }
 
 static void _create_feat_splash(coord_def center,
@@ -2230,7 +2221,7 @@ static void _create_feat_splash(coord_def center,
     _create_feat_at(center, overwriteable, newfeat);
     for (int i = 0; i < nattempts; ++i)
     {
-        const coord_def newp(dgn_random_point_visible_from(center, radius));
+        const coord_def newp(_random_point_visible_from(center, radius));
         if (newp.origin() || grd(newp) != overwriteable)
             continue;
         _create_feat_at(newp, overwriteable, newfeat);
@@ -3103,8 +3094,13 @@ bool bolt::misses_player()
         if (you.invisible() && !can_see_invis)
             real_tohit /= 2;
 
+        // Backlit is easier to hit:
         if (you.backlit(true, false))
             real_tohit += 2 + random2(8);
+
+        // Umbra is harder to hit:
+        if (!nightvision && you.umbra(true, true))
+            real_tohit -= 2 + random2(4);
     }
 
     bool train_shields_more = false;
@@ -4037,10 +4033,6 @@ void bolt::enchantment_affect_monster(monster* mon)
 
     if (mon->alive())           // Aftereffects.
     {
-        // Mimics become known.
-        if (mons_is_mimic(mon->type))
-            mimic_alert(mon);
-
         // Message or record the success/failure.
         switch (ench_result)
         {
@@ -4101,31 +4093,20 @@ void bolt::monster_post_hit(monster* mon, int dmg)
         }
     }
 
-    bool wake_mimic = true;
-
     // Handle missile effects.
     if (item && item->base_type == OBJ_MISSILES)
     {
         // SPMSL_POISONED handled via callback _poison_hit_victim() in
         // item_use.cc
-        if (item->special == SPMSL_CURARE)
-        {
-            if (ench_power == AUTOMATIC_HIT
-                && _curare_hits_monster(agent(), mon, 2)
-                && !mon->alive())
-            {
-                wake_mimic = false;
-            }
-        }
+        if (item->special == SPMSL_CURARE && ench_power == AUTOMATIC_HIT)
+            _curare_hits_monster(agent(), mon, 2);
     }
 
     if (name == "bolt of energy"
         || origin_spell == SPELL_QUICKSILVER_BOLT) // purple draconian breath
         debuff_monster(mon);
 
-    if (wake_mimic && mons_is_mimic(mon->type))
-        mimic_alert(mon);
-    else if (dmg)
+    if (dmg)
         beogh_follower_convert(mon, true);
 
     if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE) ||
@@ -4389,8 +4370,13 @@ void bolt::affect_monster(monster* mon)
         if (mon->invisible() && !can_see_invis)
             beam_hit /= 2;
 
+        // Backlit is easier to hit:
         if (mon->backlit(true, false))
             beam_hit += 2 + random2(8);
+
+        // Umbra is harder to hit:
+        if (!nightvision && mon->umbra(true, true))
+            beam_hit -= 2 + random2(4);
     }
 
     defer_rand r;
@@ -5592,7 +5578,7 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                aimed_at_feet(false), msg_generated(false),
                noise_generated(false), passed_target(false),
                in_explosion_phase(false), smart_monster(false),
-               can_see_invis(false), attitude(ATT_HOSTILE), foe_ratio(0),
+               can_see_invis(false), nightvision(false), attitude(ATT_HOSTILE), foe_ratio(0),
                chose_ray(false), beam_cancelled(false),
                dont_stop_player(false), bounces(false), bounce_pos(),
                reflections(0), reflector(-1), auto_hit(false)

@@ -325,8 +325,6 @@ void tornado_damage(actor *caster, int dur)
                                 mon->add_ench(ench);
                         }
                         behaviour_event(mon, ME_ANNOY, caster->mindex());
-                        if (mons_is_mimic(mon->type))
-                            mimic_alert(mon);
                     }
                     else if (!leda)
                     {

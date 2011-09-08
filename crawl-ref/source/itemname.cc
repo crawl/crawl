@@ -998,7 +998,7 @@ static const char* _book_type_name(int booktype)
     case BOOK_CANTRIPS:               return "Cantrips";
     case BOOK_PARTY_TRICKS:           return "Party Tricks";
     case BOOK_STALKING:               return "Stalking";
-    case BOOK_BRANDS:                 return "Brands";
+    case BOOK_DEBILITATION:           return "Debilitation";
     case BOOK_DRAGON:                 return "the Dragon";
     case BOOK_BURGLARY:               return "Burglary";
     case BOOK_DREAMS:                 return "Dreams";
@@ -2854,7 +2854,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (you.species == SP_FELID)
             return (true);
 
-        if (!you.could_wield(item, true)
+        if (!you.could_wield(item, true, !temp)
             && !is_throwable(&you, item))
         {
             // Weapon is too large (or small) to be wielded and cannot

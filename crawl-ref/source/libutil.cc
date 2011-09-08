@@ -249,32 +249,6 @@ int ends_with(const std::string &s, const char *suffixes[])
     return (0);
 }
 
-#ifdef UNIX
-extern "C" int stricmp(const char *str1, const char *str2)
-{
-    int ret = 0;
-
-    // No need to check for *str1.  If str1 ends, then tolower(*str1) will be
-    // 0, ret will be -1, and the loop will break.
-    while (!ret && *str2)
-    {
-        unsigned char c1 = tolower(*str1);
-        unsigned char c2 = tolower(*str2);
-
-        ret = c1 - c2;
-        str1++;
-        str2++;
-    }
-
-    if (ret < 0)
-        ret = -1;
-    else if (ret > 0)
-        ret = 1;
-
-    return (ret);
-}
-#endif
-
 bool strip_suffix(std::string &s, const std::string &suffix)
 {
     if (ends_with(s, suffix))

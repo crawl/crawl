@@ -130,9 +130,9 @@ bool validate_player_name(const std::string &name, bool verbose)
 {
 #if defined(TARGET_OS_WINDOWS)
     // Quick check for CON -- blows up real good under DOS/Windows.
-    if (stricmp(name.c_str(), "con") == 0
-        || stricmp(name.c_str(), "nul") == 0
-        || stricmp(name.c_str(), "prn") == 0
+    if (strcasecmp(name.c_str(), "con") == 0
+        || strcasecmp(name.c_str(), "nul") == 0
+        || strcasecmp(name.c_str(), "prn") == 0
         || strnicmp(name.c_str(), "LPT", 3) == 0)
     {
         if (verbose)

@@ -167,33 +167,6 @@ MDEF(shapeshifter)
     return (1);
 }
 
-MDEF(mimic)
-{
-    ASSERT_DLUA;
-    if (mons_genus(mons->type) == MONS_GOLD_MIMIC)
-    {
-        switch (mons->type)
-        {
-        case MONS_GOLD_MIMIC:
-            lua_pushstring(ls, "gold mimic"); break;
-        case MONS_WEAPON_MIMIC:
-            lua_pushstring(ls, "weapon mimic"); break;
-        case MONS_ARMOUR_MIMIC:
-            lua_pushstring(ls, "armour mimic"); break;
-        case MONS_POTION_MIMIC:
-            lua_pushstring(ls, "potion mimic"); break;
-        case MONS_SCROLL_MIMIC:
-            lua_pushstring(ls, "scroll mimic"); break;
-        default:
-            lua_pushstring(ls, "unknown mimic"); break;
-        }
-    }
-    else
-        lua_pushnil(ls);
-
-    return (1);
-}
-
 MDEF(dancing_weapon)
 {
     ASSERT_DLUA;
@@ -521,7 +494,6 @@ static MonsAccessor mons_attrs[] =
     { "entry_name",     l_mons_entry_name },
     { "unique"   ,      l_mons_unique },
     { "shapeshifter",   l_mons_shapeshifter },
-    { "mimic",          l_mons_mimic },
     { "dancing_weapon", l_mons_dancing_weapon },
     { "wont_attack",    l_mons_wont_attack },
 
