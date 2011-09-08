@@ -4513,3 +4513,32 @@ void clear_level_target()
     level_target.clear();
     trans_travel_dest.clear();
 }
+
+level_id_iterator::level_id_iterator()
+{
+    cur = level_id(BRANCH_MAIN_DUNGEON, 1);
+}
+
+level_id_iterator::operator bool() const
+{
+    return cur.level_type < NUM_LEVEL_AREA_TYPES;
+}
+
+level_id level_id_iterator::operator*() const
+{
+    return cur;
+}
+
+void level_id_iterator::operator++()
+{
+    if (cur.level_type == LEVEL_DUNGEON)
+    {
+        if (branches[cur.branch].depth < ++cur.depth)
+            cur.branch = static_cast<branch_type>(cur.branch + 1), cur.depth = 1;
+        if (cur.branch < NUM_BRANCHES)
+            return;
+        cur.depth = -1;
+    }
+    cur.level_type = static_cast<level_area_type>(cur.level_type + 1);
+    return;
+}
