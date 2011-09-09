@@ -3738,7 +3738,9 @@ void melee_attack::player_sustain_passive_damage()
 
 int melee_attack::player_staff_damage(skill_type skill)
 {
-    return (random2(5*(you.skill(skill) + you.skill(SK_EVOCATIONS))/4));
+    if (x_chance_in_y(2*you.skill(SK_EVOCATIONS) + you.skill(skill), 30))
+        return (random2(5*(you.skill(skill) + you.skill(SK_EVOCATIONS)/2)/4));
+    return 0;
 }
 
 void melee_attack::emit_nodmg_hit_message()
@@ -3755,9 +3757,6 @@ void melee_attack::player_apply_staff_damage()
     special_damage = 0;
 
     if (!weapon || !item_is_staff(*weapon))
-        return;
-
-    if (random2(15) > you.skill(SK_EVOCATIONS))
         return;
 
     switch (weapon->sub_type)
@@ -3829,6 +3828,9 @@ void melee_attack::player_apply_staff_damage()
 
     case STAFF_POISON:
     {
+        if (random2(30) >= 2*you.skill(SK_EVOCATIONS) + you.skill(SK_POISON_MAGIC))
+            return;
+
         // Base chance at 50% -- like mundane weapons.
         if (coinflip() || x_chance_in_y(you.skill(SK_POISON_MAGIC), 8))
         {
@@ -3844,19 +3846,16 @@ void melee_attack::player_apply_staff_damage()
         if (defender->res_negative_energy())
             break;
 
-        if (x_chance_in_y(you.skill(SK_NECROMANCY) + 1, 8))
+        special_damage = player_staff_damage(SK_NECROMANCY);
+
+        if (special_damage)
         {
-            special_damage = player_staff_damage(SK_NECROMANCY);
+            special_damage_message =
+                make_stringf(
+                    "%s convulses in agony!",
+                    defender->name(DESC_CAP_THE).c_str());
 
-            if (special_damage)
-            {
-                special_damage_message =
-                    make_stringf(
-                        "%s convulses in agony!",
-                        defender->name(DESC_CAP_THE).c_str());
-
-                did_god_conduct(DID_NECROMANCY, 4);
-            }
+            did_god_conduct(DID_NECROMANCY, 4);
         }
         break;
 
@@ -3864,10 +3863,10 @@ void melee_attack::player_apply_staff_damage()
         if (!defender->is_summoned())
             break;
 
-        if (x_chance_in_y(you.skill(SK_SUMMONINGS) + 1, 8))
+        if (x_chance_in_y(2*you.skill(SK_EVOCATIONS) + you.skill(SK_SUMMONINGS), 30))
         {
             emit_nodmg_hit_message();
-            abjuration(random2(5*(you.skill(SK_SUMMONINGS) + you.skill(SK_EVOCATIONS))/4));
+            abjuration(random2(5*(you.skill(SK_SUMMONINGS) + you.skill(SK_EVOCATIONS)/2)/4));
         }
         break;
 
