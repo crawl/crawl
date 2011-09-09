@@ -337,6 +337,9 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_CHOPPING, 2 },
 
     // Staves
+    { WPN_STAFF,             "staff",               5,  5, 12, 150,  6,
+        SK_STAVES,       HANDS_DOUBLE, SIZE_MEDIUM, MI_NONE, false,
+        DAMV_CRUSHING, 2 },
     { WPN_QUARTERSTAFF,      "quarterstaff",        7,  6, 12, 180,  7,
         SK_STAVES,       HANDS_DOUBLE, SIZE_LARGE,  MI_NONE, false,
         DAMV_CRUSHING, 10 },
@@ -1399,7 +1402,6 @@ int weapon_rarity(int w_type)
 
     case WPN_HAND_AXE:
     case WPN_MACE:
-    case WPN_QUARTERSTAFF:
         return (9);
 
     case WPN_BOW:
@@ -1409,6 +1411,7 @@ int weapon_rarity(int w_type)
     case WPN_SHORT_SWORD:
     case WPN_SLING:
     case WPN_SPEAR:
+    case WPN_QUARTERSTAFF:
         return (8);
 
     case WPN_FALCHION:
@@ -1427,6 +1430,7 @@ int weapon_rarity(int w_type)
     case WPN_GLAIVE:
     case WPN_HALBERD:
     case WPN_BLOWGUN:
+    case WPN_STAFF:
         return (5);
 
     case WPN_BROAD_AXE:
@@ -1829,7 +1833,7 @@ int weapon_str_weight(const item_def &wpn)
     ASSERT (wpn.base_type == OBJ_WEAPONS || wpn.base_type == OBJ_STAVES);
 
     if (wpn.base_type == OBJ_STAVES)
-        return (Weapon_prop[ Weapon_index[WPN_QUARTERSTAFF] ].str_weight);
+        return (Weapon_prop[ Weapon_index[WPN_STAFF] ].str_weight);
 
     return (Weapon_prop[ Weapon_index[wpn.sub_type] ].str_weight);
 }
@@ -1938,7 +1942,7 @@ static size_type weapon_size(const item_def &item)
     ASSERT (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES);
 
     if (item.base_type == OBJ_STAVES)
-        return (Weapon_prop[ Weapon_index[WPN_QUARTERSTAFF] ].fit_size);
+        return (Weapon_prop[ Weapon_index[WPN_STAFF] ].fit_size);
 
     return (Weapon_prop[ Weapon_index[item.sub_type] ].fit_size);
 }
@@ -2547,7 +2551,7 @@ int property(const item_def &item, int prop_type)
         break;
 
     case OBJ_STAVES:
-        weapon_sub = item_is_rod(item) ? WPN_CLUB : WPN_QUARTERSTAFF;
+        weapon_sub = item_is_rod(item) ? WPN_CLUB : WPN_STAFF;
 
         if (prop_type == PWPN_DAMAGE)
             return (Weapon_prop[ Weapon_index[weapon_sub] ].dam);

@@ -876,7 +876,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
     weapon_type rc = WPN_UNKNOWN;
 
     const weapon_type common_subtypes[] = {
-        WPN_QUARTERSTAFF, WPN_SLING,
+        WPN_STAFF, WPN_SLING,
         WPN_SPEAR, WPN_HAND_AXE, WPN_MACE,
         WPN_DAGGER, WPN_DAGGER, WPN_CLUB,
         WPN_HAMMER, WPN_WHIP, WPN_SABRE
@@ -1473,11 +1473,14 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             break;
         }
 
-        // Quarterstaff - not powerful, as this would make the 'staves'
-        // skill just too good.
+        // Staves
+        case WPN_STAFF:
         case WPN_QUARTERSTAFF:
-            if (one_chance_in(15))
+            if (one_chance_in(30))
                 rc = SPWPN_ANTIMAGIC;
+
+            if (one_chance_in(30))
+                rc = SPWPN_HOLY_WRATH;
 
             if (one_chance_in(30))
                 rc = SPWPN_PAIN;
@@ -1485,11 +1488,14 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (_got_distortion_roll(item_level))
                 rc = SPWPN_DISTORTION;
 
-            if (one_chance_in(5))
+            if (one_chance_in(10))
                 rc = SPWPN_SPEED;
 
             if (one_chance_in(10))
                 rc = SPWPN_VORPAL;
+
+            if (one_chance_in(10))
+                rc = SPWPN_DRAINING;
 
             if (one_chance_in(6))
                 rc = SPWPN_PROTECTION;

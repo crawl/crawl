@@ -968,7 +968,7 @@ static void _give_items_skills(const newgame_def& ng)
 
     case JOB_ARTIFICER:
         // Equipment. Quarterstaff, and armour or robe.
-        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_QUARTERSTAFF);
+        newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_STAFF);
 
         // Choice of lesser wands, 15 charges plus wand of random
         // effects: confusion, enslavement, slowing, magic dart, frost,

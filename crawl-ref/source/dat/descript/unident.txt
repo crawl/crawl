@@ -32,7 +32,7 @@ scroll
 
 A scroll of paper covered in magical writing.
 %%%%
-staff
+magical staff
 
 A stick imbued with magical properties.
 %%%%

@@ -11,7 +11,7 @@
 -- {ego} for identified branded items.
 -- { <skill> } - the relevant weapon skill for weapons.
 -- { <class> } - item class: gold, weapon, missile, armour, wand, carrion,
---               food, scroll, jewellery, potion, book, staff, orb, misc
+--               food, scroll, jewellery, potion, book, magical staff, orb, misc
 -- {stick} for items suitable for "sticks to snakes"
 -- {fruit} for fruit
 --

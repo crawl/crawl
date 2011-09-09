@@ -500,6 +500,9 @@ enum weapon_type
     WPN_SACRED_SCOURGE,
     WPN_TRISHULA,
 
+    WPN_STAFF,                         // Move this before WPN_MAX_NONBLESSED
+                                       // when major version incremented.
+
     NUM_WEAPONS,
 
 // special cases
