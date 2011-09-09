@@ -2699,6 +2699,7 @@ bool mons_is_seeking(const monster* m)
 bool mons_is_fleeing(const monster* m)
 {
     return (m->behaviour == BEH_FLEE
+            || m->behaviour == BEH_RETREAT
             || mons_class_flag(m->type, M_FLEEING));
 }
 
@@ -3099,6 +3100,20 @@ bool mons_has_ranged_attack(const monster* mon)
            || mons_has_ranged_weapon(mon);
 }
 
+bool mons_can_attack(const monster* mon)
+{
+    const actor* foe = mon->get_foe();
+    if (!foe || !mon->can_see(foe))
+        return false;
+
+    if (mons_has_los_attack(mon))
+        return true;
+
+    if (mons_has_ranged_attack(mon) && mon->see_cell_no_trans(foe->pos()))
+        return true;
+
+    return adjacent(mon->pos(), foe->pos());
+}
 
 // Use of variant:
 // 0 : She is tap dancing.

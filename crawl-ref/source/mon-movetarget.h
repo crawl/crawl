@@ -3,6 +3,7 @@
 
 struct level_exit;
 
+bool target_is_unreachable(monster* mon);
 bool try_pathfind(monster* mon);
 bool find_wall_target(monster* mon);
 void check_wander_target(monster* mon, bool isPacified = false);
