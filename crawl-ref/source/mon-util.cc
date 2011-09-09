@@ -1740,7 +1740,8 @@ int exper_value(const monster* mon)
             {
             case SPELL_PARALYSE:
             case SPELL_SMITING:
-            case SPELL_HAUNT:
+            case SPELL_SUMMON_GREATER_DEMON:
+            case SPELL_SUMMON_EYEBALLS:
             case SPELL_HELLFIRE_BURST:
             case SPELL_HELLFIRE:
             case SPELL_SYMBOL_OF_TORMENT:
@@ -1750,14 +1751,18 @@ int exper_value(const monster* mon)
                 break;
 
             case SPELL_LIGHTNING_BOLT:
+            case SPELL_CHAIN_LIGHTNING:
             case SPELL_BOLT_OF_DRAINING:
             case SPELL_VENOM_BOLT:
             case SPELL_STICKY_FLAME_RANGE:
             case SPELL_DISINTEGRATE:
-            case SPELL_SUMMON_GREATER_DEMON:
+            case SPELL_HAUNT:
+            case SPELL_SUMMON_DRAGON:
+            case SPELL_SUMMON_HORRIBLE_THINGS:
             case SPELL_BANISHMENT:
             case SPELL_LEHUDIBS_CRYSTAL_SPEAR:
             case SPELL_IRON_SHOT:
+            case SPELL_IOOD:
             case SPELL_TELEPORT_SELF:
             case SPELL_TELEPORT_OTHER:
             case SPELL_PORKALATOR:
