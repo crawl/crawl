@@ -130,6 +130,8 @@ weapon_type str_to_weapon(const std::string &str)
         return (WPN_SHORT_SWORD);
     else if (str == "falchion")
         return (WPN_FALCHION);
+    else if (str == "quarterstaff")
+        return (WPN_QUARTERSTAFF);
     else if (str == "mace")
         return (WPN_MACE);
     else if (str == "ankus")
@@ -156,6 +158,8 @@ static std::string _weapon_to_str(int weapon)
         return "short sword";
     case WPN_FALCHION:
         return "falchion";
+    case WPN_QUARTERSTAFF:
+        return "quarterstaff";
     case WPN_MACE:
         return "mace";
     case WPN_ANKUS:

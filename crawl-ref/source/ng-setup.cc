@@ -527,7 +527,8 @@ static void _give_items_skills(const newgame_def& ng)
 
         newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_LEATHER_ARMOUR,
                            ARM_ANIMAL_SKIN);
-        newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_BUCKLER, ARM_SHIELD);
+        if (ng.weapon != WPN_QUARTERSTAFF)
+            newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_BUCKLER, ARM_SHIELD);
         newgame_make_item(3, EQ_HELMET, OBJ_ARMOUR, ARM_HELMET, ARM_CAP);
 
         // Small species get darts, the others nets.
