@@ -356,7 +356,7 @@ DEPTH:  Zot
 
 NAME:   uniq_ignacio
 DEPTH:  Pan
-CHANCE: 50%
+CHANCE: 25%
 TAGS:   pan transparent extra allow_dup luniq_ignacio
 {{
   if not dgn.persist.ignacio_spawned then
