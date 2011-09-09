@@ -141,7 +141,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         return self.id == other.id
 
     def open(self):
-        logging.info("Socket opened from ip %s (fd: %s).",
+        logging.info("#%s: Socket opened from ip %s (fd%s).", self.id,
                      self.request.remote_ip, self.request.connection.stream.socket.fileno())
         global sockets
         sockets.add(self)
@@ -197,12 +197,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.timeout = None
 
         if not self.received_pong:
-            logging.info("Connection to remote ip %s timed out.", self.request.remote_ip)
+            logging.info("#%s: Connection to remote ip %s timed out.",
+                         self.id, self.request.remote_ip)
             self.close()
         else:
             if self.is_running() and self.idle_time() > max_idle_time:
-                logging.info("Stopping crawl after idle time limit for %s.",
-                             self.username)
+                logging.info("#%s: Stopping crawl after idle time limit for %s.",
+                             self.id, self.username)
                 self.stop_crawl()
 
         if not self.client_terminated:
@@ -249,9 +250,10 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.ioloop.add_handler(self.p.stderr.fileno(), self.on_stderr,
                                 self.ioloop.READ | self.ioloop.ERROR)
 
-        logging.info("Starting crawl for user %s (ip %s, fds %s,%s,%s).",
-                     self.username, self.request.remote_ip, self.p.stdin.fileno(),
-                     self.p.stdout.fileno(), self.p.stderr.fileno())
+        logging.info("#%s: Starting crawl for user %s (ip %s, fds %s,%s,%s).",
+                     self.id, self.username, self.request.remote_ip,
+                     self.p.stdin.fileno(), self.p.stdout.fileno(),
+                     self.p.stderr.fileno())
 
         self.write_message("crawl_started();")
 
@@ -266,8 +268,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def kill_crawl(self):
         if self.p:
-            logging.info("Killing crawl process after SIGHUP did nothing (user %s, ip %s).",
-                         self.username, self.request.remote_ip)
+            logging.info("#%s: Killing crawl process after SIGHUP did nothing (user %s, ip %s).",
+                         self.id, self.username, self.request.remote_ip)
             self.p.send_signal(subprocess.signal.SIGTERM)
             self.kill_timeout = None
 
@@ -334,8 +336,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def stop_watching(self):
         if self.watched_game:
-            logging.info("User %s stopped watching %s (ip: %s)",
-                         self.username, self.watched_game.username, self.request.remote_ip)
+            logging.info("#%s: User %s stopped watching %s #%s (ip: %s)",
+                         self.id, self.username, self.watched_game.username,
+                         self.watched_game.id, self.request.remote_ip)
             self.watched_game.remove_watcher(self)
             self.watched_game = None
             self.write_message("set_watching(false);")
@@ -415,12 +418,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             username, _, password = message.partition(' ')
             real_username = user_passwd_match(username, password)
             if real_username:
-                logging.info("User %s logged in from ip %s.",
-                             real_username, self.request.remote_ip)
+                logging.info("#%s: User %s logged in from ip %s.",
+                             self.id, real_username, self.request.remote_ip)
                 self.login(real_username)
             else:
-                logging.warn("Failed login for user %s from ip %s.",
-                             username, self.request.remote_ip)
+                logging.warn("#%s: Failed login for user %s from ip %s.",
+                             self.id, username, self.request.remote_ip)
                 self.write_message("login_failed();")
 
         elif message.startswith("LoginToken: "):
@@ -429,12 +432,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             token = long(token)
             if (token, username) in login_tokens:
                 del login_tokens[(token, username)]
-                logging.info("User %s logged in from ip %s (via token).",
-                             username, self.request.remote_ip)
+                logging.info("#%s: User %s logged in from ip %s (via token).",
+                             self.id, username, self.request.remote_ip)
                 self.login(username)
             else:
-                logging.warn("Wrong login token for user %s from ip %s.",
-                             username, self.request.remote_ip)
+                logging.warn("#%s: Wrong login token for user %s from ip %s.",
+                             self.id, username, self.request.remote_ip)
                 self.write_message("login_failed();")
 
         elif message == "Remember":
@@ -475,8 +478,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                        if socket.is_running()]
             if len(sockets) >= 1:
                 socket = sockets[0]
-                logging.info("User %s (ip: %s) started watching %s.",
-                             self.username, self.request.remote_ip, socket.username)
+                logging.info("#%s: User %s (ip: %s) started watching #%s %s.",
+                             self.id, self.username, self.request.remote_ip,
+                             socket.id, socket.username)
                 self.watched_game = socket
                 socket.add_watcher(self)
                 self.write_message("set_watching(true);")
@@ -504,12 +508,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             email, _, password = message.partition(" ")
             error = register_user(username, password, email)
             if error is None:
-                logging.info("Registered user: %s (ip: %s)", username,
+                logging.info("#%s: Registered user: %s (ip: %s)", self.id, username,
                              self.request.remote_ip)
                 self.login(username)
             else:
-                logging.info("Registration attempt failed for username %s: %s (ip: %s)",
-                             username, error, self.request.remote_ip)
+                logging.info("#%s: Registration attempt failed for username %s: %s (ip: %s)",
+                             self.id, username, error, self.request.remote_ip)
                 self.write_message("register_failed(" +
                                    tornado.escape.json_encode(error) + ");")
 
@@ -539,7 +543,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             if not message.startswith("^"):
                 self.last_action_time = time.time()
 
-            logging.debug("Message: %s (user: %s)", message, self.username)
+            logging.debug("#%s: Message: %s (user: %s)", self.id, message, self.username)
             self.poll_crawl()
             if self.p is not None:
                 self.p.stdin.write(message.encode("utf8"))
@@ -548,8 +552,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         try:
             super(CrawlWebSocket, self).write_message(msg)
         except:
-            logging.warn("Exception trying to send message to %s.",
-                         self.request.remote_ip, exc_info = True)
+            logging.warn("#%s: Exception trying to send message to %s.",
+                         self.id, self.request.remote_ip, exc_info = True)
             self.ws_connection._abort()
 
     def write_message_all(self, msg):
@@ -576,7 +580,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if self.timeout:
             self.ioloop.remove_timeout(self.timeout)
 
-        logging.info("Socket for ip %s closed.", self.request.remote_ip)
+        logging.info("#%s: Socket for ip %s closed.", self.id, self.request.remote_ip)
 
     def on_stderr(self, fd, events):
         if events & self.ioloop.ERROR:
@@ -588,8 +592,9 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 return
 
             if not (s.isspace() or s == ""):
-                logging.info("ERR: %s from %s: %s",
-                             self.username, self.request.remote_ip, s.strip())
+                logging.info("#%s: ERR: %s from %s: %s",
+                             self.id, self.username, self.request.remote_ip,
+                             s.strip())
 
             self.poll_crawl()
 
@@ -600,8 +605,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 msg = msg[len("ClientPrefix:"):]
                 msg = msg.strip()
                 self.client_prefix = msg
-                logging.info("User %s is using client version %s.",
-                             self.username, self.client_prefix)
+                logging.info("#%s: User %s is using client version %s.",
+                             self.id, self.username, self.client_prefix)
                 self.send_client(self.client_prefix)
         else:
             self.write_message_all(msg)
