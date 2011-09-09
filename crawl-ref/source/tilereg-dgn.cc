@@ -699,12 +699,9 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
     // Handle weapons of reaching.
     if (!mon->wont_attack() && you.see_cell_no_trans(mon->pos()))
     {
-        const coord_def delta  = you.pos() - mon->pos();
-        const int       x_dist = std::abs(delta.x);
-        const int       y_dist = std::abs(delta.y);
+        const int dist = (you.pos() - mon->pos()).abs();
 
-        if (weapon && get_weapon_brand(*weapon) == SPWPN_REACHING
-            && std::max(x_dist, y_dist) == 2)
+        if (weapon && reach_range(weapon_reach(weapon)) <= dist)
         {
             macro_buf_add_cmd(CMD_EVOKE_WIELDED);
             _add_targeting_commands(mon->pos());
@@ -1049,9 +1046,8 @@ static void _add_tip(std::string &tip, std::string text)
 
 bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
 {
-    const bool have_reach = you.weapon()
-        && get_weapon_brand(*(you.weapon())) == SPWPN_REACHING;
-    const int  attack_dist = have_reach ? 2 : 1;
+    const int attack_dist = you_weapon() ?
+        reach_range(weapon_reach(you.weapon())) : 2;
 
     std::vector<command_type> cmd;
     tip = "";
@@ -1074,8 +1070,7 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
         if (target && you.can_see(target))
         {
             has_monster = true;
-            if (abs(gc.x - you.pos().x) <= attack_dist
-                && abs(gc.y - you.pos().y) <= attack_dist)
+            if ((gc - you.pos()).abs() <= attack_dist)
             {
                 if (!cell_is_solid(gc))
                 {

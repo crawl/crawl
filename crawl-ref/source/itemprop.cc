@@ -2098,6 +2098,31 @@ launch_retval is_launched(const actor *actor, const item_def *launcher,
 }
 
 //
+// Reaching functions:
+//
+reach_type weapon_reach(const item_def &item)
+{
+    if (get_weapon_brand(item) == SPWPN_REACHING)
+        return REACH_TWO;
+    return REACH_NONE;
+}
+
+int reach_range(reach_type rt)
+{
+    switch (rt)
+    {
+    case REACH_NONE:
+        return 2;
+    case REACH_KNIGHT:
+        return 5;
+    case REACH_TWO:
+        return 8;
+    default:
+        die("invalid reaching type: %d", rt);
+    }
+}
+
+//
 // Staff/rod functions:
 //
 bool item_is_rod(const item_def &item)
