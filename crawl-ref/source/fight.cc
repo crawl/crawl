@@ -4375,10 +4375,10 @@ int melee_attack::player_calc_base_weapon_damage()
         damage = property(*weapon, PWPN_DAMAGE);
     }
 
-    // Staves can be wielded with a worn shield, but are much less
-    // effective.
+    // Even large staves can be wielded with a worn shield, but they
+    // are much less effective.
     if (shield && weapon_skill(*weapon) == SK_STAVES
-        && hands_reqd(*weapon, you.body_size()) == HANDS_HALF)
+        && cmp_weapon_size(*weapon, SIZE_LARGE) >= 0)
     {
         damage /= 2;
     }
