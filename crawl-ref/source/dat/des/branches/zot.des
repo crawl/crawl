@@ -120,7 +120,7 @@ SUBST:  D = +, "' = .
 MONS:   patrolling nonbase draconian
 MONS:   dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
 MONS:   w:20 patrolling base draconian / nothing
-MONS:   base draconian ; glaive ego:reaching | halberd ego:reaching
+MONS:   base draconian ; glaive | halberd
 MAP
 '''''''''''''''''''''''''''''''''''''''''
 'wwwwwwwww'''''''''''''''''''''wwwwwwwww'

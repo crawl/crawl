@@ -9,7 +9,7 @@ function gnoll_sergeant (e)
   e.mons("gnoll name:sergeant n_suf hd:4 \
           col:cyan tile:mons_gnoll_sergeant; \
           potion of healing | potion of heal wounds . \
-          spear ego:reaching w:2 good_item | spear good_item . \
+          spear w:2 good_item | spear good_item . \
           ring mail | scale mail . buckler | shield")
 end
 

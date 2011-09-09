@@ -411,7 +411,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose(WPN_WHIP,    WPN_WHIP,   WPN_SPEAR,
                                        WPN_HALBERD, WPN_GLAIVE, -1);
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_REACHING);
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
         item.plus  += -2 + random2(4);
         item.plus2 += -1 + random2(2);
         break;
@@ -744,16 +744,8 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.sub_type = random_choose_weighted(100, WPN_TRIDENT,
                                                15, WPN_DEMON_TRIDENT,
                                                0);
-        if (coinflip())
+        if (!one_chance_in(3))
             level = MAKE_GOOD_ITEM;
-        else if (coinflip())
-        {
-            // Per dpeg request :)
-            item.special = SPWPN_REACHING;
-            item.plus = random_range(-1, 6, 2);
-            item.plus2 = random_range(-1, 5, 2);
-            force_item = true;
-        }
         break;
 
 

@@ -311,10 +311,10 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
         DAMV_CHOPPING, 2 },
 
     // Polearms
-    { WPN_SPEAR,             "spear",               7,  4, 11,  50,  3,
+    { WPN_SPEAR,             "spear",               6,  4, 11,  50,  3,
         SK_POLEARMS,     HANDS_HALF,   SIZE_SMALL,  MI_NONE, true,
         DAMV_PIERCING, 10 },
-    { WPN_TRIDENT,           "trident",            10,  3, 13, 160,  4,
+    { WPN_TRIDENT,           "trident",             9,  3, 13, 160,  4,
         SK_POLEARMS,     HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING, 10 },
     { WPN_HALBERD,           "halberd",            13, -3, 16, 200,  5,
@@ -323,10 +323,10 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_SCYTHE,            "scythe",             14, -4, 20, 220,  7,
         SK_POLEARMS,     HANDS_TWO,    SIZE_LARGE,  MI_NONE, false,
         DAMV_SLICING, 10 },
-    { WPN_DEMON_TRIDENT,     "demon trident",      13,  1, 13, 160,  4,
+    { WPN_DEMON_TRIDENT,     "demon trident",      12,  1, 13, 160,  4,
         SK_POLEARMS,     HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING, 2 },
-    { WPN_TRISHULA,          "trishula",           14,  0, 13, 160,  4,
+    { WPN_TRISHULA,          "trishula",           13,  0, 13, 160,  4,
         SK_POLEARMS,     HANDS_HALF,   SIZE_MEDIUM, MI_NONE, false,
         DAMV_PIERCING, 0 },
     { WPN_GLAIVE,            "glaive",             15, -3, 18, 200,  6,
@@ -1900,10 +1900,8 @@ int weapon_ev_bonus(const item_def &wpn, int skill, size_type body, int dex,
     int ret = 0;
 
     // Note: ret currently measured in halves (see skill factor).
-    if (is_whip_type(wpn.sub_type))
+    if (is_whip_type(wpn.sub_type) || weapon_skill(wpn) == SK_POLEARMS)
         ret = 3 + (dex / 5);
-    else if (weapon_skill(wpn) == SK_POLEARMS)
-        ret = 2 + (dex / 5);
 
     // Weapons of reaching are naturally a bit longer/flexier.
     if (!hide_hidden || item_type_known(wpn))
@@ -2102,6 +2100,8 @@ launch_retval is_launched(const actor *actor, const item_def *launcher,
 //
 reach_type weapon_reach(const item_def &item)
 {
+    if (weapon_skill(item) == SK_POLEARMS)
+        return REACH_TWO;
     if (get_weapon_brand(item) == SPWPN_REACHING)
         return REACH_TWO;
     return REACH_NONE;

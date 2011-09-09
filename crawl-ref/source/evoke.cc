@@ -739,7 +739,7 @@ bool evoke_item(int slot)
     case OBJ_WEAPONS:
         ASSERT(wielded);
 
-        if (get_weapon_brand(item) == SPWPN_REACHING)
+        if (weapon_reach(item))
         {
             if (_reaching_weapon_attack(item))
             {
