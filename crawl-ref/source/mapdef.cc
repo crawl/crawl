@@ -3904,6 +3904,11 @@ void mons_list::get_zombie_type(std::string s, mons_spec &spec) const
         spec.mid = MONS_PROGRAM_BUG;
         return;
     }
+    if (mod == 2 && mons_class_flag(spec.monbase, M_NO_SKELETON))
+    {
+        spec.mid = MONS_PROGRAM_BUG;
+        return;
+    }
 
     spec.mid = zombie_montypes[mod][zombie_size - 1];
 }
