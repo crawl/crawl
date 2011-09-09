@@ -12,6 +12,7 @@
 #include "env.h"
 #include "food.h"
 #include "initfile.h"
+#include "itemname.h"
 #include "itemprop.h"
 #include "items.h"
 #include "libutil.h"
@@ -420,7 +421,16 @@ LUARET1(you_num_runes, number, runes_in_pack())
 
 static int _you_have_rune(lua_State *ls)
 {
-    int which_rune = luaL_checkint(ls, 1);
+    int which_rune = NUM_RUNE_TYPES;
+    if (lua_gettop(ls) >= 1 && lua_isnumber(ls, 1))
+        which_rune = luaL_checkint(ls, 1);
+    else if (lua_gettop(ls) >= 1 && lua_isstring(ls, 1))
+    {
+        const char *spec = lua_tostring(ls, 1);
+        for (which_rune = 0; which_rune < NUM_RUNE_TYPES; which_rune++)
+            if (!strcasecmp(spec, rune_type_name(which_rune)))
+                break;
+    }
     bool have_rune = false;
     if (which_rune >= 0 && which_rune < NUM_RUNE_TYPES)
         have_rune = you.runes[which_rune];
