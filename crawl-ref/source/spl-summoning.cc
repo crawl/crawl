@@ -2249,53 +2249,75 @@ spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
     return SPRET_SUCCESS;
 }
 
-spret_type abjuration(int pow, bool fail)
+static int _abjuration(int pow, monster *mon)
 {
-    fail_check();
-    mpr("Send 'em back where they came from!");
-
     // Scale power into something comparable to summon lifetime.
     const int abjdur = pow * 12;
 
-    for (monster_iterator mon(you.get_los()); mon; ++mon)
+    // XXX: make this a prompt
+    if (mon->wont_attack())
+        return (false);
+
+    int duration;
+    if (mon->is_summoned(&duration))
     {
-        if (mon->wont_attack())
-            continue;
+        int sockage = std::max(fuzz_value(abjdur, 60, 30), 40);
+        dprf("%s abj: dur: %d, abj: %d",
+             mon->name(DESC_PLAIN).c_str(), duration, sockage);
 
-        int duration;
-        if (mon->is_summoned(&duration))
+        bool shielded = false;
+        // TSO and Trog's abjuration protection.
+        if (mons_is_god_gift(mon, GOD_SHINING_ONE))
         {
-            int sockage = std::max(fuzz_value(abjdur, 60, 30), 40);
-            dprf("%s abj: dur: %d, abj: %d",
-                 mon->name(DESC_PLAIN).c_str(), duration, sockage);
-
-            bool shielded = false;
-            // TSO and Trog's abjuration protection.
-            if (mons_is_god_gift(*mon, GOD_SHINING_ONE))
+            sockage = sockage * (30 - mon->hit_dice) / 45;
+            if (sockage < duration)
             {
-                sockage = sockage * (30 - mon->hit_dice) / 45;
-                if (sockage < duration)
-                {
-                    simple_god_message(" protects a fellow warrior from your evil magic!",
-                                       GOD_SHINING_ONE);
-                    shielded = true;
-                }
+                simple_god_message(" protects a fellow warrior from your evil magic!",
+                                   GOD_SHINING_ONE);
+                shielded = true;
             }
-            else if (mons_is_god_gift(*mon, GOD_TROG))
-            {
-                sockage = sockage * 8 / 15;
-                if (sockage < duration)
-                {
-                    simple_god_message(" shields an ally from your puny magic!",
-                                       GOD_TROG);
-                    shielded = true;
-                }
-            }
-
-            mon_enchant abj = mon->get_ench(ENCH_ABJ);
-            if (!mon->lose_ench_duration(abj, sockage) && !shielded)
-                simple_monster_message(*mon, " shudders.");
         }
+        else if (mons_is_god_gift(mon, GOD_TROG))
+        {
+            sockage = sockage * 8 / 15;
+            if (sockage < duration)
+            {
+                simple_god_message(" shields an ally from your puny magic!",
+                                   GOD_TROG);
+                shielded = true;
+            }
+        }
+
+        mon_enchant abj = mon->get_ench(ENCH_ABJ);
+        if (!mon->lose_ench_duration(abj, sockage) && !shielded)
+            simple_monster_message(mon, " shudders.");
     }
+
+    return (true);
+}
+
+spret_type cast_abjuration(int pow, monster *mon, bool fail)
+{
+    fail_check();
+    if (mon)
+    {
+        mpr("Send 'em back where they came from!");
+        _abjuration(pow, mon);
+    }
+    else
+        canned_msg(MSG_NOTHING_HAPPENS);
+
+    return SPRET_SUCCESS;
+}
+
+spret_type cast_mass_abjuration(int pow, bool fail)
+{
+    fail_check();
+    mpr("Send 'em back where they came from!");
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    {
+        _abjuration(pow, *mi);
+    }
+
     return SPRET_SUCCESS;
 }

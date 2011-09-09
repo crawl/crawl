@@ -422,7 +422,7 @@ static bool _makhleb_retribution()
     {
         mgen_data temp =
             mgen_data::hostile_at(random_mons(MONS_EXECUTIONER, MONS_GREEN_DEATH,
-                                  MONS_BLUE_DEATH, MONS_BALRUG, MONS_CACODEMON, -1),
+                                  MONS_BLIZZARD_DEMON, MONS_BALRUG, MONS_CACODEMON, -1),
                                   "the fury of Makhleb",
                                   true, 0, 0, you.pos(), 0, god);
 
@@ -889,7 +889,7 @@ static bool _lugonu_retribution()
     {
         mgen_data temp =
             mgen_data::hostile_at(random_mons(MONS_GREEN_DEATH,
-                                  MONS_BLUE_DEATH, MONS_BALRUG, -1),
+                                  MONS_BLIZZARD_DEMON, MONS_BALRUG, -1),
                                   "the touch of Lugonu",
                                   true, 0, 0, you.pos(), 0, god);
 

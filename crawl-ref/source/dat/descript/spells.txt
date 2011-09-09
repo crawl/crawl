@@ -1,7 +1,7 @@
 %%%%
 Abjuration
 
-This spell attempts to send hostile summoned creatures to the place whence they came, or at least shorten their stay in the caster's locality.
+This spell attempts to send the targeted hostile summoned creature to the place whence it came, or at least shorten its stay in the caster's locality.
 %%%%
 Agony
 
@@ -333,6 +333,10 @@ This spell hurls a small bolt of magical energy. It never misses.
 Malign Gateway
 
 This spell tears a gash in reality, creating a self-sustained but thankfully temporary portal to an unknown, tainted otherworld. Which dastardly denizens of this place might choose to poke their tentacled appendages through, nobody knows, but certainly nobody would want to be nearby when it happens.
+%%%%
+Mass Abjuration
+
+This spell attempts to send all hostile summoned creatures in sight to the place whence they came, or at least shorten their stay in the caster's locality.
 %%%%
 Mass Confusion
 

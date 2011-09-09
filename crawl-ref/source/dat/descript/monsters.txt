@@ -201,7 +201,7 @@ An ancient and strangely serene demon. It regards you coldly from the huge glowi
 %%%%
 Lorocyproca
 
-A tall and gaunt figure, draped in long robes which flow as if alive.
+A tall and gaunt figure, draped in long robes which flow as if alive. It thirsts for magical energies.
 %%%%
 Louise
 
@@ -441,9 +441,9 @@ blink frog
 
 A weird-looking frog, constantly blinking in and out of reality.
 %%%%
-Blue Death
+blizzard demon
 
-A blue greater demon, capable of conjuring great hordes of creatures into existence.
+A greater demon, wreathed in snow and lightning.
 %%%%
 blue devil
 
@@ -1597,7 +1597,7 @@ A wisp of unliving shadow, drifting on the edge of vision.
 %%%%
 shadow demon
 
-A mysterious demonic figure, constantly blurring into multiple shadows of itself.
+A mysterious demonic figure, constantly blurring into multiple shadows of itself. It weaves creatures into existence from the very shadows surrounding it.
 %%%%
 shadow dragon
 
