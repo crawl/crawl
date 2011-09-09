@@ -6,6 +6,7 @@
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
+#include "itemprop.h"
 #include "libutil.h"
 #include "player.h"
 #include "terrain.h"
@@ -135,7 +136,7 @@ bool targetter_reach::valid_aim(coord_def a)
 
     int dist = (origin - a).abs();
 
-    if (dist > (range == REACH_TWO ? 8 : range == REACH_KNIGHT ? 5 : 2))
+    if (dist > reach_range(range))
         return notify_fail("You can't reach that far!");
 
     return true;

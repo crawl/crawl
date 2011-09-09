@@ -6664,13 +6664,13 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 
 reach_type monster::reach_range() const
 {
-    const item_def *wpn = primary_weapon();
     const mon_attack_def attk(mons_attack_spec(this, 0));
-
-    if (wpn && get_weapon_brand(*wpn) == SPWPN_REACHING)
-        return (REACH_TWO);
     if (attk.flavour == AF_REACH && attk.damage)
         return (REACH_TWO);
+
+    const item_def *wpn = primary_weapon();
+    if (wpn)
+        return weapon_reach(*wpn);
     return (REACH_NONE);
 }
 
