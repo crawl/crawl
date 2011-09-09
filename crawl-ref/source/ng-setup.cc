@@ -422,26 +422,6 @@ static void _newgame_clear_item(int slot)
             you.equip[i] = -1;
 }
 
-static void _give_wand(const newgame_def& ng)
-{
-    bool is_rod;
-    int wand = start_to_wand(ng.wand, is_rod);
-    ASSERT(wand != -1);
-
-    if (is_rod)
-        make_rod(you.inv[1], STAFF_STRIKING, 8);
-    else
-    {
-        // 1 wand of random effects and one chosen lesser wand
-        const wand_type choice = static_cast<wand_type>(wand);
-        const int ncharges = 15;
-        newgame_make_item(1, EQ_NONE, OBJ_WANDS, choice,
-                          -1, 1, ncharges, 0);
-        newgame_make_item(2, EQ_NONE, OBJ_WANDS, WAND_RANDOM_EFFECTS,
-                          -1, 1, ncharges, 0);
-    }
-}
-
 static void _update_weapon(const newgame_def& ng)
 {
     ASSERT(ng.weapon != NUM_WEAPONS);
@@ -496,7 +476,6 @@ static void _update_weapon(const newgame_def& ng)
 static void _give_items_skills(const newgame_def& ng)
 {
     int weap_skill = 0;
-    int curr = 0;
 
     switch (you.char_class)
     {
@@ -968,25 +947,22 @@ static void _give_items_skills(const newgame_def& ng)
         break;
 
     case JOB_ARTIFICER:
-        // Equipment. Quarterstaff, and armour or robe.
+        // Equipment. Staff, wands, and armour or robe.
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_STAFF);
 
-        // Choice of lesser wands, 15 charges plus wand of random
-        // effects: confusion, enslavement, slowing, magic dart, frost,
-        // flame; OR a rod of striking, 8 charges and no random effects.
-        _give_wand(ng);
+        newgame_make_item(1, EQ_NONE, OBJ_WANDS, WAND_FLAME,
+                           -1, 1, 15, 0);
+        newgame_make_item(2, EQ_NONE, OBJ_WANDS, WAND_ENSLAVEMENT,
+                           -1, 1, 15, 0);
+        newgame_make_item(3, EQ_NONE, OBJ_WANDS, WAND_RANDOM_EFFECTS,
+                           -1, 1, 15, 0);
 
-        curr = 2;
-
-        if (!item_is_rod(you.inv[1]))
-            curr++;
-
-        newgame_make_item(curr, EQ_BODY_ARMOUR, OBJ_ARMOUR,
+        newgame_make_item(4, EQ_BODY_ARMOUR, OBJ_ARMOUR,
                            ARM_LEATHER_ARMOUR, ARM_ROBE);
 
         // Skills
-        you.skills[SK_EVOCATIONS]  = 4;
-        you.skills[SK_TRAPS_DOORS] = 3;
+        you.skills[SK_EVOCATIONS]  = 3;
+        you.skills[SK_TRAPS_DOORS] = 2;
         you.skills[SK_DODGING]     = 2;
         you.skills[SK_FIGHTING]    = 1;
         you.skills[SK_STAVES]      = 1;

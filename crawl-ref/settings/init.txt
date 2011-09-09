@@ -61,7 +61,6 @@
 # remember_name = false
 # weapon = (short sword | falchion | quarterstaff | hand axe | spear | mace
 #           | trident | unarmed | random)
-# wand = (enslavement | confusion | magic darts | frost | flame | striking | random)
 # species = (Human |...| Vampire | random)
 # job     = (Fighter |...| Wanderer | random)
 # random_pick = true

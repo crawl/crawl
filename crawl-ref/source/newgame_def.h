@@ -3,20 +3,6 @@
 
 #include "itemprop-enum.h"
 
-enum startup_wand_type
-{
-    SWT_ENSLAVEMENT,
-    SWT_CONFUSION,
-    SWT_MAGIC_DARTS,
-    SWT_FROST,
-    SWT_FLAME,
-    SWT_STRIKING, // actually a rod
-    NUM_STARTUP_WANDS,
-
-    SWT_NO_SELECTION = NUM_STARTUP_WANDS,
-    SWT_RANDOM,
-};
-
 // Either a character definition, with real species, job, and
 // weapon, book, wand as appropriate.
 // Or a character choice, with possibly random/viable entries.
@@ -36,7 +22,6 @@ struct newgame_def
     job_type job;
 
     weapon_type weapon;
-    startup_wand_type wand;
 
     // Only relevant for character choice, where the entire
     // character was randomly picked in one step.

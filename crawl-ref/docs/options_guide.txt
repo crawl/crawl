@@ -14,7 +14,7 @@ The contents of this text are:
 0-c     Options and how to set them.
 0-d     Aliases and variables.
 1-  Starting Screen.
-                name, remember_name, weapon, wand, species, background,
+                name, remember_name, weapon, species, background,
                 random_pick, good_random, restart_after_game,
                 default_manual_training
 2-  File System and Sound.
@@ -278,11 +278,6 @@ weapon = (short sword | falchion | quarterstaff | hand axe | spear | mace
         and unarmed is restricted to races with claws. The standard weapon
         prompt will be shown if an illegal choice for the selected
         background is specified.
-
-wand = (enslavement | confusion | magic darts | frost | flame | striking | random)
-        Artificers can start with either a wand of random effects and another
-        wand out of enslavement, confusion, magic darts, frost, or flame, or
-        with a rod of striking.
 
 species = (Human |...| Vampire | random)
         The usual abbreviations (Hu, HE, etc.) work.

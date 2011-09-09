@@ -13,7 +13,7 @@ Arcane Marksmen carry ranged weapons, and use magic to make their foes more vuln
 %%%%
 Artificer
 
-Artificers start with a choice of magical devices and are competent at using such tools.
+Artificers start with a few magical devices and are competent at using such tools.
 %%%%
 Assassin
 
