@@ -204,9 +204,11 @@ bool kbhit()
 
 void console_startup()
 {
+    tiles.resize();
 }
 
 void console_shutdown()
 {
+    tiles.shutdown();
 }
 #endif // #ifdef USE_TILE_WEB
