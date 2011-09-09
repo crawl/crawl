@@ -524,7 +524,7 @@ TILE:   c = dngn_stone_dark
 SUBST:  T=A
 SUBST:  . = ~.........
 SUBST:  ; = ~...
-KMONS:  3 = shadow demon
+KMONS:  3 = shadow wraith
 KMONS:  z = skeletal warrior / small zombie / nothing
 KMONS:  D = shadow dragon
 KMONS:  2 = reaper / soul eater
@@ -1272,7 +1272,7 @@ SUBST:   A = %
 SUBST:   B = x
 NSUBST:  " = 1:= / *:x
 KFEAT:   % = .
-KMONS:   % = soul eater / shadow demon / shadow wraith / nothing w:20
+KMONS:   % = soul eater / shadow wraith / nothing
 KITEM:   % = | / $
 SUBST:   4 = 3333444455566778
 : tar_setup(_G)

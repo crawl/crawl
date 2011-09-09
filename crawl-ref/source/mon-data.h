@@ -4676,7 +4676,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_SOUL_EATER, '3', BLUE, "soul eater",
+    MONS_SOUL_EATER, '3', MAGENTA, "soul eater",
     M_SEE_INVIS,
     MR_RES_POISON | MR_RES_COLD,
     0, 12, MONS_SOUL_EATER, MONS_SOUL_EATER, MH_DEMONIC, -10,
@@ -4737,18 +4737,6 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_SHADOW_DEMON, '3', MAGENTA, "shadow demon",
-    M_SEE_INVIS | M_INVIS,
-    MR_RES_POISON | mrd(MR_RES_COLD, 2),
-    0, 12, MONS_SHADOW_DEMON, MONS_SHADOW_DEMON, MH_DEMONIC, -7,
-    { {AT_HIT, AF_PLAIN, 21}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
-    { 6, 3, 5, 0 },
-    7, 12, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_CROAK,
-    I_HIGH, HT_LAND, FL_NONE, 11, DEFAULT_ENERGY,
-    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_SMALL
-},
-
-{
     MONS_CHAOS_SPAWN, '3', ETC_RANDOM, "chaos spawn",
     M_SEE_INVIS,
     MR_NO_FLAGS,
@@ -4760,7 +4748,19 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_BIG
 },
 
-// reaper etc. ('2')
+// greater demons ('2')
+
+{
+    MONS_SHADOW_DEMON, '2', MAGENTA, "shadow demon",
+    M_SPELLCASTER | M_SEE_INVIS,
+    MR_RES_POISON | mrd(MR_RES_COLD, 2),
+    0, 12, MONS_SHADOW_DEMON, MONS_SHADOW_DEMON, MH_DEMONIC, -7,
+    { {AT_HIT, AF_PLAIN, 21}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    { 10, 3, 5, 0 },
+    7, 12, MST_SHADOW_DEMON, CE_NOCORPSE, Z_NOZOMBIE, S_CROAK,
+    I_HIGH, HT_LAND, FL_NONE, 11, DEFAULT_ENERGY,
+    MONUSE_OPEN_DOORS, MONEAT_NOTHING, SIZE_SMALL
+},
 
 {
     MONS_GREEN_DEATH, '2', GREEN, "Green Death",
@@ -4860,7 +4860,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_TORMENTOR, '2', MAGENTA, "tormentor",
+    MONS_TORMENTOR, '2', LIGHTMAGENTA, "tormentor",
     M_SPELLCASTER | M_SPEAKS,
     MR_RES_POISON | MR_RES_FIRE,
     0, 10, MONS_TORMENTOR, MONS_TORMENTOR, MH_DEMONIC, -6,
