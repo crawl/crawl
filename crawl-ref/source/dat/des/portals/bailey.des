@@ -108,23 +108,23 @@ function hard_axe_fighter(e)
 end
 
 -- Polearms.
-function orc_with_reaching(e)
+function orc_with_polearm(e)
   e.mons("orc ; \
-          spear ego:reaching      | spear ego:reaching race:orcish |\
-          trident ego:reaching    | trident ego:reaching race:orcish |\
-          halberd ego:reaching    | halberd ego:reaching race:orcish .\
+          spear      | spear race:orcish |\
+          trident    | trident race:orcish |\
+          halberd    | halberd race:orcish .\
           scale mail race:orcish  | scale mail |\
           ring mail race:orcish   | ring mail |\
           splint mail race:orcish | splint mail")
 end
 
-function orc_warrior_with_reaching(e)
+function orc_warrior_with_polearm(e)
   e.mons("orc warrior ; \
-          spear w:5 ego:reaching    | spear w:5 ego:reaching race:orcish |\
-          trident w:5 ego:reaching  | trident w:5 ego:reaching race:orcish |\
-          halberd ego:reaching      | halberd ego:reaching race:orcish |\
-          glaive ego:reaching       | glaive ego:reaching race:orcish |\
-          bardiche w:1 ego:reaching | bardiche w:1 ego:reaching race:orcish .\
+          spear w:5    | spear w:5 race:orcish |\
+          trident w:5  | trident w:5 race:orcish |\
+          halberd      | halberd race:orcish |\
+          glaive       | glaive race:orcish |\
+          bardiche w:1 | bardiche w:1 race:orcish .\
           scale mail race:orcish    | scale mail |\
           ring mail race:orcish     | ring mail |\
           splint mail race:orcish   | splint mail |\
@@ -133,12 +133,12 @@ function orc_warrior_with_reaching(e)
           crystal plate mail w:1")
 end
 
-function orc_knight_with_reaching(e)
+function orc_knight_with_polearm(e)
   e.mons("orc knight ; \
-          trident w:5 ego:reaching  | trident w:5 ego:reaching race:orcish |\
-          halberd ego:reaching      | halberd ego:reaching race:orcish |\
-          glaive ego:reaching       | glaive ego:reaching race:orcish |\
-          bardiche w:1 ego:reaching | bardiche w:1 ego:reaching race:orcish .\
+          trident w:5  | trident w:5 race:orcish |\
+          halberd      | halberd race:orcish |\
+          glaive       | glaive race:orcish |\
+          bardiche w:1 | bardiche w:1 race:orcish .\
           ring mail race:orcish     | ring mail |\
           splint mail race:orcish   | splint mail |\
           banded mail race:orcish   | banded mail |\
@@ -147,11 +147,11 @@ function orc_knight_with_reaching(e)
 end
 
 -- defined but not used, since the depth for the current entry vaults is 7-16
-function orc_warlord_with_reaching(e)
+function orc_warlord_with_polearm(e)
   e.mons("orc warlord ; \
-          halberd ego:reaching      | halberd ego:reaching race:orcish |\
-          glaive ego:reaching       | glaive ego:reaching race:orcish |\
-          bardiche w:1 ego:reaching | bardiche w:1 ego:reaching race:orcish . \
+          halberd      | halberd race:orcish |\
+          glaive       | glaive race:orcish |\
+          bardiche w:1 | bardiche w:1 race:orcish . \
           splint mail race:orcish   | splint mail |\
           banded mail race:orcish   | banded mail |\
           plate mail race:orcish    | plate mail |\
@@ -245,8 +245,8 @@ MONS:   goblin ; hand axe ego:returning / hobgoblin ; hand axe ego:returning /\
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
 MONS:   goblin ; spear / hobgoblin ; spear / orc ; spear race:orcish
-MONS:   goblin ; spear ego:reaching / hobgoblin ; spear ego:reaching /\
-        orc ; spear race:orcish ego:reaching
+MONS:   goblin ; spear / hobgoblin ; spear /\
+        orc ; spear race:orcish
 :   bailey_portal_polearm(_G)
 : end
 SUBST: 1 = 122
@@ -270,7 +270,7 @@ CHANCE: 5%
 MONS: goblin ; hand axe ego:returning
 :   bailey_portal_axe(_G)
 : elseif rnd == 1 then
-MONS: goblin ; spear ego:reaching
+MONS: goblin ; spear
 :   bailey_portal_polearm(_G)
 : end
 MAP
@@ -465,7 +465,7 @@ ORIENT: encompass
 TAGS:   bailey_axe no_rotate
 MONS:   generate_awake kobold ; hand axe ego:returning /\
         generate_awake goblin ; hand axe ego:returning
-MONS:   gnoll ; halberd ego:reaching | halberd ego:electrocution
+MONS:   gnoll ; halberd | halberd ego:electrocution
 MONS:   orc warrior / orc knight
 NSUBST: e = 1:e / *:d
 ITEM:   potion of healing / potion of heal wounds / potion of magic / nothing /\
@@ -741,9 +741,9 @@ TAGS:   bailey_polearm no_rotate
 LFLAGS: no_tele_control
 NSUBST: D = 1:= / *:c
 NSUBST: E = 1:= / *:c
-: orc_with_reaching(_G)
-: orc_warrior_with_reaching(_G)
-: orc_knight_with_reaching(_G)
+: orc_with_polearm(_G)
+: orc_warrior_with_polearm(_G)
+: orc_knight_with_polearm(_G)
 SUBST:  2 = 223.
 SUBST:  1 = 1 2:1 .
 ITEM:   good_item crystal plate mail / good_item plate mail race:orcish /\
@@ -796,9 +796,9 @@ NAME:   bailey_polearm_2
 ORIENT: encompass
 TAGS:   bailey_polearm no_rotate
 MONS:   orc warrior ; crossbow . bolt w:5 / orc ; crossbow . bolt
-: orc_with_reaching(_G)
-: orc_warrior_with_reaching(_G)
-: orc_knight_with_reaching(_G)
+: orc_with_polearm(_G)
+: orc_warrior_with_polearm(_G)
+: orc_knight_with_polearm(_G)
 MONS:   orc knight
 SUBST:  2 = 23
 NSUBST: 4 = 1:4 / *:3
@@ -911,8 +911,8 @@ ENDMAP
 
 ############################################################################
 # Surrounded.
-# This one uses both missiles and weapons of reaching, with more emphasis
-# on the latter. Loot is approximately six good items.
+# This one uses both missiles and polearms, with more emphasis on the
+# latter.  Loot is approximately six good items.
 #
 NAME:   bailey_polearm_4
 WEIGHT: 10
@@ -920,10 +920,10 @@ ORIENT: encompass
 TAGS:   bailey_polearm no_rotate no_item_gen no_monster_gen
 LFLAGS: no_tele_control
 ITEM:   any good_item / nothing
-MONS:   orc warrior ; crossbow . bolt | halberd ego:reaching
-: orc_with_reaching(_G)
-: orc_warrior_with_reaching(_G)
-: orc_knight_with_reaching(_G)
+MONS:   orc warrior ; crossbow . bolt | halberd
+: orc_with_polearm(_G)
+: orc_warrior_with_polearm(_G)
+: orc_knight_with_polearm(_G)
 SUBST:  1=112, 2=23, 3=34
 : bailey_setup(_G)
 epilogue{{
@@ -949,7 +949,7 @@ ENDMAP
 # Infantry
 #
 # You will have to battle some battalions where the monsters in the back
-# will generally have reaching weapons.
+# will generally have polearms.
 # Loot comes in three stages: money; potions useful in battle; scrolls
 # useful in battle. No special weapons and armours.
 #
@@ -972,9 +972,9 @@ SUBST:  4 = 2:5 3   4:5
 SUBST:  5 = 3:5 4
 MONS:   orc warrior ; spear w:5 | trident w:5 | halberd | hand axe | war axe /\
         orc w:110   ; spear w:5 | trident w:5 | halberd | hand axe | war axe
-: orc_with_reaching(_G)
-: orc_warrior_with_reaching(_G)
-: orc_knight_with_reaching(_G)
+: orc_with_polearm(_G)
+: orc_warrior_with_polearm(_G)
+: orc_knight_with_polearm(_G)
 : bailey_setup(_G)
 epilogue{{
 bailey_milestone(_G)

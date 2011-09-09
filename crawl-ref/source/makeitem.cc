@@ -1450,9 +1450,6 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
 
             if (one_chance_in(5))
                 rc = SPWPN_DRAGON_SLAYING;
-
-            if (one_chance_in(3))
-                rc = SPWPN_REACHING;
             break;
 
         case WPN_SLING:
@@ -1523,15 +1520,14 @@ static brand_type _determine_weapon_brand(const item_def& item, int item_level)
             if (one_chance_in(25))
                 rc = SPWPN_ANTIMAGIC;
 
-            if (one_chance_in(5))       // 4.9%, 7.3% blades
+            if (one_chance_in(5))       // 4.9% whips, 7.3% rest
                 rc = SPWPN_VAMPIRICISM;
 
-            if (one_chance_in(10))      // 2.7%, 4.0% blades
+            if (one_chance_in(10))      // 2.7% whips, 4.0% rest
                 rc = SPWPN_PAIN;
 
-            if (one_chance_in(3)        // 13.6%, 0% blades
-                && (item.sub_type == WPN_DEMON_WHIP
-                    || item.sub_type == WPN_DEMON_TRIDENT))
+            if (one_chance_in(3)        // 13.6% of whips
+                && item.sub_type == WPN_DEMON_WHIP)
             {
                 rc = SPWPN_REACHING;
             }
@@ -1590,6 +1586,12 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
 
     if (weapon_skill(OBJ_WEAPONS, type) != SK_POLEARMS
         && brand == SPWPN_DRAGON_SLAYING)
+    {
+        return (false);
+    }
+
+    if (weapon_skill(OBJ_WEAPONS, type) == SK_POLEARMS
+        && brand == SPWPN_REACHING)
     {
         return (false);
     }
