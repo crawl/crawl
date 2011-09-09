@@ -178,26 +178,6 @@ static std::string _weapon_to_str(int weapon)
     }
 }
 
-static startup_wand_type _str_to_wand(const std::string& str)
-{
-    if (str == "enslavement")
-        return (SWT_ENSLAVEMENT);
-    if (str == "confusion")
-        return (SWT_CONFUSION);
-    if (str == "magic darts" || str == "magicdarts")
-        return (SWT_MAGIC_DARTS);
-    if (str == "frost" || str == "cold" || str == "ice")
-        return (SWT_FROST);
-    if (str == "flame" || str == "fire")
-        return (SWT_FLAME);
-    if (str == "striking")
-        return (SWT_STRIKING);
-    if (str == "random")
-        return (SWT_RANDOM);
-
-    return (SWT_NO_SELECTION);
-}
-
 // Summon types can be any of mon_summon_type (enum.h), or a relevant summoning
 // spell.
 int str_to_summon_type(const std::string &str)
@@ -218,28 +198,6 @@ int str_to_summon_type(const std::string &str)
         return (MON_SUMM_AID);
 
     return (spell_by_name(str));
-}
-
-static std::string _wand_to_str(int weapon)
-{
-    switch (weapon)
-    {
-    case SWT_ENSLAVEMENT:
-        return "enslavement";
-    case SWT_CONFUSION:
-        return "confusion";
-    case SWT_MAGIC_DARTS:
-        return "magic darts";
-    case SWT_FROST:
-        return "frost";
-    case SWT_FLAME:
-        return "flame";
-    case SWT_STRIKING:
-        return "striking";
-    case SWT_RANDOM:
-    default:
-        return "random";
-    }
 }
 
 static fire_type _str_to_fire_types(const std::string &str)
@@ -1417,8 +1375,6 @@ static void write_newgame_options(const newgame_def& prefs, FILE *f)
         fprintf(f, "background = %s\n", _job_to_str(prefs.job).c_str());
     if (prefs.weapon != WPN_UNKNOWN)
         fprintf(f, "weapon = %s\n", _weapon_to_str(prefs.weapon).c_str());
-    if (prefs.wand != SWT_NO_SELECTION)
-        fprintf(f, "wand = %s\n", _wand_to_str(prefs.wand).c_str());
     fprintf(f, "fully_random = %s\n", prefs.fully_random ? "yes" : "no");
 }
 #endif // !DISABLE_STICKY_STARTUP_OPTIONS
@@ -2360,11 +2316,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         // Choose this weapon for backgrounds that get choice.
         game.weapon = str_to_weapon(field);
-    }
-    else if (key == "wand")
-    {
-        // Choose this wand for backgrounds that get choice.
-        game.wand = _str_to_wand(field);
     }
     BOOL_OPTION_NAMED("fully_random", game.fully_random);
     else if (key == "fire_items_start")
