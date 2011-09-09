@@ -490,6 +490,16 @@ IDEF(weap_skill)
     return (2);
 }
 
+IDEF(reach_range)
+{
+    if (!item || !item->defined())
+        return (0);
+
+    reach_type rt = weapon_reach(*item);
+    lua_pushnumber(ls, reach_range(rt));
+    return (1);
+}
+
 IDEF(is_ranged)
 {
     if (!item || !item->defined())
@@ -983,6 +993,7 @@ static ItemAccessor item_attrs[] =
     { "equipped",          l_item_equipped },
     { "equip_type",        l_item_equip_type },
     { "weap_skill",        l_item_weap_skill },
+    { "reach_range",       l_item_reach_range },
     { "is_ranged",         l_item_is_ranged },
     { "is_throwable",      l_item_is_throwable },
     { "dropped",           l_item_dropped },

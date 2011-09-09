@@ -32,9 +32,12 @@ local function adjacent(dx, dy)
 end
 
 local function reaching(dx, dy)
+  if adjacent(dx, dy) or you.berserk() then
+    return nil -- don't evoke unnecessarily
+  end
   local wp = items.equipped_at("weapon")
-  if wp and wp.ego_type == "reaching" then
-    return dx*dx + dy*dy <= 8
+  if wp then
+    return dx*dx + dy*dy <= wp.reach_range
   else
     return nil
   end
