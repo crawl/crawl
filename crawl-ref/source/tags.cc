@@ -2648,6 +2648,17 @@ void unmarshallItem(reader &th, item_def &item)
     // of Crawl has more artefact props.
     if (is_artefact(item))
         artefact_fixup_props(item);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_MINOR_POLEARMS_REACH
+        && get_weapon_brand(item) == SPWPN_REACHING
+        && weapon_skill(item) == SK_POLEARMS)
+    {
+        if (is_artefact(item))
+            artefact_set_property(item, ARTP_BRAND, SPWPN_NORMAL);
+        else
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
+    }
+#endif
 }
 
 #define MAP_SERIALIZE_FLAGS_MASK 3
