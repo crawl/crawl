@@ -773,6 +773,30 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         // Both are polearms, right?
         return (weapon_restriction(WPN_SPEAR, ng));
 
+    case WPN_QUARTERSTAFF:
+        if (ng.job != JOB_GLADIATOR)
+            return (CC_BANNED);
+        switch (ng.species)
+        {
+        case SP_CENTAUR:
+        case SP_DEEP_ELF:
+        case SP_DEMIGOD:
+        case SP_DEMONSPAWN:
+        case SP_HIGH_ELF:
+        case SP_HUMAN:
+        case SP_KENKU:
+        case SP_KOBOLD:
+        case SP_MINOTAUR:
+        case SP_MUMMY:
+        case SP_OCTOPODE:
+        case SP_SLUDGE_ELF:
+            return (CC_UNRESTRICTED);
+
+        default:
+            return (species_genus(ng.species) == GENPC_DRACONIAN ? CC_UNRESTRICTED
+                    : CC_RESTRICTED);
+        }
+
     case WPN_ANKUS:
         if (species_genus(ng.species) == GENPC_OGREISH)
             return (CC_UNRESTRICTED);

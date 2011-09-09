@@ -1680,9 +1680,10 @@ static std::vector<weapon_choice> _get_weapons(const newgame_def* ng)
     }
     else
     {
-        weapon_type startwep[6] = { WPN_UNARMED, WPN_SHORT_SWORD, WPN_MACE,
-                                    WPN_HAND_AXE, WPN_SPEAR, WPN_FALCHION };
-        for (int i = 0; i < 6; ++i)
+        weapon_type startwep[7] = { WPN_UNARMED, WPN_SHORT_SWORD, WPN_MACE,
+                                    WPN_HAND_AXE, WPN_SPEAR, WPN_FALCHION,
+                                    WPN_QUARTERSTAFF};
+        for (int i = 0; i < 7; ++i)
         {
             weapon_choice wp;
             wp.first = startwep[i];
