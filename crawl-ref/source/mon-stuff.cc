@@ -3423,14 +3423,17 @@ bool can_go_straight(const monster* mon, const coord_def& p1,
     if (!find_ray(p1, p2, ray, opc_immob))
         return (false);
 
-    for (ray.advance(); ray.pos() != p2; ray.advance())
+    while (ray.advance())
     {
-        ASSERT(map_bounds(ray.pos()));
-        if (!_can_safely_go_through(mon, ray.pos()))
+        const coord_def pos = ray.pos();
+        ASSERT(map_bounds(pos));
+        if (!_can_safely_go_through(mon, pos))
             return (false);
+        else if (pos == p2)
+            return (true);
     }
 
-    return (true);
+    return (false);
 }
 
 // The default suitable() function for choose_random_nearby_monster().
