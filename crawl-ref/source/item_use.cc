@@ -456,15 +456,15 @@ void warn_shield_penalties()
     if (!you.shield())
         return;
 
-    // Warnings are limited to bows and quarterstaves at the moment.
+    // Warnings are limited to launchers and staves at the moment.
     const item_def *weapon = you.weapon();
     if (!weapon)
         return;
 
     if (is_range_weapon(*weapon))
         warn_launcher_shield_slowdown(*weapon);
-    else if (weapon->base_type == OBJ_WEAPONS
-             && weapon_skill(*weapon) == SK_STAVES)
+    else if (weapon_skill(*weapon) == SK_STAVES
+             && cmp_weapon_size(*weapon, SIZE_LARGE) >= 0)
     {
         mprf(MSGCH_WARN, "Your %s severely limits your weapon's effectiveness.",
              shield_base_name(you.shield()));
