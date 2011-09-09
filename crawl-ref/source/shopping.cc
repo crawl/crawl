@@ -933,7 +933,6 @@ unsigned int item_value(item_def item, bool ident)
             valued += 31;
             break;
 
-        case WPN_QUARTERSTAFF:
         case WPN_SHORT_SWORD:
         case WPN_SPEAR:
             valued += 32;
@@ -947,6 +946,7 @@ unsigned int item_value(item_def item, bool ident)
         case WPN_WAR_AXE:
         case WPN_MORNINGSTAR:
         case WPN_SABRE:
+        case WPN_QUARTERSTAFF:
             valued += 40;
             break;
 
