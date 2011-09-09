@@ -940,10 +940,10 @@ KMONS:      % = clay golem / wood golem / toenail golem w:2
 KMONS:      * = stone golem / crystal golem / iron golem
 KMONS:      | = electric golem
 :           elseif mrnd == 1 then
-KMONS:      % = blue devil / iron devil / ynoxinul / neqoxec / hellion /\
+KMONS:      % = blue devil / iron devil / ynoxinul / neqoxec / ice devil /\
                 / chaos spawn / demonic crawler / hellwing / orange demon /\
-                shadow demon / tormentor
-KMONS:      * = lorocyproca / reaper / soul eater / ice devil / sun demon
+                soul eater / sun demon
+KMONS:      * = lorocyproca / reaper / shadow demon / tormentor / hellion
 KMONS:      | = blizzard demon / green death / pit fiend / fiend /\
                 shadow fiend / ice fiend / executioner / balrug / cacodemon
 :           else
@@ -1718,9 +1718,9 @@ MARKER:     f = lua:fog_machine { \
                 pow_max = 10, delay_min = 10, delay_max = 40, \
                 size = 2, size_buildup_amnt = 5, \
                 size_buildup_time = 25, cloud_type = "flame" }
-KMONS:      2 = w:1 Lorocyproca / w:20 soul eater / w:20 reaper /\
+KMONS:      2 = w:1 Lorocyproca / hell beast / reaper /\
             w:20 ice devil / w:20 sun demon / hellion
-KMONS:      3 = blue devil / iron devil / shadow demon / neqoxec /\
+KMONS:      3 = blue devil / iron devil / soul eater / neqoxec /\
             w:5 tormentor / ynoxinul
 KMONS:      4 = kobold demonologist / deep elf demonologist
 KMONS:      5 = blizzard demon / green death / cacodemon

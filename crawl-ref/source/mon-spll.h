@@ -1715,6 +1715,17 @@
       }
     },
 
+    {  MST_SHADOW_DEMON,
+      {
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_SHADOW_CREATURES,
+       SPELL_SUMMON_DEMON,
+       SPELL_NO_SPELL
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,

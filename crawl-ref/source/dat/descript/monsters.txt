@@ -1597,7 +1597,7 @@ A wisp of unliving shadow, drifting on the edge of vision.
 %%%%
 shadow demon
 
-A mysterious demonic figure, constantly blurring into multiple shadows of itself.
+A mysterious demonic figure, constantly blurring into multiple shadows of itself. It weaves creatures into existence from the very shadows surrounding it.
 %%%%
 shadow dragon
 

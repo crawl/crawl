@@ -502,7 +502,7 @@ TAGS:      gloorx_vloq
 ORIENT:    southwest
 LFLOORCOL: blue
 LROCKCOL:  blue
-MONS:      patrolling Gloorx Vloq, Executioner, demonic crawler, shadow demon
+MONS:      patrolling Gloorx Vloq, Executioner, demonic crawler, shadow wraith
 KITEM:     O = dark rune of Zot
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
@@ -545,7 +545,7 @@ ORIENT:    southeast
 LFLOORCOL: blue
 LROCKCOL:  blue
 MONS:      patrolling Gloorx Vloq, Executioner, shadow wraith
-MONS:      shadow demon, unseen horror
+MONS:      soul eater, unseen horror
 KITEM:     O = dark rune of Zot
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
