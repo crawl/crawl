@@ -174,6 +174,7 @@ static bool _snakable_weapon(const item_def& item)
     return (item.base_type == OBJ_WEAPONS
            && (item.sub_type == WPN_CLUB
             || item.sub_type == WPN_SPEAR
+            || item.sub_type == WPN_STAFF
             || item.sub_type == WPN_QUARTERSTAFF
             || item.sub_type == WPN_SCYTHE
             || item.sub_type == WPN_GIANT_CLUB

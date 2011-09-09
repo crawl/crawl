@@ -228,7 +228,7 @@ DESC_ID: It rewards the powerful with power and the meek with weakness.
 
 NAME:    Staff of Olgreb
 APPEAR:  green glowing staff
-OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
+OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    0/0 # Set on wield
 COLOUR:  ETC_POISON
 TILE:    spwpn_staff_of_olgreb
@@ -244,8 +244,8 @@ DESC_ID: It was the magical weapon wielded by the mighty wizard Olgreb
          poisons.
 
 NAME:    Staff of Wucad Mu
-APPEAR:  ephemeral quarterstaff
-OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
+APPEAR:  ephemeral staff
+OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    0/0 # Set on wield
 COLOUR:  ETC_MAGIC
 TILE:    spwpn_wucad_mu
@@ -319,7 +319,7 @@ DESC:    Eerie flames cover its twisted blade.
 
 NAME:    Staff of Dispater
 APPEAR:  golden staff
-OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
+OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +4/+4
 COLOUR:  ETC_GOLD
 TILE:    spwpn_staff_of_dispater
@@ -330,7 +330,7 @@ DESC_ID: This legendary item can unleash the fury of Hell.
 
 NAME:    Sceptre of Asmodeus
 APPEAR:  ruby sceptre
-OBJ:     OBJ_WEAPONS/WPN_QUARTERSTAFF
+OBJ:     OBJ_WEAPONS/WPN_STAFF
 PLUS:    +7/+7
 COLOUR:  ETC_BLOOD
 TILE:    spwpn_sceptre_of_asmodeus
@@ -594,7 +594,7 @@ DESC:    A beautiful mithril axe, probably lost by some dwarven hero.
 
 NAME:     Elemental Staff
 APPEAR:   black staff
-OBJ:      OBJ_WEAPONS/WPN_QUARTERSTAFF
+OBJ:      OBJ_WEAPONS/WPN_STAFF
 PLUS:     +3/+1
 COLOUR:   DARKGREY
 TILE:     urand_elemental

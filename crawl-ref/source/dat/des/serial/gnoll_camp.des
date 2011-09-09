@@ -17,7 +17,7 @@ function gnoll_shaman (e)
   e.mons("gnoll name:shaman n_suf hd:3 \
           col:white tile:mons_gnoll_shaman actual_spells \
           spells:corona;petrify;heal_other;haste_other;heal_other;minor_healing\
-          ; quarterstaff | club | whip . robe | leather armour")
+          ; staff | club | whip . robe | leather armour")
 end
 
 }}

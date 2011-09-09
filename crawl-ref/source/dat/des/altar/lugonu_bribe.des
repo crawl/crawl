@@ -51,7 +51,7 @@ function callback.tgw_lugonu_bribe_lugonu_item (data, triggerable,
               potion of invisibility q:3-6",
          Trog="manual of Spellcasting w:100 / manual of Air Magic /\
               manual of Earth Magic / manual of Fire Magic /\
-              manual of Ice Magic / manual of Poison Magic / any staff /\
+              manual of Ice Magic / manual of Poison Magic / any magical staff /\
               ring of wizardry",
          Vehumet="book of Callings w:5 / book of Power w:5 /\
               randbook owner:Lugonu spells:magic_dart numspells:1",

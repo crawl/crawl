@@ -1811,7 +1811,7 @@ int melee_attack::player_weapon_type_modify(int damage)
     if (!weapon)
         weap_type = WPN_UNARMED;
     else if (item_is_staff(*weapon))
-        weap_type = WPN_QUARTERSTAFF;
+        weap_type = WPN_STAFF;
     else if (item_is_rod(*weapon))
         weap_type = WPN_CLUB;
     else if (weapon->base_type == OBJ_WEAPONS && !is_range_weapon(*weapon))
@@ -4378,8 +4378,7 @@ int melee_attack::player_calc_base_weapon_damage()
 
     // Staves can be wielded with a worn shield, but are much less
     // effective.
-    if (shield && weapon->base_type == OBJ_WEAPONS
-        && weapon_skill(*weapon) == SK_STAVES
+    if (shield && weapon_skill(*weapon) == SK_STAVES
         && hands_reqd(*weapon, you.body_size()) == HANDS_HALF)
     {
         damage /= 2;

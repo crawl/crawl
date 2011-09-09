@@ -856,7 +856,7 @@ A mysterious item resembling a rune of some kind. Once evoked, it will make the 
 %%%%
 quarterstaff
 
-A sturdy wooden pole.
+A sturdy wooden pole, meant for fighting.
 %%%%
 quick blade
 
@@ -1191,6 +1191,10 @@ A flail with large spikes on the metal lump.
 splint mail
 
 A suit made of splints of metal.
+%%%%
+staff
+
+A stout walking stick.
 %%%%
 staff of air
 

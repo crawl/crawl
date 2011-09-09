@@ -419,7 +419,7 @@ MONS: deep elf blademaster ; chain mail ego:cold_resistance /\
       deep elf master archer ; chain mail ego:poison_resistance . longbow . q:30 arrow
 NSUBST: $ = 1:b / 1:s / *:|
 : acq_on_sight(_G, 'b', {"book","book","wand"})
-: acq_on_sight(_G, 's', {"staff","jewellery","jewellery"})
+: acq_on_sight(_G, 's', {"magical staff","jewellery","jewellery"})
 KITEM: | = superb_item, superb_item, superb_item, gold, scroll of amnesia / w:5 scroll of silence
 KFEAT: b = floor
 COLOUR: # = yellow

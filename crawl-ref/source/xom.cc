@@ -1753,10 +1753,10 @@ static int _xom_rearrange_pieces(int sever, bool debug = false)
 static int _xom_random_stickable(const int HD)
 {
     int c;
-    static const int arr[12] = {WPN_CLUB, WPN_QUARTERSTAFF, WPN_BOW, WPN_SPEAR,
-                                WPN_BLOWGUN, WPN_GLAIVE, WPN_HALBERD, WPN_ANKUS,
-                                WPN_SCYTHE, WPN_LONGBOW, WPN_GIANT_CLUB,
-                                WPN_GIANT_SPIKED_CLUB};
+    static const int arr[13] = {WPN_CLUB, WPN_STAFF, WPN_QUARTERSTAFF, WPN_BOW,
+                                WPN_SPEAR, WPN_BLOWGUN, WPN_GLAIVE, WPN_HALBERD,
+                                WPN_ANKUS, WPN_SCYTHE, WPN_LONGBOW,
+                                WPN_GIANT_CLUB, WPN_GIANT_SPIKED_CLUB};
 
     // Maximum snake hd is 11 (anaconda) so random2(hd) gives us 0-10
     // weapon_rarity also gives us 1-10.
