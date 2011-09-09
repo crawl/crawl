@@ -2473,6 +2473,7 @@ enum beh_type
     BEH_PANIC,                         //  like flee but without running away
     BEH_LURK,                          //  stay still until discovered or
                                        //  enemy close by
+    BEH_RETREAT,                       //  like flee but when cannot attack
     NUM_BEHAVIOURS,                    //  max # of legal states
     BEH_CHARMED,                       //  hostile-but-charmed; creation only
     BEH_FRIENDLY,                      //  used during creation only

@@ -110,7 +110,7 @@ static void _set_no_path_found(monster* mon)
     _mark_neighbours_target_unreachable(mon);
 }
 
-static bool _target_is_unreachable(monster* mon)
+bool target_is_unreachable(monster* mon)
 {
     return (mon->travel_target == MTRAV_UNREACHABLE
             || mon->travel_target == MTRAV_KNOWN_UNREACHABLE);
@@ -170,9 +170,10 @@ bool try_pathfind(monster* mon)
     // If the target is "unreachable" (the monster already tried,
     // and failed, to find a path), there's a chance of trying again.
     // The chance is higher for wall clinging monsters to help them avoid
-    // shallow water.
-    if (_target_is_unreachable(mon) && !one_chance_in(12)
-        && !(mon->can_cling_to_walls() && one_chance_in(4)))
+    // shallow water. Retreating monsters retry every turn.
+    if (target_is_unreachable(mon) && !one_chance_in(12)
+        && !(mon->can_cling_to_walls() && one_chance_in(4))
+        && !mon->behaviour == BEH_RETREAT)
     {
         return (false);
     }
@@ -247,13 +248,10 @@ bool try_pathfind(monster* mon)
             mon->travel_target = MTRAV_PLAYER;
             return (true);
         }
-        else
-            _set_no_path_found(mon);
     }
-    else
-        _set_no_path_found(mon);
 
     // We didn't find a path.
+    _set_no_path_found(mon);
     return (false);
 }
 
