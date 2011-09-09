@@ -38,7 +38,7 @@ void init_pandemonium(void)
             env.mons_alloc[4] = MONS_NEQOXEC;
             env.mons_alloc[5] = MONS_MIDGE;
             env.mons_alloc[6] = MONS_NEQOXEC;
-            env.mons_alloc[7] = MONS_BLUE_DEATH;
+            env.mons_alloc[7] = MONS_BLIZZARD_DEMON;
             env.mons_alloc[8] = MONS_BALRUG;
             env.mons_alloc[9] = MONS_LEMURE;
             return;
@@ -51,7 +51,7 @@ void init_pandemonium(void)
             env.mons_alloc[2] = MONS_SMOKE_DEMON;
             env.mons_alloc[3] = MONS_YNOXINUL;
             env.mons_alloc[4] = MONS_GREEN_DEATH;
-            env.mons_alloc[5] = MONS_BLUE_DEATH;
+            env.mons_alloc[5] = MONS_BLIZZARD_DEMON;
             env.mons_alloc[6] = MONS_SMOKE_DEMON;
             env.mons_alloc[7] = MONS_HELLWING;
             env.mons_alloc[8] = MONS_WHITE_IMP;
@@ -155,7 +155,7 @@ void init_pandemonium(void)
             env.mons_alloc[pc] = random_mons(
                     MONS_EXECUTIONER,
                     MONS_GREEN_DEATH,
-                    MONS_BLUE_DEATH,
+                    MONS_BLIZZARD_DEMON,
                     MONS_BALRUG,
                     MONS_CACODEMON,
                     -1);

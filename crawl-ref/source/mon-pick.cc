@@ -63,7 +63,7 @@ bool mons_abyss(int mcls)
     case MONS_ANCIENT_LICH:
     case MONS_ANGEL:
     case MONS_BALRUG:
-    case MONS_BLUE_DEATH:
+    case MONS_BLIZZARD_DEMON:
     case MONS_BLUE_DEVIL:
     case MONS_BONE_DRAGON:
     case MONS_BRAIN_WORM:
@@ -263,7 +263,7 @@ int mons_rare_abyss(int mcls)
         return 11;
 
     case MONS_BALRUG:
-    case MONS_BLUE_DEATH:
+    case MONS_BLIZZARD_DEMON:
     case MONS_BLUE_DEVIL:
     case MONS_CACODEMON:
     case MONS_CHAOS_SPAWN:
@@ -279,7 +279,6 @@ int mons_rare_abyss(int mcls)
     case MONS_MUMMY:
     case MONS_NECROPHAGE:
     case MONS_ROTTING_DEVIL:
-    case MONS_SHADOW_DEMON:
     case MONS_SHADOW_IMP:
     case MONS_SUN_DEMON:
     case MONS_WIGHT:
@@ -336,6 +335,7 @@ int mons_rare_abyss(int mcls)
     case MONS_DEEP_DWARF_DEATH_KNIGHT:
     case MONS_UNBORN_DEEP_DWARF:
     case MONS_KENKU:
+    case MONS_SHADOW_DEMON:
         return 5;
 
     case MONS_AIR_ELEMENTAL:
@@ -445,7 +445,7 @@ bool mons_pan(int mcls)
     case MONS_WIZARD:
     // demons
     case MONS_BALRUG:
-    case MONS_BLUE_DEATH:
+    case MONS_BLIZZARD_DEMON:
     case MONS_CACODEMON:
     case MONS_CHAOS_SPAWN:
     case MONS_DEMONIC_CRAWLER:
@@ -2466,7 +2466,7 @@ int mons_vestibule_rare(int mcls)
         return 20;
 
     case MONS_GREEN_DEATH:
-    case MONS_BLUE_DEATH:
+    case MONS_BLIZZARD_DEMON:
     case MONS_BALRUG:
     case MONS_CACODEMON:
         return 15;
@@ -2971,7 +2971,6 @@ int mons_tartarus_level(int mcls)
     case MONS_HELL_HOUND:
     case MONS_NECROMANCER:
     case MONS_SHADOW:
-    case MONS_SHADOW_DEMON:
     case MONS_WRAITH:
     case MONS_SILENT_SPECTRE:
         mlev += 3;
@@ -2993,6 +2992,7 @@ int mons_tartarus_level(int mcls)
     case MONS_FLYING_SKULL:
     case MONS_HELLION:
     case MONS_REAPER:
+    case MONS_SHADOW_DEMON:
     case MONS_ROTTING_DEVIL:
     case MONS_SHADOW_DRAGON:
     case MONS_VAMPIRE:
@@ -3051,9 +3051,6 @@ int mons_tartarus_rare(int mcls)
     case MONS_WRAITH:
         return 52;
 
-    case MONS_SHADOW_DEMON:
-        return 50;
-
     case MONS_PHANTASMAL_WARRIOR:
         return 45;
 
@@ -3062,6 +3059,7 @@ int mons_tartarus_rare(int mcls)
 
     case MONS_HELLION:
     case MONS_TORMENTOR:
+    case MONS_SHADOW_DEMON:
         return 42;
 
     case MONS_BONE_DRAGON:

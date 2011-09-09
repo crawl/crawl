@@ -1392,7 +1392,7 @@ TAGS:   no_monster_gen
 DEPTH:  D:4-, Coc, Geh
 : if you.absdepth() > 24 then
 MONS:   fiend / balrug w:5
-MONS:   ice fiend / blue death w:5
+MONS:   ice fiend / blizzard demon w:5
 MONS:   sun demon / smoke demon / hellion
 MONS:   ice devil / blue devil w:5
 MONS:   red devil / imp
@@ -2443,7 +2443,7 @@ ENDMAP
 #
 NAME:   minmay_guarded_unrand_curses
 TAGS:   no_monster_gen no_item_gen
-DEPTH:  D:8-, Crypt
+DEPTH:  D:14-, Crypt
 WEIGHT: 3
 MONS:   reaper, reaper; scythe unrand:scythe_of_curses, mummy, guardian mummy
 ITEM:   scroll of curse armour / scroll of curse weapon
