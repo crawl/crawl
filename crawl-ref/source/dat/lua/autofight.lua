@@ -32,7 +32,7 @@ local function adjacent(dx, dy)
 end
 
 local function reaching(dx, dy)
-  if adjacent(dx, dy) or you.berserk() then
+  if adjacent(dx, dy) then
     return nil -- don't evoke unnecessarily
   end
   local wp = items.equipped_at("weapon")
