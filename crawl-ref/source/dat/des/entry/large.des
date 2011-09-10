@@ -653,11 +653,11 @@ SHUFFLE: EF
 SUBST:   E = +
 SUBST:   F = x
 MAP
-    xxxxxxxxxxxxxxxxx
-  xxx....xxxxxxx....xxx
-  xx.xxxx.xxxxx.xxxx.xx
-  x.xx..xx.xxx.xx..xx.x
-  x.x.xx.x.xxx.x.xx.x.x
+    xxxxxxxx+xxxxxxxx
+  xxx....xxx.xxx....xxx
+  xx.xxxx.xx.xx.xxxx.xx
+  x.xx..xx.x.x.xx..xx.x
+  x.x.xx.x.x.x.x.xx.x.x
   x.xx>x.x.E.F.x.x}xx.x
   xx.xxx.x.x.x.x.xxx.xx
   xxx...xx.x.x.xx...xxx
@@ -673,10 +673,10 @@ MAP
   x.x.xxx.xx.xx.xxx.x.x
   x.x.x<xx.x.x.xx[x.x.x
   x.x.xx.x.F.E.x.xx.x.x
-  x.xx..xx.xxx.xx..xx.x
-  xx.xxxx.xxxxx.xxxx.xx
-   xx....xxxxxxx....xx
-    xxxxxxxxxxxxxxxxx
+  x.xx..xx.x.x.xx..xx.x
+  xx.xxxx.xx.xx.xxxx.xx
+   xx....xxx.xxx....xx
+    xxxxxxxx+xxxxxxxx
 ENDMAP
 
 ##############################################################################
