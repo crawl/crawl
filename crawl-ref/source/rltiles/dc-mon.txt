@@ -247,7 +247,7 @@ mnoleg MONS_MNOLEG
 
 # type '1' demons
 balrug MONS_BALRUG
-blue_death MONS_BLUE_DEATH
+blue_death MONS_BLIZZARD_DEMON
 cacodemon MONS_CACODEMON
 executioner MONS_EXECUTIONER
 fiend MONS_FIEND
