@@ -3035,7 +3035,8 @@ bool is_useless_item(const item_def &item, bool temp)
                       && you.species != SP_GHOUL // makes clean chunks
                                                  // contaminated
                     || player_mutation_level(MUT_HERBIVOROUS) == 3
-                    || you.species == SP_MUMMY);
+                    || you.is_undead
+                        && you.species != SP_GHOUL);
 
         case AMU_FAITH:
             return (you.species == SP_DEMIGOD);
