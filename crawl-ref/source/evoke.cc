@@ -680,7 +680,9 @@ static bool _ball_of_energy(void)
 
 bool evoke_item(int slot)
 {
-    if (you.berserk())
+    if (you.berserk() && (slot == -1
+                       || slot != you.equip[EQ_WEAPON]
+                       || !weapon_reach(*you.weapon())))
     {
         canned_msg(MSG_TOO_BERSERK);
         return (false);
