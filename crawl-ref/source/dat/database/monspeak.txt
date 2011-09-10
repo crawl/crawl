@@ -5966,7 +5966,7 @@ hell lord
 butterfly
 
 VISUAL SPELL:The butterfly flaps @possessive@ wings in an oddly mesmeric pattern.
-VISUAL WARN:You feel entranced by @possessive@ movement.
+VISUAL:You feel entranced by @possessive@ movement.
 %%%%
 ################## Imps#####################################
 imp
