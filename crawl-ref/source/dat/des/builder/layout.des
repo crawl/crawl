@@ -666,6 +666,22 @@ TAGS: overwritable layout allow_dup unrand
 MAP
 ENDMAP
 
+# A long winding cavern of roughly constant width, snaking around all the
+# level.  It forks from time to time, but never for long.
+NAME: layout_twisted_cavern
+DEPTH: D:5-27
+WEIGHT: 999999
+ORIENT: encompass
+TAGS: overwritable layout allow_dup unrand
+{{
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym}
+    fill_area{fill = 'x', border = 'X'}
+
+    delve(3, 3, 0, -1, 1)
+    _G.subst('X = x')
+}}
+
 ## This replaces dungeon.cc:_roguey_level.
 NAME: layout_roguey
 DEPTH: 1-, !Vault
@@ -794,9 +810,8 @@ ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
     local gxm, gym = dgn.max_bounds()
-    extend_map{width = gxm, height = gym, fill = 'X'}
-    fill_area{fill = 'X'}
-    fill_area{x1=1, y1=1, x2=gxm-2, y2=gym-2, fill = 'x'}
+    extend_map{width = gxm, height = gym}
+    fill_area{fill = 'x', border = 'X'}
 
     local ngb_min = 2
     local ngb_max = crawl.random_range(3, 8)

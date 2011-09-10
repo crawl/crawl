@@ -148,7 +148,7 @@ static bool _valid_coord(lua_State *ls, map_lines &lines, int x, int y, bool err
 
 // Does what fill_area did, but here, so that it can be used through
 // multiple functions (including make_box).
-static int _fill_area (lua_State *ls, map_lines &lines, int x1, int y1, int x2, int y2, char fill)
+static int _fill_area(lua_State *ls, map_lines &lines, int x1, int y1, int x2, int y2, char fill)
 {
     for (int y = y1; y <= y2; ++y)
         for (int x = x1; x <= x2; ++x)
@@ -157,6 +157,14 @@ static int _fill_area (lua_State *ls, map_lines &lines, int x1, int y1, int x2, 
         }
 
     return (0);
+}
+
+static void _border_area(map_lines &lines, int x1, int y1, int x2, int y2, char border)
+{
+    for (int x = x1 + 1; x < x2; ++x)
+        lines(x, y1) = border, lines(x, y2) = border;
+    for (int y = y1; y <= y2; ++y)
+        lines(x1, y) = border, lines(x2, y) = border;
 }
 
 // Specifically only deals with horizontal lines.
@@ -325,8 +333,11 @@ LUAFN(dgn_fill_area)
         return (0);
 
     TABLE_CHAR(ls, fill, 'x');
+    TABLE_CHAR(ls, border, fill);
 
-    _fill_area (ls, lines, x1, y1, x2, y2, fill);
+    _fill_area(ls, lines, x1, y1, x2, y2, fill);
+    if (border != fill)
+        _border_area(lines, x1, y1, x2, y2, border);
 
     return (0);
 }
