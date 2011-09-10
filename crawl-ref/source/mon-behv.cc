@@ -707,8 +707,12 @@ void handle_behaviour(monster* mon)
             // If the target can be reached, there is a chance the monster will
             // try to attack. The chance is low to prevent the player from
             // dancing in and out of the water.
-            if (mons_can_attack(mon) || one_chance_in(10) && try_pathfind(mon))
+            try_pathfind(mon);
+            if (one_chance_in(10) && !target_is_unreachable(mon)
+                || mons_can_attack(mon))
+            {
                 new_beh = BEH_SEEK;
+            }
             else if (!proxPlayer && one_chance_in(5))
                 new_beh = BEH_WANDER;
             else if (proxPlayer)
@@ -959,8 +963,9 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
 
             // If the monster can't reach its target and can't attack it
             // either, retreat.
+            try_pathfind(mon);
             if (mons_intel(mon) > I_INSECT && !mons_can_attack(mon)
-                && !try_pathfind(mon))
+                && target_is_unreachable(mon))
             {
                 mon->behaviour = BEH_RETREAT;
             }
