@@ -1364,7 +1364,11 @@ bool go_berserk(bool intentional, bool potion)
 
     mpr("A red film seems to cover your vision as you go berserk!");
 
-    you.duration[DUR_FINESSE] = 0; // Totally incompatible.
+    if (you.duration[DUR_FINESSE] > 0)
+    {
+        you.duration[DUR_FINESSE] = 0; // Totally incompatible.
+        mpr("Finesse? Hah! Time to rip out guts!");
+    }
 
     if (you.religion == GOD_CHEIBRIADOS)
     {
