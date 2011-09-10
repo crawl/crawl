@@ -682,6 +682,11 @@ TAGS: overwritable layout allow_dup unrand
     _G.subst('X = x')
     _G.lrocktile('wall_pebble_lightgray')
     _G.lfloortile('floor_pebble_brown')
+
+    if (crawl.coinflip()) then
+      _G.subst('x = b')
+      _G.tile('b = wall_emerald')
+    end
 }}
 
 ## This replaces dungeon.cc:_roguey_level.
