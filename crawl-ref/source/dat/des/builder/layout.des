@@ -670,7 +670,7 @@ ENDMAP
 # level.  It forks from time to time, but never for long.
 NAME: layout_twisted_cavern
 DEPTH: D:5-27
-WEIGHT: 999999
+WEIGHT: 5
 ORIENT: encompass
 TAGS: overwritable layout allow_dup unrand
 {{
