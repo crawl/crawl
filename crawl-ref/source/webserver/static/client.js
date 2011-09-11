@@ -517,15 +517,15 @@ $(document).ready(
             };
 
             $.tablesorter.addParser({
-		id: 'timespan',
-		is: function(s) {
-		    return false;
-		},
-		format: function(s) {
+                id: 'timespan',
+                is: function(s) {
+                    return false;
+                },
+                format: function(s) {
                     return s.substring(0, s.length - 1);
-		},
-		type: 'numeric'
-	    });
+                },
+                type: 'numeric'
+            });
 
 
             $("#player_list").tablesorter({
