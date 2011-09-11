@@ -82,3 +82,6 @@ nick_regex = r"^[a-zA-Z0-9]{3,20}$"
 max_passwd_length = 20
 
 login_token_lifetime = 7 # Days
+
+uid = None  # If this is not None, the server will setuid to that id after
+gid = None  # binding its sockets.
