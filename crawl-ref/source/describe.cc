@@ -335,6 +335,8 @@ static std::vector<std::string> _randart_propnames(const item_def& item,
                 {
                     work << "+";
                 }
+                else if (propanns[i].prop == ARTP_METABOLISM && val < 0)
+                    work << "-";
                 else if (propanns[i].prop == ARTP_STEALTH)
                 {
                     if (val > 20)

@@ -1180,6 +1180,42 @@ DESC_END: This axe has had a curse placed on it by one of the lords of
           unleash demons into this world. Beware, for this axe has
           ways of taking its wielder under its command...
 
+NAME:     lightning scales
+APPEAR:   metallic naga barding
+OBJ:      OBJ_ARMOUR/ARM_NAGA_BARDING
+PLUS:     +3
+TILE:     urand_lightning_scales
+TILE_EQ:  lightning_scales
+COLOUR:   ETC_ELECTRICITY
+BRAND:    SPARM_RUNNING
+BOOL:     elec
+DESC:     This naga barding is made of some very metallic dragon hide, to
+          the point of initially confusing you at the first glance into
+          thinking it is actually made of metal.
+DESC_ID:  These scales have been fashioned into armour for a naga's lower
+          body. Faintly crackling with electricity, they have been enchanted
+          to allow its wearer to slither at almost a human's pace.
+
+ENUM:     BLACK_KNIGHT_HORSE
+NAME:     Black Knight's horse barding
+APPEAR:   black horse barding
+OBJ:      OBJ_ARMOUR/ARM_CENTAUR_BARDING
+PLUS:     +10
+TILE:     urand_bk_barding
+TILE_EQ:  black_knight
+COLOUR:   ETC_UNHOLY
+BRAND:    SPARM_PONDEROUSNESS
+METAB:    -2
+BOOL:     life
+DESC:     You feel sorry for the horse that has to wear this mass of metal.
+DESC_ID:  This gear used to be worn by personal horse of the Black Knight
+          during his reign of terror. Pitch-black, it appears to be made not
+          only of some strange black steel, but also of entire plates of
+          black diamond as well! Naturally, such a weight of metal and stone
+          cannot be good for the mount's speed. However, it offers not only
+          mundane protection against blows: the adamant bears an enchantment
+          that makes creature wearing it partially undead.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

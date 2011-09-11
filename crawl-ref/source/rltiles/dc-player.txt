@@ -206,6 +206,8 @@ centaur_barding_metal CENTAUR_BARDING_METAL
 centaur_barding_magenta CENTAUR_BARDING_MAGENTA
 centaur_barding_red CENTAUR_BARDING_RED
 %rim 0
+lightning_scales LIGHTNING_SCALES
+black_knight BLACK_KNIGHT
 %end_ctg
 
 ### Body armour
@@ -408,7 +410,6 @@ maxwell MAXWELL
 lears_chain_mail LEARS_CHAIN_MAIL
 faerie_dragon_armour FAERIE_DRAGON_ARMOUR
 %end_ctg
-
 
 ### Arms
 %parts_ctg ARM
