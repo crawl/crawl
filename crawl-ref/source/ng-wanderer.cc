@@ -477,7 +477,7 @@ static void _wanderer_random_evokable(int & slot)
 {
     wand_type selected_wand = WAND_ENSLAVEMENT;
 
-    switch (random2(6))
+    switch (random2(5))
     {
     case 0:
         selected_wand = WAND_ENSLAVEMENT;
@@ -488,7 +488,7 @@ static void _wanderer_random_evokable(int & slot)
         break;
 
     case 2:
-        selected_wand = WAND_FLAME;
+        selected_wand = WAND_MAGIC_DARTS;
         break;
 
     case 3:
@@ -496,13 +496,11 @@ static void _wanderer_random_evokable(int & slot)
         break;
 
     case 4:
-        selected_wand = WAND_MAGIC_DARTS;
+        selected_wand = WAND_FLAME;
         break;
 
-    case 5:
-        make_rod(you.inv[slot], STAFF_STRIKING, 8);
-        slot++;
-        return;
+    default:
+        break;
     }
 
     newgame_make_item(slot, EQ_NONE, OBJ_WANDS, selected_wand, -1, 1,

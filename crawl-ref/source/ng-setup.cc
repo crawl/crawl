@@ -761,10 +761,6 @@ static void _give_items_skills(const newgame_def& ng)
         // Gets some darts - this job is difficult to start off with.
         newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 16, 1);
 
-        // Spriggans used to get a rod of striking, but now that anyone
-        // can get one when playing an Artificer, this is no longer
-        // necessary. (jpeg)
-
         if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
 
@@ -809,10 +805,6 @@ static void _give_items_skills(const newgame_def& ng)
         // much now that the character can make their own. - bwr
         newgame_make_item(4, EQ_NONE, OBJ_POTIONS, POT_CONFUSION, -1, 2);
         newgame_make_item(5, EQ_NONE, OBJ_POTIONS, POT_POISON);
-
-        // Spriggans used to get a rod of striking, but now that anyone
-        // can get one when playing an Artificer, this is no longer
-        // necessary. (jpeg)
 
         you.skills[SK_FIGHTING]       = 1;
         you.skills[SK_UNARMED_COMBAT] = 3;
