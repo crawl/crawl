@@ -707,6 +707,11 @@ if ssl_options:
     application.listen(ssl_port, ssl_address, ssl_options = ssl_options,
                        **kwargs)
 
+if gid is not None:
+    os.setgid(gid)
+if uid is not None:
+    os.setuid(uid)
+
 ioloop = tornado.ioloop.IOLoop.instance()
 ioloop.set_blocking_log_threshold(0.5)
 
