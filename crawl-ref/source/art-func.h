@@ -70,41 +70,40 @@ static void _ASMODEUS_melee_effect(item_def* weapon, actor* attacker,
 
 static bool _evoke_sceptre_of_asmodeus()
 {
-    bool rc = true;
-    if (one_chance_in(21))
-        rc = false;
-    else if (one_chance_in(20))
+    bool rc = false;
+    if (one_chance_in(3))
     {
-        // Summon devils, maybe a Fiend.
-        const monster_type mon = (one_chance_in(4) ? MONS_FIEND :
-                                     summon_any_demon(DEMON_COMMON));
-        const bool good_summon = create_monster(
-                                     mgen_data::hostile_at(mon,
-                                         "the Sceptre of Asmodeus",
-                                         true, 6, 0, you.pos())) != -1;
+        const monster_type mon = static_cast<monster_type>(
+                random_choose_weighted(3, MONS_EFREET,
+                                       3, MONS_SUN_DEMON,
+                                       2, MONS_BALRUG,
+                                       2, MONS_HELLION,
+                                       1, MONS_PIT_FIEND,
+                                       1, MONS_FIEND,
+                                       0));
 
-        if (good_summon)
+        mgen_data mg(mon, BEH_CHARMED, &you,
+                     0, 0, you.pos(), MHITYOU,
+                     MG_FORCE_BEH, you.religion);
+
+        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
+        const int mons = create_monster(mg);
+
+        if (mons != -1)
         {
-            if (mon == MONS_FIEND)
-                mpr("\"Your arrogance condemns you, mortal!\"");
-            else
-                mpr("The Sceptre summons one of its servants.");
+            rc = true;
+            mpr("The Sceptre summons one of its servants.");
+            did_god_conduct(DID_UNHOLY, 3);
+
+            if (!player_angers_monster(&menv[mons]))
+            {
+                mpr("You don't feel so good about this...");
+            }
         }
         else
             mpr("The air shimmers briefly.");
     }
-    else
-    {
-        // Cast a destructive spell.
-        const spell_type spl = static_cast<spell_type>(
-            random_choose_weighted(114, SPELL_BOLT_OF_FIRE,
-                                   57,  SPELL_LIGHTNING_BOLT,
-                                   57,  SPELL_BOLT_OF_DRAINING,
-                                   12,  SPELL_HELLFIRE,
-                                   0));
-        your_spells(spl, you.skill(SK_EVOCATIONS) * 8, false);
-    }
-
     return (rc);
 }
 
