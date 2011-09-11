@@ -118,11 +118,8 @@ void reassess_starting_skills()
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
         skill_type sk = static_cast<skill_type>(i);
-        if (you.skills[sk] == 0
-            && (you.species != SP_VAMPIRE || sk != SK_UNARMED_COMBAT))
-        {
+        if (you.skills[sk] == 0)
             continue;
-        }
 
         // Grant the amount of skill points required for a human.
         you.skill_points[sk] = skill_exp_needed(you.skills[sk], sk,
@@ -139,14 +136,6 @@ void reassess_starting_skills()
                 break;
         }
 
-        // Vampires should always have Unarmed Combat skill.
-        if (you.species == SP_VAMPIRE && sk == SK_UNARMED_COMBAT
-            && you.skills[sk] < 1)
-        {
-            you.skill_points[sk] = skill_exp_needed(1, sk);
-            you.skills[sk] = 1;
-        }
-
         // Wanderers get at least 1 level in their skills.
         if (you.char_class == JOB_WANDERER && you.skills[sk] < 1)
         {
@@ -160,6 +149,13 @@ void reassess_starting_skills()
             you.skill_points[sk] = skill_exp_needed(1, sk);
             you.skills[sk] = 1;
         }
+    }
+
+    // Vampires should always have Unarmed Combat skill.
+    if (you.species == SP_VAMPIRE && you.skills[SK_UNARMED_COMBAT] < 1)
+    {
+        you.skill_points[SK_UNARMED_COMBAT] = skill_exp_needed(1, SK_UNARMED_COMBAT);
+        you.skills[SK_UNARMED_COMBAT] = 1;
     }
 }
 
