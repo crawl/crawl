@@ -2710,19 +2710,13 @@ void bolt::affect_place_explosion_clouds()
             cl_type = CLOUD_STEAM;
             break;
         }
-
-        place_cloud(cl_type, p, duration, agent());
+        if (p == ray.pos() || x_chance_in_y(125 + ench_power, 225))
+            place_cloud(cl_type, p, duration, agent());
     }
 
     // then check for more specific explosion cloud types.
     if (name == "ice storm")
         place_cloud(CLOUD_COLD, p, 2 + random2avg(5,2), agent());
-
-    if (name == "stinking cloud")
-    {
-        const int duration =  1 + random2(4) + random2((ench_power / 50) + 1);
-        place_cloud(CLOUD_STINK, p, duration, agent());
-    }
 
     if (name == "great blast of fire")
     {
