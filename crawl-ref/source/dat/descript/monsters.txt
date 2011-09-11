@@ -479,7 +479,7 @@ A viscous liquid, flowing along the floor in search of organic matter to corrode
 %%%%
 bush
 
-A woody plant. It looks dry enough to be easily set on fire. and its foliage is not very dense, permitting missiles to pass through it. However it is firmly rooted and requires much effort to destroy.
+A woody plant. It looks dry enough to be easily set on fire, and its foliage is not very dense, permitting missiles to pass through it. However it is firmly rooted and requires much effort to destroy.
 %%%%
 burning bush
 
@@ -1731,7 +1731,7 @@ A large creature with a human head, the body of a lion, and the wings of a huge 
 %%%%
 spider
 
-An ordinary orb-weaving spider with a white cross on its back. It's not as grotesquely huge as other arachnids in this place, but still as big as a small cat.
+An ordinary orb-weaving spider with a white cross on its back. It's not as grotesquely huge as other arachnids in this place, but still as big as a small cat - and you don't have a shoe that big.
 %%%%
 spiny frog
 
@@ -1872,7 +1872,7 @@ A chattering and shrieking minor demon.
 %%%%
 ugly thing
 
-An ugly thing. According to legend, this mutated creature is the otherworldly spawn of a wizard's breeding experiment.
+An ugly thing. According to legend, this mutated creature is the otherworldly spawn of a wizard's breeding experiment. Yuck.
 %%%%
 unborn deep dwarf
 
@@ -1912,7 +1912,7 @@ A heavily armed and armoured guardian of the Vaults.
 %%%%
 very ugly thing
 
-A very ugly thing. According to legend, this hideously mutated creature is the otherworldly spawn of a wizard's breeding experiment.
+A very ugly thing. According to legend, this hideously mutated creature is the otherworldly spawn of a wizard's breeding experiment. Double yuck!
 %%%%
 wandering mushroom
 
