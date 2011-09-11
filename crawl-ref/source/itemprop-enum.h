@@ -480,6 +480,9 @@ enum weapon_type
     WPN_DEMON_TRIDENT,
     WPN_SCYTHE,
 
+#if TAG_MAJOR_VERSION != 32
+    WPN_STAFF,
+#endif
     WPN_QUARTERSTAFF,
     WPN_LAJATANG,
 
@@ -500,8 +503,9 @@ enum weapon_type
     WPN_SACRED_SCOURGE,
     WPN_TRISHULA,
 
-    WPN_STAFF,                         // Move this before WPN_MAX_NONBLESSED
-                                       // when major version incremented.
+#if TAG_MAJOR_VERSION == 32
+    WPN_STAFF,
+#endif
 
     NUM_WEAPONS,
 
