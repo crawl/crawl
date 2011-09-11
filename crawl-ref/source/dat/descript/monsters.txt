@@ -355,7 +355,7 @@ A lump of sickly green flesh, dripping with lethal acid.
 %%%%
 agate snail
 
-A huge and disgusting gastropod with a celadon shell inside which it will hide when frightened.
+A huge and disgusting gastropod with a celadon shell, inside which it will hide when frightened.
 %%%%
 air elemental
 
@@ -367,7 +367,7 @@ A sneaky crocodilian that hides in water and waits patiently for its prey to get
 %%%%
 alligator snapping turtle
 
-A particularly large and nasty snapping turtle. Like its smaller relative it too can reach out and bite from afar and will retreat inside its shell when threatened.
+A particularly large and nasty snapping turtle. Like its smaller relative, it too can reach out and bite from afar, and will retreat inside its shell when threatened.
 %%%%
 anaconda
 
@@ -403,7 +403,7 @@ An oddity of nature, ball lightning bounces around behaving almost, but not quit
 %%%%
 ballistomycete
 
-A lumpy reddish fungus covered in knobbly rhizome growths, growing well in the dank underground dungeon. It will occasionally produce giant spore balls, which in turn give rise to more ballistomycetes.
+A lumpy reddish fungus covered in knobbly rhizome growths, growing well in the dank underground dungeon. It will occasionally produce giant spore balls, which in turn will give rise to more ballistomycetes.
 %%%%
 Balrug
 
@@ -463,7 +463,7 @@ An undead figure preserved by the brackish waters of a bog. Though it has been r
 %%%%
 boring beetle
 
-An umber beetle with humongous powerful mandibles with which it can dig through solid rock.
+An umber beetle with humongous powerful mandibles, with which it can dig through solid rock.
 %%%%
 boulder beetle
 
@@ -479,7 +479,7 @@ A viscous liquid, flowing along the floor in search of organic matter to corrode
 %%%%
 bush
 
-A woody plant. It looks dry enough to be easily set on fire, and its foliage is not very dense, permitting missiles to pass through it. However it is firmly rooted and requires much effort to destroy.
+A woody plant. It looks dry enough to be easily set on fire, and its foliage is not very dense, permitting missiles to pass through it. However, it is firmly rooted, and requires much effort to destroy.
 %%%%
 burning bush
 
@@ -1060,11 +1060,11 @@ A larger and even uglier goblin, with an even worse temper to match. Many foolis
 %%%%
 hog
 
-A large even-toed ungulate. Like human beings it is omnivorous, intelligent, and nearly hairless.
+A large even-toed ungulate. Like human beings, it is omnivorous, intelligent, and nearly hairless.
 %%%%
 holy swine
 
-A rare celestial version of a usually filthy animal. They are said to be not natural creatures but angelic beings who succumbed to hostile magic.
+A rare celestial version of a usually filthy animal. They are said to be not natural creatures, but angelic beings who succumbed to hostile magic.
 %%%%
 pearl dragon
 
@@ -1104,7 +1104,7 @@ Like a normal dragon, only white and covered in frost.
 %%%%
 ice fiend
 
-A huge frigid demon covered in frost and wreathed in freezing air. One of the most terrible denizens of the many Hells.
+A huge frigid demon covered in frost and wreathed in freezing air. It is one of the most terrible denizens of the many Hells.
 %%%%
 ice statue
 
@@ -1320,7 +1320,7 @@ A hybrid that is human from the waist up; below is a scaly, muscular snakelike t
 %%%%
 naga mage
 
-A naga that has trained in the use of magic, trailed by an eldritch nimbus. It is especially skilled in spells dealing with poison and venoms.
+A naga that has trained in the use of magic, trailed by an eldritch nimbus. It is especially skilled in spells dealing with poison and venom.
 %%%%
 naga warrior
 
@@ -1430,7 +1430,7 @@ A pious, armoured warrior fighting for the forces of good.
 %%%%
 pandemonium lord
 
-A formidable demon lord inhabiting the endless halls of Pandemonium. Each one is different from the other, with its own set of strengths and weaknesses.
+A formidable demon lord inhabiting the endless halls of Pandemonium. Each one is different, with its own set of strengths and weaknesses.
 %%%%
 phantasmal warrior
 
@@ -1605,7 +1605,7 @@ A great shadowy shape, radiating evil and death.
 %%%%
 Shadow Fiend
 
-A horrible being that appears as a great mass of writhing shadows which occasionally reveals a huge, horned skeleton. One of the most terrible denizens of the many Hells.
+A horrible being that appears as a great mass of writhing shadows which occasionally reveals a huge, horned skeleton. It is one of the most terrible denizens of the many Hells.
 %%%%
 shadow imp
 
@@ -1629,7 +1629,7 @@ These dangerous divine guardians always travel in pairs. Each has the ability to
 %%%%
 sheep
 
-A dim-witted, fluffy ovine, better known for its woolly hide than its ferociousness. Dungeon sheep are nevertheless far more murderous than their surface brethren. It looks quite flammable.
+A dim-witted, fluffy ovine, better known for its woolly hide than its ferociousness. Dungeon sheep are nevertheless far more murderous than their surface brethren. This one looks quite flammable.
 %%%%
 shining eye
 
@@ -1707,7 +1707,7 @@ The common dungeon snake.
 %%%%
 snapping turtle
 
-A belligerent testudine with an armoured carapace. Its neck is surprisingly extensible and can reach out and bite from afar. When threatened it will retreat inside its shell.
+A belligerent testudine with an armoured carapace. Its neck is surprisingly extensible and can reach out and bite from afar. When threatened, it will retreat inside its shell.
 %%%%
 soldier ant
 
@@ -1751,7 +1751,7 @@ A small humanoid, resembling a human or elf except for the size. They move at a 
 %%%%
 spriggan air mage
 
-A magically-adept spriggan blessed with the secrets of the winds.
+A magically adept spriggan blessed with the secrets of the winds.
 %%%%
 spriggan assassin
 
@@ -1896,7 +1896,7 @@ A powerful warrior, with skills undiminished by undeath. It complements its comb
 %%%%
 vampire mage
 
-A sorcerer who, by accident or design, has been afflicted with the curse of the vampire. Regardless, through undeath he has finally mastered the art of dark magic.
+A sorcerer who, by accident or design, has been afflicted with the curse of the vampire. Regardless, through undeath, this wizard has finally mastered the art of dark magic.
 %%%%
 vampire mosquito
 
