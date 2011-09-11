@@ -1292,12 +1292,24 @@ spret_type cast_shadow_creatures(god_type god, bool fail)
     const int mons =
         create_monster(
             mgen_data(RANDOM_MOBILE_MONSTER, BEH_FRIENDLY, &you,
-                      2, SPELL_SHADOW_CREATURES,
-                      you.pos(), MHITYOU,
+                      1, // This duration is only used for band members.
+                      SPELL_SHADOW_CREATURES, you.pos(), MHITYOU,
                       MG_FORCE_BEH, god), false);
 
     if (mons != -1)
+    {
+        // Choose a new duration based on HD.
+        int x = std::max(menv[mons].hit_dice - 3, 1);
+        int d = div_rand_round(17,x);
+        if (d < 1)
+            d = 1;
+        if (d > 4)
+            d = 4;
+        mon_enchant me = mon_enchant(ENCH_ABJ, d);
+        me.set_duration(&menv[mons], &me);
+        menv[mons].update_ench(me);
         player_angers_monster(&menv[mons]);
+    }
     else
         mpr("The shadows disperse without effect.");
 
