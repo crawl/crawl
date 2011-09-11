@@ -492,7 +492,11 @@ const char* armour_ego_name(const item_def& item, bool terse)
         switch (get_armour_ego_type(item))
         {
         case SPARM_NORMAL:            return "";
-        case SPARM_RUNNING:           return "running";
+        case SPARM_RUNNING:
+            if (item.sub_type == ARM_NAGA_BARDING)
+                                      return "speedy slithering";
+            else
+                                      return "running";
         case SPARM_FIRE_RESISTANCE:   return "fire resistance";
         case SPARM_COLD_RESISTANCE:   return "cold resistance";
         case SPARM_POISON_RESISTANCE: return "poison resistance";
@@ -521,7 +525,11 @@ const char* armour_ego_name(const item_def& item, bool terse)
         switch (get_armour_ego_type(item))
         {
         case SPARM_NORMAL:            return "";
-        case SPARM_RUNNING:           return " {run}";
+        case SPARM_RUNNING:
+            if (item.sub_type == ARM_NAGA_BARDING)
+                                      return " {sslith}";
+            else
+                                      return " {run}";
         case SPARM_FIRE_RESISTANCE:   return " {rF+}";
         case SPARM_COLD_RESISTANCE:   return " {rC+}";
         case SPARM_POISON_RESISTANCE: return " {rPois}";
