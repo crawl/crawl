@@ -3147,6 +3147,17 @@ bool is_useless_item(const item_def &item, bool temp)
             return (false);
         }
 
+    case OBJ_BOOKS:
+        if (item.sub_type != BOOK_MANUAL)
+            return (false);
+        if (you.skills[item.plus] >= 27)
+            return (true);
+        /* not until they're blocked elsewhere
+        if (is_useless_skill(item.plus))
+            return (true);
+        */
+        return (false);
+
     default:
         return (false);
     }
