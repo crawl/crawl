@@ -29,6 +29,8 @@ class TornadoFilter(logging.Filter):
         if record.module == "web" and record.levelno <= logging.INFO: return False
         return True
 logging.getLogger().addFilter(TornadoFilter())
+logging.addLevelName(logging.DEBUG, "DEBG")
+logging.addLevelName(logging.WARNING, "WARN")
 
 def user_passwd_match(username, passwd): # Returns the correctly cased username.
     try:
@@ -250,7 +252,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.ioloop.add_handler(self.p.stderr.fileno(), self.on_stderr,
                                 self.ioloop.READ | self.ioloop.ERROR)
 
-        logging.info("#%s: Starting crawl for user %s (ip %s, fds %s,%s,%s).",
+        logging.info("#%s: Starting crawl for user %s (ip %s, fd%s, fd%s, fd%s).",
                      self.id, self.username, self.request.remote_ip,
                      self.p.stdin.fileno(), self.p.stdout.fileno(),
                      self.p.stderr.fileno())
@@ -402,8 +404,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.write_message("connection_closed('Could not initialize your rc and morgue!<br>" +
                                "This probably means there is something wrong with the server " +
                                "configuration.');")
-            logging.warn("User initialization returned an error for user %s!",
-                         self.username)
+            logging.warn("#%s: User initialization returned an error for user %s!",
+                         self.id, self.username)
             self.username = None
             self.close()
             return
@@ -592,7 +594,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 return
 
             if not (s.isspace() or s == ""):
-                logging.info("#%s: ERR: %s from %s: %s",
+                logging.info("#%s: ERR: %s: %s",
                              self.id, self.username, self.request.remote_ip,
                              s.strip())
 
