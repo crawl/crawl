@@ -514,6 +514,8 @@ bool is_useless_skill(int skill)
         case SK_SHIELDS:
             return true;
         }
+    if (you.species == SP_OCTOPODE && skill == SK_ARMOUR)
+        return true;
     return false;
 }
 
