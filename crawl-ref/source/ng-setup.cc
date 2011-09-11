@@ -568,7 +568,8 @@ static void _give_items_skills(const newgame_def& ng)
         else
         {
             you.skills[SK_DODGING]++;
-            you.skills[SK_ARMOUR] = 1; // for the eventual dragon scale mail :)
+            if (!is_useless_skill(SK_ARMOUR))
+                you.skills[SK_ARMOUR] = 1; // for the eventual dragon scale mail :)
         }
         break;
 
@@ -992,6 +993,11 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_ARMOUR] = 0;
         you.skills[SK_THROWING] = 0;
         you.skills[SK_SHIELDS] = 0;
+    }
+    if (you.species == SP_OCTOPODE)
+    {
+        you.skills[SK_DODGING] += you.skills[SK_ARMOUR];
+        you.skills[SK_ARMOUR] = 0;
     }
 
     if (you.religion != GOD_NO_GOD)
