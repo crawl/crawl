@@ -411,7 +411,10 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.base_type = OBJ_WEAPONS;
         item.sub_type  = random_choose(WPN_WHIP,    WPN_WHIP,   WPN_SPEAR,
                                        WPN_HALBERD, WPN_GLAIVE, -1);
-        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
+        if (weapon_skill(item.base_type, item.sub_type) == SK_POLEARMS)
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
+        else
+            set_item_ego_type(item, OBJ_WEAPONS, SPWPN_REACHING);
         item.plus  += -2 + random2(4);
         item.plus2 += -1 + random2(2);
         break;
