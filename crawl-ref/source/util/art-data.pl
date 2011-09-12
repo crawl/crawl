@@ -23,6 +23,7 @@ my %field_type = (
     BLINK    => "bool",
     BRAND    => "enum",
     CHAOTIC  => "bool",
+    CLARITY  => "bool",
     COLD     => "num",
     COLOUR   => "enum",
     CURSED   => "num",
@@ -483,7 +484,7 @@ my @art_order = (
     "SEEINV", "INV", "LEV", "BLINK", "BERSERK",  "NOISES", "\n",
     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "METAB", "\n",
     "MUTATE", "ACC", "DAM", "CURSED", "STEALTH", "MP", "\n",
-    "PONDEROUS", "HP", "\n",
+    "PONDEROUS", "HP", "CLARITY", "\n",
     "}",
 
     "DESC", "\n",

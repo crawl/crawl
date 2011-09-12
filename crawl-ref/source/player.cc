@@ -3994,7 +3994,8 @@ bool player_item_conserve(bool calc_unid)
 int player_mental_clarity(bool calc_unid, bool items)
 {
     int ret = 3 * player_equip(EQ_AMULET, AMU_CLARITY, calc_unid) * items
-              + player_mutation_level(MUT_CLARITY);
+              + player_mutation_level(MUT_CLARITY)
+              + scan_artefacts(ARTP_CLARITY);
 
     if (you.religion == GOD_ASHENZARI && you.piety >= piety_breakpoint(2)
         && !player_under_penance())

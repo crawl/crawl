@@ -2790,6 +2790,7 @@ enum artefact_prop_type
     ARTP_MAGICAL_POWER,
     ARTP_PONDEROUS,
     ARTP_HP,
+    ARTP_CLARITY,
     ARTP_NUM_PROPERTIES
 };
 

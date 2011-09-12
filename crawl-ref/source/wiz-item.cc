@@ -306,6 +306,7 @@ const char* _prop_name[ARTP_NUM_PROPERTIES] = {
     "MP",
     "Slow",
     "HP",
+    "Clar",
 };
 
 #define ARTP_VAL_BOOL 0
@@ -344,6 +345,7 @@ int8_t _prop_type[ARTP_NUM_PROPERTIES] = {
     ARTP_VAL_ANY,  //MAGICAL_POWER
     ARTP_VAL_BOOL, //PONDEROUS
     ARTP_VAL_ANY,  //HP
+    ARTP_VAL_BOOL, //CLARITY
 };
 
 static void _tweak_randart(item_def &item)
@@ -1351,13 +1353,16 @@ static void _debug_rap_stats(FILE *ostat)
         -1, //ARTP_CAUSE_TELEPORTATION
         -1, //ARTP_PREVENT_TELEPORTATION
         -1, //ARTP_ANGRY
-        -1, //ARTP_METABOLISM
+         0, //ARTP_METABOLISM
         -1, //ARTP_MUTAGENIC
          0, //ARTP_ACCURACY
          0, //ARTP_DAMAGE
         -1, //ARTP_CURSED
          0, //ARTP_STEALTH
          0, //ARTP_MAGICAL_POWER
+        -1, //ARTP_PONDEROUS,
+         0, //ARTP_HP,
+         1, //ARTP_CLARITY
          -1
     };
 
@@ -1498,7 +1503,9 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_CURSED",
         "ARTP_STEALTH",
         "ARTP_MAGICAL_POWER",
-        "ARTP_PONDEROUS"
+        "ARTP_PONDEROUS",
+        "ARTP_HP",
+        "ARTP_CLARITY",
     };
 
     fprintf(ostat, "                            All    Good   Bad\n");
