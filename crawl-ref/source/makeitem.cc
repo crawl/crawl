@@ -2618,6 +2618,7 @@ bool is_high_tier_wand(int type)
     case WAND_COLD:
     case WAND_LIGHTNING:
     case WAND_DRAINING:
+    case WAND_DISINTEGRATION:
         return true;
     default:
         return false;
