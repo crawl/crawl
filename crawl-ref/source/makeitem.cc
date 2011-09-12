@@ -2609,24 +2609,19 @@ static int _wand_max_initial_charges(int subtype)
     }
 }
 
-int degrade_high_tier_wand(int type)
+bool is_high_tier_wand(int type)
 {
-    if (type == WAND_FIRE)
-        return WAND_FLAME;
-
-    if (type == WAND_COLD)
-        return WAND_FROST;
-
-    if (type == WAND_LIGHTNING)
-        return (coinflip() ? WAND_FLAME : WAND_FROST);
-
-    if (type == WAND_PARALYSIS)
-        return WAND_SLOWING;
-
-    if (type == WAND_DRAINING)
-        return WAND_POLYMORPH_OTHER;
-
-    return type;
+    switch(type)
+    {
+    case WAND_PARALYSIS:
+    case WAND_FIRE:
+    case WAND_COLD:
+    case WAND_LIGHTNING:
+    case WAND_DRAINING:
+        return true;
+    default:
+        return false;
+    }
 }
 
 static void _generate_wand_item(item_def& item, int force_type, int item_level)
@@ -2636,9 +2631,9 @@ static void _generate_wand_item(item_def& item, int force_type, int item_level)
         item.sub_type = force_type;
     else
     {
-        item.sub_type = _random_wand_subtype();
-        if (item_level < 2)
-            item.sub_type = degrade_high_tier_wand(item.sub_type);
+        do
+            item.sub_type = _random_wand_subtype();
+        while (item_level < 2 && is_high_tier_wand(item.sub_type));
     }
 
     // Generate charges randomly...

@@ -132,9 +132,18 @@ static void _give_scroll(monster* mon, int level)
 
 static void _give_wand(monster* mon, int level)
 {
-    if (mons_is_unique(mon->type) && !mons_class_flag(mon->type, M_NO_WAND)
-        && (one_chance_in(5)
-            || (mon->type == MONS_MAURICE && one_chance_in(3))))
+    if (!mons_is_unique(mon->type) || mons_class_flag(mon->type, M_NO_WAND))
+        return;
+
+    if (!one_chance_in(5) && (mon->type != MONS_MAURICE || !one_chance_in(3)))
+        return;
+
+    // Don't give top-tier wands before 5 HD, except to Ijyb and not in sprint.
+    const bool no_high_tier =
+            (mon->hit_dice < 5 || mons_class_flag(mon->type, M_NO_HT_WAND))
+             && (mon->type != MONS_IJYB || crawl_state.game_is_sprint());
+
+    while (1)
     {
         const int idx = items(0, OBJ_WANDS, OBJ_RANDOM, true, level, 0);
 
@@ -143,18 +152,19 @@ static void _give_wand(monster* mon, int level)
 
         item_def& wand = mitm[idx];
 
-        // Don't give top-tier wands before 5 HD, except to Ijyb and not in
-        // sprint.
-        if ((mon->hit_dice < 5 || mons_class_flag(mon->type, M_NO_HT_WAND))
-            && (mon->type != MONS_IJYB || crawl_state.game_is_sprint()))
+        if (no_high_tier && is_high_tier_wand(wand.sub_type))
         {
-            // Technically these wands will be undercharged, but it
-            // doesn't really matter.
-            wand.sub_type = degrade_high_tier_wand(wand.sub_type);
+            dprf("Destroying %s because %s doesn't want a high tier wand.",
+                 wand.name(DESC_NOCAP_A).c_str(),
+                 mon->name(DESC_NOCAP_THE).c_str());
+            destroy_item(idx, true);
         }
-
-        wand.flags = 0;
-        _give_monster_item(mon, idx);
+        else
+        {
+            wand.flags = 0;
+            _give_monster_item(mon, idx);
+            break;
+        }
     }
 }
 
