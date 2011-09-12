@@ -14,7 +14,7 @@ A sphere of clear crystal.
 %%%%
 deck of cards
 
-A deck of cards.
+A deck of powerful magical cards painted in the ichor of demons. They may have any number of helpful or dangerous effects when drawn.
 %%%%
 potion
 
