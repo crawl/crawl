@@ -336,6 +336,7 @@ bool mons_is_confused(const monster* m, bool class_too = false);
 bool mons_is_wandering(const monster* m);
 bool mons_is_seeking(const monster* m);
 bool mons_is_fleeing(const monster* m);
+bool mons_is_retreating(const monster* m);
 bool mons_is_panicking(const monster* m);
 bool mons_is_cornered(const monster* m);
 bool mons_is_lurking(const monster* m);

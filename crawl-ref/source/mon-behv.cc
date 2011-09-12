@@ -1096,7 +1096,7 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
 
     case ME_CORNERED:
         // Some monsters can't flee.
-        if (!mons_is_fleeing(mon) && !mon->has_ench(ENCH_FEAR))
+        if (!mons_is_retreating(mon) && !mon->has_ench(ENCH_FEAR))
             break;
 
         // Pacified monsters shouldn't change their behaviour.
@@ -1184,6 +1184,6 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
 
 void make_mons_stop_fleeing(monster* mon)
 {
-    if (mons_is_fleeing(mon))
+    if (mons_is_retreating(mon))
         behaviour_event(mon, ME_CORNERED);
 }
