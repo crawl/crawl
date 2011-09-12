@@ -1165,19 +1165,18 @@ static bool _rune_at(const coord_def p)
 }
 
 static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
-        bool applyGlobal=false)
+                                 bool morph = false)
 {
-    const std::vector<dungeon_feature_type> terrain_elements = _abyss_pick_terrain_elements();
+    const std::vector<dungeon_feature_type> terrain_elements =
+                                                _abyss_pick_terrain_elements();
 
     if (one_chance_in(3))
         _abyss_create_rooms(abyss_genlevel_mask, random_range(1, 10));
 
     const int exit_chance = _abyss_exit_chance();
 
-    // Except for the altar on the starting position, don't place any
-    // altars.
-    const int altar_chance =
-        you.char_direction != GDT_GAME_START? 10000 : 0;
+    // Except for the altar on the starting position, don't place any altars.
+    const int altar_chance = you.char_direction != GDT_GAME_START? 10000 : 0;
 
     const int n_terrain_elements = terrain_elements.size();
     int exits_wanted  = 0;
@@ -1215,67 +1214,66 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
         if (_rune_at(p) || grd(p) == DNGN_EXIT_ABYSS)
             continue;
 
-        if (!one_chance_in(you.abyss_speed) && applyGlobal)
+        if (!one_chance_in(you.abyss_speed) && morph)
             continue;
 
         double x = (p.x + major_coord.x);
         double y = (p.y + major_coord.y);
-        worley::noise_datum noise = worley::worley(x/scale, y/scale, abyss_depth);
+        worley::noise_datum noise = worley::worley(x / scale, y / scale,
+                                                   abyss_depth);
         dungeon_feature_type feat = DNGN_FLOOR;
 
-        if (grd(p) == DNGN_UNSEEN || applyGlobal)
+        if (grd(p) != DNGN_UNSEEN && !morph)
+            continue;
+
+        worley::noise_datum sub_noise = worley::worley(x * 17, y * 31,
+                                                       abyss_depth / 10);
+
+        int dist = noise.distance[0] * 100;
+        bool isWall = (dist > 118 || dist < 40);
+
+        if (noise.id[0] + noise.id[1] % 2  == 0)
+            isWall = sub_noise.id[0] % 2;
+
+        if (sub_noise.id[0] % 3 == 0)
+            isWall = isWall ^ true;
+
+        if (isWall)
         {
-            worley::noise_datum sub_noise =
-                worley::worley(x*17, y*31, abyss_depth / 10);
-
-            int dist = noise.distance[0] * 100;
-            bool isWall = (dist > 118 || dist < 40);
-
-            if (noise.id[0] + noise.id[1] % 2  == 0)
-                isWall = sub_noise.id[0] % 2;
-
-            if (sub_noise.id[0] % 3 == 0)
-                isWall = isWall ^ true;
-
-            if (isWall)
-            {
-                int fuzz = (sub_noise.id[1] % 3 ? 0 : sub_noise.id[1] % 2 + 1);
-                int id = (noise.id[0] + fuzz) % n_terrain_elements;
-                feat = terrain_elements[id];
-            }
-
-            if (feat != grd(p))
-            {
-                if (applyGlobal)
-                    _abyss_wipe_square_at(*ri, true);
-
-                if (feat == DNGN_FLOOR && in_los_bounds_g(p) && !(noise.id[1] % 3))
-                {
-                    cloud_type cloud = clouds[sub_noise.id[1] % NUM_CLOUDS];
-                    check_place_cloud(cloud, p, (noise.id[1] % 4)+2, 0);
-                }
-                grd(p) = feat;
-            }
-
-
-            // Place abyss exits, stone arches, and altars to liven up the scene:
-            (_abyss_check_place_feat(p, exit_chance,
-                                     &exits_wanted,
-                                     &use_abyss_exit_map,
-                                     DNGN_EXIT_ABYSS,
-                                     abyss_genlevel_mask)
-             ||
-             _abyss_check_place_feat(p, altar_chance,
-                                     &altars_wanted,
-                                     NULL,
-                                     _abyss_pick_altar(),
-                                     abyss_genlevel_mask)
-             ||
-             _abyss_check_place_feat(p, 10000, NULL, NULL,
-                                     DNGN_STONE_ARCH,
-                                     abyss_genlevel_mask));
+            int fuzz = (sub_noise.id[1] % 3 ? 0 : sub_noise.id[1] % 2 + 1);
+            int id = (noise.id[0] + fuzz) % n_terrain_elements;
+            feat = terrain_elements[id];
         }
 
+        if (feat != grd(p))
+        {
+            if (morph)
+                _abyss_wipe_square_at(*ri, true);
+
+            if (feat == DNGN_FLOOR && in_los_bounds_g(p) && !(noise.id[1] % 3))
+            {
+                cloud_type cloud = clouds[sub_noise.id[1] % NUM_CLOUDS];
+                check_place_cloud(cloud, p, (noise.id[1] % 4)+2, 0);
+            }
+            grd(p) = feat;
+        }
+
+        // Place abyss exits, stone arches, and altars to liven up the scene:
+        (_abyss_check_place_feat(p, exit_chance,
+                                 &exits_wanted,
+                                 &use_abyss_exit_map,
+                                 DNGN_EXIT_ABYSS,
+                                 abyss_genlevel_mask)
+         ||
+         _abyss_check_place_feat(p, altar_chance,
+                                 &altars_wanted,
+                                 NULL,
+                                 _abyss_pick_altar(),
+                                 abyss_genlevel_mask)
+         ||
+         _abyss_check_place_feat(p, 10000, NULL, NULL,
+                                 DNGN_STONE_ARCH,
+                                 abyss_genlevel_mask));
     }
 }
 
