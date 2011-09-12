@@ -701,7 +701,7 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
     {
         const int dist = (you.pos() - mon->pos()).abs();
 
-        if (weapon && reach_range(weapon_reach(*weapon)) <= dist)
+        if (dist > 2 && weapon && reach_range(weapon_reach(*weapon)) <= dist)
         {
             macro_buf_add_cmd(CMD_EVOKE_WIELDED);
             _add_targeting_commands(mon->pos());
