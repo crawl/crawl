@@ -2789,6 +2789,7 @@ enum artefact_prop_type
     ARTP_STEALTH,
     ARTP_MAGICAL_POWER,
     ARTP_PONDEROUS,
+    ARTP_HP,
     ARTP_NUM_PROPERTIES
 };
 

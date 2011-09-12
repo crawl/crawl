@@ -4531,6 +4531,9 @@ int get_real_hp(bool trans, bool rotted)
     if (!rotted)
         hitp += you.hp_max_temp;
 
+    if (trans)
+        hitp += scan_artefacts(ARTP_HP);
+
     // Being berserk makes you resistant to damage. I don't know why.
     if (trans && you.berserk())
         hitp = hitp * 3 / 2;

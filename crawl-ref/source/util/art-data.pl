@@ -40,6 +40,7 @@ my %field_type = (
     LIFE     => "bool",
     MAGIC    => "num",
     METAB    => "num",
+    HP       => "num",
     MP       => "num",
     MUTATE   => "num",
     NAME     => "str",
@@ -482,7 +483,7 @@ my @art_order = (
     "SEEINV", "INV", "LEV", "BLINK", "BERSERK",  "NOISES", "\n",
     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "METAB", "\n",
     "MUTATE", "ACC", "DAM", "CURSED", "STEALTH", "MP", "\n",
-    "PONDEROUS", "\n",
+    "PONDEROUS", "HP", "\n",
     "}",
 
     "DESC", "\n",

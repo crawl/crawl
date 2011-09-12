@@ -244,6 +244,7 @@ static std::vector<std::string> _randart_propnames(const item_def& item,
         { "Dam",    ARTP_DAMAGE,                0 },
 
         // Qualitative attributes
+        { "HP",     ARTP_HP,                    0 },
         { "MP",     ARTP_MAGICAL_POWER,         0 },
         { "SInv",   ARTP_EYESIGHT,              2 },
         { "Stlth",  ARTP_STEALTH,               2 }, // handled specially
@@ -442,6 +443,7 @@ static std::string _randart_descrip(const item_def &item)
         { ARTP_POISON, "It protects you from poison.", false},
         { ARTP_NEGATIVE_ENERGY, "negative energy", true},
         { ARTP_MAGIC, "It increases your resistance to enchantments.", false},
+        { ARTP_HP, "It affects your health (%d).", false},
         { ARTP_MAGICAL_POWER, "It affects your mana capacity (%d).", false},
         { ARTP_EYESIGHT, "It enhances your eyesight.", false},
         { ARTP_INVISIBLE, "It lets you turn invisible.", false},
