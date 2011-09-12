@@ -2293,7 +2293,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         {
             mons->add_ench(ENCH_WITHDRAWN);
 
-            if (mons_is_fleeing(mons))
+            if (mons_is_retreating(mons))
                 behaviour_event(mons, ME_CORNERED);
 
             simple_monster_message(mons, " withdraws into its shell!");

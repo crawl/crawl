@@ -158,7 +158,7 @@ static bool _swap_monsters(monster* mover, monster* moved)
     // A friendly or good-neutral monster moving past a fleeing hostile
     // or neutral monster, or vice versa.
     if (mover->wont_attack() == moved->wont_attack()
-        || mons_is_fleeing(mover) == mons_is_fleeing(moved))
+        || mons_is_retreating(mover) == mons_is_retreating(moved))
     {
         return (false);
     }
@@ -396,7 +396,7 @@ static void _set_mons_move_dir(const monster* mons,
     // Move the monster.
     *dir = delta->sgn();
 
-    if (mons_is_fleeing(mons) && mons->travel_target != MTRAV_WALL
+    if (mons_is_retreating(mons) && mons->travel_target != MTRAV_WALL
         && (!mons->friendly() || mons->target != you.pos()))
     {
         *dir *= -1;
@@ -3115,7 +3115,7 @@ static bool _mons_can_displace(const monster* mpusher,
         return (false);
 
     // Fleeing monsters of the same type may push past higher ranking ones.
-    if (!monster_senior(mpusher, mpushee, mons_is_fleeing(mpusher)))
+    if (!monster_senior(mpusher, mpushee, mons_is_retreating(mpusher)))
         return (false);
 
     return (true);
@@ -3358,7 +3358,7 @@ static void _find_good_alternate_move(monster* mons,
             if (good_move[mon_compass[newdir].x+1][mon_compass[newdir].y+1])
                 dist[i] = distance(mons->pos()+mon_compass[newdir], target);
             else
-                dist[i] = (mons_is_fleeing(mons)) ? (-FAR_AWAY) : FAR_AWAY;
+                dist[i] = mons_is_retreating(mons) ? (-FAR_AWAY) : FAR_AWAY;
         }
 
         const int dir0 = ((dir + 8 + sdir) % 8);
@@ -3369,7 +3369,7 @@ static void _find_good_alternate_move(monster* mons,
             continue;
 
         // Which one was better? -- depends on FLEEING or not.
-        if (mons_is_fleeing(mons))
+        if (mons_is_retreating(mons))
         {
             if (dist[0] >= dist[1] && dist[0] >= current_distance)
             {

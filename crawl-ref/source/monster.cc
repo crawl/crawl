@@ -203,11 +203,8 @@ bool monster::wants_submerge() const
     if (seen_context == "bursts forth shouting")
         return (false);
 
-    if (!mons_is_fleeing(this)
-        && mons_can_move_towards_target(this))
-    {
+    if (!mons_is_retreating(this) && mons_can_move_towards_target(this))
         return (false);
-    }
 
     return (!mons_landlubbers_in_reach(this));
 }
