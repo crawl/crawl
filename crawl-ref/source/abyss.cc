@@ -1214,6 +1214,10 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
         if (_rune_at(p) || grd(p) == DNGN_EXIT_ABYSS)
             continue;
 
+        // Don't morph altars and stone arches.
+        if (grd(p) == DNGN_STONE_ARCH || feat_is_altar(grd(p)))
+            continue;
+
         if (!one_chance_in(you.abyss_speed) && morph)
             continue;
 
@@ -1258,7 +1262,11 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
             grd(p) = feat;
         }
 
-        // Place abyss exits, stone arches, and altars to liven up the scene:
+        if (morph)
+            continue;
+
+        // Place abyss exits, stone arches, and altars to liven up the scene
+        // (only on area creation, not on morphing).
         (_abyss_check_place_feat(p, exit_chance,
                                  &exits_wanted,
                                  &use_abyss_exit_map,
