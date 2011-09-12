@@ -2710,7 +2710,8 @@ void bolt::affect_place_explosion_clouds()
             cl_type = CLOUD_STEAM;
             break;
         }
-        if (p == ray.pos() || x_chance_in_y(125 + ench_power, 225))
+        const coord_def center = (aimed_at_feet ? source : ray.pos());
+        if (p == center || x_chance_in_y(125 + ench_power, 225))
             place_cloud(cl_type, p, duration, agent());
     }
 
