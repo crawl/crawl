@@ -45,7 +45,7 @@ bool got_curare_roll(const int item_level);
 void reroll_brand(item_def &item, int item_level);
 
 deck_rarity_type random_deck_rarity();
-int degrade_high_tier_wand(int type);
+bool is_high_tier_wand(int type);
 
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 void makeitem_tests();
