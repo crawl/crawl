@@ -1216,6 +1216,14 @@ DESC_ID:  This gear used to be worn by personal horse of the Black Knight
           mundane protection against blows: the adamant bears an enchantment
           that makes creature wearing it partially undead.
 
+NAME:     ring of Vitality
+APPEAR:   amethyst ring with an ankh
+OBJ:      OBJ_JEWELLERY/RING_REGENERATION
+HP:       +15
+COLOUR:   LIGHTMAGENTA
+TILE:     urand_vitality
+DESC_END: This famed ring greatly improves its wearer's health.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2
