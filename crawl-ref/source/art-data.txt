@@ -1224,6 +1224,18 @@ COLOUR:   LIGHTMAGENTA
 TILE:     urand_vitality
 DESC_END: This famed ring greatly improves its wearer's health.
 
+NAME:     autumn katana
+APPEAR:   long, slightly curved sword
+OBJ:      OBJ_WEAPONS/WPN_LONG_SWORD
+TILE:     urand_katana
+TILE_EQ:  katana_slant
+COLOUR:   LIGHTRED
+PLUS:     +8/+8
+DAM:      +5
+BOOL:     clarity
+BRAND:    SPWPN_VORPAL
+DESC_ID:  This exotic sword is a weapon for truly enlightened users.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

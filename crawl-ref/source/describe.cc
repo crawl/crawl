@@ -249,6 +249,7 @@ static std::vector<std::string> _randart_propnames(const item_def& item,
         { "SInv",   ARTP_EYESIGHT,              2 },
         { "Stlth",  ARTP_STEALTH,               2 }, // handled specially
         { "Curse",  ARTP_CURSED,                2 },
+        { "Clar",   ARTP_CLARITY,               2 },
     };
 
     // For randart jewellery, note the base jewellery type if it's not
@@ -458,6 +459,7 @@ static std::string _randart_descrip(const item_def &item)
         { ARTP_ANGRY,  "It makes you angry.", false},
         { ARTP_CURSED, "It may recurse itself.", false},
         { ARTP_PONDEROUS, "It slows your movement.", false},
+        { ARTP_CLARITY, "It protects you against confusion.", false},
     };
 
     for (unsigned i = 0; i < ARRAYSZ(propdescs); ++i)
