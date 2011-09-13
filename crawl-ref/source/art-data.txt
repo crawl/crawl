@@ -561,8 +561,8 @@ PLUS:     +2/+10
 COLOUR:   ETC_UNHOLY
 TILE:     urand_botono
 TILE_EQ:  botono
-BRAND:    SPWPN_VAMPIRICISM
-STEALTH:  -30
+BRAND:    SPWPN_REAPING
+HP:       -3
 BOOL:     poison, life, noises
 DESC_END: A really dark and malign artefact, which no wise man would even touch.
 
