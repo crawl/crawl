@@ -186,6 +186,14 @@ static armour_type _acquirement_armour_subtype(bool divine)
         case EQ_BODY_ARMOUR:
             result = NUM_ARMOURS; break;
         }
+
+        if (you.species == SP_NAGA || you.species == SP_CENTAUR)
+        {
+            armour_type bard = (you.species == SP_NAGA) ? ARM_NAGA_BARDING
+                                                        : ARM_CENTAUR_BARDING;
+            if (one_chance_in(you.seen_armour[bard] ? 4 : 2))
+                result = bard;
+        }
     }
 
     result = _pick_wearable_armour(result);
