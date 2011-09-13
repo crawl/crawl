@@ -1236,6 +1236,17 @@ BOOL:     clarity
 BRAND:    SPWPN_VORPAL
 DESC_ID:  This exotic sword is a weapon for truly enlightened users.
 
+NAME:     shillelagh "Devastator"
+APPEAR:   loaded stick
+OBJ:      OBJ_WEAPONS/WPN_CLUB
+TILE:     urand_shillelagh
+TILE_EQ:  shillelagh
+PLUS:     +2/+4
+BOOL:     special
+# hrm, nothing fitting, shouldn't be elemental but should be marked
+COLOUR:   WHITE
+DESC:     You guess this stick is loaded with something else than just lead.
+
 # This entry must always be last.
 ENUM:   DUMMY2
 NAME:   DUMMY UNRANDART 2

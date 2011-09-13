@@ -720,3 +720,19 @@ static void _BRILLIANCE_unequip(item_def *item, bool *show_msgs)
 {
     invalidate_agrid(true);
 }
+
+///////////////////////////////////////////////////
+static void _DEVASTATOR_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    if (unmeld)
+        return;
+    mpr("Time to introduce the shillelagh law.");
+}
+
+
+static void _DEVASTATOR_melee_effect(item_def* item, actor* attacker,
+                                     actor* defender, bool mondied, int dam)
+{
+    ASSERT(attacker == &you); // TODO
+    shillelagh(attacker, defender->pos(), dam);
+}
