@@ -339,7 +339,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     // Staves
     { WPN_STAFF,             "staff",               5,  5, 12, 150,  6,
         SK_STAVES,       HANDS_DOUBLE, SIZE_MEDIUM, MI_NONE, false,
-        DAMV_CRUSHING, 2 },
+        DAMV_CRUSHING, 0 },
     { WPN_QUARTERSTAFF,      "quarterstaff",        10, 3, 13, 180,  7,
         SK_STAVES,       HANDS_DOUBLE, SIZE_LARGE,  MI_NONE, false,
         DAMV_CRUSHING, 10 },
