@@ -1419,6 +1419,22 @@ static void _make_spectral_thing(monster* mons, bool quiet)
     }
 }
 
+static bool _reaping(monster *mons)
+{
+    if (!mons->props.exists("reaping_damage"))
+        return false;
+
+    int rd = mons->props["reaping_damage"].get_int();
+    dprf("Reaping chance: %d/%d", rd, mons->damage_total);
+    if (!x_chance_in_y(rd, mons->damage_total))
+        return false;
+
+    actor *killer = actor_by_mid(mons->props["reaper"].get_int());
+    if (killer)
+        return mons_reaped(killer, mons);
+    return false;
+}
+
 // Returns the slot of a possibly generated corpse or -1.
 int monster_die(monster* mons, killer_type killer,
                 int killer_index, bool silent, bool wizard, bool fake)
@@ -2381,9 +2397,14 @@ int monster_die(monster* mons, killer_type killer,
 
     if (fake)
     {
+        if (corpse != -1)
+            if (_reaping(mons))
+                corpse = -1;
+
         _give_experience(player_exp, monster_exp, killer, killer_index,
                          pet_kill, was_visible);
         crawl_state.dec_mon_acting(mons);
+
         return (corpse);
     }
 
@@ -2429,6 +2450,10 @@ int monster_die(monster* mons, killer_type killer,
     // back on, such as TSO's halo or sticky flame. (jpeg)
     if (mons_near(mons) && mons->has_ench(ENCH_INVIS))
         autotoggle_autopickup(false);
+
+    if (corpse != -1)
+        if (_reaping(mons))
+            corpse = -1;
 
     crawl_state.dec_mon_acting(mons);
     monster_cleanup(mons);
@@ -2479,6 +2504,12 @@ int mounted_kill(monster* daddy, monster_type mc, killer_type killer,
     mon.attitude = daddy->attitude;
     mon.damage_friendly = daddy->damage_friendly;
     mon.damage_total = daddy->damage_total;
+    if (daddy->props.exists("reaping_damage"))
+    {
+        dprf("Mounted kill: marking the other monster as reaped as well.");
+        mon.props["reaping_damage"].get_int() = daddy->props["reaping_damage"].get_int();
+        mon.props["reaper"].get_int() = daddy->props["reaper"].get_int();
+    }
 
     return monster_die(&mon, killer, killer_index, false, false, true);
 }

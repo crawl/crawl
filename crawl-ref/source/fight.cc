@@ -851,8 +851,7 @@ bool melee_attack::player_attack()
         if (defender->props.exists("helpless"))
             defender->props.erase("helpless");
 
-        damage_done = defender->hurt(&you, damage_done,
-                                     special_damage_flavour, false);
+        damage_done = inflict_damage(damage_done);
 
         if (damage_done)
             player_exercise_combat_skills();
@@ -1320,7 +1319,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     const int post_ac_dmg = player_apply_monster_ac(aux_damage);
 
     aux_damage = post_ac_dmg;
-    aux_damage = defender->hurt(&you, aux_damage, BEAM_MISSILE, false);
+    aux_damage = inflict_damage(aux_damage, BEAM_MISSILE);
     damage_done = aux_damage;
 
     switch(atk)
@@ -1346,7 +1345,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
             {
                 const int dmg = bestroll(pre_ac_dmg - post_ac_dmg, hooves);
                 // do some of the previously ignored damage in extra-damage
-                damage_done += defender->hurt(&you, dmg, BEAM_MISSILE, false);
+                damage_done += inflict_damage(dmg, BEAM_MISSILE);
             }
 
             break;
@@ -2177,7 +2176,7 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
          special_damage, special_damage_flavour);
 #endif
 
-    special_damage = defender->hurt(&you, special_damage, special_damage_flavour, false);
+    special_damage = inflict_damage(special_damage);
 
     if (!defender->alive())
     {
@@ -2207,28 +2206,7 @@ void melee_attack::_monster_die(monster* mons, killer_type killer,
 {
     if (invalid_monster(mons))
         return; // Already died some other way.
-
-    const bool chaos = (damage_brand == SPWPN_CHAOS);
-    const bool reaping = (damage_brand == SPWPN_REAPING);
-
-    // Copy defender before it gets reset by monster_die().
-    monster* def_copy = NULL;
-    if (chaos || reaping)
-        def_copy = new monster(*mons);
-
-    int corpse = monster_die(mons, killer, killer_index);
-
-    if (chaos)
-    {
-        chaos_killed_defender(def_copy);
-        delete def_copy;
-    }
-    else if (reaping)
-    {
-        if (corpse != -1)
-            mons_reaped(attacker, def_copy);
-        delete def_copy;
-    }
+    monster_die(mons, killer, killer_index);
 }
 
 static bool is_boolean_resist(beam_type flavour)
@@ -2920,176 +2898,6 @@ void melee_attack::chaos_affects_attacker()
     }
 }
 
-static void _find_remains(monster* mon, int &corpse_class, int &corpse_index,
-                          item_def &fake_corpse, int &last_item,
-                          std::vector<int> items)
-{
-    for (int i = 0; i < NUM_MONSTER_SLOTS; ++i)
-    {
-        const int idx = mon->inv[i];
-
-        if (idx == NON_ITEM)
-            continue;
-
-        item_def &item(mitm[idx]);
-
-        if (!item.defined() || item.pos != mon->pos())
-            continue;
-
-        items.push_back(idx);
-    }
-
-    corpse_index = NON_ITEM;
-    last_item    = NON_ITEM;
-
-    corpse_class = fill_out_corpse(mon, mon->type, fake_corpse, true);
-    if (corpse_class == -1 || mons_weight(corpse_class) == 0)
-        return;
-
-    // Stop at first non-matching corpse, since the freshest corpse will
-    // be at the top of the stack.
-    for (stack_iterator si(mon->pos()); si; ++si)
-    {
-        if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
-        {
-            if (si->orig_monnum != fake_corpse.orig_monnum
-                || si->plus != fake_corpse.plus
-                || si->plus2 != fake_corpse.plus2
-                || si->special != fake_corpse.special
-                || si->flags != fake_corpse.flags)
-            {
-                break;
-            }
-
-            // If it's a hydra the number of heads must match.
-            if ((short) mon->number != si->props[MONSTER_NUMBER].get_short())
-                break;
-
-            // Got it!
-            corpse_index = si.link();
-            break;
-        }
-        else
-        {
-            // Last item which we're sure belonged to the monster.
-            for (unsigned int i = 0; i < items.size(); i++)
-                if (items[i] == si.link())
-                    last_item = si.link();
-        }
-    }
-}
-
-static bool _make_zombie(monster* mon, int corpse_class, int corpse_index,
-                         item_def &fake_corpse, int last_item)
-{
-    // If the monster dropped a corpse, then don't waste it by turning
-    // it into a zombie.
-    if (corpse_index != NON_ITEM || !mons_class_can_be_zombified(corpse_class))
-        return (false);
-
-    // Good gods won't let their gifts/followers be raised as the
-    // undead.
-    if (is_good_god(mon->god))
-        return (false);
-
-    // First attempt to raise zombie fitted out with all its old
-    // equipment.
-    int zombie_index = -1;
-    int idx = get_mitm_slot(0);
-    if (idx != NON_ITEM && last_item != NON_ITEM)
-    {
-        mitm[idx]     = fake_corpse;
-        mitm[idx].pos = mon->pos();
-
-        // Insert it in the item stack right after the monster's last
-        // item, so it will be equipped with all the monster's items.
-        mitm[idx].link       = mitm[last_item].link;
-        mitm[last_item].link = idx;
-
-        animate_remains(mon->pos(), CORPSE_BODY, mon->behaviour,
-                        mon->foe, 0, "a chaos effect", mon->god,
-                        true, true, true, &zombie_index);
-    }
-
-    // No equipment to get, or couldn't get it for some reason.
-    if (zombie_index == -1)
-    {
-        monster_type type = (mons_zombie_size(mon->type) == Z_SMALL) ?
-                                MONS_ZOMBIE_SMALL : MONS_ZOMBIE_LARGE;
-        mgen_data mg(type, mon->behaviour, 0, 0, 0, mon->pos(),
-                     mon->foe, MG_FORCE_PLACE, mon->god,
-                     mon->type, mon->number);
-        mg.non_actor_summoner = "a chaos effect";
-        zombie_index = create_monster(mg);
-    }
-
-    if (zombie_index == -1)
-        return (false);
-
-    monster* zombie = &menv[zombie_index];
-
-    // Attempt to force zombie into exact same spot.
-    if (zombie->pos() != mon->pos() && zombie->is_habitable(mon->pos()))
-        zombie->move_to_pos(mon->pos());
-
-    if (you.can_see(mon))
-    {
-        if (you.can_see(zombie))
-            simple_monster_message(mon, " turns into a zombie!");
-        else if (last_item != NON_ITEM)
-        {
-            simple_monster_message(mon, "'s equipment vanishes!");
-            autotoggle_autopickup(true);
-        }
-    }
-    else
-    {
-        simple_monster_message(zombie, " appears from thin air!");
-        autotoggle_autopickup(false);
-    }
-
-    player_angers_monster(zombie);
-
-    return (true);
-}
-
-// mon is a copy of the monster from before monster_die() was called,
-// though its hitpoints may be non-positive.
-//
-// NOTE: Isn't called if monster dies from poisoning caused by chaos.
-void melee_attack::chaos_killed_defender(monster* mon)
-{
-    ASSERT(mon->type != -1 && mon->type != MONS_NO_MONSTER);
-    ASSERT(in_bounds(mon->pos()));
-    ASSERT(!defender->alive());
-
-    if (!attacker->alive())
-        return;
-
-    if (attacker->atype() == ACT_PLAYER && you.banished)
-        return;
-
-    if (mon->is_summoned() || (mon->flags & (MF_BANISHED | MF_HARD_RESET)))
-        return;
-
-    int              corpse_class, corpse_index, last_item;
-    item_def         fake_corpse;
-    std::vector<int> items;
-    _find_remains(mon, corpse_class, corpse_index, fake_corpse, last_item,
-                  items);
-
-    if (one_chance_in(100)
-        && _make_zombie(mon, corpse_class, corpse_index, fake_corpse,
-                        last_item))
-    {
-#ifdef NOTE_DEBUG_CHAOS_EFFECTS
-        take_note(Note(NOTE_MESSAGE, 0, 0,
-                       "CHAOS killed defender: zombified monster"), true);
-#endif
-        DID_AFFECT();
-    }
-}
-
 void melee_attack::do_miscast()
 {
     if (miscast_level == -1)
@@ -3673,7 +3481,7 @@ bool melee_attack::chop_hydra_head(int dam,
                 bleed_onto_floor(defender->pos(), defender->type,
                                  defender->as_monster()->hit_points, true);
 
-            defender->hurt(attacker, defender->as_monster()->hit_points);
+            inflict_damage(defender->as_monster()->hit_points, BEAM_NONE, true);
 
             return (true);
         }
@@ -5924,14 +5732,10 @@ void melee_attack::mons_perform_attack_rounds()
                 break;
             }
 
-            defender->hurt(attacker, damage_done + special_damage,
-                           special_damage_flavour);
+            inflict_damage(damage_done + special_damage);
 
             if (!defender->alive())
             {
-                if (chaos_attack && defender->atype() == ACT_MONSTER)
-                    chaos_killed_defender(def_copy);
-
                 if (chaos_attack && attacker->alive())
                     chaos_affects_attacker();
 
@@ -5965,13 +5769,10 @@ void melee_attack::mons_perform_attack_rounds()
             }
 
             if (special_damage > 0)
-                defender->hurt(attacker, special_damage, special_damage_flavour);
+                inflict_damage(special_damage);
 
             if (!defender->alive())
             {
-                if (chaos_attack && defender->atype() == ACT_MONSTER)
-                    chaos_killed_defender(def_copy);
-
                 if (chaos_attack && attacker->alive())
                     chaos_affects_attacker();
 
@@ -6135,6 +5936,22 @@ void melee_attack::chaos_affect_actor(actor *victim)
     {
         mprf("%s", attk.special_damage_message.c_str());
     }
+}
+
+int melee_attack::inflict_damage(int dam, beam_type flavour, bool clean)
+{
+    if (flavour == NUM_BEAMS)
+        flavour = special_damage_flavour;
+    // Auxes temporarily clear damage_brand so we don't need to check.
+    if (damage_brand == SPWPN_REAPING
+     || damage_brand == SPWPN_CHAOS && one_chance_in(100))
+    {
+        defender->props["reaping_damage"].get_int() += dam;
+        // With two reapers of different friendliness, the most recent one
+        // gets the zombie.  Too rare a case to care any more.
+        defender->props["reaper"].get_int() = attacker->mid;
+    }
+    return defender->hurt(attacker, dam, flavour, clean);
 }
 
 ///////////////////////////////////////////////////////////////////////////

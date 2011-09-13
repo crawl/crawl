@@ -3024,6 +3024,7 @@ bool monster::heal(int amount, bool max_too)
         // Clear the damage blame if it goes away completely.
         damage_friendly = 0;
         damage_total = 0;
+        props.erase("reaping_damage");
     }
 
     return (success);
