@@ -114,7 +114,7 @@ ENDMAP
 # Mnoleg
 #
 NAME:      mnoleg
-TAGS:      mnoleg
+TAGS:      mnoleg uniq_mnoleg
 ORIENT:    northeast
 LFLOORCOL: yellow
 LROCKCOL:  red
@@ -158,7 +158,7 @@ xxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:      mnoleg_st
-TAGS:      mnoleg
+TAGS:      mnoleg uniq_mnoleg
 ORIENT:    southwest
 LFLOORCOL: yellow
 LROCKCOL:  red
@@ -216,7 +216,7 @@ ENDMAP
 # Lom Lobon
 #
 NAME:      lom_lobon
-TAGS:      lom_lobon
+TAGS:      lom_lobon uniq_lom_lobon
 ORIENT:    north
 LFLOORCOL: lightgrey
 TAGS:      no_rotate
@@ -261,7 +261,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx...@.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:      lom_lobon_st
-TAGS:      lom_lobon no_pool_fixup
+TAGS:      lom_lobon no_pool_fixup uniq_lom_lobon
 ORIENT:    northwest
 LFLOORCOL: lightgrey
 LROCKCOL:  white
@@ -323,7 +323,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx..@..
 ENDMAP
 
 NAME:      lom_lobon_spiral_st
-TAGS:      lom_lobon no_pool_fixup patrolling
+TAGS:      lom_lobon no_pool_fixup patrolling uniq_lom_lobon
 ORIENT:    northeast
 LFLOORCOL: lightgrey
 LROCKCOL:  white
@@ -392,7 +392,7 @@ ENDMAP
 # reliably teleport away again.
 #
 NAME:      cerebov
-TAGS:      cerebov
+TAGS:      cerebov uniq_cerebov
 DESC:      Cerebov's castle
 ORIENT:    northeast
 LFLOORCOL: red
@@ -445,7 +445,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:      cerebov_st
-TAGS:      cerebov patrolling
+TAGS:      cerebov patrolling uniq_cerebov
 ORIENT:    north
 LFLOORCOL: red
 LROCKCOL:  red
@@ -498,7 +498,7 @@ ENDMAP
 # Gloorx Vloq
 #
 NAME:      gloorx_vloq
-TAGS:      gloorx_vloq
+TAGS:      gloorx_vloq uniq_gloorx_vloq
 ORIENT:    southwest
 LFLOORCOL: blue
 LROCKCOL:  blue
@@ -540,7 +540,7 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:      gloorx_vloq_st
-TAGS:      gloorx_vloq
+TAGS:      gloorx_vloq uniq_gloorx_vloq
 ORIENT:    southeast
 LFLOORCOL: blue
 LROCKCOL:  blue

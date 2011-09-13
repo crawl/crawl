@@ -2397,6 +2397,8 @@ static void _prepare_water(int level_number)
 
 static void _pan_level(int level_number)
 {
+    const char *pandemon_level_names[] =
+        { "mnoleg", "lom_lobon", "cerebov", "gloorx_vloq", };
     int which_demon = -1;
     // Could do spotty_level, but that doesn't always put all paired
     // stairs reachable from each other which isn't a problem in normal
@@ -2414,16 +2416,12 @@ static void _pan_level(int level_number)
                 break;
             }
         }
-        while (you.unique_creatures[MONS_MNOLEG + which_demon]);
+        while (you.uniq_map_tags.count(std::string("uniq_")
+                                     + pandemon_level_names[which_demon]));
     }
 
     if (which_demon >= 0)
     {
-        const char *pandemon_level_names[] =
-        {
-            "mnoleg", "lom_lobon", "cerebov", "gloorx_vloq"
-        };
-
         const map_def *vault =
             random_map_for_tag(pandemon_level_names[which_demon], false);
 
