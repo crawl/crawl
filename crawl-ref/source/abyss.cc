@@ -60,7 +60,7 @@
 static const int ABYSSAL_RUNE_MAX_ROLL = 200;
 
 #ifdef NEW_ABYSS
-static abyss_state abyssal_state;
+abyss_state abyssal_state;
 
 static std::vector<dungeon_feature_type> abyssal_features;
 static std::list<monster*> displaced_monsters;
