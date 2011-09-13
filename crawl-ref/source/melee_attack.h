@@ -132,6 +132,8 @@ private:
                           int dam_type,
                           int wpn_brand);
 
+    int inflict_damage(int dam, beam_type flavour = NUM_BEAMS, bool clean = false);
+
     // Returns true if the defender is banished.
     bool distortion_affects_defender();
 
@@ -139,7 +141,6 @@ private:
     void pain_affects_defender();
     void chaos_affects_defender();
     void chaos_affects_attacker();
-    void chaos_killed_defender(monster* def_copy);
     int  random_chaos_brand();
     void do_miscast();
 
