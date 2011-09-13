@@ -1046,6 +1046,45 @@ spret_type cast_shatter(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
+void shillelagh(actor *wielder, coord_def where, int pow)
+{
+    bolt beam;
+    beam.name = "shillelagh";
+    beam.flavour = BEAM_VISUAL;
+    beam.set_agent(wielder);
+    beam.colour = BROWN;
+    beam.glyph = dchar_glyph(DCHAR_EXPLOSION);
+    beam.range = 1;
+    beam.ex_size = 1;
+    beam.is_explosion = true;
+    beam.source = wielder->pos();
+    beam.target = where;
+    beam.hit = AUTOMATIC_HIT;
+    beam.loudness = 7;
+    beam.explode();
+
+    counted_monster_list affected_monsters;
+    for (adjacent_iterator ai(where, false); ai; ++ai)
+    {
+        monster *mon = monster_at(*ai);
+        if (!mon || mon->submerged())
+            continue;
+        _record_monster_by_name(affected_monsters, mon);
+        _shatter_monsters(*ai, pow, 0, wielder);
+    }
+    if (!affected_monsters.empty())
+    {
+        const std::string message =
+            make_stringf("%s shudder%s.",
+                         _describe_monsters(affected_monsters).c_str(),
+                         _monster_count(affected_monsters) == 1? "s" : "");
+        if (strwidth(message) < get_number_of_cols() - 2)
+            mpr(message.c_str());
+        else
+	    mpr("There is a shattering impact!");
+    }
+}
+
 static int _ignite_poison_affect_item(item_def& item, bool in_inv)
 {
     int strength = 0;

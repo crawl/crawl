@@ -18,6 +18,7 @@ spret_type cast_toxic_radiance(bool non_player = false, bool fail = false);
 spret_type cast_refrigeration(int pow, bool non_player = false,
                               bool freeze_potions = true, bool fail = false);
 void sonic_damage(bool scream);
+void shillelagh(actor *wielder, coord_def where, int pow);
 spret_type vampiric_drain(int pow, monster* mons, bool fail);
 spret_type cast_freeze(int pow, monster* mons, bool fail);
 spret_type cast_airstrike(int pow, const dist &beam, bool fail);
