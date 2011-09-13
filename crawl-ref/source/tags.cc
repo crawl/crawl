@@ -26,6 +26,7 @@
 #include <unistd.h>
 #endif
 
+#include "abyss.h"
 #include "artefact.h"
 #include "branch.h"
 #if TAG_MAJOR_VERSION == 32
@@ -81,6 +82,9 @@ extern std::map<level_id, std::string> level_annotations;
 extern std::map<level_id, std::string> level_exclusions;
 extern std::map<level_id, std::string> level_uniques;
 extern std::set<std::pair<std::string, level_id> > auto_unique_annotations;
+
+// defined in abyss.cc
+extern abyss_state abyssal_state;
 
 // temp file pairs used for file level cleanup
 
@@ -1284,6 +1288,9 @@ static void tag_construct_you(writer &th)
             marshallInt(th, sp->second[k]);
     }
 
+    marshallCoord(th, abyssal_state.major_coord);
+    marshallFloat(th, abyssal_state.depth);
+
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
 
@@ -2184,6 +2191,13 @@ static void tag_read_you(reader &th)
         for (j = 0; j < 27; j++)
             you.spell_usage[spell][j] = unmarshallInt(th);
     }
+#if TAG_MAJOR_VERSION == 32
+    }
+    if (th.getMinorVersion() >= TAG_MINOR_ABYSS_STATE)
+    {
+#endif
+    abyssal_state.major_coord = unmarshallCoord(th);
+    abyssal_state.depth = unmarshallFloat(th);
 #if TAG_MAJOR_VERSION == 32
     }
 #endif
