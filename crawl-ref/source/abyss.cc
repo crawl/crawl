@@ -672,6 +672,14 @@ static void _generate_area(const map_mask &abyss_genlevel_mask,
 }
 #endif
 
+static bool _abyssal_rune_at(const coord_def p)
+{
+    for (stack_iterator si(p); si; ++si)
+        if (item_is_rune(*si, RUNE_ABYSSAL))
+            return true;
+    return false;
+}
+
 class xom_abyss_feature_amusement_check
 {
 private:
@@ -694,14 +702,8 @@ private:
     {
         // See above comment about env.map_knowledge().known().
         for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
-        {
-            if (env.map_knowledge(*ri).seen())
-            {
-                for (stack_iterator si(*ri); si; ++si)
-                    if (item_is_rune(*si, RUNE_ABYSSAL))
-                        return true;
-            }
-        }
+            if (env.map_knowledge(*ri).seen() && _abyssal_rune_at(*ri))
+                return true;
         return false;
     }
 
@@ -1156,14 +1158,6 @@ static bool _abyss_teleport_within_level()
     return (false);
 }
 
-static bool _rune_at(const coord_def p)
-{
-    for (stack_iterator si(p); si; ++si)
-        if (item_is_rune(*si, RUNE_ABYSSAL))
-            return true;
-    return false;
-}
-
 static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
                                  bool morph = false)
 {
@@ -1211,7 +1205,7 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
             continue;
 
         // Don't morph a cell with the Rune or the exit.
-        if (_rune_at(p) || grd(p) == DNGN_EXIT_ABYSS)
+        if (_abyssal_rune_at(p) || grd(p) == DNGN_EXIT_ABYSS)
             continue;
 
         // Don't morph altars and stone arches.
