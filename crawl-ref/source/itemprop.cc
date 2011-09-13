@@ -343,7 +343,7 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_QUARTERSTAFF,      "quarterstaff",        10, 3, 13, 180,  7,
         SK_STAVES,       HANDS_DOUBLE, SIZE_LARGE,  MI_NONE, false,
         DAMV_CRUSHING, 10 },
-    { WPN_LAJATANG,          "lajatang",           16, -3, 13, 200,  3,
+    { WPN_LAJATANG,          "lajatang",            16,-3, 14, 200,  3,
         SK_STAVES,       HANDS_DOUBLE, SIZE_LARGE,  MI_NONE, false,
         DAMV_SLICING, 2 },
 
