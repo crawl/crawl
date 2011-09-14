@@ -1081,7 +1081,7 @@ void shillelagh(actor *wielder, coord_def where, int pow)
         if (strwidth(message) < get_number_of_cols() - 2)
             mpr(message.c_str());
         else
-	    mpr("There is a shattering impact!");
+            mpr("There is a shattering impact!");
     }
 }
 
