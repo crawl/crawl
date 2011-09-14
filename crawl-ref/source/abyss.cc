@@ -1254,8 +1254,11 @@ void generate_abyss()
     setup_environment_effects();
 }
 
-void abyss_morph()
+void abyss_morph(double duration)
 {
+    if (you.level_type != LEVEL_ABYSS)
+        return;
+
     abyssal_state.depth += you.time_taken * (you.abyss_speed + 40.0) / 20000.0;
     map_mask abyss_genlevel_mask;
     _abyss_invert_mask(&abyss_genlevel_mask);
