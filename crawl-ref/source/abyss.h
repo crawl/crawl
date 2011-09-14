@@ -13,7 +13,6 @@
 const int ABYSS_AREA_SHIFT_RADIUS = LOS_RADIUS + 2;
 const coord_def ABYSS_CENTRE(GXM / 2, GYM / 2);
 
-#ifdef NEW_ABYSS
 struct abyss_state
 {
     coord_def major_coord;
@@ -21,7 +20,6 @@ struct abyss_state
 };
 void abyss_morph();
 void push_features_to_abyss();
-#endif
 
 void generate_abyss();
 void maybe_shift_abyss_around_player();

@@ -2966,12 +2966,7 @@ static void _player_reacts()
         // this is instantaneous
         if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
             you_teleport_now(true);
-#ifdef NEW_ABYSS
-#define SHIFT_PERIOD 80
-#else
-#define SHIFT_PERIOD 30
-#endif
-        else if (you.level_type == LEVEL_ABYSS && one_chance_in(SHIFT_PERIOD))
+        else if (you.level_type == LEVEL_ABYSS && one_chance_in(80))
             you_teleport_now(false, true); // to new area of the Abyss
     }
 
@@ -3112,10 +3107,8 @@ void world_reacts()
     apply_noises();
     handle_monsters(true);
 
-#ifdef NEW_ABYSS
     if (you.level_type == LEVEL_ABYSS)
         abyss_morph();
-#endif
 
     _check_banished();
 
