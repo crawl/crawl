@@ -472,12 +472,14 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
 
 static void _VAMPIRES_TOOTH_equip(item_def *item, bool *show_msgs, bool unmeld)
 {
-    if (you.is_undead != US_UNDEAD)
+    if (you.is_undead == US_ALIVE)
     {
         _equip_mpr(show_msgs,
                    "You feel a strange hunger, and smell blood in the air...");
         make_hungry(4500, false, false);
     }
+    else if (you.species == SP_VAMPIRE)
+        _equip_mpr(show_msgs, "You feel a bloodthirsty glee!");
     else
         _equip_mpr(show_msgs, "You feel strangely empty.");
 }
