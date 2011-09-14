@@ -5483,7 +5483,7 @@ void player::init()
 
     entry_cause         = EC_SELF_EXPLICIT;
     entry_cause_god     = GOD_NO_GOD;
-    abyss_speed         = 40;
+    abyss_speed         = 0;
 
     old_hunger          = hunger;
     transit_stair       = DNGN_UNSEEN;

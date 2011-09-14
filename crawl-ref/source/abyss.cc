@@ -433,15 +433,12 @@ static int _abyss_create_items(const map_mask &abyss_genlevel_mask,
     return (items_placed);
 }
 
+#ifndef NEW_ABYSS
 static std::vector<dungeon_feature_type> _abyss_pick_terrain_elements()
 {
     std::vector<dungeon_feature_type> terrain_elements;
 
-#ifdef NEW_ABYSS
-    const int n_terrain_elements = random_range(5,7);
-#else
     const int n_terrain_elements = 5;
-#endif
 
     // Generate level composition vector.
     for (int i = 0; i < n_terrain_elements; i++)
@@ -461,6 +458,7 @@ static std::vector<dungeon_feature_type> _abyss_pick_terrain_elements()
     }
     return (terrain_elements);
 }
+#endif
 
 #ifdef NEW_ABYSS
 void push_features_to_abyss()
@@ -1161,8 +1159,15 @@ static bool _abyss_teleport_within_level()
 static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
                                  bool morph = false)
 {
-    const std::vector<dungeon_feature_type> terrain_elements =
-                                                _abyss_pick_terrain_elements();
+    const dungeon_feature_type terrain_elements[] =
+    {
+        DNGN_ROCK_WALL,
+        DNGN_STONE_WALL,
+        DNGN_METAL_WALL,
+        DNGN_LAVA,
+        DNGN_SHALLOW_WATER,
+        DNGN_DEEP_WATER,
+    };
 
     if (one_chance_in(3))
         _abyss_create_rooms(abyss_genlevel_mask, random_range(1, 10));
@@ -1172,7 +1177,7 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
     // Except for the altar on the starting position, don't place any altars.
     const int altar_chance = you.char_direction != GDT_GAME_START? 10000 : 0;
 
-    const int n_terrain_elements = terrain_elements.size();
+    const int n_terrain_elements = ARRAYSZ(terrain_elements);
     int exits_wanted  = 0;
     int altars_wanted = 0;
     bool use_abyss_exit_map = true;
@@ -1210,9 +1215,6 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
 
         // Don't morph altars and stone arches.
         if (grd(p) == DNGN_STONE_ARCH || feat_is_altar(grd(p)))
-            continue;
-
-        if (!one_chance_in(you.abyss_speed) && morph)
             continue;
 
         double x = (p.x + major_coord.x);
@@ -1453,7 +1455,7 @@ void generate_abyss()
 
 void abyss_morph()
 {
-    abyssal_state.depth += 0.25;
+    abyssal_state.depth += you.time_taken * (you.abyss_speed + 40.0) / 20000.0;
     map_mask abyss_genlevel_mask;
     _abyss_invert_mask(&abyss_genlevel_mask);
     dgn_erase_unused_vault_placements();
