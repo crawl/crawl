@@ -3458,7 +3458,9 @@ bool can_go_straight(const monster* mon, const coord_def& p1,
     {
         const coord_def pos = ray.pos();
         ASSERT(map_bounds(pos));
-        if (!_can_safely_go_through(mon, pos))
+        if (pos == p2 && pos == PLAYER_POS)
+            return (true);
+        else if (!_can_safely_go_through(mon, pos))
             return (false);
         else if (pos == p2)
             return (true);
