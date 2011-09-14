@@ -3107,9 +3107,6 @@ void world_reacts()
     apply_noises();
     handle_monsters(true);
 
-    if (you.level_type == LEVEL_ABYSS)
-        abyss_morph();
-
     _check_banished();
 
     ASSERT(you.time_taken >= 0);

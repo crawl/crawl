@@ -18,7 +18,7 @@ struct abyss_state
     coord_def major_coord;
     double depth;
 };
-void abyss_morph();
+void abyss_morph(double duration);
 void push_features_to_abyss();
 
 void generate_abyss();
