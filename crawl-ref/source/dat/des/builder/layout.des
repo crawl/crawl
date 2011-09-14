@@ -716,19 +716,35 @@ TAGS: overwritable layout allow_dup unrand
     function link_rooms(r1, r2, sideways)
         local x1, y1, x2, y2
         if sideways then
-            x1 = r1.x2
+            x1 = r1.x2 + 1
             y1 = crawl.random_range(r1.y1 + 1, r1.y2 - 1)
-            x2 = r2.x1
+            x2 = r2.x1 - 1
             y2 = crawl.random_range(r2.y1 + 1, r2.y2 - 1)
+
+            if x2 - x1 >= 2 then
+                mapgrd[x1][y1] = r1.door
+                mapgrd[x2][y2] = r2.door
+                x1 = x1 + 1
+                x2 = x2 - 1
+            end
         else
             x1 = crawl.random_range(r1.x1 + 1, r1.x2 - 1)
-            y1 = r1.y2
+            y1 = r1.y2 + 1
             x2 = crawl.random_range(r2.x1 + 1, r2.x2 - 1)
-            y2 = r2.y1
+            y2 = r2.y1 - 1
+
+            if y2 - y1 >= 2 then
+                mapgrd[x1][y1] = r1.door
+                mapgrd[x2][y2] = r2.door
+                y1 = y1 + 1
+                y2 = y2 - 1
+            end
         end
 
+        mapgrd[x1][y1] = '.'
+
         while x1 ~= x2 or y1 ~= y2 do
-            if crawl.coinflip() then
+            if crawl.coinflip() and x1 ~= x2 then
                 x1 = x1 + sign(x2 - x1)
             else
                 y1 = y1 + sign(y2 - y1)
@@ -764,6 +780,7 @@ TAGS: overwritable layout allow_dup unrand
                 x2 = base_x + 6 + crawl.random2(5),
                 y2 = base_y + 6 + crawl.random2(3),
                 fill = '.',
+                door = crawl.one_chance_in(3) and '.' or '+',
             }
 
             table.insert(rooms, room)
@@ -773,6 +790,7 @@ TAGS: overwritable layout allow_dup unrand
     for i, room in ipairs(rooms) do
         if i == special then
             room.fill = 'O'
+            room.door = '+'
         end
 
         fill_area(room)
