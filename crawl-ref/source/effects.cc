@@ -2345,7 +2345,15 @@ void handle_time()
     }
 
     if (you.level_type == LEVEL_ABYSS)
+    {
         forget_map(you.religion == GOD_LUGONU ? 25 : 45);
+        // Update the abyss speed. This place is unstable and the speed can
+        // fluctuate. It's not a constant increase.
+        if (coinflip() && you.abyss_speed < 100)
+            ++you.abyss_speed;
+        else if (one_chance_in(5) && you.abyss_speed > 0)
+            --you.abyss_speed;
+    }
 
     if (you.religion == GOD_JIYVA && one_chance_in(10))
     {
