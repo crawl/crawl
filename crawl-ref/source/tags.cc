@@ -1069,6 +1069,7 @@ static void tag_construct_you(writer &th)
     marshallString(th, you.level_type_ext);
     marshallByte(th, you.entry_cause);
     marshallByte(th, you.entry_cause_god);
+    marshallInt(th, you.abyss_speed);
 
     marshallInt(th, you.disease);
     marshallShort(th, you.dead ? 0 : you.hp);
@@ -1765,6 +1766,11 @@ static void tag_read_you(reader &th)
 
     you.entry_cause     = static_cast<entry_cause_type>(unmarshallByte(th));
     you.entry_cause_god = static_cast<god_type>(unmarshallByte(th));
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_ABYSS_SPEED)
+#endif
+        you.abyss_speed = unmarshallInt(th);
+
     you.disease         = unmarshallInt(th);
 
     you.hp              = unmarshallShort(th);
