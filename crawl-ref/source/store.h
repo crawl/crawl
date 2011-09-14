@@ -8,7 +8,6 @@
 #define STORE_H
 
 #include <limits.h>
-#include <map>
 #include <string>
 #include <vector>
 
@@ -264,7 +263,7 @@ public:
 
     ~CrawlHashTable();
 
-    typedef std::map<std::string, CrawlStoreValue> hash_map_type;
+    typedef std::unordered_map<std::string, CrawlStoreValue> hash_map_type;
     typedef hash_map_type::iterator                iterator;
     typedef hash_map_type::const_iterator          const_iterator;
 
