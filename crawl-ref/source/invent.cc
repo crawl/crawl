@@ -1000,7 +1000,7 @@ std::string item_class_name(int type, bool terse)
         case OBJ_WEAPONS:    return ("Hand Weapons");
         case OBJ_MISSILES:   return ("Missiles");
         case OBJ_ARMOUR:     return ("Armour");
-        case OBJ_WANDS:      return ("Magical Devices");
+        case OBJ_WANDS:      return ("Wands");
         case OBJ_FOOD:       return ("Comestibles");
         case OBJ_SCROLLS:    return ("Scrolls");
         case OBJ_JEWELLERY:  return ("Jewellery");
