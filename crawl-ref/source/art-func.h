@@ -179,17 +179,20 @@ static bool _DISPATER_evoke(item_def *item, int* pract, bool* did_work,
         return (false);
     }
 
+    *did_work = true;
     int power = you.skill(SK_EVOCATIONS) * 8;
 
     if (your_spells(SPELL_HELLFIRE, power, false) == SPRET_ABORT)
+    {
+        *unevokable = true;
         return (false);
+    }
 
     mpr("You feel the staff feeding on your energy!");
     dec_hp(5 + random2avg(19, 2), false);
     dec_mp(2 + random2avg(5, 2));
     make_hungry(100, false, true);
     *pract    = (coinflip() ? 2 : 1);
-    *did_work = true;
 
     return (false);
 }
