@@ -173,7 +173,7 @@ bool try_pathfind(monster* mon)
     // shallow water. Retreating monsters retry every turn.
     if (target_is_unreachable(mon) && !one_chance_in(12)
         && !(mon->can_cling_to_walls() && one_chance_in(4))
-        && !mon->behaviour == BEH_RETREAT)
+        && mon->behaviour != BEH_RETREAT)
     {
         return (false);
     }
