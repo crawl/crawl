@@ -945,7 +945,7 @@ static void _fixup_pandemonium_stairs()
         if (grd(*ri) >= DNGN_STONE_STAIRS_UP_I
             && grd(*ri) <= DNGN_ESCAPE_HATCH_UP)
         {
-            if (one_chance_in(50))
+            if (one_chance_in(30))
                 grd(*ri) = DNGN_EXIT_PANDEMONIUM;
             else
                 grd(*ri) = DNGN_FLOOR;
