@@ -2339,6 +2339,7 @@ enum monster_type                      // (int) menv[].type
     MONS_ERESHKIGAL,
     MONS_ROYAL_JELLY,
     MONS_THE_ENCHANTRESS,
+    // the four Pan lords, order must match runes
     MONS_MNOLEG,
     MONS_LOM_LOBON,
     MONS_CEREBOV,

@@ -3002,6 +3002,17 @@ static monster_type _pick_zot_exit_defender()
 #ifdef DEBUG_MON_CREATION
         mpr("Create a pandemonium lord!", MSGCH_DIAGNOSTICS);
 #endif
+        for (int i = 0; i < 4; i++)
+        {
+            // Sometimes pick an unique lord whose rune you've stolen.
+            //
+            if (you.runes[RUNE_MNOLEG + i]
+                && !you.unique_creatures[MONS_MNOLEG + i]
+                && one_chance_in(10))
+            {
+                return static_cast<monster_type>(MONS_MNOLEG + i);
+            }
+        }
         return (MONS_PANDEMONIUM_LORD);
     }
 
