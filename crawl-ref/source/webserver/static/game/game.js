@@ -1,14 +1,13 @@
-var dungeon_ctx;
-var dungeon_cell_w = 32, dungeon_cell_h = 32;
-var dungeon_cell_x_scale = 1, dungeon_cell_y_scale = 1;
-var dungeon_cols = 0, dungeon_rows = 0;
-var view_x = 0, view_y = 0;
-var view_center_x = 0, view_center_y = 0;
+var dungeon_renderer;
 
 var minimap_ctx;
 var minimap_cell_w, minimap_cell_h;
 var minimap_x = 0, minimap_y = 0;
 var minimap_display_x = 0, minimap_display_y = 0;
+
+$(document).ready(function () {
+    dungeon_renderer = new DungeonViewRenderer($("#dungeon")[0]);
+});
 
 // Text area handling ----------------------------------------------------------
 function get_text_area_line(name, line)
@@ -128,19 +127,13 @@ function do_layout()
     layout.crt_width = Math.floor((window_width - 30) / char_w);
     layout.crt_height = Math.floor((window_height - 15) / char_h);
 
-    view_width = Math.floor(remaining_width / dungeon_cell_w);
-    view_height = Math.floor(remaining_height / dungeon_cell_h);
-    // TODO: Scale so that everything fits
-    if (view_width < layout_parameters.show_diameter)
-        view_width = layout_parameters.show_diameter;
-    if (view_height < layout_parameters.show_diameter)
-        view_height = layout_parameters.show_diameter;
-
     // Position controls
     set_layer("normal");
     var minimap_display = $("#minimap").css("display");
     $("#minimap, #minimap_overlay").show();
-    view_size(view_width, view_height);
+
+    dungeon_renderer.fit_to(remaining_width, remaining_height,
+                            layout.show_diameter);
 
     var dungeon_offset = $("#dungeon").offset();
 
@@ -170,8 +163,6 @@ function do_layout()
     set_layer(layer);
 
     // Update the view
-    view_x = view_center_x - Math.floor(dungeon_cols / 2);
-    view_y = view_center_y - Math.floor(dungeon_rows / 2);
     force_full_render(true);
     display();
     update_minimap_overlay();
@@ -183,9 +174,6 @@ function do_layout()
         layout.crt_height == current_layout.crt_height &&
         layout.msg_width == current_layout.msg_width)
         return false;
-
-    log(current_layout);
-    log(layout);
 
     current_layout = layout;
 
@@ -205,35 +193,14 @@ function send_layout(layout)
 
 function set_dungeon_cell_size(w, h)
 {
-    dungeon_cell_w = w;
-    dungeon_cell_h = h;
-    dungeon_cell_x_scale = w / 32;
-    dungeon_cell_y_scale = h / 32;
+    dungeon_renderer.set_cell_size(w, h);
     do_layout();
 }
+
 // View area -------------------------------------------------------------------
-function view_size(cols, rows)
-{
-    if ((cols == dungeon_cols) && (rows == dungeon_rows))
-        return;
-
-    log("Changing view size to: " + cols + "/" + rows);
-    dungeon_cols = cols;
-    dungeon_rows = rows;
-    var canvas = $("#dungeon")[0];
-    canvas.width = dungeon_cols * dungeon_cell_w;
-    canvas.height = dungeon_rows * dungeon_cell_h;
-    dungeon_ctx = canvas.getContext("2d");
-}
-
 function vgrdc(x, y)
 {
-    view_center_x = x;
-    view_center_y = y;
-    var old_vx = view_x, old_vy = view_y;
-    view_x = x - Math.floor(dungeon_cols / 2);
-    view_y = y - Math.floor(dungeon_rows / 2);
-    shift(view_x - old_vx, view_y - old_vy);
+    dungeon_renderer.set_view_center(x, y);
 
     update_minimap_overlay();
 }
@@ -243,16 +210,11 @@ function update_minimap_overlay()
     // Update the minimap overlay
     var minimap_overlay = $("#minimap_overlay")[0];
     var ctx = minimap_overlay.getContext("2d");
+    var view = dungeon_renderer.view;
     ctx.clearRect(0, 0, minimap_overlay.width, minimap_overlay.height);
     ctx.strokeStyle = "yellow";
-    ctx.strokeRect(minimap_display_x + (view_x - minimap_x) * minimap_cell_w + 0.5,
-                   minimap_display_y + (view_y - minimap_y) * minimap_cell_h + 0.5,
-                   dungeon_cols * minimap_cell_w - 1,
-                   dungeon_rows * minimap_cell_h - 1);
-}
-
-function in_view(cx, cy)
-{
-    return (cx >= view_x) && (view_x + dungeon_cols > cx) &&
-        (cy >= view_y) && (view_y + dungeon_rows > cy);
+    ctx.strokeRect(minimap_display_x + (view.x - minimap_x) * minimap_cell_w + 0.5,
+                   minimap_display_y + (view.y - minimap_y) * minimap_cell_h + 0.5,
+                   dungeon_renderer.cols * minimap_cell_w - 1,
+                   dungeon_renderer.rows * minimap_cell_h - 1);
 }
