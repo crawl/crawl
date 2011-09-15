@@ -6636,8 +6636,10 @@ _friendly_beogh_speech_rare_
 
 @The_monster@ @says_or_shouts@, "Our fallen brethren won't be forgotten."
 
+@The_monster@ nervously looks @at_foe@.
+
 # messages submitted by Lemuel
-@The_monster@ says @to_foe@, "I'd rather not die in your service, @player_name@."
+@The_monster@ looks @at_foe@ and says, "I'd rather not die in your service, @player_name@."
 
 @The_monster@ chants, "I shall fear no evil, for @player_name@ is my saviour."
 
