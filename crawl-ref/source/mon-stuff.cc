@@ -651,7 +651,7 @@ static void _give_player_experience(int experience, killer_type killer,
         return;
 
     unsigned int exp_gain = 0;
-    unsigned int avail_gain = 0;;
+    unsigned int avail_gain = 0;
     gain_exp(experience, &exp_gain, &avail_gain);
 
     kill_category kc =
@@ -1571,7 +1571,7 @@ int monster_die(monster* mons, killer_type killer,
         }
         else if (wearing_amulet(AMU_RAGE) && one_chance_in(30))
         {
-            const int bonus = (2 + random2(4)) / 2;;
+            const int bonus = (2 + random2(4)) / 2;
 
             you.increase_duration(DUR_BERSERK, bonus);
 
