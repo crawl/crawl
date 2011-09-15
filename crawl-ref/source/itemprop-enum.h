@@ -287,6 +287,8 @@ enum rune_type
     RUNE_ABYSSAL,
 
     RUNE_DEMONIC,
+
+    // order must match monsters
     RUNE_MNOLEG,
     RUNE_LOM_LOBON,
     RUNE_CEREBOV,
