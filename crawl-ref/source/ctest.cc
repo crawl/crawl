@@ -183,7 +183,7 @@ namespace crawl_tests
             }
             const int code = failures.empty() ? 0 : 1;
             end(code, false, "%d %ss, %d succeeded, %d failed",
-                ntests, activity, nsuccess, failures.size());
+                ntests, activity, nsuccess, (int)failures.size());
         }
         return (failures.empty());
     }
