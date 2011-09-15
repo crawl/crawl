@@ -3413,11 +3413,9 @@ void make_mons_leave_level(monster* mon)
 
 static bool _can_safely_go_through(const monster * mon, const coord_def p)
 {
-    const dungeon_feature_type can_move =
-        (mons_habitat(mon) == HT_AMPHIBIOUS) ? DNGN_DEEP_WATER
-                                             : DNGN_SHALLOW_WATER;
+    ASSERT(map_bounds(p));
 
-    if (env.grid(p) < can_move)
+    if (!monster_habitable_grid(mon, grd(p)))
         return false;
 
     // Stupid monsters don't pathfind around shallow water
@@ -3454,19 +3452,11 @@ bool can_go_straight(const monster* mon, const coord_def& p1,
     if (!find_ray(p1, p2, ray, opc_immob))
         return (false);
 
-    while (ray.advance())
-    {
-        const coord_def pos = ray.pos();
-        ASSERT(map_bounds(pos));
-        if (pos == p2 && pos == PLAYER_POS)
-            return (true);
-        else if (!_can_safely_go_through(mon, pos))
+    while (ray.advance() && ray.pos() != p2)
+        if (!_can_safely_go_through(mon, ray.pos()))
             return (false);
-        else if (pos == p2)
-            return (true);
-    }
 
-    return (false);
+    return (true);
 }
 
 // The default suitable() function for choose_random_nearby_monster().
