@@ -220,7 +220,7 @@ bool try_pathfind(monster* mon)
     // All monsters can find the Orb in Zotdef
     const int range = (crawl_state.game_is_zotdef() || mon->friendly() ? 1000 : mons_tracking_range(mon));
 
-    if (range > 0 && dist > dist_range(range))
+    if (range > 0 && dist > range)
     {
         mon->travel_target = MTRAV_UNREACHABLE;
 #ifdef DEBUG_PATHFIND
