@@ -373,18 +373,6 @@ inline void UNUSED(const volatile T &)
 {
 }
 
-#if defined __GNUC__
-  // gcc-4.0 and gcc-4.1 need the tr1 prefix.
-# include <tr1/unordered_map>
-# define unordered_map tr1::unordered_map
-#else
-  // This doesn't work on MSVC <= 8; it is possible to use stdext::hash_map
-  // with the same STL API, but I have no means to test.
-  // #if _MSC_VER < 1600
-# include <unordered_map>
-#endif
-
-
 #endif // __cplusplus
 
 // And now headers we want precompiled
