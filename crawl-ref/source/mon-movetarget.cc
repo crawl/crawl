@@ -232,7 +232,8 @@ bool try_pathfind(monster* mon)
 
 #ifdef DEBUG_PATHFIND
     mprf("Need a path for %s from (%d, %d) to (%d, %d), max. dist = %d",
-         mon->name(DESC_PLAIN).c_str(), mon->pos(), PLAYER_POS, range);
+         mon->name(DESC_PLAIN).c_str(), mon->pos().x, mon->pos().y,
+         PLAYER_POS.x, PLAYER_POS.y, range);
 #endif
     monster_pathfind mp;
     if (range > 0)
