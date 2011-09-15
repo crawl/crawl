@@ -4556,6 +4556,15 @@ void describe_god(god_type which_god, bool give_title)
             _print_final_god_abil_desc(which_god, buf,
                                        ABIL_NON_ABILITY);
         }
+        else if (which_god == GOD_CHEIBRIADOS)
+        {
+            have_any = true;
+            std::string buf = "You can call upon "
+                              + god_name(which_god)
+                              + " to make pieces of armour ponderous.";
+            _print_final_god_abil_desc(which_god, buf,
+                                       ABIL_CHEIBRIADOS_PONDEROUSIFY);
+        }
 
         // mv: No abilities (except divine protection) under penance
         if (!player_under_penance())
