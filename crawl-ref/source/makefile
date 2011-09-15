@@ -909,7 +909,8 @@ SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.xz
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
 .PHONY: all test install clean clean-contrib clean-rltiles distclean debug \
-        profile package-source source build-windows package-windows rest docs
+        profile package-source source build-windows package-windows rest \
+        docs api
 
 all: $(GAME) docs webserver
 
@@ -1015,6 +1016,15 @@ rest:
 
 $(DOC_BASE)/crawl_manual.txt: $(DOC_BASE)/crawl_manual.reST util/unrest.pl
 	$(QUIET_GEN)util/unrest.pl <$< >$@
+
+%.luadoc: %
+	cp -s $< $@
+
+CLUA_MODULE_SOURCES = $(filter l_%,$(OBJECTS:%.o=%.cc))
+api: $(CLUA_MODULE_SOURCES:=.luadoc)
+	mkdir -p luadoc
+	luadoc -d luadoc $^
+
 
 ##########################################################################
 # The level compiler
@@ -1137,7 +1147,7 @@ clean: clean-rltiles clean-webserver
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(OBJECTS) $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d) *.ixx  \
-	    .contrib-libs .cflags
+	    .contrib-libs .cflags *.cc.luadoc
 	$(RM) -r build-win
 	$(RM) -r build
 
