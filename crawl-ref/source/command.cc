@@ -2733,7 +2733,7 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>x</w>      : gain an experience level\n"
                        "<w>$</w>      : get 1000 gold\n"
                        "<w>]</w>      : get a mutation\n"
-                       "<w>_</w>      : gain religion\n"
+                       "<w>_</w>      : gain religion (god)\n"
                        "<w>^</w>      : set piety to a value\n"
                        "<w>@</w>      : set Str Int Dex\n"
                        "<w>Ctrl-Z</w> : gain lots of Zot Points\n"
