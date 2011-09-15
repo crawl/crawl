@@ -4530,7 +4530,7 @@ static bool _vorpalise_weapon(bool already_known)
         // but the eruption _is_ guaranteed.  What it will do is not.
         _explosion(you.pos(), &you, BEAM_CHAOS, "chaos eruption", "chaos affixation");
         xom_is_stimulated(200);
-        switch(random2(success? 4 : 2))
+        switch(random2(success? 2 : 4))
         {
         case 3:
             if (transform(50, coinflip() ? TRAN_PIG :
