@@ -1795,6 +1795,7 @@ std::string spell_noise_string(spell_type spell)
     case SPELL_FIREBALL:
     case SPELL_DELAYED_FIREBALL:
     case SPELL_HELLFIRE_BURST:
+    case SPELL_TORNADO:
         effect_noise = 15;
         break;
 
@@ -1809,7 +1810,6 @@ std::string spell_noise_string(spell_type spell)
     case SPELL_LIGHTNING_BOLT:
     case SPELL_CHAIN_LIGHTNING:
     case SPELL_CONJURE_BALL_LIGHTNING:
-    case SPELL_TORNADO:
         effect_noise = 25;
         break;
 

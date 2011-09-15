@@ -98,7 +98,7 @@ bool WindSystem::has_wind(coord_def c)
 
 static void _set_tornado_durations(int powc)
 {
-    int dur = 40 + powc / 6;
+    int dur = 60;
     you.duration[DUR_TORNADO] = dur;
     you.duration[DUR_LEVITATION] =
         std::max(dur, you.duration[DUR_LEVITATION]);
@@ -226,7 +226,7 @@ void tornado_damage(actor *caster, int dur)
         pow = caster->as_monster()->hit_dice * 4;
     dprf("Doing tornado, dur %d, effective power %d", dur, pow);
     const coord_def org = caster->pos();
-    noisy(25, org, caster->mindex());
+    int max_noise = 0;
     WindSystem winds(org);
 
     int age = _tornado_age(caster);
@@ -268,6 +268,10 @@ void tornado_damage(actor *caster, int dur)
         dprf("at dist %d dur is %d%%, pow is %d", r, rdur, rpow);
         if (!rpow)
             break;
+
+        int noise = div_rand_round(r * rdur * 3, 100);
+        if (noise > max_noise)
+            max_noise = noise;
 
         std::vector<coord_def> clouds;
         for (; dam_i && dam_i.radius() == r; ++dam_i)
@@ -338,7 +342,7 @@ void tornado_damage(actor *caster, int dur)
                             float_player(false);
                     }
                     int dmg = apply_chunked_AC(
-                                div_rand_round(roll_dice(7, rpow), 15),
+                                div_rand_round(roll_dice(9, rpow), 15),
                                 victim->armour_class());
                     if (dur < 0)
                         dmg = 0;
@@ -366,6 +370,8 @@ void tornado_damage(actor *caster, int dur)
                 move_avail.push_back(*dam_i);
         }
     }
+
+    noisy(max_noise, org, caster->mindex());
 
     if (dur <= 0)
         return;
