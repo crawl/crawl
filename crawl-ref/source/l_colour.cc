@@ -3,6 +3,12 @@
  * @brief Colour related functions
 **/
 
+/*
+--- Colour related functions
+
+module "colour"
+*/
+
 #include "AppHdr.h"
 
 #include "cluautil.h"
@@ -62,6 +68,11 @@ static int _lua_element_colour(int rand, const coord_def& loc,
     return str_to_colour(colour);
 }
 
+/*
+--- Define a new elemental colour.
+-- See <code>COLOUR:</code> in <tt>docs/develop/levels/syntax.txt</tt> for details.
+function add_colour(name, fun)
+*/
 LUAFN(l_add_colour)
 {
     const std::string &name = luaL_checkstring(ls, 1);
