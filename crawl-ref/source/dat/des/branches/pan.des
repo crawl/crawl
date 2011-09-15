@@ -80,7 +80,7 @@ colour.add_colour("disco", function(rand, x, y)
 end)
 
 function pan_demonic_rune(e, glyph, place_lord)
-    e.subst(glyph .. ' = ' .. (place_lord and glyph or '.') .. ':7 O:1 N:4')
+    e.subst(glyph .. ' = ' .. (place_lord and glyph or '.') .. ':6 O:1 N:2')
     e.kitem('O = demonic rune of Zot')
     e.kfeat('N = exit_pandemonium')
     if place_lord then
