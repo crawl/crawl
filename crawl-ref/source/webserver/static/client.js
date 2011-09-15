@@ -36,6 +36,7 @@ function delay_ended()
         } catch (err)
         {
             console.error("Error in message: " + msg.data + " - " + err);
+            log(err);
         }
     }
 }

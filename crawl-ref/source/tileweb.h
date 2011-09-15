@@ -66,7 +66,7 @@ public:
     void write_message(const char *format, ...);
     void finish_message();
     void send_message(const char *format, ...);
-    
+
     /* Adds a prefix that will be written before any other
        data that is sent after this call, unless no other
        data is sent until pop_prefix is called. The suffix

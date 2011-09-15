@@ -2,39 +2,46 @@ map_knowledge = function ()
 {
     var k = {};
     var monster_table = {};
-    var next_monster_table = {};
     var dirty_locs = [];
     var bounds = null;
     var bounds_changed = false;
 
-    var set = function (x, y, val)
+    function set(x, y, val)
     {
         k[[x,y]] = val;
-    };
+    }
 
-    var get = function (x, y)
+    function get(x, y)
     {
         if (k[[x,y]] === undefined)
             k[[x,y]] = {x: x, y: y};
         return k[[x,y]];
-    };
+    }
 
-    var clear = function ()
+    function clear()
     {
         k = {};
         monster_table = {};
         bounds = null;
-    };
+    }
 
-    var touch = function (x, y)
+    function visible(x, y)
+    {
+        var cell = get(x, y);
+        if (cell.t && ((cell.t.bg & TILE_FLAG_UNSEEN) == 0))
+            return true;
+        return false;
+    }
+
+    function touch(x, y)
     {
         var cell = get(x, y);
         if (!cell.dirty)
             dirty_locs.push({x: x, y: y});
         cell.dirty = true;
-    };
+    }
 
-    var merge_objects = function (current, diff)
+    function merge_objects(current, diff)
     {
         if (!current)
             return diff;
@@ -43,12 +50,19 @@ map_knowledge = function ()
             current[prop] = diff[prop];
 
         return current;
-    };
+    }
 
-    var merge_monster = function (old_mon, mon)
+    function merge_monster(old_mon, mon)
     {
+        if (old_mon && old_mon.id && (!mon || (mon.id != old_mon.id)))
+        {
+            old_mon.refs--;
+        }
+
         if (!mon)
+        {
             return null;
+        }
 
         var id = mon.id;
 
@@ -64,16 +78,30 @@ map_knowledge = function ()
         {
             merge_objects(last, mon);
         }
-        
+
         if (id)
-            next_monster_table[id] = last;
+        {
+            last.refs = last.refs || 0;
+            if (!old_mon || old_mon.id != id)
+                last.refs += 1;
+            monster_table[id] = last;
+        }
 
         return last;
-    };
+    }
+
+    function clean_monster_table()
+    {
+        for (id in monster_table)
+        {
+            if (!monster_table[id].refs)
+                delete monster_table[id];
+        }
+    }
 
     var merge_last_x, merge_last_y;
 
-    var merge = function (val)
+    function merge(val)
     {
         var x;
         if (val.x === undefined)
@@ -88,14 +116,11 @@ map_knowledge = function ()
         merge_last_y = y;
 
         var entry = get(x, y);
-        
+
         for (var prop in val)
         {
             if (prop == "mon")
             {
-                if (entry[prop] && entry[prop].id && !val[prop])
-                    delete next_monster_table[entry[prop].id];
-                
                 entry[prop] = merge_monster(entry[prop], val[prop]);
             }
             else if (prop == "t")
@@ -112,7 +137,7 @@ map_knowledge = function ()
         }
 
         touch(x, y);
-        
+
         if (bounds)
         {
             if (bounds.left > x)
@@ -146,20 +171,16 @@ map_knowledge = function ()
             };
         }
 
-    };
+    }
 
-    var merge_diff = function (vals)
+    function merge_diff(vals)
     {
-        next_monster_table = {};
-        for (var id in monster_table)
-            next_monster_table[id] = monster_table[id];
-
         $.each(vals, function (i, val)
                {
                    merge(val);
                });
 
-        monster_table = next_monster_table;
+        clean_monster_table();
     };
 
     return {
@@ -168,6 +189,7 @@ map_knowledge = function ()
         merge: merge_diff,
         clear: clear,
         touch: touch,
+        visible: visible,
         dirty: function () { return dirty_locs; },
         reset_dirty: function () { dirty_locs = []; },
         bounds: function () { return bounds; },

@@ -121,7 +121,7 @@ void TilesFramework::send_message(const char *format, ...)
     va_start(argp, format);
     vfprintf(stdout, format, argp);
     va_end(argp);
-    
+
     finish_message();
 }
 
@@ -465,7 +465,7 @@ void TilesFramework::_send_map(bool force_full)
             _send_cell(gc, m_current_view(gc), m_next_view(gc),
                        m_current_map_knowledge(gc), env.map_knowledge(gc),
                        new_monster_locs, force_full);
-            
+
             if (prefix_popped())
             {
                 send_gc = false;
@@ -508,11 +508,11 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
     else
     {
         last = m_current_map_knowledge(it->second).monsterinfo();
-        
+
         if (it->second != gc)
             write_message(""); // As above
     }
-    
+
     if (last == NULL)
         force_full = true;
 
@@ -521,7 +521,7 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
 
     if (force_full || (last->type != m->type))
         write_message("type:%d,", m->type);
-    
+
     if (force_full || (last->base_type != m->base_type))
         write_message("btype:%d,", m->base_type);
 
@@ -529,7 +529,7 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
     if ((force_full && no_exp)
         || (last && mons_class_flag(last->type, M_NO_EXP_GAIN) != no_exp))
         write_message("no_exp:%u,", no_exp);
-    
+
     pop_prefix("},");
 }
 
@@ -815,7 +815,7 @@ void TilesFramework::redraw()
                       m_next_flash_colour);
         m_current_flash_colour = m_next_flash_colour;
     }
-    
+
     if (m_view_loaded)
         _send_map(false);
 
