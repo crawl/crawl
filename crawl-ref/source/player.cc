@@ -2720,7 +2720,7 @@ void forget_map(int chance_forgotten, bool force)
                             || you.level_type == LEVEL_ABYSS
                                 && you.religion == GOD_LUGONU;
     const double geometric_chance = 0.99;
-    const int radius = (rot_resist ? 600 : 300);
+    const int radius = (rot_resist ? 200 : 100);
 
     const int scalar = 0xFF;
     for (rectangle_iterator ri(0); ri; ++ri)
@@ -2736,7 +2736,7 @@ void forget_map(int chance_forgotten, bool force)
             if (rotting_map)
             {
                 int chance = pow(geometric_chance,
-                                 std::max(1, dist-radius)) * scalar;
+                                 std::max(1, (dist - radius) / 40)) * scalar;
                 doDecay = !x_chance_in_y(chance, scalar);
             }
             else
