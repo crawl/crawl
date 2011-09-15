@@ -683,7 +683,7 @@ TAGS: overwritable layout allow_dup unrand
     _G.lrocktile('wall_pebble_lightgray')
     _G.lfloortile('floor_pebble_brown')
 
-    if (crawl.coinflip()) then
+    if (crawl.one_chance_in(3)) then
       _G.subst('x = b')
       _G.tile('b = wall_emerald')
     end
