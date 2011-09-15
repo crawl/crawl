@@ -2153,6 +2153,10 @@ void handle_time()
         spawn_random_monsters();
     }
 
+    // Labyrinth and Abyss maprot.
+    if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
+        forget_map(0);
+
     // Every 20 turns, a variety of other effects.
     if (! (_div(base_time, 200) > _div(old_time, 200)))
         return;
@@ -2333,20 +2337,12 @@ void handle_time()
     // Exercise armour *xor* stealth skill: {dlb}
     practise(EX_WAIT);
 
-    if (you.level_type == LEVEL_LABYRINTH)
-    {
-        // Now that the labyrinth can be automapped, apply map rot as
-        // a counter-measure. (Those mazes sure are easy to forget.)
-        forget_map(you.species == SP_MINOTAUR ? 25 : 45);
-
-        // From time to time change a section of the labyrinth.
-        if (one_chance_in(10))
-            change_labyrinth();
-    }
+    // From time to time change a section of the labyrinth.
+    if (you.level_type == LEVEL_LABYRINTH && one_chance_in(10))
+        change_labyrinth();
 
     if (you.level_type == LEVEL_ABYSS)
     {
-        forget_map(you.religion == GOD_LUGONU ? 25 : 45);
         // Update the abyss speed. This place is unstable and the speed can
         // fluctuate. It's not a constant increase.
         if (coinflip() && you.abyss_speed < 100)

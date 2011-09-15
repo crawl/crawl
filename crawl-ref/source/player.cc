@@ -2719,35 +2719,36 @@ void forget_map(int chance_forgotten, bool force)
                                 && you.species == SP_MINOTAUR
                             || you.level_type == LEVEL_ABYSS
                                 && you.religion == GOD_LUGONU;
-    const double geometric_chance = 0.97;
-    const int radius = (rot_resist ? 60 : 30);
+    const double geometric_chance = 0.99;
+    const int radius = (rot_resist ? 600 : 300);
 
     const int scalar = 0xFF;
     for (rectangle_iterator ri(0); ri; ++ri)
     {
-        if (!you.see_cell(*ri))
-        {
-            const int dist = distance(you.pos(), *ri);
-            bool doDecay = (force || chance_forgotten == 100);
-            if (!doDecay)
-            {
-                if (rotting_map)
-                {
-                    int chance = pow(geometric_chance,
-                                     std::max(1, dist-radius)) * scalar;
-                    doDecay = !x_chance_in_y(chance, scalar);
-                }
-                else
-                    doDecay = !x_chance_in_y(chance_forgotten, 100);
-            }
+        const coord_def &p = *ri;
+        if (you.see_cell(p) || !env.map_knowledge(p).known())
+            continue;
 
-            if (doDecay)
+        const int dist = distance(you.pos(), p);
+        bool doDecay = (force || chance_forgotten == 100);
+        if (!doDecay)
+        {
+            if (rotting_map)
             {
-                env.map_knowledge(*ri).clear();
-#ifdef USE_TILE
-                tile_forget_map(*ri);
-#endif
+                int chance = pow(geometric_chance,
+                                 std::max(1, dist-radius)) * scalar;
+                doDecay = !x_chance_in_y(chance, scalar);
             }
+            else
+                doDecay = !x_chance_in_y(chance_forgotten, 100);
+        }
+
+        if (doDecay)
+        {
+            env.map_knowledge(p).clear();
+#ifdef USE_TILE
+            tile_forget_map(p);
+#endif
         }
     }
 
