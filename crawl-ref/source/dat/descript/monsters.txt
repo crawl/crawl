@@ -19,11 +19,11 @@ __(_suffix_examine
 It has been enchanted to dance through the air and attack under its own
 power.
 %%%%
+# Uniques
 Aizul
 
 Once the primary guardian serpent of a legendary treasure hoard, he was disgraced after thieves looted it while he slept. He now slithers about the dungeon, seeking vengeance against all would-be looters. He is an accomplished spellcaster, but no more deadly in melee combat than others of his kind.
 %%%%%
-# Uniques
 Agnes
 
 A tall (for her kind) and beautiful warrior, as vain as she is quick. You can't help but notice both her exotic weapon and graceful movements. She searches the dungeon for aesthetically pleasing objects to surround herself with.
@@ -596,7 +596,7 @@ This deep elf is an exalted servant of an ancient dark god.
 %%%%
 deep elf knight
 
-A battle-hardened deep elf reaver.
+A battle-hardened deep elf, proficient with magic and the sword.
 %%%%
 deep elf mage
 
