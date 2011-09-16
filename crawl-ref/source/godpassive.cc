@@ -31,8 +31,11 @@ int che_stat_boost(int piety)
 {
     if (you.religion != GOD_CHEIBRIADOS || you.penance[GOD_CHEIBRIADOS])
         return (0);
-
-    return std::min((piety - 20) / 10, 15);
+    if (piety < 30)  // Since you've already begun to slow down.
+        return 1;
+    if (piety > 160) // Fudging this slightly to agree with ****** piety.
+        return 15;
+    return std::min((piety - 10) / 10, 14);
 }
 
 // Eat from one random off-level item stack.
