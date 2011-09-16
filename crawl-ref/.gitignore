@@ -50,7 +50,6 @@ DEADJOE
 /source/html/
 
 # Luadoc stuff
-/source/*.cc.luadoc
 /source/luadoc/
 
 # Crawl generated junk

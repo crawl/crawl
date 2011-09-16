@@ -1017,13 +1017,10 @@ rest:
 $(DOC_BASE)/crawl_manual.txt: $(DOC_BASE)/crawl_manual.reST util/unrest.pl
 	$(QUIET_GEN)util/unrest.pl <$< >$@
 
-%.luadoc: %
-	cp -s $< $@
-
 CLUA_MODULE_SOURCES = $(filter l_%,$(OBJECTS:%.o=%.cc))
-api: $(CLUA_MODULE_SOURCES:=.luadoc)
+api: $(CLUA_MODULE_SOURCES)
 	mkdir -p luadoc
-	luadoc -d luadoc $^
+	luadoc --doclet util.html_doclet --taglet util.taglet -d luadoc $^
 
 
 ##########################################################################
@@ -1147,7 +1144,7 @@ clean: clean-rltiles clean-webserver
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(OBJECTS) $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d) *.ixx  \
-	    .contrib-libs .cflags *.cc.luadoc
+	    .contrib-libs .cflags
 	$(RM) -r build-win
 	$(RM) -r build
 
