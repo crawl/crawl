@@ -1259,7 +1259,8 @@ void abyss_morph(double duration)
     if (you.level_type != LEVEL_ABYSS)
         return;
 
-    abyssal_state.depth += you.time_taken * (you.abyss_speed + 40.0) / 20000.0;
+    abyssal_state.depth += you.time_taken * (you.abyss_speed + 40.0)
+                        / (you.religion == GOD_CHEIBRIADOS ? 40000.0 : 20000.0);
     map_mask abyss_genlevel_mask;
     _abyss_invert_mask(&abyss_genlevel_mask);
     dgn_erase_unused_vault_placements();
