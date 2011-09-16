@@ -235,11 +235,11 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
         }
     }
 
-    if (proprt[ARTP_PONDEROUS] && !unmeld)
+    if (proprt[ARTP_PONDEROUS])
     {
         if (msg)
             mpr("You feel rather ponderous.");
-        che_handle_change(CB_PONDEROUS_COUNT, 1);
+        artefact_wpn_learn_prop(item, ARTP_PONDEROUS);
     }
 
     if (proprt[ARTP_EYESIGHT])
@@ -358,11 +358,10 @@ static void _unequip_artefact_effect(item_def &item,
         }
     }
 
-    if (proprt[ARTP_PONDEROUS] && !meld)
+    if (proprt[ARTP_PONDEROUS])
     {
         if (msg)
             mpr("That put a bit of spring back into your step.");
-        che_handle_change(CB_PONDEROUS_COUNT, -1);
     }
 
     if (proprt[ARTP_HP])
@@ -898,12 +897,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             break;
 
         case SPARM_PONDEROUSNESS:
-            if (!unmeld)
-            {
-                mpr("You feel rather ponderous.");
-                che_handle_change(CB_PONDEROUS_COUNT, 1);
-                you.redraw_evasion = true;
-            }
+            mpr("You feel rather ponderous.");
             break;
 
         case SPARM_LEVITATION:
@@ -1046,11 +1040,7 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         break;
 
     case SPARM_PONDEROUSNESS:
-        if (!meld)
-        {
-            mpr("That put a bit of spring back into your step.");
-            che_handle_change(CB_PONDEROUS_COUNT, -1);
-        }
+        mpr("That put a bit of spring back into your step.");
         break;
 
     case SPARM_LEVITATION:

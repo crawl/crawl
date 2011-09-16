@@ -15,23 +15,22 @@
 
 enum object_selector
 {
-    OSEL_ANY         =  -1,
-    OSEL_WIELD       =  -2,
-    OSEL_UNIDENT     =  -3,
-    OSEL_EQUIP       =  -4,
-    OSEL_RECHARGE    =  -5,
-    OSEL_ENCH_ARM    =  -6,
-    OSEL_VAMP_EAT    =  -7,
-    OSEL_DRAW_DECK   =  -8,
-    OSEL_THROWABLE   =  -9,
-    OSEL_BUTCHERY    = -10,
-    OSEL_EVOKABLE    = -11,
-    OSEL_WORN_ARMOUR = -12,
-    OSEL_FRUIT       = -13,
-    OSEL_PONDER_ARM  = -14,
-    OSEL_CURSED_WORN = -15,
-    OSEL_UNCURSED_WORN_ARMOUR    = -16,
-    OSEL_UNCURSED_WORN_JEWELLERY = -17
+    OSEL_ANY                     =  -1,
+    OSEL_WIELD                   =  -2,
+    OSEL_UNIDENT                 =  -3,
+    OSEL_EQUIP                   =  -4,
+    OSEL_RECHARGE                =  -5,
+    OSEL_ENCH_ARM                =  -6,
+    OSEL_VAMP_EAT                =  -7,
+    OSEL_DRAW_DECK               =  -8,
+    OSEL_THROWABLE               =  -9,
+    OSEL_BUTCHERY                = -10,
+    OSEL_EVOKABLE                = -11,
+    OSEL_WORN_ARMOUR             = -12,
+    OSEL_FRUIT                   = -13,
+    OSEL_CURSED_WORN             = -14,
+    OSEL_UNCURSED_WORN_ARMOUR    = -15,
+    OSEL_UNCURSED_WORN_JEWELLERY = -16,
 };
 
 #define SLOT_BARE_HANDS      -2

@@ -3108,51 +3108,6 @@ void lugonu_bend_space()
     ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC, "a spatial distortion");
 }
 
-bool is_ponderousifiable(const item_def& item)
-{
-    return (item.base_type == OBJ_ARMOUR
-            && you_tran_can_wear(item)
-            && !is_shield(item)
-            && !is_artefact(item)
-            && get_armour_ego_type(item) != SPARM_RUNNING
-            && get_armour_ego_type(item) != SPARM_PONDEROUSNESS);
-}
-
-bool ponderousify_armour()
-{
-    const int item_slot = prompt_invent_item("Make which item ponderous?",
-                                             MT_INVLIST, OSEL_PONDER_ARM,
-                                             true, true, false);
-
-    if (prompt_failed(item_slot))
-        return (false);
-
-    item_def& arm(you.inv[item_slot]);
-    if (!is_ponderousifiable(arm)) // player pressed '*' and made a bad choice
-    {
-        mpr("That item can't be made ponderous.");
-        return (false);
-    }
-
-    const int old_ponder = player_ponderousness();
-    cheibriados_make_item_ponderous(arm);
-
-    you.redraw_armour_class = true;
-    you.redraw_evasion = true;
-
-    simple_god_message(" says: Use this wisely!");
-
-    const int new_ponder = player_ponderousness();
-    if (new_ponder > old_ponder)
-    {
-        mprf("You feel %s ponderous.",
-             old_ponder? "even more" : "rather");
-        che_handle_change(CB_PONDEROUSNESS, new_ponder - old_ponder);
-    }
-
-    return (true);
-}
-
 void cheibriados_time_bend(int pow)
 {
     mpr("The flow of time bends around you.");

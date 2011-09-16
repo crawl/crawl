@@ -1000,7 +1000,6 @@ int player_equip(equipment_type slot, int sub_type, bool calc_unid)
 int player_equip_ego_type(int slot, int special, bool calc_unid)
 {
     int ret = 0;
-    bool melded = (special == SPARM_PONDEROUSNESS);
 
     item_def* item;
     switch (slot)
@@ -1029,7 +1028,7 @@ int player_equip_ego_type(int slot, int special, bool calc_unid)
         // Check all armour slots:
         for (int i = EQ_MIN_ARMOUR; i <= EQ_MAX_ARMOUR; i++)
         {
-            if ((item = you.slot_item(static_cast<equipment_type>(i), melded))
+            if ((item = you.slot_item(static_cast<equipment_type>(i)))
                 && get_armour_ego_type(*item) == special
                 && (calc_unid || item_type_known(*item)))
             {
@@ -1042,7 +1041,7 @@ int player_equip_ego_type(int slot, int special, bool calc_unid)
         if (slot < EQ_MIN_ARMOUR || slot > EQ_MAX_ARMOUR)
             die("invalid slot: %d", slot);
         // Check a specific armour slot for an ego type:
-        if ((item = you.slot_item(static_cast<equipment_type>(slot), melded))
+        if ((item = you.slot_item(static_cast<equipment_type>(slot)))
             && get_armour_ego_type(*item) == special
             && (calc_unid || item_type_known(*item)))
         {
@@ -1438,7 +1437,11 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         rf += scan_artefacts(ARTP_FIRE, calc_unid);
 
         // Che bonus
-        rf += che_boost(CB_RFIRE);
+        if (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(3)
+            && !player_under_penance())
+        {
+            rf++;
+        }
     }
 
     // species:
@@ -1574,7 +1577,11 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         rc += scan_artefacts(ARTP_COLD, calc_unid);
 
         // Che bonus
-        rc += che_boost(CB_RCOLD);
+        if (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(2)
+            && !player_under_penance())
+        {
+            rc++;
+        }
     }
 
     // mutations:
@@ -1993,7 +2000,11 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         pl += scan_artefacts(ARTP_NEGATIVE_ENERGY, calc_unid);
 
         // Che bonus
-        pl += che_boost(CB_RNEG);
+        if (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(1)
+            && !player_under_penance())
+        {
+            pl++;
+        }
 
         pl += player_equip(EQ_STAFF, STAFF_DEATH, calc_unid);
     }
@@ -2037,7 +2048,12 @@ int player_movement_speed(bool ignore_burden)
         mv -= 2;
 
     // ponderous brand and artefact property
-    mv += player_ponderousness();
+    mv += 2 * (scan_artefacts(ARTP_PONDEROUS)
+             + player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_PONDEROUSNESS));
+
+    // Cheibriados
+    if (you.religion == GOD_CHEIBRIADOS)
+        mv += 2 + std::min(div_rand_round(you.piety, 20), 8);
 
     // In the air, can fly fast (should be lightly burdened).
     if (!ignore_burden && you.light_flight())
@@ -2120,20 +2136,6 @@ int player_armour_slots()
         if (i != EQ_SHIELD && you_can_wear(i, true))
             armour_slot_count++;
     return armour_slot_count;
-}
-
-int player_ponderous_count()
-{
-    return (scan_artefacts(ARTP_PONDEROUS)
-            + player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS));
-}
-
-int player_ponderousness()
-{
-    int slots = player_armour_slots();
-    if (slots == 0)
-        return 0;
-    return ((player_ponderous_count() * 10)/slots);
 }
 
 static int _player_armour_racial_bonus(const item_def& item)
@@ -4208,11 +4210,8 @@ int scan_artefacts(artefact_prop_type which_property, bool calc_unid)
 
     for (int i = EQ_WEAPON; i < NUM_EQUIP; ++i)
     {
-        if (you.melded[i] && which_property != ARTP_PONDEROUS
-            || you.equip[i] == -1)
-        {
+        if (you.melded[i] || you.equip[i] == -1)
             continue;
-        }
 
         const int eq = you.equip[i];
 

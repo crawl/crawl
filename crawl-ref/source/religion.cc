@@ -312,10 +312,9 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "control the weather"
     },
     // Cheibriados
-    { "Cheibriados slows and strengthens your metabolism, "
-      "and supports the use of ponderous armour.",
-      "bend time to slow others",
-      "",
+    { "Cheibriados slows and strengthens your metabolism.",
+      "bend time to slow others, and Cheibriados keeps you warm",
+      "Cheibriados protects you from fire.",
       "inflict damage to those overly hasty",
       "step out of the time flow"
     },
@@ -427,10 +426,9 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "control the weather"
     },
     // Cheibriados
-    { "Cheibriados will no longer slow or strengthen your metabolism, "
-      "or support the use of ponderous armour.",
-      "bend time to slow others",
-      "",
+    { "Cheibriados will no longer slow or strengthen your metabolism.",
+      "bend time to slow others, and Cheibriados no longer keeps you warm",
+      "Cheibriados will no longer protect you from fire.",
       "inflict damage to those overly hasty",
       "step out of the time flow"
     },
@@ -961,8 +959,10 @@ void dec_penance(god_type god, int val)
                 mpr("Your vision regains its divine sight.");
                 autotoggle_autopickup(false);
             }
-            else if (god == GOD_CHEIBRIADOS && che_boost_level())
+            else if (god == GOD_CHEIBRIADOS && che_stat_boost())
             {
+                mprf(MSGCH_GOD, "%s restores the support of your attributes.",
+                        god_name(you.religion).c_str());
                 redraw_screen();
                 notify_stat_change("mollifying Cheibriados");
             }
@@ -2665,10 +2665,12 @@ static void _gain_piety_point()
         update_player_symbol();
     }
 
-    if (you.religion == GOD_CHEIBRIADOS)
+    if (you.religion == GOD_CHEIBRIADOS
+        && che_stat_boost(old_piety) < che_stat_boost())
     {
-        int diffrank = piety_rank(you.piety) - piety_rank(old_piety);
-        che_handle_change(CB_PIETY, diffrank);
+        mprf(MSGCH_GOD, "%s raises the support of your attributes.",
+                        god_name(you.religion).c_str());
+        notify_stat_change("Cheibriados piety gain");
     }
 
     if (you.religion == GOD_SHINING_ONE)
@@ -2800,10 +2802,12 @@ void lose_piety(int pgn)
         you.redraw_armour_class = true;
     }
 
-    if (you.religion == GOD_CHEIBRIADOS)
+    if (you.religion == GOD_CHEIBRIADOS
+        && che_stat_boost(old_piety) > che_stat_boost())
     {
-        int diffrank = piety_rank(you.piety) - piety_rank(old_piety);
-        che_handle_change(CB_PIETY, diffrank);
+        mprf(MSGCH_GOD, "%s reduces the support of your attributes.",
+                        god_name(you.religion).c_str());
+        notify_stat_change("Cheibriados piety loss");
     }
 
     if (you.religion == GOD_SHINING_ONE)
@@ -2843,7 +2847,6 @@ void excommunication(god_type new_god)
 
     const bool was_haloed = you.haloed();
     const int  old_piety  = you.piety;
-    const int  old_piety_rank = piety_rank();
 
     god_acting gdact(old_god, true);
 
@@ -2856,8 +2859,6 @@ void excommunication(god_type new_god)
         ash_init_bondage(&you);
 
     you.num_current_gifts[old_god] = 0;
-
-    che_handle_change(CB_PIETY, piety_rank() - old_piety_rank);
 
     you.religion = GOD_NO_GOD;
 
@@ -3434,11 +3435,6 @@ void god_pitch(god_type which_god)
         mpr("You can now call upon Fedhas to speed up the decay of corpses.",
             MSGCH_GOD);
         mpr("The plants of the dungeon cease their hostilities.", MSGCH_GOD);
-    }
-    else if (you.religion == GOD_CHEIBRIADOS)
-    {
-        mpr("You can now call upon Cheibriados to make your armour ponderous.",
-            MSGCH_GOD);
     }
 
     if (you.worshipped[you.religion] < 100)

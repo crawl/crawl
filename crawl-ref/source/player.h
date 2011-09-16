@@ -849,8 +849,6 @@ int player_spec_summ(void);
 
 int player_speed(void);
 int player_armour_slots();
-int player_ponderous_count();
-int player_ponderousness();
 int player_evokable_levitation();
 int player_evokable_invis();
 

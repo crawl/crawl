@@ -52,6 +52,7 @@ enum tag_minor_version
     TAG_MINOR_POLEARMS_REACH,      // Purge reaching from polearms (built-in now).
     TAG_MINOR_ABYSS_STATE,         // Save the Worley noise state for the Abyss.
     TAG_MINOR_ABYSS_SPEED,         // Save the abyss speed which is variable.
+    TAG_MINOR_UNPONDERIFY,         // Give Cheibriadites back their old gear.
 
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
