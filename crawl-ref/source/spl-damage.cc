@@ -1067,10 +1067,9 @@ void shillelagh(actor *wielder, coord_def where, int pow)
     for (adjacent_iterator ai(where, false); ai; ++ai)
     {
         monster *mon = monster_at(*ai);
-        if (!mon || mon->submerged())
+        if (!mon || !mon->alive() || mon->submerged() || mon->is_insubstantial())
             continue;
         _record_monster_by_name(affected_monsters, mon);
-        _shatter_monsters(*ai, pow, 0, wielder);
     }
     if (!affected_monsters.empty())
     {
@@ -1083,6 +1082,10 @@ void shillelagh(actor *wielder, coord_def where, int pow)
         else
             mpr("There is a shattering impact!");
     }
+
+    // need to do this again to do the actual damage
+    for (adjacent_iterator ai(where, false); ai; ++ai)
+        _shatter_monsters(*ai, pow, 0, wielder);
 }
 
 static int _ignite_poison_affect_item(item_def& item, bool in_inv)
