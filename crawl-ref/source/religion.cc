@@ -2668,7 +2668,7 @@ static void _gain_piety_point()
     if (you.religion == GOD_CHEIBRIADOS
         && che_stat_boost(old_piety) < che_stat_boost())
     {
-        mprf(MSGCH_GOD, "%s raises the support of your attributes.",
+        mprf(MSGCH_GOD, "%s raises the support of your attributes as your movement slows.",
                         god_name(you.religion).c_str());
         notify_stat_change("Cheibriados piety gain");
     }
@@ -2805,7 +2805,7 @@ void lose_piety(int pgn)
     if (you.religion == GOD_CHEIBRIADOS
         && che_stat_boost(old_piety) > che_stat_boost())
     {
-        mprf(MSGCH_GOD, "%s reduces the support of your attributes.",
+        mprf(MSGCH_GOD, "%s reduces the support of your attributes as your movement quickens.",
                         god_name(you.religion).c_str());
         notify_stat_change("Cheibriados piety loss");
     }
@@ -3388,6 +3388,14 @@ void god_pitch(god_type which_god)
 
     god_welcome_identify_gear();
     ash_check_bondage();
+
+    // Chei worshippers start their stat gain immediately.
+    if (you.religion == GOD_CHEIBRIADOS)
+    {
+        mprf(MSGCH_GOD, "%s begins to support your attributes as your movement slows.",
+                         god_name(you.religion).c_str());
+        notify_stat_change("Cheibriados worship");
+    }
 
     // We disable all magical skills to avoid accidentally angering Trog.
     if (you.religion == GOD_TROG)
