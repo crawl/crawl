@@ -2527,7 +2527,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
                                                     item_level));
 
             if (get_armour_ego_type(item) == SPARM_PONDEROUSNESS)
-                item.plus += 3 + random2(4);
+                item.plus += 3 + random2(8);
         }
     }
     else if (one_chance_in(12))
