@@ -9,16 +9,6 @@ body {
     float: right;
 }
 
-#stats {
-    display: inline-block;
-    vertical-align: top;
-    position: absolute;
-}
-
-#minimap, #minimap_overlay {
-    position: absolute;
-}
-
 #crt {
     display: inline-block;
 }
@@ -182,3 +172,14 @@ a:hover {
 .bg13 { background-color: rgb(255,  82, 255); }
 .bg14 { background-color: rgb(255, 255,  82); }
 .bg15 { background-color: rgb(255, 255, 255); }
+
+/* These are just here for compatibility with older versions */
+#stats {
+    display: inline-block;
+    vertical-align: top;
+    position: absolute;
+}
+
+#minimap, #minimap_overlay {
+    position: absolute;
+}

@@ -1,0 +1,18 @@
+#right_column {
+    display: inline-block;
+    vertical-align: top;
+    float: right;
+}
+
+#stats {
+    display: inline;
+    position: static;
+}
+
+#minimap_block {
+    display: inline-block;
+}
+
+#minimap, #minimap_overlay {
+    position: absolute;
+}
