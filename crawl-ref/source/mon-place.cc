@@ -381,7 +381,7 @@ void spawn_random_monsters()
         _scale_spawn_parameter(env.spawn_random_rate,
                                6 * env.spawn_random_rate,
                                0)
-        : 8;
+        : (you.religion == GOD_CHEIBRIADOS) ? 16 : 8;
 
     if (rate == 0)
     {
