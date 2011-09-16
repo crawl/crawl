@@ -25,5 +25,6 @@ void debug_make_trap(void);
 bool debug_make_shop(const coord_def& pos = you.pos());
 void debug_place_map();
 void debug_test_explore();
+void wizard_abyss_speed();
 
 #endif
