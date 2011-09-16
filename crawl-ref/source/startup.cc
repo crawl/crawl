@@ -314,6 +314,7 @@ static void _post_init(bool newc)
         run_map_epilogues();
 }
 
+#ifndef DGAMELAUNCH
 /**
  * Helper for show_startup_menu()
  * constructs the game modes section
@@ -846,6 +847,7 @@ again:
         }
     }
 }
+#endif
 
 static void _choose_arena_teams(newgame_def* choice,
                                 const newgame_def& defaults)
