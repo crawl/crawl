@@ -133,27 +133,17 @@ function do_layout()
     $("#minimap, #minimap_overlay").show();
 
     dungeon_renderer.fit_to(remaining_width, remaining_height,
-                            layout.show_diameter);
+                            layout_parameters.show_diameter);
 
-    var dungeon_offset = $("#dungeon").offset();
-
-    $("#stats").offset({
-        left: dungeon_offset.left + $("#dungeon").width() + 10,
-        top: dungeon_offset.top
-    });
-
-    $("#minimap").offset({
-        left: dungeon_offset.left + $("#dungeon").width() + 10,
-        top: dungeon_offset.top + stat_height_pixels + 10
-    });
-
+    var minimap_block = $("#minimap_block");
     var minimap_canvas = $("#minimap")[0];
+    minimap_block.width(stat_width_pixels);
     minimap_canvas.width = stat_width_pixels;
     minimap_cell_w = minimap_cell_h = Math.floor(stat_width_pixels / layout_parameters.gxm);
+    minimap_block.height(layout_parameters.gym * minimap_cell_h);
     minimap_canvas.height = layout_parameters.gym * minimap_cell_h;
     minimap_ctx = minimap_canvas.getContext("2d");
 
-    $("#minimap_overlay").offset($("#minimap").offset());
     var minimap_overlay = $("#minimap_overlay")[0];
     minimap_overlay.width = minimap_canvas.width;
     minimap_overlay.height = minimap_canvas.height;

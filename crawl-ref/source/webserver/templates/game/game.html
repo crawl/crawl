@@ -13,14 +13,20 @@
 <script type="text/javascript" src="/static/{{ prefix }}/tileinfo-icons.js"></script>
 <script type="text/javascript" src="/static/{{ prefix }}/tileinfo-gui.js"></script>
 <script type="text/javascript" src="/static/{{ prefix }}/render.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/{{ prefix }}/style.css">
 
 <div id="crt" style="display: none;"></div>
 
 <div id="normal" style="display: none;">
   <canvas id="dungeon"></canvas>
-  <div id="stats"></div>
-  <canvas id="minimap"></canvas>
-  <canvas id="minimap_overlay"></canvas>
+  <div id="right_column">
+    <div id="stats"></div>
+    <div id="minimap_block">
+      <canvas id="minimap"></canvas>
+      <canvas id="minimap_overlay"></canvas>
+    </div>
+    <div id="monster_list"></div>
+  </div>
   <div id="messages"></div>
 </div>
 
