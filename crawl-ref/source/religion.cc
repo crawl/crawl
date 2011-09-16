@@ -959,7 +959,7 @@ void dec_penance(god_type god, int val)
                 mpr("Your vision regains its divine sight.");
                 autotoggle_autopickup(false);
             }
-            else if (god == GOD_CHEIBRIADOS && che_stat_boost())
+            else if (god == GOD_CHEIBRIADOS)
             {
                 mprf(MSGCH_GOD, "%s restores the support of your attributes.",
                         god_name(you.religion).c_str());
