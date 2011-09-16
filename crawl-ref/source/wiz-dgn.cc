@@ -680,7 +680,7 @@ void debug_place_map()
 {
     char what_to_make[100];
     mesclr();
-    mprf(MSGCH_PROMPT, "Enter map name: ");
+    mprf(MSGCH_PROMPT, "Enter map name (prefix it with * for local placement): ");
     if (cancelable_get_line_autohist(what_to_make, sizeof what_to_make))
     {
         canned_msg(MSG_OK);
