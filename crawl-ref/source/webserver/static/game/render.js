@@ -77,6 +77,8 @@ function clear_map()
     minimap_ctx.fillRect(0, 0,
                          $("#minimap").width(),
                          $("#minimap").height());
+
+    monster_list.clear();
 }
 
 function mappable(val)
@@ -119,6 +121,8 @@ function display()
         dungeon_renderer.render_loc(loc.x, loc.y, cell);
     }
     map_knowledge.reset_dirty();
+
+    monster_list.update();
 }
 
 function set_flash(colour)
@@ -216,7 +220,7 @@ function get_cell_map_feature(map_cell)
         else if (att_flag == TILE_FLAG_PET)
             return MF_MONS_FRIENDLY;
 
-        if (map_cell.mon && map_cell.mon.no_exp)
+        if (map_cell.mon && map_cell.mon.typedata.no_exp)
             return MF_MONS_NO_EXP;
         else
             return MF_MONS_HOSTILE;

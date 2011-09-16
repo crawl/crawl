@@ -52,9 +52,14 @@ map_knowledge = function ()
         return current;
     }
 
+    function set_monster_defaults(mon)
+    {
+        mon.att = mon.att || 0;
+    }
+
     function merge_monster(old_mon, mon)
     {
-        if (old_mon && old_mon.id && (!mon || (mon.id != old_mon.id)))
+        if (old_mon && old_mon.refs)
         {
             old_mon.refs--;
         }
@@ -67,12 +72,15 @@ map_knowledge = function ()
         var id = mon.id;
 
         var last = monster_table[id];
-        if (id === 0 || last == null)
+        if (!last)
         {
             if (old_mon)
-                last = merge_objects(old_mon, mon);
+                last = merge_objects(merge_objects({}, old_mon), mon);
             else
+            {
                 last = mon;
+                set_monster_defaults(last);
+            }
         }
         else
         {
@@ -82,8 +90,7 @@ map_knowledge = function ()
         if (id)
         {
             last.refs = last.refs || 0;
-            if (!old_mon || old_mon.id != id)
-                last.refs += 1;
+            last.refs++;
             monster_table[id] = last;
         }
 
