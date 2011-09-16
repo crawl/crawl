@@ -226,7 +226,7 @@ void tornado_damage(actor *caster, int dur)
         pow = caster->as_monster()->hit_dice * 4;
     dprf("Doing tornado, dur %d, effective power %d", dur, pow);
     const coord_def org = caster->pos();
-    int max_noise = 0;
+    int noise = 0;
     WindSystem winds(org);
 
     int age = _tornado_age(caster);
@@ -269,9 +269,7 @@ void tornado_damage(actor *caster, int dur)
         if (!rpow)
             break;
 
-        int noise = div_rand_round(r * rdur * 3, 100);
-        if (noise > max_noise)
-            max_noise = noise;
+        noise = std::max(div_rand_round(r * rdur * 3, 100), noise);
 
         std::vector<coord_def> clouds;
         for (; dam_i && dam_i.radius() == r; ++dam_i)
@@ -371,7 +369,7 @@ void tornado_damage(actor *caster, int dur)
         }
     }
 
-    noisy(max_noise, org, caster->mindex());
+    noisy(noise, org, caster->mindex());
 
     if (dur <= 0)
         return;
