@@ -1877,6 +1877,19 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_KOBOLD_DEMONOLOGIST:
     case MONS_OGRE_MAGE:
     case MONS_EROLCHA:
+    case MONS_WIZARD:
+    case MONS_ILSUIW:
+    case MONS_MARA:
+    case MONS_MERFOLK_AQUAMANCER:
+    case MONS_SPRIGGAN:
+    case MONS_SPRIGGAN_AIR_MAGE:
+    case MONS_SPRIGGAN_DEFENDER:
+        if (item_race == MAKE_ITEM_RANDOM_RACE)
+            item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = ARM_ROBE;
+        break;
+
     case MONS_DRACONIAN:
     case MONS_RED_DRACONIAN:
     case MONS_WHITE_DRACONIAN:
@@ -1894,17 +1907,9 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_DRACONIAN_MONK:
     case MONS_DRACONIAN_ZEALOT:
     case MONS_DRACONIAN_KNIGHT:
-    case MONS_WIZARD:
-    case MONS_ILSUIW:
-    case MONS_MARA:
-    case MONS_MERFOLK_AQUAMANCER:
-    case MONS_SPRIGGAN:
-    case MONS_SPRIGGAN_AIR_MAGE:
-    case MONS_SPRIGGAN_DEFENDER:
-        if (item_race == MAKE_ITEM_RANDOM_RACE)
-            item_race = MAKE_ITEM_NO_RACE;
+        item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
-        item.sub_type  = ARM_ROBE;
+        item.sub_type  = ARM_CLOAK;
         break;
 
     case MONS_SPRIGGAN_DRUID:

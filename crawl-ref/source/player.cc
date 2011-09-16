@@ -649,8 +649,7 @@ bool you_can_wear(int eq, bool special_armour)
     case EQ_GLOVES:
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
-            || player_genus(GENPC_OGREISH)
-            || player_genus(GENPC_DRACONIAN))
+            || player_genus(GENPC_OGREISH))
         {
             return (false);
         }
@@ -670,16 +669,17 @@ bool you_can_wear(int eq, bool special_armour)
         // These species cannot wear boots.
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
-            || player_genus(GENPC_OGREISH)
-            || player_genus(GENPC_DRACONIAN))
+            || player_genus(GENPC_OGREISH))
         {
             return (false);
         }
         return (true);
 
     case EQ_BODY_ARMOUR:
+        if (player_genus(GENPC_DRACONIAN))
+            return (false);
     case EQ_SHIELD:
-        // Anyone can wear robes or a buckler/shield.
+        // Most races can wear robes or a buckler/shield.
         if (special_armour)
             return (true);
         if (you.species == SP_TROLL
@@ -5842,10 +5842,9 @@ int player::armour_class() const
         if (form == TRAN_LICH)
             AC += (300 + 100 * skill(SK_NECROMANCY) / 6);   // max 7
 
-        //jmf: only give:
         if (player_genus(GENPC_DRACONIAN))
         {
-           AC += 300 + 100 * (you.experience_level / 3);  // max 12
+           AC += 400 + 100 * (you.experience_level / 3);  // max 13
 
            if (form == TRAN_DRAGON)
                AC += 700;

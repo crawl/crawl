@@ -1703,7 +1703,8 @@ bool monster::pickup_armour(item_def &item, int near, bool force)
     case ARM_CLOAK:
         if (type == MONS_MAURICE
             || type == MONS_NIKOLA
-            || type == MONS_CRAZY_YIUF)
+            || type == MONS_CRAZY_YIUF
+            || ::mons_genus(type) == MONS_DRACONIAN)
         {
             eq = EQ_BODY_ARMOUR;
         }
