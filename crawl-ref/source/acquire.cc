@@ -103,6 +103,14 @@ static armour_type _pick_wearable_armour(const armour_type arm)
             result = ARM_LARGE_SHIELD; // so have centaurs
         break;
 
+    case SP_OCTOPODE:
+        if (arm != ARM_HELMET && arm != ARM_SHIELD)
+            if (coinflip())
+                result = ARM_HELMET;
+            else
+                result = ARM_SHIELD;
+        // and fall through for shield size adjustments
+
     default:
         if (arm == ARM_CENTAUR_BARDING || arm == ARM_NAGA_BARDING)
             result = ARM_BOOTS;
