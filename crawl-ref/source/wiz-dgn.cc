@@ -842,4 +842,22 @@ void wizard_recreate_level()
     trackers_init_new_level(true);
 }
 
+void wizard_abyss_speed()
+{
+    char specs[256];
+    mprf(MSGCH_PROMPT, "Set abyss speed to what? (now %d, higher value = "
+                       "higher speed) ", you.abyss_speed);
+
+    if (!cancelable_get_line(specs, sizeof(specs)))
+    {
+        const int speed = atoi(specs);
+        if (speed || specs[0] == '0')
+        {
+            you.abyss_speed = speed;
+            return;
+        }
+    }
+
+    canned_msg(MSG_OK);
+}
 #endif
