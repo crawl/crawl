@@ -58,16 +58,6 @@ static armour_type _pick_wearable_armour(const armour_type arm)
     {
     case SP_OGRE:
     case SP_TROLL:
-    case SP_RED_DRACONIAN:
-    case SP_WHITE_DRACONIAN:
-    case SP_GREEN_DRACONIAN:
-    case SP_YELLOW_DRACONIAN:
-    case SP_GREY_DRACONIAN:
-    case SP_BLACK_DRACONIAN:
-    case SP_PURPLE_DRACONIAN:
-    case SP_MOTTLED_DRACONIAN:
-    case SP_PALE_DRACONIAN:
-    case SP_BASE_DRACONIAN:
     case SP_SPRIGGAN:
         if (arm == ARM_GLOVES
             || arm == ARM_BOOTS
@@ -86,6 +76,31 @@ static armour_type _pick_wearable_armour(const armour_type arm)
         else if (arm == NUM_ARMOURS)
         {
             result = ARM_ROBE;  // no heavy armour, see below
+        }
+        break;
+
+    case SP_RED_DRACONIAN:
+    case SP_WHITE_DRACONIAN:
+    case SP_GREEN_DRACONIAN:
+    case SP_YELLOW_DRACONIAN:
+    case SP_GREY_DRACONIAN:
+    case SP_BLACK_DRACONIAN:
+    case SP_PURPLE_DRACONIAN:
+    case SP_MOTTLED_DRACONIAN:
+    case SP_PALE_DRACONIAN:
+    case SP_BASE_DRACONIAN:
+        if (arm == ARM_ROBE
+            || arm == NUM_ARMOURS // no heavy armour
+            || arm == ARM_CENTAUR_BARDING
+            || arm == ARM_NAGA_BARDING)
+        {
+            result = static_cast<armour_type>(random_choose(
+                                 ARM_HELMET, ARM_GLOVES, ARM_BOOTS, -1));
+        }
+        else if (arm == ARM_SHIELD)
+        {
+            if (x_chance_in_y(5 + you.skills[SK_SHIELDS], 20))
+                result = ARM_LARGE_SHIELD;
         }
         break;
 

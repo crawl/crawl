@@ -594,6 +594,14 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         return (false);
     }
 
+    if (player_genus(GENPC_DRACONIAN) && slot == EQ_BODY_ARMOUR)
+    {
+        if (verbose)
+            mprf("Your wings%s won't fit in that.", you.mutation[MUT_BIG_WINGS]
+                 ? "" : ", even vestigial as they are,");
+        return (false);
+    }
+
     if (sub_type == ARM_NAGA_BARDING || sub_type == ARM_CENTAUR_BARDING)
     {
         if (you.species == SP_NAGA && sub_type == ARM_NAGA_BARDING
@@ -610,9 +618,6 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
     }
 
     size_type player_size = you.body_size(PSIZE_TORSO, ignore_temporary);
-    // Draconians are medium for weapons, large for armour.
-    if (player_genus(GENPC_DRACONIAN)) // no transforms which alter size allow armour
-        player_size = SIZE_LARGE;
     int bad_size = fit_armour_size(item, player_size);
 
     if (bad_size)
@@ -705,6 +710,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         {
             if (verbose)
                 mpr("You can't wear that with your antennae!");
+            return (false);
+        }
+
+        if (player_genus(GENPC_DRACONIAN))
+        {
+            if (verbose)
+                mpr("You can't wear that with your reptilian head.");
             return (false);
         }
 

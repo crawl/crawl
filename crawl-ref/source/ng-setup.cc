@@ -484,8 +484,17 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, WPN_SHORT_SWORD);
         _update_weapon(ng);
 
-        newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_SCALE_MAIL,
-                          ARM_ROBE);
+        if (player_genus(GENPC_DRACONIAN))
+        {
+            newgame_make_item(1, EQ_GLOVES, OBJ_ARMOUR, ARM_GLOVES, -1, 1, 0,
+                              TGLOV_DESC_GAUNTLETS);
+            newgame_make_item(3, EQ_BOOTS, OBJ_ARMOUR, ARM_BOOTS);
+        }
+        else
+        {
+            newgame_make_item(1, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_SCALE_MAIL,
+                              ARM_ROBE);
+        }
         newgame_make_item(2, EQ_SHIELD, OBJ_ARMOUR, ARM_SHIELD, ARM_BUCKLER);
 
         // Skills.

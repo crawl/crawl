@@ -1785,6 +1785,13 @@ static void tag_read_you(reader &th)
         you.equip[i] = unmarshallByte(th);
     for (i = 0; i < count; ++i)
         you.melded[i] = unmarshallBoolean(th);
+#if TAG_MAJOR_VERSION == 32
+    if (player_genus(GENPC_DRACONIAN))
+    {
+        you.equip[EQ_BODY_ARMOUR] = -1;
+        you.melded[EQ_BODY_ARMOUR] = false;
+    }
+#endif
 
     you.magic_points              = unmarshallByte(th);
     you.max_magic_points          = unmarshallByte(th);
