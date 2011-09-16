@@ -2678,6 +2678,22 @@ void unmarshallItem(reader &th, item_def &item)
         else
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
     }
+    if (th.getMinorVersion() < TAG_MINOR_UNPONDERIFY
+        && item.base_type == OBJ_ARMOUR
+        && is_artefact(item)
+        && is_random_artefact(item)
+        && artefact_wpn_property(item, ARTP_PONDEROUS))
+    {
+        // no artefacts but unrands could get this naturally
+        trim_randart_inscrip(item);
+        item.special = get_armour_ego_type(item);
+        item.flags &= ~ISFLAG_RANDART;
+        item.props.erase(ARTEFACT_PROPS_KEY);
+        item.props.erase(KNOWN_PROPS_KEY);
+        item.props.erase(ARTEFACT_APPEAR_KEY);
+        item.props.erase(ARTEFACT_NAME_KEY);
+        ASSERT(!is_artefact(item));
+    }
 #endif
 }
 

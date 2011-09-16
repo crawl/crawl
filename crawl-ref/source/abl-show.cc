@@ -414,8 +414,6 @@ static const ability_def Ability_List[] =
     { ABIL_FEDHAS_RAIN, "Rain", 4, 0, 150, 4, ABFLAG_NONE},
 
     // Cheibriados
-    { ABIL_CHEIBRIADOS_PONDEROUSIFY, "Make Ponderous",
-      0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_CHEIBRIADOS_TIME_BEND, "Bend Time", 3, 0, 50, 1, ABFLAG_NONE },
     { ABIL_CHEIBRIADOS_SLOUCH, "Slouch", 5, 0, 100, 8, ABFLAG_NONE },
     { ABIL_CHEIBRIADOS_TIME_STEP, "Step From Time",
@@ -1118,7 +1116,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_ZIN_CURE_ALL_MUTATIONS:
     case ABIL_ELYVILON_LIFESAVING:
     case ABIL_TROG_BURN_SPELLBOOKS:
-    case ABIL_CHEIBRIADOS_PONDEROUSIFY:
     case ABIL_ASHENZARI_TRANSFER_KNOWLEDGE:
     case ABIL_ASHENZARI_END_TRANSFER:
     case ABIL_ASHENZARI_SCRYING:
@@ -2649,11 +2646,6 @@ static bool _do_ability(const ability_def& abil)
         jiyva_remove_bad_mutation();
         break;
 
-    case ABIL_CHEIBRIADOS_PONDEROUSIFY:
-        if (!ponderousify_armour())
-            return (false);
-        break;
-
     case ABIL_CHEIBRIADOS_TIME_STEP:
         cheibriados_time_step(you.skill(SK_INVOCATIONS)*you.piety/10);
         break;
@@ -3094,8 +3086,6 @@ std::vector<talent> your_talents(bool check_confused)
     // Religious abilities.
     if (you.religion == GOD_TROG && !silenced(you.pos()))
         _add_talent(talents, ABIL_TROG_BURN_SPELLBOOKS, check_confused);
-    else if (you.religion == GOD_CHEIBRIADOS && !silenced(you.pos()))
-        _add_talent(talents, ABIL_CHEIBRIADOS_PONDEROUSIFY, check_confused);
     else if (you.transfer_skill_points > 0)
         _add_talent(talents, ABIL_ASHENZARI_END_TRANSFER, check_confused);
 
