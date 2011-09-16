@@ -186,6 +186,7 @@ struct monster_info : public monster_info_base
     bool has_proper_name() const;
     dungeon_feature_type get_mimic_feature() const;
     std::string mimic_name() const;
+    std::string pluralized_name(bool fullname = true) const;
     std::string common_name(description_level_type desc = DESC_PLAIN) const;
     std::string proper_name(description_level_type desc = DESC_PLAIN) const;
     std::string full_name(description_level_type desc = DESC_PLAIN, bool use_comma = false) const;

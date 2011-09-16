@@ -985,6 +985,38 @@ static std::string _verbose_info(const monster_info& mi)
     return inf;
 }
 
+std::string monster_info::pluralized_name(bool fullname) const
+{
+    // Don't pluralise uniques, ever.  Multiple copies of the same unique
+    // are unlikely in the dungeon currently, but quite common in the
+    // arena.  This prevens "4 Gra", etc. {due}
+    // Unless it's Mara, who summons illusions of himself.
+    if (mons_is_unique(type) && type != MONS_MARA)
+    {
+        return common_name();
+    }
+    // Specialcase mimics, so they don't get described as piles of gold
+    // when that would be inappropriate. (HACK)
+    else if (mons_is_mimic(type))
+    {
+        return "mimics";
+    }
+    else if (mons_genus(type) == MONS_DRACONIAN)
+    {
+        return pluralise(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
+    }
+    else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
+             || type == MONS_DANCING_WEAPON || type == MONS_LABORATORY_RAT
+             || !fullname)
+    {
+        return pluralise(mons_type_name(type, DESC_PLAIN));
+    }
+    else
+    {
+        return pluralise(common_name());
+    }
+}
+
 void monster_info::to_string(int count, std::string& desc,
                                   int& desc_color, bool fullname) const
 {
@@ -995,36 +1027,7 @@ void monster_info::to_string(int count, std::string& desc,
     else
     {
         // TODO: this should be done in a much cleaner way, with code to merge multiple monster_infos into a single common structure
-        out << count << " ";
-
-        // Don't pluralise uniques, ever.  Multiple copies of the same unique
-        // are unlikely in the dungeon currently, but quite common in the
-        // arena.  This prevens "4 Gra", etc. {due}
-        // Unless it's Mara, who summons illusions of himself.
-        if (mons_is_unique(type) && type != MONS_MARA)
-        {
-            out << common_name();
-        }
-        // Specialcase mimics, so they don't get described as piles of gold
-        // when that would be inappropriate. (HACK)
-        else if (mons_is_mimic(type))
-        {
-            out << "mimics";
-        }
-        else if (mons_genus(type) == MONS_DRACONIAN)
-        {
-            out << pluralise(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
-        }
-        else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
-                || type == MONS_DANCING_WEAPON || type == MONS_LABORATORY_RAT
-                || !fullname)
-        {
-            out << pluralise(mons_type_name(type, DESC_PLAIN));
-        }
-        else
-        {
-            out << pluralise(common_name());
-        }
+        out << count << " " << pluralized_name(fullname);
     }
 
 #ifdef DEBUG_DIAGNOSTICS

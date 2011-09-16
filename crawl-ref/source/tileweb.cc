@@ -517,18 +517,32 @@ void TilesFramework::_send_monster(const coord_def &gc, const monster_info* m,
         force_full = true;
 
     if (force_full || (last->full_name() != m->full_name()))
-        write_message("name:'%s',", m->full_name().c_str());
+        write_message("name:'%s',",
+                      replace_all_of(m->full_name(), "'", "\\'").c_str());
+
+    if (force_full || (last->pluralized_name() != m->pluralized_name()))
+        write_message("plural:'%s',",
+                      replace_all_of(m->pluralized_name(), "'", "\\'").c_str());
 
     if (force_full || (last->type != m->type))
+    {
         write_message("type:%d,", m->type);
+
+        // TODO: get this information to the client in another way
+        write_message("typedata:{avghp:%d,", mons_avg_hp(m->type));
+        if (mons_class_flag(m->type, M_NO_EXP_GAIN))
+            write_message("no_exp:1,");
+        write_message("},");
+    }
+
+    if (force_full || (last->attitude != m->attitude))
+        write_message("att:%d,", m->attitude);
 
     if (force_full || (last->base_type != m->base_type))
         write_message("btype:%d,", m->base_type);
 
-    bool no_exp = mons_class_flag(m->type, M_NO_EXP_GAIN);
-    if ((force_full && no_exp)
-        || (last && mons_class_flag(last->type, M_NO_EXP_GAIN) != no_exp))
-        write_message("no_exp:%u,", no_exp);
+    if (force_full || (last->threat != m->threat))
+        write_message("threat:%d,", m->threat);
 
     pop_prefix("},");
 }

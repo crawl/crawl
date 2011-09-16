@@ -148,6 +148,8 @@ function do_layout()
     minimap_overlay.width = minimap_canvas.width;
     minimap_overlay.height = minimap_canvas.height;
 
+    $("#monster_list").width(stat_width_pixels);
+
     // Go back to the old layer, re-hide the minimap if necessary
     $("#minimap, #minimap_overlay").css("display", minimap_display);
     set_layer(layer);
@@ -156,6 +158,7 @@ function do_layout()
     force_full_render(true);
     display();
     update_minimap_overlay();
+    monster_list.update();
 
     // Send the layout
     if (current_layout &&
