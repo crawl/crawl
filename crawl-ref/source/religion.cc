@@ -429,7 +429,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     { "Cheibriados will no longer slow or strengthen your metabolism.",
       "bend time to slow others, and Cheibriados will no longer protect your life force",
       "Cheibriados will no longer protect you from cold.",
-      "inflict damage to those overly hast, and Cheibriados will no longer protect you from fire",
+      "inflict damage to those overly hasty, and Cheibriados will no longer protect you from fire",
       "step out of the time flow"
     },
     // Ashenzari
