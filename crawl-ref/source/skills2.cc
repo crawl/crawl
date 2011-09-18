@@ -139,24 +139,6 @@ struct species_skill_aptitude
 // a discount with about 75%.
 static int _spec_skills[NUM_SPECIES][NUM_SKILLS];
 
-/* *************************************************************
-
-// these were unimplemented "level titles" for two classes {dlb}
-
-JOB_PRIEST
-   "Preacher";
-   "Priest";
-   "Evangelist";
-   "Pontifex";
-
-JOB_PALADIN:
-   "Holy Warrior";
-   "Holy Crusader";
-   "Paladin";
-   "Scourge of Evil";
-
-************************************************************* */
-
 int get_skill_percentage(const skill_type x)
 {
     const int needed = skill_exp_needed(you.skills[x] + 1, x);
