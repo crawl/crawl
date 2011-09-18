@@ -434,7 +434,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
 {
     int power = 0;
     if (rod)
-        power = 5 + you.skill(SK_EVOCATIONS) * 3;
+        power = 5 + you.skill(SK_EVOCATIONS, 3);
     else
     {
         int enhanced = 0;
@@ -451,17 +451,17 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
             {
                 unsigned int bit = (1 << ndx);
                 if (disciplines & bit)
-                    power += you.skill(spell_type2skill(bit)) * 2;
+                    power += you.skill(spell_type2skill(bit), 200);
             }
             power /= skillcount;
         }
 
-        power += you.skill(SK_SPELLCASTING) / 2;
+        power += you.skill(SK_SPELLCASTING, 50);
 
         // Brilliance boosts spell power a bit (equivalent to three
         // spell school levels).
         if (!fail_rate_check && you.duration[DUR_BRILLIANCE])
-            power += 6;
+            power += 600;
 
         if (apply_intel)
             power = (power * you.intel()) / 10;
@@ -485,7 +485,7 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
                 power /= 2;
         }
 
-        power = stepdown_value(power, 50, 50, 150, 200);
+        power = stepdown_value(power / 100, 50, 50, 150, 200);
     }
 
     const int cap = spell_power_cap(spell);

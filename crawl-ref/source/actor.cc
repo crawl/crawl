@@ -99,6 +99,10 @@ bool actor::handle_trap()
     return (trap != NULL);
 }
 
+int actor::skill_rdiv(skill_type sk, int mult, int div) const
+{
+    return div_rand_round(skill(sk, mult * 256), div * 256);
+}
 
 int actor::res_holy_fire() const
 {

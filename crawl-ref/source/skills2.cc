@@ -519,10 +519,10 @@ bool is_useless_skill(int skill)
     return false;
 }
 
-int skill_bump(skill_type skill)
+int skill_bump(skill_type skill, int scale)
 {
-    int sk = you.skill(skill);
-    return sk < 3 ? sk * 2 : sk + 3;
+    int sk = you.skill_rdiv(skill, scale);
+    return sk < 3 * scale ? sk * 2 : sk + 3 * scale;
 }
 
 // What aptitude value corresponds to doubled skill learning
@@ -730,8 +730,8 @@ void dump_skills(std::string &text)
                                   you.train[i]        ? '+'
                                                       : '-'),
                                  you.skills[i],
-                                 you.skill(sk) != you.skills[i]
-                                     ? make_stringf("(%d)", you.skill(sk)).c_str()
+                                 you.skill(sk, 1) != you.skills[i]
+                                     ? make_stringf("(%d)", you.skill(sk, 1)).c_str()
                                      : "",
                                  skill_name(static_cast<skill_type>(i)));
         }
@@ -824,7 +824,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         }
     }
 
-    int new_level = boost ? you.skill(tsk) : you.skills[tsk];
+    int new_level = you.skill(tsk, 1, !boost);
     // Restore the level
     you.skills[fsk] = fsk_level;
     you.skills[tsk] = tsk_level;
@@ -876,7 +876,7 @@ void skill_state::save()
     if (!is_invalid_skill(you.manual_skill))
         manual_charges  = you.inv[you.manual_index].plus2;
     for (int i = 0; i < NUM_SKILLS; i++)
-        changed_skills[i] = you.skill((skill_type)i);
+        changed_skills[i] = you.skill((skill_type)i, 1);
 }
 
 void skill_state::restore_levels()

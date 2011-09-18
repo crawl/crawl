@@ -655,7 +655,7 @@ public:
     void shield_block_succeeded(actor *foe);
 
     bool wearing_light_armour(bool with_skill = false) const;
-    int  skill(skill_type skill) const;
+    int  skill(skill_type skill, int scale, bool real = false) const;
     int  traps_skill() const;
 
     bool do_shaft();

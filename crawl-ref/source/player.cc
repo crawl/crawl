@@ -1366,7 +1366,7 @@ int player_hunger_rate(void)
 
 int player_spell_levels(void)
 {
-    int sl = (you.experience_level - 1) + (you.skills[SK_SPELLCASTING] * 2);
+    int sl = you.experience_level - 1 + you.skill(SK_SPELLCASTING, 2, true);
 
     bool fireball = false;
     bool delayed_fireball = false;
@@ -2237,7 +2237,7 @@ int player_adjusted_shield_evasion_penalty(int scale)
     const int base_shield_penalty = -property(*shield, PARM_EVASION);
     return std::max(0,
                     (base_shield_penalty * scale
-                     - you.skill(SK_SHIELDS) * scale
+                     - you.skill(SK_SHIELDS, scale)
                      / std::max(1, 5 + player_evasion_size_factor())));
 }
 
@@ -2278,9 +2278,9 @@ int player_adjusted_body_armour_evasion_penalty(int scale)
 
     return ((base_ev_penalty
              + std::max(0, 3 * base_ev_penalty - you.strength()))
-            * (45 - you.skill(SK_ARMOUR))
+            * (450 - you.skill(SK_ARMOUR, 10))
             * scale
-            / 45);
+            / 450);
 }
 
 // The total EV penalty to the player for all their worn armour items
@@ -2414,8 +2414,8 @@ int player_evasion(ev_ignore_type evit)
     const int ev_dex = stepdown_value(you.dex(), 10, 24, 72, 72);
 
     const int dodge_bonus =
-        (7 + you.skill(SK_DODGING) * ev_dex) * scale
-        / (20 - size_factor);
+        (70 + you.skill(SK_DODGING, 10) * ev_dex) * scale
+        / (20 - size_factor) / 10;
 
     // [ds] Dodging penalty for being in high EVP armour, almost
     // identical to v0.5/4.1 penalty, but with the EVP discount being
@@ -2547,7 +2547,7 @@ int player_shield_class(void)
 
         // bonus applied only to base, see above for effect:
         shield += base_shield * 50;
-        shield += base_shield * 5 * you.skill(SK_SHIELDS) / 2;
+        shield += base_shield * you.skill(SK_SHIELDS, 5) / 2;
         shield += base_shield * racial_bonus * 10 / 6;
 
         shield += item.plus * 100;
@@ -2564,14 +2564,14 @@ int player_shield_class(void)
     {
         if (you.duration[DUR_MAGIC_SHIELD])
         {
-            stat   =  600 + you.skill(SK_EVOCATIONS) * 50;
-            shield += 300 + you.skill(SK_EVOCATIONS) * 25;
+            stat   =  600 + you.skill(SK_EVOCATIONS, 50);
+            shield += 300 + you.skill(SK_EVOCATIONS, 25);
         }
 
         if (!you.duration[DUR_FIRE_SHIELD]
             && you.duration[DUR_CONDENSATION_SHIELD])
         {
-            shield += 300 + (you.skill(SK_ICE_MAGIC) * 25);
+            shield += 300 + you.skill(SK_ICE_MAGIC, 25);
             stat    = std::max(stat, you.intel() * 38);
         }
     }
@@ -2583,7 +2583,7 @@ int player_shield_class(void)
     }
 
     if (shield + stat > 0)
-        shield += skill_bump(SK_SHIELDS) * 38;
+        shield += skill_bump(SK_SHIELDS, 38);
 
     // mutations
     shield += player_mutation_level(MUT_LARGE_BONE_PLATES) > 0 ? 100 + player_mutation_level(MUT_LARGE_BONE_PLATES) * 100 : 0;      // +2, +3, +4
@@ -3545,7 +3545,7 @@ int check_stealth(void)
         break;
     }
 
-    stealth += you.skill(SK_STEALTH) * race_mod;
+    stealth += you.skill(SK_STEALTH, race_mod);
 
     if (you.burden_state > BS_UNENCUMBERED)
         stealth /= you.burden_state;
@@ -4511,7 +4511,7 @@ int get_real_hp(bool trans, bool rotted)
     hitp  = you.experience_level * 11 / 2;
     hitp += you.hp_max_perm;
     // Important: we shouldn't add Heroism boosts here.
-    hitp += (you.experience_level * you.skills[SK_FIGHTING]) / 8;
+    hitp += (you.experience_level * you.skill(SK_FIGHTING, 10, true)) / 80;
 
     // Racial modifier.
     hitp *= 10 + species_hp_modifier(you.species);
@@ -4520,7 +4520,8 @@ int get_real_hp(bool trans, bool rotted)
     // Frail and robust mutations, divine vigour, and rugged scale mut.
     hitp *= 100 + (player_mutation_level(MUT_ROBUST) * 10)
                 + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
-                + (player_mutation_level(MUT_RUGGED_BROWN_SCALES) ? player_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
+                + (player_mutation_level(MUT_RUGGED_BROWN_SCALES) ?
+                   player_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
                 - (player_mutation_level(MUT_FRAIL) * 10);
     hitp /= 100;
 
@@ -4545,8 +4546,8 @@ int get_real_mp(bool include_items)
     int enp = you.experience_level + you.mp_max_perm;
     enp += (you.experience_level * species_mp_modifier(you.species) + 1) / 3;
 
-    int spell_extra = (you.experience_level * you.skills[SK_SPELLCASTING]) / 4;
-    int invoc_extra = (you.experience_level * you.skills[SK_INVOCATIONS]) / 6;
+    int spell_extra = you.skill(SK_SPELLCASTING, you.experience_level, true) / 4;
+    int invoc_extra = you.skill(SK_INVOCATIONS, you.experience_level, true) / 6;
 
     enp += std::max(spell_extra, invoc_extra);
     enp = stepdown_value(enp, 9, 18, 45, 100);
@@ -5748,28 +5749,30 @@ void player::shield_block_succeeded(actor *foe)
     practise(EX_SHIELD_BLOCK);
 }
 
-int player::skill(skill_type sk) const
+int player::skill(skill_type sk, int scale, bool real) const
 {
-    int level = skills[sk];
+    int level = skills[sk] * scale;
+    if (real)
+        return level;
     if (you.duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
-        level = std::min(level + 5, 27);
+        level = std::min(level + 5 * scale, 27 * scale);
     if (you.penance[GOD_ASHENZARI])
-        level = std::max(level - std::min(4, level / 2), 0);
+        level = std::max(level - std::min(4 * scale, level / 2), 0);
     else if (you.religion == GOD_ASHENZARI)
-        level = ash_skill_boost(sk);
+        level = ash_skill_boost(sk, scale);
 
-    return level;
+    return level * scale;
 }
 
 // only for purposes of detection, not disarming
 int player::traps_skill() const
 {
-    int val = skill(SK_TRAPS_DOORS);
+    int val = skill(SK_TRAPS_DOORS, 15);
 
     if (you.religion == GOD_ASHENZARI && !player_under_penance())
-        val += you.piety / 15;
+        val += you.piety;
 
-    return val;
+    return div_rand_round(val, 15);
 }
 
 int player_icemail_armour_class()
@@ -5800,7 +5803,7 @@ int player::armour_class() const
 
         // [ds] effectively: ac_value * (22 + Arm) / 22, where Arm =
         // Armour Skill + racial_skill_bonus / 2.
-        AC += ac_value * (44 + 2 * skill(SK_ARMOUR) + racial_bonus) / 44;
+        AC += ac_value * (440 + skill(SK_ARMOUR, 20) + racial_bonus * 10) / 440;
         AC += item.plus * 100;
 
         // The deformed don't fit into body armour very well.
@@ -5821,10 +5824,10 @@ int player::armour_class() const
     AC += scan_artefacts(ARTP_AC) * 100;
 
     if (duration[DUR_ICY_ARMOUR])
-        AC += 400 + 100 * skill(SK_ICE_MAGIC) / 3;         // max 13
+        AC += 400 + skill(SK_ICE_MAGIC, 100) / 3;    // max 13
 
     if (duration[DUR_STONESKIN])
-        AC += 200 + 100 * skill(SK_EARTH_MAGIC) / 5;       // max 7
+        AC += 200 + skill(SK_EARTH_MAGIC, 20);       // max 7
 
     if (mutation[MUT_ICEMAIL])
         AC += 100 * player_icemail_armour_class();
@@ -5840,7 +5843,7 @@ int player::armour_class() const
         // Note: Even though necromutation is a high level spell, it does
         // allow the character full armour (so the bonus is low). -- bwr
         if (form == TRAN_LICH)
-            AC += (300 + 100 * skill(SK_NECROMANCY) / 6);   // max 7
+            AC += 300 + skill(SK_NECROMANCY, 100) / 6;    // max 7
 
         if (player_genus(GENPC_DRACONIAN))
         {
@@ -5873,25 +5876,25 @@ int player::armour_class() const
             break;
 
         case TRAN_SPIDER: // low level (small bonus), also gets EV
-            AC += (200 + 100 * skill(SK_POISON_MAGIC) / 6); // max 6
+            AC += 200 + skill(SK_POISON_MAGIC, 100) / 6; // max 6
             break;
 
         case TRAN_ICE_BEAST:
-            AC += (500 + 100 * (skill(SK_ICE_MAGIC) + 1) / 4); // max 12
+            AC += 500 + skill(SK_ICE_MAGIC, 25) + 25;    // max 12
 
             if (duration[DUR_ICY_ARMOUR])
-                AC += (100 + 100 * skill(SK_ICE_MAGIC) / 4);   // max +7
+                AC += 100 + skill(SK_ICE_MAGIC, 25);     // max +7
             break;
 
         case TRAN_DRAGON: // Draconians handled above
-            AC += (700 + 100 * skill(SK_FIRE_MAGIC) / 3); // max 16
+            AC += 700 + skill(SK_FIRE_MAGIC, 100) / 3;   // max 16
             break;
 
         case TRAN_STATUE: // main ability is armour (high bonus)
-            AC += (1700 + 100 * skill(SK_EARTH_MAGIC) / 2);    // max 30
+            AC += 1700 + 100 * skill(SK_EARTH_MAGIC, 50);// max 30
 
             if (duration[DUR_STONESKIN])
-                AC += (100 + 100 * skill(SK_EARTH_MAGIC) / 4); // max +7
+                AC += 100 + skill(SK_EARTH_MAGIC, 25);   // max +7
             break;
 
         default:
@@ -6232,7 +6235,7 @@ int player_res_magic(bool calc_unid, bool temp)
 
     // Enchantment skill through staff of enchantment (up to 90).
     if (player_equip(EQ_STAFF, STAFF_ENCHANTMENT, calc_unid))
-        rm += 3 * (3 + std::max(you.skill(SK_CHARMS), you.skill(SK_HEXES)));
+        rm += 9 + std::max(you.skill(SK_CHARMS, 3), you.skill(SK_HEXES, 3));
 
     // Mutations
     rm += 30 * player_mutation_level(MUT_MAGIC_RESISTANCE);

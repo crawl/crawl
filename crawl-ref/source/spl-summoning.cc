@@ -215,7 +215,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
     }
 
     const int dur = std::min(3 + random2(pow) / 20, 5);
-    int how_many_max = 1 + random2(1 + you.skill(SK_TRANSMUTATIONS)) / 4;
+    int how_many_max = 1 + random2(1 + you.skill(SK_TRANSMUTATIONS, 1)) / 4;
     const bool friendly = (!wpn.cursed());
     const beh_type beha = (friendly) ? BEH_FRIENDLY : BEH_HOSTILE;
 
@@ -599,21 +599,21 @@ spret_type cast_summon_elemental(int pow, god_type god,
     // - Earth elementals are more static and easy to tame (as before).
     // - Fire elementals fall in between the two (10 is still fairly easy).
     const bool friendly = ((mon != MONS_FIRE_ELEMENTAL
-                            || x_chance_in_y(you.skill(SK_FIRE_MAGIC)
+                            || x_chance_in_y(you.skill(SK_FIRE_MAGIC, 1)
                                              - horde_penalty, 10))
 
                         && (mon != MONS_WATER_ELEMENTAL
-                            || x_chance_in_y(you.skill(SK_ICE_MAGIC)
+                            || x_chance_in_y(you.skill(SK_ICE_MAGIC, 1)
                                              - horde_penalty,
                                              (you.species == SP_MERFOLK) ? 5
                                                                          : 15))
 
                         && (mon != MONS_AIR_ELEMENTAL
-                            || x_chance_in_y(you.skill(SK_AIR_MAGIC)
+                            || x_chance_in_y(you.skill(SK_AIR_MAGIC, 1)
                                              - horde_penalty, 15))
 
                         && (mon != MONS_EARTH_ELEMENTAL
-                            || x_chance_in_y(you.skill(SK_EARTH_MAGIC)
+                            || x_chance_in_y(you.skill(SK_EARTH_MAGIC, 1)
                                              - horde_penalty, 5))
 
                         && random2(100) >= unfriendly);

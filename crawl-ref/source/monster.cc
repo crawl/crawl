@@ -3555,18 +3555,19 @@ void monster::poison(actor *agent, int amount, bool force)
     poison_monster(this, agent, amount, force);
 }
 
-int monster::skill(skill_type sk) const
+int monster::skill(skill_type sk, int scale) const
 {
+    int hd = scale * hit_dice;
     switch (sk)
     {
     case SK_EVOCATIONS:
-        return (type == MONS_DEEP_DWARF_ARTIFICER ? hit_dice * 2 : hit_dice);
+        return (type == MONS_DEEP_DWARF_ARTIFICER ? hd * 2 : hd);
 
     case SK_NECROMANCY:
-        return ((holiness() == MH_UNDEAD || holiness() == MH_DEMONIC) ? hit_dice : hit_dice / 2);
+        return ((holiness() == MH_UNDEAD || holiness() == MH_DEMONIC) ? hd : hd/2);
 
     case SK_POISON_MAGIC:
-        return (is_actual_spellcaster() ? hit_dice : hit_dice / 3);
+        return (is_actual_spellcaster() ? hd : hd / 3);
 
     default:
         return (0);
