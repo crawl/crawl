@@ -1403,7 +1403,7 @@ void evoke_deck(item_def& deck)
     }
 
     if (!deck_gone && allow_id
-        && you.skill(SK_EVOCATIONS, 1) > 5 + random2(35))
+        && you.skill(SK_EVOCATIONS) > 5 + random2(35))
     {
         mpr("Your skill with magical items lets you identify the deck.");
         set_ident_flags(deck, ISFLAG_KNOW_TYPE);

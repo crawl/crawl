@@ -643,9 +643,9 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                 case SPWPN_PAIN:
                 {
                     const char* your_arm = you.arm_name(false).c_str();
-                    if (you.skill(SK_NECROMANCY, 1) == 0)
+                    if (you.skill(SK_NECROMANCY) == 0)
                         mpr("You have a feeling of ineptitude.");
-                    else if (you.skill(SK_NECROMANCY, 1) <= 6)
+                    else if (you.skill(SK_NECROMANCY) <= 6)
                         mprf("Pain shudders through your %s!", your_arm);
                     else
                         mprf("A searing pain shoots up your %s!", your_arm);
@@ -925,7 +925,7 @@ static void _equip_armour_effect(item_def& arm, bool unmeld)
             break;
 
         case SPARM_ARCHMAGI:
-            if (!you.skill(SK_SPELLCASTING, 1))
+            if (!you.skill(SK_SPELLCASTING))
                 mpr("You feel strangely lacking in power.");
             else
                 mpr("You feel powerful.");

@@ -206,7 +206,7 @@ static void _olgreb_pluses(item_def *item)
 {
     // Giving Olgreb's staff a little lift since staves of poison have
     // been made better. -- bwr
-    item->plus  = you.skill(SK_POISON_MAGIC, 1) / 3;
+    item->plus  = you.skill(SK_POISON_MAGIC) / 3;
     item->plus2 = item->plus;
 }
 

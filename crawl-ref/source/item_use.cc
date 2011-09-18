@@ -5853,7 +5853,7 @@ void tile_item_use(int idx)
             return;
 
         case OBJ_BOOKS:
-            if (!item_is_spellbook(item) || !you.skill(SK_SPELLCASTING, 1))
+            if (!item_is_spellbook(item) || !you.skill(SK_SPELLCASTING))
             {
                 if (check_warning_inscriptions(item, OPER_READ))
                     _handle_read_book(idx);

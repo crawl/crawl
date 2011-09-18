@@ -2994,7 +2994,7 @@ bool fedhas_evolve_flora()
     case MONS_BUSH:
     {
         std::string evolve_desc = " can now spit acid";
-        int skill = you.skill(SK_INVOCATIONS, 1);
+        int skill = you.skill(SK_INVOCATIONS);
         if (skill >= 20)
             evolve_desc += " continuously";
         else if (skill >= 15)

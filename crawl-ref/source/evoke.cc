@@ -324,7 +324,7 @@ static bool _check_crystal_ball(int subtype, bool known)
     int min_evo = 2;
     if (known && subtype == MISC_CRYSTAL_BALL_OF_SEEING)
         min_evo = 3;
-    if (you.skill(SK_EVOCATIONS, 1) < min_evo)
+    if (you.skill(SK_EVOCATIONS) < min_evo)
     {
         mpr("You lack the skill to use this item.");
         return false;
@@ -355,8 +355,8 @@ static bool _ball_of_seeing(void)
         confuse_player(10 + random2(10));
     else if (use < 15 || coinflip())
         mpr("You see nothing.");
-    else if (magic_mapping(6 + you.skill(SK_EVOCATIONS, 1),
-                           50 + random2(you.skill(SK_EVOCATIONS, 1)), true))
+    else if (magic_mapping(6 + you.skill(SK_EVOCATIONS),
+                           50 + random2(you.skill(SK_EVOCATIONS)), true))
     {
         mpr("You see a map of your surroundings!");
         ret = true;
@@ -369,7 +369,7 @@ static bool _ball_of_seeing(void)
 
 bool disc_of_storms(bool drac_breath)
 {
-    const int fail_rate = (30 - you.skill(SK_EVOCATIONS, 1));
+    const int fail_rate = 30 - you.skill(SK_EVOCATIONS);
     bool rc = false;
 
     if ((player_res_electricity() || x_chance_in_y(fail_rate, 100))
@@ -388,7 +388,7 @@ bool disc_of_storms(bool drac_breath)
         rc = true;
 
         const int disc_count = (drac_breath) ? roll_dice(2, 1 + you.experience_level / 7) :
-                                roll_dice(2, 1 + you.skill(SK_EVOCATIONS, 1) / 7);
+                                roll_dice(2, 1 + you.skill(SK_EVOCATIONS) / 7);
 
         for (int i = 0; i < disc_count; ++i)
         {
@@ -399,7 +399,7 @@ bool disc_of_storms(bool drac_breath)
             const zap_type which_zap = RANDOM_ELEMENT(types);
 
             beam.range = (drac_breath) ? you.experience_level / 3 + 5 :
-                                         you.skill(SK_EVOCATIONS, 1)/3 + 5; // 5--14
+                                         you.skill(SK_EVOCATIONS) / 3 + 5; // 5--14
             beam.source = you.pos();
             beam.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
             int power = (drac_breath) ? 25 + you.experience_level : 30
@@ -416,9 +416,9 @@ bool disc_of_storms(bool drac_breath)
                 if (grd(*ri) < DNGN_MAXWALL)
                     continue;
 
-                if (one_chance_in(60 - you.skill(SK_EVOCATIONS, 1)))
+                if (one_chance_in(60 - you.skill(SK_EVOCATIONS)))
                     place_cloud(CLOUD_RAIN, *ri,
-                                random2(you.skill(SK_EVOCATIONS, 1)), &you);
+                                random2(you.skill(SK_EVOCATIONS)), &you);
             }
         }
     }
@@ -427,8 +427,8 @@ bool disc_of_storms(bool drac_breath)
 
 void tome_of_power(int slot)
 {
-    int powc = 5 + you.skill(SK_EVOCATIONS, 1)
-                 + roll_dice(5, you.skill(SK_EVOCATIONS, 1));
+    int powc = 5 + you.skill(SK_EVOCATIONS)
+                 + roll_dice(5, you.skill(SK_EVOCATIONS));
 
     msg::stream << "The book opens to a page covered in "
                 << weird_writing() << '.' << std::endl;
@@ -498,7 +498,7 @@ void tome_of_power(int slot)
     {
         viewwindow();
 
-        int temp_rand = random2(23) + random2(you.skill(SK_EVOCATIONS, 1) / 3);
+        int temp_rand = random2(23) + random2(you.skill(SK_EVOCATIONS) / 3);
 
         if (temp_rand > 25)
             temp_rand = 25;
@@ -592,7 +592,7 @@ static bool _box_of_beasts(item_def &box)
 
     mpr("You open the lid...");
 
-    if (x_chance_in_y(60 + you.skill(SK_EVOCATIONS, 1), 100))
+    if (x_chance_in_y(60 + you.skill(SK_EVOCATIONS), 100))
     {
         const monster_type beasts[] = {
             MONS_BAT,       MONS_HOUND,     MONS_JACKAL,
@@ -671,7 +671,7 @@ static bool _ball_of_energy(void)
         else
         {
             mpr("You are suffused with power!");
-            inc_mp(5 + random2avg(you.skill(SK_EVOCATIONS, 1), 2));
+            inc_mp(5 + random2avg(you.skill(SK_EVOCATIONS), 2));
 
             ret = true;
         }

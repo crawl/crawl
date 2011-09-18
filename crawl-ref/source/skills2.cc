@@ -730,8 +730,8 @@ void dump_skills(std::string &text)
                                   you.train[i]        ? '+'
                                                       : '-'),
                                  you.skills[i],
-                                 you.skill(sk, 1) != you.skills[i]
-                                     ? make_stringf("(%d)", you.skill(sk, 1)).c_str()
+                                 you.skill(sk) != you.skills[i]
+                                     ? make_stringf("(%d)", you.skill(sk)).c_str()
                                      : "",
                                  skill_name(static_cast<skill_type>(i)));
         }
@@ -876,7 +876,7 @@ void skill_state::save()
     if (!is_invalid_skill(you.manual_skill))
         manual_charges  = you.inv[you.manual_index].plus2;
     for (int i = 0; i < NUM_SKILLS; i++)
-        changed_skills[i] = you.skill((skill_type)i, 1);
+        changed_skills[i] = you.skill((skill_type)i);
 }
 
 void skill_state::restore_levels()
