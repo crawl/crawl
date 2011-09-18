@@ -211,3 +211,52 @@ function update_minimap_overlay()
                    dungeon_renderer.cols * minimap_cell_w - 1,
                    dungeon_renderer.rows * minimap_cell_h - 1);
 }
+
+// Minimap controls ------------------------------------------------------------
+var farview_old_vc;
+var farview_old_map_cursor;
+function minimap_farview(ev)
+{
+    if (ev.which == 3 || farview_old_vc)
+    {
+        var offset = $("#minimap").offset();
+        if (farview_old_vc === undefined)
+        {
+            farview_old_vc = {
+                x: dungeon_renderer.view_center.x,
+                y: dungeon_renderer.view_center.y
+            }
+            farview_old_map_cursor = cursor_locs[CURSOR_MAP];
+        }
+        var x = Math.round((ev.pageX - minimap_display_x - offset.left)
+                           / minimap_cell_w
+                           + minimap_x - 0.5);
+        var y = Math.round((ev.pageY - minimap_display_y - offset.top)
+                           / minimap_cell_h
+                           + minimap_y - 0.5);
+        vgrdc(x, y);
+        place_cursor(CURSOR_MAP, x, y);
+    }
+}
+
+function stop_minimap_farview(ev)
+{
+    if (farview_old_vc !== undefined)
+    {
+        vgrdc(farview_old_vc.x, farview_old_vc.y);
+        farview_old_vc = undefined;
+        if (farview_old_map_cursor)
+            place_cursor(CURSOR_MAP, farview_old_map_cursor.x,
+                         farview_old_map_cursor.y);
+        else
+            remove_cursor(CURSOR_MAP);
+    }
+}
+
+$(document).ready(function () {
+    $("#minimap_overlay")
+        .mousedown(minimap_farview)
+        .mousemove(minimap_farview)
+        .mouseup(stop_minimap_farview)
+        .bind("contextmenu", function(ev) { ev.preventDefault(); });
+});

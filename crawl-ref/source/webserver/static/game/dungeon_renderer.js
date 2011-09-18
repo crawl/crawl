@@ -43,6 +43,9 @@ function DungeonViewRenderer(element)
         // Shifts the dungeon view by cx/cy cells.
         shift: function(x, y)
         {
+            if ((x == 0) && (y == 0))
+                return;
+
             if (x > this.cols) x = this.cols;
             if (x < -this.cols) x = -this.cols;
             if (y > this.rows) y = this.rows;
