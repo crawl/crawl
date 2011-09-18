@@ -5749,9 +5749,19 @@ void player::shield_block_succeeded(actor *foe)
     practise(EX_SHIELD_BLOCK);
 }
 
+int player_exp_progress(int scale)
+{
+    if (you.experience_level >= 27)
+        return 0;
+
+    const int current = exp_needed(you.experience_level);
+    const int next    = exp_needed(you.experience_level + 1);
+    return ((you.experience - current) * scale / (next - current));
+}
+
 int player::skill(skill_type sk, int scale, bool real) const
 {
-    int level = skills[sk] * scale;
+    int level = skills[sk] * scale + player_exp_progress(scale);
     if (real)
         return level;
     if (you.duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)

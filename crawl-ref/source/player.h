@@ -872,6 +872,7 @@ void display_char_status(void);
 
 void forget_map(int chance_forgotten = 100, bool force = false);
 
+int player_exp_progress(int scale = 100);
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL,
               unsigned int* actual_avail_gain = NULL);
 

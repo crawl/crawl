@@ -698,17 +698,6 @@ static bool _need_stats_printed()
 }
 #endif
 
-static std::string _get_exp_progress()
-{
-    if (you.experience_level >= 27)
-        return "";
-
-    const int current = exp_needed(you.experience_level);
-    const int next    = exp_needed(you.experience_level + 1);
-    return make_stringf("%2d%%",
-                        (you.experience - current) * 100 / (next - current));
-}
-
 void print_stats(void)
 {
     cursor_control coff(false);
@@ -1744,8 +1733,8 @@ static std::vector<formatted_string> _get_overview_stats()
              "Spells: %2d memorised, %2d level%s left\n"
              "%s",
              you.experience_level,
-             (you.experience_level < 27 ? make_stringf("   Next: %s",
-                                           _get_exp_progress().c_str()).c_str()
+             (you.experience_level < 27 ? make_stringf("   Next: %d",
+                                               player_exp_progress()).c_str()
                                         : ""),
              godpowers.c_str(),
              you.spell_no, player_spell_levels(),
