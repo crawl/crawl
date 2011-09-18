@@ -676,7 +676,6 @@ int mons_standard_level(int mcls)
     case MONS_FIRE_GIANT:
     case MONS_FROST_GIANT:
     case MONS_HELL_KNIGHT:
-    case MONS_INSUBSTANTIAL_WISP:
     case MONS_LICH:
     case MONS_STONE_GIANT:
     case MONS_ETTIN:
@@ -908,7 +907,6 @@ int mons_standard_rare(int mcls)
     case MONS_FUNGUS:
     case MONS_AGATE_SNAIL:
     case MONS_ICE_DRAGON:
-    case MONS_INSUBSTANTIAL_WISP:
     case MONS_PHANTASMAL_WARRIOR:
     case MONS_RAKSHASA:
     case MONS_REDBACK:
