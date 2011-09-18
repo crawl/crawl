@@ -61,6 +61,7 @@ public:
     skill_type get_skill() const;
     bool is_selectable(bool keep_hotkey = true);
     bool is_set(int flag) const;
+    bool mastered() const;
     void refresh(bool keep_hotkey);
     void set_display();
     void set_name(bool keep_hotkey);
