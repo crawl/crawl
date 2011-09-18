@@ -564,7 +564,7 @@ void exercise(skill_type exsk, int deg)
 
 // Check if we should stop training this skill immediately.
 // We look at skill points because actual level up comes later.
-static bool _level_up_check(skill_type sk)
+static bool _level_up_check(skill_type sk, bool simu)
 {
     // New skill learned.
     const bool skill_learned  = !skill_known(sk)
@@ -578,7 +578,9 @@ static bool _level_up_check(skill_type sk)
     if (you.skill_points[sk] >= skill_exp_needed(27, sk)
         || skill_learned && !you.auto_training)
     {
-        you.train[sk] = you.training[sk] = 0;
+        you.training[sk] = 0;
+        if (!simu)
+            you.train[sk] = 0;
         if (!skill_learned)
             check_selected_skills();
         return true;
@@ -679,7 +681,7 @@ void train_skills(int exp, const int cost, const bool simu)
                 gain += _train(sk, sk_exp[sk], simu);
                 exp += sk_exp[sk];
                 ASSERT(exp >= 0);
-                if (_level_up_check(sk))
+                if (_level_up_check(sk, simu))
                     sk_exp[sk] = 0;
             }
 
@@ -713,7 +715,7 @@ void train_skills(int exp, const int cost, const bool simu)
             break;
         }
 
-        _level_up_check(sk);
+        _level_up_check(sk, simu);
 
         if (gain && _is_magic_skill(sk))
             magic_gain += gain;

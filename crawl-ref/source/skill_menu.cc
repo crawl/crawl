@@ -107,7 +107,7 @@ bool SkillMenuEntry::is_selectable(bool keep_hotkey)
     if (!skill_known(m_sk) && !is_set(SKMF_RESKILL_TO))
         return false;
 
-    if (you.skills[m_sk] == 27)
+    if (mastered())
     {
         if (is_set(SKMF_RESKILL_TO) && !keep_hotkey)
             ++m_letter;
@@ -121,6 +121,13 @@ bool SkillMenuEntry::is_selectable(bool keep_hotkey)
 bool SkillMenuEntry::is_set(int flag) const
 {
     return m_skm->is_set(flag);
+}
+
+bool SkillMenuEntry::mastered() const
+{
+    return (is_set(SKMF_EXPERIENCE) ? m_skm->get_saved_skill_level(m_sk, false)
+                                    : you.skills[m_sk]) == 27;
+
 }
 
 void SkillMenuEntry::refresh(bool keep_hotkey)
@@ -242,7 +249,7 @@ COLORS SkillMenuEntry::get_colour() const
         else
             return you.train[m_sk] ? LIGHTBLUE : BLUE;
     }
-    else if (you.skills[m_sk] == 27)
+    else if (mastered())
         return YELLOW;
     else if (!you.train[m_sk] || !skill_known(m_sk))
         return DARKGREY;
@@ -266,11 +273,10 @@ std::string SkillMenuEntry::get_prefix()
     else
         letter = ' ';
 
-    const int sign = (!skill_known(m_sk)
-                      || you.skills[m_sk] == 27) ? ' ' :
-                     (you.train[m_sk] == 2)   ? '*' :
-                     (you.train[m_sk])        ? '+'
-                                                 : '-';
+    const int sign = (!skill_known(m_sk) || mastered()) ? ' ' :
+                                 (you.train[m_sk] == 2) ? '*' :
+                                        you.train[m_sk] ? '+'
+                                                        : '-';
 #ifdef USE_TILE_LOCAL
     return make_stringf(" %c %c", letter, sign);
 #else
@@ -378,7 +384,7 @@ void SkillMenuEntry::set_points()
 
 void SkillMenuEntry::set_progress()
 {
-    if (you.skills[m_sk] == 27 || !skill_known(m_sk))
+    if (mastered() || !skill_known(m_sk))
         m_progress->set_text("");
     else
     {
