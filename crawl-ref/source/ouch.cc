@@ -929,11 +929,11 @@ static void _xom_checks_damage(kill_method_type death_type,
             amusementvalue += 7;
 
         if (death_type != KILLED_BY_BEAM
-            && you.skill(SK_THROWING, 1) <= (you.experience_level / 4))
+            && you.skill(SK_THROWING) <= (you.experience_level / 4))
         {
             amusementvalue += 2;
         }
-        else if (you.skill(SK_FIGHTING, 1) <= (you.experience_level / 4))
+        else if (you.skill(SK_FIGHTING) <= (you.experience_level / 4))
             amusementvalue += 2;
 
         if (player_in_a_dangerous_place())

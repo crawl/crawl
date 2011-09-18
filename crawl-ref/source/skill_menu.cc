@@ -242,9 +242,9 @@ COLORS SkillMenuEntry::get_colour() const
         return WHITE;
     }
     else if (m_skm->get_state(SKM_LEVEL) == SKM_LEVEL_ENHANCED
-             && you.skill(m_sk, 1) != you.skills[m_sk])
+             && you.skill(m_sk) != you.skills[m_sk])
     {
-        if (you.skill(m_sk, 1) < you.skills[m_sk])
+        if (you.skill(m_sk) < you.skills[m_sk])
             return you.train[m_sk] ? LIGHTRED : RED;
         else
             return you.train[m_sk] ? LIGHTBLUE : BLUE;
@@ -328,12 +328,12 @@ void SkillMenuEntry::set_level()
 {
     int level;
     const bool changed = m_skm->get_state(SKM_LEVEL) == SKM_LEVEL_ENHANCED
-                         && you.skill(m_sk, 1) != you.skills[m_sk];
+                         && you.skill(m_sk) != you.skills[m_sk];
 
     if (is_set(SKMF_EXPERIENCE))
         level = m_skm->get_saved_skill_level(m_sk, changed);
     else if (changed)
-        level = you.skill(m_sk, 1);
+        level = you.skill(m_sk);
     else
         level = you.skills[m_sk];
 
@@ -921,9 +921,9 @@ void SkillMenu::init_flags()
 
     for (unsigned int i = 0; i < NUM_SKILLS; ++i)
     {
-        if (you.skill(skill_type(i), 1) > you.skills[i])
+        if (you.skill(skill_type(i)) > you.skills[i])
             set_flag(SKMF_ENHANCED);
-        else if (you.skill(skill_type(i), 1) < you.skills[i])
+        else if (you.skill(skill_type(i)) < you.skills[i])
             set_flag(SKMF_REDUCED);
     }
 }
@@ -1190,7 +1190,7 @@ void SkillMenu::set_skills()
             ln = 0;
             continue;
         }
-        else if (!is_invalid_skill(sk) && !you.skill(sk, 1)
+        else if (!is_invalid_skill(sk) && !you.skill(sk)
                  && !skill_known(sk) && !you.training[sk]
                  && get_state(SKM_SHOW) == SKM_SHOW_KNOWN)
         {

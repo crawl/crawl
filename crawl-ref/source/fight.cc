@@ -1765,7 +1765,7 @@ int melee_attack::player_stab(int damage)
         if (defender->asleep())
         {
             // Sleeping moster wakes up when stabbed but may be groggy.
-            if (x_chance_in_y(you.skill(SK_STABBING, 1) + you.dex() + 1, 200))
+            if (x_chance_in_y(you.skill(SK_STABBING) + you.dex() + 1, 200))
             {
                 int stun = random2(you.dex() + 1);
 
@@ -3830,7 +3830,7 @@ int melee_attack::player_to_hit(bool random_factor)
     {
         if (wpn_skill != SK_FIGHTING)
         {
-            if (you.skill(wpn_skill, 1) < 1 && player_in_a_dangerous_place())
+            if (you.skill(wpn_skill) < 1 && player_in_a_dangerous_place())
                 xom_is_stimulated(10); // Xom thinks that is mildly amusing.
 
             your_to_hit += maybe_random_div(you.skill(wpn_skill, 100), 100,
@@ -4175,10 +4175,10 @@ int melee_attack::player_calc_base_unarmed_damage()
     if (player_in_bat_form())
     {
         // Bats really don't do a lot of damage.
-        damage += you.skill(SK_UNARMED_COMBAT, 1) / 5;
+        damage += you.skill(SK_UNARMED_COMBAT) / 5;
     }
     else // FIXME, badly: this needs to allow partial skills, yet can't be random
-        damage += you.skill(SK_UNARMED_COMBAT, 1);
+        damage += you.skill(SK_UNARMED_COMBAT);
 
     return (damage);
 }
@@ -5997,7 +5997,7 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
         const int weap = you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] - 1;
         const item_def &wpn = you.inv[weap];
         if (_is_melee_weapon(&wpn)
-            && you.skill(weapon_skill(wpn), 1) > you.skill(SK_UNARMED_COMBAT, 1))
+            && you.skill(weapon_skill(wpn)) > you.skill(SK_UNARMED_COMBAT))
         {
             unarmed_warning = true;
         }
