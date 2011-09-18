@@ -2065,6 +2065,10 @@ static void _place_feature_mimics(int level_number,
         if (!is_valid_mimic_feat(feat))
             continue;
 
+        // Don't mess up tomb's layout.
+        if (player_in_branch(BRANCH_TOMB) && feat_is_stone_stair(feat))
+            continue;
+
         // Don't mimic the stairs the player is going to be placed on.
         if (feat == dest_stairs_type)
             continue;
