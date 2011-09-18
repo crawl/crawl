@@ -176,6 +176,7 @@ static bool _DISPATER_evoke(item_def *item, int* pract, bool* did_work,
     if (you.duration[DUR_DEATHS_DOOR] || !enough_hp(11, true)
         || !enough_mp(5, true))
     {
+        *unevokable = true;
         return (false);
     }
 
@@ -236,7 +237,13 @@ static void _OLGREB_world_reacts(item_def *item)
 static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
                           bool* unevokable)
 {
-    if (!enough_mp(4, true) || you.skill(SK_EVOCATIONS) < random2(6))
+    if (!enough_mp(4, true))
+    {
+        *unevokable = true;
+        return (false);
+    }
+
+    if (you.skill(SK_EVOCATIONS) < random2(6))
         return (false);
 
     dec_mp(4);
