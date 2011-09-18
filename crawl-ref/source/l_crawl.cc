@@ -185,8 +185,7 @@ static int crawl_enable_more(lua_State *ls)
 -- a pre-allocated buffer, an arbitrary 500-character limit is
 -- currently imposed.
 -- @return Either a string if one is input, or nil if input is canceled
-function c_input_line()
-*/
+function c_input_line() */
 static int crawl_c_input_line(lua_State *ls)
 {
     char linebuf[500];
@@ -301,6 +300,10 @@ static void crawl_sendkeys_proc(lua_State *ls, int argi)
     }
 }
 
+/*
+--- XXX vararg function
+-- 
+function sendkeys() */
 static int crawl_sendkeys(lua_State *ls)
 {
     int top = lua_gettop(ls);
@@ -309,7 +312,10 @@ static int crawl_sendkeys(lua_State *ls)
     return (0);
 }
 
-// Tell Crawl to process one command.
+/*
+--- Tell Crawl to process one command.
+-- @return whether it will actually do so?
+function process_command() */
 static int crawl_process_command(lua_State *ls)
 {
     const bool will_process =
@@ -328,6 +334,9 @@ static int crawl_process_command(lua_State *ls)
     return (1);
 }
 
+/*
+--- 
+function process_keys() */
 static int crawl_process_keys(lua_State *ls)
 {
     const delay_type current_delay = current_delay_action();
@@ -369,7 +378,10 @@ static int crawl_process_keys(lua_State *ls)
     return (0);
 }
 
-
+/*
+--- Play a sound.
+-- @param sf filename of sound to play
+function playsound(sf) */
 static int crawl_playsound(lua_State *ls)
 {
     const char *sf = luaL_checkstring(ls, 1);
@@ -379,6 +391,10 @@ static int crawl_playsound(lua_State *ls)
     return (0);
 }
 
+/*
+--- Run a macro.
+-- @param macroname name of macro to run
+function runmacro(macroname) */
 static int crawl_runmacro(lua_State *ls)
 {
     const char *macroname = luaL_checkstring(ls, 1);
@@ -388,6 +404,10 @@ static int crawl_runmacro(lua_State *ls)
     return (0);
 }
 
+/*
+--- Set user options from string.
+-- @param s string of options to set, in same format as <tt>init.txt</tt>/<tt>.crawlrc</tt>.
+function setopt(s) */
 static int crawl_setopt(lua_State *ls)
 {
     if (!lua_isstring(ls, 1))
@@ -403,6 +423,10 @@ static int crawl_setopt(lua_State *ls)
     return (0);
 }
 
+/*
+--- Read options from file.
+-- @param filename name of file to read from
+function read_options(filename) */
 static int crawl_read_options(lua_State *ls)
 {
     if (!lua_isstring(ls, 1))
