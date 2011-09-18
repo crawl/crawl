@@ -845,6 +845,8 @@ void TilesFramework::update_minimap(const coord_def& gc)
 void TilesFramework::clear_minimap()
 {
     m_origin = coord_def(-1, -1);
+    // Changing the origin invalidates coordinates on the client side
+    m_current_gc = coord_def(-1, -1);
     m_need_full_map = true;
 }
 
