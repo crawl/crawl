@@ -1403,7 +1403,7 @@ void evoke_deck(item_def& deck)
     }
 
     if (!deck_gone && allow_id
-        && you.skill(SK_EVOCATIONS) > 5 + random2(35))
+        && you.skill(SK_EVOCATIONS, 1) > 5 + random2(35))
     {
         mpr("Your skill with magical items lets you identify the deck.");
         set_ident_flags(deck, ISFLAG_KNOW_TYPE);
@@ -1528,10 +1528,10 @@ static void _damnation_card(int power, deck_rarity_type rarity)
     const int power_level = get_power_level(power, rarity);
     int nemelex_bonus = 0;
     if (you.religion == GOD_NEMELEX_XOBEH && !player_under_penance())
-        nemelex_bonus = you.piety / 20;
+        nemelex_bonus = you.piety;
 
-    int extra_targets = power_level + random2(you.skill(SK_EVOCATIONS)
-                                              + nemelex_bonus) / 12;
+    int extra_targets = power_level + random2(you.skill(SK_EVOCATIONS, 20)
+                                              + nemelex_bonus) / 240;
 
     for (int i = 0; i < 1 + extra_targets; ++i)
     {
@@ -2858,11 +2858,11 @@ static int _card_power(deck_rarity_type rarity)
     else if (you.religion == GOD_NEMELEX_XOBEH)
     {
         result = you.piety;
-        result *= (you.skill(SK_EVOCATIONS) + 25);
-        result /= 27;
+        result *= (you.skill(SK_EVOCATIONS, 100) + 2500);
+        result /= 2700;
     }
 
-    result += you.skill(SK_EVOCATIONS) * 9;
+    result += you.skill(SK_EVOCATIONS, 9);
     if (rarity == DECK_RARITY_RARE)
         result += 150;
     else if (rarity == DECK_RARITY_LEGENDARY)

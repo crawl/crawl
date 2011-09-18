@@ -263,7 +263,7 @@ static bool _check_train_armour(int amount)
         // XXX: animal skin; should be a better way to get at that.
         const int mass_base = 100;
         const int mass = std::max(item_mass(*armour) - mass_base, 0);
-        if (x_chance_in_y(mass, 50 * you.skill(SK_ARMOUR)))
+        if (x_chance_in_y(mass, you.skill(SK_ARMOUR, 50)))
         {
             exercise(SK_ARMOUR, amount);
             return (true);

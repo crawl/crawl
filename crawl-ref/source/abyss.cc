@@ -1336,7 +1336,7 @@ static void _initialise_level_corrupt_seeds(int power)
 static bool _spawn_corrupted_servant_near(const coord_def &pos)
 {
     const beh_type beh =
-        one_chance_in(2 + you.skill(SK_INVOCATIONS) / 4) ? BEH_HOSTILE
+        x_chance_in_y(100, 200 + you.skill(SK_INVOCATIONS, 25)) ? BEH_HOSTILE
         : BEH_NEUTRAL;
 
     // [ds] No longer summon hostiles -- don't create the monster if
