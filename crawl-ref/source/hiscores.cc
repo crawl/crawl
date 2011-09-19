@@ -148,6 +148,7 @@ void hiscores_new_entry(const scorefile_entry &ne)
     // If we've still not inserted it, it's not a highscore.
     if (!inserted)
     {
+        newest_entry = -1; // This might not be the first game
         _hs_close(scores, "a+", score_file_name());
         return;
     }
