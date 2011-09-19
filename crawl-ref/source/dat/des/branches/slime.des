@@ -56,8 +56,8 @@ end
 ##############################################################################
 
 # Weight balancer
-NAME: slime_dummy
-TAGS: slime_entry
+NAME:  slime_dummy
+TAGS:  slime_entry
 KFEAT: O = enter_slime_pits
 MAP
 O
@@ -66,7 +66,7 @@ ENDMAP
 # Slime entries featuring an altar to Jiyva
 NAME:   slime_altar_1
 TAGS:   slime_entry
-WEIGHT: 5
+WEIGHT: 30
 KFEAT:  Z = altar_jiyva
 KFEAT:  O = enter_slime_pits
 MAP
@@ -77,7 +77,6 @@ ENDMAP
 
 NAME:   slime_altar_2
 TAGS:   slime_entry
-WEIGHT: 2
 KFEAT:  Z = altar_jiyva
 SUBST:  1 : 111223
 NSUBST: 1 = 1 / 1. , 2 = 2 / 2... , 3 = 3 / 3....
@@ -98,21 +97,40 @@ c111m.
 ccccc
 ENDMAP
 
+NAME:  dpeg_slime_entry_enclosed_altar
+TAGS:  slime_entry
+KFEAT: O = enter_slime_pits
+KFEAT: S = slimy_wall
+KFEAT: _ = altar_jiyva
+MAP
+  .....
+ .ccccc.
+.ccccccc.
+.cccSccc.
+.ccSO.cc.
+.ccS_..=@
+.cccSccc.
+.ccccccc.
+ .ccccc.
+  .....
+ENDMAP
+
 NAME:   minmay_slime_entry_eyes
 TAGS:   slime_entry ruin_lair
 WEIGHT: 2
 MONS:   eye of devastation, eye of draining / giant eyeball
 KFEAT:  O = enter_slime_pits
+KFEAT:  S = slimy_wall
 MAP
  ....   ....
 ..xx..x..xx..
 .xxxx.x.xxxx.
 .xxx..x..xxx.
-..x.x...x.x..
+..x.S...S.x..
  ...........
- xxx.1O2.xxx
+ xxS.1O2.Sxx
  ...........
-..x.x...x.x..
+..x.S...S.x..
 .xxx..x..xxx.
 .xxxx.x.xxxx.
 ..xx..x..xx..
@@ -161,7 +179,7 @@ ENDMAP
 
 NAME:   minmay_slime_entry_oklob_open
 TAGS:   slime_entry
-WEIGHT: 8
+WEIGHT: 5
 MONS:   oklob plant / nothing w:20
 KFEAT:  O = enter_slime_pits
 MAP
@@ -177,26 +195,44 @@ ENDMAP
 NAME:   minmay_slime_entry_oklob_enclosed
 TAGS:   slime_entry ruin_lair
 ORIENT: northeast
-WEIGHT: 2
+WEIGHT: 5
 MONS:   oklob plant / nothing w:20
 KFEAT:  O = enter_slime_pits
+KFEAT:  S = slimy_wall
 MAP
 xxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxx......xxxxxx
 xxxxxx...........xxxx
-xxx11.......xx....xxx
-xxx11.....xxxx....xxx
-xxxO11..xxxxx....xxxx
-xxxx11xxxxxx.....xxxx
-xxxxxxxxxxx.....xxxxx
+xxS11.......xx....xxx
+xxS11.....xxxx....xxx
+xxSO11..xxxxx....xxxx
+xxSS11xxxxxx.....xxxx
+xxxSSSxxxxx.....xxxxx
 xxxxxxxxxx.....xxxxxx
 xxxxxxxx.....xxxxxxxx
 xxxxxxx.@..xxxxxxxxxx
 ENDMAP
 
-##############################################################################
+NAME:   dpeg_slime_entry_corner
+TAGS:   slime_entry ruin_lair
+ORIENT: northeast
+WEIGHT: 5
+KFEAT:  O = enter_slime_pits
+KFEAT:  S = slimy_wall
+MAP
+xxxxxxxxxxx
+xSSSxxxxxx
+xSO..xxxx
+xS.....xx
+xxxxxx.xx
+xxxx....x
+xxx...xx.
+xx..
+ENDMAP
+
+################################################################################
 # Slime Pit specific non-ending non-entry vaults
-##############################################################################
+################################################################################
 
 ################################################################################
 # Slime Pit
