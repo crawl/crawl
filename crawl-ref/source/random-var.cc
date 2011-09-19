@@ -155,6 +155,23 @@ random_var operator/(const random_var& x, int d)
     return (random_var(start, end, weights));
 }
 
+random_var div_rand_round(const random_var& x, int d)
+{
+    const int start = x.min() / d;
+    const int end = (x.max() + d - 1) / d + 1;
+    std::vector<int> weights(end - start, 0);
+
+    for (int v = x.min(); v <= x.max(); ++v)
+    {
+        int rem = v % d;
+        weights[v / d - start] += x.weight(v) * (d - rem);
+        if (rem > 0)
+            weights[v / d + 1 - start] += x.weight(v) * rem;
+    }
+
+    return (random_var(start, end, weights));
+}
+
 random_var rv::max(const random_var& x, const random_var& y)
 {
     const int start = std::max(x.min(), y.min());

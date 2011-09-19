@@ -4070,7 +4070,7 @@ random_var melee_attack::player_weapon_speed()
                    || weapon->base_type == OBJ_STAVES))
     {
         attack_delay = constant(property(*weapon, PWPN_SPEED));
-        attack_delay -= constant(you.skill(wpn_skill, 10)) / 20;
+        attack_delay -= div_rand_round(constant(you.skill(wpn_skill, 10)), 20);
 
         min_delay = property(*weapon, PWPN_SPEED) / 2;
 
@@ -4114,8 +4114,8 @@ random_var melee_attack::player_unarmed_speed()
     {
         unarmed_delay =
             rv::max(unarmed_delay
-                     - constant(you.skill(SK_UNARMED_COMBAT, 10))
-                                / (player_in_bat_form() ? 30 : 50),
+                    - div_rand_round(constant(you.skill(SK_UNARMED_COMBAT, 10)),
+                                     player_in_bat_form() ? 30 : 50),
                     constant(min_delay));
     }
 
