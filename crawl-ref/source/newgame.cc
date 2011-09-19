@@ -2084,9 +2084,7 @@ static void _choose_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
                                           : get_tutorial_maps());
     if (maps.empty())
     {
-        end(1, true, make_stringf("No %s maps found.",
-                                  is_sprint ? "sprint"
-                                            : "tutorial").c_str());
+        end(1, true, "No %s maps found.", is_sprint ? "sprint" : "tutorial");
     }
 
     if (ng_choice->map.empty())
