@@ -1832,6 +1832,11 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         orb_pickup_noise(you.pos(), 30);
 
         mpr("The lords of Pandemonium are not amused; beware!", MSGCH_WARN);
+        if (you.religion == GOD_CHEIBRIADOS)
+        {
+            mprf(MSGCH_GOD, "%s tells them not to hurry.",
+                            god_name(you.religion).c_str());
+        }
         mpr("Now all you have to do is get back out of the dungeon!", MSGCH_ORB);
 
         you.char_direction = GDT_ASCENDING;
