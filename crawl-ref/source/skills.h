@@ -17,7 +17,7 @@ void check_skill_cost_change();
 void reassess_starting_skills();
 void check_selected_skills();
 void init_training();
-void reset_training();
+void reset_training(bool unknown = true);
 void check_skill_level_change(skill_type sk, bool do_level_up = true);
 void change_skill_level(skill_type exsk, int num_level);
 void change_skill_points(skill_type sk, int points, bool do_level_up);
