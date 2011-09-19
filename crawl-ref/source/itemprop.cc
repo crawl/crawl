@@ -1430,12 +1430,12 @@ int weapon_rarity(int w_type)
     case WPN_GLAIVE:
     case WPN_HALBERD:
     case WPN_BLOWGUN:
-    case WPN_STAFF:
         return (5);
 
     case WPN_BROAD_AXE:
     case WPN_SPIKED_FLAIL:
     case WPN_WHIP:
+    case WPN_STAFF:
         return (4);
 
     case WPN_GREAT_MACE:
