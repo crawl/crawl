@@ -274,7 +274,7 @@ static bool _feat_is_passwallable(dungeon_feature_type feat)
 
 spret_type cast_passwall(const coord_def& delta, int pow, bool fail)
 {
-    int shallow = 1 + (you.skill(SK_EARTH_MAGIC) / 8);
+    int shallow = 1 + you.skill(SK_EARTH_MAGIC) / 8;
     int range = shallow + random2(pow) / 25;
     int maxrange = shallow + pow / 25;
 

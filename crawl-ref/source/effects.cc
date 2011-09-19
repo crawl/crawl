@@ -3236,7 +3236,7 @@ static void _recharge_rod(item_def &rod, int aut, bool in_inv)
 
     int rate = 4 + short(rod.props["rod_enchantment"]);
 
-    rate *= (10 + skill_bump(SK_EVOCATIONS));
+    rate *= 10 * aut + skill_bump(SK_EVOCATIONS, aut);
     rate *= aut;
     rate = div_rand_round(rate, 100);
 
