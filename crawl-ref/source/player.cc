@@ -196,7 +196,7 @@ static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
             "Do you really want to %s into the Zot trap",
             move_verb.c_str());
 
-        if (!yes_or_no(prompt.c_str()))
+        if (!yes_or_no("%s", prompt.c_str()))
         {
             canned_msg(MSG_OK);
             return (false);
