@@ -2044,7 +2044,8 @@ static void _place_feature_mimics(int level_number,
                                   dungeon_feature_type dest_stairs_type)
 {
     if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
-        || player_in_branch(BRANCH_VESTIBULE_OF_HELL))
+        || player_in_branch(BRANCH_VESTIBULE_OF_HELL)
+        || player_in_branch(BRANCH_SLIME_PITS))
     {
         return;
     }
