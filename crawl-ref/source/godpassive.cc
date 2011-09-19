@@ -685,7 +685,7 @@ std::map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
 
 int ash_skill_boost(skill_type sk, int scale)
 {
-    const int level = you.skills[sk];
+    const int level = you.skills[sk] * scale + get_skill_progress(sk, scale);
     if (!level || !you.skill_boost[sk] || piety_rank() <= 2)
         return level;
 
@@ -693,8 +693,8 @@ int ash_skill_boost(skill_type sk, int scale)
     // 2 = medium bonus -> factor = 1.25
     // 3 = high bonus   -> factor = 1.5
     const float piety_factor = (you.skill_boost[sk] + 3) / 4.0;
-    const int base = std::min(piety_rank() - 1, level);
-    const int bonus = std::max<int>(0, scale * base * piety_factor - level / 4.0);
+    const int base = std::min((piety_rank() - 1) * scale, level);
+    const int bonus = std::max<int>(0, base * piety_factor - level / 4.0);
 
-    return std::min(level + bonus, 27);
+    return std::min(level + bonus, 27 * scale);
 }
