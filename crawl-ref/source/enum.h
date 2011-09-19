@@ -2916,6 +2916,13 @@ enum skill_menu_state
     SKM_VIEW_NEW_LEVEL,
 };
 
+enum skill_focus_mode
+{
+    SKM_FOCUS_OFF,
+    SKM_FOCUS_ON,
+    SKM_FOCUS_TOGGLE,
+};
+
 // order is important on these (see player_speed())
 enum speed_type
 {
