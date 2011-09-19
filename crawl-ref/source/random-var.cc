@@ -150,7 +150,7 @@ random_var operator/(const random_var& x, int d)
     std::vector<int> weights(end - start, 0);
 
     for (int v = x.min(); v <= x.max(); ++v)
-        weights[v/2 - start] += x.weight(v);
+        weights[v / d - start] += x.weight(v);
 
     return (random_var(start, end, weights));
 }
