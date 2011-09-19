@@ -4175,10 +4175,10 @@ int melee_attack::player_calc_base_unarmed_damage()
     if (player_in_bat_form())
     {
         // Bats really don't do a lot of damage.
-        damage += you.skill(SK_UNARMED_COMBAT) / 5;
+        damage += you.skill_rdiv(SK_UNARMED_COMBAT, 1, 5);
     }
-    else // FIXME, badly: this needs to allow partial skills, yet can't be random
-        damage += you.skill(SK_UNARMED_COMBAT);
+    else
+        damage += you.skill_rdiv(SK_UNARMED_COMBAT);
 
     return (damage);
 }
