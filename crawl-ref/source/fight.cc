@@ -3549,7 +3549,7 @@ void melee_attack::player_sustain_passive_damage()
 
 int melee_attack::player_staff_damage(skill_type skill)
 {
-    if (x_chance_in_y(2 * you.skill(SK_EVOCATIONS, 100)
+    if (x_chance_in_y(you.skill(SK_EVOCATIONS, 200)
                     + you.skill(skill, 100), 3000))
     {
         return random2((you.skill(skill, 100)
