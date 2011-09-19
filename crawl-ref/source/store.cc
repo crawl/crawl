@@ -1442,12 +1442,18 @@ CrawlStoreValue& CrawlHashTable::get_value(const std::string &key)
 
 const CrawlStoreValue& CrawlHashTable::get_value(const std::string &key) const
 {
-    ASSERT(hash_map != NULL);
+#ifdef ASSERTS
+    if (!hash_map)
+        die("trying to read non-existant property \"%s\"", key.c_str());
+#endif
     assert_validity();
 
     hash_map_type::const_iterator i = hash_map->find(key);
 
-    ASSERT(i != hash_map->end());
+#ifdef ASSERTS
+    if (i == hash_map->end())
+        die("trying to read non-existant property \"%s\"", key.c_str());
+#endif
     ASSERT(i->second.type != SV_NONE);
     ASSERT(!(i->second.flags & SFLAG_UNSET));
 
