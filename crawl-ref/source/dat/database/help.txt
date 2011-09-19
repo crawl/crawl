@@ -178,7 +178,13 @@ It is not a bug if you gain a skill level in Axes after killing a monster with
 a spell.
 
 You can toggle a skill by pressing its letter. If a skill is deselected
-(<darkgrey>darkened</darkgrey>), it will not be trained at all.
+(<darkgrey>darkened</darkgrey>), it will not be trained at all.  A skill set to
+focus (marked with <w>*</w>) will be trained faster than others.
+
+To gain new skills, you have to practise them. This means using a weapon in
+combat, casting spells or disarming traps for example. The skill will then
+be trained when you gain experience, and when it reaches level 1, you will
+be able to disable or focus it like any other.
 
 Training can be done in two modes:
 * automatic: Skills are trained by your use of them.
@@ -188,9 +194,6 @@ The training percentage (in <brown>brown</brown>) shows the relative amount of e
 which will be used to train this skill.
 You must always have at least one skill enabled.
 You can switch between automatic and manual training with the <w>/</w> key.
-
-You can active focus mode with <w>|</w> key (or <w>tab</w>). A skill set to
-focus (marked with <w>*</w>) will be trained faster than others.
 
 How fast you train a skill is governed by the following factors:
 * aptitude: Shown <red>red</red> in the Apt column. Higher numbers mean that
