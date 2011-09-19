@@ -2185,98 +2185,89 @@ void reveal_secret_door(const coord_def& p)
     learned_something_new(HINT_FOUND_SECRET_DOOR, p);
 }
 
-bool stop_attack_prompt(const monster* mon, bool beam_attack,
-                        coord_def beam_target, bool autohit_first)
+bool bad_attack(const monster *mon, std::string& adj, std::string& suffix)
 {
     ASSERT(!crawl_state.game_is_arena());
-
     if (you.confused() || !you.can_see(mon))
         return (false);
 
     bool retval = false;
-    bool prompt = false;
+    adj.clear();
+    suffix.clear();
 
-    const bool mon_target    = (beam_target == mon->pos());
-    const bool inSanctuary   = (is_sanctuary(you.pos())
-                                || is_sanctuary(mon->pos()));
-    const bool wontAttack    = mon->wont_attack();
-    const bool isFriendly    = mon->friendly();
-    const bool isNeutral     = mon->neutral();
-    const bool isUnchivalric = is_unchivalric_attack(&you, mon);
-    const bool isHoly        = mon->is_holy()
-                                   && (mon->attitude != ATT_HOSTILE
-                                       || testbits(mon->flags, MF_NO_REWARD)
-                                       || testbits(mon->flags, MF_WAS_NEUTRAL));
-    const bool isSlime       = mons_is_slime(mon);
+    if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
+        suffix = ", despite your sanctuary";
 
-    if (isFriendly)
+    if (mon->friendly())
     {
-        // Listed in the form: "your rat", "Blork the orc".
-        std::string mon_name = mon->name(DESC_PLAIN);
-        mon_name = std::string("your ") +
-                   (you.religion == GOD_OKAWARU ? "ally the " : "") +
-                   mon_name;
-        std::string verb = "";
-        bool need_mon_name = true;
-        if (beam_attack)
-        {
-            verb = "fire ";
-            if (mon_target)
-                verb += "at ";
-            else if (you.pos() < beam_target && beam_target < mon->pos()
-                     || you.pos() > beam_target && beam_target > mon->pos())
-            {
-                if (autohit_first)
-                    return (false);
+        if (you.religion == GOD_OKAWARU)
+            adj = "your ally the ";
+        else
+            adj = "your ";
+        return true;
+    }
 
-                verb += "in " + apostrophise(mon_name) + " direction";
-                need_mon_name = false;
-            }
-            else
-                verb += "through ";
+    if (is_unchivalric_attack(&you, mon)
+        && you.religion == GOD_SHINING_ONE
+        && !tso_unchivalric_attack_safe_monster(mon))
+    {
+        adj += "helpless ";
+    }
+    if (mon->wont_attack())
+        adj += "non-hostile ";
+    if (mon->neutral() && is_good_god(you.religion))
+        adj += "neutral ";
+    if (mon->is_holy() && is_good_god(you.religion))
+        adj += "holy ";
+
+    if (you.religion == GOD_JIYVA && mons_is_slime(mon))
+        retval = true;
+
+    return retval || !adj.empty() || !suffix.empty();
+}
+
+bool stop_attack_prompt(const monster* mon, bool beam_attack,
+                        coord_def beam_target, bool autohit_first)
+{
+    if (you.confused() || !you.can_see(mon))
+        return (false);
+
+    std::string adj, suffix;
+    if (!bad_attack(mon, adj, suffix))
+        return false;
+
+    // Listed in the form: "your rat", "Blork the orc".
+    std::string mon_name = mon->name(DESC_PLAIN);
+    if (!mon_name.find("the ")) // no "your the royal jelly" nor "the the RJ"
+        mon_name.erase(0, 4);
+    if (adj.find("your"))
+        adj = "the " + adj;
+    mon_name = adj + mon_name;
+    std::string verb;
+    if (beam_attack)
+    {
+        verb = "fire ";
+        if (beam_target == mon->pos())
+            verb += "at ";
+        else if (you.pos() < beam_target && beam_target < mon->pos()
+                 || you.pos() > beam_target && beam_target > mon->pos())
+        {
+            if (autohit_first)
+                return (false);
+
+            verb += "in " + apostrophise(mon_name) + " direction";
+            mon_name = "";
         }
         else
-            verb = "attack ";
-
-        if (need_mon_name)
-            verb += mon_name;
-
-        snprintf(info, INFO_SIZE, "Really %s%s?",
-                 verb.c_str(),
-                 (inSanctuary) ? ", despite your sanctuary" : "");
-
-        prompt = true;
+            verb += "through ";
     }
-    else if (inSanctuary || wontAttack
-             || (isSlime && you.religion == GOD_JIYVA)
-             || (isNeutral || isHoly) && is_good_god(you.religion)
-             || isUnchivalric
-                && you.religion == GOD_SHINING_ONE
-                && !tso_unchivalric_attack_safe_monster(mon))
-    {
-        snprintf(info, INFO_SIZE, "Really %s the %s%s%s%s%s?",
-                 (beam_attack) ? (mon_target) ? "fire at"
-                                              : "fire through"
-                               : "attack",
-                 (isUnchivalric) ? "helpless "
-                                 : "",
-                 (isFriendly)    ? "friendly " :
-                 (wontAttack)    ? "non-hostile " :
-                 (isNeutral)     ? "neutral "
-                                 : "",
-                 (isHoly)        ? "holy "
-                                 : "",
-                 mon->name(DESC_PLAIN).c_str(),
-                 (inSanctuary)   ? ", despite your sanctuary"
-                                 : "");
+    else
+        verb = "attack ";
 
-        prompt = true;
-    }
+    snprintf(info, INFO_SIZE, "Really %s%s%s?",
+             verb.c_str(), mon_name.c_str(), suffix.c_str());
 
-    if (prompt)
-        retval = !yesno(info, false, 'n');
-
-    return (retval);
+    return !yesno(info, false, 'n');
 }
 
 bool is_orckind(const actor *act)
