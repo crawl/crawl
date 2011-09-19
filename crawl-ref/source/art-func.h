@@ -181,7 +181,7 @@ static bool _DISPATER_evoke(item_def *item, int* pract, bool* did_work,
     }
 
     *did_work = true;
-    int power = you.skill(SK_EVOCATIONS) * 8;
+    int power = you.skill(SK_EVOCATIONS, 8);
 
     if (your_spells(SPELL_HELLFIRE, power, false) == SPRET_ABORT)
     {
@@ -243,7 +243,7 @@ static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
         return (false);
     }
 
-    if (you.skill(SK_EVOCATIONS) < random2(6))
+    if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 500))
         return (false);
 
     dec_mp(4);
@@ -251,11 +251,11 @@ static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
     *pract    = 1;
     *did_work = true;
 
-    int power = 10 + you.skill(SK_EVOCATIONS) * 8;
+    int power = 10 + you.skill(SK_EVOCATIONS, 8);
 
     your_spells(SPELL_OLGREBS_TOXIC_RADIANCE, power, false);
 
-    if (x_chance_in_y(you.skill(SK_EVOCATIONS) + 1, 10))
+    if (x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 1000))
         your_spells(SPELL_VENOM_BOLT, power, false);
 
     return (false);
@@ -264,12 +264,12 @@ static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
 static void _OLGREB_melee_effect(item_def* weapon, actor* attacker,
                                  actor* defender, bool mondied, int dam)
 {
-    int skill = attacker->skill(SK_POISON_MAGIC);
+    int skill = attacker->skill(SK_POISON_MAGIC, 100);
     if (defender->alive()
-        && (coinflip() || x_chance_in_y(skill, 8)))
+        && (coinflip() || x_chance_in_y(skill, 800)))
     {
         defender->poison(attacker, 2, defender->has_lifeforce()
-                                      && x_chance_in_y(skill, 8));
+                                      && x_chance_in_y(skill, 800));
         if (attacker->atype() == ACT_PLAYER)
             did_god_conduct(DID_POISON, 3);
     }
@@ -453,7 +453,7 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
                             bool* unevokable)
 {
     if (you.magic_points == you.max_magic_points
-        || you.skill(SK_EVOCATIONS) < random2(25))
+        || !x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 2400))
     {
         return (false);
     }
@@ -466,7 +466,7 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
 
     mpr("Magical energy flows into your mind!");
 
-    inc_mp(3 + random2(5) + you.skill(SK_EVOCATIONS) / 3);
+    inc_mp(3 + random2(5) + you.skill_rdiv(SK_EVOCATIONS, 1, 3));
     make_hungry(50, false, true);
 
     *pract    = 1;

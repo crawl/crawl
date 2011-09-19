@@ -347,9 +347,8 @@ void SkillMenuEntry::set_new_level()
     if (is_set(SKMF_EXPERIENCE) && is_selectable())
     {
         m_progress->set_fg_colour(CYAN);
-        m_progress->set_text(make_stringf("-> %2d",
-                                          skill_boost ? you.skill(m_sk)
-                                                      : you.skills[m_sk]));
+        m_progress->set_text(make_stringf("-> %2d", you.skill(m_sk, 1,
+                                                              !skill_boost)));
         return;
     }
 

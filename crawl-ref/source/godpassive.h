@@ -29,7 +29,7 @@ void ash_id_inventory();
 void ash_id_monster_equipment(monster* mon);
 int ash_detect_portals(bool all);
 monster_type ash_monster_tier(const monster *mon);
-int ash_skill_boost(skill_type sk);
+int ash_skill_boost(skill_type sk, int scale);
 std::map<skill_type, int8_t> ash_get_boosted_skills(eq_type type);
 
 #endif

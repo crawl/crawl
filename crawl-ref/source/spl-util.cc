@@ -381,11 +381,11 @@ int spell_hunger(spell_type which_spell, bool rod)
 
     if (rod)
     {
-        hunger -= 10 * you.skill(SK_EVOCATIONS);
+        hunger -= you.skill(SK_EVOCATIONS, 10);
         hunger = std::max(hunger, level * 5);
     }
     else
-        hunger -= you.intel() * you.skill(SK_SPELLCASTING);
+        hunger -= you.skill(SK_SPELLCASTING, you.intel());
 
     if (hunger < 0)
         hunger = 0;

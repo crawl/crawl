@@ -139,40 +139,23 @@ struct species_skill_aptitude
 // a discount with about 75%.
 static int _spec_skills[NUM_SPECIES][NUM_SKILLS];
 
-/* *************************************************************
+int get_skill_progress(skill_type sk, int scale)
+{
+    const int needed = skill_exp_needed(you.skills[sk] + 1, sk);
+    const int prev_needed = skill_exp_needed(you.skills[sk], sk);
+    const int amt_done = you.skill_points[sk] - prev_needed;
+    int prog = (amt_done * scale) / (needed - prev_needed);
 
-// these were unimplemented "level titles" for two classes {dlb}
+    ASSERT(prog >= 0);
+    ASSERT(prog < scale);
 
-JOB_PRIEST
-   "Preacher";
-   "Priest";
-   "Evangelist";
-   "Pontifex";
-
-JOB_PALADIN:
-   "Holy Warrior";
-   "Holy Crusader";
-   "Paladin";
-   "Scourge of Evil";
-
-************************************************************* */
+    return prog;
+}
 
 int get_skill_percentage(const skill_type x)
 {
-    const int needed = skill_exp_needed(you.skills[x] + 1, x);
-    const int prev_needed = skill_exp_needed(you.skills[x], x);
-
-    const int amt_done = you.skill_points[x] - prev_needed;
-    int percent_done = (amt_done*100) / (needed - prev_needed);
-
-    if (percent_done >= 100) // paranoia (1)
-        percent_done = 99;
-
-    if (percent_done < 0)    // paranoia (2)
-        percent_done = 0;
-
     // Round down to multiple of 5.
-    return ((percent_done / 5) * 5);
+    return get_skill_progress(x, 20) * 5;
 }
 
 const char *skill_name(skill_type which_skill)
@@ -519,10 +502,10 @@ bool is_useless_skill(int skill)
     return false;
 }
 
-int skill_bump(skill_type skill)
+int skill_bump(skill_type skill, int scale)
 {
-    int sk = you.skill(skill);
-    return sk < 3 ? sk * 2 : sk + 3;
+    int sk = you.skill_rdiv(skill, scale);
+    return sk < 3 * scale ? sk * 2 : sk + 3 * scale;
 }
 
 // What aptitude value corresponds to doubled skill learning
@@ -824,7 +807,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         }
     }
 
-    int new_level = boost ? you.skill(tsk) : you.skills[tsk];
+    int new_level = you.skill(tsk, 1, !boost);
     // Restore the level
     you.skills[fsk] = fsk_level;
     you.skills[tsk] = tsk_level;

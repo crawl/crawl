@@ -131,6 +131,17 @@ int maybe_random2(int x, bool random_factor)
         return (x / 2);
 }
 
+// [0, ceil(nom/denom)]
+int maybe_random_div(int nom, int denom, bool random_factor)
+{
+    if (nom <= 0)
+        return (0);
+    if (random_factor)
+        return (random2(nom + denom) / denom);
+    else
+        return (nom / 2 / denom);
+}
+
 // [num, num*size]
 int maybe_roll_dice(int num, int size, bool random)
 {

@@ -177,8 +177,8 @@ static int _can_pacify_monster(const monster* mon, const int healed)
     else if (holiness == MH_DEMONIC)
         divisor += 2;
 
-    const int random_factor = random2((you.skill(SK_INVOCATIONS) + 1) *
-                                      healed / divisor);
+    int random_factor = random2((you.skill(SK_INVOCATIONS, healed) + healed)
+                                / divisor);
 
     dprf("pacifying %s? max hp: %d, factor: %d, Inv: %d, healed: %d, rnd: %d",
          mon->name(DESC_PLAIN).c_str(), mon->max_hit_points, factor,

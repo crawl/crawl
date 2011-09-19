@@ -655,7 +655,7 @@ public:
     void shield_block_succeeded(actor *foe);
 
     bool wearing_light_armour(bool with_skill = false) const;
-    int  skill(skill_type skill) const;
+    int  skill(skill_type skill, int scale =1, bool real = false) const;
     int  traps_skill() const;
 
     bool do_shaft();
@@ -872,6 +872,7 @@ void display_char_status(void);
 
 void forget_map(int chance_forgotten = 100, bool force = false);
 
+int player_exp_progress(int scale = 100);
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL,
               unsigned int* actual_avail_gain = NULL);
 
