@@ -388,7 +388,7 @@ bool disc_of_storms(bool drac_breath)
         rc = true;
 
         const int disc_count = (drac_breath) ? roll_dice(2, 1 + you.experience_level / 7) :
-                                roll_dice(2, 1 + you.skill(SK_EVOCATIONS) / 7);
+                                roll_dice(2, 1 + you.skill_rdiv(SK_EVOCATIONS, 7));
 
         for (int i = 0; i < disc_count; ++i)
         {
@@ -398,8 +398,9 @@ bool disc_of_storms(bool drac_breath)
 
             const zap_type which_zap = RANDOM_ELEMENT(types);
 
+            // range has no tracer, so randomness is ok
             beam.range = (drac_breath) ? you.experience_level / 3 + 5 :
-                                         you.skill(SK_EVOCATIONS) / 3 + 5; // 5--14
+                                         you.skill_rdiv(SK_EVOCATIONS, 3) + 5; // 5--14
             beam.source = you.pos();
             beam.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
             int power = (drac_breath) ? 25 + you.experience_level : 30
@@ -498,7 +499,7 @@ void tome_of_power(int slot)
     {
         viewwindow();
 
-        int temp_rand = random2(23) + random2(you.skill(SK_EVOCATIONS) / 3);
+        int temp_rand = random2(23) + random2(you.skill_rdiv(SK_EVOCATIONS, 3));
 
         if (temp_rand > 25)
             temp_rand = 25;
