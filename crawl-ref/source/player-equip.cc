@@ -235,13 +235,6 @@ static void _equip_artefact_effect(item_def &item, bool *show_msgs, bool unmeld)
         }
     }
 
-    if (proprt[ARTP_PONDEROUS])
-    {
-        if (msg)
-            mpr("You feel rather ponderous.");
-        artefact_wpn_learn_prop(item, ARTP_PONDEROUS);
-    }
-
     if (proprt[ARTP_EYESIGHT])
         autotoggle_autopickup(false);
 
@@ -356,12 +349,6 @@ static void _unequip_artefact_effect(item_def &item,
             mprf("You feel less %s.",
                  proprt[ARTP_EVASION] > 0? "nimble" : "awkward");
         }
-    }
-
-    if (proprt[ARTP_PONDEROUS])
-    {
-        if (msg)
-            mpr("That put a bit of spring back into your step.");
     }
 
     if (proprt[ARTP_HP])

@@ -2788,7 +2788,10 @@ enum artefact_prop_type
     ARTP_CURSED,
     ARTP_STEALTH,
     ARTP_MAGICAL_POWER,
-    ARTP_PONDEROUS,
+      ARTP_UNUSED, // please reuse
+#if TAG_MAJOR_VERSION == 32
+    ARTP_OLD_PONDEROUS = ARTP_UNUSED,
+#endif
     ARTP_HP,
     ARTP_CLARITY,
     ARTP_NUM_PROPERTIES

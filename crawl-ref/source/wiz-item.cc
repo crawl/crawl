@@ -343,7 +343,7 @@ int8_t _prop_type[ARTP_NUM_PROPERTIES] = {
     ARTP_VAL_POS,  //CURSED
     ARTP_VAL_ANY,  //STEALTH
     ARTP_VAL_ANY,  //MAGICAL_POWER
-    ARTP_VAL_BOOL, //PONDEROUS
+    ARTP_VAL_BOOL, //*UNUSED*
     ARTP_VAL_ANY,  //HP
     ARTP_VAL_BOOL, //CLARITY
 };
@@ -1360,7 +1360,7 @@ static void _debug_rap_stats(FILE *ostat)
         -1, //ARTP_CURSED
          0, //ARTP_STEALTH
          0, //ARTP_MAGICAL_POWER
-        -1, //ARTP_PONDEROUS,
+         0, // *UNUSED*,
          0, //ARTP_HP,
          1, //ARTP_CLARITY
          -1
@@ -1503,7 +1503,7 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_CURSED",
         "ARTP_STEALTH",
         "ARTP_MAGICAL_POWER",
-        "ARTP_PONDEROUS",
+        "ARTP_*UNUSED*",
         "ARTP_HP",
         "ARTP_CLARITY",
     };

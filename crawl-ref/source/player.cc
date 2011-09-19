@@ -2048,8 +2048,7 @@ int player_movement_speed(bool ignore_burden)
         mv -= 2;
 
     // ponderous brand and artefact property
-    mv += 2 * (scan_artefacts(ARTP_PONDEROUS)
-             + player_equip_ego_type(EQ_BODY_ARMOUR, SPARM_PONDEROUSNESS));
+    mv += 2 * player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_PONDEROUSNESS);
 
     // Cheibriados
     if (you.religion == GOD_CHEIBRIADOS)
