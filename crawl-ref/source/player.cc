@@ -5761,7 +5761,7 @@ int player_exp_progress(int scale)
 
 int player::skill(skill_type sk, int scale, bool real) const
 {
-    int level = skills[sk] * scale + player_exp_progress(scale);
+    int level = skills[sk] * scale + get_skill_progress(sk, scale);
     if (real)
         return level;
     if (you.duration[DUR_HEROISM] && sk <= SK_LAST_MUNDANE)
@@ -5771,7 +5771,7 @@ int player::skill(skill_type sk, int scale, bool real) const
     else if (you.religion == GOD_ASHENZARI)
         level = ash_skill_boost(sk, scale);
 
-    return level * scale;
+    return level;
 }
 
 // only for purposes of detection, not disarming
