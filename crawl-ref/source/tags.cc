@@ -2689,7 +2689,7 @@ void unmarshallItem(reader &th, item_def &item)
         && item.base_type == OBJ_ARMOUR
         && is_artefact(item)
         && is_random_artefact(item)
-        && artefact_wpn_property(item, ARTP_PONDEROUS))
+        && artefact_wpn_property(item, ARTP_OLD_PONDEROUS))
     {
         // no artefacts but unrands could get this naturally
         trim_randart_inscrip(item);

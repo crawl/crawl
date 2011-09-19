@@ -1976,8 +1976,7 @@ static void _make_faerie_armour(item_def &item)
             || artefact_wpn_property(doodad, ARTP_PREVENT_SPELLCASTING)
             || artefact_wpn_property(doodad, ARTP_CAUSE_TELEPORTATION)
             || artefact_wpn_property(doodad, ARTP_PREVENT_TELEPORTATION)
-            || artefact_wpn_property(doodad, ARTP_MUTAGENIC)
-            || artefact_wpn_property(doodad, ARTP_PONDEROUS))
+            || artefact_wpn_property(doodad, ARTP_MUTAGENIC))
         {
             continue;
         }

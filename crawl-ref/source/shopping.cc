@@ -806,9 +806,6 @@ int artefact_value(const item_def &item)
     else if (prop[ ARTP_COLD ] < 0)
         ret -= 10;
 
-    if (prop[ARTP_PONDEROUS])
-        ret -= 10;
-
     // These normally come alone or in resist/susceptible pairs...
     // we're making items a bit more expensive if they have both positive.
     if (prop[ ARTP_FIRE ] > 0 && prop[ ARTP_COLD ] > 0)
