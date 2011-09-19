@@ -69,7 +69,7 @@ The contents of this text are:
                 show_inventory_weights, show_newturn_mark, show_gold_turns,
                 show_game_turns, show_beam, item_stack_summary_minimum,
                 list_rotten, mlist_min_height, msg_min_height, msg_max_height,
-                messages_at_top, show_no_ctele,
+                messages_at_top, show_no_ctele, skill_focus
                 mlist_allow_alternate_layout, mlist_targetting, classic_hud,
                 menu_colour, menu_colour_prefix_class, menu_colour_shops,
                 message_colour, force_more_message,
@@ -1542,6 +1542,12 @@ msg_condense_short = true
 show_no_ctele = true
         If set, -cTele will be displayed in the status light area when
         teleport control is not possible.
+
+skill_focus = true
+        When set to true, skills cycle between disabled, enabled and focus in
+        the skill screen. When set to false, they only toggle between enabled
+        and disabled. Setting the option to "toggle" adds a toggle to the skill
+        screen to change the behaviour in-game.
 
 4-k     Missiles.
 -----------------

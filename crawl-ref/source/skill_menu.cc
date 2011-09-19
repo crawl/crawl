@@ -976,10 +976,13 @@ void SkillMenu::init_switches()
 
     sw = new SkillMenuSwitch("Do", '|');
     m_switches[SKM_DO] = sw;
-    if (!is_set(SKMF_EXPERIENCE))
+    if (!is_set(SKMF_EXPERIENCE) && Options.skill_focus != SKM_FOCUS_ON)
         sw->add(SKM_DO_PRACTISE);
-    if (!is_set(SKMF_RESKILLING) && !is_set(SKMF_SIMPLE))
+    if (!is_set(SKMF_RESKILLING) && !is_set(SKMF_SIMPLE)
+        && Options.skill_focus != SKM_FOCUS_OFF)
+    {
         sw->add(SKM_DO_FOCUS);
+    }
     sw->set_state(you.skill_menu_do);
     sw->add_hotkey('\t');
     sw->update();

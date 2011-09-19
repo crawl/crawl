@@ -754,6 +754,7 @@ void game_options::reset_options()
     magic_point_warning    = 0;
     default_target         = true;
     autopickup_no_burden   = true;
+    skill_focus            = SKM_FOCUS_ON;
 
     user_note_prefix       = "";
     note_all_skill_levels  = false;
@@ -2490,6 +2491,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     {
         // field is already cleaned up from trim_string()
         user_note_prefix = field;
+    }
+    else if (key == "skill_focus")
+    {
+        if (field == "toggle")
+            skill_focus = SKM_FOCUS_TOGGLE;
+        else if (_read_bool(field, true))
+            skill_focus = SKM_FOCUS_ON;
+        else
+            skill_focus = SKM_FOCUS_OFF;
     }
     else BOOL_OPTION(note_all_skill_levels);
     else BOOL_OPTION(note_skill_max);
