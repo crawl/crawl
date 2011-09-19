@@ -4543,14 +4543,18 @@ std::string melee_attack::mons_attack_desc(const mon_attack_def &attk)
     if (!you.can_see(attacker))
         return ("");
 
+    std::string ret;
     int dist = (attacker->pos() - defender->pos()).abs();
-    if (dist <= 2)
-        return "";
+    if (dist >= 2)
+    {
+        ASSERT(attk.flavour == AF_REACH || weapon && weapon_reach(*weapon));
+        ret = " from afar";
+    }
 
-    ASSERT(attk.flavour == AF_REACH || weapon && weapon_reach(*weapon));
     if (weapon && attacker->type != MONS_DANCING_WEAPON)
-        return " from afar with " + weapon->name(DESC_NOCAP_A);
-    return " from afar";
+        ret += " with " + weapon->name(DESC_NOCAP_A);
+
+    return ret;
 }
 
 std::string melee_attack::mons_defender_name()
