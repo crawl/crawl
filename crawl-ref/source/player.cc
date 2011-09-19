@@ -2759,6 +2759,16 @@ void forget_map(int chance_forgotten, bool force)
 #endif
 }
 
+int get_exp_progress()
+{
+    if (you.experience_level >= 27)
+        return 0;
+
+    const int current = exp_needed(you.experience_level);
+    const int next    = exp_needed(you.experience_level + 1);
+    return ((you.experience - current) * 100 / (next - current));
+}
+
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
               unsigned int* actual_avail_gain)
 {
