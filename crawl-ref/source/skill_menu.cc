@@ -1015,7 +1015,6 @@ void SkillMenu::init_switches()
     const bool transferring = !is_invalid_skill(you.transfer_to_skill);
     if (!is_set(SKMF_SPECIAL) || you.wizard)
     {
-        sw->add(SKM_VIEW_PROGRESS);
         sw->add(SKM_VIEW_TRAINING);
         if (transferring)
         {
@@ -1025,7 +1024,10 @@ void SkillMenu::init_switches()
     }
 
     if (you.wizard)
+    {
+        sw->add(SKM_VIEW_PROGRESS);
         sw->add(SKM_VIEW_POINTS);
+    }
 
     if (is_set(SKMF_SPECIAL))
     {

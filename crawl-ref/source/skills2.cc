@@ -154,8 +154,7 @@ int get_skill_progress(skill_type sk, int scale)
 
 int get_skill_percentage(const skill_type x)
 {
-    // Round down to multiple of 5.
-    return get_skill_progress(x, 20) * 5;
+    return get_skill_progress(x, 100);
 }
 
 const char *skill_name(skill_type which_skill)
