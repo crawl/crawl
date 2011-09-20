@@ -806,7 +806,7 @@ int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
         }
     }
 
-    int new_level = you.skill(tsk, 1, !boost);
+    int new_level = you.skill(tsk, 10, !boost);
     // Restore the level
     you.skills[fsk] = fsk_level;
     you.skills[tsk] = tsk_level;
@@ -858,7 +858,10 @@ void skill_state::save()
     if (!is_invalid_skill(you.manual_skill))
         manual_charges  = you.inv[you.manual_index].plus2;
     for (int i = 0; i < NUM_SKILLS; i++)
-        changed_skills[i] = you.skill((skill_type)i);
+    {
+        real_skills[i] = you.skill((skill_type)i, 10, true);
+        changed_skills[i] = you.skill((skill_type)i, 10);
+    }
 }
 
 void skill_state::restore_levels()

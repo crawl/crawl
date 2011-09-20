@@ -129,7 +129,8 @@ public:
     void cancel_help();
     void clear_selections();
     bool exit();
-    int get_saved_skill_level(skill_type sk, bool changed);
+    int get_raw_skill_level(skill_type sk);
+    int get_saved_skill_level(skill_type sk, bool real);
     skill_menu_state get_state(skill_menu_switch sw);
     void help();
     void select(skill_type sk, int keyn);
