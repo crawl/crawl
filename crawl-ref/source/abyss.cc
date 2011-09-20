@@ -612,6 +612,26 @@ static void _place_displaced_monsters()
     displaced_monsters.clear();
 }
 
+static void _push_items()
+{
+    for (int i = 0; i < MAX_ITEMS; i++)
+    {
+        item_def& item(mitm[i]);
+        if (!item.defined() || !in_bounds(item.pos) || item.held_by_monster())
+            continue;
+
+        if (grd(item.pos) == DNGN_FLOOR)
+            continue;
+
+        for (distance_iterator di(item.pos); di; ++di)
+            if (grd(*di) == DNGN_FLOOR)
+            {
+                move_item_to_grid(&i, *di, true);
+                break;
+            }
+    }
+}
+
 // Deletes everything on the level at the given position.
 // Things that are wiped:
 // 1. Dungeon terrain (set to DNGN_UNSEEN)
@@ -1062,9 +1082,6 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
 
         if (feat != grd(p))
         {
-            if (morph)
-                _abyss_wipe_square_at(*ri, true);
-
             if (feat == DNGN_FLOOR && in_los_bounds_g(p) && !(noise.id[1] % 3))
             {
                 cloud_type cloud = clouds[sub_noise.id[1] % NUM_CLOUDS];
@@ -1266,6 +1283,7 @@ void abyss_morph(double duration)
     dgn_erase_unused_vault_placements();
     _abyss_apply_terrain(abyss_genlevel_mask, true);
     _place_displaced_monsters();
+    _push_items();
     los_changed();
 }
 
