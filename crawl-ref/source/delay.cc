@@ -842,6 +842,7 @@ void handle_delay()
         {
             // Ran out of things to drop.
             _pop_delay();
+            you.time_taken = 0;
             return;
         }
     }
@@ -941,8 +942,11 @@ void handle_delay()
         }
 
         case DELAY_MULTIDROP:
-            drop_item(items_for_multidrop[0].slot,
-                      items_for_multidrop[0].quantity);
+            if (!drop_item(items_for_multidrop[0].slot,
+                           items_for_multidrop[0].quantity))
+            {
+                you.time_taken = 0;
+            }
             items_for_multidrop.erase(items_for_multidrop.begin());
             break;
 
