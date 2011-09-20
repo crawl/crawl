@@ -7,6 +7,15 @@
 #ifndef HISCORES_H
 #define HISCORES_H
 
+// copied from "stuff.h"...
+#ifdef __GNUC__
+// show warnings about the format string
+# define PRINTF(x, dfmt) const char *format dfmt, ...) \
+                   __attribute__((format (printf, x+1, x+2))
+#else
+# define PRINTF(x, dfmt) const char *format dfmt, ...
+#endif
+
 class scorefile_entry;
 
 void hiscores_new_entry(const scorefile_entry &se);
@@ -41,8 +50,7 @@ public:
     void init(const std::string &line);
     std::string xlog_line() const;
 
-    void add_field(const std::string &key,
-                   const char *format, ...);
+    void add_field(const std::string &key, PRINTF(2, ));
 
     std::string str_field(const std::string &) const;
     int int_field(const std::string &) const;
@@ -188,4 +196,5 @@ private:
     void init_from(const scorefile_entry &other);
 };
 
+#undef PRINTF
 #endif  // HISCORES_H

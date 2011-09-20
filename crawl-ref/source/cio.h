@@ -15,6 +15,15 @@
 #include <string>
 #include <vector>
 
+// copied from "stuff.h"...
+#ifdef __GNUC__
+// show warnings about the format string
+# define PRINTF(x, dfmt) const char *format dfmt, ...) \
+                   __attribute__((format (printf, x+1, x+2))
+#else
+# define PRINTF(x, dfmt) const char *format dfmt, ...
+#endif
+
 class input_history
 {
 public:
@@ -48,7 +57,7 @@ int m_getch();
 int unmangle_direction_keys(int keyin, KeymapContext keymap = KMC_DEFAULT,
                             bool fake_ctrl = true, bool fake_shift = true);
 
-void nowrap_eol_cprintf(const char *s, ...);
+void nowrap_eol_cprintf(PRINTF(0, ));
 
 // Returns zero if user entered text and pressed Enter, otherwise returns the
 // key pressed that caused the exit, usually Escape.
@@ -260,4 +269,5 @@ protected:
 
 typedef int keycode_type;
 
+#undef PRINTF
 #endif
