@@ -26,7 +26,7 @@ SkillMenu* SkillMenuEntry::m_skm;
 SkillMenu* SkillMenuSwitch::m_skm;
 
 #define NAME_SIZE 20
-#define LEVEL_SIZE 4
+#define LEVEL_SIZE 5
 #define PROGRESS_SIZE 6
 #define APTITUDE_SIZE 5
 SkillMenuEntry::SkillMenuEntry(coord_def coord)
@@ -125,7 +125,7 @@ bool SkillMenuEntry::is_set(int flag) const
 
 bool SkillMenuEntry::mastered() const
 {
-    return (is_set(SKMF_EXPERIENCE) ? m_skm->get_saved_skill_level(m_sk, false)
+    return (is_set(SKMF_EXPERIENCE) ? m_skm->get_raw_skill_level(m_sk)
                                     : you.skills[m_sk]) == 27;
 
 }
@@ -327,28 +327,25 @@ void SkillMenuEntry::set_aptitude()
 void SkillMenuEntry::set_level()
 {
     int level;
-    const bool changed = m_skm->get_state(SKM_LEVEL) == SKM_LEVEL_ENHANCED
-                         && you.skill(m_sk) != you.skills[m_sk];
+    const bool real = m_skm->get_state(SKM_LEVEL) != SKM_LEVEL_ENHANCED;
 
     if (is_set(SKMF_EXPERIENCE))
-        level = m_skm->get_saved_skill_level(m_sk, changed);
-    else if (changed)
-        level = you.skill(m_sk);
+        level = m_skm->get_saved_skill_level(m_sk, real);
     else
-        level = you.skills[m_sk];
+        level = you.skill(m_sk, 10, real);
 
-    m_level->set_text(make_stringf("%2d", level));
+    m_level->set_text(make_stringf("%4.1f", level / 10.0));
     m_level->set_fg_colour(get_colour());
 }
 
 void SkillMenuEntry::set_new_level()
 {
-    const bool skill_boost = m_skm->get_state(SKM_LEVEL) == SKM_LEVEL_ENHANCED;
+    const bool real = m_skm->get_state(SKM_LEVEL) != SKM_LEVEL_ENHANCED;
     if (is_set(SKMF_EXPERIENCE) && is_selectable())
     {
         m_progress->set_fg_colour(CYAN);
-        m_progress->set_text(make_stringf("-> %2d", you.skill(m_sk, 1,
-                                                              !skill_boost)));
+        m_progress->set_text(make_stringf("->%4.1f",
+                                          you.skill(m_sk, 10, real) / 10.0));
         return;
     }
 
@@ -358,19 +355,19 @@ void SkillMenuEntry::set_new_level()
     {
         new_level = transfer_skill_points(m_sk, m_sk,
                                           skill_transfer_amount(m_sk), true,
-                                          skill_boost);
+                                          !real);
         m_progress->set_fg_colour(BROWN);
     }
     else if (is_set(SKMF_RESKILL_TO))
     {
         new_level = transfer_skill_points(you.transfer_from_skill, m_sk,
                                           you.transfer_skill_points, true,
-                                          skill_boost);
+                                          !real);
         m_progress->set_fg_colour(CYAN);
     }
 
     if (is_selectable() || m_sk == you.transfer_from_skill)
-        m_progress->set_text(make_stringf("-> %2d", new_level));
+        m_progress->set_text(make_stringf("->%4.1f", new_level / 10.0));
     else
         m_progress->set_text("");
 }
@@ -387,7 +384,7 @@ void SkillMenuEntry::set_progress()
         m_progress->set_text("");
     else
     {
-        m_progress->set_text(make_stringf("(%2d%%)",
+        m_progress->set_text(make_stringf(" %2d%%",
                                           get_skill_percentage(m_sk)));
     }
     m_progress->set_fg_colour(CYAN);
@@ -400,7 +397,7 @@ void SkillMenuEntry::set_reskill_progress()
         text = "  *  ";
     else if (m_sk == you.transfer_to_skill)
     {
-        text += make_stringf("(%2d%%)",
+        text += make_stringf(" %2d%%",
                              (you.transfer_total_skill_points
                              - you.transfer_skill_points)
                                  * 100 / you.transfer_total_skill_points);
@@ -416,7 +413,7 @@ void SkillMenuEntry::set_title()
 {
     m_name->allow_highlight(false);
     m_name->set_text("    Skill");
-    m_level->set_text("Lvl");
+    m_level->set_text("Level");
 
     m_name->set_fg_colour(BLUE);
     m_level->set_fg_colour(BLUE);
@@ -427,7 +424,7 @@ void SkillMenuEntry::set_title()
 
     if (is_set(SKMF_RESKILLING))
     {
-        m_progress->set_text("->Lvl");
+        m_progress->set_text("-> Lvl");
         return;
     }
 
@@ -447,7 +444,7 @@ void SkillMenuEntry::set_training()
     if (!you.train[m_sk] || !skill_known(m_sk) || mastered())
         m_progress->set_text("");
     else
-        m_progress->set_text(make_stringf("(%2d%%)", you.training[m_sk]));
+        m_progress->set_text(make_stringf(" %2d%%", you.training[m_sk]));
     m_progress->set_fg_colour(BROWN);
 }
 
@@ -796,12 +793,17 @@ bool SkillMenu::exit()
     return true;
 }
 
-int SkillMenu::get_saved_skill_level(skill_type sk, bool changed)
+int SkillMenu::get_raw_skill_level(skill_type sk)
 {
-    if (changed)
-        return m_skill_backup.changed_skills[sk];
-    else
         return m_skill_backup.skills[sk];
+}
+
+int SkillMenu::get_saved_skill_level(skill_type sk, bool real)
+{
+    if (real)
+        return m_skill_backup.real_skills[sk];
+    else
+        return m_skill_backup.changed_skills[sk];
 }
 
 skill_menu_state SkillMenu::get_state(skill_menu_switch sw)
