@@ -483,10 +483,9 @@ static void _scale_training(int scale, bool known, bool exact)
  * Reset the training array. Unknown skills are not touched and disabled ones
  * are skipped. In automatic mode, we use values from the exercise queue.
  * In manual mode, all enabled skills are set to the same value.
- * If unknown is false, unknown skills will be ignored.
  * Result is scaled back to 100.
  */
-void reset_training(bool unknown)
+void reset_training()
 {
     const int MAX_TRAINING_UNKNOWN = 50;
     int total_unknown = 0;
@@ -496,7 +495,7 @@ void reset_training(bool unknown)
     // manual mode, they are all set to 1.
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
-        if (!skill_known(i) && unknown)
+        if (!skill_known(i))
             total_unknown += you.training[i];
         else if (you.auto_training)
             you.training[i] = 0;

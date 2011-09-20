@@ -441,7 +441,7 @@ void SkillMenuEntry::set_title()
 
 void SkillMenuEntry::set_training()
 {
-    if (!you.train[m_sk] || !skill_known(m_sk) || mastered())
+    if (!you.train[m_sk] || !skill_known(m_sk) && !you.training[m_sk])
         m_progress->set_text("");
     else
         m_progress->set_text(make_stringf(" %2d%%", you.training[m_sk]));
@@ -625,9 +625,8 @@ SkillMenu::SkillMenu(int flag, int exp) : PrecisionMenu(), m_flags(flag),
             if (!skill_known(i))
                 you.training[i] = 0;
 
+        reset_training();
     }
-
-    reset_training(false);
 
 #ifdef USE_TILE_LOCAL
     const int limit = tiles.get_crt_font()->char_height() * 4
@@ -787,8 +786,6 @@ bool SkillMenu::exit()
         train_skills();
         m_skill_backup.restore_training();
     }
-    else
-        reset_training();
 
     return true;
 }
@@ -881,7 +878,7 @@ void SkillMenu::toggle(skill_menu_switch sw)
     {
     case SKM_MODE:
         you.auto_training = !you.auto_training;
-        reset_training(false);
+        reset_training();
         if (get_state(SKM_VIEW) == SKM_VIEW_TRAINING)
             refresh_display();
         break;
@@ -1200,7 +1197,8 @@ void SkillMenu::set_skills()
             ln = 0;
             continue;
         }
-        else if (!is_invalid_skill(sk) && !you.skill(sk) && !skill_known(sk)
+        else if (!is_invalid_skill(sk) && !you.skill(sk)
+                 && !skill_known(sk) && !you.training[sk]
                  && get_state(SKM_SHOW) == SKM_SHOW_KNOWN)
         {
             continue;
@@ -1230,7 +1228,7 @@ void SkillMenu::toggle_practise(skill_type sk, int keyn)
         you.train[sk] = (you.train[sk] + 1) % 3;
     else
         die("Invalid state.");
-    reset_training(false);
+    reset_training();
     SkillMenuEntry* skme = find_entry(sk);
     skme->set_name(true);
     const std::vector<int> hotkeys = skme->get_name_item()->get_hotkeys();
