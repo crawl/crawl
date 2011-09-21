@@ -786,7 +786,7 @@ void scorefile_entry::set_base_xlog_fields() const
         fields->add_field("wiz", "%d", wiz_mode);
 
     fields->add_field("start", "%s", make_date_string(birth_time).c_str());
-    fields->add_field("dur",   "%d", real_time);
+    fields->add_field("dur",   "%d", (int)real_time);
     fields->add_field("turn",  "%d", num_turns);
 
     if (num_diff_runes)

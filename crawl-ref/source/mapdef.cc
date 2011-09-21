@@ -2641,7 +2641,7 @@ std::string map_def::validate_temple_map()
             if (((unsigned long) num) != altars.size())
             {
                 return make_stringf("Temple should contain %u altars, but "
-                                    "has %d.", altars.size(), num);
+                                    "has %d.", (unsigned int)altars.size(), num);
             }
         }
     }

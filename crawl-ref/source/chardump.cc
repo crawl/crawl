@@ -295,7 +295,7 @@ static void _sdump_visits(dump_params &par)
         branches_total += branches_visited[i];
 
     text += make_stringf("You %svisited %d branch",
-                         have.c_str(), branches_visited.size());
+                         have.c_str(), (int)branches_visited.size());
     if (branches_visited.size() != 1)
         text += "es";
     text += make_stringf(" of the dungeon, and %s %d of its levels.\n",
@@ -392,7 +392,7 @@ static void _sdump_visits(dump_params &par)
         if (!misc_portals.empty())
         {
             text += make_stringf("You %svisited %d portal chamber",
-                                 have.c_str(), misc_portals.size());
+                                 have.c_str(), (int)misc_portals.size());
             if (misc_portals.size() > 1)
                 text += "s";
             text += ": ";

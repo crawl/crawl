@@ -2343,7 +2343,7 @@ static std::string _drop_selitem_text(const std::vector<MenuEntry*> *s)
     }
 
     return (make_stringf(" (%u%s turn%s)",
-                s->size(),
+                (unsigned int)s->size(),
                 extraturns? "+" : "",
                 s->size() > 1? "s" : ""));
 }

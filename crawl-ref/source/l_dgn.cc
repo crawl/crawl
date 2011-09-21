@@ -453,9 +453,9 @@ static int dgn_map(lua_State *ls)
         {
             luaL_error(ls,
                        lines.empty()? "Map is empty"
-                       : make_stringf("Line %d out of range (0-%u)",
+                       : make_stringf("Line %d out of range (0-%d)",
                                       which_line,
-                                      lines.size() - 1).c_str());
+                                      (int)lines.size() - 1).c_str());
         }
         PLUARET(string, lines[which_line].c_str());
     }
