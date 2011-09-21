@@ -321,18 +321,12 @@ void check_skill_level_change(skill_type sk, bool do_level_up)
     int new_level = you.skills[sk];
     while (1)
     {
-        const unsigned int prev = skill_exp_needed(new_level, sk);
-        const unsigned int next = skill_exp_needed(new_level + 1, sk);
-
-        if (you.skill_points[sk] >= next)
+        if (new_level < 27
+            && you.skill_points[sk] >= skill_exp_needed(new_level + 1, sk))
         {
-            if (++new_level >= 27)
-            {
-                new_level = 27;
-                break;
-            }
+            ++new_level;
         }
-        else if (you.skill_points[sk] < prev)
+        else if (you.skill_points[sk] < skill_exp_needed(new_level, sk))
         {
             new_level--;
             ASSERT(new_level >= 0);
