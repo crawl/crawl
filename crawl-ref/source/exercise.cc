@@ -453,16 +453,6 @@ void practise(exer_type ex, int param1)
         exercise(SK_TRAPS_DOORS, 1);
         break;
 
-    case EX_SAGE:
-        sk = static_cast<skill_type>(param1);
-        exercise(sk, 20);
-        break;
-
-    case EX_READ_MANUAL:
-        sk = static_cast<skill_type>(param1);
-        exercise(sk, 500);
-        break;
-
     case EX_SHIELD_BLOCK:
     case EX_SHIELD_TRAP:
         if (coinflip())
