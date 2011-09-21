@@ -70,4 +70,5 @@ Joshua Gross                 nyra                         Jeremey Wilson
 Brian Haase                  Dylan O'Donnell              Samuel Wilson
 Shayne Halvorson             Yuuma Oohara                 Yelve Yakut
 Sophie Hamilton              Malwyn P                     Zooko
-Anders Heggestøyl            Lothar Dierkes
+Anders Heggestøyl            Lothar Dierkes               Michael Gagno
+Samuel Bronson               Pete Hurst
