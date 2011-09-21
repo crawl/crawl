@@ -129,7 +129,7 @@ A
   shows any peculiarities like unusual speed or eating behaviours
 
 m
-  shows your skills and lets you switch off some if wanted
+  shows your skills and lets you disable training for (or focus it on) some if wanted
 
 i
   the equipment
@@ -1889,7 +1889,7 @@ Monks
   body and soul through the discipline of the martial arts. Monks start with
   very little equipment, but can survive without the weighty weapons and
   spellbooks needed by characters of other backgrounds. When they choose a god
-  for the first time their spiritual training gives them a piety boost.
+  for the first time, their spiritual training gives them a piety boost.
 
 Berserkers
   Berserkers are hardy warriors who worship Trog the Wrathful, from whom they
@@ -2894,11 +2894,10 @@ Tele
 Lev
   You levitate a few inches above the ground. While this is enough to cross
   water and lava, movement is not completely controlled. It will usually time
-  out.
+  out. You are also safe from electrical melee attacks while levitating.
 
 Fly
-  You fly, gaining the benefits of levitation with none of the drawbacks. Flying
-  provides an additional speed bonus to swiftness.
+  You fly, gaining the benefits of levitation with none of the drawbacks.
 
 Held
   You are held in a net. You cannot move freely and will instead try to fight
@@ -2929,7 +2928,7 @@ DMsl
 
 Rot
   This is a very harmful, necromantic ailment. You will lose maximum hit points
-  over time. Only healing potions and wands or and certain abilities restore
+  over time. Only healing potions and wands (and certain abilities) restore
   these, once lost. The rotting status itself is cured with potions of healing
   or by waiting it out.
 
