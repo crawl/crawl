@@ -698,7 +698,7 @@ bool sort_item_identified(const InvEntry *a)
 bool sort_item_charged(const InvEntry *a)
 {
     return (a->item->base_type != OBJ_WANDS
-            || !item_is_evokable(*(a->item), true));
+            || !item_is_evokable(*(a->item), false, true));
 }
 
 static bool _compare_invmenu_items(const InvEntry *a, const InvEntry *b,
@@ -1118,7 +1118,7 @@ static bool _item_class_selected(const item_def &i, int selector)
         return (item_is_rechargeable(i, true));
 
     case OSEL_EVOKABLE:
-        return (item_is_evokable(i, true, true));
+        return (item_is_evokable(i, true, true, true));
 
     case OSEL_ENCH_ARM:
         return (is_enchantable_armour(i, true, true));
@@ -1908,8 +1908,8 @@ bool item_is_wieldable(const item_def &item)
                && item.sub_type == MISC_LANTERN_OF_SHADOWS);
 }
 
-bool item_is_evokable(const item_def &item, bool known, bool all_wands,
-                      bool msg)
+bool item_is_evokable(const item_def &item, bool reach, bool known,
+                      bool all_wands, bool msg)
 {
     const std::string error = item_is_melded(item)
             ? "Your " + item.name(DESC_QUALNAME) + " is melded into your body."
@@ -1950,10 +1950,10 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
         return (true);
 
     case OBJ_WEAPONS:
-        if (!wielded && !msg)
+        if ((!wielded || !reach) && !msg)
             return (false);
 
-        if (weapon_reach(item) && item_type_known(item))
+        if (reach && weapon_reach(item) && item_type_known(item))
         {
             if (!wielded)
             {

@@ -726,7 +726,7 @@ bool evoke_item(int slot)
 
     item_def& item = you.inv[slot];
     // Also handles messages.
-    if (!item_is_evokable(item, false, false, true))
+    if (!item_is_evokable(item, true, false, false, true))
         return (false);
 
     int pract = 0; // By how much Evocations is practised.

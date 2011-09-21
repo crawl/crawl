@@ -5806,7 +5806,7 @@ void tile_item_use(int idx)
                 return;
             }
             // Evoke misc. items, rods, or wands.
-            if (item_is_evokable(item))
+            if (item_is_evokable(item, false))
             {
                 evoke_item(idx);
                 return;
