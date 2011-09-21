@@ -141,6 +141,9 @@ static int _spec_skills[NUM_SPECIES][NUM_SKILLS];
 
 int get_skill_progress(skill_type sk, int scale)
 {
+    if (you.skills[sk] >= 27)
+        return 0;
+
     const int needed = skill_exp_needed(you.skills[sk] + 1, sk);
     const int prev_needed = skill_exp_needed(you.skills[sk], sk);
     const int amt_done = you.skill_points[sk] - prev_needed;
@@ -539,6 +542,8 @@ unsigned int skill_exp_needed(int lev)
                           8200, 9450, 10800, 12300, 13950,   // 16-20
                           15750, 17700, 19800, 22050, 24450, // 21-25
                           27000, 29750 };
+    ASSERT(lev >= 0);
+    ASSERT(lev <= 27);
     return exp[lev];
 }
 
