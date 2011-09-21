@@ -21,7 +21,7 @@ bool form_changed_physiology(transformation_type form = you.form);
 bool form_can_wear_item(const item_def& item,
                         transformation_type form = you.form);
 
-bool can_equip(equipment_type use_which, bool ignore_temporary);
+bool can_equip(equipment_type use_which, bool temp);
 
 bool feat_dangerous_for_form(transformation_type which_trans,
                              dungeon_feature_type feat);
