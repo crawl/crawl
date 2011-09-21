@@ -729,6 +729,18 @@ bool transform(int pow, transformation_type which_trans, bool force,
             mpr("Your new body merges with your icy armour.");
         break;
 
+    case TRAN_SPIDER:
+        if (you.attribute[ATTR_HELD])
+        {
+            trap_def *trap = find_trap(you.pos());
+            // Some folks claims it's "a bug", and spiders should be immune
+            // to webs.  They know how to walk safely, but not if already
+            // entangled.  So let's give a message.
+            if (trap && trap->type == TRAP_WEB)
+                mpr("You wish you had such spider senses a moment ago.");
+        }
+        break;
+
     case TRAN_DRAGON:
         if (you.attribute[ATTR_HELD])
         {
