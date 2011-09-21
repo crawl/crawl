@@ -12,16 +12,45 @@ Branches
 Gods
 ----
 * Ammo gifts can include large rocks and javelins.
+* Lugonu accepts kills of demons.
+* Cheibriados loses the "Make Ponderous" invocation, slows you down all the
+  time depending on piety.
+* Cheibriados can slow down Abyss morphing and Orb run monster spawns.
+
+Species
+-------
+* Octopodes.
+* Draconians cannot wear body armour anymore, can wear gloves and boots.
 
 Spells
 ------
 * Ozocubu's Refrigeration no longer works through glass walls.
 * Flame Tongue has slightly longer range.
-* Removed: Maxwell's Silver Hammer.
+* Removed: Maxwell's Silver Hammer, Levitate.
+* Abjuration becomes single-target, its old version (Mass Abj.) is
+  available as a new level 7 spell.
+* Swiftness and Flight no longer give an extra boost when cast together.
+* Flight is now level 2.
+* Summoned Ugly Things are now always friendly.
+* Shadow Creatures don't last as long anymore.
+* Tornado's damage has been slightly improved.
+* Mephitic Cloud and Evaporate don't guarantee a 3x3 cloud anymore.
+* Recasting a transformation is no worse than the original cast.
 
 Backgrounds
 -----------
 * Arcane Marksmen are back, with a Hex-based spellbook.
+* Artificers get a weaker staff and skills, but an extra wand.
+
+Skills
+------
+* Non-integer values of a skill matter.
+* Stealth is drasticaly more expensive.
+
+Levels
+------
+* Web "traps", can briefly entangle those caught.
+* A "twisting cavern" map layout.
 
 Interface
 ---------
@@ -29,18 +58,37 @@ Interface
   next level.
 * Throwable starting weapons are autoinscribed with "=f".
 * Leaving an unique Pan level without the rune asks for confirmation.
+* Uniques and player ghosts annotate the level on the overview screen.
+* A character dump option: spell_usage, counts spells you have cast.
 
 Monsters
 --------
 * Ignacio no longer uses Torment, he'll appear repeatedly until killed.
-* New monster: profane servitor -- angel corrupted by Yredelemnul.
-* Removed: giant toads, vipers.
+* New monster: profane servitor -- angel corrupted by Yredelemnul (undead).
+* New monster: blizzard demon -- a cold/air rank 2 demon.
+* Removed: giant toads, vipers, blue deaths.
+* Reorganized demon ranks, moving easier 1s to 2.
+* Feature mimics may now maquerade as most features.
+* Item mimics can move once revealed.
+* Monsters will retreat when hit from behind an obstacle they can't walk
+  around.
+* Unique Pandemonium lords can haunt you on the Orb run if you've stolen
+  their runes.  Violate the 5th Commandment not 7th!
 
 Items
 -----
 * Acquirement allows choosing missiles.
+* Nagas and centaur get far better chances to acquire bardings.
 * Misc items start identified when there's no doubts about them.
 * The Orb of Zot has a slightly mutagenic glow.
+* The Crusade card can no longer give you permanent allies.
+* All polearms have the reaching brand built in.
+* Quarterstaves are split into two weapons: weak "staff" and good
+  "quarterstaff".  Gladiators get to start with the latter.
+* Common two-handed weapons are easier to use effectively.
+* Several new fixed artefacts.
+* The Staff of Dispater can be evoked for permanent temporarily friendly
+  demons instead of hellfire.
 
 Technical
 ---------
