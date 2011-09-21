@@ -1398,8 +1398,6 @@ static void _setup_generic(const newgame_def& ng)
     calc_total_skill_points();
     init_skill_order();
     init_training();
-    you.exp_available = 25;
-    train_skills();
 
     if (crawl_state.game_is_zotdef())
         you.zot_points = 80;
