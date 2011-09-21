@@ -2345,7 +2345,9 @@ void handle_time()
     {
         // Update the abyss speed. This place is unstable and the speed can
         // fluctuate. It's not a constant increase.
-        if (coinflip() && you.abyss_speed < 100)
+        if (you.religion == GOD_CHEIBRIADOS && coinflip())
+            ; // Speed change less often for Chei.
+        else if (coinflip() && you.abyss_speed < 100)
             ++you.abyss_speed;
         else if (one_chance_in(5) && you.abyss_speed > 0)
             --you.abyss_speed;
