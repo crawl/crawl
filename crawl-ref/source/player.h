@@ -896,7 +896,7 @@ void update_player_symbol();
 void update_vision_range();
 
 bool you_can_wear(int eq, bool special_armour = false);
-bool player_has_feet(void);
+bool player_has_feet(bool temp = true);
 bool player_wearing_slot(int eq);
 bool you_tran_can_wear(const item_def &item);
 bool you_tran_can_wear(int eq, bool check_mutation = false);

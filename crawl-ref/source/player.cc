@@ -719,12 +719,12 @@ bool you_can_wear(int eq, bool special_armour)
     }
 }
 
-bool player_has_feet()
+bool player_has_feet(bool temp)
 {
     if (you.species == SP_NAGA
         || you.species == SP_FELID
         || you.species == SP_OCTOPODE
-        || you.fishtail)
+        || you.fishtail && temp)
     {
         return (false);
     }

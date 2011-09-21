@@ -119,7 +119,7 @@ bool can_wield(item_def *weapon, bool say_reason,
         return (false);
     }
 
-    if (!can_equip(EQ_WEAPON, ignore_temporary_disability))
+    if (!can_equip(EQ_WEAPON, !ignore_temporary_disability))
     {
         SAY(mpr("You can't wield anything in your present form."));
         return (false);
@@ -689,46 +689,46 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         }
 
         // Soft helmets (caps and wizard hats) always fit, otherwise.
-        if (!is_hard_helmet(item) && !player_is_shapechanged())
-            return (true);
-
-        if (player_mutation_level(MUT_HORNS))
+        if (is_hard_helmet(item))
         {
-            if (verbose)
-                mpr("You can't wear that with your horns!");
-            return (false);
-        }
+            if (player_mutation_level(MUT_HORNS))
+            {
+                if (verbose)
+                    mpr("You can't wear that with your horns!");
+                return (false);
+            }
 
-        if (player_mutation_level(MUT_BEAK))
-        {
-            if (verbose)
-                mpr("You can't wear that with your beak!");
-            return (false);
-        }
+            if (player_mutation_level(MUT_BEAK))
+            {
+                if (verbose)
+                    mpr("You can't wear that with your beak!");
+                return (false);
+            }
 
-        if (player_mutation_level(MUT_ANTENNAE))
-        {
-            if (verbose)
-                mpr("You can't wear that with your antennae!");
-            return (false);
-        }
+            if (player_mutation_level(MUT_ANTENNAE))
+            {
+                if (verbose)
+                    mpr("You can't wear that with your antennae!");
+                return (false);
+            }
 
-        if (player_genus(GENPC_DRACONIAN))
-        {
-            if (verbose)
-                mpr("You can't wear that with your reptilian head.");
-            return (false);
-        }
+            if (player_genus(GENPC_DRACONIAN))
+            {
+                if (verbose)
+                    mpr("You can't wear that with your reptilian head.");
+                return (false);
+            }
 
-        if (you.species == SP_OCTOPODE)
-        {
-            if (verbose)
-                mpr("You can't wear that!");
-            return (false);
+            if (you.species == SP_OCTOPODE)
+            {
+                if (verbose)
+                    mpr("You can't wear that!");
+                return (false);
+            }
         }
     }
 
-    if (!can_equip(slot, ignore_temporary))
+    if (!can_equip(slot, !ignore_temporary))
     {
         if (verbose)
             mpr("You can't wear that in your present form.");

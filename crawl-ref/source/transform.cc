@@ -927,7 +927,7 @@ void untransform(bool skip_wielding, bool skip_move)
 
 // XXX: This whole system is a mess as it still relies on special
 // cases to handle a large number of things (see wear_armour()) -- bwr
-bool can_equip(equipment_type use_which, bool ignore_temporary)
+bool can_equip(equipment_type use_which, bool temp)
 {
     if (use_which == EQ_HELMET
         && (player_mutation_level(MUT_HORNS)
@@ -936,13 +936,13 @@ bool can_equip(equipment_type use_which, bool ignore_temporary)
         return (false);
     }
 
-    if (use_which == EQ_BOOTS && !player_has_feet())
+    if (use_which == EQ_BOOTS && !player_has_feet(temp))
         return (false);
 
     if (use_which == EQ_GLOVES && you.has_claws(false) >= 3)
         return (false);
 
-    if (!ignore_temporary)
+    if (temp)
     {
         switch (you.form)
         {
