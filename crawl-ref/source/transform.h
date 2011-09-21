@@ -42,8 +42,6 @@ monster_type transform_mons();
 std::string blade_parts(bool terse = false);
 monster_type dragon_form_dragon_type();
 
-void transformation_expiration_warning();
-
 int form_hp_mod();
 
 #endif
