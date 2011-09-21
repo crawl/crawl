@@ -115,7 +115,7 @@ int  ends_with(const std::string &s, const char *suffixes[]);
 std::string strip_filename_unsafe_chars(const std::string &s);
 
 std::string vmake_stringf(const char *format, va_list args);
-std::string make_stringf(const char *format, ...);
+std::string make_stringf(PRINTF(0, ));
 
 std::string replace_all(std::string s,
                         const std::string &tofind,

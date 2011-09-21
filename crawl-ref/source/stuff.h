@@ -9,15 +9,6 @@
 
 #include <map>
 
-// nearly copied from "mpr.h"...
-#ifdef __GNUC__
-// show warnings about the format string
-# define PRINTF(x, dfmt) const char *format dfmt, ...) \
-                   __attribute__((format (printf, x+1, x+2))
-#else
-# define PRINTF(x, dfmt) const char *format dfmt, ...
-#endif
-
 std::string make_time_string(time_t abs_time, bool terse = false);
 std::string make_file_time(time_t when);
 
@@ -66,5 +57,4 @@ class game_ended_condition : public std::exception
 int prompt_for_quantity(const char *prompt);
 int prompt_for_int(const char *prompt, bool nonneg);
 
-#undef PRINTF
 #endif

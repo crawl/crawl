@@ -48,7 +48,7 @@ int m_getch();
 int unmangle_direction_keys(int keyin, KeymapContext keymap = KMC_DEFAULT,
                             bool fake_ctrl = true, bool fake_shift = true);
 
-void nowrap_eol_cprintf(const char *s, ...);
+void nowrap_eol_cprintf(PRINTF(0, ));
 
 // Returns zero if user entered text and pressed Enter, otherwise returns the
 // key pressed that caused the exit, usually Escape.
