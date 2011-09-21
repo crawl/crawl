@@ -732,12 +732,21 @@ bool transform(int pow, transformation_type which_trans, bool force,
     case TRAN_DRAGON:
         if (you.attribute[ATTR_HELD])
         {
-            mpr("The net rips apart!");
-            you.attribute[ATTR_HELD] = 0;
-            you.redraw_quiver = true;
+            trap_def *trap = find_trap(you.pos());
+            if (trap && trap->type == TRAP_WEB)
+            {
+                mpr("You shred the web into pieces!");
+                destroy_trap(you.pos());
+            }
             int net = get_trapping_net(you.pos());
             if (net != NON_ITEM)
+            {
+                mpr("The net rips apart!");
                 destroy_item(net);
+            }
+
+            you.attribute[ATTR_HELD] = 0;
+            you.redraw_quiver = true;
         }
         break;
 
