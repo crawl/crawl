@@ -348,15 +348,6 @@ size_type player::transform_size(transformation_type tform, int psize) const
     }
 }
 
-void transformation_expiration_warning()
-{
-    if (you.duration[DUR_TRANSFORMATION]
-            <= get_expiration_threshold(DUR_TRANSFORMATION))
-    {
-        mpr("You have a feeling this form won't last long.");
-    }
-}
-
 static bool _abort_or_fizzle(bool just_check)
 {
     if (!just_check && you.turn_is_over)
@@ -479,6 +470,30 @@ static bool _transformation_is_safe(transformation_type which_trans,
     return (false);
 }
 
+static int _transform_duration(transformation_type which_trans, int pow)
+{
+    switch (which_trans)
+    {
+    case TRAN_BLADE_HANDS:
+        return std::min(10 + random2(pow), 100);
+    case TRAN_SPIDER:
+        return std::min(10 + random2(pow) + random2(pow), 60);
+    case TRAN_STATUE:
+    case TRAN_DRAGON:
+    case TRAN_LICH:
+    case TRAN_BAT:
+        return std::min(20 + random2(pow) + random2(pow), 100);
+    case TRAN_ICE_BEAST:
+        return std::min(30 + random2(pow) + random2(pow), 100);
+    case TRAN_PIG:
+        return pow;
+    case TRAN_NONE:
+        return 0;
+    default:
+        die("unknown transformation: %d", which_trans);
+    }
+}
+
 // Transforms you into the specified form. If force is true, checks for
 // inscription warnings are skipped, and the transformation fails silently
 // (if it fails). If just_check is true the transformation doesn't actually
@@ -515,7 +530,8 @@ bool transform(int pow, transformation_type which_trans, bool force,
     // This must occur before the untransform() and the is_undead check.
     if (previous_trans == which_trans)
     {
-        if (you.duration[DUR_TRANSFORMATION] < 100 * BASELINE_DELAY)
+        int dur = _transform_duration(which_trans, pow);
+        if (you.duration[DUR_TRANSFORMATION] < dur * BASELINE_DELAY)
         {
             if (just_check)
                 return (true);
@@ -524,15 +540,14 @@ bool transform(int pow, transformation_type which_trans, bool force,
                 mpr("You feel you'll be a pig longer.");
             else
                 mpr("You extend your transformation's duration.");
-            you.increase_duration(DUR_TRANSFORMATION, random2(pow), 100);
-            transformation_expiration_warning();
+            you.duration[DUR_TRANSFORMATION] = dur * BASELINE_DELAY;
 
             return (true);
         }
         else
         {
             if (!force && which_trans != TRAN_PIG)
-                mpr("You cannot extend your transformation any further!");
+                mpr("You fail to extend your transformation any further.");
             return (false);
         }
     }
@@ -579,7 +594,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     std::set<equipment_type> rem_stuff = _init_equipment_removal(which_trans);
 
-    int str = 0, dex = 0, dur = 0;
+    int str = 0, dex = 0;
     const char* tran_name = "buggy";
     std::string msg;
 
@@ -597,13 +612,11 @@ bool transform(int pow, transformation_type which_trans, bool force,
     case TRAN_SPIDER:
         tran_name = "spider";
         dex       = 5;
-        dur       = std::min(10 + random2(pow) + random2(pow), 60);
         msg      += "a venomous arachnid creature.";
         break;
 
     case TRAN_BLADE_HANDS:
         tran_name = ("Blade " + uppercase_first(blade_parts(true))).c_str();
-        dur       = std::min(10 + random2(pow), 100);
         msg       = "Your " + blade_parts()
                     + " turn into razor-sharp scythe blades.";
         break;
@@ -612,7 +625,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
         tran_name = "statue";
         str       = 2;
         dex       = -2;
-        dur       = std::min(20 + random2(pow) + random2(pow), 100);
         if (player_genus(GENPC_DWARVEN) && one_chance_in(10))
             msg = "You inwardly fear your resemblance to a lawn ornament.";
         else
@@ -621,21 +633,18 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     case TRAN_ICE_BEAST:
         tran_name = "ice beast";
-        dur       = std::min(30 + random2(pow) + random2(pow), 100);
         msg      += "a creature of crystalline ice.";
         break;
 
     case TRAN_DRAGON:
         tran_name = "dragon";
         str       = 10;
-        dur       = std::min(20 + random2(pow) + random2(pow), 100);
         msg      += "a fearsome dragon!";
         break;
 
     case TRAN_LICH:
         tran_name = "lich";
         str       = 3;
-        dur       = std::min(20 + random2(pow) + random2(pow), 100);
         msg       = "Your body is suffused with negative energy!";
         break;
 
@@ -643,7 +652,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
         tran_name = "bat";
         str       = -5;
         dex       = 5;
-        dur       = std::min(20 + random2(pow) + random2(pow), 100);
         if (you.species == SP_VAMPIRE)
             msg += "a vampire bat.";
         else
@@ -652,7 +660,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     case TRAN_PIG:
         tran_name = "pig";
-        dur       = pow;
         msg       = "You have been turned into a pig!";
         you.transform_uncancellable = true;
         break;
@@ -687,7 +694,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     // Update your status.
     you.form = which_trans;
-    you.set_duration(DUR_TRANSFORMATION, dur);
+    you.set_duration(DUR_TRANSFORMATION, _transform_duration(which_trans, pow));
     update_player_symbol();
 
     _remove_equipment(rem_stuff);
@@ -763,9 +770,6 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     if (crawl_state.which_god_acting() == GOD_XOM)
        you.transform_uncancellable = true;
-
-    if (you.species != SP_VAMPIRE || which_trans != TRAN_BAT)
-        transformation_expiration_warning();
 
     // Re-check terrain now that be may no longer be swimming or flying.
     if (was_flying && you.flight_mode() == FL_NONE
