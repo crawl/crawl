@@ -1814,6 +1814,8 @@ static void _find_description(bool *again, std::string *error_inout)
         }
         else if (doing_features)
             me = new FeatureMenuEntry(str, feat_by_desc(str), letter);
+        else if (doing_gods)
+            me = new GodMenuEntry(key_list[i]);
         else
         {
             me = new MenuEntry(uppercase_first(key_list[i]), MEL_ITEM, 1,
