@@ -1372,8 +1372,6 @@ static void _setup_generic(const newgame_def& ng)
     // This function depends on stats and mutations being finalised.
     _give_items_skills(ng);
 
-    _give_species_bonus_mp();
-
     if (you.species == SP_DEMONSPAWN)
         roll_demonspawn_mutations();
 
@@ -1398,6 +1396,8 @@ static void _setup_generic(const newgame_def& ng)
     calc_total_skill_points();
     init_skill_order();
     init_training();
+
+    _give_species_bonus_mp();
 
     if (crawl_state.game_is_zotdef())
         you.zot_points = 80;
