@@ -1260,9 +1260,12 @@ clean-rltiles:
 # Packaging a source tarball for release
 #
 
+credits: util/columnise-credits.pl
+	util/columnise-credits.pl ../CREDITS.txt
+
 # To package, you *must* have lex and yacc to generate the intermediates.
 BSRC = build/crawl-ref/source/
-source: removeold prebuildyacc
+source: removeold prebuildyacc credits
 	@git branch >/dev/null 2>/dev/null || (echo You can package source only from git. && false)
 	rm -rf build
 	mkdir build
