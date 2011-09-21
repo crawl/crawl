@@ -555,6 +555,14 @@ void skill_manual(int slot)
         set_ident_flags(manual, ISFLAG_KNOW_TYPE);
     const skill_type skill = static_cast<skill_type>(manual.plus);
 
+    if (is_useless_skill(skill))
+    {
+        if (!known)
+            mprf("This is a manual of %s.", skill_name(skill));
+        mpr("You have no use for it.");
+        return;
+    }
+
     if (skill == you.manual_skill)
     {
         stop_studying_manual();
