@@ -920,6 +920,28 @@ void discover_mimic(const coord_def& pos)
     mg.behaviour = BEH_WANDER;
     mg.cls = item ? MONS_ITEM_MIMIC : MONS_FEATURE_MIMIC;
     mg.pos = pos;
+    if (feature_mimic)
+    {
+        if (feat_is_stone_stair(feat))
+            mg.colour = feat_d.em_colour;
+        else
+            mg.colour = feat_d.colour;
+
+        dungeon_feature_type mimic_feat =
+                (feat == DNGN_OPEN_DOOR) ? DNGN_CLOSED_DOOR : feat;
+        mg.props["feat_type"] = static_cast<short>(mimic_feat);
+        mg.props["glyph"] = static_cast<int>(get_feat_symbol(mimic_feat));
+
+#ifdef USE_TILE
+        mg.props["tile_idx"] = static_cast<int>(tile);
+#endif
+    }
+    else
+    {
+        mg.colour = item->colour;
+        mg.props["glyph"] = static_cast<int>(get_item_glyph(item).ch);
+    }
+
     const int mid = place_monster(mg, true);
     ASSERT(mid != -1);
     monster* mimic = &menv[mid];
@@ -928,32 +950,12 @@ void discover_mimic(const coord_def& pos)
     if (item && !mimic->pickup_misc(*item, 0))
         die("Mimic failed to pickup its item.");
 
-    if (feature_mimic)
-    {
-        if (feat_is_stone_stair(feat))
-            mimic->colour = feat_d.em_colour;
-        else
-            mimic->colour = feat_d.colour;
-
-        dungeon_feature_type mimic_feat =
-                (feat == DNGN_OPEN_DOOR) ? DNGN_CLOSED_DOOR : feat;
-        mimic->props["feat_type"] = static_cast<short>(mimic_feat);
-        mimic->props["glyph"] = static_cast<int>(get_feat_symbol(mimic_feat));
-
-        // Necessary for door mimics to force LOS update.
+    // Necessary for door mimics to force LOS update.
+    if (feature_mimic && feat_is_door(feat))
         mimic->set_position(pos);
 
-#ifdef USE_TILE
-        mimic->props["tile_idx"] = static_cast<int>(tile);
-#endif
-    }
-    else
-    {
-        mimic->colour = get_mimic_colour(mimic);
-        mimic->props["glyph"] = static_cast<int>(get_item_glyph(item).ch);
-        if (item->base_type == OBJ_ARMOUR)
-            mimic->ac += 10;
-    }
+    if (item && item->base_type == OBJ_ARMOUR)
+        mimic->ac += 10;
 
     behaviour_event(mimic, ME_ALERT, MHITYOU);
 

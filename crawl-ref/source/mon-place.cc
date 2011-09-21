@@ -1715,6 +1715,9 @@ static int _place_monster_aux(const mgen_data &mg,
         }
     }
 
+    if (mons_is_mimic(mg.cls))
+        mon->props = mg.props;
+
     // Set attitude, behaviour and target.
     mon->attitude  = ATT_HOSTILE;
     mon->behaviour = mg.behaviour;
