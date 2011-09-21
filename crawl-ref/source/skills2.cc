@@ -150,7 +150,6 @@ int get_skill_progress(skill_type sk, int scale)
     int prog = (amt_done * scale) / (needed - prev_needed);
 
     ASSERT(prog >= 0);
-    ASSERT(prog < scale);
 
     return prog;
 }
