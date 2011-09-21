@@ -41,8 +41,7 @@ public:
     void init(const std::string &line);
     std::string xlog_line() const;
 
-    void add_field(const std::string &key,
-                   const char *format, ...);
+    void add_field(const std::string &key, PRINTF(2, ));
 
     std::string str_field(const std::string &) const;
     int int_field(const std::string &) const;
