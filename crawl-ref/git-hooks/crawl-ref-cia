@@ -184,6 +184,8 @@ $user =~ s/thevalrus/valrus/;
 $user =~ s/akbecker/GreatZebu/;
 $user =~ s/pete/mumra/;
 $user =~ s/bstriegs/Wensley/;
+$user =~ s/lothar.dierkes/ldierk/;
+$user =~ s/naesten/SamB/;
 
 $rev = substr($commit, 0, 12);
 
