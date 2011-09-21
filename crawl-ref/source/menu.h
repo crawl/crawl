@@ -191,6 +191,17 @@ public:
 #endif
 };
 
+class GodMenuEntry : public MenuEntry
+{
+public:
+    GodMenuEntry(const std::string& txt = std::string());
+
+    virtual std::string get_text(const bool unused = false) const;
+private:
+    god_type god;
+    std::string colour_text;
+};
+
 #ifdef USE_TILE_LOCAL
 class PlayerMenuEntry : public MenuEntry
 {
