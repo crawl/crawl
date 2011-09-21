@@ -282,22 +282,6 @@ static void _change_skill_level(skill_type exsk, int n)
             you.skill_order[exsk]++;
     }
 
-    if (exsk == SK_FIGHTING)
-        calc_hp();
-
-    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING)
-        calc_mp();
-
-    if (exsk == SK_DODGING || exsk == SK_ARMOUR)
-        you.redraw_evasion = true;
-
-    if (exsk == SK_ARMOUR || exsk == SK_SHIELDS
-        || exsk == SK_ICE_MAGIC || exsk == SK_EARTH_MAGIC
-        || you.duration[DUR_TRANSFORMATION] > 0)
-    {
-        you.redraw_armour_class = true;
-    }
-
     const skill_type best_spell = best_skill(SK_SPELLCASTING,
                                              SK_LAST_MAGIC);
     if (exsk == SK_SPELLCASTING && you.skills[exsk] == 1
@@ -869,6 +853,22 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     you.exp_available -= cost;
     max_exp -= cost;
     you.total_skill_points += skill_inc;
+
+    if (exsk == SK_FIGHTING)
+        calc_hp();
+
+    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING)
+        calc_mp();
+
+    if (exsk == SK_DODGING || exsk == SK_ARMOUR)
+        you.redraw_evasion = true;
+
+    if (exsk == SK_ARMOUR || exsk == SK_SHIELDS
+        || exsk == SK_ICE_MAGIC || exsk == SK_EARTH_MAGIC
+        || you.duration[DUR_TRANSFORMATION] > 0)
+    {
+        you.redraw_armour_class = true;
+    }
 
     check_skill_cost_change();
     ASSERT(you.exp_available >= 0);
