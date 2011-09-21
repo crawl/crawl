@@ -831,7 +831,7 @@ GodMenuEntry::GodMenuEntry(const std::string& txt) : MenuEntry(txt, MEL_ITEM, 1,
         //hotkeys.push_back(txt.at(0));
         hotkeys.push_back(tolower(txt.at(0)));
     }
-    int c = god_colour(god);
+    int c = god_message_altar_colour(god);
     colour_text = colour_to_str(c);
     data = &text;
 }
