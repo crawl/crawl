@@ -437,7 +437,7 @@ static const bool _is_appropriate_spell(spell_type spell,
 static const bool _is_appropriate_evokable(const item_def& item,
                                            const actor* target)
 {
-    if (!item_is_evokable(item, false, true))
+    if (!item_is_evokable(item, false, false, true))
         return (false);
 
     // Only wands for now.
