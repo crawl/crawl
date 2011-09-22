@@ -312,7 +312,7 @@ static void _resolve_job(newgame_def* ng, const newgame_def* ng_choice)
             // any valid job will do
             do
                 ng->job = job_type(random2(NUM_JOBS));
-            while (_is_job_valid_choice(ng->job));
+            while (!_is_job_valid_choice(ng->job));
         }
         else
         {
