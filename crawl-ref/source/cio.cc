@@ -509,7 +509,7 @@ int line_reader::process_key(int ch)
             length = np - buffer;
 
             cursorto(pos);
-            buffer[length] = 0;
+            buffer[length-1] = 0;
             wrapcprintf(wrapcol, "%s ", cur);
             cursorto(pos);
         }
