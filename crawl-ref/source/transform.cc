@@ -91,62 +91,46 @@ bool form_changed_physiology(transformation_type form)
 
 bool form_can_wear_item(const item_def& item, transformation_type form)
 {
-    bool rc = true;
-
     if (item.base_type == OBJ_JEWELLERY)
     {
-        // Everything but bats can wear all jewellery; bats and pigs can
-        // only wear amulets.
-        if ((form == TRAN_BAT || form == TRAN_PIG)
-             && !jewellery_is_amulet(item))
-        {
-            rc = false;
-        }
+        // Everyone can wear amulets.
+        if (jewellery_is_amulet(item))
+            return true;
+        // And only bats and pigs can't wear rings.
+        return (form != TRAN_BAT && form != TRAN_PIG);
     }
-    else
+
+    // It's not jewellery, and it's worn, so it must be armour.
+    const equipment_type eqslot = get_armour_slot(item);
+
+    switch (form)
     {
-        // It's not jewellery, and it's worn, so it must be armour.
-        const equipment_type eqslot = get_armour_slot(item);
+    // Some forms can wear everything.
+    case TRAN_NONE:
+    case TRAN_LICH:
+        return true;
 
-        switch (form)
-        {
-        // Some forms can wear everything.
-        case TRAN_NONE:
-        case TRAN_LICH:
-            rc = true;
-            break;
+    // Some can't wear anything.
+    case TRAN_DRAGON:
+    case TRAN_BAT:
+    case TRAN_PIG:
+    case TRAN_SPIDER:
+        return false;
 
-        // Some can't wear anything.
-        case TRAN_DRAGON:
-        case TRAN_BAT:
-        case TRAN_PIG:
-        case TRAN_SPIDER:
-            rc = false;
-            break;
+    // And some need more complicated logic.
+    case TRAN_BLADE_HANDS:
+        return (eqslot != EQ_SHIELD && eqslot != EQ_GLOVES);
 
-        // And some need more complicated logic.
-        case TRAN_BLADE_HANDS:
-            rc = (eqslot != EQ_SHIELD && eqslot != EQ_GLOVES);
-            break;
+    case TRAN_STATUE:
+        return (eqslot == EQ_CLOAK || eqslot == EQ_HELMET
+             || eqslot == EQ_SHIELD);
 
-        case TRAN_STATUE:
-            rc = (eqslot == EQ_CLOAK || eqslot == EQ_HELMET
-                  || eqslot == EQ_SHIELD);
-            break;
+    case TRAN_ICE_BEAST:
+        return (eqslot == EQ_CLOAK);
 
-        case TRAN_ICE_BEAST:
-            rc = (eqslot == EQ_CLOAK);
-            break;
-
-        default:                // Bug-catcher.
-            mprf(MSGCH_ERROR, "Unknown transformation type %d in "
-                 "form_can_wear_item",
-                 you.form);
-            break;
-        }
+    default:                // Bug-catcher.
+        die("Unknown transformation type %d in form_can_wear_item", you.form);
     }
-
-    return (rc);
 }
 
 static std::set<equipment_type>
@@ -948,53 +932,6 @@ void untransform(bool skip_wielding, bool skip_move)
     you.turn_is_over = true;
     if (you.transform_uncancellable)
         you.transform_uncancellable = false;
-}
-
-// XXX: This whole system is a mess as it still relies on special
-// cases to handle a large number of things (see wear_armour()) -- bwr
-bool can_equip(equipment_type use_which, bool temp)
-{
-    if (use_which == EQ_HELMET
-        && (player_mutation_level(MUT_HORNS)
-            || player_mutation_level(MUT_BEAK)))
-    {
-        return (false);
-    }
-
-    if (use_which == EQ_BOOTS && !player_has_feet(temp))
-        return (false);
-
-    if (use_which == EQ_GLOVES && you.has_claws(false) >= 3)
-        return (false);
-
-    if (temp)
-    {
-        switch (you.form)
-        {
-        case TRAN_NONE:
-        case TRAN_LICH:
-            return (true);
-
-        case TRAN_BLADE_HANDS:
-            return (use_which != EQ_WEAPON
-                    && use_which != EQ_GLOVES
-                    && use_which != EQ_SHIELD);
-
-        case TRAN_STATUE:
-            return (use_which == EQ_WEAPON
-                    || use_which == EQ_SHIELD
-                    || use_which == EQ_CLOAK
-                    || use_which == EQ_HELMET);
-
-        case TRAN_ICE_BEAST:
-            return (use_which == EQ_CLOAK);
-
-        default:
-            return (false);
-        }
-    }
-
-    return (true);
 }
 
 static void _extra_hp(int amount_extra) // must also set in calc_hp

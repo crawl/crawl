@@ -119,7 +119,7 @@ bool can_wield(item_def *weapon, bool say_reason,
         return (false);
     }
 
-    if (!can_equip(EQ_WEAPON, !ignore_temporary_disability))
+    if (!ignore_temporary_disability && !form_can_wield(you.form))
     {
         SAY(mpr("You can't wield anything in your present form."));
         return (false);
@@ -662,8 +662,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return (false);
         }
 
-        if (!ignore_temporary
-            && you.fishtail)
+        if (!ignore_temporary && you.fishtail)
         {
             if (verbose)
                mpr("You don't currently have feet!");
@@ -728,7 +727,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
         }
     }
 
-    if (!can_equip(slot, !ignore_temporary))
+    if (!ignore_temporary && !form_can_wear_item(item, you.form))
     {
         if (verbose)
             mpr("You can't wear that in your present form.");
