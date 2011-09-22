@@ -296,7 +296,7 @@ endif
 #
 # Set up object file dependencies for $(GAME) target.
 #
-include makefile.obj
+include Makefile.obj
 
 # Just a quick hack to make it clean up
 # tiles-specific object files too.
