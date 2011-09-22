@@ -1949,9 +1949,12 @@ bool monster::pickup_gold(item_def &item, int near)
 
 bool monster::pickup_misc(item_def &item, int near)
 {
-    // Never pick up runes.
-    if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_RUNE_OF_ZOT)
+    // Never pick up runes, except rune mimics.
+    if (item.base_type == OBJ_MISCELLANY && item.sub_type == MISC_RUNE_OF_ZOT
+        && !mons_is_item_mimic(type))
+    {
         return (false);
+    }
 
     // Holy monsters and worshippers of good gods won't pick up evil
     // miscellaneous items.
