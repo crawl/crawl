@@ -5900,7 +5900,7 @@ int player::armour_class() const
             break;
 
         case TRAN_STATUE: // main ability is armour (high bonus)
-            AC += 1700 + 100 * skill(SK_EARTH_MAGIC, 50);// max 30
+            AC += 1700 + skill(SK_EARTH_MAGIC, 50);// max 30
 
             if (duration[DUR_STONESKIN])
                 AC += 100 + skill(SK_EARTH_MAGIC, 25);   // max +7
