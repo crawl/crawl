@@ -783,6 +783,8 @@ std::string monster_info::mimic_name() const
     {
         if (item->base_type == OBJ_GOLD)
             s = "pile of gold";
+        else if (item->sub_type == MISC_RUNE_OF_ZOT)
+            s = "rune";
         else
             s = item->name(DESC_BASENAME);
     }

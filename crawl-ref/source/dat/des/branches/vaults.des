@@ -500,6 +500,20 @@ MAP
 o
 ENDMAP
 
+############################################################
+# Vault:8 - the subvault used for potential rune locations that do not
+# contain the rune, but rather a mimic of it!
+#
+# Used by the 'vault8_rune()' function in the prelude.
+#
+NAME:    vault8_rune_mimic
+TAGS:    vault8_norune
+WEIGHT:  1
+KITEM:   o = silver rune of Zot mimic
+MAP
+o
+ENDMAP
+
 ###############################################################################
 # Vaults:8 quadrants
 ###############################################################################
