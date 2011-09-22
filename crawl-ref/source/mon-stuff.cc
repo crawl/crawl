@@ -1086,7 +1086,8 @@ static bool _explode_monster(monster* mons, killer_type killer,
     if (mons->hit_points > 0 || mons->hit_points <= -15 || wizard
         || killer == KILL_RESET || killer == KILL_DISMISSED || killer == KILL_BANISHED)
     {
-        return (false);
+        if (killer != KILL_TIMEOUT)
+            return (false);
     }
 
     bolt beam;

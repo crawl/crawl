@@ -4594,7 +4594,6 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
     }
     case ENCH_FAKE_ABJURATION:
     case ENCH_ABJ:
-    case ENCH_SHORT_LIVED:
         // Set duration to -1 so that monster_die() and any of its
         // callees can tell that the monster ran out of time or was
         // abjured.
@@ -4608,7 +4607,10 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         monster_die(this, (me.ench == ENCH_FAKE_ABJURATION) ? KILL_MISC :
                             (quiet) ? KILL_DISMISSED : KILL_RESET, NON_MONSTER);
         break;
-
+    case ENCH_SHORT_LIVED:
+        // Conjured ball lightnings explode when they time out.
+        monster_die(this, KILL_TIMEOUT, NON_MONSTER);
+        break;
     case ENCH_SUBMERGED:
         if (mons_is_wandering(this))
         {
