@@ -1693,7 +1693,7 @@ static void _find_description(bool *again, std::string *error_inout)
         else
         {
             ASSERT(sel.size() == 1);
-            ASSERT(sel[0]->hotkeys.size() == 1);
+            ASSERT(sel[0]->hotkeys.size() >= 1);
 
             std::string key;
 

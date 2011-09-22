@@ -721,8 +721,7 @@ bool Menu::is_hotkey(int i, int key)
     int end = first_entry + pagesize;
     if (end > static_cast<int>(items.size())) end = items.size();
 
-    bool ishotkey = (is_set(MF_SINGLESELECT) ? items[i]->is_primary_hotkey(key)
-                                             : items[i]->is_hotkey(key));
+    bool ishotkey = items[i]->is_hotkey(key);
 
     return !is_set(MF_SELECT_BY_PAGE) ? ishotkey
                                       : ishotkey && i >= first_entry && i < end;
@@ -752,8 +751,7 @@ void Menu::select_items(int key, int qty)
         // are usually separated by at least a page, so we should
         // only select the item on the current page. This is why we
         // use two loops, and check to see if we've matched an item
-        // by its primary hotkey (which is assumed to always be
-        // hotkeys[0]), in which case, we stop selecting further
+        // by its hotkey, in which case, we stop selecting further
         // items.
         const bool check_preselected = (key == CK_ENTER);
         for (int i = first_entry; i < final; ++i)
@@ -767,11 +765,8 @@ void Menu::select_items(int key, int qty)
             else if (is_hotkey(i, key))
             {
                 select_index(i, qty);
-                if (items[i]->hotkeys[0] == key)
-                {
-                    selected = true;
-                    break;
-                }
+                selected = true;
+                break;
             }
         }
 
@@ -788,11 +783,8 @@ void Menu::select_items(int key, int qty)
                 else if (is_hotkey(i, key))
                 {
                     select_index(i, qty);
-                    if (items[i]->hotkeys[0] == key)
-                    {
-                        selected = true;
-                        break;
-                    }
+                    selected = true;
+                    break;
                 }
             }
         }
