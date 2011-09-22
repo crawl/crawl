@@ -2322,7 +2322,7 @@ static bool _do_ability(const ability_def& abil)
         if (!spell_direction(spd, beam))
             return (false);
 
-        power = you.skill(SK_INVOCATIONS, 3)
+        power = you.skill(SK_INVOCATIONS, 1)
                 + random2(1 + you.skill(SK_INVOCATIONS, 1))
                 + random2(1 + you.skill(SK_INVOCATIONS, 1));
 
