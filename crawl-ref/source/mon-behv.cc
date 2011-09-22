@@ -201,7 +201,8 @@ void handle_behaviour(monster* mon)
     if (crawl_state.game_is_zotdef())
     {
         if (!isFriendly && !isNeutral && env.orb_pos == mon->pos()
-            && mon->speed)
+            && mon->speed
+            && mon->type != MONS_TOADSTOOL)
         {
             const int loss = div_rand_round(10, mon->speed);
             if (loss)
