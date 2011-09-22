@@ -243,7 +243,7 @@ static bool _OLGREB_evoke(item_def *item, int* pract, bool* did_work,
         return (false);
     }
 
-    if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 500))
+    if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 600))
         return (false);
 
     dec_mp(4);
@@ -453,7 +453,7 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
                             bool* unevokable)
 {
     if (you.magic_points == you.max_magic_points
-        || !x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 2400))
+        || !x_chance_in_y(you.skill(SK_EVOCATIONS, 100) + 100, 2500))
     {
         return (false);
     }

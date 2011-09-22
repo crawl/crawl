@@ -2699,7 +2699,7 @@ int fedhas_rain(const coord_def &target)
             // per tile is 20 * p = expected.  Say an Invocations skill
             // of 27 gives expected 5 clouds.
             int max_expected = 5;
-            int expected = you.skill_rdiv(SK_INVOCATIONS, max_expected, 270);
+            int expected = you.skill_rdiv(SK_INVOCATIONS, max_expected, 27);
 
             if (x_chance_in_y(expected, 20))
             {
