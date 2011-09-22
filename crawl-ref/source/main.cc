@@ -631,7 +631,6 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'L': debug_place_map();                     break;
     case 'i': wizard_identify_pack();                break;
     case 'I': wizard_unidentify_pack();              break;
-    case 'Z':
     case 'z': wizard_cast_spec_spell();              break;
     case '(': wizard_create_feature();               break;
     case ')': wizard_mod_tide();                     break;
@@ -727,6 +726,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
             mpr("This only makes sense in a labyrinth!");
         break;
 
+    case 'Z':
     case CONTROL('Z'):
         if (crawl_state.game_is_zotdef())
         {
