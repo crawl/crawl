@@ -839,8 +839,9 @@ void wizard_list_items()
 
         if (item.link != NON_ITEM)
         {
-            mprf("(%2d,%2d): %s", item.pos.x, item.pos.y,
-                 item.name(DESC_PLAIN, false, false, false).c_str());
+            mprf("(%2d,%2d): %s%s", item.pos.x, item.pos.y,
+                 item.name(DESC_PLAIN, false, false, false).c_str(),
+                 item.flags & ISFLAG_MIMIC ? " mimic" : "");
         }
     }
 
@@ -853,8 +854,9 @@ void wizard_list_items()
         int item = igrd(*ri);
         if (item != NON_ITEM)
         {
-            mprf("%3d at (%2d,%2d): %s", item, ri->x, ri->y,
-                 mitm[item].name(DESC_PLAIN, false, false, false).c_str());
+            mprf("%3d at (%2d,%2d): %s%s", item, ri->x, ri->y,
+                 mitm[item].name(DESC_PLAIN, false, false, false).c_str(),
+                 mitm[item].flags & ISFLAG_MIMIC ? " mimic" : "");
         }
     }
 }
