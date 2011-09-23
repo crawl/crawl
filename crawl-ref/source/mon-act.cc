@@ -1825,14 +1825,19 @@ static bool _handle_throw(monster* mons, bolt & beem)
 
     item_def *missile = &mitm[mon_item];
 
-    // Throwing a net at a target that is already caught would be
-    // completely useless, so bail out.
     const actor *act = actor_at(beem.target);
     if (missile->base_type == OBJ_MISSILES
         && missile->sub_type == MI_THROWING_NET
-        && act && act->caught())
+        && act)
     {
-        return (false);
+        // Throwing a net at a target that is already caught would be
+        // completely useless, so bail out.
+        if (act->caught())
+            return (false);
+        // Netting targets that are already permanently stuck in place
+        // is similarly useless.
+        if (mons_class_is_stationary(act->type))
+            return (false);
     }
 
     // If the attack needs a launcher that we can't wield, bail out.
