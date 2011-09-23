@@ -738,6 +738,20 @@ bool cast_a_spell(bool check_range, spell_type spell)
         return (false);
     }
 
+    if (god_hates_spell(spell, you.religion))
+    {
+        // None currently dock just piety, right?
+        if (!yesno(god_loathes_spell(spell, you.religion) ?
+            "<lightred>Casting this spell will cause instant excommunicatiom!"
+                "<lighred> Really cast?" :
+            "Casting this spell will put you into penance. Really cast?",
+            true, 'n'))
+        {
+            crawl_state.zero_turns_taken();
+            return (false);
+        }
+    }
+
     const bool staff_energy = player_energy();
     if (you.confused())
         random_uselessness();

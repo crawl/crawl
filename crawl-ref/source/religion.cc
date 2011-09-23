@@ -3664,10 +3664,21 @@ bool god_hates_spell(spell_type spell, god_type god)
         if (is_hasty_spell(spell))
             return (true);
         break;
+    case GOD_TROG:
+        return (true);
     default:
         break;
     }
     return (false);
+}
+
+bool god_loathes_spell(spell_type spell, god_type god)
+{
+    if (spell == SPELL_NECROMUTATION && is_good_god(god))
+        return true;
+    if (spell == SPELL_STATUE_FORM && god == GOD_YREDELEMNUL)
+        return true;
+    return false;
 }
 
 bool god_can_protect_from_harm(god_type god)

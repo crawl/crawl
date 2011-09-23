@@ -2951,6 +2951,8 @@ static int _get_spell_description(const spell_type spell,
     {
         description += god_name(you.religion)
                        + " frowns upon the use of this spell.\n";
+        if (god_loathes_spell(spell, you.religion))
+            description += "You'd be excommunicated if you dared to cast it!\n";
     }
     else if (god_likes_spell(spell, you.religion))
     {
