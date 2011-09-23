@@ -5,16 +5,13 @@ ifneq (,$(filter parallel=%,$(DEB_BUILD_OPTIONS)))
 	MAKEFLAGS += -j$(NUMJOBS)
 endif
 
-CFOPTIMIZE = -O2
-ifneq (,$(filter noopt,$(DEB_BUILD_OPTIONS)))
-	CFOPTIMIZE = -O0
-endif
 ifneq (,$(shell gcc --version|grep 'gcc (.*) 4\.4\.'))
   ifeq ($(DEB_HOST_ARCH),powerpc)
 	# g++-4.4 has an ICE there.
-	CFOPTIMIZE = -O0
+	DEB_BUILD_OPTIONS := $(DEB_BUILD_OPTIONS) noopt
   endif
 endif
+CFOPTIMIZE = $(shell dpkg-buildflags --get CXXFLAGS || echo -g -O2) $(shell dpkg-buildflags --get LDFLAGS)
 
 tree-stamp:
 	dh_testdir
@@ -32,7 +29,7 @@ ifneq ($(DEB_BUILD_GNU_TYPE),$(DEB_HOST_GNU_TYPE))
 endif
 
 # The makefile is unorthodox, requiring all options to be specified on every invocation.
-ARGS_CONSOLE = prefix=/usr CFOPTIMIZE=$(CFOPTIMIZE) WIZARD=y $(CROSS)
+ARGS_CONSOLE = prefix=/usr CFOPTIMIZE="$(CFOPTIMIZE)" WIZARD=y $(CROSS)
 ARGS_TILES   = $(ARGS_CONSOLE) TILES=y GAME=crawl-tiles \
 	PROPORTIONAL_FONT=/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf \
 	MONOSPACED_FONT=/usr/share/fonts/truetype/ttf-dejavu/DejaVuSansMono.ttf
