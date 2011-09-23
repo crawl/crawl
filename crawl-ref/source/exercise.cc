@@ -69,7 +69,6 @@ static skill_type _abil_skill(ability_type abil)
     case ABIL_TSO_CLEANSING_FLAME:
     case ABIL_OKAWARU_FINESSE:
     case ABIL_CHEIBRIADOS_SLOUCH:
-    case ABIL_ELYVILON_RESTORATION:
     case ABIL_LUGONU_CORRUPT:
     case ABIL_JIYVA_CURE_BAD_MUTATION:
     case ABIL_CHEIBRIADOS_TIME_STEP:
@@ -131,7 +130,6 @@ static int _abil_degree(ability_type abil)
     case ABIL_BEOGH_SMITING:
         return (2 + random2(2));
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
-    case ABIL_ELYVILON_PURIFICATION:
     case ABIL_LUGONU_BEND_SPACE:
     case ABIL_FEDHAS_SUNLIGHT:
     case ABIL_FEDHAS_PLANT_RING:
@@ -159,7 +157,7 @@ static int _abil_degree(ability_type abil)
 
     case ABIL_CHEIBRIADOS_SLOUCH:
         return (4 + random2(4));
-    case ABIL_ELYVILON_RESTORATION:
+    case ABIL_ELYVILON_PURIFICATION:
         return (4 + random2(6));
 
     case ABIL_LUGONU_CORRUPT:

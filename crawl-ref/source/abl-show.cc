@@ -209,7 +209,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
       ABIL_NEMELEX_MARK_FOUR, ABIL_NEMELEX_STACK_FIVE },
     // Elyvilon
     { ABIL_ELYVILON_LESSER_HEALING_OTHERS, ABIL_ELYVILON_PURIFICATION,
-      ABIL_ELYVILON_GREATER_HEALING_OTHERS, ABIL_ELYVILON_RESTORATION,
+      ABIL_ELYVILON_GREATER_HEALING_OTHERS, ABIL_NON_ABILITY,
       ABIL_ELYVILON_DIVINE_VIGOUR },
     // Lugonu
     { ABIL_LUGONU_ABYSS_EXIT, ABIL_LUGONU_BEND_SPACE, ABIL_LUGONU_BANISH,
@@ -366,13 +366,12 @@ static const ability_def Ability_List[] =
       1, 0, 100, generic_cost::range(0, 1), ABFLAG_CONF_OK },
     { ABIL_ELYVILON_LESSER_HEALING_OTHERS, "Lesser Healing",
       1, 0, 100, 0, ABFLAG_CONF_OK },
-    { ABIL_ELYVILON_PURIFICATION, "Purification", 2, 0, 150, 2,
+    { ABIL_ELYVILON_PURIFICATION, "Purification", 3, 0, 300, 3,
       ABFLAG_CONF_OK },
     { ABIL_ELYVILON_GREATER_HEALING_SELF, "Greater Self-Healing",
       2, 0, 250, 2, ABFLAG_CONF_OK },
     { ABIL_ELYVILON_GREATER_HEALING_OTHERS, "Greater Healing",
       2, 0, 250, 2, ABFLAG_CONF_OK },
-    { ABIL_ELYVILON_RESTORATION, "Restoration", 3, 0, 400, 3, ABFLAG_CONF_OK },
     { ABIL_ELYVILON_DIVINE_VIGOUR, "Divine Vigour", 0, 0, 600, 6,
       ABFLAG_CONF_OK },
 
@@ -1204,7 +1203,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
         break;
 
     case ABIL_TSO_CLEANSING_FLAME:
-    case ABIL_ELYVILON_RESTORATION:
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
     case ABIL_LUGONU_CORRUPT:
     case ABIL_FEDHAS_RAIN:
@@ -1461,14 +1459,17 @@ static bool _check_ability_possible(const ability_def& abil,
     case ABIL_ELYVILON_PURIFICATION:
         if (!you.disease && !you.rotting && !you.duration[DUR_POISONING]
             && !you.duration[DUR_CONF] && !you.duration[DUR_SLOW]
-            && !you.duration[DUR_PARALYSIS] && !you.petrified())
+            && !you.duration[DUR_PARALYSIS] && !you.petrified()
+            && you.strength() == you.max_strength()
+            && you.intel() == you.max_intel()
+            && you.dex() == you.max_dex()
+            && !player_rotted())
         {
             mpr("Nothing ails you!");
             return (false);
         }
         return (true);
 
-    case ABIL_ELYVILON_RESTORATION:
     case ABIL_MUMMY_RESTORATION:
         if (you.strength() == you.max_strength()
             && you.intel() == you.max_intel()
@@ -2454,11 +2455,6 @@ static bool _do_ability(const ability_def& abil)
         }
         break;
     }
-
-    case ABIL_ELYVILON_RESTORATION:
-        restore_stat(STAT_ALL, 0, false);
-        unrot_hp(100);
-        break;
 
     case ABIL_ELYVILON_DIVINE_VIGOUR:
         if (!elyvilon_divine_vigour())
