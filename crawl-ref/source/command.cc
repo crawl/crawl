@@ -2813,9 +2813,8 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>Ctrl-X</w> : Xom effect stats\n"
                        "\n"
                        "<yellow>Wizard targeting commands</yellow>\n"
-                       "<w>x?</w>     : list targeted commands\n"
-                       "\n"
-                       "<w>?</w>      : list wizard commands\n",
+                       "(not prefixed with <w>&</w>!)\n"
+                       "<w>x?</w>     : list targeted commands\n",
                        true, true);
 
     int key = _show_keyhelp_menu(cols.formatted_lines(), false,
