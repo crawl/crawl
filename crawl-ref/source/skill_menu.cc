@@ -473,9 +473,10 @@ std::string SkillMenuSwitch::get_help()
     switch (m_state)
     {
     case SKM_MODE_AUTO:
-        return "In automatic mode, the skills you use are trained.";
+        return "In automatic mode, skills are trained as you use them.";
     case SKM_MODE_MANUAL:
-        return "In manual mode, the skills you have selected are trained.";
+        return "In manual mode, experience is spread evenly across all "
+                "activated skills.";
     case SKM_DO_PRACTISE:
         if (m_skm->is_set(SKMF_SIMPLE))
             return hints_skills_info();
