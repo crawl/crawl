@@ -841,6 +841,8 @@ bool is_valid_border_feat(dungeon_feature_type feat)
                || feat == DNGN_LAVA_SEA));
 }
 
+// This is for randomly generated mimics.
+// Other features can be defined as mimic in vaults.
 bool is_valid_mimic_feat(dungeon_feature_type feat)
 {
     // Don't risk trapping the player inside a portal vault.
@@ -868,6 +870,17 @@ bool is_valid_mimic_feat(dungeon_feature_type feat)
     if (feat_is_statue_or_idol(feat))
         return true;
 
+    return false;
+}
+
+// Those can never be mimiced.
+bool feat_cannot_be_mimic(dungeon_feature_type feat)
+{
+    if (feat == DNGN_FLOOR || feat == DNGN_SHALLOW_WATER
+        || feat == DNGN_DEEP_WATER)
+    {
+        return true;
+    }
     return false;
 }
 

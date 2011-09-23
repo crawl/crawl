@@ -4634,7 +4634,10 @@ static void _vault_grid_mapspec(vault_placement &place, const coord_def &where,
         grd(where) = DNGN_FLOOR;
 
     if (f.mimic > 0 && one_chance_in(f.mimic))
+    {
+        ASSERT(!feat_cannot_be_mimic(grd(where)));
         env.level_map_mask(where) |= MMT_MIMIC;
+    }
     else if (f.no_mimic)
         env.level_map_mask(where) |= MMT_NO_MIMIC;
 
