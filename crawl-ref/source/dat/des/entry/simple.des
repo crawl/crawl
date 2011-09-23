@@ -1292,3 +1292,68 @@ MAP
  .xl.....x....xl....x..lx.
  ....   ...  ....  .......
 ENDMAP
+
+##############################################################################
+# ldierk's gardens
+
+NAME:    ldierk_walled_garden
+TAGS:    entry no_monster_gen no_pool_fixup
+ORIENT:  float
+SHUFFLE: 123t
+SUBST:   W : wW
+SUBST:   R : RWW, R = W.
+SUBST:   T : t
+MONS:    plant, fungus, bush
+MAP
+xxxxxx@xxxxxx
+xWWWWTRTWWWWx
+xW.1.....2.Wx
+xW111...222Wx
+xT.1.....2.Tx
+@R....{....R@
+xT.3.....t.Tx
+xW333...tttWx
+xW.3.....t.Wx
+xW...T.T...Wx
+xWWWWT.TWWWWx
+xxxxxx@xxxxxx
+ENDMAP
+
+NAME:    ldierk_walled_garden_2
+TAGS:    entry no_monster_gen no_pool_fixup
+ORIENT:  float
+SHUFFLE: 123t
+SUBST:   W : wW
+SUBST:   T : W.
+MONS:    plant, fungus, bush
+MAP
+  xxx xxx 
+ xxWx@xWxx
+xxW1WTW2Wxx
+xW1G1T2G2Wx 
+xxW1.{.2Wxx
+xxW3...tWxx
+xW3G3.tGtWx
+xxW3...tWxx
+ xxWx@xWxx
+  xxx xxx
+ENDMAP
+
+NAME:    ldierk_water_garden
+TAGS:    entry no_monster_gen no_pool_fixup
+ORIENT:  float
+SHUFFLE: 123t
+SUBST:   W : wW
+MONS:    plant, fungus, bush
+MAP
+  W       W  
+ W1W     W2W  
+W1T1WWWWW2T2W  
+ W1...(...2W  
+  W...{...W  
+ W3...[...tW  
+W3T3WWWWWtTtW 
+ W3W     WtW  
+  W       W  
+ENDMAP
+
