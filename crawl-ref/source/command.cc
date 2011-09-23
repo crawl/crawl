@@ -1069,15 +1069,15 @@ static std::vector<std::string> _get_branch_keys()
 
         names.push_back(branch.shortname);
     }
-/*
-    // Maybe include other level areas, as well.
-    for (int i = LEVEL_LABYRINTH; i < NUM_LEVEL_AREA_TYPES; i++)
-    {
-        names.push_back(place_name(
+
+    //add handpicked places
+    names.push_back(place_name(
                             get_packed_place(BRANCH_MAIN_DUNGEON, 1,
-                                static_cast<level_area_type>(i)), true));
-    }
-*/
+                                static_cast<level_area_type>(LEVEL_ABYSS)), false));
+    names.push_back(place_name(
+                            get_packed_place(BRANCH_MAIN_DUNGEON, 1,
+                                static_cast<level_area_type>(LEVEL_PANDEMONIUM)), false));
+
     return (names);
 }
 
