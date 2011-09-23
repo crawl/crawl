@@ -127,18 +127,14 @@ static bool _mons_hostile(const monster* mon)
     return (!mon->wont_attack() && !mon->neutral());
 }
 
-// Check whether this monster might be pacified.
-// Returns 0, if monster can be pacified but the attempt failed.
-// Returns 1, if monster is pacified.
+// Check whether it is possible at all to pacify this monster.
 // Returns -1, if monster can never be pacified.
 // Returns -2, if monster can currently not be pacified (asleep).
-static int _can_pacify_monster(const monster* mon, const int healed)
+// Returns 0, if it's possible to pacify this monster.
+int is_pacifiable(const monster* mon)
 {
     if (you.religion != GOD_ELYVILON)
         return (-1);
-
-    if (healed < 1)
-        return (0);
 
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
@@ -164,12 +160,31 @@ static int _can_pacify_monster(const monster* mon, const int healed)
     if (mon->asleep()) // not aware of what is happening
         return (-2);
 
+    return 0;
+}
+
+// Check whether this monster might be pacified.
+// Returns 0, if monster can be pacified but the attempt failed.
+// Returns 1, if monster is pacified.
+// Returns -1, if monster can never be pacified.
+// Returns -2, if monster can currently not be pacified (asleep).
+static int _can_pacify_monster(const monster* mon, const int healed)
+{
+
+   int pacifiable = is_pacifiable(mon);
+   if (pacifiable < 0)
+       return pacifiable;
+
+   if (healed < 1)
+        return (0);
+
     const int factor = (mons_intel(mon) <= I_ANIMAL)       ? 3 : // animals
                        (is_player_same_species(mon->type)) ? 2   // same species
                                                            : 1;  // other
 
     int divisor = 3;
 
+    const mon_holy_type holiness = mon->holiness();
     if (mon->is_holy())
         divisor--;
     else if (holiness == MH_UNDEAD)
