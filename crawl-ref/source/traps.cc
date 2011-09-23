@@ -337,6 +337,21 @@ void monster_caught_in_net(monster* mon, bolt &pbolt)
     if (mon->body_size(PSIZE_BODY) >= SIZE_GIANT)
         return;
 
+    if (mons_class_is_stationary(mon->type))
+    {
+        if (you.see_cell(mon->pos()))
+        {
+            if (mon->visible_to(&you))
+            {
+                mprf("The net is caught on %s!",
+                     mon->name(DESC_NOCAP_THE).c_str());
+            }
+            else
+                mpr("The net is caught on something unseen!");
+        }
+        return;
+    }
+
     if (mon->is_insubstantial())
     {
         if (you.can_see(mon))
