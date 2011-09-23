@@ -787,44 +787,54 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
     if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
         return ("");
 
-    std::vector<std::string> dislikes;
+    std::string text;
+    std::vector<std::string> dislikes;        // Piety loss
+    std::vector<std::string> really_dislikes; // Penance
 
     if (god_hates_cannibalism(which_god))
-        dislikes.push_back("you perform cannibalism");
+        really_dislikes.push_back("you perform cannibalism");
 
     if (is_good_god(which_god))
     {
-        dislikes.push_back("you drink blood");
-        dislikes.push_back("you use necromancy");
-        dislikes.push_back("you use unholy magic or items");
-        dislikes.push_back("you attack non-hostile holy beings");
-        dislikes.push_back("you or your allies kill non-hostile holy beings");
-        dislikes.push_back("you attack neutral beings");
+        if (which_god == GOD_SHINING_ONE)
+            really_dislikes.push_back("you drink blood");
+        else
+            dislikes.push_back("you drink blood");
+
+        really_dislikes.push_back("you use necromancy");
+        really_dislikes.push_back("you use unholy magic or items");
+        really_dislikes.push_back("you attack non-hostile holy beings");
+        really_dislikes.push_back("you or your allies kill non-hostile holy beings");
+
+        if (which_god == GOD_ZIN)
+            dislikes.push_back("you attack neutral beings");
+        else
+            really_dislikes.push_back("you attack neutral beings");
     }
 
     switch (which_god)
     {
     case GOD_ZIN:     case GOD_SHINING_ONE:  case GOD_ELYVILON:
     case GOD_OKAWARU:
-        dislikes.push_back("you attack allies");
+        really_dislikes.push_back("you attack allies");
         break;
 
     case GOD_BEOGH:
-        dislikes.push_back("you attack allied orcs");
+        really_dislikes.push_back("you attack allied orcs");
         break;
 
     case GOD_JIYVA:
-        dislikes.push_back("you attack your fellow slimes");
+        really_dislikes.push_back("you attack your fellow slimes");
         break;
 
     case GOD_FEDHAS:
         dislikes.push_back("you or your allies destroy plants");
         dislikes.push_back("allied flora die");
-        dislikes.push_back("you use necromancy on corpses, chunks or skeletons");
+        really_dislikes.push_back("you use necromancy on corpses, chunks or skeletons");
         break;
 
     case GOD_SIF_MUNA:
-        dislikes.push_back("you destroy spellbooks");
+        really_dislikes.push_back("you destroy spellbooks");
         break;
 
     default:
@@ -849,60 +859,76 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
     {
     case GOD_ZIN:
         dislikes.push_back("you deliberately mutate yourself");
-        dislikes.push_back("you polymorph monsters");
-        dislikes.push_back("you use unclean or chaotic magic or items");
-        dislikes.push_back("you eat the flesh of sentient beings");
+        really_dislikes.push_back("you polymorph monsters");
+        really_dislikes.push_back("you use unclean or chaotic magic or items");
+        really_dislikes.push_back("you eat the flesh of sentient beings");
         dislikes.push_back("you or your allies attack monsters in a "
                            "sanctuary");
         break;
 
     case GOD_SHINING_ONE:
-        dislikes.push_back("you poison monsters");
-        dislikes.push_back("you attack intelligent monsters in an "
-                           "unchivalric manner");
+        really_dislikes.push_back("you poison monsters");
+        really_dislikes.push_back("you attack intelligent monsters in an "
+                                  "unchivalric manner");
         break;
 
     case GOD_ELYVILON:
-        dislikes.push_back("you kill living things while asking for "
-                           "your life to be spared");
+        really_dislikes.push_back("you kill living things while asking for "
+                                  "your life to be spared");
         break;
 
     case GOD_YREDELEMNUL:
-        dislikes.push_back("you use holy magic or items");
+        really_dislikes.push_back("you use holy magic or items");
         break;
 
     case GOD_TROG:
-        dislikes.push_back("you memorise spells");
-        dislikes.push_back("you attempt to cast spells");
-        dislikes.push_back("you train magic skills");
+        really_dislikes.push_back("you memorise spells");
+        really_dislikes.push_back("you attempt to cast spells");
+        really_dislikes.push_back("you train magic skills");
         break;
 
     case GOD_BEOGH:
-        dislikes.push_back("you desecrate orcish remains");
-        dislikes.push_back("you destroy orcish idols");
+        really_dislikes.push_back("you desecrate orcish remains");
+        really_dislikes.push_back("you destroy orcish idols");
         break;
 
     case GOD_JIYVA:
-        dislikes.push_back("you kill slimes");
+        really_dislikes.push_back("you kill slimes");
         break;
 
     case GOD_CHEIBRIADOS:
-        dislikes.push_back("you hasten yourself");
-        dislikes.push_back("use unnaturally quick items");
+        really_dislikes.push_back("you hasten yourself");
+        really_dislikes.push_back("use unnaturally quick items");
         break;
 
     default:
         break;
     }
 
-    if (dislikes.empty())
+    if (dislikes.empty() && really_dislikes.empty())
         return ("");
 
-    std::string text = god_name(which_god);
-                text += " dislikes it when ";
-                text += comma_separated_line(dislikes.begin(), dislikes.end(),
+    if (!dislikes.empty())
+    {
+        text += god_name(which_god);
+        text += " dislikes it when ";
+        text += comma_separated_line(dislikes.begin(), dislikes.end(),
+                                     " or ", ", ");
+        text += ".";
+
+        if (!really_dislikes.empty())
+            text += " ";
+    }
+
+    if (!really_dislikes.empty())
+    {
+        text += god_name(which_god);
+        text += " strongly dislikes it when ";
+                text += comma_separated_line(really_dislikes.begin(),
+                                             really_dislikes.end(),
                                              " or ", ", ");
-                text += ".";
+        text += ".";
+    }
 
     return (text);
 }
