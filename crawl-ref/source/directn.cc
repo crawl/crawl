@@ -66,6 +66,7 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "wiz-mon.h"
+#include "spl-goditem.h"
 
 const std::string SHORT_DESC_KEY = "short_desc_key";
 
@@ -1028,6 +1029,8 @@ static std::string _targ_mode_name(targ_mode_type mode)
         return ("enemies");
     case TARG_FRIEND:
         return ("friends");
+    case TARG_INJURED_FRIEND:
+        return ("injured friends");
     case TARG_HOSTILE:
     case TARG_HOSTILE_SUBMERGED:
         return ("hostiles");
@@ -1068,7 +1071,8 @@ coord_def direction_chooser::find_default_target() const
     else if (mode == TARG_ENEMY || mode == TARG_HOSTILE
              || mode == TARG_HOSTILE_SUBMERGED
              || mode == TARG_EVOLVABLE_PLANTS
-             || mode == TARG_HOSTILE_UNDEAD)
+             || mode == TARG_HOSTILE_UNDEAD
+             || mode == TARG_INJURED_FRIEND)
     {
         // Try to find an enemy monster.
 
@@ -1081,7 +1085,10 @@ coord_def direction_chooser::find_default_target() const
                 || mode == TARG_EVOLVABLE_PLANTS
                     && mons_is_evolvable(mon_target)
                 || mode == TARG_HOSTILE_UNDEAD && !mon_target->friendly()
-                   && mon_target->holiness() == MH_UNDEAD)
+                   && mon_target->holiness() == MH_UNDEAD
+                || mode == TARG_INJURED_FRIEND
+                   && (mon_target->friendly() && mons_get_damage_level(mon_target) > MDAM_OKAY
+                       || !mon_target->friendly() && is_pacifiable(mon_target) >= 0))
             && in_range(mon_target->pos()))
         {
             result = mon_target->pos();
@@ -2438,6 +2445,10 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
 
     if (mode == TARG_FRIEND)
         return (mon->friendly());
+
+    if (mode == TARG_INJURED_FRIEND)
+        return (mon->friendly() && mons_get_damage_level(mon) > MDAM_OKAY
+                || !mon->friendly() && is_pacifiable(mon) >= 0);
 
     if (mode == TARG_EVOLVABLE_PLANTS)
         return (mons_is_evolvable(mon));
