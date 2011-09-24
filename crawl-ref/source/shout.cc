@@ -378,6 +378,11 @@ bool check_awaken(monster* mons)
     if (you.umbra() && you.visible_to(mons))
         mons_perc -= 30 * LOS_RADIUS / you.current_vision;
 
+    // The shifting glow from the Orb, while too unstable to negate invis
+    // or affect to-hit, affects stealth even more than regular glow.
+    if (orb_haloed(you.pos()))
+        mons_perc += 80;
+
     if (mons_perc < 0)
         mons_perc = 0;
 
