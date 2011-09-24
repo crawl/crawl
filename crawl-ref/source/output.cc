@@ -16,6 +16,7 @@
 #include "species.h"
 
 #include "abl-show.h"
+#include "areas.h"
 #include "branch.h"
 #include "cio.h"
 #include "colour.h"
@@ -1832,8 +1833,7 @@ static std::vector<formatted_string> _get_overview_resistances(
 
     const int stasis = wearing_amulet(AMU_STASIS, calc_unid);
     const int notele = scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid)
-                       || crawl_state.game_is_zotdef()
-                          && you.char_direction == GDT_ASCENDING;
+                       || crawl_state.game_is_zotdef() && orb_haloed(you.pos());
     const int rrtel = !!player_teleport(calc_unid);
     if (notele && !stasis)
     {

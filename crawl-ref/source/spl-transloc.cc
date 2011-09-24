@@ -100,7 +100,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         random_blink(false);
     }
     // The orb sometimes degrades controlled blinks to completely uncontrolled.
-    else if (you.char_direction == GDT_ASCENDING && !wizard_blink)
+    else if (orb_haloed(you.pos()) && !wizard_blink)
     {
         if (pre_msg)
             mpr(pre_msg->c_str());
@@ -285,12 +285,12 @@ bool allow_control_teleport(bool quiet)
 {
     bool retval = !(testbits(env.level_flags, LFLAG_NO_TELE_CONTROL)
                     || testbits(get_branch_flags(), BFLAG_NO_TELE_CONTROL)
-                    || you.char_direction == GDT_ASCENDING);
+                    || orb_haloed(you.pos()));
 
     // Tell the player why if they have teleport control.
     if (!quiet && !retval && player_control_teleport())
     {
-        if (you.char_direction == GDT_ASCENDING)
+        if (orb_haloed(you.pos()))
             mpr("The orb prevents control of your teleportation!", MSGCH_ORB);
         else
             mpr("A powerful magic prevents control of your teleportation.");
@@ -328,7 +328,7 @@ void you_teleport(void)
             mpr("You have a feeling this translocation may take a while to kick in...");
             teleport_delay += 5 + random2(10);
         }
-        else if (you.char_direction == GDT_ASCENDING && coinflip())
+        else if (orb_haloed(you.pos()) && coinflip())
         {
             mpr("You feel the orb delaying this translocation!", MSGCH_ORB);
             teleport_delay += 5 + random2(5);
