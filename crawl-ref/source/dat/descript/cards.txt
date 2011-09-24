@@ -2,7 +2,7 @@
 # decks of transport -> escape
 the Portal card
 
-This card teleports you to a random location. At higher power levels this may be instantaneous, controlled or both.
+This card teleports you to a random location, allowing control of the translocation at high power.
 It is usually found in decks of escape and war, or in Nemelex Xobeh's deck of punishment.
 %%%%
 the Warp card
