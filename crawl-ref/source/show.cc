@@ -391,6 +391,9 @@ static void _update_monster(const monster* mons)
                 || mons->stealth() <= 2 && !_hashed_rand(mons, 1, 4))
             {
                 env.map_knowledge(gp).set_invisible_monster();
+                // Just display the actual position for friendlies.
+                if (mons->friendly())
+                    return;
             }
 
             // Exceptionally stealthy monsters have a higher chance of
