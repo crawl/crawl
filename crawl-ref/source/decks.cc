@@ -1437,6 +1437,7 @@ int get_power_level(int power, deck_rarity_type rarity)
     case DECK_RARITY_RANDOM:
         die("unset deck rarity");
     }
+    dprf("Power level: %d", power_level);
     return power_level;
 }
 
@@ -1444,20 +1445,10 @@ int get_power_level(int power, deck_rarity_type rarity)
 static void _portal_card(int power, deck_rarity_type rarity)
 {
     const int control_level = get_power_level(power, rarity);
-    bool instant = false;
     bool controlled = false;
-    if (control_level >= 2)
-    {
-        instant = true;
+
+    if (x_chance_in_y(control_level, 2))
         controlled = true;
-    }
-    else if (control_level == 1)
-    {
-        if (coinflip())
-            instant = true;
-        else
-            controlled = true;
-    }
 
     int threshold = 6;
     const bool was_controlled = player_control_teleport();
@@ -1468,10 +1459,10 @@ static void _portal_card(int power, deck_rarity_type rarity)
     if (controlled && (!was_controlled || short_control))
         you.set_duration(DUR_CONTROL_TELEPORT, threshold); // Long enough to kick in.
 
-    if (instant)
-        you_teleport_now(true);
-    else
-        you_teleport();
+    if (x_chance_in_y(control_level, 2))
+        random_blink(false);
+
+    you_teleport();
 }
 
 static void _warp_card(int power, deck_rarity_type rarity)
