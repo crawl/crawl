@@ -950,7 +950,7 @@ void discover_mimic(const coord_def& pos)
         mg.props["glyph"] = static_cast<int>(get_item_glyph(item).ch);
     }
 
-    const int midx = place_monster(mg, true);
+    const int midx = place_monster(mg, true, true);
     if (midx == -1)
     {
         mpr("Too many monsters on level, can't place mimic.", MSGCH_ERROR);
@@ -958,14 +958,12 @@ void discover_mimic(const coord_def& pos)
         return;
     }
     monster* mimic = &menv[midx];
-    ASSERT(mimic->pos() == pos);
 
     if (item && !mimic->pickup_misc(*item, 0))
         die("Mimic failed to pickup its item.");
 
-    // Necessary for door mimics to force LOS update.
-    if (feature_mimic && feat_is_door(feat))
-        mimic->set_position(pos);
+    if (!mimic->move_to_pos(pos))
+        die("Moving mimic into position failed.");
 
     if (item && item->base_type == OBJ_ARMOUR)
         mimic->ac += 10;
