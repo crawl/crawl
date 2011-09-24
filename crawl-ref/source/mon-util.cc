@@ -904,7 +904,14 @@ void discover_mimic(const coord_def& pos)
         dprf("Moved to (%d, %d).", mon->pos().x, mon->pos().y);
     }
     else if (mon)
-        die("Cannot move monster out of the way.");
+    {
+        // Not a single habitable place left on the level.  Possible in a Zig
+        // or if a paranoid player covers a small Trove with summons.
+        mpr("There is some commotion, and a hidden mimic gets squished!");
+        if (item)
+            destroy_item(*item, true);
+        return;
+    }
 
     if (feature_mimic)
     {
