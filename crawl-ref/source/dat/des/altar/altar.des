@@ -1,16 +1,30 @@
 ###############################################################################
-# altar.des: This contains the generic altar vaults.
-#            Vaults particular to a specific branch (Beogh altar minivaults
-#            for Orc:*, for example), should go in the corresponding des-file.
-#            A few entry vaults contain altars; these should always be in an
-#            entry_foo.des file.
-#
-#            Overflow altars, i.e. altars dedicated to a single Temple god
-#            which can be used if the god does not show up in the Temple,
-#            should go to overflow.des.
+# altar.des: This contains most of the generic altar vaults.
+#            All vaults in this file focus on the altar, in particular, all
+#            maps are rather small.
+#            Some maps containing altars should *not* go in this file.
+#            These are
+#            * Branch-specific vaults
+#              (Beogh altar minivaults for Orc:*, for example)
+#              These go into the corresponding des-file of the branch.
+#            * Entry vaults with altars
+#              Use an entry_foo.des file.
+#            * Overflow altars.
+#              (I.e. altars dedicated to a single Temple god which can be
+#              used if the god does not show up in the Temple).
+#              Use overflow.des.
+#            * Large non-overflow vaults.
+#              These are vaults where the altar is used for thematic reasons.
+#              Use a file in the variable/ directory.
 #
 #            For a particularly elaborate altar map, using lots of lua, use a
 #            single, new file.
+#
+# Content:
+# I    Temples (Multi-altar vaults, containing two or more C)
+# II   General altars (containing a single C)
+# III  Altars to minor gods
+#
 ###############################################################################
 
 default-depth: D

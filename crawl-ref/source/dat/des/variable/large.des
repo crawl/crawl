@@ -11,7 +11,7 @@ default-depth: D:12-26
 
 ###############################################################################
 # Rats! (Lemuel), slightly easier now
-# There another, harder version for the Lair.
+# There is another, harder version for the Lair.
 #
 NAME:    RatsNest_Dungeon
 ORIENT:  northeast
@@ -2311,4 +2311,341 @@ xc|$*$*$ccc6-m..cxxxxxxxxxxx
 xc$|$*$*yyy--m..cxxxxxxxxxxx
 xccccccccccccccccxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+################################################################################
+# Makhleb temple
+# 
+NAME:   evilmike_makhleb_hellhole
+ORIENT: southeast
+DEPTH:  D:19-
+TAGS:   no_monster_gen
+COLOUR: v = lightred
+COLOUR: = = lightred
+TILE:   v = DNGN_METAL_WALL_BROWN
+FTILE:  .Yv+*|m1234567d$' = FLOOR_INFERNAL_BLANK
+FTILE:  = = FLOOR_INFERNAL_BLANK
+KFEAT:  7 = altar_makhleb
+KFEAT:  m = iron_grate
+NSUBST: * = 2:| / *:*
+SUBST:  Z = Y, Y = Y:4 V:1
+SUBST:  v = v:6 b:1, . = .:7 ':1
+KPROP:  'b6 = bloody
+MARKER: = = lua:restrict_door()
+SUBST:  b = v, B = .
+MONS:   hell knight
+MONS:   kobold demonologist, deep elf demonologist
+# these demons are the same ones you get from greater/lesser servant
+MONS:   blizzard demon / green death / patrolling executioner / balrug / cacodemon
+MONS:   orange demon / ynoxinul / w:4 neqoxec / hellwing / smoke demon
+# depth controls the number of greater servants... amount ranges from 1 to 3
+: if you.absdepth() < 23 then
+NSUBST: 4 = 1:4 / 2:5
+: elseif you.absdepth() < 26 then
+NSUBST: 4 = 2:4 / 1:5
+: end
+MONS:   human name:sacrificial n_adj n_spe att:neutral
+KMONS:  7 = patrolling hell knight
+ITEM:   acquire any
+SUBST:  '" = ., b = v
+MAP
+          xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          xxxxvvvvvvvvvvvvvvvvvvvvxxvvvvvvv
+          xxxxvvvvvvvvv.1vv.2vv.1vvvv...vvv
+          xxxxvllvvvvvv..vv..vv..vvv..Y.3vv
+          xxxxvlY......vv$$vv$$vv....vvv**v
+          xxxxvv.......vv$$vv$$vv....vvv**v
+          xxxxvv.2.vvvv..vv..vv..vvv..Y.3vv
+          xxxxvv...vvvv.2vv.1vv.2vvvv...vvv
+          xxxxvv...vvvvvvvvvvvvvvvvvvllvvvv
+          xxxxvv...vvvvvvvvvvvvvvvvvllvvvvv
+   xxxxxxxxxxxvvv+vvvvvvvlvllvllvllllvvvvvv
+   xvvvvvvvvvvvv...vvvvvvllllllllllvvvvvvvv
+  ""vlvlvlvlvvv.....vvvv..............vvvvv
+"Z"Zv....1..vv...Y..1vvv..v.5v..v..v.4*|vvv
+@"""v......1v...lll...vY..Y..Y..Y.1Y.vv||vv
+@"""+.......+..YlvlY.5+.............7lvv|dv
+@"""v......1v...lll...vY..Y..Y..Y.1Y.vv||vv
+"Z"Zv....1..vv...Y..1vvv..v.5v..v..v.4*|vvv
+  ""vlvlvlvlvvv.....vvvv..............vvvvv
+   xvvvvvvvvvvvv...vvvvvvllllllllllvvvvvvvv
+   xxxxxxxxvvvvvv+vvvvvvvlvllvllvllllvvvvvv
+          xvvvvv...vvvvvvvvvvvvvvvvvllxxxxx
+          xv.......m6''vxxxxxxxxxxxxxllxxxx
+          xv.5..5..m'l6="xxxx""0""xxxxllxxx
+          xv.vvv.5.m'6'vx"xxxx"xxx"xxxxll"x
+          xv.vvvv..vv=vvx"xx""xxxx"xxxxl>"x
+          xv$vvvv..m'6'vxx""xxx"x"xxxxx"""x
+          xv**vvv4.m6l'vxx"xxxxx"xxxxx"""xx
+          xv**$....m'''vxx"0xxxxx""0""xxx"x
+          xvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+################################################################################
+# Sif Muna library
+# 
+NAME:   evilmike_library_of_many_secrets
+ORIENT: southeast
+DEPTH:  D:11-
+TAGS:   no_pool_fixup no_monster_gen
+TILE:   c = DNGN_STONE_WALL_BLUE
+COLOUR: c" = lightblue
+COLOUR: = = lightblue
+FTILE:  .+def12Ubc|* = FLOOR_CRYSTAL_SQUARES
+FTILE:  "_ = FLOOR_MARBLE
+KFEAT:  _ = altar_sif_muna
+SUBST:  Y = U, U = U:4 V:1 T:1
+: if you.absdepth() < 16 then
+MONS:   w:20 orc wizard / w:40 deep elf mage / w:30 naga mage / w:10 vampire mage
+MONS:   w:2 orc sorcerer / w:1 deep elf sorcerer
+: elseif you.absdepth() < 21 then
+MONS:   w:5 orc wizard / w:25 deep elf mage / w:15 naga mage / w:25 wizard / \ 
+        w:10 vampire mage / w:20 ogre mage
+MONS:   w:25 orc sorcerer / w:50 deep elf sorcerer / w:25 lich
+: elseif you.absdepth() < 26 then
+MONS:   w:1 orc wizard / w:5 deep elf mage / w:4 naga mage / w:30 wizard / \ 
+        w:4 vampire mage / w:55 ogre mage / w:1 lich
+MONS:   w:50 deep elf sorcerer / w:35 lich / w:15 ancient lich
+: else
+MONS:   w:5 deep elf mage / w:2 naga mage / w:30 wizard / \ 
+        w:3 vampire mage / w:55 ogre mage / w:5 lich
+MONS:   w:25 deep elf sorcerer / w:50 lich / w:25 ancient lich
+: end
+ITEM:   any book / w:20 any randbook
+ITEM:   w:20 any magical staff / any jewellery
+ITEM:   any randbook / gold
+SUBST:  '" = .
+MAP
+                xxxxxxxxxxxxxxxxxxxxxxxxx
+                xcccccccccccccccccccccccc
+                xccccccccwwwwwwcccccccccc
+                xccccU............Ucccccc
+                xcwwc..b..b..b..b..cccccc
+                xc|*+..b..b..b..b..cccccc
+                xc||c..2..1..1..1..='cccc
+                xc|*+..b..b..b..b..c'cccc
+  xxxxxxxxxxxxxxxcwwc..b..b..b..b..c'cccc
+  xcccccccccccccccc=cU............Uc'cccc
+  xccc'=''''''''''='ccccccc++ccccccc'cccc
+  xccc'cccccccccccc'ccccccw..wcccccc=cccc
+  xccc'=f...cc...f='=''''=w..w='''''''ccc
+  xccc'c.bb.cc.bb.c'ccccccc++cccc=ccc=ccc
+  xccc'c..1.cc.1..c'cwwwwwwWWwwwc'cwwwwwc
+  xccc=cccc+cc+cccc=cwbb..1..bbwc'cdd.eec
+''cccc..............cwb...U...bwc'ccc+ccc
+'Yc.1c..bbbb..bbbb1.cw..U"""U..wc'c.....c
+@'+..c..............cw.."""""..wc=c..b.2c
+@Yc..+..bbbb1.bbbb1.+W.U""_""U2W+.+.bUb1c
+@'+..c..............cw.."""""..wc=c..b.2c
+'Yc.1c..bbbb..bbbb1.cw..U"""U..wc'c.....c
+''cccc..............cwb...U...bwc'ccc+ccc
+  xccc=cccc+cc+cccc=cwbb..1..bbwc'cee.ddc
+  xccc'c..c....c..c'cwwwwwwwwwwwc'cwwwwwc
+  xccc'cU.+1bb1+.Uc'cccccc=cccccc=ccc=ccc
+  xccc'=f.c....c.f='='''''''''''''''''ccc
+  xccc'cccccc=ccccc'ccccccccccccccccccccc
+  xccc'=''''''''''='ccccccccccccccccccccc
+  xcccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+################################################################################
+# Okawaru armoury
+#
+NAME:   evilmike_iron_armoury
+ORIENT: southeast
+TAGS:   no_monster_gen no_item_gen
+DEPTH:  D:11-27, Vault:1-7
+KFEAT:  _ = altar_okawaru
+SUBST:  = = =v
+FTILE:  '+Gvc12345_defghijk = floor_hall
+: if you.absdepth() < 16 then
+MONS:   w:5 deep elf soldier / deep elf fighter / orc warrior
+MONS:   w:20 orc warrior / centaur warrior
+MONS:   orc warrior
+MONS:   w:8 patrolling orc knight / w:2 patrolling orc warlord
+: elseif you.absdepth() < 21 then
+MONS:   w:1 deep elf knight / w:4 orc warrior / w:2 centaur warrior
+MONS:   w:12 orc knight / w:6 deep elf knight / w:4 centaur warrior / w:2 yaktaur captain
+MONS:   orc knight
+KMONS:  4 = patrolling Wiglaf, patrolling orc warlord
+: elseif you.absdepth() < 26 then
+MONS:   w:1 deep elf knight / w:4 orc knight / w:2 centaur warrior / w:1 yaktaur captain
+MONS:   w:4 orc knight / w:1 deep elf knight / w:3 yaktaur captain
+MONS:   orc warlord
+KMONS:  4 = patrolling Wiglaf, patrolling deep elf blademaster
+: else
+MONS:   w:1 deep elf knight / w:4 orc knight / w:3 yaktaur captain
+MONS:   w:4 orc warlord / w:1 deep elf blademaster / w:3 deep elf master archer
+MONS:   deep elf blademaster
+KMONS:  4 = patrolling Wiglaf, patrolling draconian knight
+: end
+SUBST:  5 = 2221'
+# Lots of loot in this one. In true okawaru fashion, most of it is junk!
+ITEM:   any armour, any armour good_item / acquire armour
+ITEM:   any weapon, any weapon good_item / acquire weapon
+ITEM:   arrow, bolt, sling bullet, gold
+SHUFFLE: df, hi, jk, eg
+NSUBST: d = 1:e / *:d
+NSUBST: f = 1:g / *:f
+SUBST:  ' = .
+MAP
+.................................x
+.....v...........................x
+.......vvvvvvvvvvvvvv......wwww..x
+.....vvvvdd'ddvff'ffvvv.....www..x
+.....viivdd'ddvff'ffvvvvv....ww..x
+.....viivvv+vvvvv+vvvkkvvvv...w..x
+.....v''+''5'''1'5''vkkveevv.....x
+.....viiv'cc'''''cc'+''vv+vvv....x
+..v.vviiv'ccc'''ccc'vkkv'5''vv...x
+....vvvvv''cc'''cc'2vvvv'''''vv..x
+..v.v'1vG'''''''5'''Gv''''''3'vv.x
+....+''+''''''''2'''1+'''''4_''=.x
+..v.v'1vG'''''''5'''Gv''''''3'vv.x
+....vvvvv''cc'''cc'2vvvv'''''vv..x
+..v.vvhhv'ccc'''ccc'vjjv'5''vv...x
+.....vhhv'cc'''''cc'+''vv+vvv....x
+.....v''+''5'''1'5''vjjvggvv.....x
+.....vhhvvv+vvvvv+vvvjjvvvv...w..x
+.....vhhvff'ffvdd'ddvvvvv....ww..x
+.....vvvvff'ffvdd'ddvvv.....www..x
+.......vvvvvvvvvvvvvv......wwww..x
+.....v...........................x
+.................................x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+################################################################################
+# Vehumet Hall
+#
+NAME:   evilmike_halls_of_destruction
+ORIENT: northeast
+DEPTH:  D:18-
+TAGS:   no_monster_gen
+COLOUR: v'4! = red
+COLOUR: = = red
+TILE:   v = DNGN_STONE_WALL_RED
+FTILE:  v'4! = FLOOR_PEBBLE_RED
+FTILE:  = = FLOOR_PEBBLE_RED
+FTILE:  G1BC = FLOOR_VAULT
+MARKER: ! = lua:fog_machine { \
+                pow_max = 10, delay_min = 10, delay_max = 20, \
+                size = 8, size_buildup_amnt = 5, \
+                size_buildup_time = 10, cloud_type = "flame" \
+            }
+# let's not have enemies opening the door and roasting themselves...
+MARKER: = = lua:restrict_door()
+KFEAT:  _ = altar_vehumet
+: if you.absdepth() < 23 then
+# Given a special name so they stand out in tiles mode
+MONS:   statue hd:9 spells:orb_of_destruction tile:mons_statue_mage col:vehumet \
+        name:conjurer n_adj
+MONS:   w:6 deep elf conjurer / w:2 wizard / w:1 spriggan air mage / w:1 deep elf annihilator
+MONS:   w:3 deep elf annihilator / w:1 deep elf conjurer
+KMONS:  5 = nikola, deep elf annihilator
+: else
+MONS:   statue hd:13 spells:orb_of_destruction tile:mons_statue_mage col:vehumet \
+        name:conjurer n_adj
+MONS:   w:4 deep elf conjurer / w:2 wizard / w:2 spriggan air mage / w:2 deep elf annihilator
+MONS:   w:2 deep elf annihilator / w:1 draconian annihilator
+KMONS:  5 = frederick, boris, draconian annihilator
+: end
+MONS:   fire vortex
+NSUBST: G = 1:1 / 1:1G / *:G
+NSUBST: A = 4:2 / 2:2*. / 1:|
+NSUBST: B = 1:1 / *:G
+NSUBST: C = 1:1 / *:G
+SUBST:  v = c, '! = . 
+MAP
+xccccccccccccccccccccccccccccc
+xcG....+....Ac...A..GccGccGccc
+xccc+ccc.....+......ccc3cc3ccc
+xc.....ccc+cccccccc+cc*||||*cc
+xc...A.+..A..+.Ac...cG**CC**Gc
+xc+ccccccccccc..cA..cc*....*cc
+xc.cGcGcGc1ccc+ccc+ccG......Gc
+xc..........cc..A+..cc......cc
+xc2.........Gcccccc.cccc++cccc
+ccccGcGcc...cccvvvc.+........c
+ccGcccccG...Gccv4vccc...ccc..c
+...2ccccc...vvvv'vvvv....ccc.c
+@.......+...=''4!4''=...5_cc2c
+...2ccccc...vvvv'vvvv....ccc.c
+ccGcccccG...Gccv4vccc...ccc..c
+ccccGcGcc...cccvvvc.+........c
+xcG2........Gcccccc2cc++cc++cc
+xcc.........cccc1cc.c...cc...c
+xcG..cGcGc1cccG.....c...cc...c
+xcc..cccccccccc...ccc%%%cc$$$c
+xcG.........ccG...Gcc*B*cc$B$c
+xcc.......12ccc...ccc***cc$$$c
+xcG...........+...Gccc3cccc3cc
+xccccccccccccccccccccccccccccc
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+################################################################################
+# Kikubaaqudgha Temple
+#
+NAME:   evilmike_negative_zone
+ORIENT: southeast
+DEPTH:  D:15-
+TAGS:   no_monster_gen
+#
+# gives a 50% chance of there being at least one shortcut in this vault
+SUBST:  = = c:8 =:1
+TILE:   c = WALL_BRICK_GRAY
+# maybe use something darker?
+#
+# 66% chance that there are no one width corridors in the inner part.
+SUBST:  B : b..
+TILE:   b = WALL_STONE_GRAY
+COLOUR: b = white
+SUBST:  b = c
+#
+KFEAT:  _ = altar_kikubaaqudgha
+: if you.absdepth() < 19 then
+MONS:   small zombie / large zombie / small skeleton / large skeleton / \
+        w:5 small simulacrum / w:5 large simulacrum
+MONS:   w:2 necromancer / w:1 deep dwarf necromancer, deep elf death mage, \
+        w:5 deep elf death mage / nothing
+MONS:   w:4 soul eater / w:1 reaper, reaper, reaper / nothing
+: elseif you.absdepth() < 24 then
+MONS:   w:5 small zombie / large zombie / w:5 small skeleton / large skeleton / \
+        w:2 small simulacrum / w:3 large simulacrum
+MONS:   necromancer / w:5 deep dwarf necromancer / w:5 deep elf death mage, lich, \
+        lich / deep elf death mage / nothing
+MONS:   soul eater / w:5 reaper, reaper, shadow fiend / w:5 reaper
+: else 
+MONS:   large zombie / large skeleton / w:5 large simulacrum
+MONS:   necromancer / deep elf death mage, \
+        w:15 lich / w:5 ancient lich / deep elf death mage, lich / ancient lich
+MONS:   reaper / soul eater, reaper, shadow fiend
+: end
+MARKER: V = lua:fog_machine { cloud_type = "foul pestilence", \
+            pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
+            size = 1, walk_dist = 1, spread_rate= 33 }
+MARKER: V = lua:props_marker { feature_description = "foul fountain" }
+SUBST:  % = %*|$
+SUBST:  A = 11.
+MAP
+xxxx......@@@......xxxxxxxxxxxxxxxxxxxxxxxxx
+xccc......1.1......ccccccccccccccccccccccccc
+xccc..b..1c+c1..b..c%%c...5...cccccccccccccc
+xccc.....cc.cc.....=%%+...V...+..cc.cccccccc
+xccc..b.2c...c2.b..c%%c.......cc....ccc1>1cc
+xccc.....c...c.....cccc.......cc.bb.ccc.c.cc
+xccc=ccccc...ccccccccccccc+ccccc.BB.ccc.c.cc
+xcb$$bc.........cb$$bc....5....c....ccc.c.cc
+xc1..1c.Bb...bB.c1..1c.b.ccc.b.c5BB5cc....cc
+xcb..bc.bb...bb.cb..bc.b.ccc.b.c.bb.cc.c.ccc
+xc1...+.........+...1=..2...2..=.6..cc.c.ccc
+xcb..bc.bb...bb.cb..bccccc.ccccc.cc..+.c.ccc
+xc1..1c.Bb...bB.c1..1=AAAc.cAAAccccccccc+ccc
+xcb$$bc...3_4...cb$$bcA$Ac.cA$Accccccc.....c
+xccc=ccccc...cccccccccA2Ac+cA2Accccccc%6.6%c
+xcc%%2ccccc+ccccccccccc+cc.cc+ccAAAccc%%7%%c
+xcc%%.+..........A.1.A.........+2$Accc%%%%%c
+xcc2..c...........A.12A........cAAAccc%%%%%c
+xccccccccccccccccccccccccccccccccccccccccccc
 ENDMAP
