@@ -1184,7 +1184,7 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
         if (!player_angers_monster(&menv[mons]) && !friendly)
         {
             mpr(charmed ? "You don't feel so good about this..."
-                        : "It doesn't look very happy.");
+                        : "It doesn't seem very happy.");
         }
         else if (friendly && mons_genus(mon) == MONS_IMP)
         {
