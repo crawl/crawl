@@ -950,9 +950,9 @@ void discover_mimic(const coord_def& pos)
         mg.props["glyph"] = static_cast<int>(get_item_glyph(item).ch);
     }
 
-    const int mid = place_monster(mg, true);
-    ASSERT(mid != -1);
-    monster* mimic = &menv[mid];
+    const int midx = place_monster(mg, true);
+    ASSERT(midx != -1);
+    monster* mimic = &menv[midx];
     ASSERT(mimic->pos() == pos);
 
     if (item && !mimic->pickup_misc(*item, 0))
@@ -969,7 +969,7 @@ void discover_mimic(const coord_def& pos)
 
     // Friendly monsters don't appreciate being pushed away.
     if (mon && mon->friendly())
-        behaviour_event(mon, ME_WHACK, mid);
+        behaviour_event(mon, ME_WHACK, midx);
 
     // Announce the mimic.
     if (feature_mimic && feat == DNGN_OPEN_DOOR)
