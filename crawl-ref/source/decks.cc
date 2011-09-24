@@ -2745,11 +2745,8 @@ static void _summon_flying(int power, deck_rarity_type rarity)
     };
 
     // Choose what kind of monster.
-    // Be nice and don't summon invisibles with no SInv.
-    monster_type result = MONS_PROGRAM_BUG;
-    do
-        result = flytypes[random2(5) + power_level];
-    while (mons_class_flag(result, M_INVIS) && !you.can_see_invisible());
+    monster_type result = flytypes[random2(5) + power_level];
+    bool hostile_invis = false;
 
     for (int i = 0; i < power_level * 5 + 2; ++i)
     {
@@ -2760,7 +2757,13 @@ static void _summon_flying(int power, deck_rarity_type rarity)
                       friendly ? BEH_FRIENDLY : BEH_HOSTILE, &you,
                       std::min(power/50 + 1, 5), 0,
                       you.pos(), MHITYOU));
+
+        if (mons_class_flag(result, M_INVIS) && !you.can_see_invisible() && !friendly)
+            hostile_invis = true;
     }
+
+    if (hostile_invis)
+        mpr("Whatever you just summoned cannot be friendly.");
 }
 
 static void _summon_skeleton(int power, deck_rarity_type rarity)
