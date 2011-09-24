@@ -853,6 +853,9 @@ ENDMAP
 
 NAME:   orb_original
 TAGS:   orb_chamber
+MARKER: Z = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="auto" \
+        }
 KITEM:  Z = Orb of Zot
 KMASK:  Z1! = no_item_gen
 SUBST:  ! = ^ .:40
@@ -886,6 +889,9 @@ ENDMAP
 NAME:   orb_monky_inset
 TAGS:   orb_chamber
 WEIGHT: 5
+MARKER: Z = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="auto" \
+        }
 KITEM:  Z = Orb of Zot
 KMASK:  Z1! = no_item_gen
 SUBST:  ! = ^ .:40
@@ -920,6 +926,9 @@ NAME:   orb_two_ways
 TAGS:   orb_chamber
 WEIGHT: 5
 NSUBST: Y = 1:Z / *:.
+MARKER: Z = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="auto" \
+        }
 KITEM:  Z = Orb of Zot
 KMASK:  YZ1! = no_item_gen
 SUBST:  ! = ^ .:40
@@ -953,6 +962,9 @@ ENDMAP
 NAME:   orb_monky_within_orb
 TAGS:   orb_chamber
 WEIGHT: 5
+MARKER: Z = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="auto" \
+        }
 KITEM:  Z = Orb of Zot
 KMASK:  Z1! = no_item_gen
 SUBST:  ! = ^ .:40
@@ -986,6 +998,9 @@ ENDMAP
 NAME:   orb_monky_twist
 TAGS:   orb_chamber
 WEIGHT: 5
+MARKER: Z = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="auto" \
+        }
 KITEM:  Z = Orb of Zot
 KMASK:  Z1! = no_item_gen
 SUBST:  ! = ^ .:40
@@ -1018,6 +1033,9 @@ ENDMAP
 
 NAME:   mrperson_orb_statues
 TAGS:   orb_chamber
+MARKER: Z = lua:item_pickup_change_flags { \
+            level_flags="!no_tele_control", item="auto" \
+        }
 KITEM:  Z = Orb of Zot
 KMASK:  Z1! = no_item_gen
 SUBST:  ! = ^ .:40

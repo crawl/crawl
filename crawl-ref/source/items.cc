@@ -1769,6 +1769,28 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         return (-1);
     }
 
+    if (mitm[obj].base_type == OBJ_ORBS
+        && you.char_direction == GDT_DESCENDING)
+    {
+        // Take a note!
+        _check_note_item(mitm[obj]);
+
+        env.orb_pos = you.pos(); // can be wrong in wizmode
+        orb_pickup_noise(you.pos(), 30);
+
+        mpr("The lords of Pandemonium are not amused; beware!", MSGCH_WARN);
+        if (you.religion == GOD_CHEIBRIADOS)
+        {
+            mprf(MSGCH_GOD, "%s tells them not to hurry.",
+                            god_name(you.religion).c_str());
+        }
+        mpr("Now all you have to do is get back out of the dungeon!", MSGCH_ORB);
+
+        you.char_direction = GDT_ASCENDING;
+        xom_is_stimulated(200, XM_INTRIGUED);
+        invalidate_agrid(true);
+    }
+
     coord_def p = mitm[obj].pos;
     // If moving an item directly from a monster to the player without the
     // item having been on the grid, then it really isn't a position event.
@@ -1820,28 +1842,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         taken_new_item(item.base_type);
         if (is_artefact(item) || get_equip_desc(item) != ISFLAG_NO_DESC)
             learned_something_new(HINT_SEEN_RANDART);
-    }
-
-    if (item.base_type == OBJ_ORBS
-        && you.char_direction == GDT_DESCENDING)
-    {
-        // Take a note!
-        _check_note_item(item);
-
-        env.orb_pos = you.pos(); // can be wrong in wizmode
-        orb_pickup_noise(you.pos(), 30);
-
-        mpr("The lords of Pandemonium are not amused; beware!", MSGCH_WARN);
-        if (you.religion == GOD_CHEIBRIADOS)
-        {
-            mprf(MSGCH_GOD, "%s tells them not to hurry.",
-                            god_name(you.religion).c_str());
-        }
-        mpr("Now all you have to do is get back out of the dungeon!", MSGCH_ORB);
-
-        you.char_direction = GDT_ASCENDING;
-        xom_is_stimulated(200, XM_INTRIGUED);
-        invalidate_agrid(true);
     }
 
     if (item.base_type == OBJ_ORBS && you.level_type == LEVEL_DUNGEON)
