@@ -5564,8 +5564,7 @@ bool item_blocks_teleport(bool calc_unid, bool permit_id)
 {
     return (scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid)
             || stasis_blocks_effect(calc_unid, permit_id, NULL)
-            || crawl_state.game_is_zotdef()
-               && you.char_direction == GDT_ASCENDING);
+            || crawl_state.game_is_zotdef() && orb_haloed(you.pos()));
 }
 
 bool stasis_blocks_effect(bool calc_unid,
