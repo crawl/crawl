@@ -378,15 +378,17 @@ static void _update_monster(const monster* mons)
         }
 
         // maybe show unstealthy invis monsters
-        if (_hashed_rand(mons, 0, 7) >= mons->stealth() + 4)
+        if (mons->friendly()
+            || _hashed_rand(mons, 0, 7) >= mons->stealth() + 4)
         {
             // We cannot use regular randomness here, otherwise redrawing the
             // screen would give out the real position.  We need to save the
             // seed too -- but it needs to be regenerated every turn.
 
             // Maybe mark their square.
-            if (mons->stealth() <= -2 || mons->stealth() <= 2
-                && !_hashed_rand(mons, 1, 4))
+            if (mons->friendly()
+                || mons->stealth() <= -2 
+                || mons->stealth() <= 2 && !_hashed_rand(mons, 1, 4))
             {
                 env.map_knowledge(gp).set_invisible_monster();
             }
