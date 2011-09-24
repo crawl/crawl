@@ -409,12 +409,12 @@ note_monsters = orb of fire, ancient lich, Sigmund
 # See options_guide.txt for the options
 # cset, feature, mon_glyph
 
-##### 6-b       DOS and Windows #######################
+##### 6-b   Windows console #######################
 #
 # dos_use_background_intensity = true
 # background = black
 
-##### 6-c   Unix ##################################
+##### 6-c   Unix console ##########################
 #
 # use_fake_cursor = false
 
