@@ -147,12 +147,9 @@ bool curse_an_item(bool quiet)
             if (you.inv[i].cursed())
                 continue;
 
-            if (you.inv[i].base_type != OBJ_POTIONS
-                && item_is_melded(you.inv[i]))
-            {
-                // Melded items cannot be cursed.
+            // Melded items cannot be cursed.
+            if (item_is_melded(you.inv[i]))
                 continue;
-            }
 
             // Item is valid for cursing, so we'll give it a chance.
             count++;
