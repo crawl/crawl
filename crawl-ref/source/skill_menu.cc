@@ -644,8 +644,9 @@ SkillMenu::SkillMenu(int flag, int exp) : PrecisionMenu(), m_flags(flag),
     m_pos = m_min_coord;
     m_ff = new MenuFreeform();
 
+    m_max_coord.x = MIN_COLS + 1;
+
 #ifdef USE_TILE_LOCAL
-    m_max_coord.x = MIN_COLS;
     m_max_coord.y = get_number_of_lines();
     if (is_set(SKMF_SKILL_ICONS))
     {
@@ -653,7 +654,6 @@ SkillMenu::SkillMenu(int flag, int exp) : PrecisionMenu(), m_flags(flag),
         m_max_coord.x += 2 * TILES_COL;
     }
 #else
-    m_max_coord.x = MIN_COLS + 1;
     m_max_coord.y = get_number_of_lines() + 1;
 #endif
 
