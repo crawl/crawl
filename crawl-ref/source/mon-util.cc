@@ -954,7 +954,8 @@ void discover_mimic(const coord_def& pos)
     if (midx == -1)
     {
         mpr("Too many monsters on level, can't place mimic.", MSGCH_ERROR);
-        destroy_item(*item, true);
+        if (item)
+            destroy_item(*item, true);
         return;
     }
     monster* mimic = &menv[midx];
