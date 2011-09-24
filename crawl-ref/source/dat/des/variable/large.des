@@ -2315,7 +2315,7 @@ ENDMAP
 
 ################################################################################
 # Makhleb temple
-# 
+#
 NAME:   evilmike_makhleb_hellhole
 ORIENT: southeast
 DEPTH:  D:19-
@@ -2383,7 +2383,7 @@ ENDMAP
 
 ################################################################################
 # Sif Muna library
-# 
+#
 NAME:   evilmike_library_of_many_secrets
 ORIENT: southeast
 DEPTH:  D:11-
@@ -2399,15 +2399,15 @@ SUBST:  Y = U, U = U:4 V:1 T:1
 MONS:   w:20 orc wizard / w:40 deep elf mage / w:30 naga mage / w:10 vampire mage
 MONS:   w:2 orc sorcerer / w:1 deep elf sorcerer
 : elseif you.absdepth() < 21 then
-MONS:   w:5 orc wizard / w:25 deep elf mage / w:15 naga mage / w:25 wizard / \ 
+MONS:   w:5 orc wizard / w:25 deep elf mage / w:15 naga mage / w:25 wizard / \
         w:10 vampire mage / w:20 ogre mage
 MONS:   w:25 orc sorcerer / w:50 deep elf sorcerer / w:25 lich
 : elseif you.absdepth() < 26 then
-MONS:   w:1 orc wizard / w:5 deep elf mage / w:4 naga mage / w:30 wizard / \ 
+MONS:   w:1 orc wizard / w:5 deep elf mage / w:4 naga mage / w:30 wizard / \
         w:4 vampire mage / w:55 ogre mage / w:1 lich
 MONS:   w:50 deep elf sorcerer / w:35 lich / w:15 ancient lich
 : else
-MONS:   w:5 deep elf mage / w:2 naga mage / w:30 wizard / \ 
+MONS:   w:5 deep elf mage / w:2 naga mage / w:30 wizard / \
         w:3 vampire mage / w:55 ogre mage / w:5 lich
 MONS:   w:25 deep elf sorcerer / w:50 lich / w:25 ancient lich
 : end
@@ -2555,7 +2555,7 @@ NSUBST: G = 1:1 / 1:1G / *:G
 NSUBST: A = 4:2 / 2:2*. / 1:|
 NSUBST: B = 1:1 / *:G
 NSUBST: C = 1:1 / *:G
-SUBST:  v = c, '! = . 
+SUBST:  v = c, '! = .
 MAP
 xccccccccccccccccccccccccccccc
 xcG....+....Ac...A..GccGccGccc
@@ -2616,7 +2616,7 @@ MONS:   w:5 small zombie / large zombie / w:5 small skeleton / large skeleton / 
 MONS:   necromancer / w:5 deep dwarf necromancer / w:5 deep elf death mage, lich, \
         lich / deep elf death mage / nothing
 MONS:   soul eater / w:5 reaper, reaper, shadow fiend / w:5 reaper
-: else 
+: else
 MONS:   large zombie / large skeleton / w:5 large simulacrum
 MONS:   necromancer / deep elf death mage, \
         w:15 lich / w:5 ancient lich / deep elf death mage, lich / ancient lich

@@ -1327,10 +1327,10 @@ SUBST:   W : wW
 SUBST:   T : W.
 MONS:    plant, fungus, bush
 MAP
-  xxx xxx 
+  xxx xxx
  xxWx@xWxx
 xxW1WTW2Wxx
-xW1G1T2G2Wx 
+xW1G1T2G2Wx
 xxW1.{.2Wxx
 xxW3...tWxx
 xW3G3.tGtWx
@@ -1346,14 +1346,13 @@ SHUFFLE: 123t
 SUBST:   W : wW
 MONS:    plant, fungus, bush
 MAP
-  W       W  
- W1W     W2W  
-W1T1WWWWW2T2W  
- W1...(...2W  
-  W...{...W  
- W3...[...tW  
-W3T3WWWWWtTtW 
- W3W     WtW  
-  W       W  
+  W       W
+ W1W     W2W
+W1T1WWWWW2T2W
+ W1...(...2W
+  W...{...W
+ W3...[...tW
+W3T3WWWWWtTtW
+ W3W     WtW
+  W       W
 ENDMAP
-
