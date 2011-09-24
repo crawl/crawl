@@ -711,7 +711,7 @@ static bool _compare_invmenu_items(const InvEntry *a, const InvEntry *b,
         if (cmp)
             return (cmp < 0);
     }
-    return (false);
+    return (a->item->link < b->item->link);
 }
 
 struct menu_entry_comparator
