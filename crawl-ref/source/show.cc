@@ -387,7 +387,7 @@ static void _update_monster(const monster* mons)
 
             // Maybe mark their square.
             if (mons->friendly()
-                || mons->stealth() <= -2 
+                || mons->stealth() <= -2
                 || mons->stealth() <= 2 && !_hashed_rand(mons, 1, 4))
             {
                 env.map_knowledge(gp).set_invisible_monster();
