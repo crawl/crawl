@@ -1509,11 +1509,11 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                         spell_cast = SPELL_NO_SPELL;
                     }
 
-                    // Pacified monsters leaving the level won't choose
-                    // emergency spells harmful to the area.
+                    // Pacified monsters leaving the level will only
+                    // try and cast escape spells.
                     if (spell_cast != SPELL_NO_SPELL
                         && mons->pacified()
-                        && spell_harms_area(spell_cast))
+                        && !testbits(get_spell_flags(spell_cast), SPFLAG_ESCAPE))
                     {
                         spell_cast = SPELL_NO_SPELL;
                     }
