@@ -7,10 +7,10 @@
 # crumbling statue.)
 
 # TODO:
-# 1. Currently, you have to use * direction for melee attacks. This is not 
+# 1. Currently, you have to use * direction for melee attacks. This is not
 #    good, an ordinary melee attack (bumping) should suffice. We don't want
 #    pressure plates around the statue, the player should touch the thing.
-# 2. The message ("You notice a very old statue...") should interrupt 
+# 2. The message ("You notice a very old statue...") should interrupt
 #    travel/explore.
 
 {{
@@ -55,7 +55,7 @@ collapsemarker:add_triggerer(DgnTriggerer:new {
 lua_marker("#", collapsemarker)
 
 }}
-KFEAT: # = granite_statue 
+KFEAT: # = granite_statue
 : lua_marker("#", portal_desc {
 :        desc="A very old granite statue.",
 :        desc_long="There is a crevice running across its chest. Maybe it will break if you hit it?"})
