@@ -240,4 +240,5 @@ protected:
 
 void get_monster_info(std::vector<monster_info>& mons);
 
+typedef std::vector<std::string> (*desc_filter) (const monster_info& mi);
 #endif
