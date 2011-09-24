@@ -105,7 +105,7 @@ const deck_archetype deck_of_transport[] = {
 };
 
 const deck_archetype deck_of_emergency[] = {
-    { CARD_TOMB,       {5, 5, 5} },
+    { CARD_TOMB,       {4, 4, 4} },
     { CARD_BANSHEE,    {5, 5, 5} },
     { CARD_DAMNATION,  {0, 1, 2} },
     { CARD_SOLITUDE,   {5, 5, 5} },
