@@ -348,6 +348,7 @@ monster_info::monster_info(const monster* m, int milev)
         }
         if (type_known && mons_is_item_mimic(type))
         {
+            ASSERT(m->inv[MSLOT_MISCELLANY] != NON_ITEM);
             inv[MSLOT_MISCELLANY].reset(
                 new item_def(get_item_info(mitm[m->inv[MSLOT_MISCELLANY]])));
         }
