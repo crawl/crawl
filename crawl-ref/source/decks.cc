@@ -1926,35 +1926,38 @@ static void _blade_card(int power, deck_rarity_type rarity)
     wield_weapon(false);
 
     const int power_level = get_power_level(power, rarity);
+    brand_type brand;
+
     if (power_level >= 2)
     {
         cast_tukimas_dance(random2(power/4));
+        return;
     }
     else if (power_level == 1)
     {
-        cast_sure_blade(random2(power/4));
+        brand_type brands[] = {SPWPN_DISTORTION, SPWPN_PAIN,
+            SPWPN_ANTIMAGIC, SPWPN_CHAOS, SPWPN_ELECTROCUTION};
+        brand = RANDOM_ELEMENT(brands);
     }
     else
     {
-        const brand_type brands[] = {
-            SPWPN_FLAMING, SPWPN_FREEZING, SPWPN_VENOM, SPWPN_DRAINING,
-            SPWPN_VORPAL, SPWPN_DISTORTION, SPWPN_PAIN, SPWPN_ANTIMAGIC,
-            SPWPN_CHAOS,
-        };
+        brand_type brands[] = {SPWPN_FLAMING, SPWPN_FREEZING, SPWPN_VENOM,
+            SPWPN_DRAINING, SPWPN_VORPAL};
+        brand = RANDOM_ELEMENT(brands);
+    }
 
-        if (!brand_weapon(RANDOM_ELEMENT(brands), random2(power/4)))
+    if (!brand_weapon(brand, random2(power/4)))
+    {
+        item_def* wpn = you.weapon();
+
+        if (wpn)
         {
-            item_def* wpn = you.weapon();
-
-            if (wpn)
-            {
-                mprf("%s vibrate%s crazily for a second.",
-                     wpn->name(DESC_CAP_YOUR).c_str(),
-                     wpn->quantity == 1 ? "s" : "");
-            }
-            else
-                mprf("Your %s twitch.", you.hand_name(true).c_str());
+            mprf("%s vibrate%s crazily for a second.",
+                 wpn->name(DESC_CAP_YOUR).c_str(),
+                 wpn->quantity == 1 ? "s" : "");
         }
+        else
+            mprf("Your %s twitch.", you.hand_name(true).c_str());
     }
 }
 
