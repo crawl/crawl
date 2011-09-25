@@ -2206,7 +2206,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_ZIN_IMPRISON:
     {
         beam.range = LOS_RADIUS;
-        if (!spell_direction(spd, beam))
+        if (!spell_direction(spd, beam, DIR_TARGET, TARG_HOSTILE, 0, false))
             return (false);
 
         if (beam.target == you.pos())
