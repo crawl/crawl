@@ -716,9 +716,12 @@ int exp_rate(int killer)
 
 // Elyvilon will occasionally (5% chance) protect the life of one of
 // your allies.
-static bool _ely_protect_ally(monster* mons)
+static bool _ely_protect_ally(monster* mons, killer_type killer)
 {
     if (you.religion != GOD_ELYVILON)
+        return (false);
+
+    if (!MON_KILL(killer) && !YOU_KILL(killer))
         return (false);
 
     if (!mons->is_holy()
@@ -858,7 +861,7 @@ static bool _monster_avoided_death(monster* mons, killer_type killer, int i)
     }
 
     // Elyvilon specials.
-    if (_ely_protect_ally(mons))
+    if (_ely_protect_ally(mons, killer))
         return (true);
     if (_ely_heal_monster(mons, killer, i))
         return (true);
