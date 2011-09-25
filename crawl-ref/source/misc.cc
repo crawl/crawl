@@ -2506,3 +2506,48 @@ unsigned int breakpoint_rank(int val, const int breakpoints[],
 
     return result;
 }
+
+void counted_monster_list::add(const monster* mons)
+{
+    const std::string name = mons->name(DESC_PLAIN);
+    for (counted_list::iterator i = list.begin(); i != list.end(); ++i)
+    {
+        if (i->first->name(DESC_PLAIN) == name)
+        {
+            i->second++;
+            return;
+        }
+    }
+    list.push_back(counted_monster(mons, 1));
+}
+
+int counted_monster_list::count()
+{
+    int nmons = 0;
+    for (counted_list::const_iterator i = list.begin(); i != list.end(); ++i)
+        nmons += i->second;
+    return (nmons);
+}
+
+std::string counted_monster_list::describe(bool cap)
+{
+    std::string out;
+
+    description_level_type desc = cap ? DESC_CAP_THE : DESC_NOCAP_THE;
+    for (counted_list::const_iterator i = list.begin();
+         i != list.end(); desc = DESC_NOCAP_THE)
+    {
+        const counted_monster &cm(*i);
+        if (i != list.begin())
+        {
+            ++i;
+            out += (i == list.end() ? " and " : ", ");
+        }
+        else
+            ++i;
+
+        out += cm.second > 1 ? pluralise(cm.first->name(desc))
+                             : cm.first->name(desc);
+    }
+    return out;
+}

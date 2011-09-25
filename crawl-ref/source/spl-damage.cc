@@ -325,59 +325,6 @@ spret_type cast_chain_lightning(int pow, const actor *caster, bool fail)
     return SPRET_SUCCESS;
 }
 
-typedef std::pair<const monster* ,int> counted_monster;
-typedef std::vector<counted_monster> counted_monster_list;
-static void _record_monster_by_name(counted_monster_list &list,
-                                    const monster* mons)
-{
-    const std::string name = mons->name(DESC_PLAIN);
-    for (counted_monster_list::iterator i = list.begin(); i != list.end(); ++i)
-    {
-        if (i->first->name(DESC_PLAIN) == name)
-        {
-            i->second++;
-            return;
-        }
-    }
-    list.push_back(counted_monster(mons, 1));
-}
-
-static int _monster_count(const counted_monster_list &list)
-{
-    int nmons = 0;
-    for (counted_monster_list::const_iterator i = list.begin();
-         i != list.end(); ++i)
-    {
-        nmons += i->second;
-    }
-    return (nmons);
-}
-
-static std::string _describe_monsters(const counted_monster_list &list)
-{
-    std::ostringstream out;
-
-    description_level_type desc = DESC_CAP_THE;
-    for (counted_monster_list::const_iterator i = list.begin();
-         i != list.end(); desc = DESC_NOCAP_THE)
-    {
-        const counted_monster &cm(*i);
-        if (i != list.begin())
-        {
-            ++i;
-            out << (i == list.end() ? " and " : ", ");
-        }
-        else
-            ++i;
-
-        const std::string name =
-            cm.second > 1 ? pluralise(cm.first->name(desc))
-                          : cm.first->name(desc);
-        out << name;
-    }
-    return (out.str());
-}
-
 // Poisonous light passes right through invisible players
 // and monsters, and so, they are unaffected by this spell --
 // assumes only you can cast this spell (or would want to).
@@ -422,7 +369,7 @@ spret_type cast_toxic_radiance(bool non_player, bool fail)
                     affected = true;
 
                 if (affected)
-                    _record_monster_by_name(affected_monsters, *mi);
+                    affected_monsters.add(*mi);
             }
             else if (you.can_see_invisible())
             {
@@ -437,8 +384,8 @@ spret_type cast_toxic_radiance(bool non_player, bool fail)
     {
         const std::string message =
             make_stringf("%s %s poisoned.",
-                         _describe_monsters(affected_monsters).c_str(),
-                         _monster_count(affected_monsters) == 1? "is" : "are");
+                         affected_monsters.describe().c_str(),
+                         affected_monsters.count() == 1? "is" : "are");
         if (strwidth(message) < get_number_of_cols() - 2)
             mpr(message.c_str());
         else
@@ -491,14 +438,14 @@ spret_type cast_refrigeration(int pow, bool non_player, bool freeze_potions,
 
     for (monster_iterator mi(&you); mi; ++mi)
         if (cell_see_cell(you.pos(), mi->pos(), LOS_SOLID)) // not just you.can_see (Scry)
-            _record_monster_by_name(affected_monsters, *mi);
+            affected_monsters.add(*mi);
 
     if (!affected_monsters.empty())
     {
         const std::string message =
             make_stringf("%s %s frozen.",
-                         _describe_monsters(affected_monsters).c_str(),
-                         _monster_count(affected_monsters) == 1? "is" : "are");
+                         affected_monsters.describe().c_str(),
+                         affected_monsters.count() == 1? "is" : "are");
         if (strwidth(message) < get_number_of_cols() - 2)
             mpr(message.c_str());
         else
@@ -554,7 +501,7 @@ void sonic_damage(bool scream)
         if (cell_see_cell(you.pos(), mi->pos(), LOS_SOLID)
             && !silenced(mi->pos()))
         {
-            _record_monster_by_name(affected_monsters, *mi);
+            affected_monsters.add(*mi);
         }
 
     /* dpeg sez:
@@ -567,8 +514,8 @@ void sonic_damage(bool scream)
     {
         const std::string message =
             make_stringf("%s %s hurt by the noise.",
-                         _describe_monsters(affected_monsters).c_str(),
-                         _monster_count(affected_monsters) == 1? "is" : "are");
+                         affected_monsters.describe().c_str(),
+                         affected_monsters.count() == 1? "is" : "are");
         if (strwidth(message) < get_number_of_cols() - 2)
             mpr(message.c_str());
         else
@@ -1069,14 +1016,14 @@ void shillelagh(actor *wielder, coord_def where, int pow)
         monster *mon = monster_at(*ai);
         if (!mon || !mon->alive() || mon->submerged() || mon->is_insubstantial())
             continue;
-        _record_monster_by_name(affected_monsters, mon);
+        affected_monsters.add(mon);
     }
     if (!affected_monsters.empty())
     {
         const std::string message =
             make_stringf("%s shudder%s.",
-                         _describe_monsters(affected_monsters).c_str(),
-                         _monster_count(affected_monsters) == 1? "s" : "");
+                         affected_monsters.describe().c_str(),
+                         affected_monsters.count() == 1? "s" : "");
         if (strwidth(message) < get_number_of_cols() - 2)
             mpr(message.c_str());
         else
