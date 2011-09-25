@@ -710,27 +710,6 @@ v.v.v...v.v.v
  ....vvv....
 ENDMAP
 
-NAME:   minmay_temple_entry_levitate
-TAGS:   temple_entry
-WEIGHT: 1
-ORIENT: float
-SUBST:  < : <>
-KMASK:  l = no_monster_gen
-KPROP:  . = no_rtele_into
-SUBST:  ' = .
-KFEAT:  O = enter_temple
-MAP
-clclclclc
-l.......l
-c.clclc.c
-l.l'''l.l
-c.c<O<c.c
-l.l'''l.l
-c.clclc.c
-l.......l
-clclclclc
-ENDMAP
-
 NAME:   minmay_temple_entry_oklob
 TAGS:   temple_entry
 WEIGHT: 1
