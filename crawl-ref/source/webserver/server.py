@@ -172,6 +172,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         return not self.is_running() and self.watched_game is None
 
     def update_lobby(self):
+        if self.client_terminated:
+            logging.warn("#%s: update_lobby called for closed " +
+                         "socket! (Crawl is %srunning)" %
+                         (self.id,
+                          ("not " if self.is_running() else "")))
+            if not self.is_running():
+                global sockets
+                sockets.remove(self)
+            return
+
         running_games = [game for game in sockets if game.is_running()]
         lobby_html = self.render_string("lobby.html", running_games = running_games)
         self.write_message("lobby_data(" +
@@ -367,6 +377,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.p.stdout.close()
             self.p.stderr.close()
             self.p = None
+
+            logging.info("#%s: Crawl terminated.", self.id)
 
             if self.kill_timeout:
                 self.ioloop.remove_timeout(self.kill_timeout)
@@ -595,8 +607,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
             if not (s.isspace() or s == ""):
                 logging.info("#%s: ERR: %s: %s",
-                             self.id, self.username, self.request.remote_ip,
-                             s.strip())
+                             self.id, self.username, s.strip())
 
             self.poll_crawl()
 
@@ -718,6 +729,8 @@ ioloop.set_blocking_log_threshold(0.5)
 if dgl_mode:
     status_file_timeout()
     purge_login_tokens_timeout()
+
+logging.info("Webtiles server started!")
 
 try:
     ioloop.start()
