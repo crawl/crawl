@@ -317,18 +317,6 @@ static int _healing_spell(int healed, bool divine_ability,
             simple_monster_message(mons, " is completely healed.");
         else
             print_wounds(mons);
-
-        if (you.religion == GOD_ELYVILON && !is_hostile)
-        {
-            if (one_chance_in(8))
-                simple_god_message(" approves of your healing of a fellow "
-                                   "creature.");
-            else
-                mpr("Elyvilon appreciates your healing of a fellow creature.");
-
-            // Give a small piety return.
-            gain_piety(1, 8);
-        }
     }
 
     if (!did_something)
