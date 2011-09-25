@@ -342,6 +342,14 @@ void search_astar(const coord_def & start,
     search_astar(start, valid_target, connect, visited, candidates);
 }
 
-
-
+struct counted_monster_list
+{
+    typedef std::pair<const monster* ,int> counted_monster;
+    typedef std::vector<counted_monster> counted_list;
+    counted_list list;
+    void add(const monster* mons);
+    int count();
+    bool empty() { return list.empty(); }
+    std::string describe(bool cap = true);
+};
 #endif
