@@ -1947,12 +1947,37 @@ static bool _do_ability(const ability_def& abil)
             you_teleport();
         break;
 
+    case ABIL_BREATHE_STICKY_FLAME:
+    {
+        targetter_splash hitfunc(&you);
+        beam.range = 1;
+        if (!spell_direction(abild, beam,
+                             DIR_NONE, TARG_HOSTILE, 0, true, true, false,
+                             NULL, NULL, false,
+                             &hitfunc))
+        {
+            return (false);
+        }
+
+        // TODO: zapping() has a dumb ally check
+        if (!zapping(ZAP_BREATHE_STICKY_FLAME,
+            (you.form == TRAN_DRAGON) ?
+                2 * you.experience_level : you.experience_level,
+            beam, true, "You spit a glob of burning liquid."))
+        {
+            return (false);
+        }
+
+        you.increase_duration(DUR_BREATH_WEAPON,
+                      3 + random2(10) + random2(30 - you.experience_level));
+        break;
+    }
+
     case ABIL_BREATHE_FIRE:
     case ABIL_BREATHE_FROST:
     case ABIL_BREATHE_POISON:
     case ABIL_SPIT_ACID:
     case ABIL_BREATHE_POWER:
-    case ABIL_BREATHE_STICKY_FLAME:
     case ABIL_BREATHE_STEAM:
     case ABIL_BREATHE_MEPHITIC:
         beam.range = _calc_breath_ability_range(abil.ability);
