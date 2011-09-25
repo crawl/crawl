@@ -983,7 +983,9 @@ spret_type cast_tukimas_ball(actor *caster, int pow, god_type god,
                              0,
                              // if you animate the weapon, your god gets mad
                              // if it poisons/drains stuff
-                             god);
+                             god,
+                             MONS_NO_MONSTER, 0, BLACK,
+                             pow);
                 mg.props[TUKIMA_WEAPON] = wpn;
                 int mons = create_monster(mg);
                 bool success = (mons != -1);
