@@ -738,7 +738,15 @@ bool cast_a_spell(bool check_range, spell_type spell)
         return (false);
     }
 
-    if (god_hates_spell(spell, you.religion))
+    // This needs more work: there are spells which are hated but allowed if
+    // they don't have a certain effect.  You may use Poison Arrow on those
+    // immune, use Mephitic Cloud to shield yourself from other clouds.
+    // There are also spells which god_hates_spell() doesn't recognize, like
+    // using Evaporate on certain potions.
+    //
+    // I'm disabling this code for now except for excommunication, please
+    // re-enable if you can fix it.
+    if (/*god_hates_spell*/god_loathes_spell(spell, you.religion))
     {
         // None currently dock just piety, right?
         if (!yesno(god_loathes_spell(spell, you.religion) ?
