@@ -2270,6 +2270,47 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     return !yesno(info, false, 'n');
 }
 
+bool stop_attack_prompt(targetter &hitfunc, std::string verb)
+{
+    if (you.confused())
+        return false;
+
+    std::string adj, suffix;
+    counted_monster_list victims;
+    for (distance_iterator di(hitfunc.origin, false, true, LOS_RADIUS); di; ++di)
+    {
+        if (hitfunc.is_affected(*di) <= AFF_NO)
+            continue;
+        const monster* mon = monster_at(*di);
+        std::string adjn, suffixn;
+        if (mon && you.can_see(mon) && bad_attack(mon, adjn, suffixn))
+        {
+            if (victims.empty()) // record the adjectives for the first listed
+                adj = adjn, suffix = suffixn;
+            victims.add(mon);
+        }
+    }
+
+    if (victims.empty())
+        return false;
+
+    // Listed in the form: "your rat", "Blork the orc".
+    std::string mon_name = victims.describe(DESC_PLAIN);
+    if (!mon_name.find("the ")) // no "your the royal jelly" nor "the the RJ"
+        mon_name.erase(0, 4);
+    if (adj.find("your"))
+        adj = "the " + adj;
+    mon_name = adj + mon_name;
+
+    if (verb != "attack")
+        verb += " at";
+
+    snprintf(info, INFO_SIZE, "Really %s %s%s?",
+             verb.c_str(), mon_name.c_str(), suffix.c_str());
+
+    return !yesno(info, false, 'n');
+}
+
 bool is_orckind(const actor *act)
 {
     if (mons_genus(act->mons_species()) == MONS_ORC)
@@ -2529,13 +2570,11 @@ int counted_monster_list::count()
     return (nmons);
 }
 
-std::string counted_monster_list::describe(bool cap)
+std::string counted_monster_list::describe(description_level_type desc)
 {
     std::string out;
 
-    description_level_type desc = cap ? DESC_CAP_THE : DESC_NOCAP_THE;
-    for (counted_list::const_iterator i = list.begin();
-         i != list.end(); desc = DESC_NOCAP_THE)
+    for (counted_list::const_iterator i = list.begin(); i != list.end();)
     {
         const counted_monster &cm(*i);
         if (i != list.begin())
@@ -2548,6 +2587,10 @@ std::string counted_monster_list::describe(bool cap)
 
         out += cm.second > 1 ? pluralise(cm.first->name(desc))
                              : cm.first->name(desc);
+
+        // yay capitalization hacks, may we merge Cryp71c's branch already please?
+        if (desc == DESC_CAP_THE)
+            desc = DESC_NOCAP_THE;
     }
     return out;
 }

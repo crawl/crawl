@@ -1959,14 +1959,12 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         }
 
-        // TODO: zapping() has a dumb ally check
-        if (!zapping(ZAP_BREATHE_STICKY_FLAME,
-            (you.form == TRAN_DRAGON) ?
+        if (stop_attack_prompt(hitfunc, "spit"))
+            return false;
+
+        zapping(ZAP_BREATHE_STICKY_FLAME, (you.form == TRAN_DRAGON) ?
                 2 * you.experience_level : you.experience_level,
-            beam, true, "You spit a glob of burning liquid."))
-        {
-            return (false);
-        }
+            beam, false, "You spit a glob of burning liquid.");
 
         you.increase_duration(DUR_BREATH_WEAPON,
                       3 + random2(10) + random2(30 - you.experience_level));
