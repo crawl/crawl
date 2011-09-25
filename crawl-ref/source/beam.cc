@@ -5421,6 +5421,8 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
 
     const dungeon_feature_type dngn_feat = grd(loc);
 
+    bool at_wall = false;
+
     // Check to see if we're blocked by a wall.
     if (feat_is_wall(dngn_feat)
         || dngn_feat == DNGN_SECRET_DOOR
@@ -5431,6 +5433,8 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
         // solid cells at the center of the explosion.
         if (stop_at_walls && !(delta.origin() && affects_wall(dngn_feat)))
             return;
+        // But remember that we are at a wall.
+        at_wall = true;
     }
 
     if (feat_is_solid(dngn_feat) && !feat_is_wall(dngn_feat) && stop_at_statues)
@@ -5459,9 +5463,16 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
         if (m(new_delta + centre) <= count)
             continue;
 
+        // If we were at a wall, only move to visible squares.
+        if (at_wall && !you.see_cell(loc + Compass[i]))
+            continue;
+
         int cadd = 5;
-        // Changing direction (e.g. looking around a wall) costs more.
-        if (delta.x * Compass[i].x < 0 || delta.y * Compass[i].y < 0)
+        // Circling around the center is always free.
+        if (delta.rdist() == 1 && new_delta.rdist() == 1)
+            cadd = 0;
+        // Otherwise changing direction (e.g. looking around a wall) costs more.
+        else if (delta.x * Compass[i].x < 0 || delta.y * Compass[i].y < 0)
             cadd = 17;
 
         determine_affected_cells(m, new_delta, count + cadd, r,
