@@ -2600,17 +2600,17 @@ static monster_type _band_member(band_type band, int power)
 
     case BAND_ORCS:
         mon_type = MONS_ORC;
-        if (one_chance_in(6))
+        if (one_chance_in(6)) // 14.58%
             mon_type = MONS_ORC_WIZARD;
-        if (one_chance_in(8))
+        if (one_chance_in(8)) // 12.50%
             mon_type = MONS_ORC_PRIEST;
         break;
 
     case BAND_ORC_WARRIOR:
         mon_type = MONS_ORC;
-        if (one_chance_in(5))
+        if (one_chance_in(5)) // 17.14%
             mon_type = MONS_ORC_WIZARD;
-        if (one_chance_in(7))
+        if (one_chance_in(7)) // 14.29%
             mon_type = MONS_ORC_PRIEST;
         break;
 
