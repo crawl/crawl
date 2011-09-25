@@ -509,8 +509,19 @@ bool melee_attack::attack()
 
     if (attacker->atype() == ACT_PLAYER && defender->atype() == ACT_MONSTER)
     {
-        if (stop_attack_prompt(defender->as_monster(), false,
-                               attacker->pos()))
+        if (weapon && is_unrandom_artefact(*weapon)
+            && weapon->special == UNRAND_DEVASTATOR)
+        {
+            targetter_smite hitfunc(attacker, 1, 1, 1);
+            hitfunc.set_aim(defender->pos());
+            if (stop_attack_prompt(hitfunc, "attack"))
+            {
+                cancel_attack = true;
+                return (false);
+            }
+        }
+        else if (stop_attack_prompt(defender->as_monster(), false,
+                                    attacker->pos()))
         {
             cancel_attack = true;
             return (false);
