@@ -2194,6 +2194,14 @@ bool melee_attack::player_monattk_hit_effects(bool mondied)
 
     if (!defender->alive())
     {
+        // Wyrmbane needs to be notified of deaths, including ones due to its
+        // Dragon Slaying brand, but other users of melee_effects() don't want
+        // to be possibly called twice.  Adding another entry for a single
+        // artefact would be overkill, so here we call it by hand:
+        if (unrand_entry && weapon && weapon->special == UNRAND_WYRMBANE)
+            unrand_entry->fight_func.melee_effects(weapon, attacker, defender,
+                                                   true, special_damage);
+
         _monster_die(defender->as_monster(), KILL_YOU, NON_MONSTER);
 
         return (true);
