@@ -2448,7 +2448,7 @@ static monsterentry mondata[] = {
 
 // angelic beings ('A')
 {
-    MONS_ANGEL, 'A', WHITE, "Angel",
+    MONS_ANGEL, 'A', WHITE, "angel",
     M_FIGHTER | M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS | M_GLOWS_LIGHT,
     MR_RES_POISON | mrd(MR_RES_ELEC, 2),
     0, 10, MONS_ANGEL, MONS_ANGEL, MH_HOLY, -8,
@@ -2461,7 +2461,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_CHERUB, 'A', BROWN, "Cherub",
+    MONS_CHERUB, 'A', BROWN, "cherub",
     M_FIGHTER | M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS | M_GLOWS_LIGHT,
     MR_RES_POISON | MR_RES_ELEC | MR_RES_FIRE,
     0, 10, MONS_ANGEL, MONS_CHERUB, MH_HOLY, -8,
@@ -2474,7 +2474,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_DAEVA, 'A', YELLOW, "Daeva",
+    MONS_DAEVA, 'A', YELLOW, "daeva",
     M_FIGHTER | M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS | M_GLOWS_LIGHT,
     MR_RES_POISON,
     0, 12, MONS_ANGEL, MONS_DAEVA, MH_HOLY, -8,

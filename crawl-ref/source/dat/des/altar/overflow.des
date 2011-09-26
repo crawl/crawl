@@ -267,9 +267,9 @@ DEPTH: D:3-18, Vault
 TAGS:  uniq_altar_elyvilon temple_overflow_elyvilon
 TAGS:  no_trap_gen uniq_angel_altar
 : if you.absdepth() > 12 then
-MONS: patrolling Daeva / patrolling Angel
+MONS: patrolling daeva / patrolling angel
 : else
-MONS:  patrolling Angel
+MONS:  patrolling angel
 : end
 KFEAT: _ = altar_elyvilon
 KPROP: >"1_ = no_rtele_into
@@ -1210,9 +1210,9 @@ DEPTH: D:3-18, Vault
 TAGS:  uniq_altar_zin temple_overflow_zin
 TAGS:  no_trap_gen uniq_angel_altar
 : if you.absdepth() > 12 then
-MONS: patrolling Daeva / patrolling Angel
+MONS: patrolling daeva / patrolling angel
 : else
-MONS:  patrolling Angel
+MONS:  patrolling angel
 : end
 KFEAT: _ = altar_zin
 KPROP: >"1_ = no_rtele_into
@@ -1264,9 +1264,9 @@ DEPTH: D:3-18, Vault
 TAGS:  uniq_altar_the_shining_one temple_overflow_the_shining_one
 TAGS:  no_trap_gen uniq_angel_altar
 : if you.absdepth() > 12 then
-MONS: patrolling Daeva / patrolling Angel
+MONS: patrolling daeva / patrolling angel
 : else
-MONS:  patrolling Angel
+MONS:  patrolling angel
 : end
 KFEAT: _ = altar_the_shining_one
 KPROP: >"1_ = no_rtele_into
