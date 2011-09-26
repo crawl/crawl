@@ -3690,8 +3690,6 @@ bool god_hates_spell(spell_type spell, god_type god)
         if (is_hasty_spell(spell))
             return (true);
         break;
-    case GOD_TROG:
-        return (true);
     default:
         break;
     }
