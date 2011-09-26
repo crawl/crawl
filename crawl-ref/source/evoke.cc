@@ -388,7 +388,7 @@ bool disc_of_storms(bool drac_breath)
         rc = true;
 
         const int disc_count = (drac_breath) ? roll_dice(2, 1 + you.experience_level / 7) :
-                                roll_dice(2, 1 + you.skill_rdiv(SK_EVOCATIONS, 7));
+            roll_dice(2, 1 + you.skill_rdiv(SK_EVOCATIONS, 1, 7));
 
         for (int i = 0; i < disc_count; ++i)
         {
