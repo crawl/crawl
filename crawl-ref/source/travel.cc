@@ -125,6 +125,8 @@ const int8_t FORBIDDEN   = -1;
 // Map of terrain types that are traversable.
 static FixedVector<int8_t,NUM_FEATURES> traversable_terrain;
 
+static std::set<std::string> portal_names;
+
 /*
  * Warn if interlevel travel is going to take you outside levels in
  * the range [src,dest].
@@ -3083,7 +3085,15 @@ unsigned short level_id::packed_place() const
 
 std::string level_id::describe(bool long_name, bool with_number) const
 {
-    return place_name(this->packed_place(), long_name, with_number);
+    std::string description = place_name(this->packed_place(),
+                                         long_name, with_number);
+    if (level_type == LEVEL_PORTAL_VAULT) {
+        std::string::size_type cpos = description.find(':');
+        const std::string brname = (cpos != std::string::npos ?
+                                    description.substr(0, cpos) : description);
+        portal_names.insert(brname);
+    }
+    return description;
 }
 
 level_id level_id::parse_level_id(const std::string &s) throw (std::string)
@@ -3098,7 +3108,8 @@ level_id level_id::parse_level_id(const std::string &s) throw (std::string)
         return (level_id(LEVEL_PANDEMONIUM));
     else if (brname == "Lab")
         return (level_id(LEVEL_LABYRINTH));
-    else if (brname == "Port")
+    else if (brname == "Port" ||
+             portal_names.find(brname) != portal_names.end())
         return (level_id(LEVEL_PORTAL_VAULT));
 
     const branch_type br = str_to_branch(brname);

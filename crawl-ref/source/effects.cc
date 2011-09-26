@@ -550,6 +550,12 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
             return;
         }
         cast_into = "the Abyss";
+        you.props["abyss_return_name"] = you.level_type_name;
+        you.props["abyss_return_abbrev"] = you.level_type_name_abbrev;
+        you.props["abyss_return_origin"] = you.level_type_origin;
+        you.props["abyss_return_tag"] = you.level_type_tag;
+        you.props["abyss_return_ext"] = you.level_type_ext;
+        you.props["abyss_return_desc"] = level_id::current().describe();
         break;
 
     case DNGN_EXIT_ABYSS:

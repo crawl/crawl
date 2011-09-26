@@ -110,8 +110,10 @@ static void _player_change_level_reset()
 
 static level_id _stair_destination_override()
 {
-    const std::string force_place =
+    const std::string force_place = (grd(you.pos()) == DNGN_EXIT_ABYSS) ?
+        static_cast<std::string>(you.props["abyss_return_desc"]) :
         env.markers.property_at(you.pos(), MAT_ANY, "dstplace");
+
     if (!force_place.empty())
     {
         try
@@ -461,6 +463,25 @@ static void _leaving_level_now(dungeon_feature_type stair_used)
     }
 
     _clear_golubria_traps();
+
+    if (grd(you.pos()) == DNGN_EXIT_ABYSS) {
+        you.level_type_name =
+            static_cast<std::string>(you.props["abyss_return_name"]);
+        you.level_type_name_abbrev =
+            static_cast<std::string>(you.props["abyss_return_abbrev"]);
+        you.level_type_origin =
+            static_cast<std::string>(you.props["abyss_return_origin"]);
+        you.level_type_tag =
+            static_cast<std::string>(you.props["abyss_return_tag"]);
+        you.level_type_ext =
+            static_cast<std::string>(you.props["abyss_return_ext"]);
+        you.props.erase("abyss_return_desc");
+        you.props.erase("abyss_return_name");
+        you.props.erase("abyss_return_abbrev");
+        you.props.erase("abyss_return_origin");
+        you.props.erase("abyss_return_tag");
+        you.props.erase("abyss_return_ext");
+    }
 }
 
 static void _set_entry_cause(entry_cause_type default_cause,

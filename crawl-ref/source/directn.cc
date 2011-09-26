@@ -3099,7 +3099,7 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         // is the description for a portal of unknown type.
         return ("gate leading to a distant place");
     case DNGN_EXIT_PORTAL_VAULT:
-        return ("gate leading back to the Dungeon");
+        return ("gate leading back out of here");
     case DNGN_MALIGN_GATEWAY:
         return ("portal to somewhere");
     case DNGN_RETURN_FROM_DWARVEN_HALL:
