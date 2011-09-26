@@ -847,7 +847,6 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_ANGEL:
-    case MONS_CHERUB:
         force_item     = true;
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
@@ -859,6 +858,29 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
         item.plus  = 1 + random2(3);
         item.plus2 = 1 + random2(3);
+        break;
+
+    case MONS_CHERUB:
+        item_race  = MAKE_ITEM_NO_RACE;
+        if (!melee_only)
+        {
+            item.base_type  = OBJ_WEAPONS;
+            item.sub_type  = random_choose(WPN_SLING,
+                                           WPN_BOW,
+                                           WPN_LONGBOW,
+                                           -1);
+            break;
+        }
+        force_item     = true;
+        item.base_type = OBJ_WEAPONS;
+        // slightly worse melee, still mostly blessed
+        item.sub_type  = random_choose(WPN_FLAIL,
+                                       WPN_BLESSED_LONG_SWORD,
+                                       WPN_BLESSED_SCIMITAR,
+                                       WPN_BLESSED_FALCHION,
+                                       -1);
+        // but flaming not holy wrath
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
         break;
 
     case MONS_PALADIN:
@@ -1502,6 +1524,16 @@ void give_shield(monster* mon, int level)
     case MONS_MENNAS:
         make_item_for_monster(mon, OBJ_ARMOUR, ARM_LARGE_SHIELD,
                               level * 2 + 1, MAKE_ITEM_NO_RACE, 1);
+        break;
+
+    case MONS_CHERUB:
+        if (main_weap && main_weap->base_type == OBJ_WEAPONS
+            && main_weap->sub_type == WPN_SLING)
+        {
+            // Big shields interfere with ranged combat, at least theme-wise.
+            make_item_for_monster(mon, OBJ_ARMOUR, ARM_BUCKLER,
+                                  level, MAKE_ITEM_NO_RACE, 1);
+        }
         break;
 
     case MONS_DEEP_ELF_SOLDIER:
