@@ -129,7 +129,7 @@ bool SkillMenuEntry::is_set(int flag) const
 bool SkillMenuEntry::mastered() const
 {
     return (is_set(SKMF_EXPERIENCE) ? m_skm->get_raw_skill_level(m_sk)
-                                    : you.skills[m_sk]) == 27;
+                                    : you.skills[m_sk]) >= 27;
 
 }
 
@@ -337,7 +337,10 @@ void SkillMenuEntry::set_level()
     else
         level = you.skill(m_sk, 10, real);
 
-    m_level->set_text(make_stringf("%4.1f", level / 10.0));
+    if (mastered())
+        m_level->set_text(make_stringf("%d", level / 10));
+    else
+        m_level->set_text(make_stringf("%4.1f", level / 10.0));
     m_level->set_fg_colour(get_colour());
 }
 
