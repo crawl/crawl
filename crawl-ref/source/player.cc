@@ -2582,7 +2582,7 @@ int player_shield_class(void)
     }
 
     if (shield + stat > 0)
-        shield += skill_bump(SK_SHIELDS, 38);
+        shield += you.skill(SK_SHIELDS, 38) + std::min(you.skill(SK_SHIELDS, 38), 3 * 38);
 
     // mutations
     shield += player_mutation_level(MUT_LARGE_BONE_PLATES) > 0 ? 100 + player_mutation_level(MUT_LARGE_BONE_PLATES) * 100 : 0;      // +2, +3, +4
