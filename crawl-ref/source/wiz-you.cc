@@ -401,7 +401,7 @@ void wizard_set_skill_level(skill_type skill)
         else
         {
             const int old_amount = you.skills[skill];
-            const int points = skill_exp_needed(amount, skill);
+            const int points = skill_exp_needed(std::min(amount, 27), skill);
 
             you.skill_points[skill] = points + 1;
             you.ct_skill_points[skill] = 0;
