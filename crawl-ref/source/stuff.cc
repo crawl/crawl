@@ -153,6 +153,9 @@ NORETURN void end(int exit_code, bool print_error, const char *format, ...)
     msg::deinitialise_mpr_streams();
     clear_globals_on_exit();
     databaseSystemShutdown();
+#ifdef DEBUG_PROPS
+    dump_prop_accesses();
+#endif
 
     if (!error.empty())
     {

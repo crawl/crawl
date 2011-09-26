@@ -1340,6 +1340,13 @@ void CrawlHashTable::read(reader &th)
 }
 
 
+#ifdef DEBUG_PROPS
+static std::map<std::string, int> accesses;
+# define ACCESS(x) ++accesses[x]
+#else
+# define ACCESS(x)
+#endif
+
 //////////////////
 // Misc functions
 
@@ -1348,6 +1355,7 @@ bool CrawlHashTable::exists(const std::string &key) const
     if (hash_map == NULL)
         return (false);
 
+    ACCESS(key);
     assert_validity();
     hash_map_type::const_iterator i = hash_map->find(key);
 
@@ -1427,6 +1435,7 @@ CrawlStoreValue& CrawlHashTable::get_value(const std::string &key)
     assert_validity();
     init_hash_map();
 
+    ACCESS(key);
     iterator i = hash_map->find(key);
 
     if (i == hash_map->end())
@@ -1448,6 +1457,7 @@ const CrawlStoreValue& CrawlHashTable::get_value(const std::string &key) const
 #endif
     assert_validity();
 
+    ACCESS(key);
     hash_map_type::const_iterator i = hash_map->find(key);
 
 #ifdef ASSERTS
@@ -1494,6 +1504,7 @@ void CrawlHashTable::erase(const std::string key)
     assert_validity();
     init_hash_map();
 
+    ACCESS(key);
     iterator i = hash_map->find(key);
 
     if (i != hash_map->end())
@@ -1936,3 +1947,33 @@ CrawlVector::const_iterator CrawlVector::end() const
     assert_validity();
     return vec.end();
 }
+
+
+#ifdef DEBUG_PROPS
+static bool _cmp(std::string a, std::string b)
+{
+    return accesses[a] > accesses[b];
+}
+
+void dump_prop_accesses()
+{
+    FILE *f = fopen("prop_accesses", "w");
+    ASSERT(f);
+
+    std::vector<std::string> props;
+
+    for (std::map<std::string, int>::const_iterator i = accesses.begin();
+         i != accesses.end(); ++i)
+    {
+        props.push_back(i->first);
+    }
+
+    std::sort(props.begin(), props.end(), _cmp);
+    for (std::vector<std::string>::const_iterator i = props.begin();
+         i != props.end(); ++i)
+    {
+        fprintf(f, "%10d %s\n", accesses[*i], i->c_str());
+    }
+    fclose(f);
+}
+#endif

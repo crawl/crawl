@@ -382,4 +382,9 @@ public:
     iterator begin();
     iterator end();
 };
+
+#ifdef DEBUG_PROPS
+void dump_prop_accesses();
+#endif
+
 #endif
