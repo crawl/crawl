@@ -1088,6 +1088,10 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
                 check_place_cloud(cloud, p, (noise.id[1] % 4)+2, 0);
             }
             grd(p) = feat;
+
+            monster* mon = monster_at(p);
+            if (mon && !monster_habitable_grid(mon, feat))
+                _push_displaced_monster(mon);
         }
 
         if (morph)
