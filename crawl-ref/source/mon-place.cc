@@ -1543,7 +1543,7 @@ static int _place_monster_aux(const mgen_data &mg,
         if (!one_chance_in(7))
             mon->god = GOD_BEOGH;
     }
-    // Angels (other than Mennas) and Daevas belong to TSO, but 1 out of
+    // Angels (other than Mennas) and daevas belong to TSO, but 1 out of
     // 7 in the Abyss are adopted by Xom.
     else if (mons_class_holiness(mg.cls) == MH_HOLY)
     {

@@ -4785,7 +4785,7 @@ rustles
 whispers
 ## END Menkaure ##
 %%%%
-############ MENNAS ### A silent Angel.
+############ MENNAS ### A silent angel.
 Mennas
 
 VISUAL:@The_monster@ gestures at you. @player_only@
@@ -6228,7 +6228,7 @@ w:1
 w:1
 @The_monster@ says @to_foe@, "@player_god@ be with thee, mortal!"
 
-# The good gods are assumed to work closely together, so a Daeva praising
+# The good gods are assumed to work closely together, so a daeva praising
 # Elyvilon is actually flavour.
 w:1
 @The_monster@ says @to_foe@, "Praised be @good_god@ in the heavens above!"

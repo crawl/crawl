@@ -1301,7 +1301,7 @@ std::string item_def::name_aux(description_level_type desc,
             break;
         }
         else if (flags & ISFLAG_BLESSED_WEAPON && !dbname)
-        {   // Since Angels and Daevas can get blessed base items, we
+        {   // Since angels and daevas can get blessed base items, we
             // need a separate flag for this, so they can still have
             // their holy weapons.
             buff << "Blessed ";
