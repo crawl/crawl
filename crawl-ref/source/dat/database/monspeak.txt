@@ -5962,13 +5962,6 @@ hell lord
 
 @_hell_lord_taunt_@
 %%%%
-################## #########################################
-butterfly
-
-VISUAL SPELL:The butterfly flaps @possessive@ wings in an oddly mesmeric pattern.
-VISUAL:You feel entranced by @possessive@ movement.
-%%%%
-################## Imps#####################################
 imp
 
 w:1
