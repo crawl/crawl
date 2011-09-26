@@ -820,7 +820,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
 
     // bats and birds ('b')
     case MONS_BAT:
-        return TILEP_MONS_MEGABAT;
+        return TILEP_MONS_BAT;
     case MONS_VAMPIRE_BAT:
         return TILEP_MONS_VAMPIRE_BAT;
     case MONS_BUTTERFLY:
@@ -3224,7 +3224,7 @@ static tileidx_t _tileidx_corpse(const item_def &item)
 
     // bats and birds ('b')
     case MONS_BAT:
-        return TILE_CORPSE_MEGABAT;
+        return TILE_CORPSE_BAT;
     case MONS_BUTTERFLY:
         return TILE_CORPSE_BUTTERFLY;
     case MONS_RAVEN:
