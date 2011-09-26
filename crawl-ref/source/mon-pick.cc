@@ -2276,6 +2276,7 @@ int mons_forest_level(int mcls)
         break;
 
     case MONS_SPRIGGAN_AIR_MAGE:
+    case MONS_SPRIGGAN_BERSERKER:
         mlev += 3;
 
     case MONS_SPRIGGAN_DEFENDER:
@@ -2300,14 +2301,17 @@ int mons_forest_rare(int mcls)
     case MONS_SPRIGGAN_RIDER:
     case MONS_GRIZZLY_BEAR:
     case MONS_WOLF:
-        return 40;
+        return 60;
 
     case MONS_SPRIGGAN_AIR_MAGE:
     case MONS_BLACK_BEAR:
-        return 20;
+        return 40;
+
+    case MONS_SPRIGGAN_BERSERKER:
+        return 25;
 
     case MONS_SPRIGGAN_DEFENDER:
-        return 10;
+        return 20;
 
     default:
         return 0;
