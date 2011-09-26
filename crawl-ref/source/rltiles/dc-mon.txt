@@ -13,7 +13,7 @@ soldier_ant MONS_SOLDIER_ANT
 queen_ant MONS_QUEEN_ANT
 
 ## Batty monsters ('b')
-megabat MONS_MEGABAT
+bat MONS_BAT
 ../../player/transform/bat_form MONS_VAMPIRE_BAT
 butterfly MONS_BUTTERFLY
 butterfly1
@@ -186,7 +186,7 @@ polar_bear MONS_POLAR_BEAR
 
 ## Yaks, sheep and elephants ('Y')
 sheep MONS_SHEEP
-black_sheep MONS_BLACK_SHEEP
+dc-mon/vault/black_sheep MONS_BLACK_SHEEP
 yak MONS_YAK
 death_yak MONS_DEATH_YAK
 catoblepas MONS_CATOBLEPAS
@@ -470,7 +470,7 @@ killer_klown_yellow
 slave MONS_SLAVE
 human_slave
 ## From the Wucad Mu wizlab
-human_monk_ghost MONS_HUMAN_MONK
+vault/human_monk_ghost MONS_HUMAN_MONK
 ## From the Cigotuvi wizlab
 vault/deformed_human MONS_DEFORMED_HUMAN
 ## From an entry vault
@@ -611,7 +611,7 @@ boris MONS_BORIS
 %sdir dc-mon/undead
 lich MONS_LICH
 ancient_lich MONS_ANCIENT_LICH
-zonguldrok_lich1 MONS_ZONGULDROK_LICH
+dc-mon/vault/zonguldrok_lich MONS_ZONGULDROK_LICH
 
 ## Mummies ('M')
 %sdir dc-mon/unique
@@ -664,8 +664,8 @@ rock_troll MONS_ROCK_TROLL
 iron_troll MONS_IRON_TROLL
 deep_troll MONS_DEEP_TROLL
 ## From the Wucad Mu wizard laboratory
-rock_troll_monk_ghost MONS_ROCK_TROLL_MONK
-iron_troll_monk_ghost MONS_IRON_TROLL_MONK
+vault/rock_troll_monk_ghost MONS_ROCK_TROLL_MONK
+vault/iron_troll_monk_ghost MONS_IRON_TROLL_MONK
 
 ## Vampires ('V')
 %sdir dc-mon/undead
