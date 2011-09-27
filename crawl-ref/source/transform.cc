@@ -443,7 +443,13 @@ bool feat_dangerous_for_form(transformation_type which_trans,
     return (false);
 }
 
-static mutation_type appendages[]={MUT_HORNS, MUT_BEAK, MUT_TENTACLES, MUT_TALONS,};
+static mutation_type appendages[] =
+{
+    MUT_HORNS,
+    /*MUT_BEAK,*/
+    MUT_TENTACLES,
+    MUT_TALONS,
+};
 
 static bool _slot_conflict(equipment_type eq)
 {
@@ -851,7 +857,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
             ASSERT(app != NUM_MUTATIONS);
             ASSERT(beastly_slot(app) != EQ_NONE);
             ASSERT(you.equip[beastly_slot(app)] == -1);
-            you.mutation[app] = (app == MUT_BEAK) ? 1 : 3;
+            you.mutation[app] = app == MUT_BEAK ? 1 : app == MUT_HORNS ? 2 : 3;
         }
         break;
 
