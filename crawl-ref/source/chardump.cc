@@ -1136,10 +1136,17 @@ static void _sdump_vault_list(dump_params &par)
     }
 }
 
-static bool _sort_by_casts(std::pair<spell_type, FixedVector<int, 28> > a,
-                           std::pair<spell_type, FixedVector<int, 28> > b)
+static bool _sort_by_first_cast(std::pair<spell_type, FixedVector<int, 28> > a,
+                                std::pair<spell_type, FixedVector<int, 28> > b)
 {
-    return (a.second[27] > b.second[27]);
+    for (int i = 0; i < 27; i++)
+    {
+        if (a.second[i] > b.second[i])
+            return true;
+        else if (a.second[i] < b.second[i])
+            return false;
+    }
+    return false;
 }
 
 static void _sdump_spell_usage(dump_params &par)
@@ -1174,7 +1181,7 @@ static void _sdump_spell_usage(dump_params &par)
         }
         usage_vec.push_back(std::pair<spell_type, FixedVector<int, 28> >(sp->first, v));
     }
-    std::sort(usage_vec.begin(), usage_vec.end(), _sort_by_casts);
+    std::sort(usage_vec.begin(), usage_vec.end(), _sort_by_first_cast);
 
     for (std::vector<std::pair<spell_type, FixedVector<int, 28> > >::const_iterator sp =
          usage_vec.begin(); sp != usage_vec.end(); ++sp)
