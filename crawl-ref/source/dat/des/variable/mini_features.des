@@ -2247,18 +2247,8 @@ TAGS:  no_monster_gen
 DEPTH: D:15-27, Elf
 ITEM:  acquire any
 MONS:  statue generate_awake n_rpl name:diamond_obelisk hp:10000 \
-       col:white tile:mons_diamond_obelisk
+       col:white tile:mons_diamond_obelisk perm_ench:tornado
 KPROP: .d1 = no_tele_into
-{{
-  hook("post_place", function()
-    for mons in iter.mons_rect_iterator(dgn.point(1, 1),
-                         dgn.point(dgn.GXM - 2, dgn.GYM - 2)) do
-      if mons.name == "diamond obelisk" then
-        mons.add_ench("tornado", 1, 99999)
-      end
-    end
-  end)
-}}
 MAP
       ccc
      ccdcc
