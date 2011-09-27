@@ -124,6 +124,11 @@ apt-get install build-essential libncursesw5-dev bison flex liblua5.1-0-dev \
 (the last four are needed only for tiles builds).  This is the complete set,
 with it you don't have a need for the bundled "contribs".
 
+If you are going to be rebuilding, it is strongly recommended that you
+also install and configure ccache:
+apt-get install ccache
+less /usr/share/doc/ccache/README.Debian
+
 
 Prerequisites (other systems):
 
