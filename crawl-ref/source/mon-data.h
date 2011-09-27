@@ -4159,7 +4159,7 @@ static monsterentry mondata[] = {
 
 // Octopode race, not a 'normal' octopus.
 {
-    MONS_OCTOPODE, 'X', LIGHTCYAN, "octopode",
+    MONS_OCTOPODE, 'x', LIGHTCYAN, "octopode",
     M_NO_SKELETON | M_COLD_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
     700, 10, MONS_KRAKEN, MONS_OCTOPODE, MH_NATURAL, -1,
