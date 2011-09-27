@@ -511,6 +511,9 @@ static bool _transformation_check(const spell_type spell)
     case SPELL_NECROMUTATION:
         tran = TRAN_LICH;
         break;
+    case SPELL_BEASTLY_APPENDAGE:
+        tran = TRAN_APPENDAGE;
+        break;
     default:
         break;
     }
@@ -2667,7 +2670,7 @@ static void _xom_zero_miscast()
     }
 
     if (!player_genus(GENPC_DRACONIAN) && you.species != SP_MUMMY
-        && (you.form == TRAN_NONE || you.form == TRAN_BLADE_HANDS))
+        && !form_changed_physiology())
     {
         messages.push_back("Your eyebrows briefly feel incredibly bushy.");
         messages.push_back("Your eyebrows wriggle.");

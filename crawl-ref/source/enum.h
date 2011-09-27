@@ -245,6 +245,7 @@ enum attribute_type
     ATTR_PERM_LEVITATION,      // Kenku flight or boots of lev are on.
     ATTR_SEEN_INVIS_TURN,      // Last turn you saw something invisible.
     ATTR_SEEN_INVIS_SEED,      // Random seed for invis monster positions.
+    ATTR_APPENDAGE,            // eq slot of Beastly Appendage
     NUM_ATTRIBUTES
 };
 
@@ -259,6 +260,7 @@ enum transformation_type
     TRAN_LICH,
     TRAN_BAT,
     TRAN_PIG,
+    TRAN_APPENDAGE,
 };
 
 enum beam_type                  // beam[].flavour
@@ -3232,6 +3234,7 @@ enum spell_type
     SPELL_INNER_FLAME,
     SPELL_PETRIFYING_CLOUD,
     SPELL_MASS_ABJURATION,
+    SPELL_BEASTLY_APPENDAGE,
 
     NUM_SPELLS
 };

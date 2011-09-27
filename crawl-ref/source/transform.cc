@@ -21,6 +21,7 @@
 #include "item_use.h"
 #include "itemprop.h"
 #include "items.h"
+#include "mutation.h"
 #include "output.h"
 #include "player.h"
 #include "player-equip.h"
@@ -86,7 +87,7 @@ bool form_can_butcher_barehanded(transformation_type form)
 // Used to mark transformations which override species/mutation intrinsics.
 bool form_changed_physiology(transformation_type form)
 {
-    return (form != TRAN_NONE && form != TRAN_BLADE_HANDS);
+    return (form != TRAN_NONE && form != TRAN_BLADE_HANDS && form != TRAN_APPENDAGE);
 }
 
 bool form_can_wear_item(const item_def& item, transformation_type form)
@@ -108,6 +109,7 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
     // Some forms can wear everything.
     case TRAN_NONE:
     case TRAN_LICH:
+    case TRAN_APPENDAGE: // handled as mutations
         return true;
 
     // Some can't wear anything.
@@ -237,7 +239,7 @@ static bool _mutations_prevent_wearing(const item_def& item)
     return (false);
 }
 
-static void _unmeld_equipment_slot(equipment_type e)
+static void _unmeld_equipment_type(equipment_type e)
 {
     item_def& item = you.inv[you.equip[e]];
 
@@ -290,7 +292,7 @@ static void _unmeld_equipment(const std::set<equipment_type>& melded)
         if (you.equip[e] == -1)
             continue;
 
-        _unmeld_equipment_slot(e);
+        _unmeld_equipment_type(e);
     }
 }
 
@@ -362,6 +364,7 @@ monster_type transform_mons()
     case TRAN_PIG:
         return MONS_HOG;
     case TRAN_BLADE_HANDS:
+    case TRAN_APPENDAGE:
     case TRAN_NONE:
         return MONS_PLAYER;
     }
@@ -373,7 +376,7 @@ std::string blade_parts(bool terse)
 {
     if (you.species == SP_FELID)
         return terse ? "paws" : "front paws";
-    if (you.species == SP_OCTOPODE)
+    if (you.mutation[MUT_TENTACLES] > 1)
         return "tentacles";
     return "hands";
 }
@@ -440,6 +443,50 @@ bool feat_dangerous_for_form(transformation_type which_trans,
     return (false);
 }
 
+static mutation_type appendages[]={MUT_HORNS, MUT_BEAK, MUT_TENTACLES, MUT_TALONS,};
+
+static bool _slot_conflict(equipment_type eq)
+{
+    // Choose uncovered slots only.  Melding could make people re-cast
+    // until they get something that doesn't conflict with their randart
+    // of überness.
+    if (you.equip[eq] != -1)
+        return true;
+
+    for (int mut = 0; mut < NUM_MUTATIONS; mut++)
+        if (you.mutation[mut] && eq == beastly_slot(mut))
+            return true;
+
+    return false;
+}
+
+static mutation_type _beastly_appendage()
+{
+    mutation_type chosen = NUM_MUTATIONS;
+    int count = 0;
+
+    for (unsigned int i = 0; i < ARRAYSZ(appendages); i++)
+    {
+        mutation_type app = appendages[i];
+
+        if (_slot_conflict(beastly_slot(app)))
+            continue;
+        if (physiology_mutation_conflict(app))
+            continue;
+
+        if (one_chance_in(++count))
+            chosen = app;
+    }
+    return chosen;
+}
+
+const char* appendage_name(int app)
+{
+    ASSERT(beastly_slot(app) != EQ_NONE);
+    const mutation_def& mdef = get_mutation_def((mutation_type) app);
+    return mdef.short_desc;
+}
+
 static bool _transformation_is_safe(transformation_type which_trans,
                                     dungeon_feature_type feat, bool quiet)
 {
@@ -458,6 +505,7 @@ static int _transform_duration(transformation_type which_trans, int pow)
 {
     switch (which_trans)
     {
+    case TRAN_APPENDAGE:
     case TRAN_BLADE_HANDS:
         return std::min(10 + random2(pow), 100);
     case TRAN_SPIDER:
@@ -648,6 +696,40 @@ bool transform(int pow, transformation_type which_trans, bool force,
         you.transform_uncancellable = true;
         break;
 
+    case TRAN_APPENDAGE:
+    {
+        tran_name = "appendage";
+        mutation_type app = _beastly_appendage();
+        if (app == NUM_MUTATIONS)
+        {
+            mpr("You have no appropriate body parts free.");
+            return false;
+        }
+
+        if (!just_check)
+        {
+            you.attribute[ATTR_APPENDAGE] = app;
+            switch(app)
+            {
+            case MUT_BEAK:
+                msg = "Your face morphs into a beak.";
+                break;
+            case MUT_TALONS:
+                msg = "Your feet morph into talons.";
+                break;
+            case MUT_TENTACLES:
+                msg = "Your arms morph into several tentacles.";
+                break;
+            case MUT_HORNS:
+                msg = "You grow a pair of large bovine horns.";
+                break;
+            default:
+                die("Unknown beastly appendage.");
+            }
+        }
+        break;
+    }
+
     case TRAN_NONE:
         break;
     default:
@@ -667,6 +749,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
 
     // Most transformations conflict with stone skin.
     if (which_trans != TRAN_NONE
+        && which_trans != TRAN_APPENDAGE
         && which_trans != TRAN_BLADE_HANDS
         && which_trans != TRAN_STATUE)
     {
@@ -762,6 +845,16 @@ bool transform(int pow, transformation_type which_trans, bool force,
         set_redraw_status(REDRAW_HUNGER);
         break;
 
+    case TRAN_APPENDAGE:
+        {
+            int app = you.attribute[ATTR_APPENDAGE];
+            ASSERT(app != NUM_MUTATIONS);
+            ASSERT(beastly_slot(app) != EQ_NONE);
+            ASSERT(you.equip[beastly_slot(app)] == -1);
+            you.mutation[app] = (app == MUT_BEAK) ? 1 : 3;
+        }
+        break;
+
     default:
         break;
     }
@@ -779,7 +872,8 @@ bool transform(int pow, transformation_type which_trans, bool force,
     // Re-check terrain now that be may no longer be swimming or flying.
     if (was_flying && you.flight_mode() == FL_NONE
                    || feat_is_water(grd(you.pos()))
-                      && which_trans == TRAN_BLADE_HANDS
+                      && (which_trans == TRAN_BLADE_HANDS
+                          || which_trans == TRAN_APPENDAGE)
                       && you.species == SP_MERFOLK)
     {
         move_player_to_grid(you.pos(), false, true);
@@ -870,6 +964,19 @@ void untransform(bool skip_wielding, bool skip_move)
 
     case TRAN_PIG:
         mpr("Your transformation has ended.", MSGCH_DURATION);
+        break;
+
+    case TRAN_APPENDAGE:
+        {
+            int app = you.attribute[ATTR_APPENDAGE];
+            ASSERT(beastly_slot(app) != EQ_NONE);
+            // would be lots of work to do it via delete_mutation, the hacky
+            // way is one line:
+            you.mutation[app] = you.innate_mutations[app];
+            you.attribute[ATTR_APPENDAGE] = 0;
+            mprf(MSGCH_DURATION, "Your %s disappear%s.", appendage_name(app),
+                 (app == MUT_BEAK) ? "s" : "");
+        }
         break;
 
     default:
