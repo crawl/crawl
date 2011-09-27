@@ -1,5 +1,8 @@
+/**
+ * @file
+ * @brief This file is for MSVC to generate a precompiled header
+ */
 
-/* This file is for MSVC to generate a precompiled header */
 #include "AppHdr.h"
 
 /* Make setting up the link trivial on MSVC */
