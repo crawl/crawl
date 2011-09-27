@@ -358,7 +358,22 @@ bool strip_bool_tag(std::string &s, const std::string &name, bool defval)
 int strip_number_tag(std::string &s, const std::string &tagprefix)
 {
     const std::string num = strip_tag_prefix(s, tagprefix);
-    return (num.empty()? TAG_UNFOUND : atoi(num.c_str()));
+    int x;
+    if (num.empty() || !parse_int(num.c_str(), x))
+        return TAG_UNFOUND;
+    return x;
+}
+
+bool parse_int(const char *s, int &i)
+{
+    if (!s || !*s)
+        return false;
+    char *err;
+    long x = strtol(s, &err, 10);
+    if (*err || x < INT_MIN || x > INT_MAX)
+        return false;
+    i = x;
+    return true;
 }
 
 // Naively prefix A/an to a noun.

@@ -24,6 +24,7 @@
 #include "matrix.h"
 #include "fprop.h"
 #include "makeitem.h"
+#include "monster.h"
 #include "travel_defs.h"
 
 extern const char *traversable_glyphs;
@@ -667,6 +668,7 @@ class mons_spec
     bool explicit_spells;
     std::vector<monster_spells> spells;
     uint64_t extra_monster_flags;
+    std::vector<mon_enchant> ench;
 
     monster_type initial_shifter;
 
@@ -738,6 +740,7 @@ private:
                                     monster_type zomb) const;
     mons_spec_slot parse_mons_spec(std::string spec);
     void parse_mons_spells(mons_spec &slot, std::vector<std::string> &spells);
+    mon_enchant parse_ench(std::string &ench_str, bool perm);
     mons_spec pick_monster(mons_spec_slot &slot);
     int fix_demon(int id) const;
 
