@@ -167,7 +167,7 @@ static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
              + player_mutation_level(MUT_ACUTE_VISION)
              - 2 * player_mutation_level(MUT_BLURRY_VISION));
 
-        if (random2(skill) > 6)
+        if (random2(skill) > 6 && (you.duration[DUR_SWIFTNESS] <= 0 || coinflip()))
         {
             // We check the safety before revealing it.
             const bool safe = trap->is_safe();
