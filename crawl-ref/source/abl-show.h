@@ -18,6 +18,7 @@ struct talent
     int hotkey;
     int fail;
     bool is_invocation;
+    bool is_zotdef;
 };
 
 const std::string make_cost_description(ability_type ability);
