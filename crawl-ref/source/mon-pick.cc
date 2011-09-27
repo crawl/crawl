@@ -121,6 +121,7 @@ bool mons_abyss(int mcls)
     case MONS_NECROMANCER:
     case MONS_NECROPHAGE:
     case MONS_NEQOXEC:
+    case MONS_OCTOPODE:
     case MONS_ORANGE_DEMON:
     case MONS_PHANTASMAL_WARRIOR:
     case MONS_PHANTOM:
@@ -336,6 +337,7 @@ int mons_rare_abyss(int mcls)
     case MONS_UNBORN_DEEP_DWARF:
     case MONS_KENKU:
     case MONS_SHADOW_DEMON:
+    case MONS_OCTOPODE:
         return 5;
 
     case MONS_AIR_ELEMENTAL:
