@@ -391,6 +391,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_DEEP_DWARF_ARTIFICER:
     case TILEP_MONS_DEEP_DWARF_DEATH_KNIGHT:
     case TILEP_MONS_KOBOLD:
+    case TILEP_MONS_OCTOPODE:
         *ofs_x = 0;
         *ofs_y = 0;
         break;
