@@ -3432,6 +3432,42 @@ void mons_list::parse_mons_spells(mons_spec &spec, std::vector<std::string> &spe
     }
 }
 
+mon_enchant mons_list::parse_ench(std::string &ench_str, bool perm)
+{
+    std::vector<std::string> ep = split_string(":", ench_str);
+    if (ep.size() > (perm ? 2 : 3))
+    {
+        error = make_stringf("bad %sench specifier: \"%s\"",
+                             perm ? "perm_" : "",
+                             ench_str.c_str());
+        return mon_enchant();
+    }
+
+    enchant_type et = name_to_ench(ep[0].c_str());
+    if (et == ENCH_NONE)
+    {
+        error = make_stringf("unknown ench: \"%s\"", ep[0].c_str());
+        return mon_enchant();
+    }
+
+    int deg = 0, dur = perm ? INFINITE_DURATION : 0;
+    if (ep.size() > 1 && !ep[1].empty())
+        if (!parse_int(ep[1].c_str(), deg))
+        {
+            error = make_stringf("invalid deg in ench specifier \"%s\"",
+                                 ench_str.c_str());
+            return mon_enchant();
+        }
+    if (ep.size() > 2 && !ep[2].empty())
+        if (!parse_int(ep[2].c_str(), dur))
+        {
+            error = make_stringf("invalid dur in ench specifier \"%s\"",
+                                 ench_str.c_str());
+            return mon_enchant();
+        }
+    return mon_enchant(et, deg, 0, dur);
+}
+
 mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
 {
     mons_spec_slot slot;
@@ -3743,6 +3779,20 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         {
             serpent_of_hell_flavour = upcase_first(lowercase(serpent_of_hell_flavour)).substr(0, 3);
             mspec.props["serpent_of_hell_flavour"].get_int() = str_to_branch(serpent_of_hell_flavour, BRANCH_GEHENNA);
+        }
+
+        std::string ench_str;
+        while (!(ench_str = strip_tag_prefix(mon_str, "ench:")).empty())
+        {
+            mspec.ench.push_back(parse_ench(ench_str, false));
+            if (!error.empty())
+                return (slot);
+        }
+        while (!(ench_str = strip_tag_prefix(mon_str, "perm_ench:")).empty())
+        {
+            mspec.ench.push_back(parse_ench(ench_str, true));
+            if (!error.empty())
+                return (slot);
         }
 
         trim_string(mon_str);

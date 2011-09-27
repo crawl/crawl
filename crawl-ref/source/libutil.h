@@ -92,6 +92,7 @@ bool strip_bool_tag(std::string &s, const std::string &name,
                     bool defval = false);
 std::vector<std::string> strip_multiple_tag_prefix(std::string &s, const std::string &tagprefix);
 std::string strip_tag_prefix(std::string &s, const std::string &tagprefix);
+bool parse_int(const char *s, int &i);
 
 std::string article_a(const std::string &name, bool lowercase = true);
 std::string pluralise(

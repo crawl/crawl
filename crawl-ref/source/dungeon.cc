@@ -4503,6 +4503,10 @@ int dgn_place_monster(mons_spec &mspec,
         mons.ghost->init_dancing_weapon(*wpn, 180);
         mons.dancing_weapon_init();
     }
+
+    for (unsigned int i = 0; i < mspec.ench.size(); i++)
+        mons.add_ench(mspec.ench[i]);
+
     return (mindex);
 }
 

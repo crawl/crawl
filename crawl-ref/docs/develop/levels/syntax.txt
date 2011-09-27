@@ -975,6 +975,21 @@ MONS:     (list of monsters)
           the messages you get unsatisfactory, add suitable entries to
           source/dat/database/monspell.txt.
 
+          Setting enchantments:
+          ---------------------
+          You may give a monster any number of enchantments.  It may
+          start hasted, blind, have permanent DMsl, etc.  The syntax is
+          "ench:<name>:<degree>:<duration>" or "perm_ench:<name>:<degree>".
+          The <degree> and <duration> fields may be omitted.  Note that
+          the enchantment will start the moment the monster is created and
+          thus most likely time out before the player has a chance to
+          notice the monster -- non-permanent ones make sense mostly only
+          if created from a lua trigger.
+
+          MONS: orc perm_ench:blind perm_ench:mad
+          MONS: sheep ench:sticky_flame
+          MONS: stone giant dur:1 ench:berserk
+
 
 FHEIGHT:  xyz = 40
 
