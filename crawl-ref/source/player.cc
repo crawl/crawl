@@ -3562,6 +3562,9 @@ int check_stealth(void)
     if (you.confused())
         stealth /= 3;
 
+    if (you.duration[DUR_SWIFTNESS] > 0)
+        stealth /= 2;
+
     const item_def *arm = you.slot_item(EQ_BODY_ARMOUR, false);
     const item_def *cloak = you.slot_item(EQ_CLOAK, false);
     const item_def *boots = you.slot_item(EQ_BOOTS, false);
