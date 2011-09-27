@@ -3617,6 +3617,9 @@ int check_stealth(void)
             stealth += 20;
     }
 
+    else if (player_mutation_level(MUT_HOOVES) > 0)
+        stealth -= 5 + 5 * player_mutation_level(MUT_HOOVES);
+
     else if (you.species == SP_FELID && !you.form)
         stealth += 20;  // paws
 
