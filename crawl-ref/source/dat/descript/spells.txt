@@ -574,7 +574,7 @@ This spell forms a mystical bond between the caster and a wielded short blade, m
 %%%%
 Swiftness
 
-This spell imbues its caster with the ability to achieve great movement speeds.
+This spell imbues its caster with the ability to achieve great movement speeds. But this speed comes at a price: the caster is less stealthy and more likely to blunder into traps while the spell is in effect.
 %%%%
 Teleport Other
 
