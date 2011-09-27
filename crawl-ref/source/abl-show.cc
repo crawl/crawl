@@ -1271,6 +1271,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     result.fail = failure;
     result.is_invocation = invoc;
+    result.is_zotdef = abil.flags & ABFLAG_ZOTDEF;
 
     return result;
 }
@@ -2857,18 +2858,36 @@ int choose_ability_menu(const std::vector<talent>& talents)
         numbers[i] = i;
 
     bool found_invocations = false;
+    bool found_zotdef = false;
 
-    // First add all non-invocations.
+    // First add all non-invocation, non-zotdef abilities.
     for (unsigned int i = 0; i < talents.size(); ++i)
     {
         if (talents[i].is_invocation)
             found_invocations = true;
+        else if (talents[i].is_zotdef)
+            found_zotdef = true;
         else
         {
             MenuEntry* me = new MenuEntry(_describe_talent(talents[i]),
                                           MEL_ITEM, 1, talents[i].hotkey);
             me->data = &numbers[i];
             abil_menu.add_entry(me);
+        }
+    }
+
+    if (found_zotdef)
+    {
+        abil_menu.add_entry(new MenuEntry("    Zot Defence - ", MEL_SUBTITLE));
+        for (unsigned int i = 0; i < talents.size(); ++i)
+        {
+            if (talents[i].is_zotdef)
+            {
+                MenuEntry* me = new MenuEntry(_describe_talent(talents[i]),
+                                              MEL_ITEM, 1, talents[i].hotkey);
+                me->data = &numbers[i];
+                abil_menu.add_entry(me);
+            }
         }
     }
 
