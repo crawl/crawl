@@ -2888,6 +2888,7 @@ void inscribe_item(item_def &item, bool msgwin)
     {
         mpr(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
         you.wield_change  = true;
+        you.redraw_quiver = true;
     }
 }
 
