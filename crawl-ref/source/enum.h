@@ -1449,13 +1449,13 @@ enum enchant_type
     ENCH_HELPLESS,
 #endif
     ENCH_LIQUEFYING,
-    ENCH_PERM_TORNADO,
+    ENCH_TORNADO,
     ENCH_FAKE_ABJURATION,
     ENCH_DAZED,         // Dazed - less chance of acting each turn.
-    ENCH_MUTE,          // Permanently silenced.
-    ENCH_BLIND,         // Permanently blind (everything is invisible).
-    ENCH_DUMB,          // Permanently dumb (as in, 'struck dumb').
-    ENCH_MAD,           // Permanently mad.
+    ENCH_MUTE,          // Silenced.
+    ENCH_BLIND,         // Blind (everything is invisible).
+    ENCH_DUMB,          // Dumb (as in, 'struck dumb').
+    ENCH_MAD,           // Mad.
     ENCH_SILVER_CORONA, // Zin's silver light.
     ENCH_RECITE_TIMER,  // Was recited against.
     ENCH_INNER_FLAME,

@@ -2885,8 +2885,8 @@ static void marshall_mon_enchant(writer &th, const mon_enchant &me)
     marshallShort(th, me.degree);
     marshallShort(th, me.who);
     marshallInt(th, me.source);
-    marshallShort(th, me.duration);
-    marshallShort(th, me.maxduration);
+    marshallShort(th, std::min(me.duration, INFINITE_DURATION));
+    marshallShort(th, std::min(me.maxduration, INFINITE_DURATION));
 }
 
 static mon_enchant unmarshall_mon_enchant(reader &th)

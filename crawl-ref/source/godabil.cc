@@ -1041,8 +1041,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
         break;
 
     case ZIN_BLIND:
-        if (mon->add_ench(mon_enchant(ENCH_BLIND, degree, &you,
-                          (degree + random2(spellpower)) * BASELINE_DELAY)))
+        if (mon->add_ench(mon_enchant(ENCH_BLIND, degree, &you, INFINITE_DURATION)))
         {
             simple_monster_message(mon, " is struck blind by the wrath of Zin!");
             affected = true;
@@ -1071,8 +1070,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
         break;
 
     case ZIN_MUTE:
-        if (mon->add_ench(mon_enchant(ENCH_MUTE, degree, &you,
-                          (degree + random2(spellpower)) * BASELINE_DELAY)))
+        if (mon->add_ench(mon_enchant(ENCH_MUTE, degree, &you, INFINITE_DURATION)))
         {
             simple_monster_message(mon, " is struck mute by the wrath of Zin!");
             affected = true;
@@ -1080,8 +1078,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
         break;
 
     case ZIN_MAD:
-        if (mon->add_ench(mon_enchant(ENCH_MAD, degree, &you,
-                          (degree + random2(spellpower)) * BASELINE_DELAY)))
+        if (mon->add_ench(mon_enchant(ENCH_MAD, degree, &you, INFINITE_DURATION)))
         {
             simple_monster_message(mon, " is driven mad by the wrath of Zin!");
             affected = true;
@@ -1089,8 +1086,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
         break;
 
     case ZIN_DUMB:
-        if (mon->add_ench(mon_enchant(ENCH_DUMB, degree, &you,
-                          (degree + random2(spellpower)) * BASELINE_DELAY)))
+        if (mon->add_ench(mon_enchant(ENCH_DUMB, degree, &you, INFINITE_DURATION)))
         {
             simple_monster_message(mon, " is left stupefied by the wrath of Zin!");
             affected = true;
