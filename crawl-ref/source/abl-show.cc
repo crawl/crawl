@@ -91,7 +91,8 @@ enum ability_flag_type
     ABFLAG_NECRO_MISCAST  = 0x00004000, // severity 3 necro miscast
     ABFLAG_TMIG_MISCAST   = 0x00008000, // severity 3 transmigration miscast
     ABFLAG_LEVEL_DRAIN    = 0x00010000, // drains 2 levels
-    ABFLAG_STAT_DRAIN     = 0x00020000  // stat drain
+    ABFLAG_STAT_DRAIN     = 0x00020000, // stat drain
+    ABFLAG_ZOTDEF         = 0x00040000, // ZotDef ability, w/ appropriate hotkey
 };
 
 struct generic_cost
@@ -149,7 +150,7 @@ struct ability_def
     unsigned int        zp_cost;        // zot point cost of ability
 };
 
-static int  _find_ability_slot(ability_type which_ability);
+static int  _find_ability_slot(const ability_def& abil);
 static bool _activate_talent(const talent& tal);
 static bool _do_ability(const ability_def& abil);
 static void _pay_ability_costs(const ability_def& abil, int zpcost);
@@ -427,36 +428,36 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, ABFLAG_NONE },
 
     // zot defence abilities
-    { ABIL_MAKE_FUNGUS, "Make mushroom circle", 0, 0, 0, 0, ABFLAG_NONE, 10 },
-    { ABIL_MAKE_DART_TRAP, "Make dart trap", 0, 0, 0, 0, ABFLAG_NONE, 5 },
-    { ABIL_MAKE_PLANT, "Make plant", 0, 0, 0, 0, ABFLAG_NONE, 2},
-    { ABIL_MAKE_OKLOB_SAPLING, "Make oklob sapling", 0, 0, 0, 0, ABFLAG_NONE, 60},
-    { ABIL_MAKE_BURNING_BUSH, "Make burning bush", 0, 0, 0, 0, ABFLAG_NONE, 200},
-    { ABIL_MAKE_OKLOB_PLANT, "Make oklob plant", 0, 0, 0, 0, ABFLAG_NONE, 250},
-    { ABIL_MAKE_ICE_STATUE, "Make ice statue", 0, 0, 50, 0, ABFLAG_NONE, 2000},
-    { ABIL_MAKE_OCS, "Make crystal statue", 0, 0, 200, 0, ABFLAG_NONE, 2000},
-    { ABIL_MAKE_SILVER_STATUE, "Make silver statue", 0, 0, 400, 0, ABFLAG_NONE, 3000},
-    { ABIL_MAKE_CURSE_SKULL, "Make curse skull", 0, 0, 600, 0, ABFLAG_NECRO_MISCAST_MINOR, 10000},
-    { ABIL_MAKE_TELEPORT, "Zot-teleport", 0, 0, 0, 0, ABFLAG_NONE, 2},
-    { ABIL_MAKE_ARROW_TRAP, "Make arrow trap", 0, 0, 0, 0, ABFLAG_NONE, 30 },
-    { ABIL_MAKE_BOLT_TRAP, "Make bolt trap", 0, 0, 0, 0, ABFLAG_NONE, 300 },
-    { ABIL_MAKE_SPEAR_TRAP, "Make spear trap", 0, 0, 0, 0, ABFLAG_NONE, 50 },
-    { ABIL_MAKE_AXE_TRAP, "Make axe trap", 0, 0, 0, 0, ABFLAG_NONE, 500 },
-    { ABIL_MAKE_NEEDLE_TRAP, "Make needle trap", 0, 0, 0, 0, ABFLAG_NONE, 30 },
-    { ABIL_MAKE_NET_TRAP, "Make net trap", 0, 0, 0, 0, ABFLAG_NONE, 2 },
-    { ABIL_MAKE_TELEPORT_TRAP, "Make teleport trap", 0, 0, 0, 0, ABFLAG_TLOC_MISCAST, 15000 },
-    { ABIL_MAKE_ALARM_TRAP, "Make alarm trap", 0, 0, 0, 0, ABFLAG_NONE, 2 },
-    { ABIL_MAKE_BLADE_TRAP, "Make blade trap", 0, 0, 0, 0, ABFLAG_NONE, 3000 },
-    { ABIL_MAKE_OKLOB_CIRCLE, "Make oklob circle", 0, 0, 0, 0, ABFLAG_NONE, 1000},
-    { ABIL_MAKE_ACQUIRE_GOLD, "Acquire gold", 0, 0, 0, 0, ABFLAG_LEVEL_DRAIN, 0 },
-    { ABIL_MAKE_ACQUIREMENT, "Acquirement", 0, 0, 0, 0, ABFLAG_LEVEL_DRAIN, 0 },
-    { ABIL_MAKE_WATER, "Make water", 0, 0, 0, 0, ABFLAG_NONE, 10 },
-    { ABIL_MAKE_LIGHTNING_SPIRE, "Make lightning spire", 0, 0, 0, 0, ABFLAG_NONE, 100},
-    { ABIL_MAKE_BAZAAR, "Make bazaar", 0, 30, 0, 0, ABFLAG_PERMANENT_HP, 100 },
-    { ABIL_MAKE_ALTAR, "Make altar", 0, 0, 0, 0, ABFLAG_NONE, 2 },
-    { ABIL_MAKE_GRENADES, "Make grenades", 0, 0, 0, 0, ABFLAG_NONE, 2 },
-    { ABIL_MAKE_SAGE, "Sage", 0, 0, 300, 0,  ABFLAG_INSTANT, 0 },
-    { ABIL_REMOVE_CURSE, "Remove Curse", 0, 0, 300, 0, ABFLAG_STAT_DRAIN, 0 },
+    { ABIL_MAKE_FUNGUS, "Make mushroom circle", 0, 0, 0, 0, ABFLAG_ZOTDEF, 10 },
+    { ABIL_MAKE_DART_TRAP, "Make dart trap", 0, 0, 0, 0, ABFLAG_ZOTDEF, 5 },
+    { ABIL_MAKE_PLANT, "Make plant", 0, 0, 0, 0, ABFLAG_ZOTDEF, 2},
+    { ABIL_MAKE_OKLOB_SAPLING, "Make oklob sapling", 0, 0, 0, 0, ABFLAG_ZOTDEF, 60},
+    { ABIL_MAKE_BURNING_BUSH, "Make burning bush", 0, 0, 0, 0, ABFLAG_ZOTDEF, 200},
+    { ABIL_MAKE_OKLOB_PLANT, "Make oklob plant", 0, 0, 0, 0, ABFLAG_ZOTDEF, 250},
+    { ABIL_MAKE_ICE_STATUE, "Make ice statue", 0, 0, 50, 0, ABFLAG_ZOTDEF, 2000},
+    { ABIL_MAKE_OCS, "Make crystal statue", 0, 0, 200, 0, ABFLAG_ZOTDEF, 2000},
+    { ABIL_MAKE_SILVER_STATUE, "Make silver statue", 0, 0, 400, 0, ABFLAG_ZOTDEF, 3000},
+    { ABIL_MAKE_CURSE_SKULL, "Make curse skull", 0, 0, 600, 0, ABFLAG_ZOTDEF|ABFLAG_NECRO_MISCAST_MINOR, 10000},
+    { ABIL_MAKE_TELEPORT, "Zot-teleport", 0, 0, 0, 0, ABFLAG_ZOTDEF, 2},
+    { ABIL_MAKE_ARROW_TRAP, "Make arrow trap", 0, 0, 0, 0, ABFLAG_ZOTDEF, 30 },
+    { ABIL_MAKE_BOLT_TRAP, "Make bolt trap", 0, 0, 0, 0, ABFLAG_ZOTDEF, 300 },
+    { ABIL_MAKE_SPEAR_TRAP, "Make spear trap", 0, 0, 0, 0, ABFLAG_ZOTDEF, 50 },
+    { ABIL_MAKE_AXE_TRAP, "Make axe trap", 0, 0, 0, 0, ABFLAG_ZOTDEF, 500 },
+    { ABIL_MAKE_NEEDLE_TRAP, "Make needle trap", 0, 0, 0, 0, ABFLAG_ZOTDEF, 30 },
+    { ABIL_MAKE_NET_TRAP, "Make net trap", 0, 0, 0, 0, ABFLAG_ZOTDEF, 2 },
+    { ABIL_MAKE_TELEPORT_TRAP, "Make teleport trap", 0, 0, 0, 0, ABFLAG_ZOTDEF|ABFLAG_TLOC_MISCAST, 15000 },
+    { ABIL_MAKE_ALARM_TRAP, "Make alarm trap", 0, 0, 0, 0, ABFLAG_ZOTDEF, 2 },
+    { ABIL_MAKE_BLADE_TRAP, "Make blade trap", 0, 0, 0, 0, ABFLAG_ZOTDEF, 3000 },
+    { ABIL_MAKE_OKLOB_CIRCLE, "Make oklob circle", 0, 0, 0, 0, ABFLAG_ZOTDEF, 1000},
+    { ABIL_MAKE_ACQUIRE_GOLD, "Acquire gold", 0, 0, 0, 0, ABFLAG_ZOTDEF|ABFLAG_LEVEL_DRAIN, 0 },
+    { ABIL_MAKE_ACQUIREMENT, "Acquirement", 0, 0, 0, 0, ABFLAG_ZOTDEF|ABFLAG_LEVEL_DRAIN, 0 },
+    { ABIL_MAKE_WATER, "Make water", 0, 0, 0, 0, ABFLAG_ZOTDEF, 10 },
+    { ABIL_MAKE_LIGHTNING_SPIRE, "Make lightning spire", 0, 0, 0, 0, ABFLAG_ZOTDEF, 100},
+    { ABIL_MAKE_BAZAAR, "Make bazaar", 0, 30, 0, 0, ABFLAG_ZOTDEF|ABFLAG_PERMANENT_HP, 100 },
+    { ABIL_MAKE_ALTAR, "Make altar", 0, 0, 0, 0, ABFLAG_ZOTDEF, 2 },
+    { ABIL_MAKE_GRENADES, "Make grenades", 0, 0, 0, 0, ABFLAG_ZOTDEF, 2 },
+    { ABIL_MAKE_SAGE, "Sage", 0, 0, 300, 0,  ABFLAG_ZOTDEF|ABFLAG_INSTANT, 0 },
+    { ABIL_REMOVE_CURSE, "Remove Curse", 0, 0, 300, 0, ABFLAG_ZOTDEF|ABFLAG_STAT_DRAIN, 0 },
 
     { ABIL_RENOUNCE_RELIGION, "Renounce Religion", 0, 0, 0, 0, ABFLAG_NONE },
 };
@@ -910,13 +911,14 @@ static talent _get_talent(ability_type ability, bool check_confused)
     // abilities keep the same slots if they change.
     result.which = _fixup_ability(ability);
 
+    const ability_def &abil = _get_ability_def(result.which);
+
     int failure = 0;
     bool perfect = false;  // is perfect
     bool invoc = false;
 
     if (check_confused)
     {
-        const ability_def &abil = _get_ability_def(result.which);
         if (you.confused() && !testbits(abil.flags, ABFLAG_CONF_OK))
         {
             // Initialize these so compilers don't complain.
@@ -931,7 +933,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     // Look through the table to see if there's a preference, else
     // find a new empty slot for this ability. -- bwr
-    const int index = _find_ability_slot(ability);
+    const int index = _find_ability_slot(abil);
     if (index != -1)
         result.hotkey = index_to_letter(index);
     else
@@ -2743,7 +2745,7 @@ static int _scale_piety_cost(ability_type abil, int original_cost)
             : original_cost);
 }
 
-// We pass in ability XP cost as it may have changed during the exercise
+// We pass in ability ZP cost as it may have changed during the exercise
 // of the ability (if the cost is scaled, for example)
 static void _pay_ability_costs(const ability_def& abil, int zpcost)
 {
@@ -3314,21 +3316,26 @@ void set_god_ability_slots()
 
 // Returns an index (0-51) if successful, -1 if you should
 // just use the next one.
-static int _find_ability_slot(ability_type which_ability)
+static int _find_ability_slot(const ability_def &abil)
 {
     for (int slot = 0; slot < 52; slot++)
-        if (you.ability_letter_table[slot] == which_ability)
+        if (you.ability_letter_table[slot] == abil.ability)
             return (slot);
 
     // No requested slot, find new one and make it preferred.
 
-    // Skip over a-e (invocations), a-g for Elyvilon.
-    const int first_slot = you.religion == GOD_ELYVILON ? 7 : 5;
+    // Skip over a-e (invocations), a-g for Elyvilon, a-E for ZotDef
+    int first_slot = 5;
+    if (you.religion == GOD_ELYVILON)
+	first_slot = 7;
+    if (abil.flags & ABFLAG_ZOTDEF)
+	first_slot = 5 + 26; // capital F, for *some* memory compat.
+
     for (int slot = first_slot; slot < 52; ++slot)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
         {
-            you.ability_letter_table[slot] = which_ability;
+            you.ability_letter_table[slot] = abil.ability;
             return (slot);
         }
     }
@@ -3338,7 +3345,7 @@ static int _find_ability_slot(ability_type which_ability)
     {
         if (you.ability_letter_table[slot] == ABIL_NON_ABILITY)
         {
-            you.ability_letter_table[slot] = which_ability;
+            you.ability_letter_table[slot] = abil.ability;
             return (slot);
         }
     }
