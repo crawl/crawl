@@ -509,7 +509,7 @@ centaur warrior
 
 A muscular centaur, a veteran of numerous battles, armed with well-made weapons and able to use them skillfully.
 %%%%
-Chaos spawn
+chaos spawn
 
 A being of pure chaos, its form is constantly shifting, growing and then losing eyes, mouths, claws and tentacles. It corrupts everything it touches.
 %%%%
