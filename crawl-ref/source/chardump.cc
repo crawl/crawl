@@ -1160,13 +1160,14 @@ static void _sdump_spell_usage(dump_params &par)
     if (max_lt)
         max_lt++;
 
-    par.text += make_stringf("\n%-24s | %5s", "Spells cast", "total");
+    par.text += make_stringf("\n%-24s", "Spells cast");
     for (int lt = 0; lt < max_lt; lt++)
         par.text += make_stringf(" | %2d-%2d", lt * 3 + 1, lt * 3 + 3);
-    par.text += "\n-------------------------+-------";
+    par.text += make_stringf(" | %5s", "total");
+    par.text += "\n-------------------------";
     for (int lt = 0; lt < max_lt; lt++)
         par.text += "+-------";
-    par.text += "\n";
+    par.text += "+-------\n";
 
     std::vector<std::pair<spell_type, FixedVector<int, 28> > > usage_vec;
     for (std::map<spell_type, FixedVector<int, 27> >::const_iterator sp =
@@ -1188,9 +1189,6 @@ static void _sdump_spell_usage(dump_params &par)
     {
         par.text += chop_string(spell_title(sp->first), 24);
 
-        ASSERT(sp->second[27] > 0);
-        par.text += make_stringf(" |%6d", sp->second[27]);
-
         for (int lt = 0; lt < max_lt; lt++)
         {
             int ltotal = 0;
@@ -1198,6 +1196,8 @@ static void _sdump_spell_usage(dump_params &par)
                 ltotal += sp->second[i];
             par.text += make_stringf(" |%6d", ltotal);
         }
+        ASSERT(sp->second[27] > 0);
+        par.text += make_stringf(" |%6d", sp->second[27]);
 
         par.text += "\n";
     }
