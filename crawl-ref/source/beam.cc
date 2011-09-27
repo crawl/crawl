@@ -5469,7 +5469,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
 
         int cadd = 5;
         // Circling around the center is always free.
-        if (delta.rdist() == 1 && new_delta.rdist() == 1)
+        if (hits && delta.rdist() == 1 && new_delta.rdist() == 1)
             cadd = 0;
         // Otherwise changing direction (e.g. looking around a wall) costs more.
         else if (delta.x * Compass[i].x < 0 || delta.y * Compass[i].y < 0)
