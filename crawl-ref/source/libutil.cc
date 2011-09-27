@@ -814,6 +814,8 @@ std::string wordwrap_line(std::string &s, int width, bool tags)
  * "foo123bar" > "foo99bar"
  * "0.10" > "0.9" (version sort)
  *
+ * @param a String one.
+ * @param b String two.
  * @param limit If passed, comparison ends after X numeric parts.
  * @return As in strcmp().
 **/

@@ -673,7 +673,7 @@ void tile_place_item_marker(const coord_def &gc, const item_def &item)
 /**
  * Place the tile for an unseen monster's disturbance.
  *
- * @param where    The disturbance's map position.
+ * @param gc    The disturbance's map position.
 **/
 void tile_place_invisible_monster(const coord_def &gc)
 {
