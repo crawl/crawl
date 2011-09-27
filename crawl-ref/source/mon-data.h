@@ -4851,7 +4851,8 @@ static monsterentry mondata[] = {
     M_SENSE_INVIS | M_INVIS,
     MR_RES_POISON | MR_RES_COLD | MR_RES_FIRE | MR_RES_ELEC,
     0, 12, MONS_LOROCYPROCA, MONS_LOROCYPROCA, MH_DEMONIC, -7,
-    { {AT_HIT, AF_ANTIMAGIC, 25}, {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK, AT_NO_ATK },
+    { {AT_HIT, AF_ANTIMAGIC, 25}, {AT_HIT, AF_PLAIN, 25}, AT_NO_ATK,
+       AT_NO_ATK },
     { 12, 3, 5, 0 },
     10, 12, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_MOAN,
     I_HIGH, HT_LAND, FL_NONE, 10, DEFAULT_ENERGY,
@@ -5308,7 +5309,7 @@ static monsterentry mondata[] = {
     MONUSE_WEAPONS_ARMOUR, MONEAT_NOTHING, SIZE_LARGE
 },
 
-// "C"yclopses and giants.
+// "C"yclopes and giants.
 {
     MONS_CHUCK, 'C', WHITE, "Chuck",
     M_WARM_BLOOD | M_SPEAKS | M_UNIQUE,
@@ -5348,7 +5349,8 @@ static monsterentry mondata[] = {
 // Antaeus is now demonic so that he'll resist torment. - bwr
 {
     MONS_ANTAEUS, 'C', LIGHTCYAN, "Antaeus",
-    M_UNIQUE | M_WARM_BLOOD | M_FIGHTER | M_SPELLCASTER | M_SENSE_INVIS | M_SPEAKS,
+    M_UNIQUE | M_WARM_BLOOD | M_FIGHTER | M_SPELLCASTER | M_SENSE_INVIS
+        | M_SPEAKS,
     mrd(MR_RES_ELEC | MR_RES_COLD, 2) | MR_VUL_FIRE,
     0, 15, MONS_GIANT, MONS_TITAN, MH_DEMONIC, -9,
     { {AT_HIT, AF_COLD, 75}, {AT_HIT, AF_COLD, 30}, AT_NO_ATK, AT_NO_ATK },
