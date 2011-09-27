@@ -58,6 +58,8 @@ static const char *transform_name()
         return "lich";
     case TRAN_PIG:
         return "pig";
+    case TRAN_APPENDAGE:
+        return "appendage";
     default:
         return "";
     }

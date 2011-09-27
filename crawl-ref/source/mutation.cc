@@ -68,6 +68,29 @@ static const body_facet_def _body_facets[] =
     { EQ_BOOTS, MUT_TALONS, 3 }
 };
 
+equipment_type beastly_slot(int mut)
+{
+    switch (mut)
+    {
+    case MUT_HORNS:
+        return EQ_HELMET;
+    case MUT_ANTENNAE:
+        return EQ_HELMET;
+    case MUT_BEAK:
+        return EQ_HELMET;
+    case MUT_CLAWS:
+        return EQ_GLOVES;
+    case MUT_TENTACLES:
+        return EQ_GLOVES;
+    case MUT_HOOVES:
+        return EQ_BOOTS;
+    case MUT_TALONS:
+        return EQ_BOOTS;
+    default:
+        return EQ_NONE;
+    }
+}
+
 static int mut_index[NUM_MUTATIONS];
 
 void init_mut_index()
@@ -858,7 +881,7 @@ static int _body_covered()
     return (covered);
 }
 
-static bool _physiology_mutation_conflict(mutation_type mutat)
+bool physiology_mutation_conflict(mutation_type mutat)
 {
     // If demonspawn, and mutat is a scale, see if they were going
     // to get it sometime in the future anyway; otherwise, conflict.
@@ -1136,7 +1159,7 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         }
     }
 
-    if (_physiology_mutation_conflict(mutat))
+    if (physiology_mutation_conflict(mutat))
         return (false);
 
     const mutation_def& mdef = get_mutation_def(mutat);
@@ -1504,6 +1527,8 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
         }
         else if (fully_inactive)
             colourname = "darkgrey";
+        else if (you.form == TRAN_APPENDAGE && you.attribute[ATTR_APPENDAGE] == mut)
+            colourname = "lightgreen";
         else if (_is_slime_mutation(mut))
             colourname = "green";
 

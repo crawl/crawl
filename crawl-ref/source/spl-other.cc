@@ -545,6 +545,7 @@ spret_type cast_condensation_shield(int pow, bool fail)
 spret_type cast_stoneskin(int pow, bool fail)
 {
     if (you.form != TRAN_NONE
+        && you.form != TRAN_APPENDAGE
         && you.form != TRAN_STATUE
         && you.form != TRAN_BLADE_HANDS)
     {

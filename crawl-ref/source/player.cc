@@ -324,6 +324,7 @@ void moveto_location_effects(dungeon_feature_type old_feat,
             if (feat_is_water(new_grid) // We're entering water
                 // We're not transformed, or with a form compatible with tail
                 && (you.form == TRAN_NONE
+                    || you.form == TRAN_APPENDAGE
                     || you.form == TRAN_BLADE_HANDS))
             {
                 merfolk_start_swimming(stepped);
@@ -537,6 +538,7 @@ bool is_player_same_species(const int mon, bool transform)
         case TRAN_STATUE:
         case TRAN_BLADE_HANDS:
         case TRAN_NONE:
+        case TRAN_APPENDAGE:
             break; // Check real (non-transformed) form.
         }
     }
@@ -808,7 +810,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     }
 
     // No further restrictions.
-    if (you.form == TRAN_NONE || you.form == TRAN_LICH)
+    if (you.form == TRAN_NONE || you.form == TRAN_LICH || you.form == TRAN_APPENDAGE)
         return (true);
 
     // Bats and pigs cannot wear anything except amulets.
@@ -2209,7 +2211,8 @@ bool player_is_shapechanged(void)
 {
     if (you.form == TRAN_NONE
         || you.form == TRAN_BLADE_HANDS
-        || you.form == TRAN_LICH)
+        || you.form == TRAN_LICH
+        || you.form == TRAN_APPENDAGE)
     {
         return (false);
     }
@@ -3551,6 +3554,7 @@ int check_stealth(void)
         race_mod++; // intentionally tiny, lich form is already overpowered
         break;
     case TRAN_NONE:
+    case TRAN_APPENDAGE:
         break;
     }
 
@@ -5847,6 +5851,7 @@ int player::armour_class() const
     if (form == TRAN_NONE
         || form == TRAN_LICH
         || form == TRAN_BLADE_HANDS
+        || form == TRAN_APPENDAGE
         || (form == TRAN_DRAGON
         && player_genus(GENPC_DRACONIAN)))
     {
@@ -5883,6 +5888,7 @@ int player::armour_class() const
         switch (form)
         {
         case TRAN_NONE:
+        case TRAN_APPENDAGE:
         case TRAN_BLADE_HANDS:
         case TRAN_LICH:  // can wear normal body armour (small bonus)
             break;
@@ -6545,6 +6551,7 @@ int player::has_claws(bool allow_tran) const
 
         // transformations other than these will override claws
         if (form != TRAN_NONE
+            && form != TRAN_APPENDAGE
             && form != TRAN_STATUE
             && form != TRAN_LICH)
         {
@@ -6569,6 +6576,7 @@ int player::has_talons(bool allow_tran) const
     {
         // transformations other than these will override talons
         if (form != TRAN_NONE
+            && form != TRAN_APPENDAGE
             && form != TRAN_BLADE_HANDS
             && form != TRAN_STATUE
             && form != TRAN_LICH)
@@ -6599,6 +6607,7 @@ int player::has_fangs(bool allow_tran) const
 
         // transformations other than these will override fangs
         if (form != TRAN_NONE
+            && form != TRAN_APPENDAGE
             && form != TRAN_BLADE_HANDS
             && form != TRAN_STATUE
             && form != TRAN_LICH)
@@ -6629,6 +6638,7 @@ int player::has_tail(bool allow_tran) const
 
         // transformations other than these will override a tail
         if (form != TRAN_NONE
+            && form != TRAN_APPENDAGE
             && form != TRAN_BLADE_HANDS
             && form != TRAN_STATUE
             && form != TRAN_LICH)
@@ -6683,6 +6693,7 @@ int player::has_pseudopods(bool allow_tran) const
     {
         // transformations other than these will override pseudopods
         if (form != TRAN_NONE
+            && form != TRAN_APPENDAGE
             && form != TRAN_BLADE_HANDS
             && form != TRAN_STATUE
             && form != TRAN_LICH)
@@ -6704,6 +6715,7 @@ int player::has_tentacles(bool allow_tran) const
     if (allow_tran)
     {
         if (form != TRAN_NONE
+            && form != TRAN_APPENDAGE
             && form != TRAN_BLADE_HANDS
             && form != TRAN_STATUE
             && form != TRAN_LICH)

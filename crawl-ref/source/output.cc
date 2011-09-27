@@ -458,6 +458,7 @@ static void _print_stats_wp(int y)
                 text = "Teeth";
                 break;
             case TRAN_NONE:
+            case TRAN_APPENDAGE:
             default:
                 break;
         }

@@ -859,6 +859,7 @@ static bool _vampire_cannot_cast(spell_type spell)
     // Satiated or less
     switch (spell)
     {
+    case SPELL_BEASTLY_APPENDAGE:
     case SPELL_BLADE_HANDS:
     case SPELL_CURE_POISON:
     case SPELL_DRAGON_FORM:
@@ -1593,6 +1594,9 @@ static spret_type _do_cast(spell_type spell, int powc,
         return brand_weapon(SPWPN_DISTORTION, powc, fail);
 
     // Transformations.
+    case SPELL_BEASTLY_APPENDAGE:
+        return cast_transform(powc, TRAN_APPENDAGE, fail);
+
     case SPELL_BLADE_HANDS:
         return cast_transform(powc, TRAN_BLADE_HANDS, fail);
 

@@ -829,6 +829,11 @@ static void _describe_transform(status_info* inf)
         inf->short_text = "statue-form";
         inf->long_text  = "You are a statue.";
         break;
+    case TRAN_APPENDAGE:
+        inf->light_text = "App";
+        inf->short_text = "appendage";
+        inf->long_text  = "You have a beastly appendage.";
+        break;
     case TRAN_NONE:
         break;
     }

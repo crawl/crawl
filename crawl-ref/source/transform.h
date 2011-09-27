@@ -39,6 +39,7 @@ void unmeld_one_equip(equipment_type eq);
 monster_type transform_mons();
 std::string blade_parts(bool terse = false);
 monster_type dragon_form_dragon_type();
+const char* appendage_name(int app = you.attribute[ATTR_APPENDAGE]);
 
 int form_hp_mod();
 

@@ -3011,6 +3011,19 @@ struct spell_desc
 },
 
 {
+    SPELL_BEASTLY_APPENDAGE, "Beastly Appendage",
+     SPTYP_TRANSMUTATION,
+     SPFLAG_HELPFUL | SPFLAG_CHAOTIC,
+     1,
+     50,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

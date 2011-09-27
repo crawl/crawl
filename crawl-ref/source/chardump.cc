@@ -267,6 +267,18 @@ static void _sdump_transform(dump_params &par)
         case TRAN_PIG:
             text += "You " + verb + " a filthy swine.";
             break;
+        case TRAN_APPENDAGE:
+            if (you.attribute[ATTR_APPENDAGE] == MUT_BEAK)
+            {
+                text += make_stringf("You %s grown a temporary beak.",
+                                     par.se ? "had" : "have");
+            }
+            else
+            {
+                text += make_stringf("You %s grown temporary %s.",
+                                     par.se ? "had" : "have", appendage_name());
+            }
+            break;
         case TRAN_NONE:
             break;
         }

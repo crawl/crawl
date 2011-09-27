@@ -1847,7 +1847,8 @@ int melee_attack::player_weapon_type_modify(int damage)
 
     // Take transformations into account, if no weapon is wielded.
     if (weap_type == WPN_UNARMED
-        && you.form != TRAN_NONE)
+        && you.form != TRAN_NONE
+        && you.form != TRAN_APPENDAGE)
     {
         switch (you.form)
         {
@@ -1921,6 +1922,7 @@ int melee_attack::player_weapon_type_modify(int damage)
             }
             break;
         case TRAN_NONE:
+        case TRAN_APPENDAGE:
             break;
         } // transformations
 
@@ -3961,6 +3963,7 @@ int melee_attack::player_to_hit(bool random_factor)
             your_to_hit += maybe_random2(10, random_factor);
             break;
         case TRAN_PIG:
+        case TRAN_APPENDAGE:
         case TRAN_NONE:
             break;
         }
@@ -4177,6 +4180,7 @@ int melee_attack::player_calc_base_unarmed_damage()
     case TRAN_PIG:
         break;
     case TRAN_NONE:
+    case TRAN_APPENDAGE:
         break;
     }
 
