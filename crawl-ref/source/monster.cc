@@ -1697,7 +1697,8 @@ bool monster::pickup_armour(item_def &item, int near, bool force)
         break;
     // And another hack or two...
     case ARM_WIZARD_HAT:
-        if (type == MONS_GASTRONOK)
+    case ARM_CAP:
+        if (type == MONS_GASTRONOK || type == MONS_OCTOPODE)
             eq = EQ_BODY_ARMOUR;
         break;
     case ARM_CLOAK:
