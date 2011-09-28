@@ -131,6 +131,7 @@ mon-behv.o \
 mon-cast.o \
 mon-clone.o \
 mon-death.o \
+mon-ench.o \
 mon-gear.o \
 mon-grow.o \
 mon-info.o \
