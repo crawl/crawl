@@ -2692,8 +2692,7 @@ void monster::go_berserk(bool /* intentional */, bool /* potion */)
     }
     del_ench(ENCH_FATIGUE, true); // Give no additional message.
 
-    const int duration = 16 + random2avg(13, 2);
-    add_ench(mon_enchant(ENCH_BERSERK, 0, 0, duration * 10));
+    add_ench(ENCH_BERSERK);
     if (simple_monster_message(this, " goes berserk!"))
         // Xom likes monsters going berserk.
         xom_is_stimulated(friendly() ? 25 : 100);
@@ -6979,6 +6978,8 @@ int mon_enchant::calc_duration(const monster* mons,
         cturn = 10 * (4 + random2(4)) / _mod_speed(10, mons->speed);
     case ENCH_INNER_FLAME:
         return (random_range(75, 125) * 10);
+    case ENCH_BERSERK:
+        return (16 + random2avg(13, 2)) * 10;
     default:
         break;
     }
