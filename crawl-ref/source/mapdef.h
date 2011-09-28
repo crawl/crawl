@@ -24,7 +24,7 @@
 #include "matrix.h"
 #include "fprop.h"
 #include "makeitem.h"
-#include "monster.h"
+#include "mon-ench.h"
 #include "travel_defs.h"
 
 extern const char *traversable_glyphs;
