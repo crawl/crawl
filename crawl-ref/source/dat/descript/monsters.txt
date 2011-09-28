@@ -1242,6 +1242,10 @@ lindwurm
 
 A small serpentine dragon with a pair of strong forelimbs. Its thick scales give off an eerie green glow.
 %%%%
+mad acolyte of Lugonu
+
+An insane follower of Lugonu. Years of living in the abyss have clearly taken their toll on this one's feeble mind.
+%%%%
 manticore
 
 A hideous cross-breed, bearing the features of a human and a lion, with great bat-like wings. Its tail bristles with spikes that can be loosed at potential prey.

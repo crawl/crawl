@@ -188,11 +188,6 @@ KMONS:  O = tentacled monstrosity / large abomination / chaos spawn
 KMONS:  L = wizard hd:16 name:mad_acolyte_of_Lugonu n_rpl n_des col:lightgreen \
             spells:smiting;blink_other;invisibility;malign_gateway;blink priest_spells ; \
             robe . quarterstaff ego:distortion | dagger ego:distortion
-MARKER: L = lua:MonPropsMarker:new { description= \
-               "An insane follower of Lugonu. Years of living in the abyss have clearly " ..\
-               "taken their toll on this one's feeble mind.", \
-               quote='"And when you look long into an abyss, the abyss also looks into you."\n \
-               \ \ \ -Friedrich Nietzche, "Beyond Good and Evil", 1886' }
 MAP
 ''''' ''''' '''''
 'bbb'''bbb'''bbb'
@@ -217,11 +212,6 @@ SUBST:  ' = .
 KMONS:  L = wizard hd:16 name:mad_acolyte_of_Lugonu n_rpl n_des col:lightgreen \
             spells:smiting;blink_other;invisibility;malign_gateway;blink priest_spells ; \
             robe . quarterstaff ego:distortion | dagger ego:distortion
-MARKER: L = lua:MonPropsMarker:new { description= \
-               "An insane follower of Lugonu. Years of living in the abyss have clearly " ..\
-               "taken their toll on this one's feeble mind.", \
-               quote='"And when you look long into an abyss, the abyss also looks into you."\n \
-               \ \ \ -Friedrich Nietzche, "Beyond Good and Evil", 1886' }
 MAP
   '''''''''''
   'b'b'b'b'b'
