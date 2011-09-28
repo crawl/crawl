@@ -2014,13 +2014,16 @@ static void tag_read_you(reader &th)
             you.train_set[j] = unmarshallBoolean(th);
 #if TAG_MAJOR_VERSION == 32
         }
-        else
-            init_can_train();
 #endif
         you.skill_points[j]    = unmarshallInt(th);
         you.ct_skill_points[j] = unmarshallInt(th);
         you.skill_order[j]     = unmarshallByte(th);
     }
+
+#if TAG_MAJOR_VERSION == 32
+        if (th.getMinorVersion() < TAG_MINOR_SKILL_RESTRICTIONS)
+#endif
+            init_can_train();
 
 #if TAG_MAJOR_VERSION == 32
     if (th.getMinorVersion() >= TAG_MINOR_SKILL_TRAINING)
