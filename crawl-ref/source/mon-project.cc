@@ -541,41 +541,41 @@ void iood_catchup(monster* mons, int pturns)
 
 bool boulder_start(monster *mon, bolt *beam)
 {
-	mon->add_ench(ENCH_ROLLING);
-	simple_monster_message(mon, " curls into a ball and rolls at you!");
-	// Work out x/y/vx/vy from beam
-	beam->choose_ray();
+    mon->add_ench(ENCH_ROLLING);
+    simple_monster_message(mon, " curls into a ball and rolls at you!");
+    // Work out x/y/vx/vy from beam
+    beam->choose_ray();
     mon->props["boulder_x"].get_float() = beam->ray.r.start.x - 0.5;
     mon->props["boulder_y"].get_float() = beam->ray.r.start.y - 0.5;
     mon->props["boulder_vx"].get_float() = beam->ray.r.dir.x;
     mon->props["boulder_vy"].get_float() = beam->ray.r.dir.y;
-	boulder_act(*mon);
-	return true;
+    boulder_act(*mon);
+    return true;
 }
 bool boulder_flee(monster *mon, bolt *beam)
 {
-	mon->add_ench(ENCH_ROLLING);
-	simple_monster_message(mon, " curls into a ball and rolls away!");
-	// Work out x/y/vx/vy from beam
-	beam->choose_ray();
+    mon->add_ench(ENCH_ROLLING);
+    simple_monster_message(mon, " curls into a ball and rolls away!");
+    // Work out x/y/vx/vy from beam
+    beam->choose_ray();
     mon->props["boulder_x"].get_float() = beam->ray.r.start.x - 0.5;
     mon->props["boulder_y"].get_float() = beam->ray.r.start.y - 0.5;
     mon->props["boulder_vx"].get_float() = -beam->ray.r.dir.x;
     mon->props["boulder_vy"].get_float() = -beam->ray.r.dir.y;
-	boulder_act(*mon);
-	return true;
+    boulder_act(*mon);
+    return true;
 }
 
 static void _boulder_stop(monster& mon, bool msg = true)
 {
-	if (mon.type==MONS_BOULDER_BEETLE) {
-		/*
-		if (msg)
-		    simple_monster_message(&mon, " comes to a halt.");
-		*/
+    if (mon.type==MONS_BOULDER_BEETLE) {
+        /*
+        if (msg)
+            simple_monster_message(&mon, " comes to a halt.");
+        */
 
-		mon.del_ench(ENCH_ROLLING,!msg);
-	}
+        mon.del_ench(ENCH_ROLLING,!msg);
+    }
 }
 
 // Alas, too much differs to reuse beam shield blocks :(
@@ -595,7 +595,7 @@ static bool _boulder_hit(monster& mon, const coord_def &pos)
 {
     bolt beam;
     beam.name = "rolling boulder";
-	beam.flavour = BEAM_DISINTEGRATION;
+    beam.flavour = BEAM_DISINTEGRATION;
     beam.attitude = mon.attitude;
 
     actor *caster = &mon;
@@ -606,9 +606,9 @@ static bool _boulder_hit(monster& mon, const coord_def &pos)
     beam.source = pos;
     beam.target = pos;
     beam.hit = AUTOMATIC_HIT;
-	beam.source_name = mon.name(DESC_PLAIN, true);
+    beam.source_name = mon.name(DESC_PLAIN, true);
 
-	int pow = mon.hit_dice * 6;
+    int pow = mon.hit_dice * 6;
     pow = stepdown_value(pow, 30, 30, 200, -1);
     beam.damage = dice_def(3, pow / 4);
 
@@ -619,13 +619,13 @@ static bool _boulder_hit(monster& mon, const coord_def &pos)
 
     beam.fire();
 
-	return (true);
+    return (true);
 }
 
 bool boulder_act(monster& mon)
 {
-	// Handles Boulder Beetle in Rolling form
-	// returns true if stopped rolling
+    // Handles Boulder Beetle in Rolling form
+    // returns true if stopped rolling
 
     float x = mon.props["boulder_x"];
     float y = mon.props["boulder_y"];
@@ -643,7 +643,7 @@ bool boulder_act(monster& mon)
     }
 
     _normalize(vx, vy);
-	/* IOOD swerving code, could reinstigate if it make boulders more fun
+    /* IOOD swerving code, could reinstigate if it make boulders more fun
     const actor *foe = mon.get_foe();
     // If the target is gone, the orb continues on a ballistic course since
     // picking a new one would require intelligence.
@@ -691,7 +691,7 @@ bool boulder_act(monster& mon)
         mon.props["iood_vx"] = vx;
         mon.props["iood_vy"] = vy;
     }
-	*/
+    */
 move_again:
 
     x += vx;
@@ -710,9 +710,9 @@ move_again:
 
     if (pos == mon.pos())
         return (false);
-	
-	// Place a dust trail (so we can see which way it's rolling)
-	place_cloud(CLOUD_DUST_TRAIL, mon.pos(), 2 + random2(3), &mon);
+    
+    // Place a dust trail (so we can see which way it's rolling)
+    place_cloud(CLOUD_DUST_TRAIL, mon.pos(), 2 + random2(3), &mon);
 
     actor *victim = actor_at(pos);
     if (cell_is_solid(pos) || victim)
@@ -722,24 +722,24 @@ move_again:
             if (you.see_cell(pos))
                 mprf("%s hits %s", mon.name(DESC_THE, true).c_str(),
                      feature_description(pos, false, DESC_A).c_str());
-	        _boulder_stop(mon,you.see_cell(pos));
+            _boulder_stop(mon,you.see_cell(pos));
         }
 
         monster* mons = (victim && victim->atype() == ACT_MONSTER) ?
             (monster*) victim : 0;
 
-		if (mons && mons_is_boulder(mons))
+        if (mons && mons_is_boulder(mons))
         {
             if (mon.observable())
                 mpr("The boulders collide with a stupendous crash!");
             else
                 noisy(20, pos, "You hear a loud crashing sound!");
 
-			// Remove ROLLING and add DAZED
-			mon.del_ench(ENCH_ROLLING,true);
-			mons->del_ench(ENCH_ROLLING,true);
-			mon.add_ench(ENCH_CONFUSION);
-			mons->add_ench(ENCH_CONFUSION);
+            // Remove ROLLING and add DAZED
+            mon.del_ench(ENCH_ROLLING,true);
+            mons->del_ench(ENCH_ROLLING,true);
+            mon.add_ench(ENCH_CONFUSION);
+            mons->add_ench(ENCH_CONFUSION);
             return (true);
         }
 
@@ -826,15 +826,15 @@ move_again:
             mprf("%s hits you!", mon.name(DESC_THE, true).c_str());
 
         if (_boulder_hit(mon, pos)){
-			if ((victim && victim->alive()))
-				_boulder_stop(mon);
+            if ((victim && victim->alive()))
+                _boulder_stop(mon);
         //    return (true);
-		}
+        }
     }
 
     if (!mon.move_to_pos(pos))
     {
-		_boulder_stop(mon);
+        _boulder_stop(mon);
         return (true);
     }
 

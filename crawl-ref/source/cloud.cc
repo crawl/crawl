@@ -1245,13 +1245,13 @@ static const char *_terse_cloud_names[] =
 #if TAG_MAJOR_VERSION > 32
     "calcifying dust",
 #endif
-	"blessed fire", "foul pestilence", "thin mist",
+    "blessed fire", "foul pestilence", "thin mist",
     "seething chaos", "rain", "mutagenic fog", "magical condensation",
     "raging winds",
 #if TAG_MAJOR_VERSION == 32
     "calcifying dust", 
 #endif
-	"sparse dust",
+    "sparse dust",
 };
 
 static const char *_verbose_cloud_names[] =
@@ -1264,12 +1264,12 @@ static const char *_verbose_cloud_names[] =
 #if TAG_MAJOR_VERSION > 32
     "calcifying dust",
 #endif
-	"blessed fire", "dark miasma", "thin mist", "seething chaos", "the rain",
+    "blessed fire", "dark miasma", "thin mist", "seething chaos", "the rain",
     "mutagenic fog", "magical condensation", "raging winds",
 #if TAG_MAJOR_VERSION == 32
     "calcifying dust", 
 #endif
-	"sparse dust",
+    "sparse dust",
 };
 
 std::string cloud_type_name(cloud_type type, bool terse)
@@ -1460,7 +1460,7 @@ int get_cloud_colour(int cloudno)
         break;
 
     case CLOUD_DUST_TRAIL:
-		which_colour = ETC_EARTH;
+        which_colour = ETC_EARTH;
         break;
 
     case CLOUD_HOLY_FLAMES:
