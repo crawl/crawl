@@ -53,7 +53,7 @@ Turn into a speedy vampire bat. In bat form, you can neither interact with items
 %%%%
 Bottle Blood
 
-At experience level 6 and higher, Vampires can bottle the blood from non-rotten and blood-containing corpses they are standing on. Doing so requires a butchery tool and the capability of wielding it, as is the case for butchering.
+At experience level 6 and higher, Vampires can bottle the blood from non-rotten and blood-containing corpses they are standing on. Doing so requires the capability of wielding your knife, as is the case for butchering.
 %%%%
 Spit Acid
 
