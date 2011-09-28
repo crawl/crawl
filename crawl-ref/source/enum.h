@@ -2919,6 +2919,7 @@ enum skill_menu_state
     SKM_VIEW_POINTS,
     SKM_DO_FOCUS,
     SKM_VIEW_NEW_LEVEL,
+    SKM_SHOW_TRAINABLE,
 };
 
 enum skill_focus_mode

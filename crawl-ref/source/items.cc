@@ -313,6 +313,8 @@ bool dec_inv_item_quantity(int obj, int amount, bool suppress_burden)
             }
         }
 
+        item_skills(you.inv[obj], you.stop_train);
+
         you.inv[obj].base_type = OBJ_UNASSIGNED;
         you.inv[obj].quantity  = 0;
         you.inv[obj].props.clear();
@@ -1852,6 +1854,8 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     you.turn_is_over = true;
 
     you.last_pickup[item.link] = retval;
+
+    item_skills(item, you.start_train);
 
     return (retval);
 }

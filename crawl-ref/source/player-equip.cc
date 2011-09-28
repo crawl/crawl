@@ -153,6 +153,11 @@ static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
         _unequip_armour_effect(item, meld);
     else if (slot >= EQ_LEFT_RING && slot < NUM_EQUIP)
         _unequip_jewellery_effect(item, msg);
+
+    if (slot == EQ_BODY_ARMOUR && !meld)
+        you.stop_train.insert(SK_ARMOUR);
+    else if (slot == EQ_SHIELD && !meld)
+        you.stop_train.insert(SK_SHIELDS);
 }
 
 void _hp_artefact()

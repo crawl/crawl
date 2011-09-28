@@ -1,7 +1,7 @@
 /**
  * @file
  * @brief Collects all calls to skills.cc:exercise for
- *            easier changes to the training modell.
+ *            easier changes to the training model.
 **/
 
 #include "AppHdr.h"
@@ -18,7 +18,7 @@
 #include "sprint.h"
 #include "state.h"
 
-static skill_type _abil_skill(ability_type abil)
+skill_type abil_skill(ability_type abil)
 {
     switch (abil)
     {
@@ -205,7 +205,6 @@ static void _exercise_spell(spell_type spell, bool success)
     // exercise skills in that random order. That way, first skill don't
     // stay in the queue for a shorter time.
     bool conj = false;
-    bool unknown = false;
     std::vector<skill_type> disc;
     for (int ndx = 0; ndx <= SPTYP_LAST_EXPONENT; ndx++)
     {
@@ -215,15 +214,12 @@ static void _exercise_spell(spell_type spell, bool success)
         skill = spell_type2skill(1 << ndx);
         if (skill == SK_CONJURATIONS)
             conj = true;
-        if (!you.skills[skill])
-            unknown = true;
 
         disc.push_back(skill);
     }
 
-    // We slow down the training of spells with
-    //conjuration (except if trying to learn a new skill).
-    if (conj && !unknown && !x_chance_in_y(skillcount, 4))
+    // We slow down the training of spells with conjurations.
+    if (conj && !x_chance_in_y(skillcount, 4))
         return;
 
     std::random_shuffle(disc.begin(), disc.end());
@@ -406,7 +402,7 @@ void practise(exer_type ex, int param1)
     case EX_USED_ABIL:
     {
         ability_type abil = static_cast<ability_type>(param1);
-        sk = _abil_skill(abil);
+        sk = abil_skill(abil);
         deg = _abil_degree(abil);
         if (sk != SK_NONE)
             exercise(sk, deg);

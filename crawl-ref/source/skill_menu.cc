@@ -78,12 +78,23 @@ skill_type SkillMenuEntry::get_skill() const
     return m_sk;
 }
 
+static bool _show_skill(skill_type sk, skill_menu_state state)
+{
+    switch (state)
+    {
+    case SKM_SHOW_KNOWN:     return you.skills[sk];
+    case SKM_SHOW_TRAINABLE: return you.can_train[sk];
+    case SKM_SHOW_ALL:       return true;
+    default:                 return false;
+    }
+}
+
 bool SkillMenuEntry::is_selectable(bool keep_hotkey)
 {
     if (is_invalid_skill(m_sk))
         return false;
 
-    if (!skill_known(m_sk) && m_skm->get_state(SKM_SHOW) == SKM_SHOW_KNOWN)
+    if (!_show_skill(m_sk, m_skm->get_state(SKM_SHOW)))
         return false;
 
     if (is_set(SKMF_HELP))
@@ -107,7 +118,7 @@ bool SkillMenuEntry::is_selectable(bool keep_hotkey)
         return false;
     }
 
-    if (!skill_known(m_sk) && !is_set(SKMF_RESKILL_TO))
+    if (!you.can_train[m_sk] && !is_set(SKMF_RESKILL_TO))
         return false;
 
     if (mastered())
@@ -239,11 +250,6 @@ COLORS SkillMenuEntry::get_colour() const
     {
         return CYAN;
     }
-    else if (m_skm->get_state(SKM_DO) == SKM_DO_FOCUS
-             && you.train[m_sk] == 2)
-    {
-        return WHITE;
-    }
     else if (m_skm->get_state(SKM_LEVEL) == SKM_LEVEL_ENHANCED
              && you.skill(m_sk) != you.skills[m_sk])
     {
@@ -254,8 +260,11 @@ COLORS SkillMenuEntry::get_colour() const
     }
     else if (mastered())
         return YELLOW;
-    else if (!you.train[m_sk] || !skill_known(m_sk))
+    else if (!you.train[m_sk] || !you.can_train[m_sk]
+             || !you.skills[m_sk] && !you.training[m_sk])
+    {
         return DARKGREY;
+    }
     else if (crosstrain_bonus(m_sk) > 1 && is_set(SKMF_APTITUDE))
         return GREEN;
     else if (is_antitrained(m_sk) && is_set(SKMF_APTITUDE))
@@ -276,10 +285,10 @@ std::string SkillMenuEntry::get_prefix()
     else
         letter = ' ';
 
-    const int sign = (!skill_known(m_sk) || mastered()) ? ' ' :
-                                 (you.train[m_sk] == 2) ? '*' :
-                                        you.train[m_sk] ? '+'
-                                                        : '-';
+    const int sign = (!you.can_train[m_sk] || mastered()) ? ' ' :
+                                   (you.train[m_sk] == 2) ? '*' :
+                                          you.train[m_sk] ? '+'
+                                                          : '-';
 #ifdef USE_TILE_LOCAL
     return make_stringf(" %c %c", letter, sign);
 #else
@@ -386,7 +395,7 @@ void SkillMenuEntry::set_points()
 
 void SkillMenuEntry::set_progress()
 {
-    if (mastered() || !skill_known(m_sk))
+    if (mastered())
         m_progress->set_text("");
     else
     {
@@ -447,7 +456,7 @@ void SkillMenuEntry::set_title()
 
 void SkillMenuEntry::set_training()
 {
-    if (!you.train[m_sk] || !skill_known(m_sk) && !you.training[m_sk])
+    if (!you.train[m_sk] || !you.training[m_sk])
         m_progress->set_text("");
     else
         m_progress->set_text(make_stringf(" %2d%%", you.training[m_sk]));
@@ -533,6 +542,7 @@ std::string SkillMenuSwitch::get_name(skill_menu_state state)
     case SKM_DO_PRACTISE:    return "practise";
     case SKM_DO_FOCUS:       return "focus";
     case SKM_SHOW_KNOWN:     return "known";
+    case SKM_SHOW_TRAINABLE: return "trainable";
     case SKM_SHOW_ALL:       return "all";
     case SKM_LEVEL_ENHANCED:
         return (m_skm->is_set(SKMF_ENHANCED)
@@ -626,12 +636,6 @@ SkillMenu::SkillMenu(int flag, int exp) : PrecisionMenu(), m_flags(flag),
     {
         m_skill_backup.save();
         you.auto_training = false;
-
-        // We're not training unknown skills.
-        for (int i = 0; i < NUM_SKILLS; i++)
-            if (!skill_known(i))
-                you.training[i] = 0;
-
         reset_training();
     }
 
@@ -767,11 +771,9 @@ bool SkillMenu::exit()
 
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
-        if (!skill_known(i))
-            continue;
-
         if (you.train[i])
         {
+            ASSERT(you.can_train[i]);
             enabled_skill = true;
             break;
         }
@@ -885,6 +887,12 @@ void SkillMenu::toggle(skill_menu_switch sw)
     {
     case SKM_MODE:
         you.auto_training = !you.auto_training;
+
+        // Unknown skills are on by default in auto mode and off in manual.
+        for (int i = 0; i < NUM_SKILLS; ++i)
+            if (!you.skills[i] && !you.train_set[i])
+                you.train[i] = you.auto_training;
+
         reset_training();
         if (get_state(SKM_VIEW) == SKM_VIEW_TRAINING)
             refresh_display();
@@ -1000,7 +1008,8 @@ void SkillMenu::init_switches()
 
     sw = new SkillMenuSwitch("Show", '*');
     m_switches[SKM_SHOW] = sw;
-    sw->add(SKM_SHOW_KNOWN);
+    //sw->add(SKM_SHOW_KNOWN);
+    sw->add(SKM_SHOW_TRAINABLE);
     if (!is_set(SKMF_SIMPLE) && !is_set(SKMF_EXPERIENCE))
         sw->add(SKM_SHOW_ALL);
     sw->update();
@@ -1204,12 +1213,8 @@ void SkillMenu::set_skills()
             ln = 0;
             continue;
         }
-        else if (!is_invalid_skill(sk) && !you.skill(sk)
-                 && !skill_known(sk) && !you.training[sk]
-                 && get_state(SKM_SHOW) == SKM_SHOW_KNOWN)
-        {
+        else if (!is_invalid_skill(sk) && !_show_skill(sk, get_state(SKM_SHOW)))
             continue;
-        }
         else
         {
             skme.set_skill(sk);
@@ -1229,12 +1234,14 @@ void SkillMenu::set_skills()
 
 void SkillMenu::toggle_practise(skill_type sk, int keyn)
 {
+    ASSERT(you.can_train[sk]);
     if (get_state(SKM_DO) == SKM_DO_PRACTISE)
         you.train[sk] = !you.train[sk];
     else if (get_state(SKM_DO) == SKM_DO_FOCUS)
         you.train[sk] = (you.train[sk] + 1) % 3;
     else
         die("Invalid state.");
+    you.train_set[sk] = true;
     reset_training();
     SkillMenuEntry* skme = find_entry(sk);
     skme->set_name(true);

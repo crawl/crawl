@@ -548,11 +548,7 @@ void stop_studying_manual(bool finish)
 
     you.manual_skill = SK_NONE;
     you.manual_index = -1;
-    if (!you.skills[sk])
-    {
-        lose_skill(sk);
-        reset_training();
-    }
+    you.stop_train.insert(sk);
 }
 
 void skill_manual(int slot)
@@ -595,11 +591,7 @@ void skill_manual(int slot)
     mprf("You start studying %s.", skill_name(skill));
     you.manual_skill = skill;
     you.manual_index = slot;
-    if (!you.skills[skill])
-    {
-        gain_skill(skill);
-        reset_training();
-    }
+    you.start_train.insert(skill);
     you.turn_is_over = true;
 }
 

@@ -3114,54 +3114,9 @@ std::vector<talent> your_talents(bool check_confused)
     if (!player_under_penance() && (!silenced(you.pos())
                                     || you.religion == GOD_NEMELEX_XOBEH))
     {
-        for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
-        {
-            if (you.piety >= piety_breakpoint(i))
-            {
-                ability_type abil = god_abilities[you.religion][i];
-                if (crawl_state.game_is_zotdef()
-                    && (abil == ABIL_LUGONU_ABYSS_EXIT
-                     || abil == ABIL_LUGONU_ABYSS_ENTER))
-                {
-                    abil = ABIL_NON_ABILITY;
-                }
-                if (abil != ABIL_NON_ABILITY)
-                {
-                    _add_talent(talents, abil, check_confused);
-
-                    if (abil == ABIL_ELYVILON_LESSER_HEALING_OTHERS)
-                    {
-                        _add_talent(talents,
-                                    ABIL_ELYVILON_LESSER_HEALING_SELF,
-                                    check_confused);
-                        _add_talent(talents,
-                                    ABIL_ELYVILON_LIFESAVING,
-                                    check_confused);
-                    }
-                    else if (abil == ABIL_ELYVILON_GREATER_HEALING_OTHERS)
-                    {
-                        _add_talent(talents,
-                                    ABIL_ELYVILON_GREATER_HEALING_SELF,
-                                    check_confused);
-                    }
-                    else if (abil == ABIL_YRED_RECALL_UNDEAD_SLAVES)
-                    {
-                        _add_talent(talents,
-                                    ABIL_YRED_INJURY_MIRROR,
-                                    check_confused);
-                    }
-                }
-            }
-        }
-
-        if (you.religion == GOD_ZIN
-            && !you.num_total_gifts[GOD_ZIN]
-            && you.piety > 160)
-        {
-            _add_talent(talents,
-                        ABIL_ZIN_CURE_ALL_MUTATIONS,
-                        check_confused);
-        }
+        std::vector<ability_type> abilities = get_god_abilities();
+        for (unsigned int i = 0; i < abilities.size(); ++i)
+            _add_talent(talents, abilities[i], check_confused);
     }
 
     // And finally, the ability to opt-out of your faith {dlb}:
@@ -3387,6 +3342,54 @@ static int _find_ability_slot(ability_type which_ability)
 
     // All letters are assigned.
     return (-1);
+}
+
+std::vector<ability_type> get_god_abilities()
+{
+    std::vector<ability_type> abilities;
+    for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
+    {
+        if (you.piety < piety_breakpoint(i))
+            continue;
+
+        ability_type abil = god_abilities[you.religion][i];
+        if (abil == ABIL_NON_ABILITY
+            || crawl_state.game_is_zotdef()
+               && (abil == ABIL_LUGONU_ABYSS_EXIT
+                   || abil == ABIL_LUGONU_ABYSS_ENTER))
+        {
+            continue;
+        }
+
+        abilities.push_back(abil);
+        if (abil == ABIL_ELYVILON_LESSER_HEALING_OTHERS)
+        {
+            abilities.push_back(ABIL_ELYVILON_LESSER_HEALING_SELF);
+            abilities.push_back(ABIL_ELYVILON_LIFESAVING);
+        }
+        else if (abil == ABIL_ELYVILON_GREATER_HEALING_OTHERS)
+            abilities.push_back(ABIL_ELYVILON_GREATER_HEALING_SELF);
+        else if (abil == ABIL_YRED_RECALL_UNDEAD_SLAVES)
+            abilities.push_back(ABIL_YRED_INJURY_MIRROR);
+    }
+
+    if (you.religion == GOD_ZIN && !you.num_total_gifts[GOD_ZIN] && you.piety > 160)
+        abilities.push_back(ABIL_ZIN_CURE_ALL_MUTATIONS);
+
+    return abilities;
+}
+void gain_god_ability(int i)
+{
+    you.start_train.insert(abil_skill(god_abilities[you.religion][i]));
+    if (god_abilities[you.religion][i] == ABIL_TSO_DIVINE_SHIELD)
+        you.start_train.insert(SK_SHIELDS);
+}
+
+void lose_god_ability(int i)
+{
+    you.stop_train.insert(abil_skill(god_abilities[you.religion][i]));
+    if (god_abilities[you.religion][i] == ABIL_TSO_DIVINE_SHIELD)
+        you.stop_train.insert(SK_SHIELDS);
 }
 
 ////////////////////////////////////////////////////////////////////////

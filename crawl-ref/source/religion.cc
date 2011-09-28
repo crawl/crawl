@@ -35,6 +35,7 @@
 #include "effects.h"
 #include "env.h"
 #include "enum.h"
+#include "exercise.h"
 #include "files.h"
 #include "food.h"
 #include "godabil.h"
@@ -2654,6 +2655,8 @@ static void _gain_piety_point()
             // title.
             redraw_skill(you.your_name, player_title());
 
+            gain_god_ability(i);
+
             if (_abil_chg_message(god_gain_power_messages[you.religion][i],
                                   "You can now %s.", i))
             {
@@ -2810,6 +2813,7 @@ void lose_piety(int pgn)
                 // title.
                 redraw_skill(you.your_name, player_title());
 
+                lose_god_ability(i);
                 _abil_chg_message(god_lose_power_messages[you.religion][i],
                                   "You can no longer %s.", i);
 
@@ -2877,6 +2881,14 @@ void excommunication(god_type new_god)
     god_acting gdact(old_god, true);
 
     take_note(Note(NOTE_LOSE_GOD, old_god));
+
+    std::vector<ability_type> abilities = get_god_abilities();
+    for (unsigned int i = 0; i < abilities.size(); ++i)
+    {
+        you.stop_train.insert(abil_skill(abilities[i]));
+        if (abilities[i] == ABIL_TSO_DIVINE_SHIELD)
+            you.stop_train.insert(SK_SHIELDS);
+    }
 
     you.duration[DUR_PIETY_POOL] = 0; // your loss
     you.piety = 0;

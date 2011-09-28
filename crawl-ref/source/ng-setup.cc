@@ -1398,6 +1398,7 @@ static void _setup_generic(const newgame_def& ng)
     calc_total_skill_points();
     init_skill_order();
     init_training();
+    init_can_train();
 
     _give_species_bonus_mp();
 

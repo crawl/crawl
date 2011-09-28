@@ -1187,6 +1187,9 @@ static void _input()
             world_reacts();
         }
 
+        if (!you_are_delayed())
+            update_can_train();
+
         return;
     }
 
@@ -1270,6 +1273,7 @@ static void _input()
         if (apply_berserk_penalty)
             _do_berserk_no_combat_penalty();
 
+        update_can_train();
         world_reacts();
     }
 
@@ -3006,6 +3010,9 @@ static void _player_reacts()
 // Ran after monsters and clouds get to act.
 static void _player_reacts_to_monsters()
 {
+    // In case Maurice managed to steal a needed item for example.
+    update_can_train();
+
     if (you.duration[DUR_FIRE_SHIELD] > 0)
         manage_fire_shield(you.time_taken);
 
