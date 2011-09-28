@@ -1088,7 +1088,9 @@ coord_def direction_chooser::find_default_target() const
                    && mon_target->holiness() == MH_UNDEAD
                 || mode == TARG_INJURED_FRIEND
                    && (mon_target->friendly() && mons_get_damage_level(mon_target) > MDAM_OKAY
-                       || !mon_target->friendly() && is_pacifiable(mon_target) >= 0))
+                       || (!mon_target->wont_attack()
+                           && !mon_target->neutral()
+                           && is_pacifiable(mon_target) >= 0)))
             && in_range(mon_target->pos()))
         {
             result = mon_target->pos();
@@ -2448,7 +2450,7 @@ static bool _find_monster(const coord_def& where, int mode, bool need_path,
 
     if (mode == TARG_INJURED_FRIEND)
         return (mon->friendly() && mons_get_damage_level(mon) > MDAM_OKAY
-                || !mon->friendly() && is_pacifiable(mon) >= 0);
+                || !mon->wont_attack() && !mon->neutral() && is_pacifiable(mon) >= 0);
 
     if (mode == TARG_EVOLVABLE_PLANTS)
         return (mons_is_evolvable(mon));
