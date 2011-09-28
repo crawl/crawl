@@ -177,14 +177,23 @@ Note: you train all activated skills at once whenever you gain some experience.
 It is not a bug if you gain a skill level in Axes after killing a monster with
 a spell.
 
-You can toggle a skill by pressing its letter. If a skill is deselected
-(<darkgrey>darkened</darkgrey>), it will not be trained at all. A skill set to focus (marked with <w>*</w>)
-will be trained faster than others.
+You can cycle a skill between <darkgrey>- deselected</darkgrey>, + selected, and <w>* focused</w>
+by pressing its letter. If a skill is deselected, it will not be trained at
+all. A skill set to focus will be trained faster than others.
+
+You can read about skills by using <w>?</w> to switch to description mode; to read
+about skills you don't yet have, combine this with <w>*</w> (show all skills).
 
 To train skills, you need to be able to practise them. This means carrying a
 weapon of the appropriate type, or knowing a spell from the school you want to
 train. Some skills like Dodging and Spellcasting have no restrictions and can
 always be trained.
+
+[XXX: This paragraph describes stuff that is not yet implemented!]
+To train existing skills, you may be required to satisfy certain requirements.
+For example, to train a weapon skill, you will need to carry a weapon of that
+type; to train a spell school, you will need to have memorized a spell from
+that school, etc.
 
 Training can be done in two modes:
 * automatic: Skills are trained by your use of them.
