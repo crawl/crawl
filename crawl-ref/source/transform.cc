@@ -512,9 +512,9 @@ static int _transform_duration(transformation_type which_trans, int pow)
 {
     switch (which_trans)
     {
-    case TRAN_APPENDAGE:
     case TRAN_BLADE_HANDS:
         return std::min(10 + random2(pow), 100);
+    case TRAN_APPENDAGE:
     case TRAN_SPIDER:
         return std::min(10 + random2(pow) + random2(pow), 60);
     case TRAN_STATUE:
