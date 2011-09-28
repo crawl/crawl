@@ -2085,8 +2085,11 @@ static bool _do_ability(const ability_def& abil)
         you.increase_duration(DUR_BREATH_WEAPON,
                       3 + random2(10) + random2(30 - you.experience_level));
 
-        if (abil.ability == ABIL_BREATHE_STEAM)
+        if (abil.ability == ABIL_BREATHE_STEAM
+            || abil.ability == ABIL_SPIT_ACID)
+        {
             you.duration[DUR_BREATH_WEAPON] /= 2;
+        }
 
         break;
 
