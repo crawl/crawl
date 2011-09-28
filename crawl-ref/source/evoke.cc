@@ -72,6 +72,8 @@ void shadow_lantern_effect()
     }
 }
 
+extern bool apply_berserk_penalty;
+
 static bool _reaching_weapon_attack(const item_def& wpn)
 {
     dist beam;
@@ -127,6 +129,12 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         mpr("There's a wall in the way.");
         return (false);
     }
+
+    // Failing to hit someone due to a friend blocking is infuriating,
+    // shadow-boxing empty space is not (and would be abusable to wait
+    // with no penalty).
+    if (mons)
+        apply_berserk_penalty = false;
 
     // Choose one of the two middle squares (which might be the same).
     const coord_def middle =
