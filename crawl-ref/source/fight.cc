@@ -5083,7 +5083,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
     case AF_CONFUSE:
         if (attk.type == AT_SPORE)
         {
-            if (defender->res_poison() > 0)
+            if (defender->res_poison() > 0 || defender->is_unbreathing())
                 break;
 
             if (--(attacker->as_monster()->hit_dice) <= 0)
