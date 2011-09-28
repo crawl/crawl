@@ -3599,8 +3599,12 @@ void bolt::affect_player()
         blood_spray(you.pos(), MONS_PLAYER, hurted / 5);
 
     // Confusion effect for spore explosions
-    if (flavour == BEAM_SPORE && hurted && you.holiness() != MH_UNDEAD)
+    if (flavour == BEAM_SPORE && hurted
+        && you.holiness() != MH_UNDEAD
+        && !you.is_unbreathing())
+    {
         potion_effect(POT_CONFUSION, 1);
+    }
 
     // handling of missiles
     if (item && item->base_type == OBJ_MISSILES)
@@ -4352,7 +4356,8 @@ void bolt::affect_monster(monster* mon)
     const bool engulfs = (is_explosion || is_big_cloud);
 
     if (engulfs && flavour == BEAM_SPORE
-        && mon->holiness() == MH_NATURAL)
+        && mon->holiness() == MH_NATURAL
+        && !mon->is_unbreathing())
     {
         apply_enchantment_to_monster(mon);
     }
