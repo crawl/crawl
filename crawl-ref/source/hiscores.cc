@@ -1168,7 +1168,7 @@ void scorefile_entry::init(time_t dt)
      */
 
     // do points first.
-    uint64_t pt = you.gold; // sprint games could overflow a 32 bit value
+    uint64_t pt = std::min(you.gold, 1000000); // sprint games could overflow a 32 bit value
     pt += _award_modified_experience();
 
     num_runes      = runes_in_pack();
