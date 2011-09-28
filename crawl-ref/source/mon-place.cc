@@ -1647,7 +1647,7 @@ static int _place_monster_aux(const mgen_data &mg,
     if (mg.cls == MONS_TWISTER)
     {
         mon->props["tornado_since"].get_int() = you.elapsed_time;
-        mon->add_ench(ENCH_TORNADO);
+        mon->add_ench(mon_enchant(ENCH_TORNADO, 0, 0, INFINITE_DURATION));
     }
 
     if (!crawl_state.game_is_arena() && you.misled())
