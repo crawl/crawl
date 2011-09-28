@@ -1174,13 +1174,20 @@ static void _give_basic_spells(job_type which_job)
     case JOB_EARTH_ELEMENTALIST:
         which_spell = SPELL_SANDBLAST;
         break;
+    case JOB_TRANSMUTER:
+        which_spell = SPELL_BEASTLY_APPENDAGE;
+        break;
 
     default:
         break;
     }
 
-    if (which_spell != SPELL_NO_SPELL)
+    std::string temp;
+    if (which_spell != SPELL_NO_SPELL
+        && !spell_is_uncastable(which_spell, temp))
+    {
         add_spell_to_memory(which_spell);
+    }
 
     return;
 }
