@@ -86,5 +86,6 @@ std::string spell_noise_string(spell_type spell);
 bool is_prevented_teleport(spell_type spell);
 
 bool spell_is_uncastable(spell_type spell, std::string &message);
+void spell_skills(spell_type spell, std::set<skill_type> &skills);
 
 #endif

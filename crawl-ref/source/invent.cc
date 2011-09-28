@@ -1908,8 +1908,18 @@ bool item_is_wieldable(const item_def &item)
                && item.sub_type == MISC_LANTERN_OF_SHADOWS);
 }
 
+/*
+ * Return wether an item can be evoked.
+ * @param item      The item to check
+ * @param reach     Do weapons of reaching count?
+ * @param known     When set it returns true for items of unknown type which
+ *                  might be evokable.
+ * @param all_wands When set, it returns true for empty wands.
+ * @param msg       Whether we need to print a message.
+ * @param equip     When disabled, ignore wield and meld requirements.
+ */
 bool item_is_evokable(const item_def &item, bool reach, bool known,
-                      bool all_wands, bool msg)
+                      bool all_wands, bool msg, bool equip)
 {
     const std::string error = item_is_melded(item)
             ? "Your " + item.name(DESC_QUALNAME) + " is melded into your body."
@@ -1921,7 +1931,7 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
 
         if (entry->evoke_func && item_type_known(item))
         {
-            if (item_is_equipped(item) && !item_is_melded(item))
+            if (item_is_equipped(item) && !item_is_melded(item) || !equip)
                 return (true);
 
             if (msg)
@@ -1932,8 +1942,8 @@ bool item_is_evokable(const item_def &item, bool reach, bool known,
         // Unrandart might still be evokable (e.g., reaching)
     }
 
-    const bool wielded = you.equip[EQ_WEAPON] == item.link
-                         && !item_is_melded(item);
+    const bool wielded = !equip || you.equip[EQ_WEAPON] == item.link
+                                   && !item_is_melded(item);
 
     switch (item.base_type)
     {

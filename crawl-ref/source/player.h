@@ -117,6 +117,8 @@ public:
   FixedVector<uint8_t, NUM_SKILLS>  skills; //!< skill level
   FixedVector<int8_t, NUM_SKILLS>  train; //!< 0: disabled, 1: normal, 2: focus.
   FixedVector<unsigned int, NUM_SKILLS>  training; //<! percentage of XP used
+  FixedVector<bool, NUM_SKILLS> can_train; //!<Is training this skill allowed
+  FixedVector<bool, NUM_SKILLS> train_set; //!< Has the player set this skill
   FixedVector<unsigned int, NUM_SKILLS> skill_points;
   FixedVector<unsigned int, NUM_SKILLS> ct_skill_points; //<!track skill points
                                                     //<!gained by crosstraining
@@ -124,6 +126,8 @@ public:
 
   bool auto_training;
   std::list<skill_type> exercises;
+  std::set<skill_type> stop_train; //<! need to check if we can still train
+  std::set<skill_type> start_train; //<! we can resume training
 
   // Skill menu states
   skill_menu_state skill_menu_do;

@@ -30,6 +30,7 @@
 #include "options.h"
 #include "player.h"
 #include "religion.h"
+#include "spl-book.h"
 #include "quiver.h"
 #include "random.h"
 #include "shopping.h"
@@ -1893,6 +1894,55 @@ skill_type range_skill(object_class_type wclass, int wtype)
     return (range_skill(wpn));
 }
 
+static bool _item_trains_evocations(const item_def& item)
+{
+    if (item_is_evokable(item, false, false, false, false, false))
+        return true;
+
+    if (is_artefact(item) && (artefact_wpn_property(item, ARTP_INVISIBLE)
+                              || artefact_wpn_property(item, ARTP_LEVITATE)
+                              || artefact_wpn_property(item, ARTP_BLINK)
+                              || artefact_wpn_property(item, ARTP_BERSERK)))
+    {
+        return true;
+    }
+
+    if (item.base_type == OBJ_JEWELLERY)
+        switch (item.sub_type)
+        {
+        case RING_INVISIBILITY:
+        case RING_TELEPORTATION:
+        case RING_LEVITATION:
+        case AMU_RAGE:
+            return true;
+        }
+
+    return false;
+}
+
+bool item_skills(const item_def &item, std::set<skill_type> &skills)
+{
+    skill_type sk = weapon_skill(item);
+    if (sk != SK_FIGHTING)
+        skills.insert(sk);
+
+    sk = range_skill(item);
+    if (sk != SK_THROWING)
+        skills.insert(sk);
+
+    if (_item_trains_evocations(item))
+        skills.insert(SK_EVOCATIONS);
+
+    if (item_is_rod(item) && item_type_known(item))
+    {
+        int sp = 0;
+        while (sp < SPELLBOOK_SIZE && is_valid_spell_in_book(item, sp))
+            if (which_spell_in_book(item, sp++) == SPELL_CONDENSATION_SHIELD)
+                skills.insert(SK_SHIELDS);
+    }
+
+    return !skills.empty();
+}
 
 // Calculate the bonus to melee EV for using "wpn", with "skill" and "dex"
 // to protect a body of size "body".

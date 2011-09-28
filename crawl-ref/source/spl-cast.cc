@@ -1970,3 +1970,16 @@ std::string spell_schools_string(spell_type spell)
 
     return (desc);
 }
+
+void spell_skills(spell_type spell, std::set<skill_type> &skills)
+{
+    unsigned int disciplines = get_spell_disciplines(spell);
+    for (int i = 0; i <= SPTYP_LAST_EXPONENT; ++i)
+    {
+        const unsigned int bit = (1 << i);
+        if (disciplines & bit)
+            skills.insert(spell_type2skill(bit));
+    }
+    if (spell == SPELL_CONDENSATION_SHIELD)
+        skills.insert(SK_SHIELDS);
+}

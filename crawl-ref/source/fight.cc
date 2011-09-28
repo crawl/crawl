@@ -2071,13 +2071,9 @@ void melee_attack::player_exercise_combat_skills()
 
     const bool helpless = defender->cannot_fight();
 
-    // Slow down the practise of low damage weapons unless we are trying to
-    // learn the weapon skill or the fighting skill.
-    if (helpless || x_chance_in_y(damage, 20)
-        || !you.skills[wpn_skill] || !you.skills[SK_FIGHTING])
-    {
+    // Slow down the practise of low damage weapons.
+    if (helpless || x_chance_in_y(damage, 20))
         practise(helpless ? EX_WILL_HIT_HELPLESS : EX_WILL_HIT, wpn_skill);
-    }
 }
 
 void melee_attack::player_check_weapon_effects()

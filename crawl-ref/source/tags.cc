@@ -1146,6 +1146,8 @@ static void tag_construct_you(writer &th)
         marshallUByte(th, you.skills[j]);
         marshallByte(th, you.train[j]);
         marshallInt(th, you.training[j]);
+        marshallBoolean(th, you.can_train[j]);
+        marshallBoolean(th, you.train_set[j]);
         marshallInt(th, you.skill_points[j]);
         marshallInt(th, you.ct_skill_points[j]);
         marshallByte(th, you.skill_order[j]);   // skills ordering
@@ -2003,6 +2005,13 @@ static void tag_read_you(reader &th)
 #endif
             you.train[j]    = unmarshallByte(th);
             you.training[j] = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+        }
+        if (th.getMinorVersion() >= TAG_MINOR_SKILL_RESTRICTIONS)
+        {
+#endif
+            you.can_train[j] = unmarshallBoolean(th);
+            you.train_set[j] = unmarshallBoolean(th);
 #if TAG_MAJOR_VERSION == 32
         }
 #endif

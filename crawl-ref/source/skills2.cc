@@ -864,9 +864,5 @@ void skill_state::restore_training()
 {
     you.train                       = train;
     you.auto_training               = auto_training;
-    for (int i = 0; i < NUM_SKILLS; i++)
-        if (!skill_known(i))
-            you.training[i] = training[i];
-
     reset_training();
 }

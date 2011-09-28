@@ -5340,8 +5340,10 @@ void player::init()
 
     auto_training = !(Options.default_manual_training);
     skills.init(0);
-    train.init(1);
+    train.init(auto_training);
     training.init(0);
+    can_train.init(false);
+    train_set.init(false);
     skill_points.init(0);
     ct_skill_points.init(0);
     skill_order.init(MAX_SKILL_ORDER);
