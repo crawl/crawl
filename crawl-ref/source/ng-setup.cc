@@ -817,11 +817,6 @@ static void _give_items_skills(const newgame_def& ng)
         newgame_make_item(2, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE);
         newgame_make_item(3, EQ_NONE, OBJ_BOOKS, BOOK_CHANGES);
 
-        // A little bit of starting ammo for evaporate... don't need too
-        // much now that the character can make their own. - bwr
-        newgame_make_item(4, EQ_NONE, OBJ_POTIONS, POT_CONFUSION, -1, 2);
-        newgame_make_item(5, EQ_NONE, OBJ_POTIONS, POT_POISON);
-
         you.skills[SK_FIGHTING]       = 1;
         you.skills[SK_UNARMED_COMBAT] = 3;
         you.skills[SK_DODGING]        = 2;
