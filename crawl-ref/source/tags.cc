@@ -2014,6 +2014,8 @@ static void tag_read_you(reader &th)
             you.train_set[j] = unmarshallBoolean(th);
 #if TAG_MAJOR_VERSION == 32
         }
+        else if (you.skills[j])
+            you.train_set[j] = true;
 #endif
         you.skill_points[j]    = unmarshallInt(th);
         you.ct_skill_points[j] = unmarshallInt(th);
