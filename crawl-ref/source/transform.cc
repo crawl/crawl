@@ -39,12 +39,13 @@ static void _extra_hp(int amount_extra);
 
 bool form_can_wield(transformation_type form)
 {
-    return (form == TRAN_NONE || form == TRAN_STATUE || form == TRAN_LICH);
+    return (form == TRAN_NONE || form == TRAN_STATUE || form == TRAN_LICH
+         || form == TRAN_APPENDAGE);
 }
 
 bool form_can_fly(transformation_type form)
 {
-    if (form == TRAN_LICH
+    if ((form == TRAN_NONE || form == TRAN_LICH || form == TRAN_APPENDAGE)
         && you.species == SP_KENKU
         && (you.experience_level >= 15 || you.airborne()))
     {
