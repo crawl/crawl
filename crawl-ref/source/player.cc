@@ -5770,6 +5770,10 @@ void player::shield_block_succeeded(actor *foe)
 
 int player::skill(skill_type sk, int scale, bool real) const
 {
+    // wizard racechange, or upgraded old save
+    if (is_useless_skill(sk))
+        return 0;
+
     int level = skills[sk] * scale + get_skill_progress(sk, scale);
     if (real)
         return level;
