@@ -364,6 +364,9 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
     case JOB_TRANSMUTER:
         switch (speci)
         {
+        case SP_MUMMY:
+        case SP_GHOUL:
+            return (CC_BANNED);
         case SP_HIGH_ELF:
         case SP_DEEP_ELF:
         case SP_MOUNTAIN_DWARF:
@@ -375,8 +378,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_KENKU:
-        case SP_MUMMY:
-        case SP_GHOUL:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
