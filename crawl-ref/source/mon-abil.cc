@@ -2592,22 +2592,22 @@ bool mon_special_ability(monster* mons, bolt & beem)
         }
         break;
 
-	case MONS_BOULDER_BEETLE:
+    case MONS_BOULDER_BEETLE:
         if (!mons->has_ench(ENCH_ROLLING)){
-			// Fleeing check
-			if (mons_is_fleeing(mons)) {
-				if (one_chance_in(2)) {
-	             //   behaviour_event(mons, ME_CORNERED);
-					boulder_flee(mons,&beem);
-				}
-			}
-			// Normal check
-			else if(one_chance_in(3))
-			{
-				boulder_start(mons,&beem);
-			}
-		}
-		break;
+            // Fleeing check
+            if (mons_is_fleeing(mons)) {
+                if (one_chance_in(2)) {
+                 //   behaviour_event(mons, ME_CORNERED);
+                    boulder_flee(mons,&beem);
+                }
+            }
+            // Normal check
+            else if(one_chance_in(3))
+            {
+                boulder_start(mons,&beem);
+            }
+        }
+        break;
 
     case MONS_MANTICORE:
         if (mons->has_ench(ENCH_CONFUSION))
