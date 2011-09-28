@@ -137,7 +137,7 @@ void SkillMenuEntry::refresh(bool keep_hotkey)
 {
     if (m_sk == SK_TITLE)
         set_title();
-    else if (is_invalid_skill(m_sk))
+    else if (is_invalid_skill(m_sk) || is_useless_skill(m_sk))
         _clear();
     else
     {
