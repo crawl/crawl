@@ -500,6 +500,8 @@ bool is_useless_skill(int skill)
         }
     if (you.species == SP_OCTOPODE && skill == SK_ARMOUR)
         return true;
+    if (skill == SK_ARMOUR && player_genus(GENPC_DRACONIAN))
+        return true;
     return false;
 }
 
