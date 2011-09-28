@@ -477,32 +477,9 @@ void calc_mp()
     you.redraw_magic_points = true;
 }
 
-bool is_useless_skill(int skill)
+bool is_useless_skill(skill_type skill)
 {
-    if (you.species == SP_DEMIGOD && skill == SK_INVOCATIONS)
-        return true;
-    if (you.species == SP_FELID)
-        switch(skill)
-        {
-        case SK_SHORT_BLADES:
-        case SK_LONG_BLADES:
-        case SK_AXES:
-        case SK_MACES_FLAILS:
-        case SK_POLEARMS:
-        case SK_STAVES:
-        case SK_SLINGS:
-        case SK_BOWS:
-        case SK_CROSSBOWS:
-        case SK_THROWING:
-        case SK_ARMOUR:
-        case SK_SHIELDS:
-            return true;
-        }
-    if (you.species == SP_OCTOPODE && skill == SK_ARMOUR)
-        return true;
-    if (skill == SK_ARMOUR && player_genus(GENPC_DRACONIAN))
-        return true;
-    return false;
+    return species_apt(skill) == -99;
 }
 
 int skill_bump(skill_type skill, int scale)
