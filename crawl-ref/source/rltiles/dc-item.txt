@@ -123,6 +123,7 @@ bardiche1 WPN_BARDICHE
 bardiche2
 
 ##Staff
+staff WPN_STAFF
 quarterstaff WPN_QUARTERSTAFF
 quarterstaff2
 lajatang1 WPN_LAJATANG
