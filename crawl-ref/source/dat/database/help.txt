@@ -181,22 +181,23 @@ You can cycle a skill between <darkgrey>- deselected</darkgrey>, + selected, and
 by pressing its letter. If a skill is deselected, it will not be trained at
 all. A skill set to focus will be trained faster than others.
 
+A skill can be trained if there's any available mean of exercising it.
+Fighting, Throwing, Dodging, Stealth, Stabbing, Traps & Doors, Unarmed Combat,
+and Spellcasting can always be trained. For the rest:
+* Weapon skills require carrying a weapon of the appropriate type.
+* Armour requires wearing an armour with an evasion penalty.
+* Shields requires either that you either be wearing a shield, or have the
+      capacity to obtain one through magical or divine means.
+* Evocations requires carrying an evocable item, or the help of Nemelex Xobah.
+* Spell schools require knowing a spell of the school, or divine assistance.
+* Invocations requires having at least one divine ability that exercises it.
+# XXX: Should state somewhere *when* Nemelex/Kiku permit Evo/Necro for free
+
 You can read about skills by using <w>?</w> to switch to description mode; to read
-about skills you don't yet have, combine this with <w>*</w> (show all skills).
-
-To train skills, you need to be able to practise them. This means carrying a
-weapon of the appropriate type, or knowing a spell from the school you want to
-train. Some skills like Dodging and Spellcasting have no restrictions and can
-always be trained.
-
-[XXX: This paragraph describes stuff that is not yet implemented!]
-To train existing skills, you may be required to satisfy certain requirements.
-For example, to train a weapon skill, you will need to carry a weapon of that
-type; to train a spell school, you will need to have memorized a spell from
-that school, etc.
+about skills you aren't (yet) able to train, combine this with <w>*</*> (show all skills).
 
 Training can be done in two modes:
-* automatic: Skills are trained by your use of them.
+* automatic: Skills are trained based on your use of them.
 * manual: Experience is spread evenly across all activated skills.
 
 The training percentage (in <brown>brown</brown>) shows the relative amount of experience
