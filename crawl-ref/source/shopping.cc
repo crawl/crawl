@@ -186,7 +186,7 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
             "/<w>L-Click</w>"
 #endif
             "] make purchase   [<w>\\</w>] list known items   "
-            "[<w>?</w>/<w>*</w>] inventory");
+            "[<w>?</w>] inventory [<w>*</w>] toggle");
 
     fs.cprintf("%*s", get_number_of_cols() - fs.width() - 1, "");
     fs.display();
@@ -600,7 +600,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
             // Toggle between browsing and shopping.
             viewing = !viewing;
         }
-        else if (key == '?' || key == '*')
+        else if (key == '?')
             browse_inventory(false);
         else if (key == '$')
         {
@@ -652,6 +652,18 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
                     }
                 }
             }
+        }
+        else if (key=='*')
+        {
+	    total_cost=0;
+	    for (unsigned i=0;i<selected.size();++i) {
+                item_def& item = mitm[stock[i]];
+                const int gp_value = _shop_get_item_value(item, shop.greed,
+                                                          id_stock);
+		selected[i] = !selected[i];
+		if (selected[i])
+		  total_cost += gp_value;
+	    }
         }
         else if (!isaalpha(key))
         {
