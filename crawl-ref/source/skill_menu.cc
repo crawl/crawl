@@ -771,9 +771,8 @@ bool SkillMenu::exit()
 
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
-        if (you.train[i])
+        if (you.can_train[i] && you.train[i])
         {
-            ASSERT(you.can_train[i]);
             enabled_skill = true;
             break;
         }
