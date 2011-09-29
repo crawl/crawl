@@ -132,9 +132,9 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
     {
         shop_list = "[<w>$</w>] ";
         if (num_selected > 0)
-            shop_list += "Selected -> shopping list";
+            shop_list += "selected -> shopping list";
         else if (num_in_list > 0)
-            shop_list += "Shopping list -> selected";
+            shop_list += "shopping list -> selected";
         else
             shop_list = "";
     }
@@ -164,16 +164,16 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
 
     if (!pkeys.empty())
     {
-        pkeys = "[" + pkeys + "] Select Item to "
-                + (viewing ? "Examine" : "Buy");
+        pkeys = "[" + pkeys + "] select item to "
+                + (viewing ? "examine" : "buy");
     }
     fs = formatted_string::parse_string(make_stringf(
             "[<w>x</w>/<w>Esc</w>"
 #ifdef USE_TILE
             "/<w>R-Click</w>"
 #endif
-            "] exit            [<w>!</w>] %s   %s",
-            (viewing ? "to buy items    " : "to examine items"),
+            "] exit           [<w>!</w>] %s  %s",
+            (viewing ? "buy items      " : "examine items  "),
             pkeys.c_str()));
 
     fs.cprintf("%*s", get_number_of_cols() - fs.width() - 1, "");
@@ -185,8 +185,8 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
 #ifdef USE_TILE
             "/<w>L-Click</w>"
 #endif
-            "] make purchase   [<w>\\</w>] list known items   "
-            "[<w>?</w>] inventory [<w>*</w>] toggle");
+            "] make purchase  [<w>\\</w>] list known items "
+            "[<w>?</w>] inventory  [<w>*</w>] invert selection");
 
     fs.cprintf("%*s", get_number_of_cols() - fs.width() - 1, "");
     fs.display();
@@ -655,15 +655,16 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
         }
         else if (key=='*')
         {
-	    total_cost=0;
-	    for (unsigned i=0;i<selected.size();++i) {
-                item_def& item = mitm[stock[i]];
-                const int gp_value = _shop_get_item_value(item, shop.greed,
-                                                          id_stock);
-		selected[i] = !selected[i];
-		if (selected[i])
-		  total_cost += gp_value;
-	    }
+            total_cost = 0;
+            for (unsigned i = 0; i < selected.size(); ++i)
+            {
+                selected[i] = !selected[i];
+                if (selected[i])
+                {
+                    total_cost += _shop_get_item_value(mitm[stock[i]],
+                                                       shop.greed, id_stock);
+                }
+            }
         }
         else if (!isaalpha(key))
         {
