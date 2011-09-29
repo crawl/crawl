@@ -751,7 +751,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         // None currently dock just piety, right?
         if (!yesno(god_loathes_spell(spell, you.religion) ?
             "<lightred>Casting this spell will cause instant excommunication!"
-                "<lighred> Really cast?" :
+                "</lightred> Really cast?" :
             "Casting this spell will put you into penance. Really cast?",
             true, 'n'))
         {
