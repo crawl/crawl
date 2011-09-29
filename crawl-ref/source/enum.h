@@ -2631,6 +2631,7 @@ enum mutation_type
     MUT_CAMOUFLAGE,
     MUT_TENTACLES,      // Gloves but don't lose a slot yet.
 #endif
+    MUT_TENTACLE_SPIKE, // Octopode only.
     NUM_MUTATIONS,
 
     RANDOM_MUTATION = NUM_MUTATIONS + 1,

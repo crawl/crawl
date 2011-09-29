@@ -86,6 +86,8 @@ equipment_type beastly_slot(int mut)
         return EQ_BOOTS;
     case MUT_TALONS:
         return EQ_BOOTS;
+    case MUT_TENTACLE_SPIKE:
+        return EQ_BOOTS;
     default:
         return EQ_NONE;
     }
@@ -631,6 +633,7 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_FANGS:
     case MUT_HOOVES:
     case MUT_TALONS:
+    case MUT_TENTACLE_SPIKE:
     case MUT_BREATHE_POISON:
     case MUT_STINGER:
     case MUT_BIG_WINGS:
@@ -910,6 +913,10 @@ bool physiology_mutation_conflict(mutation_type mutat)
     {
         return (true);
     }
+
+    // Need tentacles to grow something on them.
+    if (mutat == MUT_TENTACLE_SPIKE && you.species != SP_OCTOPODE)
+        return (true);
 
     if ((mutat == MUT_HOOVES || mutat == MUT_TALONS) && !player_has_feet())
         return (true);

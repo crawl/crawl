@@ -447,7 +447,7 @@ bool feat_dangerous_for_form(transformation_type which_trans,
 static mutation_type appendages[] =
 {
     MUT_HORNS,
-    /*MUT_BEAK,*/
+    MUT_TENTACLE_SPIKE,
     MUT_TENTACLES,
     MUT_TALONS,
 };
@@ -730,6 +730,9 @@ bool transform(int pow, transformation_type which_trans, bool force,
             case MUT_HORNS:
                 msg = "You grow a pair of large bovine horns.";
                 break;
+            case MUT_TENTACLE_SPIKE:
+                msg = "One of your tentacles grows a vicious spike.";
+                break;
             default:
                 die("Unknown beastly appendage.");
             }
@@ -982,7 +985,7 @@ void untransform(bool skip_wielding, bool skip_move)
             you.mutation[app] = you.innate_mutations[app];
             you.attribute[ATTR_APPENDAGE] = 0;
             mprf(MSGCH_DURATION, "Your %s disappear%s.", appendage_name(app),
-                 (app == MUT_BEAK) ? "s" : "");
+                 (app == MUT_TENTACLE_SPIKE) ? "s" : "");
         }
         break;
 
