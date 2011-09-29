@@ -128,8 +128,6 @@ void reassess_starting_skills()
         ASSERT(!is_invalid_skill(sk));
         ASSERT(!is_useless_skill(sk));
 
-        you.train_set[sk] = true;
-
         // Grant the amount of skill points required for a human.
         you.skill_points[sk] = skill_exp_needed(you.skills[sk], sk,
         static_cast<species_type>(SP_HUMAN)) + 1;
@@ -491,6 +489,10 @@ void init_can_train()
     }
 
     _check_stop_train();
+
+    for (int i = 0; i < NUM_SKILLS; ++i)
+        if (you.can_train[i] && you.skills[i])
+            you.train_set[i] = true;
 }
 
 /*
