@@ -2797,6 +2797,8 @@ static tileidx_t _tileidx_weapon_base(const item_def &item)
         return TILE_WPN_GLAIVE;
 
     case WPN_STAFF:
+        return TILE_WPN_STAFF;
+
     case WPN_QUARTERSTAFF:
         return TILE_WPN_QUARTERSTAFF;
 
