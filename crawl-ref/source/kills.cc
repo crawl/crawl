@@ -509,12 +509,6 @@ std::string kill_def::base_name(const kill_monster_desc &md) const
 
     switch (md.monnum)
     {
-      case MONS_ABOMINATION_LARGE:
-        name = "large " + name;
-        break;
-      case MONS_ABOMINATION_SMALL:
-        // Do nothing
-        break;
       case MONS_RAKSHASA_FAKE:
       case MONS_MARA_FAKE:
         name = "illusory " + name;
