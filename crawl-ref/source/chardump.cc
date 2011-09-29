@@ -268,10 +268,10 @@ static void _sdump_transform(dump_params &par)
             text += "You " + verb + " a filthy swine.";
             break;
         case TRAN_APPENDAGE:
-            if (you.attribute[ATTR_APPENDAGE] == MUT_BEAK)
+            if (you.attribute[ATTR_APPENDAGE] == MUT_TENTACLE_SPIKE)
             {
-                text += make_stringf("You %s grown a temporary beak.",
-                                     par.se ? "had" : "have");
+                text += make_stringf("One of your tentacles %s a temporary spike.",
+                                     par.se ? "had" : "has");
             }
             else
             {

@@ -969,6 +969,13 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
             // Max talon damage: 8.
             aux_damage += player_mutation_level(MUT_TALONS);
         }
+        else if (player_mutation_level(MUT_TENTACLE_SPIKE))
+        {
+            aux_verb = "pierce";
+
+            // Max spike damage: 8.
+            aux_damage += player_mutation_level(MUT_TENTACLE_SPIKE);
+        }
 
         break;
 
@@ -1116,7 +1123,8 @@ static bool _extra_aux_attack(unarmed_attack_type atk)
     {
     case UNAT_KICK:
         return ((player_mutation_level(MUT_HOOVES)
-                 || you.has_usable_talons())
+                 || you.has_usable_talons()
+                 || player_mutation_level(MUT_TENTACLE_SPIKE))
                 && coinflip());
 
     case UNAT_HEADBUTT:
@@ -1191,8 +1199,11 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
         baseattack = UNAT_HEADBUTT;
 
     // Octopodes turn kicks into punches.
-    if (you.species == SP_OCTOPODE && baseattack == UNAT_KICK)
+    if (you.species == SP_OCTOPODE && baseattack == UNAT_KICK
+        && (!player_mutation_level(MUT_TENTACLE_SPIKE) || coinflip()))
+    {
         baseattack = UNAT_PUNCH;
+    }
 
     if (_tran_forbid_aux_attack(baseattack))
         baseattack = UNAT_NO_ATTACK;
