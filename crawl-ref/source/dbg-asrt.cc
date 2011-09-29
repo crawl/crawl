@@ -30,6 +30,7 @@
 #include "mon-util.h"
 #include "options.h"
 #include "religion.h"
+#include "skills2.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
@@ -194,6 +195,23 @@ static void _dump_player(FILE *file)
         }
         fprintf(file, "\n");
     }
+
+    fprintf(file, "Skills (mode: %s)\n", you.auto_training ? "auto" : "manual");
+    fprintf(file, "Name            | can_train | train | training | level | points\n");
+    for (size_t i = 0; i < NUM_SKILLS; ++i)
+    {
+        const skill_type sk = skill_type(i);
+        if (is_invalid_skill(sk))
+            continue;
+        fprintf(file, "%-16s|     %c     |   %d   |    %2d    | %4.1f  | %d\n",
+                skill_name(sk),
+                you.can_train[sk] ? 'X' : ' ',
+                you.train[sk],
+                you.training[sk],
+                you.skill(sk, 10) / 10.0,
+                you.skill_points[sk]);
+    }
+    fprintf(file, "\n");
 
     fprintf(file, "Spell bugs:\n");
     for (size_t i = 0; i < you.spells.size(); ++i)
