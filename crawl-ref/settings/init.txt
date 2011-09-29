@@ -1,27 +1,3 @@
-# NOTE FOR PLAYERS OF OLD VERSIONS (DCSS 0.3.4 or before):
-#
-# DCSS 0.4 introduces several rather drastic changes to the interface;
-# read 034_changes.txt for details. Uncomment these options if you want
-# to disable them and go back to the old state:
-# monster colours, command keys, order on the character selection screen,
-# item colours, appearance of the stat section, butchering interface,
-# targeting interface.
-# The options for monster glyphs and item colours don't matter for Tiles.
-# (New players should just ignore these lines.)
-#
-# include                 = 034_monster_glyphs.txt
-# include                 = 034_command_keys.txt
-# classic_item_colours    = true
-# classic_hud             = true
-# always_confirm_butcher  = true
-# target_unshifted_dirs   = true
-# clear_messages          = true
-#
-# Similar options for reverting later changes:
-# include                 = 052_monster_glyphs.txt
-# include                 = 060_monster_glyphs.txt
-# include                 = 071_monster_glyphs.txt
-
 # Crawl Init file
 #
 # On Unix systems (such as Mac OS X, Linux and the BSDs), you must copy
@@ -54,6 +30,28 @@
 # uncommenting.
 # Options with several values, e.g. drop_mode = (multi | single),
 # usually have the first value as default.
+#
+# The options for monster glyphs and item colours don't matter for Tiles.
+# Similarily, tile options are ignored in console games.
+
+##### Ancient versions ##############################################
+# If you're used to the interface of ancient versions of Crawl, you may
+# get back parts of it by uncommenting the following options:
+
+# include                 = 034_command_keys.txt
+# classic_item_colours    = true
+# classic_hud             = true
+# always_confirm_butcher  = true
+# target_unshifted_dirs   = true
+# clear_messages          = true
+#
+# And to revert monster glyph and colouring changes:
+# include                 = 034_monster_glyphs.txt
+# include                 = 052_monster_glyphs.txt
+# include                 = 060_monster_glyphs.txt
+# include                 = 071_monster_glyphs.txt
+# include                 = 080_monster_glyphs.txt
+# include                 = 0.9_monster_glyphs.txt
 
 ##### 1- Starting Screen ############################################
 #
