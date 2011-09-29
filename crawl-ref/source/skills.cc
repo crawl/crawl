@@ -501,8 +501,11 @@ void init_training()
 {
     int total = 0;
     for (int i = 0; i < NUM_SKILLS; ++i)
-        if (you.train[i] && you.skills[i])
+        if (you.skills[i])
+        {
+            you.train[i] = true;
             total += you.skill_points[i];
+        }
 
     // If no trainable skills, exit.
     if (!total)
