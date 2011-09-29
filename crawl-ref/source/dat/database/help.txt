@@ -178,13 +178,13 @@ It is not a bug if you gain a skill level in Axes after killing a monster with
 a spell.
 
 You can toggle a skill by pressing its letter. If a skill is deselected
-(<darkgrey>darkened</darkgrey>), it will not be trained at all.  A skill set to
-focus (marked with <w>*</w>) will be trained faster than others.
+(<darkgrey>darkened</darkgrey>), it will not be trained at all. A skill set to focus (marked with <w>*</w>)
+will be trained faster than others.
 
-To gain new skills, you have to practise them. This means using a weapon in
-combat, casting spells or disarming traps for example. The skill will then
-be trained when you gain experience, and when it reaches level 1, you will
-be able to disable or focus it like any other.
+To train skills, you need to be able to practise them. This means carrying a
+weapon of the appropriate type, or knowing a spell from the school you want to
+train. Some skills like Dodging and Spellcasting have no restrictions and can
+always be trained.
 
 Training can be done in two modes:
 * automatic: Skills are trained by your use of them.
@@ -211,8 +211,6 @@ example god powers. These skill modifiers are shown in <blue>blue</blue>.
 Apart from (de)selecting skills, you also have the following commands:
 <w>/</w> :  Switch between automatic and manual training.
 <w>?</w> :  Allows you to read the descriptions of skills.
-<w>*</w> :  Shows all skills, even those you don't have yet.
-<w>!</w> :  Switch between progress (how far on the way to the next level) and
-      training rate, i.e. how much experience is spent on a skill.
+<w>*</w> :  Shows all skills, even those you can't train yet.
 <w>_</w> :  Shows/hides skill modifiers, e.g. from god powers.
 %%%%
