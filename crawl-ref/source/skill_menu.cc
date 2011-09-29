@@ -813,7 +813,7 @@ int SkillMenu::get_saved_skill_level(skill_type sk, bool real)
 
 skill_menu_state SkillMenu::get_state(skill_menu_switch sw)
 {
-    if (is_set(SKMF_EXPERIENCE) && !m_switches[sw])
+    if (is_set(SKMF_EXPERIENCE))
     {
         switch (sw)
         {
