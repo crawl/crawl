@@ -842,7 +842,8 @@ static void _start_running(int dir, int mode)
     coord_def next_pos = you.pos() + Compass[dir];
     for (adjacent_iterator ai(next_pos); ai; ++ai)
     {
-        if (env.grid(*ai) == DNGN_SLIMY_WALL)
+        if (env.grid(*ai) == DNGN_SLIMY_WALL
+            && (you.religion != GOD_JIYVA || you.penance[GOD_JIYVA]))
         {
             mpr("You're about to run into the slime covered wall!",
                 MSGCH_WARN);
