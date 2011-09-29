@@ -6010,9 +6010,7 @@ mon_holy_type player::holiness() const
 
 bool player::undead_or_demonic() const
 {
-    const mon_holy_type holi = holiness();
-
-    return (holi == MH_UNDEAD || holi == MH_DEMONIC);
+    return you.is_undead || you.species == SP_DEMONSPAWN;
 }
 
 bool player::is_holy(bool check_spells) const
@@ -6025,7 +6023,7 @@ bool player::is_holy(bool check_spells) const
 
 bool player::is_unholy(bool check_spells) const
 {
-    return (holiness() == MH_DEMONIC);
+    return you.species == SP_DEMONSPAWN;
 }
 
 bool player::is_evil(bool check_spells) const
