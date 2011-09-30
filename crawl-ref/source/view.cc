@@ -273,6 +273,13 @@ void update_monsters_in_view()
         }
         else if (!you.turn_is_over)
         {
+            if (mi->flags & MF_WAS_IN_VIEW)
+            {
+                // Reset client id so the player doesn't know (for sure) he
+                // has seen this monster before when it reappears.
+                mi->reset_client_id();
+            }
+
             mi->flags &= ~MF_WAS_IN_VIEW;
 
             // If the monster hasn't been seen by the time that the player
