@@ -326,11 +326,12 @@ local function mset_if(condition, ...)
 end
 
 mset(with_props("place:Slime:$", { jelly_protect = true }),
-     "place:Snake:$",
+     with_props("place:Snake:$", { weight = 5 }),
      with_props("place:Lair:$ w:90 / catoblepas", { weight = 5 }),
-     "place:Spider:$ w:50 / ghost moth / red wasp / tarantella",
+     with_props("place:Spider:$ w:50 / ghost moth / red wasp / tarantella",
+                { weight = 5}),
      "place:Crypt:$",
-     "place:Dwarf:$",
+     with_props("place:Dwarf:$", { weight = 5 }),
      "place:Abyss",
      with_props("place:Forest:$ w:50 / spriggan defender / " ..
                 "spriggan air mage / spriggan druid / spriggan berserker",
@@ -350,7 +351,7 @@ mset(with_props("place:Slime:$", { jelly_protect = true }),
      with_props("insubstantial wisp / air elemental / vapour / titan / " ..
                 "storm dragon / electric golem", { weight = 2 }),
      with_props("clay golem / earth elemental / stone golem / iron golem / " ..
-                "crystal golem / stone giant / iron dragon", { weight = 1 }),
+                "crystal golem / stone giant / iron dragon", { weight = 2 }),
      with_props("swamp drake / fire drake / death drake / steam dragon / " ..
                 "swamp dragon / dragon / ice dragon / storm dragon / " ..
                 "iron dragon / shadow dragon / quicksilver dragon / " ..
