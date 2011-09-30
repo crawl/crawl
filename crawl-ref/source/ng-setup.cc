@@ -1004,7 +1004,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.skills[SK_THROWING] = 0;
         you.skills[SK_SHIELDS] = 0;
     }
-    if (you.species == SP_OCTOPODE)
+    if (you.species == SP_OCTOPODE || you.species == SP_BASE_DRACONIAN)
     {
         you.skills[SK_DODGING] += you.skills[SK_ARMOUR];
         you.skills[SK_ARMOUR] = 0;
