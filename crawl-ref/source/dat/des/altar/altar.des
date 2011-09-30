@@ -324,6 +324,30 @@ xxxwwwWwWxxxx
 xxx...@..xxxx
 ENDMAP
 
+NAME:  lemuel_angel_altar
+DEPTH: D:3-18, Vault
+TAGS:  no_trap_gen
+: if you.absdepth() > 12 then
+MONS: patrolling Daeva / patrolling Angel
+: else
+MONS:  patrolling Angel
+: end
+KFEAT: _ = altar_elyvilon / altar_zin / altar_the_shining_one
+KPROP: >"1_ = no_rtele_into
+SUBST: " = .
+MAP
+   .....
+  ..xmx..
+ ..xx>xx..
+..xxx"xxx..
+.xxxx1xxxx.
+.m>""_"">m.
+.xxxx"xxxx.
+..xxx"xxx..
+ ..xx>xx..
+  ..xmx..
+   .....
+ENDMAP
 
 ##############################################################################
 # III   Altars to minor gods
