@@ -1,3 +1,11 @@
+body {
+    margin: 0px;
+}
+
+#lobby {
+    margin: 4px;
+}
+
 #right_column {
     display: inline-block;
     vertical-align: top;

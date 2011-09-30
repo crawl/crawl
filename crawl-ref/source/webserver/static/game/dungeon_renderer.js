@@ -1,3 +1,5 @@
+var default_size = { w: 32, h: 32 };
+
 function DungeonViewRenderer(element)
 {
     DungeonCellRenderer.call(this, element);
@@ -111,14 +113,17 @@ function DungeonViewRenderer(element)
 
         fit_to: function(width, height, min_diameter)
         {
+            if ((min_diameter * default_size.w > width)
+                || (min_diameter * default_size.h > height))
+            {
+                var scale = Math.min(width / (min_diameter * default_size.w),
+                                     height / (min_diameter * default_size.h));
+                this.set_cell_size(Math.floor(default_size.w * scale),
+                                   Math.floor(default_size.h * scale));
+            }
+
             var view_width = Math.floor(width / this.cell_width);
             var view_height = Math.floor(height / this.cell_height);
-            // TODO: Scale so that everything fits
-            if (view_width < min_diameter)
-                view_width = min_diameter;
-            if (view_height < min_diameter)
-                view_height = min_diameter;
-
             this.set_size(view_width, view_height);
         },
 
