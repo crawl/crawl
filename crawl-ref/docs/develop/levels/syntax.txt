@@ -565,7 +565,8 @@ ITEM:     (list of items, separated by comma)
             item from getting an ego.  The item must be fully specified, so
             trying "any weapon ego:vorpal" or "any armour ego:positive_energy"
             will result in an error.  Trying to give an ego to something which
-            can't accept an ego will also result in an error.
+            can't accept an ego will also result in an error.  The full lists
+            are in the str_to_ego() function in mapdef.cc.
           * "unrand:item_name" will make a given unrandom by a given name,
             like "long sword unrand:singing_sword".  Omit any apostrophes
             in the name (e.g, unrand:vampires_tooth).  If the name has
