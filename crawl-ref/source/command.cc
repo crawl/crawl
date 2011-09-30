@@ -1113,7 +1113,7 @@ static bool _item_filter(std::string key, std::string body)
 
 static bool _skill_filter(std::string key, std::string body)
 {
-    key = lowercase_string(key);
+    lowercase(key);
     std::string name;
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
     {
@@ -1156,7 +1156,7 @@ static bool _card_filter(std::string key, std::string body)
 
 static bool _ability_filter(std::string key, std::string body)
 {
-    key = lowercase_string(key);
+    lowercase(key);
     if (string_matches_ability_name(key))
         return (false);
 

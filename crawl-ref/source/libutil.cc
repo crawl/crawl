@@ -216,24 +216,53 @@ std::string &uppercase(std::string &s)
     return (s);
 }
 
-std::string upcase_first(std::string s)
-{
-    if (!s.empty())
-        s[0] = toupper(s[0]);
-    return (s);
-}
-
 std::string &lowercase(std::string &s)
 {
-    for (unsigned i = 0, sz = s.size(); i < sz; ++i)
-        s[i] = tolower(s[i]);
-
+    s = lowercase_string(s);
     return (s);
 }
 
 std::string lowercase_string(std::string s)
 {
-    lowercase(s);
+    std::string res;
+    ucs_t c;
+    char buf[4];
+    for (const char *tp = s.c_str(); int len = utf8towc(&c, tp); tp += len)
+        res.append(buf, wctoutf8(buf, towlower(c)));
+    return (res);
+}
+
+// Warning: this (and uppercase_first()) relies on no libc (glibc, BSD libc,
+// MSVC crt) supporting letters that expand or contract, like German ß (-> SS)
+// upon capitalization / lowercasing.  This is mostly a fault of the API --
+// there's no way to return two characters in one code point.
+// Also, all characters must have the same length in bytes before and after
+// lowercasing, all platforms currently have this property.
+//
+// A non-hacky version would be slower for no gain other than sane code; at
+// least unless you use some more powerful API.
+std::string lowercase_first(std::string s)
+{
+    ucs_t c;
+    if (!s.empty())
+    {
+        utf8towc(&c, &s[0]);
+        wctoutf8(&s[0], towlower(c));
+    }
+    return (s);
+}
+
+std::string uppercase_first(std::string s)
+{
+    // Incorrect due to those pesky Dutch having "ij" as a single letter (wtf?).
+    // Too bad, there's no standard function to handle that character, and I
+    // don't care enough.
+    ucs_t c;
+    if (!s.empty())
+    {
+        utf8towc(&c, &s[0]);
+        wctoutf8(&s[0], towupper(c));
+    }
     return (s);
 }
 

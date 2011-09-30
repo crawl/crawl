@@ -3661,7 +3661,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
 
         msg = replace_all(msg, "@foe_possessive@", "@foe@'s");
         msg = replace_all(msg, "@foe@", foe_name);
-        msg = replace_all(msg, "@Foe@", upcase_first(foe_name));
+        msg = replace_all(msg, "@Foe@", uppercase_first(foe_name));
 
         if (m_foe->is_named())
             msg = replace_all(msg, "@foe_name@", foe->name(DESC_PLAIN, true));
@@ -3780,7 +3780,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     std::string part_str   = mons->hand_name(false, &can_plural);
 
     msg = replace_all(msg, "@hand@", part_str);
-    msg = replace_all(msg, "@Hand@", upcase_first(part_str));
+    msg = replace_all(msg, "@Hand@", uppercase_first(part_str));
 
     if (!can_plural)
         part_str = "NO PLURAL HANDS";
@@ -3788,13 +3788,13 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         part_str = mons->hand_name(true);
 
     msg = replace_all(msg, "@hands@", part_str);
-    msg = replace_all(msg, "@Hands@", upcase_first(part_str));
+    msg = replace_all(msg, "@Hands@", uppercase_first(part_str));
 
     can_plural = false;
     part_str   = mons->arm_name(false, &can_plural);
 
     msg = replace_all(msg, "@arm@", part_str);
-    msg = replace_all(msg, "@Arm@", upcase_first(part_str));
+    msg = replace_all(msg, "@Arm@", uppercase_first(part_str));
 
     if (!can_plural)
         part_str = "NO PLURAL ARMS";
@@ -3802,13 +3802,13 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         part_str = mons->arm_name(true);
 
     msg = replace_all(msg, "@arms@", part_str);
-    msg = replace_all(msg, "@Arms@", upcase_first(part_str));
+    msg = replace_all(msg, "@Arms@", uppercase_first(part_str));
 
     can_plural = false;
     part_str   = mons->foot_name(false, &can_plural);
 
     msg = replace_all(msg, "@foot@", part_str);
-    msg = replace_all(msg, "@Foot@", upcase_first(part_str));
+    msg = replace_all(msg, "@Foot@", uppercase_first(part_str));
 
     if (!can_plural)
         part_str = "NO PLURAL FOOT";
@@ -3816,7 +3816,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         part_str = mons->foot_name(true);
 
     msg = replace_all(msg, "@feet@", part_str);
-    msg = replace_all(msg, "@Feet@", upcase_first(part_str));
+    msg = replace_all(msg, "@Feet@", uppercase_first(part_str));
 
     if (foe != NULL)
     {
