@@ -103,9 +103,8 @@ function do_layout()
     var msg_height_pixels = $("#messages").outerHeight();
     $("#messages").html(old_html);
 
-    // We have to subtract a bit more for scrollbars and margins
-    var remaining_width = window_width - stat_width_pixels - 50;
-    var remaining_height = window_height - msg_height_pixels - 20;
+    var remaining_width = window_width - stat_width_pixels;
+    var remaining_height = window_height - msg_height_pixels;
 
     // Determine the maximum size for the CRT layer
     set_layer("crt");
@@ -158,7 +157,6 @@ function do_layout()
     force_full_render(true);
     display();
     update_minimap_overlay();
-    monster_list.update();
 
     // Send the layout
     if (current_layout &&
@@ -182,12 +180,6 @@ function send_layout(layout)
     msg += "^H" + layout.crt_height + "\n";
     msg += "^m" + layout.msg_width + "\n";
     socket.send(msg);
-}
-
-function set_dungeon_cell_size(w, h)
-{
-    dungeon_renderer.set_cell_size(w, h);
-    do_layout();
 }
 
 // View area -------------------------------------------------------------------
