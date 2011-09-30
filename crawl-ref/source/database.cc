@@ -235,7 +235,7 @@ void TextDB::_regenerate_db()
     unlink_u(full_db_path.c_str());
 #endif
 
-    std::string now = make_stringf("%ld", time(0));
+    std::string now = make_stringf("%ld", (long)time(0));
     if (!(_db = dbm_open(db_path.c_str(), O_RDWR | O_CREAT, 0660)))
         end(1, true, "Unable to open DB: %s", db_path.c_str());
     for (unsigned int i = 0; i < _input_files.size(); i++)
