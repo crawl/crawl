@@ -1177,6 +1177,12 @@ static void _give_basic_spells(job_type which_job)
     case JOB_TRANSMUTER:
         which_spell = SPELL_BEASTLY_APPENDAGE;
         break;
+    case JOB_STALKER:
+        which_spell = SPELL_FULSOME_DISTILLATION;
+        break;
+    case JOB_WARPER:
+        which_spell = SPELL_APPORTATION;
+        break;
 
     default:
         break;
