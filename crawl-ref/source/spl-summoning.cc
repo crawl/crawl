@@ -230,7 +230,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
         if (wpn.quantity < how_many_max)
             how_many_max = wpn.quantity;
 
-        for (int i = 0; i <= how_many_max; i++)
+        for (int i = 0; i < how_many_max; i++)
         {
             monster_type mon;
 
@@ -261,11 +261,9 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
         // the really big sticks (so bonus applies really only to trolls
         // and ogres).  Still, it's unlikely any character is strong
         // enough to bother lugging a few of these around. - bwr
-        monster_type mon;
+        monster_type mon = MONS_SNAKE;
 
-        if (item_mass(wpn) < 300)
-            mon = MONS_SNAKE;
-        else
+        if (get_weapon_brand(item) == SPWPN_VENOM || item_mass(wpn) >= 300)
             mon = MONS_WATER_MOCCASIN;
 
         if (pow > 20 && one_chance_in(3))
@@ -289,9 +287,6 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
             snake->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, dur));
         }
     }
-
-    if (wpn.quantity < count)
-        count = wpn.quantity;
 
     if (!count)
     {
