@@ -835,7 +835,7 @@ static std::string _level_description_string_hud()
             if (you.level_type_name.find(":") != std::string::npos)
                 short_name = you.level_type_name;
             else
-                short_name = article_a(upcase_first(you.level_type_name),
+                short_name = article_a(uppercase_first(you.level_type_name),
                                        false);
         }
         else

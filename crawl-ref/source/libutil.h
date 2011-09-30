@@ -30,7 +30,8 @@ std::string &escape_path_spaces(std::string &s);
 std::string lowercase_string(std::string s);
 std::string &lowercase(std::string &s);
 std::string &uppercase(std::string &s);
-std::string upcase_first(std::string);
+std::string uppercase_first(std::string);
+std::string lowercase_first(std::string);
 
 bool key_is_escape(int key);
 
@@ -157,20 +158,6 @@ std::vector<std::string> split_string(
     bool trim = true,
     bool accept_empties = false,
     int nsplits = -1);
-
-inline std::string lowercase_first(std::string s)
-{
-    if (s.length())
-        s[0] = tolower(s[0]);
-    return (s);
-}
-
-inline std::string uppercase_first(std::string s)
-{
-    if (s.length())
-        s[0] = toupper(s[0]);
-    return (s);
-}
 
 template <typename Z>
 std::string comma_separated_line(Z start, Z end,
