@@ -933,6 +933,37 @@ ENDMAP
 
 ###################################
 
+NAME:   pan_captured_pigsty
+TAGS:   pan extra
+MONS:   hairy devil, holy swine
+KFEAT:  o = iron_grate
+{{
+local function swineherd_die(monster, killer_type, killer_index, silent, wizard)
+  local p = dgn.find_marker_positions_by_prop("pigsty_gate", 1)[1]
+  if (p == nil) then
+    crawl.mpr("Error: someone stolen the pigsty gate!")
+    return
+  end
+  dgn.grid(p.x, p.y, "floor")
+  if (you.see_cell(p.x, p.y)) then
+    crawl.mpr("The grate goes up!")
+  else
+    crawl.mpr("You hear a sound of rusty metal sliding.")
+  end
+end
+}}
+MARKER: 1 = lua:MonPropsMarker:new {monster_dies_lua_key = swineherd_die}
+MARKER: o = lua:props_marker {pigsty_gate=1}
+MAP
+xxxxx
+x222x
+x222x
+xxoxx
+@..1@
+ENDMAP
+
+###################################
+
 # Sadly, this vault works well only in text. If we could get changing tiles,
 # it would be great, but for now, these are static.
 #
