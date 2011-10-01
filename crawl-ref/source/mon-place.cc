@@ -525,15 +525,23 @@ monster_type pick_random_monster(const level_id &place, int power,
 
     lev_mons = power;
 
-    if (place == BRANCH_MAIN_DUNGEON
-        && lev_mons != DEPTH_ABYSS && one_chance_in(4))
-    {
+#if TAG_MAJOR_VERSION == 32
+    // old magic value, let's check if it is not used anymore.
+    // Please remove in a while.
+    // This has nothing to do with save compat, just using TAG_MAJOR_VERSION
+    // to fool your grep into coming here.
+    if (place.level_type == LEVEL_DUNGEON && lev_mons == DEPTH_ABYSS)
+        die("requested DEPTH_ABYSS monster for %s", place.describe().c_str());
+#endif
+
+    if (place == BRANCH_MAIN_DUNGEON && one_chance_in(4))
         lev_mons = random2(power);
-    }
 
     const int original_level = lev_mons;
 
     // OODs do not apply to the Abyss, Pan, etc.
+    // They do to parts(?!?) of Hell but not Zot.  Probably related to the
+    // DEPTH_ABYSS hack above.
     if (you.level_type == LEVEL_DUNGEON && lev_mons <= 27)
     {
         // Apply moderate OOD fuzz where appropriate.
@@ -552,8 +560,7 @@ monster_type pick_random_monster(const level_id &place, int power,
 
     // Abyss or Pandemonium. Almost never called from Pan; probably only
     // if a random demon gets summon anything spell.
-    if (lev_mons == DEPTH_ABYSS
-        || place.level_type == LEVEL_PANDEMONIUM
+    if (place.level_type == LEVEL_PANDEMONIUM
         || place.level_type == LEVEL_ABYSS)
     {
         do
