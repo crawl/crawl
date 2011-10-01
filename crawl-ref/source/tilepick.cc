@@ -3553,6 +3553,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_GOLDEN_DRAGON;
     case MONS_SHADOW_DRAGON:
         return TILE_CORPSE_SHADOW_DRAGON;
+    case MONS_PEARL_DRAGON:
+        return TILE_CORPSE_PEARL_DRAGON;
 
     // frogs ('F')
     case MONS_GIANT_FROG:
@@ -3677,6 +3679,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_HELLEPHANT;
     case MONS_CATOBLEPAS:
         return TILE_CORPSE_CATOBLEPAS;
+    case MONS_APIS:
+        return TILE_CORPSE_APIS;
 
     // water monsters
     case MONS_BIG_FISH:
