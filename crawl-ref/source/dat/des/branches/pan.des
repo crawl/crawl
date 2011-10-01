@@ -1017,6 +1017,7 @@ ENDMAP
 # Here, the forces good have taken a foothold in the lands of evil, and are
 # ready to smite your rear.
 NAME:   pan_holy
+WEIGHT: 0
 TAGS:   pan
 ORIENT: encompass
 KMONS:  1 = angel
@@ -1032,21 +1033,7 @@ KMONS:  8 = shedu band
 # please add more types as they get usable
 TILE:   c = wall_church
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x...............................x
-x1..............................x
-x2..............................x
-x3..............................x
-x4..............................x
-x5..............................x
-x6..............................x
-x7..............................x
-x8..............................x
-x...............................x
-x...............................x
-x...............................x
-x...............................x
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+.
 ENDMAP
 
 ##############################################################################
