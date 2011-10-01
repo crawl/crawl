@@ -1442,6 +1442,9 @@ static bool _ely_holy_revenge(const monster *victim)
         // hates undead -- would she heal demons out of spite for you?
         if (mi->is_evil(false) || mi->is_unholy(false))
             continue;
+        // your associates are presumed guilty
+        if (mi->wont_attack())
+            continue;
         if (mi->hit_points >= mi->max_hit_points)
             continue;
         patients.push_back(*mi);
