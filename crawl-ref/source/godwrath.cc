@@ -55,6 +55,7 @@ static void _god_smites_you(god_type god, const char *message = NULL,
 static bool _beogh_idol_revenge();
 static void _tso_blasts_cleansing_flame(const char *message = NULL);
 static bool _tso_holy_revenge();
+static bool _ely_holy_revenge(const monster *victim);
 
 static bool _yred_random_zombified_hostile()
 {
@@ -1289,7 +1290,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     return (true);
 }
 
-bool do_god_revenge(conduct_type thing_done)
+bool do_god_revenge(conduct_type thing_done, const monster *victim)
 {
     bool retval = false;
 
@@ -1301,7 +1302,12 @@ bool do_god_revenge(conduct_type thing_done)
     case DID_KILL_HOLY:
     case DID_HOLY_KILLED_BY_UNDEAD_SLAVE:
     case DID_HOLY_KILLED_BY_SERVANT:
-        retval = _tso_holy_revenge();
+        // It's TSO who does the smiting and war stuff so he handles revenge
+        // for his allies as well -- unless another god has some special ties.
+        if (victim && victim->god == GOD_ELYVILON)
+            retval = _ely_holy_revenge(victim);
+        else
+            retval = _tso_holy_revenge();
         break;
     default:
         break;
@@ -1410,6 +1416,48 @@ static bool _tso_holy_revenge()
     }
 
     return (false);
+}
+
+// Killing apises may make Elyvilon sad.  She'll sulk and stuff.
+static bool _ely_holy_revenge(const monster *victim)
+{
+    // It's a mild effect, a relatively big chance is ok.  Keeping it small
+    // though -- we don't want gods to be omniescent.
+    if (!one_chance_in(3))
+        return false;
+
+    god_acting gdact(GOD_ELYVILON, true);
+
+    std::string msg = getSpeakString("Elyvilon holy");
+    if (msg.empty())
+        msg = "Elyvilon is displeased.";
+    mpr(msg.c_str(), MSGCH_GOD, GOD_ELYVILON);
+
+    std::vector<monster*> patients;
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    {
+        // healer not necromancer
+        if (!mi->alive())
+            continue;
+        // hates undead -- would she heal demons out of spite for you?
+        if (mi->is_evil(false) || mi->is_unholy(false))
+            continue;
+        if (mi->hit_points >= mi->max_hit_points)
+            continue;
+        patients.push_back(*mi);
+    }
+    if (patients.empty())
+        return false;
+
+    mpr("Elyvilon touches your foes with healing grace.");
+    for (std::vector<monster*>::const_iterator mi = patients.begin();
+         mi != patients.end(); ++mi)
+    {
+        simple_monster_message(*mi, " is healed.");
+        (*mi)->heal(10 + random2(10), false);
+    }
+
+    return (true);
 }
 
 static void _god_smites_you(god_type god, const char *message,
