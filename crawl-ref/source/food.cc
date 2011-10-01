@@ -134,10 +134,12 @@ void set_hunger(int new_hunger_level, bool suppress_msg)
         lessen_hunger(hunger_difference, suppress_msg);
 }
 
-// More of a "weapon_switch back from butchering" function, switching
-// to a weapon is done using the wield_weapon code.
-// special cases like staves of power or other special weps are taken
-// care of by calling wield_effects().    {gdl}
+/**
+ * More of a "weapon_switch back from butchering" function, switching
+ * to a weapon is done using the wield_weapon() code.
+ * Special cases like staves of power or other special weps are taken
+ * care of by calling wield_effects().    {gdl}
+ */
 void weapon_switch(int targ)
 {
     // Give the player an option to abort.

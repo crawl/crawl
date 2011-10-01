@@ -58,6 +58,10 @@ bool actor::stand_on_solid_ground() const
            && !feat_is_water(grd(pos()));
 }
 
+/**
+ * Wrapper around the virtual actor::can_wield(const item_def&,bool,bool,bool,bool) const overload.
+ * @param item May be NULL, in which case a dummy item will be passed in.
+ */
 bool actor::can_wield(const item_def* item, bool ignore_curse,
                       bool ignore_brand, bool ignore_shield,
                       bool ignore_transform) const
@@ -239,7 +243,7 @@ bool actor_slime_wall_immune(const actor *act)
               you.religion == GOD_JIYVA && !you.penance[GOD_JIYVA]
             : act->res_acid() == 3);
 }
-/*
+/**
  * Accessor method to the clinging member.
  *
  * @returns The value of clinging.
@@ -249,7 +253,7 @@ bool actor::is_wall_clinging() const
     return props.exists("clinging") && props["clinging"].get_bool();
 }
 
-/*
+/**
  * Check a cell to see if actor can keep clinging if it moves to it.
  *
  * @param p Coordinates of the cell checked.
@@ -263,7 +267,7 @@ bool actor::can_cling_to(const coord_def& p) const
     return cell_can_cling_to(pos(), p);
 }
 
-/*
+/**
  * Update the clinging status of an actor.
  *
  * It checks adjacent orthogonal walls to see if the actor can cling to them.
