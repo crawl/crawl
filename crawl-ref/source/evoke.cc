@@ -548,7 +548,8 @@ void stop_studying_manual(bool finish)
 
     you.manual_skill = SK_NONE;
     you.manual_index = -1;
-    you.stop_train.insert(sk);
+    if (training_restricted(sk))
+        you.stop_train.insert(sk);
 }
 
 void skill_manual(int slot)
