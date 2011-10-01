@@ -1168,7 +1168,7 @@ $(UTIL)%.o: $(UTIL)%.cc .cflags
 ifdef NO_INLINE_DEPGEN
 	$(QUIET_CXX)$(CXX) $(YACC_CFLAGS) -c $< -o $(UTIL)$*.o
 else
-	$(QUIET_CXX)$(CXX) $(YACC_CFLAGS) -Wp,-MD,$(UTIL)$*.d,-MT,$(UTIL)$*.o -c $< -o $(UTIL)$*.o
+	$(QUIET_CXX)$(CXX) $(YACC_CFLAGS) -Wp,-MMD,$(UTIL)$*.d,-MT,$(UTIL)$*.o -c $< -o $(UTIL)$*.o
 endif
 
 ifdef PCH
@@ -1191,14 +1191,14 @@ endif
 ifdef NO_INLINE_DEPGEN
 	$(QUIET_CC)$(CC) $(ALL_CFLAGS) -c $< -o $@
 else
-	$(QUIET_CC)$(CC) $(ALL_CFLAGS) -Wp,-MD,$*.d,-MT,$@ -c $< -o $@
+	$(QUIET_CC)$(CC) $(ALL_CFLAGS) -Wp,-MMD,$*.d,-MT,$@ -c $< -o $@
 endif
 
 %.o: %.cc .cflags $(GENERATED_HEADERS)
 ifdef NO_INLINE_DEPGEN
 	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) -c $< -o $@
 else
-	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) -Wp,-MD,$*.d,-MT,$@ -c $< -o $@
+	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) -Wp,-MMD,$*.d,-MT,$@ -c $< -o $@
 endif
 
 icon.o: util/crawl.rc util/crawl.ico .cflags
