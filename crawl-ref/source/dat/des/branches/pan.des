@@ -1060,6 +1060,8 @@ KMONS:  7 = apis
 KMONS:  8 = shedu band
 # please add more types as they get usable
 TILE:   c = wall_church
+: _G.set_random_mon_list("angel / cherub / ophan / daeva / pearl dragon / " ..
+:                        "apis / shedu / apis / shedu / angel")
 MAP
 .
 ENDMAP
