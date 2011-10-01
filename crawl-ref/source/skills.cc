@@ -456,6 +456,25 @@ void update_can_train()
         _check_start_train();
 }
 
+bool training_restricted(skill_type sk)
+{
+    switch (sk)
+    {
+    case SK_FIGHTING:
+    // Requiring missiles would mean disabling the skill when you run out.
+    case SK_THROWING:
+    case SK_DODGING:
+    case SK_STEALTH:
+    case SK_STABBING:
+    case SK_TRAPS_DOORS:
+    case SK_UNARMED_COMBAT:
+    case SK_SPELLCASTING:
+        return false;
+    default:
+        return true;
+    }
+}
+
 /*
  * Init the can_train array by examining inventory and spell list to see which
  * skills can be trained.
@@ -470,22 +489,8 @@ void init_can_train()
             continue;
 
         you.can_train[sk] = true;
-
-        switch (sk)
-        {
-        case SK_FIGHTING:
-        // Requiring missiles would mean disabling the skill when you run out.
-        case SK_THROWING:
-        case SK_DODGING:
-        case SK_STEALTH:
-        case SK_STABBING:
-        case SK_TRAPS_DOORS:
-        case SK_UNARMED_COMBAT:
-        case SK_SPELLCASTING:
-            break;
-        default:
+        if (training_restricted(sk))
             you.stop_train.insert(sk);
-        }
     }
 
     _check_stop_train();
