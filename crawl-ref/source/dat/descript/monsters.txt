@@ -1595,6 +1595,10 @@ sea snake
 
 A brightly coloured snake, very comfortable in the water. It has a highly potent venomous bite.
 %%%%
+seraph
+
+The Seraphim, or the Burning Ones, are the highest rank of the angelic hosts, the mightiest servants of the Good Gods. They have six wings and but one face, and are said to sometimes take form of fiery serpents.
+%%%%
 shadow
 
 A wisp of unliving shadow, drifting on the edge of vision.
