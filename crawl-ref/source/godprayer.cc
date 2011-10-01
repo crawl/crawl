@@ -89,9 +89,6 @@ bool god_accepts_prayer(god_type god)
 
     switch (god)
     {
-    case GOD_ZIN:
-        return (zin_sustenance(false));
-
     case GOD_JIYVA:
         return (jiyva_can_paralyse_jellies());
 
@@ -382,12 +379,6 @@ void pray()
 
     switch(you.religion)
     {
-    case GOD_ZIN:
-        //jmf: this "good" god will feed you (a la Nethack)
-        if (do_zin_sustenance())
-            something_happened = true;
-        break;
-
     case GOD_JIYVA:
         you.duration[DUR_JELLY_PRAYER] = 200;
 

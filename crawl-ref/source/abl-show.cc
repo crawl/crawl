@@ -308,9 +308,8 @@ static const ability_def Ability_List[] =
 
     // INVOCATIONS:
     // Zin
-    { ABIL_ZIN_SUSTENANCE, "Sustenance", 0, 0, 0, 0, ABFLAG_PIETY },
     { ABIL_ZIN_RECITE, "Recite", 0, 0, 0, 0, ABFLAG_BREATH | ABFLAG_DELAY },
-    { ABIL_ZIN_VITALISATION, "Vitalisation", 0, 0, 100, 1, ABFLAG_CONF_OK },
+    { ABIL_ZIN_VITALISATION, "Vitalisation", 0, 0, 0, 1, ABFLAG_CONF_OK },
     { ABIL_ZIN_IMPRISON, "Imprison", 5, 0, 125, 4, ABFLAG_NONE },
     { ABIL_ZIN_SANCTUARY, "Sanctuary", 7, 0, 150, 15, ABFLAG_NONE },
     { ABIL_ZIN_CURE_ALL_MUTATIONS, "Cure All Mutations",
@@ -2204,11 +2203,6 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     // INVOCATIONS:
-
-    case ABIL_ZIN_SUSTENANCE:
-        // Activated via prayer elsewhere.
-        break;
-
     case ABIL_ZIN_RECITE:
     {
         recite_type prayertype;
