@@ -3715,6 +3715,9 @@ void setup_vault_mon_list()
         {
             vault_mon_types[i] = list[i].mid;
             vault_mon_bases[i] = list[i].monbase;
+            // hack for Pandemonium
+            if (i < 10)
+                env.mons_alloc[i] = (monster_type)list[i].mid;
         }
         vault_mon_weights[i] = list[i].genweight;
     }

@@ -44,6 +44,7 @@
 #include "itemprop.h"
 #include "items.h"
 #include "l_defs.h"
+#include "lev-pand.h"
 #include "libutil.h"
 #include "makeitem.h"
 #include "mapdef.h"
@@ -74,6 +75,7 @@
 #include "traps.h"
 #include "travel.h"
 #include "tutorial.h"
+#include "zotdef.h"
 #include "hints.h"
 
 #ifdef DEBUG_DIAGNOSTICS
@@ -1297,11 +1299,11 @@ static int _num_items_wanted(int level_number)
 
 static int _num_mons_wanted(level_area_type level_type)
 {
-    if (level_type == LEVEL_ABYSS
-        || player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
-    {
+    if (level_type == LEVEL_ABYSS)
         return 0;
-    }
+
+    if (level_type == LEVEL_PANDEMONIUM)
+        return random2avg(28, 3);
 
     int mon_wanted = roll_dice(3, 10);
 
@@ -2159,6 +2161,16 @@ static void _place_item_mimics(int level_number)
 static void _build_dungeon_level(int level_number, level_area_type level_type,
                                  dungeon_feature_type dest_stairs_type)
 {
+    // Generate a random monster table for Pan.
+    if (level_type == LEVEL_PANDEMONIUM)
+    {
+        init_pandemonium();
+        setup_vault_mon_list();
+    }
+    // Still used to set colours.  FIXME.
+    if (level_type == LEVEL_ABYSS)
+        init_pandemonium();
+
     _build_layout_skeleton(level_number, level_type);
 
     if (you.level_type == LEVEL_LABYRINTH
@@ -3552,9 +3564,15 @@ bool door_vetoed(const coord_def pos)
 
 static void _builder_monsters(int level_number, level_area_type level_type, int mon_wanted)
 {
-    if (level_type == LEVEL_PANDEMONIUM
-        || player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
+    if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
+        return;
+
+    if (level_type == LEVEL_PANDEMONIUM)
     {
+        dprf("Generating Pan monsters, set:%s", zotdef_debug_wave_desc().c_str());
+        // TODO: allow regular generation to handle this
+        while (mon_wanted-- > 0)
+            pandemonium_mons();
         return;
     }
 

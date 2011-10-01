@@ -1239,25 +1239,6 @@ void down_stairs(dungeon_feature_type force_stair,
         }
     }
 
-    switch (you.level_type)
-    {
-    case LEVEL_ABYSS:
-        grd(you.pos()) = DNGN_FLOOR;
-
-        init_pandemonium();     // colours only
-        break;
-
-    case LEVEL_PANDEMONIUM:
-        init_pandemonium();
-
-        for (int pc = random2avg(28, 3); pc > 0; pc--)
-            pandemonium_mons();
-        break;
-
-    default:
-        break;
-    }
-
     you.turn_is_over = true;
 
     save_game_state();
