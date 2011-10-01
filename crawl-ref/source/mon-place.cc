@@ -558,86 +558,61 @@ monster_type pick_random_monster(const level_id &place, int power,
         lev_mons = std::min(30, lev_mons);
     }
 
-    // Abyss or Pandemonium. Almost never called from Pan; probably only
-    // if a random demon gets summon anything spell.
-    if (place.level_type == LEVEL_PANDEMONIUM
-        || place.level_type == LEVEL_ABYSS)
+    int level = 0, diff, chance;
+
+    lev_mons = std::min(30, lev_mons);
+
+    const int n_pick_tries   = 10000;
+    const int n_relax_margin = n_pick_tries / 10;
+    int monster_pick_tries = 10000;
+    const std::vector<monster_type> valid_monster_types =
+        _find_valid_monster_types(place);
+
+    if (valid_monster_types.empty())
+        return MONS_PROGRAM_BUG;
+
+    while (monster_pick_tries-- > 0)
     {
-        do
+        mon_type = valid_monster_types[random2(valid_monster_types.size())];
+
+        if (crawl_state.game_is_arena() && arena_veto_random_monster(mon_type)
+            || force_mobile && mons_class_is_stationary(mon_type))
         {
-            int count;
-
-            do
-            {
-                count = 0;
-                do
-                {
-                    mon_type = static_cast<monster_type>(random2(NUM_MONSTERS));
-                    count++;
-                }
-                while (mons_abyss_rare(mon_type) == 0 && count < 2000);
-            } while ((crawl_state.game_is_arena()
-                          && arena_veto_random_monster(mon_type))
-                      || (crawl_state.game_is_sprint()
-                          && sprint_veto_random_abyss_monster(mon_type))
-                      || (force_mobile && (mons_class_is_stationary(mon_type)
-                                           || mons_is_mimic(mon_type))));
-
-            if (count == 2000)
-                return (MONS_PROGRAM_BUG);
-        }
-        while (random2avg(100, 2) > mons_abyss_rare(mon_type)
-               && !one_chance_in(100));
-    }
-    else
-    {
-        int level = 0, diff, chance;
-
-        lev_mons = std::min(30, lev_mons);
-
-        const int n_pick_tries   = 10000;
-        const int n_relax_margin = n_pick_tries / 10;
-        int monster_pick_tries = 10000;
-        const std::vector<monster_type> valid_monster_types =
-            _find_valid_monster_types(place);
-
-        if (valid_monster_types.empty())
-            return MONS_PROGRAM_BUG;
-
-        while (monster_pick_tries-- > 0)
-        {
-            mon_type = valid_monster_types[random2(valid_monster_types.size())];
-
-            if (crawl_state.game_is_arena() && arena_veto_random_monster(mon_type)
-                || force_mobile && mons_class_is_stationary(mon_type))
-            {
-                continue;
-            }
-
-            level  = mons_level(mon_type, place);
-            diff   = level - lev_mons;
-
-            // If we're running low on tries, ignore level differences.
-            if (monster_pick_tries < n_relax_margin)
-                diff = 0;
-
-            chance = mons_rarity(mon_type, place) - (diff * diff);
-
-            // If we're running low on tries, remove level restrictions.
-            if ((monster_pick_tries < n_relax_margin
-                 || std::abs(lev_mons - level) <= 5)
-                && random2avg(100, 2) <= chance)
-            {
-                break;
-            }
+            continue;
         }
 
-        if (monster_pick_tries <= 0)
-            return (MONS_PROGRAM_BUG);
+        if (place == LEVEL_ABYSS && crawl_state.game_is_sprint()
+            && sprint_veto_random_abyss_monster(mon_type))
+        {
+            continue;
+        }
 
-        if (level > original_level + 5)
-            *isood = true;
+        level  = mons_level(mon_type, place);
+        if (original_level >= DEPTH_ABYSS)
+            diff = 0;
+        else
+            diff = level - lev_mons;
+
+        // If we're running low on tries, ignore level differences.
+        if (monster_pick_tries < n_relax_margin)
+            diff = 0;
+
+        chance = mons_rarity(mon_type, place) - (diff * diff);
+
+        // If we're running low on tries, remove level restrictions.
+        if ((monster_pick_tries < n_relax_margin
+             || std::abs(lev_mons - level) <= 5)
+            && random2avg(100, 2) <= chance)
+        {
+            break;
+        }
     }
+
+    if (monster_pick_tries <= 0)
+        return (MONS_PROGRAM_BUG);
+
+    if (level > original_level + 5)
+        *isood = true;
 
     if (lev_mons > original_level)
         dprf("Orginal level: %d, Final level: %d, Monster: %s, OOD: %s",
