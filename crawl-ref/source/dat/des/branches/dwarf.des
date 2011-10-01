@@ -45,25 +45,6 @@ dhfh.colors = function(e)
     dgn.set_feature_desc_long("metal wall", "These metal walls are brush-textured and recently maintained.\n")
 end
 
-dhfh.random_monster_set = function(e)
-    e.set_random_mon_list("wight / troll / rock troll w:3 / deep troll w:1 / \
-        shapeshifter w:3 / necrophage w:3 / orange rat w:5 / redback w:5 / \
-        wolf spider w:5 / giant centipede / war dog ")
-end
-
-dhfh.treasure_setup = function(e)
-    if (local_util.treasure_level == 0) then
-        local_util.treasure_level = crawl.random_range(2,4)
-        local_util.treasure_levels = {2,3,4}
-    end
-
-    local level = local_util.treasure_select_level()
-
-    if (local_util.treasure_level == level) then
-        e.place("Dwarf:" .. level)
-    end
-end
-
 dhfh.hall_setup = function(e, glyph)
     local mod
     if (glyph == "|") then
