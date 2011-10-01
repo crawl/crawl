@@ -22,6 +22,7 @@
 #include "effects.h"
 #include "env.h"
 #include "files.h"
+#include "food.h"
 #include "fprop.h"
 #include "godabil.h"
 #include "goditem.h"
@@ -66,12 +67,6 @@
 #endif
 
 static void _zin_saltify(monster* mon);
-
-bool zin_sustenance(bool actual)
-{
-    return (you.piety >= piety_breakpoint(0)
-            && (!actual || you.hunger_state == HS_STARVING));
-}
 
 std::string zin_recite_text(int* trits, size_t len, int prayertype, int step)
 {
@@ -1207,95 +1202,45 @@ static void _zin_saltify(monster* mon)
     }
 }
 
-static bool _kill_duration(duration_type dur)
-{
-    const bool rc = (you.duration[dur] > 0);
-    you.duration[dur] = 0;
-    return (rc);
-}
-
 bool zin_vitalisation()
 {
-    bool success = false;
-    int type = 0;
-
     // Remove negative afflictions.
     if (you.disease || you.rotting || you.confused()
         || you.petrifying() || you.duration[DUR_POISONING])
     {
-        do
-        {
-            switch (random2(5))
-            {
-            case 0:
-                if (you.disease)
-                {
-                    success = true;
-                    you.disease = 0;
-                }
-                break;
-            case 1:
-                if (you.rotting)
-                {
-                    success = true;
-                    you.rotting = 0;
-                }
-                break;
-            case 2:
-                success = _kill_duration(DUR_CONF);
-                break;
-            case 3:
-                success = _kill_duration(DUR_POISONING);
-                break;
-            case 4:
-                success = _kill_duration(DUR_PETRIFYING);
-                break;
-            }
-        }
-        while (!success);
+        you.disease = 0;
+        you.rotting = 0;
+        you.duration[DUR_CONF] = 0;
+        you.duration[DUR_POISONING] = 0;
+        you.duration[DUR_PETRIFYING] = 0;
+        mpr("You feel better.");
     }
+
     // Restore stats.
-    else if (you.strength() < you.max_strength()
+    if (you.strength() < you.max_strength()
              || you.intel() < you.max_intel()
              || you.dex() < you.max_dex())
     {
-        type = 1;
-        restore_stat(STAT_RANDOM, 0, true);
-        success = true;
-    }
-    else
-    {
-        // Add divine stamina.
-        if (you.attribute[ATTR_DIVINE_STAMINA] < 9)
-        {
-            success = true;
-            type = 2;
-
-            mprf("%s grants you divine stamina.",
-                 god_name(GOD_ZIN).c_str());
-
-            const int stamina_amt = 3;
-            you.attribute[ATTR_DIVINE_STAMINA] += stamina_amt;
-            you.set_duration(DUR_DIVINE_STAMINA,
-                             40 + you.skill(SK_INVOCATIONS, 5)/2);
-
-            notify_stat_change(STAT_STR, stamina_amt, true, "");
-            notify_stat_change(STAT_INT, stamina_amt, true, "");
-            notify_stat_change(STAT_DEX, stamina_amt, true, "");
-        }
+        restore_stat(STAT_ALL, 0, true);
+        mpr("You feel renewed.");
     }
 
-    // If vitalisation has succeeded, display an appropriate message.
-    if (success)
-    {
-        mprf("You feel %s.", (type == 0) ? "better" :
-                             (type == 1) ? "renewed"
-                                         : "powerful");
-    }
-    else
-        canned_msg(MSG_NOTHING_HAPPENS);
+    // Feed the player slightly.
+    if (you.hunger_state < HS_FULL)
+        lessen_hunger(1000, true);
 
-    return (success);
+    // Add divine stamina.
+    simple_god_message("%s grants you divine stamina.", GOD_ZIN);
+
+    const int stamina_amt = std::max(1, you.skill_rdiv(SK_INVOCATIONS, 1, 3));
+    you.attribute[ATTR_DIVINE_STAMINA] = stamina_amt;
+    you.set_duration(DUR_DIVINE_STAMINA, 60);
+
+    notify_stat_change(STAT_STR, stamina_amt, true, "");
+    notify_stat_change(STAT_INT, stamina_amt, true, "");
+    notify_stat_change(STAT_DEX, stamina_amt, true, "");
+
+    return true;
 }
 
 void zin_remove_divine_stamina()

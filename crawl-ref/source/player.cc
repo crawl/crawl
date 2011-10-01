@@ -2599,6 +2599,9 @@ int player_sust_abil(bool calc_unid)
 
     sa += player_equip(EQ_RINGS, RING_SUSTAIN_ABILITIES, calc_unid);
 
+    if (you.duration[DUR_DIVINE_STAMINA] > 0)
+        sa += 1;
+
     if (sa > 2)
         sa = 2;
 
@@ -4725,6 +4728,12 @@ bool confuse_player(int amount, bool resistable)
         return (false);
     }
 
+    if (you.duration[DUR_DIVINE_STAMINA] > 0)
+    {
+        mpr("Your divine stamina protects you from confusion!");
+        return (false);
+    }
+
     const int old_value = you.duration[DUR_CONF];
     you.increase_duration(DUR_CONF, amount, 40);
 
@@ -4788,6 +4797,12 @@ bool poison_player(int amount, std::string source, std::string source_aux,
 
     if (!force && player_res_poison() > 0 || amount <= 0)
         return (false);
+
+    if (!force && you.duration[DUR_DIVINE_STAMINA] > 0)
+    {
+        mpr("Your divine stamina protects you from poison!");
+        return (false);
+    }
 
     const int old_value = you.duration[DUR_POISONING];
     you.duration[DUR_POISONING] += amount;
@@ -4881,10 +4896,9 @@ bool miasma_player(std::string source, std::string source_aux)
     if (you.res_rotting() || you.duration[DUR_DEATHS_DOOR])
         return (false);
 
-    // Zin's protection.
-    if (you.religion == GOD_ZIN && x_chance_in_y(you.piety, MAX_PIETY))
+    if (you.duration[DUR_DIVINE_STAMINA] > 0)
     {
-        simple_god_message(" protects your body from miasma!");
+        mpr("Your divine stamina protects you from the miasma!");
         return (false);
     }
 
@@ -6426,10 +6440,9 @@ bool player::rot(actor *who, int amount, int immediate, bool quiet)
         return (false);
     }
 
-    // Zin's protection.
-    if (religion == GOD_ZIN && x_chance_in_y(piety, MAX_PIETY))
+    if (you.duration[DUR_DIVINE_STAMINA] > 0)
     {
-        simple_god_message(" protects your body from decay!");
+        mpr("Your divine stamina protects you from decay!");
         return (false);
     }
 
@@ -6517,6 +6530,12 @@ void player::petrify(actor *who)
 
     if (you.res_petrify() > 0)
         return;
+
+    if (you.duration[DUR_DIVINE_STAMINA] > 0)
+    {
+        mpr("Your divine stamina protects you from petrification!");
+        return;
+    }
 
     if (you.petrifying())
     {
@@ -6746,10 +6765,9 @@ bool player::sicken(int amount, bool allow_hint)
     if (res_rotting() || amount <= 0)
         return (false);
 
-    // Zin's protection.
-    if (religion == GOD_ZIN && x_chance_in_y(piety, MAX_PIETY))
+    if (you.duration[DUR_DIVINE_STAMINA] > 0)
     {
-        simple_god_message(" protects your body from disease!");
+        mpr("Your divine stamina protects you from disease!");
         return (false);
     }
 

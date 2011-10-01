@@ -4467,15 +4467,7 @@ void describe_god(god_type which_god, bool give_title)
 
         if (which_god == GOD_ZIN)
         {
-            if (zin_sustenance(false))
-            {
-                have_any = true;
-                std::string buf = "Praying to "
-                                  + god_name(which_god)
-                                  + " will provide sustenance if starving.";
-                _print_final_god_abil_desc(which_god, buf,
-                                           ABIL_ZIN_SUSTENANCE);
-            }
+            have_any = true;
             const char *how = (you.piety >= 150) ? "carefully" :
                               (you.piety >= 100) ? "often" :
                               (you.piety >=  50) ? "sometimes" :
