@@ -168,7 +168,7 @@ corpse on the ground by clicking the <w>left mouse button</w> while pressing
 %%%%
 skill-menu
 
-                           <h>Skill management</h>
+                               <h>Skill management</h>
 In Crawl, you gain experience for killing monsters (and very few other
 activities). This experience is used to train skills. The skill screen allows
 you to select which skills to train.
@@ -177,17 +177,18 @@ Note: you train all activated skills at once whenever you gain some experience.
 It is not a bug if you gain a skill level in Axes after killing a monster with
 a spell.
 
-You can toggle a skill by pressing its letter. If a skill is deselected
-(<darkgrey>darkened</darkgrey>), it will not be trained at all. A skill set to focus (marked with <w>*</w>)
-will be trained faster than others.
+You can cycle a skill between <darkgrey>- deselected</darkgrey>, + selected, and <w>* focused</w>
+by pressing its letter. If a skill is deselected, it will not be trained at
+all. A skill set to focus will be trained faster than others.
 
-To train skills, you need to be able to practise them. This means carrying a
-weapon of the appropriate type, or knowing a spell from the school you want to
-train. Some skills like Dodging and Spellcasting have no restrictions and can
-always be trained.
+A skill can only be trained if there's some available means of exercising it;
+see "Training restrictions" below for details.
+
+You can read about skills by using <w>?</w> to switch to description mode; to read
+about skills you aren't (yet) able to train, combine this with <w>*</*> (show all skills).
 
 Training can be done in two modes:
-* automatic: Skills are trained by your use of them.
+* automatic: Skills are trained based on your use of them.
 * manual: Experience is spread evenly across all activated skills.
 
 The training percentage (in <brown>brown</brown>) shows the relative amount of experience
@@ -208,9 +209,22 @@ How fast you train a skill is governed by the following factors:
 On top of that, there are some effects which directly modify a skill, for
 example god powers. These skill modifiers are shown in <blue>blue</blue>.
 
-Apart from (de)selecting skills, you also have the following commands:
+Apart from (de)selecting skills, you also have the following toggles:
 <w>/</w> :  Switch between automatic and manual training.
 <w>?</w> :  Allows you to read the descriptions of skills.
 <w>*</w> :  Shows all skills, even those you can't train yet.
 <w>_</w> :  Shows/hides skill modifiers, e.g. from god powers.
+
+			      <h>Training restrictions</h>
+Fighting, Throwing, Dodging, Stealth, Stabbing, Traps & Doors, Unarmed Combat,
+and Spellcasting can always be trained. For the rest:
+* Weapon skills require carrying a weapon of the appropriate type.
+* Armour requires wearing an armour with an evasion penalty.
+* Shields requires that you either be wearing a shield, or have the capacity
+      to obtain one through magical or divine means.
+* Evocations requires carrying an evocable item, or the help of Nemelex Xobah.
+* Spell schools require knowing a spell of the school, or divine assistance.
+* Invocations requires having at least one divine ability that exercises it.
+# FIXME: Should state somewhere *when* Nemelex/Kiku permit Evo/Necro for free
+
 %%%%
