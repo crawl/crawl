@@ -29,7 +29,7 @@ int mons_level(int mcls, const level_id &place)
     int monster_level = 0;
 
     if (place.level_type == LEVEL_ABYSS)
-        monster_level = ((mons_abyss(mcls)) ? place.absdepth() : 0);
+        monster_level = ((mons_abyss_rare(mcls)) ? place.absdepth() : 0);
     else if (place.level_type == LEVEL_PANDEMONIUM)
         monster_level = ((mons_pan(mcls)) ? place.absdepth() : 0);
     else if (place.level_type == LEVEL_DUNGEON)
@@ -44,7 +44,7 @@ int mons_rarity(int mcls, const level_id &place)
 {
     // now, what about pandemonium ??? {dlb}
     if (place.level_type == LEVEL_ABYSS)
-        return mons_rare_abyss(mcls);
+        return mons_abyss_rare(mcls);
     else
         return branches[place.branch].mons_rarity_function(mcls);
 }
@@ -53,149 +53,7 @@ int mons_rarity(int mcls, const level_id &place)
 // NOTE: Labyrinths and portal vaults have no random monster generation.
 
 // The Abyss
-bool mons_abyss(int mcls)
-{
-    switch (mcls)
-    {
-    case MONS_ABOMINATION_LARGE:
-    case MONS_ABOMINATION_SMALL:
-    case MONS_AIR_ELEMENTAL:
-    case MONS_ANCIENT_LICH:
-    case MONS_ANGEL:
-    case MONS_BALRUG:
-    case MONS_BLIZZARD_DEMON:
-    case MONS_BLUE_DEVIL:
-    case MONS_BONE_DRAGON:
-    case MONS_BRAIN_WORM:
-    case MONS_CACODEMON:
-    case MONS_CHAOS_SPAWN:
-    case MONS_CLAY_GOLEM:
-    case MONS_CRYSTAL_GOLEM:
-    case MONS_DAEVA:
-    case MONS_DANCING_WEAPON:
-    case MONS_DEMONIC_CRAWLER:
-    case MONS_EARTH_ELEMENTAL:
-    case MONS_EFREET:
-    case MONS_EIDOLON:
-    case MONS_EXECUTIONER:
-    case MONS_EYE_OF_DEVASTATION:
-    case MONS_EYE_OF_DRAINING:
-    case MONS_FIRE_BAT:
-    case MONS_FIRE_ELEMENTAL:
-    case MONS_FLAMING_CORPSE:
-    case MONS_FLAYED_GHOST:
-    case MONS_FLYING_SKULL:
-    case MONS_FREEZING_WRAITH:
-    case MONS_DEATH_DRAKE:
-    case MONS_FUNGUS:
-    case MONS_GIANT_EYEBALL:
-    case MONS_GIANT_ORANGE_BRAIN:
-    case MONS_GIANT_SPORE:
-    case MONS_GREAT_ORB_OF_EYES:
-    case MONS_GOLDEN_EYE:
-    case MONS_GREEN_DEATH:
-    case MONS_GUARDIAN_SERPENT:
-    case MONS_HAIRY_DEVIL:
-    case MONS_HELLEPHANT:
-    case MONS_HELLION:
-    case MONS_HELLWING:
-    case MONS_HELL_HOG:
-    case MONS_HELL_HOUND:
-    case MONS_HELL_KNIGHT:
-    case MONS_HUNGRY_GHOST:
-    case MONS_ICE_BEAST:
-    case MONS_ICE_DEVIL:
-    case MONS_IMP:
-    case MONS_INSUBSTANTIAL_WISP:
-    case MONS_IRON_DEVIL:
-    case MONS_IRON_GOLEM:
-    case MONS_IRON_IMP:
-    case MONS_JELLY:
-    case MONS_LEMURE:
-    case MONS_LICH:
-    case MONS_LOROCYPROCA:
-    case MONS_MIDGE:
-    case MONS_MUMMY:
-    case MONS_NAGA_MAGE:
-    case MONS_NAGA_WARRIOR:
-    case MONS_NECROMANCER:
-    case MONS_NECROPHAGE:
-    case MONS_NEQOXEC:
-    case MONS_OCTOPODE:
-    case MONS_ORANGE_DEMON:
-    case MONS_PHANTASMAL_WARRIOR:
-    case MONS_PHANTOM:
-    case MONS_PIT_FIEND:
-    case MONS_PROFANE_SERVITOR:
-    case MONS_RAKSHASA:
-    case MONS_REAPER:
-    case MONS_RED_DEVIL:
-    case MONS_ROTTING_DEVIL:
-    case MONS_SHADOW:
-    case MONS_SHADOW_DEMON:
-    case MONS_SHADOW_IMP:
-    case MONS_SHINING_EYE:
-    case MONS_SILENT_SPECTRE:
-    case MONS_SIXFIRHY:
-    case MONS_SKELETAL_WARRIOR:
-    case MONS_SKELETON_LARGE:
-    case MONS_SKELETON_SMALL:
-    case MONS_SKY_BEAST:
-    case MONS_SMOKE_DEMON:
-    case MONS_SOUL_EATER:
-    case MONS_SPINY_WORM:
-    case MONS_STONE_GOLEM:
-    case MONS_SUN_DEMON:
-    case MONS_TENTACLED_MONSTROSITY:
-    case MONS_TOENAIL_GOLEM:
-    case MONS_TORMENTOR:
-    case MONS_UFETUBUS:
-    case MONS_UGLY_THING:
-    case MONS_UNSEEN_HORROR:
-    case MONS_VAMPIRE:
-    case MONS_VAPOUR:
-    case MONS_VERY_UGLY_THING:
-    case MONS_WHITE_IMP:
-    case MONS_WIGHT:
-    case MONS_WIZARD:
-    case MONS_WOOD_GOLEM:
-    case MONS_WRAITH:
-    case MONS_YNOXINUL:
-    case MONS_ZOMBIE_LARGE:
-    case MONS_ZOMBIE_SMALL:
-    case MONS_SIMULACRUM_LARGE:
-    case MONS_SIMULACRUM_SMALL:
-    case MONS_MOTTLED_DRACONIAN:
-    case MONS_YELLOW_DRACONIAN:
-    case MONS_BLACK_DRACONIAN:
-    case MONS_WHITE_DRACONIAN:
-    case MONS_RED_DRACONIAN:
-    case MONS_PURPLE_DRACONIAN:
-    case MONS_PALE_DRACONIAN:
-    case MONS_GREEN_DRACONIAN:
-    case MONS_GREY_DRACONIAN:
-    case MONS_DRACONIAN_CALLER:
-    case MONS_DRACONIAN_MONK:
-    case MONS_DRACONIAN_SCORCHER:
-    case MONS_DRACONIAN_KNIGHT:
-    case MONS_DRACONIAN_ANNIHILATOR:
-    case MONS_DRACONIAN_ZEALOT:
-    case MONS_DRACONIAN_SHIFTER:
-    case MONS_DEEP_DWARF:
-    case MONS_DEEP_DWARF_SCION:
-    case MONS_DEEP_DWARF_ARTIFICER:
-    case MONS_DEEP_DWARF_NECROMANCER:
-    case MONS_DEEP_DWARF_BERSERKER:
-    case MONS_DEEP_DWARF_DEATH_KNIGHT:
-    case MONS_UNBORN_DEEP_DWARF:
-    case MONS_KENKU:
-        return (true);
-    default:
-        return (false);
-    }
-}
-
-int mons_rare_abyss(int mcls)
+int mons_abyss_rare(int mcls)
 {
     switch (mcls)
     {

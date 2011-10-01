@@ -568,7 +568,7 @@ monster_type pick_random_monster(const level_id &place, int power,
                     mon_type = static_cast<monster_type>(random2(NUM_MONSTERS));
                     count++;
                 }
-                while (mons_abyss(mon_type) == 0 && count < 2000);
+                while (mons_abyss_rare(mon_type) == 0 && count < 2000);
             } while ((crawl_state.game_is_arena()
                           && arena_veto_random_monster(mon_type))
                       || (crawl_state.game_is_sprint()
@@ -579,7 +579,7 @@ monster_type pick_random_monster(const level_id &place, int power,
             if (count == 2000)
                 return (MONS_PROGRAM_BUG);
         }
-        while (random2avg(100, 2) > mons_rare_abyss(mon_type)
+        while (random2avg(100, 2) > mons_abyss_rare(mon_type)
                && !one_chance_in(100));
     }
     else
