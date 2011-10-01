@@ -263,7 +263,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
         // enough to bother lugging a few of these around. - bwr
         monster_type mon = MONS_SNAKE;
 
-        if (get_weapon_brand(item) == SPWPN_VENOM || item_mass(wpn) >= 300)
+        if (get_weapon_brand(wpn) == SPWPN_VENOM || item_mass(wpn) >= 300)
             mon = MONS_WATER_MOCCASIN;
 
         if (pow > 20 && one_chance_in(3))
