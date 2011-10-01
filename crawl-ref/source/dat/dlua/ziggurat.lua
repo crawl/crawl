@@ -372,7 +372,7 @@ mset(spec_fn(function ()
 
 mset(spec_fn(function ()
                local d = math.max(0, zig().depth - 5)
-               return "place:Pan w:40 / pandemonium lord w:" .. d
+               return "place:Pan w:45 / pandemonium lord w:" .. d
              end))
 
 mset(spec_fn(function ()
