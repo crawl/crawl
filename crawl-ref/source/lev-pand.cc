@@ -21,79 +21,10 @@
 
 void init_pandemonium(void)
 {
-    int pc = 0;
-
-    for (pc = 0; pc < MAX_MONSTERS; ++pc)
-    {
-        monster* mons = &menv[pc];
-
-        // Looks for unique demons and sets appropriate lists of demons.
-        // NB - also sets the level colours.
-        if (mons->type == MONS_MNOLEG)
-        {
-            env.mons_alloc[0] = MONS_ABOMINATION_SMALL;
-            env.mons_alloc[1] = MONS_ABOMINATION_SMALL;
-            env.mons_alloc[2] = MONS_ABOMINATION_SMALL;
-            env.mons_alloc[3] = MONS_ABOMINATION_LARGE;
-            env.mons_alloc[4] = MONS_NEQOXEC;
-            env.mons_alloc[5] = MONS_MIDGE;
-            env.mons_alloc[6] = MONS_NEQOXEC;
-            env.mons_alloc[7] = MONS_BLIZZARD_DEMON;
-            env.mons_alloc[8] = MONS_BALRUG;
-            env.mons_alloc[9] = MONS_LEMURE;
-            return;
-        }
-
-        if (mons->type == MONS_LOM_LOBON)
-        {
-            env.mons_alloc[0] = MONS_HELLWING;
-            env.mons_alloc[1] = MONS_SMOKE_DEMON;
-            env.mons_alloc[2] = MONS_SMOKE_DEMON;
-            env.mons_alloc[3] = MONS_YNOXINUL;
-            env.mons_alloc[4] = MONS_GREEN_DEATH;
-            env.mons_alloc[5] = MONS_BLIZZARD_DEMON;
-            env.mons_alloc[6] = MONS_SMOKE_DEMON;
-            env.mons_alloc[7] = MONS_HELLWING;
-            env.mons_alloc[8] = MONS_WHITE_IMP;
-            env.mons_alloc[9] = MONS_HELLWING;
-            return;
-        }
-
-        if (mons->type == MONS_CEREBOV)
-        {
-            env.mons_alloc[0] = MONS_EFREET;
-            env.mons_alloc[1] = MONS_ABOMINATION_SMALL;
-            env.mons_alloc[2] = MONS_ORANGE_DEMON;
-            env.mons_alloc[3] = MONS_ORANGE_DEMON;
-            env.mons_alloc[4] = MONS_NEQOXEC;
-            env.mons_alloc[5] = MONS_LEMURE;
-            env.mons_alloc[6] = MONS_ORANGE_DEMON;
-            env.mons_alloc[7] = MONS_YNOXINUL;
-            env.mons_alloc[8] = MONS_BALRUG;
-            env.mons_alloc[9] = MONS_BALRUG;
-            return;
-        }
-
-        if (mons->type == MONS_GLOORX_VLOQ)
-        {
-            env.mons_alloc[0] = MONS_SKELETON_SMALL;
-            env.mons_alloc[1] = MONS_SKELETON_SMALL;
-            env.mons_alloc[2] = MONS_SKELETON_LARGE;
-            env.mons_alloc[3] = MONS_WHITE_IMP;
-            env.mons_alloc[4] = MONS_CACODEMON;
-            env.mons_alloc[5] = MONS_HELLWING;
-            env.mons_alloc[6] = MONS_SMOKE_DEMON;
-            env.mons_alloc[7] = MONS_EXECUTIONER;
-            env.mons_alloc[8] = MONS_EXECUTIONER;
-            env.mons_alloc[9] = MONS_EXECUTIONER;
-            return;
-        }
-    }
-
     // colour of monster 9 is colour of floor, 8 is colour of rock
     // IIRC, BLACK is set to LIGHTGREY
 
-    for (pc = 0; pc < 10; ++pc)
+    for (int pc = 0; pc < 10; ++pc)
     {
         switch (random2(17))
         {

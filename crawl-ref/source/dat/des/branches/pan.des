@@ -19,6 +19,25 @@ function pan_lord_epilogue(name)
     crawl.mark_milestone('br.enter', 'entered the realm of ' .. name .. '.')
 end
 
+function pan_lord_monsters(_G, name)
+    -- needs exactly 10 monsters, weights are not supported yet
+    local monsters = {
+        Mnoleg = "small abomination / small abomination / small abomination / " ..
+                 "large abomination / neqoxec / midge / neqoxec / " ..
+                 "blizzard demon / balrug / lemure",
+        ['Lom Lobon'] = "hellwing / smoke demon / smoke demon / ynoxinul / " ..
+                 "Green Death / blizzard demon / smoke demon / hellwing / " ..
+                 "white imp / hellwing",
+        Cerebov = "efreet / small abomination / orange demon / orange demon / " ..
+                 "neqoxec / lemure / orange demon / ynoxinul / balrug / balrug",
+        ['Gloorx Vloq'] = "small skeleton / small skeleton / large skeleton / " ..
+                 "white imp / cacodemon / hellwing / smoke demon / " ..
+                 "executioner / executioner / executioner"
+    }
+
+    _G.set_random_mon_list(monsters[name])
+end
+
 colours = {
     "magenta", "blue", "cyan", "green",
     "brown", "red", "lightgrey"
@@ -120,6 +139,7 @@ LFLOORCOL: yellow
 LROCKCOL:  red
 MONS:      patrolling Mnoleg, neqoxec
 KITEM:     O = glowing rune of Zot
+: pan_lord_monsters(_G, 'Mnoleg')
 epilogue{{
   pan_lord_epilogue('Mnoleg')
 }}
@@ -172,6 +192,7 @@ KITEM:     O = glowing rune of Zot
 NSUBST:    q = 2:u / *:.
 NSUBST:    e = 2:u / *:.
 NSUBST:    p = 3:u / *:.
+: pan_lord_monsters(_G, 'Mnoleg')
 epilogue{{
   pan_lord_epilogue('Mnoleg')
 }}
@@ -223,6 +244,7 @@ TAGS:      no_rotate
 LROCKCOL:  white
 MONS:      patrolling Lom Lobon, giant orange brain, rakshasa, wizard
 KITEM:     O = magical rune of Zot
+: pan_lord_monsters(_G, 'Lom Lobon')
 epilogue{{
   pan_lord_epilogue('Lom Lobon')
 }}
@@ -272,6 +294,7 @@ MONS:      sixfirhy
 SUBST:     0 = 23444445566
 NSUBST:    Q = 1:O / *:4
 NSUBST:    B = 1:. / *:b
+: pan_lord_monsters(_G, 'Lom Lobon')
 epilogue{{
   pan_lord_epilogue('Lom Lobon')
 }}
@@ -335,6 +358,7 @@ KMONS:     e = deep elf annihilator
 COLOUR:    c = white
 KFEAT:     S = deep_water
 NSUBST:    D = 1:S / *:w
+: pan_lord_monsters(_G, 'Lom Lobon')
 epilogue{{
   pan_lord_epilogue('Lom Lobon')
 }}
@@ -404,6 +428,7 @@ epilogue{{
 }}
 COLOUR:     n = blue
 TILE:       n = dngn_metal_wall_cracked
+: pan_lord_monsters(_G, 'Cerebov')
 :           dgn.set_feature_desc_short("translucent stone wall",
 :                                      "cracked metal wall")
 :           dgn.set_feature_desc_long("translucent stone wall",
@@ -452,6 +477,7 @@ LROCKCOL:  red
 KITEM:     O = fiery rune of zot
 MONS:      patrolling Cerebov, balrug, pit fiend
 MONS:      red devil, sun demon, imp
+: pan_lord_monsters(_G, 'Cerebov')
 epilogue{{
   pan_lord_epilogue('Cerebov')
 }}
@@ -504,6 +530,7 @@ LFLOORCOL: blue
 LROCKCOL:  blue
 MONS:      patrolling Gloorx Vloq, Executioner, demonic crawler, shadow wraith
 KITEM:     O = dark rune of Zot
+: pan_lord_monsters(_G, 'Gloorx Vloq')
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
 }}
@@ -547,6 +574,7 @@ LROCKCOL:  blue
 MONS:      patrolling Gloorx Vloq, Executioner, shadow wraith
 MONS:      soul eater, unseen horror
 KITEM:     O = dark rune of Zot
+: pan_lord_monsters(_G, 'Gloorx Vloq')
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
 }}

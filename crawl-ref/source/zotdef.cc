@@ -757,7 +757,7 @@ void zotdef_set_wave()
 std::string zotdef_debug_wave_desc()
 {
     std::string list = you.zotdef_wave_name + " [";
-    for (int i = 0; i <= NSLOTS; i++)
+    for (int i = 0; i <= (crawl_state.game_is_zotdef() ? NSLOTS : 9); i++)
     {
         if (i)
             list += ", ";
