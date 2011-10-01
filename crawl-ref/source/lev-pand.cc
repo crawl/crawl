@@ -191,7 +191,7 @@ void pandemonium_mons(void)
     {
         do
             pan_mons = random2(NUM_MONSTERS);
-        while (!mons_pan(pan_mons));
+        while (!mons_pan_rare(pan_mons));
     }
     mgen_data mg(static_cast<monster_type>(pan_mons));
     mg.level_type = LEVEL_PANDEMONIUM;
