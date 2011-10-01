@@ -1047,7 +1047,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 #endif
     }
 
-    do_god_revenge(thing_done);
+    do_god_revenge(thing_done, victim);
 
     return (retval);
 }
