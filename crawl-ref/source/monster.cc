@@ -1328,12 +1328,6 @@ bool monster::pickup_launcher(item_def &launch, int near, bool force)
 
 static bool _is_signature_weapon(monster* mons, const item_def &weapon)
 {
-    if (mons->type == MONS_ANGEL || mons->type == MONS_CHERUB)
-        return (weapon.sub_type == WPN_SACRED_SCOURGE);
-
-    if (mons->type == MONS_DAEVA)
-        return (weapon.sub_type == WPN_EUDEMON_BLADE);
-
     if (mons->type == MONS_DEEP_DWARF_ARTIFICER)
         return (weapon.base_type == OBJ_STAVES);
 
@@ -1401,6 +1395,9 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
         if (mons->type == MONS_MENNAS)
             return (get_weapon_brand(weapon) == SPWPN_HOLY_WRATH);
     }
+
+    if (mons->is_holy())
+        return is_blessed(weapon);
 
     if (is_unrandom_artefact(weapon))
     {
