@@ -67,10 +67,10 @@ bool actor::can_wield(const item_def* item, bool ignore_curse,
         // Unarmed combat.
         item_def fake;
         fake.base_type = OBJ_UNASSIGNED;
-        return can_wield(fake, ignore_curse, ignore_brand, ignore_transform);
+        return can_wield(fake, ignore_curse, ignore_brand, ignore_shield, ignore_transform);
     }
     else
-        return can_wield(*item, ignore_curse, ignore_brand, ignore_transform);
+        return can_wield(*item, ignore_curse, ignore_brand, ignore_shield, ignore_transform);
 }
 
 bool actor::can_pass_through(int x, int y) const
