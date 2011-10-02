@@ -3577,7 +3577,7 @@ void monster::poison(actor *agent, int amount, bool force)
     poison_monster(this, agent, amount, force);
 }
 
-int monster::skill(skill_type sk, int scale) const
+int monster::skill(skill_type sk, int scale, bool real) const
 {
     int hd = scale * hit_dice;
     switch (sk)
