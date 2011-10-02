@@ -411,3 +411,120 @@ Sacrifice part of one of your skills to improve another.
 End Transfer Knowledge
 
 Abort an ongoing skill transfer.
+%%%%
+# Zotdef
+Make dart trap
+
+Create a dart trap at the targeted location.
+%%%%
+Make oklob sapling
+
+Plant an oklob sapling with the ability to spit acid at the targeted location.
+%%%%
+Make arrow trap
+
+Create an arrow trap at the targeted location.
+%%%%
+Make plant
+
+Cause a plant to grow at the targeted location.
+%%%%
+Remove Curse
+
+Uncurse all of your equipment.
+%%%%
+Make burning bush
+
+Plant a burning bush with the ability to throw fire and see invisible monsters at the targeted location.
+%%%%
+Make altar
+
+Create an altar to a random god at your location.
+%%%%
+Make grenades
+
+Spawn a number of explosive giant spores around you.
+%%%%
+Make oklob plant
+
+Plant a fully grown oklob plant with the ability to spit acid at the targeted location.
+%%%%
+Make net trap
+
+Create a net trap at the targeted location.
+%%%%
+Make ice statue
+
+Construct a statue with various icy abilities at the targeted location.
+%%%%
+Make spear trap
+
+Create a spear trap at the targeted location.
+%%%%
+Make alarm trap
+
+Create an alarm trap to alert you to the presence of monsters at the targeted location.
+%%%%
+Make mushroom circle
+
+Grow a circle of fungi centred at the targeted location.
+%%%%
+Make bolt trap
+
+Create a bolt trap at the targeted location.
+%%%%
+Make crystal statue
+
+Construct a statue with the ability to confuse monsters at the targeted location.
+%%%%
+Make needle trap
+
+Create a poisonous needle trap at the targeted location.
+%%%%
+Zot-teleport
+
+Perform a controlled teleport.
+%%%%
+Make water
+
+Create a pool of shallow water at your location.
+%%%%
+Make axe trap
+
+Create an axe trap at the targeted location.
+%%%%
+Make lightning spire
+
+Construct a lightning spire with the ability to throw electricity at the targeted location.
+%%%%
+Make silver statue
+
+Construct a statue with the ability to summon friendly demons at the targeted location.
+%%%%
+Make bazaar
+
+Create a portal to a bazaar at your location.
+%%%%
+Acquire gold
+
+Acquire a large quantity of gold.
+%%%%
+Make oklob circle
+
+Grow a circle of oklob plants centred at the targeted location.
+%%%%
+Sage
+
+Funnel some of your earned experience towards a certain skill and train it faster than normal.
+%%%%
+Acquirement
+
+Acquire a chosen type of item.
+%%%%
+Make blade trap
+
+Create a blade trap at the targeted location.
+%%%%
+Make curse skull
+
+Construct a curse skull with the ability to summon the undead at the targeted location, at the cost of a necromantic backlash to yourself.

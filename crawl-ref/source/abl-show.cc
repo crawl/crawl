@@ -894,6 +894,12 @@ static const std::string _detailed_cost_description(ability_type ability)
     if (abil.flags & ABFLAG_CONF_OK)
         ret << "\nYou can use it even if confused.";
 
+    if (abil.flags & ABFLAG_LEVEL_DRAIN)
+        ret << "\nIt will lower your experience level by one when used.";
+
+    if (abil.flags & ABFLAG_STAT_DRAIN)
+        ret << "\nIt will temporarily drain your strength, intelligence or dexterity when used.";
+
     return (ret.str());
 }
 
