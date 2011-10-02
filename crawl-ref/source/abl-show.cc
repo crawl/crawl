@@ -842,6 +842,12 @@ static const std::string _detailed_cost_description(ability_type ability)
             ret << "\nHP     : ";
         ret << abil.hp_cost.cost(you.hp_max);
     }
+    if (abil.zp_cost)
+    {
+        have_cost = true;
+        ret << "\nZP     : ";
+        ret << abil.zp_cost;
+    }
 
     if (abil.food_cost && you.is_undead != US_UNDEAD
         && (you.is_undead != US_SEMI_UNDEAD || you.hunger_state > HS_STARVING))
@@ -1306,12 +1312,11 @@ static void _print_talent_description(const talent& tal)
     }
 
     if (lookup.empty()) // Still nothing found?
-        cprintf("No description found.");
-    else
-    {
-        print_description(name + "\n\n" + lookup + "\n"
-                          + _detailed_cost_description(tal.which));
-    }
+        lookup = "No description found.\n";
+
+    print_description(name + "\n\n" + lookup + "\n"
+                      + _detailed_cost_description(tal.which));
+
     getchm();
     clrscr();
 }
