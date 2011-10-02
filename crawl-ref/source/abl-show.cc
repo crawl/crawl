@@ -159,16 +159,21 @@ static int _scale_piety_cost(ability_type abil, int original_cost);
 static std::string _zd_mons_description_for_ability (const ability_def &abil);
 static monster_type _monster_for_ability (const ability_def& abil);
 
-// this all needs to be split into data/util/show files
-// and the struct mechanism here needs to be rewritten (again)
-// along with the display routine to piece the strings
-// together dynamically ... I'm getting to it now {dlb}
-
-// it makes more sense to think of them as an array
-// of structs than two arrays that share common index
-// values -- well, doesn't it? {dlb}
-
-// declaring this const messes up externs later, so don't do it
+/**
+ * This all needs to be split into data/util/show files
+ * and the struct mechanism here needs to be rewritten (again)
+ * along with the display routine to piece the strings
+ * together dynamically ... I'm getting to it now {dlb}
+ *
+ * This array corresponds with ::god_gain_power_messages and
+ * ::god_lose_power_messages, which have the same shape.
+ *
+ * It makes more sense to think of them as an array
+ * of structs than two arrays that share common index
+ * values -- well, doesn't it? {dlb}
+ *
+ * @note Declaring this const messes up externs later, so don't do it!
+ */
 ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
 {
     // no god

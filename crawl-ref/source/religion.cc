@@ -214,6 +214,9 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
     },
 };
 
+/**
+ * This corresponds with ::god_abilities, as well as with ::god_lose_power_messages.
+ */
 const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
 {
     // no god
@@ -328,6 +331,9 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
     },
 };
 
+/**
+ * This corresponds with ::god_abilities, as well as with ::god_gain_power_messages.
+ */
 const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
 {
     // no god
