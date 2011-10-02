@@ -1015,6 +1015,7 @@ static void tag_construct_char(writer &th)
     // Important: you may never remove or alter a field without bumping
     // CHR_FORMAT.  Bumping it makes all saves invisible when browsed in an
     // older version.
+    // Please keep this compatible even over major version breaks!
 
     // Appending fields is fine.
 
