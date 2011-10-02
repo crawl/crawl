@@ -1643,6 +1643,7 @@ static bool _activate_talent(const talent& tal)
         case ABIL_TRAN_BAT:
         case ABIL_BOTTLE_BLOOD:
         case ABIL_ASHENZARI_END_TRANSFER:
+        case ABIL_ZIN_VITALISATION:
             hungerCheck = false;
             break;
         default:
