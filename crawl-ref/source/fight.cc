@@ -5049,15 +5049,6 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
                      attacker->conj_verb("draw").c_str(),
                      def_name(DESC_NOCAP_ITS).c_str());
             }
-
-            // 4.1.2 actually drains max hp; we're being nicer and just doing
-            // a rot effect.
-            if ((damage_done > 6 && one_chance_in(3)) || one_chance_in(20))
-            {
-                if (defender->atype() == ACT_PLAYER)
-                    mprf("You feel less resilient.");
-                rot_defender(0, coinflip() ? 2 : 1);
-            }
         }
         break;
 
