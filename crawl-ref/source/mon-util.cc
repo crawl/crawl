@@ -3626,6 +3626,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         msg = replace_all(msg, "@foe_name@", you.your_name);
         msg = replace_all(msg, "@foe_species@", species_name(you.species));
         msg = replace_all(msg, "@foe_genus@", foe_species);
+        msg = replace_all(msg, "@Foe_genus@", uppercase_first(foe_species));
         msg = replace_all(msg, "@foe_genus_plural@",
                           _pluralise_player_genus());
     }
@@ -3674,6 +3675,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         std::string genus = mons_type_name(mons_genus(m_foe->type), DESC_PLAIN);
 
         msg = replace_all(msg, "@foe_genus@", genus);
+        msg = replace_all(msg, "@Foe_genus@", uppercase_first(genus));
         msg = replace_all(msg, "@foe_genus_plural@", pluralise(genus));
 
         foe_species = genus;
