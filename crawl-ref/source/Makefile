@@ -1164,12 +1164,12 @@ doxy-all: doxygen-all
 doxygen-all:
 	$(DOXYGEN) $(DOXYGEN_ALL_CONF)
 
-$(UTIL)%.o: $(UTIL)%.cc .cflags
-ifdef NO_INLINE_DEPGEN
-	$(QUIET_CXX)$(CXX) $(YACC_CFLAGS) -c $< -o $(UTIL)$*.o
-else
-	$(QUIET_CXX)$(CXX) $(YACC_CFLAGS) -Wp,-MMD,$(UTIL)$*.d,-MT,$(UTIL)$*.o -c $< -o $(UTIL)$*.o
+ifndef NO_INLINE_DEPGEN
+INLINE_DEPGEN_CFLAGS = -Wp,-MMD,$(patsubst %.o,%.d,$@),-MT,$@
 endif
+
+$(UTIL)%.o: $(UTIL)%.cc .cflags
+	$(QUIET_CXX)$(CXX) $(YACC_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
 
 ifdef PCH
 %.h.gch: %.h
@@ -1188,18 +1188,10 @@ endif
 	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(ALL_CFLAGS) -MT $*.o $< > $*.d
 
 %.o: %.m .cflags $(GENERATED_HEADERS)
-ifdef NO_INLINE_DEPGEN
-	$(QUIET_CC)$(CC) $(ALL_CFLAGS) -c $< -o $@
-else
-	$(QUIET_CC)$(CC) $(ALL_CFLAGS) -Wp,-MMD,$*.d,-MT,$@ -c $< -o $@
-endif
+	$(QUIET_CC)$(CC) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
 
 %.o: %.cc .cflags $(GENERATED_HEADERS)
-ifdef NO_INLINE_DEPGEN
-	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) -c $< -o $@
-else
-	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) -Wp,-MMD,$*.d,-MT,$@ -c $< -o $@
-endif
+	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
 
 icon.o: util/crawl.rc util/crawl.ico .cflags
 	$(QUIET_WINDRES)$(WINDRES) util/crawl.rc icon.o
