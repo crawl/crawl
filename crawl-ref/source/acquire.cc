@@ -486,6 +486,10 @@ static int _acquirement_weapon_subtype(bool divine)
     int best_sk = 0;
 
     for (int i = SK_SHORT_BLADES; i <= SK_CROSSBOWS; i++)
+        if (you.skills[i] > best_sk)
+            best_sk = you.skills[i];
+
+    for (int i = SK_SHORT_BLADES; i <= SK_CROSSBOWS; i++)
     {
         skill_type sk = static_cast<skill_type>(i);
         if (is_invalid_skill(sk))
@@ -493,12 +497,12 @@ static int _acquirement_weapon_subtype(bool divine)
 
         // Adding a small constant allows for the occasional
         // weapon in an untrained skill.
-
         const int weight = you.skills[sk] + 1;
+        // ... unless it's a scroll acquirement and you're highly skilled in a
+        // different weapon type.
+        if (!divine && you.skills[sk] * 3 < best_sk && you.skills[sk] + 7 < best_sk)
+            continue;
         count += weight;
-
-        if (you.skills[sk] > best_sk)
-            best_sk = you.skills[sk];
 
         if (x_chance_in_y(weight, count))
             skill = sk;
