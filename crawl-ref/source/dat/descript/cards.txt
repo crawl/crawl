@@ -115,7 +115,7 @@ It is usually found in decks of changes and wonders.
 %%%%
 the Sage card
 
-This card will funnel some of your earned experience towards a training specific skill and train it faster than it normally would.
+This card will funnel some of your earned experience towards training a specific skill and train it faster than it normally would.
 It is usually found in decks of changes and wonders.
 %%%%
 # deck of dungeons -> also changes
