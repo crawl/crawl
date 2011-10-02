@@ -4754,7 +4754,7 @@ VISUAL:@The_monster@ strides towards you, then pauses, indecisive.
 %%%%
 _Menkaure_rare_
 
-@Possessive@ ankle releases a plume of dust as @pronoun@ confides, "I'm not really a mummy, you know."
+@The_monster@'s ankle releases a plume of dust as @pronoun@ confides, "I'm not really a mummy, you know."
 
 VISUAL:@The_monster@ forgets how to to speak, silenced by the ages.
 
