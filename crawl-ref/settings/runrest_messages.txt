@@ -4,6 +4,7 @@ ignore := runrest_ignore_message
 ignore = Jiyva gurgles merrily
 ignore = Jiyva appreciates your sacrifice
 ignore = Jiyva says: Divide and consume
+ignore = You hear.*splatter
 
 ignore = You feel.*sick
 ignore = disappears in a puff of smoke
@@ -20,9 +21,8 @@ ignore = You .* eating
 
 # Traps
 #
-stop = found a trap
+stop = found.*trap
 stop = You have blundered into a Zot trap
-stop = Wait a moment
 stop = You fall through a shaft
 
 # Ailments
