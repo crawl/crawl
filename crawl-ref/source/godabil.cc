@@ -1204,13 +1204,13 @@ static void _zin_saltify(monster* mon)
 
 bool zin_vitalisation()
 {
-    // Feed the player slightly.
-    if (you.hunger_state < HS_FULL)
-        lessen_hunger(1000, true);
-
-    // Add divine stamina.
     simple_god_message(" grants you divine stamina.");
 
+    // Feed the player slightly.
+    if (you.hunger_state < HS_FULL)
+        lessen_hunger(250, false);
+
+    // Add divine stamina.
     const int stamina_amt = std::max(1, you.skill_rdiv(SK_INVOCATIONS, 1, 3));
     you.attribute[ATTR_DIVINE_STAMINA] = stamina_amt;
     you.set_duration(DUR_DIVINE_STAMINA, 60 + roll_dice(2, 10));
