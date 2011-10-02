@@ -16,6 +16,7 @@ tile_list_processor::tile_list_processor() :
     m_corpsify(false),
     m_composing(false),
     m_shrink(true),
+    m_texture(0),
     m_prefix("TILE"),
     m_start_value("0"),
     m_variation_idx(-1),
@@ -30,6 +31,8 @@ tile_list_processor::~tile_list_processor()
         delete m_back[i];
 
     m_back.resize(0);
+    if (m_texture)
+        delete m_texture;
 }
 
 bool tile_list_processor::load_image(tile &img, const char *filename,
@@ -395,6 +398,9 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             else if (m_rim)
                 m_compose.add_rim(tile_colour::black);
 
+            if (m_texture)
+                m_compose.texture(*m_texture);
+
             if (!m_back.empty())
             {
                 const unsigned int pseudo_rand = m_page.m_tiles.size() * 54321;
@@ -414,6 +420,30 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
 
             m_compose.unload();
             m_composing = false;
+        }
+        else if (strcmp(arg, "texture") == 0)
+        {
+            CHECK_ARG(1);
+
+            if (m_texture)
+                delete m_texture;
+
+            if (strcmp(m_args[1], "none") == 0)
+            {
+                CHECK_NO_ARG(2);
+                m_texture = 0;
+                return (true);
+            }
+
+            CHECK_NO_ARG(2);
+            tile *img = new tile();
+            if (!load_image(*img, m_args[1], true))
+            {
+                fprintf(stderr, "Error(%s:%d): couldn't load image "
+                                "'%s'.\n", list_file, line, m_args[1]);
+                return (false);
+            }
+            m_texture = img;
         }
         else if (strcmp(arg, "include") == 0)
         {
@@ -698,6 +728,9 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             if (m_corpsify)
                 m_compose.corpsify();
 
+            if (m_texture)
+                m_compose.texture(*m_texture);
+
             const unsigned int pseudo_rand = m_page.m_tiles.size() * 54321;
             tile *back = m_back[pseudo_rand % m_back.size()];
             img.copy(*back);
@@ -720,6 +753,9 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
 
             if (m_corpsify)
                 img.corpsify();
+
+            if (m_texture)
+                img.texture(*m_texture);
         }
 
         recolour(img);

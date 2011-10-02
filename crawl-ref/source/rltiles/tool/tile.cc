@@ -327,6 +327,41 @@ bool tile::compose(const tile &img)
     return (true);
 }
 
+bool tile::texture(const tile &img)
+{
+    if (!valid())
+    {
+        fprintf(stderr, "Error: can't texture onto an unloaded image.\n");
+        return (false);
+    }
+
+    if (!img.valid())
+    {
+        fprintf(stderr, "Error: can't texture from an unloaded image.\n");
+        return (false);
+    }
+
+    if (m_width != img.m_width || m_height != img.m_height)
+    {
+        fprintf(stderr, "Error: can't texture with mismatched dimensions. "
+                        "(%d, %d) onto (%d, %d)\n",
+                img.m_width, img.m_height, m_width, m_height);
+        return (false);
+    }
+
+    for (int i = 0; i < m_width * m_height; i += 1)
+    {
+        const tile_colour *src = &img.m_pixels[i];
+        tile_colour *dest = &m_pixels[i];
+
+        if (dest->r || dest->g || dest->b)
+            dest->r = src->r, dest->g = src->g, dest->b = src->b;
+        // alpha is unchanged
+    }
+
+    return (true);
+}
+
 bool tile::load(const std::string &new_filename)
 {
     m_filename = new_filename;

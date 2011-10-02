@@ -27,6 +27,7 @@ public:
 
     void copy(const tile &img);
     bool compose(const tile &img);
+    bool texture(const tile &img);
 
     void replace_colour(tile_colour &find, tile_colour &replace);
     void fill(const tile_colour &col);
