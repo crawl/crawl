@@ -267,7 +267,7 @@ public:
     bool fumbles_attack(bool verbose = true);
     bool cannot_fight() const;
 
-    int  skill(skill_type skill, int scale = 1) const;
+    int  skill(skill_type skill, int scale = 1, bool real = false) const;
 
     void attacking(actor *other);
     bool can_go_berserk() const;
