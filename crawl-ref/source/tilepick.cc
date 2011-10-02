@@ -4553,7 +4553,7 @@ tileidx_t tileidx_skill(skill_type skill, bool active)
     }
 
     if (!active)
-        ch++;
+        ch += TILEG_FIGHTING_OFF - TILEG_FIGHTING_ON;
 
     return ch;
 }
