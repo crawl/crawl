@@ -166,7 +166,7 @@ public:
     int turn_stop;
     beh_type behaviour;
     god_type god;
-    coord_def& corpse_pos;
+    coord_def corpse_pos;
 };
 
 // A marker powered by Lua.
