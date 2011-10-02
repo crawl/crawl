@@ -1164,21 +1164,12 @@ doxy-all: doxygen-all
 doxygen-all:
 	$(DOXYGEN) $(DOXYGEN_ALL_CONF)
 
+# Dependency generation
+#
 ifndef NO_INLINE_DEPGEN
+# See info node: (gcc) Preprocessor Options
 INLINE_DEPGEN_CFLAGS = -Wp,-MMD,$(patsubst %.o,%.d,$@),-MT,$@
 endif
-
-$(UTIL)%.o: $(UTIL)%.cc .cflags
-	$(QUIET_CXX)$(CXX) $(YACC_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
-
-ifdef PCH
-%.h.gch: %.h
-	$(QUIET_PCH)$(CXX) $(ALL_CFLAGS) -c $< -o $@
-
-CC_DEP := AppHdr.h.gch
-endif
-
-$(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_LIBS)
 
 ifdef NO_INLINE_DEPGEN
 $(OBJECTS): $(OBJECTS:%.o=%.d) $(YACC_OBJECTS:%.o=%.d)
@@ -1186,6 +1177,22 @@ endif
 
 %.d: %.cc .cflags $(GENERATED_HEADERS)
 	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(ALL_CFLAGS) -MT $*.o $< > $*.d
+
+# Precompiled headers
+#
+ifdef PCH
+%.h.gch: %.h
+	$(QUIET_PCH)$(CXX) $(ALL_CFLAGS) -c $< -o $@
+
+CC_DEP := AppHdr.h.gch
+endif
+
+# Plain old compilation
+#
+$(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_LIBS)
+
+$(UTIL)%.o: $(UTIL)%.cc .cflags
+	$(QUIET_CXX)$(CXX) $(YACC_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
 
 %.o: %.m .cflags $(GENERATED_HEADERS)
 	$(QUIET_CC)$(CC) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
