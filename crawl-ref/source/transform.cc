@@ -718,20 +718,17 @@ bool transform(int pow, transformation_type which_trans, bool force,
             you.attribute[ATTR_APPENDAGE] = app;
             switch(app)
             {
-            case MUT_BEAK:
-                msg = "Your face morphs into a beak.";
-                break;
-            case MUT_TALONS:
-                msg = "Your feet morph into talons.";
-                break;
-            case MUT_TENTACLES:
-                msg = "Your arms morph into several tentacles.";
-                break;
             case MUT_HORNS:
                 msg = "You grow a pair of large bovine horns.";
                 break;
             case MUT_TENTACLE_SPIKE:
                 msg = "One of your tentacles grows a vicious spike.";
+                break;
+            case MUT_TENTACLES:
+                msg = "Your arms morph into several tentacles.";
+                break;
+            case MUT_TALONS:
+                msg = "Your feet morph into talons.";
                 break;
             default:
                 die("Unknown beastly appendage.");
@@ -861,7 +858,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
             ASSERT(app != NUM_MUTATIONS);
             ASSERT(beastly_slot(app) != EQ_NONE);
             ASSERT(you.equip[beastly_slot(app)] == -1);
-            you.mutation[app] = app == MUT_BEAK ? 1 : app == MUT_HORNS ? 2 : 3;
+            you.mutation[app] = app == MUT_HORNS ? 2 : 3;
         }
         break;
 
