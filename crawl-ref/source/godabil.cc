@@ -1204,37 +1204,16 @@ static void _zin_saltify(monster* mon)
 
 bool zin_vitalisation()
 {
-    // Remove negative afflictions.
-    if (you.disease || you.rotting || you.confused()
-        || you.petrifying() || you.duration[DUR_POISONING])
-    {
-        you.disease = 0;
-        you.rotting = 0;
-        you.duration[DUR_CONF] = 0;
-        you.duration[DUR_POISONING] = 0;
-        you.duration[DUR_PETRIFYING] = 0;
-        mpr("You feel better.");
-    }
-
-    // Restore stats.
-    if (you.strength() < you.max_strength()
-             || you.intel() < you.max_intel()
-             || you.dex() < you.max_dex())
-    {
-        restore_stat(STAT_ALL, 0, true);
-        mpr("You feel renewed.");
-    }
-
     // Feed the player slightly.
     if (you.hunger_state < HS_FULL)
         lessen_hunger(1000, true);
 
     // Add divine stamina.
-    simple_god_message("%s grants you divine stamina.", GOD_ZIN);
+    simple_god_message(" grants you divine stamina.");
 
     const int stamina_amt = std::max(1, you.skill_rdiv(SK_INVOCATIONS, 1, 3));
     you.attribute[ATTR_DIVINE_STAMINA] = stamina_amt;
-    you.set_duration(DUR_DIVINE_STAMINA, 60);
+    you.set_duration(DUR_DIVINE_STAMINA, 60 + roll_dice(2, 10));
 
     notify_stat_change(STAT_STR, stamina_amt, true, "");
     notify_stat_change(STAT_INT, stamina_amt, true, "");
