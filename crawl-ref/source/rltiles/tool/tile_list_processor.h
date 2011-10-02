@@ -46,6 +46,7 @@ protected:
     std::vector<std::string> m_categories;
     std::vector<int> m_ctg_counts;
     tile m_compose;
+    tile* m_texture;
     int m_variation_idx;
     int m_variation_col;
     int m_weight;
