@@ -560,6 +560,8 @@ std::string get_god_likes(god_type which_god, bool verbose)
                          : "");
 
         likes.push_back(info);
+
+        likes.push_back("you calm hostilities by healing your foes");
         break;
 
     case GOD_JIYVA:
@@ -3806,10 +3808,9 @@ void handle_god_time()
             xom_tick();
             return;
 
-        // These gods like long-standing worshippers.
         case GOD_ELYVILON:
-            if (_need_free_piety())
-                gain_piety(1, 20);
+            if (one_chance_in(50))
+                lose_piety(1);
             return;
 
         case GOD_SHINING_ONE:
@@ -3822,7 +3823,6 @@ void handle_god_time()
                 gain_piety(1, 12);
             return;
 
-        // All the rest will excommunicate you if piety goes below 1.
         case GOD_JIYVA:
             if (one_chance_in(20))
                 lose_piety(1);
