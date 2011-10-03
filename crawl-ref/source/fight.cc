@@ -4863,6 +4863,7 @@ static void _steal_item_from_player(monster* mon)
             mon->inv[MSLOT_GOLD] = idx;
             new_item.set_holding_monster(mon->mindex());
         }
+        mitm[mon->inv[MSLOT_GOLD]].flags |= ISFLAG_THROWN;
         mprf("%s steals %s your gold!",
              mon->name(DESC_CAP_THE).c_str(),
              stolen_amount == you.gold ? "all" : "some of");

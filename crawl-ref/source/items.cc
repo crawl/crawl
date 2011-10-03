@@ -1569,6 +1569,52 @@ static void _got_item(item_def& item, int quant)
         item.props.erase("needs_autopickup");
 }
 
+static void _got_gold(item_def& item, int quant, bool quiet)
+{
+    you.attribute[ATTR_GOLD_FOUND] += quant;
+
+    if (you.religion == GOD_ZIN && !(item.flags & ISFLAG_THROWN))
+    {
+        int due = quant += you.attribute[ATTR_TITHE_BASE];
+        if (due > 0)
+        {
+            int tithe = due / 10;
+            due -= tithe * 10;
+            quant -= tithe;
+            you.attribute[ATTR_DONATIONS] += tithe;
+            mprf("You pay a tithe of %d gold.", tithe);
+
+            // A single scroll can give you more than D:1-18, Lair and Orc
+            // together, limit the gains.  You're still required to pay from
+            // your sudden fortune, yet it's considered your duty to the Church
+            // so piety is capped.  If you want more piety, donate more!
+            //
+            // Note that the stepdown is not applied to other gains: it would
+            // be simpler, yet when a monster combines a number of gold piles
+            // you shouldn't be penalized.
+            if (item.props.exists("acquired")) // including "acquire any" in vaults
+            {
+                tithe = stepdown_value(tithe, 10, 10, 50, 50);
+                dprf("Gold was acquired, reducing gains to %d.", tithe);
+            }
+            // Another special case: Orc gives simply too much compared to
+            // other branches.
+            gain_piety(tithe * 3, player_in_branch(BRANCH_ORCISH_MINES) ? 4 : 2);
+        }
+        you.attribute[ATTR_TITHE_BASE] = due;
+    }
+    if (quant <= 0)
+        return;
+    you.add_gold(quant);
+
+    if (!quiet)
+    {
+        mprf("You now have %d gold piece%s.",
+             you.gold, you.gold != 1 ? "s" : "");
+        learned_something_new(HINT_SEEN_GOLD);
+    }
+}
+
 void note_inscribe_item(item_def &item)
 {
     _autoinscribe_item(item);
@@ -1604,17 +1650,8 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     // Gold has no mass, so we handle it first.
     if (mitm[obj].base_type == OBJ_GOLD)
     {
-        you.attribute[ATTR_GOLD_FOUND] += quant_got;
-        you.add_gold(quant_got);
+        _got_gold(mitm[obj], quant_got, quiet);
         dec_mitm_item_quantity(obj, quant_got);
-
-        if (!quiet)
-        {
-            mprf("You now have %d gold piece%s.",
-                 you.gold, you.gold != 1 ? "s" : "");
-        }
-
-        learned_something_new(HINT_SEEN_GOLD);
 
         you.turn_is_over = true;
         return (retval);
