@@ -1815,9 +1815,11 @@ int ToggleableMenu::pre_process(int key)
 /**
  * Performs regular rectangular AABB intersection between the given AABB
  * rectangle and a item in the menu_entries
+ * <pre>
  * start(x,y)------------
  *           |          |
  *           ------------end(x,y)
+ * </pre>
  */
 static bool _AABB_intersection(const coord_def& item_start,
                               const coord_def& item_end,
