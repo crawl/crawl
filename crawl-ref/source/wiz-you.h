@@ -19,7 +19,6 @@ void wizard_set_all_skills(void);
 void wizard_change_species(void);
 void wizard_set_xl();
 bool wizard_add_mutation();
-void wizard_get_religion(void);
 void wizard_set_stats(void);
 void wizard_edit_durations(void);
 void wizard_get_god_gift ();

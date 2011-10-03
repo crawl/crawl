@@ -661,42 +661,6 @@ bool wizard_add_mutation()
 }
 #endif
 
-#ifdef WIZARD
-void wizard_get_religion(void)
-{
-    char specs[80];
-
-    msgwin_get_line("Which god (by name)? ", specs, sizeof(specs));
-
-    if (specs[0] == '\0')
-        return;
-
-    std::string spec = lowercase_string(specs);
-
-    god_type god = GOD_NO_GOD;
-
-    for (int i = 1; i < NUM_GODS; ++i)
-    {
-        const god_type gi = static_cast<god_type>(i);
-        if (lowercase_string(god_name(gi)).find(spec) != std::string::npos)
-        {
-            god = gi;
-            break;
-        }
-    }
-
-    if (god == GOD_NO_GOD)
-        mpr("That god doesn't seem to be taking followers today.");
-    else
-    {
-        dungeon_feature_type feat = altar_for_god(god);
-        dungeon_terrain_changed(you.pos(), feat, false);
-
-        pray();
-    }
-}
-#endif
-
 void wizard_set_stats()
 {
     char buf[80];
