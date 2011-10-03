@@ -252,28 +252,30 @@ void wizard_heal(bool super_heal)
 void wizard_set_hunger_state()
 {
     std::string hunger_prompt =
-        "Set hunger state to s(T)arving, (N)ear starving, (H)ungry";
+        "Set hunger state to s(T)arving, (N)ear starving, (V)ery hungry, (H)ungry";
     if (you.species == SP_GHOUL)
         hunger_prompt += " or (S)atiated";
     else
-        hunger_prompt += ", (S)atiated, (F)ull or (E)ngorged";
+        hunger_prompt += ", (S)atiated, (F)ull, ve(R)y full or (E)ngorged";
     hunger_prompt += "? ";
 
     mprf(MSGCH_PROMPT, "%s", hunger_prompt.c_str());
 
     const int c = tolower(getchk());
 
-    // Values taken from food.cc.
     switch (c)
     {
-    case 't': you.hunger = 500;   break;
-    case 'n': you.hunger = 1200;  break;
-    case 'h': you.hunger = 2400;  break;
-    case 's': you.hunger = 5000;  break;
-    case 'f': you.hunger = 8000;  break;
-    case 'e': you.hunger = 12000; break;
+    case 't': you.hunger = HUNGER_STARVING;      break;
+    case 'n': you.hunger = HUNGER_NEAR_STARVING; break;
+    case 'v': you.hunger = HUNGER_VERY_HUNGRY;   break;
+    case 'h': you.hunger = HUNGER_HUNGRY;        break;
+    case 's': you.hunger = HUNGER_SATIATED;      break;
+    case 'f': you.hunger = HUNGER_FULL;          break;
+    case 'r': you.hunger = HUNGER_VERY_FULL;     break;
+    case 'e': you.hunger = HUNGER_ENGORGED;      break;
     default:  canned_msg(MSG_OK); break;
     }
+    --you.hunger;
 
     food_change();
 
