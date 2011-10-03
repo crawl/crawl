@@ -458,7 +458,7 @@ static const ability_def Ability_List[] =
     { ABIL_MAKE_WATER, "Make water", 0, 0, 0, 0, ABFLAG_ZOTDEF, 10 },
     { ABIL_MAKE_LIGHTNING_SPIRE, "Make lightning spire", 0, 0, 0, 0, ABFLAG_ZOTDEF, 100},
     { ABIL_MAKE_BAZAAR, "Make bazaar", 0, 30, 0, 0, ABFLAG_ZOTDEF|ABFLAG_PERMANENT_HP, 100 },
-    { ABIL_MAKE_ALTAR, "Make altar", 0, 0, 0, 0, ABFLAG_ZOTDEF, 2 },
+    { ABIL_MAKE_ALTAR, "Make altar", 0, 0, 0, 0, ABFLAG_ZOTDEF, 50 },
     { ABIL_MAKE_GRENADES, "Make grenades", 0, 0, 0, 0, ABFLAG_ZOTDEF, 2 },
     { ABIL_MAKE_SAGE, "Sage", 0, 0, 300, 0,  ABFLAG_ZOTDEF|ABFLAG_INSTANT, 0 },
     { ABIL_REMOVE_CURSE, "Remove Curse", 0, 0, 300, 0, ABFLAG_ZOTDEF|ABFLAG_STAT_DRAIN, 0 },
@@ -1863,7 +1863,7 @@ static bool _do_ability(const ability_def& abil)
     }
 
     case ABIL_MAKE_ALTAR:
-        if (!create_altar(true))
+        if (!zotdef_create_altar())
         {
             mpr("The dungeon dims for a moment.");
             return (false);

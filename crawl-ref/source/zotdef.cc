@@ -11,6 +11,7 @@
 #include "env.h"
 #include "externs.h"
 #include "files.h"
+#include "godprayer.h"
 #include "ghost.h"
 #include "items.h" // for find_floor_item
 #include "itemname.h" // for make_name
@@ -23,6 +24,7 @@
 #include "mon-util.h"
 #include "player.h"
 #include "random.h"
+#include "religion.h"
 #include "state.h"
 #include "terrain.h"
 #include "traps.h"
@@ -917,7 +919,7 @@ static monster_type _pick_unique(int level)
 }
 
 // Ask for a location and place a trap there. Returns true
-// for success
+// for success.
 bool create_trap(trap_type spec_type)
 {
     dist abild;
@@ -948,6 +950,55 @@ bool create_trap(trap_type spec_type)
         grd(abild.target) = env.trap[env.tgrid(abild.target)].category();
 
     return result;
+}
+
+/**
+ * Create an altar to the god of the player's choice.
+ * @param wizmode if ::true, bypass some checks.
+ */
+bool zotdef_create_altar(bool wizmode)
+{
+    char specs[80];
+
+    if (!wizmode && grd(you.pos()) != DNGN_FLOOR)
+        return false;
+
+    msgwin_get_line("Which god (by name)? ", specs, sizeof(specs));
+
+    if (specs[0] == '\0')
+        return false;
+
+    std::string spec = lowercase_string(specs);
+
+    god_type god = GOD_NO_GOD;
+
+    for (int i = 1; i < NUM_GODS; ++i)
+    {
+        const god_type gi = static_cast<god_type>(i);
+        if (lowercase_string(god_name(gi)).find(spec) != std::string::npos)
+        {
+            god = gi;
+            break;
+        }
+    }
+
+    if (god == GOD_NO_GOD) {
+        mpr("That god doesn't seem to be taking followers today.");
+        return false;
+    }
+    else
+    {
+        dungeon_feature_type feat = altar_for_god(god);
+        dungeon_terrain_changed(you.pos(), feat, false);
+
+        if (wizmode)
+            pray();
+        else
+            mprf("An altar to %s grows from the floor before you!",
+                 god_name(god).c_str());
+
+        return true;
+    }
 }
 
 bool create_zotdef_ally(monster_type mtyp, const char *successmsg)
