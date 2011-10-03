@@ -1,7 +1,6 @@
 /**
  * @file
  * @brief Functions for unix and curses support
- *             Needed by makefile.unix.
 **/
 
 /* Some replacement routines missing in gcc
