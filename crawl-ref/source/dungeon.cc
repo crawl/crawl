@@ -5960,7 +5960,14 @@ void init_level_connectivity()
 
 void read_level_connectivity(reader &th)
 {
-    for (int i = 0; i < NUM_BRANCHES; i++)
+#if TAG_MAJOR_VERSION == 32
+    int nb = 23;
+    if (th.getMinorVersion() >= TAG_MINOR_NUM_LEVEL_CONN)
+        nb = unmarshallInt(th);
+#else
+    int nb = unmarshallInt(th);
+#endif
+    for (int i = 0; i < nb; i++)
     {
         unsigned int depth = branches[i].depth > 0 ? branches[i].depth : 0;
         unsigned int num_entries = unmarshallInt(th);
@@ -5973,6 +5980,7 @@ void read_level_connectivity(reader &th)
 
 void write_level_connectivity(writer &th)
 {
+    marshallInt(th, NUM_BRANCHES);
     for (int i = 0; i < NUM_BRANCHES; i++)
     {
         marshallInt(th, connectivity[i].size());
