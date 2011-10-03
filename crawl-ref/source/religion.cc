@@ -583,6 +583,12 @@ std::string get_god_likes(god_type which_god, bool verbose)
         likes.push_back(info);
         break;
 
+    case GOD_SHINING_ONE:
+        snprintf(info, INFO_SIZE, "you meet creatures to determine whether "
+                                  "they need to be eraticated");
+        likes.push_back(info);
+        break;
+
     default:
         break;
     }
@@ -3763,15 +3769,6 @@ bool god_protects_from_harm()
     return false;
 }
 
-// Returns true if the player can use the good gods' passive piety gain.
-static bool _need_free_piety()
-{
-    return (!crawl_state.game_is_sprint()
-            && (you.piety < 150
-                || you.gift_timeout
-                || you.penance[you.religion]));
-}
-
 //jmf: moved stuff from effects::handle_time()
 void handle_god_time()
 {
@@ -3814,9 +3811,9 @@ void handle_god_time()
             return;
 
         case GOD_SHINING_ONE:
-            if (_need_free_piety())
-                gain_piety(1, 15);
-            return;
+            if (one_chance_in(35))
+                lose_piety(1);
+            break;
 
         case GOD_JIYVA:
             if (one_chance_in(20))
