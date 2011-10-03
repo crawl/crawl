@@ -169,7 +169,6 @@ void reassess_starting_skills()
 static void _change_skill_level(skill_type exsk, int n)
 {
     ASSERT(n != 0);
-    skill_type old_best_skill = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     bool need_reset = false;
 
     if (-n > you.skills[exsk])
@@ -223,17 +222,13 @@ static void _change_skill_level(skill_type exsk, int n)
         learned_something_new(HINT_GAINED_SPELLCASTING);
     }
 
-    const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
-    if (best != old_best_skill || old_best_skill == exsk)
-        redraw_skill(you.your_name, player_title());
-
     if (need_reset)
         reset_training();
     // TODO: also identify rings of wizardry.
 }
 
 // Called whenever a skill is trained.
-static void _change_skill_sublevel(skill_type exsk)
+static void _change_skill_sublevel(skill_type exsk, skill_type old_best_skill)
 {
     if (exsk == SK_FIGHTING)
         calc_hp();
@@ -260,6 +255,10 @@ static void _change_skill_sublevel(skill_type exsk)
         if (sk != exsk && you.skill(sk, 10, true) >= you.skill(exsk, 10, true))
             you.skill_order[exsk]++;
     }
+
+    const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
+        if (best != old_best_skill || old_best_skill == exsk)
+            redraw_skill(you.your_name, player_title());
 }
 
 void check_skill_level_change(skill_type sk, bool do_level_up)
@@ -972,6 +971,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
             stop_studying_manual(true);
     }
 
+    const skill_type old_best_skill = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     you.skill_points[exsk] += skill_inc;
     you.ct_skill_points[exsk] += (1 - 1 / crosstrain_bonus(exsk))
                                  * skill_inc;
@@ -979,7 +979,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     max_exp -= cost;
     you.total_skill_points += skill_inc;
 
-    _change_skill_sublevel(exsk);
+    _change_skill_sublevel(exsk, old_best_skill);
     check_skill_cost_change();
     ASSERT(you.exp_available >= 0);
     ASSERT(max_exp >= 0);

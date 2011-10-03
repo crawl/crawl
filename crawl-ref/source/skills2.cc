@@ -394,22 +394,23 @@ skill_type best_skill(skill_type min_skill, skill_type max_skill,
         if (sk == excl_skill || is_invalid_skill(sk))
             continue;
 
-        if (you.skills[sk] > best_skill_level)
+        const unsigned int skill_level = you.skill(sk, 10, true);
+        if (skill_level > best_skill_level)
         {
             ret = sk;
-            best_skill_level = you.skills[sk];
+            best_skill_level = skill_level;
             best_position = you.skill_order[sk];
 
         }
-        else if (you.skills[sk] == best_skill_level
-                && you.skill_order[sk] < best_position)
+        else if (skill_level == best_skill_level
+                 && you.skill_order[sk] < best_position)
         {
             ret = sk;
             best_position = you.skill_order[sk];
         }
     }
 
-    return static_cast<skill_type>(ret);
+    return ret;
 }
 
 // Calculate the skill_order array from scratch.
