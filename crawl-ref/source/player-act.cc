@@ -669,7 +669,7 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         return (false);
     }
 
-    ASSERT(HUNGER_STARVING + BERSERK_NUTRITION < HS_VERY_HUNGRY);
+    ASSERT(HUNGER_STARVING + BERSERK_NUTRITION < HUNGER_VERY_HUNGRY);
     if (you.hunger <= HS_VERY_HUNGRY)
     {
         if (verbose)
