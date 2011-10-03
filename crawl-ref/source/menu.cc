@@ -821,33 +821,6 @@ void Menu::select_items(int key, int qty)
     cgotoxy(x, y);
 }
 
-GodMenuEntry::GodMenuEntry(const std::string& txt) : MenuEntry(txt, MEL_ITEM, 1, 0, false)
-{
-    god = str_to_god(txt);
-    if (god == GOD_SHINING_ONE)
-        hotkeys.push_back('1');
-    else
-    {
-        //hotkeys.push_back(txt.at(0));
-        hotkeys.push_back(tolower(txt.at(0)));
-    }
-    int c = god_message_altar_colour(god);
-    colour_text = colour_to_str(c);
-    data = &text;
-}
-
-std::string GodMenuEntry::get_text(const bool unused) const
-{
-    if (level == MEL_ITEM && hotkeys.size())
-    {
-        char buf[300];
-        snprintf(buf, sizeof buf, " <%s>%c</%s> %c %s",  colour_text.c_str(),
-                 hotkeys[0], colour_text.c_str(), preselected ? '+' : '-', text.c_str());
-        return std::string(buf);
-    }
-    return text;
-}
-
 MonsterMenuEntry::MonsterMenuEntry(const std::string &str, const monster* mon,
                                    int hotkey) :
     MenuEntry(str, MEL_ITEM, 1, hotkey)

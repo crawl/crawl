@@ -25,6 +25,7 @@
 #include "decks.h"
 #include "describe.h"
 #include "files.h"
+#include "godmenu.h"
 #include "ghost.h"
 #include "invent.h"
 #include "itemname.h"
@@ -1815,7 +1816,7 @@ static void _find_description(bool *again, std::string *error_inout)
         else if (doing_features)
             me = new FeatureMenuEntry(str, feat_by_desc(str), letter);
         else if (doing_gods)
-            me = new GodMenuEntry(key_list[i]);
+            me = new GodMenuEntry(str_to_god(key_list[i]));
         else
         {
             me = new MenuEntry(uppercase_first(key_list[i]), MEL_ITEM, 1,
