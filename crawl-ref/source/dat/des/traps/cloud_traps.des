@@ -32,8 +32,10 @@ function callback.cloud_trap_stepped(data, triggerable, triggerer, marker, ev)
   local pow_min = 1
   local pow_max = 10
   local pow_rolls = 2
+  local pow_mod = data.cloud_pow_mod or 1
   local kill_cat = "other"
   local size = 1
+  local size_mod = data.cloud_size_mod or 1
   local spread_rate = -1
   local colour = ""
   local name = ""
@@ -43,14 +45,14 @@ function callback.cloud_trap_stepped(data, triggerable, triggerer, marker, ev)
   -- Size is at least 2, so that players note the effect on screen.
   -- TODO: Need to see how absdepth() works in Pan, Abyss?
   local depth = you.absdepth()
-  size = depth/3 + crawl.random2(depth/3)
+  size = (depth/3 + crawl.random2(depth/3))*size_mod
   if (size<2) then
     size = 2
   end
 
   -- Adjust power for depth
-  pow_min = depth/6
-  pow_max = depth/2
+  pow_min = pow_mod * depth/6
+  pow_max = pow_mod * depth/2
   if (pow_min<1) then
     pow_min = 1
   end
@@ -125,7 +127,7 @@ KFEAT:  ^ = pressure plate trap
 {{
   local tm = TriggerableFunction:new{func="callback.cloud_trap_stepped",
               repeated=true,
-              data={triggered=false, cloud_type="fire",
+              data={triggered=false, cloud_type="flame", cloud_pow_mod=0.3, cloud_size_mod=0.6,
                 cloud_message="Fire belches from an orifice in the ground!" } }
   tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
   lua_marker('^', tm)
@@ -142,7 +144,7 @@ KFEAT:  ^ = pressure plate trap
 {{
   local tm = TriggerableFunction:new{func="callback.cloud_trap_stepped",
               repeated=true,
-              data={triggered=false, cloud_type="freezing vapour",
+              data={triggered=false, cloud_type="freezing vapour", cloud_pow_mod=0.3, cloud_size_mod=0.6,
                 cloud_message="A freezing wind blows from a nearby grate!" } }
   tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
   lua_marker('^', tm)
@@ -159,7 +161,7 @@ KFEAT:  ^ = pressure plate trap
 {{
   local tm = TriggerableFunction:new{func="callback.cloud_trap_stepped",
               repeated=true,
-              data={triggered=false, cloud_type="seething chaos",
+              data={triggered=false, cloud_type="seething chaos", cloud_size_mod=0.8,
                 cloud_message="Space ruptures around you!" } }
   tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
   lua_marker('^', tm)
