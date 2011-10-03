@@ -980,9 +980,14 @@ static void _give_items_skills(const newgame_def& ng)
     if (you.species == SP_DEEP_DWARF)
         newgame_make_item(-1, EQ_NONE, OBJ_WANDS, WAND_HEALING, -1, 1, 5);
 
-    // Zotdef: everyone gets a bonus two potions of healing
+    // Zotdef: everyone gets a bonus two potions of healing, plus two
+    // free levels in Traps & Doors so they can replace old traps with
+    // better ones.
     if (crawl_state.game_is_zotdef())
+    {
         newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_HEALING, -1, 2);
+        you.skills[SK_TRAPS_DOORS] += 2;
+    }
 
     if (weap_skill)
     {
