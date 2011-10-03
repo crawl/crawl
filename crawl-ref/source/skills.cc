@@ -214,17 +214,6 @@ static void _change_skill_level(skill_type exsk, int n)
         need_reset = true;
     }
 
-    // Recalculate this skill's order for tie breaking skills
-    // at its new level.   See skills2.cc::init_skill_order()
-    // for more details.  -- bwr
-    you.skill_order[exsk] = 0;
-    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
-    {
-        skill_type sk = static_cast<skill_type>(i);
-        if (sk != exsk && you.skills[sk] >= you.skills[exsk])
-            you.skill_order[exsk]++;
-    }
-
     const skill_type best_spell = best_skill(SK_SPELLCASTING,
                                              SK_LAST_MAGIC);
     if (exsk == SK_SPELLCASTING && you.skills[exsk] == 1
@@ -241,6 +230,36 @@ static void _change_skill_level(skill_type exsk, int n)
     if (need_reset)
         reset_training();
     // TODO: also identify rings of wizardry.
+}
+
+// Called whenever a skill is trained.
+static void _change_skill_sublevel(skill_type exsk)
+{
+    if (exsk == SK_FIGHTING)
+        calc_hp();
+
+    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING)
+        calc_mp();
+
+    if (exsk == SK_DODGING || exsk == SK_ARMOUR)
+        you.redraw_evasion = true;
+
+    if (exsk == SK_ARMOUR || exsk == SK_SHIELDS || exsk == SK_ICE_MAGIC
+        || exsk == SK_EARTH_MAGIC || you.duration[DUR_TRANSFORMATION] > 0)
+    {
+        you.redraw_armour_class = true;
+    }
+
+    // Recalculate this skill's order for tie breaking skills
+    // at its new level.   See skills2.cc::init_skill_order()
+    // for more details.  -- bwr
+    you.skill_order[exsk] = 0;
+    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+    {
+        skill_type sk = static_cast<skill_type>(i);
+        if (sk != exsk && you.skill(sk, 10, true) >= you.skill(exsk, 10, true))
+            you.skill_order[exsk]++;
+    }
 }
 
 void check_skill_level_change(skill_type sk, bool do_level_up)
@@ -960,22 +979,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     max_exp -= cost;
     you.total_skill_points += skill_inc;
 
-    if (exsk == SK_FIGHTING)
-        calc_hp();
-
-    if (exsk == SK_INVOCATIONS || exsk == SK_SPELLCASTING)
-        calc_mp();
-
-    if (exsk == SK_DODGING || exsk == SK_ARMOUR)
-        you.redraw_evasion = true;
-
-    if (exsk == SK_ARMOUR || exsk == SK_SHIELDS
-        || exsk == SK_ICE_MAGIC || exsk == SK_EARTH_MAGIC
-        || you.duration[DUR_TRANSFORMATION] > 0)
-    {
-        you.redraw_armour_class = true;
-    }
-
+    _change_skill_sublevel(exsk);
     check_skill_cost_change();
     ASSERT(you.exp_available >= 0);
     ASSERT(max_exp >= 0);

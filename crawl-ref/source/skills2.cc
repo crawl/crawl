@@ -423,12 +423,7 @@ skill_type best_skill(skill_type min_skill, skill_type max_skill,
 // is judged to be the best skill (thus, nicknames are sticky)...
 // other skills will have to attain the next level higher to be
 // considered a better skill (thus, the first skill to reach level 27
-// becomes the characters final nickname).
-//
-// As for other uses of best_skill:  this method is still appropriate
-// in that there is no additional advantage anywhere else in the game
-// for partial skill levels.  Besides, its probably best if the player
-// isn't able to micromanage at that level.  -- bwr
+// becomes the characters final nickname). -- bwr
 void init_skill_order(void)
 {
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
@@ -647,9 +642,9 @@ bool compare_skills(skill_type sk1, skill_type sk2)
     else if (is_invalid_skill(sk2))
         return true;
     else
-        return you.skills[sk1] > you.skills[sk2]
-               || you.skills[sk1] == you.skills[sk2]
-                   && you.skill_order[sk1] < you.skill_order[sk2];
+        return (you.skill(sk1, 10, true) > you.skill(sk2, 10, true)
+                || you.skill(sk1, 10, true) == you.skill(sk2, 10, true)
+                   && you.skill_order[sk1] < you.skill_order[sk2]);
 }
 
 bool is_antitrained(skill_type sk)
