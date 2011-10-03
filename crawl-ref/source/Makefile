@@ -986,17 +986,16 @@ TRACK_CFLAGS = $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS))           # (stray ' f
 ##########################################################################
 # Dependencies
 
-DEPS := $(shell ls $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d) 2> /dev/null)
+DEPS := $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d)
 
-ifneq ($(DEPS),)
 -include $(DEPS)
-endif
 
 endif
 endif
 endif
 
-depend: $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d)
+# Only serves to check if all .d files can be built
+depend: $(DEPS)
 
 # This information is included in crash reports, and is printed with
 # "crawl -version"
