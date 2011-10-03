@@ -4,6 +4,7 @@ Stone Soup 0.10 (????????)
 0.10 Highlights
 ---------------
 * New species: Octopodes, sentient land-capable octopuses.
+* Skill training system reworked. Dancing is really gone this time!
 
 Branches
 --------
