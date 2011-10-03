@@ -19,6 +19,7 @@ import time, datetime
 import collections
 import re
 import random
+import codecs
 
 from config import *
 
@@ -551,7 +552,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             game_id, _, contents = message.partition(" ")
             rcfile_path = os.path.join(games[game_id]["rcfile_path"], self.username + ".rc")
             with open(rcfile_path, 'w') as f:
-                f.write(contents)
+                f.write(codecs.BOM_UTF8)
+                f.write(contents.encode("utf8"))
 
         elif self.p is not None:
             if not message.startswith("^"):
