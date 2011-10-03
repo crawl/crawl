@@ -1202,8 +1202,7 @@ endif
 #
 $(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_LIBS)
 
-$(UTIL)%.o: $(UTIL)%.cc .cflags
-	$(QUIET_CXX)$(CXX) $(YACC_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
+$(UTIL)%.o: ALL_CFLAGS=$(YACC_CFLAGS)
 
 %.o: %.m .cflags $(GENERATED_HEADERS)
 	$(QUIET_CC)$(CC) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
