@@ -82,10 +82,10 @@ static bool _show_skill(skill_type sk, skill_menu_state state)
 {
     switch (state)
     {
-    case SKM_SHOW_KNOWN:     return you.skills[sk];
-    case SKM_SHOW_TRAINABLE: return you.can_train[sk];
-    case SKM_SHOW_ALL:       return true;
-    default:                 return false;
+    case SKM_SHOW_KNOWN:   return you.skills[sk];
+    case SKM_SHOW_DEFAULT: return (you.can_train[sk] || you.skills[sk]);
+    case SKM_SHOW_ALL:     return true;
+    default:               return false;
     }
 }
 
@@ -542,7 +542,7 @@ std::string SkillMenuSwitch::get_name(skill_menu_state state)
     case SKM_DO_PRACTISE:    return "practise";
     case SKM_DO_FOCUS:       return "focus";
     case SKM_SHOW_KNOWN:     return "known";
-    case SKM_SHOW_TRAINABLE: return "trainable";
+    case SKM_SHOW_DEFAULT:   return "default";
     case SKM_SHOW_ALL:       return "all";
     case SKM_LEVEL_ENHANCED:
         return (m_skm->is_set(SKMF_ENHANCED)
@@ -1008,7 +1008,7 @@ void SkillMenu::init_switches()
     sw = new SkillMenuSwitch("Show", '*');
     m_switches[SKM_SHOW] = sw;
     //sw->add(SKM_SHOW_KNOWN);
-    sw->add(SKM_SHOW_TRAINABLE);
+    sw->add(SKM_SHOW_DEFAULT);
     if (!is_set(SKMF_SIMPLE) && !is_set(SKMF_EXPERIENCE))
         sw->add(SKM_SHOW_ALL);
     sw->update();
