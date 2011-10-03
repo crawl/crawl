@@ -1177,7 +1177,7 @@ doxygen-all:
 #
 ifndef NO_INLINE_DEPGEN
 # See info node: (gcc) Preprocessor Options
-INLINE_DEPGEN_CFLAGS = -Wp,-MMD,$(patsubst %.o,%.d,$@),-MT,$@
+INLINE_DEPGEN_CFLAGS = -Wp,-MMD,$*.d,-MT,$@
 endif
 
 ifdef NO_INLINE_DEPGEN
@@ -1190,9 +1190,9 @@ endif
 # Precompiled headers
 #
 ifdef PCH
-# FIXME: This dependancy list is obviously incomplete...
-%.h.gch: %.h
-	$(QUIET_PCH)$(CXX) $(ALL_CFLAGS) -c $< -o $@
+-include AppHdr.h.d
+%.gch: %
+	$(QUIET_PCH)$(CXX) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
 
 CC_DEP := AppHdr.h.gch
 endif
