@@ -319,7 +319,7 @@ static int _healing_spell(int healed, bool divine_ability,
             mons_pacify(mons, ATT_NEUTRAL);
 
             // Give a small piety return.
-            gain_piety(pgain, 2);
+            gain_piety(pgain);
         }
     }
 
