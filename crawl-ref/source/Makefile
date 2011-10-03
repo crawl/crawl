@@ -59,7 +59,8 @@ ASSERTS = yes
 # Disable GNU Make implicit rules and variables. Leaving them enabled will slow
 # down MinGW and Cygwin builds by a very VERY noticeable degree. Besides, we have
 # _explicit_ rules defined for everything. So we don't need them.
-MAKEFLAGS += -rR
+MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
+.SUFFIXES:       # ... so zap the suffix list to neutralize most predifined rules, too
 
 #
 # Compiler Flags
