@@ -246,6 +246,7 @@ enum attribute_type
     ATTR_SEEN_INVIS_TURN,      // Last turn you saw something invisible.
     ATTR_SEEN_INVIS_SEED,      // Random seed for invis monster positions.
     ATTR_APPENDAGE,            // eq slot of Beastly Appendage
+    ATTR_TITHE_BASE,           // Remainder of untithed gold.
     NUM_ATTRIBUTES
 };
 
