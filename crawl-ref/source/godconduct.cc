@@ -971,6 +971,17 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             break;
 
+        case DID_SEE_MONSTER:
+            if (you.religion == GOD_SHINING_ONE)
+            {
+                piety_denom = level / 2 + 6 - you.experience_level / 4;
+                piety_change = piety_denom - 4;
+                piety_denom = std::max(piety_denom, 1);
+                piety_change = std::max(piety_change, 0);
+                retval = true;
+            }
+            break;
+
         case DID_NOTHING:
         case NUM_CONDUCTS:
             break;
@@ -1034,7 +1045,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Servant Kill Chaotic", "Attack In Sanctuary",
                 "Kill Artificial", "Undead Slave Kill Artificial",
                 "Servant Kill Artificial", "Destroy Spellbook",
-                "Exploration", "Desecrated Holy Remains",
+                "Exploration", "Desecrated Holy Remains", "Seen Monster",
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
