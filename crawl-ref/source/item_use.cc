@@ -402,9 +402,9 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             you.turn_is_over = true;
             you.time_taken *= 3;
             you.time_taken /= 10;
-
-            return (false);
         }
+
+        return (false);
     }
 
     const unsigned int old_talents = your_talents(false).size();
