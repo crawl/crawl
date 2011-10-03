@@ -439,7 +439,7 @@ Plant a burning bush with the ability to throw fire and see invisible monsters a
 %%%%
 Make altar
 
-Create an altar to a random god at your location.
+Create an altar to a chosen god at your location.
 %%%%
 Make grenades
 
