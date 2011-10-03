@@ -1182,10 +1182,10 @@ endif
 
 ifdef NO_INLINE_DEPGEN
 $(OBJECTS): $(OBJECTS:%.o=%.d) $(YACC_OBJECTS:%.o=%.d)
-endif
 
 %.d: %.cc .cflags $(GENERATED_HEADERS)
 	$(QUIET_DEPEND)$(or $(DEPCXX),$(CXX)) -MM $(ALL_CFLAGS) -MT $*.o $< > $*.d
+endif
 
 # Precompiled headers
 #
