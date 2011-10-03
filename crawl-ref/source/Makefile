@@ -9,6 +9,7 @@
 # Typical targets:
 #    make
 #    make debug
+#    make debug-lite    # Like "make debug", but without all the spew.
 #    make install
 #    make debug install
 #    -- note, unlike most programs, you need to specify build type when
@@ -640,6 +641,13 @@ ifneq (,$(filter debug,$(MAKECMDGOALS)))
 	NO_OPTIMIZE=YesPlease
 endif
 
+# Debug-Lite
+# No optimization, but little/no debugging spew.
+ifneq (,$(filter debug-lite,$(MAKECMDGOALS)))
+	DEBUG=YesPlease
+	NO_OPTIMIZE=YesPlease
+endif
+
 # Profile
 # Optimized, with full debugging.
 ifneq (,$(filter profile,$(MAKECMDGOALS)))
@@ -908,7 +916,7 @@ SRC_PKG_TAR   := $(PKG_SRC_DIR).tar.xz
 SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.xz
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
-.PHONY: all test install clean clean-contrib clean-rltiles distclean debug \
+.PHONY: all test install clean clean-contrib clean-rltiles distclean debug debug-lite \
         profile package-source source build-windows package-windows rest docs
 
 all: $(GAME) docs webserver
@@ -1154,6 +1162,7 @@ $(GAME): $(GAME_DEPENDS)
 	+$(QUIET_LINK)$(CXX) $(LDFLAGS) $(EXTRA_OBJECTS) $(OBJECTS) -o $(GAME) $(LIBS)
 
 debug: all
+debug-lite: all
 profile: all
 
 doxy-simple: doxygen-simple
