@@ -1,0 +1,162 @@
+###############################################################################
+# hive.des - Hive entry vaults and layouts.
+#
+# The hive offers food for the player, but they will have to face berserking
+# bees and grab as much as they can before the larvae eat all the spoils and
+# transform into bees themselves.
+###############################################################################
+
+
+###############################################################################
+# Hive entries
+
+# Utility functions
+
+lua {{
+
+function place_hive_portal(e, perm)
+  e.kfeat("O = enter_portal_vault")
+   e.lua_marker('O', hive_portal())
+end
+
+function hive_portal()
+  local d = "You hear a manifold buzzing. The waxy walls of this " ..
+  "place are dripping with honey, but the larvae are hungry, and the queen " ..
+  "bee will not tolerate intruders."
+  return one_way_stair { desc = 'gateway to a hive', desc_long = d,
+                           dst = 'new_hive', floor = 'stone_arch' }
+end
+
+function hive_message(e)
+  crawl.mpr("You enter an furiously buzzing hive!")
+end
+
+function hive_milestone(e)
+  crawl.mark_milestone("br.enter", "entered a Hive.", true)
+end
+
+function random_hive_colour()
+  local colours = {"blue", "red", "lightblue", "magenta", "green"}
+  return colours[crawl.random2(#colours) + 1]
+end
+
+function fixup_hive()
+  dgn.fixup_stairs("stone_arch", "exit_portal_vault")
+
+  if (dgn.get_floor_colour() == "black") then
+    dgn.change_floor_colour(random_hive_colour())
+  end
+
+  if (dgn.get_rock_colour() == "black") then
+    dgn.change_rock_colour("yellow")
+  end
+
+  dgn.change_floor_tile("floor_hive")
+  dgn.change_rock_tile("wall_hive")
+end
+
+dgn.set_lt_callback("new_hive", "fixup_hive")
+
+function hive_epilogue(e)
+  e.hook("epilogue",
+         function ()
+           hive_message(_G)
+           hive_milestone(_G)
+         end)
+end
+
+}}
+
+
+##############################################################################
+# Hive entries
+##############################################################################
+# Dummy entry
+#
+NAME: new_hive_0
+TAGS: new_hive_entry transparent extra
+ORIENT: float
+PLACE: D:12
+: place_hive_portal(_G)
+MAP
+O
+ENDMAP
+
+
+########################################################
+# Combs of tragedy (mumra)
+# Hive portal map
+NAME:     new_hive_mumra_combs
+TAGS:     new_hive
+ORIENT:	  encompass
+# Guarantee a certain amount of combs and larva to demonstrate
+# NSUBST:   % : %:5 / . # FIXME: syntax error
+# NSUBST:   ! : !:4 / .
+KITEM: % = honeycomb
+KMONS: ! = killer bee larva
+# Perform rest of item/mons substitutions
+KITEM: $ = honeycomb w:5 / nothing w:10
+KITEM: * = royal jelly / honeycomb w:5 / nothing w:3
+KMONS: 1 = killer bee larva w:3 / nothing
+KMONS: 2 = killer bee / killer bee larva w:5 / nothing w:2
+KMONS: 3 = queen bee
+# Either b or c
+SHUFFLE: bc/de
+SUBST: c=a, e=a
+NSUBST: b = 1:. / *:aa.
+# Either d or e
+NSUBST: d = 1:. / *:aa.
+# At least 1 of f
+NSUBST: f = 1:. / *:aa.
+# At least 1 of g
+NSUBST: g = 1:. / *:aa.
+# At least 1 of h
+NSUBST: h = 1:. / *:aa.
+# At least 1 of i
+NSUBST: i = 1:. / *:aa.
+# At least 1 of j
+NSUBST: j = 1:. / *:aa.
+# At least 1 of k
+NSUBST: k = 1:. / *:aa.
+# At least 1 of l
+NSUBST: l = 1:. / *:aa.
+# At least 1 of m
+NSUBST: m = 1:. / *:aa.
+# At least 1 of n
+NSUBST: n = 1:. / *:aa.
+# At least 1 of o
+NSUBST: o = 1:. / *:aa.
+# At least 1 of p
+NSUBST: p = 1:. / *:aa.
+# At least 1 of q
+NSUBST: q = 1:. / *:aa.
+: hive_epilogue(_G)
+MAP
+             aaaaa     aaaaa
+            aa.<>aa   aa...aa
+           aa.....aaaaa..$..aa
+          aa!%%%%%!aaa..$*$..aa
+        aaaaa!%%%!aaaaa..$..aaaaa
+       aa...bb!!!cc...dd...ee...aa
+      aa..$..aaaaa..$..aaaaa..$..aa
+     aa..$*$..aaa..$*$..aaa..$*$..aa
+   aaaaa..$..aaaaa..$..aaaaa..$..aaaaa
+  aa...ff.1.ff.1.gg.1.gg.1.hh.1.hh...aa
+ aa.$$$.aaaaa.$$$.aaaaa.$$$.aaaaa.$$$.aa
+aa.$***$.aaa.$***$.aaa.$***$.aaa.$***$.aa
+ aa.$$$.aaaaa.$$$.aaaaa.$$$.aaaaa.$$$.aa
+  aa1.1ii1.1jj...jj1.1kk1.1kk1.1ll1.1aa
+   aaaaa.$$$.aaaaa.$$$.aaaaa.$$$.aaaaa
+    aaa1$***$1aaa1$***$1aaa1$***$1aa
+      aa.$$$.aaaaa.$$$.aaaaa.$$$.aa
+       aa1.1mm...nn1.1nn...oo1.1aa
+        aaaaa.....aaaaa.....aaaaa
+         aaa111$111aaa111$111aa
+           aa11111aaaaa11111aa
+            aa111pp$$$qq111aa
+             aaaaa11111aaaaa
+               aa1122211aa
+                aa22322aa
+                 aa***aa
+                  aaaaa
+ENDMAP

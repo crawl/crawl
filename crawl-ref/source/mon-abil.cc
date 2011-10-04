@@ -1034,8 +1034,15 @@ static bool _make_monster_angry(const monster* mon, monster* targ)
 
     if (you.can_see(mon))
     {
-        mprf("%s goads %s on!", mon->name(DESC_CAP_THE).c_str(),
-             targ->name(DESC_NOCAP_THE).c_str());
+        if (mon->type == MONS_QUEEN_BEE && targ->type == MONS_KILLER_BEE)
+        {
+            mprf("%s calls on %s to defend her!",
+                mon->name(DESC_CAP_THE).c_str(),
+                targ->name(DESC_NOCAP_THE).c_str());
+        }
+        else
+            mprf("%s goads %s on!", mon->name(DESC_CAP_THE).c_str(),
+                 targ->name(DESC_NOCAP_THE).c_str());
     }
 
     targ->go_berserk(false);
@@ -1066,7 +1073,35 @@ static bool _moth_incite_monsters(const monster* mon)
             return (true);
     }
 
-    return (false);
+    return goaded != 0;
+}
+
+static bool _queen_incite_worker(const monster* queen)
+{
+    ASSERT(queen->type == MONS_QUEEN_BEE);
+    if (is_sanctuary(you.pos()) || is_sanctuary(queen->pos()))
+        return false;
+
+    int goaded = 0;
+    circle_def c(queen->pos(), 4, C_ROUND);
+    for (monster_iterator mi(&c); mi; ++mi)
+    {
+        // Only goad killer bees
+        if (mi->type != MONS_KILLER_BEE)
+            continue;
+
+        if (*mi == queen || !mi->needs_berserk())
+            continue;
+
+        if (is_sanctuary(mi->pos()))
+            continue;
+
+        if (_make_monster_angry(queen, *mi) && !one_chance_in(3 * ++goaded))
+            return (true);
+    }
+
+    return goaded != 0;
+
 }
 
 static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
@@ -2311,6 +2346,12 @@ bool mon_special_ability(monster* mons, bolt & beem)
     case MONS_MOTH_OF_WRATH:
         if (one_chance_in(3))
             used = _moth_incite_monsters(mons);
+        break;
+
+    case MONS_QUEEN_BEE:
+        if (one_chance_in(4)
+            || mons->hit_points < mons->max_hit_points / 3 && one_chance_in(2))
+            used = _queen_incite_worker(mons);
         break;
 
     case MONS_SNORG:

@@ -2717,6 +2717,11 @@ bool monster_polymorph(monster* mons, monster_type targetc,
             // Message used for the Slimify ability.
             str_polymon = " quivers uncontrollably and liquefies into ";
         }
+        else if (mons->type == MONS_KILLER_BEE_LARVA
+            && targetc == MONS_KILLER_BEE)
+        {
+            str_polymon = " metamorphoses into ";
+        }
         else
             str_polymon = " evaporates and reforms as ";
 

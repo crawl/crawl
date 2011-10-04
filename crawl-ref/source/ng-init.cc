@@ -75,6 +75,8 @@ void initialise_branch_depths()
 
     dprf("Disabling branch: %s", branches[disabled_branch].shortname);
     branches[disabled_branch].startdepth = -1;
+    dprf("Disabling hive.");
+    branches[BRANCH_HIVE].startdepth = -1;
 
     initialise_branches_for_game_type();
 }
