@@ -284,12 +284,33 @@ static bool _check_moveto_terrain(const coord_def& p,
     return _check_moveto_dangerous(p, msg);
 }
 
+static bool _check_moveto_exclusion(const coord_def& p,
+                                    const std::string &move_verb)
+{
+    if (is_excluded(p)
+        && !is_stair_exclusion(p)
+        && !is_excluded(you.pos()))
+    {
+        std::string prompt =
+            make_stringf("Really %s into a travel-excluded area?",
+                         move_verb.c_str());
+
+        if (!yesno(prompt.c_str(), false, 'n'))
+        {
+            canned_msg(MSG_OK);
+            return (false);
+        }
+    }
+    return (true);
+}
+
 bool check_moveto(const coord_def& p, const std::string &move_verb,
                   const std::string &msg)
 {
     return (_check_moveto_terrain(p, move_verb, msg)
             && _check_moveto_cloud(p, move_verb)
-            && _check_moveto_trap(p, move_verb));
+            && _check_moveto_trap(p, move_verb)
+            && _check_moveto_exclusion(p, move_verb));
 }
 
 static void _splash()
