@@ -1128,14 +1128,19 @@ static int _food_preference(int type,
             preference -= 3;
             break;
         case CE_POISON_CONTAM:
-            preference -= 1;
+            if (!you.res_poison())
+                preference -= 1;
             // fall through
         case CE_CONTAMINATED:
             if (saprovorous == 3 && !is_rotten)
                 preference += 1;
-            if (saprovorous)
-                break;
+            if (!saprovorous)
+                preference -=1;
+            break;
         case CE_POISONOUS:
+            if (!you.res_poison())
+                preference -=1;
+            break;
         case CE_MUTAGEN_RANDOM:
         case CE_MUTAGEN_GOOD:
         case CE_MUTAGEN_BAD:
