@@ -229,8 +229,12 @@ void SkillRegion::update()
         if (skill > SK_UNARMED_COMBAT && skill < SK_SPELLCASTING)
             continue;
         InventoryTile desc;
-        desc.tile     = tileidx_skill(skill, you.train[skill]
-                                             && you.can_train[skill]);
+        if (you.skills[skill] >= 27)
+            desc.tile = tileidx_skill(skill, -1);
+        else if (!you.can_train[skill])
+            desc.tile = tileidx_skill(skill, 0);
+        else
+            desc.tile = tileidx_skill(skill, you.train[skill]);
         desc.idx      = idx;
         desc.quantity = you.skills[skill];
 
