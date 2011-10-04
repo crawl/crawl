@@ -297,13 +297,13 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_TOUGH_SKIN]      = 2;
         you.mutation[MUT_REGENERATION]    = 2;
         you.mutation[MUT_FAST_METABOLISM] = 3;
-        you.mutation[MUT_SAPROVOROUS]     = 3;
-        you.mutation[MUT_CARNIVOROUS]     = 3;
+        you.mutation[MUT_SAPROVOROUS]     = 2;
+        you.mutation[MUT_GOURMAND]        = 1;
         you.mutation[MUT_SHAGGY_FUR]      = 1;
         break;
     case SP_KOBOLD:
         you.mutation[MUT_SAPROVOROUS] = 2;
-        you.mutation[MUT_CARNIVOROUS] = 2;
+        you.mutation[MUT_CARNIVOROUS] = 3;
         break;
     case SP_VAMPIRE:
         you.mutation[MUT_FANGS]        = 3;

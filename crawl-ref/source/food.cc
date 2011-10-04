@@ -1099,6 +1099,7 @@ void eat_floor_item(int item_link)
 }
 
 static int _food_preference(int type,
+                            bool nutrition = false,
                             corpse_effect_type effect_type = CE_CLEAN,
                             bool is_rotten = false)
 {
@@ -1151,8 +1152,10 @@ static int _food_preference(int type,
         if (is_rotten)
             preference -= 2 - saprovorous;
 
+        if (!nutrition && you.mutation[MUT_GOURMAND])
+            preference += 3;
         // gourmand - (only affects chunks)
-        if (you.duration[DUR_GOURMAND] >= GOURMAND_MAX)
+        else if (you.duration[DUR_GOURMAND] >= GOURMAND_MAX)
             preference++;
     }
     else
@@ -1164,12 +1167,13 @@ static int _food_preference(int type,
     return preference;
 }
 
-static int _food_preference(const item_def &food)
+static int _food_preference(const item_def &food, bool nutrition = false)
 {
     if (food.sub_type != FOOD_CHUNK)
-        return _food_preference(food.sub_type);
+        return _food_preference(food.sub_type, nutrition);
 
-    return _food_preference(FOOD_CHUNK, mons_corpse_effect(food.plus),
+    return _food_preference(FOOD_CHUNK, nutrition,
+                            mons_corpse_effect(food.plus),
                             food_is_rotten(food));
 }
 
@@ -1538,7 +1542,7 @@ int prompt_eat_chunks(bool only_auto)
                 continue;
 
             // You have to be hungry enough to consider eating a chunk
-            if (you.hunger_state > _maximum_satiation(_food_preference((*si)))
+            if (you.hunger_state > _maximum_satiation(_food_preference(*si))
                 && you.species != SP_VAMPIRE)
             {
                 continue;
@@ -1575,7 +1579,7 @@ int prompt_eat_chunks(bool only_auto)
             continue;
 
         // You have to be hungry enough to consider eating a chunk
-        if (you.hunger_state > _maximum_satiation(_food_preference((*item)))
+        if (you.hunger_state > _maximum_satiation(_food_preference(*item))
             && you.species != SP_VAMPIRE)
         {
             continue;
@@ -1739,7 +1743,7 @@ static void _eat_chunk(corpse_effect_type chunk_type, bool cannibal,
                        int mon_intel, bool holy, bool rotten)
 {
     bool likes_chunks = player_likes_chunks(true);
-    int preference    = _food_preference(FOOD_CHUNK, chunk_type, rotten);
+    int preference    = _food_preference(FOOD_CHUNK, true, chunk_type, rotten);
     int hp_amt        = 0;
     bool suppress_msg = false; // do we display the chunk nutrition message?
     int nutrition = CHUNK_BASE_NUTRITION * _chunk_satiation_multiplier(preference);
@@ -1901,7 +1905,7 @@ static void _eat_permafood(int item_type)
 
     // multiply the base satiation by a value determined by how much
     // the player likes the food
-    const int preference = _food_preference(item_type);
+    const int preference = _food_preference(item_type, true);
     food_value *= _permafood_satiation_multiplier(preference);
 
     if (food_value > 0)
@@ -2473,8 +2477,8 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
 
         // First, we calculate how much we like this thing we are considering eating
         // Then, based on that, we decide how hungry we would have to be to eat it
-        const int preference = _food_preference(kindof_thing, effect_type,
-                                                is_rotten);
+        const int preference = _food_preference(kindof_thing, false,
+                                                effect_type, is_rotten);
         const bool inedible = preference < (kindof_thing == FOOD_CHUNK ? 0: 2);
         const bool willing_to_eat =
                     (!check_hunger
