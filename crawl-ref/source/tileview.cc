@@ -226,6 +226,82 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
         flv.floor = TILE_FLOOR_TOMB;
         return;
 
+    case BRANCH_ABYSS:
+        flv.floor = TILE_FLOOR_NERVES;
+        switch (random2(6))
+        {
+        default:
+        case 0: flv.wall = TILE_WALL_HIVE; break;
+        case 1: flv.wall = TILE_WALL_PEBBLE_RED; break;
+        case 2: flv.wall = TILE_WALL_SLIME; break;
+        case 3: flv.wall = TILE_WALL_ICE; break;
+        case 4: flv.wall = TILE_WALL_HALL; break;
+        case 5: flv.wall = TILE_WALL_UNDEAD; break;
+        }
+        return;
+
+    case BRANCH_PANDEMONIUM:
+        flv.floor = TILE_FLOOR_TOMB;
+        switch (random2(7))
+        {
+        default:
+        case 0: flv.wall = TILE_WALL_ZOT_BLUE; break;
+        case 1: flv.wall = TILE_WALL_ZOT_RED; break;
+        case 2: flv.wall = TILE_WALL_ZOT_MAGENTA; break;
+        case 3: flv.wall = TILE_WALL_ZOT_GREEN; break;
+        case 4: flv.wall = TILE_WALL_ZOT_CYAN; break;
+        case 5: flv.wall = TILE_WALL_ZOT_YELLOW; break;
+        case 6: flv.wall = TILE_WALL_ZOT_WHITE; break;
+        }
+
+        if (one_chance_in(3))
+            flv.wall = TILE_WALL_FLESH;
+        if (one_chance_in(3))
+            flv.floor = TILE_FLOOR_NERVES;
+        break;
+
+    case BRANCH_ZIGGURAT:
+    case BRANCH_BAZAAR:
+    case BRANCH_TROVE:
+        flv.wall  = TILE_WALL_VAULT;
+        flv.floor = TILE_FLOOR_VAULT;
+        return;
+
+    case BRANCH_LABYRINTH:
+        flv.wall  = TILE_WALL_LAB_ROCK;
+        flv.floor = TILE_FLOOR_LABYRINTH;
+        return;
+
+    case BRANCH_SEWER:
+        flv.wall  = TILE_WALL_SLIME;
+        flv.floor = TILE_FLOOR_SLIME;
+        return;
+
+    case BRANCH_OSSUARY:
+        flv.wall  = TILE_WALL_SANDSTONE;
+        flv.floor = TILE_FLOOR_SANDSTONE;
+        return;
+
+    case BRANCH_BAILEY:
+        flv.wall  = TILE_WALL_BRICK_BROWN;
+        flv.floor = TILE_FLOOR_COBBLE_BLOOD;
+        return;
+
+    case BRANCH_ICE_CAVE:
+        flv.wall  = TILE_WALL_ICE;
+        flv.floor = TILE_FLOOR_ICE;
+        return;
+
+    case BRANCH_VOLCANO:
+        flv.wall  = TILE_WALL_PEBBLE_RED;
+        flv.floor = TILE_FLOOR_ROUGH_RED;
+        return;
+
+    case BRANCH_WIZLAB:
+        flv.wall  = TILE_WALL_NORMAL;
+        flv.floor = TILE_FLOOR_NORMAL;
+        return;
+
     case NUM_BRANCHES:
         break;
     }

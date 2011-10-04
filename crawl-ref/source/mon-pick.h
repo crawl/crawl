@@ -13,7 +13,12 @@ int mons_rarity(int mcls, const level_id &place = level_id::current());
 
 int mons_level(int mcls, const level_id &place = level_id::current());
 
+int mons_null_level(int mcls);
+int mons_null_rare(int mcls);
+
+int mons_abyss_level(int mcls);
 int mons_abyss_rare(int mcls);
+int mons_pan_level(int mcls);
 int mons_pan_rare(int mcls);
 
 int mons_cocytus_level(int mcls);
