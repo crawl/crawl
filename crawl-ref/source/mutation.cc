@@ -1841,6 +1841,23 @@ void roll_demonspawn_mutations()
                          _select_ds_mutations()));
 }
 
+void adjust_racial_mutation(mutation_type mut, int diff)
+{
+    if (diff < 0)
+    {
+        you.mutation[mut]         = std::max(you.mutation[mut] + diff, 0);
+        you.innate_mutations[mut] = std::max(you.innate_mutations[mut] + diff, 0);
+    }
+    else
+    {
+        const mutation_def& mdef  = get_mutation_def(mut);
+        you.mutation[mut]         = std::min<int>(you.mutation[mut] + diff,
+                                                  mdef.levels);
+        you.innate_mutations[mut] = std::min<int>(you.innate_mutations[mut] + diff,
+                                                  mdef.levels);
+    }
+}
+
 bool perma_mutate(mutation_type which_mut, int how_much)
 {
     ASSERT(is_valid_mutation(which_mut));
