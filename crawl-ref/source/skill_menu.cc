@@ -206,9 +206,13 @@ void SkillMenuEntry::set_name(bool keep_hotkey)
     if (is_set(SKMF_SKILL_ICONS))
     {
         m_name_tile->clear_tile();
-        m_name_tile->add_tile(tile_def(tileidx_skill(m_sk,
-                                                     get_colour() != DARKGRAY),
-                                       TEX_GUI));
+        if (you.skills[m_sk] >= 27)
+            m_name_tile->add_tile(tile_def(tileidx_skill(m_sk, -1), TEX_GUI));
+        else if (!you.can_train[m_sk])
+            m_name_tile->add_tile(tile_def(tileidx_skill(m_sk, 0), TEX_GUI));
+        else
+            m_name_tile->add_tile(tile_def(tileidx_skill(m_sk, you.train[m_sk]),
+                                           TEX_GUI));
     }
 #endif
     set_level();
