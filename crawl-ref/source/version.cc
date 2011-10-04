@@ -12,6 +12,11 @@
 
 namespace Version
 {
+    std::string Major()
+    {
+        return std::string(CRAWL_VERSION_MAJOR);
+    }
+
     std::string Short()
     {
         return std::string(CRAWL_VERSION_SHORT);
