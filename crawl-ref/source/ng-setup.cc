@@ -239,7 +239,7 @@ void give_basic_mutations(species_type speci)
     case SP_OGRE:
         you.mutation[MUT_TOUGH_SKIN]      = 1;
         you.mutation[MUT_FAST_METABOLISM] = 1;
-        you.mutation[MUT_SAPROVOROUS]     = 1;
+        you.mutation[MUT_CARNIVOROUS]     = 1;
         break;
     case SP_HALFLING:
         you.mutation[MUT_SLOW_METABOLISM]     = 1;
@@ -258,7 +258,8 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_TOUGH_SKIN]      = 3;
         you.mutation[MUT_FAST]            = 2;
         you.mutation[MUT_DEFORMED]        = 1;
-        you.mutation[MUT_FAST_METABOLISM] = 2;
+        you.mutation[MUT_FAST_METABOLISM] = 1;
+        you.mutation[MUT_HERBIVOROUS]     = 1;
         you.mutation[MUT_HOOVES]          = 3;
         break;
     case SP_NAGA:
@@ -296,13 +297,13 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_TOUGH_SKIN]      = 2;
         you.mutation[MUT_REGENERATION]    = 2;
         you.mutation[MUT_FAST_METABOLISM] = 3;
-        you.mutation[MUT_SAPROVOROUS]     = 2;
-        you.mutation[MUT_GOURMAND]        = 1;
+        you.mutation[MUT_SAPROVOROUS]     = 3;
+        you.mutation[MUT_CARNIVOROUS]     = 3;
         you.mutation[MUT_SHAGGY_FUR]      = 1;
         break;
     case SP_KOBOLD:
         you.mutation[MUT_SAPROVOROUS] = 2;
-        you.mutation[MUT_CARNIVOROUS] = 3;
+        you.mutation[MUT_CARNIVOROUS] = 2;
         break;
     case SP_VAMPIRE:
         you.mutation[MUT_FANGS]        = 3;
