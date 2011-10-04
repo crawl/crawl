@@ -1128,7 +1128,12 @@ static int _food_preference(int type,
             break;
         case CE_POISON_CONTAM:
             preference -= 1;
+            // fall through
         case CE_CONTAMINATED:
+            if (saprovorous == 3 && !is_rotten)
+                preference += 1;
+            if (saprovorous)
+                break;
         case CE_POISONOUS:
         case CE_MUTAGEN_RANDOM:
         case CE_MUTAGEN_GOOD:
@@ -1144,7 +1149,7 @@ static int _food_preference(int type,
 
         // handle rotten food
         if (is_rotten)
-            preference -= (4 - saprovorous) / 2;
+            preference -= 2 - saprovorous;
 
         // gourmand - (only affects chunks)
         if (you.duration[DUR_GOURMAND] >= GOURMAND_MAX)
