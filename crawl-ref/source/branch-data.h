@@ -16,7 +16,7 @@ Branch branches[] = {
     //  travel shortcut, upstairs exit branch, dangerous branch end, ambient noise level
 
     { BRANCH_MAIN_DUNGEON, BRANCH_MAIN_DUNGEON, -1, -1,
-      BRANCH_DUNGEON_DEPTH, -1, 0, 0,
+          BRANCH_DUNGEON_DEPTH, -1, 0, 0,
       NUM_FEATURES, NUM_FEATURES,  // sentinel values
       "Dungeon", "the Dungeon", "D",
       NULL,
@@ -29,7 +29,7 @@ Branch branches[] = {
       "Temple", "the Ecumenical Temple", "Temple",
       NULL,
       false, LIGHTGREY, BROWN,
-      mons_standard_rare, mons_standard_level,
+      mons_null_rare, mons_null_level,
       'T', false, false, 0 },
 
     { BRANCH_ORCISH_MINES, BRANCH_MAIN_DUNGEON, 6, 11, 4, 6, 0, 0,
@@ -173,7 +173,7 @@ Branch branches[] = {
       DNGN_ENTER_ZOT, DNGN_RETURN_FROM_ZOT,
       "Zot", "the Realm of Zot", "Zot",
       NULL,
-      true, BLACK, BLACK,
+      true, BLACK, BLACK, // set per-map
       mons_hallzot_rare, mons_hallzot_level,
       'Z', false, true, 0 },
 
@@ -200,6 +200,102 @@ Branch branches[] = {
       true, YELLOW, BROWN,
       mons_dwarf_rare, mons_dwarf_level,
       'K', false, false, 0 },
+
+    { BRANCH_ABYSS, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+      DNGN_ENTER_ABYSS, DNGN_EXIT_ABYSS,
+      "Abyss", "the Abyss", "Abyss",
+      NULL,
+      false, BLACK, BLACK, // set specially
+      mons_abyss_rare, mons_abyss_level,
+      '0', false, false, 0 },
+
+    { BRANCH_PANDEMONIUM, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+      DNGN_ENTER_PANDEMONIUM, DNGN_EXIT_PANDEMONIUM,
+      "Pandemonium", "Pandemonium", "Pan",
+      NULL,
+      true, BLACK, BLACK, // set specially from monster set
+      mons_pan_rare, mons_pan_level,
+      '0', false, false, 0 },
+
+    { BRANCH_ZIGGURAT, NUM_BRANCHES, -1, -1, 27, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
+      "Ziggurat", "a ziggurat", "Zig",
+      NULL,
+      false, BLACK, BLACK,
+      mons_null_rare, mons_null_level, // overridden later
+      '0', false, false /* maybe, but Zig:26 is almost as bad */, 0 },
+
+    { BRANCH_LABYRINTH, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+      DNGN_ENTER_LABYRINTH, DNGN_ESCAPE_HATCH_UP,
+      "Labyrinth", "a Labyrinth", "Lab",
+      NULL,
+      false, BLACK, BLACK,
+      mons_null_rare, mons_null_level,
+      '0', false, false, 0 },
+
+    { BRANCH_BAZAAR, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
+      "Bazaar", "a bazaar", "Bazaar",
+      NULL,
+      false, BLUE, YELLOW,
+      mons_null_rare, mons_null_level,
+      '0', false, false, 0 },
+
+    { BRANCH_TROVE, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
+      "Trove", "a treasure trove", "Trove",
+      NULL,
+      false, DARKGREY, BLUE,
+      mons_null_rare, mons_null_level,
+      '0', false, false, 0 },
+
+    { BRANCH_SEWER, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
+      "Sewer", "the sewers", "Sewer",
+      NULL,
+      false, LIGHTGREY, DARKGREY,
+      mons_null_rare, mons_null_level,
+      '0', false, false, 0 },
+
+    { BRANCH_OSSUARY, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
+      "Ossuary", "a tomb", "Ossuary",
+      NULL,
+      false, WHITE, YELLOW,
+      mons_null_rare, mons_null_level,
+      '0', false, false, 0 },
+
+    { BRANCH_BAILEY, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
+      "Bailey", "the bailey", "Bailey",
+      NULL,
+      false, WHITE, LIGHTGREY,
+      mons_null_rare, mons_null_level,
+      '0', false, false, 0 },
+
+    { BRANCH_ICE_CAVE, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
+      "Ice Cave", "an ice cave", "IceCv",
+      NULL,
+      false, BLUE, WHITE,
+      mons_null_rare, mons_null_level,
+      '0', false, false, 0 },
+
+    { BRANCH_VOLCANO, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
+      "Volcano", "a volcano", "Volcano",
+      NULL,
+      false, RED, RED,
+      mons_null_rare, mons_null_level,
+      '0', false, false, 0 },
+
+    { BRANCH_WIZLAB, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
+      "Wizlab", "a Wizard's Laboratory", "WizLab",
+      NULL,
+      false, LIGHTGREY, BROWN, // set per-map
+      mons_null_rare, mons_null_level,
+      '0', false, false, 0 },
 };
 
 #endif

@@ -50,10 +50,25 @@ int mons_rarity(int mcls, const level_id &place)
         return branches[place.branch].mons_rarity_function(mcls);
 }
 
-// level_area_type != LEVEL_DUNGEON
-// NOTE: Labyrinths and portal vaults have no random monster generation.
+// The Ecumenical Temple and other places with no monster gen.
+int mons_null_level(int mcls)
+{
+    return 0;
+}
+
+int mons_null_rare(int mcls)
+{
+    return 0;
+}
 
 // The Abyss
+int mons_abyss_level(int mcls)
+{
+    if (mons_abyss_rare(mcls))
+        return DEPTH_ABYSS;
+    return 0;
+}
+
 int mons_abyss_rare(int mcls)
 {
     switch (mcls)
@@ -242,6 +257,13 @@ int mons_abyss_rare(int mcls)
 }
 
 // Pandemonium
+int mons_pan_level(int mcls)
+{
+    if (mons_pan_rare(mcls))
+        return DEPTH_PAN;
+    return 0;
+}
+
 int mons_pan_rare(int mcls)
 {
     // Note: this is used as-is by place:Pan, but not by actual Pan

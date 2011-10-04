@@ -4567,5 +4567,5 @@ static void _compile_time_asserts()
     // Also some runtime stuff; I don't know if the order of branches[]
     // needs to match the enum, but it currently does.
     for (int i = 0; i < NUM_BRANCHES; ++i)
-        ASSERT(branches[i].id == i);
+        ASSERT(branches[i].id == i || branches[i].id == NUM_BRANCHES);
 }
