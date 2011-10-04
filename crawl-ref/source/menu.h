@@ -703,7 +703,7 @@ class PrecisionMenu;
  * Abstract base class interface for all attachable objects.
  * Objects are generally containers that hold MenuItems, however special
  * objects are also possible, for instance MenuDescriptor, MenuButton.
- * All objects should have an unique std::string #name, although the uniqueness
+ * All objects should have an unique std::string name, although the uniqueness
  * is not enforced or checked right now.
  */
 class MenuObject
