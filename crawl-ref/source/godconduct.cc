@@ -974,6 +974,8 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_SEE_MONSTER:
             if (you.religion == GOD_SHINING_ONE)
             {
+                if (victim && (victim->is_evil() || victim->is_unholy()))
+                    break;
                 piety_denom = level / 2 + 6 - you.experience_level / 4;
                 piety_change = piety_denom - 4;
                 piety_denom = std::max(piety_denom, 1);
