@@ -751,9 +751,9 @@ static float _permafood_satiation_multiplier(int preference)
     case 2:  return (1.0 / 3.0); // 2 levels incompatible
     case 3:  return (2.0 / 3.0); // 1 level incompatible
     case 4:  return 1;           // basic case
-    case 5:  return 1.5;         // 1 level compatible
-    case 6:  return 2;           // 2 levels compatible
-    default: return 2.5;         // 3 levels compatible
+    case 5:  return (4.0 / 3.0); // 1 level compatible
+    case 6:  return (5.0 / 3.0); // 2 levels compatible
+    default: return 2;           // 3 levels compatible
     }
 }
 
