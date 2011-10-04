@@ -1530,7 +1530,7 @@ int prompt_eat_chunks(bool only_auto)
                 continue;
 
             // You have to be hungry enough to consider eating a chunk
-            if (you.hunger_state >= _maximum_satiation(_food_preference(
+            if (you.hunger_state > _maximum_satiation(_food_preference(
                                                 FOOD_CHUNK,
                                                 mons_corpse_effect(si->plus),
                                                 food_is_rotten(*si))))
@@ -1569,7 +1569,7 @@ int prompt_eat_chunks(bool only_auto)
             continue;
 
         // You have to be hungry enough to consider eating a chunk
-        if (you.hunger_state >= _maximum_satiation(_food_preference(
+        if (you.hunger_state > _maximum_satiation(_food_preference(
                                                FOOD_CHUNK,
                                                mons_corpse_effect(item->plus),
                                                food_is_rotten(*item))))
