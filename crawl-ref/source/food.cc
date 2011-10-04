@@ -1123,10 +1123,13 @@ static int _food_preference(int type,
         // is passed even if the original chunk wasn't clean [except rotting])
         switch (effect_type)
         {
+        case CE_ROT:
+            preference -= 3;
+            break;
+        case CE_POISON_CONTAM:
+            preference -= 1;
         case CE_CONTAMINATED:
         case CE_POISONOUS:
-        case CE_POISON_CONTAM:
-        case CE_ROT:
         case CE_MUTAGEN_RANDOM:
         case CE_MUTAGEN_GOOD:
         case CE_MUTAGEN_BAD:
