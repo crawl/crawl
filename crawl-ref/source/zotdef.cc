@@ -954,7 +954,7 @@ bool create_trap(trap_type spec_type)
 
 /**
  * Create an altar to the god of the player's choice.
- * @param wizmode if ::true, bypass some checks.
+ * @param wizmode if true, bypass some checks.
  */
 bool zotdef_create_altar(bool wizmode)
 {
