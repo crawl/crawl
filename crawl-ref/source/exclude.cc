@@ -27,8 +27,8 @@
 
 static bool _mon_needs_auto_exclude(const monster* mon, bool sleepy = false)
 {
-    if (mons_is_stationary(mon) && sleepy)
-            return (false);
+    if (mons_is_stationary(mon))
+        return (!sleepy);
 
     // Auto exclusion only makes sense if the monster is still asleep.
     return (mon->asleep());
