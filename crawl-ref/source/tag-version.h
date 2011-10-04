@@ -55,6 +55,7 @@ enum tag_minor_version
     TAG_MINOR_UNPONDERIFY,         // Give Cheibriadites back their old gear.
     TAG_MINOR_SKILL_RESTRICTIONS,  // Add restrictions to which skills can be trained.
     TAG_MINOR_NUM_LEVEL_CONN,      // Fix level connectivity data hard-coding NUM_BRANCHES.
+    TAG_MINOR_FOOD_MUTATIONS,      // Food reform racial mutation upgrades.
 
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
