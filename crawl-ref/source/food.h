@@ -43,7 +43,7 @@ enum satiation_threshold
     HUNGER_STARVING      = 1000,
     HUNGER_NEAR_STARVING = 1533,
     HUNGER_VERY_HUNGRY   = 2066,
-    HUNGER_HUNGRY        = 2600,
+    HUNGER_HUNGRY        = 2800,
     HUNGER_SATIATED      = 7000,
     HUNGER_FULL          = 9000,
     HUNGER_VERY_FULL     = 11000,
