@@ -169,32 +169,22 @@ corpse on the ground by clicking the <w>left mouse button</w> while pressing
 skill-menu
 
                                <h>Skill management</h>
-In Crawl, you gain experience for killing monsters (and very few other
-activities). This experience is used to train skills. The skill screen allows
-you to select which skills to train.
-
-Note: you train all activated skills at once whenever you gain some experience.
-It is not a bug if you gain a skill level in Axes after killing a monster with
-a spell.
-
-You can cycle a skill between <darkgrey>- deselected</darkgrey>, + selected, and <w>* focused</w>
-by pressing its letter. If a skill is deselected, it will not be trained at
-all. A skill set to focus will be trained faster than others.
-
+You gain experience for killing monsters (and very few other activities).
+This experience is used to train skills. The skill screen allows you to
+select which skills to train. Note that you train all activated skills at
+once whenever you gain some experience. It is not a bug if you gain a skill
+level in Axes after killing a monster with a spell.
 A skill can only be trained if there's some available means of exercising it;
 see "Training restrictions" below for details.
 
-You can read about skills by using <w>?</w> to switch to description mode; to read
-about skills you aren't (yet) able to train, combine this with <w>*</*> (show all skills).
+By pressing its letter, you can cycle if and how a skill is trained:
+<darkgrey>- deselected</darkgrey>    Skill will not train at all.
++ selected 
+<w>* focused</w>       Skill will train faster than others.
 
-Training can be done in two modes:
-* automatic: Skills are trained based on your use of them.
-* manual: Experience is spread evenly across all activated skills.
-
-The training percentage (in <brown>brown</brown>) shows the relative amount of experience
-which will be used to train this skill.
-You must always have at least one skill enabled.
-You can switch between automatic and manual training with the <w>/</w> key.
+Training can be done in two modes, which are toggled with the <w>/</w> key.
+* automatic:    Skills are trained based on your use of them.
+* manual:       Experience is spread evenly across all activated skills.
 
 How fast you train a skill is governed by the following factors:
 * aptitude: Shown <red>red</red> in the Apt column. Higher numbers mean that
@@ -205,15 +195,16 @@ How fast you train a skill is governed by the following factors:
 * magic penalties: It is harder to learn an elemental skill if you are
       proficient in the opposing element (Air-Earth, Ice-Fire).
       The aptitude penalty is indicated in <magenta>magenta</magenta>.
-
 On top of that, there are some effects which directly modify a skill, for
 example god powers. These skill modifiers are shown in <blue>blue</blue>.
+The training percentage (in <brown>brown</brown>) shows the relative amount of experience
+which will be used to train this skill.
 
 Apart from (de)selecting skills, you also have the following toggles:
-<w>/</w> :  Switch between automatic and manual training.
-<w>?</w> :  Allows you to read the descriptions of skills.
-<w>*</w> :  Shows all skills, even those you can't train yet.
-<w>_</w> :  Shows/hides skill modifiers, e.g. from god powers.
+<w>/</w> :   Switch between automatic and manual training.
+<w>*</w> :   Shows all skills, even those you can't train yet.
+<w>?</w> :   Allows you to read the descriptions of skills.
+<w>_</w> :   Shows/hides skill modifiers, e.g. from god powers.
 
 			      <h>Training restrictions</h>
 Fighting, Throwing, Dodging, Stealth, Stabbing, Traps & Doors, Unarmed Combat,
@@ -222,9 +213,9 @@ and Spellcasting can always be trained. For the rest:
 * Armour requires wearing an armour with an evasion penalty.
 * Shields requires that you either be wearing a shield, or have the capacity
       to obtain one through magical or divine means.
-* Evocations requires carrying an evocable item, or the help of Nemelex Xobah.
-* Spell schools require knowing a spell of the school, or divine assistance.
+* Evocations requires carrying an evocable item, or having a Nemelex ability.
+* Spell schools require knowing a spell of the school.
+* Necromancy can also be trained when having a Kikubaaqudgha ability.
 * Invocations requires having at least one divine ability that exercises it.
-# FIXME: Should state somewhere *when* Nemelex/Kiku permit Evo/Necro for free
 
 %%%%
