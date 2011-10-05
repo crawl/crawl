@@ -1229,8 +1229,13 @@ bool summon_common_demon(int pow, god_type god, int spell,
 bool summon_greater_demon(int pow, god_type god, int spell,
                           bool quiet)
 {
-    return _summon_demon_wrapper(pow, god, spell, DEMON_GREATER,
-                                 5, false, random2(pow) > 5, quiet);
+    monster_type mon = summon_any_demon(DEMON_GREATER);
+
+    const bool charmed = (random2(pow) > 5);
+    const bool friendly = (charmed && mons_demon_tier(mon) == 2);
+
+    return _summon_demon_wrapper(pow, god, spell, mon,
+                                 5, friendly, charmed, quiet);
 }
 
 bool summon_demon_type(monster_type mon, int pow, god_type god,
