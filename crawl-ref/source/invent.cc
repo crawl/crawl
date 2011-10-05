@@ -211,7 +211,27 @@ std::string InvEntry::get_text(bool need_cursor) const
     if (InvEntry::show_glyph)
         tstr << "(" << glyph_to_tagstr(get_item_glyph(item)) << ")" << " ";
 
-    tstr << text;
+    //For weights display we need to know maximum number of chars in each column
+    //which fit in one line.
+    //XXX There should be a better way to determine this, for now we simply
+    //estimate it by the following heuristics {kittel}.
+    unsigned max_chars_in_line=get_number_of_cols()-2;
+#ifdef USE_TILE
+    if ( Options.tile_menu_icons && Options.show_inventory_weights )
+      max_chars_in_line=get_number_of_cols()*4/9-2;
+#endif
+    if (Options.show_inventory_weights)
+    {
+        max_chars_in_line-=1;
+        const int w_weight =10;//length of " (999 aum)"
+        int excess=strwidth(tstr.str())+text.size() + w_weight - max_chars_in_line;
+        if ( excess > 0 )
+	    tstr<<text.substr(0,std::max<int>(0,text.size()-excess-2))<<"..";
+        else
+            tstr << text;
+    }
+    else
+        tstr << text;
 
     if (InvEntry::show_prices)
     {
@@ -231,10 +251,12 @@ std::string InvEntry::get_text(bool need_cursor) const
             std::string colour_tag = colour_to_str(item->colour);
             colour_tag_adjustment = colour_tag.size() * 2 + 5;
         }
-        tstr << std::setw(get_number_of_cols() - strwidth(tstr.str()) - 2
-                          + colour_tag_adjustment)
+
+	//Note: If updating the " (%i aum)" format, remember to update w_weight above.
+        tstr << std::setw(max_chars_in_line - strwidth(tstr.str())
+			  + colour_tag_adjustment)
              << std::right
-             << make_stringf("(%.1f aum)", BURDEN_TO_AUM * mass);
+             << make_stringf(" (%i aum)", static_cast<int>(0.5+BURDEN_TO_AUM * mass));
     }
     return tstr.str();
 }
@@ -396,9 +418,8 @@ void InvMenu::set_title(const std::string &s)
         cgotoxy(1, 1);
 
         const int cap = carrying_capacity(BS_UNENCUMBERED);
-
         stitle = make_stringf(
-            "Inventory: %.0f/%.0f aum (%d%%, %d/52 slots)",
+            "Inventory: %.0f/%.0f aum (%d%%, %d/52 slots, Ctrl-W toggles weight display)",
             BURDEN_TO_AUM * you.burden,
             BURDEN_TO_AUM * cap,
             (you.burden * 100) / cap,
@@ -902,6 +923,13 @@ std::vector<SelItem> InvMenu::get_selitems() const
 
 bool InvMenu::process_key(int key)
 {
+    if ( key == CONTROL('W') )
+    {
+        Options.show_inventory_weights=!Options.show_inventory_weights;
+        draw_menu();
+        return (true);
+    }
+
     if (items.size()
         && type == MT_DROP
         && (key == CONTROL('D') || key == '@'))

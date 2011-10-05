@@ -255,10 +255,6 @@ static void _post_init(bool newc)
 #endif
 
 #ifdef USE_TILE
-    // Override inventory weights options for tiled menus.
-    if (Options.tile_menu_icons && Options.show_inventory_weights)
-        Options.show_inventory_weights = false;
-
     init_player_doll();
 
     tiles.resize();
