@@ -215,7 +215,9 @@ enum launch_retval
 enum misc_item_type
 {
     MISC_BOTTLED_EFREET,               //    0
+#if TAG_MAJOR_VERSION == 32
     MISC_CRYSTAL_BALL_OF_SEEING,
+#endif
     MISC_AIR_ELEMENTAL_FAN,
     MISC_LAMP_OF_FIRE,
     MISC_STONE_OF_EARTH_ELEMENTALS,

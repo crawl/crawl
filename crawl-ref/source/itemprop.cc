@@ -734,13 +734,7 @@ iflags_t full_ident_mask(const item_def& item)
         flagset = 0;
         break;
     case OBJ_MISCELLANY:
-        if (item.sub_type == MISC_CRYSTAL_BALL_OF_SEEING
-            || item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY)
-        {
-            flagset = ISFLAG_KNOW_TYPE;
-        }
-        else
-            flagset = 0;
+        flagset = 0;
         break;
     case OBJ_BOOKS:
     case OBJ_ORBS:
@@ -2816,7 +2810,6 @@ int item_mass(const item_def &item)
         switch (item.sub_type)
         {
         case MISC_BOTTLED_EFREET:
-        case MISC_CRYSTAL_BALL_OF_SEEING:
         case MISC_CRYSTAL_BALL_OF_ENERGY:
             unit_mass = 150;
             break;
@@ -3025,8 +3018,6 @@ void seen_item(const item_def &item)
         if (item.base_type == OBJ_ARMOUR)
             you.seen_armour[item.sub_type] |= 1 << SP_UNKNOWN_BRAND;
         if (item.base_type == OBJ_MISCELLANY
-            && item.sub_type != MISC_CRYSTAL_BALL_OF_SEEING
-            && item.sub_type != MISC_CRYSTAL_BALL_OF_ENERGY
             && !is_deck(item))
         {
             you.seen_misc.set(item.sub_type);

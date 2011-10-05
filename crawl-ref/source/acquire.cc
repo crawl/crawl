@@ -770,12 +770,6 @@ static int _acquirement_misc_subtype()
     {
         result = MISC_CRYSTAL_BALL_OF_ENERGY;
     }
-    if (x_chance_in_y(you.skills[SK_EVOCATIONS], 27)
-        && !you.seen_misc[MISC_CRYSTAL_BALL_OF_SEEING]
-        && you.religion != GOD_ASHENZARI)
-    {
-        result = MISC_CRYSTAL_BALL_OF_SEEING;
-    }
 
     return (result);
 }
