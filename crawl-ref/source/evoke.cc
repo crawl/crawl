@@ -302,8 +302,7 @@ static bool _efreet_flask(int slot)
 static bool _is_crystal_ball(const item_def &item)
 {
     return (item.base_type == OBJ_MISCELLANY
-            && (item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY
-                || item.sub_type == MISC_CRYSTAL_BALL_OF_SEEING));
+            && (item.sub_type == MISC_CRYSTAL_BALL_OF_ENERGY));
 }
 
 static bool _check_crystal_ball(int subtype, bool known)
@@ -329,50 +328,13 @@ static bool _check_crystal_ball(int subtype, bool known)
         return (false);
     }
 
-    int min_evo = 2;
-    if (known && subtype == MISC_CRYSTAL_BALL_OF_SEEING)
-        min_evo = 3;
-    if (you.skill(SK_EVOCATIONS) < min_evo)
+    if (you.skill(SK_EVOCATIONS) < 2)
     {
         mpr("You lack the skill to use this item.");
         return false;
     }
 
     return (true);
-}
-
-static bool _ball_of_seeing(void)
-{
-    bool ret = false;
-
-    mpr("You gaze into the crystal ball.");
-
-    int use = random2(you.skill(SK_EVOCATIONS, 6));
-
-    if (you.level_type == LEVEL_LABYRINTH)
-        mpr("You see a maze of twisty little passages, all alike.");
-    else if (use < 2)
-        lose_stat(STAT_INT, 1, false, "using a ball of seeing");
-    else if (use < 5 && enough_mp(1, true))
-    {
-        mpr("You feel your power drain away!");
-        set_mp(0);
-        // if you're out of mana, the switch chain falls through to confusion
-    }
-    else if (use < 10)
-        confuse_player(10 + random2(10));
-    else if (use < 15 || coinflip())
-        mpr("You see nothing.");
-    else if (magic_mapping(6 + you.skill(SK_EVOCATIONS),
-                           50 + random2(you.skill(SK_EVOCATIONS)), true))
-    {
-        mpr("You see a map of your surroundings!");
-        ret = true;
-    }
-    else
-        mpr("You see nothing.");
-
-    return (ret);
 }
 
 bool disc_of_storms(bool drac_breath)
@@ -829,10 +791,12 @@ bool evoke_item(int slot)
                 pract = 2;
             break;
 
+#if TAG_MAJOR_VERSION == 32
         case MISC_CRYSTAL_BALL_OF_SEEING:
-            if (_ball_of_seeing())
-                pract = 1, ident = true;
+            mpr("Nothing happens.");
+            pract = 0, ident = true;
             break;
+#endif
 
         case MISC_AIR_ELEMENTAL_FAN:
             if (!x_chance_in_y(you.skill(SK_EVOCATIONS, 100), 3000))

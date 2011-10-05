@@ -712,7 +712,6 @@ void item_colour(item_def &item)
 
         case MISC_AIR_ELEMENTAL_FAN:
         case MISC_CRYSTAL_BALL_OF_ENERGY:
-        case MISC_CRYSTAL_BALL_OF_SEEING:
         case MISC_DISC_OF_STORMS:
         case MISC_HORN_OF_GERYON:
         case MISC_LANTERN_OF_SHADOWS:
@@ -3120,6 +3119,7 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
              || item.sub_type == MISC_QUAD_DAMAGE
 #if TAG_MAJOR_VERSION == 32
              || item.sub_type == MISC_CRYSTAL_BALL_OF_FIXATION
+             || item.sub_type == MISC_CRYSTAL_BALL_OF_SEEING
 #endif
              || item.sub_type == MISC_EMPTY_EBONY_CASKET
              // Pure decks are rare in the dungeon.

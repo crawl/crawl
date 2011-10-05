@@ -3756,9 +3756,6 @@ static tileidx_t _tileidx_misc(const item_def &item)
     case MISC_BOTTLED_EFREET:
         return TILE_MISC_BOTTLED_EFREET;
 
-    case MISC_CRYSTAL_BALL_OF_SEEING:
-        return TILE_MISC_CRYSTAL_BALL_OF_SEEING;
-
     case MISC_AIR_ELEMENTAL_FAN:
         return TILE_MISC_AIR_ELEMENTAL_FAN;
 
