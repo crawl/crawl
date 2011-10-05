@@ -1163,6 +1163,13 @@ static void tag_construct_you(writer &th)
         marshallInt(th, *it);
     }
 
+    marshallByte(th, you.exercises_all.size());
+    for (std::list<skill_type>::iterator it = you.exercises_all.begin();
+         it != you.exercises_all.end(); ++it)
+    {
+        marshallInt(th, *it);
+    }
+
     marshallByte(th, you.skill_menu_do);
     marshallByte(th, you.skill_menu_view);
 
@@ -2044,6 +2051,19 @@ static void tag_read_you(reader &th)
         check_selected_skills();
         init_training();
     }
+#endif
+
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_DISABLED_SKILLS)
+    {
+#endif
+        count = unmarshallByte(th);
+        for (i = 0; i < count; i++)
+            you.exercises_all.push_back((skill_type)unmarshallInt(th));
+#if TAG_MAJOR_VERSION == 32
+    }
+    else
+        you.exercises_all = you.exercises;
 #endif
 
     // If somebody SIGHUP'ed out of the skill menu with all skills disabled.
