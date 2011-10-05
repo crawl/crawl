@@ -296,23 +296,16 @@ static void _init_exercise_queue()
     ASSERT(you.exercises.empty());
     FixedVector<unsigned int, NUM_SKILLS> prac = you.training;
 
-    // We remove unknown skills, since we don't want then in the queue.
-    for (int i = 0; i < NUM_SKILLS; ++i)
-        if (!you.skills[i])
-            prac[i] = 0;
-
-    for (int i = 0; i < EXERCISE_QUEUE_SIZE; ++i)
+    while (1)
     {
-        skill_type sk = static_cast<skill_type>(random_choose_weighted(prac));
+        skill_type sk = (skill_type)random_choose_weighted(prac);
         if (is_invalid_skill(sk))
-            sk = static_cast<skill_type>(random_choose_weighted(you.training));
-
-        if (!you.skills[sk])
-            continue;
-
+            break;
         you.exercises.push_back(sk);
         --prac[sk];
     }
+
+    ASSERT(you.exercises.size() == (unsigned)EXERCISE_QUEUE_SIZE);
 }
 
 static void _erase_from_stop_train(skill_set &can_train)
@@ -453,7 +446,7 @@ static void _check_stop_train()
         if (is_invalid_skill(*it))
             continue;
 
-        if (you.can_train[*it] && you.train[*it] && you.training[*it])
+        if (skill_trained(*it) && you.training[*it])
             skills.insert(*it);
         you.can_train[*it] = false;
     }
@@ -512,63 +505,21 @@ void init_can_train()
     }
 
     _check_stop_train();
-
-    for (int i = 0; i < NUM_SKILLS; ++i)
-        if (you.can_train[i] && you.skills[i])
-            you.train_set[i] = true;
 }
 
-/*
- * Init the training array by scaling down the skill_points array to 100.
- * Used at game setup, and when upgrading saves.
- */
-void init_training()
+void init_train()
 {
-    int total = 0;
     for (int i = 0; i < NUM_SKILLS; ++i)
-        if (you.skills[i])
-        {
-            you.train[i] = true;
-            total += you.skill_points[i];
-        }
-
-    // If no trainable skills, exit.
-    if (!total)
-        return;
-
-    for (int i = 0; i < NUM_SKILLS; ++i)
-        if (you.skills[i])
-            you.training[i] = you.skill_points[i] * 100 / total;
-
-    _init_exercise_queue();
+        if (you.can_train[i] && you.skill_points[i])
+            you.train[i] = you.train_set[i] = true;
+        else
+            you.train[i] = you.auto_training;
 }
 
 static bool _cmp_rest(const std::pair<skill_type,int>& a,
                       const std::pair<skill_type,int>& b)
 {
     return a.second < b.second;
-}
-
-// Make sure at least one skill is selected.
-void check_selected_skills()
-{
-    skill_type first_selectable = SK_NONE;
-    for (int i = 0; i < NUM_SKILLS; ++i)
-    {
-        skill_type sk = static_cast<skill_type>(i);
-        if (you.train[sk])
-            return;
-        if (!you.can_train[sk] || you.skills[sk] == 27)
-            continue;
-        if (is_invalid_skill(first_selectable))
-            first_selectable = sk;
-    }
-
-    if (!is_invalid_skill(first_selectable))
-        you.train[first_selectable] = 1;
-
-    // It's possible to have no selectable skills, if they are all at level 0
-    // or level 27, so we don't assert. XP will just accumulate in the pool.
 }
 
 /*
@@ -624,6 +575,45 @@ static void _scale_training(int scale, bool exact)
 }
 
 /*
+ * Init the training array by scaling down the skill_points array to 100.
+ * Used at game setup, and when upgrading saves.
+ */
+void init_training()
+{
+    for (int i = 0; i < NUM_SKILLS; ++i)
+        if (skill_trained(i))
+            you.training[i] = you.skill_points[i];
+
+    _scale_training(EXERCISE_QUEUE_SIZE, true);
+    _init_exercise_queue();
+
+    if (!you.auto_training)
+        reset_training();
+}
+
+// Make sure at least one skill is selected.
+void check_selected_skills()
+{
+    skill_type first_selectable = SK_NONE;
+    for (int i = 0; i < NUM_SKILLS; ++i)
+    {
+        skill_type sk = static_cast<skill_type>(i);
+        if (skill_trained(sk))
+            return;
+        if (!you.can_train[sk] || you.skills[sk] == 27)
+            continue;
+        if (is_invalid_skill(first_selectable))
+            first_selectable = sk;
+    }
+
+    if (!is_invalid_skill(first_selectable))
+        you.train[first_selectable] = 1;
+
+    // It's possible to have no selectable skills, if they are all at level 0
+    // or level 27, so we don't assert. XP will just accumulate in the pool.
+}
+
+/*
  * Reset the training array. Disabled skills are skipped.
  * In automatic mode, we use values from the exercise queue.
  * In manual mode, all enabled skills are set to the same value.
@@ -635,7 +625,7 @@ void reset_training()
     // to 0 (and filled later with the content of the queue), in manual mode,
     // the trainable ones are set to 1 (or 2 for focus).
     for (int i = 0; i < NUM_SKILLS; ++i)
-        if (you.auto_training || !you.can_train[i])
+        if (you.auto_training || !skill_trained(i))
             you.training[i] = 0;
         else
             you.training[i] = you.train[i];
@@ -648,7 +638,7 @@ void reset_training()
              it != you.exercises.end(); ++it)
         {
             skill_type sk = *it;
-            if (you.train[sk] && you.can_train[sk])
+            if (skill_trained(sk))
             {
                 you.training[sk] += you.train[sk];
                 empty = false;
@@ -659,7 +649,7 @@ void reset_training()
         // a default weight of 1 (or 2 for focus skills).
         if (empty)
             for (int sk = 0; sk < NUM_SKILLS; ++sk)
-                if (you.can_train[sk])
+                if (skill_trained(sk))
                     you.training[sk] = you.train[sk];
 
         // Focused skills get at least 20% training.
@@ -674,7 +664,7 @@ void reset_training()
 // returns total number of skill points gained
 void exercise(skill_type exsk, int deg)
 {
-    if (you.skills[exsk] >= 27 || !you.train[exsk] || !you.can_train[exsk])
+    if (you.skills[exsk] >= 27 || !skill_trained(exsk))
         return;
 
     dprf("Exercise %s by %d.", skill_name(exsk), deg);
@@ -864,6 +854,11 @@ void train_skills(int exp, const int cost, const bool simu)
 
     if (magic_gain && !simu)
         did_god_conduct(DID_SPELL_PRACTISE, magic_gain);
+}
+
+bool skill_trained(int i)
+{
+    return (you.can_train[i] && you.train[i]);
 }
 
 void train_skill(skill_type skill, int exp)

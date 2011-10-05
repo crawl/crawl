@@ -6,6 +6,7 @@
 
 #include "cio.h"
 #include "libutil.h"
+#include "options.h"
 #include "skills.h"
 #include "skills2.h"
 #include "stuff.h"
@@ -76,7 +77,10 @@ int SkillRegion::handle_mouse(MouseEvent &event)
         else
         {
             tiles.set_need_redraw();
-            you.train[skill] = !you.train[skill];
+            if (Options.skill_focus == SKM_FOCUS_OFF)
+                you.train[skill] = !you.train[skill];
+            else
+                you.train[skill] = (you.train[skill] + 1) % 3;
             reset_training();
         }
         return CK_MOUSE_CMD;
@@ -110,7 +114,7 @@ bool SkillRegion::update_tip_text(std::string& tip)
 
     const int flag = m_items[item_idx].flag;
     if (flag & TILEI_FLAG_INVALID)
-        tip = "You don't have this skill yet.";
+        tip = "You cannot train this skill now.";
     else
     {
         const skill_type skill = (skill_type) m_items[item_idx].idx;
@@ -231,14 +235,14 @@ void SkillRegion::update()
         InventoryTile desc;
         if (you.skills[skill] >= 27)
             desc.tile = tileidx_skill(skill, -1);
-        else if (!you.can_train[skill])
+        else if (!you.training[skill])
             desc.tile = tileidx_skill(skill, 0);
         else
             desc.tile = tileidx_skill(skill, you.train[skill]);
         desc.idx      = idx;
         desc.quantity = you.skills[skill];
 
-        if (you.skills[skill] == 0 || you.skills[skill] >= 27)
+        if (!you.can_train[skill] || you.skills[skill] >= 27)
             desc.flag |= TILEI_FLAG_INVALID;
 
         m_items.push_back(desc);
