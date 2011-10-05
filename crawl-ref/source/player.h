@@ -125,7 +125,8 @@ public:
   FixedVector<uint8_t, NUM_SKILLS>  skill_order;
 
   bool auto_training;
-  std::list<skill_type> exercises;
+  std::list<skill_type> exercises;     //<! recent practise events
+  std::list<skill_type> exercises_all; //<! also include events for disabled skills
   std::set<skill_type> stop_train; //<! need to check if we can still train
   std::set<skill_type> start_train; //<! we can resume training
 
