@@ -5375,7 +5375,7 @@ void player::init()
 
     auto_training = !(Options.default_manual_training);
     skills.init(0);
-    train.init(auto_training);
+    train.init(false);
     training.init(0);
     can_train.init(false);
     train_set.init(false);

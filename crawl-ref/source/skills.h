@@ -20,9 +20,10 @@ void check_skill_cost_change();
 bool training_restricted(skill_type sk);
 void reassess_starting_skills();
 void check_selected_skills();
+void init_train();
 void init_can_train();
-void update_can_train();
 void init_training();
+void update_can_train();
 void reset_training();
 void check_skill_level_change(skill_type sk, bool do_level_up = true);
 void change_skill_level(skill_type exsk, int num_level);
@@ -32,7 +33,6 @@ void exercise(skill_type exsk, int deg);
 void train_skills(bool simu = false);
 void train_skills(int exp, const int cost, const bool simu);
 void train_skill(skill_type skill, int exp);
-void gain_skill(skill_type sk);
-void lose_skill(skill_type sk);
-
+bool skill_trained(int i);
+inline bool skill_trained(skill_type sk) { return skill_trained((int) sk); }
 #endif
