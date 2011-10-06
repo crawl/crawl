@@ -2402,7 +2402,10 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
     bool speed_brand = false;
 
     if (you.confused())
+    {
         thr.target = you.pos() + coord_def(random2(13)-6, random2(13)-6);
+        thr.isValid = true;
+    }
     else if (target)
         thr = *target;
     else
