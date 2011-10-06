@@ -35,4 +35,5 @@ void train_skills(int exp, const int cost, const bool simu);
 void train_skill(skill_type skill, int exp);
 bool skill_trained(int i);
 inline bool skill_trained(skill_type sk) { return skill_trained((int) sk); }
+void redraw_skill(skill_type exsk, skill_type old_best_skill = SK_NONE);
 #endif

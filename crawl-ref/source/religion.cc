@@ -979,7 +979,7 @@ void dec_penance(god_type god, int val)
         {
             // In case the best skill is Invocations, redraw the god
             // title.
-            redraw_skill(you.your_name, player_title());
+            redraw_title(you.your_name, player_title());
         }
 
         if (you.religion == god)
@@ -1113,7 +1113,7 @@ static void _inc_penance(god_type god, int val)
         {
             // In case the best skill is Invocations, redraw the god
             // title.
-            redraw_skill(you.your_name, player_title());
+            redraw_title(you.your_name, player_title());
         }
     }
     else
@@ -2656,7 +2656,7 @@ static void _gain_piety_point()
 
             // In case the best skill is Invocations, redraw the god
             // title.
-            redraw_skill(you.your_name, player_title());
+            redraw_title(you.your_name, player_title());
 
             gain_god_ability(i);
 
@@ -2714,7 +2714,7 @@ static void _gain_piety_point()
     if (you.piety > 160 && old_piety <= 160)
     {
         // In case the best skill is Invocations, redraw the god title.
-        redraw_skill(you.your_name, player_title());
+        redraw_title(you.your_name, player_title());
 
         if (!you.num_total_gifts[you.religion])
         {
@@ -2791,7 +2791,7 @@ void lose_piety(int pgn)
         {
             // In case the best skill is Invocations, redraw the god
             // title.
-            redraw_skill(you.your_name, player_title());
+            redraw_title(you.your_name, player_title());
 
             if (you.religion == GOD_ZIN)
                 simple_god_message(
@@ -2814,7 +2814,7 @@ void lose_piety(int pgn)
             {
                 // In case the best skill is Invocations, redraw the god
                 // title.
-                redraw_skill(you.your_name, player_title());
+                redraw_title(you.your_name, player_title());
 
                 lose_god_ability(i);
                 _abil_chg_message(god_lose_power_messages[you.religion][i],
@@ -2903,7 +2903,7 @@ void excommunication(god_type new_god)
 
     you.religion = GOD_NO_GOD;
 
-    redraw_skill(you.your_name, player_title());
+    redraw_title(you.your_name, player_title());
 
     // Renouncing may have changed the conducts on our wielded or
     // quivered weapons, so refresh the display.
@@ -3575,7 +3575,7 @@ void god_pitch(god_type which_god)
     you.wield_change = true;
     you.redraw_quiver = true;
 
-    redraw_skill(you.your_name, player_title());
+    redraw_title(you.your_name, player_title());
 
     learned_something_new(HINT_CONVERT);
 }

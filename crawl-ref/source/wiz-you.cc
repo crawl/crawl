@@ -386,77 +386,60 @@ void wizard_exercise_skill(void)
 #endif
 
 #ifdef WIZARD
-void wizard_set_skill_level(skill_type skill)
+// When raw is set, skip the various checks and redraw (used by fsim)
+void wizard_set_skill_level(skill_type skill, int amount, bool raw)
 {
     if (skill == SK_NONE)
         skill = debug_prompt_for_skill("Which skill (by name)? ");
 
     if (skill == SK_NONE)
+    {
         mpr("That skill doesn't seem to exist.");
-    else
+        return;
+    }
+
+    if (amount < 0)
     {
         mpr(skill_name(skill));
-        int amount = prompt_for_int("To what level? ", true);
+        amount = prompt_for_int("To what level? ", true);
+    }
 
-        if (amount < 0)
-            canned_msg(MSG_OK);
-        else
-        {
-            const int old_amount = you.skills[skill];
-            const int points = skill_exp_needed(std::min(amount, 27), skill);
+    if (amount < 0)
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
 
-            you.skill_points[skill] = points + 1;
-            you.ct_skill_points[skill] = 0;
-            you.skills[skill] = amount;
+    const int old_amount = you.skills[skill];
+    const int points = skill_exp_needed(std::min(amount, 27), skill);
 
-            if (amount == 27)
-            {
-                you.train[skill] = 0;
-                check_selected_skills();
-            }
+    you.skill_points[skill] = points + 1;
+    you.ct_skill_points[skill] = 0;
+    you.skills[skill] = amount;
 
-            reset_training();
-            calc_total_skill_points();
+    if (raw)
+        return;
 
-            redraw_skill(you.your_name, player_title());
+    if (amount == 27)
+    {
+        you.train[skill] = 0;
+        check_selected_skills();
+    }
 
-            switch (skill)
-            {
-            case SK_FIGHTING:
-                calc_hp();
-                break;
+    reset_training();
+    calc_total_skill_points();
 
-            case SK_SPELLCASTING:
-            case SK_INVOCATIONS:
-            case SK_EVOCATIONS:
-                calc_mp();
-                break;
+    redraw_skill(skill);
 
-            case SK_DODGING:
-                you.redraw_evasion = true;
-                break;
+    mprf("%s %s to skill level %d.", (old_amount < amount ? "Increased" :
+                                      old_amount > amount ? "Lowered"
+                                                          : "Reset"),
+         skill_name(skill), amount);
 
-            case SK_ARMOUR:
-                you.redraw_armour_class = true;
-                you.redraw_evasion = true;
-                break;
-
-            default:
-                break;
-            }
-
-            mprf("%s %s to skill level %d.",
-                 (old_amount < amount ? "Increased" :
-                  old_amount > amount ? "Lowered"
-                                      : "Reset"),
-                 skill_name(skill), amount);
-
-            if (skill == SK_STEALTH && amount == 27)
-            {
-                mpr("If you set the stealth skill to a value higher than 27, "
-                    "hide mode is activated, and monsters won't notice you.");
-            }
-        }
+    if (skill == SK_STEALTH && amount == 27)
+    {
+        mpr("If you set the stealth skill to a value higher than 27, "
+            "hide mode is activated, and monsters won't notice you.");
     }
 }
 #endif
@@ -487,7 +470,7 @@ void wizard_set_all_skills(void)
             you.skills[sk] = amount;
         }
 
-        redraw_skill(you.your_name, player_title());
+        redraw_title(you.your_name, player_title());
 
         calc_total_skill_points();
 

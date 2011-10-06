@@ -773,7 +773,7 @@ void lose_level()
             you.hp, you.hp_max, you.magic_points, you.max_magic_points);
     take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
 
-    redraw_skill(you.your_name, player_title());
+    redraw_title(you.your_name, player_title());
     you.redraw_experience = true;
 
     xom_is_stimulated(200);

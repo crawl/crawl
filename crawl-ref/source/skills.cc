@@ -228,7 +228,7 @@ static void _change_skill_level(skill_type exsk, int n)
 }
 
 // Called whenever a skill is trained.
-static void _change_skill_sublevel(skill_type exsk, skill_type old_best_skill)
+void redraw_skill(skill_type exsk, skill_type old_best_skill)
 {
     if (exsk == SK_FIGHTING)
         calc_hp();
@@ -258,7 +258,7 @@ static void _change_skill_sublevel(skill_type exsk, skill_type old_best_skill)
 
     const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
         if (best != old_best_skill || old_best_skill == exsk)
-            redraw_skill(you.your_name, player_title());
+            redraw_title(you.your_name, player_title());
 }
 
 void check_skill_level_change(skill_type sk, bool do_level_up)
@@ -1002,7 +1002,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
     max_exp -= cost;
     you.total_skill_points += skill_inc;
 
-    _change_skill_sublevel(exsk, old_best_skill);
+    redraw_skill(exsk, old_best_skill);
     check_skill_cost_change();
     ASSERT(you.exp_available >= 0);
     ASSERT(max_exp >= 0);
