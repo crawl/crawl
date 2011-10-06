@@ -5383,6 +5383,7 @@ void player::init()
     ct_skill_points.init(0);
     skill_order.init(MAX_SKILL_ORDER);
     exercises.clear();
+    exercises_all.clear();
 
     skill_menu_do = SKM_NONE;
     skill_menu_view = SKM_NONE;
