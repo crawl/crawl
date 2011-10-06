@@ -419,6 +419,17 @@ int zin_tithe(item_def& item, int quant, bool quiet)
     {
         int tithe = due / 10;
         due -= tithe * 10;
+        // Those high enough in the hierarchy get to reap the benefits.
+        // You're never big enough to be paid, the top is not having to pay
+        // (and even that at 200 piety, for a brief moment until it decays).
+        tithe = std::min(tithe,
+                (you.penance[GOD_ZIN] + MAX_PIETY - you.piety) * 2 / 3);
+        if (tithe <= 0)
+        {
+            // update the remainder anyway
+            you.attribute[ATTR_TITHE_BASE] = due;
+            return 0;
+        }
         taken = tithe;
         you.attribute[ATTR_DONATIONS] += tithe;
         mprf("You pay a tithe of %d gold.", tithe);
