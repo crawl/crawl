@@ -312,10 +312,12 @@ static void _reset_game()
     note_list.clear();
     msg::deinitialise_mpr_streams();
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // [ds] Don't show the title screen again, just go back to
     // the menu.
     crawl_state.title_screen = false;
+#endif
+#ifdef USE_TILE
     tiles.clear_text_tags(TAG_NAMED_MONSTER);
 #endif
 }
@@ -1008,9 +1010,9 @@ bool apply_berserk_penalty = false;
 
 static void _center_cursor()
 {
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     const coord_def cwhere = crawl_view.grid2screen(you.pos());
-    cgotoxy(cwhere.x, cwhere.y);
+    cgotoxy(cwhere.x, cwhere.y, GOTO_DNGN);
 #endif
 }
 
@@ -1227,7 +1229,7 @@ static void _input()
         crawl_state.waiting_for_command = true;
         c_input_reset(true);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         cursor_control con(false);
 #endif
         const command_type cmd = _get_next_cmd();
@@ -1717,7 +1719,7 @@ static void _do_display_map()
     if (Hints.hints_events[HINT_MAP_VIEW])
         Hints.hints_events[HINT_MAP_VIEW] = false;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // Since there's no actual overview map, but the functionality
     // exists, give a message to explain what's going on.
     mpr("Move the cursor to view the level map, or type <w>?</w> for "
@@ -1728,7 +1730,7 @@ static void _do_display_map()
     level_pos pos;
     const bool travel = show_map(pos, true, true, true);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     mpr("Returning to the game...");
 #endif
     if (travel)
@@ -2032,7 +2034,7 @@ void process_command(command_type cmd)
         // because we want to have CTRL-Y available...
         // and unfortunately they tend to be stuck together.
         clrscr();
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
         console_shutdown();
         kill(0, SIGTSTP);
         console_startup();

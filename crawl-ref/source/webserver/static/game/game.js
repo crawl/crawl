@@ -168,18 +168,7 @@ function do_layout()
 
     current_layout = layout;
 
-    send_layout(layout);
     return true;
-}
-
-function send_layout(layout)
-{
-    var msg = "";
-    msg += "^s" + layout.stats_height + "\n";
-    msg += "^W" + layout.crt_width + "\n";
-    msg += "^H" + layout.crt_height + "\n";
-    msg += "^m" + layout.msg_width + "\n";
-    socket.send(msg);
 }
 
 // View area -------------------------------------------------------------------

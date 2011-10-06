@@ -272,7 +272,7 @@ enum mons_equip_desc_level_type
     DESC_IDENTIFIED,
 };
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 char mlist_index_to_letter(int index);
 #endif
 

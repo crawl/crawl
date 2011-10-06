@@ -33,7 +33,11 @@
 #include "viewgeom.h"
 
 #include <sys/time.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/un.h>
 #include <stdarg.h>
+#include <errno.h>
 
 
 
@@ -49,7 +53,8 @@ static unsigned int get_milliseconds()
 TilesFramework tiles;
 
 TilesFramework::TilesFramework()
-    : m_view_loaded(false),
+    : m_crt_enabled(true),
+      m_view_loaded(false),
       m_next_view_tl(0, 0),
       m_next_view_br(-1, -1),
       m_current_flash_colour(BLACK),
@@ -72,6 +77,8 @@ TilesFramework::~TilesFramework()
 
 void TilesFramework::shutdown()
 {
+    close(m_sock);
+    remove(m_sock_name.c_str());
 }
 
 void TilesFramework::draw_doll_edit()
@@ -80,6 +87,30 @@ void TilesFramework::draw_doll_edit()
 
 bool TilesFramework::initialise()
 {
+    // Init socket
+    m_sock = socket(PF_UNIX, SOCK_DGRAM, 0);
+    if (m_sock < 0)
+    {
+        die("Can't open the webtiles socket!");
+    }
+    sockaddr_un addr;
+    addr.sun_family = AF_UNIX;
+    strcpy(addr.sun_path, m_sock_name.c_str());
+    if (bind(m_sock, (sockaddr*) &addr, sizeof (sockaddr_un)))
+    {
+        die("Can't bind the webtiles socket!");
+    }
+
+    int bufsize = 64 * 1024;
+    if (setsockopt(m_sock, SOL_SOCKET, SO_SNDBUF, &bufsize, sizeof (bufsize)))
+    {
+        die("Can't set buffer size!");
+    }
+    m_max_msg_size = bufsize;
+
+    if (m_await_connection)
+        _await_connection();
+
     std::string title = CRAWL " " + Version::Long();
     send_message("document.title = \"%s\";", title.c_str());
 
@@ -95,34 +126,194 @@ bool TilesFramework::initialise()
 void TilesFramework::write_message(const char *format, ...)
 {
     for (unsigned int i = 0; i < m_prefixes.size(); ++i)
-        fputs(m_prefixes[i].c_str(), stdout);
+        m_msg_buf.append(m_prefixes[i].data());
     m_prefixes.clear();
+
+    char buf[2048];
+    int len;
 
     va_list  argp;
     va_start(argp, format);
-    vfprintf(stdout, format, argp);
+    if ((len = vsnprintf(buf, sizeof (buf), format, argp)) >= sizeof (buf))
+        die("Webtiles message too long! (%d)", len);
     va_end(argp);
+
+    m_msg_buf.append(buf);
 }
 
 void TilesFramework::finish_message()
 {
-    fprintf(stdout, "\n");
-    fflush(stdout);
+    m_msg_buf.append("\n");
+    const char* fragment_start = m_msg_buf.data();
+    const char* data_end = m_msg_buf.data() + m_msg_buf.size();
+    while (fragment_start < data_end)
+    {
+        int fragment_size = data_end - fragment_start;
+        if (fragment_size > m_max_msg_size)
+            fragment_size = m_max_msg_size;
+
+        for (unsigned int i = 0; i < m_dest_addrs.size(); ++i)
+        {
+            if (sendto(m_sock, fragment_start, fragment_size, 0,
+                       (sockaddr*) &m_dest_addrs[i], sizeof (sockaddr_un)) == -1)
+            {
+                if (errno == ECONNREFUSED || errno == ENOENT)
+                {
+                    // the other side is dead
+                    m_dest_addrs.erase(m_dest_addrs.begin() + i);
+                    i--;
+                }
+                else
+                    die("Socket write error: %s", strerror(errno));
+            }
+        }
+
+        fragment_start += fragment_size;
+    }
     m_prefixes.clear();
+    m_msg_buf.clear();
 }
 
 void TilesFramework::send_message(const char *format, ...)
 {
     for (unsigned int i = 0; i < m_prefixes.size(); ++i)
-        fputs(m_prefixes[i].c_str(), stdout);
+        m_msg_buf.append(m_prefixes[i].data());
     m_prefixes.clear();
+
+    char buf[2048];
+    int len;
 
     va_list  argp;
     va_start(argp, format);
-    vfprintf(stdout, format, argp);
+    if ((len = vsnprintf(buf, sizeof (buf), format, argp)) >= sizeof (buf))
+        die("Webtiles message too long! (%d)", len);
     va_end(argp);
 
+    m_msg_buf.append(buf);
+
     finish_message();
+}
+
+void TilesFramework::_await_connection()
+{
+    while (m_dest_addrs.size() == 0)
+    {
+        _receive_control_message();
+    }
+}
+
+wint_t TilesFramework::_receive_control_message()
+{
+    char buf[4096]; // Should be enough for client->server messages
+    sockaddr_un srcaddr;
+    socklen_t srcaddr_len;
+
+    srcaddr_len = sizeof (srcaddr);
+
+    int len = recvfrom(m_sock, buf, sizeof (buf),
+                       0,
+                       (sockaddr *) &srcaddr, &srcaddr_len);
+
+    if (len == -1)
+    {
+        die("Socket read error: %s", strerror(errno));
+    }
+
+    std::string data(buf, len);
+    return _handle_control_message(srcaddr, data);
+}
+
+wint_t TilesFramework::_handle_control_message(sockaddr_un addr, std::string data)
+{
+    // Hack - this needs a real JSON parser
+
+    static const std::string keymsgstart("{\"msg\":\"key\",\"keycode\":");
+
+    int c = 0;
+
+    if (data == "{\"msg\":\"attach\"}")
+    {
+        m_dest_addrs.push_back(addr);
+    }
+    else if (data.compare(0, keymsgstart.size(), keymsgstart) == 0)
+    {
+        std::stringstream ss(data);
+        ss.ignore(keymsgstart.size());
+
+        ss >> c;
+
+        if (ss.fail())
+            c = 0;
+    }
+    else if (data == "{\"msg\":\"spectator_joined\"}")
+    {
+        _send_everything();
+    }
+
+    return c;
+}
+
+bool TilesFramework::await_input(wint_t& c, bool block)
+{
+    int result;
+    fd_set fds;
+    int maxfd = m_sock;
+
+    while (true)
+    {
+        do
+        {
+            FD_ZERO(&fds);
+            FD_SET(STDIN_FILENO, &fds);
+            FD_SET(m_sock, &fds);
+
+            if (block)
+            {
+                result = select(maxfd + 1, &fds, NULL, NULL, NULL);
+            }
+            else
+            {
+                timeval timeout;
+                timeout.tv_sec = 0;
+                timeout.tv_usec = 0;
+
+                result = select(maxfd + 1, &fds, NULL, NULL, &timeout);
+            }
+        }
+        while (result == -1 && errno == EINTR);
+
+        if (result == 0)
+        {
+            return false;
+        }
+        else if (result > 0)
+        {
+            if (FD_ISSET(m_sock, &fds))
+            {
+                c = _receive_control_message();
+
+                if (c > 0)
+                    return true;
+            }
+
+            if (FD_ISSET(STDIN_FILENO, &fds))
+            {
+                c = 0;
+                return true;
+            }
+        }
+        else if (errno == EBADF)
+        {
+            // This probably means that stdin got closed because of a
+            // SIGHUP. We'll just return.
+            c = 0;
+            return false;
+        }
+        else
+        {
+            die("select error: %s", strerror(errno));
+        }
+    }
 }
 
 void TilesFramework::push_prefix(std::string prefix)
@@ -612,131 +803,65 @@ void TilesFramework::load_dungeon(const coord_def &cen)
     unwind_var<coord_def> vlos1(crawl_view.vlos1);
     unwind_var<coord_def> vlos2(crawl_view.vlos2);
 
+    m_next_gc = cen;
+
     crawl_view.calc_vlos();
-    viewwindow(false);
+    viewwindow(false, true);
     place_cursor(CURSOR_MAP, cen);
 }
 
 static const int min_stat_height = 12;
 static const int stat_width = 42;
 
-static void _send_layout_data(bool need_response)
+static void _send_layout_data()
 {
-    // need_response indicates if the client needs to set a layout
     tiles.send_message("layout({view_max_width:%u,view_max_height:%u,\
 force_overlay:%u,show_diameter:%u,msg_min_height:%u,stat_width:%u,   \
-min_stat_height:%u,gxm:%u,gym:%u},%u);",
+min_stat_height:%u,gxm:%u,gym:%u});",
                        Options.view_max_width, Options.view_max_height,
                        Options.tile_force_overlay, ENV_SHOW_DIAMETER,
                        Options.msg_min_height, stat_width,
                        min_stat_height + (Options.show_gold_turns ? 1 : 0),
-                       GXM, GYM,
-                       need_response);
+                       GXM, GYM);
 }
 
 void TilesFramework::resize()
 {
-    // Width of status area in characters.
-    crawl_view.hudsz.x = stat_width;
-    crawl_view.msgsz.y = Options.msg_min_height;
-    m_text_message.resize(crawl_view.msgsz.x, crawl_view.msgsz.y);
-
-    crawl_view.viewsz = coord_def(ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER);
-    crawl_view.init_view();
-
     // Send the client the necessary data to do the layout
-    _send_layout_data(true);
+    _send_layout_data();
 
-    // Now wait for the response
-    getch_ck();
+    m_text_message.resize(crawl_view.msgsz.x, crawl_view.msgsz.y);
+    m_text_stat.resize(crawl_view.hudsz.x, crawl_view.hudsz.y);
+    m_text_crt.resize(crawl_view.termsz.x, crawl_view.termsz.y);
 }
 
-int TilesFramework::getch_ck()
+/*
+  Send everything a newly joined spectator needs
+ */
+void TilesFramework::_send_everything()
 {
-    m_text_crt.send();
-    m_text_stat.send();
-    m_text_message.send();
-
-    if (need_redraw())
-        redraw();
-
-    int key = getchar();
-    if (key == '\\')
+    std::string title = CRAWL " " + Version::Long();
+    send_message("document.title = \"%s\";", title.c_str());
+    m_text_crt.send(true);
+    m_text_stat.send(true);
+    m_text_message.send(true);
+    _send_layout_data();
+    send_message("vgrdc(%d,%d);",
+                 m_current_gc.x - m_origin.x, m_current_gc.y - m_origin.y);
+    send_message("set_flash(%d);", m_current_flash_colour);
+    _send_map(true);
+    switch (m_active_layer)
     {
-        // Char encoded as a number
-        char data[10];
-        fgets(data, 10, stdin);
-        return atoi(data);
+    case LAYER_CRT:
+        send_message("set_layer('crt');");
+        break;
+    case LAYER_NORMAL:
+        send_message("set_layer('normal');");
+        break;
+    default:
+        // Cannot happen
+        break;
     }
-    else if (key == '^')
-    {
-        // Control messages
-        // TODO: This would be much nicer if we just sent messages in JSON
-        int msg = getchar();
-        int num = 0;
-        if (msg == 'w' || msg == 'h' || msg == 's'
-            || msg == 'W' || msg == 'H' || msg == 'm')
-        {
-            // Read the number
-            char data[10];
-            fgets(data, 10, stdin);
-            num = atoi(data);
-        }
-        switch (msg)
-        {
-        case 's': // Set height of the stats area
-            if (num <= 0) num = 1;
-            if (num > 400) num = 400;
-            crawl_view.hudsz.y = num;
-            m_text_stat.resize(crawl_view.hudsz.x, crawl_view.hudsz.y);
-            break;
-        case 'W': // Set width of CRT
-            if (num <= 0) num = 1;
-            if (num > 400) num = 400;
-            crawl_view.termsz.x = num;
-            m_text_crt.resize(crawl_view.termsz.x, crawl_view.termsz.y);
-            break;
-        case 'H': // Set height of CRT
-            if (num <= 0) num = 1;
-            if (num > 400) num = 400;
-            crawl_view.termsz.y = num;
-            m_text_crt.resize(crawl_view.termsz.x, crawl_view.termsz.y);
-            break;
-        case 'm': // Set width of the message view
-            if (num <= 0) num = 1;
-            if (num > 400) num = 400;
-            crawl_view.msgsz.x = num;
-            m_text_message.resize(crawl_view.msgsz.x, crawl_view.msgsz.y);
-            break;
-        case 'r': // A spectator joined, resend the necessary data
-            std::string title = CRAWL " " + Version::Long();
-            send_message("document.title = \"%s\";", title.c_str());
-            m_text_crt.send(true);
-            m_text_stat.send(true);
-            m_text_message.send(true);
-            _send_layout_data(false);
-            send_message("vgrdc(%d,%d);",
-                         m_current_gc.x - m_origin.x, m_current_gc.y - m_origin.y);
-            send_message("set_flash(%d);", m_current_flash_colour);
-            _send_map(true);
-            switch (m_active_layer)
-            {
-            case LAYER_CRT:
-                send_message("set_layer('crt');");
-                break;
-            case LAYER_NORMAL:
-                send_message("set_layer('normal');");
-                break;
-            default:
-                // Cannot happen
-                break;
-            }
-            break;
-        }
-
-        return getch_ck();
-    }
-    return key;
 }
 
 void TilesFramework::clrscr()
@@ -744,30 +869,20 @@ void TilesFramework::clrscr()
     // TODO: Clear cursor
 
     m_text_crt.clear();
-    m_text_message.clear();
-    m_text_stat.clear();
 
-    cgotoxy(1, 1);
+    this->cgotoxy(1, 1);
 
     set_need_redraw();
 }
 
-int TilesFramework::get_number_of_lines()
+void TilesFramework::set_crt_enabled(bool value)
 {
-    return m_text_crt.my;
+    m_crt_enabled = value;
 }
 
-int TilesFramework::get_number_of_cols()
+bool TilesFramework::is_crt_enabled()
 {
-    switch (m_active_layer)
-    {
-    default:
-        return 0;
-    case LAYER_NORMAL:
-        return m_text_message.mx;
-    case LAYER_CRT:
-        return m_text_crt.mx;
-    }
+    return m_crt_enabled;
 }
 
 void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
@@ -777,10 +892,17 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
     switch (region)
     {
     case GOTO_CRT:
-        if (m_active_layer != LAYER_CRT)
-            send_message("set_layer(\"crt\");");
-        m_active_layer = LAYER_CRT;
-        m_print_area = &m_text_crt;
+        if (m_crt_enabled > 0)
+        {
+            if (m_active_layer != LAYER_CRT)
+                send_message("set_layer(\"crt\");");
+            m_active_layer = LAYER_CRT;
+            m_print_area = &m_text_crt;
+        }
+        else
+        {
+            m_print_area = NULL;
+        }
         break;
     case GOTO_MSG:
         if (m_active_layer != LAYER_NORMAL)
@@ -795,15 +917,10 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
         m_print_area = &m_text_stat;
         break;
     default:
-        die("invalid cgotoxy region in webtiles: %d", region);
+        m_print_area = NULL;
         break;
     }
     m_cursor_region = region;
-}
-
-GotoRegion TilesFramework::get_cursor_region() const
-{
-    return m_cursor_region;
 }
 
 void TilesFramework::redraw()
@@ -812,25 +929,28 @@ void TilesFramework::redraw()
     m_text_stat.send();
     m_text_message.send();
 
-    if (m_current_gc != m_next_gc)
+    if (m_need_redraw)
     {
-        if (m_origin.equals(-1, -1))
-            m_origin = m_next_gc;
-        write_message("vgrdc(%d,%d);",
-                m_next_gc.x - m_origin.x,
-                m_next_gc.y - m_origin.y);
-        m_current_gc = m_next_gc;
-    }
+        if (m_current_gc != m_next_gc)
+        {
+            if (m_origin.equals(-1, -1))
+                m_origin = m_next_gc;
+            write_message("vgrdc(%d,%d);",
+                          m_next_gc.x - m_origin.x,
+                          m_next_gc.y - m_origin.y);
+            m_current_gc = m_next_gc;
+        }
 
-    if (m_current_flash_colour != m_next_flash_colour)
-    {
-        write_message("set_flash(%d);",
-                      m_next_flash_colour);
-        m_current_flash_colour = m_next_flash_colour;
-    }
+        if (m_current_flash_colour != m_next_flash_colour)
+        {
+            write_message("set_flash(%d);",
+                          m_next_flash_colour);
+            m_current_flash_colour = m_next_flash_colour;
+        }
 
-    if (m_view_loaded)
-        _send_map(false);
+        if (m_view_loaded)
+            _send_map(false);
+    }
 
     m_need_redraw = false;
     m_last_tick_redraw = get_milliseconds();
@@ -1013,6 +1133,9 @@ void TilesFramework::put_string(char *buffer)
 
 void TilesFramework::put_ucs_string(ucs_t *str)
 {
+    if (m_print_area == NULL)
+        return;
+
     while (*str)
     {
         if (*str == '\r')
@@ -1048,6 +1171,9 @@ void TilesFramework::put_ucs_string(ucs_t *str)
 
 void TilesFramework::clear_to_end_of_line()
 {
+    if (m_print_area == NULL)
+        return;
+
     for (int x = m_print_x; x < m_print_area->mx; ++x)
         m_print_area->put_character(' ', m_print_fg, m_print_bg, x, m_print_y);
 }

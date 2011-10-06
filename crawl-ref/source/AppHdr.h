@@ -96,7 +96,7 @@
 #endif
 
     #define FILE_SEPARATOR '/'
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     #define USE_CURSES
 #endif
 

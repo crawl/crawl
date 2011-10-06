@@ -268,7 +268,6 @@ endif
 
 ifdef WEBTILES
 OBJECTS += \
-libweb.o \
 tiledoll.o \
 tilemcache.o \
 tilepick.o \

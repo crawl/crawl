@@ -114,7 +114,7 @@ static bool _find_feature(const coord_def& where, int mode, bool need_path,
 static bool _find_fprop_unoccupied(const coord_def& where, int mode, bool need_path,
                            int range, targetter *hitfunc);
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 static bool _find_mlist(const coord_def& where, int mode, bool need_path,
                          int range, targetter *hitfunc);
 #endif
@@ -424,7 +424,7 @@ void direction_chooser::describe_cell() const
     flush_prev_message();
 }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 static void _draw_ray_glyph(const coord_def &pos, int colour,
                             int glych, int mcol)
 {
@@ -657,7 +657,7 @@ void full_describe_view()
             // (A) An angel (neutral), wielding a glowing long sword
 
             std::string prefix = "";
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
             glyph g = get_mons_glyph(mi->mon());
             const std::string col_string = colour_to_str(g.col);
             prefix = "(<" + col_string + ">"
@@ -673,7 +673,7 @@ void full_describe_view()
             if (mi->dam != MDAM_OKAY)
                 str += ", " + mi->damage_desc();
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
             // Wraparound if the description is longer than allowed.
             linebreak_string(str, get_number_of_cols() - 9);
 #endif
@@ -684,7 +684,7 @@ void full_describe_view()
             {
                 if (j == 0)
                     me = new MonsterMenuEntry(prefix+str, mi->mon(), hotkey++);
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
                 else
                 {
                     str = "         " + fss[j].tostring();
@@ -710,7 +710,7 @@ void full_describe_view()
         for (unsigned int i = 0; i < all_items.size(); ++i, hotkey++)
         {
             InvEntry *me = all_items[i];
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
             // Show glyphs only for ASCII.
             me->set_show_glyph(true);
 #endif
@@ -729,7 +729,7 @@ void full_describe_view()
         {
             const coord_def c = list_features[i];
             std::string desc = "";
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
             glyph g = get_cell_glyph(c);
             const std::string colour_str = colour_to_str(g.col);
             desc = "(<" + colour_str + ">";
@@ -825,7 +825,7 @@ void full_describe_view()
         }
     }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     if (!list_items.empty())
     {
         // Unset show_glyph for other menus.
@@ -833,7 +833,8 @@ void full_describe_view()
         me->set_show_glyph(false);
         delete me;
     }
-#else
+#endif
+#ifdef USE_TILE
     // Clear cursor placement.
     tiles.place_cursor(CURSOR_TUTORIAL, NO_CURSOR);
     tiles.clear_text_tags(TAG_TUTORIAL);
@@ -862,7 +863,7 @@ void full_describe_view()
 //
 //--------------------------------------------------------------
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 // XXX: Hack - can't pass mlist entries into _find_mlist().
 bool mlist_full_info;
 std::vector<monster_info> mlist;
@@ -1041,7 +1042,7 @@ static std::string _targ_mode_name(targ_mode_type mode)
     }
 }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 static void _update_mlist(bool enable)
 {
     crawl_state.mlist_targeting = enable;
@@ -1163,7 +1164,7 @@ void direction_chooser::draw_beam_if_needed()
     if (!show_beam)
     {
         viewwindow(
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
             false
 #endif
             );
@@ -1179,7 +1180,7 @@ void direction_chooser::draw_beam_if_needed()
         if (!hitfunc->valid_aim(target()))
         {
 #ifdef USE_TILE
-            viewwindow();
+            viewwindow(false, true);
 #endif
             return;
         }
@@ -1190,7 +1191,8 @@ void direction_chooser::draw_beam_if_needed()
             {
 #ifdef USE_TILE
                 tile_place_ray(*ri, aff);
-#else
+#endif
+#ifndef USE_TILE_LOCAL
                 int bcol = BLACK;
                 if (aff < 0)
                     bcol = DARKGREY;
@@ -1202,7 +1204,7 @@ void direction_chooser::draw_beam_if_needed()
 #endif
             }
 #ifdef USE_TILE
-        viewwindow();
+        viewwindow(false, true);
 #endif
         return;
     }
@@ -1212,7 +1214,7 @@ void direction_chooser::draw_beam_if_needed()
     {
 #ifdef USE_TILE
         // Clear the old beam if we're not drawing anything else.
-        viewwindow();
+        viewwindow(false, true);
 #endif
         return;
     }
@@ -1236,7 +1238,8 @@ void direction_chooser::draw_beam_if_needed()
         const bool inrange = in_range(p);
 #ifdef USE_TILE
         tile_place_ray(p, inrange ? AFF_YES : AFF_NO);
-#else
+#endif
+#ifndef USE_TILE_LOCAL
         const int bcol = inrange ? MAGENTA : DARKGREY;
         _draw_ray_glyph(p, bcol, '*', bcol | COLFLAG_REVERSE);
 #endif
@@ -1246,7 +1249,7 @@ void direction_chooser::draw_beam_if_needed()
     tile_place_ray(target(), in_range(ray.pos()) ? AFF_YES : AFF_NO);
 
     // In tiles, we need to refresh the window to get the beam drawn.
-    viewwindow();
+    viewwindow(false, true);
 #endif
 }
 
@@ -1837,7 +1840,7 @@ command_type direction_chooser::massage_command(command_type key_command) const
 
 void direction_chooser::handle_mlist_cycle_command(command_type key_command)
 {
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     if (key_command >= CMD_TARGET_CYCLE_MLIST
         && key_command <= CMD_TARGET_CYCLE_MLIST_END)
     {
@@ -1904,7 +1907,7 @@ bool direction_chooser::do_main_loop()
     {
     case CMD_TARGET_SHOW_PROMPT: describe_cell(); break;
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     case CMD_TARGET_TOGGLE_MLIST:
         Options.mlist_targeting = !Options.mlist_targeting;
         _update_mlist(Options.mlist_targeting);
@@ -2053,7 +2056,7 @@ void direction_chooser::finalize_moves()
 
 bool direction_chooser::choose_direction()
 {
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     if (may_target_monster && restricts != DIR_DIR && Options.mlist_targeting)
         _update_mlist(true);
 #endif
@@ -2100,7 +2103,7 @@ bool direction_chooser::choose_direction()
         ;
 
     msgwin_set_temporary(false);
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     _update_mlist(false);
 #endif
     finalize_moves();
@@ -2314,7 +2317,7 @@ static bool _mons_is_valid_target(const monster* mon, int mode, int range)
     return (true);
 }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 static bool _find_mlist(const coord_def& where, int idx, bool need_path,
                         int range, targetter *hitfunc)
 {
@@ -4033,7 +4036,7 @@ command_type targeting_behaviour::get_command(int key)
     if (cmd >= CMD_MIN_TARGET && cmd < CMD_TARGET_CYCLE_TARGET_MODE)
         return (cmd);
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     // Overrides the movement keys while mlist_targeting is active.
     if (crawl_state.mlist_targeting && isalower(key))
         return static_cast<command_type>(CMD_TARGET_CYCLE_MLIST + (key - 'a'));

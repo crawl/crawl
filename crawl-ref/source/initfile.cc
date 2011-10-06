@@ -26,6 +26,9 @@
 #ifdef USE_TILE
  #include "tilereg-map.h"
 #endif
+#ifdef USE_TILE_WEB
+ #include "tileweb.h"
+#endif
 #include "invent.h"
 #include "item_use.h"
 #include "libutil.h"
@@ -3417,6 +3420,10 @@ enum commandline_option_type
     CLO_ZOTDEF,
     CLO_TUTORIAL,
     CLO_WIZARD,
+#ifdef USE_TILE_WEB
+    CLO_WEBTILES_SOCKET,
+    CLO_AWAIT_CONNECTION,
+#endif
 
     CLO_NOPS
 };
@@ -3427,7 +3434,10 @@ static const char *cmd_ops[] = {
     "mapstat", "arena", "dump-maps", "test", "script", "builddb",
     "help", "version", "seed", "save-version", "sprint",
     "extra-opt-first", "extra-opt-last", "sprint-map", "edit-save",
-    "print-charset", "zotdef", "tutorial", "wizard"
+    "print-charset", "zotdef", "tutorial", "wizard",
+#ifdef USE_TILE_WEB
+    "webtiles-socket", "await-connection",
+#endif
 };
 
 static const int num_cmd_ops = CLO_NOPS;
@@ -4067,6 +4077,17 @@ bool parse_args(int argc, char **argv, bool rc_only)
                 Options.wiz_mode = WIZ_NO;
 #endif
             break;
+
+#ifdef USE_TILE_WEB
+        case CLO_WEBTILES_SOCKET:
+            nextUsed          = true;
+            tiles.m_sock_name = next_arg;
+            break;
+
+        case CLO_AWAIT_CONNECTION:
+            tiles.m_await_connection = true;
+            break;
+#endif
 
         case CLO_PRINT_CHARSET:
             if (rc_only)

@@ -41,7 +41,7 @@
 #include "tileview.h"
 #endif
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 static unsigned _get_travel_colour(const coord_def& p)
 {
 #ifdef WIZARD
@@ -62,7 +62,7 @@ static unsigned _get_travel_colour(const coord_def& p)
 }
 #endif
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 static bool _travel_colour_override(const coord_def& p)
 {
   if (is_waypoint(p) || is_stair_exclusion(p)
@@ -431,7 +431,7 @@ static int _get_number_of_lines_levelmap()
     return get_number_of_lines() - (Options.level_map_title ? 1 : 0);
 }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 static void _draw_level_map(int start_x, int start_y, bool travel_mode,
         bool on_level)
 {
@@ -503,7 +503,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
 
     puttext(1, top, vbuf);
 }
-#endif // USE_TILE
+#endif // USE_TILE_LOCAL
 
 static void _reset_travel_colours(std::vector<coord_def> &features,
         bool on_level)
@@ -530,7 +530,7 @@ static bool _comp_glyphs(const glyph& g1, const glyph& g2)
     return (g1.ch < g2.ch || g1.ch == g2.ch && g1.col < g2.col);
 }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 static glyph _get_feat_glyph(const coord_def& gc);
 #endif
 
@@ -573,7 +573,7 @@ class feature_list
 
     void maybe_add(const coord_def& gc)
     {
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
         if (!env.map_knowledge(gc).known())
             return;
 
@@ -604,7 +604,7 @@ public:
     }
 };
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 static void _draw_title(const coord_def& cpos, const feature_list& feats)
 {
     if (!Options.level_map_title)
@@ -718,6 +718,10 @@ bool show_map(level_pos &lpos,
         cursor_control ccon(!Options.use_fake_cursor);
         int i, j;
 
+#ifdef USE_TILE_WEB
+        tiles_crt_control crt(false);
+#endif
+
         int move_x = 0, move_y = 0, scroll_y = 0;
 
         bool new_level = true;
@@ -750,7 +754,7 @@ bool show_map(level_pos &lpos,
         bool map_alive  = true;
         bool redraw_map = true;
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
         clrscr();
 #endif
         textcolor(DARKGREY);
@@ -871,12 +875,13 @@ bool show_map(level_pos &lpos,
                 // location.  It silently ignores everything else going
                 // on in this function.  --Enne
                 tiles.load_dungeon(lpos.pos);
-#else
+#endif
+#ifndef USE_TILE_LOCAL
                 _draw_title(lpos.pos, feats);
                 _draw_level_map(start_x, start_y, travel_mode, on_level);
-#endif // USE_TILE
+#endif
             }
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
             cursorxy(curs_x, curs_y + top - 1);
 #endif
             redraw_map = true;
@@ -1248,7 +1253,7 @@ bool show_map(level_pos &lpos,
             lpos.pos.y = std::min(std::max(lpos.pos.y, min_y), max_y);
             move_x = lpos.pos.x - oldp.x;
             move_y = lpos.pos.y - oldp.y;
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
             if (num_lines < map_lines)
             {
                 // Scrolling only happens when we don't have a large enough
@@ -1293,7 +1298,7 @@ bool emphasise(const coord_def& where)
             && you.where_are_you != BRANCH_VESTIBULE_OF_HELL);
 }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 // Get glyph for feature list; here because it's so similar
 // to get_map_col.
 static glyph _get_feat_glyph(const coord_def& gc)

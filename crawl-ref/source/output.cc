@@ -107,7 +107,7 @@ class colour_bar
         textcolor(BLACK);
         for (int cx = 0; cx < width; cx++)
         {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
             // Maybe this should use textbackground too?
             textcolor(BLACK + m_empty * 16);
 
@@ -162,7 +162,7 @@ class colour_bar
 
 colour_bar HP_Bar(LIGHTGREEN, GREEN, RED, DARKGREY);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 colour_bar MP_Bar(BLUE, BLUE, LIGHTBLUE, DARKGREY);
 #else
 colour_bar MP_Bar(LIGHTBLUE, BLUE, MAGENTA, DARKGREY);
@@ -684,7 +684,7 @@ static void _print_status_lights(int y)
     }
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 static bool _need_stats_printed()
 {
     return you.redraw_hit_points
@@ -714,7 +714,7 @@ void print_stats(void)
     if (MP_Bar.wants_redraw())
         you.redraw_magic_points = true;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     bool has_changed = _need_stats_printed();
 #endif
 
@@ -806,7 +806,7 @@ void print_stats(void)
     }
     textcolor(LIGHTGREY);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (has_changed)
         update_screen();
 #else
@@ -1085,7 +1085,7 @@ std::string mpr_monster_list(bool past)
     return (msg);
 }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 static void _print_next_monster_desc(const std::vector<monster_info>& mons,
                                      int& start, bool zombified = false,
                                      int idx = -1)
@@ -1190,7 +1190,7 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
 }
 #endif
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 // #define BOTTOM_JUSTIFY_MONSTER_LIST
 // Returns -1 if the monster list is empty, 0 if there are so many monsters
 // they have to be consolidated, and 1 otherwise.
@@ -1879,7 +1879,7 @@ static char _get_overview_screen_results()
     formatted_scroller overview;
     overview.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP);
     overview.set_more(formatted_string::parse_string(
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
                         "<cyan>[ +/L-click : Page down.   - : Page up."
                         "           Esc/R-click exits.]"));
 #else

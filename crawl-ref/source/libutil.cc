@@ -905,7 +905,7 @@ bool version_is_stable(const char *v)
     }
 }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 coord_def cgettopleft(GotoRegion region)
 {
     switch (region)
@@ -942,13 +942,17 @@ void cgotoxy(int x, int y, GotoRegion region)
     ASSERT_SAVE(y >= 1 && y <= sz.y);
 
     gotoxy_sys(tl.x + x - 1, tl.y + y - 1);
+
+#ifdef USE_TILE_WEB
+    tiles.cgotoxy(x, y, region);
+#endif
 }
 
 GotoRegion get_cursor_region()
 {
     return (_current_region);
 }
-#endif // USE_TILE
+#endif // USE_TILE_LOCAL
 
 coord_def cgetsize(GotoRegion region)
 {
@@ -1097,7 +1101,7 @@ static void handle_hangup(int)
     if (crawl_state.seen_hups++)
         return;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // XXX: Will a tiles build ever need to handle the HUP signal?
     sighup_save_and_exit();
 #elif defined(USE_CURSES)

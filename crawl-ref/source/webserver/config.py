@@ -18,6 +18,8 @@ password_db = "./webserver/passwd.db3"
 static_path = "./webserver/static"
 template_path = "./webserver/templates/"
 
+server_socket_path = None # Uses global temp dir
+
 games = OrderedDict([
     ("dcss-web-trunk", dict(
         name = "DCSS trunk",
@@ -26,6 +28,7 @@ games = OrderedDict([
         macro_path = "./rcs/",
         morgue_path = "./rcs",
         running_game_path = "./rcs/running",
+        socket_path = "./rcs",
         client_prefix = "game")),
     ("sprint-web-trunk", dict(
         name = "Sprint trunk",
@@ -34,6 +37,7 @@ games = OrderedDict([
         macro_path = "./rcs/",
         morgue_path = "./rcs",
         running_game_path = "./rcs/running",
+        socket_path = "./rcs",
         options = ["-sprint"],
         client_prefix = "game")),
     ("zd-web-trunk", dict(
@@ -43,6 +47,7 @@ games = OrderedDict([
         macro_path = "./rcs/",
         morgue_path = "./rcs",
         running_game_path = "./rcs/running",
+        socket_path = "./rcs",
         options = ["-zotdef"],
         client_prefix = "game")),
     ("tut-web-trunk", dict(
@@ -52,6 +57,7 @@ games = OrderedDict([
         macro_path = "./rcs/",
         morgue_path = "./rcs",
         running_game_path = "./rcs/running",
+        socket_path = "./rcs",
         options = ["-tutorial"],
         client_prefix = "game")),
 ])
