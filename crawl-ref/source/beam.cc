@@ -168,10 +168,6 @@ static void _zap_animation(int colour, const monster* mon = NULL,
 
     if (in_los_bounds_v(drawp))
     {
-        // Default to whatever colour magic is today.
-        if (colour == -1)
-            colour = ETC_MAGIC;
-
 #ifdef USE_TILE
         tiles.add_overlay(p, tileidx_zap(colour));
 #else
@@ -220,6 +216,9 @@ static void _ench_animation(int flavour, const monster* mon, bool force)
     case BEAM_BLINK:
     case BEAM_BLINK_CLOSE:
         elem = ETC_WARP;
+        break;
+    case BEAM_MAGIC:
+        elem = ETC_MAGIC;
         break;
     default:
         elem = ETC_ENCHANT;
@@ -3226,10 +3225,7 @@ void bolt::affect_player_enchantment()
     }
 
     // You didn't resist it.
-    if (effect_known)
-        _ench_animation(real_flavour);
-    else
-        _zap_animation(-1);
+    _ench_animation(effect_known ? real_flavour : BEAM_MAGIC);
 
     bool nasty = true, nice = false;
 
@@ -4021,10 +4017,7 @@ void bolt::enchantment_affect_monster(monster* mon)
 
     // Doing this here so that the player gets to see monsters
     // "flicker and vanish" when turning invisible....
-    if (effect_known)
-        _ench_animation(real_flavour, mon);
-    else
-        _zap_animation(-1, mon, false);
+    _ench_animation(effect_known ? real_flavour : BEAM_MAGIC, mon, effect_known);
 
     // Try to hit the monster with the enchantment.
     int res_margin = 0;
