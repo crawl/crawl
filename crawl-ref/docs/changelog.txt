@@ -5,7 +5,8 @@ Stone Soup 0.10 (????????)
 ---------------
 * New species: Octopodes, sentient land-capable octopuses.
 * Skill training system reworked. Dancing is really gone this time!
-* Food "reform": Nobody seems able to concisely explain what this is good for...
+* Food reform: Fewer chunks available; smoother gradient for carnivore,
+  herbivore, saprovore mutations.
 
 Branches
 --------
