@@ -454,11 +454,17 @@ int zin_tithe(item_def& item, int quant, bool quiet)
             tithe = stepdown_value(tithe, 10, 10, 50, 50);
             dprf("Gold was acquired, reducing gains to %d.", tithe);
         }
-        else if (player_in_branch(BRANCH_ORCISH_MINES))
+        else
         {
-            // Another special case: Orc gives simply too much compared to
-            // other branches.
-            denom = 4;
+            if (player_in_branch(BRANCH_ORCISH_MINES))
+            {
+                // Another special case: Orc gives simply too much compared to
+                // other branches.
+                denom *= 2;
+            }
+            // Avg gold pile value: 10 + depth/2.
+            tithe *= 37;
+            denom *= 20 + you.absdepth0;
         }
         gain_piety(tithe * 3, denom);
     }
