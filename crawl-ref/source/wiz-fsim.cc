@@ -26,8 +26,10 @@
 #include "options.h"
 #include "player.h"
 #include "player-equip.h"
+#include "skills.h"
 #include "skills2.h"
 #include "species.h"
+#include "wiz-you.h"
 
 #ifdef WIZARD
 static int _create_fsim_monster(int mtype, int hp)
@@ -57,18 +59,18 @@ static skill_type _fsim_melee_skill(const item_def *item)
 
 static void _fsim_set_melee_skill(int skill, const item_def *item)
 {
-    you.skills[_fsim_melee_skill(item)] = skill;
-    you.skills[SK_FIGHTING]             = skill * 15 / 27;
-    you.skills[SK_ARMOUR]               = skill * 15 / 27;
-    you.skills[SK_SHIELDS]              = skill;
+    wizard_set_skill_level(_fsim_melee_skill(item), skill, true);
+    wizard_set_skill_level(SK_FIGHTING, skill * 15 / 27, true);
+    wizard_set_skill_level(SK_ARMOUR, skill * 15 / 27, true);
+    wizard_set_skill_level(SK_SHIELDS, skill, true);
     for (int i = 0; i < 15; ++i)
-        you.skills[SK_SPELLCASTING + i] = skill;
+        wizard_set_skill_level(skill_type(SK_SPELLCASTING + i), skill, true);
 }
 
 static void _fsim_set_ranged_skill(int skill, const item_def *item)
 {
-    you.skills[range_skill(*item)] = skill;
-    you.skills[SK_THROWING]        = skill * 15 / 27;
+    wizard_set_skill_level(range_skill(*item), skill, true);
+    wizard_set_skill_level(SK_THROWING, skill * 15 / 27, true);
 }
 
 static void _fsim_item(FILE *out,
@@ -450,6 +452,9 @@ static bool debug_fight_sim(int mindex, int missile_slot,
 
     bool success = true;
     unwind_var<FixedVector<uint8_t, NUM_SKILLS> > skills(you.skills);
+    unwind_var<FixedVector<unsigned int, NUM_SKILLS> > skill_points(you.skill_points);
+    unwind_var<std::list<skill_type> > exercises(you.exercises);
+    unwind_var<std::list<skill_type> > exercises_all(you.exercises_all);
     unwind_var<FixedVector<int8_t, NUM_STATS> > stats(you.base_stats);
     unwind_var<int> xp(you.experience_level);
 
@@ -570,6 +575,7 @@ void debug_fight_statistics(bool use_defaults, bool defence)
         }
     }
     monster_die(&menv[mindex], KILL_DISMISSED, NON_MONSTER);
+    reset_training();
 }
 
 #endif

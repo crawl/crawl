@@ -14,7 +14,8 @@ void wizard_heal(bool super_heal);
 void wizard_set_hunger_state();
 void wizard_set_piety();
 void wizard_exercise_skill(void);
-void wizard_set_skill_level(skill_type skill = SK_NONE);
+void wizard_set_skill_level(skill_type skill = SK_NONE, int amount = -1,
+                            bool raw = false);
 void wizard_set_all_skills(void);
 void wizard_change_species(void);
 void wizard_set_xl();
