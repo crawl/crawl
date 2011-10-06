@@ -2482,11 +2482,12 @@ bool fedhas_plant_ring_from_fruit()
 
     for (int i = 0; i < max_use; ++i)
     {
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
         coord_def temp = grid2view(adjacent[i]);
         cgotoxy(temp.x, temp.y, GOTO_DNGN);
         put_colour_ch(GREEN, '1' + i);
-#else
+#endif
+#ifdef USE_TILE
         tiles.add_overlay(adjacent[i], TILE_INDICATOR + i);
 #endif
     }
@@ -2504,7 +2505,7 @@ bool fedhas_plant_ring_from_fruit()
 
     // The user entered a number, remove all number overlays which
     // are higher than that number.
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     unsigned not_used = adjacent.size() - unsigned(target_count);
     for (unsigned i = adjacent.size() - not_used;
          i < adjacent.size();
@@ -2512,7 +2513,8 @@ bool fedhas_plant_ring_from_fruit()
     {
         view_update_at(adjacent[i]);
     }
-#else
+#endif
+#ifdef USE_TILE
     // For tiles we have to clear all overlays and redraw the ones
     // we want.
     tiles.clear_overlays();
@@ -2680,7 +2682,7 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
     viewwindow(false);
     for (unsigned i = 0; i < positions.size(); ++i)
     {
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 
         coord_def temp = grid2view(positions[i]->pos);
         cgotoxy(temp.x, temp.y, GOTO_DNGN);
@@ -2690,7 +2692,8 @@ int fedhas_corpse_spores(beh_type behavior, bool interactive)
 
         unsigned character = mons_char(MONS_GIANT_SPORE);
         put_colour_ch(color, character);
-#else
+#endif
+#ifdef USE_TILE
         tiles.add_overlay(positions[i]->pos, TILE_SPORE_OVERLAY);
 #endif
     }

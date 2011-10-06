@@ -6,8 +6,8 @@
     </a>
   </td>
   <td>{{ running_game.game_id }}</td>
-  <td>{{ (running_game.where or "") }}</td>
-  <td>{{ int(running_game.idle_time()) }}s</td>
-  <td>{{ len(running_game.watchers) }}</td>
+  <td>{{ (running_game.process.where or "") }}</td>
+  <td>{{ int(running_game.process.idle_time()) }}s</td>
+  <td>{{ running_game.process.watcher_count() }}</td>
 </tr>
 {% end %}

@@ -227,6 +227,17 @@ int getchk()
     }
 
     wint_t c;
+
+#ifdef USE_TILE_WEB
+    refresh();
+
+    tiles.redraw();
+    tiles.await_input(c, true);
+
+    if (c > 0)
+        return c;
+#endif
+
     switch (get_wch(&c))
     {
     case ERR:
@@ -414,10 +425,18 @@ void console_startup(void)
     crawl_view.init_geometry();
 
     set_mouse_enabled(false);
+
+#ifdef USE_TILE_WEB
+    tiles.resize();
+#endif
 }
 
 void console_shutdown()
 {
+#ifdef USE_TILE_WEB
+    tiles.shutdown();
+#endif
+
     // resetty();
     endwin();
 
@@ -457,6 +476,13 @@ void putwch(ucs_t chr)
         c = ' ';
     // TODO: recognize unsupported characters and try to transliterate
     addnwstr(&c, 1);
+
+#ifdef USE_TILE_WEB
+    ucs_t buf[2];
+    buf[0] = chr;
+    buf[1] = 0;
+    tiles.put_ucs_string(buf);
+#endif
 }
 
 void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
@@ -483,6 +509,10 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
 void update_screen(void)
 {
     refresh();
+
+#ifdef USE_TILE_WEB
+    tiles.set_need_redraw();
+#endif
 }
 
 void clear_to_end_of_line(void)
@@ -490,6 +520,10 @@ void clear_to_end_of_line(void)
     textcolor(LIGHTGREY);
     textbackground(BLACK);
     clrtoeol();
+
+#ifdef USE_TILE_WEB
+    tiles.clear_to_end_of_line();
+#endif
 }
 
 int get_number_of_lines(void)
@@ -510,6 +544,10 @@ void clrscr()
 #ifdef DGAMELAUNCH
     printf("%s", DGL_CLEAR_SCREEN);
     fflush(stdout);
+#endif
+
+#ifdef USE_TILE_WEB
+    tiles.clrscr();
 #endif
 }
 
@@ -604,6 +642,10 @@ static int curs_fg_attr(int col)
 void textcolor(int col)
 {
     (void)attrset(Current_Colour = curs_fg_attr(col));
+
+#ifdef USE_TILE_WEB
+    tiles.textcolor(col);
+#endif
 }
 
 static int curs_bg_attr(int col)
@@ -662,6 +704,10 @@ static int curs_bg_attr(int col)
 void textbackground(int col)
 {
     (void)attrset(Current_Colour = curs_bg_attr(col));
+
+#ifdef USE_TILE_WEB
+    tiles.textbackground(col);
+#endif
 }
 
 
@@ -745,6 +791,11 @@ int wherey()
 
 void delay(unsigned int time)
 {
+#ifdef USE_TILE_WEB
+    tiles.redraw();
+    tiles.send_message("delay(%d);", time);
+#endif
+
     refresh();
     if (time)
         usleep(time * 1000);
@@ -757,6 +808,7 @@ bool kbhit()
         return true;
 
     wint_t c;
+#ifndef USE_TILE_WEB
     int i;
 
     nodelay(stdscr, TRUE);
@@ -775,4 +827,12 @@ bool kbhit()
     default:
         return false;
     }
+#else
+    bool result = tiles.await_input(c, false);
+
+    if (result && (c != 0))
+        pending = c;
+
+    return result;
+#endif
 }

@@ -802,7 +802,7 @@ unsigned real_colour(unsigned raw_colour, const coord_def& loc)
     if (_is_element_colour(raw_colour))
         raw_colour = colflags | element_colour(raw_colour, false, loc);
 
-#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE)
+#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE_LOCAL)
     if (colflags)
     {
         unsigned brand = _colflag2brand(colflags);

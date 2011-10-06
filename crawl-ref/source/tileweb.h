@@ -12,6 +12,7 @@
 #include "viewgeom.h"
 #include "map_knowledge.h"
 #include <map>
+#include <sys/un.h>
 
 class TilesFramework
 {
@@ -28,9 +29,6 @@ public:
     void clrscr();
 
     void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
-    GotoRegion get_cursor_region() const;
-    int get_number_of_lines();
-    int get_number_of_cols();
 
     void update_minimap(const coord_def &gc);
     void clear_minimap();
@@ -60,12 +58,29 @@ public:
     void put_string(char *str);
     void put_ucs_string(ucs_t *str);
     void clear_to_end_of_line();
-    int wherex() { return m_print_x + 1; }
-    int wherey() { return m_print_y + 1; }
 
     void write_message(const char *format, ...);
     void finish_message();
     void send_message(const char *format, ...);
+
+    /* Webtiles can receive input both via stdin, and on the
+       socket. Also, while waiting for input, it should be
+       able to handle other control messages (for example,
+       requests to re-send data when a new spectator joins).
+
+       This function waits until input is available either via
+       stdin or from a control message. If the input came from
+       a control message, it will be written into c; otherwise,
+       it still has to be read from stdin.
+
+       If block is false, await_input will immediately return,
+       even if no input is available. The return value indicates
+       whether input can be read from stdin; c will be non-zero
+       if input came via a control message.
+     */
+    bool await_input(wint_t& c, bool block);
+
+    void check_for_control_messages();
 
     /* Adds a prefix that will be written before any other
        data that is sent after this call, unless no other
@@ -75,7 +90,23 @@ public:
     void push_prefix(std::string prefix);
     void pop_prefix(std::string suffix);
     bool prefix_popped();
+
+    std::string m_sock_name;
+    bool m_await_connection;
+
+    void set_crt_enabled(bool value);
+    bool is_crt_enabled();
+
 protected:
+    int m_sock;
+    int m_max_msg_size;
+    std::string m_msg_buf;
+    std::vector<sockaddr_un> m_dest_addrs;
+
+    void _await_connection();
+    wint_t _handle_control_message(sockaddr_un addr, std::string data);
+    wint_t _receive_control_message();
+
     std::vector<std::string> m_prefixes;
 
     enum LayerID
@@ -86,6 +117,7 @@ protected:
         LAYER_MAX,
     };
     LayerID m_active_layer;
+    bool m_crt_enabled;
 
     unsigned int m_last_tick_redraw;
     bool m_need_redraw;
@@ -126,6 +158,8 @@ protected:
 
     dolls_data last_player_doll;
 
+    void _send_everything();
+
     void _send_map(bool force_full = false);
     void _send_cell(const coord_def &gc,
                     const screen_cell_t &current_sc, const screen_cell_t &next_sc,
@@ -139,5 +173,23 @@ protected:
 
 // Main interface for tiles functions
 extern TilesFramework tiles;
+
+class tiles_crt_control
+{
+public:
+    tiles_crt_control(bool crt_enabled)
+        : m_was_enabled(tiles.is_crt_enabled())
+    {
+        tiles.set_crt_enabled(crt_enabled);
+    }
+
+    ~tiles_crt_control()
+    {
+        tiles.set_crt_enabled(m_was_enabled);
+    }
+
+private:
+    bool m_was_enabled;
+};
 
 #endif

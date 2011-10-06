@@ -724,7 +724,7 @@ void view_update_at(const coord_def &pos)
 
     show_update_at(pos);
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     if (!env.map_knowledge(pos).visible())
         return;
     glyph g = get_cell_glyph(pos);
@@ -750,7 +750,7 @@ void view_update_at(const coord_def &pos)
 #endif
 }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 void flash_monster_colour(const monster* mon, uint8_t fmc_colour,
                           int fmc_delay)
 {
@@ -1000,8 +1000,11 @@ static bool _show_terrain = false;
 //
 // If show_updates is set, env.show and dependent structures
 // are updated. Should be set if anything in view has changed.
+//
+// If tiles_only is set, only the tile view will be updated. This
+// is only relevant for Webtiles.
 //---------------------------------------------------------------
-void viewwindow(bool show_updates)
+void viewwindow(bool show_updates, bool tiles_only)
 {
     if (you.duration[DUR_TIME_STEP])
         return;
@@ -1070,10 +1073,18 @@ void viewwindow(bool show_updates)
     // and this simply works without requiring a stack.
     you.flash_colour = BLACK;
     you.last_view_update = you.num_turns;
-#ifndef USE_TILE
-    puttext(crawl_view.viewp.x, crawl_view.viewp.y, crawl_view.vbuf);
-    update_monster_pane();
-#else
+#ifndef USE_TILE_LOCAL
+#ifdef USE_TILE_WEB
+    tiles_crt_control crt(false);
+#endif
+
+    if (!tiles_only)
+    {
+        puttext(crawl_view.viewp.x, crawl_view.viewp.y, crawl_view.vbuf);
+        update_monster_pane();
+    }
+#endif
+#ifdef USE_TILE
     tiles.set_need_redraw(you.running ? Options.tile_runrest_rate : 0);
     tiles.load_dungeon(crawl_view.vbuf, crawl_view.vgrdc);
     tiles.update_tabs();
@@ -1116,7 +1127,7 @@ void draw_cell(screen_cell_t *cell, const coord_def &gc,
     {
         if (you.see_cell(gc))
         {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
             cell->colour = real_colour(flash_colour);
 #else
             monster_type mons = env.map_knowledge(gc).monster();

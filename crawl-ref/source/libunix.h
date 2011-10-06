@@ -5,7 +5,7 @@
 #define O_BINARY 0
 #endif
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 
 #include <stdio.h>
 

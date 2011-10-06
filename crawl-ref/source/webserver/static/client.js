@@ -82,16 +82,30 @@ function handle_keypress(e)
     {
         focus_chat();
     }
-    else if (s == "\\")
+    else if (s == "{")
     {
-        socket.send("\\92\n");
-    }
-    else if (s == "^")
-    {
-        socket.send("\\94\n");
+        send_bytes(["{".charCodeAt(0)]);
     }
     else
         socket.send(s);
+}
+
+function send_keycode(code)
+{
+    socket.send('{"msg":"key","keycode":' + code + '}');
+}
+
+function send_bytes(bytes)
+{
+    s = '{"msg":"input","data":[';
+    $.each(bytes, function (i, code) {
+        if (i == 0)
+            s += code;
+        else
+            s += "," + code;
+    });
+    s += "]}";
+    socket.send(s);
 }
 
 function handle_keydown(e)
@@ -113,13 +127,13 @@ function handle_keydown(e)
         if (e.which in ctrl_key_conversion)
         {
             e.preventDefault();
-            socket.send("\\" + ctrl_key_conversion[e.which] + "\n");
+            send_keycode(ctrl_key_conversion[e.which]);
         }
         else if ($.inArray(String.fromCharCode(e.which), captured_control_keys) != -1)
         {
             e.preventDefault();
             var code = e.which - "A".charCodeAt(0) + 1; // Compare the CONTROL macro in defines.h
-            socket.send("\\" + code + "\n");
+            send_keycode(code);
         }
     }
     else if (!e.ctrlKey && e.shiftKey && !e.altKey)
@@ -127,14 +141,15 @@ function handle_keydown(e)
         if (e.which in shift_key_conversion)
         {
             e.preventDefault();
-            socket.send("\\" + shift_key_conversion[e.which] + "\n");
+            send_keycode(shift_key_conversion[e.which]);
         }
     }
     else if (!e.ctrlKey && !e.shiftKey && e.altKey)
     {
-        //e.preventDefault();
-        //var s = String.fromCharCode(e.which);
-        //socket.send("\\27\n" + s);
+        if (e.which == 18) return;
+
+        e.preventDefault();
+        send_bytes([27, e.which]);
     }
     else if (!e.ctrlKey && !e.shiftKey && !e.altKey)
     {
@@ -146,7 +161,7 @@ function handle_keydown(e)
         else if (e.which in key_conversion)
         {
             e.preventDefault();
-            socket.send("\\" + key_conversion[e.which] + "\n");
+            send_keycode(key_conversion[e.which]);
         }
         else
             log("Key: " + e.which);

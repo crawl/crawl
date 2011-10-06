@@ -35,12 +35,12 @@ bool view_update();
 void view_update_at(const coord_def &pos);
 void flash_view(uint8_t colour = BLACK); // inside #ifndef USE_TILE_LOCAL?
 void flash_view_delay(uint8_t colour = BLACK, int delay = 150);
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 void flash_monster_colour(const monster* mon, uint8_t fmc_colour,
                           int fmc_delay);
 #endif
 
-void viewwindow(bool show_updates = true);
+void viewwindow(bool show_updates = true, bool tiles_only = false);
 void draw_cell(screen_cell_t *cell, const coord_def &gc,
                bool anim_updates, int flash_colour);
 
