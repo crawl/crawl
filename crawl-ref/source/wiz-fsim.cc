@@ -139,6 +139,7 @@ static bool _fsim_ranged_combat(FILE *out, int wskill, int mi,
     for (int i = 0; i < iter_limit; ++i)
     {
         mon = orig;
+        mon.move_to_pos(mon.pos());
         bolt beam;
         you.time_taken = player_speed();
 
@@ -146,7 +147,8 @@ static bool _fsim_ranged_combat(FILE *out, int wskill, int mi,
         inc_inv_item_quantity(thrown, 1);
 
         beam.target = mon.pos();
-        if (throw_it(beam, thrown, true, DEBUG_COOKIE))
+        beam.animate = false;
+        if (throw_it(beam, thrown, false, DEBUG_COOKIE))
             hits++;
 
         you.hunger = hunger;
