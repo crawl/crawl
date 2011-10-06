@@ -1421,7 +1421,8 @@ void bolt::do_fire()
 
         // Actually draw the beam/missile/whatever, if the player can see
         // the cell.
-        draw(pos());
+        if (animate)
+            draw(pos());
 
         noise_generated = false;
         ray.advance();
@@ -3225,7 +3226,8 @@ void bolt::affect_player_enchantment()
     }
 
     // You didn't resist it.
-    _ench_animation(effect_known ? real_flavour : BEAM_MAGIC);
+    if (animate)
+        _ench_animation(effect_known ? real_flavour : BEAM_MAGIC);
 
     bool nasty = true, nice = false;
 
@@ -4017,7 +4019,12 @@ void bolt::enchantment_affect_monster(monster* mon)
 
     // Doing this here so that the player gets to see monsters
     // "flicker and vanish" when turning invisible....
-    _ench_animation(effect_known ? real_flavour : BEAM_MAGIC, mon, effect_known);
+    if (animate)
+    {
+        _ench_animation(effect_known ? real_flavour
+                                     : BEAM_MAGIC,
+                        mon, effect_known);
+    }
 
     // Try to hit the monster with the enchantment.
     int res_margin = 0;
@@ -5575,7 +5582,7 @@ bolt::bolt() : origin_spell(SPELL_NO_SPELL),
                loudness(0), noise_msg(), is_beam(false), is_explosion(false),
                is_big_cloud(false), aimed_at_spot(false), aux_source(),
                affects_nothing(false), affects_items(true), effect_known(true),
-               draw_delay(15), special_explosion(NULL), range_funcs(),
+               draw_delay(15), special_explosion(NULL), animate(true), range_funcs(),
                damage_funcs(), hit_funcs(), aoe_funcs(), affect_func(NULL),
                obvious_effect(false), seen(false), heard(false),
                path_taken(), extra_range_used(0), is_tracer(false),

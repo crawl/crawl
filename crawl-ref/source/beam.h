@@ -107,6 +107,7 @@ struct bolt
                                        // itself.
     bool        was_missile;           // For determining if this was SPMSL_FLAME / FROST etc
                                        // this is required in order to change mulch rate on these types
+    bool        animate;               // Do we draw animations?
 
     // Various callbacks.
     std::vector<range_used_func>  range_funcs;
