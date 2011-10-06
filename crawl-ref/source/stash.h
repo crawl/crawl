@@ -148,6 +148,10 @@ public:
         unsigned price;
     };
 
+    // Attempts to guess if the item came from the shop, and if so returns the
+    // corresponding shop_item_name:
+    std::string get_shop_item_name(const item_def&) const;
+
 private:
     int x, y;
     std::string name;
@@ -364,7 +368,8 @@ private:
     void get_matching_stashes(const base_pattern &search,
                               std::vector<stash_search_result> &results) const;
     bool display_search_results(std::vector<stash_search_result> &results,
-                                const char* sort_style);
+                                bool& sort_by_dist,
+                                bool& show_as_stacks);
     std::string stash_search_prompt();
 
 private:
