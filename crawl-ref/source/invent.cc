@@ -1075,13 +1075,14 @@ const char* item_slot_name(equipment_type type, bool terse)
 
 std::vector<SelItem> select_items(const std::vector<const item_def*> &items,
                                    const char *title, bool noselect,
-                                   menu_type mtype)
+                                   menu_type mtype, invtitle_annotator titlefn)
 {
     std::vector<SelItem> selected;
     if (!items.empty())
     {
         InvMenu menu;
         menu.set_type(mtype);
+        menu.set_title_annotator(titlefn);
         menu.set_title(title);
         if (mtype == MT_PICKUP)
             menu.set_tag("pickup");

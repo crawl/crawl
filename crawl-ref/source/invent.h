@@ -202,7 +202,8 @@ int prompt_invent_item(const char *prompt,
 std::vector<SelItem> select_items(
                         const std::vector<const item_def*> &items,
                         const char *title, bool noselect = false,
-                        menu_type mtype = MT_PICKUP);
+                        menu_type mtype = MT_PICKUP,
+                        invtitle_annotator titlefn = NULL);
 
 std::vector<SelItem> prompt_invent_items(
                         const char *prompt,
