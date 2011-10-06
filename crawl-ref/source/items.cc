@@ -1584,6 +1584,12 @@ static void _got_gold(item_def& item, int quant, bool quiet)
             you.attribute[ATTR_DONATIONS] += tithe;
             mprf("You pay a tithe of %d gold.", tithe);
 
+            if (item.plus == 1) // seen before worshipping Zin
+            {
+                tithe = 0;
+                mprf(MSGCH_GOD, "%s is a bit unhappy you did not bring this "
+                                "gold earlier.", god_name(GOD_ZIN).c_str());
+            }
             // A single scroll can give you more than D:1-18, Lair and Orc
             // together, limit the gains.  You're still required to pay from
             // your sudden fortune, yet it's considered your duty to the Church
