@@ -1623,6 +1623,7 @@ int acquirement_create_item(object_class_type class_wanted,
     if (thing_created != NON_ITEM)
     {
         ASSERT(mitm[thing_created].is_valid());
+        mitm[thing_created].props["acquired"].get_int() = agent;
     }
     return (thing_created);
 }

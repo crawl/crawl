@@ -3027,4 +3027,6 @@ void seen_item(const item_def &item)
     // major hack.  Deconstify should be safe here, but it's still repulsive.
     if (you.religion == GOD_ASHENZARI)
         ((item_def*)&item)->flags |= ISFLAG_KNOW_CURSE;
+    if (item.base_type == OBJ_GOLD && !item.plus)
+        ((item_def*)&item)->plus = (you.religion == GOD_ZIN) ? 2 : 1;
 }

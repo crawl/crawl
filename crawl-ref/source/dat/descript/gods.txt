@@ -16,11 +16,11 @@ Buggy
 %%%%
 Zin
 
-Zin is a God for those focused on inner strength. Followers must remain pure of body and soul, refraining from unholy, evil, unclean or chaotic magic; the use of mutations and the consumption of intelligent beings' flesh. They may preach to or imprison the unenlightened, and can ultimately gain a divine refuge. Zin values selflessness and long-standing faith. Zin's followers can safely convert to Elyvilon and the Shining One.
+Zin is a God for those focused on inner strength. Followers must remain pure of body and soul, refraining from unholy, evil, unclean or chaotic magic; the use of mutations and the consumption of intelligent beings' flesh. They may preach to or imprison the unenlightened, and can ultimately gain a divine refuge. Zin values selflessness, demanding a tithe of 1/10 of all gold gained, preferably followed by donations of more. Zin's followers can safely convert to Elyvilon and the Shining One.
 %%%%
 The Shining One
 
-The Shining One is a powerful deity on a crusade against all evil. Followers and their allies may be granted various blessings upon mercilessly slaying evil and unholy beings. Worshippers must never use unholy or evil magic, and are expected to prove their moral superiority by fighting honourably. Long-standing persistence is appreciated. The Shining One does not mind shifting worship to Elyvilon or Zin.
+The Shining One is a powerful deity on a crusade against all evil. Followers and their allies may be granted various blessings upon mercilessly slaying evil and unholy beings. Worshippers must never use unholy or evil magic, and are expected to prove their moral superiority by fighting honourably. The God demands followers to scour the world, examining all of its inhabitants for traces of evil that must be eradicated. The Shining One does not mind shifting worship to Elyvilon or Zin.
 %%%%
 Kikubaaqudgha
 
@@ -60,7 +60,7 @@ Nemelex is a strange and unpredictable trickster God, whose powers can be invoke
 %%%%
 Elyvilon
 
-Elyvilon the Healer welcomes all good souls who are prepared for long worship and devotion. Those individuals can expect to gain powerful healing abilities. The Healer prefers a creed of pacifism, and helps worshippers avoid bloodshed. Elyvilon appreciates the destruction of weapons. Elyvilon does not mind if worshippers shift to Zin or the Shining One.
+Elyvilon the Healer welcomes all good souls who are prepared to help others. Those individuals can expect to gain powerful healing abilities. The Healer prefers a creed of pacifism, and helps worshippers avoid bloodshed. Elyvilon appreciates the destruction of weapons. Elyvilon does not mind if worshippers shift to Zin or the Shining One.
 %%%%
 Lugonu
 
