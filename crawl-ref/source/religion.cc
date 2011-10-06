@@ -3555,6 +3555,21 @@ void god_pitch(god_type which_god)
         }
     }
 
+    // Need to pay St. Peters.
+    if (you.religion == GOD_ZIN && you.attribute[ATTR_DONATIONS] * 9 < you.gold)
+    {
+        item_def lucre;
+        lucre.base_type = OBJ_GOLD;
+        // If you worshipped Zin before, the already tithed for part is fine.
+        lucre.quantity = you.gold - you.attribute[ATTR_DONATIONS] * 9;
+        // Use the harsh acquirement pricing -- with a cap at +50 piety.
+        // We don't want you get max piety at start just because you're filthy
+        // rich.  In that case, you have to donate again more...  That the poor
+        // widow is not spared doesn't mean the rich can't be milked for more.
+        lucre.props["acquired"] = 0;
+        you.gold -= zin_tithe(lucre, lucre.quantity, false);
+    }
+
     // Refresh wielded/quivered weapons in case we have a new conduct
     // on them.
     you.wield_change = true;
