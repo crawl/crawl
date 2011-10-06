@@ -1574,41 +1574,7 @@ static void _got_gold(item_def& item, int quant, bool quiet)
     you.attribute[ATTR_GOLD_FOUND] += quant;
 
     if (you.religion == GOD_ZIN && !(item.flags & ISFLAG_THROWN))
-    {
-        int due = quant += you.attribute[ATTR_TITHE_BASE];
-        if (due > 0)
-        {
-            int tithe = due / 10;
-            due -= tithe * 10;
-            quant -= tithe;
-            you.attribute[ATTR_DONATIONS] += tithe;
-            mprf("You pay a tithe of %d gold.", tithe);
-
-            if (item.plus == 1) // seen before worshipping Zin
-            {
-                tithe = 0;
-                mprf(MSGCH_GOD, "%s is a bit unhappy you did not bring this "
-                                "gold earlier.", god_name(GOD_ZIN).c_str());
-            }
-            // A single scroll can give you more than D:1-18, Lair and Orc
-            // together, limit the gains.  You're still required to pay from
-            // your sudden fortune, yet it's considered your duty to the Church
-            // so piety is capped.  If you want more piety, donate more!
-            //
-            // Note that the stepdown is not applied to other gains: it would
-            // be simpler, yet when a monster combines a number of gold piles
-            // you shouldn't be penalized.
-            if (item.props.exists("acquired")) // including "acquire any" in vaults
-            {
-                tithe = stepdown_value(tithe, 10, 10, 50, 50);
-                dprf("Gold was acquired, reducing gains to %d.", tithe);
-            }
-            // Another special case: Orc gives simply too much compared to
-            // other branches.
-            gain_piety(tithe * 3, player_in_branch(BRANCH_ORCISH_MINES) ? 4 : 2);
-        }
-        you.attribute[ATTR_TITHE_BASE] = due;
-    }
+        quant -= zin_tithe(item, quant, quiet);
     if (quant <= 0)
         return;
     you.add_gold(quant);
