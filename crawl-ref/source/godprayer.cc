@@ -411,6 +411,61 @@ void pray()
     dprf("piety: %d (-%d)", you.piety, you.piety_hysteresis);
 }
 
+int zin_tithe(item_def& item, int quant, bool quiet)
+{
+    int taken = 0;
+    int due = quant += you.attribute[ATTR_TITHE_BASE];
+    if (due > 0)
+    {
+        int tithe = due / 10;
+        due -= tithe * 10;
+        // Those high enough in the hierarchy get to reap the benefits.
+        // You're never big enough to be paid, the top is not having to pay
+        // (and even that at 200 piety, for a brief moment until it decays).
+        tithe = std::min(tithe,
+                (you.penance[GOD_ZIN] + MAX_PIETY - you.piety) * 2 / 3);
+        if (tithe <= 0)
+        {
+            // update the remainder anyway
+            you.attribute[ATTR_TITHE_BASE] = due;
+            return 0;
+        }
+        taken = tithe;
+        you.attribute[ATTR_DONATIONS] += tithe;
+        mprf("You pay a tithe of %d gold.", tithe);
+
+        if (item.plus == 1) // seen before worshipping Zin
+        {
+            tithe = 0;
+            mprf(MSGCH_GOD, "%s is a bit unhappy you did not bring this "
+                            "gold earlier.", god_name(GOD_ZIN).c_str());
+        }
+        // A single scroll can give you more than D:1-18, Lair and Orc
+        // together, limit the gains.  You're still required to pay from
+        // your sudden fortune, yet it's considered your duty to the Church
+        // so piety is capped.  If you want more piety, donate more!
+        //
+        // Note that the stepdown is not applied to other gains: it would
+        // be simpler, yet when a monster combines a number of gold piles
+        // you shouldn't be penalized.
+        int denom = 2;
+        if (item.props.exists("acquired")) // including "acquire any" in vaults
+        {
+            tithe = stepdown_value(tithe, 10, 10, 50, 50);
+            dprf("Gold was acquired, reducing gains to %d.", tithe);
+        }
+        else if (player_in_branch(BRANCH_ORCISH_MINES))
+        {
+            // Another special case: Orc gives simply too much compared to
+            // other branches.
+            denom = 4;
+        }
+        gain_piety(tithe * 3, denom);
+    }
+    you.attribute[ATTR_TITHE_BASE] = due;
+    return taken;
+}
+
 static int _gold_to_donation(int gold)
 {
     return static_cast<int>((gold * log((float)gold)) / MAX_PIETY);

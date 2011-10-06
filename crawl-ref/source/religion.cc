@@ -560,6 +560,8 @@ std::string get_god_likes(god_type which_god, bool verbose)
                          : "");
 
         likes.push_back(info);
+
+        likes.push_back("you calm hostilities by healing your foes");
         break;
 
     case GOD_JIYVA:
@@ -578,6 +580,12 @@ std::string get_god_likes(god_type which_god, bool verbose)
     case GOD_ASHENZARI:
         snprintf(info, INFO_SIZE, "you explore the world (preferably while "
                                   "bound by curses)");
+        likes.push_back(info);
+        break;
+
+    case GOD_SHINING_ONE:
+        snprintf(info, INFO_SIZE, "you meet creatures to determine whether "
+                                  "they need to be eraticated");
         likes.push_back(info);
         break;
 
@@ -3547,6 +3555,21 @@ void god_pitch(god_type which_god)
         }
     }
 
+    // Need to pay St. Peters.
+    if (you.religion == GOD_ZIN && you.attribute[ATTR_DONATIONS] * 9 < you.gold)
+    {
+        item_def lucre;
+        lucre.base_type = OBJ_GOLD;
+        // If you worshipped Zin before, the already tithed for part is fine.
+        lucre.quantity = you.gold - you.attribute[ATTR_DONATIONS] * 9;
+        // Use the harsh acquirement pricing -- with a cap at +50 piety.
+        // We don't want you get max piety at start just because you're filthy
+        // rich.  In that case, you have to donate again more...  That the poor
+        // widow is not spared doesn't mean the rich can't be milked for more.
+        lucre.props["acquired"] = 0;
+        you.gold -= zin_tithe(lucre, lucre.quantity, false);
+    }
+
     // Refresh wielded/quivered weapons in case we have a new conduct
     // on them.
     you.wield_change = true;
@@ -3761,15 +3784,6 @@ bool god_protects_from_harm()
     return false;
 }
 
-// Returns true if the player can use the good gods' passive piety gain.
-static bool _need_free_piety()
-{
-    return (!crawl_state.game_is_sprint()
-            && (you.piety < 150
-                || you.gift_timeout
-                || you.penance[you.religion]));
-}
-
 //jmf: moved stuff from effects::handle_time()
 void handle_god_time()
 {
@@ -3806,23 +3820,16 @@ void handle_god_time()
             xom_tick();
             return;
 
-        // These gods like long-standing worshippers.
         case GOD_ELYVILON:
-            if (_need_free_piety())
-                gain_piety(1, 20);
+            if (one_chance_in(50))
+                lose_piety(1);
             return;
 
         case GOD_SHINING_ONE:
-            if (_need_free_piety())
-                gain_piety(1, 15);
-            return;
+            if (one_chance_in(35))
+                lose_piety(1);
+            break;
 
-        case GOD_ZIN:
-            if (_need_free_piety())
-                gain_piety(1, 12);
-            return;
-
-        // All the rest will excommunicate you if piety goes below 1.
         case GOD_JIYVA:
             if (one_chance_in(20))
                 lose_piety(1);
@@ -3831,6 +3838,7 @@ void handle_god_time()
         case GOD_YREDELEMNUL:
         case GOD_KIKUBAAQUDGHA:
         case GOD_VEHUMET:
+        case GOD_ZIN:
             if (one_chance_in(17))
                 lose_piety(1);
             break;

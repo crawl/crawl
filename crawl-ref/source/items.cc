@@ -1569,6 +1569,24 @@ static void _got_item(item_def& item, int quant)
         item.props.erase("needs_autopickup");
 }
 
+static void _got_gold(item_def& item, int quant, bool quiet)
+{
+    you.attribute[ATTR_GOLD_FOUND] += quant;
+
+    if (you.religion == GOD_ZIN && !(item.flags & ISFLAG_THROWN))
+        quant -= zin_tithe(item, quant, quiet);
+    if (quant <= 0)
+        return;
+    you.add_gold(quant);
+
+    if (!quiet)
+    {
+        mprf("You now have %d gold piece%s.",
+             you.gold, you.gold != 1 ? "s" : "");
+        learned_something_new(HINT_SEEN_GOLD);
+    }
+}
+
 void note_inscribe_item(item_def &item)
 {
     _autoinscribe_item(item);
@@ -1604,17 +1622,8 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
     // Gold has no mass, so we handle it first.
     if (mitm[obj].base_type == OBJ_GOLD)
     {
-        you.attribute[ATTR_GOLD_FOUND] += quant_got;
-        you.add_gold(quant_got);
+        _got_gold(mitm[obj], quant_got, quiet);
         dec_mitm_item_quantity(obj, quant_got);
-
-        if (!quiet)
-        {
-            mprf("You now have %d gold piece%s.",
-                 you.gold, you.gold != 1 ? "s" : "");
-        }
-
-        learned_something_new(HINT_SEEN_GOLD);
 
         you.turn_is_over = true;
         return (retval);

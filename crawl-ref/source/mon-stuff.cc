@@ -4020,6 +4020,13 @@ void seen_monster(monster* mons)
                            name.c_str()));
         }
     }
+
+    if (!mons->has_ench(ENCH_ABJ)
+        && !mons->has_ench(ENCH_FAKE_ABJURATION)
+        && !testbits(mons->flags, MF_NO_REWARD))
+    {
+        did_god_conduct(DID_SEE_MONSTER, mons->hit_dice, true, mons);
+    }
 }
 
 //---------------------------------------------------------------
