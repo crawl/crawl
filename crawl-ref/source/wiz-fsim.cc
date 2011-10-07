@@ -139,6 +139,7 @@ static bool _fsim_ranged_combat(FILE *out, int wskill, int mi,
     for (int i = 0; i < iter_limit; ++i)
     {
         mon = orig;
+        mon.hit_points = mon.max_hit_points;
         mon.move_to_pos(mon.pos());
         bolt beam;
         you.time_taken = player_speed();
