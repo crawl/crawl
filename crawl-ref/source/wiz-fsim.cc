@@ -51,10 +51,7 @@ static int _create_fsim_monster(int mtype, int hp)
 
 static skill_type _fsim_melee_skill(const item_def *item)
 {
-    skill_type sk = SK_UNARMED_COMBAT;
-    if (item)
-        sk = weapon_skill(*item);
-    return (sk);
+    return (item ? weapon_skill(*item) : SK_UNARMED_COMBAT);
 }
 
 static void _fsim_set_melee_skill(int skill, const item_def *item)
@@ -63,14 +60,13 @@ static void _fsim_set_melee_skill(int skill, const item_def *item)
     wizard_set_skill_level(SK_FIGHTING, skill * 15 / 27, true);
     wizard_set_skill_level(SK_ARMOUR, skill * 15 / 27, true);
     wizard_set_skill_level(SK_SHIELDS, skill, true);
-    for (int i = 0; i < 15; ++i)
-        wizard_set_skill_level(skill_type(SK_SPELLCASTING + i), skill, true);
+    for (int i = SK_FIRST_MAGIC_SCHOOL; i <= SK_LAST_SKILL; ++i)
+        wizard_set_skill_level(skill_type(i), skill, true);
 }
 
 static void _fsim_set_ranged_skill(int skill, const item_def *item)
 {
     wizard_set_skill_level(range_skill(*item), skill, true);
-    wizard_set_skill_level(SK_THROWING, skill * 15 / 27, true);
 }
 
 static void _fsim_item(FILE *out,
