@@ -197,19 +197,27 @@ static void _dump_player(FILE *file)
     }
 
     fprintf(file, "Skills (mode: %s)\n", you.auto_training ? "auto" : "manual");
-    fprintf(file, "Name            | can_train | train | training | level | points\n");
+    fprintf(file, "Name            | can_train | train | training | level | points | progress\n");
     for (size_t i = 0; i < NUM_SKILLS; ++i)
     {
         const skill_type sk = skill_type(i);
         if (is_invalid_skill(sk))
             continue;
-        fprintf(file, "%-16s|     %c     |   %d   |    %2d    | %4.1f  | %d\n",
+        int needed_min = 0, needed_max = 0;
+        if (sk >= 0 && you.skills[sk] <= 27)
+            needed_min = skill_exp_needed(you.skills[sk], sk);
+        if (sk >= 0 && you.skills[sk] < 27)
+            needed_max = skill_exp_needed(you.skills[sk] + 1, sk);
+
+        fprintf(file, "%-16s|     %c     |   %d   |    %2d    |   %2d  | %6d | %d/%d\n",
                 skill_name(sk),
                 you.can_train[sk] ? 'X' : ' ',
                 you.train[sk],
                 you.training[sk],
-                you.skill(sk, 10) / 10.0,
-                you.skill_points[sk]);
+                you.skills[sk],
+                you.skill_points[sk],
+                you.skill_points[sk] - needed_min,
+                std::max(needed_max - needed_min, 0));
     }
     fprintf(file, "\n");
 
