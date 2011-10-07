@@ -430,6 +430,7 @@ bool mons_speaks(monster* mons)
             return (false);
 
         // Monsters in a battle frenzy are likewise occupied.
+        // But roused holy creatures are not.
         if (mons->has_ench(ENCH_BATTLE_FRENZY) && !one_chance_in(3))
             return (false);
 

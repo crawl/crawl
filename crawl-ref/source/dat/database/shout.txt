@@ -153,6 +153,27 @@ SOUND:@The_monster@ caws.
 __CAW unseen
 
 SOUND:You hear a loud caw.
+%%%%
+__CHERUB seen
+
+SOUND:@The_monster@'s eagle head screeches!
+
+SOUND:@The_monster@'s lion head roars!
+
+SOUND:@The_monster@'s ox head lows!
+
+SOUND:@The_monster@'s human head shouts!
+%%%%
+__CHERUB unseen
+
+SOUND:You hear a shout.
+
+SOUND:You hear a screech.
+
+SOUND:You hear a roar.
+
+SOUND:You hear a low.
+%%%%
 ############################################
 # End of default shouts
 ############################################

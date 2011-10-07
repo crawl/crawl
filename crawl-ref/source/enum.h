@@ -1461,6 +1461,7 @@ enum enchant_type
     ENCH_SILVER_CORONA, // Zin's silver light.
     ENCH_RECITE_TIMER,  // Was recited against.
     ENCH_INNER_FLAME,
+    ENCH_ROUSED,        // Monster has been roused to greatness
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

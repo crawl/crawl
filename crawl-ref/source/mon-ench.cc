@@ -788,6 +788,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_FEAR_INSPIRING: case ENCH_REGENERATION: case ENCH_RAISED_MR:
         case ENCH_MIRROR_DAMAGE: case ENCH_STONESKIN: case ENCH_LIQUEFYING:
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
+        case ENCH_ROUSED:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -1005,6 +1006,7 @@ void monster::apply_enchantment(const mon_enchant &me)
         break;
 
     case ENCH_BATTLE_FRENZY:
+    case ENCH_ROUSED:
         decay_enchantment(me, false);
         break;
 
@@ -1691,7 +1693,7 @@ static const char *enchant_names[] =
 #endif
     "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
-    "inner flame", "buggy",
+    "inner flame", "roused", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)

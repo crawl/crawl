@@ -71,6 +71,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_INSANE;
     case ENCH_BATTLE_FRENZY:
         return MB_FRENZIED;
+    case ENCH_ROUSED:
+        return MB_ROUSED;
     case ENCH_HASTE:
         return MB_HASTED;
     case ENCH_MIGHT:
@@ -1038,6 +1040,8 @@ void monster_info::to_string(int count, std::string& desc,
     {
         if (is(MB_FRENZIED))
             out << " (frenzied)";
+        else if (is(MB_ROUSED))
+            out << " (roused)";
         else if (is(MB_BERSERK))
             out << " (berserk)";
         else if (Options.verbose_monster_pane)
@@ -1106,6 +1110,8 @@ std::vector<std::string> monster_info::attributes() const
         v.push_back("berserk");
     if (is(MB_FRENZIED))
         v.push_back("consumed by blood-lust");
+    if (is(MB_ROUSED))
+        v.push_back("roused with righteous anger");
     if (is(MB_HASTED))
         v.push_back("moving very quickly");
     if (is(MB_STRONG))

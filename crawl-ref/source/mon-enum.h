@@ -57,6 +57,7 @@ enum mon_attack_type
     AT_TRUNK_SLAP,
     AT_SNAP,
     AT_SPLASH,
+    AT_CHERUB,
 
     AT_SHOOT,       // Attack representing missile damage for M_ARCHER.
     AT_WEAP_ONLY,   // Ranged weap: shoot point-blank like AT_SHOOT, melee weap:
@@ -227,6 +228,7 @@ enum shout_type
     S_HISS,                 // for snakes and lizards
     S_DEMON_TAUNT,          // for pandemonium lords
     S_CAW,                  // for ravens
+    S_CHERUB,               // for cherubs
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt
