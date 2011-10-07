@@ -1599,6 +1599,12 @@ int acquirement_create_item(object_class_type class_wanted,
                 thing.plus2 = std::max(static_cast<int>(thing.plus2), 0);
         }
     }
+    else if (is_deck(thing))
+    {
+        thing.special = !one_chance_in(3) ? DECK_RARITY_LEGENDARY :
+                        !one_chance_in(5) ? DECK_RARITY_RARE :
+                                            DECK_RARITY_COMMON;
+    }
 
     if (agent > GOD_NO_GOD && agent < NUM_GODS && agent == you.religion)
         thing.inscription = "god gift";
