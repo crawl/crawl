@@ -179,7 +179,7 @@ see "Training restrictions" below for details.
 
 By pressing its letter, you can cycle if and how a skill is trained:
 <darkgrey>- deselected</darkgrey>    Skill will not train at all.
-+ selected 
++ selected
 <w>* focused</w>       Skill will train faster than others.
 
 Training can be done in two modes, which are toggled with the <w>/</w> key.
@@ -206,7 +206,7 @@ Apart from (de)selecting skills, you also have the following toggles:
 <w>?</w> :   Allows you to read the descriptions of skills.
 <w>_</w> :   Shows/hides skill modifiers, e.g. from god powers.
 
-			      <h>Training restrictions</h>
+                               <h>Training restrictions</h>
 Fighting, Throwing, Dodging, Stealth, Stabbing, Traps & Doors, Unarmed Combat,
 and Spellcasting can always be trained. For the rest:
 * Weapon skills require carrying a weapon of the appropriate type.
