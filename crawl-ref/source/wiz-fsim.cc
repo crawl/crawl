@@ -85,7 +85,7 @@ static void _fsim_item(FILE *out,
     double avspeed = ((double) time / (double)  iterations);
     fprintf(out,
             " %-5s|  %3d%%    |  %5.2f |    %5.2f  |"
-            "   %5.2f |   %3d   |   %5.2g\n",
+            "   %5.2f |   %3d   |   %5.1f\n",
             wskill,
             100 * hits / iterations,
             double(damage) / iterations,
