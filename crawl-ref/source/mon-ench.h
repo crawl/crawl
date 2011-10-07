@@ -9,7 +9,9 @@ class mon_enchant
 {
 public:
     enchant_type  ench;
-    int           degree;
+    int           degree;   // The higher the degree, the faster the degree
+                            // decays, but degrees of 1 do not decay -- they
+                            // just run out when the duration does.
     int           duration, maxduration;
     kill_category who;      // Source's alignment.
     mid_t         source;   // Who set this enchantment?

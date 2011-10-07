@@ -1462,6 +1462,7 @@ enum enchant_type
     ENCH_RECITE_TIMER,  // Was recited against.
     ENCH_INNER_FLAME,
     ENCH_ROUSED,        // Monster has been roused to greatness
+    ENCH_BREATH_WEAPON, // just a simple timer for dragon breathweapon spam
     // Update enchantment names in monster.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS

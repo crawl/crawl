@@ -2475,6 +2475,12 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (!you.visible_to(mons))
             break;
 
+        if ((mons_genus(mons->type) == MONS_DRAGON || mons_genus(mons->type) == MONS_DRACONIAN)
+            && mons->has_ench(ENCH_BREATH_WEAPON))
+        {
+            break;
+        }
+
         if (mons->type != MONS_HELL_HOUND && x_chance_in_y(3, 13)
             || one_chance_in(10))
         {
@@ -2614,6 +2620,13 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
     if (used)
         mons->lose_energy(EUT_SPECIAL);
+
+    // XXX: Unless monster dragons get abilities that are not a breath
+    // weapon...
+    if (used && (mons_genus(mons->type) == MONS_DRAGON || mons_genus(mons->type) == MONS_DRACONIAN))
+    {
+        setup_breath_timeout(mons);
+    }
 
     return (used);
 }

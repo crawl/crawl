@@ -76,6 +76,7 @@ enum monster_info_flags
     MB_INNER_FLAME,
     MB_UMBRAED,
     MB_ROUSED,
+    MB_BREATH_WEAPON,
     NUM_MB_FLAGS
 };
 

@@ -1669,17 +1669,21 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             }
         }
 
+        bool was_drac_breath = false;
+
         // If there's otherwise no ranged attack use the breath weapon.
         // The breath weapon is also occasionally used.
         if (draco_breath != SPELL_NO_SPELL
             && (spell_cast == SPELL_NO_SPELL
                  || !_is_emergency_spell(hspell_pass, spell_cast)
                     && one_chance_in(4))
-            && !player_or_mon_in_sanct(mons))
+            && !player_or_mon_in_sanct(mons)
+            && !mons->has_ench(ENCH_BREATH_WEAPON))
         {
             spell_cast = draco_breath;
             setup_mons_cast(mons, beem, spell_cast);
             finalAnswer = true;
+            was_drac_breath = true;
         }
 
         // Should the monster *still* not have a spell, well, too bad {dlb}:
@@ -1744,6 +1748,13 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
         if (mons->type == MONS_BALL_LIGHTNING)
             mons->suicide();
+
+        // Dragons now have a time-out on their breath weapons, draconians too!
+        if (mons_genus(mons->type) == MONS_DRAGON
+            || (mons_genus(mons->type) == MONS_DRACONIAN && was_drac_breath))
+        {
+            setup_breath_timeout(mons);
+        }
 
         // FINALLY! determine primary spell effects {dlb}:
         if (spell_cast == SPELL_BLINK || spell_cast == SPELL_CONTROLLED_BLINK)
@@ -2143,6 +2154,22 @@ static bool _mons_vampiric_drain(monster *mons)
     }
 
     return (true);
+}
+
+void setup_breath_timeout(monster* mons)
+{
+    if (mons_genus(mons->type) != MONS_DRAGON && mons_genus(mons->type) != MONS_DRACONIAN)
+        return;
+
+    if (mons->has_ench(ENCH_BREATH_WEAPON))
+        return;
+
+    int timeout = roll_dice(1, 5);
+
+    dprf("dragon/draconian breath timeout %d", timeout);
+
+    mon_enchant breath_timeout = mon_enchant(ENCH_BREATH_WEAPON, 1, mons, timeout*10);
+    mons->add_ench(breath_timeout);
 }
 
 /**
@@ -4186,6 +4213,9 @@ bool ms_waste_of_time(const monster* mon, spell_type monspell)
         if (spell_harms_target(monspell) && is_sanctuary(mon->target))
             return (true);
     }
+
+    if (mons_genus(mon->type) == MONS_DRAGON && mon->has_ench(ENCH_BREATH_WEAPON))
+        return (true);
 
     // Eventually, we'll probably want to be able to have monsters
     // learn which of their elemental bolts were resisted and have those

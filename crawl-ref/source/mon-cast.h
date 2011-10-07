@@ -29,6 +29,7 @@ void mons_cast_haunt(monster* mons);
 void mons_cast_mislead(monster* mons);
 bool actor_is_illusion_cloneable(actor *target);
 void mons_cast_spectral_orcs(monster* mons);
+void setup_breath_timeout(monster* mons);
 
 bool ms_direct_nasty(spell_type monspell);
 bool ms_useful_fleeing_out_of_sight(const monster* mon, spell_type monspell);
