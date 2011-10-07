@@ -1493,7 +1493,7 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
                 mpr("The lava burns you!!");
             else if (damage > 40)
                 mpr("The lava sears you!!");
-            else if (damage < 20)
+            else if (damage > 20)
                 mpr("The lava scorches you!");
             else
                 mpr("The lava scalds you!");
