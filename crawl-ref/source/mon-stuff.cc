@@ -4023,7 +4023,8 @@ void seen_monster(monster* mons)
 
     if (!mons->has_ench(ENCH_ABJ)
         && !mons->has_ench(ENCH_FAKE_ABJURATION)
-        && !testbits(mons->flags, MF_NO_REWARD))
+        && !testbits(mons->flags, MF_NO_REWARD)
+        && !crawl_state.game_is_arena())
     {
         did_god_conduct(DID_SEE_MONSTER, mons->hit_dice, true, mons);
     }
