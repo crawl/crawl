@@ -1008,7 +1008,7 @@
 },
 
 {
-    ZAP_LIGHT_BEAM,
+    ZAP_HOLY_LIGHT,
     "beam of light",
     200,
     new calcdice_calculator<3, 11, 1, 3>,

@@ -2764,7 +2764,7 @@ struct spell_desc
 },
 
 {
-    SPELL_LIGHT_BEAM, "Light Beam",
+    SPELL_HOLY_LIGHT, "Holy Light",
      SPTYP_CONJURATION | SPTYP_HOLY,
      SPFLAG_DIR_OR_TARGET,
      6,
