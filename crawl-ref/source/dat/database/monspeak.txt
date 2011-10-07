@@ -6764,15 +6764,15 @@ beogh_converted_orc_reaction_speech_follower
 #################################
 cherub
 
-@The_monster@ sings a praise to the Shining One, in four-part harmony.
+@The_monster@ sings praise to the Shining One, in four-part harmony.
 
 @The_monster@'s lion-head roars!
 
 @The_monster@'s eagle-head screeches!
 
-@The_monster@ sings a praise to Zin.
+@The_monster@ sings praise to Zin.
 
-@The_monster@ sings a praise to Elyvilon.
+@The_monster@ sings praise to Elyvilon.
 %%%%
 #################################
 # Monsters who worship Zin
