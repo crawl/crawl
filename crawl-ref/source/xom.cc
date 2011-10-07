@@ -4000,32 +4000,9 @@ void xom_check_lost_item(const item_def& item)
         xom_is_stimulated(200, "Xom laughs nastily.", true);
     else if (is_special_unrandom_artefact(item))
         xom_is_stimulated(100, "Xom snickers.", true);
-    else if (item_is_rune(item))
-    {
-        if (item_is_unique_rune(item))
-            xom_is_stimulated(200, "Xom snickers loudly.", true);
-        else if (you.entry_cause == EC_SELF_EXPLICIT
-                 && !(item.flags & ISFLAG_BEEN_IN_INV))
-        {
-            // Player voluntarily entered Pan or the Abyss looking for
-            // runes, yet never found them.
-            if (item.plus == RUNE_ABYSSAL)
-            {
-                ASSERT(!you.runes[RUNE_ABYSSAL]);
-                // Ignore Abyss area shifts.
-                if (you.level_type != LEVEL_ABYSS)
-                {
-                    // Abyssal runes are a lot more trouble to find than
-                    // demonic runes, so they get twice the stimulation.
-                    xom_is_stimulated(100, "Xom snickers.", true);
-                }
-            }
-            else if (item.plus == RUNE_DEMONIC && !you.runes[RUNE_DEMONIC])
-            {
-                xom_is_stimulated(50, "Xom snickers softly.", true);
-            }
-        }
-    }
+    // you can't be made lose unique runes anymore, it was voluntary -- not so funny
+    else if (item_is_rune(item) && item_is_unique_rune(item))
+        xom_is_stimulated(50, "Xom snickers loudly.", true);
 }
 
 void xom_check_destroyed_item(const item_def& item, int cause)
