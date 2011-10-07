@@ -49,6 +49,7 @@
 #include "mon-util.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
+#include "mutation.h"
 #include "notes.h"
 #include "output.h"
 #include "player.h"
@@ -280,6 +281,40 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
 
         if (hurted == 0 && doEffects)
             canned_msg(MSG_YOU_RESIST);
+        break;
+    }
+
+    case BEAM_BOLT_OF_ZIN:
+    {
+        // Damage to chaos and mutations.
+
+        // For mutation damage, we want to count innate mutations for
+        // the demonspawn, but not for other species.
+        int mutated = how_mutated(you.species == SP_DEMONSPAWN, true);
+        int multiplier = std::min(mutated * 5, 100);
+        if (you.is_chaotic() || player_is_shapechanged())
+            multiplier = 100; // full damage
+        else if (you.is_undead || is_chaotic_god(you.religion))
+            multiplier = std::max(multiplier, 33);
+
+        hurted = hurted * multiplier / 100;
+
+        if (doEffects)
+        {
+            if (hurted <= 0)
+                canned_msg(MSG_YOU_RESIST);
+            else if (multiplier > 50)
+                mpr("The blast sears you terribly!");
+            else
+                mpr("The blast sears you!");
+
+            if (one_chance_in(3)
+                // delete_mutation() handles MUT_MUTATION_RESISTANCE but not the amulet
+                && (!wearing_amulet(AMU_RESIST_MUTATION) || one_chance_in(10)))
+            {
+                delete_mutation(RANDOM_GOOD_MUTATION);
+            }
+        }
         break;
     }
 

@@ -1709,6 +1709,30 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
         break;
     }
 
+    case BEAM_BOLT_OF_ZIN:
+    {
+        int dam = 0;
+        // Those naturally chaotic/unclean get hit fully, those who merely
+        // dabble in things Zin hates get partial resistance.
+        if (mons->is_chaotic() || !mons->is_unclean(false))
+            dam = 3;
+        else if (mons->is_unclean(true))
+            dam = 2;
+        // a bit of damage to those you can recite against
+        else if (mons->is_unholy() || mons->is_evil())
+            dam = 1;
+        // if monster mutations get added, here's the place for partial damage
+
+        hurted = hurted * dam / 3;
+        if (doFlavouredEffects)
+        {
+            simple_monster_message(mons,
+                                   hurted == 0 ? " appears unharmed."
+                                               : " is seared!");
+        }
+        break;
+    }
+
     case BEAM_ICE:
         // ice - about 50% of damage is cold, other 50% is impact and
         // can't be resisted (except by AC, of course)
@@ -5176,6 +5200,16 @@ void bolt::refine_for_explosion()
         }
     }
 
+    if (name == "silver bolt")
+    {
+        seeMsg  = "The silver bolt explodes into a blast of light!";
+        hearMsg = "The dungeon gets brighter for a moment.";
+
+        glyph   = dchar_glyph(DCHAR_FIRED_BURST);
+        flavour = BEAM_BOLT_OF_ZIN;
+        ex_size = 1;
+    }
+
     if (seeMsg == NULL)
     {
         seeMsg  = "The beam explodes into a cloud of software bugs!";
@@ -5810,6 +5844,7 @@ static std::string _beam_type_name(beam_type type)
     case BEAM_AIR:                   return ("air");
     case BEAM_INNER_FLAME:           return ("inner flame");
     case BEAM_PETRIFYING_CLOUD:      return ("calcifying dust");
+    case BEAM_BOLT_OF_ZIN:           return ("silver light");
 
     case NUM_BEAMS:                  die("invalid beam type");
     }

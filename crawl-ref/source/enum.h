@@ -345,7 +345,8 @@ enum beam_type                  // beam[].flavour
     BEAM_POTION_RANDOM,
     BEAM_AIR,
     BEAM_PETRIFYING_CLOUD,
-    BEAM_LAST_REAL = BEAM_PETRIFYING_CLOUD,
+    BEAM_BOLT_OF_ZIN,
+    BEAM_LAST_REAL = BEAM_BOLT_OF_ZIN,
 
     // For getting the visual effect of a beam.
     BEAM_VISUAL,
@@ -3241,6 +3242,7 @@ enum spell_type
     SPELL_PETRIFYING_CLOUD,
     SPELL_MASS_ABJURATION,
     SPELL_BEASTLY_APPENDAGE,
+    SPELL_SILVER_BLAST,
 
     NUM_SPELLS
 };
@@ -3412,6 +3414,7 @@ enum zap_type
     ZAP_BREATHE_MEPHITIC,
     ZAP_IOOD_BURST,
     ZAP_INNER_FLAME,
+    ZAP_BLAST_OF_SILVER,
 
     NUM_ZAPS
 };

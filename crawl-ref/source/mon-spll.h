@@ -1726,6 +1726,17 @@
       }
     },
 
+    {  MST_SILVER_STAR,
+      {
+       SPELL_HOLY_LIGHT,
+       SPELL_HOLY_LIGHT,
+       SPELL_NO_SPELL,
+       SPELL_NO_SPELL,
+       SPELL_SILVER_BLAST,
+       SPELL_SILVER_BLAST
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,
