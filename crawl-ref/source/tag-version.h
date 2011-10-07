@@ -57,6 +57,7 @@ enum tag_minor_version
     TAG_MINOR_NUM_LEVEL_CONN,      // Fix level connectivity data hard-coding NUM_BRANCHES.
     TAG_MINOR_FOOD_MUTATIONS,      // Food reform racial mutation upgrades.
     TAG_MINOR_DISABLED_SKILLS,     // Track practise events of disabled skills.
+    TAG_MINOR_CHERUB_ATTACKS,      // Give Cherubs a new attack flavour.
 
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1

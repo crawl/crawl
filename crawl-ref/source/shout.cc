@@ -134,6 +134,9 @@ void handle_monster_shouts(monster* mons, bool force)
     case S_CAW:
         default_msg_key = "__CAW";
         break;
+    case S_CHERUB:
+        default_msg_key = "__CHERUB";
+        break;
     default:
         default_msg_key = "__BUGGY"; // S_LOUD, S_VERY_SOFT, etc. (loudness)
     }

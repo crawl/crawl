@@ -4418,24 +4418,32 @@ int melee_attack::mons_calc_damage(const mon_attack_def &attk)
 
     damage_max += attk.damage;
     damage     += 1 + random2(attk.damage);
+    monster* as_mon = attacker->as_monster();
+    int frenzy_degree = -1;
 
     // Berserk/mighted/frenzied monsters get bonus damage.
-    if (attacker->as_monster()->has_ench(ENCH_MIGHT)
-        || attacker->as_monster()->has_ench(ENCH_BERSERK)
-        || attacker->as_monster()->has_ench(ENCH_INSANE))
+    if (as_mon->has_ench(ENCH_MIGHT)
+        || as_mon->has_ench(ENCH_BERSERK)
+        || as_mon->has_ench(ENCH_INSANE))
     {
         damage = damage * 3 / 2;
     }
-    else if (attacker->as_monster()->has_ench(ENCH_BATTLE_FRENZY))
+    else if (as_mon->has_ench(ENCH_BATTLE_FRENZY))
     {
-        const mon_enchant ench =
-            attacker->as_monster()->get_ench(ENCH_BATTLE_FRENZY);
+        frenzy_degree = as_mon->get_ench(ENCH_BATTLE_FRENZY).degree;
+    }
+    else if (as_mon->has_ench(ENCH_ROUSED))
+    {
+        frenzy_degree = as_mon->get_ench(ENCH_ROUSED).degree;
+    }
 
+    if (frenzy_degree != -1)
+    {
 #ifdef DEBUG_DIAGNOSTICS
         const int orig_damage = damage;
 #endif
 
-        damage = damage * (115 + ench.degree * 15) / 100;
+        damage = damage * (115 + frenzy_degree * 15) / 100;
 
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "%s frenzy damage: %d->%d",
@@ -5460,6 +5468,11 @@ void melee_attack::mons_perform_attack_rounds()
                 attk.type = AT_SHOOT;
             else
                 attk.type = AT_HIT;
+        }
+
+        if (attk.type == AT_CHERUB)
+        {
+            attk.type = static_cast<mon_attack_type>(random_choose(AT_HIT, AT_BITE, AT_PECK, AT_GORE, -1));
         }
 
         if (attk.type == AT_NONE)

@@ -3939,8 +3939,18 @@ static ghost_demon unmarshallGhost(reader &th)
     ghost.speed            = unmarshallShort(th);
     ghost.see_invis        = unmarshallByte(th);
     ghost.brand            = static_cast<brand_type>(unmarshallShort(th));
+#if TAG_MAJOR_VERSION == 32
+    short temp_attk = unmarshallShort(th);
+    if (th.getMinorVersion() < TAG_MINOR_CHERUB_ATTACKS
+        && static_cast<mon_attack_type>(temp_attk) == AT_CHERUB)
+    {
+        temp_attk++;
+    }
 
+    ghost.att_type = static_cast<mon_attack_type>(temp_attk);
+#else
     ghost.att_type = static_cast<mon_attack_type>(unmarshallShort(th));
+#endif
     ghost.att_flav = static_cast<mon_attack_flavour>(unmarshallShort(th));
 
     unmarshallResists(th, ghost.resists);

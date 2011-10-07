@@ -75,6 +75,7 @@ enum monster_info_flags
     MB_PERM_SUMMON,
     MB_INNER_FLAME,
     MB_UMBRAED,
+    MB_ROUSED,
     NUM_MB_FLAGS
 };
 

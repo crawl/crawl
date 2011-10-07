@@ -3900,6 +3900,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         "hisses",
         "sneers",       // S_DEMON_TAUNT
         "caws",
+        "says",         // S_CHERUB -- they just speak normally.
         "buggily says", // NUM_SHOUTS
         "breathes",     // S_VERY_SOFT
         "whispers",     // S_SOFT

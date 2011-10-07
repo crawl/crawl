@@ -916,6 +916,93 @@ static void _orc_battle_cry(monster* chief)
     }
 }
 
+static void _cherub_hymn(monster* chief)
+{
+    const actor *foe = chief->get_foe();
+    int affected = 0;
+
+    if (foe
+        && (foe != &you || !chief->friendly())
+        && !silenced(chief->pos())
+        && chief->can_see(foe)
+        && coinflip())
+    {
+        const int level = chief->hit_dice > 12? 2 : 1;
+        std::vector<monster* > seen_affected;
+        for (monster_iterator mi(chief); mi; ++mi)
+        {
+            if (*mi != chief
+                && mi->holiness() == MH_HOLY
+                && mons_aligned(chief, *mi)
+                && mi->hit_dice < chief->hit_dice
+                && !mi->berserk()
+                && !mi->has_ench(ENCH_MIGHT)
+                && !mi->cannot_move()
+                && !mi->confused())
+            {
+                mon_enchant ench = mi->get_ench(ENCH_ROUSED);
+                if (ench.ench == ENCH_NONE || ench.degree < level)
+                {
+                    const int dur =
+                        random_range(12, 20) * speed_to_duration(mi->speed);
+
+                    if (ench.ench != ENCH_NONE)
+                    {
+                        ench.degree   = level;
+                        ench.duration = std::max(ench.duration, dur);
+                        mi->update_ench(ench);
+                    }
+                    else
+                    {
+                        mi->add_ench(mon_enchant(ENCH_ROUSED, level,
+                                                 chief, dur));
+                    }
+
+                    affected++;
+                    if (you.can_see(*mi))
+                        seen_affected.push_back(*mi);
+
+                    if (mi->asleep())
+                        behaviour_event(*mi, ME_DISTURB, MHITNOT, chief->pos());
+                }
+            }
+        }
+
+        if (affected)
+        {
+            if (you.can_see(chief) && player_can_hear(chief->pos()))
+            {
+                mprf(MSGCH_SOUND, "%s sings a powerful hymn!",
+                     chief->name(DESC_CAP_THE).c_str());
+            }
+
+            // The yell happens whether you happen to see it or not.
+            noisy(LOS_RADIUS, chief->pos(), chief->mindex());
+
+            // Disabling detailed frenzy announcement because it's so spammy.
+            const msg_channel_type channel =
+                        chief->friendly() ? MSGCH_MONSTER_ENCHANT
+                                          : MSGCH_FRIEND_ENCHANT;
+
+            if (!seen_affected.empty())
+            {
+                std::string who;
+                if (seen_affected.size() == 1)
+                {
+                    who = seen_affected[0]->name(DESC_CAP_THE);
+                    mprf(channel, "%s is roused by the hymn!", who.c_str());
+                }
+                else
+                {
+                    mprf(channel, "%s holy creatures are roused to righteous anger!",
+                         chief->friendly() ? "Your" : "The");
+                }
+            }
+        }
+    }
+}
+
+
 static bool _make_monster_angry(const monster* mon, monster* targ)
 {
     if (mon->friendly() != targ->friendly())
@@ -2037,6 +2124,10 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
         _orc_battle_cry(mons);
         // Doesn't cost a turn.
+        break;
+
+    case MONS_CHERUB:
+        _cherub_hymn(mons);
         break;
 
     case MONS_ORANGE_STATUE:
