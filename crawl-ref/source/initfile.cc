@@ -873,8 +873,8 @@ void game_options::reset_options()
 #ifdef WIZARD
     fsim_rounds = 4000L;
     fsim_mons   = "worm";
-    fsim_str = fsim_int = fsim_dex = 15;
-    fsim_xl  = 10;
+    fsim_str = fsim_int = fsim_dex = -1;
+    fsim_xl  = -1;
     fsim_kit.clear();
 #endif
 

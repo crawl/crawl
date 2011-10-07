@@ -460,15 +460,21 @@ static bool debug_fight_sim(int mindex, int missile_slot,
     for (int i = SK_FIGHTING; i < NUM_SKILLS; ++i)
         you.skills[i] = 0;
 
-    you.experience_level = Options.fsim_xl;
-    if (you.experience_level < 1)
-        you.experience_level = 1;
-    if (you.experience_level > 27)
-        you.experience_level = 27;
+    if (Options.fsim_xl != -1)
+    {
+        you.experience_level = Options.fsim_xl;
+        if (you.experience_level < 1)
+            you.experience_level = 1;
+        if (you.experience_level > 27)
+            you.experience_level = 27;
+    }
 
-    you.base_stats[STAT_STR] = debug_cap_stat(Options.fsim_str);
-    you.base_stats[STAT_INT] = debug_cap_stat(Options.fsim_int);
-    you.base_stats[STAT_DEX] = debug_cap_stat(Options.fsim_dex);
+    if (Options.fsim_str != -1)
+        you.base_stats[STAT_STR] = debug_cap_stat(Options.fsim_str);
+    if (Options.fsim_int != -1)
+        you.base_stats[STAT_INT] = debug_cap_stat(Options.fsim_int);
+    if (Options.fsim_dex != -1)
+        you.base_stats[STAT_DEX] = debug_cap_stat(Options.fsim_dex);
 
     combat(ostat, mindex, missile_slot);
 
