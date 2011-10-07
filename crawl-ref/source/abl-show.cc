@@ -3357,9 +3357,9 @@ static int _find_ability_slot(const ability_def &abil)
     // Skip over a-e (invocations), a-g for Elyvilon, a-E for ZotDef
     int first_slot = 5;
     if (you.religion == GOD_ELYVILON)
-	first_slot = 7;
+        first_slot = 7;
     if (abil.flags & ABFLAG_ZOTDEF)
-	first_slot = 5 + 26; // capital F, for *some* memory compat.
+        first_slot = 5 + 26; // capital F, for *some* memory compat.
 
     for (int slot = first_slot; slot < 52; ++slot)
     {
