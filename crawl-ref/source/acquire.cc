@@ -1449,7 +1449,7 @@ int acquirement_create_item(object_class_type class_wanted,
                                    * roll_dice(1, 8)));
     }
     else if (class_wanted == OBJ_MISSILES && !divine)
-        thing.quantity *= 2;
+        thing.quantity *= 5;
     else if (quant > 1)
         thing.quantity = quant;
 
