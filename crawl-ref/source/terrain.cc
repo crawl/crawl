@@ -1488,15 +1488,15 @@ bool fall_into_a_pool(const coord_def& entry, bool allow_shift,
             int damage = 10 + roll_dice(2, 50) / resist;
 
             if (damage > 100)
-                mpr("The lava scorches you!!");
-            else if (damage > 70)
                 mpr("The lava roasts you!!");
-            else if (damage > 40)
+            else if (damage > 70)
                 mpr("The lava burns you!!");
+            else if (damage > 40)
+                mpr("The lava sears you!!");
             else if (damage < 20)
-                mpr("The lava scalds you!");
+                mpr("The lava scorches you!");
             else
-                mpr("The lava sears you!");
+                mpr("The lava scalds you!");
 
             ouch(damage, NON_MONSTER, KILLED_BY_LAVA);
         }
