@@ -682,6 +682,9 @@ public:
     std::vector<map_marker*> get_markers_at(const coord_def &c);
     std::string property_at(const coord_def &c, map_marker_type type,
                             const std::string &key);
+    std::string property_at(const coord_def &c, map_marker_type type,
+                            const char *key)
+    { return property_at(c, type, std::string(key)); }
     void clear();
 
     void write(writer &) const;

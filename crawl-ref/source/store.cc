@@ -876,16 +876,6 @@ dlua_chunk &CrawlStoreValue::get_lua()
     GET_VAL_PTR(SV_LUA, dlua_chunk*, new dlua_chunk());
 }
 
-CrawlStoreValue &CrawlStoreValue::operator [] (const std::string &key)
-{
-    return get_table()[key];
-}
-
-CrawlStoreValue &CrawlStoreValue::operator [] (const vec_size &index)
-{
-    return get_vector()[index];
-}
-
 ///////////////////////////
 // Const accessor functions
 #define GET_CONST_SETUP(x) \
@@ -974,18 +964,6 @@ level_pos CrawlStoreValue::get_level_pos() const
 {
     GET_CONST_SETUP(SV_LEV_POS);
     return *((level_pos*)val.ptr);
-}
-
-const CrawlStoreValue &CrawlStoreValue::operator
-    [] (const std::string &key) const
-{
-    return get_table()[key];
-}
-
-const CrawlStoreValue &CrawlStoreValue::operator
-    [](const vec_size &index) const
-{
-    return get_vector()[index];
 }
 
 /////////////////////
@@ -1470,17 +1448,6 @@ const CrawlStoreValue& CrawlHashTable::get_value(const std::string &key) const
     return (i->second);
 }
 
-CrawlStoreValue& CrawlHashTable::operator[] (const std::string &key)
-{
-    return get_value(key);
-}
-
-const CrawlStoreValue& CrawlHashTable::operator[] (const std::string &key)
-    const
-{
-    return get_value(key);
-}
-
 ///////////////////////////
 // std::map style interface
 hash_size CrawlHashTable::size() const
@@ -1778,16 +1745,6 @@ const CrawlStoreValue& CrawlVector::get_value(const vec_size &index) const
     ASSERT(index <= vec.size());
 
     return vec[index];
-}
-
-CrawlStoreValue& CrawlVector::operator[] (const vec_size &index)
-{
-    return get_value(index);
-}
-
-const CrawlStoreValue& CrawlVector::operator[] (const vec_size &index) const
-{
-    return get_value(index);
 }
 
 ///////////////////////////
