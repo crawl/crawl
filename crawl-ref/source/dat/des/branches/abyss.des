@@ -127,12 +127,13 @@ KMONS: T = tentacled monstrosity
 SUBST: T = Tw
 KFEAT: KT = w
 KFEAT: O = W
+SUBST: D : cW
 SUBST: . = w., w = WWWw, C = c., c = ccv
 MAP
       CCcccCC
    CCCCccOccCCCC
  CCCCcccWcWcccCCCC
-ccccccwwwwwwwcccccc
+ccccccwWDWDWwcccccc
 cTwwwwwwwwwwwwwwwTc
 cTwwwwwwwwwwwwwwwTc
 ccccccccwwwcccccccc
@@ -146,30 +147,23 @@ ccccccccwwwcccccccc
        ..@..
 ENDMAP
 
-# This rune is supposed to be hard to reach, and killing the siren isn't usually
-# an option. Some versions let you use dig to get to her. You can always break LOS
-# with her (you will never be trapped inside the vault).
 NAME:  evilmike_abyss_rune_siren
 TAGS:  abyss_rune
 KITEM: O = abyssal rune of Zot
-: if crawl.one_chance_in(3) then
-SUBST: N : m, C : x
-: else
-SUBST: N : n, C : c
-: end
 SUBST: X = c., c = ccv
+KPROP: l = no_cloud_gen
 MONS:  generate_awake siren
 MAP
 XXXXcccXXXX
 XXXccOccXXX
-XXcc0N0ccXX
-Xcc0NNN0ccX
+XXcc0n0ccXX
+Xcc0nnn0ccX
 Xc.......cX
 Xc.N...N.cX
 Xcc.....ccX
-Xcc.NNN.ccX
-X c.N1N.cXX
-Xcc.CNC.ccX
+Xcc.lll.ccX
+X c.l1l.cXX
+Xcc.clc.ccX
 Xc.......cX
 Xc..ccc..cX
 @+cccXccc+@
@@ -231,11 +225,9 @@ ENDMAP
 NAME:   evilmike_abyss_rune_seething_chaos
 TAGS:   abyss_rune allow_dup
 KITEM:  O = abyssal rune of Zot
-MARKER: ! = lua:fog_machine { \
-                pow_max = 10, delay_min = 10, delay_max = 40, \
-                size = 2, size_buildup_amnt = 5, \
-                size_buildup_time = 25, cloud_type = "seething chaos" \
-            }
+MARKER: ! = lua:fog_machine { cloud_type = "seething chaos", \
+            pow_min = 8, pow_max = 12, delay_min = 20, delay_max = 30, \
+            size = 1, walk_dist = 1, spread_rate = 33 }
 SUBST:  ! = ., X = x., x = xc
 MONS:   bat, chaos spawn, dragon / ice dragon
 MONS:   ogre mage, hill giant
@@ -245,11 +237,11 @@ cc.ccX X X
 c.O2cxx X X
 cc2+c3xx X X
 Xccc..1xx X X
- Xx3.!.4xx X X
-X xx1...5xx X
- X xx4...1xx X
-X X xx5.!..xX ..@
- X X xx1...xxx++x
+ Xx3.1.4xx X X
+X xx1.!.5xx X
+ X xx4.1..xx X
+X X xx5....xX ..@
+ X X xx....xxx++x
   X X xx........x
    X X xxx....XXx
     X X  xxxxxxxx
@@ -305,20 +297,22 @@ TAGS:   abyss_rune
 KITEM:  O = abyssal rune of Zot
 MONS:   ettin ; giant spiked club ego:distortion | giant club ego:distortion . \
                 giant spiked club ego:chaos | giant club ego:chaos
-SUBST:  x = xxxcccn, . = ...W
+SUBST:  x = xxccn, . = ...W
 NSUBST: 1 = 4:1 / *:0
 MAP
-    xxx.xx
- xxxx.xx.xx
- x1x.x1xx.xx
- xx.xxx.xx.x
-xx.xx1x.x1xx
-x.xx1O.xx.xx
-xx.xx.xx.xxx
- xx.xxxxx1xx
- x1x.x1x.xx
- xxxx.x.xx
-    xxxxx
+    ........
+ ....xxx.xx..
+ .xxxx.xx.xx..
+ .x1x.x1xx.xx.
+..xx.xxx.xx.x.
+.xx.xx1x.x1xx.
+.x.xx1O.xx.xx.
+.xx.xx.xx.xxx.
+..xx.xxxxx1xx.
+ .x1x.x1x.xx..
+ .xxxx.x.xx..
+ ....xxxxx..
+    .......
 ENDMAP
 
 NAME:  evilmike_abyss_rune_curve
