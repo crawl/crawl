@@ -190,6 +190,10 @@ You hear someone hum a lilting melody!
 
 You hear someone hum a lively tune!
 %%%%
+Silver Blast cast
+
+@The_monster@ shoots forth a bolt of silver!
+%%%%
 #####################################################
 # Individual innate spells (breathing and spitting).
 #####################################################
@@ -380,6 +384,10 @@ orb of fire cast
 @The_monster@ glows red.
 
 @The_monster@ emits a lurid red light.
+%%%%
+silver star cast
+
+@The_monster@ shines brightly.
 %%%%
 # Sphinxes can't gesture or point.
 sphinx cast

@@ -3024,6 +3024,19 @@ struct spell_desc
 },
 
 {
+    SPELL_SILVER_BLAST, "Silver Blast",
+     SPTYP_CONJURATION | SPTYP_HOLY,
+     SPFLAG_DIR_OR_TARGET,
+     5,
+     200,
+     6, 6,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
      0,
      SPFLAG_TESTING,

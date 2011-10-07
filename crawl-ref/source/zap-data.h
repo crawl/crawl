@@ -1087,4 +1087,20 @@
     0
 },
 
+{
+    ZAP_BLAST_OF_SILVER,
+    "silver light",
+    200,
+    new calcdice_calculator<3, 10, 1, 2>,
+    new tohit_calculator<40>,
+    LIGHTGRAY,
+    false,
+    BEAM_BOLT_OF_ZIN,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+    true,
+    0 // Noise comes from explosion
+},
+
 #endif

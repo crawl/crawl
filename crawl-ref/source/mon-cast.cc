@@ -911,6 +911,25 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
         beam.is_beam  = true;
         break;
 
+    case SPELL_HOLY_LIGHT:
+        beam.name     = "beam of golden light";
+        beam.damage   = dice_def(3, 8 + power / 11);
+        beam.colour   = ETC_HOLY;
+        beam.flavour  = BEAM_HOLY;
+        beam.hit      = 17 + power / 25;
+        beam.is_beam  = true;
+        break;
+
+    case SPELL_SILVER_BLAST:
+        beam.colour   = LIGHTGRAY;
+        beam.name     = "silver bolt";
+        beam.damage   = dice_def(3, 7 + power / 10);
+        beam.hit      = 40;
+        beam.flavour  = BEAM_BOLT_OF_ZIN;
+        beam.foe_ratio = 80;
+        beam.is_explosion = true;
+        break;
+
     default:
         if (check_validity)
         {
