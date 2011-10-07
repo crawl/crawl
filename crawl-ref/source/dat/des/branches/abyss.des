@@ -29,7 +29,7 @@ CHANCE: 0 : 90%
 
 NAME: abyss_rune_dummy
 TAGS: abyss_rune dummy
-CHANCE: 0 : 90%
+CHANCE: 0 : 10%
 
 NAME: abyss_exit_dummy
 TAGS: abyss_exit dummy
