@@ -1943,6 +1943,7 @@ int melee_attack::player_weapon_type_modify(int damage)
     // Take normal hits into account.  If the hit is from a weapon with
     // more than one damage type, randomly choose one damage type from
     // it.
+    monster_type defender_genus = mons_genus(defender->as_monster()->type);
     switch (weapon ? single_damage_type(*weapon) : -1)
     {
     case DAM_PIERCE:
@@ -1954,7 +1955,7 @@ int melee_attack::player_weapon_type_modify(int damage)
         {
             if (defender->atype() == ACT_MONSTER
                 && defender_visible
-                && mons_genus(defender->as_monster()->type) == MONS_HOG)
+                && defender_genus == MONS_HOG)
             {
                 attack_verb = "spit";
                 verb_degree = "like the proverbial pig";
@@ -1975,10 +1976,15 @@ int melee_attack::player_weapon_type_modify(int damage)
             attack_verb = "slash";
         else if (damage < HIT_STRONG)
             attack_verb = "slice";
-        else if (mons_genus(defender->as_monster()->type) == MONS_OGRE)
+        else if (defender_genus == MONS_OGRE)
         {
             attack_verb = "dice";
             verb_degree = "like an onion";
+        }
+        else if (defender_genus == MONS_SKELETON_SMALL)
+        {
+            attack_verb = "fracture";
+            verb_degree = "into splinters";
         }
         else
         {
@@ -1996,6 +2002,11 @@ int melee_attack::player_weapon_type_modify(int damage)
             attack_verb = one_chance_in(4) ? "thump" : "sock";
         else if (damage < HIT_STRONG)
             attack_verb = "bludgeon";
+        else if (defender_genus == MONS_SKELETON_SMALL)
+        {
+            attack_verb = "shatter";
+            verb_degree = "into splinters";
+        }
         else
         {
             const char* bash_desc[][2] = {{"crush",  "like a grape"},
