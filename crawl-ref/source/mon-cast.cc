@@ -2087,7 +2087,6 @@ void mons_cast_spectral_orcs(monster* mons)
 
     for (int i = random2(3) + 1; i > 0; --i)
     {
-
          monster_type mon = MONS_ORC;
          if (coinflip())
              mon = MONS_ORC_WARRIOR;
@@ -3598,21 +3597,24 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_DEATHS_DOOR:
-         if (!mons->has_ench(ENCH_DEATHS_DOOR))
-         {
-             const int dur = BASELINE_DELAY * 2 * mons->skill(SK_NECROMANCY);
-             mprf("%s stands defiantly in death's doorway!", mons->name(DESC_CAP_THE).c_str());
-             mons->hit_points = std::max(std::min(mons->hit_points, mons->skill(SK_NECROMANCY)), 1);
-             mons->add_ench(mon_enchant(ENCH_DEATHS_DOOR, 0, mons, dur));
-         }
-         return;
+        if (!mons->has_ench(ENCH_DEATHS_DOOR))
+        {
+            const int dur = BASELINE_DELAY * 2 * mons->skill(SK_NECROMANCY);
+            mprf("%s stands defiantly in death's doorway!",
+                 mons->name(DESC_CAP_THE).c_str());
+            mons->hit_points = std::max(std::min(mons->hit_points,
+                                        mons->skill(SK_NECROMANCY)), 1);
+            mons->add_ench(mon_enchant(ENCH_DEATHS_DOOR, 0, mons, dur));
+        }
+        return;
 
     case SPELL_REGENERATION:
     {
-        mprf("%s's wounds begin to heal before your eyes!", mons->name(DESC_CAP_THE).c_str());
+        mprf("%s's wounds begin to heal before your eyes!",
+             mons->name(DESC_CAP_THE).c_str());
         const int dur = BASELINE_DELAY
-             * std::min(5 + roll_dice(2, (mons->hit_dice * 10) / 3 + 1), 100);
-         mons->add_ench(mon_enchant(ENCH_REGENERATION, 0, mons, dur));
+            * std::min(5 + roll_dice(2, (mons->hit_dice * 10) / 3 + 1), 100);
+        mons->add_ench(mon_enchant(ENCH_REGENERATION, 0, mons, dur));
         return;
     }
     }
@@ -4180,7 +4182,7 @@ bool ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
         if (mon->type == MONS_KRAKEN)
             return true;
     case SPELL_DEATHS_DOOR:
-         return !mon->has_ench(ENCH_DEATHS_DOOR);
+        return !mon->has_ench(ENCH_DEATHS_DOOR);
     default:
         return !targ_adj && spell_typematch(monspell, SPTYP_SUMMONING);
     }
@@ -4453,9 +4455,9 @@ bool ms_waste_of_time(const monster* mon, spell_type monspell)
         break;
 
     case SPELL_DEATHS_DOOR:
-         if (mon->has_ench(ENCH_DEATHS_DOOR))
+        if (mon->has_ench(ENCH_DEATHS_DOOR))
             ret = true;
-         break;
+        break;
 
     case SPELL_NO_SPELL:
         ret = true;
