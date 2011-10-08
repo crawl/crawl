@@ -136,6 +136,8 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
         return MB_INNER_FLAME;
     case ENCH_BREATH_WEAPON:
         return MB_BREATH_WEAPON;
+    case ENCH_DEATHS_DOOR:
+        return MB_DEATHS_DOOR;
     default:
         return NUM_MB_FLAGS;
     }
@@ -1171,6 +1173,10 @@ std::vector<std::string> monster_info::attributes() const
         v.push_back("stupefied");
     if (is(MB_MAD))
         v.push_back("lost in madness");
+    if (is(MB_DEATHS_DOOR))
+       v.push_back("standing in death's doorway");
+    if (is(MB_REGENERATION))
+       v.push_back("regenerating");
     return v;
 }
 

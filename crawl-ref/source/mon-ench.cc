@@ -686,6 +686,16 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         behaviour_event(this, ME_EVAL);
         break;
 
+    case ENCH_DEATHS_DOOR:
+        if (!quiet)
+            simple_monster_message(this, " is no longer invulnerable.");
+        break;
+
+    case ENCH_REGENERATION:
+         if (!quiet)
+            simple_monster_message(this, " is no longer regenerating.");
+         break;
+
     default:
         break;
     }
@@ -788,7 +798,7 @@ void monster::timeout_enchantments(int levels)
         case ENCH_FEAR_INSPIRING: case ENCH_REGENERATION: case ENCH_RAISED_MR:
         case ENCH_MIRROR_DAMAGE: case ENCH_STONESKIN: case ENCH_LIQUEFYING:
         case ENCH_SILVER_CORONA: case ENCH_DAZED: case ENCH_FAKE_ABJURATION:
-        case ENCH_ROUSED: case ENCH_BREATH_WEAPON:
+        case ENCH_ROUSED: case ENCH_BREATH_WEAPON: case ENCH_DEATHS_DOOR:
             lose_ench_levels(i->second, levels);
             break;
 
@@ -993,6 +1003,7 @@ void monster::apply_enchantment(const mon_enchant &me)
     case ENCH_DUMB:
     case ENCH_MAD:
     case ENCH_BREATH_WEAPON:
+    case ENCH_DEATHS_DOOR:
         decay_enchantment(me);
         break;
 
@@ -1694,7 +1705,7 @@ static const char *enchant_names[] =
 #endif
     "liquefying", "tornado", "fake_abjuration",
     "dazed", "mute", "blind", "dumb", "mad", "silver_corona", "recite timer",
-    "inner flame", "roused", "breath timer", "buggy",
+    "inner flame", "roused", "breath timer", "deaths_door", "buggy",
 };
 
 static const char *_mons_enchantment_name(enchant_type ench)
@@ -1842,6 +1853,7 @@ int mon_enchant::calc_duration(const monster* mons,
     case ENCH_REGENERATION:
     case ENCH_RAISED_MR:
     case ENCH_MIRROR_DAMAGE:
+    case ENCH_DEATHS_DOOR:
         cturn = 300 / _mod_speed(25, mons->speed);
         break;
     case ENCH_SLOW:

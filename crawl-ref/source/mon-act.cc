@@ -103,7 +103,7 @@ static void _monster_regenerate(monster* mons)
     if (crawl_state.disables[DIS_MON_REGEN])
         return;
 
-    if (mons->has_ench(ENCH_SICK) ||
+    if (mons->has_ench(ENCH_SICK) || mons->has_ench(ENCH_DEATHS_DOOR) ||
         (!mons_can_regenerate(mons) && !(mons->has_ench(ENCH_REGENERATION))))
     {
         return;
