@@ -1316,6 +1316,8 @@ int artefact_wpn_property(const item_def &item, artefact_prop_type prop,
 {
     artefact_properties_t  proprt;
     artefact_known_props_t known;
+    proprt.init(0);
+    known.init(0);
 
     artefact_wpn_properties(item, proprt, known);
 
