@@ -3693,7 +3693,9 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
         }
 
         if (amount != INSTANT_DEATH)
-            if (petrified())
+            if (this->has_ench(ENCH_DEATHS_DOOR))
+               return (0);
+            else if (petrified())
                 amount /= 3;
             else if (petrifying())
                 amount = amount * 1000 / 1732;
