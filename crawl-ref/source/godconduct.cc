@@ -796,6 +796,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             }
             else if (you.religion == GOD_TROG)
             {
+                simple_god_message(" doesn't appreciate you training magic!");
                 piety_change = -level;
                 piety_denom = 10;
                 retval = true;
