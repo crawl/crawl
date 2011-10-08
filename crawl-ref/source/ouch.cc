@@ -1322,6 +1322,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
     if (crawl_state.game_is_tutorial())
     {
+        crawl_state.need_save = false;
         if (!non_death)
             tutorial_death_message();
 
