@@ -2998,7 +2998,7 @@ static bool _find_subtype_by_name(item_def &item,
         {
             item.plus = j;
 
-            if (name == lowercase_string(item.name(DESC_PLAIN)))
+            if (name == lowercase_string(item.name(DESC_PLAIN, false, false, false)))
             {
                 type_wanted = i;
                 i = ntypes;
