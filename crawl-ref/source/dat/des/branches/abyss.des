@@ -352,6 +352,17 @@ MAP
 .......................
 ENDMAP
 
+NAME:  kb_abyss_rune_zappy
+TAGS:  abyss_rune allow_dup
+KITEM: O = abyssal rune of Zot
+MONS:  lightning spire generate_awake
+MAP
+ 1.1
+.....
+1.O.1
+.....
+ 1.1
+ENDMAP
 
 ###############################################################################
 # abyss exit vaults
