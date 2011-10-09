@@ -183,8 +183,9 @@ static void _give_potion(monster* mon, int level)
         mitm[thing_created].flags = 0;
         _give_monster_item(mon, thing_created);
     }
-    else if ((mons_species(mon->type) == MONS_DEEP_DWARF && one_chance_in(3))
+    else if ((mons_species(mon->type) == MONS_DEEP_DWARF
               || mon->type == MONS_GNOLL_SERGEANT)
+                  && one_chance_in(3))
     {
         const int thing_created =
             items(0, OBJ_POTIONS, coinflip() ? POT_HEAL_WOUNDS
@@ -1566,12 +1567,6 @@ void give_shield(monster* mon, int level)
         }
         break;
 
-    case MONS_GNOLL_SERGEANT:
-        make_item_for_monster(mon, OBJ_ARMOUR,
-                              coinflip() ? ARM_BUCKLER : ARM_SHIELD,
-                              level, MAKE_ITEM_NO_RACE);
-        break;
-
     case MONS_DEEP_ELF_SOLDIER:
     case MONS_DEEP_ELF_FIGHTER:
         if (one_chance_in(6))
@@ -1606,6 +1601,7 @@ void give_shield(monster* mon, int level)
         }
         break;
     case MONS_KENKU:
+    case MONS_GNOLL_SERGEANT:
         if (one_chance_in(3))
         {
             make_item_for_monster(mon, OBJ_ARMOUR,
