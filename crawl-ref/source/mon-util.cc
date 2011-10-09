@@ -3357,8 +3357,11 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
     }
 
     // Special-case gnolls, so they can't get past (hob)goblins.
-    if (m1->type == MONS_GNOLL && m2->type != MONS_GNOLL)
+    if (mons_species(m1->type) == MONS_GNOLL
+        && mons_species(m2->type) != MONS_GNOLL)
+    {
         return (false);
+    }
 
     return (mchar1 == mchar2 && (fleeing || m1->hit_dice > m2->hit_dice));
 }

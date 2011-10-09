@@ -1737,6 +1737,17 @@
       }
     },
 
+    {  MST_GNOLL_SHAMAN,
+      {
+       SPELL_CORONA,
+       SPELL_PETRIFY,
+       SPELL_HEAL_OTHER,
+       SPELL_HASTE_OTHER,
+       SPELL_HEAL_OTHER,
+       SPELL_MINOR_HEALING
+      }
+    },
+
     {  MST_TEST_SPAWNER,
       {
        SPELL_SHADOW_CREATURES,
