@@ -418,14 +418,15 @@ void InvMenu::set_title(const std::string &s)
         cgotoxy(1, 1);
 
         const int cap = carrying_capacity(BS_UNENCUMBERED);
+
         stitle = make_stringf(
-            "Inventory: %.0f/%.0f aum (%d%%, %d/52 slots, Ctrl-W toggles weight display)",
+            "Inventory: %.0f/%.0f aum (%d%%, %d/52 slots)",
             BURDEN_TO_AUM * you.burden,
             BURDEN_TO_AUM * cap,
             (you.burden * 100) / cap,
             inv_count());
 
-        std::string prompt = "Press item letter to examine.";
+        std::string prompt = "_: help; Ctrl-W: toggle weight display";
         stitle = stitle + std::string(std::max(0, get_number_of_cols()
                                                   - strwidth(stitle)
                                                   - strwidth(prompt)),
