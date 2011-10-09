@@ -1321,8 +1321,6 @@ void merfolk_stop_swimming()
 void trackers_init_new_level(bool transit)
 {
     travel_init_new_level();
-    if (transit)
-        stash_init_new_level();
 }
 
 std::string weird_glowing_colour()

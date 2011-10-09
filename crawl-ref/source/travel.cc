@@ -3849,11 +3849,6 @@ void TravelCache::load(reader& inf, int minorVersion)
         linfo.id = id;
         linfo.load(inf, minorVersion);
 
-        // Non-dungeon levels aren't persistent, but we do
-        // save the current level.
-        if (id.level_type != LEVEL_DUNGEON && id != level_id::current())
-            continue;
-
         levels[id] = linfo;
     }
 
