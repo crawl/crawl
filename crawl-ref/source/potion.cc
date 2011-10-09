@@ -133,11 +133,14 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
             const int value = 200;
             const int herbivorous = player_mutation_level(MUT_HERBIVOROUS);
 
-            if (herbivorous < 3 && player_likes_chunks(true))
+            if (herbivorous < 3 && player_likes_chunks())
             {
                 // Likes it.
                 mpr("This tastes like blood.");
                 lessen_hunger(value, true);
+
+                if (!player_likes_chunks(true))
+                    check_amu_the_gourmand(false);
             }
             else
             {
