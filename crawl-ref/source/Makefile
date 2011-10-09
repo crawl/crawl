@@ -677,11 +677,16 @@ endif
 ifdef PCH
 CFWARN_L += -Winvalid-pch
 
+ifdef PCH_BYTHEBOOK
 # Follow the suggestions in ccache(1)
 CFOTHERS_L += -fpch-preprocess
 export CCACHE_SLOPPINESS = time_macros
 # ... for everything but version.cc, which uses __DATE__ and __TIME__
 version.o: CCACHE_SLOPPINESS =
+else
+# Just keep ccache blisfully ignorant of the precompiled header
+export CCACHE_CPP2 = yes
+endif
 endif
 
 ifdef ASSERTS
