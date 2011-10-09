@@ -1841,8 +1841,9 @@ static void _find_parent_branch(branch_type br, int depth,
 static void _trackback(std::vector<level_id> &vec,
                        branch_type branch, int subdepth)
 {
-    if (subdepth < 1 || subdepth > MAX_LEVELS)
+    if (subdepth < 1)
         return;
+    ASSERT(subdepth <= 27);
 
     level_id lid(branch, subdepth);
     vec.push_back(lid);

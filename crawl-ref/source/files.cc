@@ -1159,20 +1159,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
     std::string level_name = level_id::current().describe();
 
-    if (you.level_type == LEVEL_DUNGEON && old_level.level_type == LEVEL_DUNGEON
-        || load_mode == LOAD_START_GAME && you.char_direction != GDT_GAME_START)
-    {
-        const level_id current(level_id::current());
-        if (Generated_Levels.find(current) == Generated_Levels.end())
-        {
-            // Make sure the old file is gone.
-            you.save->delete_chunk(level_name);
-
-            // Save the information for later deletion -- DML 6/11/99
-            Generated_Levels.insert(current);
-        }
-    }
-
     you.prev_targ     = MHITNOT;
     you.prev_grd_targ.reset();
 
@@ -1231,7 +1217,6 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
             // generation.
             you.absdepth0 = 0;
             you.char_direction = GDT_DESCENDING;
-            Generated_Levels.insert(level_id::current());
         }
 
 #ifdef USE_TILE
@@ -1869,7 +1854,7 @@ static void _load_level(const level_id &level)
 // in this game.
 bool is_existing_level(const level_id &level)
 {
-    return (Generated_Levels.find(level) != Generated_Levels.end());
+    return you.save && you.save->has_chunk(level.describe());
 }
 
 // This class provides a way to walk the dungeon with a bit more flexibility

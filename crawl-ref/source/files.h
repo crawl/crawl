@@ -22,13 +22,6 @@ enum load_mode_type
     LOAD_VISITOR,               // Visitor pattern to see all levels
 };
 
-// referenced in files - newgame - ouch - dgn-overview:
-#define MAX_LEVELS 50
-
-// referenced in files - newgame - ouch:
-typedef std::set<level_id> level_id_set;
-extern level_id_set Generated_Levels;
-
 bool file_exists(const std::string &name);
 bool dir_exists(const std::string &dir);
 bool is_absolute_path(const std::string &path);
