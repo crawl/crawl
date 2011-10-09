@@ -58,6 +58,7 @@ enum tag_minor_version
     TAG_MINOR_FOOD_MUTATIONS,      // Food reform racial mutation upgrades.
     TAG_MINOR_DISABLED_SKILLS,     // Track practise events of disabled skills.
     TAG_MINOR_CHERUB_ATTACKS,      // Give Cherubs a new attack flavour.
+    TAG_MINOR_FOOD_MUTATIONS_BACK, // Revert the food experiment mutations.
 
     NUM_TAG_MINORS,
     TAG_MINOR_VERSION = NUM_TAG_MINORS - 1
