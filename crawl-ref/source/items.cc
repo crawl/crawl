@@ -3777,7 +3777,7 @@ bool get_item_by_name(item_def *item, char* specs,
 // coord_def() if not present
 coord_def orb_position()
 {
-    item_def* orb = find_floor_item(OBJ_ORBS,ORB_ZOT);
+    item_def* orb = find_floor_item(OBJ_ORBS, ORB_ZOT);
     return (orb ? orb->pos: coord_def());
 }
 

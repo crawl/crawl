@@ -422,28 +422,6 @@
     0
 },
 
-#if TAG_MAJOR_VERSION == 32
-{
-    ZAP_BONE_SHARDS,
-    "spray of bone shards",
-    // Incoming power is highly dependent on mass (see spl-damage.cc).
-    // Basic function is power * 15 + mass...  with the largest
-    // available mass (3000) we get a power of 4500 at a power
-    // level of 100 (for 3d29).
-    10000,
-    new dicedef_calculator<3, 4, 1, 180>,
-    new tohit_calculator<8, 1, 100>,
-    LIGHTGREY,
-    false,
-    BEAM_MAGIC,
-    DCHAR_FIRED_ZAP,
-    true,
-    true,
-    false,
-    3
-},
-#endif
-
 {
     ZAP_BANISHMENT,
     "",
