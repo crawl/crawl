@@ -385,6 +385,7 @@ int mons_standard_level(int mcls)
     case MONS_WORM:
     case MONS_SNAKE:
     case MONS_QUOKKA:
+    case MONS_GNOLL_SHAMAN:
         return 6;
 
     case MONS_ORC:
@@ -401,6 +402,7 @@ int mons_standard_level(int mcls)
     case MONS_PHANTOM:
     case MONS_SCORPION:
     case MONS_SKELETON_SMALL:
+    case MONS_GNOLL_SERGEANT:
         return 8;
 
     case MONS_WATER_MOCCASIN:
@@ -801,6 +803,7 @@ int mons_standard_rare(int mcls)
     case MONS_WIZARD:
     case MONS_HARPY:
     case MONS_FIRE_CRAB:
+    case MONS_GNOLL_SERGEANT:
         return 20;
 
     case MONS_BORING_BEETLE:
@@ -814,6 +817,7 @@ int mons_standard_rare(int mcls)
     case MONS_EYE_OF_DEVASTATION:
     case MONS_NECROMANCER:
     case MONS_WOOD_GOLEM:
+    case MONS_GNOLL_SHAMAN:
         return 15;
 
     case MONS_KOBOLD_DEMONOLOGIST:
@@ -958,6 +962,8 @@ int mons_mineorc_level(int mcls)
     case MONS_TROLL:
     case MONS_TWO_HEADED_OGRE:
     case MONS_ETTIN:
+    case MONS_GNOLL_SHAMAN:
+    case MONS_GNOLL_SERGEANT:
         mlev += 3;
         break;
 
@@ -1013,6 +1019,8 @@ int mons_mineorc_rare(int mcls)
         return 2;
 
     case MONS_OGRE_MAGE:
+    case MONS_GNOLL_SHAMAN:
+    case MONS_GNOLL_SERGEANT:
         return 1;
 
     default:

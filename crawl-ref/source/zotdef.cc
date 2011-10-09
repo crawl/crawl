@@ -270,7 +270,8 @@ static void _gnoll_wave(int power)
 {
     wave_name("GNOLL WAVE");
     monster_type gnolls[] = {MONS_GNOLL, MONS_GNOLL, MONS_GNOLL,
-                MONS_GNOLL, MONS_GNOLL, MONS_GNOLL, MONS_TROLL, END};
+                MONS_GNOLL, MONS_GNOLL_SHAMAN, MONS_GNOLL_SERGEANT,
+                MONS_TROLL, END};
     monster_type boss[] = {MONS_GRUM, MONS_TROLL, END};
     _zotdef_fill_from_list(gnolls, 0, power); // full
     _zotdef_choose_boss(boss, power);
