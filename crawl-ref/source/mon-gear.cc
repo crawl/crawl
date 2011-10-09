@@ -183,7 +183,8 @@ static void _give_potion(monster* mon, int level)
         mitm[thing_created].flags = 0;
         _give_monster_item(mon, thing_created);
     }
-    else if (mons_species(mon->type) == MONS_DEEP_DWARF && one_chance_in(3))
+    else if ((mons_species(mon->type) == MONS_DEEP_DWARF && one_chance_in(3))
+              || mon->type == MONS_GNOLL_SERGEANT)
     {
         const int thing_created =
             items(0, OBJ_POTIONS, coinflip() ? POT_HEAL_WOUNDS
@@ -404,6 +405,20 @@ static item_make_species_type _give_weapon(monster* mon, int level,
             item.sub_type  = random_choose(WPN_SPEAR, WPN_SPEAR, WPN_HALBERD,
                                            WPN_CLUB,  WPN_WHIP,  WPN_FLAIL, -1);
         }
+        break;
+
+    case MONS_GNOLL_SHAMAN:
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = random_choose(WPN_STAFF, WPN_CLUB, WPN_WHIP, -1);
+        break;
+
+    case MONS_GNOLL_SERGEANT:
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_SPEAR;
+        if (one_chance_in(3))
+            level = MAKE_GOOD_ITEM;
         break;
 
     case MONS_PIKEL:
@@ -1551,6 +1566,12 @@ void give_shield(monster* mon, int level)
         }
         break;
 
+    case MONS_GNOLL_SERGEANT:
+        make_item_for_monster(mon, OBJ_ARMOUR,
+                              coinflip() ? ARM_BUCKLER : ARM_SHIELD,
+                              level, MAKE_ITEM_NO_RACE);
+        break;
+
     case MONS_DEEP_ELF_SOLDIER:
     case MONS_DEEP_ELF_FIGHTER:
         if (one_chance_in(6))
@@ -1725,6 +1746,18 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         }
         else
             return;
+        break;
+
+    case MONS_GNOLL_SHAMAN:
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = coinflip() ? ARM_ROBE : ARM_LEATHER_ARMOUR;
+        break;
+
+    case MONS_GNOLL_SERGEANT:
+        item_race      = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        item.sub_type  = coinflip() ? ARM_RING_MAIL : ARM_SCALE_MAIL;
         break;
 
     case MONS_JOSEPH:

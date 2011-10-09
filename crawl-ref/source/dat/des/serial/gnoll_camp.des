@@ -2,26 +2,6 @@
 # gnoll_camp.des: This file includes a serial vault for the early, open levels
 # in main Dungeon.
 
-# Some lua shortcuts.
-{{
-
-function gnoll_sergeant (e)
-  e.mons("gnoll name:sergeant n_suf hd:4 \
-          col:cyan tile:mons_gnoll_sergeant; \
-          potion of healing | potion of heal wounds . \
-          spear w:2 good_item | spear good_item . \
-          ring mail | scale mail . buckler | shield")
-end
-
-function gnoll_shaman (e)
-  e.mons("gnoll name:shaman n_suf hd:3 \
-          col:white tile:mons_gnoll_shaman actual_spells \
-          spells:corona;petrify;heal_other;haste_other;heal_other;minor_healing\
-          ; staff | club | whip . robe | leather armour")
-end
-
-}}
-
 # The serial vault definition. CHANCE is fairly high with 10%, but a game
 # is not guaranteed to come up with one of the layouts within the depth
 # range, so the serial vault itself is probably fairly rare.
@@ -50,8 +30,8 @@ WEIGHT: 8
 KMASK:  w = no_monster_gen
 MONS:   gnoll
 MONS:   gnoll ; stone q:10 | dart q:10 | spear q:3 | throwing net q:3 / nothing
-: gnoll_sergeant(_G)
-: gnoll_shaman(_G)
+MONS:   gnoll shaman
+MONS:   gnoll sergeant
 MONS:   jackal / hound / war dog w:1
 MAP
 ................
@@ -77,8 +57,8 @@ TAGS:   serial_gnoll_camp patrolling
 WEIGHT: 8
 MONS:   gnoll
 MONS:   gnoll ; stone q:10 | dart q:10 | spear q:3 | throwing net q:3
-: gnoll_sergeant(_G)
-: gnoll_shaman(_G)
+MONS:   gnoll shaman
+MONS:   gnoll sergeant
 MONS:   jackal w:20 / hound / war dog w:1 / nothing w:5
 MAP
 ...............
@@ -128,8 +108,8 @@ TAGS:   serial_gnoll_camp patrolling uniq_gnoll_camp_huts
 #       Place monsters randomly: 6 gnolls, 2 sergeants, 2 shamans and 4 dogs.
 NSUBST: . = 7:1 / 1:2 / 2:3 / 4:4 / *:.
 MONS:   gnoll
-: gnoll_sergeant(_G)
-: gnoll_shaman(_G)
+MONS:   gnoll shaman
+MONS:   gnoll sergeant
 MONS:   jackal / hound / war dog w:1
 MAP
      ........
@@ -158,8 +138,8 @@ WEIGHT: 8
 #       Place monsters randomly: 4 gnolls, 2 sergeants, 2 shamans and 4 dogs.
 NSUBST: . = 5:1 / 1:2 / 2:3 / 4:4 / *:.
 MONS:   gnoll
-: gnoll_sergeant(_G)
-: gnoll_shaman(_G)
+MONS:   gnoll shaman
+MONS:   gnoll sergeant
 MONS:   jackal / hound / war dog w:1
 MONS:   gnoll ; stone q:10 | dart q:10 | spear q:3 | throwing net q:3
 MAP
@@ -195,8 +175,8 @@ NAME:    gnoll_camp_mini_basic
 TAGS:    serial_gnoll_camp patrolling allow_dup
 SHUFFLE: 34
 MONS:    gnoll, jackal / hound / war dog w:1
-: gnoll_sergeant(_G)
-: gnoll_shaman(_G)
+MONS:    gnoll shaman
+MONS:    gnoll sergeant
 MAP
 .............
 ...cccccc....
@@ -245,7 +225,7 @@ NAME:   gnoll_camp_mini_secret_sergeant
 TAGS:   serial_gnoll_camp patrolling
 WEIGHT: 5
 MONS:   gnoll / nothing w:2
-: gnoll_sergeant(_G)
+MONS:   gnoll sergeant
 MAP
 ...............
 ...ccccc.......
@@ -280,8 +260,8 @@ NAME:    gnoll_camp_mini_house
 TAGS:    serial_gnoll_camp patrolling allow_dup
 SHUFFLE: 23
 MONS:    gnoll
-: gnoll_sergeant(_G)
-: gnoll_shaman(_G)
+MONS:    gnoll shaman
+MONS:    gnoll sergeant
 MONS:    hound / war dog w:2
 MAP
 ...........
@@ -303,8 +283,8 @@ TAGS:    serial_gnoll_camp patrolling allow_dup
 WEIGHT:  20
 SHUFFLE: 123
 MONS:    gnoll
-: gnoll_sergeant(_G)
-: gnoll_shaman(_G)
+MONS:    gnoll shaman
+MONS:    gnoll sergeant
 MAP
 ........
 ..x++x..
