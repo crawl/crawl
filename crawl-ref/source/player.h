@@ -752,7 +752,7 @@ bool check_moveto(const coord_def& p, const std::string &move_verb = "step",
                   const std::string &msg = "");
 void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift);
 
-bool player_in_mappable_area(void);
+bool is_map_persistent(void);
 bool player_in_branch(int branch);
 bool player_in_level_area(level_area_type area);
 bool player_in_hell(void);

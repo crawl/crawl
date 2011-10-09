@@ -1920,7 +1920,7 @@ bool direction_chooser::do_main_loop()
         if (!just_looking)
             break;
 
-        if (!player_in_mappable_area())
+        if (!is_map_persistent())
             mpr("You cannot set exclusions on this level.");
         else
         {

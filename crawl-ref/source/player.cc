@@ -457,7 +457,7 @@ bool is_feat_dangerous(dungeon_feature_type grid, bool permanently)
         return false;
 }
 
-bool player_in_mappable_area(void)
+bool is_map_persistent(void)
 {
     return (!testbits(env.level_flags, LFLAG_NO_MAP));
 }
@@ -2779,7 +2779,7 @@ void forget_map(int chance_forgotten, bool force)
         }
     }
 
-    ash_detect_portals(player_in_mappable_area());
+    ash_detect_portals(is_map_persistent());
 #ifdef USE_TILE
     tiles.update_minimap_bounds();
 #endif

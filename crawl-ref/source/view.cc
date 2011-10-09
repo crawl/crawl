@@ -1022,7 +1022,7 @@ void viewwindow(bool show_updates)
 
     if (show_updates || _show_terrain)
     {
-        if (!player_in_mappable_area())
+        if (!is_map_persistent())
         {
             env.map_knowledge.init(map_cell());
             ash_detect_portals(false);

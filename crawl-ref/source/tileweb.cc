@@ -434,7 +434,7 @@ void TilesFramework::_send_map(bool force_full)
     if (force_full)
     {
         write_message("clear_map();");
-        write_message("mappable(%u);", player_in_mappable_area());
+        write_message("mappable(%u);", is_map_persistent());
     }
 
     coord_def last_gc(0, 0);
