@@ -2225,6 +2225,11 @@ static band_type _choose_band(int mon_type, int power, int &band_size,
             band_size = (coinflip() ? 3 : 2);
         }
         break;
+    case MONS_GNOLL_SHAMAN:
+    case MONS_GNOLL_SERGEANT:
+        band = BAND_GNOLLS;
+        band_size = 3 + random2(4);
+        break;
     case MONS_DEEP_DWARF_SCION:
         band = BAND_DEEP_DWARF;
         band_size = (one_chance_in(5)? 2: 1) + random2(3);
