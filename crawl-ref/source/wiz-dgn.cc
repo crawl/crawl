@@ -826,7 +826,8 @@ void wizard_recreate_level()
 
     if (lev.level_type == LEVEL_DUNGEON)
         you.get_place_info().levels_seen--;
-    Generated_Levels.erase(lev);
+    if (you.save)
+        you.save->delete_chunk(lev.describe());
     const bool newlevel = load_level(stair_taken, LOAD_START_GAME, lev);
 #ifdef USE_TILE
     tile_new_level(newlevel);

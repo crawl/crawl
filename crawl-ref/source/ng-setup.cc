@@ -1432,9 +1432,6 @@ static void _setup_generic(const newgame_def& ng)
     set_hp(you.hp_max);
     set_mp(you.max_magic_points);
 
-    // tmpfile purging removed in favour of marking
-    Generated_Levels.clear();
-
     initialise_branch_depths();
     initialise_temples();
     init_level_connectivity();
