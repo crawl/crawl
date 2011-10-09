@@ -2034,7 +2034,7 @@ enum monster_type                      // (int) menv[].type
     MONS_GNOME,                 // single vault
     MONS_HALFLING,              // recolouring + single vault.
     MONS_FELID,                 // recolouring + single vault.  Miaow!
-    MONS_VAMPIRE_BAT,           // for recolouring
+    MONS_VAMPIRE_BAT,           // recolouring + vaults
     MONS_DEMIGOD,               // recolouring + single vault
     MONS_DEMONSPAWN,            // recolouring + single vault... but there are FRs
     MONS_GARGOYLE,
@@ -2443,7 +2443,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SPRIGGAN_AIR_MAGE,
     MONS_FIRE_BAT,
     MONS_IGNACIO,
-    MONS_HOLY_SWINE,            // porkalator only
+    MONS_HOLY_SWINE,            // porkalator
     MONS_SENSED_FRIENDLY,
     MONS_GIANT,
     MONS_BASILISK,
@@ -3256,12 +3256,12 @@ enum slot_select_mode
 
 enum stat_type
 {
-  STAT_STR,                     //    0
-  STAT_INT,
-  STAT_DEX,
-  NUM_STATS, // added for increase_stats() {dlb}
-  STAT_ALL, // must remain after NUM_STATS -- added to handle royal jelly, etc. {dlb}
-  STAT_RANDOM,
+    STAT_STR,
+    STAT_INT,
+    STAT_DEX,
+    NUM_STATS,
+    STAT_ALL, // must remain after NUM_STATS -- added to handle royal jelly, etc. {dlb}
+    STAT_RANDOM,
 };
 
 enum targeting_type
@@ -3359,9 +3359,6 @@ enum zap_type
     ZAP_PAIN,
     ZAP_STICKY_FLAME,
     ZAP_DISPEL_UNDEAD,
-#if TAG_MAJOR_VERSION == 32
-    ZAP_BONE_SHARDS,
-#endif
     ZAP_BANISHMENT,
     ZAP_DEGENERATION,
     ZAP_STING,
@@ -3378,16 +3375,9 @@ enum zap_type
     ZAP_BREATHE_ACID,
     ZAP_BREATHE_POISON,
     ZAP_BREATHE_POWER,
-#if TAG_MAJOR_VERSION == 32
-    ZAP_ENSLAVE_UNDEAD,
-#endif
     ZAP_AGONY,
     ZAP_DISINTEGRATION,
     ZAP_BREATHE_STEAM,
-#if TAG_MAJOR_VERSION == 32
-    ZAP_CONTROL_DEMON,
-    ZAP_ORB_OF_FRAGMENTATION,
-#endif
     ZAP_THROW_ICICLE,
     ZAP_ICE_STORM,
     ZAP_CORONA,
