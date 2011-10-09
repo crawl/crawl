@@ -55,13 +55,6 @@
 // Global
 StashTracker StashTrack;
 
-void stash_init_new_level()
-{
-    // If there's an existing stash level for Pan, blow it away.
-    StashTrack.remove_level(level_id(LEVEL_PANDEMONIUM));
-    StashTrack.remove_level(level_id(LEVEL_PORTAL_VAULT));
-}
-
 std::string userdef_annotate_item(const char *s, const item_def *item,
                                   bool exclusive)
 {

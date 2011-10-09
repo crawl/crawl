@@ -20,9 +20,6 @@ class reader;
 class writer;
 class StashMenu;
 
-// Stash definitions
-void stash_init_new_level();
-
 enum STASH_TRACK_MODES
 {
     STM_NONE,             // Stashes are not tracked

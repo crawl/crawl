@@ -1026,12 +1026,15 @@ enum level_flag_type
     LFLAG_NO_MAP          = (1 << 2), // Level can't be persistently mapped.
 };
 
+// Volatile state and cache.
 enum level_state_type
 {
     LSTATE_NONE = 0,
 
     LSTATE_GOLUBRIA       = (1 << 0), // A Golubria trap exists.
     LSTATE_GLOW_MOLD      = (1 << 1), // Any glowing mold exists.
+
+    LSTATE_DELETED        = (1 << 2), // The level won't be saved.
 };
 
 // NOTE: The order of these is very important to their usage!

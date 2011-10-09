@@ -1173,20 +1173,19 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // This block is to grab followers and save the old level to disk.
     if (load_mode == LOAD_ENTER_LEVEL)
     {
+        dprf("stair_taken = <yellow>%s</yellow>", dungeon_feature_name(stair_taken));
         ASSERT(old_level.depth != -1); // what's this for?
 
         _grab_followers();
 
         if (old_level.level_type == LEVEL_DUNGEON
+            || stair_taken == DNGN_ENTER_PORTAL_VAULT
             || old_level.level_type != you.level_type)
         {
             _save_level(old_level);
         }
         else
-        {
-            _do_lost_monsters();
-            _do_lost_items();
-        }
+            delete_level(old_level);
 
         // The player is now between levels.
         you.position.reset();
@@ -1855,6 +1854,17 @@ static void _load_level(const level_id &level)
 bool is_existing_level(const level_id &level)
 {
     return you.save && you.save->has_chunk(level.describe());
+}
+
+void delete_level(const level_id &level)
+{
+    env.level_state |= LSTATE_DELETED;
+    erase_level_info(level);
+    StashTrack.remove_level(level);
+    if (you.save)
+        you.save->delete_chunk(level.describe());
+    _do_lost_monsters();
+    _do_lost_items();
 }
 
 // This class provides a way to walk the dungeon with a bit more flexibility
