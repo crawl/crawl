@@ -312,7 +312,7 @@ class StashTracker
 public:
     static bool is_level_untrackable()
     {
-        return !player_in_mappable_area();
+        return !is_map_persistent();
     }
 
     StashTracker() : levels(), last_corpse_update(0)

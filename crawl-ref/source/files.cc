@@ -1479,7 +1479,7 @@ bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
         // because of a transformation.
         maybe_clear_weapon_swap();
 
-        ash_detect_portals(player_in_mappable_area());
+        ash_detect_portals(is_map_persistent());
     }
     // Initialize halos, etc.
     invalidate_agrid(true);

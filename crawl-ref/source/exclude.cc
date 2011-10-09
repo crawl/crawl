@@ -69,7 +69,7 @@ static int _get_full_exclusion_radius()
 // exclusion.
 void set_auto_exclude(const monster* mon)
 {
-    if (!player_in_mappable_area())
+    if (!is_map_persistent())
         return;
 
     if (_need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
@@ -429,7 +429,7 @@ void deferred_exclude_update()
 void clear_excludes()
 {
     // Sanity checks
-    if (!player_in_mappable_area())
+    if (!is_map_persistent())
         return;
 
 #ifdef USE_TILE
@@ -495,7 +495,7 @@ void del_exclude(const coord_def &p)
 void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
                  bool defer_updates)
 {
-    if (!player_in_mappable_area())
+    if (!is_map_persistent())
         return;
 
     if (!in_bounds(p))

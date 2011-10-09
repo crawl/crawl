@@ -579,13 +579,13 @@ static void _dgn_map_colour_fixup()
 bool set_level_flags(uint32_t flags, bool silent)
 {
     bool could_control = allow_control_teleport(true);
-    bool could_map     = player_in_mappable_area();
+    bool could_map     = is_map_persistent();
 
     uint32_t old_flags = env.level_flags;
     env.level_flags |= flags;
 
     bool can_control = allow_control_teleport(true);
-    bool can_map     = player_in_mappable_area();
+    bool can_map     = is_map_persistent();
 
     if (could_control && !can_control && !silent)
     {
@@ -605,13 +605,13 @@ bool set_level_flags(uint32_t flags, bool silent)
 bool unset_level_flags(uint32_t flags, bool silent)
 {
     bool could_control = allow_control_teleport(true);
-    bool could_map     = player_in_mappable_area();
+    bool could_map     = is_map_persistent();
 
     iflags_t old_flags = env.level_flags;
     env.level_flags &= ~flags;
 
     bool can_control = allow_control_teleport(true);
-    bool can_map     = player_in_mappable_area();
+    bool can_map     = is_map_persistent();
 
     if (!could_control && can_control && !silent)
     {
