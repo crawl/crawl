@@ -62,6 +62,7 @@ static bool _vampire_consume_corpse(int slot, bool invent);
 static void _heal_from_food(int hp_amt, int mp_amt = 0, bool unrot = false,
                             bool restore_str = false);
 
+
 /*
  *  BEGIN PUBLIC FUNCTIONS
  */
@@ -1180,6 +1181,11 @@ static int _food_preference(const item_def &food, bool nutrition = false)
     return _food_preference(FOOD_CHUNK, nutrition,
                             mons_corpse_effect(food.plus),
                             food_is_rotten(food));
+}
+
+int maximum_satiation(const item_def &food, bool nutrition)
+{
+    return _maximum_satiation(_food_preference(food, nutrition));
 }
 
 // Returns which of two food items is older (true for first, else false).
