@@ -106,7 +106,9 @@ Xom powers
 
 To worship Xom is to live riskily. In a good mood Xom may shower you with gifts, while at other times this capricious god could decide to "spice things up a little" and send you to your doom. If you prove yourself the stronger, so much the better; if not, well, there'll be other playthings...
 %%%%
-# no active powers of Vehumet
+Vehumet powers
+
+Worshippers of Vehumet will quickly be able to recover their magical energy upon killing beings. As they gain favour, they will also gain various enhancements to their destructive spells - firstly assistance in casting such spells, then increased range for their conjurations, and finally a lowered cost for casting higher level destructive spells. Eventually, Vehumet will gift followers rare books of destructive magic.
 %%%%
 Okawaru powers
 
