@@ -1227,7 +1227,7 @@ static uint8_t _roll_abyss_rock_colour()
     return random_choose_weighted(
          130, BLUE,
          409, GREEN,
-         695, CYAN,
+         // no CYAN (metal)
          770, RED,
          522, MAGENTA,
         1292, BROWN,
