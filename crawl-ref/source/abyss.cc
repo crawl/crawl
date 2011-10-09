@@ -24,7 +24,6 @@
 #include "itemprop.h"
 #include "items.h"
 #include "l_defs.h"
-#include "lev-pand.h"
 #include "los.h"
 #include "makeitem.h"
 #include "mapmark.h"
@@ -1201,13 +1200,57 @@ static void _initialize_abyss_state()
     abyssal_state.depth = 0.0;
 }
 
+static uint8_t _roll_abyss_floor_colour()
+{
+    return random_choose_weighted(
+         108, BLUE,
+         632, GREEN,
+         // no CYAN (silence)
+         932, RED,
+         488, MAGENTA,
+         433, BROWN,
+        3438, LIGHTGRAY,
+         // no DARKGREY (out of LOS)
+         766, LIGHTBLUE,
+         587, LIGHTGREEN,
+         794, LIGHTCYAN,
+         566, LIGHTRED,
+         313, LIGHTMAGENTA,
+         // no YELLOW (halo)
+         890, WHITE,
+          50, ETC_FIRE,
+    0);
+}
+
+static uint8_t _roll_abyss_rock_colour()
+{
+    return random_choose_weighted(
+         130, BLUE,
+         409, GREEN,
+         695, CYAN,
+         770, RED,
+         522, MAGENTA,
+        1292, BROWN,
+         // no LIGHTGRAY (stone)
+         // no DARKGREY (out of LOS)
+         570, LIGHTBLUE,
+         705, LIGHTGREEN,
+         952, LIGHTCYAN,
+        1456, LIGHTRED,
+         377, LIGHTMAGENTA,
+         105, YELLOW,
+         101, WHITE,
+          60, ETC_FIRE,
+    0);
+}
+
 static void _abyss_generate_new_area()
 {
     _initialize_abyss_state();
     remove_sanctuary(false);
 
-    // Get new monsters and colours.
-    init_pandemonium();
+    env.floor_colour = _roll_abyss_floor_colour();
+    env.rock_colour = _roll_abyss_rock_colour();
 #ifdef USE_TILE
     tile_init_flavour();
 #endif

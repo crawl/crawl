@@ -2167,9 +2167,6 @@ static void _build_dungeon_level(int level_number, level_area_type level_type,
         init_pandemonium();
         setup_vault_mon_list();
     }
-    // Still used to set colours.  FIXME.
-    if (level_type == LEVEL_ABYSS)
-        init_pandemonium();
 
     _build_layout_skeleton(level_number, level_type);
 

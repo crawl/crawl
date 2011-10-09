@@ -19,7 +19,6 @@
 #include "hiscores.h"
 #include "itemname.h"
 #include "items.h"
-#include "lev-pand.h"
 #include "libutil.h"
 #include "mapmark.h"
 #include "message.h"

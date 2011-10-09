@@ -24,7 +24,6 @@
 #include "initfile.h"
 #include "itemname.h"
 #include "items.h"
-#include "lev-pand.h"
 #include "macro.h"
 #include "maps.h"
 #include "menu.h"
@@ -222,11 +221,7 @@ static void _post_init(bool newc)
          old_level);
 
     if (newc && you.char_direction == GDT_GAME_START)
-    {
-        // Randomise colours properly for the Abyss.
         generate_abyss();
-        init_pandemonium();
-    }
 
 #ifdef DEBUG_DIAGNOSTICS
     // Debug compiles display a lot of "hidden" information, so we auto-wiz.
