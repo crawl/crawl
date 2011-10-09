@@ -83,6 +83,8 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
 bool chunk_is_poisonous(int chunktype);
 void eat_floor_item(int item_link);
 
+int maximum_satiation(const item_def &food, bool nutrition = false);
+
 int eat_from_floor(bool skip_chunks = true);
 bool eat_from_inventory();
 int prompt_eat_chunks(bool only_auto = false);
