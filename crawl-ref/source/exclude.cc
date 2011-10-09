@@ -495,7 +495,7 @@ void del_exclude(const coord_def &p)
 void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
                  bool defer_updates)
 {
-    if (!player_in_mappable_area()) // currently only Abyss
+    if (!player_in_mappable_area())
         return;
 
     if (!in_bounds(p))

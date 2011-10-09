@@ -1213,7 +1213,7 @@ static map_feature get_cell_map_feature(const map_cell& cell)
 
 void TilesFramework::update_minimap(const coord_def& gc)
 {
-    if (!player_in_mappable_area() || !m_region_map)
+    if (!m_region_map)
         return;
 
     map_feature mf;

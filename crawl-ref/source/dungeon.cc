@@ -1227,7 +1227,7 @@ void dgn_reset_level(bool enable_random_maps)
     else if (player_in_level_area(LEVEL_LABYRINTH)
              || player_in_level_area(LEVEL_ABYSS))
     {
-        env.level_flags = LFLAG_NO_TELE_CONTROL | LFLAG_NO_MAGIC_MAP;
+        env.level_flags = LFLAG_NO_TELE_CONTROL | LFLAG_NO_MAP;
     }
     else
         env.level_flags = 0;

@@ -1482,16 +1482,8 @@ int staff_spell(int staff)
         return (-1);
     }
 
-    const int flags = get_spell_flags(spell);
-
-    // Labyrinths block divinations.
-    if (you.level_type == LEVEL_LABYRINTH
-        && testbits(flags, SPFLAG_MAPPING))
-    {
-        mpr("Something interferes with your magic!");
-    }
     // All checks passed, we can cast the spell.
-    else if (your_spells(spell, power, false, false)
+    if (your_spells(spell, power, false, false)
             == SPRET_ABORT)
     {
         crawl_state.zero_turns_taken();

@@ -33,7 +33,7 @@ void tile_new_level(bool first_time, bool init_unseen)
     if (first_time)
         tile_init_flavour();
 
-    if (!player_in_mappable_area() || init_unseen)
+    if (init_unseen)
     {
         for (unsigned int x = 0; x < GXM; x++)
             for (unsigned int y = 0; y < GYM; y++)
