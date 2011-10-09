@@ -312,8 +312,7 @@ class StashTracker
 public:
     static bool is_level_untrackable()
     {
-        return you.level_type == LEVEL_LABYRINTH
-            || you.level_type == LEVEL_ABYSS;
+        return !player_in_mappable_area();
     }
 
     StashTracker() : levels(), last_corpse_update(0)

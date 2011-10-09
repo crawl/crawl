@@ -388,11 +388,6 @@ static bool _is_travelsafe_square(const coord_def& c, bool ignore_hostile,
     if (!env.map_knowledge(c).known())
         return (false);
 
-    // In the Abyss, disallow travelling into unseen territory
-    // even if it's known, i.e. you've seen it before.
-    if (!player_in_mappable_area() && !you.see_cell(c))
-        return (false);
-
     const dungeon_feature_type grid = env.map_knowledge(c).feat();
 
     // Also make note of what's displayed on the level map for
@@ -2938,12 +2933,6 @@ void start_explore(bool grab_items)
     if (Hints.hints_explored)
         Hints.hints_explored = false;
 
-    if (!player_in_mappable_area())
-    {
-        mpr("It would help if you knew where you were, first.");
-        return;
-    }
-
     if (!i_feel_safe(true, true))
         return;
 
@@ -3934,8 +3923,7 @@ std::vector<level_id> TravelCache::known_levels() const
 
 bool can_travel_to(const level_id &id)
 {
-    return (id.level_type == LEVEL_DUNGEON && can_travel_interlevel()
-            || id.level_type == you.level_type && player_in_mappable_area());
+    return (id.level_type == LEVEL_DUNGEON && can_travel_interlevel());
 }
 
 bool can_travel_interlevel()

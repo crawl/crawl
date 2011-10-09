@@ -450,8 +450,7 @@ void wizard_reveal_traps()
 
 void wizard_map_level()
 {
-    if (testbits(env.level_flags, LFLAG_NOT_MAPPABLE)
-        || testbits(get_branch_flags(), BFLAG_NOT_MAPPABLE))
+    if (testbits(env.level_flags, LFLAG_NO_MAP))
     {
         if (!yesno("Force level to be mappable?", true, 'n'))
         {
@@ -459,8 +458,7 @@ void wizard_map_level()
             return;
         }
 
-        unset_level_flags(LFLAG_NOT_MAPPABLE | LFLAG_NO_MAGIC_MAP);
-        unset_branch_flags(BFLAG_NOT_MAPPABLE | BFLAG_NO_MAGIC_MAP);
+        unset_level_flags(LFLAG_NO_MAP);
     }
 
     magic_mapping(1000, 100, true, true);

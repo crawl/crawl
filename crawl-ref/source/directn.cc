@@ -1920,11 +1920,8 @@ bool direction_chooser::do_main_loop()
         if (!just_looking)
             break;
 
-        if (you.level_type == LEVEL_LABYRINTH
-            || !player_in_mappable_area())
-        {
+        if (!player_in_mappable_area())
             mpr("You cannot set exclusions on this level.");
-        }
         else
         {
             const bool was_excluded = is_exclude_root(target());

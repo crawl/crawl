@@ -1017,8 +1017,7 @@ enum level_flag_type
     LFLAG_NONE = 0,
 
     LFLAG_NO_TELE_CONTROL = (1 << 0), // Teleport control not allowed.
-    LFLAG_NOT_MAPPABLE    = (1 << 1), // Level not mappable (like Abyss).
-    LFLAG_NO_MAGIC_MAP    = (1 << 2), // Level can't be magic mapped.
+    LFLAG_NO_MAP          = (1 << 2), // Level can't be persistently mapped.
 };
 
 enum level_state_type

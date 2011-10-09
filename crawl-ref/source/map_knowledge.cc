@@ -134,9 +134,7 @@ void set_terrain_seen(int x, int y)
     map_cell* cell = &env.map_knowledge[x][y];
 
     // First time we've seen a notable feature.
-    // In unmappable areas, this doesn't work since
-    // map knowledge gets wiped each turn.
-    if (!(cell->flags & MAP_SEEN_FLAG) && player_in_mappable_area())
+    if (!(cell->flags & MAP_SEEN_FLAG))
     {
         _automap_from(x, y, _map_quality());
 

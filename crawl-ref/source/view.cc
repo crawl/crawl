@@ -463,9 +463,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     if (!in_bounds(pos))
         pos = you.pos();
 
-    if (!force
-        && (testbits(env.level_flags, LFLAG_NO_MAGIC_MAP)
-            || testbits(get_branch_flags(), BFLAG_NO_MAGIC_MAP)))
+    if (!force && testbits(env.level_flags, LFLAG_NO_MAP))
     {
         if (!suppress_msg)
             canned_msg(MSG_DISORIENTED);
@@ -894,8 +892,6 @@ static int player_view_update_at(const coord_def &gc)
 
 #ifdef USE_TILE
     const coord_def ep = grid2show(gc);
-    if (!player_in_mappable_area())
-        return (ret); // XXX: is this necessary?
 
     // We remove any references to mcache when
     // writing to the background.
