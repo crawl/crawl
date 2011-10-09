@@ -7,8 +7,6 @@
 #ifndef FOOD_H
 #define FOOD_H
 
-#include "mon-enum.h"
-
 enum food_type
 {
     FOOD_MEAT_RATION,                  //    0
@@ -38,17 +36,7 @@ enum food_type
 };
 
 #define BERSERK_NUTRITION    700
-enum satiation_threshold
-{
-    HUNGER_STARVING      = 1000,
-    HUNGER_NEAR_STARVING = 1533,
-    HUNGER_VERY_HUNGRY   = 2066,
-    HUNGER_HUNGRY        = 2800,
-    HUNGER_SATIATED      = 7000,
-    HUNGER_FULL          = 9000,
-    HUNGER_VERY_FULL     = 11000,
-    HUNGER_ENGORGED      = 12000
-};
+#define HUNGER_STARVING     1000
 
 int count_corpses_in_pack(bool blood_only = false);
 bool butchery(int which_corpse = -1, bool bottle_blood = false);
@@ -72,18 +60,16 @@ bool causes_rot(const item_def &food);
 bool is_inedible(const item_def &item);
 bool is_preferred_food(const item_def &food);
 bool is_forbidden_food(const item_def &food);
+bool check_amu_the_gourmand(bool reqid);
 
 bool can_ingest(const item_def &food, bool suppress_msg,
                 bool reqid = false, bool check_hunger = true);
 bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                 bool reqid = false, bool check_hunger = true,
-                corpse_effect_type effect_type = CE_CLEAN,
-                bool is_rotten = false);
+                bool rotten = false);
 
 bool chunk_is_poisonous(int chunktype);
 void eat_floor_item(int item_link);
-
-int maximum_satiation(const item_def &food, bool nutrition = false);
 
 int eat_from_floor(bool skip_chunks = true);
 bool eat_from_inventory();

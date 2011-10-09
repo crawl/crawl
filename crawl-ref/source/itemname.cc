@@ -345,25 +345,6 @@ std::string item_def::name(description_level_type descrip,
         if (tried)
             insparts.push_back(tried_str);
 
-        if (this->base_type == OBJ_FOOD)
-        {
-            std::string sat;
-
-            switch (maximum_satiation(*this))
-            {
-            case HS_STARVING:      sat = "starving";      break;
-            case HS_NEAR_STARVING: sat = "near starving"; break;
-            case HS_VERY_HUNGRY:   sat = "very hungry";   break;
-            case HS_HUNGRY:        sat = "hungry";        break;
-            case HS_SATIATED:      sat = "satiated";      break;
-            case HS_FULL:          sat = "full";          break;
-            case HS_VERY_FULL:     sat = "very full";     break;
-            case HS_ENGORGED:      sat = "engorged";      break;
-            }
-
-            insparts.push_back("edible when "+sat);
-        }
-
         if (with_inscription && !(this->inscription.empty()))
             insparts.push_back(this->inscription);
 

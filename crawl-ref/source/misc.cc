@@ -136,7 +136,7 @@ static void _create_monster_hide(const item_def corpse)
 
 int get_max_corpse_chunks(int mons_class)
 {
-    return (mons_weight(mons_class) / 300);
+    return (mons_weight(mons_class) / 150);
 }
 
 void turn_corpse_into_skeleton(item_def &item)
