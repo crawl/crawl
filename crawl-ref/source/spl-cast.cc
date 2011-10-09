@@ -1673,18 +1673,6 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_CONTROLLED_BLINK:
         return cast_controlled_blink(powc, fail);
 
-    // Utility spells.
-    // XXX: This should probably be removed.
-    case SPELL_DETECT_SECRET_DOORS:
-        cast_detect_secret_doors(powc);
-        break;
-
-    // XXX: This one too.
-    case SPELL_DETECT_TRAPS:
-        mprf("You detect %s", (detect_traps(powc) > 0) ? "traps!"
-                                                       : "nothing.");
-        break;
-
     // Only a Xom spell, no failure.
     case SPELL_DETECT_ITEMS:
         mprf("You detect %s", (detect_items(powc) > 0) ? "items!"

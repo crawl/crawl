@@ -588,19 +588,6 @@ struct spell_desc
 },
 
 {
-    SPELL_DETECT_TRAPS, "Detect Traps",
-     0,
-     SPFLAG_MAPPING,
-     2,
-     50,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
-},
-
-{
     SPELL_BLINK, "Blink",
      SPTYP_TRANSLOCATION,
      SPFLAG_ESCAPE,
@@ -1728,19 +1715,6 @@ struct spell_desc
      NULL,
      false,
      false
-},
-
-{
-    SPELL_DETECT_SECRET_DOORS, "Detect Secret Doors",
-     0,
-     SPFLAG_NONE,
-     1,
-     200,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
 },
 
 {
