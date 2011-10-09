@@ -2128,17 +2128,18 @@ static void tag_read_you(reader &th)
         you.innate_mutations[MUT_FRAIL] = 0;
         you.innate_mutations[MUT_ROBUST] = 0;
     }
-    if (th.getMinorVersion() < TAG_MINOR_FOOD_MUTATIONS)
+    if (th.getMinorVersion() >= TAG_MINOR_FOOD_MUTATIONS
+        && th.getMinorVersion() < TAG_MINOR_FOOD_MUTATIONS_BACK)
     {
         switch (you.species)
         {
         case SP_OGRE:
-            adjust_racial_mutation(MUT_SAPROVOROUS,     -1);
-            adjust_racial_mutation(MUT_CARNIVOROUS,      1);
+            adjust_racial_mutation(MUT_SAPROVOROUS,      1);
+            adjust_racial_mutation(MUT_CARNIVOROUS,     -1);
             break;
         case SP_CENTAUR:
-            adjust_racial_mutation(MUT_FAST_METABOLISM, -1);
-            adjust_racial_mutation(MUT_HERBIVOROUS,      1);
+            adjust_racial_mutation(MUT_FAST_METABOLISM,  1);
+            adjust_racial_mutation(MUT_HERBIVOROUS,     -1);
             break;
         default:
             break;
