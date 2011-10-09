@@ -81,12 +81,6 @@ function clear_map()
     monster_list.clear();
 }
 
-function mappable(val)
-{
-    minimap_enabled = val;
-    $("#minimap,#minimap_overlay").toggle(!!val);
-}
-
 function m(data)
 {
     map_knowledge.merge(data);
