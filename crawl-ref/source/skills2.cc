@@ -862,3 +862,18 @@ void skill_state::restore_training()
     you.auto_training               = auto_training;
     reset_training();
 }
+
+// Sanitize skills after an upgrade, racechange, etc.
+void fixup_skills()
+{
+    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+    {
+        skill_type sk = static_cast<skill_type>(i);
+        if (is_useless_skill(sk))
+            you.skill_points[i] = 0;
+        you.skill_points[i] = std::min(you.skill_points[i],
+                                       skill_exp_needed(27, sk));
+        check_skill_level_change(sk);
+    }
+    init_can_train();
+}
