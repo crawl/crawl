@@ -492,7 +492,9 @@ enum weapon_type
 
     WPN_SLING,
 
+#if TAG_MAJOR_VERSION == 32
     WPN_MAX_NONBLESSED = WPN_SLING,
+#endif
 
     WPN_BLESSED_FALCHION,
     WPN_BLESSED_LONG_SWORD,

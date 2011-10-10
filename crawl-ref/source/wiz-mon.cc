@@ -91,7 +91,9 @@ static int _make_mimic_item(object_class_type type)
     switch (type)
     {
     case OBJ_WEAPONS:
-        item.sub_type = random2(WPN_MAX_NONBLESSED + 1);
+        do
+            item.sub_type = random2(NUM_WEAPONS);
+        while (is_blessed(item));
 
         prop = random2(100);
 
