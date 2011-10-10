@@ -70,7 +70,7 @@ static int food_can_eat(lua_State *ls)
     if (lua_isboolean(ls, 2))
         hungercheck = lua_toboolean(ls, 2);
 
-    bool edible = item && can_ingest(*item, true, true, hungercheck);
+    bool edible = item && can_ingest(*item, true, hungercheck);
     lua_pushboolean(ls, edible);
     return (1);
 }
@@ -102,9 +102,7 @@ static int food_eat(lua_State *ls)
     bool eaten = false;
     if (!you.turn_is_over)
     {
-        // When we get down to eating, we don't care if the eating is courtesy
-        // an un-ided amulet of the gourmand.
-        if (item && can_ingest(*item, false, false))
+        if (item && can_ingest(*item, false))
             eaten = eat_item(*item);
     }
     lua_pushboolean(ls, eaten);
