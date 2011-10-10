@@ -14,12 +14,6 @@
 
 struct bolt;
 
-enum enchant_stat_type
-{
-    ENCHANT_TO_HIT,
-    ENCHANT_TO_DAM,
-};
-
 enum fire_type
 {
     FIRE_NONE      = 0x0000,
@@ -86,7 +80,7 @@ void zap_wand(int slot = -1);
 
 bool puton_item(int slot);
 
-bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn);
+bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour);
 bool enchant_armour(int &ac_change, bool quiet, item_def &arm);
 
 bool setup_missile_beam(const actor *actor, bolt &beam, item_def &item,

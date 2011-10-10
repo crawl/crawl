@@ -90,8 +90,6 @@
 #include "xom.h"
 
 static bool _drink_fountain();
-static bool _handle_enchant_weapon(enchant_stat_type which_stat,
-                                   bool quiet = false);
 static int _handle_enchant_armour(int item_slot = -1,
                                   std::string *pre_msg = NULL);
 
@@ -4617,131 +4615,69 @@ static bool _vorpalise_weapon(bool already_known)
     return (msg);
 }
 
-bool enchant_weapon(enchant_stat_type which_stat, bool quiet, item_def &wpn)
+bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
 {
-    ASSERT(wpn.defined());
+    bool success = false;
 
-    bool to_hit = (which_stat == ENCHANT_TO_HIT);
-
-    // Cannot be enchanted nor uncursed.
-    if (!is_enchantable_weapon(wpn, true, to_hit))
-    {
-        if (!quiet)
-            canned_msg(MSG_NOTHING_HAPPENS);
-
-        return (false);
-    }
-
-    const bool is_cursed = wpn.cursed();
+    // Get item name now before changing enchantment.
+    std::string iname = wpn.name(DESC_CAP_YOUR);
+    const char *s = wpn.quantity == 1 ? "s" : "";
 
     // Missiles and blowguns only have one stat.
     if (wpn.base_type == OBJ_MISSILES
         || (wpn.base_type == OBJ_WEAPONS
             && wpn.sub_type == WPN_BLOWGUN))
     {
-        which_stat = ENCHANT_TO_HIT;
-        to_hit     = true;
+        acc = std::max(acc, dam);
+        dam = 0;
     }
 
-    int enchant_level = (to_hit ? wpn.plus
-                                : wpn.plus2);
-    bool uncurse_only = false;
-
-    // Even if not affected, it may be uncursed.
-    if (!is_enchantable_weapon(wpn, false, to_hit)
-        || enchant_level >= 4 && x_chance_in_y(enchant_level, MAX_WPN_ENCHANT))
+    if (wpn.base_type == OBJ_WEAPONS || wpn.base_type == OBJ_MISSILES)
     {
-        if (is_cursed)
-            uncurse_only = true;
-        else
+        if (!is_artefact(wpn))
         {
-            if (!quiet)
-                canned_msg(MSG_NOTHING_HAPPENS);
-
-            // Xom thinks it's funny if enchantment is possible but fails.
-            if (is_enchantable_weapon(wpn, false, to_hit))
-                xom_is_stimulated(25);
-
-            return (false);
+            while (acc--)
+            {
+                if (wpn.plus < 4 || !x_chance_in_y(wpn.plus, MAX_WPN_ENCHANT))
+                    wpn.plus++, success = true;
+            }
+            while (dam--)
+            {
+                if (wpn.plus2 < 4 || !x_chance_in_y(wpn.plus2, MAX_WPN_ENCHANT))
+                    wpn.plus2++, success = true;
+            }
+            if (success && colour)
+                mprf("%s glow%s %s for a moment.", iname.c_str(), s, colour);
+        }
+        if (wpn.cursed())
+        {
+            if (!success && colour)
+            {
+                if (const char *space = strchr(colour, ' '))
+                    colour = space + 1;
+                mprf("%s glow%s silvery %s for a moment.", iname.c_str(), s, colour);
+                do_uncurse_item(wpn, true, true);
+            }
+            success = true;
         }
     }
 
-    // Get item name now before changing enchantment.
-    std::string iname = wpn.name(DESC_CAP_YOUR);
-
-    if (!uncurse_only)
+    if (!success && colour)
     {
-        if (wpn.base_type == OBJ_WEAPONS)
-        {
-            if (to_hit)
-            {
-                if (!quiet)
-                    mprf("%s glows green for a moment.", iname.c_str());
-
-                wpn.plus++;
-            }
-            else
-            {
-                if (!quiet)
-                    mprf("%s glows red for a moment.", iname.c_str());
-
-                wpn.plus2++;
-            }
-        }
-        else if (wpn.base_type == OBJ_MISSILES)
-        {
-            if (!quiet)
-            {
-                mprf("%s glow%s red for a moment.", iname.c_str(),
-                     wpn.quantity > 1 ? "" : "s");
-            }
-
-            wpn.plus++;
-        }
-        else
-            uncurse_only = true;
+        if (!wpn.defined())
+            iname = "Your " + you.hand_name(true);
+        mprf("%s very briefly gain%s a %s sheen.", iname.c_str(), s, colour);
     }
 
-    if (is_cursed)
-    {
-        if (uncurse_only)
-        {
-            if (!quiet)
-            {
-                mprf("%s glows silver for a moment.",
-                     wpn.name(DESC_CAP_YOUR).c_str());
-            }
-        }
-
-        do_uncurse_item(wpn, true, true);
-    }
-    else
-    {
-        if (uncurse_only)
-        {
-            if (!quiet)
-                canned_msg(MSG_NOTHING_HAPPENS);
-        }
-    }
-
-    return (true);
+    return success;
 }
 
-static bool _handle_enchant_weapon(enchant_stat_type which_stat,
-                                   bool quiet)
+static void _handle_enchant_weapon(int acc, int dam, const char *colour)
 {
-    item_def* item = you.weapon();
-
-    if (!item)
-    {
-        canned_msg(MSG_NOTHING_HAPPENS);
-        return (false);
-    }
-
-    bool result = enchant_weapon(which_stat, quiet, *item);
-    you.wield_change = true;
-
-    return result;
+    item_def nothing, *weapon = you.weapon();
+    if (!weapon || weapon->base_type != OBJ_WEAPONS && weapon->base_type != OBJ_STAVES)
+        weapon = &nothing;
+    enchant_weapon(*weapon, acc, dam, colour);
 }
 
 bool enchant_armour(int &ac_change, bool quiet, item_def &arm)
@@ -5343,79 +5279,15 @@ void read_scroll(int slot)
 
     // Everything [in the switch] below this line is a nightmare {dlb}:
     case SCR_ENCHANT_WEAPON_I:
-        id_the_scroll = _handle_enchant_weapon(ENCHANT_TO_HIT);
+        _handle_enchant_weapon(1, 0, "green");
         break;
 
     case SCR_ENCHANT_WEAPON_II:
-        id_the_scroll = _handle_enchant_weapon(ENCHANT_TO_DAM);
+        _handle_enchant_weapon(0, 1, "red");
         break;
 
     case SCR_ENCHANT_WEAPON_III:
-        if (you.weapon())
-        {
-            item_def& wpn = *you.weapon();
-
-            const bool is_cursed = wpn.cursed();
-
-            if (wpn.base_type != OBJ_WEAPONS && wpn.base_type != OBJ_MISSILES
-                && wpn.base_type != OBJ_STAVES
-                || !is_cursed
-                   && !is_enchantable_weapon(wpn, true, true)
-                   && !is_enchantable_weapon(wpn, true, false))
-            {
-                canned_msg(MSG_NOTHING_HAPPENS);
-                id_the_scroll = false;
-                break;
-            }
-            // It's a weapon or stack of missiles that is not an artefact
-            // and not fully enchanted, or at least needs to be uncursed.
-
-            // Get item name now before changing enchantment.
-            std::string iname = wpn.name(DESC_CAP_YOUR);
-
-            // Uncursing is always possible.
-            bool success = is_cursed;
-            if (_handle_enchant_weapon(ENCHANT_TO_HIT, true))
-                success = true;
-
-            if (is_enchantable_weapon(wpn, true, true) && coinflip()
-                && _handle_enchant_weapon(ENCHANT_TO_HIT, true))
-            {
-                success = true;
-            }
-
-            // Only weapons use the second stat.
-            if (wpn.base_type == OBJ_WEAPONS)
-            {
-                if (_handle_enchant_weapon(ENCHANT_TO_DAM, true))
-                    success = true;
-
-                if (is_enchantable_weapon(wpn, true, false) && coinflip()
-                    && _handle_enchant_weapon(ENCHANT_TO_DAM, true))
-                {
-                    success = true;
-                }
-            }
-
-            if (is_cursed)
-                do_uncurse_item(wpn, true, true);
-
-            if (success)
-            {
-                mprf("%s glow%s bright yellow for a while.", iname.c_str(),
-                     wpn.quantity > 1 ? "" : "s");
-            }
-            else
-            {
-                canned_msg(MSG_NOTHING_HAPPENS);
-                id_the_scroll = false;
-            }
-        }
-        else
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            id_the_scroll = false;
-        }
+        _handle_enchant_weapon(1 + random2(2), 1 + random2(2), "bright yellow");
         break;
 
     case SCR_VORPALISE_WEAPON:
