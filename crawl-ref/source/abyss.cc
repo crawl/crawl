@@ -1003,7 +1003,7 @@ static void _abyss_apply_terrain(const map_mask &abyss_genlevel_mask,
         DNGN_DEEP_WATER,
     };
 
-    if (one_chance_in(3))
+    if (one_chance_in(3) && !morph)
         _abyss_create_rooms(abyss_genlevel_mask, random_range(1, 10));
 
     const int exit_chance = _abyss_exit_chance();
