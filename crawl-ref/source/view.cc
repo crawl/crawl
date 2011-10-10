@@ -1023,10 +1023,7 @@ void viewwindow(bool show_updates)
     if (show_updates || _show_terrain)
     {
         if (!is_map_persistent())
-        {
-            env.map_knowledge.init(map_cell());
             ash_detect_portals(false);
-        }
 
 #ifdef USE_TILE
         tile_draw_floor();
