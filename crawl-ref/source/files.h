@@ -87,8 +87,8 @@ std::vector<std::string> get_title_files();
 
 class level_id;
 
-bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
-          const level_id& old_level);
+bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
+                const level_id& old_level);
 
 void save_game(bool leave_game, const char *bye = NULL);
 

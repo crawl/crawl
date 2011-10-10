@@ -213,7 +213,7 @@ static void _wizard_go_to_level(const level_pos &pos)
     you.where_are_you = static_cast<branch_type>(pos.id.branch);
     you.absdepth0    = abs_depth;
 
-    const bool newlevel = load(stair_taken, LOAD_ENTER_LEVEL, old_level);
+    const bool newlevel = load_level(stair_taken, LOAD_ENTER_LEVEL, old_level);
 #ifdef USE_TILE
     tile_new_level(newlevel);
 #else
@@ -824,7 +824,7 @@ void wizard_recreate_level()
     if (lev.level_type == LEVEL_DUNGEON)
         you.get_place_info().levels_seen--;
     Generated_Levels.erase(lev);
-    const bool newlevel = load(stair_taken, LOAD_START_GAME, lev);
+    const bool newlevel = load_level(stair_taken, LOAD_START_GAME, lev);
 #ifdef USE_TILE
     tile_new_level(newlevel);
 #else

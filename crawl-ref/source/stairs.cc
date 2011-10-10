@@ -715,7 +715,7 @@ void up_stairs(dungeon_feature_type force_stair,
 
     const coord_def stair_pos = you.pos();
 
-    load(stair_taken, LOAD_ENTER_LEVEL, old_level);
+    load_level(stair_taken, LOAD_ENTER_LEVEL, old_level);
 
     _set_entry_cause(entry_cause, old_level.level_type);
     entry_cause = you.entry_cause;
@@ -1167,7 +1167,7 @@ void down_stairs(dungeon_feature_type force_stair,
             more();
     }
 
-    const bool newlevel = load(stair_taken, LOAD_ENTER_LEVEL, old_level);
+    const bool newlevel = load_level(stair_taken, LOAD_ENTER_LEVEL, old_level);
 
     _set_entry_cause(entry_cause, old_level.level_type);
     entry_cause = you.entry_cause;
