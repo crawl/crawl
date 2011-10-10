@@ -138,15 +138,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
 
     const bool is_cursed = wpn.cursed();
 
-    enchant_weapon(ENCHANT_TO_HIT, true, wpn);
-
-    if (coinflip())
-        enchant_weapon(ENCHANT_TO_HIT, true, wpn);
-
-    enchant_weapon(ENCHANT_TO_DAM, true, wpn);
-
-    if (coinflip())
-        enchant_weapon(ENCHANT_TO_DAM, true, wpn);
+    enchant_weapon(wpn, 1 + random2(2), 1 + random2(2), 0);
 
     if (is_cursed)
         do_uncurse_item(wpn, false);

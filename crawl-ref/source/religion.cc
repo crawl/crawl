@@ -1498,11 +1498,9 @@ static bool _blessing_wpn(monster* mon)
     item_def& wpn(mitm[slot]);
 
     // And enchant or uncurse it.
-    if (!enchant_weapon((coinflip()) ? ENCHANT_TO_HIT
-                                     : ENCHANT_TO_DAM, true, wpn))
-    {
+    int which = random2(2);
+    if (!enchant_weapon(wpn, which, 1 - which, NULL))
         return (false);
-    }
 
     item_set_appearance(wpn);
     return (true);

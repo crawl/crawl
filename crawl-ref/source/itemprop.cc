@@ -1323,38 +1323,6 @@ bool is_offensive_wand(const item_def& item)
     return false;
 }
 
-bool is_enchantable_weapon(const item_def &wpn, bool uncurse, bool first)
-{
-    if (wpn.base_type != OBJ_WEAPONS
-        && wpn.base_type != OBJ_STAVES
-        && wpn.base_type != OBJ_MISSILES)
-    {
-        return (false);
-    }
-
-    if (uncurse && wpn.cursed() && you.religion != GOD_ASHENZARI)
-        return true;
-
-    // Artefacts or highly enchanted weapons cannot be enchanted,
-    // only uncursed.
-    if (wpn.base_type == OBJ_WEAPONS)
-    {
-        if (is_artefact(wpn)
-            || first && wpn.plus >= MAX_WPN_ENCHANT
-            || !first && wpn.plus2 >= MAX_WPN_ENCHANT)
-        {
-            return (false);
-        }
-    }
-    // Highly enchanted missiles, which have only one stat, cannot be
-    // enchanted or uncursed, since missiles cannot be artefacts or
-    // cursed.
-    else if (wpn.plus >= MAX_WPN_ENCHANT)
-        return (false);
-
-    return (true);
-}
-
 // Returns whether a piece of armour can be enchanted further.
 // If unknown is true, unidentified armour will return true.
 bool is_enchantable_armour(const item_def &arm, bool uncurse, bool unknown)
