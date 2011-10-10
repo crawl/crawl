@@ -215,18 +215,18 @@ std::string InvEntry::get_text(bool need_cursor) const
     //which fit in one line.
     //XXX There should be a better way to determine this, for now we simply
     //estimate it by the following heuristics {kittel}.
-    unsigned max_chars_in_line=get_number_of_cols()-2;
+    unsigned max_chars_in_line = get_number_of_cols() - 2;
 #ifdef USE_TILE
-    if ( Options.tile_menu_icons && Options.show_inventory_weights )
-      max_chars_in_line=get_number_of_cols()*4/9-2;
+    if (Options.tile_menu_icons && Options.show_inventory_weights)
+        max_chars_in_line = get_number_of_cols() * 4 / 9 - 2;
 #endif
     if (Options.show_inventory_weights)
     {
-        max_chars_in_line-=1;
-        const int w_weight =10;//length of " (999 aum)"
-        int excess=strwidth(tstr.str())+text.size() + w_weight - max_chars_in_line;
-        if ( excess > 0 )
-            tstr<<text.substr(0,std::max<int>(0,text.size()-excess-2))<<"..";
+        max_chars_in_line -= 1;
+        const int w_weight = 10; //length of " (999 aum)"
+        int excess = strwidth(tstr.str()) + text.size() + w_weight - max_chars_in_line;
+        if (excess > 0)
+            tstr << text.substr(0, std::max<int>(0, text.size() - excess - 2)) << "..";
         else
             tstr << text;
     }
@@ -256,7 +256,8 @@ std::string InvEntry::get_text(bool need_cursor) const
         tstr << std::setw(max_chars_in_line - strwidth(tstr.str())
                           + colour_tag_adjustment)
              << std::right
-             << make_stringf(" (%i aum)", static_cast<int>(0.5+BURDEN_TO_AUM * mass));
+             << make_stringf(" (%i aum)",
+                             static_cast<int>(0.5 + BURDEN_TO_AUM * mass));
     }
     return tstr.str();
 }
@@ -926,7 +927,7 @@ bool InvMenu::process_key(int key)
 {
     if ( key == CONTROL('W') )
     {
-        Options.show_inventory_weights=!Options.show_inventory_weights;
+        Options.show_inventory_weights = !Options.show_inventory_weights;
         draw_menu();
         return (true);
     }
