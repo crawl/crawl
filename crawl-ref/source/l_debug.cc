@@ -69,7 +69,7 @@ LUAFN(debug_enter_dungeon)
     you.where_are_you = BRANCH_MAIN_DUNGEON;
     you.level_type = LEVEL_DUNGEON;
 
-    load(DNGN_STONE_STAIRS_DOWN_I, LOAD_START_GAME, level_id());
+    load_level(DNGN_STONE_STAIRS_DOWN_I, LOAD_START_GAME, level_id());
     return (0);
 }
 

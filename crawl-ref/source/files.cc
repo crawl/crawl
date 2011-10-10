@@ -1128,8 +1128,8 @@ static coord_def _stair_destination_pos()
     return posm->dest;
 }
 
-bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
-          const level_id& old_level)
+bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
+                const level_id& old_level)
 {
     unwind_var<dungeon_feature_type> stair(
         you.transit_stair, stair_taken, DNGN_UNSEEN);
@@ -1864,7 +1864,7 @@ static void _load_level(const level_id &level)
     you.absdepth0 = level.dungeon_absdepth();
     you.level_type = level.level_type;
 
-    load(DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR, level_id());
+    load_level(DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR, level_id());
 }
 
 // Given a level returns true if the level has been created already
