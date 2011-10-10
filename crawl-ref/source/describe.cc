@@ -4424,7 +4424,11 @@ void describe_god(god_type which_god, bool give_title)
         //mv: The following code shows abilities given by your god (if any).
 
         textcolor(LIGHTGREY);
-        cprintf("\n\nGranted powers:                                                          (Cost)\n");
+        const char *header = "Granted powers:";
+        const char *cost   = "(Cost)";
+        cprintf("\n\n%s%*s%s\n", header,
+                get_number_of_cols() - 1 - strwidth(header) - strwidth(cost),
+                "", cost);
         textcolor(colour);
 
         // mv: Some gods can protect you from harm.
