@@ -2434,6 +2434,21 @@ bool is_forbidden_food(const item_def &food)
 bool can_ingest(const item_def &food, bool suppress_msg, bool reqid,
                 bool check_hunger)
 {
+    if (check_hunger)
+    {
+        if (is_poisonous(food))
+        {
+            if (!suppress_msg)
+                mpr("It contains deadly poison!");
+            return false;
+        }
+        if (causes_rot(food))
+        {
+            if (!suppress_msg)
+                mpr("It is caustic! Not only inedible but also greatly harmful!");
+            return false;
+        }
+    }
     return can_ingest(food.base_type, food.sub_type, suppress_msg, reqid,
                       check_hunger, food_is_rotten(food));
 }
