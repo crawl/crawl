@@ -156,8 +156,11 @@ static bool _blocked_ray(const coord_def &where,
 
 static bool _is_public_key(std::string key)
 {
-    if (key == "helpless" || key == "wand_known" || key == "feat_type"
-        || key == "glyph")
+    if (key == "helpless"
+     || key == "wand_known"
+     || key == "feat_type"
+     || key == "glyph"
+     || key == "serpent_of_hell_flavour")
     {
         return true;
     }
