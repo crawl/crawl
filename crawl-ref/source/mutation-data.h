@@ -1411,9 +1411,9 @@
    "Your tentacle spike grows bigger.",
    "Your tentacle spike grows even bigger."},
 
-  {"Your tentacle spike recedes somewhat.",
+  {"Your tentacle spike disappears.",
    "Your tentacle spike becomes smaller.",
-   "Your tentacle spike disappears."},
+   "Your tentacle spike recedes somewhat."},
 
   "tentacle spike"
 },
