@@ -1419,11 +1419,14 @@ int player_spell_levels(void)
     return (sl);
 }
 
-bool player_likes_chunks(bool permanently)
+int player_likes_chunks(bool permanently)
 {
-    return (player_mutation_level(MUT_GOURMAND) > 0
-            || player_mutation_level(MUT_CARNIVOROUS) > 0
-            || (!permanently && wearing_amulet(AMU_THE_GOURMAND)));
+    if (player_mutation_level(MUT_GOURMAND) > 0
+        || (!permanently && wearing_amulet(AMU_THE_GOURMAND)))
+    {
+        return 3;
+    }
+    return player_mutation_level(MUT_CARNIVOROUS);
 }
 
 // If temp is set to false, temporary sources or resistance won't be counted.

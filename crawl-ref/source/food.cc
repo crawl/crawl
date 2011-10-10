@@ -1376,9 +1376,8 @@ int prompt_eat_chunks(bool only_auto)
 
     // If we *know* the player can eat chunks, doesn't have the gourmand
     // effect and isn't hungry, don't prompt for chunks.
-    if (you.species != SP_VAMPIRE && !player_likes_chunks(true)
-        && !wearing_amulet(AMU_THE_GOURMAND, false)
-        && you.hunger_state >= HS_SATIATED)
+    if (you.species != SP_VAMPIRE
+        && you.hunger_state >= HS_SATIATED + player_likes_chunks())
     {
         return (0);
     }
@@ -1602,11 +1601,11 @@ static int _apply_gourmand_nutrition_effects(int nutrition, int gourmand)
                       / (GOURMAND_MAX + GOURMAND_NUTRITION_BASE));
 }
 
-static int _chunk_nutrition(bool likes_chunks)
+static int _chunk_nutrition(int likes_chunks)
 {
     int nutrition = CHUNK_BASE_NUTRITION;
 
-    if (likes_chunks || you.hunger_state < HS_SATIATED)
+    if (you.hunger_state < HS_SATIATED + likes_chunks)
     {
         return (likes_chunks ? nutrition
                              : _apply_herbivore_nutrition_effects(nutrition));
@@ -1637,7 +1636,7 @@ static void _say_chunk_flavour(bool likes_chunks)
 static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
                        int mon_intel, bool holy)
 {
-    bool likes_chunks = player_likes_chunks(true);
+    int likes_chunks  = player_likes_chunks(true);
     int nutrition     = _chunk_nutrition(likes_chunks);
     int hp_amt        = 0;
     bool suppress_msg = false; // do we display the chunk nutrition message?
@@ -2471,9 +2470,8 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
 
     // ur_chunkslover not defined in terms of ur_carnivorous because
     // a player could be one and not the other IMHO - 13mar2000 {dlb}
-    bool ur_chunkslover = ((check_hunger ? you.hunger_state < HS_SATIATED
-                                         : true)
-                              || player_likes_chunks(true));
+    bool ur_chunkslover = check_hunger ? you.hunger_state < HS_SATIATED
+                          + player_likes_chunks() : player_likes_chunks();
 
     switch (what_isit)
     {
@@ -2512,9 +2510,6 @@ bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
                     return (false);
 
                 if (ur_chunkslover)
-                    return (true);
-
-                if (wearing_amulet(AMU_THE_GOURMAND))
                     return (true);
 
                 if (!suppress_msg)
