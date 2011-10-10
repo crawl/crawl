@@ -226,7 +226,7 @@ std::string InvEntry::get_text(bool need_cursor) const
         const int w_weight =10;//length of " (999 aum)"
         int excess=strwidth(tstr.str())+text.size() + w_weight - max_chars_in_line;
         if ( excess > 0 )
-	    tstr<<text.substr(0,std::max<int>(0,text.size()-excess-2))<<"..";
+            tstr<<text.substr(0,std::max<int>(0,text.size()-excess-2))<<"..";
         else
             tstr << text;
     }
@@ -252,9 +252,9 @@ std::string InvEntry::get_text(bool need_cursor) const
             colour_tag_adjustment = colour_tag.size() * 2 + 5;
         }
 
-	//Note: If updating the " (%i aum)" format, remember to update w_weight above.
+        //Note: If updating the " (%i aum)" format, remember to update w_weight above.
         tstr << std::setw(max_chars_in_line - strwidth(tstr.str())
-			  + colour_tag_adjustment)
+                          + colour_tag_adjustment)
              << std::right
              << make_stringf(" (%i aum)", static_cast<int>(0.5+BURDEN_TO_AUM * mass));
     }
