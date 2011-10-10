@@ -3457,27 +3457,29 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         break;
 
     case MONS_SERPENT_OF_HELL:
-        // XXX: ick
-        switch (mi.colour)
+        if (!mi.props.exists("serpent_of_hell_flavour"))
         {
-        case RED:
+            inf.body << "Well now, isn't this buggy?\n";
+            break;
+        }
+        switch (mi.props["serpent_of_hell_flavour"].get_int())
+        {
+        default:
+            // SoH spawned outside the hells counts as one of Gehenna.
             inf.body << "A huge red glowing dragon, burning with hellfire.\n";
             break;
 
-        case WHITE:
+        case BRANCH_COCYTUS:
             inf.body << "A huge gleaming white dragon, covered in shards of ice.\n";
             break;
 
-        case CYAN:
+        case BRANCH_DIS:
             inf.body << "A huge metallic dragon, glowing with power.\n";
             break;
 
-        case MAGENTA:
+        case BRANCH_TARTARUS:
             inf.body << "A huge and dark dragon, wreathed in terrifying shadows.\n";
             break;
-
-        default:
-            inf.body << "Well now, isn't this buggy?\n";
         }
         break;
 
