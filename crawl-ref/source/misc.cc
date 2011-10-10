@@ -689,6 +689,8 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         return (rot_count > 0);
     }
 
+    mprf("You can't carry %s right now.", coag_count > 1 ? "them" : "it");
+
     // No space in inventory, check floor.
     int o = igrd(you.pos());
     while (o != NON_ITEM)
