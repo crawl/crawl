@@ -1893,6 +1893,9 @@ static bool _item_trains_evocations(const item_def& item)
     if (item_is_evokable(item, false, false, false, false, false))
         return true;
 
+    if (!item_type_known(item))
+        return false;
+
     if (is_artefact(item) && (artefact_wpn_property(item, ARTP_INVISIBLE)
                               || artefact_wpn_property(item, ARTP_LEVITATE)
                               || artefact_wpn_property(item, ARTP_BLINK)
