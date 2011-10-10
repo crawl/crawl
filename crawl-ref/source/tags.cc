@@ -3858,14 +3858,6 @@ static void marshallResists(writer &th, const mon_resist_def &res)
     marshallByte(th, res.acid);
     marshallByte(th, res.sticky_flame);
     marshallByte(th, res.rotting);
-#if TAG_MAJOR_VERSION == 32
-    if (TAG_MINOR_VERSION <= TAG_MINOR_CHERUB_ATTACKS)
-    {
-        marshallByte(th, 0);
-        marshallByte(th, 0);
-        marshallByte(th, 0);
-    }
-#endif
 }
 
 static void unmarshallResists(reader &th, mon_resist_def &res)
