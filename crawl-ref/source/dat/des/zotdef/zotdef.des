@@ -7,9 +7,6 @@
     e.marker("Y = feat:stone_stairs_up_i")
     e.kfeat("Y = .")
     e.kitem("Z = Orb of Zot")
-    e.lua_marker("Z", item_pickup_change_flags {
-            level_flags="!no_magic_map", item="Orb of Zot"
-         })
   end
 }}
 
@@ -21,7 +18,6 @@ TAGS:    zotdef
 ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
-LFLAGS:  no_magic_map
 : zotdef_setup(_G)
 MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
@@ -83,11 +79,7 @@ TAGS:    zotdef
 ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
-LFLAGS:  no_magic_map
 : zotdef_setup(_G)
-MARKER:  Z = lua:item_pickup_change_flags { \
-            level_flags="!no_magic_map", item="Orb of Zot" \
-         }
 MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
             size = 2, walk_dist = 2, spread_rate= 35 }
@@ -151,7 +143,6 @@ TAGS:    zotdef no_rotate
 ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
-LFLAGS:  no_magic_map
 : zotdef_setup(_G)
 MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
@@ -228,7 +219,6 @@ TAGS:    zotdef no_rotate
 ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
-LFLAGS:  no_magic_map
 : zotdef_setup(_G)
 MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
@@ -289,7 +279,6 @@ TAGS:    _zotdef no_rotate
 ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
-LFLAGS:  no_magic_map
 : zotdef_setup(_G)
 MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
