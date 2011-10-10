@@ -5292,6 +5292,11 @@ void read_scroll(int slot)
 
     case SCR_VORPALISE_WEAPON:
         id_the_scroll = _vorpalise_weapon(alreadyknown);
+        if (!id_the_scroll && item_type_known(OBJ_SCROLLS, SCR_CURSE_WEAPON))
+        {
+            mpr("You feel like taking on a jabberwock.");
+            id_the_scroll = true;
+        }
         if (!id_the_scroll)
             canned_msg(MSG_NOTHING_HAPPENS);
         break;
