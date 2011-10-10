@@ -138,9 +138,6 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
                 // Likes it.
                 mpr("This tastes like blood.");
                 lessen_hunger(value, true);
-
-                if (!player_likes_chunks(true))
-                    check_amu_the_gourmand(false);
             }
             else
             {
