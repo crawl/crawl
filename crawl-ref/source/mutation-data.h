@@ -1336,7 +1336,7 @@
    "You are completely covered in thin metallic scales (AC +3, rElec)."},
 
   {"Colourless scales grow over part of your body.",
-   "Your colourless scales are metallic and spread over more of your body.",
+   "Your colourless scales turn metallic and spread over more of your body.",
    "Thin metallic scales cover your body completely."},
 
   {"Your colourless scales disappear.",
