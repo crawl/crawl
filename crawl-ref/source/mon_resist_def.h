@@ -21,11 +21,6 @@ struct mon_resist_def
     bool sticky_flame;
     bool rotting;
 
-    // Physical damage resists (currently unused)
-    short pierce;
-    short slice;
-    short bludgeon;
-
     mon_resist_def();
     mon_resist_def(int flags, short level = -100);
 

@@ -189,15 +189,7 @@ enum mon_resist_flags
     MR_VUL_FIRE          = (1<< 9),
     MR_VUL_COLD          = (1<<10),
 
-    // Melee armour resists/vulnerabilities.
-    // XXX: how to do combos (bludgeon/slice, bludgeon/pierce)
-    MR_RES_PIERCE        = (1<<11),
-    MR_RES_SLICE         = (1<<12),
-    MR_RES_BLUDGEON      = (1<<13),
-
-    MR_VUL_PIERCE        = (1<<14),
-    MR_VUL_SLICE         = (1<<15),
-    MR_VUL_BLUDGEON      = (1<<16),
+    // 1<<11 .. 1<<16: feel free to reuse
 
     // Immune to stickiness of sticky flame.
     MR_RES_STICKY_FLAME  = (1<<17),

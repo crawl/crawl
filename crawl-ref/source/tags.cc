@@ -3857,9 +3857,14 @@ static void marshallResists(writer &th, const mon_resist_def &res)
     marshallByte(th, res.acid);
     marshallByte(th, res.sticky_flame);
     marshallByte(th, res.rotting);
-    marshallByte(th, res.pierce);
-    marshallByte(th, res.slice);
-    marshallByte(th, res.bludgeon);
+#if TAG_MAJOR_VERSION == 32
+    if (TAG_MINOR_VERSION <= TAG_MINOR_CHERUB_ATTACKS)
+    {
+        marshallByte(th, 0);
+        marshallByte(th, 0);
+        marshallByte(th, 0);
+    }
+#endif
 }
 
 static void unmarshallResists(reader &th, mon_resist_def &res)
@@ -3874,9 +3879,14 @@ static void unmarshallResists(reader &th, mon_resist_def &res)
     res.acid         = unmarshallByte(th);
     res.sticky_flame = unmarshallByte(th);
     res.rotting      = unmarshallByte(th);
-    res.pierce       = unmarshallByte(th);
-    res.slice        = unmarshallByte(th);
-    res.bludgeon     = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() <= TAG_MINOR_CHERUB_ATTACKS)
+    {
+        unmarshallByte(th);
+        unmarshallByte(th);
+        unmarshallByte(th);
+    }
+#endif
 }
 
 static void marshallSpells(writer &th, const monster_spells &spells)
