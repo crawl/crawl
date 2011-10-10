@@ -1590,7 +1590,7 @@ static int _apply_herbivore_nutrition_effects(int nutrition)
     int how_herbivorous = player_mutation_level(MUT_HERBIVOROUS);
 
     while (how_herbivorous--)
-        nutrition = nutrition * 80 / 100;
+        nutrition = nutrition * 75 / 100;
 
     return (nutrition);
 }
