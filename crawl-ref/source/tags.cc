@@ -1148,7 +1148,9 @@ static void tag_construct_you(writer &th)
         marshallUByte(th, you.skills[j]);
         marshallByte(th, you.train[j]);
         marshallInt(th, you.training[j]);
+#if TAG_MAJOR_VERSION == 32
         marshallBoolean(th, you.can_train[j]);
+#endif
         marshallBoolean(th, you.train_set[j]);
         marshallInt(th, you.skill_points[j]);
         marshallInt(th, you.ct_skill_points[j]);
@@ -2018,8 +2020,8 @@ static void tag_read_you(reader &th)
         }
         if (th.getMinorVersion() >= TAG_MINOR_SKILL_RESTRICTIONS)
         {
-#endif
             you.can_train[j] = unmarshallBoolean(th);
+#endif
             you.train_set[j] = unmarshallBoolean(th);
 #if TAG_MAJOR_VERSION == 32
         }
