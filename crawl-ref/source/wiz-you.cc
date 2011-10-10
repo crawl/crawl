@@ -178,6 +178,18 @@ void wizard_change_species(void)
         break;
     }
 
+    // Sanitize skills.
+    for (i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
+    {
+        skill_type sk = static_cast<skill_type>(i);
+        if (is_useless_skill(sk))
+            you.skill_points[i] = 0;
+        you.skill_points[i] = std::min(you.skill_points[i],
+                                       skill_exp_needed(27, sk));
+        check_skill_level_change(sk);
+    }
+    init_can_train();
+
     calc_hp();
     calc_mp();
 
