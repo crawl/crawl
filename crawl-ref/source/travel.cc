@@ -3923,7 +3923,9 @@ std::vector<level_id> TravelCache::known_levels() const
 
 bool can_travel_to(const level_id &id)
 {
-    return (id.level_type == LEVEL_DUNGEON && can_travel_interlevel());
+    return (id.level_type == LEVEL_DUNGEON && can_travel_interlevel()
+            // FIXME: check depth too once level_type is gone
+         || id.level_type == you.level_type);
 }
 
 bool can_travel_interlevel()
