@@ -190,6 +190,7 @@ static void _post_init(bool newc)
 
     // Fix the mutation definitions for the species we're playing.
     fixup_mutations();
+    fixup_skills();
 
     // Load macros
     macro_init();
