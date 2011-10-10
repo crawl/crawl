@@ -2992,7 +2992,7 @@ bool is_useless_item(const item_def &item, bool temp)
         case POT_WATER:
         case POT_BLOOD:
         case POT_BLOOD_COAGULATED:
-            return (!can_ingest(item, true, true, false));
+            return (!can_ingest(item, true, false));
         case POT_POISON:
         case POT_STRONG_POISON:
             // If you're poison resistant, poison is only useless.

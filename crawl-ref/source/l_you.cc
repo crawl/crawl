@@ -240,8 +240,8 @@ static int l_you_abil_letters(lua_State *ls)
 static int you_can_consume_corpses(lua_State *ls)
 {
     lua_pushboolean(ls,
-                    can_ingest(OBJ_FOOD, FOOD_CHUNK, true, false, false)
-                    || can_ingest(OBJ_CORPSES, CORPSE_BODY, true, false, false)
+                    can_ingest(OBJ_FOOD, FOOD_CHUNK, true, false)
+                    || can_ingest(OBJ_CORPSES, CORPSE_BODY, true, false)
                   );
     return (1);
 }

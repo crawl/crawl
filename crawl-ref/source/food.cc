@@ -720,7 +720,7 @@ static bool _player_has_enough_food()
         if (!item.defined())
             continue;
 
-        if (!can_ingest(item, true, true, false))
+        if (!can_ingest(item, true, false))
             continue;
 
         if (food_is_rotten(item) && !player_mutation_level(MUT_SAPROVOROUS))
@@ -2341,7 +2341,7 @@ bool is_inedible(const item_def &item)
     }
 
     if (item.base_type == OBJ_FOOD
-        && !can_ingest(item, true, true, false))
+        && !can_ingest(item, true, false))
     {
         return (true);
     }
@@ -2431,8 +2431,7 @@ bool is_forbidden_food(const item_def &food)
     return (false);
 }
 
-bool can_ingest(const item_def &food, bool suppress_msg, bool reqid,
-                bool check_hunger)
+bool can_ingest(const item_def &food, bool suppress_msg, bool check_hunger)
 {
     if (check_hunger)
     {
@@ -2449,12 +2448,12 @@ bool can_ingest(const item_def &food, bool suppress_msg, bool reqid,
             return false;
         }
     }
-    return can_ingest(food.base_type, food.sub_type, suppress_msg, reqid,
+    return can_ingest(food.base_type, food.sub_type, suppress_msg,
                       check_hunger, food_is_rotten(food));
 }
 
 bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
-                bool reqid, bool check_hunger, bool rotten)
+                bool check_hunger, bool rotten)
 {
     bool survey_says = false;
 
