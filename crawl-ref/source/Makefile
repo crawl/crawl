@@ -1157,7 +1157,7 @@ clean: clean-rltiles clean-webserver
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
 	    libunix.o $(OBJECTS) $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d) *.ixx  \
-	    .contrib-libs .cflags AppHdr.h.gch
+	    .contrib-libs .cflags AppHdr.h.gch AppHdr.h.d
 	$(RM) -r build-win
 	$(RM) -r build
 
