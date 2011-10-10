@@ -930,7 +930,7 @@ bool melee_attack::player_attack()
 
         // Actually apply the bleeding effect, this can come from an aux claw
         // or a main hand claw attack and up to now has not actually happened.
-        const int degree = you.has_claws();
+        const int degree = you.has_usable_claws();
         if (apply_bleeding && defender->can_bleed()
             && degree > 0 && damage_done > 0)
         {
