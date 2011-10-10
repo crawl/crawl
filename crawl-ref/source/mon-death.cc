@@ -51,8 +51,7 @@ bool mons_is_pikel (monster* mons)
 **/
 void pikel_band_neutralise()
 {
-    bool any_vis = false;
-
+    int visible_slaves = 0;
     for (monster_iterator mi; mi; ++mi)
     {
         if (mi->type == MONS_SLAVE
@@ -61,10 +60,12 @@ void pikel_band_neutralise()
             && mi->mname != "freed slave"
             && mi->observable())
         {
-            any_vis = true;
+            visible_slaves++;
         }
     }
-    if (any_vis)
+    if (visible_slaves == 1)
+        mprf("With Pikel's spell broken, the former slave thanks you for its freedom.");
+    else if (visible_slaves > 1)
         mprf("With Pikel's spell broken, the former slaves thank you for their freedom.");
 
     add_daction(DACT_PIKEL_SLAVES);
