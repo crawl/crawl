@@ -20,8 +20,7 @@ import random
 import codecs
 
 from config import *
-
-from process_handler import CrawlProcessHandler
+from process_handler import *
 
 logging.basicConfig(**logging_config)
 
@@ -226,12 +225,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.write_message("go_lobby();")
                 return
 
-        if game_id not in games: return
+        if dgl_mode and game_id not in games: return
 
         self.game_id = game_id
 
-        self.process = CrawlProcessHandler(games[game_id], self.username,
-                                           self.logger, self.ioloop)
+        if dgl_mode:
+            self.process = CrawlProcessHandler(games[game_id], self.username,
+                                               self.logger, self.ioloop)
+        else:
+            self.process = DGLLessCrawlProcessHandler(self.logger, self.ioloop)
+
         self.process.end_callback = self._on_crawl_end
         self.process.add_watcher(self)
         self.process.start()

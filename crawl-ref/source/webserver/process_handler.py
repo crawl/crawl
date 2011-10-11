@@ -107,7 +107,7 @@ class CrawlProcessHandlerBase(object):
         raise NotImplementedError()
 
 class CrawlProcessHandler(CrawlProcessHandlerBase):
-    def __init__(self, game_params, username, logger,  io_loop):
+    def __init__(self, game_params, username, logger, io_loop):
         super(CrawlProcessHandler, self).__init__(game_params, username,
                                                   logger, io_loop)
         self.socketpath = None
@@ -234,3 +234,22 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self.last_activity_time = time.time()
 
         self.send_to_all(msg)
+
+
+
+class DGLLessCrawlProcessHandler(CrawlProcessHandler):
+    def __init__(self, logger, io_loop):
+        game_params = dict(
+            name = "DCSS",
+            ttyrec_path = "./",
+            socket_path = "./",
+            client_prefix = "game")
+        super(DGLLessCrawlProcessHandler, self).__init__(game_params,
+                                                         "game",
+                                                         logger, io_loop)
+
+    def _base_call(self):
+        return ["./crawl"]
+
+    def check_where(self):
+        pass
