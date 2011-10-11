@@ -113,6 +113,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self.socketpath = None
         self.conn = None
         self.ttyrec_filename = None
+        self.ttyrec_filename_only = None
 
         if "client_prefix" in game_params:
             self.client_version = game_params["client_prefix"]
@@ -134,15 +135,15 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                                     "-await-connection"]
 
         now = datetime.datetime.utcnow()
-        running_game_path = game["running_game_path"]
-        self.ttyrec_filename = os.path.join(running_game_path,
-                                            self.username + ":" +
-                                            now.strftime("%Y-%m-%d.%H:%M:%S")
-                                            + ".ttyrec")
+        ttyrec_path = game.get("ttyrec_path", game.get("running_game_path"))
+        tf = self.username + ":" + now.strftime("%Y-%m-%d.%H:%M:%S") + ".ttyrec"
+        self.ttyrec_filename_only = tf
+        self.ttyrec_filename = os.path.join(ttyrec_path, tf)
 
         self.logger.info("Starting crawl.")
 
         self.process = TerminalRecorder(call, self.ttyrec_filename,
+                                        self._ttyrec_id_header(),
                                         self.io_loop)
         self.process.end_callback = self._on_process_end
         self.process.output_callback = self._on_process_output
@@ -152,6 +153,22 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self.conn.connect()
 
         self.last_activity_time = time.time()
+
+    def _ttyrec_id_header(self):
+        clrscr = "\033[2J"
+        crlf = "\r\n"
+        templ = (clrscr + "\033[1;1H" + crlf +
+                 "Player: %s" + crlf +
+                 "Game: %s" + crlf +
+                 "Server: %s" + crlf +
+                 "Filename: %s" + crlf +
+                 "Time: (%s) %s" + crlf +
+                 clrscr)
+        tstamp = int(time.time())
+        ctime = time.ctime()
+        return templ % (self.username, self.game_params["name"],
+                        config.server_id, self.ttyrec_filename_only,
+                        tstamp, ctime)
 
     def _on_process_end(self):
         self.logger.info("Crawl terminated.")
