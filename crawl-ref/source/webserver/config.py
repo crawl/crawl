@@ -20,6 +20,8 @@ template_path = "./webserver/templates/"
 
 server_socket_path = None # Uses global temp dir
 
+server_id = ""
+
 games = OrderedDict([
     ("dcss-web-trunk", dict(
         name = "DCSS trunk",

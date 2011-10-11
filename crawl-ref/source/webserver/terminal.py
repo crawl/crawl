@@ -10,7 +10,7 @@ import time
 BUFSIZ = 2048
 
 class TerminalRecorder(object):
-    def __init__(self, command, filename, io_loop):
+    def __init__(self, command, filename, id_header, io_loop):
         self.io_loop = io_loop
         self.command = command
         self.ttyrec = open(filename, "w", 0)
@@ -23,6 +23,9 @@ class TerminalRecorder(object):
 
         self.end_callback = None
         self.output_callback = None
+
+        if id_header:
+            self.write_ttyrec_chunk(id_header)
 
         self._spawn()
 
