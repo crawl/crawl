@@ -2225,9 +2225,7 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
     case HINT_CONTAMINATED_CHUNK:
         text << "Chunks that are described as <brown>contaminated</brown> will "
                 "occasionally make you sick when eaten. However, since food is "
-                "scarce in the dungeon, you'll sometimes have to risk it. "
-                "Note that if a chunk makes you sick, you won't get any nutrition "
-                "out of it.";
+                "scarce in the dungeon, you'll often have to risk it.";
 
         // Break if we've seen the sickness hint before.
         if (!Hints.hints_events[HINT_YOU_SICK])
