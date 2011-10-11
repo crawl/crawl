@@ -4,9 +4,18 @@
 
 {{
   function zotdef_setup(e)
+
+    e.orient("encompass")
+    e.lfloorcol("magenta")
+    e.lrockcol("lightmagenta")
+
     e.marker("Y = feat:stone_stairs_up_i")
     e.kfeat("Y = .")
     e.kitem("Z = Orb of Zot")
+
+    e.kmask("*| = no_monster_gen")
+    e.kprop("*| = no_rtele_into")
+
     e.lua_marker("F", fog_machine {
             cloud_type = "purple smoke",
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35,
@@ -20,13 +29,7 @@
 
 NAME:    zotvault
 TAGS:    zotdef
-ORIENT:  encompass
-LFLOORCOL: magenta
-LROCKCOL:  lightmagenta
 : zotdef_setup(_G)
-KMASK:  * = no_monster_gen
-KMASK:  | = no_monster_gen
-KPROP: *| = no_rtele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -78,13 +81,7 @@ ENDMAP
 
 NAME:    zotvault2
 TAGS:    zotdef
-ORIENT:  encompass
-LFLOORCOL: magenta
-LROCKCOL:  lightmagenta
 : zotdef_setup(_G)
-KMASK:  * = no_monster_gen
-KMASK:  | = no_monster_gen
-KPROP: *| = no_rtele_into
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXXXXXXXXxxxxxxxxxx
@@ -141,13 +138,7 @@ ENDMAP
 # from the south, and rarely is better than always.
 NAME:    zotvault3
 TAGS:    zotdef no_rotate
-ORIENT:  encompass
-LFLOORCOL: magenta
-LROCKCOL:  lightmagenta
 : zotdef_setup(_G)
-KMASK:  * = no_monster_gen
-KMASK:  | = no_monster_gen
-KPROP: *| = no_rtele_into
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -214,13 +205,7 @@ ENDMAP
 
 NAME:    zotvault4
 TAGS:    zotdef no_rotate
-ORIENT:  encompass
-LFLOORCOL: magenta
-LROCKCOL:  lightmagenta
 : zotdef_setup(_G)
-KMASK:  * = no_monster_gen
-KMASK:  | = no_monster_gen
-KPROP: *| = no_rtele_into
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 X.......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.......X
@@ -271,9 +256,6 @@ ENDMAP
 # Currently under development and testing, so commented out in the tags.
 NAME:    zotvault5
 TAGS:    _zotdef no_rotate
-ORIENT:  encompass
-LFLOORCOL: magenta
-LROCKCOL:  lightmagenta
 : zotdef_setup(_G)
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
