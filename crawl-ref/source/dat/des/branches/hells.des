@@ -446,7 +446,7 @@ SUBVAULT: E : vestibule_geryon
 SHUFFLE:  ABCD
 SUBST:    ABCDE = .
 : if crawl.coinflip() then
-  : if crawl.one_chance_in(4) then
+  : if crawl.coinflip() then
 MONS:   Murray
 NSUBST: : = 1:1 / *:.
   : else
