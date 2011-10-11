@@ -2066,20 +2066,21 @@ void finished_eating_message(int food_type)
             mprf("Mmm... %s.", Options.pizza.c_str());
         else
         {
-            int temp_rand = random2(9);
-            mprf("%s %s.",
-                (carnivorous && temp_rand >= 6
+            int temp_rand = random2(10);
+            mprf("%s %s",
+                (carnivorous && temp_rand >= 7
                  || herbivorous && temp_rand <= 4
                  || temp_rand == 3) ? "Yeuchh!" : "Mmm...",
-                (temp_rand == 0) ? "Ham and pineapple" :
-                (temp_rand == 1) ? "Super Supreme" :
-                (temp_rand == 2) ? "Pepperoni" :
-                (temp_rand == 3) ? "Anchovies" :
-                (temp_rand == 4) ? "Chicken" :
-                (temp_rand == 5) ? "Cheesy" :
-                (temp_rand == 6) ? "Vegetable" :
-                (temp_rand == 7) ? "Peppers"
-                                 : "Mushroom");
+                (temp_rand == 0) ? "Ham and pineapple." :
+                (temp_rand == 1) ? "Super Supreme." :
+                (temp_rand == 2) ? "Pepperoni." :
+                (temp_rand == 3) ? "Anchovies." :
+                (temp_rand == 4) ? "Chicken." :
+                (temp_rand == 5) ? "That's the fabled Pandemonium Pizza!" :
+                (temp_rand == 6) ? "Cheesy." :
+                (temp_rand == 7) ? "Vegetable." :
+                (temp_rand == 8) ? "Peppers."
+                                 : "Mushroom.");
         }
         break;
     case FOOD_CHEESE:
