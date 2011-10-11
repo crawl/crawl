@@ -7,6 +7,11 @@
     e.marker("Y = feat:stone_stairs_up_i")
     e.kfeat("Y = .")
     e.kitem("Z = Orb of Zot")
+    e.lua_marker("F", fog_machine {
+            cloud_type = "purple smoke",
+            pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35,
+            size = 2, walk_dist = 2, spread_rate= 35
+	 })
   end
 }}
 
@@ -19,9 +24,6 @@ ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
 : zotdef_setup(_G)
-MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
-            pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
-            size = 2, walk_dist = 2, spread_rate= 35 }
 KMASK:  * = no_monster_gen
 KMASK:  | = no_monster_gen
 KPROP: *| = no_rtele_into
@@ -80,9 +82,6 @@ ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
 : zotdef_setup(_G)
-MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
-            pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
-            size = 2, walk_dist = 2, spread_rate= 35 }
 KMASK:  * = no_monster_gen
 KMASK:  | = no_monster_gen
 KPROP: *| = no_rtele_into
@@ -136,17 +135,16 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # This one is very sensitive to the pathfinding algorithm, and currently
-# doesn't work (all critters enter the Orb chamber from the south). Needs
-# reworking before use, so the 'zotdef' tag has been replaced with '_zotdef'.
+# doesn't work (all critters enter the Orb chamber from the south).
+#
+# Okay, this is still a bit odd, but now critters only *rarely* enter
+# from the south, and rarely is better than always.
 NAME:    zotvault3
 TAGS:    zotdef no_rotate
 ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
 : zotdef_setup(_G)
-MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
-            pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
-            size = 2, walk_dist = 2, spread_rate= 35 }
 KMASK:  * = no_monster_gen
 KMASK:  | = no_monster_gen
 KPROP: *| = no_rtele_into
@@ -220,9 +218,6 @@ ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
 : zotdef_setup(_G)
-MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
-            pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
-            size = 2, walk_dist = 2, spread_rate= 35 }
 KMASK:  * = no_monster_gen
 KMASK:  | = no_monster_gen
 KPROP: *| = no_rtele_into
@@ -280,9 +275,6 @@ ORIENT:  encompass
 LFLOORCOL: magenta
 LROCKCOL:  lightmagenta
 : zotdef_setup(_G)
-MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
-            pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
-            size = 2, walk_dist = 2, spread_rate= 35 }
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXX...................................................................XXXXX
