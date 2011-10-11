@@ -31,7 +31,7 @@ games = OrderedDict([
         morgue_path = "./rcs",
         running_game_path = "./rcs/running",
         socket_path = "./rcs",
-        client_prefix = "game")),
+        client_path = "./webserver/game_data/")),
     ("sprint-web-trunk", dict(
         name = "Sprint trunk",
         crawl_binary = "./crawl",
@@ -40,8 +40,8 @@ games = OrderedDict([
         morgue_path = "./rcs",
         running_game_path = "./rcs/running",
         socket_path = "./rcs",
-        options = ["-sprint"],
-        client_prefix = "game")),
+        client_path = "./webserver/game_data/",
+        options = ["-sprint"])),
     ("zd-web-trunk", dict(
         name = "Zot Defense trunk",
         crawl_binary = "./crawl",
@@ -50,8 +50,8 @@ games = OrderedDict([
         morgue_path = "./rcs",
         running_game_path = "./rcs/running",
         socket_path = "./rcs",
-        options = ["-zotdef"],
-        client_prefix = "game")),
+        client_path = "./webserver/game_data/",
+        options = ["-zotdef"])),
     ("tut-web-trunk", dict(
         name = "Tutorial trunk",
         crawl_binary = "./crawl",
@@ -60,8 +60,8 @@ games = OrderedDict([
         morgue_path = "./rcs",
         running_game_path = "./rcs/running",
         socket_path = "./rcs",
-        options = ["-tutorial"],
-        client_prefix = "game")),
+        client_path = "./webserver/game_data/",
+        options = ["-tutorial"])),
 ])
 
 dgl_status_file = "./rcs/status"
