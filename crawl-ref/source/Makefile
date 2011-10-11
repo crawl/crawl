@@ -957,18 +957,18 @@ webserver/static/%.png: dat/tiles/%.png
 	$(QUIET_COPY)$(COPY) $< webserver/static/
 
 webserver/static/game/%.png: dat/tiles/%.png
-	$(QUIET_COPY)$(COPY) $< webserver/static/game/
+	$(QUIET_COPY)$(COPY) $< webserver/game_data/static/
 
 TILEINFOJS = $(TILEIMAGEFILES) dngn
 
-STATICFILES = $(TILEIMAGEFILES:%=webserver/static/game/%.png) \
+STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
-              $(TILEINFOJS:%=webserver/static/game/tileinfo-%.js)
+              $(TILEINFOJS:%=webserver/game_data/static/tileinfo-%.js)
 
 $(TILEINFOJS:%=$(RLTILES)/tileinfo-%.js): rltile-build
 
 webserver/static/game/%.js: $(RLTILES)/%.js
-	$(QUIET_COPY)$(COPY) $< webserver/static/game/
+	$(QUIET_COPY)$(COPY) $< webserver/game_data/static/
 
 clean-webserver:
 	$(RM) $(STATICFILES)

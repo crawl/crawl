@@ -1,6 +1,7 @@
 import os, os.path, errno
 import subprocess
 import datetime, time
+import hashlib
 
 import config
 
@@ -8,6 +9,8 @@ from tornado.escape import json_decode, json_encode
 
 from terminal import TerminalRecorder
 from connection import WebtilesSocketConnection
+from util import DynamicTemplateLoader
+from game_data_handler import GameDataHandler
 
 class CrawlProcessHandlerBase(object):
     def __init__(self, game_params, username, logger, io_loop):
@@ -17,7 +20,7 @@ class CrawlProcessHandlerBase(object):
         self.io_loop = io_loop
 
         self.process = None
-        self.client_version = None
+        self.client_path = game_params.get("client_path")
         self.where = None
         self.wheretime = time.time()
         self.kill_timeout = None
@@ -47,8 +50,21 @@ class CrawlProcessHandlerBase(object):
 
     def add_watcher(self, watcher):
         self._watchers.add(watcher)
-        if self.client_version:
-            watcher.set_client(self.game_params, self.client_version)
+        if self.client_path:
+            self._send_client(watcher)
+
+    def _send_client(self, watcher):
+        v = hashlib.sha1(os.path.abspath(self.client_path)).hexdigest()
+        GameDataHandler.add_version(v,
+                                    os.path.join(self.client_path, "static"))
+
+        templ_path = os.path.join(self.client_path, "templates")
+        loader = DynamicTemplateLoader.get(templ_path)
+        templ = loader.load("game.html")
+        game_html = templ.generate(version = v)
+        watcher.handle_message("delay_timeout = 1;$('#game').html(" +
+                               json_encode(game_html) +
+                               ");delay_ended();")
 
     def remove_watcher(self, watcher):
         self._watchers.remove(watcher)
@@ -114,10 +130,6 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self.conn = None
         self.ttyrec_filename = None
         self.ttyrec_filename_only = None
-
-        if "client_prefix" in game_params:
-            self.client_version = game_params["client_prefix"]
-
 
     def start(self):
         self.socketpath = os.path.join(self.game_params["socket_path"],
@@ -243,7 +255,7 @@ class DGLLessCrawlProcessHandler(CrawlProcessHandler):
             name = "DCSS",
             ttyrec_path = "./",
             socket_path = "./",
-            client_prefix = "game")
+            client_path = "./webserver/game_data")
         super(DGLLessCrawlProcessHandler, self).__init__(game_params,
                                                          "game",
                                                          logger, io_loop)
