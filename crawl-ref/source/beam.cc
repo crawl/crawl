@@ -2570,8 +2570,8 @@ maybe_bool bolt::affects_wall(dungeon_feature_type wall) const
     // digging
     if (flavour == BEAM_DIGGING
         && (wall == DNGN_ROCK_WALL || wall == DNGN_CLEAR_ROCK_WALL
-            || wall == DNGN_SLIMY_WALL || wall == DNGN_GRATE)
-            || wall == DNGN_SECRET_DOOR)
+            || wall == DNGN_SLIMY_WALL || wall == DNGN_GRATE
+            || wall == DNGN_SECRET_DOOR))
     {
         return (B_TRUE);
     }
