@@ -631,7 +631,7 @@ static void _give_wanderer_spell(skill_type skill)
         break;
 
     case SK_TRANSMUTATIONS:
-        spell = SPELL_SANDBLAST;
+        spell = SPELL_BEASTLY_APPENDAGE;
         break;
 
     case SK_FIRE_MAGIC:
