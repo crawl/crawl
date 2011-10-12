@@ -1175,13 +1175,17 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     {
         if (player_spirit_shield() && death_type != KILLED_BY_POISON)
         {
-            if (dam <= you.magic_points)
-            {
-                dec_mp(dam);
+            // round off fairly (important for taking 1 damage at a time)
+            int mp = div_rand_round(dam * you.magic_points,
+                                    you.hp + you.magic_points);
+            // but don't kill the player with round-off errors
+            mp = std::max(mp, dam + 1 - you.hp);
+            mp = std::min(mp, you.magic_points);
+
+            dam -= mp;
+            dec_mp(mp);
+            if (dam <= 0)
                 return;
-            }
-            dam -= you.magic_points;
-            dec_mp(you.magic_points);
         }
 
         if (dam >= you.hp && god_protects_from_harm())
