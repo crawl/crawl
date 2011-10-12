@@ -504,7 +504,7 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
         ng->name = choice->name;
         ng->filename = get_save_filename(choice->name);
 
-        if (save_exists(choice->filename))
+        if (save_exists(ng->filename))
         {
             cprintf("\nDo you really want to overwrite your old game? ");
             char c = getchm();
