@@ -4632,9 +4632,11 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
         dam = 0;
     }
 
-    if (wpn.base_type == OBJ_WEAPONS || wpn.base_type == OBJ_MISSILES)
+    if (wpn.base_type == OBJ_WEAPONS
+	|| wpn.base_type == OBJ_MISSILES
+	|| wpn.base_type == OBJ_STAVES)
     {
-        if (!is_artefact(wpn))
+        if (!is_artefact(wpn) && wpn.base_type != OBJ_STAVES)
         {
             while (acc--)
             {
@@ -4669,13 +4671,16 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
         mprf("%s very briefly gain%s a %s sheen.", iname.c_str(), s, colour);
     }
 
+    if (success)
+        you.wield_change = true;
+
     return success;
 }
 
 static void _handle_enchant_weapon(int acc, int dam, const char *colour)
 {
     item_def nothing, *weapon = you.weapon();
-    if (!weapon || weapon->base_type != OBJ_WEAPONS && weapon->base_type != OBJ_STAVES)
+    if (!weapon)
         weapon = &nothing;
     enchant_weapon(*weapon, acc, dam, colour);
 }
