@@ -17,10 +17,10 @@
     e.kprop("*| = no_rtele_into")
 
     e.lua_marker("F", fog_machine {
-            cloud_type = "purple smoke",
-            pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35,
-            size = 2, walk_dist = 2, spread_rate= 35
-	 })
+        cloud_type = "purple smoke",
+        pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35,
+        size = 2, walk_dist = 2, spread_rate= 35
+    })
   end
 }}
 
