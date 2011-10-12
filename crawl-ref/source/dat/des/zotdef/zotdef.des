@@ -254,6 +254,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ENDMAP
 
 # Currently under development and testing, so commented out in the tags.
+# Monsters have a tendancy to get stuck peering through the glass...
 NAME:    zotvault5
 TAGS:    _zotdef no_rotate
 : zotdef_setup(_G)
