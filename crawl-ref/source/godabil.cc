@@ -1653,6 +1653,11 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     // longer needed.
     mon->del_ench(ENCH_SOUL_RIPE, false, false);
 
+    // Remove the monster's invisibility enchantment. If we don't do
+    // this, it'll stay invisible after being remade as a spectral thing
+    // below.
+    mon->del_ench(ENCH_INVIS, false, false);
+
     // If the monster's held in a net, get it out.
     mons_clear_trapping_net(mon);
 
