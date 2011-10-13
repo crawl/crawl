@@ -14,6 +14,10 @@ __cap-T_suffix
 
 You feel a lump in the pit of your stomach.
 %%%%
+__cap-U_suffix
+
+If made afraid, it may become angry!
+%%%%
 __(_suffix_examine
 
 It has been enchanted to dance through the air and attack under its own
@@ -423,7 +427,7 @@ An unusually large kobold.
 %%%%
 black bear
 
-A small black bear. If provoked, it may become angry!
+A small black bear.
 %%%%
 black draconian
 
@@ -994,7 +998,7 @@ A large creature with the hindquarters of a lion and the wings, head and talons 
 %%%%
 grizzly bear
 
-A large, nasty bear with grey fur. If provoked, it may become angry!
+A large, nasty bear with grey fur.
 %%%%
 guardian mummy
 
@@ -1474,7 +1478,7 @@ The apparition of an unfortunate adventurer.
 %%%%
 polar bear
 
-A large and very strong bear covered in glistening white fur. If provoked, it may become angry!
+A large and very strong bear covered in glistening white fur.
 %%%%
 porcupine
 
