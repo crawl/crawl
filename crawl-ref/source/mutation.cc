@@ -156,6 +156,12 @@ void fixup_mutations()
         ASSERT(is_valid_mutation(MUT_STINGER));
         _seek_mutation(MUT_STINGER)->rarity = 8;
     }
+
+    if (you.species == SP_OCTOPODE)
+    {
+        ASSERT(is_valid_mutation(MUT_TENTACLE_SPIKE));
+        _seek_mutation(MUT_TENTACLE_SPIKE)->rarity = 10;
+    }
 }
 
 bool mutation_is_fully_active(mutation_type mut)

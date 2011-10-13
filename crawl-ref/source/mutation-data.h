@@ -829,7 +829,7 @@
    "tentacles"
 },
 
-{ MUT_TENTACLE_SPIKE,            10,  3, false,  true,
+{ MUT_TENTACLE_SPIKE,            0,  3, false,  true,
   "spike",
 
   {"One of your tentacles bears a spike.",
