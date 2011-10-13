@@ -77,6 +77,7 @@ makefile.dep
 /source/*.ilk
 /source/rltiles/*.d
 /source/.cflags
+/source/rltiles/.cflags
 /source/.contrib-ok
 /source/.contrib-libs
 /source/compflag.h
