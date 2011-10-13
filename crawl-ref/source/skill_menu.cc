@@ -257,7 +257,7 @@ COLORS SkillMenuEntry::get_colour() const
     else if (m_skm->get_state(SKM_LEVEL) == SKM_LEVEL_ENHANCED
              && you.skill(m_sk, 10, true) != you.skill(m_sk, 10, false))
     {
-        if (you.skill(m_sk, 10, true) < you.skill(m_sk, 10, false))
+        if (you.skill(m_sk, 10, true) > you.skill(m_sk, 10, false))
             return you.train[m_sk] ? LIGHTRED : RED;
         else
             return you.train[m_sk] ? LIGHTBLUE : BLUE;
