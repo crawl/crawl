@@ -17,7 +17,7 @@ Should the wearer of this amulet be levitated by magical means, he or she will b
 %%%%
 amulet of guardian spirit
 
-This amulet makes its wearer less susceptible to external damage, draining magical power instead.  Should the reserves of magic be depleted, the spirit will fail to provide its protection until more power is available.
+This amulet makes its wearer less susceptible to external damage, draining magical power instead. Should the reserves of magic be depleted, the spirit will fail to provide its protection until more power is available.
 %%%%
 amulet of inaccuracy
 
