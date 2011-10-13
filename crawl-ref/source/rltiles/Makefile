@@ -29,6 +29,10 @@ endif
 CFLAGS := -O2 $(SDL_CFLAGS) $(PNG_INCLUDE)
 LDFLAGS += $(SDL_LDFLAGS) $(PNG_LIB)
 
+ifdef DEBUG
+CFLAGS += -DDEBUG -ggdb
+endif
+
 ifneq (,$(findstring MINGW,$(uname_S)))
 LDFLAGS += -lgdi32 -lwinmm
 endif
