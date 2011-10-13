@@ -829,6 +829,24 @@
    "tentacles"
 },
 
+{ MUT_TENTACLE_SPIKE,            10,  3, false,  true,
+  "spike",
+
+  {"One of your tentacles bears a spike.",
+   "One of your tentacles bears a nasty spike.",
+   "One of your tentacles bears a large vicious spike."},
+
+  {"One of your lower tentacles grows a sharp spike.",
+   "Your tentacle spike grows bigger.",
+   "Your tentacle spike grows even bigger."},
+
+  {"Your tentacle spike disappears.",
+   "Your tentacle spike becomes smaller.",
+   "Your tentacle spike recedes somewhat."},
+
+  "tentacle spike"
+},
+
 // Naga only
 { MUT_BREATHE_POISON,             0,  1, false, false,
   "breathe poison",
@@ -1398,24 +1416,6 @@
    "Your natural camouflage becomes less effective."},
 
    "camouflage"
-},
-
-{ MUT_TENTACLE_SPIKE,            10,  3, false,  true,
-  "spike",
-
-  {"One of your tentacles bears a spike.",
-   "One of your tentacles bears a nasty spike.",
-   "One of your tentacles bears a large vicious spike."},
-
-  {"One of your lower tentacles grows a sharp spike.",
-   "Your tentacle spike grows bigger.",
-   "Your tentacle spike grows even bigger."},
-
-  {"Your tentacle spike disappears.",
-   "Your tentacle spike becomes smaller.",
-   "Your tentacle spike recedes somewhat."},
-
-  "tentacle spike"
 },
 
 #endif

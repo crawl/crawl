@@ -2543,6 +2543,7 @@ enum mutation_type
     MUT_TALONS,         // feet
 #if TAG_MAJOR_VERSION != 32
     MUT_TENTACLES,      // Gloves but don't lose a slot yet.
+    MUT_TENTACLE_SPIKE, // Octopode only.
 #endif
 
     // scales
@@ -2637,8 +2638,8 @@ enum mutation_type
     MUT_POWERED_BY_PAIN,
     MUT_CAMOUFLAGE,
     MUT_TENTACLES,      // Gloves but don't lose a slot yet.
-#endif
     MUT_TENTACLE_SPIKE, // Octopode only.
+#endif
     NUM_MUTATIONS,
 
     RANDOM_MUTATION = NUM_MUTATIONS + 1,
