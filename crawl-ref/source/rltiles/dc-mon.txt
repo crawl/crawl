@@ -250,7 +250,7 @@ balrug MONS_BALRUG
 blue_death MONS_BLIZZARD_DEMON
 cacodemon MONS_CACODEMON
 executioner MONS_EXECUTIONER
-fiend MONS_FIEND
+brimstone_fiend MONS_BRIMSTONE_FIEND
 green_death MONS_GREEN_DEATH
 ice_fiend MONS_ICE_FIEND
 pit_fiend MONS_PIT_FIEND
