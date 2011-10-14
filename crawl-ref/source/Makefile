@@ -40,6 +40,8 @@
 #    V             -- set to anything to enable verbose build
 #
 #    USE_ICC       -- set to use Intel's compiler
+#    LTO           -- set for better optimization but slower compilation,
+#                     requires gcc4.6+
 #    ASSERTS       -- set to enable assertion checks (implied in debug mode)
 #    NOWIZARD      -- set to disable wizard mode.  Use if you have untrusted
 #                     remote players without DGL.
@@ -97,6 +99,10 @@ else
 CFOPTIMIZE := -O2
 
 endif # USE_ICC
+
+ifdef LTO
+CFOPTIMIZE += -flto=jobserver -fwhole-program
+endif
 
 CFOTHERS := -pipe $(EXTERNAL_FLAGS)
 CFWARN := -Wall
