@@ -77,6 +77,12 @@ endif
 endif
 
 BASE_OBJECTS := tile_colour.o tile.o tile_page.o tile_list_processor.o main.o
+
+# MSVCRT's tmpfile() is broken, so use our own version instead.
+ifneq (,$(findstring MINGW,$(uname_S)))
+BASE_OBJECTS += tmpfile.o
+endif
+
 OBJECTS := $(BASE_OBJECTS:%=$(TOOLDIR)/%)
 
 all: $(TILEGEN) $(HEADERS) $(SOURCE) $(IMAGES) $(JAVASCRIPT)
