@@ -4658,8 +4658,8 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
                 if (const char *space = strchr(colour, ' '))
                     colour = space + 1;
                 mprf("%s glow%s silvery %s for a moment.", iname.c_str(), s, colour);
-                do_uncurse_item(wpn, true, true);
             }
+	    do_uncurse_item(wpn, true, true);
             success = true;
         }
     }

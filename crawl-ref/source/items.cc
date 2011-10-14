@@ -1364,6 +1364,9 @@ void pickup(bool partial_quantity)
             }
 
             o = next;
+
+            if (o == NON_ITEM && keyin != 'y' && keyin != 'a')
+                canned_msg(MSG_OK);
         }
 
         if (!pickup_warning.empty())
