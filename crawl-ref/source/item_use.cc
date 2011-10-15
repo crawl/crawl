@@ -4633,8 +4633,8 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
     }
 
     if (wpn.base_type == OBJ_WEAPONS
-	|| wpn.base_type == OBJ_MISSILES
-	|| wpn.base_type == OBJ_STAVES)
+        || wpn.base_type == OBJ_MISSILES
+        || wpn.base_type == OBJ_STAVES)
     {
         if (!is_artefact(wpn) && wpn.base_type != OBJ_STAVES)
         {
@@ -4659,7 +4659,7 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
                     colour = space + 1;
                 mprf("%s glow%s silvery %s for a moment.", iname.c_str(), s, colour);
             }
-	    do_uncurse_item(wpn, true, true);
+            do_uncurse_item(wpn, true, true);
             success = true;
         }
     }
