@@ -130,6 +130,9 @@ class CrawlProcessHandlerBase(object):
 
         return call
 
+    def note_activity(self):
+        self.last_activity_time = time.time()
+
     def handle_input(self, msg):
         raise NotImplementedError()
 
@@ -170,6 +173,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                                         self.logger, self.io_loop)
         self.process.end_callback = self._on_process_end
         self.process.output_callback = self._on_process_output
+        self.process.activity_callback = self.note_activity
 
         self.conn = WebtilesSocketConnection(self.io_loop, self.socketpath)
         self.conn.message_callback = self._on_socket_message
@@ -231,7 +235,6 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
     def _on_process_output(self, line):
         self.check_where()
-        self.last_activity_time = time.time()
 
         self.send_to_all(line)
 
@@ -328,6 +331,8 @@ class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
         if msg.startswith("{"):
             obj = json_decode(msg)
 
+            self.note_activity()
+
             if obj["msg"] == "input" and self.process:
                 self.last_action_time = time.time()
 
@@ -344,9 +349,12 @@ class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
                 self.conn.send_message(msg.encode("utf8"))
 
         elif msg == "^":
+            self.note_activity()
             self.process.write_input("\\94\n")
 
         else:
+            if not msg.startswith("^"):
+                self.note_activity()
             self.process.stdin.write(msg.encode("utf8"))
 
     def on_stderr(self, fd, events):
