@@ -1140,9 +1140,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
 
     switch (item.sub_type)
     {
-    case RING_FIRE:
     case RING_HUNGER:
-    case RING_ICE:
     case RING_LIFE_PROTECTION:
     case RING_POISON_RESISTANCE:
     case RING_PROTECTION_FROM_COLD:
@@ -1152,6 +1150,16 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
     case RING_SUSTENANCE:
     case RING_SLAYING:
     case RING_TELEPORT_CONTROL:
+        break;
+
+    case RING_FIRE:
+        mpr("You feel more attuned to fire.");
+        ident = ID_KNOWN_TYPE;
+        break;
+
+    case RING_ICE:
+        mpr("You feel more attuned to ice.");
+        ident = ID_KNOWN_TYPE;
         break;
 
     case RING_WIZARDRY:
