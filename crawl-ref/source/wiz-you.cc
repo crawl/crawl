@@ -461,7 +461,7 @@ void wizard_set_all_skills(void)
         for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
         {
             skill_type sk = static_cast<skill_type>(i);
-            if (is_invalid_skill(sk))
+            if (is_invalid_skill(sk) || is_useless_skill(sk))
                 continue;
 
             const int points = skill_exp_needed(amount, sk);
