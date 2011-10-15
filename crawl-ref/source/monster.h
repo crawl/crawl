@@ -370,7 +370,7 @@ public:
     int armour_class() const;
     int melee_evasion(const actor *attacker, ev_ignore_type evit) const;
 
-    void poison(actor *agent, int amount = 1, bool force = false);
+    bool poison(actor *agent, int amount = 1, bool force = false);
     bool sicken(int strength, bool unused = true);
     bool bleed(const actor *agent, int amount, int degree);
     void paralyse(actor *, int str, std::string source = "");

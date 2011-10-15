@@ -1742,6 +1742,9 @@ int player_res_torment(bool, bool temp)
 // If temp is set to false, temporary sources or resistance won't be counted.
 int player_res_poison(bool calc_unid, bool temp, bool items)
 {
+    if (you.are_currently_undead())
+        return 1;
+
     int rp = 0;
 
     if (items)
@@ -1763,6 +1766,7 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
 
         // randart weapons:
         rp += scan_artefacts(ARTP_POISON, calc_unid);
+
     }
 
     // mutations:
@@ -1782,7 +1786,6 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
         // transformations:
         switch (you.form)
         {
-        case TRAN_LICH:
         case TRAN_ICE_BEAST:
         case TRAN_STATUE:
         case TRAN_DRAGON:
@@ -1796,10 +1799,26 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
             rp++;
     }
 
-    if (rp > 1)
-        rp = 1;
+    return (rp > 0 ? 1 : 0);
 
-    return (rp);
+}
+
+int _maybe_reduce_poison(int amount)
+{
+    int rp = player_res_poison(true, true, true);
+
+    if (rp <= 0)
+        return amount;
+
+    int reduction = binomial_generator(amount, 90);
+    int new_amount = amount - reduction;
+
+    if (amount != new_amount) {
+        dprf("Poison reduced (%d -> %d)", amount, new_amount);
+    } else {
+        dprf("Poison not reduced (%d)", amount);
+    }
+    return new_amount;
 }
 
 int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
@@ -4780,10 +4799,11 @@ bool curare_hits_player(int death_source, int amount, const bolt &beam)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (player_res_poison() > 0)
+    if (you.are_currently_undead())
         return (false);
 
-    poison_player(amount, beam.get_source_name(), beam.name);
+    if(!poison_player(amount, beam.get_source_name(), beam.name))
+        return (false);
 
     int hurted = 0;
 
@@ -4818,7 +4838,13 @@ bool poison_player(int amount, std::string source, std::string source_aux,
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (!force && player_res_poison() > 0 || amount <= 0)
+    if (you.are_currently_undead())
+    {
+        dprf("Cannot poison, you are undead!");
+        return (false);
+    }
+
+    if (!force && !(amount = _maybe_reduce_poison(amount)))
         return (false);
 
     if (!force && you.duration[DUR_DIVINE_STAMINA] > 0)
@@ -4844,7 +4870,7 @@ bool poison_player(int amount, std::string source, std::string source_aux,
     you.props["poisoner"] = source;
     you.props["poison_aux"] = source_aux;
 
-    return (true);
+    return amount;
 }
 
 void dec_poison_player()
@@ -4855,6 +4881,9 @@ void dec_poison_player()
     if (GOD_CHEIBRIADOS == you.religion
         && you.piety >= piety_breakpoint(0)
         && coinflip())
+        return;
+
+    if (you.are_currently_undead())
         return;
 
     if (you.duration[DUR_POISONING] > 0)
@@ -6392,9 +6421,9 @@ int player::mons_species() const
     }
 }
 
-void player::poison(actor *agent, int amount, bool force)
+bool player::poison(actor *agent, int amount, bool force)
 {
-    ::poison_player(amount, agent? agent->name(DESC_NOCAP_A, true) : "");
+    return ::poison_player(amount, agent? agent->name(DESC_NOCAP_A, true) : "");
 }
 
 void player::expose_to_element(beam_type element, int st)
@@ -7002,6 +7031,13 @@ bool player::is_fiery() const
 bool player::is_skeletal() const
 {
     return (false);
+}
+
+bool player::are_currently_undead() const {
+    return (form == TRAN_LICH
+            || (is_undead == US_SEMI_UNDEAD && hunger_state == HS_STARVING)
+            || (is_undead == US_UNDEAD)
+            || (is_undead == US_HUNGRY_DEAD));
 }
 
 void player::shiftto(const coord_def &c)

@@ -179,14 +179,13 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         break;
 
     case BEAM_POISON:
-        resist = player_res_poison();
 
-        if (resist <= 0 && doEffects)
-            poison_player(coinflip() ? 2 : 1, source, kaux);
+        if (doEffects)
+            resist = poison_player(coinflip() ? 2 : 1, source, kaux);
 
         hurted = resist_adjust_damage(&you, flavour, resist,
                                       hurted, true);
-        if (resist > 0 && doEffects)
+        if (resist == 0 && doEffects)
             canned_msg(MSG_YOU_RESIST);
         break;
 
@@ -194,12 +193,14 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         // [dshaligram] NOT importing uber-poison arrow from 4.1. Giving no
         // bonus to poison resistant players seems strange and unnecessarily
         // arbitrary.
+
         resist = player_res_poison();
 
-        if (!resist && doEffects)
-            poison_player(4 + random2(3), source, kaux, true);
-        else if (!you.is_undead && doEffects)
-            poison_player(2 + random2(3), source, kaux, true);
+        if (doEffects) {
+            int poison_amount = 2 + random2(3);
+            poison_amount += (resist ? 0 : 2);
+            poison_player(poison_amount, source, kaux, true);
+        }
 
         hurted = resist_adjust_damage(&you, flavour, resist, hurted);
         if (hurted < original && doEffects)
