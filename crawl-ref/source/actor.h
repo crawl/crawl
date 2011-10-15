@@ -187,7 +187,7 @@ public:
     virtual void teleport(bool right_now = false,
                           bool abyss_shift = false,
                           bool wizard_tele = false) = 0;
-    virtual void poison(actor *attacker, int amount = 1, bool force = false) = 0;
+    virtual bool poison(actor *attacker, int amount = 1, bool force = false) = 0;
     virtual bool sicken(int amount, bool allow_hint = true) = 0;
     virtual void paralyse(actor *attacker, int strength,
                           std::string source = "") = 0;

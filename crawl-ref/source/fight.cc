@@ -4649,14 +4649,22 @@ void melee_attack::mons_set_weapon(const mon_attack_def &attk)
 
 void melee_attack::mons_do_poison(const mon_attack_def &attk)
 {
-    if (defender->res_poison() > 0)
-        return;
-
     if (attk.flavour == AF_POISON_NASTY
         || one_chance_in(15 + 5 * (attk.flavour == AF_POISON ? 1 : 0))
         || (damage_done > 1
             && one_chance_in(attk.flavour == AF_POISON ? 4 : 3)))
     {
+        int amount = 1;
+        if (attk.flavour == AF_POISON_NASTY)
+            amount++;
+        else if (attk.flavour == AF_POISON_MEDIUM)
+            amount += random2(3);
+        else if (attk.flavour == AF_POISON_STRONG)
+            amount += roll_dice(2, 5);
+
+        if(!defender->poison(attacker, amount))
+            return;
+
         if (needs_message)
         {
             if (defender->atype() == ACT_PLAYER
@@ -4676,16 +4684,6 @@ void melee_attack::mons_do_poison(const mon_attack_def &attk)
                      mons_defender_name().c_str());
             }
         }
-
-        int amount = 1;
-        if (attk.flavour == AF_POISON_NASTY)
-            amount++;
-        else if (attk.flavour == AF_POISON_MEDIUM)
-            amount += random2(3);
-        else if (attk.flavour == AF_POISON_STRONG)
-            amount += roll_dice(2, 5);
-
-        defender->poison(attacker, amount);
     }
 }
 
@@ -4957,9 +4955,8 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
     case AF_POISON_STR:
     case AF_POISON_INT:
     case AF_POISON_DEX:
-        if (defender->res_poison() <= 0)
+        if (defender->poison(attacker, roll_dice(1, 3)))
         {
-            defender->poison(attacker, roll_dice(1, 3));
             if (one_chance_in(4))
             {
                 stat_type drained_stat = (flavour == AF_POISON_STR ? STAT_STR :
@@ -5140,7 +5137,7 @@ void melee_attack::mons_apply_attack_flavour(const mon_attack_def &attk)
         break;
 
     case AF_ACID:
-        if (attacker->type == MONS_SPINY_WORM && defender->res_poison() <= 0)
+        if (attacker->type == MONS_SPINY_WORM)
             defender->poison(attacker, 2 + random2(4));
         splash_defender_with_acid(3);
         break;

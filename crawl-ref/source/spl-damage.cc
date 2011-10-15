@@ -346,10 +346,11 @@ spret_type cast_toxic_radiance(bool non_player, bool fail)
     {
         mpr("The light passes straight through your body.");
     }
-    else if (!player_res_poison())
+    else
     {
-        mpr("You feel rather sick.");
-        poison_player(2, "", "toxic radiance");
+        int poison_amount = poison_player(2, "", "toxic radiance");
+        if (poison_amount)
+            mpr("You feel rather sick.");
     }
 
     counted_monster_list affected_monsters;

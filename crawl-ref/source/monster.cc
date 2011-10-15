@@ -3565,16 +3565,16 @@ int monster::mons_species() const
     return ::mons_species(type);
 }
 
-void monster::poison(actor *agent, int amount, bool force)
+bool monster::poison(actor *agent, int amount, bool force)
 {
     if (amount <= 0)
-        return;
+        return (false);
 
     // Scale poison down for monsters.
     if (!(amount /= 2))
         amount = 1;
 
-    poison_monster(this, agent, amount, force);
+    return poison_monster(this, agent, amount, force);
 }
 
 int monster::skill(skill_type sk, int scale, bool real) const
