@@ -778,7 +778,7 @@ bool SkillMenu::exit()
             break;
         }
 
-        if (you.skills[i] < 27)
+        if (you.skills[i] < 27 && !is_useless_skill((skill_type)i))
             maxed_out = false;
     }
 
