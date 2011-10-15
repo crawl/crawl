@@ -255,6 +255,10 @@ run on 9x).
   since.  Please either update msys, or delete /mingw/bin/sdl-config so it
   won't interfere with the copy shipped with Crawl.
 
+* For you stubborn types who insist on using separate msys and git installs,
+  make sure git.exe is in your PATH when trying to build from git! Otherwise,
+  util/gen_ver.pl will most likely fail to generate build.h.
+
 Building on Windows (cygwin)
 ----------------------------
 
