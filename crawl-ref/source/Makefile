@@ -936,9 +936,13 @@ SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.xz
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
 .PHONY: all test install clean clean-contrib clean-rltiles distclean debug debug-lite \
-        profile package-source source build-windows package-windows rest docs
+        profile package-source source build-windows package-windows rest docs greet
 
-all: $(GAME) docs webserver
+all: greet $(GAME) docs webserver
+
+greet:
+	@echo "  * If you experience any problems building Crawl, please take a second look"
+	@echo "    at INSTALL.txt: the solution to your problem just might be in there!"
 
 docs: $(GENERATED_DOCS)
 
