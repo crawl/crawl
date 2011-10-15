@@ -36,6 +36,17 @@ class CrawlProcessHandlerBase(object):
         for watcher in self._watchers:
             watcher.handle_message(msg)
 
+    def handle_process_end(self):
+        if self.kill_timeout:
+            self.io_loop.remove_timeout(self.kill_timeout)
+            self.kill_timeout = None
+
+        for watcher in list(self._watchers):
+            watcher.stop_watching()
+
+        if self.end_callback:
+            self.end_callback()
+
     def update_watcher_description(self):
         watcher_names = [watcher.username for watcher in self._watchers
                          if watcher.username]
@@ -191,15 +202,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self.conn.close()
             self.conn = None
 
-        if self.kill_timeout:
-            self.io_loop.remove_timeout(self.kill_timeout)
-            self.kill_timeout = None
-
-        for watcher in list(self._watchers):
-            watcher.stop_watching()
-
-        if self.end_callback:
-            self.end_callback()
+        self.handle_process_end()
 
     def add_watcher(self, watcher):
         super(CrawlProcessHandler, self).add_watcher(watcher)
@@ -218,17 +221,13 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
                 for x in obj["data"]:
                     data += chr(x)
 
-                self.process.poll()
-                if self.process:
-                    self.process.write_input(data)
+                self.process.write_input(data)
 
             elif self.conn:
                 self.conn.send_message(msg.encode("utf8"))
 
         else:
-            self.process.poll()
-            if self.process:
-                self.process.write_input(msg.encode("utf8"))
+            self.process.write_input(msg.encode("utf8"))
 
     def _on_process_output(self, line):
         self.check_where()
@@ -243,7 +242,6 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self.process.output_callback = None
 
         self.check_where()
-        self.last_activity_time = time.time()
 
         self.send_to_all(msg)
 
@@ -265,3 +263,119 @@ class DGLLessCrawlProcessHandler(CrawlProcessHandler):
 
     def check_where(self):
         pass
+
+
+class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
+    def __init__(self, game_params, username, logger, io_loop):
+        super(CompatCrawlProcessHandler, self).__init__(game_params, username,
+                                                        logger, io_loop)
+        self.client_path = game_params["client_prefix"]
+
+    def start(self):
+        game = self.game_params
+        call = self._base_call()
+
+        self.logger.info("Starting crawl (compat-mode).")
+
+        self.process = subprocess.Popen(call,
+                                        stdin = subprocess.PIPE,
+                                        stdout = subprocess.PIPE,
+                                        stderr = subprocess.PIPE)
+
+        self.io_loop.add_handler(self.process.stdout.fileno(), self.on_stdout,
+                                self.io_loop.READ | self.io_loop.ERROR)
+        self.io_loop.add_handler(self.process.stderr.fileno(), self.on_stderr,
+                                self.io_loop.READ | self.io_loop.ERROR)
+
+        self.last_activity_time = time.time()
+
+        self.create_mock_ttyrec()
+
+    def create_mock_ttyrec(self):
+        now = datetime.datetime.utcnow()
+        running_game_path = self.game_params["running_game_path"]
+        self.ttyrec_filename = os.path.join(running_game_path,
+                                            self.username + ":" + now.strftime("%Y-%m-%d.%H:%M:%S")
+                                            + ".ttyrec")
+        f = open(self.ttyrec_filename, "w")
+        f.close()
+
+    def delete_mock_ttyrec(self):
+        if self.ttyrec_filename:
+            os.remove(self.ttyrec_filename)
+            self.ttyrec_filename = None
+
+    def poll_crawl(self):
+        if self.process is not None and self.process.poll() is not None:
+            self.io_loop.remove_handler(self.process.stdout.fileno())
+            self.io_loop.remove_handler(self.process.stderr.fileno())
+            self.process.stdout.close()
+            self.process.stderr.close()
+            self.process = None
+
+            self.logger.info("Crawl terminated. (compat-mode)")
+
+            self.delete_mock_ttyrec()
+            self.handle_process_end()
+
+    def add_watcher(self, watcher):
+        super(CompatCrawlProcessHandler, self).add_watcher(watcher)
+
+        if self.process:
+            self.process.write_input("^r")
+
+    def handle_input(self, msg):
+        if msg.startswith("{"):
+            obj = json_decode(msg)
+
+            if obj["msg"] == "input" and self.process:
+                self.last_action_time = time.time()
+
+                data = ""
+                for x in obj["data"]:
+                    data += chr(x)
+
+                self.process.stdin.write(data)
+
+            elif obj["msg"] == "key" and self.process:
+                self.process.stdin.write("\\" + str(obj["keycode"]) + "\n")
+
+            elif self.conn:
+                self.conn.send_message(msg.encode("utf8"))
+
+        elif msg == "^":
+            self.process.write_input("\\94\n")
+
+        else:
+            self.process.stdin.write(msg.encode("utf8"))
+
+    def on_stderr(self, fd, events):
+        if events & self.io_loop.ERROR:
+            self.poll_crawl()
+        elif events & self.io_loop.READ:
+            s = self.process.stderr.readline()
+
+            if not (s.isspace() or s == ""):
+                self.logger.info("ERR: %s", s.strip())
+
+            self.poll_crawl()
+
+    def on_stdout(self, fd, events):
+        if events & self.io_loop.ERROR:
+            self.poll_crawl()
+        elif events & self.io_loop.READ:
+            msg = self.process.stdout.readline()
+
+            self.send_to_all(msg)
+
+            self.poll_crawl()
+            self.check_where()
+
+    def _send_client(self, watcher):
+        templ_path = os.path.join(config.template_path, self.client_path)
+        loader = DynamicTemplateLoader.get(templ_path)
+        templ = loader.load("game.html")
+        game_html = templ.generate(prefix = self.client_path)
+        watcher.handle_message("delay_timeout = 1;$('#game').html(" +
+                               json_encode(game_html) +
+                               ");delay_ended();")

@@ -171,8 +171,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.game_id = game_id
 
         if dgl_mode:
-            self.process = CrawlProcessHandler(games[game_id], self.username,
-                                               self.logger, self.ioloop)
+            args = (games[game_id], self.username, self.logger, self.ioloop)
+            if (games[game_id].get("compat_mode") or
+                "client_prefix" in games[game_id]):
+                self.process = CompatCrawlProcessHandler(*args)
+            else:
+                self.process = CrawlProcessHandler(*args)
         else:
             self.process = DGLLessCrawlProcessHandler(self.logger, self.ioloop)
 
@@ -383,6 +387,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.ws_connection._abort()
 
     def handle_message(self, msg):
+        """Handles data coming from crawl."""
         if not self.client_terminated:
             self.write_message(msg)
 
