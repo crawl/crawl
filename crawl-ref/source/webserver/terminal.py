@@ -133,7 +133,7 @@ class TerminalRecorder(object):
             if len(line) > 0:
                 if line[-1] == "\r": line = line[:-1]
 
-                self.logger.warning("ERR: %s", line)
+                self.logger.info("ERR: %s", line)
 
             pos = self.error_buffer.find("\n")
 
@@ -167,6 +167,8 @@ class TerminalRecorder(object):
         return self.returncode
 
     def write_input(self, data):
+        if self.poll() is not None: return
+
         while len(data) > 0:
             written = os.write(self.child_fd, data)
             data = data[written:]
