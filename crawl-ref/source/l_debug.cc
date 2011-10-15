@@ -51,7 +51,7 @@ LUAFN(debug_goto_place)
         const int bind_entrance =
             lua_isnumber(ls, 2)? luaL_checkint(ls, 2) : -1;
         you.goto_place(id);
-        if (id.level_type == LEVEL_DUNGEON && bind_entrance != -1)
+        if (bind_entrance != -1)
             branches[you.where_are_you].startdepth = bind_entrance;
     }
     catch (const std::string &err)
@@ -67,7 +67,6 @@ LUAFN(debug_enter_dungeon)
 
     you.absdepth0 = 0;
     you.where_are_you = BRANCH_MAIN_DUNGEON;
-    you.level_type = LEVEL_DUNGEON;
 
     load_level(DNGN_STONE_STAIRS_DOWN_I, LOAD_START_GAME, level_id());
     return (0);
@@ -93,8 +92,7 @@ LUAFN(debug_generate_level)
     tile_clear_flavour();
     tile_new_level(true);
 #endif
-    builder(you.absdepth0, you.level_type,
-            lua_isboolean(ls, 1)? lua_toboolean(ls, 1) : true);
+    builder(you.absdepth0, lua_isboolean(ls, 1)? lua_toboolean(ls, 1) : true);
     return (0);
 }
 

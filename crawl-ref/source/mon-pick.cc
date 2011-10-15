@@ -26,28 +26,14 @@
 // NOTE: The lower the level the earlier a monster may appear.
 int mons_level(int mcls, const level_id &place)
 {
-    int monster_level = 0;
-
-    if (place.level_type == LEVEL_ABYSS)
-        monster_level = ((mons_abyss_rare(mcls)) ? place.absdepth() : 0);
-    else if (place.level_type == LEVEL_PANDEMONIUM)
-        monster_level = ((mons_pan_rare(mcls)) ? place.absdepth() : 0);
-    else if (place.level_type == LEVEL_DUNGEON)
-        monster_level = branches[place.branch].mons_level_function(mcls);
-
-    return monster_level;
+    return branches[place.branch].mons_level_function(mcls);
 }
 
 // NOTE: Higher values returned means the monster is "more common".
 // A return value of zero means the monster will never appear. {dlb}
 int mons_rarity(int mcls, const level_id &place)
 {
-    if (place.level_type == LEVEL_ABYSS)
-        return mons_abyss_rare(mcls);
-    else if (place.level_type == LEVEL_PANDEMONIUM)
-        return mons_pan_rare(mcls);
-    else
-        return branches[place.branch].mons_rarity_function(mcls);
+    return branches[place.branch].mons_rarity_function(mcls);
 }
 
 // The Ecumenical Temple and other places with no monster gen.
@@ -374,8 +360,6 @@ int mons_pan_rare(int mcls)
 }
 
 /* ******************** END EXTERNAL FUNCTIONS ******************** */
-
-// LEVEL_DUNGEON
 
 // The Main Dungeon
 int mons_standard_level(int mcls)

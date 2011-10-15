@@ -904,33 +904,16 @@ void print_stats(void)
 static std::string _level_description_string_hud()
 {
     const PlaceInfo& place = you.get_place_info();
-    std::string short_name = place.short_name();
+    std::string short_name = branches[place.branch].shortname;
 
-    if (place.level_type == LEVEL_DUNGEON
-        && branches[place.branch].depth > 1)
-    {
+    if (branches[place.branch].depth > 1)
         short_name += make_stringf(":%d", player_branch_depth());
-    }
-    // Indefinite articles
-    else if (place.level_type == LEVEL_PORTAL_VAULT
-             || place.level_type == LEVEL_LABYRINTH)
-    {
-        if (!you.level_type_name.empty())
-        {
-            // If the level name is faking a dungeon depth
-            // (i.e., "Ziggurat:3") then don't add an article
-            if (you.level_type_name.find(":") != std::string::npos)
-                short_name = you.level_type_name;
-            else
-                short_name = article_a(uppercase_first(you.level_type_name),
-                                       false);
-        }
-        else
-            short_name.insert(0, "A ");
-    }
     // Definite articles
-    else if (place.level_type == LEVEL_ABYSS)
+    else if (place.branch == BRANCH_ABYSS)
         short_name.insert(0, "The ");
+    // Indefinite articles
+    else if (place.branch != BRANCH_PANDEMONIUM && !is_connected_branch(place.branch))
+        short_name = article_a(short_name);
     return short_name;
 }
 

@@ -3820,17 +3820,17 @@ void monster::pandemon_init()
     ac              = ghost->ac;
     ev              = ghost->ev;
     flags           = MF_INTERESTING;
-    // Don't make greased-lightning Pandemonium demons in the dungeon
+    // Don't make greased-lightning Pandemonium lords in the dungeon
     // max speed = 17). Demons in Pandemonium can be up to speed 20,
     // possibly with haste. Non-caster demons are likely to be fast.
-    if (you.level_type == LEVEL_DUNGEON)
-        speed = (!ghost->spellcaster ? 11 + roll_dice(2, 3) :
-                 one_chance_in(3) ? 10 :
-                 7 + roll_dice(2, 5));
-    else
+    if (player_in_branch(BRANCH_PANDEMONIUM) || player_in_branch(BRANCH_ZIGGURAT))
         speed = (!ghost->spellcaster ? 12 + roll_dice(2, 4) :
                  one_chance_in(3) ? 10 :
                  8 + roll_dice(2, 6));
+    else
+        speed = (!ghost->spellcaster ? 11 + roll_dice(2, 3) :
+                 one_chance_in(3) ? 10 :
+                 7 + roll_dice(2, 5));
 
     speed_increment = 70;
 
@@ -4040,8 +4040,7 @@ bool monster::needs_abyss_transit() const
 {
     return ((mons_is_unique(type)
                 || (flags & MF_BANISHED)
-                || you.level_type == LEVEL_DUNGEON
-                   && hit_dice > 8 + random2(25)
+                || hit_dice > 8 + random2(25)
                    && mons_can_use_stairs(this))
             && !has_ench(ENCH_ABJ));
 }

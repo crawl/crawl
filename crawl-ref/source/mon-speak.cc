@@ -296,7 +296,7 @@ static std::string _get_speak_string(const std::vector<std::string> &prefixes,
     int duration = 1;
     if (mons->hit_points <= 0)
         key += " killed";
-    else if ((mons->flags & MF_BANISHED) && you.level_type != LEVEL_ABYSS)
+    else if ((mons->flags & MF_BANISHED) && you.where_are_you != BRANCH_ABYSS)
         key += " banished";
     else if (mons->is_summoned(&duration) && duration <= 0)
         key += " unsummoned";
@@ -397,7 +397,7 @@ bool mons_speaks(monster* mons)
     // Monsters always talk on death, even if invisible/silenced/etc.
     int duration = 1;
     const bool force_speak = !mons->alive()
-        || (mons->flags & MF_BANISHED) && you.level_type != LEVEL_ABYSS
+        || (mons->flags & MF_BANISHED) && you.where_are_you != BRANCH_ABYSS
         || (mons->is_summoned(&duration) && duration <= 0)
         || crawl_state.prev_cmd == CMD_LOOK_AROUND; // Wizard testing
 

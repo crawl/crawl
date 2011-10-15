@@ -159,7 +159,7 @@ static void level_place_lost_monsters(m_transit_list &m)
 
         // Monsters transiting to the Abyss have a 50% chance of being
         // placed, otherwise a 100% chance.
-        if (you.level_type == LEVEL_ABYSS && coinflip())
+        if (player_in_branch(BRANCH_ABYSS) && coinflip())
             continue;
 
         if (place_lost_monster(*mon))
@@ -248,33 +248,15 @@ bool follower::place(bool near_player)
             continue;
         m = mons;
 
-        bool placed = false;
+        // Shafts no longer retain the position, if anything else would
+        // want to request a specific one, it should do so here if !near_player
 
-        // In certain instances (currently, falling through a shaft)
-        // try to place monster as close as possible to its previous
-        // <x,y> coordinates.
-        if (!near_player && you.level_type == LEVEL_DUNGEON
-            && in_bounds(m.pos()))
-        {
-            const coord_def where_to_go =
-                dgn_find_nearby_stair(DNGN_ESCAPE_HATCH_DOWN,
-                                      m.pos(), true);
-
-            if (where_to_go == you.pos())
-                near_player = true;
-            else if (m.find_home_near_place(where_to_go))
-                placed = true;
-        }
-
-        if (!placed)
-            placed = m.find_place_to_live(near_player);
-
-        if (placed)
+        if (m.find_place_to_live(near_player))
         {
             dprf("Placed follower: %s", m.name(DESC_PLAIN).c_str());
             m.target.reset();
 
-            m.flags &= ~MF_TAKING_STAIRS;
+            m.flags &= ~MF_TAKING_STAIRS & ~MF_BANISHED;
             m.flags |= MF_JUST_SUMMONED;
 
             restore_mons_items(m);

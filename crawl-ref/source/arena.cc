@@ -237,7 +237,6 @@ namespace arena
 
         if (place.is_valid())
         {
-            you.level_type    = place.level_type;
             you.where_are_you = place.branch;
             you.absdepth0     = place.absdepth();
         }
@@ -364,17 +363,6 @@ namespace arena
                 throw make_stringf("Bad place '%s': %s",
                                    arena_place.c_str(),
                                    err.c_str());
-            }
-
-            if (place.level_type == LEVEL_LABYRINTH)
-            {
-                throw (std::string("Can't set arena place to the "
-                                   "labyrinth."));
-            }
-            else if (place.level_type == LEVEL_PORTAL_VAULT)
-            {
-                throw (std::string("Can't set arena place to a portal "
-                                   "vault."));
             }
         }
 

@@ -88,7 +88,7 @@ void overview_clear()
 void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
 {
     // Don't record in temporary terrain
-    if (you.level_type != LEVEL_DUNGEON)
+    if (!player_in_connected_branch())
         return;
 
     const god_type god = feat_altar_god(which_thing);
@@ -439,7 +439,7 @@ static std::string _get_unseen_branches()
         if (seen_lair_branches >= 2 && is_random_lair_subbranch(branch))
             continue;
 
-        if (i == BRANCH_VESTIBULE_OF_HELL)
+        if (i == BRANCH_VESTIBULE_OF_HELL || !is_connected_branch(branch))
             continue;
 
         if (branch_is_unfinished(branch))
@@ -671,9 +671,13 @@ static std::string _get_notes()
 {
     std::string disp;
 
-    for (level_id_iterator i; i; ++i)
-        if (!get_level_annotation(*i).empty())
-            disp += _get_coloured_level_annotation(*i) + "\n";
+    for (int br = 0 ; br < NUM_BRANCHES; ++br)
+        for (int d = 1; d <= branches[br].depth; ++d)
+        {
+            level_id i(static_cast<branch_type>(br), d);
+            if (!get_level_annotation(i).empty())
+                disp += _get_coloured_level_annotation(i) + "\n";
+        }
 
     if (disp.empty())
         return disp;
@@ -774,7 +778,7 @@ static void _seen_staircase(const coord_def& pos)
 static void _seen_altar(god_type god, const coord_def& pos)
 {
     // Can't record in Abyss or Pan.
-    if (you.level_type != LEVEL_DUNGEON)
+    if (!player_in_connected_branch())
         return;
 
     level_pos where(level_id::current(), pos);
@@ -879,7 +883,7 @@ static void _update_unique_annotation(level_id level)
 void set_unique_annotation(monster* mons, const level_id level)
 {
     // Abyss persists its denizens.
-    if (level.level_type != LEVEL_DUNGEON && level.level_type != LEVEL_ABYSS)
+    if (!is_connected_branch(level) && level != BRANCH_ABYSS)
         return;
     if (!mons_is_unique(mons->type) && mons->type != MONS_PLAYER_GHOST)
         return;
@@ -1007,17 +1011,17 @@ void annotate_level()
     {
         li2 = level_id::get_next_level_id(you.pos());
 
-        if (li2.level_type != LEVEL_DUNGEON || li2.depth <= 0)
+        if (!is_connected_branch(li2) || li2.depth <= 0)
             li2 = level_id::current();
     }
 
-    if (you.level_type != LEVEL_DUNGEON && li2.level_type != LEVEL_DUNGEON)
+    if (!player_in_connected_branch() && !is_connected_branch(li2))
     {
         mpr("You can't annotate this level.");
         return;
     }
 
-    if (you.level_type != LEVEL_DUNGEON)
+    if (!player_in_connected_branch())
         li = li2;
     else if (li2 != level_id::current())
     {

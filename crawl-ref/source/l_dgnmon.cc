@@ -5,17 +5,17 @@
 
 #include "AppHdr.h"
 
+#include "branch.h"
 #include "cluautil.h"
+#include "coord.h"
 #include "l_libs.h"
-
 #include "dungeon.h"
 #include "env.h"
 #include "libutil.h"
 #include "mapdef.h"
-#include "mon-util.h"
 #include "mon-place.h"
-#include "coord.h"
 #include "mon-stuff.h"
+#include "mon-util.h"
 
 #define MONSLIST_METATABLE "crawldgn.monster_list"
 
@@ -110,12 +110,11 @@ static int dgn_set_random_mon_list(lua_State *ls)
         std::string name;
         if (mon.place.is_valid())
         {
-            if (mon.place.level_type == LEVEL_LABYRINTH
-                || mon.place.level_type == LEVEL_PORTAL_VAULT)
+            if (!branch_has_monsters(mon.place.branch))
             {
                 std::string err;
-                err = make_stringf("mon #%d: Can't use Lab or Portal as a "
-                                   "monster place.", i + 1);
+                err = make_stringf("mon #%d: Can't use a place with no natural "
+                                   "monsters as a monster place.", i + 1);
                 luaL_argerror(ls, list_pos, err.c_str());
                 return 0;
             }

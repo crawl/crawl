@@ -7,6 +7,7 @@
 #include "player.h"
 #include "spl-transloc.h"
 #include "traps.h"
+#include "travel.h"
 #include "branch-data.h"
 
 Branch& your_branch()
@@ -16,8 +17,7 @@ Branch& your_branch()
 
 bool at_branch_bottom()
 {
-    return your_branch().depth == player_branch_depth()
-           && you.level_type == LEVEL_DUNGEON;
+    return your_branch().depth == player_branch_depth();
 }
 
 level_id branch_entry_level(branch_type branch)
@@ -41,32 +41,10 @@ level_id branch_entry_level(branch_type branch)
     return level_id(parent, subdepth);
 }
 
-static level_id find_parent_dungeon_level(level_id level)
-{
-    ASSERT(level.level_type == LEVEL_DUNGEON);
-    if (!--level.depth)
-        return branch_entry_level(level.branch);
-    else
-        return (level);
-}
-
-static level_id find_parent_for_current_level_area()
-{
-    ASSERT(you.level_type != LEVEL_DUNGEON);
-
-    // Return the level_id saved in where_are_you and absdepth0:
-    unwind_var<level_area_type> player_level_type(
-        you.level_type, LEVEL_DUNGEON);
-    return level_id::current();
-}
-
 level_id current_level_parent()
 {
-    level_id current(level_id::current());
-    if (current.level_type == LEVEL_DUNGEON)
-        return find_parent_dungeon_level(current);
-
-    return find_parent_for_current_level_area();
+    // TODO:LEVEL_STACK: go up the level stack
+    return find_up_level(level_id::current());
 }
 
 bool is_hell_subbranch(branch_type branch)
@@ -82,6 +60,17 @@ bool is_random_lair_subbranch(branch_type branch)
         && branch != BRANCH_SLIME_PITS;
 }
 
+bool is_connected_branch(branch_type branch)
+{
+    ASSERT(branch >= 0 && branch < NUM_BRANCHES);
+    return !(branches[branch].branch_flags & BFLAG_NO_XLEV_TRAVEL);
+}
+
+bool is_connected_branch(level_id place)
+{
+    return is_connected_branch(place.branch);
+}
+
 branch_type str_to_branch(const std::string &branch, branch_type err)
 {
     for (int i = 0; i < NUM_BRANCHES; ++i)
@@ -93,48 +82,36 @@ branch_type str_to_branch(const std::string &branch, branch_type err)
 
 int current_level_ambient_noise()
 {
-    switch (you.level_type)
-    {
-    case LEVEL_DUNGEON:
-        return branches[you.where_are_you].ambient_noise;
-    case LEVEL_ABYSS:
-        // should probably randomize this somehow - change it up when the
-        // abyss shifts?
-        return 0;
-    case LEVEL_PANDEMONIUM:
-        // same as abyss
-        return 0;
-    case LEVEL_PORTAL_VAULT:
-        // should be overridable in vaults
-        return 0;
-    case LEVEL_LABYRINTH:
-        return 0;
-    default:
-        dprf("unknown level type in current_level_ambient_noise: %d", you.level_type);
-        return 0;
-    }
+    return branches[you.where_are_you].ambient_noise;
 }
 
-static const char *level_type_names[] =
+bool branch_has_monsters(branch_type branch)
+{
+    return branches[branch].mons_rarity_function != mons_null_rare;
+}
+
+#if TAG_MAJOR_VERSION == 32
+static const char *old_level_type_names[] =
 {
     "D", "Lab", "Abyss", "Pan", "Port"
 };
 
-const char *level_area_type_name(int level_type)
+const char *old_level_area_type_name(int old_level_type)
 {
-    if (level_type >= 0 && level_type < NUM_LEVEL_AREA_TYPES)
-        return level_type_names[level_type];
+    if (old_level_type >= 0 && old_level_type < NUM_LEVEL_AREA_TYPES)
+        return old_level_type_names[old_level_type];
     return ("");
 }
 
-level_area_type str_to_level_area_type(const std::string &s)
+old_level_area_type str_to_old_level_area_type(const std::string &s)
 {
     for (int i = 0; i < NUM_LEVEL_AREA_TYPES; ++i)
-        if (s == level_type_names[i])
-            return (static_cast<level_area_type>(i));
+        if (s == old_level_type_names[i])
+            return (static_cast<old_level_area_type>(i));
 
-    return (LEVEL_DUNGEON);
+    return (OLD_LEVEL_DUNGEON);
 }
+#endif
 
 bool set_branch_flags(uint32_t flags, bool silent, branch_type branch)
 {
@@ -148,7 +125,7 @@ bool set_branch_flags(uint32_t flags, bool silent, branch_type branch)
 
     bool can_control = allow_control_teleport(true);
 
-    if (you.level_type == LEVEL_DUNGEON && branch == you.where_are_you
+    if (branch == you.where_are_you
         && could_control && !can_control && !silent)
     {
         mpr("You sense the appearance of a powerful magical force "
@@ -170,7 +147,7 @@ bool unset_branch_flags(uint32_t flags, bool silent, branch_type branch)
 
     const bool can_control = allow_control_teleport(true);
 
-    if (you.level_type == LEVEL_DUNGEON && branch == you.where_are_you
+    if (branch == you.where_are_you
         && !could_control && can_control && !silent)
     {
         // Isn't really a "recovery", but I couldn't think of where
@@ -184,12 +161,7 @@ bool unset_branch_flags(uint32_t flags, bool silent, branch_type branch)
 uint32_t get_branch_flags(branch_type branch)
 {
     if (branch == NUM_BRANCHES)
-    {
-        if (you.level_type != LEVEL_DUNGEON)
-            return (0);
-
         branch = you.where_are_you;
-    }
 
     return branches[branch].branch_flags;
 }
@@ -203,4 +175,24 @@ bool branch_is_unfinished(branch_type branch)
 {
     return branch == BRANCH_SPIDER_NEST || branch == BRANCH_FOREST
            || branch == BRANCH_DWARVEN_HALL || branch == BRANCH_HIVE;
+}
+
+bool is_portal_vault(branch_type branch)
+{
+    switch (branch)
+    {
+    // somehow not BRANCH_LABYRINTH
+    case BRANCH_ZIGGURAT:
+    case BRANCH_BAZAAR:
+    case BRANCH_TROVE:
+    case BRANCH_SEWER:
+    case BRANCH_OSSUARY:
+    case BRANCH_BAILEY:
+    case BRANCH_ICE_CAVE:
+    case BRANCH_VOLCANO:
+    case BRANCH_WIZLAB:
+        return true;
+    default:
+        return false;
+    }
 }

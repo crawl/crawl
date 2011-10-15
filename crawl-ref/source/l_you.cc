@@ -142,7 +142,6 @@ LUARET1(you_turns, number, you.num_turns)
 LUARET1(you_time, number, you.elapsed_time)
 LUARET1(you_can_smell, boolean, you.can_smell())
 LUARET1(you_has_claws, number, you.has_claws(false))
-LUARET1(you_level_type_tag, string, you.level_type_tag.c_str())
 
 LUARET1(you_see_cell_rel, boolean,
         you.see_cell(coord_def(luaL_checkint(ls, 1), luaL_checkint(ls, 2)) + you.pos()))
@@ -342,8 +341,6 @@ static const struct luaL_reg you_clib[] =
 
     { "can_smell",         you_can_smell },
     { "has_claws",         you_has_claws },
-
-    { "level_type_tag",    you_level_type_tag },
 
     { "see_cell",          you_see_cell_rel },
     { "see_cell_no_trans", you_see_cell_no_trans_rel },

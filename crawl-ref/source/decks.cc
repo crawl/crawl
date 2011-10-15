@@ -1290,7 +1290,7 @@ static int _xom_check_card(item_def &deck, card_type card,
 
     case CARD_DAMNATION:
         // Nothing happened, boring.
-        if (you.level_type != LEVEL_DUNGEON)
+        if (player_in_branch(BRANCH_ABYSS))
             amusement = 0;
         break;
 
@@ -1509,7 +1509,7 @@ static void _velocity_card(int power, deck_rarity_type rarity)
 
 static void _damnation_card(int power, deck_rarity_type rarity)
 {
-    if (you.level_type != LEVEL_DUNGEON)
+    if (player_in_branch(BRANCH_ABYSS))
     {
         canned_msg(MSG_NOTHING_HAPPENS);
         return;
@@ -1546,7 +1546,7 @@ static void _damnation_card(int power, deck_rarity_type rarity)
 
 static void _warpwright_card(int power, deck_rarity_type rarity)
 {
-    if (you.level_type == LEVEL_ABYSS)
+    if (player_in_branch(BRANCH_ABYSS))
     {
         mpr("The power of the Abyss blocks your magic.");
         return;
@@ -1621,7 +1621,7 @@ static void _minefield_card(int power, deck_rarity_type rarity)
         if (grd(*ri) == DNGN_FLOOR && !find_trap(*ri)
             && one_chance_in(4 - power_level))
         {
-            if (you.level_type == LEVEL_ABYSS)
+            if (player_in_branch(BRANCH_ABYSS))
                 grd(*ri) = coinflip() ? DNGN_DEEP_WATER : DNGN_LAVA;
             else
                 place_specific_trap(*ri, TRAP_RANDOM);
@@ -2370,7 +2370,7 @@ static void _trowel_card(int power, deck_rarity_type rarity)
     // handles stacked level_area_types correctly. We should also
     // review whether Trowel being able to create infinite portal
     // vaults is a Good Thing, because it looks pretty broken to me.
-    if (power_level >= 2 && you.level_type == LEVEL_DUNGEON
+    if (power_level >= 2 && player_in_connected_branch()
         && crawl_state.game_standard_levelgen())
     {
         // Generate a portal to something.

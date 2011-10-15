@@ -794,13 +794,13 @@ static weapon_type _determine_weapon_subtype(int item_level)
 
 static bool _try_make_item_unrand(item_def& item, int force_type)
 {
-    if (you.level_type == LEVEL_PANDEMONIUM)
+    if (player_in_branch(BRANCH_PANDEMONIUM))
     {
         return (false);
     }
 
     int idx = find_okay_unrandart(item.base_type, force_type,
-                                  you.level_type == LEVEL_ABYSS);
+                                  player_in_branch(BRANCH_ABYSS));
 
     if (idx != -1 && make_item_unrandart(item, idx))
         return (true);

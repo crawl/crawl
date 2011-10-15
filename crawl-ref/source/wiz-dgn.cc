@@ -41,7 +41,7 @@
 #ifdef WIZARD
 static dungeon_feature_type _find_appropriate_stairs(bool down)
 {
-    if (you.level_type == LEVEL_DUNGEON)
+    if (player_in_connected_branch())
     {
         int depth = subdungeon_depth(you.where_are_you, you.absdepth0);
         if (down)
@@ -89,9 +89,9 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
         }
     }
 
-    switch (you.level_type)
+    switch (you.where_are_you)
     {
-    case LEVEL_LABYRINTH:
+    case BRANCH_LABYRINTH:
         if (down)
         {
             mpr("Can't go down in the Labyrinth.");
@@ -100,25 +100,18 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
         else
             return DNGN_ESCAPE_HATCH_UP;
 
-    case LEVEL_ABYSS:
+    case BRANCH_ABYSS:
         return DNGN_EXIT_ABYSS;
 
-    case LEVEL_PANDEMONIUM:
+    case BRANCH_PANDEMONIUM:
         if (down)
             return DNGN_TRANSIT_PANDEMONIUM;
         else
             return DNGN_EXIT_PANDEMONIUM;
 
-    case LEVEL_PORTAL_VAULT:
-        return DNGN_EXIT_PORTAL_VAULT;
-
     default:
-        mpr("Unknown level type.");
-        return DNGN_UNSEEN;
+        return DNGN_EXIT_PORTAL_VAULT;
     }
-
-    mpr("Impossible occurrence in find_appropriate_stairs()");
-    return DNGN_UNSEEN;
 }
 
 void wizard_place_stairs(bool down)
@@ -131,45 +124,8 @@ void wizard_place_stairs(bool down)
     dungeon_terrain_changed(you.pos(), stairs, false);
 }
 
-// Try to find and use stairs already in the portal vault level,
-// since this might be a multi-level portal vault like a ziggurat.
-static bool _take_portal_vault_stairs(const bool down)
-{
-    ASSERT(you.level_type == LEVEL_PORTAL_VAULT);
-
-    const command_type cmd = down ? CMD_GO_DOWNSTAIRS : CMD_GO_UPSTAIRS;
-
-    coord_def stair_pos(-1, -1);
-
-    for (rectangle_iterator ri(1); ri; ++ri)
-    {
-        if (feat_stair_direction(grd(*ri)) == cmd)
-        {
-            stair_pos = *ri;
-            break;
-        }
-    }
-
-    if (!in_bounds(stair_pos))
-        return (false);
-
-    clear_trapping_net();
-    you.set_position(stair_pos);
-
-    if (down)
-        down_stairs();
-    else
-        up_stairs();
-
-    return (true);
-}
-
 void wizard_level_travel(bool down)
 {
-    if (you.level_type == LEVEL_PORTAL_VAULT)
-        if (_take_portal_vault_stairs(down))
-            return;
-
     dungeon_feature_type stairs = _find_appropriate_stairs(down);
 
     if (stairs == DNGN_UNSEEN)
@@ -209,7 +165,6 @@ static void _wizard_go_to_level(const level_pos &pos)
     const level_id old_level = level_id::current();
     const bool keep_travel_data = can_travel_interlevel();
 
-    you.level_type    = LEVEL_DUNGEON;
     you.where_are_you = static_cast<branch_type>(pos.id.branch);
     you.absdepth0    = abs_depth;
 
@@ -824,8 +779,7 @@ void wizard_recreate_level()
     if (lev.depth == 1 && lev != BRANCH_MAIN_DUNGEON)
         stair_taken = branches[lev.branch].entry_stairs;
 
-    if (lev.level_type == LEVEL_DUNGEON)
-        you.get_place_info().levels_seen--;
+    you.get_place_info().levels_seen--;
     if (you.save)
         you.save->delete_chunk(lev.describe());
     const bool newlevel = load_level(stair_taken, LOAD_START_GAME, lev);

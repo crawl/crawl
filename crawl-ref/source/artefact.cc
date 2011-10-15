@@ -17,6 +17,7 @@
 #include "options.h"
 
 #include "areas.h"
+#include "branch.h"
 #include "colour.h"
 #include "coordit.h"
 #include "database.h"
@@ -26,7 +27,6 @@
 #include "items.h"
 #include "libutil.h"
 #include "makeitem.h"
-#include "place.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
@@ -266,39 +266,7 @@ std::string replace_name_parts(const std::string &name_in, const item_def& item)
 
     if (name.find("@branch_name@", 0) != std::string::npos)
     {
-        std::string place;
-        if (one_chance_in(5))
-        {
-            switch (random2(8))
-            {
-            case 0:
-            case 1:
-            default:
-               place = "the Abyss";
-               break;
-            case 2:
-            case 3:
-               place = "Pandemonium";
-               break;
-            case 4:
-            case 5:
-               place = "the Realm of Zot";
-               break;
-            case 6:
-               place = "the Labyrinth";
-               break;
-            case 7:
-               place = "the Portal Chambers";
-               break;
-            }
-        }
-        else
-        {
-            const branch_type branch =
-                     static_cast<branch_type>(random2(BRANCH_TARTARUS));
-            place = place_name(get_packed_place(branch, 1, LEVEL_DUNGEON),
-                                true, false);
-        }
+        std::string place = branches[random2(NUM_BRANCHES)].longname;
         if (!place.empty())
             name = replace_all(name, "@branch_name@", place);
     }

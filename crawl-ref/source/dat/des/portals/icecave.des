@@ -660,7 +660,8 @@ SHUFFLE: Qq / Zz / Nn / Bb / Mm
 SUBST:   Q=2, Z=2, N=., B=., M=.
 SUBST:   q=!, z=!, n=., b=., m=.
 # Replaces '!'s with fog generators, then makes them floor.
-: if you.level_type_tag() == "ice_cave_hard" then
+: --FIXME: if you.level_type_tag() == "ice_cave_hard" then
+: if false then
 : place_fog(_G, "freezing vapour", 100)
 : else
 : place_fog(_G, "freezing vapour", 30)
@@ -682,7 +683,8 @@ dgn.set_random_mon_list("white imp w:35 / ufetubus w:35 / blue devil w:20 / \
                          ice devil / nothing")
 ice_cave_milestone(_G)
 }}
-: if you.level_type_tag() == "ice_cave_hard" then
+: --FIXME: if you.level_type_tag() == "ice_cave_hard" then
+: if false then
 MONS:    white imp / ufetubus
 MONS:    ice devil / blue devil w:3 / nothing w:2
 MONS:    ice statue
@@ -763,7 +765,8 @@ KMONS:  S = ice statue
 # I is an ice statue with loot underneath.
 KITEM:  I = any scroll q:3
 KMONS:  I = ice statue
-: if you.level_type_tag() == "ice_cave_hard" then
+: --FIXME: if you.level_type_tag() == "ice_cave_hard" then
+: if false then
 MONS:   ice devil / blue devil / nothing w:7
 # FIXME: I can't quite make up more simulacrums
 MONS:   grizzly bear simulacrum w:20 / dragon simulacrum /\
@@ -858,7 +861,8 @@ epilogue{{
 ice_cave_milestone(_G)
 }}
 # Two different populations: undead/demon and natural/giant.
-: if you.level_type_tag() == "ice_cave_hard" then
+: --FIXME: if you.level_type_tag() == "ice_cave_hard" then
+: if false then
 : ice_cave_random_monster_list_undead_demon(_G)
 : ice_cave_caverns_undead_demon_monster_set(_G)
 ITEM: cloak ego:fire_resistance good_item / wizard hat good_item / \
@@ -918,7 +922,8 @@ ORIENT: encompass
 # doesn't have enough cold resistance for many clouds. The ';' placeholder
 # symbol gives the natural monsters some safety padding from generator
 # placement.
-: if you.level_type_tag() == "ice_cave_hard"  then
+: --FIXME: if you.level_type_tag() == "ice_cave_hard"  then
+: if false then
 : ice_cave_random_monster_list_undead_demon(_G)
 : ice_cave_caverns_undead_demon_monster_set(_G)
 ITEM: cloak ego:fire_resistance good_item / wizard hat good_item / \
@@ -999,7 +1004,8 @@ ORIENT: encompass
 # Two different populations: undead/demon (hard) and natural/giant (easy).
 # Different fog generator generation according to population,
 # as the natural monsters can't stomach the clouds.
-: if you.level_type_tag() == "ice_cave_hard" then
+: --FIXME: if you.level_type_tag() == "ice_cave_hard" then
+: if false then
 : ice_cave_random_monster_list_undead_demon(_G)
 : ice_cave_caverns_undead_demon_monster_set(_G)
 ITEM: cloak ego:fire_resistance good_item / wizard hat good_item / \

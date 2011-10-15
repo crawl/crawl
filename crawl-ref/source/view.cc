@@ -352,7 +352,7 @@ void update_monsters_in_view()
     // Abyss, Xom is stimulated in proportion to the number of
     // hostile monsters.  Thus if the entourage doesn't grow, then
     // Xom becomes bored.
-    if (you.level_type == LEVEL_ABYSS
+    if (player_in_branch(BRANCH_ABYSS)
         && you.attribute[ATTR_ABYSS_ENTOURAGE] < num_hostile)
     {
         you.attribute[ATTR_ABYSS_ENTOURAGE] = num_hostile;

@@ -13,8 +13,8 @@
 #include <string.h>
 
 #include "externs.h"
-#include "options.h"
 #include "artefact.h"
+#include "branch.h"
 #include "cio.h"
 #include "describe.h"
 #include "decks.h"
@@ -29,6 +29,7 @@
 #include "macro.h"
 #include "menu.h"
 #include "notes.h"
+#include "options.h"
 #include "place.h"
 #include "player.h"
 #include "spl-book.h"
@@ -118,6 +119,12 @@ static std::string _purchase_keys(const std::string &s)
     return (list);
 }
 
+static bool _can_shoplist(level_id lev = level_id::current())
+{
+    // TODO: temporary shoplists
+    return is_connected_branch(lev.branch);
+}
+
 static void _list_shop_keys(const std::string &purchasable, bool viewing,
                             int total_stock, int num_selected,
                             int num_in_list)
@@ -128,7 +135,7 @@ static void _list_shop_keys(const std::string &purchasable, bool viewing,
     formatted_string fs;
 
     std::string shop_list = "";
-    if (!viewing && you.level_type == LEVEL_DUNGEON)
+    if (!viewing && _can_shoplist())
     {
         shop_list = "[<w>$</w>] ";
         if (num_selected > 0)
@@ -605,7 +612,7 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
         else if (key == '$')
         {
             if (viewing || (num_selected == 0 && num_in_list == 0)
-                || you.level_type != LEVEL_DUNGEON)
+                || !_can_shoplist())
             {
                 _shop_print("Huh?", 1);
                 _shop_more();
@@ -2272,7 +2279,7 @@ bool ShoppingList::add_thing(const item_def &item, int cost,
 
     SETUP_POS();
 
-    if (pos.id.level_type != LEVEL_DUNGEON)
+    if (!_can_shoplist(_pos->id.branch))
     {
         mpr("The shopping list can only contain things in the dungeon.",
              MSGCH_ERROR);
@@ -2303,7 +2310,7 @@ bool ShoppingList::add_thing(std::string desc, std::string buy_verb, int cost,
 
     SETUP_POS();
 
-    if (pos.id.level_type != LEVEL_DUNGEON)
+    if (!_can_shoplist(pos.id.branch))
     {
         mpr("The shopping list can only contain things in the dungeon.",
              MSGCH_ERROR);
@@ -2407,7 +2414,7 @@ unsigned int ShoppingList::cull_identical_items(const item_def& item,
 
     // Can't put items in Bazaar shops in the shopping list, so
     // don't bother transferring shopping list items to Bazaar shops.
-    if (cost != -1 && you.level_type != LEVEL_DUNGEON)
+    if (cost != -1 && !_can_shoplist())
         return (0);
 
     switch (item.base_type)

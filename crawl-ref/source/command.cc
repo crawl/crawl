@@ -1038,15 +1038,6 @@ static std::vector<std::string> _get_branch_keys()
 
         names.push_back(branch.shortname);
     }
-
-    //add handpicked places
-    names.push_back(place_name(
-                            get_packed_place(BRANCH_MAIN_DUNGEON, 1,
-                                static_cast<level_area_type>(LEVEL_ABYSS)), false));
-    names.push_back(place_name(
-                            get_packed_place(BRANCH_MAIN_DUNGEON, 1,
-                                static_cast<level_area_type>(LEVEL_PANDEMONIUM)), false));
-
     return (names);
 }
 

@@ -84,7 +84,7 @@ static void _set_no_path_found(monster* mon)
 #ifdef DEBUG_PATHFIND
     mpr("No path found!");
 #endif
-    if (crawl_state.game_is_zotdef() && you.level_type == LEVEL_DUNGEON
+    if (crawl_state.game_is_zotdef() && player_in_branch(BRANCH_MAIN_DUNGEON)
         && !testbits(env.pgrid(mon->pos()), FPROP_NO_RTELE_INTO))
     {
         if (you.wizard)
@@ -101,7 +101,7 @@ static void _set_no_path_found(monster* mon)
             // effortless win with all the opposition doing nothing.
 
             // This is only appropriate in the zotdef map itself, though,
-            // which is why we check for LEVEL_DUNGEON above.
+            // which is why we check for BRANCH_MAIN_DUNGEON above.
             // (This kind of thing is totally normal in, say, a Bazaar.)
             die("ZotDef: monster %s failed to pathfind to (%d,%d) (%s)",
                 mon->name(DESC_PLAIN).c_str(),

@@ -51,6 +51,7 @@
 #include "mon-util.h"
 #include "mon-transit.h"
 #include "mutation.h"
+#include "place.h"
 #include "quiver.h"
 #include "religion.h"
 #include "skills.h"
@@ -557,12 +558,9 @@ static void unmarshall_container(reader &th, T_container &container,
         (container.*inserter)(unmarshal(th));
 }
 
-// XXX: Redundant with level_id.save()/load().
 void marshall_level_id(writer& th, const level_id& id)
 {
-    marshallByte(th, id.branch);
-    marshallInt(th, id.depth);
-    marshallByte(th, id.level_type);
+    marshallShort(th, id.packed_place());
 }
 
 void marshall_level_id_set(writer& th, const std::set<level_id>& id)
@@ -611,11 +609,18 @@ T unmarshall_long_as(reader& th)
 
 level_id unmarshall_level_id(reader& th)
 {
-    level_id id;
-    id.branch     = static_cast<branch_type>(unmarshallByte(th));
-    id.depth      = unmarshallInt(th);
-    id.level_type = static_cast<level_area_type>(unmarshallByte(th));
-    return (id);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_MINOR_NO_LEVEL_TYPE)
+    {
+        branch_type br = static_cast<branch_type>(unmarshallByte(th));
+        int depth      = unmarshallInt(th);
+        int level_type = unmarshallByte(th);
+        return level_id::from_packed_place(get_packed_place(br,
+                                           level_type ? 0xFF : depth));
+    }
+    else
+#endif
+    return level_id::from_packed_place(unmarshallShort(th));
 }
 
 std::set<level_id> unmarshall_level_id_set(reader& th)
@@ -1059,12 +1064,10 @@ static void tag_construct_you(writer &th)
     marshallInt(th, you.sage_bonus_degree);
     marshallShort(th, you.manual_skill);
     marshallInt(th, you.manual_index);
-    marshallByte(th, you.level_type);
-    marshallString(th, you.level_type_name);
-    marshallString(th, you.level_type_name_abbrev);
-    marshallString(th, you.level_type_origin);
-    marshallString(th, you.level_type_tag);
-    marshallString(th, you.level_type_ext);
+#if TAG_MAJOR_VERSION == 32
+    // a level might be not yet converted
+    marshallString(th, you.old_level_type_name_abbrev);
+#endif
     marshallByte(th, you.entry_cause);
     marshallByte(th, you.entry_cause_god);
     marshallInt(th, you.abyss_speed);
@@ -1382,7 +1385,6 @@ static void tag_construct_you_items(writer &th)
 
 static void marshallPlaceInfo(writer &th, PlaceInfo place_info)
 {
-    marshallInt(th, place_info.level_type);
     marshallInt(th, place_info.branch);
 
     marshallInt(th, place_info.num_visits);
@@ -1762,14 +1764,27 @@ static void tag_read_you(reader &th)
         you.manual_index  = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 32
     }
-#endif
-    you.level_type        = static_cast<level_area_type>(unmarshallByte(th));
-    you.level_type_name   = unmarshallString(th);
+    if (th.getMinorVersion() < TAG_MINOR_NO_LEVEL_TYPE)
+    {
+        int lt = unmarshallByte(th);
+        unmarshallString(th);
 
-    you.level_type_name_abbrev = unmarshallString(th);
-    you.level_type_origin      = unmarshallString(th);
-    you.level_type_tag         = unmarshallString(th);
-    you.level_type_ext         = unmarshallString(th);
+        you.old_level_type_name_abbrev = unmarshallString(th);
+        unmarshallString(th);
+        unmarshallString(th);
+        unmarshallString(th);
+        if (lt)
+        {
+            // TODO:LEVEL_STACK: push the old level if != 0
+            level_id lev = level_id::from_packed_place(get_packed_place(
+                               (branch_type)lt, 0xFF));
+            you.where_are_you = lev.branch;
+            you.absdepth0 = absdungeon_depth(lev.branch, lev.depth);
+        }
+    }
+    else // for levels not yet converted
+        you.old_level_type_name_abbrev = unmarshallString(th);
+#endif
 
     you.entry_cause     = static_cast<entry_cause_type>(unmarshallByte(th));
     you.entry_cause_god = static_cast<god_type>(unmarshallByte(th));
@@ -2425,8 +2440,17 @@ static PlaceInfo unmarshallPlaceInfo(reader &th)
 {
     PlaceInfo place_info;
 
-    place_info.level_type = unmarshallInt(th);
-    place_info.branch     = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_MINOR_NO_LEVEL_TYPE)
+    {
+        int lt = unmarshallInt(th);
+        place_info.branch = (branch_type)unmarshallInt(th);
+        if (lt)
+            place_info.branch = place_branch(get_packed_place((branch_type)lt, 0xFF));
+    }
+    else
+#endif
+    place_info.branch      = static_cast<branch_type>(unmarshallInt(th));
 
     place_info.num_visits  = unmarshallInt(th);
     place_info.levels_seen = unmarshallInt(th);

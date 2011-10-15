@@ -129,7 +129,6 @@ function wizlab_setup (e, wizlab_desc)
     e.kfeat("< = exit_portal_vault")
     e.tile("< = no_random dngn_portal_wizard_lab")
     -- This is so that the note shows up properly.
-    dgn.set_level_type_origin("in " .. wizlab_desc)
     dgn.set_feature_desc_short("gate leading back to the Dungeon",
                                "portal leading out of here")
     if wizlab_desc ~= "Eringya's Formal Garden" then

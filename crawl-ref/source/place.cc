@@ -13,50 +13,89 @@
 #include "player.h"
 #include "travel.h"
 
-// Do not attempt to use level_id if level_type != LEVEL_DUNGEON
 std::string short_place_name(level_id id)
 {
     return id.describe();
 }
 
-int place_branch(unsigned short place)
+branch_type place_branch(unsigned short place)
 {
-    const unsigned branch = (unsigned) ((place >> 8) & 0xFF);
-    const int lev = place & 0xFF;
-    return lev == 0xFF? -1 : (int) branch;
+#if TAG_MAJOR_VERSION == 32
+    place = upgrade_packed_place(place);
+#endif
+    return static_cast<branch_type>((place >> 8) & 0xFF);
 }
 
 int place_depth(unsigned short place)
 {
-    const int lev = place & 0xFF;
-    return lev == 0xFF? -1 : lev;
+#if TAG_MAJOR_VERSION == 32
+    place = upgrade_packed_place(place);
+#endif
+    return place & 0xFF;
 }
 
-int place_type(unsigned short place)
+unsigned short get_packed_place(branch_type branch, int subdepth)
 {
-    const unsigned type = (unsigned) ((place >> 8) & 0xFF);
-    const int lev = place & 0xFF;
-    return lev == 0xFF? (int) type : (int) LEVEL_DUNGEON;
-}
-
-unsigned short get_packed_place(branch_type branch, int subdepth,
-                                 level_area_type level_type)
-{
-    unsigned short place = (unsigned short)
-        ((static_cast<int>(branch) << 8) | (subdepth & 0xFF));
-
-    if (level_type != LEVEL_DUNGEON)
-        place = (unsigned short) ((static_cast<int>(level_type) << 8) | 0xFF);
-
-    return place;
+    return (static_cast<int>(branch) << 8) | (subdepth & 0xFF);
 }
 
 unsigned short get_packed_place()
 {
     return get_packed_place(you.where_are_you,
-                            subdungeon_depth(you.where_are_you, you.absdepth0),
-                            you.level_type);
+                            subdungeon_depth(you.where_are_you, you.absdepth0));
 }
+
+#if TAG_MAJOR_VERSION == 32
+unsigned short upgrade_packed_place(unsigned short place)
+{
+    // D:-1 ("Buggy Badlands") is used as a magic value by vault definitions
+    if ((place & 0xFF) != 0xFF || place == 0xFF)
+        return place;
+    switch (static_cast<old_level_area_type>(place >> 8))
+    {
+    case OLD_LEVEL_DUNGEON:
+        die("old LEVEL_DUNGEON with no depth");
+    case OLD_LEVEL_LABYRINTH:
+        return get_packed_place(BRANCH_LABYRINTH, 1);
+    case OLD_LEVEL_ABYSS:
+        return get_packed_place(BRANCH_ABYSS, 1);
+    case OLD_LEVEL_PANDEMONIUM:
+        return get_packed_place(BRANCH_PANDEMONIUM, 1);
+    case OLD_LEVEL_PORTAL_VAULT:
+        if (you.old_level_type_name_abbrev == "Spider")
+            return get_packed_place(BRANCH_SPIDER_NEST, 1);
+        else if (you.old_level_type_name_abbrev == "Bazaar")
+            return get_packed_place(BRANCH_BAZAAR, 1);
+        else if (you.old_level_type_name_abbrev == "Trove")
+            return get_packed_place(BRANCH_TROVE, 1);
+        else if (you.old_level_type_name_abbrev == "Sewer")
+            return get_packed_place(BRANCH_SEWER, 1);
+        else if (you.old_level_type_name_abbrev == "Ossuary")
+            return get_packed_place(BRANCH_OSSUARY, 1);
+        else if (you.old_level_type_name_abbrev == "Bailey")
+            return get_packed_place(BRANCH_BAILEY, 1);
+        else if (you.old_level_type_name_abbrev == "IceCv")
+            return get_packed_place(BRANCH_ICE_CAVE, 1);
+        else if (you.old_level_type_name_abbrev == "Volcano")
+            return get_packed_place(BRANCH_VOLCANO, 1);
+        else if (you.old_level_type_name_abbrev == "WizLab")
+            return get_packed_place(BRANCH_WIZLAB, 1);
+        else if (you.old_level_type_name_abbrev.find("Zig:"))
+        {
+            int zig_depth;
+            if (sscanf(you.old_level_type_name_abbrev.c_str(), "Zig:%d", &zig_depth) == 1)
+                return get_packed_place(BRANCH_ZIGGURAT, zig_depth);
+        }
+        // yeah, both cases can happen
+        else if (you.old_level_type_name_abbrev == "ziggurat")
+            return get_packed_place(BRANCH_ZIGGURAT, 1);
+        die("unknown old portal branch: %s", you.old_level_type_name_abbrev.c_str());
+        break;
+    default:
+        die("unknown old level type: %d", place >> 8);
+    }
+}
+#endif
 
 bool single_level_branch(branch_type branch)
 {
@@ -70,48 +109,7 @@ std::string place_name(unsigned short place, bool long_name,
     uint8_t branch = (place >> 8) & 0xFF;
     int lev = place & 0xFF;
 
-    std::string result;
-    if (lev == 0xFF)
-    {
-        switch (branch)
-        {
-        case LEVEL_ABYSS:
-            return (long_name ? "The Abyss" : "Abyss");
-        case LEVEL_PANDEMONIUM:
-            return (long_name ? "Pandemonium" : "Pan");
-        case LEVEL_LABYRINTH:
-            return (long_name ? "a Labyrinth" : "Lab");
-        case LEVEL_PORTAL_VAULT:
-            // XXX: This was originally in misc.cc:new_level. It really makes
-            // no sense for it to be there, as there are instances where portal
-            // vaults can use origin elsewhere (death messages, etc), and Note
-            // ::describe calls this anyway. (due)
-            if (branch == you.level_type
-                && !you.level_type_origin.empty())
-            {
-                if (!long_name)
-                    return uppercase_first(you.level_type_name_abbrev);
-
-                std::string desc;
-
-                size_t space = you.level_type_origin.find(" ");
-                if (space == std::string::npos)
-                    desc += you.level_type_origin;
-                else
-                    desc += you.level_type_origin.substr(space + 1);
-
-                return desc;
-            }
-            else
-            {
-                return long_name ? "a Portal Chamber" : "Port";
-            }
-        default:
-            return (long_name ? "Buggy Badlands" : "Bug");
-        }
-    }
-
-    result = (long_name ?
+    std::string result = (long_name ?
               branches[branch].longname : branches[branch].abbrevname);
 
     if (include_number && branches[branch].depth != 1)
@@ -164,7 +162,7 @@ int absdungeon_depth(branch_type branch, int subdepth)
     else
     {
         --subdepth;
-        while (branch != BRANCH_MAIN_DUNGEON)
+        while (branch != BRANCH_MAIN_DUNGEON && branch != NUM_BRANCHES)
         {
             subdepth += branches[branch].startdepth;
             branch = branches[branch].parent_branch;
@@ -184,24 +182,39 @@ int player_branch_depth()
 }
 
 // Returns true if exits from this type of level involve going upstairs.
-bool level_type_exits_up(level_area_type type)
+bool branch_exits_up(branch_type branch)
 {
-    return (type == LEVEL_LABYRINTH || type == LEVEL_PORTAL_VAULT);
+    switch (branch)
+    {
+    case BRANCH_ZIGGURAT:
+    case BRANCH_LABYRINTH:
+    case BRANCH_BAZAAR:
+    case BRANCH_TROVE:
+    case BRANCH_SEWER:
+    case BRANCH_OSSUARY:
+    case BRANCH_BAILEY:
+    case BRANCH_ICE_CAVE:
+    case BRANCH_VOLCANO:
+    case BRANCH_WIZLAB:
+        return true;
+    default:
+        return false;
+    }
 }
 
-bool level_type_exits_down(level_area_type type)
+bool branch_exits_down(branch_type branch)
 {
-    return (type == LEVEL_PANDEMONIUM || type == LEVEL_ABYSS);
+    return (branch == BRANCH_PANDEMONIUM || branch == BRANCH_ABYSS);
 }
 
-bool level_type_allows_followers(level_area_type type)
+bool branch_allows_followers(branch_type branch)
 {
-    return (type == LEVEL_DUNGEON || type == LEVEL_PANDEMONIUM);
+    return (is_connected_branch(branch) || branch == BRANCH_PANDEMONIUM);
 }
 
-bool level_type_is_stash_trackable(level_area_type type)
+bool branch_is_stash_trackable(branch_type branch)
 {
-    return (type != LEVEL_ABYSS && type != LEVEL_LABYRINTH);
+    return (branch != BRANCH_ABYSS && branch != BRANCH_LABYRINTH);
 }
 
 std::vector<level_id> all_dungeon_ids()

@@ -85,7 +85,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             mpr(pre_msg->c_str());
         canned_msg(MSG_STRANGE_STASIS);
     }
-    else if (you.level_type == LEVEL_ABYSS
+    else if (player_in_branch(BRANCH_ABYSS)
              && _abyss_blocks_teleport(high_level_controlled_blink)
              && !wizard_blink)
     {
@@ -207,7 +207,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             mpr("Oops! Maybe something was there already.");
             random_blink(false);
         }
-        else if (you.level_type == LEVEL_ABYSS && !wizard_blink)
+        else if (player_in_branch(BRANCH_ABYSS) && !wizard_blink)
         {
             abyss_teleport(false);
             if (you.pet_target != MHITYOU)
@@ -246,7 +246,7 @@ void random_blink(bool allow_partial_control, bool override_abyss)
 
     if (item_blocks_teleport(true, true))
         canned_msg(MSG_STRANGE_STASIS);
-    else if (you.level_type == LEVEL_ABYSS
+    else if (player_in_branch(BRANCH_ABYSS)
              && !override_abyss
              && _abyss_blocks_teleport(false))
     {
@@ -323,7 +323,7 @@ void you_teleport(void)
 
         int teleport_delay = 3 + random2(3);
 
-        if (you.level_type == LEVEL_ABYSS && !one_chance_in(5))
+        if (player_in_branch(BRANCH_ABYSS) && !one_chance_in(5))
         {
             mpr("You have a feeling this translocation may take a while to kick in...");
             teleport_delay += 5 + random2(10);
@@ -426,7 +426,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
     viewwindow();
     StashTrack.update_stash(you.pos());
 
-    if (you.level_type == LEVEL_ABYSS && !wizard_tele)
+    if (player_in_branch(BRANCH_ABYSS) && !wizard_tele)
     {
         abyss_teleport(new_abyss_area);
         if (you.pet_target != MHITYOU)
@@ -575,7 +575,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
         // (Check done for the straight line, no pathfinding involved.)
         bool need_distance_check = false;
         coord_def centre;
-        if (you.level_type == LEVEL_LABYRINTH)
+        if (player_in_branch(BRANCH_LABYRINTH))
         {
             bool success = false;
             for (int xpos = 0; xpos < GXM; xpos++)
@@ -704,10 +704,10 @@ void you_teleport_now(bool allow_control, bool new_abyss_area, bool wizard_tele)
     // *less* dangerous than the old dangerous area.
     // Teleporting in a labyrinth is also funny, more so for non-minotaurs.
     if (randtele
-        && (you.level_type == LEVEL_LABYRINTH
-            || you.level_type != LEVEL_ABYSS && player_in_a_dangerous_place()))
+        && (player_in_branch(BRANCH_LABYRINTH)
+            || you.where_are_you != BRANCH_ABYSS && player_in_a_dangerous_place()))
     {
-        if (you.level_type == LEVEL_LABYRINTH && you.species == SP_MINOTAUR)
+        if (player_in_branch(BRANCH_LABYRINTH) && you.species == SP_MINOTAUR)
             xom_is_stimulated(100);
         else
             xom_is_stimulated(200);

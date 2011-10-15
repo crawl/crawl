@@ -945,7 +945,7 @@ bool show_map(level_pos &lpos,
                 // Cycle the radius of an exclude.
             case CMD_MAP_EXCLUDE_AREA:
             {
-                if (you.level_type == LEVEL_LABYRINTH)
+                if (!is_map_persistent())
                     break;
 
                 cycle_exclude_radius(lpos.pos);

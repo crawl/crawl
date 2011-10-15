@@ -2454,7 +2454,7 @@ bool melee_attack::distortion_affects_defender()
         return (false);
     }
 
-    if (you.level_type != LEVEL_ABYSS && coinflip())
+    if (you.where_are_you != BRANCH_ABYSS && coinflip())
     {
         emit_nodmg_hit_message();
 

@@ -56,6 +56,8 @@ Branch& your_branch();
 bool at_branch_bottom();
 bool is_hell_subbranch(branch_type branch);
 bool is_random_lair_subbranch(branch_type branch);
+bool is_connected_branch(branch_type branch);
+bool is_connected_branch(level_id place);
 level_id branch_entry_level(branch_type branch);
 level_id current_level_parent();
 
@@ -63,9 +65,7 @@ branch_type str_to_branch(const std::string &branch,
                           branch_type err = NUM_BRANCHES);
 
 int current_level_ambient_noise();
-
-const char *level_area_type_name(int level_type);
-level_area_type str_to_level_area_type(const std::string &s);
+bool branch_has_monsters(branch_type branch);
 
 bool set_branch_flags(uint32_t flags, bool silent = false,
                       branch_type branch = NUM_BRANCHES);
@@ -75,4 +75,5 @@ uint32_t get_branch_flags(branch_type branch = NUM_BRANCHES);
 branch_type get_branch_at(const coord_def& pos);
 bool branch_is_unfinished(branch_type branch);
 
+bool is_portal_vault(branch_type branch); // AXE ME!
 #endif
