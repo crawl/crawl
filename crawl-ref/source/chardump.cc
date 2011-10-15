@@ -22,6 +22,7 @@
 #include "options.h"
 
 #include "artefact.h"
+#include "branch.h"
 #include "debug.h"
 #include "describe.h"
 #include "dgn-overview.h"
@@ -287,6 +288,18 @@ static void _sdump_transform(dump_params &par)
     }
 }
 
+static branch_type single_portals[] =
+{
+    BRANCH_LABYRINTH,
+    BRANCH_TROVE,
+    BRANCH_SEWER,
+    BRANCH_OSSUARY,
+    BRANCH_BAILEY,
+    BRANCH_ICE_CAVE,
+    BRANCH_VOLCANO,
+    BRANCH_WIZLAB,
+};
+
 static void _sdump_visits(dump_params &par)
 {
     std::string &text(par.text);
@@ -313,7 +326,7 @@ static void _sdump_visits(dump_params &par)
     text += make_stringf(" of the dungeon, and %s %d of its levels.\n",
                          seen.c_str(), branches_total.levels_seen);
 
-    PlaceInfo place_info = you.get_place_info(LEVEL_PANDEMONIUM);
+    PlaceInfo place_info = you.get_place_info(BRANCH_PANDEMONIUM);
     if (place_info.num_visits > 0)
     {
         text += make_stringf("You %svisited Pandemonium %d time",
@@ -324,7 +337,7 @@ static void _sdump_visits(dump_params &par)
                              seen.c_str(), place_info.levels_seen);
     }
 
-    place_info = you.get_place_info(LEVEL_ABYSS);
+    place_info = you.get_place_info(BRANCH_ABYSS);
     if (place_info.num_visits > 0)
     {
         text += make_stringf("You %svisited the Abyss %d time",
@@ -334,85 +347,55 @@ static void _sdump_visits(dump_params &par)
         text += ".\n";
     }
 
-    place_info = you.get_place_info(LEVEL_LABYRINTH);
+    place_info = you.get_place_info(BRANCH_BAZAAR);
     if (place_info.num_visits > 0)
     {
-        text += make_stringf("You %svisited %d Labyrinth",
+        text += make_stringf("You %svisited %d bazaars",
                              have.c_str(), place_info.num_visits);
         if (place_info.num_visits > 1)
             text += "s";
         text += ".\n";
     }
 
-    place_info = you.get_place_info(LEVEL_PORTAL_VAULT);
+    place_info = you.get_place_info(BRANCH_ZIGGURAT);
     if (place_info.num_visits > 0)
     {
-        CrawlVector &vaults =
-            you.props[YOU_PORTAL_VAULT_NAMES_KEY].get_vector();
+        int num_zigs = place_info.num_visits;
+        text += make_stringf("You %s%s %d Ziggurat",
+                             have.c_str(),
+                             (num_zigs == you.zigs_completed) ? "completed"
+                                                              : "visited",
+                             num_zigs);
+        if (num_zigs > 1)
+            text += "s";
+        if (num_zigs != you.zigs_completed && you.zigs_completed)
+            text += make_stringf(" (completing %d)", you.zigs_completed);
+        text += make_stringf(", and %s %d of %s levels",
+                             seen.c_str(), place_info.levels_seen,
+                             num_zigs > 1 ? "their" : "its");
+        if (num_zigs != 1 && !you.zigs_completed)
+            text += make_stringf(" (deepest: %d)", you.zig_max);
+        text += ".\n";
+    }
 
-        int num_bazaars = 0;
-        int num_zigs    = 0;
-        int zig_levels  = 0;
-        std::vector<std::string> misc_portals;
-
-        for (unsigned int i = 0; i < vaults.size(); i++)
-        {
-            std::string name = vaults[i].get_string();
-
-            if (name.find("Ziggurat") != std::string::npos)
-            {
-                zig_levels++;
-
-                if (name == "Ziggurat:1")
-                    num_zigs++;
-            }
-            else if (name == "bazaar")
-                num_bazaars++;
-            else
-                misc_portals.push_back(name);
-        }
-
-        if (num_bazaars > 0)
-        {
-            text += make_stringf("You %svisited %d bazaar",
-                                 have.c_str(), num_bazaars);
-
-            if (num_bazaars > 1)
-                text += "s";
-            text += ".\n";
-        }
-
-        if (num_zigs > 0)
-        {
-            text += make_stringf("You %s%s %d Ziggurat",
-                                 have.c_str(),
-                                 (num_zigs == you.zigs_completed) ? "completed"
-                                                                  : "visited",
-                                 num_zigs);
-            if (num_zigs > 1)
-                text += "s";
-            if (num_zigs != you.zigs_completed && you.zigs_completed)
-                text += make_stringf(" (completing %d)", you.zigs_completed);
-            text += make_stringf(", and %s %d of %s levels",
-                                 seen.c_str(), zig_levels,
-                                 num_zigs > 1 ? "their" : "its");
-            if (num_zigs != 1 && !you.zigs_completed)
-                text += make_stringf(" (deepest: %d)", you.zig_max);
-            text += ".\n";
-        }
-
-        if (!misc_portals.empty())
-        {
-            text += make_stringf("You %svisited %d portal chamber",
-                                 have.c_str(), (int)misc_portals.size());
-            if (misc_portals.size() > 1)
-                text += "s";
-            text += ": ";
-            text += comma_separated_line(misc_portals.begin(),
-                                         misc_portals.end(),
-                                         ", ");
-            text += ".\n";
-        }
+    std::vector<std::string> misc_portals;
+    for (unsigned int i = 0; i < ARRAYSZ(single_portals); i++)
+    {
+        branch_type br = single_portals[i];
+        place_info = you.get_place_info(br);
+        if (!place_info.num_visits)
+            continue;
+        std::string name = branches[br].shortname;
+        if (place_info.num_visits > 1)
+            name += make_stringf(" (%d times)", place_info.num_visits);
+        misc_portals.push_back(name);
+    }
+    if (!misc_portals.empty())
+    {
+        text += "You " + have + "also visited: "
+                + comma_separated_line(misc_portals.begin(),
+                                       misc_portals.end())
+                + ".\n";
     }
 
     text += "\n";
@@ -643,8 +626,7 @@ static void _sdump_notes(dump_params &par)
 static void _sdump_location(dump_params &par)
 {
     if (you.absdepth0 == -1
-        && you.where_are_you == BRANCH_MAIN_DUNGEON
-        && you.level_type == LEVEL_DUNGEON)
+        && you.where_are_you == BRANCH_MAIN_DUNGEON)
     {
         par.text += "You escaped";
     }

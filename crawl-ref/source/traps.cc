@@ -1728,7 +1728,7 @@ bool is_valid_shaft_level(const level_id &place)
         return (false);
     }
 
-    if (place.level_type != LEVEL_DUNGEON)
+    if (!is_connected_branch(place))
         return (false);
 
     // Shafts are now allowed on the first two levels, as they have a
@@ -1773,7 +1773,7 @@ level_id generic_shaft_dest(level_pos lpos, bool known = false)
 {
     level_id  lid   = lpos.id;
 
-    if (lid.level_type != LEVEL_DUNGEON)
+    if (!is_connected_branch(lid))
         return lid;
 
     int      curr_depth = lid.depth;
@@ -1878,23 +1878,19 @@ int num_traps_for_place(int level_number, const level_id &place)
     if (level_number == -1)
         level_number = place.absdepth();
 
-    switch (place.level_type)
+    switch (place.branch)
     {
-    case LEVEL_DUNGEON:
-        if (place.branch == BRANCH_ECUMENICAL_TEMPLE)
-            return 0;
-    case LEVEL_PANDEMONIUM:
-        return random2avg(9, 2);
-    case LEVEL_LABYRINTH:
-    case LEVEL_PORTAL_VAULT:
+    case BRANCH_ECUMENICAL_TEMPLE:
+        return 0;
+    case BRANCH_LABYRINTH:
         die("invalid place for traps");
         break;
-    case LEVEL_ABYSS:
     default:
-        return 0;
+        if (!is_connected_branch(place.branch))
+            return 0;
+    case BRANCH_PANDEMONIUM:
+        return random2avg(9, 2);
     }
-
-    return 0;
 }
 
 static trap_type _random_trap_slime(int level_number)

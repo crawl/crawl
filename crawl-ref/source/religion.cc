@@ -2573,7 +2573,7 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
     if (original_gain <= 0)
         return;
 
-    if (crawl_state.game_is_sprint() && you.level_type == LEVEL_ABYSS && !force)
+    if (crawl_state.game_is_sprint() && player_in_branch(BRANCH_ABYSS) && !force)
         return;
 
     // Xom uses piety differently...
@@ -4191,7 +4191,7 @@ int get_tension(god_type god)
 
     tension /= div;
 
-    if (you.level_type == LEVEL_ABYSS)
+    if (player_in_branch(BRANCH_ABYSS))
     {
         if (tension < 2)
             tension = 2;

@@ -135,6 +135,7 @@ void marshallItem    (writer &, const item_def &);
 void marshallMonster (writer &, const monster&);
 void marshallMonsterInfo (writer &, const monster_info &);
 void marshallMapCell (writer &, const map_cell &);
+void marshall_level_id(writer& th, const level_id& id);
 
 void marshallEnumVal (writer &, const enum_info *, int);
 
@@ -205,6 +206,7 @@ void        unmarshallItem    (reader &, item_def &item);
 void        unmarshallMonster (reader &, monster& item);
 void        unmarshallMonsterInfo (reader &, monster_info &mi);
 void        unmarshallMapCell (reader &, map_cell& cell);
+level_id    unmarshall_level_id(reader& th);
 
 int         unmarshallEnumVal (reader &, const enum_info *);
 

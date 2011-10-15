@@ -1490,7 +1490,7 @@ static bool _check_ability_possible(const ability_def& abil,
         return (true);
 
     case ABIL_LUGONU_ABYSS_EXIT:
-        if (you.level_type != LEVEL_ABYSS)
+        if (!player_in_branch(BRANCH_ABYSS))
         {
             mpr("You aren't in the Abyss!");
             return (false);
@@ -1501,7 +1501,7 @@ static bool _check_ability_possible(const ability_def& abil,
         return (!is_level_incorruptible());
 
     case ABIL_LUGONU_ABYSS_ENTER:
-        if (you.level_type == LEVEL_ABYSS)
+        if (player_in_branch(BRANCH_ABYSS))
         {
             mpr("You're already here!");
             return (false);

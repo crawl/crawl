@@ -352,7 +352,7 @@ void hints_new_turn()
 
         if (you.attribute[ATTR_HELD])
             learned_something_new(HINT_CAUGHT_IN_NET);
-        else if (i_feel_safe() && you.level_type != LEVEL_ABYSS)
+        else if (i_feel_safe() && you.where_are_you != BRANCH_ABYSS)
         {
             // We don't want those "Whew, it's safe to rest now" messages
             // if you were just cast into the Abyss. Right?
@@ -4690,12 +4690,7 @@ bool hints_monster_interesting(const monster* mons)
         return (true);
 
     // The monster is (seriously) out of depth.
-    if (you.level_type == LEVEL_DUNGEON
-        && mons_level(mons->type) >= you.absdepth0 + 8)
-    {
-        return (true);
-    }
-    return (false);
+    return (mons_level(mons->type) >= you.absdepth0 + 8);
 }
 
 void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
@@ -4742,7 +4737,7 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
             // I'll simply reuse that one.
             const int level_diff = mons_level(mi.type) - (you.absdepth0 + 8);
 
-            if (you.level_type == LEVEL_DUNGEON && level_diff >= 0)
+            if (level_diff >= 0)
             {
                 ostr << "This kind of monster is usually only encountered "
                      << (level_diff > 5 ? "much " : "")

@@ -70,7 +70,10 @@ struct Note
     int first, second;
     long turn;
     unsigned short packed_place;
+
+#if TAG_MAJOR_VERSION == 32
     std::string place_abbrev;
+#endif
     std::string name;
     std::string desc;
 };

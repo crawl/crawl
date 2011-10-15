@@ -1024,7 +1024,7 @@ static void _move_player(const coord_def& where)
         grd(where) = DNGN_FLOOR;
     move_player_to_grid(where, false, true);
     // If necessary, update the Abyss.
-    if (you.level_type == LEVEL_ABYSS)
+    if (player_in_branch(BRANCH_ABYSS))
         maybe_shift_abyss_around_player();
 }
 

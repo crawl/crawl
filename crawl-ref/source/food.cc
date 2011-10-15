@@ -869,7 +869,7 @@ bool food_change(bool suppress_message)
 
                 // Xom thinks this is funny if you're in a labyrinth
                 // and are low on food.
-                if (you.level_type == LEVEL_LABYRINTH
+                if (player_in_branch(BRANCH_LABYRINTH)
                     && !_player_has_enough_food())
                 {
                     xom_is_stimulated(50);

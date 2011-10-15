@@ -125,8 +125,6 @@ const int8_t FORBIDDEN   = -1;
 // Map of terrain types that are traversable.
 static FixedVector<int8_t,NUM_FEATURES> traversable_terrain;
 
-static std::set<std::string> portal_names;
-
 /*
  * Warn if interlevel travel is going to take you outside levels in
  * the range [src,dest].
@@ -1885,12 +1883,8 @@ static void _track_intersect(std::vector<level_id> &cur,
 // 'first' and 'second', returns -1. If first == second, returns 0.
 int level_distance(level_id first, level_id second)
 {
-    if (first == second
-        || (first.level_type != LEVEL_DUNGEON
-            && first.level_type == second.level_type))
-    {
+    if (first == second)
         return 0;
-    }
 
     std::vector<level_id> fv, sv;
 
@@ -2242,8 +2236,7 @@ level_id find_down_level(level_id curr)
 
 level_id find_deepest_explored(level_id curr)
 {
-    ASSERT(curr.branch != NUM_BRANCHES
-           && curr.level_type == LEVEL_DUNGEON);
+    ASSERT(curr.branch != NUM_BRANCHES);
 
     for (int i = branches[curr.branch].depth; i > 0; --i)
     {
@@ -2256,11 +2249,8 @@ level_id find_deepest_explored(level_id curr)
     // If the player's currently in the same place, report their current
     // level_id if the travel cache hasn't been updated.
     const level_id player_level = level_id::current();
-    if (player_level.level_type == curr.level_type
-        && player_level.branch == curr.branch)
-    {
+    if (player_level == curr.branch)
         return (player_level);
-    }
 
     return (curr);
 }
@@ -2963,7 +2953,7 @@ void do_explore_cmd()
         mpr("You need to eat something NOW!");
     else if (you.berserk())
         mpr("Calm down first, please.");
-    else if (you.level_type == LEVEL_LABYRINTH)
+    else if (player_in_branch(BRANCH_LABYRINTH))
         mpr("No exploration algorithm can help you here.");
     else                        // Start exploring
         start_explore(Options.explore_greedy);
@@ -3004,31 +2994,13 @@ void arrange_features(std::vector<coord_def> &features)
 level_id level_id::current()
 {
     const level_id id(you.where_are_you,
-                      subdungeon_depth(you.where_are_you, you.absdepth0),
-                      you.level_type);
+                      subdungeon_depth(you.where_are_you, you.absdepth0));
     return id;
-}
-
-int level_id::dungeon_absdepth() const
-{
-    ASSERT(branch != NUM_BRANCHES && depth != -1);
-    return absdungeon_depth(branch, depth);
 }
 
 int level_id::absdepth() const
 {
-    switch (level_type)
-    {
-    case LEVEL_DUNGEON:
-        return absdungeon_depth(branch, depth);
-    case LEVEL_PANDEMONIUM:
-        return DEPTH_PAN;
-    case LEVEL_ABYSS:
-        return DEPTH_ABYSS;
-    default:
-        // No true notion of depth here.
-        return you.absdepth0;
-    }
+    return absdungeon_depth(branch, depth);
 }
 
 level_id level_id::get_next_level_id(const coord_def &pos)
@@ -3070,20 +3042,12 @@ level_id level_id::get_next_level_id(const coord_def &pos)
 
 unsigned short level_id::packed_place() const
 {
-    return get_packed_place(branch, depth, level_type);
+    return get_packed_place(branch, depth);
 }
 
 std::string level_id::describe(bool long_name, bool with_number) const
 {
-    std::string description = place_name(this->packed_place(),
-                                         long_name, with_number);
-    if (level_type == LEVEL_PORTAL_VAULT) {
-        std::string::size_type cpos = description.find(':');
-        const std::string brname = (cpos != std::string::npos ?
-                                    description.substr(0, cpos) : description);
-        portal_names.insert(brname);
-    }
-    return description;
+    return place_name(this->packed_place(), long_name, with_number);
 }
 
 level_id level_id::parse_level_id(const std::string &s) throw (std::string)
@@ -3092,17 +3056,22 @@ level_id level_id::parse_level_id(const std::string &s) throw (std::string)
     std::string brname  = (cpos != std::string::npos? s.substr(0, cpos)  : s);
     std::string brdepth = (cpos != std::string::npos? s.substr(cpos + 1) : "");
 
-    if (brname == "Abyss")
-        return (level_id(LEVEL_ABYSS));
-    else if (brname == "Pan")
-        return (level_id(LEVEL_PANDEMONIUM));
-    else if (brname == "Lab")
-        return (level_id(LEVEL_LABYRINTH));
-    else if (brname == "Port" ||
-             portal_names.find(brname) != portal_names.end())
-        return (level_id(LEVEL_PORTAL_VAULT));
+    branch_type br = str_to_branch(brname);
+#if TAG_MAJOR_VERSION == 32
+    if (brname == "Port" && !you.old_level_type_name_abbrev.empty())
+    {
+        brname = you.old_level_type_name_abbrev;
+        cpos = brname.find(':');
+        if (cpos != std::string::npos)
+        {
+            brdepth = brname.substr(cpos + 1);
+            brname  = brname.substr(0, cpos);
+        }
 
-    const branch_type br = str_to_branch(brname);
+        br = str_to_branch(brname);
+    }
+#endif
+
     if (br == NUM_BRANCHES)
     {
         throw make_stringf("Invalid branch \"%s\" in spec \"%s\"",
@@ -3122,30 +3091,38 @@ level_id level_id::parse_level_id(const std::string &s) throw (std::string)
     return level_id(br, dep);
 }
 
-level_id level_id::from_packed_place(const unsigned short place)
+level_id level_id::from_packed_place(unsigned short place)
 {
+#if TAG_MAJOR_VERSION == 32
+    place = upgrade_packed_place(place);
+#endif
     level_id id;
 
     id.branch     = (branch_type) place_branch(place);
     id.depth      = place_depth(place);
-    id.level_type = (level_area_type) place_type(place);
 
     return (id);
 }
 
-// NOTE: see also marshall_level_id
 void level_id::save(writer& outf) const
 {
-    marshallShort(outf, branch);
-    marshallShort(outf, depth);
-    marshallShort(outf, level_type);
+    marshall_level_id(outf, *this);
 }
 
 void level_id::load(reader& inf)
 {
-    branch     = static_cast<branch_type>(unmarshallShort(inf));
-    depth      = unmarshallShort(inf);
-    level_type = static_cast<level_area_type>(unmarshallShort(inf));
+#if TAG_MAJOR_VERSION == 32
+    if (inf.getMinorVersion() < TAG_MINOR_NO_LEVEL_TYPE)
+    {
+        branch_type br = static_cast<branch_type>(unmarshallShort(inf));
+        int d          = unmarshallShort(inf);
+        int level_type = unmarshallShort(inf);
+        (*this) = level_id::from_packed_place(get_packed_place(br,
+                                              level_type ? 0xFF : d));
+    }
+    else
+#endif
+    (*this) = unmarshall_level_id(inf);
 }
 
 level_pos level_pos::current()
@@ -3919,14 +3896,13 @@ std::vector<level_id> TravelCache::known_levels() const
 
 bool can_travel_to(const level_id &id)
 {
-    return (id.level_type == LEVEL_DUNGEON && can_travel_interlevel()
-            // FIXME: check depth too once level_type is gone
-         || id.level_type == you.level_type);
+    return (is_connected_branch(id) && can_travel_interlevel()
+            || id == level_id::current());
 }
 
 bool can_travel_interlevel()
 {
-    return (you.level_type == LEVEL_DUNGEON);
+    return player_in_connected_branch();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -4509,33 +4485,4 @@ void clear_level_target()
 {
     level_target.clear();
     trans_travel_dest.clear();
-}
-
-level_id_iterator::level_id_iterator()
-{
-    cur = level_id(BRANCH_MAIN_DUNGEON, 1);
-}
-
-level_id_iterator::operator bool() const
-{
-    return cur.level_type < NUM_LEVEL_AREA_TYPES;
-}
-
-level_id level_id_iterator::operator*() const
-{
-    return cur;
-}
-
-void level_id_iterator::operator++()
-{
-    if (cur.level_type == LEVEL_DUNGEON)
-    {
-        if (branches[cur.branch].depth < ++cur.depth)
-            cur.branch = static_cast<branch_type>(cur.branch + 1), cur.depth = 1;
-        if (cur.branch < NUM_BRANCHES)
-            return;
-        cur.depth = -1;
-    }
-    cur.level_type = static_cast<level_area_type>(cur.level_type + 1);
-    return;
 }

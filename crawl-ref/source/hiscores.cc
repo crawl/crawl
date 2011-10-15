@@ -504,7 +504,6 @@ void scorefile_entry::init_from(const scorefile_entry &se)
     killerpath        = se.killerpath;
     dlvl              = se.dlvl;
     absdepth          = se.absdepth;
-    level_type        = se.level_type;
     branch            = se.branch;
     map               = se.map;
     mapdesc           = se.mapdesc;
@@ -681,7 +680,6 @@ void scorefile_entry::init_with_fields()
     branch     = str_to_branch(fields->str_field("br"), BRANCH_MAIN_DUNGEON);
     dlvl       = fields->int_field("lvl");
     absdepth   = fields->int_field("absdepth");
-    level_type = str_to_level_area_type(fields->str_field("ltyp"));
 
     map        = fields->str_field("map");
     mapdesc    = fields->str_field("mapdesc");
@@ -755,20 +753,15 @@ void scorefile_entry::set_base_xlog_fields() const
                       skill_title(best_skill, best_skill_lvl,
                                   race, str, dex, god).c_str());
 
-    // "place" is a human readable place name, and it is write-only,
-    // so we can write place names like "Bazaar" that Crawl cannot
-    // translate back. This does have the unfortunate side-effect that
-    // Crawl will not preserve the "place" field in the highscores file.
     fields->add_field("place", "%s",
-                      place_name(get_packed_place(branch, dlvl, level_type),
+                      place_name(get_packed_place(branch, dlvl),
                                  false, true).c_str());
 
-    // Note: "br", "lvl" and "ltyp" are saved in canonical names that
-    // can be read back by future versions of Crawl.
+    // Note: "br", "lvl" (and former "ltyp") are redundant with "place"
+    // but may still be used by DGL logs.
     fields->add_field("br",   "%s", _short_branch_name(branch));
     fields->add_field("lvl",  "%d", dlvl);
     fields->add_field("absdepth", "%d", absdepth);
-    fields->add_field("ltyp", "%s", level_area_type_name(level_type));
 
     fields->add_field("hp",   "%d", final_hp);
     fields->add_field("mhp",  "%d", final_max_hp);
@@ -1059,7 +1052,6 @@ void scorefile_entry::reset()
     killerpath.clear();
     dlvl                 = 0;
     absdepth             = 1;
-    level_type           = LEVEL_DUNGEON;
     branch               = BRANCH_MAIN_DUNGEON;
     map.clear();
     mapdesc.clear();
@@ -1267,7 +1259,6 @@ void scorefile_entry::init(time_t dt)
     // main dungeon: level is simply level
     dlvl       = player_branch_depth();
     branch     = you.where_are_you;  // no adjustments necessary.
-    level_type = you.level_type;     // pandemonium, labyrinth, dungeon..
 
     absdepth   = you.absdepth0 + 1;  // 1-based absolute depth.
 
@@ -1567,7 +1558,7 @@ std::string scorefile_entry::death_place(death_desc_verbosity verbosity) const
     if (verbosity == DDV_ONELINE || verbosity == DDV_TERSE)
     {
         const std::string pname =
-            place_name(get_packed_place(branch, dlvl, level_type), false, true);
+            place_name(get_packed_place(branch, dlvl), false, true);
         return make_stringf(" (%s)", pname.c_str());
     }
 
@@ -1576,7 +1567,7 @@ std::string scorefile_entry::death_place(death_desc_verbosity verbosity) const
 
     // where did we die?
     std::string placename =
-        place_name(get_packed_place(branch, dlvl, level_type), true, true);
+        place_name(get_packed_place(branch, dlvl), true, true);
 
     // add appropriate prefix
     if (placename.find("Level") == 0)

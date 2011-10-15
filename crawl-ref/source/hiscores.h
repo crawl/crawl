@@ -81,7 +81,6 @@ private:
     std::string killerpath;         // colon-separated intermediate killers
     uint8_t     dlvl;               // dungeon level (relative)
     short       absdepth;           // 1-based absolute depth
-    level_area_type level_type;     // what kind of level died on..
     branch_type branch;             // dungeon branch
     std::string map;                // the vault (if any) the player is in
     std::string mapdesc;            // DESC: of the vault the player is in.

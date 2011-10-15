@@ -33,7 +33,7 @@ inline void tile_new_level(bool first_time)
 // Set the default type of walls and floors.
 void tile_init_default_flavour();
 // Get the default types of walls and floors
-void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv);
+void tile_default_flv(branch_type br, tile_flavour &flv);
 // Clear the per-cell wall and floor flavours.
 void tile_clear_flavour(const coord_def &p);
 void tile_clear_flavour();

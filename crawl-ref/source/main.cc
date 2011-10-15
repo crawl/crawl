@@ -684,14 +684,14 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         break;
 
     case 'B':
-        if (you.level_type != LEVEL_ABYSS)
+        if (you.where_are_you != BRANCH_ABYSS)
             banished(DNGN_ENTER_ABYSS, "wizard command");
         else
             down_stairs(DNGN_EXIT_ABYSS);
         break;
 
     case CONTROL('A'):
-        if (you.level_type == LEVEL_ABYSS)
+        if (player_in_branch(BRANCH_ABYSS))
             abyss_teleport(true);
         else
             mpr("You can only abyss_teleport() inside the Abyss.");
@@ -731,7 +731,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         break;
 
     case 'k':
-        if (you.level_type == LEVEL_LABYRINTH)
+        if (player_in_branch(BRANCH_LABYRINTH))
             change_labyrinth(true);
         else
             mpr("This only makes sense in a labyrinth!");
@@ -1374,12 +1374,6 @@ static void _go_upstairs()
             shop();
         return;
     }
-    else if (ygrd == DNGN_ENTER_HELL && you.level_type != LEVEL_DUNGEON)
-    {
-        mpr("You can't enter Hell from outside the dungeon!",
-            MSGCH_ERROR);
-        return;
-    }
     // Up and down both work for portals.
     else if (feat_is_bidirectional_portal(ygrd))
     {
@@ -1413,8 +1407,7 @@ static void _go_upstairs()
         return;
     }
 
-    if (ygrd == DNGN_EXIT_PORTAL_VAULT
-        && you.level_type_name.find("Ziggurat") != std::string::npos)
+    if (ygrd == DNGN_EXIT_PORTAL_VAULT && player_in_branch(BRANCH_ZIGGURAT))
     {
         if (!yesno("Are you sure you want to leave this Ziggurat?"))
             return;
@@ -1490,12 +1483,6 @@ static void _go_downstairs()
             shop();
         return;
     }
-    else if (ygrd == DNGN_ENTER_HELL && you.level_type != LEVEL_DUNGEON)
-    {
-        mpr("You can't enter Hell from outside the dungeon!",
-            MSGCH_ERROR);
-        return;
-    }
     // Up and down both work for portals.
     else if (feat_is_bidirectional_portal(ygrd))
     {
@@ -1530,8 +1517,7 @@ static void _go_downstairs()
     if (!check_annotation_exclusion_warning())
         return;
 
-    if (ygrd == DNGN_EXIT_PORTAL_VAULT
-        && you.level_type_name.find("Ziggurat") != std::string::npos)
+    if (ygrd == DNGN_EXIT_PORTAL_VAULT && player_in_branch(BRANCH_ZIGGURAT))
     {
         if (!yesno("Are you sure you want to leave this Ziggurat?"))
             return;
@@ -2805,7 +2791,7 @@ static void _check_banished()
     if (you.banished && !crawl_state.game_is_zotdef())
     {
         you.banished = false;
-        if (you.level_type != LEVEL_ABYSS)
+        if (you.where_are_you != BRANCH_ABYSS)
         {
             mpr("You are cast into the Abyss!", MSGCH_BANISHMENT);
             more();
@@ -2971,7 +2957,7 @@ static void _player_reacts()
         // this is instantaneous
         if (teleportitis_level > 0 && one_chance_in(100 / teleportitis_level))
             you_teleport_now(true);
-        else if (you.level_type == LEVEL_ABYSS && one_chance_in(80))
+        else if (player_in_branch(BRANCH_ABYSS) && one_chance_in(80))
             you_teleport_now(false, true); // to new area of the Abyss
     }
 
@@ -3147,7 +3133,6 @@ void world_reacts()
 
     // Zotdef spawns only in the main dungeon
     if (crawl_state.game_is_zotdef()
-        && you.level_type == LEVEL_DUNGEON
         && you.where_are_you == BRANCH_MAIN_DUNGEON
         && you.num_turns > 100)
     {
@@ -3187,8 +3172,7 @@ void world_reacts()
         if (you.num_turns < INT_MAX)
         {
             if (!crawl_state.game_is_zotdef()
-                || you.where_are_you == BRANCH_MAIN_DUNGEON
-                   && you.level_type == LEVEL_DUNGEON)
+                || you.where_are_you == BRANCH_MAIN_DUNGEON)
             {
                 you.num_turns++;
             }
@@ -4272,7 +4256,7 @@ static void _move_player(coord_def move)
     if (you.running == RMODE_START)
         you.running = RMODE_CONTINUE;
 
-    if (you.level_type == LEVEL_ABYSS)
+    if (player_in_branch(BRANCH_ABYSS))
         maybe_shift_abyss_around_player();
 
     apply_berserk_penalty = !attacking;

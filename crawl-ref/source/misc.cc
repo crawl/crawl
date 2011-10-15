@@ -1940,7 +1940,7 @@ void timeout_tombs(int duration)
 
 void bring_to_safety()
 {
-    if (you.level_type == LEVEL_ABYSS)
+    if (player_in_branch(BRANCH_ABYSS))
         return abyss_teleport(true);
 
     if (crawl_state.game_is_zotdef() && !orb_position().origin())

@@ -35,6 +35,7 @@
 #include "act-iter.h"
 #include "areas.h"
 #include "artefact.h"
+#include "branch.h"
 #include "chardump.h"
 #include "cloud.h"
 #include "clua.h"
@@ -815,7 +816,7 @@ static void _write_tagged_chunk(const std::string &chunkname, tag_type tag)
     tag_write(tag, outf);
 }
 
-int get_dest_stair_type(level_area_type old_level_type, branch_type old_branch,
+int get_dest_stair_type(branch_type old_branch,
                         dungeon_feature_type stair_taken, bool &find_first)
 {
     // Order is important here.
@@ -838,8 +839,8 @@ int get_dest_stair_type(level_area_type old_level_type, branch_type old_branch,
         return DNGN_EXIT_HELL;
 
     if (stair_taken == DNGN_EXIT_PORTAL_VAULT
-        || (old_level_type == LEVEL_LABYRINTH
-            || old_level_type == LEVEL_PORTAL_VAULT)
+        || (old_branch == BRANCH_LABYRINTH
+            || is_portal_vault(old_branch))
            && feat_is_escape_hatch(stair_taken))
     {
         return DNGN_EXIT_PORTAL_VAULT;
@@ -899,14 +900,13 @@ int get_dest_stair_type(level_area_type old_level_type, branch_type old_branch,
     return DNGN_FLOOR;
 }
 
-static void _place_player_on_stair(level_area_type old_level_type,
-                                   branch_type old_branch,
+static void _place_player_on_stair(branch_type old_branch,
                                    int stair_taken, const coord_def& dest_pos)
 
 {
     bool find_first = true;
     dungeon_feature_type stair_type = static_cast<dungeon_feature_type>(
-            get_dest_stair_type(old_level_type, old_branch,
+            get_dest_stair_type(old_branch,
                                 static_cast<dungeon_feature_type>(stair_taken),
                                 find_first));
 
@@ -930,7 +930,7 @@ static void _close_level_gates()
     for (rectangle_iterator ri(0); ri; ++ri)
     {
         if (you.char_direction == GDT_ASCENDING
-            && you.level_type != LEVEL_PANDEMONIUM)
+            && you.where_are_you != BRANCH_PANDEMONIUM)
         {
             if (feat_sealable_portal(grd(*ri)))
             {
@@ -991,7 +991,7 @@ static bool _grab_follower_at(const coord_def &pos)
 
 static void _grab_followers()
 {
-    const bool can_follow = level_type_allows_followers(you.level_type);
+    const bool can_follow = branch_allows_followers(you.where_are_you);
 
     int non_stair_using_allies = 0;
     monster* dowan = NULL;
@@ -1091,9 +1091,8 @@ static void _do_lost_monsters()
 {
     // Uniques can be considered wandering Pan just like you, so they're not
     // gone forever.  The likes of Cerebov won't be generated elsewhere, but
-    // there's no need to special-case that, and if in the future we'll want
-    // to know whether they're alive, the data will be accurate.
-    if (you.level_type == LEVEL_PANDEMONIUM)
+    // there's no need to special-case that.
+    if (player_in_branch(BRANCH_PANDEMONIUM))
         for (monster_iterator mi; mi; ++mi)
             if (mons_is_unique(mi->type))
                 you.unique_creatures[mi->type] = false;
@@ -1137,8 +1136,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     unwind_bool ylev(you.entering_level, load_mode != LOAD_VISITOR, false);
 
 #ifdef DEBUG_LEVEL_LOAD
-    mprf(MSGCH_DIAGNOSTICS, "Loading... level type: %d, branch: %d, level: %d",
-                            you.level_type, you.where_are_you, you.absdepth0);
+    mprf(MSGCH_DIAGNOSTICS, "Loading... branch: %d, level: %d",
+                            you.where_are_you, you.absdepth0);
 #endif
 
     // Destination position for hatch.
@@ -1178,9 +1177,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         _grab_followers();
 
-        if (old_level.level_type == LEVEL_DUNGEON
-            || stair_taken == DNGN_ENTER_PORTAL_VAULT
-            || old_level.level_type != you.level_type)
+        if (is_connected_branch(old_level)
+            || old_level.branch != you.where_are_you)
         {
             _save_level(old_level);
         }
@@ -1208,7 +1206,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         env.turns_on_level = -1;
 
         if (you.char_direction == GDT_GAME_START
-            && you.level_type == LEVEL_DUNGEON)
+            && you.where_are_you == BRANCH_MAIN_DUNGEON)
         {
             // If we're leaving the Abyss for the first time as a Chaos
             // Knight of Lugonu (who start out there), force a return
@@ -1227,16 +1225,16 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         // XXX: This is ugly.
         bool dummy;
         dungeon_feature_type stair_type = static_cast<dungeon_feature_type>(
-            get_dest_stair_type(old_level.level_type, old_level.branch,
+            get_dest_stair_type(old_level.branch,
                                 static_cast<dungeon_feature_type>(stair_taken),
                                 dummy));
 
         _clear_env_map();
-        builder(you.absdepth0, you.level_type, true, stair_type);
+        builder(you.absdepth0, true, stair_type);
         just_created_level = true;
 
         if (!crawl_state.game_is_tutorial()
-            && (you.absdepth0 > 1 || you.level_type != LEVEL_DUNGEON)
+            && you.absdepth0 > 1
             && one_chance_in(3))
         {
             load_ghost(true);
@@ -1266,7 +1264,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     // Closes all the gates if you're on the way out.
     // Before marker activation since it removes some.
     if (make_changes && you.char_direction == GDT_ASCENDING
-        && you.level_type != LEVEL_PANDEMONIUM)
+        && you.where_are_you != BRANCH_PANDEMONIUM)
     {
         _close_level_gates();
     }
@@ -1290,11 +1288,8 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (make_changes)
     {
         _clear_clouds();
-        if (you.level_type != LEVEL_ABYSS)
-        {
-            _place_player_on_stair(old_level.level_type,
-                                   old_level.branch, stair_taken, dest_pos);
-        }
+        if (you.where_are_you != BRANCH_ABYSS)
+            _place_player_on_stair(old_level.branch, stair_taken, dest_pos);
         else
             you.moveto(ABYSS_CENTRE);
 
@@ -1306,7 +1301,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     crawl_view.set_player_at(you.pos(), load_mode != LOAD_VISITOR);
 
     // Actually "move" the followers if applicable.
-    if (level_type_allows_followers(you.level_type)
+    if (branch_allows_followers(you.where_are_you)
         && load_mode == LOAD_ENTER_LEVEL)
     {
         place_followers();
@@ -1385,8 +1380,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
 
         if (load_mode == LOAD_START_GAME
             || (load_mode == LOAD_ENTER_LEVEL
-                && (old_level.branch != you.where_are_you
-                    || old_level.level_type != you.level_type)))
+                && old_level.branch != you.where_are_you))
         {
             delta.num_visits++;
         }
@@ -1595,19 +1589,10 @@ void save_game_state()
         save_game(true);
 }
 
-static std::string _make_portal_vault_ghost_suffix()
-{
-    return you.level_type_ext.empty()? "ptl" : you.level_type_ext;
-}
-
 static std::string _make_ghost_filename()
 {
-    std::string suffix;
-    if (you.level_type == LEVEL_PORTAL_VAULT)
-        suffix = _make_portal_vault_ghost_suffix();
-    else
-        suffix = replace_all(level_id::current().describe(), ":", "-");
-    return get_bonefile_directory() + "bones." + suffix;
+    return get_bonefile_directory() + "bones."
+           + replace_all(level_id::current().describe(), ":", "-");
 }
 
 #define BONES_DIAGNOSTICS (defined(WIZARD) || defined(DEBUG_BONES) | defined(DEBUG_DIAGNOSTICS))
@@ -1843,8 +1828,7 @@ static void _load_level(const level_id &level)
 {
     // Load the given level.
     you.where_are_you = level.branch;
-    you.absdepth0 = level.dungeon_absdepth();
-    you.level_type = level.level_type;
+    you.absdepth0 =     level.absdepth();
 
     load_level(DNGN_STONE_STAIRS_DOWN_I, LOAD_VISITOR, level_id());
 }
@@ -1859,10 +1843,11 @@ bool is_existing_level(const level_id &level)
 void delete_level(const level_id &level)
 {
     env.level_state |= LSTATE_DELETED;
-    erase_level_info(level);
+    travel_cache.erase_level_info(level);
     StashTrack.remove_level(level);
     if (you.save)
         you.save->delete_chunk(level.describe());
+    save_abyss_uniques();
     _do_lost_monsters();
     _do_lost_items();
 }

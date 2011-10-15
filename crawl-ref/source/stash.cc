@@ -1572,7 +1572,7 @@ std::string StashTracker::stash_search_prompt()
     if (!lastsearch.empty())
         opts.push_back(
             make_stringf("Enter for \"%s\"", lastsearch.c_str()));
-    if (level_type_is_stash_trackable(you.level_type)
+    if (branch_is_stash_trackable(you.where_are_you)
         && lastsearch != ".")
     {
         opts.push_back("? for help");
@@ -1718,7 +1718,7 @@ void StashTracker::search_stashes()
 
     if (csearch == ".")
     {
-        if (!level_type_is_stash_trackable(you.level_type))
+        if (!branch_is_stash_trackable(you.where_are_you))
         {
             mpr("Cannot track items on this level.");
             return;

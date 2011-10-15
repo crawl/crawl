@@ -561,7 +561,7 @@ public:
 static void _abyss_lose_monster(monster& mons)
 {
     if (mons.needs_abyss_transit())
-        mons.set_transit(level_id(LEVEL_ABYSS));
+        mons.set_transit(level_id(BRANCH_ABYSS));
 
     mons.destroy_inventory();
     mons.reset();
@@ -914,16 +914,20 @@ static void _abyss_shift_level_contents_around_player(
 static void _abyss_generate_monsters(int nmonsters)
 {
     mgen_data mons;
-    mons.level_type = LEVEL_ABYSS;
     mons.proximity  = PROX_AWAY_FROM_PLAYER;
 
     for (int mcount = 0; mcount < nmonsters; mcount++)
-        mons_place(mons);
+    {
+        mons.cls = pick_random_monster_for_place(BRANCH_ABYSS, MONS_NO_MONSTER,
+                                                 false, false, false);
+        if (!invalid_monster_type(mons.cls))
+            mons_place(mons);
+    }
 }
 
 void maybe_shift_abyss_around_player()
 {
-    ASSERT(you.level_type == LEVEL_ABYSS);
+    ASSERT(player_in_branch(BRANCH_ABYSS));
     if (map_bounds_with_margin(you.pos(),
                                MAPGEN_BORDER + ABYSS_AREA_SHIFT_RADIUS + 1))
     {
@@ -959,7 +963,7 @@ void save_abyss_uniques()
         if (mi->needs_abyss_transit()
             && !testbits(mi->flags, MF_TAKING_STAIRS))
         {
-            mi->set_transit(level_id(LEVEL_ABYSS));
+            mi->set_transit(level_id(BRANCH_ABYSS));
         }
 }
 
@@ -1319,7 +1323,7 @@ void generate_abyss()
 
 void abyss_morph(double duration)
 {
-    if (you.level_type != LEVEL_ABYSS)
+    if (!player_in_branch(BRANCH_ABYSS))
         return;
 
     abyssal_state.depth += you.time_taken * (you.abyss_speed + 40.0)
@@ -1422,12 +1426,13 @@ static bool _spawn_corrupted_servant_near(const coord_def &pos)
         }
 
         // Got a place, summon the beast.
-        monster_type mons = pick_random_monster(level_id(LEVEL_ABYSS));
+        monster_type mons = pick_random_monster(level_id(BRANCH_ABYSS));
         if (invalid_monster_type(mons))
             return (false);
 
         mgen_data mg(mons, beh, 0, 5, 0, p);
         mg.non_actor_summoner = "Lugonu's corruption";
+        mg.place = BRANCH_ABYSS;
 
         const int mid = create_monster(mg);
         return !invalid_monster_index(mid);
@@ -1632,7 +1637,7 @@ static void _corrupt_level_features(const corrupt_env &cenv)
 
 static bool _is_level_corrupted()
 {
-    if (player_in_level_area(LEVEL_ABYSS))
+    if (player_in_branch(BRANCH_ABYSS))
         return (true);
 
     return (!!env.markers.find(MAT_CORRUPTION_NEXUS));

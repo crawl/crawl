@@ -201,7 +201,8 @@ Branch branches[] = {
       mons_dwarf_rare, mons_dwarf_level,
       'K', false, false, 0 },
 
-    { BRANCH_ABYSS, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+    { BRANCH_ABYSS, NUM_BRANCHES, DEPTH_ABYSS, DEPTH_ABYSS, 1, -1,
+          BFLAG_NO_XLEV_TRAVEL, LFLAG_NO_TELE_CONTROL | LFLAG_NO_MAP,
       DNGN_ENTER_ABYSS, DNGN_EXIT_ABYSS,
       "Abyss", "the Abyss", "Abyss",
       NULL,
@@ -209,7 +210,8 @@ Branch branches[] = {
       mons_abyss_rare, mons_abyss_level,
       '0', false, false, 0 },
 
-    { BRANCH_PANDEMONIUM, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+    { BRANCH_PANDEMONIUM, NUM_BRANCHES, DEPTH_PAN, DEPTH_PAN,
+          1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PANDEMONIUM, DNGN_EXIT_PANDEMONIUM,
       "Pandemonium", "Pandemonium", "Pan",
       NULL,
@@ -217,7 +219,7 @@ Branch branches[] = {
       mons_pan_rare, mons_pan_level,
       '0', false, false, 0 },
 
-    { BRANCH_ZIGGURAT, NUM_BRANCHES, -1, -1, 27, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+    { BRANCH_ZIGGURAT, NUM_BRANCHES, 27, 27, 27, 27, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
       "Ziggurat", "a ziggurat", "Zig",
       NULL,
@@ -225,7 +227,8 @@ Branch branches[] = {
       mons_null_rare, mons_null_level, // overridden later
       '0', false, false /* maybe, but Zig:26 is almost as bad */, 0 },
 
-    { BRANCH_LABYRINTH, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+    { BRANCH_LABYRINTH, NUM_BRANCHES, 10, 20, 1, 13, BFLAG_NO_XLEV_TRAVEL,
+          LFLAG_NO_TELE_CONTROL | LFLAG_NO_MAP,
       DNGN_ENTER_LABYRINTH, DNGN_ESCAPE_HATCH_UP,
       "Labyrinth", "a Labyrinth", "Lab",
       NULL,
@@ -233,7 +236,7 @@ Branch branches[] = {
       mons_null_rare, mons_null_level,
       '0', false, false, 0 },
 
-    { BRANCH_BAZAAR, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+    { BRANCH_BAZAAR, NUM_BRANCHES, 10, 27, 1, 15, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
       "Bazaar", "a bazaar", "Bazaar",
       NULL,
@@ -241,7 +244,7 @@ Branch branches[] = {
       mons_null_rare, mons_null_level,
       '0', false, false, 0 },
 
-    { BRANCH_TROVE, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+    { BRANCH_TROVE, NUM_BRANCHES, 10, 27, 1, 20, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
       "Trove", "a treasure trove", "Trove",
       NULL,
@@ -249,7 +252,7 @@ Branch branches[] = {
       mons_null_rare, mons_null_level,
       '0', false, false, 0 },
 
-    { BRANCH_SEWER, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+    { BRANCH_SEWER, NUM_BRANCHES, 3, 6, 1, 4, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
       "Sewer", "the sewers", "Sewer",
       NULL,
@@ -257,7 +260,7 @@ Branch branches[] = {
       mons_null_rare, mons_null_level,
       '0', false, false, 0 },
 
-    { BRANCH_OSSUARY, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+    { BRANCH_OSSUARY, NUM_BRANCHES, 4, 8, 1, 6, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
       "Ossuary", "a tomb", "Ossuary",
       NULL,
@@ -265,7 +268,7 @@ Branch branches[] = {
       mons_null_rare, mons_null_level,
       '0', false, false, 0 },
 
-    { BRANCH_BAILEY, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+    { BRANCH_BAILEY, NUM_BRANCHES, 7, 16, 1, 11, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
       "Bailey", "the bailey", "Bailey",
       NULL,
@@ -273,7 +276,7 @@ Branch branches[] = {
       mons_null_rare, mons_null_level,
       '0', false, false, 0 },
 
-    { BRANCH_ICE_CAVE, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+    { BRANCH_ICE_CAVE, NUM_BRANCHES, 11, 19, 1, 15, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
       "Ice Cave", "an ice cave", "IceCv",
       NULL,
@@ -281,7 +284,7 @@ Branch branches[] = {
       mons_null_rare, mons_null_level,
       '0', false, false, 0 },
 
-    { BRANCH_VOLCANO, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+    { BRANCH_VOLCANO, NUM_BRANCHES, 8, 21, 1, 13, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
       "Volcano", "a volcano", "Volcano",
       NULL,
@@ -289,7 +292,7 @@ Branch branches[] = {
       mons_null_rare, mons_null_level,
       '0', false, false, 0 },
 
-    { BRANCH_WIZLAB, NUM_BRANCHES, -1, -1, 1, -1, BFLAG_NO_XLEV_TRAVEL, 0,
+    { BRANCH_WIZLAB, NUM_BRANCHES, 22, 27, 1, 24, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
       "Wizlab", "a Wizard's Laboratory", "WizLab",
       NULL,

@@ -912,9 +912,7 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
     if (!in_bounds(dst) || !in_bounds(src) || src == dst)
         return;
 
-    // Move terrain.
-    if (you.level_type == LEVEL_DUNGEON)
-        move_notable_thing(src, dst);
+    move_notable_thing(src, dst);
 
     dungeon_feature_type dfeat = grd(src);
     if (dfeat == DNGN_ENTER_SHOP)
@@ -1894,7 +1892,7 @@ bool is_boring_terrain(dungeon_feature_type feat)
         return true;
 
     // A portal deeper into the Ziggurat is boring.
-    if (feat == DNGN_ENTER_PORTAL_VAULT && you.level_type == LEVEL_PORTAL_VAULT)
+    if (feat == DNGN_ENTER_PORTAL_VAULT && player_in_branch(BRANCH_ZIGGURAT))
         return true;
 
     // Altars in the temple are boring.

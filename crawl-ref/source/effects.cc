@@ -539,78 +539,23 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
                        "escaped from the Abyss!" + _who_banished(who));
     }
 
-    std::string cast_into;
-
     switch (gate_type)
     {
     case DNGN_ENTER_ABYSS:
-        if (you.level_type == LEVEL_ABYSS)
+        if (player_in_branch(BRANCH_ABYSS))
         {
             mpr("You feel trapped.");
             return;
         }
-        cast_into = "the Abyss";
-        you.props["abyss_return_name"] = you.level_type_name;
-        you.props["abyss_return_abbrev"] = you.level_type_name_abbrev;
-        you.props["abyss_return_origin"] = you.level_type_origin;
-        you.props["abyss_return_tag"] = you.level_type_tag;
-        you.props["abyss_return_ext"] = you.level_type_ext;
-        you.props["abyss_return_desc"] = level_id::current().describe();
+        // TODO:LEVEL_STACK
         break;
 
     case DNGN_EXIT_ABYSS:
-        if (you.level_type != LEVEL_ABYSS)
+        if (you.where_are_you != BRANCH_ABYSS)
         {
             mpr("You feel dizzy for a moment.");
             return;
         }
-        break;
-
-    case DNGN_ENTER_PANDEMONIUM:
-        if (you.level_type == LEVEL_PANDEMONIUM)
-        {
-            mpr("You feel trapped.");
-            return;
-        }
-        cast_into = "Pandemonium";
-        break;
-
-    case DNGN_TRANSIT_PANDEMONIUM:
-        if (you.level_type != LEVEL_PANDEMONIUM)
-        {
-            banished(DNGN_ENTER_PANDEMONIUM, who);
-            return;
-        }
-        break;
-
-    case DNGN_EXIT_PANDEMONIUM:
-        if (you.level_type != LEVEL_PANDEMONIUM)
-        {
-            mpr("You feel dizzy for a moment.");
-            return;
-        }
-        break;
-
-    case DNGN_ENTER_LABYRINTH:
-        if (you.level_type == LEVEL_LABYRINTH)
-        {
-            mpr("You feel trapped.");
-            return;
-        }
-        cast_into = "a Labyrinth";
-        break;
-
-    case DNGN_ENTER_HELL:
-    case DNGN_ENTER_DIS:
-    case DNGN_ENTER_GEHENNA:
-    case DNGN_ENTER_COCYTUS:
-    case DNGN_ENTER_TARTARUS:
-        if (player_in_hell() || player_in_branch(BRANCH_VESTIBULE_OF_HELL))
-        {
-            mpr("You feel dizzy for a moment.");
-            return;
-        }
-        cast_into = "Hell";
         break;
 
     default:
@@ -662,9 +607,9 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
     if (!crawl_state.is_god_acting())
         you.entry_cause_god = GOD_NO_GOD;
 
-    if (!cast_into.empty() && you.entry_cause != EC_SELF_EXPLICIT)
+    if (gate_type == DNGN_ENTER_ABYSS && you.entry_cause != EC_SELF_EXPLICIT)
     {
-        const std::string what = "Cast into " + cast_into + _who_banished(who);
+        const std::string what = "Cast into the Abyss" + _who_banished(who);
         take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
     }
 
@@ -2161,7 +2106,7 @@ void handle_time()
     }
 
     // Labyrinth and Abyss maprot.
-    if (you.level_type == LEVEL_LABYRINTH || you.level_type == LEVEL_ABYSS)
+    if (player_in_branch(BRANCH_LABYRINTH) || player_in_branch(BRANCH_ABYSS))
         forget_map(0);
 
     // Every 20 turns, a variety of other effects.
@@ -2345,10 +2290,10 @@ void handle_time()
     practise(EX_WAIT);
 
     // From time to time change a section of the labyrinth.
-    if (you.level_type == LEVEL_LABYRINTH && one_chance_in(10))
+    if (player_in_branch(BRANCH_LABYRINTH) && one_chance_in(10))
         change_labyrinth();
 
-    if (you.level_type == LEVEL_ABYSS)
+    if (player_in_branch(BRANCH_ABYSS))
     {
         // Update the abyss speed. This place is unstable and the speed can
         // fluctuate. It's not a constant increase.

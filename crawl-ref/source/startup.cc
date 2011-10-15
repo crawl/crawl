@@ -208,13 +208,13 @@ static void _post_init(bool newc)
     if (newc && you.char_direction == GDT_GAME_START)
     {
         // Chaos Knights of Lugonu start out in the Abyss.
-        you.level_type  = LEVEL_ABYSS;
-        you.entry_cause = EC_UNKNOWN;
+        you.where_are_you = BRANCH_ABYSS;
+        you.entry_cause   = EC_UNKNOWN;
     }
 
     // XXX: Any invalid level_id should do.
     level_id old_level;
-    old_level.level_type = NUM_LEVEL_AREA_TYPES;
+    old_level.branch = NUM_BRANCHES;
 
     load_level(you.entering_level ? you.transit_stair : DNGN_STONE_STAIRS_DOWN_I,
                you.entering_level ? LOAD_ENTER_LEVEL :

@@ -588,8 +588,8 @@ void destroy_item(int dest, bool never_created)
 
 static void _handle_gone_item(const item_def &item)
 {
-    if (you.level_type == LEVEL_ABYSS
-        && place_type(item.orig_place) == LEVEL_ABYSS
+    if (player_in_branch(BRANCH_ABYSS)
+        && place_branch(item.orig_place) == BRANCH_ABYSS
         && !(item.flags & ISFLAG_BEEN_IN_INV))
     {
         if (is_unrandom_artefact(item))
@@ -982,14 +982,6 @@ void origin_set_startequip(item_def &item)
     }
 }
 
-static void _origin_set_portal_vault(item_def &item)
-{
-    if (you.level_type != LEVEL_PORTAL_VAULT)
-        return;
-
-    item.props[PORTAL_VAULT_ORIGIN_KEY] = you.level_type_origin;
-}
-
 void origin_set_monster(item_def &item, const monster* mons)
 {
     if (!origin_known(item))
@@ -997,7 +989,6 @@ void origin_set_monster(item_def &item, const monster* mons)
         if (!item.orig_monnum)
             item.orig_monnum = mons->type + 1;
         item.orig_place = get_packed_place();
-        _origin_set_portal_vault(item);
     }
 }
 
@@ -1005,7 +996,6 @@ void origin_purchased(item_def &item)
 {
     // We don't need to check origin_known if it's a shop purchase
     item.orig_place  = get_packed_place();
-    _origin_set_portal_vault(item);
     item.orig_monnum = -IT_SRC_SHOP;
 }
 
@@ -1013,7 +1003,6 @@ void origin_acquired(item_def &item, int agent)
 {
     // We don't need to check origin_known if it's a divine gift
     item.orig_place  = get_packed_place();
-    _origin_set_portal_vault(item);
     item.orig_monnum = -agent;
 }
 
@@ -1081,7 +1070,6 @@ void origin_set(const coord_def& where)
         if (!si->orig_monnum)
             si->orig_monnum = static_cast<short>(monnum);
         si->orig_place  = pplace;
-        _origin_set_portal_vault(*si);
     }
 }
 
@@ -1098,7 +1086,6 @@ static void _origin_freeze(item_def &item, const coord_def& where)
             origin_set_monstercorpse(item, where);
 
         item.orig_place = get_packed_place();
-        _origin_set_portal_vault(item);
         _check_note_item(item);
     }
 }
@@ -1115,11 +1102,8 @@ std::string origin_monster_name(const item_def &item)
 
 static std::string _origin_place_desc(const item_def &item)
 {
-    if (place_type(item.orig_place) == LEVEL_PORTAL_VAULT
-        && item.props.exists(PORTAL_VAULT_ORIGIN_KEY))
-    {
+    if (item.props.exists(PORTAL_VAULT_ORIGIN_KEY))
         return item.props[PORTAL_VAULT_ORIGIN_KEY].get_string();
-    }
 
     return prep_branch_level_name(item.orig_place);
 }
@@ -1898,7 +1882,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
             learned_something_new(HINT_SEEN_RANDART);
     }
 
-    if (item.base_type == OBJ_ORBS && you.level_type == LEVEL_DUNGEON)
+    if (item.base_type == OBJ_ORBS)
         unset_branch_flags(BFLAG_HAS_ORB);
 
     _got_item(item, item.quantity);
@@ -2004,7 +1988,7 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
     item.link = igrd(p);
     igrd(p) = ob;
 
-    if (item.base_type == OBJ_ORBS && you.level_type == LEVEL_DUNGEON)
+    if (item.base_type == OBJ_ORBS)
         set_branch_flags(BFLAG_HAS_ORB);
 
     return (true);

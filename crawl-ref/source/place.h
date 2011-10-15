@@ -13,12 +13,10 @@
 //
 unsigned short get_packed_place();
 
-unsigned short get_packed_place(branch_type branch, int subdepth,
-                                 level_area_type level_type);
+unsigned short get_packed_place(branch_type branch, int subdepth);
 
-int place_branch(unsigned short place);
+branch_type place_branch(unsigned short place);
 int place_depth(unsigned short place);
-int place_type(unsigned short place);
 
 std::string short_place_name(unsigned short place);
 std::string short_place_name(level_id id);
@@ -42,11 +40,15 @@ int player_branch_depth();
 
 bool single_level_branch(branch_type branch);
 
-bool level_type_exits_up(level_area_type type);
-bool level_type_exits_down(level_area_type type);
-bool level_type_allows_followers(level_area_type type);
-bool level_type_is_stash_trackable(level_area_type type);
+bool branch_exits_up(branch_type branch);
+bool branch_exits_down(branch_type branch);
+bool branch_allows_followers(branch_type branch);
+bool branch_is_stash_trackable(branch_type branch);
 
 std::vector<level_id> all_dungeon_ids();
+
+#if TAG_MAJOR_VERSION == 32
+unsigned short upgrade_packed_place(unsigned short place);
+#endif
 
 #endif

@@ -168,30 +168,9 @@ public:
   // memory being freed twice.
   KillMaster* kills;
 
-  level_area_type level_type;
-
-  // Human-readable name for portal vault. Will be set to level_type_tag
-  // if not explicitly set by the entry portal.
-  std::string level_type_name;
-
-  // Three-letter extension for portal vault bones files. Will be set
-  // to first three letters of level_type_tag if not explicitly set by
-  // the entry portal.
-  std::string level_type_ext;
-
-  // Abbreviation of portal vault name, for use in notes.  If not
-  // explicitly set by the portal vault, will be set from level_type_name
-  // or level_type_tag if either is short enough, or the shorter of the
-  // two will be truncated if neither is short enough.
-  std::string level_type_name_abbrev;
-
-  // Item origin string for items from portal vaults, so that dumps
-  // can have origins like "You found it in on level 2 of a ziggurat".
-  // Will be set relative to level_type_name if not explicitly set.
-  std::string level_type_origin;
-
-  // .des file tag for portal vault
-  std::string level_type_tag;
+#if TAG_MAJOR_VERSION == 32
+  std::string old_level_type_name_abbrev;
+#endif
 
   branch_type where_are_you;
 
@@ -380,7 +359,6 @@ public:
 
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
-    FixedVector<PlaceInfo, NUM_LEVEL_AREA_TYPES - 1> non_branch_info;
 
 public:
     player();
@@ -674,10 +652,7 @@ public:
     ////////////////////////////////////////////////////////////////
 
     PlaceInfo& get_place_info() const ; // Current place info
-    PlaceInfo& get_place_info(branch_type branch,
-                              level_area_type level_type2) const;
     PlaceInfo& get_place_info(branch_type branch) const;
-    PlaceInfo& get_place_info(level_area_type level_type2) const;
     void clear_place_info();
 
     void goto_place(const level_id &level);
@@ -755,9 +730,12 @@ bool check_moveto(const coord_def& p, const std::string &move_verb = "step",
 void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift);
 
 bool is_map_persistent(void);
-bool player_in_branch(int branch);
-bool player_in_level_area(level_area_type area);
+bool player_in_mappable_area(void);
+bool player_in_connected_branch(void);
 bool player_in_hell(void);
+
+static inline bool player_in_branch(int branch)
+{ return you.where_are_you == branch; };
 
 bool berserk_check_wielded_weapon(void);
 int player_equip(equipment_type slot, int sub_type, bool calc_unid = true);

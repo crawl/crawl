@@ -79,7 +79,6 @@ struct raw_range
 struct level_range
 {
 public:
-    level_area_type level_type;
     branch_type branch;
     int shallowest, deepest;
     bool deny;
