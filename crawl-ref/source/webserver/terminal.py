@@ -23,6 +23,7 @@ class TerminalRecorder(object):
 
         self.end_callback = None
         self.output_callback = None
+        self.activity_callback = None
 
         self.errpipe_read = None
         self.error_buffer = ""
@@ -82,6 +83,9 @@ class TerminalRecorder(object):
 
             if len(buf) > 0:
                 self.write_ttyrec_chunk(buf)
+
+                if self.activity_callback:
+                    self.activity_callback()
 
                 self.output_buffer += buf
                 self._do_output_callback()
