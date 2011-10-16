@@ -18,6 +18,13 @@ function log(text)
         window.console.log(text);
 }
 
+function send_message(msg, data)
+{
+    data = data || {};
+    data["msg"] = msg;
+    socket.send($.toJSON(data));
+}
+
 function delay(ms)
 {
     clearTimeout(delay_timeout);
@@ -176,7 +183,9 @@ function start_login()
         $("#reg_link").hide();
         $("#login_message").html("Logging in...");
         $("#remember_me").attr("checked", true);
-        socket.send("LoginToken: " + get_login_cookie());
+        send_message("token_login", {
+            cookie: get_login_cookie()
+        });
         set_login_cookie(null);
     }
     else
@@ -191,7 +200,10 @@ function login()
     $("#login_message").html("Logging in...");
     var username = $("#username").val();
     var password = $("#password").val();
-    socket.send("Login: " + username + " " + password);
+    send_message("login", {
+        username: username,
+        password: password
+    });
     return false;
 }
 
@@ -213,7 +225,7 @@ function logged_in(username)
 
     if ($("#remember_me").attr("checked"))
     {
-        socket.send("Remember");
+        send_message("set_login_cookie");
     }
 }
 
@@ -221,11 +233,13 @@ function remember_me_click()
 {
     if ($("#remember_me").attr("checked"))
     {
-        socket.send("Remember");
+        send_message("set_login_cookie");
     }
     else if (get_login_cookie())
     {
-        socket.send("UnRemember: " + get_login_cookie());
+        send_message("forget_login_cookie", {
+            cookie: get_login_cookie()
+        });
         set_login_cookie(null);
     }
 }
@@ -244,7 +258,9 @@ function logout()
 {
     if (get_login_cookie())
     {
-        socket.send("UnRemember: " + get_login_cookie());
+        send_message("forget_login_cookie", {
+            cookie: get_login_cookie()
+        });
         set_login_cookie(null);
     }
     location.reload();
@@ -294,7 +310,11 @@ function register()
         return false;
     }
 
-    socket.send("Register: " + username + " " + email + " " + password);
+    send_message("register", {
+        username: username,
+        password: password,
+        email: email
+    });
 
     return false;
 }
@@ -307,7 +327,7 @@ function register_failed(message)
 var editing_rc;
 function edit_rc(id)
 {
-    socket.send("GetRC: " + id);
+    send_message("get_rc", { game_id: id });
     editing_rc = id;
 }
 
@@ -320,14 +340,17 @@ function rcfile_contents(contents)
 
 function send_rc()
 {
-    socket.send("SetRC: " + editing_rc + " " + $("#rc_file_contents").val());
+    send_message("set_rc", {
+        game_id: editing_rc,
+        contents: $("#rc_file_contents").val()
+    });
     $("#rc_edit").hide();
     return false;
 }
 
 function ping()
 {
-    socket.send("Pong");
+    send_message("pong");
 }
 
 function connection_closed(msg)
@@ -340,7 +363,9 @@ function connection_closed(msg)
 
 function play_now(id)
 {
-    socket.send("Play: " + id);
+    send_message("play", {
+        game_id: id
+    });
 }
 
 var lobby_update_timeout = undefined;
@@ -379,7 +404,7 @@ function lobby(enable)
 }
 function lobby_update()
 {
-    socket.send("UpdateLobby");
+    send_message("update_lobby");
 }
 function lobby_data(data)
 {
@@ -422,16 +447,20 @@ function hash_changed()
     if (watch)
     {
         var watch_user = watch[1];
-        socket.send("Watch: " + watch_user);
+        send_message("watch", {
+            username: watch_user
+        });
     }
     else if (play)
     {
         var game_id = play[1];
-        socket.send("Play: " + game_id);
+        send_message("play", {
+            game_id: game_id
+        });
     }
     else if (location.hash.match(/^#lobby$/i))
     {
-        socket.send("GoLobby");
+        send_message("go_lobby");
     }
 }
 
