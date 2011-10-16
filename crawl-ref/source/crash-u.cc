@@ -301,7 +301,7 @@ void write_stack_trace(FILE* file, int ignore_count)
 
     free(symbols);
 }
-#else // defined(UNIX)
+#else // BACKTRACE_SUPPORTED
 void write_stack_trace(FILE* file, int ignore_count)
 {
     const char* msg = "Unable to get stack trace on this platform.\n";
