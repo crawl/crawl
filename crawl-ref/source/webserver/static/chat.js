@@ -30,7 +30,9 @@ function chat_message_send(e)
     {
         e.preventDefault();
         e.stopPropagation();
-        socket.send("Chat: " + $("#chat_input").val());
+        send_message("chat_msg", {
+            text: $("#chat_input").val()
+        });
         $("#chat_input").val("");
         return false;
     }

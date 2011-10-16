@@ -76,6 +76,22 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.logger = logging.LoggerAdapter(logging.getLogger(), {})
         self.logger.process = self._process_log_msg
 
+        self.message_handlers = {
+            "login": self.login,
+            "token_login": self.token_login,
+            "set_login_cookie": self.set_login_cookie,
+            "forget_login_cookie": self.forget_login_cookie,
+            "play": self.start_crawl,
+            "pong": self.pong,
+            "update_lobby": self.update_lobby,
+            "watch": self.watch,
+            "chat_msg": self.post_chat_message,
+            "register": self.register,
+            "go_lobby": self.go_lobby,
+            "get_rc": self.get_rc,
+            "set_rc": self.set_rc,
+            }
+
     def _process_log_msg(self, msg, kwargs):
         return "#%-5s %s" % (self.id, msg), kwargs
 
@@ -234,7 +250,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         if self.is_running():
             self.process.stop()
 
-    def login(self, username):
+    def do_login(self, username):
         self.username = username
         self.logger.extra["username"] = username
         if not self.init_user():
@@ -250,130 +266,123 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                            tornado.escape.json_encode(username) + ");")
         self.send_game_links()
 
-    def on_message(self, message):
-        login_start = "Login: "
-        if message.startswith(login_start):
-            message = message[len(login_start):]
-            username, _, password = message.partition(' ')
-            real_username = user_passwd_match(username, password)
-            if real_username:
-                self.logger.info("User %s logged in.", real_username)
-                self.login(real_username)
-            else:
-                self.logger.warning("Failed login for user %s.", username)
-                self.write_message("login_failed();")
+    def login(self, username, password):
+        real_username = user_passwd_match(username, password)
+        if real_username:
+            self.logger.info("User %s logged in.", real_username)
+            self.do_login(real_username)
+        else:
+            self.logger.warning("Failed login for user %s.", username)
+            self.write_message("login_failed();")
 
-        elif message.startswith("LoginToken: "):
-            message = message[len("LoginToken: "):]
-            username, _, token = message.partition(' ')
+    def token_login(self, cookie):
+        username, _, token = cookie.partition(' ')
+        token = long(token)
+        if (token, username) in login_tokens:
+            del login_tokens[(token, username)]
+            self.logger.info("User %s logged in (via token).", username)
+            self.do_login(username)
+        else:
+            self.logger.warning("Wrong login token for user %s.", username)
+            self.write_message("login_failed();")
+
+    def set_login_cookie(self):
+        if self.username is None: return
+        token = rand.getrandbits(128)
+        expires = datetime.datetime.now() + datetime.timedelta(login_token_lifetime)
+        login_tokens[(token, self.username)] = expires
+        cookie = self.username + " " + str(token)
+        self.write_message("set_login_cookie(" +
+                           tornado.escape.json_encode(cookie) + "," +
+                           str(login_token_lifetime) + ");")
+
+    def forget_login_cookie(self, cookie):
+        try:
+            username, _, token = cookie.partition(' ')
             token = long(token)
             if (token, username) in login_tokens:
                 del login_tokens[(token, username)]
-                self.logger.info("User %s logged in (via token).", username)
-                self.login(username)
-            else:
-                self.logger.warning("Wrong login token for user %s.", username)
-                self.write_message("login_failed();")
+        except ValueError:
+            return
 
-        elif message == "Remember":
-            if self.username is None: return
-            token = rand.getrandbits(128)
-            expires = datetime.datetime.now() + datetime.timedelta(login_token_lifetime)
-            login_tokens[(token, self.username)] = expires
-            cookie = self.username + " " + str(token)
-            self.write_message("set_login_cookie(" +
-                               tornado.escape.json_encode(cookie) + "," +
-                               str(login_token_lifetime) + ");")
+    def pong(self):
+        self.received_pong = True
 
-        elif message.startswith("UnRemember: "):
-            message = message[len("UnRemember: "):]
-            username, _, token = message.partition(' ')
-            try:
-                token = long(token)
-                if (token, username) in login_tokens:
-                    del login_tokens[(token, username)]
-            except ValueError:
-                return
+    def watch(self, username):
+        procs = [socket.process for socket in find_user_sockets(username)
+                 if socket.is_running()]
+        if len(procs) >= 1:
+            process = procs[0]
+            self.logger.info("Started watching %s.", process.username)
+            self.watched_game = process
+            process.add_watcher(self)
+            self.write_message("set_watching(true);")
+        else:
+            self.write_message("go_lobby();")
 
-        elif message.startswith("Play: "):
-            if self.process or self.watched_game: return
-            game_id = message[len("Play: "):]
-            self.start_crawl(game_id)
+    def post_chat_message(self, text):
+        if self.username is None:
+            self.write_message("chat('You need to log in to send messages!');")
+            return
 
-        elif message == "Pong":
-            self.received_pong = True
+        chat_msg = ("<span class='chat_sender'>%s</span>: <span class='chat_msg'>%s</span>" %
+                    (self.username, tornado.escape.xhtml_escape(text)))
+        receiver = None
+        if self.process:
+            receiver = self.process
+        elif self.watched_game:
+            receiver = self.watched_game
 
-        elif message == "UpdateLobby":
-            self.update_lobby()
+        if receiver:
+            receiver.send_to_all("chat(%s);" % tornado.escape.json_encode(chat_msg))
 
-        elif message.startswith("Watch: "):
-            if self.process or self.watched_game: return
-            watch_username = message[len("Watch: "):]
-            procs = [socket.process for socket in find_user_sockets(watch_username)
-                     if socket.is_running()]
-            if len(procs) >= 1:
-                process = procs[0]
-                self.logger.info("Started watching %s.", process.username)
-                self.watched_game = process
-                process.add_watcher(self)
-                self.write_message("set_watching(true);")
-            else:
-                self.write_message("go_lobby();")
-
-        elif message.startswith("Chat: "):
-            if self.username is None:
-                self.write_message("chat('You need to log in to send messages!');")
-                return
-
-            chat_msg = ("<span class='chat_sender'>%s</span>: <span class='chat_msg'>%s</span>" %
-                        (self.username, tornado.escape.xhtml_escape(message[len("Chat: "):])))
-            receiver = None
-            if self.process:
-                receiver = self.process
-            elif self.watched_game:
-                receiver = self.watched_game
-            if receiver:
-                receiver.send_to_all("chat(%s);" % tornado.escape.json_encode(chat_msg))
-
-        elif message.startswith("Register: "):
-            message = message[len("Register: "):]
-            username, _, message = message.partition(" ")
-            email, _, password = message.partition(" ")
-            error = register_user(username, password, email)
-            if error is None:
-                self.logger.info("Registered user %s.", username)
-                self.login(username)
-            else:
-                self.logger.info("Registration attempt failed for username %s: %s",
+    def register(self, username, password, email):
+        error = register_user(username, password, email)
+        if error is None:
+            self.logger.info("Registered user %s.", username)
+            self.do_login(username)
+        else:
+            self.logger.info("Registration attempt failed for username %s: %s",
                              username, error)
-                self.write_message("register_failed(" +
-                                   tornado.escape.json_encode(error) + ");")
+            self.write_message("register_failed(" +
+                               tornado.escape.json_encode(error) + ");")
 
-        elif message == "GoLobby":
-            if self.is_running():
-                self.process.stop()
-            elif self.watched_game:
-                self.stop_watching()
+    def go_lobby(self):
+        if self.is_running():
+            self.process.stop()
+        elif self.watched_game:
+            self.stop_watching()
 
-        elif message.startswith("GetRC: "):
-            game_id = message[len("GetRC: "):]
-            if game_id not in games: return
-            rcfile_path = os.path.join(games[game_id]["rcfile_path"], self.username + ".rc")
-            with open(rcfile_path, 'r') as f:
-                contents = f.read()
-            self.write_message("rcfile_contents(" +
-                               tornado.escape.json_encode(contents) + ");")
+    def get_rc(self, game_id):
+        if game_id not in games: return
+        rcfile_path = os.path.join(games[game_id]["rcfile_path"], self.username + ".rc")
+        with open(rcfile_path, 'r') as f:
+            contents = f.read()
+        self.write_message("rcfile_contents(" +
+                           tornado.escape.json_encode(contents) + ");")
 
-        elif message.startswith("SetRC: "):
-            message = message[len("SetRC: "):]
-            game_id, _, contents = message.partition(" ")
-            rcfile_path = os.path.join(games[game_id]["rcfile_path"], self.username + ".rc")
-            with open(rcfile_path, 'w') as f:
-                f.write(codecs.BOM_UTF8)
-                f.write(contents.encode("utf8"))
+    def set_rc(self, game_id, contents):
+        rcfile_path = os.path.join(games[game_id]["rcfile_path"], self.username + ".rc")
+        with open(rcfile_path, 'w') as f:
+            f.write(codecs.BOM_UTF8)
+            f.write(contents.encode("utf8"))
 
-        elif message.startswith("{"):
-            self.process.handle_input(message)
+    def on_message(self, message):
+        if message.startswith("{"):
+            try:
+                obj = tornado.escape.json_decode(message)
+                if obj["msg"] in self.message_handlers:
+                    handler = self.message_handlers[obj["msg"]]
+                    del obj["msg"]
+                    handler(**obj)
+                elif self.process:
+                    self.process.handle_input(message)
+                else:
+                    self.logger.warning("Didn't know how to handle msg: %s",
+                                        obj["msg"])
+            except:
+                self.logger.warning("Error while handling JSON message!",
+                                    exc_info=True)
 
         elif self.process:
             self.logger.debug("Message: %s", message)
