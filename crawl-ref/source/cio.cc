@@ -107,17 +107,21 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
 // cursoring over darkgrey or black causes problems.
 void cursorxy(int x, int y)
 {
-#if defined(USE_TILE_LOCAL)
+#ifdef USE_TILE
     coord_def ep(x, y);
     coord_def gc = crawl_view.screen2grid(ep);
     tiles.place_cursor(CURSOR_MOUSE, gc);
-#elif defined(UNIX)
+#endif
+
+#ifndef USE_TILE_LOCAL
+#if defined(UNIX)
     if (Options.use_fake_cursor)
         fakecursorxy(x, y);
     else
         cgotoxy(x, y, GOTO_CRT);
 #else
     cgotoxy(x, y, GOTO_CRT);
+#endif
 #endif
 }
 
