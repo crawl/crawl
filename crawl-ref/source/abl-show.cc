@@ -250,7 +250,6 @@ static const ability_def Ability_List[] =
     { ABIL_NON_ABILITY, "No ability", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_SPIT_POISON, "Spit Poison", 0, 0, 40, 0, ABFLAG_BREATH },
 
-    { ABIL_TELEPORTATION, "Teleportation", 0, 100, 200, 0, ABFLAG_NONE },
     { ABIL_BLINK, "Blink", 0, 50, 50, 0, ABFLAG_NONE },
 
     { ABIL_BREATHE_FIRE, "Breathe Fire", 0, 0, 125, 0, ABFLAG_BREATH },
@@ -272,8 +271,6 @@ static const ability_def Ability_List[] =
     { ABIL_FLY, "Fly", 3, 0, 100, 0, ABFLAG_NONE },
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, ABFLAG_NONE },
     { ABIL_HELLFIRE, "Hellfire", 0, 250, 200, 0, ABFLAG_NONE },
-    { ABIL_THROW_FLAME, "Throw Flame", 0, 20, 50, 0, ABFLAG_NONE },
-    { ABIL_THROW_FROST, "Throw Frost", 0, 20, 50, 0, ABFLAG_NONE },
 
     // FLY_II used to have ABFLAG_EXHAUSTION, but that's somewhat meaningless
     // as exhaustion's only (and designed) effect is preventing Berserk. - bwr
@@ -1058,14 +1055,10 @@ static talent _get_talent(ability_type ability, bool check_confused)
         // end species abilities (some mutagenic)
 
         // begin demonic powers {dlb}
-    case ABIL_THROW_FLAME:
-    case ABIL_THROW_FROST:
-        failure = 10 - you.experience_level;
-        break;
-
     case ABIL_HELLFIRE:
         failure = 50 - you.experience_level;
         break;
+        // end demonic powers {dlb}
 
     case ABIL_BLINK:
         // Allowing perfection makes the third level matter much more
@@ -1073,12 +1066,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 48 - (12 * player_mutation_level(MUT_BLINK))
                   - you.experience_level / 2;
         break;
-
-    case ABIL_TELEPORTATION:
-        failure = ((player_mutation_level(MUT_TELEPORT_AT_WILL) > 1) ? 30 : 50)
-                    - you.experience_level;
-        break;
-        // end demonic powers {dlb}
 
         // begin transformation abilities {dlb}
     case ABIL_END_TRANSFORMATION:
@@ -1959,10 +1946,6 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_TELEPORTATION:    // ring of teleportation
-    case ABIL_TELEPORTATION:          // teleport mut
-        if (player_mutation_level(MUT_TELEPORT_AT_WILL) == 3)
-            you_teleport_now(true, true); // instant and to new area of Abyss
-        else
             you_teleport();
         break;
 
@@ -2143,20 +2126,6 @@ static bool _do_ability(const ability_def& abil)
         if (your_spells(SPELL_HELLFIRE_BURST,
                         you.experience_level * 5, false) == SPRET_ABORT)
             return (false);
-        break;
-
-    case ABIL_THROW_FLAME:
-    case ABIL_THROW_FROST:
-        // Taking ranges from the equivalent spells.
-        beam.range = (abil.ability == ABIL_THROW_FLAME ? 7 : 8);
-        if (!spell_direction(abild, beam))
-            return (false);
-
-        if (!zapping((abil.ability == ABIL_THROW_FLAME ? ZAP_FLAME : ZAP_FROST),
-                     you.experience_level * 3, beam, true))
-        {
-            return (false);
-        }
         break;
 
     case ABIL_EVOKE_TURN_INVISIBLE:     // ring, randarts, darkness items
@@ -3122,20 +3091,11 @@ std::vector<talent> your_talents(bool check_confused)
     if (player_mutation_level(MUT_HURL_HELLFIRE))
         _add_talent(talents, ABIL_HELLFIRE, check_confused);
 
-    if (player_mutation_level(MUT_THROW_FLAMES))
-        _add_talent(talents, ABIL_THROW_FLAME, check_confused);
-
-    if (player_mutation_level(MUT_THROW_FROST))
-        _add_talent(talents, ABIL_THROW_FROST, check_confused);
-
     if (you.duration[DUR_TRANSFORMATION] && !you.transform_uncancellable)
         _add_talent(talents, ABIL_END_TRANSFORMATION, check_confused);
 
     if (player_mutation_level(MUT_BLINK))
         _add_talent(talents, ABIL_BLINK, check_confused);
-
-    if (player_mutation_level(MUT_TELEPORT_AT_WILL))
-        _add_talent(talents, ABIL_TELEPORTATION, check_confused);
 
     // Religious abilities.
     if (you.religion == GOD_TROG && !silenced(you.pos()))

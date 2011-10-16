@@ -23,7 +23,9 @@ enum ability_type
     ABIL_BREATHE_STEAM,
     ABIL_BREATHE_MEPHITIC,
     ABIL_SPIT_ACID,
+#if TAG_MAJOR_VERSION == 32
     ABIL_TELEPORTATION,
+#endif
     ABIL_BLINK,
 
     // Others
@@ -32,8 +34,10 @@ enum ability_type
 
     // Species-specific abilities.
     // Demonspawn-only
+#if TAG_MAJOR_VERSION == 32
     ABIL_THROW_FLAME,
     ABIL_THROW_FROST,
+#endif
     ABIL_HELLFIRE,
     // Kenku, Draconians
     ABIL_FLY,
@@ -2616,10 +2620,14 @@ enum mutation_type
     MUT_STRONG,
     MUT_STRONG_STIFF,
     MUT_TELEPORT,
+#if TAG_MAJOR_VERSION == 32
     MUT_TELEPORT_AT_WILL,
+#endif
     MUT_TELEPORT_CONTROL,
+#if TAG_MAJOR_VERSION == 32
     MUT_THROW_FLAMES,
     MUT_THROW_FROST,
+#endif
     MUT_TORMENT_RESISTANCE,
     MUT_TOUGH_SKIN,
     MUT_WEAK,
