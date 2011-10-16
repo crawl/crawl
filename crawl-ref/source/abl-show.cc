@@ -1946,7 +1946,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_EVOKE_TELEPORTATION:    // ring of teleportation
-            you_teleport();
+        you_teleport();
         break;
 
     case ABIL_BREATHE_STICKY_FLAME:
