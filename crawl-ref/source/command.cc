@@ -865,7 +865,7 @@ static bool _compare_mon_names(MenuEntry *entry_a, MenuEntry* entry_b)
     return (lowercase(a_name) < lowercase(b_name));
 }
 
-// Compare monsters by location-independant level, or by hitdice if
+// Compare monsters by location-independent level, or by hitdice if
 // levels are equal, or by name if both level and hitdice are equal.
 static bool _compare_mon_toughness(MenuEntry *entry_a, MenuEntry* entry_b)
 {

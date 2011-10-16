@@ -806,13 +806,13 @@ void unmarshallString4(reader &th, std::string& s)
     if (len) th.read(&s.at(0), len);
 }
 
-// boolean (to avoid system-dependant bool implementations)
+// boolean (to avoid system-dependent bool implementations)
 void marshallBoolean(writer &th, bool data)
 {
     th.writeByte(data ? 1 : 0);
 }
 
-// boolean (to avoid system-dependant bool implementations)
+// boolean (to avoid system-dependent bool implementations)
 bool unmarshallBoolean(reader &th)
 {
     return (th.readByte() != 0);
