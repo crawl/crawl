@@ -1411,7 +1411,13 @@ static void _setup_generic(const newgame_def& ng)
     _give_species_bonus_mp();
 
     if (crawl_state.game_is_zotdef())
+    {
         you.zot_points = 80;
+
+        // There's little sense in training these skills in ZotDef
+        you.train[SK_STEALTH] = 0;
+        you.train[SK_TRAPS_DOORS] = 0;
+    }
 
     for (int i = 0; i < ENDOFPACK; ++i)
         if (you.inv[i].defined())
