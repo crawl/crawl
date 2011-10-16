@@ -1180,7 +1180,7 @@ void direction_chooser::draw_beam_if_needed()
         if (!hitfunc->valid_aim(target()))
         {
 #ifdef USE_TILE
-            viewwindow(false, true);
+            viewwindow(true, true);
 #endif
             return;
         }
@@ -1204,7 +1204,7 @@ void direction_chooser::draw_beam_if_needed()
 #endif
             }
 #ifdef USE_TILE
-        viewwindow(false, true);
+        viewwindow(true, true);
 #endif
         return;
     }
@@ -1214,7 +1214,7 @@ void direction_chooser::draw_beam_if_needed()
     {
 #ifdef USE_TILE
         // Clear the old beam if we're not drawing anything else.
-        viewwindow(false, true);
+        viewwindow(true, true);
 #endif
         return;
     }
@@ -1249,7 +1249,7 @@ void direction_chooser::draw_beam_if_needed()
     tile_place_ray(target(), in_range(ray.pos()) ? AFF_YES : AFF_NO);
 
     // In tiles, we need to refresh the window to get the beam drawn.
-    viewwindow(false, true);
+    viewwindow(true, true);
 #endif
 }
 
