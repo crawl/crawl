@@ -1443,8 +1443,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // Promote the casting of useful spells for low-HP monsters.
         // (kraken should always cast their escape spell of inky).
         if (!finalAnswer
-            && mons->hit_points < mons->max_hit_points / 4
-            && (!one_chance_in(4) || mons->type == MONS_KRAKEN))
+            && mons->hit_points < mons->max_hit_points / 3
+            && (coinflip() || mons->type == MONS_KRAKEN))
         {
             // Note: There should always be at least some chance we don't
             // get here... even if the monster is on its last HP.  That
@@ -4183,6 +4183,8 @@ bool ms_low_hitpoint_cast(const monster* mon, spell_type monspell)
             return true;
     case SPELL_DEATHS_DOOR:
         return !mon->has_ench(ENCH_DEATHS_DOOR);
+    case SPELL_INVISIBILITY:
+        return !mon->has_ench(ENCH_INVIS);
     default:
         return !targ_adj && spell_typematch(monspell, SPTYP_SUMMONING);
     }
