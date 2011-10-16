@@ -27,14 +27,15 @@ class CrawlProcessHandlerBase(object):
 
         self.end_callback = None
         self._watchers = set()
+        self._receivers = set()
         self.last_activity_time = time.time()
 
     def idle_time(self):
         return time.time() - self.last_activity_time
 
     def send_to_all(self, msg):
-        for watcher in self._watchers:
-            watcher.handle_message(msg)
+        for receiver in self._receivers:
+            receiver.handle_message(msg)
 
     def handle_process_end(self):
         if self.kill_timeout:
@@ -59,10 +60,22 @@ class CrawlProcessHandlerBase(object):
         self.send_to_all("watchers(%i,'%s')" %
                          (len(self._watchers), s))
 
-    def add_watcher(self, watcher):
-        self._watchers.add(watcher)
+    def add_watcher(self, watcher, hide = False):
+        if not hide:
+            self._watchers.add(watcher)
+        self._receivers.add(watcher)
         if self.client_path:
             self._send_client(watcher)
+        self.update_watcher_description()
+
+    def remove_watcher(self, watcher):
+        if watcher in self._watchers:
+            self._watchers.remove(watcher)
+        self._receivers.remove(watcher)
+        self.update_watcher_description()
+
+    def watcher_count(self):
+        return len(self._watchers)
 
     def _send_client(self, watcher):
         v = hashlib.sha1(os.path.abspath(self.client_path)).hexdigest()
@@ -76,13 +89,6 @@ class CrawlProcessHandlerBase(object):
         watcher.handle_message("delay_timeout = 1;$('#game').html(" +
                                json_encode(game_html) +
                                ");delay_ended();")
-
-    def remove_watcher(self, watcher):
-        self._watchers.remove(watcher)
-        self.update_watcher_description()
-
-    def watcher_count(self):
-        return len(self._watchers)
 
     def stop(self):
         self.process.send_signal(subprocess.signal.SIGHUP)
@@ -208,8 +214,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
         self.handle_process_end()
 
-    def add_watcher(self, watcher):
-        super(CrawlProcessHandler, self).add_watcher(watcher)
+    def add_watcher(self, watcher, hide = False):
+        super(CrawlProcessHandler, self).add_watcher(watcher, hide)
 
         if self.conn:
             self.conn.send_message('{"msg":"spectator_joined"}')
@@ -321,8 +327,8 @@ class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
             self.delete_mock_ttyrec()
             self.handle_process_end()
 
-    def add_watcher(self, watcher):
-        super(CompatCrawlProcessHandler, self).add_watcher(watcher)
+    def add_watcher(self, watcher, hide = False):
+        super(CompatCrawlProcessHandler, self).add_watcher(watcher, hide)
 
         if self.process:
             self.process.write_input("^r")
