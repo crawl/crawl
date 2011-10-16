@@ -576,7 +576,7 @@ This deep elf exults in conjured mayhem and destruction. Hated by most passers-b
 %%%%
 deep elf blademaster
 
-Once in a very great while, there is a deep elf that scorns magic and devotes herself to the study of the sword. This is such a champion of the deep elves, wielding two blades with lethal grace.
+Once in a very great while, there is a deep elf that scorns magic and devotes itself to the study of the sword. This is such a champion of the deep elves, wielding two blades with lethal grace.
 %%%%
 deep elf conjurer
 
