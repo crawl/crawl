@@ -942,10 +942,8 @@ void discover_mimic(const coord_def& pos)
         else
             mg.colour = feat_d.colour;
 
-        dungeon_feature_type mimic_feat =
-                (feat == DNGN_OPEN_DOOR) ? DNGN_CLOSED_DOOR : feat;
-        mg.props["feat_type"] = static_cast<short>(mimic_feat);
-        mg.props["glyph"] = static_cast<int>(get_feat_symbol(mimic_feat));
+        mg.props["feat_type"] = static_cast<short>(feat);
+        mg.props["glyph"] = static_cast<int>(get_feat_symbol(feat));
 
 #ifdef USE_TILE
         mg.props["tile_idx"] = static_cast<int>(tile);
@@ -983,9 +981,7 @@ void discover_mimic(const coord_def& pos)
         behaviour_event(mon, ME_WHACK, midx);
 
     // Announce the mimic.
-    if (feature_mimic && feat == DNGN_OPEN_DOOR)
-        simple_monster_message(mimic, " slams shut!", MSGCH_WARN);
-    else if (mons_near(mimic))
+    if (mons_near(mimic))
         mprf(MSGCH_WARN, "The %s is a mimic!", name.c_str());
 
     // Just in case there's another one.
