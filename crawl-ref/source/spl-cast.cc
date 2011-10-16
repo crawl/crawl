@@ -420,6 +420,8 @@ int spell_fail(spell_type spell)
         }
     }
 
+    chance2 += 10 * player_mutation_level(MUT_WILD_MAGIC);
+
     // Apply the effects of Vehumet and items of wizardry.
     chance2 = _apply_spellcasting_success_boosts(spell, chance2);
 
@@ -483,6 +485,13 @@ int calc_spell_power(spell_type spell, bool apply_intel, bool fail_rate_check,
         {
             for (int i = enhanced; i < 0; i++)
                 power /= 2;
+        }
+
+        // Wild magic boosts spell power but decreases success rate.
+        if (!fail_rate_check)
+        {
+            power *= 10 + 5 * player_mutation_level(MUT_WILD_MAGIC);
+            power /= 10;
         }
 
         power = stepdown_value(power / 100, 50, 50, 150, 200);

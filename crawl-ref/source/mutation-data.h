@@ -969,6 +969,24 @@
   "low mp"
 },
 
+{ MUT_WILD_MAGIC,                 6,   3,  false, false,
+    "wild magic",
+
+    {"Your spells are a little harder to cast, but a little more powerful.",
+     "Your spells are harder to cast, but more powerful.",
+     "Your spells are much harder to cast, but much more powerful."},
+
+    {"You feel less in control of your magic.",
+     "You feel less in control of your magic.",
+     "You feel your magical power running wild!"},
+
+    {"You regain control of your magic.",
+     "You feel more in control of your magic.",
+     "You feel more in control of your magic."},
+
+    "wild magic"
+},
+
 { MUT_STOCHASTIC_TORMENT_RESISTANCE, 0,  3, false, false,
   NULL,
 
