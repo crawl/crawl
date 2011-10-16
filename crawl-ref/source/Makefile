@@ -941,8 +941,8 @@ SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 all: greet $(GAME) docs webserver
 
 greet:
-	@echo "  * If you experience any problems building Crawl, please take a second look"
-	@echo "    at INSTALL.txt: the solution to your problem just might be in there!"
+	@printf "  * If you experience any problems building Crawl, please take a second look\\n"\
+	"  * at INSTALL.txt: the solution to your problem just might be in there!\\n"
 
 docs: $(GENERATED_DOCS)
 
