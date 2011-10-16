@@ -2612,6 +2612,9 @@ enum mutation_type
     MUT_SCREAM,
     MUT_SHAGGY_FUR,
     MUT_SHOCK_RESISTANCE,
+#if TAG_MAJOR_VERSION != 32
+    MUT_SLOW,
+#endif
     MUT_SLOW_HEALING,
     MUT_SLOW_METABOLISM,
     MUT_SPINY,
@@ -2631,7 +2634,11 @@ enum mutation_type
     MUT_TORMENT_RESISTANCE,
     MUT_TOUGH_SKIN,
     MUT_WEAK,
+#if TAG_MAJOR_VERSION != 32
+    MUT_WILD_MAGIC,
+#else
     MUT_SLOW,
+#endif
     MUT_UNBREATHING,
 
     // Jiyva-specific mutations
@@ -2647,6 +2654,7 @@ enum mutation_type
     MUT_CAMOUFLAGE,
     MUT_TENTACLES,      // Gloves but don't lose a slot yet.
     MUT_TENTACLE_SPIKE, // Octopode only.
+    MUT_WILD_MAGIC,
 #endif
     NUM_MUTATIONS,
 
