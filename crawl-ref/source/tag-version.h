@@ -32,7 +32,7 @@ enum tag_minor_version
     TAG_MINOR_HP_MP_CALC,          // HP and MP recalculated rather than stored +5000.
     TAG_MINOR_64_MB,               // More than 64 monster info flags.
     TAG_MINOR_SEEN_MISC,           // Record misc items seen.
-    TAG_MINOR_SPECIES_HP_NO_MUT,   // Species HP modifier is independant from frail/robust.
+    TAG_MINOR_SPECIES_HP_NO_MUT,   // Species HP modifier is independent from frail/robust.
     TAG_MINOR_GOLDIFIED_RUNES,     // Runes are undroppable and don't take space.
     TAG_MINOR_ZIG_COUNT,           // Count completed Ziggurats and max level of partials.
     TAG_MINOR_ZIG_FIX,             // Zero out junk ziggurat variable values.
