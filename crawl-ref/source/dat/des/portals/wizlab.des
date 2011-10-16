@@ -1551,7 +1551,7 @@ TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 wizname = crawl.make_name()
 
 kmons ("    1 = col:silver patrolling wizard name:" .. string.gsub(wizname, " ", "_")
-         .. "_the_Cloud_Mage name_replace"
+         .. "_the_Cloud_Mage name_replace tile:mons_cloud_mage"
          .. " spells:mephitic_cloud;freezing_cloud;poisonous_cloud;"
          .. "airstrike;blink_range;blink_range hd:20 hp:150 ;"
          .. " robe unrand:robe_of_clouds . quick blade ego:electrocution |"
@@ -1728,7 +1728,7 @@ KMONS:      5 = blizzard demon / green death / cacodemon
 wizname = crawl.make_name()
 
 kmons     ("1 = col:fire patrolling wizard name:" .. string.gsub(wizname, " ", "_")
-              .. "_the_Hellbinder name_replace"
+              .. "_the_Hellbinder name_replace tile:mons_hellbinder"
               .." spells:call_imp;summon_demon;haste;hellfire;blink_away;throw_flame"
               .." hd:20 hp:150 ; demon blade . robe")
 }}
