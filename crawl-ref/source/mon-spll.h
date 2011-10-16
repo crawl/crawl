@@ -192,7 +192,7 @@
        SPELL_INVISIBILITY,
        SPELL_ANIMATE_DEAD,
        SPELL_ANIMATE_DEAD,
-       SPELL_TELEPORT_SELF
+       SPELL_INVISIBILITY
       }
     },
 
@@ -269,7 +269,7 @@
        SPELL_SUMMON_DEMON,
        SPELL_PARALYSE,
        SPELL_ANIMATE_DEAD,
-       SPELL_TELEPORT_SELF
+       SPELL_NO_SPELL
       }
     },
 
@@ -313,7 +313,7 @@
        SPELL_NO_SPELL,
        SPELL_ANIMATE_DEAD,
        SPELL_ANIMATE_DEAD,
-       SPELL_TELEPORT_SELF
+       SPELL_NO_SPELL
       }
     },
 
@@ -324,7 +324,7 @@
        SPELL_INVISIBILITY,
        SPELL_ANIMATE_DEAD,
        SPELL_ANIMATE_DEAD,
-       SPELL_BLINK
+       SPELL_INVISIBILITY
       }
     },
 
@@ -445,7 +445,7 @@
        SPELL_NO_SPELL,
        SPELL_SYMBOL_OF_TORMENT,
        SPELL_NO_SPELL,
-       SPELL_SUMMON_DEMON
+       SPELL_NO_SPELL
       }
     },
 
@@ -456,7 +456,7 @@
        SPELL_NO_SPELL,
        SPELL_SYMBOL_OF_TORMENT,
        SPELL_DISPEL_UNDEAD,
-       SPELL_SUMMON_DEMON
+       SPELL_NO_SPELL
       }
     },
 
@@ -544,7 +544,7 @@
        SPELL_NO_SPELL,
        SPELL_POLYMORPH_OTHER,
        SPELL_CONFUSE,
-       SPELL_SUMMON_DEMON
+       SPELL_NO_SPELL
       }
     },
 
@@ -555,7 +555,7 @@
        SPELL_NO_SPELL,
        SPELL_VENOM_BOLT,
        SPELL_NO_SPELL,
-       SPELL_BLINK
+       SPELL_NO_SPELL
       }
     },
 
@@ -566,7 +566,7 @@
        SPELL_NO_SPELL,
        SPELL_STICKY_FLAME_RANGE,
        SPELL_SMITING,
-       SPELL_TELEPORT_SELF
+       SPELL_NO_SPELL
       }
     },
 
@@ -577,7 +577,7 @@
        SPELL_NO_SPELL,
        SPELL_AIRSTRIKE,
        SPELL_BOLT_OF_COLD,
-       SPELL_TELEPORT_OTHER
+       SPELL_NO_SPELL
       }
     },
 
@@ -610,7 +610,7 @@
        SPELL_SUMMON_UFETUBUS,
        SPELL_VAMPIRE_SUMMON,
        SPELL_SUMMON_DEMON,
-       SPELL_TELEPORT_SELF
+       SPELL_NO_SPELL
       }
     },
 
@@ -621,7 +621,7 @@
        SPELL_CANTRIP,
        SPELL_LIGHTNING_BOLT,
        SPELL_BOLT_OF_DRAINING,
-       SPELL_TELEPORT_SELF
+       SPELL_NO_SPELL
       }
     },
 
@@ -632,7 +632,7 @@
        SPELL_INVISIBILITY,
        SPELL_STONE_ARROW,
        SPELL_BOLT_OF_DRAINING,
-       SPELL_TELEPORT_SELF
+       SPELL_INVISIBILITY
       }
     },
 
@@ -665,7 +665,7 @@
        SPELL_SUMMON_DEMON,
        SPELL_SUMMON_GREATER_DEMON,
        SPELL_CALL_IMP,
-       SPELL_TELEPORT_SELF
+       SPELL_NO_SPELL
       }
     },
 
@@ -676,7 +676,7 @@
        SPELL_BLINK,
        SPELL_IRON_SHOT,
        SPELL_POISON_ARROW,
-       SPELL_TELEPORT_SELF
+       SPELL_BLINK
       }
     },
 
@@ -687,7 +687,7 @@
        SPELL_HASTE,
        SPELL_SUMMON_DEMON,
        SPELL_HELLFIRE,
-       SPELL_TELEPORT_SELF
+       SPELL_HASTE
       }
     },
 
@@ -695,10 +695,10 @@
       {
        SPELL_BOLT_OF_DRAINING,
        SPELL_BOLT_OF_DRAINING,
-       SPELL_MINOR_HEALING,
+       SPELL_VAMPIRIC_DRAINING,
        SPELL_ANIMATE_DEAD,
        SPELL_ANIMATE_DEAD,
-       SPELL_TELEPORT_SELF
+       SPELL_VAMPIRIC_DRAINING
       }
     },
 
@@ -1137,7 +1137,7 @@
        SPELL_BLINK_OTHER_CLOSE,
        SPELL_BOLT_OF_MAGMA,
        SPELL_ISKENDERUNS_MYSTIC_BLAST,
-       SPELL_STONE_ARROW
+       SPELL_NO_SPELL
       }
     },
 
@@ -1214,7 +1214,7 @@
        SPELL_CORONA,
        SPELL_BLINK,
        SPELL_CANTRIP,
-       SPELL_CANTRIP
+       SPELL_NO_SPELL
       }
     },
 
@@ -1293,7 +1293,7 @@
        SPELL_NO_SPELL,
        SPELL_FIRE_SUMMON,
        SPELL_NO_SPELL,
-       SPELL_TELEPORT_SELF
+       SPELL_NO_SPELL
       }
     },
 
@@ -1326,7 +1326,7 @@
        SPELL_NO_SPELL,
        SPELL_SUMMON_HORRIBLE_THINGS,
        SPELL_SUMMON_HORRIBLE_THINGS,
-       SPELL_TELEPORT_SELF
+       SPELL_NO_SPELL
       }
     },
 
@@ -1403,7 +1403,7 @@
        SPELL_NO_SPELL,
        SPELL_POISON_ARROW,
        SPELL_VENOM_BOLT,
-       SPELL_BLINK_OTHER
+       SPELL_NO_SPELL
       }
     },
 
