@@ -692,15 +692,16 @@ void exercise(skill_type exsk, int deg)
 
     dprf("Exercise %s by %d.", skill_name(exsk), deg);
 
+    // push first in case queues are empty, like during -test
     while (deg > 0)
     {
         if (skill_trained(exsk))
         {
-            you.exercises.pop_front();
             you.exercises.push_back(exsk);
+            you.exercises.pop_front();
         }
-        you.exercises_all.pop_front();
         you.exercises_all.push_back(exsk);
+        you.exercises_all.pop_front();
         deg--;
     }
     reset_training();
