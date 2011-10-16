@@ -4318,7 +4318,7 @@ bool ms_waste_of_time(const monster* mon, spell_type monspell)
         break;
 
     case SPELL_REGENERATION:
-        if (mon->has_ench(ENCH_REGENERATION))
+        if (mon->has_ench(ENCH_REGENERATION) || mon->has_ench(ENCH_DEATHS_DOOR))
             ret = true;
         break;
 
