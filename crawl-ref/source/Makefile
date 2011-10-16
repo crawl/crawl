@@ -956,7 +956,7 @@ test:
 webserver/static/%.png: dat/tiles/%.png
 	$(QUIET_COPY)$(COPY) $< webserver/static/
 
-webserver/static/game/%.png: dat/tiles/%.png
+webserver/game_data/static/%.png: dat/tiles/%.png
 	$(QUIET_COPY)$(COPY) $< webserver/game_data/static/
 
 TILEINFOJS = $(TILEIMAGEFILES) dngn
@@ -967,7 +967,7 @@ STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
 
 $(TILEINFOJS:%=$(RLTILES)/tileinfo-%.js): rltile-build
 
-webserver/static/game/%.js: $(RLTILES)/%.js
+webserver/game_data/static/%.js: $(RLTILES)/%.js
 	$(QUIET_COPY)$(COPY) $< webserver/game_data/static/
 
 clean-webserver:
