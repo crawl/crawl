@@ -976,6 +976,10 @@ bool zotdef_create_altar(bool wizmode)
     for (int i = 1; i < NUM_GODS; ++i)
     {
         const god_type gi = static_cast<god_type>(i);
+
+        if (!wizmode && is_unavailable_god(gi))
+            continue;
+
         if (lowercase_string(god_name(gi)).find(spec) != std::string::npos)
         {
             god = gi;
