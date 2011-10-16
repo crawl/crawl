@@ -7,10 +7,6 @@ Spit Poison
 
 Spit poison at a targeted monster.
 %%%%
-Teleportation
-
-Teleport yourself to a random location on the level.
-%%%%
 Blink ability
 
 Randomly translocate a short distance.
@@ -67,14 +63,6 @@ Start flying.
 Hellfire
 
 Blast your enemies with hellfire.
-%%%%
-Throw Flame ability
-
-Throw a blast of flame at a targeted monster.
-%%%%
-Throw Frost ability
-
-Throw a blast of frost at a targeted monster.
 %%%%
 Release Delayed Fireball
 

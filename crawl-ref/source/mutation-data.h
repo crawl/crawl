@@ -382,6 +382,7 @@
   "deformed"
 },
 
+#if TAG_MAJOR_VERSION == 32
 { MUT_TELEPORT_AT_WILL,           0,  3, false, false,
   "teleport at will",
 
@@ -399,6 +400,7 @@
 
   "teleport at will"
 },
+#endif
 
 { MUT_SPIT_POISON,                8,  3, false, false,
   "spit poison",
@@ -441,7 +443,7 @@
 
   {"You can translocate small distances at will.",
    "You are good at translocating small distances at will.",
-   "You can translocate small distances instantaneously."},
+   "You can easily translocate small distances at will."},
 
   {"You feel jittery.",
    "You feel more jittery.",
@@ -672,6 +674,7 @@
   "hurl hellfire"
 },
 
+#if TAG_MAJOR_VERSION == 32
 { MUT_THROW_FLAMES,               0,  1, false, false,
   "throw flames of Gehenna",
 
@@ -691,6 +694,7 @@
 
   "throw frost"
 },
+#endif
 
 // body-slot facets
 { MUT_HORNS,                      7,  3, false,  true,

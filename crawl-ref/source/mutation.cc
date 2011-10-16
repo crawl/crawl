@@ -606,7 +606,6 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_SLOW_METABOLISM:
     case MUT_TELEPORT_CONTROL:
     case MUT_MAGIC_RESISTANCE:
-    case MUT_TELEPORT_AT_WILL:
     case MUT_CLARITY:
     case MUT_MUTATION_RESISTANCE:
     case MUT_ROBUST:
@@ -1148,12 +1147,9 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     if (!is_valid_mutation(mutat))
         return (false);
 
-    // [Cha] don't allow teleportation or teleport at will mutations in sprint
-    if ((mutat == MUT_TELEPORT || mutat == MUT_TELEPORT_AT_WILL)
-        && crawl_state.game_is_sprint())
-    {
+    // [Cha] don't allow teleportitis in sprint
+    if (mutat == MUT_TELEPORT && crawl_state.game_is_sprint())
         return (false);
-    }
 
     if (you.species == SP_NAGA)
     {
