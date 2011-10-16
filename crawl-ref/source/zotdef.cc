@@ -983,7 +983,8 @@ bool zotdef_create_altar(bool wizmode)
         }
     }
 
-    if (god == GOD_NO_GOD) {
+    if (god == GOD_NO_GOD)
+    {
         mpr("That god doesn't seem to be taking followers today.");
         return false;
     }
