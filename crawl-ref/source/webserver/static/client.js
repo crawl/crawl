@@ -94,11 +94,13 @@ function handle_keypress(e)
         send_bytes(["{".charCodeAt(0)]);
     }
     else
-        socket.send(s);
+        send_message("input", { text: s });
 }
 
 function send_keycode(code)
 {
+    /* TODO: Use send_message for these as soon as crawl uses a proper
+       JSON parser */
     socket.send('{"msg":"key","keycode":' + code + '}');
 }
 
