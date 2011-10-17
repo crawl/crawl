@@ -2070,7 +2070,11 @@ void set_ident_type(item_def &item, item_type_id_state_type setting,
     set_ident_type(item.base_type, item.sub_type, setting, force);
 
     if (in_inventory(item))
+    {
         shopping_list.cull_identical_items(item);
+        if (setting == ID_KNOWN_TYPE && item_trains_evocations(item))
+            you.start_train.insert(SK_EVOCATIONS);
+    }
 
     if (setting == ID_KNOWN_TYPE && old_setting != ID_KNOWN_TYPE
         && notes_are_active() && is_interesting_item(item)
