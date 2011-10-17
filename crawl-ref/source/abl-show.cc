@@ -3352,7 +3352,7 @@ std::vector<ability_type> get_god_abilities()
         if (you.piety < piety_breakpoint(i))
             continue;
 
-        ability_type abil = god_abilities[you.religion][i];
+        ability_type abil = _fixup_ability(god_abilities[you.religion][i]);
         if (abil == ABIL_NON_ABILITY
             || crawl_state.game_is_zotdef()
                && (abil == ABIL_LUGONU_ABYSS_EXIT
