@@ -221,23 +221,21 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             self.conn.send_message('{"msg":"spectator_joined"}')
 
     def handle_input(self, msg):
-        if msg.startswith("{"):
-            obj = json_decode(msg)
+        obj = json_decode(msg)
 
-            if obj["msg"] == "input" and self.process:
-                self.last_action_time = time.time()
+        if obj["msg"] == "input" and self.process:
+            self.last_action_time = time.time()
 
-                data = ""
-                for x in obj["data"]:
-                    data += chr(x)
+            data = ""
+            for x in obj.get("data", []):
+                data += chr(x)
 
-                self.process.write_input(data)
+            data += obj.get("text", u"").encode("utf8")
 
-            elif self.conn:
-                self.conn.send_message(msg.encode("utf8"))
+            self.process.write_input(data)
 
-        else:
-            self.process.write_input(msg.encode("utf8"))
+        elif self.conn:
+            self.conn.send_message(msg.encode("utf8"))
 
     def _on_process_output(self, line):
         self.check_where()
@@ -343,20 +341,18 @@ class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
                 self.last_action_time = time.time()
 
                 data = ""
-                for x in obj["data"]:
+                for x in obj.get("data", []):
                     data += chr(x)
+
+                data += obj.get("text", u"").encode("utf8")
+
+                if data == "^":
+                    self.process.write_input("\\94\n")
 
                 self.process.stdin.write(data)
 
             elif obj["msg"] == "key" and self.process:
                 self.process.stdin.write("\\" + str(obj["keycode"]) + "\n")
-
-            elif self.conn:
-                self.conn.send_message(msg.encode("utf8"))
-
-        elif msg == "^":
-            self.note_activity()
-            self.process.write_input("\\94\n")
 
         else:
             if not msg.startswith("^"):

@@ -66,9 +66,6 @@ function layout(params, need_response)
     current_layout = undefined;
 
     do_layout();
-
-    if (need_response)
-        socket.send("\n"); // To end the layout process
 }
 
 function do_layout()
@@ -167,7 +164,6 @@ function do_layout()
         return false;
 
     current_layout = layout;
-
     return true;
 }
 

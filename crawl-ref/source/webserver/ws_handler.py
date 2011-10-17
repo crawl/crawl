@@ -385,6 +385,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                                     exc_info=True)
 
         elif self.process:
+            # This is just for compatibility with 0.9, 0.10 only sends
+            # JSON
             self.logger.debug("Message: %s", message)
             self.process.handle_input(message)
 
