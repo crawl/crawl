@@ -3079,6 +3079,13 @@ static int _slouchable(coord_def where, int pow, int, actor* agent)
     return (dmg > 0) ? 1 : 0;
 }
 
+static bool _act_slouchable(const actor *act)
+{
+    if (act->atype() != ACT_MONSTER)
+        return false;  // too slow-witted
+    return _slouchable(act->pos(), 0, 0, 0);
+}
+
 static int _slouch_monsters(coord_def where, int pow, int dummy, actor* agent)
 {
     if (!_slouchable(where, pow, dummy, agent))
@@ -3096,13 +3103,17 @@ static int _slouch_monsters(coord_def where, int pow, int dummy, actor* agent)
 
 bool cheibriados_slouch(int pow)
 {
-    int count = apply_area_visible(_slouch_monsters, pow, true, &you);
+    int count = apply_area_visible(_slouchable, pow, true, &you);
     if (!count)
         if (!yesno("There's no one hasty visible. Invoke Slouch anyway?",
                    true, 'n'))
         {
             return false;
         }
+
+    targetter_los hitfunc(&you, LOS_DEFAULT);
+    if (stop_attack_prompt(hitfunc, "hurt", _act_slouchable))
+        return false;
 
     mpr("You can feel time thicken.");
     dprf("your speed is %d", player_movement_speed());

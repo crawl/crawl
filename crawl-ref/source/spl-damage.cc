@@ -404,6 +404,12 @@ spret_type cast_toxic_radiance(bool non_player, bool fail)
 spret_type cast_refrigeration(int pow, bool non_player, bool freeze_potions,
                               bool fail)
 {
+    {
+        targetter_los hitfunc(&you, LOS_SOLID);
+        if (stop_attack_prompt(hitfunc, "harm"))
+            return SPRET_ABORT;
+    }
+
     fail_check();
     if (non_player)
         mpr("Something drains the heat from around you.");
@@ -793,13 +799,10 @@ static bool _player_hurt_monster(monster& m, int damage,
 }
 
 // Here begin the actual spells:
-static int _shatter_monsters(coord_def where, int pow, int, actor *)
+static int _shatter_mon_dice(const monster *mon)
 {
-    dice_def dam_dice(0, 5 + pow / 3); // Number of dice set below.
-    monster* mon = monster_at(where);
-
-    if (mon == NULL)
-        return (0);
+    if (!mon)
+        return 0;
 
     // Removed a lot of silly monsters down here... people, just because
     // it says ice, rock, or iron in the name doesn't mean it's actually
@@ -819,14 +822,12 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
     case MONS_SILVER_STATUE:
     case MONS_ORANGE_STATUE:
     case MONS_ROXANNE:
-        dam_dice.num = 6;
-        break;
+        return 6;
 
     // 1/3 damage to liquids.
     case MONS_JELLYFISH:
     case MONS_WATER_ELEMENTAL:
-        dam_dice.num = 1;
-        break;
+        return 1;
 
     default:
         const bool petrifying = mon->petrifying();
@@ -835,25 +836,34 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
         // Extra damage to petrifying/petrified things.
         // Undo the damage reduction as well; base damage is 4 : 6.
         if (petrifying || petrified)
-            dam_dice.num = petrifying ? 7 : 18;
+            return petrifying ? 7 : 18;
         // No damage to insubstantials.
         else if (mon->is_insubstantial())
-            dam_dice.num = 0;
+            return 0;
         // 1/3 damage to fliers and slimes.
         else if (mons_flies(mon) || mons_is_slime(mon))
-            dam_dice.num = 1;
+            return 1;
         // 3/2 damage to ice.
         else if (mon->is_icy())
-            dam_dice.num = 4;
+            return 4;
         // Double damage to bone.
         else if (mon->is_skeletal())
-            dam_dice.num = 6;
+            return 6;
         // Normal damage to everything else.
         else
-            dam_dice.num = 3;
-        break;
+            return 3;
     }
+}
 
+static int _shatter_monsters(coord_def where, int pow, int, actor *)
+{
+    dice_def dam_dice(0, 5 + pow / 3); // Number of dice set below.
+    monster* mon = monster_at(where);
+
+    if (mon == NULL)
+        return (0);
+
+    dam_dice.num = _shatter_mon_dice(mon);
     int damage = std::max(0, dam_dice.roll() - random2(mon->armour_class()));
 
     if (damage > 0)
@@ -967,8 +977,22 @@ static int _shatter_walls(coord_def where, int pow, int, actor *)
     return (0);
 }
 
+static bool _shatterable(const actor *act)
+{
+    if (act->atype() != ACT_MONSTER)
+        return true; // no player ghostlies... at least user-controllable ones
+    return _shatter_mon_dice(act->as_monster());
+}
+
 spret_type cast_shatter(int pow, bool fail)
 {
+    {
+        int r_min = 3 + you.skill(SK_EARTH_MAGIC) / 5;
+        targetter_los hitfunc(&you, LOS_ARENA, r_min, std::min(r_min + 1, 8));
+        if (stop_attack_prompt(hitfunc, "harm", _shatterable))
+            return SPRET_ABORT;
+    }
+
     fail_check();
     const bool silence = silenced(you.pos());
 

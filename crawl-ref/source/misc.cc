@@ -2272,7 +2272,8 @@ bool stop_attack_prompt(const monster* mon, bool beam_attack,
     return !yesno(info, false, 'n');
 }
 
-bool stop_attack_prompt(targetter &hitfunc, std::string verb)
+bool stop_attack_prompt(targetter &hitfunc, std::string verb,
+                        bool (*affects)(const actor *victim))
 {
     if (you.confused())
         return false;
@@ -2284,8 +2285,12 @@ bool stop_attack_prompt(targetter &hitfunc, std::string verb)
         if (hitfunc.is_affected(*di) <= AFF_NO)
             continue;
         const monster* mon = monster_at(*di);
+        if (!mon || !you.can_see(mon))
+            continue;
+        if (affects && !affects(mon))
+            continue;
         std::string adjn, suffixn;
-        if (mon && you.can_see(mon) && bad_attack(mon, adjn, suffixn))
+        if (bad_attack(mon, adjn, suffixn))
         {
             if (victims.empty()) // record the adjectives for the first listed
                 adj = adjn, suffix = suffixn;
@@ -2303,9 +2308,6 @@ bool stop_attack_prompt(targetter &hitfunc, std::string verb)
     if (adj.find("your"))
         adj = "the " + adj;
     mon_name = adj + mon_name;
-
-    if (verb != "attack")
-        verb += " at";
 
     snprintf(info, INFO_SIZE, "Really %s %s%s?",
              verb.c_str(), mon_name.c_str(), suffix.c_str());

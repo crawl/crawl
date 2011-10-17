@@ -1961,7 +1961,7 @@ static bool _do_ability(const ability_def& abil)
             return (false);
         }
 
-        if (stop_attack_prompt(hitfunc, "spit"))
+        if (stop_attack_prompt(hitfunc, "spit at"))
             return false;
 
         zapping(ZAP_BREATHE_STICKY_FLAME, (you.form == TRAN_DRAGON) ?
