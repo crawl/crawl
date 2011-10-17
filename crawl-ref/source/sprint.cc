@@ -44,11 +44,6 @@ bool sprint_veto_random_abyss_monster(monster_type type)
     return random2(20) > mons_class_hit_dice(type);
 }
 
-mapref_vector get_sprint_maps()
-{
-    return find_maps_for_tag("sprint");
-}
-
 // We could save this in crawl_state instead.
 // Or choose_game() could save *ng to crawl_state
 // entirely, though that'd be redundant with
