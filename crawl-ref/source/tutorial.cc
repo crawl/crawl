@@ -17,7 +17,7 @@
 
 mapref_vector get_tutorial_maps()
 {
-    return find_maps_for_tag("tutorial_start");
+    return find_maps_for_tag("tutorial");
 }
 
 // We could save this in crawl_state instead.
