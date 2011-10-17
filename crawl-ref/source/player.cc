@@ -3726,6 +3726,7 @@ int get_expiration_threshold(duration_type dur)
         return (15 * BASELINE_DELAY);
 
     case DUR_CONFUSING_TOUCH:
+    case DUR_NAUSEA:
         return (20 * BASELINE_DELAY);
 
     default:
@@ -3993,6 +3994,7 @@ void display_char_status()
         STATUS_NET,
         DUR_POISONING,
         STATUS_SICK,
+        DUR_NAUSEA,
         STATUS_ROT,
         STATUS_CONTAMINATION,
         DUR_CONFUSING_TOUCH,
