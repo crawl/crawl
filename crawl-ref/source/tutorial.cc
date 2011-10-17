@@ -15,11 +15,6 @@
 #include "skills.h"
 #include "state.h"
 
-mapref_vector get_tutorial_maps()
-{
-    return find_maps_for_tag("tutorial");
-}
-
 // We could save this in crawl_state instead.
 // Or choose_game() could save *ng to crawl_state
 // entirely, though that'd be redundant with
