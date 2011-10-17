@@ -3065,7 +3065,7 @@ void cheibriados_time_bend(int pow)
     }
 }
 
-static int _slouch_monsters(coord_def where, int pow, int, actor* agent)
+static int _slouchable(coord_def where, int pow, int, actor* agent)
 {
     monster* mon = monster_at(where);
     if (mon == NULL || mons_is_stationary(mon) || mon->cannot_move()
@@ -3076,15 +3076,39 @@ static int _slouch_monsters(coord_def where, int pow, int, actor* agent)
     }
 
     int dmg = (mon->speed - 1000/player_movement_speed()/player_speed());
+    return (dmg > 0) ? 1 : 0;
+}
+
+static int _slouch_monsters(coord_def where, int pow, int dummy, actor* agent)
+{
+    if (!_slouchable(where, pow, dummy, agent))
+        return 0;
+
+    monster* mon = monster_at(where);
+    ASSERT(mon);
+
+    int dmg = (mon->speed - 1000/player_movement_speed()/player_speed());
     dmg = (dmg > 0 ? roll_dice(dmg*4, 3)/2 : 0);
 
     mon->hurt(agent, dmg, BEAM_MMISSILE, true);
     return (1);
 }
 
-int cheibriados_slouch(int pow)
+bool cheibriados_slouch(int pow)
 {
-    return (apply_area_visible(_slouch_monsters, pow, true, &you));
+    int count = apply_area_visible(_slouch_monsters, pow, true, &you);
+    if (!count)
+        if (!yesno("There's no one hasty visible. Invoke Slouch anyway?",
+                   true, 'n'))
+        {
+            return false;
+        }
+
+    mpr("You can feel time thicken.");
+    dprf("your speed is %d", player_movement_speed());
+
+    apply_area_visible(_slouch_monsters, pow, true, &you);
+    return true;
 }
 
 void cheibriados_time_step(int pow) // pow is the number of turns to skip
