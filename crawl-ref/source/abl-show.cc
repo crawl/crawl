@@ -3378,6 +3378,7 @@ std::vector<ability_type> get_god_abilities()
 
     return abilities;
 }
+
 void gain_god_ability(int i)
 {
     you.start_train.insert(abil_skill(god_abilities[you.religion][i]));
