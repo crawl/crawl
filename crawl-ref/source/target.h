@@ -96,4 +96,16 @@ public:
 private:
     bool anyone_there(coord_def loc);
 };
+
+class targetter_los : public targetter
+{
+public:
+    targetter_los(const actor *act, los_type los = LOS_DEFAULT,
+                  int range = LOS_RADIUS, int range_max = 0);
+    bool valid_aim(coord_def a);
+    aff_type is_affected(coord_def loc);
+private:
+    los_type los;
+    int range2, range_max2;
+};
 #endif

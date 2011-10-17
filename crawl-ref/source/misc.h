@@ -113,7 +113,8 @@ void reveal_secret_door(const coord_def& p);
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool autohit_first = false);
-bool stop_attack_prompt(targetter &hitfunc, std::string verb);
+bool stop_attack_prompt(targetter &hitfunc, std::string verb,
+                        bool (*affects)(const actor *victim) = 0);
 
 bool is_orckind(const actor *act);
 
