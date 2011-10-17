@@ -33,9 +33,13 @@ class CrawlProcessHandlerBase(object):
     def idle_time(self):
         return time.time() - self.last_activity_time
 
-    def send_to_all(self, msg):
+    def write_to_all(self, msg):
         for receiver in self._receivers:
             receiver.handle_message(msg)
+
+    def send_to_all(self, msg, **data):
+        for receiver in self._receivers:
+            receiver.send_message(msg, **data)
 
     def handle_process_end(self):
         if self.kill_timeout:
@@ -57,8 +61,9 @@ class CrawlProcessHandlerBase(object):
             s = s + ", and %i Anon" % anon_count
         elif anon_count > 0:
             s = "%i Anon" % anon_count
-        self.send_to_all("watchers(%i,'%s')" %
-                         (len(self._watchers), s))
+        self.send_to_all("update_spectators",
+                         count = len(self._watchers),
+                         names = s)
 
     def add_watcher(self, watcher, hide = False):
         if not hide:
@@ -86,9 +91,7 @@ class CrawlProcessHandlerBase(object):
         loader = DynamicTemplateLoader.get(templ_path)
         templ = loader.load("game.html")
         game_html = templ.generate(version = v)
-        watcher.handle_message("delay_timeout = 1;$('#game').html(" +
-                               json_encode(game_html) +
-                               ");delay_ended();")
+        watcher.send_message("game_client", content = game_html)
 
     def stop(self):
         self.process.send_signal(subprocess.signal.SIGHUP)
@@ -240,7 +243,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
     def _on_process_output(self, line):
         self.check_where()
 
-        self.send_to_all(line)
+        self.write_to_all(line)
 
     def _on_socket_message(self, msg):
         # stdout data is only used for compatibility to wrapper
@@ -250,7 +253,7 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
         self.check_where()
 
-        self.send_to_all(msg)
+        self.write_to_all(msg)
 
 
 
@@ -376,7 +379,7 @@ class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
         elif events & self.io_loop.READ:
             msg = self.process.stdout.readline()
 
-            self.send_to_all(msg)
+            self.write_to_all(msg)
 
             self.poll_crawl()
             self.check_where()
