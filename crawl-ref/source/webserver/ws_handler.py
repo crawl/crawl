@@ -1,4 +1,4 @@
-import tornado.escape
+from tornado.escape import json_encode, json_decode, xhtml_escape
 import tornado.websocket
 import tornado.ioloop
 import tornado.template
@@ -141,24 +141,21 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         running_games = [game for game in sockets if game.is_running()]
         lobby_html = self.render_string("lobby.html", running_games = running_games)
-        self.write_message("lobby_data(" +
-                           tornado.escape.json_encode(lobby_html) + ");")
+        self.send_message("lobby", content = lobby_html);
 
     def send_game_links(self):
         # Rerender Banner
         banner_html = self.render_string("banner.html", username = self.username)
-        self.write_message("$('#banner').html(" +
-                           tornado.escape.json_encode(banner_html) + ");")
+        self.send_message("html", id = "banner", content = banner_html)
         play_html = self.render_string("game_links.html", games = games)
-        self.write_message("$('#play_now').html(" +
-                           tornado.escape.json_encode(play_html) + ");")
+        self.send_message("set_game_links", content = play_html)
 
     def reset_timeout(self):
         if self.timeout:
             self.ioloop.remove_timeout(self.timeout)
 
         self.received_pong = False
-        self.write_message("ping();")
+        self.send_message("ping")
         self.timeout = self.ioloop.add_timeout(time.time() + connection_timeout,
                                                self.check_connection)
 
@@ -179,7 +176,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def start_crawl(self, game_id):
         if dgl_mode:
             if self.username == None:
-                self.write_message("go_lobby();")
+                self.send_message("go_lobby")
                 return
 
         if dgl_mode and game_id not in games: return
@@ -200,7 +197,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.process.add_watcher(self, hide=True)
         self.process.start()
 
-        self.write_message("crawl_started();")
+        self.send_message("game_started")
 
         if dgl_mode:
             update_global_status()
@@ -215,7 +212,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
                 self.close()
             else:
                 # Go back to lobby
-                self.write_message("crawl_ended();")
+                self.send_message("game_ended")
                 if dgl_mode:
                     self.update_lobby()
                 else:
@@ -238,14 +235,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.logger.info("Stopped watching %s.", self.watched_game.username)
             self.watched_game.remove_watcher(self)
             self.watched_game = None
-            self.write_message("set_watching(false);")
-            self.write_message("go_lobby();")
+            self.send_message("go_lobby")
 
     def shutdown(self):
         if not self.client_terminated:
             msg = self.render_string("shutdown.html", game=self)
-            self.write_message("connection_closed(" +
-                               tornado.escape.json_encode(msg) + ");")
+            self.send_message("close", reason = msg)
             self.close()
         if self.is_running():
             self.process.stop()
@@ -254,16 +249,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         self.username = username
         self.logger.extra["username"] = username
         if not self.init_user():
-            self.write_message("connection_closed('Could not initialize your rc and morgue!<br>" +
-                               "This probably means there is something wrong with the server " +
-                               "configuration.');")
+            msg = ("Could not initialize your rc and morgue!<br>" +
+                   "This probably means there is something wrong " +
+                   "with the server configuration.")
+            self.send_message("close", reason = msg)
             self.logger.warning("User initialization returned an error for user %s!",
                                 self.username)
             self.username = None
             self.close()
             return
-        self.write_message("logged_in(" +
-                           tornado.escape.json_encode(username) + ");")
+        self.send_message("login_success", username = username)
         self.send_game_links()
 
     def login(self, username, password):
@@ -273,7 +268,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.do_login(real_username)
         else:
             self.logger.warning("Failed login for user %s.", username)
-            self.write_message("login_failed();")
+            self.send_message("login_fail")
 
     def token_login(self, cookie):
         username, _, token = cookie.partition(' ')
@@ -284,7 +279,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.do_login(username)
         else:
             self.logger.warning("Wrong login token for user %s.", username)
-            self.write_message("login_failed();")
+            self.send_message("login_fail")
 
     def set_login_cookie(self):
         if self.username is None: return
@@ -292,9 +287,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         expires = datetime.datetime.now() + datetime.timedelta(login_token_lifetime)
         login_tokens[(token, self.username)] = expires
         cookie = self.username + " " + str(token)
-        self.write_message("set_login_cookie(" +
-                           tornado.escape.json_encode(cookie) + "," +
-                           str(login_token_lifetime) + ");")
+        self.send_message("login_cookie", cookie = cookie,
+                          expires = login_token_lifetime)
 
     def forget_login_cookie(self, cookie):
         try:
@@ -316,17 +310,18 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.logger.info("Started watching %s.", process.username)
             self.watched_game = process
             process.add_watcher(self)
-            self.write_message("set_watching(true);")
+            self.send_message("watching_started")
         else:
-            self.write_message("go_lobby();")
+            self.send_message("go_lobby")
 
     def post_chat_message(self, text):
         if self.username is None:
-            self.write_message("chat('You need to log in to send messages!');")
+            self.send_message("chat",
+                              content = 'You need to log in to send messages!')
             return
 
         chat_msg = ("<span class='chat_sender'>%s</span>: <span class='chat_msg'>%s</span>" %
-                    (self.username, tornado.escape.xhtml_escape(text)))
+                    (self.username, xhtml_escape(text)))
         receiver = None
         if self.process:
             receiver = self.process
@@ -334,7 +329,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             receiver = self.watched_game
 
         if receiver:
-            receiver.send_to_all("chat(%s);" % tornado.escape.json_encode(chat_msg))
+            receiver.send_to_all("chat", content = chat_msg)
 
     def register(self, username, password, email):
         error = register_user(username, password, email)
@@ -344,8 +339,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         else:
             self.logger.info("Registration attempt failed for username %s: %s",
                              username, error)
-            self.write_message("register_failed(" +
-                               tornado.escape.json_encode(error) + ");")
+            self.send_message("register_fail", reason = error)
 
     def go_lobby(self):
         if self.is_running():
@@ -358,8 +352,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         rcfile_path = os.path.join(games[game_id]["rcfile_path"], self.username + ".rc")
         with open(rcfile_path, 'r') as f:
             contents = f.read()
-        self.write_message("rcfile_contents(" +
-                           tornado.escape.json_encode(contents) + ");")
+        self.send_message("rcfile_contents", contents = contents)
 
     def set_rc(self, game_id, contents):
         rcfile_path = os.path.join(games[game_id]["rcfile_path"], self.username + ".rc")
@@ -370,7 +363,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def on_message(self, message):
         if message.startswith("{"):
             try:
-                obj = tornado.escape.json_decode(message)
+                obj = json_decode(message)
                 if obj["msg"] in self.message_handlers:
                     handler = self.message_handlers[obj["msg"]]
                     del obj["msg"]
@@ -396,6 +389,12 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         except:
             self.logger.warning("Exception trying to send message.", exc_info = True)
             self.ws_connection._abort()
+
+    def send_message(self, msg, **data):
+        """Sends a JSON message to the client."""
+        data["msg"] = msg
+        if not self.client_terminated:
+            self.write_message(json_encode(data))
 
     def handle_message(self, msg):
         """Handles data coming from crawl."""

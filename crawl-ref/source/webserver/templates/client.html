@@ -3,15 +3,18 @@
   <head>
     <title>WebTiles - Dungeon Crawl Stone Soup</title>
     <link rel="icon" href="/static/stone_soup_icon-32x32.png" type="image/png">
-    <script type="text/javascript" src="/static/jquery.js"></script>
-    <script type="text/javascript" src="/static/jquery.cookie.js"></script>
-    <script type="text/javascript" src="/static/jquery.json.js"></script>
-    <script type="text/javascript" src="/static/jquery.tablesorter.min.js"></script>
-    <script type="text/javascript" src="/static/key_conversion.js"></script>
-    <script type="text/javascript" src="/static/client.js"></script>
-    <script type="text/javascript" src="/static/chat.js"></script>
     <script type="text/javascript">
       var socket_server = "{{ socket_server }}";
+    </script>
+    <script src="/static/scripts/contrib/require.js"></script>
+    <script>
+      require({
+          baseUrl: '/static/scripts',
+          priority: ['jquery'],
+          paths: {
+              'jquery': '/static/scripts/contrib/jquery'
+          }
+      }, ['client']);
     </script>
     <link rel="stylesheet" type="text/css" href="/static/style.css">
   </head>
@@ -21,23 +24,22 @@
     <div id="lobby" style="display: none;">
       <div id="login">
         <span id="login_message"></span>
-        <form action="" id="login_form" onsubmit="return login();">
+        <form action="" id="login_form">
           <label for="username">User:</label>
           <input class="text" type="text" name="username" id="username"></input>
           <label for="password">Pass:</label>
           <input class="text" type="password" name="password" id="password"></input>
           <input class="button" type="submit" name="submit" id="submit" value="Login"></input>
         </form>
-        <input type="checkbox" name="remember_me" id="remember_me"
-               onclick="remember_me_click()">Stay logged in</input>
+        <input type="checkbox" name="remember_me" id="remember_me">Stay logged in</input>
         |
-        <a id="reg_link" href="javascript:start_register()">Register</a>
-        <a id="logout_link" href="javascript:logout()" style="display: none;">Logout</a>
+        <a id="reg_link" href="javascript:">Register</a>
+        <a id="logout_link" href="javascript:" style="display: none;">Logout</a>
       </div>
 
       <div id="register" class="floating_dialog" style="display: none;">
         <span id="register_message"></span>
-        <form action="" id="register_form" onsubmit="return register();">
+        <form action="" id="register_form">
           <label for="username">Username:</label>
           <input class="text" type="text" name="username" id="reg_username"></input>
           <br>
@@ -51,13 +53,13 @@
           <input class="text" type="text" name="email" id="reg_email"></input>
           <br>
           <input class="button" type="button" name="cancel" id="reg_cancel"
-                 onclick="javascript:cancel_register()" value="Cancel"></input>
+                 value="Cancel"></input>
           <input class="button" type="submit" name="submit" id="reg_submit" value="Submit"></input>
         </form>
       </div>
 
       <div id="rc_edit" class="floating_dialog" style="display: none;">
-        <form action="" id="rc_edit_form" onsubmit="return send_rc();">
+        <form action="" id="rc_edit_form">
           <textarea class="text" name="rc_file_contents" id="rc_file_contents"
                     cols="80" rows="25">
           </textarea>
@@ -76,7 +78,7 @@
       <div id="lobby_body">
         <span>
           Games currently running:
-          <a href="javascript:lobby_update()">(Refresh)</a>
+          <a id="lobby_update_link" href="javascript:">(Refresh)</a>
         </span>
         <table id="player_list">
           <thead>
@@ -101,7 +103,7 @@
     </div>
 
     <div id="chat" style="display: none;">
-      <a href="javascript:toggle_chat();" id="chat_caption">
+      <a href="javascript:" id="chat_caption">
         <span id="spectator_count">0 spectators</span>
         <span id="message_count">0 new messages</span>
       </a>
@@ -114,7 +116,7 @@
         </div>
 
         <input class="text" type="text" name="chat_input"
-               id="chat_input" onkeydown="chat_message_send(event)"></input>
+               id="chat_input"></input>
       </div>
     </div>
   </body>

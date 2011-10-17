@@ -5,7 +5,9 @@ Play now:
 <br>
 <a href="#play-{{ id }}">{{ games[id]["name"] }}</a>
 {% set rcs.add(games[id]["rcfile_path"]) %}
-<a href="javascript:edit_rc('{{ id }}');">(edit rc)</a>
+<a href="javascript:"
+   class="edit_rc_link"
+   data-game_id="{{ id }}">(edit rc)</a>
 {% else %}
 <a href="#play-{{ id }}">{{ games[id]["name"] }}</a>
 {% end %}
