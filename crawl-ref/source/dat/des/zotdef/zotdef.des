@@ -29,6 +29,7 @@
 
 NAME:    zotvault
 TAGS:    zotdef
+DESC:    Scenario I: Hall of Zot
 : zotdef_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
