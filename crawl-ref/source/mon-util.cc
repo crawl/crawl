@@ -3309,7 +3309,7 @@ bool monster_senior(const monster* m1, const monster* m2, bool fleeing)
         if (leader_mid == m1->mid)
             return (true);
     }
-    // And prevent followers to dispace the leader to avoid constant swapping.
+    // And prevent followers to displace the leader to avoid constant swapping.
     else if (m1->props.exists("band_leader"))
     {
         unsigned leader_mid = m1->props["band_leader"].get_int();
