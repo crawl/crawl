@@ -666,6 +666,16 @@ static bool _eat_check(bool check_hunger = true, bool silent = false)
         return (false);
     }
 
+    if (you.duration[DUR_NAUSEA])
+    {
+        if (!silent)
+        {
+            mpr("You'd puke it out immediately!");
+            crawl_state.zero_turns_taken();
+        }
+        return (false);
+    }
+
     if (check_hunger && you.hunger >= 11000)
     {
         if (!silent)
@@ -1746,8 +1756,11 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
                 if (x_chance_in_y(contam, 1000))
                 {
                     mpr("There is something wrong with this meat.");
-                    if (you.sicken(50 + random2(100), false))
+                    if (you.duration[DUR_DIVINE_STAMINA] > 0)
+                        mpr("Your divine stamina protects you.");
+                    else
                     {
+                        you.increase_duration(DUR_NAUSEA, 100 + random2(200), 300);
                         learned_something_new(HINT_CONTAMINATED_CHUNK);
                         xom_is_stimulated(random2(100));
                     }

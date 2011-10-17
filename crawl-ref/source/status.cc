@@ -141,6 +141,8 @@ static duration_def duration_data[] =
       BLUE, "Shroud", "shrouded", "You are protected by a distorting shroud." },
     { DUR_TORNADO_COOLDOWN, false,
       YELLOW, "Tornado", "", "" ,},
+    { DUR_NAUSEA, true,
+      YELLOW, "Nausea", "nauseated", "You cannot eat right now."},
 };
 
 static int duration_index[NUM_DURATIONS];
