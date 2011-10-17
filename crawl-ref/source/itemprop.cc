@@ -1856,7 +1856,7 @@ skill_type range_skill(object_class_type wclass, int wtype)
     return (range_skill(wpn));
 }
 
-static bool _item_trains_evocations(const item_def& item)
+bool item_trains_evocations(const item_def& item)
 {
     if (item_is_evokable(item, false, false, false, false, false))
         return true;
@@ -1895,7 +1895,7 @@ bool item_skills(const item_def &item, std::set<skill_type> &skills)
     if (sk != SK_THROWING)
         skills.insert(sk);
 
-    if (_item_trains_evocations(item))
+    if (item_trains_evocations(item))
         skills.insert(SK_EVOCATIONS);
 
     if (item_is_rod(item) && item_type_known(item))
