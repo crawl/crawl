@@ -73,7 +73,7 @@ void make_hungry(int hunger_amount, bool suppress_msg,
     if (crawl_state.disables[DIS_HUNGER])
         return;
 
-    if (crawl_state.game_is_zotdef() && you.species == SP_SPRIGGAN)
+    if (crawl_state.game_is_zotdef() && you.is_undead != US_SEMI_UNDEAD)
     {
         you.hunger = 6000;
         you.hunger_state = HS_SATIATED;
