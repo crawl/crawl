@@ -711,11 +711,11 @@ void exercise(skill_type exsk, int deg)
 // We look at skill points because actual level up comes later.
 static bool _level_up_check(skill_type sk, bool simu)
 {
-	// Don't overtrain spellcasting past level 1 with Trog and
-	// don't train past level 27.
-	if (sk == SK_SPELLCASTING && !you.skills[sk] && you.religion == GOD_TROG
+        // Don't overtrain spellcasting past level 1 with Trog and
+        // don't train past level 27.
+        if (sk == SK_SPELLCASTING && !you.skills[sk] && you.religion == GOD_TROG
         && you.skill_points[sk] >= skill_exp_needed(1, sk)
-		|| you.skill_points[sk] >= skill_exp_needed(27, sk))
+                || you.skill_points[sk] >= skill_exp_needed(27, sk))
     {
         you.training[sk] = 0;
         if (!simu)
