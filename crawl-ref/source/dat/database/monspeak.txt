@@ -5969,7 +5969,6 @@ w:1
 
 w:2
 @_hostile_imp_@
-
 %%%%
 iron imp
 
@@ -5978,7 +5977,6 @@ w:1
 
 w:2
 @_hostile_imp_@
-
 %%%%
 shadow imp
 
@@ -5987,7 +5985,6 @@ w:1
 
 w:2
 @_hostile_imp_@
-
 %%%%
 white imp
 
