@@ -1051,7 +1051,7 @@ ORIENT: encompass
 KMONS:  1 = angel
 KMONS:  2 = cherub
 KMONS:  3 = cherub hd:25 name:seraph n_rpl n_spe col:lightmagenta \
-            tile:mons_seraph ; blessed great sword ego:flaming . dragon armour \
+            tile:mons_seraph ; blessed great sword ego:flaming . fire dragon armour \
             ego:positive_energy
 KMONS:  4 = ophan
 KMONS:  5 = daeva

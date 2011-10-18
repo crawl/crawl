@@ -748,7 +748,7 @@ SUBST:  2 = 223.
 SUBST:  1 = 1 2:1 .
 ITEM:   good_item crystal plate mail / good_item plate mail race:orcish /\
         good_item gold dragon armour w:5 / good_item ice dragon armour w:5 /\
-        good_item dragon armour w:5 / good_item steam dragon armour w:5
+        good_item fire dragon armour w:5 / good_item steam dragon armour w:5
 # XXX: Which armour pieces can be orcish?
 ITEM:   good_item cloak race:orcish / good_item pair of gloves race:orcish /\
         good_item helmet race:orcish / good_item pair of boots race:orcish /\

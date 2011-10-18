@@ -349,8 +349,8 @@ animal_skin2
 
 troll_hide ARM_TROLL_HIDE
 troll_leather_armour ARM_TROLL_LEATHER_ARMOUR
-green_dragon_scales ARM_DRAGON_HIDE
-green_dragon_scale_mail ARM_DRAGON_ARMOUR
+green_dragon_scales ARM_FIRE_DRAGON_HIDE
+green_dragon_scale_mail ARM_FIRE_DRAGON_ARMOUR
 ice_dragon_hide ARM_ICE_DRAGON_HIDE
 ice_dragon_armour ARM_ICE_DRAGON_ARMOUR
 silver_dragon_scales ARM_STEAM_DRAGON_HIDE

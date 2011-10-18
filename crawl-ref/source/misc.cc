@@ -111,7 +111,7 @@ static void _create_monster_hide(const item_def corpse)
     // These values cannot be set by a reasonable formula: {dlb}
     switch (mons_class)
     {
-    case MONS_DRAGON:         item.sub_type = ARM_DRAGON_HIDE;         break;
+    case MONS_DRAGON:         item.sub_type = ARM_FIRE_DRAGON_HIDE;    break;
     case MONS_TROLL:          item.sub_type = ARM_TROLL_HIDE;          break;
     case MONS_ICE_DRAGON:     item.sub_type = ARM_ICE_DRAGON_HIDE;     break;
     case MONS_STEAM_DRAGON:   item.sub_type = ARM_STEAM_DRAGON_HIDE;   break;

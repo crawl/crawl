@@ -96,9 +96,9 @@ static armour_def Armour_prop[NUM_ARMOURS] =
         false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_SWAMP_DRAGON_ARMOUR,  "swamp dragon armour",    7, -2,  200,
         false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
-    { ARM_DRAGON_HIDE,          "dragon hide",            3, -3,  350,
+    { ARM_FIRE_DRAGON_HIDE,     "fire dragon hide",       3, -3,  350,
         false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
-    { ARM_DRAGON_ARMOUR,        "dragon armour",          8, -3,  350,
+    { ARM_FIRE_DRAGON_ARMOUR,   "fire dragon armour",     8, -3,  350,
         false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_ICE_DRAGON_HIDE,      "ice dragon hide",        4, -3,  350,
         false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
@@ -1071,8 +1071,8 @@ bool hide2armour(item_def &item)
     default:
         return (false);
 
-    case ARM_DRAGON_HIDE:
-        item.sub_type = ARM_DRAGON_ARMOUR;
+    case ARM_FIRE_DRAGON_HIDE:
+        item.sub_type = ARM_FIRE_DRAGON_ARMOUR;
         break;
 
     case ARM_TROLL_HIDE:
@@ -1137,7 +1137,7 @@ bool armour_is_hide(const item_def &item, bool inc_made)
     switch (item.sub_type)
     {
     case ARM_TROLL_LEATHER_ARMOUR:
-    case ARM_DRAGON_ARMOUR:
+    case ARM_FIRE_DRAGON_ARMOUR:
     case ARM_ICE_DRAGON_ARMOUR:
     case ARM_STEAM_DRAGON_ARMOUR:
     case ARM_MOTTLED_DRAGON_ARMOUR:
@@ -1148,7 +1148,7 @@ bool armour_is_hide(const item_def &item, bool inc_made)
         return (inc_made);
 
     case ARM_TROLL_HIDE:
-    case ARM_DRAGON_HIDE:
+    case ARM_FIRE_DRAGON_HIDE:
     case ARM_ICE_DRAGON_HIDE:
     case ARM_STEAM_DRAGON_HIDE:
     case ARM_MOTTLED_DRAGON_HIDE:
@@ -2354,8 +2354,8 @@ int get_armour_res_fire(const item_def &arm, bool check_artp)
     // intrinsic armour abilities
     switch (arm.sub_type)
     {
-    case ARM_DRAGON_ARMOUR:
-    case ARM_DRAGON_HIDE:
+    case ARM_FIRE_DRAGON_ARMOUR:
+    case ARM_FIRE_DRAGON_HIDE:
         res += 2;
         break;
     case ARM_GOLD_DRAGON_ARMOUR:
@@ -2398,8 +2398,8 @@ int get_armour_res_cold(const item_def &arm, bool check_artp)
     case ARM_GOLD_DRAGON_HIDE:
         res += 1;
         break;
-    case ARM_DRAGON_ARMOUR:
-    case ARM_DRAGON_HIDE:
+    case ARM_FIRE_DRAGON_ARMOUR:
+    case ARM_FIRE_DRAGON_HIDE:
         res -= 1;
         break;
     default:

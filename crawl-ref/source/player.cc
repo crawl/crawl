@@ -1447,10 +1447,10 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         rf += player_equip(EQ_STAFF, STAFF_FIRE, calc_unid);
 
         // body armour:
-        rf += 2 * player_equip(EQ_BODY_ARMOUR, ARM_DRAGON_ARMOUR);
+        rf += 2 * player_equip(EQ_BODY_ARMOUR, ARM_FIRE_DRAGON_ARMOUR);
         rf += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR);
         rf -= player_equip(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_ARMOUR);
-        rf += 2 * player_equip(EQ_BODY_ARMOUR, ARM_DRAGON_HIDE);
+        rf += 2 * player_equip(EQ_BODY_ARMOUR, ARM_FIRE_DRAGON_HIDE);
         rf += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE);
         rf -= player_equip(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_HIDE);
 
@@ -1589,10 +1589,10 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         // body armour:
         rc += 2 * player_equip(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_ARMOUR);
         rc += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_ARMOUR);
-        rc -= player_equip(EQ_BODY_ARMOUR, ARM_DRAGON_ARMOUR);
+        rc -= player_equip(EQ_BODY_ARMOUR, ARM_FIRE_DRAGON_ARMOUR);
         rc += 2 * player_equip(EQ_BODY_ARMOUR, ARM_ICE_DRAGON_HIDE);
         rc += player_equip(EQ_BODY_ARMOUR, ARM_GOLD_DRAGON_HIDE);
-        rc -= player_equip(EQ_BODY_ARMOUR, ARM_DRAGON_HIDE);
+        rc -= player_equip(EQ_BODY_ARMOUR, ARM_FIRE_DRAGON_HIDE);
 
         // ego armours
         rc += player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_COLD_RESISTANCE);

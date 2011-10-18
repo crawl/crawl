@@ -463,14 +463,6 @@ double sword
 
 A magical weapon with two razor-sharp blades.
 %%%%
-dragon armour
-
-A magical armour, made from the scales of a fire-breathing dragon. It provides great protection from the effects of fire, but renders its wearer more susceptible to the effects of cold.
-%%%%
-dragon hide
-
-The scaly skin of a dragon. It can be fashioned into proper armour, but even in its raw form it provides great protection from the effects of fire but renders its wearer susceptible to cold.
-%%%%
 eggplant
 
 A rotten eggplant which you can throw at the Crawl developers. (It's a bug if you ever see this message.)
@@ -494,6 +486,14 @@ This fearsome weapon is covered in dried blood and crude engravings of torture a
 falchion
 
 A sword with a broad slashing blade.
+%%%%
+fire dragon armour
+
+A magical armour, made from the scales of a fire-breathing dragon. It provides great protection from the effects of fire, but renders its wearer more susceptible to the effects of cold.
+%%%%
+fire dragon hide
+
+The scaly skin of a common true dragon. It can be fashioned into proper armour, but even in its raw form it provides great protection from the effects of fire but renders its wearer susceptible to cold.
 %%%%
 flail
 

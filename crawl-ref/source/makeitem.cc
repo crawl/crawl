@@ -392,8 +392,8 @@ void item_colour(item_def &item)
 
         switch (item.sub_type)
         {
-        case ARM_DRAGON_HIDE:
-        case ARM_DRAGON_ARMOUR:
+        case ARM_FIRE_DRAGON_HIDE:
+        case ARM_FIRE_DRAGON_ARMOUR:
             item.colour = mons_class_colour(MONS_DRAGON);
             break;
         case ARM_TROLL_HIDE:
@@ -2406,7 +2406,7 @@ bool is_armour_brand_ok(int type, int brand, bool strict)
     case SPARM_FIRE_RESISTANCE:
     case SPARM_COLD_RESISTANCE:
     case SPARM_RESISTANCE:
-        if (type == ARM_DRAGON_ARMOUR
+        if (type == ARM_FIRE_DRAGON_ARMOUR
             || type == ARM_ICE_DRAGON_ARMOUR
             || type == ARM_GOLD_DRAGON_ARMOUR)
         {
@@ -3574,7 +3574,7 @@ armour_type get_random_armour_type(int item_level)
         const armour_type hiarmours[] = { ARM_CRYSTAL_PLATE_MAIL,
                                           ARM_TROLL_HIDE,
                                           ARM_TROLL_LEATHER_ARMOUR,
-                                          ARM_DRAGON_HIDE, ARM_DRAGON_ARMOUR,
+                                          ARM_FIRE_DRAGON_HIDE, ARM_FIRE_DRAGON_ARMOUR,
                                           ARM_ICE_DRAGON_HIDE,
                                           ARM_ICE_DRAGON_ARMOUR };
 
