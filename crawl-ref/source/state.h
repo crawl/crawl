@@ -70,6 +70,8 @@ struct game_state
 
     std::string sprint_map; // Sprint map set on command line, if any.
 
+    std::string map;        // Map selected in the newgame menu
+
     void (*terminal_resize_handler)();
     void (*terminal_resize_check)();
 

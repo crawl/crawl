@@ -43,20 +43,3 @@ bool sprint_veto_random_abyss_monster(monster_type type)
 {
     return random2(20) > mons_class_hit_dice(type);
 }
-
-// We could save this in crawl_state instead.
-// Or choose_game() could save *ng to crawl_state
-// entirely, though that'd be redundant with
-// you.your_name, you.species, crawl_state.type, ...
-
-static std::string _sprint_map;
-
-std::string get_sprint_map()
-{
-    return _sprint_map;
-}
-
-void set_sprint_map(const std::string& map)
-{
-    _sprint_map = map;
-}

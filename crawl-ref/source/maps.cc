@@ -716,7 +716,7 @@ bool map_selector::accept(const map_def &mapdef) const
     case PLACE:
         if (mapdef.has_tag_prefix("tutorial")
             && (!crawl_state.game_is_tutorial()
-                || !mapdef.has_tag(get_tutorial_map())))
+                || !mapdef.has_tag(crawl_state.map)))
         {
             return (false);
         }

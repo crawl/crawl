@@ -1101,7 +1101,7 @@ static void _setup_tutorial_miscs()
     you.skills[SK_SHIELDS] = 0;
 
     // Some spellcasting for the magic tutorial.
-    if (get_tutorial_map().find("tutorial_lesson4") != std::string::npos)
+    if (crawl_state.map.find("tutorial_lesson4") != std::string::npos)
         you.skills[SK_SPELLCASTING] = 1;
 
     // Set Str low enough for the burdened tutorial.
@@ -1284,6 +1284,7 @@ static void _setup_generic(const newgame_def& ng);
 void setup_game(const newgame_def& ng)
 {
     crawl_state.type = ng.type;
+    crawl_state.map  = ng.map;
 
     switch (crawl_state.type)
     {
@@ -1324,7 +1325,6 @@ static void _setup_normal_game()
  */
 static void _setup_tutorial(const newgame_def& ng)
 {
-    set_tutorial_map(ng.map);
     make_hungry(0, true);
 }
 
@@ -1333,7 +1333,6 @@ static void _setup_tutorial(const newgame_def& ng)
  */
 static void _setup_sprint(const newgame_def& ng)
 {
-    set_sprint_map(ng.map);
 }
 
 /**

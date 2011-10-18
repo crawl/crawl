@@ -6,11 +6,6 @@
 #ifndef TUTORIAL_H
 #define TUTORIAL_H
 
-// Set and get the current map. Used to transfer
-// map choice from game choice to level gen.
-void set_tutorial_map(const std::string& map);
-std::string get_tutorial_map();
-
 // Set a few player attributes from the tutorial map.
 void set_tutorial_hunger(int hunger);
 void set_tutorial_skill(const char *skill, int level);

@@ -15,23 +15,6 @@
 #include "skills.h"
 #include "state.h"
 
-// We could save this in crawl_state instead.
-// Or choose_game() could save *ng to crawl_state
-// entirely, though that'd be redundant with
-// you.your_name, you.species, crawl_state.type, ...
-
-static std::string _tutorial_map;
-
-std::string get_tutorial_map()
-{
-    return _tutorial_map;
-}
-
-void set_tutorial_map(const std::string& map)
-{
-    _tutorial_map = map;
-}
-
 void set_tutorial_hunger(int hunger)
 {
     if (!crawl_state.game_is_tutorial())
