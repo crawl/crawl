@@ -324,6 +324,7 @@ public:
   bool redraw_quiver;         // redraw quiver
   uint64_t redraw_status_flags;
 
+  bool redraw_title;
   bool redraw_hit_points;
   bool redraw_magic_points;
   FixedVector<bool, NUM_STATS> redraw_stats;

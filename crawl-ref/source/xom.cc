@@ -265,7 +265,7 @@ static void _xom_is_stimulated(int maxinterestingness,
                     (interestingness >  20) ? message_array[1]
                                             : message_array[0]));
         //updating piety status line
-        redraw_title(you.your_name, player_title());
+        you.redraw_title = true;
     }
 }
 
@@ -336,14 +336,14 @@ void xom_tick()
         const std::string msg = "You are now " + new_xom_favour;
         god_speaks(you.religion, msg.c_str());
         //updating piety status line
-        redraw_title(you.your_name, player_title());
+        you.redraw_title = true;
     }
 
     if (you.gift_timeout == 1)
     {
         simple_god_message(" is getting BORED.");
         //updating piety status line
-        redraw_title(you.your_name, player_title());
+        you.redraw_title = true;
     }
 
     if (wearing_amulet(AMU_FAITH)? coinflip() : one_chance_in(3))
@@ -375,7 +375,7 @@ void xom_tick()
 
                 you.gift_timeout += interest;
                 //updating piety status line
-                redraw_title(you.your_name, player_title());
+                you.redraw_title = true;
 #if defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
                 mprf(MSGCH_DIAGNOSTICS,
                      "tension %d (chance: %d) -> increase interest to %d",
@@ -3686,7 +3686,7 @@ static int _xom_is_bad(int sever, int tension, bool debug = false)
         const int interest = random2avg(badness * 60, 2);
         you.gift_timeout   = std::min(interest, 255);
         //updating piety status line
-        redraw_title(you.your_name, player_title());
+        you.redraw_title = true;
 #if defined(DEBUG_RELIGION) || defined(DEBUG_XOM)
         mprf(MSGCH_DIAGNOSTICS, "badness: %d, new interest: %d",
              badness, you.gift_timeout);

@@ -3447,7 +3447,7 @@ void level_change(bool skip_attribute_increase)
             _felid_extra_life();
     }
 
-    redraw_title(you.your_name, player_title());
+    you.redraw_title = true;
 
     // Hints mode arbitrarily ends at xp 7.
     if (crawl_state.game_is_hints() && you.experience_level >= 7)
