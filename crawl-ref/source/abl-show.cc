@@ -340,13 +340,13 @@ static const ability_def Ability_List[] =
 
     // Makhleb
     { ABIL_MAKHLEB_MINOR_DESTRUCTION, "Minor Destruction",
-      1, 0, 20, 0, ABFLAG_NONE },
+      0, scaling_cost::fixed(1), 20, 0, ABFLAG_NONE },
     { ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB, "Lesser Servant of Makhleb",
-      2, 0, 50, 1, ABFLAG_NONE },
+      0, scaling_cost::fixed(4), 50, 1, ABFLAG_NONE },
     { ABIL_MAKHLEB_MAJOR_DESTRUCTION, "Major Destruction",
-      4, 0, 100, 1, ABFLAG_NONE },
+      0, scaling_cost::fixed(6), 100, generic_cost::range(0, 1), ABFLAG_NONE },
     { ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB, "Greater Servant of Makhleb",
-      6, 0, 100, 5, ABFLAG_NONE },
+      0, scaling_cost::fixed(10), 100, 5, ABFLAG_NONE },
 
     // Sif Muna
     { ABIL_SIF_MUNA_CHANNEL_ENERGY, "Channel Energy",
