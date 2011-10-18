@@ -2586,6 +2586,7 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
         && lid.depth == 1)
     {
         if (crawl_state.game_is_sprint()
+            || crawl_state.game_is_zotdef()
             || crawl_state.game_is_tutorial())
         {
             vault = find_map_by_name(crawl_state.map);
@@ -2595,8 +2596,6 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
                     crawl_state.map.c_str());
             }
         }
-        else if (crawl_state.game_is_zotdef())
-            vault = random_map_for_tag("zotdef");
         else
             vault = random_map_for_tag("entry");
     }
