@@ -1884,6 +1884,11 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
             number_raised++;
             if (you.see_cell(*ri))
                 number_seen++;
+
+            // For the tracer, we don't care about exact count (and the
+            // corpse is not gone).
+            if (!actual)
+                break;
         }
     }
 
