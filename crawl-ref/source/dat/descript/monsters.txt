@@ -525,6 +525,10 @@ clay golem
 
 A huge animated clay statue.
 %%%%
+crimson imp
+
+A small, ugly minor demon. Its fanged maw seems locked in a permanent malign grin, and its horns protrude obscenely from its scaly pate.
+%%%%
 crocodile
 
 An aggressive crocodilian with great crunching jaws full of sharp teeth.
@@ -1113,10 +1117,6 @@ An imposing statue carved in glistening ice. Freezing vapours swirl about it.
 iguana
 
 A huge lizard with great crunching jaws.
-%%%%
-crimson imp
-
-A small, ugly minor demon. Its fanged maw seems locked in a permanent malign grin, and its horns protrude obscenely from its scaly pate.
 %%%%
 insubstantial wisp
 
