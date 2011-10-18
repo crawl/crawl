@@ -63,7 +63,7 @@ bool unequip_item(equipment_type slot, bool msg)
         return (false);
     else
     {
-    	item_skills(you.inv[item_slot], you.stop_train);
+        item_skills(you.inv[item_slot], you.stop_train);
         you.equip[slot] = -1;
         if (!you.melded[slot])
             _unequip_effect(slot, item_slot, false, msg);
