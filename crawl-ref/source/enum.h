@@ -2236,7 +2236,7 @@ enum monster_type                      // (int) menv[].type
     MONS_TRAINING_DUMMY,
 
     // Demons:
-    MONS_IMP,
+    MONS_CRIMSON_IMP,
     MONS_QUASIT,
     MONS_WHITE_IMP,
     MONS_LEMURE,

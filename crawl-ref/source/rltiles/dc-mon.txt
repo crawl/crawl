@@ -289,7 +289,7 @@ sixfirhy MONS_SIXFIRHY
 hellwing MONS_HELLWING
 
 # type '5' demons
-imp MONS_IMP
+crimson_imp MONS_CRIMSON_IMP
 quasit MONS_QUASIT
 lemure MONS_LEMURE
 iron_imp MONS_IRON_IMP

@@ -111,7 +111,7 @@ default-depth: D:12-26
 # note that other than the imps, the demons here cannot fly
 NAME:   hellmouth_1
 TAGS:   no_rotate
-MONS:   imp / quasit / shadow imp, hellion / rotting devil / iron devil /\
+MONS:   crimson imp / quasit / shadow imp, hellion / rotting devil / iron devil /\
         hairy devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / wand of draining
@@ -148,7 +148,7 @@ ENDMAP
 NAME:   hellmouth_2
 TAGS:   no_monster_gen no_rotate
 ORIENT: float
-MONS:   imp / quasit / shadow imp / iron imp / lemure
+MONS:   crimson imp / quasit / shadow imp / iron imp / lemure
 MONS:   hellion / rotting devil / iron devil / hairy devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / wand of draining
@@ -185,7 +185,7 @@ ENDMAP
 ##############################################################################
 # Hellmouth 3 (Lemuel)
 NAME:   hellmouth_3
-MONS:   weight:50 imp / quasit / shadow imp / iron imp / lemure, hell hound
+MONS:   weight:50 crimson imp / quasit / shadow imp / iron imp / lemure, hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / nothing
 ORIENT: float
@@ -553,7 +553,7 @@ TAGS: vestibule_geh
 MARKER: G=feat:enter_gehenna
 SUBST:  G=A
 SUBST:  L = l.
-KMONS:  5 = imp
+KMONS:  5 = crimson imp
 KMONS:  2 = hellion
 KMONS:  3 = red devil
 KMONS:  2 = reaper / soul eater
@@ -854,7 +854,7 @@ ORIENT: encompass
 MONS:   patrolling Asmodeus, Fiend
 MONS:   Balrug, sun demon, hellion, fire giant
 KMONS:  7 = molten gargoyle
-KMONS:  8 = imp
+KMONS:  8 = crimson imp
 # Place one Serpent in the inner circle.
 : serpent_of_hell_setup(_G)
 KFEAT:  D = lava

@@ -3458,7 +3458,7 @@ monster_type summon_any_demon(demon_class_type dct)
     case DEMON_LESSER:
         // tier 5
         mon = static_cast<monster_type>(random_choose_weighted(
-            1, MONS_IMP,
+            1, MONS_CRIMSON_IMP,
             1, MONS_QUASIT,
             1, MONS_WHITE_IMP,
             1, MONS_LEMURE,
