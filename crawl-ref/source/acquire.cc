@@ -661,30 +661,20 @@ static int _acquirement_jewellery_subtype()
 
 static int _acquirement_staff_subtype(const has_vector& already_has)
 {
-    int result = random2(STAFF_FIRST_ROD);
-
-    // Elemental preferences -- bwr
-    if (result == STAFF_FIRE || result == STAFF_COLD)
+    // First look at skills to determine whether the player gets a rod.
+    int spell_skills = player_spell_skills();
+    if (random2(spell_skills) < you.skills[SK_EVOCATIONS] + 3
+            && !one_chance_in(5))
     {
-        if (you.skills[SK_FIRE_MAGIC] > you.skills[SK_ICE_MAGIC])
-            result = STAFF_FIRE;
-        if (you.skills[SK_FIRE_MAGIC] < you.skills[SK_ICE_MAGIC])
-            result = STAFF_COLD;
-    }
-    else if (result == STAFF_AIR || result == STAFF_EARTH)
-    {
-        if (you.skills[SK_AIR_MAGIC] > you.skills[SK_EARTH_MAGIC])
-            result = STAFF_AIR;
-        if (you.skills[SK_AIR_MAGIC] < you.skills[SK_EARTH_MAGIC])
-            result = STAFF_EARTH;
+        return get_random_rod_type();
     }
 
-    skill_type best_spell_skill = best_skill(SK_SPELLCASTING, SK_LAST_SKILL);
+    // Now try to pick an enhancer staff matching the player's best skill.
+    skill_type best_spell_skill = best_skill(SK_SPELLCASTING, SK_EVOCATIONS);
+    bool found_enhancer = false;
+    int result = random2(NUM_STAVES);
 
-#define TRY_GIVE(x) { if (!already_has[x]) result = x; }
-    // If we're going to give out an enhancer staff,
-    // we should at least bias things towards the
-    // best spell skill. -- bwr
+#define TRY_GIVE(x) { if (you.type_ids[OBJ_STAVES][x] != ID_KNOWN_TYPE) {result = x; found_enhancer = true;} }
     switch (best_spell_skill)
     {
     case SK_FIRE_MAGIC:   TRY_GIVE(STAFF_FIRE);        break;
@@ -697,38 +687,28 @@ static int _acquirement_staff_subtype(const has_vector& already_has)
     case SK_CHARMS:       TRY_GIVE(STAFF_ENCHANTMENT); break;
     case SK_HEXES:        TRY_GIVE(STAFF_ENCHANTMENT); break;
     case SK_SUMMONINGS:   TRY_GIVE(STAFF_SUMMONING);   break;
-#undef TRY_GIVE
-
-    case SK_EVOCATIONS:
-        if (!one_chance_in(4))
-            result = get_random_rod_type();
-        break;
-
-    default: // Invocations and leftover spell schools.
-        switch (random2(5))
-        {
-        case 0: result = STAFF_WIZARDRY;   break;
-        case 1: result = STAFF_POWER;      break;
-        case 2: result = STAFF_ENERGY;     break;
-        case 3: result = STAFF_CHANNELING; break;
-        case 4: break;          // keep the original random staff
-        }
-        break;
+    default:                                           break;
     }
+    if (one_chance_in(found_enhancer ? 2 : 3))
+        return result;
 
-    int spell_skills = player_spell_skills();
-
-    // Increased chance of getting a rod for new or
-    // non-spellcasters.  -- bwr
-    if (one_chance_in(20)
-        || (spell_skills <= 1               // short on spells
-            && result < STAFF_FIRST_ROD
-            && !one_chance_in(4)))
+    // Otherwise pick a non-enhancer staff.
+    switch (random2(6))
     {
-        result = get_random_rod_type();
+    case 0: case 1: result = STAFF_WIZARDRY;   break;
+    case 2: case 3: result = STAFF_ENERGY;     break;
+    case 4: result = STAFF_POWER;              break;
+    case 5: result = STAFF_CHANNELING;         break;
     }
-
-    return (result);
+    switch (random2(6))
+    {
+    case 0: case 1: TRY_GIVE(STAFF_WIZARDRY);   break;
+    case 2: case 3: TRY_GIVE(STAFF_ENERGY);     break;
+    case 4: TRY_GIVE(STAFF_POWER);              break;
+    case 5: TRY_GIVE(STAFF_CHANNELING);         break;
+#undef TRY_GIVE
+    }
+    return result;
 }
 
 static int _acquirement_misc_subtype()
