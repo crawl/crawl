@@ -270,6 +270,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
         case DID_FRIEND_DIED:
         case DID_SOULED_FRIEND_DIED:
+            if (victim && you.religion != GOD_FEDHAS
+                && (victim->holiness() == MH_NONLIVING
+                 || victim->holiness() == MH_PLANT))
+            {
+                // For everyone but Fedhas, plants are items not creatures,
+                // and animated items are, well, items as well.
+                break;
+            }
+
             switch (you.religion)
             {
             case GOD_FEDHAS:
