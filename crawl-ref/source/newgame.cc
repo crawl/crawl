@@ -2080,11 +2080,13 @@ static void _choose_gamemode_map(newgame_def* ng, newgame_def* ng_choice,
     // Sprint, otherwise Tutorial.
     const bool is_sprint = (ng_choice->type == GAME_TYPE_SPRINT);
 
-    const mapref_vector maps = (is_sprint ? get_sprint_maps()
-                                          : get_tutorial_maps());
+    const std::string type_name = gametype_to_str(ng_choice->type);
+
+    const mapref_vector maps = find_maps_for_tag(type_name);
+
     if (maps.empty())
     {
-        end(1, true, "No %s maps found.", is_sprint ? "sprint" : "tutorial");
+        end(1, true, "No %s maps found.", type_name.c_str());
     }
 
     if (ng_choice->map.empty())
