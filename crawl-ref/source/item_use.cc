@@ -367,7 +367,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
             // Switching to bare hands is extra fast.
             you.turn_is_over = true;
             you.time_taken *= 3;
-            you.time_taken /= 5;
+            you.time_taken /= 10;
         }
         else
             canned_msg(MSG_EMPTY_HANDED_ALREADY);
