@@ -102,29 +102,28 @@ function trove.get_trove_item(e, value, base_item)
   local d = crawl.roll_dice
 
   -- base is item.base_type, type is item.sub_type, quant is an additional parameter (quantity, charges, etc)
-  -- currently 22% armour, 22% weapon, 44% consumable, 11% miscellaneous (which are not actually taken from the player)
+  -- currently 20% armour, 15% weapon, 50% consumable, 15% miscellaneous (which are not actually taken from the player)
   local prices = {
        {base="armour", type="gold dragon armour", quant=1+d(3), weight=1},
        {base="armour", type="storm dragon armour", quant=1+d(3), weight=1},
        {base="armour", type="fire dragon armour", quant=2+d(3), weight=1},
        {base="armour", type="ice dragon armour", quant=2+d(3), weight=1},
-       {base="armour", type="mottled dragon armour", quant=2+d(3), weight=1},
-       {base="armour", type="steam dragon armour", quant=2+d(3), weight=1},
 
        {base="weapon", type="demon whip", quant=3+d(3),
-                                          quant2=3+d(3), weight=2},
+                                          quant2=3+d(3), weight=1},
        {base="weapon", type="demon trident", quant=3+d(3),
-                                             quant2=3+d(3), weight=2},
+                                             quant2=3+d(3), weight=1},
        {base="weapon", type="demon blade", quant=3+d(3),
-                                           quant2=3+d(3), weight=2},
+                                           quant2=3+d(3), weight=1},
 
        {base="wand", type="healing", quant=7+d(2), weight=1},
        {base="potion", type="healing", quant=12+d(4)+d(4), weight=1},
-       {base="potion", type="heal wounds", quant=8+d(3)+d(3), weight=2},
+       {base="potion", type="heal wounds", quant=8+d(3)+d(3), weight=1},
 
        {base="wand", type="hasting", quant=7+d(2), weight=1},
-       {base="potion", type="speed", quant=3+d(3)+d(2), weight=2},
-       {base="scroll", type="blinking", quant=3+d(3), weight=2},
+       {base="potion", type="speed", quant=3+d(3)+d(2), weight=1},
+       {base="scroll", type="blinking", quant=3+d(3), weight=1},
+       {base="scroll", type="teleportation", quant=10+d(3)+d(4), weight=1},
 
        {base="potion", type="cure mutation", quant=2, weight=1},
        {base="scroll", type="acquirement", quant=2, weight=1},
