@@ -108,7 +108,7 @@ function trove.get_trove_item(e, value, base_item)
        {base="armour", type="storm dragon armour", quant=1+d(3), weight=1},
        {base="armour", type="ice dragon armour", quant=2+d(3), weight=2},
        {base="armour", type="mottled dragon armour", quant=2+d(3), weight=1},
-       {base="armour", type="crystal plate mail", quant=2+d(3), weight=1},
+       {base="armour", type="steam dragon armour", quant=2+d(3), weight=1},
 
        {base="weapon", type="demon whip", quant=3+d(3),
                                           quant2=3+d(3), weight=2},
