@@ -203,7 +203,7 @@ Lom Lobon
 
 An ancient and strangely serene demon. It regards you coldly from the huge glowing eye in the centre of its forehead.
 %%%%
-Lorocyproca
+lorocyproca
 
 A tall and gaunt figure, draped in long robes which flow as if alive. It thirsts for magical energies.
 %%%%
@@ -780,7 +780,7 @@ felid
 
 A feline creature that has been granted sentience by magical means. It uses the gift of speech to demand milk, treats and catnip.
 %%%%
-fiend
+Fiend
 
 A huge and powerful demon wreathed in hellfire, with great scaly wings. One of the most fearsome denizens of any of the Hells.
 %%%%
@@ -1106,7 +1106,7 @@ ice dragon
 
 Like a normal dragon, only white and covered in frost.
 %%%%
-ice fiend
+Ice Fiend
 
 A huge frigid demon covered in frost and wreathed in freezing air. It is one of the most terrible denizens of the many Hells.
 %%%%
