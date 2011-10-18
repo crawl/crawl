@@ -242,7 +242,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
                     random_choose_weighted(3, ARM_TROLL_LEATHER_ARMOUR,
                                            3, ARM_STEAM_DRAGON_ARMOUR,
                                            1, ARM_SWAMP_DRAGON_ARMOUR,
-                                           1, ARM_DRAGON_ARMOUR,
+                                           1, ARM_FIRE_DRAGON_ARMOUR,
                                            0));
             }
 
@@ -251,7 +251,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
             if (!divine && one_chance_in(5))
             {
                 result = static_cast<armour_type>(random_choose(
-                        ARM_DRAGON_ARMOUR,
+                        ARM_FIRE_DRAGON_ARMOUR,
                         ARM_ICE_DRAGON_ARMOUR,
                         ARM_STEAM_DRAGON_ARMOUR,
                         ARM_MOTTLED_DRAGON_ARMOUR,
@@ -327,7 +327,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
                                        20, ARM_STEAM_DRAGON_ARMOUR,
                                        15, ARM_MOTTLED_DRAGON_ARMOUR,
                                        10, ARM_SWAMP_DRAGON_ARMOUR,
-                                       10, ARM_DRAGON_ARMOUR,
+                                       10, ARM_FIRE_DRAGON_ARMOUR,
                                        10, ARM_ICE_DRAGON_ARMOUR,
                                         5, ARM_STORM_DRAGON_ARMOUR,
                                         5, ARM_GOLD_DRAGON_ARMOUR,

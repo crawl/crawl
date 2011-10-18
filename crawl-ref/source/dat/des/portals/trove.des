@@ -106,7 +106,8 @@ function trove.get_trove_item(e, value, base_item)
   local prices = {
        {base="armour", type="gold dragon armour", quant=1+d(3), weight=1},
        {base="armour", type="storm dragon armour", quant=1+d(3), weight=1},
-       {base="armour", type="ice dragon armour", quant=2+d(3), weight=2},
+       {base="armour", type="fire dragon armour", quant=2+d(3), weight=1},
+       {base="armour", type="ice dragon armour", quant=2+d(3), weight=1},
        {base="armour", type="mottled dragon armour", quant=2+d(3), weight=1},
        {base="armour", type="steam dragon armour", quant=2+d(3), weight=1},
 
@@ -679,7 +680,7 @@ MONS:    storm dragon zombie
 MONS:    golden dragon zombie
 MONS:    dragon skeleton
 ITEM:    animal skin good_item / any armour good_item
-ITEM:    gold dragon hide / storm dragon hide / dragon hide / troll hide / any useful armour good_item
+ITEM:    gold dragon hide / storm dragon hide / fire dragon hide / troll hide / any useful armour good_item
 ITEM:    arrow good_item / dart good_item / bolt good_item / any missile good_item
 ITEM:    bow good_item / crossbow good_item / any useful weapon good_item
 SHUFFLE: 123
@@ -804,7 +805,7 @@ ORIENT:  encompass
 ITEM:    chain mail unrand:lears_chain_mail                                  /\
  randart plate mail w:50                                                     /\
          plate mail unrand:maxwells_patent_armour                            /\
- randart dragon armour                                                       /\
+ randart fire dragon armour                                                  /\
          gold dragon armour unrand:armour_of_the_dragon_king                 /\
  randart crystal plate mail                                                  /\
  randart robe w:50                                                           /\

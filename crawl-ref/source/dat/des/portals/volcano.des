@@ -242,7 +242,7 @@ function setup_loot (e)
                                   "banded mail w:20", "plate mail w:10", "pair of gloves w:5",
                                   "helmet w:6", "pair of boots w:3", "cap w:2", "wizard hat w:2",
                                   "shield w:1", "buckler w:3"}) ..
-                                  " / dragon armour w:5")
+                                  " / fire dragon armour w:5")
     e.item([[potion of berserk rage w:20 / potion of poison w:2 / potion of might w:5 / potion of brilliance w:5 /
              potion of agility w:5 / potion of experience w:1 / potion of resistance]])
     e.item(make_fiery_weapon(e, {"demon whip w:2", "dire flail w:4", "ankus w:20", "dagger w:20",
