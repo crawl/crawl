@@ -2585,22 +2585,14 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
         && lid.branch == BRANCH_MAIN_DUNGEON
         && lid.depth == 1)
     {
-        if (crawl_state.game_is_sprint())
+        if (crawl_state.game_is_sprint()
+            || crawl_state.game_is_tutorial())
         {
-            vault = find_map_by_name(get_sprint_map());
+            vault = find_map_by_name(crawl_state.map);
             if (vault == NULL)
             {
-                end(1, false, "Couldn't find selected Sprint map '%s'.",
-                    get_sprint_map().c_str());
-            }
-        }
-        else if (crawl_state.game_is_tutorial())
-        {
-            vault = find_map_by_name(get_tutorial_map());
-            if (vault == NULL)
-            {
-                end(1, false, "Couldn't find selected Tutorial map '%s'.",
-                    get_tutorial_map().c_str());
+                end(1, false, "Couldn't find selected map '%s'.",
+                    crawl_state.map.c_str());
             }
         }
         else if (crawl_state.game_is_zotdef())
