@@ -1034,7 +1034,7 @@ static void tag_construct_char(writer &th)
 
     marshallByte(th, crawl_state.type);
     if (crawl_state.game_is_tutorial())
-        marshallString(th, get_tutorial_map());
+        marshallString(th, crawl_state.map);
 
     marshallString(th, species_name(you.species));
     marshallString(th, you.religion ? god_name(you.religion) : "");
@@ -1714,7 +1714,7 @@ void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
 
     crawl_state.type = (game_type) unmarshallByte(th);
     if (crawl_state.game_is_tutorial())
-        set_tutorial_map(unmarshallString(th));
+        crawl_state.map = unmarshallString(th);
 
     if (major > 32 || major == 32 && minor > 26)
     {
