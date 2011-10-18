@@ -5962,7 +5962,7 @@ hell lord
 
 @_hell_lord_taunt_@
 %%%%
-imp
+crimson imp
 
 w:1
 @_imp_taunt_@
