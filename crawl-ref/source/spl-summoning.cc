@@ -1150,8 +1150,8 @@ spret_type cast_call_imp(int pow, god_type god, bool fail)
     if (mons != -1)
     {
         mpr((mon == MONS_WHITE_IMP)  ? "A beastly little devil appears in a puff of frigid air." :
-            (mon == MONS_SHADOW_IMP) ? "A shadowy apparition takes form in the air." :
-            (mon == MONS_IRON_IMP)   ? "A metallic apparition takes form in the air."
+            (mon == MONS_IRON_IMP)   ? "A metallic apparition takes form in the air." :
+            (mon == MONS_SHADOW_IMP) ? "A shadowy apparition takes form in the air."
                                      : "A beastly little devil appears in a puff of flame.");
 
         player_angers_monster(&menv[mons]);
