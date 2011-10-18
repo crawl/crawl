@@ -125,7 +125,6 @@ skill_type weapon_skill(object_class_type wclass, int wtype);
 skill_type range_skill(const item_def &item);
 skill_type range_skill(object_class_type wclass, int wtype);
 
-bool item_trains_evocations(const item_def& item);
 bool item_skills(const item_def &item, std::set<skill_type> &skills);
 
 // launcher and ammo functions:
