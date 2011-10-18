@@ -1887,6 +1887,10 @@ bool item_trains_evocations(const item_def& item)
 
 bool item_skills(const item_def &item, std::set<skill_type> &skills)
 {
+    // Armour need to be worn to allow training.
+    if (item.base_type == OBJ_ARMOUR)
+        return false;
+
     skill_type sk = weapon_skill(item);
     if (sk != SK_FIGHTING)
         skills.insert(sk);
