@@ -82,6 +82,7 @@ ENDMAP
 
 NAME:    zotvault2
 TAGS:    zotdef
+DESC:    Scenario II: Battle Heart
 : zotdef_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -139,6 +140,7 @@ ENDMAP
 # from the south, and rarely is better than always.
 NAME:    zotvault3
 TAGS:    zotdef no_rotate
+DESC:    Scenario III: Two or Three?
 : zotdef_setup(_G)
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -206,6 +208,7 @@ ENDMAP
 
 NAME:    zotvault4
 TAGS:    zotdef no_rotate
+DESC:    Scenario IV: Columnade
 : zotdef_setup(_G)
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -258,6 +261,7 @@ ENDMAP
 # Monsters have a tendancy to get stuck peering through the glass...
 NAME:    zotvault5
 TAGS:    _zotdef no_rotate
+DESC:    Scenario V: Glassed Sandwich
 : zotdef_setup(_G)
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
