@@ -1877,9 +1877,9 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
 
     for (; ri; ++ri)
     {
-        // Produces a message if the corpse you are butchering is raised.
-        if (animate_remains(*ri, CORPSE_BODY, beha, hitting, as, nas, god,
-                            actual, true, 0, 0, &motions) > 0)
+        // There may be many corpses on the same spot.
+        while (animate_remains(*ri, CORPSE_BODY, beha, hitting, as, nas, god,
+                               actual, true, 0, 0, &motions) > 0)
         {
             number_raised++;
             if (you.see_cell(*ri))
