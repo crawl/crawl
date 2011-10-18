@@ -687,7 +687,8 @@ static void _print_status_lights(int y)
 #ifdef USE_TILE_LOCAL
 static bool _need_stats_printed()
 {
-    return you.redraw_hit_points
+    return you.redraw_title
+           || you.redraw_hit_points
            || you.redraw_magic_points
            || you.redraw_armour_class
            || you.redraw_evasion
@@ -699,6 +700,86 @@ static bool _need_stats_printed()
            || you.redraw_quiver;
 }
 #endif
+
+static void _redraw_title(const std::string &your_name, const std::string &job_name)
+{
+    std::string title = your_name + " the " + job_name;
+
+    unsigned int in_len = strwidth(title);
+    const unsigned int WIDTH = crawl_view.hudsz.x;
+    if (in_len > WIDTH)
+    {
+        in_len -= 3;  // What we're getting back from removing "the".
+
+        const unsigned int name_len = strwidth(your_name);
+        std::string trimmed_name = your_name;
+
+        // Squeeze name if required, the "- 8" is to not squeeze too much.
+        if (in_len > WIDTH && (name_len - 8) > (in_len - WIDTH))
+        {
+            trimmed_name = chop_string(trimmed_name,
+                                       name_len - (in_len - WIDTH) - 1);
+        }
+
+        title = trimmed_name + ", " + job_name;
+    }
+
+    // Line 1: Foo the Bar    *WIZARD*
+    cgotoxy(1, 1, GOTO_STAT);
+    textcolor(YELLOW);
+    cprintf("%s", chop_string(title, WIDTH).c_str());
+    if (you.wizard)
+    {
+        textcolor(LIGHTBLUE);
+        cgotoxy(1 + crawl_view.hudsz.x-9, 1, GOTO_STAT);
+        cprintf(" *WIZARD*");
+    }
+#ifdef DGL_SIMPLE_MESSAGING
+    update_message_status();
+#endif
+
+    // Line 2:
+    // Minotaur [of God] [Piety]
+    textcolor(YELLOW);
+    cgotoxy(1, 2, GOTO_STAT);
+    std::string species = species_name(you.species);
+    nowrap_eol_cprintf("%s", species.c_str());
+    if (you.religion != GOD_NO_GOD)
+    {
+        std::string god = " of ";
+        god += you.religion == GOD_JIYVA ? god_name_jiyva(true)
+                                         : god_name(you.religion);
+        nowrap_eol_cprintf("%s", god.c_str());
+
+        std::string piety = _god_powers(true);
+        if (player_under_penance())
+            textcolor(RED);
+        if ((unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1)
+            <= WIDTH)
+        {
+            nowrap_eol_cprintf(" %s", piety.c_str());
+        }
+        else if ((unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1)
+                  == (WIDTH + 1))
+        {
+            //mottled draconian of TSO doesn't fit by one symbol,
+            //so we remove leading space.
+            nowrap_eol_cprintf("%s", piety.c_str());
+        }
+    }
+    else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
+             && !had_gods())
+    {
+        std::string godpiety = "**....";
+        textcolor(DARKGREY);
+        if ((unsigned int)(strwidth(species) + strwidth(godpiety) + 1) <= WIDTH)
+            nowrap_eol_cprintf(" %s", godpiety.c_str());
+    }
+
+    clear_to_end_of_line();
+
+    textcolor(LIGHTGREY);
+}
 
 void print_stats(void)
 {
@@ -717,6 +798,12 @@ void print_stats(void)
 #ifdef USE_TILE_LOCAL
     bool has_changed = _need_stats_printed();
 #endif
+
+    if (you.redraw_title)
+    {
+        you.redraw_title = false;
+        _redraw_title(you.your_name, player_title());
+    }
 
     if (you.redraw_hit_points)   { you.redraw_hit_points = false;   _print_stats_hp (1, 3); }
     if (you.redraw_magic_points) { you.redraw_magic_points = false; _print_stats_mp (1, 4); }
@@ -861,91 +948,10 @@ void print_stats_level()
     clear_to_end_of_line();
 }
 
-void redraw_title(const std::string &your_name, const std::string &job_name)
-{
-    std::string title = your_name + " the " + job_name;
-
-    unsigned int in_len = strwidth(title);
-    const unsigned int WIDTH = crawl_view.hudsz.x;
-    if (in_len > WIDTH)
-    {
-        in_len -= 3;  // What we're getting back from removing "the".
-
-        const unsigned int name_len = strwidth(your_name);
-        std::string trimmed_name = your_name;
-
-        // Squeeze name if required, the "- 8" is to not squeeze too much.
-        if (in_len > WIDTH && (name_len - 8) > (in_len - WIDTH))
-        {
-            trimmed_name = chop_string(trimmed_name,
-                                       name_len - (in_len - WIDTH) - 1);
-        }
-
-        title = trimmed_name + ", " + job_name;
-    }
-
-    // Line 1: Foo the Bar    *WIZARD*
-    cgotoxy(1, 1, GOTO_STAT);
-    textcolor(YELLOW);
-    cprintf("%s", chop_string(title, WIDTH).c_str());
-    if (you.wizard)
-    {
-        textcolor(LIGHTBLUE);
-        cgotoxy(1 + crawl_view.hudsz.x-9, 1, GOTO_STAT);
-        cprintf(" *WIZARD*");
-    }
-#ifdef DGL_SIMPLE_MESSAGING
-    update_message_status();
-#endif
-
-    // Line 2:
-    // Minotaur [of God] [Piety]
-    textcolor(YELLOW);
-    cgotoxy(1, 2, GOTO_STAT);
-    std::string species = species_name(you.species);
-    nowrap_eol_cprintf("%s", species.c_str());
-    if (you.religion != GOD_NO_GOD)
-    {
-        std::string god = " of ";
-        god += you.religion == GOD_JIYVA ? god_name_jiyva(true)
-                                         : god_name(you.religion);
-        nowrap_eol_cprintf("%s", god.c_str());
-
-        std::string piety = _god_powers(true);
-        if (player_under_penance())
-            textcolor(RED);
-        if ((unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1)
-            <= WIDTH)
-        {
-            nowrap_eol_cprintf(" %s", piety.c_str());
-        }
-        else if ((unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1)
-                  == (WIDTH + 1))
-        {
-            //mottled draconian of TSO doesn't fit by one symbol,
-            //so we remove leading space.
-            nowrap_eol_cprintf("%s", piety.c_str());
-        }
-    }
-    else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
-             && !had_gods())
-    {
-        std::string godpiety = "**....";
-        textcolor(DARKGREY);
-        if ((unsigned int)(strwidth(species) + strwidth(godpiety) + 1) <= WIDTH)
-            nowrap_eol_cprintf(" %s", godpiety.c_str());
-    }
-
-    clear_to_end_of_line();
-
-    textcolor(LIGHTGREY);
-}
-
 void draw_border(void)
 {
     textcolor(HUD_CAPTION_COLOUR);
     clrscr();
-    redraw_title(you.your_name, player_title());
 
     textcolor(Options.status_caption_colour);
 

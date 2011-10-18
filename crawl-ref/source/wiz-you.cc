@@ -471,7 +471,7 @@ void wizard_set_all_skills(void)
             you.skills[sk] = amount;
         }
 
-        redraw_title(you.your_name, player_title());
+        you.redraw_title = true;
 
         calc_total_skill_points();
 

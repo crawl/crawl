@@ -821,6 +821,7 @@ LUAFN(_crawl_redraw_view)
 LUAFN(_crawl_redraw_stats)
 {
     you.wield_change        = true;
+    you.redraw_title        = true;
     you.redraw_quiver       = true;
     you.redraw_hit_points   = true;
     you.redraw_magic_points = true;

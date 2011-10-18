@@ -277,6 +277,7 @@ void redraw_screen(void)
 
     draw_border();
 
+    you.redraw_title        = true;
     you.redraw_hit_points   = true;
     you.redraw_magic_points = true;
     you.redraw_stats.init(true);
