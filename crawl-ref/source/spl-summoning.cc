@@ -1186,7 +1186,9 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
             mpr(charmed ? "You don't feel so good about this..."
                         : "It doesn't seem very happy.");
         }
-        else if (friendly && mons_genus(mon) == MONS_CRIMSON_IMP)
+        else if (friendly
+                    && (mon == MONS_CRIMSON_IMP || mon == MONS_WHITE_IMP
+                        || mon == MONS_IRON_IMP || mon == MONS_SHADOW_IMP))
         {
             std::string msg = getSpeakString("_friendly_imp_greeting");
             execute_embedded_lua(msg);
