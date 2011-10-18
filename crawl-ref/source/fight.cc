@@ -1327,14 +1327,15 @@ bool melee_attack::player_aux_unarmed()
 
 bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 {
+    const int slaying = slaying_bonus(PWPN_DAMAGE);
     did_hit = true;
 
     aux_damage  = player_aux_stat_modify_damage(aux_damage);
-    aux_damage += slaying_bonus(PWPN_DAMAGE);
-
     aux_damage  = random2(aux_damage);
 
     aux_damage  = player_apply_fighting_skill(aux_damage, true);
+    aux_damage += (slaying > -1) ? (random2(1 + slaying))
+                                 : (-random2(1 - slaying));
     aux_damage  = player_apply_misc_modifiers(aux_damage);
 
     // Clear stab bonus which will be set for the primary weapon attack.
@@ -1662,8 +1663,10 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
         if (item_is_rod(*weapon))
             wpn_damage_plus = (short)weapon->props["rod_enchantment"];
 
+        wpn_damage_plus += slaying_bonus(PWPN_DAMAGE);
+
         damage += (wpn_damage_plus > -1) ? (random2(1 + wpn_damage_plus))
-                                         : -(1 + random2(-wpn_damage_plus));
+                                         : (-random2(1 - wpn_damage_plus));
 
         if (get_equip_race(*weapon) == ISFLAG_DWARVEN
             && player_genus(GENPC_DWARVEN))
@@ -3789,13 +3792,9 @@ void melee_attack::player_calc_hit_damage()
     }
 
     potential_damage = player_stat_modify_damage(potential_damage);
-
-    //  apply damage bonus from ring of slaying
-    // (before randomization -- some of these rings
-    //  are stupidly powerful) -- GDL
-    potential_damage += slaying_bonus(PWPN_DAMAGE);
     damage_done =
         potential_damage > 0 ? one_chance_in(3) + random2(potential_damage) : 0;
+
     damage_done = player_apply_weapon_skill(damage_done);
     damage_done = player_apply_fighting_skill(damage_done, false);
     damage_done = player_apply_misc_modifiers(damage_done);
