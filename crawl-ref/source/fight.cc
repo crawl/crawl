@@ -3473,6 +3473,9 @@ void melee_attack::handle_noise(const coord_def & pos)
     if (noise_factor > 0)
         level = std::max(1, level);
 
+    // Cap melee noise at shouting volume.
+    level = std::min(12, level);
+
     if (level > 0)
         noisy(level, pos, attacker->mindex());
 
