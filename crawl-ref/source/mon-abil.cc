@@ -2332,7 +2332,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             mons->go_berserk(true);
         break;
 
-    case MONS_IMP:
+    case MONS_CRIMSON_IMP:
     case MONS_PHANTOM:
     case MONS_INSUBSTANTIAL_WISP:
     case MONS_BLINK_FROG:

@@ -392,7 +392,7 @@ SUBST:   = = =v
 SUBST:   ' : l.
 : _G.set_random_mon_list("fire bat w:30 / fire drake / dragon / hell hound / " ..
 :     "efreet / fire crab / fire giant w:3 / mottled dragon / " ..
-:     "fire elemental / imp / fire vortex / molten gargoyle")
+:     "fire elemental / crimson imp / fire vortex / molten gargoyle")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvvvvvvvvvvvvvvvvvvxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxllllxxxxxxxxxlllllxxxll.3..v$$$$$$$$v......0..vxxxxxx.....xxxxxxx

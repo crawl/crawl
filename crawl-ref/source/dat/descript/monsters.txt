@@ -1114,7 +1114,7 @@ iguana
 
 A huge lizard with great crunching jaws.
 %%%%
-imp
+crimson imp
 
 A small, ugly minor demon. Its fanged maw seems locked in a permanent malign grin, and its horns protrude obscenely from its scaly pate.
 %%%%

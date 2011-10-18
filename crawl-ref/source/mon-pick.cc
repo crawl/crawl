@@ -134,7 +134,7 @@ int mons_abyss_rare(int mcls)
     case MONS_HAIRY_DEVIL:
     case MONS_HELLION:
     case MONS_ICE_DEVIL:
-    case MONS_IMP:
+    case MONS_CRIMSON_IMP:
     case MONS_LOROCYPROCA:
     case MONS_MUMMY:
     case MONS_NECROPHAGE:
@@ -408,7 +408,7 @@ int mons_standard_level(int mcls)
     case MONS_WATER_MOCCASIN:
     case MONS_CENTAUR:
     case MONS_ICE_BEAST:
-    case MONS_IMP:
+    case MONS_CRIMSON_IMP:
     case MONS_JELLY:
     case MONS_NECROPHAGE:
     case MONS_QUASIT:
@@ -631,7 +631,7 @@ int mons_standard_rare(int mcls)
     case MONS_GOBLIN:
     case MONS_HILL_GIANT:
     case MONS_HOBGOBLIN:
-    case MONS_IMP:
+    case MONS_CRIMSON_IMP:
     case MONS_KOBOLD:
     case MONS_SKELETON_LARGE:
     case MONS_ORC:
@@ -2383,7 +2383,7 @@ int mons_dis_level(int mcls)
     switch (mcls)
     {
     case MONS_CLAY_GOLEM:
-    case MONS_IMP:
+    case MONS_CRIMSON_IMP:
     case MONS_NECROPHAGE:
     case MONS_RED_DEVIL:
     case MONS_SKELETAL_WARRIOR:
@@ -2455,7 +2455,7 @@ int mons_dis_rare(int mcls)
 {
     switch (mcls)
     {
-    case MONS_IMP:
+    case MONS_CRIMSON_IMP:
     case MONS_IRON_DEVIL:
     case MONS_IRON_IMP:
     case MONS_ZOMBIE_LARGE:
@@ -2558,7 +2558,7 @@ int mons_gehenna_level(int mcls)
 
     case MONS_HELL_HOG:
     case MONS_HELL_HOUND:
-    case MONS_IMP:
+    case MONS_CRIMSON_IMP:
     case MONS_NECROPHAGE:
     case MONS_STONE_GOLEM:
         mlev += 2;
@@ -2657,7 +2657,7 @@ int mons_gehenna_rare(int mcls)
         return 32;
 
     case MONS_HELL_HOG:
-    case MONS_IMP:
+    case MONS_CRIMSON_IMP:
     case MONS_IRON_DEVIL:
         return 30;
 
@@ -2842,7 +2842,7 @@ int mons_tartarus_level(int mcls)
 
     switch (mcls)
     {
-    case MONS_IMP:
+    case MONS_CRIMSON_IMP:
     case MONS_SKELETON_LARGE:
     case MONS_RED_DEVIL:
     case MONS_SHADOW_IMP:
@@ -2979,7 +2979,7 @@ int mons_tartarus_rare(int mcls)
     case MONS_LICH:
         return 24;
 
-    case MONS_IMP:
+    case MONS_CRIMSON_IMP:
     case MONS_SHADOW_DRAGON:
     case MONS_DEATH_DRAKE:
         return 20;

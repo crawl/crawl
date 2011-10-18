@@ -1138,7 +1138,7 @@ spret_type cast_call_imp(int pow, god_type god, bool fail)
     if (random2(pow) >= 46 || one_chance_in(6))
         mon = one_chance_in(3) ? MONS_IRON_IMP : MONS_SHADOW_IMP;
     else
-        mon = one_chance_in(3) ? MONS_WHITE_IMP : MONS_IMP;
+        mon = one_chance_in(3) ? MONS_WHITE_IMP : MONS_CRIMSON_IMP;
 
     const int dur = std::min(2 + (random2(pow) / 4), 6);
 
@@ -1186,7 +1186,7 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
             mpr(charmed ? "You don't feel so good about this..."
                         : "It doesn't seem very happy.");
         }
-        else if (friendly && mons_genus(mon) == MONS_IMP)
+        else if (friendly && mons_genus(mon) == MONS_CRIMSON_IMP)
         {
             std::string msg = getSpeakString("_friendly_imp_greeting");
             execute_embedded_lua(msg);

@@ -3932,7 +3932,7 @@ bool monster_descriptor(int which_class, mon_desc_type which_descriptor)
         case MONS_CACODEMON:
         case MONS_DEEP_TROLL:
         case MONS_HELLWING:
-        case MONS_IMP:
+        case MONS_CRIMSON_IMP:
         case MONS_IRON_TROLL:
         case MONS_LEMURE:
         case MONS_ROCK_TROLL:

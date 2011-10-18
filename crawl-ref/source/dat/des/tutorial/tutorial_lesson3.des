@@ -512,7 +512,7 @@ ITEM:    scroll of enchant armour q:3
 ITEM:    scroll of recharging q:3
 SHUFFLE: ijk
 MONS:    gnoll ; spear ego:none | mace ego:none
-MONS:    imp
+MONS:    crimson imp
 MONS:    gnoll ; flail ego:none | spiked flail ego:none | halberd ego:none . \
          leather armour ego:fire_resistance | ring mail ego:fire_resistance
 MONS:    orc ; scimitar ego:none | battleaxe ego:none | halberd ego:none . \

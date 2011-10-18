@@ -1171,7 +1171,7 @@ ENDMAP
 
 NAME:  minmay_nine_imps
 DEPTH: D:7-14
-MONS:  imp / white imp w:3 / shadow imp w:1
+MONS:  crimson imp / white imp w:3 / shadow imp w:1
 MAP
 xxxxx
 x111x
@@ -1393,7 +1393,7 @@ MONS:   fiend / balrug w:5
 MONS:   ice fiend / blizzard demon w:5
 MONS:   sun demon / smoke demon / hellion
 MONS:   ice devil / blue devil w:5
-MONS:   red devil / imp
+MONS:   red devil / crimson imp
 MONS:   ufetubus / white imp w:5
 SUBST:  " = |
 SUBST:  ' = |
@@ -1402,18 +1402,18 @@ MONS:   sun demon / hellion w:5
 MONS:   ice devil
 MONS:   red devil / smoke demon w:5
 MONS:   blue devil / white imp w:5
-MONS:   imp
+MONS:   crimson imp
 MONS:   ufetubus
 SUBST:  " = |
 SUBST:  ' = *
 : elseif you.absdepth() > 12 then
-MONS:   smoke demon, blue devil, imp, white imp
+MONS:   smoke demon, blue devil, crimson imp, white imp
 SUBST:  " = *
 SUBST:  ' = %
 SUBST:  5 = .
 SUBST:  6 = .
 : else
-MONS:   imp, white imp
+MONS:   crimson imp, white imp
 SUBST:  " = %
 SUBST:  ' = .
 SUBST:  3 = .

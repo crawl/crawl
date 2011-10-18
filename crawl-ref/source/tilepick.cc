@@ -1562,8 +1562,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return 0;
 
     // '5' demons
-    case MONS_IMP:
-        return TILEP_MONS_IMP;
+    case MONS_CRIMSON_IMP:
+        return TILEP_MONS_CRIMSON_IMP;
     case MONS_QUASIT:
         return TILEP_MONS_QUASIT;
     case MONS_WHITE_IMP:

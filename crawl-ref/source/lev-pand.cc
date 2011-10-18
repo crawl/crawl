@@ -62,7 +62,7 @@ void init_pandemonium(void)
             env.mons_alloc[pc] = MONS_RED_DEVIL;
 
         if (one_chance_in(30))
-            env.mons_alloc[pc] = MONS_IMP;
+            env.mons_alloc[pc] = MONS_CRIMSON_IMP;
 
         if (one_chance_in(30))
             env.mons_alloc[pc] = MONS_SIXFIRHY;
