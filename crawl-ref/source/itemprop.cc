@@ -1859,39 +1859,12 @@ skill_type range_skill(object_class_type wclass, int wtype)
     return (range_skill(wpn));
 }
 
-bool item_trains_evocations(const item_def& item)
-{
-    if (item_is_evokable(item, false, false, false, false, false))
-        return true;
-
-    if (!item_type_known(item))
-        return false;
-
-    if (is_artefact(item) && (artefact_wpn_property(item, ARTP_INVISIBLE)
-                              || artefact_wpn_property(item, ARTP_LEVITATE)
-                              || artefact_wpn_property(item, ARTP_BLINK)
-                              || artefact_wpn_property(item, ARTP_BERSERK)))
-    {
-        return true;
-    }
-
-    if (item.base_type == OBJ_JEWELLERY)
-        switch (item.sub_type)
-        {
-        case RING_INVISIBILITY:
-        case RING_TELEPORTATION:
-        case RING_LEVITATION:
-        case AMU_RAGE:
-            return true;
-        }
-
-    return false;
-}
-
 bool item_skills(const item_def &item, std::set<skill_type> &skills)
 {
+    const bool equipped = get_equip_slot(&item) != -1;
+
     // Armour need to be worn to allow training.
-    if (item.base_type == OBJ_ARMOUR)
+    if (item.base_type == OBJ_ARMOUR && !equipped)
         return false;
 
     // Wands don't need to be identified, they always train evocations.
@@ -1899,7 +1872,7 @@ bool item_skills(const item_def &item, std::set<skill_type> &skills)
         skills.insert(SK_EVOCATIONS);
 
     // Item have to be known to be uncursed or equipped.
-    if (!item_known_uncursed(item) && get_equip_slot(&item) == -1)
+    if (!equipped && !item_known_uncursed(item))
         return false;
 
     skill_type sk = weapon_skill(item);
@@ -1910,7 +1883,7 @@ bool item_skills(const item_def &item, std::set<skill_type> &skills)
     if (sk != SK_THROWING)
         skills.insert(sk);
 
-    if (item_trains_evocations(item))
+    if (gives_ability(item))
         skills.insert(SK_EVOCATIONS);
 
     if (item_is_rod(item) && item_type_known(item))
