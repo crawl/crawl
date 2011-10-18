@@ -475,8 +475,12 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
     ng->type = choice->type;
     ng->map  = choice->map;
 
-    if (ng->type == GAME_TYPE_SPRINT || ng->type == GAME_TYPE_TUTORIAL)
+    if (ng->type == GAME_TYPE_SPRINT
+     || ng->type == GAME_TYPE_ZOTDEF
+     || ng->type == GAME_TYPE_TUTORIAL)
+    {
         _choose_gamemode_map(ng, choice, defaults);
+    }
 
     _choose_char(ng, choice, defaults);
 
