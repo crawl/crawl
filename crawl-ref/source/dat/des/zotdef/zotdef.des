@@ -12,6 +12,8 @@
     e.marker("Y = feat:stone_stairs_up_i")
     e.kfeat("Y = .")
     e.kitem("Z = Orb of Zot")
+    e.kitem("* = star_item")
+    e.kitem("| = superb_item")
 
     e.kmask("*| = no_monster_gen")
     e.kprop("*| = no_rtele_into")
