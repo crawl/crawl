@@ -675,7 +675,10 @@ void set_ident_flags(item_def &item, iflags_t flags)
         request_autoinscribe();
 
         if (in_inventory(item))
+        {
             shopping_list.cull_identical_items(item);
+            item_skills(item, you.start_train);
+        }
     }
 
     if (fully_identified(item))
@@ -1889,6 +1892,14 @@ bool item_skills(const item_def &item, std::set<skill_type> &skills)
 {
     // Armour need to be worn to allow training.
     if (item.base_type == OBJ_ARMOUR)
+        return false;
+
+    // Wands don't need to be identified, they always train evocations.
+    if (item.base_type == OBJ_WANDS)
+        skills.insert(SK_EVOCATIONS);
+
+    // Item have to be known to be uncursed or equipped.
+    if (!item_known_uncursed(item) && get_equip_slot(&item) == -1)
         return false;
 
     skill_type sk = weapon_skill(item);

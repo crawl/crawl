@@ -132,6 +132,8 @@ static void _equip_effect(equipment_type slot, int item_slot, bool unmeld,
         _equip_armour_effect(item, unmeld);
     else if (slot >= EQ_LEFT_RING && slot < NUM_EQUIP)
         _equip_jewellery_effect(item, unmeld);
+
+    item_skills(item, you.start_train);
 }
 
 static void _unequip_effect(equipment_type slot, int item_slot, bool meld,
