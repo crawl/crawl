@@ -936,6 +936,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
         {
             // Initialize these so compilers don't complain.
             result.is_invocation = 0;
+            result.is_zotdef = 0;
             result.hotkey = 0;
             result.fail = 0;
 
