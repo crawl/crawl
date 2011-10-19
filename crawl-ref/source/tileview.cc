@@ -623,7 +623,7 @@ void tile_draw_floor()
         }
 }
 
-// Called from item() in view.cc
+// Called from _update_item_at in show.cc
 void tile_place_item(const coord_def &gc, const item_def &item)
 {
     tileidx_t t = tileidx_item(item);
@@ -650,7 +650,7 @@ void tile_place_item(const coord_def &gc, const item_def &item)
     }
 }
 
-// Called from item() in view.cc
+// Called from _update_item_at in show.cc
 void tile_place_item_marker(const coord_def &gc, const item_def &item)
 {
     if (you.see_cell(gc))
@@ -691,7 +691,7 @@ void tile_place_invisible_monster(const coord_def &gc)
     env.tile_fg(ep) = t;
 }
 
-// Called from show_def::_update_monster() in show.cc
+// Called from _update_monster() in show.cc
 void tile_place_monster(const coord_def &gc, const monster* mon)
 {
     if (!mon)
