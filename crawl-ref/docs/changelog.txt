@@ -153,7 +153,7 @@ Zot Defence
 * Disable useless gods.
 * Disable hunger, except for Vampires.
 * Creating altar asks for god, at much higher ability cost.
-* Plants and non-livings dying does count as friend dying (also in Crawl).
+* Plants and non-livings dying don't count as friend dying (also in Crawl).
 
 Technical
 ---------
