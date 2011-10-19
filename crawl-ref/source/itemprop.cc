@@ -2538,6 +2538,18 @@ int property(const item_def &item, int prop_type)
         break;
 
     case OBJ_WEAPONS:
+        if (is_unrandom_artefact(item))
+        {
+            if (prop_type == PWPN_DAMAGE)
+                return (Weapon_prop[ Weapon_index[item.sub_type] ].dam
+                        + artefact_wpn_property(item, ARTP_BASE_DAM));
+            else if (prop_type == PWPN_HIT)
+                return (Weapon_prop[ Weapon_index[item.sub_type] ].hit
+                        + artefact_wpn_property(item, ARTP_BASE_ACC));
+            else if (prop_type == PWPN_SPEED)
+                return (Weapon_prop[ Weapon_index[item.sub_type] ].speed
+                        + artefact_wpn_property(item, ARTP_BASE_DELAY));
+        }
         if (prop_type == PWPN_DAMAGE)
             return (Weapon_prop[ Weapon_index[item.sub_type] ].dam);
         else if (prop_type == PWPN_HIT)

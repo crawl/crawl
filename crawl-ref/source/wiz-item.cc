@@ -343,9 +343,11 @@ int8_t _prop_type[ARTP_NUM_PROPERTIES] = {
     ARTP_VAL_POS,  //CURSED
     ARTP_VAL_ANY,  //STEALTH
     ARTP_VAL_ANY,  //MAGICAL_POWER
-    ARTP_VAL_BOOL, //*UNUSED*
+    ARTP_VAL_ANY,  //BASE_DELAY
     ARTP_VAL_ANY,  //HP
     ARTP_VAL_BOOL, //CLARITY
+    ARTP_VAL_ANY,  //BASE_ACC
+    ARTP_VAL_ANY,  //BASE_DAM
 };
 
 static void _tweak_randart(item_def &item)
@@ -1362,9 +1364,11 @@ static void _debug_rap_stats(FILE *ostat)
         -1, //ARTP_CURSED
          0, //ARTP_STEALTH
          0, //ARTP_MAGICAL_POWER
-         0, // *UNUSED*,
-         0, //ARTP_HP,
+         0, //ARTP_BASE_DELAY
+         0, //ARTP_HP
          1, //ARTP_CLARITY
+         0, //ARTP_BASE_ACC
+         0, //ARTP_BASE_DAM
          -1
     };
 
@@ -1505,9 +1509,11 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_CURSED",
         "ARTP_STEALTH",
         "ARTP_MAGICAL_POWER",
-        "ARTP_*UNUSED*",
+        "ARTP_BASE_DELAY",
         "ARTP_HP",
         "ARTP_CLARITY",
+        "ARTP_BASE_ACC",
+        "ARTP_BASE_DAM",
     };
 
     fprintf(ostat, "                            All    Good   Bad\n");
