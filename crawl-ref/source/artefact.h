@@ -31,8 +31,7 @@ enum unrand_flag_type
     UNRAND_FLAG_CORPSE_VIOLATING = 0x40,
     UNRAND_FLAG_NOGEN            = 0x80,
     UNRAND_FLAG_RANDAPP          =0x100,
-    // Warning!  Any further extension and you'll need to change the field from
-    // a char.  What a loss of 82*sizeof() bytes...
+    // Please make sure it fits in unrandart_entry.flags (currently 16 bits).
 };
 
 enum setup_missile_type
