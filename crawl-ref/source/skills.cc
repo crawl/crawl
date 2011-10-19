@@ -606,7 +606,7 @@ void check_selected_skills()
         skill_type sk = static_cast<skill_type>(i);
         if (skill_trained(sk))
             return;
-        if (!you.can_train[sk] || you.skills[sk] == 27)
+        if (!you.can_train[sk] || you.skill_points[sk] >= skill_exp_needed(27, sk))
             continue;
         if (is_invalid_skill(first_selectable))
             first_selectable = sk;
