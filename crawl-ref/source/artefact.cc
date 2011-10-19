@@ -868,11 +868,11 @@ void static _get_randart_properties(const item_def &item,
         // Weapons and rings of slaying can't get these.
         if (one_chance_in(4 + power_level))  // to-hit
         {
-            proprt[ARTP_ACCURACY] = 1 + random2(3) + random2(2);
+            proprt[ARTP_ACCURACY] = 2 + random2(3) + random2(3);
             power_level++;
             if (one_chance_in(4))
             {
-                proprt[ARTP_ACCURACY] -= 1 + random2(3) + random2(3)
+                proprt[ARTP_ACCURACY] -= 2 + random2(4) + random2(4)
                                            + random2(3);
                 power_level--;
             }
@@ -880,11 +880,11 @@ void static _get_randart_properties(const item_def &item,
 
         if (one_chance_in(4 + power_level))  // to-dam
         {
-            proprt[ARTP_DAMAGE] = 1 + random2(3) + random2(2);
+            proprt[ARTP_DAMAGE] = 2 + random2(3) + random2(3);
             power_level++;
             if (one_chance_in(4))
             {
-                proprt[ARTP_DAMAGE] -= 1 + random2(3) + random2(3)
+                proprt[ARTP_DAMAGE] -= 2 + random2(4) + random2(4)
                                          + random2(3);
                 power_level--;
             }
