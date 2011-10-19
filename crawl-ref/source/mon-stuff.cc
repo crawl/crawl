@@ -1848,7 +1848,9 @@ int monster_die(monster* mons, killer_type killer,
             {
                 if (you.hp < you.hp_max)
                 {
-                    int heal = random2(1 + 2 * mons->hit_dice);
+                    int heal = (you.religion == GOD_MAKHLEB) ?
+                                mons->hit_dice + random2(mons->hit_dice) :
+                                random2(1 + 2 * mons->hit_dice);
                     if (heal > 0)
                         mprf("You feel a little better.");
                     inc_hp(heal);
