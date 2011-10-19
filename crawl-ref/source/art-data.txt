@@ -732,7 +732,9 @@ DESC_END: Presumably this relic led to the invention of the famous spell, or may
 NAME:     Captain's cutlass
 APPEAR:   black cutlass
 OBJ:      OBJ_WEAPONS/WPN_SABRE
-PLUS:     +6/+10
+PLUS:     +6/+7
+BASE_ACC: -1
+BASE_DAM: +2
 COLOUR:   DARKGREY
 TILE:     urand_cutlass
 TILE_EQ:  cutlass
@@ -1230,7 +1232,9 @@ TILE:     urand_katana
 TILE_EQ:  katana_slant
 COLOUR:   LIGHTRED
 PLUS:     +8/+8
-DAM:      +8
+BASE_ACC: +2
+BASE_DAM: +4
+BASE_DELAY: -2
 BOOL:     clarity
 BRAND:    SPWPN_VORPAL
 DESC_ID:  This exotic sword is a weapon for truly enlightened users.

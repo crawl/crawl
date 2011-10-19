@@ -19,6 +19,9 @@ my %field_type = (
     ACC      => "num",
     ANGRY    => "num",
     APPEAR   => "str",
+    BASE_ACC => "num",
+    BASE_DAM => "num",
+    BASE_DELAY => "num",
     BERSERK  => "bool",
     BLINK    => "bool",
     BRAND    => "enum",
@@ -26,13 +29,13 @@ my %field_type = (
     CLARITY  => "bool",
     COLD     => "num",
     COLOUR   => "enum",
+    CORPSE_VIOLATING => "bool",
     CURSED   => "num",
     DAM      => "num",
     DEX      => "num",
     ELEC     => "bool",
     EV       => "num",
     EVIL     => "bool",
-    CORPSE_VIOLATING => "bool",
     FIRE     => "num",
     HOLY     => "bool",
     INT      => "num",
@@ -64,8 +67,6 @@ my %field_type = (
     TILE     => "str",
     TILE_EQ  => "str",
     TILERIM  => "bool",
-
-    UNUSED   => "unused",
 
     flags     => "flags",
 
@@ -483,7 +484,7 @@ my @art_order = (
     "SEEINV", "INV", "LEV", "BLINK", "BERSERK",  "NOISES", "\n",
     "NOSPELL", "RND_TELE", "NOTELEP", "ANGRY", "METAB", "\n",
     "MUTATE", "ACC", "DAM", "CURSED", "STEALTH", "MP", "\n",
-    "UNUSED", "HP", "CLARITY", "\n",
+    "BASE_DELAY", "HP", "CLARITY", "BASE_ACC", "BASE_DAM", "\n",
     "}",
 
     "DESC", "\n",
