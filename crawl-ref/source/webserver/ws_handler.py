@@ -385,7 +385,8 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def write_message(self, msg):
         try:
-            super(CrawlWebSocket, self).write_message(msg)
+            if not self.client_terminated:
+                super(CrawlWebSocket, self).write_message(msg)
         except:
             self.logger.warning("Exception trying to send message.", exc_info = True)
             self.ws_connection._abort()
@@ -395,11 +396,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         data["msg"] = msg
         if not self.client_terminated:
             self.write_message(json_encode(data))
-
-    def handle_message(self, msg):
-        """Handles data coming from crawl."""
-        if not self.client_terminated:
-            self.write_message(msg)
 
     def on_close(self):
         if self.process is None and self in sockets:

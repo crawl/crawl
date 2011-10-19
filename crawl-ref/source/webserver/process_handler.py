@@ -35,7 +35,7 @@ class CrawlProcessHandlerBase(object):
 
     def write_to_all(self, msg):
         for receiver in self._receivers:
-            receiver.handle_message(msg)
+            receiver.write_message(msg)
 
     def send_to_all(self, msg, **data):
         for receiver in self._receivers:
@@ -389,6 +389,4 @@ class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
         loader = DynamicTemplateLoader.get(templ_path)
         templ = loader.load("game.html")
         game_html = templ.generate(prefix = self.client_path)
-        watcher.handle_message("delay_timeout = 1;$('#game').html(" +
-                               json_encode(game_html) +
-                               ");delay_ended();")
+        watcher.send_message("game_client", content = game_html)
