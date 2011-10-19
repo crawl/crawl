@@ -94,7 +94,7 @@ void init_pandemonium(void)
     }
 
     if (one_chance_in(10))
-        env.mons_alloc[7 + random2(3)] = MONS_FIEND;
+        env.mons_alloc[7 + random2(3)] = MONS_BRIMSTONE_FIEND;
 
     if (one_chance_in(10))
         env.mons_alloc[7 + random2(3)] = MONS_ICE_FIEND;

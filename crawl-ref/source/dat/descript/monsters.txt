@@ -477,6 +477,10 @@ brain worm
 
 A slimy mauve worm with a greatly distended head.
 %%%%
+Brimstone Fiend
+
+A huge and powerful demon wreathed in hellfire, with great scaly wings. One of the most fearsome denizens of any of the Hells.
+%%%%
 brown ooze
 
 A viscous liquid, flowing along the floor in search of organic matter to corrode.
@@ -779,10 +783,6 @@ These hovering horrors are especially loathed by wizards.
 felid
 
 A feline creature that has been granted sentience by magical means. It uses the gift of speech to demand milk, treats and catnip.
-%%%%
-Fiend
-
-A huge and powerful demon wreathed in hellfire, with great scaly wings. One of the most fearsome denizens of any of the Hells.
 %%%%
 fire bat
 

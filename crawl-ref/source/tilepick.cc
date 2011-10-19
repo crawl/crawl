@@ -1628,8 +1628,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_LOROCYPROCA;
 
     // '1' demons
-    case MONS_FIEND:
-        return TILEP_MONS_FIEND;
+    case MONS_BRIMSTONE_FIEND:
+        return TILEP_MONS_BRIMSTONE_FIEND;
     case MONS_ICE_FIEND:
         return TILEP_MONS_ICE_FIEND;
     case MONS_SHADOW_FIEND:

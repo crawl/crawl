@@ -877,7 +877,7 @@ ENDMAP
 NAME:    lemuel_hall_of_pain
 TAGS:    pan
 MONS:    pandemonium lord, any demon
-MONS:    smoke demon / weight:1 fiend
+MONS:    smoke demon / weight:1 brimstone fiend
 SHUFFLE: mx/nc
 SHUFFLE: O1/AB
 SUBST:   A=|, B=|

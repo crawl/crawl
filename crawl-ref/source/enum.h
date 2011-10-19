@@ -2271,7 +2271,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SUN_DEMON,
     MONS_SHADOW_DEMON,
     MONS_PIT_FIEND,
-    MONS_FIEND,
+    MONS_BRIMSTONE_FIEND,
     MONS_ICE_FIEND,
     MONS_SHADOW_FIEND,
     MONS_PANDEMONIUM_LORD,

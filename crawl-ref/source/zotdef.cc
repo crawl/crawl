@@ -243,10 +243,10 @@ static void _fire_wave(int power)
         MONS_MOLTEN_GARGOYLE, MONS_SALAMANDER, MONS_SUN_DEMON,
         MONS_RED_DRACONIAN, MONS_MOTTLED_DRACONIAN, MONS_DRACONIAN_SCORCHER,
         MONS_FLAMING_CORPSE, MONS_MOTTLED_DRAGON, MONS_EFREET,
-        MONS_HELL_KNIGHT, MONS_FIEND, MONS_BALRUG, MONS_HELL_HOUND,
+        MONS_HELL_KNIGHT, MONS_BRIMSTONE_FIEND, MONS_BALRUG, MONS_HELL_HOUND,
         MONS_HELL_HOG, END};
     monster_type boss[] = {MONS_AZRAEL, MONS_XTAHUA, MONS_SERPENT_OF_HELL,
-                    MONS_MARGERY, MONS_FIEND, MONS_BALRUG, MONS_FIRE_GIANT, END};
+                    MONS_MARGERY, MONS_BRIMSTONE_FIEND, MONS_BALRUG, MONS_FIRE_GIANT, END};
     _zotdef_fill_from_list(firemons, 0, power);
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("You hear roaring flames in the distance!");
@@ -459,7 +459,7 @@ static void _pan_wave(int power)
     monster_type boss[] = {MONS_MNOLEG, MONS_LOM_LOBON, MONS_CEREBOV,
                 MONS_GLOORX_VLOQ, MONS_GERYON, MONS_DISPATER,
                 MONS_ASMODEUS, MONS_ERESHKIGAL, MONS_PANDEMONIUM_LORD, END};
-    monster_type weakboss[] = {MONS_PANDEMONIUM_LORD, MONS_FIEND,
+    monster_type weakboss[] = {MONS_PANDEMONIUM_LORD, MONS_BRIMSTONE_FIEND,
                 MONS_PIT_FIEND, MONS_ICE_FIEND, MONS_BLIZZARD_DEMON, END};
 
     for (int i = 0; i <= NSLOTS; i++)
