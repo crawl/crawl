@@ -65,6 +65,10 @@ function TollStair:event(marker, ev)
       return true
     end
 
+    if self.props.overview == "Ziggurat" then
+      return true
+    end
+
     self:check_shopping_list(marker, true)
 
     return true
