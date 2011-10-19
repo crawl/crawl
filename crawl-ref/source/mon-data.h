@@ -4897,10 +4897,10 @@ static monsterentry mondata[] = {
 
 // fiends, etc. ('1')
 {
-    MONS_FIEND, '1', LIGHTRED, "Fiend",
+    MONS_BRIMSTONE_FIEND, '1', LIGHTRED, "Brimstone Fiend",
     M_SPELLCASTER | M_SEE_INVIS | M_GLOWS_LIGHT,
     MR_RES_POISON | MR_RES_HELLFIRE | MR_VUL_COLD,
-    0, 15, MONS_FIEND, MONS_FIEND, MH_DEMONIC, -12,
+    0, 15, MONS_BRIMSTONE_FIEND, MONS_BRIMSTONE_FIEND, MH_DEMONIC, -12,
     { {AT_HIT, AF_PLAIN, 25}, {AT_HIT, AF_PLAIN, 15}, {AT_HIT, AF_PLAIN, 15},
        AT_NO_ATK },
     { 18, 3, 5, 0 },

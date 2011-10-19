@@ -944,7 +944,7 @@ KMONS:      % = blue devil / iron devil / ynoxinul / neqoxec / ice devil /\
                 / chaos spawn / demonic crawler / hellwing / orange demon /\
                 soul eater / sun demon
 KMONS:      * = lorocyproca / reaper / shadow demon / tormentor / hellion
-KMONS:      | = blizzard demon / green death / pit fiend / fiend /\
+KMONS:      | = blizzard demon / green death / pit fiend / brimstone fiend /\
                 shadow fiend / ice fiend / executioner / balrug / cacodemon
 :           else
 KMONS:      % = place:D:15 zombie / guardian mummy w:2

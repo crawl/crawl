@@ -79,7 +79,7 @@ static bool _evoke_sceptre_of_asmodeus()
                                        2, MONS_BALRUG,
                                        2, MONS_HELLION,
                                        1, MONS_PIT_FIEND,
-                                       1, MONS_FIEND,
+                                       1, MONS_BRIMSTONE_FIEND,
                                        0));
 
         mgen_data mg(mon, BEH_CHARMED, &you,

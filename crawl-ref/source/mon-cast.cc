@@ -3587,7 +3587,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                                        2, MONS_BALRUG,
                                        2, MONS_HELLION,
                                        1, MONS_PIT_FIEND,
-                                       1, MONS_FIEND,
+                                       1, MONS_BRIMSTONE_FIEND,
                                        0));
 
             create_monster(

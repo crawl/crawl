@@ -3520,7 +3520,7 @@ monster_type summon_any_demon(demon_class_type dct)
         {
             // tier 1
             mon = static_cast<monster_type>(random_choose_weighted(
-                1, MONS_FIEND,
+                1, MONS_BRIMSTONE_FIEND,
                 1, MONS_ICE_FIEND,
                 1, MONS_SHADOW_FIEND,
                 1, MONS_PIT_FIEND,

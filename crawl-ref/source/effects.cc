@@ -1345,7 +1345,7 @@ static void _hell_effects()
 
         case BRANCH_GEHENNA:
             if (summon_instead)
-                which_beastie = MONS_FIEND;
+                which_beastie = MONS_BRIMSTONE_FIEND;
             else
                 which_miscast = SPTYP_FIRE;
             break;
@@ -1367,7 +1367,7 @@ static void _hell_effects()
         default:
             // This is to silence gcc compiler warnings. {dlb}
             if (summon_instead)
-                which_beastie = MONS_FIEND;
+                which_beastie = MONS_BRIMSTONE_FIEND;
             else
                 which_miscast = SPTYP_NECROMANCY;
             break;

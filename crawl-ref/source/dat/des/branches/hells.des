@@ -238,7 +238,7 @@ ENDMAP
 
 NAME:  lemuel_hellion_isle
 DEPTH: Geh:*
-MONS:  hellion, Fiend
+MONS:  hellion, brimstone fiend
 SUBST: L = l.
 SUBST: 1 = l:2 1
 MAP
@@ -664,7 +664,7 @@ ENDMAP
 
 NAME:    dis_old
 ORIENT:  north
-MONS:    patrolling Dispater, Fiend, Ice Fiend, iron devil, metal gargoyle, iron dragon
+MONS:    patrolling Dispater, brimstone fiend, Ice Fiend, iron devil, metal gargoyle, iron dragon
 : serpent_of_hell_setup(_G)
 SHUFFLE: 23
 SUBST:   4 = 4446
@@ -716,7 +716,7 @@ ENDMAP
 NAME:    dis_mu
 ORIENT:  north
 KFEAT:   o = granite_statue
-MONS:    patrolling Dispater, fiend, ice fiend, iron devil, metal gargoyle, iron dragon
+MONS:    patrolling Dispater, brimstone fiend, ice fiend, iron devil, metal gargoyle, iron dragon
 MONS:    iron troll
 KMONS:   8 = iron golem
 KFEAT:   8 = .
@@ -777,7 +777,7 @@ ENDMAP
 
 NAME:   geh_old
 ORIENT: encompass
-MONS:   patrolling Asmodeus, Fiend, Balrug, molten gargoyle
+MONS:   patrolling Asmodeus, brimstone fiend, Balrug, molten gargoyle
 MONS:   nothing, random, random
 : serpent_of_hell_setup(_G)
 : geh_setup(_G)
@@ -851,7 +851,7 @@ ENDMAP
 
 NAME:   geh_mu
 ORIENT: encompass
-MONS:   patrolling Asmodeus, Fiend
+MONS:   patrolling Asmodeus, brimstone fiend
 MONS:   Balrug, sun demon, hellion, fire giant
 KMONS:  7 = molten gargoyle
 KMONS:  8 = crimson imp
