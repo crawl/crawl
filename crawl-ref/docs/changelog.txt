@@ -88,8 +88,8 @@ Items
   "quarterstaff".  Gladiators get to start with the latter.
 * Common two-handed weapons are easier to use effectively.
 * Several new fixed artefacts.
-* The Staff of Dispater can be evoked for permanent temporarily friendly
-  demons instead of hellfire.
+* The Staff of Asmodeus can be evoked for permanent temporarily friendly
+  demons (instead of random conjurations or hostile demons).
 
 Technical
 ---------
