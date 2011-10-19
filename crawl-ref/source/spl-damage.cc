@@ -17,6 +17,7 @@
 #include "directn.h"
 #include "env.h"
 #include "food.h"
+#include "fprop.h"
 #include "godconduct.h"
 #include "itemprop.h"
 #include "items.h"
@@ -486,6 +487,9 @@ spret_type cast_refrigeration(int pow, bool non_player, bool freeze_potions,
         else
             mi->hurt(&you, hurt, BEAM_COLD);
 
+        if (!non_player && (is_sanctuary(you.pos()) || is_sanctuary(mi->pos())))
+            remove_sanctuary(true);
+
         // Cold-blooded creatures can be slowed.
         if (mi->alive()
             && mons_class_flag(mi->type, M_COLD_BLOOD)
@@ -867,7 +871,12 @@ static int _shatter_monsters(coord_def where, int pow, int, actor *)
     int damage = std::max(0, dam_dice.roll() - random2(mon->armour_class()));
 
     if (damage > 0)
+    {
         _player_hurt_monster(*mon, damage);
+
+        if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
+            remove_sanctuary(true);
+    }
 
     return (damage);
 }
