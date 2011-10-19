@@ -1170,7 +1170,8 @@ static std::string _describe_ammo(const item_def &item)
             description += "It has been contaminated by something likely to cause disease.";
             break;
         case SPMSL_RAGE:
-            description += "It is tipped with a substance that causes a mindless, berserk rage.";
+            description += "It is tipped with a substance that causes a mindless, "
+                "berserk rage, making people attack friend and foe alike.";
             break;
        case SPMSL_RETURNING:
             description += "A skilled user can throw it in such a way "
