@@ -72,9 +72,6 @@ enum extra_monster_index_type
     MISC_MISCAST,
 };
 
-// number of monster enchantments
-#define NUM_MON_ENCHANTS 6
-
 // size of Pan monster sets. Also used for wave data in ZotDef.
 #define MAX_MONS_ALLOC 20
 
