@@ -144,7 +144,7 @@ Items
 Webtiles
 --------
 * Monster list.
-* Webtiles games create a ttyrec.
+* Webtiles games create a ttyrec, allowing them to be watched from SSH.
 * Scale cells for small screens.
 
 Zot Defence
