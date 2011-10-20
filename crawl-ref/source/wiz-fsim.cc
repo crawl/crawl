@@ -164,8 +164,8 @@ static bool _fsim_ranged_combat(FILE *out, int wskill, int mi,
 
 static bool _fsim_mon_melee(FILE *out, int dodge, int armour, int mi)
 {
-    you.skills[SK_DODGING] = dodge;
-    you.skills[SK_ARMOUR]  = armour;
+    wizard_set_skill_level(SK_DODGING, dodge, true);
+    wizard_set_skill_level(SK_ARMOUR, armour, true);
 
     const int yhp  = you.hp;
     const int ymhp = you.hp_max;
