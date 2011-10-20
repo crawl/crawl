@@ -1781,7 +1781,7 @@ unsigned int item_value(item_def item, bool ident)
                 switch (item.sub_type)
                 {
                 case RING_SLAYING:
-                    coefficient = 80;
+                    coefficient = 60;
                     break;
                 case RING_PROTECTION:
                 case RING_EVASION:
