@@ -82,6 +82,7 @@ void overview_clear()
     level_annotations.clear();
     level_exclusions.clear();
     level_uniques.clear();
+    auto_unique_annotations.clear();
 }
 
 void seen_notable_thing(dungeon_feature_type which_thing, const coord_def& pos)
