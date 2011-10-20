@@ -3741,6 +3741,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
                              coord_def(0, 0), amount);
 
         blame_damage(agent, amount);
+        behaviour_event(this, ME_HURT);
     }
 
     if (cleanup_dead && (hit_points <= 0 || hit_dice <= 0) && type != -1)
