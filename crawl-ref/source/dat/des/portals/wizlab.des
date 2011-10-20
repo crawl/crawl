@@ -674,7 +674,7 @@ KITEM:      9 = scroll of acquirement
 :                                     "A glistening mirror, reflecting everything around it.\n")
 :           dgn.set_feature_desc_short("granite statue", "strange machine")
 :           dgn.set_feature_desc_long("granite statue", "A mechanical contraption," ..
-:                                     " all hisses and pops.\n")
+:                                     " all hisses and pops. It is highly reflective.\n")
 :           dgn.set_feature_desc_short("dry fountain", "glistening fountain")
 :           dgn.set_feature_desc_long("dry fountain", "A pristine fountain. " ..
 :                                     "The only thing it lacks is water.\n")
