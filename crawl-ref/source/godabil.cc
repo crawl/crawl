@@ -3115,7 +3115,7 @@ bool cheibriados_slouch(int pow)
     if (stop_attack_prompt(hitfunc, "hurt", _act_slouchable))
         return false;
 
-    mpr("You can feel time thicken.");
+    mpr("You can feel time thicken for a moment.");
     dprf("your speed is %d", player_movement_speed());
 
     apply_area_visible(_slouch_monsters, pow, true, &you);
