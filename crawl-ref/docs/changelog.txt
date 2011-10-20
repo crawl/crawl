@@ -61,7 +61,7 @@ Spells
   available as a new level 7 spell.
 * Swiftness and Flight no longer give an extra boost when cast together.
 * Swiftness halves stealth and makes it harder to detect traps.
-* Flight is now level 2.
+* Flight is now level 3.
 * Summoned Ugly Things are now always friendly.
 * Shadow Creatures don't last as long anymore.
 * Tornado's damage has been slightly improved.
@@ -105,7 +105,7 @@ Monsters
 * Removed: giant toads, vipers, blue deaths.
 * Renamed: Fiend -> Brimstone Fiend. Imp -> Crimson Imp.
 * Reorganized demon ranks, moving easier 1s to 2.
-* Feature mimics may now maquerade as most features.
+* Feature mimics may now masquerade as most features.
 * Item mimics can move once revealed.
 * Monsters will retreat when hit from behind an obstacle they can't walk
   around.
