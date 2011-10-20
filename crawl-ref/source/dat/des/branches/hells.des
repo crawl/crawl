@@ -21,7 +21,6 @@ end
 
 function geh_setup(e)
    e.place("Geh:7")
-   e.tags("no_rotate")
    e.lflags("no_tele_control")
    e.lua_marker('O', item_pickup_change_flags {
                      level_flags="!no_tele_control", item="auto" } )
@@ -777,6 +776,7 @@ ENDMAP
 
 NAME:   geh_old
 ORIENT: encompass
+TAGS:   no_rotate
 MONS:   patrolling Asmodeus, brimstone fiend, Balrug, molten gargoyle
 MONS:   nothing, random, random
 : serpent_of_hell_setup(_G)
@@ -851,6 +851,7 @@ ENDMAP
 
 NAME:   geh_mu
 ORIENT: encompass
+TAGS:   no_rotate
 MONS:   patrolling Asmodeus, brimstone fiend
 MONS:   Balrug, sun demon, hellion, fire giant
 KMONS:  7 = molten gargoyle
