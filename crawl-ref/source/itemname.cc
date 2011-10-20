@@ -2072,7 +2072,7 @@ void set_ident_type(item_def &item, item_type_id_state_type setting,
     if (in_inventory(item))
     {
         shopping_list.cull_identical_items(item);
-        if (setting == ID_KNOWN_TYPE && gives_ability(item))
+        if (setting == ID_KNOWN_TYPE && item_trains_evocations(item))
             you.start_train.insert(SK_EVOCATIONS);
     }
 
