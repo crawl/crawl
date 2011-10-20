@@ -870,18 +870,7 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
 
     const beh_type old_behaviour = mon->behaviour;
 
-    // Set up random fleeing:
-    // Monster can flee if HP is less than 1/4 maxhp or less than 20 hp
-    // (whichever is lower). Chance starts quite low, and is 100% at 1 hp.
-    // These numbers could still use some adjusting.
-    //
-    // Assuming fleeThreshold is 20:
-    //   at 20 hp: 5% chance of fleeing
-    //   at 10 hp: 55% chance of fleeing
-    //   (chance increases by 5% for every hp lost.)
     int fleeThreshold = std::min(mon->max_hit_points / 4, 20);
-    bool willFlee   = x_chance_in_y(fleeThreshold - mon->hit_points + 1,
-                                      fleeThreshold);
 
     bool isSmart          = (mons_intel(mon) > I_ANIMAL);
     bool isMobile         = !mons_is_stationary(mon);
@@ -990,18 +979,6 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
         // invisible foe.
         if (event == ME_WHACK)
             setTarget = true;
-
-        // Smart monsters, undead, plants, and nonliving monsters cannot flee.
-        // Cannot flee if cornered. There is also a random chance involved.
-        if (willFlee && !isSmart && isMobile
-            && mon->holiness() != MH_UNDEAD
-            && mon->holiness() != MH_PLANT
-            && mon->holiness() != MH_NONLIVING
-            && !mons_class_flag(mon->type, M_NO_FLEE)
-            && !mons_is_cornered(mon))
-        {
-            mon->behaviour = BEH_FLEE;
-        }
 
         break;
 
@@ -1137,6 +1114,29 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
         }
 
         mon->behaviour = BEH_CORNERED;
+        break;
+
+    case ME_HURT:
+        // Smart monsters, undead, plants, and nonliving monsters cannot flee.
+        // Cannot flee if cornered.
+        // Monster can flee if HP is less than 1/4 maxhp or less than 20 hp
+        // (whichever is lower). Chance starts quite low, and is 100% at 1 hp.
+        // These numbers could still use some adjusting.
+        //
+        // Assuming fleeThreshold is 20:
+        //   at 20 hp: 5% chance of fleeing
+        //   at 10 hp: 55% chance of fleeing
+        //   (chance increases by 5% for every hp lost.)
+        if (!isSmart && isMobile
+            && mon->holiness() != MH_UNDEAD
+            && mon->holiness() != MH_PLANT
+            && mon->holiness() != MH_NONLIVING
+            && !mons_class_flag(mon->type, M_NO_FLEE)
+            && !mons_is_cornered(mon)
+            && x_chance_in_y(fleeThreshold - mon->hit_points + 1, fleeThreshold))
+        {
+            mon->behaviour = BEH_FLEE;
+        }
         break;
 
     case ME_EVAL:
