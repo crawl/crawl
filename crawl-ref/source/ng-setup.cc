@@ -1401,24 +1401,6 @@ static void _setup_generic(const newgame_def& ng)
     _racialise_starting_equipment();
     initialise_item_descriptions();
 
-    reassess_starting_skills();
-    calc_total_skill_points();
-    init_skill_order();
-    init_can_train();
-    init_train();
-    init_training();
-
-    _give_species_bonus_mp();
-
-    if (crawl_state.game_is_zotdef())
-    {
-        you.zot_points = 80;
-
-        // There's little sense in training these skills in ZotDef
-        you.train[SK_STEALTH] = 0;
-        you.train[SK_TRAPS_DOORS] = 0;
-    }
-
     for (int i = 0; i < ENDOFPACK; ++i)
         if (you.inv[i].defined())
         {
@@ -1436,6 +1418,24 @@ static void _setup_generic(const newgame_def& ng)
             item_colour(you.inv[i]);  // set correct special and colour
             _apply_job_colour(you.inv[i]);
         }
+
+    reassess_starting_skills();
+    calc_total_skill_points();
+    init_skill_order();
+    init_can_train();
+    init_train();
+    init_training();
+
+    _give_species_bonus_mp();
+
+    if (crawl_state.game_is_zotdef())
+    {
+        you.zot_points = 80;
+
+        // There's little sense in training these skills in ZotDef
+        you.train[SK_STEALTH] = 0;
+        you.train[SK_TRAPS_DOORS] = 0;
+    }
 
     // If the item in slot 'a' is a throwable weapon like a dagger,
     // inscribe it with {=f} to prevent it being autoquivered.
