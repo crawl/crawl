@@ -1068,27 +1068,27 @@ ORIENT:     encompass
 TAGS:       wizlab no_item_gen no_monster_gen no_rotate allow_dup
 KPROP:      . = w:1 bloody / w:15 nothing
 KPROP:      ' = bloody / w:5 nothing
-KMONS:      a = human name:sickly name_adjective tile:mons_deformed_human / \
-            human name:monstrous name_adjective tile:mons_deformed_human  / \
-            human name:deformed name_adjective tile:mons_deformed_human   / \
-            human name:twisted name_adjective tile:mons_deformed_human    / \
-            human name:grotesque name_adjective tile:mons_deformed_human  / \
-            human name:hideous name_adjective tile:mons_deformed_human    / \
-            human name:febrile name_adjective tile:mons_deformed_human
-KMONS:      b = elf name:sickly name_adjective tile:mons_deformed_elf     / \
-            elf name:monstrous name_adjective tile:mons_deformed_elf      / \
-            elf name:deformed name_adjective tile:mons_deformed_elf       / \
-            elf name:twisted name_adjective tile:mons_deformed_elf        / \
-            elf name:grotesque name_adjective tile:mons_deformed_elf      / \
-            elf name:hideous name_adjective tile:mons_deformed_elf        / \
-            elf name:febrile name_adjective tile:mons_deformed_elf
-KMONS:      d = orc name:sickly name_adjective tile:mons_deformed_orc     / \
-            orc name:monstrous name_adjective tile:mons_deformed_orc      / \
-            orc name:deformed name_adjective tile:mons_deformed_orc       / \
-            orc name:twisted name_adjective tile:mons_deformed_orc        / \
-            orc name:grotesque name_adjective tile:mons_deformed_orc      / \
-            orc name:hideous name_adjective tile:mons_deformed_orc        / \
-            orc name:febrile name_adjective tile:mons_deformed_orc
+KMONS:      a = human name:sickly n_adj n_spe tile:mons_deformed_human / \
+            human name:monstrous n_adj n_spe tile:mons_deformed_human  / \
+            human name:deformed n_adj n_spe tile:mons_deformed_human   / \
+            human name:twisted n_adj n_spe tile:mons_deformed_human    / \
+            human name:grotesque n_adj n_spe tile:mons_deformed_human  / \
+            human name:hideous n_adj n_spe tile:mons_deformed_human    / \
+            human name:febrile n_adj n_noc tile:mons_deformed_human
+KMONS:      b = elf name:sickly n_adj n_spe tile:mons_deformed_elf     / \
+            elf name:monstrous n_adj n_spe tile:mons_deformed_elf      / \
+            elf name:deformed n_adj n_spe tile:mons_deformed_elf       / \
+            elf name:twisted n_adj n_spe tile:mons_deformed_elf        / \
+            elf name:grotesque n_adj n_spe tile:mons_deformed_elf      / \
+            elf name:hideous n_adj n_spe tile:mons_deformed_elf        / \
+            elf name:febrile n_adj n_spe n_noc tile:mons_deformed_elf
+KMONS:      d = orc name:sickly n_adj n_spe tile:mons_deformed_orc     / \
+            orc name:monstrous n_adj n_spe tile:mons_deformed_orc      / \
+            orc name:deformed n_adj n_spe tile:mons_deformed_orc       / \
+            orc name:twisted n_adj n_spe tile:mons_deformed_orc        / \
+            orc name:grotesque n_adj n_spe tile:mons_deformed_orc      / \
+            orc name:hideous n_adj n_spe tile:mons_deformed_orc        / \
+            orc name:febrile n_adj n_noc tile:mons_deformed_orc
 KMONS:      u = ugly thing / w:2 very ugly thing
 KMONS:      U = very ugly thing
 KMONS:      J = pulsating lump

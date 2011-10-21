@@ -910,7 +910,7 @@ KMONS:   7 =  kobold ; dagger . dart
 : else
 KMONS:   7 =  big kobold ; dagger . throwing net q:2
 : end
-KMONS:   1 = kobold name:hungry name_adjective name_species ; nothing
+KMONS:   1 = kobold name:hungry name_adjective name_nocorpse ; nothing
 SUBST:   . = e f .:150
 : dgn.delayed_decay(_G, 'e', 'rat skeleton')
 : dgn.delayed_decay(_G, 'f', 'giant gecko skeleton')
@@ -2699,7 +2699,7 @@ ENDMAP
 
 # This wizard likes to experiment!
 NAME:    laboratory_2
-MONS:    wizard col:lightred name:mad n_adj n_spe spells:polymorph_other;\
+MONS:    wizard col:lightred name:mad n_adj n_noc spells:polymorph_other;\
          paralyse;blink;bolt_of_fire;bolt_of_fire;teleport_self
 DEPTH:   D:10-26, Vault
 MONS:    laboratory rat

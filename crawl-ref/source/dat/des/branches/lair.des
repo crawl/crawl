@@ -1348,7 +1348,7 @@ MONS:   red devil / rotting devil / hairy devil / hellwing w:50
 MONS:   orange demon
 MONS:   sun demon
 MONS:   hydra / fire drake / dire elephant
-MONS:   wizard col:red hd:13 name:crazed n_adj tile:mons_hell_wizard
+MONS:   wizard col:red hd:13 name:crazed n_adj n_noc tile:mons_hell_wizard
 KITEM:  / = acquire any
 MARKER: = = lua:restrict_door {}
 MAP

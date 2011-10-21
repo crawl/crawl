@@ -296,7 +296,7 @@ monster_type fill_out_corpse(const monster* mons,
         }
     }
 
-    if (mons && !mons->mname.empty())
+    if (mons && !mons->mname.empty() && !(mons->flags & MF_NAME_NOCORPSE))
     {
         corpse.props[CORPSE_NAME_KEY] = mons->mname;
         corpse.props[CORPSE_NAME_TYPE_KEY].get_int64() = mons->flags;
@@ -2683,7 +2683,7 @@ void change_monster_type(monster* mons, monster_type targetc)
             // Remove the replacement name from the new monster
             flags = flags & ~(MF_NAME_MASK | MF_NAME_DESCRIPTOR
                               | MF_NAME_DEFINITE | MF_NAME_SPECIES
-                              | MF_NAME_ZOMBIE);
+                              | MF_NAME_ZOMBIE | MF_NAME_NOCORPSE);
         }
         else
             name = mons->mname;
