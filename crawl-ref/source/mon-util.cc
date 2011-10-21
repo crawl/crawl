@@ -765,6 +765,13 @@ bool mons_is_poisoner(const monster* mon)
         return (true);
     }
 
+    if (mon->type == MONS_DANCING_WEAPON
+        && mon->primary_weapon()
+        && get_weapon_brand(*mon->primary_weapon()) == SPWPN_VENOM)
+    {
+        return (true);
+    }
+
     return (false);
 }
 
