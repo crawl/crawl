@@ -1149,7 +1149,7 @@ COLOUR:     W = green
 :           })
 KITEM:      $ = potion of degeneration / potion of decay / \
             potion of mutation / w:3 potion of strong poison / \
-            w:2 potion of poison / w:5 potion of healing / \
+            w:2 potion of poison / w:5 potion of curing / \
             w:3 potion of heal wounds / w:1 potion of cure mutation
 KITEM:      * = gold
 KITEM:      % = amulet of resist mutation good_item

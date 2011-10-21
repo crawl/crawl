@@ -704,7 +704,7 @@ white
 %sdir item/potion
 %back i-label
 %rim 0
-i-heal POT_HEALING POT_ID_FIRST
+i-curing POT_CURING POT_ID_FIRST
 i-heal-wounds POT_HEAL_WOUNDS
 i-speed POT_SPEED
 i-might POT_MIGHT

@@ -1981,7 +1981,7 @@ static void _potion_card(int power, deck_rarity_type rarity)
     potion_type pot_effects[] = {
         POT_AGILITY, POT_AGILITY, POT_BRILLIANCE,
         POT_BRILLIANCE, POT_MIGHT, POT_MIGHT,
-        POT_HEALING, POT_HEALING, POT_CONFUSION,
+        POT_CURING, POT_CURING, POT_CONFUSION,
         POT_SLOWING, POT_PARALYSIS
     };
 

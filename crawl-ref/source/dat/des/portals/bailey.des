@@ -468,7 +468,7 @@ MONS:   generate_awake kobold ; hand axe ego:returning /\
 MONS:   gnoll ; halberd | halberd ego:electrocution
 MONS:   orc warrior / orc knight
 NSUBST: e = 1:e / *:d
-ITEM:   potion of healing / potion of heal wounds / potion of magic / nothing /\
+ITEM:   potion of curing / potion of heal wounds / potion of magic / nothing /\
         potion of might w:5 / potion of speed w:2 / potion of berserk rage w:3
 ITEM:   potion of experience w:30 / potion of cure mutation w:30 /\
         potion of gain intelligence q:2 / potion of gain strength q:2 /\
@@ -652,7 +652,7 @@ TAGS:   bailey_axe no_item_gen no_monster_gen
 # The secret door does not work well, it will always be open. I also believe
 # that loot is a bit much, but other baileys suffer from that as well... added
 # the warlord in an attempt to make it more even. --dpeg
-ITEM:   potion of healing / potion of heal wounds / potion of resistance w:5 / \
+ITEM:   potion of curing / potion of heal wounds / potion of resistance w:5 / \
         potion of might w:5 / potion of brilliance w:5 / potion of agility w:5 / \
         potion of magic w:5 / potion of speed w:5 / \
         scroll of teleportation / scroll of blinking / scroll of identify / \
@@ -958,7 +958,7 @@ WEIGHT: 10
 ORIENT: encompass
 TAGS:   bailey_polearm no_item_gen no_monster_gen
 LFLAGS: no_tele_control
-KITEM:  ! = potion of healing / potion of heal wounds / potion of might w:5 /\
+KITEM:  ! = potion of curing / potion of heal wounds / potion of might w:5 /\
             potion of speed w:3 / potion of berserk rage w:2 /\
             potion of invisibility w:3 / potion of experience w:1 /\
             potion of gain strength w:1 / potion of resistance w:1

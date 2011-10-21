@@ -231,8 +231,8 @@ KFEAT:    q = w
 COLOUR:   q = green
 MONS:     jackal / w:3 nothing, kobold / w:5 nothing, big kobold
 SHUFFLE:  deef
-ITEM:     potion of heal wounds / potion of healing
-ITEM:     potion of healing / potion of healing q:2 w:5 / \
+ITEM:     potion of heal wounds / potion of curing
+ITEM:     potion of curing / potion of curing q:2 w:5 / \
           potion of heal wounds / potion of heal wounds q:2 w:5
 KITEM:    f = potion of levitation q:2, potion of restore abilities w:7 / \
           potion of gain intelligence / potion of gain strength / \
@@ -293,7 +293,7 @@ MONS:   kobold / big kobold w:1
 MONS:   small snake / snake w:5 / giant newt w:2 / ooze w:1
 SUBST:   y : yyyyyyW., Y : YYYYYYWw
 SUBST:   y = W., Y = Ww
-ITEM:   potion of healing / potion of heal wounds / potion of might w:4 /\
+ITEM:   potion of curing / potion of heal wounds / potion of might w:4 /\
         potion of brilliance w:4 / potion of agility w:4 /\
         potion of levitation w:4 / any scroll w:7 / any armour w:2 / any weapon w:2
 : sewer_setup(_G)
@@ -473,7 +473,7 @@ SHUFFLE: de
 MONS:    grey rat / rat w:5 / green rat w:1
 MONS:    small snake / snake w:5 / giant newt w:2 / ooze w:1
 MONS:    giant frog
-ITEM:    potion of healing / potion of heal wounds / potion of might /\
+ITEM:    potion of curing / potion of heal wounds / potion of might /\
          potion of magic / potion of speed w:5 / potion of brilliance w:5
 ITEM:    scroll of teleportation / scroll of blinking w:5 /\
          scroll of fear w:5 / scroll of magic mapping /\
@@ -649,7 +649,7 @@ KMONS:   1 = giant newt / small snake w:5 / \
          snake w:4 / big fish w:3 / nothing w:6
 #      loot
 SUBST:   e = !!!!????%
-KITEM:   ? = potion of levitation q:2 w:15 / potion of healing /\
+KITEM:   ? = potion of levitation q:2 w:15 / potion of curing /\
          potion of heal wounds / potion of might / potion of magic /\
          potion of speed w:5 / potion of brilliance w:5
 KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
@@ -892,7 +892,7 @@ SUBST:   hVZzSsUuTgY = W
 #      loot
 SUBST:   e = !!!!?????
 KITEM:   ? = potion of levitation w:5 / potion of levitation q:2 w:5 /\
-         potion of healing / potion of heal wounds / potion of might /\
+         potion of curing / potion of heal wounds / potion of might /\
          potion of magic / potion of speed w:5 / potion of brilliance w:5
 KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
          scroll of blinking w:3 / scroll of magic mapping w:3 /\
@@ -958,7 +958,7 @@ SUBST:  ~ = WWWW.
 SUBST:  - = WW...
 SUBST:  " = W...
 NSUBST: ? = 4=ef / *=112233
-KITEM:  e = potion of healing / potion of heal wounds / potion of might /\
+KITEM:  e = potion of curing / potion of heal wounds / potion of might /\
         potion of magic / potion of speed w:5 / potion of brilliance w:5
 KITEM:  f = scroll of teleportation / scroll of fear w:5 /\
         scroll of blinking w:3 / scroll of magic mapping w:3 /\
@@ -1072,7 +1072,7 @@ KMONS:   " = nothing w:50 / rat / grey rat / green rat w:5
 KPROP:   w = no_tele_into
 #      loot
 SUBST:   e = !!!!!?????%
-KITEM:   ? = potion of healing / potion of heal wounds / potion of might /\
+KITEM:   ? = potion of curing / potion of heal wounds / potion of might /\
          potion of magic / potion of speed w:5 / potion of brilliance w:5
 KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
          scroll of blinking w:3 / scroll of magic mapping w:3 /\
@@ -1147,7 +1147,7 @@ SUBST:   2 = 222222W.
 SUBST:   e = !!!?????%WWW
 KFEAT:   !?% = W
 COLOUR:  !?% = lightgreen
-KITEM:   ? = potion of healing / potion of heal wounds / potion of might /\
+KITEM:   ? = potion of curing / potion of heal wounds / potion of might /\
          potion of magic / potion of speed w:5 / potion of brilliance w:5
 KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
          scroll of blinking w:3 / scroll of magic mapping w:3 /\

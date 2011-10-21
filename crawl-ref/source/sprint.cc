@@ -10,7 +10,7 @@
 
 void sprint_give_items()
 {
-    newgame_give_item(OBJ_POTIONS, POT_HEALING);
+    newgame_give_item(OBJ_POTIONS, POT_CURING);
     newgame_give_item(OBJ_POTIONS, POT_HEAL_WOUNDS);
     newgame_give_item(OBJ_POTIONS, POT_SPEED);
     newgame_give_item(OBJ_POTIONS, POT_MAGIC, 2);

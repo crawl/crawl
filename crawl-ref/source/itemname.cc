@@ -644,7 +644,7 @@ static const char* potion_type_name(int potiontype)
 {
     switch (static_cast<potion_type>(potiontype))
     {
-    case POT_HEALING:           return "healing";
+    case POT_CURING:            return "curing";
     case POT_HEAL_WOUNDS:       return "heal wounds";
     case POT_SPEED:             return "speed";
     case POT_MIGHT:             return "might";
@@ -2686,7 +2686,7 @@ bool is_emergency_item(const item_def &item)
         case POT_SPEED:
             if (you.religion == GOD_CHEIBRIADOS)
                 return (false);
-        case POT_HEALING:
+        case POT_CURING:
         case POT_HEAL_WOUNDS:
         case POT_RESISTANCE:
         case POT_MAGIC:

@@ -4743,7 +4743,7 @@ bool monster::can_drink_potion(potion_type ptype) const
 
     switch (ptype)
     {
-        case POT_HEALING:
+        case POT_CURING:
         case POT_HEAL_WOUNDS:
             return (holiness() != MH_NONLIVING
                     && holiness() != MH_PLANT);
@@ -4768,7 +4768,7 @@ bool monster::should_drink_potion(potion_type ptype) const
 {
     switch (ptype)
     {
-    case POT_HEALING:
+    case POT_CURING:
         return (hit_points <= max_hit_points / 2)
                 || has_ench(ENCH_POISON)
                 || has_ench(ENCH_SICK)
@@ -4808,7 +4808,7 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff)
 
     switch (pot_eff)
     {
-    case POT_HEALING:
+    case POT_CURING:
     {
         heal(5 + random2(7));
         simple_monster_message(this, " is healed!");
