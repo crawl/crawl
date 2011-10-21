@@ -503,13 +503,13 @@ void debug_make_trap()
     for (int t = TRAP_DART; t < NUM_TRAPS; ++t)
     {
         const trap_type tr = static_cast<trap_type>(t);
-        const char* tname  = trap_name(tr);
+        std::string tname  = lowercase_string(trap_name(tr));
         if (spec.find(tname) != spec.npos)
         {
             trap = tr;
             break;
         }
-        else if (strstr(tname, spec.c_str()))
+        else if (tname.find(spec) != tname.npos)
         {
             matches.push_back(tr);
             match_names.push_back(tname);
@@ -520,7 +520,7 @@ void debug_make_trap()
     {
         if (matches.empty())
         {
-            mprf("I know no traps named \"%s\"", spec.c_str());
+            mprf("I know no traps named \"%s\".", spec.c_str());
             return;
         }
         // Only one match, use that
@@ -538,7 +538,10 @@ void debug_make_trap()
     }
 
     if (place_specific_trap(you.pos(), trap))
-        mprf("Created a %s trap, marked it undiscovered", trap_name(trap));
+    {
+        mprf("Created a %s trap, marked it undiscovered.",
+             trap_name(trap).c_str());
+    }
     else
         mpr("Could not create trap - too many traps on level.");
 

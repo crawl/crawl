@@ -161,7 +161,7 @@ std::string trap_def::name(description_level_type desc) const
     if (type >= NUM_TRAPS)
         return ("buggy");
 
-    const char* basename = trap_name(type);
+    std::string basename = trap_name(type);
     if (desc == DESC_CAP_A || desc == DESC_NOCAP_A)
     {
         std::string prefix = (desc == DESC_CAP_A ? "A" : "a");
@@ -1123,17 +1123,6 @@ trap_type get_trap_type(const coord_def& pos)
         return (ptrap->type);
 
     return (TRAP_UNASSIGNED);
-}
-
-// Returns the unqualified name ("blade", "dart") of the trap at the
-// given position. Does not check if the trap has been discovered, and
-// will faithfully report the names of unknown traps.
-//
-// If there is no trap at the given position, returns an empty string.
-const char *trap_name_at(const coord_def& c)
-{
-    const trap_type trap = get_trap_type(c);
-    return trap != TRAP_UNASSIGNED? trap_name(trap) : "";
 }
 
 static bool _disarm_is_deadly(trap_def& trap)
