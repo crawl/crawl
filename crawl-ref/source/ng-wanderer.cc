@@ -466,7 +466,7 @@ static void _healing_or_teleport(int n)
             set_ident_type(OBJ_SCROLLS, SCR_TELEPORTATION, ID_KNOWN_TYPE);
             break;
         case 1:
-            set_ident_type(OBJ_POTIONS, POT_HEALING, ID_KNOWN_TYPE);
+            set_ident_type(OBJ_POTIONS, POT_CURING, ID_KNOWN_TYPE);
             break;
         }
     }

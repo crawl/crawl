@@ -1147,11 +1147,11 @@ static int _xom_do_potion(bool debug = false)
     if (debug)
         return (XOM_GOOD_POTION);
 
-    potion_type pot = POT_HEALING;
+    potion_type pot = POT_CURING;
     while (true)
     {
         pot = static_cast<potion_type>(
-                random_choose(POT_HEALING, POT_HEAL_WOUNDS, POT_MAGIC,
+                random_choose(POT_CURING, POT_HEAL_WOUNDS, POT_MAGIC,
                               POT_SPEED, POT_MIGHT, POT_AGILITY, POT_BRILLIANCE,
                               POT_INVISIBILITY, POT_BERSERK_RAGE,
                               POT_EXPERIENCE, -1));
@@ -1164,7 +1164,7 @@ static int _xom_do_potion(bool debug = false)
         // Extending an existing effect is okay, though.
         switch (pot)
         {
-        case POT_HEALING:
+        case POT_CURING:
             if (you.rotting || you.disease || you.duration[DUR_CONF]
                 || you.duration[DUR_POISONING])
             {
@@ -1199,7 +1199,7 @@ static int _xom_do_potion(bool debug = false)
     std::string potion_msg = "potion effect ";
     switch (pot)
     {
-    case POT_HEALING:       potion_msg += "(healing)"; break;
+    case POT_CURING:        potion_msg += "(curing)"; break;
     case POT_HEAL_WOUNDS:   potion_msg += "(heal wounds)"; break;
     case POT_MAGIC:         potion_msg += "(magic)"; break;
     case POT_SPEED:         potion_msg += "(speed)"; break;

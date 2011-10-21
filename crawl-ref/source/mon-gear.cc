@@ -189,7 +189,7 @@ static void _give_potion(monster* mon, int level)
     {
         const int thing_created =
             items(0, OBJ_POTIONS, coinflip() ? POT_HEAL_WOUNDS
-                                             : POT_HEALING, true, level, 0);
+                                             : POT_CURING, true, level, 0);
 
         if (thing_created == NON_ITEM)
             return;

@@ -682,7 +682,7 @@ static void _give_items_skills(const newgame_def& ng)
         you.equip[EQ_WEAPON] = -1;
 
         newgame_make_item(0, EQ_BODY_ARMOUR, OBJ_ARMOUR, ARM_ROBE, -1, 1, 1);
-        newgame_make_item(1, EQ_NONE, OBJ_POTIONS, POT_HEALING);
+        newgame_make_item(1, EQ_NONE, OBJ_POTIONS, POT_CURING);
         newgame_make_item(2, EQ_NONE, OBJ_POTIONS, POT_HEAL_WOUNDS);
 
         you.skills[SK_FIGHTING]       = 2;
@@ -986,7 +986,7 @@ static void _give_items_skills(const newgame_def& ng)
     // better ones.
     if (crawl_state.game_is_zotdef())
     {
-        newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_HEALING, -1, 2);
+        newgame_make_item(-1, EQ_NONE, OBJ_POTIONS, POT_CURING, -1, 2);
         you.skills[SK_TRAPS_DOORS] += 2;
     }
 

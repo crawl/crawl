@@ -2744,7 +2744,7 @@ enum size_part_type
 
 enum potion_type
 {
-    POT_HEALING,
+    POT_CURING,
     POT_HEAL_WOUNDS,
     POT_SPEED,
     POT_MIGHT,

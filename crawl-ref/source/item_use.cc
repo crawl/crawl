@@ -4361,7 +4361,7 @@ static bool _drink_fountain()
             random_choose_weighted(467, POT_WATER,
                                    48,  POT_DECAY,
                                    40,  POT_MUTATION,
-                                   40,  POT_HEALING,
+                                   40,  POT_CURING,
                                    40,  POT_HEAL_WOUNDS,
                                    40,  POT_SPEED,
                                    40,  POT_MIGHT,

@@ -758,6 +758,10 @@ potion of cure mutation
 
 A potion which removes some or all of any mutations which may be afflicting you.
 %%%%
+potion of curing
+
+A blessed fluid which heals some wounds, clears the mind and cures diseases. If it is used when one is at or near full health, it can also slightly repair permanent injuries.
+%%%%
 potion of decay
 
 A vile and putrid cursed liquid which causes your flesh to decay before your very eyes.
@@ -785,10 +789,6 @@ A potion of beneficial mutation.
 potion of heal wounds
 
 A magical healing elixir which causes wounds to close and heal almost instantly. If it is used when one is at or near full health, it can also repair permanent injuries.
-%%%%
-potion of healing
-
-A blessed fluid which heals some wounds, clears the mind and cures diseases. If it is used when one is at or near full health, it can also slightly repair permanent injuries.
 %%%%
 potion of invisibility
 

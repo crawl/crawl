@@ -70,7 +70,7 @@ bool potion_effect(potion_type pot_eff, int pow, bool drank_it, bool was_known)
 
     switch (pot_eff)
     {
-    case POT_HEALING:
+    case POT_CURING:
         if (you.duration[DUR_DEATHS_DOOR])
         {
             mpr("You feel queasy.");

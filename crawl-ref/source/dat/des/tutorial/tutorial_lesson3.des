@@ -430,7 +430,7 @@ COLOUR:  ABCDdefg = lightblue
 COLOUR:  .1234h = brown
 FTILE:   .{})^1234h = floor_swamp, t = floor_grass
 FTILE:   ABCDdefg = tutorial_pad
-ITEM:    potion of healing q:2
+ITEM:    potion of curing q:2
 ITEM:    meat ration q:50
 ITEM:    ring of levitation
 ITEM:    cloak unrand:ratskin_cloak
@@ -500,7 +500,7 @@ FTILE:   ABCdefgh = tutorial_pad
 KFEAT:   ' = .
 COLOUR:  ' = red
 KFEAT:   S = general shop use_all ; \
-         potion of healing | potion of heal wounds |  potion of heal wounds q:2 | potion of might | \
+         potion of curing | potion of heal wounds |  potion of heal wounds q:2 | potion of might | \
          wand of paralysis | ring mail | buckler ego:none | ring of slaying | scroll of enchant weapon II
 ITEM:    gold q:40
 ITEM:    wand of flame charges:9

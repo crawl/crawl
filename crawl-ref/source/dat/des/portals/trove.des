@@ -117,7 +117,7 @@ function trove.get_trove_item(e, value, base_item)
                                            quant2=3+d(3), weight=1},
 
        {base="wand", type="healing", quant=7+d(2), weight=1},
-       {base="potion", type="healing", quant=12+d(4)+d(4), weight=1},
+       {base="potion", type="curing", quant=12+d(4)+d(4), weight=1},
        {base="potion", type="heal wounds", quant=8+d(3)+d(3), weight=1},
 
        {base="wand", type="hasting", quant=7+d(2), weight=1},
@@ -871,8 +871,8 @@ NAME:    trove_alchemists_storehouse
 TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_mu
 WEIGHT:  5
 ORIENT:  encompass
-ITEM:    potion of healing / potion of heal wounds / \
-         potion of healing q:2 / potion of heal wounds q:2
+ITEM:    potion of curing / potion of heal wounds / \
+         potion of curing q:2 / potion of heal wounds q:2
 ITEM:    potion of experience / potion of gain strength / \
          potion of gain intelligence / potion of gain dexterity
 ITEM:    potion of might / potion of resistance / \
