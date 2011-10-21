@@ -3362,7 +3362,7 @@ enum zap_type
     ZAP_SLOWING,
     ZAP_HASTING,
     ZAP_MAGIC_DARTS,
-    ZAP_HEALING,
+    ZAP_HEAL_WOUNDS,
     ZAP_PARALYSIS,
     ZAP_FIRE,
     ZAP_COLD,

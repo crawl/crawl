@@ -1109,7 +1109,7 @@ spell_type zap_type_to_spell(zap_type zap)
         return SPELL_HASTE;
     case ZAP_MAGIC_DARTS:
         return SPELL_MAGIC_DART;
-    case ZAP_HEALING:
+    case ZAP_HEAL_WOUNDS:
         return SPELL_MAJOR_HEALING;
     case ZAP_PARALYSIS:
         return SPELL_PARALYSE;

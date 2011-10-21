@@ -1247,7 +1247,7 @@ static bool _handle_wand(monster* mons, bolt &beem)
         }
         return (false);
 
-    case WAND_HEALING:
+    case WAND_HEAL_WOUNDS:
         if (mons->hit_points <= mons->max_hit_points / 2)
         {
             beem.target = mons->pos();
@@ -3972,7 +3972,7 @@ static spell_type _map_wand_to_mspell(int wand_type)
     case WAND_SLOWING:         return SPELL_SLOW;
     case WAND_HASTING:         return SPELL_HASTE;
     case WAND_MAGIC_DARTS:     return SPELL_MAGIC_DART;
-    case WAND_HEALING:         return SPELL_MINOR_HEALING;
+    case WAND_HEAL_WOUNDS:     return SPELL_MINOR_HEALING;
     case WAND_PARALYSIS:       return SPELL_PARALYSE;
     case WAND_FIRE:            return SPELL_BOLT_OF_FIRE;
     case WAND_COLD:            return SPELL_BOLT_OF_COLD;

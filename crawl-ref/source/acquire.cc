@@ -767,7 +767,7 @@ static int _acquirement_wand_subtype()
         switch (type)
         {
         case WAND_HASTING:          // each 17.9%, group unknown each 26.3%
-        case WAND_HEALING:
+        case WAND_HEAL_WOUNDS:
             w = 25; break;
         case WAND_TELEPORTATION:    // each 10.7%, group unknown each 17.6%
         case WAND_INVISIBILITY:

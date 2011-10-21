@@ -1373,7 +1373,7 @@ wand of hasting
 
 A magical device which casts enchantments to speed up the actions of a creature at which it is directed.
 %%%%
-wand of healing
+wand of heal wounds
 
 A magical device which can heal a creature's wounds.
 %%%%

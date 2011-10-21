@@ -977,9 +977,9 @@ static void _give_items_skills(const newgame_def& ng)
         break;
     }
 
-    // Deep Dwarves get a wand of healing (5).
+    // Deep Dwarves get a wand of heal wounds (5).
     if (you.species == SP_DEEP_DWARF)
-        newgame_make_item(-1, EQ_NONE, OBJ_WANDS, WAND_HEALING, -1, 1, 5);
+        newgame_make_item(-1, EQ_NONE, OBJ_WANDS, WAND_HEAL_WOUNDS, -1, 1, 5);
 
     // Zotdef: everyone gets a bonus two potions of healing, plus two
     // free levels in Traps & Doors so they can replace old traps with

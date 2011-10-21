@@ -2590,7 +2590,7 @@ static int _random_wand_subtype()
     // invis, hasting, healing  (1.11% each)
     // fireball, teleportaion   (3.74% each)
     // others                   (6.37% each)
-    if (rc == WAND_INVISIBILITY || rc == WAND_HASTING || rc == WAND_HEALING
+    if (rc == WAND_INVISIBILITY || rc == WAND_HASTING || rc == WAND_HEAL_WOUNDS
         || (rc == WAND_FIREBALL || rc == WAND_TELEPORTATION) && coinflip())
     {
         rc = random2(NUM_WANDS);
@@ -2604,7 +2604,7 @@ static int _wand_max_initial_charges(int subtype)
 {
     switch (subtype)
     {
-    case WAND_HEALING: case WAND_HASTING: case WAND_INVISIBILITY:
+    case WAND_HEAL_WOUNDS: case WAND_HASTING: case WAND_INVISIBILITY:
         return 8;
 
     case WAND_FLAME: case WAND_FROST: case WAND_MAGIC_DARTS:
