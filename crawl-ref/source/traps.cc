@@ -873,7 +873,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
             {
                 if (m->is_insubstantial())
                     simple_monster_message(m, " passes through a web.");
-                else if (mons_genus(m->type))
+                else if (mons_genus(m->type) == MONS_JELLY)
                     simple_monster_message(m, " oozes through a web.");
                 // too spammy for spiders, and expected
             }
