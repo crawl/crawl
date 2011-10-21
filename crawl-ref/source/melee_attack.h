@@ -131,7 +131,6 @@ private:
     bool _move_stairs();
 private:
     // Monster-attack specific stuff
-    bool monster_attack();
     void mons_apply_attack_flavour();
     std::string mons_attack_verb();
     std::string mons_attack_desc();

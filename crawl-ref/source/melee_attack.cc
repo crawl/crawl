@@ -227,6 +227,20 @@ bool melee_attack::handle_phase_attempted()
 
     attack_occurred = true;
 
+    // TODO Relocated this?
+    if (attacker->atype() == ACT_MONSTER)
+    {
+        if (check_unrand_effects())
+            return (false);
+
+        item_def *weap = attacker->as_monster()->mslot_item(MSLOT_WEAPON);
+        if (weap && you.can_see(attacker) && weap->cursed()
+            && is_range_weapon(*weap))
+        {
+            set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
+        }
+    }
+
     // Check for player practicing dodging
     if (one_chance_in(3) && defender == &you)
         practise(EX_MONSTER_MAY_HIT);
@@ -553,6 +567,114 @@ bool melee_attack::handle_phase_damaged()
             }
         }
     }
+    else
+    {
+        const bool chaos_attack = damage_brand == SPWPN_CHAOS
+                                  || (attk_flavour == AF_CHAOS
+                                      && attacker != defender);
+
+        if (defender->atype() == ACT_PLAYER)
+            practise(EX_MONSTER_WILL_HIT);
+
+        if (decapitate_hydra(damage_done, attacker->damage_type(attack_number)))
+            return (true);
+
+        special_damage = 0;
+        special_damage_message.clear();
+        special_damage_flavour = BEAM_NONE;
+
+        if (attacker != defender && attk_type == AT_TRAMPLE)
+            do_knockback();
+
+        // Monsters attacking themselves don't get attack flavour.
+        // The message sequences look too weird.  Also, stealing
+        // attacks aren't handled until after the damage msg.
+        if (attacker != defender && attk_flavour != AF_STEAL)
+            mons_apply_attack_flavour();
+
+        if (needs_message && !special_damage_message.empty())
+            mprf("%s", special_damage_message.c_str());
+
+        // Defender banished.  Bail since the defender is still alive in the
+        // Abyss.
+        if (defender->is_banished())
+        {
+            if (chaos_attack && attacker->alive())
+                chaos_affects_attacker();
+
+            do_miscast();
+            return (false);
+        }
+
+        defender->hurt(attacker, damage_done + special_damage,
+                       special_damage_flavour);
+
+        if (!defender->alive())
+        {
+            if (chaos_attack && attacker->alive())
+                chaos_affects_attacker();
+
+            do_miscast();
+            return (true);
+        }
+
+        // Yredelemnul's injury mirroring can kill the attacker.
+        // Also, bail if the monster is attacking itself without a
+        // weapon, since intrinsic monster attack flavours aren't
+        // applied for self-attacks.
+        if (!attacker->alive() || (attacker == defender && !weapon))
+        {
+            if (miscast_target == defender)
+                do_miscast();
+            return (false);
+        }
+
+        special_damage = 0;
+        special_damage_message.clear();
+        special_damage_flavour = BEAM_NONE;
+        apply_damage_brand();
+
+        if (needs_message && !special_damage_message.empty())
+        {
+            mprf("%s", special_damage_message.c_str());
+            // Don't do message-only miscasts along with a special
+            // damage message.
+            if (miscast_level == 0)
+                miscast_level = -1;
+        }
+
+        if (special_damage > 0)
+            defender->hurt(attacker, special_damage, special_damage_flavour);
+
+        if (!defender->alive())
+        {
+            if (chaos_attack && attacker->alive())
+                chaos_affects_attacker();
+
+            do_miscast();
+            return (true);
+        }
+
+        if (chaos_attack && attacker->alive())
+            chaos_affects_attacker();
+
+        if (miscast_target == defender)
+            do_miscast();
+
+        // Yredelemnul's injury mirroring can kill the attacker.
+        if (!attacker->alive())
+            return (false);
+
+        if (miscast_target == attacker)
+            do_miscast();
+
+        // Miscast might have killed the attacker.
+        if (!attacker->alive())
+            return (false);
+
+        if (attk_flavour == AF_STEAL)
+            mons_apply_attack_flavour();
+    }
 
     return (true);
 }
@@ -671,6 +793,29 @@ bool melee_attack::attack()
         adjust_noise();
 
         handle_noise(defender->pos());
+
+        // Invisible monster might have interrupted butchering.
+        if (you_are_delayed() && defender->atype() == ACT_PLAYER
+            && perceived_attack && !attacker_visible)
+        {
+            handle_interrupted_swap(false, true);
+        }
+    }
+
+    // If an enemy attacked a friend, set the pet target if it isn't set
+    // already, but not if sanctuary is in effect (pet target must be
+    // set explicitly by the player during sanctuary).
+    if (perceived_attack && attacker->alive()
+        && (defender->atype() == ACT_PLAYER
+            || defender->as_monster()->friendly())
+        && !attacker->as_monster()->wont_attack()
+        && you.pet_target == MHITNOT
+        && env.sanctuary_time <= 0)
+    {
+        if (defender->atype() == ACT_PLAYER)
+            interrupt_activity(AI_MONSTER_ATTACKS, attacker->as_monster());
+        else
+            you.pet_target = attacker->mindex();
     }
 
     // This may invalidate both the attacker and defender.
@@ -758,172 +903,6 @@ void melee_attack::adjust_noise()
             break;
         }
     }
-}
-
-bool melee_attack::monster_attack()
-{
-    const bool chaos_attack = damage_brand == SPWPN_CHAOS
-                              || (attk_flavour == AF_CHAOS
-                                  && attacker != defender);
-
-    if (check_unrand_effects())
-        return (false);
-
-    if (damage_done > 0)
-    {
-        if (defender == &you)
-            practise(EX_MONSTER_WILL_HIT);
-
-        if (defender->can_bleed()
-            && !defender->is_summoned()
-            && !defender->submerged())
-        {
-            int blood = _modify_blood_amount(damage_done,
-                                             attacker->damage_type());
-
-            if (blood > defender->stat_hp())
-                blood = defender->stat_hp();
-
-            bleed_onto_floor(defender->pos(), defender->type, blood, true);
-        }
-
-        if (decapitate_hydra(damage_done,
-                             attacker->damage_type(attack_number)))
-        {
-            return (true);
-        }
-
-        special_damage = 0;
-        special_damage_message.clear();
-        special_damage_flavour = BEAM_NONE;
-
-        if (attacker != defender && attk_type == AT_TRAMPLE)
-            do_knockback();
-
-        // Monsters attacking themselves don't get attack flavour.
-        // The message sequences look too weird.  Also, stealing
-        // attacks aren't handled until after the damage msg.
-        if (attacker != defender && attk_flavour != AF_STEAL)
-            mons_apply_attack_flavour();
-
-        if (needs_message && !special_damage_message.empty())
-            mprf("%s", special_damage_message.c_str());
-
-        // Defender banished.  Bail since the defender is still alive in the
-        // Abyss.
-        if (defender->is_banished())
-        {
-            if (chaos_attack && attacker->alive())
-                chaos_affects_attacker();
-
-            do_miscast();
-            return (false);
-        }
-
-        defender->hurt(attacker, damage_done + special_damage,
-                       special_damage_flavour);
-
-        if (!defender->alive())
-        {
-            if (chaos_attack && attacker->alive())
-                chaos_affects_attacker();
-
-            do_miscast();
-            return (true);
-        }
-
-        // Yredelemnul's injury mirroring can kill the attacker.
-        // Also, bail if the monster is attacking itself without a
-        // weapon, since intrinsic monster attack flavours aren't
-        // applied for self-attacks.
-        if (!attacker->alive() || (attacker == defender && !weapon))
-        {
-            if (miscast_target == defender)
-                do_miscast();
-            return (false);
-        }
-
-        special_damage = 0;
-        special_damage_message.clear();
-        special_damage_flavour = BEAM_NONE;
-        apply_damage_brand();
-
-        if (needs_message && !special_damage_message.empty())
-        {
-            mprf("%s", special_damage_message.c_str());
-            // Don't do message-only miscasts along with a special
-            // damage message.
-            if (miscast_level == 0)
-                miscast_level = -1;
-        }
-
-        if (special_damage > 0)
-            defender->hurt(attacker, special_damage, special_damage_flavour);
-
-        if (!defender->alive())
-        {
-            if (chaos_attack && attacker->alive())
-                chaos_affects_attacker();
-
-            do_miscast();
-            return (true);
-        }
-
-        if (chaos_attack && attacker->alive())
-            chaos_affects_attacker();
-
-        if (miscast_target == defender)
-            do_miscast();
-
-        // Yredelemnul's injury mirroring can kill the attacker.
-        if (!attacker->alive())
-            return (false);
-
-        if (miscast_target == attacker)
-            do_miscast();
-
-        // Miscast might have killed the attacker.
-        if (!attacker->alive())
-            return (false);
-
-        if (attk_flavour == AF_STEAL)
-            mons_apply_attack_flavour();
-    }
-
-    item_def *weap = attacker->as_monster()->mslot_item(MSLOT_WEAPON);
-    if (weap && you.can_see(attacker) && weap->cursed()
-        && is_range_weapon(*weap))
-    {
-        set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
-    }
-
-    // Handle noise from last round.
-    handle_noise(defender->pos());
-
-    // Invisible monster might have interrupted butchering.
-    if (you_are_delayed() && defender->atype() == ACT_PLAYER
-        && perceived_attack && !attacker_visible)
-    {
-        handle_interrupted_swap(false, true);
-    }
-
-    // If an enemy attacked a friend, set the pet target if it isn't set
-    // already, but not if sanctuary is in effect (pet target must be
-    // set explicitly by the player during sanctuary).
-    if (perceived_attack && attacker->alive()
-        && (defender->atype() == ACT_PLAYER
-            || defender->as_monster()->friendly())
-        && !attacker->as_monster()->wont_attack()
-        && you.pet_target == MHITNOT
-        && env.sanctuary_time <= 0)
-    {
-        if (defender->atype() == ACT_PLAYER)
-            interrupt_activity(AI_MONSTER_ATTACKS, attacker->as_monster());
-        else
-            you.pet_target = attacker->mindex();
-    }
-
-    return (did_hit);
 }
 
 void melee_attack::check_autoberserk()
@@ -3369,7 +3348,7 @@ void melee_attack::player_apply_staff_damage()
         break;
 
     default:
-        mpr("You're wielding some staff I've never heard of! (fight.cc)",
+        mpr("You're wielding some staff I've never heard of! (melee_attack.cc)",
             MSGCH_ERROR);
         break;
     }
