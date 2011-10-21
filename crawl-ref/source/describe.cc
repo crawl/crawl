@@ -540,36 +540,40 @@ static const char *trap_names[] =
 {
     "dart", "arrow", "spear", "axe",
     "teleport", "alarm", "blade",
-    "bolt", "net", "zot", "needle",
+    "bolt", "net", "Zot", "needle",
     "shaft", "passage", "pressure plate", "web",
 };
 
-const char *trap_name(trap_type trap)
+std::string trap_name(trap_type trap)
 {
     ASSERT(NUM_TRAPS == sizeof(trap_names) / sizeof(*trap_names));
 
     if (trap >= TRAP_DART && trap < NUM_TRAPS)
-        return trap_names[trap];
-    return (NULL);
+        return (trap_names[trap]);
+    return ("");
 }
 
 int str_to_trap(const std::string &s)
 {
     ASSERT(NUM_TRAPS == sizeof(trap_names) / sizeof(*trap_names));
 
+    // "Zot trap" is capitalised in trap_names[], but the other trap
+    // names aren't.
+    const std::string tspec = lowercase_string(s);
+
     // allow a couple of synonyms
-    if (s == "random" || s == "any")
+    if (tspec == "random" || tspec == "any")
         return (TRAP_RANDOM);
-    else if (s == "suitable")
+    else if (tspec == "suitable")
         return (TRAP_INDEPTH);
-    else if (s == "nonteleport" || s == "noteleport"
-             || s == "nontele" || s == "notele")
+    else if (tspec == "nonteleport" || tspec == "noteleport"
+             || tspec == "nontele" || tspec == "notele")
     {
         return (TRAP_NONTELEPORT);
     }
 
     for (int i = 0; i < NUM_TRAPS; ++i)
-        if (trap_names[i] == s)
+        if (tspec == trap_names[i])
             return (i);
 
     return (-1);

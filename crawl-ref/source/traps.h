@@ -31,7 +31,6 @@ int reveal_traps(const int range);
 void destroy_trap(const coord_def& pos);
 trap_def* find_trap(const coord_def& where);
 trap_type get_trap_type(const coord_def& where);
-const char *trap_name_at(const coord_def& c);
 
 trap_type random_trap();
 trap_type random_trap(dungeon_feature_type feat);
