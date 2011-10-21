@@ -1003,7 +1003,7 @@ MONS:   draconian shifter / draconian annihilator / lich  / \
         deep elf annihilator / deep elf demonologist
 NSUBST: 4 = 6:5 / *:4
 MONS:   ancient lich
-MONS:   human name:innocent n_adj att:neutral
+MONS:   human name:innocent n_adj n_noc att:neutral
 NSUBST: 4 = 1:7 / *:4
 ITEM:   acquire any
 SUBST:  - = .

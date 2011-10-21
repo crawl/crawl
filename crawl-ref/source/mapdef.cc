@@ -3774,6 +3774,11 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             {
                 mspec.extra_monster_flags |= MF_NAME_ZOMBIE;
             }
+            if (strip_tag(mon_str, "name_nocorpse")
+                || strip_tag(mon_str, "n_noc"))
+            {
+                mspec.extra_monster_flags |= MF_NAME_NOCORPSE;
+            }
         }
 
         std::string serpent_of_hell_flavour = strip_tag_prefix(mon_str, "serpent_of_hell_flavour:");
