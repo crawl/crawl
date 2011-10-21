@@ -3995,7 +3995,7 @@ void zap_wand(int slot)
             targ_mode = TARG_ANY;
             break;
 
-        case WAND_HEALING:
+        case WAND_HEAL_WOUNDS:
             if (you.religion == GOD_ELYVILON)
             {
                 targ_mode = TARG_ANY;

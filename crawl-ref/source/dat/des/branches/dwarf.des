@@ -488,7 +488,7 @@ PLACE:    Dwarf:1
 NSUBST:   s = 1:= / *:c
 MARKER:   = = lua:restrict_door()
 SUBST:    ? = w * |:3
-KITEM:    w : wand of healing
+KITEM:    w : wand of heal wounds
 SUBVAULT: O : dhfh_hall_top
 SUBVAULT: Z : dhfh_hall_left
 SUBVAULT: Y : dhfh_hall_left

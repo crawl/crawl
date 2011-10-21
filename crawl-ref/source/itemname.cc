@@ -577,7 +577,7 @@ const char* wand_type_name(int wandtype)
     case WAND_SLOWING:         return "slowing";
     case WAND_HASTING:         return "hasting";
     case WAND_MAGIC_DARTS:     return "magic darts";
-    case WAND_HEALING:         return "healing";
+    case WAND_HEAL_WOUNDS:     return "heal wounds";
     case WAND_PARALYSIS:       return "paralysis";
     case WAND_FIRE:            return "fire";
     case WAND_COLD:            return "cold";
@@ -2660,7 +2660,7 @@ bool is_emergency_item(const item_def &item)
         case WAND_HASTING:
             if (you.religion == GOD_CHEIBRIADOS)
                 return (false);
-        case WAND_HEALING:
+        case WAND_HEAL_WOUNDS:
         case WAND_TELEPORTATION:
             return (true);
         default:

@@ -3158,7 +3158,7 @@ zap_type item_def::zap() const
     case WAND_SLOWING:         result = ZAP_SLOWING;         break;
     case WAND_HASTING:         result = ZAP_HASTING;         break;
     case WAND_MAGIC_DARTS:     result = ZAP_MAGIC_DARTS;     break;
-    case WAND_HEALING:         result = ZAP_HEALING;         break;
+    case WAND_HEAL_WOUNDS:     result = ZAP_HEAL_WOUNDS;     break;
     case WAND_PARALYSIS:       result = ZAP_PARALYSIS;       break;
     case WAND_FIRE:            result = ZAP_FIRE;            break;
     case WAND_COLD:            result = ZAP_COLD;            break;
