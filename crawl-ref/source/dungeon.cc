@@ -6301,7 +6301,7 @@ void vault_placement::apply_grid()
                 env.grid_colours(*ri) = 0;
                 env.pgrid(*ri) = 0;
                 // what about heightmap?
-#if USE_TILE
+#ifdef USE_TILE
                 tile_clear_flavour(*ri);
 #endif
             }
