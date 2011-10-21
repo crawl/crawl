@@ -72,7 +72,7 @@ static void _fsim_set_ranged_skill(int skill, const item_def *item)
 static void _fsim_item(FILE *out,
                        bool melee,
                        const item_def *weap,
-                       const char *wskill,
+                       skill_type sk,
                        unsigned int damage,
                        int iterations, int hits,
                        int maxdam, unsigned int time)
@@ -80,9 +80,10 @@ static void _fsim_item(FILE *out,
     double hitdam = hits? double(damage) / hits : 0.0;
     double avspeed = ((double) time / (double)  iterations);
     fprintf(out,
-            " %-5s|  %3d%%    |  %5.2f |    %5.2f  |"
+            " %2d   |  %3.1f  |  %3d%%    |  %5.2f |    %5.2f  |"
             "   %5.2f |   %3d   |   %5.1f\n",
-            wskill,
+            you.skills[sk],
+            (you.skill(sk, 10) - you.skill(sk, 10, true)) / 10.0,
             100 * hits / iterations,
             double(damage) / iterations,
             hitdam,
@@ -156,7 +157,7 @@ static bool _fsim_ranged_combat(FILE *out, int wskill, int mi,
         if (damage > maxdam)
             maxdam = damage;
     }
-    _fsim_item(out, false, item, make_stringf("%2d", wskill).c_str(),
+    _fsim_item(out, false, item, _fsim_melee_skill(item),
                cumulative_damage, iter_limit, hits, maxdam, time_taken);
 
     return (true);
@@ -225,7 +226,7 @@ static bool _fsim_melee_combat(FILE *out, int wskill, int mi,
         if (damage > maxdam)
             maxdam = damage;
     }
-    _fsim_item(out, true, item, make_stringf("%2d", wskill).c_str(),
+    _fsim_item(out, true, item, _fsim_melee_skill(item),
                cumulative_damage, iter_limit, hits, maxdam, time_taken);
 
     return (true);
@@ -341,7 +342,7 @@ static void _fsim_title(FILE *o, int mon, int ms)
     fprintf(o, "Weapon    : %s\n", _fsim_weapon(ms).c_str());
     fprintf(o, "Skill     : %s\n", _fsim_wskill(ms).c_str());
     fprintf(o, "\n");
-    fprintf(o, "Skill | Accuracy | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time\n");
+    fprintf(o, "Skill | Bonus | Accuracy | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time\n");
 }
 
 static void _fsim_defence_title(FILE *o, int mon)
