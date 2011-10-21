@@ -1240,6 +1240,10 @@ bool spell_is_useless(spell_type spell, bool transient)
         if (you.religion == GOD_SHINING_ONE && !player_under_penance())
             return true;
         break;
+    case SPELL_INSULATION:
+        if (player_res_electricity(false, transient, transient))
+            return true;
+        break;
     default:
         break; // quash unhandled constants warnings
     }
