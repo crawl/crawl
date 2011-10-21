@@ -984,10 +984,13 @@ bool _actor_apply_cloud_side_effects(actor *act,
                 else
                     return give_bad_mutation();
             }
-            else
+            else if (mons->mutate())
             {
-                return mons->mutate();
+                if (you.religion == GOD_ZIN && cloud.whose == KC_YOU)
+                    did_god_conduct(DID_DELIBERATE_MUTATING, 5 + random2(3));
+                return true;
             }
+            return false;
         }
         break;
 

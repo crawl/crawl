@@ -2111,6 +2111,13 @@ bool miasma_monster(monster* mons, const actor* who)
 
     bool success = poison_monster(mons, who);
 
+    if (who == &you
+        && is_good_god(you.religion)
+        && !(success && you.religion == GOD_SHINING_ONE)) // already penalized
+    {
+        did_god_conduct(DID_NECROMANCY, 5 + random2(3));
+    }
+
     if (mons->max_hit_points > 4 && coinflip())
     {
         mons->max_hit_points--;
