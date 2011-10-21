@@ -1859,27 +1859,30 @@ skill_type range_skill(object_class_type wclass, int wtype)
     return (range_skill(wpn));
 }
 
-bool item_trains_evocations(const item_def &item)
-{
-    return (gives_ability(item)
-            || item_is_evokable(item, false, false, false, false, false));
-}
-
 bool item_skills(const item_def &item, std::set<skill_type> &skills)
 {
-    const bool equipped = get_equip_slot(&item) != -1;
+    const bool equipped = item_is_equipped(item);
 
     // Armour need to be worn to allow training.
     if (item.base_type == OBJ_ARMOUR && !equipped)
         return false;
 
-    // Wands don't need to be identified, they always train evocations.
-    if (item.base_type == OBJ_WANDS)
+    // Evokables that don't need to be equipped.
+    if (item_is_evokable(item, false, false, false, false, true))
         skills.insert(SK_EVOCATIONS);
 
     // Item have to be known to be uncursed or equipped.
     if (!equipped && !item_known_uncursed(item))
         return false;
+
+    // Evokables that need to be equipped to be evoked. They can train
+    // evocations just by being carried, but they need to pass the uncursed
+    // check first.
+    if (gives_ability(item)
+        || item_is_evokable(item, false, false, false, false, false))
+    {
+        skills.insert(SK_EVOCATIONS);
+    }
 
     skill_type sk = weapon_skill(item);
     if (sk != SK_FIGHTING)
@@ -1888,9 +1891,6 @@ bool item_skills(const item_def &item, std::set<skill_type> &skills)
     sk = range_skill(item);
     if (sk != SK_THROWING)
         skills.insert(sk);
-
-    if (item_trains_evocations(item))
-        skills.insert(SK_EVOCATIONS);
 
     if (item_is_rod(item) && item_type_known(item))
     {
@@ -2600,19 +2600,12 @@ bool gives_ability(const item_def &item)
     case OBJ_WEAPONS:
         break;
     case OBJ_JEWELLERY:
-        if (!jewellery_is_amulet(item))
+        if (item.sub_type == RING_TELEPORTATION
+            || item.sub_type == RING_LEVITATION
+            || item.sub_type == RING_INVISIBILITY
+            || item.sub_type == AMU_RAGE)
         {
-            if (item.sub_type == RING_TELEPORTATION
-                || item.sub_type == RING_LEVITATION
-                || item.sub_type == RING_INVISIBILITY)
-            {
-                return (true);
-            }
-        }
-        else
-        {
-            if (item.sub_type == AMU_RAGE)
-                return (true);
+            return (true);
         }
         break;
     case OBJ_ARMOUR:
