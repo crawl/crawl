@@ -1,6 +1,8 @@
 import crypt
 import sqlite3
 import re
+import os.path
+import logging
 
 from config import max_passwd_length, nick_regex, password_db
 
@@ -25,6 +27,22 @@ def user_passwd_match(username, passwd): # Returns the correctly cased username.
     finally:
         if c: c.close()
         if conn: conn.close()
+
+def ensure_user_db_exists():
+    if os.path.exists(password_db): return
+    logging.warn("User database didn't exist; creating it now.")
+    try:
+        conn = sqlite3.connect(password_db)
+        c = conn.cursor()
+        schema = ("CREATE TABLE dglusers (id integer primary key," +
+                  " username text, email text, env text," +
+                  " password text, flags integer);")
+        c.execute(schema)
+        conn.commit()
+    finally:
+        if c: c.close()
+        if conn: conn.close()
+
 
 def register_user(username, passwd, email): # Returns an error message or None
     if passwd == "": return "The password can't be empty!"
