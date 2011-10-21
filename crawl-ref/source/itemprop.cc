@@ -538,6 +538,9 @@ void do_curse_item(item_def &item, bool quiet)
         item.flags |= ISFLAG_SEEN_CURSED;
     }
 
+    // This might prevent a carried item from allowing training.
+    maybe_change_train(item, false);
+
     item.flags |= ISFLAG_CURSED;
 
     // Xom is amused by the player's items being cursed, especially if
@@ -608,6 +611,9 @@ void do_uncurse_item(item_def &item, bool inscribe, bool no_ash,
     }
     item.flags &= (~ISFLAG_CURSED);
     item.flags &= (~ISFLAG_SEEN_CURSED);
+
+    // This might allow training for a carried item.
+    maybe_change_train(item, true);
 
     if (check_bondage)
         ash_check_bondage();
@@ -1859,24 +1865,76 @@ skill_type range_skill(object_class_type wclass, int wtype)
     return (range_skill(wpn));
 }
 
+// Check whether an item can be easily and quickly equipped.
+static bool _item_is_swappable(const item_def &item)
+{
+    if (item.base_type == OBJ_ARMOUR || !item_known_uncursed(item))
+        return false;
+
+    if (item.base_type == OBJ_JEWELLERY)
+    {
+        if (item.sub_type == AMU_FAITH && you.religion != GOD_NO_GOD)
+            return false;
+        return (item.sub_type != AMU_THE_GOURMAND
+                && item.sub_type != AMU_GUARDIAN_SPIRIT
+                && item.sub_type != RING_MAGICAL_POWER);
+    }
+
+    if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_POWER)
+        return false;
+
+    const int brand = get_weapon_brand(item);
+    return (brand != SPWPN_DISTORTION && brand != SPWPN_VAMPIRICISM);
+}
+
+// Check whether the equipment slot of an item is occupied by an item which
+// cannot be quickly removed.
+static bool _slot_blocked(const item_def &item)
+{
+    const equipment_type eq = get_item_slot(item);
+    if (eq == EQ_NONE)
+        return false;
+
+    if (eq == EQ_RINGS)
+    {
+        equipment_type eq_from = EQ_LEFT_RING;
+        equipment_type eq_to = EQ_RIGHT_RING;
+        if (you.species == SP_OCTOPODE)
+        {
+            eq_from = EQ_RING_ONE;
+            eq_to = EQ_RING_EIGHT;
+        }
+
+        for (int i = eq_from; i <= eq_to; ++i)
+            if (you.equip[i] == -1 || _item_is_swappable(you.inv[you.equip[i]]))
+                return false;
+
+        // No free slot found.
+        return true;
+    }
+
+    return (you.equip[eq] != -1 && !_item_is_swappable(you.inv[you.equip[eq]]));
+}
+
 bool item_skills(const item_def &item, std::set<skill_type> &skills)
 {
     const bool equipped = item_is_equipped(item);
-
-    // Armour need to be worn to allow training.
-    if (item.base_type == OBJ_ARMOUR && !equipped)
-        return false;
 
     // Evokables that don't need to be equipped.
     if (item_is_evokable(item, false, false, false, false, true))
         skills.insert(SK_EVOCATIONS);
 
-    // Item have to be known to be uncursed or equipped.
-    if (!equipped && !item_known_uncursed(item))
+    // Item doesn't have to be equipped, but if it isn't, it needs to be easy
+    // and quick to equip. This means:
+    // - known to be uncursed
+    // - quick to equip (no armour)
+    // - no effect that suffer from swapping (distortion, vampirism, faith,...)
+    // - slot easily accessible (item in slot needs to meet the same conditions)
+    if (!equipped && (!_item_is_swappable(item) || _slot_blocked(item)))
         return false;
 
     // Evokables that need to be equipped to be evoked. They can train
-    // evocations just by being carried, but they need to pass the uncursed
+    // evocations just by being carried, but they need to pass the equippable
     // check first.
     if (gives_ability(item)
         || item_is_evokable(item, false, false, false, false, false))
@@ -1901,6 +1959,20 @@ bool item_skills(const item_def &item, std::set<skill_type> &skills)
     }
 
     return !skills.empty();
+}
+
+void maybe_change_train(const item_def& item, bool start)
+{
+    const equipment_type eq = get_item_slot(item);
+    if (eq == EQ_NONE)
+        return;
+
+    for (int i = 0; i < ENDOFPACK; ++i)
+        if (item.link != i && you.inv[i].defined()
+            && get_item_slot(you.inv[i]) == eq)
+        {
+            item_skills(you.inv[i], start ? you.start_train : you.stop_train);
+        }
 }
 
 // Calculate the bonus to melee EV for using "wpn", with "skill" and "dex"
