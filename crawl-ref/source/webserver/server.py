@@ -78,6 +78,8 @@ if gid is not None:
 if uid is not None:
     os.setuid(uid)
 
+ensure_user_db_exists()
+
 ioloop = tornado.ioloop.IOLoop.instance()
 ioloop.set_blocking_log_threshold(0.5)
 
