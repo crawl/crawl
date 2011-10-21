@@ -472,7 +472,7 @@ i-frost WAND_FROST
 i-slowing WAND_SLOWING
 i-hasting WAND_HASTING
 i-magic_darts WAND_MAGIC_DARTS
-i-healing WAND_HEALING
+i-heal_wounds WAND_HEAL_WOUNDS
 i-paralysis WAND_PARALYSIS
 i-fire WAND_FIRE
 i-cold WAND_COLD
