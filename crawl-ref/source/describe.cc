@@ -573,7 +573,7 @@ int str_to_trap(const std::string &s)
     }
 
     for (int i = 0; i < NUM_TRAPS; ++i)
-        if (tspec == trap_names[i])
+        if (tspec == lowercase_string(trap_names[i]))
             return (i);
 
     return (-1);
