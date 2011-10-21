@@ -4817,7 +4817,7 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff)
             ENCH_POISON, ENCH_SICK, ENCH_CONFUSION, ENCH_ROT
         };
 
-        // We can differentiate healing and heal wounds (and blood,
+        // We can differentiate curing and heal wounds (and blood,
         // for vampires) by seeing if any status ailments are cured.
         for (unsigned int i = 0; i < ARRAYSZ(cured_enchants); ++i)
             if (del_ench(cured_enchants[i]))
