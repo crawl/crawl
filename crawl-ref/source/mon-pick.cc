@@ -1798,7 +1798,6 @@ int mons_pitslime_level(int mcls)
         break;
 
     case MONS_DEATH_OOZE:
-    case MONS_TENTACLED_MONSTROSITY:
     case MONS_GIANT_ORANGE_BRAIN:
         mlev += 5;
         break;
@@ -1847,9 +1846,6 @@ int mons_pitslime_rare(int mcls)
     case MONS_PULSATING_LUMP:
     case MONS_GIANT_ORANGE_BRAIN:
         return 20;
-
-    case MONS_TENTACLED_MONSTROSITY:
-        return 2;
 
     default:
         return 0;
