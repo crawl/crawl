@@ -2587,9 +2587,9 @@ static int _random_wand_subtype()
     // Wands used to be uniform (5.26% each)
     //
     // Now:
-    // invis, hasting, healing  (1.11% each)
-    // fireball, teleportaion   (3.74% each)
-    // others                   (6.37% each)
+    // invis, hasting, heal wounds (1.11% each)
+    // fireball, teleportaion      (3.74% each)
+    // others                      (6.37% each)
     if (rc == WAND_INVISIBILITY || rc == WAND_HASTING || rc == WAND_HEAL_WOUNDS
         || (rc == WAND_FIREBALL || rc == WAND_TELEPORTATION) && coinflip())
     {
