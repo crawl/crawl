@@ -33,6 +33,7 @@
 static void _init_player(void)
 {
     you.init();
+    dlua.callfn("dgn_clear_data", "");
 }
 
 // Recall that demonspawn & demigods get more later on. {dlb}
