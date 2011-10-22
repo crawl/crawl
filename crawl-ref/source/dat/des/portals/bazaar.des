@@ -242,6 +242,7 @@ ENDMAP
 # Bazaar entry with statue (Lemuel)
 NAME:   statue_bzr
 TAGS:   bzr_entry
+KPROP:  O = no_rtele_into
 SUBST:  G = G111
 MONS:   orange crystal statue / silver statue / ice statue
 : place_bazaar_portal(_G, true)
