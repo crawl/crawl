@@ -828,7 +828,7 @@ void bolt::digging_wall_effect()
             std::string wall;
             if (feat == DNGN_GRATE)
             {
-                mpr("The damaged grate falls apart into pieces.");
+                mpr("The damaged grate falls apart.");
                 return;
             }
             else if (feat == DNGN_SLIMY_WALL)
