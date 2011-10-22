@@ -50,6 +50,7 @@ Character
 * Restrictions for eating unfitting food at high satiation with herbi/carnivore.
 * Eating chunks beyond satiated depends on level of carnivorousness.
 * A little score increase from runes for non-winners.
+* Poison resistance is only 90% effective.
 
 Spells
 ------
@@ -70,7 +71,8 @@ Spells
 * Recasting a transformation is no worse than the original cast.
 * Animate Dead animates stacks.
 * Lee's Rapid Ceconstruction: prevent abuse.
-* Summon Greater Demon only has 1 demons turn hostile over time.
+* Summon Greater Demon only has tier 1 demons turn hostile over time.
+* Spider form is susceptible to poison.
 
 Backgrounds
 -----------
@@ -140,6 +142,8 @@ Items
 * Tomb card is rarer.
 * Portal card does not give instant teleports.
 * Early weapons tend to be better.
+* Rename potion of healing to potion of curing.
+* Rename wand of healing to wand of heal wounds.
 
 Webtiles
 --------
@@ -154,6 +158,7 @@ Zot Defence
 * Disable hunger, except for Vampires.
 * Creating altar asks for god, at much higher ability cost.
 * Plants and non-livings dying don't count as friend dying (also in Crawl).
+* Start with some consumables (as in Sprint) to make the early game a little easier.
 
 Technical
 ---------
