@@ -1245,15 +1245,15 @@
 { MUT_ICY_BLUE_SCALES,                  2,  3, false, true,
   NULL,
 
-  {"You are partially covered in colourless scales (AC +1).",
+  {"You are partially covered in icy blue scales (AC +1).",
    "You are mostly covered in icy blue scales (AC +2, EV -1).",
    "You are completely covered in icy blue scales (AC +3, EV -1, rC+)."},
 
-  {"Colourless scales grow over part of your body.",
-   "Your colourless scales turn blue and spread over more of your body.",
+  {"Icy blue scales grow over part of your body.",
+   "Icy blue scales spread over more of your body.",
    "Icy blue scales cover your body completely."},
 
-  {"Your colourless scales disappear.",
+  {"Your icy blue scales disappear.",
    "Your icy blue scales recede somewhat.",
    "Your icy blue scales recede somewhat."},
 
@@ -1299,15 +1299,15 @@
 { MUT_MOLTEN_SCALES,                    2,  3, false, true,
   NULL,
 
-  {"You are partially covered in colourless scales (AC +1).",
+  {"You are partially covered in molten scales (AC +1).",
    "You are mostly covered in molten scales (AC +2, EV -1).",
    "You are completely covered in molten scales (AC +3, EV -1, rF+)."},
 
-  {"Colourless scales grow over part of your body.",
-   "Your colourless scales turn molten and spread over more of your body.",
+  {"Molten scales grow over part of your body.",
+   "Molten scales spread over more of your body.",
    "Molten scales cover your body completely."},
 
-  {"Your colourless scales disappear.",
+  {"Your molten scales disappear.",
    "Your molten scales recede somewhat.",
    "Your molten scales recede somewhat."},
 
@@ -1353,15 +1353,15 @@
 { MUT_SLIMY_GREEN_SCALES,            2,  3, false, true,
   NULL,
 
-  {"You are partially covered in colourless scales (AC +1).",
+  {"You are partially covered in slimy green scales (AC +1).",
    "You are mostly covered in slimy green scales (AC +2, EV -1).",
    "You are completely covered in slimy green scales (AC +3, EV -2, rPois)."},
 
-  {"Colourless scales grow over part of your body.",
-   "Your colourless scales turn green and spread over more of your body.",
+  {"Slimy green scales grow over part of your body.",
+   "Slimy green scales spread over more of your body.",
    "Slimy green scales cover your body completely."},
 
-  {"Your colourless scales disappear.",
+  {"Your slimy green scales disappear.",
    "Your slimy green scales recede somewhat.",
    "Your slimy green scales recede somewhat."},
 
@@ -1371,15 +1371,15 @@
 { MUT_THIN_METALLIC_SCALES,            2,  3, false, true,
   NULL,
 
-  {"You are partially covered in colourless scales (AC +1).",
+  {"You are partially covered in thin metallic scales (AC +1).",
    "You are mostly covered in thin metallic scales (AC +2).",
    "You are completely covered in thin metallic scales (AC +3, rElec)."},
 
-  {"Colourless scales grow over part of your body.",
-   "Your colourless scales turn metallic and spread over more of your body.",
+  {"Thin metallic scales grow over part of your body.",
+   "Thin metallic scales spread over more of your body.",
    "Thin metallic scales cover your body completely."},
 
-  {"Your colourless scales disappear.",
+  {"Your thin metallic scales disappear.",
    "Your thin metallic scales recede somewhat.",
    "Your thin metallic scales recede somewhat."},
 
@@ -1407,15 +1407,15 @@
 { MUT_YELLOW_SCALES,                    2,  3, false,  true,
   NULL,
 
-  {"You are partially covered in colourless scales (AC +1).",
+  {"You are partially covered in yellow scales (AC +1).",
    "You are mostly covered in yellow scales (AC +2, rAcid+).",
    "You are completely covered in yellow scales (AC +3, rAcid++)."},
 
-  {"Colourless scales grow over part of your body.",
-   "Your colourless scales turn yellow and spread over more of your body.",
+  {"Yellow scales grow over part of your body.",
+   "Yellow scales spread over more of your body.",
    "Yellow scales cover you completely."},
 
-  {"Your colourless scales disappear.",
+  {"Your yellow scales disappear.",
    "Your yellow scales recede somewhat.",
    "Your yellow scales recede somewhat."},
 
