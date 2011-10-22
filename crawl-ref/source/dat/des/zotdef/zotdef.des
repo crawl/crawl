@@ -8,6 +8,8 @@
     e.orient("encompass")
     e.lfloorcol("magenta")
     e.lrockcol("lightmagenta")
+    e.lfloortile("floor_rough_magenta")
+    e.lrocktile("wall_zot_magenta")
 
     e.marker("Y = feat:stone_stairs_up_i")
     e.kfeat("Y = .")
@@ -23,6 +25,7 @@
         pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35,
         size = 2, walk_dist = 2, spread_rate= 35
     })
+
   end
 }}
 
