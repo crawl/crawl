@@ -47,8 +47,8 @@ TAGS:   zot_entry
 KFEAT:  O = enter_zot
 COLOUR: c = lightmagenta
 COLOUR: .+ = magenta
-TILE:   c = WALL_ZOT_MAGENTA
-FTILE:  .O+ = FLOOR_HALL
+TILE:   c = wall_zot_magenta
+FTILE:  .O+ = floor_hall
 MONS:   killer klown
 MAP
 xxxxxxxxx
@@ -67,7 +67,7 @@ TAGS:   no_monster_gen zot_entry
 SUBST:  = = nnn=
 SUBST:  c: c:70 v:20 b:10
 SUBST:  v: vcxlmb, n: nnnnvbcx
-FTILE:  })]O-4G: FLOOR_MARBLE
+FTILE:  })]O-4G: floor_marble
 SUBST:  - = ^ .:90
 KFEAT:  O = enter_zot
 SUBST:  4 = 122223
@@ -111,11 +111,11 @@ KFEAT:  ^ = alarm trap / blade trap / axe trap / bolt trap
 KFEAT:  O = enter_zot
 KFEAT:  n = stone_arch
 KFEAT:  m = iron_grate
-FTILE:  "OnDx = FLOOR_MARBLE
+FTILE:  "OnDx = floor_marble
 COLOUR: " = magenta
-TILE:   x = WALL_ZOT_MAGENTA
+TILE:   x = wall_zot_magenta
 COLOUR: x = magenta
-FTILE:  .+cm^1234$ = FLOOR_HALL
+FTILE:  .+cm^1234$ = floor_hall
 SUBST:  D = +, "' = .
 MONS:   patrolling nonbase draconian
 MONS:   dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
@@ -152,8 +152,8 @@ ENDMAP
 NAME:   evilmike_zot_entry_gauntlet
 TAGS:   no_monster_gen zot_entry
 SUBST:  b: v.., v: c.
-TILE:   X = WALL_ZOT_MAGENTA
-FTILE:  -OD = FLOOR_HALL
+TILE:   X = wall_zot_magenta
+FTILE:  -OD = floor_hall
 COLOUR: X-D = magenta
 KPROP:  O- = no_tele_into
 SUBST:  - = ., D = +
@@ -221,10 +221,10 @@ KFEAT:  O = enter_zot
 SUBST:  G: GXm., m: mmlw
 SUBST:  x: xcvX
 NSUBST: 2 = 2:2 / *:-
-TILE:   X = WALL_ZOT_MAGENTA
+TILE:   X = wall_zot_magenta
 COLOUR: X = magenta
 COLOUR: . = white
-FTILE:  -23O = FLOOR_HALL
+FTILE:  -23O = floor_hall
 SUBST:  - = .
 MONS:   draconian zealot / draconian caller
 MONS:   dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golden dragon
@@ -261,9 +261,9 @@ ENDMAP
 NAME:   evilmike_zot_entry_hall
 TAGS:   no_monster_gen patrolling zot_entry
 KFEAT:  O = enter_zot
-TILE:   X = WALL_ZOT_MAGENTA
+TILE:   X = wall_zot_magenta
 COLOUR: X+- = magenta
-FTILE:  -O+ = FLOOR_HALL
+FTILE:  -O+ = floor_hall
 KPROP:  O- = no_tele_into
 SUBST:  - = .
 SUBST:  v: ....cnXblw, z:..cnXblw
@@ -290,9 +290,9 @@ ENDMAP
 NAME:   evilmike_zot_entry_basic
 TAGS:   no_monster_gen zot_entry
 KFEAT:  O = enter_zot
-TILE:   x = WALL_ZOT_MAGENTA
+TILE:   x = wall_zot_magenta
 COLOUR: x+- = magenta
-FTILE:  O-+ = FLOOR_HALL
+FTILE:  O-+ = floor_hall
 KPROP:  O- = no_tele_into
 SUBST:  - = .
 NSUBST: d = 5:3 / 2:2 / 1:1
@@ -315,9 +315,9 @@ NAME:   evilmike_zot_entry_diamond
 TAGS:   no_monster_gen zot_entry
 KFEAT:  O = enter_zot
 KFEAT:  A = stone_arch
-TILE:   X = WALL_ZOT_MAGENTA
+TILE:   X = wall_zot_magenta
 COLOUR: X+- = magenta
-FTILE:  -O+A = FLOOR_HALL
+FTILE:  -O+A = floor_hall
 KPROP:  -OxA = no_tele_into
 SUBST:  - = .
 NSUBST: 2 = 2:2 / *:.
@@ -784,7 +784,7 @@ TAGS:       no_dump
 LFLAGS:     no_tele_control
 LFLOORCOL:  magenta
 LROCKCOL:   lightmagenta
-LFLOORTILE: floor_tomb
+LFLOORTILE: floor_rough_magenta
 LROCKTILE:  wall_zot_magenta
 
 #traps
@@ -811,6 +811,7 @@ SUBST:    M = 4 5 8:30 9
 
 SUBVAULT: Y : orb_chamber
 COLOUR:   c = magenta
+TILE:     c = dngn_stone_wall_magenta
 
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -1083,7 +1084,7 @@ TAGS:       transparent no_dump
 ORIENT:     float
 LFLOORCOL:  lightgrey
 LROCKCOL:   white
-LFLOORTILE: floor_tomb
+LFLOORTILE: floor_rough_lightgray
 LROCKTILE:  wall_zot_white
 MAP
 .
@@ -1095,7 +1096,7 @@ TAGS:       transparent no_dump
 ORIENT:     float
 LFLOORCOL:  white
 LROCKCOL:   blue
-LFLOORTILE: floor_tomb
+LFLOORTILE: floor_rough_white
 LROCKTILE:  wall_zot_blue
 MAP
 .
@@ -1107,8 +1108,8 @@ TAGS:       transparent no_dump
 ORIENT:     float
 LFLOORCOL:  blue
 LROCKCOL:   lightblue
-LFLOORTILE: floor_tomb
-LROCKTILE:  wall_zot_cyan
+LFLOORTILE: floor_rough_blue
+LROCKTILE:  wall_zot_lightblue
 MAP
 .
 ENDMAP
@@ -1119,8 +1120,8 @@ TAGS:       transparent no_dump
 ORIENT:     float
 LFLOORCOL:  lightblue
 LROCKCOL:   magenta
-LFLOORTILE: floor_tomb
-LROCKTILE:  wall_zot_blue
+LFLOORTILE: floor_rough_lightblue
+LROCKTILE:  wall_zot_green
 MAP
 .
 ENDMAP
