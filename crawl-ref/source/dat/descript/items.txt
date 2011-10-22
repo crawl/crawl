@@ -457,7 +457,7 @@ A flail with spiked lumps on both ends.
 %%%%
 disc of storms
 
-This extremely powerful item can unleash a destructive storm of electricity. It is especially effective in the hands of one skilled in air elemental magic, but cannot be used by one who is not a conductor.
+This extremely powerful item can unleash a destructive storm of electricity. Its effectiveness greatly improves in the hands of one skilled in using magical devices, but cannot be used by one who is not a conductor.
 %%%%
 double sword
 
