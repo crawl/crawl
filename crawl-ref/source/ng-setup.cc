@@ -228,6 +228,17 @@ void unfocus_stats()
     }
 }
 
+// Some consumables to make the starts of Sprint and Zotdef a little easier.
+void _give_bonus_items()
+{
+    newgame_give_item(OBJ_POTIONS, POT_CURING);
+    newgame_give_item(OBJ_POTIONS, POT_HEAL_WOUNDS);
+    newgame_give_item(OBJ_POTIONS, POT_SPEED);
+    newgame_give_item(OBJ_POTIONS, POT_MAGIC, 2);
+    newgame_give_item(OBJ_POTIONS, POT_BERSERK_RAGE);
+    newgame_give_item(OBJ_SCROLLS, SCR_BLINKING);
+}
+
 void give_basic_mutations(species_type speci)
 {
     // We should switch over to a size-based system
@@ -1386,8 +1397,8 @@ static void _setup_generic(const newgame_def& ng)
 
     _give_starting_food();
 
-    if (crawl_state.game_is_sprint())
-        sprint_give_items();
+    if (crawl_state.game_is_sprint() || crawl_state.game_is_zotdef())
+        _give_bonus_items();
 
     // Give tutorial skills etc
     if (crawl_state.game_is_tutorial())
