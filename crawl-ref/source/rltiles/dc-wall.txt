@@ -216,21 +216,25 @@ zot_blue3
 
 %variation WALL_ZOT green
 %hue 240 120
+%lum 240 -5
 %repeat WALL_ZOT WALL_ZOT_GREEN
 %resetcol
 
 %variation WALL_ZOT cyan
 %hue 240 180
+%lum 240 -5
 %repeat WALL_ZOT WALL_ZOT_CYAN WALL_ICE
 %resetcol
 
 %variation WALL_ZOT red
 %hue 240 0
+%lum 240 -5
 %repeat WALL_ZOT WALL_ZOT_RED
 %resetcol
 
 %variation WALL_ZOT magenta
 %hue 240 300
+%lum 240 -5
 %repeat WALL_ZOT WALL_ZOT_MAGENTA
 %resetcol
 
