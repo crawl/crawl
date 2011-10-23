@@ -269,7 +269,7 @@ static bool _is_seen_land(coord_def gc)
 {
     const dungeon_feature_type feat = _safe_feat(gc);
 
-    return (feat != DNGN_UNSEEN && !feat_is_water(feat) && feat != DNGN_LAVA);
+    return (feat != DNGN_UNSEEN && !feat_is_water(feat) && !feat_is_lava(feat));
 }
 
 static bool _is_seen_shallow(coord_def gc)
@@ -289,7 +289,7 @@ static void _pack_default_waves(const coord_def &gc, packed_cell *cell)
     if (cell->swamp_tree_water && feat == DNGN_TREE)
         feat = DNGN_SHALLOW_WATER;
 
-    if (!feat_is_water(feat) && feat != DNGN_LAVA || env.grid_colours(gc))
+    if (!feat_is_water(feat) && !feat_is_lava(feat) || env.grid_colours(gc))
         return;
 
     if (feat == DNGN_DEEP_WATER)
