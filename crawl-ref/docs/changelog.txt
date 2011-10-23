@@ -10,7 +10,7 @@ Branches, portal vaults, levels
 -------------------------------
 * Remove Hive. Guarantee some limited food supply in the dungeon.
 * Reworked Abyss transformations.
-* Most abyssical runes are in special vaults.
+* Most abyssal runes are in special vaults.
 * Escaping the Abyss returns to place of banishment.
 * Ziggurats have much more colourful holy levels.
 * Ziggurats: spriggan levels.
@@ -32,8 +32,9 @@ Gods
 * Makhleb gives more Health for killing but no Magic anymore.
 * Zin followers pay mandatory tithe for piety. No more piety for waiting.
 * Zin takes some gold upon conversion; this gives more piety than donation.
-* Zin's Vitalisation is proactive, protecting from all bad statuses and feeds.
-* Zin's Imprison improved.
+* Zin's Vitalisation is proactive, protecting from all bad statuses.
+* Prayer to Zin doesn't provide feeding, Vitalisation gives satiation instead.
+* Zin's Imprison duration increased.
 * TSO: piety decays; gain piety for spotting non-evil monsters.
 * Elyvilon: piety decays; piety for pacifications doubled.
 * Elyvilon has piety loss for ally deaths instead of penance.
@@ -70,7 +71,7 @@ Spells
 * Mephitic Cloud and Evaporate don't guarantee a 3x3 cloud anymore.
 * Recasting a transformation is no worse than the original cast.
 * Animate Dead animates stacks.
-* Lee's Rapid Ceconstruction: prevent abuse.
+* Lee's Rapid Deconstruction: prevent abuse.
 * Summon Greater Demon only has tier 1 demons turn hostile over time.
 * Spider form is susceptible to poison.
 
@@ -111,11 +112,13 @@ Monsters
 * Item mimics can move once revealed.
 * Monsters will retreat when hit from behind an obstacle they can't walk
   around.
-* Unique Pandemonium lords can haunt you on the Orb run if you've stolen
-  their runes.  Violate the 5th Commandment not 7th!
+* Unique Pandemonium lords can hunt you on the Orb run if you've stolen
+  their runes. Violate the 5th Commandment not 7th!
 * More emergency spell usage.
 * Gnoll shamans and sergeants are actual monsters.
 * Breath timeout for dragons, draconians, drakes.
+* Most monster summoning spells toned down slightly.
+* Monsters flee at lower health thresholds, and less predictably.
 
 Items
 -----
@@ -132,8 +135,9 @@ Items
 * Quarterstaves are split into two weapons: weak "staff" and good
   "quarterstaff".  Gladiators get to start with the latter.
 * Common two-handed weapons are easier to use effectively.
-* Several new fixed artefacts.
-* The Staff of Asmodeus can be evoked for permanent temporarily friendly
+* Several new fixed artefacts: lightning scales, Black Knight's horse barding,
+  ring of Vitality, autumn katana, shillelagh "Devastator".
+* The Sceptre of Asmodeus can be evoked for permanent temporarily friendly
   demons (instead of random conjurations or hostile demons).
 * Scrolls of enchant and vorpalise weapon identified upon use.
 * Amulet of guardian spirit draws from HP and MP simultaneously.
