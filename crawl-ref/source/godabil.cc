@@ -455,6 +455,14 @@ static int _zin_check_recite_to_single_monster(const coord_def& where,
     if (mon->has_attack_flavour(AF_STEAL_FOOD))
         eligibility[RECITE_IMPURE]++;
 
+    // Being naturally mutagenic isn't good either.
+    corpse_effect_type ce = mons_corpse_effect(mon->type);
+    if ((ce == CE_ROT || ce == CE_MUTAGEN_RANDOM || ce == CE_MUTAGEN_GOOD
+         || ce == CE_MUTAGEN_BAD || ce == CE_RANDOM) && !mon->is_chaotic())
+    {
+        eligibility[RECITE_IMPURE]++;
+    }
+
     // Death drakes and rotting devils get a bump to uncleanliness.
     if (mon->type == MONS_ROTTING_DEVIL || mon->type == MONS_DEATH_DRAKE)
         eligibility[RECITE_IMPURE]++;
