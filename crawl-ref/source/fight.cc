@@ -4345,6 +4345,15 @@ bool melee_attack::mons_attack_warded_off()
             mprf("%s tries to attack %s, but flinches away.",
                  atk_name(DESC_CAP_THE).c_str(),
                  mons_defender_name().c_str());
+
+            if (defender == &you
+                && player_equip(EQ_AMULET, AMU_WARDING, true)
+                && !player_equip(EQ_STAFF, STAFF_SUMMONING, true))
+            {
+                item_def *amu = you.slot_item(EQ_AMULET);
+                ASSERT(amu);
+                wear_id_type(*amu);
+            }
         }
         return (true);
     }
