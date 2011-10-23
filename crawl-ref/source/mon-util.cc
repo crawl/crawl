@@ -4180,6 +4180,8 @@ mon_body_shape get_mon_shape(const int type)
 
     case '9': // gargoyles
         return (MON_SHAPE_HUMANOID_WINGED_TAILED);
+    case '*': // orbs
+        return (MON_SHAPE_ORB);
     }
 
     return (MON_SHAPE_MISC);
