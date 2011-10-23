@@ -180,7 +180,8 @@ NSUBST: A = 2:L / *:.
 SUBST:  ' = .
 KMONS:  O = tentacled monstrosity / large abomination / chaos spawn
 KMONS:  L = wizard hd:16 name:mad_acolyte_of_Lugonu n_rpl n_des col:lightgreen \
-            spells:smiting;blink_other;invisibility;malign_gateway;blink priest_spells ; \
+            tile:mons_hell_wizard priest_spells \
+            spells:smiting;blink_other;invisibility;malign_gateway;blink ; \
             robe . quarterstaff ego:distortion | dagger ego:distortion
 MAP
 ''''' ''''' '''''
@@ -204,7 +205,8 @@ KFEAT:  _ = altar_lugonu
 FTILE:  ._+OL = floor_crystal_squares
 SUBST:  ' = .
 KMONS:  L = wizard hd:16 name:mad_acolyte_of_Lugonu n_rpl n_des col:lightgreen \
-            spells:smiting;blink_other;invisibility;malign_gateway;blink priest_spells ; \
+            tile:mons_hell_wizard priest_spells \
+            spells:smiting;blink_other;invisibility;malign_gateway;blink ; \
             robe . quarterstaff ego:distortion | dagger ego:distortion
 MAP
   '''''''''''
