@@ -44,7 +44,9 @@ wolf MONS_WOLF
 hell_hound MONS_HELL_HOUND
 hog MONS_HOG
 hell_hog MONS_HELL_HOG
+%rim 0
 holy_swine MONS_HOLY_SWINE
+%rim 1
 %sdir player/felids
 cat4 MONS_FELID
 %sdir dc-mon/animals
