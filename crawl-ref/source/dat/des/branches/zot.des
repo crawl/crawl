@@ -785,7 +785,7 @@ LFLAGS:     no_tele_control
 LFLOORCOL:  magenta
 LROCKCOL:   lightmagenta
 LFLOORTILE: floor_rough_magenta
-LROCKTILE:  wall_zot_magenta
+LROCKTILE:  wall_zot_lightmagenta
 
 #traps
 SUBST:    C = X:900 c:100 =
@@ -1121,7 +1121,7 @@ ORIENT:     float
 LFLOORCOL:  lightblue
 LROCKCOL:   magenta
 LFLOORTILE: floor_rough_lightblue
-LROCKTILE:  wall_zot_green
+LROCKTILE:  wall_zot_magenta
 MAP
 .
 ENDMAP
