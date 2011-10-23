@@ -1820,7 +1820,7 @@ static int _xom_snakes_to_sticks(int sever, bool debug = false)
             doodad.quantity = 1;
 
             // Output some text since otherwise snakes will disappear silently.
-            mprf("%s reforms as %s", mi->name(DESC_CAP_THE).c_str(),
+            mprf("%s reforms as %s.", mi->name(DESC_CAP_THE).c_str(),
                  doodad.name(DESC_NOCAP_A).c_str());
 
             // Dismiss monster silently.
