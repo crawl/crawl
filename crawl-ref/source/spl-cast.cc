@@ -71,55 +71,10 @@
 #include "transform.h"
 #include "view.h"
 
-static bool _surge_identify_boosters(spell_type spell)
-{
-    const unsigned int typeflags = get_spell_disciplines(spell);
-    if ((typeflags & SPTYP_FIRE) || (typeflags & SPTYP_ICE))
-    {
-        int num_unknown = 0;
-        for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
-        {
-            if (i == EQ_AMULET)
-                continue;
-
-            if (player_wearing_slot(i)
-                && !item_type_known(you.inv[you.equip[i]]))
-            {
-                ++num_unknown;
-            }
-        }
-
-        // We can also identify cases with two unknown rings, both
-        // of fire (or both of ice)...let's skip it.
-        if (num_unknown == 1)
-        {
-            for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
-            {
-                if (i == EQ_AMULET)
-                    continue;
-
-                if (player_wearing_slot(i))
-                {
-                    item_def& ring = you.inv[you.equip[i]];
-                    if (!item_ident(ring, ISFLAG_KNOW_PROPERTIES)
-                        && (ring.sub_type == RING_FIRE
-                            || ring.sub_type == RING_ICE))
-                    {
-                        wear_id_type(ring);
-                    }
-                }
-            }
-            return (true);
-        }
-    }
-    return (false);
-}
-
 static void _surge_power(spell_type spell)
 {
     int enhanced = 0;
 
-    _surge_identify_boosters(spell);
     enhanced += spell_enhancement(get_spell_disciplines(spell));
 
     if (enhanced)               // one way or the other {dlb}
