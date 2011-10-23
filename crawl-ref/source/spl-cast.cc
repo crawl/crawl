@@ -105,11 +105,7 @@ static bool _surge_identify_boosters(spell_type spell)
                         && (ring.sub_type == RING_FIRE
                             || ring.sub_type == RING_ICE))
                     {
-                        set_ident_type(ring.base_type, ring.sub_type,
-                                        ID_KNOWN_TYPE);
-                        set_ident_flags(ring, ISFLAG_KNOW_PROPERTIES);
-                        mprf("You are wearing: %s",
-                             ring.name(DESC_INVENTORY_EQUIP).c_str());
+                        wear_id_type(ring);
                     }
                 }
             }

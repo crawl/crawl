@@ -1087,13 +1087,7 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         else if (player_equip(EQ_AMULET, AMU_GUARDIAN_SPIRIT, true))
         {
             item_def& amu(you.inv[you.equip[EQ_AMULET]]);
-            if (!item_type_known(amu))
-            {
-                set_ident_type(amu.base_type, amu.sub_type, ID_KNOWN_TYPE);
-                set_ident_flags(amu, ISFLAG_KNOW_PROPERTIES);
-                mprf("You are wearing: %s",
-                     amu.name(DESC_INVENTORY_EQUIP).c_str());
-            }
+            wear_id_type(amu);
         }
         break;
 

@@ -2444,6 +2444,16 @@ void swap_with_monster(monster* mon_to_swap)
     }
 }
 
+void wear_id_type(item_def &item)
+{
+    if (item_ident(item, ISFLAG_KNOW_PROPERTIES))
+        return;
+    set_ident_type(item.base_type, item.sub_type, ID_KNOWN_TYPE);
+    set_ident_flags(item, ISFLAG_KNOW_PROPERTIES);
+    mprf("You are wearing: %s",
+         item.name(DESC_INVENTORY_EQUIP).c_str());
+}
+
 // AutoID an equipped ring of teleport.
 // Code copied from fire/ice in spl-cast.cc
 void maybe_id_ring_TC()
@@ -2478,14 +2488,8 @@ void maybe_id_ring_TC()
         if (player_wearing_slot(i))
         {
             item_def& ring = you.inv[you.equip[i]];
-            if (!item_ident(ring, ISFLAG_KNOW_PROPERTIES)
-                && ring.sub_type == RING_TELEPORT_CONTROL)
-            {
-                set_ident_type(ring.base_type, ring.sub_type, ID_KNOWN_TYPE);
-                set_ident_flags(ring, ISFLAG_KNOW_PROPERTIES);
-                mprf("You are wearing: %s",
-                     ring.name(DESC_INVENTORY_EQUIP).c_str());
-            }
+            if (ring.sub_type == RING_TELEPORT_CONTROL)
+                wear_id_type(ring);
         }
     }
 }
