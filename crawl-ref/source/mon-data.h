@@ -2321,7 +2321,7 @@ static monsterentry mondata[] = {
     MONS_RED_WASP, 'y', RED, "red wasp",
     M_NO_SKELETON,
     MR_VUL_POISON,
-    180, 12, MONS_YELLOW_WASP, MONS_RED_WASP, MH_NATURAL, -3,
+    180, 12, MONS_RED_WASP, MONS_RED_WASP, MH_NATURAL, -3,
     { {AT_STING, AF_PARALYSE, 23}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 8, 3, 5, 0 },
     7, 14, MST_NO_SPELLS, CE_POISONOUS, Z_SMALL, S_BUZZ,
