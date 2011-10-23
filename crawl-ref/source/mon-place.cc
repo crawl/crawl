@@ -1511,6 +1511,9 @@ static int _place_monster_aux(const mgen_data &mg,
     // Mennas belongs to Zin.
     else if (mg.cls == MONS_MENNAS)
         mon->god = GOD_ZIN;
+    // Yiuf is a faithful Xommite.
+    else if (mg.cls == MONS_CRAZY_YIUF)
+        mon->god = GOD_XOM;
     // The hell lords, Grinder and Ignacio belong to Makhleb.
     else if (mons_species(mg.cls) == MONS_HELL_LORD
              || mg.cls == MONS_ANTAEUS
