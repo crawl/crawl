@@ -263,11 +263,9 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
         {
             if (cell.is_sanctuary)
                 m_buf_feat.add(TILE_SANCTUARY, x, y);
-            if (cell.is_silenced && (cell.halo == HALO_RANGE))
-                m_buf_feat.add(TILE_HALO_RANGE_SILENCED, x, y);
-            else if (cell.is_silenced)
+            if (cell.is_silenced)
                 m_buf_feat.add(TILE_SILENCED, x, y);
-            else if (cell.halo == HALO_RANGE)
+            if (cell.halo == HALO_RANGE)
                 m_buf_feat.add(TILE_HALO_RANGE, x, y);
 
             if (cell.orb_glow)
