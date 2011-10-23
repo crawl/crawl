@@ -805,7 +805,6 @@ static tileidx_t _mon_sinus(tileidx_t tile)
     ASSERT(count > 0);
     ASSERT(count > 1); // technically, staying put would work
     int n = you.frame_no % (2 * count - 2);
-    debuglog("n=%d, frame %d/%d\n", you.frame_no, n, count);
     return (n < count) ? (tile + n) : (tile + 2 * count - 2 - n);
 }
 
