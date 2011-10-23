@@ -1893,6 +1893,8 @@ monster_type pick_random_zombie()
 
             if (!mons_zombie_size(mcls) || mons_is_unique(mcls))
                 continue;
+            if (mons_class_holiness(mcls) != MH_NATURAL)
+                continue;
 
             zombifiable.push_back(mcls);
         }
