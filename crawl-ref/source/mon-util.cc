@@ -4091,6 +4091,8 @@ mon_body_shape get_mon_shape(const int type)
             return (MON_SHAPE_HUMANOID);
         else if (type == MONS_MANTICORE)
             return (MON_SHAPE_QUADRUPED);
+        else if (type == MONS_HARPY)
+            return (MON_SHAPE_HUMANOID_WINGED);
         else
             return (MON_SHAPE_QUADRUPED_WINGED);
     case 'I': // ice beasts
