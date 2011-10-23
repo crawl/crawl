@@ -469,6 +469,10 @@ killer_klown_red
 killer_klown_yellow
 slave MONS_SLAVE
 human_slave
+## From a Lair ending
+vault/hell_wizard_50 MONS_HELL_WIZARD
+vault/hell_wizard_75
+vault/hell_wizard_100
 ## From the Wucad Mu wizlab
 vault/human_monk_ghost MONS_HUMAN_MONK
 ## From the Cigotuvi wizlab

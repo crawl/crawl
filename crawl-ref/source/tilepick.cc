@@ -798,6 +798,17 @@ static tileidx_t _mon_random(tileidx_t tile)
     return (tile + random2(count));
 }
 
+// actually, a triangle wave, but it's up to the actual tiles
+static tileidx_t _mon_sinus(tileidx_t tile)
+{
+    int count = tile_player_count(tile);
+    ASSERT(count > 0);
+    ASSERT(count > 1); // technically, staying put would work
+    int n = you.frame_no % (2 * count - 2);
+    debuglog("n=%d, frame %d/%d\n", you.frame_no, n, count);
+    return (n < count) ? (tile + n) : (tile + 2 * count - 2 - n);
+}
+
 // This function allows for getting a monster from "just" the type.
 // To avoid needless duplication of a cases in tileidx_monster, some
 // extra parameters that have reasonable defaults for monsters where
@@ -2488,6 +2499,8 @@ static tileidx_t _tileidx_monster_no_props(const monster* mon)
         tileidx_t t = mon->props["monster_tile"].get_short();
         if (t == TILEP_MONS_STATUE_GUARDIAN)
             return _mon_random(t);
+        else if (t == TILEP_MONS_HELL_WIZARD)
+            return _mon_sinus(t);
         else
             return t;
     }
