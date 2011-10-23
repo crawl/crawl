@@ -10,6 +10,7 @@
 #include "item_use.h"
 #include "libutil.h"
 #include "macro.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "ouch.h"
@@ -453,9 +454,7 @@ bool lose_stat(stat_type which_stat, int8_t stat_loss, bool force,
             if (ring && !is_artefact(*ring)
                 && ring->sub_type == RING_SUSTAIN_ABILITIES)
             {
-                set_ident_type(*ring, ID_KNOWN_TYPE);
-                mprf("You are wearing: %s",
-                     ring->name(DESC_INVENTORY_EQUIP).c_str());
+                wear_id_type(*ring);
             }
         }
     }

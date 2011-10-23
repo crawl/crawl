@@ -4767,13 +4767,7 @@ bool confuse_player(int amount, bool resistable)
         if (player_equip(EQ_AMULET, AMU_CLARITY, true))
         {
             item_def* const amu = you.slot_item(EQ_AMULET, false);
-            if (!item_ident(*amu, ISFLAG_KNOW_TYPE))
-            {
-                set_ident_type(amu->base_type, amu->sub_type, ID_KNOWN_TYPE);
-                set_ident_flags(*amu, ISFLAG_KNOW_TYPE);
-                mprf("You are wearing: %s",
-                     amu->name(DESC_INVENTORY_EQUIP).c_str());
-            }
+            wear_id_type(*amu);
         }
         return (false);
     }
@@ -5224,13 +5218,8 @@ void float_player(bool fly)
         // it's important to do this only if the amulet is not identified yet,
         // or you'd get spammed
         item_def& amu(you.inv[you.equip[EQ_AMULET]]);
-        if (!is_artefact(amu) && !item_type_known(amu))
-        {
-            set_ident_type(amu.base_type, amu.sub_type, ID_KNOWN_TYPE);
-            set_ident_flags(amu, ISFLAG_KNOW_PROPERTIES);
-            mprf("You are wearing: %s",
-                 amu.name(DESC_INVENTORY_EQUIP).c_str());
-        }
+        if (!is_artefact(amu))
+            wear_id_type(amu);
     }
 
     burden_change();
