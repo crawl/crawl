@@ -353,11 +353,9 @@ function DungeonCellRenderer(element)
                 {
                     if (cell.sanctuary)
                         this.draw_dngn(TILE_SANCTUARY, x, y);
-                    if (cell.silenced && (cell.halo == HALO_RANGE))
-                        this.draw_dngn(TILE_HALO_RANGE_SILENCED, x, y);
-                    else if (cell.silenced)
+                    if (cell.silenced)
                         this.draw_dngn(TILE_SILENCED, x, y);
-                    else if (cell.halo == HALO_RANGE)
+                    if (cell.halo == HALO_RANGE)
                         this.draw_dngn(TILE_HALO_RANGE, x, y);
                     if (cell.orb_glow)
                         this.draw_dngn(TILE_ORB_GLOW + cell.orb_glow - 1, x, y);
