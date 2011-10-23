@@ -9,10 +9,10 @@
     e.lfloorcol("magenta")
     e.lrockcol("lightmagenta")
     e.lfloortile("floor_rough_magenta")
-    e.lrocktile("wall_zot_magenta")
+    e.lrocktile("wall_zot_lightmagenta")
 
     e.colour("c = magenta")
-    e.tile("c = dngn_stone_wall_magenta")
+    e.tile("c = wall_zot_magenta")
 
     e.marker("Y = feat:stone_stairs_up_i")
     e.kfeat("Y = .")
