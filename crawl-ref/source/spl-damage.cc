@@ -860,24 +860,29 @@ static int _shatter_mon_dice(const monster *mon)
     }
 }
 
-static int _shatter_monsters(coord_def where, int pow, int, actor *)
+static int _shatter_monsters(coord_def where, int pow, int, actor *agent)
 {
     dice_def dam_dice(0, 5 + pow / 3); // Number of dice set below.
     monster* mon = monster_at(where);
 
-    if (mon == NULL)
+    if (mon == NULL || mon == agent)
         return (0);
 
     dam_dice.num = _shatter_mon_dice(mon);
     int damage = std::max(0, dam_dice.roll() - random2(mon->armour_class()));
 
-    if (damage > 0)
+    if (damage <= 0)
+        return 0;
+
+    if (agent->atype() == ACT_PLAYER)
     {
         _player_hurt_monster(*mon, damage);
 
         if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
             remove_sanctuary(true);
     }
+    else
+        mon->hurt(agent, damage);
 
     return (damage);
 }
@@ -1027,6 +1032,33 @@ spret_type cast_shatter(int pow, bool fail)
     return SPRET_SUCCESS;
 }
 
+static int _shatter_player(int pow, actor *wielder)
+{
+    dice_def dam_dice(0, 5 + pow / 3); // Number of dice set below.
+
+    if (you.petrified())
+        dam_dice.num = 18; // reduced later
+    else if (you.petrifying())
+        dam_dice.num = 7;  // reduced later
+    // Same order as for monsters -- petrified flyers get hit hard, skeletal
+    // flyers get no extra damage.
+    else if (you.airborne())
+        dam_dice.num = 1;
+    else if (you.form == TRAN_STATUE || you.form == TRAN_LICH)
+        dam_dice.num = 6;
+    else if (you.form == TRAN_ICE_BEAST)
+        dam_dice.num = 4;
+    else
+        dam_dice.num = 3;
+
+    int damage = std::max(0, dam_dice.roll() - random2(you.armour_class()));
+
+    if (damage > 0)
+        ouch(damage, wielder->mindex(), KILLED_BY_MONSTER);
+
+    return (damage);
+}
+
 void shillelagh(actor *wielder, coord_def where, int pow)
 {
     bolt beam;
@@ -1050,6 +1082,8 @@ void shillelagh(actor *wielder, coord_def where, int pow)
         monster *mon = monster_at(*ai);
         if (!mon || !mon->alive() || mon->submerged() || mon->is_insubstantial())
             continue;
+        if (mon == wielder)
+            continue;
         affected_monsters.add(mon);
     }
     if (!affected_monsters.empty())
@@ -1067,6 +1101,9 @@ void shillelagh(actor *wielder, coord_def where, int pow)
     // need to do this again to do the actual damage
     for (adjacent_iterator ai(where, false); ai; ++ai)
         _shatter_monsters(*ai, pow, 0, wielder);
+
+    if ((you.pos() - wielder->pos()).abs() <= 2 && in_bounds(you.pos()))
+        _shatter_player(pow, wielder);
 }
 
 static int _ignite_poison_affect_item(item_def& item, bool in_inv)
