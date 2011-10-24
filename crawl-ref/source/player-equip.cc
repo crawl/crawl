@@ -483,8 +483,6 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
             you.attribute[ATTR_SHADOWS] = 1;
             update_vision_range();
         }
-        else if (item.sub_type == MISC_HORN_OF_GERYON)
-            set_ident_flags(item, ISFLAG_IDENT_MASK);
         break;
     }
 
