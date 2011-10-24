@@ -213,23 +213,20 @@ bool melee_attack::handle_phase_attempted()
 
         return (false);
     }
-    // Non-fumbled self-attacks due to confusion are still pretty funny,
-    // though.
+    // Non-fumbled self-attacks due to confusion are still pretty funny, though.
     else if (attacker == defender && attacker->confused())
     {
-        xom_is_stimulated(attacker->atype() == ACT_PLAYER ? 255 : 128);
         // And is still hilarious if it's the player.
-        if (attacker->atype() == ACT_PLAYER)
-            xom_is_stimulated(255);
-        else
-            xom_is_stimulated(128);
+        xom_is_stimulated(attacker->atype() == ACT_PLAYER ? 255 : 128);
     }
 
     attack_occurred = true;
 
-    // TODO Relocated this?
+    // TODO Relocate this?
     if (attacker->atype() == ACT_MONSTER)
     {
+        // check_unrand_effects returns the living condition of defender for
+        // early exit purposes
         if (check_unrand_effects())
             return (false);
 
@@ -298,10 +295,10 @@ bool melee_attack::handle_phase_blocked()
                      feat_name.c_str());
             }
         }
+        
+        // Give chaos weapon a chance to affect the attacker
         if (damage_brand == SPWPN_CHAOS)
             chaos_affects_attacker();
-
-        return (true);
     }
 
     return (true);
@@ -436,8 +433,10 @@ bool melee_attack::handle_phase_hit()
     const bool shield_blocked = attack_shield_blocked(true);
 
     if (shield_blocked)
+    {
         if (!handle_phase_blocked())
             return (false);
+    }
     else
     {
         // Slimify does no damage and serves as an on-hit effect, handle it
@@ -785,13 +784,14 @@ bool melee_attack::attack()
         do_miscast();
 
         // Odd place to do this, we'll see if we want to move it
-        if (unarmed_ok && where == defender->pos())
-            player_aux_unarmed();
+        // On a more up-to-date thought, this is already done in handle_phase_
+        // end so we'll comment it out for now to see if it stops working
+        //if (unarmed_ok && where == defender->pos())
+        //    player_aux_unarmed();
     }
     else
     {
         adjust_noise();
-
         handle_noise(defender->pos());
 
         // Invisible monster might have interrupted butchering.
