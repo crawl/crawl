@@ -3,6 +3,12 @@
  * @brief General game bindings.
 **/
 
+/*
+--- General game bindings
+
+module "crawl"
+*/
+
 #include "AppHdr.h"
 
 #include "dlua.h"
@@ -39,6 +45,11 @@
 // User accessible
 //
 
+/*
+--- Print a message.
+-- @param message message to print
+-- @channel channel to print on; defaults to 0 (<code>MSGCH_PLAIN</code>)
+function mpr(message, channel) */
 static int crawl_mpr(lua_State *ls)
 {
     if (!crawl_state.io_inited)
@@ -65,6 +76,9 @@ static int crawl_mpr(lua_State *ls)
     return (0);
 }
 
+/*
+---
+function formatted_mpr(message, channel) */
 static int crawl_formatted_mpr(lua_State *ls)
 {
     if (!crawl_state.io_inited)
@@ -92,7 +106,9 @@ static int crawl_formatted_mpr(lua_State *ls)
     return (0);
 }
 
-// Print to stderr for debugging hooks.
+/*
+--- Print to stderr for debugging hooks.
+function stderr(text) */
 LUAFN(crawl_stderr)
 {
     const char *text = luaL_checkstring(ls, 1);
@@ -100,6 +116,9 @@ LUAFN(crawl_stderr)
     return (0);
 }
 
+/*
+--- Debugging spew.
+function dpr(text) */
 LUAFN(crawl_dpr)
 {
 #ifdef DEBUG_DIAGNOSTICS
@@ -110,12 +129,30 @@ LUAFN(crawl_dpr)
     return (0);
 }
 
+/*
+---
+function delay(ms) */
 LUAWRAP(crawl_delay, delay(luaL_checkint(ls, 1)))
+/*
+---
+function more() */
 LUAWRAP(crawl_more, more())
+/*
+---
+function flush_prev_message() */
 LUAWRAP(crawl_flush_prev_message, flush_prev_message())
+/*
+---
+function mesclr(force) */
 LUAWRAP(crawl_mesclr, mesclr(lua_isboolean(ls, 1) ? lua_toboolean(ls, 1) : false))
+/*
+---
+function redraw_screen() */
 LUAWRAP(crawl_redraw_screen, redraw_screen())
 
+/*
+---
+function set_more_autoclear(flag) */
 static int crawl_set_more_autoclear(lua_State *ls)
 {
     if (lua_isnone(ls, 1))
@@ -128,6 +165,9 @@ static int crawl_set_more_autoclear(lua_State *ls)
     return (0);
 }
 
+/*
+---
+function enable_more(flag) */
 static int crawl_enable_more(lua_State *ls)
 {
     if (lua_isnone(ls, 1))
@@ -140,6 +180,12 @@ static int crawl_enable_more(lua_State *ls)
     return (0);
 }
 
+/*
+--- Wrapper for <code>cancelable_get_line()</code>.  Since that takes
+-- a pre-allocated buffer, an arbitrary 500-character limit is
+-- currently imposed.
+-- @return Either a string if one is input, or nil if input is canceled
+function c_input_line() */
 static int crawl_c_input_line(lua_State *ls)
 {
     char linebuf[500];
@@ -152,8 +198,19 @@ static int crawl_c_input_line(lua_State *ls)
     return (1);
 }
 
+/*
+--- Get input key (combo).
+-- @return integer representing the key (combo) input
+function getch() */
 LUARET1(crawl_getch, number, getchm())
+/*
+--- Check for pending input.
+-- @return 1 if there is, 0 otherwise
+function kbhit() */
 LUARET1(crawl_kbhit, number, kbhit())
+/*
+--- Flush the input buffer (typeahead).
+function flush_input() */
 LUAWRAP(crawl_flush_input, flush_input_buffer(FLUSH_LUA))
 
 static char _lua_char(lua_State *ls, int ndx, char defval = 0)
@@ -162,6 +219,15 @@ static char _lua_char(lua_State *ls, int ndx, char defval = 0)
             : lua_tostring(ls, ndx)[0]);
 }
 
+/*
+--- Ask the player a yes/no question.
+-- The player is supposed to answer by pressing Y or N.
+-- @param prompt question for the user
+-- @param safe accept lowercase answers?
+-- @param safeanswer if a letter, this will be considered a safe default
+-- @param clear_after clear the question after the user answers?
+-- @param noprompt if true, skip asking the question; just wait for the answer
+function yesno(prompt, safe, safeanswer, clear_after, interrupt_delays, noprompt) */
 static int crawl_yesno(lua_State *ls)
 {
     const char *prompt = luaL_checkstring(ls, 1);
@@ -179,6 +245,12 @@ static int crawl_yesno(lua_State *ls)
     return (1);
 }
 
+/*
+--- Ask the player a yes/no/quit question.
+-- Mostly like <code>yesno()</code>, but doesn't yet support as many
+-- parameters in this Lua binding.
+-- @param allow_all actually ask a yes/no/quit/all question
+function yesnoquit(prompt, safe, safeanswer, allow_all, clear_after) */
 static int crawl_yesnoquit(lua_State *ls)
 {
     const char *prompt = luaL_checkstring(ls, 1);
@@ -228,6 +300,10 @@ static void crawl_sendkeys_proc(lua_State *ls, int argi)
     }
 }
 
+/*
+--- XXX vararg function
+-- 
+function sendkeys() */
 static int crawl_sendkeys(lua_State *ls)
 {
     int top = lua_gettop(ls);
@@ -236,7 +312,10 @@ static int crawl_sendkeys(lua_State *ls)
     return (0);
 }
 
-// Tell Crawl to process one command.
+/*
+--- Tell Crawl to process one command.
+-- @return whether it will actually do so?
+function process_command() */
 static int crawl_process_command(lua_State *ls)
 {
     const bool will_process =
@@ -255,6 +334,9 @@ static int crawl_process_command(lua_State *ls)
     return (1);
 }
 
+/*
+--- 
+function process_keys() */
 static int crawl_process_keys(lua_State *ls)
 {
     const delay_type current_delay = current_delay_action();
@@ -296,7 +378,10 @@ static int crawl_process_keys(lua_State *ls)
     return (0);
 }
 
-
+/*
+--- Play a sound.
+-- @param sf filename of sound to play
+function playsound(sf) */
 static int crawl_playsound(lua_State *ls)
 {
     const char *sf = luaL_checkstring(ls, 1);
@@ -306,6 +391,10 @@ static int crawl_playsound(lua_State *ls)
     return (0);
 }
 
+/*
+--- Run a macro.
+-- @param macroname name of macro to run
+function runmacro(macroname) */
 static int crawl_runmacro(lua_State *ls)
 {
     const char *macroname = luaL_checkstring(ls, 1);
@@ -315,6 +404,10 @@ static int crawl_runmacro(lua_State *ls)
     return (0);
 }
 
+/*
+--- Set user options from string.
+-- @param s string of options to set, in same format as <tt>init.txt</tt>/<tt>.crawlrc</tt>.
+function setopt(s) */
 static int crawl_setopt(lua_State *ls)
 {
     if (!lua_isstring(ls, 1))
@@ -330,6 +423,10 @@ static int crawl_setopt(lua_State *ls)
     return (0);
 }
 
+/*
+--- Read options from file.
+-- @param filename name of file to read from
+function read_options(filename) */
 static int crawl_read_options(lua_State *ls)
 {
     if (!lua_isstring(ls, 1))
