@@ -778,8 +778,8 @@ FTILE:  G = floor_grass
 COLOUR: B = brown
 FTILE:  B = floor_dirt
 SUBST:  BG = .
-NSUBST: ' = 1:d *:.
-NSUBST: . = 1:1 *=.....1
+NSUBST: ' = 1:d / *:.
+NSUBST: . = 1:1 / *=.....1
 MONS:   plant name:musa name_adjective
 ITEM:   banana q:6 w:2 / banana q:7 w:4 / banana q:10 / banana q:12 / \
         banana q:14 w:4 / banana q:16 w:2
