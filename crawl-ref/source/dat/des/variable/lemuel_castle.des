@@ -74,8 +74,8 @@ function castle_lemuel_subvault_setup(e)
             e.mons("plant / w:1 oklob plant")
         end
         e.mons("plant")
- end
- }}
+end
+}}
 
 
 ###############################################################################
