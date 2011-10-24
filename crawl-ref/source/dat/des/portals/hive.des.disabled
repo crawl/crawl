@@ -334,7 +334,7 @@ ENDMAP
 # Hive portal map
 NAME:     hive_mumra_combs
 TAGS:     hive
-ORIENT:	  encompass
+ORIENT:   encompass
 # Guarantee a certain amount of combs and larva to demonstrate
 # NSUBST:   % : %:5 / . # FIXME: syntax error
 # NSUBST:   ! : !:4 / .
