@@ -1549,15 +1549,13 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
         switch (mon->type)
         {
         case MONS_WOOD_GOLEM:
-            simple_monster_message(mon, " shudders violently!");
-
-            // We use beam.damage not only for inflicting damage here,
-            // but so that later on we'll know that the spell didn't
-            // fizzle (since we don't actually explode wood golems). - bwr
-            explode         = false;
+            explode         = true;
+            beam.name       = "blast of splinters";
+            beam.colour     = BROWN;
             beam.damage.num = 2;
-            _player_hurt_monster(*mon, beam.damage.roll(),
-                                 BEAM_DISINTEGRATION);
+            if (_player_hurt_monster(*mon, beam.damage.roll(),
+                                     BEAM_DISINTEGRATION))
+                beam.damage.num++;
             break;
 
         case MONS_TOENAIL_GOLEM:
@@ -1567,7 +1565,7 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
             beam.damage.num = 2;
             if (_player_hurt_monster(*mon, beam.damage.roll(),
                                      BEAM_DISINTEGRATION))
-                beam.damage.num ++;
+                beam.damage.num++;
             break;
 
         case MONS_IRON_ELEMENTAL:
@@ -1693,18 +1691,10 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
                       if (_player_hurt_monster(*mon, beam.damage.roll(),
                                                BEAM_DISINTEGRATION))
                           beam.damage.num += 2;
-                  }
-                  goto all_done; // i.e., no "Foo Explodes!"
+                }
+                goto all_done; // Messaging already handled for skeletons.
             }
-
-            // Mark that a monster was targeted.
-            beam.damage.num = 1;
-
-            // Yes, this spell does lousy damage if the monster isn't
-            // susceptible. - bwr
-            _player_hurt_monster(*mon, roll_dice(1, 5 + pow / 25),
-                                 BEAM_DISINTEGRATION);
-            goto do_terrain;
+            goto do_terrain;  // Targeted monster not shatterable.
         }
 
         mprf("%s shatters!", name_cap_the.c_str());
@@ -1744,7 +1734,6 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
     }
 
   do_terrain:
-    // FIXME: do nothing in Abyss & Pandemonium?
 
     switch (grid)
     {
@@ -1884,18 +1873,6 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
         beam.name       = "blast of rock fragments";
         beam.colour     = LIGHTGREY;
         beam.damage.num = 2;
-        break;
-
-    //
-    // Permarock and floor are unaffected -- bwr
-    //
-    case DNGN_PERMAROCK_WALL:
-    case DNGN_CLEAR_PERMAROCK_WALL:
-    case DNGN_FLOOR:
-        explode = false;
-        mprf("%s seems to be unnaturally hard.",
-             (grid == DNGN_FLOOR) ? "The dungeon floor"
-                                  : "That wall");
         break;
 
     default:
