@@ -776,6 +776,7 @@ static const char *targeting_help_2 =
     "<w>!</w> : fire, don't stop, ignore range\n"
     "<w>p</w> : fire at Previous target (also <w>f</w>)\n"
     "<w>:</w> : show/hide beam path\n"
+    "<w>Ctrl-C</w> : cycle through beam paths\n"
     "<w>Shift-Dir.</w> : fire straight-line beam\n"
     "\n"
     "<h>Firing or throwing a missile:\n"
