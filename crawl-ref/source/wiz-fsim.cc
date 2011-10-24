@@ -95,13 +95,15 @@ static void _fsim_item(FILE *out,
 static void _fsim_defence_item(FILE *out, int cum, int hits, int max,
                                int speed, int iters)
 {
-    // AC | EV | Arm | Dod | Acc | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time
-    fprintf(out, "%2d   %2d    %2d   %2d   %3d%%   %5.2f      %5.2f      %5.2f      %3d"
+    skill_type sk = you.skills[SK_DODGING] ? SK_DODGING : SK_ARMOUR;
+    // AC | EV | Arm | Dod | Bonus | Acc | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time
+    fprintf(out, "%2d   %2d    %2d   %2d     %3.1f   %3d%%   %5.2f      %5.2f      %5.2f      %3d"
             "       %2d\n",
             you.armour_class(),
             player_evasion(),
             you.skills[SK_DODGING],
             you.skills[SK_ARMOUR],
+            (you.skill(sk, 10) - you.skill(sk, 10, true)) / 10.0,
             100 * hits / iters,
             double(cum) / iters,
             hits? double(cum) / hits : 0.0,
@@ -362,7 +364,7 @@ static void _fsim_defence_title(FILE *o, int mon)
     fprintf(o, "\n");
     _fsim_mon_stats(o, menv[mon]);
     fprintf(o, "\n");
-    fprintf(o, "AC | EV | Dod | Arm | Acc | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time\n");
+    fprintf(o, "AC | EV | Dod | Arm | Bonus | Acc | Av.Dam | Av.HitDam | Eff.Dam | Max.Dam | Av.Time\n");
 }
 
 static bool _fsim_mon_hit_you(FILE *ostat, int mindex, int)
