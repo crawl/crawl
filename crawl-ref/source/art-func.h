@@ -745,5 +745,6 @@ static void _DEVASTATOR_equip(item_def *item, bool *show_msgs, bool unmeld)
 static void _DEVASTATOR_melee_effect(item_def* item, actor* attacker,
                                      actor* defender, bool mondied, int dam)
 {
-    shillelagh(attacker, defender->pos(), dam);
+    if (dam)
+        shillelagh(attacker, defender->pos(), dam);
 }
