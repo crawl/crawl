@@ -1184,10 +1184,9 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
         // stop doing so just because they noticed something.
         mon->behaviour = old_behaviour;
     }
-    else if (wasLurking && mon->has_ench(ENCH_SUBMERGED)
-             && !mon->del_ench(ENCH_SUBMERGED))
+    else if (mon->has_ench(ENCH_SUBMERGED) && !mon->del_ench(ENCH_SUBMERGED))
     {
-        // The same goes for lurking submerged monsters, if they can't
+        // The same goes for submerged monsters, if they can't
         // unsubmerge.
         mon->behaviour = BEH_LURK;
     }
