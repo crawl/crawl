@@ -2186,6 +2186,8 @@ unsigned int item_value(item_def item, bool ident)
 
     case OBJ_BOOKS:
         valued = 150;
+        if (item.sub_type == BOOK_DESTRUCTION)
+            break;
 
         if (item_type_known(item))
         {
