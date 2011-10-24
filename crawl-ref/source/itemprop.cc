@@ -2243,6 +2243,12 @@ bool item_is_orb(const item_def &item)
     return (item.base_type == OBJ_ORBS && item.sub_type == ORB_ZOT);
 }
 
+bool item_is_horn_of_geryon(const item_def &item)
+{
+    return (item.base_type == OBJ_MISCELLANY
+            && item.sub_type == MISC_HORN_OF_GERYON);
+}
+
 bool item_is_corpse(const item_def &item)
 {
     return (item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY);
