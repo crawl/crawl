@@ -139,19 +139,24 @@ struct species_skill_aptitude
 // a discount with about 75%.
 static int _spec_skills[NUM_SPECIES][NUM_SKILLS];
 
-int get_skill_progress(skill_type sk, int scale)
+int get_skill_progress(skill_type sk, int level, int points, int scale)
 {
-    if (you.skills[sk] >= 27)
+    if (level >= 27)
         return 0;
 
-    const int needed = skill_exp_needed(you.skills[sk] + 1, sk);
-    const int prev_needed = skill_exp_needed(you.skills[sk], sk);
-    const int amt_done = you.skill_points[sk] - prev_needed;
+    const int needed = skill_exp_needed(level + 1, sk);
+    const int prev_needed = skill_exp_needed(level, sk);
+    const int amt_done = points - prev_needed;
     int prog = (amt_done * scale) / (needed - prev_needed);
 
     ASSERT(prog >= 0);
 
     return prog;
+}
+
+int get_skill_progress(skill_type sk, int scale)
+{
+    return get_skill_progress(sk, you.skills[sk], you.skill_points[sk], scale);
 }
 
 int get_skill_percentage(const skill_type x)

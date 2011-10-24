@@ -5852,8 +5852,11 @@ int player::skill(skill_type sk, int scale, bool real) const
         level = std::min(level + 5 * scale, 27 * scale);
     if (you.penance[GOD_ASHENZARI])
         level = std::max(level - std::min(4 * scale, level / 2), 0);
-    else if (you.religion == GOD_ASHENZARI)
+    else if (you.religion == GOD_ASHENZARI && you.skill_boost[sk]
+             && piety_rank() > 2)
+    {
         level = ash_skill_boost(sk, scale);
+    }
 
     return level;
 }
