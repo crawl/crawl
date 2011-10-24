@@ -401,7 +401,7 @@ deck of destruction
 
 A deck of magical cards, most of which hurl death and destruction at one's foes (or, if unlucky, at oneself).
 
-It may contain the following cards: Vitriol, Flame, Frost, Venom, the Spark, the Hammer, Pain, Torment.
+It may contain the following cards: Vitriol, Flame, Frost, Venom, the Spark, the Hammer, Pain, the Orb.
 %%%%
 deck of dungeons
 
@@ -419,7 +419,7 @@ deck of punishment
 
 A deck of magical cards which wreak havoc on the user.
 
-It may contain the following cards: Wrath, the Wraith, the Curse, Xom, Famine, Wild Magic, the Portal, the Tomb, Damnation, the Minefield.
+It may contain the following cards: Wrath, the Wraith, the Curse, Xom, Famine, Wild Magic, the Portal, the Tomb, Damnation, the Minefield, Torment.
 %%%%
 deck of summonings
 

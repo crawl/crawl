@@ -121,9 +121,8 @@ const deck_archetype deck_of_destruction[] = {
     { CARD_VENOM,   {5, 5, 5} },
     { CARD_HAMMER,  {5, 5, 5} },
     { CARD_SPARK,   {5, 5, 5} },
-    { CARD_PAIN,    {5, 5, 5} },
+    { CARD_PAIN,    {5, 5, 3} },
     { CARD_ORB,     {5, 5, 5} },
-    { CARD_TORMENT, {0, 2, 4} },
     END_OF_DECK
 };
 
@@ -199,6 +198,7 @@ const deck_archetype deck_of_punishment[] = {
     { CARD_PORTAL,     {5, 5, 5} },
     { CARD_MINEFIELD,  {5, 5, 5} },
     { CARD_SWINE,      {5, 5, 5} },
+    { CARD_TORMENT,    {5, 5, 5} },
     END_OF_DECK
 };
 
@@ -1672,28 +1672,6 @@ static void _stairs_card(int power, deck_rarity_type rarity)
     stair_draw_count++;
 }
 
-static int _drain_monsters(coord_def where, int pow, int, actor *)
-{
-    if (where == you.pos())
-        drain_exp();
-    else
-    {
-        monster* mon = monster_at(where);
-        if (mon == NULL)
-            return (0);
-
-        if (!mon->drain_exp(&you, false, pow / 50))
-            simple_monster_message(mon, " is unaffected.");
-    }
-
-    return (1);
-}
-
-static void _mass_drain(int pow)
-{
-    apply_area_visible(_drain_monsters, pow, true);
-}
-
 // Return true if it was a "genuine" draw, i.e., there was a monster
 // to target. This is still exploitable by finding popcorn monsters.
 static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
@@ -1734,7 +1712,7 @@ static bool _damaging_card(card_type card, int power, deck_rarity_type rarity)
         if (power_level == 2)
         {
             mprf("You have drawn %s.", card_name(card));
-            _mass_drain(power);
+            torment(&you, TORMENT_CARDS, you.pos());
             return (true);
         }
         else
