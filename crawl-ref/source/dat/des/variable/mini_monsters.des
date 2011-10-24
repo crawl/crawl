@@ -1461,6 +1461,7 @@ SHUFFLE: ABC
 KFEAT:   A = altar_the_shining_one
 KFEAT:   B = altar_elyvilon
 KFEAT:   C = altar_zin
+SUBST:   ' = .
 MAP
 xxxxxxxxx
 xcccccccx
