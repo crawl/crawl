@@ -49,6 +49,9 @@ DEADJOE
 # Doxygen documentation
 /source/html/
 
+# Luadoc stuff
+/source/luadoc/
+
 # Crawl generated junk
 arena.result
 saves

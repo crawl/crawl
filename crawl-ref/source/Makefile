@@ -936,7 +936,8 @@ SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.xz
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
 .PHONY: all test install clean clean-contrib clean-rltiles distclean debug debug-lite \
-        profile package-source source build-windows package-windows rest docs greet
+        profile package-source source build-windows package-windows rest docs greet \
+        api
 
 all: greet $(GAME) docs webserver
 
@@ -1045,6 +1046,12 @@ rest:
 
 $(DOC_BASE)/crawl_manual.txt: $(DOC_BASE)/crawl_manual.reST util/unrest.pl
 	$(QUIET_GEN)util/unrest.pl <$< >$@
+
+CLUA_MODULE_SOURCES = $(filter l_%,$(OBJECTS:%.o=%.cc))
+api: $(CLUA_MODULE_SOURCES)
+	mkdir -p luadoc
+	luadoc --doclet util.html_doclet --taglet util.taglet -d luadoc $^
+
 
 ##########################################################################
 # The level compiler
