@@ -152,6 +152,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_SLUDGE_ELF,      SK_INVOCATIONS,     0),
     APT(SP_SLUDGE_ELF,      SK_EVOCATIONS,      0),
 
+#if TAG_MAJOR_VERSION == 32
     // SP_MOUNTAIN_DWARF
     APT(SP_MOUNTAIN_DWARF,  SK_FIGHTING,        2),
     APT(SP_MOUNTAIN_DWARF,  SK_SHORT_BLADES,    1),
@@ -186,6 +187,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_MOUNTAIN_DWARF,  SK_POISON_MAGIC,   -2),
     APT(SP_MOUNTAIN_DWARF,  SK_INVOCATIONS,     0),
     APT(SP_MOUNTAIN_DWARF,  SK_EVOCATIONS,      1),
+#endif
 
     // SP_HALFLING
     APT(SP_HALFLING,        SK_FIGHTING,       -1),
