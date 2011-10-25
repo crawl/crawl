@@ -2767,7 +2767,7 @@ bool is_bad_item(const item_def &item, bool temp)
         case POT_POISON:
         case POT_STRONG_POISON:
             // Poison is not that bad if you're poison resistant.
-            return (!player_res_poison(false)
+            return (!player_res_poison(false) > 0
                     || !temp && you.species == SP_VAMPIRE);
         case POT_MUTATION:
             return (you.is_undead
@@ -3001,7 +3001,7 @@ bool is_useless_item(const item_def &item, bool temp)
             // If you're poison resistant, poison is only useless.
             // Spriggans could argue, but it's too small of a gain for
             // possible player confusion.
-            return (player_res_poison(false));
+            return (player_res_poison(false) > 0);
 
         case POT_INVISIBILITY:
             // If you're Corona'd or a TSO-ite, this is always useless.
@@ -3059,7 +3059,7 @@ bool is_useless_item(const item_def &item, bool temp)
             return (player_mutation_level(MUT_ACUTE_VISION));
 
         case RING_POISON_RESISTANCE:
-            return (player_res_poison(false, temp, false)
+            return (player_res_poison(false, temp, false) > 0
                     && (temp || you.species != SP_VAMPIRE));
 
         case AMU_CONTROLLED_FLIGHT:
