@@ -38,3 +38,32 @@ Some useful config options:
 * Use more than one thread for packing when doing a push or gc.
   Useful on multi-processor or dual-core machines:
       git config --global pack.threads 2
+
+-------------------------
+
+Nice hunk markers for .des files:
+
+Add this to .git/config:
+
+[diff "des"]
+        xfuncname = ".*\\{\\{.*"
+        xfuncname = "^NAME:.*$"
+
+Combined with the *.des entry in crawl-ref/.gitattributes, this will
+cause "git diff" to include helpful headers in each hunk (after the
+second @@), like so:
+
+--- a/crawl-ref/source/dat/des/builder/uniques.des
++++ b/crawl-ref/source/dat/des/builder/uniques.des
+@@ -405,8 +405,8 @@ NAME:    uniq_crazy_yiuf_cottage
+ SUBST:   P:PQ;; , Q=2;
+ NSUBST:  P=1:t / *:2;
+ # Randomisation 4: Hammers. Hammers. Hammers.
+-SUBST:   ; : .:100 ;:10 2:d
+-SUBST:   ; = .:10 2:d
++SUBST:   ; : .:100 ;:10 d:2
++SUBST:   ; = .:10 d:2
+ : if crawl.one_chance_in(300) then
+ SUBST:   t="
+ : end
+
