@@ -1,0 +1,29 @@
+Pretty-printers for libstdc++
+=============================
+
+Follow the instructions at the following URL, and your std::strings
+will print like strings, etc.:
+
+http://gcc.gnu.org/onlinedocs/libstdc++/manual/debug.html
+
+
+How to make a std::string:
+==========================
+
+(From #gdb)
+<jankratochvil> SamB:
+<jankratochvil> (gdb) p $a=(std::allocator<char>*)malloc(sizeof(std::allocator<char>))
+<jankratochvil> (gdb) p $a->allocator()
+<jankratochvil> (gdb) p $s=(std::string*)malloc(sizeof(std::string))
+<jankratochvil> (gdb) p $s->basic_string("foo",*$a)
+<jankratochvil> (gdb) p *$s
+<jankratochvil> $20 = "foo"
+<jankratochvil> std::string is mostly the only tricky class as it is just an alias name for basic_string....
+
+Again, with just the input:
+
+p $a=(std::allocator<char>*)malloc(sizeof(std::allocator<char>))
+p $a->allocator()
+p $s=(std::string*)malloc(sizeof(std::string))
+p $s->basic_string("foo",*$a)
+p *$s
