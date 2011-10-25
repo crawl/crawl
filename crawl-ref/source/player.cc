@@ -3077,10 +3077,12 @@ void level_change(bool skip_attribute_increase)
                 }
                 break;
 
+#if TAG_MAJOR_VERSION == 32
             case SP_MOUNTAIN_DWARF:
                 if (!(you.experience_level % 4))
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
+#endif
 
             case SP_DEEP_DWARF:
                 if (you.experience_level == 14)
@@ -6300,7 +6302,9 @@ int player_res_magic(bool calc_unid, bool temp)
     case SP_HIGH_ELF:
     case SP_SLUDGE_ELF:
     case SP_DEEP_ELF:
+#if TAG_MAJOR_VERSION == 32
     case SP_MOUNTAIN_DWARF:
+#endif
     case SP_VAMPIRE:
     case SP_DEMIGOD:
     case SP_OGRE:

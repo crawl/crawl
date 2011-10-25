@@ -14,6 +14,11 @@
 
 char_choice_restriction job_allowed(species_type speci, job_type job)
 {
+#if TAG_MAJOR_VERSION == 32
+    if (speci == SP_MOUNTAIN_DWARF)
+        return CC_BANNED;
+#endif
+
     switch (job)
     {
     case JOB_FIGHTER:
@@ -64,7 +69,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         {
         case SP_HIGH_ELF:
         case SP_DEEP_ELF:
-        case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
         case SP_MERFOLK:
         case SP_HALFLING:
@@ -138,7 +142,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_HIGH_ELF:
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
-        case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_HALFLING:
@@ -167,7 +170,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             return (CC_BANNED);
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
-        case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
         case SP_MERFOLK:
         case SP_HALFLING:
@@ -214,7 +216,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         {
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
-        case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
         case SP_KOBOLD:
         case SP_SPRIGGAN:
@@ -237,7 +238,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         {
         case SP_DEEP_ELF:
         case SP_SLUDGE_ELF:
-        case SP_MOUNTAIN_DWARF:
         case SP_HILL_ORC:
         case SP_MERFOLK:
         case SP_KOBOLD:
@@ -260,7 +260,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
     case JOB_WIZARD:
         switch (speci)
         {
-        case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_MERFOLK:
@@ -280,7 +279,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         switch (speci)
         {
         case SP_SLUDGE_ELF:
-        case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_MERFOLK:
@@ -304,7 +302,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         {
         case SP_HIGH_ELF:
         case SP_SLUDGE_ELF:
-        case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_CENTAUR:
@@ -328,7 +325,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         switch (speci)
         {
         case SP_HIGH_ELF:
-        case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_MERFOLK:
@@ -349,7 +345,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         switch (speci)
         {
         case SP_HIGH_ELF:
-        case SP_MOUNTAIN_DWARF:
         case SP_MERFOLK:
         case SP_HALFLING:
         case SP_CENTAUR:
@@ -369,7 +364,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             return (CC_BANNED);
         case SP_HIGH_ELF:
         case SP_DEEP_ELF:
-        case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_HALFLING:
@@ -406,7 +400,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
     case JOB_ICE_ELEMENTALIST:
         switch (speci)
         {
-        case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
         case SP_HALFLING:
         case SP_SPRIGGAN:
@@ -424,7 +417,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
     case JOB_AIR_ELEMENTALIST:
         switch (speci)
         {
-        case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_MERFOLK:
@@ -464,7 +456,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         switch (speci)
         {
         case SP_HIGH_ELF:
-        case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_HALFLING:
@@ -485,7 +476,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         {
         case SP_HIGH_ELF:
         case SP_DEEP_ELF:
-        case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_MERFOLK:
@@ -514,7 +504,6 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
             return (CC_BANNED);
         case SP_HIGH_ELF:
         case SP_DEEP_ELF:
-        case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_NAGA:
@@ -674,7 +663,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         switch (ng.species)
         {
         case SP_HUMAN:
-        case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
         case SP_HILL_ORC:
         case SP_MUMMY:
@@ -736,7 +724,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         case SP_MINOTAUR:
         case SP_HIGH_ELF:
         case SP_SLUDGE_ELF:
-        case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
         case SP_KENKU:
         case SP_DEMIGOD:
@@ -762,7 +749,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         // for some species whose Polearm aptitudes are not too bad.
         switch (ng.species)
         {
-        case SP_MOUNTAIN_DWARF:
         case SP_DEEP_DWARF:
         case SP_GHOUL:
         case SP_VAMPIRE:
@@ -825,7 +811,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         switch(ng.species)
         {
         case SP_DEEP_DWARF:
-        case SP_MOUNTAIN_DWARF:
         case SP_KOBOLD:
         case SP_MERFOLK:
         case SP_OGRE:
@@ -842,7 +827,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
     case WPN_SLING:
         switch(ng.species)
         {
-        case SP_MOUNTAIN_DWARF:
         case SP_DEEP_ELF:
         case SP_HIGH_ELF:
         case SP_SLUDGE_ELF:
@@ -872,7 +856,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         switch(ng.species)
         {
         case SP_DEEP_DWARF:
-        case SP_MOUNTAIN_DWARF:
             return CC_RESTRICTED;
         case SP_SPRIGGAN:
         case SP_FELID:
@@ -885,7 +868,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         switch(ng.species)
         {
         case SP_DEEP_DWARF:
-        case SP_MOUNTAIN_DWARF:
             return CC_RESTRICTED;
         case SP_FELID:
             return CC_BANNED;

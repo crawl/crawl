@@ -2970,7 +2970,9 @@ enum species_type
     SP_HIGH_ELF,
     SP_DEEP_ELF,
     SP_SLUDGE_ELF,
+#if TAG_MAJOR_VERSION == 32
     SP_MOUNTAIN_DWARF,
+#endif
     SP_HALFLING,
     SP_HILL_ORC,
     SP_KOBOLD,
@@ -3000,11 +3002,15 @@ enum species_type
     SP_DEEP_DWARF,
     SP_FELID,
     SP_OCTOPODE,
+// The high scores viewer still needs enums for removed species.
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)
     SP_OGRE_MAGE,                      // (placeholder)
     SP_GREY_ELF,                       // (placeholder)
     SP_GNOME,                          // (placeholder)
+#if TAG_MAJOR_VERSION != 32
+    SP_MOUNTAIN_DWARF,                 // (placeholder)
+#endif
     NUM_SPECIES,                       // always after the last species
 
     SP_UNKNOWN  = 100,

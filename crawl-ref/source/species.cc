@@ -21,7 +21,7 @@ static species_type species_order[] = {
     // comparatively human-like looks
     SP_HUMAN,          SP_HIGH_ELF,
     SP_DEEP_ELF,       SP_SLUDGE_ELF,
-    SP_MOUNTAIN_DWARF, SP_DEEP_DWARF,
+    SP_DEEP_DWARF,
     SP_HILL_ORC,       SP_MERFOLK,
     // small species
     SP_HALFLING,       SP_KOBOLD,
@@ -37,8 +37,7 @@ static species_type species_order[] = {
     SP_MUMMY,          SP_GHOUL,
     SP_VAMPIRE,
     // not humanoid at all
-    SP_FELID,
-    SP_OCTOPODE,
+    SP_FELID,          SP_OCTOPODE,
 };
 
 species_type random_draconian_player_species()
@@ -169,7 +168,9 @@ std::string species_name(species_type speci, bool genus, bool adj)
         {
             switch (speci)
             {
+#if TAG_MAJOR_VERSION == 32
             case SP_MOUNTAIN_DWARF: res = "Mountain Dwarf";            break;
+#endif
             case SP_DEEP_DWARF:     res = "Deep Dwarf";                break;
             default:                res = "Dwarf";                     break;
             }
@@ -251,7 +252,9 @@ genus_type species_genus(species_type species)
     case SP_SLUDGE_ELF:
         return (GENPC_ELVEN);
 
+#if TAG_MAJOR_VERSION == 32
     case SP_MOUNTAIN_DWARF:
+#endif
     case SP_DEEP_DWARF:
         return (GENPC_DWARVEN);
 
@@ -300,8 +303,10 @@ monster_type player_species_to_mons_species(species_type species)
     case SP_DEEP_ELF:
     case SP_SLUDGE_ELF:
         return (MONS_ELF);
+#if TAG_MAJOR_VERSION == 32
     case SP_MOUNTAIN_DWARF:
         return (MONS_DWARF);
+#endif
     case SP_HALFLING:
         return (MONS_HALFLING);
     case SP_HILL_ORC:
@@ -399,7 +404,9 @@ int species_exp_modifier(species_type species)
         return 12;
     case SP_SPRIGGAN:
     case SP_KENKU:
+#if TAG_MAJOR_VERSION == 32
     case SP_MOUNTAIN_DWARF:
+#endif
     case SP_DEEP_DWARF:
         return 13;
     case SP_BASE_DRACONIAN:
@@ -461,7 +468,9 @@ int species_hp_modifier(species_type species)
     case SP_PURPLE_DRACONIAN:
     case SP_MOTTLED_DRACONIAN:
     case SP_PALE_DRACONIAN:
+#if TAG_MAJOR_VERSION == 32
     case SP_MOUNTAIN_DWARF:
+#endif
     case SP_GHOUL:
     case SP_HILL_ORC:
     case SP_MINOTAUR:
@@ -482,7 +491,9 @@ int species_mp_modifier(species_type species)
     case SP_TROLL:
     case SP_MINOTAUR:
         return -2;
+#if TAG_MAJOR_VERSION == 32
     case SP_MOUNTAIN_DWARF:
+#endif
     case SP_HILL_ORC:
     case SP_CENTAUR:
     case SP_GHOUL:
