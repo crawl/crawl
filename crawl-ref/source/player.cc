@@ -671,7 +671,7 @@ bool you_can_wear(int eq, bool special_armour)
     case EQ_GLOVES:
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
-            || player_genus(GENPC_OGREISH))
+            || you.species == SP_OGRE)
         {
             return (false);
         }
@@ -691,7 +691,7 @@ bool you_can_wear(int eq, bool special_armour)
         // These species cannot wear boots.
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
-            || player_genus(GENPC_OGREISH))
+            || you.species == SP_OGRE)
         {
             return (false);
         }
@@ -706,7 +706,7 @@ bool you_can_wear(int eq, bool special_armour)
             return (true);
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
-            || player_genus(GENPC_OGREISH)
+            || you.species == SP_OGRE
             || player_genus(GENPC_DRACONIAN))
         {
             return (false);
@@ -729,7 +729,7 @@ bool you_can_wear(int eq, bool special_armour)
         }
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
-            || player_genus(GENPC_OGREISH)
+            || you.species == SP_OGRE
             || player_genus(GENPC_DRACONIAN))
         {
             return (false);
@@ -2199,7 +2199,7 @@ static int _player_armour_racial_bonus(const item_def& item)
 
     // get the armour race value that corresponds to the character's race:
     const iflags_t racial_type
-                            = ((player_genus(GENPC_DWARVEN)) ? ISFLAG_DWARVEN :
+                            = ((you.species == SP_DEEP_DWARF)? ISFLAG_DWARVEN :
                                (player_genus(GENPC_ELVEN))   ? ISFLAG_ELVEN :
                                (you.species == SP_HILL_ORC)  ? ISFLAG_ORCISH
                                                              : 0);
@@ -2518,7 +2518,7 @@ int player_body_armour_racial_spellcasting_bonus(const int scale)
     // Get the armour race value that corresponds to the character's
     // race:
     const iflags_t player_race
-                            = ((player_genus(GENPC_DWARVEN)) ? ISFLAG_DWARVEN :
+                            = ((you.species == SP_DEEP_DWARF)? ISFLAG_DWARVEN :
                                (player_genus(GENPC_ELVEN))   ? ISFLAG_ELVEN :
                                (you.species == SP_HILL_ORC)  ? ISFLAG_ORCISH
                                                              : 0);
@@ -7072,7 +7072,7 @@ bool player::cannot_act() const
 
 bool player::can_throw_large_rocks() const
 {
-    return (player_genus(GENPC_OGREISH) || species == SP_TROLL);
+    return (species == SP_OGRE || species == SP_TROLL);
 }
 
 bool player::can_smell() const
