@@ -7,7 +7,8 @@
 #define MATRIX_H
 
 template <typename Z>
-class Matrix {
+class Matrix
+{
 public:
     Matrix(int width, int height, const Z &initial);
     Matrix(int width, int height);

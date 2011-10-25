@@ -5,13 +5,13 @@
 #include "fight.h"
 #include "godpassive.h"
 #include "godwrath.h"
+#include "libutil.h"
 #include "monster.h"
 #include "mon-util.h"
 #include "player.h"
 #include "random.h"
 #include "religion.h"
 #include "state.h"
-#include "stuff.h"
 
 /////////////////////////////////////////////////////////////////////
 // god_conduct_trigger
@@ -270,6 +270,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
         case DID_FRIEND_DIED:
         case DID_SOULED_FRIEND_DIED:
+            if (victim && you.religion != GOD_FEDHAS
+                && (victim->holiness() == MH_NONLIVING
+                 || victim->holiness() == MH_PLANT))
+            {
+                // For everyone but Fedhas, plants are items not creatures,
+                // and animated items are, well, items as well.
+                break;
+            }
+
             switch (you.religion)
             {
             case GOD_FEDHAS:
@@ -286,16 +295,14 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 }
                 break;
 
-            case GOD_ELYVILON: // healer god cares more about this
+            case GOD_ELYVILON:
                 // Converted allies (marked as TSOites) can be martyrs.
                 if (victim && victim->god == GOD_SHINING_ONE)
                     break;
 
-                if (player_under_penance())
-                    penance = 1;  // if already under penance smaller bonus
-                else
-                    penance = level;
-                // fall through
+                piety_change = -(level/2 + 1);
+                retval = true;
+                break;
 
             case GOD_ZIN:
                 // Converted allies (marked as TSOites) can be martyrs.
@@ -334,7 +341,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 
             case GOD_KIKUBAAQUDGHA:
             case GOD_YREDELEMNUL:
+#ifndef NEW_OKAWARU_PIETY
             case GOD_OKAWARU:
+#endif
             case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_TROG:
@@ -360,7 +369,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             switch (you.religion)
             {
             case GOD_SHINING_ONE:
+#ifndef NEW_OKAWARU_PIETY
             case GOD_OKAWARU:
+#endif
             case GOD_VEHUMET:
             case GOD_MAKHLEB:
             case GOD_BEOGH:
@@ -387,11 +398,14 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             switch (you.religion)
             {
             case GOD_SHINING_ONE:
+#ifndef NEW_OKAWARU_PIETY
             case GOD_OKAWARU:
+#endif
             case GOD_MAKHLEB:
             case GOD_TROG:
             case GOD_KIKUBAAQUDGHA:
             case GOD_BEOGH:
+            case GOD_LUGONU:
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
 
@@ -520,7 +534,9 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_MAKHLEB:
             case GOD_BEOGH:
             case GOD_LUGONU:
+#ifndef NEW_OKAWARU_PIETY
             case GOD_OKAWARU:
+#endif
                 if (god_hates_attacking_friend(you.religion, victim))
                     break;
 
@@ -533,7 +549,6 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 {
                     simple_god_message(" appreciates your killing of a holy "
                                        "being.");
-                    retval = true;
                     piety_change *= 2;
                 }
                 break;
@@ -706,6 +721,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             case GOD_MAKHLEB:
             case GOD_TROG:
             case GOD_BEOGH:
+            case GOD_LUGONU:
                 simple_god_message(" accepts your collateral kill.");
                 retval = true;
                 piety_denom = level + 10 - (is_good_god(you.religion) ? 0 :
@@ -783,16 +799,15 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
             // low and makes change.
             if (you.religion == GOD_SIF_MUNA)
             {
-                // Old curve: random2(12) <= spell-level, this is
-                // similar, but faster at low levels (to help ease
-                // things for low level spells).  Power averages about
-                // (level * 20 / 3) + 10 / 3 now.  Also note that spell
-                // skill practise comes just after XP gain, so magical
-                // kills tend to do both at the same time (unlike
-                // melee).  This means high level spells probably work
-                // pretty much like they used to (use spell, get piety).
-                piety_change = level + 10;
-                piety_denom = 80;
+                piety_change = level;
+                piety_denom = 40;
+                retval = true;
+            }
+            else if (you.religion == GOD_TROG)
+            {
+                simple_god_message(" doesn't appreciate your training magic!");
+                piety_change = -level;
+                piety_denom = 10;
                 retval = true;
             }
             break;
@@ -958,10 +973,23 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_EXPLORATION:
             if (you.religion == GOD_ASHENZARI)
             {
-                // levels: x1, x2, x3, x4
-                piety_change = 1 + ash_bondage_level();
-                piety_change *= 8; // base gain per dungeon level
+                const int base_gain = 6; // base gain per dungeon level
+                // levels: x1, x1.5, x2, x2.5, x3
+                piety_change = base_gain + base_gain * you.bondage_level / 2;
                 piety_denom = level;
+                retval = true;
+            }
+            break;
+
+        case DID_SEE_MONSTER:
+            if (you.religion == GOD_SHINING_ONE)
+            {
+                if (victim && (victim->is_evil() || victim->is_unholy()))
+                    break;
+                piety_denom = level / 2 + 6 - you.experience_level / 4;
+                piety_change = piety_denom - 4;
+                piety_denom = std::max(piety_denom, 1);
+                piety_change = std::max(piety_change, 0);
                 retval = true;
             }
             break;
@@ -970,6 +998,27 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case NUM_CONDUCTS:
             break;
         }
+
+#ifdef NEW_OKAWARU_PIETY
+        if (you.religion == GOD_OKAWARU
+            // currently no constructs and plants
+            && (thing_done == DID_KILL_LIVING
+             || thing_done == DID_KILL_UNDEAD
+             || thing_done == DID_KILL_DEMON
+             || thing_done == DID_KILL_HOLY)
+            && ! god_hates_attacking_friend(you.religion, victim))
+        {
+            int gain = get_fuzzied_monster_difficulty(victim);
+            dprf("fuzzied monster difficulty: %4.2f", gain*0.01);
+            gain_piety(gain, 700);
+            piety_denom = 700;
+            if (piety_change > 3200)
+                simple_god_message(" appreciates your kill.");
+            else if (piety_change > 9) // might still be miniscule
+                simple_god_message(" accepts your kill.");
+            retval = true;
+        }
+#endif
 
 #ifdef DEBUG_DIAGNOSTICS
         int old_piety = you.piety;
@@ -1008,10 +1057,10 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Servant Kill Chaotic", "Attack In Sanctuary",
                 "Kill Artificial", "Undead Slave Kill Artificial",
                 "Servant Kill Artificial", "Destroy Spellbook",
-                "Exploration", "Desecrated Holy Remains",
+                "Exploration", "Desecrated Holy Remains", "Seen Monster",
             };
 
-            COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS, c1);
+            COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
             dprf("conduct: %s; piety: %d (%+d/%d); penance: %d (%+d)",
                  conducts[thing_done],
                  you.piety, piety_change, piety_denom,
@@ -1021,7 +1070,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
 #endif
     }
 
-    do_god_revenge(thing_done);
+    do_god_revenge(thing_done, victim);
 
     return (retval);
 }

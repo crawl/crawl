@@ -1,6 +1,7 @@
 PREFIX := install
 
 SUBDIRS = sqlite sdl sdl-image freetype libpng pcre zlib
+ARCH = unknown
 
 ifdef USE_LUAJIT
 SUBDIRS += luajit/src
@@ -39,8 +40,8 @@ $(SUBDIRS):
 	    exit 1; \
 	fi
 	@cd $@ && \
-	$(MAKE) all prefix=$(shell echo $@ | perl -pe 's/[^\/]+/../g')/$(PREFIX) && \
-	$(MAKE) install prefix=$(shell echo $@ | perl -pe 's/[^\/]+/../g')/$(PREFIX)
+	$(MAKE) all prefix=$(shell echo $@ | perl -pe 's/[^\/]+/../g')/$(PREFIX)/$(ARCH) && \
+	$(MAKE) install prefix=$(shell echo $@ | perl -pe 's/[^\/]+/../g')/$(PREFIX)/$(ARCH)
 
 libpng freetype: zlib
 sdl-image: sdl libpng

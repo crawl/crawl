@@ -32,7 +32,6 @@ extern level_id_set Generated_Levels;
 bool file_exists(const std::string &name);
 bool dir_exists(const std::string &dir);
 bool is_absolute_path(const std::string &path);
-bool is_read_safe_path(const std::string &path);
 void assert_read_safe_path(const std::string &path) throw (std::string);
 unsigned long file_size(FILE *handle);
 
@@ -55,6 +54,7 @@ std::string datafile_path(
 bool get_dos_compatible_file_name(std::string *fname);
 std::string get_parent_directory(const std::string &filename);
 std::string get_base_filename(const std::string &filename);
+std::string get_cache_name(const std::string &filename);
 std::string get_path_relative_to(const std::string &referencefile,
                                  const std::string &relativepath);
 std::string catpath(const std::string &first, const std::string &second);
@@ -71,14 +71,8 @@ std::vector<player_save_info> find_saved_characters();
 
 std::string get_savefile_directory(bool ignore_game_type = false);
 std::string get_bonefile_directory(bool ignore_game_type = false);
-std::string get_save_filename(const std::string &pre,
-                              const std::string &suf,
-                              const std::string &ext,
-                              bool suppress_uid = false);
-std::string get_savedir_filename(const std::string &pre,
-                                 const std::string &suf,
-                                 const std::string &ext,
-                                 bool suppress_uid = false);
+std::string get_save_filename(const std::string &name);
+std::string get_savedir_filename(const std::string &name);
 std::string get_base_savedir_path(const std::string &subpath = "");
 std::string get_savedir_path(const std::string &shortpath);
 std::string savedir_versioned_path(const std::string &subdirs = "");
@@ -86,7 +80,6 @@ std::string get_prefs_filename();
 std::string change_file_extension(const std::string &file,
                                   const std::string &ext);
 
-void file_touch(const std::string &file);
 time_t file_modtime(const std::string &file);
 bool is_newer(const std::string &a, const std::string &b);
 std::vector<std::string> get_title_files();
@@ -94,8 +87,8 @@ std::vector<std::string> get_title_files();
 
 class level_id;
 
-bool load(dungeon_feature_type stair_taken, load_mode_type load_mode,
-          const level_id& old_level);
+bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
+                const level_id& old_level);
 
 void save_game(bool leave_game, const char *bye = NULL);
 
@@ -104,8 +97,10 @@ void save_game_state();
 
 bool get_save_version(reader &file, int &major, int &minor);
 
-bool save_exists(const std::string& name);
-void restore_game(const std::string& name);
+bool save_exists(const std::string& filename);
+bool restore_game(const std::string& filename);
+
+void sighup_save_and_exit();
 
 bool is_existing_level(const level_id &level);
 
@@ -129,10 +124,8 @@ FILE *lk_open(const char *mode, const std::string &file);
 void lk_close(FILE *handle, const char *mode, const std::string &file);
 
 // file locking stuff
-#ifdef USE_FILE_LOCKING
 bool lock_file_handle(FILE *handle, bool write);
 bool unlock_file_handle(FILE *handle);
-#endif // USE_FILE_LOCKING
 
 class file_lock
 {

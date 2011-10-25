@@ -17,7 +17,8 @@ void init_properties(void);
 bool item_known_cursed(const item_def &item);
 bool item_known_uncursed(const item_def &item);
 void do_curse_item(item_def &item, bool quiet = true);
-void do_uncurse_item(item_def &item, bool inscribe = true, bool no_ash = false);
+void do_uncurse_item(item_def &item, bool inscribe = true, bool no_ash = false,
+                     bool check_bondage = true);
 
 // stationary:
 void set_item_stationary(item_def &item);
@@ -75,8 +76,7 @@ bool item_is_rechargeable(const item_def &it, bool hide_charged = false,
                           bool weapons = false);
 int wand_charge_value(int type);
 int wand_max_charges(int type);
-bool is_enchantable_weapon(const item_def &wpn, bool uncurse,
-                           bool first = true);
+bool is_offensive_wand(const item_def& item);
 bool is_enchantable_armour(const item_def &arm, bool uncurse,
                            bool unknown = false);
 
@@ -103,6 +103,8 @@ hands_reqd_type hands_reqd(const item_def &item, size_type size);
 hands_reqd_type hands_reqd(object_class_type base_type, int sub_type,
                            size_type size);
 
+bool is_whip_type(int wpn_type);
+
 bool is_demonic(const item_def &item);
 bool is_blessed(const item_def &item);
 bool is_blessed_convertible(const item_def &item);
@@ -123,6 +125,9 @@ skill_type weapon_skill(object_class_type wclass, int wtype);
 skill_type range_skill(const item_def &item);
 skill_type range_skill(object_class_type wclass, int wtype);
 
+bool item_skills(const item_def &item, std::set<skill_type> &skills);
+void maybe_change_train(const item_def &item, bool start);
+
 // launcher and ammo functions:
 bool is_range_weapon(const item_def &item);
 bool is_range_weapon_type(weapon_type wtype);
@@ -135,6 +140,9 @@ bool is_throwable(const actor *actor, const item_def &wpn, bool force = false);
 launch_retval is_launched(const actor *actor, const item_def *launcher,
                           const item_def &missile);
 
+reach_type weapon_reach(const item_def &item);
+int reach_range(reach_type rt);
+
 // staff/rod functions:
 bool item_is_rod(const item_def &item);
 bool item_is_staff(const item_def &item);
@@ -143,6 +151,7 @@ bool item_is_staff(const item_def &item);
 bool item_is_rune(const item_def &item, rune_type which_rune = NUM_RUNE_TYPES);
 bool item_is_unique_rune(const item_def &item);
 bool item_is_orb(const item_def &orb);
+bool item_is_horn_of_geryon(const item_def &item);
 
 bool item_is_corpse(const item_def &item);
 bool item_is_spellbook(const item_def &item);

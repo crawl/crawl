@@ -40,7 +40,7 @@ public:
     virtual ~mcache_entry() {}
 
     void inc_ref() { m_ref_count++; }
-    void dec_ref() { m_ref_count--; ASSERT(m_ref_count >= 0); }
+    void dec_ref() { m_ref_count--; if (m_ref_count < 0) m_ref_count = 0; }
     int ref_count() { return m_ref_count; }
 
     enum
@@ -76,6 +76,7 @@ public:
 
     void read(reader &th);
     void construct(writer &th);
+    bool empty() { return m_entries.empty(); }
 
 protected:
     std::vector<mcache_entry*> m_entries;

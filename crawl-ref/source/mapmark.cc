@@ -32,7 +32,8 @@ map_marker::marker_reader map_marker::readers[NUM_MAP_MARKER_TYPES] =
     &map_wiz_props_marker::read,
     &map_tomb_marker::read,
     &map_malign_gateway_marker::read,
-    &map_phoenix_marker::read
+    &map_phoenix_marker::read,
+    &map_position_marker::read
 };
 
 map_marker::marker_parser map_marker::parsers[NUM_MAP_MARKER_TYPES] =
@@ -707,6 +708,51 @@ map_marker *map_phoenix_marker::clone() const
 std::string map_phoenix_marker::debug_describe() const
 {
     return make_stringf("Phoenix marker (%d, %d)", turn_start, turn_stop);
+}
+
+////////////////////////////////////////////////////////////////////////////
+// map_position_marker
+
+map_position_marker::map_position_marker(
+    const coord_def &p,
+    const coord_def _dest)
+    : map_marker(MAT_POSITION, p), dest(_dest)
+{
+}
+
+map_position_marker::map_position_marker(
+    const map_position_marker &other)
+    : map_marker(MAT_POSITION, other.pos), dest(other.dest)
+{
+}
+
+void map_position_marker::write(writer &outf) const
+{
+    this->map_marker::write(outf);
+    marshallCoord(outf, dest);
+}
+
+void map_position_marker::read(reader &inf)
+{
+    map_marker::read(inf);
+    dest = (unmarshallCoord(inf));
+}
+
+map_marker *map_position_marker::clone() const
+{
+    return new map_position_marker(pos, dest);
+}
+
+map_marker *map_position_marker::read(reader &inf, map_marker_type)
+{
+    map_marker *mapf = new map_position_marker();
+    mapf->read(inf);
+    return (mapf);
+}
+
+std::string map_position_marker::debug_describe() const
+{
+    return make_stringf("position (%d,%d)", dest.x, dest.y);
 }
 
 //////////////////////////////////////////////////////////////////////////

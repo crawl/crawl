@@ -9,8 +9,7 @@
 
 mon_resist_def::mon_resist_def()
     : elec(0), poison(0), fire(0), steam(0), cold(0), hellfire(0), acid(0),
-      asphyx(false), sticky_flame(false), rotting(false), pierce(0), slice(0),
-      bludgeon(0)
+      asphyx(false), sticky_flame(false), rotting(false)
 {
 }
 
@@ -30,8 +29,7 @@ short mon_resist_def::get_default_res_level(int resist, short level) const
 
 mon_resist_def::mon_resist_def(int flags, short level)
     : elec(0), poison(0), fire(0), steam(0), cold(0), hellfire(0), acid(0),
-      asphyx(false), sticky_flame(false), rotting(false), pierce(0), slice(0),
-      bludgeon(0)
+      asphyx(false), sticky_flame(false), rotting(false)
 {
     for (int i = 0; i < 32; ++i)
     {
@@ -54,16 +52,6 @@ mon_resist_def::mon_resist_def(int flags, short level)
         case MR_VUL_FIRE:     fire       = -nl;  break;
         case MR_VUL_COLD:     cold       = -nl;  break;
 
-        // resistance to certain damage types
-        case MR_RES_PIERCE:   pierce     = nl;   break;
-        case MR_RES_SLICE:    slice      = nl;   break;
-        case MR_RES_BLUDGEON: bludgeon   = nl;   break;
-
-        // vulnerability to certain damage types
-        case MR_VUL_PIERCE:   pierce     = -nl;  break;
-        case MR_VUL_SLICE:    slice      = -nl;  break;
-        case MR_VUL_BLUDGEON: bludgeon   = -nl;  break;
-
         case MR_RES_STICKY_FLAME: sticky_flame = true; break;
         case MR_RES_ROTTING:      rotting      = true; break;
 
@@ -81,9 +69,6 @@ const mon_resist_def &mon_resist_def::operator |= (const mon_resist_def &o)
     hellfire    += o.hellfire;
     asphyx       = asphyx       || o.asphyx;
     acid        += o.acid;
-    pierce      += o.pierce;
-    slice       += o.slice;
-    bludgeon    += o.bludgeon;
     sticky_flame = sticky_flame || o.sticky_flame;
     rotting      = rotting      || o.rotting;
     return (*this);

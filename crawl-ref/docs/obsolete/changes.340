@@ -1583,7 +1583,7 @@ Oct 30, 2000 (Brent Ross)
 
      * bugfix for the Geryon bug
      * message added for berserkers chopping up corpses in rage
-     * some incorrect enums in it_use3.cc (for Asmodeus's staff) changed
+     * some incorrect enums in it_use3.cc (for Asmodeus' staff) changed
      * demonspawn xp penalty lowered to 140%
      * Elyvilon sacrifice code fixed to limit abuse
      * priest.cc and priest.h renamed to abyss.*

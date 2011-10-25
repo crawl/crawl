@@ -8,8 +8,23 @@
 
 #define CRAWL "Dungeon Crawl Stone Soup"
 
+enum rel_type
+{
+    VER_ALPHA,
+    VER_BETA,
+    VER_FINAL,
+};
+
 namespace Version
 {
+    //! The major version string.
+    /*!
+     * This version is just the major release number, e.g. '0.10' for
+     * all of 0.10-a0, 0.10, and 0.10.1 (assuming this last is even
+     * released).
+     */
+    std::string Major();
+
     //! The short version string.
     /*!
      * This version will generally match the last version tag. For instance,
@@ -35,7 +50,7 @@ namespace Version
     /*!
      * Indicates whether it's a devel or a stable version.
      */
-    bool ReleaseType();
+    rel_type ReleaseType();
 
     //! The compiler used.
     /*!

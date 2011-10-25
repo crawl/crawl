@@ -106,7 +106,6 @@ function volcano_portal (e)
     e.colour("O = red")
     e.rtile("X = wall_pebble_red")
     e.ftile("OS = floor_rough_red")
-    e.tags("layout_caves")
 end
 
 function volcano_feat_descs()
@@ -143,7 +142,7 @@ function volcano_setup (e, metal, subvault)
     if subvault == nil then
         e.set_random_mon_list([[hog / fire elemental / fire vortex /
                                 worker ant / bumblebee / fire drake / lindwurm /
-                                imp / redback / manticore / hell hound /
+                                crimson imp / redback / manticore / hell hound /
                                 hell hog / flayed ghost / pulsating lump /
                                 toenail golem / efreet /
                                 vampire]])
@@ -243,7 +242,7 @@ function setup_loot (e)
                                   "banded mail w:20", "plate mail w:10", "pair of gloves w:5",
                                   "helmet w:6", "pair of boots w:3", "cap w:2", "wizard hat w:2",
                                   "shield w:1", "buckler w:3"}) ..
-                                  " / dragon armour w:5")
+                                  " / fire dragon armour w:5")
     e.item([[potion of berserk rage w:20 / potion of poison w:2 / potion of might w:5 / potion of brilliance w:5 /
              potion of agility w:5 / potion of experience w:1 / potion of resistance]])
     e.item(make_fiery_weapon(e, {"demon whip w:2", "dire flail w:4", "ankus w:20", "dagger w:20",
@@ -388,7 +387,7 @@ function fiery_guardians (e)
 
     if crawl.one_chance_in(3) then
         -- "Demonic" fire-themed monster pack.
-        e.mons("imp w:20 / pulsating lump / toenail golem / hell hound w:9 / \
+        e.mons("crimson imp w:20 / pulsating lump / toenail golem / hell hound w:9 / \
                 / red devil ; trident ego:flaming")
         e.mons("efreet / flaming corpse / flayed ghost / hell hog / vampire / " .. hellknight)
         return
@@ -396,13 +395,13 @@ function fiery_guardians (e)
 
     if crawl.coinflip() then
         -- Demonic/unliving themed pack.
-        e.mons("imp / fire elemental / toenail golem / pulsating lump / hell hound / fire vortex")
+        e.mons("crimson imp / fire elemental / toenail golem / pulsating lump / hell hound / fire vortex")
         e.mons("efreet / vampire / " .. hellknight)
         return
     end
 
     -- Finally, if we reach this stage, let's go all out.
-    e.mons("hell hound / hog / toenail golem / fire elemental / imp")
+    e.mons("hell hound / hog / toenail golem / fire elemental / crimson imp")
     e.mons(hellknight)
     return
 end
@@ -622,7 +621,7 @@ SUBVAULT:   B : volcano_grotto_subvault
 KMONS:      l = lava snake w:2 / lava fish w:5 / nothing w:120
 KFEAT:      l = l
 :           volcano_setup(_G)
-:           place_large_volcano(_G)
+:           place_tiny_volcano(_G)
 epilogue{{
 volcano_milestone(_G)
 }}
@@ -817,8 +816,6 @@ KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 :       fiery_guardians(_G)
 KMONS:  G = statue name:lasher name_adjective \
         generate_awake ; whip ego:flaming
-KMONS:  F = statue name:lasher name_adjective \
-        generate_awake ; whip ego:reaching
 KMONS:  l = lava fish / lava worm / nothing
 KFEAT:  l = l
 #       Loot: 10 items.
@@ -829,11 +826,11 @@ xc.....cc.cxxxxxxxx
 xc...cc.c.cccccxxxx
 xc...c.cc..cGccxxxx
 xc...c.lccc.cGcccxx
-xc121c.llcGc.ccFcxx
+xc121c.llcGc.ccGcxx
 xcdgdc.llccGc..ccxx
 xceCec.lllccccc.cxx
 xcfgfc.lllllc...cxx
-xcg<gc.......cFccxx
+xcg<gc.......cGccxx
 xcccccccccccccccxxx
 ENDMAP
 
@@ -896,7 +893,7 @@ MAP
    xxy.....Lllllllllllllrr.cccccccc+cccccccc.llllllllllllllL......yxx
     xy.....LllllllSnnnllnnL.................LLllllllllllllL.....yxxx
     xxxy....LllllnnSllnnlllLllLlLllllLllLlLlzlllllllllllllL.......yxx
-     xA.......nnnllllllllllLlllllllllllllllllzzllllllllllllL.......yxx
+     xA.<.....nnnllllllllllLlllllllllllllllllzzllllllllllllL.......yxx
      xxxxy.....LllllllllllllllllllllllllllllllTzzTllllllllllL.....yxx
        xy........LLllllllllllllllllllllllllllllllzzllllllllL.....yxx
        xxxy..........LllllllllllllllllllLllllllllllzlllllLL......yxx
@@ -997,7 +994,7 @@ SUBVAULT:   B : volcano_tomb_subvault
 KFEAT:      u = lava
 KMONS:      u = flying skull
 :           volcano_setup(_G)
-:           place_large_volcano(_G)
+:           place_tiny_volcano(_G)
 epilogue{{
 volcano_milestone(_G)
 }}

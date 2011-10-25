@@ -600,7 +600,7 @@ SUBST: A = ., B = ., O = .
 ORIENT: encompass
 MARKER: T = lua:fog_machine { cloud_type="seething chaos", \
             pow_min = 20, pow_max = 40, delay = 10, \
-            size = 1, walk_dist = 0, spread_rate= 75 }
+            size = 2, walk_dist = 0, spread_rate= 75 }
 KFEAT: T = .
 MAP
 XXXXXXXXXXXXXXXXX

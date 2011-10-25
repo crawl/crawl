@@ -9,9 +9,6 @@ Guarantees:
   the exact state it had at the last commit().
 
 Caveats/issues:
-* Benchmarked on random chunks of size 2^random2(X) * frandom(1),
-  naive reusing of the first slab of free space produces less waste than
-  best fit.  I don't fully understand why, but for now, let's use that.
 * Unless DO_FSYNC is defined, crashes that put down the operating system
   may break the consistency guarantee.
 * A commit() will break readers who read a chunk that was deleted or
@@ -21,6 +18,8 @@ Caveats/issues:
 * Readers ignore uncompleted writes; completed but not committed ones will
   be available immediately -- yet a crash will lose them.
 */
+
+#include "AppHdr.h"
 
 #include <stdio.h>
 
@@ -32,7 +31,6 @@ Caveats/issues:
 #include <stdlib.h>
 #include <sstream>
 
-#include "AppHdr.h"
 #include "package.h"
 #include "endianness.h"
 #include "errors.h"
@@ -152,20 +150,28 @@ void package::load()
     read_directory(htole(head.start), head.version);
 
     if (rw)
-    {
-        free_blocks[sizeof(file_header)] = file_len - sizeof(file_header);
+        load_traces();
+}
 
-        for(directory_t::iterator ch = directory.begin();
-            ch != directory.end(); ch++)
-        {
-            trace_chunk(ch->second);
-        }
-#ifdef COSTLY_ASSERTS
-        // any inconsitency in the save is guaranteed to be already found
-        // by this time -- this checks only for internal bugs
-        fsck();
-#endif
+void package::load_traces()
+{
+    ASSERT(!dirty);
+    ASSERT(!n_users);
+    if (directory.empty() || !block_map.empty())
+        return;
+
+    free_blocks[sizeof(file_header)] = file_len - sizeof(file_header);
+
+    for(directory_t::iterator ch = directory.begin();
+        ch != directory.end(); ++ch)
+    {
+        trace_chunk(ch->second);
     }
+#ifdef COSTLY_ASSERTS
+    // any inconsitency in the save is guaranteed to be already found
+    // by this time -- this checks only for internal bugs
+    fsck();
+#endif
 }
 
 package::~package()
@@ -283,25 +289,40 @@ len_t package::extend_block(len_t at, len_t size, len_t by)
     return by;
 }
 
-len_t package::alloc_block()
+len_t package::alloc_block(len_t &size)
 {
-    for(fb_t::iterator bl = free_blocks.begin(); bl!=free_blocks.end(); bl++)
+    fb_t::iterator bl, best_big, best_small;
+    len_t bb_size = (len_t)-1, bs_size = 0;
+    for(bl = free_blocks.begin(); bl!=free_blocks.end(); ++bl)
     {
-        // don't reuse very small blocks
-        if (bl->second < 16)
-            continue;
-
-          len_t at = bl->first;
-          len_t free = bl->second;
-          dprintf("found a block for reuse at %u size %u\n", at, free);
-          free_blocks.erase(bl);
-          free_blocks[at + sizeof(block_header)] = free - sizeof(block_header);
-
-          return at;
+        if (bl->second < bb_size && bl->second >= size + sizeof(block_header))
+            best_big = bl, bb_size = bl->second;
+        // don't reuse very small blocks unless they're big enough
+        else if (bl->second >= 16 && bl->second > bs_size)
+            best_small = bl, bs_size = bl->second;
     }
-    len_t at = file_len;
+    if (bb_size != (len_t)-1)
+        bl = best_big;
+    else if (bs_size != 0)
+        bl = best_small;
+    else
+    {
+        len_t at = file_len;
 
-    file_len += sizeof(block_header);
+        file_len += sizeof(block_header) + size;
+        return at;
+    }
+
+    len_t at = bl->first;
+    len_t free = bl->second;
+    dprintf("found a block for reuse at %u size %u\n", at, free);
+    free_blocks.erase(bl);
+    free -= sizeof(block_header);
+    if (size > free)
+        size = free;
+    if ((free -= size))
+        free_blocks[at + sizeof(block_header) + size] = free;
+
     return at;
 }
 
@@ -336,7 +357,7 @@ len_t package::write_directory()
 
     std::stringstream dir;
     for (directory_t::iterator i = directory.begin();
-         i != directory.end(); i++)
+         i != directory.end(); ++i)
     {
         uint8_t name_len = i->first.length();
         dir.write((const char*)&name_len, sizeof(name_len));
@@ -384,7 +405,7 @@ void package::free_block(len_t at, len_t size)
     neigh = free_blocks.lower_bound(at);
     if (neigh != free_blocks.begin())
     {
-        neigh--;
+        --neigh;
         ASSERT(neigh->first + neigh->second <= at);
         if (neigh->first + neigh->second == at)
         {
@@ -424,13 +445,13 @@ void package::fsck()
            (unsigned int)free_blocks.size(), file_len);
 
     for(fb_t::const_iterator bl = free_blocks.begin(); bl != free_blocks.end();
-        bl++)
+        ++bl)
     {
         printf("<at %u size %u>\n", bl->first, bl->second);
     }
 #endif
     for(bm_t::const_iterator bl = block_map.begin(); bl != block_map.end();
-        bl++)
+        ++bl)
     {
 #ifdef FSCK_VERBOSE
         printf("[at %u size %u+header]\n", bl->first, bl->second.first);
@@ -506,7 +527,7 @@ std::vector<std::string> package::list_chunks()
     std::vector<std::string> list;
     list.reserve(directory.size());
     for (directory_t::iterator i = directory.begin();
-         i != directory.end(); i++)
+         i != directory.end(); ++i)
     {
         if (!i->first.empty())
             list.push_back(i->first);
@@ -534,7 +555,7 @@ void package::trace_chunk(len_t start)
         fb_t::iterator sp = free_blocks.upper_bound(start);
         if (sp == free_blocks.begin())
             fail("save file corrupted -- overlapping blocks");
-        sp--;
+        --sp;
         len_t sp_start = sp->first;
         len_t sp_size  = sp->second;
         if (sp_start > start || sp_start + sp_size < end)
@@ -566,6 +587,48 @@ void package::unlink()
     ::unlink_u(filename.c_str());
 }
 
+// the amount of free space not at the end of file
+len_t package::get_slack()
+{
+    load_traces();
+
+    len_t slack = 0;
+    for(fb_t::iterator bl = free_blocks.begin(); bl!=free_blocks.end(); ++bl)
+        slack += bl->second;
+    return slack;
+}
+
+len_t package::get_chunk_fragmentation(const std::string name)
+{
+    load_traces();
+    ASSERT(directory.find(name) != directory.end()); // not has_chunk(), "" is valid
+    len_t frags = 0;
+    len_t at = directory[name];
+    while(at)
+    {
+        bm_t::iterator bl = block_map.find(at);
+        ASSERT(bl != block_map.end());
+        frags ++;
+        at = bl->second.second;
+    }
+    return frags;
+}
+
+len_t package::get_chunk_compressed_length(const std::string name)
+{
+    load_traces();
+    ASSERT(directory.find(name) != directory.end()); // not has_chunk(), "" is valid
+    len_t len = 0;
+    len_t at = directory[name];
+    while(at)
+    {
+        bm_t::iterator bl = block_map.find(at);
+        ASSERT(bl != block_map.end());
+        len += bl->second.first;
+        at = bl->second.second;
+    }
+    return len;
+}
 
 chunk_writer::chunk_writer(package *parent, const std::string _name)
     : first_block(0), cur_block(0), block_len(0)
@@ -621,7 +684,7 @@ chunk_writer::~chunk_writer()
             fail("save file compression failed: %s", zs.msg);
         raw_write(z_buffer, zs.next_out - z_buffer);
         zs.next_out = z_buffer;
-        zs.avail_out = sizeof(ZB_SIZE);
+        zs.avail_out = ZB_SIZE;
     } while (res != Z_STREAM_END);
     if (deflateEnd(&zs) != Z_OK)
         fail("save file compression failed during clean-up: %s", zs.msg);
@@ -636,11 +699,10 @@ void chunk_writer::raw_write(const void *data, len_t len)
 {
     while (len > 0)
     {
-        int space = pkg->extend_block(cur_block, block_len, len);
+        len_t space = pkg->extend_block(cur_block, block_len, len);
         if (!space)
         {
-            len_t next_block = pkg->alloc_block();
-            space = pkg->extend_block(next_block, 0, len);
+            len_t next_block = pkg->alloc_block(space = len);
             ASSERT(space > 0);
             if (cur_block)
                 finish_block(next_block);
@@ -651,7 +713,7 @@ void chunk_writer::raw_write(const void *data, len_t len)
         }
 
         pkg->seek(cur_block + block_len + sizeof(block_header));
-        if (::write(pkg->fd, data, space) != space)
+        if (::write(pkg->fd, data, space) != (ssize_t)space)
             sysfail("write error while saving");
         data = (char*)data + space;
         block_len += space;

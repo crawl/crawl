@@ -74,6 +74,12 @@ public:
     std::vector<std::string> list_chunks();
     void abort();
     void unlink();
+
+    // statistics
+    len_t get_slack();
+    len_t get_size() const { return file_len; };
+    len_t get_chunk_fragmentation(const std::string name);
+    len_t get_chunk_compressed_length(const std::string name);
 private:
     std::string filename;
     bool rw;
@@ -87,7 +93,7 @@ private:
     std::stack<len_t> unlinked_blocks;
     std::map<len_t, std::pair<len_t, len_t> > block_map;
     len_t extend_block(len_t at, len_t size, len_t by);
-    len_t alloc_block();
+    len_t alloc_block(len_t &size);
     void finish_chunk(const std::string name, len_t at);
     void free_chunk(const std::string name);
     len_t write_directory();
@@ -98,6 +104,7 @@ private:
     void read_directory(len_t start, uint8_t version);
     void trace_chunk(len_t start);
     void load();
+    void load_traces();
     friend class chunk_writer;
     friend class chunk_reader;
 };

@@ -19,26 +19,31 @@ int  overview_knows_num_portals(dungeon_feature_type portal);
 void display_overview();
 bool unnotice_feature(const level_pos &pos);
 std::string overview_description_string(bool display);
+void enter_branch(branch_type branch, level_id from);
 
 ///////////////////////////////////////////////////////////
-void set_level_annotation(std::string str,
-                          level_id li = level_id::current());
-void clear_level_annotation(level_id li = level_id::current());
-
 void set_level_exclusion_annotation(std::string str,
                                     level_id li = level_id::current());
 void clear_level_exclusion_annotation(level_id li = level_id::current());
+void set_level_unique_annotation(std::string str,
+                                 level_id li = level_id::current());
+void set_unique_annotation(monster* mons,
+                           const level_id level = level_id::current());
+void remove_unique_annotation(monster* mons);
 
 std::string get_level_annotation(level_id li = level_id::current(),
-                                 bool skip_excl = false);
-
-std::string get_coloured_level_annotation(int col,
-                                 level_id li = level_id::current(),
-                                 bool skip_excl = false);
+                                 bool skip_excl = false,
+                                 bool skip_uniq = false,
+                                 bool use_colour = false,
+                                 int colour = LIGHTRED);
 
 bool level_annotation_has(std::string str,
                           level_id li = level_id::current());
 
 void annotate_level();
 
+class writer;
+class reader;
+void marshallUniqueAnnotations(writer& outf);
+void unmarshallUniqueAnnotations(reader& inf);
 #endif

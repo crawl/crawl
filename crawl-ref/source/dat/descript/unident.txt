@@ -3,14 +3,6 @@ amulet
 
 A piece of jewellery.
 %%%%
-blazing lamp
-
-A lamp.
-%%%%
-bone lantern
-
-A strange lantern made out of ancient bones.
-%%%%
 book
 
 A book of magic spells. Beware, for some of the more powerful grimoires
@@ -22,19 +14,7 @@ A sphere of clear crystal.
 %%%%
 deck of cards
 
-A deck of cards.
-%%%%
-gauzy fan
-
-A fan.
-%%%%
-grey disc
-
-A grey disc.
-%%%%
-nondescript stone
-
-A lump of rock.
+A deck of powerful magical cards painted in the ichor of demons. They may have any number of helpful or dangerous effects when drawn.
 %%%%
 potion
 
@@ -52,19 +32,7 @@ scroll
 
 A scroll of paper covered in magical writing.
 %%%%
-sealed bronze flask
-
-A heavy bronze flask, warm to the touch.
-%%%%
-silver horn
-
-A curving, roughly-chased silver horn, dulled by age.
-%%%%
-small ebony casket
-
-A small black box. I wonder what's inside?
-%%%%
-staff
+magical staff
 
 A stick imbued with magical properties.
 %%%%

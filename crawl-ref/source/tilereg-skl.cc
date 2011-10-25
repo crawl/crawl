@@ -1,11 +1,13 @@
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "tilereg-skl.h"
 
 #include "cio.h"
 #include "libutil.h"
+#include "options.h"
+#include "skills.h"
 #include "skills2.h"
 #include "stuff.h"
 #include "tiledef-icons.h"
@@ -40,17 +42,10 @@ void SkillRegion::draw_tag()
     const int apt          = species_apt(skill, you.species);
 
     std::string progress = "";
-    // Don't display progress when unskilled or expert.
-    if (you.skills[skill] > 0 && you.skills[skill] < 27)
-    {
-        progress = make_stringf("(%d%%)  ",
-                                get_skill_percentage(skill));
-    }
 
-    std::string desc = make_stringf("%-14s Skill %2d  %s Aptitude %c%d",
+    std::string desc = make_stringf("%-14s Skill %4.1f Aptitude %c%d",
                                     skill_name(skill),
-                                    you.skills[skill],
-                                    progress.c_str(),
+                                    you.skill(skill, 10) / 10.0,
                                     apt > 0 ? '+' : ' ',
                                     apt);
 
@@ -75,14 +70,18 @@ int SkillRegion::handle_mouse(MouseEvent &event)
         }
 #endif
         m_last_clicked_item = item_idx;
-        if (you.skills[skill] == 0)
-            mpr("You cannot toggle a skill you don't have yet.");
+        if (!you.can_train[skill])
+            mpr("You cannot train this skill.");
         else if (you.skills[skill] >= 27)
             mpr("There's no point to toggling this skill anymore.");
         else
         {
             tiles.set_need_redraw();
-            you.practise_skill[skill] = !you.practise_skill[skill];
+            if (Options.skill_focus == SKM_FOCUS_OFF)
+                you.train[skill] = !you.train[skill];
+            else
+                you.train[skill] = (you.train[skill] + 1) % 3;
+            reset_training();
         }
         return CK_MOUSE_CMD;
     }
@@ -99,8 +98,7 @@ bool SkillRegion::update_tab_tip_text(std::string &tip, bool active)
 {
     const char *prefix = active ? "" : "[L-Click] ";
 
-    tip = make_stringf("%s%s",
-                       prefix, "Manage skills");
+    tip = make_stringf("%s%s", prefix, "Manage skills");
 
     return (true);
 }
@@ -116,16 +114,16 @@ bool SkillRegion::update_tip_text(std::string& tip)
 
     const int flag = m_items[item_idx].flag;
     if (flag & TILEI_FLAG_INVALID)
-        tip = "You don't have this skill yet.";
+        tip = "You cannot train this skill now.";
     else
     {
         const skill_type skill = (skill_type) m_items[item_idx].idx;
 
         tip = "[L-Click] ";
-        if (you.practise_skill[skill])
-            tip += "Lower the rate of training";
+        if (you.train[skill])
+            tip += "Disable training";
         else
-            tip += "Increase the rate of training";
+            tip += "Enable training";
     }
 #ifdef WIZARD
     if (you.wizard)
@@ -234,14 +232,17 @@ void SkillRegion::update()
 
         if (skill > SK_UNARMED_COMBAT && skill < SK_SPELLCASTING)
             continue;
-
         InventoryTile desc;
-        desc.tile     = tileidx_skill(skill,
-                                      you.practise_skill[skill]);
+        if (you.skills[skill] >= 27)
+            desc.tile = tileidx_skill(skill, -1);
+        else if (!you.training[skill])
+            desc.tile = tileidx_skill(skill, 0);
+        else
+            desc.tile = tileidx_skill(skill, you.train[skill]);
         desc.idx      = idx;
         desc.quantity = you.skills[skill];
 
-        if (you.skills[skill] == 0 || you.skills[skill] >= 27)
+        if (!you.can_train[skill] || you.skills[skill] >= 27)
             desc.flag |= TILEI_FLAG_INVALID;
 
         m_items.push_back(desc);

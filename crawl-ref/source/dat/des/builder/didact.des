@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # This file contains vaults and lua for didactical purposes --
-# it is included in clua/loadmaps.lua for syntax checking. None of the maps
+# it is included in dlua/loadmaps.lua for syntax checking. None of the maps
 # here will be used in real games.
 #
 ##############################################################################

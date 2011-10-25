@@ -4,12 +4,31 @@
 
 {{
   function zotdef_setup(e)
+
+    e.orient("encompass")
+    e.lfloorcol("magenta")
+    e.lrockcol("lightmagenta")
+    e.lfloortile("floor_rough_magenta")
+    e.lrocktile("wall_zot_lightmagenta")
+
+    e.colour("c = magenta")
+    e.tile("c = wall_zot_magenta")
+
     e.marker("Y = feat:stone_stairs_up_i")
     e.kfeat("Y = .")
     e.kitem("Z = Orb of Zot")
-    e.lua_marker("Z", item_pickup_change_flags {
-            level_flags="!no_magic_map", item="Orb of Zot"
-         })
+    e.kitem("* = star_item")
+    e.kitem("| = superb_item")
+
+    e.kmask("*| = no_monster_gen")
+    e.kprop("*| = no_rtele_into")
+
+    e.lua_marker("F", fog_machine {
+        cloud_type = "purple smoke",
+        pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35,
+        size = 2, walk_dist = 2, spread_rate= 35
+    })
+
   end
 }}
 
@@ -17,15 +36,9 @@
 # hall_of_Zot_5
 
 NAME:    zotvault
-TAGS:    zotdef no_monster_gen
-ORIENT:  encompass
-LFLOORCOL: magenta
-LROCKCOL:  lightmagenta
-LFLAGS:  no_magic_map
+TAGS:    zotdef
+DESC:    Scenario I: Hall of Zot
 : zotdef_setup(_G)
-MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
-            pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
-            size = 2, walk_dist = 2, spread_rate= 35 }
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -76,18 +89,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:    zotvault2
-TAGS:    zotdef no_monster_gen
-ORIENT:  encompass
-LFLOORCOL: magenta
-LROCKCOL:  lightmagenta
-LFLAGS:  no_magic_map
+TAGS:    zotdef
+DESC:    Scenario II: Battle Heart
 : zotdef_setup(_G)
-MARKER:  Z = lua:item_pickup_change_flags { \
-            level_flags="!no_magic_map", item="Orb of Zot" \
-         }
-MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
-            pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
-            size = 2, walk_dist = 2, spread_rate= 35 }
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXXXXXXXXxxxxxxxxxx
@@ -116,40 +120,36 @@ xxxxxxxxxXXX..............XXXxxxxxxxxxxxxxxxxxxxxxXXX..............XXXxxxxxxxxx
 xxxxxxxxxxxXXX..........XXXxxxxxxxxxxxxxxxxxxxxxxxxxXXX..........XXXxxxxxxxxxxx
 xxxxxxxxxxxxxXX.......XXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXX.......XXxxxxxxxxxxxxx
 xxxxxxxxxxxxxxXX.....XXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXX.....XXxxxxxxxxxxxxxx
-xxxxxxxxxxxccccXX...XXcccccccccxxxxxxxxxxxxxxxxxccccxccccXX...XXccccxxxxxxxxxxx
-xxxxxxxxxccc..................cccccccxxxxxccccccc..................cccxxxxxxxxx
-xxxxxxxccc......ccccccc.............cccxccc.............ccccccc......cccxxxxxxx
-xxxxxxcc.......cccxxxxcccccccc........ccc........ccccccccxxxxccc.......ccxxxxxx
-xxxxxxc..........ccxxxxxxxxxcc.........c.........ccxxxxxxxxxcc..........cxxxxxx
-xxxxxxcc..........ccxxxxxxxxc.....................cxxxxxxxxcc..........ccxxxxxx
-xxxxxxxcc..........ccxxxxxxxc.....................cxxxxxxxcc..........ccxxxxxxx
-xxxxxxxxcc..........cxxxxxxxc.....................cxxxxxxxc..........ccxxxxxxxx
-xxxxxxxxxc..........cxxxxxxxcc...................ccxxxxxxxc..........cxxxxxxxxx
-xxxxxxxccc..........cxxxxxxxxcc.................ccxxxxxxxxc..........cccxxxxxxx
-xxxxxccc..........cccxxxxxxxxxcc...............ccxxxxxxxxxccc..........cccxxxxx
-xxxxxc..........cccxxxxxxxxxxxxcc.............ccxxxxxxxxxxxxccc..........cxxxxx
-xxxxxc........cccxxxxxxxxxxxxxxxccc.........cccxxxxxxxxxxxxxxxccc........cxxxxx
-xxxxxc........cxxxxxxxxxxxxxxxxxxxccc..[..cccxxxxxxxxxxxxxxxxxxxc........cxxxxx
-xxxxxc...{....cxxxxxxxxxxxxxxxxxxxxxc..F..cxxxxxxxxxxxxxxxxxxxxxc....(...cxxxxx
-xxxxxc...F....cxxxxxxxxxxxxxxxxxxxxxcccccccxxxxxxxxxxxxxxxxxxxxxc....F...cxxxxx
-xxxxxccccccccccxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxccccccccccxxxxx
+xxxxxxxxxxxxxxxXX...XXcccccccccxxxxxxxxxxxxxxxxxcccccccccXX...XXxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxc.............cccccccxxxxxccccccc.............cxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxccccccc.............cccxccc.............cccccccxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxcccccccccc......ccc......ccccccccccxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxcc........c........ccxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxc...................cxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccccccxxxxxxxc...................cxxxxxxxccccccccxxxxxxxxxxxxxx
+xxxxxxxxxxxxxcc......cccccxxxc...................cxxxccccc......ccxxxxxxxxxxxxx
+xxxxxxxxxxxccc...........ccxcc...................ccxcc...........cccxxxxxxxxxxx
+xxxxxxxxxxcc..............ccc.....................ccc..............ccxxxxxxxxxx
+xxxxxcccccc....................c...............cc...................ccccccxxxxx
+xxxxxc......................ccccc.............ccccc......................cxxxxx
+xxxxxc.........ccc........cccxxxccc.........cccxxxccc........ccc.........cxxxxx
+xxxxxcF{.......cxcc.....cccxxxxxxxccc..[..cccxxxxxxxccc.....ccxc.......(Fcxxxxx
+xxxxxc........ccxxcc..cccxxxxxxxxxxxcc.F.ccxxxxxxxxxxxccc..ccxxcc........cxxxxx
+xxxxxc........cxxxxccccxxxxxxxxxxxxxxcc.ccxxxxxxxxxxxxxxccccxxxxc........cxxxxx
+xxxxxccccccccccxxxxxxxxxxxxxxxxxxxxxxxcccxxxxxxxxxxxxxxxxxxxxxxxccccccccccxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # This one is very sensitive to the pathfinding algorithm, and currently
-# doesn't work (all critters enter the Orb chamber from the south). Needs
-# reworking before use, so the 'zotdef' tag has been replaced with '_zotdef'.
+# doesn't work (all critters enter the Orb chamber from the south).
+#
+# Okay, this is still a bit odd, but now critters only *rarely* enter
+# from the south, and rarely is better than always.
 NAME:    zotvault3
-TAGS:    _zotdef no_monster_gen no_rotate
-ORIENT:  encompass
-LFLOORCOL: magenta
-LROCKCOL:  lightmagenta
-LFLAGS:  no_magic_map
+TAGS:    zotdef no_rotate
+DESC:    Scenario III: Two or Three?
 : zotdef_setup(_G)
-MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
-            pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
-            size = 2, walk_dist = 2, spread_rate= 35 }
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -159,18 +159,18 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX...XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.....XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.....Y.....XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXXXXXXXXXXX..........Z..........XXXXXXXXXXXXXXXXXXXXXXXXXXXX
-XXXXXXX....................X..XXX...........XXX..X....................XXXXXXX
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXX.........Z.........XXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXXXXX..................XX...XX...........XX...XX..................XXXXXXXX
 XXXXXXX....................X..XXXXX.......XXXXX..X....................XXXXXXX
 XXXXXXX....................X..XXXXXX.....XXXXXX..X....................XXXXXXX
 XXXXXXX....................X..XXXXXXX...XXXXXXX..X....................XXXXXXX
 XXXXXXX....................X..XXXXXXX...XXXXXXX..X....................XXXXXXX
 XXXXXXX..............XX....X..XXXXXXXX.XXXXXXXX..X....XX..............XXXXXXX
 XXXXXXX...............XX...X..XXXXXXXX.XXXXXXXX..X...XX...............XXXXXXX
-XXXXXXX...............XX...X..XXXXXXXX.XXXXXXXX..X...XX...............XXXXXXX
+XXXXXXXX..............XX...X..XXXXXXXX.XXXXXXXX..X...XX..............XXXXXXXX
 XXXXXXXXXXXXXXX.......XX...XX...................XX...XX.......XXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXX.....XX.....X.................X.....XX.....XXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXX...XX.....X.................X.....XX...XXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXX...XXX....X.................X....XXX...XXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXXXXXX.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.XXXXXXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXXX.........XXXXXXXXXXXXXXXXXXXXXXXXX.........XXXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXX....XXXXX....XXXXXXX.......XXXXXXX....XXXXX....XXXXXXXXXXXXXXX
@@ -215,15 +215,9 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ENDMAP
 
 NAME:    zotvault4
-TAGS:    zotdef no_monster_gen no_rotate
-ORIENT:  encompass
-LFLOORCOL: magenta
-LROCKCOL:  lightmagenta
-LFLAGS:  no_magic_map
+TAGS:    zotdef no_rotate
+DESC:    Scenario IV: Columnade
 : zotdef_setup(_G)
-MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
-            pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
-            size = 2, walk_dist = 2, spread_rate= 35 }
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 X.......XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX.......X
@@ -272,16 +266,11 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ENDMAP
 
 # Currently under development and testing, so commented out in the tags.
+# Monsters have a tendancy to get stuck peering through the glass...
 NAME:    zotvault5
-TAGS:    _zotdef no_monster_gen no_rotate
-ORIENT:  encompass
-LFLOORCOL: magenta
-LROCKCOL:  lightmagenta
-LFLAGS:  no_magic_map
+TAGS:    _zotdef no_rotate
+DESC:    Scenario V: Glassed Sandwich
 : zotdef_setup(_G)
-MARKER: F = lua:fog_machine { cloud_type= "purple smoke", \
-            pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
-            size = 2, walk_dist = 2, spread_rate= 35 }
 MAP
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 XXXXX...................................................................XXXXX

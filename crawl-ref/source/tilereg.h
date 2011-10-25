@@ -1,4 +1,4 @@
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 #ifndef TILEREG_H
 #define TILEREG_H
 
@@ -60,8 +60,6 @@ public:
     // End position in pixels (bottom right)
     int ex;
     int ey;
-
-    static coord_def NO_CURSOR;
 
 protected:
     void recalculate();

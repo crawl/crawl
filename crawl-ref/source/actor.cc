@@ -58,6 +58,10 @@ bool actor::stand_on_solid_ground() const
            && !feat_is_water(grd(pos()));
 }
 
+/**
+ * Wrapper around the virtual actor::can_wield(const item_def&,bool,bool,bool,bool) const overload.
+ * @param item May be NULL, in which case a dummy item will be passed in.
+ */
 bool actor::can_wield(const item_def* item, bool ignore_curse,
                       bool ignore_brand, bool ignore_shield,
                       bool ignore_transform) const
@@ -67,10 +71,10 @@ bool actor::can_wield(const item_def* item, bool ignore_curse,
         // Unarmed combat.
         item_def fake;
         fake.base_type = OBJ_UNASSIGNED;
-        return can_wield(fake, ignore_curse, ignore_brand, ignore_transform);
+        return can_wield(fake, ignore_curse, ignore_brand, ignore_shield, ignore_transform);
     }
     else
-        return can_wield(*item, ignore_curse, ignore_brand, ignore_transform);
+        return can_wield(*item, ignore_curse, ignore_brand, ignore_shield, ignore_transform);
 }
 
 bool actor::can_pass_through(int x, int y) const
@@ -99,6 +103,10 @@ bool actor::handle_trap()
     return (trap != NULL);
 }
 
+int actor::skill_rdiv(skill_type sk, int mult, int div) const
+{
+    return div_rand_round(skill(sk, mult * 256), div * 256);
+}
 
 int actor::res_holy_fire() const
 {
@@ -197,7 +205,7 @@ void actor::shield_block_succeeded(actor *foe)
         && (unrand_entry = get_unrand_entry(sh->special))
         && unrand_entry->fight_func.melee_effects)
     {
-       unrand_entry->fight_func.melee_effects(sh, this, foe, false);
+       unrand_entry->fight_func.melee_effects(sh, this, foe, false, 0);
     }
 }
 
@@ -229,18 +237,13 @@ int actor::body_weight(bool base) const
     }
 }
 
-kill_category actor_kill_alignment(const actor *act)
-{
-    return (act? act->kill_alignment() : KC_OTHER);
-}
-
 bool actor_slime_wall_immune(const actor *act)
 {
     return (act->atype() == ACT_PLAYER?
               you.religion == GOD_JIYVA && !you.penance[GOD_JIYVA]
             : act->res_acid() == 3);
 }
-/*
+/**
  * Accessor method to the clinging member.
  *
  * @returns The value of clinging.
@@ -250,7 +253,7 @@ bool actor::is_wall_clinging() const
     return props.exists("clinging") && props["clinging"].get_bool();
 }
 
-/*
+/**
  * Check a cell to see if actor can keep clinging if it moves to it.
  *
  * @param p Coordinates of the cell checked.
@@ -264,7 +267,7 @@ bool actor::can_cling_to(const coord_def& p) const
     return cell_can_cling_to(pos(), p);
 }
 
-/*
+/**
  * Update the clinging status of an actor.
  *
  * It checks adjacent orthogonal walls to see if the actor can cling to them.

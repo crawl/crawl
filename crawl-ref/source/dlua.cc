@@ -293,9 +293,9 @@ void init_dungeon_lua()
     luaL_openlib(dlua, "debug", debug_dlib, 0);
     luaL_openlib(dlua, "los", los_dlib, 0);
 
-    dlua.execfile("clua/dungeon.lua", true, true);
-    dlua.execfile("clua/luamark.lua", true, true);
-    dlua.execfile("clua/mapinit.lua", true, true);
+    dlua.execfile("dlua/dungeon.lua", true, true);
+    dlua.execfile("dlua/luamark.lua", true, true);
+    dlua.execfile("dlua/mapinit.lua", true, true);
 
     lua_getglobal(dlua, "dgn_run_map");
     luaopen_debug(dlua);

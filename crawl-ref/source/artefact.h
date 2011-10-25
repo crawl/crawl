@@ -3,7 +3,6 @@
  * @brief Random and unrandom artefact functions.
 **/
 
-
 #ifndef RANDART_H
 #define RANDART_H
 
@@ -14,9 +13,6 @@ struct bolt;
 #include "art-enum.h"
 
 #define ART_PROPERTIES ARTP_NUM_PROPERTIES
-
-// Reserving the upper bits for later expansion/versioning.
-#define RANDART_SEED_MASK  0x00ffffff
 
 #define KNOWN_PROPS_KEY     "artefact_known_props"
 #define ARTEFACT_PROPS_KEY  "artefact_props"
@@ -34,8 +30,8 @@ enum unrand_flag_type
     UNRAND_FLAG_CHAOTIC          = 0x20,
     UNRAND_FLAG_CORPSE_VIOLATING = 0x40,
     UNRAND_FLAG_NOGEN            = 0x80,
-    // Warning!  Any further extension and you'll need to change the field from
-    // a char.  What a loss of 82*sizeof() bytes...
+    UNRAND_FLAG_RANDAPP          =0x100,
+    // Please make sure it fits in unrandart_entry.flags (currently 16 bits).
 };
 
 enum setup_missile_type
@@ -45,8 +41,6 @@ enum setup_missile_type
     SM_CANCEL,
 };
 
-// The following unrandart bits were taken from $pellbinder's mon-util
-// code (see mon-util.h & mon-util.cc) and modified (LRH).
 struct unrandart_entry
 {
     const char *name;        // true name of unrandart
@@ -59,7 +53,7 @@ struct unrandart_entry
     uint8_t           colour;       // colour of ura
 
     short         value;
-    uint8_t       flags;
+    uint16_t      flags;
 
     short prpty[ART_PROPERTIES];
 
@@ -69,14 +63,14 @@ struct unrandart_entry
     const char *desc_end; // appended to ided
 
     void (*equip_func)(item_def* item, bool* show_msgs, bool unmeld);
-    void (*unequip_func)(const item_def* item, bool* show_msgs);
+    void (*unequip_func)(item_def* item, bool* show_msgs);
     void (*world_reacts_func)(item_def* item);
     // An item can't be a melee weapon and launcher at the same time, so have
     // the functions relevant to those item types share a union.
     union
     {
         void (*melee_effects)(item_def* item, actor* attacker,
-                              actor* defender, bool mondied);
+                              actor* defender, bool mondied, int damage);
         setup_missile_type (*launch)(item_def* item, bolt* beam,
                                      std::string* ammo_name, bool* returning);
     } fight_func;
@@ -89,6 +83,7 @@ bool is_artefact(const item_def &item);
 bool is_random_artefact(const item_def &item);
 bool is_unrandom_artefact(const item_def &item);
 bool is_special_unrandom_artefact(const item_def &item);
+bool is_randapp_artefact(const item_def &item);
 
 void artefact_fixup_props(item_def &item);
 
@@ -103,8 +98,8 @@ std::string get_artefact_name(const item_def &item, bool force_known = false);
 
 void set_artefact_name(item_def &item, const std::string &name);
 
-std::string artefact_name(const item_def &item, bool appearance = false);
-std::string replace_name_parts(const std::string name_in, const item_def& item);
+std::string make_artefact_name(const item_def &item, bool appearance = false);
+std::string replace_name_parts(const std::string &name_in, const item_def& item);
 
 const char *unrandart_descrip(int which_descrip, const item_def &item);
 
@@ -135,6 +130,7 @@ int artefact_known_wpn_property(const item_def &item,
                                  artefact_prop_type prop);
 
 void artefact_wpn_learn_prop(item_def &item, artefact_prop_type prop);
+void reveal_randapp_artefact(item_def &item);
 
 bool make_item_randart(item_def &item, bool force_mundane = false);
 bool make_item_unrandart(item_def &item, int unrand_index);
@@ -152,7 +148,6 @@ void artefact_set_property(item_def           &item,
 
 int get_unrandart_num(const char *name);
 
-void cheibriados_make_item_ponderous(item_def &item);
 void unrand_reacts();
 
 #endif

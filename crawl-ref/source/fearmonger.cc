@@ -15,7 +15,6 @@
 #include "monster.h"
 #include "random.h"
 #include "state.h"
-#include "stuff.h"
 #include "areas.h"
 
 // Add a monster to the list of fearmongers.
@@ -77,7 +76,7 @@ monster* player::get_fearmonger(const coord_def &target) const
         const int olddist = grid_distance(pos(), mon->pos());
         const int newdist = grid_distance(target, mon->pos());
 
-        if (olddist >= newdist)
+        if (olddist > newdist)
             return (mon);
     }
     return (NULL);
@@ -85,7 +84,7 @@ monster* player::get_fearmonger(const coord_def &target) const
 
 monster* player::get_any_fearmonger() const
 {
-    if (fearmongers.size() > 0)
+    if (!fearmongers.empty())
         return (&menv[fearmongers[0]]);
     else
         return (NULL);

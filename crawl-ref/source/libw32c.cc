@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Functions for windows32 console mode support.
+ * @brief Functions for windows console mode support.
 **/
 
 #include "AppHdr.h"
@@ -66,7 +66,6 @@
 #include "message.h"
 #include "options.h"
 #include "state.h"
-#include "stuff.h"
 #include "unicode.h"
 #include "view.h"
 #include "viewgeom.h"
@@ -96,7 +95,7 @@ static bool w32_smart_cursor = true;
 
 // we can do straight translation of DOS color to win32 console color.
 #define WIN32COLOR(col) (WORD)(col)
-static void writeChar(wchar_t c);
+static void writeChar(ucs_t c);
 static void bFlush(void);
 static void _setcursortype_internal(bool curstype);
 
@@ -124,7 +123,7 @@ static DWORD crawlColorData[16] =
 };
  */
 
-void writeChar(wchar_t c)
+void writeChar(ucs_t c)
 {
     if (c == '\t')
     {
@@ -151,6 +150,10 @@ void writeChar(wchar_t c)
 
         return;
     }
+
+    // check for upper Unicode which Windows can't handle
+    if (c > 0xFFFF)
+        c = 0xBF; // '¿'
 
     int tc = WIN32COLOR(current_color);
     pci = &screen[SCREENINDEX(cx,cy)];
@@ -239,7 +242,7 @@ void set_mouse_enabled(bool enabled)
     }
 }
 
-void set_string_input(bool value)
+static void _set_string_input(bool value)
 {
     DWORD inmodes, outmodes;
     if (value == TRUE)
@@ -334,7 +337,7 @@ static void w32_term_resizer()
     crawl_view.init_geometry();
 }
 
-void init_libw32c(void)
+void console_startup()
 {
     inbuf = GetStdHandle(STD_INPUT_HANDLE);
     outbuf = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -360,7 +363,7 @@ void init_libw32c(void)
 #endif
 
     // by default, set string input to false:  use char-input only
-    set_string_input(false);
+    _set_string_input(false);
 
     // set up screen size
     set_w32_screen_size();
@@ -393,7 +396,7 @@ void init_libw32c(void)
 
 }
 
-void deinit_libw32c(void)
+void console_shutdown()
 {
     // don't do anything if we were never initted
     if (inbuf == NULL || outbuf == NULL)
@@ -408,7 +411,7 @@ void deinit_libw32c(void)
         SetConsoleOutputCP(OutputCP);
 
     // restore console attributes for normal function
-    set_string_input(true);
+    _set_string_input(true);
 
     // set cursor and normal textcolor
     _setcursortype_internal(true);
@@ -521,11 +524,6 @@ void gotoxy_sys(int x, int y)
     }
 }
 
-void textattr(int c)
-{
-    textcolor(c);
-}
-
 void textcolor(int c)
 {
     // change current color used to stamp chars
@@ -599,7 +597,7 @@ int wherey(void)
     return cy+1;
 }
 
-void putwch(wchar_t c)
+void putwch(ucs_t c)
 {
     if (c == 0)
         c = ' ';
@@ -839,7 +837,7 @@ bool kbhit()
     return 0;
 }
 
-void delay(int ms)
+void delay(unsigned int ms)
 {
     Sleep((DWORD)ms);
 }
@@ -853,13 +851,13 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
         cgotoxy(x1, y1 + y);
         for (int x = 0; x < size.x; ++x)
         {
-            textattr(cell->colour);
+            textcolor(cell->colour);
             putwch(cell->glyph);
             cell++;
         }
     }
     update_screen();
-    textattr(WHITE);
+    textcolor(WHITE);
 }
 
 void update_screen()

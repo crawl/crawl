@@ -75,8 +75,8 @@ never communicate with the player in any form.
 Non-humanoid monsters get a 1/84 probability of "speaking" per turn
 (non-verbal actions, more like). This chance is divided by another 10,
 if the monster in question was generated as a member of a group.
-Chances are again doubled if this non-humanoid monster is fleeing, and
-doubled again if confused.
+Chances are doubled if this non-humanoid monster is fleeing, and doubled
+again if confused.
 
 Neutral monsters only speak half as often, and for charmed monsters
 the probability is divided by 3. The same applies to silenced

@@ -430,6 +430,7 @@ bool mons_speaks(monster* mons)
             return (false);
 
         // Monsters in a battle frenzy are likewise occupied.
+        // But roused holy creatures are not.
         if (mons->has_ench(ENCH_BATTLE_FRENZY) && !one_chance_in(3))
             return (false);
 
@@ -570,7 +571,7 @@ bool mons_speaks(monster* mons)
                                     unseen);
         }
     }
-    else if (mons->type == MONS_PANDEMONIUM_DEMON)
+    else if (mons->type == MONS_PANDEMONIUM_LORD)
     {
         // Pandemonium demons have randomly generated names, so use
         // "pandemonium lord" instead.

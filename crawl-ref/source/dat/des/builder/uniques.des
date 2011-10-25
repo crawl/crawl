@@ -116,7 +116,7 @@ DEPTH:  4-9, !Lair, !Slime
 
 ###############################################################################
 # Do *not* change the name of this vault without changing the relevant section
-# in monstuff.cc:monster_die. If wishing to alter Boris's weights by using
+# in monstuff.cc:monster_die. If wishing to alter Boris' weights by using
 # multiple uniq_boris TAG'd maps, ensure that you add the relevant line to
 # remove the tag in monstuff.cc:monster_die.
 NAME:   uniq_boris
@@ -125,7 +125,7 @@ DEPTH:  20-27, !Lair, !Slime
 
 NAME:   uniq_donald
 # XXX: add Vaults:1-4 when finished re-do of vaults.
-DEPTH:  Swamp, Snake, Shoals, Slime, Crypt:1-4, Blade, Elf:2-6, Orc:3-4
+DEPTH:  Swamp, Snake, Shoals, Slime, Crypt:1-4, Blade, Elf:1-4, Orc:3-4
 : place_unique(_G, "Donald")
 
 NAME:   uniq_duvessa
@@ -354,6 +354,33 @@ NAME:   uniq_tiamat
 DEPTH:  Zot
 : place_unique(_G, "Tiamat band")
 
+NAME:   uniq_ignacio
+DEPTH:  Pan
+CHANCE: 25%
+TAGS:   pan transparent extra allow_dup luniq_ignacio
+{{
+  if not dgn.persist.ignacio_spawned then
+    local runes = 0;
+    for _, r in ipairs({"demonic","glowing","magical","fiery","dark"}) do
+      if you.have_rune(r) then
+        runes = runes + 1
+      end
+    end
+    if crawl.x_chance_in_y(runes * runes, 100) then
+      dgn.persist.ignacio_spawned = true
+      dgn.persist.ignacio_forbid = crawl.coinflip()
+    else
+      return
+    end
+  end
+  if dgn.persist.ignacio_forbid then
+    return
+  end
+  mons("Ignacio")
+}}
+MAP
+1
+ENDMAP
 
 ###############################################################################
 # Crazy Yiuf! Only in his cottage.

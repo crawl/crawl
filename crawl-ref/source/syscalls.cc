@@ -102,6 +102,17 @@ bool read_urandom(char *buf, int len)
 
 #ifdef TARGET_OS_WINDOWS
 # ifndef UNIX
+static void CALLBACK _abortion(PVOID dummy, BOOLEAN timedout)
+{
+    TerminateProcess(GetCurrentProcess(), 0);
+}
+
+void alarm(unsigned int seconds)
+{
+    HANDLE dummy;
+    CreateTimerQueueTimer(&dummy, 0, _abortion, 0, seconds * 1000, 0, 0);
+}
+
 // implementation by Richard W.M. Jones
 // He claims this is the equivalent to fsync(), reading the MSDN doesn't seem
 // to show that vital metadata is indeed flushed, others report that at least
@@ -145,9 +156,52 @@ int fdatasync(int fd)
 // as a symbol in the libraries without a proper header.
 int fdatasync(int fd)
 {
+# ifdef F_FULLFSYNC
+    // On MacOS X, fsync() doesn't even try to actually do what it was asked.
+    // Sane systems might have this problem only on disks that do write caching
+    // but ignore flush requests.  fsync() should never return before the disk
+    // claims the flush completed, but this is not the case on OS X.
+    //
+    // Except, this is the case for internal drives only.  For "external" ones,
+    // F_FULLFSYNC is said to fail (at least on some versions of OS X), while
+    // fsync() actually works.  Thus, we need to try both.
+    return fcntl(fd, F_FULLFSYNC, 0) && fsync(fd);
+# else
     return fsync(fd);
+# endif
 }
 #endif
+
+
+// The old school way of doing short delays via low level I/O sync.
+// Good for systems like old versions of Solaris that don't have usleep.
+#ifdef NEED_USLEEP
+
+# ifdef TARGET_OS_WINDOWS
+void usleep(unsigned long time)
+{
+    ASSERT(time > 0);
+    ASSERT(!(time % 1000));
+    Sleep(time/1000);
+}
+# else
+
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/unistd.h>
+
+void usleep(unsigned long time)
+{
+    struct timeval timer;
+
+    timer.tv_sec  = (time / 1000000L);
+    timer.tv_usec = (time % 1000000L);
+
+    select(0, NULL, NULL, NULL, &timer);
+}
+# endif
+#endif
+
 
 bool file_exists(const std::string &name)
 {

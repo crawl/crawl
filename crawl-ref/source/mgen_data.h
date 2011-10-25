@@ -36,7 +36,7 @@ struct mgen_data
 
     // For summoned monsters this is their type of summoning, either the
     // spell which summoned them or one of the values of the enumeration
-    // mon_summon_type in mon-util.h.
+    // mon_summon_type in mon-enum.h.
     int             summon_type;
 
     // Where the monster will be created.
@@ -148,7 +148,8 @@ struct mgen_data
         ASSERT(summon_type == 0 || (abj >= 1 && abj <= 6)
                || mt == MONS_BALL_LIGHTNING || mt == MONS_ORB_OF_DESTRUCTION
                || summon_type == SPELL_STICKS_TO_SNAKES
-               || summon_type == SPELL_DEATH_CHANNEL);
+               || summon_type == SPELL_DEATH_CHANNEL
+               || summon_type == SPELL_SIMULACRUM);
     }
 
     bool permit_bands() const { return (flags & MG_PERMIT_BANDS); }

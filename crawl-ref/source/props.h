@@ -4,7 +4,7 @@
     Contains all the properties and methods common to monsters and players.
 */
 
-/*! \var CrawlHashTable props
+/*! \var CrawlHashTable actor::props
     \brief Properties hash table.
 
     actor keys

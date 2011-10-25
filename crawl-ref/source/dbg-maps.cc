@@ -62,13 +62,14 @@ static bool _mg_is_disconnected_level()
 static bool mg_do_build_level(int niters)
 {
     mesclr();
-    mprf("On %s (%d); %d g, %d fail, %d err%s, %d uniq, "
+    mprf("On %s (%d); %d g, %d fail, %u err%s, %u uniq, "
          "%d try, %d (%.2lf%%) vetos",
          level_id::current().describe().c_str(), niters,
-         mg_levels_tried, mg_levels_failed, mapgen_errors.size(),
+         mg_levels_tried, mg_levels_failed,
+         (unsigned int)mapgen_errors.size(),
          mapgen_last_error.empty()? ""
          : (" (" + mapgen_last_error + ")").c_str(),
-         mapgen_use_count.size(),
+         (unsigned int)mapgen_use_count.size(),
          mg_build_attempts, mg_vetoes,
          mg_build_attempts? mg_vetoes * 100.0 / mg_build_attempts : 0.0);
 
@@ -186,13 +187,14 @@ static void mg_build_levels(int niters)
     for (int i = 0; i < niters; ++i)
     {
         mesclr();
-        mprf("On %d of %d; %d g, %d fail, %d err%s, %d uniq, "
+        mprf("On %d of %d; %d g, %d fail, %u err%s, %u uniq, "
              "%d try, %d (%.2lf%%) vetos",
              i, niters,
-             mg_levels_tried, mg_levels_failed, mapgen_errors.size(),
+             mg_levels_tried, mg_levels_failed,
+             (unsigned int)mapgen_errors.size(),
              mapgen_last_error.empty()? ""
              : (" (" + mapgen_last_error + ")").c_str(),
-             mapgen_use_count.size(),
+             (unsigned int)mapgen_use_count.size(),
              mg_build_attempts, mg_vetoes,
              mg_build_attempts? mg_vetoes * 100.0 / mg_build_attempts : 0.0);
 

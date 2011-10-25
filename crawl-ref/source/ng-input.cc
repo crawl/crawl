@@ -17,7 +17,7 @@ void opening_screen(void)
     std::string msg =
     "<yellow>Hello, welcome to " CRAWL " " + Version::Long() + "!</yellow>\n"
     "<brown>(c) Copyright 1997-2002 Linley Henzell, "
-    "2002-2010 Crawl DevTeam\n"
+    "2002-2011 Crawl DevTeam\n"
     "Read the instructions for legal details."
     "</brown> " ;
 
@@ -130,9 +130,9 @@ bool validate_player_name(const std::string &name, bool verbose)
 {
 #if defined(TARGET_OS_WINDOWS)
     // Quick check for CON -- blows up real good under DOS/Windows.
-    if (stricmp(name.c_str(), "con") == 0
-        || stricmp(name.c_str(), "nul") == 0
-        || stricmp(name.c_str(), "prn") == 0
+    if (strcasecmp(name.c_str(), "con") == 0
+        || strcasecmp(name.c_str(), "nul") == 0
+        || strcasecmp(name.c_str(), "prn") == 0
         || strnicmp(name.c_str(), "LPT", 3) == 0)
     {
         if (verbose)

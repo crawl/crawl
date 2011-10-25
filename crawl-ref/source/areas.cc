@@ -9,6 +9,7 @@
 #include "areas.h"
 
 #include "act-iter.h"
+#include "art-enum.h"
 #include "beam.h"
 #include "cloud.h"
 #include "coord.h"
@@ -38,6 +39,8 @@ enum areaprop_flag
     APROP_HALO          = (1 << 3),
     APROP_LIQUID        = (1 << 4),
     APROP_ACTUAL_LIQUID = (1 << 5),
+    APROP_ORB           = (1 << 6),
+    APROP_UMBRA         = (1 << 7),
 };
 
 struct area_centre
@@ -80,7 +83,7 @@ void areas_actor_moved(const actor* act, const coord_def& oldpos)
     if (act->alive() &&
         (you.entering_level
          || act->halo_radius2() > -1 || act->silence_radius2() > -1
-         || act->liquefying_radius2() > -1))
+         || act->liquefying_radius2() > -1 || act->umbra_radius2() > -1))
     {
         // Not necessarily new, but certainly potentially interesting.
         invalidate_agrid(true);
@@ -129,8 +132,8 @@ static void _update_agrid()
         {
             _agrid_centres.push_back(area_centre(AREA_LIQUID, ai->pos(), r));
 
-            for (radius_iterator ri(ai->pos(),r, C_CIRCLE, ai->get_los());
-                ri; ++ri)
+            for (radius_iterator ri(ai->pos(), r, C_CIRCLE, ai->get_los());
+                 ri; ++ri)
             {
                 dungeon_feature_type f = grd(*ri);
 
@@ -141,6 +144,32 @@ static void _update_agrid()
             }
             no_areas = false;
         }
+
+        if ((r = ai->umbra_radius2()) >= 0)
+        {
+            _agrid_centres.push_back(area_centre(AREA_UMBRA, ai->pos(), r));
+
+            for (radius_iterator ri(ai->pos(), r, C_CIRCLE, ai->get_los());
+                 ri; ++ri)
+            {
+                _set_agrid_flag(*ri, APROP_UMBRA);
+            }
+            no_areas = false;
+        }
+
+    }
+
+    if (you.char_direction == GDT_ASCENDING && !env.orb_pos.origin())
+    {
+        const int r = 5;
+        _agrid_centres.push_back(area_centre(AREA_ORB, env.orb_pos, r));
+        los_glob los(env.orb_pos, LOS_DEFAULT);
+        for (radius_iterator ri(env.orb_pos, r, C_CIRCLE, &los);
+             ri; ++ri)
+        {
+            _set_agrid_flag(*ri, APROP_ORB);
+        }
+        no_areas = false;
     }
 
     // TODO: update sanctuary here.
@@ -159,6 +188,8 @@ static area_centre_type _get_first_area (const coord_def& f)
         return AREA_SILENCE;
     if (a & APROP_HALO)
         return AREA_HALO;
+    if (a & APROP_UMBRA)
+        return AREA_UMBRA;
     // liquid is always applied; actual_liquid is on top
     // of this. If we find the first, we don't care about
     // the second.
@@ -179,7 +210,7 @@ coord_def find_centre_for (const coord_def& f, area_centre_type at)
     if (_agrid(f) == 0)
         return coord_def(-1, -1);
 
-    if (_agrid_centres.size() == 0)
+    if (_agrid_centres.empty())
         return coord_def(-1, -1);
 
     coord_def possible = coord_def(-1, -1);
@@ -321,6 +352,10 @@ void create_sanctuary(const coord_def& center, int time)
     int       cloud_count = 0;
     monster* seen_mon    = NULL;
 
+    // Since revealing mimics can move monsters, we do it first.
+    for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
+        discover_mimic(*ri);
+
     int shape = random2(4);
     for (radius_iterator ri(center, radius, C_POINTY); ri; ++ri)
     {
@@ -380,27 +415,15 @@ void create_sanctuary(const coord_def& center, int time)
                 mon->behaviour = BEH_SEEK;
                 behaviour_event(mon, ME_EVAL, MHITYOU);
             }
-            else if (!mon->wont_attack())
+            else if (!mon->wont_attack() && mons_is_influenced_by_sanctuary(mon))
             {
-                if (mons_is_mimic(mon->type))
-                {
-                    mimic_alert(mon);
-                    if (you.can_see(mon))
-                    {
-                        scare_count++;
-                        seen_mon = mon;
-                    }
-                }
-                else if (mons_is_influenced_by_sanctuary(mon))
-                {
-                    mons_start_fleeing_from_sanctuary(mon);
+                mons_start_fleeing_from_sanctuary(mon);
 
-                    // Check to see that monster is actually fleeing.
-                    if (mons_is_fleeing(mon) && you.can_see(mon))
-                    {
-                        scare_count++;
-                        seen_mon = mon;
-                    }
+                // Check to see that monster is actually fleeing.
+                if (mons_is_fleeing(mon) && you.can_see(mon))
+                {
+                    scare_count++;
+                    seen_mon = mon;
                 }
             }
         }
@@ -507,22 +530,33 @@ bool actor::haloed() const
 
 int player::halo_radius2() const
 {
+    int size = -1;
+
     if (you.religion == GOD_SHINING_ONE && you.piety >= piety_breakpoint(0)
         && !you.penance[GOD_SHINING_ONE])
     {
         // Preserve the middle of old radii.
         const int r = you.piety - 10;
         // The cap is 64, just less than the LOS of 65.
-        return std::min(LOS_RADIUS*LOS_RADIUS, r * r / 400);
+        size = std::min(LOS_RADIUS*LOS_RADIUS, r * r / 400);
     }
 
-    return (-1);
+    if (player_equip_unrand(UNRAND_BRILLIANCE))
+        size = std::max(size, 9);
+
+    return (size);
 }
 
 int monster::halo_radius2() const
 {
+    item_def* weap = mslot_item(MSLOT_WEAPON);
+    int size = -1;
+
+    if (weap && weap->special == UNRAND_BRILLIANCE)
+        size = 9;
+
     if (holiness() != MH_HOLY)
-        return (-1);
+        return size;
     // The values here depend on 1. power, 2. sentience.  Thus, high-ranked
     // sentient celestials have really big haloes, while holy animals get
     // small ones.
@@ -546,8 +580,9 @@ int monster::halo_radius2() const
         return (10);
     case MONS_APIS:
         return (4);
-    case MONS_PALADIN:
-        return (4);  // mere humans
+    case MONS_PALADIN: // If a paladin finds the mace of brilliance
+                       // it needs a larger halo
+        return (std::max(4, size));  // mere humans
     case MONS_BLESSED_TOE:
         return (17);
     case MONS_SILVER_STAR:
@@ -596,4 +631,59 @@ bool liquefied(const coord_def& p, bool check_actual)
     // just recoloured for consistency
     else
         return (_check_agrid_flag(p, APROP_LIQUID));
+}
+
+
+/////////////
+// Orb's glow
+//
+
+bool orb_haloed(const coord_def& p)
+{
+    if (!map_bounds(p))
+        return (false);
+    if (!_agrid_valid)
+        _update_agrid();
+
+    return (_check_agrid_flag(p, APROP_ORB));
+}
+
+/////////////
+// Umbra
+//
+
+bool umbraed(const coord_def& p)
+{
+    if (!map_bounds(p))
+        return (false);
+    if (!_agrid_valid)
+        _update_agrid();
+
+    return (_check_agrid_flag(p, APROP_UMBRA));
+}
+
+// Whether actor is in an umbra.
+bool actor::umbraed() const
+{
+    return (::umbraed(pos()));
+}
+
+// Stub for player umbra.
+int player::umbra_radius2() const
+{
+    return (-1);
+}
+
+int monster::umbra_radius2() const
+{
+    if (holiness() != MH_UNDEAD)
+        return (-1);
+
+    switch (type)
+    {
+    case MONS_PROFANE_SERVITOR:
+        return (40); // Very unholy!
+    default:
+        return (-1);
+    }
 }

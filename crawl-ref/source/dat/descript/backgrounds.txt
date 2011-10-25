@@ -9,11 +9,11 @@ Air Elementalists have learned the Shock spell. Later on, their book of Air prov
 %%%%
 Arcane Marksman
 
-Arcane Marksmen carry some missiles as well as a book from which they will learn spells to brand those missiles later on.
+Arcane Marksmen carry ranged weapons, and use magic to make their foes more vulnerable to attacks from afar.
 %%%%
 Artificer
 
-Artificers start with a choice of magical devices and are competent at using such tools.
+Artificers start with a few magical devices and are competent at using such tools.
 %%%%
 Assassin
 
@@ -29,11 +29,7 @@ Chaos Knights are playthings of the unpredictable Xom, and are subject to the go
 %%%%
 Conjurer
 
-Conjurers confront problems with damaging spells. They can choose whether they want their destruction to be fire or ice flavoured.
-%%%%
-Crusader
-
-Crusaders are melee fighters who can boost themselves in battle with spells from the book of War Chants.
+Conjurers confront problems with damaging spells from the book of Conjurations.
 %%%%
 Death Knight
 
@@ -81,7 +77,11 @@ Necromancers are wizards specializing in the practice of death magic. They start
 %%%%
 Priest
 
-Priests are followers of Zin, spreading the god's word to the Dungeon's inhabitants. Hill Orcs can follow the orc god Beogh.
+Priests are followers of Zin, spreading the god's word to the Dungeon's inhabitants. Hill Orcs instead follow the orc god Beogh.
+%%%%
+Skald
+
+Skalds are melee fighters who can boost themselves in battle with spells from the book of War Chants.
 %%%%
 Stalker
 

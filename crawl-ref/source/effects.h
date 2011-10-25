@@ -56,11 +56,9 @@ int holy_word_player(int pow, int caster, actor *attacker = NULL);
 int holy_word_monsters(coord_def where, int pow, int caster,
                        actor *attacker = NULL);
 
-int torment(int caster, const coord_def& where);
-
-int torment_player(int pow, int caster);
-int torment_monsters(coord_def where, int pow, int caster,
-                     actor *attacker = NULL);
+int torment(actor *attacker, int taux, const coord_def& where);
+int torment_player(actor *attacker, int taux);
+int torment_monsters(coord_def where, actor *attacker, int taux);
 
 void immolation(int pow, int caster, coord_def where, bool known = false,
                 actor *attacker = NULL);

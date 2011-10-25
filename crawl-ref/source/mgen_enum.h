@@ -49,7 +49,7 @@ enum band_type
     BAND_BLINK_FROGS,
     BAND_SKELETAL_WARRIORS,
     BAND_DRACONIAN,
-    BAND_PANDEMONIUM_DEMON,
+    BAND_PANDEMONIUM_LORD,
     BAND_HARPIES,
     BAND_ILSUIW,
     BAND_AZRAEL,
@@ -78,7 +78,7 @@ enum demon_class_type
 
 enum holy_being_class_type
 {
-    HOLY_BEING_WARRIOR,                //    0: Daeva or Angel
+    HOLY_BEING_WARRIOR,                //    0: daeva or angel
 };
 
 enum dragon_class_type

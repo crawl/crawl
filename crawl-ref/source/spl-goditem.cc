@@ -13,9 +13,11 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "decks.h"
 #include "describe.h"
 #include "env.h"
 #include "godconduct.h"
+#include "godpassive.h"
 #include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
@@ -58,7 +60,8 @@ int identify(int power, int item_slot, std::string *pre_msg)
 
         item_def& item(you.inv[item_slot]);
 
-        if (fully_identified(item))
+        if (fully_identified(item)
+            && (!is_deck(item) || top_card_is_known(item)))
         {
             mpr("Choose an unidentified item, or Esc to abort.");
             if (Options.auto_list)
@@ -74,6 +77,9 @@ int identify(int power, int item_slot, std::string *pre_msg)
         set_ident_flags(item, ISFLAG_IDENT_MASK);
         if (Options.autoinscribe_artefacts && is_artefact(item))
             add_autoinscription(item, artefact_auto_inscription(item));
+
+        if (is_deck(item) && !top_card_is_known(item))
+            deck_identify_first(item_slot);
 
         // For scrolls, now id the scroll, unless already known.
         if (power == -1
@@ -121,18 +127,14 @@ static bool _mons_hostile(const monster* mon)
     return (!mon->wont_attack() && !mon->neutral());
 }
 
-// Check whether this monster might be pacified.
-// Returns 0, if monster can be pacified but the attempt failed.
-// Returns 1, if monster is pacified.
+// Check whether it is possible at all to pacify this monster.
 // Returns -1, if monster can never be pacified.
 // Returns -2, if monster can currently not be pacified (asleep).
-static int _can_pacify_monster(const monster* mon, const int healed)
+// Returns 0, if it's possible to pacify this monster.
+int is_pacifiable(const monster* mon)
 {
     if (you.religion != GOD_ELYVILON)
         return (-1);
-
-    if (healed < 1)
-        return (0);
 
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
@@ -158,12 +160,31 @@ static int _can_pacify_monster(const monster* mon, const int healed)
     if (mon->asleep()) // not aware of what is happening
         return (-2);
 
+    return 0;
+}
+
+// Check whether this monster might be pacified.
+// Returns 0, if monster can be pacified but the attempt failed.
+// Returns 1, if monster is pacified.
+// Returns -1, if monster can never be pacified.
+// Returns -2, if monster can currently not be pacified (asleep).
+static int _can_pacify_monster(const monster* mon, const int healed)
+{
+
+   int pacifiable = is_pacifiable(mon);
+   if (pacifiable < 0)
+       return pacifiable;
+
+   if (healed < 1)
+        return (0);
+
     const int factor = (mons_intel(mon) <= I_ANIMAL)       ? 3 : // animals
                        (is_player_same_species(mon->type)) ? 2   // same species
                                                            : 1;  // other
 
     int divisor = 3;
 
+    const mon_holy_type holiness = mon->holiness();
     if (mon->is_holy())
         divisor--;
     else if (holiness == MH_UNDEAD)
@@ -171,8 +192,8 @@ static int _can_pacify_monster(const monster* mon, const int healed)
     else if (holiness == MH_DEMONIC)
         divisor += 2;
 
-    const int random_factor = random2((you.skill(SK_INVOCATIONS) + 1) *
-                                      healed / divisor);
+    int random_factor = random2((you.skill(SK_INVOCATIONS, healed) + healed)
+                                / divisor);
 
     dprf("pacifying %s? max hp: %d, factor: %d, Inv: %d, healed: %d, rnd: %d",
          mon->name(DESC_PLAIN).c_str(), mon->max_hit_points, factor,
@@ -182,6 +203,14 @@ static int _can_pacify_monster(const monster* mon, const int healed)
         return (1);
 
     return (0);
+}
+
+static std::vector<std::string> _desc_mindless(const monster_info& mi)
+{
+    std::vector<std::string> descs;
+    if (mi.intel() <= I_PLANT)
+        descs.push_back("mindless");
+    return descs;
 }
 
 // Returns: 1 -- success, 0 -- failure, -1 -- cancel
@@ -200,8 +229,8 @@ static int _healing_spell(int healed, bool divine_ability,
                                       mode != TARG_NUM_MODES ? mode :
                                       you.religion == GOD_ELYVILON ?
                                             TARG_ANY : TARG_FRIEND,
-                                      LOS_RADIUS,
-                                      false, true, true, "Heal", NULL);
+                                      LOS_RADIUS, false, true, true, "Heal",
+                                      NULL, false, NULL, _desc_mindless);
     }
     else
     {
@@ -221,7 +250,7 @@ static int _healing_spell(int healed, bool divine_ability,
         }
 
         mpr("You are healed.");
-        inc_hp(healed, false);
+        inc_hp(healed);
         return (1);
     }
 
@@ -238,7 +267,7 @@ static int _healing_spell(int healed, bool divine_ability,
     const bool is_hostile = _mons_hostile(mons);
 
     // Don't divinely heal a monster you can't pacify.
-    if (divine_ability
+    if (divine_ability && is_hostile
         && you.religion == GOD_ELYVILON
         && can_pacify <= 0)
     {
@@ -290,7 +319,7 @@ static int _healing_spell(int healed, bool divine_ability,
             mons_pacify(mons, ATT_NEUTRAL);
 
             // Give a small piety return.
-            gain_piety(pgain, 2);
+            gain_piety(pgain);
         }
     }
 
@@ -303,18 +332,6 @@ static int _healing_spell(int healed, bool divine_ability,
             simple_monster_message(mons, " is completely healed.");
         else
             print_wounds(mons);
-
-        if (you.religion == GOD_ELYVILON && !is_hostile)
-        {
-            if (one_chance_in(8))
-                simple_god_message(" approves of your healing of a fellow "
-                                   "creature.");
-            else
-                mpr("Elyvilon appreciates your healing of a fellow creature.");
-
-            // Give a small piety return.
-            gain_piety(1, 8);
-        }
     }
 
     if (!did_something)
@@ -335,37 +352,6 @@ int cast_healing(int pow, bool divine_ability, const coord_def& where,
                            not_self, mode));
 }
 
-bool cast_revivification(int pow)
-{
-    if (you.hp == you.hp_max)
-        canned_msg(MSG_NOTHING_HAPPENS);
-    else if (you.hp_max < 21)
-        mpr("You lack the resilience to cast this spell.");
-    else
-    {
-        mpr("Your body is healed in an amazingly painful way.");
-
-        int loss = 2;
-        for (int i = 0; i < 9; ++i)
-            if (x_chance_in_y(8, pow))
-                loss++;
-
-        dec_max_hp(loss * you.hp_max / 100);
-        set_hp(you.hp_max, false);
-
-        if (you.duration[DUR_DEATHS_DOOR])
-        {
-            mpr("Your life is in your own hands once again.", MSGCH_DURATION);
-            you.paralyse(NULL, 5 + random2(5));
-            confuse_player(10 + random2(10));
-            you.duration[DUR_DEATHS_DOOR] = 0;
-        }
-        return (true);
-    }
-
-    return (false);
-}
-
 // Antimagic is sort of an anti-extension... it sets a lot of magical
 // durations to 1 so it's very nasty at times (and potentially lethal,
 // that's why we reduce levitation to 2, so that the player has a chance
@@ -375,13 +361,15 @@ void antimagic()
 {
     duration_type dur_list[] = {
         DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE, DUR_MIGHT, DUR_AGILITY,
-        DUR_BRILLIANCE, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
-        DUR_REGENERATION, DUR_SWIFTNESS, DUR_CONTROL_TELEPORT,
+        DUR_BRILLIANCE, DUR_CONFUSING_TOUCH, DUR_SURE_BLADE, DUR_CORONA,
+        DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
+        DUR_REGENERATION, DUR_SWIFTNESS, DUR_TELEPORT, DUR_CONTROL_TELEPORT,
         DUR_TRANSFORMATION, DUR_DEATH_CHANNEL, DUR_DEFLECT_MISSILES,
         DUR_PHASE_SHIFT, DUR_SEE_INVISIBLE, DUR_WEAPON_BRAND, DUR_SILENCE,
-        DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_BARGAIN,
-        DUR_INSULATION, DUR_RESIST_POISON, DUR_RESIST_FIRE, DUR_RESIST_COLD,
-        DUR_SLAYING, DUR_STEALTH, DUR_MAGIC_SHIELD, DUR_SAGE, DUR_PETRIFIED
+        DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_INSULATION, DUR_RESIST_POISON,
+        DUR_RESIST_FIRE, DUR_RESIST_COLD, DUR_SLAYING, DUR_STEALTH,
+        DUR_MAGIC_SHIELD, DUR_PETRIFIED, DUR_LIQUEFYING, DUR_DARKNESS,
+        DUR_PETRIFYING, DUR_SHROUD_OF_GOLUBRIA
     };
 
     if (!you.permanent_levitation() && !you.permanent_flight()
@@ -527,10 +515,6 @@ static bool _mark_detected_creature(coord_def where, monster* mon,
             where = place;
     }
 
-    // Mimics are too obvious by now, even out of LOS.
-    if (mons_is_unknown_mimic(mon))
-        discover_mimic(mon);
-
     env.map_knowledge(where).set_detected_monster(mons_detected_base(mon->type));
 
     return (found_good);
@@ -552,6 +536,7 @@ int detect_creatures(int pow, bool telepathic)
 
     for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
     {
+        discover_mimic(*ri);
         if (monster* mon = monster_at(*ri))
         {
             // If you can see the monster, don't "detect" it elsewhere.
@@ -608,7 +593,7 @@ static bool _selectively_remove_curse(std::string *pre_msg)
         if (!used && pre_msg)
             mpr(*pre_msg);
 
-        do_uncurse_item(item);
+        do_uncurse_item(item, true, false, false);
         used = true;
     }
 }
@@ -616,7 +601,15 @@ static bool _selectively_remove_curse(std::string *pre_msg)
 bool remove_curse(bool alreadyknown, std::string *pre_msg)
 {
     if (you.religion == GOD_ASHENZARI && alreadyknown)
-        return _selectively_remove_curse(pre_msg);
+    {
+        if (_selectively_remove_curse(pre_msg))
+        {
+            ash_check_bondage();
+            return true;
+        }
+        else
+            return false;
+    }
 
     bool success = false;
 
@@ -703,7 +696,7 @@ bool curse_item(bool armour, bool alreadyknown, std::string *pre_msg)
     if (armour)
         min_type = EQ_MIN_ARMOUR, max_type = EQ_MAX_ARMOUR;
     else
-        min_type = EQ_LEFT_RING, max_type = EQ_AMULET;
+        min_type = EQ_LEFT_RING, max_type = EQ_RING_EIGHT;
     for (int i = min_type; i <= max_type; i++)
     {
         if (you.equip[i] != -1 && !you.inv[you.equip[i]].cursed())
@@ -981,8 +974,6 @@ bool cast_smiting(int pow, monster* mons)
         mprf("You smite %s!", mons->name(DESC_THE).c_str());
 
         behaviour_event(mons, ME_ANNOY, MHITYOU);
-        if (mons_is_mimic(mons->type))
-            mimic_alert(mons);
     }
 
     enable_attack_conducts(conducts);

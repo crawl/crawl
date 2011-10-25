@@ -166,7 +166,7 @@ public:
     int turn_stop;
     beh_type behaviour;
     god_type god;
-    coord_def& corpse_pos;
+    coord_def corpse_pos;
 };
 
 // A marker powered by Lua.
@@ -223,6 +223,22 @@ public:
 
 public:
     std::map<std::string, std::string> properties;
+};
+
+class map_position_marker : public map_marker
+{
+public:
+    map_position_marker(const coord_def &pos = coord_def(0, 0),
+                        const coord_def _dest = INVALID_COORD);
+    map_position_marker(const map_position_marker &other);
+    void write(writer &) const;
+    void read(reader &);
+    std::string debug_describe() const;
+    map_marker *clone() const;
+    static map_marker *read(reader &, map_marker_type);
+
+public:
+    coord_def dest;
 };
 
 #endif

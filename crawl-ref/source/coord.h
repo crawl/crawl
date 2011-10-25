@@ -1,20 +1,38 @@
 #ifndef COORD_H
 #define COORD_H
 
-bool in_bounds_x(int x);
-bool in_bounds_y(int y);
-bool in_bounds(int x, int y);
-bool map_bounds_x(int x);
-bool map_bounds_y(int y);
-bool map_bounds(int x, int y);
 coord_def random_in_bounds();
 
-inline bool in_bounds(const coord_def &p)
+static inline bool in_bounds_x(int x)
+{
+    return (x > X_BOUND_1 && x < X_BOUND_2);
+}
+
+static inline bool in_bounds_y(int y)
+{
+    return (y > Y_BOUND_1 && y < Y_BOUND_2);
+}
+
+// Returns true if inside the area the player can move and dig (ie exclusive).
+static inline bool in_bounds(int x, int y)
+{
+    return (x > X_BOUND_1 && x < X_BOUND_2 && y > Y_BOUND_1 && y < Y_BOUND_2);
+}
+
+// Returns true if inside the area the player can map (ie inclusive).
+// Note that terrain features should be in_bounds() leaving an outer
+// ring of rock to frame the level.
+static inline bool map_bounds(int x, int y)
+{
+    return (x >= X_BOUND_1 && x <= X_BOUND_2 && y >= Y_BOUND_1 && y <= Y_BOUND_2);
+}
+
+static inline bool in_bounds(const coord_def &p)
 {
     return in_bounds(p.x, p.y);
 }
 
-inline bool map_bounds(const coord_def &p)
+static inline bool map_bounds(const coord_def &p)
 {
     return map_bounds(p.x, p.y);
 }

@@ -29,8 +29,6 @@
 #include <vector>
 #include <cmath>
 
-typedef FixedArray<short, GXM, GYM> grid_short;
-
 const char *PROPS_SHOALS_TIDE_KEY = "shoals-tide-height";
 const char *PROPS_SHOALS_TIDE_VEL = "shoals-tide-velocity";
 const char *PROPS_SHOALS_TIDE_UPDATE_TIME = "shoals-tide-update-time";

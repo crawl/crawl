@@ -13,13 +13,6 @@ local function assert_place_monster_on(monster, feature)
   crawl.message("Placing " .. monster .. " on " .. feature)
   assert(place_monster_on(place.x, place.y, monster, feature),
          "Could not place monster " .. monster .. " on " .. feature)
-
-  if monster ~= 'mimic' then
-    local realname = dgn.mons_at(place.x, place.y).name
-    assert(realname == monster,
-           "Monster placed is '" .. realname ..
-             "', expected '" .. monster .. "'")
-  end
 end
 
 assert_place_monster_on("quokka", "floor")
@@ -32,7 +25,3 @@ assert_place_monster_on("flying skull", "lava")
 assert_place_monster_on("rock worm", "rock_wall")
 assert_place_monster_on("cyan ugly thing")
 assert_place_monster_on("purple very ugly thing")
-
-for i = 1, 100 do
-  assert_place_monster_on("mimic")
-end

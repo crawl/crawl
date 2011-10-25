@@ -7,6 +7,7 @@
 #ifndef IT_USE3_H
 #define IT_USE3_H
 
+void stop_studying_manual(bool finish = false);
 void skill_manual(int slot);
 
 void tome_of_power(int slot);

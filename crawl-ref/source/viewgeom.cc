@@ -51,7 +51,7 @@ class _layout
 #pragma GCC diagnostic ignored "-Wstrict-overflow"
     void _assert_validity() const
     {
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
         // Check that all the panes fit in the view.
         ASSERT((viewp+viewsz - termp).x <= termsz.x);
         ASSERT((viewp+viewsz - termp).y <= termsz.y);
@@ -372,12 +372,13 @@ void crawl_view_geometry::init_geometry()
 {
     termsz = coord_def(get_number_of_cols(), get_number_of_lines());
     hudsz  = coord_def(HUD_WIDTH,
-                       HUD_HEIGHT + (Options.show_gold_turns ? 1 : 0));
+                       HUD_HEIGHT + (Options.show_gold_turns ? 1 : 0)
+                                  + crawl_state.game_is_zotdef());
 
     const _inline_layout lay_inline(termsz, hudsz);
     const _mlist_col_layout lay_mlist(termsz, hudsz);
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     if ((termsz.x < MIN_COLS || termsz.y < MIN_LINES || !lay_inline.valid)
         && !crawl_state.need_save)
     {
@@ -404,7 +405,7 @@ void crawl_view_geometry::init_geometry()
     mlistp  = winner->mlistp;
     mlistsz = winner->mlistsz;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // libgui may redefine these based on its own settings.
     gui_init_view_params(*this);
 #endif

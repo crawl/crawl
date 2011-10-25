@@ -219,7 +219,6 @@ A: If you are in the Abyss for the first time, chances of getting out are slim. 
 
 * You need to find a gateway leading out of the Abyss. These are rare!
 * Don't stick around to fight; move as much as possible!
-* The Abyss wraps around, so avoid going straight in one direction.
 * If you have it, use defensive equipment (weapons of protection, etc.).
 * Use teleportation to hopefully end up in a completely new part of the Abyss.
 * Teleportation might take much longer to kick in than in the Dungeon.
@@ -401,10 +400,7 @@ Can I play Tiles online?
 %%%%
 A:tiles online
 
-A: For 0.6, a tile-based interface is available at http://crawl.chaosforge.org/index.php?title=NetTiles, though it is missing some features of the official, local Tiles version.
-For more recent versions, no, that's not possible at the moment. We are working on changing that, but it'll take a while.
-
-If you can, do give the console version a try: playing online is certainly worth it.
+A: A web-based tile interface is available at https://tiles.crawl.develz.org/, though it is missing some features of the local Tiles version.  Trunk builds are not currently supported, but may be in the future.
 %%%%
 Q:tiles commands
 

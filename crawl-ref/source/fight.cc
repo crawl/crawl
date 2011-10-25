@@ -22,6 +22,30 @@
 #include "invent.h"
 #include "itemprop.h"
 #include "mon-behv.h"
+// These all might not be necessary? added on merge
+#include "mon-cast.h"
+#include "mon-clone.h"
+#include "mon-place.h"
+#include "terrain.h"
+#include "mgen_data.h"
+#include "coord.h"
+#include "mon-stuff.h"
+#include "mon-util.h"
+#include "mutation.h"
+#include "ouch.h"
+#include "options.h"
+#include "player.h"
+#include "random-var.h"
+#include "religion.h"
+#include "godconduct.h"
+#include "shopping.h"
+#include "skills.h"
+#include "species.h"
+#include "spl-clouds.h"
+#include "spl-miscast.h"
+#include "spl-summoning.h"
+#include "spl-util.h"
+// End list
 #include "state.h"
 #include "stuff.h"
 #include "travel.h"
@@ -282,10 +306,10 @@ static inline int get_resistible_fraction(beam_type flavour)
 
     // Assume ice storm and throw icicle are mostly solid.
     case BEAM_ICE:
-        return (25);
+        return (40);
 
     case BEAM_LAVA:
-        return (35);
+        return (55);
 
     case BEAM_POISON_ARROW:
         return (70);
@@ -342,6 +366,22 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
     return std::max(resistible + irresistible, 0);
 }
 
+int melee_attack::inflict_damage(int dam, beam_type flavour, bool clean)
+{
+    if (flavour == NUM_BEAMS)
+        flavour = special_damage_flavour;
+    // Auxes temporarily clear damage_brand so we don't need to check.
+    if (damage_brand == SPWPN_REAPING
+     || damage_brand == SPWPN_CHAOS && one_chance_in(100))
+    {
+        defender->props["reaping_damage"].get_int() += dam;
+        // With two reapers of different friendliness, the most recent one
+        // gets the zombie.  Too rare a case to care any more.
+        defender->props["reaper"].get_int() = attacker->mid;
+    }
+    return defender->hurt(attacker, dam, flavour, clean);
+}
+
 ///////////////////////////////////////////////////////////////////////////
 
 static bool _is_melee_weapon(const item_def *weapon)
@@ -373,8 +413,11 @@ bool wielded_weapon_check(item_def *weapon, bool no_message)
     {
         const int weap = you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] - 1;
         const item_def &wpn = you.inv[weap];
-        if (_is_melee_weapon(&wpn))
+        if (_is_melee_weapon(&wpn)
+            && you.skill(weapon_skill(wpn)) > you.skill(SK_UNARMED_COMBAT))
+        {
             unarmed_warning = true;
+        }
     }
 
     if (!you.received_weapon_warning && !you.confused()
@@ -445,12 +488,8 @@ int weapon_str_weight(object_class_type wpn_class, int wpn_type)
     }
 
     // whips are special cased (because they are not much like maces)
-    if (wpn_type == WPN_WHIP
-        || wpn_type == WPN_DEMON_WHIP
-        || wpn_type == WPN_SACRED_SCOURGE)
-    {
+    if (is_whip_type(wpn_type))
         ret = 2;
-    }
     else if (wpn_type == WPN_QUICK_BLADE) // high dex is very good for these
         ret = 1;
 

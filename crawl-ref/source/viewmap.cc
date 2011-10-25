@@ -41,7 +41,7 @@
 #include "tileview.h"
 #endif
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 static unsigned _get_travel_colour(const coord_def& p)
 {
 #ifdef WIZARD
@@ -62,7 +62,7 @@ static unsigned _get_travel_colour(const coord_def& p)
 }
 #endif
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 static bool _travel_colour_override(const coord_def& p)
 {
   if (is_waypoint(p) || is_stair_exclusion(p)
@@ -116,12 +116,12 @@ static bool _is_explore_horizon(const coord_def& c)
 }
 #endif
 
-wchar_t get_sightmap_char(dungeon_feature_type feat)
+ucs_t get_sightmap_char(dungeon_feature_type feat)
 {
     return (get_feature_def(feat).symbol);
 }
 
-wchar_t get_magicmap_char(dungeon_feature_type feat)
+ucs_t get_magicmap_char(dungeon_feature_type feat)
 {
     return (get_feature_def(feat).magic_symbol);
 }
@@ -134,15 +134,12 @@ wchar_t get_magicmap_char(dungeon_feature_type feat)
 // 3. '^' for traps
 // 4. '_' for altars
 // 5. Anything else will look for the exact same character in the level map.
-bool is_feature(wchar_t feature, const coord_def& where)
+bool is_feature(ucs_t feature, const coord_def& where)
 {
     if (!env.map_knowledge(where).known() && !you.see_cell(where))
         return (false);
 
-    dungeon_feature_type grid = grd(where);
-
-    if (feature_mimic_at(where))
-        grid = get_mimic_feat(monster_at(where));
+    dungeon_feature_type grid = grid_appearance(where);
 
     switch (feature)
     {
@@ -224,6 +221,8 @@ bool is_feature(wchar_t feature, const coord_def& where)
         case DNGN_RETURN_FROM_TOMB:
         case DNGN_RETURN_FROM_SWAMP:
         case DNGN_RETURN_FROM_SHOALS:
+        case DNGN_RETURN_FROM_SPIDER_NEST:
+        case DNGN_RETURN_FROM_FOREST:
         case DNGN_EXIT_PORTAL_VAULT:
             return (true);
         default:
@@ -250,6 +249,8 @@ bool is_feature(wchar_t feature, const coord_def& where)
         case DNGN_ENTER_TOMB:
         case DNGN_ENTER_SWAMP:
         case DNGN_ENTER_SHOALS:
+        case DNGN_ENTER_SPIDER_NEST:
+        case DNGN_ENTER_FOREST:
             return (true);
         default:
             return (false);
@@ -260,6 +261,7 @@ bool is_feature(wchar_t feature, const coord_def& where)
         case DNGN_TRAP_MECHANICAL:
         case DNGN_TRAP_MAGICAL:
         case DNGN_TRAP_NATURAL:
+        case DNGN_TRAP_WEB:
             return (true);
         default:
             return (false);
@@ -269,7 +271,7 @@ bool is_feature(wchar_t feature, const coord_def& where)
     }
 }
 
-static bool _is_feature_fudged(int feature, const coord_def& where)
+static bool _is_feature_fudged(ucs_t feature, const coord_def& where)
 {
     if (!env.map_knowledge(where).known())
         return (false);
@@ -310,7 +312,7 @@ static bool _is_feature_fudged(int feature, const coord_def& where)
     return (false);
 }
 
-static int _find_feature(int feature, int curs_x, int curs_y,
+static int _find_feature(ucs_t feature, int curs_x, int curs_y,
                          int start_x, int start_y, int anchor_x, int anchor_y,
                          int ignore_count, int *move_x, int *move_y)
 {
@@ -371,7 +373,7 @@ static int _find_feature(int feature, int curs_x, int curs_y,
 }
 
 void find_features(const std::vector<coord_def>& features,
-                   wchar_t feature, std::vector<coord_def> *found)
+                   ucs_t feature, std::vector<coord_def> *found)
 {
     for (unsigned feat = 0; feat < features.size(); ++feat)
     {
@@ -382,7 +384,7 @@ void find_features(const std::vector<coord_def>& features,
 }
 
 static int _find_feature(const std::vector<coord_def>& features,
-                          int feature, int curs_x, int curs_y,
+                          ucs_t feature, int curs_x, int curs_y,
                           int start_x, int start_y,
                           int ignore_count,
                           int *move_x, int *move_y,
@@ -429,7 +431,7 @@ static int _get_number_of_lines_levelmap()
     return get_number_of_lines() - (Options.level_map_title ? 1 : 0);
 }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 static void _draw_level_map(int start_x, int start_y, bool travel_mode,
         bool on_level)
 {
@@ -486,7 +488,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
                 if (Options.show_waypoints)
                 {
                     // XXX: This is a horrible hack.
-                    wchar_t bc = cell->glyph;
+                    ucs_t bc   = cell->glyph;
                     uint8_t ch = is_waypoint(c);
                     if (ch && (bc == get_sightmap_char(DNGN_FLOOR)
                                || bc == get_magicmap_char(DNGN_FLOOR)))
@@ -501,7 +503,7 @@ static void _draw_level_map(int start_x, int start_y, bool travel_mode,
 
     puttext(1, top, vbuf);
 }
-#endif // USE_TILE
+#endif // USE_TILE_LOCAL
 
 static void _reset_travel_colours(std::vector<coord_def> &features,
         bool on_level)
@@ -528,7 +530,7 @@ static bool _comp_glyphs(const glyph& g1, const glyph& g2)
     return (g1.ch < g2.ch || g1.ch == g2.ch && g1.col < g2.col);
 }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 static glyph _get_feat_glyph(const coord_def& gc);
 #endif
 
@@ -571,7 +573,7 @@ class feature_list
 
     void maybe_add(const coord_def& gc)
     {
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
         if (!env.map_knowledge(gc).known())
             return;
 
@@ -602,7 +604,7 @@ public:
     }
 };
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 static void _draw_title(const coord_def& cpos, const feature_list& feats)
 {
     if (!Options.level_map_title)
@@ -634,7 +636,7 @@ static void _draw_title(const coord_def& cpos, const feature_list& feats)
     cgotoxy(1, 1);
     textcolor(WHITE);
 
-    cprintf("%s", chop_string(upcase_first(place_name(
+    cprintf("%s", chop_string(uppercase_first(place_name(
                           get_packed_place(), true, true)) + pstr,
                       columns - helplen).c_str());
 
@@ -716,6 +718,10 @@ bool show_map(level_pos &lpos,
         cursor_control ccon(!Options.use_fake_cursor);
         int i, j;
 
+#ifdef USE_TILE_WEB
+        tiles_crt_control crt(false);
+#endif
+
         int move_x = 0, move_y = 0, scroll_y = 0;
 
         bool new_level = true;
@@ -748,7 +754,7 @@ bool show_map(level_pos &lpos,
         bool map_alive  = true;
         bool redraw_map = true;
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
         clrscr();
 #endif
         textcolor(DARKGREY);
@@ -850,7 +856,6 @@ bool show_map(level_pos &lpos,
                 new_level = false;
             }
 
-#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
             // If we've received a HUP signal then the user can't choose a
             // location, so indicate this by returning an invalid position.
             if (crawl_state.seen_hups)
@@ -858,7 +863,6 @@ bool show_map(level_pos &lpos,
                 lpos = level_pos();
                 chose = false;
             }
-#endif
 
             start_y = screen_y - half_screen;
 
@@ -871,12 +875,13 @@ bool show_map(level_pos &lpos,
                 // location.  It silently ignores everything else going
                 // on in this function.  --Enne
                 tiles.load_dungeon(lpos.pos);
-#else
+#endif
+#ifndef USE_TILE_LOCAL
                 _draw_title(lpos.pos, feats);
                 _draw_level_map(start_x, start_y, travel_mode, on_level);
-#endif // USE_TILE
+#endif
             }
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
             cursorxy(curs_x, curs_y + top - 1);
 #endif
             redraw_map = true;
@@ -1128,7 +1133,7 @@ bool show_map(level_pos &lpos,
             {
                 bool forward = (cmd != CMD_MAP_FIND_STASH_REVERSE);
 
-                int getty;
+                ucs_t getty;
                 switch (cmd)
                 {
                 case CMD_MAP_FIND_UPSTAIR:
@@ -1241,24 +1246,14 @@ bool show_map(level_pos &lpos,
             if (!map_alive)
                 break;
 
-#ifdef USE_TILE
-            {
-                const coord_def oldp = lpos.pos;
-                lpos.pos.x += move_x;
-                lpos.pos.y += move_y;
-                lpos.pos.x = std::min(std::max(lpos.pos.x, 1), GXM);
-                lpos.pos.y = std::min(std::max(lpos.pos.y, 1), GYM);
-                curs_x += lpos.pos.x - oldp.x;
-                curs_y += lpos.pos.y - oldp.y;
-            }
-#else
-            if (curs_x + move_x < 1)
-                move_x = 1 - curs_x;
-            else if (curs_x + move_x > crawl_view.termsz.x)
-                move_x = crawl_view.termsz.x - curs_x;
-
-            curs_x += move_x;
-
+            const coord_def oldp = lpos.pos;
+            lpos.pos.x += move_x;
+            lpos.pos.y += move_y;
+            lpos.pos.x = std::min(std::max(lpos.pos.x, min_x), max_x);
+            lpos.pos.y = std::min(std::max(lpos.pos.y, min_y), max_y);
+            move_x = lpos.pos.x - oldp.x;
+            move_y = lpos.pos.y - oldp.y;
+#ifndef USE_TILE_LOCAL
             if (num_lines < map_lines)
             {
                 // Scrolling only happens when we don't have a large enough
@@ -1274,50 +1269,21 @@ bool show_map(level_pos &lpos,
                     curs_y -= (screen_y - old_screen_y);
                     scroll_y = 0;
                 }
-
-                if (curs_y + move_y < 1)
+                if (curs_y + move_y < 1 || curs_y + move_y > num_lines)
                 {
                     screen_y += move_y;
-
-                    if (screen_y < min_y + half_screen)
-                    {
-                        move_y   = screen_y - (min_y + half_screen);
-                        screen_y = min_y + half_screen;
-                    }
-                    else
-                        move_y = 0;
-                }
-
-                if (curs_y + move_y > num_lines)
-                {
-                    screen_y += move_y;
-
-                    if (screen_y > max_y - half_screen)
-                    {
-                        move_y   = screen_y - (max_y - half_screen);
-                        screen_y = max_y - half_screen;
-                    }
-                    else
-                        move_y = 0;
+                    curs_y -= move_y;
                 }
             }
             start_y = screen_y - half_screen;
-
-            if (curs_y + move_y < 1)
-                move_y = 1 - curs_y;
-            else if (curs_y + move_y > num_lines)
-                move_y = num_lines - curs_y;
-
-            curs_y += move_y;
-
-            lpos.pos.x = start_x + curs_x - 1;
-            lpos.pos.y = start_y + curs_y - 1;
 #endif
+            curs_x += move_x;
+            curs_y += move_y;
         }
     }
 
 #ifdef USE_TILE
-    tiles.place_cursor(CURSOR_MAP, Region::NO_CURSOR);
+    tiles.place_cursor(CURSOR_MAP, NO_CURSOR);
 #endif
 
     redraw_screen();
@@ -1332,7 +1298,7 @@ bool emphasise(const coord_def& where)
             && you.where_are_you != BRANCH_VESTIBULE_OF_HELL);
 }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 // Get glyph for feature list; here because it's so similar
 // to get_map_col.
 static glyph _get_feat_glyph(const coord_def& gc)

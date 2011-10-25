@@ -1,7 +1,7 @@
 #ifndef FT_FONTWRAPPER_H
 #define FT_FONTWRAPPER_H
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 #ifdef USE_FT
 
 #include "tilefont.h"
@@ -98,5 +98,5 @@ protected:
 };
 
 #endif // USE_FT
-#endif // USE_TILE
+#endif // USE_TILE_LOCAL
 #endif // include guard

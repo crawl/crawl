@@ -31,7 +31,7 @@
 typedef uint32_t ucs_t;
 
 // length of a single zot defence cycle
-#define CYCLE_LENGTH 200
+#define CYCLE_LENGTH 100
 
 // Waiting time before monsters arrive
 #define CYCLE_INTERVAL 50
@@ -71,9 +71,6 @@ enum extra_monster_index_type
     MELEE_MISCAST,
     MISC_MISCAST,
 };
-
-// number of monster enchantments
-#define NUM_MON_ENCHANTS 6
 
 // size of Pan monster sets. Also used for wave data in ZotDef.
 #define MAX_MONS_ALLOC 20
@@ -167,6 +164,7 @@ const int DEBUG_COOKIE = 32767;
 const int MAX_SKILL_LEVEL = 27;
 const int MAX_EXP_TOTAL = 8999999;
 const int HIGH_EXP_POOL = 20000;
+const int EXERCISE_QUEUE_SIZE = 100;
 
 const int MIN_HIT_MISS_PERCENTAGE = 5;
 
@@ -217,7 +215,7 @@ const int BRANCH_DUNGEON_DEPTH = 27;
 
 const int ANTITRAIN_PENALTY = 2;
 
-#define TORNADO_RADIUS 5
+#define TORNADO_RADIUS 6
 
 #define NUMBER_OF_RUNES_NEEDED    3
 
@@ -227,6 +225,8 @@ const int ANTITRAIN_PENALTY = 2;
 // Haste/slow boost.
 #define haste_mul(x) div_rand_round((x) * 3, 2)
 #define haste_div(x) div_rand_round((x) * 2, 3)
+#define berserk_mul(x) div_rand_round((x) * 3, 2)
+#define berserk_div(x) div_rand_round((x) * 2, 3)
 
 #define MAX_MONSTER_HP 10000
 

@@ -29,12 +29,13 @@
 #include "decks.h"
 #include "delay.h"
 #include "describe.h"
-#include "dgn-actions.h"
+#include "dactions.h"
 #include "dgnevent.h"
 #include "dlua.h"
 #include "effects.h"
 #include "env.h"
 #include "enum.h"
+#include "exercise.h"
 #include "files.h"
 #include "food.h"
 #include "godabil.h"
@@ -93,7 +94,6 @@
 // & is replaced by "is" or "are" as appropriate for the item.
 // % is replaced by "s" or "" as appropriate.
 // Text between [] only appears if the item already glows.
-// <> and </> are replaced with colors.
 // First message is if there's no piety gain; second is if piety gain is
 // one; third is if piety gain is more than one.
 static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
@@ -106,9 +106,9 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
     },
     // Zin
     {
-        " <>barely glow%</> and disappear%.",
-        " <>glow% silver</> and disappear%.",
-        " <>glow% blindingly silver</> and disappear%.",
+        " barely glow% and disappear%.",
+        " glow% silver and disappear%.",
+        " glow% blindingly silver and disappear%.",
     },
     // TSO
     {
@@ -214,6 +214,9 @@ static const char *_Sacrifice_Messages[NUM_GODS][NUM_PIETY_GAIN] =
     },
 };
 
+/**
+ * This corresponds with ::god_abilities, as well as with ::god_lose_power_messages.
+ */
 const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
 {
     // no god
@@ -257,7 +260,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "speed up your combat" },
     // Makhleb
-    { "gain power from killing",
+    { "gain health from killing",
       "harness Makhleb's destructive might",
       "summon a lesser servant of Makhleb",
       "hurl Makhleb's greater destruction",
@@ -270,7 +273,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "" },
     // Trog
     { "go berserk at will",
-      "call upon Trog for regeneration and magic resistance",
+      "regenerate and be protected from hostile enchantments",
       "",
       "call in reinforcements",
       "" },
@@ -313,22 +316,24 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "control the weather"
     },
     // Cheibriados
-    { "Cheibriados slows and strengthens your metabolism, "
-      "and supports the use of ponderous armour.",
-      "bend time to slow others",
-      "",
-      "inflict damage to those overly hasty",
+    { "Cheibriados slows and strengthens your metabolism.",
+      "bend time to slow others, and Cheibriados protects your life force",
+      "Cheibriados protects you from cold.",
+      "inflict damage to those overly hasty, and Cheibriados protects you from fire",
       "step out of the time flow"
     },
     // Ashenzari
     { "",
-      "The more cursed you are, the more Ashenzari helps you learn.",
+      "The more cursed you are, the more Ashenzari supports your skills.",
       "Ashenzari keeps your vision and mind clear.",
       "scry through walls",
       "Ashenzari helps you to reconsider your skills."
     },
 };
 
+/**
+ * This corresponds with ::god_abilities, as well as with ::god_gain_power_messages.
+ */
 const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
 {
     // no god
@@ -372,7 +377,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "",
       "speed up your combat" },
     // Makhleb
-    { "gain power from killing",
+    { "gain health from killing",
       "harness Makhleb's destructive might",
       "summon a lesser servant of Makhleb",
       "hurl Makhleb's greater destruction",
@@ -385,7 +390,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "" },
     // Trog
     { "go berserk at will",
-      "call upon Trog for regeneration and magic resistance",
+      "regenerate and be protected from hostile enchantments",
       "",
       "call in reinforcements",
       "" },
@@ -428,16 +433,15 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "control the weather"
     },
     // Cheibriados
-    { "Cheibriados will no longer slow or strengthen your metabolism, "
-      "or support the use of ponderous armour.",
-      "bend time to slow others",
-      "",
-      "inflict damage to those overly hasty",
+    { "Cheibriados will no longer slow or strengthen your metabolism.",
+      "bend time to slow others, and Cheibriados will no longer protect your life force",
+      "Cheibriados will no longer protect you from cold.",
+      "inflict damage to those overly hasty, and Cheibriados will no longer protect you from fire",
       "step out of the time flow"
     },
     // Ashenzari
     { "",
-      "Ashenzari no longer helps you learn.",
+      "Ashenzari no longer supports your skills.",
       "Ashenzari no longer keeps your vision and mind clear.",
       "scry through walls",
       "Ashenzari no longer helps you to reconsider your skills."
@@ -478,7 +482,34 @@ bool is_chaotic_god(god_type god)
 
 bool is_unavailable_god(god_type god)
 {
-    return (god == GOD_JIYVA && jiyva_is_dead());
+    if (god == GOD_JIYVA && jiyva_is_dead())
+        return (true);
+
+    // Don't allow Fedhas in ZotDef, as his invocations are duplicated, and
+    // passives thoroughly overpowered.  Protection for plants, speed-up of
+    // oklobs, etc...
+    // Basically, ZotDef is Fedhas.
+    if (god == GOD_FEDHAS && crawl_state.game_is_zotdef())
+        return (true);
+
+    // No Ashenzari, too -- nothing to explore, can't use his abilities,
+    // piety for runes won't give you reskilling on time.  We could give some
+    // piety for every wave, but there's little point.
+    if (god == GOD_ASHENZARI && crawl_state.game_is_zotdef())
+        return (true);
+
+    return (false);
+}
+
+god_type random_god(bool disallow_no_god)
+{
+    god_type god;
+
+    do
+        god = static_cast<god_type>(random2(NUM_GODS - 1));
+    while (disallow_no_god && god == GOD_NO_GOD);
+
+    return (god);
 }
 
 std::string get_god_powers(god_type which_god)
@@ -538,6 +569,8 @@ std::string get_god_likes(god_type which_god, bool verbose)
                          : "");
 
         likes.push_back(info);
+
+        likes.push_back("you calm hostilities by healing your foes");
         break;
 
     case GOD_JIYVA:
@@ -556,6 +589,12 @@ std::string get_god_likes(god_type which_god, bool verbose)
     case GOD_ASHENZARI:
         snprintf(info, INFO_SIZE, "you explore the world (preferably while "
                                   "bound by curses)");
+        likes.push_back(info);
+        break;
+
+    case GOD_SHINING_ONE:
+        snprintf(info, INFO_SIZE, "you meet creatures to determine whether "
+                                  "they need to be eraticated");
         likes.push_back(info);
         break;
 
@@ -664,7 +703,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     switch (which_god)
     {
-    case GOD_SHINING_ONE: case GOD_MAKHLEB:
+    case GOD_SHINING_ONE: case GOD_MAKHLEB: case GOD_LUGONU:
         likes.push_back("you or your allies kill demons");
         break;
 
@@ -716,6 +755,10 @@ std::string get_god_likes(god_type which_god, bool verbose)
         likes.push_back("you or your allied orcs kill holy beings");
         break;
 
+    case GOD_OKAWARU:
+        likes.push_back("you kill holy beings");
+        break;
+
     default:
         break;
     }
@@ -739,7 +782,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         break;
     }
 
-    if (likes.size() == 0 && really_likes.size() == 0)
+    if (likes.empty() && really_likes.empty())
         text += " %s doesn't like anything? This a bug; please report it.";
     else
     {
@@ -747,7 +790,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
         text += comma_separated_line(likes.begin(), likes.end());
         text += ".";
 
-        if (really_likes.size() > 0)
+        if (!really_likes.empty())
         {
             text += " ";
             text += god_name(which_god);
@@ -768,44 +811,54 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
     if (which_god == GOD_NO_GOD || which_god == GOD_XOM)
         return ("");
 
-    std::vector<std::string> dislikes;
+    std::string text;
+    std::vector<std::string> dislikes;        // Piety loss
+    std::vector<std::string> really_dislikes; // Penance
 
     if (god_hates_cannibalism(which_god))
-        dislikes.push_back("you perform cannibalism");
+        really_dislikes.push_back("you perform cannibalism");
 
     if (is_good_god(which_god))
     {
-        dislikes.push_back("you drink blood");
-        dislikes.push_back("you use necromancy");
-        dislikes.push_back("you use unholy magic or items");
-        dislikes.push_back("you attack non-hostile holy beings");
-        dislikes.push_back("you or your allies kill non-hostile holy beings");
-        dislikes.push_back("you attack neutral beings");
+        if (which_god == GOD_SHINING_ONE)
+            really_dislikes.push_back("you drink blood");
+        else
+            dislikes.push_back("you drink blood");
+
+        really_dislikes.push_back("you use necromancy");
+        really_dislikes.push_back("you use unholy magic or items");
+        really_dislikes.push_back("you attack non-hostile holy beings");
+        really_dislikes.push_back("you or your allies kill non-hostile holy beings");
+
+        if (which_god == GOD_ZIN)
+            dislikes.push_back("you attack neutral beings");
+        else
+            really_dislikes.push_back("you attack neutral beings");
     }
 
     switch (which_god)
     {
     case GOD_ZIN:     case GOD_SHINING_ONE:  case GOD_ELYVILON:
     case GOD_OKAWARU:
-        dislikes.push_back("you attack allies");
+        really_dislikes.push_back("you attack allies");
         break;
 
     case GOD_BEOGH:
-        dislikes.push_back("you attack allied orcs");
+        really_dislikes.push_back("you attack allied orcs");
         break;
 
     case GOD_JIYVA:
-        dislikes.push_back("you attack your fellow slimes");
+        really_dislikes.push_back("you attack your fellow slimes");
         break;
 
     case GOD_FEDHAS:
         dislikes.push_back("you or your allies destroy plants");
         dislikes.push_back("allied flora die");
-        dislikes.push_back("you use necromancy on corpses, chunks or skeletons");
+        really_dislikes.push_back("you use necromancy on corpses, chunks or skeletons");
         break;
 
     case GOD_SIF_MUNA:
-        dislikes.push_back("you destroy spellbooks");
+        really_dislikes.push_back("you destroy spellbooks");
         break;
 
     default:
@@ -830,59 +883,76 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
     {
     case GOD_ZIN:
         dislikes.push_back("you deliberately mutate yourself");
-        dislikes.push_back("you polymorph monsters");
-        dislikes.push_back("you use unclean or chaotic magic or items");
-        dislikes.push_back("you eat the flesh of sentient beings");
+        really_dislikes.push_back("you polymorph monsters");
+        really_dislikes.push_back("you use unclean or chaotic magic or items");
+        really_dislikes.push_back("you eat the flesh of sentient beings");
         dislikes.push_back("you or your allies attack monsters in a "
                            "sanctuary");
         break;
 
     case GOD_SHINING_ONE:
-        dislikes.push_back("you poison monsters");
-        dislikes.push_back("you attack intelligent monsters in an "
-                           "unchivalric manner");
+        really_dislikes.push_back("you poison monsters");
+        really_dislikes.push_back("you attack intelligent monsters in an "
+                                  "unchivalric manner");
         break;
 
     case GOD_ELYVILON:
-        dislikes.push_back("you kill living things while asking for "
-                           "your life to be spared");
+        really_dislikes.push_back("you kill living things while asking for "
+                                  "your life to be spared");
         break;
 
     case GOD_YREDELEMNUL:
-        dislikes.push_back("you use holy magic or items");
+        really_dislikes.push_back("you use holy magic or items");
         break;
 
     case GOD_TROG:
-        dislikes.push_back("you memorise spells");
-        dislikes.push_back("you attempt to cast spells");
+        really_dislikes.push_back("you memorise spells");
+        really_dislikes.push_back("you attempt to cast spells");
+        really_dislikes.push_back("you train magic skills");
         break;
 
     case GOD_BEOGH:
-        dislikes.push_back("you desecrate orcish remains");
-        dislikes.push_back("you destroy orcish idols");
+        really_dislikes.push_back("you desecrate orcish remains");
+        really_dislikes.push_back("you destroy orcish idols");
         break;
 
     case GOD_JIYVA:
-        dislikes.push_back("you kill slimes");
+        really_dislikes.push_back("you kill slimes");
         break;
 
     case GOD_CHEIBRIADOS:
-        dislikes.push_back("you hasten yourself");
-        dislikes.push_back("use unnaturally quick items");
+        really_dislikes.push_back("you hasten yourself");
+        really_dislikes.push_back("use unnaturally quick items");
         break;
 
     default:
         break;
     }
 
-    if (dislikes.empty())
+    if (dislikes.empty() && really_dislikes.empty())
         return ("");
 
-    std::string text = god_name(which_god);
-                text += " dislikes it when ";
-                text += comma_separated_line(dislikes.begin(), dislikes.end(),
+    if (!dislikes.empty())
+    {
+        text += god_name(which_god);
+        text += " dislikes it when ";
+        text += comma_separated_line(dislikes.begin(), dislikes.end(),
+                                     " or ", ", ");
+        text += ".";
+
+        if (!really_dislikes.empty())
+            text += " ";
+    }
+
+    if (!really_dislikes.empty())
+    {
+        text += god_name(which_god);
+        text += " strongly dislikes it when ";
+                text += comma_separated_line(really_dislikes.begin(),
+                                             really_dislikes.end(),
                                              " or ", ", ");
-                text += ".";
+        text += ".";
+    }
 
     return (text);
 }
@@ -918,7 +988,7 @@ void dec_penance(god_type god, int val)
         {
             // In case the best skill is Invocations, redraw the god
             // title.
-            redraw_skill(you.your_name, player_title());
+            you.redraw_title = true;
         }
 
         if (you.religion == god)
@@ -939,8 +1009,10 @@ void dec_penance(god_type god, int val)
                 mpr("Your vision regains its divine sight.");
                 autotoggle_autopickup(false);
             }
-            else if (god == GOD_CHEIBRIADOS && che_boost_level())
+            else if (god == GOD_CHEIBRIADOS)
             {
+                mprf(MSGCH_GOD, "%s restores the support of your attributes.",
+                        god_name(you.religion).c_str());
                 redraw_screen();
                 notify_stat_change("mollifying Cheibriados");
             }
@@ -1050,7 +1122,7 @@ static void _inc_penance(god_type god, int val)
         {
             // In case the best skill is Invocations, redraw the god
             // title.
-            redraw_skill(you.your_name, player_title());
+            you.redraw_title = true;
         }
     }
     else
@@ -1065,9 +1137,14 @@ static void _inc_penance(int val)
     _inc_penance(you.religion, val);
 }
 
+static void _set_penance(god_type god, int val)
+{
+    you.penance[god] = val;
+}
+
 static void _inc_gift_timeout(int val)
 {
-    if (you.gift_timeout + val > 200)
+    if (200 - you.gift_timeout < val)
         you.gift_timeout = 200;
     else
         you.gift_timeout += val;
@@ -1079,7 +1156,7 @@ static monster_type _yred_servants[] =
     MONS_MUMMY, MONS_WIGHT, MONS_FLYING_SKULL, MONS_WRAITH,
     MONS_ROTTING_HULK, MONS_FREEZING_WRAITH, MONS_PHANTASMAL_WARRIOR,
     MONS_FLAMING_CORPSE, MONS_FLAYED_GHOST, MONS_SKELETAL_WARRIOR,
-    MONS_GHOUL, MONS_DEATH_COB, MONS_BONE_DRAGON
+    MONS_GHOUL, MONS_DEATH_COB, MONS_BONE_DRAGON, MONS_PROFANE_SERVITOR,
 };
 
 #define MIN_YRED_SERVANT_THRESHOLD 3
@@ -1430,11 +1507,9 @@ static bool _blessing_wpn(monster* mon)
     item_def& wpn(mitm[slot]);
 
     // And enchant or uncurse it.
-    if (!enchant_weapon((coinflip()) ? ENCHANT_TO_HIT
-                                     : ENCHANT_TO_DAM, true, wpn))
-    {
+    int which = random2(2);
+    if (!enchant_weapon(wpn, which, 1 - which, NULL))
         return (false);
-    }
 
     item_set_appearance(wpn);
     return (true);
@@ -1976,7 +2051,7 @@ static bool _jiyva_mutate()
 
     if (rand < 10)
         return (delete_mutation(RANDOM_SLIME_MUTATION, true, false, true));
-    else if (rand < 40)
+    else if (rand < 35)
         return (delete_mutation(RANDOM_NON_SLIME_MUTATION, true, false, true));
     else if (rand < 60)
         return (mutate(RANDOM_MUTATION, true, false, true));
@@ -1984,35 +2059,6 @@ static bool _jiyva_mutate()
         return (mutate(RANDOM_SLIME_MUTATION, true, false, true));
     else
         return (mutate(RANDOM_GOOD_MUTATION, true, false, true));
-}
-
-static int _give_first_conjuration_book()
-{
-    // Assume the fire/earth book, as conjurations is strong with fire. -- bwr
-    int book = BOOK_CONJURATIONS_I;
-
-    // Conjuration books are largely Fire or Ice, so we'll use
-    // that as the primary condition, and air/earth to break ties. -- bwr
-    if (you.skills[SK_ICE_MAGIC] > you.skills[SK_FIRE_MAGIC]
-        || you.skills[SK_FIRE_MAGIC] == you.skills[SK_ICE_MAGIC]
-           && you.skills[SK_AIR_MAGIC] > you.skills[SK_EARTH_MAGIC])
-    {
-        book = BOOK_CONJURATIONS_II;
-    }
-    else if (you.skills[SK_FIRE_MAGIC] == 0 && you.skills[SK_EARTH_MAGIC] == 0)
-    {
-        // If we're here it's because we were going to default to the
-        // fire/earth book... but we don't have those skills.  So we
-        // choose randomly based on the species weighting, again
-        // ignoring air/earth which are secondary in these books. - bwr
-        if (random2(100 * species_apt_factor(SK_ICE_MAGIC)) <
-            random2(100 * species_apt_factor(SK_FIRE_MAGIC)))
-        {
-            book = BOOK_CONJURATIONS_II;
-        }
-    }
-
-    return (book);
 }
 
 bool do_god_gift(bool forced)
@@ -2050,10 +2096,11 @@ bool do_god_gift(bool forced)
                 break;
 
             // Should gift catnip instead.
-            if (you.species == SP_CAT)
+            if (you.species == SP_FELID)
                 break;
 
             const bool need_missiles = _need_missile_gift(forced);
+            object_class_type gift_type;
 
             if (forced && (!need_missiles || one_chance_in(4))
                 || (!forced && you.piety > 130 && random2(you.piety) > 120
@@ -2062,43 +2109,35 @@ bool do_god_gift(bool forced)
                 if (you.religion == GOD_TROG
                     || (you.religion == GOD_OKAWARU && coinflip()))
                 {
-                    success = acquirement(OBJ_WEAPONS, you.religion);
+                    gift_type = OBJ_WEAPONS;
                 }
                 else
-                {
-                    success = acquirement(OBJ_ARMOUR, you.religion);
-                    // Okawaru charges extra for armour acquirements.
-                    if (success)
-                        _inc_gift_timeout(30 + random2avg(15, 2));
-                }
+                    gift_type = OBJ_ARMOUR;
+            }
+            else if (need_missiles)
+                gift_type = OBJ_MISSILES;
+            else
+                break;
 
-                if (success)
+            success = acquirement(gift_type, you.religion);
+            if (success)
+            {
+                simple_god_message(" grants you a gift!");
+                more();
+
+                if (gift_type == OBJ_MISSILES)
+                    _inc_gift_timeout(4 + roll_dice(2, 4));
+                else
                 {
-                    simple_god_message(" grants you a gift!");
-                    more();
+                    // Okawaru charges extra for armour acquirements.
+                    if (you.religion == GOD_OKAWARU && gift_type == OBJ_ARMOUR)
+                        _inc_gift_timeout(30 + random2avg(15, 2));
 
                     _inc_gift_timeout(30 + random2avg(19, 2));
-                    you.num_current_gifts[you.religion]++;
-                    you.num_total_gifts[you.religion]++;
-                    take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
-                break;
-            }
-
-            if (need_missiles)
-            {
-                success = acquirement(OBJ_MISSILES, you.religion);
-                if (success)
-                {
-                    simple_god_message(" grants you a gift!");
-                    more();
-
-                    _inc_gift_timeout(4 + roll_dice(2, 4));
-                    you.num_current_gifts[you.religion]++;
-                    you.num_total_gifts[you.religion]++;
-                    take_note(Note(NOTE_GOD_GIFT, you.religion));
-                }
-                break;
+                you.num_current_gifts[you.religion]++;
+                you.num_total_gifts[you.religion]++;
+                take_note(Note(NOTE_GOD_GIFT, you.religion));
             }
             break;
         }
@@ -2124,7 +2163,7 @@ bool do_god_gift(bool forced)
 
         case GOD_JIYVA:
             if (forced || you.piety > 80 && random2(you.piety) > 50
-                         && one_chance_in(4) && you.gift_timeout == 0
+                         && one_chance_in(4) && !you.gift_timeout
                          && you.can_safely_mutate())
             {
                 if (_jiyva_mutate())
@@ -2173,8 +2212,8 @@ bool do_god_gift(bool forced)
                     gift = OBJ_RANDOM;
                 else if (you.religion == GOD_VEHUMET)
                 {
-                    if (!you.had_book[BOOK_CONJURATIONS_I])
-                        gift = _give_first_conjuration_book();
+                    if (!you.had_book[BOOK_CONJURATIONS_II])
+                        gift = BOOK_CONJURATIONS_II;
                     else if (!you.had_book[BOOK_POWER])
                         gift = BOOK_POWER;
                     else if (!you.had_book[BOOK_ANNIHILATIONS])
@@ -2234,16 +2273,16 @@ bool do_god_gift(bool forced)
                     // meaningless for Kiku. evk
                     if (you.religion != GOD_KIKUBAAQUDGHA)
                     {
+                        // Vehumet gives books less readily.
+                        if (you.religion == GOD_VEHUMET)
+                            _inc_gift_timeout(10 + random2(10));
+
                         _inc_gift_timeout(40 + random2avg(19, 2));
                         you.num_current_gifts[you.religion]++;
                         you.num_total_gifts[you.religion]++;
                     }
                     take_note(Note(NOTE_GOD_GIFT, you.religion));
                 }
-
-                // Vehumet gives books less readily.
-                if (you.religion == GOD_VEHUMET && success)
-                    _inc_gift_timeout(10 + random2(10));
             }                   // End of giving books.
             break;              // End of book gods.
         }                       // switch (you.religion)
@@ -2262,17 +2301,6 @@ bool do_god_gift(bool forced)
     }
 #endif
     return (success);
-}
-
-bool do_zin_sustenance()
-{
-    if (!zin_sustenance())
-        return false;
-    god_speaks(you.religion, "Your stomach feels content.");
-    set_hunger(6000, true);
-    lose_piety(5 + random2avg(10, 2) + (you.gift_timeout ? 5 : 0));
-    _inc_gift_timeout(30 + random2avg(10, 2));
-    return true;
 }
 
 std::string god_name(god_type which_god, bool long_name)
@@ -2334,7 +2362,7 @@ std::string god_name_jiyva(bool second_name)
     return (name);
 }
 
-god_type str_to_god(const std::string _name, bool exact)
+god_type str_to_god(const std::string &_name, bool exact)
 {
     std::string target(_name);
     trim_string(target);
@@ -2347,7 +2375,7 @@ god_type str_to_god(const std::string _name, bool exact)
     god_type partial      = GOD_NO_GOD;
     for (int i = 0; i < NUM_GODS; ++i)
     {
-        god_type    god  = (god_type) i;
+        god_type    god  = static_cast<god_type>(i);
         std::string name = lowercase_string(god_name(god, false));
 
         if (name == target)
@@ -2542,6 +2570,7 @@ int piety_scale(int piety)
     return (piety);
 }
 
+static void _gain_piety_point();
 void gain_piety(int original_gain, int denominator, bool force, bool should_scale_piety)
 {
     if (original_gain <= 0)
@@ -2560,21 +2589,30 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
         pgn = sprint_modify_piety(pgn);
 
     pgn = div_rand_round(pgn, denominator);
-    if (pgn <= 0)
-        return;
+    while (pgn-- > 0)
+        _gain_piety_point();
+    if (you.piety > you.piety_max[you.religion])
+    {
+        if (you.piety > 160 && you.piety_max[you.religion] <= 160)
+        {
+            mark_milestone("god.maxpiety", "became the Champion of "
+                           + god_name(you.religion) + ".");
+        }
+        you.piety_max[you.religion] = you.piety;
+    }
+}
 
+static void _gain_piety_point()
+{
     // check to see if we owe anything first
     if (you.penance[you.religion] > 0)
     {
-        dec_penance(pgn);
+        dec_penance(1);
         return;
     }
     else if (you.gift_timeout > 0)
     {
-        if (you.gift_timeout > pgn)
-            you.gift_timeout -= pgn;
-        else
-            you.gift_timeout = 0;
+        you.gift_timeout--;
 
         // Slow down piety gain to account for the fact that gifts
         // no longer have a piety cost for getting them.
@@ -2612,25 +2650,14 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
         }
     }
 
-    // Apply hysteresis.
-    {
-        // piety_hysteresis is the amount of _loss_ stored up, so this
-        // may look backwards.
-        const int old_hysteresis = you.piety_hysteresis;
-        you.piety_hysteresis = std::max<int>(0, you.piety_hysteresis - pgn);
-        const int pgn_borrowed = (old_hysteresis - you.piety_hysteresis);
-        pgn -= pgn_borrowed;
-
-#ifdef DEBUG_PIETY
-        mprf(MSGCH_DIAGNOSTICS, "Piety increasing by %d (and %d taken from "
-                                "hysteresis, %d original)",
-             pgn, pgn_borrowed, original_gain);
-#endif
-    }
-
     int old_piety = you.piety;
-
-    you.piety += std::min<int>(MAX_PIETY - you.piety, pgn);
+    // Apply hysteresis.
+    // piety_hysteresis is the amount of _loss_ stored up, so this
+    // may look backwards.
+    if (you.piety_hysteresis)
+        you.piety_hysteresis--;
+    else if (you.piety < MAX_PIETY)
+        you.piety++;
 
     for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
     {
@@ -2641,7 +2668,9 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
 
             // In case the best skill is Invocations, redraw the god
             // title.
-            redraw_skill(you.your_name, player_title());
+            you.redraw_title = true;
+
+            gain_god_ability(i);
 
             if (_abil_chg_message(god_gain_power_messages[you.religion][i],
                                   "You can now %s.", i))
@@ -2680,10 +2709,12 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
         update_player_symbol();
     }
 
-    if (you.religion == GOD_CHEIBRIADOS)
+    if (you.religion == GOD_CHEIBRIADOS
+        && che_stat_boost(old_piety) < che_stat_boost())
     {
-        int diffrank = piety_rank(you.piety) - piety_rank(old_piety);
-        che_handle_change(CB_PIETY, diffrank);
+        mprf(MSGCH_GOD, "%s raises the support of your attributes as your movement slows.",
+                        god_name(you.religion).c_str());
+        notify_stat_change("Cheibriados piety gain");
     }
 
     if (you.religion == GOD_SHINING_ONE)
@@ -2695,7 +2726,7 @@ void gain_piety(int original_gain, int denominator, bool force, bool should_scal
     if (you.piety > 160 && old_piety <= 160)
     {
         // In case the best skill is Invocations, redraw the god title.
-        redraw_skill(you.your_name, player_title());
+        you.redraw_title = true;
 
         if (!you.num_total_gifts[you.religion])
         {
@@ -2772,7 +2803,7 @@ void lose_piety(int pgn)
         {
             // In case the best skill is Invocations, redraw the god
             // title.
-            redraw_skill(you.your_name, player_title());
+            you.redraw_title = true;
 
             if (you.religion == GOD_ZIN)
                 simple_god_message(
@@ -2795,8 +2826,9 @@ void lose_piety(int pgn)
             {
                 // In case the best skill is Invocations, redraw the god
                 // title.
-                redraw_skill(you.your_name, player_title());
+                you.redraw_title = true;
 
+                lose_god_ability(i);
                 _abil_chg_message(god_lose_power_messages[you.religion][i],
                                   "You can no longer %s.", i);
 
@@ -2815,10 +2847,12 @@ void lose_piety(int pgn)
         you.redraw_armour_class = true;
     }
 
-    if (you.religion == GOD_CHEIBRIADOS)
+    if (you.religion == GOD_CHEIBRIADOS
+        && che_stat_boost(old_piety) > che_stat_boost())
     {
-        int diffrank = piety_rank(you.piety) - piety_rank(old_piety);
-        che_handle_change(CB_PIETY, diffrank);
+        mprf(MSGCH_GOD, "%s reduces the support of your attributes as your movement quickens.",
+                        god_name(you.religion).c_str());
+        notify_stat_change("Cheibriados piety loss");
     }
 
     if (you.religion == GOD_SHINING_ONE)
@@ -2858,24 +2892,30 @@ void excommunication(god_type new_god)
 
     const bool was_haloed = you.haloed();
     const int  old_piety  = you.piety;
-    const int  old_piety_rank = piety_rank();
 
     god_acting gdact(old_god, true);
 
     take_note(Note(NOTE_LOSE_GOD, old_god));
 
+    std::vector<ability_type> abilities = get_god_abilities();
+    for (unsigned int i = 0; i < abilities.size(); ++i)
+    {
+        you.stop_train.insert(abil_skill(abilities[i]));
+        if (abilities[i] == ABIL_TSO_DIVINE_SHIELD)
+            you.stop_train.insert(SK_SHIELDS);
+    }
+
     you.duration[DUR_PIETY_POOL] = 0; // your loss
     you.piety = 0;
     you.piety_hysteresis = 0;
-    you.bondage_level = 0;
+    if (old_god == GOD_ASHENZARI)
+        ash_init_bondage(&you);
 
     you.num_current_gifts[old_god] = 0;
 
-    che_handle_change(CB_PIETY, piety_rank() - old_piety_rank);
-
     you.religion = GOD_NO_GOD;
 
-    redraw_skill(you.your_name, player_title());
+    you.redraw_title = true;
 
     // Renouncing may have changed the conducts on our wielded or
     // quivered weapons, so refresh the display.
@@ -2898,11 +2938,11 @@ void excommunication(god_type new_god)
     switch (old_god)
     {
     case GOD_XOM:
-        _inc_penance(old_god, 50);
+        _set_penance(old_god, 50);
         break;
 
     case GOD_KIKUBAAQUDGHA:
-        _inc_penance(old_god, 30);
+        _set_penance(old_god, 30);
         break;
 
     case GOD_YREDELEMNUL:
@@ -2913,15 +2953,15 @@ void excommunication(god_type new_god)
                                GOD_YREDELEMNUL);
             add_daction(DACT_ALLY_YRED_SLAVE);
         }
-        _inc_penance(old_god, 30);
+        _set_penance(old_god, 30);
         break;
 
     case GOD_VEHUMET:
-        _inc_penance(old_god, 25);
+        _set_penance(old_god, 25);
         break;
 
     case GOD_MAKHLEB:
-        _inc_penance(old_god, 25);
+        _set_penance(old_god, 25);
         break;
 
     case GOD_TROG:
@@ -2930,7 +2970,7 @@ void excommunication(god_type new_god)
 
         add_daction(DACT_ALLY_TROG);
 
-        _inc_penance(old_god, 50);
+        _set_penance(old_god, 50);
         break;
 
     case GOD_BEOGH:
@@ -2947,20 +2987,20 @@ void excommunication(god_type new_god)
         if (_need_water_walking())
             fall_into_a_pool(you.pos(), true, grd(you.pos()));
 
-        _inc_penance(old_god, 50);
+        _set_penance(old_god, 50);
         break;
 
     case GOD_SIF_MUNA:
-        _inc_penance(old_god, 50);
+        _set_penance(old_god, 50);
         break;
 
     case GOD_NEMELEX_XOBEH:
         nemelex_shuffle_decks();
-        _inc_penance(old_god, 150); // Nemelex penance is special
+        _set_penance(old_god, 150); // Nemelex penance is special
         break;
 
     case GOD_LUGONU:
-        _inc_penance(old_god, 50);
+        _set_penance(old_god, 50);
         break;
 
     case GOD_SHINING_ONE:
@@ -2976,13 +3016,11 @@ void excommunication(god_type new_god)
         // leaving your other followers (blessed with friendliness by
         // his power, but not his servants) alone.
         if (!is_good_god(new_god))
-        {
-            _inc_penance(old_god, 50);
             add_daction(DACT_ALLY_HOLY);
-        }
         else
             add_daction(DACT_HOLY_PETS_GO_NEUTRAL);
 
+        _set_penance(old_god, 50);
         break;
 
     case GOD_ZIN:
@@ -2995,11 +3033,9 @@ void excommunication(god_type new_god)
         // Leaving Zin for a non-good god will make all your followers
         // (originally from TSO) abandon you.
         if (!is_good_god(new_god))
-        {
-            _inc_penance(old_god, 25);
-
             add_daction(DACT_ALLY_HOLY);
-        }
+
+        _set_penance(old_god, 25);
         break;
 
     case GOD_ELYVILON:
@@ -3010,11 +3046,9 @@ void excommunication(god_type new_god)
         // Leaving Elyvilon for a non-good god will make all your
         // followers (originally from TSO) abandon you.
         if (!is_good_god(new_god))
-        {
-            _inc_penance(old_god, 30);
-
             add_daction(DACT_ALLY_HOLY);
-        }
+
+        _set_penance(old_god, 30);
         break;
 
     case GOD_JIYVA:
@@ -3030,30 +3064,30 @@ void excommunication(god_type new_god)
         if (you.duration[DUR_SLIMIFY])
             you.duration[DUR_SLIMIFY] = 0;
 
-        _inc_penance(old_god, 30);
+        _set_penance(old_god, 30);
         break;
+
     case GOD_FEDHAS:
         if (query_da_counter(DACT_ALLY_PLANT))
         {
             mpr("The plants of the dungeon turn on you.", MSGCH_GOD, GOD_FEDHAS);
             add_daction(DACT_ALLY_PLANT);
         }
-        _inc_penance(old_god, 30);
+        _set_penance(old_god, 30);
         break;
 
     case GOD_ASHENZARI:
         if (you.transfer_skill_points > 0)
             ashenzari_end_transfer(false, true);
-        // max_level can be much higher, multi-Zig felids may lose millions
-        you.exp_docked = exp_needed(you.max_level + 1)
-                       - exp_needed(you.max_level);
+        you.exp_docked = exp_needed(std::min<int>(you.max_level, 27)  + 1)
+                       - exp_needed(std::min<int>(you.max_level, 27));
         you.exp_docked_total = you.exp_docked;
-        _inc_penance(old_god, 50);
+        _set_penance(old_god, 50);
         break;
 
     case GOD_CHEIBRIADOS:
     default:
-        _inc_penance(old_god, 25);
+        _set_penance(old_god, 25);
         break;
     }
 
@@ -3175,7 +3209,6 @@ bool god_likes_items(god_type god)
 
     switch (god)
     {
-    case GOD_ZIN:
     case GOD_BEOGH:
     case GOD_NEMELEX_XOBEH:
     case GOD_ASHENZARI:
@@ -3204,9 +3237,6 @@ bool god_likes_item(god_type god, const item_def& item)
 
     switch (god)
     {
-    case GOD_ZIN:
-        return (item.base_type == OBJ_GOLD);
-
     case GOD_ELYVILON:
         if (item_is_stationary(item)) // Held in a net?
             return false;
@@ -3271,6 +3301,12 @@ bool transformed_player_can_join_god(god_type which_god)
     if (which_god == GOD_ZIN && you.form != TRAN_NONE)
         return (false);
 
+    if (which_god == GOD_YREDELEMNUL
+        && (you.form == TRAN_STATUE || you.petrified()))
+    {   // it's rather hard to pray while petrified, though
+        return (false);
+    }
+
     return (true);
 }
 
@@ -3286,6 +3322,7 @@ void god_welcome_identify_gear()
         mpr("Your amulet flashes!", MSGCH_GOD);
         flash_view_delay(god_colour(you.religion), 300);
         set_ident_type(*amulet, ID_KNOWN_TYPE);
+        set_ident_flags(*amulet, ISFLAG_KNOW_TYPE);
     }
 
     if (you.religion == GOD_ASHENZARI)
@@ -3311,7 +3348,7 @@ void god_pitch(god_type which_god)
     mprf("You %s the altar of %s.",
          you.species == SP_NAGA ? "coil in front of" :
          // < TGWi> you curl up on the altar and go to sleep
-         you.species == SP_CAT  ? "sit before"
+         you.species == SP_FELID  ? "sit before"
                                 : "kneel at",
          god_name(which_god).c_str());
     more();
@@ -3378,6 +3415,8 @@ void god_pitch(god_type which_god)
     else
     {
         you.piety = 15; // to prevent near instant excommunication
+        if (you.piety_max[you.religion] < 15)
+            you.piety_max[you.religion] = 15;
         you.piety_hysteresis = 0;
         you.gift_timeout = 0;
     }
@@ -3402,6 +3441,20 @@ void god_pitch(god_type which_god)
 
     god_welcome_identify_gear();
     ash_check_bondage();
+
+    // Chei worshippers start their stat gain immediately.
+    if (you.religion == GOD_CHEIBRIADOS)
+    {
+        mprf(MSGCH_GOD, "%s begins to support your attributes as your movement slows.",
+                         god_name(you.religion).c_str());
+        notify_stat_change("Cheibriados worship");
+    }
+
+    // We disable all magical skills to avoid accidentally angering Trog.
+    if (you.religion == GOD_TROG)
+        for (int sk = SK_SPELLCASTING; sk <= SK_LAST_MAGIC; ++sk)
+            if (you.skills[sk])
+                you.train[sk] = 0;
 
     // When you start worshipping a good god, you make all non-hostile
     // unholy and evil beings hostile; when you start worshipping Zin,
@@ -3444,11 +3497,6 @@ void god_pitch(god_type which_god)
             MSGCH_GOD);
         mpr("The plants of the dungeon cease their hostilities.", MSGCH_GOD);
     }
-    else if (you.religion == GOD_CHEIBRIADOS)
-    {
-        mpr("You can now call upon Cheibriados to make your armour ponderous.",
-            MSGCH_GOD);
-    }
 
     if (you.worshipped[you.religion] < 100)
         you.worshipped[you.religion]++;
@@ -3489,13 +3537,19 @@ void god_pitch(god_type which_god)
         // permanent instead of based off of penance. - bwr
         if (you.penance[GOD_SHINING_ONE])
         {
-            _inc_penance(GOD_SHINING_ONE, 30);
+            _set_penance(GOD_SHINING_ONE, 30);
             god_speaks(GOD_SHINING_ONE,
                        "\"You will pay for your evil ways, mortal!\"");
         }
     }
 
     // Note that you.worshipped[] has already been incremented.
+    if (you.char_class == JOB_MONK && had_gods() <= 1)
+    {
+        // monks get bonus piety for first god
+        gain_piety(35, 1, true, false);
+    }
+
     if (you.religion == GOD_LUGONU && you.worshipped[GOD_LUGONU] == 1)
         gain_piety(20, 1, true, false);  // allow instant access to first power
 
@@ -3513,19 +3567,49 @@ void god_pitch(god_type which_god)
         }
     }
 
+    // Need to pay St. Peters.
+    if (you.religion == GOD_ZIN && you.attribute[ATTR_DONATIONS] * 9 < you.gold)
+    {
+        item_def lucre;
+        lucre.base_type = OBJ_GOLD;
+        // If you worshipped Zin before, the already tithed for part is fine.
+        lucre.quantity = you.gold - you.attribute[ATTR_DONATIONS] * 9;
+        // Use the harsh acquirement pricing -- with a cap at +50 piety.
+        // We don't want you get max piety at start just because you're filthy
+        // rich.  In that case, you have to donate again more...  That the poor
+        // widow is not spared doesn't mean the rich can't be milked for more.
+        lucre.props["acquired"] = 0;
+        you.gold -= zin_tithe(lucre, lucre.quantity, false);
+    }
+
     // Refresh wielded/quivered weapons in case we have a new conduct
     // on them.
     you.wield_change = true;
     you.redraw_quiver = true;
 
-    redraw_skill(you.your_name, player_title());
+    you.redraw_title = true;
 
     learned_something_new(HINT_CONVERT);
 }
 
+int had_gods()
+{
+    int count = 0;
+    for (int i = 0; i < MAX_NUM_GODS; i++)
+        count += you.worshipped[i];
+    return count;
+}
+
+bool god_likes_your_god(god_type god, god_type your_god)
+{
+    return (is_good_god(god) && is_good_god(your_god));
+}
+
 bool god_hates_your_god(god_type god, god_type your_god)
 {
-    ASSERT(god != your_god);
+    // Gods do not hate themselves.
+    if (god == your_god)
+        return (false);
 
     // Non-good gods always hate your current god.
     if (!is_good_god(god))
@@ -3637,7 +3721,7 @@ bool god_hates_spell(spell_type spell, god_type god)
         }
         break;
     case GOD_YREDELEMNUL:
-        if (is_holy_spell(spell))
+        if (is_holy_spell(spell) || spell == SPELL_STATUE_FORM)
             return (true);
         break;
     case GOD_FEDHAS:
@@ -3652,6 +3736,15 @@ bool god_hates_spell(spell_type spell, god_type god)
         break;
     }
     return (false);
+}
+
+bool god_loathes_spell(spell_type spell, god_type god)
+{
+    if (spell == SPELL_NECROMUTATION && is_good_god(god))
+        return true;
+    if (spell == SPELL_STATUE_FORM && god == GOD_YREDELEMNUL)
+        return true;
+    return false;
 }
 
 bool god_can_protect_from_harm(god_type god)
@@ -3703,15 +3796,6 @@ bool god_protects_from_harm()
     return false;
 }
 
-// Returns true if the player can use the good gods' passive piety gain.
-static bool _need_free_piety()
-{
-    return (!crawl_state.game_is_sprint()
-            && (you.piety < 150
-                || you.gift_timeout
-                || you.penance[you.religion]));
-}
-
 //jmf: moved stuff from effects::handle_time()
 void handle_god_time()
 {
@@ -3748,23 +3832,16 @@ void handle_god_time()
             xom_tick();
             return;
 
-        // These gods like long-standing worshippers.
         case GOD_ELYVILON:
-            if (_need_free_piety())
-                gain_piety(1, 20);
+            if (one_chance_in(50))
+                lose_piety(1);
             return;
 
         case GOD_SHINING_ONE:
-            if (_need_free_piety())
-                gain_piety(1, 15);
-            return;
+            if (one_chance_in(35))
+                lose_piety(1);
+            break;
 
-        case GOD_ZIN:
-            if (_need_free_piety())
-                gain_piety(1, 12);
-            return;
-
-        // All the rest will excommunicate you if piety goes below 1.
         case GOD_JIYVA:
             if (one_chance_in(20))
                 lose_piety(1);
@@ -3773,6 +3850,7 @@ void handle_god_time()
         case GOD_YREDELEMNUL:
         case GOD_KIKUBAAQUDGHA:
         case GOD_VEHUMET:
+        case GOD_ZIN:
             if (one_chance_in(17))
                 lose_piety(1);
             break;
@@ -3809,7 +3887,7 @@ void handle_god_time()
 
         case GOD_FEDHAS:
         case GOD_CHEIBRIADOS:
-            // Fedhas's piety is stable over time but we need a case here to
+            // Fedhas' piety is stable over time but we need a case here to
             // avoid the error message below.
             break;
 
@@ -4080,7 +4158,7 @@ int get_tension(god_type god)
     int total = 0;
 
     bool nearby_monster = false;
-    for (radius_iterator ri(you.get_los()); ri; ri++)
+    for (radius_iterator ri(you.get_los()); ri; ++ri)
     {
         const monster* mon = monster_at(*ri);
 
@@ -4156,6 +4234,14 @@ int get_tension(god_type god)
     return std::max(0, tension);
 }
 
+int get_fuzzied_monster_difficulty(const monster *mons)
+{
+    double factor = sqrt(exp_needed(you.experience_level) / 30.0);
+    int exp = exper_value(mons) * 100;
+    exp = random2(exp) + random2(exp);
+    return exp / (1 + factor);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // Stuff for placing god gift monsters after the player's turn has ended.
 /////////////////////////////////////////////////////////////////////////////
@@ -4208,7 +4294,7 @@ static void _place_delayed_monsters()
         if (midx != -1)
             placed++;
 
-        if (_delayed_done_trigger_pos.size() > 0
+        if (!_delayed_done_trigger_pos.empty()
             && _delayed_done_trigger_pos[0] == i)
         {
             cback = _delayed_done_callbacks[0];

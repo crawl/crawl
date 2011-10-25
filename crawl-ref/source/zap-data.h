@@ -87,7 +87,7 @@
 },
 
 {
-    ZAP_HEALING,
+    ZAP_HEAL_WOUNDS,
     "",
     100,
     new dicedef_calculator<1, 7, 1, 3>,
@@ -250,7 +250,7 @@
     ZAP_LIGHTNING,
     "bolt of lightning",
     200,
-    new calcdice_calculator<1, 10, 3, 5>,
+    new calcdice_calculator<1, 13, 3, 5>,
     new tohit_calculator<7, 1, 40>,
     LIGHTCYAN,
     false,
@@ -330,7 +330,7 @@
     ZAP_BEAM_OF_ENERGY,
     "narrow beam of energy",
     1000,
-    new calcdice_calculator<12, 40, 3, 2>,
+    new calcdice_calculator<10, 40, 1, 1>,
     new tohit_calculator<1>,
     YELLOW,
     false,
@@ -421,28 +421,6 @@
     false,
     0
 },
-
-#if TAG_MAJOR_VERSION == 32
-{
-    ZAP_BONE_SHARDS,
-    "spray of bone shards",
-    // Incoming power is highly dependent on mass (see spl-damage.cc).
-    // Basic function is power * 15 + mass...  with the largest
-    // available mass (3000) we get a power of 4500 at a power
-    // level of 100 (for 3d29).
-    10000,
-    new dicedef_calculator<3, 4, 1, 180>,
-    new tohit_calculator<8, 1, 100>,
-    LIGHTGREY,
-    false,
-    BEAM_MAGIC,
-    DCHAR_FIRED_ZAP,
-    true,
-    true,
-    false,
-    3
-},
-#endif
 
 {
     ZAP_BANISHMENT,
@@ -560,7 +538,7 @@
     ZAP_ELECTRICITY,
     "zap",
     25,
-    new dicedef_calculator<1, 3, 1, 4>,
+    new dicedef_calculator<1, 4, 1, 4>,
     new tohit_calculator<8, 1, 7>,
     LIGHTCYAN,
     false,
@@ -702,24 +680,6 @@
     6
 },
 
-#if TAG_MAJOR_VERSION == 32
-{
-    ZAP_ENSLAVE_UNDEAD,
-    "",
-    100,
-    NULL,
-    NULL,
-    BLACK,
-    true,
-    BEAM_ENSLAVE_UNDEAD,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
-#endif
-
 {
     ZAP_ENSLAVE_SOUL,
     "",
@@ -782,40 +742,6 @@
     true,
     false,
     0 // Explosion does the noise.
-},
-
-#if TAG_MAJOR_VERSION == 32
-{
-    ZAP_CONTROL_DEMON,
-    "",
-    100,
-    NULL,
-    new tohit_calculator<0, 3, 2>,
-    BLACK,
-    true,
-    BEAM_ENSLAVE_DEMON,
-    NUM_DCHAR_TYPES,
-    false,
-    false,
-    false,
-    0
-},
-#endif
-
-{
-    ZAP_ORB_OF_FRAGMENTATION,
-    "metal orb",
-    200,
-    new calcdice_calculator<3, 30, 3, 4>,
-    new tohit_calculator<20>,
-    CYAN,
-    false,
-    BEAM_FRAG,
-    DCHAR_FIRED_ZAP,
-    false,
-    false,
-    true,
-    5 // XXX: Seems like it might be louder than this.
 },
 
 {
@@ -950,7 +876,7 @@
     ZAP_MAGMA,
     "bolt of magma",
     200,
-    new calcdice_calculator<4, 10, 3, 5>,
+    new calcdice_calculator<4, 15, 3, 5>,
     new tohit_calculator<8, 1, 25>,
     RED,
     false,
@@ -1060,7 +986,7 @@
 },
 
 {
-    ZAP_LIGHT_BEAM,
+    ZAP_HOLY_LIGHT,
     "beam of light",
     200,
     new calcdice_calculator<3, 11, 1, 3>,
@@ -1121,6 +1047,38 @@
     true,
     false,
     0
+},
+
+{
+    ZAP_INNER_FLAME,
+    "",
+    100,
+    NULL,
+    new tohit_calculator<0, 3, 1>,
+    BLACK,
+    true,
+    BEAM_INNER_FLAME,
+    NUM_DCHAR_TYPES,
+    false,
+    false,
+    false,
+    0
+},
+
+{
+    ZAP_BLAST_OF_SILVER,
+    "silver light",
+    200,
+    new calcdice_calculator<3, 10, 1, 2>,
+    new tohit_calculator<40>,
+    LIGHTGRAY,
+    false,
+    BEAM_BOLT_OF_ZIN,
+    DCHAR_FIRED_ZAP,
+    false,
+    false,
+    true,
+    0 // Noise comes from explosion
 },
 
 #endif

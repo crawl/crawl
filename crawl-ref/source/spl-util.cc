@@ -29,6 +29,7 @@
 #include "mon-behv.h"
 #include "mon-util.h"
 #include "notes.h"
+#include "options.h"
 #include "player.h"
 #include "religion.h"
 #include "spl-cast.h"
@@ -163,7 +164,7 @@ spell_type spell_by_name(std::string name, bool partial_match)
         return (SPELL_NO_SPELL);
     }
 
-    int spellmatch = -1;
+    spell_type spellmatch = SPELL_NO_SPELL;
     for (int i = 0; i < NUM_SPELLS; i++)
     {
         spell_type type = static_cast<spell_type>(i);
@@ -176,14 +177,13 @@ spell_type spell_by_name(std::string name, bool partial_match)
         if (spell_name.find(name) != std::string::npos)
         {
             if (spell_name == name)
-                return static_cast<spell_type>(i);
+                return type;
 
-            spellmatch = i;
+            spellmatch = type;
         }
     }
 
-    return (spellmatch != -1 ? static_cast<spell_type>(spellmatch)
-                             : SPELL_NO_SPELL);
+    return spellmatch;
 }
 
 spschool_flag_type school_by_name(std::string name)
@@ -274,8 +274,10 @@ spell_type get_spell_by_letter(char letter)
 
 bool add_spell_to_memory(spell_type spell)
 {
-    int i, j;
-
+    int i;
+    int j = -1;
+    std::string sname = spell_title(spell);
+    lowercase(sname);
     // first we find a slot in our head:
     for (i = 0; i < MAX_KNOWN_SPELLS; i++)
     {
@@ -286,11 +288,30 @@ bool add_spell_to_memory(spell_type spell)
     you.spells[i] = spell;
 
     // now we find an available label:
-    for (j = 0; j < 52; j++)
+    // first check to see whether we've chosen an automatic label:
+    for (unsigned k = 0; k < Options.auto_spell_letters.size(); ++k)
     {
-        if (you.spell_letter_table[j] == -1)
+        if (!Options.auto_spell_letters[k].first.matches(sname))
+            continue;
+        for (unsigned l = 0; l < Options.auto_spell_letters[k].second.length(); ++l)
+            if (isaalpha(Options.auto_spell_letters[k].second[l]) &&
+                you.spell_letter_table[letter_to_index(Options.auto_spell_letters[k].second[l])] == -1)
+            {
+                j = letter_to_index(Options.auto_spell_letters[k].second[l]);
+                mprf("Spell assigned to '%c'.",
+                     Options.auto_spell_letters[k].second[l]);
+                break;
+            }
+        if (j != -1)
             break;
     }
+    // If we didn't find a label above, choose the first available one.
+    if (j == -1)
+        for (j = 0; j < 52; j++)
+        {
+            if (you.spell_letter_table[j] == -1)
+                break;
+        }
 
     you.spell_letter_table[j] = i;
 
@@ -298,7 +319,9 @@ bool add_spell_to_memory(spell_type spell)
 
     take_note(Note(NOTE_LEARN_SPELL, spell));
 
-#ifdef USE_TILE
+    spell_skills(spell, you.start_train);
+
+#ifdef USE_TILE_LOCAL
     tiles.layout_statcol();
     redraw_screen();
 #endif
@@ -314,6 +337,8 @@ bool del_spell_from_memory_by_slot(int slot)
     if (you.last_cast_spell == you.spells[slot])
         you.last_cast_spell = SPELL_NO_SPELL;
 
+    spell_skills(you.spells[slot], you.stop_train);
+
     mprf("Your memory of %s unravels.", spell_title(you.spells[slot]));
     you.spells[ slot ] = SPELL_NO_SPELL;
 
@@ -326,7 +351,7 @@ bool del_spell_from_memory_by_slot(int slot)
 
     you.spell_no--;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tiles.layout_statcol();
     redraw_screen();
 #endif
@@ -360,11 +385,11 @@ int spell_hunger(spell_type which_spell, bool rod)
 
     if (rod)
     {
-        hunger -= 10 * you.skill(SK_EVOCATIONS);
+        hunger -= you.skill(SK_EVOCATIONS, 10);
         hunger = std::max(hunger, level * 5);
     }
     else
-        hunger -= you.intel() * you.skill(SK_SPELLCASTING);
+        hunger -= you.skill(SK_SPELLCASTING, you.intel());
 
     if (hunger < 0)
         hunger = 0;
@@ -742,7 +767,6 @@ int apply_area_within_radius(cell_func cf, const coord_def& where,
                              int pow, int radius, int ctype,
                              actor *agent)
 {
-
     int rv = 0;
 
     for (radius_iterator ri(where, radius, false, false); ri; ++ri)
@@ -792,7 +816,7 @@ bool spell_direction(dist &spelld, bolt &pbolt,
                       bool needs_path, bool may_target_monster,
                       bool may_target_self, const char *target_prefix,
                       const char* top_prompt, bool cancel_at_self,
-                      targetter *hitfunc)
+                      targetter *hitfunc, desc_filter get_desc_func)
 {
     if (range < 1)
         range = (pbolt.range < 1) ? LOS_RADIUS : pbolt.range;
@@ -811,6 +835,7 @@ bool spell_direction(dist &spelld, bolt &pbolt,
     args.behaviour = NULL;
     args.cancel_at_self = cancel_at_self;
     args.hitfunc = hitfunc;
+    args.get_desc_func = get_desc_func;
 
     direction(spelld, args);
 
@@ -928,7 +953,7 @@ skill_type spell_type2skill(unsigned int spelltype)
         dprf("spell_type2skill: called with spelltype %u", spelltype);
         return (SK_NONE);
     }
-}                               // end spell_type2skill()
+}
 
 /*
  **************************************************
@@ -1084,7 +1109,7 @@ spell_type zap_type_to_spell(zap_type zap)
         return SPELL_HASTE;
     case ZAP_MAGIC_DARTS:
         return SPELL_MAGIC_DART;
-    case ZAP_HEALING:
+    case ZAP_HEAL_WOUNDS:
         return SPELL_MAJOR_HEALING;
     case ZAP_PARALYSIS:
         return SPELL_PARALYSE;
@@ -1131,15 +1156,6 @@ bool spell_is_empowered(spell_type spell)
 
     switch (spell)
     {
-    case SPELL_SWIFTNESS:
-        // looking at player_movement_speed, this should be correct ~DMB
-        if (player_movement_speed() > 6
-            && you.duration[DUR_CONTROLLED_FLIGHT] > 0
-            && you.duration[DUR_SWIFTNESS] < 1)
-        {
-            return (true);
-        }
-        break;
     case SPELL_STONESKIN:
         if (you.duration[DUR_TRANSFORMATION] > 0
             && you.form == TRAN_STATUE
@@ -1196,15 +1212,13 @@ bool spell_is_useless(spell_type spell, bool transient)
         if (player_movement_speed() <= 6)
             return (true);
         break;
+#if TAG_MAJOR_VERSION == 32
     case SPELL_LEVITATION:
+#endif
     case SPELL_FLY:
         if (you.species == SP_KENKU && you.experience_level >= 15)
             return (true);
         if (transient && you.is_levitating())
-            return (true);
-        break;
-    case SPELL_REGENERATION:
-        if (you.species == SP_DEEP_DWARF)
             return (true);
         break;
     case SPELL_INVISIBILITY:
@@ -1219,23 +1233,15 @@ bool spell_is_useless(spell_type spell, bool transient)
         if (you.can_see_invisible(false, false))
             return (true);
         break;
-    // weapon branding is useless
-    case SPELL_FIRE_BRAND:
-    case SPELL_FREEZING_AURA:
-    case SPELL_LETHAL_INFUSION:
-    case SPELL_WARP_BRAND:
-    case SPELL_EXCRUCIATING_WOUNDS:
-    case SPELL_POISON_WEAPON:
-    // could be useful if it didn't require wielding
-    case SPELL_TUKIMAS_DANCE:
-        if (you.species == SP_CAT)
-            return (true);
-        break;
     case SPELL_DARKNESS:
         // mere corona is not enough, but divine light blocks it completely
         if (transient && you.haloed())
             return true;
-        if (you.religion == GOD_SHINING_ONE && player_under_penance())
+        if (you.religion == GOD_SHINING_ONE && !player_under_penance())
+            return true;
+        break;
+    case SPELL_INSULATION:
+        if (player_res_electricity(false, transient, transient))
             return true;
         break;
     default:

@@ -74,14 +74,15 @@ function spiders_nest_random_monster_set(e)
                          yellow wasp / red wasp / \
                          goliath beetle / boring beetle / boulder beetle / \
                          giant centipede / emperor scorpion / jumping spider / \
-                         tarantella / ghost moth w:2 / demonic crawler w:2")
+                         tarantella / demonic crawler w:2")
+                         -- no more ghost moths, please restore for the branch
 end
 }}
 
 # Add a milestone for entering the Spider's Nest.
 {{
 function spiders_nest_milestone(e)
-  crawl.mark_milestone("br.enter", "entered a Spider's Nest", true)
+  crawl.mark_milestone("br.enter", "entered a Spider's Nest.", true)
 end
 }}
 
@@ -113,6 +114,21 @@ function callback.spider_trap_warn(data, triggerable, triggerer, marker, ev)
 end
 }}
 
+# Flavour text for Spiderweb map ##########################################
+
+{{
+function callback.spiders_nest_cobweb_light(data, triggerable, triggerer, marker, ev)
+    crawl.mpr("Something lightly brushes against you...",1)
+    crawl.more()
+    crawl.mpr("You realise it was just a hanging strand of cobweb; you push it aside and calm your nerves." , "talk_visual")
+end
+}}
+
+{{
+function callback.spiders_nest_web_lair(data, triggerable, triggerer, marker, ev)
+    crawl.mpr("The chamber up ahead is thickly strewn with cobwebs." , "talk_visual")
+end
+}}
 
 # Entries ##########################################
 
@@ -158,33 +174,33 @@ MONS:    redback / wolf spider
 MONS:    jumping spider / tarantella w:20
 MONS:    emperor scorpion / demonic crawler
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x...xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x.<.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-x....xxxxxxxxxxWWWWxxxxxxxxxxxxxxxxxxxxxx
-xxx...xxxxxxxxxWW.Wxxxxxxxxxxxxxxxxxxxxxx
-xxxx...xxxxxxxxW.3.xxxxxxxxxxxxxxxxxxxxxx
-xxxxx....xxxxx......xxxxxxxxxxxxxxxxxxxxx
-xxxxxx.A.xxxx...xx...xxxxxxxxxxxxxxxxxxxx
-xxxxxx....xx...xxxx...xxxxxW4||xxxxxxxxxx
-xxxxxxxx.1111.xxxxxx..WWWxxWW4|xxxxxxxxxx
-xxxxxxxxx1111xxxxxxxx..WWxxWWW4xxxxxxxxxx
-xxxxxxxxx1111xxxxxxxx...WxxWWWWxxxxxxxxxx
-xxxxxxxx.1111.xxxxxx..3.WxxxWWxxxxxxxxxxx
-xxxxxxx...xx...xxxx.....xxxxWWxxxxxxxxxxx
-xxxxxx...xxxx...xx...x..xxxxWWxxxxxxxxxxx
-xxxW....xxxxxx.2222.xx..xxxWWWWxxxxxxxxxx
-xxx....xxxxxxxx2222xxx..xxxWWWWxxxxxxxxxx
-xxx..3.xxxxxxxx2222xxx..xxxW..Wxxxxxx.**x
-xxxW....xxxxxx.2222.xx..xx.....Wxxxxx.<*x
-xxxxxx...xxxx...xx...x..x...xx..Wxxx....x
-xxxxxxx...xx...xxxx........xxxx..Wx...xxx
-xxxxxxxx......xxxxxx..44..xxxxxx.55..xxxx
-xxxxxxxxx............4554.......5665xxxxx
-xxxxxxxxxW..3........4554.......5665xxxxx
-xxxxxxxxxWW..xxxxxxxW.44.Wxxxxxx.55.xxxxx
-xxxxxxxxxxxxxxxxxxxxWW..WWxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx
+x...x
+x.<.xx        xxxxxx
+x....xx       xWWWWx
+xxx...xx      xWW.Wx
+  xx...xxx   xxW.3.xx
+   xx....x  xx......xx
+    xx.A.xxxx...xx...xx   xxxxxx
+     x....xx...xxxx...xxxxxW4||x
+     xxx.1111.xxxxxx..WWWxxWW4|x
+       xx1111xxxxxxxx..WWxxWWW4x
+       xx1111xxxxxxxx...WxxWWWWx
+      xx.1111.xxxxxx..3.WxxxWWxx
+     xx...xx...xxxx.....xxxxWWx
+  xxxx...xxxx...xx...x..xxxxWWxx
+  xW....xxxxxx.2222.xx..xxxWWWWx
+  x....xxxxxxxx2222xxx..xxxWWWWx    xxxxx
+  x..3.xxxxxxxx2222xxx..xxxW..Wxx   x.**x
+  xW....xxxxxx.2222.xx..xx.....Wxxxxx.<*x
+  xxxx...xxxx...xx...x..x...xx..Wxxx....x
+     xx...xx...xxxx........xxxx..Wx...xxx
+      xx......xxxxxx..44..xxxxxx.55..xx
+       xx............4554.......5665xx
+        xW..3........4554.......5665x
+        xWW..xxxxxxxW.44.Wxxxxxx.55.x
+        xxxxxx     xWW..WWx    xxxxxx
+                   xxxxxxxx
 ENDMAP
 
 ###############################################################################
@@ -194,7 +210,7 @@ ENDMAP
 NAME:   spiders_nest_the_unseen
 TAGS:   spiders_nest no_item_gen no_monster_gen
 ORIENT: encompass
-WEIGHT: 5
+WEIGHT: 0
 : spiders_nest_colours(_G)
 : spiders_nest_random_monster_set(_G)
 epilogue{{
@@ -227,7 +243,7 @@ ENDMAP
 NAME:   spiders_nest_ghost_moth_duel
 TAGS:   spiders_nest no_item_gen no_monster_gen generate_awake
 ORIENT: encompass
-WEIGHT: 5
+WEIGHT: 0
 : spiders_nest_colours(_G)
 : spiders_nest_random_monster_set(_G)
 epilogue{{
@@ -342,7 +358,99 @@ xxxxxx.Wx1.Wxxxx
 xxxxxx.Wxxx.Wxxx
 xxxxxW.xxxxx.W1x
 xxxx1..x***xx.Wx
-xxxxW.xx****xx.x
+xxxx.Wxx****xx.x
 xA<.xxx******Z.x
 xxxxxxxxxxxxxxxx
+ENDMAP
+
+####################################################################
+# Spider Web by Mumra
+#
+# A main spiral path to follow with randomised walls and pools / deep water.
+# Narrow deep water channels run laterally into the center; hopefully spiders
+# can pathfind these and keep jumping out at the player. The player could use
+# them to head straight for the center with levitate or cling, but it could be
+# dangerous getting blocked in.
+#
+# dpeg: The map can theoretically get a player stranded from a random teleport,
+#       but chances are very slim and I'd like a more conceptual solution (like
+#       disabling long-range teleports in spider vaults) before doing anything
+#       ad-hoc here.
+#
+NAME:    mumra_spider_spiderweb
+TAGS:    spiders_nest no_item_gen no_monster_gen no_pool_fixup
+ORIENT:  encompass
+NSUBST:  y = 1:y / *:.
+{{
+local ym = TriggerableFunction:new{func="callback.spiders_nest_cobweb_light"}
+ym:add_triggerer(DgnTriggerer:new{type="player_move"})
+lua_marker('y', ym)
+local vm = TriggerableFunction:new{func="callback.spiders_nest_web_lair"}
+vm:add_triggerer(DgnTriggerer:new{type="player_move"})
+lua_marker('v', vm)
+}}
+SUBST:   y = .
+SUBST:   v = .
+# Water etc.
+SUBST:   w = z
+SUBST:   W = W w:15 x:4
+SUBST:   . = .:6 W
+SUBST:   z = W:5 w:50 .:2
+SUBST:   X = w x
+# Monster sets, and some items
+NSUBST:  1 = 2:t / *:w
+SUBST:   2 = 2 *:4
+KMONS:   2 = tarantella / redback w:12 / jumping spider w:8 / wolf spider w:5
+KMONS:   3 = redback
+SUBST:   4 = 4 *:3
+KMONS:   4 = jumping spider / wolf spider w:5 / spider w:20 / redback w:2
+SUBST:   5 = 5 *:1
+KMONS:   5 = wolf spider / jumping spider w:3 / spider w:5
+SUBST:   6 = 6 *:2
+KMONS:   6 = spider / wolf spider w:4 / jumping spider w:1
+SUBST:   7 = 7 .:50
+KMONS:   7 = trapdoor spider
+KITEM:   t = piece of ambrosia
+: spiders_nest_colours(_G)
+: spiders_nest_random_monster_set(_G)
+epilogue{{
+spiders_nest_milestone(_G)
+}}
+MAP
+          xxxx                           xxxxx
+          xw6x                           x6wwx
+          xwxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwx6x
+        xxxxw..WWWW...7..7.WWWWWWWW.7.WWWWwxxx
+       xxwwyyx....7.WWWWWWW...7..7.WWW.7.WWxxx
+       xwwyww.WWWxxxxxxxxxxxxxxxxxxxWWWwW.7Wxx
+      xxwAwxxxwxxxx66xxxxxxxxxxxxxxxxxwxxxW.Wx
+      xw<wxxxxxwxx66xxxxxxxWWxxxxxx66wxxxxW.Wxx
+      xw.wx  x6xwwwxxxxxxWW.7.WWxxxxxw66xxxW7Wxx
+     xxwWxx  xxxxxxwxWW.7..WWW.7.WWWxxwxxxxxW.Wx
+     xWWWx       xwW7..WWWXxxxWWW...7wxxxxxxW7Wxxx
+     xWwxx      xxW.WwxxxxxxxxxxxXXWw.WxxxxxxW.Xxxx
+    xxwxx      xxW.WxxwwxxxxxxxxxxxxwW.WxxxxxxW.W5xx
+   xxwxx      xxW.2xxxxxwwxxxxxxxxxwxxW.Wxxx5xxW.Wxx
+  xxwxx   xxxxx7.WxxxxxxxxwwxxxxxxwxxxxW7WxxxwwW7Wwxx
+  xwxx    x4xx.WWxxxxxxx2...w.22.wxxxxxxW.wwwx5xW.Wwx
+  xxx     xxw.WXxxxxxx2..2|x2w..w.xxxxwwwW.WxxxxW.Wxx
+          xx7WXxxxxx2..2.x2www.w..2wwwxxxW7WxxxW7Wxx
+         xxW.Wxxxxx2.x...ww11wwxwww2xxxxxXW.xxxW.Wx
+        xxW.Wxxxxxxx..wwwww11www...2xxxxxXW.xxx.Wxx
+        xW.Wxxxxxxwwww.x..www.x.www.2xxxxXW7xxW.3x
+  xxxxxxxW.WWxxxwwxxxx....x........wxxxxXW.xxxW7xx
+  x4xx44wwW.<WWwxxxxxxxxx......xxxxxwxxxW.WxxW.Wx
+ xx34wwwxxWWW.7.WWWxxxxxxxxxxW.WWWWxwxxW7Wxxx.Wxx
+ x3ww44xxxxxxWWW.7.WWXxxxxxxxxW7.v.WWwWW.WxxW7Wx
+xxwxxx2x    xxxxWWW.WWWXXxxxxxxxxWW..<..Wxxx.WWx
+xwxx xxx       xxxxW.7WWW.7.xxxxxxxWWWWWxxx4.Wxx
+xxx               xxxx...WWW.7.xxxxxxxxwxxxW74x
+                    xxwxxXXWWWW.Wxxxx55w5xW.Wxx
+                    x42xxxxxXXWW..Wxxxx5wxW7Wx
+                    xxxx   xxxxXWW.7WxxxwxW.Wx
+                              xxxxWW..WxwW.Wxx
+                                 xxxxW...7WXx
+                                    xxxxWWWxx
+                                       xxxwx
+                                         xxx
 ENDMAP

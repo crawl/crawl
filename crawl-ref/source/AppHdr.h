@@ -95,12 +95,8 @@
     #define USE_UNIX_SIGNALS
 #endif
 
-    // If this is defined, Crawl will attempt to save and exit when it
-    // receives a hangup signal.
-    #define SIGHUP_SAVE
-
     #define FILE_SEPARATOR '/'
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     #define USE_CURSES
 #endif
 
@@ -160,10 +156,13 @@
     #ifndef REGEX_PCRE
     #define REGEX_PCRE
     #endif
-
-    #define NEED_USLEEP
 #else
     #error Missing platform #define or unsupported compiler.
+#endif
+
+#ifndef _WIN32_WINNT
+// Allow using Win2000 syscalls.
+# define _WIN32_WINNT 0x501
 #endif
 
 #if defined(__GNUC__)
@@ -202,11 +201,6 @@
     // starts up and notices that a db file is out-of-date, it updates
     // it in-place, instead of torching the old file.
     #define DGL_REWRITE_PROTECT_DB_FILES
-
-    // This secures the PRNG itself by hashing the values with SHA256.
-    // PRNG will be about 15 times slower when this is turned on, but
-    // even with that the cpu time used by the PRNG is relatively small.
-    #define MORE_HARDENED_PRNG
 
     // Startup preferences are saved by player name rather than uid,
     // since all players use the same uid in dgamelaunch.
@@ -313,14 +307,6 @@
     #endif
 #endif
 
-
-#ifdef USE_TILE
-    #ifdef __cplusplus
-    #include "libgui.h"
-    #include "tilesdl.h"
-    #endif
-#endif
-
 // =========================================================================
 //  Lua user scripts (NOTE: this may also be enabled in your makefile!)
 // =========================================================================
@@ -337,6 +323,8 @@
 // =========================================================================
 //  Game Play Defines
 // =========================================================================
+// use Abyss morphing
+
 // number of older messages stored during play and in save files
 #define NUM_STORED_MESSAGES   1000
 
@@ -364,14 +352,6 @@
 // these -- usually this means you should place them in ~/crawl/
 // unless it's a DGL build.
 
-// If we're on a multiuser system, file locking of shared files is
-// very important (else things will just keep getting corrupted)
-#define USE_FILE_LOCKING
-
-#if defined(DGL_SIMPLE_MESSAGING) && !defined(USE_FILE_LOCKING)
-#error Must define USE_FILE_LOCKING for DGL_SIMPLE_MESSAGING
-#endif
-
 #if !defined(DB_NDBM) && !defined(DB_DBH) && !defined(USE_SQLITE_DBM)
 #define USE_SQLITE_DBM
 #endif
@@ -388,15 +368,26 @@
 
 #ifdef __cplusplus
 
-
 template < class T >
 inline void UNUSED(const volatile T &)
 {
 }
 
+#endif // __cplusplus
+
+
+#ifdef __GNUC__
+// show warnings about the format string
+# define PRINTF(x, dfmt) const char *format dfmt, ...) \
+                   __attribute__((format (printf, x+1, x+2))
+#else
+# define PRINTF(x, dfmt) const char *format dfmt, ...
+#endif
+
+
 // And now headers we want precompiled
 #ifdef TARGET_COMPILER_VC
-#include "msvc.h"
+# include "msvc.h"
 #endif
 
 #include "externs.h"
@@ -404,9 +395,14 @@ inline void UNUSED(const volatile T &)
 #include "version.h"
 
 #ifdef TARGET_COMPILER_VC
-#include "libw32c.h"
+# include "libw32c.h"
 #endif
 
-#endif // __cplusplus
+#ifdef USE_TILE
+# ifdef __cplusplus
+#  include "libgui.h"
+#  include "tiles.h"
+# endif
+#endif
 
 #endif // APPHDR_H

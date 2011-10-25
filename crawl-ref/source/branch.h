@@ -8,15 +8,11 @@
 
 #include "enum.h"
 
-struct fog_machine_data;
-
 enum branch_flag_type
 {
     BFLAG_NONE = 0,
 
     BFLAG_NO_TELE_CONTROL = (1 << 0), // Teleport control not allowed.
-    BFLAG_NOT_MAPPABLE    = (1 << 1), // Branch levels not mappable.
-    BFLAG_NO_MAGIC_MAP    = (1 << 2), // Branch levels can't be magic mapped.
     BFLAG_HAS_ORB         = (1 << 3), // Orb is on the floor in this branch
 
     BFLAG_ISLANDED        = (1 << 4), // May have isolated zones with no stairs.
@@ -46,10 +42,6 @@ struct Branch
     uint8_t rock_colour;
     int       (*mons_rarity_function)(int);
     int       (*mons_level_function)(int);
-    int       (*num_traps_function)(int);
-    trap_type (*rand_trap_function)(int);
-    int       (*num_fogs_function)(int);
-    void      (*rand_fog_function)(int,fog_machine_data&);
     int travel_shortcut;         // Which key to press for travel.
     bool any_upstair_exits;      // any upstair exits the branch (Hell branches)
     bool dangerous_bottom_level; // bottom level is more dangerous than normal
@@ -62,6 +54,7 @@ Branch& your_branch();
 
 bool at_branch_bottom();
 bool is_hell_subbranch(branch_type branch);
+bool is_random_lair_subbranch(branch_type branch);
 level_id branch_entry_level(branch_type branch);
 level_id current_level_parent();
 
@@ -78,5 +71,7 @@ bool set_branch_flags(uint32_t flags, bool silent = false,
 bool unset_branch_flags(uint32_t flags, bool silent = false,
                         branch_type branch = NUM_BRANCHES);
 uint32_t get_branch_flags(branch_type branch = NUM_BRANCHES);
+branch_type get_branch_at(const coord_def& pos);
+bool branch_is_unfinished(branch_type branch);
 
 #endif

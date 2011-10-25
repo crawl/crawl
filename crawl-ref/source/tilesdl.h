@@ -272,12 +272,5 @@ protected:
 // Main interface for tiles functions
 extern TilesFramework tiles;
 
-#ifdef TARGET_COMPILER_MINGW
-#ifndef alloca
-// Srsly, MinGW, wtf?
-void *alloca(size_t);
-#endif
-#endif
-
 #endif
 #endif

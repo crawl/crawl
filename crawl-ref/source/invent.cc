@@ -211,7 +211,27 @@ std::string InvEntry::get_text(bool need_cursor) const
     if (InvEntry::show_glyph)
         tstr << "(" << glyph_to_tagstr(get_item_glyph(item)) << ")" << " ";
 
-    tstr << text;
+    //For weights display we need to know maximum number of chars in each column
+    //which fit in one line.
+    //XXX There should be a better way to determine this, for now we simply
+    //estimate it by the following heuristics {kittel}.
+    unsigned max_chars_in_line = get_number_of_cols() - 2;
+#ifdef USE_TILE
+    if (Options.tile_menu_icons && Options.show_inventory_weights)
+        max_chars_in_line = get_number_of_cols() * 4 / 9 - 2;
+#endif
+    if (Options.show_inventory_weights)
+    {
+        max_chars_in_line -= 1;
+        const int w_weight = 10; //length of " (999 aum)"
+        int excess = strwidth(tstr.str()) + text.size() + w_weight - max_chars_in_line;
+        if (excess > 0)
+            tstr << text.substr(0, std::max<int>(0, text.size() - excess - 2)) << "..";
+        else
+            tstr << text;
+    }
+    else
+        tstr << text;
 
     if (InvEntry::show_prices)
     {
@@ -231,10 +251,13 @@ std::string InvEntry::get_text(bool need_cursor) const
             std::string colour_tag = colour_to_str(item->colour);
             colour_tag_adjustment = colour_tag.size() * 2 + 5;
         }
-        tstr << std::setw(get_number_of_cols() - strwidth(tstr.str()) - 2
+
+        //Note: If updating the " (%i aum)" format, remember to update w_weight above.
+        tstr << std::setw(max_chars_in_line - strwidth(tstr.str())
                           + colour_tag_adjustment)
              << std::right
-             << make_stringf("(%.1f aum)", BURDEN_TO_AUM * mass);
+             << make_stringf(" (%i aum)",
+                             static_cast<int>(0.5 + BURDEN_TO_AUM * mass));
     }
     return tstr.str();
 }
@@ -346,7 +369,7 @@ InvMenu::InvMenu(int mflags)
     : Menu(mflags, "inventory", false), type(MT_INVLIST), pre_select(NULL),
       title_annotate(NULL)
 {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (Options.tile_menu_icons)
 #endif
         mdisplay->set_num_columns(2);
@@ -404,7 +427,7 @@ void InvMenu::set_title(const std::string &s)
             (you.burden * 100) / cap,
             inv_count());
 
-        std::string prompt = "Press item letter to examine.";
+        std::string prompt = "_: help";
         stitle = stitle + std::string(std::max(0, get_number_of_cols()
                                                   - strwidth(stitle)
                                                   - strwidth(prompt)),
@@ -485,8 +508,6 @@ static std::string _no_selectables_message(int item_selector)
         return "You aren't carrying any items that can be evoked.";
     case OSEL_FRUIT:
         return "You aren't carrying any fruit.";
-    case OSEL_PONDER_ARM:
-        return "You aren't carrying any armour which can be made ponderous.";
     case OSEL_CURSED_WORN:
         return "None of your equipped items are cursed.";
     case OSEL_UNCURSED_WORN_ARMOUR:
@@ -512,7 +533,7 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
         set_title("");
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
 {
     if (!Options.tile_menu_icons)
@@ -700,7 +721,7 @@ bool sort_item_identified(const InvEntry *a)
 bool sort_item_charged(const InvEntry *a)
 {
     return (a->item->base_type != OBJ_WANDS
-            || !item_is_evokable(*(a->item), true));
+            || !item_is_evokable(*(a->item), false, true));
 }
 
 static bool _compare_invmenu_items(const InvEntry *a, const InvEntry *b,
@@ -713,7 +734,7 @@ static bool _compare_invmenu_items(const InvEntry *a, const InvEntry *b,
         if (cmp)
             return (cmp < 0);
     }
-    return (false);
+    return (a->item->link < b->item->link);
 }
 
 struct menu_entry_comparator
@@ -818,34 +839,33 @@ void InvMenu::load_items(const std::vector<const item_def*> &mitems,
         if (!inv_class[i])
             continue;
 
-        std::string subtitle = item_class_name(i);
-
-        // Mention the class selection shortcuts.
-        if (is_set(MF_MULTISELECT) && inv_class[i] > 1)
+        if (type != MT_RUNES)
         {
-            std::vector<char> glyphs;
-            _get_class_hotkeys(i, glyphs);
-            if (!glyphs.empty())
-            {
-                const std::string str = "Magical Staves and Rods"; // longest string
-                subtitle += std::string(strwidth(str) - strwidth(subtitle) + 1, ' ');
-                subtitle += "(select all with ";
-#ifdef USE_TILE
-                // For some reason, this is only formatted correctly in the
-                // Tiles version.
-                subtitle += "<w>";
-#endif
-                for (unsigned int k = 0; k < glyphs.size(); ++k)
-                     subtitle += glyphs[k];
-#ifdef USE_TILE
-                subtitle += "</w><blue>";
-#endif
-                subtitle += ")";
-            }
-        }
+            std::string subtitle = item_class_name(i);
+            if (type == MT_KNOW && i == OBJ_MISCELLANY)
+                subtitle = "Runes"; // hack
 
-        add_entry(new MenuEntry(subtitle, MEL_SUBTITLE));
-        items_in_class.clear();
+            // Mention the class selection shortcuts.
+            if (is_set(MF_MULTISELECT) && inv_class[i] > 1)
+            {
+                std::vector<char> glyphs;
+                _get_class_hotkeys(i, glyphs);
+                if (!glyphs.empty())
+                {
+                    // longest string
+                    const std::string str = "Magical Staves and Rods";
+                    subtitle += std::string(strwidth(str)
+                                            - strwidth(subtitle) + 1, ' ');
+                    subtitle += "(select all with <w>";
+                    for (unsigned int k = 0; k < glyphs.size(); ++k)
+                         subtitle += glyphs[k];
+                    subtitle += "</w><blue>)";
+                }
+            }
+
+            add_entry(new MenuEntry(subtitle, MEL_SUBTITLE));
+            items_in_class.clear();
+        }
 
         for (int j = 0, count = mitems.size(); j < count; ++j)
         {
@@ -905,6 +925,13 @@ std::vector<SelItem> InvMenu::get_selitems() const
 
 bool InvMenu::process_key(int key)
 {
+    if ( key == CONTROL('W') )
+    {
+        Options.show_inventory_weights = !Options.show_inventory_weights;
+        draw_menu();
+        return (true);
+    }
+
     if (items.size()
         && type == MT_DROP
         && (key == CONTROL('D') || key == '@'))
@@ -987,7 +1014,7 @@ std::string item_class_name(int type, bool terse)
         case OBJ_JEWELLERY:  return ("jewellery");
         case OBJ_POTIONS:    return ("potion");
         case OBJ_BOOKS:      return ("book");
-        case OBJ_STAVES:     return ("staff");
+        case OBJ_STAVES:     return ("magical staff");
         case OBJ_ORBS:       return ("orb");
         case OBJ_MISCELLANY: return ("misc");
         case OBJ_CORPSES:    return ("carrion");
@@ -1001,7 +1028,7 @@ std::string item_class_name(int type, bool terse)
         case OBJ_WEAPONS:    return ("Hand Weapons");
         case OBJ_MISSILES:   return ("Missiles");
         case OBJ_ARMOUR:     return ("Armour");
-        case OBJ_WANDS:      return ("Magical Devices");
+        case OBJ_WANDS:      return ("Wands");
         case OBJ_FOOD:       return ("Comestibles");
         case OBJ_SCROLLS:    return ("Scrolls");
         case OBJ_JEWELLERY:  return ("Jewellery");
@@ -1014,6 +1041,36 @@ std::string item_class_name(int type, bool terse)
         }
     }
     return ("");
+}
+
+const char* item_slot_name(equipment_type type, bool terse)
+{
+    if (terse)
+    {
+        switch (type)
+        {
+        case EQ_CLOAK:       return "cloak";
+        case EQ_HELMET:      return "helmet";
+        case EQ_GLOVES:      return "gloves";
+        case EQ_BOOTS:       return "boots";
+        case EQ_SHIELD:      return "shield";
+        case EQ_BODY_ARMOUR: return "body";
+        default:             return "";
+        }
+    }
+    else
+    {
+        switch (type)
+        {
+        case EQ_CLOAK:       return "Cloak";
+        case EQ_HELMET:      return "Helmet";
+        case EQ_GLOVES:      return "Gloves";
+        case EQ_BOOTS:       return "Boots";
+        case EQ_SHIELD:      return "Shield";
+        case EQ_BODY_ARMOUR: return "Body";
+        default:             return "";
+        }
+    }
 }
 
 std::vector<SelItem> select_items(const std::vector<const item_def*> &items,
@@ -1031,7 +1088,7 @@ std::vector<SelItem> select_items(const std::vector<const item_def*> &items,
         menu.load_items(items);
         int new_flags = noselect ? MF_NOSELECT
                                  : MF_MULTISELECT | MF_ALLOW_FILTER;
-        new_flags |= MF_SHOW_PAGENUMBERS;
+        new_flags |= MF_SHOW_PAGENUMBERS | MF_ALLOW_FORMATTING;
         menu.set_flags(new_flags);
         menu.show();
         selected = menu.get_selitems();
@@ -1060,7 +1117,7 @@ static bool _item_class_selected(const item_def &i, int selector)
         return (itype == OBJ_ARMOUR && item_is_equipped(i));
 
     case OSEL_UNIDENT:
-        return !fully_identified(i);
+        return !fully_identified(i) || (is_deck(i) && !top_card_is_known(i));
 
     case OBJ_MISSILES:
         return (itype == OBJ_MISSILES || itype == OBJ_WEAPONS);
@@ -1091,10 +1148,7 @@ static bool _item_class_selected(const item_def &i, int selector)
         return (item_is_rechargeable(i, true));
 
     case OSEL_EVOKABLE:
-        return (item_is_evokable(i, true, true));
-
-    case OSEL_PONDER_ARM:
-        return (is_ponderousifiable(i));
+        return (item_is_evokable(i, true, true, true));
 
     case OSEL_ENCH_ARM:
         return (is_enchantable_armour(i, true, true));
@@ -1198,7 +1252,7 @@ unsigned char invent_select(const char *title,
                              Menu::selitem_tfn selitemfn,
                              const std::vector<SelItem> *pre_select)
 {
-    InvMenu menu(flags);
+    InvMenu menu(flags | MF_ALLOW_FORMATTING);
 
     menu.set_preselect(pre_select);
     menu.set_title_annotator(titlefn);
@@ -1345,7 +1399,7 @@ std::vector<SelItem> prompt_invent_items(
                 need_getch  = true;
             }
 
-            if (items.size())
+            if (!items.empty())
             {
                 if (!crawl_state.doing_prev_cmd_again)
                 {
@@ -1410,7 +1464,6 @@ std::vector<SelItem> prompt_invent_items(
 
 static int _digit_to_index(char digit, operation_types oper)
 {
-
     const char iletter = static_cast<char>(oper);
 
     for (int i = 0; i < ENDOFPACK; ++i)
@@ -1643,16 +1696,16 @@ bool check_warning_inscriptions(const item_def& item,
                 equip = you.equip[EQ_AMULET];
             else
             {
-                equip = you.equip[EQ_LEFT_RING];
-                if (equip != -1 && item.link == equip)
-                    return (check_old_item_warning(item, oper));
+                for (int slots = EQ_LEFT_RING; slots < NUM_EQUIP; ++slots)
+                {
+                    if (slots == EQ_AMULET)
+                    continue;
 
-                // Or maybe the other ring?
-                equip = you.equip[EQ_RIGHT_RING];
+                    equip = you.equip[slots];
+                    if (equip != -1 && item.link == equip)
+                        return (check_old_item_warning(item, oper));
+                }
             }
-
-            if (equip != -1 && item.link == equip)
-                return (check_old_item_warning(item, oper));
         }
         else if (oper == OPER_REMOVE || oper == OPER_TAKEOFF)
         {
@@ -1786,7 +1839,7 @@ int prompt_invent_item(const char *prompt,
 
             need_prompt = need_redraw;
 
-            if (items.size())
+            if (!items.empty())
             {
                 if (count)
                     *count = items[0].quantity;
@@ -1868,7 +1921,7 @@ bool prompt_failed(int retval, std::string msg)
             canned_msg(MSG_OK);
     }
     else
-        mprf(MSGCH_PROMPT, msg.c_str());
+        mpr(msg.c_str(), MSGCH_PROMPT);
 
     crawl_state.cancel_cmd_repeat();
 
@@ -1885,8 +1938,18 @@ bool item_is_wieldable(const item_def &item)
                && item.sub_type == MISC_LANTERN_OF_SHADOWS);
 }
 
-bool item_is_evokable(const item_def &item, bool known, bool all_wands,
-                      bool msg)
+/*
+ * Return wether an item can be evoked.
+ * @param item      The item to check
+ * @param reach     Do weapons of reaching count?
+ * @param known     When set it returns true for items of unknown type which
+ *                  might be evokable.
+ * @param all_wands When set, it returns true for empty wands.
+ * @param msg       Whether we need to print a message.
+ * @param equip     When disabled, ignore wield and meld requirements.
+ */
+bool item_is_evokable(const item_def &item, bool reach, bool known,
+                      bool all_wands, bool msg, bool equip)
 {
     const std::string error = item_is_melded(item)
             ? "Your " + item.name(DESC_QUALNAME) + " is melded into your body."
@@ -1898,7 +1961,7 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
 
         if (entry->evoke_func && item_type_known(item))
         {
-            if (item_is_equipped(item) && !item_is_melded(item))
+            if (item_is_equipped(item) && !item_is_melded(item) || !equip)
                 return (true);
 
             if (msg)
@@ -1909,8 +1972,8 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
         // Unrandart might still be evokable (e.g., reaching)
     }
 
-    const bool wielded = you.equip[EQ_WEAPON] == item.link
-                         && !item_is_melded(item);
+    const bool wielded = !equip || you.equip[EQ_WEAPON] == item.link
+                                   && !item_is_melded(item);
 
     switch (item.base_type)
     {
@@ -1927,11 +1990,10 @@ bool item_is_evokable(const item_def &item, bool known, bool all_wands,
         return (true);
 
     case OBJ_WEAPONS:
-        if (!wielded && !msg)
+        if ((!wielded || !reach) && !msg)
             return (false);
 
-        if (get_weapon_brand(item) == SPWPN_REACHING
-            && item_type_known(item))
+        if (reach && weapon_reach(item) && item_type_known(item))
         {
             if (!wielded)
             {

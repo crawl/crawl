@@ -18,6 +18,7 @@ struct talent
     int hotkey;
     int fail;
     bool is_invocation;
+    bool is_zotdef;
 };
 
 const std::string make_cost_description(ability_type ability);
@@ -31,6 +32,8 @@ bool string_matches_ability_name(const std::string& key);
 std::string print_abilities(void);
 
 void set_god_ability_slots(void);
-
+std::vector<ability_type> get_god_abilities();
+void gain_god_ability(int i);
+void lose_god_ability(int i);
 
 #endif

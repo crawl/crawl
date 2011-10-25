@@ -24,7 +24,7 @@ enum armour_type
 
     ARM_BOOTS,
 
-    ARM_BUCKLER,
+    ARM_BUCKLER, // order of shields matters
     ARM_SHIELD,
     ARM_LARGE_SHIELD,
     ARM_MAX_RACIAL = ARM_LARGE_SHIELD,
@@ -37,8 +37,8 @@ enum armour_type
     ARM_TROLL_HIDE,
     ARM_TROLL_LEATHER_ARMOUR,
 
-    ARM_DRAGON_HIDE,
-    ARM_DRAGON_ARMOUR,
+    ARM_FIRE_DRAGON_HIDE,
+    ARM_FIRE_DRAGON_ARMOUR,
     ARM_ICE_DRAGON_HIDE,
     ARM_ICE_DRAGON_ARMOUR,
     ARM_STEAM_DRAGON_HIDE,
@@ -116,7 +116,6 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
     SPWPN_ACID,    // acid bite only for the moment
     SPWPN_DEBUG_RANDART,
     NUM_SPECIAL_WEAPONS,
-    SPWPN_DUMMY_CRUSHING,        // ONLY TEMPORARY USAGE -- converts to VORPAL
 };
 
 enum corpse_type
@@ -216,7 +215,9 @@ enum launch_retval
 enum misc_item_type
 {
     MISC_BOTTLED_EFREET,               //    0
+#if TAG_MAJOR_VERSION == 32
     MISC_CRYSTAL_BALL_OF_SEEING,
+#endif
     MISC_AIR_ELEMENTAL_FAN,
     MISC_LAMP_OF_FIRE,
     MISC_STONE_OF_EARTH_ELEMENTALS,
@@ -247,7 +248,9 @@ enum misc_item_type
 
     MISC_QUAD_DAMAGE, // Sprint only
 
-    NUM_MISCELLANY // mv: used for random generation
+    NUM_MISCELLANY, // mv: used for random generation
+    MISC_FIRST_DECK = MISC_DECK_OF_ESCAPE,
+    MISC_LAST_DECK  = MISC_DECK_OF_DEFENCE,
 };
 
 enum missile_type
@@ -286,6 +289,8 @@ enum rune_type
     RUNE_ABYSSAL,
 
     RUNE_DEMONIC,
+
+    // order must match monsters
     RUNE_MNOLEG,
     RUNE_LOM_LOBON,
     RUNE_CEREBOV,
@@ -467,9 +472,11 @@ enum weapon_type
     WPN_GIANT_CLUB,
     WPN_GIANT_SPIKED_CLUB,
 
+#if TAG_MAJOR_VERSION == 32
     WPN_KNIFE,
-
     WPN_KATANA,
+#endif
+
     WPN_DEMON_BLADE,
     WPN_DOUBLE_SWORD,
     WPN_TRIPLE_SWORD,
@@ -477,23 +484,30 @@ enum weapon_type
     WPN_DEMON_TRIDENT,
     WPN_SCYTHE,
 
+#if TAG_MAJOR_VERSION != 32
+    WPN_STAFF,
+#endif
     WPN_QUARTERSTAFF,
     WPN_LAJATANG,
 
     WPN_SLING,
 
-    WPN_MAX_NONBLESSED = WPN_SLING,
-
     WPN_BLESSED_FALCHION,
     WPN_BLESSED_LONG_SWORD,
     WPN_BLESSED_SCIMITAR,
     WPN_BLESSED_GREAT_SWORD,
+#if TAG_MAJOR_VERSION == 32
     WPN_BLESSED_KATANA,
+#endif
     WPN_EUDEMON_BLADE,
     WPN_BLESSED_DOUBLE_SWORD,
     WPN_BLESSED_TRIPLE_SWORD,
     WPN_SACRED_SCOURGE,
     WPN_TRISHULA,
+
+#if TAG_MAJOR_VERSION == 32
+    WPN_STAFF,
+#endif
 
     NUM_WEAPONS,
 
@@ -502,6 +516,12 @@ enum weapon_type
     WPN_UNKNOWN = 1000,                // 1000
     WPN_RANDOM,
     WPN_VIABLE,
+
+// thrown weapons (for hunter weapon selection)
+    WPN_THROWN,
+    WPN_ROCKS,
+    WPN_JAVELINS,
+    WPN_DARTS,
 };
 
 enum weapon_property_type
@@ -557,7 +577,7 @@ enum wand_type
     WAND_SLOWING,
     WAND_HASTING,
     WAND_MAGIC_DARTS,
-    WAND_HEALING,
+    WAND_HEAL_WOUNDS,
     WAND_PARALYSIS,
     WAND_FIRE,
     WAND_COLD,

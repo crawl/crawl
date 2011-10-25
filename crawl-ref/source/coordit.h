@@ -13,8 +13,8 @@ public:
     coord_def operator *() const;
     const coord_def* operator->() const;
 
-    rectangle_iterator& operator ++ ();
-    rectangle_iterator operator ++ (int);
+    void operator ++ ();
+    void operator ++ (int);
 private:
     coord_def current, topleft, bottomright;
 };
@@ -66,8 +66,8 @@ public:
     coord_def operator *() const;
     const coord_def* operator->() const;
 
-    const radius_iterator& operator ++ ();
-    radius_iterator operator ++ (int);
+    void operator ++ ();
+    void operator ++ (int);
 
 private:
     void advance(bool may_stay);

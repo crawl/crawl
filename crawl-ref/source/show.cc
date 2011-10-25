@@ -27,12 +27,12 @@
 #include "random.h"
 #include "showsymb.h"
 #include "state.h"
-#include "stuff.h"
 #include "areas.h"
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tileview.h"
 #endif
+#include "traps.h"
 #include "travel.h"
 #include "viewgeom.h"
 #include "viewmap.h"
@@ -119,28 +119,26 @@ static void _update_feat_at(const coord_def &gp)
 
     dungeon_feature_type feat = grid_appearance(gp);
     unsigned colour = env.grid_colours(gp);
+    trap_type trap = TRAP_UNASSIGNED;
+    if (feat_is_trap(feat))
+        trap = get_trap_type(gp);
 
-    // Check for mimics
-    if (monster_at(gp))
-    {
-        const monster* mmimic = monster_at(gp);
-        if (mons_is_feat_mimic(mmimic->type) && mons_is_unknown_mimic(mmimic))
-        {
-            feat = get_mimic_feat(mmimic);
-            colour = mmimic->colour;
-        }
-    }
-
-    env.map_knowledge(gp).set_feature(feat, colour);
+    env.map_knowledge(gp).set_feature(feat, colour, trap);
 
     if (haloed(gp))
         env.map_knowledge(gp).flags |= MAP_HALOED;
+
+    if (umbraed(gp))
+        env.map_knowledge(gp).flags |= MAP_UMBRAED;
 
     if (silenced(gp))
         env.map_knowledge(gp).flags |= MAP_SILENCED;
 
     if (liquefied(gp, false))
         env.map_knowledge(gp).flags |= MAP_LIQUEFIED;
+
+    if (orb_haloed(gp))
+        env.map_knowledge(gp).flags |= MAP_ORB_HALOED;
 
     if (is_sanctuary(gp))
     {
@@ -222,11 +220,7 @@ static void _update_item_at(const coord_def &gp)
 
     if (you.see_cell(gp))
     {
-        // Check for mimics.
-        const monster* m = monster_at(gp);
-        if (m && mons_is_unknown_mimic(m) && mons_is_item_mimic(m->type))
-            eitem = get_mimic_item(m);
-        else if (you.visible_igrd(gp) != NON_ITEM)
+        if (you.visible_igrd(gp) != NON_ITEM)
             eitem = mitm[you.visible_igrd(gp)];
         else
             return;
@@ -329,6 +323,23 @@ static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
 }
 
 /**
+ * Mark the estimated position of an invisible monster.
+ *
+ * Marks a spot on the map as possibly containing an unseen monster
+ * (showing up as a disturbance in the air), and also places the
+ * corresponding tile.
+ *
+ * @param where    The disturbance's map position.
+**/
+static void _mark_invisible_monster(const coord_def &where)
+{
+    env.map_knowledge(where).set_invisible_monster();
+#ifdef USE_TILE
+    tile_place_invisible_monster(where);
+#endif
+}
+
+/**
  * Update map knowledge for monsters
  *
  * This function updates the map_knowledge grid with a monster_info if relevant.
@@ -337,19 +348,11 @@ static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
  *
  * @param mons    The monster at the relevant location.
 **/
-static void _update_monster(const monster* mons)
+static void _update_monster(monster* mons)
 {
     _check_monster_pos(mons);
 
     const coord_def gp = mons->pos();
-
-    if (mons_is_unknown_mimic(mons))
-    {
-#ifdef USE_TILE
-        tile_place_monster(mons->pos(), mons);
-#endif
-        return;
-    }
 
     if (!mons->visible_to(&you))
     {
@@ -375,17 +378,22 @@ static void _update_monster(const monster* mons)
         }
 
         // maybe show unstealthy invis monsters
-        if (_hashed_rand(mons, 0, 7) >= mons->stealth() + 4)
+        if (mons->friendly()
+            || _hashed_rand(mons, 0, 7) >= mons->stealth() + 4)
         {
             // We cannot use regular randomness here, otherwise redrawing the
             // screen would give out the real position.  We need to save the
             // seed too -- but it needs to be regenerated every turn.
 
             // Maybe mark their square.
-            if (mons->stealth() <= -2 || mons->stealth() <= 2
-                && !_hashed_rand(mons, 1, 4))
+            if (mons->friendly()
+                || mons->stealth() <= -2
+                || mons->stealth() <= 2 && !_hashed_rand(mons, 1, 4))
             {
                 env.map_knowledge(gp).set_invisible_monster();
+                // Just display the actual position for friendlies.
+                if (mons->friendly())
+                    return;
             }
 
             // Exceptionally stealthy monsters have a higher chance of
@@ -400,16 +408,17 @@ static void _update_monster(const monster* mons)
             // Otherwise just indicate that there's a monster nearby
             coord_def new_pos = gp + Compass[_hashed_rand(mons, 3, 8)];
             if (_valid_invis_spot(new_pos, mons) && _hashed_rand(mons, 4, 2))
-                env.map_knowledge(new_pos).set_invisible_monster();
+                _mark_invisible_monster(new_pos);
 
             new_pos = gp + Compass[_hashed_rand(mons, 5, 8)];
             if (_valid_invis_spot(new_pos, mons) && !_hashed_rand(mons, 6, 3))
-                env.map_knowledge(new_pos).set_invisible_monster();
+                _mark_invisible_monster(new_pos);
         }
 
         return;
     }
 
+    mons->ensure_has_client_id();
     monster_info mi(mons);
     env.map_knowledge(gp).set_monster(mi);
 
@@ -420,7 +429,6 @@ static void _update_monster(const monster* mons)
 
 void show_update_at(const coord_def &gp, bool terrain_only)
 {
-
     if (you.see_cell(gp))
         env.map_knowledge(gp).clear_data();
     else if (!env.map_knowledge(gp).known())
@@ -439,7 +447,7 @@ void show_update_at(const coord_def &gp, bool terrain_only)
     if (!in_bounds(gp))
         return;
 
-    const monster* mons = monster_at(gp);
+    monster* mons = monster_at(gp);
     if (mons && mons->alive())
         _update_monster(mons);
 

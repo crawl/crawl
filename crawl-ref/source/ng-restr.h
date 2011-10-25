@@ -13,11 +13,7 @@ enum char_choice_restriction
 char_choice_restriction job_allowed(species_type speci, job_type job);
 bool is_good_combination(species_type spc, job_type job,
                          bool good = false);
-char_choice_restriction book_restriction(startup_book_type booktype,
-                                         const newgame_def &ng);
 char_choice_restriction weapon_restriction(weapon_type wpn,
                                            const newgame_def &ng);
-char_choice_restriction religion_restriction(god_type god,
-                                             const newgame_def &ng);
 
 #endif

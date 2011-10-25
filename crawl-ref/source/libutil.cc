@@ -9,9 +9,9 @@
 #include "itemname.h" // is_vowel()
 #include "libutil.h"
 #include "externs.h"
+#include "files.h"
 #include "macro.h"
 #include "message.h"
-#include "stuff.h"
 #include "unicode.h"
 #include "viewgeom.h"
 
@@ -29,6 +29,15 @@
     #ifdef WINMM_PLAY_SOUNDS
         #include <mmsystem.h>
     #endif
+#endif
+
+#ifdef UNIX
+    #include <signal.h>
+#endif
+
+#ifdef DGL_ENABLE_CORE_DUMP
+    #include <sys/time.h>
+    #include <sys/resource.h>
 #endif
 
 description_level_type description_type_by_name(const char *desc)
@@ -194,24 +203,53 @@ std::string &uppercase(std::string &s)
     return (s);
 }
 
-std::string upcase_first(std::string s)
-{
-    if (!s.empty())
-        s[0] = toupper(s[0]);
-    return (s);
-}
-
 std::string &lowercase(std::string &s)
 {
-    for (unsigned i = 0, sz = s.size(); i < sz; ++i)
-        s[i] = tolower(s[i]);
-
+    s = lowercase_string(s);
     return (s);
 }
 
 std::string lowercase_string(std::string s)
 {
-    lowercase(s);
+    std::string res;
+    ucs_t c;
+    char buf[4];
+    for (const char *tp = s.c_str(); int len = utf8towc(&c, tp); tp += len)
+        res.append(buf, wctoutf8(buf, towlower(c)));
+    return (res);
+}
+
+// Warning: this (and uppercase_first()) relies on no libc (glibc, BSD libc,
+// MSVC crt) supporting letters that expand or contract, like German ß (-> SS)
+// upon capitalization / lowercasing.  This is mostly a fault of the API --
+// there's no way to return two characters in one code point.
+// Also, all characters must have the same length in bytes before and after
+// lowercasing, all platforms currently have this property.
+//
+// A non-hacky version would be slower for no gain other than sane code; at
+// least unless you use some more powerful API.
+std::string lowercase_first(std::string s)
+{
+    ucs_t c;
+    if (!s.empty())
+    {
+        utf8towc(&c, &s[0]);
+        wctoutf8(&s[0], towlower(c));
+    }
+    return (s);
+}
+
+std::string uppercase_first(std::string s)
+{
+    // Incorrect due to those pesky Dutch having "ij" as a single letter (wtf?).
+    // Too bad, there's no standard function to handle that character, and I
+    // don't care enough.
+    ucs_t c;
+    if (!s.empty())
+    {
+        utf8towc(&c, &s[0]);
+        wctoutf8(&s[0], towupper(c));
+    }
     return (s);
 }
 
@@ -226,32 +264,6 @@ int ends_with(const std::string &s, const char *suffixes[])
 
     return (0);
 }
-
-#ifdef UNIX
-extern "C" int stricmp(const char *str1, const char *str2)
-{
-    int ret = 0;
-
-    // No need to check for *str1.  If str1 ends, then tolower(*str1) will be
-    // 0, ret will be -1, and the loop will break.
-    while (!ret && *str2)
-    {
-        unsigned char c1 = tolower(*str1);
-        unsigned char c2 = tolower(*str2);
-
-        ret = c1 - c2;
-        str1++;
-        str2++;
-    }
-
-    if (ret < 0)
-        ret = -1;
-    else if (ret > 0)
-        ret = 1;
-
-    return (ret);
-}
-#endif
 
 bool strip_suffix(std::string &s, const std::string &suffix)
 {
@@ -362,7 +374,22 @@ bool strip_bool_tag(std::string &s, const std::string &name, bool defval)
 int strip_number_tag(std::string &s, const std::string &tagprefix)
 {
     const std::string num = strip_tag_prefix(s, tagprefix);
-    return (num.empty()? TAG_UNFOUND : atoi(num.c_str()));
+    int x;
+    if (num.empty() || !parse_int(num.c_str(), x))
+        return TAG_UNFOUND;
+    return x;
+}
+
+bool parse_int(const char *s, int &i)
+{
+    if (!s || !*s)
+        return false;
+    char *err;
+    long x = strtol(s, &err, 10);
+    if (*err || x < INT_MIN || x > INT_MAX)
+        return false;
+    i = x;
+    return true;
 }
 
 // Naively prefix A/an to a noun.
@@ -438,6 +465,10 @@ std::string pluralise(const std::string &name,
     else if (ends_with(name, "cyclops"))
     {
         return name.substr(0, name.length() - 1) + "es";
+    }
+    else if (name == "catoblepas")
+    {
+        return "catoblepae";
     }
     else if (ends_with(name, "s"))
     {
@@ -612,6 +643,7 @@ std::string replace_all(std::string s,
                         const std::string &find,
                         const std::string &repl)
 {
+    ASSERT(!find.empty());
     std::string::size_type start = 0;
     std::string::size_type found;
 
@@ -630,6 +662,7 @@ std::string replace_all_of(std::string s,
                            const std::string &tofind,
                            const std::string &replacement)
 {
+    ASSERT(!tofind.empty());
     std::string::size_type start = 0;
     std::string::size_type found;
 
@@ -644,6 +677,7 @@ std::string replace_all_of(std::string s,
 
 int count_occurrences(const std::string &text, const std::string &s)
 {
+    ASSERT(!s.empty());
     int nfound = 0;
     std::string::size_type pos = 0;
 
@@ -796,6 +830,8 @@ std::string wordwrap_line(std::string &s, int width, bool tags)
  * "foo123bar" > "foo99bar"
  * "0.10" > "0.9" (version sort)
  *
+ * @param a String one.
+ * @param b String two.
  * @param limit If passed, comparison ends after X numeric parts.
  * @return As in strcmp().
 **/
@@ -837,36 +873,26 @@ not_numeric:
     return 0;
 }
 
-// The old school way of doing short delays via low level I/O sync.
-// Good for systems like old versions of Solaris that don't have usleep.
-#ifdef NEED_USLEEP
-
-# ifdef TARGET_OS_WINDOWS
-void usleep(unsigned long time)
+// make STL sort happy
+bool numcmpstr(const std::string a, const std::string b)
 {
-    ASSERT(time > 0);
-    ASSERT(!(time % 1000));
-    Sleep(time/1000);
+    return numcmp(a.c_str(), b.c_str()) == -1;
 }
-# else
 
-#include <sys/time.h>
-#include <sys/types.h>
-#include <sys/unistd.h>
-
-void usleep(unsigned long time)
+bool version_is_stable(const char *v)
 {
-    struct timeval timer;
-
-    timer.tv_sec  = (time / 1000000L);
-    timer.tv_usec = (time % 1000000L);
-
-    select(0, NULL, NULL, NULL, &timer);
+    // vulnerable to changes in the versioning scheme
+    for (;; v++)
+    {
+        if (*v == '.' || isadigit(*v))
+            continue;
+        if (*v == '-')
+            return isadigit(v[1]);
+        return true;
+    }
 }
-# endif
-#endif
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 coord_def cgettopleft(GotoRegion region)
 {
     switch (region)
@@ -903,13 +929,17 @@ void cgotoxy(int x, int y, GotoRegion region)
     ASSERT_SAVE(y >= 1 && y <= sz.y);
 
     gotoxy_sys(tl.x + x - 1, tl.y + y - 1);
+
+#ifdef USE_TILE_WEB
+    tiles.cgotoxy(x, y, region);
+#endif
 }
 
 GotoRegion get_cursor_region()
 {
     return (_current_region);
 }
-#endif // USE_TILE
+#endif // USE_TILE_LOCAL
 
 coord_def cgetsize(GotoRegion region)
 {
@@ -1021,4 +1051,94 @@ int get_taskbar_size()
     }
     return 0;
 }
+
+static BOOL WINAPI console_handler(DWORD sig)
+{
+    switch(sig)
+    {
+    case CTRL_C_EVENT:
+    case CTRL_BREAK_EVENT:
+        return true; // block the signal
+    default:
+        return false;
+    case CTRL_CLOSE_EVENT:
+    case CTRL_LOGOFF_EVENT:
+    case CTRL_SHUTDOWN_EVENT:
+        if (crawl_state.seen_hups++)
+            return true;
+
+        sighup_save_and_exit();
+        return true;
+    }
+}
+
+void init_signals()
+{
+    // If there's no console,
+    SetConsoleCtrlHandler(console_handler, true);
+}
+
+#else
+
+/* [ds] This SIGHUP handling is primitive and far from safe, but it
+ * should be better than nothing. Feel free to get rigorous on this.
+ */
+static void handle_hangup(int)
+{
+    if (crawl_state.seen_hups++)
+        return;
+
+#ifdef USE_TILE_LOCAL
+    // XXX: Will a tiles build ever need to handle the HUP signal?
+    sighup_save_and_exit();
+#elif defined(USE_CURSES)
+    // When using Curses, closing stdin will cause any Curses call blocking
+    // on key-presses to immediately return, including any call that was
+    // still blocking in the main thread when the HUP signal was caught.
+    // This should guarantee that the main thread will un-stall and
+    // will eventually return to _input() in main.cc, which will then
+    // call sighup_save_and_exit().
+    //
+    // The point to all this is that if a user is playing a game on a
+    // remote server and disconnects at a --more-- prompt, that when
+    // the player reconnects the code behind the more() call will execute
+    // before the disconnected game is saved, thus (for example) preventing
+    // the hack of avoiding excomunication consesquences because of the
+    // more() after "You have lost your religion!"
+    fclose(stdin);
+#else
+     #error "Must use either Curses or tiles on Unix"
+#endif
+}
+
+void init_signals()
+{
+#ifdef DGAMELAUNCH
+    // Force timezone to UTC.
+    setenv("TZ", "", 1);
+    tzset();
+#endif
+
+#ifdef USE_UNIX_SIGNALS
+#ifdef SIGQUIT
+    signal(SIGQUIT, SIG_IGN);
+#endif
+
+#ifdef SIGINT
+    signal(SIGINT, SIG_IGN);
+#endif
+
+    signal(SIGHUP, handle_hangup);
+#endif
+
+#ifdef DGL_ENABLE_CORE_DUMP
+    rlimit lim;
+    if (!getrlimit(RLIMIT_CORE, &lim))
+    {
+        lim.rlim_cur = RLIM_INFINITY;
+        setrlimit(RLIMIT_CORE, &lim);
+    }
+#endif
+}
+
 #endif

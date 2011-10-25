@@ -81,11 +81,8 @@ static void _mon_check_foe_invalid(monster* mon)
 static bool _mon_tries_regain_los(monster* mon)
 {
     // Only intelligent monsters with ranged attack will try to regain LOS.
-    if (mons_intel(mon) < I_NORMAL
-        || !mons_has_ranged_spell(mon, true) && !mons_has_ranged_attack(mon))
-    {
+    if (mons_intel(mon) < I_NORMAL || !mons_has_ranged_attack(mon))
         return false;
-    }
 
     // Any special case should go here.
     if (mons_class_flag(mon->type, M_FIGHTER)
@@ -108,8 +105,7 @@ static void _set_firing_pos(monster* mon, coord_def target)
 {
     const int ideal_range = LOS_RADIUS / 2;
     const int current_distance = mon->pos().distance_from(target);
-    const los_type los = mons_has_los_ability(mon->type) ? LOS_DEFAULT
-                                                         : LOS_NO_TRANS;
+    const los_type los = mons_has_los_attack(mon) ? LOS_DEFAULT : LOS_NO_TRANS;
 
     // We don't consider getting farther away unless already very close.
     const int max_range = std::max(ideal_range, current_distance);
@@ -191,11 +187,9 @@ void handle_behaviour(monster* mon)
         proxPlayer = false;
 #endif
     bool proxFoe;
-    bool isHurt     = (mon->hit_points <= mon->max_hit_points / 4 - 1);
     bool isHealthy  = (mon->hit_points > mon->max_hit_points / 2);
     bool isSmart    = (mons_intel(mon) > I_ANIMAL);
     bool isScared   = mon->has_ench(ENCH_FEAR);
-    bool isMobile   = !mons_is_stationary(mon);
     bool isPacified = mon->pacified();
     bool patrolling = mon->is_patrolling();
     static std::vector<level_exit> e;
@@ -204,7 +198,7 @@ void handle_behaviour(monster* mon)
     // Zotdef rotting
     if (crawl_state.game_is_zotdef())
     {
-        if (!isFriendly && !isNeutral && orb_position() == mon->pos()
+        if (!isFriendly && !isNeutral && env.orb_pos == mon->pos()
             && mon->speed)
         {
             const int loss = div_rand_round(10, mon->speed);
@@ -213,7 +207,7 @@ void handle_behaviour(monster* mon)
                 mpr("Your flesh rots away as the Orb of Zot is desecrated.",
                     MSGCH_DANGER);
                 rot_hp(loss);
-                ouch(1, NON_MONSTER, KILLED_BY_ROTTING);
+                ouch(1, mon->mindex(), KILLED_BY_ROTTING);
             }
         }
     }
@@ -248,10 +242,6 @@ void handle_behaviour(monster* mon)
             mon->behaviour = BEH_FLEE;
         }
     }
-
-    const dungeon_feature_type can_move =
-        (mons_habitat(mon) == HT_AMPHIBIOUS) ? DNGN_DEEP_WATER
-                                             : DNGN_SHALLOW_WATER;
 
     // Validate current target exists.
     _mon_check_foe_invalid(mon);
@@ -405,7 +395,8 @@ void handle_behaviour(monster* mon)
         if (afoe)
             foepos = afoe->pos();
 
-        if (crawl_state.game_is_zotdef() && mon->foe == MHITYOU)
+        if (crawl_state.game_is_zotdef() && mon->foe == MHITYOU
+            && !mon->wont_attack())
         {
             foepos = PLAYER_POS;
             proxFoe = true;
@@ -510,7 +501,7 @@ void handle_behaviour(monster* mon)
                                 mon->target = PLAYER_POS;  // infallible tracking in zotdef
                             else
                             {
-                                if (one_chance_in(you.skill(SK_STEALTH) / 3)
+                                if (x_chance_in_y(300, you.skill(SK_STEALTH, 100))
                                     || you.penance[GOD_ASHENZARI] && coinflip())
                                 {
                                     mon->target = you.pos();
@@ -579,7 +570,7 @@ void handle_behaviour(monster* mon)
                 // If monster is currently getting into firing position and
                 // see the player and can attack him, clear firing_pos.
                 if (!mon->firing_pos.zero()
-                    && (mons_has_los_ability(mon->type)
+                    && (mons_has_los_attack(mon)
                         || mon->see_cell_no_trans(mon->target)))
                 {
                     mon->firing_pos.reset();
@@ -592,7 +583,7 @@ void handle_behaviour(monster* mon)
                     break;
                 }
 
-                if (mon->firing_pos.zero() && try_pathfind(mon, can_move))
+                if (mon->firing_pos.zero() && try_pathfind(mon))
                     break;
 
                 // Whew. If we arrived here, path finding didn't yield anything
@@ -618,16 +609,6 @@ void handle_behaviour(monster* mon)
                 mon->target = menv[mon->foe].pos();
             }
 
-            // Smart monsters, zombified monsters other than spectral
-            // things, plants, and nonliving monsters cannot flee.
-            if (isHurt && !isSmart && isMobile
-                && (!mons_is_zombified(mon) || mon->type == MONS_SPECTRAL_THING)
-                && mon->holiness() != MH_PLANT
-                && mon->holiness() != MH_NONLIVING)
-            {
-                new_beh = BEH_FLEE;
-
-            }
             break;
 
         case BEH_WANDER:
@@ -684,7 +665,7 @@ void handle_behaviour(monster* mon)
                 break;
             }
 
-            check_wander_target(mon, isPacified, can_move);
+            check_wander_target(mon, isPacified);
 
             // During their wanderings, monsters will eventually relax
             // their guard (stupid ones will do so faster, smart
@@ -709,6 +690,22 @@ void handle_behaviour(monster* mon)
                         e[e_index].unreachable = true;
                 }
             }
+            break;
+
+        case BEH_RETREAT:
+            // If the target can be reached, there is a chance the monster will
+            // try to attack. The chance is low to prevent the player from
+            // dancing in and out of the water.
+            try_pathfind(mon);
+            if (one_chance_in(10) && !target_is_unreachable(mon)
+                || mons_can_attack(mon))
+            {
+                new_beh = BEH_SEEK;
+            }
+            else if (!proxPlayer && one_chance_in(5))
+                new_beh = BEH_WANDER;
+            else if (proxPlayer)
+                mon->target = foepos;
             break;
 
         case BEH_FLEE:
@@ -873,7 +870,10 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
 
     const beh_type old_behaviour = mon->behaviour;
 
+    int fleeThreshold = std::min(mon->max_hit_points / 4, 20);
+
     bool isSmart          = (mons_intel(mon) > I_ANIMAL);
+    bool isMobile         = !mons_is_stationary(mon);
     bool wontAttack       = mon->wont_attack();
     bool sourceWontAttack = false;
     bool setTarget        = false;
@@ -953,7 +953,15 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
             if (mon->asleep() && mons_near(mon))
                 remove_auto_exclude(mon, true);
 
-            if (!mons_is_cornered(mon))
+            // If the monster can't reach its target and can't attack it
+            // either, retreat.
+            try_pathfind(mon);
+            if (mons_intel(mon) > I_INSECT && !mons_can_attack(mon)
+                && target_is_unreachable(mon))
+            {
+                mon->behaviour = BEH_RETREAT;
+            }
+            else if (!mons_is_cornered(mon) && (mon->hit_points > fleeThreshold))
                 mon->behaviour = BEH_SEEK;
 
             if (src == MHITYOU)
@@ -971,6 +979,7 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
         // invisible foe.
         if (event == ME_WHACK)
             setTarget = true;
+
         break;
 
     case ME_ALERT:
@@ -1004,6 +1013,7 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
         // against them, unless they have a current foe.
         // It won't turn friends hostile either.
         if ((!mons_is_fleeing(mon) || mons_class_flag(mon->type, M_FLEEING))
+            && !mons_is_retreating(mon)
             && !mons_is_panicking(mon)
             && !mons_is_cornered(mon))
         {
@@ -1026,11 +1036,7 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
             if (src == MHITYOU && src_pos == you.pos()
                 && !you.see_cell(mon->pos()))
             {
-                const dungeon_feature_type can_move =
-                    (mons_habitat(mon) == HT_AMPHIBIOUS) ? DNGN_DEEP_WATER
-                                                         : DNGN_SHALLOW_WATER;
-
-                try_pathfind(mon, can_move);
+                try_pathfind(mon);
             }
         }
         break;
@@ -1084,7 +1090,7 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
 
     case ME_CORNERED:
         // Some monsters can't flee.
-        if (mon->behaviour != BEH_FLEE && !mon->has_ench(ENCH_FEAR))
+        if (!mons_is_retreating(mon) && !mon->has_ench(ENCH_FEAR))
             break;
 
         // Pacified monsters shouldn't change their behaviour.
@@ -1108,6 +1114,29 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
         }
 
         mon->behaviour = BEH_CORNERED;
+        break;
+
+    case ME_HURT:
+        // Smart monsters, undead, plants, and nonliving monsters cannot flee.
+        // Cannot flee if cornered.
+        // Monster can flee if HP is less than 1/4 maxhp or less than 20 hp
+        // (whichever is lower). Chance starts quite low, and is 100% at 1 hp.
+        // These numbers could still use some adjusting.
+        //
+        // Assuming fleeThreshold is 20:
+        //   at 20 hp: 5% chance of fleeing
+        //   at 10 hp: 55% chance of fleeing
+        //   (chance increases by 5% for every hp lost.)
+        if (!isSmart && isMobile
+            && mon->holiness() != MH_UNDEAD
+            && mon->holiness() != MH_PLANT
+            && mon->holiness() != MH_NONLIVING
+            && !mons_class_flag(mon->type, M_NO_FLEE)
+            && !mons_is_cornered(mon)
+            && x_chance_in_y(fleeThreshold - mon->hit_points + 1, fleeThreshold))
+        {
+            mon->behaviour = BEH_FLEE;
+        }
         break;
 
     case ME_EVAL:
@@ -1172,16 +1201,6 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
 
 void make_mons_stop_fleeing(monster* mon)
 {
-    if (mons_is_fleeing(mon))
+    if (mons_is_retreating(mon))
         behaviour_event(mon, ME_CORNERED);
-}
-
-// Returns the position of the Orb, or you.pos() if
-// the Orb's not found.
-coord_def zotdef_target()
-{
-    coord_def tgt = orb_position();
-    if (tgt.origin())
-        tgt = you.pos();
-    return tgt;
 }

@@ -13,25 +13,26 @@ $mergebase or $mergebase = "";
 
 mkdir dirname($outfile);
 
-$_ = `git describe --tags --long $mergebase 2> /dev/null || git describe --tags $mergebase 2> /dev/null`
+$_ = `git describe --tags $mergebase 2> /dev/null`
     || (open(IN, "<", "$scriptpath/release_ver") ? <IN>
         : die "No Git, and $scriptpath/release_ver doesn't exist.\n")
     or die "couldn't get the version information\n";
 
 chomp;
 
-/v?([0-9]+\.[0-9]+(?:\.[0-9]+)?(?:-([a-zA-Z]+[0-9]+))?)(?:-[0-9]+-g[a-fA-F0-9]+)?/
+/v?(([0-9]+\.[0-9]+)(?:\.[0-9]+)?(?:-([a-zA-Z]+[0-9]+))?)(?:-[0-9]+-g[a-fA-F0-9]+)?/
     or die "Version string '$_' is malformed.\n";
 
-my ($tag, $pretyp) = ($1, $2);
+my ($major, $tag, $pretyp) = ($2, $1, $3);
 
-my $stable = defined($pretyp) ? "false" : "true";
+my $rel = defined($pretyp) ? $pretyp le "b" ? "ALPHA" : "BETA" : "FINAL";
 
 my $prefix = "CRAWL";
 
 open OUT, ">", "$outfile" or die $!;
 print OUT <<__eof__;
-#define ${prefix}_VERSION_FINAL $stable
+#define ${prefix}_VERSION_MAJOR "$major"
+#define ${prefix}_VERSION_RELEASE VER_$rel
 #define ${prefix}_VERSION_SHORT "$tag"
 #define ${prefix}_VERSION_LONG "$_"
 __eof__

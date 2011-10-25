@@ -10,13 +10,16 @@
 #include "mon-transit.h"
 
 #include "artefact.h"
+#include "coord.h"
+#include "coordit.h"
 #include "dungeon.h"
 #include "env.h"
 #include "items.h"
 #include "mon-place.h"
-#include "coord.h"
 #include "mon-util.h"
 #include "random.h"
+#include "religion.h"
+#include "travel.h"
 
 #define MAX_LOST 100
 
@@ -198,7 +201,7 @@ void place_transiting_items()
     i_transit_list keep;
     i_transit_list::iterator item;
 
-    for (item = ilist.begin(); item != ilist.end(); item++)
+    for (item = ilist.begin(); item != ilist.end(); ++item)
     {
         coord_def pos = item->pos;
 
@@ -293,7 +296,7 @@ void follower::restore_mons_items(monster& m)
             m.inv[i] = NON_ITEM;
         else
         {
-            const int islot = get_item_slot(0);
+            const int islot = get_mitm_slot(0);
             m.inv[i] = islot;
             if (islot == NON_ITEM)
                 continue;
@@ -304,4 +307,142 @@ void follower::restore_mons_items(monster& m)
             it.link = NON_ITEM + 1 + m.mindex();
         }
     }
+}
+
+static bool _is_religious_follower(const monster* mon)
+{
+    return ((you.religion == GOD_YREDELEMNUL || you.religion == GOD_BEOGH)
+            && is_follower(mon));
+}
+
+static bool _tag_follower_at(const coord_def &pos, bool &real_follower)
+{
+    if (!in_bounds(pos) || pos == you.pos())
+        return (false);
+
+    monster* fmenv = monster_at(pos);
+    if (fmenv == NULL)
+        return (false);
+
+    if (!fmenv->alive()
+        || fmenv->speed_increment < 50
+        || fmenv->incapacitated()
+        || mons_is_stationary(fmenv))
+    {
+        return (false);
+    }
+
+    if (!monster_habitable_grid(fmenv, DNGN_FLOOR))
+        return (false);
+
+    // Only non-wandering friendly monsters or those actively
+    // seeking the player will follow up/down stairs.
+    if (!fmenv->friendly()
+          && (!mons_is_seeking(fmenv) || fmenv->foe != MHITYOU)
+        || fmenv->foe == MHITNOT)
+    {
+        return (false);
+    }
+
+    // Monsters that are not directly adjacent are subject to more
+    // stringent checks.
+    if ((pos - you.pos()).abs() > 2)
+    {
+        if (!fmenv->friendly())
+            return (false);
+
+        // Undead will follow Yredelemnul worshippers, and orcs will
+        // follow Beogh worshippers.
+        if (!_is_religious_follower(fmenv))
+            return (false);
+    }
+
+    // Monsters that can't use stairs can still be marked as followers
+    // (though they'll be ignored for transit), so any adjacent real
+    // follower can follow through. (jpeg)
+    if (!mons_can_use_stairs(fmenv))
+    {
+        if (_is_religious_follower(fmenv))
+        {
+            fmenv->flags |= MF_TAKING_STAIRS;
+            return (true);
+        }
+        return (false);
+    }
+
+    real_follower = true;
+
+    // Monster is chasing player through stairs.
+    fmenv->flags |= MF_TAKING_STAIRS;
+
+    // Clear patrolling/travel markers.
+    fmenv->patrol_point.reset();
+    fmenv->travel_path.clear();
+    fmenv->travel_target = MTRAV_NONE;
+
+    fmenv->clear_clinging();
+
+    dprf("%s is marked for following.",
+         fmenv->name(DESC_CAP_THE, true).c_str());
+
+    return (true);
+}
+
+static int follower_tag_radius2()
+{
+    // If only friendlies are adjacent, we set a max radius of 6, otherwise
+    // only adjacent friendlies may follow.
+    for (adjacent_iterator ai(you.pos()); ai; ++ai)
+    {
+        if (const monster* mon = monster_at(*ai))
+            if (!mon->friendly())
+                return (2);
+    }
+
+    return (6 * 6);
+}
+
+void tag_followers()
+{
+    const int radius2 = follower_tag_radius2();
+    int n_followers = 18;
+
+    std::vector<coord_def> places[2];
+    int place_set = 0;
+
+    places[place_set].push_back(you.pos());
+    memset(travel_point_distance, 0, sizeof(travel_distance_grid_t));
+    while (!places[place_set].empty())
+    {
+        for (int i = 0, size = places[place_set].size(); i < size; ++i)
+        {
+            const coord_def &p = places[place_set][i];
+            for (adjacent_iterator ai(p); ai; ++ai)
+            {
+                if ((*ai - you.pos()).abs() > radius2
+                    || travel_point_distance[ai->x][ai->y])
+                {
+                    continue;
+                }
+                travel_point_distance[ai->x][ai->y] = 1;
+
+                bool real_follower = false;
+                if (_tag_follower_at(*ai, real_follower))
+                {
+                    // If we've run out of our follower allowance, bail.
+                    if (real_follower && --n_followers <= 0)
+                        return;
+                    places[!place_set].push_back(*ai);
+                }
+            }
+        }
+        places[place_set].clear();
+        place_set = !place_set;
+    }
+}
+
+void untag_followers()
+{
+    for (int m = 0; m < MAX_MONSTERS; ++m)
+        menv[m].flags &= (~MF_TAKING_STAIRS);
 }

@@ -1,7 +1,6 @@
 /**
  * @file
  * @brief Functions for unix and curses support
- *             Needed by makefile.unix.
 **/
 
 /* Some replacement routines missing in gcc
@@ -34,15 +33,9 @@
 #include "options.h"
 #include "files.h"
 #include "state.h"
-#include "stuff.h"
 #include "unicode.h"
 #include "view.h"
 #include "viewgeom.h"
-
-#ifdef DGL_ENABLE_CORE_DUMP
-#include <sys/time.h>
-#include <sys/resource.h>
-#endif
 
 #include <wchar.h>
 #include <locale.h>
@@ -51,10 +44,6 @@
 
 static struct termios def_term;
 static struct termios game_term;
-
-// Give Crawl so many seconds after receiving a HUP signal to save and
-// get out of the way.
-const int HANGUP_KILL_DELAY_SECONDS = 10;
 
 #ifdef USE_UNIX_SIGNALS
 #include <signal.h>
@@ -71,9 +60,6 @@ const int HANGUP_KILL_DELAY_SECONDS = 10;
 #else
     #include CURSES_INCLUDE_FILE
 #endif
-
-void unixcurses_startup();
-void unixcurses_shutdown();
 
 // Globals holding current text/backg. colors
 static short FG_COL = WHITE;
@@ -241,6 +227,17 @@ int getchk()
     }
 
     wint_t c;
+
+#ifdef USE_TILE_WEB
+    refresh();
+
+    tiles.redraw();
+    tiles.await_input(c, true);
+
+    if (c > 0)
+        return c;
+#endif
+
     switch (get_wch(&c))
     {
     case ERR:
@@ -309,79 +306,12 @@ static void handle_sigwinch(int)
         crawl_state.terminal_resized = true;
 }
 
-#ifdef SIGHUP_SAVE
-
-void sighup_save_and_exit();
-
-/* [ds] This SIGHUP handling is primitive and far from safe, but it
- * should be better than nothing. Feel free to get rigorous on this.
- */
-static void handle_hangup(int)
-{
-    if (crawl_state.seen_hups++)
-        return;
-
-    // Set up an alarm to force-kill Crawl if it rudely ignores the
-    // hangup signal.
-    alarm(HANGUP_KILL_DELAY_SECONDS);
-
-    interrupt_activity(AI_FORCE_INTERRUPT);
-
-#ifdef USE_TILE
-    // XXX: Will a tiles build ever need to handle the HUP signal?
-    sighup_save_and_exit();
-#elif defined(USE_CURSES)
-    // When using Curses, closing stdin will cause any Curses call blocking
-    // on key-presses to immediately return, including any call that was
-    // still blocking in the main thread when the HUP signal was caught.
-    // This should guarantee that the main thread will un-stall and
-    // will eventually return to _input() in main.cc, which will then
-    // call sighup_save_and_exit().
-    //
-    // The point to all this is that if a user is playing a game on a
-    // remote server and disconnects at a --more-- prompt, that when
-    // the player reconnects the code behind the more() call will execute
-    // before the disconnected game is saved, thus (for example) preventing
-    // the hack of avoiding excomunication consesquences because of the
-    // more() after "You have lost your religion!"
-    fclose(stdin);
-#else
-     #error "Must use either Curses or tiles on Unix"
-#endif
-}
-
-void sighup_save_and_exit()
-{
-    if (crawl_state.seen_hups == 0)
-    {
-        mpr("sighup_save_and_exit() called without a HUP signal; please"
-            "file a bug report", MSGCH_ERROR);
-        return;
-    }
-
-    if (crawl_state.saving_game || crawl_state.updating_scores)
-        return;
-
-    crawl_state.saving_game = true;
-    if (crawl_state.need_save)
-    {
-        mpr("Received HUP signal, saved and exited game.", MSGCH_ERROR);
-
-        // save_game(true) exits from the game. The "true" is also required
-        // to save changes to the current level.
-        save_game(true, "Received HUP signal, saved game.");
-    }
-    else
-        end(0, false, "Received HUP signal, game already saved.");
-}
-#endif // SIGHUP_SAVE
-
 #endif // USE_UNIX_SIGNALS
 
 static void unix_handle_terminal_resize()
 {
-    unixcurses_shutdown();
-    unixcurses_startup();
+    console_shutdown();
+    console_startup();
 }
 
 static void unixcurses_defkeys(void)
@@ -455,7 +385,7 @@ int unixcurses_get_vi_key(int keyin)
 #define KPADAPP "\033[?1051l\033[?1052l\033[?1060l\033[?1061h"
 #define KPADCUR "\033[?1051l\033[?1052l\033[?1060l\033[?1061l"
 
-void unixcurses_startup(void)
+void console_startup(void)
 {
     termio_init();
 
@@ -463,36 +393,8 @@ void unixcurses_startup(void)
     write(1, KPADAPP, strlen(KPADAPP));
 #endif
 
-#ifdef DGAMELAUNCH
-    // Force timezone to UTC.
-    setenv("TZ", "", 1);
-    tzset();
-#endif
-
 #ifdef USE_UNIX_SIGNALS
-#ifdef SIGQUIT
-    signal(SIGQUIT, SIG_IGN);
-#endif
-
-#ifdef SIGINT
-    signal(SIGINT, SIG_IGN);
-#endif
-
-#ifdef SIGHUP_SAVE
-    signal(SIGHUP, handle_hangup);
-#endif
-
     signal(SIGWINCH, handle_sigwinch);
-
-#endif
-
-#ifdef DGL_ENABLE_CORE_DUMP
-    rlimit lim;
-    if (!getrlimit(RLIMIT_CORE, &lim))
-    {
-        lim.rlim_cur = RLIM_INFINITY;
-        setrlimit(RLIMIT_CORE, &lim);
-    }
 #endif
 
     initscr();
@@ -523,10 +425,18 @@ void unixcurses_startup(void)
     crawl_view.init_geometry();
 
     set_mouse_enabled(false);
+
+#ifdef USE_TILE_WEB
+    tiles.resize();
+#endif
 }
 
-void unixcurses_shutdown()
+void console_shutdown()
 {
+#ifdef USE_TILE_WEB
+    tiles.shutdown();
+#endif
+
     // resetty();
     endwin();
 
@@ -536,60 +446,8 @@ void unixcurses_shutdown()
 #endif
 
 #ifdef USE_UNIX_SIGNALS
-#ifdef SIGQUIT
-    signal(SIGQUIT, SIG_DFL);
-#endif
-
-#ifdef SIGINT
-    signal(SIGINT, SIG_DFL);
-#endif
-
-#ifdef SIGHUP_SAVE
-    signal(SIGHUP, SIG_DFL);
-#endif
-
     signal(SIGWINCH, SIG_DFL);
 #endif
-}
-
-
-/* Convert value to string */
-extern "C" char *itoa(int value, char *strptr, int radix)
-{
-    unsigned int bitmask = 32768;
-    int ctr = 0;
-    int startflag = 0;
-
-    if (radix == 10)
-    {
-        sprintf(strptr, "%i", value);
-    }
-    if (radix == 2)             /* int to "binary string" */
-    {
-        while (bitmask)
-        {
-            if (value & bitmask)
-            {
-                startflag = 1;
-                sprintf(strptr + ctr, "1");
-            }
-            else
-            {
-                if (startflag)
-                    sprintf(strptr + ctr, "0");
-            }
-
-            bitmask = bitmask >> 1;
-            if (startflag)
-                ctr++;
-        }
-
-        if (!startflag)         /* Special case if value == 0 */
-            sprintf((strptr + ctr++), "0");
-
-        strptr[ctr] = (char) NULL;
-    }
-    return strptr;
 }
 
 void cprintf(const char *format, ...)
@@ -611,19 +469,20 @@ void cprintf(const char *format, ...)
     }
 }
 
-int putwch(ucs_t chr)
+void putwch(ucs_t chr)
 {
     wchar_t c = chr;
     if (!c)
         c = ' ';
     // TODO: recognize unsupported characters and try to transliterate
-    return (addnwstr(&c, 1));
-}
+    addnwstr(&c, 1);
 
-void put_colour_ch(int colour, ucs_t ch)
-{
-    textattr(colour);
-    putwch(ch);
+#ifdef USE_TILE_WEB
+    ucs_t buf[2];
+    buf[0] = chr;
+    buf[1] = 0;
+    tiles.put_ucs_string(buf);
+#endif
 }
 
 void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
@@ -649,6 +508,11 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
 // C++ string class.  -- bwr
 void update_screen(void)
 {
+    refresh();
+
+#ifdef USE_TILE_WEB
+    tiles.set_need_redraw();
+#endif
 }
 
 void clear_to_end_of_line(void)
@@ -656,13 +520,10 @@ void clear_to_end_of_line(void)
     textcolor(LIGHTGREY);
     textbackground(BLACK);
     clrtoeol();
-}
 
-void clear_to_end_of_screen(void)
-{
-    textcolor(LIGHTGREY);
-    textbackground(BLACK);
-    clrtobot();
+#ifdef USE_TILE_WEB
+    tiles.clear_to_end_of_line();
+#endif
 }
 
 int get_number_of_lines(void)
@@ -675,18 +536,19 @@ int get_number_of_cols(void)
     return (COLS);
 }
 
-int clrscr()
+void clrscr()
 {
-    int retval;
-
     textcolor(LIGHTGREY);
     textbackground(BLACK);
-    retval = clear();
+    clear();
 #ifdef DGAMELAUNCH
     printf("%s", DGL_CLEAR_SCREEN);
     fflush(stdout);
 #endif
-    return (retval);
+
+#ifdef USE_TILE_WEB
+    tiles.clrscr();
+#endif
 }
 
 void set_cursor_enabled(bool enabled)
@@ -697,6 +559,15 @@ void set_cursor_enabled(bool enabled)
 bool is_cursor_enabled()
 {
     return (cursor_is_enabled);
+}
+
+bool is_smart_cursor_enabled()
+{
+    return false;
+}
+
+void enable_smart_cursor(bool dummy)
+{
 }
 
 inline unsigned get_brand(int col)
@@ -711,13 +582,6 @@ inline unsigned get_brand(int col)
            (col & COLFLAG_REVERSE)          ? CHATTR_REVERSE
                                             : CHATTR_NORMAL;
 }
-
-#ifndef USE_TILE
-void textattr(int col)
-{
-    textcolor(col);
-}
-#endif
 
 static int curs_fg_attr(int col)
 {
@@ -778,6 +642,10 @@ static int curs_fg_attr(int col)
 void textcolor(int col)
 {
     (void)attrset(Current_Colour = curs_fg_attr(col));
+
+#ifdef USE_TILE_WEB
+    tiles.textcolor(col);
+#endif
 }
 
 static int curs_bg_attr(int col)
@@ -836,12 +704,16 @@ static int curs_bg_attr(int col)
 void textbackground(int col)
 {
     (void)attrset(Current_Colour = curs_bg_attr(col));
+
+#ifdef USE_TILE_WEB
+    tiles.textbackground(col);
+#endif
 }
 
 
-int gotoxy_sys(int x, int y)
+void gotoxy_sys(int x, int y)
 {
-    return (move(y - 1, x - 1));
+    move(y - 1, x - 1);
 }
 
 typedef cchar_t char_info;
@@ -917,8 +789,13 @@ int wherey()
     return getcury(stdscr) + 1;
 }
 
-void delay(unsigned long time)
+void delay(unsigned int time)
 {
+#ifdef USE_TILE_WEB
+    tiles.redraw();
+    tiles.send_message("delay(%d);", time);
+#endif
+
     refresh();
     if (time)
         usleep(time * 1000);
@@ -931,6 +808,7 @@ bool kbhit()
         return true;
 
     wint_t c;
+#ifndef USE_TILE_WEB
     int i;
 
     nodelay(stdscr, TRUE);
@@ -949,17 +827,12 @@ bool kbhit()
     default:
         return false;
     }
-}
+#else
+    bool result = tiles.await_input(c, false);
 
-extern "C" {
-    // Convert string to lowercase.
-    char *strlwr(char *str)
-    {
-        unsigned int i;
+    if (result && (c != 0))
+        pending = c;
 
-        for (i = 0; i < strlen(str); i++)
-            str[i] = tolower(str[i]);
-
-        return (str);
-    }
+    return result;
+#endif
 }

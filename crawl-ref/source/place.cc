@@ -67,7 +67,6 @@ bool single_level_branch(branch_type branch)
 std::string place_name(unsigned short place, bool long_name,
                         bool include_number)
 {
-
     uint8_t branch = (place >> 8) & 0xFF;
     int lev = place & 0xFF;
 
@@ -91,7 +90,7 @@ std::string place_name(unsigned short place, bool long_name,
                 && !you.level_type_origin.empty())
             {
                 if (!long_name)
-                    return upcase_first(you.level_type_name_abbrev);
+                    return uppercase_first(you.level_type_name_abbrev);
 
                 std::string desc;
 

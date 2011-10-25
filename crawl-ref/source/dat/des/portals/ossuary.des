@@ -394,7 +394,7 @@ MONS:    gnoll zombie / hobgoblin zombie / orc zombie / \
 ITEM:    scroll of curse armour / scroll of enchant armour w:5 / \
          scroll of curse weapon / scroll of remove curse       / \
          potion of mutation w:5 / potion of cure mutation w:5  / \
-         potion of confusion    / potion of healing w:15       / \
+         potion of confusion    / potion of curing w:15       / \
          potion of degeneration / potion of restore abilities  / \
          scroll of immolation   / scroll of identify
 # and sometimes strictly useless ones
@@ -583,9 +583,10 @@ flood(flood_x, flood_y, crawl.random_range(6, 16), function(x, y, distance)
 end)
 
 }}
-SHUFFLE: AB/CD/EF/GH
-SUBST:   AC : ., B : A, D : <
-SUBST:   EFGH : d
+SHUFFLE: ABI/CDJ/EFK/GHL
+SUBST:   A : ., B : A, I : <
+SUBST:   EFKGHL : d
+SUBST:   CDJ = 1112
 MONS:    generate_awake zombie place:D:6 /\
          w:5 generate_awake mummy
 MONS:    plant col:darkgrey name:withered n_adj tile:mons_withered_plant /\
@@ -610,11 +611,11 @@ xxxxc1+.............+1cxxxx
 xxxxccc.vv+vv+vv+vv.cccxxxx
 xxxxc1+.vAAAv1vCCCv.+1cxxxx
 xxxxccc.vABAvvvCDCv.cccxxxx
-xxxxc1+.vAAAv1vCCCv.+1cxxxx
+xxxxc1+.vAAIv1vJCCv.+1cxxxx
 xxxxccc.vvvvv+vvvvv.cccxxxx
 xxxxc1+.............+1cxxxx
 xxxxccc.vvvvv+vvvvv.cccxxxx
-xxxxc1+.vEEEv1vGGGv.+1cxxxx
+xxxxc1+.vEEKv1vLGGv.+1cxxxx
 xxxxccc.vEFEvvvGHGv.cccxxxx
 xxxxc1+.vEEEv1vGGGv.+1cxxxx
 xxxxccc.vv+vv+vv+vv.cccxxxx
@@ -674,7 +675,7 @@ ORIENT:  encompass
 TAGS:    ossuary no_item_gen no_monster_gen
 # loot: 8 items of which 6 should be good.
 # Most of the loot helps right here, if need be.
-ITEM:    potion of healing / potion of heal wounds / potion of speed / \
+ITEM:    potion of curing / potion of heal wounds / potion of speed / \
          potion of confusion w:5 / potion of mutation w:5 / \
          scroll of identify / scroll of teleportation w:5 / \
          scroll of blinking w:5 / scroll of holy word / \
@@ -837,7 +838,7 @@ ccc cc+cc   cc''=cccccc''+''''+.x.+Xc
            ccc              ccccccc
 ENDMAP
 
-# Menkaures's pyramid
+# Menkaures' pyramid
 NAME:    ossuary_due_pyramid
 WEIGHT:  10
 ORIENT:  encompass
@@ -906,11 +907,11 @@ MONS:   mummy
 KFEAT:  F = floor
 COLOUR: F = cyan
 KMONS:  F = rat simulacrum / goblin simulacrum / kobold simulacrum /\
-            megabat simulacrum / nothing w:80
+            bat simulacrum / nothing w:80
 KFEAT:  S = floor
 COLOUR: S = green
 KMONS:  S = spectral rat / spectral goblin / spectral kobold /\
-            spectral megabat / nothing w:80
+            spectral bat / nothing w:80
 # Loot.
 ITEM:   any potion / any scroll / nothing w:1
 #
