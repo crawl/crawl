@@ -1,6 +1,6 @@
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "tilereg-inv.h"
 
@@ -360,7 +360,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
             // first equipable categories
             case OBJ_WEAPONS:
             case OBJ_STAVES:
-                if (you.species != SP_CAT)
+                if (you.species != SP_FELID)
                 {
                     _handle_wield_tip(tmp, cmd);
                     if (is_throwable(&you, item))
@@ -404,7 +404,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 _handle_wield_tip(tmp, cmd, "\n[Ctrl + L-Click] ", true);
                 break;
             case OBJ_ARMOUR:
-                if (you.species != SP_CAT)
+                if (you.species != SP_FELID)
                 {
                     tmp += "Wear (%)";
                     cmd.push_back(CMD_WEAR_ARMOUR);
@@ -423,7 +423,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 cmd.push_back(CMD_REMOVE_JEWELLERY);
                 break;
             case OBJ_MISSILES:
-                if (you.species != SP_CAT)
+                if (you.species != SP_FELID)
                 {
                     tmp += "Fire (%)";
                     cmd.push_back(CMD_FIRE);
@@ -433,7 +433,7 @@ bool InventoryRegion::update_tip_text(std::string& tip)
                 }
                 break;
             case OBJ_WANDS:
-                if (you.species != SP_CAT)
+                if (you.species != SP_FELID)
                 {
                     tmp += "Evoke (%)";
                     cmd.push_back(CMD_EVOKE);

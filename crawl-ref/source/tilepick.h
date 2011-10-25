@@ -35,7 +35,7 @@ tileidx_t tileidx_cloud(const cloud_struct &cl, bool disturbance = false);
 tileidx_t tileidx_bolt(const bolt &bolt);
 tileidx_t tileidx_zap(int colour);
 tileidx_t tileidx_spell(const spell_type spell);
-tileidx_t tileidx_skill(const skill_type skill, bool active);
+tileidx_t tileidx_skill(const skill_type skill, int train);
 tileidx_t tileidx_command(const command_type cmd);
 tileidx_t tileidx_gametype(const game_type gtype);
 

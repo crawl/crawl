@@ -50,7 +50,6 @@
 #include "spl-util.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
 #include "env.h"
 #include "transform.h"
 #include "travel.h"
@@ -86,6 +85,7 @@ static void _sdump_overview(dump_params &);
 static void _sdump_hiscore(dump_params &);
 static void _sdump_monster_list(dump_params &);
 static void _sdump_vault_list(dump_params &);
+static void _sdump_spell_usage(dump_params &);
 static void _sdump_separator(dump_params &);
 #ifdef CLUA_BINDINGS
 static void _sdump_lua(dump_params &);
@@ -141,6 +141,7 @@ static dump_section_handler dump_handlers[] = {
     { "hiscore",        _sdump_hiscore       },
     { "monlist",        _sdump_monster_list  },
     { "vaults",         _sdump_vault_list    },
+    { "spell_usage",    _sdump_spell_usage   },
 
     // Conveniences for the .crawlrc artist.
     { "",               _sdump_newline       },
@@ -266,6 +267,18 @@ static void _sdump_transform(dump_params &par)
         case TRAN_PIG:
             text += "You " + verb + " a filthy swine.";
             break;
+        case TRAN_APPENDAGE:
+            if (you.attribute[ATTR_APPENDAGE] == MUT_TENTACLE_SPIKE)
+            {
+                text += make_stringf("One of your tentacles %s a temporary spike.",
+                                     par.se ? "had" : "has");
+            }
+            else
+            {
+                text += make_stringf("You %s grown temporary %s.",
+                                     par.se ? "had" : "have", appendage_name());
+            }
+            break;
         case TRAN_NONE:
             break;
         }
@@ -294,7 +307,7 @@ static void _sdump_visits(dump_params &par)
         branches_total += branches_visited[i];
 
     text += make_stringf("You %svisited %d branch",
-                         have.c_str(), branches_visited.size());
+                         have.c_str(), (int)branches_visited.size());
     if (branches_visited.size() != 1)
         text += "es";
     text += make_stringf(" of the dungeon, and %s %d of its levels.\n",
@@ -371,19 +384,27 @@ static void _sdump_visits(dump_params &par)
 
         if (num_zigs > 0)
         {
-            text += make_stringf("You %svisited %d Ziggurat",
-                                 have.c_str(), num_zigs);
+            text += make_stringf("You %s%s %d Ziggurat",
+                                 have.c_str(),
+                                 (num_zigs == you.zigs_completed) ? "completed"
+                                                                  : "visited",
+                                 num_zigs);
             if (num_zigs > 1)
                 text += "s";
-            text += make_stringf(", and %s %d of %s levels.\n",
+            if (num_zigs != you.zigs_completed && you.zigs_completed)
+                text += make_stringf(" (completing %d)", you.zigs_completed);
+            text += make_stringf(", and %s %d of %s levels",
                                  seen.c_str(), zig_levels,
                                  num_zigs > 1 ? "their" : "its");
+            if (num_zigs != 1 && !you.zigs_completed)
+                text += make_stringf(" (deepest: %d)", you.zig_max);
+            text += ".\n";
         }
 
         if (!misc_portals.empty())
         {
             text += make_stringf("You %svisited %d portal chamber",
-                                 have.c_str(), misc_portals.size());
+                                 have.c_str(), (int)misc_portals.size());
             if (misc_portals.size() > 1)
                 text += "s";
             text += ": ";
@@ -604,7 +625,7 @@ static void _sdump_notes(dump_params &par)
     if (note_list.empty())
         return;
 
-    text += "\nNotes\nTurn   | Place   | Note\n";
+    text += "\nNotes\nTurn   | Place    | Note\n";
     text += "--------------------------------------------------------------\n";
     for (unsigned i = 0; i < note_list.size(); ++i)
     {
@@ -634,7 +655,7 @@ static void _sdump_location(dump_params &par)
 
     par.text += ".";
     par.text += "\n";
-}                               // end dump_location()
+}
 
 static void _sdump_religion(dump_params &par)
 {
@@ -745,11 +766,10 @@ static void _sdump_inventory(dump_params &par)
     std::string &text(par.text);
     std::string text2;
 
-    int inv_class2[OBJ_GOLD];
+    int inv_class2[NUM_OBJECT_CLASSES];
     int inv_count = 0;
-    char tmp_quant[20];
 
-    for (i = 0; i < OBJ_GOLD; i++)
+    for (i = 0; i < NUM_OBJECT_CLASSES; i++)
         inv_class2[i] = 0;
 
     for (i = 0; i < ENDOFPACK; i++)
@@ -771,7 +791,7 @@ static void _sdump_inventory(dump_params &par)
     {
         text += "Inventory:\n\n";
 
-        for (i = 0; i < OBJ_GOLD; i++)
+        for (i = 0; i < NUM_OBJECT_CLASSES; i++)
         {
             if (inv_class2[i] != 0)
             {
@@ -808,13 +828,8 @@ static void _sdump_inventory(dump_params &par)
                         int ival = -1;
                         if (par.show_prices)
                         {
-                            text += " (";
-
-                            itoa(ival = item_value(you.inv[j], true),
-                                  tmp_quant, 10);
-
-                            text += tmp_quant;
-                            text += " gold)";
+                            text += make_stringf(" (%d gold)",
+                                        ival = item_value(you.inv[j], true));
                         }
 
                         if (origin_describable(you.inv[j])
@@ -853,21 +868,8 @@ static void _sdump_inventory(dump_params &par)
 static void _sdump_skills(dump_params &par)
 {
     std::string &text(par.text);
-    char tmp_quant[20];
 
-    if (par.se)
-        text += " You had ";
-    else
-        text += " You have ";
-
-    itoa(you.exp_available, tmp_quant, 10);
-    text += tmp_quant;
-    text += " experience left.";
-
-    text += "\n";
-    text += "\n";
-    text += "   Skills:";
-    text += "\n";
+    text += "   Skills:\n";
 
     dump_skills(text);
     text += "\n";
@@ -889,7 +891,7 @@ static std::string spell_type_shortname(int spell_class, bool slash)
     ret += spelltype_short_name(spell_class);
 
     return (ret);
-}                               // end spell_type_shortname()
+}
 
 //---------------------------------------------------------------
 //
@@ -899,7 +901,6 @@ static std::string spell_type_shortname(int spell_class, bool slash)
 static void _sdump_spells(dump_params &par)
 {
     std::string &text(par.text);
-    char tmp_quant[20];
 
 // This array helps output the spell types in the traditional order.
 // this can be tossed as soon as I reorder the enum to the traditional order {dlb}
@@ -940,9 +941,7 @@ static void _sdump_spells(dump_params &par)
             text += "You had ";
         else
             text += "You have ";
-        itoa(spell_levels, tmp_quant, 10);
-        text += tmp_quant;
-        text += " spell levels left.";
+        text += make_stringf("%d spell levels left.", spell_levels);
     }
 
     text += "\n";
@@ -999,10 +998,7 @@ static void _sdump_spells(dump_params &par)
 
                 spell_line = chop_string(spell_line, 66);
 
-                itoa(spell_difficulty(spell), tmp_quant, 10);
-                spell_line += tmp_quant;
-
-                spell_line = chop_string(spell_line, 71);
+                spell_line += make_stringf("%-5d", spell_difficulty(spell));
 
                 spell_line += spell_hunger_string(spell);
                 spell_line += "\n";
@@ -1012,8 +1008,7 @@ static void _sdump_spells(dump_params &par)
         }
         text += "\n\n";
     }
-}                               // end dump_spells()
-
+}
 
 static void _sdump_kills(dump_params &par)
 {
@@ -1153,6 +1148,78 @@ static void _sdump_vault_list(dump_params &par)
     }
 }
 
+static bool _sort_by_first_cast(std::pair<spell_type, FixedVector<int, 28> > a,
+                                std::pair<spell_type, FixedVector<int, 28> > b)
+{
+    for (int i = 0; i < 27; i++)
+    {
+        if (a.second[i] > b.second[i])
+            return true;
+        else if (a.second[i] < b.second[i])
+            return false;
+    }
+    return false;
+}
+
+static void _sdump_spell_usage(dump_params &par)
+{
+    if (you.spell_usage.empty())
+        return;
+
+    int max_lt = (std::min<int>(you.max_level, 27) - 1) / 3;
+
+    // Don't show both a total and 1..3 when there's only one tier.
+    if (max_lt)
+        max_lt++;
+
+    par.text += make_stringf("\n%-24s", "Spells cast");
+    for (int lt = 0; lt < max_lt; lt++)
+        par.text += make_stringf(" | %2d-%2d", lt * 3 + 1, lt * 3 + 3);
+    par.text += make_stringf(" || %5s", "total");
+    par.text += "\n-------------------------";
+    for (int lt = 0; lt < max_lt; lt++)
+        par.text += "+-------";
+    par.text += "++-------\n";
+
+    std::vector<std::pair<spell_type, FixedVector<int, 28> > > usage_vec;
+    for (std::map<spell_type, FixedVector<int, 27> >::const_iterator sp =
+         you.spell_usage.begin(); sp != you.spell_usage.end(); ++sp)
+    {
+        FixedVector<int, 28> v;
+        v[27] = 0;
+        for (int i = 0; i < 27; i++)
+        {
+            v[i] = sp->second[i];
+            v[27] += v[i];
+        }
+        usage_vec.push_back(std::pair<spell_type, FixedVector<int, 28> >(sp->first, v));
+    }
+    std::sort(usage_vec.begin(), usage_vec.end(), _sort_by_first_cast);
+
+    for (std::vector<std::pair<spell_type, FixedVector<int, 28> > >::const_iterator sp =
+         usage_vec.begin(); sp != usage_vec.end(); ++sp)
+    {
+        par.text += chop_string(spell_title(sp->first), 24);
+
+        for (int lt = 0; lt < max_lt; lt++)
+        {
+            int ltotal = 0;
+            for (int i = lt * 3; i < lt * 3 + 3; i++)
+                ltotal += sp->second[i];
+            if (ltotal)
+                par.text += make_stringf(" |%6d", ltotal);
+            else
+                par.text += " |      ";
+        }
+        ASSERT(sp->second[27] > 0);
+        par.text += make_stringf(" ||%6d", sp->second[27]);
+
+        par.text += "\n";
+    }
+
+    par.text += "\n";
+}
+
 static void _sdump_mutations(dump_params &par)
 {
     std::string &text(par.text);
@@ -1163,7 +1230,7 @@ static void _sdump_mutations(dump_params &par)
         text += describe_mutations();
         text += "\n\n";
     }
-}                               // end dump_mutations()
+}
 
 // ========================================================================
 //      Public Functions
@@ -1310,7 +1377,7 @@ void display_notes()
     scr.set_flags(MF_START_AT_END);
     scr.set_tag("notes");
     scr.set_highlighter(new MenuHighlighter);
-    scr.set_title(new MenuEntry("Turn   | Place   | Note"));
+    scr.set_title(new MenuEntry("Turn   | Place    | Note"));
     for (unsigned int i = 0; i < note_list.size(); ++i)
     {
         std::string prefix = note_list[i].describe(true, true, false);

@@ -9,6 +9,7 @@
 
 #include "externs.h"
 #include "show.h"
+#include "viewgeom.h"
 
 void init_monsters_seens();
 
@@ -17,7 +18,7 @@ bool mon_enemies_around(const monster* mons);
 void seen_monsters_react();
 
 void find_features(const std::vector<coord_def>& features,
-        wchar_t feature, std::vector<coord_def> *found);
+                   ucs_t feature, std::vector<coord_def> *found);
 
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
                    bool force = false, bool deterministic = false,
@@ -25,23 +26,24 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 void reautomap_level();
 void fully_map_level();
 
-bool is_feature(wchar_t feature, const coord_def& where);
-
-void clear_feature_overrides();
-void add_feature_override(const std::string &text);
+bool is_feature(ucs_t feature, const coord_def& where);
 
 std::string screenshot();
 
+int viewmap_flash_colour();
 bool view_update();
 void view_update_at(const coord_def &pos);
-void flash_view(uint8_t colour = BLACK); // inside #ifndef USE_TILE?
+void flash_view(uint8_t colour = BLACK); // inside #ifndef USE_TILE_LOCAL?
 void flash_view_delay(uint8_t colour = BLACK, int delay = 150);
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 void flash_monster_colour(const monster* mon, uint8_t fmc_colour,
                           int fmc_delay);
 #endif
 
-void viewwindow(bool show_updates = true);
+void viewwindow(bool show_updates = true, bool tiles_only = false);
+void draw_cell(screen_cell_t *cell, const coord_def &gc,
+               bool anim_updates, int flash_colour);
+
 void update_monsters_in_view();
 bool handle_seen_interrupt(monster* mons,
                            std::vector<std::string>* msgs_buf = NULL);

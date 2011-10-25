@@ -7,6 +7,7 @@
 #include "AppHdr.h"
 
 #include <locale.h>
+#include <stdio.h>
 #include <string>
 #include <string.h>
 #include <limits.h>
@@ -512,7 +513,7 @@ char *next_glyph(char *s)
     return s_cur;
 }
 
-std::string chop_string(const char *s, int width, bool spaces = true)
+std::string chop_string(const char *s, int width, bool spaces)
 {
     const char *s0 = s;
     ucs_t c;
@@ -534,7 +535,7 @@ std::string chop_string(const char *s, int width, bool spaces = true)
    return std::string(s0, s - s0);;
 }
 
-std::string chop_string(const std::string &s, int width, bool spaces = true)
+std::string chop_string(const std::string &s, int width, bool spaces)
 {
     return chop_string(s.c_str(), width, spaces);
 }

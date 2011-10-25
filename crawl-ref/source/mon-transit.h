@@ -43,4 +43,7 @@ void place_followers();
 
 void place_transiting_items();
 
+void tag_followers();
+void untag_followers();
+
 #endif

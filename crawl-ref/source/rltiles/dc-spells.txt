@@ -39,7 +39,6 @@ dig DIG
 lees_rapid_deconstruction LEES_RAPID_DECONSTRUCTION
 lehudibs_crystal_spear LEHUDIBS_CRYSTAL_SPEAR
 ledas_liquefaction LEDAS_LIQUEFACTION
-maxwells_silver_hammer MAXWELLS_SILVER_HAMMER
 passwall PASSWALL
 petrify PETRIFY
 sandblast SANDBLAST
@@ -81,6 +80,7 @@ ignite_poison IGNITE_POISON
 ring_of_flames RING_OF_FLAMES
 sticky_flame STICKY_FLAME
 throw_flame THROW_FLAME
+inner_flame INNER_FLAME
 
 %sdir gui/spells/ice
 bolt_of_cold BOLT_OF_COLD
@@ -169,6 +169,7 @@ portal_projectile PORTAL_PROJECTILE
 teleport TELEPORT
 teleport_other TELEPORT_OTHER
 warp_weapon WARP_WEAPON
+shroud_of_golubria SHROUD_OF_GOLUBRIA
 
 %sdir gui/spells/transmutation
 alter_self ALTER_SELF

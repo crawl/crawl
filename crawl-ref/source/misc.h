@@ -111,22 +111,27 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
 
 void reveal_secret_door(const coord_def& p);
 
-std::string your_hand(bool plural);
-
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool autohit_first = false);
+bool stop_attack_prompt(targetter &hitfunc, std::string verb,
+                        bool (*affects)(const actor *victim) = 0);
 
 bool is_orckind(const actor *act);
 
 bool is_dragonkind(const actor *act);
 void swap_with_monster(monster* mon_to_swap);
 
+void wear_id_type(item_def &item);
 void maybe_id_ring_TC();
+
+int apply_chunked_AC(int dam, int ac);
 
 void entered_malign_portal(actor* act);
 
 void handle_real_time(time_t t = time(0));
 std::string part_stack_string(const int num, const int total);
+unsigned int breakpoint_rank(int val, const int breakpoints[],
+                             unsigned int num_breakpoints);
 #define DISCONNECT_DIST (INT_MAX - 1000)
 
 struct position_node
@@ -340,6 +345,14 @@ void search_astar(const coord_def & start,
     search_astar(start, valid_target, connect, visited, candidates);
 }
 
-
-
+struct counted_monster_list
+{
+    typedef std::pair<const monster* ,int> counted_monster;
+    typedef std::vector<counted_monster> counted_list;
+    counted_list list;
+    void add(const monster* mons);
+    int count();
+    bool empty() { return list.empty(); }
+    std::string describe(description_level_type desc = DESC_CAP_THE);
+};
 #endif

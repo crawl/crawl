@@ -18,7 +18,6 @@
 #include "map_knowledge.h"
 #include "mon-util.h"
 #include "options.h"
-#include "stuff.h"
 #include "env.h"
 #include "tags.h"
 #include "terrain.h"
@@ -29,20 +28,14 @@
 static bool _mon_needs_auto_exclude(const monster* mon, bool sleepy = false)
 {
     if (mons_is_stationary(mon))
-    {
-        if (sleepy)
-            return (false);
+        return (!sleepy);
 
-        // Don't give away mimics unless already known.
-        return (!mons_is_mimic(mon->type)
-                || testbits(mon->flags, MF_KNOWN_MIMIC));
-    }
     // Auto exclusion only makes sense if the monster is still asleep.
     return (mon->asleep());
 }
 
 // Check whether a given monster is listed in the auto_exclude option.
-bool need_auto_exclude(const monster* mon, bool sleepy)
+static bool _need_auto_exclude(const monster* mon, bool sleepy = false)
 {
     // This only works if the name is lowercased.
     std::string name = mon->name(DESC_BASENAME,
@@ -65,7 +58,9 @@ bool need_auto_exclude(const monster* mon, bool sleepy)
 // Nightstalker reduces LOS, so reducing the maximum exclusion radius
 // only makes sense. This is only possible because it's a permanent
 // mutation; the lantern of Shadows should not have this effect.
-int _get_full_exclusion_radius()
+// TODO: update the radiuses on wield/unwield, we already need to do that
+// when gaining/losing nightstalker.
+static int _get_full_exclusion_radius()
 {
     return (LOS_RADIUS - player_mutation_level(MUT_NIGHTSTALKER));
 }
@@ -74,10 +69,10 @@ int _get_full_exclusion_radius()
 // exclusion.
 void set_auto_exclude(const monster* mon)
 {
-    if (!player_in_mappable_area())
+    if (!is_map_persistent())
         return;
 
-    if (need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
+    if (_need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
     {
         int rad = _get_full_exclusion_radius();
         if (mon->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
@@ -101,7 +96,7 @@ void set_auto_exclude(const monster* mon)
 // player in sight. If sleepy is true, stationary monsters are ignored.
 void remove_auto_exclude(const monster* mon, bool sleepy)
 {
-    if (need_auto_exclude(mon, sleepy))
+    if (_need_auto_exclude(mon, sleepy))
     {
         del_exclude(mon->pos());
 #ifdef USE_TILE
@@ -434,7 +429,7 @@ void deferred_exclude_update()
 void clear_excludes()
 {
     // Sanity checks
-    if (!player_in_mappable_area())
+    if (!is_map_persistent())
         return;
 
 #ifdef USE_TILE
@@ -500,7 +495,7 @@ void del_exclude(const coord_def &p)
 void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
                  bool defer_updates)
 {
-    if (!player_in_mappable_area()) // currently only Abyss
+    if (!is_map_persistent())
         return;
 
     if (!in_bounds(p))

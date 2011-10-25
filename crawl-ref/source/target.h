@@ -2,6 +2,7 @@
 #define TARGET_H
 
 #include "beam.h"
+#include "mon-info.h"
 
 enum aff_type // sign and non-zeroness matters
 {
@@ -21,6 +22,7 @@ public:
     coord_def origin;
     coord_def aim;
     const actor* agent;
+    std::string why_not;
 
     virtual bool set_aim(coord_def a);
     virtual bool valid_aim(coord_def a) = 0;
@@ -85,4 +87,25 @@ public:
     std::vector<std::vector<coord_def> > queue;
 };
 
+class targetter_splash : public targetter
+{
+public:
+    targetter_splash(const actor *act);
+    bool valid_aim(coord_def a);
+    aff_type is_affected(coord_def loc);
+private:
+    bool anyone_there(coord_def loc);
+};
+
+class targetter_los : public targetter
+{
+public:
+    targetter_los(const actor *act, los_type los = LOS_DEFAULT,
+                  int range = LOS_RADIUS, int range_max = 0);
+    bool valid_aim(coord_def a);
+    aff_type is_affected(coord_def loc);
+private:
+    los_type los;
+    int range2, range_max2;
+};
 #endif

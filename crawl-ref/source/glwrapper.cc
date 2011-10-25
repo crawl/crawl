@@ -1,6 +1,6 @@
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "glwrapper.h"
 
@@ -97,4 +97,4 @@ bool GLStateManager::_valid(int num_verts, drawing_modes mode)
 }
 #endif // ASSERTS
 
-#endif // USE_TILE
+#endif // USE_TILE_LOCAL

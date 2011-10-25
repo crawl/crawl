@@ -161,7 +161,7 @@ static void _clear_pending_delays()
     }
 }
 
-void start_delay(delay_type type, int turns, int parm1, int parm2)
+void start_delay(delay_type type, int turns, int parm1, int parm2, int parm3)
 {
     ASSERT(!crawl_state.game_is_arena());
 
@@ -174,6 +174,7 @@ void start_delay(delay_type type, int turns, int parm1, int parm2)
     delay.duration = turns;
     delay.parm1    = parm1;
     delay.parm2    = parm2;
+    delay.parm3    = parm3;
     delay.started  = false;
 
     // Paranoia
@@ -402,8 +403,7 @@ void maybe_clear_weapon_swap()
         you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED] = 0;
 }
 
-void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
-                             bool transform)
+void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe)
 {
     if (!you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED]
         || !you_tran_can_wear(EQ_WEAPON) || you.cannot_act() || you.berserk())
@@ -420,8 +420,7 @@ void handle_interrupted_swap(bool swap_if_safe, bool force_unsafe,
     const bool       prompt = Options.prompt_for_swap && !safe;
     const delay_type delay  = current_delay_action();
 
-    const char* prompt_str  = transform ? "Switch back to main weapon?"
-                                        : "Switch back from butchering tool?";
+    const char* prompt_str  = "Switch back to main weapon?";
 
     // If we're going to prompt then update the window so the player can
     // see what the monsters are.
@@ -622,11 +621,8 @@ bool already_learning_spell(int spell)
 // more amused the hungrier you are.
 static void _xom_check_corpse_waste()
 {
-    int food_need = 7000 - you.hunger;
-    if (food_need < 0)
-        food_need = 0;
-
-    xom_is_stimulated(64 + (191 * food_need / 6000));
+    const int food_need = std::max(7000 - you.hunger, 0);
+    xom_is_stimulated(50 + (151 * food_need / 6000));
 }
 
 void clear_macro_process_key_delay()
@@ -663,10 +659,27 @@ void handle_delay()
             if (!mitm[delay.parm1].defined())
                 break;
 
-            mprf(MSGCH_MULTITURN_ACTION, "You start %s the %s.",
-                 (delay.type == DELAY_BOTTLE_BLOOD ? "bottling blood from"
-                                                   : "butchering"),
-                 mitm[delay.parm1].name(DESC_PLAIN).c_str());
+            if (delay.type == DELAY_BOTTLE_BLOOD)
+            {
+                mprf(MSGCH_MULTITURN_ACTION,
+                     "You start bottling blood from the %s.",
+                     mitm[delay.parm1].name(DESC_PLAIN).c_str());
+            }
+            else
+            {
+                std::string tool;
+                switch (delay.parm3)
+                {
+                case SLOT_BUTCHERING_KNIFE: tool = "knife"; break;
+                case SLOT_CLAWS:            tool = "claws"; break;
+                case SLOT_TEETH:            tool = "teeth"; break;
+                case SLOT_BIRDIE:           tool = "beak and talons"; break;
+                default: tool = you.inv[delay.parm3].name(DESC_QUALNAME);
+                }
+                mprf(MSGCH_MULTITURN_ACTION,
+                     "You start butchering the %s with your %s.",
+                     mitm[delay.parm1].name(DESC_PLAIN).c_str(), tool.c_str());
+            }
             break;
 
         case DELAY_MEMORISE:
@@ -763,7 +776,7 @@ void handle_delay()
                     if (player_mutation_level(MUT_SAPROVOROUS) == 3)
                         _xom_check_corpse_waste();
                     else
-                        xom_is_stimulated(32);
+                        xom_is_stimulated(25);
                     delay.duration = 0;
                 }
                 else
@@ -829,6 +842,7 @@ void handle_delay()
         {
             // Ran out of things to drop.
             _pop_delay();
+            you.time_taken = 0;
             return;
         }
     }
@@ -928,8 +942,11 @@ void handle_delay()
         }
 
         case DELAY_MULTIDROP:
-            drop_item(items_for_multidrop[0].slot,
-                      items_for_multidrop[0].quantity);
+            if (!drop_item(items_for_multidrop[0].slot,
+                           items_for_multidrop[0].quantity))
+            {
+                you.time_taken = 0;
+            }
             items_for_multidrop.erase(items_for_multidrop.begin());
             break;
 
@@ -1133,7 +1150,7 @@ static void _finish_delay(const delay_queue_item &delay)
                 if (player_mutation_level(MUT_SAPROVOROUS) == 3)
                     _xom_check_corpse_waste();
                 else
-                    xom_is_stimulated(64);
+                    xom_is_stimulated(50);
 
                 break;
             }
@@ -1158,12 +1175,7 @@ static void _finish_delay(const delay_queue_item &delay)
             else
             {
                 mprf("You finish %s the %s into pieces.",
-                     (you.has_usable_claws()
-                      || player_mutation_level(MUT_BEAK)
-                         && player_mutation_level(MUT_TALONS)
-                      || you.has_usable_fangs() == 3
-                         && you.species != SP_VAMPIRE) ? "ripping"
-                                                       : "chopping",
+                     delay.parm3 <= SLOT_CLAWS ? "ripping" : "chopping",
                      mitm[delay.parm1].name(DESC_PLAIN).c_str());
 
                 if (god_hates_cannibalism(you.religion)
@@ -1246,7 +1258,7 @@ static void _finish_delay(const delay_queue_item &delay)
         if (delay.parm1 == you.equip[EQ_WEAPON])
         {
             unwield_item();
-            canned_msg(MSG_EMPTY_HANDED);
+            canned_msg(MSG_EMPTY_HANDED_NOW);
         }
 
         if (!copy_item_to_grid(you.inv[ delay.parm1 ],
@@ -1324,11 +1336,14 @@ static void _armour_wear_effects(const int item_slot)
         {
             remove_ice_armour();
         }
+        if (property(arm, PARM_EVASION))
+            you.start_train.insert(SK_ARMOUR);
     }
     else if (eq_slot == EQ_SHIELD)
     {
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
             remove_condensation_shield();
+        you.start_train.insert(SK_SHIELDS);
     }
 
     equip_item(eq_slot, item_slot);
@@ -1622,7 +1637,13 @@ inline static bool _monster_warning(activity_interrupt_type ai,
     const monster* mon = static_cast<const monster* >(at.data);
     if (!you.can_see(mon))
         return false;
-    if (testbits(mon->flags, MF_JUST_SUMMONED) && atype == DELAY_NOT_DELAYED)
+
+    // Disable message for summons.
+    if (mon->is_summoned() && atype == DELAY_NOT_DELAYED)
+        return false;
+
+    // Mimics announce themselves when revealed.
+    if (mons_is_mimic(mon->type))
         return false;
 
     if (at.context == "already seen" || at.context == "uncharm")

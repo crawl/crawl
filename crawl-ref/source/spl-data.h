@@ -40,7 +40,7 @@ struct spell_desc
     SPELL_CAUSE_FEAR, "Cause Fear",
      SPTYP_HEXES,
      SPFLAG_AREA,
-     5,
+     4,
      200,
      LOS_RADIUS, LOS_RADIUS,
      0,
@@ -66,7 +66,7 @@ struct spell_desc
     SPELL_FIREBALL, "Fireball",
      SPTYP_CONJURATION | SPTYP_FIRE,
      SPFLAG_DIR_OR_TARGET,
-     6,
+     5,
      200,
      6, 6,
      0,
@@ -146,7 +146,7 @@ struct spell_desc
      SPFLAG_DIR_OR_TARGET,
      6,
      200,
-     6, 6,
+     7, 7,
      0,
      NULL,
      true,
@@ -159,7 +159,7 @@ struct spell_desc
      SPFLAG_DIR_OR_TARGET,
      6,
      200,
-     7, 7,
+     6, 6,
      0,
      NULL,
      true,
@@ -278,7 +278,7 @@ struct spell_desc
      SPFLAG_DIR_OR_TARGET,
      2,
      50,
-     7, 7,
+     8, 8,
      0,
      NULL,
      true,
@@ -291,7 +291,7 @@ struct spell_desc
      SPFLAG_DIR_OR_TARGET,
      2,
      50,
-     8, 8,
+     7, 7,
      0,
      NULL,
      true,
@@ -330,7 +330,7 @@ struct spell_desc
      SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
      SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF,
      3,
-     200,
+     100,
      5, 5,
      0,
      NULL,
@@ -445,8 +445,21 @@ struct spell_desc
 {
     SPELL_ABJURATION, "Abjuration",
      SPTYP_SUMMONING,
-     SPFLAG_AREA | SPFLAG_NEUTRAL | SPFLAG_ESCAPE,
+     SPFLAG_TARGET | SPFLAG_ESCAPE,
      3,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_MASS_ABJURATION, "Mass Abjuration",
+     SPTYP_SUMMONING,
+     SPFLAG_AREA | SPFLAG_NEUTRAL | SPFLAG_ESCAPE,
+     7,
      200,
      -1, -1,
      0,
@@ -468,11 +481,12 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 32
 {
     SPELL_LEVITATION, "Levitation",
      SPTYP_CHARMS | SPTYP_AIR,
      SPFLAG_NONE,
-     2,
+     3,
      150,
      -1, -1,
      0,
@@ -480,6 +494,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_BOLT_OF_DRAINING, "Bolt of Draining",
@@ -537,7 +552,7 @@ struct spell_desc
     SPELL_POISONOUS_CLOUD, "Poisonous Cloud",
      SPTYP_CONJURATION | SPTYP_POISON | SPTYP_AIR,
      SPFLAG_GRID | SPFLAG_AREA | SPFLAG_ALLOW_SELF,
-     5,
+     6,
      200,
      6, 6,
      0,
@@ -570,19 +585,6 @@ struct spell_desc
      NULL,
      true,
      false
-},
-
-{
-    SPELL_DETECT_TRAPS, "Detect Traps",
-     0,
-     SPFLAG_MAPPING,
-     2,
-     50,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
 },
 
 {
@@ -878,7 +880,7 @@ struct spell_desc
     SPELL_SUMMON_ICE_BEAST, "Summon Ice Beast",
      SPTYP_ICE | SPTYP_SUMMONING,
      SPFLAG_BATTLE,
-     5,
+     4,
      200,
      -1, -1,
      0,
@@ -929,7 +931,7 @@ struct spell_desc
 {
     SPELL_BERSERKER_RAGE, "Berserker Rage",
      SPTYP_CHARMS,
-     SPFLAG_HASTY,
+     SPFLAG_HASTY | SPFLAG_MONSTER,
      3,
      0,
      -1, -1,
@@ -1246,7 +1248,7 @@ struct spell_desc
     SPELL_FLY, "Flight",
      SPTYP_CHARMS | SPTYP_AIR,
      SPFLAG_NONE,
-     4,
+     3,
      200,
      -1, -1,
      0,
@@ -1617,7 +1619,7 @@ struct spell_desc
      SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
      1,
      40,                           // cap for range; damage cap is at 25
-     1, 4,
+     2, 5,
      0,
      NULL,
      true,
@@ -1716,19 +1718,6 @@ struct spell_desc
 },
 
 {
-    SPELL_DETECT_SECRET_DOORS, "Detect Secret Doors",
-     0,
-     SPFLAG_NONE,
-     1,
-     200,
-     -1, -1,
-     0,
-     NULL,
-     false,
-     true
-},
-
-{
     SPELL_SEE_INVISIBLE, "See Invisible",
      SPTYP_CHARMS,
      SPFLAG_HELPFUL,
@@ -1782,7 +1771,7 @@ struct spell_desc
 
 {
     SPELL_SILENCE, "Silence",
-     SPTYP_CHARMS | SPTYP_AIR,
+     SPTYP_HEXES | SPTYP_AIR,
      SPFLAG_AREA,
      5,
      200,
@@ -1850,7 +1839,7 @@ struct spell_desc
      SPTYP_TRANSMUTATION | SPTYP_POISON,
      SPFLAG_NONE,
      4,
-     0,
+     100,
      -1, -1,
      0,
      NULL,
@@ -1863,7 +1852,7 @@ struct spell_desc
      SPTYP_FIRE | SPTYP_TRANSMUTATION,
      SPFLAG_DIR_OR_TARGET | SPFLAG_AREA | SPFLAG_ALLOW_SELF,
      2,   // XXX: level 2 or 3, what should it be now? -- bwr
-     200,
+     50,
      6, 6,
      0,
      NULL,
@@ -1897,6 +1886,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 32
 {
     SPELL_MAXWELLS_SILVER_HAMMER, "Maxwell's Silver Hammer",
      SPTYP_CHARMS | SPTYP_EARTH,
@@ -1909,6 +1899,7 @@ struct spell_desc
      false,
      true
 },
+#endif
 
 {
     SPELL_CONDENSATION_SHIELD, "Condensation Shield",
@@ -2747,7 +2738,7 @@ struct spell_desc
 },
 
 {
-    SPELL_LIGHT_BEAM, "Light Beam",
+    SPELL_HOLY_LIGHT, "Holy Light",
      SPTYP_CONJURATION | SPTYP_HOLY,
      SPFLAG_DIR_OR_TARGET,
      6,
@@ -2909,7 +2900,7 @@ struct spell_desc
      7,
      200,
      -1, -1,
-     0,
+     -4,
      NULL,
      false,
      false
@@ -2951,6 +2942,71 @@ struct spell_desc
      0,
      NULL,
      false,
+     false
+},
+
+{
+    SPELL_PETRIFYING_CLOUD, "Petrifying Cloud",
+    SPTYP_CONJURATION | SPTYP_EARTH | SPTYP_AIR,
+    SPFLAG_DIR_OR_TARGET | SPFLAG_MONSTER,
+    5,
+    0,
+    LOS_RADIUS, LOS_RADIUS,
+    0,
+    NULL,
+    true,
+    false
+},
+
+{
+    SPELL_SHROUD_OF_GOLUBRIA, "Shroud of Golubria",
+     SPTYP_CHARMS | SPTYP_TRANSLOCATION,
+     SPFLAG_NONE,
+     2,
+     200,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     false
+},
+
+{
+    SPELL_INNER_FLAME, "Inner Flame",
+     SPTYP_HEXES | SPTYP_FIRE,
+     SPFLAG_DIR_OR_TARGET | SPFLAG_NOT_SELF,
+     3,
+     200,
+     LOS_RADIUS, LOS_RADIUS,
+     0,
+     NULL,
+     true,
+     false
+},
+
+{
+    SPELL_BEASTLY_APPENDAGE, "Beastly Appendage",
+     SPTYP_TRANSMUTATION,
+     SPFLAG_HELPFUL | SPFLAG_CHAOTIC,
+     1,
+     50,
+     -1, -1,
+     0,
+     NULL,
+     false,
+     true
+},
+
+{
+    SPELL_SILVER_BLAST, "Silver Blast",
+     SPTYP_CONJURATION | SPTYP_HOLY,
+     SPFLAG_DIR_OR_TARGET,
+     5,
+     200,
+     6, 6,
+     0,
+     NULL,
+     true,
      false
 },
 

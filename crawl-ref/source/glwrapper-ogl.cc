@@ -1,6 +1,6 @@
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 #ifdef USE_GL
 
 #include "glwrapper-ogl.h"
@@ -363,7 +363,7 @@ void OGLShapeBuffer::draw(const GLState &state, const GLW_3VF *pt, const GLW_3VF
 #endif
 void OGLShapeBuffer::draw(const GLState &state)
 {
-    if (m_position_buffer.size() == 0)
+    if (m_position_buffer.empty())
         return;
 
     if (!state.array_vertex)
@@ -403,4 +403,4 @@ void OGLShapeBuffer::clear()
 }
 
 #endif // USE_GL
-#endif // USE_TILE
+#endif // USE_TILE_LOCAL

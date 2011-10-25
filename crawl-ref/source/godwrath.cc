@@ -55,6 +55,7 @@ static void _god_smites_you(god_type god, const char *message = NULL,
 static bool _beogh_idol_revenge();
 static void _tso_blasts_cleansing_flame(const char *message = NULL);
 static bool _tso_holy_revenge();
+static bool _ely_holy_revenge(const monster *victim);
 
 static bool _yred_random_zombified_hostile()
 {
@@ -213,7 +214,7 @@ static bool _zin_retribution()
             you.hibernate();
             break;
         case 2:
-            you.paralyse(NULL, 3 + random2(10));
+            paralyse_player("the wrath of Zin", 3 + random2(10));
             break;
         }
         break;
@@ -399,7 +400,7 @@ static bool _cheibriados_retribution()
             break;
     // No tension wrath.
     case 0:
-        if (curse_an_item(true, false))
+        if (curse_an_item())
             simple_god_message(" makes up for lost time.", god);
         else
             glammer = true;
@@ -422,7 +423,7 @@ static bool _makhleb_retribution()
     {
         mgen_data temp =
             mgen_data::hostile_at(random_mons(MONS_EXECUTIONER, MONS_GREEN_DEATH,
-                                  MONS_BLUE_DEATH, MONS_BALRUG, MONS_CACODEMON, -1),
+                                  MONS_BLIZZARD_DEMON, MONS_BALRUG, MONS_CACODEMON, -1),
                                   "the fury of Makhleb",
                                   true, 0, 0, you.pos(), 0, god);
 
@@ -496,7 +497,7 @@ static bool _kikubaaqudgha_retribution()
     {
         // torment, or 3 necromancy miscasts
         if (!player_res_torment(false))
-            torment(TORMENT_KIKUBAAQUDGHA, you.pos());
+            torment(NULL, TORMENT_KIKUBAAQUDGHA, you.pos());
         else
         {
             for (int i = 0; i < 3; ++i)
@@ -889,7 +890,7 @@ static bool _lugonu_retribution()
     {
         mgen_data temp =
             mgen_data::hostile_at(random_mons(MONS_GREEN_DEATH,
-                                  MONS_BLUE_DEATH, MONS_BALRUG, -1),
+                                  MONS_BLIZZARD_DEMON, MONS_BALRUG, -1),
                                   "the touch of Lugonu",
                                   true, 0, 0, you.pos(), 0, god);
 
@@ -1019,7 +1020,7 @@ static bool _jiyva_retribution()
                 }
 
                 if (transform(random2(you.penance[GOD_JIYVA]) * 2, form, true))
-                    you.transform_uncancellable = false;
+                    you.transform_uncancellable = true;
             }
     }
     else
@@ -1027,7 +1028,7 @@ static bool _jiyva_retribution()
         const monster_type slimes[] = {
                 MONS_GIANT_EYEBALL, MONS_EYE_OF_DRAINING,
                 MONS_EYE_OF_DEVASTATION, MONS_GREAT_ORB_OF_EYES,
-                MONS_GIANT_SPORE, MONS_SHINING_EYE, MONS_GIANT_ORANGE_BRAIN,
+                MONS_SHINING_EYE, MONS_GIANT_ORANGE_BRAIN,
                 MONS_JELLY, MONS_BROWN_OOZE, MONS_ACID_BLOB, MONS_AZURE_JELLY,
                 MONS_DEATH_OOZE, MONS_SLIME_CREATURE
             };
@@ -1208,14 +1209,14 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
 {
     ASSERT(god != GOD_NO_GOD);
 
-    if (god == GOD_JIYVA && jiyva_is_dead())
+    if (is_unavailable_god(god))
         return (false);
 
     // Good gods don't use divine retribution on their followers, and
     // gods don't use divine retribution on followers of gods they don't
     // hate.
     if (!force && ((god == you.religion && is_good_god(god))
-        || (god != you.religion && !god_hates_your_god(god))))
+        || (!god_hates_your_god(god))))
     {
         return (false);
     }
@@ -1226,7 +1227,9 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     switch (god)
     {
     // One in ten chance that Xom might do something good...
-    case GOD_XOM: xom_acts(one_chance_in(10), abs(you.piety - 100)); break;
+    case GOD_XOM:
+        xom_acts(one_chance_in(10), abs(you.piety - HALF_MAX_PIETY));
+        break;
     case GOD_SHINING_ONE:   do_more = _tso_retribution(); break;
     case GOD_ZIN:           do_more = _zin_retribution(); break;
     case GOD_MAKHLEB:       do_more = _makhleb_retribution(); break;
@@ -1287,7 +1290,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     return (true);
 }
 
-bool do_god_revenge(conduct_type thing_done)
+bool do_god_revenge(conduct_type thing_done, const monster *victim)
 {
     bool retval = false;
 
@@ -1299,7 +1302,12 @@ bool do_god_revenge(conduct_type thing_done)
     case DID_KILL_HOLY:
     case DID_HOLY_KILLED_BY_UNDEAD_SLAVE:
     case DID_HOLY_KILLED_BY_SERVANT:
-        retval = _tso_holy_revenge();
+        // It's TSO who does the smiting and war stuff so he handles revenge
+        // for his allies as well -- unless another god has some special ties.
+        if (victim && victim->god == GOD_ELYVILON)
+            retval = _ely_holy_revenge(victim);
+        else
+            retval = _tso_holy_revenge();
         break;
     default:
         break;
@@ -1410,6 +1418,51 @@ static bool _tso_holy_revenge()
     return (false);
 }
 
+// Killing apises may make Elyvilon sad.  She'll sulk and stuff.
+static bool _ely_holy_revenge(const monster *victim)
+{
+    // It's a mild effect, a relatively big chance is ok.  Keeping it small
+    // though -- we don't want gods to be omniescent.
+    if (!one_chance_in(3))
+        return false;
+
+    god_acting gdact(GOD_ELYVILON, true);
+
+    std::string msg = getSpeakString("Elyvilon holy");
+    if (msg.empty())
+        msg = "Elyvilon is displeased.";
+    mpr(msg.c_str(), MSGCH_GOD, GOD_ELYVILON);
+
+    std::vector<monster*> patients;
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    {
+        // healer not necromancer
+        if (!mi->alive())
+            continue;
+        // hates undead -- would she heal demons out of spite for you?
+        if (mi->is_evil(false) || mi->is_unholy(false))
+            continue;
+        // your associates are presumed guilty
+        if (mi->wont_attack())
+            continue;
+        if (mi->hit_points >= mi->max_hit_points)
+            continue;
+        patients.push_back(*mi);
+    }
+    if (patients.empty())
+        return false;
+
+    mpr("Elyvilon touches your foes with healing grace.");
+    for (std::vector<monster*>::const_iterator mi = patients.begin();
+         mi != patients.end(); ++mi)
+    {
+        simple_monster_message(*mi, " is healed.");
+        (*mi)->heal(10 + random2(10), false);
+    }
+
+    return (true);
+}
+
 static void _god_smites_you(god_type god, const char *message,
                             kill_method_type death_type)
 {
@@ -1459,20 +1512,16 @@ static void _god_smites_you(god_type god, const char *message,
     }
 }
 
-int ash_reduce_xp(int amount)
+void ash_reduce_penance(int amount)
 {
     if (!you.penance[GOD_ASHENZARI] || !you.exp_docked_total)
-        return 0;
+        return;
 
     int lost = std::min(amount / 2, you.exp_docked);
     you.exp_docked -= lost;
-    dprf("Ashenzari: exp stolen: %d, %d/%d to go", lost, you.exp_docked,
-         you.exp_docked_total);
 
     int new_pen = (((int64_t)you.exp_docked * 50) + you.exp_docked_total - 1)
                 / you.exp_docked_total;
     if (new_pen < you.penance[GOD_ASHENZARI])
         dec_penance(GOD_ASHENZARI, you.penance[GOD_ASHENZARI] - new_pen);
-
-    return lost;
 }

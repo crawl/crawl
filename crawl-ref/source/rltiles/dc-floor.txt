@@ -564,3 +564,37 @@ sigil_straight_E_W_NE_NW SIGIL_FOURWAY
 sigil_sharp_E_NE SIGIL_SHARP_E_NE
 sigil_sharp_W_SW SIGIL_SHARP_W_SW
 sigil_straight_E_NE_SW SIGIL_STRAIGHT_E_NE_SW
+
+%weight 10
+infernal01 FLOOR_INFERNAL
+infernal02
+infernal03
+infernal04
+infernal05
+infernal06
+infernal07
+infernal08
+infernal09
+infernal10
+infernal11
+infernal12
+%weight 2
+infernal13
+infernal14
+infernal15
+infernal_blank FLOOR_INFERNAL_BLANK
+
+%weight 10
+labyrinth0 FLOOR_LABYRINTH
+labyrinth1
+labyrinth2
+labyrinth3
+
+crypt0 FLOOR_CRYPT
+crypt1
+crypt2
+crypt3
+crypt4
+crypt5
+crypt6
+crypt7

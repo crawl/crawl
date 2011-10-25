@@ -21,7 +21,7 @@ extern int unixcurses_get_vi_key(int keyin);
 
 static keycode_type _numpad2vi(keycode_type key)
 {
-#if defined(UNIX) && !defined(USE_TILE)
+#if defined(UNIX) && !defined(USE_TILE_LOCAL)
     key = unixcurses_get_vi_key(key);
 #endif
     switch (key)
@@ -30,7 +30,7 @@ static keycode_type _numpad2vi(keycode_type key)
     case CK_DOWN:  key = 'j'; break;
     case CK_LEFT:  key = 'h'; break;
     case CK_RIGHT: key = 'l'; break;
-#if defined(UNIX) && !defined(USE_TILE)
+#if defined(UNIX) && !defined(USE_TILE_LOCAL)
     case -1001:    key = 'b'; break;
     case -1002:    key = 'j'; break;
     case -1003:    key = 'n'; break;
@@ -84,7 +84,7 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
     case '8': return 'k';
     case '9': return 'u';
 
- #ifndef USE_TILE
+ #ifndef USE_TILE_LOCAL
     default: return unixcurses_get_vi_key(keyin);
  #endif
 
@@ -107,17 +107,21 @@ int unmangle_direction_keys(int keyin, KeymapContext keymap,
 // cursoring over darkgrey or black causes problems.
 void cursorxy(int x, int y)
 {
-#if defined(USE_TILE)
+#ifdef USE_TILE
     coord_def ep(x, y);
     coord_def gc = crawl_view.screen2grid(ep);
     tiles.place_cursor(CURSOR_MOUSE, gc);
-#elif defined(UNIX)
+#endif
+
+#ifndef USE_TILE_LOCAL
+#if defined(UNIX)
     if (Options.use_fake_cursor)
         fakecursorxy(x, y);
     else
         cgotoxy(x, y, GOTO_CRT);
 #else
     cgotoxy(x, y, GOTO_CRT);
+#endif
 #endif
 }
 
@@ -135,7 +139,7 @@ void nowrap_eol_cprintf(const char *s, ...)
 }
 
 // cprintf that knows how to wrap down lines
-void wrapcprintf(int wrapcol, const char *s, ...)
+static void wrapcprintf(int wrapcol, const char *s, ...)
 {
     va_list args;
     va_start(args, s);
@@ -321,14 +325,12 @@ int line_reader::read_line(bool clear_previous)
     {
         int ch = getchm(getch_ck);
 
-#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
         // Don't return a partial string if a HUP signal interrupted things
         if (crawl_state.seen_hups)
         {
             buffer[0] = '\0';
             return (0);
         }
-#endif
 
         if (keyfn)
         {
@@ -511,7 +513,7 @@ int line_reader::process_key(int ch)
             length = np - buffer;
 
             cursorto(pos);
-            buffer[length] = 0;
+            buffer[length-1] = 0;
             wrapcprintf(wrapcol, "%s ", cur);
             cursorto(pos);
         }
@@ -601,12 +603,6 @@ int line_reader::process_key(int ch)
 // Of mice and other mice.
 
 static std::queue<c_mouse_event> mouse_events;
-
-coord_def get_mouse_pos()
-{
-    // lib$(OS) has to maintain mousep. This function is just the messenger.
-    return (crawl_view.mousep);
-}
 
 c_mouse_event get_mouse_event()
 {

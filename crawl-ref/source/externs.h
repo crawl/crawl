@@ -82,7 +82,7 @@ const int kPathLen = 256;
 #define NO_BERSERK_PENALTY    -1
 
 typedef FixedArray<dungeon_feature_type, GXM, GYM> feature_grid;
-typedef FixedArray<unsigned short, GXM, GYM> map_mask;
+typedef FixedArray<unsigned int, GXM, GYM> map_mask;
 
 struct item_def;
 struct coord_def;
@@ -258,6 +258,7 @@ struct coord_def
 };
 
 const coord_def INVALID_COORD(-1, -1);
+const coord_def NO_CURSOR(-1, -1);
 
 typedef bool (*coord_predicate)(const coord_def &c);
 
@@ -331,6 +332,7 @@ struct delay_queue_item
     int         duration;
     int         parm1;
     int         parm2;
+    int         parm3;
     bool        started;
     int         trits[6];
     size_t      len;
@@ -541,7 +543,7 @@ struct item_def
 
 public:
     item_def() : base_type(OBJ_UNASSIGNED), sub_type(0), plus(0), plus2(0),
-                 special(0L), colour(0), rnd(0), quantity(0), flags(0L),
+                 special(0), colour(0), rnd(0), quantity(0), flags(0),
                  pos(), link(NON_ITEM), slot(0), orig_place(0),
                  orig_monnum(0), inscription()
     {
@@ -680,6 +682,9 @@ public:
     std::vector<map_marker*> get_markers_at(const coord_def &c);
     std::string property_at(const coord_def &c, map_marker_type type,
                             const std::string &key);
+    std::string property_at(const coord_def &c, map_marker_type type,
+                            const char *key)
+    { return property_at(c, type, std::string(key)); }
     void clear();
 
     void write(writer &) const;
@@ -710,7 +715,8 @@ struct message_filter
 
     message_filter(const std::string &s) : channel(-1), pattern(s) { }
 
-    bool is_filtered(int ch, const std::string &s) const {
+    bool is_filtered(int ch, const std::string &s) const
+    {
         bool channel_match = ch == channel || channel == -1;
         if (!channel_match || pattern.empty())
             return channel_match;
@@ -777,15 +783,13 @@ private:
 
 struct mon_display
 {
-    monster_type type;
-    wchar_t      glyph;
+    ucs_t        glyph;
     unsigned     colour;
     monster_type detected; // What a monster of type "type" is detected as.
 
-    mon_display(monster_type m = MONS_NO_MONSTER,
-                unsigned gly = 0, unsigned col = 0,
+    mon_display(unsigned gly = 0, unsigned col = 0,
                 monster_type d = MONS_NO_MONSTER)
-       : type(m), glyph(gly), colour(col), detected(d) { }
+       : glyph(gly), colour(col), detected(d) { }
 };
 
 struct final_effect
@@ -795,5 +799,7 @@ struct final_effect
     coord_def pos;
     int x;
 };
+
+typedef FixedArray<item_type_id_state_type, NUM_OBJECT_CLASSES, MAX_SUBTYPES> id_arr;
 
 #endif // EXTERNS_H

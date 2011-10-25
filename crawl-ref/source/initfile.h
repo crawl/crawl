@@ -11,6 +11,7 @@
 #include <cstdio>
 
 #include "enum.h"
+#include "itemprop-enum.h"
 #include "unicode.h"
 
 enum drop_mode_type
@@ -82,6 +83,7 @@ void save_player_name(void);
 std::string channel_to_str(int ch);
 
 int str_to_channel(const std::string &);
+weapon_type str_to_weapon(const std::string &str);
 
 class StringLineInput : public LineInput
 {

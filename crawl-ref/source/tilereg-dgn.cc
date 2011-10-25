@@ -1,6 +1,6 @@
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "tilereg-dgn.h"
 
@@ -437,7 +437,7 @@ static const bool _is_appropriate_spell(spell_type spell,
 static const bool _is_appropriate_evokable(const item_def& item,
                                            const actor* target)
 {
-    if (!item_is_evokable(item, false, true))
+    if (!item_is_evokable(item, false, false, true))
         return (false);
 
     // Only wands for now.
@@ -466,7 +466,7 @@ static const bool _is_appropriate_evokable(const item_def& item,
 static const bool _have_appropriate_evokable(const actor* target)
 {
     // Felids cannot use wands.
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
         return (false);
 
     for (int i = 0; i < ENDOFPACK; i++)
@@ -667,7 +667,7 @@ static const bool _have_appropriate_spell(const actor* target)
 
 static bool _can_fire_item()
 {
-    return (you.species != SP_CAT
+    return (you.species != SP_FELID
             && you.m_quiver->get_fire_item() != -1);
 }
 
@@ -699,12 +699,9 @@ static bool _handle_distant_monster(monster* mon, unsigned char mod)
     // Handle weapons of reaching.
     if (!mon->wont_attack() && you.see_cell_no_trans(mon->pos()))
     {
-        const coord_def delta  = you.pos() - mon->pos();
-        const int       x_dist = std::abs(delta.x);
-        const int       y_dist = std::abs(delta.y);
+        const int dist = (you.pos() - mon->pos()).abs();
 
-        if (weapon && get_weapon_brand(*weapon) == SPWPN_REACHING
-            && std::max(x_dist, y_dist) == 2)
+        if (dist > 2 && weapon && reach_range(weapon_reach(*weapon)) >= dist)
         {
             macro_buf_add_cmd(CMD_EVOKE_WIELDED);
             _add_targeting_commands(mon->pos());
@@ -1049,9 +1046,8 @@ static void _add_tip(std::string &tip, std::string text)
 
 bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
 {
-    const bool have_reach = you.weapon()
-        && get_weapon_brand(*(you.weapon())) == SPWPN_REACHING;
-    const int  attack_dist = have_reach ? 2 : 1;
+    const int attack_dist = you.weapon() ?
+        reach_range(weapon_reach(*you.weapon())) : 2;
 
     std::vector<command_type> cmd;
     tip = "";
@@ -1074,8 +1070,7 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
         if (target && you.can_see(target))
         {
             has_monster = true;
-            if (abs(gc.x - you.pos().x) <= attack_dist
-                && abs(gc.y - you.pos().y) <= attack_dist)
+            if ((gc - you.pos()).abs() <= attack_dist)
             {
                 if (!cell_is_solid(gc))
                 {
@@ -1090,7 +1085,7 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
                 }
             }
 
-            if (you.species != SP_CAT
+            if (you.species != SP_FELID
                 && you.see_cell_no_trans(target->pos())
                 && you.m_quiver->get_fire_item() != -1)
             {

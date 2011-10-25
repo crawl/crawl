@@ -16,6 +16,7 @@ bool read_urandom(char *buf, int len);
 #ifdef TARGET_OS_WINDOWS
 # ifndef UNIX
 int fdatasync(int fd);
+void alarm(unsigned int seconds);
 # endif
 #endif
 
@@ -23,6 +24,10 @@ int fdatasync(int fd);
 #if !defined(TARGET_OS_LINUX) && !defined(TARGET_OS_WINDOWS) && !defined(TARGET_OS_NETBSD) && !defined(TARGET_OS_SOLARIS)
 # define NEED_FAKE_FDATASYNC
 int fdatasync(int fd);
+#endif
+
+#ifdef NEED_USLEEP
+void usleep(unsigned long time);
 #endif
 
 int rename_u(const char *oldpath, const char *newpath);

@@ -20,7 +20,7 @@ enum corpse_effect_type
     CE_CONTAMINATED,    //    2
     CE_POISONOUS,       //    3
     CE_POISON_CONTAM,   //    4
-    CE_HCL,             //    5
+    CE_ROT,             //    5
     CE_MUTAGEN_RANDOM,  //    6
     CE_MUTAGEN_GOOD,    //    7 - may be worth implementing {dlb}
     CE_MUTAGEN_BAD,     //    8 - may be worth implementing {dlb}
@@ -57,6 +57,7 @@ enum attack_type
     AT_TRUNK_SLAP,
     AT_SNAP,
     AT_SPLASH,
+    AT_CHERUB,
 
     AT_SHOOT,       // Attack representing missile damage for M_ARCHER.
     AT_WEAP_ONLY,   // Ranged weap: shoot point-blank like AT_SHOOT, melee weap
@@ -127,6 +128,7 @@ enum mon_intel_type             // Must be in increasing intelligence order
 {
     I_PLANT = 0,
     I_INSECT,
+    I_REPTILE = I_INSECT, // just for documentation
     I_ANIMAL,
     I_NORMAL,
     I_HIGH,
@@ -187,15 +189,7 @@ enum mon_resist_flags
     MR_VUL_FIRE          = (1<< 9),
     MR_VUL_COLD          = (1<<10),
 
-    // Melee armour resists/vulnerabilities.
-    // XXX: how to do combos (bludgeon/slice, bludgeon/pierce)
-    MR_RES_PIERCE        = (1<<11),
-    MR_RES_SLICE         = (1<<12),
-    MR_RES_BLUDGEON      = (1<<13),
-
-    MR_VUL_PIERCE        = (1<<14),
-    MR_VUL_SLICE         = (1<<15),
-    MR_VUL_BLUDGEON      = (1<<16),
+    // 1<<11 .. 1<<16: feel free to reuse
 
     // Immune to stickiness of sticky flame.
     MR_RES_STICKY_FLAME  = (1<<17),
@@ -226,6 +220,7 @@ enum shout_type
     S_HISS,                 // for snakes and lizards
     S_DEMON_TAUNT,          // for pandemonium lords
     S_CAW,                  // for ravens
+    S_CHERUB,               // for cherubs
     NUM_SHOUTS,
 
     // Loudness setting for shouts that are only defined in dat/shout.txt

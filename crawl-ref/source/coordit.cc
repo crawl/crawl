@@ -47,7 +47,7 @@ const coord_def* rectangle_iterator::operator->() const
     return &current;
 }
 
-rectangle_iterator& rectangle_iterator::operator ++()
+void rectangle_iterator::operator ++()
 {
     if (current.x == bottomright.x)
     {
@@ -58,15 +58,12 @@ rectangle_iterator& rectangle_iterator::operator ++()
     {
         current.x++;
     }
-    return *this;
 }
 
 
-rectangle_iterator rectangle_iterator::operator++(int dummy)
+void rectangle_iterator::operator++(int dummy)
 {
-    const rectangle_iterator copy = *this;
     ++(*this);
-    return (copy);
 }
 
 /*
@@ -170,17 +167,14 @@ bool radius_iterator::is_valid_square(const coord_def &p) const
     return (true);
 }
 
-const radius_iterator& radius_iterator::operator++()
+void radius_iterator::operator++()
 {
     advance(false);
-    return (*this);
 }
 
-radius_iterator radius_iterator::operator++(int dummy)
+void radius_iterator::operator++(int dummy)
 {
-    const radius_iterator copy = *this;
     ++(*this);
-    return (copy);
 }
 
 /*

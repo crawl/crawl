@@ -111,11 +111,19 @@ static void _crash_signal_handler(int sig_num)
     _crash_signal            = sig_num;
     crawl_state.game_crashed = true;
 
+    // During a crash, we may be in an inconsistent state (duh).  Doing a number
+    // of things can cause a lock up, especially calling non-reentrant functions
+    // like malloc() and friends, used by C++ basics like std::string
+    // internally.
+    // There's no reliable way to ensure such things won't happen.  A pragmatic
+    // solution is to abort the crash dump.
+    alarm(5);
+
     // In case the crash dumper is unable to open a file and has to dump
     // to stderr.
 #ifndef USE_TILE
     if (crawl_state.io_inited)
-        unixcurses_shutdown();
+        console_shutdown();
 #endif
 
     do_crash_dump();
@@ -140,10 +148,8 @@ void init_crash_handler()
     {
         if (i == SIGALRM)
             continue;
-#ifdef SIGHUP_SAVE
         if (i == SIGHUP)
             continue;
-#endif
 #ifdef SIGQUIT
         if (i == SIGQUIT)
             continue;
@@ -295,7 +301,7 @@ void write_stack_trace(FILE* file, int ignore_count)
 
     free(symbols);
 }
-#else // defined(UNIX)
+#else // BACKTRACE_SUPPORTED
 void write_stack_trace(FILE* file, int ignore_count)
 {
     const char* msg = "Unable to get stack trace on this platform.\n";

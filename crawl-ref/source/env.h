@@ -98,9 +98,13 @@ struct crawl_environment
     unsigned int dactions_done;
 
     coord_def sanctuary_pos;
+    coord_def orb_pos;
     int sanctuary_time;
     int forest_awoken_until;
     int density;
+
+    // Volatile level flags, not saved.
+    uint32_t level_state;
 
     // Temp stuff.
     std::vector<final_effect> final_effects;

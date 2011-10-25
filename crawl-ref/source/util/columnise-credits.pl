@@ -5,7 +5,7 @@ use warnings;
 
 use Unicode::Collate;
 
-my $CREDITS = 'CREDITS.txt';
+my $CREDITS = $ARGV[0] || 'CREDITS.txt';
 
 my $NAMEHEAD = qr/contributed to .*Stone Soup:\s*$/;
 

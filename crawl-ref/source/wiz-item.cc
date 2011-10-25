@@ -67,8 +67,8 @@ static void _make_all_books()
 void wizard_create_spec_object_by_name()
 {
     char buf[500];
-    mprf(MSGCH_PROMPT, "Enter name of item: ");
-    if (cancelable_get_line(buf, sizeof buf) || !*buf)
+    mprf(MSGCH_PROMPT, "Enter name of item (or ITEM spec): ");
+    if (cancelable_get_line_autohist(buf, sizeof buf) || !*buf)
     {
         canned_msg(MSG_OK);
         return;
@@ -150,7 +150,7 @@ void wizard_create_spec_object()
     msgwin_reply(make_stringf("%c", keyin));
 
     // Allocate an item to play with.
-    thing_created = get_item_slot();
+    thing_created = get_mitm_slot();
     if (thing_created == NON_ITEM)
     {
         mpr("Could not allocate item.");
@@ -304,7 +304,9 @@ const char* _prop_name[ARTP_NUM_PROPERTIES] = {
     "Curse",
     "Stlth",
     "MP",
-    "Slow"
+    "Slow",
+    "HP",
+    "Clar",
 };
 
 #define ARTP_VAL_BOOL 0
@@ -341,7 +343,11 @@ int8_t _prop_type[ARTP_NUM_PROPERTIES] = {
     ARTP_VAL_POS,  //CURSED
     ARTP_VAL_ANY,  //STEALTH
     ARTP_VAL_ANY,  //MAGICAL_POWER
-    ARTP_VAL_BOOL  //PONDEROUS
+    ARTP_VAL_ANY,  //BASE_DELAY
+    ARTP_VAL_ANY,  //HP
+    ARTP_VAL_BOOL, //CLARITY
+    ARTP_VAL_ANY,  //BASE_ACC
+    ARTP_VAL_ANY,  //BASE_DAM
 };
 
 static void _tweak_randart(item_def &item)
@@ -602,7 +608,7 @@ void wizard_create_all_artefacts()
         if (entry->base_type == OBJ_UNASSIGNED)
             continue;
 
-        int islot = get_item_slot();
+        int islot = get_mitm_slot();
         if (islot == NON_ITEM)
             break;
 
@@ -618,7 +624,7 @@ void wizard_create_all_artefacts()
     }
 
     // Create Horn of Geryon
-    int islot = get_item_slot();
+    int islot = get_mitm_slot();
     if (islot != NON_ITEM)
     {
         item_def& item = mitm[islot];
@@ -835,8 +841,9 @@ void wizard_list_items()
 
         if (item.link != NON_ITEM)
         {
-            mprf("(%2d,%2d): %s", item.pos.x, item.pos.y,
-                 item.name(DESC_PLAIN, false, false, false).c_str());
+            mprf("(%2d,%2d): %s%s", item.pos.x, item.pos.y,
+                 item.name(DESC_PLAIN, false, false, false).c_str(),
+                 item.flags & ISFLAG_MIMIC ? " mimic" : "");
         }
     }
 
@@ -849,8 +856,9 @@ void wizard_list_items()
         int item = igrd(*ri);
         if (item != NON_ITEM)
         {
-            mprf("%3d at (%2d,%2d): %s", item, ri->x, ri->y,
-                 mitm[item].name(DESC_PLAIN, false, false, false).c_str());
+            mprf("%3d at (%2d,%2d): %s%s", item, ri->x, ri->y,
+                 mitm[item].name(DESC_PLAIN, false, false, false).c_str(),
+                 mitm[item].flags & ISFLAG_MIMIC ? " mimic" : "");
         }
     }
 }
@@ -862,7 +870,7 @@ void wizard_list_items()
 //---------------------------------------------------------------
 static void _debug_acquirement_stats(FILE *ostat)
 {
-    int p = get_item_slot(11);
+    int p = get_mitm_slot(11);
     if (p == NON_ITEM)
     {
         mpr("Too many items on level.");
@@ -1017,7 +1025,9 @@ static void _debug_acquirement_stats(FILE *ostat)
     const int e_order[] =
     {
         EQ_WEAPON, EQ_BODY_ARMOUR, EQ_SHIELD, EQ_HELMET, EQ_CLOAK,
-        EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING
+        EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING,
+        EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
+        EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT
     };
 
     bool naked = true;
@@ -1294,6 +1304,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     mpr("Results written into 'items.stat'.");
 }
 
+#define MAX_TRIES 16777216 /* not special anymore */
 static void _debug_rap_stats(FILE *ostat)
 {
     int i = prompt_invent_item("Generate randart stats on which item?",
@@ -1346,13 +1357,18 @@ static void _debug_rap_stats(FILE *ostat)
         -1, //ARTP_CAUSE_TELEPORTATION
         -1, //ARTP_PREVENT_TELEPORTATION
         -1, //ARTP_ANGRY
-        -1, //ARTP_METABOLISM
+         0, //ARTP_METABOLISM
         -1, //ARTP_MUTAGENIC
          0, //ARTP_ACCURACY
          0, //ARTP_DAMAGE
         -1, //ARTP_CURSED
          0, //ARTP_STEALTH
          0, //ARTP_MAGICAL_POWER
+         0, //ARTP_BASE_DELAY
+         0, //ARTP_HP
+         1, //ARTP_CLARITY
+         0, //ARTP_BASE_ACC
+         0, //ARTP_BASE_DAM
          -1
     };
 
@@ -1376,7 +1392,7 @@ static void _debug_rap_stats(FILE *ostat)
 
     artefact_properties_t proprt;
 
-    for (i = 0; i < RANDART_SEED_MASK; ++i)
+    for (i = 0; i < MAX_TRIES; ++i)
     {
         if (kbhit())
         {
@@ -1384,8 +1400,6 @@ static void _debug_rap_stats(FILE *ostat)
             mpr("Stopping early due to keyboard input.");
             break;
         }
-
-        item.special = i;
 
         // Generate proprt once and hand it off to randart_is_bad(),
         // so that randart_is_bad() doesn't generate it a second time.
@@ -1442,11 +1456,11 @@ static void _debug_rap_stats(FILE *ostat)
         total_bad_props     += num_bad_props;
         total_balance_props += balance;
 
-        if (i % 16777 == 0)
+        if (i % 16767 == 0)
         {
             mesclr();
             float curr_percent = (float) i * 1000.0
-                / (float) RANDART_SEED_MASK;
+                / (float) MAX_TRIES;
             mprf("%4.1f%% done.", curr_percent / 10.0);
         }
 
@@ -1495,7 +1509,11 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_CURSED",
         "ARTP_STEALTH",
         "ARTP_MAGICAL_POWER",
-        "ARTP_PONDEROUS"
+        "ARTP_BASE_DELAY",
+        "ARTP_HP",
+        "ARTP_CLARITY",
+        "ARTP_BASE_ACC",
+        "ARTP_BASE_DAM",
     };
 
     fprintf(ostat, "                            All    Good   Bad\n");

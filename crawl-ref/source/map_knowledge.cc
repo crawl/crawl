@@ -14,7 +14,6 @@
 #include "options.h"
 #include "show.h"
 #include "showsymb.h"
-#include "stuff.h"
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tilepick.h"
@@ -135,34 +134,14 @@ void set_terrain_seen(int x, int y)
     map_cell* cell = &env.map_knowledge[x][y];
 
     // First time we've seen a notable feature.
-    // In unmappable areas, this doesn't work since
-    // map knowledge gets wiped each turn.
-    if (!(cell->flags & MAP_SEEN_FLAG) && player_in_mappable_area())
+    if (!(cell->flags & MAP_SEEN_FLAG))
     {
         _automap_from(x, y, _map_quality());
 
-        const bool boring = !is_notable_terrain(feat)
-            // A portal deeper into the Ziggurat is boring.
-            || (feat == DNGN_ENTER_PORTAL_VAULT
-                && you.level_type == LEVEL_PORTAL_VAULT)
-            // Altars in the temple are boring.
-            || (feat_is_altar(feat)
-                && player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
-            // Only note the first entrance to the Abyss/Pan/Hell
-            // which is found.
-            || ((feat == DNGN_ENTER_ABYSS || feat == DNGN_ENTER_PANDEMONIUM
-                 || feat == DNGN_ENTER_HELL)
-                && overview_knows_num_portals(feat) > 1)
-            // There are at least three Zot entrances, and they're always
-            // on D:27, so ignore them.
-            || feat == DNGN_ENTER_ZOT;
-
-        if (!boring)
+        if (!is_boring_terrain(feat))
         {
             coord_def pos(x, y);
-            std::string desc =
-                feature_description(pos, false, DESC_A);
-
+            std::string desc = feature_description(pos, false, DESC_A);
             take_note(Note(NOTE_SEEN_FEAT, 0, 0, desc.c_str()));
         }
     }

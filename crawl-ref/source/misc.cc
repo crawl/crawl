@@ -15,10 +15,6 @@
 #include <unistd.h>
 #endif
 
-#ifdef TARGET_COMPILER_MINGW
-#include <io.h>
-#endif
-
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>
@@ -62,7 +58,6 @@
 #include "mon-pathfind.h"
 #include "mon-info.h"
 #include "mon-iter.h"
-#include "mon-util.h"
 #include "mon-stuff.h"
 #include "ng-setup.h"
 #include "ouch.h"
@@ -91,14 +86,14 @@
 static void _create_monster_hide(const item_def corpse)
 {
     // kiku_receive_corpses() creates corpses that are easily scummed
-    // for hides.  We prevent this by setting "DoNotDropHide" as an item
+    // for hides.  We prevent this by setting "never_hide" as an item
     // property of corpses it creates.
-    if (corpse.props.exists("DoNotDropHide"))
+    if (corpse.props.exists("never_hide"))
         return;
 
     int mons_class = corpse.plus;
 
-    int o = get_item_slot();
+    int o = get_mitm_slot();
     if (o == NON_ITEM)
         return;
 
@@ -116,7 +111,7 @@ static void _create_monster_hide(const item_def corpse)
     // These values cannot be set by a reasonable formula: {dlb}
     switch (mons_class)
     {
-    case MONS_DRAGON:         item.sub_type = ARM_DRAGON_HIDE;         break;
+    case MONS_DRAGON:         item.sub_type = ARM_FIRE_DRAGON_HIDE;    break;
     case MONS_TROLL:          item.sub_type = ARM_TROLL_HIDE;          break;
     case MONS_ICE_DRAGON:     item.sub_type = ARM_ICE_DRAGON_HIDE;     break;
     case MONS_STEAM_DRAGON:   item.sub_type = ARM_STEAM_DRAGON_HIDE;   break;
@@ -174,7 +169,9 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
     item.quantity  = 1 + random2(max_chunks);
     item.quantity  = stepdown_value(item.quantity, 4, 4, 12, 12);
 
-    if (you.species != SP_VAMPIRE)
+    if (is_bad_food(item))
+        item.flags |= ISFLAG_DROPPED;
+    else if (you.species != SP_VAMPIRE)
         item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
     // Happens after the corpse has been butchered.
@@ -192,7 +189,7 @@ void turn_corpse_into_skeleton_and_chunks(item_def &item)
     if (mons_skeleton(item.plus))
         turn_corpse_into_skeleton(item);
 
-    int o = get_item_slot();
+    int o = get_mitm_slot();
     if (o != NON_ITEM)
     {
         turn_corpse_into_chunks(chunks);
@@ -394,7 +391,7 @@ void maybe_coagulate_blood_potions_floor(int obj)
     }
 
     // Else, create a new stack of potions.
-    int o = get_item_slot(20);
+    int o = get_mitm_slot(20);
     if (o == NON_ITEM)
         return;
 
@@ -692,6 +689,8 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         return (rot_count > 0);
     }
 
+    mprf("You can't carry %s right now.", coag_count > 1 ? "them" : "it");
+
     // No space in inventory, check floor.
     int o = igrd(you.pos());
     while (o != NON_ITEM)
@@ -732,7 +731,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     // If we got here nothing was found!
 
     // Create a new stack of potions.
-    o = get_item_slot();
+    o = get_mitm_slot();
     if (o == NON_ITEM)
         return (false);
 
@@ -958,7 +957,7 @@ void turn_corpse_into_skeleton_and_blood_potions(item_def &item)
     if (mons_skeleton(item.plus))
         turn_corpse_into_skeleton(item);
 
-    int o = get_item_slot();
+    int o = get_mitm_slot();
     if (o != NON_ITEM)
     {
         turn_corpse_into_blood_potions(blood_potions);
@@ -1244,7 +1243,8 @@ void search_around(bool only_adjacent)
                 if (ptrap)
                 {
                     ptrap->reveal();
-                    mpr("You found a trap!");
+                    mprf("You found %s trap!",
+                         ptrap->name(DESC_NOCAP_A).c_str());
                     learned_something_new(HINT_SEEN_TRAP, *ri);
                     practise(EX_TRAP_FOUND);
                 }
@@ -1366,7 +1366,11 @@ bool go_berserk(bool intentional, bool potion)
 
     mpr("A red film seems to cover your vision as you go berserk!");
 
-    you.duration[DUR_FINESSE] = 0; // Totally incompatible.
+    if (you.duration[DUR_FINESSE] > 0)
+    {
+        you.duration[DUR_FINESSE] = 0; // Totally incompatible.
+        mpr("Finesse? Hah! Time to rip out guts!");
+    }
 
     if (you.religion == GOD_CHEIBRIADOS)
     {
@@ -1391,6 +1395,7 @@ bool go_berserk(bool intentional, bool potion)
     // Cutting the duration in half since berserk causes haste and hasted
     // actions have half the usual delay. This keeps player turns
     // approximately consistent withe previous versions. -cao
+    // Only 1.5 now, but I'm keeping the reduction as a nerf. -1KB
     int berserk_duration = (20 + random2avg(19,2)) / 2;
 
     you.increase_duration(DUR_BERSERK, berserk_duration);
@@ -1421,7 +1426,7 @@ static bool _mons_has_path_to_player(const monster* mon, bool want_move = false)
     if (mon->asleep())
         return (true);
 
-    if (mons_is_stationary(mon))
+    if (mons_is_stationary(mon) && !mons_is_tentacle_end(mon->type))
     {
         int dist = grid_distance(you.pos(), mon->pos());
         if (want_move)
@@ -1476,8 +1481,7 @@ bool mons_can_hurt_player(const monster* mon, const bool want_move)
     // still use some ranged form of attack.
     if (you.see_cell_no_trans(mon->pos())
         && (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT
-            || mons_has_ranged_ability(mon)
-            || mons_has_ranged_spell(mon)))
+            || mons_has_ranged_attack(mon)))
     {
         return (true);
     }
@@ -1491,7 +1495,7 @@ static bool _mons_is_always_safe(const monster *mon)
 {
     return (mon->wont_attack()
             || mons_class_flag(mon->type, M_NO_EXP_GAIN)
-               && mon->type != MONS_KRAKEN_TENTACLE
+               && !mons_is_tentacle_end(mon->type)
             || mon->withdrawn()
             || mon->type == MONS_BALLISTOMYCETE && mon->number == 0);
 }
@@ -1499,9 +1503,6 @@ static bool _mons_is_always_safe(const monster *mon)
 bool mons_is_safe(const monster* mon, const bool want_move,
                   const bool consider_user_options, bool check_dist)
 {
-    if (mons_is_unknown_mimic(mon))
-        return (true);
-
     int  dist    = grid_distance(you.pos(), mon->pos());
 
     bool is_safe = (_mons_is_always_safe(mon)
@@ -1541,8 +1542,7 @@ bool mons_is_safe(const monster* mon, const bool want_move,
 }
 
 // Return all nearby monsters in range (default: LOS) that the player
-// is able to recognise as being monsters (i.e. no unknown mimics or
-// submerged creatures.)
+// is able to recognise as being monsters (i.e. no submerged creatures.)
 //
 // want_move       (??) Somehow affects what monsters are considered dangerous
 // just_check      Return zero or one monsters only
@@ -1573,7 +1573,6 @@ std::vector<monster* > get_nearby_monsters(bool want_move,
             if (mon->alive()
                 && (!require_visible || mon->visible_to(&you))
                 && !mon->submerged()
-                && !mons_is_unknown_mimic(mon)
                 && (!dangerous_only || !mons_is_safe(mon, want_move,
                                                      consider_user_options,
                                                      check_dist)))
@@ -1745,7 +1744,6 @@ static void _drop_tomb(const coord_def& pos, bool premature)
     bool seen_change = false;
     for (adjacent_iterator ai(pos); ai; ++ai)
     {
-
         // "Normal" tomb
         if (grd(*ai) == DNGN_ROCK_WALL &&
             env.markers.property_at(*ai, MAT_ANY, "prison") != "Zin")
@@ -1793,7 +1791,8 @@ static void _drop_tomb(const coord_def& pos, bool premature)
             (mon) ? "releases" : "dismisses",
             (mon) ? mon->name(DESC_THE).c_str() : "the silver walls,",
             (mon) ? "from its prison" : "but there is nothing inside them");
-        else {
+        else
+        {
             if (!silenced(you.pos()))
                 mpr("You hear a deep rumble.", MSGCH_SOUND);
             else
@@ -1848,7 +1847,7 @@ void timeout_malign_gateways (int duration)
             if (mmark->monster_summoned && !mons)
             {
                 // The marker hangs around until later.
-                if (env.grid(mmark->pos) == DNGN_TEMP_PORTAL)
+                if (env.grid(mmark->pos) == DNGN_MALIGN_GATEWAY)
                     env.grid(mmark->pos) = DNGN_FLOOR;
 
                 env.markers.remove(mmark);
@@ -1936,7 +1935,7 @@ void bring_to_safety()
     if (crawl_state.game_is_zotdef() && !orb_position().origin())
     {
         // In ZotDef, it's not the safety of your sorry butt that matters.
-        for (distance_iterator di(orb_position(), true, false); di; ++di)
+        for (distance_iterator di(env.orb_pos, true, false); di; ++di)
             if (!monster_at(*di)
                 && !(env.pgrid(*di) & FPROP_NO_TELE_INTO))
             {
@@ -1994,6 +1993,8 @@ void bring_to_safety()
 // This includes ALL afflictions, unlike wizard/Xom revive.
 void revive()
 {
+    adjust_level(-1);
+
     you.disease = 0;
     you.magic_contamination = 0;
     set_hunger(6000, true);
@@ -2012,6 +2013,11 @@ void revive()
     if (you.form)
         untransform();
     you.clear_beholders();
+    you.attribute[ATTR_DIVINE_DEATH_CHANNEL] = 0;
+    you.attribute[ATTR_INVIS_UNCANCELLABLE] = 0;
+    you.attribute[ATTR_LEV_UNCANCELLABLE] = 0;
+    if (you.duration[DUR_SCRYING])
+        you.xray_vision = false;
 
     for(int dur = 0; dur < NUM_DURATIONS; dur++)
         if (dur != DUR_GOURMAND && dur != DUR_PIETY_POOL)
@@ -2025,12 +2031,20 @@ void revive()
     you.stat_zero.init(0);
 
     unrot_hp(9999);
-    set_hp(9999, false);
-    set_mp(9999, false);
+    set_hp(9999);
+    set_mp(9999);
     you.dead = false;
 
     // Remove silence.
     invalidate_agrid();
+
+    if (you.hp_max <= 0)
+    {
+        you.lives = 0;
+        mpr("You are too frail to live.");
+        // possible only with an extreme abuse of Borgnjor's
+        ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_DRAINING);
+    }
 
     mpr("You rejoin the land of the living...");
     more();
@@ -2063,7 +2077,7 @@ void setup_environment_effects()
             }
         }
     }
-    dprf("%u environment effect seeds", sfx_seeds.size());
+    dprf("%u environment effect seeds", (unsigned int)sfx_seeds.size());
 }
 
 static void apply_environment_effect(const coord_def &c)
@@ -2116,6 +2130,7 @@ void run_environment_effects()
     run_corruption_effects(you.time_taken);
     shoals_apply_tides(div_rand_round(you.time_taken, BASELINE_DELAY),
                        false, true);
+    abyss_morph(you.time_taken);
     timeout_tombs(you.time_taken);
     timeout_malign_gateways(you.time_taken);
 }
@@ -2172,139 +2187,132 @@ void reveal_secret_door(const coord_def& p)
     learned_something_new(HINT_FOUND_SECRET_DOOR, p);
 }
 
-// A feeble attempt at Nethack-like completeness for cute messages.
-std::string your_hand(bool plural)
+bool bad_attack(const monster *mon, std::string& adj, std::string& suffix)
 {
-    std::string result;
+    ASSERT(!crawl_state.game_is_arena());
+    if (you.confused() || !you.can_see(mon))
+        return (false);
 
-    switch (you.form)
+    bool retval = false;
+    adj.clear();
+    suffix.clear();
+
+    if (is_sanctuary(you.pos()) || is_sanctuary(mon->pos()))
+        suffix = ", despite your sanctuary";
+
+    if (mon->friendly())
     {
-    default:
-        mpr("ERROR: unknown transformation in your_hand() (misc.cc)",
-            MSGCH_ERROR);
-    case TRAN_NONE:
-    case TRAN_STATUE:
-    case TRAN_LICH:
-        result = (you.has_usable_claws()) ? "claw" : "hand";
-        if (you.species == SP_CAT)
-            result = "paw";
-        break;
-    case TRAN_ICE_BEAST:
-        result = "hand";
-        if (you.species == SP_CAT)
-            result = "paw";
-        break;
-    case TRAN_SPIDER:
-    case TRAN_PIG:
-        result = "front leg";
-        break;
-    case TRAN_DRAGON:
-    case TRAN_BAT:
-        result = "foreclaw";
-        break;
-    case TRAN_BLADE_HANDS:
-        result = "scythe-like blade";
-        break;
+        if (you.religion == GOD_OKAWARU)
+            adj = "your ally the ";
+        else
+            adj = "your ";
+        return true;
     }
 
-    if (plural)
-        result += 's';
+    if (is_unchivalric_attack(&you, mon)
+        && you.religion == GOD_SHINING_ONE
+        && !tso_unchivalric_attack_safe_monster(mon))
+    {
+        adj += "helpless ";
+    }
+    if (mon->wont_attack())
+        adj += "non-hostile ";
+    if (mon->neutral() && is_good_god(you.religion))
+        adj += "neutral ";
+    if (mon->is_holy() && is_good_god(you.religion))
+        adj += "holy ";
 
-    return result;
+    if (you.religion == GOD_JIYVA && mons_is_slime(mon))
+        retval = true;
+
+    return retval || !adj.empty() || !suffix.empty();
 }
 
 bool stop_attack_prompt(const monster* mon, bool beam_attack,
                         coord_def beam_target, bool autohit_first)
 {
-    ASSERT(!crawl_state.game_is_arena());
-
     if (you.confused() || !you.can_see(mon))
         return (false);
 
-    bool retval = false;
-    bool prompt = false;
+    std::string adj, suffix;
+    if (!bad_attack(mon, adj, suffix))
+        return false;
 
-    const bool mon_target    = (beam_target == mon->pos());
-    const bool inSanctuary   = (is_sanctuary(you.pos())
-                                || is_sanctuary(mon->pos()));
-    const bool wontAttack    = mon->wont_attack();
-    const bool isFriendly    = mon->friendly();
-    const bool isNeutral     = mon->neutral();
-    const bool isUnchivalric = is_unchivalric_attack(&you, mon);
-    const bool isHoly        = mon->is_holy()
-                                   && (mon->attitude != ATT_HOSTILE
-                                       || testbits(mon->flags, MF_NO_REWARD)
-                                       || testbits(mon->flags, MF_WAS_NEUTRAL));
-
-    if (isFriendly)
+    // Listed in the form: "your rat", "Blork the orc".
+    std::string mon_name = mon->name(DESC_PLAIN);
+    if (!mon_name.find("the ")) // no "your the royal jelly" nor "the the RJ"
+        mon_name.erase(0, 4);
+    if (adj.find("your"))
+        adj = "the " + adj;
+    mon_name = adj + mon_name;
+    std::string verb;
+    if (beam_attack)
     {
-        // Listed in the form: "your rat", "Blork the orc".
-        std::string mon_name = mon->name(DESC_PLAIN);
-        mon_name = std::string("your ") +
-                   (you.religion == GOD_OKAWARU ? "ally the " : "") +
-                   mon_name;
-        std::string verb = "";
-        bool need_mon_name = true;
-        if (beam_attack)
+        verb = "fire ";
+        if (beam_target == mon->pos())
+            verb += "at ";
+        else if (you.pos() < beam_target && beam_target < mon->pos()
+                 || you.pos() > beam_target && beam_target > mon->pos())
         {
-            verb = "fire ";
-            if (mon_target)
-                verb += "at ";
-            else if (you.pos() < beam_target && beam_target < mon->pos()
-                     || you.pos() > beam_target && beam_target > mon->pos())
-            {
-                if (autohit_first)
-                    return (false);
+            if (autohit_first)
+                return (false);
 
-                verb += "in " + apostrophise(mon_name) + " direction";
-                need_mon_name = false;
-            }
-            else
-                verb += "through ";
+            verb += "in " + apostrophise(mon_name) + " direction";
+            mon_name = "";
         }
         else
-            verb = "attack ";
-
-        if (need_mon_name)
-            verb += mon_name;
-
-        snprintf(info, INFO_SIZE, "Really %s%s?",
-                 verb.c_str(),
-                 (inSanctuary) ? ", despite your sanctuary" : "");
-
-        prompt = true;
+            verb += "through ";
     }
-    else if (inSanctuary || wontAttack
-             || (you.religion == GOD_JIYVA && mons_is_slime(mon)
-                 && !mon->is_shapeshifter())
-             || (isNeutral || isHoly) && is_good_god(you.religion)
-             || isUnchivalric
-                && you.religion == GOD_SHINING_ONE
-                && !tso_unchivalric_attack_safe_monster(mon))
+    else
+        verb = "attack ";
+
+    snprintf(info, INFO_SIZE, "Really %s%s%s?",
+             verb.c_str(), mon_name.c_str(), suffix.c_str());
+
+    return !yesno(info, false, 'n');
+}
+
+bool stop_attack_prompt(targetter &hitfunc, std::string verb,
+                        bool (*affects)(const actor *victim))
+{
+    if (you.confused())
+        return false;
+
+    std::string adj, suffix;
+    counted_monster_list victims;
+    for (distance_iterator di(hitfunc.origin, false, true, LOS_RADIUS); di; ++di)
     {
-        snprintf(info, INFO_SIZE, "Really %s the %s%s%s%s%s?",
-                 (beam_attack) ? (mon_target) ? "fire at"
-                                              : "fire through"
-                               : "attack",
-                 (isUnchivalric) ? "helpless "
-                                 : "",
-                 (isFriendly)    ? "friendly " :
-                 (wontAttack)    ? "non-hostile " :
-                 (isNeutral)     ? "neutral "
-                                 : "",
-                 (isHoly)        ? "holy "
-                                 : "",
-                 mon->name(DESC_PLAIN).c_str(),
-                 (inSanctuary)   ? ", despite your sanctuary"
-                                 : "");
-
-        prompt = true;
+        if (hitfunc.is_affected(*di) <= AFF_NO)
+            continue;
+        const monster* mon = monster_at(*di);
+        if (!mon || !you.can_see(mon))
+            continue;
+        if (affects && !affects(mon))
+            continue;
+        std::string adjn, suffixn;
+        if (bad_attack(mon, adjn, suffixn))
+        {
+            if (victims.empty()) // record the adjectives for the first listed
+                adj = adjn, suffix = suffixn;
+            victims.add(mon);
+        }
     }
 
-    if (prompt)
-        retval = !yesno(info, false, 'n');
+    if (victims.empty())
+        return false;
 
-    return (retval);
+    // Listed in the form: "your rat", "Blork the orc".
+    std::string mon_name = victims.describe(DESC_PLAIN);
+    if (!mon_name.find("the ")) // no "your the royal jelly" nor "the the RJ"
+        mon_name.erase(0, 4);
+    if (adj.find("your"))
+        adj = "the " + adj;
+    mon_name = adj + mon_name;
+
+    snprintf(info, INFO_SIZE, "Really %s %s%s?",
+             verb.c_str(), mon_name.c_str(), suffix.c_str());
+
+    return !yesno(info, false, 'n');
 }
 
 bool is_orckind(const actor *act)
@@ -2409,28 +2417,41 @@ void swap_with_monster(monster* mon_to_swap)
     {
         if (you.body_size(PSIZE_BODY) >= SIZE_GIANT)
         {
-            mpr("The net rips apart!");
-            you.attribute[ATTR_HELD] = 0;
-            you.redraw_quiver = true;
             int net = get_trapping_net(you.pos());
             if (net != NON_ITEM)
                 destroy_item(net);
+            mprf("The %s rips apart!", (net == NON_ITEM) ? "web" : "net");
+            you.attribute[ATTR_HELD] = 0;
+            you.redraw_quiver = true;
         }
         else
         {
             you.attribute[ATTR_HELD] = 10;
-            mpr("You become entangled in the net!");
+            if (get_trapping_net(you.pos()) != NON_ITEM)
+                mpr("You become entangled in the net!");
+            else
+                mpr("You get stuck in the web!");
             you.redraw_quiver = true; // Account for being in a net.
             // Xom thinks this is hilarious if you trap yourself this way.
             if (you_caught)
-                xom_is_stimulated(16);
+                xom_is_stimulated(12);
             else
-                xom_is_stimulated(255);
+                xom_is_stimulated(200);
         }
 
         if (!you_caught)
             mon.del_ench(ENCH_HELD, true);
     }
+}
+
+void wear_id_type(item_def &item)
+{
+    if (item_ident(item, ISFLAG_KNOW_PROPERTIES))
+        return;
+    set_ident_type(item.base_type, item.sub_type, ID_KNOWN_TYPE);
+    set_ident_flags(item, ISFLAG_KNOW_PROPERTIES);
+    mprf("You are wearing: %s",
+         item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
 // AutoID an equipped ring of teleport.
@@ -2444,8 +2465,11 @@ void maybe_id_ring_TC()
     }
 
     int num_unknown = 0;
-    for (int i = EQ_LEFT_RING; i <= EQ_RIGHT_RING; ++i)
+    for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
     {
+        if (i == EQ_AMULET)
+            continue;
+
         if (player_wearing_slot(i)
             && !item_ident(you.inv[you.equip[i]], ISFLAG_KNOW_PROPERTIES))
         {
@@ -2453,22 +2477,43 @@ void maybe_id_ring_TC()
         }
     }
 
-    if (num_unknown != 1)
+    if (num_unknown == 0)
         return;
 
-    for (int i = EQ_LEFT_RING; i <= EQ_RIGHT_RING; ++i)
+    for (int i = EQ_LEFT_RING; i < NUM_EQUIP; ++i)
+    {
+        if (i == EQ_AMULET)
+            continue;
+
         if (player_wearing_slot(i))
         {
             item_def& ring = you.inv[you.equip[i]];
-            if (!item_ident(ring, ISFLAG_KNOW_PROPERTIES)
-                && ring.sub_type == RING_TELEPORT_CONTROL)
-            {
-                set_ident_type(ring.base_type, ring.sub_type, ID_KNOWN_TYPE);
-                set_ident_flags(ring, ISFLAG_KNOW_PROPERTIES);
-                mprf("You are wearing: %s",
-                     ring.name(DESC_INVENTORY_EQUIP).c_str());
-            }
+            if (ring.sub_type == RING_TELEPORT_CONTROL)
+                wear_id_type(ring);
         }
+    }
+}
+
+// Reduce damage by AC.
+// In most cases, we want AC to mostly stop weak attacks completely but affect
+// strong ones less, but the regular formula is too hard to apply well to cases
+// when damage is spread into many small chunks.
+//
+// Every point of damage is processed independently.  Every point of AC has
+// an independent 1/81 chance of blocking that damage.
+//
+// AC 20 stops 22% of damage, AC 40 -- 39%, AC 80 -- 63%.
+int apply_chunked_AC(int dam, int ac)
+{
+    double chance = pow(80.0/81, ac);
+    uint64_t cr = chance * (((uint64_t)1) << 32);
+
+    int hurt = 0;
+    for (int i = 0; i < dam; i++)
+        if (random_int() < cr)
+            hurt++;
+
+    return hurt;
 }
 
 void entered_malign_portal(actor* act)
@@ -2499,4 +2544,61 @@ std::string part_stack_string(const int num, const int total)
                 ret += " of your";
 
     return ret;
+}
+
+unsigned int breakpoint_rank(int val, const int breakpoints[],
+                             unsigned int num_breakpoints)
+{
+    unsigned int result = 0;
+    while (result < num_breakpoints && val >= breakpoints[result])
+        ++result;
+
+    return result;
+}
+
+void counted_monster_list::add(const monster* mons)
+{
+    const std::string name = mons->name(DESC_PLAIN);
+    for (counted_list::iterator i = list.begin(); i != list.end(); ++i)
+    {
+        if (i->first->name(DESC_PLAIN) == name)
+        {
+            i->second++;
+            return;
+        }
+    }
+    list.push_back(counted_monster(mons, 1));
+}
+
+int counted_monster_list::count()
+{
+    int nmons = 0;
+    for (counted_list::const_iterator i = list.begin(); i != list.end(); ++i)
+        nmons += i->second;
+    return (nmons);
+}
+
+std::string counted_monster_list::describe(description_level_type desc)
+{
+    std::string out;
+
+    for (counted_list::const_iterator i = list.begin(); i != list.end();)
+    {
+        const counted_monster &cm(*i);
+        if (i != list.begin())
+        {
+            ++i;
+            out += (i == list.end() ? " and " : ", ");
+        }
+        else
+            ++i;
+
+        out += cm.second > 1 ? pluralise(cm.first->name(desc))
+                             : cm.first->name(desc);
+
+        // yay capitalization hacks, may we merge Cryp71c's branch already please?
+        if (desc == DESC_CAP_THE)
+            desc = DESC_NOCAP_THE;
+    }
+    return out;
 }

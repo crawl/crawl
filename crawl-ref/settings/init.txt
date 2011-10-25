@@ -1,27 +1,3 @@
-# NOTE FOR PLAYERS OF OLD VERSIONS (DCSS 0.3.4 or before):
-#
-# DCSS 0.4 introduces several rather drastic changes to the interface;
-# read 034_changes.txt for details. Uncomment these options if you want
-# to disable them and go back to the old state:
-# monster colours, command keys, order on the character selection screen,
-# item colours, appearance of the stat section, butchering interface,
-# targeting interface.
-# The options for monster glyphs and item colours don't matter for Tiles.
-# (New players should just ignore these lines.)
-#
-# include                 = 034_monster_glyphs.txt
-# include                 = 034_command_keys.txt
-# classic_item_colours    = true
-# classic_hud             = true
-# always_confirm_butcher  = true
-# target_unshifted_dirs   = true
-# clear_messages          = true
-#
-# Similar options for reverting later changes:
-# include                 = 052_monster_glyphs.txt
-# include                 = 060_monster_glyphs.txt
-# include                 = 071_monster_glyphs.txt
-
 # Crawl Init file
 #
 # On Unix systems (such as Mac OS X, Linux and the BSDs), you must copy
@@ -54,21 +30,41 @@
 # uncommenting.
 # Options with several values, e.g. drop_mode = (multi | single),
 # usually have the first value as default.
+#
+# The options for monster glyphs and item colours don't matter for Tiles.
+# Similarily, tile options are ignored in console games.
+
+##### Ancient versions ##############################################
+# If you're used to the interface of ancient versions of Crawl, you may
+# get back parts of it by uncommenting the following options:
+
+# include                 = 034_command_keys.txt
+# classic_item_colours    = true
+# classic_hud             = true
+# always_confirm_butcher  = true
+# target_unshifted_dirs   = true
+# clear_messages          = true
+#
+# And to revert monster glyph and colouring changes:
+# include                 = 034_monster_glyphs.txt
+# include                 = 052_monster_glyphs.txt
+# include                 = 060_monster_glyphs.txt
+# include                 = 071_monster_glyphs.txt
+# include                 = 080_monster_glyphs.txt
+# include                 = 0.9_monster_glyphs.txt
 
 ##### 1- Starting Screen ############################################
 #
 # name = Delilah
 # remember_name = false
-# weapon = (short sword | falchion | hand axe | spear | mace | trident
-#           | unarmed | random)
-# book = (fire | ice | random)
-# wand = (enslavement | confusion | magic darts | frost | flame | striking | random)
+# weapon = (short sword | falchion | quarterstaff | hand axe | spear | mace
+#           | trident | unarmed | random)
 # species = (Human |...| Vampire | random)
 # job     = (Fighter |...| Wanderer | random)
-# religion = (Beogh | Zin | random)
 # random_pick = true
 # good_random = false
 # restart_after_game = true
+# default_manual_training = true
 
 ##### 2-  File System ###############################################
 #
@@ -85,7 +81,6 @@ lua_file = lua/wield.lua
 lua_file = lua/runrest.lua
 lua_file = lua/gearset.lua
 lua_file = lua/trapwalk.lua
-lua_file = lua/pickup.lua
 
 # kills.lua yields more information at the cost of huge dumps.
 # lua_file = lua/kills.lua
@@ -171,10 +166,11 @@ drop_filter = useless_item
 # explore_stop     = items,greedy_pickup_smart,stairs,shops,altars,gates
 # explore_stop    += greedy_visited_item_stack
 # explore_improved = true
+# explore_wall_bias = 0
 # travel_key_stop = false
 #
 # explore_stop_pickup_ignore = curare
-auto_exclude = oklob plant,statue,curse skull,roxanne, hyperactive
+auto_exclude = oklob,statue,curse skull,roxanne,hyperactive,lightning spire
 
 # tc_reachable      = blue
 # tc_dangerous      = cyan
@@ -194,7 +190,6 @@ runrest_ignore_monster = butterfly:1
 # runrest_ignore_message = Jiyva's power touches on your attributes
 include = runrest_messages.txt
 
-# trap_prompt = false
 trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 
 #rest_wait_both = true
@@ -208,6 +203,7 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 ##### 4-i       Command Enhancements ##################
 #
 # auto_list     = false
+# auto_switch   = true
 # easy_open     = false
 # easy_unequip  = false
 # equip_unequip = true
@@ -243,7 +239,7 @@ sort_menus = inv: true : equipped, freshness, charged
 # mlist_targetting             = true
 # show_gold_turns              = true
 # show_game_turns              = true
-
+# show_newturn_mark            = false
 # clear_messages             = true
 # small_more                 = true
 # show_more                  = false
@@ -253,6 +249,8 @@ sort_menus = inv: true : equipped, freshness, charged
 # show_beam                  = false
 # msg_condense_repeats   = false
 # msg_condense_short     = false
+# show_no_ctele          = false
+# skill_focus            = false
 
 #####          Colours (messages and menus) #####
 #
@@ -367,6 +365,7 @@ include = tiles_options.txt
 # dump_order  = header, hiscore, stats, misc, notes, inventory,
 # dump_order += turns_by_place, skills, spells, overview, mutations,
 # dump_order += messages, screenshot, monlist, kills_by_place, kills
+# dump_order += spell_usage
 # dump_book_spells = false
 
 ##### 5-b       Notes #################################
@@ -408,12 +407,12 @@ note_monsters = orb of fire, ancient lich, Sigmund
 # See options_guide.txt for the options
 # cset, feature, mon_glyph
 
-##### 6-b       DOS and Windows #######################
+##### 6-b   Windows console #######################
 #
 # dos_use_background_intensity = true
 # background = black
 
-##### 6-c   Unix ##################################
+##### 6-c   Unix console ##########################
 #
 # use_fake_cursor = false
 

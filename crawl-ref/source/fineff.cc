@@ -35,7 +35,7 @@ void add_final_effect(final_effect_flavour flavour,
 
     for (std::vector<final_effect>::iterator fi = env.final_effects.begin();
          fi != env.final_effects.end();
-         fi++)
+         ++fi)
     {
         if (fi->flavour == fe.flavour
             && fi->att == fe.att
@@ -61,11 +61,6 @@ void fire_final_effects()
         const final_effect &fe = env.final_effects[i];
         // We can't just pass the pointer, as we wouldn't be notified
         // if it becomes invalid between scheduling and firing.
-
-        // This code doesn't check for monster being cleaned and a new one
-        // immediately replacing it; this is not supposed to happen save for
-        // zombifying (and then it's the same monster), but if this changes,
-        // we'd need an identifier or such.
         actor *attacker = actor_by_mid(fe.att);
         actor *defender = actor_by_mid(fe.def);
 
@@ -80,12 +75,12 @@ void fire_final_effects()
             if (!attacker || attacker == defender || !attacker->alive())
                 continue;
             // defender being dead is ok, if we killed them we still suffer
-            if (attacker->atype() == ACT_PLAYER)
+            if (fe.att == MID_PLAYER)
             {
                 mpr("It reflects your damage back at you!");
                 ouch(fe.x, NON_MONSTER, KILLED_BY_REFLECTION);
             }
-            else if (defender->atype() == ACT_PLAYER)
+            else if (fe.def == MID_PLAYER)
             {
                 simple_god_message(" mirrors your injury!");
 #ifndef USE_TILE

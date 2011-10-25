@@ -37,6 +37,7 @@ public:
 
     virtual bool valid() const = 0;
     virtual bool matches(const std::string &s) const = 0;
+    virtual const std::string &tostring() const = 0;
 };
 
 template <p_compile pcomp, p_free pfree, p_match pmatch>

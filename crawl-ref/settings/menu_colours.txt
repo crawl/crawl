@@ -20,9 +20,10 @@ ae   = >ring.*(sustenance)
 # Evil items
 menu = $evil:.*evil_item.*
 
-# Handle cursed items early to override other colour settings.
+# Handle cursed and equipped items early to override other colour settings.
 menu = lightred:.*equipped.* cursed
 menu = red: (a|the) cursed
+menu = inventory:lightgreen:.*equipped.*
 
 # Important game items
 #
@@ -61,6 +62,4 @@ menu = cyan:.*misc.*[lL]antern
 menu = $dangerous:.*dangerous_item.*
 
 # Defaults for normal items
-#
-menu = inventory:lightgreen:.*equipped.*
 menu = green:uncursed

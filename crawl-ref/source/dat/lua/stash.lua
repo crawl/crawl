@@ -11,7 +11,7 @@
 -- {ego} for identified branded items.
 -- { <skill> } - the relevant weapon skill for weapons.
 -- { <class> } - item class: gold, weapon, missile, armour, wand, carrion,
---               food, scroll, jewellery, potion, book, staff, orb, misc
+--               food, scroll, jewellery, potion, book, magical staff, orb, misc
 -- {stick} for items suitable for "sticks to snakes"
 -- {fruit} for fruit
 --
@@ -40,9 +40,9 @@ function ch_stash_search_annotate_item(it)
   end
 
   if it.artefact then
-    annot = annot .. "{artefact} "
+    annot = annot .. "{artefact} {artifact} "
   elseif it.branded then
-    annot = annot .. "{ego} "
+    annot = annot .. "{ego} {branded} "
   end
 
   if it.snakable then
@@ -63,7 +63,13 @@ function ch_stash_search_annotate_item(it)
   end
 
   if ch_annotate_item_class then
-    annot = annot .. "{" .. it.class(true) .. "}"
+    if it.class(true) == "armour" then
+        st, _ = it.subtype()
+        annot = annot .. "{" .. st .. " "
+    else
+        annot = annot .. "{"
+    end
+    annot = annot .. it.class(true) .. "}"
   end
 
   return annot

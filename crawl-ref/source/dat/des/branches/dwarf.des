@@ -45,25 +45,6 @@ dhfh.colors = function(e)
     dgn.set_feature_desc_long("metal wall", "These metal walls are brush-textured and recently maintained.\n")
 end
 
-dhfh.random_monster_set = function(e)
-    e.set_random_mon_list("wight / troll / rock troll w:3 / deep troll w:1 / \
-        shapeshifter w:3 / necrophage w:3 / orange rat w:5 / redback w:5 / \
-        wolf spider w:5 / giant centipede / war dog ")
-end
-
-dhfh.treasure_setup = function(e)
-    if (local_util.treasure_level == 0) then
-        local_util.treasure_level = crawl.random_range(2,4)
-        local_util.treasure_levels = {2,3,4}
-    end
-
-    local level = local_util.treasure_select_level()
-
-    if (local_util.treasure_level == level) then
-        e.place("Dwarf:" .. level)
-    end
-end
-
 dhfh.hall_setup = function(e, glyph)
     local mod
     if (glyph == "|") then
@@ -448,7 +429,7 @@ SUBVAULT: Z : fruiting_plant
 SUBVAULT: Y : fruiting_plant
 SUBVAULT: X : fruiting_plant
 SUBVAULT: W : fruiting_plant
-KITEM:    p = potion of healing / potion of heal wounds / \
+KITEM:    p = potion of curing / potion of heal wounds / \
               potion of restore abilities w:1 / potion of poison w:3 / \
               potion of strong poison w:1 / potion of confusion w:1 / nothing
 KMONS:    1 = deep dwarf artificer
@@ -484,7 +465,7 @@ ENDMAP
 
 NAME:  dhfh_hall_left
 TAGS:  dhfh_hall_left allow_dup no_rotate no_hmirror no_vmirror
-KITEM: * = any scroll / any potion / any book w:2 / any staff w:1 / any jewellery w:3 / \
+KITEM: * = any scroll / any potion / any book w:2 / any magical staff w:1 / any jewellery w:3 / \
            w:2 any misc / any level:20 weapon / w:3 any level:20 armour
 : dhfh.hall_setup(_G, "*")
 MAP
@@ -507,7 +488,7 @@ PLACE:    Dwarf:1
 NSUBST:   s = 1:= / *:c
 MARKER:   = = lua:restrict_door()
 SUBST:    ? = w * |:3
-KITEM:    w : wand of healing
+KITEM:    w : wand of heal wounds
 SUBVAULT: O : dhfh_hall_top
 SUBVAULT: Z : dhfh_hall_left
 SUBVAULT: Y : dhfh_hall_left

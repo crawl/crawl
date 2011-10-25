@@ -9,6 +9,7 @@
 
 #include "abyss.h"
 #include "areas.h"
+#include "artefact.h"
 #include "cio.h"
 #include "colour.h"
 #include "coord.h"
@@ -39,10 +40,10 @@
 #include "showsymb.h"
 #include "spl-miscast.h"
 #include "spl-util.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "view.h"
 #include "viewmap.h"
+#include "wiz-dgn.h"
 
 #ifdef WIZARD
 // Creates a specific monster by mon type number.
@@ -67,12 +68,107 @@ void wizard_create_spec_monster(void)
     }
 }
 
+static int _make_mimic_item(object_class_type type)
+{
+    int it = items(0, OBJ_RANDOM, OBJ_RANDOM, true, 0, 0);
+
+    if (it == NON_ITEM)
+        return NON_ITEM;
+
+    item_def &item = mitm[it];
+
+    item.base_type = type;
+    item.sub_type  = 0;
+    item.special   = 0;
+    item.colour    = 0;
+    item.flags     = 0;
+    item.quantity  = 1;
+    item.plus      = 0;
+    item.plus2     = 0;
+    item.link      = NON_ITEM;
+
+    int prop;
+    switch (type)
+    {
+    case OBJ_WEAPONS:
+        do
+            item.sub_type = random2(NUM_WEAPONS);
+        while (is_blessed(item));
+
+        prop = random2(100);
+
+        if (prop < 20)
+            make_item_randart(item);
+        else if (prop < 50)
+            set_equip_desc(item, ISFLAG_GLOWING);
+        else if (prop < 80)
+            set_equip_desc(item, ISFLAG_RUNED);
+        else if (prop < 85)
+            set_equip_race(item, ISFLAG_ORCISH);
+        else if (prop < 90)
+            set_equip_race(item, ISFLAG_DWARVEN);
+        else if (prop < 95)
+            set_equip_race(item, ISFLAG_ELVEN);
+        break;
+
+    case OBJ_ARMOUR:
+        do
+            item.sub_type = random2(NUM_ARMOURS);
+        while (armour_is_hide(item));
+
+        prop = random2(100);
+
+        if (prop < 20)
+            make_item_randart(item);
+        else if (prop < 40)
+            set_equip_desc(item, ISFLAG_GLOWING);
+        else if (prop < 60)
+            set_equip_desc(item, ISFLAG_RUNED);
+        else if (prop < 80)
+            set_equip_desc(item, ISFLAG_EMBROIDERED_SHINY);
+        else if (prop < 85)
+            set_equip_race(item, ISFLAG_ORCISH);
+        else if (prop < 90)
+            set_equip_race(item, ISFLAG_DWARVEN);
+        else if (prop < 95)
+            set_equip_race(item, ISFLAG_ELVEN);
+        break;
+
+    case OBJ_SCROLLS:
+        item.sub_type = random2(NUM_SCROLLS);
+        break;
+
+    case OBJ_POTIONS:
+        do
+            item.sub_type = random2(NUM_POTIONS);
+        while (is_blood_potion(item) || is_fizzing_potion(item));
+        break;
+
+    case OBJ_BOOKS:
+        item.sub_type = random2(MAX_NORMAL_BOOK);
+        break;
+
+    case OBJ_STAVES:
+        item.sub_type = random2(STAFF_FIRST_ROD - 1);
+        break;
+
+    case OBJ_GOLD:
+    default:
+        item.quantity = 5 + random2(1000);
+        break;
+    }
+
+    item_colour(item); // also sets special vals for scrolls/potions
+
+    return (it);
+}
+
 // Creates a specific monster by name. Uses the same patterns as
 // map definitions.
 void wizard_create_spec_monster_name()
 {
     char specs[100];
-    mpr("Which monster by name? ", MSGCH_PROMPT);
+    mpr("Enter monster name (or MONS spec): ", MSGCH_PROMPT);
     if (cancelable_get_line_autohist(specs, sizeof specs) || !*specs)
     {
         canned_msg(MSG_OK);
@@ -123,6 +219,32 @@ void wizard_create_spec_monster_name()
     if (!in_bounds(place))
     {
         mpr("Found no space to place monster.", MSGCH_DIAGNOSTICS);
+        return;
+    }
+
+    if (mons_is_feat_mimic(type))
+    {
+        if (wizard_create_feature(place))
+            env.level_map_mask(place) |= MMT_MIMIC;
+        return;
+    }
+
+    if (mons_is_item_mimic(type))
+    {
+        object_class_type item_type = get_item_mimic_type();
+        if (item_type == OBJ_UNASSIGNED)
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+        int it = _make_mimic_item(item_type);
+        if (it == NON_ITEM)
+        {
+            mpr("Cannot create item.", MSGCH_DIAGNOSTICS);
+            return;
+        }
+        move_item_to_grid(&it, place);
+        mitm[it].flags |= ISFLAG_MIMIC;
         return;
     }
 
@@ -351,7 +473,7 @@ void wizard_spawn_control()
         if (!cancelable_get_line(specs, sizeof(specs)))
         {
             const int rate = atoi(specs);
-            if (rate)
+            if (rate || specs[0] == '0')
             {
                 env.spawn_random_rate = rate;
                 done = true;
@@ -468,6 +590,14 @@ void debug_stethoscope(int mon)
          get_monster_data(mons.base_monster)->name : "",
          mons.mid, mons.number, mons.stealth(), mons.flags);
 
+    if (mons.damage_total)
+    {
+        mprf(MSGCH_DIAGNOSTICS,
+             "pdam=%1.1f/%d (%d%%)",
+             0.5 * mons.damage_friendly, mons.damage_total,
+             50 * mons.damage_friendly / mons.damage_total);
+    }
+
     // Print habitat and behaviour information.
     const habitat_type hab = mons_habitat(&mons);
 
@@ -484,6 +614,7 @@ void debug_stethoscope(int mon)
           mons_is_wandering(&mons)       ? "wander" :
           mons_is_seeking(&mons)         ? "seek" :
           mons_is_fleeing(&mons)         ? "flee" :
+          mons_is_retreating(&mons)      ? "retreat" :
           mons_is_cornered(&mons)        ? "cornered" :
           mons_is_panicking(&mons)       ? "panic" :
           mons_is_lurking(&mons)         ? "lurk"
@@ -817,7 +948,7 @@ void wizard_give_monster_item(monster* mon)
         }
     }
 
-    int index = get_item_slot(10);
+    int index = get_mitm_slot(10);
     if (index == NON_ITEM)
     {
         mpr("Too many items on level, bailing.");
@@ -1116,7 +1247,7 @@ void debug_pathfind(int mid)
             path_str += info;
         }
         mpr(path_str.c_str());
-        mprf("-> path length: %d", path.size());
+        mprf("-> path length: %u", (unsigned int)path.size());
 
         mpr("");
         path = mp.calc_waypoints();
@@ -1129,7 +1260,7 @@ void debug_pathfind(int mid)
             path_str += info;
         }
         mpr(path_str.c_str());
-        mprf("-> #waypoints: %d", path.size());
+        mprf("-> #waypoints: %u", (unsigned int)path.size());
     }
 }
 

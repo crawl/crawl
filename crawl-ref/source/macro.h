@@ -13,7 +13,8 @@
 class key_recorder;
 typedef std::deque<int> keyseq;
 
-class key_recorder {
+class key_recorder
+{
 public:
     bool                  paused;
     keyseq                keys;
@@ -25,7 +26,8 @@ public:
     void clear();
 };
 
-class pause_all_key_recorders {
+class pause_all_key_recorders
+{
 public:
     pause_all_key_recorders();
     ~pause_all_key_recorders();
@@ -74,6 +76,7 @@ void add_key_recorder(key_recorder* recorder);
 void remove_key_recorder(key_recorder* recorder);
 
 bool is_processing_macro();
+bool has_pending_input();
 
 int get_macro_buf_size();
 

@@ -219,7 +219,7 @@ static int dgn_change_level_flags(lua_State *ls)
 }
 
 static const std::string branch_flag_names[] =
-{"no_tele_control", "not_mappable", "no_magic_map", "has_orb", "islanded", ""};
+{"no_tele_control", "unused", "no_map", "has_orb", "islanded", ""};
 
 static int dgn_bflags(lua_State *ls)
 {
@@ -453,9 +453,9 @@ static int dgn_map(lua_State *ls)
         {
             luaL_error(ls,
                        lines.empty()? "Map is empty"
-                       : make_stringf("Line %d out of range (0-%u)",
+                       : make_stringf("Line %d out of range (0-%d)",
                                       which_line,
-                                      lines.size() - 1).c_str());
+                                      (int)lines.size() - 1).c_str());
         }
         PLUARET(string, lines[which_line].c_str());
     }

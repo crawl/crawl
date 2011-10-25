@@ -257,7 +257,7 @@ COLOUR: K = magenta
 FTILE:  M = floor_rough_red, K = floor_rough_red, # = floor_rough_red
 MARKER: # = lua:fog_machine{\
             pow_max = 15, delay_min = 100, delay_max = 150, \
-            size = 1, size_buildup_amnt = 10, \
+            size = 2, size_buildup_amnt = 10, \
             size_buildup_time = 1000 }
 KFEAT:  # = fountain_blood
 # the talent:
@@ -274,7 +274,7 @@ KMONS:  S = human; robe
 KMONS:  B: iron troll / cyclops / stone giant / minotaur / vault guard
 # the fans:
 SUBST:  F = 011112223334455679.........
-MONS:   human; leather armour|ring mail . knife|club|ankus|whip|nothing
+MONS:   human; leather armour|ring mail . dagger|club|ankus|whip|nothing
 MONS:   elf; robe|leather armour . w:24 quarterstaff|w:1 lajatang|w:75 nothing
 # these are Sludge Elves.
 MONS:   ghoul / necrophage / rotting hulk / vampire
@@ -496,6 +496,20 @@ KFEAT:   o = any shop
 : else
 KITEM:   o = any good_item
 : end
+MAP
+o
+ENDMAP
+
+############################################################
+# Vault:8 - the subvault used for potential rune locations that do not
+# contain the rune, but rather a mimic of it!
+#
+# Used by the 'vault8_rune()' function in the prelude.
+#
+NAME:    vault8_rune_mimic
+TAGS:    vault8_norune
+WEIGHT:  1
+KITEM:   o = silver rune of Zot mimic
 MAP
 o
 ENDMAP

@@ -17,6 +17,7 @@ enum mon_event_type
     ME_WHACK,                           // physical attack
     ME_SCARE,                           // frighten monster
     ME_CORNERED,                        // cannot flee
+    ME_HURT,                            // lost some HP (by any mean)
 };
 
 class monster;
@@ -39,11 +40,7 @@ void make_mons_leave_level(monster* mon);
 bool monster_can_hit_monster(monster* mons, const monster* targ);
 
 // For Zotdef: the target position of MHITYOU monsters is
-// the orb, if it's on the ground. Note that zotdef_target()
-// returns the orb position, or you.pos if the orb's not
-// on the ground.
-#define PLAYER_POS (crawl_state.game_is_zotdef() ? zotdef_target() : you.pos())
-
-coord_def zotdef_target();
+// the orb.
+#define PLAYER_POS (crawl_state.game_is_zotdef() ? env.orb_pos : you.pos())
 
 #endif

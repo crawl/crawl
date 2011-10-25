@@ -30,6 +30,7 @@
 #include "mon-util.h"
 #include "options.h"
 #include "religion.h"
+#include "skills2.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
@@ -37,7 +38,7 @@
 #include "hiscores.h"
 #include "zotdef.h"
 
-#if defined(USE_TILE) && (defined(TARGET_OS_WINDOWS) || defined(TARGET_COMPILER_MINGW))
+#if defined(USE_TILE_LOCAL) && (defined(TARGET_OS_WINDOWS) || defined(TARGET_COMPILER_MINGW))
 #define NOCOMM            /* Comm driver APIs and definitions */
 #define NOLOGERROR        /* LogError() and related definitions */
 #define NOPROFILER        /* Profiler APIs */
@@ -140,11 +141,11 @@ static void _dump_player(FILE *file)
     fprintf(file, "Job:        %s\n\n", get_job_name(you.char_class));
     fprintf(file, "class_name: %s\n\n", you.class_name.c_str());
 
-    fprintf(file, "HP: %d/%d; base: %d/%d\n", you.hp, you.hp_max,
-            you.base_hp, you.base_hp2);
-    fprintf(file, "MP: %d/%d; base: %d/%d\n",
+    fprintf(file, "HP: %d/%d; mods: %d/%d\n", you.hp, you.hp_max,
+            you.hp_max_temp, you.hp_max_perm);
+    fprintf(file, "MP: %d/%d; mods: %d/%d\n",
             you.magic_points, you.max_magic_points,
-            you.base_magic_points, you.base_magic_points2);
+            you.hp_max_temp, you.mp_max_perm);
     fprintf(file, "Stats: %d (%d) %d (%d) %d (%d)\n",
             you.strength(), you.max_strength(), you.intel(), you.max_intel(),
             you.dex(), you.max_dex());
@@ -172,7 +173,7 @@ static void _dump_player(FILE *file)
                 debug_coord_str(you.running.pos).c_str());
     }
 
-    if (you.delay_queue.size() > 0)
+    if (!you.delay_queue.empty())
     {
         fprintf(file, "Delayed (%u):\n",
                 (unsigned int)you.delay_queue.size());
@@ -194,6 +195,31 @@ static void _dump_player(FILE *file)
         }
         fprintf(file, "\n");
     }
+
+    fprintf(file, "Skills (mode: %s)\n", you.auto_training ? "auto" : "manual");
+    fprintf(file, "Name            | can_train | train | training | level | points | progress\n");
+    for (size_t i = 0; i < NUM_SKILLS; ++i)
+    {
+        const skill_type sk = skill_type(i);
+        if (is_invalid_skill(sk))
+            continue;
+        int needed_min = 0, needed_max = 0;
+        if (sk >= 0 && you.skills[sk] <= 27)
+            needed_min = skill_exp_needed(you.skills[sk], sk);
+        if (sk >= 0 && you.skills[sk] < 27)
+            needed_max = skill_exp_needed(you.skills[sk] + 1, sk);
+
+        fprintf(file, "%-16s|     %c     |   %d   |    %2d    |   %2d  | %6d | %d/%d\n",
+                skill_name(sk),
+                you.can_train[sk] ? 'X' : ' ',
+                you.train[sk],
+                you.training[sk],
+                you.skills[sk],
+                you.skill_points[sk],
+                you.skill_points[sk] - needed_min,
+                std::max(needed_max - needed_min, 0));
+    }
+    fprintf(file, "\n");
 
     fprintf(file, "Spell bugs:\n");
     for (size_t i = 0; i < you.spells.size(); ++i)
@@ -470,7 +496,7 @@ static void _debug_dump_lua_markers(FILE *file)
 
         std::string result = lua_marker->debug_to_string();
 
-        if (result.size() > 0 && result[result.size() - 1] == '\n')
+        if (!result.empty() && result[result.size() - 1] == '\n')
             result = result.substr(0, result.size() - 1);
 
         fprintf(file, "Lua marker %d at (%d, %d):\n",
@@ -516,8 +542,10 @@ static void _dump_ver_stuff(FILE* file)
     fprintf(file, "Game mode: %s\n",
             gametype_to_str(crawl_state.type).c_str());
 
-#ifdef USE_TILE
+#if defined(USE_TILE_LOCAL)
     fprintf(file, "Tiles: yes\n\n");
+#elif defined(USE_TILE_WEB)
+    fprintf(file, "Tiles: online\n\n");
 #else
     fprintf(file, "Tiles: no\n\n");
 #endif
@@ -697,7 +725,7 @@ void do_crash_dump()
 //---------------------------------------------------------------
 static NORETURN void _BreakStrToDebugger(const char *mesg, bool assert)
 {
-#if defined(USE_TILE) && (defined(TARGET_COMPILER_MINGW) || defined(TARGET_OS_WINDOWS))
+#if defined(USE_TILE_LOCAL) && (defined(TARGET_COMPILER_MINGW) || defined(TARGET_OS_WINDOWS))
     SDL_SysWMinfo SysInfo;
     SDL_VERSION(&SysInfo.version);
     if (SDL_GetWMInfo(&SysInfo) > 0)

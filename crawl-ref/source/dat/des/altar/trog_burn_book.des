@@ -1,0 +1,64 @@
+# Trog burns a book at his altar.
+#
+# He only does so if both the altar and the book are in sight of the player.
+# This should give sneaky players an opportunity to apport the book, but
+# only if they spot the vault in time.
+
+{{
+function callback.trog_book_convert_book(data, triggerable,
+                                          triggerer, marker, ev)
+  if data.turns ~= you.turns() then
+    data.tc = data.tc + 1
+    data.turns = you.turns()
+  end
+
+  if data.tc < 3 then
+    return
+  end
+
+  if data.triggered == true then
+    return
+  end
+
+  local m = dgn.find_marker_positions_by_prop("slave_name", "trog_book")[1]
+  if m ~= nil then
+    local _x, _y = m:xy()
+
+    if not you.see_cell(_x, _y) then
+      return
+    end
+
+    for book in iter.stash_iterator(_x, _y) do
+      if string.find(book.name(), 'book') then
+        book.destroy()
+        dgn.place_cloud(_x, _y, "flame", 15)
+        crawl.god_speaks("Trog", "The spellbook bursts into flames! "
+                              .. "Trog roars with delight!")
+      end
+    end
+    data.triggered = true
+  end
+end
+}}
+
+
+NAME:   trog_book
+TAGS:   uniq_altar_trog temple_overflow_trog
+DEPTH:  D:2-10, Orc
+KFEAT:  _ = altar_trog
+{{
+local tm = TriggerableFunction:new{func="callback.trog_book_convert_book",
+  repeated=true, data={turns=you.turns(), tc=0, triggered=false} }
+tm:add_triggerer(DgnTriggerer:new{type="player_los"})
+lua_marker('_', tm)
+}}
+MARKER: b = lua:portal_desc {slave_name="trog_book"}
+KFEAT:  b = .
+KITEM:  b = any book
+MAP
+xxxxxxx
+x.....xxx
+x._.b....@
+x.....xxx
+xxxxxxx
+ENDMAP

@@ -102,24 +102,28 @@ function trove.get_trove_item(e, value, base_item)
   local d = crawl.roll_dice
 
   -- base is item.base_type, type is item.sub_type, quant is an additional parameter (quantity, charges, etc)
-  -- currently 22% armour, 22% weapon, 44% consumable, 11% miscellaneous (which are not actually taken from the player)
+  -- currently 20% armour, 15% weapon, 50% consumable, 15% miscellaneous (which are not actually taken from the player)
   local prices = {
        {base="armour", type="gold dragon armour", quant=1+d(3), weight=1},
        {base="armour", type="storm dragon armour", quant=1+d(3), weight=1},
-       {base="armour", type="ice dragon armour", quant=2+d(3), weight=2},
-       {base="armour", type="dragon armour", quant=2+d(3), weight=2},
+       {base="armour", type="fire dragon armour", quant=2+d(3), weight=1},
+       {base="armour", type="ice dragon armour", quant=2+d(3), weight=1},
 
-       {base="weapon", type="demon whip", quant=3+d(3), weight=2},
-       {base="weapon", type="demon trident", quant=3+d(3), weight=2},
-       {base="weapon", type="demon blade", quant=3+d(3), weight=2},
+       {base="weapon", type="demon whip", quant=3+d(3),
+                                          quant2=3+d(3), weight=1},
+       {base="weapon", type="demon trident", quant=3+d(3),
+                                             quant2=3+d(3), weight=1},
+       {base="weapon", type="demon blade", quant=3+d(3),
+                                           quant2=3+d(3), weight=1},
 
-       {base="wand", type="healing", quant=7+d(2), weight=1},
-       {base="potion", type="healing", quant=12+d(4)+d(4), weight=1},
-       {base="potion", type="heal wounds", quant=8+d(3)+d(3), weight=2},
+       {base="wand", type="heal wounds", quant=7+d(2), weight=1},
+       {base="potion", type="curing", quant=12+d(4)+d(4), weight=1},
+       {base="potion", type="heal wounds", quant=8+d(3)+d(3), weight=1},
 
        {base="wand", type="hasting", quant=7+d(2), weight=1},
-       {base="potion", type="speed", quant=3+d(3)+d(2), weight=2},
-       {base="scroll", type="blinking", quant=3+d(3), weight=2},
+       {base="potion", type="speed", quant=3+d(3)+d(2), weight=1},
+       {base="scroll", type="blinking", quant=3+d(3), weight=1},
+       {base="scroll", type="teleportation", quant=10+d(3)+d(4), weight=1},
 
        {base="potion", type="cure mutation", quant=2, weight=1},
        {base="scroll", type="acquirement", quant=2, weight=1},
@@ -136,7 +140,7 @@ function trove.get_trove_item(e, value, base_item)
     item.plus1 = chosen.quant
   elseif chosen.base == "weapon" then
     item.plus1 = chosen.quant
-    item.plus2 = chosen.quant
+    item.plus2 = chosen.quant2
   elseif chosen.base == "scroll" or chosen.base == "potion" then
     item.quantity = chosen.quant
   end
@@ -278,10 +282,10 @@ NAME:   enter_trove_3
 TAGS:   uniq_trove no_monster_gen no_wall_fixup chance_trove
 CHANCE: 5%
 : trove.portal(_G)
-COLOUR: . = blue
-COLOUR: c = blue
-COLOUR: x = blue
+COLOUR: .cx = blue
 SUBST:  x = c:20 =:6
+TILE:   cx = wall_stone_dark
+FTILE:  =.cxO = floor_marble
 MAP
 cxxxc
 x...x
@@ -616,7 +620,7 @@ ENDMAP
 NAME:   trove_armour_1
 WEIGHT: 15
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
 # Loot: once again, 16 items.
 COLOUR: o = blue
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
@@ -645,7 +649,7 @@ ENDMAP
 NAME:   trove_armour_2
 WEIGHT: 15
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
 # Loot: 15 items.
 COLOUR: x = blue
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
@@ -667,7 +671,7 @@ ENDMAP
 NAME:    trove_hunter_1
 WEIGHT:  5
 ORIENT:  encompass
-TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
 # Loot:  15 items, this time.
 COLOUR:  x = blue
 COLOUR:  o = blue
@@ -675,7 +679,7 @@ MONS:    storm dragon zombie
 MONS:    golden dragon zombie
 MONS:    dragon skeleton
 ITEM:    animal skin good_item / any armour good_item
-ITEM:    gold dragon hide / storm dragon hide / dragon hide / troll hide / any useful armour good_item
+ITEM:    gold dragon hide / storm dragon hide / fire dragon hide / troll hide / any useful armour good_item
 ITEM:    arrow good_item / dart good_item / bolt good_item / any missile good_item
 ITEM:    bow good_item / crossbow good_item / any useful weapon good_item
 SHUFFLE: 123
@@ -800,7 +804,7 @@ ORIENT:  encompass
 ITEM:    chain mail unrand:lears_chain_mail                                  /\
  randart plate mail w:50                                                     /\
          plate mail unrand:maxwells_patent_armour                            /\
- randart dragon armour                                                       /\
+ randart fire dragon armour                                                  /\
          gold dragon armour unrand:armour_of_the_dragon_king                 /\
  randart crystal plate mail                                                  /\
  randart robe w:50                                                           /\
@@ -829,14 +833,14 @@ ITEM:    ring of evasion unrand:ring_of_shaolin / any randart jewellery w:60 /\
          pair of gloves unrand:gauntlets_of_war                              /\
          pair of gloves unrand:fencers_gloves
 ITEM:    dagger unrand:vampires_tooth / dagger unrand:dagger_of_chilly_death /\
-         knife unrand:spriggans_knife / long sword unrand:sword_of_jihad     /\
+         dagger unrand:spriggans_knife / long sword unrand:sword_of_jihad     /\
          dagger unrand:morg / great sword unrand:sword_of_the_doom_knight    /\
          great sword unrand:sword_of_power / long sword unrand:bloodbane     /\
          scimitar unrand:scimitar_of_flaming_death / war axe unrand:arga     /\
          dagger unrand:knife_of_accuracy / long sword unrand:plutonium_sword /\
          demon blade unrand:leech / long sword unrand:sword_of_zonguldrok    /\
          staff of poison unrand:staff_of_olgreb / scythe unrand:finisher     /\
-         quarterstaff unrand:elemental_staff / glaive unrand:glaive_of_prune /\
+         staff unrand:elemental_staff / glaive unrand:glaive_of_prune        /\
          battleaxe unrand:wrath_of_trog / glaive unrand:glaive_of_the_guard  /\
          trident unrand:trident_of_the_octopus_king / spear unrand:wyrmbane  /\
          scythe unrand:scythe_of_curses / giant club unrand:skullcrusher     /\
@@ -867,8 +871,8 @@ NAME:    trove_alchemists_storehouse
 TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_mu
 WEIGHT:  5
 ORIENT:  encompass
-ITEM:    potion of healing / potion of heal wounds / \
-         potion of healing q:2 / potion of heal wounds q:2
+ITEM:    potion of curing / potion of heal wounds / \
+         potion of curing q:2 / potion of heal wounds q:2
 ITEM:    potion of experience / potion of gain strength / \
          potion of gain intelligence / potion of gain dexterity
 ITEM:    potion of might / potion of resistance / \
@@ -937,7 +941,7 @@ ENDMAP
 
 # 16 pieces of armour
 NAME:   trove_armour_six_rooms
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
 ORIENT: encompass
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
 : trove.setup_features(_G)
@@ -1025,7 +1029,7 @@ ENDMAP
 NAME:   trove_books_scrolls
 TAGS:   trove no_item_gen no_monster_gen allow_dup
 ORIENT: encompass
-ITEM:   acquire staff / acquire book / acquire:sif_muna book / any book
+ITEM:   acquire magical staff / acquire book / acquire:sif_muna book / any book
 SUBST:  d = de
 : trove.good_scroll(_G)
 : trove.setup_features(_G)

@@ -1,0 +1,15 @@
+Play now:
+{% set rcs = set() %}
+{% for id in games %}
+{% if games[id]["rcfile_path"] not in rcs %}
+<br>
+<a href="#play-{{ id }}">{{ games[id]["name"] }}</a>
+{% set rcs.add(games[id]["rcfile_path"]) %}
+<a href="javascript:"
+   class="edit_rc_link"
+   data-game_id="{{ id }}">(edit rc)</a>
+{% else %}
+<a href="#play-{{ id }}">{{ games[id]["name"] }}</a>
+{% end %}
+{% if id != games.keys()[-1] %} | {% end %}
+{% end %}

@@ -580,6 +580,17 @@ The Shining One says, "Martyrs are remembered forever."
 w:1
 The Shining One says, "An eye for an eye, a tooth for a tooth."
 %%%%
+##########################################
+# Elyvilon hates you killing her animals #
+##########################################
+Elyvilon holy
+
+Elyvilon hisses: "You foul beast! How dare you!"
+
+Elyvilon sadly speaks: "How it came to be that such cruelty exists."
+
+Elyvilon whispers: "No one should ever harm others. Ever!"
+%%%%
 ##########################################################
 # Messages for the *player* using Zin's Recite invocation
 ##########################################################
@@ -792,7 +803,7 @@ w:1
 You feel someone pinching you. As you turn, you see no one.
 
 w:1
-Xom says: "Amen!".
+Xom says: Amen!
 %%%%
 _trout_species_
 
@@ -839,11 +850,15 @@ Ashenzari says: Partake of my vision. Partake of my curse.
 %%%%
 Beogh penance
 
-@Beogh welcome@
+Beogh says: Show any more mercy to foul non-orcs and I'll have you killed.
 %%%%
 Beogh welcome
 
 Beogh says: Drown the unbelievers in a sea of blood!
+%%%%
+Beogh newgame
+
+@Beogh welcome@
 %%%%
 Cheibriados penance
 
@@ -860,6 +875,10 @@ Elyvilon says: I plead you, be more careful when helping others!
 Elyvilon welcome
 
 Elyvilon says: Go forth and aid the weak!
+%%%%
+Elyvilon newgame
+
+@Elyvilon welcome@
 %%%%
 Fedhas penance
 
@@ -892,6 +911,10 @@ Lugonu penance
 Lugonu welcome
 
 Lugonu says: Spread carnage and corruption!
+%%%%
+Lugonu newgame
+
+Lugonu says: Take this gate or call upon me to unleash you onto the world, my servant!
 %%%%
 Makhleb penance
 
@@ -941,6 +964,10 @@ Trog welcome
 
 Trog says: Kill them all!
 %%%%
+Trog newgame
+
+@Trog welcome@
+%%%%
 Vehumet penance
 
 @Vehumet welcome@
@@ -975,6 +1002,10 @@ Yredelemnul welcome
 
 Yredelemnul says: Carry the black torch! Rouse the idle dead!
 %%%%
+Yredelemnul newgame
+
+@Yredelemnul welcome@
+%%%%
 Zin penance
 
 Zin castigates you for your disobedience of the Law.
@@ -984,4 +1015,8 @@ Zin sternly explains the importance of @important_subject@.
 Zin welcome
 
 Zin says: Spread the light, my child.
+%%%%
+Zin newgame
+
+@Zin welcome@
 %%%%

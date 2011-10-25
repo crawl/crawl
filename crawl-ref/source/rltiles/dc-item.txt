@@ -85,9 +85,6 @@ sabre2
 
 quickblade WPN_QUICK_BLADE
 
-katana1 WPN_KATANA
-katana2
-
 double_sword WPN_DOUBLE_SWORD
 triple_sword WPN_TRIPLE_SWORD
 demon_blade WPN_DEMON_BLADE
@@ -126,6 +123,7 @@ bardiche1 WPN_BARDICHE
 bardiche2
 
 ##Staff
+staff WPN_STAFF
 quarterstaff WPN_QUARTERSTAFF
 quarterstaff2
 lajatang1 WPN_LAJATANG
@@ -351,8 +349,8 @@ animal_skin2
 
 troll_hide ARM_TROLL_HIDE
 troll_leather_armour ARM_TROLL_LEATHER_ARMOUR
-green_dragon_scales ARM_DRAGON_HIDE
-green_dragon_scale_mail ARM_DRAGON_ARMOUR
+green_dragon_scales ARM_FIRE_DRAGON_HIDE
+green_dragon_scale_mail ARM_FIRE_DRAGON_ARMOUR
 ice_dragon_hide ARM_ICE_DRAGON_HIDE
 ice_dragon_armour ARM_ICE_DRAGON_ARMOUR
 silver_dragon_scales ARM_STEAM_DRAGON_HIDE
@@ -408,6 +406,10 @@ helmet1_visored THELM_HELM
 helmet2_etched
 helmet3
 helmet4_visor
+helmet_horned THELM_HELM_HORNED
+helmet_spiked THELM_HELM_SPIKED
+helmet_plumed THELM_HELM_PLUMED
+helmet_winged THELM_HELM_WINGED
 
 %sdir item/armour
 ###### GLOVES
@@ -470,7 +472,7 @@ i-frost WAND_FROST
 i-slowing WAND_SLOWING
 i-hasting WAND_HASTING
 i-magic_darts WAND_MAGIC_DARTS
-i-healing WAND_HEALING
+i-heal_wounds WAND_HEAL_WOUNDS
 i-paralysis WAND_PARALYSIS
 i-fire WAND_FIRE
 i-cold WAND_COLD
@@ -702,7 +704,7 @@ white
 %sdir item/potion
 %back i-label
 %rim 0
-i-heal POT_HEALING POT_ID_FIRST
+i-curing POT_CURING POT_ID_FIRST
 i-heal-wounds POT_HEAL_WOUNDS
 i-speed POT_SPEED
 i-might POT_MIGHT
@@ -976,6 +978,18 @@ runes/rune_gloorx_vloq MISC_RUNE_GLOORX_VLOQ
 runes/rune_mnoleg MISC_RUNE_MNOLEG
 runes/rune_lom_lobon MISC_RUNE_LOM_LOBON
 runes/rune_snake MISC_RUNE_SNAKE
+runes/rune_swamp MISC_RUNE_SWAMP
+runes/rune_shoals MISC_RUNE_SHOALS
+runes/rune_slime MISC_RUNE_SLIME
+runes/rune_vaults MISC_RUNE_VAULTS
+runes/rune_tomb MISC_RUNE_TOMB
+runes/rune_abyss MISC_RUNE_ABYSS
+runes/rune_demonic_1 MISC_RUNE_DEMONIC
+runes/rune_demonic_2
+runes/rune_demonic_3
+runes/rune_demonic_4
+runes/rune_demonic_5
+runes/rune_demonic_6
 %rim 0
 misc_quad MISC_QUAD_DAMAGE
 %rim 1

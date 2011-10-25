@@ -59,7 +59,6 @@ void search_dungeon(const coord_def & start,
                     bool exhaustive = true,
                     int connect_mode = 8)
 {
-
     if (connect_mode < 1 || connect_mode > 8)
         connect_mode = 8;
 
@@ -818,7 +817,7 @@ static bool _orange_statue_effects(monster* mons)
     return (false);
 }
 
-static bool _orc_battle_cry(monster* chief)
+static void _orc_battle_cry(monster* chief)
 {
     const actor *foe = chief->get_foe();
     int affected = 0;
@@ -915,9 +914,94 @@ static bool _orc_battle_cry(monster* chief)
             }
         }
     }
-    // Orc battle cry doesn't cost the monster an action.
-    return (false);
 }
+
+static void _cherub_hymn(monster* chief)
+{
+    const actor *foe = chief->get_foe();
+    int affected = 0;
+
+    if (foe
+        && (foe != &you || !chief->friendly())
+        && !silenced(chief->pos())
+        && chief->can_see(foe)
+        && coinflip())
+    {
+        const int level = chief->hit_dice > 12? 2 : 1;
+        std::vector<monster* > seen_affected;
+        for (monster_iterator mi(chief); mi; ++mi)
+        {
+            if (*mi != chief
+                && mi->holiness() == MH_HOLY
+                && mons_aligned(chief, *mi)
+                && mi->hit_dice < chief->hit_dice
+                && !mi->berserk()
+                && !mi->has_ench(ENCH_MIGHT)
+                && !mi->cannot_move()
+                && !mi->confused())
+            {
+                mon_enchant ench = mi->get_ench(ENCH_ROUSED);
+                if (ench.ench == ENCH_NONE || ench.degree < level)
+                {
+                    const int dur =
+                        random_range(12, 20) * speed_to_duration(mi->speed);
+
+                    if (ench.ench != ENCH_NONE)
+                    {
+                        ench.degree   = level;
+                        ench.duration = std::max(ench.duration, dur);
+                        mi->update_ench(ench);
+                    }
+                    else
+                    {
+                        mi->add_ench(mon_enchant(ENCH_ROUSED, level,
+                                                 chief, dur));
+                    }
+
+                    affected++;
+                    if (you.can_see(*mi))
+                        seen_affected.push_back(*mi);
+
+                    if (mi->asleep())
+                        behaviour_event(*mi, ME_DISTURB, MHITNOT, chief->pos());
+                }
+            }
+        }
+
+        if (affected)
+        {
+            if (you.can_see(chief) && player_can_hear(chief->pos()))
+            {
+                mprf(MSGCH_SOUND, "%s sings a powerful hymn!",
+                     chief->name(DESC_CAP_THE).c_str());
+            }
+
+            // The yell happens whether you happen to see it or not.
+            noisy(LOS_RADIUS, chief->pos(), chief->mindex());
+
+            // Disabling detailed frenzy announcement because it's so spammy.
+            const msg_channel_type channel =
+                        chief->friendly() ? MSGCH_MONSTER_ENCHANT
+                                          : MSGCH_FRIEND_ENCHANT;
+
+            if (!seen_affected.empty())
+            {
+                std::string who;
+                if (seen_affected.size() == 1)
+                {
+                    who = seen_affected[0]->name(DESC_CAP_THE);
+                    mprf(channel, "%s is roused by the hymn!", who.c_str());
+                }
+                else
+                {
+                    mprf(channel, "%s holy creatures are roused to righteous anger!",
+                         chief->friendly() ? "Your" : "The");
+                }
+            }
+        }
+    }
+}
+
 
 static bool _make_monster_angry(const monster* mon, monster* targ)
 {
@@ -950,8 +1034,15 @@ static bool _make_monster_angry(const monster* mon, monster* targ)
 
     if (you.can_see(mon))
     {
-        mprf("%s goads %s on!", mon->name(DESC_THE).c_str(),
-             targ->name(DESC_THE).c_str());
+        if (mon->type == MONS_QUEEN_BEE && targ->type == MONS_KILLER_BEE)
+        {
+            mprf("%s calls on %s to defend her!",
+                mon->name(DESC_THE).c_str(),
+                targ->name(DESC_THE).c_str());
+        }
+        else
+            mprf("%s goads %s on!", mon->name(DESC_THE).c_str(),
+                 targ->name(DESC_THE).c_str());
     }
 
     targ->go_berserk(false);
@@ -982,7 +1073,35 @@ static bool _moth_incite_monsters(const monster* mon)
             return (true);
     }
 
-    return (false);
+    return goaded != 0;
+}
+
+static bool _queen_incite_worker(const monster* queen)
+{
+    ASSERT(queen->type == MONS_QUEEN_BEE);
+    if (is_sanctuary(you.pos()) || is_sanctuary(queen->pos()))
+        return false;
+
+    int goaded = 0;
+    circle_def c(queen->pos(), 4, C_ROUND);
+    for (monster_iterator mi(&c); mi; ++mi)
+    {
+        // Only goad killer bees
+        if (mi->type != MONS_KILLER_BEE)
+            continue;
+
+        if (*mi == queen || !mi->needs_berserk())
+            continue;
+
+        if (is_sanctuary(mi->pos()))
+            continue;
+
+        if (_make_monster_angry(queen, *mi) && !one_chance_in(3 * ++goaded))
+            return (true);
+    }
+
+    return goaded != 0;
+
 }
 
 static inline void _mons_cast_abil(monster* mons, bolt &pbolt,
@@ -1021,8 +1140,8 @@ static void _establish_connection(int tentacle,
             mgen_data(connector_type, SAME_ATTITUDE(main), main,
                       0, 0, last->pos, main->foe,
                       MG_FORCE_PLACE, main->god, MONS_NO_MONSTER, tentacle,
-                      main->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER,
-                      you.level_type));
+                      main->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER));
+
         if (connect < 0)
         {
             // Big failure mode.
@@ -1043,7 +1162,6 @@ static void _establish_connection(int tentacle,
 
     while (current)
     {
-
         // Last monster we visited or placed
         monster* last_mon = monster_at(last->pos);
         if (!last_mon)
@@ -1069,8 +1187,7 @@ static void _establish_connection(int tentacle,
             mgen_data(connector_type, SAME_ATTITUDE(main), main,
                       0, 0, current->pos, main->foe,
                       MG_FORCE_PLACE, main->god, MONS_NO_MONSTER, tentacle,
-                      main->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER,
-                      you.level_type));
+                      main->colour, you.absdepth0, PROX_CLOSE_TO_PLAYER));
 
         if (connect >= 0)
         {
@@ -1517,7 +1634,8 @@ struct complicated_sight_check
     coord_def base_position;
     bool operator()(monster* mons, actor * test)
     {
-        return (test->visible_to(mons) && cell_see_cell(base_position, test->pos()));
+        return (test->visible_to(mons)
+                && cell_see_cell(base_position, test->pos(), LOS_SOLID));
     }
 };
 
@@ -2039,7 +2157,12 @@ bool mon_special_ability(monster* mons, bolt & beem)
         if (is_sanctuary(mons->pos()))
             break;
 
-        used = _orc_battle_cry(mons);
+        _orc_battle_cry(mons);
+        // Doesn't cost a turn.
+        break;
+
+    case MONS_CHERUB:
+        _cherub_hymn(mons);
         break;
 
     case MONS_ORANGE_STATUE:
@@ -2119,6 +2242,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         break;
 
     case MONS_ELECTRIC_EEL:
+    case MONS_LIGHTNING_SPIRE:
         if (mons->has_ench(ENCH_CONFUSION))
             break;
 
@@ -2224,6 +2348,12 @@ bool mon_special_ability(monster* mons, bolt & beem)
             used = _moth_incite_monsters(mons);
         break;
 
+    case MONS_QUEEN_BEE:
+        if (one_chance_in(4)
+            || mons->hit_points < mons->max_hit_points / 3 && one_chance_in(2))
+            used = _queen_incite_worker(mons);
+        break;
+
     case MONS_SNORG:
         if (mons->has_ench(ENCH_CONFUSION))
             break;
@@ -2243,7 +2373,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
             mons->go_berserk(true);
         break;
 
-    case MONS_IMP:
+    case MONS_CRIMSON_IMP:
     case MONS_PHANTOM:
     case MONS_INSUBSTANTIAL_WISP:
     case MONS_BLINK_FROG:
@@ -2295,7 +2425,7 @@ bool mon_special_ability(monster* mons, bolt & beem)
         {
             mons->add_ench(ENCH_WITHDRAWN);
 
-            if (mons_is_fleeing(mons))
+            if (mons_is_retreating(mons))
                 behaviour_event(mons, ME_CORNERED);
 
             simple_monster_message(mons, " withdraws into its shell!");
@@ -2385,6 +2515,12 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
         if (!you.visible_to(mons))
             break;
+
+        if ((mons_genus(mons->type) == MONS_DRAGON || mons_genus(mons->type) == MONS_DRACONIAN)
+            && mons->has_ench(ENCH_BREATH_WEAPON))
+        {
+            break;
+        }
 
         if (mons->type != MONS_HELL_HOUND && x_chance_in_y(3, 13)
             || one_chance_in(10))
@@ -2526,6 +2662,13 @@ bool mon_special_ability(monster* mons, bolt & beem)
     if (used)
         mons->lose_energy(EUT_SPECIAL);
 
+    // XXX: Unless monster dragons get abilities that are not a breath
+    // weapon...
+    if (used && (mons_genus(mons->type) == MONS_DRAGON || mons_genus(mons->type) == MONS_DRACONIAN))
+    {
+        setup_breath_timeout(mons);
+    }
+
     return (used);
 }
 
@@ -2655,7 +2798,7 @@ void mon_nearby_ability(monster* mons)
             mons->add_ench(ENCH_SUBMERGED);
         break;
 
-    case MONS_PANDEMONIUM_DEMON:
+    case MONS_PANDEMONIUM_LORD:
         if (mons->ghost->cycle_colours)
             mons->colour = random_colour();
         break;
@@ -2862,5 +3005,6 @@ void activate_ballistomycetes(monster* mons, const coord_def & origin,
 
             thread = thread->last;
         }
+        env.level_state |= LSTATE_GLOW_MOLD;
     }
 }

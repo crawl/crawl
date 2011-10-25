@@ -5,10 +5,10 @@
 //
 // Based loosely on NetHack's lev_comp.l
 
+#include "AppHdr.h"
 #include <algorithm>
 #include <cstring>
 #include <queue>
-#include "AppHdr.h"
 #include "mapdef.h"
 #include "levcomp.tab.h"
 #include "stuff.h"

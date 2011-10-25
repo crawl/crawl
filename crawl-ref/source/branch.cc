@@ -2,6 +2,7 @@
 
 #include "branch.h"
 #include "externs.h"
+#include "files.h"
 #include "place.h"
 #include "player.h"
 #include "spl-transloc.h"
@@ -15,7 +16,8 @@ Branch& your_branch()
 
 bool at_branch_bottom()
 {
-    return your_branch().depth == player_branch_depth();
+    return your_branch().depth == player_branch_depth()
+           && you.level_type == LEVEL_DUNGEON;
 }
 
 level_id branch_entry_level(branch_type branch)
@@ -74,6 +76,12 @@ bool is_hell_subbranch(branch_type branch)
             && branch != BRANCH_VESTIBULE_OF_HELL);
 }
 
+bool is_random_lair_subbranch(branch_type branch)
+{
+    return branches[branch].parent_branch == BRANCH_LAIR
+        && branch != BRANCH_SLIME_PITS;
+}
+
 branch_type str_to_branch(const std::string &branch, branch_type err)
 {
     for (int i = 0; i < NUM_BRANCHES; ++i)
@@ -85,7 +93,8 @@ branch_type str_to_branch(const std::string &branch, branch_type err)
 
 int current_level_ambient_noise()
 {
-    switch (you.level_type) {
+    switch (you.level_type)
+    {
     case LEVEL_DUNGEON:
         return branches[you.where_are_you].ambient_noise;
     case LEVEL_ABYSS:
@@ -133,26 +142,17 @@ bool set_branch_flags(uint32_t flags, bool silent, branch_type branch)
         branch = you.where_are_you;
 
     bool could_control = allow_control_teleport(true);
-    bool could_map     = player_in_mappable_area();
 
     uint32_t old_flags = branches[branch].branch_flags;
     branches[branch].branch_flags |= flags;
 
     bool can_control = allow_control_teleport(true);
-    bool can_map     = player_in_mappable_area();
 
     if (you.level_type == LEVEL_DUNGEON && branch == you.where_are_you
         && could_control && !can_control && !silent)
     {
         mpr("You sense the appearance of a powerful magical force "
             "which warps space.", MSGCH_WARN);
-    }
-
-    if (you.level_type == LEVEL_DUNGEON && branch == you.where_are_you
-        && could_map && !can_map && !silent)
-    {
-        mpr("A powerful force appears that prevents you from "
-            "remembering where you've been.", MSGCH_WARN);
     }
 
     return (old_flags != branches[branch].branch_flags);
@@ -164,13 +164,11 @@ bool unset_branch_flags(uint32_t flags, bool silent, branch_type branch)
         branch = you.where_are_you;
 
     const bool could_control = allow_control_teleport(true);
-    const bool could_map     = player_in_mappable_area();
 
     uint32_t old_flags = branches[branch].branch_flags;
     branches[branch].branch_flags &= ~flags;
 
     const bool can_control = allow_control_teleport(true);
-    const bool can_map     = player_in_mappable_area();
 
     if (you.level_type == LEVEL_DUNGEON && branch == you.where_are_you
         && !could_control && can_control && !silent)
@@ -178,14 +176,6 @@ bool unset_branch_flags(uint32_t flags, bool silent, branch_type branch)
         // Isn't really a "recovery", but I couldn't think of where
         // else to send it.
         mpr("Space seems to straighten in your vicinity.", MSGCH_RECOVERY);
-    }
-
-    if (you.level_type == LEVEL_DUNGEON && branch == you.where_are_you
-        && !could_map && can_map && !silent)
-    {
-        // Isn't really a "recovery", but I couldn't think of where
-        // else to send it.
-        mpr("An oppressive force seems to lift.", MSGCH_RECOVERY);
     }
 
     return (old_flags != branches[branch].branch_flags);
@@ -202,4 +192,15 @@ uint32_t get_branch_flags(branch_type branch)
     }
 
     return branches[branch].branch_flags;
+}
+
+branch_type get_branch_at(const coord_def& pos)
+{
+    return level_id::current().get_next_level_id(pos).branch;
+}
+
+bool branch_is_unfinished(branch_type branch)
+{
+    return branch == BRANCH_SPIDER_NEST || branch == BRANCH_FOREST
+           || branch == BRANCH_DWARVEN_HALL || branch == BRANCH_HIVE;
 }

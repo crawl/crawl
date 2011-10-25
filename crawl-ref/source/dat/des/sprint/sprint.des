@@ -35,7 +35,7 @@ MARKER: H = lua:fog_machine { \
 MONS:   Ijyb, ogre, Sigmund, jelly, centaur warrior, Sonja, rock troll
 SUBST:  r = r.
 SUBST:  r = ~.
-KITEM:  I = potion of healing
+KITEM:  I = potion of curing
 KITEM:  $ = gold q:27
 KMONS:  B = yellow wasp
 KMONS:  D = kobold demonologist

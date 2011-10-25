@@ -11,6 +11,7 @@
 #include "env.h"
 #include "externs.h"
 #include "files.h"
+#include "godprayer.h"
 #include "ghost.h"
 #include "items.h" // for find_floor_item
 #include "itemname.h" // for make_name
@@ -23,8 +24,8 @@
 #include "mon-util.h"
 #include "player.h"
 #include "random.h"
+#include "religion.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "traps.h"
 #include "libutil.h"
@@ -144,7 +145,7 @@ static int _mon_strength(monster_type mon_type)
         case MONS_ZOMBIE_LARGE:
             strength += 4;
             break;
-        case MONS_PANDEMONIUM_DEMON:        // base init has 4HD (!)
+        case MONS_PANDEMONIUM_LORD: // base init has 4HD (!)
             strength = 30;
             break;
         default:
@@ -237,15 +238,15 @@ static void _hydra_wave(int power)
 static void _fire_wave(int power)
 {
     wave_name("FIRE WAVE");
-    monster_type firemons[] = {MONS_FIRE_ELEMENTAL, MONS_FIRE_DRAKE, MONS_IMP,
+    monster_type firemons[] = {MONS_FIRE_ELEMENTAL, MONS_FIRE_DRAKE, MONS_CRIMSON_IMP,
         MONS_DRAGON, MONS_FIRE_VORTEX ,MONS_FIRE_GIANT, MONS_HELLION,
         MONS_MOLTEN_GARGOYLE, MONS_SALAMANDER, MONS_SUN_DEMON,
         MONS_RED_DRACONIAN, MONS_MOTTLED_DRACONIAN, MONS_DRACONIAN_SCORCHER,
         MONS_FLAMING_CORPSE, MONS_MOTTLED_DRAGON, MONS_EFREET,
-        MONS_HELL_KNIGHT, MONS_FIEND, MONS_BALRUG, MONS_HELL_HOUND,
+        MONS_HELL_KNIGHT, MONS_BRIMSTONE_FIEND, MONS_BALRUG, MONS_HELL_HOUND,
         MONS_HELL_HOG, END};
     monster_type boss[] = {MONS_AZRAEL, MONS_XTAHUA, MONS_SERPENT_OF_HELL,
-                    MONS_MARGERY, MONS_FIEND, MONS_BALRUG, MONS_FIRE_GIANT, END};
+                    MONS_MARGERY, MONS_BRIMSTONE_FIEND, MONS_BALRUG, MONS_FIRE_GIANT, END};
     _zotdef_fill_from_list(firemons, 0, power);
     _zotdef_choose_boss(boss, power);
     _zotdef_danger_msg("You hear roaring flames in the distance!");
@@ -269,7 +270,8 @@ static void _gnoll_wave(int power)
 {
     wave_name("GNOLL WAVE");
     monster_type gnolls[] = {MONS_GNOLL, MONS_GNOLL, MONS_GNOLL,
-                MONS_GNOLL, MONS_GNOLL, MONS_GNOLL, MONS_TROLL, END};
+                MONS_GNOLL, MONS_GNOLL_SHAMAN, MONS_GNOLL_SERGEANT,
+                MONS_TROLL, END};
     monster_type boss[] = {MONS_GRUM, MONS_TROLL, END};
     _zotdef_fill_from_list(gnolls, 0, power); // full
     _zotdef_choose_boss(boss, power);
@@ -364,10 +366,10 @@ static void _butterfly_wave(int power)
     _zotdef_danger_msg("You feel a sudden sense of peace!");
 }
 
-static void _beast_wave(int power)
+static void _hell_beast_wave(int power)
 {
-    wave_name("BEAST WAVE");
-    monster_type bst[] = {MONS_BEAST, END};
+    wave_name("HELL BEAST WAVE");
+    monster_type bst[] = {MONS_HELL_BEAST, END};
     _zotdef_fill_from_list(bst, 0, power); // full
     _zotdef_danger_msg("A hideous howling noise can be heard in the distance!");
 }
@@ -375,8 +377,7 @@ static void _beast_wave(int power)
 static void _frog_wave(int power)
 {
     wave_name("FROG WAVE");
-    monster_type frogs[] = {MONS_GIANT_FROG, MONS_GIANT_TOAD,
-                MONS_SPINY_FROG, MONS_BLINK_FROG, END};
+    monster_type frogs[] = {MONS_GIANT_FROG, MONS_SPINY_FROG, MONS_BLINK_FROG, END};
     monster_type boss[] = {MONS_PRINCE_RIBBIT, MONS_SPINY_FROG, MONS_BLINK_FROG, END};
     _zotdef_fill_from_list(frogs, 0, power); // full
     _zotdef_choose_boss(boss, power);
@@ -403,7 +404,7 @@ static void _wraith_wave(int power)
                 MONS_SPECTRAL_THING, END};
     _zotdef_fill_from_list(wraiths, 0, power); // full
     _zotdef_choose_boss(boss, power);
-    _zotdef_danger_msg("The hair rises on the back of your neck!");
+    _zotdef_danger_msg("You shudder with fear!");
 }
 
 static void _giant_wave(int power)
@@ -457,9 +458,9 @@ static void _pan_wave(int power)
     // Lobon in particular is almost unkillable
     monster_type boss[] = {MONS_MNOLEG, MONS_LOM_LOBON, MONS_CEREBOV,
                 MONS_GLOORX_VLOQ, MONS_GERYON, MONS_DISPATER,
-                MONS_ASMODEUS, MONS_ERESHKIGAL, MONS_PANDEMONIUM_DEMON, END};
-    monster_type weakboss[] = {MONS_PANDEMONIUM_DEMON, MONS_FIEND,
-                MONS_PIT_FIEND, MONS_ICE_FIEND, MONS_BLUE_DEATH, END};
+                MONS_ASMODEUS, MONS_ERESHKIGAL, MONS_PANDEMONIUM_LORD, END};
+    monster_type weakboss[] = {MONS_PANDEMONIUM_LORD, MONS_BRIMSTONE_FIEND,
+                MONS_PIT_FIEND, MONS_ICE_FIEND, MONS_BLIZZARD_DEMON, END};
 
     for (int i = 0; i <= NSLOTS; i++)
     {
@@ -469,7 +470,7 @@ static void _pan_wave(int power)
             monster_type mon_type = static_cast<monster_type>(random2(NUM_MONSTERS));
             monsterentry *mentry = get_monster_data(mon_type);
             int pow = random2avg(power, 2);
-            switch (mentry->showchar)
+            switch (mentry->basechar)
             {
             case '5': if (pow > 4) continue; break;
             case '4': if (pow > 4) continue; break;
@@ -507,7 +508,7 @@ static void _zotdef_set_special_wave(int power)
             case 8: wave_fn = _golem_wave; wpow = 22; break;
             case 9: wave_fn = _human_wave; wpow = 12; break;
             case 10: wave_fn = _butterfly_wave; wpow = 1; break;
-            case 11: wave_fn = _beast_wave; wpow = 12; break;
+            case 11: wave_fn = _hell_beast_wave; wpow = 12; break;
             case 12: wave_fn = _frog_wave; wpow = 4; break;
             case 13: wave_fn = _bear_wave; wpow = 6; break;
             case 14: wave_fn = _wraith_wave; wpow = 8; break;
@@ -759,7 +760,7 @@ void zotdef_set_wave()
 std::string zotdef_debug_wave_desc()
 {
     std::string list = you.zotdef_wave_name + " [";
-    for (int i = 0; i <= NSLOTS; i++)
+    for (int i = 0; i <= (crawl_state.game_is_zotdef() ? NSLOTS : 9); i++)
     {
         if (i)
             list += ", ";
@@ -919,7 +920,7 @@ static monster_type _pick_unique(int level)
 }
 
 // Ask for a location and place a trap there. Returns true
-// for success
+// for success.
 bool create_trap(trap_type spec_type)
 {
     dist abild;
@@ -950,6 +951,60 @@ bool create_trap(trap_type spec_type)
         grd(abild.target) = env.trap[env.tgrid(abild.target)].category();
 
     return result;
+}
+
+/**
+ * Create an altar to the god of the player's choice.
+ * @param wizmode if true, bypass some checks.
+ */
+bool zotdef_create_altar(bool wizmode)
+{
+    char specs[80];
+
+    if (!wizmode && grd(you.pos()) != DNGN_FLOOR)
+        return false;
+
+    msgwin_get_line("Which god (by name)? ", specs, sizeof(specs));
+
+    if (specs[0] == '\0')
+        return false;
+
+    std::string spec = lowercase_string(specs);
+
+    god_type god = GOD_NO_GOD;
+
+    for (int i = 1; i < NUM_GODS; ++i)
+    {
+        const god_type gi = static_cast<god_type>(i);
+
+        if (!wizmode && is_unavailable_god(gi))
+            continue;
+
+        if (lowercase_string(god_name(gi)).find(spec) != std::string::npos)
+        {
+            god = gi;
+            break;
+        }
+    }
+
+    if (god == GOD_NO_GOD)
+    {
+        mpr("That god doesn't seem to be taking followers today.");
+        return false;
+    }
+    else
+    {
+        dungeon_feature_type feat = altar_for_god(god);
+        dungeon_terrain_changed(you.pos(), feat, false);
+
+        if (wizmode)
+            pray();
+        else
+            mprf("An altar to %s grows from the floor before you!",
+                 god_name(god).c_str());
+
+        return true;
+    }
 }
 
 bool create_zotdef_ally(monster_type mtyp, const char *successmsg)

@@ -6,8 +6,19 @@
 #include "coord.h"
 #include "coordit.h"
 #include "env.h"
+#include "itemprop.h"
+#include "libutil.h"
 #include "player.h"
 #include "terrain.h"
+
+#define notify_fail(x) (why_not = (x), false)
+
+static std::string _wallmsg(coord_def c)
+{
+    ASSERT(map_bounds(c)); // there'd be an information leak
+    const char *wall = feat_type_name(grd(c));
+    return "There is " + article_a(wall) + " there.";
+}
 
 bool targetter::set_aim(coord_def a)
 {
@@ -53,13 +64,13 @@ targetter_smite::targetter_smite(const actor* act, int ran,
 
 bool targetter_smite::valid_aim(coord_def a)
 {
-    if (!affects_walls && feat_is_solid(grd(a)))
-        return false;
-    if (a == origin)
-        return true;
+    if (a != origin && !cell_see_cell(origin, a, LOS_DEFAULT))
+        return notify_fail("You cannot see that place.");
     if ((origin - a).abs() > range2)
-        return false;
-    return cell_see_cell(origin, a);
+        return notify_fail("Out of range.");
+    if (!affects_walls && feat_is_solid(grd(a)))
+        return notify_fail(_wallmsg(a));
+    return true;
 }
 
 bool targetter_smite::set_aim(coord_def a)
@@ -116,22 +127,19 @@ targetter_reach::targetter_reach(const actor* act, reach_type ran) :
 
 bool targetter_reach::valid_aim(coord_def a)
 {
-    if (!cell_see_cell(origin, a))
-        return false;
+    if (origin == a)
+        return notify_fail("That would be overly suicidal.");
+    if (!cell_see_cell(origin, a, LOS_DEFAULT))
+        return notify_fail("You cannot see that place.");
     if (!agent->see_cell_no_trans(a))
-        return false;
+        return notify_fail("You can't get through.");
 
     int dist = (origin - a).abs();
 
-    switch(range)
-    {
-    default:
-        return dist <= 2;
-    case REACH_KNIGHT:
-        return dist <= 5;
-    case REACH_TWO:
-        return dist <= 8;
-    }
+    if (dist > reach_range(range))
+        return notify_fail("You can't reach that far!");
+
+    return true;
 }
 
 aff_type targetter_reach::is_affected(coord_def loc)
@@ -142,10 +150,11 @@ aff_type targetter_reach::is_affected(coord_def loc)
     if (loc == aim)
         return AFF_YES;
 
-    // Knight move reach "slips through" and can't be blocked by either
-    // square in the middle.
-    if ((loc - origin) * 2 == (aim - origin))
+    if (((loc - origin) * 2 - (aim - origin)).abs() <= 1
+        && grd(loc) > DNGN_MAX_NONREACH)
+    {
         return AFF_TRACER;
+    }
 
     return AFF_NO;
 }
@@ -172,14 +181,24 @@ static bool _cloudable(coord_def loc)
 
 bool targetter_cloud::valid_aim(coord_def a)
 {
-    if (!agent)
-        return _cloudable(a);
-
-    if ((origin - a).abs() > range2)
-        return false;
-    if (!_cloudable(a))
-        return false;
-    return cell_see_cell(origin, a);
+    if (agent && (origin - a).abs() > range2)
+        return notify_fail("Out of range.");
+    if (!map_bounds(a)
+        || agent
+           && origin != a
+           && !cell_see_cell(origin, a, LOS_DEFAULT))
+    {
+        return notify_fail("You cannot see that place.");
+    }
+    if (feat_is_solid(grd(a)))
+        return notify_fail(_wallmsg(a));
+    if (agent)
+    {
+        if (env.cgrid(a) != EMPTY_CLOUD)
+            return notify_fail("There's already a cloud there.");
+        ASSERT(_cloudable(a));
+    }
+    return true;
 }
 
 bool targetter_cloud::set_aim(coord_def a)
@@ -193,7 +212,6 @@ bool targetter_cloud::set_aim(coord_def a)
 
     int placed = 0;
     queue[0].push_back(a);
-    ASSERT(_cloudable(a));
 
     for (unsigned int d1 = 0; d1 < queue.size() && placed < cnt_max; d1++)
     {
@@ -230,4 +248,94 @@ aff_type targetter_cloud::is_affected(coord_def loc)
         return AFF_NO;
 
     return it->second;
+}
+
+targetter_splash::targetter_splash(const actor* act)
+{
+    ASSERT(act);
+    agent = act;
+    origin = aim = act->pos();
+}
+
+bool targetter_splash::valid_aim(coord_def a)
+{
+    if (agent && grid_distance(origin, a) > 1)
+        return notify_fail("Out of range.");
+    return true;
+}
+
+bool targetter_splash::anyone_there(coord_def loc)
+{
+    if (!map_bounds(loc))
+        return false;
+    if (agent && agent->atype() == ACT_PLAYER)
+        return env.map_knowledge(loc).monsterinfo();
+    return actor_at(loc);
+}
+
+aff_type targetter_splash::is_affected(coord_def loc)
+{
+    if (!valid_aim(aim) || !valid_aim(loc))
+        return AFF_NO;
+
+    if (loc == aim)
+        return AFF_YES;
+
+    // self-spit currently doesn't splash
+    if (aim == origin)
+        return AFF_NO;
+
+    // it splashes around only upon hitting someone
+    if (!anyone_there(aim))
+        return AFF_NO;
+
+    if (grid_distance(loc, aim) > 1)
+        return AFF_NO;
+
+    // you're safe from being splashed by own spit
+    if (loc == origin)
+        return AFF_NO;
+
+    return anyone_there(loc) ? AFF_YES : AFF_MAYBE;
+}
+
+
+targetter_los::targetter_los(const actor *act, los_type _los,
+                             int range, int range_max)
+{
+    ASSERT(act);
+    agent = act;
+    origin = aim = act->pos();
+    los = _los;
+    range2 = range * range + 1;
+    if (!range_max)
+        range_max = range;
+    ASSERT(range_max >= range);
+    range_max2 = range_max * range_max + 1;
+}
+
+bool targetter_los::valid_aim(coord_def a)
+{
+    if ((a - origin).abs() > range_max2)
+        return notify_fail("Out of range.");
+    // If this message ever becomes used, please improve it.  I did not
+    // bother adding complexity just for monsters and "hit allies" prompts
+    // which don't need it.
+    if (!is_affected(a))
+        return notify_fail("The effect is blocked.");
+    return true;
+}
+
+aff_type targetter_los::is_affected(coord_def loc)
+{
+    if (loc == aim)
+        return AFF_YES;
+
+    if ((loc - origin).abs() > range_max2)
+        return AFF_NO;
+
+    if (!cell_see_cell(loc, origin, los))
+        return AFF_NO;
+
+    return (loc - origin).abs() > range_max2 ? AFF_MAYBE : AFF_YES;
 }

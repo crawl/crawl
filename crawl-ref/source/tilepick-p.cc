@@ -47,7 +47,6 @@ tileidx_t tilep_equ_weapon(const item_def &item)
         case MISC_STONE_OF_EARTH_ELEMENTALS:  return TILEP_HAND1_STONE;
         case MISC_DISC_OF_STORMS:             return TILEP_HAND1_DISC;
 
-        case MISC_CRYSTAL_BALL_OF_SEEING:
         case MISC_CRYSTAL_BALL_OF_ENERGY:     return TILEP_HAND1_CRYSTAL;
 
         case MISC_LAMP_OF_FIRE:               return TILEP_HAND1_LANTERN;
@@ -92,13 +91,15 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_EVENINGSTAR:       return TILEP_HAND1_EVENINGSTAR;
     case WPN_GIANT_CLUB:        return TILEP_HAND1_GIANT_CLUB_PLAIN;
     case WPN_GIANT_SPIKED_CLUB: return TILEP_HAND1_GIANT_CLUB_SPIKE_SLANT;
-    case WPN_ANKUS:             return TILEP_HAND1_MACE;
+    case WPN_ANKUS:             return TILEP_HAND1_ANKUS;
     case WPN_WHIP:              return TILEP_HAND1_WHIP;
     case WPN_DEMON_WHIP:        return TILEP_HAND1_BLACK_WHIP;
     case WPN_SACRED_SCOURGE:    return TILEP_HAND1_SACRED_SCOURGE;
 
     // Edge
+#if TAG_MAJOR_VERSION == 32
     case WPN_KNIFE:                return TILEP_HAND1_DAGGER_SLANT;
+#endif
     case WPN_DAGGER:               return TILEP_HAND1_DAGGER_SLANT;
     case WPN_SHORT_SWORD:          return TILEP_HAND1_SHORT_SWORD_SLANT;
     case WPN_LONG_SWORD:           return TILEP_HAND1_LONG_SWORD_SLANT;
@@ -108,7 +109,10 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_SABRE:                return TILEP_HAND1_SABRE;
     case WPN_DEMON_BLADE:          return TILEP_HAND1_DEMON_BLADE;
     case WPN_QUICK_BLADE:          return TILEP_HAND1_DAGGER;
+#if TAG_MAJOR_VERSION == 32
     case WPN_KATANA:               return TILEP_HAND1_KATANA_SLANT;
+    case WPN_BLESSED_KATANA:       return TILEP_HAND1_KATANA_SLANT;
+#endif
     case WPN_DOUBLE_SWORD:         return TILEP_HAND1_DOUBLE_SWORD;
     case WPN_TRIPLE_SWORD:         return TILEP_HAND1_TRIPLE_SWORD;
     case WPN_EUDEMON_BLADE:        return TILEP_HAND1_BLESSED_BLADE;
@@ -117,7 +121,6 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_BLESSED_GREAT_SWORD:  return TILEP_HAND1_GREAT_SWORD_SLANT;
     case WPN_BLESSED_SCIMITAR:     return TILEP_HAND1_SCIMITAR;
     case WPN_BLESSED_FALCHION:     return TILEP_HAND1_FALCHION;
-    case WPN_BLESSED_KATANA:       return TILEP_HAND1_KATANA_SLANT;
     case WPN_BLESSED_DOUBLE_SWORD: return TILEP_HAND1_DOUBLE_SWORD;
     case WPN_BLESSED_TRIPLE_SWORD: return TILEP_HAND1_TRIPLE_SWORD;
 
@@ -133,6 +136,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_SPEAR:         return TILEP_HAND1_SPEAR;
     case WPN_HALBERD:       return TILEP_HAND1_HALBERD;
     case WPN_GLAIVE:        return TILEP_HAND1_GLAIVE;
+    case WPN_STAFF:         return TILEP_HAND1_QUARTERSTAFF1;
     case WPN_QUARTERSTAFF:  return TILEP_HAND1_QUARTERSTAFF1;
     case WPN_LAJATANG:      return TILEP_HAND1_DIRE_LAJATANG;
     case WPN_SCYTHE:        return TILEP_HAND1_SCYTHE;
@@ -190,7 +194,6 @@ tileidx_t tilep_equ_armour(const item_def &item)
 
     switch (item.sub_type)
     {
-
     case ARM_ROBE:
         return _modrng(item.rnd, TILEP_BODY_ROBE_FIRST_NORM,
                        TILEP_BODY_ROBE_LAST_NORM);
@@ -204,7 +207,7 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_PLATE_MAIL:         return TILEP_BODY_PLATE_BLACK;
     case ARM_CRYSTAL_PLATE_MAIL: return TILEP_BODY_CRYSTAL_PLATE;
 
-    case ARM_DRAGON_HIDE:         return TILEP_BODY_DRAGONSC_GREEN;
+    case ARM_FIRE_DRAGON_HIDE:    return TILEP_BODY_DRAGONSC_GREEN;
     case ARM_ICE_DRAGON_HIDE:     return TILEP_BODY_DRAGONSC_CYAN;
     case ARM_STEAM_DRAGON_HIDE:   return TILEP_BODY_DRAGONSC_WHITE;
     case ARM_MOTTLED_DRAGON_HIDE: return TILEP_BODY_DRAGONSC_MAGENTA;
@@ -213,7 +216,7 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_SWAMP_DRAGON_HIDE:   return TILEP_BODY_DRAGONSC_BROWN;
     case ARM_PEARL_DRAGON_HIDE:   return TILEP_BODY_DRAGONSC_PEARL;
 
-    case ARM_DRAGON_ARMOUR:         return TILEP_BODY_DRAGONARM_GREEN;
+    case ARM_FIRE_DRAGON_ARMOUR:    return TILEP_BODY_DRAGONARM_GREEN;
     case ARM_ICE_DRAGON_ARMOUR:     return TILEP_BODY_DRAGONARM_CYAN;
     case ARM_STEAM_DRAGON_ARMOUR:   return TILEP_BODY_DRAGONARM_WHITE;
     case ARM_MOTTLED_DRAGON_ARMOUR: return TILEP_BODY_DRAGONARM_MAGENTA;
@@ -352,6 +355,13 @@ tileidx_t tilep_equ_boots(const item_def &item)
 
     int etype = enchant_to_int(item);
 
+    if (is_unrandom_artefact(item))
+    {
+        const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
+        if (tile)
+            return tile;
+    }
+
     if (item.sub_type == ARM_NAGA_BARDING)
         return TILEP_BOOTS_NAGA_BARDING + std::min(etype, 3);
 
@@ -360,13 +370,6 @@ tileidx_t tilep_equ_boots(const item_def &item)
 
     if (item.sub_type != ARM_BOOTS)
         return 0;
-
-    if (is_unrandom_artefact(item))
-    {
-        const tileidx_t tile = unrandart_to_doll_tile(find_unrandart_index(item));
-        if (tile)
-            return tile;
-    }
 
     return _modrng(item.rnd, TILEP_BOOTS_FIRST_NORM, TILEP_BOOTS_LAST_NORM);
 }
@@ -390,7 +393,7 @@ tileidx_t tileidx_player()
             {
             case SP_CENTAUR: ch = TILEP_TRAN_STATUE_CENTAUR;  break;
             case SP_NAGA:    ch = TILEP_TRAN_STATUE_NAGA;     break;
-            case SP_CAT:     ch = TILEP_TRAN_STATUE_FELID;    break;
+            case SP_FELID:   ch = TILEP_TRAN_STATUE_FELID;    break;
             default:         ch = TILEP_TRAN_STATUE_HUMANOID; break;
             }
             break;
@@ -402,13 +405,14 @@ tileidx_t tileidx_player()
             {
             case SP_CENTAUR: ch = TILEP_TRAN_LICH_CENTAUR;  break;
             case SP_NAGA:    ch = TILEP_TRAN_LICH_NAGA;     break;
-            case SP_CAT:     ch = TILEP_TRAN_LICH_FELID;    break;
+            case SP_FELID:   ch = TILEP_TRAN_LICH_FELID;    break;
             default:         ch = TILEP_TRAN_LICH_HUMANOID; break;
             }
             break;
         }
         // no special tile
         case TRAN_BLADE_HANDS: break;
+        case TRAN_APPENDAGE:
         case TRAN_NONE: break;
     }
 
@@ -527,8 +531,10 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_VAMPIRE;
     case SP_DEEP_DWARF:
         return TILEP_BASE_DEEP_DWARF;
-    case SP_CAT:
+    case SP_FELID:
         return TILEP_BASE_FELID;
+    case SP_OCTOPODE:
+        return TILEP_BASE_OCTOPODE;
     default:
         return TILEP_BASE_HUMAN;
     }
@@ -669,7 +675,7 @@ void tilep_job_default(int job, dolls_data *doll)
             parts[TILEP_PART_LEG]   = TILEP_LEG_METAL_SILVER;
             break;
 
-        case JOB_CRUSADER:
+        case JOB_SKALD:
             parts[TILEP_PART_BODY]  = TILEP_BODY_SHIRT_WHITE3;
             parts[TILEP_PART_LEG]   = TILEP_LEG_SKIRT_OFS;
             parts[TILEP_PART_HELM]  = TILEP_HELM_HELM_IRON;
@@ -933,6 +939,19 @@ void tilep_calc_flags(const dolls_data &doll, int flag[])
         flag[TILEP_PART_HAND1] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_HAND2] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_HELM]  = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_HAIR]  = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_SHADOW]= TILEP_FLAG_HIDE;
+        flag[TILEP_PART_DRCWING]=TILEP_FLAG_HIDE;
+        flag[TILEP_PART_DRCHEAD]=TILEP_FLAG_HIDE;
+    }
+    else if (is_player_tile(doll.parts[TILEP_PART_BASE], TILEP_BASE_OCTOPODE))
+    {
+        flag[TILEP_PART_CLOAK] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BOOTS] = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_LEG]   = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_BODY]  = TILEP_FLAG_HIDE;
+        flag[TILEP_PART_ARM]   = TILEP_FLAG_HIDE;
         flag[TILEP_PART_HAIR]  = TILEP_FLAG_HIDE;
         flag[TILEP_PART_BEARD] = TILEP_FLAG_HIDE;
         flag[TILEP_PART_SHADOW]= TILEP_FLAG_HIDE;

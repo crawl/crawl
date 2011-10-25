@@ -114,7 +114,7 @@ This specifically includes: regeneration. The flavour of this spell is that your
 wounds are reanimated by necromantic magic. This act is considered unholy by its
 very nature.
 
-This specifically excludes: Fedhas's ability to hasten the decay of corpses.
+This specifically excludes: Fedhas' ability to hasten the decay of corpses.
 This is a) a divine act, though not specifically a holy one, and b) flavoured as
 though the natural process of decay has been quickened, rather than the corpse
 being unnaturally decayed.

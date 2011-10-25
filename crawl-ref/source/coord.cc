@@ -28,40 +28,6 @@ bool adjacent(const coord_def& p1, const coord_def& p2)
     return grid_distance(p1, p2) <= 1;
 }
 
-bool in_bounds_x(int x)
-{
-    return (x > X_BOUND_1 && x < X_BOUND_2);
-}
-
-bool in_bounds_y(int y)
-{
-    return (y > Y_BOUND_1 && y < Y_BOUND_2);
-}
-
-// Returns true if inside the area the player can move and dig (ie exclusive).
-bool in_bounds(int x, int y)
-{
-    return (in_bounds_x(x) && in_bounds_y(y));
-}
-
-bool map_bounds_x(int x)
-{
-    return (x >= X_BOUND_1 && x <= X_BOUND_2);
-}
-
-bool map_bounds_y(int y)
-{
-    return (y >= Y_BOUND_1 && y <= Y_BOUND_2);
-}
-
-// Returns true if inside the area the player can map (ie inclusive).
-// Note that terrain features should be in_bounds() leaving an outer
-// ring of rock to frame the level.
-bool map_bounds(int x, int y)
-{
-    return (map_bounds_x(x) && map_bounds_y(y));
-}
-
 bool map_bounds_with_margin(coord_def p, int margin)
 {
     return (p.x >= X_BOUND_1 + margin && p.x <= X_BOUND_2 - margin

@@ -1,6 +1,6 @@
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "tilereg-map.h"
 
@@ -304,9 +304,6 @@ int MapRegion::handle_mouse(MouseEvent &event)
 bool MapRegion::update_tip_text(std::string& tip)
 {
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
-        return (false);
-
-    if (!player_in_mappable_area())
         return (false);
 
     tip = "[L-Click] Travel / [R-Click] View";

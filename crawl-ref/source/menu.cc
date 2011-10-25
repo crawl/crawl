@@ -18,8 +18,10 @@
 #include "options.h"
 #include "player.h"
 #include "hints.h"
+#include "religion.h"
+#include "colour.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
  #include "mon-stuff.h"
  #include "mon-util.h"
  #include "terrain.h"
@@ -51,7 +53,7 @@ void MenuDisplayText::draw_stock_item(int index, const MenuEntry *me)
         return;
 
     const int col = m_menu->item_colour(index, me);
-    textattr(col);
+    textcolor(col);
     const bool needs_cursor = (m_menu->get_cursor() == index
                                && m_menu->is_set(MF_MULTISELECT));
 
@@ -75,7 +77,7 @@ void MenuDisplayText::draw_more()
     m_menu->get_more().display();
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 MenuDisplayTile::MenuDisplayTile(Menu *menu) : MenuDisplay(menu)
 {
     m_menu->set_maxpagesize(tiles.get_menu()->maxpagesize());
@@ -117,7 +119,7 @@ Menu::Menu(int _flags, const std::string& tagname, bool text_only)
     select_filter(), highlighter(new MenuHighlighter), num(-1), lastch(0),
     alive(false), last_selected(-1)
 {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (text_only)
         mdisplay = new MenuDisplayText(this);
     else
@@ -311,7 +313,7 @@ std::vector<MenuEntry *> Menu::show(bool reuse_selections)
     mdisplay->set_offset(1 + !!title);
 
     // Lose lines for the title + room for -more- line.
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     pagesize = max_pagesize - !!title - 1;
 #else
     pagesize = get_number_of_lines() - !!title - 1;
@@ -371,7 +373,7 @@ int Menu::post_process(int k)
 
 bool Menu::process_key(int keyin)
 {
-    if (items.size() == 0)
+    if (items.empty())
     {
         lastch = keyin;
         return (false);
@@ -850,7 +852,7 @@ FeatureMenuEntry::FeatureMenuEntry(const std::string &str,
 }
 
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 PlayerMenuEntry::PlayerMenuEntry(const std::string &str) :
     MenuEntry(str, MEL_ITEM, 1)
 {
@@ -925,8 +927,18 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
     }
     else if (mons_is_mimic(m->type))
     {
-        tileidx_t idx = tileidx_monster(m) & TILE_FLAG_MASK;
-        tileset.push_back(tile_def(idx, TEX_DEFAULT));
+        tileidx_t idx;
+        if (mons_is_feat_mimic(m->type))
+        {
+            idx = m->props["tile_idx"].get_int();
+            tileset.push_back(tile_def(idx, TEX_FEAT));
+        }
+        else
+        {
+            idx = tileidx_monster(m) & TILE_FLAG_MASK;
+            tileset.push_back(tile_def(idx, TEX_DEFAULT));
+        }
+        tileset.push_back(tile_def(TILEI_MIMIC, TEX_ICONS));
     }
     else
     {
@@ -986,6 +998,8 @@ bool MonsterMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
         tileset.push_back(tile_def(TILEI_GOOD_NEUTRAL, TEX_ICONS));
     else if (m->neutral())
         tileset.push_back(tile_def(TILEI_NEUTRAL, TEX_ICONS));
+    else if (mons_is_fleeing(m))
+        tileset.push_back(tile_def(TILEI_FLEEING, TEX_ICONS));
     else if (mons_looks_stabbable(m))
         tileset.push_back(tile_def(TILEI_STAB_BRAND, TEX_ICONS));
     else if (mons_looks_distracted(m))
@@ -1250,7 +1264,7 @@ void Menu::write_title()
     if (!first)
         ASSERT(title2);
 
-    textattr(item_colour(-1, first ? title : title2));
+    textcolor(item_colour(-1, first ? title : title2));
 
     std::string text = (first ? title->get_text() : title2->get_text());
     cprintf("%s", text.c_str());
@@ -1718,6 +1732,7 @@ bool formatted_scroller::process_key(int keyin)
         break;
     }
     default:
+        moved = false;
         if (is_set(MF_SINGLESELECT))
         {
             select_items(keyin);
@@ -1733,7 +1748,7 @@ bool formatted_scroller::process_key(int keyin)
 
     if (repaint)
         draw_menu();
-    else if (moved && is_set(MF_EASY_EXIT))
+    else if (!moved || is_set(MF_EASY_EXIT))
         return (false);
 
     return (true);
@@ -1773,9 +1788,11 @@ int ToggleableMenu::pre_process(int key)
 /**
  * Performs regular rectangular AABB intersection between the given AABB
  * rectangle and a item in the menu_entries
+ * <pre>
  * start(x,y)------------
  *           |          |
  *           ------------end(x,y)
+ * </pre>
  */
 static bool _AABB_intersection(const coord_def& item_start,
                               const coord_def& item_end,
@@ -1804,7 +1821,7 @@ PrecisionMenu::PrecisionMenu() : m_active_object(NULL),
 PrecisionMenu::~PrecisionMenu()
 {
     clear();
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tiles.get_crt()->detach_menu();
 #endif
 }
@@ -1820,7 +1837,7 @@ void PrecisionMenu::set_select_type(SelectType flag)
 void PrecisionMenu::clear()
 {
     // release all the data reserved
-    if (m_attached_objects.size() == 0)
+    if (m_attached_objects.empty())
     {
         return;
     }
@@ -1837,7 +1854,7 @@ void PrecisionMenu::clear()
 }
 
 /**
- * Processes user input
+ * Processes user input.
  *
  * Returns:
  * true when a significant event happened, signaling that the player has made a
@@ -1848,7 +1865,7 @@ bool PrecisionMenu::process_key(int key)
 {
     if (m_active_object == NULL)
     {
-        if (m_attached_objects.size() == 0)
+        if (m_attached_objects.empty())
         {
             // nothing to process
             return true;
@@ -1961,7 +1978,7 @@ bool PrecisionMenu::process_key(int key)
     return false;
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 int PrecisionMenu::handle_mouse(const MouseEvent &me)
 {
     // Feed input to each attached object that the mouse is over
@@ -2019,10 +2036,10 @@ void PrecisionMenu::_clear_selections()
 /**
  * Finds the closest rectangle to given entry start on a caardinal
  * direction from it.
- * if no entries are found, NULL is returned
+ * If no entries are found, NULL is returned.
  *
- * TODO: This is exact duplicate of MenuObject::_find_item_by_direction()
- * maybe somehow generalize it and detach it from class
+ * TODO: This is exact duplicate of MenuObject::_find_item_by_direction();
+ * maybe somehow generalize it and detach it from class?
  */
 MenuObject* PrecisionMenu::_find_object_by_direction(const MenuObject* start,
                                                    Direction dir)
@@ -2135,7 +2152,7 @@ std::vector<MenuItem*> PrecisionMenu::get_selected_items()
     for (it = m_attached_objects.begin(); it != m_attached_objects.end(); ++it)
     {
         std::vector<MenuItem*> object_selected = (*it)->get_selected_items();
-        if (object_selected.size() > 0)
+        if (!object_selected.empty())
         {
             std::vector<MenuItem*>::iterator object_it;
             for (object_it = object_selected.begin();
@@ -2206,7 +2223,7 @@ void PrecisionMenu::set_active_object(MenuObject* object)
 
 void PrecisionMenu::draw_menu()
 {
-    if (m_attached_objects.size() > 0)
+    if (!m_attached_objects.empty())
     {
         std::vector<MenuObject*>::iterator it;
         for (it = m_attached_objects.begin(); it != m_attached_objects.end();
@@ -2226,7 +2243,7 @@ MenuItem::MenuItem(): m_min_coord(0,0), m_max_coord(0,0), m_selected(false),
                       m_link_left(NULL), m_link_right(NULL), m_link_up(NULL),
                       m_link_down(NULL), m_item_id(-1)
 {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     m_unit_width_pixels = tiles.get_crt_font()->char_width();
     m_unit_height_pixels = tiles.get_crt_font()->char_height();
 #endif
@@ -2240,7 +2257,7 @@ MenuItem::~MenuItem()
 {
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 void MenuItem::set_tile_height()
 {
     m_unit_height_pixels = TILE_Y;
@@ -2252,7 +2269,7 @@ void MenuItem::set_tile_height()
  */
 void MenuItem::set_bounds(const coord_def& min_coord, const coord_def& max_coord)
 {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // these are saved in font dx / dy for mouse to work properly
     // remove 1 unit from all the entries because console starts at (1,1)
     // but tiles starts at (0,0)
@@ -2277,7 +2294,13 @@ void MenuItem::set_bounds_no_multiply(const coord_def& min_coord,
     m_max_coord = max_coord;
 }
 
-// By default, value does nothing. Override for Items needing it
+void MenuItem::move(const coord_def& delta)
+{
+    m_min_coord += delta;
+    m_max_coord += delta;
+}
+
+// By default, value does nothing. Override for Items needing it.
 void MenuItem::select(bool toggle, int value)
 {
     select(toggle);
@@ -2404,14 +2427,14 @@ MenuItem* MenuItem::get_link_down() const
     return m_link_down;
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 int MenuItem::get_vertical_offset() const
 {
     return m_unit_height_pixels / 2 - tiles.get_crt_font()->char_height() / 2;
 }
 #endif
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 TextItem::TextItem() : m_font_buf(tiles.get_crt_font())
 #else
 TextItem::TextItem()
@@ -2449,7 +2472,7 @@ void TextItem::render()
     if (!m_visible)
         return;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (m_dirty)
     {
         m_font_buf.clear();
@@ -2503,11 +2526,11 @@ const std::string& TextItem::get_text() const
 }
 
 /**
- * Wraps and chops the m_text variable and saves the chopped
- * text to m_render_text.
+ * Wraps and chops the #m_text variable and saves the chopped
+ * text to #m_render_text.
  * This is done to preserve the old text in case the text item
- * changes size and could fit more text
- * Override if you use font with different sizes than CRTRegion font
+ * changes size and could fit more text.
+ * Override if you use font with different sizes than CRTRegion font.
  */
 void TextItem::_wrap_text()
 {
@@ -2516,7 +2539,7 @@ void TextItem::_wrap_text()
     int max_lines;
     max_cols = (m_max_coord.x - m_min_coord.x);
     max_lines = (m_max_coord.y - m_min_coord.y);
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // Tiles saves coordinates in pixels
     max_cols = max_cols / m_unit_width_pixels;
     max_lines = max_lines / m_unit_height_pixels;
@@ -2567,7 +2590,10 @@ void FormattedTextItem::render()
     if (!m_visible)
         return;
 
-#ifdef USE_TILE
+    if (m_max_coord.x == m_min_coord.x || m_max_coord.y == m_min_coord.y)
+        return;
+
+#ifdef USE_TILE_LOCAL
     if (m_dirty)
     {
         m_font_buf.clear();
@@ -2582,6 +2608,8 @@ void FormattedTextItem::render()
 #else
     // Clean the drawing area first
     // clear_to_end_of_line does not work for us
+    ASSERT(m_max_coord.x > m_min_coord.x);
+    ASSERT(m_max_coord.y > m_min_coord.y);
     std::string white_space(m_max_coord.x - m_min_coord.x, ' ');
     for (int i = 0; i < (m_max_coord.y - m_min_coord.y); ++i)
     {
@@ -2595,7 +2623,7 @@ void FormattedTextItem::render()
 #endif
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 TextTileItem::TextTileItem()
 {
     for (int i = 0; i < TEX_MAX; i++)
@@ -2643,7 +2671,7 @@ void TextTileItem::render()
         }
         // center the text
         // TODO wrap / chop the text
-        const int tile_offset = (m_tiles.size() > 0) ? 32 : 0;
+        const int tile_offset = m_tiles.empty() ? 0 : 32;
         m_font_buf.add(m_text, term_colours[m_fg_colour],
                        m_min_coord.x + tile_offset,
                        m_min_coord.y + get_vertical_offset());
@@ -2760,7 +2788,7 @@ MenuObject::MenuObject() : m_dirty(false), m_allow_focus(true), m_min_coord(0,0)
                            m_max_coord(0,0)
 {
     m_object_name = "unnamed object";
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     m_unit_width_pixels = tiles.get_crt_font()->char_width();
     m_unit_height_pixels = tiles.get_crt_font()->char_height();
 #endif
@@ -2770,7 +2798,7 @@ MenuObject::~MenuObject()
 {
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 void MenuObject::set_tile_height()
 {
     m_unit_height_pixels = TILE_Y;
@@ -2780,7 +2808,7 @@ void MenuObject::set_tile_height()
 void MenuObject::init(const coord_def& min_coord, const coord_def& max_coord,
               const std::string& name)
 {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // these are saved in font dx / dy for mouse to work properly
     // remove 1 unit from all the entries because console starts at (1,1)
     // but tiles starts at (0,0)
@@ -2953,7 +2981,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
 
     if (m_active_item == NULL)
     {
-        if (m_entries.size() == 0)
+        if (m_entries.empty())
         {
             // nothing to process
             return MenuObject::INPUT_NO_ACTION;
@@ -3071,7 +3099,7 @@ MenuObject::InputReturnValue MenuFreeform::process_input(int key)
     return MenuObject::INPUT_NO_ACTION;
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 MenuObject::InputReturnValue MenuFreeform::handle_mouse(const MouseEvent& me)
 {
     if (!m_allow_focus || !m_visible)
@@ -3244,7 +3272,7 @@ void MenuFreeform::set_active_item(MenuItem* item)
 
 void MenuFreeform::activate_first_item()
 {
-    if (m_entries.size() > 0)
+    if (!m_entries.empty())
     {
         // find the first activeable item
         for (int i = 0; i < static_cast<int> (m_entries.size()); ++i)
@@ -3260,7 +3288,7 @@ void MenuFreeform::activate_first_item()
 
 void MenuFreeform::activate_last_item()
 {
-    if (m_entries.size() > 0)
+    if (!m_entries.empty())
     {
         // find the last activeable item
         for (int i = m_entries.size() -1; i >= 0; --i)
@@ -3470,7 +3498,7 @@ MenuObject::InputReturnValue MenuScroller::process_input(int key)
 
     if (m_currently_active < 0)
     {
-        if (m_entries.size() == 0)
+        if (m_entries.empty())
         {
             // nothing to process
             return MenuObject::INPUT_NO_ACTION;
@@ -3558,7 +3586,7 @@ MenuObject::InputReturnValue MenuScroller::process_input(int key)
     return MenuObject::INPUT_NO_ACTION;
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 MenuObject::InputReturnValue MenuScroller::handle_mouse(const MouseEvent &me)
 {
     if (!m_allow_focus || !m_visible)
@@ -3740,7 +3768,7 @@ void MenuScroller::set_active_item(MenuItem* item)
 
 void MenuScroller::activate_first_item()
 {
-    if (m_entries.size() > 0)
+    if (!m_entries.empty())
     {
         // find the first activeable item
         for (int i = 0; i < static_cast<int> (m_entries.size()); ++i)
@@ -3756,7 +3784,7 @@ void MenuScroller::activate_first_item()
 
 void MenuScroller::activate_last_item()
 {
-    if (m_entries.size() > 0)
+    if (!m_entries.empty())
     {
         // find the last activeable item
         for (int i = m_entries.size() -1; i >= 0; --i)
@@ -3873,7 +3901,7 @@ void MenuScroller::_place_items()
         max_coord.y = min_coord.y + item_height;
         min_coord.x = m_min_coord.x;
         max_coord.x = m_max_coord.x;
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         // reserve one tile space for scrollbar
         max_coord.x -= 32;
 #endif
@@ -3940,7 +3968,7 @@ MenuObject::InputReturnValue MenuDescriptor::process_input(int key)
     return MenuObject::INPUT_NO_ACTION;
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 MenuObject::InputReturnValue MenuDescriptor::handle_mouse(const MouseEvent &me)
 {
     // we have nothing interesting to do on mouse events because render()
@@ -3967,7 +3995,7 @@ void MenuDescriptor::_place_items()
     {
         // update
         m_active_item = tmp;
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
         textcolor(BLACK);
         textbackground(BLACK);
         for (int i = 0; i < m_desc_item.get_max_coord().y
@@ -4016,7 +4044,7 @@ MenuObject::InputReturnValue BoxMenuHighlighter::process_input(int key)
     return MenuObject::INPUT_NO_ACTION;
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 MenuObject::InputReturnValue BoxMenuHighlighter::handle_mouse(const MouseEvent &me)
 {
     // we have nothing interesting to do on mouse events because render()
@@ -4033,7 +4061,7 @@ void BoxMenuHighlighter::render()
     if (!m_visible)
        return;
     _place_items();
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     m_line_buf.draw();
 #else
     if (m_active_item != NULL)
@@ -4047,7 +4075,7 @@ void BoxMenuHighlighter::_place_items()
     if (tmp == m_active_item)
         return;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     m_line_buf.clear();
     if (tmp != NULL)
     {
@@ -4095,7 +4123,7 @@ void BlackWhiteHighlighter::render()
 
     if (m_active_item != NULL)
     {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         m_shape_buf.draw();
 #endif
         m_active_item->render();
@@ -4110,7 +4138,7 @@ void BlackWhiteHighlighter::_place_items()
         return;
     }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     m_shape_buf.clear();
 #endif
     // we had an active item before
@@ -4124,7 +4152,7 @@ void BlackWhiteHighlighter::_place_items()
     }
     if (tmp != NULL)
     {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         m_shape_buf.add(tmp->get_min_coord().x, tmp->get_min_coord().y,
                         tmp->get_max_coord().x, tmp->get_max_coord().y,
                         term_colours[LIGHTGRAY]);

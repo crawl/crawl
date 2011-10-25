@@ -82,12 +82,12 @@ spell_type which_spell_in_book(int sbook_type, int spl)
     ASSERT(sbook_type >= 0);
     ASSERT(sbook_type < static_cast<int>(NUMBER_SPELLBOOKS));
     return spellbook_template_array[sbook_type][spl];
-}                               // end which_spell_in_book()
+}
 
 int player_spell_skills()
 {
     int sum = 0;
-    for (int i = SK_SPELLCASTING; i <= SK_POISON_MAGIC; i++)
+    for (int i = SK_SPELLCASTING; i <= SK_LAST_MAGIC; i++)
         sum += you.skills[i];
 
     return (sum);
@@ -182,12 +182,7 @@ int spellbook_contents(item_def &book, read_book_action_type action,
                 }
             }
         }
-        out.cprintf("%s", chop_string(schools, 30).c_str());
-
-        char sval[3];
-        itoa(level_diff, sval, 10);
-        out.cprintf(sval);
-        out.cprintf("\n");
+        out.cprintf("%s%d\n", chop_string(schools, 30).c_str(), level_diff);
         spelcount++;
     }
 
@@ -234,7 +229,6 @@ int spellbook_contents(item_def &book, read_book_action_type action,
     return (keyn);     // try to figure out that for which this is used {dlb}
 }
 
-//jmf: was in shopping.cc
 // Rarity 100 is reserved for unused books.
 int book_rarity(uint8_t which_book)
 {
@@ -242,14 +236,13 @@ int book_rarity(uint8_t which_book)
     {
     case BOOK_MINOR_MAGIC:
     case BOOK_HINDERANCE:
-    case BOOK_CANTRIPS: //jmf: added 04jan2000
+    case BOOK_CANTRIPS:
         return 1;
 
     case BOOK_CHANGES:
     case BOOK_MALEDICT:
         return 2;
 
-    case BOOK_CONJURATIONS_I:
     case BOOK_CONJURATIONS_II:
     case BOOK_NECROMANCY:
     case BOOK_CALLINGS:
@@ -263,8 +256,9 @@ int book_rarity(uint8_t which_book)
         return 4;
 
     case BOOK_YOUNG_POISONERS:
-    case BOOK_STALKING:    //jmf: added 24jun2000
+    case BOOK_STALKING:
     case BOOK_WAR_CHANTS:
+    case BOOK_DEBILITATION:
         return 5;
 
     case BOOK_CLOUDS:
@@ -272,11 +266,11 @@ int book_rarity(uint8_t which_book)
         return 6;
 
     case BOOK_ENCHANTMENTS:
-    case BOOK_PARTY_TRICKS:     //jmf: added 04jan2000
+    case BOOK_PARTY_TRICKS:
         return 7;
 
     case BOOK_TRANSFIGURATIONS:
-    case BOOK_ZOOLOGY:
+    case BOOK_BEASTS:
         return 8;
 
     case BOOK_FIRE:
@@ -294,7 +288,7 @@ int book_rarity(uint8_t which_book)
 
     case BOOK_MUTATIONS:
     case BOOK_BURGLARY:
-    case BOOK_CHEMISTRY:
+    case BOOK_ALCHEMY:
     case BOOK_DREAMS:
         return 12;
 
@@ -315,10 +309,10 @@ int book_rarity(uint8_t which_book)
     case BOOK_DESTRUCTION:
         return 30;
 
-    case BOOK_BRANDS:        // XXX: Temporarily disabled along with AM
 #if TAG_MAJOR_VERSION == 32
     case BOOK_MINOR_MAGIC_II:
     case BOOK_MINOR_MAGIC_III:
+    case BOOK_CONJURATIONS_I:
 #endif
        return 100;
 
@@ -436,9 +430,9 @@ void mark_had_book(const item_def &book)
 
     if (book.sub_type == BOOK_RANDART_LEVEL)
     {
-        god_type god;
         const int level = book.plus;
 #if TAG_MAJOR_VERSION == 32
+        god_type god;
         if (level > 0 && level <= 9)
         {
             if (origin_is_acquirement(book)
@@ -461,13 +455,6 @@ void mark_had_book(int booktype)
     ASSERT(booktype >= 0 && booktype <= MAX_FIXED_BOOK);
 
     you.had_book[booktype] = true;
-
-    if (booktype == BOOK_CONJURATIONS_I
-        || booktype == BOOK_CONJURATIONS_II)
-    {
-        you.had_book[BOOK_CONJURATIONS_I]  = true;
-        you.had_book[BOOK_CONJURATIONS_II] = true;
-    }
 }
 
 void inscribe_book_highlevel(item_def &book)
@@ -525,7 +512,7 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
     case US_HUNGRY_DEAD: // Ghouls
         switch (spell)
         {
-        case SPELL_BERSERKER_RAGE:
+        case SPELL_BEASTLY_APPENDAGE:
         case SPELL_BLADE_HANDS:
         case SPELL_BORGNJORS_REVIVIFICATION:
         case SPELL_CURE_POISON:
@@ -561,7 +548,7 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
     case US_UNDEAD: // Mummies
         switch (spell)
         {
-        case SPELL_BERSERKER_RAGE:
+        case SPELL_BEASTLY_APPENDAGE:
         case SPELL_BLADE_HANDS:
         case SPELL_BORGNJORS_REVIVIFICATION:
         case SPELL_CURE_POISON:
@@ -593,8 +580,21 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
     if (you.species == SP_DEEP_DWARF && spell == SPELL_REGENERATION)
         rc = true;
 
-    if (you.species == SP_CAT && spell == SPELL_PORTAL_PROJECTILE)
+    if (you.species == SP_FELID
+        && (spell == SPELL_PORTAL_PROJECTILE
+         // weapon branding is useless
+         || spell == SPELL_FIRE_BRAND
+         || spell == SPELL_FREEZING_AURA
+         || spell == SPELL_LETHAL_INFUSION
+         || spell == SPELL_WARP_BRAND
+         || spell == SPELL_EXCRUCIATING_WOUNDS
+         || spell == SPELL_POISON_WEAPON
+         || spell == SPELL_SURE_BLADE
+         // could be useful if it didn't require wielding
+         || spell == SPELL_TUKIMAS_DANCE))
+    {
         rc = true;
+    }
 
     return (rc);
 }
@@ -714,7 +714,8 @@ static bool _get_mem_list(spell_list &mem_spells,
 
         num_books++;
         num_on_ground++;
-        _index_book(book, book_hash, num_unreadable, book_errors);
+        if (player_can_reach_floor("", true))
+            _index_book(book, book_hash, num_unreadable, book_errors);
     }
 
     if (book_errors)
@@ -726,12 +727,12 @@ static bool _get_mem_list(spell_list &mem_spells,
         {
             if (num_unknown > 1)
             {
-                mpr("You must pick those books before reading them.",
+                mpr("You must pick up those books before reading them.",
                     MSGCH_PROMPT);
             }
             else if (num_unknown == 1)
             {
-                mpr("You must pick this book before reading it.",
+                mpr("You must pick up this book before reading it.",
                     MSGCH_PROMPT);
             }
             else
@@ -741,6 +742,11 @@ static bool _get_mem_list(spell_list &mem_spells,
             }
         }
         return (false);
+    }
+    else if (num_on_ground && num_on_ground == num_books
+             && !player_can_reach_floor("", just_check))
+    {
+        return false;
     }
     else if (num_unreadable == num_books)
     {
@@ -752,7 +758,7 @@ static bool _get_mem_list(spell_list &mem_spells,
         }
         return (false);
     }
-    else if (book_hash.size() == 0)
+    else if (book_hash.empty())
     {
         if (!just_check)
         {
@@ -860,8 +866,6 @@ static int _failure_rate_to_group(int fail)
 {
     return (fail == 100) ? 100 :
            (fail > 77)   ?  78 :
-           (fail > 71)   ?  72 :
-           (fail > 64)   ?  65 :
            (fail > 59)   ?  60 :
            (fail > 50)   ?  51 :
            (fail > 40)   ?  41 :
@@ -895,7 +899,7 @@ static bool _sort_mem_spells(spell_type a, spell_type b)
     if (spell_difficulty(a) != spell_difficulty(b))
         return (spell_difficulty(a) < spell_difficulty(b));
 
-    return (stricmp(spell_title(a), spell_title(b)) < 0);
+    return (strcasecmp(spell_title(a), spell_title(b)) < 0);
 }
 
 std::vector<spell_type> get_mem_spell_list(std::vector<int> &books)
@@ -931,7 +935,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
 {
     std::sort(spells.begin(), spells.end(), _sort_mem_spells);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     const bool text_only = false;
 #else
     const bool text_only = true;
@@ -940,7 +944,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
     ToggleableMenu spell_menu(MF_SINGLESELECT | MF_ANYPRINTABLE
                     | MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
                     text_only);
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // [enne] Hack.  Use a separate title, so the column headers are aligned.
     spell_menu.set_title(
         new MenuEntry(" Your Spells - Memorisation  (toggle to descriptions with '!')",
@@ -998,7 +1002,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
                                  num_race > 1 ? "s" : "");
     }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     // Tiles menus get this information in the title.
     more_str += "   Toggle display with '<w>!</w>'";
 #endif
@@ -1056,7 +1060,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
             new MenuEntry(desc.str(), MEL_ITEM, 1,
                           index_to_letter(i % 52));
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
 #endif
 
@@ -1191,7 +1195,7 @@ static bool _learn_spell_checks(spell_type specspell)
     bool undead = false;
     if (you_cannot_memorise(specspell, undead))
     {
-        mprf(desc_cannot_memorise_reason(undead).c_str());
+        mpr(desc_cannot_memorise_reason(undead).c_str());
         return (false);
     }
 
@@ -1398,10 +1402,6 @@ int count_staff_spells(const item_def &item, bool need_id)
 int staff_spell(int staff)
 {
     item_def& istaff(you.inv[staff]);
-    // Spell staves are mostly for the benefit of non-spellcasters, so we're
-    // not going to involve INT or Spellcasting skills for power. -- bwr
-    int variable_power = (5 + you.skills[SK_EVOCATIONS]
-                    + roll_dice(2, you.skills[SK_EVOCATIONS]));
 
     if (!item_is_rod(istaff))
     {
@@ -1454,9 +1454,7 @@ int staff_spell(int staff)
 
     const spell_type spell = which_spell_in_book(istaff, idx);
     const int mana = spell_mana(spell) * ROD_CHARGE_MULT;
-
-    // We also need a fixed power for range calculation
-    int fixed_power = calc_spell_power(spell, false, false, true, true);
+    int power = calc_spell_power(spell, false, false, true, true);
 
     int food = spell_hunger(spell, true);
 
@@ -1470,7 +1468,7 @@ int staff_spell(int staff)
     if (food && (you.hunger_state == HS_STARVING || you.hunger <= food)
         && !you.is_undead)
     {
-        mpr("You don't have the energy to cast that spell.");
+        canned_msg(MSG_NO_ENERGY);
         crawl_state.zero_turns_taken();
         return (-1);
     }
@@ -1484,16 +1482,8 @@ int staff_spell(int staff)
         return (-1);
     }
 
-    const int flags = get_spell_flags(spell);
-
-    // Labyrinths block divinations.
-    if (you.level_type == LEVEL_LABYRINTH
-        && testbits(flags, SPFLAG_MAPPING))
-    {
-        mpr("Something interferes with your magic!");
-    }
     // All checks passed, we can cast the spell.
-    else if (your_spells(spell, variable_power, false, false, fixed_power)
+    if (your_spells(spell, power, false, false)
             == SPRET_ABORT)
     {
         crawl_state.zero_turns_taken();
@@ -1673,13 +1663,11 @@ static void _make_book_randart(item_def &book)
 {
     if (!is_artefact(book))
     {
-        // This may need to get re-initialized at some point.
-        book.special = (random_int() & RANDART_SEED_MASK);
         book.flags |= ISFLAG_RANDART;
         if (!book.props.exists(ARTEFACT_APPEAR_KEY))
         {
             book.props[ARTEFACT_APPEAR_KEY].get_string() =
-                artefact_name(book, true);
+                make_artefact_name(book, true);
         }
     }
 }
