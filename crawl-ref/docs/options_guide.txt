@@ -25,9 +25,9 @@ The contents of this text are:
 4-  Interface.
 4-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
-                autopickup_no_burden, pickup_thrown, pickup_dropped,
-                chunks_autopickup, assign_item_slot, drop_mode,
-                pickup_mode, drop_filter, default_friendly_pickup
+                autopickup_no_burden, pickup_thrown, chunks_autopickup,
+                assign_item_slot, drop_mode, pickup_mode, drop_filter,
+                default_friendly_pickup
 4-b     Targeting.
                 default_target, target_unshifted_dirs, darken_beyond_range
 4-c     Passive Sightings (detected and remembered entities).
@@ -66,8 +66,8 @@ The contents of this text are:
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, clear_messages, show_more, small_more,
                 show_inventory_weights, show_newturn_mark, show_gold_turns,
-                show_game_turns, show_beam, item_stack_summary_minimum,
-                list_rotten, mlist_min_height, msg_min_height, msg_max_height,
+                show_game_turns, item_stack_summary_minimum, list_rotten,
+                mlist_min_height, msg_min_height, msg_max_height,
                 messages_at_top, show_no_ctele, skill_focus,
                 mlist_allow_alternate_layout, mlist_targetting, classic_hud,
                 menu_colour, menu_colour_prefix_class, menu_colour_shops,
@@ -467,11 +467,6 @@ pickup_thrown = true
         aware that autopickup uses a turn, though it won't trigger if
         there are hostile monsters in sight.
 
-pickup_dropped = false
-        pickup_dropped lets autopickup affect objects you've dropped.
-        Set to false to block autopickup for dropped objects. This can
-        be convenient.
-
 chunks_autopickup = true
         If true then butchered flesh will be automatically picked up
         right after they're generated (and after switching back from
@@ -808,10 +803,9 @@ travel_avoid_terrain = (shallow water | deep water)
 explore_greedy = true
         Greedy explore travels to items that are eligible for
         autopickup in addition to exploring the level, but is
-        otherwise identical to regular explore. Greedy explore is best
-        with pickup_dropped = false. Explore greed is disabled if
-        you're temporarily unable to pick up items (from uncontrolled
-        levitation, for instance).
+        otherwise identical to regular explore. Explore greed is
+        disabled if you're temporarily unable to pick up items
+        (from uncontrolled levitation, for instance).
 
 explore_stop  = items,greedy_pickup_smart,stairs,shops,altars,gates,
 explore_stop += greedy_visited_item_stack
@@ -1321,13 +1315,6 @@ show_game_turns = false
         If set to true, the turn counter in the stat area will display game
         turns instead of player turns. A second number is displayed in
         parenthesis, showing the duration of the last action.
-
-show_beam = true
-        When performing actions such as throwing or zapping, you can
-        toggle whether to show the beam path or not. This option
-        controls the initial status of this toggle. When set to true,
-        the path will be shown.  This is always true for the tile
-        version.
 
 item_stack_summary_minimum = 5
         If you step over a stack with this number or more of items in
