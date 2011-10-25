@@ -29,6 +29,7 @@ dc-mon/holy/phoenix MONS_PHOENIX
 %rim 0
 microbat MONS_MICROBAT
 %rim 1
+megabat MONS_MEGABAT
 gigabat MONS_GIGABAT
 fruity_bat MONS_FRUITY_BAT
 ice_bat MONS_ICE_BAT
