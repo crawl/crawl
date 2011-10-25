@@ -181,6 +181,7 @@ public:
     bool lose_ench_duration(const mon_enchant &e, int levels);
     bool lose_ench_levels(const mon_enchant &e, int lev);
     void lose_energy(energy_use_type et, int div = 1, int mult = 1);
+    void gain_energy(energy_use_type et, int div = 1, int mult = 1);
 
     void scale_hp(int num, int den);
     bool gain_exp(int exp);

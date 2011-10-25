@@ -6224,6 +6224,18 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
     speed_increment -= energy_loss;
 }
 
+void monster::gain_energy(energy_use_type et, int div, int mult)
+{
+    int energy_gain  = div_round_up(mult * action_energy(et), div);
+    if (has_ench(ENCH_PETRIFYING))
+    {
+        energy_gain *= 2;
+        energy_gain /= 3;
+    }
+
+    speed_increment += energy_gain;
+}
+
 bool monster::can_drink_potion(potion_type ptype) const
 {
     if (mons_class_is_stationary(type))

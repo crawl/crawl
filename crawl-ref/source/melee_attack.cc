@@ -194,19 +194,17 @@ bool melee_attack::handle_phase_attempted()
     // The attacker loses nutrition.
     attacker->make_hungry(3, true);
 
+    // Initial attack causes energy to be used for all attacks.  No
+	// additional energy is used for unarmed attacks.
+	if (effective_attack_number == 0)
+		attacker->lose_energy(EUT_ATTACK);
+
     // Xom thinks fumbles are funny...
     if (attacker->fumbles_attack())
     {
-        // Make sure the monster uses up some energy, even though
-        // it didn't actually attack.
-        attacker->lose_energy(EUT_ATTACK);
-
         // ... and thinks fumbling when trying to hit yourself is just
         // hilarious.
-        if (attacker == defender)
-            xom_is_stimulated(255);
-        else
-            xom_is_stimulated(14);
+        xom_is_stimulated(attacker == defender ? 255 : 14);
 
         if (damage_brand == SPWPN_CHAOS)
             chaos_affects_attacker();
@@ -278,10 +276,6 @@ bool melee_attack::handle_phase_blocked()
         }
         else
         {
-            // Make sure the monster uses up some energy, even though it
-            // didn't actually land a blow.
-            attacker->lose_energy(EUT_ATTACK);
-
             if (!mons_near(defender->as_monster()))
             {
                 simple_monster_message(attacker->as_monster(),
@@ -306,9 +300,10 @@ bool melee_attack::handle_phase_blocked()
 
 bool melee_attack::handle_phase_dodged()
 {
-    int ev_nophase = defender->melee_evasion(attacker, EV_IGNORE_PHASESHIFT);
+	const int ev = defender->melee_evasion(attacker);
+    const int ev_nophase = defender->melee_evasion(attacker, EV_IGNORE_PHASESHIFT);
 
-    if (test_hit(to_hit, ev_nophase) > 0)
+    if (ev_margin + (ev - ev_nophase) > 0)
     {
         if (needs_message && !defender_invisible)
         {
@@ -400,11 +395,6 @@ bool melee_attack::handle_phase_hit()
             final_attack_delay = calc_attack_delay();
             if (damage_brand == SPWPN_SPEED)
                 final_attack_delay = final_attack_delay / 2 + 1;
-
-            // Initial attack causes energy to be used for all attacks.  No
-            // additional energy is used for unarmed attacks.
-            if (effective_attack_number == 0)
-                attacker->as_monster()->lose_energy(EUT_ATTACK);
 
             // speed adjustment for weapon using monsters
             if (final_attack_delay > 0)
@@ -721,31 +711,25 @@ bool melee_attack::attack()
     // correct handle_phase_ handler.
     coord_def where = defender->pos();
     const int ev = defender->melee_evasion(attacker);
-    const int ev_nohelpless = defender_invisible ? ev
+    const int ev_helpless = defender_invisible ? ev
         : defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
 
+    ev_margin = test_hit(to_hit, ev);
+
     // Check for a stab (helpless or petrifying)
-    if (to_hit >= ev && ev_nohelpless > ev)
+    if (to_hit >= ev && ev_helpless > ev)
     {
         defender->props["helpless"] = true;
         ev_margin = 1;
 
-        if (needs_message && !defender_invisible)
-        {
-            mprf("Helpless, %s %s to dodge %s attack.",
-                 mons_defender_name().c_str(),
-                 defender->conj_verb("fail").c_str(),
-                 atk_name(DESC_ITS).c_str());
-        }
-
         handle_phase_hit();
     }
-    else if (test_hit(to_hit, ev) >= ev)
+    else if (ev_margin > 0)
     {
         if (attacker != defender && attack_warded_off())
         {
             // A warded-off attack takes half the normal energy.
-            attacker->lose_energy(EUT_ATTACK, 2);
+            attacker->gain_energy(EUT_ATTACK, 2);
 
             perceived_attack = true;
             return (false);
@@ -776,8 +760,6 @@ bool melee_attack::attack()
 
     if (attacker->atype() == ACT_PLAYER)
     {
-        handle_noise(defender->pos());
-
         if (damage_brand == SPWPN_CHAOS)
             chaos_affects_attacker();
 
@@ -791,9 +773,6 @@ bool melee_attack::attack()
     }
     else
     {
-        adjust_noise();
-        handle_noise(defender->pos());
-
         // Invisible monster might have interrupted butchering.
         if (you_are_delayed() && defender->atype() == ACT_PLAYER
             && perceived_attack && !attacker_visible)
@@ -801,6 +780,9 @@ bool melee_attack::attack()
             handle_interrupted_swap(false, true);
         }
     }
+
+    adjust_noise();
+    handle_noise(defender->pos());
 
     // If an enemy attacked a friend, set the pet target if it isn't set
     // already, but not if sanctuary is in effect (pet target must be
@@ -3386,7 +3368,6 @@ bool melee_attack::player_check_monster_died()
 
 /* Calculate the to-hit for an attacker
  *
- *
  * @param random deterministic or stochastic calculation(s)
  */
 int melee_attack::calc_to_hit(bool random)
@@ -3900,13 +3881,6 @@ void melee_attack::mons_announce_dud_hit()
              attacker->conj_verb(mons_attack_verb()).c_str(),
              mons_defender_name().c_str());
     }
-}
-
-// TODO: Remove after monster attack rounds is handled outside of melee_attack
-void melee_attack::mons_set_weapon()
-{
-    weapon = (attk_type == AT_HIT) ? attacker->weapon(attack_number) : NULL;
-    damage_brand = attacker->damage_brand(attack_number);
 }
 
 void melee_attack::mons_do_poison()
@@ -4862,6 +4836,8 @@ int melee_attack::calc_damage()
 
         set_attack_verb();
         damage_done = std::max(0, damage_done);
+
+        return damage_done;
     }
 
     return (0);
