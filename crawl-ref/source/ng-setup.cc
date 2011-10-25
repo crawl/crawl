@@ -579,7 +579,7 @@ static void _give_items_skills(const newgame_def& ng)
             // Species skilled with maces/flails get one, the others axes.
             weapon_type startwep = WPN_HAND_AXE;
             if (species_apt(SK_MACES_FLAILS) > species_apt(SK_AXES))
-                startwep = (player_genus(GENPC_OGREISH)) ? WPN_ANKUS : WPN_MACE;
+                startwep = (you.species == SP_OGRE) ? WPN_ANKUS : WPN_MACE;
 
             newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, startwep);
         }
@@ -791,7 +791,7 @@ static void _give_items_skills(const newgame_def& ng)
         // Gets some darts - this job is difficult to start off with.
         newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 16, 1);
 
-        if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL)
+        if (you.species == SP_OGRE || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 1;
@@ -904,7 +904,7 @@ static void _give_items_skills(const newgame_def& ng)
 
         newgame_make_item(4, EQ_NONE, OBJ_POTIONS, POT_CONFUSION, -1, 2);
 
-        if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL)
+        if (you.species == SP_OGRE || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 1;
@@ -1076,7 +1076,7 @@ static void _give_starting_food()
     {
         item.base_type = OBJ_FOOD;
         if (you.species == SP_HILL_ORC || you.species == SP_KOBOLD
-            || player_genus(GENPC_OGREISH) || you.species == SP_TROLL
+            || you.species == SP_OGRE || you.species == SP_TROLL
             || you.species == SP_FELID)
         {
             item.sub_type = FOOD_MEAT_RATION;
@@ -1145,7 +1145,7 @@ static void _racialise_starting_equipment()
                 // Now add appropriate species type mod.
                 if (player_genus(GENPC_ELVEN))
                     set_equip_race(you.inv[i], ISFLAG_ELVEN);
-                else if (player_genus(GENPC_DWARVEN))
+                else if (you.species == SP_DEEP_DWARF)
                     set_equip_race(you.inv[i], ISFLAG_DWARVEN);
                 else if (you.species == SP_HILL_ORC)
                     set_equip_race(you.inv[i], ISFLAG_ORCISH);

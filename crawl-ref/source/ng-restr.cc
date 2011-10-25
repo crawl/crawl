@@ -785,7 +785,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         }
 
     case WPN_ANKUS:
-        if (species_genus(ng.species) == GENPC_OGREISH)
+        if (ng.species == SP_OGRE)
             return (CC_UNRESTRICTED);
 
     case WPN_CROSSBOW:

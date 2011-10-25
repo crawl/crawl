@@ -348,7 +348,7 @@ std::string skill_title_by_rank(skill_type best_skill, uint8_t skill_rank,
             break;
 
         case SK_SPELLCASTING:
-            if (player_genus(GENPC_OGREISH, static_cast<species_type>(species)))
+            if (you.species == SP_OGRE)
                 result = "Ogre Mage";
             break;
 

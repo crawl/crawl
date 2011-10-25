@@ -159,23 +159,6 @@ std::string species_name(species_type speci, bool genus, bool adj)
             }
         }
         break;
-    case GENPC_DWARVEN:
-        if (adj)  // doesn't care about species/genus
-            res = "Dwarven";
-        else if (genus)
-            res = "Dwarf";
-        else
-        {
-            switch (speci)
-            {
-#if TAG_MAJOR_VERSION == 32
-            case SP_MOUNTAIN_DWARF: res = "Mountain Dwarf";            break;
-#endif
-            case SP_DEEP_DWARF:     res = "Deep Dwarf";                break;
-            default:                res = "Dwarf";                     break;
-            }
-        }
-        break;
     case GENPC_NONE:
     default:
         switch (speci)
@@ -193,6 +176,14 @@ std::string species_name(species_type speci, bool genus, bool adj)
         case SP_HILL_ORC:
             res = (adj ? "Orcish" : genus ? "Orc" : "Hill Orc");
             break;
+        case SP_DEEP_DWARF:
+            res = (adj ? "Dwarven" : genus ? "Dwarf" : "Deep Dwarf");
+            break;
+#if TAG_MAJOR_VERSION == 32
+        case SP_MOUNTAIN_DWARF:
+            res = (adj ? "Dwarven" : genus ? "Dwarf" : "Mountain Dwarf");
+            break;
+#endif
 
         case SP_OGRE:       res = (adj ? "Ogreish"    : "Ogre");       break;
         case SP_TROLL:      res = (adj ? "Trollish"   : "Troll");      break;
@@ -251,15 +242,6 @@ genus_type species_genus(species_type species)
     case SP_DEEP_ELF:
     case SP_SLUDGE_ELF:
         return (GENPC_ELVEN);
-
-#if TAG_MAJOR_VERSION == 32
-    case SP_MOUNTAIN_DWARF:
-#endif
-    case SP_DEEP_DWARF:
-        return (GENPC_DWARVEN);
-
-    case SP_OGRE:
-        return (GENPC_OGREISH);
 
     default:
         return (GENPC_NONE);

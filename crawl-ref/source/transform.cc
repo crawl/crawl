@@ -664,7 +664,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         tran_name = "statue";
         str       = 2;
         dex       = -2;
-        if (player_genus(GENPC_DWARVEN) && one_chance_in(10))
+        if (you.species == SP_DEEP_DWARF && one_chance_in(10))
             msg = "You inwardly fear your resemblance to a lawn ornament.";
         else
             msg += "a living statue of rough stone.";
