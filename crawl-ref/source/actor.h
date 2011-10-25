@@ -125,6 +125,9 @@ public:
     virtual void lose_energy(energy_use_type, int div = 1, int mult = 1)
     {
     }
+    virtual void gain_energy(energy_use_type, int div = 1, int mult = 1)
+	{
+	}
 
     virtual std::string name(description_level_type type,
                              bool force_visible = false) const = 0;

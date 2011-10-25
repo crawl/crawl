@@ -39,7 +39,6 @@ public:
 
     beam_type special_damage_flavour;
 
-    // Armour penalties?
     // Adjusted EV penalty for body armour and shields.
     int       attacker_body_armour_penalty;
     int       attacker_shield_penalty;
