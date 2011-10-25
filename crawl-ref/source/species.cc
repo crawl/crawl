@@ -476,13 +476,13 @@ int species_mp_modifier(species_type species)
 #if TAG_MAJOR_VERSION == 32
     case SP_MOUNTAIN_DWARF:
 #endif
-    case SP_HILL_ORC:
     case SP_CENTAUR:
     case SP_GHOUL:
         return -1;
     default:
         return 0;
     case SP_SLUDGE_ELF:
+    case SP_KENKU:
         return 1;
     case SP_FELID:
     case SP_HIGH_ELF:
