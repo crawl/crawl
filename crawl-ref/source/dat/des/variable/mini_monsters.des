@@ -65,15 +65,11 @@ MAP
 ENDMAP
 
 NAME:    eino_jars
-DEPTH:   D:4-14
+DEPTH:   D:7-14
 TAGS:    extra luniq_mini
 SHUFFLE: 11%
-: if you.absdepth() >7 then
 MONS:    killer bee / nothing w:5
 SUBST:   % = %*
-: else
-MONS:    killer bee larva
-: end
 MAP
 xxxxxx
 x1111x
@@ -110,18 +106,18 @@ ENDMAP
 # Beehive minivault
 NAME:  minivault_7
 TAGS:  allow_dup
-MONS:  patrolling queen bee, patrolling killer bee, killer bee larva
+MONS:  patrolling queen bee, patrolling killer bee
 KITEM: R = w:2 honeycomb / w:1 royal jelly
 MAP
 ............
 ....aaaa....
 ..a2a2aaaa..
-..aaRa3a2a..
+..aaRa2a2a..
 .aa2aRa2aaa.
-.a3aRa1aRa2.
-.aa3aRaRa2a.
-.aaa2a2a3aa.
-..a3aRa2aa..
+.a2aRa1aRa2.
+.aa2aRaRa2a.
+.aaa2a2a2aa.
+..a2aRa2aa..
 ...aa2aa2a..
 ....aaaa....
 ............
