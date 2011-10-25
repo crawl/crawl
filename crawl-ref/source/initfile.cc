@@ -715,7 +715,6 @@ void game_options::reset_options()
     show_gold_turns = false;
     show_game_turns = false;
 #endif
-    show_beam       = true;
 
     game = newgame_def();
 
@@ -775,7 +774,6 @@ void game_options::reset_options()
     show_more              = true;
     small_more             = false;
 
-    pickup_dropped         = false;
     pickup_thrown          = true;
 
     travel_delay           = 20;
@@ -2383,9 +2381,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(show_gold_turns);
     else BOOL_OPTION(show_game_turns);
     else BOOL_OPTION(show_no_ctele);
-#ifndef USE_TILE
-    else BOOL_OPTION(show_beam);
-#endif
     else if (key == "hp_warning")
     {
         hp_warning = atoi(field.c_str());
@@ -2747,7 +2742,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             std::pair<text_pattern,std::string>(thesplit[0], thesplit[1]));
     }
     else BOOL_OPTION(pickup_thrown);
-    else BOOL_OPTION(pickup_dropped);
 #ifdef WIZARD
     else if (key == "fsim_kit")
         append_vector(fsim_kit, split_string(",", field));

@@ -51,7 +51,6 @@ static option_handler handlers[] =
     { "no_dark_brand",   &Options.no_dark_brand, option_hboolean },
     { "auto_list",       &Options.auto_list, option_hboolean },
     { "pickup_thrown",   &Options.pickup_thrown, option_hboolean },
-    { "pickup_dropped",  &Options.pickup_dropped, option_hboolean },
     { "show_waypoints",  &Options.show_waypoints, option_hboolean },
     { "item_colour",     &Options.item_colour, option_hboolean },
     { "easy_exit_menu",  &Options.easy_exit_menu, option_hboolean },
