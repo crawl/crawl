@@ -429,6 +429,10 @@ bool mons_speaks(monster* mons)
         if (mons->berserk())
             return (false);
 
+        // Rolling beetles shouldn't twitch antennae
+        if (mons->rolling())
+            return (false);
+
         // Monsters in a battle frenzy are likewise occupied.
         // But roused holy creatures are not.
         if (mons->has_ench(ENCH_BATTLE_FRENZY) && !one_chance_in(3))

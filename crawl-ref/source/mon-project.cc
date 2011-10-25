@@ -542,7 +542,7 @@ void iood_catchup(monster* mons, int pturns)
 bool boulder_start(monster *mon, bolt *beam)
 {
     mon->add_ench(ENCH_ROLLING);
-    simple_monster_message(mon, " curls into a ball and rolls at you!");
+    simple_monster_message(mon, " curls into a ball and starts rolling!");
     // Work out x/y/vx/vy from beam
     beam->choose_ray();
     mon->props["boulder_x"].get_float() = beam->ray.r.start.x - 0.5;
