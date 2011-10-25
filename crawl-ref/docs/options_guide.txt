@@ -69,7 +69,7 @@ The contents of this text are:
                 show_game_turns, item_stack_summary_minimum, list_rotten,
                 mlist_min_height, msg_min_height, msg_max_height,
                 messages_at_top, show_no_ctele, skill_focus,
-                mlist_allow_alternate_layout, mlist_targetting, classic_hud,
+                mlist_allow_alternate_layout, mlist_targetting,
                 menu_colour, menu_colour_prefix_class, menu_colour_shops,
                 message_colour, force_more_message,
                 msg_condense_repeats, msg_condense_short
@@ -1368,10 +1368,6 @@ mlist_targetting = false
         feature on and off. This option controls the initial setting
         at game start or reload.
 
-classic_hud = false
-        Remove the Health and Magic bars and the monster list, for a
-        more 0.3-like HUD display.
-
 menu_colour = <match>:<colour>:<regex>
         This prints a line (of the inventory, a menu, or the discoveries
         screen) containing regex in the stated colour. There can be
@@ -2056,13 +2052,6 @@ char_set = (default | ascii | ibm | dec | unicode)
         respectively, CP437 codes or VT100 line-drawing characters + 128.
 
         Has negligible effect in the Tiles build.
-
-classic_item_colours = false
-        Crawl uses 4.0 b26/0.1.x-like item colours if
-        classic_item_colours is set to true. The default (false) is to
-        use the new 0.2 item colours.
-        This option will not affect the colour of existing items, only
-        items generated after the option is set.
 
 colour.OLDCOLOUR = NEWCOLOUR
         Useful for terminals where some colours are hard to read (and

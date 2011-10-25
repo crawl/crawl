@@ -119,18 +119,10 @@ class _inline_layout : public _layout
         if ((viewsz.y % 2) != 1)
             --viewsz.y;
 
-        if (Options.classic_hud)
-        {
-            mlistsz.y = 0;
-            _increment(msgsz.y,  leftover_y(), MSG_MAX_HEIGHT);
-        }
-        else
-        {
-            if (mlistsz.y < MLIST_MIN_HEIGHT)
-                _increment(mlistsz.y, leftover_rightcol_y(), MLIST_MIN_HEIGHT);
-            _increment(msgsz.y,  leftover_y(), MSG_MAX_HEIGHT);
-            _increment(mlistsz.y, leftover_rightcol_y(), INT_MAX);
-        }
+        if (mlistsz.y < MLIST_MIN_HEIGHT)
+            _increment(mlistsz.y, leftover_rightcol_y(), MLIST_MIN_HEIGHT);
+        _increment(msgsz.y,  leftover_y(), MSG_MAX_HEIGHT);
+        _increment(mlistsz.y, leftover_rightcol_y(), INT_MAX);
 
         // Finish off by doing the positions.
         if (Options.messages_at_top)
@@ -390,7 +382,6 @@ void crawl_view_geometry::init_geometry()
 
     const _layout* winner = &lay_inline;
     if (Options.mlist_allow_alternate_layout
-        && !Options.classic_hud
         && lay_mlist.valid)
     {
         winner = &lay_mlist;

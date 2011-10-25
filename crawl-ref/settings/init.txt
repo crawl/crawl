@@ -39,8 +39,6 @@
 # get back parts of it by uncommenting the following options:
 
 # include                 = 034_command_keys.txt
-# classic_item_colours    = true
-# classic_hud             = true
 # always_confirm_butcher  = true
 # target_unshifted_dirs   = true
 # clear_messages          = true
@@ -229,7 +227,6 @@ sort_menus = inv: true : equipped, freshness, charged
 # stat_colour = 1:lightred, 3:red
 
 # status_caption_colour        = yellow
-# classic_hud                  = true
 # mlist_min_height             = 4
 # msg_min_height               = 7
 # msg_max_height               = 10
@@ -392,8 +389,6 @@ note_monsters = orb of fire, ancient lich, Sigmund
 # wiz_mode         = no
 # char_set         = ascii
 # use_fake_player_cursor = false
-#
-# classic_item_colours = true
 #
 # colour.lightgray = black
 # colour.lightcyan = cyan
