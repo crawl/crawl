@@ -2908,12 +2908,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(explore_improved);
     else BOOL_OPTION(travel_key_stop);
-    else if (key == "stash_filter")
-    {
-        std::vector<std::string> seg = split_string(",", field);
-        for (int i = 0, count = seg.size(); i < count; ++i)
-            Stash::filter(seg[i]);
-    }
     else if (key == "sound")
     {
         std::vector<std::string> seg = split_string(",", field);

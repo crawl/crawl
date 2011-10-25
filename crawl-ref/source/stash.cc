@@ -186,7 +186,6 @@ static void _fully_identify_item(item_def *item)
 // ----------------------------------------------------------------------
 
 bool Stash::aggressive_verify = true;
-std::vector<item_def> Stash::filters;
 
 Stash::Stash(int xp, int yp) : enabled(true), items()
 {
@@ -221,67 +220,6 @@ bool Stash::are_items_same(const item_def &a, const item_def &b)
                     || (a.base_type == OBJ_FOOD && a.sub_type == FOOD_CHUNK
                         && b.sub_type == FOOD_CHUNK))
                 && a.plus == b.plus));
-}
-
-void Stash::filter(const std::string &str)
-{
-    std::string base = str;
-
-    uint8_t       subc = 255;
-    std::string   subs = "";
-    std::string::size_type cpos = base.find(":", 0);
-    if (cpos != std::string::npos)
-    {
-        subc = atoi(subs.c_str());
-
-        base = base.substr(0, cpos);
-    }
-
-    const int base_num = atoi(base.c_str());
-    if (base_num == 0 && base != "0" || subc == 0 && subs != "0")
-    {
-        item_types_pair pair = item_types_by_name(str);
-        if (pair.base_type == OBJ_UNASSIGNED)
-        {
-            Options.report_error("Invalid stash filter '" + str + "'");
-            return;
-        }
-        filter(pair.base_type, pair.sub_type);
-    }
-    else
-    {
-        const object_class_type basec =
-            static_cast<object_class_type>(base_num);
-        filter(basec, subc);
-    }
-}
-
-void Stash::filter(object_class_type base, uint8_t sub)
-{
-    item_def item;
-    item.base_type = base;
-    item.sub_type  = sub;
-
-    filters.push_back(item);
-}
-
-bool Stash::is_filtered(const item_def &item)
-{
-    for (int i = 0, count = filters.size(); i < count; ++i)
-    {
-        const item_def &filter = filters[i];
-        if (item.base_type == filter.base_type
-            && (filter.sub_type == 255
-                || item.sub_type == filter.sub_type))
-        {
-            if (is_artefact(item))
-                return (false);
-            if (filter.sub_type != 255 && !item_type_known(item))
-                return (false);
-            return (true);
-        }
-    }
-    return (false);
 }
 
 bool Stash::unverified() const
@@ -640,8 +578,6 @@ bool Stash::matches_search(const std::string &prefix,
     for (unsigned i = 0; i < items.size(); ++i)
     {
         const item_def &item = items[i];
-        if (Stash::is_filtered(item))
-            continue;
 
         const std::string s   = stash_item_name(item);
         const std::string ann =
@@ -1039,9 +975,6 @@ bool ShopInfo::matches_search(const std::string &prefix,
 
     for (unsigned i = 0; i < items.size(); ++i)
     {
-        if (Stash::is_filtered(items[i].item))
-            continue;
-
         const std::string sname = shop_item_name(items[i]);
         const std::string ann   = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE,
                                                       &items[i].item, true);

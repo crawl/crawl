@@ -53,9 +53,8 @@ The contents of this text are:
                 runrest_ignore_message, runrest_stop_message,
                 runrest_ignore_poison, runrest_ignore_monster,
                 trapwalk_safe_hp, rest_wait_both, auto_exclude
-4-h     Stashes.
-                stash_filter, annotate_item_class,
-                annotate_item_dropped
+4-h     Floor items.
+                annotate_item_class, annotate_item_dropped
 4-i     Command Enhancements.
                 auto_list, auto_switch, easy_open, easy_unequip,
                 equip_unequip, easy_confirm, allow_self_target,
@@ -985,42 +984,20 @@ auto_exclude = <list of monster names>
         monster dies or wakes up while you are in sight, this exclusion
         is automatically removed again.
 
-4-h     Stashes.
+4-h     Floor items.
 ----------------
 
-A stash is a heap of items tracked by Crawl. You can search in your
-stashes with Ctrl-F. The weird name "stash" is for historical reasons
-when the stash-tracker tracked only specific stashes that you asked it
-to. Modern Crawls track all items in the dungeon without the need for
-explicit steps.
-
-stash_filter = <list of item names or numbers>
-        This option prevents certain items or classes of items from being
-        rembered by the stash tracker.
-
-        For example:
-
-             stash_filter = scroll of noise, scroll of curse weapon
-
-        will make the stash-tracker ignore scrolls of noise and scrolls
-        of curse weapon.  The item names must be exact, and must be
-        singular, not plural.
-
-        It can also be used the filter entire classes of items by their
-        number.  For example:
-
-             stash_filter = 14, 4:21
-
-        filters corpses (14) as well as food of the subtype chunks (4:21).
+You can search for items all around the dungeon with Ctrl-F. It accepts not
+only the real name but can also take certain "annotations":
 
 annotate_item_class = false
         This only works if stash.lua has already been sourced in
         init.txt. Automatically annotates items with their object class,
-        e.g. weapon or wand, for stash searching.
+        e.g. weapon or wand, for floor item searching.
 
 annotate_item_dropped = false
         This only works if stash.lua has already been sourced in
-        init.txt. Annotates dropped items with {dropped} for stash
+        init.txt. Annotates dropped items with {dropped} for floor
         searching.
 
 4-i     Command Enhancements.
