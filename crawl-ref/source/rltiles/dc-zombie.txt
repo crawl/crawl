@@ -53,6 +53,33 @@ skeleton_hydra5
 %sdir dc-mon/undead
 simulacrum_small MONS_SIMULACRUM_SMALL
 simulacrum_large MONS_SIMULACRUM_LARGE
+%texture icy
+%sdir dc-mon/undead/zombies
+zombie_small MONS_SIMULACRUM_SMALL2
+zombie_large MONS_SIMULACRUM_LARGE2
+zombie_quadruped_small MONS_SIMULACRUM_QUADRUPED_SMALL
+zombie_quadruped_large MONS_SIMULACRUM_QUADRUPED_LARGE
+zombie_toad MONS_SIMULACRUM_TOAD
+zombie_bat MONS_SIMULACRUM_BAT
+zombie_bee MONS_SIMULACRUM_BEE
+zombie_bug MONS_SIMULACRUM_BEETLE
+zombie_rat MONS_SIMULACRUM_RAT
+zombie_hound MONS_SIMULACRUM_HOUND
+zombie_fish MONS_SIMULACRUM_FISH
+zombie_centaur MONS_SIMULACRUM_CENTAUR
+zombie_naga MONS_SIMULACRUM_NAGA
+zombie_snake MONS_SIMULACRUM_SNAKE
+zombie_worm MONS_SIMULACRUM_WORM
+zombie_lizard MONS_SIMULACRUM_LIZARD
+zombie_spider MONS_SIMULACRUM_SPIDER
+zombie_dragon MONS_SIMULACRUM_DRAGON
+zombie_kraken_head MONS_SIMULACRUM_KRAKEN
+zombie_hydra1 MONS_SIMULACRUM_HYDRA
+zombie_hydra2
+zombie_hydra3
+zombie_hydra4
+zombie_hydra5
+%texture none
 
 ## Spectral things
 %sdir dc-mon/undead/spectrals
