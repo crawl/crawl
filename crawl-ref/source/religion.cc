@@ -594,7 +594,7 @@ std::string get_god_likes(god_type which_god, bool verbose)
 
     case GOD_SHINING_ONE:
         snprintf(info, INFO_SIZE, "you meet creatures to determine whether "
-                                  "they need to be eraticated");
+                                  "they need to be eradicated");
         likes.push_back(info);
         break;
 
