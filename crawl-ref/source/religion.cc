@@ -3528,8 +3528,8 @@ void god_pitch(god_type which_god)
             mpr("Unknown good god.", MSGCH_ERROR);
         }
         // Give a piety bonus when switching between good gods.
-        if (old_piety > 15)
-            gain_piety(std::min(30, old_piety - 15), 1, true, false);
+        if (old_piety > 30)
+            gain_piety(old_piety - 30, 2, true, false);
     }
     else if (is_evil_god(you.religion))
     {
