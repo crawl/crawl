@@ -372,6 +372,7 @@ char_choice_restriction job_allowed(species_type speci, job_type job)
         case SP_TROLL:
         case SP_MINOTAUR:
         case SP_KENKU:
+        case SP_VAMPIRE:
             return (CC_RESTRICTED);
         default:
             return (CC_UNRESTRICTED);
