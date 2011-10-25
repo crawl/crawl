@@ -2987,10 +2987,10 @@ bool bolt::harmless_to_player() const
         return (player_prot_life(false) >= 3);
 
     case BEAM_POISON:
-        return (player_res_poison(false));
+        return (player_res_poison(false) > 0);
 
     case BEAM_POTION_STINKING_CLOUD:
-        return (player_res_poison(false) || player_mental_clarity(false)
+        return (player_res_poison(false) > 0 || player_mental_clarity(false)
                 || you.is_unbreathing());
 
     case BEAM_ELECTRICITY:
