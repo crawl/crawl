@@ -36,13 +36,11 @@ static option_handler handlers[] =
 {
     // Boolean options come first
     { "autoswitch",    &Options.auto_switch, option_hboolean },
-    { "colour_map",    &Options.colour_map, option_hboolean },
     { "clean_map",     &Options.clean_map, option_hboolean },
     { "show_uncursed", &Options.show_uncursed, option_hboolean },
     { "easy_open",     &Options.easy_open, option_hboolean },
     { "easy_armour",   &Options.easy_unequip, option_hboolean },
     { "easy_unequip",  &Options.easy_unequip, option_hboolean },
-    { "easy_butcher",  &Options.easy_butcher, option_hboolean },
     { "always_confirm_butcher", &Options.always_confirm_butcher, option_hboolean },
     { "default_target",       &Options.default_target, option_hboolean },
     { "autopickup_no_burden", &Options.autopickup_no_burden, option_hboolean },
@@ -52,7 +50,6 @@ static option_handler handlers[] =
     { "auto_list",       &Options.auto_list, option_hboolean },
     { "pickup_thrown",   &Options.pickup_thrown, option_hboolean },
     { "show_waypoints",  &Options.show_waypoints, option_hboolean },
-    { "item_colour",     &Options.item_colour, option_hboolean },
     { "easy_exit_menu",  &Options.easy_exit_menu, option_hboolean },
     { "dos_use_background_intensity", &Options.dos_use_background_intensity,
                                       option_hboolean },

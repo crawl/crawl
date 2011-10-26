@@ -393,12 +393,6 @@ bool butchery(int which_corpse, bool bottle_blood)
                              || birdie_butcher || knife_butcher
                              || you.weapon() && can_cut_meat(*you.weapon()));
 
-    if (!Options.easy_butcher && !can_butcher)
-    {
-        mpr("Maybe you should try using a sharper implement.");
-        return (false);
-    }
-
     // It makes more sense that you first find out if there's anything
     // to butcher, *then* decide to actually butcher it.
     // The old code did it the other way.
