@@ -850,7 +850,6 @@ ifndef V
 endif
 endif
 
-ifdef TILES_ANY
 TILEIMAGEFILES := floor wall feat main player gui icons
 TILEDEFS = $(TILEIMAGEFILES) dngn unrand
 TILEDEFPRES = $(TILEDEFS:%=$(RLTILES)/tiledef-%)
@@ -862,6 +861,7 @@ TILEFILES = $(TILEIMAGEFILES:%=%.png)
 ORIGTILEFILES = $(TILEFILES:%=$(RLTILES)/%)
 DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
 
+ifdef TILES_ANY
 OBJECTS += $(TILEDEFOBJS)
 
 ifndef NO_OPTIMIZE
