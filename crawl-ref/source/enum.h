@@ -1800,19 +1800,6 @@ enum flight_type
     FL_FLY                             // wings, etc... paralysis == fall
 };
 
-#if TAG_MAJOR_VERSION == 32
-enum old_level_area_type               // you.level_type
-{
-    OLD_LEVEL_DUNGEON,
-    OLD_LEVEL_LABYRINTH,
-    OLD_LEVEL_ABYSS,
-    OLD_LEVEL_PANDEMONIUM,
-    OLD_LEVEL_PORTAL_VAULT,
-
-    NUM_LEVEL_AREA_TYPES
-};
-#endif
-
 // Reasons for entering the Abyss.
 enum entry_cause_type
 {

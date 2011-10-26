@@ -47,8 +47,4 @@ bool branch_is_stash_trackable(branch_type branch);
 
 std::vector<level_id> all_dungeon_ids();
 
-#if TAG_MAJOR_VERSION == 32
-unsigned short upgrade_packed_place(unsigned short place);
-#endif
-
 #endif

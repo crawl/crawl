@@ -92,29 +92,6 @@ bool branch_has_monsters(branch_type branch)
     return branches[branch].mons_rarity_function != mons_null_rare;
 }
 
-#if TAG_MAJOR_VERSION == 32
-static const char *old_level_type_names[] =
-{
-    "D", "Lab", "Abyss", "Pan", "Port"
-};
-
-const char *old_level_area_type_name(int old_level_type)
-{
-    if (old_level_type >= 0 && old_level_type < NUM_LEVEL_AREA_TYPES)
-        return old_level_type_names[old_level_type];
-    return ("");
-}
-
-old_level_area_type str_to_old_level_area_type(const std::string &s)
-{
-    for (int i = 0; i < NUM_LEVEL_AREA_TYPES; ++i)
-        if (s == old_level_type_names[i])
-            return (static_cast<old_level_area_type>(i));
-
-    return (OLD_LEVEL_DUNGEON);
-}
-#endif
-
 branch_type get_branch_at(const coord_def& pos)
 {
     return level_id::current().get_next_level_id(pos).branch;

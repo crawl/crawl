@@ -3057,20 +3057,6 @@ level_id level_id::parse_level_id(const std::string &s) throw (std::string)
     std::string brlev   = (cpos != std::string::npos? s.substr(cpos + 1) : "");
 
     branch_type br = str_to_branch(brname);
-#if TAG_MAJOR_VERSION == 32
-    if (brname == "Port" && !you.old_level_type_name_abbrev.empty())
-    {
-        brname = you.old_level_type_name_abbrev;
-        cpos = brname.find(':');
-        if (cpos != std::string::npos)
-        {
-            brlev  = brname.substr(cpos + 1);
-            brname = brname.substr(0, cpos);
-        }
-
-        br = str_to_branch(brname);
-    }
-#endif
 
     if (br == NUM_BRANCHES)
     {
@@ -3095,9 +3081,6 @@ level_id level_id::parse_level_id(const std::string &s) throw (std::string)
 
 level_id level_id::from_packed_place(unsigned short place)
 {
-#if TAG_MAJOR_VERSION == 32
-    place = upgrade_packed_place(place);
-#endif
     level_id id;
 
     id.branch     = (branch_type) place_branch(place);
@@ -3113,17 +3096,6 @@ void level_id::save(writer& outf) const
 
 void level_id::load(reader& inf)
 {
-#if TAG_MAJOR_VERSION == 32
-    if (inf.getMinorVersion() < TAG_MINOR_NO_LEVEL_TYPE)
-    {
-        branch_type br = static_cast<branch_type>(unmarshallShort(inf));
-        int d          = unmarshallShort(inf);
-        int level_type = unmarshallShort(inf);
-        (*this) = level_id::from_packed_place(get_packed_place(br,
-                                              level_type ? 0xFF : d));
-    }
-    else
-#endif
     (*this) = unmarshall_level_id(inf);
 }
 

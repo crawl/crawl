@@ -333,31 +333,14 @@ static void _leaving_level_now(dungeon_feature_type stair_used)
     const std::string newtype =
         env.markers.property_at(you.pos(), MAT_ANY, "dst");
 
-    const std::string oldname_abbrev = you.old_level_type_name_abbrev;
-    std::string newname_abbrev =
-        env.markers.property_at(you.pos(), MAT_ANY, "dstname_abbrev");
-
     dungeon_events.fire_position_event(DET_PLAYER_CLIMBS, you.pos());
     dungeon_events.fire_event(DET_LEAVING_LEVEL);
-
-    // Lua scripts explicitly set level_type_name_abbrev, so use that.
-    if (you.old_level_type_name_abbrev != oldname_abbrev)
-        newname_abbrev = you.old_level_type_name_abbrev;
-
-    if (strwidth(newname_abbrev) > MAX_NOTE_PLACE_LEN)
-    {
-        mprf(MSGCH_ERROR, "'%s' is too long for a portal vault name "
-                          "abbreviation, truncating", newname_abbrev.c_str());
-        newname_abbrev = chop_string(newname_abbrev, MAX_NOTE_PLACE_LEN, false);
-    }
 
     _clear_golubria_traps();
 
     if (grd(you.pos()) == DNGN_EXIT_ABYSS)
     {
         // TODO:LEVEL_STACK
-        you.old_level_type_name_abbrev =
-            static_cast<std::string>(you.props["abyss_return_abbrev"]);
         you.props.erase("abyss_return_desc");
         you.props.erase("abyss_return_name");
         you.props.erase("abyss_return_abbrev");
