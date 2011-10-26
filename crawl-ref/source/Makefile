@@ -1231,7 +1231,7 @@ endif
 
 # Plain old compilation
 #
-$(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_LIBS)
+$(OBJECTS:%.o=%.cc): $(CC_DEP) $(CONTRIB_LIBS)
 
 $(UTIL)%.o: ALL_CFLAGS=$(YACC_CFLAGS)
 
@@ -1296,6 +1296,10 @@ endif
 clean-rltiles:
 	$(RM) $(DESTTILEFILES)
 	+$(MAKE) -C $(RLTILES) distclean
+
+ifdef TILES_ANY
+$(OBJECTS:%.o=%.cc): $(TILEDEFHDRS)
+endif
 
 #############################################################################
 # Packaging a source tarball for release
