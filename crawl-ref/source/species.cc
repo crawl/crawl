@@ -390,6 +390,7 @@ int species_exp_modifier(species_type species)
     case SP_MOUNTAIN_DWARF:
 #endif
     case SP_DEEP_DWARF:
+    case SP_MINOTAUR:
         return 13;
     case SP_BASE_DRACONIAN:
     case SP_RED_DRACONIAN:
@@ -403,7 +404,6 @@ int species_exp_modifier(species_type species)
     case SP_PALE_DRACONIAN:
     case SP_DEEP_ELF:
     case SP_CENTAUR:
-    case SP_MINOTAUR:
     case SP_MUMMY:
     case SP_FELID:
         return 14;
