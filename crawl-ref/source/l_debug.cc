@@ -52,7 +52,7 @@ LUAFN(debug_goto_place)
             lua_isnumber(ls, 2)? luaL_checkint(ls, 2) : -1;
         you.goto_place(id);
         if (bind_entrance != -1)
-            branches[you.where_are_you].startdepth = bind_entrance;
+            startdepth[you.where_are_you] = bind_entrance;
     }
     catch (const std::string &err)
     {

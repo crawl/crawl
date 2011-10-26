@@ -1048,7 +1048,7 @@ bool show_map(level_pos &lpos,
                     = prompt_translevel_target(TPF_DEFAULT_OPTIONS, name).p;
 
                 if (pos.id.depth < 1
-                    || pos.id.depth > branches[pos.id.branch].depth
+                    || pos.id.depth > brdepth[pos.id.branch]
                     || !is_existing_level(pos.id))
                 {
                     canned_msg(MSG_OK);

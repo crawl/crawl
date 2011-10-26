@@ -76,7 +76,7 @@ static int _dungeon_branch_depth(uint8_t branch)
 {
     if (branch >= NUM_BRANCHES)
         return -1;
-    return branches[branch].depth;
+    return brdepth[branch];
 }
 
 static bool _is_noteworthy_dlevel(unsigned short place)

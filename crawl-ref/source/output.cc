@@ -906,7 +906,7 @@ static std::string _level_description_string_hud()
     const PlaceInfo& place = you.get_place_info();
     std::string short_name = branches[place.branch].shortname;
 
-    if (branches[place.branch].depth > 1)
+    if (brdepth[place.branch] > 1)
         short_name += make_stringf(":%d", player_branch_depth());
     // Definite articles
     else if (place.branch == BRANCH_ABYSS)

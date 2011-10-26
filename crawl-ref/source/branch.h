@@ -21,12 +21,11 @@ struct Branch
     branch_type id;
     branch_type parent_branch;
 
-    int mindepth;               // min/max possible depth for this branch
+    int mindepth;               // min/max possible parent depth for this branch
     int maxdepth;
 
-    int depth;
-    int startdepth;             // which level of the parent branch,
-                                // 1 for first level
+    int numlevels;              // depth of the branch
+
     uint32_t branch_flags;
     uint32_t default_level_flags;
     dungeon_feature_type entry_stairs;
@@ -46,9 +45,10 @@ struct Branch
     int ambient_noise;           // affects noise loudness and player stealth
 };
 
-extern Branch branches[];
+extern const Branch branches[NUM_BRANCHES];
+extern FixedVector<int, NUM_BRANCHES> startdepth, brdepth;
 
-Branch& your_branch();
+const Branch& your_branch();
 
 bool at_branch_bottom();
 bool is_hell_subbranch(branch_type branch);

@@ -1030,7 +1030,7 @@ static std::vector<std::string> _get_branch_keys()
     for (int i = BRANCH_MAIN_DUNGEON; i < NUM_BRANCHES; i++)
     {
         branch_type which_branch = static_cast<branch_type>(i);
-        Branch     &branch       = branches[which_branch];
+        const Branch &branch     = branches[which_branch];
 
         // Skip unimplemented branches
         if(branch_is_unfinished(which_branch))

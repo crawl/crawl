@@ -780,7 +780,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
             // XXX: We don't have a random monster list here, so pick one
             // from where we were.
             place.branch = BRANCH_MAIN_DUNGEON;
-            place.depth  = branches[you.where_are_you].startdepth;
+            place.depth  = startdepth[you.where_are_you];
             *lev_mons = you.absdepth0;
         }
 

@@ -100,7 +100,7 @@ unsigned short upgrade_packed_place(unsigned short place)
 bool single_level_branch(branch_type branch)
 {
     return (branch >= 0 && branch < NUM_BRANCHES
-            && branches[branch].depth == 1);
+            && brdepth[branch] == 1);
 }
 
 std::string place_name(unsigned short place, bool long_name,
@@ -112,7 +112,7 @@ std::string place_name(unsigned short place, bool long_name,
     std::string result = (long_name ?
               branches[branch].longname : branches[branch].abbrevname);
 
-    if (include_number && branches[branch].depth != 1)
+    if (include_number && brdepth[branch] != 1)
     {
         if (long_name)
         {
@@ -164,7 +164,7 @@ int absdungeon_depth(branch_type branch, int subdepth)
         --subdepth;
         while (branch != BRANCH_MAIN_DUNGEON && branch != NUM_BRANCHES)
         {
-            subdepth += branches[branch].startdepth;
+            subdepth += startdepth[branch];
             branch = branches[branch].parent_branch;
         }
     }
@@ -224,7 +224,7 @@ std::vector<level_id> all_dungeon_ids()
     {
         const Branch &branch = branches[i];
 
-        for (int depth = 1; depth <= branch.depth; depth++)
+        for (int depth = 1; depth <= brdepth[i]; depth++)
             out.push_back(level_id(branch.id, depth));
     }
     return (out);
