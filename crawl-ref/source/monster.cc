@@ -884,7 +884,7 @@ void monster::equip_weapon(item_def &item, int near, bool msg)
         case SPWPN_PENETRATION:
             mprf("%s %s briefly pass through it before %s manages to get a "
                  "firm grip on it.",
-                 pronoun(PRONOUN_CAP_POSSESSIVE).c_str(),
+                 pronoun(PRONOUN_POSSESSIVE).c_str(),
                  hand_name(true).c_str(),
                  pronoun(PRONOUN_NOCAP).c_str());
             break;
@@ -4145,7 +4145,7 @@ bool monster::sicken(int amount, bool unused)
     if (!has_ench(ENCH_SICK) && you.can_see(this))
     {
         // Yes, could be confused with poisoning.
-        mprf("%s looks sick.", name(DESC_CAP_THE).c_str());
+        mprf("%s looks sick.", name(DESC_THE).c_str());
     }
 
     add_ench(mon_enchant(ENCH_SICK, 0, 0, amount * 10));
@@ -4230,7 +4230,7 @@ bool monster::bleed(const actor* agent, int amount, int degree)
             make_mons_leave_level(this);
         break;
 =======*/
-        mprf("%s begins to bleed from %s wounds!", name(DESC_CAP_THE).c_str(),
+        mprf("%s begins to bleed from %s wounds!", name(DESC_THE).c_str(),
              pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
     }
 //>>>>>>> master

@@ -716,7 +716,7 @@ static void _UNDEADHUNTER_melee_effect(item_def* item, actor* attacker,
     if (defender->holiness() == MH_UNDEAD && !one_chance_in(3) && !mondied)
     {
         mprf("%s %s blasted by disruptive energy!",
-              defender->name(DESC_CAP_THE).c_str(),
+              defender->name(DESC_THE).c_str(),
               defender->atype() == ACT_PLAYER ? "are" : "is");
         defender->hurt(attacker, random2avg((1 + (dam * 3)), 3));
     }

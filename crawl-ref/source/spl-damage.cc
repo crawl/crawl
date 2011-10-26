@@ -731,21 +731,14 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
     {
         if (mons->observable())
         {
-<<<<<<< HEAD
-            mprf("The air twists arounds and harmlessly tosses %s around.",
-                 mons->name(DESC_THE).c_str());
-            // Bailing out early, no need to upset the gods or the target.
-            return (false);
-=======
             mprf("But air would do no harm to %s!",
-                 mons->name(DESC_NOCAP_THE).c_str());
+                 mons->name(DESC_THE).c_str());
             return SPRET_ABORT;
->>>>>>> master
         }
 
         fail_check();
         mprf("The air twists arounds and harmlessly tosses %s around.",
-             mons->name(DESC_NOCAP_THE).c_str());
+             mons->name(DESC_THE).c_str());
         // Bailing out early, no need to upset the gods or the target.
         return SPRET_SUCCESS; // you still did discover the invisible monster
     }
@@ -756,17 +749,11 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
     if (stop_attack_prompt(mons, false, you.pos()))
         return SPRET_ABORT;
 
-<<<<<<< HEAD
-            mprf("The air twists around and strikes %s!",
-                 mons->name(DESC_THE).c_str());
-            noisy(4, beam.target);
-=======
     fail_check();
     set_attack_conducts(conducts, mons);
->>>>>>> master
 
     mprf("The air twists around and strikes %s!",
-         mons->name(DESC_NOCAP_THE).c_str());
+         mons->name(DESC_THE).c_str());
     noisy(4, beam.target);
 
     behaviour_event(mons, ME_ANNOY, MHITYOU);
@@ -2027,11 +2014,9 @@ void forest_damage(const actor *mon)
                             "A tree reaches out and hits %s!",
                             "A root smacks %s from below.",
                             0);
-                        const bool up = *msg == '%';
                         // "it" looks butt-ugly here...
                         mprf(msg, foe->visible_to(&you) ?
-                                      foe->name(up ? DESC_CAP_THE
-                                                   : DESC_NOCAP_THE).c_str()
+                                      foe->name(DESC_THE).c_str()
                                     : up ? "Something" : "something");
                     }
                     foe->hurt(mon, damage);

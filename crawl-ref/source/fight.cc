@@ -182,6 +182,9 @@ bool fight_melee(actor *attacker, actor *defender, bool allow_unarmed)
         mon_attack_def attk = mons_attack_spec(attacker->as_monster(),
                                                attack_number);
 
+        if (attk.type == AT_CHERUB)
+        	attk.type = static_cast<mon_attack_type>(random_choose(AT_HIT, AT_BITE, AT_PECK_AT_GORE, -1));
+
         if (attk.type == AT_NONE)
         {
             // Make sure the monster uses up some energy, even though it

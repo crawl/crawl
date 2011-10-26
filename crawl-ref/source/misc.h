@@ -353,6 +353,6 @@ struct counted_monster_list
     void add(const monster* mons);
     int count();
     bool empty() { return list.empty(); }
-    std::string describe(description_level_type desc = DESC_CAP_THE);
+    std::string describe(description_level_type desc = DESC_THE);
 };
 #endif
