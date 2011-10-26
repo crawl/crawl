@@ -1011,9 +1011,6 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
         }
     }
 
-    set_branch_flags(place.map.branch_flags.flags_set, true);
-    unset_branch_flags(place.map.branch_flags.flags_unset, true);
-
     set_level_flags(place.map.level_flags.flags_set, true);
     unset_level_flags(place.map.level_flags.flags_unset, true);
 
