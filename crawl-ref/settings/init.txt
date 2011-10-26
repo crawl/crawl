@@ -120,7 +120,6 @@ drop_filter = useless_item
 # detected_monster_colour = lightred
 # detected_item_colour = green
 # remembered_monster_colour = darkgrey
-# colour_map = false
 # clean_map = true
 
 ##### 4-d       Branding ##############################
@@ -132,13 +131,12 @@ drop_filter = useless_item
 # heap_brand         = reverse
 # feature_item_brand = reverse
 # trap_item_brand    = reverse
-# verbose_monster_pane = false
 
 ##### 4-e       Level Map Functions ###################
 #
 # level_map_cursor_step = 7
 # level_map_title = false
-# item_colour = false
+# show_waypoints = false
 
 ##### 4-f       Viewport Options  ###################
 #
@@ -206,7 +204,6 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 # equip_unequip = true
 # easy_confirm  = (none | safe)
 # allow_self_target      = (yes | no | prompt)
-# easy_butcher           = false
 # always_confirm_butcher = true
 # prefer_safe_chunks     = false
 # easy_eat_chunks        = true

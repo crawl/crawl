@@ -32,13 +32,12 @@ The contents of this text are:
                 default_target, target_unshifted_dirs, darken_beyond_range
 4-c     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
-                remembered_monster_colour, colour_map, clean_map
+                remembered_monster_colour, clean_map
 4-d     Branding (Item and Monster Highlighting).
                 friend_brand, neutral_brand, stab_brand, may_stab_brand,
-                heap_brand, feature_item_brand, trap_item_brand,
-                verbose_monster_panel
+                heap_brand, feature_item_brand, trap_item_brand
 4-e     Level Map Functions.
-                level_map_cursor_step, level_map_title, item_colour
+                level_map_cursor_step, level_map_title, show_waypoints
 4-f     Viewport Display Options.
                 view_max_width, view_max_height, view_lock_x,
                 view_lock_y, view_lock, center_on_scroll,
@@ -58,7 +57,7 @@ The contents of this text are:
 4-i     Command Enhancements.
                 auto_list, auto_switch, easy_open, easy_unequip,
                 equip_unequip, easy_confirm, allow_self_target,
-                easy_butcher, always_confirm_butcher, prefer_safe_chunks,
+                always_confirm_butcher, prefer_safe_chunks,
                 easy_eat_chunks, easy_eat_gourmand, easy_eat_contaminated,
                 prompt_for_swap, easy_quit_item_prompts,
                 easy_exit_menu, sort_menus, spell_slot
@@ -607,9 +606,6 @@ remembered_monster_colour = darkgrey
         The colour for monsters you have seen before. Note that the
         value of this option is meaningless if you set clean_map.
 
-colour_map = true
-        Colours out of sight map features on the playing screen.
-
 clean_map = false
         Cleans up out of sight monsters and clouds on the map. This is
         like pressing Ctrl-C (clearing both main screen and level map)
@@ -680,12 +676,6 @@ trap_item_brand = reverse
         use this brand, the items on the square are hidden by the trap
         symbol (^) and the trap symbol is branded.
 
-verbose_monster_pane = true
-        If set to false using the console version of Crawl (rather than the
-        tiles version), the pane listing the monsters in sight will give
-        the older, less detailed information like "distracted" or "resting"
-        rather than "fleeing", "sleeping", "unaware", etc.
-
 4-e     Level Map Functions.
 ----------------------------
 
@@ -697,8 +687,9 @@ level_map_title = true
         Whether to show the level name at the top of the level map
         screen.
 
-item_colour = true
-        Colours items on level-map.
+show_waypoints = true
+        Whether to display a number on the level map to indicate
+        waypoints (placed with the Ctrl-W command).
 
 4-f     Viewport Display Options
 --------------------------------
@@ -1042,11 +1033,6 @@ allow_self_target = (yes | no | prompt)
         spells, such as Mephitic Cloud or Evaporate, where you
         are always a valid target.
 
-easy_butcher = true
-        If true, auto-switch to an appropriate uncursed weapon for
-        butchery. For such tools any special messages are ignored. If
-        false, you have to wield the tool manually.
-
 always_confirm_butcher = false
         If true, always request confirmation before butchering. If
         false, butchering will proceed automatically if there is exactly
@@ -1084,11 +1070,10 @@ easy_eat_contaminated = false
         wearing an amulet of the Gourmand.
 
 prompt_for_swap = true
-        If both this and easy_butcher are true, then if an auto-switch
-        butchery is interrupted by a hostile monster, the game will
-        ask if you wish to switch back to your weapon.  It will also
-        prompt you if after butchery is interupted you teleport or
-        change levels and find yourself near hostile monsters.
+        If true, then if an auto-switch butchery is interrupted by a
+        hostile monster, the game will ask if you wish to switch back to
+        your weapon. It will also prompt you if after butchery is interupted
+        you teleport orchange levels and find yourself near hostile monsters.
 
 easy_quit_item_prompts = true
         Setting this option to true allows the quitting of item listing

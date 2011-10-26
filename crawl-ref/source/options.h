@@ -89,8 +89,6 @@ public:
     int         scroll_margin_x;
     int         scroll_margin_y;
 
-    bool        verbose_monster_pane;
-
     int         autopickup_on;
     int         default_friendly_pickup;
     bool        default_manual_training;
@@ -103,13 +101,11 @@ public:
     uint32_t    autopickups;     // items to autopickup
     bool        auto_switch;     // switch melee&ranged weapons according to enemy range
     bool        show_inventory_weights; // show weights in inventory listings
-    bool        colour_map;      // add colour to the map
     bool        clean_map;       // remove unseen clouds/monsters
     bool        show_uncursed;   // label known uncursed items as "uncursed"
     bool        easy_open;       // open doors with movement
     bool        easy_unequip;    // allow auto-removing of armour / jewellery
     bool        equip_unequip;   // Make 'W' = 'T', and 'P' = 'R'.
-    bool        easy_butcher;    // autoswap to butchering tool
     bool        always_confirm_butcher; // even if only one corpse
     bool        chunks_autopickup; // Autopickup chunks after butchering
     bool        prompt_for_swap; // Prompt to switch back from butchering
@@ -217,8 +213,6 @@ public:
     int         travel_stair_cost;
 
     bool        show_waypoints;
-
-    bool        item_colour;    // Colour items on level map
 
     unsigned    evil_colour; // Colour for things player's god dissapproves
 
