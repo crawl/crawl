@@ -1244,7 +1244,7 @@ void search_around(bool only_adjacent)
                 {
                     ptrap->reveal();
                     mprf("You found %s trap!",
-                         ptrap->name(DESC_NOCAP_A).c_str());
+                         ptrap->name(DESC_A).c_str());
                     learned_something_new(HINT_SEEN_TRAP, *ri);
                     practise(EX_TRAP_FOUND);
                 }
@@ -2595,10 +2595,6 @@ std::string counted_monster_list::describe(description_level_type desc)
 
         out += cm.second > 1 ? pluralise(cm.first->name(desc))
                              : cm.first->name(desc);
-
-        // yay capitalization hacks, may we merge Cryp71c's branch already please?
-        if (desc == DESC_CAP_THE)
-            desc = DESC_NOCAP_THE;
     }
     return out;
 }

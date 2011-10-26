@@ -4620,7 +4620,7 @@ bool enchant_weapon(item_def &wpn, int acc, int dam, const char *colour)
     bool success = false;
 
     // Get item name now before changing enchantment.
-    std::string iname = wpn.name(DESC_CAP_YOUR);
+    std::string iname = wpn.name(DESC_YOUR);
     const char *s = wpn.quantity == 1 ? "s" : "";
 
     // Missiles and blowguns only have one stat.

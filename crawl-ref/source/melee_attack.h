@@ -103,7 +103,7 @@ private:
 
     std::string atk_name(description_level_type desc) const;
     std::string def_name(description_level_type desc) const;
-    std::string wep_name(description_level_type desc = DESC_NOCAP_YOUR,
+    std::string wep_name(description_level_type desc = DESC_YOUR,
                          iflags_t ignore_flags = ISFLAG_KNOW_CURSE
                                                | ISFLAG_KNOW_PLUSES) const;
 
@@ -124,7 +124,6 @@ private:
 
     int inflict_damage(int dam, beam_type flavour = NUM_BEAMS, bool clean = false);
 
->>>>>>> master
     // Returns true if the defender is banished.
     bool distortion_affects_defender();
     void antimagic_affects_defender();

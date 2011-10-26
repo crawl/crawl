@@ -926,7 +926,7 @@ void discover_mimic(const coord_def& pos)
         // If we took a note of this feature, then note that it was a mimic.
         if (!is_boring_terrain(feat))
         {
-            std::string desc = feature_description(pos, false, DESC_CAP_THE, false);
+            std::string desc = feature_description(pos, false, DESC_THE, false);
             take_note(Note(NOTE_FEAT_MIMIC, 0, 0, desc.c_str()));
         }
 
@@ -3209,19 +3209,11 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
 
     switch (variant)
     {
-        case PRONOUN_CAP:
-            return ((gender == GENDER_NEUTER) ? "It" :
-                    (gender == GENDER_MALE)   ? "He" : "She");
-
-        case PRONOUN_NOCAP:
+        case PRONOUN:
             return ((gender == GENDER_NEUTER) ? "it" :
                     (gender == GENDER_MALE)   ? "he" : "she");
 
-        case PRONOUN_CAP_POSSESSIVE:
-            return ((gender == GENDER_NEUTER) ? "Its" :
-                    (gender == GENDER_MALE)   ? "His" : "Her");
-
-        case PRONOUN_NOCAP_POSSESSIVE:
+        case PRONOUN_POSSESSIVE:
             return ((gender == GENDER_NEUTER) ? "its" :
                     (gender == GENDER_MALE)   ? "his" : "her");
 

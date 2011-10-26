@@ -1136,7 +1136,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
             mpr(sanct_msg, MSGCH_GOD);
         else
             mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s explodes!",
-                 mons->full_name(DESC_CAP_THE).c_str());
+                 mons->full_name(DESC_THE).c_str());
     }
 
     if (is_sanctuary(mons->pos()))
@@ -3140,7 +3140,7 @@ void corrode_monster(monster* mons, const actor* evildoer)
         {
             mprf("%s writhes in agony as %s flesh is eaten away!",
                  mons->name(DESC_THE).c_str(),
-                 mons->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
+                 mons->pronoun(PRONOUN_POSSESSIVE).c_str());
         }
     }
 }
