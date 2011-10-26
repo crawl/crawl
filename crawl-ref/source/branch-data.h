@@ -88,7 +88,7 @@ const Branch branches[NUM_BRANCHES] = {
       mons_pitsnake_rare, mons_pitsnake_level,
       'P', false, true, 0 },
 
-    { BRANCH_HIVE, BRANCH_MAIN_DUNGEON, 11, 16, 2, 0, 0,
+    { BRANCH_HIVE, NUM_BRANCHES, 11, 16, 1, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_HIVE, DNGN_RETURN_FROM_HIVE,
       "Hive", "the Hive", "Hive",
       "You hear a buzzing sound coming from all directions.",
