@@ -155,8 +155,8 @@ static void _give_wand(monster* mon, int level)
         if (no_high_tier && is_high_tier_wand(wand.sub_type))
         {
             dprf("Destroying %s because %s doesn't want a high tier wand.",
-                 wand.name(DESC_NOCAP_A).c_str(),
-                 mon->name(DESC_NOCAP_THE).c_str());
+                 wand.name(DESC_A).c_str(),
+                 mon->name(DESC_THE).c_str());
             destroy_item(idx, true);
         }
         else

@@ -3439,7 +3439,7 @@ static std::string _mon_enchantments_string(const monster_info& mi)
 
     if (!enchant_descriptors.empty())
     {
-        return std::string(mi.pronoun(PRONOUN_CAP))
+        return std::string(mi.pronoun(PRONOUN))
             + " is "
             + comma_separated_line(enchant_descriptors.begin(),
                                    enchant_descriptors.end())
@@ -3521,7 +3521,7 @@ static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi)
 static std::string _get_monster_desc(const monster_info& mi)
 {
     std::string text    = "";
-    std::string pronoun = mi.pronoun(PRONOUN_CAP);
+    std::string pronoun = mi.pronoun(PRONOUN);
 
     if (mi.is(MB_CLINGING))
         text += pronoun + " is clinging to the wall.\n";
@@ -3570,7 +3570,7 @@ static std::string _get_monster_desc(const monster_info& mi)
 
     if (mi.is(MB_POSSESSABLE))
     {
-        text += std::string(mi.pronoun(PRONOUN_CAP_POSSESSIVE))
+        text += std::string(mi.pronoun(PRONOUN_POSSESSIVE))
                 + " soul is ripe for the taking.\n";
     }
     else if (mi.is(MB_ENSLAVED))
@@ -3829,7 +3829,7 @@ static bool _print_item_desc(const coord_def where)
         return false;
 
     std::string name = get_menu_colour_prefix_tags(mitm[targ_item],
-                                                   DESC_NOCAP_A);
+                                                   DESC_A);
     mprf(MSGCH_FLOOR_ITEMS, "You see %s here.", name.c_str());
 
     if (mitm[ targ_item ].link != NON_ITEM)
@@ -3929,7 +3929,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
         if (!in_range)
         {
             mprf(MSGCH_EXAMINE_FILTER, "%s is out of range.",
-                 mon->pronoun(PRONOUN_CAP).c_str());
+                 mon->pronoun(PRONOUN).c_str());
         }
 #ifndef DEBUG_DIAGNOSTICS
         monster_described = true;

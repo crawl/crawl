@@ -3764,13 +3764,13 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     msg = replace_all(msg, "@The_monster@", mons->name(cap));
 
     msg = replace_all(msg, "@Pronoun@",
-                      mons->pronoun(PRONOUN_CAP));
+                      mons->pronoun(PRONOUN));
     msg = replace_all(msg, "@pronoun@",
-                      mons->pronoun(PRONOUN_NOCAP));
+                      mons->pronoun(PRONOUN));
     msg = replace_all(msg, "@Possessive@",
-                      mons->pronoun(PRONOUN_CAP_POSSESSIVE));
+                      mons->pronoun(PRONOUN_POSSESSIVE));
     msg = replace_all(msg, "@possessive@",
-                      mons->pronoun(PRONOUN_NOCAP_POSSESSIVE));
+                      mons->pronoun(PRONOUN_POSSESSIVE));
     msg = replace_all(msg, "@reflexive@",
                       mons->pronoun(PRONOUN_REFLEXIVE));
     msg = replace_all(msg, "@objective@",
@@ -3853,7 +3853,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     {
         msg = replace_all(msg, "@God@", "a god");
         std::string possessive =
-            mons->pronoun(PRONOUN_NOCAP_POSSESSIVE) + " god";
+            mons->pronoun(PRONOUN_POSSESSIVE) + " god";
         msg = replace_all(msg, "@possessive_God@", possessive.c_str());
 
         msg = replace_all(msg, "@my_God@", "my God");

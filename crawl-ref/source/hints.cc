@@ -4806,7 +4806,7 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
              && mi.is(MB_STABBABLE))
     {
         ostr << "Apparently "
-             << mons_pronoun((monster_type) mi.type, PRONOUN_NOCAP)
+             << mons_pronoun((monster_type) mi.type, PRONOUN)
              << " has not noticed you - yet. Note that you do not have to "
                 "engage every monster you meet. Sometimes, discretion is the "
                 "better part of valour.";
@@ -4815,7 +4815,7 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
              && mi.is(MB_DISTRACTED))
     {
         ostr << "Apparently "
-             << mons_pronoun((monster_type) mi.type, PRONOUN_NOCAP)
+             << mons_pronoun((monster_type) mi.type, PRONOUN)
              << " has been distracted by something. You could use this "
                 "opportunity to sneak up on this monster - or to sneak away.";
     }

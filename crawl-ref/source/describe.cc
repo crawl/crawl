@@ -3254,7 +3254,7 @@ static std::string _monster_stat_description(const monster_info& mi)
         resist_descriptions.push_back(tmp);
     }
 
-    const char* pronoun = mi.pronoun(PRONOUN_CAP);
+    const char* pronoun = mi.pronoun(PRONOUN);
 
     if (mi.threat != MTHRT_UNDEF)
         result << pronoun << " looks " << _get_threat_desc(mi.threat) << ".\n";
@@ -3352,7 +3352,7 @@ static std::string _monster_stat_description(const monster_info& mi)
     if (mons_is_feat_mimic(mi.type))
     {
         result << pronoun << " is as big as "
-               << thing_do_grammar(DESC_NOCAP_A, true, false,
+               << thing_do_grammar(DESC_A, true, false,
                                    feat_type_name(mi.get_mimic_feature()))
                << "\n";
     }
@@ -3526,16 +3526,16 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     if (!mons_class_can_use_stairs(mi.type))
     {
-        inf.body << "\n" << mi.pronoun(PRONOUN_CAP)
+        inf.body << "\n" << mi.pronoun(PRONOUN)
                  << " is incapable of using stairs.\n";
     }
 
     if (mi.intel() == I_PLANT)
-        inf.body << mi.pronoun(PRONOUN_CAP) << " is mindless.\n";
+        inf.body << mi.pronoun(PRONOUN) << " is mindless.\n";
 
     if (mi.is(MB_CHAOTIC))
     {
-        inf.body << mi.pronoun(PRONOUN_CAP)
+        inf.body << mi.pronoun(PRONOUN)
                  << " is vulnerable to silver and hated by Zin.\n";
     }
 

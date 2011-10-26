@@ -20,8 +20,9 @@ enum unarmed_attack_type
     UNAT_PUNCH,
     UNAT_BITE,
     UNAT_PSEUDOPODS,
+    UNAT_TENTACLES,
     UNAT_FIRST_ATTACK = UNAT_KICK,
-    UNAT_LAST_ATTACK = UNAT_PSEUDOPODS,
+    UNAT_LAST_ATTACK = UNAT_TENTACLES
 };
 
 class melee_attack : public attack
@@ -93,27 +94,11 @@ private:
 
     /* Attack effects */
     void check_autoberserk();
-    bool check_unrand_effects(bool mondied = false);
-    void emit_nodmg_hit_message();
-
-    std::string debug_damage_number();
-    std::string special_attack_punctuation();
-    std::string attack_strength_punctuation();
-    std::string evasion_margin_adverb();
-
-    std::string atk_name(description_level_type desc) const;
-    std::string def_name(description_level_type desc) const;
-    std::string wep_name(description_level_type desc = DESC_YOUR,
-                         iflags_t ignore_flags = ISFLAG_KNOW_CURSE
-                                               | ISFLAG_KNOW_PLUSES) const;
+    bool check_unrand_effects();
 
     bool attack_shield_blocked(bool verbose);
     bool apply_damage_brand();
-    void calc_elemental_brand_damage(beam_type flavour,
-                                     int res,
-                                     const char *verb);
-    bool apply_damage_brand();
-    int fire_res_apply_cerebov_downgrade(int res);
+
     void drain_defender();
     void rot_defender(int amount, int immediate = 0);
     void splash_defender_with_acid(int strength);
@@ -138,7 +123,6 @@ private:
     /* Output methods */
     void adjust_noise();
     void emit_nodmg_hit_message();
-    bool attack_shield_blocked(bool verbose);
 
     void set_attack_verb();
 

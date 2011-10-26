@@ -284,7 +284,7 @@ static std::string _shop_print_stock(const std::vector<int>& stock,
         else
             textcolor(i % 2 ? LIGHTGREY : WHITE);
 
-        std::string item_name = item.name(DESC_NOCAP_A, false, id);
+        std::string item_name = item.name(DESC_A, false, id);
         if (unknown)
             item_name += " (unknown)";
 

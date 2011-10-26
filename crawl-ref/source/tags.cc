@@ -3947,7 +3947,7 @@ static ghost_demon unmarshallGhost(reader &th)
 #if TAG_MAJOR_VERSION == 32
     short temp_attk = unmarshallShort(th);
     if (th.getMinorVersion() < TAG_MINOR_CHERUB_ATTACKS
-        && static_cast<mon_attack_type>(temp_attk) == AT_CHERUB)
+        && static_cast<attack_type>(temp_attk) == AT_CHERUB)
     {
         temp_attk++;
     }

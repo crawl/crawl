@@ -886,7 +886,7 @@ void monster::equip_weapon(item_def &item, int near, bool msg)
                  "firm grip on it.",
                  pronoun(PRONOUN_POSSESSIVE).c_str(),
                  hand_name(true).c_str(),
-                 pronoun(PRONOUN_NOCAP).c_str());
+                 pronoun(PRONOUN).c_str());
             break;
         case SPWPN_REAPING:
             mpr("It is briefly surrounded by shifting shadows.");
@@ -2678,7 +2678,7 @@ void monster::go_frenzy()
         del_ench(ENCH_SLOW, true); // Give no additional message.
         simple_monster_message(this,
             make_stringf(" shakes off %s lethargy.",
-                         pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str()).c_str());
+                         pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
     }
     del_ench(ENCH_HASTE, true);
     del_ench(ENCH_FATIGUE, true); // Give no additional message.
@@ -2709,7 +2709,7 @@ void monster::go_berserk(bool /* intentional */, bool /* potion */)
         del_ench(ENCH_SLOW, true); // Give no additional message.
         simple_monster_message(this,
             make_stringf(" shakes off %s lethargy.",
-                         pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str()).c_str());
+                         pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
     }
     del_ench(ENCH_FATIGUE, true); // Give no additional message.
 
@@ -4231,7 +4231,7 @@ bool monster::bleed(const actor* agent, int amount, int degree)
         break;
 =======*/
         mprf("%s begins to bleed from %s wounds!", name(DESC_THE).c_str(),
-             pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
+             pronoun(PRONOUN_POSSESSIVE).c_str());
     }
 //>>>>>>> master
 
@@ -4278,16 +4278,14 @@ void monster::check_speed()
     // speed is getting borked.
     if (speed < 0 || speed > 130)
     {
-        dprf(MSGCH_DIAGNOSTICS,
-             "Bad speed: %s, spd: %d, spi: %d, hd: %d, ench: %s",
+        dprf("Bad speed: %s, spd: %d, spi: %d, hd: %d, ench: %s",
              name(DESC_PLAIN).c_str(),
              speed, speed_increment, hit_dice,
              describe_enchantments().c_str());
 
         calc_speed();
 
-        dprf(MSGCH_DIAGNOSTICS, "Fixed speed for %s to %d",
-             name(DESC_PLAIN).c_str(), speed);
+        dprf("Fixed speed for %s to %d", name(DESC_PLAIN).c_str(), speed);
     }
 
     if (speed_increment < 0)
@@ -4295,8 +4293,7 @@ void monster::check_speed()
 
     if (speed_increment > 200)
     {
-        dprf(MSGCH_DIAGNOSTICS,
-             "Clamping speed increment on %s: %d",
+        dprf("Clamping speed increment on %s: %d",
              name(DESC_PLAIN).c_str(), speed_increment);
 
         speed_increment = 140;
@@ -5142,7 +5139,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 hit_points = 0;
                 if (observable())
                     mprf("As %s mount dies, %s plunges down into %s!",
-                         pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
+                         pronoun(PRONOUN_POSSESSIVE).c_str(),
                          name(DESC_THE).c_str(),
                          grd(pos()) == DNGN_LAVA ?
                              "lava and is incinerated" :
@@ -5152,7 +5149,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             {
                 mprf("%s jumps down from %s now dead mount.",
                      name(DESC_THE).c_str(),
-                     pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
+                     pronoun(PRONOUN_POSSESSIVE).c_str());
             }
         }
     }

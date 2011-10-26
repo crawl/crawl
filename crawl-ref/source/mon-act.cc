@@ -2789,14 +2789,14 @@ static bool _monster_eat_food(monster* mons, bool nearby)
             if (!nearby)
                 mprf(MSGCH_SOUND, "You hear a distant popping sound.");
             else
-                mprf("%s devours %s.", mons->name(DESC_CAP_THE).c_str(),
-                    quant_name(*si, 1, DESC_NOCAP_THE).c_str());
+                mprf("%s devours %s.", mons->name(DESC_THE).c_str(),
+                    quant_name(*si, 1, DESC_THE).c_str());
             dec_mitm_item_quantity(si.link(), 1);
             if (!nearby)
                 mprf(MSGCH_SOUND, "You hear a distant popping sound.");
             else
-                mprf("%s devours %s.", mons->name(DESC_CAP_THE).c_str(),
-                    quant_name(*si, 1, DESC_NOCAP_THE).c_str());
+                mprf("%s devours %s.", mons->name(DESC_THE).c_str(),
+                    quant_name(*si, 1, DESC_THE).c_str());
             monster_polymorph(mons, MONS_KILLER_BEE);
             return true;
         }

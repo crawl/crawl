@@ -4192,7 +4192,7 @@ bool bolt::attempt_block(monster* mon)
                     mprf("%s reflects the %s off %s %s!",
                          mon->name(DESC_THE).c_str(),
                          name.c_str(),
-                         mon->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
+                         mon->pronoun(PRONOUN_POSSESSIVE).c_str(),
                          shield->name(DESC_PLAIN).c_str());
                     ident_reflector(shield);
                 }

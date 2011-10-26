@@ -103,7 +103,6 @@ bool fight_melee(actor *attacker, actor *defender, bool allow_unarmed)
         // Check if the player is fighting with something unsuitable,
         // or someone unsuitable.
         if (you.can_see(defender)
-            && !mons_is_unknown_mimic(defender->as_monster())
             && !wielded_weapon_check(attk.weapon))
         {
             you.turn_is_over = false;
@@ -183,7 +182,7 @@ bool fight_melee(actor *attacker, actor *defender, bool allow_unarmed)
                                                attack_number);
 
         if (attk.type == AT_CHERUB)
-        	attk.type = static_cast<mon_attack_type>(random_choose(AT_HIT, AT_BITE, AT_PECK_AT_GORE, -1));
+        	attk.type = static_cast<attack_type>(random_choose(AT_HIT, AT_BITE, AT_PECK, AT_GORE, -1));
 
         if (attk.type == AT_NONE)
         {
@@ -367,22 +366,6 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
         resistible = resistible * (ranged? 15 : 20) / 10;
 
     return std::max(resistible + irresistible, 0);
-}
-
-int melee_attack::inflict_damage(int dam, beam_type flavour, bool clean)
-{
-    if (flavour == NUM_BEAMS)
-        flavour = special_damage_flavour;
-    // Auxes temporarily clear damage_brand so we don't need to check.
-    if (damage_brand == SPWPN_REAPING
-     || damage_brand == SPWPN_CHAOS && one_chance_in(100))
-    {
-        defender->props["reaping_damage"].get_int() += dam;
-        // With two reapers of different friendliness, the most recent one
-        // gets the zombie.  Too rare a case to care any more.
-        defender->props["reaper"].get_int() = attacker->mid;
-    }
-    return defender->hurt(attacker, dam, flavour, clean);
 }
 
 ///////////////////////////////////////////////////////////////////////////
