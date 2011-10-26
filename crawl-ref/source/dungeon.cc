@@ -2064,7 +2064,7 @@ static void _place_feature_mimics(int level_number,
 
         // If this is the real branch entry, don't mimic it.
         if (feat_is_branch_stairs(feat)
-            && player_branch_depth() == branches[get_branch_at(pos)].startdepth)
+            && player_branch_depth() == startdepth[get_branch_at(pos)])
         {
             continue;
         }
@@ -3257,7 +3257,7 @@ static void _place_branch_entrances(int dlevel, branch_type branch)
         if (i == BRANCH_VESTIBULE_OF_HELL)
             continue;
 
-        Branch *b = &branches[i];
+        const Branch *b = &branches[i];
 
         const bool mimic = !branch_is_unfinished(b->id)
                            && !is_hell_subbranch(b->id)
@@ -3268,7 +3268,7 @@ static void _place_branch_entrances(int dlevel, branch_type branch)
 
         if (b->entry_stairs != NUM_FEATURES
             && player_in_branch(b->parent_branch)
-            && (player_branch_depth() == b->startdepth || mimic))
+            && (player_branch_depth() == startdepth[i] || mimic))
         {
             // Place a stair.
             dprf("Placing stair to %s", b->shortname);
@@ -5895,7 +5895,7 @@ void init_level_connectivity()
 {
     for (int i = 0; i < NUM_BRANCHES; i++)
     {
-        int depth = branches[i].depth > 0 ? branches[i].depth : 0;
+        int depth = brdepth[i] > 0 ? brdepth[i] : 0;
         connectivity[i].resize(depth);
     }
 }
@@ -5911,7 +5911,7 @@ void read_level_connectivity(reader &th)
 #endif
     for (int i = 0; i < nb; i++)
     {
-        unsigned int depth = branches[i].depth > 0 ? branches[i].depth : 0;
+        unsigned int depth = brdepth[i] > 0 ? brdepth[i] : 0;
         unsigned int num_entries = unmarshallInt(th);
         connectivity[i].resize(std::max(depth, num_entries));
 
@@ -5946,7 +5946,7 @@ static bool _fixup_interlevel_connectivity()
     //      is updated, so we rely on the level not being vetoed after
     //      this check.
 
-    if (!player_in_connected_branch() || your_branch().depth == -1)
+    if (!player_in_connected_branch() || brdepth[you.where_are_you] == -1)
         return (true);
     if (branches[you.where_are_you].branch_flags & BFLAG_ISLANDED)
         return (true);

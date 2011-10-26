@@ -50,7 +50,7 @@ static dungeon_feature_type _find_appropriate_stairs(bool down)
             depth--;
 
         // Can't go down from bottom level of a branch.
-        if (depth > branches[you.where_are_you].depth)
+        if (depth > brdepth[you.where_are_you])
         {
             mpr("Can't go down from the bottom of a branch.");
             return DNGN_UNSEEN;
@@ -153,7 +153,7 @@ static void _wizard_go_to_level(const level_pos &pos)
         abs_depth > you.absdepth0? DNGN_STONE_STAIRS_DOWN_I
                                   : DNGN_STONE_STAIRS_UP_I;
 
-    if (pos.id.depth == branches[pos.id.branch].depth)
+    if (pos.id.depth == brdepth[pos.id.branch])
         stair_taken = DNGN_STONE_STAIRS_DOWN_I;
 
     if (pos.id.branch != you.where_are_you && pos.id.depth == 1
@@ -192,7 +192,7 @@ void wizard_interlevel_travel()
     const level_pos pos =
         prompt_translevel_target(TPF_ALLOW_UPDOWN | TPF_SHOW_ALL_BRANCHES, name).p;
 
-    if (pos.id.depth < 1 || pos.id.depth > branches[pos.id.branch].depth)
+    if (pos.id.depth < 1 || pos.id.depth > brdepth[pos.id.branch])
     {
         canned_msg(MSG_OK);
         return;
@@ -340,10 +340,10 @@ void wizard_list_branches()
 {
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
-        if (branches[i].startdepth != -1)
+        if (startdepth[i] != -1)
         {
             mprf(MSGCH_DIAGNOSTICS, "Branch %d (%s) is on level %d of %s",
-                 i, branches[i].longname, branches[i].startdepth,
+                 i, branches[i].longname, startdepth[i],
                  branches[branches[i].parent_branch].abbrevname);
         }
         else if (is_random_lair_subbranch((branch_type)i))

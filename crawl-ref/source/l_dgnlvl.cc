@@ -16,7 +16,7 @@ const char *branch_name = luaL_checkstring(ls, pos);                \
 branch_type req_branch_type = str_to_branch(branch_name);           \
 if (req_branch_type == NUM_BRANCHES)                                \
 luaL_error(ls, "Expected branch name");                         \
-Branch &br = branches[req_branch_type]
+const Branch &br = branches[req_branch_type]
 
 #define BRANCHFN(name, type, expr)   \
 LUAFN(dgn_br_##name) {           \

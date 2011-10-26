@@ -209,7 +209,7 @@ void level_range::read(reader& inf)
             // is already gone (and no new bug is introduced)
             branch     = place_branch(upgrade_packed_place(lt | 0xFF00));
             shallowest = 1;
-            deepest    = branches[branch].depth;
+            deepest    = brdepth[branch];
         }
     }
     else
@@ -229,7 +229,7 @@ std::string level_range::str_depth_range() const
     if (shallowest == -1)
         return (":??");
 
-    if (deepest >= branches[branch].depth)
+    if (deepest >= branches[branch].numlevels)
         return (shallowest == 1? "" : make_stringf("%d-", shallowest));
 
     if (shallowest == deepest)
@@ -271,9 +271,9 @@ void level_range::set(const std::string &br, int s, int d)
     if (branch != NUM_BRANCHES)
     {
         if (shallowest == -1)
-            shallowest = branches[branch].depth;
+            shallowest = branches[branch].numlevels;
         if (deepest == -1)
-            deepest = branches[branch].depth;
+            deepest = branches[branch].numlevels;
     }
 
     if (deepest < shallowest)

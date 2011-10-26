@@ -1426,8 +1426,8 @@ static void tag_construct_you_dungeon(writer &th)
     marshallByte(th, NUM_BRANCHES);
     for (int j = 0; j < NUM_BRANCHES; ++j)
     {
-        marshallInt(th, branches[j].startdepth);
-        marshallInt(th, branches[j].branch_flags);
+        marshallInt(th, brdepth[j]);
+        marshallInt(th, startdepth[j]);
     }
 
     marshallMap(th, stair_level,
@@ -2513,10 +2513,11 @@ static void tag_read_you_dungeon(reader &th)
 
     // how many branches?
     count = unmarshallByte(th);
+    ASSERT(count <= NUM_BRANCHES);
     for (int j = 0; j < count; ++j)
     {
-        branches[j].startdepth   = unmarshallInt(th);
-        branches[j].branch_flags = unmarshallInt(th);
+        brdepth[j]    = unmarshallInt(th);
+        startdepth[j] = unmarshallInt(th);
     }
 
 #if TAG_MAJOR_VERSION == 32

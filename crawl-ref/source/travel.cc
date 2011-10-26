@@ -1947,7 +1947,7 @@ static std::string _get_trans_travel_dest(const travel_target &target,
 
     if (!skip_branch)
         dest << branch;
-    if (branches[branch_id].depth != 1)
+    if (brdepth[branch_id] != 1)
     {
         if (!skip_branch)
             dest << ":";
@@ -2037,7 +2037,7 @@ static std::vector<branch_type> _get_branches(bool (*selector)(const Branch &))
 
 static bool _is_valid_branch(const Branch &br)
 {
-    return (br.shortname != NULL && br.depth != -1);
+    return (br.shortname != NULL && brdepth[br.id] != -1);
 }
 
 static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
@@ -2152,10 +2152,10 @@ static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
                 if (toupper(keyin) == branches[br[i]].travel_shortcut)
                 {
 #ifdef WIZARD
-                    Branch     &target = branches[br[i]];
+                    const Branch &target = branches[br[i]];
                     std::string msg;
 
-                    if (target.startdepth == -1
+                    if (startdepth[br[i]] == -1
                         && (i == BRANCH_SWAMP
                             || i == BRANCH_SHOALS
                             || i == BRANCH_SNAKE_PIT))
@@ -2229,7 +2229,7 @@ static level_id _find_up_level()
 
 level_id find_down_level(level_id curr)
 {
-    if (curr.depth < branches[curr.branch].depth)
+    if (curr.depth < brdepth[curr.branch])
         ++curr.depth;
     return (curr);
 }
@@ -2238,7 +2238,7 @@ level_id find_deepest_explored(level_id curr)
 {
     ASSERT(curr.branch != NUM_BRANCHES);
 
-    for (int i = branches[curr.branch].depth; i > 0; --i)
+    for (int i = brdepth[curr.branch]; i > 0; --i)
     {
         const level_id lid(curr.branch, i);
         LevelInfo *linf = travel_cache.find_level_info(lid);
@@ -2438,7 +2438,7 @@ travel_target prompt_translevel_target(int prompt_flags,
     target = _prompt_travel_depth(target.p.id, to_entrance);
 
     if (target.p.id.depth < 1
-        || target.p.id.depth > branches[target.p.id.branch].depth)
+        || target.p.id.depth > brdepth[target.p.id.branch])
     {
         target.p.id.depth = -1;
     }
@@ -3019,7 +3019,7 @@ level_id level_id::get_next_level_id(const coord_def &pos)
         if (gridc == branches[i].exit_stairs)
         {
             id.branch = branches[i].parent_branch;
-            id.depth = branches[i].startdepth;
+            id.depth = startdepth[i];
             break;
         }
     }
@@ -3054,7 +3054,7 @@ level_id level_id::parse_level_id(const std::string &s) throw (std::string)
 {
     std::string::size_type cpos = s.find(':');
     std::string brname  = (cpos != std::string::npos? s.substr(0, cpos)  : s);
-    std::string brdepth = (cpos != std::string::npos? s.substr(cpos + 1) : "");
+    std::string brlev   = (cpos != std::string::npos? s.substr(cpos + 1) : "");
 
     branch_type br = str_to_branch(brname);
 #if TAG_MAJOR_VERSION == 32
@@ -3064,8 +3064,8 @@ level_id level_id::parse_level_id(const std::string &s) throw (std::string)
         cpos = brname.find(':');
         if (cpos != std::string::npos)
         {
-            brdepth = brname.substr(cpos + 1);
-            brname  = brname.substr(0, cpos);
+            brlev  = brname.substr(cpos + 1);
+            brname = brname.substr(0, cpos);
         }
 
         br = str_to_branch(brname);
@@ -3078,11 +3078,13 @@ level_id level_id::parse_level_id(const std::string &s) throw (std::string)
                            brname.c_str(), s.c_str());
     }
 
-    const int dep = (brdepth.empty() ? 1 :
-                     brdepth == "$"  ? branches[br].depth
-                                     : atoi(brdepth.c_str()));
+    // Branch:$ uses static data -- it never comes from the current game.
+    const int dep = (brlev.empty() ? 1 :
+                     brlev == "$"  ? branches[br].numlevels
+                                   : atoi(brlev.c_str()));
 
-    if (dep < 0 || dep > branches[br].depth)
+    // The branch might have been longer when the save has been created.
+    if (dep < 0 || dep > brdepth[br] && dep > branches[br].numlevels)
     {
         throw make_stringf("Invalid depth for %s in spec \"%s\"",
                            brname.c_str(), s.c_str());

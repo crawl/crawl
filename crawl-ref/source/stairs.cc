@@ -184,7 +184,7 @@ static void _player_change_level_upstairs(dungeon_feature_type stair_find,
             // particular game (like the Swamp or Shoals), then
             // its startdepth is set to -1; compensate for that,
             // so we don't end up on "level -1".
-            if (branches[i].startdepth == -1)
+            if (brdepth[i] == -1)
                 you.absdepth0 += 2;
             break;
         }

@@ -145,11 +145,11 @@ static std::vector<level_id> mg_dungeon_places()
 
     for (int br = BRANCH_MAIN_DUNGEON; br < NUM_BRANCHES; ++br)
     {
-        if (branches[br].depth == -1)
+        if (brdepth[br] == -1)
             continue;
 
         const branch_type branch = static_cast<branch_type>(br);
-        for (int depth = 1; depth <= branches[br].depth; ++depth)
+        for (int depth = 1; depth <= brdepth[br]; ++depth)
             places.push_back(level_id(branch, depth));
     }
     return (places);
@@ -264,11 +264,11 @@ static void _write_mapgen_stats()
     std::vector<level_id> mapless;
     for (int i = BRANCH_MAIN_DUNGEON; i < NUM_BRANCHES; ++i)
     {
-        if (branches[i].depth == -1)
+        if (brdepth[i] == -1)
             continue;
 
         const branch_type br = static_cast<branch_type>(i);
-        for (int dep = 1; dep <= branches[i].depth; ++dep)
+        for (int dep = 1; dep <= brdepth[i]; ++dep)
         {
             const level_id lid(br, dep);
             _check_mapless(lid, mapless);
