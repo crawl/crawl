@@ -1094,7 +1094,7 @@ static const species_skill_aptitude species_skill_aptitudes[] =
     APT(SP_VAMPIRE,         SK_FIRE_MAGIC,     -2),
     APT(SP_VAMPIRE,         SK_ICE_MAGIC,       0),
     APT(SP_VAMPIRE,         SK_AIR_MAGIC,       0),
-    APT(SP_VAMPIRE,         SK_EARTH_MAGIC,    -1),
+    APT(SP_VAMPIRE,         SK_EARTH_MAGIC,     0),
     APT(SP_VAMPIRE,         SK_POISON_MAGIC,   -1),
     APT(SP_VAMPIRE,         SK_INVOCATIONS,    -2),
     APT(SP_VAMPIRE,         SK_EVOCATIONS,     -1),
