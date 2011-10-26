@@ -2067,6 +2067,10 @@ malarious mermaid
 
 A young woman with a fish tail in place of legs. She looks quite sick, but still capable of bespelling her audience.
 %%%%
+mountain dwarf
+
+Mountain dwarves are surface-dwelling relatives of the deep dwarves. After years of war with the taller but otherwise quite similar hill orcs, the mountain dwarves were conquered and driven from these lands. This one has been imported from foreign shores.
+%%%%
 pristine statue
 
 An immaculately sculpted statue of an archer.
