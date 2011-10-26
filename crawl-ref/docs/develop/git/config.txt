@@ -66,4 +66,3 @@ second @@), like so:
  : if crawl.one_chance_in(300) then
  SUBST:   t="
  : end
-

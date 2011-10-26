@@ -302,7 +302,7 @@ static void crawl_sendkeys_proc(lua_State *ls, int argi)
 
 /*
 --- XXX vararg function
--- 
+--
 function sendkeys() */
 static int crawl_sendkeys(lua_State *ls)
 {
@@ -335,7 +335,7 @@ static int crawl_process_command(lua_State *ls)
 }
 
 /*
---- 
+---
 function process_keys() */
 static int crawl_process_keys(lua_State *ls)
 {
