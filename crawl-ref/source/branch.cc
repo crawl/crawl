@@ -113,59 +113,6 @@ old_level_area_type str_to_old_level_area_type(const std::string &s)
 }
 #endif
 
-bool set_branch_flags(uint32_t flags, bool silent, branch_type branch)
-{
-    if (branch == NUM_BRANCHES)
-        branch = you.where_are_you;
-
-    bool could_control = allow_control_teleport(true);
-
-    uint32_t old_flags = branches[branch].branch_flags;
-    branches[branch].branch_flags |= flags;
-
-    bool can_control = allow_control_teleport(true);
-
-    if (branch == you.where_are_you
-        && could_control && !can_control && !silent)
-    {
-        mpr("You sense the appearance of a powerful magical force "
-            "which warps space.", MSGCH_WARN);
-    }
-
-    return (old_flags != branches[branch].branch_flags);
-}
-
-bool unset_branch_flags(uint32_t flags, bool silent, branch_type branch)
-{
-    if (branch == NUM_BRANCHES)
-        branch = you.where_are_you;
-
-    const bool could_control = allow_control_teleport(true);
-
-    uint32_t old_flags = branches[branch].branch_flags;
-    branches[branch].branch_flags &= ~flags;
-
-    const bool can_control = allow_control_teleport(true);
-
-    if (branch == you.where_are_you
-        && !could_control && can_control && !silent)
-    {
-        // Isn't really a "recovery", but I couldn't think of where
-        // else to send it.
-        mpr("Space seems to straighten in your vicinity.", MSGCH_RECOVERY);
-    }
-
-    return (old_flags != branches[branch].branch_flags);
-}
-
-uint32_t get_branch_flags(branch_type branch)
-{
-    if (branch == NUM_BRANCHES)
-        branch = you.where_are_you;
-
-    return branches[branch].branch_flags;
-}
-
 branch_type get_branch_at(const coord_def& pos)
 {
     return level_id::current().get_next_level_id(pos).branch;

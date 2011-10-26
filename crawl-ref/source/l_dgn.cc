@@ -218,52 +218,6 @@ static int dgn_change_level_flags(lua_State *ls)
     return (1);
 }
 
-static const std::string branch_flag_names[] =
-{"no_tele_control", "unused", "no_map", "has_orb", "islanded", ""};
-
-static int dgn_bflags(lua_State *ls)
-{
-    MAP(ls, 1, map);
-
-    try
-    {
-        map->branch_flags = map_flags::parse(branch_flag_names,
-                                             luaL_checkstring(ls, 2));
-    }
-    catch (const std::string &error)
-    {
-        luaL_argerror(ls, 2, error.c_str());
-    }
-
-    return (0);
-}
-
-static int dgn_change_branch_flags(lua_State *ls)
-{
-    map_flags flags;
-
-    try
-    {
-        flags = map_flags::parse(branch_flag_names,
-                                 luaL_checkstring(ls, 1));
-    }
-    catch (const std::string &error)
-    {
-        luaL_argerror(ls, 2, error.c_str());
-        lua_pushboolean(ls, false);
-        return (1);
-    }
-
-    bool silent = lua_toboolean(ls, 2);
-
-    bool changed1 = set_branch_flags(flags.flags_set, silent);
-    bool changed2 = unset_branch_flags(flags.flags_unset, silent);
-
-    lua_pushboolean(ls, changed1 || changed2);
-
-    return (1);
-}
-
 static void _chance_magnitude_check(lua_State *ls, int which_par, int chance)
 {
     if (chance < 0 || chance > CHANCE_ROLL)
@@ -1891,7 +1845,6 @@ const struct luaL_reg dgn_dlib[] =
 { "has_tag", dgn_has_tag },
 { "tags_remove", dgn_tags_remove },
 { "lflags", dgn_lflags },
-{ "bflags", dgn_bflags },
 { "chance", dgn_chance },
 { "depth_chance", dgn_depth_chance },
 { "weight", dgn_weight },
@@ -1937,7 +1890,6 @@ const struct luaL_reg dgn_dlib[] =
 { "remove_marker", dgn_remove_marker },
 { "num_matching_markers", dgn_num_matching_markers },
 { "change_level_flags", dgn_change_level_flags },
-{ "change_branch_flags", dgn_change_branch_flags },
 { "get_floor_colour", dgn_get_floor_colour },
 { "get_rock_colour",  dgn_get_rock_colour },
 { "change_floor_colour", dgn_change_floor_colour },
