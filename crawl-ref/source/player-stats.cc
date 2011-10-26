@@ -116,7 +116,7 @@ void jiyva_stat_action()
 {
     int cur_stat[3];
     int stat_total = 0;
-    int evp = player_raw_body_armour_evasion_penalty();
+    int evp = you.unadjusted_body_armour_penalty();
     int target_stat[3];
     for (int x = 0; x < 3; ++x)
     {

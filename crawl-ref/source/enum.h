@@ -2776,10 +2776,8 @@ enum potion_type
 
 enum pronoun_type
 {
-    PRONOUN_CAP,
-    PRONOUN_NOCAP,
-    PRONOUN_CAP_POSSESSIVE,
-    PRONOUN_NOCAP_POSSESSIVE,
+    PRONOUN,
+    PRONOUN_POSSESSIVE,
     PRONOUN_REFLEXIVE,                  // reflexive is always lowercase
     PRONOUN_OBJECTIVE,                  // objective is always lowercase
 };

@@ -3290,7 +3290,7 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
     }
 
     mesclr();
-//    mprf("Wearing %s.", you.inv[new_ring].name(DESC_NOCAP_A).c_str());
+//    mprf("Wearing %s.", you.inv[new_ring].name(DESC_A).c_str());
 
     mprf(MSGCH_PROMPT,
          "You're wearing eight rings. Remove which one?");

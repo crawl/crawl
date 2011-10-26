@@ -3329,7 +3329,7 @@ std::string get_wounds_description_sentence(const monster* mons)
     if (wounds.empty())
         return "";
     else
-        return mons->pronoun(PRONOUN_CAP) + " is " + wounds + ".";
+        return mons->pronoun(PRONOUN) + " is " + wounds + ".";
 }
 
 std::string get_wounds_description(const monster* mons, bool colour)

@@ -2016,8 +2016,7 @@ void forest_damage(const actor *mon)
                             0);
                         // "it" looks butt-ugly here...
                         mprf(msg, foe->visible_to(&you) ?
-                                      foe->name(DESC_THE).c_str()
-                                    : up ? "Something" : "something");
+                                      foe->name(DESC_THE).c_str() : "something");
                     }
                     foe->hurt(mon, damage);
                 }

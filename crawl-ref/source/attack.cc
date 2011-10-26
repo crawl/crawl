@@ -100,17 +100,14 @@ std::string attack::anon_name(description_level_type desc,
  * Given invisibility (whether out of LOS or just invisible), returns the
  * appropriate possessive, inflexive, capitalized pronoun.
  */
- // TODO: Remove PRONOUN_CAP/NOCAP and replace with just PRONOUN
 std::string attack::anon_pronoun(pronoun_type pron)
 {
     switch (pron)
     {
     default:
-    case PRONOUN_CAP:              return "It";
-    case PRONOUN_NOCAP:            return "it";
-    case PRONOUN_CAP_POSSESSIVE:   return "Its";
-    case PRONOUN_NOCAP_POSSESSIVE: return "its";
-    case PRONOUN_REFLEXIVE:        return "itself";
+    case PRONOUN:            	return "it";
+    case PRONOUN_POSSESSIVE: 	return "its";
+    case PRONOUN_REFLEXIVE:     return "itself";
     }
 }
 

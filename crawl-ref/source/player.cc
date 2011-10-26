@@ -182,7 +182,7 @@ static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
 
             mprf(MSGCH_WARN,
                  "You found %s trap!",
-                 trap->name(DESC_NOCAP_A).c_str());
+                 trap->name(DESC_A).c_str());
 
             if (!you.running.is_any_travel())
                 more();
@@ -5818,11 +5818,11 @@ int player::adjusted_body_armour_penalty(int scale, bool use_size) const
 // The EV penalty to the player for wearing their current shield.
 int player::adjusted_shield_penalty(int scale) const
 {
-	const item_def *shield = you.slot_item(EQ_SHIELD, false);
-	if (!shield)
+	const item_def *shield_l = you.slot_item(EQ_SHIELD, false);
+	if (!shield_l)
 		return (0);
 
-	const int base_shield_penalty = -property(*shield, PARM_EVASION);
+	const int base_shield_penalty = -property(*shield_l, PARM_EVASION);
 	return std::max(0,
 					(base_shield_penalty * scale
 					 - you.skill(SK_SHIELDS, scale)
@@ -6562,7 +6562,7 @@ void player::paralyse(actor *who, int str, std::string source)
     int &paralysis(duration[DUR_PARALYSIS]);
 
     if (source.empty() && who)
-        source = who->name(DESC_NOCAP_A);
+        source = who->name(DESC_A);
 
     if (!paralysis && !source.empty())
     {

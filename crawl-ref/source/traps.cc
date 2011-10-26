@@ -342,7 +342,7 @@ void monster_caught_in_net(monster* mon, bolt &pbolt)
             if (mon->visible_to(&you))
             {
                 mprf("The net is caught on %s!",
-                     mon->name(DESC_NOCAP_THE).c_str());
+                     mon->name(DESC_THE).c_str());
             }
             else
                 mpr("The net is caught on something unseen!");

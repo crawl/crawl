@@ -804,7 +804,7 @@ static bool _orange_statue_effects(monster* mons)
             else if (you.can_see(mons))
                 mprf(MSGCH_WARN, "%s fixes %s piercing gaze on %s.",
                      mons->name(DESC_THE).c_str(),
-                     mons->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
+                     mons->pronoun(PRONOUN_POSSESSIVE).c_str(),
                      foe->name(DESC_THE).c_str());
         }
 
@@ -973,7 +973,7 @@ static void _cherub_hymn(monster* chief)
             if (you.can_see(chief) && player_can_hear(chief->pos()))
             {
                 mprf(MSGCH_SOUND, "%s sings a powerful hymn!",
-                     chief->name(DESC_CAP_THE).c_str());
+                     chief->name(DESC_THE).c_str());
             }
 
             // The yell happens whether you happen to see it or not.
@@ -989,7 +989,7 @@ static void _cherub_hymn(monster* chief)
                 std::string who;
                 if (seen_affected.size() == 1)
                 {
-                    who = seen_affected[0]->name(DESC_CAP_THE);
+                    who = seen_affected[0]->name(DESC_THE);
                     mprf(channel, "%s is roused by the hymn!", who.c_str());
                 }
                 else

@@ -182,7 +182,7 @@ bool melee_attack::handle_phase_attempted()
     		targetter_smite hitfunc(attacker, 1, 1, 1);
     		hitfunc.set_aim(defender->pos());
     		if (stop_attack_prompt(hitfunc, "attack"))
-    			return (false)
+    			return (false);
     	}
     	else if (stop_attack_prompt(defender->as_monster(), false,
     								attacker->pos()))
@@ -537,7 +537,7 @@ bool melee_attack::handle_phase_damaged()
     				 attack_strength_punctuation().c_str());
     		}
     		did_hit = false;
-    		damage_done = ;
+    		damage_done = 0;
 
     		return false;
     	}
@@ -704,7 +704,7 @@ bool melee_attack::handle_phase_damaged()
     }
 
     if (shroud_broken)
-    	mprf("Your shroud falls apart!", MSGCH_WARN);
+    	mpr("Your shroud falls apart!", MSGCH_WARN);
 
     return (true);
 }
@@ -1104,7 +1104,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         // and this secondary, high damage attack.
     case UNAT_TENTACLES:
     	aux_attack = aux_verb = "squeeze";
-    	aux_damage = 4 * you.has_usable_tentacles;
+    	aux_damage = 4 * you.has_usable_tentacles();
     	noise_factor = 100; // quieter than slapping
     	break;
 
@@ -1160,7 +1160,7 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
     	baseattack = UNAT_HEADBUTT;
 
     // Octopodes turn kicks into punches.
-    if (you.species == SP_OCTOPODES && baseattack == UNAT_KICK
+    if (you.species == SP_OCTOPODE && baseattack == UNAT_KICK
     	&& (!player_mutation_level(MUT_TENTACLE_SPIKE) || coinflip()))
     {
     	baseattack = UNAT_PUNCH;
@@ -1208,7 +1208,7 @@ bool melee_attack::player_aux_test_hit()
         mprf("Your %s passes through %s as %s momentarily phases out.",
             aux_attack.c_str(),
             defender->name(DESC_THE).c_str(),
-            defender->pronoun(PRONOUN_NOCAP).c_str());
+            defender->pronoun(PRONOUN).c_str());
     }
     else
     {
@@ -1848,7 +1848,7 @@ void melee_attack::set_attack_verb()
         	const char* pierce_desc[][2] = {{"crush", 	"like a grape"},
 											{"beat", 	"like a drum"},
 											{"hammer", 	"like a gong"},
-        									{"pound", 	"like an anvil"};
+        									{"pound", 	"like an anvil"}};
 			const int choice = random2(ARRAYSZ(pierce_desc));
 			attack_verb = pierce_desc[choice][0];
 			verb_degree = pierce_desc[choice][1];
@@ -1922,14 +1922,14 @@ void melee_attack::player_exercise_combat_skills()
     				  && !is_range_weapon(*weapon)
     			   || weapon->base_type == OBJ_STAVES))
     {
-    	damage = propert(*weapon, PWPN_DAMAGE);
+    	damage = property(*weapon, PWPN_DAMAGE);
     }
 
 	const bool helpless = defender->cannot_fight();
 
 	// Slow down the practice of low-damage weapons.
 	if (helpless || x_chance_in_y(damage, 20))
-		practise(helpless ? EX_WILL_HIT_HELPLESS : EX_WILL_HIT, wpn_skill)
+		practise(helpless ? EX_WILL_HIT_HELPLESS : EX_WILL_HIT, wpn_skill);
 }
 
 void melee_attack::player_check_weapon_effects()
@@ -3289,8 +3289,9 @@ int melee_attack::player_staff_damage(skill_type skill)
     				+ you.skill(skill, 100), 3000))
     {
     	return random2((you.skill(skill, 100)
-    				  + you.skill(SK_EVOCATIONS, 50)) / 80)
+    				  + you.skill(SK_EVOCATIONS, 50)) / 80);
     }
+    return 0;
 }
 
 void melee_attack::emit_nodmg_hit_message()
@@ -3732,7 +3733,7 @@ void melee_attack::player_stab_check()
 				!x_chance_in_y(10, 100 + you.skill_rdiv(SK_STABBING, 10) + you.dex());
     	else if (defender->petrifying())
     		stab_attempt = !x_chance_in_y(10, 20+you.skill_rdiv(SK_STABBING, 10));*/
-    	stab_attempt = x_chance_in_y(you.skill_rdiv(SK_STABBING) + you.dex() +
+    	stab_attempt = x_chance_in_y(you.skill_rdiv(SK_STABBING) + you.dex() + 1,
     								 roll);
     }
 }
@@ -3790,7 +3791,7 @@ random_var melee_attack::player_unarmed_speed()
     {
         unarmed_delay =
             rv::max(unarmed_delay
-                     - div_rand_round(constant(you.skill(SK_UNARMED_COMBAT), 10)),
+                     - div_rand_round(constant(you.skill(SK_UNARMED_COMBAT, 10)),
                                 player_in_bat_form() ? 30 : 50),
                     constant(min_delay));
     }
@@ -3896,18 +3897,17 @@ std::string melee_attack::mons_attack_verb()
     if (attacker->type == MONS_KILLER_KLOWN && attk_type == AT_HIT)
         return (RANDOM_ELEMENT(klown_attack));
 
-    mon_attack_type type = attk.type;
 
     if (mons_is_feat_mimic(attacker->type))
     {
     	const dungeon_feature_type feat = get_mimic_feat(attacker->as_monster());
     	if (feat_is_door(feat))
-    		type = AT_SNAP;
+    		attk_type = AT_SNAP;
     	else if (feat_is_fountain(feat))
-    		type = AT_SPLASH;
+    		attk_type = AT_SPLASH;
     }
 
-    if (type == AT_TENTACLE_SLAP
+    if (attk_type == AT_TENTACLE_SLAP
         && (attacker->type == MONS_KRAKEN_TENTACLE
             || attacker->type == MONS_ELDRITCH_TENTACLE))
     {
@@ -3941,9 +3941,9 @@ std::string melee_attack::mons_attack_verb()
         "splash"
     };
 
-    ASSERT(attk.type <
+    ASSERT(attk_type <
            static_cast<int>(sizeof(attack_types) / sizeof(const char *)));
-    return (attack_types[type]);
+    return (attack_types[attk_type]);
 }
 
 std::string melee_attack::mons_attack_desc()
@@ -3955,7 +3955,7 @@ std::string melee_attack::mons_attack_desc()
     int dist = (attacker->pos() - defender->pos()).abs();
     if (dist > 2)
     {
-        ASSERT(attk.flavour == AF_REACH || weapon && weapon_reach(*weapon));
+        ASSERT(attk_flavour == AF_REACH || weapon && weapon_reach(*weapon));
         ret = "from afar";
     }
 
@@ -4006,11 +4006,11 @@ void melee_attack::mons_do_poison()
             && one_chance_in(attk_flavour == AF_POISON ? 4 : 3)))
     {
         int amount = 1;
-        if (attk.flavour == AF_POISON_NASTY)
+        if (attk_flavour == AF_POISON_NASTY)
         	amount++;
-        else if (attk.flavour == AF_POISON_MEDIUM)
+        else if (attk_flavour == AF_POISON_MEDIUM)
         	amount += random2(3);
-        else if (attk.flavour == AF_POISON_STRONG)
+        else if (attk_flavour == AF_POISON_STRONG)
         	amount += roll_dice(2, 5);
 
         if (!defender->poison(attacker, amount))
@@ -4568,7 +4568,7 @@ bool melee_attack::do_knockback(bool trample)
         mprf("%s %s %s ground!",
              def_name(DESC_THE).c_str(),
              defender->conj_verb("hold").c_str(),
-             defender->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
+             defender->pronoun(PRONOUN_POSSESSIVE).c_str());
     }
 
     return false;
@@ -5055,7 +5055,7 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
     {
         mprf("You bite %s, and draw %s blood!",
              mon->name(DESC_THE, true).c_str(),
-             mon->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
+             mon->pronoun(PRONOUN_POSSESSIVE).c_str());
     }
     else
     {

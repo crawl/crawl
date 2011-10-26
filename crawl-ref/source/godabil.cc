@@ -1011,7 +1011,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
                 {
                     mprf("%s bleeds profusely from %s eyes and ears.",
                          mon->name(DESC_THE).c_str(),
-                         mons_pronoun(mon->type, PRONOUN_NOCAP_POSSESSIVE));
+                         mons_pronoun(mon->type, PRONOUN_POSSESSIVE));
                 }
                 break;
             case RECITE_CHAOTIC:
@@ -1655,7 +1655,7 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
 
     const std::string whose =
         you.can_see(mon) ? apostrophise(mon->name(DESC_THE))
-                         : mon->pronoun(PRONOUN_CAP_POSSESSIVE);
+                         : mon->pronoun(PRONOUN_POSSESSIVE);
 
     // Remove the monster's soul-enslaving enchantment, as it's no
     // longer needed.
