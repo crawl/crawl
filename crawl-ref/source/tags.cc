@@ -609,17 +609,6 @@ T unmarshall_long_as(reader& th)
 
 level_id unmarshall_level_id(reader& th)
 {
-#if TAG_MAJOR_VERSION == 32
-    if (th.getMinorVersion() < TAG_MINOR_NO_LEVEL_TYPE)
-    {
-        branch_type br = static_cast<branch_type>(unmarshallByte(th));
-        int depth      = unmarshallInt(th);
-        int level_type = unmarshallByte(th);
-        return level_id::from_packed_place(get_packed_place(br,
-                                           level_type ? 0xFF : depth));
-    }
-    else
-#endif
     return level_id::from_packed_place(unmarshallShort(th));
 }
 
@@ -1064,10 +1053,6 @@ static void tag_construct_you(writer &th)
     marshallInt(th, you.sage_bonus_degree);
     marshallShort(th, you.manual_skill);
     marshallInt(th, you.manual_index);
-#if TAG_MAJOR_VERSION == 32
-    // a level might be not yet converted
-    marshallString(th, you.old_level_type_name_abbrev);
-#endif
     marshallByte(th, you.entry_cause);
     marshallByte(th, you.entry_cause_god);
     marshallInt(th, you.abyss_speed);
@@ -1768,26 +1753,6 @@ static void tag_read_you(reader &th)
         you.manual_index  = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 32
     }
-    if (th.getMinorVersion() < TAG_MINOR_NO_LEVEL_TYPE)
-    {
-        int lt = unmarshallByte(th);
-        unmarshallString(th);
-
-        you.old_level_type_name_abbrev = unmarshallString(th);
-        unmarshallString(th);
-        unmarshallString(th);
-        unmarshallString(th);
-        if (lt)
-        {
-            // TODO:LEVEL_STACK: push the old level if != 0
-            level_id lev = level_id::from_packed_place(get_packed_place(
-                               (branch_type)lt, 0xFF));
-            you.where_are_you = lev.branch;
-            you.absdepth0 = absdungeon_depth(lev.branch, lev.depth);
-        }
-    }
-    else // for levels not yet converted
-        you.old_level_type_name_abbrev = unmarshallString(th);
 #endif
 
     you.entry_cause     = static_cast<entry_cause_type>(unmarshallByte(th));
@@ -2241,10 +2206,6 @@ static void tag_read_you(reader &th)
         you.dactions[i] = static_cast<daction_type>(unmarshallByte(th));
 
     you.level_stack.clear();
-#if TAG_MAJOR_VERSION == 32
-    if (th.getMinorVersion() >= TAG_MINOR_NO_LEVEL_TYPE)
-    {
-#endif
     int n_levs = unmarshallInt(th);
     for (int k = 0; k < n_levs; k++)
     {
@@ -2252,9 +2213,6 @@ static void tag_read_you(reader &th)
         pos.load(th);
         you.level_stack.push_back(pos);
     }
-#if TAG_MAJOR_VERSION == 32
-    }
-#endif
 
     // List of currently beholding monsters (usually empty).
     count = unmarshallShort(th);
@@ -2460,16 +2418,6 @@ static PlaceInfo unmarshallPlaceInfo(reader &th)
 {
     PlaceInfo place_info;
 
-#if TAG_MAJOR_VERSION == 32
-    if (th.getMinorVersion() < TAG_MINOR_NO_LEVEL_TYPE)
-    {
-        int lt = unmarshallInt(th);
-        place_info.branch = (branch_type)unmarshallInt(th);
-        if (lt)
-            place_info.branch = place_branch(get_packed_place((branch_type)lt, 0xFF));
-    }
-    else
-#endif
     place_info.branch      = static_cast<branch_type>(unmarshallInt(th));
 
     place_info.num_visits  = unmarshallInt(th);
@@ -2519,14 +2467,6 @@ static void tag_read_you_dungeon(reader &th)
         brdepth[j]    = unmarshallInt(th);
         startdepth[j] = unmarshallInt(th);
     }
-
-#if TAG_MAJOR_VERSION == 32
-    if (th.getMinorVersion() < TAG_MINOR_NO_GEN_LEVELS)
-    {
-        std::set<level_id> Generated_Levels;
-        unmarshallSet(th, Generated_Levels, unmarshall_level_id);
-    }
-#endif
 
     unmarshallMap(th, stair_level,
                   unmarshall_long_as<branch_type>,

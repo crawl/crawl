@@ -168,10 +168,6 @@ public:
   // memory being freed twice.
   KillMaster* kills;
 
-#if TAG_MAJOR_VERSION == 32
-  std::string old_level_type_name_abbrev;
-#endif
-
   branch_type where_are_you;
 
   FixedVector<uint8_t, 30> branch_stairs;

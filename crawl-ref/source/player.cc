@@ -5441,9 +5441,6 @@ void player::init()
         delete kills;
     kills = new KillMaster();
 
-#if TAG_MAJOR_VERSION == 32
-    old_level_type_name_abbrev.clear();
-#endif
     where_are_you    = BRANCH_MAIN_DUNGEON;
 
     branch_stairs.init(0);

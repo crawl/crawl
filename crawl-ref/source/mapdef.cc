@@ -195,33 +195,10 @@ void level_range::write(writer& outf) const
 
 void level_range::read(reader& inf)
 {
-#if TAG_MAJOR_VERSION == 32
-    if (inf.getMinorVersion() < TAG_MINOR_NO_LEVEL_TYPE)
-    {
-        unsigned short lt = unmarshallShort(inf);
-        branch     = static_cast<branch_type>(unmarshallShort(inf));
-        shallowest = unmarshallShort(inf);
-        deepest    = unmarshallShort(inf);
-        deny       = unmarshallByte(inf);
-        if (lt)
-        {
-            // buggy if the place was a portal vault, but the information
-            // is already gone (and no new bug is introduced)
-            branch     = place_branch(upgrade_packed_place(lt | 0xFF00));
-            shallowest = 1;
-            deepest    = brdepth[branch];
-        }
-    }
-    else
-    {
-#endif
     branch     = static_cast<branch_type>(unmarshallShort(inf));
     shallowest = unmarshallShort(inf);
     deepest    = unmarshallShort(inf);
     deny       = unmarshallByte(inf);
-#if TAG_MAJOR_VERSION == 32
-    }
-#endif
 }
 
 std::string level_range::str_depth_range() const

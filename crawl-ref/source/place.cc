@@ -20,17 +20,11 @@ std::string short_place_name(level_id id)
 
 branch_type place_branch(unsigned short place)
 {
-#if TAG_MAJOR_VERSION == 32
-    place = upgrade_packed_place(place);
-#endif
     return static_cast<branch_type>((place >> 8) & 0xFF);
 }
 
 int place_depth(unsigned short place)
 {
-#if TAG_MAJOR_VERSION == 32
-    place = upgrade_packed_place(place);
-#endif
     return place & 0xFF;
 }
 
@@ -44,58 +38,6 @@ unsigned short get_packed_place()
     return get_packed_place(you.where_are_you,
                             subdungeon_depth(you.where_are_you, you.absdepth0));
 }
-
-#if TAG_MAJOR_VERSION == 32
-unsigned short upgrade_packed_place(unsigned short place)
-{
-    // D:-1 ("Buggy Badlands") is used as a magic value by vault definitions
-    if ((place & 0xFF) != 0xFF || place == 0xFF)
-        return place;
-    switch (static_cast<old_level_area_type>(place >> 8))
-    {
-    case OLD_LEVEL_DUNGEON:
-        die("old LEVEL_DUNGEON with no depth");
-    case OLD_LEVEL_LABYRINTH:
-        return get_packed_place(BRANCH_LABYRINTH, 1);
-    case OLD_LEVEL_ABYSS:
-        return get_packed_place(BRANCH_ABYSS, 1);
-    case OLD_LEVEL_PANDEMONIUM:
-        return get_packed_place(BRANCH_PANDEMONIUM, 1);
-    case OLD_LEVEL_PORTAL_VAULT:
-        if (you.old_level_type_name_abbrev == "Spider")
-            return get_packed_place(BRANCH_SPIDER_NEST, 1);
-        else if (you.old_level_type_name_abbrev == "Bazaar")
-            return get_packed_place(BRANCH_BAZAAR, 1);
-        else if (you.old_level_type_name_abbrev == "Trove")
-            return get_packed_place(BRANCH_TROVE, 1);
-        else if (you.old_level_type_name_abbrev == "Sewer")
-            return get_packed_place(BRANCH_SEWER, 1);
-        else if (you.old_level_type_name_abbrev == "Ossuary")
-            return get_packed_place(BRANCH_OSSUARY, 1);
-        else if (you.old_level_type_name_abbrev == "Bailey")
-            return get_packed_place(BRANCH_BAILEY, 1);
-        else if (you.old_level_type_name_abbrev == "IceCv")
-            return get_packed_place(BRANCH_ICE_CAVE, 1);
-        else if (you.old_level_type_name_abbrev == "Volcano")
-            return get_packed_place(BRANCH_VOLCANO, 1);
-        else if (you.old_level_type_name_abbrev == "WizLab")
-            return get_packed_place(BRANCH_WIZLAB, 1);
-        else if (you.old_level_type_name_abbrev.find("Zig:"))
-        {
-            int zig_depth;
-            if (sscanf(you.old_level_type_name_abbrev.c_str(), "Zig:%d", &zig_depth) == 1)
-                return get_packed_place(BRANCH_ZIGGURAT, zig_depth);
-        }
-        // yeah, both cases can happen
-        else if (you.old_level_type_name_abbrev == "ziggurat")
-            return get_packed_place(BRANCH_ZIGGURAT, 1);
-        die("unknown old portal branch: %s", you.old_level_type_name_abbrev.c_str());
-        break;
-    default:
-        die("unknown old level type: %d", place >> 8);
-    }
-}
-#endif
 
 bool single_level_branch(branch_type branch)
 {
