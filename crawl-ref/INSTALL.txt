@@ -147,8 +147,7 @@ usually in /usr/include/ncursesw.)
 
 Building:
 
-* cd to the source directory (you can safely ignore the dolinks.sh and
-  domake.sh scripts).
+* cd to the source directory.
 
 * Most users can simply type 'make' without any extra flags, and get a
   working build as a result.  If just typing 'make' works for you, then you
