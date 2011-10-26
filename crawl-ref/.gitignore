@@ -73,6 +73,16 @@ debuglog.txt
 /source/dat/tiles/player.png
 /source/dat/tiles/gui.png
 /source/dat/tiles/icons.png
+/source/webserver/game_data/static/dngn.png
+/source/webserver/game_data/static/floor.png
+/source/webserver/game_data/static/wall.png
+/source/webserver/game_data/static/feat.png
+/source/webserver/game_data/static/main.png
+/source/webserver/game_data/static/player.png
+/source/webserver/game_data/static/gui.png
+/source/webserver/game_data/static/icons.png
+/source/webserver/game_data/static/tileinfo-*.js
+/source/webserver/static/stone_soup_icon-32x32.png
 
 # Makefile-generated junk
 makefile.dep
