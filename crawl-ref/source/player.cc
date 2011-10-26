@@ -3436,7 +3436,7 @@ void level_change(bool skip_attribute_increase)
 #endif
         }
 
-#if TAG_MAJOR_VERSION == 32
+#if TAG_MAJOR_VERSION <= 33
         note_montiers();
 #endif
 
@@ -5541,7 +5541,7 @@ void player::init()
 
     last_keypress_time = time(0);
 
-#if TAG_MAJOR_VERSION == 32
+#if TAG_MAJOR_VERSION <= 33
     for (unsigned int i = 0; i < ARRAYSZ(montiers); i++)
         montiers[i] = 0;
 #endif

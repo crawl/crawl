@@ -1282,7 +1282,7 @@ static void tag_construct_you(writer &th)
 
     marshallString(th, you.zotdef_wave_name);
 
-#if TAG_MAJOR_VERSION == 32
+#if TAG_MAJOR_VERSION <= 33
     for (unsigned int k = 0; k < ARRAYSZ(you.montiers); k++)
         marshallInt(th, you.montiers[k]);
 #endif
@@ -2245,11 +2245,15 @@ static void tag_read_you(reader &th)
 
     you.zotdef_wave_name = unmarshallString(th);
 
-#if TAG_MAJOR_VERSION == 32
+#if TAG_MAJOR_VERSION <= 33
+# if TAG_MAJOR_VERSION == 32
     if (th.getMinorVersion() >= TAG_MINOR_MON_TIER_STATS)
-        for (unsigned int k = 0; k < ARRAYSZ(you.montiers); k++)
-            you.montiers[k] = unmarshallInt(th);
+# endif
+    for (unsigned int k = 0; k < ARRAYSZ(you.montiers); k++)
+        you.montiers[k] = unmarshallInt(th);
+#endif
 
+#if TAG_MAJOR_VERSION == 32
     if (th.getMinorVersion() >= TAG_MINOR_SPELL_USAGE)
     {
 #endif
