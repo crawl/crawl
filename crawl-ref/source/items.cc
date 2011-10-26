@@ -1882,9 +1882,6 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
             learned_something_new(HINT_SEEN_RANDART);
     }
 
-    if (item.base_type == OBJ_ORBS)
-        unset_branch_flags(BFLAG_HAS_ORB);
-
     _got_item(item, item.quantity);
 
     you.turn_is_over = true;
@@ -1987,9 +1984,6 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
     // Link item to top of list.
     item.link = igrd(p);
     igrd(p) = ob;
-
-    if (item.base_type == OBJ_ORBS)
-        set_branch_flags(BFLAG_HAS_ORB);
 
     return (true);
 }
