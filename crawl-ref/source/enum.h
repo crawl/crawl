@@ -1800,22 +1800,6 @@ enum flight_type
     FL_FLY                             // wings, etc... paralysis == fall
 };
 
-// Reasons for entering the Abyss.
-enum entry_cause_type
-{
-    EC_UNKNOWN,
-    EC_SELF_EXPLICIT,
-    EC_SELF_RISKY,     // i.e., wielding an id'd distorion weapon
-    EC_SELF_ACCIDENT,  // i.e., wielding an un-id'd distortion weapon
-    EC_MISCAST,
-    EC_GOD_RETRIBUTION,
-    EC_GOD_ACT,        // Xom sending the player somewhere for amusement.
-    EC_MONSTER,
-    EC_TRAP,          // Zot traps
-    EC_ENVIRONMENT,   // Hell effects.
-    NUM_ENTRY_CAUSE_TYPES
-};
-
 // Can't change this order without breaking saves.
 enum map_marker_type
 {

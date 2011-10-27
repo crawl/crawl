@@ -205,12 +205,9 @@ static void _post_init(bool newc)
 
     run_map_local_preludes();
 
+    // Abyssal Knights start out in the Abyss.
     if (newc && you.char_direction == GDT_GAME_START)
-    {
-        // Chaos Knights of Lugonu start out in the Abyss.
         you.where_are_you = BRANCH_ABYSS;
-        you.entry_cause   = EC_UNKNOWN;
-    }
 
     // XXX: Any invalid level_id should do.
     level_id old_level;

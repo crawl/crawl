@@ -5557,8 +5557,6 @@ void player::init()
     time_taken          = 0;
     shield_blocks       = 0;
 
-    entry_cause         = EC_SELF_EXPLICIT;
-    entry_cause_god     = GOD_NO_GOD;
     abyss_speed         = 0;
 
     old_hunger          = hunger;

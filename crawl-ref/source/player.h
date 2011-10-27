@@ -316,9 +316,6 @@ public:
 
   int shield_blocks;         // number of shield blocks since last action
 
-  entry_cause_type entry_cause;
-  god_type         entry_cause_god;
-
   // For now, only control the speed of abyss morphing.
   int abyss_speed;
 

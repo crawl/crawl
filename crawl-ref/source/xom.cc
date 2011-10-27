@@ -3846,8 +3846,6 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
     ASSERT(!_player_is_dead());
 #endif
 
-    entry_cause_type old_entry_cause = you.entry_cause;
-
     sever = std::max(1, sever);
 
     god_type which_god = GOD_XOM;
@@ -3950,17 +3948,6 @@ int xom_acts(bool niceness, int sever, int tension, bool debug)
     }
 
     _handle_accidental_death(orig_hp, orig_stat_loss, orig_mutation);
-
-    // Drawing the Xom card from Nemelex's decks of oddities or punishment.
-    if (crawl_state.is_god_acting()
-        && crawl_state.which_god_acting() != GOD_XOM)
-    {
-        if (old_entry_cause != you.entry_cause
-            && you.entry_cause_god == GOD_XOM)
-        {
-            you.entry_cause_god = crawl_state.which_god_acting();
-        }
-    }
 
     if (you.religion == GOD_XOM && one_chance_in(5))
     {
