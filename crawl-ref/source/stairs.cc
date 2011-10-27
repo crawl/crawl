@@ -864,17 +864,14 @@ void down_stairs(dungeon_feature_type force_stair,
     // Fire level-leaving trigger.
     _leaving_level_now(stair_find);
 
-    if (!force_stair && !crawl_state.game_is_arena())
+    // Not entirely accurate - the player could die before
+    // reaching the Abyss.
+    if (!force_stair && old_feat == DNGN_ENTER_ABYSS)
+        mark_milestone("abyss.enter", "entered the Abyss!");
+    else if (stair_find == DNGN_EXIT_ABYSS
+             && you.char_direction != GDT_GAME_START)
     {
-        // Not entirely accurate - the player could die before
-        // reaching the Abyss.
-        if (grd(you.pos()) == DNGN_ENTER_ABYSS)
-            mark_milestone("abyss.enter", "entered the Abyss!");
-        else if (grd(you.pos()) == DNGN_EXIT_ABYSS
-                 && you.char_direction != GDT_GAME_START)
-        {
-            mark_milestone("abyss.exit", "escaped from the Abyss!");
-        }
+        mark_milestone("abyss.exit", "escaped from the Abyss!");
     }
 
     // Interlevel travel data.

@@ -522,44 +522,20 @@ static std::string _who_banished(const std::string &who)
     return (who.empty() ? who : " (" + who + ")");
 }
 
-void banished(dungeon_feature_type gate_type, const std::string &who)
+void banished(const std::string &who)
 {
     ASSERT(!crawl_state.game_is_arena());
     if (crawl_state.game_is_zotdef())
         return;
 
-    if (gate_type == DNGN_ENTER_ABYSS)
-    {
-        mark_milestone("abyss.enter",
-                       "is cast into the Abyss!" + _who_banished(who));
-    }
-    else if (gate_type == DNGN_EXIT_ABYSS)
-    {
-        mark_milestone("abyss.exit",
-                       "escaped from the Abyss!" + _who_banished(who));
-    }
+    mark_milestone("abyss.enter",
+                   "is cast into the Abyss!" + _who_banished(who));
 
-    switch (gate_type)
+    if (player_in_branch(BRANCH_ABYSS))
     {
-    case DNGN_ENTER_ABYSS:
-        if (player_in_branch(BRANCH_ABYSS))
-        {
-            mpr("You feel trapped.");
-            return;
-        }
-        // TODO:LEVEL_STACK
-        break;
-
-    case DNGN_EXIT_ABYSS:
-        if (you.where_are_you != BRANCH_ABYSS)
-        {
-            mpr("You feel dizzy for a moment.");
-            return;
-        }
-        break;
-
-    default:
-        die("Invalid banished() gateway %d", static_cast<int>(gate_type));
+        // Can't happen outside wizmode.
+        mpr("You feel trapped.");
+        return;
     }
 
     // Now figure out how we got here.
@@ -607,7 +583,7 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
     if (!crawl_state.is_god_acting())
         you.entry_cause_god = GOD_NO_GOD;
 
-    if (gate_type == DNGN_ENTER_ABYSS && you.entry_cause != EC_SELF_EXPLICIT)
+    if (you.entry_cause != EC_SELF_EXPLICIT)
     {
         const std::string what = "Cast into the Abyss" + _who_banished(who);
         take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
@@ -615,7 +591,7 @@ void banished(dungeon_feature_type gate_type, const std::string &who)
 
     stop_delay(true);
     push_features_to_abyss();
-    down_stairs(gate_type, you.entry_cause);  // heh heh
+    down_stairs(DNGN_ENTER_ABYSS, you.entry_cause);  // heh heh
 }
 
 bool forget_spell(void)

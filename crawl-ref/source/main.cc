@@ -685,7 +685,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
 
     case 'B':
         if (you.where_are_you != BRANCH_ABYSS)
-            banished(DNGN_ENTER_ABYSS, "wizard command");
+            banished("wizard command");
         else
             down_stairs(DNGN_EXIT_ABYSS);
         break;
@@ -2795,7 +2795,7 @@ static void _check_banished()
         {
             mpr("You are cast into the Abyss!", MSGCH_BANISHMENT);
             more();
-            banished(DNGN_ENTER_ABYSS, you.banished_by);
+            banished(you.banished_by);
         }
         you.banished_by.clear();
     }

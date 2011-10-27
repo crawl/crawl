@@ -3535,7 +3535,7 @@ static int _xom_do_banishment(bool debug = false)
     god_speaks(GOD_XOM, _get_xom_speech("banishment").c_str());
 
     // Handles note taking.
-    banished(DNGN_ENTER_ABYSS, "Xom");
+    banished("Xom");
     const int result = _xom_maybe_reverts_banishment(debug);
 
     return (result);
