@@ -820,7 +820,7 @@ skill_menu_state SkillMenu::get_state(skill_menu_switch sw)
         {
         case SKM_MODE:  return SKM_MODE_MANUAL;
         case SKM_DO:    return SKM_DO_FOCUS;
-        case SKM_SHOW:  return SKM_SHOW_KNOWN;
+        case SKM_SHOW:  return SKM_SHOW_DEFAULT;
         case SKM_LEVEL: return SKM_LEVEL_NORMAL;
         case SKM_VIEW:  return SKM_VIEW_NEW_LEVEL;
         default:        return SKM_NONE;
