@@ -538,60 +538,12 @@ void banished(const std::string &who)
         return;
     }
 
-    // Now figure out how we got here.
-    if (crawl_state.is_god_acting())
-    {
-        // down_stairs() will take care of setting things.
-        you.entry_cause = EC_UNKNOWN;
-    }
-    else if (who.find("self") != std::string::npos || who == you.your_name
-             || who == "you" || who == "You")
-    {
-        you.entry_cause = EC_SELF_EXPLICIT;
-    }
-    else if (who.find("distortion") != std::string::npos)
-    {
-        if (who.find("wield") != std::string::npos)
-        {
-            if (who.find("unknowing") != std::string::npos)
-                you.entry_cause = EC_SELF_ACCIDENT;
-            else
-                you.entry_cause = EC_SELF_RISKY;
-        }
-        else if (who.find("affixation") != std::string::npos)
-            you.entry_cause = EC_SELF_ACCIDENT;
-        else if (who.find("branding")  != std::string::npos)
-            you.entry_cause = EC_SELF_RISKY;
-        else
-            you.entry_cause = EC_MONSTER;
-    }
-    else if (who == "drawing a card")
-        you.entry_cause = EC_SELF_RISKY;
-    else if (who.find("you miscast") != std::string::npos)
-        you.entry_cause = EC_MISCAST;
-    else if (who == "wizard command")
-        you.entry_cause = EC_SELF_EXPLICIT;
-    else if (who.find("effects of Hell") != std::string::npos)
-        you.entry_cause = EC_ENVIRONMENT;
-    else if (who.find("Zot") != std::string::npos)
-        you.entry_cause = EC_TRAP;
-    else if (who.find("trap") != std::string::npos)
-        you.entry_cause = EC_TRAP;
-    else
-        you.entry_cause = EC_MONSTER;
-
-    if (!crawl_state.is_god_acting())
-        you.entry_cause_god = GOD_NO_GOD;
-
-    if (you.entry_cause != EC_SELF_EXPLICIT)
-    {
-        const std::string what = "Cast into the Abyss" + _who_banished(who);
-        take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
-    }
+    const std::string what = "Cast into the Abyss" + _who_banished(who);
+    take_note(Note(NOTE_MESSAGE, 0, 0, what.c_str()), true);
 
     stop_delay(true);
     push_features_to_abyss();
-    down_stairs(DNGN_ENTER_ABYSS, you.entry_cause);  // heh heh
+    down_stairs(DNGN_ENTER_ABYSS);  // heh heh
 }
 
 bool forget_spell(void)

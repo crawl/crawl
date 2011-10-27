@@ -350,35 +350,6 @@ static void _leaving_level_now(dungeon_feature_type stair_used)
     }
 }
 
-static void _set_entry_cause(entry_cause_type default_cause,
-                             branch_type old_branch)
-{
-    ASSERT(default_cause != NUM_ENTRY_CAUSE_TYPES);
-
-    if (old_branch == you.where_are_you && you.entry_cause != EC_UNKNOWN)
-        return;
-
-    if (crawl_state.is_god_acting())
-    {
-        if (crawl_state.is_god_retribution())
-            you.entry_cause = EC_GOD_RETRIBUTION;
-        else
-            you.entry_cause = EC_GOD_ACT;
-
-        you.entry_cause_god = crawl_state.which_god_acting();
-    }
-    else if (default_cause != EC_UNKNOWN)
-    {
-        you.entry_cause     = default_cause;
-        you.entry_cause_god = GOD_NO_GOD;
-    }
-    else
-    {
-        you.entry_cause     = EC_SELF_EXPLICIT;
-        you.entry_cause_god = GOD_NO_GOD;
-    }
-}
-
 static void _update_travel_cache(bool collect_travel_data,
                                  const level_id& old_level,
                                  const coord_def& stair_pos)
@@ -444,8 +415,7 @@ static void _update_travel_cache(bool collect_travel_data,
     }
 }
 
-void up_stairs(dungeon_feature_type force_stair,
-               entry_cause_type entry_cause)
+void up_stairs(dungeon_feature_type force_stair)
 {
     dungeon_feature_type stair_find = (force_stair ? force_stair
                                        : grd(you.pos()));
@@ -462,10 +432,7 @@ void up_stairs(dungeon_feature_type force_stair,
     if (feat_is_bidirectional_portal(stair_find))
     {
         if (!(stair_find == DNGN_ENTER_HELL && player_in_hell()))
-        {
-            down_stairs(force_stair, entry_cause);
-            return;
-        }
+            return down_stairs(force_stair);
     }
     // Probably still need this check here (teleportation) -- bwr
     else if (feat_stair_direction(stair_find) != CMD_GO_UPSTAIRS)
@@ -583,9 +550,6 @@ void up_stairs(dungeon_feature_type force_stair,
 
     load_level(stair_taken, LOAD_ENTER_LEVEL, old_level);
 
-    _set_entry_cause(entry_cause, old_level.branch);
-    entry_cause = you.entry_cause;
-
     you.turn_is_over = true;
 
     save_game_state();
@@ -686,8 +650,7 @@ static bool _is_portal_exit(dungeon_feature_type stair)
         || stair == DNGN_EXIT_PORTAL_VAULT;
 }
 
-void down_stairs(dungeon_feature_type force_stair,
-                 entry_cause_type entry_cause, const level_id* force_dest)
+void down_stairs(dungeon_feature_type force_stair)
 {
     const level_id old_level = level_id::current();
     const dungeon_feature_type old_feat = grd(you.pos());
@@ -711,10 +674,7 @@ void down_stairs(dungeon_feature_type force_stair,
     if (feat_is_bidirectional_portal(stair_find))
     {
         if (stair_find == DNGN_ENTER_HELL && player_in_hell())
-        {
-            up_stairs(force_stair, entry_cause);
-            return;
-        }
+            return up_stairs(force_stair);
     }
     // Probably still need this check here (teleportation) -- bwr
     else if (feat_stair_direction(stair_find) != CMD_GO_DOWNSTAIRS && !shaft)
@@ -853,8 +813,6 @@ void down_stairs(dungeon_feature_type force_stair,
         return;
 
     level_id destination_override = _stair_destination_override();
-    if (force_dest)
-        destination_override = *force_dest;
 
     // All checks are done, the player is on the move now.
 
@@ -1024,9 +982,6 @@ void down_stairs(dungeon_feature_type force_stair,
 
     const bool newlevel = load_level(stair_taken, LOAD_ENTER_LEVEL, old_level);
 
-    _set_entry_cause(entry_cause, old_level.branch);
-    entry_cause = you.entry_cause;
-
     if (newlevel)
     {
         // When entering a new level, reset friendly_pickup to default.
@@ -1064,9 +1019,7 @@ void down_stairs(dungeon_feature_type force_stair,
         case BRANCH_ABYSS:
             generate_random_blood_spatter_on_level();
 
-            // The old code had a bizarre list where a risky act was value
-            // _less_, etc.  Let's look just at these two cases:
-            if (entry_cause == EC_SELF_EXPLICIT)
+            if (!force_stair && old_feat == DNGN_ENTER_ABYSS)
                 xom_is_stimulated(100, XM_INTRIGUED);
             else
                 xom_is_stimulated(200);
@@ -1090,12 +1043,7 @@ void down_stairs(dungeon_feature_type force_stair,
         mpr("You sense a powerful magical force warping space.", MSGCH_WARN);
 
     trackers_init_new_level(true);
-
-    // XXX: Using force_dest to decide whether to save stair info.
-    //      Currently it's only used for Portal, where we don't
-    //      want to mark the destination known.
-    if (!force_dest)
-        _update_travel_cache(collect_travel_data, old_level, stair_pos);
+    _update_travel_cache(collect_travel_data, old_level, stair_pos);
 
     env.map_shadow = env.map_knowledge;
     // Preventing obvious finding of stairs at your position.
