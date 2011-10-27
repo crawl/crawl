@@ -611,6 +611,8 @@ void do_crash_dump()
     snprintf(name, sizeof(name), "%scrash-%s-%s.txt", dir.c_str(),
             you.your_name.c_str(), make_file_time(t).c_str());
 
+    if (!crawl_state.test && !_assert_msg.empty())
+        fprintf(stderr, "\n%s", _assert_msg.c_str());
     fprintf(stderr, "\nWriting crash info to %s\n", name);
     errno = 0;
     FILE* file = crawl_state.test ? stderr : freopen(name, "w+", stderr);
