@@ -257,7 +257,7 @@ const Branch branches[NUM_BRANCHES] = {
       "Sewer", "the sewers", "Sewer",
       NULL,
       false, LIGHTGREY, DARKGREY,
-      mons_null_rare, mons_null_level,
+      mons_sewer_rare, mons_sewer_level,
       '0', false, false, 0 },
 
     { BRANCH_OSSUARY, NUM_BRANCHES, 4, 8, 1, BFLAG_NO_XLEV_TRAVEL, 0,

@@ -3010,3 +3010,35 @@ int mons_tartarus_rare(int mcls)
         return 0;
     }
 }
+
+// Sewers
+int mons_sewer_level(int mcls)
+{
+    int mlev = absdungeon_depth(BRANCH_SEWER, 1);
+
+    if (!mons_sewer_rare(mcls))
+        return 0;
+    return mlev + 1;
+}
+
+int mons_sewer_rare(int mcls)
+{
+    switch (mcls)
+    {
+    case MONS_BAT:
+    case MONS_GIANT_NEWT:
+        return 100;
+
+    case MONS_SMALL_SNAKE:
+    case MONS_OOZE:
+    case MONS_WORM:
+    case MONS_SNAKE:
+    case MONS_GIANT_COCKROACH:
+    case MONS_GIANT_MITE:
+    case MONS_GIANT_GECKO:
+        return 50;
+
+    default:
+        return 0;
+    }
+}
