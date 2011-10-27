@@ -924,7 +924,7 @@ GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/cr
 GENERATED_HEADERS := art-enum.h #the rest are private
 GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mon-mst.h $(RLTILES)/dc-unrand.txt build.h compflag.h
 
-GAME_DEPENDS  := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
+GAME_DEPENDS  := $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 SRC_PKG_BASE  := stone_soup
 SRC_VERSION   := $(shell git describe --tags $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
 
@@ -1298,6 +1298,7 @@ clean-rltiles:
 	+$(MAKE) -C $(RLTILES) distclean
 
 ifdef TILES_ANY
+$(GAME): $(DESTTILEFILES)
 $(OBJECTS:%.o=%.cc): $(TILEDEFHDRS)
 endif
 
