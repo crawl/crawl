@@ -25,7 +25,7 @@ branch_type place_branch(unsigned short place)
 
 int place_depth(unsigned short place)
 {
-    return place & 0xFF;
+    return (int8_t)(place & 0xFF);
 }
 
 unsigned short get_packed_place(branch_type branch, int subdepth)

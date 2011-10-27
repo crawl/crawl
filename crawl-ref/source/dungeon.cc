@@ -117,8 +117,6 @@ static void _hide_doors();
 static void _add_plant_clumps(int frequency = 10, int clump_density = 12,
                               int clump_radius = 4);
 
-static void _portal_vault_level(int level_number);
-
 static void _pick_float_exits(vault_placement &place,
                               std::vector<coord_def> &targets);
 static bool _connect_spotty(const coord_def& from);
@@ -2420,9 +2418,7 @@ static void _pan_level(int level_number)
 // further generation, and true otherwise.
 static bool _builder_by_type(int level_number, branch_type branch)
 {
-    if (is_portal_vault(branch))
-        /*_portal_vault_level(level_number)*/;
-    else if (branch == BRANCH_LABYRINTH)
+    if (branch == BRANCH_LABYRINTH)
         dgn_build_labyrinth_level(level_number);
     else if (branch == BRANCH_ABYSS)
         generate_abyss();
@@ -2433,92 +2429,6 @@ static bool _builder_by_type(int level_number, branch_type branch)
 
     return false;
 }
-
-#if 0
-static void _portal_vault_level(int level_number)
-{
-    env.level_build_method += " portal_vault_level";
-    env.level_layout_types.insert("portal vault");
-
-    // level_type_tag may contain spaces for human readability, but the
-    // corresponding vault tag name cannot use spaces, so force spaces to
-    // _ when searching for the tag.
-    const std::string trimmed_name =
-        replace_all(trimmed_string(you.level_type_tag), " ", "_");
-
-    ASSERT(!trimmed_name.empty());
-
-    const char* level_name = trimmed_name.c_str();
-
-    const map_def *vault = random_map_for_place(level_id::current(), false);
-
-#ifdef WIZARD
-    if (!vault && you.wizard && map_count_for_tag(level_name, false) > 1)
-    {
-        char buf[80];
-
-        do
-        {
-            mprf(MSGCH_PROMPT, "Which %s (ESC or ENTER for random): ",
-                 level_name);
-            if (cancelable_get_line(buf, sizeof buf))
-                break;
-
-            std::string name = buf;
-            trim_string(name);
-
-            if (name.empty())
-                break;
-
-            lowercase(name);
-            name = replace_all(name, " ", "_");
-
-            // Allow finding e.g. "sewer_kobolds" with just "kobolds".
-            vault = find_map_by_name(you.level_type_tag + "_" + name);
-
-            // Allow finding the map with the full name.
-            if (!vault && find_map_by_name(name))
-                if (find_map_by_name(name)->has_tag(you.level_type_tag))
-                    vault = find_map_by_name(name);
-
-            if (!vault)
-                mprf(MSGCH_DIAGNOSTICS, "No such %s, try again.",
-                     level_name);
-        }
-        while (!vault);
-    }
-#endif
-
-    if (!vault)
-        vault = random_map_for_tag(level_name, false);
-
-    if (!vault)
-        vault = find_map_by_name("broken_portal");
-
-    if (vault)
-    {
-        // XXX: This is pretty hackish, I confess.
-        if (vault->border_fill_type != DNGN_ROCK_WALL)
-            dgn_replace_area(0, 0, GXM-1, GYM-1, DNGN_ROCK_WALL,
-                             vault->border_fill_type);
-
-        dgn_ensure_vault_placed(_build_primary_vault(level_number, vault),
-                                 true);
-    }
-    else
-        die("No maps or tags named '%s', and no backup either.", level_name);
-
-    link_items();
-
-    // TODO: Let portal vault map have arbitrary properties which can
-    // be passed onto the callback.
-    callback_map::const_iterator
-        i = level_type_post_callbacks.find(you.level_type_tag);
-
-    if (i != level_type_post_callbacks.end())
-        dlua.callfn(i->second.c_str(), 0, 0);
-}
-#endif
 
 static const map_def *_dgn_random_map_for_place(bool minivault)
 {
@@ -2975,9 +2885,7 @@ static void _builder_normal(int level_number)
     }
 
     if (use_random_maps)
-    {
         vault = random_map_in_depth(level_id::current());
-    }
 
     // We'll accept any kind of primary vault in the main dungeon, but only
     // ORIENT: encompass primary vaults in other branches. Other kinds of vaults

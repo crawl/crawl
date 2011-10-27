@@ -5,7 +5,7 @@
 # This represents the old 8/9 chance of *not* placing a regular vault.
 NAME: primary_dummy
 TAGS: dummy
-DEPTH: 1-100, Pan, Abyss
+DEPTH: 1-100, !Hive, !Zig, !Lab, !Bazaar, !Trove, !Sewer, !Ossuary, !Bailey, !IceCv, !Volcano, !WizLab
 ORIENT: float
 CHANCE: 0 : 0 (D:26-27), 0 : 5000 (D:24-25), 0 : 7500 (D:20-23), 0 : 8888
 MAP
