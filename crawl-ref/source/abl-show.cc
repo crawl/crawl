@@ -64,6 +64,7 @@
 #include "spl-summoning.h"
 #include "spl-miscast.h"
 #include "spl-util.h"
+#include "stairs.h"
 #include "state.h"
 #include "areas.h"
 #include "transform.h"
@@ -2472,7 +2473,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_LUGONU_ABYSS_EXIT:
-        banished(DNGN_EXIT_ABYSS);
+        down_stairs(DNGN_EXIT_ABYSS);
         break;
 
     case ABIL_LUGONU_BEND_SPACE:
@@ -2526,7 +2527,7 @@ static bool _do_ability(const ability_def& abil)
 
         bool note_status = notes_are_active();
         activate_notes(false);  // This banishment shouldn't be noted.
-        banished(DNGN_ENTER_ABYSS);
+        banished();
         activate_notes(note_status);
         break;
     }
