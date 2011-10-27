@@ -775,7 +775,7 @@ bool melee_attack::attack()
 
         handle_phase_hit();
     }
-    else if (ev_margin > 0)
+    else if (ev_margin >= 0)
     {
         if (attacker != defender && attack_warded_off())
         {
@@ -916,7 +916,7 @@ void melee_attack::adjust_noise()
             break;
 
         default:
-            die("Unhandled attack flavour for noise_factor");
+            die("Unhandled attack flavour for noise_factor "+attk_type);
             break;
         }
 
