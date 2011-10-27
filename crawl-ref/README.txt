@@ -24,17 +24,19 @@ If you'd like to dive in immediately, your best bets are to
 * for studious readers, browse the manual (see below for all doc files).
 
 Internet play:
-You can play Crawl online, both competing with other players and watching
-them. Check the homepage at http://crawl.akrasiac.org/ for details, including
-information about additional servers. You just need a ssh or telnet console;
-on Windows, the PuTTY program works very well. Read docs/ssh_guide.txt
-for a step by step guide on how to set this up.
+You can play Crawl online, both competing with other players and
+watching them. Check the homepage at
+http://crawl.develz.org/wordpress/howto for details, including
+information about additional servers. You just need a ssh or telnet
+console; on Windows, the PuTTY program works very well. Read
+docs/ssh_guide.txt for a step by step guide on how to set this up.
 
 Tiles:
 Crawl features an alternative to the classical ASCII display; Tile-based
 Crawl is often a lot more accessible to new players. Tiles are available for
 Linux, Windows and OS X.
-Unfortunately, it is not yet possible to combine tiles and Internet play.
+Tile-based Crawl can also be played online on https://tiles.crawl.develz.org,
+although it does not support all features of local Tiles yet.
 
 
 2. File system
