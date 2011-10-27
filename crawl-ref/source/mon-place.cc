@@ -501,8 +501,9 @@ monster_type pick_random_monster(const level_id &place, int power,
     if (place == BRANCH_ECUMENICAL_TEMPLE)
         return (MONS_PROGRAM_BUG);
 
-    if (is_portal_vault(place.branch))
+    if (is_portal_vault(place.branch) && !branch_has_monsters(place.branch))
     {
+        dprf("No valid monsters for place, doing protal vault fallback.");
         monster_type      base_type = (monster_type) 0;
         coord_def         dummy1;
         dungeon_char_type dummy2;
@@ -775,7 +776,8 @@ static monster_type _resolve_monster_type(monster_type mon_type,
                 return (mon_type);
             }
         }
-        else if (is_portal_vault(you.where_are_you))
+        else if (is_portal_vault(you.where_are_you)
+                 && !branch_has_monsters(you.where_are_you))
         {
             // XXX: We don't have a random monster list here, so pick one
             // from where we were.
