@@ -208,7 +208,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, BLACK, BLACK, // set specially
       mons_abyss_rare, mons_abyss_level,
-      '0', false, false, 0 },
+      'J', false, false, 0 },
 
     { BRANCH_PANDEMONIUM, NUM_BRANCHES, DEPTH_PAN, DEPTH_PAN,
           1, BFLAG_NO_XLEV_TRAVEL, 0,
@@ -217,7 +217,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       true, BLACK, BLACK, // set specially from monster set
       mons_pan_rare, mons_pan_level,
-      '0', false, false, 0 },
+      'R', false, false, 0 },
 
     { BRANCH_ZIGGURAT, NUM_BRANCHES, 27, 27, 27, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
@@ -225,7 +225,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, BLACK, BLACK,
       mons_null_rare, mons_null_level, // overridden later
-      '0', false, false /* maybe, but Zig:26 is almost as bad */, 0 },
+      'Q', false, false /* maybe, but Zig:26 is almost as bad */, 0 },
 
     { BRANCH_LABYRINTH, NUM_BRANCHES, 10, 20, 1, BFLAG_NO_XLEV_TRAVEL,
           LFLAG_NO_TELE_CONTROL | LFLAG_NO_MAP,
@@ -242,7 +242,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, BLUE, YELLOW,
       mons_null_rare, mons_null_level,
-      '0', false, false, 0 },
+      '1', false, false, 0 },
 
     { BRANCH_TROVE, NUM_BRANCHES, 10, 27, 1, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
@@ -250,7 +250,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, DARKGREY, BLUE,
       mons_null_rare, mons_null_level,
-      '0', false, false, 0 },
+      '2', false, false, 0 },
 
     { BRANCH_SEWER, NUM_BRANCHES, 3, 6, 1, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
@@ -258,7 +258,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, LIGHTGREY, DARKGREY,
       mons_sewer_rare, mons_sewer_level,
-      '0', false, false, 0 },
+      '3', false, false, 0 },
 
     { BRANCH_OSSUARY, NUM_BRANCHES, 4, 8, 1, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
@@ -266,7 +266,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, WHITE, YELLOW,
       mons_null_rare, mons_null_level,
-      '0', false, false, 0 },
+      '4', false, false, 0 },
 
     { BRANCH_BAILEY, NUM_BRANCHES, 7, 16, 1, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
@@ -274,7 +274,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, WHITE, LIGHTGREY,
       mons_null_rare, mons_null_level,
-      '0', false, false, 0 },
+      '5', false, false, 0 },
 
     { BRANCH_ICE_CAVE, NUM_BRANCHES, 11, 19, 1, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
@@ -282,7 +282,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, BLUE, WHITE,
       mons_null_rare, mons_null_level,
-      '0', false, false, 0 },
+      '6', false, false, 0 },
 
     { BRANCH_VOLCANO, NUM_BRANCHES, 8, 21, 1, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
@@ -290,7 +290,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, RED, RED,
       mons_null_rare, mons_null_level,
-      '0', false, false, 0 },
+      '7', false, false, 0 },
 
     { BRANCH_WIZLAB, NUM_BRANCHES, 22, 27, 1, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
@@ -298,7 +298,7 @@ const Branch branches[NUM_BRANCHES] = {
       NULL,
       false, LIGHTGREY, BROWN, // set per-map
       mons_null_rare, mons_null_level,
-      '0', false, false, 0 },
+      '8', false, false, 0 },
 };
 
 #endif
