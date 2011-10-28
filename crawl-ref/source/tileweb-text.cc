@@ -125,7 +125,7 @@ void WebTextArea::send(bool force)
             {
                 while (space_count)
                 {
-                    html << "&nbsp;";
+                    html << " ";
                     space_count--;
                 }
             }
@@ -144,9 +144,6 @@ void WebTextArea::send(bool force)
             {
                 switch (chr)
                 {
-                case ' ':
-                    html << "&nbsp;";
-                    break;
                 case '<':
                     html << "&lt;";
                     break;
