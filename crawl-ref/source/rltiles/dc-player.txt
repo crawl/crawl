@@ -1,5 +1,5 @@
 %name player
-%startvalue TILE_MAIN_MAX tiledef-main.h
+%startvalue TILE_MAIN_MAX main
 %prefix TILEP
 
 %include dc-demon.txt

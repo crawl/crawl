@@ -1,5 +1,4 @@
-map_knowledge = function ()
-{
+define(["jquery", "./enums"], function ($, enums) {
     var k = {};
     var monster_table = {};
     var dirty_locs = [];
@@ -28,7 +27,7 @@ map_knowledge = function ()
     function visible(x, y)
     {
         var cell = get(x, y);
-        if (cell.t && ((cell.t.bg & TILE_FLAG_UNSEEN) == 0))
+        if (cell.t && ((cell.t.bg & enums.TILE_FLAG_UNSEEN) == 0))
             return true;
         return false;
     }
@@ -206,4 +205,4 @@ map_knowledge = function ()
             return bc;
         },
     };
-} ();
+});

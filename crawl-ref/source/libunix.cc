@@ -793,7 +793,7 @@ void delay(unsigned int time)
 {
 #ifdef USE_TILE_WEB
     tiles.redraw();
-    tiles.send_message("delay(%d);", time);
+    tiles.send_message("{msg:'delay',t:%d}", time);
 #endif
 
     refresh();

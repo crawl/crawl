@@ -1,6 +1,6 @@
 %name wall
 %prefix TILE
-%startvalue TILE_FLOOR_MAX tiledef-floor.h
+%startvalue TILE_FLOOR_MAX floor
 
 %sdir dc-dngn/wall
 

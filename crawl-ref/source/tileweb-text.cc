@@ -173,7 +173,8 @@ void WebTextArea::send(bool force)
         {
             if (!sending)
             {
-                tiles.write_message("txt('%s',{", m_client_side_name.c_str());
+                tiles.write_message("{msg:'txt',id:'%s',lines:{",
+                                    m_client_side_name.c_str());
                 sending = true;
             }
 
@@ -181,7 +182,7 @@ void WebTextArea::send(bool force)
         }
     }
     if (sending)
-        tiles.send_message("});");
+        tiles.send_message("}}");
 }
 
 void WebTextArea::on_resize()
