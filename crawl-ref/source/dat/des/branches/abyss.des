@@ -366,6 +366,7 @@ MAP
  1.1
 ENDMAP
 
+
 ###############################################################################
 # abyss exit vaults
 ###############################################################################
@@ -818,19 +819,20 @@ ENDMAP
 
 ###################################################################
 # Distorted/chaotic kobolds (abyss exit version!) (Jude)
-NAME:       due_exit_kobolds
-TAGS:       no_rotate abyss_exit allow_dup
-SUBST:      y  = c.
-COLOUR:     1. = random
-MARKER:     P  = lua:fog_machine { cloud_type="blue smoke", walk_dist=1, \
-            size=9, pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
-            spread_rate=3, start_clouds=1, colour="blue" }
-KFEAT:      _ = altar_lugonu
-KFEAT:      P = enter_abyss
-KMONS:      1 = big kobold w:10 ; quick blade ego:distortion w:6 | sabre ego:distortion | \
-            short sword ego:distortion / big kobold w:80 ; short sword | sabre | \
-            quick blade w:3
-KFEAT:      P = exit_abyss
+NAME:   due_exit_kobolds
+TAGS:   no_rotate abyss_exit allow_dup
+SUBST:  y  = c.
+COLOUR: 1. = random
+MARKER: P  = lua:fog_machine { cloud_type="blue smoke", walk_dist=1, \
+             size=9, pow_max=20, delay=10, buildup_amnt=14, buildup_time=7, \
+             spread_rate=3, start_clouds=1, colour="blue" }
+KFEAT:  _ = altar_lugonu
+KFEAT:  P = enter_abyss
+KMONS:  1 = big kobold w:80 ; short sword | sabre | quick blade w:3 /\
+            big kobold w:10 ; quick blade ego:distortion w:6 | \
+                              sabre ego:distortion | short sword ego:distortion
+            
+KFEAT:  P = exit_abyss
 MAP
   ccccc
  cc...cc
@@ -850,16 +852,16 @@ ENDMAP
 ###################################################################
 # < bmh> I got the idea after I introduced a bug where the whole floor of
 #        the abyss turned into altars
-NAME: abyss_xom_lugonu_altar
-TAGS: abyss allow_dup
+NAME:   bmh_abyss_xom_lugonu_altar
+TAGS:   abyss allow_dup
 COLOUR: " : magenta w:2 / white
-KFEAT: _ = altar_lugonu
-KFEAT: X = altar_xom
-SUBST: a = XXX"
-SUBST: b = X"
-SUBST: c = XX"
-SUBST: d = X""
-SUBST: e = X"""
+KFEAT:   _ = altar_lugonu
+KFEAT:   X = altar_xom
+SUBST:   a = XXX"
+SUBST:   b = X"
+SUBST:   c = XX"
+SUBST:   d = X""
+SUBST:   e = X"""
 MAP
    ebe
   dcacd
@@ -868,4 +870,155 @@ MAP
  ec"""ce
   dcacd
    ebe
+ENDMAP
+
+NAME:   bmh_abyss_demonologist_exit
+TAGS:   abyss_exit allow_dup no_monster_gen
+MONS:   generate_awake deep elf demonologist
+MONS:   generate_awake kobold demonologist
+MONS:   generate_awake orc sorcerer name:orc_demonologist name_replace name_descriptor
+MONS:   generate_awake lich name:lich_demonologist name_replace name_descriptor \
+                            spells:shadow_creatures;summon_greater_demon
+SUBST:  d = ccxxW....
+SUBST:  e = ccxxW...
+SUBST:  f = ccxxW..
+SUBST:  w = WW'..
+SUBST:  ' = B..
+SUBST:  " = B.
+KFEAT:  0 = exit_abyss
+KFEAT:  B = floor
+KPROP:  B = bloody
+MARKER: + = lua:props_marker { \
+            door_open_prompt="This door is covered in dire warnings. " .. \
+                             "Open it anyway?", \
+            door_description_prefix="warning-scrawled " \
+            }
+MAP
+fffffffffffffffffff
+feeeeeeeeeeeeeeeeef
+fedddddddddddddddef
+fedd....cnc....ddef
+fed..ccccWcccc..def
+fed..c1lw0wl2c..def
+fed..clnWWWnlc..def
+fed..cwwWWWwwc..def
+fed..cwwwWwwwc..def
+fed..clnwwwnlc..def
+fed..c3l"""l4c..def
+fed..ccc"""ccc..def
+fed....c+++c....def
+fedd...'''''...ddef
+fedddddddddddddddef
+feeeeeeeeeeeeeeeeef
+fffffffffffffffffff
+ENDMAP
+
+# Accompanied by a decoy vault, so that the silence field does not
+# give the exit away.
+NAME:   bmh_abyss_silent_exit
+WEIGHT: 5
+TAGS:   abyss_exit allow_dup no_monster_gen
+MONS:   silent spectre
+KFEAT:  0 = exit_abyss
+SUBST:  c = cx..
+SUBST:  d = cx....
+SUBST:  x = cxxv
+SUBST:  M : TEHS
+KMONS:  T = generate_awake patrolling frost giant
+KMONS:  E = generate_awake patrolling fire giant
+KMONS:  H = generate_awake patrolling hellephant
+KMONS:  S = generate_awake patrolling storm dragon
+NSUBST: T = 6:T / *:.
+NSUBST: E = 5:E / *:.
+NSUBST: H = 5:H / *:.
+NSUBST: S = 4:S / *:.
+MARKER: + = lua:props_marker { \
+            door_open_prompt="This door is covered in dire warnings. " .. \
+                             "Open it anyway?", \
+            door_description_prefix="warning-scrawled " \
+        }
+MAP
+    ddddddd
+  xxxxxxxxxxx
+ xxcccccccccxx
+dxcc...0...ccxd
+ xxc.MMMMM.cxx
+ dxc.MbbbM.cxd
+ dxc.Mb1bM.cxd
+ xxc.MbbbM.cxx
+dxcc.MMMMM.ccxd
+dxxccc...cccxxd
+ dxxxx+++xxxxd
+   dcc...ccd
+      @@@
+ENDMAP
+
+# Decoy vault for bmh_abyss_silent_exit.
+# Not an exit vault, still placed here.
+# The vault is good Abyss furniture anyway, the silence field is interesting
+# and we don't have to worry about abyssical bubbles either.
+NAME:  bmh_abyss_silent_decoy_vault
+TAGS:  abyss no_monster_gen no_item_gen no_tele_into
+MONS:  generate_awake silent spectre
+SUBST: a = xx.
+SUBST: b = xx..
+SUBST: c = x...
+SUBST: x = xxxcccvvb
+MAP
+ cccccccccccccccccc
+cbxxxaaaaxxxaaaaxxxbc
+cbx.xxxxxx.xxxxxx.xbc
+cax.......1.......xac
+cbx.xxxxxx.xxxxxx.xbc
+cbxxxaaaaxxxaaaaxxxbc
+ ccccccccccccccccccc
+ENDMAP
+
+# Lower weight: this one will kill early Abyss visitors.
+# TODO: Once Abyss monster generation takes into account the player (e.g. time
+#       spent), we can adjust the horror/executioner probabilities.
+NAME:   bmh_executioner_abyss_exit
+WEIGHT: 3
+TAGS:   abyss_exit allow_dup
+KFEAT:  0 = exit_abyss
+NSUBST: E = 2:1 / 2:2 / *:.
+COLOUR: ' = gold
+MONS: executioner
+MONS: unseen horror
+MAP
+      xxx xxx
+     xx.xx xx.xx
+    xxEvExxxxEvExx
+@vvvv.vvv.vv.vvv.vvvvvvvvvv
+''''''''''''''''''0''''''Ev
+ vvvvvvv.vvv.vv.vvv.vvvvvvv
+       xxEvExxxxExExx
+        xx.xx xx.xx
+         xxx xxx
+ENDMAP
+
+NAME:  bmh_abyss_fiendish_exit
+TAGS:  abyss_exit allow_dup no_monster_gen
+KMONS: F = patrolling pit fiend 
+KFEAT: F = floor
+KFEAT: 0 = exit_abyss
+KFEAT: % = floor
+KFEAT: B = floor
+KITEM: % = human skeleton / elf skeleton / dwarf skeleton / orc skeleton
+SUBST: c = ccvm
+SUBST: S = %%.
+SUBST: B = BB.
+SUBST: b = B..
+KPROP: B = bloody
+KPROP: F = bloody
+MAP
+    .
+   .c.
+  .bSb.
+ .bBBBb.
+.cSF0FSc.
+ .bBBBb.
+  .bSb.
+   .c.
+    .
 ENDMAP
