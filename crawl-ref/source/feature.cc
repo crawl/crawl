@@ -35,11 +35,12 @@ void apply_feature_overrides()
         const feature_override      &fov    = Options.feature_overrides[i];
         const feature_def           &ofeat  = fov.override;
         feature_def                 &feat   = Features[fov.object];
+        ucs_t c;
 
-        if (ofeat.symbol)
-            feat.symbol = ofeat.symbol;
-        if (ofeat.magic_symbol)
-            feat.magic_symbol = ofeat.magic_symbol;
+        if (ofeat.symbol && (c = get_glyph_override(ofeat.symbol)))
+            feat.symbol = c;
+        if (ofeat.magic_symbol && (c = get_glyph_override(ofeat.magic_symbol)))
+            feat.magic_symbol = c;
         if (ofeat.colour)
             feat.colour = ofeat.colour;
         if (ofeat.map_colour)
@@ -58,11 +59,11 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
     switch(feat)
     {
         case DNGN_UNSEEN:
+        case DNGN_EXPLORE_HORIZON:
         default:
             break;
 
         case DNGN_ROCK_WALL:
-        case DNGN_SLIMY_WALL:
         case DNGN_PERMAROCK_WALL:
             f.dchar        = DCHAR_WALL;
             f.colour       = ETC_ROCK;
@@ -72,7 +73,14 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
 
         case DNGN_STONE_WALL:
             f.dchar        = DCHAR_WALL;
-            f.colour       = ETC_STONE;
+            f.colour       = LIGHTGRAY;
+            f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
+            f.minimap      = MF_WALL;
+            break;
+
+        case DNGN_SLIMY_WALL:
+            f.dchar        = DCHAR_WALL;
+            f.colour       = LIGHTGREEN;
             f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
             f.minimap      = MF_WALL;
             break;
@@ -100,10 +108,23 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap      = MF_WALL;
             break;
 
+        case DNGN_SWAMP_TREE:
+            f.dchar        = DCHAR_TREE;
+            f.magic_symbol = Options.char_table[ DCHAR_WALL_MAGIC ];
+            f.colour       = ETC_SWAMP_TREE;
+            f.minimap      = MF_WALL;
+            break;
+
         case DNGN_OPEN_SEA:
             f.dchar        = DCHAR_WALL;
             f.colour       = BLUE;
             f.minimap      = MF_WATER;
+            break;
+
+        case DNGN_LAVA_SEA:
+            f.dchar        = DCHAR_WAVY;
+            f.colour       = RED;
+            f.minimap      = MF_LAVA;
             break;
 
         case DNGN_OPEN_DOOR:
@@ -185,13 +206,6 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap      = MF_FLOOR;
             break;
 
-        case DNGN_FLOOR_SPECIAL:
-            f.dchar        = DCHAR_FLOOR;
-            f.colour       = YELLOW;
-            f.magic_symbol = Options.char_table[ DCHAR_FLOOR_MAGIC ];
-            f.minimap      = MF_FLOOR;
-            break;
-
         case DNGN_EXIT_HELL:
             f.dchar       = DCHAR_ARCH;
             f.colour      = LIGHTRED;
@@ -227,6 +241,13 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.colour     = BROWN;
             f.dchar      = DCHAR_TRAP;
             f.map_colour = BROWN;
+            f.minimap    = MF_TRAP;
+            break;
+
+        case DNGN_TRAP_WEB:
+            f.colour     = LIGHTGREY;
+            f.dchar      = DCHAR_TRAP;
+            f.map_colour = LIGHTGREY;
             f.minimap    = MF_TRAP;
             break;
 
@@ -274,7 +295,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap     = MF_STAIR_BRANCH;
             break;
 
-        case DNGN_TEMP_PORTAL:
+        case DNGN_MALIGN_GATEWAY:
             f.dchar       = DCHAR_ARCH;
             f.colour      = ETC_SHIMMER_BLUE;
             f.map_colour  = LIGHTGREY;
@@ -403,7 +424,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap     = MF_STAIR_BRANCH;
             break;
 
-        case DNGN_ENTER_DWARF_HALL:
+        case DNGN_ENTER_DWARVEN_HALL:
         case DNGN_ENTER_ORCISH_MINES:
         case DNGN_ENTER_HIVE:
         case DNGN_ENTER_LAIR:
@@ -417,6 +438,8 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
         case DNGN_ENTER_TOMB:
         case DNGN_ENTER_SWAMP:
         case DNGN_ENTER_SHOALS:
+        case DNGN_ENTER_SPIDER_NEST:
+        case DNGN_ENTER_FOREST:
             f.colour      = YELLOW;
             f.dchar       = DCHAR_STAIRS_DOWN;
             f.flags      |= FFT_NOTABLE;
@@ -434,7 +457,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap     = MF_STAIR_BRANCH;
             break;
 
-        case DNGN_RETURN_FROM_DWARF_HALL:
+        case DNGN_RETURN_FROM_DWARVEN_HALL:
         case DNGN_RETURN_FROM_ORCISH_MINES:
         case DNGN_RETURN_FROM_HIVE:
         case DNGN_RETURN_FROM_LAIR:
@@ -448,6 +471,8 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
         case DNGN_RETURN_FROM_TOMB:
         case DNGN_RETURN_FROM_SWAMP:
         case DNGN_RETURN_FROM_SHOALS:
+        case DNGN_RETURN_FROM_SPIDER_NEST:
+        case DNGN_RETURN_FROM_FOREST:
             f.colour      = YELLOW;
             f.dchar       = DCHAR_STAIRS_UP;
             f.map_colour  = GREEN;

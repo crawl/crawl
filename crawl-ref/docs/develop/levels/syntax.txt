@@ -42,10 +42,15 @@ Terrain
 
 Features
 --------
- @ - entry point - must be on outside edge. If you use ORIENT: float, and do
-     not use any @, the dungeon builder will connect at least one floorspace on
-     the edge of your map to the rest of the level; if there is no floorspace
-     on the edge of your map, it will be isolated.
+ @ - Entry point - must be on outside edge. This point will be connected to the
+     rest of the level with a corridor for both normal vaults and minivaults.
+     If a normal vault, or a minivault tagged 'mini_float', has no entry points
+     defined, random traversable squares on its edge will be chosen and
+     connected, as if they had the @ glyph.
+
+     The + and = glyphs, when placed on the edge of the map, are also considered
+     entry points.
+
  }{ - Stone stairs - You must be able to reach these from each other. The
       { upstair is also the stair on which the player will enter the
       dungeon for entry vaults.
@@ -72,7 +77,7 @@ Features
      NOTE: F used to put down a granite Statue most of the time but occasionally
      Orange or Silver or Ice statues (1 in 100). You can reproduce this by using
      F on the map together with
-     SUBST:   F = G:100 F:1
+     SUBST:   F = G:99 F:1
      KMONS:   F = orange crystal statue / silver statue / ice statue
 
  T - Water fountain
@@ -86,7 +91,6 @@ Items
  % - normal item
  * - higher level item (good)
  | - acquirement-level item (almost guaranteed excellent)
- O - place an appropriate rune here. For portal vaults, place the portal here.
  d-k - item array item. See section below on ITEM: arrays for more info.
 
 NOTE: The P (place a rune here with 1/3 chance) and R (place a honeycomb with
@@ -94,6 +98,14 @@ NOTE: The P (place a rune here with 1/3 chance) and R (place a honeycomb with
       produce the desired behaviour using
       SUBST: P = O..
       KITEM: R = w:2 honeycomb / w:1 royal jelly
+
+      The O symbol has been removed. It used to either place an appropriate
+      rune, or an appropriate substitution for a rune (a staircase into a branch
+      in branch entry vaults, a portal in portal entry vaults). This behaviour
+      can be produced with appropriate KITEM and KFEAT lines, for example:
+      KITEM: O = decaying rune of Zot
+      KFEAT: O = enter_swamp
+      KFEAT: O = enter_portal_vault
 
 Monsters
 --------
@@ -201,24 +213,30 @@ DEPTH:    For random vaults, branch entry vaults, and minivaults, this
           constraints from the closest preceding default-depth: line. If there
           is no preceding default-depth directive in the .des file, the map will
           have no DEPTH: constraint. Note that maps without a DEPTH: constraint
-          cannot be selected as random vaults or minivaults.
+          cannot be selected as random vaults or minivaults. It can make sense
+          to use an empty DEPTH line as in
 
-CHANCE:   <priority>:<roll> or <roll>
+            DEPTH:
+
+          if these maps are otherwise chosen, e.g. by TAG. See serial_ponds.des
+          for an example. When doing this, make sure that there is no
+          default-depth line handing out a depth! (This can mean that you are
+          better off with a new des file for elaborate vaults.)
+
+CHANCE:   <priority>:<roll> or <roll> [ (<depth-ranges>) ]
 
           CHANCE allows you to control the probability that your map
           is used on any given level with an absolute roll.
 
           There are two ways to specify the CHANCE roll:
 
-          CHANCE: 500
+          CHANCE: 501
           or
-          CHANCE: 5%
+          CHANCE: 5.01%
 
           If specified as a raw number, the chance of selecting the
           vault is <number> in 10000. If specified as a percentage,
           the chance of selecting the vault is <perc> * 100 in 10000.
-          Note that CHANCE accepts only integers, no fractions or
-          decimals.
 
           CHANCE is useful for random vaults with a DEPTH (or
           default-depth) setting that want to ensure a certain chance
@@ -237,7 +255,7 @@ CHANCE:   <priority>:<roll> or <roll>
           This specifies a CHANCE of 80%, which means the dummy will
           be used in 80% of vault placement attempts.
 
-          The Lua equivalent of the two CHANCE forms is:
+          The Lua equivalent of the two simple CHANCE forms is:
 
           : chance(<number>)
           : chance(<priority>, <number>)
@@ -266,12 +284,44 @@ CHANCE:   <priority>:<roll> or <roll>
           tagged chance_xxx, then one map of that set will be used
           when the chance is met.
 
+          In some cases you'd like to set a different CHANCE based on where
+          the vault is being placed. For instance:
+
+          NAME: ziggurat_portal
+          CHANCE: 5% (Pan), 2% (D:*, Lair:2-4), 3%
+
+          If you specify a depth range in parentheses after a chance
+          spec, that spec applies only in that depth range. Each
+          chance's depth range will be checked in the order specified,
+          with the exception of the default chance (3% in this example)
+          which is always checked last.
+
+          The Lua equivalent of depth-constrained CHANCE:
+          CHANCE: 2% (D:*, Lair:2-4), 0 : 50% (Geh)
+          is as:
+          : depth_chance("D:*, Lair:2-4", 200)
+          : depth_chance("Geh", 0, 5000)
+
+
 WEIGHT:   (number with 10 being default)
           For entry vaults and any other vaults randomly picked from among
           a set, this type of line affects the likelihood of the given vault
           being picked in a given game. The default WEIGHT: is 10. The
           likelihood of a vault getting picked is:
           [vault's WEIGHT: / sum of all WEIGHT:s of vaults of that type]
+
+          As with CHANCE, you may constrain weights to apply only in certain
+          depths:
+
+          WEIGHT: 100 (D:2-4), 20 (Crypt, Zot)
+
+          (Note that the default weight is always 10 unless explicitly
+          changed)
+
+          The Lua equivalent of a depth-constrained WEIGHT:
+          WEIGHT: 100 (D:2-4)
+          is
+          : depth_weight("D:2-4", 100)
 
 PLACE:    Used to specify certain special levels. Existing special levels
           include most branch ends.
@@ -320,7 +370,8 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
           * "mini_float": applicable only to minivaults, requests that
              the dungeon builder pick random exits from the minivault and
              connect it to the rest of the level, similar to the exit behaviour
-             for floating vaults.
+             for floating vaults. Has no effect if the minivault has explicitly
+             defined exits (the @ glyph).
           * "no_monster_gen": Prevents random monster generation at the time of
              the vault's creation. Highly advised for entry vaults with a
              player-hostile geography, MUST-HAVE for those with water/lava.
@@ -333,8 +384,6 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              use this tag.
           * "no_trap_gen": Prevents random trap generation at the time of the
              vault's creation.
-          * "no_shop_gen": Prevents random shop generation at the time of the
-             vault's creation.
           * "uniq_BAR": (uniq_ with any suffix) specifies that only one of
              the vaults with this tag can be used in a game.
           * "luniq": specifies that this vault can be used only once on a
@@ -344,9 +393,9 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              "luniq_BAR" is only relevant when used with "allow_dup".
           * "branch_entry" eg. "orc_entry", "lair_entry" etc.
              If chosen, these maps will contain the stairs for that branch.
-             Use "O" to place the stairs. If a branch has very few entries,
-             a dummy entry is advisable to make sure the player doesn't get
-             bored of the same few entries recycled ad nauseam.
+             If a branch has very few entries, a dummy entry is advisable to
+             make sure the player doesn't get bored of the same few entries
+             recycled ad nauseam.
              Note: if any TAG argument contains an "entry", the vault will
                    be no longer eligible for random placement. (Currently,
                    this just affects your choice of BAR when using uniq_BAR.)
@@ -360,9 +409,13 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              vault!"
           * "no_hmirror": Like no_rotate, but for horizontal mirroring.
           * "no_vmirror": Like no_rotate, but for vertical mirroring.
-          * "layout": Lua code that dungeon.cc uses for generating level
-             layouts.  Do *NOT* use or mess with unless you know what
-             you're doing.
+          * "overwritable": Lets the dungeon builder overwrite this vault with
+             other ones.  Don't use this casually.
+          * "can_overwrite": Tells the dungeon builder that this vault can be
+             placed on top of other vaults, even those without the "overwritable"
+             tag.  Don't use this casually.
+          * "layout": Makes the vault eligible for use as a level layout.  Do
+             not use this unless you know what you are doing.
           * "layout_foo": Indicates what sort of level layouts this vault is
              compatible with, for vaults that don't fit in with all layouts;
              the absence of this type of tags means it can go with any layout.
@@ -370,6 +423,11 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              multiple layouts.  Current values for "foo" are: rooms, city,
              open, caves, cross, shoals, swamp, labyrinth (though currently
              random vaults aren't placed in the last three).
+          * "no_species_xx": Disables the vault for a given player species
+             (two-letter abbreviation).  Note that the current design rules
+             strictly disallow varying the map generation based on the
+             character -- this tag is only for acquirement-like effects,
+             sprint, or tutorial.
           * "ruin": requests the level builder to damage the vault by
              removing walls near the edges, making it look like a ruin.
              You can request that a vault be ruined only in a particular
@@ -382,13 +440,20 @@ TAGS:     Tags go on a TAGS: line and are space-separated. You can have several
              vaults generated during the game.  Use this if the vault
              is predictable (like the Vault:8 and Slime:6 vaults) or
              are for weird internal uses (like the shoalhut vaults).
+          * "unrand": Don't pick this vault randomly by DEPTH.  Can still be
+             picked by tag or PLACE.
+          * "transparent": Marks the vault as potentially passable for the
+             purposes of level connectivity.  By default, vaults are considered
+             non-passable regardless of their contents.  With this tag, the
+             actual terrain of the vault affects its passability as seen by the
+             dungeon builder.
 
 LFLAGS:   Persistent, changeable per-level flags which affect game behaviour
           (FLAGS just controls how the vault is placed); should only be used
           for vaults with ORIENT encompass or with PLACE. Causes a level's
           flags to be set when the level is first created. These flags can
           later be altered using Lua markers; for examples, look at the slime
-          pit vault in lair.des, and the vaults in hell.des and elf.des.
+          pit vault in slime.des, and the vaults in hell.des.
 
           Valid flags are:
           * no_tele_control - prevents the player from using teleport control
@@ -455,6 +520,8 @@ ITEM:     (list of items, separated by comma)
           Modifiers:
           * "q:N" sets the item quantity to N (if N > 0). Does nothing
              if the item is not stackable.
+          * "charges:N" sets the number of charges for wands. Does no checks
+            against the maximum number of charges.
           * "no_uniq" prevents the item from being turned into an artefact.
           * "good_item" makes the builder try to make the item a good one
             (acquirement quality). This is independent of the level's depth,
@@ -471,7 +538,7 @@ ITEM:     (list of items, separated by comma)
             vault's level number).
           * "damaged" sets the item plusses to -1..-4.
           * "cursed" gets a curse plus plusses as in "damaged".
-          * "uncursed" forces an item to have any curse placed on it to be
+          * "not_cursed" forces an item to have any curse placed on it to be
             removed.
           * "any" by itself gives a random choice; you can combine "any" with
             "good_item."
@@ -481,7 +548,8 @@ ITEM:     (list of items, separated by comma)
           * "superb_item" by itself makes an item equivallent to the "|" glyph.
           * "any book", "any misc" etc. gives a random item of that class.
             Valid item class names are: gold, weapon, missile, armour, wand,
-            food, scroll, jewellery, potion, book, staff, orb, misc, carrion.
+            food, scroll, jewellery, potion, book, magical staff, orb, misc,
+            carrion.
             All of these are usable in map definitions, apart from "orb" and
             "carrion".
           * "race:race_name", where "race_name" is "elven", "dwarven" or
@@ -489,13 +557,16 @@ ITEM:     (list of items, separated by comma)
             from being randomly being made racial.  Has no effect if the item
             can't take that kind of racial setting.
             NOTE: Can result in a non-racial item if used with "any" and the
-            chosen item isn't compatible with the desired race.
+            chosen item isn't compatible with the desired race. If race is not
+            explicitly set, this can result in boots being replaced by a
+            barding.
           * "ego:ego_name", where "ego_name" is something like  "running" or
             "fire_resistance", and so on; "none" can be used to prevent the
             item from getting an ego.  The item must be fully specified, so
             trying "any weapon ego:vorpal" or "any armour ego:positive_energy"
             will result in an error.  Trying to give an ego to something which
-            can't accept an ego will also result in an error.
+            can't accept an ego will also result in an error.  The full lists
+            are in the str_to_ego() function in mapdef.cc.
           * "unrand:item_name" will make a given unrandom by a given name,
             like "long sword unrand:singing_sword".  Omit any apostrophes
             in the name (e.g, unrand:vampires_tooth).  If the name has
@@ -504,15 +575,30 @@ ITEM:     (list of items, separated by comma)
             will be given instead.
           * "randart" will force a randart.  Most of the above modifiers
             will be ignored, except for "ego" (for weapons only).
+          * "mundane" acts as a shortcut for "ego:none" and forces the plusses
+             to be +0.
+          * "ident:" will make the item pre-identified.  You need to specify
+            a "|"-separated list of what is to be known:
+            * "curse"
+            * "type"
+            * "pluses"
+            * "properties"
+            * "all"
+          * "unobtainable" hints that the item is supposed to never fall into
+            the player's hands.  It doesn't actually keep it from doing so,
+            just tells that to acquirement and (TODO) troves.
+          * "mimic:N" gives the item one chance in N of being turned into a
+            mimic. The ":N" can also be omitted for a guaranteed mimic.
+          * "no_mimic" prevents the item from being randomly turned into a
+            mimic by the dungeon builder.
 
-            WARNING: While checks are done to make sure that an armour ego
-            isn't given to a weapon, a weapon ego to a missile, and so on, and
-            also to make sure that egos are only given to armours, weapons and
-            missiles, no other checking is done.  Thus it is possible to create
-            a demonic weapon of holy wrath or a helmet of running.
+          WARNING: While checks are done to make sure that an armour ego
+          isn't given to a weapon, a weapon ego to a missile, and so on, and
+          also to make sure that egos are only given to armours, weapons and
+          missiles, no other checking is done.  Thus it is possible to create
+          a demonic weapon of holy wrath or a helmet of running.
 
-          Limitations: You can't specify specific pluses or number of
-          charges.
+          Limitations: You can't specify specific pluses.
 
           Corpses
           -------
@@ -559,22 +645,29 @@ ITEM:     (list of items, separated by comma)
           You can further specify artefact spell books using "randbook" and any
           combination of the following tags:
 
+          * "numspells:number" maximum number of spells to include in the book.
+            A book may contain at most 8 spells.
+          * "owner:name" will be used to make the title include the apostrophised
+            owner (or author) of the book if provided. For example, "owner:Roxanne"
+            may create "Roxanne's Treatise on Mountains". You can use the keyword
+            "player" (i.e. "owner:player") to use the player's name instead.
+
+          In addition, themed books allow the use of the following tags:
+
           * "disc:spell_school", the first spell school that should be included
             in the book. For example, "disc:earth" or "disc:ice".
           * "disc2:spell_school" an optional second spell school that can be
             included in the book. Note: specifying two spell schools doesn't
             mean that they will both definitely be included, just that they
             might be.
-          * "numspells:number" a number of spells to include in the book. Will
-            not always be followed.
           * "slevels:max_levels" the total, combined level of spells to include
             in the book. "slevels:6" will use three level two spells, two level
             three spells, a level two and a level four spell, and so on.
-          * "spell:spell" a spell to include in the book. All of "_" will be
-            replaced with " " and will be parsed as such.
-          * "owner:name" will be used to generate the title of the book if
-            provided. For example, "owner:Roxanne" may create "Roxanne's
-            Treatise on Mountains".
+          * "spells:spell_1|spell_2" a list of spells to include in the book.
+            Spells must be separated by "|" without spaces. Within a spell name,
+            all of "_" will be replaced with " " and will be parsed as such.
+            A book may contain at most 8 spells.
+          * "title:title" will define the title of the book.
 
           NOTE: You can place multiple items on the same square by using the
           KITEM directive. See that section for more information.
@@ -609,7 +702,7 @@ MONS:     (list of monsters)
 
           Individual monsters may be prefixed with the "generate_awake"
           (without the quotes). Use this sparingly:
-              MONS: generate_awake giant beetle
+              MONS: generate_awake goliath beetle
 
           Individual monsters may be prefixed with the "patrolling"
           (without the quotes). Use this sparingly:
@@ -651,7 +744,10 @@ MONS:     (list of monsters)
           * att:good_neutral -- hostile to att:hostile
           * att:fellow_slime -- tame, won't follow you
 
-          Note that 8, 9, 0 also place monsters (see the table).
+          Note that the glyphs 8, 9, 0 (without MONS) also place monsters:
+             0 - normal monster (this is equivalent to MONS: random)
+             9 - +5 depth monster
+             8 - (+2) * 2 depth monster.
 
           If you want to place a random monster suitable for the level
           the map is generated on, you can use
@@ -776,6 +872,9 @@ MONS:     (list of monsters)
           also prevent turning articles into definite unless where forced by
           name_definite or grammar.
 
+          name_zombie can be used to redefine already zombified monsters
+          (including skeletons, simulacra and spectrals).
+
           For instances where space in definitions is limited, you can use
           abbreviated forms of these tags:
 
@@ -785,6 +884,7 @@ MONS:     (list of monsters)
               name_species    -> n_spe
               name_descriptor -> n_des
               name_definite   -> n_the
+              name_zombie     -> n_zom
 
           Monster names should be used very sparingly.
 
@@ -875,6 +975,21 @@ MONS:     (list of monsters)
           message (such as: "the rat throws fire at you"). If you find
           the messages you get unsatisfactory, add suitable entries to
           source/dat/database/monspell.txt.
+
+          Setting enchantments:
+          ---------------------
+          You may give a monster any number of enchantments.  It may
+          start hasted, blind, have permanent DMsl, etc.  The syntax is
+          "ench:<name>:<degree>:<duration>" or "perm_ench:<name>:<degree>".
+          The <degree> and <duration> fields may be omitted.  Note that
+          the enchantment will start the moment the monster is created and
+          thus most likely time out before the player has a chance to
+          notice the monster -- non-permanent ones make sense mostly only
+          if created from a lua trigger.
+
+          MONS: orc perm_ench:blind perm_ench:mad
+          MONS: sheep ench:sticky_flame
+          MONS: stone giant dur:1 ench:berserk
 
 
 FHEIGHT:  xyz = 40
@@ -1084,6 +1199,10 @@ NSUBST:   ? = 3:w / *:l
           occurrences, = to randomly pick for each occurrence). If you
           omit the initial N: or N=, then 1= is assumed, except for the
           last spec where *= is assumed.
+          The parser can get confused with NSUBST specifications like
+          wW / nc=. If you use replacement symbols from * or = (perhaps
+          also for / and numbers), it is safer to spell out the N:
+          preceding the replacement symbols.
 
 KFEAT:    G = C / needle trap / antique armour shop / altar_zin
           The KFEAT: directive allows you to specify a placeholder symbol
@@ -1105,18 +1224,76 @@ KFEAT:    G = C / needle trap / antique armour shop / altar_zin
           KFEAT: A = enter_abyss
 
           If you want no feature as an option in a KFEAT line, use '.' or
-          'floor'. If you do not want to specify the type of shop, use
-          'any shop' or 'random shop'.
+          'floor'. If you do not want to specify the type of shop, use 'any
+          shop' or 'random shop'. If you wish to specify more complex options
+          for shops, see the section on shop definitions at the end of this
+          document.
 
           If you want a trap to start out known to the player, add "known"
           to the trap name:
 
           KFEAT: A = known needle trap
 
+          You can also place feature mimic using the same syntax as item
+          mimics (or prevent random placement of feature mimics). For
+          example this altar has one chance in 10 of being turned into an
+          altar mimic:
+
+          KFEAT: C = C mimic:10
+
           The placeholder used by KFEAT can be shared by KITEM and KMONS;
           see below. If the placeholder is shared, all defined Kxxxx
           operations for the placeholder are performed. Also, all Kxxx
           lines accept weights as for MONS or ITEM.
+
+          Shop definitions
+          ----------------
+
+          It's possible to customise shops further than simply specifying the
+          type of shop to place. There are a number of options, which are
+          enumerated below:
+
+            use_all:    If true, and items have been specified, all items
+                        specified will be placed in the shop, without using
+                        random selection to determine a number of items from
+                        the list.
+            name:       If provided, this is apostrophised and becomes the
+                        shop-keeper's name. For example, name:Ploog would
+                        result in "Ploog's <X shop>".
+            type:       If provided, this is used as the "type" name for the
+                        shop. For example, type:Wand would result in "X's Wand
+                        shop". Please note: this is *not* the type of shop,
+                        simply the name. Setting this will not change the
+                        content of the shop. You will still need to specify the
+                        type in the definition, i.e., "antique armour shop".
+            suffix:     If provided, this is used instead of "Emporium",
+                        "Shop", etc, in the shop name.  For example,
+                        suffix:Bazaar results in "X's x Bazaar".
+            count:      If specified, this restricts the number of items placed
+                        in the shop to this number. For example, "any shop
+                        count:1" results in a single shop with a single item in
+                        it.
+            greed:      If specified, this increases the cost of items for sale
+                        in the shop. Someone should fill the algorithm here!
+
+          Shop items
+          ----------
+
+          It's possible to also specify a list of items that should be placed
+          in a shop. This syntax specifies a number of items separated with |,
+          which is further separated from the individual shop specification
+          using the ; symbol. Individual shop items are parsed as per standard
+          item definitions, identical to those used for monster items, and
+          so-on.
+
+          Examples
+          --------
+
+          KFEAT: a = any shop name:Ploog type:Wand suffix:Emporium count:3
+                       use_all greed:10 ; any wand | any wand | any wand
+
+          In theory, this will create "Ploog's Wand Emporium", which has
+          exactly three items, each of which is a randomly chosen wand.
 
 KMONS:    ? = orc priest / w:3 deep elf priest
 
@@ -1150,7 +1327,6 @@ KMASK:    Z = no_monster_gen
              symbol. MUST-HAVE for those with water/lava symbols in
              entry vaults.
           * "no_trap_gen": Prevents random trap generation on that symbol.
-          * "no_shop_gen": Prevents random shop generation on that symbol.
           * "no_pool_fixup": prevents a water square next to land from being
              randomly converted from deep water (the default) to shallow.
           * "no_wall_fixup": prevents (rock) walls from being converted to
@@ -1190,12 +1366,17 @@ KPROP:    x = bloody
              feature (usually lava).  Does not stop fog generators or clouds
              entering from nearby squares.
           * "no_rtele_into": Prevents random teleport from chosing to use this
-             square. Should be used sparingly.
+             square. Use this to prevent nasty situations like the player
+             ending up in a closet (for example, because your map randomises
+             wall/floor so much that closets may occur) or an extremely dense
+             monster array (like a hellion island).
           * "no_ctele_into": Prevents controlled teleportation into this square.
              Will instead generate the message "A strong magical force throws
-             you back!". Should be used sparingly.
+             you back!".
           * "no_tele_into": Combines the above no_rtele_into and no_ctele_into
              in one flag, and disallows both random and controlled teleports.
+             Use this for vaults with loot where the player is not supposed to
+             get it by teleporting alone.
           * "no_tide": Shoals tides will not affect this square.
           * "no_jiyva": No spawning jellies, no off-level eating.
 
@@ -1234,7 +1415,7 @@ MARKER:   A = feat:<feature_name> or lua:<marker_expr>
 
           Here's a Lua marker that creates a cloud generator (for a
           full explanation of the various parameters, read the header
-          of dat/clua/lm_fog.lua):
+          of dat/dlua/lm_fog.lua):
 
           MARKER:  A = lua:fog_machine { \
                        pow_max = 15, delay_min = 100, delay_max = 150, \

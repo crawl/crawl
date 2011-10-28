@@ -2,6 +2,8 @@
 
 #include "colour.h"
 
+#include "areas.h"
+#include "cloud.h"
 #include "dgn-height.h"
 #include "env.h"
 #include "libutil.h"
@@ -10,8 +12,9 @@
 #include "random.h"
 
 #include <utility>
+#include <math.h>
 
-static std::map<element_type, element_colour_calc*> element_colours;
+static element_colour_calc* element_colours[NUM_COLOURS] = {};
 static std::map<std::string, element_colour_calc*> element_colours_str;
 
 typedef std::vector< std::pair<int, int> > random_colour_map;
@@ -74,9 +77,19 @@ uint8_t random_uncommon_colour()
     return (result);
 }
 
+bool is_low_colour(uint8_t colour)
+{
+    return (colour <= 7);
+}
+
+bool is_high_colour(uint8_t colour)
+{
+    return (colour >= 8 && colour <= 15);
+}
+
 uint8_t make_low_colour(uint8_t colour)
 {
-    if (colour >= 8 && colour <= 15)
+    if (is_high_colour(colour))
         return (colour - 8);
 
     return (colour);
@@ -84,17 +97,19 @@ uint8_t make_low_colour(uint8_t colour)
 
 uint8_t make_high_colour(uint8_t colour)
 {
-    if (colour <= 7)
+    if (is_low_colour(colour))
         return (colour + 8);
 
     return (colour);
 }
 
 // returns if a colour is one of the special element colours (ie not regular)
-bool is_element_colour(int col)
+static bool _is_element_colour(int col)
 {
     // stripping any COLFLAGS (just in case)
-    return ((col & 0x007f) >= ETC_FIRE);
+    col = col & 0x007f;
+    ASSERT(col < NUM_COLOURS);
+    return (col >= ETC_FIRE);
 }
 
 static int _randomized_element_colour(int rand, const coord_def&,
@@ -103,7 +118,8 @@ static int _randomized_element_colour(int rand, const coord_def&,
     int accum = 0;
     for (random_colour_map::const_iterator it = rand_vals.begin();
          it != rand_vals.end();
-         ++it) {
+         ++it)
+    {
         if ((accum += it->first) > rand)
             return it->second;
     }
@@ -119,14 +135,6 @@ static int _etc_floor(int, const coord_def& loc)
 static int _etc_rock(int, const coord_def& loc)
 {
     return element_colour(env.rock_colour, false, loc);
-}
-
-static int _etc_stone(int, const coord_def& loc)
-{
-    if (player_in_branch(BRANCH_HALL_OF_ZOT))
-        return element_colour(env.rock_colour, false, loc);
-    else
-        return LIGHTGREY;
 }
 
 static int _etc_elven_brick(int, const coord_def& loc)
@@ -156,6 +164,33 @@ static int _etc_waves(int, const coord_def& loc)
         return CYAN;
 }
 
+static int _etc_liquefied(int, const coord_def& loc)
+{
+    static int turns = you.num_turns;
+    static coord_def centre = find_centre_for(loc, AREA_LIQUID);
+
+    if (turns != you.num_turns || (centre-loc).abs() > 15)
+    {
+        centre = find_centre_for(loc, AREA_LIQUID);
+        turns = you.num_turns;
+    }
+
+    if (centre.origin())
+        return BROWN;
+
+    int x = loc.x - centre.x;
+    int y = loc.y - centre.y;
+    double dir = atan2(x, y)/PI;
+    double dist = sqrt(x*x + y*y);
+    bool phase = ((int)floor(dir*0.3 + dist*0.5 + (you.frame_no % 54)/2.7))&1;
+
+    if (player_in_branch(BRANCH_SWAMP))
+        return phase ? LIGHTRED : RED;
+    else
+        return phase ? YELLOW : BROWN;
+}
+
+
 static int _etc_tree(int, const coord_def& loc)
 {
     uint32_t h = loc.x;
@@ -163,9 +198,59 @@ static int _etc_tree(int, const coord_def& loc)
     h += loc.y;
     h+=h<<10; h^=h>>6;
     h+=h<<3; h^=h>>11; h+=h<<15;
-    return (h>>30)                        ? GREEN
-         : player_in_branch(BRANCH_SWAMP) ? BROWN
-         :                                  LIGHTGREEN;
+    return (h>>30) ? GREEN : LIGHTGREEN;
+}
+
+static int _etc_swamp_tree(int, const coord_def& loc)
+{
+    uint32_t h = loc.x;
+    h+=h<<10; h^=h>>6;
+    h += loc.y;
+    h+=h<<10; h^=h>>6;
+    h+=h<<3; h^=h>>11; h+=h<<15;
+    return (h>>30) ? GREEN : BROWN;
+}
+
+bool get_tornado_phase(const coord_def& loc)
+{
+    coord_def center = get_cloud_originator(loc);
+    if (center.origin())
+        return coinflip(); // source died/went away
+    else
+    {
+        int x = loc.x - center.x;
+        int y = loc.y - center.y;
+        double dir = atan2(x, y)/PI;
+        double dist = sqrt(x*x + y*y);
+        return ((int)floor(dir*2 + dist*0.33 - (you.frame_no % 54)/2.7))&1;
+    }
+}
+
+static int _etc_tornado(int, const coord_def& loc)
+{
+    const bool phase = get_tornado_phase(loc);
+    switch (grd(loc))
+    {
+    case DNGN_LAVA:
+        return phase ? LIGHTRED : RED;
+    case DNGN_SHALLOW_WATER:
+        return phase ? LIGHTCYAN : CYAN;
+    case DNGN_DEEP_WATER:
+        return phase ? LIGHTBLUE : BLUE;
+    default:
+        return phase ? WHITE : LIGHTGREY;
+    }
+}
+
+bool get_orb_phase(const coord_def& loc)
+{
+    int dist = (loc - env.orb_pos).abs();
+    return (you.frame_no - dist*2/3)&4;
+}
+
+static int _etc_orb_glow(int, const coord_def& loc)
+{
+    return get_orb_phase(loc) ? LIGHTMAGENTA : MAGENTA;
 }
 
 static int _etc_random(int, const coord_def&)
@@ -200,10 +285,17 @@ void add_element_colour(element_colour_calc *colour)
 {
     // or else lookups won't work: we strip high bits (because of colflags)
     ASSERT(colour->type < 128);
-    ASSERT(colour->type >= ETC_FIRST_LUA ||
-           element_colours.find(colour->type) == element_colours.end());
-    ASSERT(colour->type >= ETC_FIRST_LUA ||
-           element_colours_str.find(colour->name) == element_colours_str.end());
+    COMPILE_CHECK(NUM_COLOURS <= 128);
+    if (colour->type >= ETC_FIRST_LUA)
+    {
+        ASSERT(element_colours[colour->type] == element_colours_str[colour->name]);
+        delete element_colours[colour->type];
+    }
+    else
+    {
+        ASSERT(!element_colours[colour->type]);
+        ASSERT(element_colours_str.find(colour->name) == element_colours_str.end());
+    }
     element_colours[colour->type] = colour;
     element_colours_str[colour->name] = colour;
 }
@@ -285,18 +377,20 @@ void init_element_colours()
                             80,  DARKGREY,
                             40,  LIGHTGREY,
                         0));
-    // assassin
+    // assassin, necromancer
     add_element_colour(_create_random_element_colour_calc(
                             ETC_DEATH, "death",
                             80,  DARKGREY,
                             40,  MAGENTA,
                         0));
+#if TAG_MAJOR_VERSION == 32
     // necromancer
     add_element_colour(_create_random_element_colour_calc(
                             ETC_NECRO, "necro",
                             80,  DARKGREY,
                             40,  MAGENTA,
                         0));
+#endif
     // ie demonology
     add_element_colour(_create_random_element_colour_calc(
                             ETC_UNHOLY, "unholy",
@@ -375,7 +469,7 @@ void init_element_colours()
                             20,  MAGENTA,
                         0));
     add_element_colour(_create_random_element_colour_calc(
-                            ETC_GILA, "gila",
+                            ETC_FLASH, "flash",
                             30,  LIGHTMAGENTA,
                             30,  MAGENTA,
                             30,  YELLOW,
@@ -399,9 +493,12 @@ void init_element_colours()
     add_element_colour(new element_colour_calc(
                             ETC_ROCK, "rock", _etc_rock
                        ));
-    add_element_colour(new element_colour_calc(
-                            ETC_STONE, "stone", _etc_stone
-                       ));
+#if TAG_MAJOR_VERSION == 32
+    add_element_colour(_create_random_element_colour_calc(
+                            ETC_STONE, "stone",
+                            1,  LIGHTGREY,
+                        0));
+#endif
     add_element_colour(_create_random_element_colour_calc(
                             ETC_MIST, "mist",
                             100, CYAN,
@@ -449,36 +546,50 @@ void init_element_colours()
                             ETC_TREE, "tree", _etc_tree
                        ));
     add_element_colour(new element_colour_calc(
+                            ETC_SWAMP_TREE, "swamp_tree", _etc_swamp_tree
+                       ));
+    add_element_colour(new element_colour_calc(
+                            ETC_TORNADO, "tornado", _etc_tornado
+                       ));
+    add_element_colour(new element_colour_calc(
+                            ETC_LIQUEFIED, "liquefied", _etc_liquefied
+                       ));
+    add_element_colour(new element_colour_calc(
+                            ETC_ORB_GLOW, "orb_glow", _etc_orb_glow
+                       ));
+    add_element_colour(new element_colour_calc(
                             ETC_RANDOM, "random", _etc_random
+                       ));
+    // redefined by Lua later
+    add_element_colour(new element_colour_calc(
+                            ETC_DISCO, "disco", _etc_random
                        ));
 }
 
 void clear_colours_on_exit()
 {
-    for (std::map<element_type, element_colour_calc*>::const_iterator it = element_colours.begin(); it != element_colours.end(); ++it)
-        delete it->second;
+    for (int i = 0; i < NUM_COLOURS; i++)
+    {
+        delete element_colours[i];
+        element_colours[i] = 0;
+    }
 
-    element_colours.clear();
     element_colours_str.clear();
 }
 
 int element_colour(int element, bool no_random, const coord_def& loc)
 {
     // pass regular colours through for safety.
-    if (!is_element_colour(element))
+    if (!_is_element_colour(element))
         return (element);
 
     // Strip COLFLAGs just in case.
     element &= 0x007f;
 
-    std::map<element_type, element_colour_calc*>::const_iterator colour_it
-        = element_colours.find((element_type)element);
-    ASSERT(colour_it != element_colours.end());
-    ASSERT(colour_it->second);
+    ASSERT(element_colours[element]);
+    int ret = element_colours[element]->get(loc, no_random);
 
-    int ret = colour_it->second->get(loc, no_random);
-
-    ASSERT(!is_element_colour(ret));
+    ASSERT(!_is_element_colour(ret));
 
     return ((ret == BLACK) ? GREEN : ret);
 }
@@ -579,7 +690,7 @@ int str_to_colour(const std::string &str, int default_colour,
     return ((ret == 16) ? default_colour : ret);
 }
 
-#if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
+#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE)
 static unsigned short _dos_reverse_brand(unsigned short colour)
 {
     if (Options.dos_use_background_intensity)
@@ -655,7 +766,7 @@ unsigned short dos_brand(unsigned short colour,
 }
 #endif
 
-#if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
+#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE_LOCAL)
 static unsigned _colflag2brand(int colflag)
 {
     switch (colflag)
@@ -688,20 +799,15 @@ unsigned real_colour(unsigned raw_colour, const coord_def& loc)
     const int colflags = raw_colour & 0xFF00;
 
     // Evaluate any elemental colours to guarantee vanilla colour is returned
-    if (is_element_colour(raw_colour))
+    if (_is_element_colour(raw_colour))
         raw_colour = colflags | element_colour(raw_colour, false, loc);
 
-#if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
+#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE_LOCAL)
     if (colflags)
     {
         unsigned brand = _colflag2brand(colflags);
         raw_colour = dos_brand(raw_colour & 0xFF, brand);
     }
-#endif
-
-#ifndef USE_COLOUR_OPTS
-    // Strip COLFLAGs for systems that can't do anything meaningful with them.
-    raw_colour &= 0xFF;
 #endif
 
     return (raw_colour);

@@ -1,8 +1,7 @@
-/*
- *  File:       macro.cc
- *  Summary:    Crude macro-capability
- *  Written by: Juho Snellman <jsnell@lyseo.edu.ouka.fi>
- */
+/**
+ * @file
+ * @brief Crude macro-capability
+**/
 
 #ifndef MACRO_H
 #define MACRO_H
@@ -14,7 +13,8 @@
 class key_recorder;
 typedef std::deque<int> keyseq;
 
-class key_recorder {
+class key_recorder
+{
 public:
     bool                  paused;
     keyseq                keys;
@@ -26,7 +26,8 @@ public:
     void clear();
 };
 
-class pause_all_key_recorders {
+class pause_all_key_recorders
+{
 public:
     pause_all_key_recorders();
     ~pause_all_key_recorders();
@@ -75,6 +76,7 @@ void add_key_recorder(key_recorder* recorder);
 void remove_key_recorder(key_recorder* recorder);
 
 bool is_processing_macro();
+bool has_pending_input();
 
 int get_macro_buf_size();
 
@@ -92,7 +94,7 @@ KeymapContext context_for_command(command_type cmd);
 
 void bind_command_to_key(command_type cmd, int key);
 
-std::string command_to_string(command_type cmd);
+std::string command_to_string(command_type cmd, bool tutorial = false);
 void insert_commands(std::string &desc, std::vector<command_type> cmds,
                      bool formatted = true);
 void insert_commands(std::string &desc, const int first, ...);

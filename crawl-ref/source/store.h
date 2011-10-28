@@ -1,9 +1,8 @@
-/*
- *  File:       store.h
- *  Summary:    Saveable hash-table and vector capable of storing
- *              multiple types of data.
- *  Written by: Matthew Cline
- */
+/**
+ * @file
+ * @brief Saveable hash-table and vector capable of storing
+ *             multiple types of data.
+**/
 
 #ifndef STORE_H
 #define STORE_H
@@ -50,6 +49,7 @@ enum store_val_type
     SV_LEV_POS,
     SV_MONST,
     SV_LUA,
+    SV_INT64,
     NUM_STORE_VAL_TYPES
 };
 
@@ -72,6 +72,7 @@ union StoreUnion
     short _short;
     int   _int;
     float _float;
+    int64_t _int64;
     void* ptr;
 };
 
@@ -89,6 +90,7 @@ public:
     CrawlStoreValue(const char &val);
     CrawlStoreValue(const short &val);
     CrawlStoreValue(const int &val);
+    CrawlStoreValue(const int64_t &val);
     CrawlStoreValue(const float &val);
     CrawlStoreValue(const std::string &val);
     CrawlStoreValue(const char* val);
@@ -125,6 +127,7 @@ public:
     char           &get_byte();
     short          &get_short();
     int            &get_int();
+    int64_t        &get_int64();
     float          &get_float();
     std::string    &get_string();
     coord_def      &get_coord();
@@ -140,6 +143,7 @@ public:
     char           get_byte()      const;
     short          get_short()     const;
     int            get_int()       const;
+    int64_t        get_int64()     const;
     float          get_float()     const;
     std::string    get_string()    const;
     coord_def      get_coord()     const;
@@ -152,20 +156,6 @@ public:
     const monster&       get_monster() const;
     const dlua_chunk&     get_lua() const;
 
-#if 0
-    // These don't actually exist
-    void set_bool(const bool val);
-    void set_byte(const char val);
-    void set_short(const short val);
-    void set_int(const int val);
-    void set_float(const float val);
-    void set_string(const std::string &val);
-    void set_coord(const coord_def &val);
-    void set_table(const CrawlHashTable &val);
-    void set_vector(const CrawlVector &val);
-    void set_item(const item_def &val);
-#endif
-
 public:
     // NOTE: All operators will assert if the value is of the wrong
     // type for the operation.  If the value has no type yet, the
@@ -177,17 +167,20 @@ public:
     // If the value is a hash table or vector, the container's values
     // can be accessed with the [] operator with the approriate key
     // type (strings for hashes, longs for vectors).
-    CrawlStoreValue &operator [] (const std::string   &key);
+    CrawlStoreValue &operator [] (const std::string &key);
+    CrawlStoreValue &operator [] (const char *key);
     CrawlStoreValue &operator [] (const vec_size &index);
 
     const CrawlStoreValue &operator [] (const std::string &key) const;
-    const CrawlStoreValue &operator [] (const vec_size &index)  const;
+    const CrawlStoreValue &operator [] (const char *key) const;
+    const CrawlStoreValue &operator [] (const vec_size &index) const;
 
     // Typecast operators
     operator bool&();
     operator char&();
     operator short&();
     operator int&();
+    operator int64_t&();
     operator float&();
     operator std::string&();
     operator coord_def&();
@@ -203,6 +196,7 @@ public:
     operator char()        const;
     operator short()       const;
     operator int()         const;
+    operator int64_t()     const;
     operator float()       const;
     operator std::string() const;
     operator coord_def()   const;
@@ -214,6 +208,7 @@ public:
     CrawlStoreValue &operator = (const char &val);
     CrawlStoreValue &operator = (const short &val);
     CrawlStoreValue &operator = (const int &val);
+    CrawlStoreValue &operator = (const int64_t &val);
     CrawlStoreValue &operator = (const float &val);
     CrawlStoreValue &operator = (const std::string &val);
     CrawlStoreValue &operator = (const char* val);
@@ -296,7 +291,12 @@ public:
     // NOTE: If the const versions of get_value() or [] are given a
     // key which doesn't exist, they will assert.
     const CrawlStoreValue& get_value(const std::string &key) const;
-    const CrawlStoreValue& operator[] (const std::string &key) const;
+    const CrawlStoreValue& get_value(const char *key) const
+    { return get_value(std::string(key)); }
+    const CrawlStoreValue& operator[] (const std::string &key) const
+    { return get_value(key); }
+    const CrawlStoreValue& operator[] (const char *key) const
+    { return get_value(std::string(key)); }
 
     // NOTE: If get_value() or [] is given a key which doesn't exist
     // in the table, an unset/empty CrawlStoreValue will be created
@@ -306,13 +306,19 @@ public:
     // then trying to assign a different type to the CrawlStoreValue
     // will assert.
     CrawlStoreValue& get_value(const std::string &key);
-    CrawlStoreValue& operator[] (const std::string &key);
+    CrawlStoreValue& get_value(const char *key)
+    { return get_value(std::string(key)); }
+    CrawlStoreValue& operator[] (const std::string &key)
+    { return get_value(key); }
+    CrawlStoreValue& operator[] (const char *key)
+    { return get_value(std::string(key)); }
 
     // std::map style interface
     hash_size size() const;
     bool      empty() const;
 
     void      erase(const std::string key);
+    void      erase(const char *key) { erase(std::string(key)); }
     void      clear();
 
     const_iterator begin() const;
@@ -344,7 +350,7 @@ protected:
     store_val_type type;
     store_flags    default_flags;
     vec_size       max_size;
-    vector_type    vector;
+    vector_type    vec;
 
     friend class CrawlStoreValue;
 
@@ -363,10 +369,12 @@ public:
     // NOTE: If the const versions of get_value() or [] are given an
     // index which doesn't exist, they will assert.
     const CrawlStoreValue& get_value(const vec_size &index) const;
-    const CrawlStoreValue& operator[] (const vec_size &index) const;
+    const CrawlStoreValue& operator[] (const vec_size &index) const
+    { return get_value(index); }
 
     CrawlStoreValue& get_value(const vec_size &index);
-    CrawlStoreValue& operator[] (const vec_size &index);
+    CrawlStoreValue& operator[] (const vec_size &index)
+    { return get_value(index); }
 
     // std::vector style interface
     vec_size size() const;
@@ -389,4 +397,41 @@ public:
     iterator begin();
     iterator end();
 };
+
+#ifdef DEBUG_PROPS
+void dump_prop_accesses();
+#endif
+
+// inlines... it sucks so badly to have to pander to ancient compilers with
+// no -flto
+inline CrawlStoreValue &CrawlStoreValue::operator [] (const std::string &key)
+{
+    return get_table().get_value(key);
+}
+
+inline CrawlStoreValue &CrawlStoreValue::operator [] (const char* key)
+{
+    return get_table().get_value(key);
+}
+
+inline CrawlStoreValue &CrawlStoreValue::operator [] (const vec_size &index)
+{
+    return get_vector()[index];
+}
+
+inline const CrawlStoreValue &CrawlStoreValue::operator [] (const std::string &key) const
+{
+    return get_table().get_value(key);
+}
+
+inline const CrawlStoreValue &CrawlStoreValue::operator [] (const char* key) const
+{
+    return get_table().get_value(key);
+}
+
+inline const CrawlStoreValue &CrawlStoreValue::operator [](const vec_size &index) const
+{
+    return get_vector().get_value(index);
+}
+
 #endif

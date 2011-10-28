@@ -1,8 +1,7 @@
-/*
- *  File:       food.h
- *  Summary:    Functions for eating and butchering.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions for eating and butchering.
+**/
 
 
 #ifndef FOOD_H
@@ -36,6 +35,9 @@ enum food_type
     NUM_FOODS                          //   23
 };
 
+#define BERSERK_NUTRITION    700
+#define HUNGER_STARVING     1000
+
 int count_corpses_in_pack(bool blood_only = false);
 bool butchery(int which_corpse = -1, bool bottle_blood = false);
 
@@ -58,17 +60,18 @@ bool causes_rot(const item_def &food);
 bool is_inedible(const item_def &item);
 bool is_preferred_food(const item_def &food);
 bool is_forbidden_food(const item_def &food);
-bool check_amu_the_gourmand(bool reqid);
 
+bool can_ingest(const item_def &food, bool suppress_msg,
+                bool check_hunger = true);
 bool can_ingest(int what_isit, int kindof_thing, bool suppress_msg,
-                bool reqid = false, bool check_hunger = true);
+                bool check_hunger = true, bool rotten = false);
 
 bool chunk_is_poisonous(int chunktype);
 void eat_floor_item(int item_link);
 
 int eat_from_floor(bool skip_chunks = true);
 bool eat_from_inventory();
-int prompt_eat_chunks();
+int prompt_eat_chunks(bool only_auto = false);
 
 bool food_change(bool suppress_message = false);
 void eat_inventory_item(int which_inventory_slot);
@@ -85,5 +88,6 @@ int you_max_hunger();
 int you_min_hunger();
 
 void handle_starvation();
+const char* hunger_cost_string(const int hunger);
 
 #endif

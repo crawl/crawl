@@ -15,7 +15,16 @@
 
 lua {{
 
-function bazaar_portal()
+function place_bazaar_portal(e, perm)
+  e.kfeat("O = enter_portal_vault")
+  if perm then
+     e.lua_marker('O', bazaar_portal(false))
+  else
+     e.lua_marker('O', bazaar_portal(not crawl.one_chance_in(6)))
+  end
+end
+
+function bazaar_portal(timed)
   local desc_long =
 "Aside from the vendors who've set up their stores at various places in the " ..
 "dungeon, there are others trying to make a living by traveling from place " ..
@@ -40,7 +49,7 @@ function bazaar_portal()
     }
   local blow = 200 + 30*(40 - you.absdepth()) + crawl.random2(200)
   local bhigh = blow + crawl.random2(blow) + 100
-  if not crawl.one_chance_in(6) then
+  if timed then
     local pdesc = 'flickering gateway to a bazaar'
     return timed_marker {
                   low=blow, high=bhigh, msg=messager, single_timed=true,
@@ -101,6 +110,15 @@ function fixup_bazaar()
 end
 
 dgn.set_lt_callback("bazaar", "fixup_bazaar")
+
+function bazaar_epilogue(e)
+  e.hook("epilogue",
+         function ()
+           bazaar_message(_G)
+           bazaar_milestone(_G)
+         end)
+end
+
 }}
 
 default-depth: 10-27
@@ -109,8 +127,8 @@ default-depth: 10-27
 # Dummy entry
 
 NAME:   bzr_entry_dummy
-TAGS:   bzr_entry transparent trowel_portal allow_dup
-MARKER: O = lua:bazaar_portal()
+TAGS:   bzr_entry transparent trowel_portal zotdef_bazaar allow_dup
+: place_bazaar_portal(_G)
 MAP
 O
 ENDMAP
@@ -120,7 +138,7 @@ ENDMAP
 NAME:    bzr_entry_001
 TAGS:    bzr_entry no_pool_fixup allow_dup
 SHUFFLE: wwl
-MARKER:  O = lua:bazaar_portal()
+: place_bazaar_portal(_G)
 MAP
  www
 w.w.w
@@ -134,7 +152,7 @@ ENDMAP
 NAME:   bzr_entry_002
 TAGS:   bzr_entry allow_dup
 SUBST:  $=$.
-MARKER: O = lua:bazaar_portal()
+: place_bazaar_portal(_G)
 MAP
 xx.xx
 x$$$x
@@ -150,7 +168,7 @@ TAGS:    bzr_entry allow_dup
 MONS:    human, orc, goblin, kobold
 SUBST:   . = .:150 1
 SHUFFLE: 1234
-MARKER:  O = lua:bazaar_portal()
+: place_bazaar_portal(_G)
 MAP
  .....
 .......
@@ -163,7 +181,7 @@ ENDMAP
 # Safe
 NAME:   bzr_entry_004
 TAGS:   bzr_entry allow_dup
-MARKER: O = lua:bazaar_portal()
+: place_bazaar_portal(_G)
 MAP
  xxxxx
 xx...xx
@@ -177,7 +195,7 @@ ENDMAP
 NAME:    bzr_entry_005
 TAGS:    bzr_entry allow_dup
 SHUFFLE: wwlW
-MARKER:  O = lua:bazaar_portal()
+: place_bazaar_portal(_G)
 MAP
  wwwww
 wwwwwww
@@ -193,7 +211,7 @@ TAGS:    bzr_entry allow_dup
 ORIENT:  float
 SHUFFLE: XU, TUV
 SUBST:   X=.
-MARKER:  O = lua:bazaar_portal()
+: place_bazaar_portal(_G)
 MAP
    xxx
   xxOxx
@@ -211,7 +229,7 @@ SHUFFLE: XY
 SUBST:   a = W .
 SUBST:   X : T 1
 SUBST:   Y = .
-MARKER:  O = lua:bazaar_portal()
+: place_bazaar_portal(_G)
 MAP
      waWa.
    wwwWa.X.Y.
@@ -224,9 +242,10 @@ ENDMAP
 # Bazaar entry with statue (Lemuel)
 NAME:   statue_bzr
 TAGS:   bzr_entry
+KPROP:  O = no_rtele_into
 SUBST:  G = G111
 MONS:   orange crystal statue / silver statue / ice statue
-MARKER: O = lua:bazaar_portal()
+: place_bazaar_portal(_G, true)
 MAP
  @
 cGc
@@ -240,8 +259,8 @@ NAME:   freezing_bzr
 TAGS:   bzr_entry
 MARKER: W = lua:fog_machine { cloud_type = "freezing vapour", \
              pow_min = 1, pow_max = 5, delay_min = 20, delay_max = 30, \
-             size = 1, walk_dist = 3, spread_rate= 20 }
-MARKER: O = lua:bazaar_portal()
+             size = 2, walk_dist = 3, spread_rate= 20 }
+: place_bazaar_portal(_G)
 MAP
   W
  www
@@ -257,7 +276,7 @@ TAGS:   bzr_entry
 MARKER: O = lua:fog_machine { cloud_type= "thin mist", \
             pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35, \
             size = 2, walk_dist = 2, spread_rate= 35 }
-MARKER: O = lua:bazaar_portal()
+: place_bazaar_portal(_G)
 MAP
 O
 ENDMAP
@@ -269,9 +288,9 @@ TAGS:    bzr_entry uniq_firewalk no_item_gen
 SUBST:   $ : $ .
 MARKER:  * = lua:fog_machine { cloud_type = "flame", \
              pow_min = 2, pow_max = 4, delay_min = 5, delay_max = 10, \
-             size = 1, walk_dist = 0, spread_rate= 0 }
+             size = 2, walk_dist = 0, spread_rate= 0 }
 SUBST:   * = .
-MARKER:  O = lua:bazaar_portal()
+: place_bazaar_portal(_G)
 MAP
 c.@.$.@.c
 c.*...*.c
@@ -328,10 +347,7 @@ KFEAT:   C = wand shop / jewellery shop
 KFEAT:   D = antique weapon shop
 KFEAT:   E = antique armour shop
 KFEAT:   F = scroll shop / distillery shop
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 # special cases for blue floor
 : local colour = random_bazaar_colour()
 : lfloorcol(colour)
@@ -411,10 +427,7 @@ SUBST: w = l
 : end
 #
 SUBST:   w:wWx, l:lx
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxAxxxxxxxxxxxCxxxxxxxxxxxExxxxxxxxxxxxxxxx
@@ -435,8 +448,8 @@ TAGS:    bazaar no_rotate
 ORIENT:  encompass
 WEIGHT:  20
 SHUFFLE: Aa/Bb/Cc/Dd/Ee/Ff/Gg/Hh
-SHUFFLE: Aa/Zz, Bb/Yy, Cc/Rr, Dd/Ss, Ee/Jj, Ff/Kk, Gg/Mm
-# one guaranteed shop, expected 4.5 shops
+SHUFFLE: Aa/Zz, Bb/Yy, Cc/Rr, Dd/Ss, Ee/Jj, Ff/Kk
+# two guaranteed shops, expected five shops
 SUBST:   B=A, C=A, D=A, E=A, F=A, G=A, H=A
 SUBST:   b=a, c=a, d=a, e=a, f=a, g=a, h=a
 SUBST:   Y=Z, R=Z, S=Z, J=Z, K=Z, M=Z
@@ -457,10 +470,7 @@ SUBST: w = l
 : end
 #
 SUBST:   w:wWx, l:lx
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxAxxxxxxxxxxxCxxxxxxxxxxxExxxxxxxxxxxGxxxxxxxxxxxxxxxx
@@ -481,10 +491,7 @@ KFEAT:   A = any shop / antique armour shop
 KFEAT:   B = any shop / antique weapon shop
 KFEAT:   C = any shop / jewellery shop
 KFEAT:   D = any shop / book shop
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -536,10 +543,7 @@ SUBST:   G : G.
 SUBST:   ' = x
 SUBST:   G = .
 :end
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxx...xxxxxxxxxxxxxx
@@ -573,10 +577,7 @@ SUBST:     ab = !, AB = ., cd = !, CD = ., EeFf = $
 KFEAT:     ! = any shop
 KFEAT:     ? = any shop / T
 LFLOORCOL: blue
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxx
@@ -635,10 +636,7 @@ SUBST:   A = !, B = T
 KFEAT:   ! = any shop
 KFEAT:   ? = any shop / T
 SUBST:   T : Tc
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
        xxxxx
        x...x
@@ -667,10 +665,7 @@ ORIENT: encompass
 WEIGHT: 20
 KFEAT:  ! = any shop
 SUBST:  T = TU
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
         xxxxx
         x...x
@@ -697,10 +692,7 @@ TAGS:   bazaar no_rotate
 WEIGHT: 5
 ORIENT: encompass
 KFEAT:  A = any shop
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxx
 xxxxxxx>xxxxxxx
@@ -731,10 +723,7 @@ KFEAT:   B = antique weapon shop / weapon shop
 KFEAT:   C = antique armour shop / armour shop
 ITEM:    any weapon / w:2 good_item any weapon
 ITEM:    any armour / w:2 good_item any armour
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxx
 xxxx>xxxx
@@ -754,10 +743,7 @@ WEIGHT:  5
 ORIENT:  encompass
 SUBST:   A = TVBG
 KFEAT:   B = any shop
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxx
 xxxB.....Bxxx
@@ -778,7 +764,7 @@ SHUFFLE: AB, def
 KFEAT:   A = scroll shop / book shop / book shop
 KFEAT:   B = jewellery shop
 ITEM:    any jewellery / good_item any jewellery
-ITEM:    any book / good_item any book, any staff
+ITEM:    any book / good_item any book, any magical staff
 SUBST:   d=.d, e=.e, f=.f
 # special cases for blue/red floor
 : local colour = random_bazaar_colour()
@@ -791,10 +777,7 @@ SUBST: w = l
 : end
 : end
 #
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxwwwwwxxxxxx
@@ -807,7 +790,7 @@ xxxxxxxxxxxxxwwwwwxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-# 2 wand shops, 2 jewellery shops
+# 2 wand shops, 2 potion shops
 NAME:    dpeg_bazaar_wands
 TAGS:    bazaar no_rotate
 WEIGHT:  5
@@ -827,10 +810,7 @@ SUBST: w = l
 : end
 : end
 #
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxx......>......xxxxxxxxxx
@@ -863,10 +843,7 @@ ORIENT:  encompass
 SHUFFLE: ABCD, EFGH
 SUBST:   H=>, A=T, B=T
 KFEAT:   CDEFG = any shop
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
@@ -902,10 +879,7 @@ ORIENT:  encompass
 SHUFFLE: EFGH
 SUBST:   H=>, D=T, C=T
 KFEAT:   ABEFG = any shop
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
@@ -941,10 +915,7 @@ ORIENT:  encompass
 SHUFFLE: EFGH
 SUBST:   A=>, D=T, C=T
 KFEAT:   BHEFG = any shop
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
@@ -980,10 +951,7 @@ ORIENT:  encompass
 SHUFFLE: ABCDEF
 KFEAT:   ABCDE = any shop
 SUBST:   F = T
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
@@ -1017,10 +985,7 @@ WEIGHT:  1
 TAGS:    bazaar no_rotate
 ORIENT:  encompass
 KFEAT:   CDEFG = any shop
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xx...xxxxxxxxxxxxxxxxxxxxxxxxx...xx
@@ -1062,10 +1027,7 @@ KFEAT:   C = any shop / distillery shop
 KFEAT:   D = any shop / wand shop / food shop
 KFEAT:   E = any shop / weapon shop / armour shop
 KFEAT:   F = any shop / book shop / scroll shop
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1113,10 +1075,7 @@ SUBST:   X = <, A = >
 SUBST:   B : T G
 KFEAT:   C = any shop
 KFEAT:   D = weapon shop / book shop / jewellery shop
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.xxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxx.x
@@ -1146,10 +1105,7 @@ SUBST:   k : . x
 NSUBST:  A = 2=T:30 V / *:C
 NSUBST:  B = 1:< / >
 KFEAT:   C = any shop
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
@@ -1186,10 +1142,7 @@ SUBST:   k : . x
 NSUBST:  A = 2=T:30 V / *:C
 NSUBST:  B = 1:< / >
 KFEAT:   C = any shop
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
@@ -1227,10 +1180,7 @@ SUBST:   k : . x
 NSUBST:  A = 1:< / 1=<TC / 2=T:30 V / *:C
 NSUBST:  B = 1:> / 1=C>
 KFEAT:   C = any shop
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
@@ -1268,10 +1218,7 @@ SUBST:   k : . x
 NSUBST:  A = 1:< / 1=<TC / 2=T:30 V / *:C
 NSUBST:  B = 1:> / 1=C>
 KFEAT:   C = any shop
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
@@ -1308,10 +1255,7 @@ SUBST:   k : . x
 NSUBST:  A = 1:< / 1:> / 1:T C / 3=T:30 V / *:C
 SUBST:   B = > C:20
 KFEAT:   C = any shop
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xk.......kxxxxxxxxxk.......kxxxxxxxxxk.......kx
@@ -1346,10 +1290,7 @@ WEIGHT: 5
 ORIENT: encompass
 KFEAT:  ! = any shop
 KFEAT:  ? = any shop / T
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxx
 x.......x
@@ -1377,11 +1318,8 @@ SUBST:     "=l , '=. , A=l , B=!
 SUBST:     "=. , '=l , A=! , B=l
 : end
 KFEAT:     ! = jewellery shop / jewellery shop / wand shop / scroll shop / book shop
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
-: set_border_fill_type("lava")
+: bazaar_epilogue(_G)
+: set_border_fill_type("endless_lava")
 MAP
 lllllllllllllllllllllllllllllllllllll
 ll...lllllllllllllllll'''llllllllllll
@@ -1460,10 +1398,7 @@ MONS:      bush
 KFEAT:     ! = any shop
 KFEAT:     ? = any shop / .
 LFLOORCOL: green
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 ttttttttttttttt
 ttttttttttttttt
@@ -1488,10 +1423,7 @@ WEIGHT: 5
 ORIENT: encompass
 KFEAT:  A = antique weapon shop
 KFEAT:  B = antique armour shop
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
       xxxxx
      xx...xx
@@ -1530,10 +1462,7 @@ WEIGHT: 5
 ORIENT: encompass
 KFEAT:  ! = food shop
 KFEAT:  ? = any shop / T
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
  xxxxx         xxxxx         xxxxx
 xx...xxxxxxxxxxx...xxxxxxxxxxx...xx
@@ -1580,10 +1509,7 @@ MONS:      plant / bush w:5
 KFEAT:     ! = any shop
 LFLOORCOL: green
 SUBST:     " = ....111t
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 """"""""""""""""""""""""""""""""">
 """"""""""""""""""""""""""""""""""
@@ -1635,10 +1561,7 @@ SUBST:   A = <
 KFEAT:   B = any shop / antique armour shop / jewellery shop
 SUBST:   C = >
 SUBST:   D = T
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxAxxxC............+...xxxxxxxxx
@@ -1685,13 +1608,10 @@ NAME:    bazaar_jpeg_triangle_bulge
 TAGS:    bazaar no_rotate
 ORIENT:  encompass
 WEIGHT:  1
-SHUFFLE: ABC
+SHUFFLE: AB
 SUBST:   A = <, B = >
 KFEAT:   C = any shop
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxCxxxxxxxxxxxxxx
@@ -1722,10 +1642,7 @@ KFEAT:    B = general shop / food shop
 KFEAT:    C = scroll shop / book shop / distillery shop
 SHUFFLE:  '"
 SUBST:    '=+, "==
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xE..xxxxxxx...xx.......xx...xxxxxxx..Ex
@@ -1769,10 +1686,7 @@ SUBST:   T = V T U:1
 SHUFFLE: XY
 SUBST:   X = T
 NSUBST:  Y = 1:< / *:>
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxx'''...'''xxxxxxxx
@@ -1810,10 +1724,7 @@ SUBST:  . = 2 .:200
 SUBST:  ' = .
 SUBST:  3 = 2.
 MONS:   oklob plant, plant
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxx.........xxxxxxxxx
@@ -1849,10 +1760,7 @@ MARKER: d = lua:fog_machine { cloud_type = "mutagenic fog", \
              size = 16, walk_dist = 0, spread_rate= 0 }
 ITEM:   nothing
 NSUBST: < = 1:< / *:.
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxxxxxx     xxxxxxxxx
 x.......x     x.......x
@@ -1886,10 +1794,7 @@ ORIENT: encompass
 WEIGHT: 1
 KFEAT:  ! = distillery shop / scroll shop / general shop
 KFEAT:  ~ = teleport trap
-epilogue{{
-bazaar_message(_G)
-bazaar_milestone(_G)
-}}
+: bazaar_epilogue(_G)
 MAP
 xxxxx
 x...xxx

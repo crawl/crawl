@@ -24,6 +24,9 @@ ae = useless_item
 # !mutation.
 ae = dangerous_item
 
+# Exclude items which your god disapproves of.
+ae = evil_item
+
 # Excluding amulets as you only need one of each. (If you know the
 # subtype that means you already have one of it.) Also for some rings.
 # Some items may already be excluded as bad_item, e.g. inaccuracy.

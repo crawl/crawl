@@ -123,7 +123,7 @@ protected:
 class mcache_demon : public mcache_entry
 {
 public:
-    mcache_demon(const monster* mon);
+    mcache_demon(const monster_info& minf);
     mcache_demon(reader &th);
 
     virtual int info(tile_draw_info *dinfo) const;
@@ -179,10 +179,11 @@ unsigned int mcache_manager::register_monster(const monster* mon)
     // TODO enne - is it worth it to search against all mcache entries?
     // TODO enne - pool mcache types to avoid too much alloc/dealloc?
 
+    monster_info minf(mon);
     mcache_entry *entry;
 
     if (mcache_demon::valid(mon))
-        entry = new mcache_demon(mon);
+        entry = new mcache_demon(minf);
     else if (mcache_ghost::valid(mon))
         entry = new mcache_ghost(mon);
     else if (mcache_draco::valid(mon))
@@ -272,7 +273,7 @@ void mcache_manager::read(reader &th)
             entry = new mcache_demon(th);
             break;
         default:
-            ASSERT(!"Invalid streamed mcache type.");
+            die("Invalid streamed mcache type.");
         case MCACHE_NULL:
             entry = NULL;
             break;
@@ -349,7 +350,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_VAULT_GUARD:
     case TILEP_MONS_DEEP_ELF_MASTER_ARCHER:
     case TILEP_MONS_DEEP_ELF_BLADEMASTER:
-    case TILEP_MONS_IMP:
+    case TILEP_MONS_CRIMSON_IMP:
     case TILEP_MONS_IRON_IMP:
     case TILEP_MONS_SHADOW_IMP:
     case TILEP_MONS_NORRIS:
@@ -369,6 +370,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_SKELETAL_WARRIOR:
     case TILEP_MONS_ANGEL:
     case TILEP_MONS_CHERUB:
+    case TILEP_MONS_MENNAS:
+    case TILEP_MONS_PROFANE_SERVITOR:
     case TILEP_MONS_MERFOLK:
     case TILEP_MONS_MERFOLK_WATER:
     case TILEP_MONS_MERFOLK_JAVELINEER:
@@ -384,6 +387,11 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_ILSUIW:
     case TILEP_MONS_ILSUIW_WATER:
     case TILEP_MONS_SPRIGGAN:
+    case TILEP_MONS_KENKU:
+    case TILEP_MONS_DEEP_DWARF_ARTIFICER:
+    case TILEP_MONS_DEEP_DWARF_DEATH_KNIGHT:
+    case TILEP_MONS_KOBOLD:
+    case TILEP_MONS_OCTOPODE:
         *ofs_x = 0;
         *ofs_y = 0;
         break;
@@ -393,25 +401,42 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_CRAZY_YIUF:
     case TILEP_MONS_DEEP_ELF_DEATH_MAGE:
     case TILEP_MONS_SPRIGGAN_DEFENDER:
+    case TILEP_MONS_SPRIGGAN_BERSERKER:
+    case TILEP_MONS_BIG_KOBOLD:
         *ofs_x = -1;
         *ofs_y = 0;
         break;
     case TILEP_MONS_HOBGOBLIN:
     case TILEP_MONS_TIAMAT:
+    case TILEP_MONS_TIAMAT+1:
+    case TILEP_MONS_TIAMAT+2:
+    case TILEP_MONS_TIAMAT+3:
+    case TILEP_MONS_TIAMAT+4:
+    case TILEP_MONS_TIAMAT+5:
+    case TILEP_MONS_TIAMAT+6:
+    case TILEP_MONS_TIAMAT+7:
+    case TILEP_MONS_TIAMAT+8:
+    case TILEP_MONS_ANCIENT_CHAMPION:
         *ofs_x = -2;
         *ofs_y = 0;
         break;
-    case TILEP_MONS_HILL_GIANT:
-        *ofs_x = -3;
+    // Shift to the right.
+    case TILEP_MONS_DEMONSPAWN:
+    case TILEP_MONS_DONALD:
+        *ofs_x = 1;
         *ofs_y = 0;
         break;
-    // Shift to the right.
     case TILEP_MONS_YAKTAUR_MELEE:
+    case TILEP_MONS_WIGHT:
         *ofs_x = 2;
         *ofs_y = 0;
         break;
     case TILEP_MONS_YAKTAUR_CAPTAIN_MELEE:
         *ofs_x = 4;
+        *ofs_y = 0;
+        break;
+    case TILEP_MONS_FIRE_GIANT:
+        *ofs_x = 5;
         *ofs_y = 0;
         break;
     // Shift upwards.
@@ -433,6 +458,9 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_GUARDIAN_SERPENT:
     case TILEP_MONS_NAGA_MAGE:
     case TILEP_MONS_THE_ENCHANTRESS:
+    case TILEP_MONS_DEEP_DWARF:
+    case TILEP_MONS_DEEP_DWARF_SCION:
+    case TILEP_MONS_DEEP_DWARF_BERSERKER:
         *ofs_x = 0;
         *ofs_y = 1;
         break;
@@ -446,13 +474,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_BOGGART:
     case TILEP_MONS_DEEP_ELF_FIGHTER:
     case TILEP_MONS_DEEP_ELF_SOLDIER:
+    case TILEP_MONS_DEEP_DWARF_NECROMANCER:
+    case TILEP_MONS_UNBORN_DEEP_DWARF:
         *ofs_x = 0;
         *ofs_y = 2;
-        break;
-    case TILEP_MONS_GOBLIN:
-    case TILEP_MONS_IJYB:
-        *ofs_x = -2;
-        *ofs_y = 4;
         break;
     // Shift upwards and to the left.
     case TILEP_MONS_DEEP_ELF_MAGE:
@@ -468,13 +493,17 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -1;
         *ofs_y = -3;
         break;
-    case TILEP_MONS_MAURICE:
-        *ofs_x = -2;
-        *ofs_y = -2;
-        break;
     case TILEP_MONS_SONJA:
         *ofs_x = -2;
         *ofs_y = -2;
+        break;
+    case TILEP_MONS_SPRIGGAN_AIR_MAGE:
+        *ofs_x = -3;
+        *ofs_y = -5;
+        break;
+    case TILEP_MONS_DEEP_ELF_ELEMENTALIST:
+        *ofs_x = -2;
+        *ofs_y = -1;
         break;
     // Shift upwards and to the right.
     case TILEP_MONS_AGNES:
@@ -482,6 +511,11 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_y = -3;
         break;
     case TILEP_MONS_WIZARD:
+    case TILEP_MONS_CLOUD_MAGE:
+    case TILEP_MONS_MASTER_ELEMENTALIST:
+    case TILEP_MONS_HELL_WIZARD:
+    case TILEP_MONS_HELL_WIZARD + 1:
+    case TILEP_MONS_HELL_WIZARD + 2:
         *ofs_x = 2;
         *ofs_y = -2;
         break;
@@ -494,19 +528,32 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         *ofs_x = -1;
         *ofs_y = 3;
         break;
-    // Shift downwards and to the right.
-    case TILEP_MONS_BIG_KOBOLD:
-        *ofs_x = -1;
-        *ofs_y = 0;
+    case TILEP_MONS_GOBLIN:
+    case TILEP_MONS_IJYB:
+        *ofs_x = -2;
+        *ofs_y = 4;
         break;
-    case TILEP_MONS_KOBOLD:
-        *ofs_x = 0;
-        *ofs_y = 0;
+    // Shift downwards and to the right.
+    case TILEP_MONS_ETTIN:
+        *ofs_x = 2;
+        *ofs_y = 1;
+        break;
+    case TILEP_MONS_FROST_GIANT:
+        *ofs_x = 2;
+        *ofs_y = 3;
+        break;
+    case TILEP_MONS_TRAINING_DUMMY:
+        *ofs_x = 3;
+        *ofs_y = 2;
         break;
     case TILEP_MONS_ELF:
     case TILEP_MONS_ZOMBIE_LARGE:
         *ofs_x = 4;
         *ofs_y = 1;
+        break;
+    case TILEP_MONS_HALFLING:
+        *ofs_x = 4;
+        *ofs_y = 2;
         break;
     case TILEP_MONS_ZOMBIE_SMALL:
         *ofs_x = 4;
@@ -514,6 +561,10 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     case TILEP_MONS_HUMAN:
         *ofs_x = 5;
+        *ofs_y = 2;
+        break;
+    case TILEP_MONS_HILL_GIANT:
+        *ofs_x = 6;
         *ofs_y = 2;
         break;
     default:
@@ -641,7 +692,7 @@ mcache_ghost::mcache_ghost(const monster* mon)
 {
     ASSERT(mcache_ghost::valid(mon));
 
-    const struct ghost_demon &ghost = *mon->ghost;
+    const class ghost_demon &ghost = *mon->ghost;
 
     unsigned int pseudo_rand = ghost.max_hp * 54321 * 54321;
 
@@ -797,26 +848,21 @@ bool mcache_ghost::transparent() const
 /////////////////////////////////////////////////////////////////////////////
 // mcache_demon
 
-mcache_demon::mcache_demon(const monster* mon)
+mcache_demon::mcache_demon(const monster_info& minf)
 {
-    ASSERT(mcache_demon::valid(mon));
+    ASSERT(minf.type == MONS_PANDEMONIUM_LORD);
 
-    const struct ghost_demon &ghost = *mon->ghost;
+    const uint32_t seed = hash(&minf.mname[0], minf.mname.size());
+    rng_save_excursion exc;
+    seed_rng(seed);
 
-    unsigned int pseudo_rand1 = ghost.max_hp * 54321 * 54321;
-    unsigned int pseudo_rand2 = ghost.ac * 54321 * 54321;
-    unsigned int pseudo_rand3 = ghost.ev * 54321 * 54321;
+    m_demon.head = TILEP_DEMON_HEAD + random2(tile_player_count(TILEP_DEMON_HEAD));
+    m_demon.body = TILEP_DEMON_BODY + random2(tile_player_count(TILEP_DEMON_BODY));
 
-    int head_offset = pseudo_rand1 % tile_player_count(TILEP_DEMON_HEAD);
-    m_demon.head = TILEP_DEMON_HEAD + head_offset;
-
-    int body_offset = pseudo_rand2 % tile_player_count(TILEP_DEMON_BODY);
-    m_demon.body = TILEP_DEMON_BODY + body_offset;
-
-    if (ghost.ev % 2)
+    if (minf.fly)
     {
-        int wings_offset = pseudo_rand3 % tile_player_count(TILEP_DEMON_WINGS);
-        m_demon.wings = TILEP_DEMON_WINGS + wings_offset;
+        m_demon.wings = TILEP_DEMON_WINGS
+                        + random2(tile_player_count(TILEP_DEMON_WINGS));
     }
     else
         m_demon.wings = 0;
@@ -841,7 +887,7 @@ int mcache_demon::info(tile_draw_info *dinfo) const
 
 bool mcache_demon::valid(const monster* mon)
 {
-    return (mon && mon->type == MONS_PANDEMONIUM_DEMON);
+    return (mon && mon->type == MONS_PANDEMONIUM_LORD);
 }
 
 mcache_demon::mcache_demon(reader &th) : mcache_entry(th)

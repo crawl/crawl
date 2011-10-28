@@ -45,9 +45,13 @@ class _layout
         valid(false) {}
 
  protected:
+// Smart compilers can recognize some of these assertions as tautological,
+// but we do want to keep them in case something changes.
+// A discussion: http://kerneltrap.org/node/7434
+#pragma GCC diagnostic ignored "-Wstrict-overflow"
     void _assert_validity() const
     {
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
         // Check that all the panes fit in the view.
         ASSERT((viewp+viewsz - termp).x <= termsz.x);
         ASSERT((viewp+viewsz - termp).y <= termsz.y);
@@ -115,18 +119,10 @@ class _inline_layout : public _layout
         if ((viewsz.y % 2) != 1)
             --viewsz.y;
 
-        if (Options.classic_hud)
-        {
-            mlistsz.y = 0;
-            _increment(msgsz.y,  leftover_y(), MSG_MAX_HEIGHT);
-        }
-        else
-        {
-            if (mlistsz.y < MLIST_MIN_HEIGHT)
-                _increment(mlistsz.y, leftover_rightcol_y(), MLIST_MIN_HEIGHT);
-            _increment(msgsz.y,  leftover_y(), MSG_MAX_HEIGHT);
-            _increment(mlistsz.y, leftover_rightcol_y(), INT_MAX);
-        }
+        if (mlistsz.y < MLIST_MIN_HEIGHT)
+            _increment(mlistsz.y, leftover_rightcol_y(), MLIST_MIN_HEIGHT);
+        _increment(msgsz.y,  leftover_y(), MSG_MAX_HEIGHT);
+        _increment(mlistsz.y, leftover_rightcol_y(), INT_MAX);
 
         // Finish off by doing the positions.
         if (Options.messages_at_top)
@@ -368,28 +364,24 @@ void crawl_view_geometry::init_geometry()
 {
     termsz = coord_def(get_number_of_cols(), get_number_of_lines());
     hudsz  = coord_def(HUD_WIDTH,
-                       HUD_HEIGHT + (Options.show_gold_turns ? 1 : 0));
+                       HUD_HEIGHT + (Options.show_gold_turns ? 1 : 0)
+                                  + crawl_state.game_is_zotdef());
 
     const _inline_layout lay_inline(termsz, hudsz);
     const _mlist_col_layout lay_mlist(termsz, hudsz);
 
-    if (! lay_inline.valid)
+#ifndef USE_TILE_LOCAL
+    if ((termsz.x < MIN_COLS || termsz.y < MIN_LINES || !lay_inline.valid)
+        && !crawl_state.need_save)
     {
-#ifndef USE_TILE
         // Terminal too small; exit with an error.
-        if (!crawl_state.need_save)
-        {
-            end(1, false, "Terminal too small (%d,%d); need at least (%d,%d)",
-                termsz.x, termsz.y,
-                termsz.x + std::max(0, -lay_inline.leftover_x()),
-                termsz.y + std::max(0, -lay_inline.leftover_y()));
-        }
-#endif
+        end(1, false, "Terminal too small (%d,%d); need at least (%d,%d)",
+            termsz.x, termsz.y, MIN_COLS, MIN_LINES);
     }
+#endif
 
     const _layout* winner = &lay_inline;
     if (Options.mlist_allow_alternate_layout
-        && !Options.classic_hud
         && lay_mlist.valid)
     {
         winner = &lay_mlist;
@@ -404,7 +396,7 @@ void crawl_view_geometry::init_geometry()
     mlistp  = winner->mlistp;
     mlistsz = winner->mlistsz;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // libgui may redefine these based on its own settings.
     gui_init_view_params(*this);
 #endif

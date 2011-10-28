@@ -263,7 +263,7 @@ def parse_options():
             help="Log to the specified file")
     parser.add_option("-v", "--verbose", action="count",
             help="Be more verbose. Ignored if -l is not specified.")
-    master_help = ("Build master to push to. Default is %(master)s" % 
+    master_help = ("Build master to push to. Default is %(master)s" %
                    { 'master' : master })
     parser.add_option("-m", "--master", action="store", type="string",
             help=master_help)

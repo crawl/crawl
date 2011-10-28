@@ -1,8 +1,7 @@
-/*
- *  File:       mon-grow.cc
- *  Summary:    Monster level-up code.
- *  Written by: dshaligram on Fri Oct 26 08:33:37 2007 UTC
- */
+/**
+ * @file
+ * @brief Monster level-up code.
+**/
 
 #include "AppHdr.h"
 
@@ -39,7 +38,7 @@ static const monster_level_up mon_grow[] =
 
     monster_level_up(MONS_UGLY_THING, MONS_VERY_UGLY_THING),
 
-    monster_level_up(MONS_ANT_LARVA, MONS_GIANT_ANT),
+    monster_level_up(MONS_ANT_LARVA, MONS_WORKER_ANT),
 
     monster_level_up(MONS_KILLER_BEE_LARVA, MONS_KILLER_BEE),
 
@@ -63,6 +62,8 @@ static const monster_level_up mon_grow[] =
     monster_level_up(MONS_DEEP_ELF_SUMMONER, MONS_DEEP_ELF_SORCERER),
 
     monster_level_up(MONS_BABY_ALLIGATOR, MONS_ALLIGATOR),
+
+    monster_level_up(MONS_GNOLL, MONS_GNOLL_SERGEANT),
 };
 
 mons_experience_levels::mons_experience_levels()
@@ -111,13 +112,15 @@ void monster::upgrade_type(monster_type after, bool adjust_hd,
 
     // Initialise a dummy monster to save work.
     monster dummy;
-    dummy.type = after;
+    dummy.type         = after;
+    dummy.base_monster = base_monster;
+    dummy.number       = number;
     define_monster(&dummy);
 
     colour = dummy.colour;
     speed  = dummy.speed;
     spells = dummy.spells;
-    fix_speed();
+    calc_speed();
 
     const monsterentry *m = get_monster_data(after);
     ac += m->AC - orig->AC;
@@ -175,10 +178,8 @@ bool monster::level_up()
         // Not less than 3 hp, not more than 25.
         hpboost = std::min(std::max(hpboost, 3), 25);
 
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "%s: HD: %d, maxhp: %d, boost: %d",
+        dprf("%s: HD: %d, maxhp: %d, boost: %d",
              name(DESC_PLAIN).c_str(), hit_dice, max_hit_points, hpboost);
-#endif
 
         max_hit_points += hpboost;
         hit_points     += hpboost;

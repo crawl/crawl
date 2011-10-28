@@ -1,8 +1,7 @@
-/*
- *  File:       directn.h
- *  Summary:    Functions used when picking squares.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used when picking squares.
+**/
 
 
 #ifndef DIRECT_H
@@ -13,11 +12,12 @@
 #include "enum.h"
 #include "ray.h"
 #include "state.h"
+#include "target.h"
 
 class range_view_annotator
 {
 public:
-    range_view_annotator(int range);
+    range_view_annotator(targetter *range);
     virtual ~range_view_annotator();
 };
 
@@ -40,12 +40,15 @@ public:
     // Update the prompt shown at top.
     virtual void update_top_prompt(std::string* p_top_prompt) {}
 
+    // Add relevant descriptions to the target status.
+    virtual std::vector<std::string> get_monster_desc(const monster_info& mi);
  private:
     std::string prompt;
 
 public:
     bool just_looking;
     bool compass;
+    desc_filter get_desc_func; // Function to add relevant descriptions
 };
 
 // output from direction() function:
@@ -69,6 +72,7 @@ public:
 
 struct direction_chooser_args
 {
+    targetter *hitfunc;
     targeting_type restricts;
     targ_mode_type mode;
     int range;
@@ -81,8 +85,10 @@ struct direction_chooser_args
     targeting_behaviour *behaviour;
     bool cancel_at_self;
     bool show_floor_desc;
+    desc_filter get_desc_func;
 
     direction_chooser_args() :
+        hitfunc(NULL),
         restricts(DIR_NONE),
         mode(TARG_ANY),
         range(-1),
@@ -93,7 +99,8 @@ struct direction_chooser_args
         target_prefix(NULL),
         behaviour(NULL),
         cancel_at_self(false),
-        show_floor_desc(false) {}
+        show_floor_desc(false),
+        get_desc_func(NULL) {}
 };
 
 class direction_chooser
@@ -137,6 +144,9 @@ private:
     bool select_compass_direction(const coord_def& delta);
     bool select_previous_target();
 
+    // Mark item for pickup, initiate movement.
+    bool pickup_item();
+
     // Return true if we need to abort targeting due to a signal.
     bool handle_signals();
 
@@ -159,7 +169,7 @@ private:
     // Can be modified by the targeting_behaviour.
     void print_top_prompt() const;
 
-    // Press: ? - help, Shift-Dir - straight line, t - giant bat
+    // Press: ? - help, Shift-Dir - straight line, t - megabat
     void print_key_hints() const;
 
     // Here: An orc wizard, wielding a glowing orcish dagger, and wearing
@@ -232,6 +242,7 @@ private:
     targeting_behaviour *behaviour; // Can be NULL for default
     bool cancel_at_self;        // Disallow self-targeting?
     bool show_floor_desc;       // Describe the floor of the current target
+    targetter *hitfunc;         // Determine what would be hit.
 
     // Internal data.
     ray_def beam;               // The (possibly invalid) beam.
@@ -253,7 +264,15 @@ private:
 
 };
 
-#ifndef USE_TILE
+// Monster equipment description level.
+enum mons_equip_desc_level_type
+{
+    DESC_WEAPON,
+    DESC_FULL,
+    DESC_IDENTIFIED,
+};
+
+#ifndef USE_TILE_LOCAL
 char mlist_index_to_letter(int index);
 #endif
 
@@ -272,7 +291,7 @@ void get_square_desc(const coord_def &c, describe_info &inf,
 
 void describe_floor();
 std::string get_monster_equipment_desc(const monster_info& mi,
-                                bool full_desc = true,
+                                mons_equip_desc_level_type level = DESC_FULL,
                                 description_level_type mondtype = DESC_CAP_A,
                                 bool print_attitude = false);
 
@@ -301,6 +320,6 @@ std::vector<dungeon_feature_type> features_by_desc(const base_pattern &pattern);
 
 void full_describe_view(void);
 
-extern const struct coord_def Compass[8];
+extern const struct coord_def Compass[9];
 
 #endif

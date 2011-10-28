@@ -1,8 +1,7 @@
-/*
- *  File:       fixedarray.h
- *  Summary:    Fixed size 2D vector class that asserts if you do something bad.
- *  Written by: Jesse Jones
- */
+/**
+ * @file
+ * @brief Fixed size 2D vector class that asserts if you do something bad.
+**/
 
 #ifndef FIXARY_H
 #define FIXARY_H
@@ -12,8 +11,8 @@
 // ==========================================================================
 //    class FixedArray
 // ==========================================================================
-template <class TYPE, int WIDTH, int HEIGHT> class FixedArray {
-
+template <class TYPE, int WIDTH, int HEIGHT> class FixedArray
+{
 //-----------------------------------
 //    Types
 //
@@ -56,19 +55,23 @@ public:
 
     // ----- Access -----
     Column& operator[](unsigned long index) { return mData[index]; }
-    const Column& operator[](unsigned long index) const {
+    const Column& operator[](unsigned long index) const
+    {
         return mData[index];
     }
 
-    template<class Indexer> TYPE& operator () (const Indexer &i) {
+    template<class Indexer> TYPE& operator () (const Indexer &i)
+    {
         return mData[i.x][i.y];
     }
 
-    template<class Indexer> const TYPE& operator () (const Indexer &i) const {
+    template<class Indexer> const TYPE& operator () (const Indexer &i) const
+    {
         return mData[i.x][i.y];
     }
 
-    void init(const TYPE& def) {
+    void init(const TYPE& def)
+    {
         for (int i = 0; i < WIDTH; ++i)
             mData[i].init(def);
     }
@@ -116,15 +119,18 @@ public:
     int height() const { return data.height(); }
 
     // ----- Access -----
-    template<class Indexer> TYPE& operator () (const Indexer &i) {
+    template<class Indexer> TYPE& operator () (const Indexer &i)
+    {
         return data[i.x+RADIUS][i.y+RADIUS];
     }
 
-    template<class Indexer> const TYPE& operator () (const Indexer &i) const {
+    template<class Indexer> const TYPE& operator () (const Indexer &i) const
+    {
         return data[i.x+RADIUS][i.y+RADIUS];
     }
 
-    void init(const TYPE& def) {
+    void init(const TYPE& def)
+    {
         data.init(def);
     }
 

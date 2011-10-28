@@ -14,7 +14,6 @@
 #include "options.h"
 #include "show.h"
 #include "showsymb.h"
-#include "stuff.h"
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tilepick.h"
@@ -33,11 +32,16 @@ void map_knowledge_forget_mons(const coord_def& c)
 // Used to mark dug out areas, unset when terrain is seen or mapped again.
 void set_terrain_changed(int x, int y)
 {
+    const coord_def p = coord_def(x, y);
     env.map_knowledge[x][y].flags |= MAP_CHANGED_FLAG;
 
-    dungeon_events.fire_position_event(DET_FEAT_CHANGE, coord_def(x, y));
+    dungeon_events.fire_position_event(DET_FEAT_CHANGE, p);
 
-    los_terrain_changed(coord_def(x,y));
+    los_terrain_changed(p);
+
+    for (orth_adjacent_iterator ai(p); ai; ++ai)
+        if (actor *act = actor_at(*ai))
+            act->check_clinging(false, feat_is_door(grd(p)));
 }
 
 void set_terrain_mapped(int x, int y)
@@ -83,16 +87,25 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
             cell.clear_item();
 
         if ((!clear_detected_monsters || !cell.detected_monster())
-                && !mons_class_is_stationary(cell.monster()))
+            && !mons_class_is_stationary(cell.monster()))
+        {
             cell.clear_monster();
+#ifdef USE_TILE
+            tile_clear_monster(p);
+#endif
+        }
     }
 }
 
 static void _automap_from(int x, int y, int mutated)
 {
     if (mutated)
-        magic_mapping(8 * mutated, 25, true, you.religion == GOD_ASHENZARI,
-                      true, true, coord_def(x,y));
+    {
+        magic_mapping(8 * mutated,
+                      you.religion == GOD_ASHENZARI ? 25 + you.piety / 8 : 25,
+                      true, you.religion == GOD_ASHENZARI,
+                      true, coord_def(x,y));
+    }
 }
 
 static int _map_quality()
@@ -121,34 +134,14 @@ void set_terrain_seen(int x, int y)
     map_cell* cell = &env.map_knowledge[x][y];
 
     // First time we've seen a notable feature.
-    // In unmappable areas, this doesn't work since
-    // map knowledge gets wiped each turn.
-    if (!(cell->flags & MAP_SEEN_FLAG) && player_in_mappable_area())
+    if (!(cell->flags & MAP_SEEN_FLAG))
     {
         _automap_from(x, y, _map_quality());
 
-        const bool boring = !is_notable_terrain(feat)
-            // A portal deeper into the Ziggurat is boring.
-            || (feat == DNGN_ENTER_PORTAL_VAULT
-                && you.level_type == LEVEL_PORTAL_VAULT)
-            // Altars in the temple are boring.
-            || (feat_is_altar(feat)
-                && player_in_branch(BRANCH_ECUMENICAL_TEMPLE))
-            // Only note the first entrance to the Abyss/Pan/Hell
-            // which is found.
-            || ((feat == DNGN_ENTER_ABYSS || feat == DNGN_ENTER_PANDEMONIUM
-                 || feat == DNGN_ENTER_HELL)
-                && overview_knows_num_portals(feat) > 1)
-            // There are at least three Zot entrances, and they're always
-            // on D:27, so ignore them.
-            || feat == DNGN_ENTER_ZOT;
-
-        if (!boring)
+        if (!is_boring_terrain(feat))
         {
             coord_def pos(x, y);
-            std::string desc =
-                feature_description(pos, false, DESC_NOCAP_A);
-
+            std::string desc = feature_description(pos, false, DESC_NOCAP_A);
             take_note(Note(NOTE_SEEN_FEAT, 0, 0, desc.c_str()));
         }
     }

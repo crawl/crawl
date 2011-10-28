@@ -26,11 +26,12 @@ Main steps
     text files.
 
 1.) Make a local clone of the source code:
-    git clone git://crawl-ref.git.sourceforge.net/gitroot/crawl-ref/crawl-ref
+    git clone git://gitorious.org/crawl/crawl.git
 
 2.) Compile the code. To do this you might have to install a compiler and/or
     additional libraries. See INSTALL.txt for details. If you have any
-    questions, you can ask for help on crawl-ref-discuss@lists.sourceforge.net.
+    questions, you can ask for help on crawl-ref-discuss@lists.sourceforge.net,
+    or in ##crawl-dev on irc.freenode.net.
 
 3.) Now you can start tweaking the code. Depending on your coding background
     you may want to experiment with smaller changes first. If you intend to
@@ -69,17 +70,18 @@ Main steps
 
 Tips
 ----
-Tip 1:  The code is rougly divided into files according to functionality that
+Tip 1:  The code is roughly divided into files according to functionality that
         is reflected in the file names, so mon-gear.cc, mon-stuff.cc
         and mon-util.cc all handle code relating to monsters, while spl-data.h,
-        spl-cast.cc and spells2.cc deal with spells. Note that related code can
-        still be found in other files, too, but these are a good starting point.
+        spl-cast.cc and spl-summoning.cc deal with spells. Note that related
+        code can still be found in other files, too, but these are a good
+        starting point.
 
 Tip 2:  Start out with the simple, generic stuff where you only have to copy
         and minimally tweak existing code, and only once that works move on to
         the more complicated implementations.
 
-Tip 3:  Use grep to find all occurences of a similar instance of the same type
+Tip 3:  Use grep to find all occurrences of a similar instance of the same type
         as the one you're implementing, e.g.
             grep GOD_ELYVILON *.cc  when adding a new god, or
             grep SCR_FOG *.cc  when adding a new scroll.

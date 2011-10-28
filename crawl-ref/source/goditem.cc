@@ -1,7 +1,7 @@
-/*
- *  File:       goditem.cc
- *  Summary:    Gods' attitude towards items.
- */
+/**
+ * @file
+ * @brief Gods' attitude towards items.
+**/
 
 #include "AppHdr.h"
 
@@ -292,8 +292,11 @@ bool is_chaotic_item(const item_def& item)
         break;
     }
 
-    if (is_artefact(item) && artefact_wpn_property(item, ARTP_MUTAGENIC))
+    if (is_artefact(item) && item.base_type != OBJ_BOOKS
+        && artefact_wpn_property(item, ARTP_MUTAGENIC))
+    {
         retval = true;
+    }
 
     return (retval);
 }
@@ -312,7 +315,7 @@ bool is_potentially_hasty_item(const item_def& item)
     case OBJ_MISSILES:
         {
         const int item_brand = get_ammo_brand(item);
-        if (item_brand == SPMSL_CHAOS)
+        if (item_brand == SPMSL_CHAOS || item_brand == SPMSL_RAGE)
             return (true);
         }
         break;
@@ -337,7 +340,9 @@ bool is_hasty_item(const item_def& item)
         {
         const int item_brand = get_weapon_brand(item);
         retval = (item_brand == SPWPN_SPEED
-                  || item.sub_type == WPN_QUICK_BLADE);
+                  || item.sub_type == WPN_QUICK_BLADE
+                  || is_unrandom_artefact(item)
+                     && item.special == UNRAND_TROG);
         }
         break;
     case OBJ_ARMOUR:
@@ -366,7 +371,7 @@ bool is_hasty_item(const item_def& item)
         break;
     }
 
-    if (is_artefact(item)
+    if (is_artefact(item) && item.base_type != OBJ_BOOKS
         && (artefact_wpn_property(item, ARTP_ANGRY)
             || artefact_wpn_property(item, ARTP_BERSERK)))
     {
@@ -492,9 +497,7 @@ bool is_spellbook_type(const item_def& item, bool book_or_rod,
                        bool (*suitable)(spell_type spell, god_type god),
                        god_type god)
 {
-    const bool is_spellbook = (item.base_type == OBJ_BOOKS
-                                  && item.sub_type != BOOK_MANUAL
-                                  && item.sub_type != BOOK_DESTRUCTION);
+    const bool is_spellbook = item_is_spellbook(item);
     const bool is_rod = item_is_rod(item);
 
     if (!is_spellbook && !is_rod)
@@ -650,12 +653,8 @@ conduct_type god_hates_item_handling(const item_def &item)
         break;
 
     case GOD_TROG:
-        if (item.base_type == OBJ_BOOKS
-            && item.sub_type != BOOK_MANUAL
-            && item.sub_type != BOOK_DESTRUCTION)
-        {
+        if (item_is_spellbook(item))
             return (DID_SPELL_MEMORISE);
-        }
         break;
 
     case GOD_FEDHAS:

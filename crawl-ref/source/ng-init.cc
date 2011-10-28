@@ -1,8 +1,8 @@
-/*
- *  File:       ng-init.cc
- *  Summary:    Initializing non-player-related parts of a new game.
- *
- * TODO: 'you' shouldn't occur here.
+/**
+ * @file
+ * @brief Initializing non-player-related parts of a new game.
+**/
+/* TODO: 'you' shouldn't occur here.
  *       Some of these might fit better elsewhere.
  */
 
@@ -48,15 +48,23 @@ static uint8_t _random_potion_description()
     return desc;
 }
 
+void initialise_branches_for_game_type()
+{
+    if (crawl_state.game_is_sprint())
+        branches[BRANCH_MAIN_DUNGEON].depth = 1;
+    else
+        branches[BRANCH_MAIN_DUNGEON].depth = BRANCH_DUNGEON_DEPTH;
+}
+
 // Determine starting depths of branches.
 void initialise_branch_depths()
 {
     for (int branch = BRANCH_ECUMENICAL_TEMPLE; branch < NUM_BRANCHES; ++branch)
     {
         Branch *b = &branches[branch];
-        if (crawl_state.game_is_sprint())
+        if (crawl_state.game_is_sprint() || branch_is_unfinished(b->id))
             b->startdepth = -1;
-        else if (branch < BRANCH_VESTIBULE_OF_HELL)
+        else if (branch <= BRANCH_VESTIBULE_OF_HELL || branch > BRANCH_LAST_HELL)
             b->startdepth = random_range(b->mindepth, b->maxdepth);
     }
 
@@ -68,14 +76,7 @@ void initialise_branch_depths()
     dprf("Disabling branch: %s", branches[disabled_branch].shortname);
     branches[disabled_branch].startdepth = -1;
 
-    branches[BRANCH_SPIDER_NEST].startdepth = -1;
-    branches[BRANCH_FOREST].startdepth = -1;
-    branches[BRANCH_DWARF_HALL].startdepth = -1;
-
-    if (crawl_state.game_is_sprint())
-        branches[BRANCH_MAIN_DUNGEON].depth = 1;
-    else
-        branches[BRANCH_MAIN_DUNGEON].depth = BRANCH_DUNGEON_DEPTH;
+    initialise_branches_for_game_type();
 }
 
 #define MAX_OVERFLOW_LEVEL 9
@@ -160,7 +161,7 @@ void initialise_temples()
     }
 
 #ifdef DEBUG_TEMPLES
-    mprf(MSGCH_DIAGNOSTICS, "%u overflow altars", overflow_gods.size());
+    mprf(MSGCH_DIAGNOSTICS, "%u overflow altars", (unsigned int)overflow_gods.size());
 #endif
 
     CrawlVector &temple_gods
@@ -329,8 +330,8 @@ void initialise_item_descriptions()
 void fix_up_jiyva_name()
 {
     do
-        you.second_god_name = make_name(random_int(), false, 8, 'J');
-    while (strncmp(you.second_god_name.c_str(), "J", 1) != 0);
+        you.jiyva_second_name = make_name(random_int(), false, 8, 'J');
+    while (strncmp(you.jiyva_second_name.c_str(), "J", 1) != 0);
 
-    you.second_god_name = replace_all(you.second_god_name, " ", "");
+    you.jiyva_second_name = replace_all(you.jiyva_second_name, " ", "");
 }

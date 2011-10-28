@@ -1,7 +1,7 @@
-/*
- *  File:     spl-clouds.cc
- *  Summary:  Cloud creating spells.
- */
+/**
+ * @file
+ * @brief Cloud creating spells.
+**/
 
 #include "AppHdr.h"
 
@@ -35,8 +35,19 @@
 #include "viewchar.h"
 #include "shout.h"
 
-// Returns whether the spell was actually cast.
-bool conjure_flame(int pow, const coord_def& where)
+static void _burn_tree(coord_def pos)
+{
+    bolt beam;
+    beam.origin_spell = SPELL_CONJURE_FLAME;
+    beam.range = 1;
+    beam.flavour = BEAM_FIRE;
+    beam.name = "fireball"; // yay doing this by name
+    beam.source = beam.target = pos;
+    beam.set_agent(&you);
+    beam.fire();
+}
+
+spret_type conjure_flame(int pow, const coord_def& where, bool fail)
 {
     // FIXME: This would be better handled by a flag to enforce max range.
     if (distance(where, you.pos()) > dist_range(spell_range(SPELL_CONJURE_FLAME,
@@ -44,13 +55,13 @@ bool conjure_flame(int pow, const coord_def& where)
         || !in_bounds(where))
     {
         mpr("That's too far away.");
-        return (false);
+        return SPRET_ABORT;
     }
 
     if (you.trans_wall_blocking(where))
     {
         mpr("A translucent wall is in the way.");
-        return (false);
+        return SPRET_ABORT;
     }
 
     if (cell_is_solid(where))
@@ -67,13 +78,15 @@ bool conjure_flame(int pow, const coord_def& where)
             mpr("You can't ignite solid crystal!");
             break;
         case DNGN_TREE:
-            mpr("The flames aren't hot enough to burn down trees!");
-            break;
+        case DNGN_SWAMP_TREE:
+            fail_check();
+            _burn_tree(where);
+            return SPRET_SUCCESS;
         default:
             mpr("You can't ignite solid rock!");
             break;
         }
-        return (false);
+        return SPRET_ABORT;
     }
 
     const int cloud = env.cgrid(where);
@@ -81,7 +94,7 @@ bool conjure_flame(int pow, const coord_def& where)
     if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_FIRE)
     {
         mpr("There's already a cloud there!");
-        return (false);
+        return SPRET_ABORT;
     }
 
     // Note that self-targeting is handled by SPFLAG_NOT_SELF.
@@ -91,15 +104,17 @@ bool conjure_flame(int pow, const coord_def& where)
         if (you.can_see(mons))
         {
             mpr("You can't place the cloud on a creature.");
-            return (false);
+            return SPRET_ABORT;
         }
-        else
-        {
-            // FIXME: maybe should do _paranoid_option_disable() here?
-            mpr("You see a ghostly outline there, and the spell fizzles.");
-            return (true);      // Don't give free detection!
-        }
+
+        fail_check();
+
+        // FIXME: maybe should do _paranoid_option_disable() here?
+        mpr("You see a ghostly outline there, and the spell fizzles.");
+        return SPRET_SUCCESS;      // Don't give free detection!
     }
+
+    fail_check();
 
     if (cloud != EMPTY_CLOUD)
     {
@@ -113,16 +128,16 @@ bool conjure_flame(int pow, const coord_def& where)
     else
     {
         const int durat = std::min(5 + (random2(pow)/2) + (random2(pow)/2), 23);
-        place_cloud(CLOUD_FIRE, where, durat, KC_YOU);
+        place_cloud(CLOUD_FIRE, where, durat, &you);
         mpr("The fire roars!");
     }
     noisy(2, where);
 
-    return (true);
+    return SPRET_SUCCESS;
 }
 
 // Assumes beem.range has already been set. -cao
-bool stinking_cloud(int pow, bolt &beem)
+spret_type stinking_cloud(int pow, bolt &beem, bool fail)
 {
     beem.name        = "stinking cloud";
     beem.colour      = GREEN;
@@ -150,59 +165,64 @@ bool stinking_cloud(int pow, bolt &beem)
     {
         // We don't want to fire through friendlies.
         canned_msg(MSG_OK);
-        return (false);
+        return SPRET_ABORT;
     }
+
+    fail_check();
 
     // Really fire.
     beem.is_tracer = false;
     beem.fire();
 
-    return (true);
+    return SPRET_SUCCESS;
 }
 
-int cast_big_c(int pow, cloud_type cty, kill_category whose, bolt &beam)
+spret_type cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam,
+                      bool fail)
 {
-    big_cloud(cty, whose, beam.target, pow, 8 + random2(3), -1);
+    if (distance(beam.target, you.pos()) > dist_range(beam.range)
+        || !in_bounds(beam.target))
+    {
+        mpr("That is beyond the maximum range.");
+        return SPRET_ABORT;
+    }
+
+    if (cell_is_solid(beam.target))
+    {
+        mpr("You can't place clouds on a wall.");
+        return SPRET_ABORT;
+    }
+
+    fail_check();
+
+    big_cloud(cty, caster, beam.target, pow, 8 + random2(3), -1);
     noisy(2, beam.target);
-    return (1);
+    return SPRET_SUCCESS;
 }
 
-void big_cloud(cloud_type cl_type, kill_category whose,
-               const coord_def& where, int pow, int size, int spread_rate,
-               int colour, std::string name, std::string tile)
-{
-    big_cloud(cl_type, whose, cloud_struct::whose_to_killer(whose),
-              where, pow, size, spread_rate, colour, name, tile);
-}
-
-void big_cloud(cloud_type cl_type, killer_type killer,
-               const coord_def& where, int pow, int size, int spread_rate,
-               int colour, std::string name, std::string tile)
-{
-    big_cloud(cl_type, cloud_struct::killer_to_whose(killer), killer,
-              where, pow, size, spread_rate, colour, name, tile);
-}
-
-void big_cloud(cloud_type cl_type, kill_category whose, killer_type killer,
+void big_cloud(cloud_type cl_type, const actor *agent,
                const coord_def& where, int pow, int size, int spread_rate,
                int colour, std::string name, std::string tile)
 {
     apply_area_cloud(make_a_normal_cloud, where, pow, size,
-                     cl_type, whose, killer, spread_rate, colour, name, tile);
+                     cl_type, agent, spread_rate, colour, name, tile);
 }
 
-void cast_ring_of_flames(int power)
+spret_type cast_ring_of_flames(int power, bool fail)
 {
     // You shouldn't be able to cast this in the rain. {due}
     if (in_what_cloud(CLOUD_RAIN))
     {
         mpr("Your spell sizzles in the rain.");
-        return;
+        return SPRET_ABORT;
     }
+
+    fail_check();
     you.increase_duration(DUR_FIRE_SHIELD,
                           5 + (power / 10) + (random2(power) / 5), 50,
                           "The air around you leaps into flame!");
     manage_fire_shield(1);
+    return SPRET_SUCCESS;
 }
 
 void manage_fire_shield(int delay)
@@ -214,6 +234,11 @@ void manage_fire_shield(int delay)
     you.duration[DUR_FIRE_SHIELD]-= delay;
     if (you.duration[DUR_FIRE_SHIELD] < 0)
         you.duration[DUR_FIRE_SHIELD] = 0;
+
+    // Remove fire clouds on top of you
+    if (env.cgrid(you.pos()) != EMPTY_CLOUD)
+        if (env.cloud[env.cgrid(you.pos())].type == CLOUD_FIRE)
+            delete_cloud_at(you.pos());
 
     if (!you.duration[DUR_FIRE_SHIELD])
     {
@@ -230,12 +255,20 @@ void manage_fire_shield(int delay)
     // Place fire clouds all around you
     for (adjacent_iterator ai(you.pos()); ai; ++ai)
         if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD)
-            place_cloud(CLOUD_FIRE, *ai, 1 + random2(6), KC_YOU);
+            place_cloud(CLOUD_FIRE, *ai, 1 + random2(6), &you);
 }
 
-void corpse_rot()
+spret_type cast_corpse_rot(bool fail)
 {
-    for (radius_iterator ri(you.pos(), 6, C_ROUND, you.get_los_no_trans());
+    fail_check();
+    corpse_rot(&you);
+    return SPRET_SUCCESS;
+}
+
+void corpse_rot(actor* caster)
+{
+    for (radius_iterator ri(caster->pos(), 6, C_ROUND, caster->atype() == ACT_PLAYER ? you.get_los_no_trans()
+                                                                                    : caster->get_los());
          ri; ++ri)
     {
         if (!is_sanctuary(*ri) && env.cgrid(*ri) == EMPTY_CLOUD)
@@ -248,30 +281,26 @@ void corpse_rot()
                     else
                         turn_corpse_into_skeleton(*si);
 
-                    place_cloud(CLOUD_MIASMA, *ri, 4+random2avg(16, 3), KC_YOU);
+                    place_cloud(CLOUD_MIASMA, *ri, 4+random2avg(16, 3),caster);
 
                     // Don't look for more corpses here.
                     break;
                 }
     }
 
-    if (you.can_smell())
+    if (you.can_smell() && you.can_see(caster))
         mpr("You smell decay.");
 
     // Should make zombies decay into skeletons?
 }
 
 int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
-                        cloud_type ctype, kill_category whose,
-                        killer_type killer, int colour, std::string name,
-                        std::string tile)
+                        cloud_type ctype, const actor *agent, int colour,
+                        std::string name, std::string tile)
 {
-    if (killer == KILL_NONE)
-        killer = cloud_struct::whose_to_killer(whose);
-
     place_cloud(ctype, where,
-                 (3 + random2(pow / 4) + random2(pow / 4) + random2(pow / 4)),
-                 whose, killer, spread_rate, colour, name, tile);
+                (3 + random2(pow / 4) + random2(pow / 4) + random2(pow / 4)),
+                agent, spread_rate, colour, name, tile);
 
     return 1;
 }
@@ -393,7 +422,7 @@ std::string get_evaporate_result_list(int potion)
 
 
 // Assumes beem.range is already set -cao
-bool cast_evaporate(int pow, bolt& beem, int pot_idx)
+spret_type cast_evaporate(int pow, bolt& beem, int pot_idx, bool fail)
 {
     ASSERT(you.inv[pot_idx].base_type == OBJ_POTIONS);
     item_def& potion = you.inv[pot_idx];
@@ -406,7 +435,7 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
     beem.is_beam     = false;
     beem.aux_source.clear();
 
-    beem.hit        = you.dex() / 2 + roll_dice(2, you.skills[SK_THROWING] / 2 + 1);
+    beem.auto_hit   = true;
     beem.damage     = dice_def(1, 0);  // no damage, just producing clouds
     beem.ench_power = pow;               // used for duration only?
     beem.is_explosion = true;
@@ -525,11 +554,10 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
     {
         // We don't want to fire through friendlies or at ourselves.
         canned_msg(MSG_OK);
-        return (false);
+        return SPRET_ABORT;
     }
 
-    practise(EX_WILL_THROW_POTION);
-
+    fail_check();
     // Really fire.
     beem.flavour = real_flavour;
     beem.is_tracer = false;
@@ -541,7 +569,7 @@ bool cast_evaporate(int pow, bolt& beem, int pot_idx)
 
     dec_inv_item_quantity(pot_idx, 1);
 
-    return (true);
+    return SPRET_SUCCESS;
 }
 
 int holy_flames(monster* caster, actor* defender)
@@ -560,7 +588,7 @@ int holy_flames(monster* caster, actor* defender)
             continue;
         }
 
-        place_cloud(CLOUD_HOLY_FLAMES, *ai, caster->hit_dice * 5, KILL_MON);
+        place_cloud(CLOUD_HOLY_FLAMES, *ai, caster->hit_dice * 5, caster);
 
         cloud_count++;
     }

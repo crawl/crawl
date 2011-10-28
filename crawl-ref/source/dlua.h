@@ -1,8 +1,7 @@
-/*
- *  File:       dlua.h
- *  Summary:    Dungeon-builder Lua interface.
- *  Created by: dshaligram on Sat Jun 23 20:02:09 2007 UTC
- */
+/**
+ * @file
+ * @brief Dungeon-builder Lua interface.
+**/
 
 #ifndef DLUA_H
 #define DLUA_H
@@ -17,6 +16,7 @@ extern CLua dlua;
 
 // Lua chunks cannot exceed 512K. Which is plenty!
 const int LUA_CHUNK_MAX_SIZE = 512 * 1024;
+const int E_CHUNK_LOAD_FAILURE = -1000;
 
 class reader;
 class writer;
@@ -52,6 +52,7 @@ public:
 
     static dlua_chunk precompiled(const std::string &compiled);
 
+    std::string describe(const std::string &chunkname) const;
     void clear();
     void add(int line, const std::string &line2);
     void set_chunk(const std::string &s);

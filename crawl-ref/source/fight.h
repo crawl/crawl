@@ -1,8 +1,7 @@
-/*
- *  File:       fight.h
- *  Summary:    Functions used during combat.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used during combat.
+**/
 
 
 #ifndef FIGHT_H
@@ -20,8 +19,9 @@ enum unarmed_attack_type
     UNAT_PUNCH,
     UNAT_BITE,
     UNAT_PSEUDOPODS,
+    UNAT_TENTACLES,
     UNAT_FIRST_ATTACK = UNAT_KICK,
-    UNAT_LAST_ATTACK = UNAT_PSEUDOPODS,
+    UNAT_LAST_ATTACK = UNAT_TENTACLES,
 };
 
 enum unchivalric_attack_type

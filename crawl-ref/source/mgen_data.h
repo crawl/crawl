@@ -36,7 +36,7 @@ struct mgen_data
 
     // For summoned monsters this is their type of summoning, either the
     // spell which summoned them or one of the values of the enumeration
-    // mon_summon_type in mon-util.h.
+    // mon_summon_type in mon-enum.h.
     int             summon_type;
 
     // Where the monster will be created.
@@ -97,7 +97,6 @@ struct mgen_data
     // be available (vault metadata is not preserved across game saves).
     unsigned        map_mask;
 
-    // XXX: Also rather hackish.
     int             hd;
     int             hp;
 
@@ -105,12 +104,14 @@ struct mgen_data
     // These flags are MF_XXX, rather than MG_XXX flags.
     uint64_t        extra_flags;
 
-    // XXX: Rather hackish.
     std::string     mname;
 
     // This is used to account for non-actor summoners.  Blasted by an Ice
     // Fiend ... summoned by the effects of Hell.
     std::string     non_actor_summoner;
+
+    // This simply stores the initial shape-shifter type.
+    monster_type    initial_shifter;
 
     // This can eventually be used to store relevant information.
     CrawlHashTable  props;
@@ -133,7 +134,8 @@ struct mgen_data
               int mhd = 0, int mhp = 0,
               uint64_t extflags = 0,
               std::string monname = "",
-              std::string nas = "")
+              std::string nas = "",
+              monster_type is = RANDOM_MONSTER)
 
         : cls(mt), base_type(base), behaviour(beh), summoner(sner),
           abjuration_duration(abj), summon_type(st), pos(p),
@@ -141,10 +143,13 @@ struct mgen_data
           god(which_god), number(monnumber), colour(moncolour),
           power(monpower), proximity(prox), level_type(ltype), map_mask(0),
           hd(mhd), hp(mhp), extra_flags(extflags), mname(monname),
-          non_actor_summoner(nas), props()
+          non_actor_summoner(nas), initial_shifter(is), props()
     {
         ASSERT(summon_type == 0 || (abj >= 1 && abj <= 6)
-               || mt == MONS_BALL_LIGHTNING || mt == MONS_ORB_OF_DESTRUCTION);
+               || mt == MONS_BALL_LIGHTNING || mt == MONS_ORB_OF_DESTRUCTION
+               || summon_type == SPELL_STICKS_TO_SNAKES
+               || summon_type == SPELL_DEATH_CHANNEL
+               || summon_type == SPELL_SIMULACRUM);
     }
 
     bool permit_bands() const { return (flags & MG_PERMIT_BANDS); }
@@ -178,7 +183,8 @@ struct mgen_data
         return mgen_data(mt, BEH_HOSTILE, 0, abj, st, p,
                          alert ? MHITYOU : MHITNOT,
                          genflags, ngod, base, 0, BLACK, you.absdepth0,
-                         PROX_ANYWHERE, you.level_type, 0, 0, 0, "", nsummoner);
+                         PROX_ANYWHERE, you.level_type, 0, 0, 0, "", nsummoner,
+                         RANDOM_MONSTER);
     }
 };
 

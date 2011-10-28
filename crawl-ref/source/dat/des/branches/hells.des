@@ -5,9 +5,8 @@
 
 {{
 function dis_setup(e)
-   e.tags(dis)
    e.place("Dis:7")
-   e.tags(no_rotate)
+   e.tags("dis", "no_rotate")
    e.lflags("no_tele_control")
    e.lua_marker('O', item_pickup_change_flags {
                      level_flags="!no_tele_control", item="auto" } )
@@ -22,18 +21,14 @@ end
 
 function geh_setup(e)
    e.place("Geh:7")
-   e.tags(no_rotate)
    e.lflags("no_tele_control")
    e.lua_marker('O', item_pickup_change_flags {
                      level_flags="!no_tele_control", item="auto" } )
    e.kmask('O = no_item_gen')
    e.kitem('O = obsidian rune of Zot')
    e.lrockcol("brown")
-   e.lfloorcol("darkgrey")
---   e.lrocktile("???")
---   e.lfloortile("???")
+   e.lfloorcol("lightgrey")
    e.colour("v = red")
-   e.colour("c = darkgrey")
    dgn.set_feature_desc_short("Floor", "Ashen ground")
    dgn.set_feature_desc_long("Floor", "With every step, you walk on ash. " ..
                              "It is warm and almost comfortable.\n")
@@ -43,17 +38,16 @@ end
 
 function coc_setup(e)
    e.place("Coc:7")
-   e.tags(no_rotate)
+   e.tags("no_rotate")
    e.lflags("no_tele_control")
    e.lua_marker('O', item_pickup_change_flags {
                      level_flags="!no_tele_control", item="auto" } )
    e.kmask('O = no_item_gen')
    e.kitem('O = icy rune of Zot')
-   e.lrockcol("lightgrey")
+   e.lrockcol("lightcyan")
    e.lfloorcol("white")
---   e.lrocktile("???")
    e.lfloortile("floor_ice")
-   e.colour("c = lightcyan")
+   e.colour("c = lightblue")
    dgn.set_feature_desc_short("rock wall", "ice-covered rock wall")
    dgn.set_feature_desc_long("rock wall", "A rock wall coated in a thick layer of ice.\n")
    dgn.set_feature_desc_short("stone wall", "ice-covered stone wall")
@@ -65,7 +59,7 @@ end
 
 function tar_setup(e)
    e.place("Tar:7")
-   e.tags(no_rotate)
+   e.tags("no_rotate")
    e.lflags("no_tele_control")
    e.lua_marker('O', item_pickup_change_flags {
              level_flags="!no_tele_control", item="auto" } )
@@ -99,6 +93,16 @@ end
 # Vestibule entries
 ##############################################################################
 
+# This replaces the hardcoded placement of a hell entrance on D:21-27.
+NAME:   hell_entry
+TAGS:   extra allow_dup luniq
+DEPTH:  D:21-27
+CHANCE: 100%
+KFEAT:  O = enter_hell
+MAP
+O
+ENDMAP
+
 default-depth: D:12-26
 
 ##############################################################################
@@ -106,11 +110,11 @@ default-depth: D:12-26
 # note that other than the imps, the demons here cannot fly
 NAME:   hellmouth_1
 TAGS:   no_rotate
-MONS:   imp / quasit / shadow imp, hellion / rotting devil / iron devil /\
+MONS:   crimson imp / quasit / shadow imp, hellion / rotting devil / iron devil /\
         hairy devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / wand of draining
-ITEM:   wand of fire / ring of fire / Necronomicon / book of demonology /\
+ITEM:   wand of fire / ring of fire / Necronomicon / grand grimoire /\
         scroll of torment
 KFEAT:  A = enter_hell
 ORIENT: float
@@ -143,11 +147,11 @@ ENDMAP
 NAME:   hellmouth_2
 TAGS:   no_monster_gen no_rotate
 ORIENT: float
-MONS:   imp / quasit / shadow imp / iron imp / lemure
+MONS:   crimson imp / quasit / shadow imp / iron imp / lemure
 MONS:   hellion / rotting devil / iron devil / hairy devil / hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / wand of draining
-ITEM:   wand of fire / ring of fire / Necronomicon / book of demonology /\
+ITEM:   wand of fire / ring of fire / Necronomicon / grand grimoire /\
         scroll of torment
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / w:30 nothing
@@ -180,7 +184,7 @@ ENDMAP
 ##############################################################################
 # Hellmouth 3 (Lemuel)
 NAME:   hellmouth_3
-MONS:   weight:50 imp / quasit / shadow imp / iron imp / lemure, hell hound
+MONS:   weight:50 crimson imp / quasit / shadow imp / iron imp / lemure, hell hound
 ITEM:   good_item demon blade / good_item demon whip /\
         good_item demon trident / nothing
 ORIENT: float
@@ -233,7 +237,7 @@ ENDMAP
 
 NAME:  lemuel_hellion_isle
 DEPTH: Geh:*
-MONS:  hellion, Fiend
+MONS:  hellion, brimstone fiend
 SUBST: L = l.
 SUBST: 1 = l:2 1
 MAP
@@ -315,7 +319,7 @@ ENDMAP
 NAME:   lemuel_nasty_pond
 DEPTH:  Tar:*
 TAGS:   no_pool_fixup no_rotate
-MONS:   plant, oklob plant, death ooze, rotting devil, blue death / green death
+MONS:   plant, oklob plant, death ooze, rotting devil, blizzard demon / green death
 SUBST:  W:w.
 SUBST:  Z:w.
 SUBST:  w = w .:1
@@ -357,19 +361,21 @@ MARKER: C=feat:enter_cocytus
 MARKER: T=feat:enter_tartarus
 SUBST:  D=A, G=A, C=A, T=A
 MONS:   Geryon
-: if crawl.one_chance_in(8) then
+: if crawl.one_chance_in(4) then
 MONS:   Murray
 NSUBST: . = 1:2 / *:.
 : end
+FTILE:  +'T = floor_infernal_blank
+TILE:   c = dngn_stone_dark
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxvvvvvvvxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxx..v.....v..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxx.....v.....v.....xxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxx........v.....v........xxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx..........v..D..v..........xxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxx............v.....v............xxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxx.............v.....v.............xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx..v'''''v..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxx.....v'''''v.....xxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxx........v'''''v........xxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx..........v''D''v..........xxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx............v'''''v............xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx.............v'''''v.............xxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxx..............vvv+vvv..............xxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxx.....................................xxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx.......................................xxxxxxxxxxxxxxxx
@@ -386,17 +392,17 @@ xxxxxxx.......................................................xxxxxxxx
 xxxxxx.........................................................xxxxxxx
 xxxxxx............................{......................cccc..xxxxxxx
 xxxxxx...................................................ccccccccxxxxx
-xxxxx...l.l..............................................cccc...cxxxxx
-xxxxx..l.l.l.l.............................................c....cxxxxx
-xxxxx.l.l.l.l.l............................................c....cxxxxx
-xxxx.l.l.l.l.l.............................................c...ccccxxx
-xxxxl.l.l.l.l.l............................................+...c..ccxx
-xxxx.l.l.l.G.l.l.................<1<.......................+...+.T.cxx
-xxxxl.l.l.l.l.l.l.................<........................+...c..ccxx
-xxxx.l.l.l.l.l.l...........................................c...ccccxxx
-xxxxx.l.l.l.l.l.l..........................................c....cxxxxx
-xxxxx..l.l.l.l.............................................c....cxxxxx
-xxxxx.....l.l............................................cccc...cxxxxx
+xxxxx...l.l..............................................cccc'''cxxxxx
+xxxxx..l.l.l.l.............................................c''''cxxxxx
+xxxxx.l.l.l.l.l............................................c''''cxxxxx
+xxxx.l.l.l.l.l.............................................c'''ccccxxx
+xxxxl.l.l.l.l.l............................................+'''c''ccxx
+xxxx.l.l.l.G.l.l.................<1<.......................+'''+'T'cxx
+xxxxl.l.l.l.l.l.l.................<........................+'''c''ccxx
+xxxx.l.l.l.l.l.l...........................................c'''ccccxxx
+xxxxx.l.l.l.l.l.l..........................................c''''cxxxxx
+xxxxx..l.l.l.l.............................................c''''cxxxxx
+xxxxx.....l.l............................................cccc'''cxxxxx
 xxxxxx......................[...........(................ccccccccxxxxx
 xxxxxx...................................................cccc..xxxxxxx
 xxxxxx.........................................................xxxxxxx
@@ -411,9 +417,9 @@ xxxxxxxxxxxx..............wwwwwwwwwwwww..................xxxxxxxxxxxxx
 xxxxxxxxxxxxx...........w..wwww..wwwww..w...............xxxxxxxxxxxxxx
 xxxxxxxxxxxxxx..........w...ww.....ww..wwwww...........xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx.........ww......ww....wwwwwwwww.......xxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxx.........ww....wwww...wwwwwwwwww.....xxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx.........ww....ww....wwwwwwwwwww...xxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxx........wwww.......wwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.........ww....wwwww..wwwwwwwwww.....xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx.........ww....wwwww..wwwwwwwwww...xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx........wwww.........wwwwwwwwwwwwxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxx......wwwwwww....wwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxx...wwwwwwwwwwCwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwwwwwwwwwwwwwwwwxxxxxxxxxxxxxxxxxxxxxxxx
@@ -439,7 +445,7 @@ SUBVAULT: E : vestibule_geryon
 SHUFFLE:  ABCD
 SUBST:    ABCDE = .
 : if crawl.coinflip() then
-  : if crawl.one_chance_in(8) then
+  : if crawl.coinflip() then
 MONS:   Murray
 NSUBST: : = 1:1 / *:.
   : else
@@ -512,27 +518,29 @@ ENDMAP
 NAME: vestibule_tar_mu
 TAGS: vestibule_tar
 MARKER: T=feat:enter_tartarus
+FTILE:  =~T3Dz+'; = floor_infernal_blank
+TILE:   c = dngn_stone_dark
 SUBST:  T=A
 SUBST:  . = ~.........
 SUBST:  ; = ~...
-KMONS:  3 = shadow demon
+KMONS:  3 = shadow wraith
 KMONS:  z = skeletal warrior / small zombie / nothing
 KMONS:  D = shadow dragon
 KMONS:  2 = reaper / soul eater
 MAP
 ccccccccccccccccccccccccccccccccc
- ccczz+......;;;;;;;......+zzccc
-  cczzc..3..c.;;T;;.c..3..czzcc
-   c=ccc......c;;;c......ccc=c
-    .cccc.......D.......cccc.
-     ..ccc.............ccc..
-      .cccc...cc+cc...cccc.
-       ..cccc.c...c.cccc..
-        .cccc.cz.zc.cccc.
+ ccczz+'''''';;;;;;;''''''+zzccc
+  cczzc''3''c';;T;;'c''3''czzcc
+   c=ccc''''''c;;;c''''''ccc=c
+    .cccc'''''''D'''''''cccc.
+     ..ccc'''''''''''''ccc..
+      .cccc'''cc+cc'''cccc.
+       ..cccc'c'''c'cccc..
+        .cccc'cz'zc'cccc.
          ..cccczzzcccc..
-          .cccc...cccc.
-           ..ccc.ccc..
-            .c2c.c2c.
+          .cccc'''cccc.
+           ..ccc'ccc..
+            .c2c'c2c.
              ..c+c..
               .c.c.
                ...
@@ -544,20 +552,21 @@ TAGS: vestibule_geh
 MARKER: G=feat:enter_gehenna
 SUBST:  G=A
 SUBST:  L = l.
-KMONS:  5 = imp
+KMONS:  5 = crimson imp
 KMONS:  2 = hellion
 KMONS:  3 = red devil
 KMONS:  2 = reaper / soul eater
+FTILE:  x'5a2V+ = floor_infernal_blank
 MAP
 lllllllllllllllllllllllllllllllll
  Lllllllllllllllllllllllllllllll
   LllxxxxxxxxxxxxxxxxxxxxxxxllL
-   Lllxx.................xxllL
-    Lllxx..5....G....5..xxllL
-     Lllxx.............xxllL
-      Lllxx..V..2..V..xxllL
-       Lllxx.........xxllL
-        Lllxx.......xxllL
+   Lllxx'''''''''''''''''xxllL
+    Lllxx''5''''G''''5''xxllL
+     Lllxx'''''''''''''xxllL
+      Lllxx''V''2''V''xxllL
+       Lllxx'''''''''xxllL
+        Lllxx'''''''xxllL
          Lllxxx+++xxxllL
           Lllxx...xxllL
            Lll..3..llL
@@ -603,11 +612,12 @@ SUBST:  D=A
 KMONS:  8 = iron golem
 KMONS:  3 = iron devil
 KMONS:  6 = metal gargoyle
+FTILE:  'A+ = floor_infernal_blank
 MAP
 .............v.vvv.v.............
- ...vv....v...vv.vv...v....vv...
-  ..6v.....vv.v.D.v.vv.....v6..
-   .......v...vv.vv...v.......
+ ...vv....v...vv'vv...v....vv...
+  ..6v.....vv.v'D'v.vv.....v6..
+   .......v...vv'vv...v.......
     ...vv....v.v+v.v....vv...
      ..6v..3...8.8...3..v6..
       .....................
@@ -653,7 +663,7 @@ ENDMAP
 
 NAME:    dis_old
 ORIENT:  north
-MONS:    Dispater, Fiend, Ice Fiend, iron devil, metal gargoyle, iron dragon
+MONS:    patrolling Dispater, brimstone fiend, Ice Fiend, iron devil, metal gargoyle, iron dragon
 : serpent_of_hell_setup(_G)
 SHUFFLE: 23
 SUBST:   4 = 4446
@@ -705,7 +715,7 @@ ENDMAP
 NAME:    dis_mu
 ORIENT:  north
 KFEAT:   o = granite_statue
-MONS:    Dispater, fiend, ice fiend, iron devil, metal gargoyle, iron dragon
+MONS:    patrolling Dispater, brimstone fiend, ice fiend, iron devil, metal gargoyle, iron dragon
 MONS:    iron troll
 KMONS:   8 = iron golem
 KFEAT:   8 = .
@@ -766,7 +776,8 @@ ENDMAP
 
 NAME:   geh_old
 ORIENT: encompass
-MONS:   Asmodeus, Fiend, Balrug, molten gargoyle
+TAGS:   no_rotate
+MONS:   patrolling Asmodeus, brimstone fiend, Balrug, molten gargoyle
 MONS:   nothing, random, random
 : serpent_of_hell_setup(_G)
 : geh_setup(_G)
@@ -840,10 +851,11 @@ ENDMAP
 
 NAME:   geh_mu
 ORIENT: encompass
-MONS:   Asmodeus, Fiend
+TAGS:   no_rotate
+MONS:   patrolling Asmodeus, brimstone fiend
 MONS:   Balrug, sun demon, hellion, fire giant
 KMONS:  7 = molten gargoyle
-KMONS:  8 = imp
+KMONS:  8 = crimson imp
 # Place one Serpent in the inner circle.
 : serpent_of_hell_setup(_G)
 KFEAT:  D = lava
@@ -926,7 +938,7 @@ ENDMAP
 
 NAME:    coc_dpeg
 ORIENT:  encompass
-MONS:    Antaeus, Ice Fiend, ice dragon / nothing
+MONS:    patrolling Antaeus, Ice Fiend, ice dragon / nothing
 : serpent_of_hell_setup(_G)
 ITEM:    any, any misc, any misc, any misc
 SHUFFLE: O1dD / e0%H / f9*H / g8|H
@@ -1006,7 +1018,7 @@ NAME:    coc_old
 ORIENT:  encompass
 SHUFFLE: $|, 2X
 SUBST:   X=., 3=3.
-MONS:    Antaeus, Ice Fiend, ice dragon, Ice Fiend
+MONS:    patrolling Antaeus, Ice Fiend, ice dragon, Ice Fiend
 : serpent_of_hell_setup(_G)
 KFEAT:   D = deep_water
 NSUBST:  H = 1:D / *:w
@@ -1081,7 +1093,7 @@ ENDMAP
 
 NAME:    coc_mu
 ORIENT:  encompass
-MONS:    Antaeus, ice fiend
+MONS:    patrolling Antaeus, ice fiend
 MONS:    ice devil, blue devil, white imp, ice dragon, freezing wraith
 KMONS:   8 = ice statue
 KMONS:   9 = frost giant
@@ -1168,7 +1180,7 @@ ENDMAP
 
 NAME:   tar_old
 ORIENT: encompass
-MONS:   Ereshkigal, necrophage, wraith, shadow, small zombie
+MONS:   patrolling Ereshkigal, necrophage, wraith, shadow, small zombie
 MONS:   small skeleton, Shadow Fiend
 : serpent_of_hell_setup(_G)
 : tar_setup(_G)
@@ -1242,7 +1254,7 @@ ENDMAP
 
 NAME:    tar_mu
 ORIENT:  encompass
-MONS:    Ereshkigal, shadow fiend, reaper, soul eater, shadow demon
+MONS:    patrolling Ereshkigal, shadow fiend, reaper, soul eater, shadow demon
 MONS:    shadow dragon, shadow wraith
 KMONS:   8 = shadow imp
 : serpent_of_hell_setup(_G)
@@ -1261,7 +1273,7 @@ SUBST:   A = %
 SUBST:   B = x
 NSUBST:  " = 1:= / *:x
 KFEAT:   % = .
-KMONS:   % = soul eater / shadow demon / shadow wraith / nothing w:20
+KMONS:   % = soul eater / shadow wraith / nothing
 KITEM:   % = | / $
 SUBST:   4 = 3333444455566778
 : tar_setup(_G)

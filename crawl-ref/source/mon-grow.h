@@ -1,8 +1,7 @@
-/*
- *  File:       mon-grow.cc
- *  Summary:    Monster level-up code.
- *  Written by: dshaligram on Fri Oct 26 08:33:37 2007 UTC
- */
+/**
+ * @file
+ * @brief Monster level-up code.
+**/
 
 #ifndef __MGROW_H__
 #define __MGROW_H__

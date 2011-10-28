@@ -1,7 +1,7 @@
-/*
- *  File:       los.h
- *  Summary:    Line-of-sight algorithm.
- */
+/**
+ * @file
+ * @brief Line-of-sight algorithm.
+**/
 
 #ifndef LOS_H
 #define LOS_H
@@ -40,7 +40,7 @@ int num_feats_between(const coord_def& source, const coord_def& target,
                       dungeon_feature_type max_feat,
                       bool exclude_endpoints = true,
                       bool just_check = false);
-bool cell_see_cell(const coord_def& p1, const coord_def& p2);
+bool cell_see_cell_nocache(const coord_def& p1, const coord_def& p2);
 
 typedef SquareArray<bool, LOS_MAX_RANGE> los_grid;
 
@@ -55,4 +55,5 @@ void los_monster_died(const monster* mon);
 void los_terrain_changed(const coord_def& p);
 void los_cloud_changed(const coord_def& p);
 void los_changed();
+opacity_type mons_opacity(const monster* mon);
 #endif

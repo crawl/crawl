@@ -1,8 +1,7 @@
-/*
- *  File:       libunix.cc
- *  Summary:    Functions for unix and curses support
- *              Needed by makefile.unix.
- */
+/**
+ * @file
+ * @brief Functions for unix and curses support
+**/
 
 /* Some replacement routines missing in gcc
    Some of these are inspired by/stolen from the Linux-conio package
@@ -34,29 +33,17 @@
 #include "options.h"
 #include "files.h"
 #include "state.h"
-#include "stuff.h"
+#include "unicode.h"
 #include "view.h"
 #include "viewgeom.h"
 
-#ifdef DGL_ENABLE_CORE_DUMP
-#include <sys/time.h>
-#include <sys/resource.h>
-#endif
-
-#ifdef UNICODE_GLYPHS
 #include <wchar.h>
 #include <locale.h>
 #include <langinfo.h>
-#endif
-
 #include <termios.h>
 
 static struct termios def_term;
 static struct termios game_term;
-
-// Give Crawl so many seconds after receiving a HUP signal to save and
-// get out of the way.
-const int HANGUP_KILL_DELAY_SECONDS = 10;
 
 #ifdef USE_UNIX_SIGNALS
 #include <signal.h>
@@ -74,9 +61,6 @@ const int HANGUP_KILL_DELAY_SECONDS = 10;
     #include CURSES_INCLUDE_FILE
 #endif
 
-void unixcurses_startup();
-void unixcurses_shutdown();
-
 // Globals holding current text/backg. colors
 static short FG_COL = WHITE;
 static short BG_COL = BLACK;
@@ -84,7 +68,6 @@ static int   Current_Colour = COLOR_PAIR(BG_COL * 8 + FG_COL);
 
 static int curs_fg_attr(int col);
 static int curs_bg_attr(int col);
-static int waddstr_with_altcharset(WINDOW* w, const char* s);
 
 static bool cursor_is_enabled = true;
 
@@ -163,27 +146,6 @@ static void setup_colour_pairs(void)
     init_pair(63, COLOR_BLACK, Options.background_colour);
 }
 
-#ifdef UNICODE_GLYPHS
-static std::string unix_glyph2string(unsigned gly)
-{
-    char buf[50];  // Overkill, I know.
-    wchar_t wcbuf[2];
-    wcbuf[0] = gly;
-    wcbuf[1] = 0;
-    if (wcstombs(buf, wcbuf, sizeof buf) != (size_t) -1)
-        return (buf);
-
-    return std::string(1, gly);
-}
-
-static int unix_multibyte_strlen(const std::string &s)
-{
-    const char *cs = s.c_str();
-    size_t len = mbsrtowcs(NULL, &cs, 0, NULL);
-    return (len == (size_t) -1? s.length() : len);
-}
-#endif
-
 static void unix_handle_terminal_resize();
 
 static void termio_init()
@@ -203,17 +165,6 @@ static void termio_init()
 #endif
 
     tcsetattr(0, TCSAFLUSH, &game_term);
-
-    crawl_state.unicode_ok = false;
-#ifdef UNICODE_GLYPHS
-    if (setlocale(LC_ALL, UNICODE_LOCALE)
-        && !strcmp(nl_langinfo(CODESET), "UTF-8"))
-    {
-        crawl_state.unicode_ok       = true;
-        crawl_state.glyph2strfn      = unix_glyph2string;
-        crawl_state.multibyte_strlen = unix_multibyte_strlen;
-    }
-#endif
 
     crawl_state.terminal_resize_handler = unix_handle_terminal_resize;
 }
@@ -264,34 +215,61 @@ static int proc_mouse_event(int c, const MEVENT *me)
 }
 #endif
 
-static int raw_m_getch()
+static int pending = 0;
+
+int getchk()
 {
-    const int c = getch();
-    switch (c)
+    if (pending)
     {
-#ifdef NCURSES_MOUSE_VERSION
-    case KEY_MOUSE:
-    {
-        MEVENT me;
-        getmouse(&me);
-        return (proc_mouse_event(c, &me));
+        int c = pending;
+        pending = 0;
+        return c;
     }
+
+    wint_t c;
+
+#ifdef USE_TILE_WEB
+    refresh();
+
+    tiles.redraw();
+    tiles.await_input(c, true);
+
+    if (c > 0)
+        return c;
 #endif
-    default:
+
+    switch (get_wch(&c))
+    {
+    case ERR:
         // getch() returns -1 on EOF, convert that into an Escape. Evil hack,
         // but the alternative is to explicitly check for -1 everywhere where
         // we might otherwise spin in a tight keyboard input loop.
-        return (c == -1? ESCAPE : c);
+        return ESCAPE;
+    case OK:
+        // a normal (printable) key
+        return c;
     }
+
+    return -c;
 }
 
 int m_getch()
 {
     int c;
     do
-        c = raw_m_getch();
-    while ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
-           && !crawl_state.mouse_enabled);
+    {
+        c = getchk();
+
+#ifdef NCURSES_MOUSE_VERSION
+        if (c == -KEY_MOUSE)
+        {
+            MEVENT me;
+            getmouse(&me);
+            c = proc_mouse_event(c, &me);
+        }
+#endif
+    } while ((c == CK_MOUSE_MOVE || c == CK_MOUSE_CLICK)
+             && !crawl_state.mouse_enabled);
 
     return (c);
 }
@@ -303,17 +281,17 @@ int getch_ck()
     {
     // [dshaligram] MacOS ncurses returns 127 for backspace.
     case 127:
-    case KEY_BACKSPACE: return CK_BKSP;
-    case KEY_DC:    return CK_DELETE;
-    case KEY_HOME:  return CK_HOME;
-    case KEY_PPAGE: return CK_PGUP;
-    case KEY_END:   return CK_END;
-    case KEY_NPAGE: return CK_PGDN;
-    case KEY_UP:    return CK_UP;
-    case KEY_DOWN:  return CK_DOWN;
-    case KEY_LEFT:  return CK_LEFT;
-    case KEY_RIGHT: return CK_RIGHT;
-    default:        return c;
+    case -KEY_BACKSPACE: return CK_BKSP;
+    case -KEY_DC:    return CK_DELETE;
+    case -KEY_HOME:  return CK_HOME;
+    case -KEY_PPAGE: return CK_PGUP;
+    case -KEY_END:   return CK_END;
+    case -KEY_NPAGE: return CK_PGDN;
+    case -KEY_UP:    return CK_UP;
+    case -KEY_DOWN:  return CK_DOWN;
+    case -KEY_LEFT:  return CK_LEFT;
+    case -KEY_RIGHT: return CK_RIGHT;
+    default:         return c;
     }
 }
 
@@ -321,83 +299,19 @@ int getch_ck()
 
 static void handle_sigwinch(int)
 {
+    crawl_state.last_winch = time(0);
     if (crawl_state.waiting_for_command)
         handle_terminal_resize();
-}
-
-#ifdef SIGHUP_SAVE
-
-void sighup_save_and_exit();
-
-/* [ds] This SIGHUP handling is primitive and far from safe, but it
- * should be better than nothing. Feel free to get rigorous on this.
- */
-static void handle_hangup(int)
-{
-    if (crawl_state.seen_hups++)
-        return;
-
-    // Set up an alarm to force-kill Crawl if it rudely ignores the
-    // hangup signal.
-    alarm(HANGUP_KILL_DELAY_SECONDS);
-
-    interrupt_activity(AI_FORCE_INTERRUPT);
-
-#ifdef USE_TILE
-    // XXX: Will a tiles build ever need to handle the HUP signal?
-    sighup_save_and_exit();
-#elif defined(USE_CURSES)
-    // When using Curses, closing stdin will cause any Curses call blocking
-    // on key-presses to immediately return, including any call that was
-    // still blocking in the main thread when the HUP signal was caught.
-    // This should guarantee that the main thread will un-stall and
-    // will eventually return to _input() in main.cc, which will then
-    // call sighup_save_and_exit().
-    //
-    // The point to all this is that if a user is playing a game on a
-    // remote server and disconnects at a --more-- prompt, that when
-    // the player reconnects the code behind the more() call will execute
-    // before the disconnected game is saved, thus (for example) preventing
-    // the hack of avoiding excomunication consesquences because of the
-    // more() after "You have lost your religion!"
-    fclose(stdin);
-#else
-     #error "Must use either Curses or tiles on Unix"
-#endif
-}
-
-void sighup_save_and_exit()
-{
-    if (crawl_state.seen_hups == 0)
-    {
-        mpr("sighup_save_and_exit() called without a HUP signal; please"
-            "file a bug report", MSGCH_ERROR);
-        return;
-    }
-
-    if (crawl_state.saving_game || crawl_state.updating_scores)
-        return;
-
-    crawl_state.saving_game = true;
-    if (crawl_state.need_save)
-    {
-        mpr("Received HUP signal, saved and exited game.", MSGCH_ERROR);
-
-        // save_game(true) exits from the game. The "true" is also required
-        // to save changes to the current level.
-        save_game(true, "Received HUP signal, saved game.");
-    }
     else
-        end(0, false, "Received HUP signal, game already saved.");
+        crawl_state.terminal_resized = true;
 }
-#endif // SIGHUP_SAVE
 
 #endif // USE_UNIX_SIGNALS
 
 static void unix_handle_terminal_resize()
 {
-    unixcurses_shutdown();
-    unixcurses_startup();
+    console_shutdown();
+    console_startup();
 }
 
 static void unixcurses_defkeys(void)
@@ -437,30 +351,31 @@ static void unixcurses_defkeys(void)
 
 int unixcurses_get_vi_key(int keyin)
 {
-    switch (keyin)
+    switch (-keyin)
     {
-    // 1001..1009: passed without change
-    case 1031: return 1007;
-    case 1034: return 1001;
-    case 1040: return 1005;
+    // -1001..-1009: passed without change
+    case 1031: return -1007;
+    case 1034: return -1001;
+    case 1040: return -1005;
 
-    case KEY_HOME:   return 1007;
-    case KEY_END:    return 1001;
-    case KEY_DOWN:   return 1002;
-    case KEY_UP:     return 1008;
-    case KEY_LEFT:   return 1004;
-    case KEY_RIGHT:  return 1006;
-    case KEY_NPAGE:  return 1003;
-    case KEY_PPAGE:  return 1009;
-    case KEY_A1:     return 1007;
-    case KEY_A3:     return 1009;
-    case KEY_B2:     return 1005;
-    case KEY_C1:     return 1001;
-    case KEY_C3:     return 1003;
+    case KEY_HOME:   return -1007;
+    case KEY_END:    return -1001;
+    case KEY_DOWN:   return -1002;
+    case KEY_UP:     return -1008;
+    case KEY_LEFT:   return -1004;
+    case KEY_RIGHT:  return -1006;
+    case KEY_NPAGE:  return -1003;
+    case KEY_PPAGE:  return -1009;
+    case KEY_A1:     return -1007;
+    case KEY_A3:     return -1009;
+    case KEY_B2:     return -1005;
+    case KEY_C1:     return -1001;
+    case KEY_C3:     return -1003;
     case KEY_SHOME:  return 'Y';
     case KEY_SEND:   return 'B';
     case KEY_SLEFT:  return 'H';
     case KEY_SRIGHT: return 'L';
+    case KEY_BTAB:   return CK_SHIFT_TAB;
     }
     return keyin;
 }
@@ -470,7 +385,7 @@ int unixcurses_get_vi_key(int keyin)
 #define KPADAPP "\033[?1051l\033[?1052l\033[?1060l\033[?1061h"
 #define KPADCUR "\033[?1051l\033[?1052l\033[?1060l\033[?1061l"
 
-void unixcurses_startup(void)
+void console_startup(void)
 {
     termio_init();
 
@@ -478,36 +393,8 @@ void unixcurses_startup(void)
     write(1, KPADAPP, strlen(KPADAPP));
 #endif
 
-#ifdef DGAMELAUNCH
-    // Force timezone to UTC.
-    setenv("TZ", "", 1);
-    tzset();
-#endif
-
 #ifdef USE_UNIX_SIGNALS
-#ifdef SIGQUIT
-    signal(SIGQUIT, SIG_IGN);
-#endif
-
-#ifdef SIGINT
-    signal(SIGINT, SIG_IGN);
-#endif
-
-#ifdef SIGHUP_SAVE
-    signal(SIGHUP, handle_hangup);
-#endif
-
     signal(SIGWINCH, handle_sigwinch);
-
-#endif
-
-#ifdef DGL_ENABLE_CORE_DUMP
-    rlimit lim;
-    if (!getrlimit(RLIMIT_CORE, &lim))
-    {
-        lim.rlim_cur = RLIM_INFINITY;
-        setrlimit(RLIMIT_CORE, &lim);
-    }
 #endif
 
     initscr();
@@ -520,7 +407,11 @@ void unixcurses_startup(void)
     keypad(stdscr, TRUE);
 
 #ifdef CURSES_SET_ESCDELAY
+#ifdef NCURSES_REENTRANT
+    set_escdelay(CURSES_SET_ESCDELAY);
+#else
     ESCDELAY = CURSES_SET_ESCDELAY;
+#endif
 #endif
 #endif
 
@@ -534,10 +425,18 @@ void unixcurses_startup(void)
     crawl_view.init_geometry();
 
     set_mouse_enabled(false);
+
+#ifdef USE_TILE_WEB
+    tiles.resize();
+#endif
 }
 
-void unixcurses_shutdown()
+void console_shutdown()
 {
+#ifdef USE_TILE_WEB
+    tiles.shutdown();
+#endif
+
     // resetty();
     endwin();
 
@@ -547,65 +446,12 @@ void unixcurses_shutdown()
 #endif
 
 #ifdef USE_UNIX_SIGNALS
-#ifdef SIGQUIT
-    signal(SIGQUIT, SIG_DFL);
-#endif
-
-#ifdef SIGINT
-    signal(SIGINT, SIG_DFL);
-#endif
-
-#ifdef SIGHUP_SAVE
-    signal(SIGHUP, SIG_DFL);
-#endif
-
     signal(SIGWINCH, SIG_DFL);
 #endif
 }
 
-
-/* Convert value to string */
-extern "C" char *itoa(int value, char *strptr, int radix)
+void cprintf(const char *format, ...)
 {
-    unsigned int bitmask = 32768;
-    int ctr = 0;
-    int startflag = 0;
-
-    if (radix == 10)
-    {
-        sprintf(strptr, "%i", value);
-    }
-    if (radix == 2)             /* int to "binary string" */
-    {
-        while (bitmask)
-        {
-            if (value & bitmask)
-            {
-                startflag = 1;
-                sprintf(strptr + ctr, "1");
-            }
-            else
-            {
-                if (startflag)
-                    sprintf(strptr + ctr, "0");
-            }
-
-            bitmask = bitmask >> 1;
-            if (startflag)
-                ctr++;
-        }
-
-        if (!startflag)         /* Special case if value == 0 */
-            sprintf((strptr + ctr++), "0");
-
-        strptr[ctr] = (char) NULL;
-    }
-    return strptr;
-}
-
-int cprintf(const char *format,...)
-{
-    int i;
     char buffer[2048];          // One full screen if no control seq...
 
     va_list argp;
@@ -613,100 +459,30 @@ int cprintf(const char *format,...)
     va_start(argp, format);
     vsnprintf(buffer, sizeof(buffer), format, argp);
     va_end(argp);
-    i = waddstr_with_altcharset(stdscr, buffer);
-    return (i);
-}
 
-// Wrapper around curses waddstr(); handles switching to the alt charset
-// when necessary, and performing the funny DEC translation.
-// Returns a curses success value.
-static int waddstr_with_altcharset(WINDOW* w, const char* str)
-{
-    int ret = OK;
-    if (Options.char_set == CSET_ASCII || Options.char_set == CSET_UNICODE)
+    ucs_t c;
+    char *bp = buffer;
+    while(int s = utf8towc(&c, bp))
     {
-        // In ascii, we don't expect any high-bit chars.
-        // In Unicode, str is UTF-8 and we shouldn't touch anything.
-        ret = waddstr(w, str);
+        bp += s;
+        putwch(c);
     }
-    else
-    {
-        // Otherwise, high bit indicates alternate charset.
-        // DEC line-drawing chars don't have the high bit, so
-        // we map them into 0xE0 and above.
-        const bool bDEC = (Options.char_set == CSET_DEC);
-        const char* begin = str;
-
-        while (true)
-        {
-            const char* end = begin;
-            // Output a range of normal characters (the common case)
-            while (*end && (unsigned char)*end <= 127) ++end;
-            if (end-begin) ret = waddnstr(w, begin, end-begin);
-
-            // Then a single high-bit character
-            chtype c = (unsigned char)*end;
-            if (c == 0)
-                break;
-            else if (bDEC && c >= 0xE0)
-                ret = waddch(w, (c & 0x7F) | A_ALTCHARSET);
-            else // if (*end > 127)
-                ret = waddch(w, c | A_ALTCHARSET);
-            begin = end+1;
-        }
-    }
-    return ret;
 }
 
-int putch(unsigned char chr)
+void putwch(ucs_t chr)
 {
-    if (chr == 0)
-        chr = ' ';
-
-    return (addch(chr));
-}
-
-int putwch(unsigned chr)
-{
-#ifdef UNICODE_GLYPHS
-    if (chr <= 127 || Options.char_set != CSET_UNICODE)
-        return (putch(chr));
-
     wchar_t c = chr;
-    return (addnwstr(&c, 1));
-#else
-    return (putch(static_cast<unsigned char>(chr)));
+    if (!c)
+        c = ' ';
+    // TODO: recognize unsupported characters and try to transliterate
+    addnwstr(&c, 1);
+
+#ifdef USE_TILE_WEB
+    ucs_t buf[2];
+    buf[0] = chr;
+    buf[1] = 0;
+    tiles.put_ucs_string(buf);
 #endif
-}
-
-int window(int x1, int y1, int x2, int y2)
-{
-    x1 = y1 = x2 = y2 = 0;      /* Do something to them.. makes gcc happy :) */
-    return OK;
-}
-
-void put_colour_ch(int colour, unsigned ch)
-{
-    if (Options.char_set == CSET_ASCII || Options.char_set == CSET_UNICODE)
-    {
-        // Unicode can't or-in curses attributes; but it also doesn't have
-        // to fool around with altcharset
-        textattr(colour);
-        putwch(ch);
-    }
-    else
-    {
-        const unsigned oldch = ch;
-        if (oldch & 0x80) ch |= A_ALTCHARSET;
-        // Shift the DEC line drawing set
-        if (oldch >= 0xE0 && Options.char_set == CSET_DEC)
-            ch ^= 0x80;
-        textattr(colour);
-
-        // putch truncates ch to a byte, so don't use it.
-        if ((ch & 0x7f) == 0) ch |= ' ';
-        addch(ch);
-    }
 }
 
 void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
@@ -732,6 +508,11 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
 // C++ string class.  -- bwr
 void update_screen(void)
 {
+    refresh();
+
+#ifdef USE_TILE_WEB
+    tiles.set_need_redraw();
+#endif
 }
 
 void clear_to_end_of_line(void)
@@ -739,13 +520,10 @@ void clear_to_end_of_line(void)
     textcolor(LIGHTGREY);
     textbackground(BLACK);
     clrtoeol();
-}
 
-void clear_to_end_of_screen(void)
-{
-    textcolor(LIGHTGREY);
-    textbackground(BLACK);
-    clrtobot();
+#ifdef USE_TILE_WEB
+    tiles.clear_to_end_of_line();
+#endif
 }
 
 int get_number_of_lines(void)
@@ -758,18 +536,19 @@ int get_number_of_cols(void)
     return (COLS);
 }
 
-int clrscr()
+void clrscr()
 {
-    int retval;
-
     textcolor(LIGHTGREY);
     textbackground(BLACK);
-    retval = clear();
+    clear();
 #ifdef DGAMELAUNCH
     printf("%s", DGL_CLEAR_SCREEN);
     fflush(stdout);
 #endif
-    return (retval);
+
+#ifdef USE_TILE_WEB
+    tiles.clrscr();
+#endif
 }
 
 void set_cursor_enabled(bool enabled)
@@ -780,6 +559,15 @@ void set_cursor_enabled(bool enabled)
 bool is_cursor_enabled()
 {
     return (cursor_is_enabled);
+}
+
+bool is_smart_cursor_enabled()
+{
+    return false;
+}
+
+void enable_smart_cursor(bool dummy)
+{
 }
 
 inline unsigned get_brand(int col)
@@ -795,13 +583,6 @@ inline unsigned get_brand(int col)
                                             : CHATTR_NORMAL;
 }
 
-#ifndef USE_TILE
-void textattr(int col)
-{
-    textcolor(col);
-}
-#endif
-
 static int curs_fg_attr(int col)
 {
     short fg, bg;
@@ -814,7 +595,6 @@ static int curs_fg_attr(int col)
     // calculate which curses flags we need...
     unsigned int flags = 0;
 
-#ifdef USE_COLOUR_OPTS
     unsigned brand = get_brand(col);
     if (brand != CHATTR_NORMAL)
     {
@@ -838,7 +618,6 @@ static int curs_fg_attr(int col)
             fg = COLOR_WHITE;
         }
     }
-#endif
 
     // curses typically uses A_BOLD to give bright foreground colour,
     // but various termcaps may disagree
@@ -863,6 +642,10 @@ static int curs_fg_attr(int col)
 void textcolor(int col)
 {
     (void)attrset(Current_Colour = curs_fg_attr(col));
+
+#ifdef USE_TILE_WEB
+    tiles.textcolor(col);
+#endif
 }
 
 static int curs_bg_attr(int col)
@@ -876,7 +659,6 @@ static int curs_bg_attr(int col)
 
     unsigned int flags = 0;
 
-#ifdef USE_COLOUR_OPTS
     unsigned brand = get_brand(col);
     if (brand != CHATTR_NORMAL)
     {
@@ -898,7 +680,6 @@ static int curs_bg_attr(int col)
             fg = COLOR_WHITE;
         }
     }
-#endif
 
     // curses typically uses A_BOLD to give bright foreground colour,
     // but various termcaps may disagree
@@ -923,15 +704,18 @@ static int curs_bg_attr(int col)
 void textbackground(int col)
 {
     (void)attrset(Current_Colour = curs_bg_attr(col));
+
+#ifdef USE_TILE_WEB
+    tiles.textbackground(col);
+#endif
 }
 
 
-int gotoxy_sys(int x, int y)
+void gotoxy_sys(int x, int y)
 {
-    return (move(y - 1, x - 1));
+    move(y - 1, x - 1);
 }
 
-#ifdef UNICODE_GLYPHS
 typedef cchar_t char_info;
 inline bool operator == (const cchar_t &a, const cchar_t &b)
 {
@@ -968,37 +752,8 @@ static void flip_colour(cchar_t &ch)
     }
 
     const int newpair = (fg * 8 + bg);
-    ch.attr = COLOR_PAIR(newpair) | (ch.attr & A_ALTCHARSET);
+    ch.attr = COLOR_PAIR(newpair);
 }
-#else // ! UNICODE_GLYPHS
-typedef unsigned long char_info;
-#define character_at(y,x)    mvinch(y,x)
-#define valid_char(x) (x)
-#define write_char_at(y,x,c) mvaddch(y, x, c)
-
-#define char_info_character(c) ((c) & A_CHARTEXT)
-#define char_info_colour(c)    ((c) & A_COLOR)
-#define char_info_attributes(c) ((c) & A_ATTRIBUTES)
-
-static void flip_colour(char_info &ch)
-{
-    const unsigned colour = char_info_colour(ch);
-    const int pair        = PAIR_NUMBER(colour);
-
-    int fg     = pair & 7;
-    int bg     = (pair >> 3) & 7;
-
-    if (pair == 63)
-    {
-        fg    = COLOR_WHITE;
-        bg    = COLOR_BLACK;
-    }
-
-    const int newpair = (fg * 8 + bg);
-    ch = (char_info_character(ch) | COLOR_PAIR(newpair) |
-          (char_info_attributes(ch) & A_ALTCHARSET));
-}
-#endif
 
 static char_info oldch, oldmangledch;
 static int faked_x = -1, faked_y;
@@ -1025,60 +780,59 @@ void fakecursorxy(int x, int y)
 
 int wherex()
 {
-    int x, y;
-
-    getyx(stdscr, y, x);
-    return (x + 1);
+    return getcurx(stdscr) + 1;
 }
 
 
 int wherey()
 {
-    int x, y;
-
-    getyx(stdscr, y, x);
-    return (y + 1);
+    return getcury(stdscr) + 1;
 }
 
-void delay(unsigned long time)
+void delay(unsigned int time)
 {
+#ifdef USE_TILE_WEB
+    tiles.redraw();
+    tiles.send_message("delay(%d);", time);
+#endif
+
     refresh();
     if (time)
         usleep(time * 1000);
 }
 
-
-/*
-   Note: kbhit now in macro.cc
- */
-
 /* This is Juho Snellman's modified kbhit, to work with macros */
-int kbhit()
+bool kbhit()
 {
+    if (pending)
+        return true;
+
+    wint_t c;
+#ifndef USE_TILE_WEB
     int i;
 
     nodelay(stdscr, TRUE);
     timeout(0);  // apparently some need this to guarantee non-blocking -- bwr
-    i = wgetch(stdscr);
+    i = get_wch(&c);
     nodelay(stdscr, FALSE);
 
-    if (i == -1)
-        i = 0;
-    else
-        ungetch(i);
-
-    return (i);
-}
-
-extern "C" {
-    // Convert string to lowercase.
-    char *strlwr(char *str)
+    switch(i)
     {
-        unsigned int i;
-
-        for (i = 0; i < strlen(str); i++)
-            str[i] = tolower(str[i]);
-
-        return (str);
+    case OK:
+        pending = c;
+        return true;
+    case KEY_CODE_YES:
+        pending = -c;
+        return true;
+    default:
+        return false;
     }
+#else
+    bool result = tiles.await_input(c, false);
+
+    if (result && (c != 0))
+        pending = c;
+
+    return result;
+#endif
 }

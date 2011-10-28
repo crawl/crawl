@@ -12,247 +12,9 @@ NAME: hive_0
 TAGS: hive_entry
 ORIENT: float
 WEIGHT: 60
+KFEAT: O = enter_hive
 MAP
 O
-ENDMAP
-
-##############################################################################
-# Standard hive
-#
-NAME: david_hive_1
-TAGS: hive_entry
-MONS: queen bee, killer bee, killer bee larva
-KITEM: R = w:2 honeycomb / w:1 royal jelly
-ORIENT: float
-MAP
-............
-....aaaa....
-..a2a2aaaa..
-..aaRa3a2a..
-.aa2aRa2aaa.
-.a3aOa1aRa2.
-.aa3aRaRa2a.
-.aaa2a2a3aa.
-..a3aRa2aa..
-...aa2aa2a..
-....aaaa....
-............
-ENDMAP
-
-##############################################################################
-# Hive monsters near stair
-#
-NAME: david_hive_2
-TAGS: hive_entry generate_awake
-MONS: nothing / killer bee / killer bee larva
-MONS: queen bee
-ORIENT: float
-MAP
-1111..@.
-1211....
-1111....
-............1
-@.....O.....@
-   ..........
-   ......1
-   .......
-   1@.....
-ENDMAP
-
-#############################################################################
-# Cooperation Not Competition (Rot)
-#
-NAME:    hive_david_3
-TAGS:    hive_entry
-ORIENT:  float
-ITEM:    honeycomb, royal jelly
-MONS:    killer bee larva / killer bee, queen bee
-MONS:    giant ant / soldier ant, queen ant
-MONS:    yellow wasp / nothing, red wasp / yellow wasp
-MONS:    bumblebee
-SHUFFLE: XY, VW, 34/56
-NSUBST:  O = 1:O / *:de.
-SUBST:   V==, W=a, X==, Y=a
-SUBST:   ? = a .:20
-SUBST:   1 : 1 7:2
-SUBST:   7 = 7 .
-MAP
-   .......   ...............
-   ..??...   ..??aaa?aaa???.
-...?aaa?..   .?aaOaaaaOaa?..
-.?aaa.aa??.....?aa=.aa=Oaa?.
-.aa333.aaa.......a?a11aaa?..
-.aaO43..=...T...a.1aOa1.a?..
-.?a.33.aaa......aa.1a2a1aa?.
-.?aa.3aa??.....aaaVa1a1aYaa.
-..?aaaa?.......?aaOW..aXOaa.
-   ????.........?aaaaaaaaa?.
-   ......     ...??aaa?a??
-   ......     ............
-ENDMAP
-
-##############################################################################
-# Bears Won't Share
-#
-NAME:    erik_hive_1
-TAGS:    hive_entry
-ORIENT:  float
-MONS:    w:200 bear / polar bear / w:100 grizzly bear / w:100 black bear
-MONS:    killer bee, queen bee, killer bee larva
-ITEM:    honeycomb, royal jelly
-SUBST:   ? = a.
-SUBST:   ; = 1:1 .
-SHUFFLE: deO
-
-MAP
-  ...............
- ;;;;;...?aaa???.
-.;;;;;..aaa2aaaaa..
-.;;;;;.?a2e4d342a?.
-.;;;;;.?a4?2?4O4a?.
-.;;;;;..?a42?a2a...
-.;;;;;..?aaaaaa?
- ;;;;;....????..
-  ..............
-ENDMAP
-
-##############################################################################
-# Bucolic
-#
-NAME:   erik_hive_2
-TAGS:   hive_entry
-ORIENT: float
-MONS:   plant, killer bee
-SUBST:  1 = 1.
-SUBST:  2 = 2.
-MAP
- 1.....2.......1.1
- ..1.....1...2..1.
- ....2.........1..
- 1.2....1....2.....2
- .....2.....1....21
- 1...1...1.........
-  ...2.....1.21...2
-  .....1.O......21.
-  .1.......1.......
-  .2.....1....1..2.
-  ...11.2....2...11
-  .1..1....1......
-    2.......2....1
-    1...1.....1
-ENDMAP
-
-##############################################################################
-# Object lesson
-#
-NAME:    erik_hive_3
-TAGS:    hive_entry
-MONS:    killer bee larva, killer bee, queen bee
-MONS:    fire drake / w:5 nothing
-SHUFFLE: UVTXYZ, lL4/lL4/lL4/wW5
-SUBST:   l=.l, L=l, w=.w, W=w, U==, V=a, T=a, X=a, Y=a, Z=a, '=.a
-KMONS:   l = fire drake / w:200 nothing
-KFEAT:   l = l
-ORIENT:  float
-MAP
- .............
-.'.aa'aa.'.'....
-..aaRa'...a'.'a..
-.'a2'Y.aaaX.aa.'..
-.aV.1aaa'1aaa.'.a.
-..aa21'2O2aaa4.aa.
-.'.Zaa2131Waaaa...
-.'aaaaaRaUa..aa'..
-..aa.4aaa.a.'.a...
-.aa...aaa.aa......
-.a..aaaa.'........
-..''..a..a.llllll
- ...'..aaa.lLLLLl
-    ...''..llllll
-       ........
-ENDMAP
-
-#############################################################################
-# Another hive entry (Eino)
-# This one appeared to me in a dream.
-#
-NAME:      eino_hive_1
-TAGS:      hive_entry no_monster_gen
-ORIENT:    float
-MONS:      killer bee / killer bee larva w:2
-MONS:      queen bee / killer bee w:2
-MONS:      oklob plant / plant w:1
-MONS:      plant / nothing
-KITEM:     R = w:2 honeycomb / w:1 royal jelly
-KMONS:     R = killer bee / killer bee larva w:2
-KFEAT:     R = .
-KMONS:     M = plant
-KMONS:     N = plant
-KFEAT:     M = *
-KFEAT:     N = | / * w:20
-KMONS:     Z = plant / nothing
-: if crawl.coinflip() then
-SUBST:     W : .
-SUBST:     w : .
-KFEAT:     Z = W
-: else
-KFEAT:     Z = .
-: end
-SUBST:     q=w
-MAP
-   x   x
- xxx...xxx
-xx4.a1a.4xx
-x4.aRaRa.4x
-x441aOa244x
-x4.aRaRa.4x
-xx4.a1a.4xx
- x4.....4x
- xxZ4.44xx
-  xZWW.4x
-  xxZWZxx
-   xxWxx
-    xWx
-xxxxxWxxxxx
-@....W....@
-xxxxxWxxxxx
-    xWx
-   xxWxx
-  xx4W4xx
-  x4.WW4x
- xx4.WWZxx
- xM4WWww4x
-xxN3wwwwwxx
-xM4wwwwwqqx
-x4.wwwwqqqx
-x4..wwqqqqx
-xx...44qqxx
- xxx..4xxx
-   x   x
-ENDMAP
-
-##########################################
-# Bees in trees by the pond
-NAME:      eino_hive_2
-TAGS:      hive_entry
-ORIENT:    float
-KFEAT:     N = w / w:5 .
-KFEAT:     Z = w
-KMONS:     Z = plant / w:3 nothing
-KFEAT:     V = w
-KMONS:     V = killer bee w:20 / nothing w:6 / giant blowfly w:1
-MONS:      plant / nothing w:3
-MONS:      killer bee w:20 / nothing w:6 / giant blowfly w:1
-MAP
-     ....  ...NNNZNN.
-  ....11.....NZZwwZZNN.
- . 11.2111.1NZwwVwwwwwN
-.1.1.11.22ZZw.wwwwVwwwZN
-..1212211ZZOZwwwwwwwVZZ.
-.1..111.21wV1.ZwVwwwZNN
- ..1.2211.1Zw1.ZwwZNN.
-  ...11.1...  11.NN..
-     ....
 ENDMAP
 
 ##############################################################################
@@ -789,4 +551,83 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxaa3a3a2a3aR2aaxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxaa3a3a2aaaaaxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxaaaaaaaxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+NAME:    beehive_diamond
+PLACE:   Hive:2
+ORIENT:  encompass
+TAGS:    no_rotate
+SHUFFLE: {([
+SUBST:   A = a:3 .:2, B = a:3 x:2, ' = . 1:3 d:1
+KMONS:   1 = killer bee
+KMONS:   2 = queen bee
+KMONS:   3 = oklob plant
+ITEM:    honeycomb / royal jelly w:4
+KITEM:   1 = nothing / honeycomb w:5 / royal jelly w:2
+KITEM:   2 = nothing / royal jelly
+: spotty_map { boxy = false, iterations = 400 + crawl.random2(300) }
+MAP
+                   aaaaa
+                  aa*|*aa
+                  a3*|*3a
+                  a3*|*3a
+                  aaa=aaa
+                aaa11211aaa
+               aa'''111'''aa
+             aaa''a''A''a''aaa
+            aa'''aaa'''aaa'''aa
+          aaa''a''a''a''a''a''aaa
+         aa'''aaa'''aaa'''aaa'''aa
+       aaa''a''a''a''a''a''a''a''aaa
+       a'''aaa'''aaa'''aaa'''aaa'''a
+      xx'a''a''a''a''a''a''a''a''a'xx
+    xxxxaaa'''aaa'''aaa'''aaa'''aaaxxxx
+   xxxBx'a''a''a''a''a''a''a''a''a'xBxxx
+   xxBBB'''aaa'''aaa'''aaa'''aaa'''BBBxx
+   xxxBx'a''a''a''a''a''a''a''a''a'xBxxx
+   xxxxxaaa'''aaa'''aaa'''aaa'''aaaxxxxx
+   xxxBx'a''a''a''a''a''a''a''a''a'xBxxx
+   xxBBB'''aaa'''aaa'''aaa'''aaa'''BBBxx
+   xxxBx'A''a''a''a''a''a''a''a''A'xBxxx
+   xxxxxAAA'''aaa'''aaa'''aaa'''AAAxxxxx
+   xxxxx.A''A''a''a''a''a''a''A''A.xxxxx
+   xxxxx...AAA'''aaa'''aaa'''AAA...xxxxx
+ xxxxxxxxx..A''A''a''a''a''A''A..xxxxxxxxx
+xxxxxxxxxxx...AAA...aaa...AAA...xxxxxxxxxxx
+xxxxxxxxxxxxx..A..A..a..A..A..xxxxxxxxxxxxx
+xxxxxxxxxxxxxx...............xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx{xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxx.x.xxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxx.xxx.xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxx.xxxxx.xxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx.xxxxxxx.xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxx.xxxxxxxxx.xxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxx.xxxxxxxxxxx.xxxxxxxxxxxxxxx
+xxxxxxxxxxxxxx(xxxxxxxxxxxxx[xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP

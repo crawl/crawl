@@ -1,8 +1,7 @@
-/*
- *  File:       ouch.h
- *  Summary:    Functions used when Bad Things happen to the player.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used when Bad Things happen to the player.
+**/
 
 
 #ifndef OUCH_H
@@ -57,7 +56,7 @@ enum kill_method_type
 };
 
 int check_your_resists(int hurted, beam_type flavour, std::string source,
-                       bolt *beam = 0);
+                       bolt *beam = 0, bool doEffects = true);
 void splash_with_acid(int acid_strength, bool corrode_items = true,
                       std::string hurt_msg = "");
 void weapon_acid(int acid_strength);
@@ -75,6 +74,8 @@ bool drain_exp(bool announce_full = true);
 
 bool expose_items_to_element(beam_type flavour, const coord_def& where,
                              int strength = 0);
-bool expose_player_to_element(beam_type flavour, int strength = 0);
+bool expose_player_to_element(beam_type flavour, int strength = 0,
+                              bool damage_inventory = true);
 
+void screen_end_game(std::string text);
 #endif

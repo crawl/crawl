@@ -1,8 +1,7 @@
-/*
- *  File:       religion.h
- *  Summary:    Misc religion related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc religion related functions.
+**/
 
 
 #ifndef RELIGION_H
@@ -28,11 +27,14 @@ bool is_chaotic_god(god_type god);
 // Returns true if the god is not present in the current game. This is
 // orthogonal to whether the player can worship the god in question.
 bool is_unavailable_god(god_type god);
+
+god_type random_god(bool disallow_no_god = false);
+
 void simple_god_message(const char *event, god_type which_deity = you.religion);
 int piety_breakpoint(int i);
 std::string god_name(god_type which_god, bool long_name = false);
 std::string god_name_jiyva(bool second_name = false);
-god_type str_to_god(const std::string name, bool exact = true);
+god_type str_to_god(const std::string &name, bool exact = true);
 
 std::string get_god_powers(god_type which_god);
 std::string get_god_likes(god_type which_god, bool verbose = false);
@@ -54,10 +56,11 @@ uint8_t god_message_altar_colour(god_type god);
 bool player_can_join_god(god_type which_god);
 bool transformed_player_can_join_god(god_type which_god);
 void god_pitch(god_type which_god);
+int had_gods();
 int piety_rank(int piety = -1);
 int piety_scale(int piety_change);
-bool god_hates_your_god(god_type god,
-                        god_type your_god = you.religion);
+bool god_likes_your_god(god_type god, god_type your_god = you.religion);
+bool god_hates_your_god(god_type god, god_type your_god = you.religion);
 std::string god_hates_your_god_reaction(god_type god,
                                         god_type your_god = you.religion);
 bool god_hates_cannibalism(god_type god);
@@ -66,7 +69,10 @@ bool god_likes_fresh_corpses(god_type god);
 bool god_likes_butchery(god_type god);
 bool god_likes_spell(spell_type spell, god_type god);
 bool god_hates_spell(spell_type spell, god_type god);
-harm_protection_type god_protects_from_harm(god_type god, bool actual = true);
+bool god_loathes_spell(spell_type spell, god_type god);
+bool god_can_protect_from_harm(god_type god);
+int elyvilon_lifesaving();
+bool god_protects_from_harm();
 bool jiyva_is_dead();
 bool fedhas_protects(const monster* target);
 bool fedhas_protects_species(int mc);
@@ -86,8 +92,6 @@ bool is_yred_undead_slave(const monster* mon);
 bool is_orcish_follower(const monster* mon);
 bool is_fellow_slime(const monster* mon);
 bool is_neutral_plant(const monster* mon);
-bool is_good_lawful_follower(const monster* mon);
-bool is_good_follower(const monster* mon);
 bool is_follower(const monster* mon);
 bool bless_follower(monster* follower = NULL,
                     god_type god = you.religion,
@@ -106,8 +110,9 @@ void religion_turn_end();
 
 int get_tension(god_type god = you.religion);
 int get_monster_tension(const monster* mons, god_type god = you.religion);
+int get_fuzzied_monster_difficulty(const monster *mons);
 
-bool do_god_gift(bool prayed_for = false, bool forced = false);
+bool do_god_gift(bool forced = false);
 
 std::vector<god_type> temple_god_list();
 std::vector<god_type> nontemple_god_list();

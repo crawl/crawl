@@ -16,6 +16,7 @@ tile_list_processor::tile_list_processor() :
     m_corpsify(false),
     m_composing(false),
     m_shrink(true),
+    m_texture(0),
     m_prefix("TILE"),
     m_start_value("0"),
     m_variation_idx(-1),
@@ -30,9 +31,12 @@ tile_list_processor::~tile_list_processor()
         delete m_back[i];
 
     m_back.resize(0);
+    if (m_texture)
+        delete m_texture;
 }
 
-bool tile_list_processor::load_image(tile &img, const char *filename)
+bool tile_list_processor::load_image(tile &img, const char *filename,
+                                     bool background)
 {
     assert(filename);
 
@@ -46,15 +50,23 @@ bool tile_list_processor::load_image(tile &img, const char *filename)
         ""
     };
 
-    if (m_sdir != "")
+    if (m_sdir != "" || background && m_back_sdir != "")
     {
+        std::vector<const char *> dirs;
+        if (m_sdir != "")
+            dirs.push_back(m_sdir.c_str());
+        if (background && m_back_sdir != "")
+            dirs.push_back(m_back_sdir.c_str());
         for (unsigned int e = 0; e < num_ext; e++)
         {
-            sprintf(temp, "%s/%s%s", m_sdir.c_str(), filename, ext[e]);
-            if (img.load(temp))
+            for (unsigned int d = 0; d < dirs.size(); d++)
             {
-                m_depends.push_back(temp);
-                return (true);
+                sprintf(temp, "%s/%s%s", dirs[d], filename, ext[e]);
+                if (img.load(temp))
+                {
+                    m_depends.push_back(temp);
+                    return (true);
+                }
             }
         }
     }
@@ -300,7 +312,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             for (unsigned int i = 1; i < m_args.size(); i++)
             {
                 tile *img = new tile();
-                if (!load_image(*img, m_args[i]))
+                if (!load_image(*img, m_args[i], true))
                 {
                     fprintf(stderr, "Error(%s:%d): couldn't load image "
                                     "'%s'.\n", list_file, line, m_args[i]);
@@ -386,7 +398,10 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             else if (m_rim)
                 m_compose.add_rim(tile_colour::black);
 
-            if (m_back.size() > 0)
+            if (m_texture)
+                m_compose.texture(*m_texture);
+
+            if (!m_back.empty())
             {
                 const unsigned int pseudo_rand = m_page.m_tiles.size() * 54321;
                 tile *back = m_back[pseudo_rand % m_back.size()];
@@ -405,6 +420,30 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
 
             m_compose.unload();
             m_composing = false;
+        }
+        else if (strcmp(arg, "texture") == 0)
+        {
+            CHECK_ARG(1);
+
+            if (m_texture)
+                delete m_texture;
+
+            if (strcmp(m_args[1], "none") == 0)
+            {
+                CHECK_NO_ARG(2);
+                m_texture = 0;
+                return (true);
+            }
+
+            CHECK_NO_ARG(2);
+            tile *img = new tile();
+            if (!load_image(*img, m_args[1], true))
+            {
+                fprintf(stderr, "Error(%s:%d): couldn't load image "
+                                "'%s'.\n", list_file, line, m_args[1]);
+                return (false);
+            }
+            m_texture = img;
         }
         else if (strcmp(arg, "include") == 0)
         {
@@ -473,6 +512,11 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         {
             CHECK_ARG(1);
             m_sdir = m_args[1];
+        }
+        else if (strcmp(arg, "back_sdir") == 0)
+        {
+            CHECK_ARG(1);
+            m_back_sdir = m_args[1];
         }
         else if (strcmp(arg, "weight") == 0)
         {
@@ -671,10 +715,10 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
 
         tile img;
 
-        if (m_back.size() > 0)
+        if (!m_back.empty())
         {
             // compose
-            if (!load_image(m_compose, arg))
+            if (!load_image(m_compose, arg, true))
             {
                 fprintf(stderr, "Error (%s:%d): couldn't load image "
                                 "'%s'.\n", list_file, line, arg);
@@ -683,6 +727,9 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
 
             if (m_corpsify)
                 m_compose.corpsify();
+
+            if (m_texture)
+                m_compose.texture(*m_texture);
 
             const unsigned int pseudo_rand = m_page.m_tiles.size() * 54321;
             tile *back = m_back[pseudo_rand % m_back.size()];
@@ -706,6 +753,9 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
 
             if (m_corpsify)
                 img.corpsify();
+
+            if (m_texture)
+                img.texture(*m_texture);
         }
 
         recolour(img);
@@ -737,7 +787,7 @@ void tile_list_processor::add_image(tile &img, const char *enumname)
     int weight = m_weight;
     if (enumname)
         m_last_enum = m_page.m_counts.size() - 1;
-    else if (m_last_enum < m_page.m_counts.size() && m_page.m_probs.size() > 0)
+    else if (m_last_enum < m_page.m_counts.size() && !m_page.m_probs.empty())
     {
         m_page.m_counts[m_last_enum]++;
         weight += m_page.m_probs[m_page.m_probs.size() - 1];
@@ -747,7 +797,7 @@ void tile_list_processor::add_image(tile &img, const char *enumname)
 
     m_page.m_probs.push_back(weight);
 
-    if (m_categories.size() > 0)
+    if (!m_categories.empty())
         m_ctg_counts[m_categories.size()-1]++;
 
     if (m_variation_idx != -1)
@@ -820,7 +870,8 @@ static bool _write_if_changed(const char *oldfilename, FILE *newfile)
     assert(oldfilename);
 
     FILE *oldfile = fopen(oldfilename, "r");
-    if (oldfile) {
+    if (oldfile)
+    {
         if (!_files_differ(newfile, oldfile))
         {
             fclose(oldfile);
@@ -847,7 +898,7 @@ void tile_list_processor::add_abstracts(
     const std::vector<std::string> &uc_max_enum)
 {
     assert(lc_enum.size() == uc_max_enum.size());
-    assert(lc_enum.size() > 0);
+    assert(!lc_enum.empty());
 
     size_t count = lc_enum.size();
     if (count == 1)
@@ -890,7 +941,7 @@ bool tile_list_processor::write_data()
         return (false);
     }
 
-    if (m_page.m_tiles.size() > 0 && m_abstract.size() > 0)
+    if (!m_page.m_tiles.empty() && !m_abstract.empty())
     {
         fprintf(stderr, "%s", "Error: can't specify tiles when using %%abstract.\n");
         return (false);
@@ -918,7 +969,7 @@ bool tile_list_processor::write_data()
 
         char filename[1024];
         sprintf(filename, "%s.png", lcname.c_str());
-        if (m_abstract.size() == 0)
+        if (m_abstract.empty())
         {
             if (!m_page.write_image(filename))
                 return (false);
@@ -952,7 +1003,7 @@ bool tile_list_processor::write_data()
             return (false);
         }
 
-        if (m_categories.size() > 0)
+        if (!m_categories.empty())
         {
             part_min = new int[m_categories.size()];
             memset(part_min, 0, sizeof(int) * m_categories.size());
@@ -1044,7 +1095,7 @@ bool tile_list_processor::write_data()
             }
         }
 
-        if (m_abstract.size() == 0)
+        if (m_abstract.empty())
             fprintf(fp, "    %s_%s_MAX\n};\n\n", m_prefix.c_str(), ucname.c_str());
         else
         {
@@ -1076,7 +1127,7 @@ bool tile_list_processor::write_data()
         fprintf(fp, "tileidx_t tile_%s_coloured(tileidx_t idx, int col);\n",
             lcname.c_str());
 
-        if (m_categories.size() > 0)
+        if (!m_categories.empty())
         {
             fprintf(fp, "\nenum tile_%s_parts\n{\n", lcname.c_str());
             for (unsigned int i = 0; i < m_categories.size(); i++)
@@ -1103,7 +1154,7 @@ bool tile_list_processor::write_data()
     }
 
     // write "tiledef-%name.cc"
-    if (m_abstract.size() == 0)
+    if (m_abstract.empty())
     {
         char filename[1024];
         sprintf(filename, "tiledef-%s.cc", lcname.c_str());
@@ -1217,7 +1268,7 @@ bool tile_list_processor::write_data()
                 lcname.c_str(), m_start_value.c_str());
         fprintf(fp, "}\n\n");
 
-        if (m_categories.size() > 0)
+        if (!m_categories.empty())
         {
             fprintf(fp, "unsigned int tile_%s_part_count[%s] =\n{\n",
                     lcname.c_str(), ctg_max.c_str());
@@ -1433,7 +1484,7 @@ bool tile_list_processor::write_data()
     }
 
     // write "tile-%name.html"
-    if (m_page.m_tiles.size() > 0)
+    if (!m_page.m_tiles.empty())
     {
         char filename[1024];
         sprintf(filename, "tile-%s.html", lcname.c_str());
@@ -1516,7 +1567,7 @@ bool tile_list_processor::write_data()
 
 
     // Write "%name.d"
-    if (m_abstract.size() == 0)
+    if (m_abstract.empty())
     {
         char filename[1024];
         sprintf(filename, "%s.d", lcname.c_str());
@@ -1528,7 +1579,7 @@ bool tile_list_processor::write_data()
             return (false);
         }
 
-        if (m_page.m_tiles.size() > 0)
+        if (!m_page.m_tiles.empty())
         {
             fprintf(fp, "%s.png: \\\n",
                     lcname.c_str(), lcname.c_str(), lcname.c_str());
@@ -1548,6 +1599,164 @@ bool tile_list_processor::write_data()
         {
              fprintf(fp, "%s:\n", m_depends[i].c_str());
         }
+
+        fclose(fp);
+    }
+
+    // write "tileinfo-%name.js"
+    {
+        char filename[1024];
+        sprintf(filename, "tileinfo-%s.js", lcname.c_str());
+        FILE *fp = tmpfile();
+
+        if (!fp)
+        {
+            fprintf(stderr, "Error: couldn't open '%s' for write.\n", filename);
+            return (false);
+        }
+
+        fprintf(fp, "// This file has been automatically generated.\n\n");
+
+        fprintf(fp, "val = %s;\n", m_start_value.c_str());
+
+        std::string old_enum_name = "";
+        int count = 0;
+        for (unsigned int i = 0; i < m_page.m_tiles.size(); i++)
+        {
+            const std::string &parts_ctg = m_page.m_tiles[i]->parts_ctg();
+            const int enumcount = m_page.m_tiles[i]->enumcount();
+
+            if (enumcount == 0)
+            {
+                if (old_enum_name.empty())
+                {
+                    fprintf(fp, "%s_%s_FILLER_%d = val++;\n", m_prefix.c_str(),
+                            ucname.c_str(), i);
+                }
+                else
+                {
+                    fprintf(fp, "%s_%s_%d = val++;\n", m_prefix.c_str(),
+                            old_enum_name.c_str(), ++count);
+                }
+            }
+            else if (parts_ctg.empty())
+            {
+                const std::string &enumname = m_page.m_tiles[i]->enumname(0);
+                fprintf(fp, "%s_%s = val++;\n", m_prefix.c_str(),
+                        enumname.c_str());
+                old_enum_name = enumname;
+                count = 0;
+            }
+            else
+            {
+                const std::string &enumname = m_page.m_tiles[i]->enumname(0);
+                fprintf(fp, "%s_%s_%s = val++;\n", m_prefix.c_str(),
+                        parts_ctg.c_str(), enumname.c_str());
+                old_enum_name = enumname;
+                count = 0;
+            }
+
+            for (int c = 1; c < enumcount; ++c)
+            {
+                const std::string &basename = m_page.m_tiles[i]->enumname(0);
+                const std::string &enumname = m_page.m_tiles[i]->enumname(c);
+
+                if (parts_ctg.empty())
+                {
+                    fprintf(fp, "val = %s_%s = %s_%s; val++;\n",
+                            m_prefix.c_str(), enumname.c_str(),
+                            m_prefix.c_str(), basename.c_str());
+                }
+                else
+                {
+                    fprintf(fp, "val = %s_%s_%s = %s_%s_%s; val++;\n",
+                            m_prefix.c_str(), parts_ctg.c_str(), enumname.c_str(),
+                            m_prefix.c_str(), parts_ctg.c_str(), basename.c_str());
+                }
+            }
+        }
+
+        if (m_abstract.size() == 0)
+        {
+            fprintf(fp, "%s_%s_MAX = val++;\n\n", m_prefix.c_str(), ucname.c_str());
+
+            fprintf(fp, "var _%s_tile_info = [\n", lcname.c_str());
+            for (unsigned int i = 0; i < m_page.m_offsets.size(); i+=4)
+            {
+                fprintf(fp, "  {w: %d, h: %d, ox: %d, oy: %d, sx: %d, sy: %d, ex: %d, ey: %d},\n",
+                        m_page.m_offsets[i+2], m_page.m_offsets[i+3],
+                        m_page.m_offsets[i], m_page.m_offsets[i+1],
+                        m_page.m_texcoords[i], m_page.m_texcoords[i+1],
+                        m_page.m_texcoords[i+2], m_page.m_texcoords[i+3]);
+            }
+            fprintf(fp, "]\n\n");
+
+            fprintf(fp, "function get_%s_tile_info(idx)\n{\n", lcname.c_str());
+            fprintf(fp, "    return _%s_tile_info[idx - %s];\n",
+                    lcname.c_str(), m_start_value.c_str());
+            fprintf(fp, "}\n\n");
+
+            fprintf(fp, "var _tile_%s_count =\n[\n", lcname.c_str());
+            for (unsigned int i = 0; i < m_page.m_counts.size(); i++)
+                fprintf(fp, "    %u,\n", m_page.m_counts[i]);
+            fprintf(fp, "];\n\n");
+
+            fprintf(fp, "function tile_%s_count(idx)\n{\n", lcname.c_str());
+            fprintf(fp, "    return _tile_%s_count[idx - %s];\n",
+                    lcname.c_str(), m_start_value.c_str());
+            fprintf(fp, "}\n\n");
+        }
+        else
+        {
+            {
+                size_t last_idx = m_abstract.size() - 1;
+
+                std::string max_enum = m_abstract[last_idx].second;
+                max_enum += "_";
+                max_enum += m_abstract[last_idx].first;
+                max_enum += "_MAX";
+
+                for (size_t j = 0; j < max_enum.size(); ++j)
+                    max_enum[j] = std::toupper(max_enum[j]);
+
+                fprintf(fp, "%s_%s_MAX = %s;\n\n",
+                        m_prefix.c_str(), ucname.c_str(), max_enum.c_str());
+            }
+
+            std::vector<std::string> uc_max_enum;
+            for (size_t i = 0; i < m_abstract.size(); ++i)
+            {
+                std::string max_enum = m_abstract[i].second;
+                max_enum += "_";
+                max_enum += m_abstract[i].first;
+                max_enum += "_MAX";
+
+                for (size_t j = 0; j < max_enum.size(); ++j)
+                    max_enum[j] = std::toupper(max_enum[j]);
+
+                uc_max_enum.push_back(max_enum);
+            }
+
+            std::vector<std::string> lc_enum;
+            for (size_t i = 0; i < m_abstract.size(); ++i)
+                lc_enum.push_back(m_abstract[i].first);
+
+            fprintf(fp, "function get_%s_tile_info(idx)\n{\n", lcname.c_str());
+            add_abstracts(fp, "return (get_%s_tile_info(idx));", lc_enum, uc_max_enum);
+            fprintf(fp, "}\n\n");
+
+            fprintf(fp, "function tile_%s_count(idx)\n{\n", lcname.c_str());
+            add_abstracts(fp, "return (tile_%s_count(idx));", lc_enum, uc_max_enum);
+            fprintf(fp, "}\n\n");
+
+            fprintf(fp, "function get_%s_img(idx) {\n", lcname.c_str());
+            add_abstracts(fp, "return \"%s\";", lc_enum, uc_max_enum);
+            fprintf(fp, "}\n\n");
+        }
+
+        fflush(fp);
+        if (!_write_if_changed(filename, fp))
+            return false;
 
         fclose(fp);
     }

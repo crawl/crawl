@@ -1,16 +1,11 @@
-/*
- *  File:       tilereg-map.cc
- *
- *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
- */
-
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "tilereg-map.h"
 
 #include "cio.h"
+#include "command.h"
 #include "food.h"
 #include "libutil.h"
 #include "misc.h"
@@ -159,13 +154,9 @@ void MapRegion::render()
 
 void MapRegion::recenter()
 {
-    // adjust offsets to center map
+    // adjust offsets to center map.
     ox = (wx - dx * (m_max_gx - m_min_gx)) / 2;
     oy = (wy - dy * (m_max_gy - m_min_gy)) / 2;
-#if 0
-    // Not needed? (jpeg)
-    m_dirty = true;
-#endif
 }
 
 void MapRegion::set(const coord_def &gc, map_feature f)
@@ -284,7 +275,13 @@ int MapRegion::handle_mouse(MouseEvent &event)
                 return (CK_MOUSE_CMD);
             }
             else
-                return (click_travel(gc, event.mod & MOD_CTRL));
+            {
+                const int cmd = click_travel(gc, event.mod & MOD_CTRL);
+                if (cmd != CK_MOUSE_CMD)
+                    process_command((command_type) cmd);
+
+                return (CK_MOUSE_CMD);
+            }
         }
         else if (event.button == MouseEvent::RIGHT)
         {
@@ -309,15 +306,12 @@ bool MapRegion::update_tip_text(std::string& tip)
     if (mouse_control::current_mode() != MOUSE_MODE_COMMAND)
         return (false);
 
-    if (!player_in_mappable_area())
-        return (false);
-
     tip = "[L-Click] Travel / [R-Click] View";
     if (you.level_type != LEVEL_LABYRINTH
         && (you.hunger_state > HS_STARVING || you_min_hunger())
         && i_feel_safe())
     {
-        tip += "\n[Shift-L-Click] Autoexplore";
+        tip += "\n[Shift + L-Click] Autoexplore";
     }
     return (true);
 }

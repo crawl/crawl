@@ -1,12 +1,6 @@
-/*
- *  File:       tilereg-crt.cc
- *
- *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
- */
-
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "cio.h"
 #include "menu.h"
@@ -61,7 +55,7 @@ void CRTRegion::clear()
 
 void CRTRegion::render()
 {
-    set_transform();
+    set_transform(true);
 
     // render all the inherited texts
     TextRegion::render();

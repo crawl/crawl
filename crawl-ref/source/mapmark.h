@@ -1,8 +1,7 @@
-/*
- *  File:       mapmark.cc
- *  Summary:    Level markers (annotations).
- *  Created by: dshaligram on Sat Jul 21 12:17:29 2007 UTC
- */
+/**
+ * @file
+ * @brief Level markers (annotations).
+**/
 
 #ifndef __MAPMARK_H__
 #define __MAPMARK_H__
@@ -125,8 +124,9 @@ class map_malign_gateway_marker : public map_marker
 {
 public:
     map_malign_gateway_marker (const coord_def& pos = coord_def(0, 0),
-                    int dur = 0, bool ip = false, monster* mon = NULL,
-                    god_type gd = GOD_NO_GOD, int pow = 0);
+                    int dur = 0, bool ip = false, std::string caster = "",
+                    beh_type bh = BEH_HOSTILE, god_type gd = GOD_NO_GOD,
+                    int pow = 0);
 
     void write (writer &) const;
     void read (reader &);
@@ -139,9 +139,34 @@ public:
     int duration;
     bool is_player;
     bool monster_summoned;
-    monster* caster;
+    std::string summoner_string;
+    beh_type behaviour;
     god_type god;
     int power;
+};
+
+// A marker powered by phoenixes!
+class map_phoenix_marker : public map_marker
+{
+public:
+    map_phoenix_marker (const coord_def& pos = coord_def(0, 0),
+                    int tst = 0, int tso = 0, beh_type bh = BEH_HOSTILE,
+                    god_type gd = GOD_NO_GOD, coord_def cp = coord_def(-1, -1)
+                    );
+
+    void write (writer &) const;
+    void read (reader &);
+    map_marker *clone() const;
+    std::string debug_describe() const;
+
+    static map_marker *read(reader &, map_marker_type);
+
+public:
+    int turn_start;
+    int turn_stop;
+    beh_type behaviour;
+    god_type god;
+    coord_def corpse_pos;
 };
 
 // A marker powered by Lua.
@@ -198,6 +223,22 @@ public:
 
 public:
     std::map<std::string, std::string> properties;
+};
+
+class map_position_marker : public map_marker
+{
+public:
+    map_position_marker(const coord_def &pos = coord_def(0, 0),
+                        const coord_def _dest = INVALID_COORD);
+    map_position_marker(const map_position_marker &other);
+    void write(writer &) const;
+    void read(reader &);
+    std::string debug_describe() const;
+    map_marker *clone() const;
+    static map_marker *read(reader &, map_marker_type);
+
+public:
+    coord_def dest;
 };
 
 #endif

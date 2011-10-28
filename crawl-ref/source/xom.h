@@ -1,8 +1,7 @@
-/*
- *  File:       xom.h
- *  Summary:    Misc Xom related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc Xom related functions.
+**/
 
 #ifndef XOM_H
 #define XOM_H

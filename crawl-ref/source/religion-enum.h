@@ -7,13 +7,14 @@ enum piety_gain_t
     NUM_PIETY_GAIN
 };
 
-enum harm_protection_type
+enum nemelex_gift_types
 {
-    HPT_NONE = 0,
-    HPT_PRAYING,
-    HPT_ANYTIME,
-    HPT_PRAYING_PLUS_ANYTIME,
-    HPT_RELIABLE_PRAYING_PLUS_ANYTIME,
-    NUM_HPTS
+    NEM_GIFT_ESCAPE = 0,
+    NEM_GIFT_DESTRUCTION,
+    NEM_GIFT_DUNGEONS,
+    NEM_GIFT_SUMMONING,
+    NEM_GIFT_WONDERS,
+    NUM_NEMELEX_GIFT_TYPES,
 };
+
 #endif

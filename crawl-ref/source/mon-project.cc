@@ -1,8 +1,7 @@
-/*
- *  File:       mon-project.cc
- *  Summary:    Slow projectiles, done as monsters.
- *  Written by: Adam Borowski
- */
+/**
+ * @file
+ * @brief Slow projectiles, done as monsters.
+**/
 
 #include "AppHdr.h"
 
@@ -31,53 +30,71 @@
 
 static void _fuzz_direction(monster& mon, int pow);
 
-bool cast_iood(actor *caster, int pow, bolt *beam)
+spret_type cast_iood(actor *caster, int pow, bolt *beam, float vx, float vy,
+                     int foe, bool fail)
 {
-    int mtarg = mgrd(beam->target);
-    if (beam->target == you.pos())
-        mtarg = MHITYOU;
+    const bool is_player = caster->atype() == ACT_PLAYER;
+    if (beam && is_player && !player_tracer(ZAP_IOOD, pow, *beam))
+        return SPRET_ABORT;
 
-    int mind = -1;
-    for (int i=0; i < 10 && mind == -1; i++)
-    {
-        mind = mons_place(mgen_data(MONS_ORB_OF_DESTRUCTION,
-                (caster->atype() == ACT_PLAYER) ? BEH_FRIENDLY :
+    fail_check();
+
+    int mtarg = !beam ? MHITNOT :
+                beam->target == you.pos() ? MHITYOU : mgrd(beam->target);
+
+    int mind = place_monster(mgen_data(MONS_ORB_OF_DESTRUCTION,
+                (is_player) ? BEH_FRIENDLY :
                     ((monster*)caster)->friendly() ? BEH_FRIENDLY : BEH_HOSTILE,
                 caster,
                 0,
                 SPELL_IOOD,
-                coord_def(-1, -1),
+                coord_def(),
                 mtarg,
                 0,
-                GOD_NO_GOD));
-    }
+                GOD_NO_GOD), true, true);
     if (mind == -1)
     {
         mpr("Failed to spawn projectile.", MSGCH_WARN);
         /*canned_msg(MSG_NOTHING_HAPPENS);*/
-        return (false);
+        return SPRET_SUCCESS;
     }
 
     monster& mon = menv[mind];
-    const coord_def pos = caster->pos();
-    beam->choose_ray();
-    dprf("beam (%d,%d)+t*(%d,%d)  ray (%f,%f)+t*(%f,%f)",
-        pos.x, pos.y, beam->target.x - pos.x, beam->target.y - pos.y,
-        beam->ray.r.start.x - 0.5, beam->ray.r.start.y - 0.5,
-        beam->ray.r.dir.x, beam->ray.r.dir.y);
-    mon.props["iood_x"].get_float() = beam->ray.r.start.x - 0.5;
-    mon.props["iood_y"].get_float() = beam->ray.r.start.y - 0.5;
-    mon.props["iood_vx"].get_float() = beam->ray.r.dir.x;
-    mon.props["iood_vy"].get_float() = beam->ray.r.dir.y;
-    mon.props["iood_kc"].get_byte() = (caster->atype() == ACT_PLAYER) ? KC_YOU :
-            ((monster*)caster)->friendly() ? KC_FRIENDLY : KC_OTHER;
+    if (beam)
+    {
+        beam->choose_ray();
+#ifdef DEBUG_DIAGNOSTICS
+        const coord_def pos = caster->pos();
+        dprf("beam (%d,%d)+t*(%d,%d)  ray (%f,%f)+t*(%f,%f)",
+            pos.x, pos.y, beam->target.x - pos.x, beam->target.y - pos.y,
+            beam->ray.r.start.x - 0.5, beam->ray.r.start.y - 0.5,
+            beam->ray.r.dir.x, beam->ray.r.dir.y);
+#endif
+        mon.props["iood_x"].get_float() = beam->ray.r.start.x - 0.5;
+        mon.props["iood_y"].get_float() = beam->ray.r.start.y - 0.5;
+        mon.props["iood_vx"].get_float() = beam->ray.r.dir.x;
+        mon.props["iood_vy"].get_float() = beam->ray.r.dir.y;
+        _fuzz_direction(mon, pow);
+    }
+    else
+    {
+        // Multi-orb: spread the orbs a bit, otherwise diagonal ones might
+        // fail to leave the cardinal direction: orb A moves -0.4,+0.9 and
+        // orb B +0.4,+0.9, both rounded to 0,1.
+        mon.props["iood_x"].get_float() = caster->pos().x + 0.4 * vx;
+        mon.props["iood_y"].get_float() = caster->pos().y + 0.4 * vy;
+        mon.props["iood_vx"].get_float() = vx;
+        mon.props["iood_vy"].get_float() = vy;
+    }
+
+    mon.props["iood_kc"].get_byte() = (is_player) ? KC_YOU :
+        ((monster*)caster)->friendly() ? KC_FRIENDLY : KC_OTHER;
     mon.props["iood_pow"].get_short() = pow;
     mon.flags &= ~MF_JUST_SUMMONED;
     mon.props["iood_caster"].get_string() = caster->as_monster()
         ? caster->name(DESC_PLAIN, true)
         : "";
-
-    _fuzz_direction(mon, pow);
+    mon.props["iood_mid"].get_int() = caster->mid;
 
     // Move away from the caster's square.
     iood_act(mon, true);
@@ -85,7 +102,33 @@ bool cast_iood(actor *caster, int pow, bolt *beam)
     // randomize it and take more so players won't get guaranteed instant
     // damage.
     mon.lose_energy(EUT_MOVE, 2, random2(3)+2);
-    return (true);
+
+    // Multi-orbs don't home during the first move, they'd likely
+    // immediately explode otherwise.
+    if (foe != MHITNOT)
+        mon.foe = foe;
+
+    return SPRET_SUCCESS;
+}
+
+void cast_iood_burst(int pow, coord_def target)
+{
+    int foe = MHITNOT;
+    if (const monster* mons = monster_at(target))
+    {
+        if (mons && you.can_see(mons))
+            foe = mons->mindex();
+    }
+
+    int n_orbs = random_range(3, 7);
+    dprf("Bursting %d orbs.", n_orbs);
+    double angle0 = random2(2097152) * PI / 1048576;
+
+    for (int i = 0; i < n_orbs; i++)
+    {
+        double angle = angle0 + i * PI * 2 / n_orbs;
+        cast_iood(&you, pow, 0, sin(angle), cos(angle), foe);
+    }
 }
 
 static void _normalize(float &x, float &y)
@@ -155,8 +198,11 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
     beam.name = "orb of destruction";
     beam.flavour = BEAM_NUKE;
     beam.attitude = mon.attitude;
-    beam.thrower = (mon.props["iood_kc"].get_byte() == KC_YOU)
-                        ? KILL_YOU_MISSILE : KILL_MON_MISSILE;
+
+    actor *caster = actor_by_mid(mon.props["iood_mid"].get_int());
+    if (!caster)        // caster is dead/gone, blame the orb itself (as its
+        caster = &mon;  // friendliness is correct)
+    beam.set_agent(caster);
     beam.colour = WHITE;
     beam.glyph = dchar_glyph(DCHAR_FIRED_BURST);
     beam.range = 1;
@@ -171,8 +217,12 @@ static bool _iood_hit(monster& mon, const coord_def &pos, bool big_boom = false)
     ASSERT(dist >= 0);
     if (dist < 4)
         pow = pow * (dist*2+3) / 10;
-    beam.damage = dice_def(8, pow / 4);
+    beam.damage = dice_def(9, pow / 4);
 
+    if (dist < 3)
+        beam.name = "wavering " + beam.name;
+    if (dist < 2)
+        beam.hit_verb = "weakly hits";
     beam.ex_size = 1;
     beam.loudness = 7;
 
@@ -283,11 +333,7 @@ move_again:
         return (false);
 
     if (!no_trail)
-    {
-        place_cloud(CLOUD_MAGIC_TRAIL, mon.pos(),
-                    2 + random2(3), mon.kill_alignment(),
-                    KILL_MON_MISSILE);
-    }
+        place_cloud(CLOUD_MAGIC_TRAIL, mon.pos(), 2 + random2(3), &mon);
 
     actor *victim = actor_at(pos);
     if (cell_is_solid(pos) || victim)
@@ -302,7 +348,7 @@ move_again:
         monster* mons = (victim && victim->atype() == ACT_MONSTER) ?
             (monster*) victim : 0;
 
-        if (mons && mons_is_projectile(victim->id()))
+        if (mons && mons_is_projectile(victim->type))
         {
             if (mon.observable())
                 mpr("The orbs collide in a blinding explosion!");

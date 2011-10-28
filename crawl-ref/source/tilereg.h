@@ -1,9 +1,4 @@
-/*
- *  File:       tilereg.h
- *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
- */
-
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 #ifndef TILEREG_H
 #define TILEREG_H
 
@@ -66,12 +61,10 @@ public:
     int ex;
     int ey;
 
-    static coord_def NO_CURSOR;
-
 protected:
     void recalculate();
     virtual void on_resize() = 0;
-    void set_transform();
+    void set_transform(bool no_scaling = false);
 };
 
 class FontWrapper;
@@ -83,6 +76,7 @@ class TileRegionInit
 public:
     TileRegionInit(ImageManager *_im, FontWrapper *_font, int _tx, int _ty) :
         im(_im), tag_font(_font), tile_x(_tx), tile_y(_ty) { }
+    TileRegionInit() { }
 
     ImageManager *im;
     FontWrapper *tag_font;

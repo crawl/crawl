@@ -1,7 +1,13 @@
+/**
+ * @file
+ * @brief General game bindings.
+**/
+
 /*
- * File:     l_crawl.cc
- * Summary:  General game bindings.
- */
+--- General game bindings
+
+module "crawl"
+*/
 
 #include "AppHdr.h"
 
@@ -27,6 +33,7 @@
 #include "random.h"
 #include "religion.h"
 #include "stuff.h"
+#include "tutorial.h"
 #include "view.h"
 
 #ifdef UNIX
@@ -38,6 +45,11 @@
 // User accessible
 //
 
+/*
+--- Print a message.
+-- @param message message to print
+-- @channel channel to print on; defaults to 0 (<code>MSGCH_PLAIN</code>)
+function mpr(message, channel) */
 static int crawl_mpr(lua_State *ls)
 {
     if (!crawl_state.io_inited)
@@ -64,6 +76,9 @@ static int crawl_mpr(lua_State *ls)
     return (0);
 }
 
+/*
+---
+function formatted_mpr(message, channel) */
 static int crawl_formatted_mpr(lua_State *ls)
 {
     if (!crawl_state.io_inited)
@@ -91,7 +106,9 @@ static int crawl_formatted_mpr(lua_State *ls)
     return (0);
 }
 
-// Print to stderr for debugging hooks.
+/*
+--- Print to stderr for debugging hooks.
+function stderr(text) */
 LUAFN(crawl_stderr)
 {
     const char *text = luaL_checkstring(ls, 1);
@@ -99,12 +116,43 @@ LUAFN(crawl_stderr)
     return (0);
 }
 
+/*
+--- Debugging spew.
+function dpr(text) */
+LUAFN(crawl_dpr)
+{
+#ifdef DEBUG_DIAGNOSTICS
+    const char *text = luaL_checkstring(ls, 1);
+    if (crawl_state.io_inited)
+        dprf("%s", text);
+#endif
+    return (0);
+}
+
+/*
+---
+function delay(ms) */
 LUAWRAP(crawl_delay, delay(luaL_checkint(ls, 1)))
+/*
+---
+function more() */
 LUAWRAP(crawl_more, more())
+/*
+---
+function flush_prev_message() */
 LUAWRAP(crawl_flush_prev_message, flush_prev_message())
+/*
+---
+function mesclr(force) */
 LUAWRAP(crawl_mesclr, mesclr(lua_isboolean(ls, 1) ? lua_toboolean(ls, 1) : false))
+/*
+---
+function redraw_screen() */
 LUAWRAP(crawl_redraw_screen, redraw_screen())
 
+/*
+---
+function set_more_autoclear(flag) */
 static int crawl_set_more_autoclear(lua_State *ls)
 {
     if (lua_isnone(ls, 1))
@@ -117,6 +165,27 @@ static int crawl_set_more_autoclear(lua_State *ls)
     return (0);
 }
 
+/*
+---
+function enable_more(flag) */
+static int crawl_enable_more(lua_State *ls)
+{
+    if (lua_isnone(ls, 1))
+    {
+        luaL_argerror(ls, 1, "needs a boolean argument");
+        return (0);
+    }
+    crawl_state.show_more_prompt = lua_toboolean(ls, 1);
+
+    return (0);
+}
+
+/*
+--- Wrapper for <code>cancelable_get_line()</code>.  Since that takes
+-- a pre-allocated buffer, an arbitrary 500-character limit is
+-- currently imposed.
+-- @return Either a string if one is input, or nil if input is canceled
+function c_input_line() */
 static int crawl_c_input_line(lua_State *ls)
 {
     char linebuf[500];
@@ -129,8 +198,19 @@ static int crawl_c_input_line(lua_State *ls)
     return (1);
 }
 
+/*
+--- Get input key (combo).
+-- @return integer representing the key (combo) input
+function getch() */
 LUARET1(crawl_getch, number, getchm())
+/*
+--- Check for pending input.
+-- @return 1 if there is, 0 otherwise
+function kbhit() */
 LUARET1(crawl_kbhit, number, kbhit())
+/*
+--- Flush the input buffer (typeahead).
+function flush_input() */
 LUAWRAP(crawl_flush_input, flush_input_buffer(FLUSH_LUA))
 
 static char _lua_char(lua_State *ls, int ndx, char defval = 0)
@@ -139,6 +219,15 @@ static char _lua_char(lua_State *ls, int ndx, char defval = 0)
             : lua_tostring(ls, ndx)[0]);
 }
 
+/*
+--- Ask the player a yes/no question.
+-- The player is supposed to answer by pressing Y or N.
+-- @param prompt question for the user
+-- @param safe accept lowercase answers?
+-- @param safeanswer if a letter, this will be considered a safe default
+-- @param clear_after clear the question after the user answers?
+-- @param noprompt if true, skip asking the question; just wait for the answer
+function yesno(prompt, safe, safeanswer, clear_after, interrupt_delays, noprompt) */
 static int crawl_yesno(lua_State *ls)
 {
     const char *prompt = luaL_checkstring(ls, 1);
@@ -156,6 +245,12 @@ static int crawl_yesno(lua_State *ls)
     return (1);
 }
 
+/*
+--- Ask the player a yes/no/quit question.
+-- Mostly like <code>yesno()</code>, but doesn't yet support as many
+-- parameters in this Lua binding.
+-- @param allow_all actually ask a yes/no/quit/all question
+function yesnoquit(prompt, safe, safeanswer, allow_all, clear_after) */
 static int crawl_yesnoquit(lua_State *ls)
 {
     const char *prompt = luaL_checkstring(ls, 1);
@@ -205,6 +300,10 @@ static void crawl_sendkeys_proc(lua_State *ls, int argi)
     }
 }
 
+/*
+--- XXX vararg function
+--
+function sendkeys() */
 static int crawl_sendkeys(lua_State *ls)
 {
     int top = lua_gettop(ls);
@@ -213,7 +312,10 @@ static int crawl_sendkeys(lua_State *ls)
     return (0);
 }
 
-// Tell Crawl to process one command.
+/*
+--- Tell Crawl to process one command.
+-- @return whether it will actually do so?
+function process_command() */
 static int crawl_process_command(lua_State *ls)
 {
     const bool will_process =
@@ -232,11 +334,22 @@ static int crawl_process_command(lua_State *ls)
     return (1);
 }
 
+/*
+---
+function process_keys() */
 static int crawl_process_keys(lua_State *ls)
 {
-    if (you_are_delayed() || you.turn_is_over)
+    const delay_type current_delay = current_delay_action();
+    if (current_delay && current_delay != DELAY_MACRO)
     {
-        luaL_error(ls, "Cannot currently process new keys");
+        luaL_error(ls, "Cannot currently process new keys (%s delay active)",
+                   delay_name(current_delay));
+        return (0);
+    }
+
+    if (you.turn_is_over)
+    {
+        luaL_error(ls, "Cannot currently process new keys (turn is over)");
         return (0);
     }
 
@@ -265,7 +378,10 @@ static int crawl_process_keys(lua_State *ls)
     return (0);
 }
 
-
+/*
+--- Play a sound.
+-- @param sf filename of sound to play
+function playsound(sf) */
 static int crawl_playsound(lua_State *ls)
 {
     const char *sf = luaL_checkstring(ls, 1);
@@ -275,6 +391,10 @@ static int crawl_playsound(lua_State *ls)
     return (0);
 }
 
+/*
+--- Run a macro.
+-- @param macroname name of macro to run
+function runmacro(macroname) */
 static int crawl_runmacro(lua_State *ls)
 {
     const char *macroname = luaL_checkstring(ls, 1);
@@ -284,6 +404,10 @@ static int crawl_runmacro(lua_State *ls)
     return (0);
 }
 
+/*
+--- Set user options from string.
+-- @param s string of options to set, in same format as <tt>init.txt</tt>/<tt>.crawlrc</tt>.
+function setopt(s) */
 static int crawl_setopt(lua_State *ls)
 {
     if (!lua_isstring(ls, 1))
@@ -299,6 +423,10 @@ static int crawl_setopt(lua_State *ls)
     return (0);
 }
 
+/*
+--- Read options from file.
+-- @param filename name of file to read from
+function read_options(filename) */
 static int crawl_read_options(lua_State *ls)
 {
     if (!lua_isstring(ls, 1))
@@ -493,6 +621,7 @@ static int crawl_article_a(lua_State *ls)
 }
 
 LUARET1(crawl_game_started, boolean, crawl_state.need_save)
+LUARET1(crawl_stat_gain_prompt, boolean, crawl_state.stat_gain_prompt)
 LUARET1(crawl_random2, number, random2(luaL_checkint(ls, 1)))
 LUARET1(crawl_one_chance_in, boolean, one_chance_in(luaL_checkint(ls, 1)))
 LUARET1(crawl_random2avg, number,
@@ -505,10 +634,23 @@ LUARET1(crawl_roll_dice, number,
         lua_gettop(ls) == 1
         ? roll_dice(1, luaL_checkint(ls, 1))
         : roll_dice(luaL_checkint(ls, 1), luaL_checkint(ls, 2)))
+LUARET1(crawl_x_chance_in_y, boolean, x_chance_in_y(luaL_checkint(ls, 1),
+                                                    luaL_checkint(ls, 2)))
 
 static int crawl_is_tiles(lua_State *ls)
 {
 #ifdef USE_TILE
+    lua_pushboolean(ls, true);
+#else
+    lua_pushboolean(ls, false);
+#endif
+
+    return (1);
+}
+
+static int crawl_is_webtiles(lua_State *ls)
+{
+#ifdef USE_TILE_WEB
     lua_pushboolean(ls, true);
 #else
     lua_pushboolean(ls, false);
@@ -525,10 +667,20 @@ static int crawl_get_command (lua_State *ls)
         return (1);
     }
 
-    command_type cmd = name_to_command(luaL_checkstring(ls, 1));
-    lua_pushstring(ls, command_to_string(cmd).c_str());
+    const command_type cmd = name_to_command(luaL_checkstring(ls, 1));
+
+    std::string cmd_name = command_to_string(cmd, true);
+    if (strcmp(cmd_name.c_str(), "<") == 0)
+        cmd_name = "<<";
+
+    lua_pushstring(ls, cmd_name.c_str());
     return (1);
 }
+
+LUAWRAP(crawl_endgame, screen_end_game(luaL_checkstring(ls, 1)))
+LUAWRAP(crawl_tutorial_hunger, set_tutorial_hunger(luaL_checkint(ls, 1)))
+LUAWRAP(crawl_tutorial_skill, set_tutorial_skill(luaL_checkstring(ls, 1), luaL_checkint(ls, 2)))
+LUAWRAP(crawl_tutorial_hint, tutorial_init_hint(luaL_checkstring(ls, 1)))
 
 static int crawl_random_element(lua_State *ls)
 {
@@ -615,13 +767,67 @@ static int crawl_err_trace(lua_State *ls)
     return (lua_gettop(ls));
 }
 
+#ifdef WIZARD
+static int crawl_call_dlua(lua_State *ls)
+{
+    if (!you.wizard)
+        luaL_error(ls, "This function is wizard mode only.");
+
+    const char* code = luaL_checkstring(ls, 1);
+    if (!code)
+        return (0);
+
+    luaL_loadbuffer(dlua, code, strlen(code), "call_dlua");
+    int status = lua_pcall(dlua, 0, LUA_MULTRET, 0);
+
+    if (status)
+    {
+        if (!lua_isnil(dlua, -1))
+        {
+            const char *msg = lua_tostring(dlua, -1);
+            if (msg == NULL)
+                msg = "(error object is not a string)";
+            mpr(msg, MSGCH_ERROR);
+        }
+
+        lua_settop(dlua, 0); // don't bother unwinding, just nuke the stack
+        return 0;
+    }
+
+    if (lua_gettop(dlua) > 0)
+    {
+        // TODO: shuttle things other than a single scalar value
+        if (lua_isnil(dlua, -1))
+            lua_pushnil(ls);
+        else if (lua_isboolean(dlua, -1))
+            lua_pushboolean(ls, lua_toboolean(dlua, -1));
+        else if (lua_isnumber(dlua, -1))
+            lua_pushnumber(ls, lua_tonumber(dlua, -1));
+        else if (const char *ret = lua_tostring(dlua, -1))
+            lua_pushstring(ls, ret);
+        else
+        {
+            mpr("call_dlua: cannot pass non-scalars yet (TODO)", MSGCH_ERROR);
+            lua_pushnil(ls);
+        }
+
+        lua_settop(dlua, 0); // clear the stack
+        return 1;
+    }
+
+    return 0;
+}
+#endif
+
 static const struct luaL_reg crawl_clib[] =
 {
     { "mpr",            crawl_mpr },
     { "formatted_mpr",  crawl_formatted_mpr },
-    { "stderr",  crawl_stderr },
+    { "dpr",            crawl_dpr },
+    { "stderr",         crawl_stderr },
     { "more",           crawl_more },
     { "more_autoclear", crawl_set_more_autoclear },
+    { "enable_more",    crawl_enable_more },
     { "flush_prev_message", crawl_flush_prev_message },
     { "mesclr",         crawl_mesclr },
     { "delay",          crawl_delay },
@@ -630,6 +836,7 @@ static const struct luaL_reg crawl_clib[] =
     { "random2avg"   ,  crawl_random2avg },
     { "coinflip",       crawl_coinflip },
     { "roll_dice",      crawl_roll_dice },
+    { "x_chance_in_y",  crawl_x_chance_in_y },
     { "random_range",   crawl_random_range },
     { "random_element", crawl_random_element },
     { "redraw_screen",  crawl_redraw_screen },
@@ -658,9 +865,19 @@ static const struct luaL_reg crawl_clib[] =
     { "grammar",        _crawl_grammar },
     { "article_a",      crawl_article_a },
     { "game_started",   crawl_game_started },
+    { "stat_gain_prompt", crawl_stat_gain_prompt },
     { "is_tiles",       crawl_is_tiles },
+    { "is_webtiles",    crawl_is_webtiles },
     { "err_trace",      crawl_err_trace },
     { "get_command",    crawl_get_command },
+    { "endgame",        crawl_endgame },
+#ifdef WIZARD
+    { "call_dlua",      crawl_call_dlua },
+#endif
+
+    { "tutorial_hunger", crawl_tutorial_hunger },
+    { "tutorial_skill",  crawl_tutorial_skill },
+    { "tutorial_hint",   crawl_tutorial_hint },
 
     { NULL, NULL },
 };
@@ -701,6 +918,7 @@ LUAFN(_crawl_redraw_view)
 LUAFN(_crawl_redraw_stats)
 {
     you.wield_change        = true;
+    you.redraw_title        = true;
     you.redraw_quiver       = true;
     you.redraw_hit_points   = true;
     you.redraw_magic_points = true;
@@ -780,6 +998,16 @@ static int _crawl_god_speaks(lua_State *ls)
     return (0);
 }
 
+LUAFN(_crawl_set_max_runes)
+{
+    int max_runes = luaL_checkinteger(ls, 1);
+    if (max_runes < 0 || max_runes > NUM_RUNE_TYPES)
+        luaL_error(ls, make_stringf("Bad number of max runes: %d", max_runes).c_str());
+    else
+        you.obtainable_runes = max_runes;
+    return (0);
+}
+
 static const struct luaL_reg crawl_dlib[] =
 {
 { "args", _crawl_args },
@@ -791,6 +1019,7 @@ static const struct luaL_reg crawl_dlib[] =
 { "millis", _crawl_millis },
 #endif
 { "make_name", crawl_make_name },
+{ "set_max_runes", _crawl_set_max_runes },
 { NULL, NULL }
 };
 

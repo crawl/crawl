@@ -1,9 +1,4 @@
-/*
- *  File:       tilereg_map.h
- *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
- */
-
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 #ifndef TILEREG_MAP_H
 #define TILEREG_MAP_H
 

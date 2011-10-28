@@ -1,8 +1,7 @@
-/*
- *  File:       itemprop.h
- *  Summary:    Misc functions.
- *  Written by: Brent Ross
- */
+/**
+ * @file
+ * @brief Misc functions.
+**/
 
 
 #ifndef ITEMPROP_H
@@ -18,7 +17,8 @@ void init_properties(void);
 bool item_known_cursed(const item_def &item);
 bool item_known_uncursed(const item_def &item);
 void do_curse_item(item_def &item, bool quiet = true);
-void do_uncurse_item(item_def &item, bool inscribe = true);
+void do_uncurse_item(item_def &item, bool inscribe = true, bool no_ash = false,
+                     bool check_bondage = true);
 
 // stationary:
 void set_item_stationary(item_def &item);
@@ -37,6 +37,7 @@ void set_equip_race(item_def &item, iflags_t flags);
 void set_equip_desc(item_def &item, iflags_t flags);
 iflags_t get_equip_race(const item_def &item);
 iflags_t get_equip_desc(const item_def &item);
+iflags_t get_species_race(species_type sp);
 
 // helmet functions:
 void  set_helmet_desc(item_def &item, short flags);
@@ -75,8 +76,8 @@ bool  check_armour_size(const item_def &item, size_type size);
 bool item_is_rechargeable(const item_def &it, bool hide_charged = false,
                           bool weapons = false);
 int wand_charge_value(int type);
-bool is_enchantable_weapon(const item_def &wpn, bool uncurse,
-                           bool first = true);
+int wand_max_charges(int type);
+bool is_offensive_wand(const item_def& item);
 bool is_enchantable_armour(const item_def &arm, bool uncurse,
                            bool unknown = false);
 
@@ -99,9 +100,11 @@ int   fit_item_throwable_size(const item_def &item, size_type size);
 int weapon_ev_bonus(const item_def &wpn, int skill, size_type body, int dex,
                      bool hide_hidden = false);
 
-hands_reqd_type  hands_reqd(const item_def &item, size_type size);
+hands_reqd_type hands_reqd(const item_def &item, size_type size);
 hands_reqd_type hands_reqd(object_class_type base_type, int sub_type,
                            size_type size);
+
+bool is_whip_type(int wpn_type);
 
 bool is_demonic(const item_def &item);
 bool is_blessed(const item_def &item);
@@ -123,6 +126,9 @@ skill_type weapon_skill(object_class_type wclass, int wtype);
 skill_type range_skill(const item_def &item);
 skill_type range_skill(object_class_type wclass, int wtype);
 
+bool item_skills(const item_def &item, std::set<skill_type> &skills);
+void maybe_change_train(const item_def &item, bool start);
+
 // launcher and ammo functions:
 bool is_range_weapon(const item_def &item);
 bool is_range_weapon_type(weapon_type wtype);
@@ -135,6 +141,9 @@ bool is_throwable(const actor *actor, const item_def &wpn, bool force = false);
 launch_retval is_launched(const actor *actor, const item_def *launcher,
                           const item_def &missile);
 
+reach_type weapon_reach(const item_def &item);
+int reach_range(reach_type rt);
+
 // staff/rod functions:
 bool item_is_rod(const item_def &item);
 bool item_is_staff(const item_def &item);
@@ -143,8 +152,11 @@ bool item_is_staff(const item_def &item);
 bool item_is_rune(const item_def &item, rune_type which_rune = NUM_RUNE_TYPES);
 bool item_is_unique_rune(const item_def &item);
 bool item_is_orb(const item_def &orb);
+bool item_is_horn_of_geryon(const item_def &item);
 
 bool item_is_corpse(const item_def &item);
+bool item_is_spellbook(const item_def &item);
+
 
 // ring functions:
 int  ring_has_pluses(const item_def &item);
@@ -154,6 +166,7 @@ bool ring_has_stackable_effect(const item_def &item);
 bool food_is_meat(const item_def &item);
 bool food_is_veg(const item_def &item);
 bool is_blood_potion(const item_def &item);
+bool is_fizzing_potion (const item_def &item);
 int food_value(const item_def &item);
 int food_turns(const item_def &item);
 bool can_cut_meat(const item_def &item);
@@ -163,6 +176,15 @@ bool is_fruit(const item_def & item);
 uint32_t item_fruit_mask(const item_def &item);
 
 // generic item property functions:
+int get_armour_res_fire(const item_def &arm, bool check_artp);
+int get_armour_res_cold(const item_def &arm, bool check_artp);
+int get_armour_res_poison(const item_def &arm, bool check_artp);
+int get_armour_res_elec(const item_def &arm, bool check_artp);
+int get_armour_life_protection(const item_def &arm, bool check_artp);
+int get_armour_res_magic(const item_def &arm, bool check_artp);
+int get_armour_res_sticky_flame(const item_def &arm);
+bool get_armour_see_invisible(const item_def &arm, bool check_artp);
+
 int property(const item_def &item, int prop_type);
 bool gives_ability(const item_def &item);
 bool gives_resistance(const item_def &item);
@@ -170,6 +192,7 @@ int item_mass(const item_def &item);
 size_type item_size(const item_def &item);
 equipment_type get_item_slot(object_class_type type, int sub_type);
 equipment_type get_item_slot(const item_def& item);
+bool in_shop(const item_def &item);
 
 std::string item_base_name(const item_def &item);
 std::string item_base_name (object_class_type type, int sub_type);

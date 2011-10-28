@@ -2,11 +2,16 @@
 
 #include "status.h"
 
+#include "areas.h"
+#include "env.h"
 #include "misc.h"
 #include "mutation.h"
 #include "player.h"
+#include "player-stats.h"
 #include "skills2.h"
+#include "terrain.h"
 #include "transform.h"
+#include "spl-transloc.h"
 
 // Status defaults for durations that are handled straight-forwardly.
 struct duration_def
@@ -28,7 +33,7 @@ static duration_def duration_data[] =
     { DUR_BERSERK, true,
       BLUE, "Berserk", "berserking", "You are possessed by a berserker rage." },
     { DUR_BREATH_WEAPON, false,
-      YELLOW, "BWpn", "short of breath", "You are short of breath." },
+      YELLOW, "Breath", "short of breath", "You are short of breath." },
     { DUR_BRILLIANCE, false,
       0, "", "brilliant", "You are brilliant." },
     { DUR_CONF, false,
@@ -36,7 +41,7 @@ static duration_def duration_data[] =
     { DUR_CONFUSING_TOUCH, true,
       BLUE, "Touch", "confusing touch", "" },
     { DUR_CONTROL_TELEPORT, true,
-      MAGENTA, "cTele", "", "You can control teleporation." },
+      MAGENTA, "cTele", "", "You can control teleportations." },
     { DUR_DEATH_CHANNEL, true,
       MAGENTA, "DChan", "death channel", "You are channeling the dead." },
     { DUR_DEFLECT_MISSILES, true,
@@ -44,13 +49,13 @@ static duration_def duration_data[] =
     { DUR_DIVINE_STAMINA, false,
       0, "", "divinely fortified", "You are divinely fortified." },
     { DUR_DIVINE_VIGOUR, false,
-      0, "", "divinely vigorous", "You are divinely vigorous." },
+      0, "", "divinely vigorous", "You are imbued with divine vigour." },
     { DUR_EXHAUSTED, false,
-      YELLOW, "Fatig", "exhausted", "You are exhausted." },
+      YELLOW, "Exh", "exhausted", "You are exhausted." },
     { DUR_FIRE_SHIELD, true,
       BLUE, "RoF", "immune to fire clouds", "" },
     { DUR_ICY_ARMOUR, true,
-      0, "", "icy armour", "You get protected by an icy armour." },
+      0, "", "icy armour", "You are protected by a layer of icy armour." },
     { DUR_LIQUID_FLAMES, false,
       RED, "Fire", "liquid flames", "You are covered in liquid flames." },
     { DUR_LOWERED_MR, false,
@@ -62,10 +67,12 @@ static duration_def duration_data[] =
     { DUR_MISLED, true,
       LIGHTMAGENTA, "Misled", "", "" },
     { DUR_PARALYSIS, false,
-      0, "", "paralysed", "You are paralysed." },
+      RED, "Para", "paralysed", "You are paralysed." },
     { DUR_PETRIFIED, false,
-      0, "", "petrified", "You are petrified." },
-    { DUR_PRAYER, false,
+      RED, "Stone", "petrified", "You are petrified." },
+    { DUR_PETRIFYING, true,
+      MAGENTA, "Petr", "petrifying", "You are turning to stone." },
+    { DUR_JELLY_PRAYER, false,
       WHITE, "Pray", "praying", "You are praying." },
     { DUR_REPEL_MISSILES, true,
       BLUE, "RMsl", "repel missiles", "You are protected from missiles." },
@@ -85,8 +92,10 @@ static duration_def duration_data[] =
       GREEN, "Slime", "slimy", "" },
     { DUR_SLEEP, false,
       0, "", "sleeping", "You are sleeping." },
+#if TAG_MAJOR_VERSION == 32
     { DUR_STONEMAIL, true,
       0, "", "stone mail", "You are covered in scales of stone."},
+#endif
     { DUR_STONESKIN, false,
       0, "", "stone skin", "Your skin is tough as stone." },
     { DUR_SWIFTNESS, true,
@@ -114,6 +123,24 @@ static duration_def duration_data[] =
     { DUR_SCRYING, false,
       LIGHTBLUE, "Scry", "scrying",
       "Your astral vision lets you see through walls." },
+    { DUR_TORNADO, true,
+      LIGHTGREY, "Tornado", "tornado",
+      "You are in the eye of a mighty hurricane." },
+    { DUR_LIQUEFYING, false,
+      YELLOW, "Liquid", "liquefying",
+      "The ground has become liquefied beneath your feet." },
+    { DUR_HEROISM, false,
+      LIGHTBLUE, "Hero", "heroism", "You possess the skills of a mighty hero." },
+    { DUR_FINESSE, false,
+      LIGHTBLUE, "Finesse", "finesse", "Your blows are lightning fast." },
+    { DUR_LIFESAVING, true,
+      LIGHTGREY, "Prot", "protection", "You ask for being saved." },
+    { DUR_DARKNESS, true,
+      BLUE, "Dark", "darkness", "You emit darkness." },
+    { DUR_SHROUD_OF_GOLUBRIA, true,
+      BLUE, "Shroud", "shrouded", "You are protected by a distorting shroud." },
+    { DUR_TORNADO_COOLDOWN, false,
+      YELLOW, "Tornado", "", "" ,},
 };
 
 static int duration_index[NUM_DURATIONS];
@@ -198,6 +225,7 @@ static void _describe_airborne(status_info* inf);
 static void _describe_burden(status_info* inf);
 static void _describe_earth_attunement(status_info* inf);
 static void _describe_glow(status_info* inf);
+static void _describe_backlit(status_info* inf);
 static void _describe_hunger(status_info* inf);
 static void _describe_regen(status_info* inf);
 static void _describe_rotting(status_info* inf);
@@ -205,6 +233,7 @@ static void _describe_sickness(status_info* inf);
 static void _describe_speed(status_info* inf);
 static void _describe_poison(status_info* inf);
 static void _describe_transform(status_info* inf);
+static void _describe_stat_zero(status_info* inf, stat_type st);
 
 void fill_status_info(int status, status_info* inf)
 {
@@ -217,6 +246,7 @@ void fill_status_info(int status, status_info* inf)
     if (status >= 0 && status < NUM_DURATIONS)
     {
         duration_type dur = static_cast<duration_type>(status);
+
         if (!you.duration[dur])
             return;
 
@@ -241,6 +271,16 @@ void fill_status_info(int status, status_info* inf)
     // completing or overriding the defaults set above.
     switch (status)
     {
+    case DUR_CONTROL_TELEPORT:
+        if(!allow_control_teleport(true))
+            inf->light_colour = DARKGREY;
+        break;
+
+    case DUR_SWIFTNESS:
+        if(you.in_water())
+            inf->light_colour = DARKGREY;
+        break;
+
     case STATUS_AIRBORNE:
         _describe_airborne(inf);
         break;
@@ -262,9 +302,24 @@ void fill_status_info(int status, status_info* inf)
     case STATUS_EARTH_ATTUNED:
         _describe_earth_attunement(inf);
         break;
-    case STATUS_GLOW:
-        // includes corona
+
+    case STATUS_CONTAMINATION:
         _describe_glow(inf);
+        break;
+
+    case STATUS_BACKLIT:
+        if (you.backlit())
+            _describe_backlit(inf);
+        break;
+
+    case STATUS_UMBRA:
+        if (you.umbra())
+        {
+            inf->light_colour = MAGENTA;
+            inf->light_text   = "Umbra";
+            inf->short_text   = "wreathed by umbra";
+            inf->long_text    = "You are wreathed by an unholy umbra.";
+        }
         break;
 
     case STATUS_NET:
@@ -304,7 +359,7 @@ void fill_status_info(int status, status_info* inf)
         const int high = 40 * BASELINE_DELAY;
         const int low  = 20 * BASELINE_DELAY;
         inf->long_text = std::string("Your ")
-                         + your_hand(true)
+                         + you.hand_name(true)
                          + " are glowing ";
         if (dur > high)
             inf->long_text += "an extremely bright ";
@@ -353,7 +408,7 @@ void fill_status_info(int status, status_info* inf)
         if (handle_pbd_corpses(false) > 0)
         {
             inf->light_colour = LIGHTMAGENTA;
-            inf->light_text   = "PbD";
+            inf->light_text   = "Regen+";
         }
         break;
 
@@ -394,6 +449,43 @@ void fill_status_info(int status, status_info* inf)
 
     case DUR_TRANSFORMATION:
         _describe_transform(inf);
+        break;
+
+    case STATUS_CLINGING:
+        if (you.is_wall_clinging())
+        {
+            inf->light_text   = "Cling";
+            inf->short_text   = "clinging";
+            inf->long_text    = "You cling to the nearby walls.";
+            const dungeon_feature_type feat = grd(you.pos());
+            if (is_feat_dangerous(feat))
+                inf->light_colour = LIGHTGREEN;
+            else if (feat == DNGN_LAVA || feat_is_water(feat))
+                inf->light_colour = GREEN;
+            else
+                inf->light_colour = DARKGREY;
+            _mark_expiring(inf, dur_expiring(DUR_TRANSFORMATION));
+        }
+        break;
+
+    case STATUS_STR_ZERO:
+        _describe_stat_zero(inf, STAT_STR);
+        break;
+    case STATUS_INT_ZERO:
+        _describe_stat_zero(inf, STAT_INT);
+        break;
+    case STATUS_DEX_ZERO:
+        _describe_stat_zero(inf, STAT_DEX);
+        break;
+
+    case STATUS_FIREBALL:
+        if (you.attribute[ATTR_DELAYED_FIREBALL])
+        {
+            inf->light_colour = LIGHTMAGENTA;
+            inf->light_text   = "Fball";
+            inf->short_text   = "delayed fireball";
+            inf->long_text    = "You have a stored fireball ready to release.";
+        }
         break;
 
     default:
@@ -468,14 +560,12 @@ static void _describe_earth_attunement(status_info* inf)
 static void _describe_glow(status_info* inf)
 {
     const int cont = get_contamination_level();
-    if (cont > 0 || you.backlit(false))
+    if (cont > 0)
     {
         inf->light_colour = DARKGREY;
-        if (you.backlit(false))
-            inf->light_colour = LIGHTBLUE;
         if (cont > 1)
             inf->light_colour = _bad_ench_colour(cont, 2, 3);
-        inf->light_text = "Glow";
+        inf->light_text = "Contam";
     }
 
     if (cont > 0)
@@ -487,9 +577,29 @@ static void _describe_glow(status_info* inf)
                  (cont == 4) ? "moderately " :
                  (cont == 5) ? "heavily "
                              : "really heavily ";
-        inf->short_text += "glowing";
+        inf->short_text += "contaminated";
         inf->long_text = describe_contamination(cont);
     }
+}
+
+static void _describe_backlit(status_info* inf)
+{
+    if (get_contamination_level() > 1)
+        inf->light_colour = _bad_ench_colour(get_contamination_level(), 2, 3);
+    else if (you.duration[DUR_QUAD_DAMAGE])
+        inf->light_colour = BLUE;
+    else if (you.duration[DUR_LIQUID_FLAMES])
+        inf->light_colour = RED;
+    else if (you.halo_radius2() > 0)
+        return;
+    else if (you.duration[DUR_CORONA])
+        inf->light_colour = LIGHTBLUE;
+    else if (!you.umbraed() && you.haloed())
+        inf->light_colour = YELLOW;
+
+    inf->light_text   = "Glow";
+    inf->short_text   = "glowing";
+    inf->long_text    = "You are glowing.";
 }
 
 static void _describe_regen(status_info* inf)
@@ -564,6 +674,9 @@ static void _describe_speed(status_info* inf)
 {
     if (you.duration[DUR_SLOW] && you.duration[DUR_HASTE])
     {
+        inf->light_colour = MAGENTA;
+        inf->light_text   = "Fast+Slow";
+        inf->short_text   = "hasted and slowed";
         inf->long_text = "You are under both slowing and hasting effects.";
     }
     else if (you.duration[DUR_SLOW])
@@ -581,6 +694,13 @@ static void _describe_speed(status_info* inf)
         inf->long_text = "Your actions are hasted.";
         _mark_expiring(inf, dur_expiring(DUR_HASTE));
     }
+    if (liquefied(you.pos(), true) && you.ground_level())
+    {
+        inf->light_colour = BROWN;
+        inf->light_text   = "SlowM";
+        inf->short_text   = "slowed movement";
+        inf->long_text    = "Your movement is slowed in this liquid ground.";
+    }
 }
 
 static void _describe_airborne(status_info* inf)
@@ -588,7 +708,7 @@ static void _describe_airborne(status_info* inf)
     if (!you.airborne())
         return;
 
-    const bool perm     = you.permanent_flight();
+    const bool perm     = you.permanent_flight() || you.permanent_levitation();
     const bool expiring = (!perm && dur_expiring(DUR_LEVITATION));
     const bool uncancel = you.attribute[ATTR_LEV_UNCANCELLABLE];
 
@@ -601,7 +721,7 @@ static void _describe_airborne(status_info* inf)
     }
     else
     {
-        inf->light_colour = uncancel ? BLUE : MAGENTA;
+        inf->light_colour = perm ? WHITE : uncancel ? BLUE : MAGENTA;
         inf->light_text   = "Lev";
         inf->short_text   = "levitating";
         inf->long_text    = "You are hovering above the floor.";
@@ -686,7 +806,7 @@ static void _describe_transform(status_info* inf)
     const bool vampbat = (you.species == SP_VAMPIRE && player_in_bat_form());
     const bool expire  = dur_expiring(DUR_TRANSFORMATION) && !vampbat;
 
-    switch (you.attribute[ATTR_TRANSFORMATION])
+    switch (you.form)
     {
     case TRAN_BAT:
         inf->light_text     = "Bat";
@@ -731,8 +851,30 @@ static void _describe_transform(status_info* inf)
         inf->short_text = "statue-form";
         inf->long_text  = "You are a statue.";
         break;
+    case TRAN_APPENDAGE:
+        inf->light_text = "App";
+        inf->short_text = "appendage";
+        inf->long_text  = "You have a beastly appendage.";
+        break;
+    case TRAN_NONE:
+        break;
     }
 
     inf->light_colour = dur_colour(GREEN, expire);
     _mark_expiring(inf, expire);
+}
+
+static const char* s0_names[NUM_STATS] = { "Collapse", "Brainless", "Clumsy", };
+
+static void _describe_stat_zero(status_info* inf, stat_type st)
+{
+    if (you.stat_zero[st])
+    {
+        inf->light_colour = you.stat(st) ? LIGHTRED : RED;
+        inf->light_text   = s0_names[st];
+        inf->short_text   = make_stringf("lost %s", stat_desc(st, SD_NAME));
+        inf->long_text    = make_stringf(you.stat(st) ?
+                "You are recovering from loss of %s." : "You have no %s!",
+                stat_desc(st, SD_NAME));
+    }
 }

@@ -1,14 +1,19 @@
+/**
+ * @file
+ * @brief Colour related functions
+**/
+
 /*
- * File:     l_colour.cc
- * Summary:  Colour related functions
- */
+--- Colour related functions
+
+module "colour"
+*/
 
 #include "AppHdr.h"
 
 #include "cluautil.h"
 #include "colour.h"
 #include "dlua.h"
-#include "message.h"
 
 typedef int (*lua_element_colour_calculator)(int, const coord_def&, lua_datum);
 
@@ -42,8 +47,6 @@ int lua_element_colour_calc::get(const coord_def& loc, bool non_random)
     return (*real_calc)(rand(non_random), loc, function);
 }
 
-static int next_colour = ETC_FIRST_LUA;
-
 static int _lua_element_colour(int rand, const coord_def& loc,
                                lua_datum function)
 {
@@ -65,19 +68,27 @@ static int _lua_element_colour(int rand, const coord_def& loc,
     return str_to_colour(colour);
 }
 
+/*
+--- Define a new elemental colour.
+-- See <code>COLOUR:</code> in <tt>docs/develop/levels/syntax.txt</tt> for details.
+function add_colour(name, fun)
+*/
 LUAFN(l_add_colour)
 {
     const std::string &name = luaL_checkstring(ls, 1);
     if (lua_gettop(ls) != 2 || !lua_isfunction(ls, 2))
         luaL_error(ls, "Expected colour generation function.");
 
+    int col = str_to_colour(name, -1, false);
+    if (col == -1)
+        luaL_error(ls, ("Unknown colour: " + name).c_str());
+
     CLua& vm(CLua::get_vm(ls));
     lua_datum function(vm, 2);
 
     add_element_colour(
-        new lua_element_colour_calc((element_type)(next_colour++),
-                                    name, function)
-  );
+        new lua_element_colour_calc((element_type)col, name, function)
+    );
 
     return 0;
 }

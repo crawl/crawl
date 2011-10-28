@@ -1,8 +1,7 @@
-/*
- *  File:       mon-place.h
- *  Summary:    Functions used when placing monsters in the dungeon.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used when placing monsters in the dungeon.
+**/
 
 
 #ifndef MONPLACE_H
@@ -34,7 +33,7 @@ int mons_place(mgen_data mg);
  * mons_place().  If you need to put a monster somewhere, use mons_place().
  * Summoned creatures can be created with create_monster().
  * *********************************************************************** */
-int place_monster(mgen_data mg, bool force_pos = false);
+int place_monster(mgen_data mg, bool force_pos = false, bool dont_place = false);
 
 monster_type pick_random_zombie();
 

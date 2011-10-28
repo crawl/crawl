@@ -1,8 +1,7 @@
-/*
- *  File:       externs.h
- *  Summary:    Fixed size 2D vector class that asserts if you do something bad.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Fixed size 2D vector class that asserts if you do something bad.
+**/
 
 #ifndef EXTERNS_H
 #define EXTERNS_H
@@ -34,14 +33,17 @@
 
 struct tile_flavour
 {
-    // The floor tile to use.
+    unsigned short floor_idx;
+    unsigned short wall_idx;
+    unsigned short feat_idx;
+
     unsigned short floor;
-    // The wall tile to use.
     unsigned short wall;
-    // Used as a random value or for special cases e.g. (bazaars, gates).
-    unsigned short special;
     // Used (primarily) by the vault 'TILE' overlay.
     unsigned short feat;
+
+    // Used as a random value or for special cases e.g. (bazaars, gates).
+    unsigned short special;
 };
 
 // A glorified unsigned int that assists with ref-counting the mcache.
@@ -69,12 +71,8 @@ protected:
 
 extern char info[INFO_SIZE];         // defined in main.cc {dlb}
 
-const int kNameLen = 30;
-#ifdef SHORT_FILE_NAMES
-    const int kFileNameLen = 6;
-#else
-    const int kFileNameLen = 250;
-#endif
+#define kNameLen        30
+const int kFileNameLen = 250;
 
 // Used only to bound the init file name length
 const int kPathLen = 256;
@@ -84,7 +82,7 @@ const int kPathLen = 256;
 #define NO_BERSERK_PENALTY    -1
 
 typedef FixedArray<dungeon_feature_type, GXM, GYM> feature_grid;
-typedef FixedArray<unsigned short, GXM, GYM> map_mask;
+typedef FixedArray<unsigned int, GXM, GYM> map_mask;
 
 struct item_def;
 struct coord_def;
@@ -258,7 +256,9 @@ struct coord_def
         return (xi == x && yi == y);
     }
 };
+
 const coord_def INVALID_COORD(-1, -1);
+const coord_def NO_CURSOR(-1, -1);
 
 typedef bool (*coord_predicate)(const coord_def &c);
 
@@ -268,6 +268,12 @@ struct run_check_dir
     coord_def delta;
 };
 
+typedef uint32_t mid_t;
+#define MID_PLAYER      ((mid_t)0xffffffff)
+// the numbers are meaningless, there's just plenty of space for gods, env,
+// and whatever else we want to have, while keeping all monster ids smaller.
+#define MID_ANON_FRIEND ((mid_t)0xffff0000)
+
 struct cloud_struct
 {
     coord_def     pos;
@@ -276,6 +282,7 @@ struct cloud_struct
     uint8_t       spread_rate;
     kill_category whose;
     killer_type   killer;
+    mid_t         source;
     int           colour;
     std::string   name;
     std::string   tile;
@@ -291,7 +298,8 @@ struct cloud_struct
     void set_whose(kill_category _whose);
     void set_killer(killer_type _killer);
 
-    std::string cloud_name(const std::string &default_name = "") const;
+    std::string cloud_name(const std::string &default_name = "",
+                           bool terse = false) const;
     void announce_actor_engulfed(const actor *engulfee,
                                  bool beneficial = false) const;
 
@@ -305,8 +313,14 @@ struct shop_struct
     uint8_t             greed;
     shop_type           type;
     uint8_t             level;
+    std::string         shop_name;
+    std::string         shop_type_name;
+    std::string         shop_suffix_name;
 
     FixedVector<uint8_t, 3> keeper_name;
+
+    shop_struct () : pos(), greed(0), type(SHOP_UNASSIGNED), level(0),
+                     shop_name(""), shop_type_name(""), shop_suffix_name("") { }
 
     bool defined() const { return type != SHOP_UNASSIGNED; }
 };
@@ -318,7 +332,10 @@ struct delay_queue_item
     int         duration;
     int         parm1;
     int         parm2;
+    int         parm3;
     bool        started;
+    int         trits[6];
+    size_t      len;
 };
 
 
@@ -526,7 +543,7 @@ struct item_def
 
 public:
     item_def() : base_type(OBJ_UNASSIGNED), sub_type(0), plus(0), plus2(0),
-                 special(0L), colour(0), rnd(0), quantity(0), flags(0L),
+                 special(0), colour(0), rnd(0), quantity(0), flags(0),
                  pos(), link(NON_ITEM), slot(0), orig_place(0),
                  orig_monnum(0), inscription()
     {
@@ -575,7 +592,7 @@ public:
 
 private:
     std::string name_aux(description_level_type desc,
-                         bool terse, bool ident,
+                         bool terse, bool ident, bool with_inscription,
                          iflags_t ignore_flags) const;
 };
 
@@ -606,6 +623,8 @@ public:
     bool is_rest() const;
     bool is_explore() const;
     bool is_any_travel() const;
+
+    std::string runmode_name() const;
 
     // Clears run state.
     void clear();
@@ -663,10 +682,13 @@ public:
     std::vector<map_marker*> get_markers_at(const coord_def &c);
     std::string property_at(const coord_def &c, map_marker_type type,
                             const std::string &key);
+    std::string property_at(const coord_def &c, map_marker_type type,
+                            const char *key)
+    { return property_at(c, type, std::string(key)); }
     void clear();
 
     void write(writer &) const;
-    void read(reader &, int minorVersion);
+    void read(reader &);
 
 private:
     typedef std::multimap<coord_def, map_marker *> dgn_marker_map;
@@ -693,7 +715,8 @@ struct message_filter
 
     message_filter(const std::string &s) : channel(-1), pattern(s) { }
 
-    bool is_filtered(int ch, const std::string &s) const {
+    bool is_filtered(int ch, const std::string &s) const
+    {
         bool channel_match = ch == channel || channel == -1;
         if (!channel_match || pattern.empty())
             return channel_match;
@@ -760,23 +783,23 @@ private:
 
 struct mon_display
 {
-    monster_type type;
-    wchar_t      glyph;
+    ucs_t        glyph;
     unsigned     colour;
     monster_type detected; // What a monster of type "type" is detected as.
 
-    mon_display(monster_type m = MONS_NO_MONSTER,
-                unsigned gly = 0, unsigned col = 0,
+    mon_display(unsigned gly = 0, unsigned col = 0,
                 monster_type d = MONS_NO_MONSTER)
-       : type(m), glyph(gly), colour(col), detected(d) { }
+       : glyph(gly), colour(col), detected(d) { }
 };
 
 struct final_effect
 {
     final_effect_flavour flavour;
-    short att, def;
+    mid_t att, def;
     coord_def pos;
     int x;
 };
+
+typedef FixedArray<item_type_id_state_type, NUM_OBJECT_CLASSES, MAX_SUBTYPES> id_arr;
 
 #endif // EXTERNS_H

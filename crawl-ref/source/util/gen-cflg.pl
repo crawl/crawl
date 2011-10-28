@@ -3,9 +3,7 @@
 use strict;
 use warnings;
 
-my $outfile = $ARGV[0];
-my $cflags = $ARGV[1];
-my $ldflags = $ARGV[2];
+my ($outfile, $cflags, $ldflags, $host, $arch) = @ARGV;
 
 $cflags =~ s/\"/\\"/g;
 $ldflags =~ s/\"/\\"/g;
@@ -26,6 +24,8 @@ print OUT <<__eof__;
 
 #define ${prefix}_CFLAGS "${cflags}"
 #define ${prefix}_LDFLAGS "${ldflags}"
+#define ${prefix}_HOST "${host}"
+#define ${prefix}_ARCH "${arch}"
 
 #endif
 

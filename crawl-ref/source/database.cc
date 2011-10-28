@@ -1,9 +1,7 @@
-/*
- *  database.cc
- *
- *  Created by Peter Berger on 4/15/07.
- *  Copyright 2007 __MyCompanyName__. All rights reserved.
- */
+/**
+ * @file
+ * database.cc
+**/
 
 #include "AppHdr.h"
 
@@ -12,7 +10,6 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <cstdlib>
-#include <fstream>
 #ifndef TARGET_COMPILER_VC
 #include <unistd.h>
 #endif
@@ -23,6 +20,12 @@
 #include "libutil.h"
 #include "random.h"
 #include "stuff.h"
+#include "syscalls.h"
+#include "unicode.h"
+
+static std::string _query_database(DBM *db, std::string key,
+                                   bool canonicalise_key, bool run_lua);
+static void _add_entry(DBM *db, const std::string &k, std::string &v);
 
 // TextDB handles dependency checking the db vs text files, creating the
 // db, loading, and destroying the DB.
@@ -46,14 +49,16 @@ class TextDB
     void _regenerate_db();
 
  private:
+    bool open_db();
     const char* const _db_name;            // relative to savedir
     std::vector<std::string> _input_files; // relative to datafile dirs
     DBM* _db;
+    time_t timestamp;
 };
 
 // Convenience functions for (read-only) access to generic
 // berkeley DB databases.
-static void _store_text_db(const std::string &in, const std::string &out);
+static void _store_text_db(const std::string &in, DBM *db);
 
 static TextDB AllDBs[] =
 {
@@ -68,6 +73,7 @@ static TextDB AllDBs[] =
             "descript/skills.txt",
             "descript/ability.txt",
             "descript/cards.txt",
+            "descript/commands.txt",
             NULL),
 
     TextDB("gamestart",
@@ -88,6 +94,7 @@ static TextDB AllDBs[] =
     TextDB("speak",
             "database/monspeak.txt", // monster speech
             "database/monspell.txt", // monster spellcasting speech
+            "database/monflee.txt",  // monster fleeing speech
             "database/wpnnoise.txt", // noisy weapon speech
             "database/insult.txt",   // imp/demon taunts
             "database/godspeak.txt", // god speech
@@ -136,7 +143,7 @@ static std::string _db_cache_path(const std::string &db)
 
 TextDB::TextDB(const char* db_name, ...)
     : _db_name(db_name),
-      _db(NULL)
+      _db(NULL), timestamp(-1)
 {
     va_list args;
     va_start(args, db_name);
@@ -154,16 +161,37 @@ TextDB::TextDB(const char* db_name, ...)
     va_end(args);
 }
 
-void TextDB::init()
+bool TextDB::open_db()
 {
-    if (_needs_update())
-        _regenerate_db();
+    if (_db)
+        return true;
 
     const std::string full_db_path = _db_cache_path(_db_name);
     _db = dbm_open(full_db_path.c_str(), O_RDONLY, 0660);
+    if (!_db)
+        return false;
 
-    if (_db == NULL)
-        end(1, true, "Failed to open DB: %s", full_db_path.c_str());
+    std::string ts = _query_database(_db, "TIMESTAMP", false, false);
+    if (ts.empty())
+        return false;
+    char *err;
+    timestamp = strtol(ts.c_str(), &err, 10);
+    if (*err)
+        return false;
+
+    return true;
+}
+
+void TextDB::init()
+{
+    open_db();
+
+    if (!_needs_update())
+        return;
+    _regenerate_db();
+
+    if (!open_db())
+        end(1, true, "Failed to open DB: %s", _db_cache_path(_db_name).c_str());
 }
 
 void TextDB::shutdown()
@@ -177,11 +205,10 @@ void TextDB::shutdown()
 
 bool TextDB::_needs_update() const
 {
-    std::string full_db_path = _db_cache_path(std::string(_db_name) + ".db");
     for (unsigned int i = 0; i < _input_files.size(); i++)
     {
         std::string full_input_path = datafile_path(_input_files[i], true);
-        if (is_newer(full_input_path, full_db_path))
+        if (file_modtime(full_input_path) > timestamp)
             return (true);
     }
     return (false);
@@ -189,6 +216,11 @@ bool TextDB::_needs_update() const
 
 void TextDB::_regenerate_db()
 {
+    shutdown();
+#ifdef DEBUG_DIAGNOSTICS
+    printf("Regenerating db: %s\n", _db_name);
+#endif
+
     std::string db_path = _db_cache_path(_db_name);
     std::string full_db_path = db_path + ".db";
 
@@ -200,17 +232,21 @@ void TextDB::_regenerate_db()
 
     file_lock lock(db_path + ".lk", "wb");
 #ifndef DGL_REWRITE_PROTECT_DB_FILES
-    unlink(full_db_path.c_str());
+    unlink_u(full_db_path.c_str());
 #endif
 
+    std::string now = make_stringf("%ld", (long)time(0));
+    if (!(_db = dbm_open(db_path.c_str(), O_RDWR | O_CREAT, 0660)))
+        end(1, true, "Unable to open DB: %s", db_path.c_str());
     for (unsigned int i = 0; i < _input_files.size(); i++)
     {
         std::string full_input_path = datafile_path(_input_files[i], true);
-        _store_text_db(full_input_path, db_path);
+        _store_text_db(full_input_path, _db);
     }
-    file_touch(full_db_path);
+    _add_entry(_db, "TIMESTAMP", now);
 
-    DO_CHMOD_PRIVATE(full_db_path.c_str());
+    dbm_close(_db);
+    _db = 0;
 }
 
 // ----------------------------------------------------------------------
@@ -307,7 +343,7 @@ std::vector<std::string> database_find_bodies(DBM *database,
 
 ///////////////////////////////////////////////////////////////////////////
 // Internal DB utility functions
-static void _execute_embedded_lua(std::string &str)
+void execute_embedded_lua(std::string &str)
 {
     // Execute any lua code found between "{{" and "}}".  The lua code
     // is expected to return a string, with which the lua code and
@@ -360,7 +396,7 @@ static void _add_entry(DBM *db, const std::string &k, std::string &v)
         end(1, true, "Error storing %s", k.c_str());
 }
 
-static void _parse_text_db(std::ifstream &inf, DBM *db)
+static void _parse_text_db(LineInput &inf, DBM *db)
 {
     std::string key;
     std::string value;
@@ -368,8 +404,7 @@ static void _parse_text_db(std::ifstream &inf, DBM *db)
     bool in_entry = false;
     while (!inf.eof())
     {
-        std::string line;
-        std::getline(inf, line);
+        std::string line = inf.get_line();
 
         if (!line.empty() && line[0] == '#')
             continue;
@@ -404,21 +439,13 @@ static void _parse_text_db(std::ifstream &inf, DBM *db)
         _add_entry(db, key, value);
 }
 
-static void _store_text_db(const std::string &in, const std::string &out)
+static void _store_text_db(const std::string &in, DBM *db)
 {
-    std::ifstream inf(in.c_str());
-    if (!inf)
+    UTF8FileLineInput inf(in.c_str());
+    if (inf.error())
         end(1, true, "Unable to open input file: %s", in.c_str());
 
-    if (DBM *db = dbm_open(out.c_str(), O_RDWR | O_CREAT, 0660))
-    {
-        _parse_text_db(inf, db);
-        dbm_close(db);
-    }
-    else
-        end(1, true, "Unable to open DB: %s", out.c_str());
-
-    inf.close();
+    _parse_text_db(inf, db);
 }
 
 static std::string _chooseStrByWeight(std::string entry, int fixed_weight = -1)
@@ -464,8 +491,8 @@ static std::string _chooseStrByWeight(std::string entry, int fixed_weight = -1)
         weights.push_back(total_weight);
     }
 
-    if (parts.size() == 0)
-        return("BUG, EMPTY ENTRY");
+    if (parts.empty())
+        return "BUG, EMPTY ENTRY";
 
     int choice = 0;
     if (fixed_weight != -1)
@@ -475,9 +502,9 @@ static std::string _chooseStrByWeight(std::string entry, int fixed_weight = -1)
 
     for (int i = 0, size = parts.size(); i < size; i++)
         if (choice < weights[i])
-            return(parts[i]);
+            return parts[i];
 
-    return("BUG, NO STRING CHOSEN");
+    return "BUG, NO STRING CHOSEN";
 }
 
 #define MAX_RECURSION_DEPTH 10
@@ -519,20 +546,28 @@ static void _call_recursive_replacement(std::string &str, DBM *database,
                                         int &num_replacements,
                                         int recursion_depth = 0);
 
-std::string getWeightedSpeechString(const std::string &key,
-                                    const std::string &suffix,
-                                    const int weight)
+static std::string _query_weighted_randomised(DBM *database,
+                                              const std::string &key,
+                                              const std::string &suffix = "",
+                                              const int weight = -1)
 {
-    if (!SpeakDB)
+    if (!database)
         return ("");
 
-    std::string result = _getWeightedString(SpeakDB, key, suffix, weight);
+    std::string result = _getWeightedString(database, key, suffix, weight);
     if (result.empty())
         return "";
 
     int num_replacements = 0;
-    _call_recursive_replacement(result, SpeakDB, suffix, num_replacements);
+    _call_recursive_replacement(result, database, suffix, num_replacements);
     return (result);
+}
+
+std::string getWeightedSpeechString(const std::string &key,
+                                    const std::string &suffix,
+                                    const int weight)
+{
+    return _query_weighted_randomised(SpeakDB, key, suffix, weight);
 }
 
 static std::string _getRandomisedStr(DBM *database, const std::string &key,
@@ -620,7 +655,7 @@ static std::string _query_database(DBM *db, std::string key,
     std::string str((const char *)result.dptr, result.dsize);
 
     if (run_lua)
-        _execute_embedded_lua(str);
+        execute_embedded_lua(str);
 
     return (str);
 }
@@ -645,6 +680,11 @@ std::string getLongDescription(const std::string &key)
         return ("");
 
     return _query_database(DescriptionDB.get(), key, true, true);
+}
+
+std::string getWeightedRandomisedDescription(const std::string &key)
+{
+    return _query_weighted_randomised(DescriptionDB, key);
 }
 
 std::vector<std::string> getLongDescKeysByRegex(const std::string &regex,
@@ -703,7 +743,7 @@ std::string getSpeakString(const std::string &key)
     int num_replacements = 0;
 
 #ifdef DEBUG_MONSPEAK
-    mprf(MSGCH_DIAGNOSTICS, "monster speech lookup for %s", key.c_str());
+    dprf("monster speech lookup for %s", key.c_str());
 #endif
     return _getRandomisedStr(SpeakDB, key, "", num_replacements);
 }

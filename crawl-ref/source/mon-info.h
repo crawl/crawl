@@ -62,12 +62,29 @@ enum monster_info_flags
     MB_FEAR_INSPIRING,
     MB_WITHDRAWN,
     MB_ATTACHED,
+#if TAG_MAJOR_VERSION == 32
+    MB_HELPLESS,
+#endif
+    MB_DAZED,
+    MB_MUTE,
+    MB_BLIND,
+    MB_DUMB,
+    MB_MAD,
+    MB_CLINGING,
+    MB_NAME_ZOMBIE,
+    MB_PERM_SUMMON,
+    MB_INNER_FLAME,
+    MB_UMBRAED,
+    MB_ROUSED,
+    MB_BREATH_WEAPON,
+    MB_DEATHS_DOOR,
+    NUM_MB_FLAGS
 };
 
 struct monster_info_base
 {
     coord_def pos;
-    uint64_t mb;
+    FixedBitArray<NUM_MB_FLAGS> mb;
     std::string mname;
     monster_type type;
     monster_type base_type;
@@ -75,8 +92,10 @@ struct monster_info_base
     unsigned number;
     unsigned colour;
     mon_attitude_type attitude;
+    mon_threat_level_type threat;
     mon_dam_level_type dam;
-    dungeon_feature_type fire_blocker; // TODO: maybe we should store the position instead
+    // TODO: maybe we should store the position instead
+    dungeon_feature_type fire_blocker;
     std::string description;
     std::string quote;
     mon_holy_type holi;
@@ -87,6 +106,9 @@ struct monster_info_base
     flight_type fly;
     bool two_weapons;
     bool no_regen;
+    CrawlHashTable props;
+
+    uint32_t client_id;
 };
 
 // Monster info used by the pane; precomputes some data
@@ -94,7 +116,8 @@ struct monster_info_base
 struct monster_info : public monster_info_base
 {
     static bool less_than(const monster_info& m1,
-                          const monster_info& m2, bool zombified = true, bool fullname = true);
+                          const monster_info& m2, bool zombified = true,
+                          bool fullname = true);
 
     static bool less_than_wrapper(const monster_info& m1,
                                   const monster_info& m2);
@@ -102,19 +125,21 @@ struct monster_info : public monster_info_base
 #define MILEV_ALL 0
 #define MILEV_SKIP_SAFE -1
 #define MILEV_NAME -2
-    monster_info() {}
+    monster_info() { client_id = 0; }
     monster_info(const monster* m, int level = MILEV_ALL);
-    monster_info(monster_type p_type, monster_type p_base_type = MONS_NO_MONSTER);
+    monster_info(monster_type p_type,
+                 monster_type p_base_type = MONS_NO_MONSTER);
 
     monster_info(const monster_info& mi)
     : monster_info_base(mi)
     {
         u = mi.u;
-        for (unsigned i = 0; i < 6; ++i)
+        for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
         {
             if (mi.inv[i].get())
                 inv[i].reset(new item_def(*mi.inv[i]));
         }
+        props = mi.props;
     }
 
     monster_info& operator=(const monster_info& p)
@@ -130,7 +155,7 @@ struct monster_info : public monster_info_base
     monster* mon() const;
 
     /* only real equipment is visible, miscellany is for mimic items */
-    std::auto_ptr<item_def> inv[6];
+    std::auto_ptr<item_def> inv[MSLOT_LAST_VISIBLE_SLOT + 1];
 
     union
     {
@@ -147,7 +172,7 @@ struct monster_info : public monster_info_base
 
     inline bool is(unsigned mbflag) const
     {
-        return !!(mb & ((uint64_t)1 << mbflag));
+        return mb[mbflag];
     }
 
     inline std::string damage_desc() const
@@ -162,6 +187,9 @@ struct monster_info : public monster_info_base
 
     std::string db_name() const;
     bool has_proper_name() const;
+    dungeon_feature_type get_mimic_feature() const;
+    std::string mimic_name() const;
+    std::string pluralized_name(bool fullname = true) const;
     std::string common_name(description_level_type desc = DESC_PLAIN) const;
     std::string proper_name(description_level_type desc = DESC_PLAIN) const;
     std::string full_name(description_level_type desc = DESC_PLAIN, bool use_comma = false) const;
@@ -218,4 +246,5 @@ protected:
 
 void get_monster_info(std::vector<monster_info>& mons);
 
+typedef std::vector<std::string> (*desc_filter) (const monster_info& mi);
 #endif

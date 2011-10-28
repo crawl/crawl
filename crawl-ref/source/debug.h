@@ -1,8 +1,7 @@
-/*
- *  File:       debug.h
- *  Summary:    Assertions and such.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Assertions and such.
+**/
 
 #ifndef DEBUG_H
 #define DEBUG_H
@@ -21,16 +20,16 @@
 
 // Synch with MSVC.
 #ifdef TARGET_COMPILER_VC
-#if _MSC_VER >= 1100 && DEBUG != defined(_DEBUG)
+#if _MSC_VER >= 1100 && defined(DEBUG) != defined(_DEBUG)
 #error DEBUG and _DEBUG are out of sync!
 #endif
 #endif
 
 
 #ifndef _lint
-#define COMPILE_CHECK(expr, tag) typedef char compile_check_ ## tag[(expr) ? 1 : -1]
+#define COMPILE_CHECK(expr) typedef char compile_check_ ## __LINE__[(expr) ? 1 : -1]
 #else
-#define COMPILE_CHECK(expr, tag)
+#define COMPILE_CHECK(expr)
 #endif
 
 #if defined(DEBUG) && !defined(ASSERTS)
@@ -39,7 +38,7 @@
 
 #ifdef ASSERTS
 
-void AssertFailed(const char *expr, const char *file, int line, bool save_game);
+NORETURN void AssertFailed(const char *expr, const char *file, int line, bool save_game);
 
 #define ASSERT_SAVE(p)                                                  \
     do {                                                                \
@@ -53,9 +52,6 @@ void AssertFailed(const char *expr, const char *file, int line, bool save_game);
 
 #define VERIFY(p)       ASSERT(p)
 
-void DEBUGSTR(const char *format,...);
-void TRACE(const char *format,...);
-
 #else
 
 #define ASSERT_SAVE(p)  ((void) 0)
@@ -66,9 +62,14 @@ inline void __DUMMY_TRACE__(...)
 {
 }
 
-#define DEBUGSTR 1 ? ((void) 0) : __DUMMY_TRACE__
-#define TRACE    1 ? ((void) 0) : __DUMMY_TRACE__
-
 #endif
 
+NORETURN void die(const char *file, int line, const char *format, ...);
+#define die(...) die(__FILE__, __LINE__, __VA_ARGS__)
+
+NORETURN void die_noline(const char *format, ...);
+
+#ifdef DEBUG
+void debuglog(const char *format, ...);
+#endif
 #endif

@@ -1,7 +1,7 @@
-/*
- * File:     fearmonger.cc
- * Summary:  player methods dealing with mesmerisation.
- */
+/**
+ * @file
+ * @brief player methods dealing with mesmerisation.
+**/
 
 #include "AppHdr.h"
 
@@ -15,11 +15,10 @@
 #include "monster.h"
 #include "random.h"
 #include "state.h"
-#include "stuff.h"
 #include "areas.h"
 
 // Add a monster to the list of fearmongers.
-void player::add_fearmonger(const monster* mon)
+bool player::add_fearmonger(const monster* mon)
 {
     if (is_sanctuary(you.pos()))
     {
@@ -29,10 +28,9 @@ void player::add_fearmonger(const monster* mon)
                  mon->name(DESC_CAP_THE).c_str());
         }
         else
-        {
             mpr("The fearful aura is strangely muted, and has no effect on you.");
-        }
-        return;
+
+        return (false);
     }
 
     if (!duration[DUR_AFRAID])
@@ -48,16 +46,18 @@ void player::add_fearmonger(const monster* mon)
         if (!afraid_of(mon))
             fearmongers.push_back(mon->mindex());
     }
+
+    return (true);
 }
 
-// Whether player is mesmerised.
+// Whether player is afraid.
 bool player::afraid() const
 {
     ASSERT(duration[DUR_AFRAID] > 0 == !fearmongers.empty());
     return (duration[DUR_AFRAID] > 0);
 }
 
-// Whether player is mesmerised by the given monster.
+// Whether player is afraid of the given monster.
 bool player::afraid_of(const monster* mon) const
 {
     for (unsigned int i = 0; i < fearmongers.size(); i++)
@@ -76,7 +76,7 @@ monster* player::get_fearmonger(const coord_def &target) const
         const int olddist = grid_distance(pos(), mon->pos());
         const int newdist = grid_distance(target, mon->pos());
 
-        if (olddist >= newdist)
+        if (olddist > newdist)
             return (mon);
     }
     return (NULL);
@@ -84,7 +84,7 @@ monster* player::get_fearmonger(const coord_def &target) const
 
 monster* player::get_any_fearmonger() const
 {
-    if (fearmongers.size() > 0)
+    if (!fearmongers.empty())
         return (&menv[fearmongers[0]]);
     else
         return (NULL);
@@ -109,9 +109,12 @@ void player::clear_fearmongers()
     duration[DUR_AFRAID] = 0;
 }
 
-// Possibly end mesmerisation if a loud noise happened.
-void player::fearmongers_check_noise(int loudness)
+// Possibly end fear if a loud noise happened.
+void player::fearmongers_check_noise(int loudness, bool axe)
 {
+    if (axe)
+       return;
+
     if (loudness >= 20 && beheld())
     {
         mprf("For a moment, your terror fades away!");
@@ -161,7 +164,7 @@ void player::update_fearmonger(const monster* mon)
 }
 
 // Helper function that resets the duration and messages if the player
-// is no longer mesmerised.
+// is no longer afraid.
 void player::_removed_fearmonger()
 {
     if (fearmongers.empty())

@@ -1,7 +1,7 @@
-/*
- *  File:       libutil.h
- *  Summary:    System independent functions
- */
+/**
+ * @file
+ * @brief System independent functions
+**/
 
 #ifndef LIBUTIL_H
 #define LIBUTIL_H
@@ -30,9 +30,9 @@ std::string &escape_path_spaces(std::string &s);
 std::string lowercase_string(std::string s);
 std::string &lowercase(std::string &s);
 std::string &uppercase(std::string &s);
-std::string upcase_first(std::string);
+std::string uppercase_first(std::string);
+std::string lowercase_first(std::string);
 
-void wait_for_keypress();
 bool key_is_escape(int key);
 
 #define CASE_ESCAPE case ESCAPE: case CONTROL('G'): case -1:
@@ -72,10 +72,17 @@ static inline int isaalnum(int c)
 
 bool ends_with(const std::string &s, const std::string &suffix);
 
-#ifdef UNIX
-extern "C" int stricmp(const char *str1, const char *str2);
-#endif
+int numcmp(const char *a, const char *b, int limit = 0);
+bool numcmpstr(std::string a, std::string b);
 size_t strlcpy(char *dst, const char *src, size_t n);
+
+int strwidth(const char *s);
+int strwidth(const std::string &s);
+std::string chop_string(const char *s, int width, bool spaces = true);
+std::string chop_string(const std::string &s, int width, bool spaces = true);
+std::string wordwrap_line(std::string &s, int cols, bool tags = false);
+
+bool version_is_stable(const char *ver);
 
 // String "tags"
 #define TAG_UNFOUND -20404
@@ -84,7 +91,9 @@ bool strip_suffix(std::string &s, const std::string &suffix);
 int strip_number_tag(std::string &s, const std::string &tagprefix);
 bool strip_bool_tag(std::string &s, const std::string &name,
                     bool defval = false);
+std::vector<std::string> strip_multiple_tag_prefix(std::string &s, const std::string &tagprefix);
 std::string strip_tag_prefix(std::string &s, const std::string &tagprefix);
+bool parse_int(const char *s, int &i);
 
 std::string article_a(const std::string &name, bool lowercase = true);
 std::string pluralise(
@@ -108,7 +117,7 @@ int  ends_with(const std::string &s, const char *suffixes[]);
 std::string strip_filename_unsafe_chars(const std::string &s);
 
 std::string vmake_stringf(const char *format, va_list args);
-std::string make_stringf(const char *format, ...);
+std::string make_stringf(PRINTF(0, ));
 
 std::string replace_all(std::string s,
                         const std::string &tofind,
@@ -150,20 +159,6 @@ std::vector<std::string> split_string(
     bool accept_empties = false,
     int nsplits = -1);
 
-inline std::string lowercase_first(std::string s)
-{
-    if (s.length())
-        s[0] = tolower(s[0]);
-    return (s);
-}
-
-inline std::string uppercase_first(std::string s)
-{
-    if (s.length())
-        s[0] = toupper(s[0]);
-    return (s);
-}
-
 template <typename Z>
 std::string comma_separated_line(Z start, Z end,
                                  const std::string &andc = " and ",
@@ -186,21 +181,33 @@ std::string comma_separated_line(Z start, Z end,
     return (text);
 }
 
-#ifdef NEED_USLEEP
-void usleep(unsigned long time);
-#endif
+inline int sqr(int x)
+{
+    return x * x;
+}
 
-#ifndef USE_TILE
-coord_def cgettopleft(GotoRegion region = GOTO_CRT);
-coord_def cgetpos(GotoRegion region = GOTO_CRT);
-void cgotoxy(int x, int y, GotoRegion region = GOTO_CRT);
-GotoRegion get_cursor_region();
-#endif
+inline bool testbits(uint64_t flags, uint64_t test)
+{
+    return ((flags & test) == test);
+}
+
 coord_def cgetsize(GotoRegion region = GOTO_CRT);
 void cscroll(int n, GotoRegion region);
 
 #ifdef TARGET_OS_WINDOWS
-int get_taskbar_height();
+enum taskbar_pos
+{
+    TASKBAR_NO      = 0x00,
+    TASKBAR_BOTTOM  = 0x01,
+    TASKBAR_TOP     = 0x02,
+    TASKBAR_LEFT    = 0x04,
+    TASKBAR_RIGHT   = 0x08,
+    TASKBAR_H       = 0x03,
+    TASKBAR_V       = 0x0C
+};
+
+int get_taskbar_size();
+taskbar_pos get_taskbar_pos();
 #endif
 
 class mouse_control
@@ -224,4 +231,5 @@ private:
     static mouse_mode ms_current_mode;
 };
 
+void init_signals();
 #endif

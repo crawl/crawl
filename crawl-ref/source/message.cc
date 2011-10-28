@@ -1,7 +1,7 @@
-/*
- *  File:       message.cc
- *  Summary:    Functions used to print messages.
- */
+/**
+ * @file
+ * @brief Functions used to print messages.
+**/
 
 #include "AppHdr.h"
 
@@ -23,7 +23,6 @@
 #include "showsymb.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
 #include "areas.h"
 #include "tags.h"
 #include "tagstring.h"
@@ -77,7 +76,7 @@ struct message_item
           turn(you.num_turns)
     {
          // Don't join long messages.
-         join = jn && pure_text().length() < 40;
+         join = jn && strwidth(pure_text()) < 40;
     }
 
     // Constructor for restored messages.
@@ -144,8 +143,8 @@ struct message_item
                     seplen++;
                 }
                 sep += " </lightgrey>";
-                if (pure_text().length() + seplen + other.pure_text().length()
-                    > msgwin_line_length())
+                if (strwidth(pure_text()) + seplen + strwidth(other.pure_text())
+                    > (int)msgwin_line_length())
                 {
                     return false;
                 }
@@ -250,16 +249,16 @@ glyph prefix_glyph(prefix_type p)
     switch (p)
     {
     case P_TURN_START:
-        g.ch = '-';
+        g.ch = Options.show_newturn_mark ? '-' : ' ';
         g.col = LIGHTGRAY;
         break;
     case P_TURN_END:
     case P_NEW_TURN:
-        g.ch = '_';
+        g.ch = Options.show_newturn_mark ? '_' : ' ';
         g.col = LIGHTGRAY;
         break;
     case P_NEW_CMD:
-        g.ch = '_';
+        g.ch = Options.show_newturn_mark ? '_' : ' ';
         g.col = DARKGRAY;
         break;
     case P_FULL_MORE:
@@ -309,7 +308,7 @@ class message_window
     {
         cgotoxy(1, n + 1, GOTO_MSG);
         line.display();
-        cprintf("%*s", width() - line.length(), "");
+        cprintf("%*s", width() - line.width(), "");
     }
 
     // Place cursor at end of last non-empty line to handle prompts.
@@ -318,9 +317,9 @@ class message_window
     void place_cursor() const
     {
         int i;
-        for (i = lines.size() - 1; i >= 0 && lines[i].length() == 0; --i);
-        if (i >= 0 && (int) lines[i].length() < crawl_view.msgsz.x)
-            cgotoxy(lines[i].length() + 1, i + 1, GOTO_MSG);
+        for (i = lines.size() - 1; i >= 0 && lines[i].width() == 0; --i);
+        if (i >= 0 && (int) lines[i].width() < crawl_view.msgsz.x)
+            cgotoxy(lines[i].width() + 1, i + 1, GOTO_MSG);
     }
 
     // Whether to show msgwin-full more prompts.
@@ -384,7 +383,8 @@ class message_window
         {
             formatted_string line;
             line.add_glyph(prefix_glyph(prompt));
-            line += lines[next_line-1].substr(1);
+            lines[next_line-1].del_char();
+            line += lines[next_line-1];
             lines[next_line-1] = line;
         }
         show();
@@ -479,7 +479,7 @@ public:
         prompt = P_NONE; // reset prompt
 
         std::vector<formatted_string> newlines;
-        linebreak_string2(text, out_width());
+        linebreak_string(text, out_width());
         formatted_string::parse_string_to_multiple(text, newlines);
 
         for (size_t i = 0; i < newlines.size(); ++i)
@@ -553,7 +553,7 @@ public:
         {
             cgotoxy(use_first_col() ? 2 : 1, last_row, GOTO_MSG);
             textcolor(channel_to_colour(MSGCH_PROMPT));
-            if (Hints.hints_left)
+            if (crawl_state.game_is_hints())
             {
                 std::string more_str = "--more-- Press Space ";
 #ifdef USE_TILE
@@ -716,8 +716,6 @@ static int colour_msg(msg_colour_type col)
         return static_cast<int>(col);
 }
 
-#ifdef USE_COLOUR_MESSAGES
-
 // Returns a colour or MSGCOL_MUTED.
 static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
 {
@@ -787,10 +785,6 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
             ret = MSGCOL_LIGHTRED;
             break;
 
-        case MSGCH_TUTORIAL:
-            ret = MSGCOL_MAGENTA;
-            break;
-
         case MSGCH_MONSTER_SPELL:
         case MSGCH_MONSTER_ENCHANT:
         case MSGCH_FRIEND_SPELL:
@@ -798,6 +792,8 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
             ret = MSGCOL_LIGHTMAGENTA;
             break;
 
+        case MSGCH_TUTORIAL:
+        case MSGCH_ORB:
         case MSGCH_BANISHMENT:
             ret = MSGCOL_MAGENTA;
             break;
@@ -856,15 +852,6 @@ static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
 
     return (ret);
 }
-
-#else // don't use colour messages
-
-static msg_colour_type channel_to_msgcol(msg_channel_type channel, int param)
-{
-    return (MSGCOL_LIGHTGREY);
-}
-
-#endif
 
 int channel_to_colour(msg_channel_type channel, int param)
 {
@@ -967,8 +954,9 @@ static void debug_channel_arena(msg_channel_type channel)
     case MSGCH_MULTITURN_ACTION:
     case MSGCH_EXAMINE:
     case MSGCH_EXAMINE_FILTER:
+    case MSGCH_ORB:
     case MSGCH_TUTORIAL:
-        DEBUGSTR("Invalid channel '%s' in arena mode",
+        die("Invalid channel '%s' in arena mode",
                  channel_to_str(channel).c_str());
         break;
     default:
@@ -1090,7 +1078,9 @@ void msgwin_got_input()
 int msgwin_get_line(std::string prompt, char *buf, int len,
                     input_history *mh, int (*keyproc)(int& c))
 {
-    msgwin_prompt(prompt);
+    if (prompt != "")
+        msgwin_prompt(prompt);
+
     int ret = cancelable_get_line(buf, len, mh, keyproc);
     msgwin_reply(buf);
     return ret;
@@ -1120,8 +1110,8 @@ unsigned int msgwin_lines()
 
 // mpr() an arbitrarily long list of strings without truncation or risk
 // of overflow.
-void mpr_comma_separated_list(const std::string prefix,
-                              const std::vector<std::string> list,
+void mpr_comma_separated_list(const std::string &prefix,
+                              const std::vector<std::string> &list,
                               const std::string &andc,
                               const std::string &comma,
                               const msg_channel_type channel,
@@ -1243,6 +1233,8 @@ void flush_prev_message()
 
 void mesclr(bool force)
 {
+    if (!crawl_state.io_inited)
+        return;
     // Unflushed message will be lost with clear_messages,
     // so they shouldn't really exist, but some of the delay
     // code appears to do this intentionally.
@@ -1318,6 +1310,8 @@ static bool _pre_more()
 
 void more(bool user_forced)
 {
+    if (!crawl_state.io_inited)
+        return;
     flush_prev_message();
     msgwin.more(false, user_forced);
     mesclr();
@@ -1404,13 +1398,17 @@ void load_messages(reader& inf)
 
 void replay_messages(void)
 {
-    formatted_scroller hist(MF_START_AT_END, "");
+    formatted_scroller hist(MF_START_AT_END | MF_ALWAYS_SHOW_MORE, "");
+    hist.set_more(formatted_string::parse_string(
+                        "<cyan>[up/<< : Page up.    down/Space/> : Page down."
+                        "                         Esc exits.]</cyan>"));
+
     const store_t msgs = messages.get_store();
     for (int i = 0; i < msgs.size(); ++i)
         if (channel_message_history(msgs[i].channel))
         {
             std::string text = msgs[i].with_repeats();
-            linebreak_string2(text, cgetsize(GOTO_CRT).x - 1);
+            linebreak_string(text, cgetsize(GOTO_CRT).x - 1);
             std::vector<formatted_string> parts;
             formatted_string::parse_string_to_multiple(text, parts);
             for (unsigned int j = 0; j < parts.size(); ++j)
@@ -1427,6 +1425,7 @@ void replay_messages(void)
                 hist.add_item_formatted_string(line);
             }
         }
+
     hist.show();
 }
 

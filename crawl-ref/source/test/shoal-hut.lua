@@ -62,7 +62,7 @@ local function verify_hut_connectivity()
   for _, vault_doors in ipairs(shoal_hut_doors()) do
     if util.forall(vault_doors, hut_door_blocked) then
       for _, door in ipairs(vault_doors) do
-        dgn.grid(door.x, door.y, "floor_special")
+        dgn.fprop_changed(door.x, door.y, "highlight")
       end
       test.map_assert(false, "Shoals hut doors blocked")
     end

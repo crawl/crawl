@@ -1,12 +1,6 @@
-/*
- *  File:       tilereg-mem.cc
- *
- *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
- */
-
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "tilereg-mem.h"
 
@@ -67,7 +61,7 @@ int MemoriseRegion::handle_mouse(MouseEvent &event)
         m_last_clicked_item = item_idx;
         tiles.set_need_redraw();
         if (learn_spell(spell, m_items[item_idx].special))
-            tiles.update_inventory();
+            tiles.update_tabs();
         else
             flush_input_buffer(FLUSH_ON_FAILURE);
         return CK_MOUSE_CMD;

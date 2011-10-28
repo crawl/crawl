@@ -1,8 +1,7 @@
-/*
- *  File:       macro.cc
- *  Summary:    Crude macro-capability
- *  Written by: Juho Snellman <jsnell@lyseo.edu.ouka.fi>
- */
+/**
+ * @file
+ * @brief Crude macro-capability
+**/
 
 /*
  * The macro-implementation works like this:
@@ -24,8 +23,6 @@
 #include "macro.h"
 #include "state.h"
 
-#include <iostream>
-#include <fstream>
 #include <string>
 #include <sstream>
 #include <map>
@@ -44,6 +41,8 @@
 #include "message.h"
 #include "state.h"
 #include "stuff.h"
+#include "syscalls.h"
+#include "unicode.h"
 
 // for trim_string:
 #include "initfile.h"
@@ -104,7 +103,7 @@ typedef std::map<int, int> cmd_to_key_map;
 static key_to_cmd_map _keys_to_cmds[KMC_CONTEXT_COUNT];
 static cmd_to_key_map _cmds_to_keys[KMC_CONTEXT_COUNT];
 
-inline int userfunc_index(int key)
+static inline int userfunc_index(int key)
 {
     int index = (key <= USERFUNCBASE? USERFUNCBASE - key : -1);
     return (index < 0 || index >= (int) userfunctions.size()? -1 : index);
@@ -142,7 +141,7 @@ static std::string get_userfunction(const keyseq &seq)
 
 static bool userfunc_referenced(int index, const macromap &mm)
 {
-    for (macromap::const_iterator i = mm.begin(); i != mm.end(); i++)
+    for (macromap::const_iterator i = mm.begin(); i != mm.end(); ++i)
     {
         if (userfunc_index(i->second) == index)
             return (true);
@@ -284,7 +283,6 @@ static keyseq parse_keyseq(std::string s)
 {
     int state = 0;
     keyseq v;
-    int num;
 
     if (s.find("===") == 0)
     {
@@ -313,10 +311,7 @@ static keyseq parse_keyseq(std::string s)
                 v.push_back(c);
             }
             else if (c == '{')
-            {
                 state = 2;
-                num = 0;
-            }
             // XXX Error handling
             break;
 
@@ -368,7 +363,7 @@ static std::string vtostr(const keyseq &seq)
         v = &dummy;
     }
 
-    for (keyseq::const_iterator i = v->begin(); i != v->end(); i++)
+    for (keyseq::const_iterator i = v->begin(); i != v->end(); ++i)
     {
         if (*i <= 32 || *i > 127)
         {
@@ -401,9 +396,9 @@ static void macro_add(macromap &mapref, keyseq key, keyseq action)
 /*
  * Remove a macro.
  */
-static void macro_del(macromap &mapref, keyseq key)
+static bool macro_del(macromap &mapref, keyseq key)
 {
-    mapref.erase(key);
+    return mapref.erase(key) != 0;
 }
 
 static void _register_expanded_keys(int num, bool reverse);
@@ -508,11 +503,11 @@ static void macro_buf_add_long(keyseq actions,
     // the sequence "abcdef" and macros "ab", "bcde" and "de"
     // "ab" and "de" are recognised as macros.
 
-    while (actions.size() > 0)
+    while (!actions.empty())
     {
         tmp = actions;
 
-        while (tmp.size() > 0)
+        while (!tmp.empty())
         {
             macromap::const_iterator subst = keymap.find(tmp);
             // Found a macro. Add the expansion (action) of the
@@ -528,7 +523,7 @@ static void macro_buf_add_long(keyseq actions,
             tmp.pop_back();
         }
 
-        if (tmp.size() == 0)
+        if (tmp.empty())
         {
             // Didn't find a macro. Add the first keypress of the sequence
             // into the buffer, remove it from the sequence, and try again.
@@ -580,6 +575,11 @@ bool is_processing_macro()
     return (macro_keys_left >= 0);
 }
 
+bool has_pending_input()
+{
+    return !Buffer.empty() && !SendKeysBuffer.empty();
+}
+
 /*
  * Command macros are only applied from the immediate front of the
  * buffer, and only when the game is expecting a command.
@@ -592,7 +592,7 @@ static void macro_buf_apply_command_macro()
     keyseq tmp = Buffer;
 
     // find the longest match from the start of the buffer and replace it
-    while (tmp.size() > 0)
+    while (!tmp.empty())
     {
         macromap::const_iterator expansion = Macros.find(tmp);
 
@@ -626,7 +626,7 @@ int macro_buf_get()
 
     _macro_inject_sent_keys();
 
-    if (Buffer.size() == 0)
+    if (Buffer.empty())
     {
         // If we're trying to fetch a new keystroke, then the processing
         // of the previous keystroke is complete.
@@ -650,16 +650,16 @@ int macro_buf_get()
     return (key);
 }
 
-static void write_map(std::ofstream &f, const macromap &mp, const char *key)
+static void write_map(FILE *f, const macromap &mp, const char *key)
 {
-    for (macromap::const_iterator i = mp.begin(); i != mp.end(); i++)
+    for (macromap::const_iterator i = mp.begin(); i != mp.end(); ++i)
     {
         // Need this check, since empty values are added into the
         // macro struct for all used keyboard commands.
         if (i->second.size())
         {
-            f << key  << vtostr((*i).first) << std::endl
-              << "A:" << vtostr((*i).second) << std::endl << std::endl;
+            fprintf(f, "%s%s\nA:%s\n\n", OUTS(key),
+                OUTS(vtostr((*i).first)), OUTS(vtostr((*i).second)));
         }
     }
 }
@@ -669,31 +669,34 @@ static void write_map(std::ofstream &f, const macromap &mp, const char *key)
  */
 void macro_save()
 {
-    std::ofstream f;
+    FILE *f;
     const std::string macrofile = get_macro_file();
-    f.open(macrofile.c_str());
+    f = fopen_u(macrofile.c_str(), "w");
     if (!f)
     {
         mprf(MSGCH_ERROR, "Couldn't open %s for writing!", macrofile.c_str());
         return;
     }
 
-    f << "# " CRAWL " " << Version::Long() << " macro file" << std::endl
-      << "# WARNING: This file is entirely auto-generated." << std::endl
-      << std::endl << "# Key Mappings:" << std::endl;
+    fprintf(f, "# %s %s macro file\n"
+               "# WARNING: This file is entirely auto-generated.\n"
+               "\n"
+               "# Key Mappings:\n",
+            OUTS(CRAWL), // ok, localizing the game name is not likely
+            OUTS(Version::Long())); // nor the version string
     for (int mc = KMC_DEFAULT; mc < KMC_CONTEXT_COUNT; ++mc)
     {
-        char keybuf[30] = "K:";
+        char buf[30] = "K:";
         if (mc)
-            snprintf(keybuf, sizeof keybuf, "K%d:", mc);
-        write_map(f, Keymaps[mc], keybuf);
+            snprintf(buf, sizeof buf, "K%d:", mc);
+        write_map(f, Keymaps[mc], buf);
     }
 
-    f << "# Command Macros:" << std::endl;
+    fprintf(f, "# Command Macros:\n");
     write_map(f, Macros, "M:");
 
     crawl_state.unsaved_macros = false;
-    f.close();
+    fclose(f);
 }
 
 /*
@@ -762,7 +765,7 @@ int getch_with_command_macros()
 {
     _macro_inject_sent_keys();
 
-    if (Buffer.size() == 0)
+    if (Buffer.empty())
     {
         // Read some keys...
         keyseq keys = _getch_mul();
@@ -816,9 +819,19 @@ void flush_input_buffer(int reason)
     }
 }
 
-static void _input_action_raw(keyseq* action)
+static std::string _macro_prompt_string(const std::string &macro_type)
 {
-    msgwin_prompt("Input macro action: ");
+    return make_stringf("Input %s action: ", macro_type.c_str());
+}
+
+static void _macro_prompt(const std::string &macro_type)
+{
+    msgwin_prompt(_macro_prompt_string(macro_type));
+}
+
+static void _input_action_raw(const std::string &macro_type, keyseq* action)
+{
+    _macro_prompt(macro_type);
     const int x = wherex();
     const int y = wherey();
     bool done = false;
@@ -851,11 +864,24 @@ static void _input_action_raw(keyseq* action)
     msgwin_reply(vtostr(*action));
 }
 
-static void _input_action_text(keyseq* action)
+static void _input_action_text(const std::string &macro_type, keyseq* action)
 {
     char buff[1024];
-    msgwin_get_line_autohist("Input macro action: ", buff, sizeof(buff));
+    msgwin_get_line_autohist(_macro_prompt_string(macro_type),
+                             buff, sizeof(buff));
     *action = parse_keyseq(buff);
+}
+
+static std::string _macro_type_name(bool keymap, KeymapContext keymc)
+{
+    return make_stringf("%s%s",
+                        keymap ? (keymc == KMC_DEFAULT    ? "default " :
+                                  keymc == KMC_LEVELMAP   ? "level-map " :
+                                  keymc == KMC_TARGETING  ? "targeting " :
+                                  keymc == KMC_CONFIRM    ? "confirm " :
+                                  keymc == KMC_MENU       ? "menu "
+                                  : "buggy") : "",
+                        (keymap ? "keymap" : "macro"));
 }
 
 void macro_add_query(void)
@@ -917,17 +943,10 @@ void macro_add_query(void)
 
     // reference to the appropriate mapping
     macromap &mapref = (keymap ? Keymaps[keymc] : Macros);
-
-    std::string prompt = make_stringf("Input %s%s trigger key: ",
-         keymap ? (keymc == KMC_DEFAULT    ? "default " :
-                   keymc == KMC_LEVELMAP   ? "level-map " :
-                   keymc == KMC_TARGETING  ? "targeting " :
-                   keymc == KMC_CONFIRM    ? "confirm " :
-                   keymc == KMC_MENU       ? "menu "
-                                           : "buggy") : "",
-         (keymap ? "keymap" : "macro"));
-
-    msgwin_prompt(prompt);
+    const std::string macro_type = _macro_type_name(keymap, keymc);
+    const std::string trigger_prompt = make_stringf("Input %s trigger key: ",
+                                                    macro_type.c_str());
+    msgwin_prompt(trigger_prompt);
 
     keyseq key;
     mouse_control mc(MOUSE_MODE_MACRO);
@@ -935,7 +954,7 @@ void macro_add_query(void)
 
     msgwin_reply(vtostr(key));
 
-    if (mapref[key].size() > 0)
+    if (mapref.find(key) != mapref.end() && !mapref[key].empty())
     {
         std::string action = vtostr(mapref[key]);
         action = replace_all(action, "<", "<<");
@@ -947,12 +966,15 @@ void macro_add_query(void)
         input = tolower(input);
         if (input == 'a' || key_is_escape(input))
         {
-            mpr("Aborting.");
+            canned_msg(MSG_OK);
             return;
         }
         else if (input == 'c')
         {
-            mpr("Cleared.");
+            mprf("Cleared %s '%s' => '%s'.",
+                 macro_type.c_str(),
+                 vtostr(key).c_str(),
+                 vtostr(mapref[key]).c_str());
             macro_del(mapref, key);
             crawl_state.unsaved_macros = true;
             return;
@@ -961,14 +983,27 @@ void macro_add_query(void)
 
     keyseq action;
     if (raw)
-        _input_action_raw(&action);
+        _input_action_raw(macro_type, &action);
     else
-        _input_action_text(&action);
+        _input_action_text(macro_type, &action);
 
     if (action.empty())
-        macro_del(mapref, key);
+    {
+        const bool deleted_macro = macro_del(mapref, key);
+        if (deleted_macro)
+            mprf("Deleted %s for '%s'.",
+                 macro_type.c_str(),
+                 vtostr(key).c_str());
+        else
+            canned_msg(MSG_OK);
+    }
     else
+    {
         macro_add(mapref, key, action);
+        mprf("Created %s '%s' => '%s'.",
+             macro_type.c_str(),
+             vtostr(key).c_str(), vtostr(action).c_str());
+    }
 
     crawl_state.unsaved_macros = true;
     redraw_screen();
@@ -983,16 +1018,17 @@ static void _read_macros_from(const char* filename)
         return;
 
     std::string s;
-    std::ifstream f(filename);
+    FileLineInput f(filename);
     keyseq key, action;
     bool keymap = false;
     KeymapContext keymc = KMC_DEFAULT;
 
-    while (f >> s)
+    while (!f.eof())
     {
+        s = f.get_line();
         trim_string(s);  // remove white space from ends
 
-        if (s[0] == '#')
+        if (s.empty() || s[0] == '#')
             continue;    // skip comments
         else if (s.substr(0, 2) == "K:")
         {
@@ -1110,7 +1146,7 @@ void remove_key_recorder(key_recorder* recorder)
 {
     std::vector<key_recorder*>::iterator i;
 
-    for (i = recorders.begin(); i != recorders.end(); i++)
+    for (i = recorders.begin(); i != recorders.end(); ++i)
         if (*i == recorder)
         {
             recorders.erase(i);
@@ -1349,7 +1385,7 @@ static std::string _special_keys_to_string(int key)
     return (cmd);
 }
 
-std::string command_to_string(command_type cmd)
+std::string command_to_string(command_type cmd, bool tutorial)
 {
     const int key = command_to_key(cmd);
 
@@ -1358,7 +1394,12 @@ std::string command_to_string(command_type cmd)
         return (desc);
 
     if (key >= 32 && key < 256)
-        snprintf(info, INFO_SIZE, "%c", (char) key);
+    {
+        if (tutorial && key >= 'A' && key <= 'Z')
+            snprintf(info, INFO_SIZE, "uppercase %c", (char) key);
+        else
+            snprintf(info, INFO_SIZE, "%c", (char) key);
+    }
     else if (key > 1000 && key <= 1009)
     {
         const int numpad = (key - 1000);

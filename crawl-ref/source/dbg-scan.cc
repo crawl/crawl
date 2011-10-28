@@ -1,8 +1,7 @@
-/*
- *  File:       dbg-scan.cc
- *  Summary:    Debugging code to scan the list of items and monsters.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Debugging code to scan the list of items and monsters.
+**/
 
 #include "AppHdr.h"
 
@@ -30,7 +29,7 @@ static void _dump_item(const char *name, int num, const item_def &item)
          num, item.base_type, item.sub_type,
          item.plus, item.plus2, item.special);
 
-    mprf("    quant: %d; colour: %d; ident: 0x%08"PRIx64"; ident_type: %d",
+    mprf("    quant: %d; colour: %d; ident: 0x%08"PRIx32"; ident_type: %d",
          item.quantity, item.colour, item.flags,
          get_ident_type(item));
 
@@ -73,7 +72,7 @@ void debug_item_scan(void)
                 }
                 else
                 {
-                    mprf(MSGCH_ERROR, "Item in stack at (%d, %d) has ",
+                    mprf(MSGCH_ERROR, "Item in stack at (%d, %d) has "
                                       "invalid link %d",
                          ri->x, ri->y, obj);
                 }
@@ -317,6 +316,9 @@ void debug_mons_scan()
             }
         }
 
+    ASSERT(you.type == MONS_PLAYER);
+    ASSERT(you.mid == MID_PLAYER);
+
     std::vector<int> floating_mons;
     bool             is_floating[MAX_MONSTERS];
 
@@ -328,6 +330,7 @@ void debug_mons_scan()
         if (!m->alive())
             continue;
 
+        ASSERT(m->mid > 0);
         coord_def pos = m->pos();
 
         if (!in_bounds(pos))
@@ -479,7 +482,7 @@ void debug_mons_scan()
                          mon->name(DESC_PLAIN, true).c_str(),
                          mon->pos().x, mon->pos().y);
 
-        if (vaults.size() == 0)
+        if (vaults.empty())
             mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());
         else
         {
@@ -502,7 +505,7 @@ void debug_mons_scan()
 
         std::vector<std::string> vaults = _in_vaults(pos);
 
-        if (vaults.size() == 0)
+        if (vaults.empty())
             mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());
         else
         {
@@ -517,7 +520,7 @@ void debug_mons_scan()
         str    = "Monster pointed to";
         vaults = _in_vaults(mon->pos());
 
-        if (vaults.size() == 0)
+        if (vaults.empty())
             mprf(MSGCH_WARN, "%s not in any vaults.", str.c_str());
         else
         {

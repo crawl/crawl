@@ -1,8 +1,3 @@
-/*
- *  File:       clua.cc
- *  Created by: dshaligram on Wed Aug 2 12:54:15 2006 UTC
- */
-
 #include "AppHdr.h"
 
 #include "clua.h"
@@ -15,6 +10,8 @@
 #include "libutil.h"
 #include "state.h"
 #include "stuff.h"
+#include "syscalls.h"
+#include "unicode.h"
 
 #include <algorithm>
 
@@ -47,7 +44,7 @@ CLua::CLua(bool managed)
       throttle_sleep_end(800), n_throttle_sleeps(0), mixed_call_depth(0),
       lua_call_depth(0), max_mixed_call_depth(8),
       max_lua_call_depth(100), memory_used(0),
-      _state(NULL), sourced_files(), uniqindex(0L)
+      _state(NULL), sourced_files(), uniqindex(0)
 {
 }
 
@@ -150,7 +147,7 @@ int CLua::file_write(lua_State *ls)
 FILE *CLua::CLuaSave::get_file()
 {
     if (!handle)
-        handle = fopen(filename, "w");
+        handle = fopen_u(filename, "w");
 
     return (handle);
 }
@@ -248,7 +245,15 @@ int CLua::loadfile(lua_State *ls, const char *filename, bool trusted,
                        make_stringf("Can't find \"%s\"", filename).c_str());
         return (-1);
     }
-    return (luaL_loadfile(ls, file.c_str()));
+
+    FileLineInput f(file.c_str());
+    std::string script;
+    while (!f.eof())
+        script += f.get_line() + "\n";
+
+    // prefixing with @ stops lua from adding [string "%s"]
+    return luaL_loadbuffer(ls, &script[0], script.length(),
+                           ("@" + file).c_str());
 }
 
 int CLua::execfile(const char *filename, bool trusted, bool die_on_fail,
@@ -409,7 +414,7 @@ int CLua::push_args(lua_State *ls, const char *format, va_list args,
             lua_pushnumber(ls, va_arg(args, int));
             break;
         case 'L':
-            ASSERT("ambiguous long in Lua push_args");
+            die("ambiguous long in Lua push_args");
             lua_pushnumber(ls, va_arg(args, long));
             break;
         case 'b':
@@ -661,14 +666,14 @@ void CLua::init_lua()
 
     lua_register(_state, "require", _clua_require);
 
-    execfile("clua/util.lua", true, true);
-    execfile("clua/iter.lua", true, true);
-    execfile("clua/init.lua", true, true);
+    execfile("dlua/util.lua", true, true);
+    execfile("dlua/iter.lua", true, true);
+    execfile("dlua/init.lua", true, true);
 
     if (managed_vm)
     {
         lua_register(_state, "pcall", _clua_guarded_pcall);
-        execfile("clua/userbase.lua", true, true);
+        execfile("dlua/userbase.lua", true, true);
     }
 
     lua_pushboolean(_state, managed_vm);
@@ -707,7 +712,7 @@ void CLua::load_chooks()
 
 void CLua::load_cmacro()
 {
-    execfile("clua/macro.lua", true, true);
+    execfile("dlua/macro.lua", true, true);
 }
 
 void CLua::add_shutdown_listener(lua_shutdown_listener *listener)

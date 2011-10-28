@@ -13,6 +13,8 @@ dc-misc/cursor CURSOR
 %sdir player/base
 human_f HUMAN
 human_m
+human_dark_f
+human_dark_m
 elf_m ELF
 elf_f
 deep_elf_f DEEP_ELF
@@ -27,6 +29,8 @@ orc_f ORC
 orc_m
 kobold_m KOBOLD
 kobold_f
+kobold2_m
+kobold2_f
 mummy_m MUMMY
 mummy_f
 naga_f NAGA
@@ -35,10 +39,19 @@ naga_darkgreen_f
 naga_darkgreen_m
 naga_lightgreen_f
 naga_lightgreen_m
+naga_blue_f
+naga_blue_m
+naga_red_f
+naga_red_m
 ogre_m OGRE
 ogre_f
 troll_f TROLL
 troll_m
+octopode1 OCTOPODE
+octopode2
+octopode3
+octopode4
+octopode5
 
 # draconians
 draconian_f DRACONIAN DRACONIAN_FIRST
@@ -85,11 +98,15 @@ demonspawn_red_f
 demonspawn_red_m
 demonspawn_black_f
 demonspawn_black_m
-ghoul GHOUL
+ghoul_m GHOUL
+ghoul2_m
+ghoul2_f
 kenku_wingless_f KENKU
 kenku_wingless_m
 kenku_winged_f
 kenku_winged_m
+kenku_wingless_brown_f
+kenku_wingless_brown_m
 merfolk_m MERFOLK
 merfolk_f
 merfolk_water_m MERFOLK_WATER
@@ -105,6 +122,11 @@ cat2
 cat3
 cat4
 cat5
+cat6
+cat7
+cat8
+cat9
+cat10
 %sdir player/base
 %end_ctg
 
@@ -184,6 +206,8 @@ centaur_barding_metal CENTAUR_BARDING_METAL
 centaur_barding_magenta CENTAUR_BARDING_MAGENTA
 centaur_barding_red CENTAUR_BARDING_RED
 %rim 0
+lightning_scales LIGHTNING_SCALES
+black_knight BLACK_KNIGHT
 %end_ctg
 
 ### Body armour
@@ -358,6 +382,7 @@ dragonsc_cyan DRAGONSC_CYAN
 dragonsc_brown DRAGONSC_BROWN
 dragonsc_blue DRAGONSC_BLUE
 dragonsc_gold DRAGONSC_GOLD
+dragonsc_pearl DRAGONSC_PEARL
 dragonarm_green DRAGONARM_GREEN
 dragonarm_white DRAGONARM_WHITE
 dragonarm_magenta DRAGONARM_MAGENTA
@@ -365,6 +390,7 @@ dragonarm_cyan DRAGONARM_CYAN
 dragonarm_brown DRAGONARM_BROWN
 dragonarm_blue DRAGONARM_BLUE
 dragonarm_gold DRAGONARM_GOLD
+dragonarm_pearl DRAGONARM_PEARL
 
 aragorn ARAGORN
 aragorn2 ARAGORN2
@@ -384,7 +410,6 @@ maxwell MAXWELL
 lears_chain_mail LEARS_CHAIN_MAIL
 faerie_dragon_armour FAERIE_DRAGON_ARMOUR
 %end_ctg
-
 
 ### Arms
 %parts_ctg ARM
@@ -442,6 +467,7 @@ mace_of_brilliance MACE_OF_BRILLIANCE
 undeadhunter UNDEADHUNTER
 eos EOS
 snakebite SNAKEBITE
+shillelagh SHILLELAGH
 ## polearms
 trident_octopus_king TRIDENT_OCTOPUS_KING
 glaive_of_prune GLAIVE_OF_PRUNE
@@ -458,6 +484,7 @@ olgreb OLGREB
 ## axes
 axe_trog AXE_TROG
 arga ARGA
+demon_axe DEMON_AXE
 ## launchers
 blowgun_assassin BLOWGUN_ASSASSIN
 punk PUNK
@@ -478,7 +505,6 @@ long_sword_slant LONG_SWORD_SLANT
 blessed_blade BLESSED_BLADE
 great_sword GREAT_SWORD
 great_sword_slant GREAT_SWORD_SLANT
-katana KATANA
 katana_slant KATANA_SLANT
 scimitar SCIMITAR
 falchion FALCHION
@@ -517,6 +543,7 @@ mace MACE2
 mace3 MACE
 mace2 GREAT_MACE
 mace_ruby MACE_RUBY
+ankus ANKUS
 morningstar MORNINGSTAR2
 morningstar2 MORNINGSTAR
 eveningstar EVENINGSTAR
@@ -788,22 +815,43 @@ knot_red KNOT_RED
 brown1 BROWN1
 brown2 BROWN2
 green GREEN
+kenku_comb KENKU_COMB
 %end_ctg
 
 ###Beard
 %parts_ctg BEARD
 %sdir player/beard
-
+full_black FULL_BLACK
+full_blonde FULL_BLONDE
+full_brown FULL_BROWN
+full_green FULL_GREEN
+full_red FULL_RED
+full_white FULL_WHITE
+garibaldi_black GARIBALDI_BLACK
+garibaldi_blonde GARIBALDI_BLONDE
+garibaldi_brown GARIBALDI_BROWN
+garibaldi_green GARIBALDI_GREEN
+garibaldi_red GARIBALDI_RED
+garibaldi_white GARIBALDI_WHITE
+medium_black MEDIUM_BLACK
+medium_blonde MEDIUM_BLONDE
+medium_brown MEDIUM_BROWN
+medium_green MEDIUM_GREEN
+medium_red MEDIUM_RED
+medium_white MEDIUM_WHITE
+scarf SCARF
 short_black SHORT_BLACK
-short_red SHORT_RED
-short_yellow SHORT_YELLOW
-short_white SHORT_WHITE
+short_blonde SHORT_BLONDE
+short_brown SHORT_BROWN
 short_green SHORT_GREEN
-long_black LONG_BLACK
-long_red LONG_RED
-long_yellow LONG_YELLOW
-long_white LONG_WHITE
-long_green LONG_GREEN
+short_red SHORT_RED
+short_white SHORT_WHITE
+stubble_black STUBBLE_BLACK
+stubble_blonde STUBBLE_BLONDE
+stubble_brown STUBBLE_BROWN
+stubble_green STUBBLE_GREEN
+stubble_red STUBBLE_RED
+stubble_white STUBBLE_WHITE
 pj PJ
 %end_ctg
 
@@ -942,4 +990,3 @@ drchead_purple PURPLE
 drchead_red RED
 drchead_white WHITE
 %end_ctg
-

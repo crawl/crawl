@@ -15,7 +15,7 @@ public:
     bool process_list(const char *list_file);
     bool write_data();
 protected:
-    bool load_image(tile &img, const char *filename);
+    bool load_image(tile &img, const char *filename, bool background = false);
     bool process_line(char *read_line, const char *list_file, int line);
     void add_image(tile &img, const char *enumname);
     void recolour(tile &img);
@@ -39,12 +39,14 @@ protected:
     std::vector<tile*> m_back;
     std::string m_parts_ctg;
     std::string m_sdir;
+    std::string m_back_sdir;
     std::string m_prefix;
     std::string m_start_value;
     std::vector<std::string> m_include;
     std::vector<std::string> m_categories;
     std::vector<int> m_ctg_counts;
     tile m_compose;
+    tile* m_texture;
     int m_variation_idx;
     int m_variation_col;
     int m_weight;

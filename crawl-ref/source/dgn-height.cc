@@ -1,7 +1,7 @@
-/*
- *  File:       dgn-height.cc
- *  Summary:    Dungeon heightmap routines.
- */
+/**
+ * @file
+ * @brief Dungeon heightmap routines.
+**/
 
 #include "AppHdr.h"
 

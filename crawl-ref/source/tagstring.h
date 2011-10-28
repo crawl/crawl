@@ -1,7 +1,7 @@
-/*
- * File:     tagstring.h
- * Summary:  Code related to tagged strings.
- */
+/**
+ * @file
+ * @brief Code related to tagged strings.
+**/
 
 #ifndef TAGSTRING_H
 #define TAGSTRING_H

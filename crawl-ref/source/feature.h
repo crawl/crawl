@@ -6,8 +6,8 @@
 struct feature_def
 {
     dungeon_char_type   dchar;
-    unsigned            symbol;          // symbol used for seen terrain
-    unsigned            magic_symbol;    // symbol used for magic-mapped terrain
+    ucs_t               symbol;          // symbol used for seen terrain
+    ucs_t               magic_symbol;    // symbol used for magic-mapped terrain
     unsigned short      colour;          // normal in LoS colour
     unsigned short      map_colour;      // colour when out of LoS on display
     unsigned short      seen_colour;     // map_colour when env.map_knowledge().seen()

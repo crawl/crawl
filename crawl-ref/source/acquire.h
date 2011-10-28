@@ -1,7 +1,7 @@
-/*
- *  File:       acquire.h
- *  Summary:    Acquirement and Trog/Oka/Sif gifts.
- */
+/**
+ * @file
+ * @brief Acquirement and Trog/Oka/Sif gifts.
+**/
 
 #ifndef ACQUIRE_H
 #define ACQUIRE_H

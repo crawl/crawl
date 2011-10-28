@@ -11,7 +11,7 @@ void blink_close(monster* mon);
 
 bool random_near_space(const coord_def& origin, coord_def& target,
                        bool allow_adjacent = false, bool restrict_LOS = true,
-                       bool forbid_dangerous = true,
+                       bool forbid_dangerous = false,
                        bool forbid_sanctuary = false);
 
 #endif

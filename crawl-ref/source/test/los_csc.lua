@@ -26,7 +26,7 @@ local function test_cellseecell_symmetry()
           other_p = temp
         end
         if (forward and backward) or (not forward and not backward) then
-          dgn.grid(other_p.x, other_p.y, "floor_special")
+          dgn.fprop_changed(other_p.x, other_p.y, "highlight")
           debug.dump_map(FAILMAP)
           assert(false,
                  "cell_see_cell asymmetry detected (iter #" .. checks .. "): "

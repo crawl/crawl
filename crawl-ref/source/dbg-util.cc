@@ -1,8 +1,7 @@
-/*
- *  File:       dbg-util.cc
- *  Summary:    Miscellaneous debugging functions.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Miscellaneous debugging functions.
+**/
 
 #include "AppHdr.h"
 
@@ -22,32 +21,6 @@
 #include "skills2.h"
 #include "spl-util.h"
 
-//---------------------------------------------------------------
-//
-// debug_prompt_for_int
-//
-// If nonneg, then it returns a non-negative number or -1 on fail
-// If !nonneg, then it returns an integer, and 0 on fail
-//
-//---------------------------------------------------------------
-int debug_prompt_for_int(const char *prompt, bool nonneg)
-{
-    char specs[80];
-
-    msgwin_get_line(prompt, specs, sizeof(specs));
-
-    if (specs[0] == '\0')
-        return (nonneg ? -1 : 0);
-
-    char *end;
-    int   ret = strtol(specs, &end, 10);
-
-    if (ret < 0 && nonneg || ret == 0 && end == specs)
-        ret = (nonneg ? -1 : 0);
-
-    return (ret);
-}
-
 monster_type debug_prompt_for_monster(void)
 {
     char  specs[80];
@@ -61,6 +34,18 @@ monster_type debug_prompt_for_monster(void)
         return (get_monster_by_name(specs));
     }
     return (MONS_NO_MONSTER);
+}
+
+static void _dump_vault_table(const CrawlHashTable &table)
+{
+    if (!table.empty())
+    {
+        CrawlHashTable::const_iterator i = table.begin();
+
+        for (; i != table.end(); ++i)
+            mprf("    %s: %s", i->first.c_str(),
+                 i->second.get_string().c_str());
+    }
 }
 
 void debug_dump_levgen()
@@ -77,7 +62,8 @@ void debug_dump_levgen()
     {
         mpr("Currently generating level.");
         method = env.level_build_method;
-        type   = env.level_layout_type;
+        type   = comma_separated_line(env.level_layout_types.begin(),
+                                      env.level_layout_types.end(), ", ");
     }
     else
     {
@@ -95,35 +81,18 @@ void debug_dump_levgen()
     mprf("level build method = %s", method.c_str());
     mprf("level layout type  = %s", type.c_str());
 
-    std::string extra;
-
-    if (!props.exists(LEVEL_EXTRAS_KEY))
-        extra = "ABSENT";
-    else
+    if (props.exists(LEVEL_EXTRAS_KEY))
     {
-        const CrawlVector &vec = props[LEVEL_EXTRAS_KEY].get_vector();
-
-        for (unsigned int i = 0; i < vec.size(); ++i)
-            extra += vec[i].get_string() + ", ";
+        mpr("Level extras:");
+        const CrawlHashTable &extras = props[LEVEL_EXTRAS_KEY].get_table();
+        _dump_vault_table(extras);
     }
 
-    mprf("Level extras: %s", extra.c_str());
-
-    mpr("Level vaults:");
-    if (!props.exists(LEVEL_VAULTS_KEY))
-        mpr("ABSENT");
-    else
+    if (props.exists(LEVEL_VAULTS_KEY))
     {
+        mpr("Level vaults:");
         const CrawlHashTable &vaults = props[LEVEL_VAULTS_KEY].get_table();
-        // const_iterator asserts if the table has hash_map == NULL
-        if (!vaults.empty())
-        {
-            CrawlHashTable::const_iterator i = vaults.begin();
-
-            for (; i != vaults.end(); ++i)
-                mprf("    %s: %s", i->first.c_str(),
-                     i->second.get_string().c_str());
-        }
+        _dump_vault_table(vaults);
     }
     mpr("");
 }
@@ -242,7 +211,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
         fprintf(stderr, "    travel_path.size() = %u\n",
                 (unsigned int)mon->travel_path.size());
 
-        if (mon->travel_path.size() > 0)
+        if (!mon->travel_path.empty())
         {
             fprintf(stderr, "    next travel step: %s\n",
                     debug_coord_str(mon->travel_path.back()).c_str());
@@ -349,37 +318,34 @@ void debug_dump_mon(const monster* mon, bool recurse)
 // debug_prompt_for_skill
 //
 //---------------------------------------------------------------
-int debug_prompt_for_skill(const char *prompt)
+skill_type debug_prompt_for_skill(const char *prompt)
 {
     char specs[80];
 
     msgwin_get_line_autohist(prompt, specs, sizeof(specs));
 
     if (specs[0] == '\0')
-        return (-1);
+        return (SK_NONE);
+    std::string spec = lowercase_string(specs);
 
-    int skill = -1;
+    skill_type skill = SK_NONE;
 
-    for (int i = 0; i < NUM_SKILLS; ++i)
+    for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
+        skill_type sk = static_cast<skill_type>(i);
         // Avoid the bad values.
-        if (is_invalid_skill(i))
+        if (is_invalid_skill(sk))
             continue;
 
-        char sk_name[80];
-        strncpy(sk_name, skill_name(i), sizeof(sk_name));
+        std::string sk_name = lowercase_string(skill_name(sk));
 
-        char *ptr = strstr(strlwr(sk_name), strlwr(specs));
-        if (ptr != NULL)
+        size_t pos = sk_name.find(spec);
+        if (pos != std::string::npos)
         {
-            if (ptr == sk_name && strlen(specs) > 0)
-            {
-                // We prefer prefixes over partial matches.
-                skill = i;
+            skill = sk;
+            // We prefer prefixes over partial matches.
+            if (!pos)
                 break;
-            }
-            else
-                skill = i;
         }
     }
 
@@ -400,3 +366,23 @@ int debug_cap_stat(int stat)
             stat > 127 ? 127
                        : stat);
 }
+
+#ifdef DEBUG
+static FILE *debugf = 0;
+
+void debuglog(const char *format, ...)
+{
+    va_list args;
+
+    if (!debugf)
+    {
+        debugf = fopen("debuglog.txt", "w");
+        ASSERT(debugf);
+    }
+
+    va_start(args, format);
+    vfprintf(debugf, format, args);
+    va_end(args);
+    fflush(debugf);
+}
+#endif

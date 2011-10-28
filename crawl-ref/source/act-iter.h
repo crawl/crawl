@@ -1,7 +1,7 @@
-/*
- * Provide a way to iterator over all actors,
- * subject to a few common restrictions.
- */
+/**
+ * @file
+ * @brief Provide a way to iterator over all actors, subject to a few common restrictions.
+**/
 
 #ifndef ACT_ITER_H
 #define ACT_ITER_H

@@ -50,6 +50,7 @@ zap_type spell_to_zap(spell_type spell)
     case SPELL_BOLT_OF_INACCURACY:
         return ZAP_BEAM_OF_ENERGY;
     case SPELL_STICKY_FLAME:
+    case SPELL_STICKY_FLAME_RANGE:
         return ZAP_STICKY_FLAME;
     case SPELL_DISPEL_UNDEAD:
         return ZAP_DISPEL_UNDEAD;
@@ -92,16 +93,16 @@ zap_type spell_to_zap(spell_type spell)
         return ZAP_POLYMORPH_OTHER;
     case SPELL_TELEPORT_OTHER:
         return ZAP_TELEPORTATION;
-    case SPELL_BANISHMENT:
-        return ZAP_BANISHMENT;
+    case SPELL_INNER_FLAME:
+        return ZAP_INNER_FLAME;
     case SPELL_HASTE:
         return ZAP_HASTING;
     case SPELL_INVISIBILITY:
         return ZAP_INVISIBILITY;
     case SPELL_DIG:
         return ZAP_DIGGING;
-    case SPELL_LIGHT_BEAM:
-        return ZAP_LIGHT_BEAM;
+    case SPELL_HOLY_LIGHT:
+        return ZAP_HOLY_LIGHT;
     case SPELL_DEBUGGING_RAY:
         return ZAP_DEBUGGING_RAY;
     default:

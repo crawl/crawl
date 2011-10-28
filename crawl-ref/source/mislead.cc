@@ -1,6 +1,7 @@
-/*  File:       mislead.cc
- *  Summary:    Handling of Mara's Mislead spell and stats, plus fakes.
- */
+/**
+ * @file
+ * @brief Handling of Mara's Mislead spell and stats, plus fakes.
+**/
 
 #include "AppHdr.h"
 #include "mislead.h"
@@ -27,6 +28,8 @@ bool unsuitable_misled_monster(monster_type mons)
             || mons_class_is_stationary(mons)
             || mons_class_is_zombified(mons)
             || mons_is_tentacle(mons)
+            || mons_class_flag(mons, M_NO_POLY_TO)
+            || mons_class_flag(mons, M_UNFINISHED)
             || mons_genus(mons) == MONS_DRACONIAN
             || mons == MONS_MANTICORE
             || mons == MONS_SLIME_CREATURE
@@ -37,7 +40,7 @@ bool unsuitable_misled_monster(monster_type mons)
             || mons == MONS_SHAPESHIFTER
             || mons == MONS_GLOWING_SHAPESHIFTER
             || mons == MONS_KILLER_KLOWN
-            || mons == MONS_GIANT_BAT);
+            || mons == MONS_BAT);
 }
 
 monster_type get_misled_monster(monster* mons)
@@ -47,7 +50,7 @@ monster_type get_misled_monster(monster* mons)
         mt = random_monster_at_grid(mons->pos());
 
     if (unsuitable_misled_monster(mt))
-        return (MONS_GIANT_BAT);
+        return (MONS_BAT);
 
     return mt;
 }
@@ -58,15 +61,19 @@ bool update_mislead_monster(monster* mons)
     if (mons_is_unique(mons->type) || !mons->mname.empty()
         || mons->props.exists("monster_tile")
         || mons->props.exists("mislead_as")
-        || mons->type == MONS_ORB_OF_DESTRUCTION)
+        || mons->type == MONS_ORB_OF_DESTRUCTION
+        || mons->type == MONS_MARA_FAKE)
     {
         return (false);
     }
 
-    short misled_as = get_misled_monster(mons);
+    monster misled_as;
+    misled_as.type = get_misled_monster(mons);
+    misled_as.mid = mons->mid;
+    define_monster(&misled_as);
     mons->props["mislead_as"] = misled_as;
 
-    if (misled_as == MONS_GIANT_BAT)
+    if (misled_as.type == MONS_BAT)
         return (false);
 
     return (true);
@@ -81,6 +88,19 @@ int update_mislead_monsters(monster* caster)
             count++;
 
     return count;
+}
+
+void end_mislead(bool level_change)
+{
+    if (level_change)
+    {
+        mpr("Away from their source, illusions no longer mislead you.",
+            MSGCH_DURATION);
+    }
+    you.duration[DUR_MISLED] = 0;
+    for (monster_iterator mi; mi; ++mi)
+        if (mi->props.exists("mislead_as"))
+            mi->props.erase("mislead_as");
 }
 
 void mons_cast_mislead(monster* mons)

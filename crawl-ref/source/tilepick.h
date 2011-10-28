@@ -1,7 +1,7 @@
-/*
- *  File:       tilepick.h
- *  Summary:    Look-up functions for dungeon and item tiles.
- */
+/**
+ * @file
+ * @brief Look-up functions for dungeon and item tiles.
+**/
 
 #ifndef TILEPICK_H
 #define TILEPICK_H
@@ -12,8 +12,8 @@
 
 struct bolt;
 struct cloud_struct;
-class coord_def;
-class item_def;
+struct coord_def;
+struct item_def;
 class monster;
 struct show_type;
 
@@ -31,15 +31,18 @@ tileidx_t tileidx_item(const item_def &item);
 tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy);
 tileidx_t tileidx_known_base_item(tileidx_t label);
 
-tileidx_t tileidx_cloud(const cloud_struct &cl);
+tileidx_t tileidx_cloud(const cloud_struct &cl, bool disturbance = false);
 tileidx_t tileidx_bolt(const bolt &bolt);
 tileidx_t tileidx_zap(int colour);
-tileidx_t tileidx_spell(spell_type spell);
+tileidx_t tileidx_spell(const spell_type spell);
+tileidx_t tileidx_skill(const skill_type skill, int train);
+tileidx_t tileidx_command(const command_type cmd);
+tileidx_t tileidx_gametype(const game_type gtype);
 
 tileidx_t tileidx_known_brand(const item_def &item);
 tileidx_t tileidx_corpse_brand(const item_def &item);
 
-tileidx_t get_clean_map_idx(tileidx_t tile_idx);
+tileidx_t get_clean_map_idx(tileidx_t tile_idx, bool mon_only = false);
 tileidx_t tileidx_unseen_flag(const coord_def &gc);
 
 

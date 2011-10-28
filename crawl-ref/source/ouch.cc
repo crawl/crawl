@@ -1,8 +1,7 @@
-/*
- *  File:       ouch.cc
- *  Summary:    Functions used when Bad Things happen to the player.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used when Bad Things happen to the player.
+**/
 
 #include "AppHdr.h"
 
@@ -14,10 +13,6 @@
 #include <cctype>
 #include <cmath>
 
-#ifdef TARGET_OS_DOS
-#include <file.h>
-#endif
-
 #ifdef UNIX
 #include <sys/types.h>
 #include <fcntl.h>
@@ -25,10 +20,6 @@
 #endif
 
 #include "ouch.h"
-
-#ifdef TARGET_COMPILER_MINGW
-#include <io.h>
-#endif
 
 #include "externs.h"
 #include "options.h"
@@ -58,6 +49,7 @@
 #include "mon-util.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
+#include "mutation.h"
 #include "notes.h"
 #include "output.h"
 #include "player.h"
@@ -71,22 +63,29 @@
 #include "state.h"
 #include "stuff.h"
 #include "transform.h"
+#include "tutorial.h"
 #include "view.h"
 #include "shout.h"
+#include "syscalls.h"
 #include "xom.h"
 
-
-static void end_game(scorefile_entry &se);
+static void _end_game(scorefile_entry &se);
 static void _item_corrode(int slot);
 
-static void _maybe_melt_player_enchantments(beam_type flavour)
+static void _maybe_melt_player_enchantments(beam_type flavour, int damage)
 {
     if (flavour == BEAM_FIRE || flavour == BEAM_LAVA
         || flavour == BEAM_HELLFIRE || flavour == BEAM_NAPALM
         || flavour == BEAM_STEAM)
     {
         if (you.duration[DUR_CONDENSATION_SHIELD] > 0)
-            remove_condensation_shield();
+        {
+            you.duration[DUR_CONDENSATION_SHIELD] -= damage * BASELINE_DELAY;
+            if (you.duration[DUR_CONDENSATION_SHIELD] <= 0)
+                remove_condensation_shield();
+            else
+                you.props["melt_shield"] = true;
+        }
 
         if (you.mutation[MUT_ICEMAIL])
         {
@@ -96,13 +95,19 @@ static void _maybe_melt_player_enchantments(beam_type flavour)
         }
 
         if (you.duration[DUR_ICY_ARMOUR] > 0)
-            remove_ice_armour();
+        {
+            you.duration[DUR_ICY_ARMOUR] -= damage * BASELINE_DELAY;
+            if (you.duration[DUR_ICY_ARMOUR] <= 0)
+                remove_ice_armour();
+            else
+                you.props["melt_armour"] = true;
+        }
     }
 }
 
 // NOTE: DOES NOT check for hellfire!!!
 int check_your_resists(int hurted, beam_type flavour, std::string source,
-                       bolt *beam)
+                       bolt *beam, bool doEffects)
 {
     int resist;
     int original = hurted;
@@ -116,23 +121,24 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         kaux = beam->name;
     }
 
-    _maybe_melt_player_enchantments(flavour);
+    if (doEffects)
+        _maybe_melt_player_enchantments(flavour, hurted);
 
     switch (flavour)
     {
     case BEAM_WATER:
         hurted = resist_adjust_damage(&you, flavour,
                                       you.res_water_drowning(), hurted, true);
-        if (!hurted)
+        if (!hurted && doEffects)
             mpr("You shrug off the wave.");
         break;
 
     case BEAM_STEAM:
         hurted = resist_adjust_damage(&you, flavour,
                                       player_res_steam(), hurted, true);
-        if (hurted < original)
+        if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
-        else if (hurted > original)
+        else if (hurted > original && doEffects)
         {
             mpr("The steam scalds you terribly!");
             xom_is_stimulated(200);
@@ -142,9 +148,9 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
     case BEAM_FIRE:
         hurted = resist_adjust_damage(&you, flavour,
                                       player_res_fire(), hurted, true);
-        if (hurted < original)
+        if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
-        else if (hurted > original)
+        else if (hurted > original && doEffects)
         {
             mpr("The fire burns you terribly!");
             xom_is_stimulated(200);
@@ -154,9 +160,9 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
     case BEAM_COLD:
         hurted = resist_adjust_damage(&you, flavour,
                                       player_res_cold(), hurted, true);
-        if (hurted < original)
+        if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
-        else if (hurted > original)
+        else if (hurted > original && doEffects)
         {
             mpr("You feel a terrible chill!");
             xom_is_stimulated(200);
@@ -168,19 +174,18 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
                                       player_res_electricity(),
                                       hurted, true);
 
-        if (hurted < original)
+        if (hurted < original && doEffects)
             canned_msg(MSG_YOU_RESIST);
         break;
 
     case BEAM_POISON:
-        resist = player_res_poison();
 
-        if (resist <= 0)
-            poison_player(coinflip() ? 2 : 1, source, kaux);
+        if (doEffects)
+            resist = poison_player(coinflip() ? 2 : 1, source, kaux);
 
         hurted = resist_adjust_damage(&you, flavour, resist,
                                       hurted, true);
-        if (resist > 0)
+        if (resist == 0 && doEffects)
             canned_msg(MSG_YOU_RESIST);
         break;
 
@@ -188,15 +193,17 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         // [dshaligram] NOT importing uber-poison arrow from 4.1. Giving no
         // bonus to poison resistant players seems strange and unnecessarily
         // arbitrary.
+
         resist = player_res_poison();
 
-        if (!resist)
-            poison_player(4 + random2(3), source, kaux, true);
-        else if (!you.is_undead)
-            poison_player(2 + random2(3), source, kaux, true);
+        if (doEffects) {
+            int poison_amount = 2 + random2(3);
+            poison_amount += (resist ? 0 : 2);
+            poison_player(poison_amount, source, kaux, true);
+        }
 
         hurted = resist_adjust_damage(&you, flavour, resist, hurted);
-        if (hurted < original)
+        if (hurted < original && doEffects)
             canned_msg(MSG_YOU_PARTIALLY_RESIST);
         break;
 
@@ -214,16 +221,17 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         else if (resist > 0)
             hurted -= (resist * hurted) / 3;
 
-        drain_exp();
+        if (doEffects)
+            drain_exp();
         break;
 
     case BEAM_ICE:
         hurted = resist_adjust_damage(&you, flavour, player_res_cold(),
                                       hurted, true);
 
-        if (hurted < original)
+        if (hurted < original && doEffects)
             canned_msg(MSG_YOU_PARTIALLY_RESIST);
-        else if (hurted > original)
+        else if (hurted > original && doEffects)
         {
             mpr("You feel a painful chill!");
             xom_is_stimulated(200);
@@ -234,9 +242,9 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         hurted = resist_adjust_damage(&you, flavour, player_res_fire(),
                                       hurted, true);
 
-        if (hurted < original)
+        if (hurted < original && doEffects)
             canned_msg(MSG_YOU_PARTIALLY_RESIST);
-        else if (hurted > original)
+        else if (hurted > original && doEffects)
         {
             mpr("The lava burns you terribly!");
             xom_is_stimulated(200);
@@ -246,7 +254,8 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
     case BEAM_ACID:
         if (player_res_acid())
         {
-            canned_msg(MSG_YOU_RESIST);
+            if (doEffects)
+                canned_msg(MSG_YOU_RESIST);
             hurted = hurted * player_acid_resist_factor() / 100;
         }
         break;
@@ -254,7 +263,8 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
     case BEAM_MIASMA:
         if (you.res_rotting())
         {
-            canned_msg(MSG_YOU_RESIST);
+            if (doEffects)
+                canned_msg(MSG_YOU_RESIST);
             hurted = 0;
         }
         break;
@@ -270,8 +280,42 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         else if (rhe < -1)
             hurted = (hurted * 3) / 2;
 
-        if (hurted == 0)
+        if (hurted == 0 && doEffects)
             canned_msg(MSG_YOU_RESIST);
+        break;
+    }
+
+    case BEAM_BOLT_OF_ZIN:
+    {
+        // Damage to chaos and mutations.
+
+        // For mutation damage, we want to count innate mutations for
+        // the demonspawn, but not for other species.
+        int mutated = how_mutated(you.species == SP_DEMONSPAWN, true);
+        int multiplier = std::min(mutated * 5, 100);
+        if (you.is_chaotic() || player_is_shapechanged())
+            multiplier = 100; // full damage
+        else if (you.is_undead || is_chaotic_god(you.religion))
+            multiplier = std::max(multiplier, 33);
+
+        hurted = hurted * multiplier / 100;
+
+        if (doEffects)
+        {
+            if (hurted <= 0)
+                canned_msg(MSG_YOU_RESIST);
+            else if (multiplier > 50)
+                mpr("The blast sears you terribly!");
+            else
+                mpr("The blast sears you!");
+
+            if (one_chance_in(3)
+                // delete_mutation() handles MUT_MUTATION_RESISTANCE but not the amulet
+                && (!wearing_amulet(AMU_RESIST_MUTATION) || one_chance_in(10)))
+            {
+                delete_mutation(RANDOM_GOOD_MUTATION);
+            }
+        }
         break;
     }
 
@@ -281,15 +325,24 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         else if (you.species == SP_VAMPIRE)
             hurted += hurted / 2;
 
-        if (original && !hurted)
+        if (original && !hurted && doEffects)
             mpr("The beam of light passes harmlessly through you.");
-        else if (hurted > original)
+        else if (hurted > original && doEffects)
         {
             mpr("The light scorches you terribly!");
             xom_is_stimulated(200);
         }
         break;
 
+    case BEAM_AIR:
+    {
+        // Airstrike.
+        if (you.res_wind() > 0)
+            hurted = 0;
+        else if (you.flight_mode())
+            hurted += hurted / 2;
+        break;
+    }
     default:
         break;
     }                           // end switch
@@ -345,21 +398,24 @@ void splash_with_acid(int acid_strength, bool corrode_items,
 
 void weapon_acid(int acid_strength)
 {
-    int hand_thing = you.equip[EQ_WEAPON];
+    int hand_thing = -1;
+
+    if (!you.melded[EQ_WEAPON])
+        hand_thing = you.equip[EQ_WEAPON];
 
     if (hand_thing == -1 && !you.melded[EQ_GLOVES])
         hand_thing = you.equip[EQ_GLOVES];
 
     if (hand_thing == -1)
     {
-        msg::stream << "Your " << your_hand(true) << " burn!" << std::endl;
+        msg::stream << "Your " << you.hand_name(true) << " burn!" << std::endl;
         ouch(roll_dice(1, acid_strength), NON_MONSTER, KILLED_BY_ACID);
     }
     else if (x_chance_in_y(acid_strength + 1, 20))
         _item_corrode(hand_thing);
 }
 
-void _item_corrode(int slot)
+static void _item_corrode(int slot)
 {
     bool it_resists = false;
     bool suppress_msg = false;
@@ -373,13 +429,6 @@ void _item_corrode(int slot)
     if (wearing_amulet(AMU_RESIST_CORROSION) && !one_chance_in(10))
     {
         dprf("Amulet protects.");
-        return;
-    }
-
-    // mutations:
-    if (player_mutation_level(MUT_YELLOW_SCALES) == 3 && !one_chance_in(10))
-    {
-        dprf("Yellow scales protect.");
         return;
     }
 
@@ -402,7 +451,6 @@ void _item_corrode(int slot)
         break;
 
     case OBJ_WEAPONS:
-    case OBJ_MISSILES:
         if (get_equip_race(item) == ISFLAG_DWARVEN && !one_chance_in(5))
         {
             it_resists = true;
@@ -445,7 +493,7 @@ void _item_corrode(int slot)
     if (!it_resists)
     {
         how_rusty--;
-        xom_is_stimulated(64);
+        xom_is_stimulated(50);
 
         if (item.base_type == OBJ_WEAPONS)
             item.plus2 = how_rusty;
@@ -490,17 +538,6 @@ static int _get_target_class(beam_type flavour)
     }
 
     return (target_class);
-}
-
-static const char* _part_stack_string(const int num, const int total)
-{
-    if (num == total)
-        return "Your";
-
-    std::string ret  = uppercase_first(number_in_words(num));
-                ret += " of your";
-
-    return ret.c_str();
 }
 
 // XXX: These expose functions could use being reworked into a real system...
@@ -598,14 +635,14 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
                 {
                 case OBJ_SCROLLS:
                     mprf("%s %s catch%s fire!",
-                         _part_stack_string(num_dest, quantity),
+                         part_stack_string(num_dest, quantity).c_str(),
                          item_name.c_str(),
                          (num_dest == 1) ? "es" : "");
                     break;
 
                 case OBJ_POTIONS:
                     mprf("%s %s freeze%s and shatter%s!",
-                         _part_stack_string(num_dest, quantity),
+                         part_stack_string(num_dest, quantity).c_str(),
                          item_name.c_str(),
                          (num_dest == 1) ? "s" : "",
                          (num_dest == 1) ? "s" : "");
@@ -616,14 +653,14 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
                     if (flavour == BEAM_DEVOUR_FOOD)
                         break;
                     mprf("%s %s %s covered with spores!",
-                         _part_stack_string(num_dest, quantity),
+                         part_stack_string(num_dest, quantity).c_str(),
                          item_name.c_str(),
                          (num_dest == 1) ? "is" : "are");
                      break;
 
                 default:
                     mprf("%s %s %s destroyed!",
-                         _part_stack_string(num_dest, quantity),
+                         part_stack_string(num_dest, quantity).c_str(),
                          item_name.c_str(),
                          (num_dest == 1) ? "is" : "are");
                      break;
@@ -648,7 +685,7 @@ static bool _expose_invent_to_element(beam_type flavour, int strength)
     if (flavour == BEAM_DEVOUR_FOOD)
         return (true);
 
-    xom_is_stimulated((num_dest > 1) ? 32 : 16);
+    xom_is_stimulated((num_dest > 1) ? 25 : 12);
 
     return (true);
 }
@@ -719,7 +756,7 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
         }
     }
 
-    xom_is_stimulated((num_dest > 1) ? 32 : 16);
+    xom_is_stimulated((num_dest > 1) ? 25 : 12);
 
     return (true);
 }
@@ -734,11 +771,12 @@ bool expose_items_to_element(beam_type flavour, const coord_def& where,
 // This function now calls _expose_invent_to_element() if strength > 0.
 //
 // XXX: This function is far from perfect and a work in progress.
-bool expose_player_to_element(beam_type flavour, int strength)
+bool expose_player_to_element(beam_type flavour, int strength,
+                              bool damage_inventory)
 {
-    _maybe_melt_player_enchantments(flavour);
+    _maybe_melt_player_enchantments(flavour, strength ? strength : 10);
 
-    if (strength <= 0)
+    if (strength <= 0 || !damage_inventory)
         return (false);
 
     return (_expose_invent_to_element(flavour, strength));
@@ -755,19 +793,13 @@ void lose_level()
         return;
     }
 
-    you.experience = exp_needed(you.experience_level + 1) - 1;
     you.experience_level--;
 
     mprf(MSGCH_WARN,
          "You are now level %d!", you.experience_level);
 
-    // Constant value to avoid grape jelly trick... see level_change() for
-    // where these HPs and MPs are given back.  -- bwr
     ouch(4, NON_MONSTER, KILLED_BY_DRAINING);
-    dec_max_hp(4);
-
     dec_mp(1);
-    dec_max_mp(1);
 
     calc_hp();
     calc_mp();
@@ -777,10 +809,14 @@ void lose_level()
             you.hp, you.hp_max, you.magic_points, you.max_magic_points);
     take_note(Note(NOTE_XP_LEVEL_CHANGE, you.experience_level, 0, buf));
 
-    redraw_skill(you.your_name, player_title());
+    you.redraw_title = true;
     you.redraw_experience = true;
 
-    xom_is_stimulated(255);
+    xom_is_stimulated(200);
+
+    // Kill the player if maxhp <= 0.  We can't just move the ouch() call past
+    // dec_max_hp() since it would decrease hp twice, so here's another one.
+    ouch(0, NON_MONSTER, KILLED_BY_DRAINING);
 }
 
 bool drain_exp(bool announce_full)
@@ -810,9 +846,9 @@ bool drain_exp(bool announce_full)
         return (true);
     }
 
-    unsigned int total_exp = exp_needed(you.experience_level + 2)
-                                  - exp_needed(you.experience_level + 1);
-    unsigned int exp_drained = (total_exp * (10 + random2(11))) / 100;
+    unsigned int total_exp = exp_needed(you.experience_level + 1)
+                                  - exp_needed(you.experience_level);
+    unsigned int exp_drained = (total_exp * (5 + random2(11))) / 100;
     unsigned int pool_drained = std::min(exp_drained,
                                      (unsigned int)you.exp_available);
 
@@ -843,7 +879,7 @@ bool drain_exp(bool announce_full)
     if (exp_drained > 0)
     {
         mpr("You feel drained.");
-        xom_is_stimulated(20);
+        xom_is_stimulated(15);
         you.experience -= exp_drained;
         you.exp_available -= pool_drained;
 
@@ -852,10 +888,7 @@ bool drain_exp(bool announce_full)
         dprf("You lose %d experience points, %d from pool.",
              exp_drained, pool_drained);
 
-        you.redraw_experience = true;
-
-        if (you.experience < exp_needed(you.experience_level + 1))
-            lose_level();
+        level_change();
 
         return (true);
     }
@@ -876,7 +909,7 @@ static void _xom_checks_damage(kill_method_type death_type,
         {
             // Xom thinks the player accidentally hurting him/herself is funny.
             // Deliberate damage is only amusing if it's dangerous.
-            int amusement = 255 * dam / (dam + you.hp);
+            int amusement = 200 * dam / (dam + you.hp);
             if (death_type == KILLED_BY_SELF_AIMED)
                 amusement /= 5;
             xom_is_stimulated(amusement);
@@ -886,13 +919,13 @@ static void _xom_checks_damage(kill_method_type death_type,
                  || death_type == KILLED_BY_FALLING_THROUGH_GATE)
         {
             // Xom thinks falling down the stairs is hilarious.
-            xom_is_stimulated(255);
+            xom_is_stimulated(200);
             return;
         }
         else if (death_type == KILLED_BY_DISINT)
         {
             // flying chunks...
-            xom_is_stimulated(128);
+            xom_is_stimulated(100);
             return;
         }
         else if (death_type != KILLED_BY_MONSTER
@@ -912,7 +945,7 @@ static void _xom_checks_damage(kill_method_type death_type,
         if (mons->wont_attack())
         {
             // Xom thinks collateral damage is funny.
-            xom_is_stimulated(255 * dam / (dam + you.hp));
+            xom_is_stimulated(200 * dam / (dam + you.hp));
             return;
         }
 
@@ -926,17 +959,17 @@ static void _xom_checks_damage(kill_method_type death_type,
         amusementvalue += leveldif * leveldif * dam;
 
         if (!mons->visible_to(&you))
-            amusementvalue += 10;
-
-        if (mons->speed < 100/player_movement_speed())
             amusementvalue += 8;
 
+        if (mons->speed < 100/player_movement_speed())
+            amusementvalue += 7;
+
         if (death_type != KILLED_BY_BEAM
-            && you.skills[SK_THROWING] <= (you.experience_level / 4))
+            && you.skill(SK_THROWING) <= (you.experience_level / 4))
         {
             amusementvalue += 2;
         }
-        else if (you.skills[SK_FIGHTING] <= (you.experience_level / 4))
+        else if (you.skill(SK_FIGHTING) <= (you.experience_level / 4))
             amusementvalue += 2;
 
         if (player_in_a_dangerous_place())
@@ -952,6 +985,11 @@ static void _yred_mirrors_injury(int dam, int death_source)
 {
     if (yred_injury_mirror())
     {
+        // Cap damage to what was enough to kill you.  Can matter if
+        // Yred saves your life or you have an extra kitty.
+        if (you.hp < 0)
+            dam += you.hp;
+
         if (dam <= 0 || invalid_monster_index(death_source))
             return;
 
@@ -971,8 +1009,8 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
     monster_type mon = royal_jelly_ejectable_monster();
 
     // Exclude torment damage.
-    const char *ptr = strstr(aux, "torment");
-    if (you.religion == GOD_JIYVA && you.piety > 160 && ptr == NULL)
+    const bool torment = aux && strstr(aux, "torment");
+    if (you.religion == GOD_JIYVA && you.piety > 160 && !torment)
     {
         int how_many = 0;
         if (dam >= you.hp_max * 3 / 4)
@@ -1015,6 +1053,22 @@ static void _maybe_spawn_jellies(int dam, const char* aux,
     }
 }
 
+static void _pain_recover_mp(int dam)
+{
+    if (you.mutation[MUT_POWERED_BY_PAIN]
+        && (you.magic_points < you.max_magic_points))
+    {
+        if (random2(dam) > 2 + 3 * player_mutation_level(MUT_POWERED_BY_PAIN)
+            || dam >= you.hp_max / 2)
+        {
+            int gain_mp = roll_dice(3, 2 + 3 * player_mutation_level(MUT_POWERED_BY_PAIN));
+
+            mpr("You focus.");
+            inc_mp(gain_mp);
+        }
+    }
+}
+
 static void _place_player_corpse(bool explode)
 {
     if (!in_bounds(you.pos()))
@@ -1027,7 +1081,7 @@ static void _place_player_corpse(bool explode)
     if (explode && explode_corpse(corpse, you.pos()))
         return;
 
-    int o = get_item_slot();
+    int o = get_mitm_slot();
     if (o == NON_ITEM)
     {
         item_was_destroyed(corpse);
@@ -1035,6 +1089,12 @@ static void _place_player_corpse(bool explode)
     }
 
     corpse.props[MONSTER_HIT_DICE].get_short() = you.experience_level;
+    corpse.props[CORPSE_NAME_KEY] = you.your_name;
+    corpse.props[CORPSE_NAME_TYPE_KEY].get_int64() = 0;
+    corpse.props["ev"].get_int() = player_evasion(static_cast<ev_ignore_type>(
+                                   EV_IGNORE_HELPLESS | EV_IGNORE_PHASESHIFT));
+    // mostly mutations here.  At least there's no need to handle armour.
+    corpse.props["ac"].get_int() = you.armour_class();
     mitm[o] = corpse;
 
     move_item_to_grid(&o, you.pos(), !you.in_water());
@@ -1045,7 +1105,7 @@ static void _place_player_corpse(bool explode)
 static void _wizard_restore_life()
 {
     if (you.hp <= 0)
-        set_hp(you.hp_max, false);
+        set_hp(you.hp_max);
     for (int i = 0; i < NUM_STATS; ++i)
     {
         if (you.stat(static_cast<stat_type>(i)) <= 0)
@@ -1077,13 +1137,24 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
     if (dam != INSTANT_DEATH && you.species == SP_DEEP_DWARF)
     {
-        // Deep Dwarves get to shave _any_ hp loss.
+        // Deep Dwarves get to shave any hp loss.
         int shave = 1 + random2(2 + random2(1 + you.experience_level / 3));
         dprf("HP shaved: %d.", shave);
         dam -= shave;
         if (dam <= 0)
-            return;
+        {
+            // Rotting and costs may lower hp directly.
+            if (you.hp > 0)
+                return;
+            dam = 0;
+        }
     }
+
+    if (dam != INSTANT_DEATH)
+        if (you.petrified())
+            dam /= 3;
+        else if (you.petrifying())
+            dam = dam * 1000 / 1732;
 
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity(AI_HP_LOSS, &hpl);
@@ -1096,7 +1167,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         || death_type == KILLED_BY_LEAVING;
 
     if (you.duration[DUR_DEATHS_DOOR] && death_type != KILLED_BY_LAVA
-        && death_type != KILLED_BY_WATER && !non_death)
+        && death_type != KILLED_BY_WATER && !non_death && you.hp_max > 0)
     {
         return;
     }
@@ -1105,28 +1176,23 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     {
         if (player_spirit_shield() && death_type != KILLED_BY_POISON)
         {
-            if (dam <= you.magic_points)
-            {
-                dec_mp(dam);
+            // round off fairly (important for taking 1 damage at a time)
+            int mp = div_rand_round(dam * you.magic_points,
+                                    you.hp + you.magic_points);
+            // but don't kill the player with round-off errors
+            mp = std::max(mp, dam + 1 - you.hp);
+            mp = std::min(mp, you.magic_points);
+
+            dam -= mp;
+            dec_mp(mp);
+            if (dam <= 0)
                 return;
-            }
-            dam -= you.magic_points;
-            dec_mp(you.magic_points);
         }
 
-        if (dam >= you.hp)
+        if (dam >= you.hp && god_protects_from_harm())
         {
-            if (harm_protection_type hpt = god_protects_from_harm(you.religion))
-            {
-                simple_god_message(" protects you from harm!");
-
-                if (you.duration[DUR_PRAYER]
-                    && hpt == HPT_RELIABLE_PRAYING_PLUS_ANYTIME)
-                {
-                    lose_piety(21 + random2(20));
-                }
-                return;
-            }
+            simple_god_message(" protects you from harm!");
+            return;
         }
 
         you.turn_damage += dam;
@@ -1153,6 +1219,8 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                 dungeon_events.fire_event(DET_HP_WARNING);
             }
 
+            hints_healing_check();
+
             _xom_checks_damage(death_type, dam, death_source);
 
             // for note taking
@@ -1173,6 +1241,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
             _yred_mirrors_injury(dam, death_source);
             _maybe_spawn_jellies(dam, aux, death_type, death_source);
+            _pain_recover_mp(dam);
 
             return;
         } // else hp <= 0
@@ -1181,7 +1250,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     // Is the player being killed by a direct act of Xom?
     if (crawl_state.is_god_acting()
         && crawl_state.which_god_acting() == GOD_XOM
-        && crawl_state.other_gods_acting().size() == 0)
+        && crawl_state.other_gods_acting().empty())
     {
         you.escaped_death_cause = death_type;
         you.escaped_death_aux   = aux == NULL ? "" : aux;
@@ -1206,7 +1275,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         you.reset_escaped_death();
 
         // Ensure some minimal information about Xom's involvement.
-        if (aux == NULL || strlen(aux) == 0)
+        if (aux == NULL || !*aux)
         {
             if (death_type != KILLED_BY_XOM)
                 aux = "Xom";
@@ -1222,7 +1291,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     }
 
 #if defined(WIZARD) || defined(DEBUG)
-    if (you.never_die)
+    if (!non_death && crawl_state.disables[DIS_DEATH])
     {
         _wizard_restore_life();
         return;
@@ -1242,7 +1311,6 @@ void ouch(int dam, int death_source, kill_method_type death_type,
         {
             const std::string death_desc
                 = se.death_description(scorefile_entry::DDV_VERBOSE);
-#ifdef USE_OPTIONAL_WIZARD_DEATH
 
             dprf("Damage: %d; Hit points: %d", dam, you.hp);
 
@@ -1253,18 +1321,18 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                 _wizard_restore_life();
                 return;
             }
-#else  // !def USE_OPTIONAL_WIZARD_DEATH
-            mpr("Since you're a debugger, I'll let you live.");
-            mpr("Be more careful next time, okay?");
-
-            take_note(Note(NOTE_DEATH, you.hp, you.hp_max,
-                            death_desc.c_str()), true);
-            _wizard_restore_life();
-            return;
-#endif  // USE_OPTIONAL_WIZARD_DEATH
         }
     }
 #endif  // WIZARD
+
+    if (crawl_state.game_is_tutorial())
+    {
+        crawl_state.need_save = false;
+        if (!non_death)
+            tutorial_death_message();
+
+        screen_end_game("");
+    }
 
     // Okay, so you're dead.
     take_note(Note(NOTE_DEATH, you.hp, you.hp_max,
@@ -1272,11 +1340,18 @@ void ouch(int dam, int death_source, kill_method_type death_type,
               true);
     if (you.lives && !non_death)
     {
+        mark_milestone("death", lowercase_first(se.long_kill_message()).c_str());
+
         you.deaths++;
         you.lives--;
         you.dead = true;
 
         stop_delay(true);
+
+        mprnojoin("You die...");
+        xom_death_message((kill_method_type) se.get_death_type());
+        more();
+
         _place_player_corpse(death_type == KILLED_BY_DISINT);
         return;
     }
@@ -1284,6 +1359,10 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     // The game's over.
     crawl_state.need_save       = false;
     crawl_state.updating_scores = true;
+
+#if TAG_MAJOR_VERSION <= 33
+    note_montiers();
+#endif
 
     // Prevent bogus notes.
     activate_notes(false);
@@ -1306,14 +1385,11 @@ void ouch(int dam, int death_source, kill_method_type death_type,
     }
 #endif
 
-    end_game(se);
+    _end_game(se);
 }
 
-static std::string morgue_name(time_t when_crawl_got_even)
+static std::string _morgue_name(time_t when_crawl_got_even)
 {
-#ifdef SHORT_FILE_NAMES
-    return "morgue";
-#else  // !SHORT_FILE_NAMES
     std::string name = "morgue-" + you.your_name;
 
     std::string time = make_file_time(when_crawl_got_even);
@@ -1321,32 +1397,55 @@ static std::string morgue_name(time_t when_crawl_got_even)
         name += "-" + time;
 
     return (name);
-#endif // SHORT_FILE_NAMES
 }
 
 // Delete save files on game end.
-static void delete_files()
+static void _delete_files()
 {
     you.save->unlink();
     delete you.save;
     you.save = 0;
 }
 
-void end_game(scorefile_entry &se)
+void screen_end_game(std::string text)
+{
+    crawl_state.cancel_cmd_all();
+    _delete_files();
+
+    if (!text.empty())
+    {
+        clrscr();
+        linebreak_string(text, get_number_of_cols());
+        display_tagged_block(text);
+
+        if (!crawl_state.seen_hups)
+            get_ch();
+    }
+
+    game_ended();
+}
+
+void _end_game(scorefile_entry &se)
 {
     for (int i = 0; i < ENDOFPACK; i++)
-        if (item_type_unknown(you.inv[i]))
+        if (you.inv[i].defined() && item_type_unknown(you.inv[i]))
             add_inscription(you.inv[i], "unknown");
 
     for (int i = 0; i < ENDOFPACK; i++)
     {
+        if (!you.inv[i].defined())
+            continue;
         set_ident_flags(you.inv[i], ISFLAG_IDENT_MASK);
-
-        if (you.inv[i].base_type != 0)
-            set_ident_type(you.inv[i], ID_KNOWN_TYPE);
+        set_ident_type(you.inv[i], ID_KNOWN_TYPE);
+        if (Options.autoinscribe_artefacts && is_artefact(you.inv[i]))
+        {
+            std::string inscr = artefact_auto_inscription(you.inv[i]);
+            if (inscr != "")
+                add_autoinscription(you.inv[i], inscr);
+        }
     }
 
-    delete_files();
+    _delete_files();
 
     // death message
     if (se.get_death_type() != KILLED_BY_LEAVING
@@ -1368,8 +1467,10 @@ void end_game(scorefile_entry &se)
             break;
 
         case GOD_KIKUBAAQUDGHA:
-            if (you.is_undead
-                && you.attribute[ATTR_TRANSFORMATION] != TRAN_LICH)
+        {
+            const mon_holy_type holi = you.holiness();
+
+            if (holi == MH_NONLIVING || holi == MH_UNDEAD)
             {
                 simple_god_message(" rasps: \"You have failed me! "
                                    "Welcome... oblivion!\"");
@@ -1380,6 +1481,7 @@ void end_game(scorefile_entry &se)
                                    "Welcome... death!\"");
             }
             break;
+        }
 
         case GOD_YREDELEMNUL:
             if (you.is_undead)
@@ -1400,11 +1502,11 @@ void end_game(scorefile_entry &se)
         flush_prev_message();
         viewwindow(); // don't do for leaving/winning characters
 
-        if (Hints.hints_left)
+        if (crawl_state.game_is_hints())
             hints_death_screen();
     }
 
-    if (!dump_char(morgue_name(se.get_death_time()), false, true, &se))
+    if (!dump_char(_morgue_name(se.get_death_time()), false, true, &se))
     {
         mpr("Char dump unsuccessful! Sorry about that.");
         if (!crawl_state.seen_hups)
@@ -1439,14 +1541,23 @@ void end_game(scorefile_entry &se)
 
     cprintf("%s", hiscore.c_str());
 
-    cprintf("\nBest Crawlers -\n");
+    cprintf("\nBest Crawlers - %s\n",
+            crawl_state.game_type_name().c_str());
 
     // "- 5" gives us an extra line in case the description wraps on a line.
     hiscores_print_list(get_number_of_lines() - lines - 5);
 
+#ifndef DGAMELAUNCH
+    cprintf("\nYou can find your morgue file in the '%s' directory.",
+            morgue_directory().c_str());
+#endif
+
     // just to pause, actual value returned does not matter {dlb}
     if (!crawl_state.seen_hups)
         get_ch();
+
+    if (se.get_death_type() == KILLED_BY_WINNING)
+        crawl_state.last_game_won = true;
 
     game_ended();
 }

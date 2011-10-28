@@ -1,8 +1,7 @@
-/*
- *  File:       mutation.cc
- *  Summary:    Functions for handling player mutations.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions for handling player mutations.
+**/
 
 
 #ifndef MUTATION_H
@@ -21,6 +20,7 @@ struct body_facet_def
 
 struct facet_def
 {
+    int tier;
     mutation_type muts[3];
     int tiers[3];
 };
@@ -84,6 +84,7 @@ std::string mutation_name(mutation_type which_mutat, int level = -1,
                           bool colour = false);
 
 void roll_demonspawn_mutations();
+void adjust_racial_mutation(mutation_type mut, int diff);
 
 bool perma_mutate(mutation_type which_mut, int how_much);
 int how_mutated(bool all = false, bool levels = false);
@@ -91,5 +92,7 @@ int how_mutated(bool all = false, bool levels = false);
 void check_demonic_guardian();
 void check_antennae_detect();
 int handle_pbd_corpses(bool do_rot);
+equipment_type beastly_slot(int mut);
+bool physiology_mutation_conflict(mutation_type mutat);
 
 #endif

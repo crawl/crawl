@@ -1,10 +1,7 @@
-/*
- * File:    ghost.cc
- * Summary: Player ghost and random Pandemonium demon handling.
- *
- * Created for Dungeon Crawl Reference by dshaligram on
- * Thu Mar 15 20:10:20 2007 UTC.
- */
+/**
+ * @file
+ * @brief Player ghost and random Pandemonium demon handling.
+**/
 
 #include "AppHdr.h"
 
@@ -12,6 +9,7 @@
 
 #include "artefact.h"
 #include "colour.h"
+#include "database.h"
 #include "env.h"
 #include "externs.h"
 #include "itemname.h"
@@ -69,6 +67,7 @@ static spell_type search_order_conj[] = {
     SPELL_SANDBLAST,
     SPELL_MAGIC_DART,
     SPELL_HIBERNATION,
+    SPELL_FLAME_TONGUE,
     SPELL_CORONA,
     SPELL_NO_SPELL,                        // end search
 };
@@ -79,12 +78,16 @@ static spell_type search_order_third[] = {
     SPELL_SYMBOL_OF_TORMENT,
     SPELL_SUMMON_GREATER_DEMON,
     SPELL_SUMMON_HORRIBLE_THINGS,
+    SPELL_SUMMON_DRAGON,
+    SPELL_TUKIMAS_BALL,
     SPELL_HAUNT,
+    SPELL_SUMMON_HYDRA,
     SPELL_SUMMON_DEMON,
     SPELL_DEMONIC_HORDE,
     SPELL_HASTE,
     SPELL_SILENCE,
     SPELL_SUMMON_BUTTERFLIES,
+    SPELL_SUMMON_ELEMENTAL,
     SPELL_SUMMON_SWARM,
     SPELL_SUMMON_UGLY_THING,
     SPELL_SWIFTNESS,
@@ -112,6 +115,7 @@ static spell_type search_order_misc[] = {
     SPELL_CONFUSE,
     SPELL_MEPHITIC_CLOUD,
     SPELL_SLOW,
+    SPELL_PETRIFY,
     SPELL_POLYMORPH_OTHER,
     SPELL_TELEPORT_OTHER,
     SPELL_EVAPORATE, // replaced with Mephitic Cloud, though at lower priority
@@ -154,7 +158,8 @@ void ghost_demon::reset()
 
 void ghost_demon::init_random_demon()
 {
-    name = make_name(random_int(), false);
+    do name = make_name(random_int(), false);
+        while (!getLongDescription(name).empty());
 
     // hp - could be defined below (as could ev, AC, etc.). Oh well, too late:
     max_hp = 100 + roll_dice(3, 50);
@@ -162,13 +167,17 @@ void ghost_demon::init_random_demon()
     ev = 5 + random2(20);
     ac = 5 + random2(20);
 
+    // Is demon a spellcaster?
+    // Non-spellcasters get some boosts to their melee and speed instead.
+    spellcaster = !one_chance_in(10);
+
     see_invis = !one_chance_in(10);
 
     if (!one_chance_in(3))
         resists.fire = random_range(1, 2);
     else
     {
-        resists.fire = 0; // res_fire
+        resists.fire = 0;
 
         if (one_chance_in(10))
             resists.fire = -1;
@@ -179,6 +188,7 @@ void ghost_demon::init_random_demon()
     else
     {
         resists.cold = 0;
+
         if (one_chance_in(10))
             resists.cold = -1;
     }
@@ -194,7 +204,7 @@ void ghost_demon::init_random_demon()
     // special attack type (uses weapon brand code):
     brand = SPWPN_NORMAL;
 
-    if (!one_chance_in(3))
+    if (!one_chance_in(3) || !spellcaster)
     {
         do
         {
@@ -202,19 +212,15 @@ void ghost_demon::init_random_demon()
             // some brands inappropriate (e.g. holy wrath)
         }
         while (brand == SPWPN_HOLY_WRATH
-               || (brand == SPWPN_ORC_SLAYING
-                   && mons_genus(you.mons_species()) != MONS_ORC)
-               || (brand == SPWPN_DRAGON_SLAYING
-                   && mons_genus(you.mons_species()) != MONS_DRACONIAN)
+               || brand == SPWPN_ORC_SLAYING
+               || brand == SPWPN_DRAGON_SLAYING
                || brand == SPWPN_PROTECTION
+               || brand == SPWPN_EVASION
                || brand == SPWPN_FLAME
-               || brand == SPWPN_FROST);
+               || brand == SPWPN_FROST
+               || brand == SPWPN_RETURNING
+               || brand == SPWPN_REACHING);
     }
-
-    // Is demon a spellcaster?
-    // Upped from one_chance_in(3)... spellcasters are more interesting
-    // and I expect named demons to typically have a trick or two. - bwr
-    spellcaster = !one_chance_in(10);
 
     // Does demon fly?
     fly = (one_chance_in(3) ? FL_NONE :
@@ -244,7 +250,11 @@ void ghost_demon::init_random_demon()
             spells[1] = RANDOM_ELEMENT(search_order_conj);
 
         if (!one_chance_in(4))
+        {
             spells[2] = RANDOM_ELEMENT(search_order_third);
+            if (spells[2] == SPELL_TUKIMAS_BALL)
+                spells[2] = SPELL_NO_SPELL;
+        }
 
         if (coinflip())
         {
@@ -262,8 +272,13 @@ void ghost_demon::init_random_demon()
             spells[5] = SPELL_TELEPORT_SELF;
 
         // Convert the player spell indices to monster spell ones.
+        // Pan lords also get their Agony upgraded to Torment.
         for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        {
             spells[i] = translate_spell(spells[i]);
+            if (spells[i] == SPELL_AGONY)
+                spells[i] = SPELL_SYMBOL_OF_TORMENT;
+        }
 
         // Give demon a chance for some monster-only spells.
         // Demon-summoning should be fairly common.
@@ -291,6 +306,10 @@ void ghost_demon::init_random_demon()
             spells[2] = SPELL_SMITING;
         if (one_chance_in(25))
             spells[2] = SPELL_HELLFIRE_BURST;
+        if (one_chance_in(22))
+            spells[2] = SPELL_SUMMON_HYDRA;
+        if (one_chance_in(20))
+            spells[2] = SPELL_SUMMON_DRAGON;
         if (one_chance_in(12))
             spells[2] = SPELL_SUMMON_GREATER_DEMON;
         if (one_chance_in(12))
@@ -409,7 +428,7 @@ void ghost_demon::init_player_ghost()
     if (!is_good_god(you.religion))
         religion = you.religion;
 
-    best_skill = ::best_skill(SK_FIGHTING, (NUM_SKILLS - 1));
+    best_skill = ::best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     best_skill_level = you.skills[best_skill];
     xl = you.experience_level;
 
@@ -459,11 +478,12 @@ static mon_attack_flavour _very_ugly_thing_flavour_upgrade(mon_attack_flavour u_
 
     return (u_att_flav);
 }
-mon_attack_flavour ugly_thing_colour_to_flavour(uint8_t u_colour)
+
+static mon_attack_flavour _ugly_thing_colour_to_flavour(uint8_t u_colour)
 {
     mon_attack_flavour u_att_flav = AF_PLAIN;
 
-    switch (u_colour & 7)
+    switch (make_low_colour(u_colour))
     {
     case RED:
         u_att_flav = AF_FIRE;
@@ -493,8 +513,9 @@ mon_attack_flavour ugly_thing_colour_to_flavour(uint8_t u_colour)
         break;
     }
 
-    if (u_colour & 8)
+    if (is_high_colour(u_colour))
         u_att_flav = _very_ugly_thing_flavour_upgrade(u_att_flav);
+
     return (u_att_flav);
 }
 
@@ -540,7 +561,7 @@ void ghost_demon::init_ugly_thing(bool very_ugly, bool only_mutate,
                                                    : BLACK);
 
     // Pick a compatible attack flavour for this colour.
-    att_flav = ugly_thing_colour_to_flavour(colour);
+    att_flav = _ugly_thing_colour_to_flavour(colour);
 
     // Pick a compatible resistance for this attack flavour.
     ugly_thing_add_resistance(false, att_flav);
@@ -576,7 +597,7 @@ void ghost_demon::ugly_thing_to_very_ugly_thing()
     ugly_thing_add_resistance(true, att_flav);
 }
 
-mon_resist_def ugly_thing_resists(bool very_ugly, mon_attack_flavour u_att_flav)
+static mon_resist_def _ugly_thing_resists(bool very_ugly, mon_attack_flavour u_att_flav)
 {
     mon_resist_def resists;
     resists.elec = 0;
@@ -626,7 +647,7 @@ mon_resist_def ugly_thing_resists(bool very_ugly, mon_attack_flavour u_att_flav)
 void ghost_demon::ugly_thing_add_resistance(bool very_ugly,
                                             mon_attack_flavour u_att_flav)
 {
-    resists = ::ugly_thing_resists(very_ugly, u_att_flav);
+    resists = _ugly_thing_resists(very_ugly, u_att_flav);
 }
 
 void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
@@ -652,7 +673,6 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
 
     // Giant spiked club: speed 12, 44+22 damage, 35 AC, 70 HP, 16 EV
     // Bardiche:          speed 10, 40+20 damage, 20 AC, 40 HP, 15 EV
-    // Katana:            speed 17, 26+13 damage, 16 AC, 32 HP, 18 EV
     // Dagger:            speed 20,  8+ 4 damage,  2 AC,  4 HP, 20 EV
     // Quick blade:       speed 23, 10+ 5 damage,  5 AC, 10 HP, 22 EV
     // Sabre:             speed 18, 14+ 7 damage,  9 AC, 18 HP, 19 EV
@@ -680,7 +700,6 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
 
     // Giant spiked club: speed 7,  22+22 damage, 17 AC, 35 HP, 11 EV
     // Bardiche:          speed 5,  20+20 damage, 10 AC, 20 HP, 10 EV
-    // Katana:            speed 12, 13+13 damage,  8 AC, 16 HP, 13 EV
     // Dagger:            speed 15,  4+4  damage,  1 AC,  5 HP, 15 EV
     // Quick blade:       speed 18,  5+5  damage,  2 AC,  5 HP, 17 EV
     // Sabre:             speed 13,  7+7  damage,  4 AC,  9 HP, 14 EV
@@ -689,7 +708,6 @@ void ghost_demon::init_dancing_weapon(const item_def& weapon, int power)
 
     // Giant spiked club: speed 5, 11+22 damage, 8 AC, 17 HP,  9 EV
     // Bardiche:          speed 3, 10+20 damage, 5 AC, 10 HP,  8 EV
-    // Katana:            speed 10, 6+13 damage, 4 AC,  8 HP, 11 EV
     // Dagger:            speed 13, 2+4  damage, 0 AC,  5 HP, 13 EV
     // Quick blade:       speed 16, 2+5  damage, 1 AC,  5 HP, 15 EV
     // Sabre:             speed 11, 3+7  damage, 2 AC,  5 HP, 12 EV
@@ -789,6 +807,16 @@ void ghost_demon::add_spells()
 
     for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
         spells[i] = translate_spell(spells[i]);
+
+    spellcaster = has_spells();
+}
+
+bool ghost_demon::has_spells() const
+{
+    for (int i = 0; i < NUM_MONSTER_SPELL_SLOTS; ++i)
+        if (spells[i] != SPELL_NO_SPELL)
+            return true;
+    return false;
 }
 
 // When passed the number for a player spell, returns the equivalent
@@ -801,16 +829,12 @@ spell_type ghost_demon::translate_spell(spell_type spel) const
         return (SPELL_BLINK);        // approximate
     case SPELL_DEMONIC_HORDE:
         return (SPELL_CALL_IMP);
-    case SPELL_AGONY:
-    case SPELL_SYMBOL_OF_TORMENT:
-        // Too powerful to give ghosts Torment for Agony?  Nah.
-        return (SPELL_SYMBOL_OF_TORMENT);
     case SPELL_DELAYED_FIREBALL:
         return (SPELL_FIREBALL);
-    case SPELL_PETRIFY:
-        return (SPELL_PARALYSE);
     case SPELL_EVAPORATE:
         return (SPELL_MEPHITIC_CLOUD);
+    case SPELL_STICKY_FLAME:
+        return (SPELL_STICKY_FLAME_RANGE);
     default:
         break;
     }
@@ -903,7 +927,6 @@ int ghost_demon::n_extra_ghosts()
         // areas at this depth, such as portal vaults.
         if (subdepth < 9 && you.where_are_you == BRANCH_MAIN_DUNGEON
             || subdepth < 2 && you.where_are_you == BRANCH_LAIR
-            || subdepth < 3 && you.where_are_you == BRANCH_DWARF_HALL
             || subdepth < 2 && you.where_are_you == BRANCH_ORCISH_MINES)
         {
             return (0);
@@ -965,7 +988,9 @@ bool debug_check_ghosts()
         // Name validation.
         if (!validate_player_name(ghost.name, false))
             return (false);
-        if (ghost.name.length() > (kNameLen - 1) || ghost.name.length() == 0)
+        // Many combining characters can come per every letter, but if there's
+        // that much, it's probably a maliciously forged ghost of some kind.
+        if (ghost.name.length() > kNameLen * 10 || ghost.name.empty())
             return (false);
         if (ghost.name != trimmed_string(ghost.name))
             return (false);
@@ -976,4 +1001,170 @@ bool debug_check_ghosts()
                 return (false);
     }
     return (true);
+}
+
+int ghost_level_to_rank(const int xl)
+{
+    if (xl <  4) return 0;
+    if (xl <  7) return 1;
+    if (xl < 11) return 2;
+    if (xl < 16) return 3;
+    if (xl < 22) return 4;
+    if (xl < 26) return 5;
+    if (xl < 27) return 6;
+    return 7;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Laboratory rats!
+
+std::string adjective_for_labrat_colour (uint8_t l_colour)
+{
+    switch (l_colour)
+    {
+    case CYAN:           return ("armoured");
+    case YELLOW:         return ("beastly");
+    case RED:            return ("fiery");
+    case LIGHTCYAN:      return ("gaseous");
+    case LIGHTRED:       return ("parasitic");
+    case LIGHTBLUE:      return ("airborne");
+    case LIGHTMAGENTA:   return ("mutated");
+    case MAGENTA:        return ("shifting");
+    case GREEN:          return ("venomous");
+    case LIGHTGRAY:      return ("");
+    default:
+        die("invalid labrat adjective");
+        break;
+    }
+
+    return ("");
+}
+
+#ifdef USE_TILE
+int tile_offset_for_labrat_colour (uint8_t l_colour)
+{
+    switch (l_colour)
+    {
+    case LIGHTGRAY:      return (0);
+    case CYAN:           return (1);
+    case YELLOW:         return (2);
+    case RED:            return (3);
+    case LIGHTCYAN:      return (4);
+    case LIGHTRED:       return (5);
+    case LIGHTBLUE:      return (6);
+    case LIGHTMAGENTA:   return (7);
+    case MAGENTA:        return (8);
+    case GREEN:          return (9);
+    default:
+        return (0);
+    }
+}
+#endif
+
+uint8_t colour_for_labrat_adjective (std::string adjective)
+{
+    if (adjective == "armoured")    return CYAN;
+    if (adjective == "beastly")     return YELLOW;
+    if (adjective == "fiery")       return RED;
+    if (adjective == "gaseous")     return LIGHTCYAN;
+    if (adjective == "parasitic")   return LIGHTRED;
+    if (adjective == "airborne")    return LIGHTBLUE;
+    if (adjective == "mutated")     return LIGHTMAGENTA;
+    if (adjective == "shifting")    return MAGENTA;
+    if (adjective == "venomous")    return GREEN;
+    if (adjective == "plain")       return LIGHTGRAY;
+
+    return BLACK;
+}
+
+static const uint8_t labrat_colour_values[] = {
+    CYAN, YELLOW, RED, LIGHTCYAN, LIGHTRED, LIGHTBLUE, LIGHTMAGENTA, MAGENTA, GREEN
+};
+
+static uint8_t _labrat_random_colour()
+{
+    return (RANDOM_ELEMENT(labrat_colour_values));
+}
+
+void ghost_demon::init_labrat (uint8_t force_colour)
+{
+    // Base init for "plain" laboratory rats. Kept in line with mon-data.h.
+    xl = 5;
+    max_hp = hit_points(xl, 3, 5);
+    ac = 5;
+    ev = 5;
+    speed = 12;
+    colour = force_colour;
+    damage = 9 + random2(3);
+
+    if (colour == BLACK)
+        colour = _labrat_random_colour();
+
+    spells.init(SPELL_NO_SPELL);
+
+    resists.elec = 0;
+    resists.poison = 0;
+    resists.fire = 0;
+    resists.sticky_flame = false;
+    resists.cold = 0;
+    resists.acid = 0;
+    resists.rotting = false;
+
+    switch (colour)
+    {
+    case CYAN: // armoured
+        ac = 20;
+        speed = 9;
+        break;
+    case YELLOW: // beastly
+        xl = 4 + random2(4);
+        ac = 2 + random2(5);
+        ev = 7 + random2(5);
+        speed = 10 + random2(8);
+        break;
+    case RED: // fiery
+        att_flav = AF_FIRE;
+        spells[0] = SPELL_FIRE_BREATH;
+        spellcaster = true;
+        resists.fire = 3;
+        resists.sticky_flame = true;
+        break;
+    case LIGHTCYAN: // gaseous
+        spells[0] = SPELL_MEPHITIC_CLOUD;
+        spellcaster = true;
+        resists.poison = 1; // otherwise it'll confuse itself
+        break;
+    case LIGHTRED: // leeching
+        att_flav = AF_VAMPIRIC;
+        break;
+    case LIGHTBLUE: // floating
+        fly = FL_LEVITATE;
+        spells[0] = SPELL_SHOCK;
+        spellcaster = true;
+        resists.elec = 1;
+        speed = 15;
+        ev = 15;
+        break;
+    case LIGHTMAGENTA: // mutated
+    {
+        att_flav = AF_MUTATE;
+        const mon_attack_type possibles[] = { AT_CLAW, AT_PECK,
+                AT_TENTACLE_SLAP, AT_TRUNK_SLAP, AT_SNAP, AT_SPLASH };
+        att_type = RANDOM_ELEMENT(possibles);
+        break;
+    }
+    case MAGENTA:
+        spells[0] = spells[1] = spells[2] = spells[3] =
+            spells[4] = spells[5] = SPELL_BLINK;
+        spellcaster = true;
+        break;
+    case GREEN:
+        att_flav = AF_POISON;
+        resists.poison = 3;
+        break;
+    case LIGHTGRAY:
+        break;
+    default:
+        break;
+    }
 }

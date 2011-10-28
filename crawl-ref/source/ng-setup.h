@@ -1,7 +1,7 @@
-/*
- *  File:       ng-setup.h
- *  Summary:    Setup "you" for a new game.
- */
+/**
+ * @file
+ * @brief Setup "you" for a new game.
+**/
 
 #ifndef NG_SETUP_H
 #define NG_SETUP_H
@@ -20,5 +20,4 @@ void newgame_give_item(object_class_type base, int sub_type,
 struct newgame_def;
 void setup_game(const newgame_def& ng);
 void unfocus_stats();
-
 #endif

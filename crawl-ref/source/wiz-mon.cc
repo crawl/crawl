@@ -1,14 +1,15 @@
-/*
- *  File:       dbg-mon.cc
- *  Summary:    Monster related debugging functions.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Monster related debugging functions.
+**/
 
 #include "AppHdr.h"
 
 #include "wiz-mon.h"
 
+#include "abyss.h"
 #include "areas.h"
+#include "artefact.h"
 #include "cio.h"
 #include "colour.h"
 #include "coord.h"
@@ -39,16 +40,16 @@
 #include "showsymb.h"
 #include "spl-miscast.h"
 #include "spl-util.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "view.h"
 #include "viewmap.h"
+#include "wiz-dgn.h"
 
 #ifdef WIZARD
 // Creates a specific monster by mon type number.
 void wizard_create_spec_monster(void)
 {
-    int mon = debug_prompt_for_int("Which monster by number? ", true);
+    int mon = prompt_for_int("Which monster by number? ", true);
 
     if (mon == -1 || (mon >= NUM_MONSTERS
                       && mon != RANDOM_MONSTER
@@ -67,12 +68,107 @@ void wizard_create_spec_monster(void)
     }
 }
 
+static int _make_mimic_item(object_class_type type)
+{
+    int it = items(0, OBJ_RANDOM, OBJ_RANDOM, true, 0, 0);
+
+    if (it == NON_ITEM)
+        return NON_ITEM;
+
+    item_def &item = mitm[it];
+
+    item.base_type = type;
+    item.sub_type  = 0;
+    item.special   = 0;
+    item.colour    = 0;
+    item.flags     = 0;
+    item.quantity  = 1;
+    item.plus      = 0;
+    item.plus2     = 0;
+    item.link      = NON_ITEM;
+
+    int prop;
+    switch (type)
+    {
+    case OBJ_WEAPONS:
+        do
+            item.sub_type = random2(NUM_WEAPONS);
+        while (is_blessed(item));
+
+        prop = random2(100);
+
+        if (prop < 20)
+            make_item_randart(item);
+        else if (prop < 50)
+            set_equip_desc(item, ISFLAG_GLOWING);
+        else if (prop < 80)
+            set_equip_desc(item, ISFLAG_RUNED);
+        else if (prop < 85)
+            set_equip_race(item, ISFLAG_ORCISH);
+        else if (prop < 90)
+            set_equip_race(item, ISFLAG_DWARVEN);
+        else if (prop < 95)
+            set_equip_race(item, ISFLAG_ELVEN);
+        break;
+
+    case OBJ_ARMOUR:
+        do
+            item.sub_type = random2(NUM_ARMOURS);
+        while (armour_is_hide(item));
+
+        prop = random2(100);
+
+        if (prop < 20)
+            make_item_randart(item);
+        else if (prop < 40)
+            set_equip_desc(item, ISFLAG_GLOWING);
+        else if (prop < 60)
+            set_equip_desc(item, ISFLAG_RUNED);
+        else if (prop < 80)
+            set_equip_desc(item, ISFLAG_EMBROIDERED_SHINY);
+        else if (prop < 85)
+            set_equip_race(item, ISFLAG_ORCISH);
+        else if (prop < 90)
+            set_equip_race(item, ISFLAG_DWARVEN);
+        else if (prop < 95)
+            set_equip_race(item, ISFLAG_ELVEN);
+        break;
+
+    case OBJ_SCROLLS:
+        item.sub_type = random2(NUM_SCROLLS);
+        break;
+
+    case OBJ_POTIONS:
+        do
+            item.sub_type = random2(NUM_POTIONS);
+        while (is_blood_potion(item) || is_fizzing_potion(item));
+        break;
+
+    case OBJ_BOOKS:
+        item.sub_type = random2(MAX_NORMAL_BOOK);
+        break;
+
+    case OBJ_STAVES:
+        item.sub_type = random2(STAFF_FIRST_ROD - 1);
+        break;
+
+    case OBJ_GOLD:
+    default:
+        item.quantity = 5 + random2(1000);
+        break;
+    }
+
+    item_colour(item); // also sets special vals for scrolls/potions
+
+    return (it);
+}
+
 // Creates a specific monster by name. Uses the same patterns as
 // map definitions.
 void wizard_create_spec_monster_name()
 {
     char specs[100];
-    mpr("Which monster by name? ", MSGCH_PROMPT);
+    mpr("Enter monster name (or MONS spec): ", MSGCH_PROMPT);
     if (cancelable_get_line_autohist(specs, sizeof specs) || !*specs)
     {
         canned_msg(MSG_OK);
@@ -123,6 +219,32 @@ void wizard_create_spec_monster_name()
     if (!in_bounds(place))
     {
         mpr("Found no space to place monster.", MSGCH_DIAGNOSTICS);
+        return;
+    }
+
+    if (mons_is_feat_mimic(type))
+    {
+        if (wizard_create_feature(place))
+            env.level_map_mask(place) |= MMT_MIMIC;
+        return;
+    }
+
+    if (mons_is_item_mimic(type))
+    {
+        object_class_type item_type = get_item_mimic_type();
+        if (item_type == OBJ_UNASSIGNED)
+        {
+            canned_msg(MSG_OK);
+            return;
+        }
+        int it = _make_mimic_item(item_type);
+        if (it == NON_ITEM)
+        {
+            mpr("Cannot create item.", MSGCH_DIAGNOSTICS);
+            return;
+        }
+        move_item_to_grid(&it, place);
+        mitm[it].flags |= ISFLAG_MIMIC;
         return;
     }
 
@@ -351,7 +473,7 @@ void wizard_spawn_control()
         if (!cancelable_get_line(specs, sizeof(specs)))
         {
             const int rate = atoi(specs);
-            if (rate)
+            if (rate || specs[0] == '0')
             {
                 env.spawn_random_rate = rate;
                 done = true;
@@ -455,7 +577,7 @@ void debug_stethoscope(int mon)
     // Print stats and other info.
     mprf(MSGCH_DIAGNOSTICS,
          "HD=%d (%u) HP=%d/%d AC=%d(%d) EV=%d MR=%d SP=%d "
-         "energy=%d%s%s num=%d flags=%04"PRIx64,
+         "energy=%d%s%s mid=%u num=%d stealth=%d flags=%04"PRIx64,
          mons.hit_dice,
          mons.experience,
          mons.hit_points, mons.max_hit_points,
@@ -466,13 +588,22 @@ void debug_stethoscope(int mon)
          mons.base_monster != MONS_NO_MONSTER ? " base=" : "",
          mons.base_monster != MONS_NO_MONSTER ?
          get_monster_data(mons.base_monster)->name : "",
-         mons.number, mons.flags);
+         mons.mid, mons.number, mons.stealth(), mons.flags);
+
+    if (mons.damage_total)
+    {
+        mprf(MSGCH_DIAGNOSTICS,
+             "pdam=%1.1f/%d (%d%%)",
+             0.5 * mons.damage_friendly, mons.damage_total,
+             50 * mons.damage_friendly / mons.damage_total);
+    }
 
     // Print habitat and behaviour information.
     const habitat_type hab = mons_habitat(&mons);
 
     mprf(MSGCH_DIAGNOSTICS,
-         "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d) god=%s",
+         "hab=%s beh=%s(%d) foe=%s(%d) mem=%d target=(%d,%d) "
+         "firing_pos=(%d,%d) god=%s",
          ((hab == HT_LAND)                       ? "land" :
           (hab == HT_AMPHIBIOUS)                 ? "amphibious" :
           (hab == HT_WATER)                      ? "water" :
@@ -483,6 +614,7 @@ void debug_stethoscope(int mon)
           mons_is_wandering(&mons)       ? "wander" :
           mons_is_seeking(&mons)         ? "seek" :
           mons_is_fleeing(&mons)         ? "flee" :
+          mons_is_retreating(&mons)      ? "retreat" :
           mons_is_cornered(&mons)        ? "cornered" :
           mons_is_panicking(&mons)       ? "panic" :
           mons_is_lurking(&mons)         ? "lurk"
@@ -495,6 +627,7 @@ void debug_stethoscope(int mon)
          mons.foe,
          mons.foe_memory,
          mons.target.x, mons.target.y,
+         mons.firing_pos.x, mons.firing_pos.y,
          god_name(mons.god).c_str());
 
     // Print resistances.
@@ -593,7 +726,7 @@ void debug_make_monster_shout(monster* mon)
         return;
     }
 
-    int num_times = debug_prompt_for_int("How many times? ", false);
+    int num_times = prompt_for_int("How many times? ", false);
 
     if (num_times <= 0)
     {
@@ -609,7 +742,7 @@ void debug_make_monster_shout(monster* mon)
             mpr("The monster is silenced and likely won't give any shouts.");
 
         for (int i = 0; i < num_times; ++i)
-            force_monster_shout(mon);
+            handle_monster_shouts(mon, true);
     }
     else
     {
@@ -692,6 +825,7 @@ void wizard_give_monster_item(monster* mon)
     switch (item.base_type)
     {
     case OBJ_WEAPONS:
+    case OBJ_STAVES:
         // Let wizard specify which slot to put weapon into via
         // inscriptions.
         if (item.inscription.find("first") != std::string::npos
@@ -814,7 +948,7 @@ void wizard_give_monster_item(monster* mon)
         }
     }
 
-    int index = get_item_slot(10);
+    int index = get_mitm_slot(10);
     if (index == NON_ITEM)
     {
         mpr("Too many items on level, bailing.");
@@ -889,6 +1023,9 @@ static void _move_player(const coord_def& where)
     if (!you.can_pass_through_feat(grd(where)))
         grd(where) = DNGN_FLOOR;
     move_player_to_grid(where, false, true);
+    // If necessary, update the Abyss.
+    if (you.level_type == LEVEL_ABYSS)
+        maybe_shift_abyss_around_player();
 }
 
 static void _move_monster(const coord_def& where, int mid1)
@@ -962,7 +1099,7 @@ void wizard_make_monster_summoned(monster* mon)
         return;
     }
 
-    int dur = debug_prompt_for_int("What summon longevity (1 to 6)? ", true);
+    int dur = prompt_for_int("What summon longevity (1 to 6)? ", true);
 
     if (dur < 1 || dur > 6)
     {
@@ -1021,7 +1158,7 @@ void wizard_make_monster_summoned(monster* mon)
         }
 
         default:
-            DEBUGSTR("Invalid summon type choice.");
+            die("Invalid summon type choice.");
             break;
     }
 
@@ -1110,7 +1247,7 @@ void debug_pathfind(int mid)
             path_str += info;
         }
         mpr(path_str.c_str());
-        mprf("-> path length: %d", path.size());
+        mprf("-> path length: %u", (unsigned int)path.size());
 
         mpr("");
         path = mp.calc_waypoints();
@@ -1123,7 +1260,7 @@ void debug_pathfind(int mid)
             path_str += info;
         }
         mpr(path_str.c_str());
-        mprf("-> #waypoints: %d", path.size());
+        mprf("-> #waypoints: %u", (unsigned int)path.size());
     }
 }
 
@@ -1262,7 +1399,7 @@ void debug_miscast(int target_index)
 
     // Handle repeats ourselves since miscasts are likely to interrupt
     // command repetions, especially if the player is the target.
-    int repeats = debug_prompt_for_int("Number of repetitions? ", true);
+    int repeats = prompt_for_int("Number of repetitions? ", true);
     if (repeats < 1)
     {
         canned_msg(MSG_OK);
@@ -1321,6 +1458,7 @@ void debug_miscast(int target_index)
     delete miscast;
 }
 
+#ifdef DEBUG_BONES
 void debug_ghosts()
 {
     mpr("(C)reate or (L)oad bones file?", MSGCH_PROMPT);
@@ -1333,5 +1471,6 @@ void debug_ghosts()
     else
         canned_msg(MSG_OK);
 }
+#endif
 
 #endif

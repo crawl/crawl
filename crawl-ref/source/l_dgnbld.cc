@@ -1,22 +1,23 @@
-/*
- * File:       l_dgnbld.cc
- * Summary:    Building routines (library "dgn").
- */
+/**
+ * @file
+ * @brief Building routines (library "dgn").
+**/
 
 #include "AppHdr.h"
 
 #include <cmath>
 
+#include "dungeon.h"
+#include "dgn-delve.h"
+#include "dgn-shoals.h"
+#include "dgn-swamp.h"
+#include "dgn-layouts.h"
 #include "cluautil.h"
 #include "coord.h"
 #include "coordit.h"
-#include "dungeon.h"
 #include "l_libs.h"
 #include "mapdef.h"
 #include "random.h"
-
-static const char *traversable_glyphs =
-    ".+=w@{}()[]<>BC^~TUVY$%*|Odefghijk0123456789";
 
 static const char *exit_glyphs = "{}()[]<>@";
 
@@ -103,6 +104,9 @@ static bool _table_bool(lua_State *ls, int idx, const char *name, bool defval)
 #define TABLE_STR(ls, val, def) const char *val = _table_str(ls, -1, #val, def);
 #define TABLE_BOOL(ls, val, def) bool val = _table_bool(ls, -1, #val, def);
 
+#define ARG_INT(ls, num, val, def) int val = lua_isnone(ls, num) ? \
+                                             def : lua_tointeger(ls, num)
+
 // Read a set of box coords (x1, y1, x2, y2) from the table.
 // Return true if coords are valid.
 static bool _coords(lua_State *ls, map_lines &lines,
@@ -144,7 +148,7 @@ static bool _valid_coord(lua_State *ls, map_lines &lines, int x, int y, bool err
 
 // Does what fill_area did, but here, so that it can be used through
 // multiple functions (including make_box).
-static int _fill_area (lua_State *ls, map_lines &lines, int x1, int y1, int x2, int y2, char fill)
+static int _fill_area(lua_State *ls, map_lines &lines, int x1, int y1, int x2, int y2, char fill)
 {
     for (int y = y1; y <= y2; ++y)
         for (int x = x1; x <= x2; ++x)
@@ -153,6 +157,14 @@ static int _fill_area (lua_State *ls, map_lines &lines, int x1, int y1, int x2, 
         }
 
     return (0);
+}
+
+static void _border_area(map_lines &lines, int x1, int y1, int x2, int y2, char border)
+{
+    for (int x = x1 + 1; x < x2; ++x)
+        lines(x, y1) = border, lines(x, y2) = border;
+    for (int y = y1; y <= y2; ++y)
+        lines(x1, y) = border, lines(x2, y) = border;
 }
 
 // Specifically only deals with horizontal lines.
@@ -168,7 +180,7 @@ static std::vector<coord_def> _box_side (int x1, int y1, int x2, int y2, int sid
     case 1: start_x = x2; start_y = y1; stop_x = x2; stop_y = y2; break;
     case 2: start_x = x1; start_y = y2; stop_x = x2; stop_y = y2; break;
     case 3: start_x = x1; start_y = y1; stop_x = x1; stop_y = y2; break;
-    default: ASSERT(!"invalid _box_side"); return (line);
+    default: die("invalid _box_side");
     }
 
     x = start_x; y = start_y;
@@ -321,8 +333,11 @@ LUAFN(dgn_fill_area)
         return (0);
 
     TABLE_CHAR(ls, fill, 'x');
+    TABLE_CHAR(ls, border, fill);
 
-    _fill_area (ls, lines, x1, y1, x2, y2, fill);
+    _fill_area(ls, lines, x1, y1, x2, y2, fill);
+    if (border != fill)
+        _border_area(lines, x1, y1, x2, y2, border);
 
     return (0);
 }
@@ -767,7 +782,7 @@ LUAFN(dgn_replace_random)
             if (lines(x, y) == find)
                 loc.push_back(coord_def(x, y));
 
-    if (!loc.size())
+    if (loc.empty())
     {
         if (required)
             return (luaL_error(ls, "Could not find '%c'", find));
@@ -873,27 +888,11 @@ LUAFN(dgn_spotty_map)
                && strchr(replace, lines(x, y-2))
                && strchr(replace, lines(x, y+2)));
 
-        if (strchr(replace, lines(x, y)))
-            lines(x, y) = fill;
-        if (strchr(replace, lines(x, y-1)))
-            lines(x, y-1) = fill;
-        if (strchr(replace, lines(x, y+1)))
-            lines(x, y+1) = fill;
-        if (strchr(replace, lines(x-1, y)))
-            lines(x-1, y) = fill;
-        if (strchr(replace, lines(x+1, y)))
-            lines(x+1, y) = fill;
-
-        if (boxy)
+        for (radius_iterator ai(coord_def(x, y), 1, boxy ? C_SQUARE : C_POINTY,
+                                NULL, false); ai; ++ai)
         {
-            if (strchr(replace, lines(x-1, y-1)))
-                lines(x-1, y-1) = fill;
-            if (strchr(replace, lines(x+1, y+1)))
-                lines(x+1, y+1) = fill;
-            if (strchr(replace, lines(x-1, y+1)))
-                lines(x-1, y+1) = fill;
-            if (strchr(replace, lines(x+1, y-1)))
-                lines(x+1, y-1) = fill;
+            if (strchr(replace, lines(*ai)))
+                lines(*ai) = fill;
         }
     }
 
@@ -904,6 +903,59 @@ static int dgn_width(lua_State *ls)
 {
     LINES(ls, 1, lines);
     PLUARET(number, lines.width());
+}
+
+LUAFN(dgn_layout_type)
+{
+    env.level_layout_types.insert(luaL_checkstring(ls, 2));
+    return 0;
+}
+
+LUAFN(dgn_delve)
+{
+    LINES(ls, 1, lines);
+
+    ARG_INT(ls, 2, ngb_min, 2);
+    ARG_INT(ls, 3, ngb_max, 3);
+    ARG_INT(ls, 4, connchance, 0);
+    ARG_INT(ls, 5, cellnum, -1);
+    ARG_INT(ls, 6, top, 125);
+
+    delve(&lines, ngb_min, ngb_max, connchance, cellnum, top);
+    return (0);
+}
+
+/* Wrappers for C++ layouts, to facilitate choosing of layouts by weight and
+ * depth */
+
+LUAFN(dgn_layout_basic)
+{
+    dgn_build_basic_level(you.absdepth0);
+    return 0;
+}
+
+LUAFN(dgn_layout_bigger_room)
+{
+    dgn_build_bigger_room_level();
+    return 0;
+}
+
+LUAFN(dgn_layout_chaotic_city)
+{
+    dgn_build_chaotic_city_level(NUM_FEATURES);
+    return 0;
+}
+
+LUAFN(dgn_layout_shoals)
+{
+    dgn_build_shoals_level(you.absdepth0);
+    return 0;
+}
+
+LUAFN(dgn_layout_swamp)
+{
+    dgn_build_swamp_level(you.absdepth0);
+    return 0;
 }
 
 const struct luaL_reg dgn_build_dlib[] =
@@ -933,7 +985,15 @@ const struct luaL_reg dgn_build_dlib[] =
     { "replace_random", &dgn_replace_random },
     { "smear_map", &dgn_smear_map },
     { "spotty_map", &dgn_spotty_map },
+    { "delve", &dgn_delve },
     { "width", dgn_width },
+    { "layout_type", &dgn_layout_type },
+
+    { "layout_basic", &dgn_layout_basic },
+    { "layout_bigger_room", &dgn_layout_bigger_room },
+    { "layout_chaotic_city", &dgn_layout_chaotic_city },
+    { "layout_shoals", &dgn_layout_shoals },
+    { "layout_swamp", &dgn_layout_swamp },
 
     { NULL, NULL }
 };

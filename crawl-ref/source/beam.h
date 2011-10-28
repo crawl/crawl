@@ -1,8 +1,7 @@
-/*
- *  File:       beam.h
- *  Summary:    Functions related to ranged attacks.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions related to ranged attacks.
+**/
 
 
 #ifndef BEAM_H
@@ -12,6 +11,7 @@
 #include "externs.h"
 #include "random.h"
 #include "ray.h"
+#include "spl-cast.h"
 
 class monster;
 
@@ -107,6 +107,7 @@ struct bolt
                                        // itself.
     bool        was_missile;           // For determining if this was SPMSL_FLAME / FROST etc
                                        // this is required in order to change mulch rate on these types
+    bool        animate;               // Do we draw animations?
 
     // Various callbacks.
     std::vector<range_used_func>  range_funcs;
@@ -137,8 +138,10 @@ struct bolt
     bool     in_explosion_phase; // explosion phase (as opposed to beam phase)
     bool        smart_monster;   // tracer firer can guess at other mons. resists?
     bool        can_see_invis;   // tracer firer can see invisible?
+    bool        nightvision;     // tracer firer has nightvision?
     mon_attitude_type attitude;  // attitude of whoever fired tracer
     int         foe_ratio;       // 100* foe ratio (see mons_should_fire())
+    std::map<mid_t, int> hit_count; // how many times targets were affected
 
     tracer_info foe_info;
     tracer_info friend_info;
@@ -231,6 +234,7 @@ private:
     void step();
     bool hit_wall();
 
+    bool damage_ignores_armour() const;
     bool apply_hit_funcs(actor* victim, int dmg, int corpse = -1);
     bool apply_dmg_funcs(actor* victim, int &dmg,
                          std::vector<std::string> &messages);
@@ -259,7 +263,7 @@ public:
     void apply_bolt_paralysis(monster* mons);
     void apply_bolt_petrify(monster* mons);
     void enchantment_affect_monster(monster* mon);
-    mon_resist_type try_enchant_monster(monster* mon);
+    mon_resist_type try_enchant_monster(monster* mon, int &res_margin);
     void tracer_enchantment_affect_monster(monster* mon);
     void tracer_nonenchantment_affect_monster(monster* mon);
     void update_hurt_or_helped(monster* mon);
@@ -304,24 +308,23 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
 bool enchant_monster_with_flavour(monster* mon, actor *atk,
                                   beam_type flavour, int powc = 0);
 
-void mass_enchantment(enchant_type wh_enchant, int pow, int who,
-                       int *m_succumbed = NULL, int *m_attempted = NULL);
+bool enchant_monster_invisible(monster* mon, const std::string &how);
 
-bool curare_hits_monster(actor *agent, monster* mons, kill_category who,
-                         int levels = 1);
-bool poison_monster(monster* mons, kill_category who, int levels = 1,
+spret_type mass_enchantment(enchant_type wh_enchant, int pow,
+                            int *m_succumbed = NULL, int *m_attempted = NULL,
+                            bool fail = false);
+
+bool poison_monster(monster* mons, const actor* who, int levels = 1,
                     bool force = false, bool verbose = true);
-bool miasma_monster(monster* mons, kill_category who);
-bool napalm_monster(monster* mons, kill_category who, int levels = 1,
+bool miasma_monster(monster* mons, const actor* who);
+bool napalm_monster(monster* mons, const actor* who, int levels = 1,
                     bool verbose = true);
 void fire_tracer(const monster* mons, struct bolt &pbolt,
                   bool explode_only = false);
-void mimic_alert(monster* mimic);
-bool zapping(zap_type ztype, int power, bolt &pbolt,
-             bool needs_tracer = false, const char* msg = NULL);
+spret_type zapping(zap_type ztype, int power, bolt &pbolt,
+                   bool needs_tracer = false, const char* msg = NULL,
+                   bool fail = false);
 bool player_tracer(zap_type ztype, int power, bolt &pbolt, int range = 0);
-
-std::string beam_type_name(beam_type type);
 
 void init_zap_index();
 void clear_zap_info_on_exit();

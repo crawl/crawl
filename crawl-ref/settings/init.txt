@@ -1,31 +1,7 @@
-# NOTE FOR PLAYERS OF OLD VERSIONS (DCSS 0.3.4 or before):
-#
-# DCSS 0.4 introduces several rather drastic changes to the interface;
-# read 034_changes.txt for details. Uncomment these options if you want
-# to disable them and go back to the old state:
-# monster colours, command keys, order on the character selection screen,
-# item colours, appearance of the stat section, butchering interface,
-# targeting interface.
-# The options for monster glyphs and item colours don't matter for Tiles.
-# (New players should just ignore these lines.)
-#
-# include                 = 034_monster_glyphs.txt
-# include                 = 034_command_keys.txt
-# classic_item_colours    = true
-# classic_hud             = true
-# always_confirm_butcher  = true
-# target_unshifted_dirs   = true
-# clear_messages          = true
-#
-# Similar options for reverting later changes:
-# include                 = 052_monster_glyphs.txt
-# include                 = 060_monster_glyphs.txt
-# include                 = 071_monster_glyphs.txt
-
 # Crawl Init file
 #
 # On Unix systems (such as Mac OS X, Linux and the BSDs), you must copy
-# init.txt to ~/.crawlrc as:
+# init.txt to ~/.crawlrc or ~/.crawl/init.txt as:
 #   cp init.txt ~/.crawlrc
 #
 # Lines beginning with '#' are comments.  The basic syntax is:
@@ -54,22 +30,39 @@
 # uncommenting.
 # Options with several values, e.g. drop_mode = (multi | single),
 # usually have the first value as default.
+#
+# The options for monster glyphs and item colours don't matter for Tiles.
+# Similarily, tile options are ignored in console games.
+
+##### Ancient versions ##############################################
+# If you're used to the interface of ancient versions of Crawl, you may
+# get back parts of it by uncommenting the following options:
+
+# include                 = 034_command_keys.txt
+# always_confirm_butcher  = true
+# target_unshifted_dirs   = true
+# clear_messages          = true
+#
+# And to revert monster glyph and colouring changes:
+# include                 = 034_monster_glyphs.txt
+# include                 = 052_monster_glyphs.txt
+# include                 = 060_monster_glyphs.txt
+# include                 = 071_monster_glyphs.txt
+# include                 = 080_monster_glyphs.txt
+# include                 = 0.9_monster_glyphs.txt
 
 ##### 1- Starting Screen ############################################
 #
 # name = Delilah
 # remember_name = false
-# use_old_selection_order = true
-# weapon = (short sword | hand axe | spear | mace | trident | random)
-# book = (fire | ice | summ | random)
-# wand = (enslavement | confusion | magic darts | frost | flame | striking | random)
-# chaos_knight = (Xom | Makhleb | Lugonu | random)
-# priest       = (Zin | Yredelemnul | Beogh | random)
+# weapon = (short sword | falchion | quarterstaff | hand axe | spear | mace
+#           | trident | unarmed | random)
 # species = (Human |...| Vampire | random)
 # job     = (Fighter |...| Wanderer | random)
 # random_pick = true
 # good_random = false
 # restart_after_game = true
+# default_manual_training = true
 
 ##### 2-  File System ###############################################
 #
@@ -86,18 +79,17 @@ lua_file = lua/wield.lua
 lua_file = lua/runrest.lua
 lua_file = lua/gearset.lua
 lua_file = lua/trapwalk.lua
-lua_file = lua/pickup.lua
 
 # kills.lua yields more information at the cost of huge dumps.
 # lua_file = lua/kills.lua
 
 # autofight.lua allows binding both movement and attack a single key.
 # Use at your own discretion! See options_guide.txt for details.
-# lua_file = lua/autofight.lua
+lua_file = lua/autofight.lua
 
 ##### 4-  Interface #################################################
 #
-##### 4-a	Picking up and Dropping ###############
+##### 4-a       Picking up and Dropping ###############
 #
 autopickup = $?!+"/%
 
@@ -107,9 +99,8 @@ include = autopickup_exceptions.txt
 drop_filter = useless_item
 
 # default_autopickup = false
-# autopickup_no_burden = true
+# autopickup_no_burden = false
 # pickup_thrown = false
-# pickup_dropped = true
 # chunks_autopickup = false
 # assign_item_slot = (forward | backward)
 #
@@ -118,21 +109,20 @@ drop_filter = useless_item
 # drop_filter = skeleton, corpse, useless_item
 # default_friendly_pickup = (none | friend | player | all)
 
-##### 4-b	Targetting ############################
+##### 4-b       Targetting ############################
 #
 # default_target = false
 # target_unshifted_dirs = true
 # darken_beyond_range = false
 
-##### 4-c	Passive Sightings #####################
+##### 4-c       Passive Sightings #####################
 #
 # detected_monster_colour = lightred
 # detected_item_colour = green
 # remembered_monster_colour = darkgrey
-# colour_map = false
 # clean_map = true
 
-##### 4-d	Branding ##############################
+##### 4-d       Branding ##############################
 #
 # friend_brand       = hi:green
 # neutral_brand      = hi:lightgrey
@@ -141,15 +131,14 @@ drop_filter = useless_item
 # heap_brand         = reverse
 # feature_item_brand = reverse
 # trap_item_brand    = reverse
-# verbose_monster_pane = false
 
-##### 4-e	Level Map Functions ###################
+##### 4-e       Level Map Functions ###################
 #
 # level_map_cursor_step = 7
 # level_map_title = false
-# item_colour = false
+# show_waypoints = false
 
-##### 4-f	Viewport Options  ###################
+##### 4-f       Viewport Options  ###################
 #
 # view_max_width   = 33
 # view_max_height  = 21
@@ -162,19 +151,21 @@ drop_filter = useless_item
 # scroll_margin_y  = 2
 # scroll_margin    = 2
 
-##### 4-g	Travel and Exploration #################
+##### 4-g       Travel and Exploration #################
 #
 # travel_delay = 20
 # explore_delay = -1
 # travel_avoid_terrain = shallow water
 #
 # explore_greedy   = false
-# explore_stop     = items,greedy_pickup,stairs,shops,altars,gates
+# explore_stop     = items,greedy_pickup_smart,stairs,shops,altars,gates
 # explore_stop    += greedy_visited_item_stack
 # explore_improved = true
+# explore_wall_bias = 0
+# travel_key_stop = false
 #
 # explore_stop_pickup_ignore = curare
-auto_exclude = oklob plant,statue,curse skull,roxanne, hyperactive
+auto_exclude = oklob,statue,curse skull,roxanne,hyperactive,lightning spire
 
 # tc_reachable      = blue
 # tc_dangerous      = cyan
@@ -194,35 +185,25 @@ runrest_ignore_monster = butterfly:1
 # runrest_ignore_message = Jiyva's power touches on your attributes
 include = runrest_messages.txt
 
-# trap_prompt = false
 trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 
 #rest_wait_both = true
 
-##### 4-h	Stashes ###############################
+##### 4-h       Stashes ###############################
 #
-
-# 14 filters out corpses
-# stash_filter = 14
-
-stash_filter = scroll of curse armour, scroll of curse weapon, scroll of noise
-stash_filter = scroll of immolation, scroll of random uselessness
-stash_filter = scroll of paper
-
-stash_filter = ring of hunger, amulet of inaccuracy
 
 # annotate_item_class = true
 # annotate_item_dropped = true
 
-##### 4-i	Command Enhancements ##################
+##### 4-i       Command Enhancements ##################
 #
 # auto_list     = false
+# auto_switch   = true
 # easy_open     = false
 # easy_unequip  = false
 # equip_unequip = true
 # easy_confirm  = (none | safe)
 # allow_self_target      = (yes | no | prompt)
-# easy_butcher           = false
 # always_confirm_butcher = true
 # prefer_safe_chunks     = false
 # easy_eat_chunks        = true
@@ -230,12 +211,11 @@ stash_filter = ring of hunger, amulet of inaccuracy
 # easy_eat_contaminated  = true
 # prompt_for_swap        = false
 # easy_quit_item_prompts = false
-# easy_exit_menu         = false
+# easy_exit_menu         = true
 # sort_menus = pickup: true : art, ego, basename, qualname, curse, qty
 sort_menus = inv: true : equipped, freshness, charged
-# menu_cursor            = true
 
-##### 4-j	Messages and Display Enhancements #####
+##### 4-j       Messages and Display Enhancements #####
 #
 # hp_warning = 30
 # mp_warning = 0
@@ -244,7 +224,6 @@ sort_menus = inv: true : equipped, freshness, charged
 # stat_colour = 1:lightred, 3:red
 
 # status_caption_colour        = yellow
-# classic_hud                  = true
 # mlist_min_height             = 4
 # msg_min_height               = 7
 # msg_max_height               = 10
@@ -252,17 +231,18 @@ sort_menus = inv: true : equipped, freshness, charged
 # messages_at_top              = true
 # mlist_targetting             = true
 # show_gold_turns              = true
-# show_real_turns              = true
-
+# show_game_turns              = true
+# show_newturn_mark            = false
 # clear_messages             = true
 # small_more                 = true
 # show_more                  = false
 # show_inventory_weights     = true
 # item_stack_summary_minimum = 5
 # list_rotten                = false
-# show_beam                  = false
 # msg_condense_repeats   = false
 # msg_condense_short     = false
+# show_no_ctele          = false
+# skill_focus            = false
 
 #####          Colours (messages and menus) #####
 #
@@ -319,8 +299,6 @@ menu_colour = notes:white:Reached XP level
 
 # You can also enforce a --more-- prompt for messages
 
-## Reduce chance of drowning because levitation runs out:
-# force_more_message = You are starting to lose your buoyancy
 ## Avoid wasting turns with aborted actions:
 # force_more_message = There are no visible monsters within range
 # force_more_message = This wand has no charges
@@ -328,24 +306,26 @@ menu_colour = notes:white:Reached XP level
 force_more_message = You have reached level
 force_more_message = Your scales start
 force_more_message = You fall through a shaft
-force_more_message = You are starting to lose your buoyancy
+
+## Reduce chance of drowning because levitation or form runs out:
+force_more_message = Careful!
 
 # Announcements of timed portal vaults (bazaar, labyrinths):
 force_more_message = interdimensional caravan
 force_more_message = distant snort
 
-##### 4-k	Firing Commands #######################
+##### 4-k       Firing Commands #######################
 #
 # fire_items_start = a
 # fire_order = launcher, return
 # fire_order += javelin / dart / stone / rock / spear / net / handaxe / dagger / club
 # fire_order += inscribed
 
-##### 4-l	Channels ##############################
+##### 4-l       Channels ##############################
 #
 # channel.multiturn = mute
 
-##### 4-m	Inscriptions ##########################
+##### 4-m       Inscriptions ##########################
 #
 # autoinscribe = bad_item.*potion:!q
 # autoinscribe = potion.*mutation:!q
@@ -354,20 +334,20 @@ force_more_message = distant snort
 # autoinscribe_cursed = false
 # autoinscribe = fruit:!e
 
-##### 4-n	Macro related Options #################
+##### 4-n       Macro related Options #################
 #
 # flush.failure = false
 # flush.command = true
 # flush.message = true
 
-##### 4-t	Tile related Options ##################
+##### 4-t       Tile related Options ##################
 
 # All tiles specific options are in the external file
 include = tiles_options.txt
 
 ##### 5-  Dump File #################################################
 #
-##### 5-a	Items and Kill List ###################
+##### 5-a       Items and Kill List ###################
 #
 # kill_map = friend:you, other:you
 # dump_kill_places = (single | all | none)
@@ -377,9 +357,10 @@ include = tiles_options.txt
 # dump_order  = header, hiscore, stats, misc, notes, inventory,
 # dump_order += turns_by_place, skills, spells, overview, mutations,
 # dump_order += messages, screenshot, monlist, kills_by_place, kills
+# dump_order += spell_usage
 # dump_book_spells = false
 
-##### 5-b	Notes #################################
+##### 5-b       Notes #################################
 #
 # user_note_prefix=@@@
 ood_interesting = 8
@@ -399,14 +380,12 @@ note_monsters = orb of fire, ancient lich, Sigmund
 
 ##### 6-  Miscellaneous #############################################
 #
-##### 6-a	All OS ################################
+##### 6-a       All OS ################################
 #
 # mouse_input      = true
 # wiz_mode         = no
 # char_set         = ascii
 # use_fake_player_cursor = false
-#
-# classic_item_colours = true
 #
 # colour.lightgray = black
 # colour.lightcyan = cyan
@@ -416,15 +395,14 @@ note_monsters = orb of fire, ancient lich, Sigmund
 # show_player_species = true
 
 # See options_guide.txt for the options
-# cset_ascii, cset_ibm, cset_dec, cset_unicode, cset_any,
-# feature, mon_glyph
+# cset, feature, mon_glyph
 
-##### 6-b	DOS and Windows #######################
+##### 6-b   Windows console #######################
 #
 # dos_use_background_intensity = true
 # background = black
 
-##### 6-c   Unix ##################################
+##### 6-c   Unix console ##########################
 #
 # use_fake_cursor = false
 

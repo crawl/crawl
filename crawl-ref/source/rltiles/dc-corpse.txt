@@ -7,21 +7,24 @@
 ### - green, otherwise.
 
 %corpse 1
+%back_sdir dc-misc/blood
 
 ### Animals
 %sdir dc-mon/animals
 
 ## Insects ('a')
-%back dc-misc/blood_green
+%back blood_green
 giant_cockroach CORPSE_GIANT_COCKROACH
-giant_ant CORPSE_GIANT_ANT
+worker_ant CORPSE_WORKER_ANT
 soldier_ant CORPSE_SOLDIER_ANT
 queen_ant CORPSE_QUEEN_ANT
 
 ## Batty monsters ('b')
 butterfly CORPSE_BUTTERFLY
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
-giant_bat CORPSE_GIANT_BAT
+%back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
+bat CORPSE_BAT
+raven CORPSE_RAVEN
+dc-mon/holy/phoenix CORPSE_PHOENIX
 
 ## Hounds and hogs ('h')
 jackal CORPSE_JACKAL
@@ -32,41 +35,55 @@ wolf CORPSE_WOLF
 hog CORPSE_HOG
 hell_hound CORPSE_HELL_HOUND
 hell_hog CORPSE_HELL_HOG
+holy_swine CORPSE_HOLY_SWINE
 %sdir player/felids
 cat1 CORPSE_FELID
 %sdir dc-mon/animals
 
 ## Bees ('k')
-%back dc-misc/blood_green
+%back blood_green
 killer_bee CORPSE_KILLER_BEE
 bumblebee CORPSE_BUMBLEBEE
 queen_bee CORPSE_QUEEN_BEE
 giant_firefly CORPSE_FIREFLY
 
 ## Lizards ('l')
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+%back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 giant_newt CORPSE_GIANT_NEWT
 giant_gecko CORPSE_GIANT_GECKO
 iguana CORPSE_IGUANA
-gila_monster CORPSE_GILA_MONSTER
+basilisk CORPSE_BASILISK
 komodo_dragon CORPSE_KOMODO_DRAGON
 
 ## Slugs ('j')
-%back dc-misc/blood_green
+%back blood_green
 elephant_slug CORPSE_ELEPHANT_SLUG
 giant_slug CORPSE_GIANT_SLUG
 agate_snail CORPSE_AGATE_SNAIL
 
 ## Rodents ('r')
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+%back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 rat CORPSE_RAT
 quokka CORPSE_QUOKKA
 grey_rat CORPSE_GREY_RAT
 green_rat CORPSE_GREEN_RAT
 orange_rat CORPSE_ORANGE_RAT
+porcupine CORPSE_PORCUPINE
+%sdir dc-mon/rat
+labrat_plain CORPSE_LABORATORY_RAT
+labrat_armoured
+labrat_beastly
+labrat_fiery
+labrat_gaseous
+labrat_leeching
+labrat_levitating
+labrat_mutated
+labrat_shifting
+labrat_venomous
+%sdir dc-mon/animals
 
 ## Spiders and insects ('s')
-%back dc-misc/blood_green
+%back blood_green
 giant_centipede CORPSE_GIANT_CENTIPEDE
 giant_mite CORPSE_GIANT_MITE
 scorpion CORPSE_SCORPION
@@ -82,15 +99,16 @@ demonic_crawler CORPSE_DEMONIC_CRAWLER
 
 ## Turtles and crocodiles ('t')
 %sdir dc-mon/animals
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+%back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 crocodile CORPSE_CROCODILE
 alligator_baby CORPSE_BABY_ALLIGATOR
 alligator CORPSE_ALLIGATOR
 snapping_turtle CORPSE_SNAPPING_TURTLE
 alligator_snapping_turtle CORPSE_ALLIGATOR_SNAPPING_TURTLE
+fire_crab CORPSE_FIRE_CRAB
 
 ## Worms ('w')
-%back dc-misc/blood_green
+%back blood_green
 killer_bee_larva CORPSE_ANT_LARVA
 killer_bee_larva CORPSE_KILLER_BEE_LARVA
 worm CORPSE_WORM
@@ -101,48 +119,46 @@ rock_worm CORPSE_ROCK_WORM
 giant_leech CORPSE_GIANT_LEECH
 
 ## Wasps ('y')
-giant_blowfly CORPSE_GIANT_BLOWFLY
-giant_mosquito CORPSE_GIANT_MOSQUITO
+vampire_mosquito CORPSE_VAMPIRE_MOSQUITO
 yellow_wasp CORPSE_YELLOW_WASP
 red_wasp CORPSE_RED_WASP
 ghost_moth CORPSE_GHOST_MOTH
 moth_of_wrath CORPSE_MOTH_OF_WRATH
 
 ## Aquatics (';')
-%back dc-misc/blood_red
+%back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 big_fish CORPSE_BIG_FISH
 giant_goldfish CORPSE_GIANT_GOLDFISH
 electric_eel CORPSE_ELECTRIC_EEL
 #lava_fish CORPSE_LAVA_FISH
 shark CORPSE_SHARK
 kraken_head CORPSE_KRAKEN /*'x'*/
-%back dc-misc/blood_green
+%back blood_green
 jellyfish CORPSE_JELLYFISH /*'J'*/
 
 ## Beetles ('B')
-giant_beetle CORPSE_GIANT_BEETLE
+goliath_beetle CORPSE_GOLIATH_BEETLE
 boring_beetle CORPSE_BORING_BEETLE
 boulder_beetle CORPSE_BOULDER_BEETLE
 
 ## Frogs ('F')
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+%back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 giant_frog CORPSE_GIANT_FROG
-giant_toad CORPSE_GIANT_TOAD
 blink_frog CORPSE_BLINK_FROG
 spiny_frog CORPSE_SPINY_FROG
 
+## Various beasts ('I')
+sky_beast CORPSE_SKY_BEAST
+
 ## Snakes ('S')
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
 small_snake CORPSE_SMALL_SNAKE
 snake CORPSE_SNAKE
 black_mamba CORPSE_BLACK_MAMBA
 water_moccasin CORPSE_WATER_MOCCASIN
 anaconda CORPSE_ANACONDA
-viper CORPSE_VIPER
 sea_snake CORPSE_SEA_SNAKE
 
 ## Bears ('U')
-bear CORPSE_BEAR
 black_bear CORPSE_BLACK_BEAR
 grizzly_bear CORPSE_GRIZZLY_BEAR
 polar_bear CORPSE_POLAR_BEAR
@@ -154,6 +170,9 @@ death_yak CORPSE_DEATH_YAK
 elephant CORPSE_ELEPHANT
 elephant_dire CORPSE_DIRE_ELEPHANT
 elephant_demonic CORPSE_HELLEPHANT
+catoblepas CORPSE_CATOBLEPAS
+%sdir dc-mon/holy
+apis CORPSE_APIS
 
 ### Non-animals
 %sdir dc-mon
@@ -179,19 +198,21 @@ mermaid_water CORPSE_MERMAID
 siren_water CORPSE_SIREN
 
 ## Rotting monsters ('n')
-%back dc-misc/blood_green
+%back blood_green
 %sdir dc-mon/undead
 necrophage CORPSE_NECROPHAGE
 ghoul CORPSE_GHOUL
 rotting_hulk CORPSE_ROTTING_HULK
 
 ## Orcs ('o')
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+%back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 %sdir dc-mon
 orc CORPSE_ORC
 
 ## Dwarves ('q')
 unique/wiglaf CORPSE_DWARF
+deep_dwarf CORPSE_DEEP_DWARF
+gnome CORPSE_GNOME
 
 ## Ugly things ('u')
 %sdir dc-mon/demons
@@ -219,6 +240,7 @@ stone_giant CORPSE_STONE_GIANT
 titan CORPSE_TITAN
 
 ## Drakes ('l')
+%sdir dc-mon/dragons
 swamp_drake CORPSE_SWAMP_DRAKE
 fire_drake CORPSE_FIRE_DRAKE
 lindwurm CORPSE_LINDWURM
@@ -237,15 +259,18 @@ iron_dragon CORPSE_IRON_DRAGON
 storm_dragon CORPSE_STORM_DRAGON
 golden_dragon CORPSE_GOLDEN_DRAGON
 shadow_dragon CORPSE_SHADOW_DRAGON
+dc-mon/holy/pearl_dragon CORPSE_PEARL_DRAGON
 
 ## Eyes ('G')
-%back dc-misc/blood_green
+%sdir dc-mon/eyes
+%back blood_green
 giant_eyeball CORPSE_GIANT_EYEBALL
 eye_of_devastation CORPSE_EYE_OF_DEVASTATION
 eye_of_draining CORPSE_EYE_OF_DRAINING
 great_orb_of_eyes CORPSE_GREAT_ORB_OF_EYES
 shining_eye CORPSE_SHINING_EYE
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+%sdir dc-mon
+%back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 giant_orange_brain CORPSE_GIANT_ORANGE_BRAIN
 
 ## Hybrids ('H')
@@ -255,16 +280,19 @@ manticore CORPSE_MANTICORE
 harpy CORPSE_HARPY
 minotaur CORPSE_MINOTAUR
 sphinx CORPSE_SPHINX
+kenku CORPSE_KENKU
+holy/shedu CORPSE_SHEDU
 
 ## Jellies ('J')
-%back dc-misc/blood_green
+%sdir dc-mon/amorphous
+%back blood_green
 giant_amoeba CORPSE_GIANT_AMOEBA
 
 ## Kobolds ('K')
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+%sdir dc-mon/
+%back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 kobold CORPSE_KOBOLD
 big_kobold CORPSE_BIG_KOBOLD
-nisse CORPSE_NISSE
 
 ## Nagas ('N')
 naga CORPSE_NAGA
@@ -280,15 +308,20 @@ rock_troll CORPSE_ROCK_TROLL
 iron_troll CORPSE_IRON_TROLL
 deep_troll CORPSE_DEEP_TROLL
 
+## Cephalopods ('X')
+../player/base/octopode1 CORPSE_OCTOPODE
+
 ## Human shaped ('@')
 human CORPSE_HUMAN
-%back dc-misc/blood_green
+demonspawn CORPSE_DEMONSPAWN
+halfling CORPSE_HALFLING
+%back blood_green
 shapeshifter CORPSE_SHAPESHIFTER
 glowing_shapeshifter CORPSE_GLOWING_SHAPESHIFTER
 
 ## Draconians ('d')
 %sdir player
-%back dc-misc/blood_red dc-misc/blood_red1 dc-misc/blood_red2 dc-misc/blood_red3 dc-misc/blood_red4
+%back blood_puddle_red blood_puddle_red1 blood_puddle_red2 blood_puddle_red3 blood_puddle_red4
 %start
 %compose drcwing/drcwing_black
 %compose base/draconian_black_m

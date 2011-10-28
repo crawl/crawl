@@ -39,6 +39,7 @@
 
   "strong"
 },
+
 { MUT_CLEVER,                     8, 14, false,  true,
   NULL,
 
@@ -68,6 +69,7 @@
 
   "poison resistance"
 },
+
 { MUT_CARNIVOROUS,                5,  3, false, false,
   "carnivore",
 
@@ -85,6 +87,7 @@
 
   "carnivorous"
 },
+
 { MUT_HERBIVOROUS,                5,  3,  true, false,
   "herbivore",
 
@@ -102,6 +105,7 @@
 
   "herbivorous"
 },
+
 { MUT_HEAT_RESISTANCE,            4,  3, false, false,
   "fire resistance",
 
@@ -119,6 +123,7 @@
 
   "heat resistance"
 },
+
 { MUT_COLD_RESISTANCE,            4,  3, false, false,
   "cold resistance",
 
@@ -136,6 +141,7 @@
 
   "cold resistance"
 },
+
 { MUT_DEMONIC_GUARDIAN,            0,  3, false, false,
   "demonic guardian",
 
@@ -153,6 +159,7 @@
 
   "demonic guardian"
 },
+
 { MUT_SHOCK_RESISTANCE,           2,  1, false, false,
   "electricity resistance",
 
@@ -162,6 +169,7 @@
 
   "shock resistance"
 },
+
 { MUT_REGENERATION,               3,  3, false, false,
   "regeneration",
 
@@ -179,6 +187,7 @@
 
   "regeneration"
 },
+
 { MUT_SLOW_HEALING,               3,  3,  true, false,
   "slow healing",
 
@@ -196,6 +205,7 @@
 
   "slow healing"
 },
+
 { MUT_FAST_METABOLISM,           10,  3,  true, false,
   "fast metabolism",
 
@@ -213,6 +223,7 @@
 
   "fast metabolism"
 },
+
 { MUT_SLOW_METABOLISM,            7,  3, false, false,
   "slow metabolism",
 
@@ -238,6 +249,7 @@
   {"", "", ""},
   "weak"
 },
+
 { MUT_DOPEY,                     10, 14,  true,  true,
   NULL,
   {"You are dopey (Int -", "", ""},
@@ -245,6 +257,7 @@
   {"", "", ""},
   "dopey",
 },
+
 { MUT_CLUMSY,                    10, 14,  true,  true,
   NULL,
   {"You are clumsy (Dex -", "", ""},
@@ -252,6 +265,7 @@
   {"", "", ""},
   "clumsy"
 },
+
 { MUT_TELEPORT_CONTROL,           2,  1, false, false,
   "teleport control",
 
@@ -279,6 +293,7 @@
 
   "teleport"
 },
+
 { MUT_MAGIC_RESISTANCE,           5,  3, false, false,
   "magic resistance",
 
@@ -366,6 +381,8 @@
 
   "deformed"
 },
+
+#if TAG_MAJOR_VERSION == 32
 { MUT_TELEPORT_AT_WILL,           0,  3, false, false,
   "teleport at will",
 
@@ -383,6 +400,8 @@
 
   "teleport at will"
 },
+#endif
+
 { MUT_SPIT_POISON,                8,  3, false, false,
   "spit poison",
 
@@ -424,7 +443,7 @@
 
   {"You can translocate small distances at will.",
    "You are good at translocating small distances at will.",
-   "You can translocate small distances instantaneously."},
+   "You can easily translocate small distances at will."},
 
   {"You feel jittery.",
    "You feel more jittery.",
@@ -436,6 +455,7 @@
 
   "blink"
 },
+
 { MUT_STRONG_STIFF,              10,  3, false,  true,
   NULL,
 
@@ -654,6 +674,7 @@
   "hurl hellfire"
 },
 
+#if TAG_MAJOR_VERSION == 32
 { MUT_THROW_FLAMES,               0,  1, false, false,
   "throw flames of Gehenna",
 
@@ -673,6 +694,7 @@
 
   "throw frost"
 },
+#endif
 
 // body-slot facets
 { MUT_HORNS,                      7,  3, false,  true,
@@ -692,6 +714,7 @@
 
   "horns"
 },
+
 { MUT_BEAK,                       1,  1, false,  true,
   "beak",
 
@@ -790,6 +813,42 @@
    "Your talons look more like feet."},
 
   "talons"
+},
+
+{ MUT_TENTACLES,                 0,  3, false, true,
+  "tentacles",
+
+  {"You have a mass of small tentacles instead of fingers.",
+   "You have a mass of tentacles instead of hands.",
+   "You have a mass of large tentacles instead of arms."},
+
+  {"Your fingers turn into small tentacles.",
+   "Your hands turn into tentacles.",
+   "Your arms turn into large tentacles."},
+
+  {"Your fingers look less like tentacles.",
+   "Your hands look less like tentacles.",
+   "Your arms look less like tentacles."},
+
+   "tentacles"
+},
+
+{ MUT_TENTACLE_SPIKE,            0,  3, false,  true,
+  "spike",
+
+  {"One of your tentacles bears a spike.",
+   "One of your tentacles bears a nasty spike.",
+   "One of your tentacles bears a large vicious spike."},
+
+  {"One of your lower tentacles grows a sharp spike.",
+   "Your tentacle spike grows bigger.",
+   "Your tentacle spike grows even bigger."},
+
+  {"Your tentacle spike disappears.",
+   "Your tentacle spike becomes smaller.",
+   "Your tentacle spike recedes somewhat."},
+
+  "tentacle spike"
 },
 
 // Naga only
@@ -910,7 +969,25 @@
   "low mp"
 },
 
-{ MUT_STOCHASTIC_TORMENT_RESISTANCE, 0, 3, false, false,
+{ MUT_WILD_MAGIC,                 6,   3,  false, false,
+    "wild magic",
+
+    {"Your spells are a little harder to cast, but a little more powerful.",
+     "Your spells are harder to cast, but more powerful.",
+     "Your spells are much harder to cast, but much more powerful."},
+
+    {"You feel less in control of your magic.",
+     "You feel less in control of your magic.",
+     "You feel your magical power running wild!"},
+
+    {"You regain control of your magic.",
+     "You feel more in control of your magic.",
+     "You feel more in control of your magic."},
+
+    "wild magic"
+},
+
+{ MUT_STOCHASTIC_TORMENT_RESISTANCE, 0,  3, false, false,
   NULL,
 
   {"You are somewhat able to resist unholy torments (1 in 5 success).",
@@ -947,7 +1024,7 @@
 { MUT_ICEMAIL,                    0,  1, false, false,
   NULL,
 
-  {"A meltable icy envelope protects you from harm (AC +", "", ""},
+  {"A meltable icy envelope protects you from harm and freezing vapours (AC +", "", ""},
   {"An icy envelope takes form around you.", "", ""},
   {"", "", ""},
 
@@ -1022,9 +1099,9 @@
 { MUT_POWERED_BY_DEATH,           0,  3, false, false,
   "powered by death",
 
-  {"You slowly steal the life force of defeated enemies.",
-   "You steal the life force of defeated enemies.",
-   "You quickly steal the life force of defeated enemies."},
+  {"You can steal the life force of nearby defeated enemies.",
+   "You can steal the life force of defeated enemies.",
+   "You can steal the life force of all defeated enemies in sight."},
 
   {"A wave of death washes over you.",
    "The wave of death grows in power.",
@@ -1034,7 +1111,23 @@
    "Your control of surrounding life forces weakens.",
    "Your control of surrounding life forces weakens."},
 
-  "pbd"
+  "powered by death"
+},
+
+{ MUT_POWERED_BY_PAIN,            0,  3, false, false,
+  "powered by pain",
+
+  {"You sometimes regain a little magical energy from taking damage.",
+   "You sometimes regain magical energy from taking damage.",
+   "You sometimes regain a lot of magical energy from taking damage."},
+
+  {"You feel energised by your suffering.",
+   "You feel even more energised by your suffering.",
+   "You feel completely energised by your suffering."},
+
+  {"", "", ""},
+
+  "powered by pain"
 },
 
 // Jiyva only mutations
@@ -1074,7 +1167,7 @@
     "eyeballs"
 },
 
-{ MUT_TRANSLUCENT_SKIN,           0,   3, false, true,
+{ MUT_TRANSLUCENT_SKIN,           0,  3, false, true,
   "translucent skin",
 
   {"Your skin is partially translucent.",
@@ -1092,7 +1185,7 @@
    "translucent skin"
 },
 
-{ MUT_PSEUDOPODS,                 0,    3, false, true,
+{ MUT_PSEUDOPODS,                 0,  3, false, true,
   "pseudopods",
 
   {"Armour fits poorly on your pseudopods.",
@@ -1110,25 +1203,21 @@
    "pseudopods"
 },
 
-{ MUT_FOOD_JELLY,                 0,    1, false, true,
+{ MUT_FOOD_JELLY,                       0,  1, false, true,
   "spawn jellies when eating",
 
   {"You occasionally spawn a jelly by eating.", "", ""},
-
   {"You feel more connected to the slimes.", "", ""},
-
   {"Your connection to the slimes vanishes.", "", ""},
 
   "jelly spawner"
 },
 
-{ MUT_ACIDIC_BITE,                0,     1, false, true,
+{ MUT_ACIDIC_BITE,                      0,  1, false, true,
   "acidic bite",
 
   {"You have acidic saliva.", "", ""},
-
   {"Acid begins to drip from your mouth.", "", ""},
-
   {"Your mouth feels dry.", "", ""},
 
   "acidic bite"
@@ -1156,15 +1245,15 @@
 { MUT_ICY_BLUE_SCALES,                  2,  3, false, true,
   NULL,
 
-  {"You are partially covered in colourless scales (AC +1).",
+  {"You are partially covered in icy blue scales (AC +1).",
    "You are mostly covered in icy blue scales (AC +2, EV -1).",
    "You are completely covered in icy blue scales (AC +3, EV -1, rC+)."},
 
-  {"Colourless scales grow over part of your body.",
-   "Your colourless scales turn blue and spread over more of your body.",
+  {"Icy blue scales grow over part of your body.",
+   "Icy blue scales spread over more of your body.",
    "Icy blue scales cover your body completely."},
 
-  {"Your colourless scales disappear.",
+  {"Your icy blue scales disappear.",
    "Your icy blue scales recede somewhat.",
    "Your icy blue scales recede somewhat."},
 
@@ -1174,9 +1263,9 @@
 { MUT_IRIDESCENT_SCALES,                2,  3, false,  true,
   NULL,
 
-  {"You are partially covered in iridescent scales (AC +3).",
+  {"You are partially covered in iridescent scales (AC +4).",
    "You are mostly covered in iridescent scales (AC +6).",
-   "You are completely covered in iridescent scales (AC +9)."},
+   "You are completely covered in iridescent scales (AC +8)."},
 
   {"Iridescent scales grow over part of your body.",
    "Iridescent scales spread over more of your body.",
@@ -1210,15 +1299,15 @@
 { MUT_MOLTEN_SCALES,                    2,  3, false, true,
   NULL,
 
-  {"You are partially covered in colourless scales (AC +1).",
+  {"You are partially covered in molten scales (AC +1).",
    "You are mostly covered in molten scales (AC +2, EV -1).",
    "You are completely covered in molten scales (AC +3, EV -1, rF+)."},
 
-  {"Colourless scales grow over part of your body.",
-   "Your colourless scales turn molten and spread over more of your body.",
+  {"Molten scales grow over part of your body.",
+   "Molten scales spread over more of your body.",
    "Molten scales cover your body completely."},
 
-  {"Your colourless scales disappear.",
+  {"Your molten scales disappear.",
    "Your molten scales recede somewhat.",
    "Your molten scales recede somewhat."},
 
@@ -1264,15 +1353,15 @@
 { MUT_SLIMY_GREEN_SCALES,            2,  3, false, true,
   NULL,
 
-  {"You are partially covered in colourless scales (AC +1).",
+  {"You are partially covered in slimy green scales (AC +1).",
    "You are mostly covered in slimy green scales (AC +2, EV -1).",
    "You are completely covered in slimy green scales (AC +3, EV -2, rPois)."},
 
-  {"Colourless scales grow over part of your body.",
-   "Your colourless scales turn green and spread over more of your body.",
+  {"Slimy green scales grow over part of your body.",
+   "Slimy green scales spread over more of your body.",
    "Slimy green scales cover your body completely."},
 
-  {"Your colourless scales disappear.",
+  {"Your slimy green scales disappear.",
    "Your slimy green scales recede somewhat.",
    "Your slimy green scales recede somewhat."},
 
@@ -1282,15 +1371,15 @@
 { MUT_THIN_METALLIC_SCALES,            2,  3, false, true,
   NULL,
 
-  {"You are partially covered in colourless scales (AC +1).",
+  {"You are partially covered in thin metallic scales (AC +1).",
    "You are mostly covered in thin metallic scales (AC +2).",
    "You are completely covered in thin metallic scales (AC +3, rElec)."},
 
-  {"Colourless scales grow over part of your body.",
-   "Your colourless scales are metallic and spread over more of your body.",
+  {"Thin metallic scales grow over part of your body.",
+   "Thin metallic scales spread over more of your body.",
    "Thin metallic scales cover your body completely."},
 
-  {"Your colourless scales disappear.",
+  {"Your thin metallic scales disappear.",
    "Your thin metallic scales recede somewhat.",
    "Your thin metallic scales recede somewhat."},
 
@@ -1300,9 +1389,9 @@
 { MUT_THIN_SKELETAL_STRUCTURE,          2,  3, false,  true,
   NULL,
 
-  {"You have a somewhat thin skeletal structure (Dex +1, Str -1, Stlth).",
-   "You have a moderately thin skeletal structure (Dex +2, Str -2, Stlth).",
-   "You have an unnaturally thin skeletal structure (Dex +3, Str -3, Stlth)."},
+  {"You have a somewhat thin skeletal structure (Dex +2, Str -1, Stlth).",
+   "You have a moderately thin skeletal structure (Dex +4, Str -2, Stlth).",
+   "You have an unnaturally thin skeletal structure (Dex +6, Str -3, Stlth)."},
 
   {"Your bones become slightly less dense.",
    "Your bones become somewhat less dense.",
@@ -1318,19 +1407,37 @@
 { MUT_YELLOW_SCALES,                    2,  3, false,  true,
   NULL,
 
-  {"You are partially covered in colourless scales (AC +1).",
-   "You are mostly covered in yellow scales (AC +2).",
-   "You are completely covered in yellow scales (AC +3, rCorr)."},
+  {"You are partially covered in yellow scales (AC +1).",
+   "You are mostly covered in yellow scales (AC +2, rAcid+).",
+   "You are completely covered in yellow scales (AC +3, rAcid++)."},
 
-  {"Colourless scales grow over part of your body.",
-   "Your colourless scales turn yellow and spread over more of your body.",
+  {"Yellow scales grow over part of your body.",
+   "Yellow scales spread over more of your body.",
    "Yellow scales cover you completely."},
 
-  {"Your colourless scales disappear.",
+  {"Your yellow scales disappear.",
    "Your yellow scales recede somewhat.",
    "Your yellow scales recede somewhat."},
 
   "yellow scales"
-}
+},
+
+{ MUT_CAMOUFLAGE,           1,   3, false, true,
+  "camouflage",
+
+  {"Your skin changes color to match your surroundings (Stlth).",
+   "Your skin blends seamlessly with your surroundings (Stlth).",
+   "Your skin perfectly mimics your surroundings (Stlth)."},
+
+  {"Your skin functions as natural camouflage.",
+   "Your natural camouflage becomes more effective.",
+   "Your natural camouflage becomes more effective."},
+
+  {"Your skin no longer functions as natural camouflage.",
+   "Your natural camouflage becomes less effective.",
+   "Your natural camouflage becomes less effective."},
+
+   "camouflage"
+},
 
 #endif

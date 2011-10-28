@@ -1,16 +1,13 @@
-/*
- *  File:         bitary.cc
- *  Summary:      Bit array data type.
- *  Created by:   Robert Vollmert
- */
+/**
+ * @file
+ * @brief Bit array data type.
+**/
 
 #include "AppHdr.h"
 
 #include "bitary.h"
 
 #include "debug.h"
-
-#define LONGSIZE (sizeof(unsigned long)*8)
 
 bit_array::bit_array(unsigned long s)
     : size(s)

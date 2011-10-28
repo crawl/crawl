@@ -1,7 +1,7 @@
-/*
- *  File:       crash-w.cc
- *  Summary:    Windows specific crash handling functions.
- */
+/**
+ * @file
+ * @brief Windows specific crash handling functions.
+**/
 
 #include "AppHdr.h"
 

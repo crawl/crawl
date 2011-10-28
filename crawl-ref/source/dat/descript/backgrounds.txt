@@ -1,15 +1,19 @@
 %%%%
+Abyssal Knight
+
+Abyssal Knights worship Lugonu, and are sent from the Abyss into the Dungeon to spread corruption and chaos.
+%%%%
 Air Elementalist
 
 Air Elementalists have learned the Shock spell. Later on, their book of Air provides them with flexibility to survive.
 %%%%
 Arcane Marksman
 
-Arcane Marksmen carry some missiles as well as a book from which they will learn spells to brand those missiles later on.
+Arcane Marksmen carry ranged weapons, and use magic to make their foes more vulnerable to attacks from afar.
 %%%%
 Artificer
 
-Artificers start with two magical devices and are competent at using such tools.
+Artificers start with a few magical devices and are competent at using such tools.
 %%%%
 Assassin
 
@@ -21,15 +25,15 @@ Berserkers believe in Trog, the magic-hating god of frenzy. Not much can stop a 
 %%%%
 Chaos Knight
 
-Chaos Knights follow one of the three chaos gods: Xom, Makhleb, or Lugonu.
+Chaos Knights are playthings of the unpredictable Xom, and are subject to the god's constantly changing moods.
 %%%%
 Conjurer
 
-Conjurers confront problems with damaging spells. They can choose whether they want their destruction to be fire or ice flavoured.
+Conjurers confront problems with damaging spells from the book of Conjurations.
 %%%%
-Crusader
+Death Knight
 
-Crusaders are melee fighters who can boost themselves in battle with spells from the book of War Chants.
+Death Knights are melee fighters who command the undead in the name of Yredelemnul the Dark.
 %%%%
 Earth Elementalist
 
@@ -53,7 +57,7 @@ Gladiators are ready for the arena with light armour, shield, nets and a weapon 
 %%%%
 Healer
 
-Healers are followers of Elyvilon, ready to heal themselves and others. The latter will possibly pacify beasts and brutes, thereby yielding experience.
+Healers are followers of Elyvilon, ready to heal themselves and others. Such healing will possibly pacify beasts and brutes, yielding experience.
 %%%%
 Hunter
 
@@ -71,17 +75,13 @@ Necromancer
 
 Necromancers are wizards specializing in the practice of death magic. They start out with the Pain spell.
 %%%%
-Paladin
-
-Paladins are righteous warriors joining the Shining One's crusade against evil.
-%%%%
 Priest
 
-Priests are followers of Zin, Yredelemnul, or the orc god Beogh.
+Priests are followers of Zin, spreading the god's word to the Dungeon's inhabitants. Hill Orcs instead follow the orc god Beogh.
 %%%%
-Reaver
+Skald
 
-Reavers are versatile, using destructive magics alongside melee fighting.
+Skalds are melee fighters who can boost themselves in battle with spells from the book of War Chants.
 %%%%
 Stalker
 
@@ -109,5 +109,5 @@ Warpers start with a weapon of their choice and a Blinking scroll. They can lear
 %%%%
 Wizard
 
-Wizards get to choose which book of Minor Magic they start with. They have higher magical reserves than any other background.
+Wizards start with a book of Minor Magic, containing a wide range of spells. They have higher magical reserves than any other background.
 %%%%

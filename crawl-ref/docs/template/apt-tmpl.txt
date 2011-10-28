@@ -10,28 +10,32 @@ two other, less sophisticated ways:
   (lightgrey).
 
 If you consider figuring out such things yourself to be fun, stop
-reading now. Otherwise, just go ahead. (The numbers in brackets
-are the aptitude values shown in version 0.6 and older.)
+reading now. Otherwise, just go ahead.
 
- -5  (238)  abysmal aptitude
- -4  (200)  very poor aptitude (learning half as fast as Humans)
- -3  (168)  poor aptitude
- -2  (141)  bad aptitude 
- -1  (119)  slightly disfavoured aptitude
-  0  (100)  standard aptitude (Humans)
- +1   (84)  slightly favoured aptitude
- +2   (71)  strong aptitude
- +3   (59)  very strong aptitude
- +4   (50)  outstanding aptitude (learning twice as fast as Humans)
- +5   (42)  exceptional aptitude
+ -5  abysmal aptitude
+ -4  terrible aptitude (learning half as fast as Humans)
+ -3  very poor aptitude
+ -2  poor aptitude
+ -1  slightly disfavoured aptitude
+  0  standard aptitude (Humans)
+ +1  slightly favoured aptitude
+ +2  strong aptitude
+ +3  very strong aptitude
+ +4  outstanding aptitude (learning twice as fast as Humans)
+ +5  exceptional aptitude
 
-Please note that many things affect how quickly a character will actually 
-learn a skill. Thus, the numbers below are good enough for comparisons among
-species, but not necessarily among skills.
+Please note that many things affect how quickly a character will
+actually learn a skill. Thus, the numbers below are good enough for
+comparisons among species, but not necessarily among skills.
 
-The Experience value (Exp) is special and indicates how much experience has
-to be earned in order to gain a new level. Here 100 is the Human standard,
-and all other species (apart from Halfling, Kobold, Hill Orc) are slower.
+There are three special values: HP, MP and Experience:
+- The HP and MP values indicate the percentages of hit points and magic
+  points that are gained per level. 0 is the Human standard, -1 is 10%
+  fewer points, +1 is 10% more points, etc.
+- The Experience value indicates how much experience has to be earned in
+  order to gain a new level. 100 is the Human standard, and all other
+  species (apart from Halfling, Kobold and Hill Orc) are slower. For
+  example, 150 means 50% more experience must be earned.
 
 The abbreviations used for the skills are:
 
@@ -39,24 +43,21 @@ General skills, Experience   Melee and Ranged Combat     Spellcasting and Magic
 --------------------------   -----------------------     ----------------------
 Arm - Armour                 Fgt - Fighting              Spc - Spellcasting
 Ddg - Dodging                SBl - Short Blades          Coj - Conjurations
-Sth - Stealth                LBl - Long Blades           Enc - Enchantments
-Stb - Stabbing               M&F - Maces & Flails        Sum - Summonings
-Shd - Shields                Axs - Axes                  Nec - Necromancy
-T&D - Traps & Doors          Pla - Polearms              Trl - Translocations
-                             Stv - Staves                Trm - Transmutations
-Inv - Invocations            UC  - Unarmed Combat
+Sth - Stealth                LBl - Long Blades           Hex - Hexes
+Stb - Stabbing               M&F - Maces & Flails        Cha - Charms
+Shd - Shields                Axs - Axes                  Sum - Summonings
+T&D - Traps & Doors          Pla - Polearms              Nec - Necromancy
+                             Stv - Staves                Trl - Translocations
+Inv - Invocations            UC  - Unarmed Combat        Trm - Transmutations
 Evo - Evocations
                              Thr - Throwing              Fir - Fire Magic
-                             Slg - Slings                Ice - Ice Magic
-Exp - Experience             Bws - Bows                  Air - Air Magic
-                             Crb - Crossbows             Ear - Earth Magic
+HP  - hit points             Slg - Slings                Ice - Ice Magic
+MP  - magic points           Bws - Bows                  Air - Air Magic
+Exp - experience             Crb - Crossbows             Ear - Earth Magic
                                                          Poi - Poison Magic
 
-Please do not edit this table directly in docs/aptitudes.txt -- make
-changes to the template in docs/template/apt-tmpl.txt.
 
-
-                 Arm Ddg Sth Stb Shd T&D   Inv Evo                 Exp
+                 Arm Ddg Sth Stb Shd T&D   Inv Evo        HP  MP   Exp
 ----------------------------------------------------------------------
 
 
@@ -64,5 +65,5 @@ changes to the template in docs/template/apt-tmpl.txt.
 ----------------------------------------------------------------------
 
 
-                 Spc Coj Enc Sum Nec Trl Trm       Fir Ice Air Ear Poi
+                 Spc Coj Hex Cha Sum Nec Trl Trm   Fir Ice Air Ear Poi
 ----------------------------------------------------------------------

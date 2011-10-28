@@ -1,8 +1,7 @@
-/*
- *  File:       artefact.cc
- *  Summary:    Random and unrandom artefact functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Random and unrandom artefact functions.
+**/
 
 #include "AppHdr.h"
 
@@ -31,15 +30,11 @@
 #include "player.h"
 #include "random.h"
 #include "religion.h"
+#include "shout.h"
 #include "species.h"
 #include "spl-book.h"
 #include "stuff.h"
 #include "view.h" // Elemental colours for unrandarts
-#include "shout.h"
-
-// The initial generation of a randart is very simple - it occurs in
-// dungeon.cc and consists of giving it a few random things - plus &
-// plus2 mainly.
 
 static bool _god_fits_artefact(const god_type which_god, const item_def &item,
                                bool name_check_only = false)
@@ -78,7 +73,6 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         break;
 
     case GOD_SIF_MUNA:
-    case GOD_KIKUBAAQUDGHA:
     case GOD_VEHUMET:
         // The magic gods: no weapons, no preventing spellcasting.
         if (item.base_type == OBJ_WEAPONS)
@@ -90,9 +84,11 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         if (item.base_type == OBJ_BOOKS)
             type_bad = true;
 
-        if (item.base_type == OBJ_JEWELLERY && (item.sub_type == RING_WIZARDRY
-            || item.sub_type == RING_FIRE || item.sub_type == RING_ICE
-            || item.sub_type == RING_MAGICAL_POWER))
+        if (item.base_type == OBJ_JEWELLERY
+            && (item.sub_type == RING_WIZARDRY
+             || item.sub_type == RING_FIRE
+             || item.sub_type == RING_ICE
+             || item.sub_type == RING_MAGICAL_POWER))
         {
             type_bad = true;
         }
@@ -113,11 +109,8 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
 
     if (type_bad && !name_check_only)
     {
-        ASSERT(!"God attempting to gift invalid type of item.");
-        mprf(MSGCH_ERROR, "%s attempting to gift invalid type of item.",
-             god_name(which_god).c_str());
-        // Prevent infinite loop in make_item_randart().
-        return (true);
+        die("%s attempting to gift invalid type of item.",
+            god_name(which_god).c_str());
     }
 
     if (type_bad)
@@ -129,8 +122,10 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     if (is_evil_god(which_god) && brand == SPWPN_HOLY_WRATH)
         return (false);
     else if (is_good_god(which_god)
-             && (brand == SPWPN_DRAINING || brand == SPWPN_PAIN
-                 || brand == SPWPN_VAMPIRICISM || brand == SPWPN_REAPING
+             && (brand == SPWPN_DRAINING
+                 || brand == SPWPN_PAIN
+                 || brand == SPWPN_VAMPIRICISM
+                 || brand == SPWPN_REAPING
                  || brand == SPWPN_CHAOS
                  || is_demonic(item)
                  || artefact_wpn_property(item, ARTP_CURSED) != 0))
@@ -179,8 +174,11 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
             return (false);
         break;
 
-    case GOD_SIF_MUNA:
     case GOD_KIKUBAAQUDGHA:
+        // Necromancy god.
+        if (item.base_type == OBJ_WEAPONS && brand != SPWPN_PAIN)
+            return (false);
+    case GOD_SIF_MUNA:
     case GOD_VEHUMET:
         // The magic gods: no preventing spellcasting.
         if (artefact_wpn_property(item, ARTP_PREVENT_SPELLCASTING))
@@ -218,6 +216,12 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         }
         break;
 
+    case GOD_ASHENZARI:
+        // Cursed god: no holy wrath (since that brand repels curses).
+        if (brand == SPWPN_HOLY_WRATH)
+            return (false);
+        break;
+
     default:
         break;
     }
@@ -225,8 +229,7 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
     return (true);
 }
 
-static std::string _replace_name_parts(const std::string name_in,
-                                       const item_def& item)
+std::string replace_name_parts(const std::string &name_in, const item_def& item)
 {
     std::string name = name_in;
 
@@ -313,7 +316,7 @@ static std::string _replace_name_parts(const std::string name_in,
         else
         {
             do
-                which_god = static_cast<god_type>(random2(NUM_GODS - 1) + 1);
+                which_god = random_god(true);
             while (!_god_fits_artefact(which_god, item, true));
         }
 
@@ -371,6 +374,13 @@ bool is_special_unrandom_artefact(const item_def &item)
             && (_seekunrandart(item)->flags & UNRAND_FLAG_SPECIAL));
 }
 
+bool is_randapp_artefact(const item_def &item)
+{
+    return (item.flags & ISFLAG_UNRANDART
+            && !(item.flags & ISFLAG_KNOW_TYPE)
+            && (_seekunrandart(item)->flags & UNRAND_FLAG_RANDAPP));
+}
+
 unique_item_status_type get_unique_item_status(const item_def& item)
 {
     if (item.flags & ISFLAG_UNRANDART)
@@ -398,9 +408,14 @@ void set_unique_item_status(int art, unique_item_status_type status)
     you.unique_items[art - UNRAND_START] = status;
 }
 
-static uint32_t _calc_seed(const item_def &item)
+void reveal_randapp_artefact(item_def &item)
 {
-    return (item.special & RANDART_SEED_MASK);
+    ASSERT(is_unrandom_artefact(item));
+    const unrandart_entry *unrand = _seekunrandart(item);
+    ASSERT(unrand);
+    ASSERT(unrand->flags & UNRAND_FLAG_RANDAPP);
+    // name and tile update themselves
+    item.colour = unrand->colour;
 }
 
 void artefact_desc_properties(const item_def &item,
@@ -413,6 +428,14 @@ void artefact_desc_properties(const item_def &item,
         return;
 
     artefact_wpn_properties(item, proprt, known);
+
+    if (item.base_type == OBJ_ARMOUR
+        && item.sub_type == ARM_GOLD_DRAGON_ARMOUR)
+    {
+        ++proprt[ARTP_POISON];
+        ++proprt[ARTP_FIRE];
+        ++proprt[ARTP_COLD];
+    }
 
     if (!force_fake_props && item_ident(item, ISFLAG_KNOW_PROPERTIES))
         return;
@@ -681,12 +704,8 @@ void static _get_randart_properties(const item_def &item,
     const int atype = item.sub_type;
     int power_level = 0;
 
-    const uint32_t seed = _calc_seed(item);
-    rng_save_excursion exc;
-    seed_rng(seed);
-
     if (aclass == OBJ_ARMOUR)
-        power_level = item.plus / 2 + 2;
+        power_level = item.plus * 2 / (armour_max_enchant(item) + 2) + 2;
     else if (aclass == OBJ_JEWELLERY)
         power_level = 1 + random2(3) + random2(2);
     else // OBJ_WEAPON
@@ -849,11 +868,11 @@ void static _get_randart_properties(const item_def &item,
         // Weapons and rings of slaying can't get these.
         if (one_chance_in(4 + power_level))  // to-hit
         {
-            proprt[ARTP_ACCURACY] = 1 + random2(3) + random2(2);
+            proprt[ARTP_ACCURACY] = 2 + random2(3) + random2(3);
             power_level++;
             if (one_chance_in(4))
             {
-                proprt[ARTP_ACCURACY] -= 1 + random2(3) + random2(3)
+                proprt[ARTP_ACCURACY] -= 2 + random2(4) + random2(4)
                                            + random2(3);
                 power_level--;
             }
@@ -861,11 +880,11 @@ void static _get_randart_properties(const item_def &item,
 
         if (one_chance_in(4 + power_level))  // to-dam
         {
-            proprt[ARTP_DAMAGE] = 1 + random2(3) + random2(2);
+            proprt[ARTP_DAMAGE] = 2 + random2(3) + random2(3);
             power_level++;
             if (one_chance_in(4))
             {
-                proprt[ARTP_DAMAGE] -= 1 + random2(3) + random2(3)
+                proprt[ARTP_DAMAGE] -= 2 + random2(4) + random2(4)
                                          + random2(3);
                 power_level--;
             }
@@ -888,7 +907,7 @@ void static _get_randart_properties(const item_def &item,
                 && atype != RING_FIRE
                 && atype != RING_ICE))
         && (aclass != OBJ_ARMOUR
-            || (atype != ARM_DRAGON_ARMOUR
+            || (atype != ARM_FIRE_DRAGON_ARMOUR
                 && atype != ARM_ICE_DRAGON_ARMOUR
                 && atype != ARM_GOLD_DRAGON_ARMOUR)))
     {
@@ -906,7 +925,7 @@ void static _get_randart_properties(const item_def &item,
                && atype != RING_FIRE
                && atype != RING_ICE)
         && (aclass != OBJ_ARMOUR
-            || atype != ARM_DRAGON_ARMOUR
+            || atype != ARM_FIRE_DRAGON_ARMOUR
                && atype != ARM_ICE_DRAGON_ARMOUR
                && atype != ARM_GOLD_DRAGON_ARMOUR))
     {
@@ -945,6 +964,7 @@ void static _get_randart_properties(const item_def &item,
     if (!done_powers
         && one_chance_in(4 + power_level)
         && (aclass != OBJ_JEWELLERY || atype != RING_LIFE_PROTECTION)
+        && (aclass != OBJ_ARMOUR || atype != ARM_PEARL_DRAGON_ARMOUR)
         && proprt[ARTP_BRAND] != SPWPN_DRAINING
         && proprt[ARTP_BRAND] != SPWPN_VAMPIRICISM
         && proprt[ARTP_BRAND] != SPWPN_PAIN
@@ -1062,7 +1082,7 @@ void static _get_randart_properties(const item_def &item,
                 break;              // already does this or something
             }
             if (aclass == OBJ_ARMOUR
-                && (atype == ARM_DRAGON_ARMOUR || atype == ARM_ICE_DRAGON_ARMOUR
+                && (atype == ARM_FIRE_DRAGON_ARMOUR || atype == ARM_ICE_DRAGON_ARMOUR
                     || atype == ARM_GOLD_DRAGON_ARMOUR))
             {
                 break;
@@ -1077,7 +1097,7 @@ void static _get_randart_properties(const item_def &item,
                 break;              // already does this or something
             }
             if (aclass == OBJ_ARMOUR
-                && (atype == ARM_DRAGON_ARMOUR || atype == ARM_ICE_DRAGON_ARMOUR
+                && (atype == ARM_FIRE_DRAGON_ARMOUR || atype == ARM_ICE_DRAGON_ARMOUR
                     || atype == ARM_GOLD_DRAGON_ARMOUR))
             {
                 break;
@@ -1239,7 +1259,8 @@ void artefact_wpn_properties(const item_def &item,
                              artefact_known_props_t &known)
 {
     ASSERT(is_artefact(item));
-    ASSERT(item.props.exists(KNOWN_PROPS_KEY));
+    if (!item.props.exists(KNOWN_PROPS_KEY))
+        return;
 
     const CrawlStoreValue &_val = item.props[KNOWN_PROPS_KEY];
     ASSERT(_val.get_type() == SV_VEC);
@@ -1278,9 +1299,7 @@ void artefact_wpn_properties(const item_def &item,
             proprt[i] = static_cast<short>(unrand->prpty[i]);
     }
     else
-    {
         _get_randart_properties(item, proprt);
-    }
 }
 
 
@@ -1297,6 +1316,8 @@ int artefact_wpn_property(const item_def &item, artefact_prop_type prop,
 {
     artefact_properties_t  proprt;
     artefact_known_props_t known;
+    proprt.init(0);
+    known.init(0);
 
     artefact_wpn_properties(item, proprt, known);
 
@@ -1357,13 +1378,6 @@ void artefact_wpn_learn_prop(item_def &item, artefact_prop_type prop)
         add_autoinscription(item, artefact_auto_inscription(item));
 }
 
-bool artefact_wpn_known_prop(const item_def &item, artefact_prop_type prop)
-{
-    bool known;
-    artefact_wpn_property(item, prop, known);
-    return known;
-}
-
 static std::string _get_artefact_type(const item_def &item,
                                       bool appear = false)
 {
@@ -1374,6 +1388,10 @@ static std::string _get_artefact_type(const item_def &item,
     case OBJ_WEAPONS:
         return "weapon";
     case OBJ_ARMOUR:
+        if (item.sub_type == ARM_ROBE)
+            return "robe";
+        if (get_item_slot(item) == EQ_BODY_ARMOUR)
+            return "body armour";
         return "armour";
     case OBJ_JEWELLERY:
         // Distinguish between amulets and rings only in appearance.
@@ -1403,22 +1421,22 @@ static bool _pick_db_name(const item_def &item)
     }
 }
 
-std::string artefact_name_lookup(const item_def &item,
+static std::string _artefact_name_lookup(const item_def &item,
                                  const std::string &lookup)
 {
     const std::string name = getRandNameString(lookup);
-    return (!name.empty()? _replace_name_parts(name, item) : name);
+    return (!name.empty()? replace_name_parts(name, item) : name);
 }
 
-bool artefact_name_lookup(std::string &result,
+static bool _artefact_name_lookup(std::string &result,
                           const item_def &item,
                           const std::string &lookup)
 {
-    result = artefact_name_lookup(item, lookup);
+    result = _artefact_name_lookup(item, lookup);
     return (!result.empty());
 }
 
-std::string artefact_name(const item_def &item, bool appearance)
+std::string make_artefact_name(const item_def &item, bool appearance)
 {
     ASSERT(is_artefact(item));
 
@@ -1430,10 +1448,11 @@ std::string artefact_name(const item_def &item, bool appearance)
     if (is_unrandom_artefact(item))
     {
         const unrandart_entry *unrand = _seekunrandart(item);
-        return (item_type_known(item) ? unrand->name : unrand->unid_name);
+        if (item_type_known(item))
+            return unrand->name;
+        if (!(unrand->flags & UNRAND_FLAG_RANDAPP))
+            return unrand->unid_name;
     }
-
-    const uint32_t seed = _calc_seed(item);
 
     std::string lookup;
     std::string result;
@@ -1461,9 +1480,6 @@ std::string artefact_name(const item_def &item, bool appearance)
     // get base type
     lookup += _get_artefact_type(item, appearance);
 
-    rng_save_excursion rng_state;
-    seed_rng(seed);
-
     if (appearance)
     {
         std::string appear = getRandNameString(lookup, " appearance");
@@ -1488,19 +1504,19 @@ std::string artefact_name(const item_def &item, bool appearance)
         std::string name;
         do
         {
-            (artefact_name_lookup(name, item, lookup)
+            (_artefact_name_lookup(name, item, lookup)
 
              // If nothing found, try god name alone.
              || (god_gift
-                 && artefact_name_lookup(name, item,
-                                         god_name(
+                 && _artefact_name_lookup(name, item,
+                                          god_name(
                                              static_cast<god_type>(item_orig),
                                              false)))
 
              // If still nothing found, try base type alone.
-             || artefact_name_lookup(name, item, _get_artefact_type(item)));
+             || _artefact_name_lookup(name, item, _get_artefact_type(item)));
         }
-        while (--tries > 0 && name.length() > 25);
+        while (--tries > 0 && strwidth(name) > 25);
 
         if (name.empty()) // still nothing found?
             result += "of Bugginess";
@@ -1538,12 +1554,12 @@ std::string get_artefact_name(const item_def &item, bool force_known)
         // print artefact's real name
         if (item.props.exists(ARTEFACT_NAME_KEY))
             return item.props[ARTEFACT_NAME_KEY].get_string();
-        return artefact_name(item, false);
+        return make_artefact_name(item, false);
     }
     // print artefact appearance
     if (item.props.exists(ARTEFACT_APPEAR_KEY))
         return item.props[ARTEFACT_APPEAR_KEY].get_string();
-    return artefact_name(item, false);
+    return make_artefact_name(item, false);
 }
 
 void set_artefact_name(item_def &item, const std::string &name)
@@ -1551,13 +1567,6 @@ void set_artefact_name(item_def &item, const std::string &name)
     ASSERT(is_artefact(item));
     ASSERT(!name.empty());
     item.props[ARTEFACT_NAME_KEY].get_string() = name;
-}
-
-void set_artefact_appearance(item_def &item, const std::string &appear)
-{
-    ASSERT(is_artefact(item));
-    ASSERT(!appear.empty());
-    item.props[ARTEFACT_APPEAR_KEY].get_string() = appear;
 }
 
 int find_unrandart_index(const item_def& artefact)
@@ -1612,7 +1621,17 @@ int find_okay_unrandart(uint8_t aclass, uint8_t atype, bool in_abyss)
         }
 
         if (entry->base_type != aclass
-            || (atype != OBJ_RANDOM && entry->sub_type != atype))
+            || atype != OBJ_RANDOM && entry->sub_type != atype
+               // Acquirement.
+               && (aclass != OBJ_WEAPONS
+                   || weapon_skill(entry->base_type, atype) !=
+                      weapon_skill(entry->base_type, entry->sub_type)
+                   || hands_reqd(entry->base_type,
+                                 atype,
+                                 you.body_size()) !=
+                      hands_reqd(entry->base_type,
+                                 entry->sub_type,
+                                 you.body_size())))
         {
             continue;
         }
@@ -1867,11 +1886,6 @@ static void _artefact_setup_prop_vectors(item_def &item)
     }
 }
 
-void artefact_set_name(item_def &item, const std::string &name)
-{
-    item.props[ARTEFACT_NAME_KEY].get_string() = name;
-}
-
 // If force_mundane is true, normally mundane items are forced to
 // nevertheless become artefacts.
 bool make_item_randart(item_def &item, bool force_mundane)
@@ -1914,12 +1928,10 @@ bool make_item_randart(item_def &item, bool force_mundane)
     int randart_tries = 500;
     do
     {
-        item.special = (random_int() & RANDART_SEED_MASK);
         // Now that we found something, initialise the props array.
         if (--randart_tries <= 0 || !_init_artefact_properties(item))
         {
-            // Something went wrong that no amount of changing
-            // item.special will fix.
+            // Something went wrong that no amount of rerolling will fix.
             item.special = 0;
             item.props.erase(ARTEFACT_PROPS_KEY);
             item.props.erase(KNOWN_PROPS_KEY);
@@ -1934,14 +1946,14 @@ bool make_item_randart(item_def &item, bool force_mundane)
     if (item.props.exists(ARTEFACT_NAME_KEY))
         ASSERT(item.props[ARTEFACT_NAME_KEY].get_type() == SV_STR);
     else
-        artefact_set_name(item, artefact_name(item, false));
+        set_artefact_name(item, make_artefact_name(item, false));
 
     // get artefact appearance
     if (item.props.exists(ARTEFACT_APPEAR_KEY))
         ASSERT(item.props[ARTEFACT_APPEAR_KEY].get_type() == SV_STR);
     else
         item.props[ARTEFACT_APPEAR_KEY].get_string() =
-            artefact_name(item, true);
+            make_artefact_name(item, true);
 
     return (true);
 }
@@ -1966,8 +1978,7 @@ static void _make_faerie_armour(item_def &item)
             || artefact_wpn_property(doodad, ARTP_PREVENT_SPELLCASTING)
             || artefact_wpn_property(doodad, ARTP_CAUSE_TELEPORTATION)
             || artefact_wpn_property(doodad, ARTP_PREVENT_TELEPORTATION)
-            || artefact_wpn_property(doodad, ARTP_MUTAGENIC)
-            || artefact_wpn_property(doodad, ARTP_PONDEROUS))
+            || artefact_wpn_property(doodad, ARTP_MUTAGENIC))
         {
             continue;
         }
@@ -2010,7 +2021,13 @@ bool make_item_unrandart(item_def &item, int unrand_index)
 
     // get artefact appearance
     ASSERT(!item.props.exists(ARTEFACT_APPEAR_KEY));
-    item.props[ARTEFACT_APPEAR_KEY].get_string() = unrand->unid_name;
+    if (!(unrand->flags & UNRAND_FLAG_RANDAPP))
+        item.props[ARTEFACT_APPEAR_KEY].get_string() = unrand->unid_name;
+    else
+    {
+        item.props[ARTEFACT_APPEAR_KEY].get_string() = make_artefact_name(item, true);
+        item_colour(item);
+    }
 
     set_unique_item_status(unrand_index, UNIQ_EXISTS);
 
@@ -2037,45 +2054,25 @@ const char *unrandart_descrip(int which_descrip, const item_def &item)
                                  : "Unknown.");
 }
 
-void artefact_clear_properties(item_def &item)
+void unrand_reacts()
 {
-    ASSERT(is_artefact(item));
-    ASSERT(item.props.exists(ARTEFACT_PROPS_KEY));
+    item_def*  weapon     = you.weapon();
+    const int  old_plus   = weapon ? weapon->plus   : 0;
+    const int  old_plus2  = weapon ? weapon->plus2  : 0;
 
-    CrawlVector &rap_vec = item.props[ARTEFACT_PROPS_KEY].get_vector();
-    ASSERT(rap_vec.get_type()     == SV_SHORT);
-    ASSERT(rap_vec.size()         == ART_PROPERTIES);
-    ASSERT(rap_vec.get_max_size() == ART_PROPERTIES);
-
-    for (vec_size i = 0; i < ART_PROPERTIES; i++)
-        rap_vec[i].get_short() = 0;
-}
-
-// Set all non-zero properties in proprt on the randart supplied.
-void artefact_merge_properties(item_def &item,
-                               const artefact_properties_t &proprt)
-{
-    ASSERT(is_artefact(item));
-    ASSERT(item.props.exists(ARTEFACT_PROPS_KEY));
-
-    CrawlVector &rap_vec = item.props[ARTEFACT_PROPS_KEY].get_vector();
-    ASSERT(rap_vec.get_type()     == SV_SHORT);
-    ASSERT(rap_vec.size()         == ART_PROPERTIES);
-    ASSERT(rap_vec.get_max_size() == ART_PROPERTIES);
-
-    for (vec_size i = 0; i < ART_PROPERTIES; i++)
+    for (int i = 0; i < NUM_EQUIP; i++)
     {
-        const short value = proprt[i];
-        if (value)
-            rap_vec[i].get_short() = value;
-    }
-}
+        if (you.unrand_reacts & (1 << i))
+        {
+            item_def&        item  = you.inv[you.equip[i]];
+            unrandart_entry* entry = get_unrand_entry(item.special);
 
-void artefact_set_properties(item_def &item,
-                             const artefact_properties_t &proprt)
-{
-    artefact_clear_properties(item);
-    artefact_merge_properties(item, proprt);
+            entry->world_reacts_func(&item);
+        }
+    }
+
+    if (weapon && (old_plus != weapon->plus || old_plus2 != weapon->plus2))
+        you.wield_change = true;
 }
 
 void artefact_set_property(item_def          &item,
@@ -2093,42 +2090,18 @@ void artefact_set_property(item_def          &item,
     rap_vec[prop].get_short() = val;
 }
 
-void cheibriados_make_item_ponderous(item_def &item)
-{
-    ASSERT(item.base_type == OBJ_ARMOUR);
-    const special_armour_type brand = get_armour_ego_type(item);
-    if (!is_artefact(item))
-    {
-        item.flags |= ISFLAG_RANDART;
-        _artefact_setup_prop_vectors(item);
-        const std::string suffix =
-            artefact_name_lookup(
-                item,
-                god_name(GOD_CHEIBRIADOS) + " ponderous");
-        artefact_set_name(item, item_base_name(item) + " " + suffix);
-    }
-    artefact_properties_t props;
-    props.init(0);
-    props[ARTP_PONDEROUS] = true;
-    props[ARTP_BRAND] = brand;
-    artefact_merge_properties(item, props);
-
-    if (Options.autoinscribe_artefacts)
-        add_autoinscription(item, artefact_auto_inscription(item));
-}
-
 template<typename Z>
-static inline void artefact_pad_store_vector(CrawlVector &vector, Z value)
+static inline void artefact_pad_store_vector(CrawlVector &vec, Z value)
 {
-    if (vector.get_max_size() < ART_PROPERTIES)
+    if (vec.get_max_size() < ART_PROPERTIES)
     {
         // Authentic tribal dance to propitiate the asserts in store.cc:
-        const int old_size = vector.get_max_size();
-        vector.set_max_size(VEC_MAX_SIZE);
-        vector.resize(ART_PROPERTIES);
-        vector.set_max_size(ART_PROPERTIES);
+        const int old_size = vec.get_max_size();
+        vec.set_max_size(VEC_MAX_SIZE);
+        vec.resize(ART_PROPERTIES);
+        vec.set_max_size(ART_PROPERTIES);
         for (int i = old_size; i < ART_PROPERTIES; ++i)
-            vector[i] = value;
+            vec[i] = value;
     }
 }
 

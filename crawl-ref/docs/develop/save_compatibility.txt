@@ -27,6 +27,12 @@ rarely is bad.
 
 2. HOW
 
+[note added by galehar]
+First, if you're adding a property to one of the actor, player or monster
+class, consider storing it in the props hash (declared in actor.h). Especially
+if the property is temporary or not applied to all monsters. Also, it won't
+create any save compatibility issues.
+
 If you are changing any of the code in tags.cc (which implements load
 and save for savefiles), you probably need to be concerned about save
 compatibility.  Any code which uses the marshall* and unmarshall*
@@ -42,7 +48,7 @@ tag_construct_you in tags.cc.  Unfortunately, you can't just add
 marshall and unmarshall calls, since if you get an old save, the wrong
 value will be unmarshalled, synchronization is lost and things
 fall apart.  So first, add a new option to the tag_minor_version enum
-in tags.h.  Make sure the new option is at the end, and that you
+in tag-version.h.  Make sure the new option is at the end, and that you
 update TAG_MINOR_VERSION to correspond to the new option.  Now, any
 savefile created by the new code, or any later savefile, will have a
 minor version >= your new version number.  So, make the marshall and

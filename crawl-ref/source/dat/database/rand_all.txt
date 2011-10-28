@@ -290,6 +290,8 @@ Untruth
 %%%%
 destiny_name
 
+Causality
+
 Destiny
 
 Fate
@@ -358,6 +360,8 @@ the Ancient
 the Exiled
 
 the Illusory
+
+the Pure
 %%%%
 thing_names
 

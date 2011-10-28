@@ -1,8 +1,7 @@
-/*
- *  File:       place.cc
- *  Summary:    Place related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Place related functions.
+**/
 
 #include "AppHdr.h"
 
@@ -68,7 +67,6 @@ bool single_level_branch(branch_type branch)
 std::string place_name(unsigned short place, bool long_name,
                         bool include_number)
 {
-
     uint8_t branch = (place >> 8) & 0xFF;
     int lev = place & 0xFF;
 
@@ -91,6 +89,9 @@ std::string place_name(unsigned short place, bool long_name,
             if (branch == you.level_type
                 && !you.level_type_origin.empty())
             {
+                if (!long_name)
+                    return uppercase_first(you.level_type_name_abbrev);
+
                 std::string desc;
 
                 size_t space = you.level_type_origin.find(" ");
@@ -99,7 +100,7 @@ std::string place_name(unsigned short place, bool long_name,
                 else
                     desc += you.level_type_origin.substr(space + 1);
 
-                return long_name ? desc : upcase_first(you.level_type_name_abbrev);
+                return desc;
             }
             else
             {
@@ -144,7 +145,7 @@ std::string short_place_name(unsigned short place)
 std::string prep_branch_level_name(unsigned short packed_place)
 {
     std::string place = place_name(packed_place, true, true);
-    if (place.length() && place != "Pandemonium")
+    if (!place.empty() && place != "Pandemonium")
         place[0] = tolower(place[0]);
     return (place.find("level") == 0 ? "on " + place
                                      : "in " + place);

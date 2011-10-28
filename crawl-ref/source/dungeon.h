@@ -1,8 +1,7 @@
-/*
- *  File:       dungeon.h
- *  Summary:    Functions used when building new levels.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used when building new levels.
+**/
 
 
 #ifndef DUNGEON_H
@@ -43,6 +42,7 @@ enum portal_type
     NUM_PORTALS
 };
 
+const int MAKE_GIFT_ITEM = 350; // worse than the next one
 const int MAKE_GOOD_ITEM = 351;
 const unsigned short INVALID_MAP_INDEX = 10000;
 
@@ -62,7 +62,8 @@ enum map_mask_type
     MMT_NO_WALL    = 0x20,    // Wall fixup should not be applied here.
     MMT_OPAQUE     = 0x40,    // Vault may impede connectivity.
     MMT_NO_TRAP    = 0x80,    // No trap generation
-    MMT_NO_SHOP    = 0x100,   // No shop generation
+    MMT_MIMIC      = 0x100,   // Feature mimics
+    MMT_NO_MIMIC   = 0x200,   // This feature shouldn't be turned into a mimic.
 };
 
 class dgn_region;
@@ -141,28 +142,26 @@ public:
     coord_def pos;
     coord_def size;
 
-    int orient;
+    map_section_type orient;
     map_def map;
     std::vector<coord_def> exits;
 
     int level_number;
-
-    // If we're not placing runes, this is the substitute feature.
-    int rune_subst;
 
     // The PC has seen at least one square of this vault.
     bool seen;
 
 public:
     vault_placement()
-        : pos(-1, -1), size(0, 0), orient(0), map(),
-          exits(), level_number(0), rune_subst(-1), seen(false)
+        : pos(-1, -1), size(0, 0), orient(MAP_NONE), map(),
+          exits(), level_number(0), seen(false)
     {
     }
 
     void reset();
     void apply_grid();
     void draw_at(const coord_def &c);
+    void connect(bool spotty = false) const;
 };
 
 class vault_place_iterator
@@ -199,7 +198,8 @@ void read_level_connectivity(reader &th);
 void write_level_connectivity(writer &th);
 
 bool builder(int level_number, level_area_type level_type,
-             bool enable_random_maps = true);
+             bool enable_random_maps = true,
+             dungeon_feature_type dest_stairs_type = NUM_FEATURES);
 void dgn_veto_level();
 
 void dgn_clear_vault_placements(vault_placement_refv &vps);
@@ -209,21 +209,11 @@ void dgn_flush_map_memory();
 double dgn_degrees_to_radians(int degrees);
 bool dgn_has_adjacent_feat(coord_def c, dungeon_feature_type feat);
 coord_def dgn_random_point_in_margin(int margin);
-coord_def dgn_random_point_in_bounds(
-    dungeon_feature_type searchfeat,
-    uint32_t mapmask = MMT_VAULT,
-    dungeon_feature_type adjacent = DNGN_UNSEEN,
-    bool monster_free = false,
-    int tries = 1500);
 coord_def dgn_random_point_from(const coord_def &c, int radius, int margin = 1);
-coord_def dgn_random_point_visible_from(const coord_def &c,
-                                        int radius,
-                                        int margin = 1,
-                                        int tries = 5);
 coord_def dgn_find_feature_marker(dungeon_feature_type feat);
 
 // Generate 3 stone stairs in both directions.
-void dgn_place_stone_stairs();
+void dgn_place_stone_stairs(bool maybe_place_hatches = false);
 
 // Set floor/wall colour based on the mons_alloc array. Used for
 // Abyss and Pan.
@@ -233,26 +223,29 @@ void dgn_set_grid_colour_at(const coord_def &c, int colour);
 bool dgn_place_map(const map_def *map,
                    bool clobber,
                    bool make_no_exits,
-                   const coord_def &pos = INVALID_COORD,
-                   int rune_subst = -1);
+                   const coord_def &pos = INVALID_COORD);
 
 const map_def *dgn_safe_place_map(const map_def *map,
                                   bool clobber,
                                   bool make_no_exits,
-                                  const coord_def &pos = INVALID_COORD,
-                                  int rune_subst = -1);
+                                  const coord_def &pos = INVALID_COORD);
 
 void level_clear_vault_memory();
 void level_welcome_messages();
 void run_map_epilogues ();
 
+struct trap_spec;
+bool place_specific_trap(const coord_def& where, trap_type trap_spec);
+bool place_specific_trap(const coord_def& where, trap_spec* spec);
 
-bool place_specific_trap(const coord_def& where, trap_type spec_type);
+struct shop_spec;
+void place_spec_shop(int level_number, const coord_def& where,
+                     shop_spec* spec, bool representative = false);
 void place_spec_shop(int level_number, const coord_def& where,
                      int force_s_type, bool representative = false);
 bool seen_replace_feat(dungeon_feature_type replace,
                        dungeon_feature_type feature);
-bool unforbidden(const coord_def &c, unsigned mask);
+bool map_masked(const coord_def &c, unsigned mask);
 coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                                 coord_def base_pos, bool find_closest);
 
@@ -264,8 +257,6 @@ int dgn_place_monster(mons_spec &mspec,
 int dgn_place_item(const item_spec &spec,
                    const coord_def &where,
                    int level = INVALID_ABSDEPTH);
-
-dungeon_feature_type dgn_tree_base_feature_at(coord_def c);
 
 class item_list;
 void dgn_place_multiple_items(item_list &list,
@@ -280,47 +271,14 @@ void dgn_set_lt_callback(std::string level_type_name,
 
 void dgn_reset_level(bool enable_random_maps = true);
 
-// Returns true if the given square is okay for use by any character,
-// but always false for squares in non-transparent vaults. This
-// function returns sane results only immediately after dungeon generation
-// (specifically, saving and restoring a game discards information on the
-// vaults used in the current level).
-bool dgn_square_is_passable(const coord_def &c);
-
 void dgn_register_place(const vault_placement &place, bool register_vault);
 void dgn_register_vault(const map_def &map);
-void dgn_unregister_vault(const map_def &map);
 
 void dgn_seen_vault_at(coord_def p);
 
-struct spec_room
-{
-    bool created;
-    bool hooked_up;
-
-    coord_def tl;
-    coord_def br;
-
-    spec_room() : created(false), hooked_up(false), tl(), br()
-    {
-    }
-
-    coord_def random_spot() const;
-};
-
-bool join_the_dots(const coord_def &from, const coord_def &to,
-                   unsigned mmask, bool early_exit = false);
-void spotty_level(bool seeded, int iterations, bool boxy);
-void smear_feature(int iterations, bool boxy, dungeon_feature_type feature,
-                   int x1, int y1, int x2, int y2);
 int process_disconnected_zones(int x1, int y1, int x2, int y2,
                                bool choose_stairless,
                                dungeon_feature_type fill);
-bool octa_room(spec_room &sr, int oblique_max,
-               dungeon_feature_type type_floor);
-
-int count_feature_in_box(int x0, int y0, int x1, int y1,
-                         dungeon_feature_type feat);
 
 // Count number of mutually isolated zones. If choose_stairless, only count
 // zones with no stairs in them. If fill is set to anything other than
@@ -338,10 +296,6 @@ void dgn_replace_area(int sx, int sy, int ex, int ey,
                       dungeon_feature_type feature,
                       unsigned mmask = 0, bool needs_update = false);
 
-void dgn_excavate(coord_def dig_at, coord_def dig_dir);
-void dgn_dig_vault_loose(vault_placement &vp);
-coord_def dgn_random_direction();
-
 bool dgn_ensure_vault_placed(bool vault_success,
                              bool disable_further_vaults);
 
@@ -349,17 +303,10 @@ bool dgn_ensure_vault_placed(bool vault_success,
 vault_placement *dgn_vault_at(coord_def gp);
 void dgn_seen_vault_at(coord_def gp);
 
-inline int count_feature_in_box(const coord_def& p1, const coord_def& p2,
-                          dungeon_feature_type feat)
-{
-    return count_feature_in_box(p1.x, p1.y, p2.x, p2.y, feat);
-}
-int count_antifeature_in_box(int x0, int y0, int x1, int y1,
-                             dungeon_feature_type feat);
 int count_neighbours(int x, int y, dungeon_feature_type feat);
 inline int count_neighbours(const coord_def& p, dungeon_feature_type feat)
 {
-  return count_neighbours(p.x, p.y, feat);
+    return count_neighbours(p.x, p.y, feat);
 }
 
 void remember_vault_placement(std::string key, const vault_placement &place);
@@ -368,7 +315,8 @@ std::string dump_vault_maps();
 
 bool dgn_square_travel_ok(const coord_def &c);
 
-typedef std::set<dungeon_feature_type> dungeon_feature_set;
-extern dungeon_feature_set dgn_Vault_Excavatable_Feats;
-
+bool join_the_dots(const coord_def &from, const coord_def &to, unsigned mmask);
+int count_feature_in_box(int x0, int y0, int x1, int y1,
+                         dungeon_feature_type feat);
+bool door_vetoed(const coord_def pos);
 #endif

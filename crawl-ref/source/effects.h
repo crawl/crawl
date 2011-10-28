@@ -1,8 +1,7 @@
-/*
- *  File:       effects.h
- *  Summary:    Misc stuff.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc stuff.
+**/
 
 
 #ifndef EFFECTS_H
@@ -43,7 +42,8 @@ void collect_radius_points(std::vector<std::vector<coord_def> > &radius_points,
 
 void random_uselessness(int scroll_slot = -1);
 
-bool recharge_wand(const int item_slot = -1, bool known = true);
+int recharge_wand(const int item_slot = -1, bool known = true,
+                  std::string *pre_msg = NULL);
 
 void direct_effect(monster* src, spell_type spl, bolt &pbolt, actor *defender);
 
@@ -56,11 +56,9 @@ int holy_word_player(int pow, int caster, actor *attacker = NULL);
 int holy_word_monsters(coord_def where, int pow, int caster,
                        actor *attacker = NULL);
 
-int torment(int caster, const coord_def& where);
-
-int torment_player(int pow, int caster);
-int torment_monsters(coord_def where, int pow, int caster,
-                     actor *attacker = NULL);
+int torment(actor *attacker, int taux, const coord_def& where);
+int torment_player(actor *attacker, int taux);
+int torment_monsters(coord_def where, actor *attacker, int taux);
 
 void immolation(int pow, int caster, coord_def where, bool known = false,
                 actor *attacker = NULL);

@@ -1,8 +1,7 @@
-/*
- *  File:       mapmark.cc
- *  Summary:    Level markers (annotations).
- *  Created by: dshaligram on Sat Jul 21 12:17:29 2007 UTC
- */
+/**
+ * @file
+ * @brief Level markers (annotations).
+**/
 
 #include "AppHdr.h"
 
@@ -32,7 +31,9 @@ map_marker::marker_reader map_marker::readers[NUM_MAP_MARKER_TYPES] =
     &map_corruption_marker::read,
     &map_wiz_props_marker::read,
     &map_tomb_marker::read,
-    &map_malign_gateway_marker::read
+    &map_malign_gateway_marker::read,
+    &map_phoenix_marker::read,
+    &map_position_marker::read
 };
 
 map_marker::marker_parser map_marker::parsers[NUM_MAP_MARKER_TYPES] =
@@ -254,18 +255,18 @@ void map_lua_marker::write(writer &outf) const
 
     // Call dlua_marker_function(table, 'read')
     lua_pushstring(dlua, "read");
-    if (!dlua.callfn("dlua_marker_function", 2, 1))
+    if (!dlua.callfn("dlua_marker_reader_name", 2, 1))
         end(1, false, "lua_marker: write error: %s", dlua.error.c_str());
 
-    // Right, what's on top should be a function. Save it.
-    dlua_chunk reader(dlua);
-    if (!reader.error.empty())
-        end(1, false, "lua_marker: couldn't save read function: %s",
-            reader.error.c_str());
+    // Right, what's on top should be a table name. Save it.
+    if (!lua_isstring(dlua, -1))
+        end(1, false, "Expected marker class name (string) to save, got %s",
+            lua_typename(dlua, lua_type(dlua, -1)));
 
-    marshallString(outf, reader.compiled_chunk());
+    const std::string marker_class(lua_tostring(dlua, -1));
+    marshallString(outf, marker_class);
 
-    // Okay, saved the reader. Now ask the writer to do its thing.
+    // Okay, saved the marker's class. Now ask the writer to do its thing.
 
     // Call: dlua_marker_method(table, fname, marker)
     get_table();
@@ -284,13 +285,8 @@ void map_lua_marker::read(reader &inf)
     if (!(initialised = unmarshallByte(inf)))
         return;
 
-    lua_stack_cleaner cln(dlua);
-    // Read the Lua chunk we saved.
-    const std::string compiled = unmarshallString(inf, LUA_CHUNK_MAX_SIZE);
-
-    dlua_chunk chunk = dlua_chunk::precompiled(compiled);
-    if (chunk.load(dlua))
-        end(1, false, "lua_marker::read error: %s", chunk.error.c_str());
+    const std::string marker_class = unmarshallString(inf);
+    lua_pushstring(dlua, marker_class.c_str());
     dlua_push_userdata(dlua, this, MAPMARK_METATABLE);
     lua_pushlightuserdata(dlua, &inf);
     if (!dlua.callfn("dlua_marker_read", 3, 1))
@@ -613,10 +609,10 @@ std::string map_tomb_marker::debug_describe() const
 // map_malign_gateway_marker
 
 map_malign_gateway_marker::map_malign_gateway_marker(const coord_def &p,
-                                 int dur, bool ip, monster* mon, god_type gd,
-                                 int pow)
+                                 int dur, bool ip, std::string sum, beh_type b,
+                                 god_type gd, int pow)
     : map_marker(MAT_MALIGN, p), duration(dur), is_player(ip), monster_summoned(false),
-      caster(mon), god(gd), power(pow)
+      summoner_string(sum), behaviour(b), god(gd), power(pow)
 {
 }
 
@@ -626,9 +622,9 @@ void map_malign_gateway_marker::write(writer &out) const
     marshallShort(out, duration);
     marshallBoolean(out, is_player);
     marshallBoolean(out, monster_summoned);
-    if (!is_player)
-        marshallMonster(out, *caster);
-    marshallByte(out, god);
+    marshallString(out, summoner_string);
+    marshallUByte(out, behaviour);
+    marshallUByte(out, god);
     marshallShort(out, power);
 }
 
@@ -638,18 +634,10 @@ void map_malign_gateway_marker::read(reader &in)
     duration  = unmarshallShort(in);
     is_player = unmarshallBoolean(in);
 
-#if TAG_MAJOR_VERSION == 31
-    int minorVersion = in.getMinorVersion();
-    if (minorVersion < TAG_MINOR_MALIGN)
-        monster_summoned = true;
-    else
-#endif
     monster_summoned = unmarshallBoolean(in);
+    summoner_string = unmarshallString(in);
+    behaviour = static_cast<beh_type>(unmarshallUByte(in));
 
-    if (!is_player)
-        unmarshallMonster(in, *caster);
-    else
-        caster = NULL;
     god       = static_cast<god_type>(unmarshallByte(in));
     power     = unmarshallShort(in);
 }
@@ -663,13 +651,108 @@ map_marker *map_malign_gateway_marker::read(reader &in, map_marker_type)
 
 map_marker *map_malign_gateway_marker::clone() const
 {
-    map_malign_gateway_marker *mark = new map_malign_gateway_marker(pos, duration, is_player, caster, god, power);
+    map_malign_gateway_marker *mark = new map_malign_gateway_marker(pos, duration, is_player, summoner_string, behaviour, god, power);
     return (mark);
 }
 
 std::string map_malign_gateway_marker::debug_describe() const
 {
     return make_stringf("Malign gateway (%d, %s)", duration, is_player ? "player" : "monster");
+}
+
+//////////////////////////////////////////////////////////////////////////
+// map_phoenix_marker
+
+map_phoenix_marker::map_phoenix_marker(const coord_def& p,
+                    int tst, int tso, beh_type bh, god_type gd, coord_def cp
+                    )
+    : map_marker(MAT_PHOENIX, p), turn_start(tst), turn_stop(tso),
+            behaviour(bh), god(gd), corpse_pos(cp)
+{
+}
+
+void map_phoenix_marker::write(writer &out) const
+{
+    map_marker::write(out);
+    marshallShort(out, turn_start);
+    marshallShort(out, turn_stop);
+    marshallUByte(out, behaviour);
+    marshallUByte(out, god);
+    marshallCoord(out, corpse_pos);
+}
+
+void map_phoenix_marker::read(reader &in)
+{
+    map_marker::read(in);
+
+    turn_start = unmarshallShort(in);
+    turn_stop = unmarshallShort(in);
+    behaviour = static_cast<beh_type>(unmarshallUByte(in));
+    god       = static_cast<god_type>(unmarshallByte(in));
+    corpse_pos = unmarshallCoord(in);
+}
+
+map_marker *map_phoenix_marker::read(reader &in, map_marker_type)
+{
+    map_phoenix_marker *mc = new map_phoenix_marker();
+    mc->read(in);
+    return (mc);
+}
+
+map_marker *map_phoenix_marker::clone() const
+{
+    map_phoenix_marker *mark = new map_phoenix_marker(pos, turn_start, turn_stop, behaviour, god, corpse_pos);
+    return (mark);
+}
+
+std::string map_phoenix_marker::debug_describe() const
+{
+    return make_stringf("Phoenix marker (%d, %d)", turn_start, turn_stop);
+}
+
+////////////////////////////////////////////////////////////////////////////
+// map_position_marker
+
+map_position_marker::map_position_marker(
+    const coord_def &p,
+    const coord_def _dest)
+    : map_marker(MAT_POSITION, p), dest(_dest)
+{
+}
+
+map_position_marker::map_position_marker(
+    const map_position_marker &other)
+    : map_marker(MAT_POSITION, other.pos), dest(other.dest)
+{
+}
+
+void map_position_marker::write(writer &outf) const
+{
+    this->map_marker::write(outf);
+    marshallCoord(outf, dest);
+}
+
+void map_position_marker::read(reader &inf)
+{
+    map_marker::read(inf);
+    dest = (unmarshallCoord(inf));
+}
+
+map_marker *map_position_marker::clone() const
+{
+    return new map_position_marker(pos, dest);
+}
+
+map_marker *map_position_marker::read(reader &inf, map_marker_type)
+{
+    map_marker *mapf = new map_position_marker();
+    mapf->read(inf);
+    return (mapf);
+}
+
+std::string map_position_marker::debug_describe() const
+{
+    return make_stringf("position (%d,%d)", dest.x, dest.y);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -942,10 +1025,8 @@ void map_markers::write(writer &outf) const
     }
 }
 
-void map_markers::read(reader &inf, int minorVersion)
+void map_markers::read(reader &inf)
 {
-    UNUSED(minorVersion);
-
     clear();
 
     const int cooky = unmarshallInt(inf);

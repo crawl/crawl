@@ -1,8 +1,7 @@
-/*
- *  File:       spl-cast.h
- *  Summary:    Spell casting functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Spell casting functions.
+**/
 
 
 #ifndef SPL_CAST_H
@@ -51,10 +50,13 @@ enum spret_type
     SPRET_NONE,                 // spell was not handled
 };
 
+#define fail_check() if(fail) return SPRET_FAIL
+
 typedef bool (*spell_selector)(spell_type spell);
 
 int list_spells(bool toggle_with_I = true, bool viewing = false,
-                int minRange = -1, spell_selector selector = NULL);
+                bool allow_preselect = true, int minRange = -1,
+                spell_selector selector = NULL);
 int spell_fail(spell_type spell);
 int calc_spell_power(spell_type spell, bool apply_intel,
                      bool fail_rate_chk = false, bool cap_power = true,
@@ -65,13 +67,11 @@ int spell_enhancement(unsigned int typeflags);
 
 bool cast_a_spell(bool check_range, spell_type spell = SPELL_NO_SPELL);
 
-bool maybe_identify_staff(item_def &item, spell_type spell = SPELL_NO_SPELL);
-
 void inspect_spells();
 void do_cast_spell_cmd(bool force);
 
 spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
-                       bool check_range = true, int range_power = 0);
+                       bool check_range = true);
 
 const char* failure_rate_to_string(int fail);
 
@@ -86,5 +86,6 @@ std::string spell_noise_string(spell_type spell);
 bool is_prevented_teleport(spell_type spell);
 
 bool spell_is_uncastable(spell_type spell, std::string &message);
+void spell_skills(spell_type spell, std::set<skill_type> &skills);
 
 #endif

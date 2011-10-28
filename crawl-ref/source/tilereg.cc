@@ -1,19 +1,15 @@
-/*
- *  File:       tilereg.cc
- *  Summary:    Region system implementations
- *
- *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
- */
+/**
+ * @file
+ * @brief Region system implementations
+**/
 
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "tilereg.h"
 
 #include "glwrapper.h"
-
-coord_def Region::NO_CURSOR(-1, -1);
 
 Region::Region() :
     ox(0),
@@ -132,10 +128,15 @@ bool Region::mouse_pos(int mouse_x, int mouse_y, int &cx, int &cy)
     return valid;
 }
 
-void Region::set_transform()
+void Region::set_transform(bool no_scaling)
 {
     GLW_3VF trans(sx + ox, sy + oy, 0);
-    GLW_3VF scale(dx, dy, 1);
+    GLW_3VF scale;
+
+    if (no_scaling)
+        scale = GLW_3VF(1, 1, 1);
+    else
+        scale = GLW_3VF(dx, dy, 1);
 
     glmanager->set_transform(trans, scale);
 }

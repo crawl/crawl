@@ -1,11 +1,11 @@
-/*
- *  File:       startup.cc
- *  Summary:    Collection of startup related functions and objects
- *  Written by:
- */
+/**
+ * @file
+ * @brief Collection of startup related functions and objects
+**/
 
 #include "AppHdr.h"
 
+#include "abyss.h"
 #include "arena.h"
 #include "cio.h"
 #include "command.h"
@@ -24,7 +24,6 @@
 #include "initfile.h"
 #include "itemname.h"
 #include "items.h"
-#include "lev-pand.h"
 #include "macro.h"
 #include "maps.h"
 #include "menu.h"
@@ -46,16 +45,14 @@
 #include "startup.h"
 #include "state.h"
 #include "status.h"
-#include "stuff.h"
 #include "terrain.h"
-#ifdef USE_TILE
- #include "tileview.h"
-#endif
 #include "view.h"
 #include "viewchar.h"
 
 #ifdef USE_TILE
-#include "tilereg-crt.h"
+ #include "tilepick.h"
+ #include "tilereg-crt.h"
+ #include "tileview.h"
 #endif
 
 // Initialise a whole lot of stuff...
@@ -69,7 +66,6 @@ static void _initialize()
         seed_rng(Options.seed);
     else
         seed_rng();
-    get_typeid_array().init(ID_UNKNOWN_TYPE);
     init_char_table(Options.char_set);
     init_show_table();
     init_monster_symbols();
@@ -108,12 +104,12 @@ static void _initialize()
     // Set up the Lua interpreter for the dungeon builder.
     init_dungeon_lua();
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // Draw the splash screen before the database gets initialised as that
     // may take awhile and it's better if the player can look at a pretty
     // screen while this happens.
     if (!crawl_state.map_stat_gen && !crawl_state.test
-        && Options.tile_title_screen)
+        && crawl_state.title_screen)
     {
         tiles.draw_title();
         tiles.update_title_msg("Loading Databases...");
@@ -122,21 +118,22 @@ static void _initialize()
 
     // Initialise internal databases.
     databaseSystemInit();
-#ifdef USE_TILE
-    if (Options.tile_title_screen)
+#ifdef USE_TILE_LOCAL
+    if (crawl_state.title_screen)
         tiles.update_title_msg("Loading Spells and Features...");
 #endif
 
     init_feat_desc_cache();
     init_spell_name_cache();
     init_spell_rarities();
-#ifdef USE_TILE
-    if (Options.tile_title_screen)
+#ifdef USE_TILE_LOCAL
+    if (crawl_state.title_screen)
         tiles.update_title_msg("Loading maps...");
 #endif
 
     // Read special levels and vaults.
     read_maps();
+    run_map_global_preludes();
 
     if (crawl_state.build_db)
         end(0);
@@ -146,8 +143,8 @@ static void _initialize()
 
     // System initialisation stuff.
     textbackground(0);
-#ifdef USE_TILE
-    if (Options.tile_title_screen)
+#ifdef USE_TILE_LOCAL
+    if (!Options.tile_skip_title && crawl_state.title_screen)
     {
         tiles.update_title_msg("Loading complete, press any key to start.");
         tiles.hide_title();
@@ -189,19 +186,24 @@ static void _initialize()
 
 static void _post_init(bool newc)
 {
+    ASSERT(strwidth(you.your_name) <= kNameLen);
+
     // Fix the mutation definitions for the species we're playing.
     fixup_mutations();
+    fixup_skills();
 
     // Load macros
     macro_init();
 
     crawl_state.need_save = true;
+    crawl_state.last_type = crawl_state.type;
+    crawl_state.last_game_won = false;
 
     calc_hp();
     calc_mp();
     food_change(true);
 
-    run_map_preludes();
+    run_map_local_preludes();
 
     if (newc && you.char_direction == GDT_GAME_START)
     {
@@ -214,16 +216,13 @@ static void _post_init(bool newc)
     level_id old_level;
     old_level.level_type = NUM_LEVEL_AREA_TYPES;
 
-    load(you.entering_level ? you.transit_stair : DNGN_STONE_STAIRS_DOWN_I,
-         you.entering_level ? LOAD_ENTER_LEVEL :
-         newc               ? LOAD_START_GAME : LOAD_RESTART_GAME,
-         old_level);
+    load_level(you.entering_level ? you.transit_stair : DNGN_STONE_STAIRS_DOWN_I,
+               you.entering_level ? LOAD_ENTER_LEVEL :
+               newc               ? LOAD_START_GAME : LOAD_RESTART_GAME,
+               old_level);
 
     if (newc && you.char_direction == GDT_GAME_START)
-    {
-        // Randomise colours properly for the Abyss.
-        init_pandemonium();
-    }
+        generate_abyss();
 
 #ifdef DEBUG_DIAGNOSTICS
     // Debug compiles display a lot of "hidden" information, so we auto-wiz.
@@ -241,7 +240,7 @@ static void _post_init(bool newc)
     you.wield_change        = true;
 
     // Start timer on session.
-    you.start_time = time(NULL);
+    you.last_keypress_time = time(NULL);
 
 #ifdef CLUA_BINDINGS
     clua.runhook("chk_startgame", "b", newc);
@@ -257,10 +256,6 @@ static void _post_init(bool newc)
 #endif
 
 #ifdef USE_TILE
-    // Override inventory weights options for tiled menus.
-    if (Options.tile_menu_icons && Options.show_inventory_weights)
-        Options.show_inventory_weights = false;
-
     init_player_doll();
 
     tiles.resize();
@@ -268,12 +263,12 @@ static void _post_init(bool newc)
     update_player_symbol();
 
     draw_border();
-    new_level();
+    new_level(!newc);
     update_turn_count();
     update_vision_range();
     you.xray_vision = !!you.duration[DUR_SCRYING];
     init_exclusion_los();
-    you.bondage_level = ash_bondage_level();
+    ash_check_bondage(false);
 
     trackers_init_new_level(false);
 
@@ -289,8 +284,11 @@ static void _post_init(bool newc)
         zap_los_monsters(Hints.hints_events[HINT_SEEN_FIRST_OBJECT]);
 
         // For a newly started hints mode, turn secret doors into normal ones.
-        if (Hints.hints_left)
+        if (crawl_state.game_is_hints())
             hints_zap_secret_doors();
+
+        if (crawl_state.game_is_zotdef())
+            fully_map_level();
     }
 
 #ifdef USE_TILE
@@ -308,16 +306,26 @@ static void _post_init(bool newc)
         run_map_epilogues();
 }
 
+#ifndef DGAMELAUNCH
 /**
  * Helper for show_startup_menu()
  * constructs the game modes section
  */
 static void _construct_game_modes_menu(MenuScroller* menu)
 {
+#ifdef USE_TILE_LOCAL
+    TextTileItem* tmp = NULL;
+#else
     TextItem* tmp = NULL;
+#endif
     std::string text;
 
+#ifdef USE_TILE_LOCAL
+    tmp = new TextTileItem();
+    tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_NORMAL), TEX_GUI));
+#else
     tmp = new TextItem();
+#endif
     text = "Dungeon Crawl";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
@@ -331,7 +339,12 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
+#ifdef USE_TILE_LOCAL
+    tmp = new TextTileItem();
+    tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_TUTORIAL), TEX_GUI));
+#else
     tmp = new TextItem();
+#endif
     text = "Tutorial for Dungeon Crawl";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
@@ -345,7 +358,12 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
+#ifdef USE_TILE_LOCAL
+    tmp = new TextTileItem();
+    tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_HINTS), TEX_GUI));
+#else
     tmp = new TextItem();
+#endif
     text = "Hints mode for Dungeon Crawl";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
@@ -359,7 +377,12 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
+#ifdef USE_TILE_LOCAL
+    tmp = new TextTileItem();
+    tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_SPRINT), TEX_GUI));
+#else
     tmp = new TextItem();
+#endif
     text = "Dungeon Sprint";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
@@ -372,7 +395,30 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
+#ifdef USE_TILE_LOCAL
+    tmp = new TextTileItem();
+    tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_ZOTDEF), TEX_GUI));
+#else
     tmp = new TextItem();
+#endif
+    text = "Zot Defence";
+    tmp->set_text(text);
+    tmp->set_fg_colour(WHITE);
+    tmp->set_highlight_colour(WHITE);
+    tmp->set_id(GAME_TYPE_ZOTDEF);
+    // Scroller does not care about x-coordinates and only cares about
+    // item height obtained from max.y - min.y
+    tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
+    tmp->set_description_text("Defend the Orb of Zot against waves of critters.");
+    menu->attach_item(tmp);
+    tmp->set_visible(true);
+
+#ifdef USE_TILE_LOCAL
+    tmp = new TextTileItem();
+    tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_INSTRUCTIONS), TEX_GUI));
+#else
+    tmp = new TextItem();
+#endif
     text = "Instructions";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
@@ -385,7 +431,12 @@ static void _construct_game_modes_menu(MenuScroller* menu)
     menu->attach_item(tmp);
     tmp->set_visible(true);
 
+#ifdef USE_TILE_LOCAL
+    tmp = new TextTileItem();
+    tmp->add_tile(tile_def(tileidx_gametype(GAME_TYPE_ARENA), TEX_GUI));
+#else
     tmp = new TextItem();
+#endif
     text = "The Arena";
     tmp->set_text(text);
     tmp->set_fg_colour(WHITE);
@@ -402,7 +453,7 @@ static void _construct_game_modes_menu(MenuScroller* menu)
 static void _construct_save_games_menu(MenuScroller* menu,
                        const std::vector<player_save_info>& chars)
 {
-    if (chars.size() == 0)
+    if (chars.empty())
     {
         // no saves
         return;
@@ -413,18 +464,18 @@ static void _construct_save_games_menu(MenuScroller* menu,
     std::vector<player_save_info>::iterator it;
     for (unsigned int i = 0; i < chars.size(); ++i)
     {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         SaveMenuItem* tmp = new SaveMenuItem();
 #else
         TextItem* tmp = new TextItem();
 #endif
         tmp->set_text(chars.at(i).short_desc());
         tmp->set_bounds(coord_def(1, 1), coord_def(1, 2));
-        tmp->set_fg_colour(WHITE);
+        tmp->set_fg_colour(chars.at(i).save_loadable ? WHITE : RED);
         tmp->set_highlight_colour(WHITE);
         // unique id
         tmp->set_id(NUM_GAME_TYPE + i);
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
         tmp->set_doll(chars.at(i).doll);
 #endif
         //tmp->set_description_text("...");
@@ -453,7 +504,7 @@ static bool _game_defined(const newgame_def& ng)
 static const int SCROLLER_MARGIN_X  = 18;
 static const int NAME_START_Y       = 5;
 static const int GAME_MODES_START_Y = 7;
-static const int SAVE_GAMES_START_Y = GAME_MODES_START_Y + 2 + NUM_GAME_TYPE;
+static const int SAVE_GAMES_START_Y = GAME_MODES_START_Y + 1 + NUM_GAME_TYPE;
 static const int MISC_TEXT_START_Y  = 19;
 static const int GAME_MODES_WIDTH   = 60;
 static const int NUM_HELP_LINES     = 3;
@@ -481,14 +532,27 @@ static int _misc_text_start_y(int num)
 static void _show_startup_menu(newgame_def* ng_choice,
                                const newgame_def& defaults)
 {
+again:
     std::vector<player_save_info> chars = find_all_saved_characters();
     const int num_saves = chars.size();
+    static int type = GAME_TYPE_UNSPECIFIED;
 
+#ifdef USE_TILE_LOCAL
+    const int max_col    = tiles.get_crt()->mx;
+#else
     const int max_col    = get_number_of_cols() - 1;
+#endif
     const int max_line   = get_number_of_lines() - 1;
     const int help_start = _misc_text_start_y(num_saves);
     const int help_end   = help_start + NUM_HELP_LINES + 1;
     const int desc_y     = help_end;
+#ifdef USE_TILE_LOCAL
+    const int game_mode_bottom = GAME_MODES_START_Y + tiles.to_lines(NUM_GAME_TYPE);
+    const int game_save_top = help_start - 2 - tiles.to_lines(std::min(2, num_saves));
+    const int save_games_start_y = std::min<int>(game_mode_bottom, game_save_top);
+#else
+    const int save_games_start_y = SAVE_GAMES_START_Y;
+#endif
 
     clrscr();
     PrecisionMenu menu;
@@ -499,12 +563,11 @@ static void _show_startup_menu(newgame_def* ng_choice,
     freeform->allow_focus(false);
     MenuScroller* game_modes = new MenuScroller();
     game_modes->init(coord_def(SCROLLER_MARGIN_X, GAME_MODES_START_Y),
-                     coord_def(GAME_MODES_WIDTH,
-                               GAME_MODES_START_Y + NUM_GAME_TYPE + 1),
+                     coord_def(GAME_MODES_WIDTH, save_games_start_y),
                      "game modes");
 
     MenuScroller* save_games = new MenuScroller();
-    save_games->init(coord_def(SCROLLER_MARGIN_X, SAVE_GAMES_START_Y),
+    save_games->init(coord_def(SCROLLER_MARGIN_X, save_games_start_y),
                      coord_def(max_col, help_start - 1),
                      "save games");
     _construct_game_modes_menu(game_modes);
@@ -524,12 +587,15 @@ static void _show_startup_menu(newgame_def* ng_choice,
     freeform->attach_item(tmp);
     tmp->set_visible(true);
 
-    tmp = new NoSelectTextItem();
-    tmp->set_text("Saved games:");
-    tmp->set_bounds(coord_def(1, SAVE_GAMES_START_Y),
-                    coord_def(SCROLLER_MARGIN_X, SAVE_GAMES_START_Y + 1));
-    freeform->attach_item(tmp);
-    tmp->set_visible(true);
+    if (num_saves)
+    {
+        tmp = new NoSelectTextItem();
+        tmp->set_text("Saved games:");
+        tmp->set_bounds(coord_def(1, save_games_start_y),
+                        coord_def(SCROLLER_MARGIN_X, save_games_start_y + 1));
+        freeform->attach_item(tmp);
+        tmp->set_visible(true);
+    }
 
     tmp = new NoSelectTextItem();
     std::string text = "Use the up/down keys to select the type of game "
@@ -555,7 +621,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
                      "descriptor");
     menu.attach_object(descriptor);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // Black and White highlighter looks kinda bad on tiles
     BoxMenuHighlighter* highlighter = new BoxMenuHighlighter(&menu);
 #else
@@ -564,7 +630,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
     highlighter->init(coord_def(-1, -1), coord_def(-1, -1), "highlighter");
     menu.attach_object(highlighter);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tiles.get_crt()->attach_menu(&menu);
 #endif
 
@@ -585,7 +651,12 @@ static void _show_startup_menu(newgame_def* ng_choice,
     bool full_name = !input_string.empty();
 
     int save = _find_save(chars, input_string);
-    if (save != -1)
+    if (type != GAME_TYPE_UNSPECIFIED)
+    {
+        menu.set_active_object(game_modes);
+        game_modes->set_active_item(type);
+    }
+    else if (save != -1)
     {
         menu.set_active_object(save_games);
         // save game id is offset by NUM_GAME_TYPE
@@ -633,10 +704,8 @@ static void _show_startup_menu(newgame_def* ng_choice,
         {
             // handle the non-action keys by hand to poll input
             // Only consider alphanumeric keys and -_ .
-            // Note: this currently allows letters between 128 and 255 in
-            // 8-bit ancient charsets.
             bool changed_name = false;
-            if (std::isalnum(keyn) || keyn == '-' || keyn == '.'
+            if (iswalnum(keyn) || keyn == '-' || keyn == '.'
                 || keyn == '_' || keyn == ' ')
             {
                 if (full_name)
@@ -644,9 +713,9 @@ static void _show_startup_menu(newgame_def* ng_choice,
                     full_name = false;
                     input_string = "";
                 }
-                if ((int) input_string.length() < kNameLen)
+                if (strwidth(input_string) < kNameLen)
                 {
-                    input_string += static_cast<char> (keyn);
+                    input_string += stringize_glyph(keyn);
                     changed_name = true;
                 }
             }
@@ -688,8 +757,8 @@ static void _show_startup_menu(newgame_def* ng_choice,
             else
             {
                 // Menu might have changed selection -- sync name.
-                int id = menu.get_active_item()->get_id();
-                switch (id)
+                type = menu.get_active_item()->get_id();
+                switch (type)
                 {
                 case GAME_TYPE_ARENA:
                     input_string = "";
@@ -697,6 +766,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
                 case GAME_TYPE_NORMAL:
                 case GAME_TYPE_TUTORIAL:
                 case GAME_TYPE_SPRINT:
+                case GAME_TYPE_ZOTDEF:
                 case GAME_TYPE_HINTS:
                     // If a game type is chosen, the user expects
                     // to start a new game. Just blanking the name
@@ -709,7 +779,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
                     break;
 
                 default:
-                    int save_number = id - NUM_GAME_TYPE;
+                    int save_number = type - NUM_GAME_TYPE;
                     input_string = chars.at(save_number).name;
                     full_name = true;
                     break;
@@ -718,7 +788,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
         }
         // we had a significant action!
         std::vector<MenuItem*> selected = menu.get_selected_items();
-        if (selected.size() == 0)
+        if (selected.empty())
         {
             // Uninteresting action, poll a new key
             continue;
@@ -730,6 +800,7 @@ static void _show_startup_menu(newgame_def* ng_choice,
         case GAME_TYPE_NORMAL:
         case GAME_TYPE_TUTORIAL:
         case GAME_TYPE_SPRINT:
+        case GAME_TYPE_ZOTDEF:
         case GAME_TYPE_HINTS:
             trim_string(input_string);
             if (is_good_name(input_string, true, false))
@@ -754,9 +825,8 @@ static void _show_startup_menu(newgame_def* ng_choice,
 
         case '?':
             list_commands();
-            // recursive escape because help messes up CRTRegion
-            _show_startup_menu(ng_choice, defaults);
-            return;
+            // restart because help messes up CRTRegion
+            goto again;
 
         default:
             // It was a savegame instead
@@ -764,10 +834,12 @@ static void _show_startup_menu(newgame_def* ng_choice,
             // Save the savegame character name
             ng_choice->name = chars.at(save_number).name;
             ng_choice->type = chars.at(save_number).saved_game_type;
+            ng_choice->filename = chars.at(save_number).filename;
             return;
         }
     }
 }
+#endif
 
 static void _choose_arena_teams(newgame_def* choice,
                                 const newgame_def& defaults)
@@ -792,7 +864,7 @@ static void _choose_arena_teams(newgame_def* choice,
 
     char buf[80];
     if (cancelable_get_line(buf, sizeof(buf)))
-        end(0);
+        game_ended();
     choice->arena_teams = buf;
     if (choice->arena_teams.empty())
         choice->arena_teams = defaults.arena_teams;
@@ -826,10 +898,20 @@ bool startup_step()
 
 
 #ifndef DGAMELAUNCH
+    if (crawl_state.last_type == GAME_TYPE_TUTORIAL
+        || crawl_state.last_type == GAME_TYPE_SPRINT)
+    {
+        choice.type = crawl_state.last_type;
+        crawl_state.type = crawl_state.last_type;
+        crawl_state.last_type = GAME_TYPE_UNSPECIFIED;
+        choice.name = defaults.name;
+        if (choice.type == GAME_TYPE_TUTORIAL)
+            choose_tutorial_character(&choice);
+    }
     // We could also check whether game type has been set here,
     // but it's probably not necessary to choose non-default game
     // types while specifying a name externally.
-    if (!is_good_name(choice.name, false, false)
+    else if (!is_good_name(choice.name, false, false)
         && choice.type != GAME_TYPE_ARENA)
     {
         _show_startup_menu(&choice, defaults);
@@ -850,25 +932,22 @@ bool startup_step()
     }
 
     bool newchar = false;
-    if (save_exists(choice.name))
+    newgame_def ng;
+    if (choice.filename.empty())
+        choice.filename = get_save_filename(choice.name);
+    if (save_exists(choice.filename) && restore_game(choice.filename))
     {
-        restore_game(choice.name);
+        save_player_name();
+    }
+    else if (choose_game(&ng, &choice, defaults)
+             && restore_game(ng.filename))
+    {
         save_player_name();
     }
     else
     {
-        newgame_def ng;
-        bool restore = choose_game(&ng, &choice, defaults);
-        if (restore)
-        {
-            restore_game(ng.name);
-            save_player_name();
-        }
-        else
-        {
-            setup_game(ng);
-            newchar = true;
-        }
+        setup_game(ng);
+        newchar = true;
     }
 
     _post_init(newchar);

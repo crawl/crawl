@@ -1,8 +1,7 @@
-/*
- *  File:       dbg-asrt.cc
- *  Summary:    Assertions and crashing.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Assertions and crashing.
+**/
 
 #include "AppHdr.h"
 
@@ -22,6 +21,7 @@
 #include "dungeon.h"
 #include "env.h"
 #include "initfile.h"
+#include "itemname.h"
 #include "jobs.h"
 #include "libutil.h"
 #include "mapmark.h"
@@ -30,15 +30,50 @@
 #include "mon-util.h"
 #include "options.h"
 #include "religion.h"
+#include "skills2.h"
 #include "spl-cast.h"
 #include "spl-util.h"
 #include "state.h"
 #include "travel.h"
 #include "hiscores.h"
+#include "zotdef.h"
 
-#ifdef ASSERTS
-static std::string _assert_msg;
+#if defined(USE_TILE_LOCAL) && (defined(TARGET_OS_WINDOWS) || defined(TARGET_COMPILER_MINGW))
+#define NOCOMM            /* Comm driver APIs and definitions */
+#define NOLOGERROR        /* LogError() and related definitions */
+#define NOPROFILER        /* Profiler APIs */
+#define NOLFILEIO         /* _l* file I/O routines */
+#define NOOPENFILE        /* OpenFile and related definitions */
+#define NORESOURCE        /* Resource management */
+#define NOATOM            /* Atom management */
+#define NOLANGUAGE        /* Character test routines */
+#define NOLSTRING         /* lstr* string management routines */
+#define NODBCS            /* Double-byte character set routines */
+#define NOKEYBOARDINFO    /* Keyboard driver routines */
+#define NOCOLOR           /* COLOR_* color values */
+#define NODRAWTEXT        /* DrawText() and related definitions */
+#define NOSCALABLEFONT    /* Truetype scalable font support */
+#define NOMETAFILE        /* Metafile support */
+#define NOSYSTEMPARAMSINFO /* SystemParametersInfo() and SPI_* definitions */
+#define NODEFERWINDOWPOS  /* DeferWindowPos and related definitions */
+#define NOKEYSTATES       /* MK_* message key state flags */
+#define NOWH              /* SetWindowsHook and related WH_* definitions */
+#define NOCLIPBOARD       /* Clipboard APIs and definitions */
+#define NOICONS           /* IDI_* icon IDs */
+#define NOMDI             /* MDI support */
+#define NOCTLMGR          /* Control management and controls */
+#define NOHELP            /* Help support */
+#define WIN32_LEAN_AND_MEAN /* No cryptography etc */
+#define NONLS             /* All NLS defines and routines */
+#define NOSERVICE         /* All Service Controller routines, SERVICE_ equates, etc. */
+#define NOKANJI           /* Kanji support stuff. */
+#define NOMCX             /* Modem Configuration Extensions */
+#include <windows.h>
+#undef max
+#include <SDL/SDL_syswm.h>
 #endif
+
+static std::string _assert_msg;
 
 static void _dump_compilation_info(FILE* file)
 {
@@ -101,32 +136,16 @@ static void _dump_player(FILE *file)
     fprintf(file, "Player:\n");
     fprintf(file, "{{{{{{{{{{{\n");
 
-    bool name_overrun = true;
-    for (int i = 0; i < 30; ++i)
-    {
-        if (you.class_name[i] == '\0')
-        {
-            name_overrun = false;
-            break;
-        }
-    }
-
-    if (name_overrun)
-    {
-        fprintf(file, "job_name runs past end of buffer.\n");
-        you.class_name[29] = '\0';
-    }
-
     fprintf(file, "Name:       [%s]\n", you.your_name.c_str());
     fprintf(file, "Species:    %s\n", species_name(you.species).c_str());
     fprintf(file, "Job:        %s\n\n", get_job_name(you.char_class));
-    fprintf(file, "class_name: %s\n\n", you.class_name);
+    fprintf(file, "class_name: %s\n\n", you.class_name.c_str());
 
-    fprintf(file, "HP: %d/%d; base: %d/%d\n", you.hp, you.hp_max,
-            you.base_hp, you.base_hp2);
-    fprintf(file, "MP: %d/%d; base: %d/%d\n",
+    fprintf(file, "HP: %d/%d; mods: %d/%d\n", you.hp, you.hp_max,
+            you.hp_max_temp, you.hp_max_perm);
+    fprintf(file, "MP: %d/%d; mods: %d/%d\n",
             you.magic_points, you.max_magic_points,
-            you.base_magic_points, you.base_magic_points2);
+            you.hp_max_temp, you.mp_max_perm);
     fprintf(file, "Stats: %d (%d) %d (%d) %d (%d)\n",
             you.strength(), you.max_strength(), you.intel(), you.max_intel(),
             you.dex(), you.max_dex());
@@ -154,7 +173,7 @@ static void _dump_player(FILE *file)
                 debug_coord_str(you.running.pos).c_str());
     }
 
-    if (you.delay_queue.size() > 0)
+    if (!you.delay_queue.empty())
     {
         fprintf(file, "Delayed (%u):\n",
                 (unsigned int)you.delay_queue.size());
@@ -176,6 +195,31 @@ static void _dump_player(FILE *file)
         }
         fprintf(file, "\n");
     }
+
+    fprintf(file, "Skills (mode: %s)\n", you.auto_training ? "auto" : "manual");
+    fprintf(file, "Name            | can_train | train | training | level | points | progress\n");
+    for (size_t i = 0; i < NUM_SKILLS; ++i)
+    {
+        const skill_type sk = skill_type(i);
+        if (is_invalid_skill(sk))
+            continue;
+        int needed_min = 0, needed_max = 0;
+        if (sk >= 0 && you.skills[sk] <= 27)
+            needed_min = skill_exp_needed(you.skills[sk], sk);
+        if (sk >= 0 && you.skills[sk] < 27)
+            needed_max = skill_exp_needed(you.skills[sk] + 1, sk);
+
+        fprintf(file, "%-16s|     %c     |   %d   |    %2d    |   %2d  | %6d | %d/%d\n",
+                skill_name(sk),
+                you.can_train[sk] ? 'X' : ' ',
+                you.train[sk],
+                you.training[sk],
+                you.skills[sk],
+                you.skill_points[sk],
+                you.skill_points[sk] - needed_min,
+                std::max(needed_max - needed_min, 0));
+    }
+    fprintf(file, "\n");
 
     fprintf(file, "Spell bugs:\n");
     for (size_t i = 0; i < you.spells.size(); ++i)
@@ -296,8 +340,24 @@ static void _dump_player(FILE *file)
             fprintf(file, " <invalid>\n");
             continue;
         }
-        fprintf(file, ": %s\n",
-                you.inv[eq].name(DESC_PLAIN, false, true).c_str());
+        const bool unknown = !item_type_known(you.inv[eq]);
+        const bool melded  = you.melded[i];
+        std::string suffix = "";
+        if (unknown || melded)
+        {
+            suffix = " (";
+            if (unknown)
+            {
+                suffix += "unknown";
+                if (melded)
+                    suffix += ", ";
+            }
+            if (melded)
+                suffix += "melded";
+            suffix += ")";
+        }
+        fprintf(file, ": %s%s\n",
+                you.inv[eq].name(DESC_PLAIN, false, true).c_str(), suffix.c_str());
     }
     fprintf(file, "\n");
 
@@ -436,7 +496,7 @@ static void _debug_dump_lua_markers(FILE *file)
 
         std::string result = lua_marker->debug_to_string();
 
-        if (result.size() > 0 && result[result.size() - 1] == '\n')
+        if (!result.empty() && result[result.size() - 1] == '\n')
             result = result.substr(0, result.size() - 1);
 
         fprintf(file, "Lua marker %d at (%d, %d):\n",
@@ -482,8 +542,10 @@ static void _dump_ver_stuff(FILE* file)
     fprintf(file, "Game mode: %s\n",
             gametype_to_str(crawl_state.type).c_str());
 
-#ifdef USE_TILE
+#if defined(USE_TILE_LOCAL)
     fprintf(file, "Tiles: yes\n\n");
+#elif defined(USE_TILE_WEB)
+    fprintf(file, "Tiles: online\n\n");
 #else
     fprintf(file, "Tiles: no\n\n");
 #endif
@@ -549,6 +611,8 @@ void do_crash_dump()
     snprintf(name, sizeof(name), "%scrash-%s-%s.txt", dir.c_str(),
             you.your_name.c_str(), make_file_time(t).c_str());
 
+    if (!crawl_state.test && !_assert_msg.empty())
+        fprintf(stderr, "\n%s", _assert_msg.c_str());
     fprintf(stderr, "\nWriting crash info to %s\n", name);
     errno = 0;
     FILE* file = crawl_state.test ? stderr : freopen(name, "w+", stderr);
@@ -566,10 +630,8 @@ void do_crash_dump()
 
     set_msg_dump_file(file);
 
-#ifdef ASSERTS
     if (!_assert_msg.empty())
         fprintf(file, "%s\n\n", _assert_msg.c_str());
-#endif
 
     _dump_ver_stuff(file);
 
@@ -615,6 +677,9 @@ void do_crash_dump()
     crawl_state.dump();
     _dump_player(file);
 
+    if (crawl_state.game_is_zotdef())
+        fprintf(file, "ZotDef wave data: %s\n", zotdef_debug_wave_desc().c_str());
+
     // Next item and monster scans.  Any messages will be sent straight to
     // the file because of set_msg_dump_file()
 #ifdef DEBUG_ITEM_SCAN
@@ -646,9 +711,7 @@ void do_crash_dump()
 
     set_msg_dump_file(NULL);
 
-#ifdef ASSERTS
     mark_milestone("crash", _assert_msg, false, t);
-#endif
 
     if (file != stderr)
         fclose(file);
@@ -659,17 +722,34 @@ void do_crash_dump()
 
 // Assertions and such
 
-#ifdef ASSERTS
 //---------------------------------------------------------------
 // BreakStrToDebugger
 //---------------------------------------------------------------
-static void _BreakStrToDebugger(const char *mesg)
+static NORETURN void _BreakStrToDebugger(const char *mesg, bool assert)
 {
-#if defined(TARGET_OS_MACOSX) || defined(TARGET_COMPILER_MINGW)
+#if defined(USE_TILE_LOCAL) && (defined(TARGET_COMPILER_MINGW) || defined(TARGET_OS_WINDOWS))
+    SDL_SysWMinfo SysInfo;
+    SDL_VERSION(&SysInfo.version);
+    if (SDL_GetWMInfo(&SysInfo) > 0)
+    {
+        MessageBoxW(SysInfo.window, OUTW(mesg),
+                   assert ? L"Assertion failed!" : L"Error",
+                   MB_OK|MB_ICONERROR);
+    }
+    // Print the message to STDERR in addition to the above message box,
+    // so it's in the message history if we call Crawl from a shell.
+    fprintf(stderr, "%s", mesg);
+
+    int* p = NULL;
+    *p = 0;
+    abort();
+
+#elif defined(TARGET_OS_MACOSX) || defined(TARGET_COMPILER_MINGW)
     fprintf(stderr, "%s", mesg);
 // raise(SIGINT);               // this is what DebugStr() does on OS X according to Tech Note 2030
     int* p = NULL;              // but this gives us a stack crawl...
     *p = 0;
+    abort();                    // just to be sure
 
 #else
     fprintf(stderr, "%s\n", mesg);
@@ -677,12 +757,13 @@ static void _BreakStrToDebugger(const char *mesg)
 #endif
 }
 
+#ifdef ASSERTS
 //---------------------------------------------------------------
 //
 // AssertFailed
 //
 //---------------------------------------------------------------
-void AssertFailed(const char *expr, const char *file, int line, bool save_game)
+NORETURN void AssertFailed(const char *expr, const char *file, int line, bool save_game)
 {
     char mesg[512];
 
@@ -699,25 +780,42 @@ void AssertFailed(const char *expr, const char *file, int line, bool save_game)
 
     _assert_msg = mesg;
 
-    _BreakStrToDebugger(mesg);
+    _BreakStrToDebugger(mesg, true);
 }
+#endif
 
-//---------------------------------------------------------------
-//
-// DEBUGSTR
-//
-//---------------------------------------------------------------
-void DEBUGSTR(const char *format, ...)
+#undef die
+NORETURN void die(const char *file, int line, const char *format, ...)
 {
-    char mesg[2048];
+    char tmp[2048], mesg[2048];
 
     va_list args;
 
     va_start(args, format);
-    vsnprintf(mesg, sizeof(mesg), format, args);
+    vsnprintf(tmp, sizeof(tmp), format, args);
     va_end(args);
 
-    _BreakStrToDebugger(mesg);
+    snprintf(mesg, sizeof(mesg), "ERROR in '%s' at line %d: %s",
+             file, line, tmp);
+
+    _assert_msg = mesg;
+
+    _BreakStrToDebugger(mesg, false);
 }
 
-#endif
+NORETURN void die_noline(const char *format, ...)
+{
+    char tmp[2048], mesg[2048];
+
+    va_list args;
+
+    va_start(args, format);
+    vsnprintf(tmp, sizeof(tmp), format, args);
+    va_end(args);
+
+    snprintf(mesg, sizeof(mesg), "ERROR: %s", tmp);
+
+    _assert_msg = mesg;
+
+    _BreakStrToDebugger(mesg, false);
+}

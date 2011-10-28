@@ -1,17 +1,18 @@
-/*
- *  File:       tilereg-title.cc
- *
- *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
- */
-
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "tilereg-title.h"
 
+#include "files.h"
 #include "libutil.h"
 #include "macro.h"
+
+static const std::string _get_title_image()
+{
+    std::vector<std::string> files = get_title_files();
+    return files[random2(files.size())];
+}
 
 TitleRegion::TitleRegion(int width, int height, FontWrapper* font) :
     m_buf(true, false), m_font_buf(font)
@@ -22,7 +23,7 @@ TitleRegion::TitleRegion(int width, int height, FontWrapper* font) :
     sx = sy = 0;
     dx = dy = 1;
 
-    if (!m_img.load_texture("title.png", MIPMAP_NONE))
+    if (!m_img.load_texture(_get_title_image().c_str(), MIPMAP_NONE))
         return;
 
     // Center

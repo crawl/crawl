@@ -5,56 +5,60 @@
 
 enum armour_type
 {
-    ARM_ROBE,                    //    0
+    ARM_ROBE,
     ARM_LEATHER_ARMOUR,
     ARM_RING_MAIL,
     ARM_SCALE_MAIL,
     ARM_CHAIN_MAIL,
-    ARM_SPLINT_MAIL,             //    5
+    ARM_SPLINT_MAIL,
     ARM_BANDED_MAIL,
     ARM_PLATE_MAIL,
 
     ARM_CLOAK,
 
     ARM_CAP,
-    ARM_WIZARD_HAT,              //   10
+    ARM_WIZARD_HAT,
     ARM_HELMET,
 
     ARM_GLOVES,
 
     ARM_BOOTS,
 
-    ARM_BUCKLER,
-    ARM_SHIELD,                  //   15
+    ARM_BUCKLER, // order of shields matters
+    ARM_SHIELD,
     ARM_LARGE_SHIELD,
     ARM_MAX_RACIAL = ARM_LARGE_SHIELD,
 
     ARM_CRYSTAL_PLATE_MAIL,
+    ARM_MIN_UNBRANDED = ARM_CRYSTAL_PLATE_MAIL,
 
     ARM_ANIMAL_SKIN,
 
     ARM_TROLL_HIDE,
-    ARM_TROLL_LEATHER_ARMOUR,    //   20
+    ARM_TROLL_LEATHER_ARMOUR,
 
-    ARM_DRAGON_HIDE,
-    ARM_DRAGON_ARMOUR,
+    ARM_FIRE_DRAGON_HIDE,
+    ARM_FIRE_DRAGON_ARMOUR,
     ARM_ICE_DRAGON_HIDE,
     ARM_ICE_DRAGON_ARMOUR,
-    ARM_STEAM_DRAGON_HIDE,       //   25
+    ARM_STEAM_DRAGON_HIDE,
     ARM_STEAM_DRAGON_ARMOUR,
     ARM_MOTTLED_DRAGON_HIDE,
     ARM_MOTTLED_DRAGON_ARMOUR,
     ARM_STORM_DRAGON_HIDE,
-    ARM_STORM_DRAGON_ARMOUR,     //   30
+    ARM_STORM_DRAGON_ARMOUR,
     ARM_GOLD_DRAGON_HIDE,
     ARM_GOLD_DRAGON_ARMOUR,
     ARM_SWAMP_DRAGON_HIDE,
     ARM_SWAMP_DRAGON_ARMOUR,
+    ARM_PEARL_DRAGON_HIDE,
+    ARM_PEARL_DRAGON_ARMOUR,
+    ARM_MAX_UNBRANDED = ARM_PEARL_DRAGON_ARMOUR,
 
-    ARM_CENTAUR_BARDING,         //   35
+    ARM_CENTAUR_BARDING,
     ARM_NAGA_BARDING,
 
-    NUM_ARMOURS                  //   37
+    NUM_ARMOURS
 };
 
 enum armour_property_type
@@ -112,7 +116,6 @@ enum brand_type // equivalent to (you.inv[].special or mitm[].special) % 30
     SPWPN_ACID,    // acid bite only for the moment
     SPWPN_DEBUG_RANDART,
     NUM_SPECIAL_WEAPONS,
-    SPWPN_DUMMY_CRUSHING,        // ONLY TEMPORARY USAGE -- converts to VORPAL
 };
 
 enum corpse_type
@@ -184,8 +187,7 @@ enum jewellery_type
                                        //   safely with first amulet.
     // RINGS after num_rings are for unique types for artefacts
     //   (no non-artefact version).
-    RING_CHARM,                        //   25
-
+    // Currently none.
     AMU_FIRST_AMULET = 35,
     AMU_RAGE = AMU_FIRST_AMULET,       //   35
     AMU_CLARITY,
@@ -213,7 +215,9 @@ enum launch_retval
 enum misc_item_type
 {
     MISC_BOTTLED_EFREET,               //    0
+#if TAG_MAJOR_VERSION == 32
     MISC_CRYSTAL_BALL_OF_SEEING,
+#endif
     MISC_AIR_ELEMENTAL_FAN,
     MISC_LAMP_OF_FIRE,
     MISC_STONE_OF_EARTH_ELEMENTALS,
@@ -222,7 +226,9 @@ enum misc_item_type
     MISC_BOX_OF_BEASTS,
     MISC_CRYSTAL_BALL_OF_ENERGY,
     MISC_EMPTY_EBONY_CASKET,
+#if TAG_MAJOR_VERSION == 32
     MISC_CRYSTAL_BALL_OF_FIXATION,
+#endif
     MISC_DISC_OF_STORMS,
 
     // pure decks
@@ -242,7 +248,9 @@ enum misc_item_type
 
     MISC_QUAD_DAMAGE, // Sprint only
 
-    NUM_MISCELLANY // mv: used for random generation
+    NUM_MISCELLANY, // mv: used for random generation
+    MISC_FIRST_DECK = MISC_DECK_OF_ESCAPE,
+    MISC_LAST_DECK  = MISC_DECK_OF_DEFENCE,
 };
 
 enum missile_type
@@ -281,6 +289,8 @@ enum rune_type
     RUNE_ABYSSAL,
 
     RUNE_DEMONIC,
+
+    // order must match monsters
     RUNE_MNOLEG,
     RUNE_LOM_LOBON,
     RUNE_CEREBOV,
@@ -293,32 +303,34 @@ enum rune_type
 
 enum scroll_type
 {
-    SCR_IDENTIFY,                      //    0
+    SCR_IDENTIFY,
     SCR_TELEPORTATION,
     SCR_FEAR,
     SCR_NOISE,
     SCR_REMOVE_CURSE,
-    SCR_DETECT_CURSE,                  //   5
+    SCR_DETECT_CURSE,
     SCR_SUMMONING,
     SCR_ENCHANT_WEAPON_I,
     SCR_ENCHANT_ARMOUR,
     SCR_TORMENT,
-    SCR_RANDOM_USELESSNESS,            //   10
+    SCR_RANDOM_USELESSNESS,
     SCR_CURSE_WEAPON,
     SCR_CURSE_ARMOUR,
     SCR_IMMOLATION,
     SCR_BLINKING,
-    SCR_PAPER,                         //   15
+#if TAG_MAJOR_VERSION == 32
+    SCR_PAPER,
+#endif
     SCR_MAGIC_MAPPING,
     SCR_FOG,
     SCR_ACQUIREMENT,
     SCR_ENCHANT_WEAPON_II,
-    SCR_VORPALISE_WEAPON,              //   20
+    SCR_VORPALISE_WEAPON,
     SCR_RECHARGING,
     SCR_ENCHANT_WEAPON_III,
     SCR_HOLY_WORD,
     SCR_VULNERABILITY,
-    SCR_SILENCE,                       //   25
+    SCR_SILENCE,
     SCR_AMNESIA,
     SCR_CURSE_JEWELLERY,
     NUM_SCROLLS
@@ -460,9 +472,11 @@ enum weapon_type
     WPN_GIANT_CLUB,
     WPN_GIANT_SPIKED_CLUB,
 
+#if TAG_MAJOR_VERSION == 32
     WPN_KNIFE,
-
     WPN_KATANA,
+#endif
+
     WPN_DEMON_BLADE,
     WPN_DOUBLE_SWORD,
     WPN_TRIPLE_SWORD,
@@ -470,23 +484,30 @@ enum weapon_type
     WPN_DEMON_TRIDENT,
     WPN_SCYTHE,
 
+#if TAG_MAJOR_VERSION != 32
+    WPN_STAFF,
+#endif
     WPN_QUARTERSTAFF,
     WPN_LAJATANG,
 
     WPN_SLING,
 
-    WPN_MAX_NONBLESSED = WPN_SLING,
-
     WPN_BLESSED_FALCHION,
     WPN_BLESSED_LONG_SWORD,
     WPN_BLESSED_SCIMITAR,
     WPN_BLESSED_GREAT_SWORD,
+#if TAG_MAJOR_VERSION == 32
     WPN_BLESSED_KATANA,
+#endif
     WPN_EUDEMON_BLADE,
     WPN_BLESSED_DOUBLE_SWORD,
     WPN_BLESSED_TRIPLE_SWORD,
     WPN_SACRED_SCOURGE,
     WPN_TRISHULA,
+
+#if TAG_MAJOR_VERSION == 32
+    WPN_STAFF,
+#endif
 
     NUM_WEAPONS,
 
@@ -495,6 +516,12 @@ enum weapon_type
     WPN_UNKNOWN = 1000,                // 1000
     WPN_RANDOM,
     WPN_VIABLE,
+
+// thrown weapons (for hunter weapon selection)
+    WPN_THROWN,
+    WPN_ROCKS,
+    WPN_JAVELINS,
+    WPN_DARTS,
 };
 
 enum weapon_property_type
@@ -550,7 +577,7 @@ enum wand_type
     WAND_SLOWING,
     WAND_HASTING,
     WAND_MAGIC_DARTS,
-    WAND_HEALING,
+    WAND_HEAL_WOUNDS,
     WAND_PARALYSIS,
     WAND_FIRE,
     WAND_COLD,

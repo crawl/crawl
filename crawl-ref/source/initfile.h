@@ -1,8 +1,7 @@
-/*
- *  File:       initfile.h
- *  Summary:    Simple reading of init file.
- *  Written by: David Loewenstern
- */
+/**
+ * @file
+ * @brief Simple reading of init file.
+**/
 
 
 #ifndef INITFILE_H
@@ -12,6 +11,8 @@
 #include <cstdio>
 
 #include "enum.h"
+#include "itemprop-enum.h"
+#include "unicode.h"
 
 enum drop_mode_type
 {
@@ -19,7 +20,7 @@ enum drop_mode_type
     DM_MULTI,
 };
 
-int str_to_summon_type (const std::string &str);
+int str_to_summon_type(const std::string &str);
 std::string gametype_to_str(game_type type);
 
 std::string read_init_file(bool runscript = false);
@@ -27,7 +28,6 @@ std::string read_init_file(bool runscript = false);
 struct newgame_def;
 newgame_def read_startup_prefs();
 
-void read_options(FILE *f, bool runscript = false);
 void read_options(const std::string &s, bool runscript = false,
                   bool clear_aliases = false);
 
@@ -51,7 +51,7 @@ public:
     std::string crawl_base;        // Directory from argv[0], may be used to
                                    // locate datafiles.
     std::string crawl_exe;         // File from argv[0].
-    std::string home;              // only used by MULTIUSER systems
+    std::string home;
 
 #ifdef DGL_SIMPLE_MESSAGING
     std::string messagefile;       // File containing messages from other users.
@@ -83,37 +83,9 @@ void save_player_name(void);
 std::string channel_to_str(int ch);
 
 int str_to_channel(const std::string &);
+weapon_type str_to_weapon(const std::string &str);
 
-class InitLineInput
-{
-public:
-    virtual ~InitLineInput() { }
-    virtual bool eof() = 0;
-    virtual std::string getline() = 0;
-};
-
-class FileLineInput : public InitLineInput
-{
-public:
-    FileLineInput(FILE *f) : file(f) { }
-
-    bool eof()
-    {
-        return !file || feof(file);
-    }
-
-    std::string getline()
-    {
-        char s[256] = "";
-        if (!eof())
-            fgets(s, sizeof s, file);
-        return (s);
-    }
-private:
-    FILE *file;
-};
-
-class StringLineInput : public InitLineInput
+class StringLineInput : public LineInput
 {
 public:
     StringLineInput(const std::string &s) : str(s), pos(0) { }
@@ -123,7 +95,7 @@ public:
         return pos >= str.length();
     }
 
-    std::string getline()
+    std::string get_line()
     {
         if (eof())
             return "";

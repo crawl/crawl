@@ -1,16 +1,15 @@
-/*
- *  File:       ctest.cc
- *  Summary:    Crawl Lua test cases
- *  Written by: Darshan Shaligram
+/**
+ * @file
+ * @brief Crawl Lua test cases
  *
- *  ctest runs Lua tests found in the test directory. The intent here
- *  is to test parts of Crawl that can be easily tested from within Crawl
- *  itself (such as LOS). As a side-effect, writing Lua bindings to support
- *  tests will expand the available Lua bindings. :-)
+ * ctest runs Lua tests found in the test directory. The intent here
+ * is to test parts of Crawl that can be easily tested from within Crawl
+ * itself (such as LOS). As a side-effect, writing Lua bindings to support
+ * tests will expand the available Lua bindings. :-)
  *
- *  Tests will run only with Crawl built in its source tree without
- *  DATA_DIR_PATH set.
- */
+ * Tests will run only with Crawl built in its source tree without
+ * DATA_DIR_PATH set.
+**/
 
 #include "AppHdr.h"
 
@@ -26,6 +25,7 @@
 #include "ng-init.h"
 #include "state.h"
 #include "stuff.h"
+#include "zotdef.h"
 
 #include <algorithm>
 #include <vector>
@@ -89,7 +89,7 @@ namespace crawl_tests
     {
         lua_stack_cleaner clean(dlua);
         luaL_openlib(dlua, "crawl", crawl_test_lib, 0);
-        dlua.execfile("clua/test.lua", true, true);
+        dlua.execfile("dlua/test.lua", true, true);
         initialise_branch_depths();
     }
 
@@ -126,6 +126,15 @@ namespace crawl_tests
             failures.push_back(file_error(file, dlua.error));
     }
 
+    static bool _has_test(const std::string& test)
+    {
+        if (crawl_state.script)
+            return false;
+        if (crawl_state.tests_selected.empty())
+            return true;
+        return crawl_state.tests_selected[0].find(test) != std::string::npos;
+    }
+
     // Assumes curses has already been initialized.
     bool run_tests(bool exit_on_complete)
     {
@@ -134,18 +143,16 @@ namespace crawl_tests
 
         flush_prev_message();
 
-        run_map_preludes();
+        run_map_global_preludes();
+        run_map_local_preludes();
         reset_test_data();
 
         init_test_bindings();
 
-        if ((crawl_state.tests_selected.empty()
-             || (crawl_state.tests_selected[0].find("makeitem") !=
-                 std::string::npos))
-            && !crawl_state.script)
-        {
+        if (_has_test("makeitem"))
             makeitem_tests();
-        }
+        if (_has_test("zotdef_wave"))
+            debug_waves();
 
         // Get a list of Lua files in test. Order of execution of
         // tests should be irrelevant.
@@ -176,7 +183,7 @@ namespace crawl_tests
             }
             const int code = failures.empty() ? 0 : 1;
             end(code, false, "%d %ss, %d succeeded, %d failed",
-                ntests, activity, nsuccess, failures.size());
+                ntests, activity, nsuccess, (int)failures.size());
         }
         return (failures.empty());
     }

@@ -9,10 +9,9 @@
 ###############################################################################
 
 NAME:   dungeon_sprint_1
-TAGS:   sprint no_item_gen no_trap_gen no_monster_gen no_pool_fixup
+TAGS:   sprint no_item_gen no_trap_gen no_monster_gen no_pool_fixup no_rotate no_hmirror no_vmirror
 DESC:   Sprint I: "Red Sonja"
 ORIENT: encompass
-FLAGS:  no_rotate no_hmirror no_vmirror
 MARKER: L = lua:fog_machine { \
              pow_min = 2, pow_max = 4, delay = 5, \
              size = 4, walk_dist = 8, spread_rate= 33, \
@@ -36,7 +35,7 @@ MARKER: H = lua:fog_machine { \
 MONS:   Ijyb, ogre, Sigmund, jelly, centaur warrior, Sonja, rock troll
 SUBST:  r = r.
 SUBST:  r = ~.
-KITEM:  I = potion of healing
+KITEM:  I = potion of curing
 KITEM:  $ = gold q:27
 KMONS:  B = yellow wasp
 KMONS:  D = kobold demonologist
@@ -46,10 +45,10 @@ KMONS:  I = giant spore
 KMONS:  J = unseen horror
 KMONS:  K = elephant slug
 KMONS:  P = pulsating lump
-KMONS:  Q = ghoul
+KMONS:  Q = necrophage
 KMONS:  R = demonic crawler
 KMONS:  S = metal gargoyle
-KMONS:  b = Wiglaf
+KMONS:  b = Norris
 KMONS:  d = Lorocyproca
 KMONS:  f = lindwurm
 KMONS:  g = hog

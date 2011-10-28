@@ -36,7 +36,7 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
         }
     }
 
-    newgame_make_item(slot, EQ_WEAPON, OBJ_WEAPONS, WPN_KNIFE);
+    newgame_make_item(slot, EQ_WEAPON, OBJ_WEAPONS, WPN_DAGGER);
 
     // We'll also re-fill the template, all for later possible safe
     // reuse of code in the future.
@@ -50,6 +50,10 @@ static bool _give_wanderer_weapon(int & slot, int wpn_skill, int plus)
     {
     case SK_SHORT_BLADES:
         you.inv[slot].sub_type = WPN_SHORT_SWORD;
+        break;
+
+    case SK_LONG_BLADES:
+        you.inv[slot].sub_type = WPN_FALCHION;
         break;
 
     case SK_MACES_FLAILS:
@@ -117,8 +121,7 @@ static skill_type _apt_weighted_choice(const skill_type * skill_array,
 
     for (unsigned i = 0; i < arr_size; ++i)
     {
-        int reciprocal_apt = (100 * 100) /
-                             species_skills(skill_array[i], you.species);
+        int reciprocal_apt = 100 / species_apt_factor(skill_array[i]);
         total_apt += reciprocal_apt;
     }
 
@@ -127,8 +130,7 @@ static skill_type _apt_weighted_choice(const skill_type * skill_array,
 
     for (unsigned i = 0; i < arr_size; ++i)
     {
-        int reciprocal_apt = (100 * 100) /
-                             species_skills(skill_array[i], you.species);
+        int reciprocal_apt = 100 / species_apt_factor(skill_array[i]);
         region_covered += reciprocal_apt;
 
         if (probe < region_covered)
@@ -215,14 +217,15 @@ static skill_type _wanderer_role_weapon_select(stat_type role)
     int str_size = sizeof(str_weapons) / sizeof(skill_type);
 
     const skill_type dex_weapons[] =
-        { SK_SHORT_BLADES, SK_STAVES, SK_UNARMED_COMBAT, SK_POLEARMS };
+        { SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT,
+          SK_POLEARMS };
 
     int dex_size = sizeof(dex_weapons) / sizeof(skill_type);
 
     const skill_type casting_schools[] =
         { SK_SUMMONINGS, SK_NECROMANCY, SK_TRANSLOCATIONS,
           SK_TRANSMUTATIONS, SK_POISON_MAGIC, SK_CONJURATIONS,
-          SK_ENCHANTMENTS, SK_FIRE_MAGIC, SK_ICE_MAGIC,
+          SK_HEXES, SK_CHARMS, SK_FIRE_MAGIC, SK_ICE_MAGIC,
           SK_AIR_MAGIC, SK_EARTH_MAGIC };
 
     int casting_size = sizeof(casting_schools) / sizeof(skill_type);
@@ -261,7 +264,6 @@ static void _wanderer_role_skill(stat_type role, int levels)
                                                      spell2);
         you.skills[selected_skill]++;
     }
-
 }
 
 // Select a random skill from all skills we have at least 1 level in.
@@ -287,45 +289,24 @@ static skill_type _weighted_skill_roll()
 
 static void _give_wanderer_book(skill_type skill, int & slot)
 {
-    int book_type = BOOK_MINOR_MAGIC_I;
+    int book_type = BOOK_MINOR_MAGIC;
     switch((int)skill)
     {
     case SK_SPELLCASTING:
-        switch (random2(3))
-        {
-        case 0:
-            book_type = BOOK_MINOR_MAGIC_I;
-            break;
-        case 1:
-            book_type = BOOK_MINOR_MAGIC_II;
-            break;
-        case 2:
-            book_type = BOOK_MINOR_MAGIC_III;
-            break;
-        }
+        book_type = BOOK_MINOR_MAGIC;
         break;
 
     case SK_CONJURATIONS:
-        switch (random2(6))
+        switch (random2(3))
         {
         case 0:
-            book_type = BOOK_MINOR_MAGIC_I;
+            book_type = BOOK_MINOR_MAGIC;
             break;
-
         case 1:
-            book_type = BOOK_MINOR_MAGIC_II;
-            break;
-        case 2:
-            book_type = BOOK_CONJURATIONS_I;
-            break;
-        case 3:
             book_type = BOOK_CONJURATIONS_II;
             break;
-        case 4:
+        case 2:
             book_type = BOOK_YOUNG_POISONERS;
-            break;
-        case 5:
-            book_type = BOOK_STALKING;
             break;
         }
         break;
@@ -334,7 +315,7 @@ static void _give_wanderer_book(skill_type skill, int & slot)
         switch (random2(2))
         {
         case 0:
-            book_type = BOOK_MINOR_MAGIC_III;
+            book_type = BOOK_MINOR_MAGIC;
             break;
         case 1:
             book_type = BOOK_CALLINGS;
@@ -351,13 +332,16 @@ static void _give_wanderer_book(skill_type skill, int & slot)
         break;
 
     case SK_TRANSMUTATIONS:
-        switch (random2(2))
+        switch (random2(3))
         {
         case 0:
             book_type = BOOK_GEOMANCY;
             break;
         case 1:
             book_type = BOOK_CHANGES;
+            break;
+        case 2:
+            book_type = BOOK_STALKING;
             break;
         }
         break;
@@ -366,34 +350,37 @@ static void _give_wanderer_book(skill_type skill, int & slot)
         switch (random2(3))
         {
         case 0:
-            book_type = BOOK_MINOR_MAGIC_I;
-            break;
         case 1:
             book_type = BOOK_FLAMES;
             break;
         case 2:
-            book_type = BOOK_CONJURATIONS_I;
+            book_type = BOOK_MINOR_MAGIC;
             break;
         }
         break;
 
     case SK_ICE_MAGIC:
-        switch (random2(3))
+        switch (random2(2))
         {
         case 0:
-            book_type = BOOK_MINOR_MAGIC_II;
-            break;
-        case 1:
             book_type = BOOK_FROST;
             break;
-        case 2:
+        case 1:
             book_type = BOOK_CONJURATIONS_II;
             break;
         }
         break;
 
     case SK_AIR_MAGIC:
-        book_type = BOOK_AIR;
+        switch (random2(2))
+        {
+        case 0:
+            book_type = BOOK_AIR;
+            break;
+        case 1:
+            book_type = BOOK_CONJURATIONS_II;
+            break;
+        }
         break;
 
     case SK_EARTH_MAGIC:
@@ -401,27 +388,15 @@ static void _give_wanderer_book(skill_type skill, int & slot)
         break;
 
     case SK_POISON_MAGIC:
-        switch (random2(2))
-        {
-        case 0:
-            book_type = BOOK_STALKING;
-            break;
-        case 1:
-            book_type = BOOK_YOUNG_POISONERS;
-            break;
-        }
+        book_type = BOOK_YOUNG_POISONERS;
         break;
 
-    case SK_ENCHANTMENTS:
-        switch (random2(2))
-        {
-        case 0:
-            book_type = BOOK_WAR_CHANTS;
-            break;
-        case 1:
-            book_type = BOOK_CHARMS;
-            break;
-        }
+    case SK_HEXES:
+        book_type = BOOK_MALEDICT;
+        break;
+
+    case SK_CHARMS:
+        book_type = BOOK_WAR_CHANTS;
         break;
     }
 
@@ -474,8 +449,8 @@ static void _good_potion_or_scroll(int & slot)
     slot++;
 }
 
-// Make n random attempts at identifying healing or teleportation.
-static void _healing_or_teleport(int n)
+// Make n random attempts at identifying curing or teleportation.
+static void _curing_or_teleport(int n)
 {
     int temp_rand = 2;
 
@@ -491,7 +466,7 @@ static void _healing_or_teleport(int n)
             set_ident_type(OBJ_SCROLLS, SCR_TELEPORTATION, ID_KNOWN_TYPE);
             break;
         case 1:
-            set_ident_type(OBJ_POTIONS, POT_HEALING, ID_KNOWN_TYPE);
+            set_ident_type(OBJ_POTIONS, POT_CURING, ID_KNOWN_TYPE);
             break;
         }
     }
@@ -502,7 +477,7 @@ static void _wanderer_random_evokable(int & slot)
 {
     wand_type selected_wand = WAND_ENSLAVEMENT;
 
-    switch (random2(6))
+    switch (random2(5))
     {
     case 0:
         selected_wand = WAND_ENSLAVEMENT;
@@ -513,7 +488,7 @@ static void _wanderer_random_evokable(int & slot)
         break;
 
     case 2:
-        selected_wand = WAND_FLAME;
+        selected_wand = WAND_MAGIC_DARTS;
         break;
 
     case 3:
@@ -521,13 +496,11 @@ static void _wanderer_random_evokable(int & slot)
         break;
 
     case 4:
-        selected_wand = WAND_MAGIC_DARTS;
+        selected_wand = WAND_FLAME;
         break;
 
-    case 5:
-        make_rod(you.inv[slot], STAFF_STRIKING, 8);
-        slot++;
-        return;
+    default:
+        break;
     }
 
     newgame_make_item(slot, EQ_NONE, OBJ_WANDS, selected_wand, -1, 1,
@@ -539,8 +512,8 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
 {
     const skill_type combined_weapon_skills[] =
         { SK_AXES, SK_MACES_FLAILS, SK_BOWS, SK_CROSSBOWS,
-          SK_SHORT_BLADES, SK_STAVES, SK_UNARMED_COMBAT, SK_POLEARMS };
-
+          SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT,
+          SK_POLEARMS };
 
     int total_weapons = sizeof(combined_weapon_skills) / sizeof(skill_type);
 
@@ -571,6 +544,7 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
     case SK_THROWING:
     case SK_STAVES:
     case SK_SHORT_BLADES:
+    case SK_LONG_BLADES:
         _give_wanderer_weapon(slot, skill, 3);
         slot++;
         break;
@@ -599,7 +573,8 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
     case SK_AIR_MAGIC:
     case SK_EARTH_MAGIC:
     case SK_POISON_MAGIC:
-    case SK_ENCHANTMENTS:
+    case SK_HEXES:
+    case SK_CHARMS:
         _give_wanderer_book(skill, slot);
         slot++;
         break;
@@ -611,9 +586,9 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
     case SK_UNARMED_COMBAT:
     case SK_INVOCATIONS:
     {
-        // Random consumables: 2x attempts to ID healing/teleportation
+        // Random consumables: 2x attempts to ID curing/teleportation
         // 1 good potion/scroll.
-        _healing_or_teleport(2);
+        _curing_or_teleport(2);
         _good_potion_or_scroll(slot);
         break;
     }
@@ -631,10 +606,10 @@ static void _give_wanderer_spell(skill_type skill)
     spell_type spell = SPELL_NO_SPELL;
 
     // Doing a rejection loop for this because I am lazy.
-    while (skill == SK_SPELLCASTING)
+    while (skill == SK_SPELLCASTING || skill == SK_CHARMS)
     {
-        int value = SK_POISON_MAGIC-SK_CONJURATIONS + 1;
-        skill = skill_type(SK_CONJURATIONS + random2(value));
+        int value = SK_LAST_MAGIC - SK_FIRST_MAGIC_SCHOOL + 1;
+        skill = skill_type(SK_FIRST_MAGIC_SCHOOL + random2(value));
     }
 
     switch ((int)skill)
@@ -656,7 +631,7 @@ static void _give_wanderer_spell(skill_type skill)
         break;
 
     case SK_TRANSMUTATIONS:
-        spell = SPELL_SANDBLAST;
+        spell = SPELL_BEASTLY_APPENDAGE;
         break;
 
     case SK_FIRE_MAGIC:
@@ -679,7 +654,7 @@ static void _give_wanderer_spell(skill_type skill)
         spell = SPELL_STING;
         break;
 
-    case SK_ENCHANTMENTS:
+    case SK_HEXES:
         spell = SPELL_CORONA;
         break;
     }
@@ -693,7 +668,8 @@ static void _wanderer_decent_equipment(skill_type & skill,
 {
     const skill_type combined_weapon_skills[] =
         { SK_AXES, SK_MACES_FLAILS, SK_BOWS, SK_CROSSBOWS,
-          SK_SHORT_BLADES, SK_STAVES, SK_UNARMED_COMBAT, SK_POLEARMS };
+          SK_SHORT_BLADES, SK_LONG_BLADES, SK_STAVES, SK_UNARMED_COMBAT,
+          SK_POLEARMS };
 
     int total_weapons = sizeof(combined_weapon_skills) / sizeof(skill_type);
 
@@ -706,7 +682,7 @@ static void _wanderer_decent_equipment(skill_type & skill,
     }
 
     // Give the player knowledge of only one spell.
-    if (skill >= SK_SPELLCASTING && skill <= SK_POISON_MAGIC)
+    if (skill >= SK_SPELLCASTING && skill <= SK_LAST_MAGIC)
     {
         for (unsigned i = 0; i < you.spells.size(); ++i)
         {
@@ -738,7 +714,7 @@ static void _wanderer_decent_equipment(skill_type & skill,
     }
 
     // Don't give a gift from the same skill twice; just default to
-    // a healing potion/teleportation scroll.
+    // a curing potion/teleportation scroll.
     if (gift_skills.find(skill) != gift_skills.end())
         skill = SK_TRAPS_DOORS;
 
@@ -752,6 +728,7 @@ static void _wanderer_decent_equipment(skill_type & skill,
     case SK_THROWING:
     case SK_STAVES:
     case SK_SHORT_BLADES:
+    case SK_LONG_BLADES:
         _give_wanderer_weapon(slot, skill, 0);
         slot++;
         break;
@@ -792,7 +769,7 @@ static void _wanderer_decent_equipment(skill_type & skill,
     case SK_UNARMED_COMBAT:
     case SK_INVOCATIONS:
     case SK_EVOCATIONS:
-        _healing_or_teleport(1);
+        _curing_or_teleport(1);
         break;
     }
 }
@@ -811,7 +788,7 @@ static void _wanderer_cover_equip_holes(int & slot)
 
     if (you.equip[EQ_WEAPON] == -1)
     {
-        weapon_type weapon = WPN_CLUB;
+        weapon_type weapon = (coinflip() ? WPN_CLUB : WPN_STAFF);
         if (you.dex() > you.strength() || you.skills[SK_STABBING])
             weapon = WPN_DAGGER;
 
@@ -924,7 +901,7 @@ void create_wanderer(void)
         mp_adjust++;
     if (secondary_role == STAT_INT)
         mp_adjust++;
-    set_mp(you.magic_points + mp_adjust, true);
+    you.mp_max_perm += mp_adjust;
 
     // Keep track of what skills we got items from, mostly to prevent
     // giving a good and then a normal version of the same weapon.

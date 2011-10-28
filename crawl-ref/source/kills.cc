@@ -1,8 +1,7 @@
-/*
- *  File:       kills.cc
- *  Summary:    Player kill tracking
- *  Written by: Darshan Shaligram
- */
+/**
+ * @file
+ * @brief Player kill tracking
+**/
 
 #include "AppHdr.h"
 
@@ -212,7 +211,7 @@ void KillMaster::add_kill_info(std::string &killtext,
 #endif
     {
 #ifdef CLUA_BINDINGS
-        if (clua.error.length())
+        if (!clua.error.empty())
         {
             killtext += "Lua error:\n";
             killtext += clua.error + "\n\n";
@@ -483,8 +482,8 @@ void kill_def::add_place(unsigned short place, bool force)
 std::string kill_def::base_name(const kill_monster_desc &md) const
 {
     std::string name;
-    if (md.monnum == MONS_PANDEMONIUM_DEMON || md.monnum == MONS_HELL_DEMON)
-        name = "demon lord";
+    if (md.monnum == MONS_PANDEMONIUM_LORD)
+        name = "pandemonium lord";
     else
         name = mons_type_name(md.monnum, DESC_PLAIN);
 
@@ -510,15 +509,7 @@ std::string kill_def::base_name(const kill_monster_desc &md) const
 
     switch (md.monnum)
     {
-      case MONS_ABOMINATION_LARGE:
-        name = "large " + name;
-        break;
-      case MONS_ABOMINATION_SMALL:
-        // Do nothing
-        break;
       case MONS_RAKSHASA_FAKE:
-        name = "illusory " + name;
-        break;
       case MONS_MARA_FAKE:
         name = "illusory " + name;
         break;
@@ -664,10 +655,6 @@ kill_monster_desc::kill_monster_desc(const monster* mon)
 
     if (mon->is_shapeshifter())
         modifier = M_SHAPESHIFTER;
-
-    // XXX: Ugly hack - merge all mimics into one mimic record.
-    if (monnum >= MONS_GOLD_MIMIC && monnum <= MONS_POTION_MIMIC)
-        monnum = MONS_WEAPON_MIMIC;
 }
 
 void kill_monster_desc::save(writer& outf) const
@@ -840,8 +827,8 @@ static int kill_lualc_symbol(lua_State *ls)
     kill_exp *ke = static_cast<kill_exp*>(lua_touserdata(ls, 1));
     if (ke)
     {
-        wchar_t ch = ke->monnum != -1?
-                     mons_char(ke->monnum) :
+        ucs_t ch = ke->monnum != -1?
+                   mons_char(ke->monnum) :
               is_ghost(ke)? 'p' : '&';
 
         if (ke->monnum == MONS_PROGRAM_BUG)

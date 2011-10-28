@@ -1,12 +1,11 @@
-/*
- *  File:       libgui.cc
- *  Summary:    Functions that any display port needs to implement.
- *  Written by: M.Itakura
- */
+/**
+ * @file
+ * @brief Functions that any display port needs to implement.
+**/
 
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,7 +19,6 @@
 #include "message.h"
 #include "stash.h"
 #include "state.h"
-#include "stuff.h"
 #include "terrain.h"
 #include "tiledef-main.h"
 #include "travel.h"
@@ -29,7 +27,7 @@
 
 int m_getch()
 {
-    return getch();
+    return getchk();
 }
 
 void set_mouse_enabled(bool enabled)
@@ -66,24 +64,11 @@ void gui_init_view_params(crawl_view_geometry &geom)
     geom.viewsz.y = 17;
 }
 
-int putch(unsigned char chr)
+void putwch(ucs_t chr)
 {
-    // object's method
-    TextRegion::text_mode->putch(chr);
-    return 0;
-}
-
-int putwch(unsigned chr)
-{
-    // No unicode support.
-    putch(static_cast<unsigned char>(chr));
-    return 0;
-}
-
-void writeWChar(unsigned char *ch)
-{
-    // object's method
-    TextRegion::text_mode->writeWChar(ch);
+    if (!chr)
+        chr = ' ';
+    TextRegion::text_mode->putwch(chr);
 }
 
 void clear_to_end_of_line()
@@ -92,7 +77,7 @@ void clear_to_end_of_line()
     TextRegion::text_mode->clear_to_end_of_line();
 }
 
-int cprintf(const char *format,...)
+void cprintf(const char *format,...)
 {
     char buffer[2048];          // One full screen if no control seq...
     va_list argp;
@@ -101,7 +86,6 @@ int cprintf(const char *format,...)
     va_end(argp);
     // object's method
     TextRegion::text_mode->addstr(buffer);
-    return 0;
 }
 
 void textcolor(int color)
@@ -130,6 +114,15 @@ bool is_cursor_enabled()
     return (false);
 }
 
+bool is_smart_cursor_enabled()
+{
+    return false;
+}
+
+void enable_smart_cursor(bool dummy)
+{
+}
+
 int wherex()
 {
     return TextRegion::wherex();
@@ -150,31 +143,19 @@ int get_number_of_cols()
     return tiles.get_number_of_cols();
 }
 
-void put_colour_ch(int colour, unsigned ch)
-{
-    textcolor(colour);
-    putwch(ch);
-}
-
-int window(int x1, int y1, int x2, int y2)
-{
-    return 0;
-}
-
 int getch_ck()
 {
     return (tiles.getch_ck());
 }
 
-int getch()
+int getchk()
 {
     return getch_ck();
 }
 
-int clrscr()
+void clrscr()
 {
     tiles.clrscr();
-    return 0;
 }
 
 void cgotoxy(int x, int y, GotoRegion region)
@@ -193,7 +174,7 @@ GotoRegion get_cursor_region()
     return (tiles.get_cursor_region());
 }
 
-void delay(int ms)
+void delay(unsigned int ms)
 {
     tiles.redraw();
     wm->delay(ms);
@@ -204,62 +185,20 @@ void update_screen()
     tiles.set_need_redraw();
 }
 
-int kbhit()
+bool kbhit()
 {
     // Look for the presence of any keyboard events in the queue.
     int count = wm->get_event_count(WM_KEYDOWN);
     return (count > 0);
 }
 
-#ifdef UNIX
-int itoa(int value, char *strptr, int radix)
+void console_startup()
 {
-    unsigned int bitmask = 32768;
-    int ctr = 0;
-    int startflag = 0;
-
-    if (radix == 10)
-    {
-        sprintf(strptr, "%i", value);
-    }
-    else if (radix == 2)             /* int to "binary string" */
-    {
-        while (bitmask)
-        {
-            if (value & bitmask)
-            {
-                startflag = 1;
-                sprintf(strptr + ctr, "1");
-            }
-            else if (startflag)
-            {
-                sprintf(strptr + ctr, "0");
-            }
-
-            bitmask = bitmask >> 1;
-            if (startflag)
-                ctr++;
-        }
-
-        if (!startflag)         /* Special case if value == 0 */
-            sprintf((strptr + ctr++), "0");
-
-        strptr[ctr] = (char) NULL;
-    }
-    return (0);                /* Me? Fail? Nah. */
+    tiles.resize();
 }
 
-
-// Convert string to lowercase.
-char *strlwr(char *str)
+void console_shutdown()
 {
-    unsigned int i;
-
-    for (i = 0; i < strlen(str); i++)
-        str[i] = tolower(str[i]);
-
-    return (str);
+    tiles.shutdown();
 }
-
-#endif // #ifdef UNIX
-#endif // #ifdef USE_TILE
+#endif // #ifdef USE_TILE_LOCAL

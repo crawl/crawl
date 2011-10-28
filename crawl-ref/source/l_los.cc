@@ -1,8 +1,7 @@
-/*
- * File:        l_los.cc
- * Summary:     Lua bindings for LOS.
- * Created by:  Robert Vollmert
- */
+/**
+ * @file
+ * @brief Lua bindings for LOS.
+**/
 
 #include "AppHdr.h"
 
@@ -12,6 +11,7 @@
 #include "coord.h"
 #include "libutil.h"
 #include "los.h"
+#include "losglobal.h"
 #include "ray.h"
 
 #define RAY_METATABLE "dgn.ray"
@@ -56,7 +56,7 @@ LUAFN(los_cell_see_cell)
 {
     COORDS(p, 1, 2);
     COORDS(q, 3, 4);
-    PLUARET(number, cell_see_cell(p, q));
+    PLUARET(number, cell_see_cell(p, q, LOS_DEFAULT));
 }
 
 const struct luaL_reg los_dlib[] =

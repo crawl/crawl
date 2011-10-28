@@ -47,6 +47,8 @@ Being skilled in Staves makes becoming skilled in Maces & Flails or Polearms eas
 Slings
 
 Being skilled in a particular type of ranged attack will let you deal more damage when using the appropriate launcher and ammunition.
+
+If you're already skilled in Slings, it is easier to become (more) skilled in Throwing.
 %%%%
 Bows
 
@@ -63,6 +65,8 @@ Being skilled in a particular type of ranged attack will let you deal more damag
 Throwing
 
 Training Throwing will make thrown weapons (as opposed to ones fired from a launcher) more effective. In particular, it makes weapons of returning more likely to actually return to their thrower.
+
+If you're already skilled in Throwing, it is easier to become (more) skilled in Slings.
 %%%%
 Armour
 
@@ -102,11 +106,17 @@ Being skilled in a magical "school" makes it easier to learn and cast spells of 
 
 Conjurations are battle oriented spells, all dealing damage in various ways.
 %%%%
-Enchantments
+Hexes
 
 Being skilled in a magical "school" makes it easier to learn and cast spells of this school. Many spells belong to a combination of several schools, in which case the average skill in these schools will decide on spellcasting success and power.
 
-Enchantments try to affect nearby beings in manifold possibilities. This includes a list of beneficial self-enchantments, like Haste.
+Hexes try to bestow various enchantments on nearby things. While none do direct damage, being ensorcelled can effectively take an opponent out of combat. Sadly, Hexes suffer greatly from spell resistance when cast on living beings.
+%%%%
+Charms
+
+Being skilled in a magical "school" makes it easier to learn and cast spells of this school. Many spells belong to a combination of several schools, in which case the average skill in these schools will decide on spellcasting success and power.
+
+Charms provide you with a number of self-enhancing auras.
 %%%%
 Summonings
 

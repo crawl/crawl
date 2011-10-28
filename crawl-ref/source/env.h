@@ -21,7 +21,7 @@ struct crawl_environment
     uint8_t floor_colour;
 
     FixedVector< item_def, MAX_ITEMS >       item;  // item list
-    FixedVector< monster, MAX_MONSTERS >    mons;  // monster list
+    FixedVector< monster, MAX_MONSTERS+1 >   mons;  // monster list, plus anon
 
     feature_grid                             grid;  // terrain grid
     FixedArray<terrain_property_t, GXM, GYM> pgrid; // terrain properties
@@ -36,9 +36,9 @@ struct crawl_environment
 
     string_set                               level_uniq_maps;
     string_set                               level_uniq_map_tags;
+    string_set                               level_layout_types;
 
     std::string                              level_build_method;
-    std::string                              level_layout_type;
 
     vault_placement_refv                     level_vaults;
 
@@ -46,6 +46,8 @@ struct crawl_environment
 
     // Player-remembered terrain and LOS
     FixedArray< map_cell, GXM, GYM >         map_knowledge;
+    // Previous map knowledge (last step)
+    FixedArray< map_cell, GXM, GYM >         map_shadow;
     std::set<coord_def> visible;
 
 #ifdef USE_TILE
@@ -57,6 +59,7 @@ struct crawl_environment
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_fg;
     FixedArray<tileidx_t, ENV_SHOW_DIAMETER, ENV_SHOW_DIAMETER> tile_bg;
     tile_flavour tile_default;
+    std::vector<std::string> tile_names;
 #endif
 
     FixedVector< cloud_struct, MAX_CLOUDS >  cloud; // cloud list
@@ -95,9 +98,13 @@ struct crawl_environment
     unsigned int dactions_done;
 
     coord_def sanctuary_pos;
+    coord_def orb_pos;
     int sanctuary_time;
     int forest_awoken_until;
     int density;
+
+    // Volatile level flags, not saved.
+    uint32_t level_state;
 
     // Temp stuff.
     std::vector<final_effect> final_effects;

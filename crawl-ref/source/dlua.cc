@@ -1,8 +1,7 @@
-/*
- *  File:       dlua.cc
- *  Summary:    Dungeon-builder Lua interface.
- *  Created by: dshaligram on Sat Jun 23 20:02:09 2007 UTC
- */
+/**
+ * @file
+ * @brief Dungeon-builder Lua interface.
+**/
 
 #include "AppHdr.h"
 
@@ -54,6 +53,14 @@ dlua_chunk dlua_chunk::precompiled(const std::string &_chunk)
     dlua_chunk dchunk;
     dchunk.compiled = _chunk;
     return (dchunk);
+}
+
+std::string dlua_chunk::describe(const std::string &name) const
+{
+    if (chunk.empty())
+        return "";
+    return make_stringf("function %s()\n%s\nend\n",
+                        name.c_str(), chunk.c_str());
 }
 
 void dlua_chunk::write(writer& outf) const
@@ -147,7 +154,7 @@ int dlua_chunk::load(CLua &interp)
     if (empty())
     {
         chunk.clear();
-        return (-1000);
+        return (E_CHUNK_LOAD_FAILURE);
     }
 
     int err = check_op(interp,
@@ -163,7 +170,6 @@ int dlua_chunk::load(CLua &interp)
         lua_pop(interp, 2);
     }
     compiled = out.str();
-    chunk.clear();
     return (err);
 }
 
@@ -179,7 +185,7 @@ int dlua_chunk::run(CLua &interp)
 int dlua_chunk::load_call(CLua &interp, const char *fn)
 {
     int err = load(interp);
-    if (err == -1000)
+    if (err == E_CHUNK_LOAD_FAILURE)
         return (0);
     if (err)
         return (err);
@@ -287,9 +293,9 @@ void init_dungeon_lua()
     luaL_openlib(dlua, "debug", debug_dlib, 0);
     luaL_openlib(dlua, "los", los_dlib, 0);
 
-    dlua.execfile("clua/dungeon.lua", true, true);
-    dlua.execfile("clua/luamark.lua", true, true);
-    dlua.execfile("clua/mapinit.lua", true, true);
+    dlua.execfile("dlua/dungeon.lua", true, true);
+    dlua.execfile("dlua/luamark.lua", true, true);
+    dlua.execfile("dlua/mapinit.lua", true, true);
 
     lua_getglobal(dlua, "dgn_run_map");
     luaopen_debug(dlua);

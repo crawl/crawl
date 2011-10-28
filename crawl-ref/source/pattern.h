@@ -3,7 +3,7 @@
 
 #ifdef REGEX_PCRE
     // Statically link pcre on Windows
-    #if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS)
+    #if defined(TARGET_OS_WINDOWS)
         #define PCRE_STATIC
     #endif
 
@@ -37,6 +37,7 @@ public:
 
     virtual bool valid() const = 0;
     virtual bool matches(const std::string &s) const = 0;
+    virtual const std::string &tostring() const = 0;
 };
 
 template <p_compile pcomp, p_free pfree, p_match pmatch>

@@ -1,8 +1,7 @@
-/*
- *  File:       mon-abil.h
- *  Summary:    Monster abilities.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Monster abilities.
+**/
 
 #ifndef MONABIL_H
 #define MONABIL_H

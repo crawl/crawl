@@ -1,14 +1,16 @@
 #include "AppHdr.h"
 
-#include <stdint.h>
+#include <math.h>
 #include "random.h"
 
+// [low, high]
 int random_range(int low, int high)
 {
     ASSERT(low <= high);
     return (low + random2(high - low + 1));
 }
 
+// [low, high]
 int random_range(int low, int high, int nrolls)
 {
     ASSERT(nrolls > 0);
@@ -93,6 +95,7 @@ int random_choose_weighted(int weight, int first, ...)
 #define UINT32_MAX ((uint32_t)(-1))
 #endif
 
+// [0, max)
 int random2(int max)
 {
     if (max <= 1)
@@ -110,12 +113,14 @@ int random2(int max)
     }
 }
 
+// [0, 1]
 bool coinflip(void)
 {
     return (static_cast<bool>(random2(2)));
 }
 
 // Returns random2(x) if random_factor is true, otherwise the mean.
+// [0, x)
 int maybe_random2(int x, bool random_factor)
 {
     if (x <= 1)
@@ -126,6 +131,18 @@ int maybe_random2(int x, bool random_factor)
         return (x / 2);
 }
 
+// [0, ceil(nom/denom)]
+int maybe_random_div(int nom, int denom, bool random_factor)
+{
+    if (nom <= 0)
+        return (0);
+    if (random_factor)
+        return (random2(nom + denom) / denom);
+    else
+        return (nom / 2 / denom);
+}
+
+// [num, num*size]
 int maybe_roll_dice(int num, int size, bool random)
 {
     if (random)
@@ -134,10 +151,10 @@ int maybe_roll_dice(int num, int size, bool random)
         return ((num + num * size) / 2);
 }
 
+// [num, num*size]
 int roll_dice(int num, int size)
 {
     int ret = 0;
-    int i;
 
     // If num <= 0 or size <= 0, then we'll just return the default
     // value of zero.  This is good behaviour in that it will be
@@ -146,7 +163,7 @@ int roll_dice(int num, int size)
     {
         ret += num;     // since random2() is zero based
 
-        for (i = 0; i < num; i++)
+        for (int i = 0; i < num; i++)
             ret += random2(size);
     }
 
@@ -197,6 +214,7 @@ void scale_dice(dice_def &dice, int threshold)
 }
 
 // Calculates num/den and randomly adds one based on the remainder.
+// [floor(num/den), ceil(num/den)]
 int div_rand_round(int num, int den)
 {
     int rem = num % den;
@@ -206,6 +224,7 @@ int div_rand_round(int num, int den)
         return (num / den);
 }
 
+// [0, max)
 int bestroll(int max, int rolls)
 {
     int best = 0;
@@ -222,6 +241,7 @@ int bestroll(int max, int rolls)
 
 // random2avg() returns same mean value as random2() but with a lower variance
 // never use with rolls < 2 as that would be silly - use random2() instead {dlb}
+// [0, max)
 int random2avg(int max, int rolls)
 {
     int sum = random2(max);
@@ -235,6 +255,7 @@ int random2avg(int max, int rolls)
 // originally designed to randomise evasion -
 // values are slightly lowered near (max) and
 // approach an upper limit somewhere near (limit/2)
+// [0, max]
 int random2limit(int max, int limit)
 {
     int i;
@@ -251,10 +272,11 @@ int random2limit(int max, int limit)
 }
 
 // Generate samples from a binomial distribution with n_trials and trial_prob
-// probability of success per trial. trial_prob is a integer less than 100
-// representing the % chancee of success.
+// probability of success per trial. trial_prob is an integer less than 100
+// representing the % chance of success.
 // This just evaluates all n trials, there is probably an efficient way of
 // doing this but I'm not much of a statistician. -CAO
+// [0, n_trials]
 int binomial_generator(unsigned n_trials, unsigned trial_prob)
 {
     int count = 0;
@@ -263,6 +285,22 @@ int binomial_generator(unsigned n_trials, unsigned trial_prob)
             count++;
 
     return count;
+}
+
+// range [0, 1.0)
+double random_real()
+{
+    return random_int() / 4294967296.0;
+}
+
+// Roll n_trials, return true if at least one succeeded.  n_trials might be
+// not integer.
+// [0, 1]
+bool bernoulli(double n_trials, double trial_prob)
+{
+    if (n_trials <= 0 || trial_prob <= 0)
+        return false;
+    return random_real() >= pow(1 - trial_prob, n_trials);
 }
 
 bool one_chance_in(int a_million)
@@ -281,6 +319,7 @@ bool x_chance_in_y(int x, int y)
     return (random2(y) < x);
 }
 
+// [val - lowfuzz, val + highfuzz]
 int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage)
 {
     const int lfuzz = lowfuzz * val / 100,

@@ -1,8 +1,7 @@
-/*
- *  File:       state.h
- *  Summary:    Game state.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Game state.
+**/
 
 #ifndef STATE_H
 #define STATE_H
@@ -12,6 +11,7 @@
 
 class monster;
 class mon_acting;
+class targetter;
 
 struct god_act_state
 {
@@ -42,6 +42,7 @@ struct game_state
     bool waiting_for_command; // True when the game is waiting for a command.
     bool terminal_resized;   // True if the term was resized and we need to
                              // take action to handle it.
+    time_t last_winch;       // Time of last resize, for crash dumps.
 
     bool io_inited;         // Is curses or the equivalent initialised?
     bool need_save;         // Set to true when game has started.
@@ -53,23 +54,24 @@ struct game_state
     bool map_stat_gen;      // Set if we're generating stats on maps.
 
     game_type type;
+    game_type last_type;
+    bool last_game_won;
     bool arena_suspended;   // Set if the arena has been temporarily
                             // suspended.
 
+    bool dump_maps;         // Dump map Lua to stderr on fresh parse.
     bool test;              // Set if we want to run self-tests and exit.
     bool script;            // Set if we want to run a Lua script and exit.
     bool build_db;          // Set if we want to rebuild the db and exit.
     std::vector<std::string> tests_selected; // Tests to be run.
     std::vector<std::string> script_args;    // Arguments to scripts.
 
-    bool unicode_ok;        // Is unicode support available?
-
     bool show_more_prompt;  // Set to false to disable --more-- prompts.
 
     std::string sprint_map; // Sprint map set on command line, if any.
 
-    std::string (*glyph2strfn)(unsigned glyph);
-    int  (*multibyte_strlen)(const std::string &s);
+    std::string map;        // Map selected in the newgame menu
+
     void (*terminal_resize_handler)();
     void (*terminal_resize_check)();
 
@@ -82,23 +84,29 @@ struct game_state
     command_type    prev_repeat_cmd;
     int             prev_cmd_repeat_goal;
     bool            cmd_repeat_started_unsafe;
+    int             lua_calls_no_turn;
+    bool            stat_gain_prompt;
 
     std::vector<std::string> startup_errors;
 
     bool level_annotation_shown;
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     // Are we currently targeting using the mlist?
     // This is global because the monster pane uses this when
     // drawing.
     bool mlist_targeting;
+#else
+    bool title_screen;
 #endif
 
-    // Range beyond which view should be darkend, -1 == disabled.
-    int darken_range;
+    // Area beyond which view should be darkened,  0 = disabled.
+    targetter *darken_range;
 
     // Any changes to macros that need to be changed?
     bool unsaved_macros;
+
+    FixedBitArray<NUM_DISABLEMENTS> disables;
 
     // Version of the last character save.
     int minorVersion;
@@ -160,11 +168,14 @@ public:
     void dump();
     bool player_is_dead() const;
 
+    bool game_standard_levelgen() const;
     bool game_is_normal() const;
     bool game_is_tutorial() const;
     bool game_is_arena() const;
     bool game_is_sprint() const;
+    bool game_is_zotdef() const;
     bool game_is_hints() const;
+    bool game_is_hints_tutorial() const;
 
     // Save subdirectory used for games such as Sprint.
     std::string game_type_name() const;
@@ -172,6 +183,11 @@ public:
     std::string game_type_qualifier() const;
 
     static std::string game_type_name_for(game_type gt);
+
+    inline void mark_last_game_won()
+    {
+        last_game_won = true;
+    }
 
     friend class mon_acting;
 };
@@ -220,6 +236,5 @@ public:
 private:
     monster* mon;
 };
-
 
 #endif

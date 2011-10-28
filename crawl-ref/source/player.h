@@ -1,8 +1,7 @@
-/*
- *  File:       player.cc
- *  Summary:    Player related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Player related functions.
+**/
 
 
 #ifndef PLAYER_H
@@ -14,34 +13,28 @@
 #include "itemprop-enum.h"
 #include "package.h"
 #include "place-info.h"
-
+#include "religion-enum.h"
 #include "species.h"
 
+#include <list>
 #include <vector>
-#include <stdint.h>
 
 #ifdef USE_TILE
 #include "tiledoll.h"
 #endif
 
-enum diag_counter_t
-{
-    DC_OTHER,
-    DC_WALK_ORTHO,
-    DC_WALK_DIAG,
-    DC_FIGHT,
-    DC_REST,
-    NUM_DC
-};
+int check_stealth(void);
 
+typedef FixedVector<int, NUM_DURATIONS> durations_t;
 class player : public actor
 {
 public:
   // Permanent data:
   std::string your_name;
   species_type species;
+  std::string species_name;
   job_type char_class;
-  char class_name[30];
+  std::string class_name;
 
   // This field is here even in non-WIZARD compiles, since the
   // player might have been playing previously under wiz mode.
@@ -51,16 +44,17 @@ public:
 
   // Long-term state:
   int elapsed_time;        // total amount of elapsed time in the game
+  int elapsed_time_at_last_input; // used for elapsed_time delta display
 
   int hp;
   int hp_max;
-  int base_hp;                // temporary max HP loss (rotting)
-  int base_hp2;               // base HPs from levels (and permanent loss)
+  int hp_max_temp;            // temporary max HP loss (rotting)
+  int hp_max_perm;            // base HPs from background (and permanent loss)
 
   int magic_points;
   int max_magic_points;
-  int base_magic_points;      // temporary max MP loss? (currently unused)
-  int base_magic_points2;     // base MPs from levels and potions of magic
+  int mp_max_temp;            // temporary max MP loss? (currently unused)
+  int mp_max_perm;            // base MPs from background (and permanent loss)
 
   FixedVector<int8_t, NUM_STATS> stat_loss;
   FixedVector<int8_t, NUM_STATS> base_stats;
@@ -77,6 +71,7 @@ public:
   unsigned int experience;
   int experience_level;
   int gold;
+  int zigs_completed, zig_max;
 
   FixedVector<int8_t, NUM_EQUIP> equip;
   FixedVector<bool, NUM_EQUIP> melded;
@@ -84,12 +79,15 @@ public:
 
   // PC's symbol (usually @) and colour.
   monster_type symbol;
+  transformation_type form;
 
   FixedVector< item_def, ENDOFPACK > inv;
+  FixedBitArray<NUM_RUNE_TYPES> runes;
+  int obtainable_runes; // can be != 15 in Sprint
 
   int burden;
   burden_state_type burden_state;
-  FixedVector<spell_type, 25> spells;
+  FixedVector<spell_type, MAX_KNOWN_SPELLS> spells;
   uint8_t spell_no;
   game_direction_type char_direction;
   bool opened_zot;
@@ -102,7 +100,7 @@ public:
 
   int absdepth0; // offset by one (-1 == 0, 0 == 1, etc.) for display
 
-  FixedVector<int, NUM_DURATIONS> duration;
+  durations_t duration;
   int rotting;
   int berserk_penalty;                // penalty for moving while berserk
 
@@ -117,17 +115,44 @@ public:
   int lives;
   int deaths;
 
-  FixedVector<uint8_t, 50>  skills;
-  FixedVector<bool, 50>  practise_skill;
-  FixedVector<unsigned int, 50>   skill_points;
-  FixedVector<uint8_t, 50>  skill_order;
+  FixedVector<uint8_t, NUM_SKILLS>  skills; //!< skill level
+  FixedVector<int8_t, NUM_SKILLS>  train; //!< 0: disabled, 1: normal, 2: focus.
+  FixedVector<unsigned int, NUM_SKILLS>  training; //<! percentage of XP used
+  FixedVector<bool, NUM_SKILLS> can_train; //!<Is training this skill allowed
+  FixedVector<bool, NUM_SKILLS> train_set; //!< Has the player set this skill
+  FixedVector<unsigned int, NUM_SKILLS> skill_points;
+  FixedVector<unsigned int, NUM_SKILLS> ct_skill_points; //<!track skill points
+                                                    //<!gained by crosstraining
+  FixedVector<uint8_t, NUM_SKILLS>  skill_order;
+
+  bool auto_training;
+  std::list<skill_type> exercises;     //<! recent practise events
+  std::list<skill_type> exercises_all; //<! also include events for disabled skills
+  std::set<skill_type> stop_train; //<! need to check if we can still train
+  std::set<skill_type> start_train; //<! we can resume training
+
+  // Skill menu states
+  skill_menu_state skill_menu_do;
+  skill_menu_state skill_menu_view;
+
+  //Ashenzari transfer knowledge
+  skill_type    transfer_from_skill;
+  skill_type    transfer_to_skill;
+  unsigned int  transfer_skill_points;
+  unsigned int  transfer_total_skill_points;
 
   skill_type sage_bonus_skill;  // If Sage is in effect, which skill it affects.
   int sage_bonus_degree;        // How much bonus XP to give in that skill.
 
+  skill_type manual_skill;
+  int manual_index;
+
   int  skill_cost_level;
   int  total_skill_points;
   int  exp_available;
+  int  zot_points; // ZotDef currency
+
+  int exp_docked, exp_docked_total; // Ashenzari's wrath
 
   FixedArray<uint8_t, 6, 50> item_description;
   FixedVector<unique_item_status_type, MAX_UNRANDARTS> unique_items;
@@ -137,7 +162,7 @@ public:
   // rather than the object itself, so that we can get away with
   // just a forward declare of the KillMaster class, rather than
   // having to #include kills.h and thus make every single .cc file
-  // dependant on kills.h.  Having a pointer means that we have
+  // dependent on kills.h.  Having a pointer means that we have
   // to do our own implementations of copying the player object,
   // since the default implementations will lead to the kills member
   // pointing to freed memory, or worse yet lead to the same piece of
@@ -174,7 +199,8 @@ public:
   FixedVector<uint8_t, 30> branch_stairs;
 
   god_type religion;
-  std::string second_god_name; // Random second name of Jiyva
+  std::string god_name;
+  std::string jiyva_second_name; // Random second name of Jiyva
   uint8_t piety;
   uint8_t piety_hysteresis;       // amount of stored-up docking
   uint8_t gift_timeout;
@@ -182,6 +208,10 @@ public:
   FixedVector<uint8_t, MAX_NUM_GODS>  worshipped;
   FixedVector<short,   MAX_NUM_GODS>  num_current_gifts;
   FixedVector<short,   MAX_NUM_GODS>  num_total_gifts;
+  FixedVector<uint8_t, MAX_NUM_GODS>  piety_max;
+
+  // Nemelex sacrifice toggles
+  FixedVector<bool, NUM_NEMELEX_GIFT_TYPES> nemelex_sacrificing;
 
   FixedVector<uint8_t, NUM_MUTATIONS> mutation;
   FixedVector<uint8_t, NUM_MUTATIONS> innate_mutations;
@@ -201,6 +231,7 @@ public:
   FixedVector<bool, NUM_SPELLS>      seen_spell;
   FixedVector<uint32_t, NUM_WEAPONS> seen_weapon;
   FixedVector<uint32_t, NUM_ARMOURS> seen_armour;
+  FixedBitArray<NUM_MISCELLANY>      seen_misc;
 
   uint8_t normal_vision;        // how far the species gets to see
   uint8_t current_vision;       // current sight radius (cells)
@@ -230,21 +261,37 @@ public:
   PlaceInfo global_info;
   player_quiver* m_quiver;
 
-  CrawlHashTable props;
-
   // monsters mesmerising player; should be protected, but needs to be saved
   // and restored.
   std::vector<int> beholders;
 
-  // monsterss causing fear to the player; see above
+  // monsters causing fear to the player; see above
   std::vector<int> fearmongers;
 
   // Delayed level actions.  This array is never trimmed, as usually D:1 won't
   // be loaded again until the very end.
   std::vector<daction_type> dactions;
-  // [time (vs turn)][autoexploring][]
-  FixedVector<int, NUM_DC> dcounters[2][2];
 
+  // The player's knowledge about item types.
+  id_arr type_ids;
+  // Additional information, about tried unidentified items.
+  // (e.g. name of item, for scrolls of RC, ID, EA)
+  CrawlHashTable type_id_props;
+
+#if TAG_MAJOR_VERSION <= 33
+  int montiers[5]; // four monster tiers, plus corpse count
+#endif
+
+  // The version the save was last played with.
+  std::string prev_save_version;
+
+  // The type of a zotdef wave, if any.
+  std::string zotdef_wave_name;
+  // The biggest assigned monster id so far.
+  mid_t last_mid;
+
+  // Count of spells cast.
+  std::map<spell_type, FixedVector<int, 27> > spell_usage;
 
   // Non-saved UI state:
   unsigned short prev_targ;
@@ -261,15 +308,11 @@ public:
 
   delay_queue_type delay_queue;       // pending actions
 
-  time_t        start_time;           // start time of session
-#if defined(WIZARD) || defined(DEBUG)
-  // If set to true, then any call to ouch() which would cuase the player
-  // to die automatically returns without ending the game.
-  bool never_die;
-#endif
+  time_t last_keypress_time;
   bool xray_vision;
-  int bondage_level;  // how much an Ash worshipper is into bondage
-
+  int8_t bondage_level;  // how much an Ash worshipper is into bondage
+  int8_t bondage[NUM_ET];
+  std::map<skill_type, int8_t> skill_boost; // Skill bonuses.
 
   // Volatile (same-turn) state:
   bool turn_is_over; // flag signaling that player has performed a timed action
@@ -282,6 +325,7 @@ public:
   bool redraw_quiver;         // redraw quiver
   uint64_t redraw_status_flags;
 
+  bool redraw_title;
   bool redraw_hit_points;
   bool redraw_magic_points;
   FixedVector<bool, NUM_STATS> redraw_stats;
@@ -297,6 +341,9 @@ public:
 
   entry_cause_type entry_cause;
   god_type         entry_cause_god;
+
+  // For now, only control the speed of abyss morphing.
+  int abyss_speed;
 
   int           old_hunger;  // used for hunger delta-meter (see output.cc)
 
@@ -323,8 +370,14 @@ public:
   // portal right away; delay the announcements then.
   int seen_portals;
 
+  // Number of viewport refreshes.
+  unsigned int frame_no;
+
   // The save file itself.
   package *save;
+
+  // The last spell cast by the player.
+  spell_type last_cast_spell;
 
 protected:
     FixedVector<PlaceInfo, NUM_BRANCHES>             branch_info;
@@ -342,8 +395,8 @@ public:
     // Set player position without updating view geometry.
     void set_position(const coord_def &c);
     // Low-level move the player. Use this instead of changing pos directly.
-    void moveto(const coord_def &c);
-    bool move_to_pos(const coord_def &c);
+    void moveto(const coord_def &c, bool clear_net = true);
+    bool move_to_pos(const coord_def &c, bool clear_net = true);
     // Move the player during an abyss shift.
     void shiftto(const coord_def &c);
     bool blink_to(const coord_def& c, bool quiet = false);
@@ -368,14 +421,16 @@ public:
     //at least one level of earth attunement (nomes)
     bool rocky() const;
 
+    bool can_cling_to_walls() const;
+    bool is_web_immune() const;
     bool cannot_speak() const;
     bool invisible() const;
     bool misled() const;
     bool can_see_invisible() const;
     bool can_see_invisible(bool unid, bool transient = true) const;
-    bool are_charming() const;
     bool visible_to(const actor *looker) const;
     bool can_see(const actor* a) const;
+    bool nightvision() const;
 
     bool see_cell(const coord_def& p) const;
     const los_base* get_los();
@@ -386,31 +441,33 @@ public:
     bool is_icy() const;
     bool is_fiery() const;
     bool is_skeletal() const;
+    bool are_currently_undead() const;
 
     bool light_flight() const;
     bool travelling_light() const;
 
     // Dealing with beholders. Implemented in behold.cc.
-    void add_beholder(const monster* mon);
+    void add_beholder(const monster* mon, bool axe = false);
     bool beheld() const;
     bool beheld_by(const monster* mon) const;
     monster* get_beholder(const coord_def &pos) const;
     monster* get_any_beholder() const;
     void remove_beholder(const monster* mon);
     void clear_beholders();
-    void beholders_check_noise(int loudness);
+    void beholders_check_noise(int loudness, bool axe = false);
     void update_beholders();
     void update_beholder(const monster* mon);
+    bool possible_beholder(const monster* mon) const;
 
     // Dealing with fearmongers. Implemented in fearmonger.cc.
-    void add_fearmonger(const monster* mon);
+    bool add_fearmonger(const monster* mon);
     bool afraid() const;
     bool afraid_of(const monster* mon) const;
     monster* get_fearmonger(const coord_def &pos) const;
     monster* get_any_fearmonger() const;
     void remove_fearmonger(const monster* mon);
     void clear_fearmongers();
-    void fearmongers_check_noise(int loudness);
+    void fearmongers_check_noise(int loudness, bool axe = false);
     void update_fearmongers();
     void update_fearmonger(const monster* mon);
 
@@ -418,7 +475,8 @@ public:
 
     bool has_spell(spell_type spell) const;
 
-    size_type transform_size(int psize = PSIZE_TORSO) const;
+    size_type transform_size(transformation_type tform,
+                             int psize = PSIZE_TORSO) const;
     std::string shout_verb() const;
 
     item_def *slot_item(equipment_type eq,
@@ -426,8 +484,9 @@ public:
     const item_def *slot_item(equipment_type eq,
                               bool include_melded=false) const;
 
+    std::map<int,int> last_pickup;
+
     // actor
-    monster_type id() const;
     int mindex() const;
     int       get_experience_level() const;
     actor_type atype() const { return ACT_PLAYER; }
@@ -444,7 +503,6 @@ public:
     bool      submerged() const;
     bool      floundering() const;
     bool      extra_balanced() const;
-    bool      has_trachea() const;
     bool      can_pass_through_feat(dungeon_feature_type grid) const;
     bool      is_habitable_feat(dungeon_feature_type actual_grid) const;
     size_type body_size(size_part_type psize = PSIZE_TORSO, bool base = false) const;
@@ -464,6 +522,8 @@ public:
     bool      has_usable_offhand() const;
     int       has_pseudopods(bool allow_tran = true) const;
     int       has_usable_pseudopods(bool allow_tran = true) const;
+    int       has_tentacles(bool allow_tran = true) const;
+    int       has_usable_tentacles(bool allow_tran = true) const;
 
     item_def *weapon(int which_attack = -1);
     item_def *shield();
@@ -493,6 +553,7 @@ public:
     bool can_go_berserk(bool intentional, bool potion = false) const;
     void go_berserk(bool intentional, bool potion = false);
     bool berserk() const;
+    bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
     bool can_bleed() const;
@@ -510,10 +571,11 @@ public:
 
     int hunger_level() const { return hunger_state; }
     void make_hungry(int nutrition, bool silent = true);
-    void poison(actor *agent, int amount = 1);
-    bool sicken(int amount);
-    void paralyse(actor *, int str);
-    void petrify(actor *, int str);
+    bool poison(actor *agent, int amount = 1, bool force = false);
+    bool sicken(int amount, bool allow_hint = true);
+    void paralyse(actor *, int str, std::string source = "");
+    void petrify(actor *);
+    bool fully_petrify(actor *foe, bool quiet = false);
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);
     bool heal(int amount, bool max_too = false);
@@ -529,26 +591,29 @@ public:
 
     mon_holy_type holiness() const;
     bool undead_or_demonic() const;
-    bool is_holy() const;
-    bool is_unholy() const;
-    bool is_evil() const;
+    bool is_holy(bool spells = true) const;
+    bool is_unholy(bool spells = true) const;
+    bool is_evil(bool spells = true) const;
     bool is_chaotic() const;
     bool is_artificial() const;
     bool is_unbreathing() const;
     bool is_insubstantial() const;
+    bool is_cloud_immune(cloud_type) const;
     int res_acid() const;
     int res_fire() const;
     int res_steam() const;
     int res_cold() const;
     int res_elec() const;
-    int res_poison() const;
-    int res_rotting() const;
+    int res_poison(bool temp = true) const;
+    int res_rotting(bool temp = true) const;
     int res_asphyx() const;
     int res_water_drowning() const;
     int res_sticky_flame() const;
     int res_holy_energy(const actor *) const;
     int res_negative_energy() const;
     int res_torment() const;
+    int res_wind() const;
+    int res_petrify(bool temp = true) const;
     int res_magic() const;
     bool confusable() const;
     bool slowable() const;
@@ -563,9 +628,13 @@ public:
     bool confused() const;
     bool caught() const;
     bool backlit(bool check_haloed = true, bool self_halo = true) const;
+    bool umbra(bool check_haloed = true, bool self_halo = true) const;
     int halo_radius2() const;
     int silence_radius2() const;
+    int liquefying_radius2 () const;
+    int umbra_radius2 () const;
     bool glows_naturally() const;
+    bool petrifying() const;
     bool petrified() const;
     bool incapacitated() const
     {
@@ -577,6 +646,8 @@ public:
     void put_to_sleep(actor *, int power = 0);
     void awake();
     void check_awaken(int disturbance);
+    int beam_resists(bolt &beam, int hurted, bool doEffects,
+                     std::string source);
 
     bool can_throw_large_rocks() const;
     bool can_smell() const;
@@ -589,6 +660,7 @@ public:
 
     int stat_hp() const     { return hp; }
     int stat_maxhp() const  { return hp_max; }
+    int stealth() const     { return check_stealth(); }
 
     int shield_bonus() const;
     int shield_block_penalty() const;
@@ -597,7 +669,7 @@ public:
     void shield_block_succeeded(actor *foe);
 
     bool wearing_light_armour(bool with_skill = false) const;
-    int  skill(skill_type skill, bool skill_bump = false) const;
+    int  skill(skill_type skill, int scale =1, bool real = false) const;
     int  traps_skill() const;
 
     bool do_shaft();
@@ -657,9 +729,11 @@ struct player_save_info
     int experience_level;
     bool wizard;
     species_type species;
+    std::string species_name;
     std::string class_name;
     god_type religion;
-    std::string second_god_name;
+    std::string god_name;
+    std::string jiyva_second_name;
     game_type saved_game_type;
 
 #ifdef USE_TILE
@@ -667,7 +741,10 @@ struct player_save_info
     bool held_in_net;
 #endif
 
-    player_save_info operator=(const player& rhs);
+    bool save_loadable;
+    std::string filename;
+
+    player_save_info& operator=(const player& rhs);
     bool operator<(const player_save_info& rhs) const;
     std::string short_desc() const;
 };
@@ -680,19 +757,21 @@ void moveto_location_effects(dungeon_feature_type old_feat,
                              bool stepped=false, bool allow_shift=true,
                              const coord_def& old_pos=coord_def());
 
-bool check_moveto(const coord_def& p, const std::string &move_verb = "step");
+bool check_moveto(const coord_def& p, const std::string &move_verb = "step",
+                  const std::string &msg = "");
 void move_player_to_grid(const coord_def& p, bool stepped, bool allow_shift);
 
-bool player_in_mappable_area(void);
+bool is_map_persistent(void);
 bool player_in_branch(int branch);
 bool player_in_level_area(level_area_type area);
 bool player_in_hell(void);
 
 bool berserk_check_wielded_weapon(void);
 int player_equip(equipment_type slot, int sub_type, bool calc_unid = true);
-int player_equip_ego_type(int slot, int sub_type);
+int player_equip_ego_type(int slot, int sub_type, bool calc_unid = true);
 bool player_equip_unrand(int unrand_index);
 bool player_can_hit_monster(const monster* mon);
+bool player_can_hear(const coord_def& p, int hear_distance = 999);
 
 bool player_is_shapechanged(void);
 
@@ -702,16 +781,16 @@ bool player_effectively_in_light_armour();
 bool player_under_penance(void);
 
 bool extrinsic_amulet_effect(jewellery_type amulet);
-bool wearing_amulet(jewellery_type which_am, bool calc_unid = true);
+bool wearing_amulet(jewellery_type which_am, bool calc_unid = true,
+                    bool ignore_extrinsic = false);
 
 int burden_change(void);
 
 int carrying_capacity(burden_state_type bs = BS_OVERLOADED);
 
-int check_stealth(void);
-
 int player_energy(void);
 
+int player_raw_body_armour_evasion_penalty();
 int player_adjusted_shield_evasion_penalty(int scale);
 int player_adjusted_body_armour_evasion_penalty(int scale);
 int player_armour_shield_spell_penalty();
@@ -731,11 +810,13 @@ int player_magical_power(void);
 int player_prot_life(bool calc_unid = true, bool temp = true,
                      bool items = true);
 
+int player_bonus_regen(void);
 int player_regen(void);
 
 int player_res_cold(bool calc_unid = true, bool temp = true,
                     bool items = true);
 int player_res_acid(bool calc_unid = true, bool items = true);
+int player_res_corr(bool calc_unid = true, bool items = true);
 int player_acid_resist_factor();
 
 int player_res_torment(bool calc_unid = true, bool temp = true);
@@ -744,7 +825,7 @@ bool player_item_conserve(bool calc_unid = true);
 int player_mental_clarity(bool calc_unid = true, bool items = true);
 int player_spirit_shield(bool calc_unid = true);
 
-bool player_likes_chunks(bool permanently = false);
+int player_likes_chunks(bool permanently = false);
 bool player_likes_water(bool permanently = false);
 
 int player_mutation_level(mutation_type mut);
@@ -761,6 +842,7 @@ int player_res_steam(bool calc_unid = true, bool temp = true,
 
 int player_res_poison(bool calc_unid = true, bool temp = true,
                       bool items = true);
+int player_res_magic(bool calc_unid = true, bool temp = true);
 
 bool player_control_teleport(bool calc_unid = true, bool temp = true,
                              bool items = true);
@@ -780,13 +862,14 @@ int player_spec_poison(void);
 int player_spec_summ(void);
 
 int player_speed(void);
-int player_ponderousness();
+int player_armour_slots();
 int player_evokable_levitation();
 int player_evokable_invis();
 
 int player_spell_levels(void);
 
 int player_sust_abil(bool calc_unid = true);
+int player_warding(bool calc_unid = true);
 
 int player_teleport(bool calc_unid = true);
 
@@ -803,11 +886,13 @@ void display_char_status(void);
 
 void forget_map(int chance_forgotten = 100, bool force = false);
 
+int get_exp_progress();
 void gain_exp(unsigned int exp_gained, unsigned int* actual_gain = NULL,
               unsigned int* actual_avail_gain = NULL);
 
 bool player_in_bat_form();
 bool player_can_open_doors();
+bool player_can_reach_floor(std::string feat = "", bool quiet = false);
 
 inline bool player_can_handle_equipment()
 {
@@ -815,6 +900,7 @@ inline bool player_can_handle_equipment()
 }
 
 void level_change(bool skip_attribute_increase = false);
+void adjust_level(int diff, bool just_xp = false);
 
 bool player_genus(genus_type which_genus,
                    species_type species = SP_UNKNOWN);
@@ -824,19 +910,20 @@ void update_player_symbol();
 void update_vision_range();
 
 bool you_can_wear(int eq, bool special_armour = false);
-bool player_has_feet(void);
+bool player_has_feet(bool temp = true);
 bool player_wearing_slot(int eq);
 bool you_tran_can_wear(const item_def &item);
 bool you_tran_can_wear(int eq, bool check_mutation = false);
 
 bool enough_hp(int minimum, bool suppress_msg);
 bool enough_mp(int minimum, bool suppress_msg, bool include_items = true);
+bool enough_zp(int minimum, bool suppress_msg);
 
 void dec_hp(int hp_loss, bool fatal, const char *aux = NULL);
 void dec_mp(int mp_loss);
 
-void inc_mp(int mp_gain, bool max_too);
-void inc_hp(int hp_gain, bool max_too);
+void inc_mp(int mp_gain);
+void inc_hp(int hp_gain);
 
 void rot_hp(int hp_loss);
 void unrot_hp(int hp_recovered);
@@ -850,7 +937,7 @@ void inc_max_mp(int mp_gain);
 void dec_max_mp(int mp_loss);
 
 void deflate_hp(int new_level, bool floor);
-void set_hp(int new_amount, bool max_too);
+void set_hp(int new_amount);
 
 int get_real_hp(bool trans, bool rotted = false);
 int get_real_mp(bool include_items);
@@ -858,7 +945,7 @@ int get_real_mp(bool include_items);
 int get_contamination_level();
 std::string describe_contamination(int level);
 
-void set_mp(int new_amount, bool max_too);
+void set_mp(int new_amount);
 
 void contaminate_player(int change, bool controlled = false,
                         bool msg = true);
@@ -870,6 +957,7 @@ bool confuse_player(int amount, bool resistable = true);
 bool curare_hits_player(int death_source, int amount, const bolt &beam);
 bool poison_player(int amount, std::string source,
                    std::string source_aux = "", bool force = false);
+void paralyse_player(std::string source, int amount = 0, int factor = 1);
 void dec_poison_player();
 void reduce_poison_player(int amount);
 bool miasma_player(std::string source, std::string source_aux = "");
@@ -884,6 +972,8 @@ void dec_exhaust_player(int delay);
 bool haste_player(int turns, bool rageext = false);
 void dec_haste_player(int delay);
 void levitate_player(int pow);
+void float_player(bool fly);
+bool land_player();
 
 void dec_disease_player(int delay);
 
@@ -892,10 +982,11 @@ void dec_color_smoke_trail();
 bool player_weapon_wielded();
 
 // Determines if the given grid is dangerous for the player to enter.
-bool is_feat_dangerous(dungeon_feature_type feat);
+bool is_feat_dangerous(dungeon_feature_type feat, bool permanently = false);
 
 void run_macro(const char *macroname = NULL);
 
 int count_worn_ego(int which_ego);
-
+bool need_expiration_warning(duration_type dur, coord_def p = you.pos());
+bool need_expiration_warning(coord_def p = you.pos());
 #endif

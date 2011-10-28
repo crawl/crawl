@@ -2,25 +2,25 @@
 # exit() is called before end() returns.  See above suppression for more
 # notes
 {
-	end_error_leak
-	Memcheck:Leak
-	obj:*
-	obj:*libstdc++*
-	obj:*libstdc++*
-	obj:*libstdc++*
-	obj:*libstdc++*
-	obj:*libstdc++*
-	fun:*end*
+   end_error_leak
+   Memcheck:Leak
+   obj:*
+   obj:*libstdc++*
+   obj:*libstdc++*
+   obj:*libstdc++*
+   obj:*libstdc++*
+   obj:*libstdc++*
+   fun:*end*
 }
 
 # An SDL "conditional jump or move" error, with the unitialized value
 # being supplied by Nvidia's OpenGL library.
 {
-	tiles_SDL_Nvida_GL_cond
-	Memcheck:Cond
-    fun:X11_SetKeyboardState
-	fun:X11_DispatchEvent
-	obj:*
+   tiles_SDL_Nvida_GL_cond
+   Memcheck:Cond
+   fun:X11_SetKeyboardState
+   fun:X11_DispatchEvent
+   obj:*
 }
 
 # ncurses keep some structures even after endwin() to 1. make flipping back

@@ -1,9 +1,7 @@
-/*
- *  File:       tiledoll.cc
- *  Summary:    Region system implementations
- *
- *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
- */
+/**
+ * @file
+ * @brief Region system implementations
+**/
 
 #include "AppHdr.h"
 
@@ -14,7 +12,10 @@
 #include <sys/stat.h>
 
 #include "files.h"
-#include "tilebuf.h"
+#include "syscalls.h"
+#ifdef USE_TILE_LOCAL
+ #include "tilebuf.h"
+#endif
 #include "tiledef-player.h"
 #include "tilepick-p.h"
 #include "transform.h"
@@ -43,6 +44,15 @@ dolls_data::~dolls_data()
     parts = NULL;
 }
 
+bool dolls_data::operator==(const dolls_data& other) const
+{
+    for (unsigned int i = 0; i < TILEP_PART_MAX; i++)
+    {
+        if (parts[i] != other.parts[i]) return false;
+    }
+    return true;
+}
+
 dolls_data player_doll;
 
 bool save_doll_data(int mode, int num, const dolls_data* dolls)
@@ -60,7 +70,7 @@ bool save_doll_data(int mode, int num, const dolls_data* dolls)
                             : dollsTxtString.c_str();
 
     FILE *fp = NULL;
-    if ((fp = fopen(dollsTxt, "w+")) != NULL)
+    if ((fp = fopen_u(dollsTxt, "w+")) != NULL)
     {
         fprintf(fp, "MODE=%s\n",
                     (mode == TILEP_MODE_EQUIP)   ? "EQUIP" :
@@ -106,7 +116,7 @@ bool load_doll_data(const char *fn, dolls_data *dolls, int max,
                             : dollsTxtString.c_str();
 
 
-    if ((fp = fopen(dollsTxt, "r")) == NULL)
+    if ((fp = fopen_u(dollsTxt, "r")) == NULL)
     {
         // File doesn't exist. By default, use equipment settings.
         *mode = TILEP_MODE_EQUIP;
@@ -252,7 +262,7 @@ static tileidx_t _random_trousers()
                  + static_cast<int>(you.char_class) * 8719;
     const char *name = you.your_name.c_str();
     for (int i = 0; i < 8 && *name; ++i, ++name)
-        offset += name[i] * 4643;
+        offset += *name * 4643;
 
     const int range = TILEP_LEG_LAST_NORM - TILEP_LEG_FIRST_NORM + 1;
     return (TILEP_LEG_FIRST_NORM + offset % range);
@@ -262,15 +272,13 @@ void fill_doll_equipment(dolls_data &result)
 {
     // Base tile.
     if (result.parts[TILEP_PART_BASE] == TILEP_SHOW_EQUIP)
-    {
         tilep_race_default(you.species, you.experience_level, &result);
-    }
 
     // Main hand.
     if (result.parts[TILEP_PART_HAND1] == TILEP_SHOW_EQUIP)
     {
         const int item = you.equip[EQ_WEAPON];
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+        if (you.form == TRAN_BLADE_HANDS)
             result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND;
         else if (item == -1)
             result.parts[TILEP_PART_HAND1] = 0;
@@ -281,7 +289,7 @@ void fill_doll_equipment(dolls_data &result)
     if (result.parts[TILEP_PART_HAND2] == TILEP_SHOW_EQUIP)
     {
         const int item = you.equip[EQ_SHIELD];
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+        if (you.form == TRAN_BLADE_HANDS)
             result.parts[TILEP_PART_HAND2] = TILEP_HAND2_BLADEHAND;
         else if (item == -1)
             result.parts[TILEP_PART_HAND2] = 0;
@@ -330,15 +338,12 @@ void fill_doll_equipment(dolls_data &result)
             }
         }
         else
-        {
             result.parts[TILEP_PART_HELM] = 0;
-        }
     }
     // Leg.
     if (result.parts[TILEP_PART_LEG] == TILEP_SHOW_EQUIP)
-    {
         result.parts[TILEP_PART_LEG] = _random_trousers();
-    }
+
     // Boots.
     if (result.parts[TILEP_PART_BOOTS] == TILEP_SHOW_EQUIP)
     {
@@ -412,6 +417,7 @@ void save_doll_file(writer &dollf)
         dollf.write("net\n", 4);
 }
 
+#ifdef USE_TILE_LOCAL
 void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll, int x, int y, bool submerged, bool ghost)
 {
     // Ordered from back to front.
@@ -452,7 +458,8 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll, int x, int 
                                         TILEP_BASE_NAGA);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_NAGA_BARDING
-        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED)
+        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_NAGA_BARDING_RED
+        || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_LIGHTNING_SCALES)
     {
         flags[TILEP_PART_BOOTS] = is_naga ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
@@ -461,7 +468,8 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll, int x, int 
                                         TILEP_BASE_CENTAUR);
 
     if (doll.parts[TILEP_PART_BOOTS] >= TILEP_BOOTS_CENTAUR_BARDING
-        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED)
+        && doll.parts[TILEP_PART_BOOTS] <= TILEP_BOOTS_CENTAUR_BARDING_RED
+        || doll.parts[TILEP_PART_BOOTS] == TILEP_BOOTS_BLACK_KNIGHT)
     {
         flags[TILEP_PART_BOOTS] = is_cent ? TILEP_FLAG_NORMAL : TILEP_FLAG_HIDE;
     }
@@ -493,5 +501,6 @@ void pack_doll_buf(SubmergedTileBuffer& buf, const dolls_data &doll, int x, int 
         buf.add(doll.parts[p], x, y, i, submerged, ghost, 0, 0, ymax);
     }
 }
+#endif
 
 #endif

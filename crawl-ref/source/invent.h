@@ -1,8 +1,7 @@
-/*
- *  File:       invent.h
- *  Summary:    Functions for inventory related commands.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions for inventory related commands.
+**/
 
 
 #ifndef INVENT_H
@@ -16,22 +15,31 @@
 
 enum object_selector
 {
-    OSEL_ANY         =  -1,
-    OSEL_WIELD       =  -2,
-    OSEL_UNIDENT     =  -3,
-    OSEL_EQUIP       =  -4,
-    OSEL_RECHARGE    =  -5,
-    OSEL_ENCH_ARM    =  -6,
-    OSEL_VAMP_EAT    =  -7,
-    OSEL_DRAW_DECK   =  -8,
-    OSEL_THROWABLE   =  -9,
-    OSEL_BUTCHERY    = -10,
-    OSEL_EVOKABLE    = -11,
-    OSEL_WORN_ARMOUR = -12,
-    OSEL_FRUIT       = -13,
-    OSEL_PONDER_ARM  = -14,
-    OSEL_CURSED_WORN = -15,
+    OSEL_ANY                     =  -1,
+    OSEL_WIELD                   =  -2,
+    OSEL_UNIDENT                 =  -3,
+    OSEL_EQUIP                   =  -4,
+    OSEL_RECHARGE                =  -5,
+    OSEL_ENCH_ARM                =  -6,
+    OSEL_VAMP_EAT                =  -7,
+    OSEL_DRAW_DECK               =  -8,
+    OSEL_THROWABLE               =  -9,
+    OSEL_BUTCHERY                = -10,
+    OSEL_EVOKABLE                = -11,
+    OSEL_WORN_ARMOUR             = -12,
+    OSEL_FRUIT                   = -13,
+    OSEL_CURSED_WORN             = -14,
+    OSEL_UNCURSED_WORN_ARMOUR    = -15,
+    OSEL_UNCURSED_WORN_JEWELLERY = -16,
 };
+
+#define SLOT_BARE_HANDS      -2
+
+// Only used for butchering messages
+#define SLOT_BUTCHERING_KNIFE -3
+#define SLOT_CLAWS            -4
+#define SLOT_TEETH            -5
+#define SLOT_BIRDIE           -6
 
 #define PROMPT_ABORT         -1
 #define PROMPT_GOT_SPECIAL   -2
@@ -73,6 +81,7 @@ class InvEntry : public MenuEntry
 private:
     static bool show_prices;
     static bool show_glyph;
+    static bool show_cursor;
     static void set_show_prices(bool doshow);
 
     mutable std::string basename;
@@ -86,6 +95,7 @@ public:
     InvEntry(const item_def &i);
     std::string get_text(const bool need_cursor = false) const;
     void set_show_glyph(bool doshow);
+    static void set_show_cursor(bool doshow);
 
     const std::string &get_basename() const;
     const std::string &get_qualname() const;
@@ -106,7 +116,7 @@ public:
 
     virtual std::string get_filter_text() const;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual bool get_tiles(std::vector<tile_def>& tiles) const;
 #endif
 
@@ -192,7 +202,8 @@ int prompt_invent_item(const char *prompt,
 std::vector<SelItem> select_items(
                         const std::vector<const item_def*> &items,
                         const char *title, bool noselect = false,
-                        menu_type mtype = MT_PICKUP);
+                        menu_type mtype = MT_PICKUP,
+                        invtitle_annotator titlefn = NULL);
 
 std::vector<SelItem> prompt_invent_items(
                         const char *prompt,
@@ -227,6 +238,7 @@ unsigned char get_invent(int invent_type);
 bool in_inventory(const item_def &i);
 
 std::string item_class_name(int type, bool terse = false);
+const char* item_slot_name(equipment_type type, bool terse);
 
 bool check_old_item_warning(const item_def& item, operation_types oper);
 bool check_warning_inscriptions(const item_def& item, operation_types oper);
@@ -236,7 +248,9 @@ void init_item_sort_comparators(item_sort_comparators &list,
 
 bool prompt_failed(int retval, std::string msg = "");
 
-bool item_is_evokable(const item_def &item, bool known = false,
-                      bool all_wands = false, bool msg = false);
+bool item_is_wieldable(const item_def &item);
+bool item_is_evokable(const item_def &item, bool reach = true,
+                      bool known = false, bool all_wands = false,
+                      bool msg = false, bool equip = true);
 bool needs_handle_warning(const item_def &item, operation_types oper);
 #endif

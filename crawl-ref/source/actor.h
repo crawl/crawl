@@ -10,15 +10,22 @@ enum ev_ignore_type
     EV_IGNORE_PHASESHIFT = 2,
 };
 
+struct bolt;
+
 class actor
 {
 public:
     virtual ~actor();
 
-    virtual monster_type  id() const = 0;
+    monster_type type;
+    mid_t        mid;
     virtual int       mindex() const = 0;
     virtual actor_type atype() const = 0;
 
+    virtual bool is_player() const
+    {
+        return atype() == ACT_PLAYER;
+    }
     virtual monster* as_monster() = 0;
     virtual player* as_player() = 0;
     virtual const monster* as_monster() const = 0;
@@ -34,12 +41,12 @@ public:
 
     // [ds] Low-level moveto() - moves the actor without updating relevant
     // grids, such as mgrd.
-    virtual void moveto(const coord_def &c) = 0;
+    virtual void moveto(const coord_def &c, bool clear_net = true) = 0;
 
     // High-level actor movement. If in doubt, use this. Returns false if the
     // actor cannot be moved to the target, possibly because it is already
     // occupied.
-    virtual bool move_to_pos(const coord_def &c) = 0;
+    virtual bool move_to_pos(const coord_def &c, bool clear_net = true) = 0;
 
     virtual void apply_location_effects(const coord_def &oldpos,
                                         killer_type killer = KILL_NONE,
@@ -59,8 +66,6 @@ public:
 
     // Returns true if the actor is exceptionally well balanced.
     virtual bool      extra_balanced() const = 0;
-
-    virtual bool      has_trachea() const = 0;
 
     virtual int       get_experience_level() const = 0;
 
@@ -143,6 +148,7 @@ public:
     virtual bool berserk() const = 0;
     virtual bool can_see_invisible() const = 0;
     virtual bool invisible() const = 0;
+    virtual bool nightvision() const = 0;
 
     // Would looker be able to see the actor when in LOS?
     virtual bool visible_to(const actor *looker) const = 0;
@@ -164,6 +170,7 @@ public:
     virtual bool is_icy() const = 0;
     virtual bool is_fiery() const = 0;
     virtual bool is_skeletal() const = 0;
+    virtual bool has_lifeforce() const = 0;
     virtual bool can_mutate() const = 0;
     virtual bool can_safely_mutate() const = 0;
     virtual bool can_bleed() const = 0;
@@ -180,10 +187,12 @@ public:
     virtual void teleport(bool right_now = false,
                           bool abyss_shift = false,
                           bool wizard_tele = false) = 0;
-    virtual void poison(actor *attacker, int amount = 1) = 0;
-    virtual bool sicken(int amount) = 0;
-    virtual void paralyse(actor *attacker, int strength) = 0;
-    virtual void petrify(actor *attacker, int strength) = 0;
+    virtual bool poison(actor *attacker, int amount = 1, bool force = false) = 0;
+    virtual bool sicken(int amount, bool allow_hint = true) = 0;
+    virtual void paralyse(actor *attacker, int strength,
+                          std::string source = "") = 0;
+    virtual void petrify(actor *attacker) = 0;
+    virtual bool fully_petrify(actor *foe, bool quiet = false) = 0;
     virtual void slow_down(actor *attacker, int strength) = 0;
     virtual void confuse(actor *attacker, int strength) = 0;
     virtual void put_to_sleep(actor *attacker, int strength) = 0;
@@ -193,14 +202,16 @@ public:
     virtual bool can_sleep() const;
     virtual void hibernate(int power = 0) = 0;
     virtual void check_awaken(int disturbance) = 0;
+    virtual int beam_resists(bolt &beam, int hurted, bool doEffects,
+                             std::string source = "") = 0;
 
-    virtual int  skill(skill_type sk, bool skill_bump = false) const
-    {
-        return (0);
-    }
+    virtual int  skill(skill_type sk, int scale = 1, bool real = false) const = 0;
+    int  skill_rdiv(skill_type sk, int mult = 1, int div = 1) const;
 
     virtual int stat_hp() const = 0;
     virtual int stat_maxhp() const = 0;
+
+    virtual int stealth () const = 0;
 
     virtual bool can_throw_large_rocks() const = 0;
 
@@ -217,32 +228,43 @@ public:
 
     virtual mon_holy_type holiness() const = 0;
     virtual bool undead_or_demonic() const = 0;
-    virtual bool is_holy() const = 0;
-    virtual bool is_unholy() const = 0;
-    virtual bool is_evil() const = 0;
+    virtual bool is_holy(bool spells = true) const = 0;
+    virtual bool is_unholy(bool spells = true) const = 0;
+    virtual bool is_evil(bool spells = true) const = 0;
     virtual bool is_chaotic() const = 0;
     virtual bool is_artificial() const = 0;
     virtual bool is_unbreathing() const = 0;
     virtual bool is_insubstantial() const = 0;
     virtual int res_acid() const = 0;
     virtual int res_fire() const = 0;
+    virtual int res_holy_fire() const;
     virtual int res_steam() const = 0;
     virtual int res_cold() const = 0;
     virtual int res_elec() const = 0;
-    virtual int res_poison() const = 0;
-    virtual int res_rotting() const = 0;
+    virtual int res_poison(bool temp = true) const = 0;
+    virtual int res_rotting(bool temp = true) const = 0;
     virtual int res_asphyx() const = 0;
     virtual int res_water_drowning() const = 0;
     virtual int res_sticky_flame() const = 0;
     virtual int res_holy_energy(const actor *attacker) const = 0;
     virtual int res_negative_energy() const = 0;
     virtual int res_torment() const = 0;
+    virtual int res_wind() const = 0;
+    virtual int res_petrify(bool temp = true) const = 0;
     virtual int res_magic() const = 0;
-    virtual bool check_res_magic(int power);
+    virtual int check_res_magic(int power);
 
     virtual flight_type flight_mode() const = 0;
     virtual bool is_levitating() const = 0;
+    virtual bool is_wall_clinging() const;
+    virtual bool can_cling_to_walls() const = 0;
+    virtual bool can_cling_to(const coord_def& p) const;
+    virtual bool check_clinging(bool stepped, bool door = false);
+    virtual void clear_clinging();
+    virtual bool is_web_immune() const = 0;
     virtual bool airborne() const;
+    virtual bool ground_level() const;
+    virtual bool stand_on_solid_ground() const;
 
     virtual bool paralysed() const = 0;
     virtual bool cannot_move() const = 0;
@@ -258,14 +280,23 @@ public:
     //            purpose)
     virtual bool backlit(bool check_haloed = true,
                          bool self_halo = true) const = 0;
+    virtual bool umbra(bool check_haloed = true,
+                         bool self_halo = true) const = 0;
     // Within any actor's halo?
     virtual bool haloed() const;
+    // Within an umbra?
+    virtual bool umbraed() const;
     // Squared halo radius.
     virtual int halo_radius2() const = 0;
     // Squared silence radius.
     virtual int silence_radius2() const = 0;
+    // Squared liquefying radius
+    virtual int liquefying_radius2 () const = 0;
+    virtual int umbra_radius2 () const = 0;
+
     virtual bool glows_naturally() const = 0;
 
+    virtual bool petrifying() const = 0;
     virtual bool petrified() const = 0;
 
     virtual bool handle_trap();
@@ -274,7 +305,11 @@ public:
 
     virtual bool incapacitated() const
     {
-        return cannot_move() || asleep() || confused() || caught();
+        return cannot_move()
+            || asleep()
+            || confused()
+            || caught()
+            || petrifying();
     }
 
     virtual int warding() const
@@ -290,15 +325,14 @@ public:
 
     coord_def position;
 
+    CrawlHashTable props;
+
 protected:
     // These are here for memory management reasons...
     los_glob los;
     los_glob los_no_trans;
 };
 
-// Identical to actor->kill_alignment(), but returns KC_OTHER if the actor
-// is NULL.
-kill_category actor_kill_alignment(const actor *actor);
 bool actor_slime_wall_immune(const actor *actor);
 
 #endif

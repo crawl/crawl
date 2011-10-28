@@ -1,7 +1,7 @@
-/*
- *  File:     spl-goditem.cc
- *  Summary:  Pseudo spells triggered by gods and various items.
- */
+/**
+ * @file
+ * @brief Pseudo spells triggered by gods and various items.
+**/
 
 #include "AppHdr.h"
 
@@ -13,10 +13,12 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "decks.h"
 #include "describe.h"
 #include "env.h"
 #include "godconduct.h"
 #include "godpassive.h"
+#include "hints.h"
 #include "invent.h"
 #include "itemprop.h"
 #include "items.h"
@@ -37,9 +39,10 @@
 #include "traps.h"
 #include "view.h"
 
-void identify(int power, int item_slot)
+int identify(int power, int item_slot, std::string *pre_msg)
 {
     int id_used = 1;
+    int identified = 0;
 
     // Scrolls of identify *may* produce "extra" identifications.
     if (power == -1 && one_chance_in(5))
@@ -53,11 +56,12 @@ void identify(int power, int item_slot)
                                            OSEL_UNIDENT, true, true, false);
         }
         if (prompt_failed(item_slot))
-            return;
+            return(identified);
 
         item_def& item(you.inv[item_slot]);
 
-        if (fully_identified(item))
+        if (fully_identified(item)
+            && (!is_deck(item) || top_card_is_known(item)))
         {
             mpr("Choose an unidentified item, or Esc to abort.");
             if (Options.auto_list)
@@ -66,10 +70,16 @@ void identify(int power, int item_slot)
             continue;
         }
 
+        if (pre_msg && identified == 0)
+            mpr(pre_msg->c_str());
+
         set_ident_type(item, ID_KNOWN_TYPE);
         set_ident_flags(item, ISFLAG_IDENT_MASK);
         if (Options.autoinscribe_artefacts && is_artefact(item))
             add_autoinscription(item, artefact_auto_inscription(item));
+
+        if (is_deck(item) && !top_card_is_known(item))
+            deck_identify_first(item_slot);
 
         // For scrolls, now id the scroll, unless already known.
         if (power == -1
@@ -91,15 +101,24 @@ void identify(int power, int item_slot)
         if (item_slot == you.equip[EQ_WEAPON])
             you.wield_change = true;
 
-        id_used--;
+        identified++;
 
-        if (Options.auto_list && id_used > 0)
+        if (item.base_type == OBJ_JEWELLERY
+            && item.sub_type == AMU_INACCURACY
+            && item_slot == you.equip[EQ_AMULET]
+            && !item_known_cursed(item))
+        {
+            learned_something_new(HINT_INACCURACY);
+        }
+
+        if (Options.auto_list && id_used > identified)
             more();
 
         // In case we get to try again.
         item_slot = -1;
     }
-    while (id_used > 0);
+    while (id_used > identified);
+    return(identified);
 }
 
 static bool _mons_hostile(const monster* mon)
@@ -108,18 +127,14 @@ static bool _mons_hostile(const monster* mon)
     return (!mon->wont_attack() && !mon->neutral());
 }
 
-// Check whether this monster might be pacified.
-// Returns 0, if monster can be pacified but the attempt failed.
-// Returns 1, if monster is pacified.
+// Check whether it is possible at all to pacify this monster.
 // Returns -1, if monster can never be pacified.
-// Returns -2, if monster can currently not be pacified (asleep)
-static int _can_pacify_monster(const monster* mon, const int healed)
+// Returns -2, if monster can currently not be pacified (asleep).
+// Returns 0, if it's possible to pacify this monster.
+int is_pacifiable(const monster* mon)
 {
     if (you.religion != GOD_ELYVILON)
         return (-1);
-
-    if (healed < 1)
-        return (0);
 
     // I was thinking of jellies when I wrote this, but maybe we shouldn't
     // exclude zombies and such... (jpeg)
@@ -145,12 +160,31 @@ static int _can_pacify_monster(const monster* mon, const int healed)
     if (mon->asleep()) // not aware of what is happening
         return (-2);
 
+    return 0;
+}
+
+// Check whether this monster might be pacified.
+// Returns 0, if monster can be pacified but the attempt failed.
+// Returns 1, if monster is pacified.
+// Returns -1, if monster can never be pacified.
+// Returns -2, if monster can currently not be pacified (asleep).
+static int _can_pacify_monster(const monster* mon, const int healed)
+{
+
+   int pacifiable = is_pacifiable(mon);
+   if (pacifiable < 0)
+       return pacifiable;
+
+   if (healed < 1)
+        return (0);
+
     const int factor = (mons_intel(mon) <= I_ANIMAL)       ? 3 : // animals
                        (is_player_same_species(mon->type)) ? 2   // same species
                                                            : 1;  // other
 
     int divisor = 3;
 
+    const mon_holy_type holiness = mon->holiness();
     if (mon->is_holy())
         divisor--;
     else if (holiness == MH_UNDEAD)
@@ -158,17 +192,25 @@ static int _can_pacify_monster(const monster* mon, const int healed)
     else if (holiness == MH_DEMONIC)
         divisor += 2;
 
-    const int random_factor = random2((you.skills[SK_INVOCATIONS] + 1) *
-                                      healed / divisor);
+    int random_factor = random2((you.skill(SK_INVOCATIONS, healed) + healed)
+                                / divisor);
 
     dprf("pacifying %s? max hp: %d, factor: %d, Inv: %d, healed: %d, rnd: %d",
          mon->name(DESC_PLAIN).c_str(), mon->max_hit_points, factor,
-         you.skills[SK_INVOCATIONS], healed, random_factor);
+         you.skill(SK_INVOCATIONS), healed, random_factor);
 
     if (mon->max_hit_points < factor * random_factor)
         return (1);
 
     return (0);
+}
+
+static std::vector<std::string> _desc_mindless(const monster_info& mi)
+{
+    std::vector<std::string> descs;
+    if (mi.intel() <= I_PLANT)
+        descs.push_back("mindless");
+    return descs;
 }
 
 // Returns: 1 -- success, 0 -- failure, -1 -- cancel
@@ -187,8 +229,8 @@ static int _healing_spell(int healed, bool divine_ability,
                                       mode != TARG_NUM_MODES ? mode :
                                       you.religion == GOD_ELYVILON ?
                                             TARG_ANY : TARG_FRIEND,
-                                      LOS_RADIUS,
-                                      false, true, true, "Heal", NULL);
+                                      LOS_RADIUS, false, true, true, "Heal",
+                                      NULL, false, NULL, _desc_mindless);
     }
     else
     {
@@ -208,14 +250,14 @@ static int _healing_spell(int healed, bool divine_ability,
         }
 
         mpr("You are healed.");
-        inc_hp(healed, false);
+        inc_hp(healed);
         return (1);
     }
 
     monster* mons = monster_at(spd.target);
     if (!mons)
     {
-        mpr("There isn't anything there!");
+        canned_msg(MSG_NOTHING_THERE);
         // This isn't a cancel, to avoid leaking invisible monster
         // locations.
         return (0);
@@ -225,13 +267,17 @@ static int _healing_spell(int healed, bool divine_ability,
     const bool is_hostile = _mons_hostile(mons);
 
     // Don't divinely heal a monster you can't pacify.
-    if (divine_ability
+    if (divine_ability && is_hostile
         && you.religion == GOD_ELYVILON
         && can_pacify <= 0)
     {
         if (can_pacify == 0)
+        {
             canned_msg(MSG_NOTHING_HAPPENS);
+            return (0);
+        }
         else
+        {
             if (can_pacify == -2)
             {
                 mprf("You cannot pacify this monster while %s is sleeping!",
@@ -239,7 +285,8 @@ static int _healing_spell(int healed, bool divine_ability,
             }
             else
                 mpr("You cannot pacify this monster!");
-        return (0);
+            return (-1);
+        }
     }
 
     bool did_something = false;
@@ -272,7 +319,7 @@ static int _healing_spell(int healed, bool divine_ability,
             mons_pacify(mons, ATT_NEUTRAL);
 
             // Give a small piety return.
-            gain_piety(pgain, 2);
+            gain_piety(pgain);
         }
     }
 
@@ -285,18 +332,6 @@ static int _healing_spell(int healed, bool divine_ability,
             simple_monster_message(mons, " is completely healed.");
         else
             print_wounds(mons);
-
-        if (you.religion == GOD_ELYVILON && !is_hostile)
-        {
-            if (one_chance_in(8))
-                simple_god_message(" approves of your healing of a fellow "
-                                   "creature.");
-            else
-                mpr("Elyvilon appreciates your healing of a fellow creature.");
-
-            // Give a small piety return.
-            gain_piety(1, 8);
-        }
     }
 
     if (!did_something)
@@ -317,37 +352,6 @@ int cast_healing(int pow, bool divine_ability, const coord_def& where,
                            not_self, mode));
 }
 
-bool cast_revivification(int pow)
-{
-    if (you.hp == you.hp_max)
-        canned_msg(MSG_NOTHING_HAPPENS);
-    else if (you.hp_max < 21)
-        mpr("You lack the resilience to cast this spell.");
-    else
-    {
-        mpr("Your body is healed in an amazingly painful way.");
-
-        int loss = 2;
-        for (int i = 0; i < 9; ++i)
-            if (x_chance_in_y(8, pow))
-                loss++;
-
-        dec_max_hp(loss * you.hp_max / 100);
-        set_hp(you.hp_max, false);
-
-        if (you.duration[DUR_DEATHS_DOOR])
-        {
-            mpr("Your life is in your own hands once again.", MSGCH_DURATION);
-            you.paralyse(NULL, 5 + random2(5));
-            confuse_player(10 + random2(10));
-            you.duration[DUR_DEATHS_DOOR] = 0;
-        }
-        return (true);
-    }
-
-    return (false);
-}
-
 // Antimagic is sort of an anti-extension... it sets a lot of magical
 // durations to 1 so it's very nasty at times (and potentially lethal,
 // that's why we reduce levitation to 2, so that the player has a chance
@@ -356,14 +360,16 @@ bool cast_revivification(int pow)
 void antimagic()
 {
     duration_type dur_list[] = {
-        DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE,
-        DUR_MIGHT, DUR_AGILITY, DUR_BRILLIANCE, DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
-        DUR_REGENERATION, DUR_SWIFTNESS, DUR_STONEMAIL, DUR_CONTROL_TELEPORT,
+        DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE, DUR_MIGHT, DUR_AGILITY,
+        DUR_BRILLIANCE, DUR_CONFUSING_TOUCH, DUR_SURE_BLADE, DUR_CORONA,
+        DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
+        DUR_REGENERATION, DUR_SWIFTNESS, DUR_TELEPORT, DUR_CONTROL_TELEPORT,
         DUR_TRANSFORMATION, DUR_DEATH_CHANNEL, DUR_DEFLECT_MISSILES,
         DUR_PHASE_SHIFT, DUR_SEE_INVISIBLE, DUR_WEAPON_BRAND, DUR_SILENCE,
-        DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_BARGAIN,
-        DUR_INSULATION, DUR_RESIST_POISON, DUR_RESIST_FIRE, DUR_RESIST_COLD,
-        DUR_SLAYING, DUR_STEALTH, DUR_MAGIC_SHIELD, DUR_SAGE, DUR_PETRIFIED
+        DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_INSULATION, DUR_RESIST_POISON,
+        DUR_RESIST_FIRE, DUR_RESIST_COLD, DUR_SLAYING, DUR_STEALTH,
+        DUR_MAGIC_SHIELD, DUR_PETRIFIED, DUR_LIQUEFYING, DUR_DARKNESS,
+        DUR_PETRIFYING, DUR_SHROUD_OF_GOLUBRIA
     };
 
     if (!you.permanent_levitation() && !you.permanent_flight()
@@ -432,6 +438,10 @@ int detect_items(int pow)
 
     for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
     {
+        // Don't you love the 0,5 shop hack?
+        if (!in_bounds(*ri))
+            continue;
+
         // Don't expose new dug out areas:
         // Note: assumptions are being made here about how
         // terrain can change (eg it used to be solid, and
@@ -465,7 +475,7 @@ static void _fuzz_detect_creatures(int pow, int *fuzz_radius, int *fuzz_chance)
         *fuzz_chance = 10;
 }
 
-static bool _mark_detected_creature(coord_def where, const monster* mon,
+static bool _mark_detected_creature(coord_def where, monster* mon,
                                     int fuzz_chance, int fuzz_radius)
 {
     bool found_good = false;
@@ -517,15 +527,16 @@ int detect_creatures(int pow, bool telepathic)
         _fuzz_detect_creatures(pow, &fuzz_radius, &fuzz_chance);
 
     int creatures_found = 0;
-    const int map_radius = 8 + random2(8) + pow;
+    const int map_radius = 10 + random2(8) + pow;
 
     // Clear the map so detect creatures is more useful and the detection
     // fuzz is harder to analyse by averaging.
     if (!telepathic)
         clear_map(false);
 
-    for (radius_iterator ri(you.pos(), map_radius, C_SQUARE); ri; ++ri)
+    for (radius_iterator ri(you.pos(), map_radius, C_ROUND); ri; ++ri)
     {
+        discover_mimic(*ri);
         if (monster* mon = monster_at(*ri))
         {
             // If you can see the monster, don't "detect" it elsewhere.
@@ -548,12 +559,18 @@ int detect_creatures(int pow, bool telepathic)
     return (creatures_found);
 }
 
-static bool _selectively_remove_curse()
+static bool _selectively_remove_curse(std::string *pre_msg)
 {
     bool used = false;
 
     while(1)
     {
+        if (!any_items_to_select(OSEL_CURSED_WORN, false) && used)
+        {
+            mpr("You have uncursed all your worn items.");
+            return used;
+        }
+
         int item_slot = prompt_invent_item("Uncurse which item?", MT_INVLIST,
                                            OSEL_CURSED_WORN, true, true, false);
         if (prompt_failed(item_slot))
@@ -573,15 +590,26 @@ static bool _selectively_remove_curse()
             continue;
         }
 
-        do_uncurse_item(item);
+        if (!used && pre_msg)
+            mpr(*pre_msg);
+
+        do_uncurse_item(item, true, false, false);
         used = true;
     }
 }
 
-bool remove_curse()
+bool remove_curse(bool alreadyknown, std::string *pre_msg)
 {
-    if (you.religion == GOD_ASHENZARI)
-        return _selectively_remove_curse();
+    if (you.religion == GOD_ASHENZARI && alreadyknown)
+    {
+        if (_selectively_remove_curse(pre_msg))
+        {
+            ash_check_bondage();
+            return true;
+        }
+        else
+            return false;
+    }
 
     bool success = false;
 
@@ -609,11 +637,102 @@ bool remove_curse()
     }
 
     if (success)
+    {
+        if (pre_msg)
+            mpr(*pre_msg);
         mpr("You feel as if something is helping you.");
+        learned_something_new(HINT_REMOVED_CURSE);
+    }
+    else if (alreadyknown)
+        mpr("None of your equipped items are cursed.", MSGCH_PROMPT);
     else
+    {
+        if (pre_msg)
+            mpr(*pre_msg);
         canned_msg(MSG_NOTHING_HAPPENS);
+    }
 
     return (success);
+}
+
+static bool _selectively_curse_item(bool armour, std::string *pre_msg)
+{
+    while(1)
+    {
+        int item_slot = prompt_invent_item("Curse which item?", MT_INVLIST,
+                                           armour ? OSEL_UNCURSED_WORN_ARMOUR
+                                                  : OSEL_UNCURSED_WORN_JEWELLERY,
+                                           true, true, false);
+        if (prompt_failed(item_slot))
+            return false;
+
+        item_def& item(you.inv[item_slot]);
+
+        if (item.cursed()
+            || !item_is_equipped(item)
+            || armour && item.base_type != OBJ_ARMOUR
+            || !armour && item.base_type != OBJ_JEWELLERY)
+        {
+            mprf("Choose an uncursed equipped piece of %s, or Esc to abort.",
+                 armour ? "armour" : "jewellery");
+            if (Options.auto_list)
+                more();
+            continue;
+        }
+
+        if (pre_msg)
+            mpr(*pre_msg);
+        do_curse_item(item, false);
+        return true;
+    }
+}
+
+bool curse_item(bool armour, bool alreadyknown, std::string *pre_msg)
+{
+    // make sure there's something to curse first
+    int count = 0;
+    int affected = EQ_WEAPON;
+    int min_type, max_type;
+    if (armour)
+        min_type = EQ_MIN_ARMOUR, max_type = EQ_MAX_ARMOUR;
+    else
+        min_type = EQ_LEFT_RING, max_type = EQ_RING_EIGHT;
+    for (int i = min_type; i <= max_type; i++)
+    {
+        if (you.equip[i] != -1 && !you.inv[you.equip[i]].cursed())
+        {
+            count++;
+            if (one_chance_in(count))
+                affected = i;
+        }
+    }
+
+    if (affected == EQ_WEAPON)
+    {
+        if (you.religion == GOD_ASHENZARI && alreadyknown)
+        {
+            mprf(MSGCH_PROMPT, "You aren't wearing any piece of uncursed %s.",
+                 armour ? "armour" : "jewellery");
+        }
+        else
+        {
+            if (pre_msg)
+                mpr(*pre_msg);
+            canned_msg(MSG_NOTHING_HAPPENS);
+        }
+
+        return false;
+    }
+
+    if (you.religion == GOD_ASHENZARI && alreadyknown)
+        return _selectively_curse_item(armour, pre_msg);
+
+    if (pre_msg)
+        mpr(*pre_msg);
+    // Make the name before we curse it.
+    do_curse_item(you.inv[you.equip[affected]], false);
+    learned_something_new(HINT_YOU_CURSED);
+    return true;
 }
 
 bool detect_curse(int scroll, bool suppress_msg)
@@ -638,6 +757,7 @@ bool detect_curse(int scroll, bool suppress_msg)
         }
 
         if (item.base_type == OBJ_WEAPONS
+            || item.base_type == OBJ_STAVES
             || item.base_type == OBJ_ARMOUR
             || item.base_type == OBJ_JEWELLERY)
         {
@@ -673,7 +793,7 @@ bool detect_curse(int scroll, bool suppress_msg)
     return (true);
 }
 
-static bool _do_imprison(int pow, const coord_def& where, bool force_full)
+static bool _do_imprison(int pow, const coord_def& where, bool zin)
 {
     // power guidelines:
     // powc is roughly 50 at Evoc 10 with no godly assistance, ranging
@@ -682,48 +802,61 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
     int number_built = 0;
 
     const dungeon_feature_type safe_tiles[] = {
-        DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_FLOOR_SPECIAL, DNGN_OPEN_DOOR
+        DNGN_SHALLOW_WATER, DNGN_FLOOR, DNGN_OPEN_DOOR
     };
 
     bool proceed;
+    monster *mon;
+    std::string targname;
 
-    if (force_full)
+    if (zin)
     {
+        // We need to get this now because we won't be able to see
+        // the monster once the walls go up!
+        mon = monster_at(where);
+        targname = mon->name(DESC_NOCAP_THE);
         bool success = true;
+        bool none_vis = true;
 
         for (adjacent_iterator ai(where); ai; ++ai)
         {
             // The tile is occupied.
-            if (actor_at(*ai))
+            if (actor *fatass = actor_at(*ai))
             {
                 success = false;
+                if (you.can_see(fatass))
+                    none_vis = false;
                 break;
             }
 
             // Make sure we have a legitimate tile.
             proceed = false;
             for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
-                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai)))
+                if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai), true))
                     proceed = true;
 
             if (!proceed && grd(*ai) > DNGN_MAX_NONREACH)
             {
                 success = false;
+                none_vis = false;
                 break;
             }
         }
 
         if (!success)
         {
-            mpr("Half-formed walls emerge from the floor, then retract.");
+            mprf(none_vis ? "You briefly glimpse something next to %s."
+                          : "You need more space to imprison %s.",
+                 targname.c_str());
             return (false);
         }
+
     }
 
     for (adjacent_iterator ai(where); ai; ++ai)
     {
         // This is where power comes in.
-        if (!force_full && one_chance_in(pow / 5))
+        if (!zin && one_chance_in(pow / 5))
             continue;
 
         // The tile is occupied.
@@ -733,7 +866,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
         // Make sure we have a legitimate tile.
         proceed = false;
         for (unsigned int i = 0; i < ARRAYSZ(safe_tiles) && !proceed; ++i)
-            if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai)))
+            if (grd(*ai) == safe_tiles[i] || feat_is_trap(grd(*ai), true))
                 proceed = true;
 
         if (proceed)
@@ -751,7 +884,21 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
                 ptrap->destroy();
 
             // Actually place the wall.
-            grd(*ai) = DNGN_ROCK_WALL;
+
+            if (zin)
+            {
+                // Make the walls silver.
+                grd(*ai) = DNGN_METAL_WALL;
+                env.grid_colours(*ai) = LIGHTGREY;
+
+                map_wiz_props_marker *marker = new map_wiz_props_marker(*ai);
+                marker->set_property("feature_description", "A gleaming silver wall");
+                marker->set_property("prison", "Zin");
+                env.markers.add(marker);
+            }
+            else
+                grd(*ai) = DNGN_ROCK_WALL;
+
             set_terrain_changed(*ai);
             number_built++;
         }
@@ -759,9 +906,17 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
 
     if (number_built > 0)
     {
-        mpr("Walls emerge from the floor!");
+        if (zin)
+        {
+            mprf("Zin imprisons %s with walls of pure silver!",
+                 targname.c_str());
+        }
+        else
+            mpr("Walls emerge from the floor!");
+
         you.update_beholders();
         you.update_fearmongers();
+        env.markers.clear_need_activate();
     }
     else
         canned_msg(MSG_NOTHING_HAPPENS);
@@ -771,6 +926,13 @@ static bool _do_imprison(int pow, const coord_def& where, bool force_full)
 
 bool entomb(int pow)
 {
+    // Zotdef - turned off
+    if (crawl_state.game_is_zotdef())
+    {
+        mpr("The dungeon rumbles ominously, and rocks fall from the ceiling!");
+        return (false);
+    }
+
     return (_do_imprison(pow, you.pos(), false));
 }
 
@@ -778,8 +940,7 @@ bool cast_imprison(int pow, monster* mons, int source)
 {
     if (_do_imprison(pow, mons->pos(), true))
     {
-        const int tomb_duration = BASELINE_DELAY
-            * pow;
+        const int tomb_duration = BASELINE_DELAY * pow;
         env.markers.add(new map_tomb_marker(mons->pos(),
                                             tomb_duration,
                                             source,
@@ -791,13 +952,11 @@ bool cast_imprison(int pow, monster* mons, int source)
     return (false);
 }
 
-bool cast_smiting(int pow, const coord_def& where)
+bool cast_smiting(int pow, monster* mons)
 {
-    monster* m = monster_at(where);
-
-    if (m == NULL)
+    if (mons == NULL || mons->submerged())
     {
-        mpr("There's nothing there!");
+        canned_msg(MSG_NOTHING_THERE);
         // Counts as a real cast, due to victory-dancing and
         // invisible/submerged monsters.
         return (true);
@@ -806,17 +965,15 @@ bool cast_smiting(int pow, const coord_def& where)
     god_conduct_trigger conducts[3];
     disable_attack_conducts(conducts);
 
-    const bool success = !stop_attack_prompt(m, false, you.pos());
+    const bool success = !stop_attack_prompt(mons, false, you.pos());
 
     if (success)
     {
-        set_attack_conducts(conducts, m);
+        set_attack_conducts(conducts, mons);
 
-        mprf("You smite %s!", m->name(DESC_NOCAP_THE).c_str());
+        mprf("You smite %s!", mons->name(DESC_NOCAP_THE).c_str());
 
-        behaviour_event(m, ME_ANNOY, MHITYOU);
-        if (mons_is_mimic(m->type))
-            mimic_alert(m);
+        behaviour_event(mons, ME_ANNOY, MHITYOU);
     }
 
     enable_attack_conducts(conducts);
@@ -824,38 +981,12 @@ bool cast_smiting(int pow, const coord_def& where)
     if (success)
     {
         // Maxes out at around 40 damage at 27 Invocations, which is
-        // plenty in my book (the old max damage was around 70,
-        // which seems excessive).
-        m->hurt(&you, 7 + (random2(pow) * 33 / 191));
-        if (m->alive())
-            print_wounds(m);
+        // plenty in my book (the old max damage was around 70, which
+        // seems excessive).
+        mons->hurt(&you, 7 + (random2(pow) * 33 / 191));
+        if (mons->alive())
+            print_wounds(mons);
     }
 
     return (success);
-}
-
-void stonemail(int pow)
-{
-    if (you.duration[DUR_ICY_ARMOUR] || you.duration[DUR_STONESKIN])
-    {
-        mpr("The spell conflicts with another spell still in effect.");
-        return;
-    }
-
-    if (you.duration[DUR_STONEMAIL])
-        mpr("Your scaly armour looks firmer.");
-    else
-    {
-        if (you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE)
-            mpr("Your stone body feels more resilient.");
-        else
-            mpr("A set of stone scales covers your body!");
-
-        you.redraw_evasion = true;
-        you.redraw_armour_class = true;
-    }
-
-    you.increase_duration(DUR_STONEMAIL, 20 + random2(pow) + random2(pow), 100,
-                          NULL);
-    burden_change();
 }

@@ -1,8 +1,3 @@
-/*
- *  File:       tiledoll.h
- *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
- */
-
 #ifdef USE_TILE
 #ifndef TILEDOLL_H
 #define TILEDOLL_H
@@ -15,6 +10,9 @@ struct dolls_data
     dolls_data(const dolls_data& orig);
     const dolls_data& operator=(const dolls_data& other);
     ~dolls_data();
+
+    bool operator ==(const dolls_data &other) const;
+    bool operator !=(const dolls_data &other) const { return !(*this == other); }
 
     tileidx_t *parts;
 };

@@ -3,6 +3,8 @@
 #include "actor.h"
 #include "areas.h"
 #include "artefact.h"
+#include "coord.h"
+#include "coordit.h"
 #include "env.h"
 #include "itemprop.h"
 #include "los.h"
@@ -11,6 +13,7 @@
 #include "random.h"
 #include "state.h"
 #include "stuff.h"
+#include "terrain.h"
 #include "traps.h"
 
 actor::~actor()
@@ -25,7 +28,7 @@ bool actor::has_equipped(equipment_type eq, int sub_type) const
 
 bool actor::will_trigger_shaft() const
 {
-    return (!airborne() && total_weight() > 0 && is_valid_shaft_level()
+    return (ground_level() && total_weight() > 0 && is_valid_shaft_level()
             // let's pretend that they always make their saving roll
             && !(atype() == ACT_MONSTER
                  && mons_is_elven_twin(static_cast<const monster* >(this))));
@@ -41,6 +44,24 @@ bool actor::airborne() const
     return (is_levitating() || (flight_mode() == FL_FLY && !cannot_move()));
 }
 
+/**
+ * Check if the actor is on the ground (or in water).
+ */
+bool actor::ground_level() const
+{
+    return (!airborne() && !is_wall_clinging());
+}
+
+bool actor::stand_on_solid_ground() const
+{
+    return ground_level() && feat_has_solid_floor(grd(pos()))
+           && !feat_is_water(grd(pos()));
+}
+
+/**
+ * Wrapper around the virtual actor::can_wield(const item_def&,bool,bool,bool,bool) const overload.
+ * @param item May be NULL, in which case a dummy item will be passed in.
+ */
 bool actor::can_wield(const item_def* item, bool ignore_curse,
                       bool ignore_brand, bool ignore_shield,
                       bool ignore_transform) const
@@ -50,10 +71,10 @@ bool actor::can_wield(const item_def* item, bool ignore_curse,
         // Unarmed combat.
         item_def fake;
         fake.base_type = OBJ_UNASSIGNED;
-        return can_wield(fake, ignore_curse, ignore_brand, ignore_transform);
+        return can_wield(fake, ignore_curse, ignore_brand, ignore_shield, ignore_transform);
     }
     else
-        return can_wield(*item, ignore_curse, ignore_brand, ignore_transform);
+        return can_wield(*item, ignore_curse, ignore_brand, ignore_shield, ignore_transform);
 }
 
 bool actor::can_pass_through(int x, int y) const
@@ -68,6 +89,9 @@ bool actor::can_pass_through(const coord_def &c) const
 
 bool actor::is_habitable(const coord_def &_pos) const
 {
+    if (can_cling_to(_pos))
+        return true;
+
     return is_habitable_feat(grd(_pos));
 }
 
@@ -79,12 +103,26 @@ bool actor::handle_trap()
     return (trap != NULL);
 }
 
-bool actor::check_res_magic(int power)
+int actor::skill_rdiv(skill_type sk, int mult, int div) const
+{
+    return div_rand_round(skill(sk, mult * 256), div * 256);
+}
+
+int actor::res_holy_fire() const
+{
+    if (is_evil() || is_unholy())
+        return (-1);
+    else if (is_holy())
+        return (3);
+    return (0);
+}
+
+int actor::check_res_magic(int power)
 {
     const int mrs = res_magic();
 
     if (mrs == MAG_IMMUNE)
-        return (true);
+        return (100);
 
     // Evil, evil hack to make weak one hd monsters easier for first level
     // characters who have resistable 1st level spells. Six is a very special
@@ -97,7 +135,7 @@ bool actor::check_res_magic(int power)
     // help them out (or building a level or two of their base skill so they
     // aren't resisted as often). - bwr
     if (atype() == ACT_MONSTER && mrs < 6 && coinflip())
-        return (false);
+        return (-1);
 
     power = stepdown_value(power, 30, 40, 100, 120);
 
@@ -107,7 +145,7 @@ bool actor::check_res_magic(int power)
     dprf("Power: %d, MR: %d, target: %d, roll: %d",
          power, mrs, mrchance, mrch2);
 
-    return (mrch2 < mrchance);
+    return (mrchance - mrch2);
 }
 
 void actor::set_position(const coord_def &c)
@@ -167,7 +205,7 @@ void actor::shield_block_succeeded(actor *foe)
         && (unrand_entry = get_unrand_entry(sh->special))
         && unrand_entry->fight_func.melee_effects)
     {
-       unrand_entry->fight_func.melee_effects(sh, this, foe, false);
+       unrand_entry->fight_func.melee_effects(sh, this, foe, false, 0);
     }
 }
 
@@ -199,14 +237,71 @@ int actor::body_weight(bool base) const
     }
 }
 
-kill_category actor_kill_alignment(const actor *act)
-{
-    return (act? act->kill_alignment() : KC_OTHER);
-}
-
 bool actor_slime_wall_immune(const actor *act)
 {
     return (act->atype() == ACT_PLAYER?
               you.religion == GOD_JIYVA && !you.penance[GOD_JIYVA]
             : act->res_acid() == 3);
+}
+/**
+ * Accessor method to the clinging member.
+ *
+ * @returns The value of clinging.
+ */
+bool actor::is_wall_clinging() const
+{
+    return props.exists("clinging") && props["clinging"].get_bool();
+}
+
+/**
+ * Check a cell to see if actor can keep clinging if it moves to it.
+ *
+ * @param p Coordinates of the cell checked.
+ * @returns Whether the actor can cling.
+ */
+bool actor::can_cling_to(const coord_def& p) const
+{
+    if (!is_wall_clinging() || !can_pass_through_feat(grd(p)))
+        return false;
+
+    return cell_can_cling_to(pos(), p);
+}
+
+/**
+ * Update the clinging status of an actor.
+ *
+ * It checks adjacent orthogonal walls to see if the actor can cling to them.
+ * If actor has fallen from the wall (wall dug or actor changed form), print a
+ * message and apply location effects.
+ *
+ * @param stepped Whether the actor has taken a step.
+ * @return the new clinging status.
+ */
+bool actor::check_clinging(bool stepped, bool door)
+{
+    bool was_clinging = is_wall_clinging();
+    bool clinging = can_cling_to_walls() && cell_is_clingable(pos())
+                    && !airborne();
+
+    if (can_cling_to_walls())
+        props["clinging"] = clinging;
+    else if (props.exists("clinging"))
+        props.erase("clinging");
+
+    if (!stepped && was_clinging && !clinging)
+    {
+        if (you.can_see(this))
+        {
+            mprf("%s fall%s off the %s.", name(DESC_CAP_THE).c_str(),
+                 is_player() ? "" : "s", door ? "door" : "wall");
+        }
+        apply_location_effects(pos());
+    }
+    return clinging;
+}
+
+void actor::clear_clinging()
+{
+    if (props.exists("clinging"))
+        props["clinging"] = false;
 }

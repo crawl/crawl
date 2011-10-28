@@ -20,6 +20,7 @@ KFEAT:  B = c
 KFEAT:  A = c
 KFEAT:  B = =
 : end
+KFEAT:  O = enter_tomb
 MAP
 cccc.cccc
 c1.....1c
@@ -41,6 +42,7 @@ MONS:   sphinx
 MONS:   w:1 mummy / w:9 guardian mummy
 MONS:   mummy priest
 SUBST:  ' = ~ .:50
+KFEAT:  O = enter_tomb
 MAP
 ........................
 ........................
@@ -79,6 +81,7 @@ TAGS:   tomb_entry no_monster_gen no_rotate
 MONS:   w:1 mummy / w:9 guardian mummy
 MONS:   sphinx
 MONS:   mummy priest
+KFEAT:  O = enter_tomb
 MAP
           ccccc
        cccc.1.cccc
@@ -110,6 +113,7 @@ KMONS:  f = w:2 col:darkgrey plant name:withered name_adjective              \
             tile:mons_withered_plant / w:1 col:lightgrey plant name:withered \
             name_adjective tile:mons_withered_plant
 SUBST:  p = f.
+KFEAT:  O = enter_tomb
 MAP
 cccccccccc
 cfffffppp.
@@ -128,6 +132,7 @@ NAME:   tomb_entry_shell_bobbens
 TAGS:   tomb_entry no_monster_gen no_item_gen no_rotate
 MONS:   guardian mummy
 MONS:   mummy priest
+KFEAT:  O = enter_tomb
 MAP
           c
         ccc..

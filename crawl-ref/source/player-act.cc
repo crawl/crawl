@@ -1,19 +1,24 @@
-/*
- * File:     player-act.cc
- * Summary:  Implementing the actor interface for player.
- */
+/**
+ * @file
+ * @brief Implementing the actor interface for player.
+**/
 
 #include "AppHdr.h"
 
 #include "player.h"
 
+#include <math.h>
+
+#include "areas.h"
 #include "artefact.h"
 #include "dgnevent.h"
 #include "env.h"
 #include "food.h"
 #include "goditem.h"
+#include "hints.h"
 #include "itemname.h"
 #include "itemprop.h"
+#include "items.h"
 #include "libutil.h"
 #include "misc.h"
 #include "monster.h"
@@ -22,11 +27,6 @@
 #include "transform.h"
 #include "traps.h"
 #include "viewgeom.h"
-
-monster_type player::id() const
-{
-    return (MONS_PLAYER);
-}
 
 int player::mindex() const
 {
@@ -60,21 +60,27 @@ bool player::is_summoned(int* _duration, int* summon_type) const
     return (false);
 }
 
-void player::moveto(const coord_def &c)
+void player::moveto(const coord_def &c, bool clear_net)
 {
-    if (c != pos())
+    if (clear_net && c != pos())
         clear_trapping_net();
 
     crawl_view.set_player_at(c);
     set_position(c);
+
+    if (player_has_orb())
+    {
+        env.orb_pos = c;
+        invalidate_agrid(true);
+    }
 }
 
-bool player::move_to_pos(const coord_def &c)
+bool player::move_to_pos(const coord_def &c, bool clear_net)
 {
     actor *target = actor_at(c);
     if (!target || target->submerged())
     {
-        moveto(c);
+        moveto(c, clear_net);
         return true;
     }
     return false;
@@ -118,7 +124,11 @@ bool player::floundering() const
 
 bool player::extra_balanced() const
 {
-    return (species == SP_NAGA && !transform_changed_physiology());
+    const dungeon_feature_type grid = grd(pos());
+    return (grid == DNGN_SHALLOW_WATER
+             && (species == SP_NAGA                      // tails, not feet
+                 || body_size(PSIZE_BODY) >= SIZE_LARGE)
+                    && !form_changed_physiology());
 }
 
 int player::get_experience_level() const
@@ -128,7 +138,7 @@ int player::get_experience_level() const
 
 bool player::can_pass_through_feat(dungeon_feature_type grid) const
 {
-    if (!feat_is_solid(grid) && grid != DNGN_TEMP_PORTAL)
+    if (!feat_is_solid(grid) && grid != DNGN_MALIGN_GATEWAY)
       return true;
 
     if (can_swim_through_rock())
@@ -170,7 +180,7 @@ size_type player::body_size(size_part_type psize, bool base) const
         return species_size(species, psize);
     else
     {
-        size_type tf_size = transform_size(psize);
+        size_type tf_size = transform_size(form, psize);
         return (tf_size == SIZE_CHARACTER ? species_size(species, psize)
                                           : tf_size);
     }
@@ -183,7 +193,7 @@ int player::body_weight(bool base) const
     if (base)
         return (weight);
 
-    switch (attribute[ATTR_TRANSFORMATION])
+    switch (form)
     {
     case TRAN_STATUE:
         weight *= 2;
@@ -207,10 +217,12 @@ int player::damage_type(int)
 {
     if (const item_def* wp = weapon())
         return (get_vorpal_type(*wp));
-    else if (attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+    else if (form == TRAN_BLADE_HANDS)
         return (DVORP_SLICING);
     else if (has_usable_claws())
         return (DVORP_CLAWING);
+    else if (has_usable_tentacles())
+        return (DVORP_TENTACLE);
 
     return (DVORP_CRUSHING);
 }
@@ -220,7 +232,7 @@ int player::damage_brand(int)
     int ret = SPWPN_NORMAL;
     const int wpn = equip[EQ_WEAPON];
 
-    if (wpn != -1)
+    if (wpn != -1 && !you.melded[EQ_WEAPON])
     {
         if (!is_range_weapon(inv[wpn]))
             ret = get_weapon_brand(inv[wpn]);
@@ -229,7 +241,7 @@ int player::damage_brand(int)
         ret = SPWPN_CONFUSE;
     else
     {
-        switch (attribute[ATTR_TRANSFORMATION])
+        switch (form)
         {
         case TRAN_SPIDER:
             ret = SPWPN_VENOM;
@@ -260,7 +272,7 @@ int player::damage_brand(int)
 // eq must be in [EQ_WEAPON, EQ_AMULET], or bad things will happen.
 item_def *player::slot_item(equipment_type eq, bool include_melded)
 {
-    ASSERT(eq >= EQ_WEAPON && eq <= EQ_AMULET);
+    ASSERT(eq >= EQ_WEAPON && eq < NUM_EQUIP);
 
     const int item = equip[eq];
     if (item == -1 || !include_melded && melded[eq])
@@ -271,7 +283,7 @@ item_def *player::slot_item(equipment_type eq, bool include_melded)
 // const variant of the above...
 const item_def *player::slot_item(equipment_type eq, bool include_melded) const
 {
-    ASSERT(eq >= EQ_WEAPON && eq <= EQ_AMULET);
+    ASSERT(eq >= EQ_WEAPON && eq < NUM_EQUIP);
 
     const int item = equip[eq];
     if (item == -1 || !include_melded && melded[eq])
@@ -282,6 +294,9 @@ const item_def *player::slot_item(equipment_type eq, bool include_melded) const
 // Returns the item in the player's weapon slot.
 item_def *player::weapon(int /* which_attack */)
 {
+    if (you.melded[EQ_WEAPON])
+        return (NULL);
+
     return (slot_item(EQ_WEAPON, false));
 }
 
@@ -306,16 +321,24 @@ bool player::can_wield(const item_def& item, bool ignore_curse,
 }
 
 bool player::could_wield(const item_def &item, bool ignore_brand,
-                         bool /* ignore_transform */) const
+                         bool ignore_transform) const
 {
-    if (species == SP_CAT)
+    if (species == SP_FELID)
         return (false);
-    if (body_size(PSIZE_TORSO) < SIZE_LARGE && item_mass(item) >= 300)
+    if (body_size(PSIZE_TORSO, ignore_transform) < SIZE_LARGE
+            && (item_mass(item) >= 500
+                || item.base_type == OBJ_WEAPONS
+                    && item_mass(item) >= 300))
         return (false);
 
+    // Anybody can wield missiles to enchant, item_mass permitting
+    if (item.base_type == OBJ_MISSILES)
+        return (true);
+
     // Small species wielding large weapons...
-    if (body_size(PSIZE_BODY) < SIZE_MEDIUM
-        && !check_weapon_wieldable_size(item, body_size(PSIZE_BODY)))
+    if (body_size(PSIZE_BODY, ignore_transform) < SIZE_MEDIUM
+        && !check_weapon_wieldable_size(item,
+               body_size(PSIZE_BODY, ignore_transform)))
     {
         return (false);
     }
@@ -362,9 +385,9 @@ static std::string _pronoun_you(description_level_type desc)
     }
 }
 
-std::string player::name(description_level_type type, bool) const
+std::string player::name(description_level_type dt, bool) const
 {
-    return (_pronoun_you(type));
+    return (_pronoun_you(dt));
 }
 
 std::string player::pronoun(pronoun_type pro, bool) const
@@ -388,9 +411,39 @@ std::string player::conj_verb(const std::string &verb) const
 
 std::string player::hand_name(bool plural, bool *can_plural) const
 {
-    if (can_plural != NULL)
-        *can_plural = true;
-    return your_hand(plural);
+    bool _can_plural;
+    if (can_plural == NULL)
+        can_plural = &_can_plural;
+    *can_plural = true;
+
+    std::string str;
+
+    if (form == TRAN_BAT || form == TRAN_DRAGON)
+        str = "foreclaw";
+    else if (form == TRAN_PIG || form == TRAN_SPIDER)
+        str = "front leg";
+    else if (form == TRAN_ICE_BEAST)
+        str = "paw";
+    else if (form == TRAN_BLADE_HANDS)
+        str = "scythe-like blade";
+    else if (form == TRAN_LICH || form == TRAN_STATUE
+             || !form_changed_physiology())
+    {
+        if (species == SP_FELID)
+            str = "paw";
+        else if (you.has_usable_claws())
+            str = "claw";
+        else if (you.has_usable_tentacles())
+            str = "tentacle";
+    }
+
+    if (str.empty())
+        return (plural ? "hands" : "hand");
+
+    if (plural && *can_plural)
+        str = pluralise(str);
+
+    return str;
 }
 
 std::string player::foot_name(bool plural, bool *can_plural) const
@@ -402,14 +455,20 @@ std::string player::foot_name(bool plural, bool *can_plural) const
 
     std::string str;
 
-    if (attribute[ATTR_TRANSFORMATION] == TRAN_SPIDER)
+    if (form == TRAN_SPIDER)
         str = "hind leg";
-    else if (!transform_changed_physiology())
+    else if (form == TRAN_LICH || form == TRAN_STATUE
+             || !form_changed_physiology())
     {
         if (player_mutation_level(MUT_HOOVES) >= 3)
             str = "hoof";
-        else if (player_mutation_level(MUT_TALONS) >= 3)
+        else if (you.has_usable_talons())
             str = "talon";
+        else if (you.has_usable_tentacles())
+        {
+            str         = "tentacles";
+            *can_plural = false;
+        }
         else if (species == SP_NAGA)
         {
             str         = "underbelly";
@@ -433,20 +492,29 @@ std::string player::foot_name(bool plural, bool *can_plural) const
 
 std::string player::arm_name(bool plural, bool *can_plural) const
 {
-    if (transform_changed_physiology())
+    if (form_changed_physiology())
         return hand_name(plural, can_plural);
 
     if (can_plural != NULL)
         *can_plural = true;
 
+    std::string adj;
     std::string str = "arm";
 
     if (player_genus(GENPC_DRACONIAN) || species == SP_NAGA)
-        str = "scaled arm";
+        adj = "scaled";
     else if (species == SP_KENKU)
-        str = "feathered arm";
+        adj = "feathered";
     else if (species == SP_MUMMY)
-        str = "bandage-wrapped arm";
+        adj = "bandage-wrapped";
+    else if (species == SP_OCTOPODE)
+        str = "tentacle";
+
+    if (form == TRAN_LICH)
+        adj = "bony";
+
+    if (!adj.empty())
+        str = adj + " " + str;
 
     if (plural)
         str = pluralise(str);
@@ -456,17 +524,21 @@ std::string player::arm_name(bool plural, bool *can_plural) const
 
 bool player::fumbles_attack(bool verbose)
 {
+    bool did_fumble = false;
+
     // Fumbling in shallow water.
-    if (floundering())
+    if (floundering() || liquefied(pos()) && ground_level())
     {
         if (x_chance_in_y(4, dex()) || one_chance_in(5))
         {
             if (verbose)
-                mpr("Unstable footing causes you to fumble your attack.");
-            return (true);
+                mpr("Your unstable footing causes you to fumble your attack.");
+            did_fumble = true;
         }
+        if (floundering())
+            learned_something_new(HINT_FUMBLING_SHALLOW_WATER);
     }
-    return (false);
+    return (did_fumble);
 }
 
 bool player::cannot_fight() const
@@ -475,7 +547,7 @@ bool player::cannot_fight() const
 }
 
 // If you have a randart equipped that has the ARTP_ANGRY property,
-// there's a 1/20 chance of it becoming activated whenever you
+// there's a 1/100 chance of it becoming activated whenever you
 // attack a monster. (Same as the berserk mutation at level 1.)
 // The probabilities for actually going berserk are cumulative!
 static bool _equipment_make_berserk()
@@ -489,7 +561,7 @@ static bool _equipment_make_berserk()
         if (!is_artefact(*item))
             continue;
 
-        if (artefact_wpn_property(*item, ARTP_ANGRY) && one_chance_in(20))
+        if (artefact_wpn_property(*item, ARTP_ANGRY) && one_chance_in(100))
             return (true);
     }
 
@@ -508,8 +580,8 @@ void player::attacking(actor *other)
             pet_target = mon->mindex();
     }
 
-    if (player_mutation_level(MUT_BERSERK)
-            && x_chance_in_y(player_mutation_level(MUT_BERSERK) * 10 - 5, 100)
+    const int chance = pow(3, player_mutation_level(MUT_BERSERK) - 1);
+    if (player_mutation_level(MUT_BERSERK) && x_chance_in_y(chance, 100)
         || _equipment_make_berserk())
     {
         go_berserk(false);
@@ -553,7 +625,7 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         return (false);
     }
 
-    if (beheld())
+    if (beheld() && !player_equip_unrand(UNRAND_DEMON_AXE))
     {
         if (verbose)
             mpr("You are too mesmerised to rage.");
@@ -603,13 +675,18 @@ bool player::can_go_berserk(bool intentional, bool potion) const
             if (!player_mental_clarity(false) && wearing_amulet(AMU_CLARITY)
                 && (amu = &you.inv[you.equip[EQ_AMULET]]) && !item_type_known(*amu))
             {
-                set_ident_type(amu->base_type, amu->sub_type, ID_KNOWN_TYPE);
-                set_ident_flags(*amu, ISFLAG_KNOW_PROPERTIES);
-                mprf("You are wearing: %s",
-                     amu->name(DESC_INVENTORY_EQUIP).c_str());
+                wear_id_type(*amu);
             }
         }
 
+        return (false);
+    }
+
+    ASSERT(HUNGER_STARVING + BERSERK_NUTRITION < 2066);
+    if (you.hunger <= 2066)
+    {
+        if (verbose)
+            mpr("You're too hungry to go berserk.");
         return (false);
     }
 
@@ -619,4 +696,15 @@ bool player::can_go_berserk(bool intentional, bool potion) const
 bool player::berserk() const
 {
     return (duration[DUR_BERSERK]);
+}
+
+bool player::can_cling_to_walls() const
+{
+    return you.form == TRAN_SPIDER;
+}
+
+bool player::is_web_immune() const
+{
+    // Spider form
+    return (can_cling_to_walls());
 }

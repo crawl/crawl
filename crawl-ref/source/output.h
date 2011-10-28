@@ -1,8 +1,7 @@
-/*
- *  File:       output.h
- *  Summary:    Functions used to print player related info.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used to print player related info.
+**/
 
 
 #ifndef OUTPUT_H
@@ -46,7 +45,6 @@ void draw_border(void);
 bool compare_monsters_attitude(const monster* m1, const monster* m2);
 
 std::string mpr_monster_list(bool past = false);
-void redraw_skill(const std::string &your_name, const std::string &class_name);
 int update_monster_pane(void);
 
 const char *equip_slot_to_name(int equip);

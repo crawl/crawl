@@ -1,8 +1,7 @@
-/*
- *  File:       place.h
- *  Summary:    Place related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Place related functions.
+**/
 
 #ifndef PLACE_H
 #define PLACE_H

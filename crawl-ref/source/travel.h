@@ -1,14 +1,13 @@
-/*
- *  File:       travel.h
- *  Summary:    Travel stuff
- *  Written by: Darshan Shaligram
- */
+/**
+ * @file
+ * @brief Travel stuff
+**/
 #ifndef TRAVEL_H
 #define TRAVEL_H
 
 #include "externs.h"
-
 #include "exclude.h"
+#include "map_knowledge.h"
 
 // For travel_distance_col and travel_distance_grid_t
 #include "travel_defs.h"
@@ -43,9 +42,9 @@ enum run_dir_type
 
 enum run_mode_type
 {
-    RMODE_INTERLEVEL     = -4, // Interlevel travel (Ctrl+G)
-    RMODE_EXPLORE_GREEDY = -3, // Explore + grab items (Tab/Ctrl+I)
-    RMODE_EXPLORE        = -2, // Exploring (Ctrl+O)
+    RMODE_INTERLEVEL     = -4, // Interlevel travel
+    RMODE_EXPLORE_GREEDY = -3, // Explore + grab items
+    RMODE_EXPLORE        = -2, // Exploring
     RMODE_TRAVEL         = -1, // Classic or Plain Old travel
     RMODE_NOT_RUNNING    = 0,  // must remain equal to 0
     RMODE_CONTINUE,
@@ -72,7 +71,7 @@ bool is_unknown_stair(const coord_def &p);
 void find_travel_pos(const coord_def& youpos, int *move_x, int *move_y,
                      std::vector<coord_def>* coords = NULL);
 
-bool is_travelsafe_square(const coord_def& c, bool ignore_hostile = false);
+bool is_stair_exclusion(const coord_def &p);
 
 /* ***********************************************************************
  * Initiates explore - the character runs around the level to map it. Note
@@ -92,7 +91,6 @@ struct travel_target;
 level_id find_up_level(level_id curr, bool up_branch = false);
 level_id find_down_level(level_id curr);
 
-void start_translevel_travel_prompt();
 void start_translevel_travel(const travel_target &pos);
 
 void start_travel(const coord_def& p);
@@ -107,12 +105,12 @@ void prevent_travel_to(const std::string &dungeon_feature_name);
 void arrange_features(std::vector<coord_def> &features);
 int level_distance(level_id first, level_id second);
 level_id find_deepest_explored(level_id curr);
+bool branch_entered(branch_type branch);
 
 bool can_travel_to(const level_id &lid);
 bool can_travel_interlevel();
-bool prompt_stop_explore(int es_why);
 
-bool travel_kill_monster(const monster* mons);
+bool travel_kill_monster(monster_type mons);
 
 enum translevel_prompt_flags
 {
@@ -140,6 +138,9 @@ const int PD_EXCLUDED = -20099;
 
 // This square is within LOS radius of an excluded square
 const int PD_EXCLUDED_RADIUS = -20100;
+
+// This square has a damaging cloud
+const int PD_CLOUD = -20101;
 
 /* ***********************************************************************
  * Array of points on the map, each value being the distance the character
@@ -242,7 +243,8 @@ public:
     bool prompt_stop() const;
 
 private:
-    template <class Z> struct named_thing {
+    template <class Z> struct named_thing
+    {
         std::string name;
         Z thing;
 
@@ -497,6 +499,8 @@ public:
     // Extract features without pathfinding
     void get_features();
 
+    const std::set<coord_def> get_unreachables() const;
+
     // The next square to go to to move towards the travel destination. Return
     // value is undefined if pathfind was not called with RMODE_TRAVEL.
     const coord_def travel_move() const;
@@ -513,6 +517,11 @@ public:
     // pathfind was not called with RMODE_EXPLORE or
     // RMODE_EXPLORE_GREEDY.
     const coord_def unexplored_square() const;
+
+    inline void set_ignore_danger()
+    {
+        ignore_danger = true;
+    }
 
 protected:
     bool is_greed_inducing_square(const coord_def &c) const;
@@ -546,6 +555,10 @@ protected:
     // hostile squares.
     bool ignore_hostile;
 
+    // Set to true for Tiles mode clicking, so you can move one step
+    // at a time through excluded areas and around stationary monsters.
+    bool ignore_danger;
+
     // If true, use magic numbers in point distance array which can be
     // used to colour the level-map.
     bool annotate_map;
@@ -570,6 +583,9 @@ protected:
     std::vector<coord_def> reseed_points;
 
     std::vector<coord_def> *features;
+
+    // List of unexplored and unreachable points.
+    std::set<coord_def> unreachables;
 
     travel_distance_col *point_distance;
 
@@ -598,6 +614,21 @@ void do_interlevel_travel();
 
 // Travel from a mouse click.  Take one step if not safe.  Attack if adjacent.
 // If force is true, then the player will attack empty squares/open doors.
+#ifdef USE_TILE
 int click_travel(const coord_def &gc, bool force);
+#endif
 
+bool check_for_interesting_features();
+void clear_level_target();
+
+class level_id_iterator : public std::iterator<std::forward_iterator_tag, level_id>
+{
+public:
+    level_id_iterator();
+    operator bool() const;
+    level_id operator *() const;
+    void operator++();
+private:
+    level_id cur;
+};
 #endif // TRAVEL_H

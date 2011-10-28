@@ -2,54 +2,13 @@
 #define MONSTER_H
 
 #include "actor.h"
-#include <stdint.h>
+#include "bitary.h"
+#include "mon-ench.h"
 
 const int KRAKEN_TENTACLE_RANGE = 3;
 #define TIDE_CALL_TURN "tide-call-turn"
 
 #define MAX_DAMAGE_COUNTER 10000
-
-class mon_enchant
-{
-public:
-    enchant_type  ench;
-    int           degree;
-    int           duration, maxduration;
-    kill_category who;      // Who set this enchantment?
-
-public:
-    mon_enchant(enchant_type e = ENCH_NONE, int deg = 0,
-                kill_category whose = KC_OTHER,
-                int dur = 0);
-
-    killer_type killer() const;
-    int kill_agent() const;
-
-    operator std::string () const;
-    const char *kill_category_desc(kill_category) const;
-    void merge_killer(kill_category who);
-    void cap_degree();
-
-    void set_duration(const monster* mons, const mon_enchant *exist);
-
-    bool operator < (const mon_enchant &other) const
-    {
-        return (ench < other.ench);
-    }
-
-    bool operator == (const mon_enchant &other) const
-    {
-        // NOTE: This does *not* check who/degree.
-        return (ench == other.ench);
-    }
-
-    mon_enchant &operator += (const mon_enchant &other);
-    mon_enchant operator + (const mon_enchant &other) const;
-
-private:
-    int modded_speed(const monster* mons, int hdplus) const;
-    int calc_duration(const monster* mons, const mon_enchant *added) const;
-};
 
 typedef std::map<enchant_type, mon_enchant> mon_enchant_list;
 
@@ -69,7 +28,6 @@ public:
     // Possibly some of these should be moved into the hash table
     std::string mname;
 
-    monster_type type;
     int hit_points;
     int max_hit_points;
     int hit_dice;
@@ -79,6 +37,7 @@ public:
     int speed_increment;
 
     coord_def target;
+    coord_def firing_pos;
     coord_def patrol_point;
     mutable montravel_target_type travel_target;
     std::vector<coord_def> travel_path;
@@ -89,6 +48,7 @@ public:
     unsigned short foe;
     int8_t ench_countdown;
     mon_enchant_list enchantments;
+    FixedBitArray<NUM_ENCHANTMENTS> ench_cache;
     uint64_t flags;                    // bitfield of boolean flags
 
     unsigned int experience;
@@ -112,9 +72,16 @@ public:
     int damage_friendly;               // Damage taken, x2 you, x1 pets, x0 else.
     int damage_total;
 
-    CrawlHashTable props;
+    uint32_t client_id;                // for ID of monster_info between turns
+    static uint32_t last_client_id;
 
 public:
+    void set_new_monster_id();
+
+    uint32_t get_client_id() const;
+    void reset_client_id();
+    void ensure_has_client_id();
+
     mon_attitude_type temp_attitude() const;
 
     // Returns true if the monster is named with a proper name, or is
@@ -131,16 +98,16 @@ public:
     void init_experience();
 
     void mark_summoned(int longevity, bool mark_items_summoned,
-                       int summon_type = 0);
+                       int summon_type = 0, bool abj = true);
     bool is_summoned(int* duration = NULL, int* summon_type = NULL) const;
     bool has_action_energy() const;
-    void check_redraw(const coord_def &oldpos) const;
+    void check_redraw(const coord_def &oldpos, bool clear_tiles = true) const;
     void apply_location_effects(const coord_def &oldpos,
                                 killer_type killer = KILL_NONE,
                                 int killernum = -1);
 
-    void moveto(const coord_def& c);
-    bool move_to_pos(const coord_def &newpos);
+    void moveto(const coord_def& c, bool clear_net = true);
+    bool move_to_pos(const coord_def &newpos, bool clear_net = true);
     bool blink_to(const coord_def& c, bool quiet = false);
 
     kill_category kill_alignment() const;
@@ -165,7 +132,7 @@ public:
     // Has ENCH_SHAPESHIFTER or ENCH_GLOWING_SHAPESHIFTER.
     bool is_shapeshifter() const;
 
-    bool has_ench(enchant_type ench) const;
+    bool has_ench(enchant_type ench) const { return ench_cache[ench]; }
     bool has_ench(enchant_type ench, enchant_type ench2) const;
     mon_enchant get_ench(enchant_type ench,
                          enchant_type ench2 = ENCH_NONE) const;
@@ -196,7 +163,7 @@ public:
 
     bool is_travelling() const;
     bool is_patrolling() const;
-    bool needs_transit() const;
+    bool needs_abyss_transit() const;
     void set_transit(const level_id &destination);
     bool find_place_to_live(bool near_player = false);
     bool find_home_near_place(const coord_def &c);
@@ -204,19 +171,19 @@ public:
     bool find_home_anywhere();
 
     void set_ghost(const ghost_demon &ghost, bool has_name = true);
-    void ghost_init();
+    void ghost_init(bool need_pos = true);
     void pandemon_init();
     void dancing_weapon_init();
+    void labrat_init();
     void uglything_init(bool only_mutate = false);
     void uglything_mutate(uint8_t force_colour = BLACK);
     void uglything_upgrade();
     void destroy_inventory();
-    void load_spells(mon_spellbook_type spellbook);
+    void load_ghost_spells();
 
     actor *get_foe() const;
 
     // actor interface
-    monster_type id() const;
     int mindex() const;
     int       get_experience_level() const;
     god_type  deity() const;
@@ -227,9 +194,10 @@ public:
 
     bool      submerged() const;
     bool      can_drown() const;
+    bool      floundering_at(const coord_def p) const;
     bool      floundering() const;
+    bool      extra_balanced_at(const coord_def p) const;
     bool      extra_balanced() const;
-    bool      has_trachea() const;
     bool      can_pass_through_feat(dungeon_feature_type grid) const;
     bool      is_habitable_feat(dungeon_feature_type actual_grid) const;
     size_type body_size(size_part_type psize = PSIZE_TORSO,
@@ -299,7 +267,7 @@ public:
     bool fumbles_attack(bool verbose = true);
     bool cannot_fight() const;
 
-    int  skill(skill_type skill, bool skill_bump = false) const;
+    int  skill(skill_type skill, int scale = 1, bool real = false) const;
 
     void attacking(actor *other);
     bool can_go_berserk() const;
@@ -307,6 +275,7 @@ public:
     void go_frenzy();
     bool berserk() const;
     bool frenzied() const;
+    bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
     bool can_bleed() const;
@@ -318,10 +287,10 @@ public:
 
     mon_holy_type holiness() const;
     bool undead_or_demonic() const;
-    bool is_holy() const;
-    bool is_unholy() const;
-    bool is_evil() const;
-    bool is_unclean() const;
+    bool is_holy(bool check_spells = true) const;
+    bool is_unholy(bool check_spells = true) const;
+    bool is_evil(bool check_spells = true) const;
+    bool is_unclean(bool check_spells = true) const;
     bool is_known_chaotic() const;
     bool is_chaotic() const;
     bool is_artificial() const;
@@ -332,8 +301,8 @@ public:
     int res_steam() const;
     int res_cold() const;
     int res_elec() const;
-    int res_poison() const;
-    int res_rotting() const;
+    int res_poison(bool temp = true) const;
+    int res_rotting(bool temp = true) const;
     int res_asphyx() const;
     int res_water_drowning() const;
     int res_sticky_flame() const;
@@ -341,15 +310,20 @@ public:
     int res_negative_energy() const;
     int res_torment() const;
     int res_acid() const;
+    int res_wind() const;
+    int res_petrify(bool temp = true) const;
     int res_magic() const;
 
     flight_type flight_mode() const;
     bool is_levitating() const;
+    bool can_cling_to_walls() const;
+    bool is_web_immune() const;
     bool invisible() const;
     bool can_see_invisible() const;
     bool visible_to(const actor *looker) const;
     bool near_foe() const;
     reach_type reach_range() const;
+    bool nightvision() const;
 
     bool is_icy() const;
     bool is_fiery() const;
@@ -362,8 +336,11 @@ public:
     bool caught() const;
     bool asleep() const;
     bool backlit(bool check_haloed = true, bool self_halo = true) const;
+    bool umbra(bool check_haloed = true, bool self_halo = true) const;
     int halo_radius2() const;
     int silence_radius2() const;
+    int liquefying_radius2 () const;
+    int umbra_radius2 () const;
     bool glows_naturally() const;
     bool petrified() const;
     bool petrifying() const;
@@ -393,11 +370,12 @@ public:
     int armour_class() const;
     int melee_evasion(const actor *attacker, ev_ignore_type evit) const;
 
-    void poison(actor *agent, int amount = 1);
-    bool sicken(int strength);
-    bool bleed(int amount, int degree);
-    void paralyse(actor *, int str);
-    void petrify(actor *, int str);
+    bool poison(actor *agent, int amount = 1, bool force = false);
+    bool sicken(int strength, bool unused = true);
+    bool bleed(const actor *agent, int amount, int degree);
+    void paralyse(actor *, int str, std::string source = "");
+    void petrify(actor *);
+    bool fully_petrify(actor *foe, bool quiet = false);
     void slow_down(actor *, int str);
     void confuse(actor *, int strength);
     bool drain_exp(actor *, bool quiet = false, int pow = 3);
@@ -406,17 +384,21 @@ public:
              beam_type flavour = BEAM_MISSILE,
              bool cleanup_dead = true);
     bool heal(int amount, bool max_too = false);
+    void blame_damage(const actor *attacker, int amount);
     void blink(bool allow_partial_control = true);
     void teleport(bool right_now = false,
                   bool abyss_shift = false,
                   bool wizard_tele = false);
+    void suicide(int hp = -1);
 
     void hibernate(int power = 0);
     void put_to_sleep(actor *attacker, int power = 0);
     void check_awaken(int disturbance);
+    int beam_resists(bolt &beam, int hurted, bool doEffects, std::string source = "");
 
     int stat_hp() const    { return hit_points; }
     int stat_maxhp() const { return max_hit_points; }
+    int stealth () const;
 
     int shield_bonus() const;
     int shield_block_penalty() const;
@@ -430,7 +412,6 @@ public:
     const player* as_player() const { return NULL; }
 
     // Hacks, with a capital H.
-    void fix_speed();
     void check_speed();
     void upgrade_type(monster_type after, bool adjust_hd, bool adjust_hp);
 
@@ -443,6 +424,7 @@ public:
 
     void bind_melee_flags();
     void bind_spell_flags();
+    void calc_speed();
 
 private:
     void init_with(const monster& mons);

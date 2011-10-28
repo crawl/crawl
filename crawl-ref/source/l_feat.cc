@@ -1,7 +1,7 @@
-/*
- * File:     l_feat.cc
- * Summary:  Boolean feat-related functions lua library "feat".
- */
+/**
+ * @file
+ * @brief Boolean feat-related functions lua library "feat".
+**/
 
 #include "AppHdr.h"
 
@@ -10,7 +10,6 @@
 #include "l_libs.h"
 
 #include "coord.h"
-#include "dungeon.h"
 #include "env.h"
 #include "libutil.h"
 #include "terrain.h"

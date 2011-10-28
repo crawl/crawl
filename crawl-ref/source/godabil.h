@@ -1,21 +1,22 @@
-/*
- *  File:       godabil.h
- *  Summary:    God-granted abilities.
- */
+/**
+ * @file
+ * @brief God-granted abilities.
+**/
 
 #ifndef GODABIL_H
 #define GODABIL_H
 
 #include "enum.h"
 #include "externs.h"
+#include "mon-info.h"
 
 struct bolt;
 
-bool zin_sustenance(bool actual = true);
-int zin_check_recite_to_single_monster(const coord_def& where);
-int zin_check_recite_to_monsters();
-int zin_recite_to_single_monster(const coord_def& where,
-                                 bool imprisoned = false, int pow = -1);
+std::string zin_recite_text(int* trits, size_t len, int prayertype, int step);
+bool zin_check_able_to_recite();
+int zin_check_recite_to_monsters(recite_type *prayertype);
+bool zin_recite_to_single_monster(const coord_def& where,
+                                  recite_type prayertype);
 bool zin_vitalisation();
 void zin_remove_divine_stamina();
 bool zin_remove_all_mutations();
@@ -24,7 +25,6 @@ bool zin_sanctuary();
 void tso_divine_shield();
 void tso_remove_divine_shield();
 
-bool elyvilon_destroy_weapons();
 void elyvilon_purification();
 bool elyvilon_divine_vigour();
 void elyvilon_remove_divine_vigour();
@@ -46,6 +46,7 @@ void yred_drain_life();
 void yred_make_enslaved_soul(monster* mon, bool force_hostile = false);
 
 bool kiku_receive_corpses(int pow, coord_def where);
+bool kiku_take_corpse();
 
 bool fedhas_passthrough_class(const monster_type mc);
 bool fedhas_passthrough(const monster* target);
@@ -64,10 +65,9 @@ bool fedhas_evolve_flora();
 
 void lugonu_bend_space();
 
-bool is_ponderousifiable(const item_def& item);
-bool ponderousify_armour();
 void cheibriados_time_bend(int pow);
-int cheibriados_slouch(int pow);
+bool cheibriados_slouch(int pow);
 void cheibriados_time_step(int pow);
 bool ashenzari_transfer_knowledge();
+bool ashenzari_end_transfer(bool finished = false, bool force = false);
 #endif

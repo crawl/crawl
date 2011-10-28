@@ -1,8 +1,7 @@
-/*
- *  File:       tiletex.h
- *  Summary:    PNG and texture loading functionality
- *  Written by: Enne Walker
- */
+/**
+ * @file
+ * @brief PNG and texture loading functionality
+**/
 
 #ifndef TILETEX_H
 #define TILETEX_H
@@ -16,6 +15,7 @@ enum TextureID
     TEX_PLAYER,  // player.png
     TEX_DEFAULT, // main.png
     TEX_GUI,     // gui.png
+    TEX_ICONS,   // icons.png
     TEX_MAX
 };
 

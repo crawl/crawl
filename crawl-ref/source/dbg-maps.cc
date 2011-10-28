@@ -1,8 +1,7 @@
-/*
- *  File:       dbg-maps.cc
- *  Summary:    Map generation statistics/testing.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Map generation statistics/testing.
+**/
 
 #include "AppHdr.h"
 
@@ -12,7 +11,6 @@
 #include "chardump.h"
 #include "dungeon.h"
 #include "env.h"
-#include "flood_find.h"
 #include "map_knowledge.h"
 #include "initfile.h"
 #include "libutil.h"
@@ -64,20 +62,21 @@ static bool _mg_is_disconnected_level()
 static bool mg_do_build_level(int niters)
 {
     mesclr();
-    mprf("On %s (%d); %d g, %d fail, %d err%s, %d uniq, "
+    mprf("On %s (%d); %d g, %d fail, %u err%s, %u uniq, "
          "%d try, %d (%.2lf%%) vetos",
          level_id::current().describe().c_str(), niters,
-         mg_levels_tried, mg_levels_failed, mapgen_errors.size(),
+         mg_levels_tried, mg_levels_failed,
+         (unsigned int)mapgen_errors.size(),
          mapgen_last_error.empty()? ""
          : (" (" + mapgen_last_error + ")").c_str(),
-         mapgen_use_count.size(),
+         (unsigned int)mapgen_use_count.size(),
          mg_build_attempts, mg_vetoes,
          mg_build_attempts? mg_vetoes * 100.0 / mg_build_attempts : 0.0);
 
     no_messages mx;
     for (int i = 0; i < niters; ++i)
     {
-        if (kbhit() && key_is_escape(getch()))
+        if (kbhit() && key_is_escape(getchk()))
         {
             mprf(MSGCH_WARN, "User requested cancel");
             return (false);
@@ -106,7 +105,7 @@ static bool mg_do_build_level(int niters)
 
         {
             unwind_bool wiz(you.wizard, true);
-            magic_mapping(1000, 100, true, true, false, false,
+            magic_mapping(1000, 100, true, true, false,
                           coord_def(GXM/2, GYM/2));
         }
         if (_mg_is_disconnected_level())
@@ -188,13 +187,14 @@ static void mg_build_levels(int niters)
     for (int i = 0; i < niters; ++i)
     {
         mesclr();
-        mprf("On %d of %d; %d g, %d fail, %d err%s, %d uniq, "
+        mprf("On %d of %d; %d g, %d fail, %u err%s, %u uniq, "
              "%d try, %d (%.2lf%%) vetos",
              i, niters,
-             mg_levels_tried, mg_levels_failed, mapgen_errors.size(),
+             mg_levels_tried, mg_levels_failed,
+             (unsigned int)mapgen_errors.size(),
              mapgen_last_error.empty()? ""
              : (" (" + mapgen_last_error + ")").c_str(),
-             mapgen_use_count.size(),
+             (unsigned int)mapgen_use_count.size(),
              mg_build_attempts, mg_vetoes,
              mg_build_attempts? mg_vetoes * 100.0 / mg_build_attempts : 0.0);
 
@@ -239,7 +239,7 @@ static void _mapgen_report_available_random_vaults(FILE *outf)
         mesclr();
         mprf("Examining random maps at %s", i->describe().c_str());
         mg_report_random_maps(outf, *i);
-        if (kbhit() && key_is_escape(getch()))
+        if (kbhit() && key_is_escape(getchk()))
             break;
         fprintf(outf, "---------------------------------\n");
     }
@@ -421,7 +421,8 @@ static void _write_mapgen_stats()
 void generate_map_stats()
 {
     // We have to run map preludes ourselves.
-    run_map_preludes();
+    run_map_global_preludes();
+    run_map_local_preludes();
     mg_build_levels(SysEnv.map_gen_iters);
     _write_mapgen_stats();
 }

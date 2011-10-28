@@ -1,8 +1,7 @@
-/*
- *  File:       state.cc
- *  Summary:    Game state functions.
- *  Written by: Matthew Cline
- */
+/**
+ * @file
+ * @brief Game state functions.
+**/
 
 #include "AppHdr.h"
 
@@ -21,25 +20,30 @@
 #include "religion.h"
 #include "showsymb.h"
 #include "state.h"
+#include "target.h"
 #include "hints.h"
 
 game_state::game_state()
     : game_crashed(false), game_wants_emergency_save(false),
       mouse_enabled(false), waiting_for_command(false),
-      terminal_resized(false), io_inited(false), need_save(false),
+      terminal_resized(false), last_winch(0), io_inited(false),
+      need_save(false),
       saving_game(false), updating_scores(false), seen_hups(0),
-      map_stat_gen(false), type(GAME_TYPE_NORMAL), arena_suspended(false),
-      test(false), script(false), build_db(false), tests_selected(),
-      unicode_ok(false), show_more_prompt(true),
-      glyph2strfn(NULL), multibyte_strlen(NULL),
+      map_stat_gen(false), type(GAME_TYPE_NORMAL),
+      last_type(GAME_TYPE_UNSPECIFIED), arena_suspended(false),
+      dump_maps(false), test(false), script(false), build_db(false),
+      tests_selected(), show_more_prompt(true),
       terminal_resize_handler(NULL), terminal_resize_check(NULL),
       doing_prev_cmd_again(false), prev_cmd(CMD_NO_CMD),
       repeat_cmd(CMD_NO_CMD),cmd_repeat_started_unsafe(false),
+      lua_calls_no_turn(0), stat_gain_prompt(false),
       level_annotation_shown(false),
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
       mlist_targeting(false),
+#else
+      title_screen(true),
 #endif
-      darken_range(-1), unsaved_macros(false), mon_act(NULL)
+      darken_range(NULL), unsaved_macros(false), mon_act(NULL)
 {
     reset_cmd_repeat();
     reset_cmd_again();
@@ -213,12 +217,12 @@ bool interrupt_cmd_repeat(activity_interrupt_type ai,
         {
             set_auto_exclude(mon);
 
-            std::string text = get_monster_equipment_desc(mon, false);
+            std::string text = get_monster_equipment_desc(mon, DESC_WEAPON);
             text += " comes into view.";
             mpr(text, MSGCH_WARN);
         }
 
-        if (Hints.hints_left)
+        if (crawl_state.game_is_hints())
             hints_monster_seen(*mon);
 #else
         formatted_string fs(channel_to_colour(MSGCH_WARN));
@@ -309,7 +313,7 @@ bool game_state::is_god_acting() const
     ASSERT(god_act.depth >= 0);
     ASSERT(!(god_act.depth > 0 && god_act.which_god == GOD_NO_GOD));
     ASSERT(!(god_act.depth == 0 && god_act.which_god != GOD_NO_GOD));
-    ASSERT(!(god_act.depth == 0 && god_act_stack.size() > 0));
+    ASSERT(!(god_act.depth == 0 && !god_act_stack.empty()));
 
     return (god_act.depth > 0);
 }
@@ -365,7 +369,7 @@ void game_state::dec_god_acting(god_type which_god)
     if (god_act.depth == 0)
     {
         god_act.reset();
-        if (god_act_stack.size() > 0)
+        if (!god_act_stack.empty())
         {
             god_act = god_act_stack[god_act_stack.size() - 1];
             god_act_stack.pop_back();
@@ -379,7 +383,7 @@ void game_state::dec_god_acting(god_type which_god)
 void game_state::clear_god_acting()
 {
     ASSERT(!is_god_acting());
-    ASSERT(god_act_stack.size() == 0);
+    ASSERT(god_act_stack.empty());
 
     god_act.reset();
 }
@@ -458,8 +462,11 @@ void game_state::dump()
                   "updating_scores: %d:\n",
             io_inited, need_save, saving_game, updating_scores);
     fprintf(stderr, "seen_hups: %d, map_stat_gen: %d, type: %d, "
-                  "arena_suspended: %d, unicode_ok: %d\n",
-            seen_hups, map_stat_gen, type, arena_suspended, unicode_ok);
+                  "arena_suspended: %d\n",
+            seen_hups, map_stat_gen, type, arena_suspended);
+    if (last_winch)
+        fprintf(stderr, "Last resize was %ld seconds ago.\n",
+                (long int)(time(0) - last_winch));
 
     fprintf(stderr, "\n");
 
@@ -499,7 +506,7 @@ void game_state::dump()
                 god_name(god_act.which_god).c_str(), god_act.depth);
     }
 
-    if (god_act_stack.size() != 0)
+    if (!god_act_stack.empty())
     {
         fprintf(stderr, "Other gods acting:\n");
         for (unsigned int i = 0; i < god_act_stack.size(); i++)
@@ -516,7 +523,7 @@ void game_state::dump()
         debug_dump_mon(mon_act, true);
     }
 
-    if (mon_act_stack.size() != 0)
+    if (!mon_act_stack.empty())
     {
         fprintf(stderr, "Others monsters acting:\n");
         for (unsigned int i = 0; i < mon_act_stack.size(); i++)
@@ -528,6 +535,11 @@ void game_state::dump()
 bool game_state::player_is_dead() const
 {
     return (updating_scores && !need_save);
+}
+
+bool game_state::game_standard_levelgen() const
+{
+    return (game_is_normal() || game_is_hints());
 }
 
 bool game_state::game_is_normal() const
@@ -554,10 +566,21 @@ bool game_state::game_is_sprint() const
     return type == GAME_TYPE_SPRINT;
 }
 
+bool game_state::game_is_zotdef() const
+{
+    ASSERT(type < NUM_GAME_TYPE);
+    return type == GAME_TYPE_ZOTDEF;
+}
+
 bool game_state::game_is_hints() const
 {
     ASSERT(type < NUM_GAME_TYPE);
     return type == GAME_TYPE_HINTS;
+}
+
+bool game_state::game_is_hints_tutorial() const
+{
+    return (game_is_hints() || game_is_tutorial());
 }
 
 std::string game_state::game_type_name() const
@@ -580,19 +603,24 @@ std::string game_state::game_type_name_for(game_type _type)
     case GAME_TYPE_ARENA:
         return "Arena";
     case GAME_TYPE_SPRINT:
-        return "Sprint";
+        return "Dungeon Sprint";
+    case GAME_TYPE_ZOTDEF:
+        return "Zot Defence";
     }
 }
 
 std::string game_state::game_savedir_path() const
 {
-    return game_is_sprint()? "sprint/" : "";
+    return game_is_sprint()? "sprint/" :
+           game_is_zotdef()? "zotdef/" : "";
 }
 
 std::string game_state::game_type_qualifier() const
 {
     if (crawl_state.game_is_sprint())
         return "-sprint";
+    if (crawl_state.game_is_zotdef())
+        return "-zotdef";
     if (crawl_state.game_is_tutorial())
         return "-tutorial";
     if (crawl_state.game_is_hints())

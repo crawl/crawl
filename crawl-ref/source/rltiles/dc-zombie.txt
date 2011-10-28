@@ -4,20 +4,31 @@ zombie_small MONS_ZOMBIE_SMALL
 zombie_large MONS_ZOMBIE_LARGE
 zombie_quadruped_small MONS_ZOMBIE_QUADRUPED_SMALL
 zombie_quadruped_large MONS_ZOMBIE_QUADRUPED_LARGE
+zombie_toad MONS_ZOMBIE_TOAD
 zombie_bat MONS_ZOMBIE_BAT
 zombie_bee MONS_ZOMBIE_BEE
 zombie_bug MONS_ZOMBIE_BEETLE
+zombie_rat MONS_ZOMBIE_RAT
+zombie_hound MONS_ZOMBIE_HOUND
 zombie_fish MONS_ZOMBIE_FISH
 zombie_centaur MONS_ZOMBIE_CENTAUR
 zombie_naga MONS_ZOMBIE_NAGA
 zombie_snake MONS_ZOMBIE_SNAKE
+zombie_worm MONS_ZOMBIE_WORM
+zombie_lizard MONS_ZOMBIE_LIZARD
 zombie_spider MONS_ZOMBIE_SPIDER
 zombie_dragon MONS_ZOMBIE_DRAGON
+zombie_kraken_head MONS_ZOMBIE_KRAKEN
 zombie_hydra1 MONS_ZOMBIE_HYDRA
 zombie_hydra2
 zombie_hydra3
 zombie_hydra4
 zombie_hydra5
+zombie_troll MONS_ZOMBIE_TROLL
+zombie_draconian MONS_ZOMBIE_DRACONIAN
+zombie_griffon MONS_ZOMBIE_GRIFFON
+zombie_quadruped_winged MONS_ZOMBIE_QUADRUPED_WINGED
+zombie_harpy MONS_ZOMBIE_HARPY
 
 %sdir dc-mon/undead/skeletons
 ## Skeletons
@@ -25,6 +36,7 @@ skeleton_humanoid_small MONS_SKELETON_SMALL
 skeleton_humanoid_large MONS_SKELETON_LARGE
 skeleton_quadruped_small MONS_SKELETON_QUADRUPED_SMALL
 skeleton_quadruped_large MONS_SKELETON_QUADRUPED_LARGE
+skeleton_toad MONS_SKELETON_TOAD
 skeleton_bat MONS_SKELETON_BAT
 skeleton_fish MONS_SKELETON_FISH
 skeleton_centaur MONS_SKELETON_CENTAUR
@@ -48,6 +60,7 @@ spectral_thing MONS_SPECTRAL_SMALL
 spectral_thing MONS_SPECTRAL_LARGE
 spectral_quadruped_small MONS_SPECTRAL_QUADRUPED_SMALL
 spectral_quadruped_large MONS_SPECTRAL_QUADRUPED_LARGE
+spectral_toad MONS_SPECTRAL_TOAD
 spectral_bat MONS_SPECTRAL_BAT
 spectral_bee MONS_SPECTRAL_BEE
 spectral_ant MONS_SPECTRAL_BEETLE
@@ -55,6 +68,7 @@ spectral_fish MONS_SPECTRAL_FISH
 spectral_centaur MONS_SPECTRAL_CENTAUR
 spectral_naga MONS_SPECTRAL_NAGA
 spectral_snake MONS_SPECTRAL_SNAKE
+spectral_worm MONS_SPECTRAL_WORM
 spectral_spider MONS_SPECTRAL_SPIDER
 spectral_dragon MONS_SPECTRAL_DRAGON
 spectral_hydra1 MONS_SPECTRAL_HYDRA

@@ -1,33 +1,34 @@
-/*
- *  File:       spl-util.h
- *  Summary:    data handlers for player spell list
- *  Written by: don brodale <dbrodale@bigfootinteractive.com>
- */
+/**
+ * @file
+ * @brief data handlers for player spell list
+**/
 
 
 #ifndef SPL_UTIL_H
 #define SPL_UTIL_H
 
 #include "enum.h"
+#include "target.h"
 
 enum spschool_flag_type
 {
-  SPTYP_NONE           = 0, // "0" is reserved for no type at all {dlb}
-  SPTYP_CONJURATION    = 1, // was 11, but only for old typematch routine {dlb}
-  SPTYP_ENCHANTMENT    = 1<<1,
-  SPTYP_FIRE           = 1<<2,
-  SPTYP_ICE            = 1<<3,
-  SPTYP_TRANSMUTATION  = 1<<4,
-  SPTYP_NECROMANCY     = 1<<5,
-  SPTYP_SUMMONING      = 1<<6,
-  SPTYP_DIVINATION     = 1<<7,
-  SPTYP_TRANSLOCATION  = 1<<8,
-  SPTYP_POISON         = 1<<9,
-  SPTYP_EARTH          = 1<<10,
-  SPTYP_AIR            = 1<<11,
-  SPTYP_HOLY           = 1<<12, //jmf: moved to accommodate "random" miscast f/x
-  SPTYP_LAST_EXPONENT  = 12,    //jmf: ``NUM_SPELL_TYPES'' kinda useless
-  NUM_SPELL_TYPES      = 14,
+  SPTYP_NONE           = 0,
+  SPTYP_CONJURATION    = 1<<0,
+  SPTYP_HEXES          = 1<<1,
+  SPTYP_CHARMS         = 1<<2,
+  SPTYP_FIRE           = 1<<3,
+  SPTYP_ICE            = 1<<4,
+  SPTYP_TRANSMUTATION  = 1<<5,
+  SPTYP_NECROMANCY     = 1<<6,
+  SPTYP_SUMMONING      = 1<<7,
+  SPTYP_DIVINATION     = 1<<8,
+  SPTYP_TRANSLOCATION  = 1<<9,
+  SPTYP_POISON         = 1<<10,
+  SPTYP_EARTH          = 1<<11,
+  SPTYP_AIR            = 1<<12,
+  SPTYP_HOLY           = 1<<13,
+  SPTYP_LAST_EXPONENT  = 13,    //jmf: ``NUM_SPELL_TYPES'' kinda useless
+  NUM_SPELL_TYPES      = 15,
   SPTYP_RANDOM         = 1<<14,
 };
 
@@ -55,6 +56,8 @@ spell_type spell_by_name(std::string name, bool partial_match = false);
 spschool_flag_type school_by_name(std::string name);
 
 int get_spell_slot_by_letter(char letter);
+int get_spell_slot(spell_type spell);
+int get_spell_letter(spell_type spell);
 spell_type get_spell_by_letter(char letter);
 
 bool add_spell_to_memory(spell_type spell);
@@ -94,12 +97,12 @@ const char* spelltype_long_name(int which_spelltype);
 typedef int cell_func(coord_def where, int pow, int aux, actor *agent);
 typedef int monster_func(monster* mon, int pow);
 typedef int cloud_func(coord_def where, int pow, int spreadrate,
-                       cloud_type type, kill_category whose,
-                       killer_type killer, int colour, std::string name,
-                       std::string tile);
+                       cloud_type type, const actor* agent, int colour,
+                       std::string name, std::string tile);
 
 int apply_area_visible(cell_func cf, int power,
-                       bool pass_through_trans = false, actor *agent = NULL);
+                       bool pass_through_trans = false, actor *agent = NULL,
+                       bool affect_scryed = false);
 
 int apply_area_square(cell_func cf, const coord_def& where, int power,
                       actor *agent = NULL);
@@ -122,7 +125,7 @@ int apply_area_within_radius(cell_func cf,  const coord_def& where,
 
 void apply_area_cloud(cloud_func func, const coord_def& where,
                       int pow, int number, cloud_type ctype,
-                      kill_category kc, killer_type killer,
+                      const actor *agent,
                       int spread_rate = -1, int colour = -1,
                       std::string name = "", std::string tile = "");
 
@@ -135,9 +138,11 @@ bool spell_direction(dist &spelld, bolt &pbolt,
                       bool may_target_self = false,
                       const char *target_prefix = NULL,
                       const char *prompt = NULL,
-                      bool cancel_at_self = false);
+                      bool cancel_at_self = false,
+                      targetter *hitfunc = NULL,
+                      desc_filter get_desc_func = NULL);
 
-int spell_type2skill (unsigned int which_spelltype);
+skill_type spell_type2skill (unsigned int which_spelltype);
 
 spell_type zap_type_to_spell(zap_type zap);
 

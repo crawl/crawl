@@ -1,8 +1,7 @@
-/*
- *  File:       tilemcache.h
- *  Summary:    Monster cache support
- *  Written by: Enne Walker
- */
+/**
+ * @file
+ * @brief Monster cache support
+**/
 
 #ifdef USE_TILE
 #ifndef TILEMCACHE_H
@@ -11,7 +10,7 @@
 #include "debug.h"
 #include <vector>
 
-class dolls_data;
+struct dolls_data;
 
 // The monster cache is designed to hold extra information about monsters that
 // can't be contained in a single tile.  This is usually for equipment,
@@ -41,7 +40,7 @@ public:
     virtual ~mcache_entry() {}
 
     void inc_ref() { m_ref_count++; }
-    void dec_ref() { m_ref_count--; ASSERT(m_ref_count >= 0); }
+    void dec_ref() { m_ref_count--; if (m_ref_count < 0) m_ref_count = 0; }
     int ref_count() { return m_ref_count; }
 
     enum
@@ -77,6 +76,7 @@ public:
 
     void read(reader &th);
     void construct(writer &th);
+    bool empty() { return m_entries.empty(); }
 
 protected:
     std::vector<mcache_entry*> m_entries;

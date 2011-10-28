@@ -6,7 +6,10 @@
 #include "coordit.h"
 #include "env.h"
 #include "fprop.h"
+#include "items.h"
+#include "libutil.h"
 #include "mon-behv.h"
+#include "mon-iter.h"
 #include "mon-pathfind.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
@@ -14,7 +17,7 @@
 #include "monster.h"
 #include "player.h"
 #include "random.h"
-#include "stuff.h"
+#include "state.h"
 #include "terrain.h"
 #include "traps.h"
 
@@ -33,7 +36,7 @@ static void _mark_neighbours_target_unreachable(monster* mon)
         return;
 
     const bool flies         = mons_flies(mon);
-    const bool amphibious    = mons_amphibious(mon);
+    const bool amphibious    = (mons_habitat(mon) == HT_AMPHIBIOUS);
     const habitat_type habit = mons_primary_habitat(mon);
 
     for (radius_iterator ri(mon->pos(), 2, true, false); ri; ++ri)
@@ -59,10 +62,17 @@ static void _mark_neighbours_target_unreachable(monster* mon)
         if (mons_primary_habitat(m) != habit)
             continue;
 
+        // Wall clinging monsters use different pathfinding.
+        if (mon->can_cling_to_walls() != m->can_cling_to_walls())
+            continue;
+
         // A flying monster has an advantage over a non-flying one.
         // Same for a swimming one.
-        if (!flies && mons_flies(m) || !amphibious && mons_amphibious(m))
+        if (!flies && mons_flies(m)
+            || !amphibious && mons_habitat(m) == HT_AMPHIBIOUS)
+        {
             continue;
+        }
 
         if (m->travel_target == MTRAV_NONE)
             m->travel_target = MTRAV_UNREACHABLE;
@@ -74,13 +84,37 @@ static void _set_no_path_found(monster* mon)
 #ifdef DEBUG_PATHFIND
     mpr("No path found!");
 #endif
+    if (crawl_state.game_is_zotdef() && you.level_type == LEVEL_DUNGEON)
+    {
+        if (you.wizard)
+        {
+            // You might have used a wizard power to teleport into a wall or
+            // a loot chamber.
+            mprf(MSGCH_ERROR, "Monster %s failed to pathfind!",
+                 mon->name(DESC_PLAIN).c_str());
+        }
+        else
+        {
+            // None of the maps allows the goal to ever become unreachable,
+            // and when that happens, let's crash rather than a give an
+            // effortless win with all the opposition doing nothing.
+
+            // This is only appropriate in the zotdef map itself, though,
+            // which is why we check for LEVEL_DUNGEON above.
+            // (This kind of thing is totally normal in, say, a Bazaar.)
+            die("ZotDef: monster %s failed to pathfind to (%d,%d) (%s)",
+                mon->name(DESC_PLAIN).c_str(),
+                env.orb_pos.x, env.orb_pos.y,
+                orb_position().origin() ? "you" : "the Orb");
+        }
+    }
 
     mon->travel_target = MTRAV_UNREACHABLE;
     // Pass information on to nearby monsters.
     _mark_neighbours_target_unreachable(mon);
 }
 
-static bool _target_is_unreachable(monster* mon)
+bool target_is_unreachable(monster* mon)
 {
     return (mon->travel_target == MTRAV_UNREACHABLE
             || mon->travel_target == MTRAV_KNOWN_UNREACHABLE);
@@ -92,7 +126,7 @@ static bool _target_is_unreachable(monster* mon)
 // Check whether there's an unobstructed path to the player (in sight!),
 // either by using an existing travel_path or calculating a new one.
 // Returns true if no further handling necessary, else false.
-bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
+bool try_pathfind(monster* mon)
 {
     // Just because we can *see* the player, that doesn't mean
     // we can actually get there.
@@ -101,7 +135,7 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
     // next turn, and even extend that flag to neighbouring
     // monsters of similar movement restrictions.
 
-    bool need_pathfind = !can_go_straight(mon->pos(), you.pos(), can_move);
+    bool need_pathfind = !can_go_straight(mon, mon->pos(), PLAYER_POS);
 
     // Smart monsters that can fire through obstacles won't use
     // pathfinding.
@@ -115,11 +149,10 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
     // Also don't use pathfinding if the monster can shoot
     // across the blocking terrain, and is smart enough to
     // realise that.
-    if (need_pathfind
+    if ((!crawl_state.game_is_zotdef()) && need_pathfind
         && mons_intel(mon) >= I_NORMAL && !mon->friendly()
-        && (mons_has_ranged_spell(mon, true)
-            || mons_has_ranged_attack(mon))
-        && exists_ray(mon->pos(), you.pos(), opc_solid))
+        && mons_has_ranged_attack(mon)
+        && cell_see_cell(mon->pos(), PLAYER_POS, LOS_SOLID))
     {
         need_pathfind = false;
     }
@@ -140,8 +173,13 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
 
     // If the target is "unreachable" (the monster already tried,
     // and failed, to find a path), there's a chance of trying again.
-    if (_target_is_unreachable(mon) && !one_chance_in(12))
+    // The chance is higher for wall clinging monsters to help them avoid
+    // shallow water. Retreating monsters retry every turn.
+    if (target_is_unreachable(mon) && !one_chance_in(12)
+        && !(mon->can_cling_to_walls() && one_chance_in(4)))
+    {
         return (false);
+    }
 
 #ifdef DEBUG_PATHFIND
     mprf("%s: Player out of reach! What now?",
@@ -154,7 +192,7 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
         const coord_def targ = mon->travel_path[len - 1];
 
         // Current target still valid?
-        if (can_go_straight(targ, you.pos(), can_move))
+        if (can_go_straight(mon, targ, PLAYER_POS))
         {
             // Did we reach the target?
             if (mon->pos() == mon->travel_path[0])
@@ -168,8 +206,7 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
                     return (true);
                 }
             }
-            else if (can_go_straight(mon->pos(), mon->travel_path[0],
-                                     can_move))
+            else if (can_go_straight(mon, mon->pos(), mon->travel_path[0]))
             {
                 mon->target = mon->travel_path[0];
                 return (true);
@@ -178,13 +215,15 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
     }
 
     // Use pathfinding to find a (new) path to the player.
-    const int dist = distance(mon->pos(), you.pos());
+    const int dist = grid_distance(mon->pos(), PLAYER_POS);
 
 #ifdef DEBUG_PATHFIND
     mprf("Need to calculate a path... (dist = %d)", dist);
 #endif
-    const int range = mons_tracking_range(mon);
-    if (range > 0 && dist > dist_range(range))
+    // All monsters can find the Orb in Zotdef
+    const int range = (crawl_state.game_is_zotdef() || mon->friendly() ? 1000 : mons_tracking_range(mon));
+
+    if (range > 0 && dist > range)
     {
         mon->travel_target = MTRAV_UNREACHABLE;
 #ifdef DEBUG_PATHFIND
@@ -196,13 +235,14 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
 
 #ifdef DEBUG_PATHFIND
     mprf("Need a path for %s from (%d, %d) to (%d, %d), max. dist = %d",
-         mon->name(DESC_PLAIN).c_str(), mon->pos(), you.pos(), range);
+         mon->name(DESC_PLAIN).c_str(), mon->pos().x, mon->pos().y,
+         PLAYER_POS.x, PLAYER_POS.y, range);
 #endif
     monster_pathfind mp;
     if (range > 0)
         mp.set_range(range);
 
-    if (mp.init_pathfind(mon, you.pos()))
+    if (mp.init_pathfind(mon, PLAYER_POS))
     {
         mon->travel_path = mp.calc_waypoints();
         if (!mon->travel_path.empty())
@@ -212,13 +252,10 @@ bool try_pathfind(monster* mon, const dungeon_feature_type can_move)
             mon->travel_target = MTRAV_PLAYER;
             return (true);
         }
-        else
-            _set_no_path_found(mon);
     }
-    else
-        _set_no_path_found(mon);
 
     // We didn't find a path.
+    _set_no_path_found(mon);
     return (false);
 }
 
@@ -357,8 +394,9 @@ bool find_siren_water_target(monster* mon)
     monster_pathfind mp;
 #ifdef WIZARD
     // Remove old highlighted areas to make place for the new ones.
-    for (rectangle_iterator ri(1); ri; ++ri)
-        env.pgrid(*ri) &= ~(FPROP_HIGHLIGHT);
+    if (you.wizard)
+        for (rectangle_iterator ri(1); ri; ++ri)
+            env.pgrid(*ri) &= ~(FPROP_HIGHLIGHT);
 #endif
 
     if (mp.init_pathfind(mon, best_target))
@@ -368,8 +406,9 @@ bool find_siren_water_target(monster* mon)
         if (!mon->travel_path.empty())
         {
 #ifdef WIZARD
-            for (unsigned int i = 0; i < mon->travel_path.size(); i++)
-                env.pgrid(mon->travel_path[i]) |= FPROP_HIGHLIGHT;
+            if (you.wizard)
+                for (unsigned int i = 0; i < mon->travel_path.size(); i++)
+                    env.pgrid(mon->travel_path[i]) |= FPROP_HIGHLIGHT;
 #endif
 #ifdef DEBUG_PATHFIND
             mprf("Found a path to (%d, %d) with %d surrounding water squares",
@@ -476,8 +515,7 @@ bool find_wall_target(monster* mon)
 }
 
 // Returns true if further handling neeeded.
-static bool _handle_monster_travelling(monster* mon,
-                                       const dungeon_feature_type can_move)
+static bool _handle_monster_travelling(monster* mon)
 {
 #ifdef DEBUG_PATHFIND
     mprf("Monster %s reached target (%d, %d)",
@@ -510,7 +548,7 @@ static bool _handle_monster_travelling(monster* mon,
     }
 
     // Can we still see our next waypoint?
-    if (!can_go_straight(mon->pos(), mon->travel_path[0], can_move))
+    if (!can_go_straight(mon, mon->pos(), mon->travel_path[0]))
     {
 #ifdef DEBUG_PATHFIND
         mpr("Can't see waypoint grid.");
@@ -528,7 +566,7 @@ static bool _handle_monster_travelling(monster* mon,
         const int size = mon->travel_path.size();
         for (int i = size - 1; i >= 0; --i)
         {
-            if (can_go_straight(mon->pos(), mon->travel_path[i], can_move))
+            if (can_go_straight(mon, mon->pos(), mon->travel_path[i]))
             {
                 mon->target = mon->travel_path[i];
                 erase = i;
@@ -638,7 +676,7 @@ static bool _choose_random_patrol_target_grid(monster* mon)
         if (*ri == mon->pos())
             continue;
 
-        if (!mon->can_pass_through_feat(grd(*ri)))
+        if (!in_bounds(*ri) || !mon->can_pass_through_feat(grd(*ri)))
             continue;
 
         // Don't bother moving to squares (currently) occupied by a
@@ -800,28 +838,205 @@ void set_random_target(monster* mon)
     }
 }
 
-void check_wander_target(monster* mon, bool isPacified,
-                         dungeon_feature_type can_move)
+// Try to find a band leader for the given monster
+static monster * _active_band_leader(monster * mon)
+{
+    // Not a band member
+    if (!mon->props.exists("band_leader"))
+        return (NULL);
+
+    // Try to find our fearless leader.
+    unsigned leader_mid = mon->props["band_leader"].get_int();
+
+    return (monster_by_mid(leader_mid));
+}
+
+// Return true if a target still needs to be set. If returns false, mon->target
+// was set.
+static bool _band_wander_target(monster * mon)
+{
+    int dist_thresh = LOS_RADIUS + HERD_COMFORT_RANGE;
+    monster * band_leader = _active_band_leader(mon);
+    if (band_leader == NULL)
+        return (true);
+
+    int leader_dist = grid_distance(mon->pos(), band_leader->pos());
+    if (leader_dist > dist_thresh)
+    {
+        monster_pathfind mp;
+        mp.set_range(1000);
+
+        if (mp.init_pathfind(mon, band_leader->pos()))
+        {
+            mon->travel_path = mp.calc_waypoints();
+            if (!mon->travel_path.empty())
+            {
+                // Okay then, we found a path.  Let's use it!
+                mon->target = mon->travel_path[0];
+                mon->travel_target = MTRAV_PATROL;
+                return (false);
+            }
+            else
+                return (true);
+        }
+
+        return (true);
+    }
+
+    std::vector<coord_def> positions;
+
+    for (radius_iterator r_it(mon->get_los_no_trans(), mon); r_it; ++r_it)
+    {
+        if (!in_bounds(*r_it))
+            continue;
+
+        int dist = grid_distance(*r_it, band_leader->pos());
+        if (dist < HERD_COMFORT_RANGE)
+        {
+            positions.push_back(*r_it);
+        }
+    }
+
+    if (positions.empty())
+        return (true);
+
+    mon->target = positions[random2(positions.size())];
+
+    ASSERT(in_bounds(mon->target));
+    return (false);
+}
+
+// Returns true if a movement target still needs to be set
+static bool _herd_wander_target(monster * mon)
+{
+    std::vector<monster_iterator> friends;
+    std::map<int, std::vector<coord_def> > distance_positions;
+
+    int dist_thresh = LOS_RADIUS + HERD_COMFORT_RANGE;
+
+    for (monster_iterator mit; mit; ++mit)
+    {
+        if (mit->mindex() == mon->mindex()
+            || mons_genus(mit->type) != mons_genus(mon->type)
+            || grid_distance(mit->pos(), mon->pos()) > dist_thresh)
+        {
+            continue;
+        }
+
+        friends.push_back(mit);
+    }
+
+    if (friends.empty())
+        return (true);
+
+    for (radius_iterator r_it(mon->get_los_no_trans(), true) ; r_it; ++r_it)
+    {
+        if (!in_bounds(*r_it))
+            continue;
+
+        int count = 0;
+        for (unsigned i = 0; i < friends.size(); i++)
+        {
+            if (grid_distance(friends[i]->pos(), *r_it) < HERD_COMFORT_RANGE
+                && friends[i]->see_cell_no_trans(*r_it))
+            {
+                count++;
+            }
+        }
+        if (count > 0)
+            distance_positions[count].push_back(*r_it);
+    }
+    std::map<int, std::vector<coord_def> >::reverse_iterator back =
+        distance_positions.rbegin();
+
+    if (back == distance_positions.rend())
+        return (true);
+
+    mon->target = back->second[random2(back->second.size())];
+    return (false);
+}
+
+static bool _herd_ok(monster * mon)
+{
+    bool in_bounds = false;
+    bool intermediate_range = false;
+    int intermediate_thresh = LOS_RADIUS + HERD_COMFORT_RANGE;
+
+    for (monster_iterator mit(mon); mit; ++mit)
+    {
+        if (mit->mindex() == mon->mindex())
+            continue;
+
+        if (mons_genus(mit->type) == mons_genus(mon->type) )
+        {
+            int g_dist = grid_distance(mit->pos(), mon->pos());
+            if (g_dist < HERD_COMFORT_RANGE
+                && mon->see_cell_no_trans(mit->pos()))
+            {
+                in_bounds = true;
+                break;
+            }
+            else if (g_dist < intermediate_thresh)
+            {
+                intermediate_range = true;
+            }
+        }
+    }
+
+    return (in_bounds || !intermediate_range);
+}
+
+// Return true if we don't have to do anything to keep within an ok distance
+// of our band leader. (If no leader exists we don't have to do anything).
+static bool _band_ok(monster * mon)
+{
+    // Don't have to worry about being close to the leader if no leader can be
+    // found.
+    monster * leader = _active_band_leader(mon);
+
+    if (!leader)
+        return (true);
+
+    int g_dist = grid_distance(leader->pos(), mon->pos());
+
+    // If in range, or sufficiently out of range we can just wander around for
+    // a while longer.
+    if (g_dist < HERD_COMFORT_RANGE && mon->see_cell_no_trans(leader->pos())
+        || g_dist >= (LOS_RADIUS + HERD_COMFORT_RANGE))
+    {
+        return (true);
+    }
+
+    return (false);
+}
+
+
+void check_wander_target(monster* mon, bool isPacified)
 {
     // default wander behaviour
     if (mon->pos() == mon->target
-        || mons_is_batty(mon) || !isPacified && one_chance_in(20))
+        || mons_is_batty(mon) || !isPacified && one_chance_in(20)
+        || herd_monster(mon) && !_herd_ok(mon)
+        || !_band_ok(mon))
     {
         bool need_target = true;
 
-        if (!can_move)
-        {
-            can_move = (mons_amphibious(mon) ? DNGN_DEEP_WATER
-                                             : DNGN_SHALLOW_WATER);
-        }
-
         if (mon->is_travelling())
-            need_target = _handle_monster_travelling(mon, can_move);
+            need_target = _handle_monster_travelling(mon);
 
         // If we still need a target because we're not travelling
         // (any more), check for patrol routes instead.
         if (need_target && mon->is_patrolling())
             need_target = _handle_monster_patrolling(mon);
+
+        if (need_target && herd_monster(mon))
+            need_target = _herd_wander_target(mon);
+
+        if (need_target
+            && _active_band_leader(mon) != NULL)
+        {
+            need_target = _band_wander_target(mon);
+        }
 
         // XXX: This is really dumb wander behaviour... instead of
         // changing the goal square every turn, better would be to

@@ -16,11 +16,11 @@ Buggy
 %%%%
 Zin
 
-Zin is a God for those focused on inner strength. Followers must remain pure of body and soul, refraining from unholy, evil, unclean or chaotic magic; the use of mutations and the consumption of intelligent beings' flesh. They may preach to or imprison the unenlightened, and can ultimately gain a divine refuge. Zin values selflessness and long-standing faith. Zin's followers can safely convert to Elyvilon and the Shining One.
+Zin is a God for those focused on inner strength. Followers must remain pure of body and soul, refraining from unholy, evil, unclean or chaotic magic; the use of mutations and the consumption of intelligent beings' flesh. They may preach to or imprison the unenlightened, and can ultimately gain a divine refuge. Zin values selflessness, demanding a tithe of 1/10 of all gold gained, preferably followed by donations of more. Zin's followers can safely convert to Elyvilon and the Shining One.
 %%%%
 The Shining One
 
-The Shining One is a powerful deity on a crusade against all evil. Followers and their allies may be granted various blessings upon mercilessly slaying evil and unholy beings. Worshippers must never use unholy or evil magic, and are expected to prove their moral superiority by fighting honourably. Long-standing persistence is appreciated. The Shining One does not mind shifting worship to Elyvilon or Zin.
+The Shining One is a powerful deity on a crusade against all evil. Followers and their allies may be granted various blessings upon mercilessly slaying evil and unholy beings. Worshippers must never use unholy or evil magic, and are expected to prove their moral superiority by fighting honourably. The God demands followers to scour the world, examining all of its inhabitants for traces of evil that must be eradicated. The Shining One does not mind shifting worship to Elyvilon or Zin.
 %%%%
 Kikubaaqudgha
 
@@ -44,7 +44,7 @@ Okawaru is a dangerous and powerful God of battle. Followers can gain a number o
 %%%%
 Makhleb
 
-Makhleb the Destroyer is a fearsome God of chaos and violent death. Followers, who must constantly appease Makhleb with blood, stand to gain various powers of death and destruction. The Destroyer is evil, and appreciates sacrifices of corpses.
+Makhleb the Destroyer is a fearsome deity of bloodshed and mortification of the flesh. Followers are expected to cleanse others by inflicting suffering and death on them in Makhleb's name, and can gain further favour by ravaging the freshly dead. Dedicated followers may also access the raw energies and hell-spawned servants of chaos, so that they may better break the impure world and its false laws for this evil God's glory.
 %%%%
 Sif Muna
 
@@ -60,7 +60,7 @@ Nemelex is a strange and unpredictable trickster God, whose powers can be invoke
 %%%%
 Elyvilon
 
-Elyvilon the Healer welcomes all good souls who are prepared for long worship and devotion. Those individuals can expect to gain powerful healing abilities. The Healer prefers a creed of pacifism, and helps worshippers avoid bloodshed. Elyvilon appreciates the destruction of weapons. Being a good God, Elyvilon does not mind if worshippers shift to one of the two allied Gods, Zin or the Shining One.
+Elyvilon the Healer welcomes all good souls who are prepared to help others. Those individuals can expect to gain powerful healing abilities. The Healer prefers a creed of pacifism, and helps worshippers avoid bloodshed. Elyvilon appreciates the destruction of weapons. Elyvilon does not mind if worshippers shift to Zin or the Shining One.
 %%%%
 Lugonu
 
@@ -76,7 +76,7 @@ Fedhas Madash is the god of plant and fungal life. Fedhas demands that followers
 %%%%
 Cheibriados
 
-Cheibriados is a god who meditates on the mystery of time. Those who choose to follow this god's path will learn to eschew unnecessary haste, slowing down both themselves and others, and hurt those who refuse to slow down. Especially devout followers may even temporarily abandon the flow of time and its needless disturbances.
+Cheibriados is a god who meditates on the mystery of time. Those who choose to follow this deity's path will learn to eschew unnecessary haste, slow down both themselves and others, and hurt those who refuse to slow down. Especially devout followers may even temporarily abandon the flow of time and its needless disturbances.
 %%%%
 Ashenzari
 
@@ -84,11 +84,11 @@ While it seems inconceivable that the divine could be shackled, Ashenzari is jus
 %%%%
 Jiyva
 
-Jiyva is the chaotic ancient deity of the slimes. Followers are expected to support the spread and satiation of their fellow slimes by allowing them to consume items and are forbidden from harming any slimes. Especially favoured followers will become as shapeless as their god, as their attributes and mutations shift around under Jiyva's influence.
+Jiyva is the chaotic ancient deity of the slimes. Followers are expected to support the spread and satiation of their fellow slimes by allowing them to consume items and are forbidden from harming any slimes. Jiyva will even occasionally consume items left elsewhere in the Dungeon by followers. Especially favoured followers will become as shapeless as their god, as their attributes and mutations shift around under Jiyva's influence.
 %%%%
 Zin powers
 
-Zin grants followers the ability to preach to the unenlightened masses. With sufficient piety, a starving follower can pray for nutrition. Later, followers will gain powers to purify and strengthen their bodies, and can eventually find temporary safety in a divine refuge. As piety grows, followers will be protected from disease, miasma, mutation and rotting. Apart from that, Zin may occasionally directly intervene to save a follower's life.
+Zin grants followers the ability to preach to the unenlightened masses, and powers to vitalise their bodies and gain divine stamina, protecting them from various afflictions. Later, followers gain the ability to imprison their foes temporarily. Followers can eventually find temporary safety in a divine refuge. As piety grows, followers will be protected from mutation, and Zin may even occasionally directly intervene to save a follower's life.
 %%%%
 The Shining One powers
 
@@ -100,21 +100,23 @@ Kikubaaqudgha will send corpses to followers, enhance servants' necromantic prow
 %%%%
 Yredelemnul powers
 
-Yredelemnul gives you the power to raise skeletons and corpses to fight on your side, to recall your undead followers to your vicinity, and to heal hit points by draining the life force of living creatures. Eventually, you'll gain the power to bind a monster's soul, and make it fight for you instead. Yredelemnul will sporadically gift you with stronger undead servants. Under prayer, with sufficient piety, Yredelemnul will mirror any injury you have to suffer onto the attacker.
+Yredelemnul gives you the power to raise skeletons and corpses to fight on your side, to recall your undead followers to your vicinity, and to heal hit points by draining the life force of living creatures. Eventually, you'll gain the power to bind a monster's soul, and make it fight for you instead. Yredelemnul will sporadically gift you with stronger undead servants. Also, with sufficient piety, Yredelemnul will mirror any injury you have to suffer onto the attacker.
 %%%%
 Xom powers
 
 To worship Xom is to live riskily. In a good mood Xom may shower you with gifts, while at other times this capricious god could decide to "spice things up a little" and send you to your doom. If you prove yourself the stronger, so much the better; if not, well, there'll be other playthings...
 %%%%
-# no active powers of Vehumet
+Vehumet powers
+
+Worshippers of Vehumet will quickly be able to recover their magical energy upon killing beings. As they gain favour, they will also gain various enhancements to their destructive spells - firstly, assistance in casting such spells; then increased range for conjurations; and finally a lowered cost for casting higher level destructive spells. Eventually, Vehumet will gift followers rare books of destructive magic.
 %%%%
 Okawaru powers
 
-Followers will soon gain the ability to temporarily increase their strength, and, much later, to haste themselves. Okawaru will eventually gift followers with weapons and armour.
+Followers will soon gain the ability to temporarily increase their skills in combat, and, much later, to deal much faster blows. Okawaru will eventually gift followers with weapons and armour.
 %%%%
 Makhleb powers
 
-Makhleb offers followers various means to inflict immense damage, and to call in help from powerful demons. They will gain power upon killing beings.
+Makhleb offers followers various means to inflict immense damage, and to call in help from powerful demons, although these powers come with a price in blood. However, Makhleb will grant followers renewed health in return for killing beings of all kinds.
 %%%%
 Sif Muna powers
 
@@ -130,7 +132,7 @@ The Trickster's followers gain various ways to influence fate when playing cards
 %%%%
 Elyvilon powers
 
-The healer god offers followers means to heal themselves from damage and other ill effects. Elyvilon also allows healing of hostile monsters, trying to turn them neutral. The healer god may directly intervene to save a follower's life, at a cost of piety. Praying and highly pious followers can be sure of such aid.
+The Healer offers followers means to heal themselves from damage and other ill effects. Elyvilon also allows healing of hostile monsters, trying to turn them neutral. Elyvilon may directly intervene to save a follower's life, especially when called upon; highly pious followers can be sure of such aid.
 %%%%
 Lugonu powers
 
@@ -142,17 +144,145 @@ Beogh encourages followers to make use of orcish gear found in the dungeon. Foll
 %%%%
 Fedhas powers
 
-Plants and fungi will not attack Fedhas worshippers without provocation. Fedhas worshippers may walk through plants or fungi, and even fire missiles or spells through them without causing harm. Fedhas grants the ability to promote plants and fungi into stronger species. Followers can eventually grow a wall of plants and create explosive spores from corpses. Followers are granted some control over the weather; they may call sunlight and eventually rainstorms.
+Plants and fungi will not attack Fedhas' worshippers without provocation. Fedhas' worshippers may walk through plants or fungi, and even fire missiles or spells through them without causing harm. Fedhas grants the ability to promote plants and fungi into stronger species. Followers can eventually grow a wall of plants and create explosive spores from corpses. They are also granted some control over the weather, being able to call sunlight and eventually rainstorms.
 %%%%
 Cheibriados powers
 
-Followers are rewarded for moving slowly and killing creatures which are faster than they are. Moving too quickly or using magically hastened weapons is frowned upon. Cheibriados rewards the faithful with a slowed metabolism, the power to slow other creatures, the power to harm those who move more quickly than you do and, finally, the ability to step out of the flow of time.
+Followers of Cheibriados move more slowly as they gain favour, and are rewarded for killing creatures which are faster than they are. Moving too quickly or using magically hastened weapons is frowned upon. Cheibriados rewards the faithful with a slowed metabolism, the power to slow other creatures, the power to harm those who move more quickly than they do, and, finally, the ability to step out of the flow of time.
 %%%%
 Jiyva powers
 
-Followers can request a jelly from Jiyva, turn monsters to slime, and eventually remove their harmful mutations. As their piety grows, Jiyva will, with increasing frequency, drop jellies into the dungeon, rearrange their attributes to favour the attribute last chosen when gaining an experience level, and grant mutation gifts. All slimes will never harm a follower of Jiyva, and Jiyva demands that worshippers do the same. Eventually, all visible slimes will join in on a prayer, preventing them from moving for a while.
+Jiyva's followers can request jellies, turn monsters to slime, and eventually remove their harmful mutations. As their piety grows, Jiyva will, with increasing frequency, drop jellies into the dungeon, rearrange followers' attributes to favour the attribute last chosen when gaining an experience level, and grant mutation gifts. Slimes will never harm a follower of Jiyva, and Jiyva demands the same conduct in return. Eventually, all visible slimes will join in on prayers, preventing them from moving for awhile.
 %%%%
 Ashenzari powers
 
-Ashenzari exhorts his followers to garb themselves with curses, rewarding followers for time spent using cursed armour, jewelry, or weapons. Ashenzari's ultimate desire, however, is not for the devotion of his followers but for knowledge of all things. Pious followers willing to part with a portion of their knowledge will receive a great portion of Ashenzari's in return.
+Ashenzari exhorts followers to garb themselves with curses, and provides rewards for time spent using cursed armour, jewelry or weapons. Ashenzari's ultimate desire, however, is not for devotion but the knowledge of all things. Pious worshippers willing to part with a portion of their knowledge will receive a great portion of Ashenzari's in return.
+%%%%
+Zin lastname
+
+Zin the Law-Giver
+%%%%
+Yredelemnul lastname
+
+Yredelemnul the Dark
+%%%%
+Okawaru lastname
+
+Warmaster Okawaru
+%%%%
+Makhleb lastname
+
+Makhleb the Destroyer
+%%%%
+Sif Muna lastname
+
+Sif Muna the Loreminder
+%%%%
+Trog lastname
+
+Trog the Wrathful
+%%%%
+Elyvilon lastname
+
+Elyvilon the Healer
+%%%%
+Lugonu lastname
+
+Lugonu the Unformed
+%%%%
+Beogh lastname
+
+Beogh the Brigand
+%%%%
+Fedhas lastname
+
+Fedhas Madash
+%%%%
+Cheibriados lastname
+
+Cheibriados the Contemplative
+%%%%
+Ashenzari lastname
+
+Ashenzari the Shackled
+%%%%
+Xom lastname
+
+w:280
+Xom of Chaos
+
+w:5
+Xom the Random
+
+w:5
+Xom the Random Number God
+
+Xom the Tricky
+
+w:5
+Xom the Less-Predictable
+
+w:5
+Xom the Unpredictable
+
+Xom of Many Doors
+
+Xom the Capricious
+
+w:5
+Xom of Bloodstained Whimsey
+
+w:5
+Xom of Enforced Whimsey
+
+Xom of Bone-Dry Humour
+
+w:5
+Xom of Malevolent Giggling
+
+w:5
+Xom of Malicious Giggling
+
+w:5
+Xom the Psychotic
+
+w:5
+Xom the Psychopath
+
+w:2
+Xom of Gnomic Intent
+
+w:2
+Xom of Ineffable Intent
+
+w:2
+Xom of Fickle Intent
+
+w:2
+Xom of Swiftly Tilting Intent
+
+w:2
+Xom of Unknown Intent
+
+Xom the Fickle
+
+Xom of Unknown Intention
+
+w:4
+The Xom-Meister
+
+w:2
+The Xom-Meister, Xom-a-lom-a-ding-dong
+
+w:2
+The Xom-Meister, Xom-o-Rama
+
+w:2
+The Xom-Meister, Xom-Xom-bo-Bom, Banana-Fana-fo-Fom
+
+w:5
+Xom the Begetter of Turbulence
+
+w:5
+Xom the Begetter of Discontinuities
 %%%%

@@ -1,12 +1,6 @@
-/*
- *  File:       tilereg-menu.cc
- *
- *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
- */
-
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "tilereg-menu.h"
 
@@ -185,7 +179,7 @@ void MenuRegion::place_entries()
 
             int entry_height;
 
-            if (m_entries[i].tiles.size() > 0)
+            if (!m_entries[i].tiles.empty())
             {
                 m_entries[i].sx = entry_start + tile_indent;
                 entry_height = std::max(max_tile_height, text_height);
@@ -226,10 +220,13 @@ void MenuRegion::place_entries()
                 if (let && plus && unfm[0] == ' ' && unfm[2] == ' '
                     && unfm[4] == ' ')
                 {
-                    formatted_string header = m_entries[i].text.substr(0, 5);
+                    formatted_string header = m_entries[i].text.chop(5);
                     m_font_buf.add(header, text_sx, text_sy);
                     text_sx += m_font_entry->string_width(header);
-                    text = m_entries[i].text.substr(5);
+                    text = m_entries[i].text;
+                    // remove hotkeys.  As Enne said above, this is a monstrosity.
+                    for (int k = 0; k < 5; k++)
+                        text.del_char();
                 }
                 else
                 {
@@ -328,7 +325,7 @@ void MenuRegion::set_entry(int idx, const std::string &str, int colour,
 
     e.heading  = (me->level == MEL_TITLE || me->level == MEL_SUBTITLE);
     e.selected = me->selected();
-    e.key      = me->hotkeys.size() > 0 ? me->hotkeys[0] : 0;
+    e.key      = !me->hotkeys.empty() ? me->hotkeys[0] : 0;
     e.sx = e.sy = e.ex = e.ey = 0;
     e.tiles.clear();
     me->get_tiles(e.tiles);

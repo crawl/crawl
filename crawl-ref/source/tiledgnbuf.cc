@@ -1,10 +1,4 @@
-/*
- *  File:       tiledgnbuf.cc
- */
-
 #include "AppHdr.h"
-
-#ifdef USE_TILE
 
 #include "tiledgnbuf.h"
 
@@ -15,6 +9,8 @@
 #include "player.h"
 #include "terrain.h"
 #include "tiledef-dngn.h"
+#include "tiledef-icons.h"
+#include "tiledef-main.h"
 #include "tiledef-player.h"
 #include "tiledoll.h"
 #include "tilemcache.h"
@@ -25,10 +21,14 @@ DungeonCellBuffer::DungeonCellBuffer(ImageManager *im) :
     m_buf_floor(&im->m_textures[TEX_FLOOR]),
     m_buf_wall(&im->m_textures[TEX_WALL]),
     m_buf_feat(&im->m_textures[TEX_FEAT]),
+    m_buf_feat_trans(&im->m_textures[TEX_FEAT], 17),
     m_buf_doll(&im->m_textures[TEX_PLAYER], 17),
     m_buf_main_trans(&im->m_textures[TEX_DEFAULT], 17),
     m_buf_main(&im->m_textures[TEX_DEFAULT]),
-    m_buf_spells(&im->m_textures[TEX_GUI])
+    m_buf_spells(&im->m_textures[TEX_GUI]),
+    m_buf_skills(&im->m_textures[TEX_GUI]),
+    m_buf_commands(&im->m_textures[TEX_GUI]),
+    m_buf_icons(&im->m_textures[TEX_ICONS])
 {
 }
 
@@ -37,8 +37,8 @@ static bool _in_water(const packed_cell &cell)
     return ((cell.bg & TILE_FLAG_WATER) && !(cell.fg & TILE_FLAG_FLYING));
 }
 
-static void _lichform_add_weapon(SubmergedTileBuffer &buf, int x, int y,
-                                 bool in_water)
+static void _transform_add_weapon(SubmergedTileBuffer &buf, int x, int y,
+                                  bool in_water)
 {
     const int item = you.equip[EQ_WEAPON];
     if (item == -1)
@@ -72,16 +72,21 @@ void DungeonCellBuffer::add(const packed_cell &cell, int x, int y)
     }
     else if (fg_idx >= TILE_MAIN_MAX)
     {
-        m_buf_doll.add(fg_idx, x, y, 0, in_water, false);
-        if (fg_idx == TILEP_TRAN_LICH)
-            _lichform_add_weapon(m_buf_doll, x, y, in_water);
+        m_buf_doll.add(fg_idx, x, y, TILEP_PART_MAX, in_water, false);
+        if (fg_idx >= TILEP_TRAN_LICH_EQUIP_FIRST
+                && fg_idx <= TILEP_TRAN_LICH_EQUIP_LAST
+            || fg_idx >= TILEP_TRAN_STATUE_EQUIP_FIRST
+                && fg_idx <= TILEP_TRAN_STATUE_EQUIP_LAST)
+        {
+            _transform_add_weapon(m_buf_doll, x, y, in_water);
+        }
     }
 
     pack_foreground(x, y, cell);
-
 }
 
-void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y)
+void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y,
+                                      bool in_water)
 {
     assert(tileidx < TILE_FEAT_MAX);
 
@@ -89,6 +94,8 @@ void DungeonCellBuffer::add_dngn_tile(int tileidx, int x, int y)
         m_buf_floor.add(tileidx, x, y);
     else if (tileidx < TILE_WALL_MAX)
         m_buf_wall.add(tileidx, x, y);
+    else if (in_water)
+        m_buf_feat_trans.add(tileidx, x, y, 0, true, false);
     else
         m_buf_feat.add(tileidx, x, y);
 }
@@ -116,15 +123,40 @@ void DungeonCellBuffer::add_spell_tile(int tileidx, int x, int y)
     m_buf_spells.add(tileidx, x, y);
 }
 
+void DungeonCellBuffer::add_skill_tile(int tileidx, int x, int y)
+{
+    m_buf_skills.add(tileidx, x, y);
+}
+
+void DungeonCellBuffer::add_command_tile(int tileidx, int x, int y)
+{
+    m_buf_commands.add(tileidx, x, y);
+}
+
+void DungeonCellBuffer::add_icons_tile(int tileidx, int x, int y)
+{
+    m_buf_icons.add(tileidx, x, y);
+}
+
+void DungeonCellBuffer::add_icons_tile(int tileidx, int x, int y,
+                                       int ox, int oy)
+{
+    m_buf_icons.add(tileidx, x, y, ox, oy, false);
+}
+
 void DungeonCellBuffer::clear()
 {
     m_buf_floor.clear();
     m_buf_wall.clear();
     m_buf_feat.clear();
+    m_buf_feat_trans.clear();
     m_buf_doll.clear();
     m_buf_main_trans.clear();
     m_buf_main.clear();
     m_buf_spells.clear();
+    m_buf_skills.clear();
+    m_buf_commands.clear();
+    m_buf_icons.clear();
 }
 
 void DungeonCellBuffer::draw()
@@ -132,312 +164,46 @@ void DungeonCellBuffer::draw()
     m_buf_floor.draw();
     m_buf_wall.draw();
     m_buf_feat.draw();
-    m_buf_doll.draw();
+    m_buf_feat_trans.draw();
     m_buf_main_trans.draw();
     m_buf_main.draw();
+    m_buf_doll.draw();
+    m_buf_skills.draw();
     m_buf_spells.draw();
+    m_buf_commands.draw();
+    m_buf_icons.draw();
 }
 
-enum wave_type
+void DungeonCellBuffer::add_blood_overlay(int x, int y, const packed_cell &cell,
+                                          bool is_wall)
 {
-    WV_NONE = 0,
-    WV_SHALLOW,
-    WV_DEEP,
-};
-
-wave_type _get_wave_type(bool shallow)
-{
-    return (shallow ? WV_SHALLOW : WV_DEEP);
-}
-
-static void _add_overlay(int tileidx, packed_cell *cell)
-{
-    cell->dngn_overlay[cell->num_dngn_overlay++] = tileidx;
-}
-
-static void _pack_shoal_waves(const coord_def &gc, packed_cell *cell)
-{
-    // Add wave tiles on floor adjacent to shallow water.
-    const dungeon_feature_type feat = env.map_knowledge(gc).feat();
-    const bool feat_has_ink = (cloud_type_at(coord_def(gc)) == CLOUD_INK);
-
-    if (feat == DNGN_DEEP_WATER && feat_has_ink)
+    if (cell.is_liquefied)
     {
-        _add_overlay(TILE_WAVE_INK_FULL, cell);
-        return;
+        int offset = cell.flv.special % tile_dngn_count(TILE_LIQUEFACTION);
+        m_buf_feat.add(TILE_LIQUEFACTION + offset, x, y);
     }
-
-    if (feat != DNGN_FLOOR && feat != DNGN_UNDISCOVERED_TRAP
-        && feat != DNGN_SHALLOW_WATER && feat != DNGN_DEEP_WATER)
+    else if (cell.is_bloody)
     {
-        return;
-    }
-
-    const bool ink_only = (feat == DNGN_DEEP_WATER);
-
-    wave_type north = WV_NONE, south = WV_NONE,
-              east = WV_NONE, west = WV_NONE,
-              ne = WV_NONE, nw = WV_NONE,
-              se = WV_NONE, sw = WV_NONE;
-
-    bool inkn = false, inks = false, inke = false, inkw = false,
-         inkne = false, inknw = false, inkse = false, inksw = false;
-
-    for (radius_iterator ri(gc, 1, true, false, true); ri; ++ri)
-    {
-        if (!env.map_knowledge(*ri).seen() && !env.map_knowledge(*ri).mapped())
-            continue;
-
-        const bool ink = (cloud_type_at(coord_def(*ri)) == CLOUD_INK);
-
-        bool shallow = false;
-        if (env.map_knowledge(*ri).feat() == DNGN_SHALLOW_WATER)
+        tileidx_t basetile;
+        if (is_wall)
         {
-            // Adjacent shallow water is only interesting for
-            // floor cells.
-            if (!ink && feat == DNGN_SHALLOW_WATER)
-                continue;
-
-            shallow = true;
+            basetile = TILE_WALL_BLOOD_S + tile_dngn_count(TILE_WALL_BLOOD_S)
+                                           * cell.blood_rotation;
         }
-        else if (env.map_knowledge(*ri).feat() != DNGN_DEEP_WATER)
-            continue;
-
-        if (!ink_only)
-        {
-            if (ri->x == gc.x) // orthogonals
-            {
-                if (ri->y < gc.y)
-                    north = _get_wave_type(shallow);
-                else
-                    south = _get_wave_type(shallow);
-            }
-            else if (ri->y == gc.y)
-            {
-                if (ri->x < gc.x)
-                    west = _get_wave_type(shallow);
-                else
-                    east = _get_wave_type(shallow);
-            }
-            else // diagonals
-            {
-                if (ri->x < gc.x)
-                {
-                    if (ri->y < gc.y)
-                        nw = _get_wave_type(shallow);
-                    else
-                        sw = _get_wave_type(shallow);
-                }
-                else
-                {
-                    if (ri->y < gc.y)
-                        ne = _get_wave_type(shallow);
-                    else
-                        se = _get_wave_type(shallow);
-                }
-            }
-        }
-        if (!feat_has_ink && ink)
-        {
-            if (ri->x == gc.x) // orthogonals
-            {
-                if (ri->y < gc.y)
-                    inkn = true;
-                else
-                    inks = true;
-            }
-            else if (ri->y == gc.y)
-            {
-                if (ri->x < gc.x)
-                    inkw = true;
-                else
-                    inke = true;
-            }
-            else // diagonals
-            {
-                if (ri->x < gc.x)
-                {
-                    if (ri->y < gc.y)
-                        inknw = true;
-                    else
-                        inksw = true;
-                }
-                else
-                {
-                    if (ri->y < gc.y)
-                        inkne = true;
-                    else
-                        inkse = true;
-                }
-            }
-        }
+        else
+            basetile = TILE_BLOOD;
+        const int offset = cell.flv.special % tile_dngn_count(basetile);
+        m_buf_feat.add(basetile + offset, x, y);
     }
-
-    if (!ink_only)
+    else if (cell.is_moldy)
     {
-        // First check for shallow water.
-        if (north == WV_SHALLOW)
-            _add_overlay(TILE_WAVE_N, cell);
-        if (south == WV_SHALLOW)
-            _add_overlay(TILE_WAVE_S, cell);
-        if (east == WV_SHALLOW)
-            _add_overlay(TILE_WAVE_E, cell);
-        if (west == WV_SHALLOW)
-            _add_overlay(TILE_WAVE_W, cell);
-
-        // Then check for deep water, overwriting shallow
-        // corner waves, if necessary.
-        if (north == WV_DEEP)
-            _add_overlay(TILE_WAVE_DEEP_N, cell);
-        if (south == WV_DEEP)
-            _add_overlay(TILE_WAVE_DEEP_S, cell);
-        if (east == WV_DEEP)
-            _add_overlay(TILE_WAVE_DEEP_E, cell);
-        if (west == WV_DEEP)
-            _add_overlay(TILE_WAVE_DEEP_W, cell);
-
-        if (ne == WV_SHALLOW && !north && !east)
-            _add_overlay(TILE_WAVE_CORNER_NE, cell);
-        else if (ne == WV_DEEP && north != WV_DEEP && east != WV_DEEP)
-            _add_overlay(TILE_WAVE_DEEP_CORNER_NE, cell);
-        if (nw == WV_SHALLOW && !north && !west)
-            _add_overlay(TILE_WAVE_CORNER_NW, cell);
-        else if (nw == WV_DEEP && north != WV_DEEP && west != WV_DEEP)
-            _add_overlay(TILE_WAVE_DEEP_CORNER_NW, cell);
-        if (se == WV_SHALLOW && !south && !east)
-            _add_overlay(TILE_WAVE_CORNER_SE, cell);
-        else if (se == WV_DEEP && south != WV_DEEP && east != WV_DEEP)
-            _add_overlay(TILE_WAVE_DEEP_CORNER_SE, cell);
-        if (sw == WV_SHALLOW && !south && !west)
-            _add_overlay(TILE_WAVE_CORNER_SW, cell);
-        else if (sw == WV_DEEP && south != WV_DEEP && west != WV_DEEP)
-            _add_overlay(TILE_WAVE_DEEP_CORNER_SW, cell);
+        int offset = cell.flv.special % tile_dngn_count(TILE_MOLD);
+        m_buf_feat.add(TILE_MOLD + offset, x, y);
     }
-
-    // Overlay with ink sheen, if necessary.
-    if (feat_has_ink)
-        _add_overlay(TILE_WAVE_INK_FULL, cell);
-    else
+    else if (cell.glowing_mold)
     {
-        if (inkn)
-            _add_overlay(TILE_WAVE_INK_N, cell);
-        if (inks)
-            _add_overlay(TILE_WAVE_INK_S, cell);
-        if (inke)
-            _add_overlay(TILE_WAVE_INK_E, cell);
-        if (inkw)
-            _add_overlay(TILE_WAVE_INK_W, cell);
-        if (inkne || inkn || inke)
-            _add_overlay(TILE_WAVE_INK_CORNER_NE, cell);
-        if (inknw || inkn || inkw)
-            _add_overlay(TILE_WAVE_INK_CORNER_NW, cell);
-        if (inkse || inks || inke)
-            _add_overlay(TILE_WAVE_INK_CORNER_SE, cell);
-        if (inksw || inks || inkw)
-            _add_overlay(TILE_WAVE_INK_CORNER_SW, cell);
-    }
-}
-
-static dungeon_feature_type _safe_feat(coord_def gc)
-{
-    if (!map_bounds(gc))
-        return (DNGN_UNSEEN);
-
-    return (env.map_knowledge(gc).feat());
-}
-
-static bool _is_seen_land(coord_def gc)
-{
-    dungeon_feature_type feat = _safe_feat(gc);
-    return (feat != DNGN_UNSEEN && !feat_is_water(feat) && feat != DNGN_LAVA);
-}
-
-static bool _is_seen_shallow(coord_def gc)
-{
-    return (_safe_feat(gc) == DNGN_SHALLOW_WATER);
-}
-
-static void _pack_default_waves(const coord_def &gc, packed_cell *cell)
-{
-    // Any tile on water with an adjacent solid tile will get an extra
-    // bit of shoreline.
-    const dungeon_feature_type feat = env.map_knowledge(gc).feat();
-    if (!feat_is_water(feat) && feat != DNGN_LAVA || env.grid_colours(gc))
-        return;
-
-    if (feat == DNGN_DEEP_WATER)
-    {
-        if (_is_seen_shallow(coord_def(gc.x, gc.y - 1)))
-            _add_overlay(TILE_DNGN_WAVE_N, cell);
-        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y - 1)))
-            _add_overlay(TILE_DNGN_WAVE_NE, cell);
-        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y)))
-            _add_overlay(TILE_DNGN_WAVE_E, cell);
-        if (_is_seen_shallow(coord_def(gc.x + 1, gc.y + 1)))
-            _add_overlay(TILE_DNGN_WAVE_SE, cell);
-        if (_is_seen_shallow(coord_def(gc.x, gc.y + 1)))
-            _add_overlay(TILE_DNGN_WAVE_S, cell);
-        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y + 1)))
-            _add_overlay(TILE_DNGN_WAVE_SW, cell);
-        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y)))
-            _add_overlay(TILE_DNGN_WAVE_W, cell);
-        if (_is_seen_shallow(coord_def(gc.x - 1, gc.y - 1)))
-            _add_overlay(TILE_DNGN_WAVE_NW, cell);
-    }
-
-
-    bool north = _is_seen_land(coord_def(gc.x, gc.y - 1));
-    bool west  = _is_seen_land(coord_def(gc.x - 1, gc.y));
-    bool east  = _is_seen_land(coord_def(gc.x + 1, gc.y));
-
-    if (north || west || east)
-    {
-        if (north)
-            _add_overlay(TILE_SHORE_N, cell);
-        if (west)
-            _add_overlay(TILE_SHORE_W, cell);
-        if (east)
-            _add_overlay(TILE_SHORE_E, cell);
-        if (north && west)
-            _add_overlay(TILE_SHORE_NW, cell);
-        if (north && east)
-            _add_overlay(TILE_SHORE_NE, cell);
-    }
-}
-
-static bool _is_seen_wall(coord_def gc)
-{
-    dungeon_feature_type feat = _safe_feat(gc);
-    return (feat != DNGN_UNSEEN && feat <= DNGN_MAXWALL);
-}
-
-static void _pack_wall_shadows(const coord_def &gc, packed_cell *cell)
-{
-    if (_is_seen_wall(gc))
-        return;
-
-    if (_is_seen_wall(coord_def(gc.x - 1, gc.y)))
-        _add_overlay(TILE_DNGN_WALL_SHADOW_W, cell);
-    if (_is_seen_wall(coord_def(gc.x - 1, gc.y - 1)))
-        _add_overlay(TILE_DNGN_WALL_SHADOW_NW, cell);
-    if (_is_seen_wall(coord_def(gc.x, gc.y - 1)))
-        _add_overlay(TILE_DNGN_WALL_SHADOW_N, cell);
-    if (_is_seen_wall(coord_def(gc.x + 1, gc.y - 1)))
-        _add_overlay(TILE_DNGN_WALL_SHADOW_NE, cell);
-    if (_is_seen_wall(coord_def(gc.x + 1, gc.y)))
-        _add_overlay(TILE_DNGN_WALL_SHADOW_E, cell);
-}
-
-void pack_cell_overlays(const coord_def &gc, packed_cell *cell)
-{
-    if (player_in_branch(BRANCH_SHOALS))
-    {
-        _pack_shoal_waves(gc, cell);
-    }
-    else
-    {
-        _pack_default_waves(gc, cell);
-        _pack_wall_shadows(gc, cell);
+        int offset = cell.flv.special % tile_dngn_count(TILE_GLOWING_MOLD);
+        m_buf_feat.add(TILE_GLOWING_MOLD + offset, x, y);
     }
 }
 
@@ -446,40 +212,64 @@ void DungeonCellBuffer::pack_background(int x, int y, const packed_cell &cell)
     const tileidx_t bg = cell.bg;
     const tileidx_t bg_idx = cell.bg & TILE_FLAG_MASK;
 
+    if (cell.swamp_tree_water && bg_idx > TILE_DNGN_UNSEEN)
+        m_buf_feat.add(TILE_DNGN_SHALLOW_WATER, x, y);
+
     if (bg_idx >= TILE_DNGN_WAX_WALL)
-    {
         add_dngn_tile(cell.flv.floor, x, y);
-    }
-    add_dngn_tile(bg_idx, x, y);
+
+    // Draw blood beneath feature tiles.
+    if (bg_idx > TILE_WALL_MAX)
+        add_blood_overlay(x, y, cell);
+
+    add_dngn_tile(bg_idx, x, y, cell.swamp_tree_water);
 
     if (bg_idx > TILE_DNGN_UNSEEN)
     {
         if (bg & TILE_FLAG_WAS_SECRET)
             m_buf_feat.add(TILE_DNGN_DETECTED_SECRET_DOOR, x, y);
 
-        if (bg & TILE_FLAG_BLOOD)
-        {
-            int offset = cell.flv.special % tile_dngn_count(TILE_BLOOD);
-            m_buf_feat.add(TILE_BLOOD + offset, x, y);
-        }
-        else if (bg & TILE_FLAG_MOLD)
-        {
-            int offset = cell.flv.special % tile_dngn_count(TILE_MOLD);
-            m_buf_feat.add(TILE_MOLD + offset, x, y);
-        }
+        // Draw blood on top of wall tiles.
+        if (bg_idx <= TILE_WALL_MAX)
+            add_blood_overlay(x, y, cell, bg_idx >= TILE_FLOOR_MAX);
 
         for (int i = 0; i < cell.num_dngn_overlay; ++i)
             add_dngn_tile(cell.dngn_overlay[i], x, y);
 
-        if (bg & TILE_FLAG_HALO)
+        if (!(bg & TILE_FLAG_UNSEEN))
+        {
+            if (bg & TILE_FLAG_KRAKEN_NW)
+                m_buf_feat.add(TILE_KRAKEN_OVERLAY_NW, x, y);
+            else if (bg & TILE_FLAG_ELDRITCH_NW)
+                m_buf_feat.add(TILE_ELDRITCH_OVERLAY_NW, x, y);
+            if (bg & TILE_FLAG_KRAKEN_NE)
+                m_buf_feat.add(TILE_KRAKEN_OVERLAY_NE, x, y);
+            else if (bg & TILE_FLAG_ELDRITCH_NE)
+                m_buf_feat.add(TILE_ELDRITCH_OVERLAY_NE, x, y);
+            if (bg & TILE_FLAG_KRAKEN_SE)
+                m_buf_feat.add(TILE_KRAKEN_OVERLAY_SE, x, y);
+            else if (bg & TILE_FLAG_ELDRITCH_SE)
+                m_buf_feat.add(TILE_ELDRITCH_OVERLAY_SE, x, y);
+            if (bg & TILE_FLAG_KRAKEN_SW)
+                m_buf_feat.add(TILE_KRAKEN_OVERLAY_SW, x, y);
+            else if (bg & TILE_FLAG_ELDRITCH_SW)
+                m_buf_feat.add(TILE_ELDRITCH_OVERLAY_SW, x, y);
+        }
+
+        if (cell.halo == HALO_MONSTER)
             m_buf_feat.add(TILE_HALO, x, y);
 
         if (!(bg & TILE_FLAG_UNSEEN))
         {
-            if (bg & TILE_FLAG_SANCTUARY)
+            if (cell.is_sanctuary)
                 m_buf_feat.add(TILE_SANCTUARY, x, y);
-            if (bg & TILE_FLAG_SILENCED)
+            if (cell.is_silenced)
                 m_buf_feat.add(TILE_SILENCED, x, y);
+            if (cell.halo == HALO_RANGE)
+                m_buf_feat.add(TILE_HALO_RANGE, x, y);
+
+            if (cell.orb_glow)
+                m_buf_feat.add(TILE_ORB_GLOW + cell.orb_glow - 1, x, y);
 
             // Apply the travel exclusion under the foreground if the cell is
             // visible.  It will be applied later if the cell is unseen.
@@ -523,122 +313,144 @@ void DungeonCellBuffer::pack_foreground(int x, int y, const packed_cell &cell)
     }
 
     if (fg & TILE_FLAG_NET)
-        m_buf_main.add(TILE_TRAP_NET, x, y);
+        m_buf_icons.add(TILEI_TRAP_NET, x, y);
 
     if (fg & TILE_FLAG_S_UNDER)
-        m_buf_main.add(TILE_SOMETHING_UNDER, x, y);
+        m_buf_icons.add(TILEI_SOMETHING_UNDER, x, y);
 
     int status_shift = 0;
+    if (fg & TILE_FLAG_MIMIC)
+        m_buf_icons.add(TILEI_MIMIC, x, y);
+
     if (fg & TILE_FLAG_BERSERK)
     {
-        m_buf_main.add(TILE_BERSERK, x, y);
+        m_buf_icons.add(TILEI_BERSERK, x, y);
         status_shift += 10;
     }
 
     // Pet mark
-    if (fg & TILE_FLAG_PET)
+    if (fg & TILE_FLAG_ATT_MASK)
     {
-        m_buf_main.add(TILE_HEART, x, y);
-        status_shift += 10;
+        const tileidx_t att_flag = fg & TILE_FLAG_ATT_MASK;
+        if (att_flag == TILE_FLAG_PET)
+        {
+            m_buf_icons.add(TILEI_HEART, x, y);
+            status_shift += 10;
+        }
+        else if (att_flag == TILE_FLAG_GD_NEUTRAL)
+        {
+            m_buf_icons.add(TILEI_GOOD_NEUTRAL, x, y);
+            status_shift += 8;
+        }
+        else if (att_flag == TILE_FLAG_NEUTRAL)
+        {
+            m_buf_icons.add(TILEI_NEUTRAL, x, y);
+            status_shift += 8;
+        }
     }
-    else if (fg & TILE_FLAG_GD_NEUTRAL)
+
+    if (fg & TILE_FLAG_BEH_MASK)
     {
-        m_buf_main.add(TILE_GOOD_NEUTRAL, x, y);
-        status_shift += 8;
-    }
-    else if (fg & TILE_FLAG_NEUTRAL)
-    {
-        m_buf_main.add(TILE_NEUTRAL, x, y);
-        status_shift += 8;
-    }
-    else if (fg & TILE_FLAG_STAB)
-    {
-        m_buf_main.add(TILE_STAB_BRAND, x, y);
-        status_shift += 8;
-    }
-    else if (fg & TILE_FLAG_MAY_STAB)
-    {
-        m_buf_main.add(TILE_MAY_STAB_BRAND, x, y);
-        status_shift += 5;
+        const tileidx_t beh_flag = fg & TILE_FLAG_BEH_MASK;
+        if (beh_flag == TILE_FLAG_STAB)
+        {
+            m_buf_icons.add(TILEI_STAB_BRAND, x, y);
+            status_shift += 15;
+        }
+        else if (beh_flag == TILE_FLAG_MAY_STAB)
+        {
+            m_buf_icons.add(TILEI_MAY_STAB_BRAND, x, y);
+            status_shift += 8;
+        }
+        else if (beh_flag == TILE_FLAG_FLEEING)
+        {
+            m_buf_icons.add(TILEI_FLEEING, x, y);
+            status_shift += 4;
+        }
     }
 
     if (fg & TILE_FLAG_POISON)
     {
-        m_buf_main.add(TILE_POISON, x, y, -status_shift, 0);
+        m_buf_icons.add(TILEI_POISON, x, y, -status_shift, 0);
         status_shift += 5;
     }
-    if (fg & TILE_FLAG_FLAME)
+    if (fg & TILE_FLAG_STICKY_FLAME)
     {
-        m_buf_main.add(TILE_FLAME, x, y, -status_shift, 0);
+        m_buf_icons.add(TILEI_STICKY_FLAME, x, y, -status_shift, 0);
         status_shift += 5;
+    }
+    if (fg & TILE_FLAG_INNER_FLAME)
+    {
+        m_buf_icons.add(TILEI_INNER_FLAME, x, y, -status_shift, 0);
+        status_shift += 8;
     }
 
     if (fg & TILE_FLAG_ANIM_WEP)
-        m_buf_main.add(TILE_ANIMATED_WEAPON, x, y);
+        m_buf_icons.add(TILEI_ANIMATED_WEAPON, x, y);
 
     if (bg & TILE_FLAG_UNSEEN && (bg != TILE_FLAG_UNSEEN || fg))
-        m_buf_main.add(TILE_MESH, x, y);
+        m_buf_icons.add(TILEI_MESH, x, y);
 
     if (bg & TILE_FLAG_OOR && (bg != TILE_FLAG_OOR || fg))
-        m_buf_main.add(TILE_OOR_MESH, x, y);
+        m_buf_icons.add(TILEI_OOR_MESH, x, y);
 
     if (bg & TILE_FLAG_MM_UNSEEN && (bg != TILE_FLAG_MM_UNSEEN || fg))
-        m_buf_main.add(TILE_MAGIC_MAP_MESH, x, y);
+        m_buf_icons.add(TILEI_MAGIC_MAP_MESH, x, y);
 
     // Don't let the "new stair" icon cover up any existing icons, but
     // draw it otherwise.
     if (bg & TILE_FLAG_NEW_STAIR && status_shift == 0)
-        m_buf_main.add(TILE_NEW_STAIR, x, y);
+        m_buf_icons.add(TILEI_NEW_STAIR, x, y);
 
     if (bg & TILE_FLAG_EXCL_CTR && (bg & TILE_FLAG_UNSEEN))
-        m_buf_main.add(TILE_TRAVEL_EXCLUSION_CENTRE_FG, x, y);
+        m_buf_icons.add(TILEI_TRAVEL_EXCLUSION_CENTRE_FG, x, y);
     else if (bg & TILE_FLAG_TRAV_EXCL && (bg & TILE_FLAG_UNSEEN))
-        m_buf_main.add(TILE_TRAVEL_EXCLUSION_FG, x, y);
+        m_buf_icons.add(TILEI_TRAVEL_EXCLUSION_FG, x, y);
 
     // Tutorial cursor takes precedence over other cursors.
     if (bg & TILE_FLAG_TUT_CURSOR)
     {
-        m_buf_main.add(TILE_TUTORIAL_CURSOR, x, y);
+        m_buf_icons.add(TILEI_TUTORIAL_CURSOR, x, y);
     }
     else if (bg & TILE_FLAG_CURSOR)
     {
         int type = ((bg & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR1) ?
-            TILE_CURSOR : TILE_CURSOR2;
+            TILEI_CURSOR : TILEI_CURSOR2;
 
         if ((bg & TILE_FLAG_CURSOR) == TILE_FLAG_CURSOR3)
-           type = TILE_CURSOR3;
+           type = TILEI_CURSOR3;
 
-        m_buf_main.add(type, x, y);
+        m_buf_icons.add(type, x, y);
     }
 
     if (fg & TILE_FLAG_MDAM_MASK)
     {
         tileidx_t mdam_flag = fg & TILE_FLAG_MDAM_MASK;
         if (mdam_flag == TILE_FLAG_MDAM_LIGHT)
-            m_buf_main.add(TILE_MDAM_LIGHTLY_DAMAGED, x, y);
+            m_buf_icons.add(TILEI_MDAM_LIGHTLY_DAMAGED, x, y);
         else if (mdam_flag == TILE_FLAG_MDAM_MOD)
-            m_buf_main.add(TILE_MDAM_MODERATELY_DAMAGED, x, y);
+            m_buf_icons.add(TILEI_MDAM_MODERATELY_DAMAGED, x, y);
         else if (mdam_flag == TILE_FLAG_MDAM_HEAVY)
-            m_buf_main.add(TILE_MDAM_HEAVILY_DAMAGED, x, y);
+            m_buf_icons.add(TILEI_MDAM_HEAVILY_DAMAGED, x, y);
         else if (mdam_flag == TILE_FLAG_MDAM_SEV)
-            m_buf_main.add(TILE_MDAM_SEVERELY_DAMAGED, x, y);
+            m_buf_icons.add(TILEI_MDAM_SEVERELY_DAMAGED, x, y);
         else if (mdam_flag == TILE_FLAG_MDAM_ADEAD)
-            m_buf_main.add(TILE_MDAM_ALMOST_DEAD, x, y);
+            m_buf_icons.add(TILEI_MDAM_ALMOST_DEAD, x, y);
     }
 
     if (fg & TILE_FLAG_DEMON)
     {
         tileidx_t demon_flag = fg & TILE_FLAG_DEMON;
         if (demon_flag == TILE_FLAG_DEMON_1)
-            m_buf_main.add(TILE_DEMON_NUM1, x, y);
+            m_buf_icons.add(TILEI_DEMON_NUM1, x, y);
         else if (demon_flag == TILE_FLAG_DEMON_2)
-            m_buf_main.add(TILE_DEMON_NUM2, x, y);
+            m_buf_icons.add(TILEI_DEMON_NUM2, x, y);
         else if (demon_flag == TILE_FLAG_DEMON_3)
-            m_buf_main.add(TILE_DEMON_NUM3, x, y);
+            m_buf_icons.add(TILEI_DEMON_NUM3, x, y);
         else if (demon_flag == TILE_FLAG_DEMON_4)
-            m_buf_main.add(TILE_DEMON_NUM4, x, y);
+            m_buf_icons.add(TILEI_DEMON_NUM4, x, y);
         else if (demon_flag == TILE_FLAG_DEMON_5)
-            m_buf_main.add(TILE_DEMON_NUM5, x, y);
+            m_buf_icons.add(TILEI_DEMON_NUM5, x, y);
     }
 }
 
@@ -671,9 +483,7 @@ void DungeonCellBuffer::pack_mcache(mcache_entry *entry, int x, int y,
     int draw_info_count = entry->info(&dinfo[0]);
     for (int i = 0; i < draw_info_count; i++)
     {
-        m_buf_doll.add(dinfo[i].idx, x, y, 0, submerged, trans,
+        m_buf_doll.add(dinfo[i].idx, x, y, TILEP_PART_MAX, submerged, trans,
                        dinfo[i].ofs_x, dinfo[i].ofs_y);
     }
 }
-
-#endif

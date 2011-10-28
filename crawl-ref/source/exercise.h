@@ -1,8 +1,8 @@
-/*
- * File:       exercise.h
- * Summary:    Collects all calls to skills.cc:exercise for
- *             easier changes to the training modell.
- */
+/**
+ * @file
+ * @brief Collects all calls to skills.cc:exercise for
+ *            easier changes to the training modell.
+**/
 
 #ifndef EXERCISE_H
 #define EXERCISE_H
@@ -25,8 +25,6 @@ enum exer_type
     EX_DID_CAST,
     EX_DID_MISCAST,
     EX_WILL_READ_SCROLL,
-    EX_SAGE,
-    EX_READ_MANUAL,
     EX_SHIELD_BLOCK,
     EX_SHIELD_TRAP,
     EX_DODGE_TRAP,
@@ -48,5 +46,6 @@ enum exer_type
 };
 
 void practise(exer_type ex, int param1 = 0);
+skill_type abil_skill(ability_type abil);
 
 #endif

@@ -1,7 +1,7 @@
-/*
- * File:     l_dgnmon.cc
- * Summary:  Monster-related functions in lua library "dgn".
- */
+/**
+ * @file
+ * @brief Monster-related functions in lua library "dgn".
+**/
 
 #include "AppHdr.h"
 
@@ -50,15 +50,6 @@ void register_monslist(lua_State *ls)
 
 static int dgn_set_random_mon_list(lua_State *ls)
 {
-    // Don't complain if we're being called when the map is being loaded
-    // and validated.
-    if (you.level_type != LEVEL_PORTAL_VAULT
-        && (you.entering_level || Generating_Level))
-    {
-        luaL_error(ls, "Can only be used in portal vaults.");
-        return (0);
-    }
-
     const int nargs = lua_gettop(ls);
 
     map_def *map = NULL;
@@ -79,20 +70,10 @@ static int dgn_set_random_mon_list(lua_State *ls)
         map = *_map;
     }
 
-    if (map)
-    {
-        if (map->orient != MAP_ENCOMPASS || map->place.is_valid()
-            || !map->depths.empty())
-        {
-            luaL_error(ls, "Can only be used in portal vaults.");
-            return (0);
-        }
-    }
-
     int       list_pos = (map != NULL) ? 2 : 1;
     mons_list mlist    = _lua_get_mlist(ls, list_pos);
 
-    if (mlist.size() == 0)
+    if (mlist.empty())
     {
         luaL_argerror(ls, list_pos, "Mon list is empty.");
         return (0);
@@ -120,7 +101,7 @@ static int dgn_set_random_mon_list(lua_State *ls)
 
         // Pandemonium lords are pseudo-unique, so don't randomly generate
         // them.
-        if (mon.mid == MONS_PANDEMONIUM_DEMON)
+        if (mon.mid == MONS_PANDEMONIUM_LORD)
         {
             num_lords++;
             continue;
@@ -136,7 +117,7 @@ static int dgn_set_random_mon_list(lua_State *ls)
                 err = make_stringf("mon #%d: Can't use Lab or Portal as a "
                                    "monster place.", i + 1);
                 luaL_argerror(ls, list_pos, err.c_str());
-                return(0);
+                return 0;
             }
             name = mon.place.describe();
         }
@@ -148,7 +129,7 @@ static int dgn_set_random_mon_list(lua_State *ls)
                 err = make_stringf("mon #%d: can't use random monster in "
                                    "list specifying random monsters", i + 1);
                 luaL_argerror(ls, list_pos, err.c_str());
-                return(0);
+                return 0;
             }
             if (mon.mid == -1)
                 mon.mid = MONS_PROGRAM_BUG;
@@ -172,13 +153,13 @@ static int dgn_set_random_mon_list(lua_State *ls)
                  "%s being ignored.",
                  name.c_str());
 
-        if (mon.items.size() > 0)
+        if (!mon.items.empty())
             mprf(MSGCH_ERROR, "dgn.set_random_mon_list() : items for "
                  "%s being ignored.",
                  name.c_str());
     } // for (int i = 0; i < num_mons; i++)
 
-    if (mons.size() == 0 && num_lords > 0)
+    if (mons.empty() && num_lords > 0)
     {
         luaL_argerror(ls, list_pos,
                       "Mon list contains only pandemonium lords.");

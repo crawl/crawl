@@ -1,12 +1,6 @@
-/*
- *  File:       tilereg-spl.cc
- *
- *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
- */
-
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "tilereg-spl.h"
 
@@ -18,7 +12,7 @@
 #include "spl-util.h"
 #include "stuff.h"
 #include "tiledef-dngn.h"
-#include "tiledef-main.h"
+#include "tiledef-icons.h"
 #include "tilepick.h"
 #include "viewgeom.h"
 
@@ -185,10 +179,10 @@ void SpellRegion::pack_buffers()
 
             InventoryTile &item = m_items[i++];
             if (item.flag & TILEI_FLAG_INVALID)
-                m_buf.add_main_tile(TILE_MESH, x, y);
+                m_buf.add_icons_tile(TILEI_MESH, x, y);
 
             if (item.flag & TILEI_FLAG_CURSOR)
-                m_buf.add_main_tile(TILE_CURSOR, x, y);
+                m_buf.add_icons_tile(TILEI_CURSOR, x, y);
 
             if (item.quantity != -1)
                 draw_number(x, y, item.quantity);

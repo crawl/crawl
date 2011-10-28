@@ -1,8 +1,7 @@
-/*
- *  File:       fixedvector.h
- *  Summary:    Fixed size vector class that asserts if you do something bad.
- *  Written by: Jesse Jones
- */
+/**
+ * @file
+ * @brief Fixed size vector class that asserts if you do something bad.
+**/
 
 #ifndef FIXVEC_H
 #define FIXVEC_H
@@ -61,13 +60,29 @@ public:
     size_t size() const { return SIZE; }
 
     // ----- Access -----
-    TYPE& operator[](unsigned long index) {
-        ASSERT(index < SIZE);
+    TYPE& operator[](unsigned long index)
+    {
+#ifdef ASSERTS
+        if (index >= SIZE)
+        {
+            // Intentionally printed as signed, it's very, very unlikely we'd
+            // have a genuine big number here, but underflows are common.
+            die_noline("range check error (%ld / %ld)", (signed long)index,
+                SIZE);
+        }
+#endif
         return mData[index];
     }
 
-    const TYPE& operator[](unsigned long index) const {
-        ASSERT(index < SIZE);
+    const TYPE& operator[](unsigned long index) const
+    {
+#ifdef ASSERTS
+        if (index >= SIZE)
+        {
+            die_noline("range check error (%ld / %ld)", (signed long)index,
+                SIZE);
+        }
+#endif
         return mData[index];
     }
 

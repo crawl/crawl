@@ -9,7 +9,6 @@
 #include "dgn-shoals.h"
 #include "dgn-height.h"
 #include "env.h"
-#include "flood_find.h"
 #include "fprop.h"
 #include "items.h"
 #include "itemprop.h"
@@ -23,13 +22,12 @@
 #include "mon-util.h"
 #include "random.h"
 #include "terrain.h"
+#include "traps.h"
 #include "view.h"
 
 #include <algorithm>
 #include <vector>
 #include <cmath>
-
-typedef FixedArray<short, GXM, GYM> grid_short;
 
 const char *PROPS_SHOALS_TIDE_KEY = "shoals-tide-height";
 const char *PROPS_SHOALS_TIDE_VEL = "shoals-tide-velocity";
@@ -232,7 +230,9 @@ static std::vector<coord_def> _shoals_water_depth_change_points()
         coord_def c(*ri);
         if (grd(c) == DNGN_DEEP_WATER
             && dgn_has_adjacent_feat(c, DNGN_SHALLOW_WATER))
+        {
             points.push_back(c);
+        }
     }
     return points;
 }
@@ -291,9 +291,6 @@ static void _shoals_furniture(int margin)
 {
     if (at_branch_bottom())
     {
-        unwind_var<dungeon_feature_set> vault_exc(dgn_Vault_Excavatable_Feats);
-        dgn_Vault_Excavatable_Feats.insert(DNGN_STONE_WALL);
-
         const coord_def p = _pick_shoals_island();
         const char *SHOAL_RUNE_HUT = "shoal_rune_hut";
         const map_def *vault = random_map_for_tag(SHOAL_RUNE_HUT);
@@ -310,7 +307,7 @@ static void _shoals_furniture(int margin)
                 vault = random_map_for_tag("shoal_hut");
             while (!vault && --tries > 0);
             if (vault)
-                dgn_place_map(vault, false, false, _pick_shoals_island(), 0);
+                dgn_place_map(vault, false, false, _pick_shoals_island());
         }
 
         // Fixup pass to connect vaults.
@@ -318,7 +315,7 @@ static void _shoals_furniture(int margin)
         {
             vault_placement &vp(*env.level_vaults[i]);
             if (vp.map.has_tag(SHOAL_RUNE_HUT))
-                dgn_dig_vault_loose(vp);
+                vp.connect();
         }
     }
 
@@ -368,7 +365,7 @@ static int _shoals_contiguous_feature_flood(
             {
                 const coord_def adj(*ai);
                 if (in_bounds(adj) && !rmap(adj) && grd(adj) == feat
-                    && unforbidden(adj, MMT_VAULT))
+                    && !map_masked(adj, MMT_VAULT))
                 {
                     rmap(adj) = nregion;
                     visit.push_back(adj);
@@ -456,7 +453,7 @@ _shoals_point_feat_cluster(dungeon_feature_type feat,
     {
         coord_def c(*ri);
         if (!region_map(c) && grd(c) == feat
-            && unforbidden(c, MMT_VAULT))
+            && !map_masked(c, MMT_VAULT))
         {
             const int featcount =
                 _shoals_contiguous_feature_flood(region_map,
@@ -510,7 +507,8 @@ static void _shoals_make_plant_near(coord_def c, int radius,
         const coord_def plant_place(
             dgn_random_point_from(c, random2(1 + radius), _shoals_margin));
         if (!plant_place.origin()
-            && !monster_at(plant_place))
+            && !monster_at(plant_place)
+            && !map_masked(plant_place, MMT_VAULT))
         {
             const dungeon_feature_type feat(grd(plant_place));
             if (_shoals_plantworthy_feat(feat)
@@ -620,7 +618,7 @@ static std::vector<coord_def> _shoals_windshadows(grid_bool &windy)
     // To avoid plants cropping up inside vaults, mark everything inside
     // vaults as "windy".
     for (rectangle_iterator ri(1); ri; ++ri)
-        if (!unforbidden(*ri, MMT_VAULT))
+        if (map_masked(*ri, MMT_VAULT))
             windy(*ri) = true;
 
     // Now we know the places in the wind shadow:
@@ -631,7 +629,9 @@ static std::vector<coord_def> _shoals_windshadows(grid_bool &windy)
         if (!windy(p) && grd(p) == DNGN_FLOOR
             && (dgn_has_adjacent_feat(p, DNGN_STONE_WALL)
                 || dgn_has_adjacent_feat(p, DNGN_ROCK_WALL)))
+        {
             wind_shadows.push_back(p);
+        }
     }
     return wind_shadows;
 }
@@ -649,7 +649,7 @@ static void _shoals_generate_wind_sheltered_plants(
     _shoals_plant_supercluster(spot, DNGN_FLOOR, &windy);
 }
 
-static void _shoals_generate_flora()
+void dgn_shoals_generate_flora()
 {
     // Water clusters are groups of plants clustered near the water.
     // Wind clusters are groups of plants clustered in wind shadow --
@@ -688,7 +688,7 @@ static void _shoals_generate_flora()
 void dgn_build_shoals_level(int level_number)
 {
     env.level_build_method += make_stringf(" shoals+ [%d]", level_number);
-    env.level_layout_type   = "shoals";
+    env.level_layout_types.insert("shoals");
 
     const int shoals_depth = level_id::current().depth - 1;
     if (you.level_type != LEVEL_LABYRINTH && you.level_type != LEVEL_PORTAL_VAULT)
@@ -702,9 +702,6 @@ void dgn_build_shoals_level(int level_number)
     _shoals_deepen_edges();
     _shoals_smooth_water();
     _shoals_furniture(_shoals_margin);
-
-    // This has to happen after placing shoal rune vault!
-    _shoals_generate_flora();
 }
 
 // Search the map for vaults and set the terrain heights for features
@@ -786,6 +783,26 @@ static coord_def _shoals_escape_place_from(coord_def bad_place,
     return chosen;
 }
 
+static void _clear_net_trapping_status(coord_def c)
+{
+    actor *victim = actor_at(c);
+    if (!victim)
+        return;
+
+    if (victim->atype() == ACT_MONSTER)
+    {
+        monster* mvictim = victim->as_monster();
+        if (you.can_see(mvictim))
+            mprf("The net is swept off %s.", mvictim->name(DESC_NOCAP_THE).c_str());
+        mons_clear_trapping_net(mvictim);
+    }
+    else
+    {
+        mpr("The tide washes the net away!");
+        clear_trapping_net();
+    }
+}
+
 static bool _shoals_tide_sweep_items_clear(coord_def c)
 {
     int link = igrd(c);
@@ -798,13 +815,20 @@ static bool _shoals_tide_sweep_items_clear(coord_def c)
         // item clear here, let dungeon_terrain_changed teleport the item
         // to the nearest safe square.
         item_def &item(*si);
+
         // Let the tide break up stacks
         if (!item_is_rune(item) && coinflip())
+            continue;
+
+        if (item_is_stationary(item) && !one_chance_in(5))
             continue;
 
         const coord_def target(_shoals_escape_place_from(c, NULL, &item));
         if (!target.origin())
         {
+            if (item_is_stationary(item))
+                _clear_net_trapping_status(c);
+
             int id = si.link();
             move_item_to_grid(&id, target);
         }
@@ -816,7 +840,7 @@ static bool _shoals_tide_sweep_items_clear(coord_def c)
 static bool _shoals_tide_sweep_actors_clear(coord_def c)
 {
     actor *victim = actor_at(c);
-    if (!victim || victim->airborne() || victim->swimming())
+    if (!victim || !victim->ground_level() || victim->swimming())
         return true;
 
     if (victim->atype() == ACT_MONSTER)
@@ -837,7 +861,14 @@ static bool _shoals_tide_sweep_actors_clear(coord_def c)
     if (evacuation_point.origin())
         return false;
 
-    victim->move_to_pos(evacuation_point);
+    bool clear_net = false;
+    if (victim->caught())
+    {
+        int net = get_trapping_net(c);
+        if (net != NON_ITEM)
+            clear_net = !move_item_to_grid(&net, evacuation_point);
+    }
+    victim->move_to_pos(evacuation_point, clear_net);
     return true;
 }
 
@@ -925,7 +956,7 @@ static void _shoals_apply_tide_at(coord_def c, int tide, bool incremental_tide)
     if (incremental_tide
         && final_feature == DNGN_DEEP_WATER
         && c == you.pos()
-        && you.airborne()
+        && !you.ground_level()
         && !you.permanent_levitation()
         && !you.permanent_flight())
     {
@@ -1121,7 +1152,7 @@ void shoals_release_tide(monster* mons)
         if (player_can_hear(mons->pos()))
         {
             mprf(MSGCH_SOUND, "The tide is released from %s call.",
-                 mons->name(DESC_NOCAP_YOUR, true).c_str());
+                 apostrophise(mons->name(DESC_NOCAP_YOUR, true)).c_str());
             if (you.see_cell(mons->pos()))
                 flash_view_delay(ETC_WATER, 150);
         }

@@ -13,17 +13,20 @@ bool one_chance_in(int a_million);
 bool x_chance_in_y(int x, int y);
 int random2(int max);
 int maybe_random2(int x, bool random_factor);
+int maybe_random_div(int nom, int denom, bool random_factor);
 int maybe_roll_dice(int num, int size, bool random);
 int random_range(int low, int high);
 int random_range(int low, int high, int nrolls);
 const char* random_choose_string(const char* first, ...);
 int random_choose(int first, ...);
 int random_choose_weighted(int weight, int first, ...);
+double random_real();
 
 int random2avg(int max, int rolls);
 int bestroll(int max, int rolls);
 int random2limit(int max, int limit);
 int binomial_generator(unsigned n_trials, unsigned trial_prob);
+bool bernoulli(double n_trials, double trial_prob);
 int fuzz_value(int val, int lowfuzz, int highfuzz, int naverage = 2);
 int roll_dice(int num, int size);
 
@@ -42,7 +45,7 @@ void scale_dice(dice_def &dice, int threshold = 24);
 class rng_save_excursion
 {
 public:
-    rng_save_excursion(long seed) { push_rng_state(); seed_rng(seed); }
+    rng_save_excursion(uint32_t seed) { push_rng_state(); seed_rng(seed); }
     rng_save_excursion()          { push_rng_state(); }
     ~rng_save_excursion()         { pop_rng_state(); }
 };
@@ -71,7 +74,7 @@ public:
 // nodes will get different results.
 class defer_rand
 {
-    std::vector<unsigned long> bits;
+    std::vector<uint32_t> bits;
     std::map<int, defer_rand> children;
 
     bool x_chance_in_y_contd(int x, int y, int index);

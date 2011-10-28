@@ -1,15 +1,13 @@
-/*
- *  File:       view.cc
- *  Summary:    Misc function used to render the dungeon.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc function used to render the dungeon.
+**/
 
 #include "AppHdr.h"
 
 #include "view.h"
 #include "shout.h"
 
-#include <stdint.h>
 #include <string.h>
 #include <cmath>
 #include <sstream>
@@ -20,7 +18,6 @@
 
 #include "map_knowledge.h"
 #include "viewchar.h"
-#include "viewgeom.h"
 #include "showsymb.h"
 
 #include "attitude-change.h"
@@ -61,8 +58,10 @@
 #include "stuff.h"
 #include "terrain.h"
 #include "tilemcache.h"
-#include "tilesdl.h"
+#include "tiles.h"
+#include "traps.h"
 #include "travel.h"
+#include "viewmap.h"
 #include "xom.h"
 
 #ifdef USE_TILE
@@ -75,17 +74,14 @@
 
 crawl_view_geometry crawl_view;
 
-void handle_seen_interrupt(monster* mons)
+bool handle_seen_interrupt(monster* mons, std::vector<std::string>* msgs_buf)
 {
-    if (mons_is_unknown_mimic(mons))
-        return;
-
     activity_interrupt_data aid(mons);
     if (!mons->seen_context.empty())
         aid.context = mons->seen_context;
     // XXX: Hack to make the 'seen' monster spec flag work.
     else if (testbits(mons->flags, MF_WAS_IN_VIEW)
-        || testbits(mons->flags, MF_SEEN))
+             || testbits(mons->flags, MF_SEEN))
     {
         aid.context = "already seen";
     }
@@ -94,11 +90,14 @@ void handle_seen_interrupt(monster* mons)
 
     if (!mons_is_safe(mons)
         && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
-            || mons->type == MONS_BALLISTOMYCETE && mons->number > 0)
+           || mons->type == MONS_BALLISTOMYCETE && mons->number > 0)
     {
-        interrupt_activity(AI_SEE_MONSTER, aid);
+        return interrupt_activity(AI_SEE_MONSTER, aid, msgs_buf);
     }
+
     seen_monster(mons);
+
+    return false;
 }
 
 void flush_comes_into_view()
@@ -128,7 +127,12 @@ void seen_monsters_react()
     for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
         if ((mi->asleep() || mons_is_wandering(*mi))
-            && check_awaken(*mi))
+            && check_awaken(*mi)
+#ifdef EUCLIDEAN
+               || you.prev_move.abs() == 2 && x_chance_in_y(2, 5)
+                  && check_awaken(*mi)
+#endif
+           )
         {
             behaviour_event(*mi, ME_ALERT, MHITYOU, you.pos(), false);
             handle_monster_shouts(*mi);
@@ -140,7 +144,6 @@ void seen_monsters_react()
         good_god_follower_attitude_change(*mi);
         beogh_follower_convert(*mi);
         slime_convert(*mi);
-        passive_enslavement_convert(*mi);
 
         // XXX: Hack for triggering Duvessa's going berserk.
         if (mi->props.exists("duvessa_berserk"))
@@ -159,9 +162,98 @@ void seen_monsters_react()
     }
 }
 
+static std::string _desc_mons_type_map(std::map<monster_type, int> types)
+{
+    std::string message;
+    unsigned int count = 1;
+    for (std::map<monster_type, int>::iterator it = types.begin();
+         it != types.end(); ++it)
+    {
+        std::string name;
+        description_level_type desc;
+        if (it->second == 1)
+        {
+            desc = (it == types.begin() ? DESC_CAP_A
+                                                : DESC_NOCAP_A);
+        }
+        else
+            desc = DESC_PLAIN;
+
+        name = mons_type_name(it->first, desc);
+        if (it->second > 1)
+        {
+            name = make_stringf("%d %s", it->second,
+                                pluralise(name).c_str());
+        }
+
+        message += name;
+        if (count == types.size() - 1)
+            message += " and ";
+        else if (count < types.size())
+            message += ", ";
+        ++count;
+    }
+    return make_stringf("%s come into view.", message.c_str());
+}
+
+/*
+ * Monster list simplification
+ *
+ * When too many monsters come into view at once, we group the ones with the
+ * same genus, starting with the most represented genus.
+ *
+ * @param types monster types and the number of monster for each type.
+ * @param genera monster genera and the number of monster for each genus.
+ */
+static void _genus_factoring(std::map<monster_type, int> &types,
+                             std::map<monster_type, int> &genera)
+{
+    monster_type genus = MONS_NO_MONSTER;
+    int num = 0;
+    std::map<monster_type, int>::iterator it;
+    // Find the most represented genus.
+    for (it = genera.begin(); it != genera.end(); ++it)
+        if (it->second > num)
+        {
+            genus = it->first;
+            num = it->second;
+        }
+
+    // The most represented genus has a single member.
+    // No more factoring is possible, we're done.
+    if (num == 1)
+    {
+        genera.clear();
+        return;
+    }
+
+    genera.erase(genus);
+    it = types.begin();
+    do
+    {
+        if (mons_genus(it->first) != genus)
+        {
+            ++it;
+            continue;
+        }
+
+        // This genus has a single monster type. Can't factor.
+        if (it->second == num)
+            return;
+
+        types.erase(it++);
+
+    } while (it != types.end());
+
+    types[genus] = num;
+}
+
 void update_monsters_in_view()
 {
+    const unsigned int max_msgs = 4;
     int num_hostile = 0;
+    std::vector<std::string> msgs;
+    std::vector<monster*> monsters;
 
     for (monster_iterator mi; mi; ++mi)
     {
@@ -170,27 +262,87 @@ void update_monsters_in_view()
             if (mi->attitude == ATT_HOSTILE)
                 num_hostile++;
 
-            if (mons_is_unknown_mimic(*mi))
+            if (mi->visible_to(&you))
             {
-                // For unknown mimics, don't mark as seen,
-                // but do mark it as in view for later messaging.
-                // FIXME: is this correct?
-                mi->flags |= MF_WAS_IN_VIEW;
-            }
-            else if (mi->visible_to(&you))
-            {
-                handle_seen_interrupt(*mi);
+                if (handle_seen_interrupt(*mi, &msgs))
+                    monsters.push_back(*mi);
                 seen_monster(*mi);
             }
             else
                 mi->flags &= ~MF_WAS_IN_VIEW;
         }
-        else
+        else if (!you.turn_is_over)
+        {
+            if (mi->flags & MF_WAS_IN_VIEW)
+            {
+                // Reset client id so the player doesn't know (for sure) he
+                // has seen this monster before when it reappears.
+                mi->reset_client_id();
+            }
+
             mi->flags &= ~MF_WAS_IN_VIEW;
 
-        // If the monster hasn't been seen by the time that the player
-        // gets control back then seen_context is out of date.
-        mi->seen_context.clear();
+            // If the monster hasn't been seen by the time that the player
+            // gets control back then seen_context is out of date.
+            mi->seen_context.clear();
+        }
+    }
+
+    if (!msgs.empty())
+    {
+        unsigned int size = monsters.size();
+        std::map<monster_type, int> types;
+        std::map<monster_type, int> genera; // This is the plural for genus!
+        for (unsigned int i = 0; i < size; ++i)
+        {
+            monster_type type;
+            if (monsters[i]->props.exists("mislead_as") && you.misled())
+                type = monsters[i]->get_mislead_type();
+            else
+                type = monsters[i]->type;
+
+            types[type]++;
+            genera[mons_genus(type)]++;
+        }
+
+        if (size == 1)
+            mpr(msgs[0], MSGCH_WARN);
+        else
+        {
+            while (types.size() > max_msgs && !genera.empty())
+                _genus_factoring(types, genera);
+            mpr(_desc_mons_type_map(types), MSGCH_WARN);
+        }
+
+        bool warning = false;
+        std::string warning_msg = "Ashenzari warns you: ";
+        for (unsigned int i = 0; i < size; ++i)
+        {
+            const monster* mon = monsters[i];
+            if (!mon->props.exists("ash_id"))
+                continue;
+
+            if (warning)
+                warning_msg += " ";
+            else
+                warning = true;
+
+            if (size == 1)
+                warning_msg += mon->pronoun(PRONOUN_CAP);
+            else if (mon->type == MONS_DANCING_WEAPON)
+                warning_msg += "There";
+            else if (types[mon->type] == 1)
+                warning_msg += mon->full_name(DESC_CAP_THE);
+            else
+                warning_msg += mon->full_name(DESC_CAP_A);
+
+            warning_msg += " is";
+            warning_msg += get_monster_equipment_desc(mon, DESC_IDENTIFIED,
+                                                      DESC_NONE);
+            warning_msg += ".";
+        }
+        if (warning)
+            mpr(warning_msg, MSGCH_GOD);
     }
 
     // Xom thinks it's hilarious the way the player picks up an ever
@@ -204,7 +356,7 @@ void update_monsters_in_view()
         && you.attribute[ATTR_ABYSS_ENTOURAGE] < num_hostile)
     {
         you.attribute[ATTR_ABYSS_ENTOURAGE] = num_hostile;
-        xom_is_stimulated(16 * num_hostile);
+        xom_is_stimulated(12 * num_hostile);
     }
 }
 
@@ -284,8 +436,16 @@ static std::auto_ptr<FixedArray<bool, GXM, GYM> > _tile_detectability()
 
         (*map)(p) = true;
 
-        if (grd(p) < DNGN_MINSEE && grd(p) != DNGN_CLOSED_DOOR)
+        if (grd(p) == DNGN_SECRET_DOOR)
+        {
+            reveal_secret_door(p);
             continue;
+        }
+
+        if (grd(p) < DNGN_MINSEE && !feat_is_closed_door(grd(p)))
+        {
+            continue;
+        }
 
         for (int dy = -1; dy <= 1; ++dy)
             for (int dx = -1; dx <= 1; ++dx)
@@ -297,31 +457,24 @@ static std::auto_ptr<FixedArray<bool, GXM, GYM> > _tile_detectability()
 
 // Returns true if it succeeded.
 bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
-                   bool force, bool deterministic, bool circular,
+                   bool force, bool deterministic,
                    coord_def pos)
 {
     if (!in_bounds(pos))
         pos = you.pos();
 
-    if (!force
-        && (testbits(env.level_flags, LFLAG_NO_MAGIC_MAP)
-            || testbits(get_branch_flags(), BFLAG_NO_MAGIC_MAP)))
+    if (!force && testbits(env.level_flags, LFLAG_NO_MAP))
     {
         if (!suppress_msg)
-            mpr("You feel momentarily disoriented.");
+            canned_msg(MSG_DISORIENTED);
 
         return (false);
     }
 
     const bool wizard_map = (you.wizard && map_radius == 1000);
 
-    if (!wizard_map)
-    {
-        if (map_radius > 50)
-            map_radius = 50;
-        else if (map_radius < 5)
-            map_radius = 5;
-    }
+    if (map_radius < 5)
+        map_radius = 5;
 
     // now gradually weaker with distance:
     const int pfar     = dist_range((map_radius * 7) / 10);
@@ -339,7 +492,7 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     if (!deterministic)
         detectable = _tile_detectability();
 
-    for (radius_iterator ri(pos, map_radius, circular ? C_ROUND : C_SQUARE);
+    for (radius_iterator ri(pos, map_radius, C_ROUND);
          ri; ++ri)
     {
         if (!wizard_map)
@@ -387,9 +540,15 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
         if (open)
         {
             if (wizard_map)
-                env.map_knowledge(*ri).set_feature(grd(*ri));
+            {
+                env.map_knowledge(*ri).set_feature(grd(*ri), 0,
+                    feat_is_trap(grd(*ri)) ? get_trap_type(*ri)
+                                           : TRAP_UNASSIGNED);
+            }
             else if (!env.map_knowledge(*ri).feat())
                 env.map_knowledge(*ri).set_feature(magic_map_base_feat(grd(*ri)));
+            if (emphasise(*ri))
+                env.map_knowledge(*ri).flags |= MAP_EMPHASIZE;
 
             if (wizard_map)
             {
@@ -417,8 +576,10 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
 
     if (!suppress_msg)
     {
-        mpr(did_map ? "You feel aware of your surroundings."
-                    : "You feel momentarily disoriented.");
+        if (did_map)
+            mpr("You feel aware of your surroundings.");
+        else
+            canned_msg(MSG_DISORIENTED);
 
         std::vector<std::string> sensed;
 
@@ -438,6 +599,25 @@ bool magic_mapping(int map_radius, int proportion, bool suppress_msg,
     }
 
     return (did_map);
+}
+
+void fully_map_level()
+{
+    for (rectangle_iterator ri(1); ri; ++ri)
+    {
+        bool ok = false;
+        for (adjacent_iterator ai(*ri, false); ai; ++ai)
+            if (grd(*ai) >= DNGN_MINSEE)
+                ok = true;
+        if (!ok)
+            continue;
+        set_terrain_visible(*ri);
+        env.map_knowledge(*ri).set_feature(grd(*ri), 0,
+            feat_is_trap(grd(*ri)) ? get_trap_type(*ri) : TRAP_UNASSIGNED);
+        if (igrd(*ri) != NON_ITEM)
+            env.map_knowledge(*ri).set_detected_item();
+        env.pgrid(*ri) |= FPROP_SEEN_OR_NOEXP;
+    }
 }
 
 // Is the given monster near (in LOS of) the player?
@@ -473,94 +653,59 @@ bool mon_enemies_around(const monster* mons)
     }
 }
 
-// Returns a string containing an ASCII representation of the map. If fullscreen
-// is set to false, only the viewable area is returned. Leading and trailing
-// spaces are trimmed from each line. Leading and trailing empty lines are also
-// snipped.
-std::string screenshot(bool fullscreen)
+// Returns a string containing a representation of the map.  Leading and
+// trailing spaces are trimmed from each line.  Leading and trailing empty
+// lines are also snipped.
+std::string screenshot()
 {
-    UNUSED(fullscreen);
-
-    // [ds] Screenshots need to be straight ASCII. We will now proceed to force
-    // the char and feature tables back to ASCII.
-    FixedVector<unsigned, NUM_DCHAR_TYPES> char_table_bk;
-    char_table_bk = Options.char_table;
-
-    init_char_table(CSET_ASCII);
-    init_show_table();
-
-    int firstnonspace = -1;
-    int firstpopline  = -1;
-    int lastpopline   = -1;
-
     std::vector<std::string> lines(crawl_view.viewsz.y);
-    for (int count_y = 1; count_y <= crawl_view.viewsz.y; count_y++)
+    unsigned int lsp = GXM;
+    for (int y = 0; y < crawl_view.viewsz.y; y++)
     {
-        int lastnonspace = -1;
-
-        for (int count_x = 1; count_x <= crawl_view.viewsz.x; count_x++)
+        std::string line;
+        for (int x = 0; x < crawl_view.viewsz.x; x++)
         {
             // in grid coords
             const coord_def gc = view2grid(crawl_view.viewp +
-                                     coord_def(count_x - 1, count_y - 1));
-
-            int ch =
-                  (!map_bounds(gc))             ? 0 :
+                                     coord_def(x, y));
+            ucs_t ch =
+                  (!map_bounds(gc))             ? ' ' :
                   (gc == you.pos())             ? mons_char(you.symbol)
                                                 : get_cell_glyph(gc).ch;
-
-            if (ch && !isprint(ch))
-            {
-                // [ds] Evil hack time again. Peek at grid, use that character.
-                ch = get_feat_symbol(grid_appearance(gc));
-            }
-
-            // More mangling to accommodate C strings.
-            if (!ch)
-                ch = ' ';
-
-            if (ch != ' ')
-            {
-                lastnonspace = count_x;
-                lastpopline = count_y;
-
-                if (firstnonspace == -1 || firstnonspace > count_x)
-                    firstnonspace = count_x;
-
-                if (firstpopline == -1)
-                    firstpopline = count_y;
-            }
-
-            lines[count_y - 1] += ch;
+            line += stringize_glyph(ch);
         }
-
-        if (lastnonspace < (int) lines[count_y - 1].length())
-            lines[count_y - 1].erase(lastnonspace + 1);
+        // right-trim the line
+        for (int x = line.length() - 1; x >= 0; x--)
+            if (line[x] == ' ')
+                line.erase(x);
+            else
+                break;
+        // see how much it can be left-trimmed
+        for (unsigned int x = 0; x < line.length(); x++)
+            if (line[x] != ' ')
+            {
+                if (lsp > x)
+                    lsp = x;
+                break;
+            }
+        lines[y] = line;
     }
 
-    // Restore char and feature tables.
-    Options.char_table = char_table_bk;
-    init_show_table();
+    for (unsigned int y = 0; y < lines.size(); y++)
+        lines[y].erase(0, lsp); // actually trim from the left
+    while (!lines.empty() && lines.back().empty())
+        lines.pop_back();       // then from the bottom
 
     std::ostringstream ss;
-    if (firstpopline != -1 && lastpopline != -1)
-    {
-        if (firstnonspace == -1)
-            firstnonspace = 0;
-
-        for (int i = firstpopline; i <= lastpopline; ++i)
-        {
-            const std::string &ref = lines[i - 1];
-            if (firstnonspace < (int) ref.length())
-                ss << ref.substr(firstnonspace);
-            ss << "\n";
-        }
-    }
-
+    unsigned int y = 0;
+    for (y = 0; y < lines.size() && lines[y].empty(); y++)
+        ;                       // ... and from the top
+    for (; y < lines.size(); y++)
+        ss << lines[y] << "\n";
     return (ss.str());
 }
 
-static int _viewmap_flash_colour()
+int viewmap_flash_colour()
 {
     if (you.attribute[ATTR_SHADOWS])
         return (DARKGREY);
@@ -579,13 +724,13 @@ void view_update_at(const coord_def &pos)
 
     show_update_at(pos);
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     if (!env.map_knowledge(pos).visible())
         return;
     glyph g = get_cell_glyph(pos);
 
     int flash_colour = you.flash_colour == BLACK
-        ? _viewmap_flash_colour()
+        ? viewmap_flash_colour()
         : you.flash_colour;
     int mons = env.map_knowledge(pos).monster();
     int cell_colour =
@@ -601,11 +746,11 @@ void view_update_at(const coord_def &pos)
 
     // Force colour back to normal, else clrscr() will flood screen
     // with this colour on DOS.
-    textattr(LIGHTGREY);
+    textcolor(LIGHTGREY);
 #endif
 }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 void flash_monster_colour(const monster* mon, uint8_t fmc_colour,
                           int fmc_delay)
 {
@@ -711,9 +856,9 @@ static int player_view_update_at(const coord_def &gc)
         cloud_type   ctype = cl.type;
 
         bool did_exclude = false;
-        if (!is_harmless_cloud(ctype)
-            && cl.whose  == KC_OTHER
-            && cl.killer == KILL_MISC)
+        if (cl.whose  == KC_OTHER
+            && cl.killer == KILL_MISC
+            && is_damaging_cloud(cl.type, false))
         {
             // Steam clouds are less dangerous than the other ones,
             // so don't exclude the neighbour cells.
@@ -726,7 +871,7 @@ static int player_view_update_at(const coord_def &gc)
     }
 
     // Print hints mode messages for features in LOS.
-    if (Hints.hints_left)
+    if (crawl_state.game_is_hints())
         hints_observe_cell(gc);
 
     if (env.map_knowledge(gc).changed() || !env.map_knowledge(gc).seen())
@@ -739,7 +884,7 @@ static int player_view_update_at(const coord_def &gc)
         env.pgrid(gc) |= FPROP_SEEN_OR_NOEXP;
         if (!crawl_state.game_is_arena())
         {
-            const int density = env.density ? env.density : 1000;
+            const int density = env.density ? env.density : 2000;
             did_god_conduct(DID_EXPLORATION, density);
             you.exploration += div_rand_round(1<<16, density);
         }
@@ -747,8 +892,6 @@ static int player_view_update_at(const coord_def &gc)
 
 #ifdef USE_TILE
     const coord_def ep = grid2show(gc);
-    if (!player_in_mappable_area())
-        return (ret); // XXX: is this necessary?
 
     // We remove any references to mcache when
     // writing to the background.
@@ -786,8 +929,8 @@ static void _draw_out_of_bounds(screen_cell_t *cell)
     cell->glyph  = ' ';
     cell->colour = DARKGREY;
 #ifdef USE_TILE
-    cell->tile_fg = 0;
-    cell->tile_bg = tileidx_out_of_bounds(you.where_are_you);
+    cell->tile.fg = 0;
+    cell->tile.bg = tileidx_out_of_bounds(you.where_are_you);
 #endif
 }
 
@@ -799,7 +942,7 @@ static void _draw_outside_los(screen_cell_t *cell, const coord_def &gc)
     cell->colour = g.col;
 
 #ifdef USE_TILE
-    tileidx_out_of_los(&cell->tile_fg, &cell->tile_bg, gc);
+    tileidx_out_of_los(&cell->tile.fg, &cell->tile.bg, gc);
 #endif
 }
 
@@ -821,10 +964,10 @@ static void _draw_player(screen_cell_t *cell,
         cell->colour |= COLFLAG_REVERSE;
 
 #ifdef USE_TILE
-    cell->tile_fg = env.tile_fg(ep) = tileidx_player();
-    cell->tile_bg = env.tile_bg(ep);
+    cell->tile.fg = env.tile_fg(ep) = tileidx_player();
+    cell->tile.bg = env.tile_bg(ep);
     if (anim_updates)
-        tile_apply_animations(cell->tile_bg, &env.tile_flv(gc));
+        tile_apply_animations(cell->tile.bg, &env.tile_flv(gc));
 #else
     UNUSED(anim_updates);
 #endif
@@ -839,10 +982,10 @@ static void _draw_los(screen_cell_t *cell,
     cell->colour = g.col;
 
 #ifdef USE_TILE
-    cell->tile_fg = env.tile_fg(ep);
-    cell->tile_bg = env.tile_bg(ep);
+    cell->tile.fg = env.tile_fg(ep);
+    cell->tile.bg = env.tile_bg(ep);
     if (anim_updates)
-        tile_apply_animations(cell->tile_bg, &env.tile_flv(gc));
+        tile_apply_animations(cell->tile.bg, &env.tile_flv(gc));
 #else
     UNUSED(anim_updates);
 #endif
@@ -857,8 +1000,11 @@ static bool _show_terrain = false;
 //
 // If show_updates is set, env.show and dependent structures
 // are updated. Should be set if anything in view has changed.
+//
+// If tiles_only is set, only the tile view will be updated. This
+// is only relevant for Webtiles.
 //---------------------------------------------------------------
-void viewwindow(bool show_updates)
+void viewwindow(bool show_updates, bool tiles_only)
 {
     if (you.duration[DUR_TIME_STEP])
         return;
@@ -867,20 +1013,20 @@ void viewwindow(bool show_updates)
 
     // Update the animation of cells only once per turn.
     const bool anim_updates = (you.last_view_update != you.num_turns);
+    // Except for elemental colours, which should be updated every refresh.
+    you.frame_no++;
 
 #ifdef USE_TILE
     tiles.clear_text_tags(TAG_NAMED_MONSTER);
+
     if (show_updates)
         mcache.clear_nonref();
 #endif
 
     if (show_updates || _show_terrain)
     {
-        if (!player_in_mappable_area())
-        {
-            env.map_knowledge.init(map_cell());
+        if (!is_map_persistent())
             ash_detect_portals(false);
-        }
 
 #ifdef USE_TILE
         tile_draw_floor();
@@ -909,7 +1055,7 @@ void viewwindow(bool show_updates)
 
     int flash_colour = you.flash_colour;
     if (flash_colour == BLACK)
-        flash_colour = _viewmap_flash_colour();
+        flash_colour = viewmap_flash_colour();
 
     const coord_def tl = coord_def(1, 1);
     const coord_def br = crawl_view.viewsz;
@@ -917,72 +1063,8 @@ void viewwindow(bool show_updates)
     {
         // in grid coords
         const coord_def gc = view2grid(*ri);
-        const coord_def ep = grid2show(gc);
 
-        if (!map_bounds(gc))
-            _draw_out_of_bounds(cell);
-        else if (!crawl_view.in_los_bounds_g(gc))
-            _draw_outside_los(cell, gc);
-        else if (gc == you.pos() && you.on_current_level && !_show_terrain
-                 && !crawl_state.game_is_arena()
-                 && !crawl_state.arena_suspended)
-        {
-            _draw_player(cell, gc, ep, anim_updates);
-        }
-        else if (you.see_cell(gc) && you.on_current_level)
-            _draw_los(cell, gc, ep, anim_updates);
-        else
-            _draw_outside_los(cell, gc);
-
-        cell->flash_colour = BLACK;
-
-        // Alter colour if flashing the characters vision.
-        if (flash_colour)
-        {
-            if (you.see_cell(gc))
-            {
-#ifdef USE_TILE
-                cell->colour = real_colour(flash_colour);
-#else
-                monster_type mons = env.map_knowledge(gc).monster();
-                if (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons) ||
-                    !you.berserk())
-                {
-                    cell->colour = real_colour(flash_colour);
-                }
-#endif
-            }
-            else
-            {
-                cell->colour = DARKGREY;
-            }
-            cell->flash_colour = cell->colour;
-        }
-        else if (crawl_state.darken_range >= 0)
-        {
-            const int rsq = (crawl_state.darken_range
-                             * crawl_state.darken_range) + 1;
-            bool out_of_range = distance(you.pos(), gc) > rsq
-                                || !you.see_cell(gc);
-            if (out_of_range)
-            {
-                cell->colour = DARKGREY;
-#ifdef USE_TILE
-                if (you.see_cell(gc))
-                    cell->tile_bg |= TILE_FLAG_OOR;
-#endif
-            }
-        }
-#ifdef USE_TILE
-        // Grey out grids that cannot be reached due to beholders.
-        else if (you.get_beholder(gc))
-            cell->tile_bg |= TILE_FLAG_OOR;
-
-        else if (you.get_fearmonger(gc))
-            cell->tile_bg |= TILE_FLAG_OOR;
-
-        tile_apply_properties(gc, &cell->tile_fg, &cell->tile_bg);
-#endif
+        draw_cell(cell, gc, anim_updates, flash_colour);
 
         cell++;
     }
@@ -991,13 +1073,21 @@ void viewwindow(bool show_updates)
     // and this simply works without requiring a stack.
     you.flash_colour = BLACK;
     you.last_view_update = you.num_turns;
-#ifndef USE_TILE
-    puttext(crawl_view.viewp.x, crawl_view.viewp.y, crawl_view.vbuf);
-    update_monster_pane();
-#else
+#ifndef USE_TILE_LOCAL
+#ifdef USE_TILE_WEB
+    tiles_crt_control crt(false);
+#endif
+
+    if (!tiles_only)
+    {
+        puttext(crawl_view.viewp.x, crawl_view.viewp.y, crawl_view.vbuf);
+        update_monster_pane();
+    }
+#endif
+#ifdef USE_TILE
     tiles.set_need_redraw(you.running ? Options.tile_runrest_rate : 0);
     tiles.load_dungeon(crawl_view.vbuf, crawl_view.vgrdc);
-    tiles.update_inventory();
+    tiles.update_tabs();
 #endif
 
     // Reset env.show if we munged it.
@@ -1005,6 +1095,85 @@ void viewwindow(bool show_updates)
         show_init();
 
     _debug_pane_bounds();
+}
+
+void draw_cell(screen_cell_t *cell, const coord_def &gc,
+               bool anim_updates, int flash_colour)
+{
+#ifdef USE_TILE
+    cell->tile.clear();
+#endif
+    const coord_def ep = grid2show(gc);
+
+    if (!map_bounds(gc))
+        _draw_out_of_bounds(cell);
+    else if (!crawl_view.in_los_bounds_g(gc))
+        _draw_outside_los(cell, gc);
+    else if (gc == you.pos() && you.on_current_level && !_show_terrain
+             && !crawl_state.game_is_arena()
+             && !crawl_state.arena_suspended)
+    {
+        _draw_player(cell, gc, ep, anim_updates);
+    }
+    else if (you.see_cell(gc) && you.on_current_level)
+        _draw_los(cell, gc, ep, anim_updates);
+    else
+        _draw_outside_los(cell, gc);
+
+    cell->flash_colour = BLACK;
+
+    // Alter colour if flashing the characters vision.
+    if (flash_colour)
+    {
+        if (you.see_cell(gc))
+        {
+#ifdef USE_TILE_LOCAL
+            cell->colour = real_colour(flash_colour);
+#else
+            monster_type mons = env.map_knowledge(gc).monster();
+            if (mons == MONS_NO_MONSTER || mons_class_is_firewood(mons) ||
+                !you.berserk())
+            {
+                cell->colour = real_colour(flash_colour);
+            }
+#endif
+        }
+        else
+        {
+            cell->colour = DARKGREY;
+        }
+        cell->flash_colour = cell->colour;
+    }
+    else if (crawl_state.darken_range)
+    {
+        if (!crawl_state.darken_range->valid_aim(gc))
+        {
+            cell->colour = DARKGREY;
+#ifdef USE_TILE
+            if (you.see_cell(gc))
+                cell->tile.bg |= TILE_FLAG_OOR;
+#endif
+        }
+    }
+#ifdef USE_TILE_LOCAL
+    // Grey out grids that cannot be reached due to beholders.
+    else if (you.get_beholder(gc))
+        cell->tile.bg |= TILE_FLAG_OOR;
+
+    else if (you.get_fearmonger(gc))
+        cell->tile.bg |= TILE_FLAG_OOR;
+
+    tile_apply_properties(gc, cell->tile);
+#elif defined(USE_TILE_WEB)
+    // For webtiles, we only grey out visible tiles
+    else if (you.get_beholder(gc) && you.see_cell(gc))
+        cell->tile.bg |= TILE_FLAG_OOR;
+
+    else if (you.get_fearmonger(gc) && you.see_cell(gc))
+        cell->tile.bg |= TILE_FLAG_OOR;
+
+    tile_apply_properties(gc, cell->tile);
+#endif
 }
 
 void toggle_show_terrain()

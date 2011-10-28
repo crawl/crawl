@@ -1,8 +1,7 @@
-/*
- *  File:       mon-behv.h
- *  Summary:    Monster behaviour functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Monster behaviour functions.
+**/
 
 #ifndef MONBEHV_H
 #define MONBEHV_H
@@ -18,6 +17,7 @@ enum mon_event_type
     ME_WHACK,                           // physical attack
     ME_SCARE,                           // frighten monster
     ME_CORNERED,                        // cannot flee
+    ME_HURT,                            // lost some HP (by any mean)
 };
 
 class monster;
@@ -38,5 +38,9 @@ void set_random_target(monster* mon);
 void make_mons_leave_level(monster* mon);
 
 bool monster_can_hit_monster(monster* mons, const monster* targ);
+
+// For Zotdef: the target position of MHITYOU monsters is
+// the orb.
+#define PLAYER_POS (crawl_state.game_is_zotdef() ? env.orb_pos : you.pos())
 
 #endif

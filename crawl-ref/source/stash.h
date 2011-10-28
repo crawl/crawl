@@ -1,8 +1,7 @@
-/*
- *  File:       stash.h
- *  Summary:    Classes tracking player stashes
- *  Written by: Darshan Shaligram
- */
+/**
+ * @file
+ * @brief Classes tracking player stashes
+**/
 
 #ifndef STASH_H
 #define STASH_H
@@ -10,7 +9,6 @@
 #include "shopping.h"
 #include <string>
 
-#include <iostream>
 #include <map>
 #include <vector>
 
@@ -41,8 +39,6 @@ public:
     Stash(int xp = -1, int yp = -1);
 
     static bool is_boring_feature(dungeon_feature_type feat);
-    static void filter(object_class_type base_type, uint8_t sub_type);
-    static void filter(const std::string &filt);
 
     static std::string stash_item_name(const item_def &item);
     void update();
@@ -53,7 +49,8 @@ public:
     std::string feature_description() const;
     std::vector<item_def> get_items() const;
 
-    bool show_menu(const level_pos &place, bool can_travel) const;
+    bool show_menu(const level_pos &place, bool can_travel,
+                   const std::vector<item_def>* matching_items = NULL) const;
 
     // Returns true if this Stash contains items that are eligible for
     // autopickup.
@@ -68,7 +65,7 @@ public:
                         stash_search_result &res)
             const;
 
-    void write(std::ostream &os, int refx = 0, int refy = 0,
+    void write(FILE *f, int refx = 0, int refy = 0,
                  std::string place = "",
                  bool identify = false) const;
 
@@ -89,11 +86,9 @@ public:
                         // also never removed from the level's map of
                         // stashes.
 
-public:
-    static bool is_filtered(const item_def &item);
-
 private:
     void _update_corpses(int rot_time);
+    void _update_identification();
     void add_item(const item_def &item, bool add_to_front = false);
 
 private:
@@ -112,7 +107,6 @@ private:
      * reflecting what's in the dungeon also increases.
      */
     static bool aggressive_verify;
-    static std::vector<item_def> filters;
 
     static bool are_items_same(const item_def &, const item_def &);
 
@@ -138,7 +132,7 @@ public:
     bool show_menu(const level_pos &place, bool can_travel) const;
     bool is_visited() const { return items.size() || visited; }
 
-    void write(std::ostream &os, bool identify = false) const;
+    void write(FILE *f, bool identify = false) const;
 
     void reset() { items.clear(); visited = true; }
     void set_name(const std::string& s) { name = s; }
@@ -153,6 +147,10 @@ public:
         item_def item;
         unsigned price;
     };
+
+    // Attempts to guess if the item came from the shop, and if so returns the
+    // corresponding shop_item_name:
+    std::string get_shop_item_name(const item_def&) const;
 
 private:
     int x, y;
@@ -197,9 +195,33 @@ struct stash_search_result
     const Stash    *stash;
     const ShopInfo *shop;
 
+    // The items that matched the search, if any.
+    std::vector<item_def> matching_items;
+
     stash_search_result() : pos(), player_distance(0), matches(0),
-                            count(0), match(), stash(NULL), shop(NULL)
+                            count(0), match(), stash(NULL), shop(NULL),
+                            matching_items()
     {
+    }
+
+    stash_search_result(const stash_search_result &o)
+        : pos(o.pos), player_distance(o.player_distance), matches(o.matches),
+          count(o.count), match(o.match), stash(o.stash), shop(o.shop),
+          matching_items(o.matching_items)
+    {
+    }
+
+    stash_search_result &operator = (const stash_search_result &o)
+    {
+        pos = o.pos;
+        player_distance = o.player_distance;
+        matches = o.matches;
+        count = o.count;
+        match = o.match;
+        stash = o.stash;
+        shop = o.shop;
+        matching_items = o.matching_items;
+        return (*this);
     }
 
     bool operator < (const stash_search_result &ssr) const
@@ -208,9 +230,10 @@ struct stash_search_result
                    || (player_distance == ssr.player_distance
                        && matches > ssr.matches));
     }
-};
 
-extern std::ostream &operator << (std::ostream &, const Stash &);
+    bool show_menu() const;
+
+};
 
 class LevelStashes
 {
@@ -253,7 +276,7 @@ public:
     void  save(writer&) const;
     void  load(reader&);
 
-    void  write(std::ostream &os, bool identify = false) const;
+    void  write(FILE *f, bool identify = false) const;
     std::string level_name() const;
     std::string short_level_name() const;
 
@@ -262,9 +285,12 @@ public:
 
     bool  is_current() const;
 
+    void  remove_shop(const coord_def& c);
  private:
     int _num_enabled_stashes() const;
     void _update_corpses(int rot_time);
+    void _update_identification();
+    void _waypoint_search(int n, std::vector<stash_search_result> &results) const;
 
  private:
     typedef std::map<int, Stash>  stashes_t;
@@ -279,15 +305,12 @@ public:
     friend class ST_ItemIterator;
 };
 
-extern std::ostream &operator << (std::ostream &, const LevelStashes &);
-
 class StashTracker
 {
 public:
     static bool is_level_untrackable()
     {
-        return you.level_type == LEVEL_LABYRINTH
-            || you.level_type == LEVEL_ABYSS;
+        return !is_map_persistent();
     }
 
     StashTracker() : levels(), last_corpse_update(0)
@@ -316,6 +339,7 @@ public:
     };
 
     void update_corpses();
+    void update_identification();
 
     void update_visible_stashes(StashTracker::stash_update_mode = ST_PASSIVE);
 
@@ -335,15 +359,17 @@ public:
     void save(writer&) const;
     void load(reader&);
 
-    void write(std::ostream &os, bool identify = false) const;
+    void write(FILE *f, bool identify = false) const;
 
     void dump(const char *filename, bool identify = false) const;
 
+    void remove_shop(const level_pos &pos);
 private:
     void get_matching_stashes(const base_pattern &search,
                               std::vector<stash_search_result> &results) const;
     bool display_search_results(std::vector<stash_search_result> &results,
-                                const char* sort_style);
+                                bool& sort_by_dist,
+                                bool& show_as_stacks);
     std::string stash_search_prompt();
 
 private:
@@ -399,6 +425,9 @@ std::vector<item_def> item_list_in_stash(const coord_def& pos);
 
 std::string userdef_annotate_item(const char *s, const item_def *item,
                                   bool exclusive = false);
+std::string stash_annotate_item(const char *s,
+                                const item_def *item,
+                                bool exclusive = false);
 
 #define STASH_LUA_SEARCH_ANNOTATE "ch_stash_search_annotate_item"
 #define STASH_LUA_DUMP_ANNOTATE   "ch_stash_dump_annotate_item"

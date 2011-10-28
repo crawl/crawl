@@ -1,13 +1,11 @@
-/*
- *  File:       tilebuf.cc
- *  Summary:    Vertex buffer implementaions
- *
- *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
- */
+/**
+ * @file
+ * @brief Vertex buffer implementaions
+**/
 
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 
 #include "tilebuf.h"
 #include "tilefont.h"

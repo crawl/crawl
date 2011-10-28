@@ -1,8 +1,7 @@
-/*
- * File:       mon-transit.h
- * Summary:    Tracking monsters in transit between levels.
- * Written by: Darshan Shaligram
- */
+/**
+ * @file
+ * @brief Tracking monsters in transit between levels.
+**/
 
 #ifndef MON_TRANSIT_H
 #define MON_TRANSIT_H
@@ -43,5 +42,8 @@ void place_transiting_monsters();
 void place_followers();
 
 void place_transiting_items();
+
+void tag_followers();
+void untag_followers();
 
 #endif

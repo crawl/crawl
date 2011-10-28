@@ -2,7 +2,7 @@
 # decks of transport -> escape
 the Portal card
 
-This card teleports you to a random location. At higher power levels this may be instantaneous, controlled or both.
+This card teleports you to a random location, allowing control of the translocation at high power.
 It is usually found in decks of escape and war, or in Nemelex Xobeh's deck of punishment.
 %%%%
 the Warp card
@@ -115,7 +115,7 @@ It is usually found in decks of changes and wonders.
 %%%%
 the Sage card
 
-This card will funnel some of your earned experience towards a training specific skill and train it faster than it normally would.
+This card will funnel some of your earned experience towards training a specific skill and train it faster than it normally would.
 It is usually found in decks of changes and wonders.
 %%%%
 # deck of dungeons -> also changes
@@ -227,7 +227,12 @@ It is usually found in decks of destruction and war.
 %%%%
 Torment card
 
-This card calls on the powers of Hell to cause agonising injury to any nearby living creature.
+This card calls on the powers of darkness to cause agonising injury to any nearby living creature.
+It is usually found in decks of destruction and war.
+%%%%
+the Orb card
+
+This card unleashes a destructive orb of pure magic, sometimes even multiple ones.
 It is usually found in decks of destruction and war.
 %%%%
 # deck of punishment (along with a few others)
@@ -243,7 +248,7 @@ It is usually only found in Nemelex Xobeh's deck of punishment.
 %%%%
 the Curse card
 
-This card places curses on your possessions and may even spoil your potions.
+This card places curses on your possessions.
 It is usually only found in Nemelex Xobeh's deck of punishment.
 %%%%
 Xom card
@@ -260,6 +265,11 @@ the Swine card
 
 This card will make you turn pink and root for truffles.
 It is usually only found in Nemelex Xobeh's deck of punishment.
+%%%%
+the Alchemist card
+
+This card transmutes some of your gold into health and magical energy.
+It is usually found in decks of changes and wonders.
 %%%%
 # deck of oddities (random card, along with a few others)
 the Bargain card

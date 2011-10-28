@@ -121,4 +121,3 @@ Note: removed from spl-data.h on 3-Nov-2009.
  *   Fennel wands
  *   More summonings!
  */
-

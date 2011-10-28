@@ -1,8 +1,7 @@
-/*
- *  File:       mpr.h
- *  Summary:    Functions used to print simple messages.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used to print simple messages.
+**/
 
 #ifndef MPR_H
 #define MPR_H
@@ -43,6 +42,7 @@ enum msg_channel_type
     MSGCH_DIAGNOSTICS,      // various diagnostic messages
     MSGCH_ERROR,            // error messages
     MSGCH_TUTORIAL,         // messages for tutorial
+    MSGCH_ORB,              // messages for the orb
 
     NUM_MESSAGE_CHANNELS    // always last
 };
@@ -84,15 +84,14 @@ inline void mprnojoin(std::string text, msg_channel_type channel=MSGCH_PLAIN,
 }
 
 // 4.1-style mpr, currently named mprf for minimal disruption.
-void mprf(msg_channel_type channel, int param, const char *format, ...);
-void mprf(msg_channel_type channel, const char *format, ...);
-void mprf(const char *format, ...);
+void mprf(msg_channel_type channel, int param, PRINTF(2, ));
+void mprf(msg_channel_type channel, PRINTF(1, ));
+void mprf(PRINTF(0, ));
 
-// Yay for C89 and lack of variadic #defines...
 #ifdef DEBUG_DIAGNOSTICS
-void dprf(const char *format, ...);
+void dprf(PRINTF(0, ));
 #else
-static inline void dprf(const char *format, ...) {}
+# define dprf(...) ((void)0)
 #endif
 
 #endif

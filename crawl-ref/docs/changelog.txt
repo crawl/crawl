@@ -1,3 +1,961 @@
+Stone Soup 0.10 (????????)
+--------------------------
+
+0.10 Highlights
+---------------
+* New species: Octopodes, sentient land-capable octopuses.
+* Skill training system reworked. Dancing is really gone this time!
+
+Branches, portal vaults, levels
+-------------------------------
+* Remove Hive. Guarantee some limited food supply in the dungeon.
+* Reworked Abyss transformations.
+* Most abyssal runes are in special vaults.
+* Escaping the Abyss returns to place of banishment.
+* Ziggurats have much more colourful holy levels.
+* Ziggurats: spriggan levels.
+* Pan monster set tweaked.
+* More Volcano portal vaults.
+* Web "traps", can briefly entangle those caught.
+* A "twisting cavern" map layout.
+* Custom shops.
+* Many vaults, including large altar vaults, Abyss vaults and Pan lords maps.
+
+Gods
+----
+* Ammo gifts can include large rocks and javelins.
+* Lugonu accepts kills of demons.
+* Cheibriados loses the "Make Ponderous" invocation, slows you down all the
+  time depending on piety.
+* Cheibriados can slow down Abyss morphing and Orb run monster spawns.
+* Makhleb's powers use Health instead of Magic.
+* Makhleb gives more Health for killing but no Magic anymore.
+* Zin followers pay mandatory tithe for piety. No more piety for waiting.
+* Zin takes some gold upon conversion; this gives more piety than donation.
+* Zin's Vitalisation is proactive, protecting from all bad statuses.
+* Prayer to Zin doesn't provide feeding, Vitalisation gives satiation instead.
+* Zin's Imprison duration increased.
+* TSO: piety decays; gain piety for spotting non-evil monsters.
+* Elyvilon: piety decays; piety for pacifications doubled.
+* Elyvilon has piety loss for ally deaths instead of penance.
+
+Species
+-------
+* Octopodes.
+* Draconians cannot wear body armour anymore, can wear gloves and boots.
+
+Character
+---------
+* Wild Magic mutation: reduced spell success, increased power.
+* Always gain nutrition from brown chunks.
+* Restrictions for eating unfitting food at high satiation with herbi/carnivore.
+* Eating chunks beyond satiated depends on level of carnivorousness.
+* A little score increase from runes for non-winners.
+* Poison resistance is only 90% effective.
+
+Spells
+------
+* New: Beastly Appendage (Transmutation 1).
+* Ozocubu's Refrigeration no longer works through glass walls.
+* Flame Tongue has slightly longer range.
+* Removed: Maxwell's Silver Hammer, Levitate.
+* Abjuration becomes single-target, its old version (Mass Abj.) is
+  available as a new level 7 spell.
+* Swiftness and Flight no longer give an extra boost when cast together.
+* Swiftness halves stealth and makes it harder to detect traps.
+* Flight is now level 3.
+* Summoned Ugly Things are now always friendly.
+* Shadow Creatures don't last as long anymore.
+* Tornado's damage has been slightly improved.
+* Conjure Ball Lightning improved.
+* Mephitic Cloud and Evaporate don't guarantee a 3x3 cloud anymore.
+* Recasting a transformation is no worse than the original cast.
+* Animate Dead animates stacks.
+* Lee's Rapid Deconstruction: prevent abuse.
+* Summon Greater Demon only has tier 1 demons turn hostile over time.
+* Spider form is susceptible to poison.
+
+Backgrounds
+-----------
+* Arcane Marksmen are back, with a Hex-based spellbook.
+* Artificers get a weaker staff and skills, but an extra wand.
+* Transmuters lose Fulsome Destillation and Evaporate, gain Beastly Appendage.
+* Monks get ** piety upon taking on their first god.
+
+Skills
+------
+* Non-integer values of a skill matter.
+* Stealth is drastically more expensive.
+* Replace unknown skill dance by skill training restrictions.
+
+Interface
+---------
+* Experience points are no longer shown directly, just a percentage to the
+  next level.
+* Throwable starting weapons are autoinscribed with "=f".
+* Leaving an unique Pan level without the rune asks for confirmation.
+* Uniques and player ghosts annotate the level on the overview screen.
+* A character dump option: spell_usage, counts spells you have cast.
+* Ctrl-W toggles weight display in inventory and dropping menu.
+* Better ?/G and ?/B menus.
+
+Monsters
+--------
+* Ignacio no longer uses Torment, he'll appear repeatedly until killed.
+* New monster: profane servitor -- angel corrupted by Yredelemnul (undead).
+* New monster: blizzard demon -- a cold/air rank 2 demon.
+* New holy monsters: silver star, cherub.
+* Removed: giant toads, vipers, blue deaths.
+* Renamed: Fiend -> Brimstone Fiend. Imp -> Crimson Imp.
+* Reorganized demon ranks, moving easier 1s to 2.
+* Feature mimics may now masquerade as most features.
+* Item mimics can move once revealed.
+* Monsters will retreat when hit from behind an obstacle they can't walk
+  around.
+* Unique Pandemonium lords can hunt you on the Orb run if you've stolen
+  their runes. Violate the 5th Commandment not 7th!
+* More emergency spell usage.
+* Gnoll shamans and sergeants are actual monsters.
+* Breath timeout for dragons, draconians, drakes.
+* Most monster summoning spells toned down slightly.
+* Monsters flee at lower health thresholds, and less predictably.
+
+Items
+-----
+* Slaying works like weapon enchantments.
+* Acquirement allows choosing missiles.
+* Nagas and centaur get far better chances to acquire bardings.
+* Staff acquirement more random.
+* Miscellaneous item acquirements gives better decks.
+* Weapon acquirement avoids useless weapon types.
+* Misc items start identified when there's no doubts about them.
+* The Orb of Zot has a slightly mutagenic glow and reduces stealth.
+* The Crusade card can no longer give you permanent allies.
+* All polearms have the reaching brand built in.
+* Quarterstaves are split into two weapons: weak "staff" and good
+  "quarterstaff".  Gladiators get to start with the latter.
+* Common two-handed weapons are easier to use effectively.
+* Several new fixed artefacts: lightning scales, Black Knight's horse barding,
+  ring of Vitality, autumn katana, shillelagh "Devastator".
+* The Sceptre of Asmodeus can be evoked for permanent temporarily friendly
+  demons (instead of random conjurations or hostile demons).
+* Scrolls of enchant and vorpalise weapon identified upon use.
+* Amulet of guardian spirit draws from HP and MP simultaneously.
+* Remove crystal balls of seeing.
+* Scroll of magic mapping detects secret doors.
+* Tomb card is rarer.
+* Portal card does not give instant teleports.
+* Early weapons tend to be better.
+* Rename potion of healing to potion of curing.
+* Rename wand of healing to wand of heal wounds.
+
+Webtiles
+--------
+* Monster list.
+* Webtiles games create a ttyrec, allowing them to be watched from SSH.
+* Scale cells for small screens.
+
+Zot Defence
+-----------
+* Map selection.
+* Disable useless gods.
+* Disable hunger, except for Vampires.
+* Creating altar asks for god, at much higher ability cost.
+* Plants and non-livings dying don't count as friend dying (also in Crawl).
+* Start with some consumables (as in Sprint) to make the early game a little easier.
+
+Technical
+---------
+* Tarballs use xz rather than bz2 compression.
+* Wizard mode is compiled in by default unless you specify NOWIZARD=y.
+
+
+Stone Soup 0.9.1 (20110904)
+---------------------------
+* Fix missing portals to Zot on D:27 with restart_after_game after Sprint.
+* Fix most large special maps not being generated.
+* Fix mad amounts of divine gifts in certain cases.
+* Don't duplicate monsters when exiting the Abyss.
+* Fix a lock-up on selecting a random character.
+* A number of crash fixes.
+* Some documentation amendments.
+* Don't stop butchering on unimportant messages.
+* Add a command "show runes" ('}') that was documented but not implemented.
+
+
+Stone Soup 0.9 (20110812)
+-------------------------
+
+Disclaimer: These are merely the highlights, not an exhaustive list of changes.
+Save compatibility with the 0.8 release is retained, although once a game is
+loaded in 0.9, you can not go back to 0.8.
+
+0.9 Highlights
+--------------
+* New skill training system. Experience pool and victory dancing are gone.
+* Ashenzari: Remove passive XP boost, add a skill boost depending on level
+  of boundedness and which equipment is bound.
+* Rename Crusader to Skald, change starting book and skill levels.
+* New spells: Inner Flame, Shroud of Golubria.
+* Removed spells: Teleport Self, Berserker Rage, Resist Poison.
+* New monsters: Ignacio (unique executioner), catoblepas, basilisk.
+* New subgame: Zot Defence.  Consider it of experimental quality, though.
+
+Skills
+------
+* Skill training: skills are trained immediately when XP is gained. The skills
+  trained are the ones that have been used recently (auto) or the ones which
+  have been selected (manual).
+* Skill costs: the XP to skill point ratio no longer depends on skill level.
+* Magic school skills early game discount removed.
+
+Gods
+----
+* Cheibriados gives full stat boost for fully ponderous, regardless of species.
+* Jiyva is a little less likely to remove mutations.
+* Improve Jiyva's stat shuffling, take skills and armour into account.
+* Makhleb has a new flavour description.
+* Nerf TSO's and Makhleb's HP and MP on kills.
+* Trog specialises in antimagic weapon gifts, gives fewer artefacts.
+* Trog dislikes it when you train magic skills.
+* Yred takes statue kills and forbids Statue Form.
+* Zin's Vitalisation is cheaper and cures petrification, stat boost stackable.
+* Don't allow avoiding good god wrath by swapping via another good god.
+* Ashenzari: Remove passive XP boost, add a skill boost depending on level
+  of boundedness and which equipment is bound.
+* Ashenzari: reduce reskilling XP penalty and some ability piety costs.
+* Ashenzari wrath: reduce all skills for the duration of wrath.
+
+Character
+---------
+* +3 base HP for all characters.
+* Racial HP/MP gain is now displayed on a -3 to +3 scale (see ?%).
+* Fighting gives less HP boost.
+* All characters carry a bootknife to dissect corpses.
+* Hill Orc Priests always take on Beogh.
+* Berserkitis mutation triggers less often.
+* Tweak starting skills for a few backgrounds (Fi, Gl, Wr, CK).
+* Give Warpers a few more darts of dispersal.
+* Let Gladiators start with a cap if they can't wear helmets.
+* Start all Hunters with the same melee weapon.
+* Start Artificers with quarterstaves, instead of letting Monks choose them.
+* Rename Crusader to Skald, change starting book and skill levels.
+* Conjurers don't need to choose a book (they always get an Air/Ice book).
+* Felids: lose a level on death, gain at most nine lives, improved aptitudes.
+* Draconians are more dextrous.
+* Berserk speed-up reduced to that of haste (1.5 instead of 2).
+* All species take the same amount of time to use stairs.
+
+Interface
+---------
+* New command: 'D'rop last. Drops the item(s) last picked up.
+* Auto-switch: bumping while wielding launcher switches to weapon in slots a/b.
+* Auto-switch: firing while wielding melee weapon switches to launcher in a/b.
+* Auto-explore tries to look at unreachable places.
+* Search: allows searching for portals, and for waypoints (Ctrl-F 1, Ctrl-F *).
+* Search: "branded" synonymous with "ego". Better help (Ctrl-F ?).
+* Search: only show items in a stash matching the search.
+* Search: allow searching for armour by equipment slot.
+* New help for skills screen (m??).
+* Change inventory colours for some potions.
+* Auto-pickup chunks after Animate Skeleton.
+* Allow toggling hit prediction with ':' in new targetting modes.
+* Cloud glyph in 7-bit ASCII is '0', not '#' anymore.
+* Prompt before leaving Ziggurat.
+* Better butchering messages, less spam.
+* Abort spellcasting in many cases where spells are guaranteed to fail.
+* Display -cTele on the status line where controlled teleports are blocked.
+* Allow redefining mimic glyphs, once identified.
+* Show percentage progress to the next level, instead of number of XP points.
+* Show 'chaotic' in monster status only when aiming silver ammo at them.
+* Show 'mindless' in monster status only when using Ely's healing abilities.
+
+Spells
+------
+* New spell: Shroud of Golubria (comes in Skald and Warper starting books).
+  Prevents some melee damage, but likely to break against more damaging
+  attacks.
+* New spell: Inner Flame (comes in starting book of Fire Elementalists).
+  Causes targeted enemy to explode in a fireball when killed.
+* Removed spells: Teleport Self, Berserker Rage, Resist Poison.
+* Tornado: radius starts low, increases over time, add cooldown, adjust damage.
+* Tornado moves monsters within its radius around.
+* Blinking with Tornado active reduces its duration, teleporting cancels it.
+* Make Fire Storm, Ice Storm, Bolt of Magma and Throw Icicle more resistible.
+* Increase Bolt of Magma damage.
+* Give Summon Dragon a longer duration, summon two dragons at high power.
+* Shock and Lightning will hit a creature at most twice; damage increased.
+* Make LRD and Sandblast more strongly affected by monster AC again.
+* Ranges of Throw Frost/Flame and of Bolt of Cold/Fire swapped.
+* Increase Flame Tongue's accuracy and range a little.
+* Sublimation of Blood takes spellpower into account.
+* Apportation takes spellpower into account for all items.
+* Statue and Dragon Form balance: give both some GDR, reduce unarmed damage.
+* Statue Form: boost all melee damage, give 50% torment resistance.
+* Increase Ozocubu's Refrigeration to level 6.
+* Reduce Summon Ice Beast to level 4, Static Discharge to level 3.
+* Maxwell's Silver Hammer works also on all weapons with bludgeoning damage.
+* Poison Weapon works also on blunt weapons.
+* Condensation Shield duration increased.
+* Simulacra from the spell are no longer abjurable.
+* Renamed books: Chemistry -> Alchemy, Zoology -> Beasts.
+
+Monsters
+--------
+* Catoblepas: a new hard-hitting yak-genus monster with petrifying breath.
+* Replace "gila monster" with "basilisk", complete with petrification.
+* Ignacio, a unique executioner of Makhleb, spawns in Pandemonium.
+* AI: monsters improve even signature weapons (e.g. Sigmund will use Finisher).
+* AI: confused high intelligence monsters don't move if next to a deadly cell.
+* Allow polymorphing demons into other similar-tier demons.
+* Snapping turtles and Geryon reach diagonally.
+* Give Shadow Fiends and Tormentors a pain-branded melee attack.
+* Boost ghost moth damage, don't spawn them in Spider's Nests.
+* Fix random pan lords not getting Symbol of Torment in their spell sets.
+* Vampire bats are undead.
+* Monsters with mutagenic chunks leaves corpses less often.
+* Reaching over a hostile monster may hit the monster between you and target.
+* Kenku monsters come with gear, may spawn in the Abyss.
+* Rename "beast" to "hell beast".
+* Rename "megabat" to "bat".
+* Kobolds can (rarely) get crossbows.
+* Pikel: fixed bugs with freed monsters.
+* Adjust xp values for some monsters.
+* Disable feature mimics.
+
+Levels
+------
+* New branch endings: multiple Elf:5 maps, Zot entry vaults on D:27.
+* Many other new vaults, including serial vaults, traps, Abyss vaults.
+* Blink in the Abyss only blinks; does not teleport anymore.
+* Baileys are more sane in loot and threat.
+* Troves: fix some bugs, and additional quests.
+* Vestibule of Hell has its own monster set.
+* Don't place kobold/orc/jelly/bee special rooms in the Hells.
+
+Orb run
+-------
+* Double the orb's weight.
+* Disable controlled teleports once the orb is picked up.
+* Orb run spawns are more likely to spawn near the player.
+* Teleportation may need longer to kick in.
+
+Items
+-----
+* Price reform: scrolls, potions, rings. Bad items cost more than 1 gold now.
+* Cards: the Orb (new card), destruction cards buffed.
+* Experience card gives less experience at low power.
+* Scroll of identify shows top card when used on deck of cards.
+* Picked up runes are no longer part of the inventory. They are listed in \.
+* Randarts with the *Rage property trigger berserk less often.
+* Modified spellbooks: Conjurations, Unlife, many elemental books.
+* Bucklers provide less SH.
+* Large rocks can (rarely) be generated on the dungeon floor.
+* Ammo of dispersal only disperses if it does damage.
+* Silver-branded ammo only does bonus damage to chaotic creatures.
+* Reduce silver and steel damage bonus.
+* Reflected missiles get their full range on the way back.
+* Randart heavy armours tend to come with better enchantment.
+* Wands and rods rely more strongly on Evocations skill.
+* Long blades: nerf double swords, buff demon blades, remove katanas.
+* Reduce demon whip and demon trident damage.
+* Remove knives. Change Spriggan's Knife from knife to dagger.
+* Make the Sword of Zonguldrok a double sword with the reaping brand.
+* Give Undeadhunter a disruption effect against undead instead of holy wrath.
+* Make Wyrmbane's enchantment increase whenever it kills a dragon.
+* Give Scythe of Curses draining brand, inflict necro miscasts on its targets.
+* Mace of Brilliance comes with a halo.
+* Singing Sword does sonic damage at high tension.
+* Bad unrandarts (Misfortune, Folly, Lear's) get a random appearance.
+* Make potions of berserk rage more common.
+
+Tiles
+-----
+* Display halo radius, fix information disparity between tiles and console.
+* Don't allow casting spells in -CAST equipment by clicking on spell icons.
+* Only flying pan lords have tiles with wings.
+* Many new or improved monster, dungeon and interface tiles.
+
+Options
+-------
+* Allow hiding the -cTele indicator with show_no_ctele.
+* Allow automatically assigning specific spells to letters with spell_slot.
+
+
+Stone Soup 0.8 (20110426)
+-------------------------
+
+Disclaimer: These are merely the highlights, not an exhaustive list of changes.
+Breaks save compatibility with the 0.7 release.
+
+0.8 Highlights
+--------------
+* New game mode: Zot Defence, a tower defence mini-game.
+* New god: Ashenzari, god of divinations.
+* New species: Felids, sentient cats.
+* New spells: Malign Gateway, Tornado, Leda's Liquefaction, Summon Dragon,
+  Summon Hydra, Darkness.
+* Removed spells: Bone Shards, Tame Beasts, Portal, Alter Self, Extension.
+* Split Enchantments into Hexes (harm foes) and Charms (self-buffs).
+* Replaced Selective Amnesia spell with scroll and book destruction.
+* Improved heavy armour.
+* Makhleb and the Shining One are no longer available as starting gods.
+* Shortened the Elven Halls.
+
+Gods
+----
+* New god: Ashenzari, god of divinations.
+* Fixed gods sometimes missing from the game due to some temple vaults.
+* Except for Jiyva, prayer is now only used for (piety-gaining) sacrifices.
+  Other effects are abilities.
+* Killing monsters from god wrath doesn't give experience or items anymore.
+* Gods ignore kills of dancing weapons, ball lightning and vortices.
+* No instant divine retribution.
+* Beefed up Cheibriados' wrath; no stat boosts during Chei penance.
+* Eating with Chei doesn't give piety.
+* Cheibriados warns you when putting on boots of running or amulet of rage.
+* Armour keeps its ponderousness when melded.
+* Invoking Elyvilon's protection is now an ability.
+* Destroying weapons in Elyvilon's name is now a prayer.
+* Elyvilon allows destruction of staves.
+* Clarified Ely's healing/pacification messaging.
+* Fedhas cares about trees burnt down in forest fires.
+* Fedhas' corpse decomposition is now activated by prayer.
+* Followers of Jiyva gain food, hp and mp on jellies slurping items.
+* Jiyva no longer provides duplicate conservation and resist corrosion effects.
+* Allowed the player more control over what items to sacrifice to Nemelex (on
+  the '^!' screen).
+* Kikubaaqudgha's invocations use Necromancy skill.
+* Toned down Kiku's mummy death curse protection.
+* Made corpses received from Kiku actually fit for reanimation; reduce number of
+  corpses.
+* Kikubaaqudgha protects followers from ordinary mummy curses.
+* Okawaru: Might -> Heroism, increasing all weapon skills by 5, up to 27.
+* Okawaru: Haste -> Finesse, doubled combat speed (melee and ranged).
+* Okawaru now accepts kills of holy beings.
+* Sif Muna punishes destruction of spellbooks.
+* Sif Muna's miscasts don't decrease penance.
+* Trog extending your rage doesn't cause glow.
+* The Shining One no longer accepts item sacrifices.
+* TSO non-holy summon extension at most doubles the current duration.
+* Prevented starvation by Xom swapping you to a vampiric weapon.
+* Yredelemnul's prayer (Injury Mirror) is now an ability.
+* Injury Mirror can now reflect torment damage.
+* Yredelemnul accepts kills of artificial beings (golems, gargoyles).
+* Overhauled Zin's Recite invocation: much more powerful and interesting.
+* Zin protects from Hell effects, chance depending on piety.
+* Zin forbids shapeshifting spells and protects against Kirke's pig spell.
+* Zin hates monsters with mutagenic/rot corpses.
+* Spell failure while already in yellow glow angers Zin.
+* Butchering forbidden corpses asks for confirmation.
+* Some god welcome messages differ while under penance.
+
+Character
+---------
+* New species: Felids, sentient cats.
+* Increased GDR from body armour. New GDR formula: 14 * (baseAC-2)^(1/2).
+* XP from monster kills is proportional to the damage dealt by player/allies
+  out of total damage.
+* No chain paralysis: When coming out of paralysis, you're immune for 1d3 turns.
+* Removed Paladins, Reavers and Arcane Marksmen.
+* Removed Chaos Knight of Makhleb.
+* Split out CK/Lugonu -> Abyssal Knight, Pr/Yredelemnul -> Death Knight.
+* Overhauled Draconians, now more interesting.
+* Fixed dangerous clouds sometimes being considered safe for travelling.
+* Fixed normal mutations possibly preventing getting them as a perma-mutation.
+* Stop quick actions from letting you search faster.
+* All sources of berserk are blocked at 'Very Hungry'. Berserk automatically
+  stops when you hit 'Starving'.
+* Remove experience pool limit; abbreviate the XP pool above 100K.
+* Stalker background changed to Transmutation-based Stabber.
+* Allow starting with a falchion for Fi and Gl, also restrict trident to these
+  backgrounds.
+* Differentiate Ha/Ko aptitudes: Kobolds are good at Summ/Necro/Hex, Halflings
+  at Charm/Tloc.
+* Halflings gain innate mutation resistance 1.
+* Only cancel levitation once the last equipped +Lev item is removed.
+* Nearing stat death causes paralysis, with increasing chances.
+* Allow Merfolk transformations even in water.
+* Retain talons, fangs and tail in appropriate transformations.
+* Don't allow any headgear with Horns 3 or Antennae 3.
+* Fix mutators and glowing occasionally giving good mutations.
+* Balanced some Demonspawn mutations (Demonic guardian, Nightstalker).
+* Remove Demonspawn breath mutations.
+* Adapt exclusion radius to the Nightstalker mutation.
+* New DS mutation Powered by Pain: restores MP when sufficient damage is taken.
+* Demonspawn Fire and Ice facets are now mutually exclusive.
+* Ghouls may now use food-cost abilities when starving.
+* Ghouls and Vampires may evoke invisibility when starving/bloodless.
+* Make hellfire ignore monster AC.
+* Remove map-forgetting and spell-forgetting Divination miscast effects.
+* Don't prevent blink from putting you in dangerous clouds.
+* Don't train Stealth for pacified monsters.
+* Allowed Merfolk/Kenku to blink over deep water.
+* Allowed Kenku to stop flying.
+* Apply terrain change to player when banished.
+* Brought Merfolk HP down to Human HP levels.
+* Boosted Mummy base MR 3 -> 5.
+* Make LOS reducers multiplicative rather than additive.
+* Potions/cards of experience give you a full level; similarly drain costs a
+  full level.
+* Make stat gain mutations work for satiated Vampires.
+* Replace scroll reading penalty while brainless with 80% failure chance.
+* A wielded ranged weapon will only 'clumsily bash' monsters, no matter its
+  enchantment.
+* Remove the satiation requirements from evokable invis.
+* Disable ghost creation/loading in wizard non-debug mode.
+* Better warning messages for form and levitation expiration.
+* Consistently abort teleportation attempts when wearing stasis or -TELE.
+* Give Ogres an extra +1 hp per level, and +3 apts in Fighting and M&F.
+* Mention dietary and drinkary habits of mummies on the 'A' screen.
+* Also meld wielded weapons.
+* Disallow wearing hats in spider or ice form; allow wearing shields in statue
+  form.
+* Prevent ice form from picking items at the bottom of deep water.
+* Overhaul combo recommendations.
+
+Interface
+---------
+* New tutorial, split into different maps/lessons.
+* Fix a crash when reloading a game after restart_after_game.
+* Allow item interaction from the inventory.
+* Messages for things coming into view even when not exploring.
+* Bind Tab to autofight, shift-Tab to autofight_nomove.
+* Autofight: fire at nearest enemy if wielding a ranged weapon.
+* More status lights: transformations, post-berserk fatigue, temporary
+  resistances.
+* Timeout information for temporary resistances and see invisible.
+* New background choice layout, grouped by category.
+* Display piety on the main screen.
+* Use inventory colours for stats area and % screen.
+* New, more informative and mouse-operable skill menu ('m' screen).
+* Don't consider places next to slime walls as "safe".
+* Allow traveling across radius 1 excluded stairs.
+* Don't generate cloud autoexclusions when immune.
+* Don't prompt for cloud-excluded staircases.
+* Make i_feel_safe() smarter about critters behind lava/statues/etc.
+* Explicitly name inventory items that are getting destroyed.
+* Display ghosts' xl rank, species and background when they come into view.
+* In the console version, don't override monster colour when berserk.
+* Fix exclusion LOS not being updated properly.
+* Make shift-running respect exclusions.
+* Allow ' to auto-switch from unarmed to slot b.
+* Clear stack autopickup flag when dropping an item on top of it.
+* List prompt choices explicitly, i.e. "(y)es or (n)o" rather than "y/n".
+* Starting sub-menus: Escape brings back to main menu instead of exiting the
+  game.
+* Don't waste turns attempting known prevented scroll teleports/blinks.
+* Inscribe item modification scrolls with "tried on foo".
+* Disallow autoexploring while berserking.
+* Don't mark level 1 upstairs and branch exits as unvisited.
+* Colours for output of Ctrl-F.
+* Re-enable highlighting of notes.
+* Colour annotations in Overview.
+* Colouring labyrinth messages.
+* Add force_more_messages for bazaar and labyrinth announcements.
+* Don't prompt for which ring to swap if one of them is cursed.
+* When enchanting an unknown piece of armour, mark it as uncursed.
+* Make the . drop/pickup selector respect quantity input.
+* '*' inverts selection instead of selecting drop_filter, and ',' selects all
+  instead of inverting.
+* More information when missing.
+* More information when MR is effective.
+* Display on the HUD if you're both hasted and slowed.
+* Add a toggle to the discoveries screen to display _un_known items.
+* Check terrain before clouds for moveto check.
+* Don't warn about entering excluded portals.
+* Force a -more- on death.
+* Autoinscribe randarts after death.
+* Taskbar overlap is now automatically detected, and the window is placed just
+  above it.
+* Allow setting of the window size relative to the screen size.
+* Fix Tab not working correctly in startup menus.
+* Reinitialize message window and notes for restart_after_game.
+* Don't waste a turn and/or magic when aborting various actions.
+* For local builds, mention morgue location after hiscore or when doing a
+  chardump.
+* Extend and rearrange tutorial/hints mode command help.
+* Better feedback when canceling various prompts.
+* Split monster/feature quotes into another screen toggleable via '!'.
+* Add several missing descriptions, improve some existing ones.
+
+Spells
+------
+* Split Enchantments skill and spell school into Charms and Hexes.
+* Removed Bone Shards, Tame Beasts, Portal, Alter Self, Extension.
+* New spell: Passage of Golubria (Tloc 5).
+* New spell: Malign Gateway (Summ/Tloc 7).
+* New spell: Tornado (Air 9).
+* New spell: Leda's Liquefaction (Tmut/Earth 4), area slowing effect.
+* New spell: Summon Dragon (Summ 9).
+* New spell: Summon Hydra (Summ 7), summons short-lived 4-12 headed hydra.
+* New spell: Darkness (Hex 7), decreases LOS radius by 2.
+* Prevent passwalling into deep water/lava if it would kill you.
+* Fix Lee's Rapid Deconstruction not obeying some checks when destroying walls.
+* Fix casting cloud spells out of range, or on (and through) walls.
+* Teleportation interrupts Passwall.
+* Fix weapon grinding via Shadow Creatures in the Hall of Blades.
+* Animate Dead no longer animates through walls.
+* Don't prompt for casting auto-hit spells "in direction" of allies.
+* Nerf Haste: multiplies speed by 1.5 instead of 2. Same factors apply to Slow.
+* Replace Selective Amnesia with scroll of amnesia.
+* Allow forgetting spells from books, destroying the book in question.
+* Nerf sticky flame range to 1.
+* Removed slower training for magic schools; doubled xp cost for opposing
+  schools.
+* Stop the player from vampiric draining known demons and undead.
+* Disallow Fulsome Destillation while levitating.
+* Implement a crude spell quiver. Store last spell cast.
+* Add a toggle to the memorisation screen for the spell descriptions.
+* Auto-id items of wizardry if you have spellcasting skills.
+* Enable autotargeting for Vampiric Draining and Freeze.
+* Make Borgnor's Revivification cost 2-11 *percent* of maxhp.
+* Restore casting noise for target spells.
+* Add noise level to spell description.
+* Increased claw damage for Dragon Form, also allows trampling.
+* For Draconians, Dragon Form changes into dragon of the appropriate colour.
+* Animate Skeleton works on unskeletalized corpses and leaves chunks behind.
+* Shadow Creatures summons only mobile monsters.
+* Slightly bump Orb of Destruction (IOOD) damage.
+* Allow Sticks to Snakes on staves and javelins, disallow on steel/silver stuff.
+* Allow Tukimizing staves.
+* New level 3 Air miscasts; buff Air miscasts.
+* Buff Static Discharge: Higher damage and increased chance of arcing.
+* Make Summon Butterflies require spell power for effectiveness.
+* Heavily nerf orb apportation. Chance and distance depend on spell power and
+  total distance.
+* Make Death Channel spectrals temporary, let ally kills work too. Reduce to
+  level 7.
+* Make semi-controlled blink random if it fails to find a location.
+* Evaporate no longer uses Throwing skill.
+* Summon Swarm monsters are always friendly; lower it to level 5.
+* While Ring of Flame is active, flame clouds are removed when you step on them.
+* Make LOS-affecting spells work through transparent walls.
+* Boost LRD damage.
+* Apportation targetting: allow cycling with +/-.
+* When apporting part of a stack, don't destroy the rest of it.
+* Don't rot while under Death's Door.
+* Death channel spectral monsters are not abjurable.
+* Merge low spell success adjectives (Cruddy, Bad, Very Poor) into Very Poor
+  (now 5-30%).
+* Move spells around among various spellbooks.
+* Reduce the chance of any book to be replaced by Power/Wizardry from 10% to 4%.
+* Don't prompt for targeting self with clouds if you've got the matching
+  resistance.
+* Ensure Death's Door leaves you at least 1 hp.
+* Make only heavy armour remove Ozocubu's Armour on wearing.
+* Make large rocks do extra damage with Sandblast.
+* Allow swapping to large rocks when Sandblast is memorised.
+* Offer wielding coagulated blood for Sublimation of Blood.
+* Make transformations affect stealth.
+* Don't cancel Condensation Shield when blinking/teleporting.
+* Don't hurt rC- players with condensation shield.
+* Don't prompt for unwielding weapons branded with Warp Weapon.
+* Don't let Mummies/Lichform cast Sublimation on themselves, do let them cast
+  Passwall.
+* Reduce Haunt duration.
+* Increase Sandblast to range 2 without stones, range 3 with.
+* Boost Stone Arrow damage from 2d12 at 50 power to 3d11.
+* Change several spell levels to be more appropriate.
+* Mention glow in Haste/Invis spell descriptions.
+* Consolidate the books of Minor Magic into a single book.
+* Include spell hunger in the chardump.
+
+Monsters
+--------
+* New monster set: feature mimics.
+* New monster set: holy monsters.
+* New monster set: spriggans.
+* New monster set: deep dwarves (in Abyss, Ziggurats).
+* Several new monsters, including silent spectre, sky beast, porcupine, fire
+  crab, bog mummy, and a few new spiders.
+* New unique: Jory, mesmerising vampire.
+* New monster spells: Cause Fear, Drain Life, Agony, Summon Elemental, Noxious
+  Cloud.
+* Fix a crash when looking up ghosts in the db search.
+* Fix silence working on demons, orbs of fire, etc.
+* Fix messages about monsters coming into view ignoring mislead.
+* Fix monsters being capable of spellcasting while berserk, reading scrolls
+  while silenced.
+* Disallow various attacks on submerged monsters.
+* Fix Aizul and Mara casting through allies.
+* Fix rock worms aimlessly moving around in walls instead of attacking.
+* Get rid of mummy death curses turning potions into decay.
+* Don't give experience or items for killing monsters from god wrath or
+  miscasts.
+* Don't make a monster coming into view leave a trail on the edge of LOS.
+* Give Asmodeus a permanent ring of flames, replace greater demon with fire
+  summon, remove bolt of draining.
+* Give Dispater Lehudib's Crystal Spear instead of Lightning Bolt.
+* Give Geryon a reaching attack, make beasts trample.
+* Give Lom Lobon antimagic attacks.
+* Give Mnoleg blink and mutate attacks, summon eyeballs instead of greater
+  demons, more hp.
+* Give the non-spellcasting random pan lords (10% chance) a guaranteed melee
+  brand, and a chance of greater speed.
+* Compensate for the Haste nerf by slowing some monsters most players fight
+  hasted.
+* Huge monsters (dragons, elephants) can trample smaller ones, shoving them
+  around.
+* Krakens have multi-segment tentacles.
+* Spiders and a few other monsters can cling to walls which allows them to
+  effectively bypass water and other obstacles.
+* Non-stupid monsters try to avoid slime walls.
+* Allies animating dead is okay for hungry level 3 herbivores.
+* Make monsters consider resistances along with AC for armour pickup.
+* Only allow allies to pick up weapons, armour and ammunition.
+* Boost ettins to hit as hard as dual-wielding stone giants. Move them deeper.
+* Sheep can catch fire and spread it to other sheep.
+* Polymorphed uniques may only cast spells if they can speak.
+* Better movement AI for ranged attackers, now try to regain line of fire.
+* Make yaks, death yaks, ugly things and slime creatures stick together when
+  wandering.
+* Try to make wandering band members stick around the leader.
+* Make wandering band members path back to the leader.
+* Let band leaders displace their followers.
+* Allow friendly monsters to path to you across the level.
+* Friendlies start following you again after killing target instead of
+  wandering.
+* Smart monsters use pathfinding to go around shallow water.
+* Monsters floundering in shallow water move slowly and fumble attacks.
+* Large monsters don't flounder in shallow water.
+* Giant monsters can walk through deep water as if it were shallow.
+* Make the royal jelly stay on Slime:6.
+* Limit number of summons from lamp of fire and fan of air.
+* Make skeletal warriors obey silence.
+* Greatly improve cacodemons.
+* Hungry ghost attack takes 25% of your nutrition.
+* Prevent confused giant eyeballs from paralyzing.
+* Make aquatic monsters chase instead of submerging if they can.
+* Friendly monsters told to 'wait here' don't follow through stairs.
+* Merged slimes split on polymorph.
+* Porkelated monsters can't cast spells either.
+* Implement snail/turtle shells; withdrawing into such a shell adds extra
+  protection.
+* Print 'zot!' sound when a friendly monster triggers a zot trap outside LOS.
+* Make zombified monsters retain their stats (at least, HD and HP).
+* Boring beetles may now burrow along diagonals.
+* No elephants in D and Vaults, slightly reduce their frequency in Lair.
+* Remove bears, replace with grizzly or black bears where appropriate.
+* Boost monster ghouls' health and damage.
+* Monsters respect glowing when deciding whether to cast Invisibility.
+* Ugly things may mutate if adjacent to a monster glowing with radiation.
+* Make good and strict neutral monsters not choose nearby foes.
+* Disallow armour mimics from taking the forms of hides.
+* Fix monsters not getting the same bonuses from dragon hides as players.
+* Naga/serpent glyph changes. (See 'settings/071_monster_glyphs.txt'.)
+* Refactor monster vamp draining.
+* Tweak Grinder's spells, weapon, and reduce depth (6-10 -> 3-6).
+* Don't give Grinder a high-tier wand, nor Ijyb in Sprint.
+* Don't hand out pain weapons to Grinder (pain attack flavour) and Pikel (whip
+  of electrocution).
+* Add paralysis and draining to the list of high tier wands.
+* Don't consider plants/fungi 'interesting', no matter their rarity.
+* Give every monster a globally unique id for proper attribution of clouds,
+  poisoning etc.
+
+Levels
+------
+* New game mode: 'Zot Defence'.
+* Shorten Elven Halls from 7 -> 5 floors.
+* Use a random Temple map if the original temple map is no longer available.
+* Fix portal vaults not being deleted after leaving.
+* Place escape hatches in all isolated Orcish Mines bubbles.
+* Make entering portal vaults from Hell work correctly.
+* Travelling to/from the Vestibule of Hell works now.
+* Include "Ten Rune Challenge" Dungeon Sprint map, slightly tweaked.
+* New sprint map by 78291.
+* Prevent randomly teleporting into the Slime:6 loot chambers.
+* Introduce serial vaults consisting of several themed mini vaults.
+* Every random Pan vault now has a 1/9 chance of having a demonic rune in it.
+* No banishment from hell effects.
+* No more darkgrey walls/floors in Geh:7 or Gloorx.
+* Ambient noise levels for dungeon branches (affecting stealth).
+* Describe level 1 upstairs as "staircase leading out of the dungeon."
+* Don't enable cTele by quaffing Elf fountains.
+* Plain water fountains give no nutrition.
+* Fix no-cTele announcements being affected by Translocations skill.
+* Generate at most one labyrinth per game (~70% chance), at depth 10-20, never
+  in Slime or Orc.
+* Troves aren't timed anymore, and always require an item.
+* Nerf troves: increased entry fees, reduced loot.
+* Make troves handle manuals correctly.
+* Don't generate outright useless troves for your species.
+* Timed markers get a second timer, activated on sight.
+* Extend unannounced portal timers to around 3000 turns.
+* Don't open transparent secret doors with warnings.
+* New noise propagation system, taking into account walls and doors.
+* Fix good_item gold giving ludicrous amounts.
+* Fix no traps being generated on Zot:5.
+* Reveal teletraps triggered by a monster in sight.
+* Replace hell exit stairs with portals.
+* Boost alarm trap noise to 25.
+* Two custom traps: basket of spiders, falling grate.
+* Change temple_entry_steam to mist, which doesn't block autotravel.
+* Allow vaults to specify shops, monster gods, wand charges.
+* New temple maps, many with < 12 altars.
+* Many great new vaults (entry vaults, serial, Lair/Snake branch ends, etc.)
+
+Items
+-----
+* New items: scroll of curse jewellery, scroll of amnesia.
+* Remove scrolls of paper, rods of discovery, crystal balls of fixation.
+* Nerf the speed brand. Damage reduced to 90%.
+* Increase the guaranteed damage reduction from armour.
+* Body armour can be enchanted up to a bonus equivalent to its base AC.
+* Enchant armour scrolls don't fail because of high bonus anymore.
+* Antimagic weapon brand.
+* Disable equipment corrosion from slime walls.
+* Remove the robe of the Archmagi's experience penalty.
+* Remove wizardry effect from Archmagi, allow it to enhance Tmut/Tloc spells.
+* Autopickup weapons subjected to Tukima's Dance.
+* Disallow blowing Geryon's horn when silenced.
+* Fix breakage of blood potion stacks when partially eaten by jellies.
+* Fix randarts with unknown base type sometimes not being eligible for
+  ?identify.
+* Fix rod pluses not being considered for ?identify.
+* Fix misleading spell descriptions on rods; display average power.
+* Disallow creation of randart demonic weapons with the holy wrath brand.
+* Fix equipping sInv artefact not reactivating autopickup.
+* Fix throwing nets becoming 'stuck' in certain situations.
+* Fix permafood being coloured brown like contaminated chunks.
+* Inscribe "was cursed" for items uncursed using ?enchant foo.
+* Fix an information leak about magic resistance from unidentified items.
+* Remove random staff ID over time: identify staff types on wield, just like
+  weapons and rods do.
+* Give staves and rods a chance to be generated cursed.
+* Allow staves of poison to affect monsters with rPois; Olgreb is 1/4
+  irresistible.
+* Give the staff of death rN+.
+* Give the staff of summoning warding, sometimes abjure summons on hit.
+* Asphyxiation resistance blocks curare damage, but not slowing.
+* Poison resistance protects against curare entirely.
+* Add new chunk type that is both poisonous and contaminated.
+* Remove +AC/+EV from randarts. Fixedarts still keep them.
+* Auto-id gourmand for non-Mu non-full-herbivores (level 3).
+* Allow cancelling some scrolls without consuming them.
+* Allow (M)emorising from books on the floor.
+* Reintroduce item stat loss prompts.
+* Prompt before wearing or wielding a known-cursed item.
+* Remove misleading messages about weapon str/dex weighting.
+* Don't corrode ammo by clumsily bashing jellies with it.
+* Don't acquire manuals or sage to utterly useless skills.
+* Improve rods of striking: 1d5 -> 1d8.
+* Do proper foe checking for rod spells that are direct effects.
+* ?EWII may uncurse blowguns.
+* Remove nutrition on hit for vampiric weapons.
+* Make Evocations skill help with ball of seeing radius.
+* Disallow use of staff of channeling when starving.
+* Give missiles of flame/frost some bonus damage.
+* Add noise to missiles.
+* Make wield mass check apply to all items.
+* Tweak some cards' probabilities and effects.
+* More detailed corrosion resistance reporting.
+* Mention butchery requirement for food in corpse description.
+* Tweak blood potion descriptions to mention nutrition for non-herbivores.
+* Disable generation of missiles and bows of reaping.
+* Remove scrolls of recharging's effect on weapons of electrocution.
+* Stop the generation of racial missiles.
+* Make ball of energy stat loss now drains between 1 and 2/3 max Int.
+* Improve some unrandart weapons: add brands, more damage.
+* Improve Maxwell's Patent Armour: AC+15, +preservation ego, +MR.
+* Improve Staff of Wucad Mu: remove miscast effects except for when channeling.
+* Make potions of experience give some xp for skills as well.
+* Fix acquirement hardly ever generating "plain" crystal plates and dragon
+  armour.
+* Make acquirement's "redundant armour" check consider things seen rather than
+  worn.
+* Allow acquirement of non-regular shields, weighted by skills.
+* When using an unidentified potion or scroll, display its name in the message.
+* New Demon axe unrandart: obsidian axe, adds a siren-like pull to nearby
+  monsters.
+* All weapons have min 7 delay, or better.
+
+Tiles
+-----
+* Fix crash when searching the database for zombies.
+* Fix mouseclick travel internally using the vi keys.
+* Fix manuals being readable while berserk or "brainless".
+* Fix tooltip leaking mimic information.
+* For the message overlay, treat mouseclicks as relevant to the map (travel
+  etc.) rather than the message history.
+* Run pngcrush in non-debug builds if installed, shaving 700KB per download.
+* Fix randomized animation of unidentified wand/missile.
+* New tile tabs for common commands and for skill management.
+* Space allowing, detach monster, spell and command tabs.
+* Automatically zoom the minimap to fill available space.
+* Generate a Windows Alert dialog on assertions.
+* Allow mouseclick movement through exclusions and stationary monsters.
+* Clicking on an enemy while wielding a ranged weapon fires at it.
+* Fix the need to click on an enemy twice to fire or cast at it.
+* Casting with ctrl+click casts the last spell if appropriate.
+* Suppress tree descriptions on mouseover.
+* Make sure mouseover descriptions are only triggered by mouse movement.
+* Ctrl-mouseclick asks for quantity for drop/pickup.
+* Add disturbance tiles for invisible monsters in clouds.
+* More helpful and less obnoxious exclusion tiles.
+* Reinstate the red haze during berserk.
+* Add species-dependent lich/statue form tiles, capable of weapon display.
+* Use poison icon for player doll, if poisoned.
+* New title screens (Denzi, Omndra).
+* Add tiles to the startup menu.
+* Remove shield tiles from various shieldless monsters.
+* New runed armour/weapon tiles.
+* Fix randart item tiles never actually being used.
+* Many great new monster tiles.
+* Improved Swamp and Lair floor.
+* New dungeon statue, blood, and Xom altar tiles.
+* Reinitialise dungeon tiles if TILE_WALL_MAX changed between versions.
+* Store vault-defined tile names in the save.
+* Overhaul tiles_help.txt.
+
+Technical
+---------
+* No setgid installs, due to many security issues; this means no shared
+  scores or ghosts.
+* Saves are stored in single files, with transactional protection against
+  crashes.
+* Don't include lua chunks in save files.
+* Autosave at game start and in Sprint, to keep crashes from losing the game.
+* Internal changes to handling monsters/LOS/map/UI, merged from NetTiles.
+* Reduce idle clock threshold, fix several bugs in measuring play time.
+* Except for public servers, ensure robustness against filesystem crashes.
+* Special and non-special unrandarts use the same generation code.
+* Reorder spell code by school and functionality.
+* Simplify ghost I/O.
+* Clean up the level generation code.
+
+Options
+-------
+* Change the explore_stop option to use greedy_pickup_smart by default.
+* New travel_key_stop option for whether keypresses should interrupt
+  travel/resting.
+* Default easy_exit_menu to false; make all keyhelp menus respect this option.
+* Make autopickup_no_burden default to true.
+* New console option: 'show_player_species' (default false), uses appropriate
+  monster glyph.
+* New option: 'show_real_turns' (default off).
+* Tiles: New option: 'tile_layout_priority', for fully customizable tile tabs.
+* Tiles: Replace 'tile_title_screen' (default true) with 'tile_skip_title'
+  (false).
+
+
+Stone Soup 0.7.2 (20110207)
+---------------------------
+* Fix crashes on entering new levels with restart_after_game = true.
+* Fix crash with off-level map viewing.
+* Fix a crash when Jiyva worshippers spawn jellies for non-monster-damage.
+* Fix crash when trying to throw a quivered dancing weapon.
+* Fix problems with Unicode locales other than en_US.UTF-8.
+* Fix near-uselessness on ARM.
+* Fix save corruption for too long player names.
+* Don't trap teleporting merfolk in a couple of temples.
+* Disallow targeting passwall at self.
+* Fix stat boosting armour not losing bonus when melding.
+* Fix weapon acquirement not considering some rare weapons.
+* Disable Trowel card in portal vaults, labyrinths, Pan and the Abyss.
+* A variety of other bug fixes.
+
 Stone Soup 0.7.1 (20100724)
 ---------------------------
 * Fix travel excludes not being saved.
@@ -5,7 +963,19 @@ Stone Soup 0.7.1 (20100724)
 
 Stone Soup 0.7 (20100724)
 -------------------------
+
+0.7 Highlights
+--------------
+* Fix over-enthusiastic Armour nerf.
+* New tutorial and mini-game (Dungeon Sprint).
+* Removed instant stat death.
+* Overhauled Demonspawn mutations.
+* Aptitudes now on a scale +5 to -5.
+* New starting menus, mouse-operable in tiles builds.
+* Removed Thief and Death Knight character backgrounds.
+
 Balance fixes
+-------------
 * Monster double actions due to energy randomisation always include a move.
 * Greatly accelerate armour training when armour is heavy relative to skill.
 * Make heavy armour guaranteed damage reduction percentage independent of
@@ -14,7 +984,8 @@ Balance fixes
 * Shields reduce attack speed.
 * Nagas and worshippers of Cheibriados don't suffer from as much hunger.
 
-Unsorted:
+Unsorted
+--------
 * New mini-game, Dungeon Sprint.
 * New tutorial, old tutorial is now a hints mode.
 * Aptitudes now on a scale +5 to -5.
@@ -22,14 +993,16 @@ Unsorted:
 * Magic mapping and Lugonu's self-banishment now work in Pandemonium.
 * Ghouls can no longer starve; they just rot faster.
 
-Interface:
+Interface
+---------
 * New starting menus, mouse-operable in tiles builds.
 * New tiles monster list tab.
 * Swap water and disturbance glyphs ('~' and '{').
 * Show effective weapon speed in '@' character info.
 * Player body size is now described on the "A" screen.
 
-Game:
+Game
+----
 * Walls in the Slime Pits are acidic.
 * Changed shop distribution between branches.
 * Removed instant stat death.
@@ -46,7 +1019,8 @@ Game:
 * Magic contamination effects are more than twice as harsh.
 * The Abyss may now include hand-made structures.
 
-Gods:
+Gods
+----
 * Zin no longer objects to deaths of non-sentient allies, and takes
   collateral kills of unclean and chaotic monsters.
 * Zin has a new power: Imprison.
@@ -59,7 +1033,8 @@ Gods:
   mutations, and produces temporary friendly slimes instead of permanent
   neutral ones via the royal jelly effect.
 
-Items:
+Items
+-----
 * Scrolls of holy word do more damage to susceptible monsters.
 * Blowguns no longer show damage, as they do none; accordingly, scrolls of
   enchant weapon II no longer work on them.
@@ -67,11 +1042,13 @@ Items:
   is properly applied for thrown weapons.
 * Demon tridents can be blessed by TSO.
 
-Backgrounds:
+Backgrounds
+-----------
 * Thieves and Death Knights are no more.
 * Warpers receive darts of dispersal.
 
-Monsters:
+Monsters
+--------
 * Anacondas are now amphibious.
 * Skeletal dragons are renamed to bone dragons.
 * Manes are now iron imps, with stat tweaks.
@@ -88,7 +1065,8 @@ Monsters:
 * New unique: Grinder the shadow imp.
 * Wayne is now capable of laying a major smackdown.
 
-Spells:
+Spells
+------
 * Call Imp is now level 2, takes spell power into account, and can summon
   iron imps.
 * Call Canine Familiar replaces Summon Elemental in the book of Callings,
@@ -99,7 +1077,8 @@ Spells:
 * Death's Door only blocks healing, paralysis only for Revivification.
 * Summon Ugly Things is level 6, Haunt is level 7.
 
-Technical:
+Technical
+---------
 * LOS and areas recalculated on-demand.
 * Asserts are enabled by default.
 * Abstract tiles code from SDL and OpenGL.
@@ -1745,4 +2724,3 @@ Stone Soup 0.1 (20060918)
 * Jelly pits
 * Missile weapons are stronger.
 * Evocations no longer increases max MP.
-

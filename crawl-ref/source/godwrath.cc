@@ -1,7 +1,7 @@
-/*
- *  File:       godwrath.cc
- *  Summary:    Divine retribution.
- */
+/**
+ * @file
+ * @brief Divine retribution.
+**/
 
 #include "AppHdr.h"
 
@@ -19,7 +19,6 @@
 #include "food.h"
 #include "ghost.h"
 #include "godabil.h"
-#include "it_use2.h"
 #include "libutil.h"
 #include "message.h"
 #include "misc.h"
@@ -33,6 +32,7 @@
 #include "mutation.h"
 #include "ouch.h"
 #include "player-stats.h"
+#include "potion.h"
 #include "religion.h"
 #include "spl-clouds.h"
 #include "spl-goditem.h"
@@ -48,11 +48,14 @@
 
 #include <sstream>
 
+#define random_mons(...) static_cast<monster_type>(random_choose(__VA_ARGS__))
+
 static void _god_smites_you(god_type god, const char *message = NULL,
                             kill_method_type death_type = NUM_KILLBY);
 static bool _beogh_idol_revenge();
 static void _tso_blasts_cleansing_flame(const char *message = NULL);
 static bool _tso_holy_revenge();
+static bool _ely_holy_revenge(const monster *victim);
 
 static bool _yred_random_zombified_hostile()
 {
@@ -70,9 +73,13 @@ static bool _yred_random_zombified_hostile()
     else
         z_type = skel ? MONS_SKELETON_SMALL : MONS_ZOMBIE_SMALL;
 
-    return (create_monster(mgen_data::hostile_at(z_type,
-                    "the anger of Yredelemnul", true,
-                    0, 0, you.pos(), 0, GOD_YREDELEMNUL, z_base)) != -1);
+    mgen_data temp = mgen_data::hostile_at(z_type, "the anger of Yredelemnul",
+                                           true, 0, 0, you.pos(), 0,
+                                           GOD_YREDELEMNUL, z_base);
+
+    temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
+    return (create_monster(temp, false) != -1);
 }
 
 static bool _okawaru_random_servant()
@@ -92,10 +99,13 @@ static bool _okawaru_random_servant()
                 (temp_rand < 95) ? MONS_HILL_GIANT         //  5%
                                  : MONS_TITAN);            //  5%
 
-    return (create_monster(
-                mgen_data::hostile_at(mon_type, "the fury of Okawaru",
-                                      true, 6, MON_SUMM_WRATH, you.pos(), 0,
-                                      GOD_OKAWARU)) != -1);
+    mgen_data temp = mgen_data::hostile_at(mon_type, "the fury of Okawaru",
+                                           true, 0, 0, you.pos(), 0,
+                                           GOD_OKAWARU);
+
+    temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
+    return (create_monster(temp, false) != -1);
 }
 
 static bool _tso_retribution()
@@ -204,7 +214,7 @@ static bool _zin_retribution()
             you.hibernate();
             break;
         case 2:
-            you.paralyse(NULL, 3 + random2(10));
+            paralyse_player("the wrath of Zin", 3 + random2(10));
             break;
         }
         break;
@@ -390,7 +400,7 @@ static bool _cheibriados_retribution()
             break;
     // No tension wrath.
     case 0:
-        if (curse_an_item(true, false))
+        if (curse_an_item())
             simple_god_message(" makes up for lost time.", god);
         else
             glammer = true;
@@ -411,12 +421,15 @@ static bool _makhleb_retribution()
 
     if (random2(you.experience_level) > 7 && !one_chance_in(5))
     {
-        bool success = (create_monster(
-                           mgen_data::hostile_at(
-                               static_cast<monster_type>(
-                                   MONS_EXECUTIONER + random2(5)),
-                               "the fury of Makhleb",
-                               true, 0, 0, you.pos(), 0, god)) != -1);
+        mgen_data temp =
+            mgen_data::hostile_at(random_mons(MONS_EXECUTIONER, MONS_GREEN_DEATH,
+                                  MONS_BLIZZARD_DEMON, MONS_BALRUG, MONS_CACODEMON, -1),
+                                  "the fury of Makhleb",
+                                  true, 0, 0, you.pos(), 0, god);
+
+        temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
+        bool success = create_monster(temp, false) != -1;
 
         simple_god_message(success ? " sends a greater servant after you!"
                                    : "'s greater servant is unavoidably "
@@ -429,12 +442,16 @@ static bool _makhleb_retribution()
 
         for (; how_many > 0; --how_many)
         {
-            if (create_monster(
-                    mgen_data::hostile_at(
-                        static_cast<monster_type>(
-                            MONS_NEQOXEC + random2(5)),
-                        "the fury of Makhleb",
-                        true, 0, 0, you.pos(), 0, god)) != -1)
+            mgen_data temp =
+                mgen_data::hostile_at(random_mons(MONS_HELLWING, MONS_NEQOXEC,
+                                      MONS_ORANGE_DEMON, MONS_SMOKE_DEMON,
+                                      MONS_YNOXINUL, -1),
+                                      "the fury of Makhleb",
+                                      true, 0, 0, you.pos(), 0, god);
+
+            temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
+            if (create_monster(temp, false) != -1)
             {
                 count++;
             }
@@ -462,7 +479,7 @@ static bool _kikubaaqudgha_retribution()
         kiku_receive_corpses(you.experience_level * 4, you.pos());
 
         if (coinflip())
-            corpse_rot();
+            corpse_rot(&you);
     }
 
     if (coinflip())
@@ -480,7 +497,7 @@ static bool _kikubaaqudgha_retribution()
     {
         // torment, or 3 necromancy miscasts
         if (!player_res_torment(false))
-            torment(TORMENT_KIKUBAAQUDGHA, you.pos());
+            torment(NULL, TORMENT_KIKUBAAQUDGHA, you.pos());
         else
         {
             for (int i = 0; i < 3; ++i)
@@ -570,7 +587,7 @@ static bool _trog_retribution()
 
                 points -= cost;
 
-                if (summon_berserker(cost * 20, god, 0, true))
+                if (summon_berserker(cost * 20, 0))
                     count++;
             }
         }
@@ -707,8 +724,7 @@ static bool _beogh_retribution()
 
                 item_colour(wpn);
 
-                if (coinflip())
-                    menv[mon].flags |= MF_HARD_RESET;
+                menv[mon].flags |= (MF_NO_REWARD | MF_HARD_RESET);
 
                 ghost_demon newstats;
                 newstats.init_dancing_weapon(wpn,
@@ -755,10 +771,13 @@ static bool _beogh_retribution()
         else
             punisher = MONS_ORC;
 
-        int mons = create_monster(
-                       mgen_data::hostile_at(punisher,
-                           "the wrath of Beogh",
-                           true, 0, 0, you.pos(), MG_PERMIT_BANDS, god));
+        mgen_data temp = mgen_data::hostile_at(punisher, "the wrath of Beogh",
+                                               true, 0, 0, you.pos(),
+                                               MG_PERMIT_BANDS, god);
+
+        temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
+        int mons = create_monster(temp, false);
 
         // sometimes name band leader
         if (mons != -1 && one_chance_in(3))
@@ -819,6 +838,10 @@ static bool _sif_muna_retribution()
         break;
 
     case 7:
+        if (!forget_spell())
+            mpr("You get a splitting headache.");
+                break;
+
     case 8:
         if (you.magic_points > 0)
         {
@@ -865,12 +888,15 @@ static bool _lugonu_retribution()
 
     if (random2(you.experience_level) > 7 && !one_chance_in(5))
     {
-        bool success = (create_monster(
-                           mgen_data::hostile_at(
-                               static_cast<monster_type>(
-                                   MONS_GREEN_DEATH + random2(3)),
-                               "the touch of Lugonu",
-                               true, 0, 0, you.pos(), 0, god)) != -1);
+        mgen_data temp =
+            mgen_data::hostile_at(random_mons(MONS_GREEN_DEATH,
+                                  MONS_BLIZZARD_DEMON, MONS_BALRUG, -1),
+                                  "the touch of Lugonu",
+                                  true, 0, 0, you.pos(), 0, god);
+
+        temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
+        bool success = create_monster(temp, false) != -1;
 
         simple_god_message(success ? " sends a demon after you!"
                                    : "'s demon is unavoidably detained.", god);
@@ -882,12 +908,16 @@ static bool _lugonu_retribution()
 
         for (; how_many > 0; --how_many)
         {
-            if (create_monster(
-                   mgen_data::hostile_at(
-                       static_cast<monster_type>(
-                           MONS_NEQOXEC + random2(5)),
-                       "the touch of Lugonu",
-                       true, 0, 0, you.pos(), 0, god)) != -1)
+            mgen_data temp =
+                mgen_data::hostile_at(random_mons(MONS_HELLWING, MONS_NEQOXEC,
+                                      MONS_ORANGE_DEMON, MONS_SMOKE_DEMON,
+                                      MONS_YNOXINUL, -1),
+                                      "the touch of Lugonu",
+                                      true, 0, 0, you.pos(), 0, god);
+
+            temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
+            if (create_monster(temp, false) != -1)
             {
                 success = true;
             }
@@ -990,7 +1020,7 @@ static bool _jiyva_retribution()
                 }
 
                 if (transform(random2(you.penance[GOD_JIYVA]) * 2, form, true))
-                    you.transform_uncancellable = false;
+                    you.transform_uncancellable = true;
             }
     }
     else
@@ -998,7 +1028,7 @@ static bool _jiyva_retribution()
         const monster_type slimes[] = {
                 MONS_GIANT_EYEBALL, MONS_EYE_OF_DRAINING,
                 MONS_EYE_OF_DEVASTATION, MONS_GREAT_ORB_OF_EYES,
-                MONS_GIANT_SPORE, MONS_SHINING_EYE, MONS_GIANT_ORANGE_BRAIN,
+                MONS_SHINING_EYE, MONS_GIANT_ORANGE_BRAIN,
                 MONS_JELLY, MONS_BROWN_OOZE, MONS_ACID_BLOB, MONS_AZURE_JELLY,
                 MONS_DEATH_OOZE, MONS_SLIME_CREATURE
             };
@@ -1010,10 +1040,14 @@ static bool _jiyva_retribution()
         {
             const monster_type slime = RANDOM_ELEMENT(slimes);
 
-            if (create_monster(
-                    mgen_data::hostile_at(static_cast<monster_type>(slime),
-                        "the vengeance of Jiyva",
-                        true, 0, 0, you.pos(), 0, god)) != -1)
+            mgen_data temp =
+                mgen_data::hostile_at(static_cast<monster_type>(slime),
+                                      "the vengeance of Jiyva",
+                                      true, 0, 0, you.pos(), 0, god);
+
+            temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
+            if (create_monster(temp, false) != -1)
             {
                 success = true;
             }
@@ -1105,6 +1139,8 @@ static bool _fedhas_retribution()
                                   MG_FORCE_PLACE,
                                   GOD_FEDHAS);
 
+       temp.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
+
         // If we have a lot of space to work with we can do something
         // flashy.
         if (radius_points[max_idx].size() > free_thresh)
@@ -1173,14 +1209,14 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
 {
     ASSERT(god != GOD_NO_GOD);
 
-    if (god == GOD_JIYVA && jiyva_is_dead())
+    if (is_unavailable_god(god))
         return (false);
 
     // Good gods don't use divine retribution on their followers, and
     // gods don't use divine retribution on followers of gods they don't
     // hate.
     if (!force && ((god == you.religion && is_good_god(god))
-        || (god != you.religion && !god_hates_your_god(god))))
+        || (!god_hates_your_god(god))))
     {
         return (false);
     }
@@ -1191,7 +1227,9 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     switch (god)
     {
     // One in ten chance that Xom might do something good...
-    case GOD_XOM: xom_acts(one_chance_in(10), abs(you.piety - 100)); break;
+    case GOD_XOM:
+        xom_acts(one_chance_in(10), abs(you.piety - HALF_MAX_PIETY));
+        break;
     case GOD_SHINING_ONE:   do_more = _tso_retribution(); break;
     case GOD_ZIN:           do_more = _zin_retribution(); break;
     case GOD_MAKHLEB:       do_more = _makhleb_retribution(); break;
@@ -1208,6 +1246,10 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     case GOD_JIYVA:         do_more = _jiyva_retribution(); break;
     case GOD_FEDHAS:        do_more = _fedhas_retribution(); break;
     case GOD_CHEIBRIADOS:   do_more = _cheibriados_retribution(); break;
+
+    case GOD_ASHENZARI:
+        // No reduction with time.
+        return (false);
 
     default:
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_RELIGION)
@@ -1248,7 +1290,7 @@ bool divine_retribution(god_type god, bool no_bonus, bool force)
     return (true);
 }
 
-bool do_god_revenge(conduct_type thing_done)
+bool do_god_revenge(conduct_type thing_done, const monster *victim)
 {
     bool retval = false;
 
@@ -1260,7 +1302,12 @@ bool do_god_revenge(conduct_type thing_done)
     case DID_KILL_HOLY:
     case DID_HOLY_KILLED_BY_UNDEAD_SLAVE:
     case DID_HOLY_KILLED_BY_SERVANT:
-        retval = _tso_holy_revenge();
+        // It's TSO who does the smiting and war stuff so he handles revenge
+        // for his allies as well -- unless another god has some special ties.
+        if (victim && victim->god == GOD_ELYVILON)
+            retval = _ely_holy_revenge(victim);
+        else
+            retval = _tso_holy_revenge();
         break;
     default:
         break;
@@ -1371,6 +1418,51 @@ static bool _tso_holy_revenge()
     return (false);
 }
 
+// Killing apises may make Elyvilon sad.  She'll sulk and stuff.
+static bool _ely_holy_revenge(const monster *victim)
+{
+    // It's a mild effect, a relatively big chance is ok.  Keeping it small
+    // though -- we don't want gods to be omniescent.
+    if (!one_chance_in(3))
+        return false;
+
+    god_acting gdact(GOD_ELYVILON, true);
+
+    std::string msg = getSpeakString("Elyvilon holy");
+    if (msg.empty())
+        msg = "Elyvilon is displeased.";
+    mpr(msg.c_str(), MSGCH_GOD, GOD_ELYVILON);
+
+    std::vector<monster*> patients;
+    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    {
+        // healer not necromancer
+        if (!mi->alive())
+            continue;
+        // hates undead -- would she heal demons out of spite for you?
+        if (mi->is_evil(false) || mi->is_unholy(false))
+            continue;
+        // your associates are presumed guilty
+        if (mi->wont_attack())
+            continue;
+        if (mi->hit_points >= mi->max_hit_points)
+            continue;
+        patients.push_back(*mi);
+    }
+    if (patients.empty())
+        return false;
+
+    mpr("Elyvilon touches your foes with healing grace.");
+    for (std::vector<monster*>::const_iterator mi = patients.begin();
+         mi != patients.end(); ++mi)
+    {
+        simple_monster_message(*mi, " is healed.");
+        (*mi)->heal(10 + random2(10), false);
+    }
+
+    return (true);
+}
+
 static void _god_smites_you(god_type god, const char *message,
                             kill_method_type death_type)
 {
@@ -1402,7 +1494,7 @@ static void _god_smites_you(god_type god, const char *message,
         if (death_type != KILLED_BY_BEOGH_SMITING
             && death_type != KILLED_BY_TSO_SMITING)
         {
-            aux = "smote by " + god_name(god);
+            aux = "smitten by " + god_name(god);
         }
 
         // If there's a message, display it before smiting.
@@ -1418,4 +1510,18 @@ static void _god_smites_you(god_type god, const char *message,
         ouch(divine_hurt, NON_MONSTER, death_type, aux.c_str());
         dec_penance(god, 1);
     }
+}
+
+void ash_reduce_penance(int amount)
+{
+    if (!you.penance[GOD_ASHENZARI] || !you.exp_docked_total)
+        return;
+
+    int lost = std::min(amount / 2, you.exp_docked);
+    you.exp_docked -= lost;
+
+    int new_pen = (((int64_t)you.exp_docked * 50) + you.exp_docked_total - 1)
+                / you.exp_docked_total;
+    if (new_pen < you.penance[GOD_ASHENZARI])
+        dec_penance(GOD_ASHENZARI, you.penance[GOD_ASHENZARI] - new_pen);
 }

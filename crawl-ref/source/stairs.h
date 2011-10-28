@@ -1,7 +1,7 @@
-/*
- * File:     stairs.h
- * Summary:  Moving between levels.
- */
+/**
+ * @file
+ * @brief Moving between levels.
+**/
 
 #ifndef STAIRS_H
 #define STAIRS_H
@@ -12,9 +12,7 @@ void down_stairs(dungeon_feature_type force_stair = DNGN_UNSEEN,
                  const level_id* force_dest = NULL);
 void up_stairs(dungeon_feature_type force_stair = DNGN_UNSEEN,
                entry_cause_type entry_cause = EC_UNKNOWN);
-void new_level();
-int runes_in_pack(std::vector<int> &runes);
+void new_level(bool restore = false);
 
-dungeon_feature_type random_stair ();
-dungeon_feature_type random_branch_stair ();
+dungeon_feature_type random_stair(bool do_place_check = true);
 #endif

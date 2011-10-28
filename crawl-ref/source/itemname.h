@@ -1,8 +1,7 @@
-/*
- *  File:       itemname.h
- *  Summary:    Misc functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc functions.
+**/
 
 
 #ifndef ITEMNAME_H
@@ -17,16 +16,6 @@ struct item_types_pair
 {
     object_class_type base_type;
     uint8_t           sub_type;
-};
-
-enum item_type_id_type
-{
-    IDTYPE_WANDS = 0,
-    IDTYPE_SCROLLS,
-    IDTYPE_JEWELLERY,
-    IDTYPE_POTIONS,
-    IDTYPE_STAVES,
-    NUM_IDTYPE
 };
 
 // [dshaligram] If you edit potion colours/descriptions, also update
@@ -88,12 +77,13 @@ enum
     NDSC_BOOK_SEC  = 8,
 };
 
-bool is_vowel(const char chr);
+bool is_vowel(const ucs_t chr);
 int property(const item_def &item, int prop_type);
 
 const char* racial_description_string(const item_def& item, bool terse = false);
 
-bool check_item_knowledge(bool quiet = false, bool inverted = false);
+void check_item_knowledge(bool unknown_items = false);
+void display_runes();
 
 std::string quant_name(const item_def &item, int quant,
                         description_level_type des, bool terse = false);
@@ -118,10 +108,7 @@ const char* armour_ego_name(const item_def& item, bool terse);
 
 void init_properties();
 
-const int NUM_ID_SUBTYPE = 50;
-typedef FixedArray<item_type_id_state_type, NUM_IDTYPE, NUM_ID_SUBTYPE> id_arr;
-
-id_arr& get_typeid_array();
+bool item_type_has_ids(object_class_type base_type);
 item_type_id_state_type get_ident_type(const item_def &item);
 item_type_id_state_type get_ident_type(object_class_type basetype,
                                        int subtype);
@@ -144,6 +131,7 @@ item_types_pair item_types_by_name(std::string name);
 std::vector<std::string> item_name_list_for_glyph(unsigned glyph);
 
 const char* wand_type_name(int wandtype);
+const char* rune_type_name(int p);
 
 bool        is_named_corpse(const item_def &corpse);
 std::string get_corpse_name(const item_def &corpse,

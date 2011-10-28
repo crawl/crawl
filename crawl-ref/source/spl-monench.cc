@@ -1,8 +1,8 @@
-/*
- *  File:     spl-monench.cc
- *  Summary:  Monster-affecting enchantment spells.
- *            Other targeted enchantments are handled in spl-zap.cc.
- */
+/**
+ * @file
+ * @brief Monster-affecting enchantment spells.
+ *           Other targeted enchantments are handled in spl-zap.cc.
+**/
 
 #include "AppHdr.h"
 
@@ -31,7 +31,7 @@ static int _sleep_monsters(coord_def where, int pow, int, actor *)
     if (!mons->can_hibernate(true))
         return (0);
 
-    if (mons->check_res_magic(pow))
+    if (mons->check_res_magic(pow) > 0)
         return (0);
 
     const int res = mons->res_cold();
@@ -46,72 +46,11 @@ static int _sleep_monsters(coord_def where, int pow, int, actor *)
     return (1);
 }
 
-void cast_mass_sleep(int pow)
+spret_type cast_mass_sleep(int pow, bool fail)
 {
-    apply_area_visible(_sleep_monsters, pow);
-}
-
-// This is a hack until we set an is_beast flag in the monster data
-// (which we might never do, this is sort of minor.)
-// It's a list of monster types which can be affected by beast taming.
-static bool _is_domesticated_animal(int type)
-{
-    const monster_type types[] = {
-        MONS_GIANT_BAT, MONS_HOUND, MONS_JACKAL, MONS_RAT,
-        MONS_YAK, MONS_WYVERN, MONS_HIPPOGRIFF, MONS_GRIFFON,
-        MONS_DEATH_YAK, MONS_WAR_DOG, MONS_GREY_RAT,
-        MONS_GREEN_RAT, MONS_ORANGE_RAT, MONS_SHEEP,
-        MONS_HOG, MONS_GIANT_FROG, MONS_GIANT_TOAD,
-        MONS_SPINY_FROG, MONS_BLINK_FROG, MONS_WOLF, MONS_WARG,
-        MONS_BEAR, MONS_GRIZZLY_BEAR, MONS_POLAR_BEAR, MONS_BLACK_BEAR
-    };
-
-    for (unsigned int i = 0; i < ARRAYSZ(types); ++i)
-        if (types[i] == type)
-            return (true);
-
-    return (false);
-}
-
-static int _tame_beast_monsters(coord_def where, int pow, int, actor *)
-{
-    monster* mons = monster_at(where);
-    if (mons == NULL)
-        return 0;
-
-    if (!_is_domesticated_animal(mons->type) || mons->friendly()
-        || player_will_anger_monster(mons))
-    {
-        return 0;
-    }
-
-    if (you.species == SP_CAT && mons_genus(mons->type) == MONS_HOUND)
-        return 0;
-
-    // 50% bonus for dogs
-    if (mons->type == MONS_HOUND || mons->type == MONS_WAR_DOG)
-        pow += (pow / 2);
-
-    if (you.species == SP_HILL_ORC && mons->type == MONS_WARG)
-        pow += (pow / 2);
-
-    if (mons->check_res_magic(pow))
-        return 0;
-
-    simple_monster_message(mons, " is tamed!");
-
-    if (random2(100) < random2(pow / 10))
-        mons->attitude = ATT_FRIENDLY;  // permanent
-    else
-        mons->add_ench(ENCH_CHARM);     // temporary
-    mons_att_changed(mons);
-
-    return 1;
-}
-
-void cast_tame_beasts(int pow)
-{
-    apply_area_visible(_tame_beast_monsters, pow);
+    fail_check();
+    apply_area_visible(_sleep_monsters, pow, true);
+    return SPRET_SUCCESS;
 }
 
 bool backlight_monsters(coord_def where, int pow, int garbage)
@@ -128,15 +67,16 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
         return (false);
 
     mon_enchant bklt = mons->get_ench(ENCH_CORONA);
-    const int lvl = bklt.degree;
+    mon_enchant zin_bklt = mons->get_ench(ENCH_SILVER_CORONA);
+    const int lvl = bklt.degree + zin_bklt.degree;
 
     // This enchantment overrides invisibility (neat).
     if (mons->has_ench(ENCH_INVIS))
     {
-        if (!mons->has_ench(ENCH_CORONA))
+        if (!mons->has_ench(ENCH_CORONA) && !mons->has_ench(ENCH_SILVER_CORONA))
         {
             mons->add_ench(
-                mon_enchant(ENCH_CORONA, 1, KC_OTHER, random_range(30, 50)));
+                mon_enchant(ENCH_CORONA, 1, 0, random_range(30, 50)));
             simple_monster_message(mons, " is lined in light.");
         }
         return (true);
@@ -154,7 +94,7 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
     return (true);
 }
 
-bool do_slow_monster(monster* mon, kill_category whose_kill)
+bool do_slow_monster(monster* mon, const actor* agent)
 {
     // Try to remove haste, if monster is hasted.
     if (mon->del_ench(ENCH_HASTE, true))
@@ -166,7 +106,7 @@ bool do_slow_monster(monster* mon, kill_category whose_kill)
     // Not hasted, slow it.
     if (!mon->has_ench(ENCH_SLOW)
         && !mons_is_stationary(mon)
-        && mon->add_ench(mon_enchant(ENCH_SLOW, 0, whose_kill)))
+        && mon->add_ench(mon_enchant(ENCH_SLOW, 0, agent)))
     {
         if (!mon->paralysed() && !mon->petrified()
             && simple_monster_message(mon, " seems to slow down."))
@@ -178,8 +118,10 @@ bool do_slow_monster(monster* mon, kill_category whose_kill)
     return (false);
 }
 
-bool project_noise()
+// XXX: Not sure why you can't exit map and cancel the spell.
+spret_type project_noise(bool fail)
 {
+    fail_check();
     bool success = false;
 
     coord_def pos(1, 0);
@@ -217,5 +159,5 @@ bool project_noise()
         }
     }
 
-    return (success);
+    return SPRET_SUCCESS;
 }

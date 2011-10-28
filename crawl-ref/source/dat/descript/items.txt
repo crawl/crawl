@@ -17,7 +17,7 @@ Should the wearer of this amulet be levitated by magical means, he or she will b
 %%%%
 amulet of guardian spirit
 
-This amulet makes its wearer immune to external damage, draining magical power instead. Should the reserves of magic be depleted, the spirit will fail to provide its protection until more power is available.
+This amulet makes its wearer less susceptible to external damage, draining magical power instead. Should the reserves of magic be depleted, the spirit will fail to provide its protection until more power is available.
 %%%%
 amulet of inaccuracy
 
@@ -105,10 +105,6 @@ blessed great sword
 
 A sword with a very long, heavy blade and a long handle. It has been enhanced by the Shining One's power.
 %%%%
-blessed katana
-
-A very rare and extremely effective imported weapon, featuring a long single-edged blade. It has been enhanced by the Shining One's power.
-%%%%
 blessed long sword
 
 A sword with a long, slashing blade. It has been enhanced by the Shining One's power.
@@ -131,11 +127,23 @@ A crossbow bolt.
 %%%%
 book of air
 
-A book of magic spells.
+A book of magic spells. You feel a faint breeze as you open the pages.
+%%%%
+book of alchemy
+
+A slightly seared book, with a hole burnt through the cover.
 %%%%
 book of annihilations
 
 While browsing, you note blood leaking from the pages. Even an illiterate will feel the sheer impact of arcane fury contained in this book. It is sought after by sorcerers, for it allows the gifted and resourceful to command destruction with the ease of a twinkle. Feeble wizards, however, may well meet their doom when trying to read this opus.
+%%%%
+book of beasts
+
+A book of magic spells. Be careful to not get bitten!
+%%%%
+book of burglary
+
+A worn-looking book, with a small key pressed between two pages.
 %%%%
 book of callings
 
@@ -171,15 +179,15 @@ A book of magic spells.
 %%%%
 book of death
 
-A book of magic spells.
+A black book containing spells written in a hasty scrawl.
 %%%%
-book of demonology
-
-When touching this book, you hear faint screams of tortured souls. Each and every page is about demons, demons of all kinds and sizes, and how to unleash them unto this unsuspecting world. Many wizards have proven too weak to stand the power of this tome. You are not sure whether you hear the screams of the countless victims, which have been eaten, maimed and raped by the demons. Or do you scream yet?
-%%%%
-book of divinations
+book of debilitation
 
 A book of magic spells.
+%%%%
+book of dreams
+
+A translucent book; light plays strangely on its surface.
 %%%%
 book of enchantments
 
@@ -199,15 +207,15 @@ A book of magic spells.
 %%%%
 book of fire
 
-A book of magic spells.
+A completely scorched book of magic spells.
 %%%%
 book of flames
 
-A book of magic spells.
+A slightly seared book of magic spells.
 %%%%
 book of frost
 
-A book of magic spells.
+A book of magic spells, cold to the touch.
 %%%%
 book of geomancy
 
@@ -223,6 +231,10 @@ A book of magic spells.
 %%%%
 book of ice
 
+A book of magic spells. An icy wind chills you for a second as you open it.
+%%%%
+book of maledictions
+
 A book of magic spells.
 %%%%
 book of minor magic
@@ -235,17 +247,13 @@ A book of magic spells.
 %%%%
 book of necromancy
 
-A book of magic spells.
+A dusty tome of forbidden magic.
 %%%%
 book of party tricks
 
 A book of magic spells.
 %%%%
 book of power
-
-A book of magic spells.
-%%%%
-book of practical magic
 
 A book of magic spells.
 %%%%
@@ -261,9 +269,9 @@ book of summonings
 
 A book of magic spells.
 %%%%
-book of surveyances
+book of the dragon
 
-A book of magic spells.
+A book of magic spells; it is warm to the touch.
 %%%%
 book of the earth
 
@@ -271,7 +279,7 @@ A book of magic spells.
 %%%%
 book of the sky
 
-A book of magic spells.
+A book of magic spells. Sparks fly from the pages.
 %%%%
 book of the tempests
 
@@ -285,41 +293,17 @@ book of transfigurations
 
 A book of magic spells.
 %%%%
-book of tukima
-
-A book of magic spells.
-%%%%
 book of unlife
 
-A book of magic spells.
+A book of magic spells, filled with sigils for binding the dead.
 %%%%
 book of war chants
 
-A book of magic spells.
+A book of spells helpful for a warrior. The versions contained here have a musical form, following the traditions of fighting skalds. Functionally, though, they work the same as spells whose magic words are merely spoken.
 %%%%
 book of wizardry
 
 A book of magic spells.
-%%%%
-book of brands
-
-This book contains magical spells related to the branding of weapons and launchers, as well as spells that are helpful in all forms of ranged combat.
-%%%%
-book of the dragon
-
-A book of magic spells; it is warm to the touch.
-%%%%
-book of burglary
-
-A worn-looking book, with a small key pressed between two pages.
-%%%%
-book of dreams
-
-A translucent book; light plays strangely on its surface.
-%%%%
-book of chemistry
-
-A slightly seared book, with a hole burnt through the cover.
 %%%%
 bottled efreet
 
@@ -379,7 +363,7 @@ A heavy piece of wood, to be held or thrown. Coshing someone on the head while t
 %%%%
 corpse
 
-A corpse.
+A corpse. You can butcher it to produce edible meat chunks.
 %%%%
 crossbow
 
@@ -389,17 +373,9 @@ crystal ball of energy
 
 A magical device which can be used to restore one's reserves of magical energy, but the use of which carries the risk of draining all of those energies completely. This risk varies inversely with the proportion of their maximum energy which the user possesses; a user near his or her full potential will find this item most beneficial.
 %%%%
-crystal ball of fixation
-
-A dangerous item which hypnotises anyone so unwise as to gaze into it, leaving them helpless for a significant length of time.
-%%%%
-crystal ball of seeing
-
-A magical device which allows one to see the layout of one's surroundings. It requires a degree of magical ability to be used reliably, otherwise it can produce unpredictable and possibly harmful results.
-%%%%
 crystal plate mail
 
-An incredibly heavy but extremely effective suit of crystalline armour. It is somewhat resistant to corrosion.
+An incredibly heavy but extremely effective suit of crystalline armour.
 %%%%
 dagger
 
@@ -425,7 +401,7 @@ deck of destruction
 
 A deck of magical cards, most of which hurl death and destruction at one's foes (or, if unlucky, at oneself).
 
-It may contain the following cards: Vitriol, Flame, Frost, Venom, the Spark, the Hammer, Pain, Torment.
+It may contain the following cards: Vitriol, Flame, Frost, Venom, the Spark, the Hammer, Pain, the Orb.
 %%%%
 deck of dungeons
 
@@ -443,7 +419,7 @@ deck of punishment
 
 A deck of magical cards which wreak havoc on the user.
 
-It may contain the following cards: Wrath, the Wraith, the Curse, Xom, Famine, Wild Magic, the Portal, the Tomb, Damnation, the Minefield.
+It may contain the following cards: Wrath, the Wraith, the Curse, Xom, Famine, Wild Magic, the Portal, the Tomb, Damnation, the Minefield, Torment.
 %%%%
 deck of summonings
 
@@ -459,9 +435,9 @@ It may contain the following cards: the Portal, the Warp, Swap, Velocity, the To
 %%%%
 deck of wonders
 
-A deck of highly mysterious and magical cards, which can permanently alter the drawer's physical and mental condition, for better or worse.
+A deck of highly mysterious and magical cards, which can alter the drawer's physical and mental condition, for better or worse.
 
-It may contain the following cards: the Potion, Focus, Shuffle, Experience, Wild Magic, the Helix, the Sage.
+It may contain the following cards: the Potion, Focus, Shuffle, Experience, Wild Magic, the Helix, the Sage, the Alchemist.
 %%%%
 demon blade
 
@@ -481,19 +457,11 @@ A flail with spiked lumps on both ends.
 %%%%
 disc of storms
 
-This extremely powerful item can unleash a destructive storm of electricity. It is especially effective in the hands of one skilled in air elemental magic, but cannot be used by one who is not a conductor.
+This extremely powerful item can unleash a destructive storm of electricity. Its effectiveness greatly improves in the hands of one skilled in using magical devices, but cannot be used by one who is not a conductor.
 %%%%
 double sword
 
 A magical weapon with two razor-sharp blades.
-%%%%
-dragon armour
-
-A magical armour, made from the scales of a fire-breathing dragon. It provides great protection from the effects of fire, but renders its wearer more susceptible to the effects of cold.
-%%%%
-dragon hide
-
-The scaly skin of a dragon. It can be fashioned into proper armour, but even in its raw form it provides great protectiom from the effects of fire but renders its wearer susceptible to cold.
 %%%%
 eggplant
 
@@ -518,6 +486,14 @@ This fearsome weapon is covered in dried blood and crude engravings of torture a
 falchion
 
 A sword with a broad slashing blade.
+%%%%
+fire dragon armour
+
+A magical armour, made from the scales of a fire-breathing dragon. It provides great protection from the effects of fire, but renders its wearer more susceptible to the effects of cold.
+%%%%
+fire dragon hide
+
+The scaly skin of a common true dragon. It can be fashioned into proper armour, but even in its raw form it provides great protection from the effects of fire but renders its wearer susceptible to cold.
 %%%%
 flail
 
@@ -546,6 +522,10 @@ The extremely tough and heavy skin of a golden dragon, covered in shimmering gol
 gold piece
 
 A pile of glittering gold coins.
+%%%%
+grand grimoire
+
+A deathly silence seems to surround you as you open this book; even the very air appears to recoil from the monstrosities pictured here. The pages, covered in abominable runes, describe how the mighty among summoners can bend to their will the terrible things from betwixt the planes. Many have been the unwary souls, however, who have toyed with this tome and been driven mad by eldritch horrors from beyond imagining.
 %%%%
 grape
 
@@ -593,7 +573,7 @@ A magical armour, made from the scales of a cold-breathing dragon. It provides g
 %%%%
 ice dragon hide
 
-The scaly skin of a dragon. It can be fashioned into proper armour, but even in its raw form it provides great protectiom from the effects of cold but renders its wearer susceptible to fire.
+The scaly skin of a dragon. It can be fashioned into proper armour, but even in its raw form it provides great protection from the effects of cold but renders its wearer susceptible to fire.
 %%%%
 javelin
 
@@ -607,14 +587,6 @@ else
     return ""
 end
 }}
-%%%%
-katana
-
-A very rare and extremely effective imported weapon, featuring a long single-edged blade.
-%%%%
-knife
-
-A simple survival knife. Designed more for utility than combat, it looks quite capable of butchering a corpse.
 %%%%
 lajatang
 
@@ -680,7 +652,7 @@ A long handle with a heavy lump on one end.
 %%%%
 manual
 
-A valuable book of magic which allows one to practise a certain skill greatly. As it is used, it gradually disintegrates and will eventually fall apart.
+A valuable book which allows one to practise a certain skill more efficiently.
 %%%%
 meat ration
 
@@ -742,6 +714,14 @@ pear
 
 A delicious juicy fruit.
 %%%%
+pearl dragon armour
+
+A magical armour made from the light but strong and flexible scales of a pearl dragon. It provides its wearer with protection from negative energy.
+%%%%
+pearl dragon hide
+
+The scaly skin of a pearl dragon. It can be fashioned into proper armour, but even in its raw form it provides protection from negative energy to its wearer.
+%%%%
 piece of ambrosia
 
 A portion of strange substance, produced by ghost moths. Consuming it provides magical energy as well as nutrition, at the cost of losing your mental focus for a short period.
@@ -778,6 +758,10 @@ potion of cure mutation
 
 A potion which removes some or all of any mutations which may be afflicting you.
 %%%%
+potion of curing
+
+A blessed fluid which heals some wounds, clears the mind and cures diseases. If it is used when one is at or near full health, it can also slightly repair permanent injuries.
+%%%%
 potion of decay
 
 A vile and putrid cursed liquid which causes your flesh to decay before your very eyes.
@@ -805,10 +789,6 @@ A potion of beneficial mutation.
 potion of heal wounds
 
 A magical healing elixir which causes wounds to close and heal almost instantly. If it is used when one is at or near full health, it can also repair permanent injuries.
-%%%%
-potion of healing
-
-A blessed fluid which heals some wounds, clears the mind and cures diseases. If it is used when one is at or near full health, it can also slightly repair permanent injuries.
 %%%%
 potion of invisibility
 
@@ -872,7 +852,7 @@ A mysterious item resembling a rune of some kind. Once evoked, it will make the 
 %%%%
 quarterstaff
 
-A sturdy wooden pole.
+A sturdy wooden pole, meant for fighting.
 %%%%
 quick blade
 
@@ -1074,7 +1054,7 @@ This scroll allows you to detect the presence of cursed items among your possess
 %%%%
 scroll of enchant armour
 
-This scroll places an enchantment on a piece of armour. Most armour can only be enchanted to +2, except for body armour and bardings which can be enchanted to +8. Using the scroll on well-enchanted items may not work.
+This scroll places an enchantment on a piece of armour. Most armour can only be enchanted to +2, except for shields which can be enchanted to +3, and body armour and bardings which can be enchanted up to the same value as their base AC.
 
 It can also be used to enchant the hides of certain exotic creatures.
 %%%%
@@ -1088,7 +1068,7 @@ This scroll places an enchantment on the wielded weapon or stack of missiles, ma
 %%%%
 scroll of enchant weapon iii
 
-This scroll enchants the wielded weapon or stack of missiles to be far more effective in combat. Although it can be used in the creation of especially enchanted weapons, it may fail to affect those already heavily enchanted, and only allows enchantment up to +9. When used on ammunition this will also decrease the chances of missiles breaking upon impact.
+This scroll enchants the wielded weapon or stack of missiles to be far more effective in combat. It may fail to affect weapons or ammunition already heavily enchanted, and only allows enchantment up to +9. When used on ammunition this will also decrease the chances of missiles breaking upon impact.
 %%%%
 scroll of fear
 
@@ -1105,6 +1085,8 @@ This scroll calls on the powers of Heaven to cause great damage to any nearby un
 scroll of identify
 
 This useful magic scroll allows you to determine the properties of any object.
+
+If used on a deck of cards, this scroll will also give away the top card.
 %%%%
 scroll of immolation
 
@@ -1146,11 +1128,13 @@ Reading the words on this scroll translocates you to a random position.
 %%%%
 scroll of torment
 
-This scroll calls on the powers of Hell to inflict great pain on any nearby creature - including you!
+This scroll calls on the powers of darkness to inflict great pain on any nearby creature - including you!
 %%%%
 scroll of vorpalise weapon
 
 This scroll enchants the wielded weapon so as to make it far more effective at inflicting harm on its wielder's enemies. Using it on a weapon already affected by some kind of permanent branding is not advised. On the other hand, the scroll can make permanent the temporary branding of weapons obtained from some spells.
+
+Brands that are closely tied to one of the gods (Trog, Lugonu, Kikubaaquadgha, The Shining One) cannot be affixed this way. Xom, on the other hand is, let's say... less than predictable.
 %%%%
 scroll of vulnerability
 
@@ -1186,7 +1170,7 @@ A piece of cloth and leather for launching stones, which do a small amount of da
 %%%%
 sling bullet
 
-A small heavy projectile usually made of lead. It can be fired from a sling. They are more effective as ammunition than simple stones, and can also come with various enchantments.
+A small, heavy projectile shaped specifically for use with slings, and more effective as ammunition than simple stones. It can also come with various enchantments.
 %%%%
 snozzcumber
 
@@ -1203,6 +1187,10 @@ A flail with large spikes on the metal lump.
 splint mail
 
 A suit made of splints of metal.
+%%%%
+staff
+
+A stout walking stick.
 %%%%
 staff of air
 
@@ -1222,7 +1210,7 @@ This staff increases the power of conjurations cast by its wielder.
 %%%%
 staff of death
 
-This staff increases the power of necromantic spells cast by its wielder. If the wielder is skilled in both evocations and necromancy, they can inflict great pain on those living souls they strike.
+This staff increases the power of necromantic spells cast by its wielder, and protects him or her from negative energy. If the wielder is skilled in both evocations and necromancy, they can inflict great pain on those living souls they strike.
 %%%%
 staff of earth
 
@@ -1230,7 +1218,7 @@ This staff increases the power of earth spells cast by its wielder. If the wield
 %%%%
 staff of enchantment
 
-This staff increases the power of enchantments cast by its wielder, and harnesses their innate skill to increase their resistance to hostile enchantments.
+This staff increases the power of charm and hex spells cast by its wielder. In the hands of a skilled person, it also increases resistance to hostile enchantments.
 %%%%
 staff of energy
 
@@ -1242,7 +1230,7 @@ This staff increases the power of fire spells cast by its wielder, and protects 
 %%%%
 staff of poison
 
-This staff increases the power of poisoning spells cast by its wielder, and protects him or her from the effects of poison. If the wielder is skilled in both evocations and poison magic, they can poison those struck by it.
+This staff increases the power of poisoning spells cast by its wielder, and protects him or her from the effects of poison. If the wielder is skilled in both evocations and poison magic, they can poison creatures struck by it - even if the victims were normally resistant.
 %%%%
 staff of power
 
@@ -1250,7 +1238,7 @@ This staff provides a reservoir of magical power to its wielder.
 %%%%
 staff of summoning
 
-This staff increases the power of summonings cast by its wielder.
+This staff increases the power of summonings cast by its wielder, and wards him or her from the attacks of summoned creatures. If the wielder is skilled in evocations, they can attempt to dismiss summoned creatures that they strike.
 %%%%
 staff of wizardry
 
@@ -1385,7 +1373,7 @@ wand of hasting
 
 A magical device which casts enchantments to speed up the actions of a creature at which it is directed.
 %%%%
-wand of healing
+wand of heal wounds
 
 A magical device which can heal a creature's wounds.
 %%%%

@@ -1,15 +1,16 @@
-/*
- *  File:       defines.h
- *  Summary:    Various definess used by Crawl.
- *  Written by: Linley Henzel
+/**
+ * @file
+ * @brief Various definess used by Crawl.
  *
- *      Abstract:       A variety of miscellaneous constant values are found here.
- *
- *  Copyright © 1999 Brian Robinson.  // Me?  How come?
- */
+ * A variety of miscellaneous constant values are found here.
+**/
 
 #ifndef DEFINES_H
 #define DEFINES_H
+
+// Minimum terminal size allowed.
+#define MIN_COLS  80
+#define MIN_LINES 24
 
 #define NUM_MONSTER_SPELL_SLOTS  6
 
@@ -27,6 +28,22 @@
     #endif
 #endif
 
+typedef uint32_t ucs_t;
+
+// length of a single zot defence cycle
+#define CYCLE_LENGTH 100
+
+// Waiting time before monsters arrive
+#define CYCLE_INTERVAL 50
+
+// peak size of a random spawn
+#define SPAWN_SIZE 1
+
+// Extra power to assign to a boss monster
+#define BOSS_MONSTER_EXTRA_POWER 5
+
+// number of waves to pass between bosses generated with a rune
+#define FREQUENCY_OF_RUNES 7
 
 // max size of inventory array {dlb}:
 #define ENDOFPACK 52
@@ -41,29 +58,27 @@ const int MAX_GHOSTS = 10;
 
 enum extra_monster_index_type
 {
-    MAX_MONSTERS = 700,         // max size of monster array {dlb}
-    NON_MONSTER  = NON_ENTITY,  // no monster
+    MAX_MONSTERS = 700,                  // max size of monster array {dlb}
+    ANON_FRIENDLY_MONSTER = MAX_MONSTERS,// unknown/dead ally, for actor blaming
+    NON_MONSTER  = NON_ENTITY,           // no monster
 
     MHITNOT = NON_MONSTER,
     MHITYOU,
 
     ZOT_TRAP_MISCAST,
+    HELL_EFFECT_MISCAST,
     WIELD_MISCAST,
     MELEE_MISCAST,
-    MISC_KNOWN_MISCAST,
-    MISC_UNKNOWN_MISCAST,
+    MISC_MISCAST,
 };
 
-// number of monster enchantments
-#define NUM_MON_ENCHANTS 6
-
-// size of Pan monster sets
-#define MAX_MONS_ALLOC 10
+// size of Pan monster sets. Also used for wave data in ZotDef.
+#define MAX_MONS_ALLOC 20
 
 #define MAX_SUBTYPES    50
 
 // max size of item list {dlb}:
-#define MAX_ITEMS 1000
+#define MAX_ITEMS 2000
 // non-item -- (ITEMS + 1) {dlb}
 #define NON_ITEM  NON_ENTITY
 
@@ -87,6 +102,8 @@ enum extra_monster_index_type
 #define GYM 70
 
 const int INFINITE_DISTANCE = 30000;
+// max distance on a map
+#define GDM 105
 
 // this is the size of the border around the playing area (see in_bounds())
 #define BOUNDARY_BORDER         1
@@ -132,14 +149,11 @@ const int LABYRINTH_BORDER = 4;
 #define MAX_TRAPS         400
 
 // max shops per level
-#define MAX_SHOPS         100
+#define MAX_SHOPS         64
 
 // max shops randomly generated in a level.
 // changing this affects the total number of shops in a game
 #define MAX_RANDOM_SHOPS  5
-
-// Can be passed to monster_die to indicate that a friendly did the killing.
-const int ANON_FRIENDLY_MONSTER = -1999;
 
 // This value is used to make test_hit checks always succeed
 #define AUTOMATIC_HIT           1500
@@ -149,8 +163,8 @@ const int DEBUG_COOKIE = 32767;
 
 const int MAX_SKILL_LEVEL = 27;
 const int MAX_EXP_TOTAL = 8999999;
-const int MAX_EXP_POOL = 20000;
-const int FULL_EXP_POOL = MAX_EXP_POOL;
+const int HIGH_EXP_POOL = 20000;
+const int EXERCISE_QUEUE_SIZE = 100;
 
 const int MIN_HIT_MISS_PERCENTAGE = 5;
 
@@ -199,8 +213,22 @@ const int DEPTH_PAN   = 52;
 
 const int BRANCH_DUNGEON_DEPTH = 27;
 
+const int ANTITRAIN_PENALTY = 2;
+
+#define TORNADO_RADIUS 6
+
+#define NUMBER_OF_RUNES_NEEDED    3
+
 // Size of unique_items in player class
 #define MAX_UNRANDARTS 100
+
+// Haste/slow boost.
+#define haste_mul(x) div_rand_round((x) * 3, 2)
+#define haste_div(x) div_rand_round((x) * 2, 3)
+#define berserk_mul(x) div_rand_round((x) * 3, 2)
+#define berserk_div(x) div_rand_round((x) * 2, 3)
+
+#define MAX_MONSTER_HP 10000
 
 // some shortcuts:
 #define menv   env.mons
@@ -210,7 +238,6 @@ const int BRANCH_DUNGEON_DEPTH = 27;
 #define igrd   env.igrid
 
 // colors, such pretty colors ...
-#ifndef TARGET_OS_DOS
 // The order is important (IRGB bit patterns).
 enum COLORS
 {
@@ -234,12 +261,6 @@ enum COLORS
     WHITE,
     MAX_TERM_COLOUR
 };
-#else
-# include <conio.h>
-# define LIGHTGREY LIGHTGRAY
-# define DARKGREY DARKGRAY
-# define MAX_TERM_COLOUR 16
-#endif
 
 // Colour options... these are used as bit flags along with the colour
 // value in the low byte.
@@ -291,6 +312,7 @@ enum CHAR_ATTRIBUTES
 const char * const MONSTER_HIT_DICE = "monster-hit-dice";
 const char * const MONSTER_NUMBER = "monster-number";
 const char * const CORPSE_NEVER_DECAYS = "corpse-no-decay";
+const char * const MONSTER_MID = "monster-mid";
 
 // Synthetic keys:
 #define KEY_MACRO_MORE_PROTECT -10

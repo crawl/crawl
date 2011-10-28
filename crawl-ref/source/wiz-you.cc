@@ -1,8 +1,7 @@
-/*
- *  File:       wiz-you.cc
- *  Summary:    Player related debugging functions.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Player related debugging functions.
+**/
 
 #include "AppHdr.h"
 
@@ -43,7 +42,7 @@ void wizard_change_species(void)
 
     if (specs[0] == '\0')
         return;
-    strlwr(specs);
+    std::string spec = lowercase_string(specs);
 
     species_type sp = SP_UNKNOWN;
 
@@ -52,10 +51,10 @@ void wizard_change_species(void)
         const species_type si = static_cast<species_type>(i);
         const std::string sp_name = lowercase_string(species_name(si));
 
-        std::string::size_type pos = sp_name.find(specs);
+        std::string::size_type pos = sp_name.find(spec);
         if (pos != std::string::npos)
         {
-            if (pos == 0 && *specs)
+            if (pos == 0)
             {
                 // We prefer prefixes over partial matches.
                 sp = si;
@@ -73,10 +72,11 @@ void wizard_change_species(void)
     }
 
     // Re-scale skill-points.
-    for (i = 0; i < NUM_SKILLS; ++i)
+    for (i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
-        you.skill_points[i] *= species_skills(i, sp);
-        you.skill_points[i] /= species_skills(i, you.species);
+        skill_type sk = static_cast<skill_type>(i);
+        you.skill_points[i] *= species_apt_factor(sk, sp)
+                               / species_apt_factor(sk);
     }
 
     you.species = sp;
@@ -167,7 +167,7 @@ void wizard_change_species(void)
             perma_mutate(MUT_PASSIVE_MAPPING, 1);
         break;
 
-    case SP_CAT:
+    case SP_FELID:
         if (you.experience_level >= 6)
             perma_mutate(MUT_SHAGGY_FUR, 1);
         if (you.experience_level >= 12)
@@ -178,6 +178,13 @@ void wizard_change_species(void)
         break;
     }
 
+    // Sanitize skills.
+    fixup_skills();
+
+    calc_hp();
+    calc_mp();
+
+    burden_change();
     update_player_symbol();
 #ifdef USE_TILE
     init_player_doll();
@@ -230,7 +237,7 @@ void wizard_heal(bool super_heal)
         you.magic_contamination = 0;
         you.duration[DUR_LIQUID_FLAMES] = 0;
         you.clear_beholders();
-        inc_hp(10, true);
+        inc_max_hp(10);
     }
 
     // Clear most status ailments.
@@ -239,8 +246,8 @@ void wizard_heal(bool super_heal)
     you.duration[DUR_CONF]      = 0;
     you.duration[DUR_MISLED]    = 0;
     you.duration[DUR_POISONING] = 0;
-    set_hp(you.hp_max, false);
-    set_mp(you.max_magic_points, false);
+    set_hp(you.hp_max);
+    set_mp(you.max_magic_points);
     set_hunger(10999, true);
     you.redraw_hit_points = true;
 }
@@ -257,7 +264,7 @@ void wizard_set_hunger_state()
 
     mprf(MSGCH_PROMPT, "%s", hunger_prompt.c_str());
 
-    const int c = tolower(getch());
+    const int c = tolower(getchk());
 
     // Values taken from food.cc.
     switch (c)
@@ -340,11 +347,19 @@ void wizard_set_piety()
         return;
     }
     mprf("Setting piety to %d.", newpiety);
-    int diff = newpiety - you.piety;
-    if (diff > 0)
-        gain_piety(diff, 1, true, false);
-    else
-        lose_piety(-diff);
+
+    // We have to set the exact piety value this way, because diff may
+    // be decreased to account for things like penance and gift timeout.
+    int diff;
+    do
+    {
+        diff = newpiety - you.piety;
+        if (diff > 0)
+            gain_piety(diff, 1, true, false);
+        else if (diff < 0)
+            lose_piety(-diff);
+    }
+    while (diff != 0);
 
     // Automatically reduce penance to 0.
     if (you.penance[you.religion] > 0)
@@ -359,81 +374,73 @@ void wizard_set_piety()
 #ifdef WIZARD
 void wizard_exercise_skill(void)
 {
-    int skill = debug_prompt_for_skill("Which skill (by name)? ");
+    skill_type skill = debug_prompt_for_skill("Which skill (by name)? ");
 
-    if (skill == -1)
+    if (skill == SK_NONE)
         mpr("That skill doesn't seem to exist.");
     else
     {
         mpr("Exercising...");
-        exercise(skill, 100);
+        exercise(skill, 10);
     }
 }
 #endif
 
 #ifdef WIZARD
-void wizard_set_skill_level(void)
+// When raw is set, skip the various checks and redraw (used by fsim)
+void wizard_set_skill_level(skill_type skill, int amount, bool raw)
 {
-    int skill = debug_prompt_for_skill("Which skill (by name)? ");
+    if (skill == SK_NONE)
+        skill = debug_prompt_for_skill("Which skill (by name)? ");
 
-    if (skill == -1)
+    if (skill == SK_NONE)
+    {
         mpr("That skill doesn't seem to exist.");
-    else
+        return;
+    }
+
+    if (amount < 0)
     {
         mpr(skill_name(skill));
-        int amount = debug_prompt_for_int("To what level? ", true);
+        amount = prompt_for_int("To what level? ", true);
+    }
 
-        if (amount < 0)
-            canned_msg(MSG_OK);
-        else
-        {
-            const int old_amount = you.skills[skill];
-            const int points = skill_exp_needed(amount, skill);
+    if (amount < 0)
+    {
+        canned_msg(MSG_OK);
+        return;
+    }
 
-            you.skill_points[skill] = points + 1;
-            you.skills[skill] = amount;
+    const int old_amount = you.skills[skill];
+    const int points = skill_exp_needed(std::min(amount, 27), skill);
 
-            calc_total_skill_points();
+    you.skill_points[skill] = points + 1;
+    you.ct_skill_points[skill] = 0;
+    you.skills[skill] = amount;
 
-            redraw_skill(you.your_name, player_title());
+    if (raw)
+        return;
 
-            switch (skill)
-            {
-            case SK_FIGHTING:
-                calc_hp();
-                break;
+    if (amount == 27)
+    {
+        you.train[skill] = 0;
+        check_selected_skills();
+    }
 
-            case SK_SPELLCASTING:
-            case SK_INVOCATIONS:
-            case SK_EVOCATIONS:
-                calc_mp();
-                break;
+    reset_training();
+    calc_total_skill_points();
 
-            case SK_DODGING:
-                you.redraw_evasion = true;
-                break;
+    redraw_skill(skill);
 
-            case SK_ARMOUR:
-                you.redraw_armour_class = true;
-                you.redraw_evasion = true;
-                break;
+    mprf("%s %s to skill level %d.", (old_amount < amount ? "Increased" :
+                                      old_amount > amount ? "Lowered"
+                                                          : "Reset"),
+         skill_name(skill), amount);
 
-            default:
-                break;
-            }
-
-            mprf("%s %s to skill level %d.",
-                 (old_amount < amount ? "Increased" :
-                  old_amount > amount ? "Lowered"
-                                      : "Reset"),
-                 skill_name(skill), amount);
-
-            if (skill == SK_STEALTH && amount == 27)
-            {
-                mpr("If you set the stealth skill to a value higher than 27, "
-                    "hide mode is activated, and monsters won't notice you.");
-            }
-        }
+    if (skill == SK_STEALTH && amount == 27)
+    {
+        mpr("If you set the stealth skill to a value higher than 27, "
+            "hide mode is activated, and monsters won't notice you.");
     }
 }
 #endif
@@ -442,9 +449,7 @@ void wizard_set_skill_level(void)
 #ifdef WIZARD
 void wizard_set_all_skills(void)
 {
-    int i;
-    int amount =
-            debug_prompt_for_int("Set all skills to what level? ", true);
+    int amount = prompt_for_int("Set all skills to what level? ", true);
 
     if (amount < 0)             // cancel returns -1 -- bwr
         canned_msg(MSG_OK);
@@ -453,18 +458,20 @@ void wizard_set_all_skills(void)
         if (amount > 27)
             amount = 27;
 
-        for (i = SK_FIGHTING; i < NUM_SKILLS; ++i)
+        for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
         {
-            if (is_invalid_skill(i))
+            skill_type sk = static_cast<skill_type>(i);
+            if (is_invalid_skill(sk) || is_useless_skill(sk))
                 continue;
 
-            const int points = skill_exp_needed(amount, i);
+            const int points = skill_exp_needed(amount, sk);
 
-            you.skill_points[i] = points + 1;
-            you.skills[i] = amount;
+            you.skill_points[sk] = points + 1;
+            you.ct_skill_points[sk] = 0;
+            you.skills[sk] = amount;
         }
 
-        redraw_skill(you.your_name, player_title());
+        you.redraw_title = true;
 
         calc_total_skill_points();
 
@@ -489,9 +496,9 @@ bool wizard_add_mutation()
         const char* msg;
 
         if (you.mutation[MUT_MUTATION_RESISTANCE] == 3)
-            msg = "You are immune to mutations, remove immunity?";
+            msg = "You are immune to mutations; remove immunity?";
         else
-            msg = "You are resistant to mutations, remove resistance?";
+            msg = "You are resistant to mutations; remove resistance?";
 
         if (yesno(msg, true, 'n'))
         {
@@ -530,19 +537,19 @@ bool wizard_add_mutation()
     if (specs[0] == '\0')
         return (false);
 
-    strlwr(specs);
+    std::string spec = lowercase_string(specs);
 
     mutation_type mutat = NUM_MUTATIONS;
 
-    if (strcmp(specs, "good") == 0)
+    if (spec == "good")
         mutat = RANDOM_GOOD_MUTATION;
-    else if (strcmp(specs, "bad") == 0)
+    else if (spec == "bad")
         mutat = RANDOM_BAD_MUTATION;
-    else if (strcmp(specs, "any") == 0)
+    else if (spec == "any")
         mutat = RANDOM_MUTATION;
-    else if (strcmp(specs, "xom") == 0)
+    else if (spec == "xom")
         mutat = RANDOM_XOM_MUTATION;
-    else if (strcmp(specs, "slime") == 0)
+    else if (spec == "slime")
         mutat = RANDOM_SLIME_MUTATION;
 
     if (mutat != NUM_MUTATIONS)
@@ -569,13 +576,13 @@ bool wizard_add_mutation()
             continue;
 
         const mutation_def& mdef = get_mutation_def(mut);
-        if (strcmp(specs, mdef.wizname) == 0)
+        if (spec == mdef.wizname)
         {
             mutat = mut;
             break;
         }
 
-        if (strstr(mdef.wizname, specs))
+        if (strstr(mdef.wizname, spec.c_str()))
             partial_matches.push_back(mut);
     }
 
@@ -587,7 +594,7 @@ bool wizard_add_mutation()
     {
         crawl_state.cancel_cmd_repeat();
 
-        if (partial_matches.size() == 0)
+        if (partial_matches.empty())
             mpr("No matching mutation names.");
         else
         {
@@ -597,7 +604,7 @@ bool wizard_add_mutation()
                 matches.push_back(get_mutation_def(partial_matches[i]).wizname);
 
             std::string prefix = "No exact match for mutation '" +
-                std::string(specs) +  "', possible matches are: ";
+                spec +  "', possible matches are: ";
 
             // Use mpr_comma_separated_list() because the list
             // might be *LONG*.
@@ -614,7 +621,7 @@ bool wizard_add_mutation()
              mutation_name(mutat, 1, false).c_str());
 
         const int levels =
-            debug_prompt_for_int("How many levels to increase or decrease? ",
+            prompt_for_int("How many levels to increase or decrease? ",
                                   false);
 
         if (levels == 0)
@@ -637,43 +644,6 @@ bool wizard_add_mutation()
     }
 
     return (success);
-}
-#endif
-
-#ifdef WIZARD
-void wizard_get_religion(void)
-{
-    char specs[80];
-
-    msgwin_get_line("Which god (by name)? ", specs, sizeof(specs));
-
-    if (specs[0] == '\0')
-        return;
-
-    strlwr(specs);
-
-    god_type god = GOD_NO_GOD;
-
-    for (int i = 1; i < NUM_GODS; ++i)
-    {
-        const god_type gi = static_cast<god_type>(i);
-        if (lowercase_string(god_name(gi)).find(specs) != std::string::npos)
-        {
-            god = gi;
-            break;
-        }
-    }
-
-    if (god == GOD_NO_GOD)
-        mpr("That god doesn't seem to be taking followers today.");
-    else
-    {
-        dungeon_feature_type feat =
-            static_cast<dungeon_feature_type>(DNGN_ALTAR_FIRST_GOD + god - 1);
-        dungeon_terrain_changed(you.pos(), feat, false);
-
-        pray();
-    }
 }
 #endif
 
@@ -729,7 +699,9 @@ static const char* dur_names[] =
     "divine shield",
     "regeneration",
     "swiftness",
+#if TAG_MAJOR_VERSION == 32
     "stonemail",
+#endif
     "controlled flight",
     "teleport",
     "control teleport",
@@ -770,11 +742,21 @@ static const char* dur_names[] =
     "afraid",
     "mirror damage",
     "scrying",
+    "tornado",
+    "liquefying",
+    "heroism",
+    "finesse",
+    "lifesaving",
+    "paralysis immunity",
+    "darkness",
+    "petrifying",
+    "shrouded",
+    "tornado cooldown",
 };
 
 void wizard_edit_durations(void)
 {
-    COMPILE_CHECK(ARRAYSZ(dur_names) == NUM_DURATIONS, dur_names_size);
+    COMPILE_CHECK(ARRAYSZ(dur_names) == NUM_DURATIONS);
     std::vector<int> durs;
     size_t max_len = 0;
 
@@ -787,12 +769,12 @@ void wizard_edit_durations(void)
         durs.push_back(i);
     }
 
-    if (durs.size() > 0)
+    if (!durs.empty())
     {
         for (unsigned int i = 0; i < durs.size(); ++i)
         {
             int dur = durs[i];
-            mprf(MSGCH_PROMPT, "%c) %-*s : %d", 'a' + i, max_len,
+            mprf(MSGCH_PROMPT, "%c) %-*s : %d", 'a' + i, (int)max_len,
                  dur_names[dur], you.duration[dur]);
         }
         mpr("", MSGCH_PROMPT);
@@ -803,7 +785,7 @@ void wizard_edit_durations(void)
 
     char buf[80];
 
-    if (cancelable_get_line_autohist(buf, sizeof buf) || strlen(buf) == 0)
+    if (cancelable_get_line_autohist(buf, sizeof buf) || !*buf)
     {
         canned_msg(MSG_OK);
         return;
@@ -819,7 +801,7 @@ void wizard_edit_durations(void)
 
     if (strlen(buf) == 1)
     {
-        if (durs.size() == 0)
+        if (durs.empty())
         {
             mpr("No existing durations to choose from.", MSGCH_PROMPT);
             return;
@@ -856,7 +838,7 @@ void wizard_edit_durations(void)
             ;
         else if (matches.size() == 1)
             choice = matches[0];
-        else if (matches.size() == 0)
+        else if (matches.empty())
         {
             mprf(MSGCH_PROMPT, "No durations matching '%s'.", buf);
             return;
@@ -874,7 +856,7 @@ void wizard_edit_durations(void)
     }
 
     snprintf(buf, sizeof(buf), "Set '%s' to: ", dur_names[choice]);
-    int num = debug_prompt_for_int(buf, false);
+    int num = prompt_for_int(buf, false);
 
     if (num == 0)
     {
@@ -887,31 +869,29 @@ void wizard_edit_durations(void)
 
 static void debug_uptick_xl(int newxl)
 {
-    while (newxl > you.experience_level)
-    {
-        you.experience = 1 + exp_needed(2 + you.experience_level);
-        level_change(true);
-    }
+    you.experience = exp_needed(newxl);
+    level_change(true);
 }
 
 static void debug_downtick_xl(int newxl)
 {
     you.hp = you.hp_max;
-    while (newxl < you.experience_level)
-    {
-        // Each lose_level() subtracts 4 HP, so do this to avoid death
-        // and/or negative HP when going from a high level to a low level.
-        you.hp     = std::max(5, you.hp);
-        you.hp_max = std::max(5, you.hp_max);
+    you.hp_max_perm += 1000; // boost maxhp so we don't die if heavily rotted
+    you.experience = exp_needed(newxl);
+    level_change();
 
-        lose_level();
+    // restore maxhp loss
+    you.hp_max_perm -= 1000;
+    calc_hp();
+    if (you.hp_max <= 0)
+    {
+        // ... but remove it completely if unviable
+        you.hp_max_temp = std::max(you.hp_max_temp, 0);
+        you.hp_max_perm = std::max(you.hp_max_perm, 0);
+        calc_hp();
     }
 
     you.hp       = std::max(1, you.hp);
-    you.hp_max   = std::max(1, you.hp_max);
-
-    you.base_hp  = std::max(5000,              you.base_hp);
-    you.base_hp2 = std::max(5000 + you.hp_max, you.base_hp2);
 }
 
 void wizard_set_xl()
@@ -946,7 +926,7 @@ void wizard_get_god_gift (void)
         return;
     }
 
-    if (!do_god_gift(false, true))
+    if (!do_god_gift(true))
         mpr("Nothing happens.");
 }
 
@@ -967,4 +947,13 @@ void wizard_god_wrath()
     if (!divine_retribution(you.religion, true, true))
         // Currently only dead Jiyva.
         mpr("You're not eligible for wrath.");
+}
+
+void wizard_god_mollify()
+{
+    for (int i = GOD_NO_GOD; i < NUM_GODS; ++i)
+    {
+        if (you.penance[i])
+            dec_penance((god_type) i, you.penance[i]);
+    }
 }

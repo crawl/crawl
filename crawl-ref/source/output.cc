@@ -1,8 +1,7 @@
-/*
- *  File:       output.cc
- *  Summary:    Functions used to print player related info.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Functions used to print player related info.
+**/
 
 #include "AppHdr.h"
 
@@ -17,19 +16,21 @@
 #include "species.h"
 
 #include "abl-show.h"
+#include "areas.h"
+#include "artefact.h"
 #include "branch.h"
 #include "cio.h"
 #include "colour.h"
 #include "coord.h"
 #include "describe.h"
 #include "format.h"
-#include "fight.h"
 #include "godabil.h"
 #include "initfile.h"
 #include "itemname.h"
 #include "item_use.h"
 #include "menu.h"
 #include "message.h"
+#include "misc.h"
 #include "mon-stuff.h"
 #include "mon-info.h"
 #include "mon-util.h"
@@ -48,10 +49,13 @@
 #include "viewchar.h"
 #include "viewgeom.h"
 #include "showsymb.h"
+#include "spl-transloc.h"
 
 #ifndef USE_TILE
 #include "directn.h"
 #endif
+
+static std::string _god_powers(bool simple = false);
 
 // Color for captions like 'Health:', 'Str:', etc.
 #define HUD_CAPTION_COLOUR Options.status_caption_colour
@@ -104,7 +108,7 @@ class colour_bar
         textcolor(BLACK);
         for (int cx = 0; cx < width; cx++)
         {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
             // Maybe this should use textbackground too?
             textcolor(BLACK + m_empty * 16);
 
@@ -112,27 +116,27 @@ class colour_bar
                 textcolor(BLACK + m_default * 16);
             else if (old_disp > disp && cx < old_disp)
                 textcolor(BLACK + m_change_neg * 16);
-            putch(' ');
+            putwch(' ');
 #else
             if (cx < disp && cx < old_disp)
             {
                 textcolor(m_default);
-                putch('=');
+                putwch('=');
             }
             else if (cx < disp)
             {
                 textcolor(m_change_pos);
-                putch('=');
+                putwch('=');
             }
             else if (cx < old_disp)
             {
                 textcolor(m_change_neg);
-                putch('-');
+                putwch('-');
             }
             else
             {
                 textcolor(m_empty);
-                putch('-');
+                putwch('-');
             }
 #endif
 
@@ -159,7 +163,7 @@ class colour_bar
 
 colour_bar HP_Bar(LIGHTGREEN, GREEN, RED, DARKGREY);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 colour_bar MP_Bar(BLUE, BLUE, LIGHTBLUE, DARKGREY);
 #else
 colour_bar MP_Bar(LIGHTBLUE, BLUE, MAGENTA, DARKGREY);
@@ -173,7 +177,7 @@ colour_bar MP_Bar(LIGHTBLUE, BLUE, MAGENTA, DARKGREY);
 void update_message_status()
 {
     static const char *msg = "(Hit _)";
-    static const int len = strlen(msg);
+    static const int len = strwidth(msg);
     static const std::string spc(len, ' ');
 
     textcolor(LIGHTBLUE);
@@ -198,12 +202,17 @@ void update_turn_count()
         return;
     }
 
-    cgotoxy(19+6, 8, GOTO_STAT);
+    cgotoxy(19+6, 9 + crawl_state.game_is_zotdef(), GOTO_STAT);
 
     // Show the turn count starting from 1. You can still quit on turn 0.
     textcolor(HUD_VALUE_COLOUR);
-    if (Options.show_real_turns)
-       cprintf("%.1f", you.elapsed_time / 10.0);
+    if (Options.show_game_turns)
+    {
+       cprintf("%.1f (%.1f)%s", you.elapsed_time / 10.0,
+               (you.elapsed_time - you.elapsed_time_at_last_input) / 10.0,
+               // extra spaces to erase excess if previous output was longer
+               "    ");
+    }
     else
         cprintf("%d", you.num_turns);
     textcolor(LIGHTGREY);
@@ -254,8 +263,7 @@ static void _print_stats_mp(int x, int y)
     for (int i = 11-col; i > 0; i--)
         cprintf(" ");
 
-    if (!Options.classic_hud)
-        MP_Bar.draw(19, y, you.magic_points, you.max_magic_points);
+    MP_Bar.draw(19, y, you.magic_points, you.max_magic_points);
 }
 
 static void _print_stats_hp(int x, int y)
@@ -299,8 +307,7 @@ static void _print_stats_hp(int x, int y)
     for (int i = 18-col; i > 0; i--)
         cprintf(" ");
 
-    if (!Options.classic_hud)
-        HP_Bar.draw(19, y, you.hp, you.hp_max);
+    HP_Bar.draw(19, y, you.hp, you.hp_max);
 }
 
 static short _get_stat_colour(stat_type stat)
@@ -347,9 +354,7 @@ static void _print_stats_ac(int x, int y)
 {
     // AC:
     cgotoxy(x+4, y, GOTO_STAT);
-    if (you.duration[DUR_STONEMAIL])
-        textcolor(dur_colour(BLUE, dur_expiring(DUR_STONEMAIL)));
-    else if (you.duration[DUR_ICY_ARMOUR] || you.duration[DUR_STONESKIN])
+    if (you.duration[DUR_ICY_ARMOUR] || you.duration[DUR_STONESKIN])
         textcolor(LIGHTBLUE);
     else if (you.duration[DUR_ICEMAIL_DEPLETED] > ICEMAIL_TIME / ICEMAIL_MAX)
         textcolor(RED);
@@ -391,31 +396,81 @@ static void _print_stats_wp(int y)
     if (you.weapon())
     {
         const item_def& wpn = *you.weapon();
-        col = wpn.colour;
 
         const std::string prefix = menu_colour_item_prefix(wpn);
         const int prefcol = menu_colour(wpn.name(DESC_INVENTORY), prefix);
         if (prefcol != -1)
             col = prefcol;
+        else
+            col = LIGHTGREY;
 
         text = wpn.name(DESC_INVENTORY, true, false, true);
     }
-    else if (you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
-    {
-        col = RED;
-        text = "Blade Hands";
-    }
     else
     {
+        const std::string prefix = "-) ";
         col = LIGHTGREY;
-        text = "Nothing wielded";
+        text = "Nothing wielded"; // Default
+
+        if (you.has_usable_claws(true))
+            text = "Claws";
+        if (you.has_usable_tentacles(true))
+            text = "Tentacles";
+
+        if (you.species == SP_FELID)
+            text = "Teeth and claws";
+
+        switch (you.form)
+        {
+            case TRAN_SPIDER:
+                col = LIGHTGREEN;
+                text = "Fangs (venom)";
+                break;
+            case TRAN_BLADE_HANDS:
+                col = RED;
+                text = "Blade " + blade_parts(true);
+                break;
+            case TRAN_STATUE:
+                col = LIGHTGREY;
+                if (you.has_usable_claws(true))
+                    text = "Stone claws";
+                else if (you.has_usable_tentacles(true))
+                    text = "Stone tentacles";
+                else
+                    text = "Stone fists";
+                break;
+            case TRAN_ICE_BEAST:
+                col = WHITE;
+                text = "Ice fists (freeze)";
+                break;
+            case TRAN_DRAGON:
+                col = GREEN;
+                text = "Teeth and claws";
+                break;
+            case TRAN_LICH:
+                col = MAGENTA;
+                text += " (drain)";
+                break;
+            case TRAN_BAT:
+            case TRAN_PIG:
+                col = LIGHTGREY;
+                text = "Teeth";
+                break;
+            case TRAN_NONE:
+            case TRAN_APPENDAGE:
+            default:
+                break;
+        }
+
+        text = prefix + text;
     }
+
     cgotoxy(1, y, GOTO_STAT);
     textcolor(Options.status_caption_colour);
     cprintf("Wp: ");
     textcolor(col);
     int w = crawl_view.hudsz.x - 4;
-    cprintf("%-*s", w, text.substr(0, w).c_str());
+    cprintf("%s", chop_string(text, w).c_str());
     textcolor(LIGHTGREY);
 }
 
@@ -426,28 +481,41 @@ static void _print_stats_qv(int y)
 
     int q = you.m_quiver->get_fire_item();
     ASSERT(q >= -1 && q < ENDOFPACK);
-    if (q != -1)
+    if (q != -1 && !fire_warn_if_impossible(true))
     {
         const item_def& quiver = you.inv[q];
-        col = quiver.colour;
         const std::string prefix = menu_colour_item_prefix(quiver);
         const int prefcol =
             menu_colour(quiver.name(DESC_INVENTORY), prefix);
         if (prefcol != -1)
             col = prefcol;
+        else
+            col = LIGHTGREY;
         text = quiver.name(DESC_INVENTORY, true);
     }
     else
     {
-        col = LIGHTGREY;
-        text = "Nothing quivered";
+        const std::string prefix = "-) ";
+
+        if (fire_warn_if_impossible(true))
+        {
+            col  = DARKGREY;
+            text = "Unavailable";
+        }
+        else
+        {
+            col  = LIGHTGREY;
+            text = "Nothing quivered";
+        }
+
+        text = prefix + text;
     }
     cgotoxy(1, y, GOTO_STAT);
     textcolor(Options.status_caption_colour);
     cprintf("Qv: ");
     textcolor(col);
     int w = crawl_view.hudsz.x - 4;
-    cprintf("%-*s", w, text.substr(0, w).c_str());
+    cprintf("%s", chop_string(text, w).c_str());
     textcolor(LIGHTGREY);
 }
 
@@ -494,20 +562,70 @@ static void _get_status_lights(std::vector<status_light>& out)
 #endif
 
     const int statuses[] = {
-        STATUS_BURDEN, STATUS_HUNGER, DUR_PRAYER, DUR_TELEPORT,
-        DUR_DEATHS_DOOR, DUR_QUAD_DAMAGE, DUR_DEFLECT_MISSILES,
-        DUR_REPEL_MISSILES, STATUS_REGENERATION, DUR_BERSERK,
-        DUR_RESIST_POISON, DUR_RESIST_COLD, DUR_RESIST_FIRE,
-        DUR_INSULATION, DUR_SEE_INVISIBLE,
-        STATUS_AIRBORNE, DUR_INVIS, DUR_CONTROL_TELEPORT, DUR_SILENCE,
-        DUR_CONFUSING_TOUCH, DUR_BARGAIN, DUR_SAGE, DUR_FIRE_SHIELD,
-        DUR_SLIMIFY, DUR_SURE_BLADE, DUR_CONF, DUR_LOWERED_MR,
-        STATUS_BEHELD, DUR_LIQUID_FLAMES, DUR_MISLED, DUR_POISONING,
-        STATUS_SICK, STATUS_ROT, STATUS_NET, STATUS_GLOW, DUR_SWIFTNESS,
-        STATUS_SPEED, DUR_DEATH_CHANNEL, DUR_TELEPATHY, DUR_STEALTH,
-        DUR_BREATH_WEAPON, DUR_EXHAUSTED, DUR_POWERED_BY_DEATH,
-        DUR_TRANSFORMATION, DUR_AFRAID, DUR_MIRROR_DAMAGE, DUR_SCRYING,
+        STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
+        STATUS_BURDEN,
+        STATUS_HUNGER,
+        DUR_PETRIFYING,
+        DUR_PETRIFIED,
+        DUR_PARALYSIS,
+        DUR_JELLY_PRAYER,
+        DUR_TELEPORT,
+        DUR_DEATHS_DOOR,
+        DUR_QUAD_DAMAGE,
+        DUR_DEFLECT_MISSILES,
+        DUR_REPEL_MISSILES,
+        STATUS_REGENERATION,
+        DUR_BERSERK,
+        DUR_RESIST_POISON,
+        DUR_RESIST_COLD,
+        DUR_RESIST_FIRE,
+        DUR_INSULATION,
+        DUR_SEE_INVISIBLE,
+        STATUS_AIRBORNE,
+        DUR_INVIS,
+        DUR_CONTROL_TELEPORT,
+        DUR_SILENCE,
+        DUR_CONFUSING_TOUCH,
+        DUR_BARGAIN,
+        DUR_SAGE,
+        DUR_FIRE_SHIELD,
+        DUR_SLIMIFY,
+        DUR_SURE_BLADE,
+        DUR_CONF,
+        DUR_LOWERED_MR,
+        STATUS_BEHELD,
+        DUR_LIQUID_FLAMES,
+        DUR_MISLED,
+        DUR_POISONING,
+        STATUS_SICK,
+        STATUS_ROT,
+        STATUS_NET,
+        STATUS_CONTAMINATION,
+        DUR_SWIFTNESS,
+        STATUS_SPEED,
+        DUR_DEATH_CHANNEL,
+        DUR_TELEPATHY,
+        DUR_STEALTH,
+        DUR_BREATH_WEAPON,
+        DUR_EXHAUSTED,
+        DUR_POWERED_BY_DEATH,
+        DUR_TRANSFORMATION,
+        DUR_AFRAID,
+        DUR_MIRROR_DAMAGE,
+        DUR_SCRYING,
         STATUS_EARTH_ATTUNED,
+        STATUS_CLINGING,
+        DUR_TORNADO,
+        DUR_LIQUEFYING,
+        DUR_HEROISM,
+        DUR_FINESSE,
+        DUR_LIFESAVING,
+        DUR_DARKNESS,
+        STATUS_FIREBALL,
+        DUR_SHROUD_OF_GOLUBRIA,
+        DUR_TORNADO_COOLDOWN,
+        STATUS_BACKLIT,
+        STATUS_UMBRA,
     };
 
     status_info inf;
@@ -520,6 +638,8 @@ static void _get_status_lights(std::vector<status_light>& out)
             out.push_back(sl);
         }
     }
+    if(!allow_control_teleport(true) && Options.show_no_ctele)
+        out.push_back(status_light(RED,"-cTele"));
 }
 
 static void _print_status_lights(int y)
@@ -527,7 +647,7 @@ static void _print_status_lights(int y)
     std::vector<status_light> lights;
     static int last_number_of_lights = 0;
     _get_status_lights(lights);
-    if (lights.size() == 0 && last_number_of_lights == 0)
+    if (lights.empty() && last_number_of_lights == 0)
         return;
     last_number_of_lights = lights.size();
 
@@ -541,7 +661,7 @@ static void _print_status_lights(int y)
     while (true)
     {
         const int end_x = (wherex() - crawl_view.hudp.x)
-                + (i_light < lights.size() ? lights[i_light].text.length()
+                + (i_light < lights.size() ? strwidth(lights[i_light].text)
                                            : 10000);
 
         if (end_x <= crawl_view.hudsz.x)
@@ -564,10 +684,11 @@ static void _print_status_lights(int y)
     }
 }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 static bool _need_stats_printed()
 {
-    return you.redraw_hit_points
+    return you.redraw_title
+           || you.redraw_hit_points
            || you.redraw_magic_points
            || you.redraw_armour_class
            || you.redraw_evasion
@@ -580,14 +701,84 @@ static bool _need_stats_printed()
 }
 #endif
 
-static short _get_exp_pool_colour(int pool)
+static void _redraw_title(const std::string &your_name, const std::string &job_name)
 {
-    if (pool < MAX_EXP_POOL/2)
-        return (HUD_VALUE_COLOUR);
-    else if (pool < MAX_EXP_POOL*3/4)
-        return (YELLOW);
-    else
-        return (RED);
+    std::string title = your_name + " the " + job_name;
+
+    unsigned int in_len = strwidth(title);
+    const unsigned int WIDTH = crawl_view.hudsz.x;
+    if (in_len > WIDTH)
+    {
+        in_len -= 3;  // What we're getting back from removing "the".
+
+        const unsigned int name_len = strwidth(your_name);
+        std::string trimmed_name = your_name;
+
+        // Squeeze name if required, the "- 8" is to not squeeze too much.
+        if (in_len > WIDTH && (name_len - 8) > (in_len - WIDTH))
+        {
+            trimmed_name = chop_string(trimmed_name,
+                                       name_len - (in_len - WIDTH) - 1);
+        }
+
+        title = trimmed_name + ", " + job_name;
+    }
+
+    // Line 1: Foo the Bar    *WIZARD*
+    cgotoxy(1, 1, GOTO_STAT);
+    textcolor(YELLOW);
+    cprintf("%s", chop_string(title, WIDTH).c_str());
+    if (you.wizard)
+    {
+        textcolor(LIGHTBLUE);
+        cgotoxy(1 + crawl_view.hudsz.x-9, 1, GOTO_STAT);
+        cprintf(" *WIZARD*");
+    }
+#ifdef DGL_SIMPLE_MESSAGING
+    update_message_status();
+#endif
+
+    // Line 2:
+    // Minotaur [of God] [Piety]
+    textcolor(YELLOW);
+    cgotoxy(1, 2, GOTO_STAT);
+    std::string species = species_name(you.species);
+    nowrap_eol_cprintf("%s", species.c_str());
+    if (you.religion != GOD_NO_GOD)
+    {
+        std::string god = " of ";
+        god += you.religion == GOD_JIYVA ? god_name_jiyva(true)
+                                         : god_name(you.religion);
+        nowrap_eol_cprintf("%s", god.c_str());
+
+        std::string piety = _god_powers(true);
+        if (player_under_penance())
+            textcolor(RED);
+        if ((unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1)
+            <= WIDTH)
+        {
+            nowrap_eol_cprintf(" %s", piety.c_str());
+        }
+        else if ((unsigned int)(strwidth(species) + strwidth(god) + strwidth(piety) + 1)
+                  == (WIDTH + 1))
+        {
+            //mottled draconian of TSO doesn't fit by one symbol,
+            //so we remove leading space.
+            nowrap_eol_cprintf("%s", piety.c_str());
+        }
+    }
+    else if (you.char_class == JOB_MONK && you.species != SP_DEMIGOD
+             && !had_gods())
+    {
+        std::string godpiety = "**....";
+        textcolor(DARKGREY);
+        if ((unsigned int)(strwidth(species) + strwidth(godpiety) + 1) <= WIDTH)
+            nowrap_eol_cprintf(" %s", godpiety.c_str());
+    }
+
+    clear_to_end_of_line();
+
+    textcolor(LIGHTGREY);
 }
 
 void print_stats(void)
@@ -604,9 +795,15 @@ void print_stats(void)
     if (MP_Bar.wants_redraw())
         you.redraw_magic_points = true;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     bool has_changed = _need_stats_printed();
 #endif
+
+    if (you.redraw_title)
+    {
+        you.redraw_title = false;
+        _redraw_title(you.your_name, player_title());
+    }
 
     if (you.redraw_hit_points)   { you.redraw_hit_points = false;   _print_stats_hp (1, 3); }
     if (you.redraw_magic_points) { you.redraw_magic_points = false; _print_stats_mp (1, 4); }
@@ -618,33 +815,48 @@ void print_stats(void)
             _print_stat(static_cast<stat_type>(i), 19, 5 + i);
     you.redraw_stats.init(false);
 
-    int yhack = 0;
-
-    // If Options.show_gold_turns, line 8 is Gold and Turns
-    if (Options.show_gold_turns)
-    {
-        // Increase y-value for all following lines.
-        yhack = 1;
-        cgotoxy(1+6, 8, GOTO_STAT);
-        textcolor(HUD_VALUE_COLOUR);
-        cprintf("%-6d", you.gold);
-    }
-
     if (you.redraw_experience)
     {
-        cgotoxy(1,8 + yhack, GOTO_STAT);
+        cgotoxy(1,8, GOTO_STAT);
         textcolor(Options.status_caption_colour);
 #ifdef DEBUG_DIAGNOSTICS
         cprintf("XP: ");
-        textcolor(_get_exp_pool_colour(you.exp_available));
+        textcolor(HUD_VALUE_COLOUR);
         cprintf("%d/%d (%d) ",
-                you.skill_cost_level, you.exp_available, you.experience);
+                you.experience_level, you.skill_cost_level, you.exp_available);
 #else
-        cprintf("Exp Pool: ");
-        textcolor(_get_exp_pool_colour(you.exp_available));
-        cprintf("%-6d", you.exp_available);
+        cprintf("XL: ");
+        textcolor(HUD_VALUE_COLOUR);
+        cprintf("%2d ", you.experience_level);
+        if (you.experience_level < 27)
+        {
+            textcolor(Options.status_caption_colour);
+            cprintf("Next: ");
+            textcolor(HUD_VALUE_COLOUR);
+            cprintf("%2d%% ", get_exp_progress());
+        }
 #endif
+        if (crawl_state.game_is_zotdef())
+        {
+            cgotoxy(1, 9, GOTO_STAT);
+            textcolor(Options.status_caption_colour);
+            cprintf("ZP: ");
+            textcolor(HUD_VALUE_COLOUR);
+            cprintf("%d     ", you.zot_points);
+        }
         you.redraw_experience = false;
+    }
+
+    int yhack = crawl_state.game_is_zotdef();
+
+    // If Options.show_gold_turns, line 9 is Gold and Turns
+    if (Options.show_gold_turns)
+    {
+        // Increase y-value for all following lines.
+        yhack++;
+        cgotoxy(1+6, 8 + yhack, GOTO_STAT);
+        textcolor(HUD_VALUE_COLOUR);
+        cprintf("%-6d", you.gold);
     }
 
     if (you.wield_change)
@@ -661,13 +873,18 @@ void print_stats(void)
         you.m_quiver->on_weapon_changed();
         _print_stats_wp(9 + yhack);
     }
-
-    if (you.redraw_quiver || you.wield_change)
-    {
-        _print_stats_qv(10 + yhack);
-        you.redraw_quiver = false;
-    }
     you.wield_change  = false;
+
+    if (you.species == SP_FELID)
+    {
+        // There are no circumstances under which Felids could quiver something.
+        // Reduce line counter for status display.y
+        yhack -= 1;
+    }
+    else if (you.redraw_quiver || you.wield_change)
+        _print_stats_qv(10 + yhack);
+
+    you.redraw_quiver = false;
 
     if (you.redraw_status_flags)
     {
@@ -676,7 +893,7 @@ void print_stats(void)
     }
     textcolor(LIGHTGREY);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (has_changed)
         update_screen();
 #else
@@ -705,7 +922,7 @@ static std::string _level_description_string_hud()
             if (you.level_type_name.find(":") != std::string::npos)
                 short_name = you.level_type_name;
             else
-                short_name = article_a(upcase_first(you.level_type_name),
+                short_name = article_a(uppercase_first(you.level_type_name),
                                        false);
         }
         else
@@ -713,18 +930,13 @@ static std::string _level_description_string_hud()
     }
     // Definite articles
     else if (place.level_type == LEVEL_ABYSS)
-    {
         short_name.insert(0, "The ");
-    }
     return short_name;
 }
 
 void print_stats_level()
 {
-    int ypos = 8;
-    if (Options.show_gold_turns)
-        ypos++;
-    cgotoxy(19, ypos, GOTO_STAT);
+    cgotoxy(19, 8, GOTO_STAT);
     textcolor(HUD_CAPTION_COLOUR);
     cprintf("Place: ");
 
@@ -736,68 +948,10 @@ void print_stats_level()
     clear_to_end_of_line();
 }
 
-void redraw_skill(const std::string &your_name, const std::string &job_name)
-{
-    std::string title = your_name + " the " + job_name;
-
-    unsigned int in_len = title.length();
-    const unsigned int WIDTH = crawl_view.hudsz.x;
-    if (in_len > WIDTH)
-    {
-        in_len -= 3;  // What we're getting back from removing "the".
-
-        const unsigned int name_len = your_name.length();
-        std::string trimmed_name = your_name;
-
-        // Squeeze name if required, the "- 8" is to not squeeze too much.
-        if (in_len > WIDTH && (name_len - 8) > (in_len - WIDTH))
-        {
-            trimmed_name =
-                trimmed_name.substr(0, name_len - (in_len - WIDTH) - 1);
-        }
-
-        title = trimmed_name + ", " + job_name;
-    }
-
-    // Line 1: Foo the Bar    *WIZARD*
-    cgotoxy(1, 1, GOTO_STAT);
-    textcolor(YELLOW);
-    if (title.size() > WIDTH)
-        title.resize(WIDTH, ' ');
-    cprintf("%-*s", WIDTH, title.c_str());
-    if (you.wizard)
-    {
-        textcolor(LIGHTBLUE);
-        cgotoxy(1 + crawl_view.hudsz.x-9, 1, GOTO_STAT);
-        cprintf(" *WIZARD*");
-    }
-#ifdef DGL_SIMPLE_MESSAGING
-    update_message_status();
-#endif
-
-    // Line 2:
-    // Level N Minotaur [of God]
-    textcolor(YELLOW);
-    cgotoxy(1, 2, GOTO_STAT);
-    nowrap_eol_cprintf("Level %d %s", you.experience_level,
-                       species_name(you.species).c_str());
-    if (you.religion != GOD_NO_GOD)
-    {
-        nowrap_eol_cprintf(" of %s",
-                           you.religion == GOD_JIYVA ? god_name_jiyva(true).c_str()
-                                                     : god_name(you.religion).c_str());
-    }
-
-    clear_to_end_of_line();
-
-    textcolor(LIGHTGREY);
-}
-
 void draw_border(void)
 {
     textcolor(HUD_CAPTION_COLOUR);
     clrscr();
-    redraw_skill(you.your_name, player_title());
 
     textcolor(Options.status_caption_colour);
 
@@ -813,10 +967,11 @@ void draw_border(void)
 
     if (Options.show_gold_turns)
     {
-        cgotoxy(1, 8, GOTO_STAT); cprintf("Gold:");
-        cgotoxy(19, 8, GOTO_STAT); cprintf("Turn:");
+        int yhack = crawl_state.game_is_zotdef();
+        cgotoxy(1, 9 + yhack, GOTO_STAT); cprintf("Gold:");
+        cgotoxy(19, 9 + yhack, GOTO_STAT); cprintf("Turn:");
     }
-    // Line 9 (or 8) is exp pool, Level
+    // Line 8 is exp pool, Level
 }
 
 // ----------------------------------------------------------------------
@@ -908,7 +1063,6 @@ std::string mpr_monster_list(bool past)
         return (msg);
     }
 
-    std::sort(mons.begin(), mons.end(), monster_info::less_than_wrapper);
     std::vector<std::string> describe;
 
     int count = 0;
@@ -937,7 +1091,7 @@ std::string mpr_monster_list(bool past)
     return (msg);
 }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 static void _print_next_monster_desc(const std::vector<monster_info>& mons,
                                      int& start, bool zombified = false,
                                      int idx = -1)
@@ -1001,6 +1155,10 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
             case MDAM_OKAY:               dam_color = GREEN;     break;
             default:                      dam_color = CYAN;      break;
             }
+
+            if (!mons_class_can_display_wounds(mi.type))
+                dam_color = BLACK;
+
             cprintf(" ");
             textbackground(dam_color);
             textcolor(dam_color);
@@ -1038,7 +1196,7 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
 }
 #endif
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 // #define BOTTOM_JUSTIFY_MONSTER_LIST
 // Returns -1 if the monster list is empty, 0 if there are so many monsters
 // they have to be consolidated, and 1 otherwise.
@@ -1055,7 +1213,6 @@ int update_monster_pane()
 
     std::vector<monster_info> mons;
     get_monster_info(mons);
-    std::sort(mons.begin(), mons.end(), monster_info::less_than_wrapper);
 
     // Count how many groups of monsters there are.
     unsigned int lines_needed = mons.size();
@@ -1070,9 +1227,6 @@ int update_monster_pane()
 
         // Use type names rather than full names ("small zombie" vs
         // "rat zombie") in order to take up fewer lines.
-
-        std::sort(mons.begin(), mons.end(),
-                  monster_info::less_than_wrapper);
 
         lines_needed = mons.size();
         for (unsigned int i = 1; i < mons.size(); i++)
@@ -1123,19 +1277,21 @@ int update_monster_pane()
 }
 #endif
 
-const char* itosym1(int stat)
+static const char* _itosym1(int stat)
 {
-    return ((stat >= 1) ? "+  " : ".  ");
+    return ((stat >= 1) ? "+  " :
+            (stat == 0) ? ".  " :
+                          "x  ");
 }
 
-const char* itosym2(int stat)
+static const char* _itosym2(int stat)
 {
     return ((stat >= 2) ? "+ +" :
             (stat == 1) ? "+ ." :
                           ". .");
 }
 
-const char* itosym3(int stat)
+static const char* _itosym3(int stat)
 {
     return ((stat >=  3) ? "+ + +" :
             (stat ==  2) ? "+ + ." :
@@ -1150,12 +1306,18 @@ static const char *s_equip_slot_names[] =
 {
     "Weapon", "Cloak",  "Helmet", "Gloves", "Boots",
     "Shield", "Armour", "Left Ring", "Right Ring", "Amulet",
+    "First Ring", "Second Ring", "Third Ring", "Fourth Ring",
+    "Fifth Ring", "Sixth Ring", "Seventh Ring", "Eighth Ring",
 };
 
 const char *equip_slot_to_name(int equip)
 {
-    if (equip == EQ_RINGS || equip == EQ_LEFT_RING || equip == EQ_RIGHT_RING)
+    if (equip == EQ_RINGS
+        || equip == EQ_LEFT_RING || equip == EQ_RIGHT_RING
+        || equip >= EQ_RING_ONE && equip <= EQ_RING_EIGHT)
+    {
         return "Ring";
+    }
 
     if (equip == EQ_BOOTS
         && (you.species == SP_CENTAUR || you.species == SP_NAGA))
@@ -1172,7 +1334,7 @@ const char *equip_slot_to_name(int equip)
 int equip_name_to_slot(const char *s)
 {
     for (int i = 0; i < NUM_EQUIP; ++i)
-        if (!stricmp(s_equip_slot_names[i], s))
+        if (!strcasecmp(s_equip_slot_names[i], s))
             return i;
 
     return -1;
@@ -1203,7 +1365,7 @@ static const char* _determine_colour_string(int level, int max_level)
     }
 }
 
-static std::string _status_mut_abilities(void);
+static std::string _status_mut_abilities(int sw);
 
 // helper for print_overview_screen
 static void _print_overview_screen_equip(column_composer& cols,
@@ -1212,7 +1374,9 @@ static void _print_overview_screen_equip(column_composer& cols,
     const int e_order[] =
     {
         EQ_WEAPON, EQ_BODY_ARMOUR, EQ_SHIELD, EQ_HELMET, EQ_CLOAK,
-        EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING
+        EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING,
+        EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
+        EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT,
     };
 
     char buf[100];
@@ -1220,10 +1384,23 @@ static void _print_overview_screen_equip(column_composer& cols,
     {
         int eqslot = e_order[i];
 
-        char slot_name_lwr[15];
-        snprintf(slot_name_lwr, sizeof slot_name_lwr, "%s",
-                 equip_slot_to_name(eqslot));
-        strlwr(slot_name_lwr);
+        if (you.species == SP_OCTOPODE
+            && e_order[i] != EQ_WEAPON
+            && !you_can_wear(e_order[i], true))
+        {
+            continue;
+        }
+
+        if (you.species == SP_OCTOPODE && (eqslot == EQ_RIGHT_RING
+                                       || eqslot == EQ_LEFT_RING))
+        {
+            continue;
+        }
+
+        if (you.species != SP_OCTOPODE && eqslot > EQ_AMULET)
+            continue;
+
+        const std::string slot_name_lwr = lowercase_string(equip_slot_to_name(eqslot));
 
         char slot[15] = "";
         // uncomment (and change 42 to 33) to bring back slot names
@@ -1235,10 +1412,13 @@ static void _print_overview_screen_equip(column_composer& cols,
             const int item_idx   = you.equip[e_order[i]];
             const item_def& item = you.inv[item_idx];
             const bool melded    = !player_wearing_slot(e_order[i]);
+            const std::string prefix = menu_colour_item_prefix(item);
+            const int prefcol = menu_colour(item.name(DESC_INVENTORY), prefix);
+            const int col = prefcol == -1 ? LIGHTGREY : prefcol;
 
             // Colour melded equipment dark grey.
             const char* colname  = melded ? "darkgrey"
-                                          : colour_to_str(item.colour).c_str();
+                                          : colour_to_str(col).c_str();
 
             const char equip_char = index_to_letter(item_idx);
 
@@ -1248,17 +1428,17 @@ static void _print_overview_screen_equip(column_composer& cols,
                      equip_char,
                      colname,
                      melded ? "melded " : "",
-                     item.name(DESC_PLAIN, true).substr(0,42).c_str(),
+                     chop_string(item.name(DESC_PLAIN, true), 42, false).c_str(),
                      colname);
             equip_chars.push_back(equip_char);
         }
         else if (e_order[i] == EQ_WEAPON
-                 && you.skills[SK_UNARMED_COMBAT])
+                 && you.skill(SK_UNARMED_COMBAT))
         {
             snprintf(buf, sizeof buf, "%s  - Unarmed", slot);
         }
         else if (e_order[i] == EQ_WEAPON
-                 && you.attribute[ATTR_TRANSFORMATION] == TRAN_BLADE_HANDS)
+                 && you.form == TRAN_BLADE_HANDS)
         {
             snprintf(buf, sizeof buf, "%s  - Blade Hands", slot);
         }
@@ -1266,34 +1446,34 @@ static void _print_overview_screen_equip(column_composer& cols,
                  && (you.species == SP_NAGA || you.species == SP_CENTAUR))
         {
             snprintf(buf, sizeof buf,
-                     "<darkgrey>(no %s)</darkgrey>", slot_name_lwr);
+                     "<darkgrey>(no %s)</darkgrey>", slot_name_lwr.c_str());
         }
         else if (!you_can_wear(e_order[i], true))
         {
             snprintf(buf, sizeof buf,
-                     "<darkgrey>(%s unavailable)</darkgrey>", slot_name_lwr);
+                     "<darkgrey>(%s unavailable)</darkgrey>", slot_name_lwr.c_str());
         }
         else if (!you_tran_can_wear(e_order[i], true))
         {
             snprintf(buf, sizeof buf,
                      "<darkgrey>(%s currently unavailable)</darkgrey>",
-                     slot_name_lwr);
+                     slot_name_lwr.c_str());
         }
         else if (!you_can_wear(e_order[i]))
         {
             snprintf(buf, sizeof buf,
-                     "<darkgrey>(%s restricted)</darkgrey>", slot_name_lwr);
+                     "<darkgrey>(%s restricted)</darkgrey>", slot_name_lwr.c_str());
         }
         else
         {
             snprintf(buf, sizeof buf,
-                     "<darkgrey>(no %s)</darkgrey>", slot_name_lwr);
+                     "<darkgrey>(no %s)</darkgrey>", slot_name_lwr.c_str());
         }
         cols.add_formatted(2, buf, false);
     }
 }
 
-static std::string _overview_screen_title()
+static std::string _overview_screen_title(int sw)
 {
     char title[50];
     snprintf(title, sizeof title, " the %s ", player_title().c_str());
@@ -1302,21 +1482,18 @@ static std::string _overview_screen_title()
     snprintf(species_job, sizeof species_job,
              "(%s %s)",
              species_name(you.species).c_str(),
-             you.class_name);
+             you.class_name.c_str());
 
     char time_turns[50] = "";
 
-    if (you.real_time != -1)
-    {
-        const time_t curr = you.real_time + (time(NULL) - you.start_time);
-        snprintf(time_turns, sizeof time_turns,
-                 " Turns: %d, Time: %s",
-                 you.num_turns, make_time_string(curr, true).c_str());
-    }
+    handle_real_time();
+    snprintf(time_turns, sizeof time_turns,
+             " Turns: %d, Time: %s",
+             you.num_turns, make_time_string(you.real_time, true).c_str());
 
-    int linelength = you.your_name.length() + strlen(title)
-                     + strlen(species_job) + strlen(time_turns);
-    for (int count = 0; linelength >= get_number_of_cols() && count < 2;
+    int linelength = strwidth(you.your_name) + strwidth(title)
+                     + strwidth(species_job) + strwidth(time_turns);
+    for (int count = 0; linelength >= sw && count < 2;
          count++)
     {
         switch (count)
@@ -1333,8 +1510,8 @@ static std::string _overview_screen_title()
           default:
               break;
         }
-        linelength = you.your_name.length() + strlen(title)
-                     + strlen(species_job) + strlen(time_turns);
+        linelength = strwidth(you.your_name) + strwidth(title)
+                     + strwidth(species_job) + strwidth(time_turns);
     }
 
     std::string text;
@@ -1343,7 +1520,7 @@ static std::string _overview_screen_title()
     text += title;
     text += species_job;
 
-    const int num_spaces = get_number_of_cols() - linelength - 1;
+    const int num_spaces = sw - linelength - 1;
     if (num_spaces > 0)
         text += std::string(num_spaces, ' ');
 
@@ -1363,21 +1540,23 @@ static std::string _wiz_god_powers()
 }
 #endif
 
-static std::string _god_powers()
+static std::string _god_powers(bool simple)
 {
-    std::string godpowers = god_name(you.religion);
+    std::string godpowers = simple ? "" : god_name(you.religion) ;
     if (you.religion == GOD_XOM)
     {
-        if (you.gift_timeout == 0)
-            godpowers += " - BORED";
+        if (!you.gift_timeout)
+            godpowers += simple ? "- BORED" : " - BORED";
         else if (you.gift_timeout == 1)
-            godpowers += " - getting BORED";
-        return (colour_string(godpowers, god_colour(you.religion)));
+            godpowers += simple ? "- getting BORED" : " - getting BORED";
+        return (simple ? godpowers
+                       : colour_string(godpowers, god_colour(you.religion)));
     }
     else if (you.religion != GOD_NO_GOD)
     {
         if (player_under_penance())
-            return (colour_string("*" + godpowers, RED));
+            return (simple ? "*"
+                           : colour_string("*" + godpowers, RED));
         else
         {
             // piety rankings
@@ -1387,8 +1566,12 @@ static std::string _god_powers()
 
             // Careful about overflow. We erase some of the god's name
             // if necessary.
-            godpowers = godpowers.substr(0, 20)
-                         + " [" + std::string(prank, '*') + std::string(6 - prank, '.') + "]";
+            std::string asterisks = std::string(prank, '*')
+                                    + std::string(6 - prank, '.');
+            if (simple)
+                return(asterisks);
+            godpowers = chop_string(godpowers, 20, false)
+                      + " [" + asterisks + "]";
             return (colour_string(godpowers, god_colour(you.religion)));
         }
     }
@@ -1537,14 +1720,14 @@ static std::vector<formatted_string> _get_overview_stats()
     }
     cols1.add_formatted(2, buf, false);
 
-    std::string godpowers = _god_powers();
+    std::string godpowers = _god_powers(false);
 #ifdef WIZARD
     if (you.wizard)
         godpowers = _wiz_god_powers();
 #endif
 
     char lives[40];
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
     {
         snprintf(lives, sizeof(lives), "Lives: %d, deaths: %d",
                  you.lives, you.deaths);
@@ -1552,15 +1735,15 @@ static std::vector<formatted_string> _get_overview_stats()
     else
         lives[0] = 0;
 
-    int xp_needed = (exp_needed(you.experience_level + 2) - you.experience) + 1;
     snprintf(buf, sizeof buf,
-             "Exp: %d/%u (%d)%s\n"
+             "XL: %d%s\n"
              "God: %s\n"
              "Spells: %2d memorised, %2d level%s left\n"
              "%s",
-             you.experience_level, you.experience, you.exp_available,
-             (you.experience_level < 27?
-              make_stringf(", need: %d", xp_needed).c_str() : ""),
+             you.experience_level,
+             (you.experience_level < 27 ? make_stringf("   Next: %2d%%",
+                                                   get_exp_progress()).c_str()
+                                        : ""),
              godpowers.c_str(),
              you.spell_no, player_spell_levels(),
              (player_spell_levels() == 1) ? "" : "s",
@@ -1576,15 +1759,21 @@ static std::vector<formatted_string> _get_overview_resistances(
 {
     char buf[1000];
 
-    // 3 columns, splits at columns 21, 38
-    column_composer cols(3, 21, 38);
+    // 3 columns, splits at columns 21, 39
+    column_composer cols(3, 21, 39);
+
+    // Don't show unreliable resistances granted by the cloak.  We could mark
+    // them somehow, but for now this will do.
+    bool dragonskin = player_equip_unrand(UNRAND_DRAGONSKIN);
+    unwind_var<bool> dragon_hack(you.melded[EQ_CLOAK], you.melded[EQ_CLOAK]
+                                                       || dragonskin);
 
     const int rfire = player_res_fire(calc_unid);
     const int rcold = player_res_cold(calc_unid);
     const int rlife = player_prot_life(calc_unid);
+    const int racid = player_res_acid(calc_unid);
     const int rpois = player_res_poison(calc_unid);
     const int relec = player_res_electricity(calc_unid);
-    const int rspir = player_spirit_shield(calc_unid);
     const int rsust = player_sust_abil(calc_unid);
     const int rmuta = (wearing_amulet(AMU_RESIST_MUTATION, calc_unid)
                        || player_mutation_level(MUT_MUTATION_RESISTANCE) == 3
@@ -1596,21 +1785,21 @@ static std::vector<formatted_string> _get_overview_resistances(
              "%sRes.Fire  : %s\n"
              "%sRes.Cold  : %s\n"
              "%sLife Prot.: %s\n"
+             "%sRes.Acid. : %s\n"
              "%sRes.Poison: %s\n"
              "%sRes.Elec. : %s\n"
-             "%sSpirit.Shd: %s\n"
              "%sSust.Abil.: %s\n"
              "%sRes.Mut.  : %s\n"
              "%sRes.Rott. : %s\n",
-             _determine_colour_string(rfire, 3), itosym3(rfire),
-             _determine_colour_string(rcold, 3), itosym3(rcold),
-             _determine_colour_string(rlife, 3), itosym3(rlife),
-             _determine_colour_string(rpois, 1), itosym1(rpois),
-             _determine_colour_string(relec, 1), itosym1(relec),
-             _determine_colour_string(rspir, 1), itosym1(rspir),
-             _determine_colour_string(rsust, 2), itosym2(rsust),
-             _determine_colour_string(rmuta, 1), itosym1(rmuta),
-             _determine_colour_string(rrott, 1), itosym1(rrott));
+             _determine_colour_string(rfire, 3), _itosym3(rfire),
+             _determine_colour_string(rcold, 3), _itosym3(rcold),
+             _determine_colour_string(rlife, 3), _itosym3(rlife),
+             _determine_colour_string(racid, 3), _itosym3(racid),
+             _determine_colour_string(rpois, 1), _itosym1(rpois),
+             _determine_colour_string(relec, 1), _itosym1(relec),
+             _determine_colour_string(rsust, 2), _itosym2(rsust),
+             _determine_colour_string(rmuta, 1), _itosym1(rmuta),
+             _determine_colour_string(rrott, 1), _itosym1(rrott));
     cols.add_formatted(0, buf, false);
 
     int saplevel = player_mutation_level(MUT_SAPROVOROUS);
@@ -1620,13 +1809,13 @@ static std::vector<formatted_string> _get_overview_resistances(
     if (wearing_amulet(AMU_THE_GOURMAND, calc_unid))
     {
         pregourmand = "Gourmand  : ";
-        postgourmand = itosym1(1);
+        postgourmand = _itosym1(1);
         saplevel = 1;
     }
     else
     {
         pregourmand = "Saprovore : ";
-        postgourmand = itosym3(saplevel);
+        postgourmand = _itosym3(saplevel);
     }
     snprintf(buf, sizeof buf, "%s%s%s",
              _determine_colour_string(saplevel, 3), pregourmand, postgourmand);
@@ -1634,55 +1823,60 @@ static std::vector<formatted_string> _get_overview_resistances(
 
 
     const int rinvi = you.can_see_invisible(calc_unid);
-    const int rward = wearing_amulet(AMU_WARDING, calc_unid);
+    const int rward = player_warding(calc_unid);
     const int rcons = player_item_conserve(calc_unid);
-    const int rcorr = player_res_acid(calc_unid);
+    const int rcorr = player_res_corr(calc_unid);
     const int rclar = player_mental_clarity(calc_unid);
+    const int rspir = player_spirit_shield(calc_unid);
     snprintf(buf, sizeof buf,
              "%sSee Invis. : %s\n"
              "%sWarding    : %s\n"
              "%sConserve   : %s\n"
              "%sRes.Corr.  : %s\n"
              "%sClarity    : %s\n"
+             "%sSpirit.Shd : %s\n"
              ,
-             _determine_colour_string(rinvi, 1), itosym1(rinvi),
-             _determine_colour_string(rward, 1), itosym1(rward),
-             _determine_colour_string(rcons, 1), itosym1(rcons),
-             _determine_colour_string(rcorr, 1), itosym1(rcorr),
-             _determine_colour_string(rclar, 1), itosym1(rclar));
+             _determine_colour_string(rinvi, 1), _itosym1(rinvi),
+             _determine_colour_string(rward, 2), _itosym2(rward),
+             _determine_colour_string(rcons, 1), _itosym1(rcons),
+             _determine_colour_string(rcorr, 1), _itosym1(rcorr),
+             _determine_colour_string(rclar, 1), _itosym1(rclar),
+             _determine_colour_string(rspir, 1), _itosym1(rspir));
     cols.add_formatted(1, buf, false);
 
     const int stasis = wearing_amulet(AMU_STASIS, calc_unid);
-    const int notele = scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid);
+    const int notele = scan_artefacts(ARTP_PREVENT_TELEPORTATION, calc_unid)
+                       || crawl_state.game_is_zotdef() && orb_haloed(you.pos());
+    const int rrtel = !!player_teleport(calc_unid);
     if (notele && !stasis)
     {
         snprintf(buf, sizeof buf, "%sPrev.Telep.: %s",
-                 _determine_colour_string(-1, 1), itosym1(1));
+                 _determine_colour_string(-1, 1), _itosym1(1));
+    }
+    else
+    if (rrtel && !stasis)
+    {
+        snprintf(buf, sizeof buf, "%sRnd.Telep. : %s",
+                 _determine_colour_string(-1, 1), _itosym1(1));
     }
     else
     {
         snprintf(buf, sizeof buf, "%sStasis     : %s",
-                 _determine_colour_string(stasis, 1), itosym1(stasis));
+                 _determine_colour_string(stasis, 1), _itosym1(stasis));
     }
     cols.add_formatted(1, buf, false);
 
-    // If you need extra space, rnd tele conflicts with stasis/-TELE;
-    // it currently shows separately to avoid the blank.
-    const int rrtel = !!player_teleport(calc_unid);
-    snprintf(buf, sizeof buf, "%sRnd.Telep. : %s",
-             _determine_colour_string(rrtel, 1), itosym1(rrtel));
-    cols.add_formatted(1, buf, false);
-
-    const int rctel = player_control_teleport(calc_unid);
+    int rctel = player_control_teleport(calc_unid);
+    rctel = allow_control_teleport(true) ? rctel : -1;
     const int rlevi = you.airborne();
     const int rcfli = wearing_amulet(AMU_CONTROLLED_FLIGHT, calc_unid);
     snprintf(buf, sizeof buf,
              "%sCtrl.Telep.: %s\n"
              "%sLevitation : %s\n"
              "%sCtrl.Flight: %s\n",
-             _determine_colour_string(rctel, 1), itosym1(rctel),
-             _determine_colour_string(rlevi, 1), itosym1(rlevi),
-             _determine_colour_string(rcfli, 1), itosym1(rcfli));
+             _determine_colour_string(rctel, 1), _itosym1(rctel),
+             _determine_colour_string(rlevi, 1), _itosym1(rlevi),
+             _determine_colour_string(rcfli, 1), _itosym1(rcfli));
     cols.add_formatted(1, buf, false);
 
     _print_overview_screen_equip(cols, equip_chars);
@@ -1697,7 +1891,7 @@ static char _get_overview_screen_results()
     formatted_scroller overview;
     overview.set_flags(MF_SINGLESELECT | MF_ALWAYS_SHOW_MORE | MF_NOWRAP);
     overview.set_more(formatted_string::parse_string(
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
                         "<cyan>[ +/L-click : Page down.   - : Page up."
                         "           Esc/R-click exits.]"));
 #else
@@ -1706,7 +1900,7 @@ static char _get_overview_screen_results()
 #endif
     overview.set_tag("resists");
 
-    overview.add_text(_overview_screen_title());
+    overview.add_text(_overview_screen_title(get_number_of_cols()));
 
     {
         std::vector<formatted_string> blines = _get_overview_stats();
@@ -1731,15 +1925,15 @@ static char _get_overview_screen_results()
     }
 
     overview.add_text(" ");
-    overview.add_text(_status_mut_abilities());
+    overview.add_text(_status_mut_abilities(get_number_of_cols()));
 
     std::vector<MenuEntry *> results = overview.show();
-    return (results.size() > 0) ? results[0]->hotkeys[0] : 0;
+    return (!results.empty()) ? results[0]->hotkeys[0] : 0;
 }
 
 std::string dump_overview_screen(bool full_id)
 {
-    std::string text = formatted_string::parse_string(_overview_screen_title());
+    std::string text = formatted_string::parse_string(_overview_screen_title(80));
     text += "\n";
 
     std::vector<formatted_string> blines = _get_overview_stats();
@@ -1759,7 +1953,7 @@ std::string dump_overview_screen(bool full_id)
     }
     text += "\n";
 
-    text += formatted_string::parse_string(_status_mut_abilities());
+    text += formatted_string::parse_string(_status_mut_abilities(80));
     text += "\n";
 
     return text;
@@ -1801,7 +1995,11 @@ std::string stealth_desc(int stealth)
 
 std::string magic_res_adjective(int mr)
 {
-    return ((mr <  10) ? "not" :
+    if (mr == MAG_IMMUNE)
+        return "immune";
+
+    std::string prefix =
+            (mr <  10) ? "not" :
             (mr <  30) ? "slightly" :
             (mr <  60) ? "somewhat" :
             (mr <  90) ? "quite" :
@@ -1810,12 +2008,13 @@ std::string magic_res_adjective(int mr)
             (mr < 190) ? "extraordinarily" :
             (mr < 240) ? "incredibly" :
             (mr < 300) ? "uncannily"
-                       : "almost entirely");
+                       : "almost entirely";
+    return prefix + " resistant";
 }
 
 // Creates rows of short descriptions for current
 // status, mutations and abilities.
-std::string _status_mut_abilities()
+static std::string _status_mut_abilities(int sw)
 {
     //----------------------------
     // print status information
@@ -1824,19 +2023,64 @@ std::string _status_mut_abilities()
     std::vector<std::string> status;
 
     const int statuses[] = {
-        DUR_TRANSFORMATION, DUR_PARALYSIS, DUR_PETRIFIED, DUR_SLEEP,
+        DUR_TRANSFORMATION,
+        DUR_PARALYSIS,
+        DUR_PETRIFIED,
+        DUR_SLEEP,
+        DUR_PETRIFYING,
         STATUS_BURDEN,
-        DUR_BREATH_WEAPON, STATUS_BEHELD, DUR_LIQUID_FLAMES, DUR_ICY_ARMOUR,
-        DUR_DEFLECT_MISSILES, DUR_REPEL_MISSILES, DUR_PRAYER,
-        STATUS_REGENERATION, DUR_DEATHS_DOOR, DUR_STONEMAIL, DUR_STONESKIN,
-        DUR_TELEPORT, DUR_DEATH_CHANNEL, DUR_PHASE_SHIFT, DUR_SILENCE,
-        DUR_INVIS, DUR_CONF, DUR_EXHAUSTED, DUR_MIGHT, DUR_BRILLIANCE,
-        DUR_AGILITY, DUR_DIVINE_VIGOUR, DUR_DIVINE_STAMINA, DUR_BERSERK,
-        STATUS_AIRBORNE, DUR_BARGAIN, DUR_SLAYING, DUR_SAGE,
-        DUR_MAGIC_SHIELD, DUR_FIRE_SHIELD, DUR_POISONING, STATUS_SICK,
-        STATUS_GLOW, STATUS_ROT, DUR_CONFUSING_TOUCH, DUR_SLIMIFY,
-        DUR_SURE_BLADE, STATUS_NET, STATUS_SPEED, DUR_AFRAID,
-        DUR_MIRROR_DAMAGE, DUR_SCRYING,
+        STATUS_STR_ZERO, STATUS_INT_ZERO, STATUS_DEX_ZERO,
+        DUR_BREATH_WEAPON,
+        STATUS_BEHELD,
+        DUR_LIQUID_FLAMES,
+        DUR_ICY_ARMOUR,
+        DUR_DEFLECT_MISSILES,
+        DUR_REPEL_MISSILES,
+        DUR_JELLY_PRAYER,
+        STATUS_REGENERATION,
+        DUR_DEATHS_DOOR,
+        DUR_STONESKIN,
+        DUR_TELEPORT,
+        DUR_DEATH_CHANNEL,
+        DUR_PHASE_SHIFT,
+        DUR_SILENCE,
+        DUR_INVIS,
+        DUR_CONF,
+        DUR_EXHAUSTED,
+        DUR_MIGHT,
+        DUR_BRILLIANCE,
+        DUR_AGILITY,
+        DUR_DIVINE_VIGOUR,
+        DUR_DIVINE_STAMINA,
+        DUR_BERSERK,
+        STATUS_AIRBORNE,
+        DUR_BARGAIN,
+        DUR_SLAYING,
+        DUR_SAGE,
+        DUR_MAGIC_SHIELD,
+        DUR_FIRE_SHIELD,
+        DUR_POISONING,
+        STATUS_SICK,
+        STATUS_CONTAMINATION,
+        STATUS_ROT,
+        DUR_CONFUSING_TOUCH,
+        DUR_SLIMIFY,
+        DUR_SURE_BLADE,
+        STATUS_NET,
+        STATUS_SPEED,
+        DUR_AFRAID,
+        DUR_MIRROR_DAMAGE,
+        DUR_SCRYING,
+        DUR_TORNADO,
+        DUR_HEROISM,
+        DUR_FINESSE,
+        DUR_LIFESAVING,
+        DUR_DARKNESS,
+        STATUS_FIREBALL,
+        DUR_SHROUD_OF_GOLUBRIA,
+        DUR_TORNADO_COOLDOWN,
+        STATUS_BACKLIT,
+        STATUS_UMBRA,
     };
 
     status_info inf;
@@ -1858,8 +2102,8 @@ std::string _status_mut_abilities()
         status.push_back(help);
     }
 
-    status.push_back(magic_res_adjective(you.res_magic())
-                     + " resistant to hostile enchantments");
+    status.push_back(magic_res_adjective(player_res_magic(false))
+                     + " to hostile enchantments");
 
     // character evaluates their ability to sneak around:
     status.push_back(stealth_desc(check_stealth()));
@@ -1906,6 +2150,8 @@ std::string _status_mut_abilities()
           break;
 
       case SP_MUMMY:
+          mutations.push_back("no food or potions");
+          mutations.push_back("fire vulnerability");
           if (you.experience_level > 12)
           {
               std::string help = "in touch with death";
@@ -1915,7 +2161,15 @@ std::string _status_mut_abilities()
           }
           break;
 
-      case SP_CAT:
+      case SP_KOBOLD:
+          mutations.push_back("disease resistance");
+          break;
+
+      case SP_DEEP_DWARF:
+          mutations.push_back("damage resistance");
+          break;
+
+      case SP_FELID:
           mutations.push_back("paw claws");
           break;
 
@@ -1961,16 +2215,22 @@ std::string _status_mut_abilities()
     }                           //end switch - innate abilities
 
     // a bit more stuff
-    if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL
+    if (you.species == SP_OGRE || you.species == SP_TROLL
         || player_genus(GENPC_DRACONIAN) || you.species == SP_SPRIGGAN)
     {
         mutations.push_back("unfitting armour");
     }
 
-    if (you.species == SP_CAT)
+    if (you.species == SP_FELID)
     {
         mutations.push_back("no armour");
         mutations.push_back("no advanced items");
+    }
+
+    if (you.species == SP_OCTOPODE)
+    {
+        mutations.push_back("almost no armour");
+        mutations.push_back("amphibious");
     }
 
     if (beogh_water_walk())
@@ -2075,7 +2335,7 @@ std::string _status_mut_abilities()
                 EV_change -= level > 1 ? 1 : 0;
                 break;
             case MUT_IRIDESCENT_SCALES:
-                AC_change += 3*level;
+                AC_change += 2*level+2;
                 break;
             case MUT_LARGE_BONE_PLATES:
                 AC_change += level + 1;
@@ -2100,7 +2360,7 @@ std::string _status_mut_abilities()
                 AC_change += level;
                 break;
             case MUT_THIN_SKELETAL_STRUCTURE:
-                Dex_change += level;
+                Dex_change += 2 * level;
                 Str_change -= level;
                 break;
             case MUT_YELLOW_SCALES:
@@ -2111,8 +2371,7 @@ std::string _status_mut_abilities()
                 EV_change += level - 1;
                 break;
             default:
-                ASSERT(false);
-                break;
+                die("mutation without a short desc: %d", i);
             }
         }
 
@@ -2168,7 +2427,25 @@ std::string _status_mut_abilities()
     //----------------------------
 
     text += print_abilities();
-    linebreak_string2(text, get_number_of_cols());
+
+    //--------------
+    // print runes
+    //--------------
+    std::vector<std::string> runes;
+    for (int i = 0; i < NUM_RUNE_TYPES; i++)
+        if (you.runes[i])
+            runes.push_back(rune_type_name(i));
+    if (!runes.empty())
+    {
+        text += make_stringf("\n<w>%s:</w> %d/%d rune%s: %s",
+                    stringize_glyph(get_item_symbol(SHOW_ITEM_MISCELLANY)).c_str(),
+                    (int)runes.size(), you.obtainable_runes,
+                    you.obtainable_runes == 1 ? "" : "s",
+                    comma_separated_line(runes.begin(), runes.end(),
+                                         ", ", ", ").c_str());
+    }
+
+    linebreak_string(text, sw);
 
     return text;
 }

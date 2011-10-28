@@ -1,8 +1,7 @@
-/*
- *  File:       menu.h
- *  Summary:    Menus and associated malarkey.
- *  Written by: Darshan Shaligram
- */
+/**
+ * @file
+ * @brief Menus and associated malarkey.
+**/
 
 #ifndef __MENU_H__
 #define __MENU_H__
@@ -10,13 +9,14 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <stdio.h>
 #include <time.h>
 #include "externs.h"
 #include "format.h"
 #include "defines.h"
 #include "libutil.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
  #include "tilebuf.h"
  #include "tiledoll.h"
 #endif
@@ -64,6 +64,7 @@ int menu_colour(const std::string &itemtext,
                 const std::string &prefix = "",
                 const std::string &tag = "");
 
+const int MENU_ITEM_STOCK_COLOUR = LIGHTGREY;
 class MenuEntry
 {
 public:
@@ -73,9 +74,10 @@ public:
     int colour;
     std::vector<int> hotkeys;
     MenuEntryLevel level;
+    bool preselected;
     void *data;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     std::vector<tile_def> tiles;
 #endif
 
@@ -83,11 +85,12 @@ public:
     MenuEntry(const std::string &txt = std::string(),
                MenuEntryLevel lev = MEL_ITEM,
                int qty  = 0,
-               int hotk = 0) :
+               int hotk = 0,
+               bool preselect = false) :
         text(txt), quantity(qty), selected_qty(0), colour(-1),
-        hotkeys(), level(lev), data(NULL)
+        hotkeys(), level(lev), preselected(preselect), data(NULL)
     {
-        colour = (lev == MEL_ITEM     ?  LIGHTGREY :
+        colour = (lev == MEL_ITEM     ?  MENU_ITEM_STOCK_COLOUR :
                   lev == MEL_SUBTITLE ?  BLUE  :
                                          WHITE);
         if (hotk)
@@ -122,7 +125,8 @@ public:
         {
             char buf[300];
             snprintf(buf, sizeof buf,
-                    " %c - %s", hotkeys[0], text.c_str());
+                    " %c %c %s", hotkeys[0], preselected ? '+' : '-',
+                                 text.c_str());
             return std::string(buf);
         }
         return text;
@@ -138,9 +142,13 @@ public:
         return (selected_qty > 0 && quantity);
     }
 
+    // -1: Invert
+    // -2: Select all
     virtual void select(int qty = -1)
     {
-        if (selected())
+        if (qty == -2)
+            selected_qty = quantity;
+        else if (selected())
             selected_qty = 0;
         else if (quantity)
             selected_qty = (qty == -1? quantity : qty);
@@ -151,7 +159,7 @@ public:
         return get_text();
     }
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual bool get_tiles(std::vector<tile_def>& tileset) const;
 
     virtual void add_tile(tile_def tile);
@@ -166,8 +174,9 @@ public:
     ToggleableMenuEntry(const std::string &txt = std::string(),
                          const std::string &alt_txt = std::string(),
                          MenuEntryLevel lev = MEL_ITEM,
-                         int qty = 0, int hotk = 0) :
-        MenuEntry(txt, lev, qty, hotk), alt_text(alt_txt) {}
+                         int qty = 0, int hotk = 0,
+                         bool preselect = false) :
+        MenuEntry(txt, lev, qty, hotk, preselect), alt_text(alt_txt) {}
 
     void toggle() { text.swap(alt_text); }
 };
@@ -177,12 +186,12 @@ class MonsterMenuEntry : public MenuEntry
 public:
     MonsterMenuEntry(const std::string &str, const monster* mon, int hotkey);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual bool get_tiles(std::vector<tile_def>& tileset) const;
 #endif
 };
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 class PlayerMenuEntry : public MenuEntry
 {
 public:
@@ -202,7 +211,7 @@ public:
     FeatureMenuEntry(const std::string &str, const dungeon_feature_type f,
                      int hotkey);
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual bool get_tiles(std::vector<tile_def>& tileset) const;
 #endif
 };
@@ -216,24 +225,25 @@ public:
 
 enum MenuFlag
 {
-    MF_NOSELECT         = 0x0000,   // No selection is permitted
-    MF_SINGLESELECT     = 0x0001,   // Select just one item
-    MF_MULTISELECT      = 0x0002,   // Select multiple items
-    MF_NO_SELECT_QTY    = 0x0004,   // Disallow partial selections
-    MF_ANYPRINTABLE     = 0x0008,   // Any printable character is valid, and
-                                    // closes the menu.
-    MF_SELECT_BY_PAGE   = 0x0010,   // Allow selections to occur only on
-                                    // currently visible page.
+    MF_NOSELECT         = 0x0000,   /// No selection is permitted
+    MF_SINGLESELECT     = 0x0001,   /// Select just one item
+    MF_MULTISELECT      = 0x0002,   /// Select multiple items
+    MF_NO_SELECT_QTY    = 0x0004,   /// Disallow partial selections
+    MF_ANYPRINTABLE     = 0x0008,   /// Any printable character is valid, and
+                                    /// closes the menu.
+    MF_SELECT_BY_PAGE   = 0x0010,   /// Allow selections to occur only on
+                                    /// currently visible page.
 
-    MF_ALWAYS_SHOW_MORE = 0x0020,   // Always show the -more- footer
-    MF_NOWRAP           = 0x0040,   // Paging past the end will not wrap back.
+    MF_ALWAYS_SHOW_MORE = 0x0020,   /// Always show the -more- footer
+    MF_NOWRAP           = 0x0040,   /// Paging past the end will not wrap back.
 
-    MF_ALLOW_FILTER     = 0x0080,   // Control-F will ask for regex and
-                                    // select the appropriate items.
-    MF_ALLOW_FORMATTING = 0x0100,   // Parse index for formatted-string
-    MF_SHOW_PAGENUMBERS = 0x0200,   // Show "(page X of Y)" when appropriate
+    MF_ALLOW_FILTER     = 0x0080,   /// Control-F will ask for regex and
+                                    /// select the appropriate items.
+    MF_ALLOW_FORMATTING = 0x0100,   /// Parse index for formatted-string
+    MF_SHOW_PAGENUMBERS = 0x0200,   /// Show "(page X of Y)" when appropriate
     MF_EASY_EXIT        = 0x1000,
     MF_START_AT_END     = 0x2000,
+    MF_PRESELECTED      = 0x4000,   /// Has a preselected entry.
 };
 
 class MenuDisplay
@@ -421,7 +431,7 @@ protected:
     virtual bool process_key(int keyin);
 };
 
-// Allows toggling by specific keys.
+/// Allows toggling by specific keys.
 class ToggleableMenu : public Menu
 {
 public:
@@ -505,11 +515,11 @@ protected:
 };
 
 /**
- * Written by Janne "felirx" Lahdenpera
- * Abstract base class interface for all menu items to inherit from
- * each item should know how it's rendered.
- * rendering should only check the item bounds and screen bounds to prevent
- * assertion errors
+ * @author Janne "felirx" Lahdenpera
+ * Abstract base class interface for all menu items to inherit from.
+ * Each item should know how it's rendered.
+ * Rendering should only check the item bounds and screen bounds to prevent
+ * assertion errors.
  */
 class MenuItem
 {
@@ -517,12 +527,15 @@ public:
     MenuItem();
     virtual ~MenuItem();
 
+    void set_tile_height();
+
     void set_id(int id) { m_item_id = id; }
     int get_id() const { return m_item_id; }
 
     virtual void set_bounds(const coord_def& min_coord, const coord_def& max_coord);
     virtual void set_bounds_no_multiply(const coord_def& min_coord,
                                          const coord_def& max_coord);
+    virtual void move(const coord_def& delta);
     virtual const coord_def& get_min_coord() const { return m_min_coord; }
     virtual const coord_def& get_max_coord() const { return m_max_coord; }
 
@@ -548,6 +561,18 @@ public:
 
     void add_hotkey(int key);
     const std::vector<int>& get_hotkeys() const;
+    void clear_hotkeys();
+
+    void set_link_left(MenuItem* item);
+    void set_link_right(MenuItem* item);
+    void set_link_up(MenuItem* item);
+    void set_link_down(MenuItem* item);
+
+    MenuItem* get_link_left() const;
+    MenuItem* get_link_right() const;
+    MenuItem* get_link_up() const;
+    MenuItem* get_link_down() const;
+
 protected:
     coord_def m_min_coord;
     coord_def m_max_coord;
@@ -562,10 +587,16 @@ protected:
     COLORS m_highlight_colour;
     int m_bg_colour;
 
-#ifdef USE_TILE
+    MenuItem* m_link_left;
+    MenuItem* m_link_right;
+    MenuItem* m_link_up;
+    MenuItem* m_link_down;
+
+#ifdef USE_TILE_LOCAL
     // Holds the conversion values to translate unit values to pixel values
     unsigned int m_unit_width_pixels;
     unsigned int m_unit_height_pixels;
+    int get_vertical_offset() const;
 #endif
 
     int m_item_id;
@@ -594,13 +625,13 @@ protected:
     std::string m_text;
     std::string m_render_text;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     FontBuffer m_font_buf;
 #endif
 };
 
 /**
- * Behaves the same as TextItem, expect selection has been overridden to always
+ * Behaves the same as TextItem, except selection has been overridden to always
  * return false
  */
 class NoSelectTextItem : public TextItem
@@ -613,9 +644,20 @@ public:
 };
 
 /**
+ * Behaves the same as TextItem but use formatted text for rendering.
+ * It ignores bg_colour.
+ * TODO: add bg_colour support to formatted_string and merge this with TextItem.
+ */
+class FormattedTextItem : public TextItem
+{
+public:
+    virtual void render();
+};
+
+/**
  * Holds an arbitary number of tiles, currently rendered on top of each other
  */
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 class TextTileItem : public TextItem
 {
 public:
@@ -626,6 +668,7 @@ public:
     virtual void render();
 
     virtual void add_tile(tile_def tile);
+    void clear_tile() { m_tiles.clear(); };
 
 protected:
     std::vector<tile_def> m_tiles;
@@ -657,10 +700,10 @@ protected:
 class PrecisionMenu;
 
 /**
- * Abstract base class interface for all attachable objects
+ * Abstract base class interface for all attachable objects.
  * Objects are generally containers that hold MenuItems, however special
  * objects are also possible, for instance MenuDescriptor, MenuButton.
- * All objects should have an unique std::string name, although the uniquitity
+ * All objects should have an unique std::string name, although the uniqueness
  * is not enforced or checked right now.
  */
 class MenuObject
@@ -684,6 +727,7 @@ public:
     MenuObject();
     virtual ~MenuObject();
 
+    void set_tile_height();
     void init(const coord_def& min_coord, const coord_def& max_coord,
               const std::string& name);
     const coord_def& get_min_coord() const { return m_min_coord; }
@@ -694,7 +738,7 @@ public:
     virtual bool can_be_focused();
 
     virtual InputReturnValue process_input(int key) = 0;
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual InputReturnValue handle_mouse(const MouseEvent& me) = 0;
 #endif
     virtual void render() = 0;
@@ -710,6 +754,7 @@ public:
     virtual std::vector<MenuItem*> get_selected_items();
     virtual bool select_item(int index) = 0;
     virtual bool select_item(MenuItem* item) = 0;
+    virtual MenuItem* find_item_by_hotkey(int key);
     virtual MenuItem* select_item_by_hotkey(int key);
     virtual void clear_selections();
     virtual MenuItem* get_active_item() = 0;
@@ -717,7 +762,8 @@ public:
     virtual bool attach_item(MenuItem* item) = 0;
 
 protected:
-    enum Direction{
+    enum Direction
+    {
         UP,
         DOWN,
         LEFT,
@@ -740,7 +786,7 @@ protected:
     // if you need a different behaviour, pleare override the
     // affected methods
     std::vector<MenuItem*> m_entries;
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // Holds the conversion values to translate unit values to pixel values
     unsigned int m_unit_width_pixels;
     unsigned int m_unit_height_pixels;
@@ -759,7 +805,7 @@ public:
     virtual ~MenuFreeform();
 
     virtual InputReturnValue process_input(int key);
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual InputReturnValue handle_mouse(const MouseEvent& me);
 #endif
     virtual void render();
@@ -768,6 +814,8 @@ public:
     virtual void set_active_item(MenuItem* item);
     virtual void activate_first_item();
     virtual void activate_last_item();
+    void set_default_item(MenuItem* item);
+    void activate_default_item();
 
     virtual bool select_item(int index);
     virtual bool select_item(MenuItem* item);
@@ -781,6 +829,7 @@ protected:
 
     // cursor position
     MenuItem* m_active_item;
+    MenuItem* m_default_item;
 };
 
 /**
@@ -796,7 +845,7 @@ public:
     virtual ~MenuScroller();
 
     virtual InputReturnValue process_input(int key);
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual InputReturnValue handle_mouse(const MouseEvent& me);
 #endif
     virtual void render();
@@ -823,8 +872,8 @@ protected:
 };
 
 /**
- * Base class for various descriptor and highlighter objects
- * these should probably be attached last to the menu to be rendered last
+ * Base class for various descriptor and highlighter objects.
+ * These should probably be attached last to the menu to be rendered last.
  */
 class MenuDescriptor : public MenuObject
 {
@@ -836,7 +885,7 @@ public:
               const std::string& name);
 
     virtual InputReturnValue process_input(int key);
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual InputReturnValue handle_mouse(const MouseEvent& me);
 #endif
     virtual void render();
@@ -872,7 +921,7 @@ protected:
 };
 
 /**
- * Class for mouse over tooltips, does nothing if USE_TILE is not defined
+ * Class for mouse over tooltips, does nothing if USE_TILE_LOCAL is not defined
  * TODO: actually implement render() and _place_items()
  */
 class MenuTooltip : public MenuDescriptor
@@ -881,22 +930,22 @@ public:
     MenuTooltip(PrecisionMenu* parent);
     virtual ~MenuTooltip();
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual InputReturnValue handle_mouse(const MouseEvent& me);
 #endif
     virtual void render();
 protected:
     virtual void _place_items();
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     ShapeBuffer m_background;
     FontBuffer m_font_buf;
 #endif
 };
 
 /**
- * Highlighter object
- * TILES: It will create a colored rectangle around the currently active item
+ * Highlighter object.
+ * TILES: It will create a colored rectangle around the currently active item.
  * CONSOLE: It will muck with the Item background color, setting it to highlight
  *          colour, reverting the change when active changes.
  */
@@ -907,7 +956,7 @@ public:
     virtual ~BoxMenuHighlighter();
 
     virtual InputReturnValue process_input(int key);
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual InputReturnValue handle_mouse(const MouseEvent& me);
 #endif
     virtual void render();
@@ -940,7 +989,7 @@ protected:
     PrecisionMenu* m_parent;
     MenuItem* m_active_item;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     LineBuffer m_line_buf;
 #else
     COLORS m_old_bg_colour;
@@ -957,7 +1006,7 @@ public:
 protected:
     virtual void _place_items();
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // Tiles does not seem to support background colors
     ShapeBuffer m_shape_buf;
 #endif
@@ -966,7 +1015,7 @@ protected:
 };
 
 /**
- * Base operations for a button to work
+ * Base operations for a button to work.
  * TODO: implement
  */
 class MenuButton : public MenuObject
@@ -1001,7 +1050,7 @@ public:
 
     virtual void draw_menu();
     virtual bool process_key(int key);
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     virtual int handle_mouse(const MouseEvent& me);
 #endif
 
@@ -1014,7 +1063,8 @@ public:
     virtual void set_active_object(MenuObject* object);
 protected:
     // These correspond to the Arrow keys when used for browsing the menus
-    enum Direction{
+    enum Direction
+    {
         UP,
         DOWN,
         LEFT,
@@ -1029,8 +1079,7 @@ protected:
     SelectType m_select_type;
 };
 
-int linebreak_string(std::string& s, int wrapcol, int maxcol);
-int linebreak_string2(std::string& s, int maxcol);
+int linebreak_string(std::string& s, int maxcol);
 std::string get_linebreak_string(const std::string& s, int maxcol);
 
 #endif

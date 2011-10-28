@@ -1,7 +1,7 @@
-/*
- *  File:       mon-speak.cc
- *  Summary:    Functions to handle speaking monsters
- */
+/**
+ * @file
+ * @brief Functions to handle speaking monsters
+**/
 
 #include "AppHdr.h"
 
@@ -418,7 +418,7 @@ bool mons_speaks(monster* mons)
         // unless they're normally silent (S_SILENT).  Use
         // get_monster_data(mons->type) to bypass mon_shouts()
         // replacing S_RANDOM with a random value.
-        if (silenced(mons->pos())
+        if (silenced(mons->pos()) || mons->has_ench(ENCH_MUTE)
             && get_monster_data(mons->type)->shouts != S_SILENT)
         {
             if (!one_chance_in(3))
@@ -430,6 +430,7 @@ bool mons_speaks(monster* mons)
             return (false);
 
         // Monsters in a battle frenzy are likewise occupied.
+        // But roused holy creatures are not.
         if (mons->has_ench(ENCH_BATTLE_FRENZY) && !one_chance_in(3))
             return (false);
 
@@ -455,7 +456,7 @@ bool mons_speaks(monster* mons)
         prefixes.push_back("fleeing");
 
     bool silence = silenced(you.pos());
-    if (silenced(mons->pos()))
+    if (silenced(mons->pos()) || mons->has_ench(ENCH_MUTE))
     {
         silence = true;
         prefixes.push_back("silenced");
@@ -570,7 +571,7 @@ bool mons_speaks(monster* mons)
                                     unseen);
         }
     }
-    else if (mons->type == MONS_PANDEMONIUM_DEMON)
+    else if (mons->type == MONS_PANDEMONIUM_LORD)
     {
         // Pandemonium demons have randomly generated names, so use
         // "pandemonium lord" instead.
@@ -622,6 +623,18 @@ bool mons_speaks(monster* mons)
                                      mons->props["speech_key"].get_string(),
                                      mons, no_player, no_foe, no_foe_name,
                                      no_god, unseen);
+
+            if (msg.empty())
+            {
+                // Try again without the prefixes if the key is empty. Vaults
+                // *really* want monsters to use the key specified, rather than
+                // the key with prefixes.
+                std::vector<std::string> faux_prefixes;
+                msg = _get_speak_string(faux_prefixes,
+                                     mons->props["speech_key"].get_string(),
+                                     mons, no_player, no_foe, no_foe_name,
+                                     no_god, unseen);
+            }
         }
 
         // If the monster was originally a unique which has been polymorphed

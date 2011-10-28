@@ -3,10 +3,10 @@
 
 enum los_type
 {
+    LOS_ARENA        = 0,
     LOS_DEFAULT      = (1 << 0),
     LOS_NO_TRANS     = (1 << 1),
-    LOS_FLAG_INVALID = (1 << 7),  // internal use
-    LOS_ARENA = LOS_FLAG_INVALID, // hack
+    LOS_SOLID        = (1 << 2),
 };
 
 void invalidate_los_around(const coord_def& p);

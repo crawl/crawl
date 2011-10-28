@@ -1,17 +1,15 @@
+/**
+ * @file
+ * @brief Functions for windows console mode support.
+**/
+
 #include "AppHdr.h"
 
 #if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
 
-/*
- *  File:       libw32c.cc
- *  Summary:    Functions for windows32 console mode support.
- *              Needed by makefile.mgw.
- *  Written by: Gordon Lipford
- */
-
 // WINDOWS INCLUDES GO HERE
 /*
- * Exclude parts of WINDOWS.H that are not needed
+ * Exclude parts of windows.h that are not needed
  */
 #define NOCOMM            /* Comm driver APIs and definitions */
 #define NOLOGERROR        /* LogError() and related definitions */
@@ -38,22 +36,21 @@
 #define NOCTLMGR          /* Control management and controls */
 #define NOHELP            /* Help support */
 /*
- * Exclude parts of WINDOWS.H that are not needed (Win32)
+ * Exclude parts of windows.h that are not needed (Win32)
  */
 #define WIN32_LEAN_AND_MEAN
 #define NONLS             /* All NLS defines and routines */
 #define NOSERVICE         /* All Service Controller routines, SERVICE_ equates, etc. */
 #define NOKANJI           /* Kanji support stuff. */
 #define NOMCX             /* Modem Configuration Extensions */
-#ifndef _X86_
-#define _X86_                     /* target architecture */
-#endif
 
 #include <excpt.h>
 #include <stdarg.h>
 #undef ARRAYSZ
 #include <windows.h>
 #undef max
+#undef AF_CHAOS
+#undef S_NORMAL
 
 // END -- WINDOWS INCLUDES
 
@@ -69,11 +66,11 @@
 #include "message.h"
 #include "options.h"
 #include "state.h"
-#include "stuff.h"
+#include "unicode.h"
 #include "view.h"
 #include "viewgeom.h"
 
-char oldTitle[80];
+wchar_t oldTitle[80];
 
 static HANDLE inbuf = NULL;
 static HANDLE outbuf = NULL;
@@ -98,7 +95,7 @@ static bool w32_smart_cursor = true;
 
 // we can do straight translation of DOS color to win32 console color.
 #define WIN32COLOR(col) (WORD)(col)
-static void writeChar(char c);
+static void writeChar(ucs_t c);
 static void bFlush(void);
 static void _setcursortype_internal(bool curstype);
 
@@ -126,7 +123,7 @@ static DWORD crawlColorData[16] =
 };
  */
 
-void writeChar(char c)
+void writeChar(ucs_t c)
 {
     if (c == '\t')
     {
@@ -154,11 +151,15 @@ void writeChar(char c)
         return;
     }
 
+    // check for upper Unicode which Windows can't handle
+    if (c > 0xFFFF)
+        c = 0xBF; // '¿'
+
     int tc = WIN32COLOR(current_color);
     pci = &screen[SCREENINDEX(cx,cy)];
 
     // is this a no-op?
-    if (pci->Char.AsciiChar != c)
+    if (pci->Char.UnicodeChar != c)
         noop = false;
     else if (pci->Attributes != tc)
         noop = false;
@@ -166,7 +167,7 @@ void writeChar(char c)
     if (!noop)
     {
         // write the info and update the dirty area
-        pci->Char.AsciiChar = c;
+        pci->Char.UnicodeChar = c;
         pci->Attributes = tc;
 
         if (chy < 0)
@@ -213,7 +214,7 @@ void bFlush(void)
     target.Right = chex;
     target.Bottom = chy;
 
-    WriteConsoleOutput(outbuf, screen, screensize, source, &target);
+    WriteConsoleOutputW(outbuf, screen, screensize, source, &target);
 
     chy = -1;
 
@@ -241,7 +242,7 @@ void set_mouse_enabled(bool enabled)
     }
 }
 
-void set_string_input(bool value)
+static void _set_string_input(bool value)
 {
     DWORD inmodes, outmodes;
     if (value == TRUE)
@@ -272,20 +273,6 @@ void set_string_input(bool value)
 
     // now flush it
     FlushConsoleInputBuffer(inbuf);
-}
-
-// this apparently only works for Win2K+ and ME+
-
-static void init_colors(char *windowTitle)
-{
-   UNUSED(windowTitle);
-
-   // look up the Crawl shortcut
-
-   // if found, modify the colortable entries in the NT_CONSOLE_PROPS
-   // structure.
-
-   // if not found, quit.
 }
 
 #ifdef TARGET_COMPILER_MINGW
@@ -320,7 +307,7 @@ static void set_w32_screen_size()
     COORD topleft;
     SMALL_RECT used;
     topleft.X = topleft.Y = 0;
-    ::ReadConsoleOutput(outbuf, screen, screensize, topleft, &used);
+    ::ReadConsoleOutputW(outbuf, screen, screensize, topleft, &used);
 }
 
 static void w32_handle_resize_event()
@@ -350,7 +337,7 @@ static void w32_term_resizer()
     crawl_view.init_geometry();
 }
 
-void init_libw32c(void)
+void console_startup()
 {
     inbuf = GetStdHandle(STD_INPUT_HANDLE);
     outbuf = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -363,8 +350,9 @@ void init_libw32c(void)
 
     std::string title = CRAWL " " + Version::Long();
 
-    GetConsoleTitle(oldTitle, 78);
-    SetConsoleTitle(title.c_str());
+    if (!GetConsoleTitleW(oldTitle, 78))
+        *oldTitle = 0;
+    SetConsoleTitleW(OUTW(title));
 
     // Use the initial Windows setting for cursor size if it exists.
     // TODO: Respect changing cursor size manually while Crawl is running.
@@ -374,10 +362,8 @@ void init_libw32c(void)
     install_sighandlers();
 #endif
 
-    init_colors(oldTitle);
-
     // by default, set string input to false:  use char-input only
-    set_string_input(false);
+    _set_string_input(false);
 
     // set up screen size
     set_w32_screen_size();
@@ -410,7 +396,7 @@ void init_libw32c(void)
 
 }
 
-void deinit_libw32c(void)
+void console_shutdown()
 {
     // don't do anything if we were never initted
     if (inbuf == NULL || outbuf == NULL)
@@ -425,7 +411,7 @@ void deinit_libw32c(void)
         SetConsoleOutputCP(OutputCP);
 
     // restore console attributes for normal function
-    set_string_input(true);
+    _set_string_input(true);
 
     // set cursor and normal textcolor
     _setcursortype_internal(true);
@@ -435,7 +421,8 @@ void deinit_libw32c(void)
     screen = NULL;
 
     // finally, restore title
-    SetConsoleTitle(oldTitle);
+    if (*oldTitle)
+        SetConsoleTitleW(oldTitle);
 }
 
 void set_cursor_enabled(bool enabled)
@@ -449,7 +436,7 @@ bool is_cursor_enabled()
     return (cursor_is_enabled);
 }
 
-void _setcursortype_internal(bool curstype)
+static void _setcursortype_internal(bool curstype)
 {
     CONSOLE_CURSOR_INFO cci;
 
@@ -489,7 +476,7 @@ void clrscr(void)
     for (x = 0; x < screensize.X; x++)
         for (y = 0; y < screensize.Y; y++)
         {
-            pci->Char.AsciiChar = ' ';
+            pci->Char.UnicodeChar = ' ';
             pci->Attributes = 0;
             pci++;
         }
@@ -501,7 +488,7 @@ void clrscr(void)
     target.Right = screensize.X - 1;
     target.Bottom = screensize.Y - 1;
 
-    WriteConsoleOutput(outbuf, screen, screensize, source, &target);
+    WriteConsoleOutputW(outbuf, screen, screensize, source, &target);
 
     // reset cursor to 1,1 for convenience
     cgotoxy(1,1);
@@ -537,11 +524,6 @@ void gotoxy_sys(int x, int y)
     }
 }
 
-void textattr(int c)
-{
-    textcolor(c);
-}
-
 void textcolor(int c)
 {
     // change current color used to stamp chars
@@ -569,7 +551,7 @@ static void cprintf_aux(const char *s)
     // early out -- not initted yet
     if (outbuf == NULL)
     {
-        printf("%s", s);
+        printf("%S", OUTW(s));
         return;
     }
 
@@ -578,10 +560,11 @@ static void cprintf_aux(const char *s)
     set_buffering(true);
 
     // loop through string
-    char *p = (char *)s;
-    while (*p)
+    ucs_t c;
+    while (int taken = utf8towc(&c, s))
     {
-        writeChar(*p++);
+        s += taken;
+        writeChar(c);
     }
 
     // reset buffering
@@ -604,15 +587,6 @@ void cprintf(const char *format, ...)
     va_end(argp);
 }
 
-void window(int x, int y, int lx, int ly)
-{
-    // do nothing
-    UNUSED(x);
-    UNUSED(y);
-    UNUSED(lx);
-    UNUSED(ly);
-}
-
 int wherex(void)
 {
     return cx+1;
@@ -623,39 +597,32 @@ int wherey(void)
     return cy+1;
 }
 
-void putch(char c)
+void putwch(ucs_t c)
 {
-    // special case: check for '0' char: map to space
     if (c == 0)
         c = ' ';
-
     writeChar(c);
-}
-
-void putwch(unsigned c)
-{
-    putch((char) c);
 }
 
 // translate virtual keys
 
-#define VKEY_MAPPINGS 10
+#define VKEY_MAPPINGS 11
 static int vk_tr[4][VKEY_MAPPINGS] = // virtual key, unmodified, shifted, control
 {
-   { VK_END, VK_DOWN, VK_NEXT, VK_LEFT, VK_CLEAR, VK_RIGHT, VK_HOME, VK_UP, VK_PRIOR, VK_INSERT },
-   { CK_END, CK_DOWN, CK_PGDN, CK_LEFT, CK_CLEAR, CK_RIGHT, CK_HOME, CK_UP, CK_PGUP , CK_INSERT },
-   { CK_SHIFT_END, CK_SHIFT_DOWN, CK_SHIFT_PGDN, CK_SHIFT_LEFT, CK_SHIFT_CLEAR, CK_SHIFT_RIGHT, CK_SHIFT_HOME, CK_SHIFT_UP, CK_SHIFT_PGUP, CK_SHIFT_INSERT },
-   { CK_CTRL_END, CK_CTRL_DOWN, CK_CTRL_PGDN, CK_CTRL_LEFT, CK_CTRL_CLEAR, CK_CTRL_RIGHT, CK_CTRL_HOME, CK_CTRL_UP, CK_CTRL_PGUP, CK_CTRL_INSERT },
+   { VK_END, VK_DOWN, VK_NEXT, VK_LEFT, VK_CLEAR, VK_RIGHT, VK_HOME, VK_UP, VK_PRIOR, VK_INSERT, VK_TAB },
+   { CK_END, CK_DOWN, CK_PGDN, CK_LEFT, CK_CLEAR, CK_RIGHT, CK_HOME, CK_UP, CK_PGUP , CK_INSERT, CONTROL('I') },
+   { CK_SHIFT_END, CK_SHIFT_DOWN, CK_SHIFT_PGDN, CK_SHIFT_LEFT, CK_SHIFT_CLEAR, CK_SHIFT_RIGHT, CK_SHIFT_HOME, CK_SHIFT_UP, CK_SHIFT_PGUP, CK_SHIFT_INSERT, CK_SHIFT_TAB },
+   { CK_CTRL_END, CK_CTRL_DOWN, CK_CTRL_PGDN, CK_CTRL_LEFT, CK_CTRL_CLEAR, CK_CTRL_RIGHT, CK_CTRL_HOME, CK_CTRL_UP, CK_CTRL_PGUP, CK_CTRL_INSERT, CK_CTRL_TAB },
    };
 
 static int ck_tr[] =
 {
-    'k', 'j', 'h', 'l', '0', 'y', 'b', '.', 'u', 'n',
-    // 'b', 'j', 'n', 'h', '.', 'l', 'y', 'k', 'u' ,
-    '8', '2', '4', '6', '0', '7', '1', '5', '9', '3',
-    // '1', '2', '3', '4', '5', '6', '7', '8', '9' ,
-    11, 10, 8, 12, '0', 25, 2, 0, 21, 14
-    // 2, 10, 14, 8, 0, 12, 25, 11, 21 ,
+    'k', 'j', 'h', 'l', '0', 'y', 'b', '.', 'u', 'n', '0',
+    // 'b', 'j', 'n', 'h', '.', 'l', 'y', 'k', 'u', (autofight)
+    '8', '2', '4', '6', '0', '7', '1', '5', '9', '3', '0',
+    // '1', '2', '3', '4', '5', '6', '7', '8', '9', (non-move autofight)
+    11, 10, 8, 12, '0', 25, 2, 0, 21, 14, '0',
+    // 2, 10, 14, 8, 0, 12, 25, 11, 21,
 };
 
 static int key_to_command(int keyin)
@@ -669,7 +636,7 @@ static int key_to_command(int keyin)
     return keyin;
 }
 
-int vk_translate(WORD VirtCode, CHAR c, DWORD cKeys)
+static int vk_translate(WORD VirtCode, WCHAR c, DWORD cKeys)
 {
     bool shftDown = false;
     bool ctrlDown = false;
@@ -740,7 +707,7 @@ int vk_translate(WORD VirtCode, CHAR c, DWORD cKeys)
 
 int m_getch()
 {
-    return getch();
+    return getchk();
 }
 
 static int w32_proc_mouse_event(const MOUSE_EVENT_RECORD &mer)
@@ -801,8 +768,8 @@ int getch_ck(void)
     bool waiting_for_event = true;
     while (waiting_for_event)
     {
-        if (ReadConsoleInput(inbuf, &ir, 1, &nread) == 0)
-            fputs("Error in ReadConsoleInput()!", stderr);
+        if (ReadConsoleInputW(inbuf, &ir, 1, &nread) == 0)
+            fputs("Error in ReadConsoleInputW()!", stderr);
         if (nread > 0)
         {
             // ignore if it isn't a keyboard event.
@@ -814,9 +781,9 @@ int getch_ck(void)
                 if (kr->bKeyDown)
                 {
                     key = vk_translate(kr->wVirtualKeyCode,
-                                        kr->uChar.AsciiChar,
-                                        kr->dwControlKeyState);
-                    if (key > 0)
+                                       kr->uChar.UnicodeChar,
+                                       kr->dwControlKeyState);
+                    if (key != 0)
                     {
                         repeat_count = kr->wRepeatCount - 1;
                         repeat_key = key;
@@ -844,17 +811,17 @@ int getch_ck(void)
     return key;
 }
 
-int getch(void)
+int getchk(void)
 {
     int c = getch_ck();
     return key_to_command(c);
 }
 
-int kbhit()
+bool kbhit()
 {
     INPUT_RECORD ir[10];
     DWORD read_count = 0;
-    PeekConsoleInput(inbuf, ir, sizeof ir / sizeof(ir[0]), &read_count);
+    PeekConsoleInputW(inbuf, ir, sizeof ir / sizeof(ir[0]), &read_count);
     if (read_count > 0)
     {
         for (unsigned i = 0; i < read_count; ++i)
@@ -870,50 +837,9 @@ int kbhit()
     return 0;
 }
 
-void delay(int ms)
+void delay(unsigned int ms)
 {
     Sleep((DWORD)ms);
-}
-
-int get_console_string(char *buf, int maxlen)
-{
-    DWORD nread;
-    // set console input to line mode
-    set_string_input(true);
-
-    // force cursor
-    const bool oldValue = cursor_is_enabled;
-
-    if (w32_smart_cursor)
-        _setcursortype_internal(true);
-
-    // set actual screen color to current color
-    SetConsoleTextAttribute(outbuf, WIN32COLOR(current_color));
-
-    if (ReadConsole(inbuf, buf, (DWORD)(maxlen-1), &nread, NULL) == 0)
-        fputs("Error in ReadConsole()!", stderr);
-
-    // terminate string, then strip CRLF, replace with \0
-    buf[maxlen-1] = 0;
-    for (unsigned i=(nread<3 ? 0 : nread-3); i<nread; i++)
-    {
-        if (buf[i] == 0x0A || buf[i] == 0x0D)
-        {
-            buf[i] = '\0';
-            break;
-        }
-    }
-
-    // reset console mode - also flushes if player has typed in
-    // too long of a name so we don't get silly garbage on return.
-    set_string_input(false);
-
-    // restore old cursor
-    if (w32_smart_cursor)
-        _setcursortype_internal(oldValue);
-
-    // return # of bytes read
-    return (int)nread;
 }
 
 void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
@@ -925,13 +851,13 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
         cgotoxy(x1, y1 + y);
         for (int x = 0; x < size.x; ++x)
         {
-            textattr(cell->colour);
+            textcolor(cell->colour);
             putwch(cell->glyph);
             cell++;
         }
     }
     update_screen();
-    textattr(WHITE);
+    textcolor(WHITE);
 }
 
 void update_screen()
@@ -962,113 +888,5 @@ int get_number_of_cols()
 {
     return (screensize.X);
 }
-
-#ifdef TARGET_COMPILER_VC
-struct DIR
-{
- public:
-    DIR()
-        : hFind(INVALID_HANDLE_VALUE),
-          wfd_valid(false)
-    {
-        memset(&wfd, 0, sizeof(wfd));
-        memset(&entry, 0, sizeof(entry));
-    }
-
-    ~DIR()
-    {
-        if (hFind != INVALID_HANDLE_VALUE)
-        {
-            FindClose(hFind);
-        }
-    }
-
-    bool init(const char* szFind)
-    {
-        // Check that it's a directory, first.
-        {
-            const DWORD dwAttr = GetFileAttributes(szFind);
-            if (dwAttr == INVALID_FILE_ATTRIBUTES)
-                return (false);
-            if ((dwAttr & FILE_ATTRIBUTE_DIRECTORY) == 0)
-                return (false);
-        }
-
-        find = szFind;
-        find += "\\*";
-
-        hFind = FindFirstFileA(find.c_str(), &wfd);
-        wfd_valid = (hFind != INVALID_HANDLE_VALUE);
-        return (true);
-    }
-
-    dirent* readdir()
-    {
-        if (!wfd_valid)
-            return 0;
-
-        _convert_wfd_to_dirent();
-        wfd_valid = (bool) FindNextFileA(hFind, &wfd);
-
-        return (&entry);
-    }
-
- private:
-    void _convert_wfd_to_dirent()
-    {
-        entry.d_reclen = sizeof(dirent);
-        entry.d_namlen = strlen(entry.d_name);
-        entry.d_type = (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-            ? DT_DIR : DT_REG;
-        strncpy(entry.d_name, wfd.cFileName, sizeof(entry.d_name));
-        entry.d_name[sizeof(entry.d_name)-1] = 0;
-    }
-
- private:
-    HANDLE hFind;
-    bool wfd_valid;
-    WIN32_FIND_DATA wfd;
-    std::string find;
-    dirent entry;
-    // since opendir calls FindFirstFile, we need a means of telling the
-    // first call to readdir that we already have a file.
-    // that's the case iff this is == 0; we use a counter rather than a
-    // flag because that allows keeping statistics.
-    int num_entries_scanned;
-};
-
-
-DIR* opendir(char* path)
-{
-    DIR* d = new DIR();
-    if (d->init(path))
-    {
-        return d;
-    }
-    else
-    {
-        delete d;
-        return 0;
-    }
-}
-
-dirent* readdir(DIR* d)
-{
-    return d->readdir();
-}
-
-int closedir(DIR* d)
-{
-    delete d;
-    return 0;
-}
-
-int ftruncate(int fp, int size)
-{
-    ASSERT(false);              // unimplemented
-    return 0;
-}
-
-#endif /* #ifdef TARGET_COMPILER_VC */
 
 #endif /* #if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE) */

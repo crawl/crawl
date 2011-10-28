@@ -1,0 +1,47 @@
+##########################################################################
+# Guarantee at least some really minimal food supply.
+##########################################################################
+
+NAME:   first_bread
+DEPTH:  D:2-5
+CHANCE: 100% (D:5), 25%
+TAGS:   uniq_first_food extra transparent
+ITEM:   bread ration
+MAP
+d
+ENDMAP
+
+NAME:   the_bakery
+DEPTH:  D:7-14
+CHANCE: 100% (D:14), 15%
+TAGS:   uniq_second_food extra chance_second_food
+ITEM:   bread ration q:2
+MONS:   spriggan col:white name:baker n_suf ; robe . dagger
+MAP
+xxxx
+xddx
+x.xx
+x.1x
+x+xx
+ENDMAP
+
+NAME:   david_nohive_1
+DEPTH:  D:8-14
+CHANCE: 100% (D:14), 15%
+TAGS:   uniq_second_food extra chance_second_food
+MONS:   queen bee, killer bee
+ITEM:   w:2 honeycomb / w:1 royal jelly
+MAP
+............
+....aaaa....
+..a2a2aaaa..
+..aada2a2a..
+.aa2ada2aaa.
+.a2ada1ada2.
+.aa2adada2a.
+.aaa2a2a2aa.
+..a2ada2aa..
+...aa2aa2a..
+....aaaa....
+............
+ENDMAP

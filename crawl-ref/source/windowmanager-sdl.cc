@@ -1,6 +1,6 @@
 #include "AppHdr.h"
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 #ifdef USE_SDL
 
 #include "windowmanager-sdl.h"
@@ -13,6 +13,7 @@
 #include "glwrapper.h"
 #include "libutil.h"
 #include "options.h"
+#include "syscalls.h"
 #include "windowmanager.h"
 
 WindowManager *wm = NULL;
@@ -135,7 +136,7 @@ static int _translate_keysym(SDL_keysym &keysym)
     case SDLK_EURO:
     case SDLK_UNDO:
         ASSERT(keysym.sym >= SDLK_F1 && keysym.sym <= SDLK_UNDO);
-        return (keysym.sym + (SDLK_UNDO - SDLK_F1 + 1) * mod);
+        return -(keysym.sym + (SDLK_UNDO - SDLK_F1 + 1) * mod);
 
         // Hack.  libw32c overloads clear with '5' too.
     case SDLK_KP5:
@@ -170,15 +171,18 @@ static int _translate_keysym(SDL_keysym &keysym)
     case SDLK_KP3:
     case SDLK_PAGEDOWN:
         return (CK_PGDN + numpad_offset);
+    case SDLK_TAB:
+        if (numpad_offset) // keep tab a tab
+            return (CK_TAB_TILE + numpad_offset);
     default:
         break;
     }
 
     // Alt does not get baked into keycodes like shift and ctrl, so handle it.
-    const int key_offset = (mod & MOD_ALT) ? 3000 : 0;
+    const int key_offset = (mod & MOD_ALT) ? -3000 : 0;
 
-    const bool is_ascii = ((keysym.unicode & 0xFF80) == 0);
-    return (is_ascii ? (keysym.unicode & 0x7F) + key_offset : 0);
+    const bool is_ascii = keysym.unicode < 127;
+    return (is_ascii ? (keysym.unicode & 0x7F) + key_offset : keysym.unicode);
 }
 
 static void _translate_event(const SDL_MouseMotionEvent &sdl_event,
@@ -293,27 +297,11 @@ int SDLWrapper::init(coord_def *m_windowsz)
         y = (y > 0) ? y : video_info->current_h + y;
         m_windowsz->x = std::max(800, x);
         m_windowsz->y = std::max(480, y);
-    }
 
 #ifdef TARGET_OS_WINDOWS
-    // We check if the window overlap the taskbar. If it does, we place the
-    // window just above the taskbar.
-    int delta_x = (wm->desktop_width() - m_windowsz->x) / 2;
-    int taskbar_height = get_taskbar_height();
-    taskbar_height += 3; // Some margin for the window border.
-    if ((wm->desktop_height() - m_windowsz->y) / 2 < taskbar_height)
-    {
-        char env_str[50];
-        sprintf(env_str, "SDL_VIDEO_WINDOW_POS=%d,%d", delta_x,
-                wm->desktop_height() - m_windowsz->y - taskbar_height);
-        putenv(env_str);
-    }
-    else
-    {
-        putenv("SDL_VIDEO_WINDOW_POS=center");
-        putenv("SDL_VIDEO_CENTERED=1");
-    }
+        set_window_placement(m_windowsz);
 #endif
+    }
 
     m_context = SDL_SetVideoMode(m_windowsz->x, m_windowsz->y, 0, flags);
     if (!m_context)
@@ -362,6 +350,58 @@ bool SDLWrapper::set_window_icon(const char* icon_name)
     SDL_FreeSurface(surf);
     return (true);
 }
+
+#ifdef TARGET_OS_WINDOWS
+void SDLWrapper::set_window_placement(coord_def *m_windowsz)
+{
+    // We move the window if it overlaps the taskbar.
+    const int title_bar = 29; // Title bar
+    const int border = 3; // Window border
+    int delta_x = (wm->desktop_width() - m_windowsz->x) / 2;
+    int delta_y = (wm->desktop_height() - m_windowsz->y) / 2;
+    taskbar_pos tpos = get_taskbar_pos();
+    int tsize = get_taskbar_size();
+
+    if (tpos == TASKBAR_TOP)
+        tsize += title_bar;
+    else
+        tsize += border;
+
+    int overlap = tsize - (tpos & TASKBAR_H ? delta_y : delta_x);
+
+    if (overlap > 0)
+    {
+        char env_str[50];
+        int x = delta_x;
+        int y = delta_y;
+
+        if (tpos & TASKBAR_H)
+            y += tpos == TASKBAR_TOP ? overlap : -overlap;
+        else
+            x += tpos == TASKBAR_LEFT ? overlap : -overlap;
+
+        // Keep the window in the screen.
+        x = std::max(x, border);
+        y = std::max(y, title_bar);
+
+        //We resize the window so that it fits in the screen.
+        m_windowsz->x = std::min(m_windowsz->x, wm->desktop_width()
+                                 - (tpos & TASKBAR_V ? tsize : 0)
+                                 - border * 2);
+        m_windowsz->y = std::min(m_windowsz->y, wm->desktop_height()
+                                 - (tpos & TASKBAR_H ? tsize : 0)
+                                 - (tpos & TASKBAR_TOP ? 0 : title_bar)
+                                 - border);
+        sprintf(env_str, "SDL_VIDEO_WINDOW_POS=%d,%d", x, y);
+        putenv(env_str);
+    }
+    else
+    {
+        putenv("SDL_VIDEO_WINDOW_POS=center");
+        putenv("SDL_VIDEO_CENTERED=1");
+    }
+}
+#endif
 
 void SDLWrapper::resize(coord_def &m_windowsz)
 {
@@ -444,6 +484,9 @@ int SDLWrapper::wait_event(wm_event *event)
         event->key.keysym.key_mod = _get_modifiers(sdlevent.key.keysym);
         event->key.keysym.unicode = sdlevent.key.keysym.unicode;
         event->key.keysym.sym = _translate_keysym(sdlevent.key.keysym);
+
+        if (!event->key.keysym.unicode && event->key.keysym.sym > 0)
+            return 0;
         break;
     case SDL_KEYUP:
         event->type = WM_KEYUP;
@@ -458,6 +501,9 @@ int SDLWrapper::wait_event(wm_event *event)
         _translate_event(sdlevent.motion, event->mouse_event);
         break;
     case SDL_MOUSEBUTTONUP:
+        event->type = WM_MOUSEBUTTONUP;
+        _translate_event(sdlevent.button, event->mouse_event);
+        break;
     case SDL_MOUSEBUTTONDOWN:
         event->type = WM_MOUSEBUTTONDOWN;
         _translate_event(sdlevent.button, event->mouse_event);
@@ -757,7 +803,7 @@ int SDLWrapper::byte_order()
 SDL_Surface *SDLWrapper::load_image(const char *file) const
 {
     SDL_Surface *surf = NULL;
-    FILE *imgfile = fopen(file, "rb");
+    FILE *imgfile = fopen_u(file, "rb");
     if (imgfile)
     {
         SDL_RWops *rw = SDL_RWFromFP(imgfile, 0);
@@ -776,4 +822,4 @@ SDL_Surface *SDLWrapper::load_image(const char *file) const
 }
 
 #endif // USE_SDL
-#endif // USE_TILE
+#endif // USE_TILE_LOCAL

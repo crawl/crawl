@@ -7,6 +7,7 @@
 #include "menu.h"
 #include "options.h"
 #include "stuff.h"
+#include "unicode.h"
 
 extern std::string init_file_error; // defined in main.cc
 
@@ -16,7 +17,7 @@ void opening_screen(void)
     std::string msg =
     "<yellow>Hello, welcome to " CRAWL " " + Version::Long() + "!</yellow>\n"
     "<brown>(c) Copyright 1997-2002 Linley Henzell, "
-    "2002-2010 Crawl DevTeam\n"
+    "2002-2011 Crawl DevTeam\n"
     "Read the instructions for legal details."
     "</brown> " ;
 
@@ -74,28 +75,13 @@ bool is_good_name(const std::string& name, bool blankOK, bool verbose)
         return (false);
     }
 
-    // If MULTIUSER is defined, userid will be tacked onto the end
-    // of each character's files, making bones a valid player name.
-#ifndef MULTIUSER
-    // This would cause big probs with ghosts.
-    // What would? {dlb}
-    // ... having the name "bones" of course! The problem comes from
-    // the fact that bones files would have the exact same filename
-    // as level files for a character named "bones".  -- bwr
-    if (stricmp(name.c_str(), "bones") == 0)
-    {
-        if (verbose)
-            cprintf("\nThat's a silly name!\n");
-        return (false);
-    }
-#endif
     return (validate_player_name(name, verbose));
 }
 
 static bool _read_player_name(std::string &name)
 {
     const int name_x = wherex(), name_y = wherey();
-    char buf[kNameLen];
+    char buf[kNameLen + 1]; // FIXME: make line_reader handle widths
     // XXX: Prompt displays garbage otherwise, but don't really know why.
     //      Other places don't do this. --rob
     buf[0] = '\0';
@@ -142,11 +128,11 @@ void enter_player_name(newgame_def *ng)
 
 bool validate_player_name(const std::string &name, bool verbose)
 {
-#if defined(TARGET_OS_DOS) || defined(TARGET_OS_WINDOWS)
+#if defined(TARGET_OS_WINDOWS)
     // Quick check for CON -- blows up real good under DOS/Windows.
-    if (stricmp(name.c_str(), "con") == 0
-        || stricmp(name.c_str(), "nul") == 0
-        || stricmp(name.c_str(), "prn") == 0
+    if (strcasecmp(name.c_str(), "con") == 0
+        || strcasecmp(name.c_str(), "nul") == 0
+        || strcasecmp(name.c_str(), "prn") == 0
         || strnicmp(name.c_str(), "LPT", 3) == 0)
     {
         if (verbose)
@@ -155,16 +141,22 @@ bool validate_player_name(const std::string &name, bool verbose)
     }
 #endif
 
-    for (unsigned int i = 0; i < name.length(); i++)
+    if (strwidth(name) > kNameLen)
     {
-        char c = name[i];
+        if (verbose)
+            cprintf("\nThat name is too long.\n");
+        return (false);
+    }
+
+    ucs_t c;
+    for (const char *str = name.c_str(); int l = utf8towc(&c, str); str += l)
+    {
         // Note that this includes systems which may be using the
         // packaging system.  The packaging system is very simple
         // and doesn't take the time to escape every character that
         // might be a problem for some random shell or OS... so we
         // play it very conservative here.  -- bwr
-        // Accented 8-bit letters are probably harmless here.  -- 1KB
-        if (!isalnum(c) && c != '-' && c != '.' && c != '_' && c != ' ')
+        if (!iswalnum(c) && c != '-' && c != '.' && c != '_' && c != ' ')
         {
             if (verbose)
             {

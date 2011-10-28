@@ -1,8 +1,7 @@
-/*
- *  File:       mapdef.cc
- *  Summary:    Support code for Crawl des files.
- *  Created by: dshaligram on Wed Nov 22 08:41:20 2006 UTC
- */
+/**
+ * @file
+ * @brief Support code for Crawl des files.
+**/
 
 #include "AppHdr.h"
 
@@ -19,6 +18,7 @@
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
+#include "cluautil.h"
 #include "debug.h"
 #include "describe.h"
 #include "directn.h"
@@ -27,6 +27,7 @@
 #include "exclude.h"
 #include "files.h"
 #include "food.h"
+#include "ghost.h"
 #include "initfile.h"
 #include "invent.h"
 #include "items.h"
@@ -41,10 +42,10 @@
 #include "mon-util.h"
 #include "place.h"
 #include "random.h"
+#include "random-weight.h"
 #include "religion.h"
 #include "spl-util.h"
 #include "spl-book.h"
-#include "stuff.h"
 #include "env.h"
 #include "tags.h"
 #ifdef USE_TILE
@@ -67,6 +68,9 @@ static const char *map_section_names[] = {
 };
 
 static string_set Map_Flag_Names;
+
+const char *traversable_glyphs =
+    ".+=w@{}()[]<>BC^~TUVY$%*|Odefghijk0123456789";
 
 // atoi that rejects strings containing non-numeric trailing characters.
 // returns defval for invalid input.
@@ -143,6 +147,27 @@ std::string mapdef_split_key_item(const std::string &s,
 
     return ("");
 }
+
+#ifdef USE_TILE
+int store_tilename_get_index(const std::string tilename)
+{
+    if (tilename.empty())
+        return 0;
+
+    // Increase index by 1 to distinguish between first entry and none.
+    unsigned int i;
+    for (i = 0; i < env.tile_names.size(); ++i)
+        if (!strcmp(tilename.c_str(), env.tile_names[i].c_str()))
+            return (i+1);
+
+#ifdef DEBUG_TILE_NAMES
+    mprf("adding %s on index %d (%d)", tilename.c_str(), i, i+1);
+#endif
+    // If not found, add tile name to vector.
+    env.tile_names.push_back(tilename);
+    return (i+1);
+}
+#endif
 
 ///////////////////////////////////////////////
 // level_range
@@ -439,7 +464,7 @@ bool map_lines::in_bounds(const coord_def &c) const
 
 bool map_lines::in_map(const coord_def &c) const
 {
-    return (lines[c.y][c.x] != ' ');
+    return (in_bounds(c) && lines[c.y][c.x] != ' ');
 }
 
 map_lines &map_lines::operator = (const map_lines &map)
@@ -548,39 +573,64 @@ void map_lines::apply_grid_overlay(const coord_def &c)
             }
 
 #ifdef USE_TILE
-            int floor = (*overlay)(x, y).floortile;
-            if (floor)
+            bool has_floor = false, has_rock = false;
+            std::string name = (*overlay)(x, y).floortile;
+            if (!name.empty())
             {
+                env.tile_flv(gc).floor_idx =
+                    store_tilename_get_index(name);
+
+                tileidx_t floor;
+                tile_dngn_index(name.c_str(), &floor);
                 if (colour)
                     floor = tile_dngn_coloured(floor, colour);
                 int offset = random2(tile_dngn_count(floor));
                 env.tile_flv(gc).floor = floor + offset;
+                has_floor = true;
             }
-            int rock = (*overlay)(x, y).rocktile;
-            if (rock)
+
+            name = (*overlay)(x, y).rocktile;
+            if (!name.empty())
             {
+                env.tile_flv(gc).wall_idx =
+                    store_tilename_get_index(name);
+
+                tileidx_t rock;
+                tile_dngn_index(name.c_str(), &rock);
                 if (colour)
                     rock = tile_dngn_coloured(rock, colour);
                 int offset = random2(tile_dngn_count(rock));
                 env.tile_flv(gc).wall = rock + offset;
+                has_rock = true;
             }
-            int tile = (*overlay)(x, y).tile;
-            if (tile)
+
+            name = (*overlay)(x, y).tile;
+            if (!name.empty())
             {
+                env.tile_flv(gc).feat_idx =
+                    store_tilename_get_index(name);
+
+                tileidx_t feat;
+                tile_dngn_index(name.c_str(), &feat);
+
                 if (colour)
-                    tile = tile_dngn_coloured(tile, colour);
-                int offset = random2(tile_dngn_count(tile));
+                    feat = tile_dngn_coloured(feat, colour);
+
+                int offset = 0;
                 if ((*overlay)(x, y).last_tile)
-                    offset = tile_dngn_count(tile) - 1;
-                if (grd(gc) == DNGN_FLOOR && !floor)
-                    env.tile_flv(gc).floor = tile + offset;
-                else if (grd(gc) == DNGN_ROCK_WALL && !rock)
-                    env.tile_flv(gc).wall = tile + offset;
+                    offset = tile_dngn_count(feat) - 1;
+                else
+                    offset = random2(tile_dngn_count(feat));
+
+                if (!has_floor && grd(gc) == DNGN_FLOOR)
+                    env.tile_flv(gc).floor = feat + offset;
+                else if (!has_rock && grd(gc) == DNGN_ROCK_WALL)
+                    env.tile_flv(gc).wall = feat + offset;
                 else
                 {
                     if ((*overlay)(x, y).no_random)
                         offset = 0;
-                    env.tile_flv(gc).feat = tile + offset;
+                    env.tile_flv(gc).feat = feat + offset;
                 }
             }
 #endif
@@ -654,11 +704,11 @@ std::string map_lines::parse_glyph_replacements(std::string s,
         if (is.length() > 2 && is[1] == ':')
         {
             const int glych = is[0];
-            int weight = atoi(is.substr(2).c_str());
-            if (weight < 1)
-                weight = 10;
-
-            gly.push_back(glyph_weighted_replacement_t(glych, weight));
+            int weight;
+            if (!parse_int(is.substr(2).c_str(), weight) || weight < 1)
+                return "Invalid weight specifier in \"" + s + "\"";
+            else
+                gly.push_back(glyph_weighted_replacement_t(glych, weight));
         }
         else
         {
@@ -687,9 +737,8 @@ std::string parse_weighted_str(const std::string &spec, T &list)
             std::string::size_type cpos = val.find(':');
             if (cpos != std::string::npos)
             {
-                weight = atoi(val.substr(cpos + 1).c_str());
-                if (weight <= 0)
-                    weight = 10;
+                if (!parse_int(val.substr(cpos + 1).c_str(), weight) || weight <= 0)
+                    return "Invalid weight specifier in \"" + spec + "\"";
                 val.erase(cpos);
                 trim_string(val);
             }
@@ -742,7 +791,7 @@ std::string map_lines::add_colour(const std::string &sub)
 
 bool map_fprop_list::parse(const std::string &fp, int weight)
 {
-    unsigned long fprop;
+    feature_property_type fprop;
 
     if (fp == "nothing")
         fprop = FPROP_NONE;
@@ -857,7 +906,11 @@ std::string map_lines::parse_nsubst_spec(const std::string &s,
     std::string err = mapdef_split_key_item(s, &key, &sep, &arg, -1);
     if (!err.empty())
         return err;
-    const int count = key == "*"? -1 : atoi(key.c_str());
+    int count = 0;
+    if (key == "*")
+        count = -1;
+    else
+        parse_int(key.c_str(), count);
     if (!count)
         return make_stringf("Illegal spec: %s", s.c_str());
 
@@ -987,7 +1040,8 @@ int map_lines::glyph(const coord_def &c) const
 
 bool map_lines::is_solid(int gly) const
 {
-    return (gly == 'x' || gly == 'c' || gly == 'b' || gly == 'v' || gly == 't');
+    return (gly == 'x' || gly == 'c' || gly == 'b' || gly == 'v' || gly == 't'
+         || gly == 'X');
 }
 
 void map_lines::check_borders()
@@ -1308,9 +1362,9 @@ void map_lines::overlay_tiles(tile_spec &spec)
             if (spec.floor)
                 (*overlay)(pos, y).floortile = spec.get_tile();
             else if (spec.feat)
-                (*overlay)(pos, y).tile = spec.get_tile();
+                (*overlay)(pos, y).tile      = spec.get_tile();
             else
-                (*overlay)(pos, y).rocktile = spec.get_tile();
+                (*overlay)(pos, y).rocktile  = spec.get_tile();
 
             (*overlay)(pos, y).no_random = spec.no_random;
             (*overlay)(pos, y).last_tile = spec.last_tile;
@@ -1827,10 +1881,10 @@ bool map_tile_list::parse(const std::string &s, int weight)
 {
     tileidx_t idx = 0;
     if (s != "none" && !tile_dngn_index(s.c_str(), &idx))
-        return false;
+        return (false);
 
-    push_back(map_weighted_tile(idx, weight));
-    return true;
+    push_back(map_weighted_tile(s, weight));
+    return (true);
 }
 
 std::string map_lines::add_tile(const std::string &sub, bool is_floor, bool is_feat)
@@ -1880,12 +1934,12 @@ std::string map_lines::add_spec_tile(const std::string &sub)
 //////////////////////////////////////////////////////////////////////////
 // tile_spec
 
-tileidx_t tile_spec::get_tile()
+std::string tile_spec::get_tile()
 {
     if (chose_fixed)
         return fixed_tile;
 
-    tileidx_t chosen = 0;
+    std::string chosen = "";
     int cweight = 0;
     for (int i = 0, size = tiles.size(); i < size; ++i)
         if (x_chance_in_y(tiles[i].second, cweight += tiles[i].second))
@@ -1894,7 +1948,7 @@ tileidx_t tile_spec::get_tile()
     if (fix)
     {
         chose_fixed = true;
-        fixed_tile = chosen;
+        fixed_tile  = chosen;
     }
     return (chosen);
 }
@@ -1959,27 +2013,121 @@ coord_def map_lines::iterator::operator ++ (int)
 
 dlua_set_map::dlua_set_map(map_def *map)
 {
-    dlua.callfn("dgn_set_map", "m", map);
+    clua_push_map(dlua, map);
+    if (!dlua.callfn("dgn_set_map", 1, 1))
+        mprf(MSGCH_ERROR, "dgn_set_map failed for '%s': %s",
+             map->name.c_str(), dlua.error.c_str());
+    // Save the returned map as a lua_datum
+    old_map.reset(new lua_datum(dlua));
 }
 
 dlua_set_map::~dlua_set_map()
 {
-    dlua.callfn("dgn_set_map", 0, 0);
+    old_map->push();
+    if (!dlua.callfn("dgn_set_map", 1, 0))
+        mprf(MSGCH_ERROR, "dgn_set_map failed: %s", dlua.error.c_str());
+}
+
+///////////////////////////////////////////////
+// map_chance
+
+std::string map_chance::describe() const
+{
+    return make_stringf("%d:%d", chance_priority, chance);
+}
+
+bool map_chance::roll() const
+{
+    return random2(CHANCE_ROLL) < chance;
+}
+
+void map_chance::write(writer &outf) const
+{
+    marshallInt(outf, chance_priority);
+    marshallInt(outf, chance);
+}
+
+void map_chance::read(reader &inf)
+{
+    chance_priority = unmarshallInt(inf);
+    chance = unmarshallInt(inf);
+}
+
+///////////////////////////////////////////////
+// depth_ranges
+
+void depth_ranges::write(writer& outf) const
+{
+    marshallShort(outf, depths.size());
+    for (int i = 0, sz = depths.size(); i < sz; ++i)
+        depths[i].write(outf);
+}
+
+void depth_ranges::read(reader &inf)
+{
+    depths.clear();
+    const int nranges = unmarshallShort(inf);
+    for (int i = 0; i < nranges; ++i)
+    {
+        level_range lr;
+        lr.read(inf);
+        depths.push_back(lr);
+    }
+}
+
+depth_ranges depth_ranges::parse_depth_ranges(
+    const std::string &depth_range_string)
+{
+    depth_ranges ranges;
+    const std::vector<std::string> frags =
+        split_string(",", depth_range_string);
+    for (int j = 0, size = frags.size(); j < size; ++j)
+        ranges.depths.push_back(level_range::parse(frags[j]));
+    return ranges;
+}
+
+bool depth_ranges::is_usable_in(const level_id &lid) const
+{
+    bool any_matched = false;
+    for (int i = 0, sz = depths.size(); i < sz; ++i)
+    {
+        const level_range &lr = depths[i];
+        if (lr.matches(lid))
+        {
+            if (lr.deny)
+                return (false);
+            any_matched = true;
+        }
+    }
+    return (any_matched);
+}
+
+void depth_ranges::add_depths(const depth_ranges &other_depths)
+{
+    depths.insert(depths.end(),
+                  other_depths.depths.begin(),
+                  other_depths.depths.end());
+}
+
+std::string depth_ranges::describe() const
+{
+    return (comma_separated_line(depths.begin(), depths.end(), ", ", ", "));
 }
 
 ///////////////////////////////////////////////
 // map_def
 //
 
+const int DEFAULT_MAP_WEIGHT = 10;
 map_def::map_def()
-    : name(), description(), tags(), place(), depths(), orient(), chance(),
-      weight(), weight_depth_mult(), weight_depth_div(), welcome_messages(),
-      map(), mons(), items(), random_mons(), prelude("dlprelude"),
-      mapchunk("dlmapchunk"), main("dlmain"),
+    : name(), description(), tags(), place(), depths(), orient(), _chance(),
+      _weight(DEFAULT_MAP_WEIGHT), weight_depth_mult(), weight_depth_div(),
+      welcome_messages(), map(), mons(), items(), random_mons(),
+      prelude("dlprelude"), mapchunk("dlmapchunk"), main("dlmain"),
       validate("dlvalidate"), veto("dlveto"), epilogue("dlepilogue"),
-      rock_colour(BLACK), floor_colour(BLACK), rock_tile(0), floor_tile(0),
-      border_fill_type(DNGN_ROCK_WALL), index_only(false), cache_offset(0L),
-      validating_map_flag(false)
+      rock_colour(BLACK), floor_colour(BLACK), rock_tile(""),
+      floor_tile(""), border_fill_type(DNGN_ROCK_WALL),
+      index_only(false), cache_offset(0L), validating_map_flag(false)
 {
     init();
 }
@@ -2017,7 +2165,7 @@ void map_def::reinit()
     welcome_messages.clear();
 
     rock_colour = floor_colour = BLACK;
-    rock_tile = floor_tile = 0;
+    rock_tile = floor_tile = "";
     border_fill_type = DNGN_ROCK_WALL;
 
     // Chance of using this level. Nonzero chance should be used
@@ -2027,19 +2175,13 @@ void map_def::reinit()
     // vault is picked, and all other vaults are ignored for that
     // random selection. weight is ignored if the vault is chosen
     // based on its chance.
-    chance = 0;
-
-    // If multiple alternative vaults have a chance, the order in which
-    // they're tested is based on chance_priority: higher priority vaults
-    // are checked first. Vaults with the same priority are tested in
-    // unspecified order.
-    chance_priority = 0;
+    _chance.clear();
 
     // Weight for this map. When selecting a map, if no map with a
     // nonzero chance is picked, one of the other eligible vaults is
     // picked with a probability of weight / (sum of weights of all
     // eligible vaults).
-    weight = 10;
+    _weight.clear(DEFAULT_MAP_WEIGHT);
 
     // How to modify weight based on absolte dungeon depth.  This
     // needs to be done in the C++ code since the map's lua code doesnt'
@@ -2050,6 +2192,17 @@ void map_def::reinit()
     // Clearing the map also zaps map transforms.
     map.clear();
     mons.clear();
+}
+
+bool map_def::map_already_used() const
+{
+    return (you.uniq_map_names.find(name) != you.uniq_map_names.end()
+            || (env.level_uniq_maps.find(name) !=
+                env.level_uniq_maps.end())
+            || has_any_tag(you.uniq_map_tags.begin(),
+                           you.uniq_map_tags.end())
+            || has_any_tag(env.level_uniq_map_tags.begin(),
+                           env.level_uniq_map_tags.end()));
 }
 
 bool map_def::valid_item_array_glyph(int gly)
@@ -2136,6 +2289,30 @@ void map_def::read_full(reader& inf, bool check_cache_version)
     epilogue.read(inf);
 }
 
+int map_def::weight(const level_id &lid) const
+{
+    const int base_weight = _weight.depth_value(lid);
+    return (base_weight
+            + lid.absdepth() * weight_depth_mult / weight_depth_div);
+}
+
+map_chance map_def::chance(const level_id &lid) const
+{
+    return _chance.depth_value(lid);
+}
+
+std::string map_def::describe() const
+{
+    return make_stringf("Map: %s\n%s%s%s%s%s%s",
+                        name.c_str(),
+                        prelude.describe("prelude").c_str(),
+                        mapchunk.describe("mapchunk").c_str(),
+                        main.describe("main").c_str(),
+                        validate.describe("validate").c_str(),
+                        veto.describe("veto").c_str(),
+                        epilogue.describe("epilogue").c_str());
+}
+
 void map_def::strip()
 {
     if (index_only)
@@ -2159,12 +2336,11 @@ void map_def::load()
     if (!index_only)
         return;
 
-    const std::string descache_base = get_descache_path(file, "");
-
+    const std::string descache_base = get_descache_path(cache_name, "");
     file_lock deslock(descache_base + ".lk", "rb", false);
     const std::string loadfile = descache_base + ".dsc";
 
-    reader inf(loadfile);
+    reader inf(loadfile, TAG_MINOR_VERSION);
     if (!inf.valid())
         throw map_load_exception(name);
     inf.advance(cache_offset);
@@ -2193,6 +2369,18 @@ void map_def::write_maplines(writer &outf) const
     map.write_maplines(outf);
 }
 
+static void _marshall_map_chance(writer &th, const map_chance &chance)
+{
+    chance.write(th);
+}
+
+static map_chance _unmarshall_map_chance(reader &th)
+{
+    map_chance chance;
+    chance.read(th);
+    return chance;
+}
+
 void map_def::write_index(writer& outf) const
 {
     if (!cache_offset)
@@ -2204,9 +2392,8 @@ void map_def::write_index(writer& outf) const
     marshallShort(outf, orient);
     // XXX: This is a hack. See the comment in l_dgn.cc.
     marshallShort(outf, static_cast<short>(border_fill_type));
-    marshallInt(outf, chance_priority);
-    marshallInt(outf, chance);
-    marshallInt(outf, weight);
+    _chance.write(outf, _marshall_map_chance);
+    _weight.write(outf, marshallInt);
     marshallInt(outf, cache_offset);
     marshallString4(outf, tags);
     place.save(outf);
@@ -2223,39 +2410,30 @@ void map_def::read_index(reader& inf)
 {
     unmarshallString4(inf, name);
     unmarshallString4(inf, place_loaded_from.filename);
-    place_loaded_from.lineno   = unmarshallInt(inf);
-    orient       = static_cast<map_section_type>(unmarshallShort(inf));
+    place_loaded_from.lineno = unmarshallInt(inf);
+    orient = static_cast<map_section_type>(unmarshallShort(inf));
     // XXX: Hack. See the comment in l_dgn.cc.
     border_fill_type =
         static_cast<dungeon_feature_type>(unmarshallShort(inf));
-    chance_priority = unmarshallInt(inf);
-    chance       = unmarshallInt(inf);
-    weight       = unmarshallInt(inf);
+
+    _chance = range_chance_t::read(inf, _unmarshall_map_chance);
+    _weight = range_weight_t::read(inf, unmarshallInt);
     cache_offset = unmarshallInt(inf);
     unmarshallString4(inf, tags);
     place.load(inf);
     read_depth_ranges(inf);
     prelude.read(inf);
-    index_only   = true;
+    index_only = true;
 }
 
 void map_def::write_depth_ranges(writer& outf) const
 {
-    marshallShort(outf, depths.size());
-    for (int i = 0, sz = depths.size(); i < sz; ++i)
-        depths[i].write(outf);
+    depths.write(outf);
 }
 
 void map_def::read_depth_ranges(reader& inf)
 {
-    depths.clear();
-    const int nranges = unmarshallShort(inf);
-    for (int i = 0; i < nranges; ++i)
-    {
-        level_range lr;
-        lr.read(inf);
-        depths.push_back(lr);
-    }
+    depths.read(inf);
 }
 
 void map_def::set_file(const std::string &s)
@@ -2267,6 +2445,7 @@ void map_def::set_file(const std::string &s)
     veto.set_file(s);
     epilogue.set_file(s);
     file = get_base_filename(s);
+    cache_name = get_cache_name(s);
 }
 
 std::string map_def::run_lua(bool run_main)
@@ -2274,48 +2453,92 @@ std::string map_def::run_lua(bool run_main)
     dlua_set_map mset(this);
 
     int err = prelude.load(dlua);
-    if (err == -1000)
+    if (err == E_CHUNK_LOAD_FAILURE)
         lua_pushnil(dlua);
     else if (err)
         return (prelude.orig_error());
+    if (!dlua.callfn("dgn_run_map", 1, 0))
+        return rewrite_chunk_errors(dlua.error);
 
-    if (!run_main)
+    if (run_main)
     {
-        lua_pushnil(dlua);
-        lua_pushnil(dlua);
-    }
-    else
-    {
+        // Run the map chunk to set up the vault's map grid.
         err = mapchunk.load(dlua);
-        if (err == -1000)
+        if (err == E_CHUNK_LOAD_FAILURE)
             lua_pushnil(dlua);
         else if (err)
             return (mapchunk.orig_error());
+        if (!dlua.callfn("dgn_run_map", 1, 0))
+            return rewrite_chunk_errors(dlua.error);
 
+        // The vault may be non-rectangular with a ragged-right edge; for
+        // transforms to work right at this point, we must pad out the right
+        // edge with spaces, so run normalise:
+        normalise();
+
+        // Run the main Lua chunk to set up the rest of the vault
+        run_hook("pre_main");
         err = main.load(dlua);
-        if (err == -1000)
+        if (err == E_CHUNK_LOAD_FAILURE)
             lua_pushnil(dlua);
         else if (err)
             return (main.orig_error());
+        if (!dlua.callfn("dgn_run_map", 1, 0))
+            return rewrite_chunk_errors(dlua.error);
+        run_hook("post_main");
     }
-
-    if (!dlua.callfn("dgn_run_map", 3, 0))
-        return rewrite_chunk_errors(dlua.error);
 
     return (dlua.error);
 }
 
-bool map_def::test_lua_boolchunk(dlua_chunk &chunk, bool defval, bool croak)
+void map_def::copy_hooks_from(const map_def &other_map,
+                              const std::string &hook_name)
+{
+    const dlua_set_map mset(this);
+    if (!dlua.callfn("dgn_map_copy_hooks_from", "ss",
+                     other_map.name.c_str(), hook_name.c_str()))
+        mprf(MSGCH_ERROR, "Lua error copying hook (%s) from '%s' to '%s': %s",
+             hook_name.c_str(), other_map.name.c_str(),
+             name.c_str(), dlua.error.c_str());
+}
+
+// Runs Lua hooks registered by the map's Lua code, if any. Returns true if
+// no errors occurred while running hooks.
+bool map_def::run_hook(const std::string &hook_name, bool die_on_lua_error)
+{
+    const dlua_set_map mset(this);
+    if (!dlua.callfn("dgn_map_run_hook", "s", hook_name.c_str()))
+    {
+        if (die_on_lua_error)
+            end(1, false, "Lua error running hook '%s' on map '%s': %s",
+                hook_name.c_str(), name.c_str(),
+                rewrite_chunk_errors(dlua.error).c_str());
+        else
+            mprf(MSGCH_ERROR, "Lua error running hook '%s' on map '%s': %s",
+                 hook_name.c_str(), name.c_str(),
+                 rewrite_chunk_errors(dlua.error).c_str());
+        return (false);
+    }
+    return (true);
+}
+
+bool map_def::run_postplace_hook(bool die_on_lua_error)
+{
+    return run_hook("post_place", die_on_lua_error);
+}
+
+bool map_def::test_lua_boolchunk(dlua_chunk &chunk, bool defval,
+                                 bool die_on_lua_error)
 {
     bool result = defval;
     dlua_set_map mset(this);
 
     int err = chunk.load(dlua);
-    if (err == -1000)
+    if (err == E_CHUNK_LOAD_FAILURE)
         return (result);
     else if (err)
     {
-        if (croak)
+        if (die_on_lua_error)
             end(1, false, "Lua error: %s", chunk.orig_error().c_str());
         else
             mprf(MSGCH_ERROR, "Lua error: %s", chunk.orig_error().c_str());
@@ -2325,7 +2548,7 @@ bool map_def::test_lua_boolchunk(dlua_chunk &chunk, bool defval, bool croak)
         dlua.fnreturns(">b", &result);
     else
     {
-        if (croak)
+        if (die_on_lua_error)
             end(1, false, "Lua error: %s",
                 rewrite_chunk_errors(dlua.error).c_str());
         else
@@ -2345,9 +2568,14 @@ bool map_def::test_lua_veto()
     return !veto.empty() && test_lua_boolchunk(veto, true);
 }
 
-bool map_def::run_lua_epilogue (bool croak)
+bool map_def::run_lua_epilogue(bool die_on_lua_error)
 {
-    return !epilogue.empty() && test_lua_boolchunk(epilogue, false, croak);
+    run_hook("pre_epilogue", die_on_lua_error);
+    const bool epilogue_result =
+        !epilogue.empty() && test_lua_boolchunk(epilogue, false,
+                                                die_on_lua_error);
+    run_hook("post_epilogue", die_on_lua_error);
+    return epilogue_result;
 }
 
 std::string map_def::rewrite_chunk_errors(const std::string &s) const
@@ -2393,7 +2621,8 @@ std::string map_def::validate_temple_map()
         if (temple_tag.empty())
             return ("Malformed temple_overflow_ tag");
 
-        int num = atoi(temple_tag.c_str());
+        int num = 0;
+        parse_int(temple_tag.c_str(), num);
 
         if (num == 0)
         {
@@ -2416,7 +2645,7 @@ std::string map_def::validate_temple_map()
             if (((unsigned long) num) != altars.size())
             {
                 return make_stringf("Temple should contain %u altars, but "
-                                    "has %d.", altars.size(), num);
+                                    "has %d.", (unsigned int)altars.size(), num);
             }
         }
     }
@@ -2431,7 +2660,7 @@ std::string map_def::validate_temple_map()
         i != b_glyphs.end(); ++i)
     {
         const keyed_mapspec *spec = map.mapspec_at(*i);
-        if (spec != NULL && spec->feat.feats.size() > 0)
+        if (spec != NULL && !spec->feat.feats.empty())
             return ("Can't change feat 'B' in temple (KFEAT)");
     }
 
@@ -2478,10 +2707,10 @@ std::string map_def::validate_map_def(const depth_ranges &default_depths)
     fixup();
     resolve();
     test_lua_validate(true);
+    run_lua_epilogue(true);
 
     if (!has_depth() && !lc_default_depths.empty())
-        add_depths(lc_default_depths.begin(),
-                   lc_default_depths.end());
+        depths.add_depths(lc_default_depths);
 
     if ((place.branch == BRANCH_ECUMENICAL_TEMPLE
          && place.level_type == LEVEL_DUNGEON)
@@ -2543,8 +2772,7 @@ std::string map_def::validate_map_def(const depth_ranges &default_depths)
     }
     else
     {
-        if (map.width() > GXM
-            || map.height() > GYM)
+        if (map.width() > GXM || map.height() > GYM)
         {
             return make_stringf(
                      "Map '%s' is too big: %dx%d - max %dx%d",
@@ -2584,29 +2812,12 @@ std::string map_def::validate_map_def(const depth_ranges &default_depths)
 
 bool map_def::is_usable_in(const level_id &lid) const
 {
-    bool any_matched = false;
-    for (int i = 0, sz = depths.size(); i < sz; ++i)
-    {
-        const level_range &lr = depths[i];
-        if (lr.matches(lid))
-        {
-            if (lr.deny)
-                return (false);
-            any_matched = true;
-        }
-    }
-    return (any_matched);
+    return depths.is_usable_in(lid);
 }
 
 void map_def::add_depth(const level_range &range)
 {
-    depths.push_back(range);
-}
-
-void map_def::add_depths(depth_ranges::const_iterator s,
-                         depth_ranges::const_iterator e)
-{
-    depths.insert(depths.end(), s, e);
+    depths.add_depth(range);
 }
 
 bool map_def::has_depth() const
@@ -2623,7 +2834,7 @@ bool map_def::is_minivault() const
 // built on it.
 bool map_def::is_overwritable_layout() const
 {
-    return (has_tag("layout") && !has_tag("sealed_layout"));
+    return has_tag("overwritable");
 }
 
 // Tries to dock a floating vault - push it to one edge of the level.
@@ -2652,10 +2863,8 @@ coord_def map_def::float_dock()
     if (which_orient == MAP_NONE || which_orient == MAP_FLOAT)
         return coord_def(-1, -1);
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Docking floating vault to %s",
-         map_section_name(which_orient));
-#endif
+    dprf("Docking floating vault to %s", map_section_name(which_orient));
+
     return dock_pos(which_orient);
 }
 
@@ -2736,11 +2945,8 @@ coord_def map_def::float_aligned_place() const
     const point_vector our_anchors = anchor_points();
     const coord_def fail(-1, -1);
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS,
-         "Aligning floating vault with %u points vs %u reference points",
-         our_anchors.size(), map_anchor_points.size());
-#endif
+    dprf("Aligning floating vault with %u points vs %u reference points",
+         (unsigned int)our_anchors.size(), (unsigned int)map_anchor_points.size());
 
     // Mismatch in the number of points we have to align, bail.
     if (our_anchors.size() != map_anchor_points.size())
@@ -2786,9 +2992,7 @@ void map_def::hmirror()
     if (has_tag("no_hmirror"))
         return;
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Mirroring %s horizontally.", name.c_str());
-#endif
+    dprf("Mirroring %s horizontally.", name.c_str());
     map.hmirror();
 
     switch (orient)
@@ -2808,9 +3012,7 @@ void map_def::vmirror()
     if (has_tag("no_vmirror"))
         return;
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Mirroring %s vertically.", name.c_str());
-#endif
+    dprf("Mirroring %s vertically.", name.c_str());
     map.vmirror();
 
     switch (orient)
@@ -2835,11 +3037,7 @@ void map_def::rotate(bool clock)
     // Make sure the largest dimension fits in the smaller map bound.
     if (map.width() <= GMINM && map.height() <= GMINM)
     {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Rotating %s %sclockwise.",
-                name.c_str(),
-                !clock? "anti-" : "");
-#endif
+        dprf("Rotating %s %sclockwise.", name.c_str(), !clock? "anti-" : "");
         map.rotate(clock);
 
         // Orientation shifts for clockwise rotation:
@@ -2993,7 +3191,7 @@ std::string map_def::apply_subvault(string_spec &spec)
         you.uniq_map_tags = uniq_tags;
         you.uniq_map_names = uniq_names;
 
-        const map_def *orig = random_map_for_tag(tag);
+        const map_def *orig = random_map_for_tag(tag, true);
         if (!orig)
             return (make_stringf("No vault found for tag '%s'", tag.c_str()));
 
@@ -3012,7 +3210,7 @@ std::string map_def::apply_subvault(string_spec &spec)
         ASSERT(vault.map.height() <= vheight);
 
         map.merge_subvault(tl, br, flags, vault);
-
+        copy_hooks_from(vault, "post_place");
         dgn_register_vault(vault);
 
         return ("");
@@ -3148,9 +3346,6 @@ mons_spec mons_list::pick_monster(mons_spec_slot &slot)
         slot.fix_slot = false;
     }
 
-    if (pick.mid == MONS_WEAPON_MIMIC && !pick.fix_mons)
-        pick.mid = random_range(MONS_GOLD_MIMIC, MONS_POTION_MIMIC);
-
     return (pick);
 }
 
@@ -3192,70 +3387,89 @@ void mons_list::set_from_slot(const mons_list &list, int slot_index)
     mons.push_back(list.mons[slot_index]);
 }
 
-bool mons_list::check_mimic(const std::string &s, int *mid, bool *fix) const
-{
-    if (s == "mimic")
-    {
-        *mid = MONS_WEAPON_MIMIC;
-        *fix = false;
-        return (true);
-    }
-    else if (s == "gold mimic")
-        *mid = MONS_GOLD_MIMIC;
-    else if (s == "weapon mimic")
-        *mid = MONS_WEAPON_MIMIC;
-    else if (s == "armour mimic")
-        *mid = MONS_ARMOUR_MIMIC;
-    else if (s == "scroll mimic")
-        *mid = MONS_SCROLL_MIMIC;
-    else if (s == "potion mimic")
-        *mid = MONS_POTION_MIMIC;
-    else
-        return (false);
-
-    *fix = true;
-    return (true);
-}
-
-void mons_list::parse_mons_spells(mons_spec &spec, const std::string &spells)
+void mons_list::parse_mons_spells(mons_spec &spec, std::vector<std::string> &spells)
 {
     spec.explicit_spells = true;
     spec.extra_monster_flags |= MF_SPELLCASTER;
-    const std::vector<std::string> spell_names(split_string(";", spells));
-    if (spell_names.size() > NUM_MONSTER_SPELL_SLOTS)
+    std::vector<std::string>::iterator spell_it;
+    for (spell_it = spells.begin(); spell_it != spells.end(); ++spell_it)
     {
-        error = make_stringf("Too many monster spells (max %d) in %s",
-                             NUM_MONSTER_SPELL_SLOTS,
-                             spells.c_str());
-        return;
+        monster_spells cur_spells;
+
+        const std::vector<std::string> spell_names(split_string(";", (*spell_it)));
+        if (spell_names.size() > NUM_MONSTER_SPELL_SLOTS)
+        {
+            error = make_stringf("Too many monster spells (max %d) in %s",
+                                 NUM_MONSTER_SPELL_SLOTS,
+                                 spell_it->c_str());
+            return;
+        }
+        for (unsigned i = 0, ssize = spell_names.size(); i < ssize; ++i)
+        {
+            const std::string spname(
+                lowercase_string(replace_all_of(spell_names[i], "_", " ")));
+            if (spname.empty() || spname == "." || spname == "none"
+                || spname == "no spell")
+            {
+                cur_spells[i] = SPELL_NO_SPELL;
+            }
+            else
+            {
+                const spell_type sp(spell_by_name(spname));
+                if (sp == SPELL_NO_SPELL)
+                {
+                    error = make_stringf("Unknown spell name: '%s' in '%s'",
+                                         spname.c_str(), spell_it->c_str());
+                    return;
+                }
+                if (!is_valid_mon_spell(sp))
+                {
+                    error = make_stringf("Not a monster spell: '%s'",
+                                         spname.c_str());
+                    return;
+                }
+                cur_spells[i] = sp;
+            }
+        }
+
+        spec.spells.push_back(cur_spells);
     }
-    for (unsigned i = 0, ssize = spell_names.size(); i < ssize; ++i)
+}
+
+mon_enchant mons_list::parse_ench(std::string &ench_str, bool perm)
+{
+    std::vector<std::string> ep = split_string(":", ench_str);
+    if (ep.size() > (perm ? 2 : 3))
     {
-        const std::string spname(
-            lowercase_string(replace_all_of(spell_names[i], "_", " ")));
-        if (spname.empty() || spname == "." || spname == "none"
-            || spname == "no spell")
-        {
-            spec.spells[i] = SPELL_NO_SPELL;
-        }
-        else
-        {
-            const spell_type sp(spell_by_name(spname));
-            if (sp == SPELL_NO_SPELL)
-            {
-                error = make_stringf("Unknown spell name: '%s' in '%s'",
-                                     spname.c_str(), spells.c_str());
-                return;
-            }
-            if (!is_valid_mon_spell(sp))
-            {
-                error = make_stringf("Not a monster spell: '%s'",
-                                     spname.c_str());
-                return;
-            }
-            spec.spells[i] = sp;
-        }
+        error = make_stringf("bad %sench specifier: \"%s\"",
+                             perm ? "perm_" : "",
+                             ench_str.c_str());
+        return mon_enchant();
     }
+
+    enchant_type et = name_to_ench(ep[0].c_str());
+    if (et == ENCH_NONE)
+    {
+        error = make_stringf("unknown ench: \"%s\"", ep[0].c_str());
+        return mon_enchant();
+    }
+
+    int deg = 0, dur = perm ? INFINITE_DURATION : 0;
+    if (ep.size() > 1 && !ep[1].empty())
+        if (!parse_int(ep[1].c_str(), deg))
+        {
+            error = make_stringf("invalid deg in ench specifier \"%s\"",
+                                 ench_str.c_str());
+            return mon_enchant();
+        }
+    if (ep.size() > 2 && !ep[2].empty())
+        if (!parse_int(ep[2].c_str(), dur))
+        {
+            error = make_stringf("invalid dur in ench specifier \"%s\"",
+                                 ench_str.c_str());
+            return mon_enchant();
+        }
+    return mon_enchant(et, deg, 0, dur);
 }
 
 mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
@@ -3271,7 +3485,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         mons_spec mspec;
         std::string s = specs[i];
 
-        std::string spells(strip_tag_prefix(s, "spells:"));
+        std::vector<std::string> spells(strip_multiple_tag_prefix(s, "spells:"));
         if (!spells.empty())
         {
             parse_mons_spells(mspec, spells);
@@ -3361,7 +3575,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             if (pos != std::string::npos && mon_str[pos] == ' ')
             {
                 const std::string mcount = mon_str.substr(0, pos);
-                const int count = atoi(mcount.c_str());
+                const int count = atoi(mcount.c_str()); // safe atoi()
                 if (count >= 1 && count <= 99)
                     mspec.quantity = count;
 
@@ -3389,7 +3603,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         if (mspec.mlevel == TAG_UNFOUND)
             mspec.mlevel = 0;
 
-        mspec.hd = strip_number_tag(mon_str, "hd:");
+        mspec.hd = std::min(100, strip_number_tag(mon_str, "hd:"));
         if (mspec.hd == TAG_UNFOUND)
             mspec.hd = 0;
 
@@ -3404,6 +3618,15 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             dur = 0;
 
         mspec.abjuration_duration = dur;
+
+        std::string shifter_name = replace_all_of(strip_tag_prefix(mon_str, "shifter:"), "_", " ");
+
+        if (!shifter_name.empty())
+        {
+            mspec.initial_shifter = get_monster_by_name(shifter_name);
+            if (mspec.initial_shifter == MONS_PROGRAM_BUG)
+                mspec.initial_shifter = RANDOM_MONSTER;
+        }
 
         int summon_type = 0;
         std::string s_type = strip_tag_prefix(mon_str, "sum:");
@@ -3476,18 +3699,22 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
         }
 
         std::string tile = strip_tag_prefix(mon_str, "tile:");
-#ifdef USE_TILE
         if (!tile.empty())
         {
+#ifdef USE_TILE
             tileidx_t index;
             if (!tile_player_index(tile.c_str(), &index))
             {
                 error = make_stringf("bad tile name: \"%s\".", tile.c_str());
                 return (slot);
             }
-            mspec.props["monster_tile"] = short(index);
-        }
 #endif
+            // Store name along with the tile.
+            mspec.props["monster_tile_name"].get_string() = tile;
+#ifdef USE_TILE
+            mspec.props["monster_tile"] = short(index);
+#endif
+        }
 
         std::string name = strip_tag_prefix(mon_str, "name:");
         if (!name.empty())
@@ -3511,20 +3738,28 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
                 mspec.extra_monster_flags |= MF_NAME_REPLACE;
             }
 
-            // We should be able to combine this with name_replace.
-            if (strip_tag(mon_str, "name_descriptor")
-                || strip_tag(mon_str, "n_des"))
-            {
-                mspec.extra_monster_flags |= MF_NAME_DESCRIPTOR;
-            }
-            // Reasoning for this setting both flags: it does nothing with the
-            // description unless NAME_DESCRIPTOR is also set; thus, you end up
-            // with bloated vault description lines akin to: "name:blah_blah
-            // name_replace name_descrpitor name_definite".
             if (strip_tag(mon_str, "name_definite")
                 || strip_tag(mon_str, "n_the"))
             {
                 mspec.extra_monster_flags |= MF_NAME_DEFINITE;
+            }
+
+            // Reasoning for setting more than one flag: suffixes and
+            // adjectives need NAME_DESCRIPTOR to get proper grammar,
+            // and definite names do nothing with the description unless
+            // NAME_DESCRIPTOR is also set.  Without this, you end up
+            // with bloated vault description lines akin to:
+            // "name:blah_blah name_replace name_descriptor
+            // name_definite".
+            const bool need_name_desc =
+                (mspec.extra_monster_flags & MF_NAME_SUFFIX)
+                    || (mspec.extra_monster_flags & MF_NAME_ADJECTIVE)
+                    || (mspec.extra_monster_flags & MF_NAME_DEFINITE);
+
+            if (strip_tag(mon_str, "name_descriptor")
+                || strip_tag(mon_str, "n_des")
+                || need_name_desc)
+            {
                 mspec.extra_monster_flags |= MF_NAME_DESCRIPTOR;
             }
 
@@ -3533,6 +3768,12 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             {
                 mspec.extra_monster_flags |= MF_NAME_SPECIES;
             }
+
+            if (strip_tag(mon_str, "name_zombie")
+                || strip_tag(mon_str, "n_zom"))
+            {
+                mspec.extra_monster_flags |= MF_NAME_ZOMBIE;
+            }
         }
 
         std::string serpent_of_hell_flavour = strip_tag_prefix(mon_str, "serpent_of_hell_flavour:");
@@ -3540,8 +3781,22 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             serpent_of_hell_flavour = strip_tag_prefix(mon_str, "soh_flavour:");
         if (!serpent_of_hell_flavour.empty())
         {
-            serpent_of_hell_flavour = upcase_first(lowercase(serpent_of_hell_flavour)).substr(0, 3);
+            serpent_of_hell_flavour = uppercase_first(lowercase(serpent_of_hell_flavour)).substr(0, 3);
             mspec.props["serpent_of_hell_flavour"].get_int() = str_to_branch(serpent_of_hell_flavour, BRANCH_GEHENNA);
+        }
+
+        std::string ench_str;
+        while (!(ench_str = strip_tag_prefix(mon_str, "ench:")).empty())
+        {
+            mspec.ench.push_back(parse_ench(ench_str, false));
+            if (!error.empty())
+                return (slot);
+        }
+        while (!(ench_str = strip_tag_prefix(mon_str, "perm_ench:")).empty())
+        {
+            mspec.ench.push_back(parse_ench(ench_str, true));
+            if (!error.empty())
+                return (slot);
         }
 
         trim_string(mon_str);
@@ -3550,8 +3805,6 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
             mspec.mlevel = -8;
         else if (mon_str == "9")
             mspec.mlevel = -9;
-        else if (check_mimic(mon_str, &mspec.mid, &mspec.fix_mons))
-            ;
         else if (mspec.place.is_valid())
         {
             // For monster specs such as place:Orc:4 zombie, we may
@@ -3586,7 +3839,7 @@ mons_list::mons_spec_slot mons_list::parse_mons_spec(std::string spec)
                 mspec.colour = nspec.colour;
         }
 
-        if (mspec.items.size() > 0)
+        if (!mspec.items.empty())
         {
             monster_type mid = (monster_type)mspec.mid;
             if (mid == RANDOM_DRACONIAN
@@ -3701,6 +3954,11 @@ void mons_list::get_zombie_type(std::string s, mons_spec &spec) const
 
     const int zombie_size = mons_zombie_size(spec.monbase);
     if (!zombie_size)
+    {
+        spec.mid = MONS_PROGRAM_BUG;
+        return;
+    }
+    if (mod == 2 && mons_class_flag(spec.monbase, M_NO_SKELETON))
     {
         spec.mid = MONS_PROGRAM_BUG;
         return;
@@ -3858,8 +4116,8 @@ mons_spec mons_list::mons_by_name(std::string name) const
         return (-1);
 
     // Special casery:
-    if (name == "pandemonium demon")
-        return (MONS_PANDEMONIUM_DEMON);
+    if (name == "pandemonium lord")
+        return (MONS_PANDEMONIUM_LORD);
 
     if (name == "any" || name == "any monster")
         return (RANDOM_MONSTER);
@@ -3918,6 +4176,19 @@ mons_spec mons_list::mons_by_name(std::string name) const
             return (spec);
         }
     }
+    if (name.find(" laboratory rat") != std::string::npos)
+    {
+        const std::string::size_type wordend = name.find(' ');
+        const std::string first_word = name.substr(0, wordend);
+
+        const int colour = colour_for_labrat_adjective(first_word);
+        if (colour != BLACK)
+        {
+            mons_spec spec = mons_by_name(name.substr(wordend+1));
+            spec.colour = colour;
+            return (spec);
+        }
+    }
 
     mons_spec spec;
     get_zombie_type(name, spec);
@@ -3933,6 +4204,49 @@ mons_spec mons_list::mons_by_name(std::string name) const
 //////////////////////////////////////////////////////////////////////
 // item_list
 
+item_spec::item_spec(const item_spec &other)
+    : _corpse_monster_spec(NULL)
+{
+    *this = other;
+}
+
+item_spec &item_spec::operator = (const item_spec &other)
+{
+    if (this != &other)
+    {
+        genweight = other.genweight;
+        base_type = other.base_type;
+        sub_type  = other.sub_type;
+        plus = other.plus;
+        plus2 = other.plus2;
+        ego = other.ego;
+        allow_uniques = other.allow_uniques;
+        level = other.level;
+        race = other.race;
+        item_special = other.item_special;
+        qty = other.qty;
+        acquirement_source = other.acquirement_source;
+        place = other.place;
+        props = other.props;
+
+        release_corpse_monster_spec();
+        if (other._corpse_monster_spec)
+            set_corpse_monster_spec(other.corpse_monster_spec());
+    }
+    return (*this);
+}
+
+item_spec::~item_spec()
+{
+    release_corpse_monster_spec();
+}
+
+void item_spec::release_corpse_monster_spec()
+{
+    delete _corpse_monster_spec;
+    _corpse_monster_spec = NULL;
+}
+
 bool item_spec::corpselike() const
 {
     return ((base_type == OBJ_CORPSES && (sub_type == CORPSE_BODY
@@ -3940,9 +4254,55 @@ bool item_spec::corpselike() const
             || (base_type == OBJ_FOOD && sub_type == FOOD_CHUNK));
 }
 
+const mons_spec &item_spec::corpse_monster_spec() const
+{
+    ASSERT(_corpse_monster_spec);
+    return *_corpse_monster_spec;
+}
+
+void item_spec::set_corpse_monster_spec(const mons_spec &spec)
+{
+    if (&spec != _corpse_monster_spec)
+    {
+        release_corpse_monster_spec();
+        _corpse_monster_spec = new mons_spec(spec);
+    }
+}
+
 void item_list::clear()
 {
     items.clear();
+}
+
+item_spec item_list::random_item ()
+{
+    if (items.size() <= 0)
+    {
+        const item_spec none;
+        return (none);
+    }
+
+    return (get_item(random2(size())));
+}
+
+typedef std::pair<item_spec, int> item_pair;
+
+item_spec item_list::random_item_weighted ()
+{
+    const item_spec none;
+
+    std::vector<item_pair> pairs;
+    for (int i = 0, sz = size(); i < sz; ++i)
+    {
+        item_spec item = get_item(i);
+        pairs.push_back(item_pair(item, item.genweight));
+    }
+
+    item_spec* rn_item = random_choose_weighted(pairs);
+    if (rn_item)
+        return (*rn_item);
+
+    return (none);
 }
 
 item_spec item_list::pick_item(item_spec_slot &slot)
@@ -4031,6 +4391,7 @@ void item_list::set_from_slot(const item_list &list, int slot_index)
 
 // TODO: More checking for innapropriate combinations, like the holy
 // wrath brand on a demonic weapon or the running ego on a helmet.
+// NOTE: Be sure to update the reference in syntax.txt if this gets moved!
 static int str_to_ego(item_spec &spec, std::string ego_str)
 {
     const char* armour_egos[] = {
@@ -4057,8 +4418,7 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         "archery",
         NULL
     };
-    COMPILE_CHECK(ARRAYSZ(armour_egos) == NUM_SPECIAL_ARMOURS,
-                  cc_armour_ego);
+    COMPILE_CHECK(ARRAYSZ(armour_egos) == NUM_SPECIAL_ARMOURS);
 
     const char* weapon_brands[] = {
         "flaming",
@@ -4087,8 +4447,7 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         "reaping",
         NULL
     };
-    COMPILE_CHECK(ARRAYSZ(weapon_brands) == NUM_REAL_SPECIAL_WEAPONS,
-                  cc_weapon_brands);
+    COMPILE_CHECK(ARRAYSZ(weapon_brands) == NUM_REAL_SPECIAL_WEAPONS);
 
     const char* missile_brands[] = {
         "flame",
@@ -4111,8 +4470,7 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         "wrath",
         NULL
     };
-    COMPILE_CHECK(ARRAYSZ(missile_brands) == NUM_SPECIAL_MISSILES,
-                  cc_missile_brands);
+    COMPILE_CHECK(ARRAYSZ(missile_brands) == NUM_SPECIAL_MISSILES);
 
     const char** name_lists[3] = {armour_egos, weapon_brands, missile_brands};
 
@@ -4137,7 +4495,7 @@ static int str_to_ego(item_spec &spec, std::string ego_str)
         break;
 
     default:
-        DEBUGSTR("Bad base_type for ego'd item.");
+        die("Bad base_type for ego'd item.");
         return 0;
     }
 
@@ -4224,17 +4582,6 @@ item_spec item_list::parse_corpse_spec(item_spec &result, std::string s)
                         static_cast<int>(corpse ? CORPSE_BODY :
                                          CORPSE_SKELETON));
 
-    // [ds] We're stuffing the corpse monster into the .plus field to
-    // match what we'll eventually do to the corpse item, in the grand
-    // WTF-is-this Crawl tradition.
-
-    // Is the caller happy with any corpse?
-    if (s == "any")
-    {
-        result.plus = RANDOM_MONSTER;
-        return (result);
-    }
-
     // The caller wants a specific monster, no doubt with the best of
     // motives. Let's indulge them:
     mons_list mlist;
@@ -4249,21 +4596,24 @@ item_spec item_list::parse_corpse_spec(item_spec &result, std::string s)
     mons_spec spec = mlist.get_monster(0);
     monster_type mtype = static_cast<monster_type>(spec.mid);
     if (!monster_corpse_is_valid(&mtype, s, corpse, skeleton, chunk))
+    {
+        error = make_stringf("Requested corpse '%s' is invalid",
+                             s.c_str());
         return (result);
+    }
 
     // Ok, looking good, the caller can have their requested toy.
-    result.plus = mtype;
-    if (spec.number)
-        result.plus2 = spec.number;
-
+    result.set_corpse_monster_spec(spec);
     return (result);
 }
 
 // Strips the first word from s and returns it.
-static std::string _get_and_discard_word(std::string* s) {
+static std::string _get_and_discard_word(std::string* s)
+{
     std::string result;
     const size_t spaceloc = s->find(' ');
-    if (spaceloc == std::string::npos) {
+    if (spaceloc == std::string::npos)
+    {
         result = *s;
         s->clear();
     }
@@ -4276,17 +4626,19 @@ static std::string _get_and_discard_word(std::string* s) {
     return result;
 }
 
-static deck_rarity_type _rarity_string_to_rarity(const std::string& s) {
+static deck_rarity_type _rarity_string_to_rarity(const std::string& s)
+{
     if (s == "common")    return DECK_RARITY_COMMON;
     if (s == "plain")     return DECK_RARITY_COMMON; // synonym
     if (s == "rare")      return DECK_RARITY_RARE;
     if (s == "ornate")    return DECK_RARITY_RARE; // synonym
     if (s == "legendary") return DECK_RARITY_LEGENDARY;
     // FIXME: log an error here.
-    return DECK_RARITY_COMMON;
+    return DECK_RARITY_RANDOM;
 }
 
-static misc_item_type _deck_type_string_to_subtype(const std::string& s) {
+static misc_item_type _deck_type_string_to_subtype(const std::string& s)
+{
     if (s == "escape")      return MISC_DECK_OF_ESCAPE;
     if (s == "destruction") return MISC_DECK_OF_DESTRUCTION;
     if (s == "dungeons")    return MISC_DECK_OF_DUNGEONS;
@@ -4338,13 +4690,11 @@ void item_list::build_deck_spec(std::string s, item_spec* spec)
     // just "deck".
     if (word != "deck")
     {
-        spec->item_special = _rarity_string_to_rarity(word);
+        spec->ego = _rarity_string_to_rarity(word);
         word = _get_and_discard_word(&s);
     }
     else
-    {
-        spec->item_special = random_deck_rarity();
-    }
+        spec->ego = DECK_RARITY_RANDOM;
 
     // Error checking.
     if (word != "deck")
@@ -4369,9 +4719,7 @@ void item_list::build_deck_spec(std::string s, item_spec* spec)
         spec->sub_type = sub_type;
     }
     else
-    {
         spec->sub_type = _random_deck_subtype();
-    }
 }
 
 item_spec item_list::parse_single_spec(std::string s)
@@ -4453,6 +4801,34 @@ item_spec item_list::parse_single_spec(std::string s)
         return (result);
     }
 
+    std::string id_str = strip_tag_prefix(s, "ident:");
+    lowercase(id_str);
+    if (id_str == "all")
+        result.props["ident"].get_int() = ISFLAG_IDENT_MASK;
+    else if (!id_str.empty())
+    {
+        std::vector<std::string> ids = split_string("|", id_str);
+        int id = 0;
+        for (std::vector<std::string>::const_iterator is = ids.begin();
+             is != ids.end(); ++is)
+        {
+            if (*is == "curse")
+                id |= ISFLAG_KNOW_CURSE;
+            else if (*is == "type")
+                id |= ISFLAG_KNOW_TYPE;
+            else if (*is == "pluses")
+                id |= ISFLAG_KNOW_PLUSES;
+            else if (*is == "properties")
+                id |= ISFLAG_KNOW_PROPERTIES;
+            else
+            {
+                error = make_stringf("Bad identify status: %s", id_str.c_str());
+                return (result);
+            }
+        }
+        result.props["ident"].get_int() = id;
+    }
+
     std::string unrand_str = strip_tag_prefix(s, "unrand:");
 
     if (strip_tag(s, "good_item"))
@@ -4473,6 +4849,13 @@ item_spec item_list::parse_single_spec(std::string s)
         }
     }
 
+    if (strip_tag(s, "mundane"))
+    {
+        result.level = ISPEC_MUNDANE;
+        result.ego   = -1;
+        if (strip_tag(s, "cursed"))
+            result.props["cursed"] = bool(true);
+    }
     if (strip_tag(s, "damaged"))
         result.level = ISPEC_DAMAGED;
     if (strip_tag(s, "cursed"))
@@ -4483,6 +4866,20 @@ item_spec item_list::parse_single_spec(std::string s)
         result.props["uncursed"] = bool(true);
     if (strip_tag(s, "useful"))
         result.props["useful"] = bool(true);
+    if (strip_tag(s, "unobtainable"))
+        result.props["unobtainable"] = true;
+
+    const int mimic = strip_number_tag(s, "mimic:");
+    if (mimic != TAG_UNFOUND)
+        result.props["mimic"] = mimic;
+    if (strip_tag(s, "mimic"))
+        result.props["mimic"] = 1;
+    if (strip_tag(s, "no_mimic"))
+        result.props["no_mimic"] = true;
+
+    const short charges = strip_number_tag(s, "charges:");
+    if (charges >= 0)
+        result.props["charges"].get_int() = charges;
 
     if (strip_tag(s, "no_uniq"))
         result.allow_uniques = 0;
@@ -4573,12 +4970,25 @@ item_spec item_list::parse_single_spec(std::string s)
             return (result);
         }
 
-        const std::string spell = replace_all_of(strip_tag_prefix(s, "spell:"),
+        const std::string title = replace_all_of(strip_tag_prefix(s, "title:"),
                                                 "_", " ");
-        if (!spell.empty() && spell_by_name(spell) == SPELL_NO_SPELL)
+
+        const std::string spells = strip_tag_prefix(s, "spells:");
+
+        std::vector<std::string> spell_list = split_string("|", spells);
+        CrawlVector &incl_spells
+            = result.props["randbook_spells"].new_vector(SV_INT);
+
+        for (unsigned int i = 0; i < spell_list.size(); ++i)
         {
-            error = make_stringf("Bad spell: %s", spell.c_str());
-            return (result);
+            std::string spell_name = replace_all_of(spell_list[i], "_", " ");
+            spell_type spell = spell_by_name(spell_name);
+            if (spell == SPELL_NO_SPELL)
+            {
+                error = make_stringf("Bad spell: %s", spell_list[i].c_str());
+                return (result);
+            }
+            incl_spells.push_back(spell);
         }
 
         const std::string owner = replace_all_of(strip_tag_prefix(s, "owner:"),
@@ -4587,12 +4997,12 @@ item_spec item_list::parse_single_spec(std::string s)
         result.props["randbook_disc2"] = disc2;
         result.props["randbook_num_spells"] = num_spells;
         result.props["randbook_slevels"] = slevels;
-        result.props["randbook_spell"] = spell;
+        result.props["randbook_title"] = title;
         result.props["randbook_owner"] = owner;
 
         result.base_type = OBJ_BOOKS;
         // This is changed in make_book_theme_randart.
-        result.sub_type = BOOK_MINOR_MAGIC_I;
+        result.sub_type = BOOK_MINOR_MAGIC;
         result.plus = -1;
 
         return (result);
@@ -4865,12 +5275,12 @@ int colour_spec::get_colour()
 //////////////////////////////////////////////////////////////////////////
 // fprop_spec
 
-unsigned long fprop_spec::get_property()
+feature_property_type fprop_spec::get_property()
 {
     if (fixed_prop != FPROP_NONE)
         return (fixed_prop);
 
-    unsigned long chosen = FPROP_NONE;
+    feature_property_type chosen = FPROP_NONE;
     int cweight = 0;
     for (int i = 0, size = fprops.size(); i < size; ++i)
         if (x_chance_in_y(fprops[i].second, cweight += fprops[i].second))
@@ -5045,6 +5455,17 @@ void keyed_mapspec::parse_features(const std::string &s)
     }
 }
 
+/**
+ * Convert a trap string into a trap_spec.
+ *
+ * This function converts an incoming trap specification string from a vault
+ * into a trap_spec.
+ *
+ * @param s       The string to be parsed.
+ * @param weight  The weight of this string.
+ * @returns       A feature_spec with the contained, parsed trap_spec stored via
+ *                std::auto_ptr as feature_spec->trap.
+**/
 feature_spec keyed_mapspec::parse_trap(std::string s, int weight)
 {
     strip_tag(s, "trap");
@@ -5058,22 +5479,75 @@ feature_spec keyed_mapspec::parse_trap(std::string s, int weight)
         err = make_stringf("bad trap name: '%s'", s.c_str());
 
     feature_spec fspec(known ? 1 : -1, weight);
-    fspec.trap = trap;
+    fspec.trap.reset(new trap_spec(static_cast<trap_type>(trap)));
     return (fspec);
 }
 
+/**
+ * Convert a shop string into a shop_spec.
+ *
+ * This function converts an incoming shop specification string from a vault
+ * into a shop_spec.
+ *
+ * @param s      The string to be parsed.
+ * @param weight The weight of this string.
+ * @returns      A feature_spec with the contained, parsed shop_spec stored via
+ *               std::auto_ptr as feature_spec->shop.
+**/
 feature_spec keyed_mapspec::parse_shop(std::string s, int weight)
 {
+    std::string orig(s);
+
     strip_tag(s, "shop");
     trim_string(s);
-    lowercase(s);
 
-    const int shop = str_to_shoptype(s);
+    bool use_all = strip_tag(s, "use_all");
+
+    std::string shop_name = replace_all_of(strip_tag_prefix(s, "name:"),
+                                           "_", " ");
+    std::string shop_type_name = replace_all_of(strip_tag_prefix(s, "type:"),
+                                                "_", " ");
+    std::string shop_suffix_name = replace_all_of(strip_tag_prefix(s,
+                                                  "suffix:"), "_", " ");
+
+    int num_items = std::min(20, strip_number_tag(s, "count:"));
+    if (num_items == TAG_UNFOUND)
+        num_items = -1;
+
+    int greed = strip_number_tag(s, "greed:");
+    if (greed == TAG_UNFOUND)
+        greed = -1;
+
+    std::vector<std::string> parts = split_string(";", s);
+    std::string main_part = parts[0];
+
+    const int shop = str_to_shoptype(main_part);
     if (shop == -1)
         err = make_stringf("bad shop type: '%s'", s.c_str());
 
+    if (parts.size() > 2)
+    {
+        err = make_stringf("too many semi-colons for '%s' spec", orig.c_str());
+    }
+
+    item_list items;
+    if (parts.size() == 2)
+    {
+        std::string item_list = parts[1];
+        std::vector<std::string> str_items = split_string("|", item_list);
+        for (int i = 0, sz = str_items.size(); i < sz; ++i)
+        {
+            err = items.add_item(str_items[i]);
+            if (!err.empty())
+                break;
+        }
+    }
+
     feature_spec fspec(-1, weight);
-    fspec.shop = shop;
+    fspec.shop.reset(new shop_spec(static_cast<shop_type>(shop), shop_name,
+                                   shop_type_name, shop_suffix_name, greed,
+                                   num_items, use_all));
+    fspec.shop->items = items;
     return (fspec);
 }
 
@@ -5083,18 +5557,24 @@ feature_spec_list keyed_mapspec::parse_feature(const std::string &str)
     int weight = find_weight(s);
     if (weight == TAG_UNFOUND || weight <= 0)
         weight = 10;
+
+    int mimic = strip_number_tag(s, "mimic:");
+    if (mimic == TAG_UNFOUND && strip_tag(s, "mimic"))
+        mimic = 1;
+    const bool no_mimic = strip_tag(s, "no_mimic");
+
     trim_string(s);
 
     feature_spec_list list;
     if (s.length() == 1)
     {
-        feature_spec fsp(-1, weight);
+        feature_spec fsp(-1, weight, mimic, no_mimic);
         fsp.glyph = s[0];
         list.push_back(fsp);
         return (list);
     }
 
-    if (s.find("trap") != std::string::npos)
+    if (s.find("trap") != std::string::npos || s == "web")
     {
         list.push_back(parse_trap(s, weight));
         return (list);
@@ -5108,11 +5588,11 @@ feature_spec_list keyed_mapspec::parse_feature(const std::string &str)
     }
 
     const dungeon_feature_type ftype = dungeon_feature_by_name(s);
+
     if (ftype == DNGN_UNSEEN)
-        err = make_stringf("no features matching \"%s\"",
-                           str.c_str());
+        err = make_stringf("no features matching \"%s\"", str.c_str());
     else
-        list.push_back(feature_spec(ftype, weight));
+        list.push_back(feature_spec(ftype, weight, mimic, no_mimic));
 
     return (list);
 }
@@ -5161,7 +5641,7 @@ std::string keyed_mapspec::set_mask(const std::string &s, bool garbage)
         static std::string flag_list[] =
             {"vault", "no_item_gen", "no_monster_gen", "no_pool_fixup",
              "no_secret_doors", "no_wall_fixup", "opaque", "no_trap_gen",
-             "no_shop_gen", ""};
+             ""};
         map_mask = map_flags::parse(flag_list, s);
     }
     catch (const std::string &error)
@@ -5171,7 +5651,7 @@ std::string keyed_mapspec::set_mask(const std::string &s, bool garbage)
     }
 
     // If not also a KFEAT...
-    if (feat.feats.size() == 0)
+    if (feat.feats.empty())
     {
         feature_spec fsp(-1, 10);
         fsp.glyph = key_glyph;
@@ -5217,7 +5697,60 @@ map_flags &keyed_mapspec::get_mask()
 }
 
 //////////////////////////////////////////////////////////////////////////
-// feature_slot
+// feature_spec and feature_slot
+
+feature_spec::feature_spec ()
+{
+    genweight = 0;
+    feat = 0;
+    glyph = -1;
+    shop.reset(NULL);
+    trap.reset(NULL);
+    mimic = 0;
+    no_mimic = false;
+}
+
+feature_spec::feature_spec(int f, int wt, int _mimic, bool _no_mimic)
+{
+    genweight = wt;
+    feat = f;
+    glyph = -1;
+    shop.reset(NULL);
+    trap.reset(NULL);
+    mimic = _mimic;
+    no_mimic = _no_mimic;
+}
+
+feature_spec::feature_spec(const feature_spec &other)
+{
+    init_with(other);
+}
+
+feature_spec& feature_spec::operator = (const feature_spec& other)
+{
+    if (this != &other)
+        init_with(other);
+    return (*this);
+}
+
+void feature_spec::init_with (const feature_spec& other)
+{
+    genweight = other.genweight;
+    feat = other.feat;
+    glyph = other.glyph;
+    mimic = other.mimic;
+    no_mimic = other.no_mimic;
+
+    if (other.trap.get())
+        trap.reset(new trap_spec(*other.trap));
+    else
+        trap.reset(NULL);
+
+    if (other.shop.get())
+        shop.reset(new shop_spec(*other.shop));
+    else
+        shop.reset(NULL);
+}
 
 feature_slot::feature_slot() : feats(), fix_slot(false)
 {

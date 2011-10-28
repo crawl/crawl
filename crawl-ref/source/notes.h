@@ -1,8 +1,7 @@
-/*
- *  File:       notes.h
- *  Summary:    Notetaking stuff
- *  Written by: Haran Pilpel
- */
+/**
+ * @file
+ * @brief Notetaking stuff
+**/
 
 #ifndef NOTES_H
 #define NOTES_H
@@ -11,7 +10,7 @@
 #include <vector>
 #include <stdio.h>
 
-#define MAX_NOTE_PLACE_LEN 7
+#define MAX_NOTE_PLACE_LEN 8
 
 class reader;
 class writer;
@@ -33,6 +32,7 @@ enum NOTE_TYPES
     NOTE_ID_ITEM,               /* needs: item name (string) */
     NOTE_GET_ITEM,              /* needs: item name (string) */
     NOTE_GAIN_SKILL,            /* needs: skill id, level */
+    NOTE_LOSE_SKILL,            /* needs: skill id, level */
     NOTE_SEEN_MONSTER,          /* needs: monster name (string) */
     NOTE_KILL_MONSTER,          /* needs: monster name (string) */
     NOTE_POLY_MONSTER,          /* needs: monster name (string) */
@@ -47,6 +47,11 @@ enum NOTE_TYPES
     NOTE_SEEN_FEAT,             /* needs: feature seen (string) */
     NOTE_XOM_EFFECT,            /* needs: description (name string) */
     NOTE_XOM_REVIVAL,           /* needs: death cause (string) */
+    NOTE_PARALYSIS,             /* needs: paralysis source (string) */
+    NOTE_NAMED_ALLY,            /* needs: ally name (string) */
+    NOTE_ALLY_DEATH,            /* needs: ally name (string) */
+    NOTE_BANISH_MONSTER,        /* needs: monster name (string) */
+    NOTE_FEAT_MIMIC,            /* needs: mimiced feature (string) */
     NOTE_NUM_TYPES
 };
 

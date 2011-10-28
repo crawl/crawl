@@ -12,8 +12,10 @@
 #include "notes.h"
 #include "options.h"
 #include "output.h"
+#include "syscalls.h"
 
 #include <errno.h>
+#include <sys/stat.h>
 
 static struct stat mfilestat;
 
@@ -49,7 +51,7 @@ static void _kill_messaging(FILE *mf)
 static void _read_each_message()
 {
     bool say_got_msg = true;
-    FILE *mf = fopen(SysEnv.messagefile.c_str(), "r+");
+    FILE *mf = fopen_u(SysEnv.messagefile.c_str(), "r+");
     if (!mf)
     {
         mprf(MSGCH_ERROR, "Couldn't read %s: %s", SysEnv.messagefile.c_str(),
@@ -61,7 +63,7 @@ static void _read_each_message()
     // Read messages, code borrowed from the SIMPLEMAIL patch.
     char line[120];
 
-    if (!lock_file_handle(mf, F_RDLCK))
+    if (!lock_file_handle(mf, false))
     {
         mprf(MSGCH_ERROR, "Failed to lock %s: %s", SysEnv.messagefile.c_str(),
              strerror(errno));
@@ -88,7 +90,7 @@ static void _read_each_message()
             _show_message_line(line);
         }
 
-        if (!lock_file_handle(mf, F_RDLCK))
+        if (!lock_file_handle(mf, false))
         {
             mprf(MSGCH_ERROR, "Failed to lock %s: %s",
                  SysEnv.messagefile.c_str(),
@@ -97,7 +99,7 @@ static void _read_each_message()
             return;
         }
     }
-    if (!lock_file_handle(mf, F_WRLCK))
+    if (!lock_file_handle(mf, true))
     {
         mprf(MSGCH_ERROR, "Unable to write lock %s: %s",
              SysEnv.messagefile.c_str(),

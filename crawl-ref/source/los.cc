@@ -1,6 +1,6 @@
-/*
- *  File:        los.cc
- *  Summary:     Line-of-sight algorithm.
+/**
+ * @file
+ * @brief Line-of-sight algorithm.
  *
  *
  *
@@ -38,7 +38,7 @@
  * The code provides functions for filling LOS information
  * around a given center efficiently, and for querying rays
  * between two given cells.
- */
+**/
 
 #include "AppHdr.h"
 
@@ -59,7 +59,6 @@
 #include "losparam.h"
 #include "player.h"
 #include "ray.h"
-#include "stuff.h"
 #include "env.h"
 #include "terrain.h"
 
@@ -119,7 +118,7 @@ void clear_rays_on_exit()
 {
    delete dead_rays;
    delete smoke_rays;
-   for (quadrant_iterator qi; qi; qi++)
+   for (quadrant_iterator qi; qi; ++qi)
        delete blockrays(*qi);
 }
 
@@ -175,11 +174,8 @@ struct los_ray : public ray_def
             old = c;
             if (!copy.advance())
             {
-//#ifdef DEBUG_DIAGNOSTICS
-//                mprf(MSGCH_DIAGNOSTICS,
-//                     "discarding corner ray (%f,%f) + t*(%f,%f)",
+//                dprf("discarding corner ray (%f,%f) + t*(%f,%f)",
 //                     r.start.x, r.start.y, r.dir.x, r.dir.y);
-//#endif
                 cs.clear();
                 break;
             }
@@ -360,7 +356,7 @@ static std::vector<int> _find_minimal_cellrays()
                     break;
                 }
                 if (!erased)
-                    min_it++;
+                    ++min_it;
                 else
                     erased = false;
             }
@@ -370,10 +366,10 @@ static std::vector<int> _find_minimal_cellrays()
     }
 
     std::vector<int> result;
-    for (quadrant_iterator qi; qi; qi++)
+    for (quadrant_iterator qi; qi; ++qi)
     {
         std::list<cellray>& min = minima(*qi);
-        for (min_it = min.begin(); min_it != min.end(); min_it++)
+        for (min_it = min.begin(); min_it != min.end(); ++min_it)
         {
             // Calculate imbalance and slope difference for sorting.
             min_it->calc_params();
@@ -408,7 +404,7 @@ static void _create_blockrays()
     // cell in ray_coords.
     const int n_cellrays = ray_coords.size();
     blockrays_t all_blockrays;
-    for (quadrant_iterator qi; qi; qi++)
+    for (quadrant_iterator qi; qi; ++qi)
         all_blockrays(*qi) = new bit_array(n_cellrays);
 
     for (unsigned int r = 0; r < fullrays.size(); ++r)
@@ -434,7 +430,7 @@ static void _create_blockrays()
         cellray_ends[i] = ray_coords[min_indices[i]];
 
     // Compress blockrays accordingly.
-    for (quadrant_iterator qi; qi; qi++)
+    for (quadrant_iterator qi; qi; ++qi)
     {
         blockrays(*qi) = new bit_array(n_min_rays);
         for (int i = 0; i < n_min_rays; ++i)
@@ -443,16 +439,14 @@ static void _create_blockrays()
     }
 
     // We can throw away all_blockrays now.
-    for (quadrant_iterator qi; qi; qi++)
+    for (quadrant_iterator qi; qi; ++qi)
         delete all_blockrays(*qi);
 
     dead_rays  = new bit_array(n_min_rays);
     smoke_rays = new bit_array(n_min_rays);
 
-#ifdef DEBUG_DIAGNOSTICS
-    mprf(MSGCH_DIAGNOSTICS, "Cellrays: %d Fullrays: %u Minimal cellrays: %u",
-          n_cellrays, fullrays.size(), n_min_rays);
-#endif
+    dprf("Cellrays: %d Fullrays: %u Minimal cellrays: %u",
+          n_cellrays, (unsigned int)fullrays.size(), n_min_rays);
 }
 
 static int _gcd(int x, int y)
@@ -535,7 +529,7 @@ static int _imbalance(ray_def ray, const coord_def& target)
     {
         coord_def old = ray.pos();
         if (!ray.advance())
-            ASSERT(false);
+            die("can't advance ray");
         switch((ray.pos() - old).abs())
         {
         case 1:
@@ -549,8 +543,7 @@ static int _imbalance(ray_def ray, const coord_def& target)
                 imb = diags;
             break;
         default:
-            ASSERT(false);
-            break;
+            die("ray imbalance out of range");
         }
     }
     return imb;
@@ -580,15 +573,12 @@ static bool _find_ray_se(const coord_def& target, ray_def& ray,
     raycast();
 
     const std::vector<cellray> &min = min_cellrays(target);
-    ASSERT(min.size() > 0);
+    ASSERT(!min.empty());
     cellray c = min[0]; // XXX: const cellray &c ?
     unsigned int index = 0;
 
-#ifdef DEBUG_DIAGNOSTICS
     if (cycle)
-        mprf(MSGCH_DIAGNOSTICS, "cycling from %d (total %d)",
-             ray.cycle_idx, min.size());
-#endif
+        dprf("cycling from %d (total %u)", ray.cycle_idx, (unsigned int)min.size());
 
     unsigned int start = cycle ? ray.cycle_idx + 1 : 0;
     ASSERT(start <= min.size());
@@ -775,7 +765,7 @@ int num_feats_between(const coord_def& source, const coord_def& target,
 }
 
 // Is p2 visible from p1, disregarding half-opaque objects?
-bool cell_see_cell(const coord_def& p1, const coord_def& p2)
+bool cell_see_cell_nocache(const coord_def& p1, const coord_def& p2)
 {
     return exists_ray(p1, p2, opc_fullyopaque);
 }
@@ -821,7 +811,7 @@ static void _losight_quadrant(los_grid& sh, const los_param& dat, int sx, int sy
     dead_rays->reset();
     smoke_rays->reset();
 
-    for (quadrant_iterator qi; qi; qi++)
+    for (quadrant_iterator qi; qi; ++qi)
     {
         coord_def p = coord_def(sx*(qi->x), sy*(qi->y));
         if (!dat.los_bounds(p))
@@ -905,6 +895,17 @@ void losight(los_grid& sh, const coord_def& center,
     losight(sh, los_param_funcs(center, opc, bounds));
 }
 
+opacity_type mons_opacity(const monster* mon)
+{
+    if (mon->type == MONS_BUSH)
+        return OPC_HALF;
+
+    if (mons_is_feat_mimic(mon->type) && feat_is_opaque(get_mimic_feat(mon)))
+        return OPC_OPAQUE;
+
+    return OPC_CLEAR;
+}
+
 /////////////////////////////////////
 // A start at tracking LOS changes.
 
@@ -915,10 +916,14 @@ static void _handle_los_change()
     invalidate_agrid();
 }
 
+static bool _mons_block_sight(const monster* mons)
+{
+    return mons_opacity(mons) != OPC_CLEAR;
+}
+
 void los_actor_moved(const actor* act, const coord_def& oldpos)
 {
-    if (act->atype() == ACT_MONSTER
-        && act->as_monster()->type == MONS_BUSH)
+    if (act->atype() == ACT_MONSTER && _mons_block_sight(act->as_monster()))
     {
         invalidate_los_around(oldpos);
         invalidate_los_around(act->pos());
@@ -928,7 +933,7 @@ void los_actor_moved(const actor* act, const coord_def& oldpos)
 
 void los_monster_died(const monster* mon)
 {
-    if (mon->type == MONS_BUSH)
+    if (_mons_block_sight(mon))
     {
         invalidate_los_around(mon->pos());
         _handle_los_change();

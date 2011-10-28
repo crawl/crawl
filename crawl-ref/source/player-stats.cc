@@ -2,10 +2,15 @@
 
 #include "player-stats.h"
 
+#include "artefact.h"
 #include "delay.h"
 #include "godpassive.h"
+#include "files.h"
+#include "itemname.h"
+#include "item_use.h"
 #include "libutil.h"
 #include "macro.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "monster.h"
 #include "ouch.h"
@@ -64,10 +69,12 @@ static void _handle_stat_change(const char *aux = NULL, bool see_source = true);
 
 void attribute_increase()
 {
+    crawl_state.stat_gain_prompt = true;
     mpr("Your experience leads to an increase in your attributes!",
         MSGCH_INTRINSIC_GAIN);
     learned_something_new(HINT_CHOOSE_STAT);
     mpr("Increase (S)trength, (I)ntelligence, or (D)exterity? ", MSGCH_PROMPT);
+    mouse_control mc(MOUSE_MODE_MORE);
 
     while (true)
     {
@@ -75,7 +82,6 @@ void attribute_increase()
 
         switch (keyin)
         {
-#if defined(USE_UNIX_SIGNALS) && defined(SIGHUP_SAVE) && defined(USE_CURSES)
         CASE_ESCAPE
             // [ds] It's safe to save the game here; when the player
             // reloads, the game will re-prompt for their level-up
@@ -83,7 +89,6 @@ void attribute_increase()
             if (crawl_state.seen_hups)
                 sighup_save_and_exit();
             break;
-#endif
 
         case 's':
         case 'S':
@@ -106,26 +111,76 @@ void attribute_increase()
     }
 }
 
-// Rearrange stats, biased towards the stat chosen last at level up.
+// Rearrange stats, biased based on your armour and skills.
 void jiyva_stat_action()
 {
-    int inc_weight[] = {1, 1, 1};
-    int dec_weight[3];
-    int stat_up_choice;
-    int stat_down_choice;
-
-    inc_weight[you.last_chosen] = 2;
-
+    int cur_stat[3];
+    int stat_total = 0;
+    int evp = player_raw_body_armour_evasion_penalty();
+    int target_stat[3];
     for (int x = 0; x < 3; ++x)
     {
-         const int8_t m = you.max_stat(static_cast<stat_type>(x));
-         dec_weight[x] = std::min(10, std::max(0, m - 7));
+        cur_stat[x] = you.max_stat(static_cast<stat_type>(x));
+        stat_total += cur_stat[x];
     }
+    // Always try for a little more strength, since Jiyva chars need their
+    // carrying capacity.
+    target_stat[0] = std::max(11, 2 + 3 * evp);
+    target_stat[1] = 9;
+    target_stat[2] = 9;
+    int remaining = stat_total - 18 - target_stat[0];
+    // Divide up the remaining stat points between Int and either Str or Dex,
+    // based on skills.
+    if (remaining > 0)
+    {
+        int magic_weights = 0;
+        int other_weights = 0;
+        for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
+        {
+            skill_type sk = static_cast<skill_type>(i);
 
-    stat_up_choice = choose_random_weighted(inc_weight, inc_weight + 3);
-    stat_down_choice = choose_random_weighted(dec_weight, dec_weight + 3);
+            int weight = you.skills[sk];
 
-    if (stat_up_choice != stat_down_choice)
+            // Anyone can get Spellcasting 1. Doesn't prove anything.
+            if (sk == SK_SPELLCASTING && weight >= 1)
+                weight--;
+
+            if (sk >= SK_SPELLCASTING && sk < SK_INVOCATIONS)
+                magic_weights += weight;
+            else
+                other_weights += weight;
+        }
+        // If you are in really heavy armour, then you already are getting a
+        // lot of Str and more won't help much, so weight magic more.
+        other_weights = std::max(other_weights - (evp >= 5 ? 4 : 1) * magic_weights/2, 0);
+        magic_weights = div_rand_round(remaining * magic_weights, magic_weights + other_weights);
+        other_weights = remaining - magic_weights;
+        target_stat[1] += magic_weights;
+        // Choose Str or Dex based on how heavy your armour is.
+        target_stat[(evp >= 5) ? 0 : 2] += other_weights;
+    }
+    // Add a little fuzz to the target.
+    for (int x = 0; x < 3; ++x)
+        target_stat[x] += random2(5) - 2;
+    int choices = 0;
+    int stat_up_choice = 0;
+    int stat_down_choice = 0;
+    // Choose a random stat shuffle that doesn't increase the l^2 distance to
+    // the (fuzzed) target.
+    for (int x = 0; x < 3; ++x)
+        for (int y = 0; y < 3; ++y)
+        {
+            if (x != y && target_stat[x] - cur_stat[x] + cur_stat[y] - target_stat[y] > 0)
+            {
+                choices++;
+                if (one_chance_in(choices))
+                {
+                    stat_up_choice = x;
+                    stat_down_choice = y;
+                }
+            }
+        }
+    if (choices)
     {
         simple_god_message("'s power touches on your attributes.");
         const std::string cause = "the 'helpfulness' of "
@@ -146,8 +201,7 @@ static kill_method_type _statloss_killtype(stat_type stat)
     case STAT_DEX:
         return KILLED_BY_CLUMSINESS;
     default:
-        ASSERT(false);
-        return NUM_KILLBY;
+        die("unknown stat");
     }
 }
 
@@ -267,7 +321,7 @@ static int _strength_modifier()
     if (you.duration[DUR_DIVINE_STAMINA])
         result += you.attribute[ATTR_DIVINE_STAMINA];
 
-    result += che_boost(CB_STATS);
+    result += che_stat_boost();
 
     // ego items of strength
     result += 3 * count_worn_ego(SPARM_STRENGTH);
@@ -286,7 +340,7 @@ static int _strength_modifier()
     result -= player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
 
     // transformations
-    switch (you.attribute[ATTR_TRANSFORMATION])
+    switch (you.form)
     {
     case TRAN_STATUE:          result +=  2; break;
     case TRAN_DRAGON:          result += 10; break;
@@ -308,7 +362,7 @@ static int _int_modifier()
     if (you.duration[DUR_DIVINE_STAMINA])
         result += you.attribute[ATTR_DIVINE_STAMINA];
 
-    result += che_boost(CB_STATS);
+    result += che_stat_boost();
 
     // ego items of intelligence
     result += 3 * count_worn_ego(SPARM_INTELLIGENCE);
@@ -336,7 +390,7 @@ static int _dex_modifier()
     if (you.duration[DUR_DIVINE_STAMINA])
         result += you.attribute[ATTR_DIVINE_STAMINA];
 
-    result += che_boost(CB_STATS);
+    result += che_stat_boost();
 
     // ego items of dexterity
     result += 3 * count_worn_ego(SPARM_DEXTERITY);
@@ -353,11 +407,11 @@ static int _dex_modifier()
     result += player_mutation_level(MUT_FLEXIBLE_WEAK)
               - player_mutation_level(MUT_STRONG_STIFF);
 
-    result += player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
+    result += 2 * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
     result -= player_mutation_level(MUT_ROUGH_BLACK_SCALES);
 
     // transformations
-    switch (you.attribute[ATTR_TRANSFORMATION])
+    switch (you.form)
     {
     case TRAN_SPIDER: result +=  5; break;
     case TRAN_STATUE: result -=  2; break;
@@ -381,9 +435,6 @@ static int _stat_modifier(stat_type stat)
     }
 }
 
-// use player::decrease_stats() instead iff:
-// (a) player_sust_abil() should not factor in; and
-// (b) there is no floor to the final stat values {dlb}
 bool lose_stat(stat_type which_stat, int8_t stat_loss, bool force,
                const char *cause, bool see_source)
 {
@@ -393,7 +444,20 @@ bool lose_stat(stat_type which_stat, int8_t stat_loss, bool force,
     // scale modifier by player_sust_abil() - right-shift
     // permissible because stat_loss is unsigned: {dlb}
     if (!force)
-        stat_loss >>= player_sust_abil();
+    {
+        int sust = player_sust_abil();
+        stat_loss >>= sust;
+
+        if (sust && !stat_loss && !player_sust_abil(false))
+        {
+            item_def *ring = get_only_unided_ring();
+            if (ring && !is_artefact(*ring)
+                && ring->sub_type == RING_SUSTAIN_ABILITIES)
+            {
+                wear_id_type(*ring);
+            }
+        }
+    }
 
     mprf(stat_loss > 0 ? MSGCH_WARN : MSGCH_PLAIN,
          "You feel %s%s.",
@@ -402,7 +466,8 @@ bool lose_stat(stat_type which_stat, int8_t stat_loss, bool force,
 
     if (stat_loss > 0)
     {
-        you.stat_loss[which_stat] += stat_loss;
+        you.stat_loss[which_stat] = std::min<int>(100,
+                                        you.stat_loss[which_stat] + stat_loss);
         _handle_stat_change(which_stat, cause, see_source);
         return (true);
     }
@@ -479,8 +544,7 @@ static std::string _stat_name(stat_type stat)
     case STAT_DEX:
         return ("dexterity");
     default:
-        ASSERT(false);
-        return ("BUG");
+        die("invalid stat");
     }
 }
 
@@ -611,14 +675,18 @@ void update_stat_zero()
             {
                 mprf("Your %s has recovered.", stat_desc(s, SD_NAME));
                 you.redraw_stats[s] = true;
+                if (i == STAT_STR)
+                    burden_change();
             }
         }
+        else // no stat penalty at all
+            continue;
 
         if (you.stat_zero[i] > STAT_DEATH_TURNS)
         {
             ouch(INSTANT_DEATH, NON_MONSTER,
                  _statloss_killtype(s), you.stat_zero_cause[i].c_str());
-         }
+        }
 
         int paramax = STAT_DEATH_TURNS - STAT_DEATH_START_PARA;
         int paradiff = std::max(you.stat_zero[i] - STAT_DEATH_START_PARA, 0);

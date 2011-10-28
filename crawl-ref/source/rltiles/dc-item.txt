@@ -39,6 +39,7 @@ hammer1 WPN_HAMMER
 hammer2
 ankus WPN_ANKUS
 bullwhip WPN_WHIP
+bullwhip2
 %rim 0
 sacred_scourge WPN_SACRED_SCOURGE
 trishula WPN_TRISHULA
@@ -51,12 +52,17 @@ giant_spiked_club WPN_GIANT_SPIKED_CLUB
 knife WPN_KNIFE
 
 dagger WPN_DAGGER
+dagger2
+dagger3
 orcish_dagger WPN_DAGGER_ORC
+orcish_dagger2
 elven_dagger WPN_DAGGER_ELF
+elven_dagger2
 
 short_sword1 WPN_SHORT_SWORD
 short_sword2
 orcish_short_sword WPN_SHORT_SWORD_ORC
+orcish_short_sword2
 elven_short_sword WPN_SHORT_SWORD_ELF
 
 long_sword1 WPN_LONG_SWORD
@@ -78,9 +84,6 @@ sabre1_silver WPN_SABRE
 sabre2
 
 quickblade WPN_QUICK_BLADE
-
-katana1 WPN_KATANA
-katana2
 
 double_sword WPN_DOUBLE_SWORD
 triple_sword WPN_TRIPLE_SWORD
@@ -120,7 +123,9 @@ bardiche1 WPN_BARDICHE
 bardiche2
 
 ##Staff
+staff WPN_STAFF
 quarterstaff WPN_QUARTERSTAFF
+quarterstaff2
 lajatang1 WPN_LAJATANG
 lajatang2
 
@@ -303,22 +308,28 @@ leather_armour1 ARM_LEATHER_ARMOUR
 leather_armour2
 leather_armour3
 orcish_leather_armor ARM_LEATHER_ARMOUR_ORC
+orcish_leather_armor2
 elven_leather_armor ARM_LEATHER_ARMOUR_ELF
+elven_leather_armor2
 
 ring_mail1 ARM_RING_MAIL
 ring_mail2
 orcish_ringmail ARM_RING_MAIL_ORC
+orcish_ringmail2
 elven_ringmail ARM_RING_MAIL_ELF
+elven_ringmail2
 dwarven_ringmail ARM_RING_MAIL_DWA
 
 scale_mail1 ARM_SCALE_MAIL
 scale_mail2
 elven_scalemail ARM_SCALE_MAIL_ELF
+elven_scalemail2
 
 chain_mail1 ARM_CHAIN_MAIL
 chain_mail2
 chain_mail3 ARM_CHAIN_MAIL_ELF
 orcish_chain_mail ARM_CHAIN_MAIL_ORC
+orcish_chain_mail2
 
 splint_mail1 ARM_SPLINT_MAIL
 splint_mail2
@@ -328,16 +339,18 @@ banded_mail2
 plate_mail1 ARM_PLATE_MAIL
 plate_mail2
 orcish_platemail ARM_PLATE_MAIL_ORC
+orcish_platemail2
 
 crystal_plate_mail ARM_CRYSTAL_PLATE_MAIL
+crystal_plate_mail2
 
 animal_skin1 ARM_ANIMAL_SKIN
 animal_skin2
 
 troll_hide ARM_TROLL_HIDE
 troll_leather_armour ARM_TROLL_LEATHER_ARMOUR
-green_dragon_scales ARM_DRAGON_HIDE
-green_dragon_scale_mail ARM_DRAGON_ARMOUR
+green_dragon_scales ARM_FIRE_DRAGON_HIDE
+green_dragon_scale_mail ARM_FIRE_DRAGON_ARMOUR
 ice_dragon_hide ARM_ICE_DRAGON_HIDE
 ice_dragon_armour ARM_ICE_DRAGON_ARMOUR
 silver_dragon_scales ARM_STEAM_DRAGON_HIDE
@@ -350,6 +363,8 @@ gold_dragon_hide ARM_GOLD_DRAGON_HIDE
 gold_dragon_armour ARM_GOLD_DRAGON_ARMOUR
 swamp_dragon_hide ARM_SWAMP_DRAGON_HIDE
 swamp_dragon_armour ARM_SWAMP_DRAGON_ARMOUR
+pearl_dragon_hide ARM_PEARL_DRAGON_HIDE
+pearl_dragon_armour ARM_PEARL_DRAGON_ARMOUR
 
 cloak1_leather ARM_CLOAK
 cloak2
@@ -391,6 +406,10 @@ helmet1_visored THELM_HELM
 helmet2_etched
 helmet3
 helmet4_visor
+helmet_horned THELM_HELM_HORNED
+helmet_spiked THELM_HELM_SPIKED
+helmet_plumed THELM_HELM_PLUMED
+helmet_winged THELM_HELM_WINGED
 
 %sdir item/armour
 ###### GLOVES
@@ -453,7 +472,7 @@ i-frost WAND_FROST
 i-slowing WAND_SLOWING
 i-hasting WAND_HASTING
 i-magic_darts WAND_MAGIC_DARTS
-i-healing WAND_HEALING
+i-heal_wounds WAND_HEAL_WOUNDS
 i-paralysis WAND_PARALYSIS
 i-fire WAND_FIRE
 i-cold WAND_COLD
@@ -685,7 +704,7 @@ white
 %sdir item/potion
 %back i-label
 %rim 0
-i-heal POT_HEALING POT_ID_FIRST
+i-curing POT_CURING POT_ID_FIRST
 i-heal-wounds POT_HEAL_WOUNDS
 i-speed POT_SPEED
 i-might POT_MIGHT
@@ -713,7 +732,8 @@ i-cure-mutation POT_CURE_MUTATION
 i-mutation POT_MUTATION
 i-resistance POT_RESISTANCE
 i-blood POT_BLOOD
-i-coagulated-blood POT_BLOOD_COAGULATED POT_ID_LAST
+i-coagulated-blood POT_BLOOD_COAGULATED
+i-water POT_FIZZING POT_ID_LAST
 %back none
 %rim 1
 
@@ -958,6 +978,18 @@ runes/rune_gloorx_vloq MISC_RUNE_GLOORX_VLOQ
 runes/rune_mnoleg MISC_RUNE_MNOLEG
 runes/rune_lom_lobon MISC_RUNE_LOM_LOBON
 runes/rune_snake MISC_RUNE_SNAKE
+runes/rune_swamp MISC_RUNE_SWAMP
+runes/rune_shoals MISC_RUNE_SHOALS
+runes/rune_slime MISC_RUNE_SLIME
+runes/rune_vaults MISC_RUNE_VAULTS
+runes/rune_tomb MISC_RUNE_TOMB
+runes/rune_abyss MISC_RUNE_ABYSS
+runes/rune_demonic_1 MISC_RUNE_DEMONIC
+runes/rune_demonic_2
+runes/rune_demonic_3
+runes/rune_demonic_4
+runes/rune_demonic_5
+runes/rune_demonic_6
 %rim 0
 misc_quad MISC_QUAD_DAMAGE
 %rim 1

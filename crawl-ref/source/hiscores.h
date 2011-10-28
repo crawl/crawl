@@ -1,8 +1,7 @@
-/*
- *  File:       hiscores.h
- *  Summary:    Scorefile manipulation functions
- *  Written by: Gordon Lipford
- */
+/**
+ * @file
+ * @brief Scorefile manipulation functions
+**/
 
 
 #ifndef HISCORES_H
@@ -42,8 +41,7 @@ public:
     void init(const std::string &line);
     std::string xlog_line() const;
 
-    void add_field(const std::string &key,
-                   const char *format, ...);
+    void add_field(const std::string &key, PRINTF(2, ));
 
     std::string str_field(const std::string &) const;
     int int_field(const std::string &) const;
@@ -66,14 +64,14 @@ private:
     std::string raw_line;
 
     std::string version;
+    uint8_t     tiles;
     int         points;
     std::string name;
-    uint32_t    uid;                // for multiuser systems
     species_type race;
     int         job;                // job_type + legacy values
     std::string race_class_name;    // overrides race & cls if non-empty.
     uint8_t     lvl;                // player level.
-    uint8_t     best_skill;         // best skill #
+    skill_type  best_skill;         // best skill #
     uint8_t     best_skill_lvl;     // best skill level
     int         death_type;
     int         death_source;       // NON_MONSTER or monster type
@@ -109,12 +107,17 @@ private:
     int         kills;              // number of monsters killed
     std::string maxed_skills;       // comma-separated list of skills
                                     // at level 27
+    std::string fifteen_skills;     // comma-separated list of skills
+                                    // at level >= 15
     std::string status_effects;     // comma-separated list of status effects
     int         gold;               // Remaining gold.
     int         gold_found;         // Gold found.
     int         gold_spent;         // Gold spent shopping.
 
     uint32_t    fruit_found_mask;   // Mask of fruits found.
+
+    int         zigs;               // Ziggurats completed.
+    int         zigmax;             // Max level reached in a ziggurat.
 
     mutable std::auto_ptr<xlog_fields> fields;
 
@@ -158,6 +161,8 @@ public:
     xlog_fields get_fields() const;
 
     void set_base_xlog_fields() const;
+    std::string short_kill_message() const;
+    std::string long_kill_message() const;
 
 private:
     std::string single_cdesc() const;
@@ -177,8 +182,6 @@ private:
     void set_score_fields() const;
     void fixup_char_name();
 
-    std::string short_kill_message() const;
-    std::string long_kill_message() const;
     std::string make_oneline(const std::string &s) const;
 
     void init_from(const scorefile_entry &other);

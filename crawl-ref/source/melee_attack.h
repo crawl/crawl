@@ -21,6 +21,7 @@ public:
     int       attack_number;
 
     int       to_hit;
+    int       ev_margin;
     int       damage_done;
     int       special_damage;
     int       aux_damage;
@@ -38,7 +39,8 @@ public:
 
     item_def  *weapon;
     int       damage_brand;  // Can be special even if unarmed (transforms)
-    int       wpn_skill, hands;
+    skill_type wpn_skill;
+    int       hands;
     bool      hand_half_bonus;
 
     bool      skip_chaos_message;
@@ -103,17 +105,17 @@ private:
     void check_autoberserk();
     bool check_unrand_effects(bool mondied = false);
     void emit_nodmg_hit_message();
-    void identify_mimic(actor *mon);
 
     std::string debug_damage_number();
     std::string special_attack_punctuation();
     std::string attack_strength_punctuation();
+    std::string evasion_margin_adverb();
 
     std::string atk_name(description_level_type desc) const;
     std::string def_name(description_level_type desc) const;
     std::string wep_name(description_level_type desc = DESC_NOCAP_YOUR,
-                         unsigned long ignore_flags = ISFLAG_KNOW_CURSE
-                                                    | ISFLAG_KNOW_PLUSES) const;
+                         iflags_t ignore_flags = ISFLAG_KNOW_CURSE
+                                               | ISFLAG_KNOW_PLUSES) const;
 
     bool attack_shield_blocked(bool verbose);
     bool apply_damage_brand();
@@ -130,12 +132,15 @@ private:
                           int dam_type,
                           int wpn_brand);
 
+    int inflict_damage(int dam, beam_type flavour = NUM_BEAMS, bool clean = false);
+
     // Returns true if the defender is banished.
     bool distortion_affects_defender();
 
+    void antimagic_affects_defender();
+    void pain_affects_defender();
     void chaos_affects_defender();
     void chaos_affects_attacker();
-    void chaos_killed_defender(monster* def_copy);
     int  random_chaos_brand();
     void do_miscast();
 
@@ -197,19 +202,20 @@ private:
     int  player_stab(int damage);
     int  player_weapon_type_modify(int damage);
 
-    bool player_hits_monster();
+    int  player_hits_monster();
     int  player_calc_base_weapon_damage();
     int  player_calc_base_unarmed_damage();
     void player_exercise_combat_skills();
     bool player_monattk_hit_effects(bool mondied);
     void player_sustain_passive_damage();
-    int  player_staff_damage(int skill);
+    int  player_staff_damage(skill_type skill);
     void player_apply_staff_damage();
     bool player_check_monster_died();
     void player_calc_hit_damage();
     void player_stab_check();
     random_var player_weapon_speed();
     random_var player_unarmed_speed();
+    void player_announce_aux_hit();
     void player_announce_hit();
     std::string player_why_missed();
     void player_warn_miss();

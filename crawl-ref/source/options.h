@@ -5,7 +5,9 @@
 #include "pattern.h"
 #include "newgame_def.h"
 
-class InitLineInput;
+typedef std::map<monster_type, mon_display> mon_glyph_map;
+
+class LineInput;
 struct game_options
 {
 public:
@@ -13,7 +15,7 @@ public:
     void reset_options();
 
     void read_option_line(const std::string &s, bool runscripts = false);
-    void read_options(InitLineInput &, bool runscripts,
+    void read_options(LineInput &, bool runscripts,
                       bool clear_aliases = true);
 
     void include(const std::string &file, bool resolve, bool runscript);
@@ -37,8 +39,8 @@ public:
 
     // View options
     std::vector<feature_override> feature_overrides;
-    std::vector<mon_display>      mon_glyph_overrides;
-    unsigned cset_override[NUM_CSET][NUM_DCHAR_TYPES];
+    mon_glyph_map mon_glyph_overrides;
+    ucs_t cset_override[NUM_DCHAR_TYPES];
 
     std::string save_dir;       // Directory where saves and bones go.
     std::string macro_dir;      // Directory containing macro.txt
@@ -67,7 +69,6 @@ public:
     bool        mlist_allow_alternate_layout;
     bool        messages_at_top;
     bool        mlist_targeting;
-    bool        classic_hud;
     bool        msg_condense_repeats;
     bool        msg_condense_short;
 
@@ -88,24 +89,23 @@ public:
     int         scroll_margin_x;
     int         scroll_margin_y;
 
-    bool        verbose_monster_pane;
-
     int         autopickup_on;
     int         default_friendly_pickup;
+    bool        default_manual_training;
 
+    bool        show_newturn_mark;// Show underscore prefix in messages for new turn
     bool        show_gold_turns; // Show gold and turns in HUD.
-    bool        show_real_turns; // Show real turns instead of actions.
-    bool        show_beam;       // Show targeting beam by default.
+    bool        show_game_turns; // Show game turns instead of player turns.
+    bool        show_no_ctele;   // Show -cTele in the status light area.
 
     uint32_t    autopickups;     // items to autopickup
+    bool        auto_switch;     // switch melee&ranged weapons according to enemy range
     bool        show_inventory_weights; // show weights in inventory listings
-    bool        colour_map;      // add colour to the map
     bool        clean_map;       // remove unseen clouds/monsters
     bool        show_uncursed;   // label known uncursed items as "uncursed"
     bool        easy_open;       // open doors with movement
     bool        easy_unequip;    // allow auto-removing of armour / jewellery
     bool        equip_unequip;   // Make 'W' = 'T', and 'P' = 'R'.
-    bool        easy_butcher;    // autoswap to butchering tool
     bool        always_confirm_butcher; // even if only one corpse
     bool        chunks_autopickup; // Autopickup chunks after butchering
     bool        prompt_for_swap; // Prompt to switch back from butchering
@@ -120,6 +120,7 @@ public:
                                        // always active.
     bool        default_target;  // start targeting on a real target
     bool        autopickup_no_burden;   // don't autopickup if it changes burden
+    skill_focus_mode skill_focus; // is the focus skills available
 
     bool        note_all_skill_levels;  // take note for all skill levels (1-27)
     bool        note_skill_max;   // take note when skills reach new max
@@ -157,7 +158,7 @@ public:
     bool        flush_input[NUM_FLUSH_REASONS]; // when to flush input buff
 
     char_set_type  char_set;
-    FixedVector<unsigned, NUM_DCHAR_TYPES> char_table;
+    FixedVector<ucs_t, NUM_DCHAR_TYPES> char_table;
 
     int         num_colours;     // used for setting up curses colour table (8 or 16)
 
@@ -183,12 +184,12 @@ public:
     std::vector<std::pair<text_pattern, std::string> > autoinscriptions;
     std::vector<text_pattern> note_items;     // Objects to note
     std::vector<int> note_skill_levels;       // Skill levels to note
+    std::vector<std::pair<text_pattern, std::string> > auto_spell_letters;
 
     bool        autoinscribe_artefacts; // Auto-inscribe identified artefacts.
     bool        autoinscribe_cursed; // Auto-inscribe previosly cursed items.
 
     bool        pickup_thrown;  // Pickup thrown missiles
-    bool        pickup_dropped; // Pickup dropped objects
     int         travel_delay;   // How long to pause between travel moves
     int         explore_delay;  // How long to pause between explore moves
 
@@ -213,9 +214,6 @@ public:
 
     bool        show_waypoints;
 
-    bool        classic_item_colours;   // Use old-style item colours
-    bool        item_colour;    // Colour items on level map
-
     unsigned    evil_colour; // Colour for things player's god dissapproves
 
     unsigned    detected_monster_colour;    // Colour of detected monsters
@@ -227,9 +225,6 @@ public:
     unsigned    may_stab_brand;     // Highlight potential stab candidates
     unsigned    feature_item_brand; // Highlight features covered by items.
     unsigned    trap_item_brand;    // Highlight traps covered by items.
-
-    bool        trap_prompt;        // Prompt when stepping on mechnical traps
-                                    // without enough hp (using trapwalk.lua)
 
     // What is the minimum number of items in a stack for which
     // you show summary (one-line) information
@@ -249,8 +244,13 @@ public:
     // How much more eager greedy-explore is for items than to explore.
     int         explore_item_greed;
 
+    // How much autoexplore favors visiting squares next to walls.
+    int         explore_wall_bias;
+
     // Some experimental improvements to explore
     bool        explore_improved;
+
+    bool        travel_key_stop;   // Travel stops on keypress.
 
     std::vector<sound_mapping> sound_mappings;
     std::vector<colour_mapping> menu_colour_mappings;
@@ -260,8 +260,6 @@ public:
     bool       menu_colour_shops;   // Use menu colours in shops?
 
     std::vector<menu_sort_condition> sort_menus;
-
-    bool       menu_cursor;         // Use item selection cursor in menus.
 
     int         dump_kill_places;   // How to dump place information for kills.
     int         dump_message_count; // How many old messages to dump
@@ -323,8 +321,10 @@ public:
 
 #ifdef USE_TILE
     char        tile_show_items[20]; // show which item types in tile inventory
-    bool        tile_title_screen;   // display title screen?
+    bool        tile_skip_title;     // wait for a key at title screen?
     bool        tile_menu_icons;     // display icons in menus?
+#endif
+#ifdef USE_TILE_LOCAL
     // minimap colours
     char        tile_player_col;
     char        tile_monster_col;
@@ -358,11 +358,17 @@ public:
     int         tile_font_lbl_size;
     std::string tile_font_tip_file;
     int         tile_font_tip_size;
+#ifdef USE_FT
+    bool        tile_font_ft_light;
+#endif
     // window settings
     screen_mode tile_full_screen;
     int         tile_window_width;
     int         tile_window_height;
     int         tile_map_pixels;
+#endif
+
+#ifdef USE_TILE
     bool        tile_force_overlay;
     // display settings
     int         tile_update_rate;
@@ -374,6 +380,8 @@ public:
     bool        tile_show_minihealthbar;
     bool        tile_show_minimagicbar;
     bool        tile_show_demon_tier;
+    bool        tile_force_regenerate_levels;
+    std::vector<std::string> tile_layout_priority;
 #endif
 
     typedef std::map<std::string, std::string> opt_map;
@@ -407,8 +415,7 @@ private:
     void clear_feature_overrides();
     void clear_cset_overrides();
     void add_cset_override(char_set_type set, const std::string &overrides);
-    void add_cset_override(char_set_type set, dungeon_char_type dc,
-                           unsigned symbol);
+    void add_cset_override(char_set_type set, dungeon_char_type dc, int symbol);
     void add_feature_override(const std::string &);
 
     void add_message_colour_mappings(const std::string &);
@@ -433,7 +440,6 @@ private:
 
     void split_parse(const std::string &s, const std::string &separator,
                      void (game_options::*add)(const std::string &));
-    void add_mon_glyph_override(monster_type mtype, mon_display &mdisp);
     void add_mon_glyph_overrides(const std::string &mons, mon_display &mdisp);
     void add_mon_glyph_override(const std::string &);
     mon_display parse_mon_glyph(const std::string &s) const;
@@ -442,6 +448,11 @@ private:
     static const std::string interrupt_prefix;
 };
 
+ucs_t get_glyph_override(int c);
+
+#ifdef DEBUG_GLOBALS
+#define Options (*real_Options)
+#endif
 extern game_options  Options;
 
 #endif

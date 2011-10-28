@@ -1,6 +1,7 @@
-/*  File:       mon-clone.cc
- *  Summary:    Code to clone existing monsters and to create player illusions.
- */
+/**
+ * @file
+ * @brief Code to clone existing monsters and to create player illusions.
+**/
 
 #include "AppHdr.h"
 
@@ -121,6 +122,7 @@ static void _mons_summon_monster_illusion(monster* caster,
         clone->del_ench(ENCH_CHARM);
         clone->del_ench(ENCH_STICKY_FLAME);
         clone->del_ench(ENCH_CORONA);
+        clone->del_ench(ENCH_SILVER_CORONA);
 
         behaviour_event(clone, ME_ALERT, MHITNOT, caster->pos());
 
@@ -141,13 +143,12 @@ static void _mons_summon_monster_illusion(monster* caster,
 
 static void _init_player_illusion_properties(monsterentry *me)
 {
-
     me->holiness = you.holiness();
     // [ds] If we're cloning the player, use their base holiness, not
     // the effects of their Necromutation spell. This is important
     // since Necromutation users presumably also have Dispel Undead
     // available to them. :P
-    if (transform_changed_physiology() && me->holiness == MH_UNDEAD)
+    if (form_changed_physiology() && me->holiness == MH_UNDEAD)
         me->holiness = MH_NATURAL;
 }
 
@@ -165,7 +166,7 @@ enchant_type player_duration_to_mons_enchantment(duration_type dur)
     case DUR_SLOW:      return ENCH_SLOW;
     case DUR_HASTE:     return ENCH_HASTE;
     case DUR_MIGHT:     return ENCH_MIGHT;
-    case DUR_BERSERK: return ENCH_BERSERK;
+    case DUR_BERSERK:   return ENCH_BERSERK;
     case DUR_POISONING: return ENCH_POISON;
     case DUR_SWIFTNESS: return ENCH_SWIFT;
 
@@ -186,7 +187,7 @@ static void _mons_load_player_enchantments(monster* creator, monster* target)
                 continue;
             target->add_ench(mon_enchant(ench,
                                          0,
-                                         creator->kill_alignment(),
+                                         creator,
                                          you.duration[i]));
         }
     }
@@ -301,6 +302,7 @@ int clone_mons(const monster* orig, bool quiet, bool* obvious,
     ASSERT(!actor_at(pos));
 
     *mons          = *orig;
+    mons->set_new_monster_id();
     mons->set_position(pos);
     mgrd(pos)    = mons->mindex();
 
@@ -312,7 +314,7 @@ int clone_mons(const monster* orig, bool quiet, bool* obvious,
         if (old_index == NON_ITEM)
             continue;
 
-        const int new_index = get_item_slot(0);
+        const int new_index = get_mitm_slot(0);
         if (new_index == NON_ITEM)
         {
             mons->unequip(mitm[old_index], i, 0, true);

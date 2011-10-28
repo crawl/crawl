@@ -1,13 +1,14 @@
-/*
- * File:      exclude.cc
- * Summary:   Code related to travel exclusions.
- */
+/**
+ * @file
+ * @brief Code related to travel exclusions.
+**/
 
 #include "AppHdr.h"
 
 #include "exclude.h"
 
 #include <algorithm>
+#include <sstream>
 
 #include "cloud.h"
 #include "coord.h"
@@ -17,7 +18,6 @@
 #include "map_knowledge.h"
 #include "mon-util.h"
 #include "options.h"
-#include "stuff.h"
 #include "env.h"
 #include "tags.h"
 #include "terrain.h"
@@ -28,20 +28,14 @@
 static bool _mon_needs_auto_exclude(const monster* mon, bool sleepy = false)
 {
     if (mons_is_stationary(mon))
-    {
-        if (sleepy)
-            return (false);
+        return (!sleepy);
 
-        // Don't give away mimics unless already known.
-        return (!mons_is_mimic(mon->type)
-                || testbits(mon->flags, MF_KNOWN_MIMIC));
-    }
     // Auto exclusion only makes sense if the monster is still asleep.
     return (mon->asleep());
 }
 
 // Check whether a given monster is listed in the auto_exclude option.
-bool need_auto_exclude(const monster* mon, bool sleepy)
+static bool _need_auto_exclude(const monster* mon, bool sleepy = false)
 {
     // This only works if the name is lowercased.
     std::string name = mon->name(DESC_BASENAME,
@@ -61,13 +55,26 @@ bool need_auto_exclude(const monster* mon, bool sleepy)
     return (false);
 }
 
+// Nightstalker reduces LOS, so reducing the maximum exclusion radius
+// only makes sense. This is only possible because it's a permanent
+// mutation; the lantern of Shadows should not have this effect.
+// TODO: update the radiuses on wield/unwield, we already need to do that
+// when gaining/losing nightstalker.
+static int _get_full_exclusion_radius()
+{
+    return (LOS_RADIUS - player_mutation_level(MUT_NIGHTSTALKER));
+}
+
 // If the monster is in the auto_exclude list, automatically set an
 // exclusion.
 void set_auto_exclude(const monster* mon)
 {
-    if (need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
+    if (!is_map_persistent())
+        return;
+
+    if (_need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
     {
-        int rad = LOS_RADIUS;
+        int rad = _get_full_exclusion_radius();
         if (mon->type == MONS_HYPERACTIVE_BALLISTOMYCETE)
             rad = 2;
         set_exclude(mon->pos(), rad, true);
@@ -89,7 +96,7 @@ void set_auto_exclude(const monster* mon)
 // player in sight. If sleepy is true, stationary monsters are ignored.
 void remove_auto_exclude(const monster* mon, bool sleepy)
 {
-    if (need_auto_exclude(mon, sleepy))
+    if (_need_auto_exclude(mon, sleepy))
     {
         del_exclude(mon->pos());
 #ifdef USE_TILE
@@ -357,6 +364,25 @@ bool is_exclude_root(const coord_def &p)
     return (curr_excludes.get_exclude_root(p));
 }
 
+int get_exclusion_radius(const coord_def &p)
+{
+    if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
+    {
+        if (!exc->radius)
+            return 1;
+        else
+            return exc->radius;
+    }
+    return 0;
+}
+
+std::string get_exclusion_desc(const coord_def &p)
+{
+    if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
+        return exc->desc;
+    return "";
+}
+
 #ifdef USE_TILE
 // update Gmap for squares surrounding exclude centre
 static void _tile_exclude_gmap_update(const coord_def &p)
@@ -403,7 +429,7 @@ void deferred_exclude_update()
 void clear_excludes()
 {
     // Sanity checks
-    if (!player_in_mappable_area())
+    if (!is_map_persistent())
         return;
 
 #ifdef USE_TILE
@@ -424,19 +450,38 @@ void clear_excludes()
     _exclude_update();
 }
 
+static void _exclude_gate(const coord_def &p, bool del = false)
+{
+    std::set<coord_def> all_doors;
+    find_connected_identical(p, grd(p), all_doors);
+    for (std::set<coord_def>::const_iterator dc = all_doors.begin();
+         dc != all_doors.end(); ++dc)
+    {
+        if (del)
+            del_exclude(*dc);
+        else
+            set_exclude(*dc, 0);
+    }
+}
+
 // Cycles the radius of an exclusion, including "off" state;
 // may start at 0 < radius < LOS_RADIUS, but won't cycle there.
 void cycle_exclude_radius(const coord_def &p)
 {
     if (travel_exclude *exc = curr_excludes.get_exclude_root(p))
     {
-        if (exc->radius == LOS_RADIUS)
+        if (feat_is_door(grd(p)))
+        {
+            _exclude_gate(p, exc->radius == 0);
+            return;
+        }
+        if (exc->radius > 0)
             set_exclude(p, 0);
         else
             del_exclude(p);
     }
     else
-        set_exclude(p, LOS_RADIUS);
+        set_exclude(p, _get_full_exclusion_radius());
 }
 
 // Remove a possible exclude.
@@ -450,7 +495,7 @@ void del_exclude(const coord_def &p)
 void set_exclude(const coord_def &p, int radius, bool autoexcl, bool vaultexcl,
                  bool defer_updates)
 {
-    if (!player_in_mappable_area()) // currently only Abyss
+    if (!is_map_persistent())
         return;
 
     if (!in_bounds(p))
@@ -545,6 +590,11 @@ std::string exclude_set::get_exclusion_desc()
          it != exclude_roots.end(); ++it)
     {
         travel_exclude &ex = it->second;
+
+        // Don't count cloud exclusions.
+        if (strstr(ex.desc.c_str(), "cloud"))
+            continue;
+
         if (ex.desc != "")
             desc.push_back(ex.desc);
         else

@@ -13,6 +13,7 @@ NAME:   orc_0_dummy
 TAGS:   orc_entry
 WEIGHT: 50
 ORIENT: float
+KFEAT:  O = enter_orcish_mines
 MAP
 O
 ENDMAP
@@ -27,6 +28,7 @@ ITEM: % / scroll of teleportation / scroll of remove curse / scroll of identify
 ITEM: % / w:2 * / scroll of blinking / scroll of recharging / scroll of fear
 SHUFFLE: %1
 ORIENT: float
+KFEAT: O = enter_orcish_mines
 MAP
            xxx
         xxxxOxxxx
@@ -55,6 +57,7 @@ NAME: david_orc_2
 TAGS: orc_entry no_rotate
 MONS: weight:50 orc / orc warrior / nothing
 ORIENT: float
+KFEAT: O = enter_orcish_mines
 MAP
 xxxx..@..xxxx
 x.....I.....x
@@ -75,6 +78,7 @@ TAGS: orc_entry
 MONS: weight:80 nothing / weight:50 orc / orc priest / orc wizard / orc warrior
 MONS: nothing / orc warrior / warg / orc priest
 ORIENT: float
+KFEAT: O = enter_orcish_mines
 MAP
 1.....@....11
 1............
@@ -103,6 +107,7 @@ MONS: weight:30 orc / orc warrior
 KFEAT: X = armour shop / .
 KFEAT: Y = weapon shop / .
 SUBST: ? = 1 $
+KFEAT: O = enter_orcish_mines
 MAP
 @.........@
 ...??..??..
@@ -129,6 +134,7 @@ SUBST: d = ~:16 .
 KFEAT: X = .
 KFEAT: Y = blade trap
 KFEAT: Z = blade trap
+KFEAT: O = enter_orcish_mines
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 xx?xxx?xxx?xxx?xxxxxxx
@@ -166,6 +172,7 @@ MONS:    orc w:32 / w:7 orc warrior / w:1 orc knight
 MONS:    orc w:32 / w:7 orc warrior
 : end
 SUBST:   x : cxv
+KFEAT:   O = enter_orcish_mines
 MAP
 xxxxxxxxxxxxxxx
 x......O......x
@@ -193,6 +200,7 @@ KFEAT:   1 = 1
 ITEM:    club, potion of confusion, slice of pizza, sausage / weight:40 nothing
 ITEM:    potion of confusion / potion of water
 SHUFFLE: defO
+KFEAT:   O = enter_orcish_mines
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x.........g..........2x...w4xxx
@@ -220,6 +228,7 @@ MONS:  orc warrior
 SUBST: G = 4
 : end
 SUBST: c = c:1000 x
+KFEAT: O = enter_orcish_mines
 MAP
 .............................
 .Iwwwwwwwwwwwwwwwwwwwwwwwwww.
@@ -247,6 +256,7 @@ MONS:   orc warrior / orc priest / orc wizard / nothing
 MONS:   warg / ogre / nothing
 ORIENT: float
 SUBST:  ? = x . $:1
+KFEAT: O = enter_orcish_mines
 MAP
 xxx.xxxxxxxxxxxxxxxxxxx
 xxx?.x?x?xx?xxx??xx?xxx
@@ -285,8 +295,9 @@ SUBST: Z : c:60 .
 SUBST: X : c:60 .
 SUBST: v : c:60 .
 SUBST: b : c:60 .
-KITEM: 2 = knife
+KITEM: 2 = dagger
 KFEAT: 2 = 2
+KFEAT: O = enter_orcish_mines
 #
 MAP
 ..............................
@@ -319,6 +330,7 @@ ORIENT: float
 MONS:   orc w:40 / orc wizard w:2 / orc priest w:2, orc warrior
 SUBST:  ? = .x
 SUBST:  ! : .$
+KFEAT: O = enter_orcish_mines
 MAP
 x??@....@....@??x
 xx??.........??xx
@@ -350,6 +362,7 @@ SUBST:  ? = @ x:20 + =
 COLOUR: ! = brown
 FTILE:  ! = floor_orc
 SUBST:  ! : .$
+KFEAT:  O = enter_orcish_mines
 MAP
 xx?xxxxxxx?xx
 x111xxxxx111x
@@ -372,13 +385,13 @@ ENDMAP
 NAME:   zombieorc1_lemuel
 TAGS:   orc_entry
 ORIENT: float
-DEPTH:  D:11
 MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
         hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
 MONS:   ogre zombie / troll zombie w:3 / hill giant zombie w:1
 MONS:   hungry ghost / phantom / w:1 wraith
 MONS:   w:1 orc sorcerer / orc priest / nothing
 SUBST:  ? = x . $:1
+KFEAT:  O = enter_orcish_mines
 MAP
 xxx.xxxxxxxxxxxxxxxxxxx
 xxx?.x?x?xx?xxx??xx?xxx
@@ -402,12 +415,11 @@ xxxxxxxxxxxxxxxxxxxx.xx
 ENDMAP
 
 #######################
-# Haunted orc entrance
+# Haunted orc entrance II
 #
 NAME:   zombieorc2_lemuel
 TAGS:   orc_entry
 ORIENT: float
-DEPTH:  D:11
 MONS:   orc zombie / orc skeleton w:2 / goblin zombie w:2 /\
         hobgoblin zombie w:2 / goblin skeleton w:1 / hobgoblin skeleton w:1
 MONS:   ogre zombie / troll zombie w:3 / hill giant zombie w:1
@@ -415,6 +427,7 @@ MONS:   hungry ghost / phantom / w:1 wraith
 MONS:   w:1 orc sorcerer / orc priest
 SUBST:  4 = 34
 SUBST:  ? = x . $:1
+KFEAT:  O = enter_orcish_mines
 MAP
 xxxxx..@..xxxxx
 x21....I....12x
@@ -427,6 +440,82 @@ x.............x
 x11...111...11x
 x21....I....12x
 xxxxx..@..xxxxx
+ENDMAP
+
+#######################
+# Guarded by dogs
+#
+NAME:   minmay_orc_entry_guard_dogs
+TAGS:   orc_entry
+WEIGHT: 5
+ORIENT: float
+MONS:   patrolling warg / nothing w:2
+KFEAT:  O = enter_orcish_mines
+MAP
+1.1
+.O.
+1.1
+ENDMAP
+
+#######################
+# Small temple
+#
+NAME:   minmay_orc_entry_temple_small
+TAGS:   orc_entry
+ORIENT: float
+MONS:   orc w:40 / orc warrior / orc wizard, patrolling orc priest
+SUBST:  " = 1...
+KFEAT:  _ = altar_beogh
+KFEAT:  O = enter_orcish_mines
+MAP
+ccccccc
+c"""""c
+c"""""c
+c"2_2"c
+c"""""c
+c"""""c
+ccc+ccc
+cI"""Ic
+ .""".
+ ..O..
+ .....
+ENDMAP
+
+#######################
+# Large temple
+NAME:   minmay_orc_entry_temple_large
+TAGS:   orc_entry
+WEIGHT: 1
+ORIENT: float
+MONS:   orc w:40 / orc warrior / orc wizard, patrolling orc priest
+SUBST:  " = 1.......
+SUBST:  ' = $.
+KFEAT:  _ = altar_beogh
+KFEAT:  O = enter_orcish_mines
+MAP
+ccccc   ccccc
+c'''c   c'''c
+c'''c   c'''c
+c'''c   c'''c
+cc+ccccccc+cc
+c"""""""""""c
+c"""""""""""c
+c"""""""""""c
+c"""I"""I"""c
+c"""""2"""""c
+c""""2_2""""c
+c"""""2"""""c
+c"""I"""I"""c
+c"""""""""""c
+ccc"""""""ccc
+ccc"""""""ccc
+cccccc+cccccc
+cccccI.Iccccc
+ccccI...Icccc
+cccI.....Iccc
+   .......
+   ...O...
+   .......
 ENDMAP
 
 
@@ -449,7 +538,7 @@ ENDMAP
 ###################################
 # mage tower -- either orc with assistants, or ogre with guards
 NAME:    mines4_lemuel
-TAGS:    mini_float no_rotate
+TAGS:    no_rotate
 SUBST:   ? = +=
 SUBST:   d = $d
 SUBST:   I = IG
@@ -471,7 +560,6 @@ ENDMAP
 ###################################
 # warg stables, with goblin stableboy
 NAME:  mines5_lemuel
-TAGS:  mini_float
 SUBST: ?: wx
 MONS:  warg / wolf,goblin
 MAP
@@ -524,8 +612,7 @@ ENDMAP
 # hidden treasure chamber
 #
 NAME: mines2_lemuel
-TAGS: mini_float
-SUBST: ? = x.
+SUBST: ? = x@
 MAP
   ?x=x?
  ?xx.xx?
@@ -539,13 +626,12 @@ ENDMAP
 # treasure chamber with oklob plant
 #
 NAME:  mines3_lemuel
-TAGS:  mini_float
 SUBST: ? = +=.
-SUBST: ! = x.
+SUBST: ! = x@
 SUBST: $ = $:30 *
 MONS:  oklob plant
 MAP
-    !.!
+    !@!
    !x?x!
    !x.xx!
   !xx..xx!
@@ -588,4 +674,424 @@ xXX.65556Xx
 xxXX.6.6XXx
 xxxXX..XXxx
  xxxx@@@xx
+ENDMAP
+
+##################################################
+# Orcish barracks (minmay)
+#
+NAME:   minmay_orc_barracks
+DEPTH:  Orc:2-
+MONS:   orc / orc warrior w:2, orc knight / orc warlord
+SUBST:  c : cx
+MAP
+ccccccccccccccccccccc
+c1.1.1.1.1.1.1.1c...c
++...............+.2.c
+c1.1.1.1.1.1.1.1c...c
+ccccccccccccccccccccc
+ENDMAP
+
+##################################################
+# A temple (minmay)
+#
+NAME:   minmay_orc_temple_a
+TAGS:   mini_float
+DEPTH:  Orc
+MONS:   orc, patrolling orc priest
+KFEAT:  _ = altar_beogh
+MAP
+ccccccc
+c..2..c
+c2._.2c
+c.....c
+ccc+ccc
+ I...I
+ .111.
+  .1.
+ENDMAP
+
+##################################################
+# Another temple (minmay)
+#
+NAME:   minmay_orc_temple_b
+TAGS:   mini_float
+DEPTH:  Orc
+MONS:   orc / nothing w:40, patrolling orc priest / nothing w:5
+KFEAT:  _ = altar_beogh
+MAP
+  ccccccc
+  cI222Ic
+  c.....c
+  c2._.2c
+  c.....c
+  cI...Ic
+ccccc+ccccc
+c.........c
+c.c11111c.c
+c..11111..c
+c.c11111c.c
+c..11111..c
+c.c11111c.c
+c..11111..c
+c.c11111c.c
+c..11111..c
+c.c11111c.c
+c.........c
+cccc+++cccc
+ ccI...Icc
+  ..0....
+   ...0.
+    .0.
+ENDMAP
+
+##################################################
+# Still another temple (minmay)
+#
+NAME:   minmay_orc_temple_c
+TAGS:   mini_float
+DEPTH:  Orc:2-
+MONS:   orc, orc priest, orc high priest
+SUBST:  . = 1 .:200
+SUBST:  . = 0 .:200
+SUBST:  " = .
+KFEAT:  _ = altar_beogh
+MAP
+ccccccccccccccccccc
+c.................c
+c.................c
+c..I..c..c..c..I..c
+c.................c
+c.................c
+c..c..cc+++cc..c..c
+c.....c""2""c.....c
+c.....c2"""2c.....c
+c..c..+""_""+..c..c
+c.....c2"""2c.....c
+c.....cI"3"Ic.....c
+c..c..ccccccc..c..c
+c.................c
+c.................c
+c..I..c..c..c..I..c
+c.................c
+c.................c
+cccccccc+++cccccccc
+     .........
+     .I.2.2.I.
+     .........
+      .......
+        ...
+ENDMAP
+
+#######################
+# Yet Another Temple
+NAME:   bh_open_orc_temple
+TAGS:   mini_float
+DEPTH:  Orc:3-
+SUBST:  " = 1.......
+MONS:   orc w:8 / orc priest w:2 / orc warrior
+MONS:   patrolling orc high priest
+KFEAT:  _ = altar_beogh
+SUBST:  ' = $.
+MAP
+     cccccccccc
+ .............c
+...I..I..I..I.c
+.........""...cc
+.........""...cc
+..I..I..I""I'''c
+........""""'''c
+.I......"""2'_'c
+........""""'''c
+..I..I..I""I'''c
+.........""...cc
+.........""...cc
+..I...I..I..I.cc
+ .............c
+     cccccccccc
+ENDMAP
+
+##################################################
+# Treasure chamber (minmay)
+#
+NAME:   minmay_orc_treasury
+TAGS:   mini_float
+DEPTH:  Orc:3-
+MONS:   orc warlord band, orc knight band
+SUBST:  $ = $:100 *|
+MAP
+vvvvvvvvvvvvvvvvvvvvvvv
+v$$$$$$$$v......9v||||v
+v$$$$$$$$+.......vvvv+v
+v$$$$$$$$v...2........v
+v$$$vvvvvv............v
+v$$vv.......9....v..1.v
+v$vv............vv....v
+vvv...9.........vv....v
+v........1......vv....v
+v..2.....v......vv...9v
+v.......vvv.....vv....v
+v........v.9.....v....v
+v.....................v
+vv...................vv
+ vv......vvvvv......vv
+  vv....vvvvvvv....vv
+   vv++vvvvvvvvv++vv
+    .........0.....
+    ....v.v.v.v.0..
+    .0.............
+    ...............
+     ......0....0.
+     ...0.........
+      ...........
+       ......0..
+         .....
+ENDMAP
+
+##################################################
+NAME:    st_orc_town
+TAGS:    no_rotate no_item_gen
+PLACE:   Orc:4
+MONS:    orc / nothing
+#
+: local brnd = crawl.random2(8)
+: if brnd > 5 then
+MONS:    orc wizard, orc sorcerer
+: elseif brnd > 2 then
+MONS:    orc priest, orc high priest
+: else
+MONS:    orc warrior, orc knight
+: end
+#
+MONS:    warg / nothing
+KFEAT:   S = any shop
+KFEAT:   _ = altar_beogh
+SUBST:   5 = 32, A:+, C:+, B:c, D:c
+SUBST:   T : TIII
+SHUFFLE: AC/BD
+MAP
+...................................
+...................................
+..cccccc..ccc.ccc.ccccccc..cccccc..
+..cS521c..ccc.ccc.ccccccc..c125Sc..
+..c5211D..ccc.ccc4ccccccc..B.125c..
+..c2111c4....1......121..4.c..12c..
+..cccCcc...11211.4ccc1ccc..ccAccc..
+@......4..1T232T1.ccc.ccc.4.......@
+..cccCcc...112114.ccc.ccc.cccAccc..
+..c11..c4.ccc+ccc.ccc1ccc4c...11c..
+..c211.D..c1...1c...131...B..112c..
+..c5211c..c2.3.2c4ccc1ccc.c.1125c..
+..cS521c..c1._.1c.ccc.ccc.c1125Sc..
+..cccccc..ccccccc.ccc.ccc.ccccccc..
+...................................
+...................................
+ENDMAP
+
+##################################################
+NAME:    st_orc_ogre_mass
+TAGS:    no_item_gen no_monster_gen
+PLACE:   Orc:4
+MONS:    ogre / nothing w:5, two-headed ogre / nothing w:5, ogre mage
+KMONS:   S = ogre / nothing w:5
+KFEAT:   S = any shop
+MAP
+  ..........@.........
+ ......................
+...xxxxxxxx..xxxxxxxx...
+..xxxx............xxxx..
+..xx.......11.......xx..
+..x..212..1221..212..x..
+....2111213SS3121112....
+....2111213SS3121112....
+..x..212..1221..212..x..
+..xx.......11.......xx..
+..xxxx............xxxx..
+...xxxxxxxx..xxxxxxxx...
+ ......................
+  ....................
+ENDMAP
+
+##################################################
+NAME:    st_orc_rangers
+TAGS:    no_rotate no_item_gen no_monster_gen no_pool_fixup
+PLACE:   Orc:4
+MONS:    orc warrior w:1 ; crossbow . bolt . halberd | war axe | spiked flail /\
+         orc w:10 ; crossbow . bolt . trident | hand axe | mace
+MONS:    orc warrior ; crossbow . bolt . glaive | broad axe | battleaxe | great mace
+MONS:    orc knight ; crossbow . bolt . glaive | broad axe | great mace
+MONS:    orc warrior
+MONS:    centaur w:20 / centaur warrior w:1 / nothing w:21
+SUBST:   3 = 23
+KFEAT:   S = any shop
+MAP
+  ...............@...............
+ .................................
+...cc..cc..cc...ccc...cc..cc..cc...
+..cc..........wwcccww..........cc..
+..c..5.......wwwcccwww.......5..c..
+....5...5..wwwwcccccwwww..5...5....
+..c....5.wwwwccccSccccwwww.5....c..
+..c...5.wwwwcccc4.4ccccwwww.5...c..
+........1221...34S43...1221........
+........1221...34S43...1221........
+..c...5.wwwwcccc4.4ccccwwww.5...c..
+..c....5.wwwwccccSccccwwww.5....c..
+....5...5..wwwwcccccwwww..5...5....
+..c..5.......wwwcccwww.......5..c..
+..cc..........wwcccww..........cc..
+...cc..cc..cc...ccc...cc..cc..cc...
+ .................................
+  ...............................
+ENDMAP
+
+##################################################
+NAME:    st_orc_mages
+TAGS:    no_item_gen no_monster_gen
+PLACE:   Orc:4
+MONS:    orc / nothing, orc wizard / nothing, orc sorcerer
+MONS:    orc priest / nothing, orc high priest, orc warrior
+KFEAT:   S = any shop
+SHUFFLE: 23/45
+MAP
+  ...................
+ ...ccccccccccccccc...
+...cc4.4...6...4.4cc...
+..cc4.2.4..6..4.2.4cc..
+..c..4.2.ccccc.2.4..c..
+..c.2.2.2.c.c.2.2.2.c..
+..c..2.2c.....c2.2..c..
+..c...2ccc.3.ccc2...c..
+..c..c..c.....c..c..c..
+..11.cc...cSc...cc.11..
+..61.c..3.S5S.3..c.16.@
+..11.cc...cSc...cc.11..
+..c..c..c.....c..c..c..
+..c...2ccc.3.ccc2...c..
+..c..2.2c.....c2.2..c..
+..c.2.2.2.c.c.2.2.2.c..
+..c..4.2.ccccc.2.4..c..
+..cc4.2.4..6..4.2.4cc..
+...cc4.4...6...4.4cc...
+ ...ccccccccccccccc...
+  ...................
+ENDMAP
+
+##################################################
+NAME:    st_orc_pillars
+TAGS:    no_item_gen no_monster_gen
+PLACE:   Orc:4
+MONS:    orc / nothing, orc warrior / nothing, orc knight / nothing
+MONS:    orc priest / nothing, orc high priest
+KFEAT:   S = any shop
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  ccccccccccccccccccccccccccccccccccccccx
+  cccccc.....ccccccccccccc..5..cccccccccx
+  cccc.44.44.44ccccccccc.........cccccccx
+  cc1..44.44.44..ccccc22..33.33..22cccccx
+  c1111...........ccc.22.........22.ccccx
+ .c.c1c.c.c.c1c.c.c.c.c1c4c4c4c4c4c.cSccx
+.....111.222.11.3.....11..2...2...2.5.Scx
+@........222.11.33c5c.112.2.2.2.2.2.c.ccx
+.....111.222.11.3.....11..2...2...2.5.Scx
+ .c.c1c.c.c.c1c.c.c.c.c1c4c4c4c4c4c.cSccx
+  c1111...........ccc.22.........22.ccccx
+  cc1..44.44.44..ccccc22..33.33..22cccccx
+  cccc.44.44.44ccccccccc.........cccccccx
+  cccccc.....ccccccccccccc..5..cccccccccx
+  ccccccccccccccccccccccccccccccccccccccx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##################################################
+NAME:    st_orc_congregation
+TAGS:    no_item_gen no_monster_gen
+PLACE:   Orc:4
+MONS:    orc / nothing, orc warrior / nothing, orc priest / nothing
+MONS:    orc wizard / nothing, orc knight, orc high priest, orc sorcerer
+KMONS:   V = orc warlord
+KFEAT:   V = T
+# This one has a lot more high level orcs than the rest,
+# so instead of adding more shops, guarantees good shops.
+KFEAT:   S = general shop
+KFEAT:   A = antique armour shop
+KFEAT:   B = antique weapon shop
+KFEAT:   C = book shop / jewellery shop
+SHUFFLE: 74/63
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xcccccccccccccccccccccccccccx
+xc1111.ccC..ccccc..Bcc.1111cx
+xc122...ccS..ccc..Acc...221cx
+xc122....cc...c...cc....221cx
+xcc...7...ccc...ccc...7...ccx
+xccc..4.33.........33.4..cccx
+xcccc.4..33..222..33..4.ccccx
+xcccc.4ccc33.222.33ccc4.ccccx
+xcccc.4ccc.6..5..6.ccc4.ccccx
+xcccc..ccc.........ccc..ccccx
+xcccc..ccc..5.V.5..ccc..ccccx
+xcccc..ccc.........ccc..ccccx
+xcccc.4ccc.7..6..7.ccc4.ccccx
+xcccc.4ccc...222...ccc4.ccccx
+xcccc.4......222......4.ccccx
+xc1...4...............4...1cx
+xc122.4..333.....333..4.221cx
+xc122..ccc333222333ccc..221cx
+xc1111.ccc.1122211.ccc.1111cx
+xccccccccc.11...11.cccccccccx
+xccccccccc.11...11.cccccccccx
+xccccccccc.1.....1.cccccccccx
+xccccccccccc.....cccccccccccx
+          .........
+            ..@..
+ENDMAP
+
+##################################################
+NAME:    st_orc_open
+TAGS:    no_item_gen no_monster_gen
+PLACE:   Orc:4
+MONS:    ogre, two-headed ogre, troll, rock troll w:19 / iron troll w:1
+MONS:    ogre mage, hill giant w:14 / ettin w:1, cyclops w:29 / stone giant w:1
+KFEAT:   S = any shop
+MAP
+ .....
+..111..  .... ....
+..151....4....3S3..
+..111.....321..3..11
+ .......2.252......1
+  ....6...123..7..@
+   ..S.3...........
+  ..4........6.1S.
+  ...3.7..S2.. 11.
+   .... ....
+ENDMAP
+
+##################################################
+NAME:    st_orc_elflike
+TAGS:    no_item_gen no_monster_gen
+PLACE:   Orc:4
+MONS:    orc high priest, orc sorcerer, orc knight
+MONS:    orc warrior, orc priest, orc wizard
+KFEAT:   S = any shop
+MAP
+xxxxxxxxxxxxxxxxxxxxxxx
+xcccccccccccccccccccccx
+xccccccS.......Sccccccx
+xccccS...cc.cc...Sccccx
+xccc...cc3...3cc...cccx
+xcc5.cc3...1...3cc.5ccx
+xcc5...............5ccx
+xcc..c2..1...1..2c..ccx
+xcc..cc2.......2cc..ccx
+xc....cc.......cc....cx
+xc.c6.....c.c.....6c.cx
+xc.cc6....c.c....6cc.cx
+xc..ccc444c.c444ccc..cx
+xcc..cccccc.cccccc..ccx
+xccc...cccc.cccc...cccx
+xccccc...........cccccx
+xcccccccccc.ccccccccccx
+xcccccccccc.ccccccccccx
+          .@.
 ENDMAP

@@ -1,15 +1,15 @@
-/*
- *  File:       sqldbm.cc
- *  Summary:    dbm wrapper for SQLite
- *  Written by: Darshan Shaligram
- */
+/**
+ * @file
+ * @brief dbm wrapper for SQLite
+**/
 
 #include "AppHdr.h"
 
-#include "libutil.h"
 #include "sqldbm.h"
 #include "stuff.h"
+#include "syscalls.h"
 #include <fcntl.h>
+#include <unistd.h>
 #include <cstring>
 
 #ifdef USE_SQLITE_DBM
@@ -80,36 +80,47 @@ int SQL_DBM::open(const std::string &s)
     if (!s.empty())
         dbfile = s;
 
-    if (!dbfile.empty())
+    if (dbfile.empty())
     {
-        if (dbfile.find(".db") != dbfile.length() - 3)
-            dbfile += ".db";
-
-#ifdef ANCIENT_SQLITE
-        if (ec(sqlite3_open(
-                    dbfile.c_str(), &db
-#else
-        if (ec(sqlite3_open_v2(
-                    dbfile.c_str(), &db,
-                    readonly? SQLITE_OPEN_READONLY :
-                    (SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE),
-                    NULL
-#endif
-                  )) != SQLITE_OK)
-        {
-            const std::string saveerr = error;
-            const int serrc = errc;
-            close();
-            error = saveerr;
-            errc  = serrc;
-            return (errc);
-        }
-
-        init_schema();
-    }
-    else
         error = "No filename!";
+        return SQLITE_ERROR; // "... or missing database"
+    }
 
+    if (dbfile.find(".db") != dbfile.length() - 3)
+        dbfile += ".db";
+
+/*
+From SQLite's documentation:
+
+# Note to Windows users: The encoding used for the filename argument of
+# sqlite3_open() and sqlite3_open_v2() must be UTF-8, not whatever codepage
+# is currently defined.  Filenames containing international characters must
+# be converted to UTF-8 prior to passing them into sqlite3_open() or
+# sqlite3_open_v2().
+
+... which saves us a lot of trouble.
+*/
+#ifdef ANCIENT_SQLITE
+    if (ec(sqlite3_open(
+                dbfile.c_str(), &db
+#else
+    if (ec(sqlite3_open_v2(
+                dbfile.c_str(), &db,
+                readonly? SQLITE_OPEN_READONLY :
+                (SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE),
+                NULL
+#endif
+              )) != SQLITE_OK)
+    {
+        const std::string saveerr = error;
+        const int serrc = errc;
+        close();
+        error = saveerr;
+        errc  = serrc;
+        return (errc);
+    }
+
+    init_schema();
     return (errc);
 }
 
@@ -258,8 +269,7 @@ std::auto_ptr<std::string> SQL_DBM::nextkey()
     std::auto_ptr<std::string> result;
     if (s_iterator)
     {
-        int err = SQLITE_OK;
-        if ((err = ec(sqlite3_step(s_iterator))) == SQLITE_ROW)
+        if (ec(sqlite3_step(s_iterator)) == SQLITE_ROW)
             result.reset(
                 new std::string(
                     (const char *) sqlite3_column_text(s_iterator, 0)));

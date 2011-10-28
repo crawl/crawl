@@ -1,7 +1,7 @@
-/*
- * File:      envmap.cc
- * Summary:   Functions dealing with env.map_knowledge.
- */
+/**
+ * @file
+ * @brief Functions dealing with env.map_knowledge.
+**/
 
 #include "AppHdr.h"
 
@@ -9,7 +9,7 @@
 
 #include "coord.h"
 #include "env.h"
-#include "stuff.h"
+#include "libutil.h"
 
 bool is_sanctuary(const coord_def& p)
 {
@@ -53,6 +53,8 @@ feature_property_type str_to_fprop(const std::string &str)
 {
     if (str == "bloody")
         return (FPROP_BLOODY);
+    if (str == "highlight")
+        return (FPROP_HIGHLIGHT);
     if (str == "mold")
         return (FPROP_MOLD);
     if (str == "no_cloud_gen")
@@ -72,3 +74,10 @@ feature_property_type str_to_fprop(const std::string &str)
 
     return (FPROP_NONE);
 }
+
+#ifdef USE_TILE
+char blood_rotation(const coord_def & p)
+{
+    return (env.pgrid(p) & FPROP_BLOOD_EAST) >> 16;
+}
+#endif

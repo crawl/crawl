@@ -1,9 +1,8 @@
-/*
- *  File:       store.cc
- *  Summary:    Saveable hash-table and vector capable of storing
- *              multiple types of data.
- *  Written by: Matthew Cline
- */
+/**
+ * @file
+ * @brief Saveable hash-table and vector capable of storing
+ *             multiple types of data.
+**/
 
 #include "AppHdr.h"
 
@@ -46,6 +45,7 @@ CrawlStoreValue::CrawlStoreValue(const CrawlStoreValue &other)
     case SV_BYTE:
     case SV_SHORT:
     case SV_INT:
+    case SV_INT64:
     case SV_FLOAT:
         val = other.val;
         break;
@@ -125,7 +125,7 @@ CrawlStoreValue::CrawlStoreValue(const CrawlStoreValue &other)
     }
 
     case NUM_STORE_VAL_TYPES:
-        ASSERT(false);
+        die("unknown stored value type");
     }
 }
 
@@ -163,6 +163,12 @@ CrawlStoreValue::CrawlStoreValue(const int &_val)
     : type(SV_INT), flags(SFLAG_UNSET)
 {
     get_int() = _val;
+}
+
+CrawlStoreValue::CrawlStoreValue(const int64_t &_val)
+    : type(SV_INT), flags(SFLAG_UNSET)
+{
+    get_int64() = _val;
 }
 
 CrawlStoreValue::CrawlStoreValue(const float &_val)
@@ -274,6 +280,10 @@ void CrawlStoreValue::unset(bool force)
         val._int = 0;
         break;
 
+    case SV_INT64:
+        val._int64 = 0;
+        break;
+
     case SV_FLOAT:
         val._float = 0.0;
         break;
@@ -351,11 +361,11 @@ void CrawlStoreValue::unset(bool force)
     }
 
     case SV_NONE:
-        DEBUGSTR("CrawlStoreValue::unset: unsetting nothing");
+        die("CrawlStoreValue::unset: unsetting nothing");
         break;
 
     default:
-        DEBUGSTR("CrawlStoreValue::unset: unsetting invalid type");
+        die("CrawlStoreValue::unset: unsetting invalid type");
         break;
     }
 
@@ -394,6 +404,7 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
     case SV_BYTE:
     case SV_SHORT:
     case SV_INT:
+    case SV_INT64:
     case SV_FLOAT:
         val = other.val;
         break;
@@ -427,7 +438,7 @@ CrawlStoreValue &CrawlStoreValue::operator = (const CrawlStoreValue &other)
         break;
 
      default:
-        DEBUGSTR("CrawlStoreValue has invalid type");
+        die("CrawlStoreValue has invalid type");
         break;
     }
 
@@ -484,6 +495,10 @@ void CrawlStoreValue::write(writer &th) const
 
     case SV_INT:
         marshallInt(th, val._int);
+        break;
+
+    case SV_INT64:
+        marshallSigned(th, val._int64);
         break;
 
     case SV_FLOAT:
@@ -557,7 +572,7 @@ void CrawlStoreValue::write(writer &th) const
         break;
 
     case NUM_STORE_VAL_TYPES:
-        ASSERT(false);
+        die("unknown stored value type");
     }
 }
 
@@ -585,6 +600,10 @@ void CrawlStoreValue::read(reader &th)
 
     case SV_INT:
         val._int = unmarshallInt(th);
+        break;
+
+    case SV_INT64:
+        val._int64 = unmarshallSigned(th);
         break;
 
     case SV_FLOAT:
@@ -673,7 +692,7 @@ void CrawlStoreValue::read(reader &th)
         break;
 
     case NUM_STORE_VAL_TYPES:
-        ASSERT(false);
+        die("unknown stored value type");
     }
 }
 
@@ -696,26 +715,26 @@ CrawlVector &CrawlStoreValue::new_vector(store_val_type _type,
                                          vec_size _max_size)
 {
 #ifdef DEBUG
-    CrawlVector* old_vector = static_cast<CrawlVector*>(val.ptr);
+    CrawlVector* old_vec = static_cast<CrawlVector*>(val.ptr);
 
     ASSERT(flags & SFLAG_UNSET);
     ASSERT(type == SV_NONE
            || (type == SV_VEC
-               && old_vector->size() == 0
-               && old_vector->get_type() == SV_NONE
-               && old_vector->get_default_flags() == 0
-               && old_vector->get_max_size() == VEC_MAX_SIZE));
+               && old_vec->empty()
+               && old_vec->get_type() == SV_NONE
+               && old_vec->get_default_flags() == 0
+               && old_vec->get_max_size() == VEC_MAX_SIZE));
 #endif
 
-    CrawlVector &vector = get_vector();
+    CrawlVector &vec = get_vector();
 
-    vector.default_flags = _flags;
-    vector.type          = _type;
+    vec.default_flags = _flags;
+    vec.type          = _type;
 
     type   =  SV_VEC;
     flags &= ~SFLAG_UNSET;
 
-    return vector;
+    return vec;
 }
 
 ///////////////////////////////////////////
@@ -746,11 +765,14 @@ CrawlVector &CrawlStoreValue::new_vector(store_val_type _type,
             case SV_INT: \
                 field = (_type) val._int; \
                 break; \
+            case SV_INT64: \
+                field = (_type) val._int64; \
+                break; \
             case SV_FLOAT: \
                 field = (_type) val._float; \
                 break; \
             default: \
-                ASSERT(false); \
+                die("unknown stored value type"); \
             } \
             type = (x); \
         } \
@@ -797,6 +819,11 @@ short &CrawlStoreValue::get_short()
 int &CrawlStoreValue::get_int()
 {
     GET_VAL(SV_INT, int, val._int, 0);
+}
+
+int64_t &CrawlStoreValue::get_int64()
+{
+    GET_VAL(SV_INT64, int64_t, val._int64, 0);
 }
 
 float &CrawlStoreValue::get_float()
@@ -849,16 +876,6 @@ dlua_chunk &CrawlStoreValue::get_lua()
     GET_VAL_PTR(SV_LUA, dlua_chunk*, new dlua_chunk());
 }
 
-CrawlStoreValue &CrawlStoreValue::operator [] (const std::string &key)
-{
-    return get_table()[key];
-}
-
-CrawlStoreValue &CrawlStoreValue::operator [] (const vec_size &index)
-{
-    return get_vector()[index];
-}
-
 ///////////////////////////
 // Const accessor functions
 #define GET_CONST_SETUP(x) \
@@ -887,6 +904,12 @@ int CrawlStoreValue::get_int() const
 {
     GET_CONST_SETUP(SV_INT);
     return val._int;
+}
+
+int64_t CrawlStoreValue::get_int64() const
+{
+    GET_CONST_SETUP(SV_INT64);
+    return val._int64;
 }
 
 float CrawlStoreValue::get_float() const
@@ -925,6 +948,12 @@ const CrawlVector& CrawlStoreValue::get_vector() const
     return *((CrawlVector*)val.ptr);
 }
 
+const monster& CrawlStoreValue::get_monster() const
+{
+    GET_CONST_SETUP(SV_MONST);
+    return *((monster*)val.ptr);
+}
+
 level_id CrawlStoreValue::get_level_id() const
 {
     GET_CONST_SETUP(SV_LEV_ID);
@@ -937,18 +966,6 @@ level_pos CrawlStoreValue::get_level_pos() const
     return *((level_pos*)val.ptr);
 }
 
-const CrawlStoreValue &CrawlStoreValue::operator
-    [] (const std::string &key) const
-{
-    return get_table()[key];
-}
-
-const CrawlStoreValue &CrawlStoreValue::operator
-    [](const vec_size &index) const
-{
-    return get_vector()[index];
-}
-
 /////////////////////
 // Typecast operators
 CrawlStoreValue::operator bool&()                  { return get_bool();       }
@@ -956,6 +973,7 @@ CrawlStoreValue::operator char&()                  { return get_byte();       }
 CrawlStoreValue::operator short&()                 { return get_short();      }
 CrawlStoreValue::operator float&()                 { return get_float();      }
 CrawlStoreValue::operator int&()                   { return get_int();        }
+CrawlStoreValue::operator int64_t&()               { return get_int64();      }
 CrawlStoreValue::operator std::string&()           { return get_string();     }
 CrawlStoreValue::operator coord_def&()             { return get_coord();      }
 CrawlStoreValue::operator CrawlHashTable&()        { return get_table();      }
@@ -983,8 +1001,7 @@ CrawlStoreValue::operator bool() const
     case SV_INT: \
         return get_int(); \
     default: \
-        ASSERT(false); \
-        return 0; \
+        die("unknown stored value type"); \
     }
 
 CrawlStoreValue::operator char() const
@@ -1000,6 +1017,24 @@ CrawlStoreValue::operator short() const
 CrawlStoreValue::operator int() const
 {
     CONST_INT_CAST();
+}
+
+CrawlStoreValue::operator int64_t() const
+{
+    // Allow upgrading but not downgrading.
+    switch (type)
+    {
+    case SV_BYTE:
+        return get_byte();
+    case SV_SHORT:
+        return get_short();
+    case SV_INT:
+        return get_int();
+    case SV_INT64:
+        return get_int64();
+    default:
+        die("unknown stored value type");
+    }
 }
 
 CrawlStoreValue::operator float() const
@@ -1050,6 +1085,12 @@ CrawlStoreValue &CrawlStoreValue::operator = (const short &_val)
 CrawlStoreValue &CrawlStoreValue::operator = (const int &_val)
 {
     get_int() = _val;
+    return (*this);
+}
+
+CrawlStoreValue &CrawlStoreValue::operator = (const int64_t &_val)
+{
+    get_int64() = _val;
     return (*this);
 }
 
@@ -1143,9 +1184,15 @@ CrawlStoreValue &CrawlStoreValue::operator = (const dlua_chunk &_val)
         temp op; \
         return temp; \
     } \
+    case SV_INT64: \
+    { \
+        int64_t &temp = get_int64(); \
+        temp op; \
+        return temp; \
+    } \
  \
     default: \
-        ASSERT(false); \
+        die("unknown stored value type"); \
         return 0; \
     }
 
@@ -1237,7 +1284,7 @@ void CrawlHashTable::write(writer &th) const
 
     CrawlHashTable::hash_map_type::const_iterator i = hash_map->begin();
 
-    for (; i != hash_map->end(); i++)
+    for (; i != hash_map->end(); ++i)
     {
         marshallString(th, i->first);
         i->second.write(th);
@@ -1271,6 +1318,13 @@ void CrawlHashTable::read(reader &th)
 }
 
 
+#ifdef DEBUG_PROPS
+static std::map<std::string, int> accesses;
+# define ACCESS(x) ++accesses[x]
+#else
+# define ACCESS(x)
+#endif
+
 //////////////////
 // Misc functions
 
@@ -1279,6 +1333,7 @@ bool CrawlHashTable::exists(const std::string &key) const
     if (hash_map == NULL)
         return (false);
 
+    ACCESS(key);
     assert_validity();
     hash_map_type::const_iterator i = hash_map->find(key);
 
@@ -1295,7 +1350,7 @@ void CrawlHashTable::assert_validity() const
 
     unsigned long actual_size = 0;
 
-    for (; i != hash_map->end(); i++)
+    for (; i != hash_map->end(); ++i)
     {
         actual_size++;
 
@@ -1358,6 +1413,7 @@ CrawlStoreValue& CrawlHashTable::get_value(const std::string &key)
     assert_validity();
     init_hash_map();
 
+    ACCESS(key);
     iterator i = hash_map->find(key);
 
     if (i == hash_map->end())
@@ -1373,27 +1429,23 @@ CrawlStoreValue& CrawlHashTable::get_value(const std::string &key)
 
 const CrawlStoreValue& CrawlHashTable::get_value(const std::string &key) const
 {
-    ASSERT(hash_map != NULL);
+#ifdef ASSERTS
+    if (!hash_map)
+        die("trying to read non-existant property \"%s\"", key.c_str());
+#endif
     assert_validity();
 
+    ACCESS(key);
     hash_map_type::const_iterator i = hash_map->find(key);
 
-    ASSERT(i != hash_map->end());
+#ifdef ASSERTS
+    if (i == hash_map->end())
+        die("trying to read non-existant property \"%s\"", key.c_str());
+#endif
     ASSERT(i->second.type != SV_NONE);
     ASSERT(!(i->second.flags & SFLAG_UNSET));
 
     return (i->second);
-}
-
-CrawlStoreValue& CrawlHashTable::operator[] (const std::string &key)
-{
-    return get_value(key);
-}
-
-const CrawlStoreValue& CrawlHashTable::operator[] (const std::string &key)
-    const
-{
-    return get_value(key);
 }
 
 ///////////////////////////
@@ -1419,6 +1471,7 @@ void CrawlHashTable::erase(const std::string key)
     assert_validity();
     init_hash_map();
 
+    ACCESS(key);
     iterator i = hash_map->find(key);
 
     if (i != hash_map->end())
@@ -1529,7 +1582,7 @@ void CrawlVector::write(writer &th) const
 
     for (vec_size i = 0; i < size(); i++)
     {
-        CrawlStoreValue val = vector[i];
+        CrawlStoreValue val = vec[i];
        val.write(th);
     }
 
@@ -1556,10 +1609,10 @@ void CrawlVector::read(reader &th)
 
     ASSERT(_size <= max_size);
 
-    vector.resize(_size);
+    vec.resize(_size);
 
     for (vec_size i = 0; i < _size; i++)
-        vector[i].read(th);
+        vec[i].read(th);
 
     assert_validity();
 }
@@ -1607,7 +1660,7 @@ void CrawlVector::assert_validity() const
 
     for (vec_size i = 0, _size = size(); i < _size; i++)
     {
-        const CrawlStoreValue &val = vector[i];
+        const CrawlStoreValue &val = vec[i];
 
         if (type != SV_NONE)
             ASSERT(val.type == SV_NONE || val.type == type);
@@ -1663,7 +1716,7 @@ void CrawlVector::set_max_size(vec_size _size)
     ASSERT(max_size == VEC_MAX_SIZE || max_size < _size);
     max_size = _size;
 
-    vector.reserve(max_size);
+    vec.reserve(max_size);
 }
 
 vec_size CrawlVector::get_max_size() const
@@ -1679,9 +1732,9 @@ CrawlStoreValue& CrawlVector::get_value(const vec_size &index)
     assert_validity();
 
     ASSERT(index <= max_size);
-    ASSERT(index <= vector.size());
+    ASSERT(index <= vec.size());
 
-    return vector[index];
+    return vec[index];
 }
 
 const CrawlStoreValue& CrawlVector::get_value(const vec_size &index) const
@@ -1689,40 +1742,30 @@ const CrawlStoreValue& CrawlVector::get_value(const vec_size &index) const
     assert_validity();
 
     ASSERT(index <= max_size);
-    ASSERT(index <= vector.size());
+    ASSERT(index <= vec.size());
 
-    return vector[index];
-}
-
-CrawlStoreValue& CrawlVector::operator[] (const vec_size &index)
-{
-    return get_value(index);
-}
-
-const CrawlStoreValue& CrawlVector::operator[] (const vec_size &index) const
-{
-    return get_value(index);
+    return vec[index];
 }
 
 ///////////////////////////
 // std::vector style interface
 vec_size CrawlVector::size() const
 {
-    return vector.size();
+    return vec.size();
 }
 
 bool CrawlVector::empty() const
 {
-    return vector.empty();
+    return vec.empty();
 }
 
 CrawlStoreValue& CrawlVector::pop_back()
 {
     assert_validity();
-    ASSERT(vector.size() > 0);
+    ASSERT(!vec.empty());
 
-    CrawlStoreValue& val = vector[vector.size() - 1];
-    vector.pop_back();
+    CrawlStoreValue& val = vec[vec.size() - 1];
+    vec.pop_back();
     return val;
 }
 
@@ -1770,7 +1813,7 @@ void CrawlVector::push_back(CrawlStoreValue val)
 #endif
 
     assert_validity();
-    ASSERT(vector.size() < max_size);
+    ASSERT(vec.size() < max_size);
     ASSERT(type == SV_NONE
            || (val.type == SV_NONE && (val.flags & SFLAG_UNSET))
            || (val.type == type));
@@ -1780,14 +1823,14 @@ void CrawlVector::push_back(CrawlStoreValue val)
         val.type   = type;
         val.flags |= SFLAG_CONST_TYPE;
     }
-    vector.push_back(val);
+    vec.push_back(val);
     assert_validity();
 }
 
 void CrawlVector::insert(const vec_size index, CrawlStoreValue val)
 {
     assert_validity();
-    ASSERT(vector.size() < max_size);
+    ASSERT(vec.size() < max_size);
     ASSERT(type == SV_NONE
            || (val.type == SV_NONE && (val.flags & SFLAG_UNSET))
            || (val.type == type));
@@ -1797,7 +1840,7 @@ void CrawlVector::insert(const vec_size index, CrawlStoreValue val)
         val.type   = type;
         val.flags |= SFLAG_CONST_TYPE;
     }
-    vector.insert(vector.begin() + index, val);
+    vec.insert(vec.begin() + index, val);
 }
 
 void CrawlVector::resize(const vec_size _size)
@@ -1807,12 +1850,12 @@ void CrawlVector::resize(const vec_size _size)
     ASSERT(_size < max_size);
 
     vec_size old_size = size();
-    vector.resize(_size);
+    vec.resize(_size);
 
     for (vec_size i = old_size; i < _size; i++)
     {
-        vector[i].flags = SFLAG_UNSET | default_flags;
-        vector[i].type  = SV_NONE;
+        vec[i].flags = SFLAG_UNSET | default_flags;
+        vec[i].type  = SV_NONE;
     }
 }
 
@@ -1820,9 +1863,9 @@ void CrawlVector::erase(const vec_size index)
 {
     assert_validity();
     ASSERT(index <= max_size);
-    ASSERT(index <= vector.size());
+    ASSERT(index <= vec.size());
 
-    vector.erase(vector.begin() + index);
+    vec.erase(vec.begin() + index);
 }
 
 void CrawlVector::clear()
@@ -1831,9 +1874,9 @@ void CrawlVector::clear()
     ASSERT(!(default_flags & SFLAG_NO_ERASE));
 
     for (vec_size i = 0, _size = size(); i < _size; i++)
-        ASSERT(!(vector[i].flags & SFLAG_NO_ERASE));
+        ASSERT(!(vec[i].flags & SFLAG_NO_ERASE));
 
-    vector.clear();
+    vec.clear();
     default_flags = 0;
     type          = SV_NONE;
 }
@@ -1841,23 +1884,53 @@ void CrawlVector::clear()
 CrawlVector::iterator CrawlVector::begin()
 {
     assert_validity();
-    return vector.begin();
+    return vec.begin();
 }
 
 CrawlVector::iterator CrawlVector::end()
 {
     assert_validity();
-    return vector.end();
+    return vec.end();
 }
 
 CrawlVector::const_iterator CrawlVector::begin() const
 {
     assert_validity();
-    return vector.begin();
+    return vec.begin();
 }
 
 CrawlVector::const_iterator CrawlVector::end() const
 {
     assert_validity();
-    return vector.end();
+    return vec.end();
 }
+
+
+#ifdef DEBUG_PROPS
+static bool _cmp(std::string a, std::string b)
+{
+    return accesses[a] > accesses[b];
+}
+
+void dump_prop_accesses()
+{
+    FILE *f = fopen("prop_accesses", "w");
+    ASSERT(f);
+
+    std::vector<std::string> props;
+
+    for (std::map<std::string, int>::const_iterator i = accesses.begin();
+         i != accesses.end(); ++i)
+    {
+        props.push_back(i->first);
+    }
+
+    std::sort(props.begin(), props.end(), _cmp);
+    for (std::vector<std::string>::const_iterator i = props.begin();
+         i != props.end(); ++i)
+    {
+        fprintf(f, "%10d %s\n", accesses[*i], i->c_str());
+    }
+    fclose(f);
+}
+#endif

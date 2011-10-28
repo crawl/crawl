@@ -9,6 +9,7 @@
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "monster.h"
+#include "random.h"
 #include "terrain.h"
 #include "traps.h"
 
@@ -16,11 +17,11 @@
 // monster_pathfind
 
 // The pathfinding is an implementation of the A* algorithm. Beginning at the
-// destination square we check all neighbours of a given grid, estimate the
+// monster position we check all neighbours of a given grid, estimate the
 // distance needed for any shortest path including this grid and push the
 // result into a hash. We can then easily access all points with the shortest
 // distance estimates and then check _their_ neighbours and so on.
-// The algorithm terminates once we reach the monster position since - because
+// The algorithm terminates once we reach the destination since - because
 // of the sorting of grids by shortest distance in the hash - there can be no
 // path between start and target that is shorter than the current one. There
 // could be other paths that have the same length but that has no real impact.
@@ -31,7 +32,6 @@
 
 int mons_tracking_range(const monster* mon)
 {
-
     int range = 0;
     switch (mons_intel(mon))
     {
@@ -55,11 +55,16 @@ int mons_tracking_range(const monster* mon)
 
     if (range)
     {
-        if (mons_is_native_in_branch(mon))
+        if (mon->can_cling_to_walls())
+            range += 4;
+        else if (mons_is_native_in_branch(mon))
             range += 3;
         else if (mons_class_flag(mon->type, M_BLOOD_SCENT))
             range++;
     }
+
+    if (you.penance[GOD_ASHENZARI])
+        range *= 5;
 
     return (range);
 }
@@ -94,9 +99,8 @@ bool monster_pathfind::init_pathfind(const monster* mon, coord_def dest,
 {
     mons   = mon;
 
-    // We're doing a reverse search from target to monster.
-    start  = dest;
-    target = mon->pos();
+    start  = mon->pos();
+    target = dest;
     pos    = start;
     allow_diagonals   = diag;
     traverse_unmapped = pass_unmapped;
@@ -130,14 +134,12 @@ bool monster_pathfind::init_pathfind(coord_def src, coord_def dest, bool diag,
 
 bool monster_pathfind::start_pathfind(bool msg)
 {
-    // NOTE: We never do any traversable() check for the starting square
-    //       (target). This means that even if the target cannot be reached
+    // NOTE: We never do any traversable() check for the target square.
+    //       This means that even if the target cannot be reached
     //       we may still find a path leading adjacent to this position, which
     //       is desirable if e.g. the player is hovering over deep water
     //       surrounded by shallow water or floor, or if a foe is hiding in
     //       a wall.
-    //       If the surrounding squares also are not traversable, we return
-    //       early that no path could be found.
 
     max_length = min_length = grid_distance(pos, target);
     for (int i = 0; i < GXM; i++)
@@ -188,11 +190,15 @@ bool monster_pathfind::calc_path_to_neighbours()
     //       / | \        of (dir = 0) once dir has passed 7.
     //      7  4  5
     //
-    for (int dir = 1; dir < 8; (dir += 2) == 9 && (dir = 0))
+    // To avoid bias, we'll choose a random 90 degree rotation
+    int rotate = random2(4) * 2; // equal probability of 0,2,4,6
+    for (int idir = 1; idir < 8; (idir += 2) == 9 && (idir = 0))
     {
         // Skip diagonal movement.
-        if (!allow_diagonals && (dir % 2))
+        if (!allow_diagonals && (idir % 2))
             continue;
+
+        int dir = (idir + rotate) % 8;  // apply our random 90 degree rotation
 
         npos = pos + Compass[dir];
 
@@ -202,7 +208,7 @@ bool monster_pathfind::calc_path_to_neighbours()
         if (!in_bounds(npos))
             continue;
 
-        if (!traversable(npos))
+        if (!traversable(npos) && npos != target)
             continue;
 
         // Ignore this grid if it takes us above the allowed distance.
@@ -323,7 +329,7 @@ std::vector<coord_def> monster_pathfind::backtrack()
         mprf("prev: (%d, %d), pos: (%d, %d)", Compass[dir].x, Compass[dir].y,
                                               pos.x, pos.y);
 #endif
-        path.push_back(pos);
+        path.insert(path.begin(), pos);
 
         if (pos.x == 0 && pos.y == 0)
             break;
@@ -349,12 +355,6 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
     if (path.empty())
         return path;
 
-    dungeon_feature_type can_move;
-    if (mons_amphibious(mons))
-        can_move = DNGN_DEEP_WATER;
-    else
-        can_move = DNGN_SHALLOW_WATER;
-
     std::vector<coord_def> waypoints;
     pos = path[0];
 
@@ -363,7 +363,7 @@ std::vector<coord_def> monster_pathfind::calc_waypoints()
 #endif
     for (unsigned int i = 1; i < path.size(); i++)
     {
-        if (can_go_straight(pos, path[i], can_move))
+        if (can_go_straight(mons, pos, path[i]) && mons_traversable(path[i]))
             continue;
         else
         {
@@ -406,15 +406,30 @@ bool monster_pathfind::traversable(const coord_def& p)
 // its preferred habit and capability of flight or opening doors.
 bool monster_pathfind::mons_traversable(const coord_def& p)
 {
-    return (mons_can_traverse(mons, p));
+    return mons_can_traverse(mons, p) || mons->can_cling_to_walls()
+                                         && cell_is_clingable(pos)
+                                         && cell_can_cling_to(pos, p);
 }
 
 int monster_pathfind::travel_cost(coord_def npos)
 {
+#ifdef EUCLIDEAN
+    int cost = 1;
+    if (mons)
+        cost = mons_travel_cost(npos);
+
+    if ((pos - npos).abs() == 2)
+        cost *= 14;
+    else
+        cost *= 10;
+
+    return cost;
+#else
     if (mons)
         return mons_travel_cost(npos);
 
     return (1);
+#endif
 }
 
 // Assumes that grids that really cannot be entered don't even get here.
@@ -425,24 +440,22 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
 
     // Doors need to be opened.
     if (feat_is_closed_door(grd(npos)) || grd(npos) == DNGN_SECRET_DOOR
-        && env.markers.property_at(npos, MAT_ANY, "door_restict") != "veto")
+        && env.markers.property_at(npos, MAT_ANY, "door_restrict") != "veto")
     {
         return (2);
     }
 
     const monster_type mt = mons_base_type(mons);
-    const bool airborne = mons_airborne(mt, -1, false);
+    const bool ground_level = !mons_airborne(mt, -1, false)
+                              && !(mons->can_cling_to_walls()
+                                   && cell_is_clingable(npos));
 
     // Travelling through water, entering or leaving water is more expensive
     // for non-amphibious monsters, so they'll avoid it where possible.
     // (The resulting path might not be optimal but it will lead to a path
     // a monster of such habits is likely to prefer.)
-    // Only tested for shallow water since they can't enter deep water anyway.
-    if (!airborne && !mons_class_amphibious(mt)
-        && (grd(pos) == DNGN_SHALLOW_WATER || grd(npos) == DNGN_SHALLOW_WATER))
-    {
+    if (mons->floundering_at(npos))
         return (2);
-    }
 
     // Try to avoid (known) traps.
     const trap_def* ptrap = find_trap(npos);
@@ -463,7 +476,7 @@ int monster_pathfind::mons_travel_cost(coord_def npos)
 
         // Mechanical traps can be avoided by flying, as can shafts, and
         // tele traps are never traversable anyway.
-        if (knows_trap && !airborne)
+        if (knows_trap && ground_level)
             return (2);
     }
 

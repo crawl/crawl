@@ -1,0 +1,73 @@
+body {
+    margin: 0px;
+}
+
+#lobby {
+    margin: 4px;
+}
+
+#right_column {
+    display: inline-block;
+    vertical-align: top;
+    float: right;
+}
+
+#stats {
+    display: inline;
+    position: static;
+}
+
+#minimap_block {
+    display: block;
+}
+
+#minimap, #minimap_overlay {
+    position: absolute;
+}
+
+
+/* monster list */
+#monster_list {
+    display: inline-block;
+    overflow-x: hidden;
+}
+
+#monster_list .group {
+    display: block;
+}
+
+#monster_list .picture {
+    display: inline;
+    vertical-align: middle;
+}
+
+#monster_list .name {
+    vertical-align: middle;
+}
+
+#monster_list .trivial {
+    color: darkgray;
+}
+#monster_list .easy {
+    color: lightgray;
+}
+#monster_list .tough {
+    color: yellow;
+}
+#monster_list .nasty {
+    color: rgb(255,  82,  82);
+}
+
+#monster_list .friendly {
+    color: green;
+}
+
+#monster_list .good_neutral,
+#monster_list .neutral,
+#monster_list .strict_neutral {
+    color: brown;
+}
+
+#monster_list .ellipse {
+    float: right;
+}

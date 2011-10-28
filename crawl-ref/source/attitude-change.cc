@@ -1,6 +1,7 @@
-/*
- * Summary:   Monster attitude changing due to religion.
- */
+/**
+ * @file
+ * @brief Monster attitude changing due to religion.
+**/
 
 #include "AppHdr.h"
 
@@ -23,7 +24,6 @@
 #include "random.h"
 #include "religion.h"
 #include "state.h"
-#include "stuff.h"
 #include "travel.h"
 #include "transform.h"
 
@@ -145,77 +145,6 @@ void fedhas_neutralise(monster* mons)
     }
 }
 
-static void _print_charm_converted_speech(const std::string key,
-                                          monster *mon,
-                                          msg_channel_type channel)
-{
-    std::string msg = getSpeakString("charm_converted_" + key);
-
-    if (!msg.empty())
-    {
-        msg = do_mon_str_replacements(msg, mon);
-        mpr(msg.c_str(), channel);
-    }
-}
-
-void passive_enslavement_convert(monster* mons)
-{
-    if (you.are_charming()
-        && mons->alive()
-        && is_player_same_species(mons->type, false)
-        && !transform_changed_physiology(false)
-        && mons->foe == MHITYOU
-        && !mons->is_summoned()
-        && !mons->is_shapeshifter()
-        && !testbits(mons->flags, MF_ATT_CHANGE_ATTEMPT)
-        && !mons->friendly()
-        && you.visible_to(mons)
-        && !mons->asleep()
-        && !mons_is_confused(mons)
-        && !mons->paralysed())
-    {
-        mons->flags |= MF_ATT_CHANGE_ATTEMPT;
-
-        const int hd = mons->hit_dice;
-
-        if (random2(random2(you.experience_level))
-                 > random2(hd) + hd + random2(5)
-            && hd * hd < you.experience_level * 7)
-        {
-            passive_enslavement_convert_monster(mons);
-            stop_running();
-        }
-    }
-}
-
-// enslavement for RING_CHARM
-void passive_enslavement_convert_monster(monster* mons)
-{
-    if (one_chance_in(1 + mons->hit_dice * mons->hit_dice))
-    {
-        _print_charm_converted_speech("reaction_sight", mons,
-                                      MSGCH_FRIEND_ENCHANT);
-        if (!one_chance_in(3))
-            _print_charm_converted_speech("speech_sight", mons, MSGCH_TALK);
-
-        mons->attitude = ATT_FRIENDLY;
-
-        // The monster is not really *created* friendly, but should it
-        // become hostile later on, it won't count as a good kill.
-        mons->flags |= MF_NO_REWARD;
-
-        if (mons->is_patrolling())
-           // Make monster stop patrolling and forget their patrol point,
-           // they're supposed to follow you now.
-           mons->patrol_point = coord_def(0, 0);
-    }
-    else
-        mons->add_ench(ENCH_CHARM);
-
-    behaviour_event(mons, ME_ALERT, MHITNOT);
-    mons_att_changed(mons);
-}
-
 // Make summoned (temporary) god gifts disappear on penance or when
 // abandoning the god in question (Trog or TSO).
 bool make_god_gifts_disappear()
@@ -242,13 +171,13 @@ bool make_god_gifts_disappear()
     return (count);
 }
 
-// When under penance, Yredelemnulites can lose all undead slaves in sight.
+// When under penance, Yredelemnulites can lose all nearby undead slaves.
 bool yred_slaves_abandon_you()
 {
     int num_reclaim = 0;
     int num_slaves = 0;
 
-    for (radius_iterator ri(you.pos(), 9); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
         monster* mons = monster_at(*ri);
         if (mons == NULL)
@@ -262,7 +191,7 @@ bool yred_slaves_abandon_you()
 
             // During penance, followers get a saving throw.
             if (random2((you.piety - you.penance[GOD_YREDELEMNUL]) / 18)
-                + random2(you.skills[SK_INVOCATIONS] - 6)
+                + random2(you.skill(SK_INVOCATIONS) - 6)
                 > random2(hd) + hd + random2(5))
             {
                 continue;
@@ -291,7 +220,7 @@ bool yred_slaves_abandon_you()
     return (false);
 }
 
-// When under penance, Beoghites can lose all orcish followers in sight,
+// When under penance, Beoghites can lose all nearby orcish followers,
 // subject to a few limitations.
 bool beogh_followers_abandon_you()
 {
@@ -299,7 +228,7 @@ bool beogh_followers_abandon_you()
     int num_reconvert = 0;
     int num_followers = 0;
 
-    for (radius_iterator ri(you.pos(), 9); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
         monster* mons = monster_at(*ri);
         if (mons == NULL)
@@ -320,7 +249,7 @@ bool beogh_followers_abandon_you()
 
                 // During penance, followers get a saving throw.
                 if (random2((you.piety - you.penance[GOD_BEOGH]) / 18)
-                    + random2(you.skills[SK_INVOCATIONS] - 6)
+                    + random2(you.skill(SK_INVOCATIONS) - 6)
                     > random2(hd) + hd + random2(5))
                 {
                     continue;
@@ -395,7 +324,9 @@ void good_god_holy_attitude_change(monster* holy)
         _print_good_god_holy_being_speech(true, "reaction", holy,
                                           MSGCH_FRIEND_ENCHANT);
 
-        if (!one_chance_in(3))
+        if (!one_chance_in(3)
+            && holy->can_speak()
+            && holy->type != MONS_MENNAS) // Mennas is mute and only has visual speech
             _print_good_god_holy_being_speech(true, "speech", holy,
                                               MSGCH_TALK);
     }
@@ -425,7 +356,9 @@ void good_god_holy_fail_attitude_change(monster* holy)
         _print_good_god_holy_being_speech(false, "reaction", holy,
                                           MSGCH_FRIEND_ENCHANT);
 
-        if (!one_chance_in(3))
+        if (!one_chance_in(3)
+            && holy->can_speak()
+            && holy->type != MONS_MENNAS) // Mennas is mute and only has visual speech
             _print_good_god_holy_being_speech(false, "speech", holy,
                                               MSGCH_TALK);
     }

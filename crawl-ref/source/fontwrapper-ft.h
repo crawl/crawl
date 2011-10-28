@@ -1,7 +1,7 @@
 #ifndef FT_FONTWRAPPER_H
 #define FT_FONTWRAPPER_H
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
 #ifdef USE_FT
 
 #include "tilefont.h"
@@ -26,7 +26,7 @@ public:
 
     // render just text
     virtual void render_textblock(unsigned int x, unsigned int y,
-                                  unsigned char *chars, unsigned char *colours,
+                                  ucs_t *chars, uint8_t *colours,
                                   unsigned int width, unsigned int height,
                                   bool drop_shadow = false);
 
@@ -46,7 +46,7 @@ public:
                        const std::string &s, const VColour &c);
     virtual void store(FontBuffer &buf, float &x, float &y,
                        const formatted_string &fs);
-    virtual void store(FontBuffer &buf, float &x, float &y, unsigned char c,
+    virtual void store(FontBuffer &buf, float &x, float &y, ucs_t c,
                        const VColour &col);
 
     virtual unsigned int char_width() const;
@@ -98,5 +98,5 @@ protected:
 };
 
 #endif // USE_FT
-#endif // USE_TILE
+#endif // USE_TILE_LOCAL
 #endif // include guard

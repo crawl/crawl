@@ -1,7 +1,7 @@
-/*
- *  File:       libutil.cc
- *  Summary:    Functions that may be missing from some systems
- */
+/**
+ * @file
+ * @brief Functions that may be missing from some systems
+**/
 
 #include "AppHdr.h"
 
@@ -9,9 +9,10 @@
 #include "itemname.h" // is_vowel()
 #include "libutil.h"
 #include "externs.h"
+#include "files.h"
 #include "macro.h"
 #include "message.h"
-#include "stuff.h"
+#include "unicode.h"
 #include "viewgeom.h"
 
 #include <sstream>
@@ -28,6 +29,15 @@
     #ifdef WINMM_PLAY_SOUNDS
         #include <mmsystem.h>
     #endif
+#endif
+
+#ifdef UNIX
+    #include <signal.h>
+#endif
+
+#ifdef DGL_ENABLE_CORE_DUMP
+    #include <sys/time.h>
+    #include <sys/resource.h>
 #endif
 
 description_level_type description_type_by_name(const char *desc)
@@ -107,7 +117,7 @@ void play_sound(const char *file)
 #if defined(WINMM_PLAY_SOUNDS)
     // Check whether file exists, is readable, etc.?
     if (file && *file)
-        sndPlaySound(file, SND_ASYNC | SND_NODEFAULT);
+        sndPlaySoundW(OUTW(file), SND_ASYNC | SND_NODEFAULT);
 
 #elif defined(SOUND_PLAY_COMMAND)
     char command[255];
@@ -116,7 +126,7 @@ void play_sound(const char *file)
         && shell_safe(file))
     {
         snprintf(command, sizeof command, SOUND_PLAY_COMMAND, file);
-        system(command);
+        system(OUTS(command));
     }
 #endif
 }
@@ -187,13 +197,6 @@ std::string &escape_path_spaces(std::string &s)
     return s;
 }
 
-void wait_for_keypress()
-{
-    // Double getchm() was necessary if first call returned zero; this
-    // should theoretically be needed only for DOS.
-    getchm() || getchm();
-}
-
 bool key_is_escape(int key)
 {
     switch (key)
@@ -213,24 +216,53 @@ std::string &uppercase(std::string &s)
     return (s);
 }
 
-std::string upcase_first(std::string s)
-{
-    if (!s.empty())
-        s[0] = toupper(s[0]);
-    return (s);
-}
-
 std::string &lowercase(std::string &s)
 {
-    for (unsigned i = 0, sz = s.size(); i < sz; ++i)
-        s[i] = tolower(s[i]);
-
+    s = lowercase_string(s);
     return (s);
 }
 
 std::string lowercase_string(std::string s)
 {
-    lowercase(s);
+    std::string res;
+    ucs_t c;
+    char buf[4];
+    for (const char *tp = s.c_str(); int len = utf8towc(&c, tp); tp += len)
+        res.append(buf, wctoutf8(buf, towlower(c)));
+    return (res);
+}
+
+// Warning: this (and uppercase_first()) relies on no libc (glibc, BSD libc,
+// MSVC crt) supporting letters that expand or contract, like German ß (-> SS)
+// upon capitalization / lowercasing.  This is mostly a fault of the API --
+// there's no way to return two characters in one code point.
+// Also, all characters must have the same length in bytes before and after
+// lowercasing, all platforms currently have this property.
+//
+// A non-hacky version would be slower for no gain other than sane code; at
+// least unless you use some more powerful API.
+std::string lowercase_first(std::string s)
+{
+    ucs_t c;
+    if (!s.empty())
+    {
+        utf8towc(&c, &s[0]);
+        wctoutf8(&s[0], towlower(c));
+    }
+    return (s);
+}
+
+std::string uppercase_first(std::string s)
+{
+    // Incorrect due to those pesky Dutch having "ij" as a single letter (wtf?).
+    // Too bad, there's no standard function to handle that character, and I
+    // don't care enough.
+    ucs_t c;
+    if (!s.empty())
+    {
+        utf8towc(&c, &s[0]);
+        wctoutf8(&s[0], towupper(c));
+    }
     return (s);
 }
 
@@ -245,32 +277,6 @@ int ends_with(const std::string &s, const char *suffixes[])
 
     return (0);
 }
-
-#ifdef UNIX
-extern "C" int stricmp(const char *str1, const char *str2)
-{
-    int ret = 0;
-
-    // No need to check for *str1.  If str1 ends, then tolower(*str1) will be
-    // 0, ret will be -1, and the loop will break.
-    while (!ret && *str2)
-    {
-        unsigned char c1 = tolower(*str1);
-        unsigned char c2 = tolower(*str2);
-
-        ret = c1 - c2;
-        str1++;
-        str2++;
-    }
-
-    if (ret < 0)
-        ret = -1;
-    else if (ret > 0)
-        ret = 1;
-
-    return (ret);
-}
-#endif
 
 bool strip_suffix(std::string &s, const std::string &suffix)
 {
@@ -325,6 +331,22 @@ bool strip_tag(std::string &s, const std::string &tag, bool skip_padding)
     return (false);
 }
 
+std::vector<std::string> strip_multiple_tag_prefix (std::string &s, const std::string &tagprefix)
+{
+    std::vector<std::string> results;
+
+    while (true)
+    {
+        std::string this_result = strip_tag_prefix(s, tagprefix);
+        if (this_result.empty())
+            break;
+
+        results.push_back(this_result);
+    }
+
+    return results;
+}
+
 std::string strip_tag_prefix(std::string &s, const std::string &tagprefix)
 {
     std::string::size_type pos = s.find(tagprefix);
@@ -365,7 +387,22 @@ bool strip_bool_tag(std::string &s, const std::string &name, bool defval)
 int strip_number_tag(std::string &s, const std::string &tagprefix)
 {
     const std::string num = strip_tag_prefix(s, tagprefix);
-    return (num.empty()? TAG_UNFOUND : atoi(num.c_str()));
+    int x;
+    if (num.empty() || !parse_int(num.c_str(), x))
+        return TAG_UNFOUND;
+    return x;
+}
+
+bool parse_int(const char *s, int &i)
+{
+    if (!s || !*s)
+        return false;
+    char *err;
+    long x = strtol(s, &err, 10);
+    if (*err || x < INT_MIN || x > INT_MAX)
+        return false;
+    i = x;
+    return true;
 }
 
 // Naively prefix A/an to a noun.
@@ -434,9 +471,17 @@ std::string pluralise(const std::string &name,
         // Vortex; vortexes is legal, but the classic plural is cooler.
         return name.substr(0, name.length() - 2) + "ices";
     }
+    else if (ends_with(name, "mosquito"))
+    {
+        return name + "es";
+    }
     else if (ends_with(name, "cyclops"))
     {
         return name.substr(0, name.length() - 1) + "es";
+    }
+    else if (name == "catoblepas")
+    {
+        return "catoblepae";
     }
     else if (ends_with(name, "s"))
     {
@@ -477,7 +522,8 @@ std::string pluralise(const std::string &name,
         return name.substr(0, name.length() - 1) + "i";
     }
     else if (ends_with(name, "sheep") || ends_with(name, "fish")
-             || ends_with(name, "folk") || ends_with(name, "shedu")
+             || ends_with(name, "folk") || ends_with(name, "spawn")
+             || ends_with(name, "kenku") || ends_with(name, "shedu")
              // "shedu" is male, "lammasu" is female of the same creature
              || ends_with(name, "lammasu") || ends_with(name, "lamassu"))
     {
@@ -490,9 +536,10 @@ std::string pluralise(const std::string &name,
         // ending with sh (except fish, which are caught in the previous check).
         return name + "es";
     }
-    else if (ends_with(name, "simulacrum"))
+    else if (ends_with(name, "simulacrum") || ends_with(name, "eidolon"))
     {
-        // simulacrum -> simulacra
+        // simulacrum -> simulacra (correct Latin pluralisation)
+        // also eidolon -> eidola (correct Greek pluralisation)
         return name.substr(0, name.length() - 2) + "a";
     }
     else if (ends_with(name, "efreet"))
@@ -502,7 +549,7 @@ std::string pluralise(const std::string &name,
     }
     else if (name == "foot")
         return "feet";
-    else if (name == "ophan" || name == "cherub")
+    else if (name == "ophan" || name == "cherub" || name == "seraph")
     {
         // unlike "angel" which is fully assimilated and "cherub" which may be
         // pluralized both ways, "ophan" always uses hebrew pluralization
@@ -516,6 +563,9 @@ std::string apostrophise(const std::string &name)
 {
     if (name.empty())
         return (name);
+
+    if (name == "you" || name == "You")
+        return (name + "r");
 
     if (name == "it" || name == "It")
         return (name + "s");
@@ -606,6 +656,7 @@ std::string replace_all(std::string s,
                         const std::string &find,
                         const std::string &repl)
 {
+    ASSERT(!find.empty());
     std::string::size_type start = 0;
     std::string::size_type found;
 
@@ -624,6 +675,7 @@ std::string replace_all_of(std::string s,
                            const std::string &tofind,
                            const std::string &replacement)
 {
+    ASSERT(!tofind.empty());
     std::string::size_type start = 0;
     std::string::size_type found;
 
@@ -638,6 +690,7 @@ std::string replace_all_of(std::string s,
 
 int count_occurrences(const std::string &text, const std::string &s)
 {
+    ASSERT(!s.empty());
     int nfound = 0;
     std::string::size_type pos = 0;
 
@@ -710,36 +763,149 @@ std::vector<std::string> split_string(const std::string &sep,
     return segments;
 }
 
-// The old school way of doing short delays via low level I/O sync.
-// Good for systems like old versions of Solaris that don't have usleep.
-#ifdef NEED_USLEEP
-
-# ifdef TARGET_OS_WINDOWS
-void usleep(unsigned long time)
+// The provided string is consumed!
+std::string wordwrap_line(std::string &s, int width, bool tags)
 {
-    ASSERT(time > 0);
-    ASSERT(!(time % 1000));
-    Sleep(time/1000);
+    const char *cp0 = s.c_str();
+    const char *cp = cp0, *space = 0;
+    ucs_t c;
+
+    while (int clen = utf8towc(&c, cp))
+    {
+        int cw = wcwidth(c);
+        if (c == ' ')
+            space = cp;
+        else if (c == '\n')
+        {
+            space = cp;
+            break;
+        }
+        if (c == '<' && tags)
+        {
+            ASSERT(cw == 1);
+            if (cp[1] == '<') // "<<" escape
+            {
+                // Note: this must be after a possible wrap, otherwise we could
+                // split the escape between lines.
+                cp++;
+            }
+            else
+            {
+                cw = 0;
+                // Skip the whole tag.
+                while (*cp != '>')
+                {
+                    if (!*cp)
+                    {
+                        // Everything so far fitted, report error.
+                        std::string ret = s + ">";
+                        s = "<lightred>ERROR: string above had unterminated tag</lightred>";
+                        return ret;
+                    }
+                    cp++;
+                }
+            }
+        }
+
+        if (cw > width)
+            break;
+
+        if (cw >= 0)
+            width -= cw;
+        cp += clen;
+    }
+
+    if (!c)
+    {
+        // everything fits
+        std::string ret = s;
+        s.clear();
+        return ret;
+    }
+
+    if (space)
+        cp = space;
+    const std::string ret = s.substr(0, cp - cp0);
+
+    // eat all trailing spaces and up to one newline
+    while (*cp == ' ')
+        cp++;
+    if (*cp == '\n')
+        cp++;
+    s.erase(0, cp - cp0);
+
+    return ret;
 }
-# else
 
-#include <sys/time.h>
-#include <sys/types.h>
-#include <sys/unistd.h>
-
-void usleep(unsigned long time)
+/**
+ * Compare two strings, sorting integer numeric parts according to their value.
+ *
+ * "foo123bar" > "foo99bar"
+ * "0.10" > "0.9" (version sort)
+ *
+ * @param a String one.
+ * @param b String two.
+ * @param limit If passed, comparison ends after X numeric parts.
+ * @return As in strcmp().
+**/
+int numcmp(const char *a, const char *b, int limit)
 {
-    struct timeval timer;
+    int res;
 
-    timer.tv_sec  = (time / 1000000L);
-    timer.tv_usec = (time % 1000000L);
+not_numeric:
+    while (*a && *a == *b && !isadigit(*a))
+    {
+        a++;
+        b++;
+    }
+    if (!a && !b)
+        return 0;
+    if (!isadigit(*a) || !isadigit(*b))
+        return (*a < *b) ? -1 : (*a > *b) ? 1 : 0;
+    while (*a == '0')
+        a++;
+    while (*b == '0')
+        b++;
+    res = 0;
+    while (isadigit(*a))
+    {
+        if (!isadigit(*b))
+            return 1;
+        if (*a != *b && !res)
+            res = (*a < *b) ? -1 : 1;
+        a++;
+        b++;
+    }
+    if (isadigit(*b))
+        return -1;
+    if (res)
+        return res;
 
-    select(0, NULL, NULL, NULL, &timer);
+    if (--limit)
+        goto not_numeric;
+    return 0;
 }
-# endif
-#endif
 
-#ifndef USE_TILE
+// make STL sort happy
+bool numcmpstr(const std::string a, const std::string b)
+{
+    return numcmp(a.c_str(), b.c_str()) == -1;
+}
+
+bool version_is_stable(const char *v)
+{
+    // vulnerable to changes in the versioning scheme
+    for (;; v++)
+    {
+        if (*v == '.' || isadigit(*v))
+            continue;
+        if (*v == '-')
+            return isadigit(v[1]);
+        return true;
+    }
+}
+
+#ifndef USE_TILE_LOCAL
 coord_def cgettopleft(GotoRegion region)
 {
     switch (region)
@@ -776,13 +942,17 @@ void cgotoxy(int x, int y, GotoRegion region)
     ASSERT_SAVE(y >= 1 && y <= sz.y);
 
     gotoxy_sys(tl.x + x - 1, tl.y + y - 1);
+
+#ifdef USE_TILE_WEB
+    tiles.cgotoxy(x, y, region);
+#endif
 }
 
 GotoRegion get_cursor_region()
 {
     return (_current_region);
 }
-#endif // USE_TILE
+#endif // USE_TILE_LOCAL
 
 coord_def cgetsize(GotoRegion region)
 {
@@ -834,21 +1004,154 @@ size_t strlcpy(char *dst, const char *src, size_t n)
 }
 
 #ifdef TARGET_OS_WINDOWS
-int get_taskbar_height()
+// FIXME: This function should detect if aero is running, but the DwmIsCompositionEnabled
+// function isn't included in msys, so I don't know how to do that. Instead, I just check
+// if we are running vista or higher. -rla
+bool _is_aero()
+{
+    OSVERSIONINFOEX osvi;
+    osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+    if (GetVersionEx((OSVERSIONINFO *) &osvi))
+        return (osvi.dwMajorVersion >= 6);
+    else
+        return false;
+}
+
+taskbar_pos get_taskbar_pos()
 {
     RECT rect;
     HWND taskbar = FindWindow("Shell_traywnd", NULL);
-    if(taskbar && GetWindowRect(taskbar, &rect)) {
-        int height = rect.bottom - rect.top;
+    if (taskbar && GetWindowRect(taskbar, &rect))
+    {
+        if (rect.right - rect.left > rect.bottom - rect.top)
+        {
+            if (rect.top > 0)
+                return TASKBAR_BOTTOM;
+            else
+                return TASKBAR_TOP;
+        }
+        else
+        {
+            if (rect.left > 0)
+                return TASKBAR_RIGHT;
+            else
+                return TASKBAR_LEFT;
+        }
+    }
+    return TASKBAR_NO;
+}
 
-        OSVERSIONINFOEX osvi;
-        osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-        if(GetVersionEx((OSVERSIONINFO *) &osvi))
-            if (osvi.dwMajorVersion >= 6 && osvi.dwMinorVersion >= 1)
-                height += 3; // Windows 7 taskbar behave strangely.
+int get_taskbar_size()
+{
+    RECT rect;
+    int size;
+    taskbar_pos tpos = get_taskbar_pos();
+    HWND taskbar = FindWindow("Shell_traywnd", NULL);
 
-        return height;
+    if (taskbar && GetWindowRect(taskbar, &rect))
+    {
+        if (tpos & TASKBAR_H)
+                size = rect.bottom - rect.top;
+        else if (tpos & TASKBAR_V)
+                size = rect.right - rect.left;
+        else
+            return 0;
+
+        if (_is_aero())
+            size += 3; // Taskbar behave strangely when aero is active.
+
+        return size;
     }
     return 0;
 }
+
+static BOOL WINAPI console_handler(DWORD sig)
+{
+    switch(sig)
+    {
+    case CTRL_C_EVENT:
+    case CTRL_BREAK_EVENT:
+        return true; // block the signal
+    default:
+        return false;
+    case CTRL_CLOSE_EVENT:
+    case CTRL_LOGOFF_EVENT:
+    case CTRL_SHUTDOWN_EVENT:
+        if (crawl_state.seen_hups++)
+            return true;
+
+        sighup_save_and_exit();
+        return true;
+    }
+}
+
+void init_signals()
+{
+    // If there's no console,
+    SetConsoleCtrlHandler(console_handler, true);
+}
+
+#else
+
+/* [ds] This SIGHUP handling is primitive and far from safe, but it
+ * should be better than nothing. Feel free to get rigorous on this.
+ */
+static void handle_hangup(int)
+{
+    if (crawl_state.seen_hups++)
+        return;
+
+#ifdef USE_TILE_LOCAL
+    // XXX: Will a tiles build ever need to handle the HUP signal?
+    sighup_save_and_exit();
+#elif defined(USE_CURSES)
+    // When using Curses, closing stdin will cause any Curses call blocking
+    // on key-presses to immediately return, including any call that was
+    // still blocking in the main thread when the HUP signal was caught.
+    // This should guarantee that the main thread will un-stall and
+    // will eventually return to _input() in main.cc, which will then
+    // call sighup_save_and_exit().
+    //
+    // The point to all this is that if a user is playing a game on a
+    // remote server and disconnects at a --more-- prompt, that when
+    // the player reconnects the code behind the more() call will execute
+    // before the disconnected game is saved, thus (for example) preventing
+    // the hack of avoiding excomunication consesquences because of the
+    // more() after "You have lost your religion!"
+    fclose(stdin);
+#else
+     #error "Must use either Curses or tiles on Unix"
+#endif
+}
+
+void init_signals()
+{
+#ifdef DGAMELAUNCH
+    // Force timezone to UTC.
+    setenv("TZ", "", 1);
+    tzset();
+#endif
+
+#ifdef USE_UNIX_SIGNALS
+#ifdef SIGQUIT
+    signal(SIGQUIT, SIG_IGN);
+#endif
+
+#ifdef SIGINT
+    signal(SIGINT, SIG_IGN);
+#endif
+
+    signal(SIGHUP, handle_hangup);
+#endif
+
+#ifdef DGL_ENABLE_CORE_DUMP
+    rlimit lim;
+    if (!getrlimit(RLIMIT_CORE, &lim))
+    {
+        lim.rlim_cur = RLIM_INFINITY;
+        setrlimit(RLIMIT_CORE, &lim);
+    }
+#endif
+}
+
 #endif

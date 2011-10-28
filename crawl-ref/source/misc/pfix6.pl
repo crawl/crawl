@@ -130,7 +130,6 @@ LINE:
 
     while ( $target =~ m/$heavy_pattern(\d+)\b/go )
     {
-
       $number = $1;
       $pos = pos( $target ) - length $number;
 
@@ -309,4 +308,3 @@ LINE:
   }
   exit if $saving;
 }
-

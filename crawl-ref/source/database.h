@@ -1,8 +1,7 @@
-/*
- *  database.h
- *
- *  Created by Peter Berger on 4/15/07.
- */
+/**
+ * @file
+ * database.h
+**/
 
 
 #ifndef DATABASE_H
@@ -50,6 +49,8 @@ std::string getWeightedSpeechString(const std::string &key,
 
 std::string getQuoteString(const std::string &key);
 std::string getLongDescription(const std::string &key);
+std::string getWeightedRandomisedDescription(const std::string &key);
+void execute_embedded_lua(std::string &str);
 
 std::vector<std::string> getLongDescKeysByRegex(const std::string &regex,
                                                 db_find_filter filter = NULL);

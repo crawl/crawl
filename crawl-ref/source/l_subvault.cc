@@ -1,7 +1,7 @@
-/*
- * File:       l_subvault.cc
- * Summary:    Subvault routines (library "dgn").
- */
+/**
+ * @file
+ * @brief Subvault routines (library "dgn").
+**/
 
 #include "AppHdr.h"
 

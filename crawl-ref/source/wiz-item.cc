@@ -1,8 +1,7 @@
-/*
- *  File:       wiz-item.cc
- *  Summary:    Item related wizard functions.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Item related wizard functions.
+**/
 
 #include "AppHdr.h"
 
@@ -17,7 +16,6 @@
 #include "cio.h"
 #include "dbg-util.h"
 #include "decks.h"
-#include "dungeon.h"
 #include "effects.h"
 #include "env.h"
 #include "godpassive.h"
@@ -69,8 +67,8 @@ static void _make_all_books()
 void wizard_create_spec_object_by_name()
 {
     char buf[500];
-    mprf(MSGCH_PROMPT, "Enter name of item: ");
-    if (cancelable_get_line(buf, sizeof buf) || !*buf)
+    mprf(MSGCH_PROMPT, "Enter name of item (or ITEM spec): ");
+    if (cancelable_get_line_autohist(buf, sizeof buf) || !*buf)
     {
         canned_msg(MSG_OK);
         return;
@@ -152,7 +150,7 @@ void wizard_create_spec_object()
     msgwin_reply(make_stringf("%c", keyin));
 
     // Allocate an item to play with.
-    thing_created = get_item_slot();
+    thing_created = get_mitm_slot();
     if (thing_created == NON_ITEM)
     {
         mpr("Could not allocate item.");
@@ -168,7 +166,7 @@ void wizard_create_spec_object()
     }
     else if (class_wanted == OBJ_GOLD)
     {
-        int amount = debug_prompt_for_int("How much gold? ", true);
+        int amount = prompt_for_int("How much gold? ", true);
         if (amount <= 0)
         {
             canned_msg(MSG_OK);
@@ -208,7 +206,7 @@ void wizard_create_spec_object()
         dummy.type = mon;
 
         if (mons_genus(mon) == MONS_HYDRA)
-            dummy.number = debug_prompt_for_int("How many heads? ", false);
+            dummy.number = prompt_for_int("How many heads? ", false);
 
         if (fill_out_corpse(&dummy, dummy.type,
                             mitm[thing_created], true) == -1)
@@ -306,7 +304,9 @@ const char* _prop_name[ARTP_NUM_PROPERTIES] = {
     "Curse",
     "Stlth",
     "MP",
-    "Slow"
+    "Slow",
+    "HP",
+    "Clar",
 };
 
 #define ARTP_VAL_BOOL 0
@@ -343,7 +343,11 @@ int8_t _prop_type[ARTP_NUM_PROPERTIES] = {
     ARTP_VAL_POS,  //CURSED
     ARTP_VAL_ANY,  //STEALTH
     ARTP_VAL_ANY,  //MAGICAL_POWER
-    ARTP_VAL_BOOL  //PONDEROUS
+    ARTP_VAL_ANY,  //BASE_DELAY
+    ARTP_VAL_ANY,  //HP
+    ARTP_VAL_BOOL, //CLARITY
+    ARTP_VAL_ANY,  //BASE_ACC
+    ARTP_VAL_ANY,  //BASE_DAM
 };
 
 static void _tweak_randart(item_def &item)
@@ -421,7 +425,7 @@ static void _tweak_randart(item_def &item)
 
     case ARTP_VAL_POS:
         mprf(MSGCH_PROMPT, "%s was %d.", _prop_name[prop], props[prop]);
-        val = debug_prompt_for_int("New value? ", true);
+        val = prompt_for_int("New value? ", true);
 
         if (val < 0)
         {
@@ -434,7 +438,7 @@ static void _tweak_randart(item_def &item)
         break;
     case ARTP_VAL_ANY:
         mprf(MSGCH_PROMPT, "%s was %d.", _prop_name[prop], props[prop]);
-        val = debug_prompt_for_int("New value? ", false);
+        val = prompt_for_int("New value? ", false);
         artefact_set_property(item, static_cast<artefact_prop_type>(prop),
                              val);
         break;
@@ -524,6 +528,14 @@ void wizard_tweak_object(void)
         const bool hex = (keyin == 'e');
         int64_t new_val = strtoll(specs, &end, hex ? 16 : 0);
 
+        if (keyin == 'e' && new_val & ISFLAG_ARTEFACT_MASK
+            && (!you.inv[item].props.exists(KNOWN_PROPS_KEY)
+             || !you.inv[item].props.exists(ARTEFACT_PROPS_KEY)))
+        {
+            mpr("You can't set this flag on a non-artefact.");
+            continue;
+        }
+
         if (end == specs)
             return;
 
@@ -538,7 +550,7 @@ void wizard_tweak_object(void)
         else if (keyin == 'e')
             you.inv[item].flags = new_val;
         else
-            ASSERT(!"unhandled keyin");
+            die("unhandled keyin");
 
         // cursedness might have changed
         ash_check_bondage();
@@ -560,7 +572,7 @@ static bool _make_book_randart(item_def &book)
     do
     {
         mpr("Make book fixed [t]heme or fixed [l]evel? ", MSGCH_PROMPT);
-        type = tolower(getch());
+        type = tolower(getchk());
     }
     while (type != 't' && type != 'l');
 
@@ -596,7 +608,7 @@ void wizard_create_all_artefacts()
         if (entry->base_type == OBJ_UNASSIGNED)
             continue;
 
-        int islot = get_item_slot();
+        int islot = get_mitm_slot();
         if (islot == NON_ITEM)
             break;
 
@@ -612,7 +624,7 @@ void wizard_create_all_artefacts()
     }
 
     // Create Horn of Geryon
-    int islot = get_item_slot();
+    int islot = get_mitm_slot();
     if (islot != NON_ITEM)
     {
         item_def& item = mitm[islot];
@@ -829,8 +841,9 @@ void wizard_list_items()
 
         if (item.link != NON_ITEM)
         {
-            mprf("(%2d,%2d): %s", item.pos.x, item.pos.y,
-                 item.name(DESC_PLAIN, false, false, false).c_str());
+            mprf("(%2d,%2d): %s%s", item.pos.x, item.pos.y,
+                 item.name(DESC_PLAIN, false, false, false).c_str(),
+                 item.flags & ISFLAG_MIMIC ? " mimic" : "");
         }
     }
 
@@ -843,8 +856,9 @@ void wizard_list_items()
         int item = igrd(*ri);
         if (item != NON_ITEM)
         {
-            mprf("%3d at (%2d,%2d): %s", item, ri->x, ri->y,
-                 mitm[item].name(DESC_PLAIN, false, false, false).c_str());
+            mprf("%3d at (%2d,%2d): %s%s", item, ri->x, ri->y,
+                 mitm[item].name(DESC_PLAIN, false, false, false).c_str(),
+                 mitm[item].flags & ISFLAG_MIMIC ? " mimic" : "");
         }
     }
 }
@@ -856,7 +870,7 @@ void wizard_list_items()
 //---------------------------------------------------------------
 static void _debug_acquirement_stats(FILE *ostat)
 {
-    int p = get_item_slot(11);
+    int p = get_mitm_slot(11);
     if (p == NON_ITEM)
     {
         mpr("Too many items on level.");
@@ -887,7 +901,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         return;
     }
 
-    const int num_itrs = debug_prompt_for_int("How many iterations? ", true);
+    const int num_itrs = prompt_for_int("How many iterations? ", true);
 
     if (num_itrs == 0)
     {
@@ -912,7 +926,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     {
         if (kbhit())
         {
-            getch();
+            getchk();
             mpr("Stopping early due to keyboard input.");
             break;
         }
@@ -1005,13 +1019,15 @@ static void _debug_acquirement_stats(FILE *ostat)
             you.your_name.c_str(), player_title().c_str(),
             you.experience_level,
             species_name(you.species).c_str(),
-            you.class_name, godname.c_str());
+            you.class_name.c_str(), godname.c_str());
 
     // Print player equipment.
     const int e_order[] =
     {
         EQ_WEAPON, EQ_BODY_ARMOUR, EQ_SHIELD, EQ_HELMET, EQ_CLOAK,
-        EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING
+        EQ_GLOVES, EQ_BOOTS, EQ_AMULET, EQ_RIGHT_RING, EQ_LEFT_RING,
+        EQ_RING_ONE, EQ_RING_TWO, EQ_RING_THREE, EQ_RING_FOUR,
+        EQ_RING_FIVE, EQ_RING_SIX, EQ_RING_SEVEN, EQ_RING_EIGHT
     };
 
     bool naked = true;
@@ -1228,12 +1244,12 @@ static void _debug_acquirement_stats(FILE *ostat)
         {
             const int mannum = subtype_quants[BOOK_MANUAL];
             fprintf(ostat, "\nManuals:\n");
-            for (int i = SK_FIGHTING; i <= SK_EVOCATIONS; ++i)
+            for (int i = SK_FIRST_SKILL; i <= SK_LAST_SKILL; ++i)
             {
                 const int k = 200 + i;
                 if (subtype_quants[k] > 0)
                 {
-                    fprintf(ostat, "%17s: %5.2f\n", skill_name(i),
+                    fprintf(ostat, "%17s: %5.2f\n", skill_name((skill_type)i),
                             100.0 * (float) subtype_quants[k] / (float) mannum);
                 }
             }
@@ -1262,7 +1278,7 @@ static void _debug_acquirement_stats(FILE *ostat)
         item.sub_type = i;
         std::string name = item.name(desc, terse, true);
 
-        max_width = std::max(max_width, (int) name.length());
+        max_width = std::max(max_width, strwidth(name));
     }
 
     // Now output the sub types.
@@ -1288,6 +1304,7 @@ static void _debug_acquirement_stats(FILE *ostat)
     mpr("Results written into 'items.stat'.");
 }
 
+#define MAX_TRIES 16777216 /* not special anymore */
 static void _debug_rap_stats(FILE *ostat)
 {
     int i = prompt_invent_item("Generate randart stats on which item?",
@@ -1340,13 +1357,18 @@ static void _debug_rap_stats(FILE *ostat)
         -1, //ARTP_CAUSE_TELEPORTATION
         -1, //ARTP_PREVENT_TELEPORTATION
         -1, //ARTP_ANGRY
-        -1, //ARTP_METABOLISM
+         0, //ARTP_METABOLISM
         -1, //ARTP_MUTAGENIC
          0, //ARTP_ACCURACY
          0, //ARTP_DAMAGE
         -1, //ARTP_CURSED
          0, //ARTP_STEALTH
          0, //ARTP_MAGICAL_POWER
+         0, //ARTP_BASE_DELAY
+         0, //ARTP_HP
+         1, //ARTP_CLARITY
+         0, //ARTP_BASE_ACC
+         0, //ARTP_BASE_DAM
          -1
     };
 
@@ -1370,16 +1392,14 @@ static void _debug_rap_stats(FILE *ostat)
 
     artefact_properties_t proprt;
 
-    for (i = 0; i < RANDART_SEED_MASK; ++i)
+    for (i = 0; i < MAX_TRIES; ++i)
     {
         if (kbhit())
         {
-            getch();
+            getchk();
             mpr("Stopping early due to keyboard input.");
             break;
         }
-
-        item.special = i;
 
         // Generate proprt once and hand it off to randart_is_bad(),
         // so that randart_is_bad() doesn't generate it a second time.
@@ -1436,11 +1456,11 @@ static void _debug_rap_stats(FILE *ostat)
         total_bad_props     += num_bad_props;
         total_balance_props += balance;
 
-        if (i % 16777 == 0)
+        if (i % 16767 == 0)
         {
             mesclr();
             float curr_percent = (float) i * 1000.0
-                / (float) RANDART_SEED_MASK;
+                / (float) MAX_TRIES;
             mprf("%4.1f%% done.", curr_percent / 10.0);
         }
 
@@ -1489,7 +1509,11 @@ static void _debug_rap_stats(FILE *ostat)
         "ARTP_CURSED",
         "ARTP_STEALTH",
         "ARTP_MAGICAL_POWER",
-        "ARTP_PONDEROUS"
+        "ARTP_BASE_DELAY",
+        "ARTP_HP",
+        "ARTP_CLARITY",
+        "ARTP_BASE_ACC",
+        "ARTP_BASE_DAM",
     };
 
     fprintf(ostat, "                            All    Good   Bad\n");

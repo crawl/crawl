@@ -1,0 +1,10 @@
+# Changes for 0.9 include monster glyph changes.
+
+###########################
+# monsters
+###########################
+
+# merfolk
+mon_glyph = merfolk : blue
+mon_glyph = merfolk impaler : lightblue
+mon_glyph = merfolk javelineer : lightgrey

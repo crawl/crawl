@@ -1,7 +1,7 @@
-/*
- *  File:       quiver.h
- *  Summary:    Player quiver functionality
- */
+/**
+ * @file
+ * @brief Player quiver functionality
+**/
 
 #ifndef QUIVER_H
 #define QUIVER_H

@@ -1,8 +1,7 @@
-/*
- *  File:       mon-stuff.h
- *  Summary:    Misc monster related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Misc monster related functions.
+**/
 
 
 #ifndef MONSTUFF_H
@@ -56,17 +55,20 @@ struct level_exit
 
 
 const item_def *give_mimic_item(monster* mimic);
-const item_def &get_mimic_item(const monster* mimic);
+const item_def* get_mimic_item(const monster* mimic);
 int  get_mimic_colour(const monster* mimic);
 dungeon_feature_type get_mimic_feat (const monster* mimic);
 bool feature_mimic_at (const coord_def &c);
+item_def* item_mimic_at(const coord_def &c);
+bool mimic_at(const coord_def &c);
 
 void alert_nearby_monsters(void);
 
 beh_type attitude_creation_behavior(mon_attitude_type att);
 beh_type actual_same_attitude(const monster& base);
 
-enum poly_power_type {
+enum poly_power_type
+{
     PPT_LESS,
     PPT_MORE,
     PPT_SAME,
@@ -97,7 +99,7 @@ void slimify_monster(monster* mons, bool hostile = false);
 
 bool mon_can_be_slimified(monster* mons);
 
-void corrode_monster(monster* mons);
+void corrode_monster(monster* mons, const actor* evildoer);
 
 void mons_check_pool(monster* mons, const coord_def &oldpos,
                      killer_type killer = KILL_NONE, int killnum = -1);
@@ -105,8 +107,9 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
 void monster_cleanup(monster* mons);
 
 int dismiss_monsters(std::string pattern);
+void zap_los_monsters(bool items_also);
 
-bool curse_an_item(bool decay_potions, bool quiet = false);
+bool curse_an_item(bool quiet = false);
 
 bool is_any_item(const item_def& item);
 void monster_drop_things(
@@ -172,8 +175,8 @@ int mons_natural_regen_rate(monster* mons);
 void mons_relocated(monster* mons);
 void mons_att_changed(monster* mons);
 
-bool can_go_straight(const coord_def& p1, const coord_def& p2,
-                     dungeon_feature_type allowed);
+bool can_go_straight(const monster* mon, const coord_def& p1,
+                     const coord_def& p2);
 
 bool is_item_jelly_edible(const item_def &item);
 
@@ -181,6 +184,7 @@ bool monster_random_space(const monster* mons, coord_def& target,
                           bool forbid_sanctuary = false);
 bool monster_random_space(monster_type mon, coord_def& target,
                           bool forbid_sanctuary = false);
+bool shove_monster(monster* mons);
 void monster_teleport(monster* mons, bool instan, bool silent = false);
 void mons_clear_trapping_net(monster* mon);
 
@@ -190,15 +194,11 @@ std::string summoned_poof_msg(const monster* mons, const item_def &item);
 
 bool mons_reaped(actor *killer, monster* victim);
 
-actor* forest_near_enemy(const actor *mon);
-void forest_message(const coord_def pos, const std::string msg,
-                    msg_channel_type ch = MSGCH_PLAIN);
-void forest_damage(const actor *mon);
-
 struct bolt;
 
 void setup_spore_explosion(bolt & beam, const monster& origin);
 void setup_lightning_explosion(bolt & beam, const monster& origin);
+void setup_inner_flame_explosion(bolt & beam, const monster& origin);
 
 bool mons_avoids_cloud(const monster* mons, cloud_type cl_type,
                        bool placement = false);
@@ -210,5 +210,10 @@ bool mons_avoids_cloud(const monster* mons, int cloud_num,
 
 void debuff_monster(monster* mons);
 int exp_rate(int killer);
+int count_monsters(monster_type mtyp, bool friendlyOnly);
+int count_allies();
+#if TAG_MAJOR_VERSION <= 33
+void note_montiers();
+#endif
 
 #endif

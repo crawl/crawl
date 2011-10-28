@@ -1,8 +1,7 @@
-/*
- *  File:       traps.h
- *  Summary:    Traps related functions.
- *  Written by: Linley Henzell
- */
+/**
+ * @file
+ * @brief Traps related functions.
+**/
 
 #ifndef TRAPS_H
 #define TRAPS_H
@@ -20,7 +19,6 @@ void free_self_from_net(void);
 
 void handle_traps(trap_type trt, int i, bool trap_known);
 int get_trapping_net(const coord_def& where, bool trapped = true);
-void mark_net_trapping(const coord_def& where);
 void monster_caught_in_net(monster* mon, bolt &pbolt);
 bool player_caught_in_net();
 void clear_trapping_net();
@@ -33,7 +31,6 @@ int reveal_traps(const int range);
 void destroy_trap(const coord_def& pos);
 trap_def* find_trap(const coord_def& where);
 trap_type get_trap_type(const coord_def& where);
-const char *trap_name_at(const coord_def& c);
 
 trap_type random_trap();
 trap_type random_trap(dungeon_feature_type feat);
@@ -48,17 +45,7 @@ int       num_traps_for_place(int level_number = -1,
 trap_type random_trap_for_place(int level_number = -1,
                                 const level_id &place = level_id::current());
 
-trap_type random_trap_slime(int level_number = -1);
-
-int traps_zero_number(int level_number = -1);
-
-int       traps_pan_number(int level_number = -1);
-trap_type traps_pan_type(int level_number = -1);
-
-int       traps_abyss_number(int level_number = -1);
-trap_type traps_abyss_type(int level_number = -1);
-
-int       traps_lab_number(int level_number = -1);
-trap_type traps_lab_type(int level_number = -1);
-
+int count_traps(trap_type ttyp);
+void place_webs(int num, bool is_second_phase = false);
+bool maybe_destroy_web(actor *oaf);
 #endif

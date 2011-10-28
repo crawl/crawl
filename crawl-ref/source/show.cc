@@ -1,6 +1,9 @@
-#include "AppHdr.h"
+/**
+ * @file
+ * @brief Updates the screen via map_knowledge.
+**/
 
-#include <stdint.h>
+#include "AppHdr.h"
 
 #include "show.h"
 
@@ -10,11 +13,13 @@
 #include "coordit.h"
 #include "dgnevent.h"
 #include "dgn-overview.h"
+#include "directn.h"
 #include "dungeon.h"
 #include "env.h"
 #include "exclude.h"
 #include "fprop.h"
 #include "itemprop.h"
+#include "mon-place.h"
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "monster.h"
@@ -22,12 +27,12 @@
 #include "random.h"
 #include "showsymb.h"
 #include "state.h"
-#include "stuff.h"
 #include "areas.h"
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tileview.h"
 #endif
+#include "traps.h"
 #include "travel.h"
 #include "viewgeom.h"
 #include "viewmap.h"
@@ -109,30 +114,31 @@ bool show_type::is_cleanable_monster() const
 
 static void _update_feat_at(const coord_def &gp)
 {
+    if (!you.see_cell(gp))
+        return;
+
     dungeon_feature_type feat = grid_appearance(gp);
     unsigned colour = env.grid_colours(gp);
+    trap_type trap = TRAP_UNASSIGNED;
+    if (feat_is_trap(feat))
+        trap = get_trap_type(gp);
 
-    bool mimic = false;
-
-    // Check for mimics
-    if (monster_at(gp))
-    {
-        const monster* mmimic = monster_at(gp);
-        if (mons_is_feat_mimic(mmimic->type))
-        {
-            feat = get_mimic_feat(mmimic);
-            colour = mmimic->colour;
-            mimic = true;
-        }
-    }
-
-    env.map_knowledge(gp).set_feature(feat, colour);
+    env.map_knowledge(gp).set_feature(feat, colour, trap);
 
     if (haloed(gp))
         env.map_knowledge(gp).flags |= MAP_HALOED;
 
+    if (umbraed(gp))
+        env.map_knowledge(gp).flags |= MAP_UMBRAED;
+
     if (silenced(gp))
         env.map_knowledge(gp).flags |= MAP_SILENCED;
+
+    if (liquefied(gp, false))
+        env.map_knowledge(gp).flags |= MAP_LIQUEFIED;
+
+    if (orb_haloed(gp))
+        env.map_knowledge(gp).flags |= MAP_ORB_HALOED;
 
     if (is_sanctuary(gp))
     {
@@ -149,9 +155,11 @@ static void _update_feat_at(const coord_def &gp)
         env.map_knowledge(gp).flags |= MAP_WITHHELD;
 
     if (feat >= DNGN_STONE_STAIRS_DOWN_I
-                            && feat <= DNGN_ESCAPE_HATCH_UP
-                            && is_exclude_root(gp))
+        && feat <= DNGN_ESCAPE_HATCH_UP
+        && is_exclude_root(gp))
+    {
         env.map_knowledge(gp).flags |= MAP_EXCLUDED_STAIRS;
+    }
 
     if (is_bloodcovered(gp))
         env.map_knowledge(gp).flags |= MAP_BLOODY;
@@ -172,7 +180,7 @@ static void _update_feat_at(const coord_def &gp)
     // Tell the world first.
     dungeon_events.fire_position_event(DET_PLAYER_IN_LOS, gp);
 
-    if (is_notable_terrain(feat) && !mimic)
+    if (is_notable_terrain(feat))
         seen_notable_thing(feat, gp);
 
     dgn_seen_vault_at(gp);
@@ -204,37 +212,49 @@ static show_item_type _item_to_show_code(const item_def &item)
 
 static void _update_item_at(const coord_def &gp)
 {
-    const item_def *eitem;
-    bool more_items = false;
-    // Check for mimics.
-    const monster* m = monster_at(gp);
-    if (m && mons_is_unknown_mimic(m) && mons_is_item_mimic(m->type))
-        eitem = &get_mimic_item(m);
-    else if (you.visible_igrd(gp) != NON_ITEM)
-        eitem = &mitm[you.visible_igrd(gp)];
-    else
+    if (!in_bounds(gp))
         return;
 
-    // monster(mimic)-owned items have link = NON_ITEM+1+midx
-    if (eitem->link > NON_ITEM && you.visible_igrd(gp) != NON_ITEM)
-        more_items = true;
-    else if (eitem->link < NON_ITEM && !crawl_state.game_is_arena())
-        more_items = true;
+    item_def eitem;
+    bool more_items = false;
 
-    env.map_knowledge(gp).set_item(get_item_info(*eitem), more_items);
+    if (you.see_cell(gp))
+    {
+        if (you.visible_igrd(gp) != NON_ITEM)
+            eitem = mitm[you.visible_igrd(gp)];
+        else
+            return;
+
+        // monster(mimic)-owned items have link = NON_ITEM+1+midx
+        if (eitem.link > NON_ITEM && you.visible_igrd(gp) != NON_ITEM)
+            more_items = true;
+        else if (eitem.link < NON_ITEM && !crawl_state.game_is_arena())
+            more_items = true;
+    }
+    else
+    {
+        const std::vector<item_def> stash = item_list_in_stash(gp);
+        if (stash.empty())
+            return;
+
+        eitem = stash[0];
+        if (stash.size() > 1)
+            more_items = true;
+    }
+    env.map_knowledge(gp).set_item(get_item_info(eitem), more_items);
 
 #ifdef USE_TILE
     if (feat_is_stair(env.grid(gp)))
-        tile_place_item_marker(grid2show(gp), *eitem);
+        tile_place_item_marker(gp, eitem);
     else
-        tile_place_item(grid2show(gp), *eitem);
+        tile_place_item(gp, eitem);
 #endif
 }
 
 static void _update_cloud(int cloudno)
 {
     const coord_def gp = env.cloud[cloudno].pos;
-    cloud_type cloud = env.cloud[cloudno].type;
+    cloud_type cloud   = env.cloud[cloudno].type;
     env.map_knowledge(gp).set_cloud(cloud, get_cloud_colour(cloudno));
 
 #ifdef USE_TILE
@@ -264,35 +284,141 @@ static void _check_monster_pos(const monster* mons)
     }
 }
 
-static void _update_monster(const monster* mons)
+/**
+ * Determine if a location is valid to present a { glyph.
+ *
+ * @param where    The location being queried.
+ * @param mons     The moster being mimicked.
+ * @returns        True if valid, otherwise False.
+*/
+static bool _valid_invis_spot(const coord_def &where, const monster* mons)
+{
+    monster *mons_at = monster_at(where);
+
+    if (mons_at && mons_at != mons)
+        return (false);
+
+    if (monster_habitable_grid(mons, grd(where)))
+        return (true);
+
+    return (false);
+}
+
+static int _hashed_rand(const monster* mons, uint32_t id, uint32_t die)
+{
+    if (die <= 1)
+        return 0;
+
+    struct
+    {
+        uint32_t mid;
+        uint32_t id;
+        uint32_t seed;
+    } data;
+    data.mid = mons->mid;
+    data.id  = id;
+    data.seed = you.attribute[ATTR_SEEN_INVIS_SEED];
+
+    return hash(&data, sizeof(data)) % die;
+}
+
+/**
+ * Mark the estimated position of an invisible monster.
+ *
+ * Marks a spot on the map as possibly containing an unseen monster
+ * (showing up as a disturbance in the air), and also places the
+ * corresponding tile.
+ *
+ * @param where    The disturbance's map position.
+**/
+static void _mark_invisible_monster(const coord_def &where)
+{
+    env.map_knowledge(where).set_invisible_monster();
+#ifdef USE_TILE
+    tile_place_invisible_monster(where);
+#endif
+}
+
+/**
+ * Update map knowledge for monsters
+ *
+ * This function updates the map_knowledge grid with a monster_info if relevant.
+ * If the monster is not currently visible to the player, the map knowledge will
+ * be upated with a disturbance if necessary.
+ *
+ * @param mons    The monster at the relevant location.
+**/
+static void _update_monster(monster* mons)
 {
     _check_monster_pos(mons);
 
     const coord_def gp = mons->pos();
 
-    if (mons_is_unknown_mimic(mons))
-    {
-#ifdef USE_TILE
-        tile_place_monster(mons->pos(), mons);
-#endif
-        return;
-    }
-
     if (!mons->visible_to(&you))
     {
         // ripple effect?
-        if ((grd(gp) == DNGN_SHALLOW_WATER
-            && !mons_flies(mons)
-            && env.cgrid(gp) == EMPTY_CLOUD)
-            ||
-            (is_opaque_cloud(env.cgrid(gp))
-                 && !mons->submerged()
-                 && !mons->is_insubstantial())
-         )
+        if (grd(gp) == DNGN_SHALLOW_WATER
+                && !mons_flies(mons)
+                && env.cgrid(gp) == EMPTY_CLOUD
+            || is_opaque_cloud(env.cgrid(gp))
+                && !mons->submerged()
+                && !mons->is_insubstantial())
+        {
             env.map_knowledge(gp).set_invisible_monster();
+        }
+
+        // Being submerged isnot the same as invisibility.
+        if (mons->submerged())
+            return;
+
+        if (you.attribute[ATTR_SEEN_INVIS_TURN] != you.num_turns)
+        {
+            you.attribute[ATTR_SEEN_INVIS_TURN] = you.num_turns;
+            you.attribute[ATTR_SEEN_INVIS_SEED] = random_int();
+        }
+
+        // maybe show unstealthy invis monsters
+        if (mons->friendly()
+            || _hashed_rand(mons, 0, 7) >= mons->stealth() + 4)
+        {
+            // We cannot use regular randomness here, otherwise redrawing the
+            // screen would give out the real position.  We need to save the
+            // seed too -- but it needs to be regenerated every turn.
+
+            // Maybe mark their square.
+            if (mons->friendly()
+                || mons->stealth() <= -2
+                || mons->stealth() <= 2 && !_hashed_rand(mons, 1, 4))
+            {
+                env.map_knowledge(gp).set_invisible_monster();
+                // Just display the actual position for friendlies.
+                if (mons->friendly())
+                    return;
+            }
+
+            // Exceptionally stealthy monsters have a higher chance of
+            // not leaving any other trails.
+            if (mons->stealth() == 1 && !_hashed_rand(mons, 2, 3)
+                || mons->stealth() == 2 && coinflip()
+                || mons->stealth() == 3)
+            {
+                return;
+            }
+
+            // Otherwise just indicate that there's a monster nearby
+            coord_def new_pos = gp + Compass[_hashed_rand(mons, 3, 8)];
+            if (_valid_invis_spot(new_pos, mons) && _hashed_rand(mons, 4, 2))
+                _mark_invisible_monster(new_pos);
+
+            new_pos = gp + Compass[_hashed_rand(mons, 5, 8)];
+            if (_valid_invis_spot(new_pos, mons) && !_hashed_rand(mons, 6, 3))
+                _mark_invisible_monster(new_pos);
+        }
+
         return;
     }
 
+    mons->ensure_has_client_id();
     monster_info mi(mons);
     env.map_knowledge(gp).set_monster(mi);
 
@@ -303,7 +429,12 @@ static void _update_monster(const monster* mons)
 
 void show_update_at(const coord_def &gp, bool terrain_only)
 {
-    env.map_knowledge(gp).clear_data();
+    if (you.see_cell(gp))
+        env.map_knowledge(gp).clear_data();
+    else if (!env.map_knowledge(gp).known())
+        return;
+    else
+        env.map_knowledge(gp).clear_monster();
 
     // The sequence is grid, items, clouds, monsters.
     _update_feat_at(gp);
@@ -316,7 +447,9 @@ void show_update_at(const coord_def &gp, bool terrain_only)
     if (!in_bounds(gp))
         return;
 
-    _update_item_at(gp);
+    monster* mons = monster_at(gp);
+    if (mons && mons->alive())
+        _update_monster(mons);
 
     const int cloud = env.cgrid(gp);
     if (cloud != EMPTY_CLOUD && env.cloud[cloud].type != CLOUD_NONE
@@ -325,9 +458,7 @@ void show_update_at(const coord_def &gp, bool terrain_only)
         _update_cloud(cloud);
     }
 
-    const monster* mons = monster_at(gp);
-    if (mons && mons->alive())
-        _update_monster(mons);
+    _update_item_at(gp);
 }
 
 void show_init(bool terrain_only)

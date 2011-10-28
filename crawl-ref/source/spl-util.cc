@@ -1,8 +1,7 @@
-/*
- *  File:       spl-util.cc                                          *
- *  Summary:    data handlers for player-available spell list        *
- *  Written by: don brodale <dbrodale@bigfootinteractive.com>        *
- */
+/**
+ * @file
+ * @brief data handlers for player-available spell list
+**/
 
 #include "AppHdr.h"
 
@@ -30,6 +29,7 @@
 #include "mon-behv.h"
 #include "mon-util.h"
 #include "notes.h"
+#include "options.h"
 #include "player.h"
 #include "religion.h"
 #include "spl-cast.h"
@@ -80,11 +80,6 @@ static int spell_list[NUM_SPELLS];
 #define SPELLDATASIZE (sizeof(spelldata)/sizeof(struct spell_desc))
 
 static struct spell_desc *_seekspell(spell_type spellid);
-static bool _cloud_helper(cloud_func func, const coord_def& where,
-                          int pow, int spread_rate,
-                          cloud_type ctype, kill_category whose,
-                          killer_type killer, int colour,
-                          std::string name, std::string tile);
 
 //
 //             BEGIN PUBLIC FUNCTIONS
@@ -104,7 +99,7 @@ void init_spell_descs(void)
         if (data.id < SPELL_NO_SPELL || data.id >= NUM_SPELLS)
             end(1, false, "spell #%d has invalid id %d", i, data.id);
 
-        if (data.title == NULL || strlen(data.title) == 0)
+        if (data.title == NULL || !*data.title)
             end(1, false, "spell #%d, id %d has no name", i, data.id);
 
         if (data.level < 1 || data.level > 9)
@@ -169,7 +164,7 @@ spell_type spell_by_name(std::string name, bool partial_match)
         return (SPELL_NO_SPELL);
     }
 
-    int spellmatch = -1;
+    spell_type spellmatch = SPELL_NO_SPELL;
     for (int i = 0; i < NUM_SPELLS; i++)
     {
         spell_type type = static_cast<spell_type>(i);
@@ -182,14 +177,13 @@ spell_type spell_by_name(std::string name, bool partial_match)
         if (spell_name.find(name) != std::string::npos)
         {
             if (spell_name == name)
-                return static_cast<spell_type>(i);
+                return type;
 
-            spellmatch = i;
+            spellmatch = type;
         }
     }
 
-    return (spellmatch != -1 ? static_cast<spell_type>(spellmatch)
-                             : SPELL_NO_SPELL);
+    return spellmatch;
 }
 
 spschool_flag_type school_by_name(std::string name)
@@ -255,6 +249,20 @@ int get_spell_slot_by_letter(char letter)
     return (you.spell_letter_table[index]);
 }
 
+int get_spell_slot(spell_type spell)
+{
+    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
+        if (you.spells[i] == spell)
+            return i;
+
+    return -1;
+}
+
+int get_spell_letter(spell_type spell)
+{
+    return index_to_letter(get_spell_slot(spell));
+}
+
 spell_type get_spell_by_letter(char letter)
 {
     ASSERT(isaalpha(letter));
@@ -266,10 +274,12 @@ spell_type get_spell_by_letter(char letter)
 
 bool add_spell_to_memory(spell_type spell)
 {
-    int i, j;
-
+    int i;
+    int j = -1;
+    std::string sname = spell_title(spell);
+    lowercase(sname);
     // first we find a slot in our head:
-    for (i = 0; i < 25; i++)
+    for (i = 0; i < MAX_KNOWN_SPELLS; i++)
     {
         if (you.spells[i] == SPELL_NO_SPELL)
             break;
@@ -278,11 +288,30 @@ bool add_spell_to_memory(spell_type spell)
     you.spells[i] = spell;
 
     // now we find an available label:
-    for (j = 0; j < 52; j++)
+    // first check to see whether we've chosen an automatic label:
+    for (unsigned k = 0; k < Options.auto_spell_letters.size(); ++k)
     {
-        if (you.spell_letter_table[j] == -1)
+        if (!Options.auto_spell_letters[k].first.matches(sname))
+            continue;
+        for (unsigned l = 0; l < Options.auto_spell_letters[k].second.length(); ++l)
+            if (isaalpha(Options.auto_spell_letters[k].second[l]) &&
+                you.spell_letter_table[letter_to_index(Options.auto_spell_letters[k].second[l])] == -1)
+            {
+                j = letter_to_index(Options.auto_spell_letters[k].second[l]);
+                mprf("Spell assigned to '%c'.",
+                     Options.auto_spell_letters[k].second[l]);
+                break;
+            }
+        if (j != -1)
             break;
     }
+    // If we didn't find a label above, choose the first available one.
+    if (j == -1)
+        for (j = 0; j < 52; j++)
+        {
+            if (you.spell_letter_table[j] == -1)
+                break;
+        }
 
     you.spell_letter_table[j] = i;
 
@@ -290,13 +319,27 @@ bool add_spell_to_memory(spell_type spell)
 
     take_note(Note(NOTE_LEARN_SPELL, spell));
 
+    spell_skills(spell, you.start_train);
+
+#ifdef USE_TILE_LOCAL
+    tiles.layout_statcol();
+    redraw_screen();
+#endif
+
     return (true);
 }
 
 bool del_spell_from_memory_by_slot(int slot)
 {
+    ASSERT(slot >= 0 && slot < MAX_KNOWN_SPELLS);
     int j;
 
+    if (you.last_cast_spell == you.spells[slot])
+        you.last_cast_spell = SPELL_NO_SPELL;
+
+    spell_skills(you.spells[slot], you.stop_train);
+
+    mprf("Your memory of %s unravels.", spell_title(you.spells[slot]));
     you.spells[ slot ] = SPELL_NO_SPELL;
 
     for (j = 0; j < 52; j++)
@@ -308,27 +351,21 @@ bool del_spell_from_memory_by_slot(int slot)
 
     you.spell_no--;
 
+#ifdef USE_TILE_LOCAL
+    tiles.layout_statcol();
+    redraw_screen();
+#endif
+
     return (true);
 }
 
 bool del_spell_from_memory(spell_type spell)
 {
-    int i,j;
-
-    for (i = 0; i < you.spell_no; i++)
-        if (you.spells[i] == spell)
-        {
-            you.spells[i] = SPELL_NO_SPELL;
-            break;
-        }
-
-    for (j = 0; j < 52; j++)
-        if (you.spell_letter_table[j] == i)
-            you.spell_letter_table[j] = -1;
-
-    you.spell_no--;
-
-    return (true);
+    int i = get_spell_slot(spell);
+    if (i == -1)
+        return (false);
+    else
+        return del_spell_from_memory_by_slot(i);
 }
 
 int spell_hunger(spell_type which_spell, bool rod)
@@ -348,11 +385,11 @@ int spell_hunger(spell_type which_spell, bool rod)
 
     if (rod)
     {
-        hunger -= 10 * you.skills[SK_EVOCATIONS];
+        hunger -= you.skill(SK_EVOCATIONS, 10);
         hunger = std::max(hunger, level * 5);
     }
     else
-        hunger -= you.intel() * you.skills[SK_SPELLCASTING];
+        hunger -= you.skill(SK_SPELLCASTING, you.intel());
 
     if (hunger < 0)
         hunger = 0;
@@ -516,13 +553,21 @@ const char *spell_title(spell_type spell)
 // Apply a function-pointer to all visible squares
 // Returns summation of return values from passed in function.
 int apply_area_visible(cell_func cf, int power,
-                       bool pass_through_trans, actor *agent)
+                       bool pass_through_trans, actor *agent,
+                       bool affect_scryed)
 {
     int rv = 0;
+
+    bool xray = you.xray_vision;
+
+    if (!affect_scryed)
+        you.xray_vision = false;
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
         if (pass_through_trans || you.see_cell_no_trans(*ri))
             rv += cf(*ri, power, 0, agent);
+
+    you.xray_vision = xray;
 
     return (rv);
 }
@@ -722,7 +767,6 @@ int apply_area_within_radius(cell_func cf, const coord_def& where,
                              int pow, int radius, int ctype,
                              actor *agent)
 {
-
     int rv = 0;
 
     for (radius_iterator ri(where, radius, false, false); ri; ++ri)
@@ -731,73 +775,34 @@ int apply_area_within_radius(cell_func cf, const coord_def& where,
     return (rv);
 }
 
-// apply_area_cloud:
-// Try to make a realistic cloud by expanding from a point, filling empty
-// floor tiles until we run out of material (passed in as number).
-// We really need some sort of a queue structure, since ideally I'd like
-// to do a (shallow) breadth-first-search of the dungeon floor.
-// This ought to work okay for small clouds.
 void apply_area_cloud(cloud_func func, const coord_def& where,
                        int pow, int number, cloud_type ctype,
-                       kill_category whose, killer_type killer,
+                       const actor *agent,
                        int spread_rate, int colour, std::string name,
                        std::string tile)
 {
-    if (!in_bounds(where))
+    if (number <= 0)
         return;
 
-    int good_squares = 0;
-    int neighbours[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
-
-    if (number && _cloud_helper(func, where, pow, spread_rate, ctype, whose,
-                                killer, colour, name, tile))
-        number--;
-
-    if (number == 0)
+    targetter_cloud place(0, 0, number, number);
+    if (!place.set_aim(where))
         return;
-
-    // These indices depend on the order in Compass (see main.cc)
-    int compass_order_orth[4] = { 2, 6, 4, 0 };
-    int compass_order_diag[4] = { 1, 3, 5, 7 };
-
-    int* const arrs[2] = { compass_order_orth, compass_order_diag };
-
-    for (int m = 0; m < 2; ++m)
+    unsigned int dist = 0;
+    while (number > 0)
     {
-        // Randomise, but do orthogonals first and diagonals later.
-        std::random_shuffle(arrs[m], arrs[m] + 4);
-        for (int i = 0; i < 4 && number; ++i)
-        {
-            const int aux = arrs[m][i];
-            if (_cloud_helper(func, where + Compass[aux],
-                               pow, spread_rate, ctype, whose, killer, colour,
-                               name, tile))
-            {
-                number--;
-                good_squares++;
-                neighbours[aux]++;
-            }
-        }
-    }
+        while (place.queue[dist].empty())
+            if (++dist >= place.queue.size())
+                return;
+        std::vector<coord_def> &q = place.queue[dist];
+        int el = random2(q.size());
+        coord_def c = q[el];
+        q[el] = q[q.size() - 1];
+        q.pop_back();
 
-    // Get a random permutation.
-    int perm[8];
-    for (int i = 0; i < 8; ++i)
-        perm[i] = i;
-    std::random_shuffle(perm, perm+8);
-    for (int i = 0; i < 8 && number; i++)
-    {
-        // Spread (in random order.)
-        const int j = perm[i];
-
-        if (neighbours[j] == 0)
+        if (place.seen[c] <= 0)
             continue;
-
-        int spread = number / good_squares;
-        number -= spread;
-        good_squares--;
-        apply_area_cloud(func, where + Compass[j], pow, spread, ctype, whose,
-                         killer, spread_rate, colour, name, tile);
+        func(c, pow, spread_rate, ctype, agent, colour, name, tile);
+        number--;
     }
 }
 
@@ -810,7 +815,8 @@ bool spell_direction(dist &spelld, bolt &pbolt,
                       int range,
                       bool needs_path, bool may_target_monster,
                       bool may_target_self, const char *target_prefix,
-                      const char* top_prompt, bool cancel_at_self)
+                      const char* top_prompt, bool cancel_at_self,
+                      targetter *hitfunc, desc_filter get_desc_func)
 {
     if (range < 1)
         range = (pbolt.range < 1) ? LOS_RADIUS : pbolt.range;
@@ -828,6 +834,8 @@ bool spell_direction(dist &spelld, bolt &pbolt,
         args.top_prompt = top_prompt;
     args.behaviour = NULL;
     args.cancel_at_self = cancel_at_self;
+    args.hitfunc = hitfunc;
+    args.get_desc_func = get_desc_func;
 
     direction(spelld, args);
 
@@ -850,8 +858,10 @@ const char* spelltype_short_name(int which_spelltype)
     {
     case SPTYP_CONJURATION:
         return ("Conj");
-    case SPTYP_ENCHANTMENT:
-        return ("Ench");
+    case SPTYP_HEXES:
+        return ("Hex");
+    case SPTYP_CHARMS:
+        return ("Chrm");
     case SPTYP_FIRE:
         return ("Fire");
     case SPTYP_ICE:
@@ -887,8 +897,10 @@ const char* spelltype_long_name(int which_spelltype)
     {
     case SPTYP_CONJURATION:
         return ("Conjuration");
-    case SPTYP_ENCHANTMENT:
-        return ("Enchantment");
+    case SPTYP_HEXES:
+        return ("Hexes");
+    case SPTYP_CHARMS:
+        return ("Charms");
     case SPTYP_FIRE:
         return ("Fire");
     case SPTYP_ICE:
@@ -918,12 +930,13 @@ const char* spelltype_long_name(int which_spelltype)
     }
 }
 
-int spell_type2skill(unsigned int spelltype)
+skill_type spell_type2skill(unsigned int spelltype)
 {
     switch (spelltype)
     {
     case SPTYP_CONJURATION:    return (SK_CONJURATIONS);
-    case SPTYP_ENCHANTMENT:    return (SK_ENCHANTMENTS);
+    case SPTYP_HEXES:          return (SK_HEXES);
+    case SPTYP_CHARMS:         return (SK_CHARMS);
     case SPTYP_FIRE:           return (SK_FIRE_MAGIC);
     case SPTYP_ICE:            return (SK_ICE_MAGIC);
     case SPTYP_TRANSMUTATION:  return (SK_TRANSMUTATIONS);
@@ -937,13 +950,10 @@ int spell_type2skill(unsigned int spelltype)
     default:
     case SPTYP_HOLY:
     case SPTYP_DIVINATION:
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "spell_type2skill: called with spelltype %u",
-             spelltype);
-#endif
-        return (-1);
+        dprf("spell_type2skill: called with spelltype %u", spelltype);
+        return (SK_NONE);
     }
-}                               // end spell_type2skill()
+}
 
 /*
  **************************************************
@@ -967,24 +977,6 @@ bool is_valid_spell(spell_type spell)
 {
     return (spell > SPELL_NO_SPELL && spell < NUM_SPELLS
             && spell_list[spell] != -1);
-}
-
-static bool _cloud_helper(cloud_func func, const coord_def& where,
-                          int pow, int spread_rate,
-                          cloud_type ctype, kill_category whose,
-                          killer_type killer, int colour, std::string name,
-                          std::string tile)
-{
-    if (in_bounds(where)
-        && !feat_is_solid(grd(where))
-        && env.cgrid(where) == EMPTY_CLOUD)
-    {
-        func(where, pow, spread_rate, ctype, whose, killer, colour, name,
-             tile);
-        return (true);
-    }
-
-    return (false);
 }
 
 static bool _spell_range_varies(spell_type spell)
@@ -1035,6 +1027,8 @@ int spell_range(spell_type spell, int pow, bool real_cast, bool player_spell)
     if (player_spell
         && vehumet_supports_spell(spell)
         && you.religion == GOD_VEHUMET
+        && spell != SPELL_STICKY_FLAME
+        && spell != SPELL_FREEZE
         && !player_under_penance()
         && you.piety >= piety_breakpoint(2))
     {
@@ -1051,12 +1045,24 @@ int spell_range(spell_type spell, int pow, bool real_cast, bool player_spell)
     const int powercap = spell_power_cap(spell);
 
     if (powercap <= pow)
-        return maxrange;
+        return std::min(maxrange, LOS_RADIUS);
 
     // Round appropriately.
-    return ((pow * (maxrange - minrange) + powercap / 2) / powercap + minrange);
+    return std::min(LOS_RADIUS,
+           (pow * (maxrange - minrange) + powercap / 2) / powercap + minrange);
 }
 
+/**
+ * Spell casting noise.
+ *
+ * Returns the noise generated by the casting of a spell. The noise depends on
+ * the spell schools and level. A modifier (noise_mod) can be applied to the
+ * spell level.
+ * @see spl-data.h
+ *
+ * \param spell  The spell being casted.
+ * \return       The amount of noise generated.
+**/
 int spell_noise(spell_type spell)
 {
     const spell_desc *desc = _seekspell(spell);
@@ -1064,6 +1070,19 @@ int spell_noise(spell_type spell)
     return spell_noise(desc->disciplines, desc->level + desc->noise_mod);
 }
 
+/**
+ * Spell default noise.
+ *
+ * Default value for spell noise given a level and a set of schools.
+ * Formula (use first match):
+ * - Conjuration (noisy)    = \f$ level \f$
+ * - Air and poison (quiet) = \f$ \frac{level}{2} \f$
+ * - Other (normal)         = \f$ \frac{3 \times level}{4} \f$
+ *
+ * \param disciplines  An integer which contain the school flags.
+ * \param level        The level of the spell.
+ * \return             The amount of noise generated.
+**/
 int spell_noise(unsigned int disciplines, int level)
 {
     if (disciplines == SPTYP_NONE)
@@ -1081,47 +1100,47 @@ spell_type zap_type_to_spell(zap_type zap)
     switch (zap)
     {
     case ZAP_FLAME:
-        return(SPELL_THROW_FLAME);
+        return SPELL_THROW_FLAME;
     case ZAP_FROST:
-        return(SPELL_THROW_FROST);
+        return SPELL_THROW_FROST;
     case ZAP_SLOWING:
-        return(SPELL_SLOW);
+        return SPELL_SLOW;
     case ZAP_HASTING:
-        return(SPELL_HASTE);
+        return SPELL_HASTE;
     case ZAP_MAGIC_DARTS:
-        return(SPELL_MAGIC_DART);
-    case ZAP_HEALING:
-        return(SPELL_MAJOR_HEALING);
+        return SPELL_MAGIC_DART;
+    case ZAP_HEAL_WOUNDS:
+        return SPELL_MAJOR_HEALING;
     case ZAP_PARALYSIS:
-        return(SPELL_PARALYSE);
+        return SPELL_PARALYSE;
     case ZAP_FIRE:
-        return(SPELL_BOLT_OF_FIRE);
+        return SPELL_BOLT_OF_FIRE;
     case ZAP_COLD:
-        return(SPELL_BOLT_OF_COLD);
+        return SPELL_BOLT_OF_COLD;
     case ZAP_PRIMAL_WAVE:
-        return(SPELL_PRIMAL_WAVE);
+        return SPELL_PRIMAL_WAVE;
     case ZAP_CONFUSION:
-        return(SPELL_CONFUSE);
+        return SPELL_CONFUSE;
     case ZAP_INVISIBILITY:
-        return(SPELL_INVISIBILITY);
+        return SPELL_INVISIBILITY;
     case ZAP_DIGGING:
-        return(SPELL_DIG);
+        return SPELL_DIG;
     case ZAP_FIREBALL:
-        return(SPELL_FIREBALL);
+        return SPELL_FIREBALL;
     case ZAP_TELEPORTATION:
-        return(SPELL_TELEPORT_OTHER);
+        return SPELL_TELEPORT_OTHER;
     case ZAP_LIGHTNING:
-        return(SPELL_LIGHTNING_BOLT);
+        return SPELL_LIGHTNING_BOLT;
     case ZAP_POLYMORPH_OTHER:
-        return(SPELL_POLYMORPH_OTHER);
+        return SPELL_POLYMORPH_OTHER;
     case ZAP_NEGATIVE_ENERGY:
-        return(SPELL_BOLT_OF_DRAINING);
+        return SPELL_BOLT_OF_DRAINING;
     case ZAP_ENSLAVEMENT:
-        return(SPELL_ENSLAVEMENT);
+        return SPELL_ENSLAVEMENT;
     case ZAP_DISINTEGRATION:
-        return(SPELL_DISINTEGRATE);
+        return SPELL_DISINTEGRATE;
     default:
-        DEBUGSTR("zap_type_to_spell() only handles wand zaps for now");
+        die("zap_type_to_spell() only handles wand zaps for now");
     }
     return SPELL_NO_SPELL;
 }
@@ -1137,18 +1156,9 @@ bool spell_is_empowered(spell_type spell)
 
     switch (spell)
     {
-    case SPELL_SWIFTNESS:
-        // looking at player_movement_speed, this should be correct ~DMB
-        if (player_movement_speed() > 6
-            && you.duration[DUR_CONTROLLED_FLIGHT] > 0
-            && you.duration[DUR_SWIFTNESS] < 1)
-        {
-            return (true);
-        }
-        break;
     case SPELL_STONESKIN:
         if (you.duration[DUR_TRANSFORMATION] > 0
-            && you.attribute[ATTR_TRANSFORMATION] == TRAN_STATUE
+            && you.form == TRAN_STATUE
             && you.duration[DUR_STONESKIN] < 1)
         {
             return (true);
@@ -1156,7 +1166,7 @@ bool spell_is_empowered(spell_type spell)
         break;
     case SPELL_OZOCUBUS_ARMOUR:
         if (you.duration[DUR_TRANSFORMATION] > 0
-            && you.attribute[ATTR_TRANSFORMATION] == TRAN_ICE_BEAST
+            && you.form == TRAN_ICE_BEAST
             && you.duration[DUR_ICY_ARMOUR] < 1)
         {
             return (true);
@@ -1202,18 +1212,13 @@ bool spell_is_useless(spell_type spell, bool transient)
         if (player_movement_speed() <= 6)
             return (true);
         break;
+#if TAG_MAJOR_VERSION == 32
     case SPELL_LEVITATION:
+#endif
     case SPELL_FLY:
-        if (you.mutation[MUT_BIG_WINGS] >= 1
-            || you.species == SP_KENKU && you.experience_level >= 5)
-        {
+        if (you.species == SP_KENKU && you.experience_level >= 15)
             return (true);
-        }
-        if (transient && you.duration[DUR_LEVITATION] > 0)
-            return (true);
-        break;
-    case SPELL_REGENERATION:
-        if (you.species == SP_DEEP_DWARF)
+        if (transient && you.is_levitating())
             return (true);
         break;
     case SPELL_INVISIBILITY:
@@ -1228,18 +1233,16 @@ bool spell_is_useless(spell_type spell, bool transient)
         if (you.can_see_invisible(false, false))
             return (true);
         break;
-    // weapon branding is useless
-    case SPELL_TUKIMAS_VORPAL_BLADE:
-    case SPELL_FIRE_BRAND:
-    case SPELL_FREEZING_AURA:
-    case SPELL_LETHAL_INFUSION:
-    case SPELL_WARP_BRAND:
-    case SPELL_EXCRUCIATING_WOUNDS:
-    case SPELL_POISON_WEAPON:
-    // could be useful if it didn't require wielding
-    case SPELL_TUKIMAS_DANCE:
-        if (you.species == SP_CAT)
-            return (true);
+    case SPELL_DARKNESS:
+        // mere corona is not enough, but divine light blocks it completely
+        if (transient && you.haloed())
+            return true;
+        if (you.religion == GOD_SHINING_ONE && !player_under_penance())
+            return true;
+        break;
+    case SPELL_INSULATION:
+        if (player_res_electricity(false, transient, transient))
+            return true;
         break;
     default:
         break; // quash unhandled constants warnings

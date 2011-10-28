@@ -19,12 +19,6 @@ function ch_item_wieldable(it)
     -- by Crawl itself.
     local spells = make_hash( you.spells() )
 
-    if spells["Bone Shards"]
-            and string.find( it.name("a"), " skeleton" )
-    then
-        return true
-    end
-
     if (spells["Sublimation of Blood"] or spells["Simulacrum"])
             and food.ischunk(it)
     then

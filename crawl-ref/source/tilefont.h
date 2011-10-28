@@ -1,8 +1,3 @@
-/*
- *  File:       tilefont.h
- *  Created by: ennewalker on Sat Jan 5 01:33:53 2008 UTC
- */
-
 #ifndef TILEFONT_H
 #define TILEFONT_H
 
@@ -13,7 +8,7 @@
 extern const VColour term_colours[MAX_TERM_COLOUR];
 
 class FontBuffer;
-class VColour;
+struct VColour;
 class formatted_string;
 
 class FontWrapper
@@ -32,7 +27,7 @@ public:
 
     // render just text
     virtual void render_textblock(unsigned int x, unsigned int y,
-                                  unsigned char *chars, unsigned char *colours,
+                                  ucs_t *chars, uint8_t *colours,
                                   unsigned int width, unsigned int height,
                                   bool drop_shadow = false) = 0;
 
@@ -52,7 +47,7 @@ public:
                        const std::string &s, const VColour &c) = 0;
     virtual void store(FontBuffer &buf, float &x, float &y,
                        const formatted_string &fs) = 0;
-    virtual void store(FontBuffer &buf, float &x, float &y, unsigned char c,
+    virtual void store(FontBuffer &buf, float &x, float &y, ucs_t c,
                        const VColour &col) = 0;
 
     virtual unsigned int char_width() const = 0;

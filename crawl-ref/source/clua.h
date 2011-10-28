@@ -1,9 +1,3 @@
-/*
- *  File:       clua.h
- *  Created by: dshaligram on Wed Aug 2 12:54:15 2006 UTC
- */
-
-
 #ifndef __CLUA_H__
 #define __CLUA_H__
 
@@ -219,6 +213,7 @@ public:
 
     bool valid() const;
     bool matches(const std::string &s) const;
+    const std::string &tostring() const { return pattern; }
 
     static bool is_lua_pattern(const std::string &s);
 

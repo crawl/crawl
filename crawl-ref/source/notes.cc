@@ -1,8 +1,7 @@
-/*
- *  File:       notes.cc
- *  Summary:    Notetaking stuff
- *  Written by: Haran Pilpel
- */
+/**
+ * @file
+ * @brief Notetaking stuff
+**/
 
 #include "AppHdr.h"
 
@@ -124,7 +123,12 @@ static bool _is_noteworthy(const Note& note)
         || note.type == NOTE_MOLLIFY_GOD
         || note.type == NOTE_DEATH
         || note.type == NOTE_XOM_REVIVAL
-        || note.type == NOTE_SEEN_FEAT)
+        || note.type == NOTE_SEEN_FEAT
+        || note.type == NOTE_PARALYSIS
+        || note.type == NOTE_NAMED_ALLY
+        || note.type == NOTE_ALLY_DEATH
+        || note.type == NOTE_BANISH_MONSTER
+        || note.type == NOTE_FEAT_MIMIC)
     {
         return (true);
     }
@@ -157,7 +161,7 @@ static bool _is_noteworthy(const Note& note)
 
     // Skills are noteworthy if in the skill value list or if
     // it's a new maximal skill (depending on options).
-    if (note.type == NOTE_GAIN_SKILL)
+    if (note.type == NOTE_GAIN_SKILL || note.type == NOTE_LOSE_SKILL)
     {
         if (Options.note_all_skill_levels
             || _is_noteworthy_skill_level(note.second)
@@ -245,7 +249,6 @@ static const char* _number_to_ordinal(int number)
 
 std::string Note::describe(bool when, bool where, bool what) const
 {
-
     std::ostringstream result;
 
     if (when)
@@ -254,11 +257,11 @@ std::string Note::describe(bool when, bool where, bool what) const
     if (where)
     {
         if (!place_abbrev.empty())
-            result << "| " << std::setw(MAX_NOTE_PLACE_LEN) << std::left
-                   << place_abbrev << " | ";
+            result << "| " << chop_string(place_abbrev, MAX_NOTE_PLACE_LEN)
+                   << " | ";
         else
-            result << "| " << std::setw(MAX_NOTE_PLACE_LEN) << std::left
-                   << short_place_name(packed_place) << " | ";
+            result << "| " << chop_string(short_place_name(packed_place),
+                                          MAX_NOTE_PLACE_LEN) << " | ";
     }
 
     if (what)
@@ -335,8 +338,13 @@ std::string Note::describe(bool when, bool where, bool what) const
                    << (first == 1 ? "" : "s") << " to Zin";
             break;
         case NOTE_GAIN_SKILL:
-            result << "Reached skill " << second
-                   << " in " << skill_name(first);
+            result << "Reached skill level " << second
+                   << " in " << skill_name(static_cast<skill_type>(first));
+            break;
+        case NOTE_LOSE_SKILL:
+            result << "Reduced skill "
+                   << skill_name(static_cast<skill_type>(first))
+                   << " to level " << second;
             break;
         case NOTE_SEEN_MONSTER:
             result << "Noticed " << name;
@@ -378,6 +386,9 @@ std::string Note::describe(bool when, bool where, bool what) const
         case NOTE_SEEN_FEAT:
             result << "Found " << name;
             break;
+        case NOTE_FEAT_MIMIC:
+            result << name <<" was a mimic.";
+            break;
         case NOTE_XOM_EFFECT:
             result << "XOM: " << name;
 #if defined(DEBUG_XOM) || defined(NOTE_DEBUG_XOM)
@@ -388,6 +399,21 @@ std::string Note::describe(bool when, bool where, bool what) const
             result << ")";
 #endif
             break;
+        case NOTE_PARALYSIS:
+            result << "Paralysed by " << name << " for " << first << " turns";
+            break;
+        case NOTE_NAMED_ALLY:
+            result << "Gained " << name << " as an ally";
+            break;
+        case NOTE_ALLY_DEATH:
+            result << "Your ally " << name << " died";
+            break;
+        case NOTE_BANISH_MONSTER:
+            if (second)
+                result << name << " (ally) was banished";
+            else
+                result << "Banished " << name;
+            break;
         default:
             result << "Buggy note description: unknown note type";
             break;
@@ -396,7 +422,7 @@ std::string Note::describe(bool when, bool where, bool what) const
 
     if (type == NOTE_SEEN_MONSTER || type == NOTE_KILL_MONSTER)
     {
-        if (what && first == MONS_PANDEMONIUM_DEMON)
+        if (what && first == MONS_PANDEMONIUM_LORD)
             result << " the pandemonium lord";
     }
     return result.str();

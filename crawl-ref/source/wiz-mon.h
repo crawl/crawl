@@ -1,8 +1,7 @@
-/*
- *  File:       wiz-mon.h
- *  Summary:    Monster related wizard functions.
- *  Written by: Linley Henzell and Jesse Jones
- */
+/**
+ * @file
+ * @brief Monster related wizard functions.
+**/
 
 #ifndef WIZMON_H
 #define WIZMON_H

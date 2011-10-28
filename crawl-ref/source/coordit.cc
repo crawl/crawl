@@ -1,13 +1,15 @@
-/*
- * File:     coordit.h
- * Summary:  Coordinate iterators.
- */
+/**
+ * @file
+ * @brief Coordinate iterators.
+**/
 
 #include "AppHdr.h"
 
 #include "coordit.h"
 
 #include "coord-circle.h"
+#include "coord.h"
+#include "random.h"
 #include "player.h"
 
 rectangle_iterator::rectangle_iterator(const coord_def& corner1,
@@ -45,7 +47,7 @@ const coord_def* rectangle_iterator::operator->() const
     return &current;
 }
 
-rectangle_iterator& rectangle_iterator::operator ++()
+void rectangle_iterator::operator ++()
 {
     if (current.x == bottomright.x)
     {
@@ -56,15 +58,12 @@ rectangle_iterator& rectangle_iterator::operator ++()
     {
         current.x++;
     }
-    return *this;
 }
 
 
-rectangle_iterator rectangle_iterator::operator++(int dummy)
+void rectangle_iterator::operator++(int dummy)
 {
-    const rectangle_iterator copy = *this;
     ++(*this);
-    return (copy);
 }
 
 /*
@@ -168,15 +167,134 @@ bool radius_iterator::is_valid_square(const coord_def &p) const
     return (true);
 }
 
-const radius_iterator& radius_iterator::operator++()
+void radius_iterator::operator++()
 {
     advance(false);
-    return (*this);
 }
 
-radius_iterator radius_iterator::operator++(int dummy)
+void radius_iterator::operator++(int dummy)
 {
-    const radius_iterator copy = *this;
     ++(*this);
-    return (copy);
+}
+
+/*
+ *  spiral iterator
+ */
+distance_iterator::distance_iterator(const coord_def& _center, bool _fair,
+                                 bool exclude_center, int _max_radius) :
+    center(_center), current(_center), r(0), max_radius(_max_radius),
+    threshold(0), icur(0), iend(0), fair(_fair)
+{
+    vcur  = lists + 0;
+    vnear = lists + 1;
+    vfar  = lists + 2;
+
+    for (int dx = -1; dx <= 1; dx++)
+        for (int dy = -1; dy <= 1; dy++)
+            if (dx || dy)
+                vnear->push_back(coord_def(dx, dy));
+
+    if (exclude_center)
+        advance();
+}
+
+static inline int sgn(int x)
+{
+    return (x < 0) ? -1 : (x > 0) ? 1 : 0;
+}
+
+bool distance_iterator::advance()
+{
+again:
+    if (++icur >= vcur->size())
+        icur = 0;
+    if (icur == iend)
+    {
+        // Advance to the next radius.
+        std::vector<coord_def> *tmp = vcur;
+        vcur = vnear;
+        vnear = vfar;
+        vfar = tmp;
+        tmp->clear();
+
+        if (!vcur->size())
+            return false;
+        // Randomize the order various directions are returned.
+        // Just the initial angle is enough.
+        if (fair)
+            icur = iend = random2(vcur->size());
+        else
+            icur = iend = 0; // randomness is costly
+
+        if (r++ >= max_radius)
+        {
+            vcur->clear();
+            return false;
+        }
+        threshold = (r+1) * (r+1) + 1;
+    }
+
+    coord_def d = (*vcur)[icur];
+    if (!in_bounds(current = center + d))
+        goto again;
+
+    ASSERT(d.x || d.y);
+    if (!d.y)
+        push_neigh(d, sgn(d.x), 0);
+    if (!d.x)
+        push_neigh(d, 0, sgn(d.y));
+    if (d.x <= 0)
+    {
+        if (d.y <= 0)
+            push_neigh(d, -1, -1);
+        if (d.y >= 0)
+            push_neigh(d, -1, +1);
+    }
+    if (d.x >= 0)
+    {
+        if (d.y <= 0)
+            push_neigh(d, +1, -1);
+        if (d.y >= 0)
+            push_neigh(d, +1, +1);
+    }
+
+    return true;
+}
+
+void distance_iterator::push_neigh(coord_def d, int dx, int dy)
+{
+    d.x += dx;
+    d.y += dy;
+    ((d.abs() <= threshold) ? vnear : vfar)->push_back(d);
+}
+
+distance_iterator::operator bool() const
+{
+    return in_bounds(current) && r <= max_radius;
+}
+
+coord_def distance_iterator::operator *() const
+{
+    return current;
+}
+
+const coord_def* distance_iterator::operator->() const
+{
+    return &current;
+}
+
+const distance_iterator& distance_iterator::operator++()
+{
+    advance();
+    return *this;
+}
+
+void distance_iterator::operator++(int dummy)
+{
+    ++(*this);
+}
+
+int distance_iterator::radius() const
+{
+    return r;
 }

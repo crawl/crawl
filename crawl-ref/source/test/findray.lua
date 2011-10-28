@@ -30,7 +30,7 @@ local function test_findray()
     local p = dgn.point(x, y)
     local ray = los.findray(you_x, you_y, x, y)
     if not ray then
-      dgn.grid(x, y, "floor_special")
+      dgn.fprop_changed(x, y, "highlight")
       debug.dump_map(FAILMAP)
       assert(false, "Can't find ray to " .. p ..
                     " although it's in unobstructed view. (#" ..
@@ -46,7 +46,7 @@ local function test_findray()
     ray_p = dgn.point(rx, ry)
     while(ray_p ~= p) do
       if feat.is_opaque(rx, ry) then
-        dgn.grid(x, y, "floor_special")
+        dgn.fprop_changed(x, y, "highlight")
         debug.dump_map(FAILMAP)
         assert(false,
                "Ray from " .. you_p .. " to " .. p ..

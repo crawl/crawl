@@ -1,16 +1,23 @@
-/*
- * File:     mon-info.cc
- * Summary:  Monster information that may be passed to the user.
+/**
+ * @file
+ * @brief Monster information that may be passed to the user.
  *
  * Used to fill the monster pane and to pass monster info to Lua.
- */
+**/
 
 #include "AppHdr.h"
 
 #include "mon-info.h"
 
+#include "areas.h"
+#include "artefact.h"
+#include "coord.h"
+#include "env.h"
 #include "fight.h"
+#include "ghost.h"
+#include "itemname.h"
 #include "libutil.h"
+#include "message.h"
 #include "misc.h"
 #include "mon-iter.h"
 #include "mon-util.h"
@@ -18,22 +25,15 @@
 #include "options.h"
 #include "religion.h"
 #include "showsymb.h"
-#include "state.h"
-#include "coord.h"
-#include "env.h"
-#include "stuff.h"
-#include "ghost.h"
 #include "skills2.h"
-#include "message.h"
+#include "state.h"
 #include "tagstring.h"
-#include "artefact.h"
+#include "terrain.h"
 
 #include <algorithm>
 #include <sstream>
 
-#define ULL1 ((uint64_t)1)
-
-static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
+static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
 {
     // Suppress silly-looking combinations, even if they're
     // internally valid.
@@ -41,89 +41,105 @@ static uint64_t ench_to_mb(const monster& mons, enchant_type ench)
                       || ench == ENCH_SWIFT
                       || ench == ENCH_PETRIFIED
                       || ench == ENCH_PETRIFYING))
-        return 0;
-
-    if ((ench == ENCH_HASTE || ench == ENCH_BATTLE_FRENZY
-            || ench == ENCH_MIGHT)
-        && mons.berserk())
-    {
-        return 0;
-    }
+        return NUM_MB_FLAGS;
 
     if (ench == ENCH_HASTE && mons.has_ench(ENCH_SLOW))
-        return 0;
+        return NUM_MB_FLAGS;
 
     if (ench == ENCH_SLOW && mons.has_ench(ENCH_HASTE))
-        return 0;
+        return NUM_MB_FLAGS;
 
     if (ench == ENCH_PETRIFIED && mons.has_ench(ENCH_PETRIFYING))
-        return 0;
+        return NUM_MB_FLAGS;
 
     switch (ench)
     {
     case ENCH_BERSERK:
-        return ULL1 << MB_BERSERK;
+        return MB_BERSERK;
     case ENCH_POISON:
-        return ULL1 << MB_POISONED;
+        return MB_POISONED;
     case ENCH_SICK:
-        return ULL1 << MB_SICK;
+        return MB_SICK;
     case ENCH_ROT:
-        return ULL1 << MB_ROTTING;
+        return MB_ROTTING;
     case ENCH_CORONA:
-        return ULL1 << MB_GLOWING;
+    case ENCH_SILVER_CORONA:
+        return MB_GLOWING;
     case ENCH_SLOW:
-        return ULL1 << MB_SLOWED;
+        return MB_SLOWED;
     case ENCH_INSANE:
-        return ULL1 << MB_INSANE;
+        return MB_INSANE;
     case ENCH_BATTLE_FRENZY:
-        return ULL1 << MB_FRENZIED;
+        return MB_FRENZIED;
+    case ENCH_ROUSED:
+        return MB_ROUSED;
     case ENCH_HASTE:
-        return ULL1 << MB_HASTED;
+        return MB_HASTED;
     case ENCH_MIGHT:
-        return ULL1 << MB_STRONG;
+        return MB_STRONG;
     case ENCH_CONFUSION:
-        return ULL1 << MB_CONFUSED;
+        return MB_CONFUSED;
     case ENCH_INVIS:
-        return ULL1 << MB_INVISIBLE;
+        return MB_INVISIBLE;
     case ENCH_CHARM:
-        return ULL1 << MB_CHARMED;
+        return MB_CHARMED;
     case ENCH_STICKY_FLAME:
-        return ULL1 << MB_BURNING;
+        return MB_BURNING;
     case ENCH_HELD:
-        return ULL1 << MB_CAUGHT;
+        return MB_CAUGHT;
     case ENCH_PETRIFIED:
-        return ULL1 << MB_PETRIFIED;
+        return MB_PETRIFIED;
     case ENCH_PETRIFYING:
-        return ULL1 << MB_PETRIFYING;
+        return MB_PETRIFYING;
     case ENCH_LOWERED_MR:
-        return ULL1 << MB_VULN_MAGIC;
+        return MB_VULN_MAGIC;
     case ENCH_SWIFT:
-        return ULL1 << MB_SWIFT;
+        return MB_SWIFT;
     case ENCH_SILENCE:
-        return ULL1 << MB_SILENCING;
+        return MB_SILENCING;
     case ENCH_PARALYSIS:
-        return ULL1 << MB_PARALYSED;
+        return MB_PARALYSED;
     case ENCH_SOUL_RIPE:
-        return ULL1 << MB_POSSESSABLE;
+        return MB_POSSESSABLE;
     case ENCH_PREPARING_RESURRECT:
-        return ULL1 << MB_PREP_RESURRECT;
+        return MB_PREP_RESURRECT;
     case ENCH_FADING_AWAY:
         if ((mons.get_ench(ENCH_FADING_AWAY)).duration < 400) // min dur is 180*20, max dur 230*10
-            return ULL1 << MB_MOSTLY_FADED;
+            return MB_MOSTLY_FADED;
 
-        return ULL1 << MB_FADING_AWAY;
+        return MB_FADING_AWAY;
     case ENCH_REGENERATION:
-        return ULL1 << MB_REGENERATION;
+        return MB_REGENERATION;
     case ENCH_RAISED_MR:
-        return ULL1 << MB_RAISED_MR;
+        return MB_RAISED_MR;
+    case ENCH_MIRROR_DAMAGE:
+        return MB_MIRROR_DAMAGE;
     case ENCH_FEAR_INSPIRING:
-        return ULL1 << MB_FEAR_INSPIRING;
+        return MB_FEAR_INSPIRING;
     case ENCH_WITHDRAWN:
-        return ULL1 << MB_WITHDRAWN;
+        return MB_WITHDRAWN;
     case ENCH_ATTACHED:
-        return ULL1 << MB_ATTACHED;
+        return MB_ATTACHED;
+    case ENCH_BLEED:
+        return MB_BLEEDING;
+    case ENCH_DAZED:
+        return MB_DAZED;
+    case ENCH_MUTE:
+        return MB_MUTE;
+    case ENCH_BLIND:
+        return MB_BLIND;
+    case ENCH_DUMB:
+        return MB_DUMB;
+    case ENCH_MAD:
+        return MB_MAD;
+    case ENCH_INNER_FLAME:
+        return MB_INNER_FLAME;
+    case ENCH_BREATH_WEAPON:
+        return MB_BREATH_WEAPON;
+    case ENCH_DEATHS_DOOR:
+        return MB_DEATHS_DOOR;
     default:
-        return 0;
+        return NUM_MB_FLAGS;
     }
 }
 
@@ -138,9 +154,23 @@ static bool _blocked_ray(const coord_def &where,
     return (true);
 }
 
+static bool _is_public_key(std::string key)
+{
+    if (key == "helpless"
+     || key == "wand_known"
+     || key == "feat_type"
+     || key == "glyph"
+     || key == "serpent_of_hell_flavour")
+    {
+        return true;
+    }
+
+    return false;
+}
+
 monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 {
-    mb = 0;
+    mb.reset();
     attitude = ATT_HOSTILE;
     pos = coord_def(0, 0);
 
@@ -174,6 +204,8 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     if (!no_regen)
         no_regen = !mons_class_can_regenerate(base_type);
 
+    threat = MTHRT_UNDEF;
+
     dam = MDAM_OKAY;
 
     fire_blocker = DNGN_UNSEEN;
@@ -190,38 +222,48 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 
     if (base_type == MONS_NO_MONSTER)
         base_type = type;
+
+    props.clear();
+
+    client_id = 0;
 }
 
 monster_info::monster_info(const monster* m, int milev)
 {
-    mb = 0;
+    mb.reset();
     attitude = ATT_HOSTILE;
     pos = grid2player(m->pos());
 
-    // XXX: this doesn't take into account ENCH_TEMP_PACIF, but that's probably
-    // a bug for mons_attitude, not this.
-    // XXX: also, mons_attitude_type should be sorted hostile/neutral/friendly;
-    // will break saves a little bit though.
     attitude = mons_attitude(m);
-    if (m->has_ench(ENCH_CHARM))
-        attitude = ATT_FRIENDLY;
-    else if (m->has_ench(ENCH_TEMP_PACIF))
-        attitude = ATT_GOOD_NEUTRAL;
 
     bool type_known = false;
     bool nomsg_wounds = false;
 
-    // CHANGE: now friendly fake Rakshasas/Maras are known (before you could still tell by equipment)
     if (m->props.exists("mislead_as") && you.misled())
+    {
         type = m->get_mislead_type();
-    else if (attitude != ATT_FRIENDLY && (m->type == MONS_RAKSHASA || m->type == MONS_RAKSHASA_FAKE))
-        type = MONS_RAKSHASA;
-    else if (attitude != ATT_FRIENDLY && (m->type == MONS_MARA || m->type == MONS_MARA_FAKE))
-        type = MONS_MARA;
+        threat = mons_threat_level(&m->props["mislead_as"].get_monster());
+    }
+    // friendly fake Rakshasas/Maras are known
+    else if (attitude != ATT_FRIENDLY && m->props.exists("faking"))
+    {
+        type = m->props["faking"].get_monster().type;
+        threat = mons_threat_level(&m->props["faking"].get_monster());
+    }
     else
     {
         type_known = true;
         type = m->type;
+        threat = mons_threat_level(m);
+    }
+
+    props.clear();
+    if (!m->props.empty())
+    {
+        CrawlHashTable::hash_map_type::const_iterator i = m->props.begin();
+        for (; i != m->props.end(); ++i)
+            if (_is_public_key(i->first))
+                props[i->first] = i->second;
     }
 
     if (type_known)
@@ -241,6 +283,8 @@ monster_info::monster_info(const monster* m, int milev)
 
         // these use number for internal information
         if (type == MONS_MANTICORE
+            || type == MONS_SIXFIRHY
+            || type == MONS_SHEDU
             || type == MONS_KRAKEN_TENTACLE
             || type == MONS_KRAKEN_TENTACLE_SEGMENT
             || type == MONS_ELDRITCH_TENTACLE_SEGMENT)
@@ -252,7 +296,10 @@ monster_info::monster_info(const monster* m, int milev)
         colour = m->colour;
 
         if (m->is_summoned())
-            mb |= ULL1 << MB_SUMMONED;
+            mb.set(MB_SUMMONED);
+
+        if (testbits(m->flags, MF_HARD_RESET) && testbits(m->flags, MF_NO_REWARD))
+            mb.set(MB_PERM_SUMMON);
     }
     else
     {
@@ -267,24 +314,40 @@ monster_info::monster_info(const monster* m, int milev)
             || type == MONS_ROYAL_JELLY
             || type == MONS_SERPENT_OF_HELL)
         {
-            mb |= ULL1 << MB_NAME_THE;
+            mb.set(MB_NAME_THE);
         }
         else
-            mb |= (ULL1 << MB_NAME_UNQUALIFIED) | (ULL1 << MB_NAME_THE);
+        {
+            mb.set(MB_NAME_UNQUALIFIED);
+            mb.set(MB_NAME_THE);
+        }
     }
 
     mname = m->mname;
-    if (!mname.empty() && !(m->flags & MF_NAME_DESCRIPTOR))
-        mb |= (ULL1 << MB_NAME_UNQUALIFIED) | (ULL1 << MB_NAME_THE);
-    else if (m->flags & MF_NAME_DEFINITE)
-        mb |= ULL1 << MB_NAME_THE;
 
-    if ((m->flags & MF_NAME_MASK) == MF_NAME_ADJECTIVE)
-        mb |= ULL1 << MB_NAME_ADJECTIVE;
+    if ((m->flags & MF_NAME_MASK) == MF_NAME_SUFFIX)
+        mb.set(MB_NAME_SUFFIX);
+    else if ((m->flags & MF_NAME_MASK) == MF_NAME_ADJECTIVE)
+        mb.set(MB_NAME_ADJECTIVE);
     else if ((m->flags & MF_NAME_MASK) == MF_NAME_REPLACE)
-        mb |= ULL1 << MB_NAME_REPLACE;
-    else if ((m->flags & MF_NAME_MASK) == MF_NAME_SUFFIX)
-        mb |= ULL1 << MB_NAME_SUFFIX;
+        mb.set(MB_NAME_REPLACE);
+
+    const bool need_name_desc =
+        (m->flags & MF_NAME_SUFFIX)
+            || (m->flags & MF_NAME_ADJECTIVE)
+            || (m->flags & MF_NAME_DEFINITE);
+
+    if (!mname.empty()
+        && !(m->flags & MF_NAME_DESCRIPTOR)
+        && !need_name_desc)
+    {
+        mb.set(MB_NAME_UNQUALIFIED);
+        mb.set(MB_NAME_THE);
+    }
+    else if (m->flags & MF_NAME_DEFINITE)
+        mb.set(MB_NAME_THE);
+    if (m->flags & MF_NAME_ZOMBIE)
+        mb.set(MB_NAME_ZOMBIE);
 
     if (milev <= MILEV_NAME)
     {
@@ -293,6 +356,12 @@ monster_info::monster_info(const monster* m, int milev)
         {
             inv[MSLOT_WEAPON].reset(
                 new item_def(get_item_info(mitm[m->inv[MSLOT_WEAPON]])));
+        }
+        if (type_known && mons_is_item_mimic(type))
+        {
+            ASSERT(m->inv[MSLOT_MISCELLANY] != NON_ITEM);
+            inv[MSLOT_MISCELLANY].reset(
+                new item_def(get_item_info(mitm[m->inv[MSLOT_MISCELLANY]])));
         }
         return;
     }
@@ -333,12 +402,18 @@ monster_info::monster_info(const monster* m, int milev)
     else
         no_regen = !mons_class_can_regenerate(type);
 
-    if (m->haloed())
-        mb |= ULL1 << MB_HALOED;
+    if (m->haloed() && !m->umbraed())
+        mb.set(MB_HALOED);
+    if (!m->haloed() && m->umbraed())
+        mb.set(MB_UMBRAED);
     if (mons_looks_stabbable(m))
-        mb |= ULL1 << MB_STABBABLE;
+        mb.set(MB_STABBABLE);
     if (mons_looks_distracted(m))
-        mb |= ULL1 << MB_DISTRACTED;
+        mb.set(MB_DISTRACTED);
+    if (liquefied(m->pos()) && m->ground_level() && !m->is_insubstantial())
+        mb.set(MB_SLOWED);
+    if (m->is_wall_clinging())
+        mb.set(MB_CLINGING);
 
     dam = mons_get_damage_level(m);
 
@@ -351,45 +426,47 @@ monster_info::monster_info(const monster* m, int milev)
         if (m->asleep())
         {
             if (!m->can_hibernate(true))
-                mb |= ULL1 << MB_DORMANT;
+                mb.set(MB_DORMANT);
             else
-                mb |= ULL1 << MB_SLEEPING;
+                mb.set(MB_SLEEPING);
         }
         // Applies to both friendlies and hostiles
         else if (mons_is_fleeing(m))
         {
-            mb |= ULL1 << MB_FLEEING;
+            mb.set(MB_FLEEING);
         }
         else if (mons_is_wandering(m) && !mons_is_batty(m))
         {
             if (mons_is_stationary(m))
-                mb |= ULL1 << MB_UNAWARE;
+                mb.set(MB_UNAWARE);
             else
-                mb |= ULL1 << MB_WANDERING;
+                mb.set(MB_WANDERING);
         }
         // TODO: is this ever needed?
         else if (m->foe == MHITNOT && !mons_is_batty(m)
                  && m->attitude == ATT_HOSTILE)
         {
-            mb |= ULL1 << MB_UNAWARE;
+            mb.set(MB_UNAWARE);
         }
     }
 
     for (mon_enchant_list::const_iterator e = m->enchantments.begin();
          e != m->enchantments.end(); ++e)
     {
-        mb |= ench_to_mb(*m, e->first);
+        monster_info_flags flag = ench_to_mb(*m, e->first);
+        if (flag != NUM_MB_FLAGS)
+            mb.set(flag);
     }
 
     // fake enchantment (permanent)
-    if (mons_class_flag(m->type, M_DEFLECT_MISSILES))
-        mb |= ULL1 << MB_DEFLECT_MSL;
+    if (mons_class_flag(type, M_DEFLECT_MISSILES))
+        mb.set(MB_DEFLECT_MSL);
 
-    if (m->type == MONS_SILENT_SPECTRE)
-        mb |= ULL1 << MB_SILENCING;
+    if (type == MONS_SILENT_SPECTRE)
+        mb.set(MB_SILENCING);
 
     if (you.beheld_by(m))
-        mb |= ULL1 << MB_MESMERIZING;
+        mb.set(MB_MESMERIZING);
 
     // Evilness of attacking
     switch (attitude)
@@ -400,7 +477,7 @@ monster_info::monster_info(const monster* m, int milev)
             && !tso_unchivalric_attack_safe_monster(m)
             && is_unchivalric_attack(&you, m))
         {
-            mb |= ULL1 << MB_EVIL_ATTACK;
+            mb.set(MB_EVIL_ATTACK);
         }
         break;
     default:
@@ -408,16 +485,16 @@ monster_info::monster_info(const monster* m, int milev)
     }
 
     if (testbits(m->flags, MF_ENSLAVED_SOUL))
-        mb |= ULL1 << MB_ENSLAVED;
+        mb.set(MB_ENSLAVED);
 
-    if (m->is_shapeshifter() && (m->flags & MF_KNOWN_MIMIC))
-        mb |= ULL1 << MB_SHAPESHIFTER;
+    if (m->is_shapeshifter() && (m->flags & MF_KNOWN_SHIFTER))
+        mb.set(MB_SHAPESHIFTER);
 
     if (m->is_known_chaotic())
-        mb |= ULL1 << MB_CHAOTIC;
+        mb.set(MB_CHAOTIC);
 
     if (m->submerged())
-        mb |= ULL1 << MB_SUBMERGED;
+        mb.set(MB_SUBMERGED);
 
     // these are excluded as mislead types
     if (mons_is_pghost(type))
@@ -431,35 +508,30 @@ monster_info::monster_info(const monster* m, int milev)
         u.ghost.religion = ghost.religion;
         u.ghost.best_skill = ghost.best_skill;
         u.ghost.best_skill_rank = get_skill_rank(ghost.best_skill_level);
-        u.ghost.xl_rank = ((ghost.xl <  4) ? 0:
-            (ghost.xl <  7) ? 1 :
-            (ghost.xl < 11) ? 2 :
-            (ghost.xl < 16) ? 3 :
-            (ghost.xl < 22) ? 4 :
-            (ghost.xl < 26) ? 5 :
-            (ghost.xl < 27) ? 6 : 7);
+        u.ghost.xl_rank = ghost_level_to_rank(ghost.xl);
     }
 
-    if (type_known)
+    for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
-        for (unsigned i = 0; i < 5; ++i)
-        {
-            bool ok;
-            if (m->inv[i] == NON_ITEM)
-                ok = false;
-            else if (i == MSLOT_MISCELLANY)
-                ok = mons_is_mimic(type);
-            else if (attitude == ATT_FRIENDLY)
-                ok = true;
-            else if (i == MSLOT_ALT_WEAPON)
-                ok = two_weapons;
-            else if (i == MSLOT_MISSILE)
-                ok = false;
-            else
-                ok = true;
-            if (ok)
-                inv[i].reset(new item_def(get_item_info(mitm[m->inv[i]])));
-        }
+        bool ok;
+        if (m->inv[i] == NON_ITEM)
+            ok = false;
+        else if (i == MSLOT_MISCELLANY)
+            ok = mons_is_mimic(type);
+        else if (attitude == ATT_FRIENDLY)
+            ok = true;
+        else if (i == MSLOT_WAND)
+            ok = props.exists("wand_known") && props["wand_known"];
+        else if (m->props.exists("ash_id") && item_type_known(mitm[m->inv[i]]))
+            ok = true;
+        else if (i == MSLOT_ALT_WEAPON)
+            ok = two_weapons;
+        else if (i == MSLOT_MISSILE)
+            ok = false;
+        else
+            ok = true;
+        if (ok)
+            inv[i].reset(new item_def(get_item_info(mitm[m->inv[i]])));
     }
 
     fire_blocker = DNGN_UNSEEN;
@@ -479,16 +551,22 @@ monster_info::monster_info(const monster* m, int milev)
     if (milev > MILEV_SKIP_SAFE)
     {
         if (mons_is_safe(m))
-            mb |= ULL1 << MB_SAFE;
+            mb.set(MB_SAFE);
         else
-            mb |= ULL1 << MB_UNSAFE;
+            mb.set(MB_UNSAFE);
     }
+
+    client_id = m->get_client_id();
 }
 
 monster* monster_info::mon() const
 {
     int m = env.mgrid(player2grid(pos));
     ASSERT(m >= 0);
+#ifdef USE_TILE
+    if (m == NON_MONSTER)
+        return NULL;
+#endif
     return &env.mons[m];
 }
 
@@ -496,8 +574,8 @@ std::string monster_info::db_name() const
 {
     if (type == MONS_DANCING_WEAPON && inv[MSLOT_WEAPON].get())
     {
-        unsigned long ignore_flags = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
-        bool          use_inscrip  = false;
+        iflags_t ignore_flags = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
+        bool     use_inscrip  = false;
         return (inv[MSLOT_WEAPON]->name(DESC_DBNAME, false, false, use_inscrip, false,
                           ignore_flags));
     }
@@ -514,7 +592,7 @@ std::string monster_info::_core_name() const
     case MONS_ZOMBIE_SMALL:     case MONS_ZOMBIE_LARGE:
     case MONS_SKELETON_SMALL:   case MONS_SKELETON_LARGE:
     case MONS_SIMULACRUM_SMALL: case MONS_SIMULACRUM_LARGE:
-    case MONS_SPECTRAL_THING:
+    case MONS_SPECTRAL_THING:   case MONS_PILLAR_OF_SALT:
         nametype = base_type;
         break;
 
@@ -532,6 +610,8 @@ std::string monster_info::_core_name() const
         s = "royal jelly";
     else if (nametype == MONS_SERPENT_OF_HELL)
         s = "Serpent of Hell";
+    else if (mons_is_mimic(nametype))
+        s = mimic_name();
     else if (invalid_monster_type(nametype) && nametype != MONS_PROGRAM_BUG)
         s = "INVALID MONSTER";
     else
@@ -551,6 +631,10 @@ std::string monster_info::_core_name() const
             s = ugly_thing_colour_name(colour) + " " + s;
             break;
 
+        case MONS_LABORATORY_RAT:
+            s = adjective_for_labrat_colour(colour) + " " + s;
+            break;
+
         case MONS_DRACONIAN_CALLER:
         case MONS_DRACONIAN_MONK:
         case MONS_DRACONIAN_ZEALOT:
@@ -565,8 +649,8 @@ std::string monster_info::_core_name() const
         case MONS_DANCING_WEAPON:
             if (inv[MSLOT_WEAPON].get())
             {
-                unsigned long ignore_flags = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
-                bool          use_inscrip  = true;
+                iflags_t ignore_flags = ISFLAG_KNOW_CURSE | ISFLAG_KNOW_PLUSES;
+                bool     use_inscrip  = true;
                 const item_def& item = *inv[MSLOT_WEAPON];
                 s = (item.name(DESC_PLAIN, false, false, use_inscrip, false,
                                   ignore_flags));
@@ -579,7 +663,7 @@ std::string monster_info::_core_name() const
         case MONS_PLAYER_ILLUSION:
             s = apostrophise(mname) + " illusion";
             break;
-        case MONS_PANDEMONIUM_DEMON:
+        case MONS_PANDEMONIUM_LORD:
             s = mname;
             break;
         default:
@@ -620,10 +704,13 @@ std::string monster_info::common_name(description_level_type desc) const
 {
     std::ostringstream ss;
 
+    if (props.exists("helpless"))
+        ss << "helpless ";
+
     if (is(MB_SUBMERGED))
         ss << "submerged ";
 
-    if (type == MONS_SPECTRAL_THING)
+    if (type == MONS_SPECTRAL_THING && !is(MB_NAME_ZOMBIE))
         ss << "spectral ";
 
     if (type == MONS_BALLISTOMYCETE)
@@ -653,15 +740,21 @@ std::string monster_info::common_name(description_level_type desc) const
     {
     case MONS_ZOMBIE_SMALL:
     case MONS_ZOMBIE_LARGE:
-        ss << " zombie";
+        if (!is(MB_NAME_ZOMBIE))
+            ss << " zombie";
         break;
     case MONS_SKELETON_SMALL:
     case MONS_SKELETON_LARGE:
-        ss << " skeleton";
+        if (!is(MB_NAME_ZOMBIE))
+            ss << " skeleton";
         break;
     case MONS_SIMULACRUM_SMALL:
     case MONS_SIMULACRUM_LARGE:
-        ss << " simulacrum";
+        if (!is(MB_NAME_ZOMBIE))
+            ss << " simulacrum";
+        break;
+    case MONS_PILLAR_OF_SALT:
+        ss << " shaped pillar of salt";
         break;
     default:
         break;
@@ -686,6 +779,37 @@ std::string monster_info::common_name(description_level_type desc) const
         s = apostrophise(s);
 
     return (s);
+}
+
+dungeon_feature_type monster_info::get_mimic_feature() const
+{
+    if (!props.exists("feat_type"))
+        return DNGN_UNSEEN;
+    return static_cast<dungeon_feature_type>(props["feat_type"].get_short());
+}
+
+std::string monster_info::mimic_name() const
+{
+    std::string s;
+    if (props.exists("feat_type"))
+        s = feat_type_name(get_mimic_feature());
+    else if (item_def* item = inv[MSLOT_MISCELLANY].get())
+    {
+        if (item->base_type == OBJ_GOLD)
+            s = "pile of gold";
+        else if (item->base_type == OBJ_MISCELLANY
+                 && item->sub_type == MISC_RUNE_OF_ZOT)
+        {
+            s = "rune";
+        }
+        else
+            s = item->name(DESC_BASENAME);
+    }
+
+    if (!s.empty())
+        s += " ";
+
+    return (s + "mimic");
 }
 
 bool monster_info::has_proper_name() const
@@ -750,7 +874,7 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
         return (false);
     }
 
-    int diff_delta = mons_difficulty(m1.type) - mons_difficulty(m2.type);
+    int diff_delta = mons_avg_hp(m1.type) - mons_avg_hp(m2.type);
 
     // By descending difficulty
     if (diff_delta > 0)
@@ -816,15 +940,26 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
 
 static std::string _verbose_info0(const monster_info& mi)
 {
-    if (mi.is(MB_CAUGHT))
-        return ("caught");
-
-    if (mi.is(MB_PETRIFIED))
-        return ("petrified");
+    if (mi.is(MB_BERSERK))
+        return ("berserk");
+    if (mi.is(MB_FRENZIED))
+        return ("frenzied");
+    if (mi.is(MB_ROUSED))
+        return ("roused");
+    if (mi.is(MB_INNER_FLAME))
+        return ("inner flame");
+    if (mi.is(MB_DUMB))
+        return ("dumb");
     if (mi.is(MB_PARALYSED))
         return ("paralysed");
+    if (mi.is(MB_CAUGHT))
+        return ("caught");
+    if (mi.is(MB_PETRIFIED))
+        return ("petrified");
     if (mi.is(MB_PETRIFYING))
         return ("petrifying");
+    if (mi.is(MB_MAD))
+        return ("mad");
     if (mi.is(MB_CONFUSED))
         return ("confused");
     if (mi.is(MB_FLEEING))
@@ -835,6 +970,14 @@ static std::string _verbose_info0(const monster_info& mi)
         return ("sleeping");
     if (mi.is(MB_UNAWARE))
         return ("unaware");
+    if (mi.is(MB_WITHDRAWN))
+        return ("withdrawn");
+    if (mi.is(MB_DAZED))
+        return ("dazed");
+    if (mi.is(MB_MUTE))
+        return ("mute");
+    if (mi.is(MB_BLIND))
+        return ("blind");
     // avoid jelly (wandering) (fellow slime)
     if (mi.is(MB_WANDERING) && mi.attitude != ATT_STRICT_NEUTRAL)
         return ("wandering");
@@ -842,6 +985,8 @@ static std::string _verbose_info0(const monster_info& mi)
         return ("burning");
     if (mi.is(MB_ROTTING))
         return ("rotting");
+    if (mi.is(MB_BLEEDING))
+        return ("bleeding");
     if (mi.is(MB_INVISIBLE))
         return ("invisible");
 
@@ -856,73 +1001,57 @@ static std::string _verbose_info(const monster_info& mi)
     return inf;
 }
 
+std::string monster_info::pluralized_name(bool fullname) const
+{
+    // Don't pluralise uniques, ever.  Multiple copies of the same unique
+    // are unlikely in the dungeon currently, but quite common in the
+    // arena.  This prevens "4 Gra", etc. {due}
+    // Unless it's Mara, who summons illusions of himself.
+    if (mons_is_unique(type) && type != MONS_MARA)
+    {
+        return common_name();
+    }
+    // Specialcase mimics, so they don't get described as piles of gold
+    // when that would be inappropriate. (HACK)
+    else if (mons_is_mimic(type))
+    {
+        return "mimics";
+    }
+    else if (mons_genus(type) == MONS_DRACONIAN)
+    {
+        return pluralise(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
+    }
+    else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
+             || type == MONS_DANCING_WEAPON || type == MONS_LABORATORY_RAT
+             || !fullname)
+    {
+        return pluralise(mons_type_name(type, DESC_PLAIN));
+    }
+    else
+    {
+        return pluralise(common_name());
+    }
+}
+
 void monster_info::to_string(int count, std::string& desc,
                                   int& desc_color, bool fullname) const
 {
     std::ostringstream out;
 
     if (count == 1)
-    {
-        if (mons_is_mimic(type))
-            out << mons_type_name(type, DESC_PLAIN);
-        else
-            out << full_name();
-    }
+        out << full_name();
     else
     {
         // TODO: this should be done in a much cleaner way, with code to merge multiple monster_infos into a single common structure
-        out << count << " ";
-
-        // Don't pluralise uniques, ever.  Multiple copies of the same unique
-        // are unlikely in the dungeon currently, but quite common in the
-        // arena.  This prevens "4 Gra", etc. {due}
-        // Unless it's Mara, who summons illusions of himself.
-        if (mons_is_unique(type) && type != MONS_MARA)
-        {
-            out << common_name();
-        }
-        // Specialcase mimics, so they don't get described as piles of gold
-        // when that would be inappropriate. (HACK)
-        else if (mons_is_mimic(type))
-        {
-            out << "mimics";
-        }
-        else if (mons_genus(type) == MONS_DRACONIAN)
-        {
-            out << pluralise(mons_type_name(MONS_DRACONIAN, DESC_PLAIN));
-        }
-        else if (type == MONS_UGLY_THING || type == MONS_VERY_UGLY_THING
-                || type == MONS_DANCING_WEAPON || !mname.empty() || !fullname)
-        {
-            out << pluralise(mons_type_name(type, DESC_PLAIN));
-        }
-        else
-        {
-            out << pluralise(common_name());
-        }
+        out << count << " " << pluralized_name(fullname);
     }
 
 #ifdef DEBUG_DIAGNOSTICS
-    out << " av" << mons_difficulty(type);
+    out << " av" << mons_avg_hp(type);
 #endif
 
     if (count == 1)
-    {
-        if (is(MB_FRENZIED))
-            out << " (frenzied)";
-        else if (is(MB_BERSERK))
-            out << " (berserk)";
-        else if (Options.verbose_monster_pane)
-            out << _verbose_info(*this);
-        else if (is(MB_STABBABLE))
-            out << " (resting)";
-        else if (is(MB_DISTRACTED))
-            out << " (distracted)";
-        else if (is(MB_INVISIBLE))
-            out << " (invisible)";
-        else if (is(MB_WITHDRAWN))
-            out << " (withdrawn)";
-    }
+       out << _verbose_info(*this);
 
     // Friendliness
     switch (attitude)
@@ -942,7 +1071,14 @@ void monster_info::to_string(int count, std::string& desc,
          break;
     case ATT_HOSTILE:
         // out << " (hostile)";
-        desc_color = LIGHTGREY;
+        switch (threat)
+        {
+        case MTHRT_TRIVIAL: desc_color = DARKGREY;  break;
+        case MTHRT_EASY:    desc_color = LIGHTGREY; break;
+        case MTHRT_TOUGH:   desc_color = YELLOW;    break;
+        case MTHRT_NASTY:   desc_color = LIGHTRED;  break;
+        default:;
+        }
         break;
     }
 
@@ -971,6 +1107,8 @@ std::vector<std::string> monster_info::attributes() const
         v.push_back("berserk");
     if (is(MB_FRENZIED))
         v.push_back("consumed by blood-lust");
+    if (is(MB_ROUSED))
+        v.push_back("roused with righteous anger");
     if (is(MB_HASTED))
         v.push_back("moving very quickly");
     if (is(MB_STRONG))
@@ -1009,6 +1147,8 @@ std::vector<std::string> monster_info::attributes() const
         v.push_back("mostly faded away");
     if (is(MB_FEAR_INSPIRING))
         v.push_back("inspiring fear");
+    if (is(MB_BREATH_WEAPON))
+        v.push_back("catching its breath");
     if (is(MB_WITHDRAWN))
     {
         v.push_back("regenerating health quickly");
@@ -1016,6 +1156,20 @@ std::vector<std::string> monster_info::attributes() const
     }
     if (is(MB_ATTACHED))
         v.push_back("attached and sucking blood");
+    if (is(MB_DAZED))
+        v.push_back("dazed");
+    if (is(MB_MUTE))
+        v.push_back("permanently mute");
+    if (is(MB_BLIND))
+        v.push_back("permanently blind");
+    if (is(MB_DUMB))
+        v.push_back("stupefied");
+    if (is(MB_MAD))
+        v.push_back("lost in madness");
+    if (is(MB_DEATHS_DOOR))
+       v.push_back("standing in death's doorway");
+    if (is(MB_REGENERATION))
+       v.push_back("regenerating");
     return v;
 }
 
@@ -1118,6 +1272,16 @@ size_type monster_info::body_size() const
             ret = SIZE_BIG;
         else if (number == 5)
             ret = SIZE_GIANT;
+    }
+    else if (mons_is_item_mimic(type))
+    {
+        const int mass = item_mass(*inv[MSLOT_MISCELLANY].get());
+        if (mass < 50)
+            ret = SIZE_TINY;
+        else if (mass < 100)
+            ret = SIZE_LITTLE;
+        else
+            ret = SIZE_SMALL;
     }
 
     return (ret);

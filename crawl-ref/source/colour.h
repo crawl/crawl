@@ -1,6 +1,9 @@
 #ifndef COLOUR_H
 #define COLOUR_H
 
+// Please remove after changing TAG_MAJOR_VERSION
+#include "tag-version.h"
+
 // various elemental colour schemes... used for abstracting random
 // short lists. When adding colours, please also add their names in
 // str_to_colour!
@@ -20,8 +23,10 @@ enum element_type
     ETC_HEAL,           // holy healing (not necromantic stuff)
     ETC_HOLY,           // general "good" god effects
     ETC_DARK,           // darkness
-    ETC_DEATH,          // currently only assassin (and equal to ETC_NECRO)
+    ETC_DEATH,          // assassin/necromancy stuff
+#if TAG_MAJOR_VERSION == 32
     ETC_NECRO,          // necromancy stuff
+#endif
     ETC_UNHOLY,         // demonology stuff
     ETC_VEHUMET,        // vehumet's oddball colours
     ETC_BEOGH,          // Beogh altar colours
@@ -33,11 +38,13 @@ enum element_type
     ETC_ELVEN,          // used for colouring elf fabric items
     ETC_DWARVEN,        // used for colouring dwarf fabric items
     ETC_ORCISH,         // used for colouring orc fabric items
-    ETC_GILA,           // gila monster colours
+    ETC_FLASH,          // flashy colours
     ETC_KRAKEN,         // kraken colours
     ETC_FLOOR,          // colour of the area's floor
     ETC_ROCK,           // colour of the area's rock
+#if TAG_MAJOR_VERSION == 32
     ETC_STONE,          // colour of the area's stone
+#endif
     ETC_MIST,           // colour of mist
     ETC_SHIMMER_BLUE,   // shimmering colours of blue
     ETC_DECAY,          // colour of decay/swamp
@@ -47,9 +54,16 @@ enum element_type
     ETC_BONE,           // colour of bone
     ETC_ELVEN_BRICK,    // colour of the walls in the Elven Halls
     ETC_WAVES,          // cyan, with regularly occurring lightcyan waves
-    ETC_TREE,           // colour of trees
+    ETC_TREE,           // colour of trees on land
     ETC_RANDOM,         // any colour (except BLACK)
-    ETC_FIRST_LUA = 96, // colour indices have to be <128
+    ETC_TORNADO,        // twisting swirls of gray
+    ETC_LIQUEFIED,      // ripples of yellow and brown.
+    ETC_SWAMP_TREE,     // colour of trees on water
+    ETC_ORB_GLOW,       // halo coming from the Orb of Zot
+    ETC_DISCO = 96,
+    ETC_FIRST_LUA = ETC_DISCO, // colour indices have to be <128
+
+    NUM_COLOURS
 };
 
 typedef int (*element_colour_calculator)(int, const coord_def&);
@@ -85,13 +99,16 @@ void add_element_colour(element_colour_calc *colour);
 void clear_colours_on_exit();
 uint8_t random_colour();
 uint8_t random_uncommon_colour();
+bool is_low_colour(uint8_t colour);
+bool is_high_colour(uint8_t colour);
 uint8_t make_low_colour(uint8_t colour);
 uint8_t make_high_colour(uint8_t colour);
-bool is_element_colour(int col);
 int  element_colour(int element, bool no_random = false,
                     const coord_def& loc = coord_def());
+bool get_tornado_phase(const coord_def& loc);
+bool get_orb_phase(const coord_def& loc);
 
-#if defined(TARGET_OS_WINDOWS) || defined(TARGET_OS_DOS) || defined(USE_TILE)
+#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE)
 unsigned short dos_brand(unsigned short colour,
                           unsigned brand = CHATTR_REVERSE);
 #endif
