@@ -862,7 +862,7 @@ Beogh newgame
 %%%%
 Cheibriados penance
 
-@Cheibriados welcome@
+Cheibriados says: Don't be so hasty! Slow down!
 %%%%
 Cheibriados welcome
 
@@ -882,7 +882,7 @@ Elyvilon newgame
 %%%%
 Fedhas penance
 
-@Fedhas welcome@
+Fedhas protests you encroaching upon the nature.
 %%%%
 Fedhas welcome
 
