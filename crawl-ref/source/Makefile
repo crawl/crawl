@@ -961,9 +961,12 @@ webserver/game_data/static/%.png: dat/tiles/%.png
 	$(QUIET_COPY)$(COPY) $< webserver/game_data/static/
 
 TILEINFOJS = $(TILEIMAGEFILES) dngn
+TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
+            denzi_undead_warrior omndra_zot_demon
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
+              $(TITLEIMGS:%=webserver/static/title_%.png) \
               $(TILEINFOJS:%=webserver/game_data/static/tileinfo-%.js)
 
 $(TILEINFOJS:%=$(RLTILES)/tileinfo-%.js): rltile-build

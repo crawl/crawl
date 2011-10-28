@@ -102,7 +102,7 @@ function (exports, $, key_conversion, chat, comm) {
 
     exports.delay = delay;
 
-    var layers = ["crt", "normal", "lobby"]
+    var layers = ["crt", "normal", "lobby", "loader"]
 
     function set_layer(layer)
     {
@@ -118,6 +118,13 @@ function (exports, $, key_conversion, chat, comm) {
         current_layer = layer;
 
         lobby(layer == "lobby");
+    }
+
+    function do_layout()
+    {
+        $("#loader").height($(window).height());
+        if (window.do_layout)
+            window.do_layout();
     }
 
     function handle_keypress(e)
@@ -430,6 +437,16 @@ function (exports, $, key_conversion, chat, comm) {
         });
     }
 
+    function show_loading_screen()
+    {
+        var imgs = $("#loader img");
+        imgs.hide();
+        var count = imgs.length;
+        var rand_index = Math.floor(Math.random() * count);
+        $(imgs[rand_index]).show();
+        set_layer("loader");
+    }
+
     var lobby_update_timeout = undefined;
     var lobby_update_rate = 30000;
 
@@ -551,6 +568,7 @@ function (exports, $, key_conversion, chat, comm) {
     function receive_game_client(data)
     {
         inhibit_messages();
+        show_loading_screen();
         $("#game").html(data.content);
         $(document).ready(uninhibit_messages);
     }
@@ -629,6 +647,8 @@ function (exports, $, key_conversion, chat, comm) {
         $("#rc_edit_form").bind("submit", send_rc);
 
         $("#lobby_update_link").bind("click", lobby_update);
+
+        do_layout();
 
         if ("MozWebSocket" in window)
         {
