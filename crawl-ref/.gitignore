@@ -83,6 +83,7 @@ debuglog.txt
 /source/webserver/game_data/static/icons.png
 /source/webserver/game_data/static/tileinfo-*.js
 /source/webserver/static/stone_soup_icon-32x32.png
+/source/webserver/static/title_*.png
 
 # Makefile-generated junk
 makefile.dep
