@@ -177,11 +177,7 @@ static int _missile_colour(const item_def &item)
         item_colour = DARKGREY;
         break;
     default:
-        // huh?
-        item_colour = LIGHTCYAN;
-        if (get_equip_race(item) == ISFLAG_DWARVEN)
-            item_colour = CYAN;
-        break;
+        die("invalid missile type");
     }
     return (item_colour);
 }
