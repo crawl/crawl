@@ -2196,13 +2196,7 @@ static int _player_armour_racial_bonus(const item_def& item)
 
     int racial_bonus = 0;
     const iflags_t armour_race = get_equip_race(item);
-
-    // get the armour race value that corresponds to the character's race:
-    const iflags_t racial_type
-                            = ((you.species == SP_DEEP_DWARF)? ISFLAG_DWARVEN :
-                               (player_genus(GENPC_ELVEN))   ? ISFLAG_ELVEN :
-                               (you.species == SP_HILL_ORC)  ? ISFLAG_ORCISH
-                                                             : 0);
+    const iflags_t racial_type = get_species_race(you.species);
 
     // Dwarven armour is universally good -- bwr
     if (armour_race == ISFLAG_DWARVEN)
@@ -2514,14 +2508,8 @@ int player_body_armour_racial_spellcasting_bonus(const int scale)
         return (0);
 
     const iflags_t armour_race = get_equip_race(*body_armour);
+    const iflags_t player_race = get_species_race(you.species);
 
-    // Get the armour race value that corresponds to the character's
-    // race:
-    const iflags_t player_race
-                            = ((you.species == SP_DEEP_DWARF)? ISFLAG_DWARVEN :
-                               (player_genus(GENPC_ELVEN))   ? ISFLAG_ELVEN :
-                               (you.species == SP_HILL_ORC)  ? ISFLAG_ORCISH
-                                                             : 0);
     int armour_racial_spellcasting_bonus = 0;
     if (armour_race & ISFLAG_ELVEN)
         armour_racial_spellcasting_bonus += 25;

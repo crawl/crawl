@@ -37,6 +37,7 @@ void set_equip_race(item_def &item, iflags_t flags);
 void set_equip_desc(item_def &item, iflags_t flags);
 iflags_t get_equip_race(const item_def &item);
 iflags_t get_equip_desc(const item_def &item);
+iflags_t get_species_race(species_type sp);
 
 // helmet functions:
 void  set_helmet_desc(item_def &item, short flags);
