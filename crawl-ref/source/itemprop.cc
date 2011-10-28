@@ -1891,7 +1891,9 @@ static bool _item_is_swappable(const item_def &item, equipment_type slot)
         return false;
 
     const int brand = get_weapon_brand(item);
-    return (brand != SPWPN_DISTORTION && brand != SPWPN_VAMPIRICISM);
+    return (brand != SPWPN_DISTORTION
+           && (brand != SPWPN_VAMPIRICISM || you.is_undead != US_ALIVE)
+           && (brand != SPWPN_HOLY_WRATH || you.is_undead == US_ALIVE));
 }
 
 static bool _item_is_swappable(const item_def &item)
