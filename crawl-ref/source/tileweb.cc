@@ -1155,13 +1155,10 @@ void TilesFramework::put_ucs_string(ucs_t *str)
                 m_print_y++;
             }
 
-            if (m_print_y >= m_print_area->my)
-            {
-                // TODO Scroll?
-                m_print_y = 0;
-            }
+            if (m_print_y < m_print_area->my)
+                m_print_area->put_character(*str, m_print_fg, m_print_bg,
+                                            m_print_x, m_print_y);
 
-            m_print_area->put_character(*str, m_print_fg, m_print_bg, m_print_x, m_print_y);
             m_print_x++;
         }
 
@@ -1171,7 +1168,8 @@ void TilesFramework::put_ucs_string(ucs_t *str)
 
 void TilesFramework::clear_to_end_of_line()
 {
-    if (m_print_area == NULL)
+    if (m_print_area == NULL ||
+        m_print_y >= m_print_area->my)
         return;
 
     for (int x = m_print_x; x < m_print_area->mx; ++x)
