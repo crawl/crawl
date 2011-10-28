@@ -771,7 +771,7 @@ ENDMAP
 
 
 ##############################################################################
-# Asmodeus
+# Asmodeus (Gehenna) - the original
 ##############################################################################
 
 NAME:   geh_old
@@ -927,6 +927,118 @@ xxxxxxxxxxxxxx'.'''xxxxxxx''.'xx''...'xxxxxxxxxx'''...'xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxx''''xxxxxxxxxxxxxxxx'''xxxxxxxxxxxxxx'''xxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Asmodeus (Gehenna) by evilmike
+##############################################################################
+
+# 70 x 68 - can be rotated
+NAME:    evilmike_geh
+ORIENT:  encompass
+SHUFFLE: ([{<
+NSUBST:  A = 1:+ / *:+cc
+SUBST:   B = ccc+
+SHUFFLE: CI / ''
+SHUFFLE: EF / ""
+SHUFFLE: CI, EF
+SUBST:   CE = +, IF : cc+
+SUBST:   '" = -
+SHUFFLE: O1$ / *3|
+MONS:    patrolling asmodeus, brimstone fiend, brimstone fiend
+MONS:    sun demon, balrug, hellion, fire giant
+KMONS:   8 = sun demon / efreet / w:20 molten gargoyle
+KMONS:   9 = efreet
+NSUBST:  l = 10:R / 25:V / *:l
+KMONS:   R = smoke demon
+KMONS:   V = fire vortex
+: serpent_of_hell_setup(_G)
+SUBST:   4 = 444499566-
+SUBST:   m : mnn
+COLOUR:  c = lightred
+COLOUR:  G = red
+FTILE:   .G{([<78m = FLOOR_PEBBLE_RED
+TILE:    v = DNGN_METAL_WALL_RED
+TILE:    c = DNGN_STONE_WALL_RED
+TILE:    n = DNGN_TRANSPARENT_WALL_RED
+SUBST:   - = .
+KFEAT:   RV = lava
+KFEAT:   L = endless_lava
+KFEAT:   m = iron_grate
+# This is needed to make it so the entire border is lava.
+# There might be a better way of doing this.
+: dgn.seen_replace_feat("rock_wall", "endless_lava")
+: geh_setup(_G)
+MAP
+LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+LllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllL
+LllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllL
+LlllvvvvvvvvvvcccccccccccccccccnnccllllllllllllllllllllllllllllllllllL
+LlllvvvvvvvvvvcccccccccccccccccnncccllllllllcccnccclllllllcccncccllllL
+Llllvv------vvcccccc-cccccccc------cllRllcccc-----clllllllc--5--cllllL
+Llllvv-$$$$-vvccccc---ccccccc--4---ccllllc--c--4--ccccncccc-%-%-cllllL
+Llllvv-$%%$--v------1------c---vv---cvmmvc--+-----+-------+-%-%-nllllL
+Llllvv-$O%$--+------v------+--vvvv--+....+--c-----+-------+--%--cllllL
+Llllvv-$%%$--v------2------c---vv---cvmmvc--+-----cccc+cccc--%--cllllL
+Llllvv-$$$$-vvccccc---ccccccc--4---ccllllc--c-----c-------c-%-%-nllllL
+Llllvv------vvcccccc-cccccccc------cllRllcccc--4--c---5---c-%-%-cllllL
+Llllvvvvvvvvvvcccccccccccccccccnncccllllllllc-----c---v---c--2--cllllL
+Llllvvvvvvvvvvcccccccccccccccccnncclllllllllcccnccc--vvv--cccncccllllL
+Llllllllllllllllllllllllllllllllllllllllllllllllllc---v---cllllllllllL
+Llllllllllllllllllllllllllllllllllllllllllllllllllc-------cllllllllllL
+Llllllllllllllllllllllllllllllllllllllllllllllllllc-------cllllllllllL
+Llllllllllllllllllllllllllllllllllllllllllllllllllcccc+ccccllllllllllL
+Llllllllllllllllllllllllllllllllllllllllllllllllllllv.7.vllllllllllllL
+Lllllcccnnccclllllllllllllllcccnncccllllllllllllllllv.G.vllllllllllllL
+Lllllc------cllllccncnccllllc------cllllllllllllllllm...mllllllllllllL
+Lllllc------cccccc--4--cccccc------cllllllllllllllllm...mllllllllllllL
+Llllln--vv--C----E-----E----C--vv--nllllllllllllllRlv.G.vlRllllllllllL
+Llllln--vv--I----F-----F----I--vv--nllllllllllllllllv...vllllllllllllL
+Lllllc----5-cccccccc-cccccccc-5----cllllllllcccllccccc+cccccllcccllllL
+Lllllc------c.....GcAcG.....c------cllllllllcccncc----4----ccncccllllL
+LllllcccCIccc...............cccICcccllllllllcc%--c--v---v--c--%ccllllL
+Lllllllc--c...................c--cllllllllllln%5-+--v---v--+-5%nlllllL
+Lllllllc--c.........7.........c--clllllllllllc%--c---------c--%clllllL
+Lllllllc--c....vv.......vv....c--cllllllllRlcccccccccc+ccccccccccllllL
+Lllllllc--c....vv.......vv....c--cllllllllllcccccccccc----------cllllL
+LlllllccEFc......8.....8......cFEccvvmmvmmvvc--------cccccccccc-cllllL
+Llllllc---cG.................Gc---c.........+--v--v---4-------c-cllllL
+Lllllln---cc........{........cc---+..G.G.G.7c--------v--v--v-4+-cllllL
+Llllllc4---A..7....<G(....7..B---4c.....8...+----------------D+-nllllL
+Lllllln---cc........[........cc---+..G.G.G.7c--------v--v--v-4+-cllllL
+Llllllc---cG.................Gc---c.........+--v--v---4-------c-cllllL
+LlllllccEFc......8.....8......cFEccvvmmvmmvvc--------cccccccccc-cllllL
+Lllllllc--c....vv.......vv....c--cllllllllllcccccccccc-------+--cllllL
+Lllllllc--c....vv.......vv....c--cllllllllRlcc-------c--vvv--ccccllllL
+Lllllllc--c.........7.........c--clllllllllllc-4-----+-------c5clllllL
+Lllllllc--c...................c--cllllllllllln--4ccccccccccccc%nlllllL
+LllllcccCIccc...............cccICcccllllllllcc---+--------+--%%ccllllL
+Lllllc------c.....GcAcG.....c------cllllllllcccncc--------cccncccllllL
+Lllllc----5-cccccccc-cccccccc-5----cllllllllcccllccccc+cccccllcccllllL
+Llllln--vv--I----F-----F----I--vv--nllllllllllllllllv...vllllllllllllL
+Llllln--vv--C----E-----E----C--vv--nllllllllllllllRlvG.GvlRllllllllllL
+Lllllc------cccccc--4--cccccc------cllllllllllllllllm...mllllllllllllL
+Lllllc------cllllccncnccllllc------cllllllllllllllllm...mllllllllllllL
+LllllcccnnccclllllllllllllllcccnncccllllllllllllllllvG.GvllllllllllllL
+Llllllllllllllllllllllllllllllllllllllllllllllllllllv.7.vllllllllllllL
+Lllllllllllllllllllllllllllllllllllllllllllllllllllccc+ccclllllllllllL
+Llllllllllllllllllllllllllllllllllllllllllllllllllcc-----ccllllllllllL
+Lllllllllllllllllllllllllllllllllllllllllllllllllcc-------cclllllllllL
+Llllllllllllllllllllllllllllllllllllllllllllllllcc--ccccc--ccllllllllL
+Lllvvvvvvvvvvvcccccccccccccccccnnccllllllllllllcc--ccccccc--cclllllllL
+Lllvvvvvvvvvvvcccccccccccccccccnncccllllllllllcc--ccccccccc--ccllllllL
+Lllvvvv----vvvcccc--2--ccccccc----cccRlllllllcc-4cc%2%-%5%cc4-cclllllL
+Lllvvv-||||-vvcccc-----cccccc--4---cclllllllcc--ccc-%-%-%-ccc--ccllllL
+Lllvv--|%%|--v------v------c--v--v--cvmmvmmvc--cccc%-%-%-%cccc--cllllL
+Lllvv--|*%|--+-----vvv-----+--------+.......+--ccccccc+ccccccc--nllllL
+Lllvv--|%%|--v------v------c--v--v--cvmmvmmvc-------------------nllllL
+Lllvvv-||||-vvcccc-----cccccc--4---cclllllllc---------5---------cllllL
+Lllvvvv----vvvcccc--3--ccccccc----cccRllllllcccc---ccccccc---ccccllllL
+LllvvvvvvvvvvvcccccccccccccccccnnccclllllllllllccncclllllccncclllllllL
+LllvvvvvvvvvvvcccccccccccccccccnnccllllllllllllllllllllllllllllllllllL
+LllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllL
+LllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllL
+LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 ENDMAP
 
 
