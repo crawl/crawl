@@ -1,6 +1,6 @@
 %name feat
 %prefix TILE
-%startvalue TILE_WALL_MAX tiledef-wall.h
+%startvalue TILE_WALL_MAX wall
 
 %sdir dc-dngn/trees
 tree1 DNGN_TREE

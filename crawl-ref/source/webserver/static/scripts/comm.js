@@ -18,7 +18,11 @@ define(["jquery", "contrib/jquery.json"], function ($) {
 
     function handle_message(msg)
     {
-        var msgobj = eval("(" + msg + ")");
+        var msgobj;
+        if (typeof msg === "string")
+            msgobj = eval("(" + msg + ")");
+        else
+            msgobj = msg;
         var handler = message_handlers[msgobj.msg];
         if (!handler)
         {

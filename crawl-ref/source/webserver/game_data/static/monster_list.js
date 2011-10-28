@@ -1,5 +1,5 @@
-monster_list = function ()
-{
+define(["jquery", "./map_knowledge", "./cell_renderer", "./dungeon_renderer"],
+function ($, map_knowledge, cr, dungeon_renderer) {
     var monsters = {};
     var $list = $("#monster_list");
     var monster_groups = [];
@@ -117,7 +117,7 @@ monster_list = function ()
                               </span>");
                 $list.append(node);
                 canvas = node.find("canvas")[0];
-                renderer = new DungeonCellRenderer(canvas);
+                renderer = new cr.DungeonCellRenderer();
                 group = {
                     node: node,
                     canvas: canvas,
@@ -146,7 +146,7 @@ monster_list = function ()
             {
                 canvas.width = needed_width;
                 canvas.height = dungeon_renderer.cell_height;
-                renderer.init();
+                renderer.init(canvas);
             }
 
             for (var j = 0; j < displayed_monsters; ++j)
@@ -205,4 +205,4 @@ monster_list = function ()
         clear: clear,
         get: function () { return monster_groups; }
     };
-} ();
+});

@@ -5,7 +5,9 @@ function (exports, $, key_conversion, chat, comm) {
     // Need to keep this global for backwards compatibility :(
     window.current_layer = "crt";
 
-    exports.log_messages = true;
+    window.debug_mode = false;
+
+    exports.log_messages = false;
     exports.log_message_size = false;
 
     var delay_timeout = undefined;
@@ -18,10 +20,31 @@ function (exports, $, key_conversion, chat, comm) {
 
     var send_message = comm.send_message;
 
-    function log(text)
+    window.log = function (text)
     {
         if (window.console && window.console.log)
             window.console.log(text);
+    }
+
+    function handle_message(msg)
+    {
+        if (typeof msg === "string")
+        {
+            if (msg.match(/^{/))
+            {
+                // JSON message
+                comm.handle_message(msg);
+            }
+            else
+            {
+                // Javascript code
+                eval(msg);
+            }
+        }
+        else
+        {
+            comm.handle_message(msg);
+        }
     }
 
     function handle_message_backlog()
@@ -30,22 +53,22 @@ function (exports, $, key_conversion, chat, comm) {
                && (message_inhibit == 0))
         {
             msg = message_queue.shift();
-            try
+            if (window.debug_mode)
             {
-                if (msg.match(/^{/))
-                {
-                    // JSON message
-                    comm.handle_message(msg);
-                }
-                else
-                {
-                    // Javascript code
-                    eval(msg);
-                }
+                handle_message(msg);
             }
-            catch (err)
+            else
             {
-                console.error("Error in message: " + msg + " - " + err);
+                try
+                {
+                    handle_message(msg);
+                }
+                catch (err)
+                {
+                    console.error("Error in message: " + msg);
+                    console.error(err.message);
+                    console.error(err.stack);
+                }
             }
         }
     }
@@ -61,6 +84,9 @@ function (exports, $, key_conversion, chat, comm) {
         handle_message_backlog();
     }
 
+    exports.inhibit_messages = inhibit_messages;
+    exports.uninhibit_messages = uninhibit_messages;
+
     function delay(ms)
     {
         clearTimeout(delay_timeout);
@@ -73,6 +99,8 @@ function (exports, $, key_conversion, chat, comm) {
         delay_timeout = undefined;
         uninhibit_messages();
     }
+
+    exports.delay = delay;
 
     var layers = ["crt", "normal", "lobby"]
 
@@ -445,14 +473,22 @@ function (exports, $, key_conversion, chat, comm) {
         var old_list = $("#player_list");
         var l = old_list.clone();
         l.find("tbody").html(data.content);
-        l.tablesorter({
-            sortList: old_list[0].config.sortList,
-            headers: {
-                3: {
-                    sorter: "timespan"
+        if (data.content.trim() != "")
+        {
+            var sortlist;
+            if (old_list[0].config)
+                sortlist = old_list[0].config.sortList;
+            else
+                sortlist = [[0, 0]];
+            l.tablesorter({
+                sortList: sortlist,
+                headers: {
+                    3: {
+                        sorter: "timespan"
+                    }
                 }
-            }
-        });
+            });
+        }
         old_list.replaceWith(l);
     }
 
@@ -519,12 +555,26 @@ function (exports, $, key_conversion, chat, comm) {
         $(document).ready(uninhibit_messages);
     }
 
+    function do_set_layer(data)
+    {
+        set_layer(data.layer);
+    }
+
+    function handle_multi_message(data)
+    {
+        var msg;
+        while (msg = data.msgs.pop())
+            message_queue.unshift(msg);
+    }
+
     // Global functions for backwards compatibility (HACK)
     window.log = log;
     window.set_layer = set_layer;
     window.assert = function () {};
 
     comm.register_handlers({
+        "multi": handle_multi_message,
+
         "set_game_links": set_game_links,
         "html": set_html,
         "lobby": lobby_data,
@@ -547,6 +597,8 @@ function (exports, $, key_conversion, chat, comm) {
         "rcfile_contents": rcfile_contents,
 
         "game_client": receive_game_client,
+
+        "layer": do_set_layer,
     });
 
     $(document).ready(function () {
@@ -651,11 +703,6 @@ function (exports, $, key_conversion, chat, comm) {
                     return s.substring(0, s.length - 1);
                 },
                 type: 'numeric'
-            });
-
-
-            $("#player_list").tablesorter({
-                sortList: [[0, 0]]
             });
         }
         else

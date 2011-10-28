@@ -1813,6 +1813,12 @@ void direction_chooser::do_redraws()
     if (need_cursor_redraw || Options.use_fake_cursor)
     {
         cursorxy(crawl_view.grid2screen(target()));
+#ifdef USE_TILE_WEB
+        // cursorxy doesn't place the cursor in Webtiles, we do it manually here
+        // This is by design, since we don't want to use the mouse cursor for
+        // the overview map.
+        tiles.place_cursor(CURSOR_MOUSE, target());
+#endif
         need_cursor_redraw = false;
     }
 }
