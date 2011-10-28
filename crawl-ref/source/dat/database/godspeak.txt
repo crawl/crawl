@@ -1010,7 +1010,7 @@ Zin penance
 
 Zin castigates you for your disobedience of the Law.
 
-Zin sternly explains the importance of @important_subject@.
+Zin sternly explains the importance of @important_subject@
 %%%%
 Zin welcome
 
