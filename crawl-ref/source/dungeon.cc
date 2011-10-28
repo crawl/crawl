@@ -5822,6 +5822,8 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                 result = *ri;
         }
     }
+    if (found)
+        return result;
 
     // FAIL
     die("Can't any place to put the player on.");
