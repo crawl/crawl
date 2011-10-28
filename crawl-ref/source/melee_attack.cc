@@ -889,6 +889,7 @@ void melee_attack::adjust_noise()
         case AT_GORE:
         case AT_SNAP:
         case AT_SPLASH:
+        case AT_CHERUB:
             noise_factor = 125;
             break;
 
@@ -907,6 +908,10 @@ void melee_attack::adjust_noise()
         case AT_TOUCH:
             noise_factor = 0;
             break;
+
+        case AT_WEAP_ONLY:
+        	noise_factor = noise_factor;
+        	break;
 
         // To prevent compiler warnings.
         case AT_NONE:
@@ -3500,7 +3505,7 @@ int melee_attack::calc_to_hit(bool random)
              attacker_armour_tohit_penalty, attacker_shield_tohit_penalty);
 
         can_do_unarmed =
-            player_fights_well_unarmed(attacker_armour_tohit_penalty
+            attacker->fights_well_unarmed(attacker_armour_tohit_penalty
                                        + attacker_shield_tohit_penalty);
 
         // fighting contribution
@@ -4646,14 +4651,6 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     default:
         return (false);
     }
-}
-
-// TODO: Move to the player class, DEFINITELY doesn't belong here
-bool melee_attack::player_fights_well_unarmed(int heavy_armour_penalty)
-{
-    return (you.burden_state == BS_UNENCUMBERED
-            && x_chance_in_y(you.skill(SK_UNARMED_COMBAT, 10), 200)
-            && x_chance_in_y(2, 1 + heavy_armour_penalty));
 }
 
 // TODO: Potentially move this, may or may not belong here (may not

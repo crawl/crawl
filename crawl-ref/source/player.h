@@ -542,6 +542,7 @@ public:
 
     bool fumbles_attack(bool verbose = true);
     bool cannot_fight() const;
+    bool fights_well_unarmed(int heavy_armour_penalty);
 
     void attacking(actor *other);
     bool can_go_berserk() const;
