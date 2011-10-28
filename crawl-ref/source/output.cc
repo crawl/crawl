@@ -17,6 +17,7 @@
 
 #include "abl-show.h"
 #include "areas.h"
+#include "artefact.h"
 #include "branch.h"
 #include "cio.h"
 #include "colour.h"
@@ -1759,6 +1760,12 @@ static std::vector<formatted_string> _get_overview_resistances(
 
     // 3 columns, splits at columns 21, 39
     column_composer cols(3, 21, 39);
+
+    // Don't show unreliable resistances granted by the cloak.  We could mark
+    // them somehow, but for now this will do.
+    bool dragonskin = player_equip_unrand(UNRAND_DRAGONSKIN);
+    unwind_var<bool> dragon_hack(you.melded[EQ_CLOAK], you.melded[EQ_CLOAK]
+                                                       || dragonskin);
 
     const int rfire = player_res_fire(calc_unid);
     const int rcold = player_res_cold(calc_unid);

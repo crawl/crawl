@@ -2013,9 +2013,8 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     case MONS_TIAMAT:
-        item_race = MAKE_ITEM_NO_RACE;
-        item.base_type = OBJ_ARMOUR;
-        item.sub_type  = ARM_GOLD_DRAGON_ARMOUR;
+        force_item = true;
+        make_item_unrandart(item, UNRAND_DRAGONSKIN);
         break;
 
     case MONS_ORC_WIZARD:

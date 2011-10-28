@@ -1461,6 +1461,10 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         // randart weapons:
         rf += scan_artefacts(ARTP_FIRE, calc_unid);
 
+        // dragonskin cloak: 0.5 to draconic resistances
+        if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+            rf++;
+
         // Che bonus
         if (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(3)
             && !player_under_penance())
@@ -1526,6 +1530,10 @@ int player_res_steam(bool calc_unid, bool temp, bool items)
 
     if (items && player_equip(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_HIDE))
         res += 2;
+
+    // dragonskin cloak: 0.5 to draconic resistances
+    if (items && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+        res++;
 
     return (res + player_res_fire(calc_unid, temp, items) / 2);
 }
@@ -1600,6 +1608,10 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
 
         // randart weapons:
         rc += scan_artefacts(ARTP_COLD, calc_unid);
+
+        // dragonskin cloak: 0.5 to draconic resistances
+        if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+            rc++;
 
         // Che bonus
         if (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(2)
@@ -1695,6 +1707,11 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
 
         // randart weapons:
         re += scan_artefacts(ARTP_ELECTRICITY, calc_unid);
+
+        // dragonskin cloak: 0.5 to draconic resistances
+        if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+            re++;
+
     }
 
     // mutations:
@@ -1765,6 +1782,10 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
 
         // randart weapons:
         rp += scan_artefacts(ARTP_POISON, calc_unid);
+
+        // dragonskin cloak: 0.5 to draconic resistances
+        if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+            rp++;
 
     }
 
@@ -1839,6 +1860,10 @@ int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
     if (items && player_equip(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
         rsf++;
     if (items && player_equip(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_HIDE))
+        rsf++;
+
+    // dragonskin cloak: 0.5 to draconic resistances
+    if (items && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
         rsf++;
 
     if (rsf > 1)
@@ -2050,6 +2075,11 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
 
         // randart wpns
         pl += scan_artefacts(ARTP_NEGATIVE_ENERGY, calc_unid);
+
+        // dragonskin cloak: 0.5 to draconic resistances
+        // this one is dubious (no pearl draconians)
+        if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+            pl++;
 
         // Che bonus
         if (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(1)
