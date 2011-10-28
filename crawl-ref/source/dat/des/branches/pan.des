@@ -232,6 +232,73 @@ xcccccccccccccccccccccccccccccx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+# The eyes probably make this vault harder than the others, but it's still Mnoleg.
+#
+# Note: if M were to cast malign gateway, there would be enough room for it here
+NAME:       evilmike_mnoleg_eyes
+TAGS:       mnoleg uniq_mnoleg
+ORIENT:     northwest
+LFLOORCOL:  yellow
+LROCKCOL:   red
+NSUBST:     O = 1:O / *:|
+KITEM:      O = glowing rune of Zot
+MONS:       patrolling mnoleg
+MONS:       giant eyeball / golden eye / eye of devastation / \
+            eye of draining / shining eye
+MONS:       w:3 large abomination / w:2 tentacled monstrosity
+MONS:       cacodemon
+MONS:       neqoxec / brain worm
+NSUBST:     C = 1:4 / *:N
+NSUBST:     N = 2:4 / *:5
+NSUBST:     M = 5:3 / 2:3. / *:.
+NSUBST:     E = 3:2 / 2:22. / 2:2.. / *:.
+SHUFFLE:    '-
+NSUBST:     ' = 5:3 / 2:3. / 1:4 / 3:5 / *:.
+NSUBST:     - = 5:2 / 2:2. / 1:4 / 3:5 / *:.
+: pan_lord_monsters(_G, 'Mnoleg')
+epilogue{{
+  pan_lord_epilogue('Mnoleg')
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xcccccccccccccccccccccccccccccccccccx
+xcOcccccccccccccccccccccOcccccccccccx
+xcc...ccccccccccccccc...ccccccccccccx
+xcc.ccMcccccccccccccMcc.ccccccccccccx
+xcc.ccM.ccccccccccc.Mcc.ccccccccccccx
+xcccMMC..ccccccccc..CMMcccccccccccccx
+xcccc.....ccccccc.....ccccc''cccccccx
+xccccc.....ccccc.....ccccc''''ccccccx
+xcccccc.............ccccc''''''cccccx
+xccccccc...EEE.....ccccc''''''''ccccx
+xcccccccc.EEEEE...ccccc''''''''''cccx
+xcccccccc.EE1EE...cccc.'''''''''''ccx
+xcccccccc.EEEEE...ccc'''cc'''''''..cc
+xcccccccc..EEE....cc'''cccc'''''.....
+xcccccccc.........cc'''cccc'''cc....@
+xccccccc...........cc'''cc'''cc......
+xcccccc.............cc''''''cc.....cc
+xccccc.....ccccc.....cc''''cc.....ccx
+xcccc.....ccccccc.....cc''cc.....ccxx
+xcccMMC..ccccc--cc.....cccc.....ccxxx
+xcc.ccM.ccccc----cc.....cc.....ccxxxx
+xcc.ccMccccc------cc..........ccxxxxx
+xcc...ccccc---cc---cc........cccxxxxx
+xcOccccccc---cccc---cc......ccccxxxxx
+xcccccccc----cccc---cc......ccccxxxxx
+xccccccc------cc---cc........cccxxxxx
+xcccccc-----------cc........N.ccxxxxx
+xcccccc----------cc.....cc.N2..cxxxxx
+xccccccc--------cc.....cccc..N.cxxxxx
+xcccccccc------cc.....cccccc...cxxxxx
+xccccccccc-----c.....cccccccccccxxxxx
+xcccccccccc---......ccxxxxxxxxxxxxxxx
+xccccccccccc-......ccxxxxxxxxxxxxxxxx
+xcccccccccccc.....ccxxxxxxxxxxxxxxxxx
+xccccccccccccc...ccxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxc.@.cxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
 
 #######################################################################
 # Lom Lobon
@@ -520,6 +587,70 @@ xx.....................................................................xx
 xx.................................@@@.................................xx
 ENDMAP
 
+NAME:       evilmike_cerebov_lava
+TAGS:       cerebov patrolling uniq_cerebov
+ORIENT:     northwest
+LFLOORCOL:  red
+LROCKCOL:   red
+SHUFFLE:    NM, XY
+SUBST:      N : L.., M = .
+SUBST:      X : .vvv, Y : ...v
+SUBST:      L : lll.
+SUBST:      U : W., W : V., V : v.
+SUBST:      P : lv
+TILE:       v = DNGN_METAL_WALL_BROWN
+KITEM:      O = fiery rune of zot
+MONS:       Cerebov, balrug, pit fiend, sun demon
+NSUBST:     Q = 1:3 / 2:|
+NSUBST:     B = 3:2 / 3:4
+NSUBST:     C = 2:2 / 2:|
+: pan_lord_monsters(_G, 'Cerebov')
+epilogue{{
+  pan_lord_epilogue('Cerebov')
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xx..........................................
+xx..........................................
+xx..............vvvvvvv.....................
+xx...vvvvv......v%|||%v......vvvvv..........
+xx...v|$$v......v%|Q|%v......v$$|v..........
+xx...v$C$vvvvvvvv%|||%vvvvvvvv$C$v..........
+xx...v$$$vvvvvvvvvv+vvvvvvvvvv$$$v...lll....
+xx...vvvv+v.................v+vvvv..lllll...
+xx.....vvv..vVvWvU.B.UvWvVv..vvv....llvll...
+xx.....vv..vv.............vv..vv....lllll...
+xx.....vv.vvB.............Bvv.vv.....lll....
+xx.....vv.V......LLNll......V.vv............
+xx.....vv.v....LLLLNllll....v.vv............
+xx.....vv.W...LLLLLNlllll...W.vvvvvvvvvv....
+xx.....vv.v...LLLLLNllPll...v.vvvvvvvvvvvv..
+xx..vvvvv.U..LLLLLL.llllll..........vllvvv..
+xx..v%%%v...LLvvv.....lllll...vWvWv.v4...vv.
+xx..v|||v..LLvv.v.Y....llPll..2.....+.....4.
+xx..v|Q|+..LLvOX3.Y...1lllll.4......+.2....@
+xx..v|||v..LLvv.v.Y....llPll..2.....+.....4.
+xx..v%%%v...LLvvv.....lllll...vWvWv.v4...vv.
+xx..vvvvv.U..LLLLLL.llllll..........vllvvv..
+xx.....vv.v...LLLLLMllPll...v.vvvvvvvvvvvv..
+xx.....vv.W...LLLLLMlllll...W.vvvvvvvvvv....
+xx.....vv.v....LLLLMllll....v.vv............
+xx.....vv.V......LLMll......V.vv............
+xx.....vv.vvB.............Bvv.vv.....lll....
+xx.....vv..vv.............vv..vv....lllll...
+xx.....vvv..vVvWvU.B.UvWvVv..vvv....llvll...
+xx...vvvv+v.................v+vvvv..lllll...
+xx...v$$$vvvvvvvvvv+vvvvvvvvvv$$$v...lll....
+xx...v$C$vvvvvvvv%|||%vvvvvvvv$C$v..........
+xx...v|$$v......v%|Q|%v......v$$|v..........
+xx...vvvvv......v%|||%v......vvvvv..........
+xx..............vvvvvvv.....................
+xx..........................................
+xx..........................................
+ENDMAP
+
+
 ##############################################################################
 # Gloorx Vloq
 #
@@ -612,6 +743,60 @@ xxxxxxxxxxxxxxx.........xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
+NAME:       evilmike_gloorx_vloq_box
+TAGS:       gloorx_vloq uniq_gloorx_vloq
+ORIENT:     southeast
+LFLOORCOL:  blue
+LROCKCOL:   blue
+SUBST:      X : x.
+SUBST:      V : x.
+: if crawl.coinflip() then
+SUBST:      C : c, d : c
+: else
+SUBST:      C : ., d : =
+: end
+MONS:       patrolling Gloorx Vloq
+MONS:       executioner, shadow demon, shadow wraith, demonic crawler     
+KITEM:      O = dark rune of Zot
+KMONS:      O = demonic crawler
+: pan_lord_monsters(_G, 'Gloorx Vloq')
+epilogue{{
+  pan_lord_epilogue('Gloorx Vloq')
+}}
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x.4..........................4.xx
+x4x.V.x.x.V.x.x.V.x.x.V.x.x.V.4xx
+x..x.x.V.x.x.V.x2x.V.x.x.V.x2V.xx
+x.V.........................x..xx
+x..x.........................x.xx
+x.x....ccccccccccccccccccc..V..xx
+x..V...cxxxxxxxxxxxxxxxxxc...x.xx
+x.x....cxxxxxxxxxxxxxx...c..x..xx
+x..x...cxxxxxxxxxxxxx..X.c...V.xx
+x.V....cxxxxxxxxxxx......c..x..xx
+x..x...cxxxxxxxx.....X.X.c...x.xx
+x.x..cccxxxx.............c..V..xx
+x...3c5+.2.........X.X.X.cc..x.xx
+....cc5c.................=3.x..xx
+@...cO5c1....2...X.X.X.X.dC..V.xx
+....cc5c.................=3.x..xx
+x...3c5+.2.........X.X.X.cc..x.xx
+x.x..cccxxxx.............c..V..xx
+x..x...cxxxxxxxx.....X.X.c...x.xx
+x.V....cxxxxxxxxxxx......c..x..xx
+x..x...cxxxxxxxxxxxxx..X.c...V.xx
+x.x....cxxxxxxxxxxxxxx...c..x..xx
+x..V...cxxxxxxxxxxxxxxxxxc...x.xx
+x.x....ccccccccccccccccccc..V..xx
+x..x.........................x.xx
+x.V.........................x..xx
+x..x.x.V.x.x.V.x2x.V.x.x.V.x2V.xx
+x4x.V.x.x.V.x.x.V.x.x.V.x.x.V.4xx
+x.4..........................4.xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
 
 
 #############################################################################
