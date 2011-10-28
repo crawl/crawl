@@ -427,7 +427,7 @@ void InvMenu::set_title(const std::string &s)
             (you.burden * 100) / cap,
             inv_count());
 
-        std::string prompt = "_: help";
+        std::string prompt = "(_ for help)";
         stitle = stitle + std::string(std::max(0, get_number_of_cols()
                                                   - strwidth(stitle)
                                                   - strwidth(prompt)),
