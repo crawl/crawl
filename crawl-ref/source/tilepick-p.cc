@@ -535,6 +535,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_FELID;
     case SP_OCTOPODE:
         return TILEP_BASE_OCTOPODE;
+    case SP_NOME:
+        return TILEP_BASE_GNOME;
     default:
         return TILEP_BASE_HUMAN;
     }

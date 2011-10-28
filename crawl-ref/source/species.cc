@@ -289,7 +289,6 @@ monster_type player_species_to_mons_species(species_type species)
         return (MONS_ELF);
 #if TAG_MAJOR_VERSION == 32
     case SP_MOUNTAIN_DWARF:
-    case SP_NOME: //PLACEHOLDER until Nome monster implemented
         return (MONS_DWARF);
 #endif
     case SP_HALFLING:
@@ -350,6 +349,8 @@ monster_type player_species_to_mons_species(species_type species)
         return (MONS_FELID);
     case SP_OCTOPODE:
         return (MONS_OCTOPODE);
+    case SP_NOME:
+        return (MONS_GNOME);
     case SP_ELF:
     case SP_HILL_DWARF:
     case SP_OGRE_MAGE:
