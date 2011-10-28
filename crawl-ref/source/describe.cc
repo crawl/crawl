@@ -1422,7 +1422,10 @@ static std::string _describe_armour(const item_def &item, bool verbose)
             description += "\nIt is well-crafted and durable.";
         else if (race == ISFLAG_ELVEN)
         {
-            description += "\nIt is well-crafted and unobstructive";
+            if (get_item_slot(item) == EQ_BODY_ARMOUR)
+                description += "\nIt is well-crafted and unobstructive";
+            else
+                description += "\nIt is well-crafted and lightweight";
             if (item.sub_type == ARM_CLOAK || item.sub_type == ARM_BOOTS)
                 description += ", and helps its wearer avoid being noticed";
             description += ".";
