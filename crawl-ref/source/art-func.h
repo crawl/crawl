@@ -748,3 +748,14 @@ static void _DEVASTATOR_melee_effect(item_def* item, actor* attacker,
     if (dam)
         shillelagh(attacker, defender->pos(), dam);
 }
+
+///////////////////////////////////////////////////
+static void _DRAGONSKIN_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    _equip_mpr(show_msgs, "You feel oddly protected from elements.");
+}
+
+static void _DRAGONSKIN_unequip(item_def *item, bool *show_msgs)
+{
+    _equip_mpr(show_msgs, "You feel no longer protected from elements.");
+}
