@@ -6352,6 +6352,13 @@ int player_res_magic(bool calc_unid, bool temp)
     return (rm);
 }
 
+bool player::fights_well_unarmed(int heavy_armour_penalty)
+{
+    return (you.burden_state == BS_UNENCUMBERED
+            && x_chance_in_y(you.skill(SK_UNARMED_COMBAT, 10), 200)
+            && x_chance_in_y(2, 1 + heavy_armour_penalty));
+}
+
 bool player::confusable() const
 {
     return (player_mental_clarity() == 0);
