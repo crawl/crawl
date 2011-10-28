@@ -5826,7 +5826,7 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
         return result;
 
     // FAIL
-    die("Can't any place to put the player on.");
+    die("Can't find any floor to put the player on.");
 }
 
 void dgn_set_lt_callback(std::string level_type_tag,
