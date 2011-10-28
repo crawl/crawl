@@ -484,12 +484,14 @@ void init_properties()
 //
 bool item_known_cursed(const item_def &item)
 {
-    return ((item.flags & ISFLAG_KNOW_CURSE) && (item.flags & ISFLAG_CURSED));
+    return (full_ident_mask(item) & ISFLAG_KNOW_CURSE
+            && item_ident(item, ISFLAG_KNOW_CURSE) && item.cursed());
 }
 
 bool item_known_uncursed(const item_def &item)
 {
-    return ((item.flags & ISFLAG_KNOW_CURSE) && !(item.flags & ISFLAG_CURSED));
+    return (!(full_ident_mask(item) & ISFLAG_KNOW_CURSE)
+            || (item_ident(item, ISFLAG_KNOW_CURSE) && !item.cursed()));
 }
 
 void do_curse_item(item_def &item, bool quiet)
@@ -1865,9 +1867,14 @@ skill_type range_skill(object_class_type wclass, int wtype)
     return (range_skill(wpn));
 }
 
-// Check whether an item can be easily and quickly equipped.
-static bool _item_is_swappable(const item_def &item)
+// Check whether an item can be easily and quickly equipped. This needs to
+// know which slot we're considering for cases like where we're already
+// wielding a cursed non-weapon.
+static bool _item_is_swappable(const item_def &item, equipment_type slot)
 {
+    if (get_item_slot(item) != slot)
+        return true;
+
     if (item.base_type == OBJ_ARMOUR || !item_known_uncursed(item))
         return false;
 
@@ -1885,6 +1892,11 @@ static bool _item_is_swappable(const item_def &item)
 
     const int brand = get_weapon_brand(item);
     return (brand != SPWPN_DISTORTION && brand != SPWPN_VAMPIRICISM);
+}
+
+static bool _item_is_swappable(const item_def &item)
+{
+    return _item_is_swappable(item, get_item_slot(item));
 }
 
 // Check whether the equipment slot of an item is occupied by an item which
@@ -1913,7 +1925,7 @@ static bool _slot_blocked(const item_def &item)
         return true;
     }
 
-    return (you.equip[eq] != -1 && !_item_is_swappable(you.inv[you.equip[eq]]));
+    return (you.equip[eq] != -1 && !_item_is_swappable(you.inv[you.equip[eq]], eq));
 }
 
 bool item_skills(const item_def &item, std::set<skill_type> &skills)
