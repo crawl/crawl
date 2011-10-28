@@ -10,7 +10,8 @@ define(["jquery", "comm"], function ($, comm) {
             if (line_span[0])
                 break;
 
-            append = "<span id='" + name + "-" + current_line + "'></span>" + append;
+            append = "<span style='white-space: pre;' id='" + name +
+                "-" + current_line + "'></span>" + append;
 
             if (current_line == 0)
             {
