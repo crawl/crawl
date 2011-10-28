@@ -910,8 +910,8 @@ void melee_attack::adjust_noise()
             break;
 
         case AT_WEAP_ONLY:
-        	noise_factor = noise_factor;
-        	break;
+            noise_factor = noise_factor;
+            break;
 
         // To prevent compiler warnings.
         case AT_NONE:
