@@ -851,8 +851,8 @@ static int _menu_selection_weight(const Menu* menu)
     int weight(0);
     for (int i = 0, size = se.size(); i < size; ++i)
     {
-        const item_def *item = static_cast<item_def *>(se[i]->data);
-        if (se[i]->selected_qty>0)
+        const item_def *item = static_cast<item_def*>(se[i]->data);
+        if (se[i]->selected_qty > 0)
             weight += item_mass(*item) * se[i]->selected_qty;
     }
     return weight;
@@ -861,26 +861,28 @@ static int _menu_selection_weight(const Menu* menu)
 static std::string _menu_burden_invstatus(const Menu *menu, bool is_pickup = false)
 {
     int sel_weight = _menu_selection_weight(menu);
-    int new_burd = you.burden + (is_pickup?sel_weight:-sel_weight);
-    std::string sw(sel_weight?make_stringf(">%.0f", new_burd * BURDEN_TO_AUM):"");
-
+    int new_burd = you.burden + (is_pickup ? sel_weight : -sel_weight);
+    std::string sw = sel_weight ? make_stringf(">%.0f", new_burd * BURDEN_TO_AUM) : "";
     //TODO: Should somehow colour burdened/overloaded in LIGHTRED/RED
     //      respectively {kittel}
-    const char * newstate = new_burd>carrying_capacity(BS_UNENCUMBERED) ?
-                                "burdened" : "unencumbered";
-    if (new_burd>carrying_capacity(BS_ENCUMBERED))
-        newstate="overloaded";
+    std::string newstate = new_burd > carrying_capacity(BS_ENCUMBERED) ?
+                               "overloaded)" :
+                           new_burd > carrying_capacity(BS_UNENCUMBERED) ?
+                               "burdened)" : "unencumbered)";
 
-    return (make_stringf("(Inv: %.0f%s/%.0f aum, %s)",
-			 you.burden * BURDEN_TO_AUM,
-			 sw.c_str(),
-			 carrying_capacity(BS_UNENCUMBERED) * BURDEN_TO_AUM,
-			 newstate));
+    std::string burden = "(Burden: ";
+    burden += Options.show_inventory_weights ? make_stringf("%.0f%s/%.0f aum)",
+			                                      you.burden * BURDEN_TO_AUM,
+			                                      sw.c_str(),
+			                                      carrying_capacity(BS_UNENCUMBERED)
+                                                                    * BURDEN_TO_AUM)
+                                             : newstate;
+    return (burden);
 }
 
 static std::string _pickup_menu_title(const Menu *menu, const std::string &oldt)
 {
-    return _menu_burden_invstatus(menu,true) + " " + oldt;
+    return _menu_burden_invstatus(menu, true) + " " + oldt;
 }
 
 void pickup_menu(int item_link)
@@ -891,11 +893,11 @@ void pickup_menu(int item_link)
     std::vector<const item_def*> items;
     item_list_on_square(items, item_link, false);
 
-    std::string prompt = "Select items to pick up or press _ for help";
+    std::string prompt = "Pick up what? (_ for help)";
     if (items.size() == 1 && items[0]->quantity > 1)
         prompt = "Select pick up quantity by entering a number, then select the item";
     std::vector<SelItem> selected =
-        select_items(items, prompt.c_str(),false,MT_PICKUP,_pickup_menu_title);
+        select_items(items, prompt.c_str(), false, MT_PICKUP, _pickup_menu_title);
     redraw_screen();
 
     std::string pickup_warning;
@@ -2317,8 +2319,8 @@ void drop_last()
 static std::string _drop_menu_title(const Menu *menu, const std::string &oldt)
 {
     std::string res = _menu_burden_invstatus(menu) + " " + oldt;
-    if (menu->is_set(MF_MULTISELECT))
-        res = "[Multidrop] " + res;
+    if (menu->is_set(MF_SINGLESELECT))
+        res = "[Single drop] " + res;
 
     return (res);
 }
@@ -2421,7 +2423,7 @@ void drop()
     }
 
     std::vector<SelItem> tmp_items;
-    tmp_items = prompt_invent_items("Drop what? (Press _ for help)", MT_DROP,
+    tmp_items = prompt_invent_items("Drop what? (_ for help)", MT_DROP,
                                      -1, _drop_menu_title, true, true, 0,
                                      &Options.drop_filter, _drop_selitem_text,
                                      &items_for_multidrop);
