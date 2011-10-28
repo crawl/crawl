@@ -1339,6 +1339,10 @@ int acquirement_create_item(object_class_type class_wanted,
             }
         }
 
+        // bias racial make towards the player
+        if (!is_artefact(doodad))
+            maybe_set_item_race(doodad, get_species_race(you.species), 3);
+
         if (doodad.base_type == OBJ_WEAPONS
                && !can_wield(&doodad, false, true)
             || doodad.base_type == OBJ_ARMOUR

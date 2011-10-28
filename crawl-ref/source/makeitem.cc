@@ -3558,6 +3558,33 @@ void item_set_appearance(item_def &item)
     }
 }
 
+void maybe_set_item_race(item_def &item, int allowed, int num_rolls)
+{
+    if (!allowed)
+        return;
+
+    while (num_rolls-- > 0)
+    {
+        iflags_t irace = 0;
+        switch (item.base_type)
+        {
+        case OBJ_WEAPONS:
+            irace = _determine_weapon_race(item, MAKE_ITEM_RANDOM_RACE);
+            break;
+        case OBJ_ARMOUR:
+            irace = _determine_armour_race(item, MAKE_ITEM_RANDOM_RACE);
+            break;
+        default:
+            return;
+        }
+        if (!(allowed & irace))
+            continue;
+        dprf("Extra race roll passed!");
+        set_equip_race(item, irace);
+        return;
+    }
+}
+
 #if defined(DEBUG_DIAGNOSTICS) || defined(DEBUG_TESTS)
 static int _test_item_level()
 {
