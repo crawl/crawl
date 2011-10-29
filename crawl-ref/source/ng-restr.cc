@@ -785,10 +785,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
             return (CC_RESTRICTED);
         }
 
-    case WPN_ANKUS:
-        if (ng.species == SP_OGRE)
-            return (CC_UNRESTRICTED);
-
     case WPN_CROSSBOW:
         switch(ng.species)
         {
