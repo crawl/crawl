@@ -269,7 +269,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
                 const armour_type armours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
                                                 ARM_RING_MAIL, ARM_SCALE_MAIL,
                                                 ARM_CHAIN_MAIL, ARM_SPLINT_MAIL,
-                                                ARM_BANDED_MAIL, ARM_PLATE_MAIL };
+                                                ARM_PLATE_MAIL };
 
                 result = static_cast<armour_type>(RANDOM_ELEMENT(armours));
 
@@ -284,7 +284,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
                 const armour_type armours[] =
                     { ARM_ANIMAL_SKIN, ARM_ROBE, ARM_LEATHER_ARMOUR,
                       ARM_RING_MAIL, ARM_SCALE_MAIL, ARM_CHAIN_MAIL,
-                      ARM_BANDED_MAIL, ARM_SPLINT_MAIL, ARM_PLATE_MAIL,
+                      ARM_SPLINT_MAIL, ARM_PLATE_MAIL,
                       ARM_CRYSTAL_PLATE_MAIL };
 
                 const int num_arms = ARRAYSZ(armours);

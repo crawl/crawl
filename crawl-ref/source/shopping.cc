@@ -1322,7 +1322,9 @@ unsigned int item_value(item_def item, bool ident)
             valued += 200;
             break;
 
+#if TAG_MAJOR_VERSION == 32
         case ARM_BANDED_MAIL:
+#endif
         case ARM_CENTAUR_BARDING:
         case ARM_NAGA_BARDING:
             valued += 150;

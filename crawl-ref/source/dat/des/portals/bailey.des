@@ -128,7 +128,6 @@ function orc_warrior_with_polearm(e)
           scale mail race:orcish    | scale mail |\
           ring mail race:orcish     | ring mail |\
           splint mail race:orcish   | splint mail |\
-          banded mail race:orcish   | banded mail |\
           plate mail race:orcish    | plate mail |\
           crystal plate mail w:1")
 end
@@ -141,7 +140,7 @@ function orc_knight_with_polearm(e)
           bardiche w:1 | bardiche w:1 race:orcish .\
           ring mail race:orcish     | ring mail |\
           splint mail race:orcish   | splint mail |\
-          banded mail race:orcish   | banded mail |\
+          chain mail race:orcish    | chain mail |\
           plate mail race:orcish    | plate mail |\
           crystal plate mail w:1")
 end
@@ -153,7 +152,7 @@ function orc_warlord_with_polearm(e)
           glaive       | glaive race:orcish |\
           bardiche w:1 | bardiche w:1 race:orcish . \
           splint mail race:orcish   | splint mail |\
-          banded mail race:orcish   | banded mail |\
+          chain mail race:orcish    | chain mail |\
           plate mail race:orcish    | plate mail |\
           crystal plate mail w:1")
 end
