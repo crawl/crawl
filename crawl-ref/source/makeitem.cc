@@ -751,7 +751,7 @@ static weapon_type _determine_weapon_subtype(int item_level)
         WPN_SLING,
         WPN_SPEAR, WPN_HAND_AXE, WPN_MACE,
         WPN_DAGGER, WPN_DAGGER, WPN_CLUB,
-        WPN_HAMMER, WPN_WHIP, WPN_SHORT_SWORD
+        WPN_WHIP, WPN_SHORT_SWORD
     };
 
     const weapon_type good_common_subtypes[] = {
