@@ -22,7 +22,9 @@ butterfly3
 butterfly4
 butterfly5
 butterfly6
+%rim 0
 fire_bat MONS_FIRE_BAT
+%rim 1
 raven MONS_RAVEN
 dc-mon/holy/phoenix MONS_PHOENIX
 %sdir dc-mon/vault
@@ -422,7 +424,7 @@ obelisk MONS_DIAMOND_OBELISK
 
 ## Spirey things ('{')
 lightning_spire MONS_LIGHTNING_SPIRE
-%rim 0
+%rim 1
 
 ## Gargoyles ('9')
 %sdir dc-mon/nonliving
@@ -473,9 +475,11 @@ killer_klown_yellow
 slave MONS_SLAVE
 human_slave
 ## From a Lair ending
+%rim 0
 vault/hell_wizard_50 MONS_HELL_WIZARD
 vault/hell_wizard_75
 vault/hell_wizard_100
+%rim 1
 ## From the Wucad Mu wizlab
 vault/human_monk_ghost MONS_HUMAN_MONK
 ## From the Cigotuvi wizlab
@@ -485,7 +489,9 @@ vault/cloud_mage MONS_CLOUD_MAGE
 ## From the Hellbinder wizlab
 vault/hellbinder MONS_HELLBINDER
 ## From a floating vault (mu_elemental_laboratory)
+%rim 0
 vault/master_elementalist MONS_MASTER_ELEMENTALIST
+%rim 1
 ## From an entry vault
 halfling MONS_HALFLING
 demigod MONS_DEMIGOD
@@ -621,7 +627,9 @@ kobold_demonologist MONS_KOBOLD_DEMONOLOGIST
 
 ## Liches ('L')
 %sdir dc-mon/unique
+%rim 0
 boris MONS_BORIS
+%rim 1
 %sdir dc-mon/undead
 lich MONS_LICH
 ancient_lich MONS_ANCIENT_LICH
@@ -846,13 +854,17 @@ deep_dwarf_artificer MONS_DEEP_DWARF_ARTIFICER
 deep_dwarf_berserker MONS_DEEP_DWARF_BERSERKER
 deep_dwarf_necromancer MONS_DEEP_DWARF_NECROMANCER
 deep_dwarf_death_knight MONS_DEEP_DWARF_DEATH_KNIGHT
+%rim 0
 undead/unborn_deep_dwarf MONS_UNBORN_DEEP_DWARF
+%rim 1
 # an entry vault
 gnome MONS_GNOME
 
 ## Small zombified monsters ('z')
 %sdir dc-mon/undead
+%rim 0
 wight MONS_WIGHT
+%rim 1
 skeletal_warrior MONS_SKELETAL_WARRIOR
 %rim 0
 flaming_corpse MONS_FLAMING_CORPSE
