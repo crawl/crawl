@@ -64,14 +64,16 @@ static armour_def Armour_prop[NUM_ARMOURS] =
     { ARM_LEATHER_ARMOUR,       "leather armour",         3, -1,  150,
         true,  EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
 
-    { ARM_RING_MAIL,            "ring mail",              4, -2,  250,
+    { ARM_RING_MAIL,            "ring mail",              5, -2,  250,
         false, EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
-    { ARM_SCALE_MAIL,           "scale mail",             5, -3,  350,
+    { ARM_SCALE_MAIL,           "scale mail",             6, -3,  350,
         false, EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
-    { ARM_CHAIN_MAIL,           "chain mail",             6, -4,  400,
+    { ARM_CHAIN_MAIL,           "chain mail",             7, -4,  400,
         false, EQ_BODY_ARMOUR, SIZE_SMALL,  SIZE_MEDIUM },
-    { ARM_BANDED_MAIL,          "banded mail",            7, -5,  500,
+#if TAG_MAJOR_VERSION == 32
+    { ARM_BANDED_MAIL,          "banded mail",            8, -5,  500,
         false, EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
+#endif
     { ARM_SPLINT_MAIL,          "splint mail",            8, -5,  550,
         false, EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
     { ARM_PLATE_MAIL,           "plate mail",            10, -6,  650,
@@ -85,11 +87,11 @@ static armour_def Armour_prop[NUM_ARMOURS] =
         true,  EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_STEAM_DRAGON_HIDE,    "steam dragon hide",      2,  0,  120,
         true,  EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
-    { ARM_STEAM_DRAGON_ARMOUR,  "steam dragon armour",    4,  0,  120,
+    { ARM_STEAM_DRAGON_ARMOUR,  "steam dragon armour",    5,  0,  120,
         true,  EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_MOTTLED_DRAGON_HIDE,  "mottled dragon hide",    3, -1,  150,
         true,  EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
-    { ARM_MOTTLED_DRAGON_ARMOUR,"mottled dragon armour",  5, -1,  150,
+    { ARM_MOTTLED_DRAGON_ARMOUR,"mottled dragon armour",  6, -1,  150,
         true,  EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
 
     { ARM_SWAMP_DRAGON_HIDE,    "swamp dragon hide",      3, -2,  200,
@@ -856,7 +858,9 @@ void set_equip_race(item_def &item, iflags_t flags)
             break;
         case OBJ_ARMOUR:
             if (item.sub_type == ARM_SPLINT_MAIL
+#if TAG_MAJOR_VERSION == 32
                 || item.sub_type == ARM_BANDED_MAIL
+#endif
                 || item.sub_type == ARM_PLATE_MAIL
                 || is_hard_helmet(item))
             {

@@ -11,7 +11,9 @@ enum armour_type
     ARM_SCALE_MAIL,
     ARM_CHAIN_MAIL,
     ARM_SPLINT_MAIL,
+#if TAG_MAJOR_VERSION == 32
     ARM_BANDED_MAIL,
+#endif
     ARM_PLATE_MAIL,
 
     ARM_CLOAK,

@@ -333,7 +333,7 @@ orcish_chain_mail2
 
 splint_mail1 ARM_SPLINT_MAIL
 splint_mail2
-banded_mail1 ARM_BANDED_MAIL
+banded_mail1
 banded_mail2
 
 plate_mail1 ARM_PLATE_MAIL

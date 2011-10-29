@@ -203,7 +203,9 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_CHAIN_MAIL:         return TILEP_BODY_CHAINMAIL;
     case ARM_SCALE_MAIL:         return TILEP_BODY_SCALEMAIL;
     case ARM_SPLINT_MAIL:        return TILEP_BODY_BANDED;
+#if TAG_MAJOR_VERSION == 32
     case ARM_BANDED_MAIL:        return TILEP_BODY_BANDED;
+#endif
     case ARM_PLATE_MAIL:         return TILEP_BODY_PLATE_BLACK;
     case ARM_CRYSTAL_PLATE_MAIL: return TILEP_BODY_CRYSTAL_PLATE;
 
