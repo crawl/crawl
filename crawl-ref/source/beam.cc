@@ -3065,8 +3065,10 @@ void bolt::tracer_affect_player()
         // Don't ask if we're aiming at ourselves.
         if (!dont_stop_player && !harmless_to_player())
         {
-            if (yesno("That beam is likely to hit you. Continue anyway?",
-                      false, 'n'))
+            std::string prompt = make_stringf("That %s is likely to hit you. Continue anyway?",
+                                              item ? name.c_str() : "beam");
+
+            if (yesno(prompt.c_str(), false, 'n'))
             {
                 friend_info.count++;
                 friend_info.power += you.experience_level;
