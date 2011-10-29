@@ -921,7 +921,7 @@ void melee_attack::adjust_noise()
             break;
 
         default:
-            die("Unhandled attack flavour for noise_factor "+attk_type);
+            die("Unhandled attack flavour for noise_factor %d", attk_type);
             break;
         }
 
