@@ -969,7 +969,7 @@ STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               $(TITLEIMGS:%=webserver/static/title_%.png) \
               $(TILEINFOJS:%=webserver/game_data/static/tileinfo-%.js)
 
-$(TILEINFOJS:%=$(RLTILES)/tileinfo-%.js): rltile-build
+$(TILEINFOJS:%=$(RLTILES)/tileinfo-%.js): build-rltiles
 
 webserver/game_data/static/%.js: $(RLTILES)/%.js
 	$(QUIET_COPY)$(COPY) $< webserver/game_data/static/
@@ -1282,13 +1282,13 @@ mon-util.d: mon-mst.h
 # RLTiles
 #
 
-.PHONY: rltile-build
-rltile-build: .contrib-libs $(RLTILES)/dc-unrand.txt
+.PHONY: build-rltiles
+build-rltiles: .contrib-libs $(RLTILES)/dc-unrand.txt
 	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH)
 
-$(TILEDEFSRCS): rltile-build
-$(TILEDEFHDRS): rltile-build
-$(ORIGTILEFILES): rltile-build
+$(TILEDEFSRCS): build-rltiles
+$(TILEDEFHDRS): build-rltiles
+$(ORIGTILEFILES): build-rltiles
 
 dat/tiles/%.png: $(RLTILES)/%.png
 	$(QUIET_PNGCRUSH)$(PNGCRUSH) $< $@
