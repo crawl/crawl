@@ -336,10 +336,10 @@ splint_mail2
 banded_mail1
 banded_mail2
 
-plate_mail1 ARM_PLATE_MAIL
-plate_mail2
-orcish_platemail ARM_PLATE_MAIL_ORC
-orcish_platemail2
+plate1 ARM_PLATE_ARMOUR
+plate2
+orcish_plate ARM_PLATE_ARMOUR_ORC
+orcish_plate2
 
 crystal_plate ARM_CRYSTAL_PLATE
 crystal_plate2

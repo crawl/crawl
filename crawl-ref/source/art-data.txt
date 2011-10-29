@@ -941,7 +941,7 @@ DESC:    A dull grey robe.
 ENUM:    MAXWELL
 NAME:    Maxwell's patent armour
 APPEAR:  weird-looking armour
-OBJ:     OBJ_ARMOUR/ARM_PLATE_MAIL
+OBJ:     OBJ_ARMOUR/ARM_PLATE_ARMOUR
 PLUS:    +15
 COLOUR:  LIGHTGREEN
 TILE:    urand_maxwell

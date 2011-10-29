@@ -206,7 +206,7 @@ tileidx_t tilep_equ_armour(const item_def &item)
 #if TAG_MAJOR_VERSION == 32
     case ARM_BANDED_MAIL:        return TILEP_BODY_BANDED;
 #endif
-    case ARM_PLATE_MAIL:         return TILEP_BODY_PLATE_BLACK;
+    case ARM_PLATE_ARMOUR:       return TILEP_BODY_PLATE_BLACK;
     case ARM_CRYSTAL_PLATE:      return TILEP_BODY_CRYSTAL_PLATE;
 
     case ARM_FIRE_DRAGON_HIDE:    return TILEP_BODY_DRAGONSC_GREEN;

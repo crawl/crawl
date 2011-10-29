@@ -722,9 +722,14 @@ piece of ambrosia
 
 A portion of strange substance, produced by ghost moths. Consuming it provides magical energy as well as nutrition, at the cost of losing your mental focus for a short period.
 %%%%
-plate mail
+# Historical note: fully articulated plates came only in the last days of
+# plate armour popularity.  Before then, it had gaps on and under joints,
+# often filled with mail.
+plate armour
 
-A suit of mail and large plates of metal.
+A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate and greaves. Chainmail covers gaps, allowing movement.
+
+It provides excellent protection, yet donning it takes forever.
 %%%%
 potion of agility
 
@@ -1182,7 +1187,7 @@ A flail with large spikes on the metal lump.
 %%%%
 splint mail
 
-A suit made of splints of metal.
+A suit made of rectangular plates of metal, connected with rings. Such platemail provides good protection, while nowhere as good as solid metal armour, it allows much greater freedom of movement.
 %%%%
 staff
 

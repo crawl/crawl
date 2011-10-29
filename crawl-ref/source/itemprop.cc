@@ -76,7 +76,7 @@ static armour_def Armour_prop[NUM_ARMOURS] =
 #endif
     { ARM_SPLINT_MAIL,          "splint mail",            8, -5,  550,
         false, EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
-    { ARM_PLATE_MAIL,           "plate mail",            10, -6,  650,
+    { ARM_PLATE_ARMOUR,         "plate armour",          10, -6,  650,
         false, EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
     { ARM_CRYSTAL_PLATE,        "crystal plate",         14, -8, 1200,
         false, EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
@@ -861,7 +861,7 @@ void set_equip_race(item_def &item, iflags_t flags)
 #if TAG_MAJOR_VERSION == 32
                 || item.sub_type == ARM_BANDED_MAIL
 #endif
-                || item.sub_type == ARM_PLATE_MAIL
+                || item.sub_type == ARM_PLATE_ARMOUR
                 || is_hard_helmet(item))
             {
                 return;

@@ -221,7 +221,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
 
     result = _pick_wearable_armour(result);
 
-    // Now we'll randomly pick a body armour up to plate mail (light
+    // Now we'll randomly pick a body armour up to plate armour (light
     // only in the case of robes or animal skins).  Unlike before, now
     // we're only giving out the finished products here, never the
     // hides. - bwr
@@ -269,7 +269,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
                 const armour_type armours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
                                                 ARM_RING_MAIL, ARM_SCALE_MAIL,
                                                 ARM_CHAIN_MAIL, ARM_SPLINT_MAIL,
-                                                ARM_PLATE_MAIL };
+                                                ARM_PLATE_ARMOUR };
 
                 result = static_cast<armour_type>(RANDOM_ELEMENT(armours));
 
@@ -284,7 +284,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
                 const armour_type armours[] =
                     { ARM_ANIMAL_SKIN, ARM_ROBE, ARM_LEATHER_ARMOUR,
                       ARM_RING_MAIL, ARM_SCALE_MAIL, ARM_CHAIN_MAIL,
-                      ARM_SPLINT_MAIL, ARM_PLATE_MAIL,
+                      ARM_SPLINT_MAIL, ARM_PLATE_ARMOUR,
                       ARM_CRYSTAL_PLATE };
 
                 const int num_arms = ARRAYSZ(armours);
@@ -314,7 +314,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
                     < random2(you.skills[SK_ARMOUR] * 2))
                 {
                     result = one_chance_in(4) ? ARM_CRYSTAL_PLATE :
-                                                ARM_PLATE_MAIL;
+                                                ARM_PLATE_ARMOUR;
                 }
             }
         }

@@ -2763,7 +2763,7 @@ static void _xom_zero_miscast()
             str += ".";
         }
         else if (item->sub_type >= ARM_RING_MAIL
-                 && item->sub_type <= ARM_PLATE_MAIL)
+                 && item->sub_type <= ARM_PLATE_ARMOUR)
         {
             str  = "Your ";
             str += name;

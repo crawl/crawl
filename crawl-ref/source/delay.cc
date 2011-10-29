@@ -348,7 +348,7 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
         // all of which can be stopped when complete.  This is a fairly
         // reasonable behaviour, although perhaps the character should have
         // the option of reversing the current action if it would take less
-        // time to get out of the plate mail that's half on than it would
+        // time to get out of the plate armour that's half on than it would
         // take to continue.  Probably too much trouble, and we'd have to
         // have a prompt... this works just fine. -- bwr
         break;
