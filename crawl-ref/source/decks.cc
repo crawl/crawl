@@ -1497,12 +1497,12 @@ static void _velocity_card(int power, deck_rarity_type rarity)
 {
     const int power_level = get_power_level(power, rarity);
     if (power_level >= 2)
-        potion_effect(POT_SPEED, random2(power / 4));
-    else if (power_level == 1)
     {
-        cast_fly(random2(power / 4));
+        potion_effect(POT_SPEED, random2(power / 4));
         cast_swiftness(random2(power / 4));
     }
+    else if (power_level == 1)
+        potion_effect(POT_SPEED, random2(power / 4));
     else
         cast_swiftness(random2(power / 4));
 }
