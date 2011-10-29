@@ -802,8 +802,8 @@ WEIGHT:  1
 ORIENT:  encompass
 ######## There should be a better way than listing all of the unrandarts...
 ITEM:    chain mail unrand:lears_chain_mail                                  /\
- randart plate mail w:50                                                     /\
-         plate mail unrand:maxwells_patent_armour                            /\
+ randart plate armour w:50                                                   /\
+         plate armour unrand:maxwells_patent_armour                          /\
  randart fire dragon armour                                                  /\
          gold dragon armour unrand:armour_of_the_dragon_king                 /\
  randart crystal plate                                                       /\

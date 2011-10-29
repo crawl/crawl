@@ -1314,7 +1314,7 @@ unsigned int item_value(item_def item, bool ident)
             valued += 300;
             break;
 
-        case ARM_PLATE_MAIL:
+        case ARM_PLATE_ARMOUR:
             valued += 230;
             break;
 

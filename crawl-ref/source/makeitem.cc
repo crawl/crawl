@@ -2094,7 +2094,7 @@ static item_status_flag_type _determine_armour_race(const item_def& item,
 #if TAG_MAJOR_VERSION == 32
         case ARM_BANDED_MAIL:
 #endif
-        case ARM_PLATE_MAIL:
+        case ARM_PLATE_ARMOUR:
             if (item.sub_type <= ARM_CHAIN_MAIL && one_chance_in(6))
                 rc = ISFLAG_ELVEN;
             if (item.sub_type >= ARM_RING_MAIL && one_chance_in(5))
@@ -2226,7 +2226,7 @@ static special_armour_type _determine_armour_ego(const item_def& item,
         if (one_chance_in(5))
             rc = SPARM_POISON_RESISTANCE;
 
-        if (item.sub_type == ARM_PLATE_MAIL && one_chance_in(15))
+        if (item.sub_type == ARM_PLATE_ARMOUR && one_chance_in(15))
             rc = SPARM_PONDEROUSNESS;
         break;
     }
@@ -2390,7 +2390,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
         // Make a good item...
         item.plus += random2(3);
 
-        if (item.sub_type <= ARM_PLATE_MAIL
+        if (item.sub_type <= ARM_PLATE_ARMOUR
             && x_chance_in_y(21 + item_level, 300))
         {
             item.plus += random2(3);
@@ -2401,7 +2401,7 @@ static void _generate_armour_item(item_def& item, bool allow_uniques,
             && (force_good
                 || forced_ego
                 || get_equip_race(item) != ISFLAG_ORCISH
-                || item.sub_type <= ARM_PLATE_MAIL && coinflip()))
+                || item.sub_type <= ARM_PLATE_ARMOUR && coinflip()))
         {
             // ...an ego item, in fact.
             set_item_ego_type(item, OBJ_ARMOUR,
@@ -3446,7 +3446,7 @@ armour_type get_random_armour_type(int item_level)
         const armour_type medarmours[] = { ARM_ROBE, ARM_LEATHER_ARMOUR,
                                            ARM_RING_MAIL, ARM_SCALE_MAIL,
                                            ARM_CHAIN_MAIL, ARM_SPLINT_MAIL,
-                                           ARM_PLATE_MAIL };
+                                           ARM_PLATE_ARMOUR };
 
         armtype = RANDOM_ELEMENT(medarmours);
     }

@@ -3040,10 +3040,10 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
         return TILE_ARM_SPLINT_MAIL;
 
 
-    case ARM_PLATE_MAIL:
+    case ARM_PLATE_ARMOUR:
         if (race == ISFLAG_ORCISH)
-            return TILE_ARM_PLATE_MAIL_ORC;
-        return TILE_ARM_PLATE_MAIL;
+            return TILE_ARM_PLATE_ARMOUR_ORC;
+        return TILE_ARM_PLATE_ARMOUR;
 
     case ARM_CRYSTAL_PLATE:
         return TILE_ARM_CRYSTAL_PLATE;

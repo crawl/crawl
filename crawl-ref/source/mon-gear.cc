@@ -1802,7 +1802,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
             level = MAKE_GOOD_ITEM;
 
         item.sub_type = random_choose_weighted(3, ARM_CHAIN_MAIL,
-                            5, ARM_SPLINT_MAIL, 10, ARM_PLATE_MAIL,
+                            5, ARM_SPLINT_MAIL, 10, ARM_PLATE_ARMOUR,
                             1, ARM_CRYSTAL_PLATE,
                             0);
         break;
@@ -1835,7 +1835,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         const int temp_rand = random2(3);
         item.sub_type = ((temp_rand == 0) ? ARM_CHAIN_MAIL :
                          (temp_rand == 1) ? ARM_SPLINT_MAIL
-                                          : ARM_PLATE_MAIL);
+                                          : ARM_PLATE_ARMOUR);
         break;
     }
 
@@ -1858,7 +1858,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         item.base_type = OBJ_ARMOUR;
         item.sub_type = random_choose_weighted(5, ARM_CHAIN_MAIL,
                                                2, ARM_SPLINT_MAIL,
-                                               1, ARM_PLATE_MAIL,
+                                               1, ARM_PLATE_ARMOUR,
                                                0);
         break;
 

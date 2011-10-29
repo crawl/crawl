@@ -14,7 +14,7 @@ enum armour_type
 #if TAG_MAJOR_VERSION == 32
     ARM_BANDED_MAIL,
 #endif
-    ARM_PLATE_MAIL,
+    ARM_PLATE_ARMOUR,
 
     ARM_CLOAK,
 
