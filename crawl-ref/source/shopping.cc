@@ -1298,7 +1298,7 @@ unsigned int item_value(item_def item, bool ident)
             break;
 
         case ARM_FIRE_DRAGON_HIDE:
-        case ARM_CRYSTAL_PLATE_MAIL:
+        case ARM_CRYSTAL_PLATE:
         case ARM_TROLL_LEATHER_ARMOUR:
         case ARM_ICE_DRAGON_HIDE:
             valued += 500;
