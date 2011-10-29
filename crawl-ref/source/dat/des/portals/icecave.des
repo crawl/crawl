@@ -710,12 +710,12 @@ ITEM: demon whip good_item / demon blade good_item / demon trident good_item
 ITEM: cap ego:cold_resistance / pair of gloves ego:cold_resistance / \
       cloak ego:cold_resistance / buckler ego:cold_resistance / \
       pair of boots ego:cold_resistance
-ITEM: crystal plate mail ego:cold_resistance / \
+ITEM: crystal plate ego:cold_resistance / \
       troll leather armour ego:cold_resistance / \
       ice dragon armour good_item / robe ego:resistance / \
       naga barding ego:cold_resistance good_item w:5 / \
       centaur barding ego:cold_resistance good_item w:5 / \
-      crystal plate mail ego:cold_resistance good_item / \
+      crystal plate ego:cold_resistance good_item / \
       troll leather armour ego:cold_resistance good_item
 MAP
                     xxxxxx

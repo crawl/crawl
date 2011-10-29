@@ -222,7 +222,7 @@ static int _armour_colour(const item_def &item)
       case ARM_ANIMAL_SKIN:
         item_colour = LIGHTGREY;
         break;
-      case ARM_CRYSTAL_PLATE_MAIL:
+      case ARM_CRYSTAL_PLATE:
         item_colour = WHITE;
         break;
       case ARM_SHIELD:
@@ -2209,7 +2209,7 @@ static special_armour_type _determine_armour_ego(const item_def& item,
     default:
         if (armour_is_hide(item, true)
             || item.sub_type == ARM_ANIMAL_SKIN
-            || item.sub_type == ARM_CRYSTAL_PLATE_MAIL)
+            || item.sub_type == ARM_CRYSTAL_PLATE)
         {
             rc = SPARM_NORMAL;
             break;
@@ -3454,7 +3454,7 @@ armour_type get_random_armour_type(int item_level)
     if (one_chance_in(20) && x_chance_in_y(11 + item_level, 400))
     {
         // High-level armours, including troll and some dragon armours.
-        const armour_type hiarmours[] = { ARM_CRYSTAL_PLATE_MAIL,
+        const armour_type hiarmours[] = { ARM_CRYSTAL_PLATE,
                                           ARM_TROLL_HIDE,
                                           ARM_TROLL_LEATHER_ARMOUR,
                                           ARM_FIRE_DRAGON_HIDE, ARM_FIRE_DRAGON_ARMOUR,
@@ -3485,7 +3485,7 @@ armour_type get_random_armour_type(int item_level)
         armtype = RANDOM_ELEMENT(morehiarmours);
 
         if (armtype == ARM_ANIMAL_SKIN && one_chance_in(20))
-            armtype = ARM_CRYSTAL_PLATE_MAIL;
+            armtype = ARM_CRYSTAL_PLATE;
     }
 
     // Secondary armours.
