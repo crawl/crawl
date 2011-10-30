@@ -1,10 +1,15 @@
 define(["jquery", "./map_knowledge", "./cell_renderer", "./dungeon_renderer"],
 function ($, map_knowledge, cr, dungeon_renderer) {
-    var monsters = {};
-    var $list = $("#monster_list");
-    var monster_groups = [];
+    var monsters, $list, monster_groups, max_rows;
 
-    var max_rows = 5;
+    function init()
+    {
+        monsters = {};
+        $list = $("#monster_list");
+        monster_groups = [];
+        max_rows = 5;
+    }
+    $(document).bind("game_init", init);
 
     function update_loc(loc)
     {

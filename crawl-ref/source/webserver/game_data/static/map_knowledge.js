@@ -1,9 +1,16 @@
 define(["jquery", "./enums"], function ($, enums) {
-    var k = {};
-    var monster_table = {};
-    var dirty_locs = [];
-    var bounds = null;
-    var bounds_changed = false;
+    var k, monster_table, dirty_locs, bounds, bounds_changed;
+
+    function init()
+    {
+        k = {};
+        monster_table = {};
+        dirty_locs = [];
+        bounds = null;
+        bounds_changed = false;
+    }
+
+    $(document).bind("game_init", init);
 
     function set(x, y, val)
     {

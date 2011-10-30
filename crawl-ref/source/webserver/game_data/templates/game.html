@@ -2,9 +2,12 @@
   require.config({
     paths: { "game": "/gamedata/{{ version }}" }
   });
-  require(['client'], function (client) {
-  client.inhibit_messages();
-  require(['game/game'], client.uninhibit_messages);
+  require(['jquery', 'client'], function ($, client) {
+    client.inhibit_messages();
+    require(['game/game'], function (game) {
+      $(document).trigger("game_init");
+      client.uninhibit_messages();
+    });
   });
 </script>
 <link rel="stylesheet" type="text/css" href="/gamedata/{{ version }}/style.css">

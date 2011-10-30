@@ -184,7 +184,7 @@ function ($, cr, map_knowledge) {
 
     var renderer = new DungeonViewRenderer();
 
-    $(document).ready(function () {
+    $(document).bind("game_init", function () {
         renderer.init($("#dungeon")[0]);
     });
 

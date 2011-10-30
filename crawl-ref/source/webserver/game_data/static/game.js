@@ -3,20 +3,35 @@ define(["jquery", "comm", "client", "./dungeon_renderer", "./display", "./minima
 function ($, comm, client, dungeon_renderer, display, minimap) {
     var layout_parameters;
 
-    function layout(data)
+    function init()
     {
-        layout_parameters = data;
-
-        do_layout();
+        layout_parameters = null;
     }
 
-    function do_layout()
-    {
-        var window_width = $(window).width();
-        var window_height = $(window).height();
+    $(document).bind("game_init", init);
 
-        if (!layout_parameters)
+    function layout_params_differ(old_params, new_params)
+    {
+        if (!old_params) return true;
+        for (var param in new_params)
+        {
+            if (old_params.hasOwnProperty(param) &&
+                old_params[param] != new_params[param])
+                return true;
+        }
+        return false;
+    }
+
+    function layout(params)
+    {
+        var window_width = params.window_width = $(window).width();
+        var window_height = params.window_height = $(window).height();
+        log(params);
+
+        if (!layout_params_differ(layout_parameters, params))
             return false;
+
+        layout_parameters = params;
 
         var layer = current_layer;
         set_layer("normal");
@@ -86,6 +101,13 @@ function ($, comm, client, dungeon_renderer, display, minimap) {
         game_version = data;
         document.title = data.text;
     }
+
+    $(document).ready(function () {
+        $(window).resize(function () {
+            var params = $.extend({}, layout_parameters);
+            layout(params);
+        });
+    });
 
     comm.register_handlers({
         "layout": layout,
