@@ -3025,6 +3025,9 @@ bool monster::heal(int amount, bool max_too)
     if (mons_is_statue(type))
         return (false);
 
+    if (has_ench(ENCH_DEATHS_DOOR))
+        return (false);
+
     if (amount < 1)
         return (false);
     else if (!max_too && hit_points == max_hit_points)
@@ -4779,13 +4782,15 @@ bool monster::should_drink_potion(potion_type ptype) const
     switch (ptype)
     {
     case POT_CURING:
-        return (hit_points <= max_hit_points / 2)
+        return (!has_ench(ENCH_DEATHS_DOOR)
+                && hit_points <= max_hit_points / 2
                 || has_ench(ENCH_POISON)
                 || has_ench(ENCH_SICK)
                 || has_ench(ENCH_CONFUSION)
-                || has_ench(ENCH_ROT);
+                || has_ench(ENCH_ROT));
     case POT_HEAL_WOUNDS:
-        return (hit_points <= max_hit_points / 2);
+        return (!has_ench(ENCH_DEATHS_DOOR)
+                && hit_points <= max_hit_points / 2);
     case POT_BLOOD:
     case POT_BLOOD_COAGULATED:
         return (hit_points <= max_hit_points / 2);
@@ -4820,8 +4825,8 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff)
     {
     case POT_CURING:
     {
-        heal(5 + random2(7));
-        simple_monster_message(this, " is healed!");
+        if (heal(5 + random2(7)))
+            simple_monster_message(this, " is healed!");
 
         const enchant_type cured_enchants[] = {
             ENCH_POISON, ENCH_SICK, ENCH_CONFUSION, ENCH_ROT
@@ -4836,8 +4841,8 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff)
     break;
 
     case POT_HEAL_WOUNDS:
-        heal(10 + random2avg(28, 3));
-        simple_monster_message(this, " is healed!");
+        if (heal(10 + random2avg(28, 3)))
+            simple_monster_message(this, " is healed!");
         break;
 
     case POT_BLOOD:
