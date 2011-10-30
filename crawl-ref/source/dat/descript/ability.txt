@@ -360,7 +360,11 @@ Turn plants and fungi adjacent to you into stronger species. Upgrading fungi req
 # Cheibriados
 Bend Time
 
-Slow down everyone who's standing just next to you.
+Attempt to slow down everyone adjacent to you. High Invocations skill makes it harder to resist.
+%%%%
+Temporal Distortion
+
+Warp the flow of time around you, causing monsters to skip forwards in time relative to you.
 %%%%
 Slouch
 

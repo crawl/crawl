@@ -66,6 +66,7 @@ bool fedhas_evolve_flora();
 void lugonu_bend_space();
 
 void cheibriados_time_bend(int pow);
+void cheibriados_temporal_distortion();
 bool cheibriados_slouch(int pow);
 void cheibriados_time_step(int pow);
 bool ashenzari_transfer_knowledge();

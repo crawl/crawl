@@ -316,10 +316,10 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "control the weather"
     },
     // Cheibriados
-    { "Cheibriados slows and strengthens your metabolism.",
-      "bend time to slow others, and Cheibriados protects your life force",
-      "Cheibriados protects you from cold.",
-      "inflict damage to those overly hasty, and Cheibriados protects you from fire",
+    { "bend time to slow others",
+      "",
+      "warp the flow of time around you",
+      "inflict damage to those overly hasty",
       "step out of the time flow"
     },
     // Ashenzari
@@ -433,10 +433,10 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "control the weather"
     },
     // Cheibriados
-    { "Cheibriados will no longer slow or strengthen your metabolism.",
-      "bend time to slow others, and Cheibriados will no longer protect your life force",
-      "Cheibriados will no longer protect you from cold.",
-      "inflict damage to those overly hasty, and Cheibriados will no longer protect you from fire",
+    { "bend time to slow others",
+      "",
+      "warp the flow of time around you",
+      "inflict damage to those overly hasty",
       "step out of the time flow"
     },
     // Ashenzari
