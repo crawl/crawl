@@ -558,10 +558,14 @@ ice_dragon MONS_ICE_DRAGON
 steam_dragon MONS_STEAM_DRAGON
 swamp_dragon MONS_SWAMP_DRAGON
 mottled_dragon MONS_MOTTLED_DRAGON
+%rim 0
 quicksilver_dragon MONS_QUICKSILVER_DRAGON
 iron_dragon MONS_IRON_DRAGON
+%rim 1
 storm_dragon MONS_STORM_DRAGON
+%rim 0
 golden_dragon MONS_GOLDEN_DRAGON
+%rim 1
 shadow_dragon MONS_SHADOW_DRAGON
 dc-mon/undead/bone_dragon MONS_BONE_DRAGON
 dc-mon/holy/pearl_dragon MONS_PEARL_DRAGON
