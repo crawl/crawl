@@ -93,3 +93,10 @@ login_token_lifetime = 7 # Days
 
 uid = None  # If this is not None, the server will setuid to that id after
 gid = None  # binding its sockets.
+
+umask = None # Ex. 0077
+
+chroot = None
+
+pidfile = None
+daemon = False
