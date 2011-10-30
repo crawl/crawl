@@ -485,28 +485,23 @@ std::vector<coord_def> find_golubria_on_level()
         if (trap && trap->type == TRAP_GOLUBRIA)
             ret.push_back(*ri);
     }
-    ASSERT(ret.size() <= 2);
     return ret;
 }
 
 static bool _find_other_passage_side(coord_def& to)
 {
     std::vector<coord_def> passages = find_golubria_on_level();
-    if (passages.size() < 2)
+    std::vector<coord_def> clear_passages;
+    for (unsigned int i = 0; i < passages.size(); i++)
+    {
+        if (passages[i] != to && !actor_at(passages[i]))
+            clear_passages.push_back(passages[i]);
+    }
+    const int choices = clear_passages.size();
+    if (choices < 1)
         return false;
-
-    if (to == passages[0])
-    {
-        to = passages[1];
-        return true;
-    }
-    else if (to == passages[1])
-    {
-        to = passages[0];
-        return true;
-    }
-    else
-        die("Golubria's passage not found");
+    to = clear_passages[random2(choices)];
+    return true;
 }
 
 // Returns a direction string from you.pos to the

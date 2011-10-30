@@ -986,12 +986,6 @@ static bool _spellcasting_aborted(spell_type spell,
         return (true);
     }
 
-    if (spell == SPELL_GOLUBRIAS_PASSAGE && !can_cast_golubrias_passage())
-    {
-        mpr("Only one passage may be opened at a time.");
-        return (true);
-    }
-
     if (spell == SPELL_MALIGN_GATEWAY && !can_cast_malign_gateway())
     {
         mpr("The dungeon can only cope with one malign gateway at a time!");
