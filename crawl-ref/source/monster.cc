@@ -3706,9 +3706,9 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             if (this->has_ench(ENCH_DEATHS_DOOR))
                return (0);
             else if (petrified())
-                amount /= 3;
+                amount /= 2;
             else if (petrifying())
-                amount = amount * 1000 / 1732;
+                amount = amount * 10 / 15;
 
         if (amount == INSTANT_DEATH)
             amount = hit_points;

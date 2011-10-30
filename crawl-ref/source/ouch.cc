@@ -1152,9 +1152,9 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
     if (dam != INSTANT_DEATH)
         if (you.petrified())
-            dam /= 3;
+            dam /= 2;
         else if (you.petrifying())
-            dam = dam * 1000 / 1732;
+            dam = dam * 10 / 15;
 
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity(AI_HP_LOSS, &hpl);
