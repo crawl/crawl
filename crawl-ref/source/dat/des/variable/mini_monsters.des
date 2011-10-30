@@ -2720,9 +2720,34 @@ ENDMAP
 # gate that opens all at once.
 NAME:   minivault_9
 TAGS:   allow_dup
-DEPTH:  D:15-27, Elf, Vault, Crypt, Dis, Geh, Tar, Coc
+DEPTH:  D:15-27, Elf, Vault, Crypt, Dis, Geh, Tar, Coc, Zot
 MARKER: X = lua: props_marker { connected_exclude="true" }
 SUBST:  X = =
+# Pick interesting monsters for dungeon branches. Vaults and D get normal OOD.
+: if you.branch() == "Elf" then
+KMONS:  8 = deep elf annihilator / deep elf blademaster / deep elf master archer / \
+            deep elf sorcerer / deep elf death mage / deep elf demonologist / \
+            deep elf high priest / w:20 place:Elf
+: elseif you.branch() == "Crypt" then
+KMONS:  8 = bone dragon / lich / ancient lich / w:5 death cob / w:5 curse toe / \
+            w:5 large zombie / w:5 large skeleton / eidolon / w:20 reaper / \
+            soul eater / w:30 place:Crypt
+: elseif you.branch() == "Dis" then
+KMONS:  8 = w:5 shadow fiend / w:5 ice fiend / w:5 brimstone fiend / w:5 pit fiend / \
+            iron dragon / tormentor / iron golem / place:Dis
+: elseif you.branch() == "Geh" then
+KMONS:  8 = brimstone fiend / w:5 pit fiend / hellion / balrug / fire giant / \
+            place:Geh
+: elseif you.branch() == "Tar" then
+KMONS:  8 = w:15 shadow fiend / reaper / w:5 soul eater / shadow dragon / lich / \
+            ancient lich / w:15 place:Tar
+: elseif you.branch() == "Coc" then
+KMONS:  8 = w:15 blizzard demon / frost giant / w:5 titan / w:15 ice fiend / \
+            w:5 large simulacrum / place:Coc
+: elseif you.branch() == "Zot" then
+KMONS:  8 = w:35 nonbase draconian / orb of fire / electric golem / killer klown / \
+            death cob / w:5 curse toe / w:5 ancient lich
+: end
 MAP
 XXXXXXXXXX
 XXXXXXXXXX
@@ -2738,7 +2763,8 @@ ENDMAP
 
 # No, John. You are the door vault
 NAME:   reverse_minivault_9
-DEPTH:  D:15-27, Elf, Vault, Crypt, Dis, Geh, Tar, Coc
+DEPTH:  D:15-27, Vault
+WEIGHT: 4
 MARKER: X = lua: props_marker { connected_exclude="true" }
 SUBST:  X = =
 MAP
