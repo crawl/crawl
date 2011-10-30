@@ -24,6 +24,5 @@ struct bolt;
 spret_type cast_apportation(int pow, bolt& beam, bool fail);
 int cast_semi_controlled_blink(int pow);
 spret_type cast_golubrias_passage(const coord_def& where, bool fail);
-bool can_cast_golubrias_passage();
 
 #endif
