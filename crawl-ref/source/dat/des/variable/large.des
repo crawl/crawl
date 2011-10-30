@@ -2265,8 +2265,6 @@ FTILE:  .@~+23 = FLOOR_HALL
 TILE:   c = DNGN_STONE_WALL_DARKGRAY
 # This is to mark the wall clearly diggable.
 TILE:   y = WALL_NORMAL
-COLOUR: c = darkgrey
-COLOUR: -d|*$14567^ = darkgrey
 MONS:   patrolling silent spectre
 MONS:   curse skull, soul eater
 # Inmates are monsters capable of blinking, summoning or airstriking.
