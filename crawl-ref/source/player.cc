@@ -1464,13 +1464,6 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         // dragonskin cloak: 0.5 to draconic resistances
         if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
             rf++;
-
-        // Che bonus
-        if (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(3)
-            && !player_under_penance())
-        {
-            rf++;
-        }
     }
 
     // species:
@@ -1612,13 +1605,6 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         // dragonskin cloak: 0.5 to draconic resistances
         if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
             rc++;
-
-        // Che bonus
-        if (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(2)
-            && !player_under_penance())
-        {
-            rc++;
-        }
     }
 
     // mutations:
@@ -2080,13 +2066,6 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         // this one is dubious (no pearl draconians)
         if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
             pl++;
-
-        // Che bonus
-        if (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(1)
-            && !player_under_penance())
-        {
-            pl++;
-        }
 
         pl += player_equip(EQ_STAFF, STAFF_DEATH, calc_unid);
     }

@@ -3130,6 +3130,39 @@ bool cheibriados_slouch(int pow)
     return true;
 }
 
+// A low-duration step from time, allowing monsters to get closer
+// to the player safely.
+void cheibriados_temporal_distortion()
+{
+    const coord_def old_pos = you.pos();
+
+    const int time = 3 + random2(3);
+    you.moveto(coord_def(0, 0));
+    you.duration[DUR_TIME_STEP] = time;
+
+    do
+    {
+        run_environment_effects();
+        handle_monsters();
+        manage_clouds();
+    }
+    while (--you.duration[DUR_TIME_STEP] > 0);
+    update_level(time * 10);
+
+    monster* mon;
+    if (mon = monster_at(old_pos))
+    {
+        mon->blink();
+        if (mon = monster_at(old_pos))
+            mon->teleport(true);
+    }
+
+    you.moveto(old_pos);
+    you.duration[DUR_TIME_STEP] = 0;
+
+    mpr("You warp the flow of time around you!");
+}
+
 void cheibriados_time_step(int pow) // pow is the number of turns to skip
 {
     const coord_def old_pos = you.pos();

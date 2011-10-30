@@ -4567,6 +4567,17 @@ void describe_god(god_type which_god, bool give_title)
             _print_final_god_abil_desc(which_god, buf,
                                        ABIL_NON_ABILITY);
         }
+        else if (which_god == GOD_CHEIBRIADOS)
+        {
+            if (you.piety >= piety_breakpoint(0))
+            {
+                have_any = true;
+                _print_final_god_abil_desc(which_god,
+                                           god_name(which_god)
+                                           + " slows and strengthens your metabolism.",
+                                           ABIL_NON_ABILITY);
+            }
+        }
 
         // mv: No abilities (except divine protection) under penance
         if (!player_under_penance())
