@@ -1032,11 +1032,8 @@ spret_type cast_golubrias_passage(const coord_def& where, bool fail)
         testbits(env.pgrid(randomized_where), FPROP_NO_CTELE_INTO) ||
         testbits(env.pgrid(randomized_here), FPROP_NO_CTELE_INTO))
     {
-        fail_check();
-        // lose a turn
         mpr("A powerful magic interferes with the creation of the passage.");
-        place_cloud(CLOUD_TLOC_ENERGY, randomized_where, 3 + random2(3), &you);
-        return SPRET_SUCCESS;
+        return SPRET_ABORT;
     }
 
     fail_check();
