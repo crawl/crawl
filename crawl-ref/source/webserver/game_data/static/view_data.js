@@ -80,6 +80,16 @@ define(["jquery", "comm"], function ($, comm) {
         place_cursor(data.id, data.loc);
     }
 
+    function init()
+    {
+        exports.flash = 0;
+        exports.flash_colour = null;
+        flash_changed = false;
+        exports.cursor_locs = [];
+    }
+
+    $(document).bind("game_init", init);
+
     comm.register_handlers({
         "cursor": handle_cursor_message,
         "flash": handle_flash_message,
