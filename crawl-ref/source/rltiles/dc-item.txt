@@ -343,6 +343,8 @@ orcish_plate2
 
 crystal_plate ARM_CRYSTAL_PLATE
 crystal_plate2
+crystal_plate3
+crystal_plate4
 
 animal_skin1 ARM_ANIMAL_SKIN
 animal_skin2
