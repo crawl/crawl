@@ -660,7 +660,20 @@ static bool _eat_check(bool check_hunger = true, bool silent = false)
         return (false);
     }
 
-    if (check_hunger && you.hunger >= 11000)
+    if (!check_hunger)
+        return true;
+
+    if (you.duration[DUR_NAUSEA] && you.hunger_state > HS_STARVING)
+    {
+        if (!silent)
+        {
+            mpr("You'd puke it out immediately!");
+            crawl_state.zero_turns_taken();
+        }
+        return (false);
+    }
+
+    if (you.hunger_state >= HS_ENGORGED)
     {
         if (!silent)
         {
@@ -1669,6 +1682,9 @@ static int _contamination_ratio(corpse_effect_type chunk_effect)
             ratio = ratio * left / GOURMAND_MAX;
     }
 
+    if (you.duration[DUR_NAUSEA] && sapro < 3)
+        ratio = std::min(ratio + 333, 1000);
+
     return ratio;
 }
 
@@ -1740,8 +1756,13 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
                 if (x_chance_in_y(contam, 1000))
                 {
                     mpr("There is something wrong with this meat.");
-                    if (you.sicken(50 + random2(100), false))
+                    if (you.duration[DUR_DIVINE_STAMINA] > 0)
+                        mpr("Your divine stamina protects you.");
+                    else
                     {
+                        if (you.duration[DUR_NAUSEA])
+                            you.sicken(50 + random2(100));
+                        you.increase_duration(DUR_NAUSEA, 100 + random2(200), 300);
                         learned_something_new(HINT_CONTAMINATED_CHUNK);
                         xom_is_stimulated(random2(100));
                     }
@@ -1903,6 +1924,13 @@ static void _eating(object_class_type item_class, int item_type)
             int duration = 1;
             if (item_type == FOOD_MEAT_RATION || item_type == FOOD_BREAD_RATION)
                 duration = 3;
+
+            if (you.duration[DUR_NAUSEA])
+            {
+                // possible only when starving
+                mpr("You force it down, but cannot stomach much of it.");
+                food_value /= 2;
+            }
 
             start_delay(DELAY_EAT, duration, 0, item_type);
             lessen_hunger(food_value, true);
