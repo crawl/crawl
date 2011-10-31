@@ -831,7 +831,7 @@ KFEAT:  P = enter_abyss
 KMONS:  1 = big kobold w:80 ; short sword | sabre | quick blade w:3 /\
             big kobold w:10 ; quick blade ego:distortion w:6 | \
                               sabre ego:distortion | short sword ego:distortion
-            
+
 KFEAT:  P = exit_abyss
 MAP
   ccccc
@@ -999,7 +999,7 @@ ENDMAP
 
 NAME:  bmh_abyss_fiendish_exit
 TAGS:  abyss_exit allow_dup no_monster_gen
-KMONS: F = patrolling pit fiend 
+KMONS: F = patrolling pit fiend
 KFEAT: F = floor
 KFEAT: 0 = exit_abyss
 KFEAT: % = floor

@@ -1459,7 +1459,7 @@ ENDMAP
 
 NAME:   tar_minmay_river
 ORIENT: encompass
-MONS:   patrolling Ereshkigal, reaper, shadow demon, shadow fiend, soul eater 
+MONS:   patrolling Ereshkigal, reaper, shadow demon, shadow fiend, soul eater
 SUBST:  " = .:298 *:1 5:1
 : serpent_of_hell_setup(_G)
 : tar_setup(_G)

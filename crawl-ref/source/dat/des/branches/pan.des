@@ -1,6 +1,6 @@
 ##############################################################################
 # pan.des: Minivaults particular to Pan, and the lairs of the Pan Demon Lords
-# 
+#
 # Contents:
 #   Pan inline functions
 #   Entry portals to Pan
@@ -775,7 +775,7 @@ SUBST:      C : c, d : c
 SUBST:      C : ., d : =
 : end
 MONS:       patrolling Gloorx Vloq
-MONS:       executioner, shadow demon, shadow wraith, demonic crawler     
+MONS:       executioner, shadow demon, shadow wraith, demonic crawler
 KITEM:      O = dark rune of Zot
 KMONS:      O = demonic crawler
 : pan_lord_monsters(_G, 'Gloorx Vloq')
@@ -832,7 +832,7 @@ ENDMAP
 # : pan_demonic(_G, 'P', true)     -- place the rune with a pandemonium lord
 # : pan_demonic(_G, 'P')           -- place the rune without lord; have to
 #                                  -- put down the Pan lord manually
-# 
+#
 # Of these maps, rand_demon_1 to rand_demon_9 are ancient heritage.
 
 NAME:  rand_demon_1
