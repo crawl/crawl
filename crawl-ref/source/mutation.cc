@@ -1569,8 +1569,6 @@ static const facet_def _demon_facets[] =
     // Tier 3 facets
     { 3, { MUT_CONSERVE_SCROLLS, MUT_HEAT_RESISTANCE, MUT_HURL_HELLFIRE },
       { 3, 3, 3 } },
-    { 3, { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_ICEMAIL },
-      { 3, 3, 3 } },
     { 3, { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_PASSIVE_FREEZE },
       { 3, 3, 3 } },
     { 3, { MUT_ROBUST, MUT_ROBUST, MUT_ROBUST },
@@ -1582,6 +1580,10 @@ static const facet_def _demon_facets[] =
           MUT_STOCHASTIC_TORMENT_RESISTANCE },
       { 3, 3, 3 } },
     // Tier 2 facets
+    { 2, { MUT_CONSERVE_SCROLLS, MUT_HEAT_RESISTANCE, MUT_IGNITE_BLOOD },
+      { 2, 2, 2 } },
+    { 2, { MUT_COLD_RESISTANCE, MUT_CONSERVE_POTIONS, MUT_ICEMAIL },
+      { 2, 2, 2 } },
     { 2, { MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH, MUT_POWERED_BY_DEATH },
       { 2, 2, 2 } },
     { 2, { MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE, MUT_MAGIC_RESISTANCE },
@@ -1593,6 +1595,8 @@ static const facet_def _demon_facets[] =
     { 2, { MUT_SPINY, MUT_SPINY, MUT_SPINY },
       { 2, 2, 2 } },
     { 2, { MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN, MUT_POWERED_BY_PAIN },
+      { 2, 2, 2 } },
+    { 2, { MUT_SAPROVOROUS, MUT_FOUL_STENCH, MUT_FOUL_STENCH },
       { 2, 2, 2 } },
     // Scale mutations
     { 1, { MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD, MUT_DISTORTION_FIELD },

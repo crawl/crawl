@@ -5350,6 +5350,30 @@ void melee_attack::mons_do_spines()
     }
 }
 
+void melee_attack::mons_emit_foul_stench()
+{
+    monster* mon = attacker->as_monster();
+
+    if (you.mutation[MUT_FOUL_STENCH]
+        && attacker->alive()
+        && grid_distance(you.pos(), mon->pos()) == 1)
+    {
+        const int mut = player_mutation_level(MUT_FOUL_STENCH);
+
+        if (x_chance_in_y(mut, 4))
+            mon->sicken(50 + random2(50) * mut);
+
+        if (damage_done >= you.hp_max / 6
+            && mut == 2
+            && !cell_is_solid(mon->pos())
+            && env.cgrid(mon->pos()) == EMPTY_CLOUD)
+        {
+            mpr("You emit a cloud of foul miasma!");
+            place_cloud(CLOUD_MIASMA, mon->pos(), 5 + random2(6), &you);
+        }
+    }
+}
+
 bool melee_attack::do_trample()
 {
     do
@@ -5878,12 +5902,13 @@ void melee_attack::mons_perform_attack_rounds()
         }
     }
 
-    // Check for passive freeze or eyeball mutation.
+    // Check for passive mutation effects.
     if (defender->atype() == ACT_PLAYER && defender->alive()
         && attacker != defender)
     {
         mons_do_eyeball_confusion();
         mons_do_passive_freeze();
+        mons_emit_foul_stench();
     }
 
     // Handle noise from last round.
