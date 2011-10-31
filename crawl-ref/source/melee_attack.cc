@@ -381,6 +381,7 @@ bool melee_attack::handle_phase_hit()
         // Apply attack delay
         you.time_taken = calc_attack_delay();
         // Check for stab (and set stab_attempt and stab_bonus)
+    	dprf("MONSTER NAME: %s", defender->name(DESC_THE).c_str());
         player_stab_check();
 
         // TODO: Remove this (placed here so I can get rid of player_attack)
@@ -453,9 +454,11 @@ bool melee_attack::handle_phase_hit()
         // This does more than just calculate the damage, it also sets up
         // messages, etc.
         damage_done = calc_damage();
+    	dprf("MONSTER NAME: %s", defender->name(DESC_THE).c_str());
 
         if (damage_done > 0)
         {
+        	// TODO Unify or remove (some output is already handled above)
             if (attacker->atype() == ACT_PLAYER)
                 player_announce_hit();
             else
@@ -474,16 +477,16 @@ bool melee_attack::handle_phase_hit()
         }
         else
         {
-            // TODO: Unify these
-            if (attacker->atype() == ACT_PLAYER)
-            {
-                no_damage_message = make_stringf("%s %s %s.",
-                                             attacker->name(DESC_THE).c_str(),
-                                             attack_verb.c_str(),
-                                             defender->name(DESC_THE).c_str());
-            }
-            else
-                mons_announce_dud_hit();
+        	attack_verb = attacker->atype() == ACT_PLAYER
+        	                        ? attack_verb
+        	                        : attacker->conj_verb(mons_attack_verb());
+
+        	// TODO: Clean this up if possible, checking atype for do / does is ugly
+			mprf("%s %s %s but %s no damage.",
+					 attacker->name(DESC_THE).c_str(),
+					 attack_verb.c_str(),
+					 defender->name(DESC_THE).c_str(),
+					 attacker->atype() == ACT_PLAYER ? "do" : "does");
         }
 
         // TODO: Remove this, placed here so we can do away with player_attack
@@ -770,6 +773,7 @@ bool melee_attack::attack()
     // Check for a stab (helpless or petrifying)
     if (to_hit >= ev && ev_helpless > ev)
     {
+    	dprf("MONSTER NAME: %s", defender->name(DESC_THE).c_str());
         defender->props["helpless"] = true;
         ev_margin = 1;
 
@@ -2832,6 +2836,7 @@ attack_flavour melee_attack::random_chaos_attack_flavour()
 bool melee_attack::apply_damage_brand()
 {
     bool brand_was_known = false;
+    int brand;
 
     if (weapon)
     {
@@ -2848,7 +2853,6 @@ bool melee_attack::apply_damage_brand()
     special_damage = 0;
     obvious_effect = false;
 
-    int brand;
     if (damage_brand == SPWPN_CHAOS)
         brand = random_chaos_brand();
     else
