@@ -855,7 +855,7 @@ static rune_type _get_rune(int runenumber)
 // Dowan is automatically placed together with Duvessa.
 static monster_type _choose_unique_by_depth(int step)
 {
-    int ret;
+    monster_type ret;
     switch (step)
     {
     case 0: // depth <= 3
@@ -901,7 +901,7 @@ static monster_type _choose_unique_by_depth(int step)
                             MONS_MARGERY, MONS_BORIS, MONS_SAINT_ROKA, -1);
     }
 
-    return static_cast<monster_type>(ret);
+    return ret;
 }
 
 static monster_type _pick_unique(int level)

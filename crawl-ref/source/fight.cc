@@ -1156,9 +1156,9 @@ static bool _extra_aux_attack(unarmed_attack_type atk)
 
 unarmed_attack_type melee_attack::player_aux_choose_baseattack()
 {
-    unarmed_attack_type baseattack = static_cast<unarmed_attack_type>
-        (random_choose(UNAT_HEADBUTT, UNAT_KICK, UNAT_PUNCH, UNAT_NO_ATTACK,
-                       -1));
+    unarmed_attack_type baseattack =
+        random_choose(UNAT_HEADBUTT, UNAT_KICK, UNAT_PUNCH, UNAT_NO_ATTACK,
+                       -1);
 
     // No punching with a shield or 2-handed wpn, except staves.
     // Octopodes aren't affectd by this, though!
@@ -5491,7 +5491,7 @@ void melee_attack::mons_perform_attack_rounds()
 
         if (attk.type == AT_CHERUB)
         {
-            attk.type = static_cast<mon_attack_type>(random_choose(AT_HIT, AT_BITE, AT_PECK, AT_GORE, -1));
+            attk.type = random_choose(AT_HIT, AT_BITE, AT_PECK, AT_GORE, -1);
         }
 
         if (attk.type == AT_NONE)

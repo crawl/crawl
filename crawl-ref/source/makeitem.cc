@@ -1725,44 +1725,52 @@ static special_missile_type _determine_missile_brand(const item_def& item,
             break;
         }
 
-        rc = static_cast<special_missile_type>(
-                         random_choose_weighted(20, SPMSL_SLEEP, 20, SPMSL_SLOW,
-                                                20, SPMSL_SICKNESS, 20, SPMSL_CONFUSION,
-                                                10, SPMSL_PARALYSIS, 10, SPMSL_RAGE,
-                                                nw, SPMSL_POISONED, 0));
+        rc = random_choose_weighted(20, SPMSL_SLEEP,
+                                    20, SPMSL_SLOW,
+                                    20, SPMSL_SICKNESS,
+                                    20, SPMSL_CONFUSION,
+                                    10, SPMSL_PARALYSIS,
+                                    10, SPMSL_RAGE,
+                                    nw, SPMSL_POISONED,
+                                    0);
         break;
     case MI_DART:
-        rc = static_cast<special_missile_type>(
-                         random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
-                                                20, SPMSL_POISONED,
-                                                12, SPMSL_SILVER, 12, SPMSL_STEEL,
-                                                12, SPMSL_DISPERSAL, 20, SPMSL_EXPLODING,
-                                                nw, SPMSL_NORMAL,
-                                                0));
+        rc = random_choose_weighted(30, SPMSL_FLAME,
+                                    30, SPMSL_FROST,
+                                    20, SPMSL_POISONED,
+                                    12, SPMSL_SILVER,
+                                    12, SPMSL_STEEL,
+                                    12, SPMSL_DISPERSAL,
+                                    20, SPMSL_EXPLODING,
+                                    nw, SPMSL_NORMAL,
+                                    0);
         break;
     case MI_ARROW:
-        rc = static_cast<special_missile_type>(
-                        random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
-                                               20, SPMSL_POISONED,
-                                               15, SPMSL_DISPERSAL,
-                                               nw, SPMSL_NORMAL,
-                                               0));
+        rc = random_choose_weighted(30, SPMSL_FLAME,
+                                    30, SPMSL_FROST,
+                                    20, SPMSL_POISONED,
+                                    15, SPMSL_DISPERSAL,
+                                    nw, SPMSL_NORMAL,
+                                    0);
         break;
     case MI_BOLT:
-        rc = static_cast<special_missile_type>(
-                        random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
-                                               20, SPMSL_POISONED, 15, SPMSL_PENETRATION,
-                                               15, SPMSL_SILVER,
-                                               10, SPMSL_STEEL, nw, SPMSL_NORMAL,
-                                               0));
+        rc = random_choose_weighted(30, SPMSL_FLAME,
+                                    30, SPMSL_FROST,
+                                    20, SPMSL_POISONED,
+                                    15, SPMSL_PENETRATION,
+                                    15, SPMSL_SILVER,
+                                    10, SPMSL_STEEL,
+                                    nw, SPMSL_NORMAL,
+                                    0);
         break;
     case MI_JAVELIN:
-        rc = static_cast<special_missile_type>(
-                        random_choose_weighted(30, SPMSL_RETURNING, 32, SPMSL_PENETRATION,
-                                               32, SPMSL_POISONED,
-                                               21, SPMSL_STEEL, 20, SPMSL_SILVER,
-                                               nw, SPMSL_NORMAL,
-                                               0));
+        rc = random_choose_weighted(30, SPMSL_RETURNING,
+                                    32, SPMSL_PENETRATION,
+                                    32, SPMSL_POISONED,
+                                    21, SPMSL_STEEL,
+                                    20, SPMSL_SILVER,
+                                    nw, SPMSL_NORMAL,
+                                    0);
         break;
     case MI_STONE:
         // deliberate fall through
@@ -1771,18 +1779,20 @@ static special_missile_type _determine_missile_brand(const item_def& item,
         rc = SPMSL_NORMAL;
         break;
     case MI_SLING_BULLET:
-        rc = static_cast<special_missile_type>(
-                        random_choose_weighted(30, SPMSL_FLAME, 30, SPMSL_FROST,
-                                               20, SPMSL_POISONED,
-                                               15, SPMSL_STEEL, 15, SPMSL_SILVER,
-                                               20, SPMSL_EXPLODING, nw, SPMSL_NORMAL,
-                                               0));
+        rc = random_choose_weighted(30, SPMSL_FLAME,
+                                    30, SPMSL_FROST,
+                                    20, SPMSL_POISONED,
+                                    15, SPMSL_STEEL,
+                                    15, SPMSL_SILVER,
+                                    20, SPMSL_EXPLODING,
+                                    nw, SPMSL_NORMAL,
+                                    0);
         break;
     case MI_THROWING_NET:
-        rc = static_cast<special_missile_type>(
-                        random_choose_weighted(30, SPMSL_STEEL, 30, SPMSL_SILVER,
-                                               nw, SPMSL_NORMAL,
-                                               0));
+        rc = random_choose_weighted(30, SPMSL_STEEL,
+                                    30, SPMSL_SILVER,
+                                    nw, SPMSL_NORMAL,
+                                    0);
         break;
     }
 
@@ -2122,27 +2132,23 @@ static special_armour_type _determine_armour_ego(const item_def& item,
     case ARM_SHIELD:
     case ARM_LARGE_SHIELD:
     case ARM_BUCKLER:
-        rc = static_cast<special_armour_type>(
-            random_choose_weighted(40, SPARM_RESISTANCE,
+        rc = random_choose_weighted(40, SPARM_RESISTANCE,
                                    120, SPARM_FIRE_RESISTANCE,
                                    120, SPARM_COLD_RESISTANCE,
                                    120, SPARM_POISON_RESISTANCE,
                                    120, SPARM_POSITIVE_ENERGY,
                                    240, SPARM_REFLECTION,
                                    480, SPARM_PROTECTION,
-                                   0));
+                                     0);
         break;
 
     case ARM_CLOAK:
-    {
-        const special_armour_type cloak_egos[] = {
-            SPARM_POISON_RESISTANCE, SPARM_DARKNESS,
-            SPARM_MAGIC_RESISTANCE, SPARM_PRESERVATION
-        };
-
-        rc = RANDOM_ELEMENT(cloak_egos);
+        rc = random_choose(SPARM_POISON_RESISTANCE,
+                           SPARM_DARKNESS,
+                           SPARM_MAGIC_RESISTANCE,
+                           SPARM_PRESERVATION,
+                           -1);
         break;
-    }
 
     case ARM_WIZARD_HAT:
         if (coinflip())
@@ -2163,15 +2169,8 @@ static special_armour_type _determine_armour_ego(const item_def& item,
         break;
 
     case ARM_GLOVES:
-    {
-        const special_armour_type gloves_egos[] = {
-            SPARM_DEXTERITY, SPARM_STRENGTH,
-            SPARM_ARCHERY
-        };
-
-        rc = RANDOM_ELEMENT(gloves_egos);
+        rc = random_choose(SPARM_DEXTERITY, SPARM_STRENGTH, SPARM_ARCHERY, -1);
         break;
-    }
 
     case ARM_BOOTS:
     case ARM_NAGA_BARDING:
@@ -2188,14 +2187,13 @@ static special_armour_type _determine_armour_ego(const item_def& item,
     }
 
     case ARM_ROBE:
-        rc = static_cast<special_armour_type>(
-                 random_choose_weighted(1, SPARM_RESISTANCE,
-                                        2, SPARM_COLD_RESISTANCE,
-                                        2, SPARM_FIRE_RESISTANCE,
-                                        2, SPARM_POSITIVE_ENERGY,
-                                        4, SPARM_MAGIC_RESISTANCE,
-                                        4, SPARM_ARCHMAGI,
-                                        0));
+        rc = random_choose_weighted(1, SPARM_RESISTANCE,
+                                    2, SPARM_COLD_RESISTANCE,
+                                    2, SPARM_FIRE_RESISTANCE,
+                                    2, SPARM_POSITIVE_ENERGY,
+                                    4, SPARM_MAGIC_RESISTANCE,
+                                    4, SPARM_ARCHMAGI,
+                                    0);
 
         // Only ever generate robes of archmagi for random pieces of armour,
         // for whatever reason.
@@ -3027,11 +3025,10 @@ static void _generate_misc_item(item_def& item, int force_type, int force_ego)
 
 deck_rarity_type random_deck_rarity()
 {
-    return static_cast<deck_rarity_type>
-        (random_choose_weighted(8, DECK_RARITY_LEGENDARY,
-                                20, DECK_RARITY_RARE,
-                                72, DECK_RARITY_COMMON,
-                                0));
+    return random_choose_weighted(8, DECK_RARITY_LEGENDARY,
+                                 20, DECK_RARITY_RARE,
+                                 72, DECK_RARITY_COMMON,
+                                  0);
 }
 
 
@@ -3088,8 +3085,8 @@ int items(bool allow_uniques,
     else
     {
         ASSERT(force_type == OBJ_RANDOM);
-        item.base_type = static_cast<object_class_type>(
-            random_choose_weighted(5, OBJ_STAVES,
+        item.base_type = random_choose_weighted(
+                                     5, OBJ_STAVES,
                                     15, OBJ_BOOKS,
                                     25, OBJ_JEWELLERY,
                                     35, OBJ_WANDS,
@@ -3100,7 +3097,7 @@ int items(bool allow_uniques,
                                    150, OBJ_MISSILES,
                                    200, OBJ_SCROLLS,
                                    200, OBJ_GOLD,
-                                     0));
+                                     0);
 
         // misc items placement wholly dependent upon current depth {dlb}:
         if (item_level > 7 && x_chance_in_y(21 + item_level, 3500))

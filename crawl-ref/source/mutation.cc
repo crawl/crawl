@@ -1953,8 +1953,6 @@ bool balance_demonic_guardian()
     return (true);
 }
 
-#define random_mons(...) static_cast<monster_type>(random_choose(__VA_ARGS__))
-
 // Primary function to handle and balance demonic guardians, if the tension
 // is unfavorably high and a guardian was not recently spawned, a new guardian
 // will be made, if tension is below a threshold (determined by the mutations
@@ -1972,16 +1970,16 @@ void check_demonic_guardian()
         switch (mutlevel)
         {
         case 1:
-            mt = random_mons(MONS_WHITE_IMP, MONS_LEMURE, MONS_UFETUBUS,
-                             MONS_IRON_IMP, MONS_MIDGE, -1);
+            mt = random_choose(MONS_WHITE_IMP, MONS_LEMURE, MONS_UFETUBUS,
+                               MONS_IRON_IMP, MONS_MIDGE, -1);
             break;
         case 2:
-            mt = random_mons(MONS_ORANGE_DEMON, MONS_SMOKE_DEMON, MONS_IRON_DEVIL,
-                             MONS_BLUE_DEVIL, MONS_HAIRY_DEVIL, -1);
+            mt = random_choose(MONS_ORANGE_DEMON, MONS_SMOKE_DEMON, MONS_IRON_DEVIL,
+                               MONS_BLUE_DEVIL, MONS_HAIRY_DEVIL, -1);
             break;
         case 3:
-            mt = random_mons(MONS_EXECUTIONER, MONS_BALRUG, MONS_ICE_DEVIL,
-                             MONS_SOUL_EATER, MONS_SUN_DEMON, -1);
+            mt = random_choose(MONS_EXECUTIONER, MONS_BALRUG, MONS_ICE_DEVIL,
+                               MONS_SOUL_EATER, MONS_SUN_DEMON, -1);
             break;
         default:
             die("Invalid demonic guardian level: %d", mutlevel);

@@ -1721,8 +1721,6 @@ static int _calc_breath_ability_range(ability_type ability)
     return (-2);
 }
 
-#define random_mons(...) static_cast<monster_type>(random_choose(__VA_ARGS__))
-
 static bool _do_ability(const ability_def& abil)
 {
     int power;
@@ -2355,7 +2353,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
-        summon_demon_type(random_mons(MONS_HELLWING, MONS_NEQOXEC,
+        summon_demon_type(random_choose(MONS_HELLWING, MONS_NEQOXEC,
                           MONS_ORANGE_DEMON, MONS_SMOKE_DEMON, MONS_YNOXINUL, -1),
                           20 + you.skill(SK_INVOCATIONS, 3), GOD_MAKHLEB);
         break;
@@ -2390,7 +2388,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
-        summon_demon_type(random_mons(MONS_EXECUTIONER, MONS_GREEN_DEATH,
+        summon_demon_type(random_choose(MONS_EXECUTIONER, MONS_GREEN_DEATH,
                           MONS_BLIZZARD_DEMON, MONS_BALRUG, MONS_CACODEMON, -1),
                           20 + you.skill(SK_INVOCATIONS, 3), GOD_MAKHLEB);
         break;

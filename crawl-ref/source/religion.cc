@@ -1374,14 +1374,11 @@ static bool _give_nemelex_gift(bool forced = false)
             int rare_weight   = 5  + (55 * you.piety / MAX_PIETY);
             int legend_weight = 0  + (35 * you.piety / MAX_PIETY);
 
-            deck_rarity_type rarity = static_cast<deck_rarity_type>(
-                random_choose_weighted(common_weight,
-                                       DECK_RARITY_COMMON,
-                                       rare_weight,
-                                       DECK_RARITY_RARE,
-                                       legend_weight,
-                                       DECK_RARITY_LEGENDARY,
-                                       0));
+            deck_rarity_type rarity = random_choose_weighted(
+                common_weight, DECK_RARITY_COMMON,
+                rare_weight,   DECK_RARITY_RARE,
+                legend_weight, DECK_RARITY_LEGENDARY,
+                0);
 
             item_def &deck(mitm[thing_created]);
 
