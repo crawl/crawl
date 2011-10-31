@@ -252,6 +252,7 @@ enum attribute_type
     ATTR_SEEN_INVIS_SEED,      // Random seed for invis monster positions.
     ATTR_APPENDAGE,            // eq slot of Beastly Appendage
     ATTR_TITHE_BASE,           // Remainder of untithed gold.
+    ATTR_EVOL_XP,              // XP gained since last evolved mutation
     NUM_ATTRIBUTES
 };
 

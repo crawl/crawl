@@ -2413,8 +2413,11 @@ void handle_time()
         jiyva_eat_offlevel_items();
 
     if (int lev = player_mutation_level(MUT_EVOLUTION))
-        if (one_chance_in(100 / lev))
+        if (one_chance_in(100 / lev)
+            && you.attribute[ATTR_EVOL_XP] * (1 + random2(10))
+               > (int)exp_needed(you.experience_level + 1))
         {
+            you.attribute[ATTR_EVOL_XP] = 0;
             mutate(coinflip() ? RANDOM_GOOD_MUTATION : RANDOM_MUTATION,
                    false, false, false, false, false, true);
             // it would kill itself anyway, but let's speed that up
