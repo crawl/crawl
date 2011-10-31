@@ -2014,7 +2014,7 @@ void forest_damage(const actor *mon)
     const coord_def pos = mon->pos();
 
     if (one_chance_in(4))
-        forest_message(pos, random_choose_string(
+        forest_message(pos, random_choose(
             "The trees move their gnarly branches around.",
             "You feel roots moving beneath the ground.",
             "Branches wave dangerously above you.",
@@ -2034,7 +2034,7 @@ void forest_damage(const actor *mon)
                 const int damage = 5 + random2(10);
                 if (foe->atype() == ACT_PLAYER)
                 {
-                    mpr(random_choose_string(
+                    mpr(random_choose(
                         "You are hit by a branch!",
                         "A tree reaches out and hits you!",
                         "A root smacks you from below.",
@@ -2046,7 +2046,7 @@ void forest_damage(const actor *mon)
                 {
                     if (you.see_cell(foe->pos()))
                     {
-                        const char *msg = random_choose_string(
+                        const char *msg = random_choose(
                             "%s is hit by a branch!",
                             "A tree reaches out and hits %s!",
                             "A root smacks %s from below.",
