@@ -84,7 +84,8 @@ static void _set_no_path_found(monster* mon)
 #ifdef DEBUG_PATHFIND
     mpr("No path found!");
 #endif
-    if (crawl_state.game_is_zotdef() && you.level_type == LEVEL_DUNGEON)
+    if (crawl_state.game_is_zotdef() && you.level_type == LEVEL_DUNGEON
+        && !testbits(env.pgrid(mon->pos()), FPROP_NO_RTELE_INTO))
     {
         if (you.wizard)
         {
