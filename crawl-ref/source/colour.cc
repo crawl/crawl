@@ -766,7 +766,7 @@ unsigned short dos_brand(unsigned short colour,
 }
 #endif
 
-#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE)
+#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE_LOCAL)
 static unsigned _colflag2brand(int colflag)
 {
     switch (colflag)

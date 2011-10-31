@@ -934,15 +934,22 @@ bool monster_info::less_than(const monster_info& m1, const monster_info& m2,
 
 static std::string _verbose_info0(const monster_info& mi)
 {
-    if (mi.is(MB_CAUGHT))
-        return ("caught");
-
-    if (mi.is(MB_PETRIFIED))
-        return ("petrified");
+    if (mi.is(MB_BERSERK))
+        return ("berserk");
+    if (mi.is(MB_FRENZIED))
+        return ("frenzied");
+    if (mi.is(MB_ROUSED))
+        return ("roused");
+    if (mi.is(MB_INNER_FLAME))
+        return ("inner flame");
     if (mi.is(MB_DUMB))
         return ("dumb");
     if (mi.is(MB_PARALYSED))
         return ("paralysed");
+    if (mi.is(MB_CAUGHT))
+        return ("caught");
+    if (mi.is(MB_PETRIFIED))
+        return ("petrified");
     if (mi.is(MB_PETRIFYING))
         return ("petrifying");
     if (mi.is(MB_MAD))
@@ -957,6 +964,14 @@ static std::string _verbose_info0(const monster_info& mi)
         return ("sleeping");
     if (mi.is(MB_UNAWARE))
         return ("unaware");
+    if (mi.is(MB_WITHDRAWN))
+        return ("withdrawn");
+    if (mi.is(MB_DAZED))
+        return ("dazed");
+    if (mi.is(MB_MUTE))
+        return ("mute");
+    if (mi.is(MB_BLIND))
+        return ("blind");
     // avoid jelly (wandering) (fellow slime)
     if (mi.is(MB_WANDERING) && mi.attitude != ATT_STRICT_NEUTRAL)
         return ("wandering");
@@ -968,14 +983,6 @@ static std::string _verbose_info0(const monster_info& mi)
         return ("bleeding");
     if (mi.is(MB_INVISIBLE))
         return ("invisible");
-    if (mi.is(MB_DAZED))
-        return ("dazed");
-    if (mi.is(MB_MUTE))
-        return ("mute");
-    if (mi.is(MB_BLIND))
-        return ("blind");
-    if (mi.is(MB_INNER_FLAME))
-        return ("inner flame");
 
     return ("");
 }
@@ -1038,24 +1045,7 @@ void monster_info::to_string(int count, std::string& desc,
 #endif
 
     if (count == 1)
-    {
-        if (is(MB_FRENZIED))
-            out << " (frenzied)";
-        else if (is(MB_ROUSED))
-            out << " (roused)";
-        else if (is(MB_BERSERK))
-            out << " (berserk)";
-        else if (Options.verbose_monster_pane)
-            out << _verbose_info(*this);
-        else if (is(MB_STABBABLE))
-            out << " (resting)";
-        else if (is(MB_DISTRACTED))
-            out << " (distracted)";
-        else if (is(MB_INVISIBLE))
-            out << " (invisible)";
-        else if (is(MB_WITHDRAWN))
-            out << " (withdrawn)";
-    }
+       out << _verbose_info(*this);
 
     // Friendliness
     switch (attitude)

@@ -1120,12 +1120,13 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
         // Smart monsters, undead, plants, and nonliving monsters cannot flee.
         // Cannot flee if cornered.
         // Monster can flee if HP is less than 1/4 maxhp or less than 20 hp
-        // (whichever is lower). Chance starts quite low, and is 100% at 1 hp.
+        // (whichever is lower). Chance starts quite low, and is near 100% at 1.
+        // Monsters with less than 8 maxhp are unable to flee.
         // These numbers could still use some adjusting.
         //
         // Assuming fleeThreshold is 20:
-        //   at 20 hp: 5% chance of fleeing
-        //   at 10 hp: 55% chance of fleeing
+        //   at 19 hp: 5% chance of fleeing
+        //   at 10 hp: 50% chance of fleeing
         //   (chance increases by 5% for every hp lost.)
         if (!isSmart && isMobile
             && mon->holiness() != MH_UNDEAD
@@ -1133,7 +1134,7 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
             && mon->holiness() != MH_NONLIVING
             && !mons_class_flag(mon->type, M_NO_FLEE)
             && !mons_is_cornered(mon)
-            && x_chance_in_y(fleeThreshold - mon->hit_points + 1, fleeThreshold))
+            && x_chance_in_y(fleeThreshold - mon->hit_points, fleeThreshold))
         {
             mon->behaviour = BEH_FLEE;
         }
@@ -1184,10 +1185,9 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
         // stop doing so just because they noticed something.
         mon->behaviour = old_behaviour;
     }
-    else if (wasLurking && mon->has_ench(ENCH_SUBMERGED)
-             && !mon->del_ench(ENCH_SUBMERGED))
+    else if (mon->has_ench(ENCH_SUBMERGED) && !mon->del_ench(ENCH_SUBMERGED))
     {
-        // The same goes for lurking submerged monsters, if they can't
+        // The same goes for submerged monsters, if they can't
         // unsubmerge.
         mon->behaviour = BEH_LURK;
     }

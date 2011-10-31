@@ -249,7 +249,7 @@ bool trap_def::is_safe(actor* act) const
     // No prompt (teleport traps are ineffective if
     // wearing an amulet of stasis)
     if (type == TRAP_TELEPORT
-        && (player_equip(EQ_AMULET, AMU_STASIS, true)
+        && (player_equip(EQ_AMULET, AMU_STASIS, false)
             || scan_artefacts(ARTP_PREVENT_TELEPORTATION, false)))
     {
         return true;
@@ -1564,7 +1564,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                                 "force_hit") == "true");
 
         bool poison = (type == TRAP_NEEDLE
-                       && !act.res_poison()
+                       && act.res_poison() <= 0
                        && (x_chance_in_y(50 - (3*act.armour_class()) / 2, 100)
                             || force_poison));
 

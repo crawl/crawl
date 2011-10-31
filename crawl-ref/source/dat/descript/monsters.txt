@@ -2053,7 +2053,7 @@ Once considered a unique species of its own, grey elves are now more properly cl
 %%%%
 hill dwarf
 
-Hill dwarves are basically just mountain dwarves who live on hills. They are otherwise indistinguishable from their mountain brethren. Once able adventurers, the hill dwarves no longer have any interest in dungeon delving. This one was captured specially for this exhibit.
+Hill dwarves are a subrace of dwarves who, as their name implies, live on hills. Once able adventurers, the hill dwarves no longer have any interest in dungeon delving. This one was captured specially for this exhibit.
 %%%%
 human monk
 
@@ -2066,6 +2066,10 @@ It seems a flimsy representation of a monk; nothing more than a half-formed memo
 malarious mermaid
 
 A young woman with a fish tail in place of legs. She looks quite sick, but still capable of bespelling her audience.
+%%%%
+mountain dwarf
+
+Mountain dwarves are surface-dwelling relatives of the deep dwarves. After years of war with the taller but otherwise quite similar hill orcs, the mountain dwarves were conquered and driven from these lands. This one has been imported from foreign shores.
 %%%%
 pristine statue
 

@@ -39,8 +39,6 @@ public:
     Stash(int xp = -1, int yp = -1);
 
     static bool is_boring_feature(dungeon_feature_type feat);
-    static void filter(object_class_type base_type, uint8_t sub_type);
-    static void filter(const std::string &filt);
 
     static std::string stash_item_name(const item_def &item);
     void update();
@@ -88,9 +86,6 @@ public:
                         // also never removed from the level's map of
                         // stashes.
 
-public:
-    static bool is_filtered(const item_def &item);
-
 private:
     void _update_corpses(int rot_time);
     void _update_identification();
@@ -112,7 +107,6 @@ private:
      * reflecting what's in the dungeon also increases.
      */
     static bool aggressive_verify;
-    static std::vector<item_def> filters;
 
     static bool are_items_same(const item_def &, const item_def &);
 
@@ -153,6 +147,10 @@ public:
         item_def item;
         unsigned price;
     };
+
+    // Attempts to guess if the item came from the shop, and if so returns the
+    // corresponding shop_item_name:
+    std::string get_shop_item_name(const item_def&) const;
 
 private:
     int x, y;
@@ -370,7 +368,8 @@ private:
     void get_matching_stashes(const base_pattern &search,
                               std::vector<stash_search_result> &results) const;
     bool display_search_results(std::vector<stash_search_result> &results,
-                                const char* sort_style);
+                                bool& sort_by_dist,
+                                bool& show_as_stacks);
     std::string stash_search_prompt();
 
 private:

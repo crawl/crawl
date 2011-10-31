@@ -3572,7 +3572,7 @@ static std::string _pluralise_player_genus()
 {
     std::string sp = species_name(you.species, true, false);
     if (player_genus(GENPC_ELVEN, you.species)
-        || player_genus(GENPC_DWARVEN, you.species))
+        || you.species == SP_DEEP_DWARF)
     {
         sp = sp.substr(0, sp.find("f"));
         sp += "ves";

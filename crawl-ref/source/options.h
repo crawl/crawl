@@ -69,7 +69,6 @@ public:
     bool        mlist_allow_alternate_layout;
     bool        messages_at_top;
     bool        mlist_targeting;
-    bool        classic_hud;
     bool        msg_condense_repeats;
     bool        msg_condense_short;
 
@@ -90,8 +89,6 @@ public:
     int         scroll_margin_x;
     int         scroll_margin_y;
 
-    bool        verbose_monster_pane;
-
     int         autopickup_on;
     int         default_friendly_pickup;
     bool        default_manual_training;
@@ -99,19 +96,16 @@ public:
     bool        show_newturn_mark;// Show underscore prefix in messages for new turn
     bool        show_gold_turns; // Show gold and turns in HUD.
     bool        show_game_turns; // Show game turns instead of player turns.
-    bool        show_beam;       // Show targeting beam by default.
     bool        show_no_ctele;   // Show -cTele in the status light area.
 
     uint32_t    autopickups;     // items to autopickup
     bool        auto_switch;     // switch melee&ranged weapons according to enemy range
     bool        show_inventory_weights; // show weights in inventory listings
-    bool        colour_map;      // add colour to the map
     bool        clean_map;       // remove unseen clouds/monsters
     bool        show_uncursed;   // label known uncursed items as "uncursed"
     bool        easy_open;       // open doors with movement
     bool        easy_unequip;    // allow auto-removing of armour / jewellery
     bool        equip_unequip;   // Make 'W' = 'T', and 'P' = 'R'.
-    bool        easy_butcher;    // autoswap to butchering tool
     bool        always_confirm_butcher; // even if only one corpse
     bool        chunks_autopickup; // Autopickup chunks after butchering
     bool        prompt_for_swap; // Prompt to switch back from butchering
@@ -196,7 +190,6 @@ public:
     bool        autoinscribe_cursed; // Auto-inscribe previosly cursed items.
 
     bool        pickup_thrown;  // Pickup thrown missiles
-    bool        pickup_dropped; // Pickup dropped objects
     int         travel_delay;   // How long to pause between travel moves
     int         explore_delay;  // How long to pause between explore moves
 
@@ -220,9 +213,6 @@ public:
     int         travel_stair_cost;
 
     bool        show_waypoints;
-
-    bool        classic_item_colours;   // Use old-style item colours
-    bool        item_colour;    // Colour items on level map
 
     unsigned    evil_colour; // Colour for things player's god dissapproves
 

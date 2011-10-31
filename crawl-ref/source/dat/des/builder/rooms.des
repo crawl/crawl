@@ -86,8 +86,7 @@ function sroom_beehive(e)
         return
     end
 
-    fill_special_room(e, "patrolling killer bee larva w:1 / "
-                      .. "patrolling killer bee w:6",
+    fill_special_room(e, "patrolling killer bee",
                       "patrolling queen bee", true)
 
     e.kitem('12 = royal jelly w:1 / honeycomb w:24 / nothing w:25')

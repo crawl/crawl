@@ -25,20 +25,19 @@ The contents of this text are:
 4-  Interface.
 4-a     Dropping and Picking up.
                 autopickup, autopickup_exceptions, default_autopickup,
-                autopickup_no_burden, pickup_thrown, pickup_dropped,
-                chunks_autopickup, assign_item_slot, drop_mode,
-                pickup_mode, drop_filter, default_friendly_pickup
+                autopickup_no_burden, pickup_thrown, chunks_autopickup,
+                assign_item_slot, drop_mode, pickup_mode, drop_filter,
+                default_friendly_pickup
 4-b     Targeting.
                 default_target, target_unshifted_dirs, darken_beyond_range
 4-c     Passive Sightings (detected and remembered entities).
                 detected_monster_colour, detected_item_colour,
-                remembered_monster_colour, colour_map, clean_map
+                remembered_monster_colour, clean_map
 4-d     Branding (Item and Monster Highlighting).
                 friend_brand, neutral_brand, stab_brand, may_stab_brand,
-                heap_brand, feature_item_brand, trap_item_brand,
-                verbose_monster_panel
+                heap_brand, feature_item_brand, trap_item_brand
 4-e     Level Map Functions.
-                level_map_cursor_step, level_map_title, item_colour
+                level_map_cursor_step, level_map_title, show_waypoints
 4-f     Viewport Display Options.
                 view_max_width, view_max_height, view_lock_x,
                 view_lock_y, view_lock, center_on_scroll,
@@ -53,13 +52,12 @@ The contents of this text are:
                 runrest_ignore_message, runrest_stop_message,
                 runrest_ignore_poison, runrest_ignore_monster,
                 trapwalk_safe_hp, rest_wait_both, auto_exclude
-4-h     Stashes.
-                stash_filter, annotate_item_class,
-                annotate_item_dropped
+4-h     Floor items.
+                annotate_item_class, annotate_item_dropped
 4-i     Command Enhancements.
                 auto_list, auto_switch, easy_open, easy_unequip,
                 equip_unequip, easy_confirm, allow_self_target,
-                easy_butcher, always_confirm_butcher, prefer_safe_chunks,
+                always_confirm_butcher, prefer_safe_chunks,
                 easy_eat_chunks, easy_eat_gourmand, easy_eat_contaminated,
                 prompt_for_swap, easy_quit_item_prompts,
                 easy_exit_menu, sort_menus, spell_slot
@@ -67,10 +65,10 @@ The contents of this text are:
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, clear_messages, show_more, small_more,
                 show_inventory_weights, show_newturn_mark, show_gold_turns,
-                show_game_turns, show_beam, item_stack_summary_minimum,
-                list_rotten, mlist_min_height, msg_min_height, msg_max_height,
+                show_game_turns, item_stack_summary_minimum, list_rotten,
+                mlist_min_height, msg_min_height, msg_max_height,
                 messages_at_top, show_no_ctele, skill_focus,
-                mlist_allow_alternate_layout, mlist_targetting, classic_hud,
+                mlist_allow_alternate_layout, mlist_targetting,
                 menu_colour, menu_colour_prefix_class, menu_colour_shops,
                 message_colour, force_more_message,
                 msg_condense_repeats, msg_condense_short
@@ -468,11 +466,6 @@ pickup_thrown = true
         aware that autopickup uses a turn, though it won't trigger if
         there are hostile monsters in sight.
 
-pickup_dropped = false
-        pickup_dropped lets autopickup affect objects you've dropped.
-        Set to false to block autopickup for dropped objects. This can
-        be convenient.
-
 chunks_autopickup = true
         If true then butchered flesh will be automatically picked up
         right after they're generated (and after switching back from
@@ -613,9 +606,6 @@ remembered_monster_colour = darkgrey
         The colour for monsters you have seen before. Note that the
         value of this option is meaningless if you set clean_map.
 
-colour_map = true
-        Colours out of sight map features on the playing screen.
-
 clean_map = false
         Cleans up out of sight monsters and clouds on the map. This is
         like pressing Ctrl-C (clearing both main screen and level map)
@@ -686,12 +676,6 @@ trap_item_brand = reverse
         use this brand, the items on the square are hidden by the trap
         symbol (^) and the trap symbol is branded.
 
-verbose_monster_pane = true
-        If set to false using the console version of Crawl (rather than the
-        tiles version), the pane listing the monsters in sight will give
-        the older, less detailed information like "distracted" or "resting"
-        rather than "fleeing", "sleeping", "unaware", etc.
-
 4-e     Level Map Functions.
 ----------------------------
 
@@ -703,8 +687,9 @@ level_map_title = true
         Whether to show the level name at the top of the level map
         screen.
 
-item_colour = true
-        Colours items on level-map.
+show_waypoints = true
+        Whether to display a number on the level map to indicate
+        waypoints (placed with the Ctrl-W command).
 
 4-f     Viewport Display Options
 --------------------------------
@@ -809,10 +794,9 @@ travel_avoid_terrain = (shallow water | deep water)
 explore_greedy = true
         Greedy explore travels to items that are eligible for
         autopickup in addition to exploring the level, but is
-        otherwise identical to regular explore. Greedy explore is best
-        with pickup_dropped = false. Explore greed is disabled if
-        you're temporarily unable to pick up items (from uncontrolled
-        levitation, for instance).
+        otherwise identical to regular explore. Explore greed is
+        disabled if you're temporarily unable to pick up items
+        (from uncontrolled levitation, for instance).
 
 explore_stop  = items,greedy_pickup_smart,stairs,shops,altars,gates,
 explore_stop += greedy_visited_item_stack
@@ -985,42 +969,20 @@ auto_exclude = <list of monster names>
         monster dies or wakes up while you are in sight, this exclusion
         is automatically removed again.
 
-4-h     Stashes.
+4-h     Floor items.
 ----------------
 
-A stash is a heap of items tracked by Crawl. You can search in your
-stashes with Ctrl-F. The weird name "stash" is for historical reasons
-when the stash-tracker tracked only specific stashes that you asked it
-to. Modern Crawls track all items in the dungeon without the need for
-explicit steps.
-
-stash_filter = <list of item names or numbers>
-        This option prevents certain items or classes of items from being
-        rembered by the stash tracker.
-
-        For example:
-
-             stash_filter = scroll of noise, scroll of curse weapon
-
-        will make the stash-tracker ignore scrolls of noise and scrolls
-        of curse weapon.  The item names must be exact, and must be
-        singular, not plural.
-
-        It can also be used the filter entire classes of items by their
-        number.  For example:
-
-             stash_filter = 14, 4:21
-
-        filters corpses (14) as well as food of the subtype chunks (4:21).
+You can search for items all around the dungeon with Ctrl-F. It accepts not
+only the real name but can also take certain "annotations":
 
 annotate_item_class = false
         This only works if stash.lua has already been sourced in
         init.txt. Automatically annotates items with their object class,
-        e.g. weapon or wand, for stash searching.
+        e.g. weapon or wand, for floor item searching.
 
 annotate_item_dropped = false
         This only works if stash.lua has already been sourced in
-        init.txt. Annotates dropped items with {dropped} for stash
+        init.txt. Annotates dropped items with {dropped} for floor
         searching.
 
 4-i     Command Enhancements.
@@ -1071,11 +1033,6 @@ allow_self_target = (yes | no | prompt)
         spells, such as Mephitic Cloud or Evaporate, where you
         are always a valid target.
 
-easy_butcher = true
-        If true, auto-switch to an appropriate uncursed weapon for
-        butchery. For such tools any special messages are ignored. If
-        false, you have to wield the tool manually.
-
 always_confirm_butcher = false
         If true, always request confirmation before butchering. If
         false, butchering will proceed automatically if there is exactly
@@ -1113,11 +1070,10 @@ easy_eat_contaminated = false
         wearing an amulet of the Gourmand.
 
 prompt_for_swap = true
-        If both this and easy_butcher are true, then if an auto-switch
-        butchery is interrupted by a hostile monster, the game will
-        ask if you wish to switch back to your weapon.  It will also
-        prompt you if after butchery is interupted you teleport or
-        change levels and find yourself near hostile monsters.
+        If true, then if an auto-switch butchery is interrupted by a
+        hostile monster, the game will ask if you wish to switch back to
+        your weapon. It will also prompt you if after butchery is interupted
+        you teleport orchange levels and find yourself near hostile monsters.
 
 easy_quit_item_prompts = true
         Setting this option to true allows the quitting of item listing
@@ -1345,13 +1301,6 @@ show_game_turns = false
         turns instead of player turns. A second number is displayed in
         parenthesis, showing the duration of the last action.
 
-show_beam = true
-        When performing actions such as throwing or zapping, you can
-        toggle whether to show the beam path or not. This option
-        controls the initial status of this toggle. When set to true,
-        the path will be shown.  This is always true for the tile
-        version.
-
 item_stack_summary_minimum = 5
         If you step over a stack with this number or more of items in
         it, the first description line will contain a summary of all the
@@ -1403,10 +1352,6 @@ mlist_targetting = false
         targetting mode. There's a toggle that allows you to turn this
         feature on and off. This option controls the initial setting
         at game start or reload.
-
-classic_hud = false
-        Remove the Health and Magic bars and the monster list, for a
-        more 0.3-like HUD display.
 
 menu_colour = <match>:<colour>:<regex>
         This prints a line (of the inventory, a menu, or the discoveries
@@ -2092,13 +2037,6 @@ char_set = (default | ascii | ibm | dec | unicode)
         respectively, CP437 codes or VT100 line-drawing characters + 128.
 
         Has negligible effect in the Tiles build.
-
-classic_item_colours = false
-        Crawl uses 4.0 b26/0.1.x-like item colours if
-        classic_item_colours is set to true. The default (false) is to
-        use the new 0.2 item colours.
-        This option will not affect the colour of existing items, only
-        items generated after the option is set.
 
 colour.OLDCOLOUR = NEWCOLOUR
         Useful for terminals where some colours are hard to read (and

@@ -65,15 +65,11 @@ MAP
 ENDMAP
 
 NAME:    eino_jars
-DEPTH:   D:4-14
+DEPTH:   D:7-14
 TAGS:    extra luniq_mini
 SHUFFLE: 11%
-: if you.absdepth() >7 then
 MONS:    killer bee / nothing w:5
 SUBST:   % = %*
-: else
-MONS:    killer bee larva
-: end
 MAP
 xxxxxx
 x1111x
@@ -110,18 +106,18 @@ ENDMAP
 # Beehive minivault
 NAME:  minivault_7
 TAGS:  allow_dup
-MONS:  patrolling queen bee, patrolling killer bee, killer bee larva
+MONS:  patrolling queen bee, patrolling killer bee
 KITEM: R = w:2 honeycomb / w:1 royal jelly
 MAP
 ............
 ....aaaa....
 ..a2a2aaaa..
-..aaRa3a2a..
+..aaRa2a2a..
 .aa2aRa2aaa.
-.a3aRa1aRa2.
-.aa3aRaRa2a.
-.aaa2a2a3aa.
-..a3aRa2aa..
+.a2aRa1aRa2.
+.aa2aRaRa2a.
+.aaa2a2a2aa.
+..a2aRa2aa..
 ...aa2aa2a..
 ....aaaa....
 ............
@@ -392,7 +388,7 @@ NAME:   goddamned_bats
 DEPTH:  D:3-12, Lair:1-3, Orc:1-2
 # Sadly, for size-based ones, only mega, micro and giga exist.  Lack of kilo
 # and tera is understandable, but come on, even mili is lacking.
-KMONS:  1 = bat name:megabat n_rpl n_spe
+KMONS:  1 = bat name:megabat n_rpl n_spe tile:mons_megabat
 KMONS:  2 = bat name:microbat n_rpl n_spe col:magenta tile:mons_microbat
 # Can we spell them this way?  Please?
 KMONS:  3 = bat name:fruity n_adj n_spe col:lightmagenta tile:mons_fruity_bat
@@ -1446,7 +1442,7 @@ ENDMAP
 
 NAME:    hallowed_hall
 TAGS:    no_monster_gen no_trap_gen extra
-PLACE:   D:17-27
+DEPTH:   D:17-27
 : if you.absdepth() > 21 then
 MONS:    pearl dragon
 : else

@@ -393,12 +393,6 @@ bool butchery(int which_corpse, bool bottle_blood)
                              || birdie_butcher || knife_butcher
                              || you.weapon() && can_cut_meat(*you.weapon()));
 
-    if (!Options.easy_butcher && !can_butcher)
-    {
-        mpr("Maybe you should try using a sharper implement.");
-        return (false);
-    }
-
     // It makes more sense that you first find out if there's anything
     // to butcher, *then* decide to actually butcher it.
     // The old code did it the other way.
@@ -2283,7 +2277,7 @@ bool is_poisonous(const item_def &food)
     if (food.base_type != OBJ_FOOD && food.base_type != OBJ_CORPSES)
         return (false);
 
-    if (player_res_poison(false))
+    if (player_res_poison(false) > 0)
         return (false);
 
     return (chunk_is_poisonous(mons_corpse_effect(food.plus)));
@@ -2311,7 +2305,7 @@ bool is_contaminated(const item_def &food)
 
     const corpse_effect_type chunk_type = mons_corpse_effect(food.plus);
     return (chunk_type == CE_CONTAMINATED
-            || (player_res_poison(false) && chunk_type == CE_POISON_CONTAM)
+            || (player_res_poison(false) > 0 && chunk_type == CE_POISON_CONTAM)
             || food_is_rotten(food)
                && player_mutation_level(MUT_SAPROVOROUS) < 3);
 }

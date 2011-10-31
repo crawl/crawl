@@ -83,7 +83,7 @@ static int _exciting_colour()
 }
 
 
-static int _newwave_weapon_colour(const item_def &item)
+static int _weapon_colour(const item_def &item)
 {
     int item_colour = BLACK;
     // fixed artefacts get predefined colours
@@ -148,48 +148,7 @@ static int _newwave_weapon_colour(const item_def &item)
     return (item_colour);
 }
 
-static int _classic_weapon_colour(const item_def &item)
-{
-    int item_colour = BLACK;
-
-    if (is_range_weapon(item))
-        item_colour = BROWN;
-    else
-    {
-        switch (item.sub_type)
-        {
-        case WPN_CLUB:
-        case WPN_GIANT_CLUB:
-        case WPN_GIANT_SPIKED_CLUB:
-        case WPN_ANKUS:
-        case WPN_WHIP:
-        case WPN_QUARTERSTAFF:
-            item_colour = BROWN;
-            break;
-        case WPN_QUICK_BLADE:
-            item_colour = LIGHTBLUE;
-            break;
-        case WPN_EXECUTIONERS_AXE:
-            item_colour = RED;
-            break;
-        default:
-            item_colour = LIGHTCYAN;
-            if (get_equip_race(item) == ISFLAG_DWARVEN)
-                item_colour = CYAN;
-            break;
-        }
-    }
-
-    return (item_colour);
-}
-
-static int _weapon_colour(const item_def &item)
-{
-    return (Options.classic_item_colours ? _classic_weapon_colour(item)
-                                         : _newwave_weapon_colour(item));
-}
-
-static int _newwave_missile_colour(const item_def &item)
+static int _missile_colour(const item_def &item)
 {
     int item_colour = BLACK;
     switch (item.sub_type)
@@ -227,41 +186,7 @@ static int _newwave_missile_colour(const item_def &item)
     return (item_colour);
 }
 
-static int _classic_missile_colour(const item_def &item)
-{
-    int item_colour = BLACK;
-    switch (item.sub_type)
-    {
-    case MI_STONE:
-    case MI_LARGE_ROCK:
-    case MI_ARROW:
-        item_colour = BROWN;
-        break;
-    case MI_SLING_BULLET:
-        item_colour = BLUE;
-        break;
-    case MI_NEEDLE:
-        item_colour = WHITE;
-        break;
-    case MI_THROWING_NET:
-        item_colour = DARKGREY;
-        break;
-    default:
-        item_colour = LIGHTCYAN;
-        if (get_equip_race(item) == ISFLAG_DWARVEN)
-            item_colour = CYAN;
-        break;
-    }
-    return (item_colour);
-}
-
-static int _missile_colour(const item_def &item)
-{
-    return (Options.classic_item_colours ? _classic_missile_colour(item)
-                                         : _newwave_missile_colour(item));
-}
-
-static int _newwave_armour_colour(const item_def &item)
+static int _armour_colour(const item_def &item)
 {
     int item_colour = BLACK;
     std::string itname = item.name(DESC_PLAIN);
@@ -317,48 +242,6 @@ static int _newwave_armour_colour(const item_def &item)
     return (item_colour);
 }
 
-static int _classic_armour_colour(const item_def &item)
-{
-    int item_colour = BLACK;
-    switch (item.sub_type)
-    {
-    case ARM_CLOAK:
-    case ARM_ROBE:
-    case ARM_NAGA_BARDING:
-    case ARM_CENTAUR_BARDING:
-    case ARM_CAP:
-    case ARM_WIZARD_HAT:
-        item_colour = random_colour();
-        break;
-    case ARM_HELMET:
-        item_colour = LIGHTCYAN;
-        break;
-    case ARM_BOOTS: // maybe more interesting boot colours?
-    case ARM_GLOVES:
-    case ARM_LEATHER_ARMOUR:
-        item_colour = BROWN;
-        break;
-    case ARM_CRYSTAL_PLATE_MAIL:
-        item_colour = LIGHTGREY;
-        break;
-    case ARM_ANIMAL_SKIN:
-        item_colour = BROWN;
-        break;
-    default:
-        item_colour = LIGHTCYAN;
-        if (get_equip_race(item) == ISFLAG_DWARVEN)
-            item_colour = CYAN;
-        break;
-    }
-    return (item_colour);
-}
-
-static int _armour_colour(const item_def &item)
-{
-    return (Options.classic_item_colours ? _classic_armour_colour(item)
-                                         : _newwave_armour_colour(item));
-}
-
 void item_colour(item_def &item)
 {
     int switchnum = 0;
@@ -374,12 +257,6 @@ void item_colour(item_def &item)
             item.colour = random_uncommon_colour();
         else
             item.colour = _weapon_colour(item);
-
-        if (is_random_artefact(item) && one_chance_in(5)
-            && Options.classic_item_colours)
-        {
-            item.colour = random_colour();
-        }
         break;
 
     case OBJ_MISSILES:

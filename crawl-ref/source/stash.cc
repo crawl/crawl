@@ -186,7 +186,6 @@ static void _fully_identify_item(item_def *item)
 // ----------------------------------------------------------------------
 
 bool Stash::aggressive_verify = true;
-std::vector<item_def> Stash::filters;
 
 Stash::Stash(int xp, int yp) : enabled(true), items()
 {
@@ -221,67 +220,6 @@ bool Stash::are_items_same(const item_def &a, const item_def &b)
                     || (a.base_type == OBJ_FOOD && a.sub_type == FOOD_CHUNK
                         && b.sub_type == FOOD_CHUNK))
                 && a.plus == b.plus));
-}
-
-void Stash::filter(const std::string &str)
-{
-    std::string base = str;
-
-    uint8_t       subc = 255;
-    std::string   subs = "";
-    std::string::size_type cpos = base.find(":", 0);
-    if (cpos != std::string::npos)
-    {
-        subc = atoi(subs.c_str());
-
-        base = base.substr(0, cpos);
-    }
-
-    const int base_num = atoi(base.c_str());
-    if (base_num == 0 && base != "0" || subc == 0 && subs != "0")
-    {
-        item_types_pair pair = item_types_by_name(str);
-        if (pair.base_type == OBJ_UNASSIGNED)
-        {
-            Options.report_error("Invalid stash filter '" + str + "'");
-            return;
-        }
-        filter(pair.base_type, pair.sub_type);
-    }
-    else
-    {
-        const object_class_type basec =
-            static_cast<object_class_type>(base_num);
-        filter(basec, subc);
-    }
-}
-
-void Stash::filter(object_class_type base, uint8_t sub)
-{
-    item_def item;
-    item.base_type = base;
-    item.sub_type  = sub;
-
-    filters.push_back(item);
-}
-
-bool Stash::is_filtered(const item_def &item)
-{
-    for (int i = 0, count = filters.size(); i < count; ++i)
-    {
-        const item_def &filter = filters[i];
-        if (item.base_type == filter.base_type
-            && (filter.sub_type == 255
-                || item.sub_type == filter.sub_type))
-        {
-            if (is_artefact(item))
-                return (false);
-            if (filter.sub_type != 255 && !item_type_known(item))
-                return (false);
-            return (true);
-        }
-    }
-    return (false);
 }
 
 bool Stash::unverified() const
@@ -640,8 +578,6 @@ bool Stash::matches_search(const std::string &prefix,
     for (unsigned i = 0; i < items.size(); ++i)
     {
         const item_def &item = items[i];
-        if (Stash::is_filtered(item))
-            continue;
 
         const std::string s   = stash_item_name(item);
         const std::string ann =
@@ -1039,9 +975,6 @@ bool ShopInfo::matches_search(const std::string &prefix,
 
     for (unsigned i = 0; i < items.size(); ++i)
     {
-        if (Stash::is_filtered(items[i].item))
-            continue;
-
         const std::string sname = shop_item_name(items[i]);
         const std::string ann   = stash_annotate_item(STASH_LUA_SEARCH_ANNOTATE,
                                                       &items[i].item, true);
@@ -1842,24 +1775,17 @@ void StashTracker::search_stashes()
     }
 
     bool sort_by_dist = true;
+    bool show_as_stacks = true;
     while (true)
     {
-        const char* sort_style;
-        if (sort_by_dist)
-        {
-            std::sort(results.begin(), results.end(), compare_by_distance());
-            sort_style = "by dist";
-        }
-        else
-        {
-            std::sort(results.begin(), results.end(), compare_by_name());
-            sort_style = "by name";
-        }
-
-        const bool again = display_search_results(results, sort_style);
+        // Note that sort_by_dist and show_as_stacks can be modified by the
+        // following call if requested by the user. Also, "results" will be
+        // sorted by the call as appropriate:
+        const bool again = display_search_results(results,
+                                                  sort_by_dist,
+                                                  show_as_stacks);
         if (!again)
             break;
-        sort_by_dist = !sort_by_dist;
     }
 }
 
@@ -1890,15 +1816,19 @@ void StashTracker::get_matching_stashes(
 class StashSearchMenu : public Menu
 {
 public:
-    StashSearchMenu(const char* sort_style_)
+    StashSearchMenu(const char* stack_style_,const char* sort_style_)
         : Menu(), can_travel(true),
           request_toggle_sort_method(false),
+          request_toggle_show_as_stack(false),
+          stack_style(stack_style_),
           sort_style(sort_style_)
     { }
 
 public:
     bool can_travel;
     bool request_toggle_sort_method;
+    bool request_toggle_show_as_stack;
+    const char* stack_style;
     const char* sort_style;
 
 protected:
@@ -1912,13 +1842,16 @@ void StashSearchMenu::draw_title()
     {
         cgotoxy(1, 1);
         textcolor(title->colour);
-        cprintf("%d %s%s, sorted %s",
+        cprintf("%d %s%s, %s %s",
                 title->quantity, title->text.c_str(),
                 title->quantity > 1? "es" : "",
-                sort_style);
+                stack_style, sort_style);
 
         draw_title_suffix(formatted_string::parse_string(make_stringf(
-                 "<lightgrey>  [<w>a-z</w>: %s  <w>?</w>/<w>!</w>: change action  <w>/</w>: change sort]",
+                 "<lightgrey> [<w>a-z</w>: %s"
+                 "  <w>?</w>/<w>!</w>: action"
+                 "  <w>-</w>: stacking"
+                 "  <w>/</w>: sorting]",
                  menu_action == ACT_EXECUTE ? "travel" : "examine")), false);
     }
 }
@@ -1931,19 +1864,91 @@ bool StashSearchMenu::process_key(int key)
         request_toggle_sort_method = true;
         return (false);
     }
+    else if (key == '-')
+    {
+        request_toggle_show_as_stack = true;
+        return (false);
+    }
 
     return Menu::process_key(key);
 }
 
-// Returns true to request redisplay with a different sort method
-bool StashTracker::display_search_results(
-    std::vector<stash_search_result> &results,
-    const char* sort_style)
+std::string ShopInfo::get_shop_item_name(const item_def& search_item) const
 {
-    if (results.empty())
+    // Rely on items_similar, rnd, quantity to see if the item_def object is in
+    // the shop (extremely unlikely to be cheated and only consequence would be a
+    // wrong name showing up in the stash search):
+    for (unsigned i = 0; i < items.size(); ++i)
+    {
+        if (items_similar(items[i].item, search_item)
+            && items[i].item.rnd == search_item.rnd
+            && items[i].item.quantity == search_item.quantity)
+        {
+            return shop_item_name(items[i]);
+        }
+    }
+    return "";
+}
+
+void _stash_flatten_results(const std::vector<stash_search_result> &in,
+                            std::vector<stash_search_result> &out)
+{
+    // Creates search results vector with at most one item in each entry
+    out.clear();
+    out.reserve(in.size() * 2);
+    for (unsigned i = 0; i < in.size(); ++i)
+    {
+        if (in[i].count < 2)
+            out.push_back(in[i]);
+        else
+        {
+            stash_search_result tmp = in[i];
+            tmp.count = 1;
+            for (unsigned j = 0; j < in[i].matching_items.size(); ++j)
+            {
+                const item_def &item = in[i].matching_items[j];
+                tmp.match = Stash::stash_item_name(item);
+                if (tmp.shop)
+                {
+                  // Need to check if the item is in the shop so we can add gold price...
+                  // tmp.shop->shop_item_name()
+                  std::string sn = tmp.shop->get_shop_item_name(item);
+                  if (!sn.empty())
+                  tmp.match=sn;
+                }
+                tmp.matches = item.quantity;
+                tmp.matching_items.clear();
+                tmp.matching_items.push_back(item);
+                out.push_back(tmp);
+            }
+        }
+    }
+}
+
+// Returns true to request redisplay if display method was toggled
+bool StashTracker::display_search_results(
+    std::vector<stash_search_result> &results_in,
+    bool& sort_by_dist,
+    bool& show_as_stacks)
+{
+    if (results_in.empty())
         return (false);
 
-    StashSearchMenu stashmenu(sort_style);
+    std::vector<stash_search_result> * results = &results_in;
+    std::vector<stash_search_result> results_single_items;
+    if (!show_as_stacks)
+    {
+        _stash_flatten_results(results_in, results_single_items);
+        results = &results_single_items;
+    }
+
+    if (sort_by_dist)
+        std::sort(results->begin(), results->end(), compare_by_distance());
+    else
+        std::sort(results->begin(), results->end(), compare_by_name());
+
+    StashSearchMenu stashmenu(show_as_stacks ? "stacks" : "items",
+                              sort_by_dist ? "by dist" : "by name");
     stashmenu.set_tag("stash");
     stashmenu.can_travel   = can_travel_interlevel();
     stashmenu.action_cycle = Menu::CYCLE_TOGGLE;
@@ -1952,20 +1957,20 @@ bool StashTracker::display_search_results(
 
     MenuEntry *mtitle = new MenuEntry(title, MEL_TITLE);
     // Abuse of the quantity field.
-    mtitle->quantity = results.size();
+    mtitle->quantity = results->size();
     stashmenu.set_title(mtitle);
 
     // Don't make a menu so tall that we recycle hotkeys on the same page.
-    if (results.size() > 52
+    if (results->size() > 52
         && (stashmenu.maxpagesize() > 52 || stashmenu.maxpagesize() == 0))
     {
         stashmenu.set_maxpagesize(52);
     }
 
     menu_letter hotkey;
-    for (unsigned i = 0; i < results.size(); ++i, ++hotkey)
+    for (unsigned i = 0; i < results->size(); ++i, ++hotkey)
     {
-        stash_search_result &res = results[i];
+        stash_search_result &res = (*results)[i];
         std::ostringstream matchtitle;
         if (const uint8_t waypoint = travel_cache.is_waypoint(res.pos))
             matchtitle << "(" << waypoint << ") ";
@@ -2003,7 +2008,16 @@ bool StashTracker::display_search_results(
         sel = stashmenu.show();
 
         if (stashmenu.request_toggle_sort_method)
+        {
+            sort_by_dist = !sort_by_dist;
             return (true);
+        }
+
+        if (stashmenu.request_toggle_show_as_stack)
+        {
+            show_as_stacks = !show_as_stacks;
+            return (true);
+        }
 
         if (sel.size() == 1
             && stashmenu.menu_action == StashSearchMenu::ACT_EXAMINE)

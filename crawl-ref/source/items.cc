@@ -2207,8 +2207,11 @@ bool drop_item(int item_dropped, int quant_drop)
     if (item_dropped == you.equip[EQ_WEAPON]
         && quant_drop >= you.inv[item_dropped].quantity)
     {
+        int old_time = you.time_taken;
         if (!wield_weapon(true, SLOT_BARE_HANDS))
             return (false);
+        // Dropping a wielded item isn't any faster.
+        you.time_taken = old_time;
     }
 
     const dungeon_feature_type my_grid = grd(you.pos());
@@ -2245,6 +2248,7 @@ bool drop_item(int item_dropped, int quant_drop)
 
     dec_inv_item_quantity(item_dropped, quant_drop);
     you.turn_is_over = true;
+    you.time_taken = div_rand_round(you.time_taken * 8, 10);
 
     you.last_pickup.erase(item_dropped);
 
@@ -2586,7 +2590,7 @@ bool item_needs_autopickup(const item_def &item)
     if ((item.flags & ISFLAG_THROWN) && Options.pickup_thrown)
         return (true);
 
-    if ((item.flags & ISFLAG_DROPPED) && !Options.pickup_dropped)
+    if (item.flags & ISFLAG_DROPPED)
         return (false);
 
     if (item.props.exists("needs_autopickup"))

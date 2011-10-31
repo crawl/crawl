@@ -1245,34 +1245,15 @@ static void _finish_delay(const delay_queue_item &delay)
     }
 
     case DELAY_DROP_ITEM:
-        // Note:  checking if item is droppable is assumed to
-        // be done before setting up this delay... this includes
-        // quantity (delay.parm2). -- bwr
+        // We're here if dropping the item required some action to be done
+        // first, like removing armour.  At this point, it should be droppable
+        // immediately.
 
         // Make sure item still exists.
         if (!you.inv[delay.parm1].defined())
             break;
 
-        // Must handle unwield_item before we attempt to copy
-        // so that temporary brands and such are cleared. -- bwr
-        if (delay.parm1 == you.equip[EQ_WEAPON])
-        {
-            unwield_item();
-            canned_msg(MSG_EMPTY_HANDED_NOW);
-        }
-
-        if (!copy_item_to_grid(you.inv[ delay.parm1 ],
-                                you.pos(), delay.parm2,
-                                true))
-        {
-            mpr("Too many items on this level, not dropping the item.");
-        }
-        else
-        {
-            mprf("You drop %s.", quant_name(you.inv[delay.parm1], delay.parm2,
-                                            DESC_A).c_str());
-            dec_inv_item_quantity(delay.parm1, delay.parm2);
-        }
+        drop_item(delay.parm1, delay.parm2);
         break;
 
     case DELAY_ASCENDING_STAIRS:
