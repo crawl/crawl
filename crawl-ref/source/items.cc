@@ -871,12 +871,12 @@ static std::string _menu_burden_invstatus(const Menu *menu, bool is_pickup = fal
                                "burdened)" : "unencumbered)";
 
     std::string burden = "(Burden: ";
-    burden += Options.show_inventory_weights ? make_stringf("%.0f%s/%.0f aum)",
-			                                      you.burden * BURDEN_TO_AUM,
-			                                      sw.c_str(),
-			                                      carrying_capacity(BS_UNENCUMBERED)
-                                                                    * BURDEN_TO_AUM)
-                                             : newstate;
+    burden += Options.show_inventory_weights ?
+                  make_stringf("%.0f%s/%.0f aum)",
+                      you.burden * BURDEN_TO_AUM,
+                      sw.c_str(),
+                      carrying_capacity(BS_UNENCUMBERED) * BURDEN_TO_AUM)
+                : newstate;
     return (burden);
 }
 
