@@ -1923,6 +1923,9 @@ static bool _slot_blocked(const item_def &item)
 
     if (eq == EQ_RINGS)
     {
+        if (you.equip[EQ_GLOVES] >= 0 && you.inv[you.equip[EQ_GLOVES]].cursed())
+            return true;
+
         equipment_type eq_from = EQ_LEFT_RING;
         equipment_type eq_to = EQ_RIGHT_RING;
         if (you.species == SP_OCTOPODE)
@@ -1936,6 +1939,13 @@ static bool _slot_blocked(const item_def &item)
                 return false;
 
         // No free slot found.
+        return true;
+    }
+
+    if (eq == EQ_WEAPON && you.equip[EQ_SHIELD] >= 0
+        && you.inv[you.equip[EQ_SHIELD]].cursed()
+        && is_shield_incompatible(item, &you.inv[you.equip[EQ_SHIELD]]))
+    {
         return true;
     }
 
@@ -1994,10 +2004,15 @@ void maybe_change_train(const item_def& item, bool start)
         return;
 
     for (int i = 0; i < ENDOFPACK; ++i)
-        if (item.link != i && you.inv[i].defined()
-            && get_item_slot(you.inv[i]) == eq)
+        if (item.link != i && you.inv[i].defined())
         {
-            item_skills(you.inv[i], start ? you.start_train : you.stop_train);
+            equipment_type islot = get_item_slot(you.inv[i]);
+            if (islot == eq
+                || (eq == EQ_GLOVES && islot == EQ_RINGS)
+                || (eq == EQ_SHIELD && islot == EQ_WEAPON))
+            {
+                item_skills(you.inv[i], start ? you.start_train : you.stop_train);
+            }
         }
 }
 
