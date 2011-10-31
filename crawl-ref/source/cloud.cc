@@ -788,7 +788,8 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
     case CLOUD_FIRE:
     case CLOUD_FOREST_FIRE:
         return act->is_fiery()
-                || (player && you.duration[DUR_FIRE_SHIELD]);
+                || (player && you.duration[DUR_FIRE_SHIELD])
+                || (player && you.mutation[MUT_IGNITE_BLOOD]);
     case CLOUD_HOLY_FLAMES:
         return act->res_holy_fire() > 0;
     case CLOUD_COLD:

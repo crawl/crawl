@@ -6223,6 +6223,9 @@ int player::res_rotting(bool temp) const
     if (temp && (petrified() || form == TRAN_STATUE))
         return 3;
 
+    if (you.mutation[MUT_FOUL_STENCH])
+        return 1;
+
     switch (is_undead)
     {
         default:

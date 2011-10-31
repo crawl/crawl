@@ -2593,9 +2593,15 @@ enum mutation_type
     MUT_FAST_METABOLISM,
     MUT_FLEXIBLE_WEAK,
     MUT_FRAIL,
+#if TAG_MAJOR_VERSION != 32
+    MUT_FOUL_STENCH,
+#endif
     MUT_GOURMAND,
     MUT_HIGH_MAGIC,
     MUT_ICEMAIL,
+#if TAG_MAJOR_VERSION != 32
+    MUT_IGNITE_BLOOD,
+#endif
     MUT_LOW_MAGIC,
     MUT_MAGIC_RESISTANCE,
     MUT_MUTATION_RESISTANCE,
@@ -2657,6 +2663,8 @@ enum mutation_type
     MUT_TENTACLES,      // Gloves but don't lose a slot yet.
     MUT_TENTACLE_SPIKE, // Octopode only.
     MUT_WILD_MAGIC,
+    MUT_IGNITE_BLOOD,
+    MUT_FOUL_STENCH,
 #endif
     NUM_MUTATIONS,
 
