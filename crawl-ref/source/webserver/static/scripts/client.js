@@ -139,9 +139,12 @@ function (exports, $, key_conversion, chat, comm) {
             return;
         }
 
-        if (e.which == 0) return;
-        if (e.which == 8) return; // Backspace gets a keypress in FF, but not Chrome
-        // so we handle it in keydown
+        if ((e.which == 0) ||
+            (e.which == 8) || /* Backspace gets a keypress in FF, but not Chrome
+                                 so we handle it in keydown */
+            (e.which == 9))   /* Tab gives a keypress in Opera even when it is
+                                 suppressed in keydown */
+            return;
 
         e.preventDefault();
 
