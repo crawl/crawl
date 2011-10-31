@@ -381,7 +381,6 @@ bool melee_attack::handle_phase_hit()
         // Apply attack delay
         you.time_taken = calc_attack_delay();
         // Check for stab (and set stab_attempt and stab_bonus)
-    	dprf("MONSTER NAME: %s", defender->name(DESC_THE).c_str());
         player_stab_check();
 
         // TODO: Remove this (placed here so I can get rid of player_attack)
@@ -454,7 +453,6 @@ bool melee_attack::handle_phase_hit()
         // This does more than just calculate the damage, it also sets up
         // messages, etc.
         damage_done = calc_damage();
-    	dprf("MONSTER NAME: %s", defender->name(DESC_THE).c_str());
 
         if (damage_done > 0)
         {
@@ -498,6 +496,9 @@ bool melee_attack::handle_phase_hit()
                 return (true);
         }
     }
+
+    if(defender->props.exists("helpless"))
+            defender->props.erase("helpless");
 
     return (true);
 }
@@ -773,7 +774,6 @@ bool melee_attack::attack()
     // Check for a stab (helpless or petrifying)
     if (to_hit >= ev && ev_helpless > ev)
     {
-    	dprf("MONSTER NAME: %s", defender->name(DESC_THE).c_str());
         defender->props["helpless"] = true;
         ev_margin = 1;
 
@@ -861,6 +861,8 @@ bool melee_attack::attack()
     return (attack_occurred);
 }
 
+// TODO: Unify attack_type and unarmed_attack_type, the former includes the latter
+// however formerly, attack_type was mons_attack_type and used exclusively for monster use.
 void melee_attack::adjust_noise()
 {
     if (attk_type == AT_WEAP_ONLY)
@@ -874,7 +876,7 @@ void melee_attack::adjust_noise()
             attk_type = AT_HIT;
     }
 
-    if (weapon == NULL)
+    if (weapon == NULL && attacker->atype() == ACT_MONSTER)
     {
         switch (attk_type)
         {
@@ -925,7 +927,7 @@ void melee_attack::adjust_noise()
             break;
 
         default:
-            die("Unhandled attack flavour for noise_factor %d", attk_type);
+            die("%d Unhandled attack flavour for noise_factor", attk_type);
             break;
         }
 
@@ -942,6 +944,10 @@ void melee_attack::adjust_noise()
         default:
             break;
         }
+    }
+    else if (weapon == NULL)
+    {
+    	noise_factor = 150;
     }
 }
 
