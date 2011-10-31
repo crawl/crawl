@@ -1894,9 +1894,9 @@ static bool _item_is_swappable(const item_def &item, equipment_type slot, bool s
     {
         if (item.sub_type == AMU_FAITH && you.religion != GOD_NO_GOD)
             return false;
-        return ((item.sub_type != AMU_THE_GOURMAND || swap_in)
-                && item.sub_type != AMU_GUARDIAN_SPIRIT
-                && (item.sub_type != RING_MAGICAL_POWER || swap_in));
+        return !((item.sub_type == AMU_THE_GOURMAND && !swap_in)
+                || item.sub_type == AMU_GUARDIAN_SPIRIT
+                || (item.sub_type == RING_MAGICAL_POWER && !swap_in));
     }
 
     if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_POWER && !swap_in)
