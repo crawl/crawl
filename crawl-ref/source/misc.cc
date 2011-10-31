@@ -2228,12 +2228,10 @@ bool bad_attack(const monster *mon, std::string& adj, std::string& suffix)
     {
         adj += "helpless ";
     }
-    if (mon->wont_attack())
-        adj += "non-hostile ";
     if (mon->neutral() && is_good_god(you.religion))
         adj += "neutral ";
-    if (mon->is_holy() && is_good_god(you.religion))
-        adj += "holy ";
+    else if (mon->wont_attack())
+        adj += "non-hostile ";
 
     if (you.religion == GOD_JIYVA && mons_is_slime(mon))
         retval = true;
