@@ -2,6 +2,7 @@
 #define MELEE_ATTACK_H
 
 #include "artefact.h"
+#include "itemprop-enum.h"
 #include "random-var.h"
 
 class melee_attack
@@ -38,7 +39,7 @@ public:
     // Attacker's damage output potential:
 
     item_def  *weapon;
-    int       damage_brand;  // Can be special even if unarmed (transforms)
+    brand_type damage_brand;  // Can be special even if unarmed (transforms)
     skill_type wpn_skill;
     int       hands;
     bool      hand_half_bonus;
@@ -129,8 +130,8 @@ private:
     void splash_monster_with_acid(int strength);
     bool decapitate_hydra(int damage_done, int damage_type = -1);
     bool chop_hydra_head(int damage_done,
-                          int dam_type,
-                          int wpn_brand);
+                         int dam_type,
+                         brand_type wpn_brand);
 
     int inflict_damage(int dam, beam_type flavour = NUM_BEAMS, bool clean = false);
 
@@ -141,7 +142,7 @@ private:
     void pain_affects_defender();
     void chaos_affects_defender();
     void chaos_affects_attacker();
-    int  random_chaos_brand();
+    brand_type random_chaos_brand();
     void do_miscast();
 
     void handle_noise(const coord_def & pos);

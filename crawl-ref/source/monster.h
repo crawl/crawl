@@ -204,7 +204,7 @@ public:
                         bool base = false) const;
     int       body_weight(bool base = false) const;
     int       total_weight() const;
-    int       damage_brand(int which_attack = -1);
+    brand_type damage_brand(int which_attack = -1);
     int       damage_type(int which_attack = -1);
 
     item_def *slot_item(equipment_type eq, bool include_melded=false);

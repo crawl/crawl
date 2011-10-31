@@ -1033,7 +1033,7 @@ bool set_item_ego_type(item_def &item, int item_type, int ego_type)
     return (false);
 }
 
-int get_weapon_brand(const item_def &item)
+brand_type get_weapon_brand(const item_def &item)
 {
     // Weapon ego types are "brands", so we do the randart lookup here.
 
@@ -1042,9 +1042,9 @@ int get_weapon_brand(const item_def &item)
         return (SPWPN_NORMAL);
 
     if (is_artefact(item))
-        return (artefact_wpn_property(item, ARTP_BRAND));
+        return static_cast<brand_type>(artefact_wpn_property(item, ARTP_BRAND));
 
-    return (item.special);
+    return static_cast<brand_type>(item.special);
 }
 
 bool missile_brand_obvious(special_missile_type brand)
@@ -1902,7 +1902,7 @@ static bool _item_is_swappable(const item_def &item, equipment_type slot)
     if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_POWER)
         return false;
 
-    const int brand = get_weapon_brand(item);
+    const brand_type brand = get_weapon_brand(item);
     return (brand != SPWPN_DISTORTION
            && (brand != SPWPN_VAMPIRICISM || you.is_undead != US_ALIVE)
            && (brand != SPWPN_HOLY_WRATH || you.is_undead == US_ALIVE));

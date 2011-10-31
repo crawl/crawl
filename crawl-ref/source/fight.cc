@@ -1263,7 +1263,7 @@ bool melee_attack::player_aux_test_hit()
 // Returns true to end the attack round.
 bool melee_attack::player_aux_unarmed()
 {
-    unwind_var<int> save_brand(damage_brand);
+    unwind_var<brand_type> save_brand(damage_brand);
 
     /*
      * baseattack is the auxiliary unarmed attack the player gets
@@ -3010,9 +3010,9 @@ void melee_attack::do_miscast()
 // return a set of effects that are roughly the same, to make it easy
 // for chaos_affects_defender() not to do duplicate effects caused
 // by the non-chaos brands/flavours they return.
-int melee_attack::random_chaos_brand()
+brand_type melee_attack::random_chaos_brand()
 {
-    int brand = SPWPN_NORMAL;
+    brand_type brand = SPWPN_NORMAL;
     // Assuming the chaos to be mildly intelligent, try to avoid brands
     // that clash with the most basic resists of the defender,
     // i.e. its holiness.
@@ -3485,8 +3485,8 @@ void melee_attack::handle_noise(const coord_def & pos)
 
 // Returns true if the attack cut off a head *and* cauterized it.
 bool melee_attack::chop_hydra_head(int dam,
-                                    int dam_type,
-                                    int wpn_brand)
+                                   int dam_type,
+                                   brand_type wpn_brand)
 {
     // Monster attackers have only a 25% chance of making the
     // chop-check to prevent runaway head inflation.
@@ -3579,7 +3579,7 @@ bool melee_attack::decapitate_hydra(int dam, int damage_type)
     {
         const int dam_type = (damage_type != -1) ? damage_type
                                                  : attacker->damage_type();
-        const int wpn_brand = attacker->damage_brand();
+        const brand_type wpn_brand = attacker->damage_brand();
 
         return chop_hydra_head(dam, dam_type, wpn_brand);
     }

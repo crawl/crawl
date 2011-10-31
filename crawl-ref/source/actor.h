@@ -1,6 +1,7 @@
 #ifndef ACTOR_H
 #define ACTOR_H
 
+#include "itemprop-enum.h"
 #include "los_def.h"
 
 enum ev_ignore_type
@@ -81,9 +82,9 @@ public:
     virtual int       body_weight(bool base = false) const;
     virtual int       total_weight() const = 0;
 
-    virtual int       damage_brand(int which_attack = -1) = 0;
-    virtual int       damage_type(int which_attack = -1) = 0;
-    virtual item_def *weapon(int which_attack = -1) = 0;
+    virtual brand_type damage_brand(int which_attack = -1) = 0;
+    virtual int        damage_type(int which_attack = -1) = 0;
+    virtual item_def  *weapon(int which_attack = -1) = 0;
     // Yay for broken overloading.
     const item_def *primary_weapon() const
     {

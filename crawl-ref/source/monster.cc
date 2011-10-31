@@ -427,7 +427,7 @@ int monster::total_weight() const
     return (body_weight() + burden);
 }
 
-int monster::damage_brand(int which_attack)
+brand_type monster::damage_brand(int which_attack)
 {
     const item_def *mweap = weapon(which_attack);
 
