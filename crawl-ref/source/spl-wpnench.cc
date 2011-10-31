@@ -177,8 +177,8 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
 
     case SPWPN_DISTORTION:
         msg += " seems to ";
-        msg += random_choose_string("twist", "bend", "vibrate",
-                                    "flex", "wobble", "twang", NULL);
+        msg += random_choose("twist", "bend", "vibrate",
+                             "flex", "wobble", "twang", NULL);
         msg += (coinflip() ? " oddly." : " strangely.");
         duration_affected = 5;
 
