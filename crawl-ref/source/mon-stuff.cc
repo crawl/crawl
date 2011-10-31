@@ -200,6 +200,11 @@ void monster_drop_things(monster* mons,
                 if (mark_item_origins && mitm[item].defined())
                     origin_set_monster(mitm[item], mons);
 
+                if (mons_is_unique(mons->type)
+                    && (mitm[item].base_type == OBJ_ARMOUR
+                        || mitm[item].base_type == OBJ_WEAPONS))
+                    add_inscription(mitm[item], mons->name(DESC_PLAIN, true));
+
                 // If a monster is swimming, the items are ALREADY
                 // underwater.
                 move_item_to_grid(&item, mons->pos(), mons->swimming());
