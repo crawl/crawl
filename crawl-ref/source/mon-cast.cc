@@ -3201,12 +3201,12 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         for (int i = 0; i < sumcount2; ++i)
         {
             create_monster(
-                mgen_data(static_cast<monster_type>(random_choose_weighted(
+                mgen_data(random_choose_weighted(
                             10, MONS_WOLF,
                              3, MONS_GRIZZLY_BEAR,
                              6, MONS_BLACK_BEAR,
                              // no polar bears
-                          0)), SAME_ATTITUDE(mons),
+                          0), SAME_ATTITUDE(mons),
                           mons, duration, spell_cast, mons->pos(),
                           mons->foe, 0, god));
         }
@@ -3222,13 +3222,13 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         for (int i = 0; i < sumcount2; ++i)
         {
             create_monster(
-                mgen_data(static_cast<monster_type>(random_choose_weighted(
+                mgen_data(random_choose_weighted(
                             90, MONS_CHERUB,    5,  MONS_SILVER_STAR,
                             20, MONS_SPIRIT,    5,  MONS_OPHAN,
                             8,  MONS_SHEDU,     20, MONS_PALADIN,
                             2,  MONS_PHOENIX,   1,  MONS_APIS,
                             // No holy dragons
-                          0)), SAME_ATTITUDE(mons),
+                          0), SAME_ATTITUDE(mons),
                           mons, duration, spell_cast, mons->pos(),
                           mons->foe, 0, god));
         }
@@ -3242,11 +3242,11 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
         duration  = std::min(2 + mons->hit_dice / 5, 6);
         create_monster(
-            mgen_data(static_cast<monster_type>(random_choose_weighted(
+            mgen_data(random_choose_weighted(
                         10, MONS_SILVER_STAR, 10, MONS_PHOENIX,
                         10, MONS_APIS,        5,  MONS_DAEVA,
                         2,  MONS_PEARL_DRAGON,
-                      0)), SAME_ATTITUDE(mons),
+                      0), SAME_ATTITUDE(mons),
                       mons, duration, spell_cast, mons->pos(),
                       mons->foe, 0, god));
 
@@ -3521,14 +3521,14 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
-            const monster_type mon = static_cast<monster_type>(
-                random_choose_weighted(100, MONS_GIANT_EYEBALL,
+            const monster_type mon = random_choose_weighted(
+                                       100, MONS_GIANT_EYEBALL,
                                         80, MONS_EYE_OF_DRAINING,
                                         60, MONS_GOLDEN_EYE,
                                         40, MONS_SHINING_EYE,
                                         20, MONS_GREAT_ORB_OF_EYES,
                                         10, MONS_EYE_OF_DEVASTATION,
-                                        0));
+                                         0);
 
             create_monster(
                 mgen_data(mon, SAME_ATTITUDE(mons), mons, duration,
@@ -3581,14 +3581,14 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
         for (sumcount = 0; sumcount < sumcount2; sumcount++)
         {
-            const monster_type mon = static_cast<monster_type>(
-                random_choose_weighted(3, MONS_EFREET,
+            const monster_type mon = random_choose_weighted(
+                                       3, MONS_EFREET,
                                        3, MONS_SUN_DEMON,
                                        2, MONS_BALRUG,
                                        2, MONS_HELLION,
                                        1, MONS_PIT_FIEND,
                                        1, MONS_BRIMSTONE_FIEND,
-                                       0));
+                                       0);
 
             create_monster(
                 mgen_data(mon, SAME_ATTITUDE(mons), mons, duration,

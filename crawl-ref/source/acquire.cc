@@ -38,11 +38,8 @@
 
 static armour_type _random_nonbody_armour_type()
 {
-    const armour_type at =
-        static_cast<armour_type>(
-            random_choose(ARM_SHIELD, ARM_CLOAK, ARM_HELMET,
-                          ARM_GLOVES, ARM_BOOTS, -1));
-    return (at);
+    return random_choose(ARM_SHIELD, ARM_CLOAK, ARM_HELMET, ARM_GLOVES,
+                         ARM_BOOTS, -1);
 }
 
 static const int max_has_value = 100;
@@ -94,8 +91,7 @@ static armour_type _pick_wearable_armour(const armour_type arm)
             || arm == ARM_CENTAUR_BARDING
             || arm == ARM_NAGA_BARDING)
         {
-            result = static_cast<armour_type>(random_choose(
-                                 ARM_HELMET, ARM_GLOVES, ARM_BOOTS, -1));
+            result = random_choose(ARM_HELMET, ARM_GLOVES, ARM_BOOTS, -1);
         }
         else if (arm == ARM_SHIELD)
         {
@@ -238,19 +234,18 @@ static armour_type _acquirement_armour_subtype(bool divine)
             // 10%.)
             if (one_chance_in(20))
             {
-                result = static_cast<armour_type>(
-                    random_choose_weighted(3, ARM_TROLL_LEATHER_ARMOUR,
-                                           3, ARM_STEAM_DRAGON_ARMOUR,
-                                           1, ARM_SWAMP_DRAGON_ARMOUR,
-                                           1, ARM_FIRE_DRAGON_ARMOUR,
-                                           0));
+                result = random_choose_weighted(3, ARM_TROLL_LEATHER_ARMOUR,
+                                                3, ARM_STEAM_DRAGON_ARMOUR,
+                                                1, ARM_SWAMP_DRAGON_ARMOUR,
+                                                1, ARM_FIRE_DRAGON_ARMOUR,
+                                                0);
             }
 
             // Non-god acquirement not only has a much better chance, but
             // can give high-end ones as well.
             if (!divine && one_chance_in(5))
             {
-                result = static_cast<armour_type>(random_choose(
+                result = random_choose(
                         ARM_FIRE_DRAGON_ARMOUR,
                         ARM_ICE_DRAGON_ARMOUR,
                         ARM_STEAM_DRAGON_ARMOUR,
@@ -259,7 +254,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
                         ARM_GOLD_DRAGON_ARMOUR,
                         ARM_SWAMP_DRAGON_ARMOUR,
                         ARM_PEARL_DRAGON_ARMOUR,
-                        -1));
+                        -1);
             }
         }
         else
@@ -322,17 +317,16 @@ static armour_type _acquirement_armour_subtype(bool divine)
         // Everyone can wear things made from hides.
         if (one_chance_in(20))
         {
-            result = static_cast<armour_type>(
-                random_choose_weighted(20, ARM_TROLL_LEATHER_ARMOUR,
-                                       20, ARM_STEAM_DRAGON_ARMOUR,
-                                       15, ARM_MOTTLED_DRAGON_ARMOUR,
-                                       10, ARM_SWAMP_DRAGON_ARMOUR,
-                                       10, ARM_FIRE_DRAGON_ARMOUR,
-                                       10, ARM_ICE_DRAGON_ARMOUR,
-                                        5, ARM_STORM_DRAGON_ARMOUR,
-                                        5, ARM_GOLD_DRAGON_ARMOUR,
-                                        5, ARM_PEARL_DRAGON_ARMOUR,
-                                        0));
+            result = random_choose_weighted(20, ARM_TROLL_LEATHER_ARMOUR,
+                                            20, ARM_STEAM_DRAGON_ARMOUR,
+                                            15, ARM_MOTTLED_DRAGON_ARMOUR,
+                                            10, ARM_SWAMP_DRAGON_ARMOUR,
+                                            10, ARM_FIRE_DRAGON_ARMOUR,
+                                            10, ARM_ICE_DRAGON_ARMOUR,
+                                             5, ARM_STORM_DRAGON_ARMOUR,
+                                             5, ARM_GOLD_DRAGON_ARMOUR,
+                                             5, ARM_PEARL_DRAGON_ARMOUR,
+                                             0);
         }
     }
 

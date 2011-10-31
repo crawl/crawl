@@ -73,14 +73,14 @@ static bool _evoke_sceptre_of_asmodeus()
     bool rc = false;
     if (one_chance_in(3))
     {
-        const monster_type mon = static_cast<monster_type>(
-                random_choose_weighted(3, MONS_EFREET,
+        const monster_type mon = random_choose_weighted(
+                                       3, MONS_EFREET,
                                        3, MONS_SUN_DEMON,
                                        2, MONS_BALRUG,
                                        2, MONS_HELLION,
                                        1, MONS_PIT_FIEND,
                                        1, MONS_BRIMSTONE_FIEND,
-                                       0));
+                                       0);
 
         mgen_data mg(mon, BEH_CHARMED, &you,
                      0, 0, you.pos(), MHITYOU,
