@@ -62,7 +62,8 @@ void fixup_mutations();
 
 bool mutate(mutation_type which_mutation, bool failMsg = true,
             bool force_mutation = false, bool god_gift = false,
-            bool stat_gain_potion = false, bool demonspawn = false);
+            bool stat_gain_potion = false, bool demonspawn = false,
+            bool no_rot = false);
 
 inline bool give_bad_mutation(bool failMsg = true, bool force_mutation = false)
 {

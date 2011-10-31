@@ -2666,6 +2666,7 @@ enum mutation_type
     MUT_IGNITE_BLOOD,
     MUT_FOUL_STENCH,
 #endif
+    MUT_EVOLUTION,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION = NUM_MUTATIONS + 1,

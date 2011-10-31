@@ -592,6 +592,24 @@
   "mutation resistance"
 },
 
+{ MUT_EVOLUTION,                  4,  2, false, false,
+  "evolution",
+
+  {"You evolve.",
+   "You rapidly evolve.",
+   ""},
+
+  {"You feel the nature experimenting on you. Don't worry, failures die fast.",
+   "Your genes go into a fast flux.",
+   ""},
+
+  {"Your wild genetic ride slows down.",
+   "You feel genetically stable.",
+   ""},
+
+  "evolution"
+},
+
 { MUT_FRAIL,                     10,  3,  true,  true,
   NULL,
 

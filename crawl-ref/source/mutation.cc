@@ -644,6 +644,7 @@ static int _calc_mutation_amusement_value(mutation_type which_mutation)
     case MUT_BIG_WINGS:
     case MUT_LOW_MAGIC:
     case MUT_SLOW:
+    case MUT_EVOLUTION:
         amusement *= 2; // funny!
         break;
 
@@ -809,6 +810,7 @@ static int _handle_conflicting_mutations(mutation_type mutation,
         { MUT_REGENERATION,     MUT_SLOW_HEALING,     1},
         { MUT_ACUTE_VISION,     MUT_BLURRY_VISION,    1},
         { MUT_FAST,             MUT_SLOW,             1},
+        { MUT_MUTATION_RESISTANCE, MUT_EVOLUTION,    -1},
         };
 
     // If we have one of the pair, delete all levels of the other,
@@ -1020,7 +1022,7 @@ static const char* _stat_mut_desc(mutation_type mut, bool gain)
 
 bool mutate(mutation_type which_mutation, bool failMsg,
             bool force_mutation, bool god_gift, bool stat_gain_potion,
-            bool demonspawn)
+            bool demonspawn, bool no_rot)
 {
     if (!god_gift)
     {
@@ -1097,6 +1099,9 @@ bool mutate(mutation_type which_mutation, bool failMsg,
     // except for demonspawn (or other permamutations) in lichform -- haranp
     if (rotting && !demonspawn)
     {
+        if (no_rot)
+            return (false);
+
         mpr("Your body decomposes!", MSGCH_MUTATION);
 
         if (coinflip())
