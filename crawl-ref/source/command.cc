@@ -747,6 +747,7 @@ static const char *targeting_help_1 =
 #ifdef WIZARD
     " \n"
     "<h>Wizard targeting commands:</h>\n"
+    "<w>Ctrl-C</w> : cycle through beam paths\n"
     "<w>D</w>: get debugging information about the monster\n"
     "<w>o</w>: give item to monster\n"
     "<w>F</w>: cycle monster friendly/good neutral/neutral/hostile\n"
@@ -776,7 +777,6 @@ static const char *targeting_help_2 =
     "<w>!</w> : fire, don't stop, ignore range\n"
     "<w>p</w> : fire at Previous target (also <w>f</w>)\n"
     "<w>:</w> : show/hide beam path\n"
-    "<w>Ctrl-C</w> : cycle through beam paths\n"
     "<w>Shift-Dir.</w> : fire straight-line beam\n"
     "\n"
     "<h>Firing or throwing a missile:\n"

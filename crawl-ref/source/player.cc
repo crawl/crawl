@@ -671,7 +671,7 @@ bool you_can_wear(int eq, bool special_armour)
     case EQ_GLOVES:
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
-            || player_genus(GENPC_OGREISH))
+            || you.species == SP_OGRE)
         {
             return (false);
         }
@@ -691,7 +691,7 @@ bool you_can_wear(int eq, bool special_armour)
         // These species cannot wear boots.
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
-            || player_genus(GENPC_OGREISH))
+            || you.species == SP_OGRE)
         {
             return (false);
         }
@@ -706,7 +706,7 @@ bool you_can_wear(int eq, bool special_armour)
             return (true);
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
-            || player_genus(GENPC_OGREISH)
+            || you.species == SP_OGRE
             || player_genus(GENPC_DRACONIAN))
         {
             return (false);
@@ -729,7 +729,7 @@ bool you_can_wear(int eq, bool special_armour)
         }
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
-            || player_genus(GENPC_OGREISH)
+            || you.species == SP_OGRE
             || player_genus(GENPC_DRACONIAN))
         {
             return (false);
@@ -2199,7 +2199,7 @@ static int _player_armour_racial_bonus(const item_def& item)
 
     // get the armour race value that corresponds to the character's race:
     const iflags_t racial_type
-                            = ((player_genus(GENPC_DWARVEN)) ? ISFLAG_DWARVEN :
+                            = ((you.species == SP_DEEP_DWARF)? ISFLAG_DWARVEN :
                                (player_genus(GENPC_ELVEN))   ? ISFLAG_ELVEN :
                                (you.species == SP_HILL_ORC)  ? ISFLAG_ORCISH
                                                              : 0);
@@ -2461,7 +2461,7 @@ int player_body_armour_racial_spellcasting_bonus(const int scale)
     // Get the armour race value that corresponds to the character's
     // race:
     const iflags_t player_race
-                            = ((player_genus(GENPC_DWARVEN)) ? ISFLAG_DWARVEN :
+                            = ((you.species == SP_DEEP_DWARF)? ISFLAG_DWARVEN :
                                (player_genus(GENPC_ELVEN))   ? ISFLAG_ELVEN :
                                (you.species == SP_HILL_ORC)  ? ISFLAG_ORCISH
                                                              : 0);
@@ -3020,10 +3020,12 @@ void level_change(bool skip_attribute_increase)
                 }
                 break;
 
+#if TAG_MAJOR_VERSION == 32
             case SP_MOUNTAIN_DWARF:
                 if (!(you.experience_level % 4))
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
+#endif
 
             case SP_DEEP_DWARF:
                 if (you.experience_level == 14)
@@ -3377,7 +3379,7 @@ void level_change(bool skip_attribute_increase)
 #endif
         }
 
-#if TAG_MAJOR_VERSION == 32
+#if TAG_MAJOR_VERSION <= 33
         note_montiers();
 #endif
 
@@ -5476,7 +5478,7 @@ void player::init()
 
     last_keypress_time = time(0);
 
-#if TAG_MAJOR_VERSION == 32
+#if TAG_MAJOR_VERSION <= 33
     for (unsigned int i = 0; i < ARRAYSZ(montiers); i++)
         montiers[i] = 0;
 #endif
@@ -5855,8 +5857,11 @@ int player::skill(skill_type sk, int scale, bool real) const
         level = std::min(level + 5 * scale, 27 * scale);
     if (you.penance[GOD_ASHENZARI])
         level = std::max(level - std::min(4 * scale, level / 2), 0);
-    else if (you.religion == GOD_ASHENZARI)
+    else if (you.religion == GOD_ASHENZARI && you.skill_boost[sk]
+             && piety_rank() > 2)
+    {
         level = ash_skill_boost(sk, scale);
+    }
 
     return level;
 }
@@ -6300,7 +6305,9 @@ int player_res_magic(bool calc_unid, bool temp)
     case SP_HIGH_ELF:
     case SP_SLUDGE_ELF:
     case SP_DEEP_ELF:
+#if TAG_MAJOR_VERSION == 32
     case SP_MOUNTAIN_DWARF:
+#endif
     case SP_VAMPIRE:
     case SP_DEMIGOD:
     case SP_OGRE:
@@ -7075,7 +7082,7 @@ bool player::cannot_act() const
 
 bool player::can_throw_large_rocks() const
 {
-    return (player_genus(GENPC_OGREISH) || species == SP_TROLL);
+    return (species == SP_OGRE || species == SP_TROLL);
 }
 
 bool player::can_smell() const

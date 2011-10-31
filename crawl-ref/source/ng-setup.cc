@@ -58,14 +58,16 @@ static void _species_stat_init(species_type which_species)
     case SP_DEEP_ELF:           sb =  3; ib = 10; db =  8;      break;  // 21
     case SP_SLUDGE_ELF:         sb =  6; ib =  7; db =  7;      break;  // 20
 
+#if TAG_MAJOR_VERSION == 32
     case SP_MOUNTAIN_DWARF:     sb =  9; ib =  4; db =  5;      break;  // 18
+#endif
     case SP_DEEP_DWARF:         sb =  9; ib =  6; db =  6;      break;  // 21
 
     case SP_TROLL:              sb = 13; ib =  2; db =  3;      break;  // 18
     case SP_OGRE:               sb = 10; ib =  5; db =  3;      break;  // 18
 
     case SP_MINOTAUR:           sb = 10; ib =  3; db =  3;      break;  // 16
-    case SP_HILL_ORC:           sb =  9; ib =  3; db =  4;      break;  // 16
+    case SP_HILL_ORC:           sb =  8; ib =  6; db =  4;      break;  // 18
     case SP_CENTAUR:            sb =  8; ib =  5; db =  2;      break;  // 15
     case SP_NAGA:               sb =  8; ib =  6; db =  4;      break;  // 18
 
@@ -577,7 +579,7 @@ static void _give_items_skills(const newgame_def& ng)
             // Species skilled with maces/flails get one, the others axes.
             weapon_type startwep = WPN_HAND_AXE;
             if (species_apt(SK_MACES_FLAILS) > species_apt(SK_AXES))
-                startwep = (player_genus(GENPC_OGREISH)) ? WPN_ANKUS : WPN_MACE;
+                startwep = (you.species == SP_OGRE) ? WPN_ANKUS : WPN_MACE;
 
             newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, startwep);
         }
@@ -789,7 +791,7 @@ static void _give_items_skills(const newgame_def& ng)
         // Gets some darts - this job is difficult to start off with.
         newgame_make_item(3, EQ_NONE, OBJ_MISSILES, MI_DART, -1, 16, 1);
 
-        if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL)
+        if (you.species == SP_OGRE || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 1;
@@ -902,7 +904,7 @@ static void _give_items_skills(const newgame_def& ng)
 
         newgame_make_item(4, EQ_NONE, OBJ_POTIONS, POT_CONFUSION, -1, 2);
 
-        if (player_genus(GENPC_OGREISH) || you.species == SP_TROLL)
+        if (you.species == SP_OGRE || you.species == SP_TROLL)
             you.inv[0].sub_type = WPN_CLUB;
 
         weap_skill = 1;
@@ -1074,7 +1076,7 @@ static void _give_starting_food()
     {
         item.base_type = OBJ_FOOD;
         if (you.species == SP_HILL_ORC || you.species == SP_KOBOLD
-            || player_genus(GENPC_OGREISH) || you.species == SP_TROLL
+            || you.species == SP_OGRE || you.species == SP_TROLL
             || you.species == SP_FELID)
         {
             item.sub_type = FOOD_MEAT_RATION;
@@ -1143,7 +1145,7 @@ static void _racialise_starting_equipment()
                 // Now add appropriate species type mod.
                 if (player_genus(GENPC_ELVEN))
                     set_equip_race(you.inv[i], ISFLAG_ELVEN);
-                else if (player_genus(GENPC_DWARVEN))
+                else if (you.species == SP_DEEP_DWARF)
                     set_equip_race(you.inv[i], ISFLAG_DWARVEN);
                 else if (you.species == SP_HILL_ORC)
                     set_equip_race(you.inv[i], ISFLAG_ORCISH);
@@ -1232,54 +1234,6 @@ static void _give_basic_knowledge(job_type which_job)
         set_ident_type(OBJ_SCROLLS, SCR_RECHARGING, ID_KNOWN_TYPE);
         break;
 
-    default:
-        break;
-    }
-}
-
-// For items that get a random colour, give them a more thematic one.
-static void _apply_job_colour(item_def &item)
-{
-    if (!Options.classic_item_colours)
-        return;
-
-    if (item.base_type != OBJ_ARMOUR)
-        return;
-
-    switch (item.sub_type)
-    {
-    case ARM_CLOAK:
-    case ARM_ROBE:
-    case ARM_NAGA_BARDING:
-    case ARM_CENTAUR_BARDING:
-    case ARM_CAP:
-    case ARM_WIZARD_HAT:
-        break;
-    default:
-        return;
-    }
-
-    switch (you.char_class)
-    {
-    case JOB_NECROMANCER:
-    case JOB_ASSASSIN:
-        item.colour = DARKGREY;
-        break;
-    case JOB_FIRE_ELEMENTALIST:
-        item.colour = RED;
-        break;
-    case JOB_ICE_ELEMENTALIST:
-        item.colour = BLUE;
-        break;
-    case JOB_AIR_ELEMENTALIST:
-        item.colour = LIGHTBLUE;
-        break;
-    case JOB_EARTH_ELEMENTALIST:
-        item.colour = BROWN;
-        break;
-    case JOB_VENOM_MAGE:
-        item.colour = MAGENTA;
-        break;
     default:
         break;
     }
@@ -1427,7 +1381,6 @@ static void _setup_generic(const newgame_def& ng)
             you.inv[i].link = i;
             you.inv[i].slot = index_to_letter(you.inv[i].link);
             item_colour(you.inv[i]);  // set correct special and colour
-            _apply_job_colour(you.inv[i]);
         }
 
     reassess_starting_skills();

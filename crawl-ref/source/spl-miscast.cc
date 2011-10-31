@@ -2808,7 +2808,7 @@ void MiscastEffect::_poison(int severity)
             break;
 
         case 2:
-            if (player_res_poison())
+            if (player_res_poison() > 0)
                 canned_msg(MSG_NOTHING_HAPPENS);
             else
                 _lose_stat(STAT_RANDOM, 1);
@@ -2838,7 +2838,7 @@ void MiscastEffect::_poison(int severity)
             _big_cloud(CLOUD_POISON, 20, 7 + random2(7));
             break;
         case 2:
-            if (player_res_poison())
+            if (player_res_poison() > 0)
                 canned_msg(MSG_NOTHING_HAPPENS);
             else
                 _lose_stat(STAT_RANDOM, 1 + random2avg(5, 2));

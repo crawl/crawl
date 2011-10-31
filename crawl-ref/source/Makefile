@@ -850,7 +850,6 @@ ifndef V
 endif
 endif
 
-ifdef TILES_ANY
 TILEIMAGEFILES := floor wall feat main player gui icons
 TILEDEFS = $(TILEIMAGEFILES) dngn unrand
 TILEDEFPRES = $(TILEDEFS:%=$(RLTILES)/tiledef-%)
@@ -862,6 +861,7 @@ TILEFILES = $(TILEIMAGEFILES:%=%.png)
 ORIGTILEFILES = $(TILEFILES:%=$(RLTILES)/%)
 DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
 
+ifdef TILES_ANY
 OBJECTS += $(TILEDEFOBJS)
 
 ifndef NO_OPTIMIZE
@@ -924,7 +924,7 @@ GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/cr
 GENERATED_HEADERS := art-enum.h #the rest are private
 GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mon-mst.h $(RLTILES)/dc-unrand.txt build.h compflag.h
 
-GAME_DEPENDS  := $(DESTTILEFILES) $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
+GAME_DEPENDS  := $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 SRC_PKG_BASE  := stone_soup
 SRC_VERSION   := $(shell git describe --tags $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
 
@@ -936,7 +936,8 @@ SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.xz
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
 
 .PHONY: all test install clean clean-contrib clean-rltiles distclean debug debug-lite \
-        profile package-source source build-windows package-windows rest docs greet
+        profile package-source source build-windows package-windows rest docs greet \
+        api
 
 all: greet $(GAME) docs webserver
 
@@ -1045,6 +1046,12 @@ rest:
 
 $(DOC_BASE)/crawl_manual.txt: $(DOC_BASE)/crawl_manual.reST util/unrest.pl
 	$(QUIET_GEN)util/unrest.pl <$< >$@
+
+CLUA_MODULE_SOURCES = $(filter l_%,$(OBJECTS:%.o=%.cc))
+api: $(CLUA_MODULE_SOURCES)
+	mkdir -p luadoc
+	luadoc --doclet util.html_doclet --taglet util.taglet -d luadoc $^
+
 
 ##########################################################################
 # The level compiler
@@ -1224,7 +1231,7 @@ endif
 
 # Plain old compilation
 #
-$(OBJECTS:%.o=%.cc): $(CC_DEP) $(TILEDEFHDRS) $(CONTRIB_LIBS)
+$(OBJECTS:%.o=%.cc): $(CC_DEP) $(CONTRIB_LIBS)
 
 $(UTIL)%.o: ALL_CFLAGS=$(YACC_CFLAGS)
 
@@ -1289,6 +1296,11 @@ endif
 clean-rltiles:
 	$(RM) $(DESTTILEFILES)
 	+$(MAKE) -C $(RLTILES) distclean
+
+ifdef TILES_ANY
+$(GAME): $(DESTTILEFILES)
+$(OBJECTS:%.o=%.cc): $(TILEDEFHDRS)
+endif
 
 #############################################################################
 # Packaging a source tarball for release

@@ -464,9 +464,6 @@ When you kill monsters, you gain experience points (XP). You receive less XP
 when friendly creatures took part in killing the monster. When you get enough
 XP, you gain an experience level, making your character more powerful. As they
 gain levels, characters gain more hit points, magic points, and spell levels.
-Whenever you are curious about the total amount of experience accumulated so
-far, or how much experience is needed to advance to the next level, press 'E' or
-'%'.
 
 Additionally, the experience you gain is used to train your skills. These skills
 represent proficiency with all areas of endeavour an ambitious adventurer might
@@ -476,8 +473,8 @@ Dodging or Stabbing. See Appendix `3. List  of Skills`_ for a detailed descripti
 of all skills present in Crawl. The ease with which a character learns a skill
 depends solely on species. These aptitudes are hinted at in the list of species
 (see Appendix `1. List of Character Species`_). For the curious, the full table
-can be checked in aptitudes.txt (also from the help screen during play), though it
-is not necessary to bother with the numbers in order to win!
+can be checked in aptitudes.txt (also from the help screen during play via '?%'),
+though it is not necessary to bother with the numbers in order to win!
 
 You can see your character's skills by pressing the 'm' key; the higher the
 level of a skill, the better you are at it. Almost all characters start with a
@@ -485,20 +482,27 @@ few skills already trained (which depends essentially on their background),
 those which are not present have to be learned from scratch. Each skill can go
 up to 27.
 
-Each time your character gains experience points, those points will be used to
-increase certain skills. There are two ways to assigning skills to practise: one
-is an automatic mode, which puts experience points into the skills you have used
-recently. The other one is a manual mode, where you specifically select the
-skills to train. You can switch between the modes by pressing '/' in the
-character skill screen ('m'); also be sure to read that screen's help text
-should you want to tweak your skillset. Note to new players: it is generally not
-necessary to finetune the skill selection.
+The skill screen allows you to change which skills are exercised and at what
+speed. Note to new players: it is generally not necessary to finetune the skill
+selection.
 
-You can elect not to practise a particular skill by selecting it in the skill
-screen (making it turn dark grey). This means that the skill will remain static
-and no experience points will be used to increase it. As a consequence, more
-experience will be spent on your other skills (and thus they will increase more
-quickly).
+If you want to modify skill selection, here is how:
+There are two ways to assigning skills to practise: one is an automatic mode,
+which puts experience points into the skills you have used recently. The other
+one is a manual mode, where you specifically select the skills to train. You
+can switch between the modes by pressing '/' in the character skill screen
+('m'); also be sure to read that screen's help text should you want to tweak
+your skillset.
+
+You can elect to either not practise a particular skill or to focus on it by
+selecting it once or twice in the skill screen.
+Dark grey skills will not be trained, so that the skill will remain static and
+no experience points will be used to increase it. As a consequence, more
+experience will be spent on your other skills (and thus they will increase
+more quickly. Note that you cannot deselect all skills; at least one skill
+must be actively exercised.
+Highlighted skills are focused on and will train faster than the others. You
+can highlight as many skills as you like.
 
 Occasionally you may find a manual of a skill which allows you to make quick
 progress in this area. For a while after you read it, experience used to
@@ -1460,13 +1464,13 @@ Hill Orcs
   cousins (the Cave Orcs) possess below the ground, descend in search of plunder
   and adventure.
 
-  Hill Orcs are as robust as the Mountain Dwarves, but have very low reserves of
+  Hill Orcs are as robust as the Minotaurs, yet they have human-like reserves of
   magical energy. Their forte is brute-force fighting, and they are skilled at
   using most hand weapons (with the exception of short blades, at which they are
   only fair), though they are not particularly good at using missile weapons.
   They prefer to use their own weapons. Orcs are poor at using most types of
   magic, with the exception of conjurations, summoning, necromancy, and the
-  elemental magic of earth, fire and ice. They advance in levels as quickly as
+  elemental magic of earth and fire. They advance in levels as quickly as
   Humans.
 
   Many orcs feel superior to all other species and beings, and they have formed
@@ -1635,6 +1639,34 @@ Demonspawn
   that unlike Demigods, they can take on gods, although not all will accept
   them.
 
+Deep Dwarves
+  Deep Dwarves are short, hardly people who, unlike their extinct surface
+  relatives, never left the underground homelands. Living there for
+  countless generations made them turn pale and lose all ability to
+  regenerate on their own (nor are they receptive to any effects which
+  merely hasten regeneration), as well as all ability to recover from losses
+  to their primary attributes over time. On the other hand, Deep Dwarves
+  have developed the ability to instantly counteract small doses of damage.
+  Their empathy with the earth makes them sense their surroundings; this
+  ability increases in power as they gain experience levels.
+
+  Given their lack of innate healing, few Deep Dwarves venture out for
+  adventures or even combat. Those who do bring a wand of healing, or rely on
+  divine assistance.
+
+  Naturally, Deep Dwarves are quite adept with all arts of avoiding blows and
+  damage and ungifted in the ways of physical combat. Those who have to defend
+  their ground most often go with ranged combat (except for bows, which are too
+  unwieldy for them) or spells. Deep Dwarves are highly spiritual beings, often
+  portrayed as actual spirits by outsiders. They are most at home with the
+  magic of earth and death.
+
+  Like all other Dwarves, they are gifted forgers. Their armour and weapons
+  are very well-crafted and much more durable than the products of lesser
+  artisans, and particularly dangerous when in the hands of a true dwarf. In
+  addition, Deep Dwarves can tinker with gadgets so as to recharge them.
+  However, each time they do so, they lose a bit of their magical essence.
+
 Felids
   Felids are a breed of cats that have been granted sentience. Originally they
   were witches' familiars that were magically augmented to provide help for
@@ -1709,54 +1741,6 @@ Sludge Elves
   are superlative transmuters, and are comfortable dabbling in necromantic,
   poison and elemental magic. As fighters, they are often more dangerous unarmed
   than armed. They advance in levels slightly slower than Humans.
-
-Dwarves
-========================================
-
-Dwarves are generally short, hardy people. Originally inhabiting deep
-underground caverns, some of them moved closer to the surface while still
-sticking to the mountainous habitat. All Dwarves are particularly dangerous when
-using Dwarven weaponry. Their armour and weapons are very well-crafted and much
-more durable than the products of lesser artisans.
-
-Mountain Dwarves
-  Mountain Dwarves, as opposed to the subterranean specimen, come from cities
-  far above the Dungeon. They love to fight, and often venture forth to seek
-  fame and fortune through battle. As such, they are very robust and excellent
-  at hand combat, especially favouring axes or bludgeoning weapons, and are good
-  at using armour and shields. They are poor at missile combat, the single
-  exception being crossbows. Polearms usually are too big for them to wield
-  comfortably and so make quite bad weapons for Mountain Dwarves.
-
-  In general, they are rather more resistant to magic than capable of using it
-  themselves. However, they are very proficient at earth and fire magic. Thus,
-  many a Mountain Dwarf started a career as an elementalist in those schools.
-  They advance in levels at a similar rate to Deep Elves.
-
-Deep Dwarves
-  Deep Dwarves are a species who, unlike their Mountain Dwarf relatives, never
-  left the underground homelands. Living there for countless generations made
-  them turn pale and lose all ability to regenerate on their own (nor are they
-  receptive to any effects which merely hasten regeneration), as well as all
-  ability to recover from losses to their primary attributes over time. On the
-  other hand, Deep Dwarves have developed the ability to instantly counteract
-  small doses of damage. Their empathy with the earth makes them sense their
-  surroundings; this ability increases in power as they gain experience levels.
-
-  Given their lack of innate healing, few Deep Dwarves venture out for
-  adventures or even combat. Those who do bring a wand of healing, or rely on
-  divine assistance.
-
-  Naturally, Deep Dwarves are quite adept with all arts of avoiding blows and
-  damage and ungifted in the ways of physical combat. Those who have to defend
-  their ground most often go with ranged combat (except for bows, which are too
-  unwieldy for them) or spells. Deep Dwarves are highly spiritual beings, often
-  portrayed as actual spirits by outsiders. They are most at home with the
-  magic of earth and death.
-
-  Like all other Dwarves, they are gifted forgers. In addition, Deep Dwarves can
-  tinker with gadgets so as to recharge them. However, each time they do so,
-  they lose a bit of their magical essence.
 
 The Undead
 ========================================
@@ -2079,6 +2063,10 @@ Being good at a specific weapon improves the speed with which you can use it by
 about 10% every two skill levels. Although lighter weapons are easier to use
 initially, as they strike quickly and accurately, heavier weapons increase in
 damage potential very quickly as you improve your skill with them.
+
+Polearms and certain whips have a special ability: they can reach farther and allow
+the wielder to attack an opponent two squares away, and even reach over monsters.
+To reach, use the 'v' command -- or preferably, use Autofight ('tab').
 
 Unarmed Combat is a special fighting skill. It allows your character to make a
 powerful attack when unarmed and also to make special secondary attacks (and

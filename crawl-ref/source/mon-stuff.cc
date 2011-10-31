@@ -425,7 +425,7 @@ int place_monster_corpse(const monster* mons, bool silent,
         return (-1);
     }
 
-#if TAG_MAJOR_VERSION == 32
+#if TAG_MAJOR_VERSION <= 33
     // Ok, so there's a corpse (possibly exploded/drowned), count it.
     you.montiers[4]++;
 #endif
@@ -520,7 +520,7 @@ static void _check_kill_milestone(const monster* mons,
     }
 }
 
-#if TAG_MAJOR_VERSION == 32
+#if TAG_MAJOR_VERSION <= 33
 void note_montiers()
 {
 #if 0
@@ -1542,7 +1542,7 @@ int monster_die(monster* mons, killer_type killer,
         killer = KILL_YOU_CONF; // Well, it was confused in a sense... (jpeg)
     }
 
-#if TAG_MAJOR_VERSION == 32
+#if TAG_MAJOR_VERSION <= 33
     if (gives_xp)
         you.montiers[mons_threat_level(mons, true)]++;
 #endif

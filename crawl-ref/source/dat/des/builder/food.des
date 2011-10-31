@@ -29,18 +29,18 @@ NAME:   david_nohive_1
 DEPTH:  D:8-14
 CHANCE: 100% (D:14), 15%
 TAGS:   uniq_second_food extra chance_second_food
-MONS:   queen bee, killer bee, killer bee larva
+MONS:   queen bee, killer bee
 ITEM:   w:2 honeycomb / w:1 royal jelly
 MAP
 ............
 ....aaaa....
 ..a2a2aaaa..
-..aada3a2a..
+..aada2a2a..
 .aa2ada2aaa.
-.a3ada1ada2.
-.aa3adada2a.
-.aaa2a2a3aa.
-..a3ada2aa..
+.a2ada1ada2.
+.aa2adada2a.
+.aaa2a2a2aa.
+..a2ada2aa..
 ...aa2aa2a..
 ....aaaa....
 ............

@@ -855,7 +855,7 @@ void explore_pickup_event(int did_pickup, int tried_pickup)
     // pick up, so the only thing to do is to stop.
     if (tried_pickup && you.running == RMODE_EXPLORE_GREEDY)
     {
-        if (explore_stopped_pos == you.pos() && !Options.pickup_dropped)
+        if (explore_stopped_pos == you.pos())
         {
             const std::string prompt =
                 make_stringf(

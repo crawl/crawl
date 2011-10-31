@@ -1006,7 +1006,7 @@ static void _unequip_armour_effect(item_def& item, bool meld)
         break;
 
     case SPARM_POISON_RESISTANCE:
-        if (!player_res_poison())
+        if (player_res_poison() <= 0)
             mpr("You feel less healthy.");
         break;
 

@@ -1495,9 +1495,13 @@ bool monster::pickup_melee_weapon(item_def &item, int near)
             if (is_range_weapon(*weap))
                 continue;
 
-            // Don't swap to a non-signature weapon.
-            if (!_is_signature_weapon(this, item) && !dual_wielding)
+            // Don't swap from a signature weapon to a non-signature one.
+            if (!_is_signature_weapon(this, item)
+                && _is_signature_weapon(this, *weap)
+                && !dual_wielding)
+            {
                 return (false);
+            }
 
             // If we get here, the weapon is a melee weapon.
             // If the new weapon is better than the current one and not cursed,
@@ -1703,6 +1707,12 @@ bool monster::pickup_armour(item_def &item, int near, bool force)
         return (false);
 
     equipment_type eq = EQ_NONE;
+
+    if (eq == EQ_BODY_ARMOUR && mons_genus(type) == MONS_DRACONIAN)
+        return false;
+
+    if (eq != EQ_HELMET && (type == MONS_OCTOPODE || type == MONS_GASTRONOK))
+        return false;
 
     // HACK to allow nagas/centaurs to wear bardings. (jpeg)
     switch (item.sub_type)

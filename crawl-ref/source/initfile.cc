@@ -688,7 +688,6 @@ void game_options::reset_options()
     mlist_allow_alternate_layout = false;
     messages_at_top  = false;
     mlist_targeting = false;
-    classic_hud = false;
     msg_condense_repeats = true;
     msg_condense_short = true;
     show_no_ctele = true;
@@ -700,8 +699,6 @@ void game_options::reset_options()
     symmetric_scroll = true;
     scroll_margin_x  = 2;
     scroll_margin_y  = 2;
-
-    verbose_monster_pane = true;
 
     autopickup_on    = 1;
     default_friendly_pickup = FRIENDLY_PICKUP_FRIEND;
@@ -715,7 +712,6 @@ void game_options::reset_options()
     show_gold_turns = false;
     show_game_turns = false;
 #endif
-    show_beam       = true;
 
     game = newgame_def();
 
@@ -735,13 +731,11 @@ void game_options::reset_options()
     suppress_startup_errors = false;
 
     show_inventory_weights = false;
-    colour_map             = true;
     clean_map              = false;
     show_uncursed          = true;
     easy_open              = true;
     easy_unequip           = true;
     equip_unequip          = false;
-    easy_butcher           = true;
     always_confirm_butcher = false;
     chunks_autopickup      = true;
     prompt_for_swap        = true;
@@ -775,7 +769,6 @@ void game_options::reset_options()
     show_more              = true;
     small_more             = false;
 
-    pickup_dropped         = false;
     pickup_thrown          = true;
 
     travel_delay           = 20;
@@ -798,15 +791,12 @@ void game_options::reset_options()
     tc_disconnected        = DARKGREY;
 
     show_waypoints         = true;
-    item_colour            = true;
 
     background_colour      = BLACK;
     // [ds] Default to jazzy colours.
     detected_item_colour   = GREEN;
     detected_monster_colour= LIGHTRED;
     status_caption_colour  = BROWN;
-
-    classic_item_colours   = false;
 
     easy_exit_menu         = false;
     dos_use_background_intensity = true;
@@ -2204,8 +2194,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(auto_switch);
     else BOOL_OPTION(suppress_startup_errors);
     else BOOL_OPTION(clean_map);
-    else BOOL_OPTION(colour_map);
-    else BOOL_OPTION_NAMED("color_map", colour_map);  // common misspelling :)
     else if (key == "easy_confirm")
     {
         // allows both 'Y'/'N' and 'y'/'n' on yesno() prompts
@@ -2230,7 +2218,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(equip_unequip);
     else BOOL_OPTION_NAMED("easy_armour", easy_unequip);
     else BOOL_OPTION_NAMED("easy_armor", easy_unequip);
-    else BOOL_OPTION(easy_butcher);
     else BOOL_OPTION(always_confirm_butcher);
     else BOOL_OPTION(chunks_autopickup);
     else BOOL_OPTION(prompt_for_swap);
@@ -2383,9 +2370,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(show_gold_turns);
     else BOOL_OPTION(show_game_turns);
     else BOOL_OPTION(show_no_ctele);
-#ifndef USE_TILE
-    else BOOL_OPTION(show_beam);
-#endif
     else if (key == "hp_warning")
     {
         hp_warning = atoi(field.c_str());
@@ -2458,7 +2442,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
 #ifndef USE_TILE
     else BOOL_OPTION(mlist_targeting);
 #endif
-    else BOOL_OPTION(classic_hud);
     else BOOL_OPTION(msg_condense_repeats);
     else BOOL_OPTION(msg_condense_short);
     else BOOL_OPTION(view_lock_x);
@@ -2470,7 +2453,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(center_on_scroll);
     else BOOL_OPTION(symmetric_scroll);
-    else BOOL_OPTION(verbose_monster_pane);
     else if (key == "scroll_margin_x")
     {
         scroll_margin_x = atoi(field.c_str());
@@ -2747,7 +2729,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
             std::pair<text_pattern,std::string>(thesplit[0], thesplit[1]));
     }
     else BOOL_OPTION(pickup_thrown);
-    else BOOL_OPTION(pickup_dropped);
 #ifdef WIZARD
     else if (key == "fsim_kit")
         append_vector(fsim_kit, split_string(",", field));
@@ -2859,9 +2840,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
         tc_disconnected = str_to_colour(field, tc_disconnected);
     else if (key == "auto_exclude")
         append_vector(auto_exclude, split_string(",", field));
-    else BOOL_OPTION(classic_item_colours);
-    else BOOL_OPTION(item_colour);
-    else BOOL_OPTION_NAMED("item_color", item_colour);
     else BOOL_OPTION(easy_exit_menu);
     else BOOL_OPTION(dos_use_background_intensity);
     else if (key == "item_stack_summary_minimum")
@@ -2908,12 +2886,6 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     }
     else BOOL_OPTION(explore_improved);
     else BOOL_OPTION(travel_key_stop);
-    else if (key == "stash_filter")
-    {
-        std::vector<std::string> seg = split_string(",", field);
-        for (int i = 0, count = seg.size(); i < count; ++i)
-            Stash::filter(seg[i]);
-    }
     else if (key == "sound")
     {
         std::vector<std::string> seg = split_string(",", field);

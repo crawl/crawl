@@ -513,7 +513,7 @@ direction_chooser::direction_chooser(dist& moves_,
     if (hitfunc)
         needs_path = true;
 
-    show_beam = Options.show_beam && !just_looking && needs_path;
+    show_beam = !just_looking && needs_path;
     need_beam_redraw = show_beam;
     have_beam = false;
 

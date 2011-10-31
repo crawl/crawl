@@ -850,7 +850,7 @@ ENDMAP
 
 ###############################################################################
 # A gallery of extinct species
-# Includes 3 formerly playable races which aren't represented as normal monsters.
+# Includes 4 formerly playable races which aren't represented as normal monsters.
 # With much stolen from kb_entry_jail
 NAME:    evilmike_entry_obsolete
 TAGS:    entry no_monster_gen
@@ -861,6 +861,7 @@ KFEAT:   ABC = floor
 KMONS:  A = gnome ; nothing
 KMONS:  B = elf col:darkgrey name:grey_elf n_rpl n_spe n_des ; nothing
 KMONS:  C = dwarf name:hill_dwarf n_rpl n_spe n_des ; nothing
+KMONS:  D = dwarf name:mountain_dwarf n_rpl n_spe n_des ; nothing
 KFEAT:  m = iron_grate
 FTILE:  .m+T = floor_vault
 TILE:   X = wall_vines
@@ -870,18 +871,18 @@ SUBST:  T:T.
 SUBST:  T=TTV
 MAP
 xxxxxxxxxxxxxxx
-xxxxxxxAxxxxxxx
-xxxxXXXmXXXxxxx
+xxxxxxxxxAxxxxx
+xxxxXXXXXmXxxxx
 xxxXX.....XXxxx
-xxXX...T...XXxx
-xxX.........Xxx
+xxBm...T...XXxx
+xxXX........Xxx
 xxX...ccc...Xxx
-xBm.T.c{+.T.+'@
+xxX.T.c{+.T.+'@
 xxX...ccc...Xxx
-xxX.........Xxx
-xxXX...T...XXxx
+xxXX........Xxx
+xxCm...T...XXxx
 xxxXX.....XXxxx
-xxxxXXXmXXXxxxx
-xxxxxxxCxxxxxxx
+xxxxXXXXXmXxxxx
+xxxxxxxxxDxxxxx
 xxxxxxxxxxxxxxx
 ENDMAP
