@@ -211,9 +211,9 @@ int player::damage_type(int)
     return (DVORP_CRUSHING);
 }
 
-int player::damage_brand(int)
+brand_type player::damage_brand(int)
 {
-    int ret = SPWPN_NORMAL;
+    brand_type ret = SPWPN_NORMAL;
     const int wpn = equip[EQ_WEAPON];
 
     if (wpn != -1 && !you.melded[EQ_WEAPON])

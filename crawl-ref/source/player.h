@@ -502,7 +502,7 @@ public:
     size_type body_size(size_part_type psize = PSIZE_TORSO, bool base = false) const;
     int       body_weight(bool base = false) const;
     int       total_weight() const;
-    int       damage_brand(int which_attack = -1);
+    brand_type damage_brand(int which_attack = -1);
     int       damage_type(int which_attack = -1);
 
     int       has_claws(bool allow_tran = true) const;
