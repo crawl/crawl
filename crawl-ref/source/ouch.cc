@@ -179,14 +179,20 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         break;
 
     case BEAM_POISON:
-
         if (doEffects)
-            resist = poison_player(coinflip() ? 2 : 1, source, kaux);
+        {
+            resist = poison_player(coinflip() ? 2 : 1, source, kaux) ? 0 : 1;
 
-        hurted = resist_adjust_damage(&you, flavour, resist,
-                                      hurted, true);
-        if (resist == 0 && doEffects)
-            canned_msg(MSG_YOU_RESIST);
+            hurted = resist_adjust_damage(&you, flavour, resist,
+                                          hurted, true);
+            if (resist > 0)
+                canned_msg(MSG_YOU_RESIST);
+        }
+        else
+        {
+            hurted = resist_adjust_damage(&you, flavour, player_res_poison(),
+                                          hurted, true);
+        }
         break;
 
     case BEAM_POISON_ARROW:
@@ -196,7 +202,8 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
 
         resist = player_res_poison();
 
-        if (doEffects) {
+        if (doEffects)
+        {
             int poison_amount = 2 + random2(3);
             poison_amount += (resist ? 0 : 2);
             poison_player(poison_amount, source, kaux, true);
