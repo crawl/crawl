@@ -370,8 +370,8 @@ std::string player::pronoun(pronoun_type pro, bool) const
     switch (pro)
     {
     default:
-    case PRONOUN:             		return "you";
-    case PRONOUN_POSSESSIVE:  		return "your";
+    case PRONOUN:                   return "you";
+    case PRONOUN_POSSESSIVE:        return "your";
     case PRONOUN_REFLEXIVE:         return "yourself";
     case PRONOUN_OBJECTIVE:         return "you";
     }

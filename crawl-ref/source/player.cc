@@ -5820,15 +5820,15 @@ int player::adjusted_body_armour_penalty(int scale, bool use_size) const
 // The EV penalty to the player for wearing their current shield.
 int player::adjusted_shield_penalty(int scale) const
 {
-	const item_def *shield_l = you.slot_item(EQ_SHIELD, false);
-	if (!shield_l)
-		return (0);
+    const item_def *shield_l = you.slot_item(EQ_SHIELD, false);
+    if (!shield_l)
+        return (0);
 
-	const int base_shield_penalty = -property(*shield_l, PARM_EVASION);
-	return std::max(0,
-					(base_shield_penalty * scale
-					 - you.skill(SK_SHIELDS, scale)
-					 / std::max(1, 5 + player_evasion_size_factor())));
+    const int base_shield_penalty = -property(*shield_l, PARM_EVASION);
+    return std::max(0,
+                    (base_shield_penalty * scale
+                     - you.skill(SK_SHIELDS, scale)
+                     / std::max(1, 5 + player_evasion_size_factor())));
 }
 
 int player::armour_tohit_penalty(bool random_factor) const
