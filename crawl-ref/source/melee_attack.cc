@@ -339,7 +339,7 @@ bool melee_attack::handle_phase_dodged()
                 mprf("%s%s misses %s%s",
                      atk_name(DESC_THE).c_str(),
                      evasion_margin_adverb().c_str(),
-                     mons_defender_name().c_str(),
+                     defender_name().c_str(),
                      attack_strength_punctuation().c_str());
             }
         }
@@ -2110,7 +2110,7 @@ void melee_attack::drain_defender()
                     "%s %s %s!",
                     atk_name(DESC_THE).c_str(),
                     attacker->conj_verb("drain").c_str(),
-                    mons_defender_name().c_str());
+                    defender_name().c_str());
         }
 
         attacker->god_conduct(DID_NECROMANCY, 2);
@@ -3811,7 +3811,7 @@ bool melee_attack::attack_warded_off()
         {
             mprf("%s tries to attack %s, but flinches away.",
                  atk_name(DESC_THE).c_str(),
-                 mons_defender_name().c_str());
+                 defender_name().c_str());
         }
 
         if (defender == &you
@@ -3963,14 +3963,6 @@ std::string melee_attack::mons_attack_desc()
     return ret;
 }
 
-std::string melee_attack::mons_defender_name()
-{
-    if (attacker == defender)
-        return actor_pronoun(attacker, PRONOUN_REFLEXIVE, attacker_visible);
-    else
-        return def_name(DESC_THE);
-}
-
 void melee_attack::announce_hit()
 {
     if (!needs_message)
@@ -3981,7 +3973,7 @@ void melee_attack::announce_hit()
         mprf("%s %s %s%s%s%s",
              atk_name(DESC_THE).c_str(),
              attacker->conj_verb(mons_attack_verb()).c_str(),
-             mons_defender_name().c_str(),
+             defender_name().c_str(),
              debug_damage_number().c_str(),
              mons_attack_desc().c_str(),
              attack_strength_punctuation().c_str());
@@ -4033,7 +4025,7 @@ void melee_attack::mons_do_poison()
             {
                 mprf("%s poisons %s!",
                      atk_name(DESC_THE).c_str(),
-                     mons_defender_name().c_str());
+                     defender_name().c_str());
             }
         }
     }
@@ -4186,7 +4178,7 @@ void melee_attack::mons_apply_attack_flavour()
             mprf("%s %s %s%s",
                  atk_name(DESC_THE).c_str(),
                  attacker->conj_verb("freeze").c_str(),
-                 mons_defender_name().c_str(),
+                 defender_name().c_str(),
                  special_attack_punctuation().c_str());
 
         }
@@ -4212,7 +4204,7 @@ void melee_attack::mons_apply_attack_flavour()
             mprf("%s %s %s%s",
                  atk_name(DESC_THE).c_str(),
                  attacker->conj_verb("shock").c_str(),
-                 mons_defender_name().c_str(),
+                 defender_name().c_str(),
                  special_attack_punctuation().c_str());
         }
 
@@ -4330,7 +4322,7 @@ void melee_attack::mons_apply_attack_flavour()
             mprf("%s %s %s!",
                  atk_name(DESC_THE).c_str(),
                  attacker->conj_verb("infuriate").c_str(),
-                 mons_defender_name().c_str());
+                 defender_name().c_str());
         }
 
         defender->go_berserk(false);
@@ -4396,7 +4388,7 @@ void melee_attack::mons_apply_attack_flavour()
             mprf("%s %s %s%s",
                  atk_name(DESC_THE).c_str(),
                  attacker->conj_verb("sear").c_str(),
-                 mons_defender_name().c_str(),
+                 defender_name().c_str(),
                  special_attack_punctuation().c_str());
 
         }

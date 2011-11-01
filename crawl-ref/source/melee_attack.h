@@ -142,7 +142,6 @@ private:
     // when all the player poisoning seems to be handled elsewhere...
     void mons_do_poison();
     void mons_do_napalm();
-    std::string mons_defender_name();
     void wasp_paralyse_defender();
     void mons_do_passive_freeze();
     void mons_do_spines();
@@ -192,7 +191,6 @@ private:
     // Added in, were previously static methods of fight.cc
     bool _tran_forbid_aux_attack(unarmed_attack_type atk);
     bool _extra_aux_attack(unarmed_attack_type atk);
-    bool player_fights_well_unarmed(int heavy_armour_penalty);
     int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
                                  bool vampiric = false);
     bool _player_vampire_draws_blood(const monster* mon, const int damage,
