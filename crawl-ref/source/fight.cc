@@ -168,8 +168,8 @@ static int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
 
     your_to_hit = 1300
                 + you.dex() * 50
-                + you.skill(SK_UNARMED_COMBAT, 50)
-                + you.skill(SK_FIGHTING, 20);
+                + you.strength() * 20
+                + you.skill(SK_FIGHTING, 30);
     your_to_hit /= 100;
 
     if (wearing_amulet(AMU_INACCURACY))
@@ -1051,8 +1051,8 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
     case UNAT_BITE:
         aux_attack = aux_verb = "bite";
-        aux_damage += you.has_usable_fangs() * 2
-                      + you.skill_rdiv(SK_UNARMED_COMBAT, 1, 5);
+        aux_damage += you.has_usable_fangs() * 2;
+        aux_damage += div_rand_round(std::max(you.strength()-10, 0), 5);
         noise_factor = 75;
 
         // prob of vampiric bite:
@@ -1111,7 +1111,7 @@ static bool _tran_forbid_aux_attack(unarmed_attack_type atk)
     }
 }
 
-static bool _extra_aux_attack(unarmed_attack_type atk)
+static bool _extra_aux_attack(unarmed_attack_type atk, bool is_base)
 {
     // No extra unarmed attacks for disabled mutations.
     // XXX: It might be better to make player_mutation_level
@@ -1119,35 +1119,46 @@ static bool _extra_aux_attack(unarmed_attack_type atk)
     if (_tran_forbid_aux_attack(atk))
         return (false);
 
+    if (you.strength() + you.dex() <= random2(50))
+        return (false);
+
     switch (atk)
     {
     case UNAT_KICK:
-        return ((player_mutation_level(MUT_HOOVES)
+        return (is_base
+                 || player_mutation_level(MUT_HOOVES)
                  || you.has_usable_talons()
-                 || player_mutation_level(MUT_TENTACLE_SPIKE))
-                && coinflip());
+                 || player_mutation_level(MUT_TENTACLE_SPIKE));
 
     case UNAT_HEADBUTT:
-        return ((player_mutation_level(MUT_HORNS)
+        return ((is_base
+                 || player_mutation_level(MUT_HORNS)
                  || player_mutation_level(MUT_BEAK))
-                && one_chance_in(3));
+                && !one_chance_in(3));
 
     case UNAT_TAILSLAP:
-        return (you.has_usable_tail()
-                && one_chance_in(4));
+        return ((is_base
+                 || you.has_usable_tail())
+                && coinflip());
 
     case UNAT_PSEUDOPODS:
-        return (you.has_usable_pseudopods()
-                && one_chance_in(3));
+        return ((is_base
+                 || you.has_usable_pseudopods())
+                && !one_chance_in(3));
 
     case UNAT_TENTACLES:
-        return (you.has_usable_tentacles()
-                && one_chance_in(3));
+        return ((is_base
+                 || you.has_usable_tentacles())
+                && !one_chance_in(3));
 
     case UNAT_BITE:
-        return ((you.has_usable_fangs()
+        return ((is_base
+                 || you.has_usable_fangs()
                  || player_mutation_level(MUT_ACIDIC_BITE))
-                && one_chance_in(5));
+                && x_chance_in_y(2, 5));
+
+    case UNAT_PUNCH:
+        return (is_base);
 
     default:
         return (false);
@@ -1165,36 +1176,7 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
     if (you.species != SP_OCTOPODE && baseattack == UNAT_PUNCH && !you.has_usable_offhand())
         baseattack = UNAT_NO_ATTACK;
 
-    if (you.has_usable_tail()
-        && (baseattack == UNAT_HEADBUTT || baseattack == UNAT_KICK)
-        && one_chance_in(3))
-    {
-        baseattack = UNAT_TAILSLAP;
-    }
-
-    if (you.has_usable_pseudopods()
-        && baseattack == UNAT_KICK && coinflip())
-    {
-        baseattack = UNAT_PSEUDOPODS;
-    }
-
-    if (you.has_usable_tentacles()
-        && baseattack == UNAT_KICK && coinflip())
-    {
-        baseattack = UNAT_TENTACLES;
-    }
-
-    // With fangs, replace head attacks with bites.
-    if ((you.has_usable_fangs() || player_mutation_level(MUT_ACIDIC_BITE))
-        && (baseattack == UNAT_HEADBUTT
-            || baseattack == UNAT_KICK
-            || _vamp_wants_blood_from_monster(defender->as_monster())
-               && !one_chance_in(3)))
-    {
-        baseattack = UNAT_BITE;
-    }
-
-    // Move racial stuff to the bottom, so that nagas can use pseudopods and the like.
+    // Nagas turn kicks into headbutts.
     if (you.species == SP_NAGA && baseattack == UNAT_KICK)
         baseattack = UNAT_HEADBUTT;
 
@@ -1267,11 +1249,8 @@ bool melee_attack::player_aux_unarmed()
 
     /*
      * baseattack is the auxiliary unarmed attack the player gets
-     * for unarmed combat skill. Note that this can still be skipped,
-     * e.g. UNAT_PUNCH with a shield.
-     *
-     * Then, they can get extra attacks depending on mutations,
-     * through _extra_aux_attack().
+     * for unarmed combat skill, which doesn't require a mutation to use
+     * but still needs to pass the other checks in _extra_aux_attack().
      */
     unarmed_attack_type baseattack = UNAT_NO_ATTACK;
     if (can_do_unarmed)
@@ -1284,7 +1263,7 @@ bool melee_attack::player_aux_unarmed()
 
         unarmed_attack_type atk = static_cast<unarmed_attack_type>(i);
 
-        if (baseattack != atk && !_extra_aux_attack(atk))
+        if (!_extra_aux_attack(atk, (baseattack == atk)))
             continue;
 
         // Determine and set damage and attack words.
@@ -1381,10 +1360,6 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
     if (damage_done > 0)
     {
-        // Clobber wpn_skill.
-        wpn_skill   = SK_UNARMED_COMBAT;
-        player_exercise_combat_skills();
-
         player_announce_aux_hit();
 
         if (damage_brand == SPWPN_ACID)
@@ -1597,16 +1572,16 @@ int melee_attack::player_stat_modify_damage(int damage)
 
 int melee_attack::player_aux_stat_modify_damage(int damage)
 {
-    int dammod = 10;
+    int dammod = 20;
     const int dam_stat_val = calc_stat_to_dam_base();
 
-    if (dam_stat_val > 11)
-        dammod += random2(dam_stat_val - 11) / 3;
-    else if (dam_stat_val < 9)
-        dammod -= random2(9 - dam_stat_val) / 2;
+    if (dam_stat_val > 10)
+        dammod += random2(dam_stat_val - 9);
+    else if (dam_stat_val < 10)
+        dammod -= random2(11 - dam_stat_val);
 
     damage *= dammod;
-    damage /= 10;
+    damage /= 20;
 
     return (damage);
 }
