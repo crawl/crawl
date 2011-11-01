@@ -1,4 +1,4 @@
-import os, os.path, errno
+import os, os.path, errno, fcntl
 import subprocess
 import datetime, time
 import hashlib
@@ -9,7 +9,7 @@ from tornado.escape import json_decode, json_encode
 
 from terminal import TerminalRecorder
 from connection import WebtilesSocketConnection
-from util import DynamicTemplateLoader
+from util import DynamicTemplateLoader, dgl_format_str
 from game_data_handler import GameDataHandler
 
 class CrawlProcessHandlerBase(object):
@@ -20,15 +20,25 @@ class CrawlProcessHandlerBase(object):
         self.io_loop = io_loop
 
         self.process = None
-        self.client_path = game_params.get("client_path")
+        self.client_path = self.config_path("client_path")
         self.where = None
         self.wheretime = time.time()
         self.kill_timeout = None
+
+        now = datetime.datetime.utcnow()
+        self.lock_basename = now.strftime("%Y-%m-%d.%H:%M:%S") + ".ttyrec"
 
         self.end_callback = None
         self._watchers = set()
         self._receivers = set()
         self.last_activity_time = time.time()
+
+    def format_path(self, path):
+        return dgl_format_str(path, self.username, self.game_params)
+
+    def config_path(self, key):
+        if key not in self.game_params: return None
+        return self.format_path(self.game_params[key])
 
     def idle_time(self):
         return time.time() - self.last_activity_time
@@ -105,9 +115,8 @@ class CrawlProcessHandlerBase(object):
             self.kill_timeout = None
 
     def check_where(self):
-        morgue_path = self.game_params["morgue_path"]
-        wherefile = os.path.join(morgue_path, self.username,
-                                 self.username + ".dglwhere")
+        morgue_path = self.config_path("morgue_path")
+        wherefile = os.path.join(morgue_path, self.username + ".dglwhere")
         try:
             if os.path.getmtime(wherefile) > self.wheretime:
                 self.wheretime = time.time()
@@ -127,12 +136,11 @@ class CrawlProcessHandlerBase(object):
 
         call = [game["crawl_binary"],
                 "-name",   self.username,
-                "-rc",     os.path.join(game["rcfile_path"],
+                "-rc",     os.path.join(self.config_path("rcfile_path"),
                                         self.username + ".rc"),
-                "-macro",  os.path.join(game["macro_path"],
+                "-macro",  os.path.join(self.config_path("macro_path"),
                                         self.username + ".macro"),
-                "-morgue", os.path.join(game["morgue_path"],
-                                        self.username)]
+                "-morgue", self.config_path("morgue_path")]
 
         if "options" in game:
             call += game["options"]
@@ -152,10 +160,11 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self.socketpath = None
         self.conn = None
         self.ttyrec_filename = None
-        self.ttyrec_filename_only = None
+        self.inprogress_lock = None
+        self.inprogress_lock_file = None
 
     def start(self):
-        self.socketpath = os.path.join(self.game_params["socket_path"],
+        self.socketpath = os.path.join(self.config_path("socket_path"),
                                        self.username + ".sock")
 
         try: # Unlink if necessary
@@ -169,11 +178,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         call = self._base_call() + ["-webtiles-socket", self.socketpath,
                                     "-await-connection"]
 
-        now = datetime.datetime.utcnow()
-        ttyrec_path = game.get("ttyrec_path", game.get("running_game_path"))
-        tf = self.username + ":" + now.strftime("%Y-%m-%d.%H:%M:%S") + ".ttyrec"
-        self.ttyrec_filename_only = tf
-        self.ttyrec_filename = os.path.join(ttyrec_path, tf)
+        ttyrec_path = self.config_path("ttyrec_path")
+        self.ttyrec_filename = os.path.join(ttyrec_path, self.lock_basename)
 
         self.logger.info("Starting crawl.")
 
@@ -184,11 +190,28 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self.process.output_callback = self._on_process_output
         self.process.activity_callback = self.note_activity
 
+        self.gen_inprogress_lock()
+
         self.conn = WebtilesSocketConnection(self.io_loop, self.socketpath)
         self.conn.message_callback = self._on_socket_message
         self.conn.connect()
 
         self.last_activity_time = time.time()
+
+    def gen_inprogress_lock(self):
+        self.inprogress_lock = os.path.join(self.config_path("inprogress_path"),
+                                            self.username + ":" + self.lock_basename)
+        f = open(self.inprogress_lock, "w")
+        fcntl.lockf(f.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        self.inprogress_lock_file = f
+        cols, lines = self.process.get_terminal_size()
+        f.write("%s\n%s\n%s\n" % (self.process.pid, cols, lines))
+        f.flush()
+
+    def remove_inprogress_lock(self):
+        fcntl.lockf(self.inprogress_lock_file.fileno(), fcntl.LOCK_UN)
+        self.inprogress_lock_file.close()
+        os.remove(self.inprogress_lock)
 
     def _ttyrec_id_header(self):
         clrscr = "\033[2J"
@@ -203,11 +226,13 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         tstamp = int(time.time())
         ctime = time.ctime()
         return templ % (self.username, self.game_params["name"],
-                        config.server_id, self.ttyrec_filename_only,
+                        config.server_id, self.lock_basename,
                         tstamp, ctime)
 
     def _on_process_end(self):
         self.logger.info("Crawl terminated.")
+
+        self.remove_inprogress_lock()
 
         self.process = None
 
@@ -262,6 +287,7 @@ class DGLLessCrawlProcessHandler(CrawlProcessHandler):
         game_params = dict(
             name = "DCSS",
             ttyrec_path = "./",
+            inprogress_path = "./",
             socket_path = "./",
             client_path = "./webserver/game_data")
         super(DGLLessCrawlProcessHandler, self).__init__(game_params,
@@ -302,11 +328,10 @@ class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
         self.create_mock_ttyrec()
 
     def create_mock_ttyrec(self):
-        now = datetime.datetime.utcnow()
-        running_game_path = self.game_params["running_game_path"]
+        running_game_path = self.config_path("running_game_path")
         self.ttyrec_filename = os.path.join(running_game_path,
-                                            self.username + ":" + now.strftime("%Y-%m-%d.%H:%M:%S")
-                                            + ".ttyrec")
+                                            self.username + ":" +
+                                            self.lock_basename)
         f = open(self.ttyrec_filename, "w")
         f.close()
 

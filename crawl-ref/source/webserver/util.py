@@ -37,3 +37,8 @@ class DynamicTemplateLoader(tornado.template.Loader):
             l = DynamicTemplateLoader(path)
             cls._instances[path] = l
             return l
+
+def dgl_format_str(s, username, game_params):
+    s = s.replace("%n", username)
+
+    return s
