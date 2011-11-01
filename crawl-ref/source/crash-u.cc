@@ -55,7 +55,7 @@ template <typename TO, typename FROM> TO nasty_cast(FROM f)
 }
 #endif // TARGET_OS_MACOSX
 
-#endif // defined(UNIX) || defined(TARGET_OS_MACOSX)
+#endif // BACKTRACE_SUPPORTED
 
 #include "crash.h"
 #include "dbg-crsh.h"
@@ -117,8 +117,9 @@ static void _crash_signal_handler(int sig_num)
     // internally.
     // There's no reliable way to ensure such things won't happen.  A pragmatic
     // solution is to abort the crash dump.
+#ifdef UNIX
     alarm(5);
-
+#endif
     // In case the crash dumper is unable to open a file and has to dump
     // to stderr.
 #ifndef USE_TILE
@@ -146,10 +147,14 @@ void init_crash_handler()
 
     for (int i = 1; i <= 64; i++)
     {
+#ifdef SIGALRM
         if (i == SIGALRM)
             continue;
+#endif
+#ifdef SIGHUP
         if (i == SIGHUP)
             continue;
+#endif
 #ifdef SIGQUIT
         if (i == SIGQUIT)
             continue;
@@ -194,8 +199,10 @@ void init_crash_handler()
         if (i == SIGSTOP)
             continue;
 #endif
+#ifdef SIGWINCH
         if (i == SIGWINCH)
             continue;
+#endif
 
         signal(i, _crash_signal_handler);
     }
