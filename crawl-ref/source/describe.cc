@@ -1044,7 +1044,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
         if (item_ident(item, ISFLAG_KNOW_PLUSES)
             && item.plus >= MAX_WPN_ENCHANT && item.plus2 >= MAX_WPN_ENCHANT)
         {
-            description += "\nIt is maximally enchanted.";
+            description += "\nIt cannot be enchanted further.";
         }
         else
         {
@@ -1258,7 +1258,7 @@ static std::string _describe_ammo(const item_def &item)
         append_missile_info(description);
 
     if (item_ident(item, ISFLAG_KNOW_PLUSES) && item.plus >= MAX_WPN_ENCHANT)
-        description += "\nIt is maximally enchanted.";
+        description += "\nIt cannot be enchanted further.";
     else
     {
         description += "\nIt can be maximally enchanted to +";
@@ -1453,7 +1453,7 @@ static std::string _describe_armour(const item_def &item, bool verbose)
             description += ".";
         }
         else
-            description += "\nIt is maximally enchanted.";
+            description += "\nIt cannot be enchanted further.";
     }
 
     description += _corrosion_resistance_string(item);
