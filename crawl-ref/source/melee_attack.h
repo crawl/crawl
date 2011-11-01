@@ -123,6 +123,7 @@ private:
     /* Output methods */
     void adjust_noise();
     void emit_nodmg_hit_message();
+    void announce_hit();
 
     void set_attack_verb();
 
@@ -136,7 +137,6 @@ private:
     void mons_apply_attack_flavour();
     std::string mons_attack_verb();
     std::string mons_attack_desc();
-    void mons_announce_hit();
     void mons_announce_dud_hit();
     void mons_set_weapon();
     // TODO: Generalizing do_poison is trivial, but what purpose would it serve
@@ -182,7 +182,6 @@ private:
     random_var player_weapon_speed();
     random_var player_unarmed_speed();
     void player_announce_aux_hit();
-    void player_announce_hit();
     std::string player_why_missed();
     void player_warn_miss();
     void player_check_weapon_effects();

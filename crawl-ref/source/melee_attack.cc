@@ -456,11 +456,7 @@ bool melee_attack::handle_phase_hit()
 
         if (damage_done > 0)
         {
-        	// TODO Unify or remove (some output is already handled above)
-            if (attacker->atype() == ACT_PLAYER)
-                player_announce_hit();
-            else
-                mons_announce_hit();
+        	announce_hit();
 
             if (!handle_phase_damaged())
                 return (false);
@@ -1417,18 +1413,6 @@ void melee_attack::player_announce_aux_hit()
          defender->name(DESC_THE).c_str(),
          debug_damage_number().c_str(),
          attack_strength_punctuation().c_str());
-}
-
-void melee_attack::player_announce_hit()
-{
-    if (!verb_degree.empty() && verb_degree[0] != ' ')
-        verb_degree = " " + verb_degree;
-
-    msg::stream << "You " << attack_verb << ' '
-                << defender->name(DESC_THE)
-                << verb_degree << debug_damage_number()
-                << attack_strength_punctuation()
-                << std::endl;
 }
 
 std::string melee_attack::player_why_missed()
@@ -3987,10 +3971,13 @@ std::string melee_attack::mons_defender_name()
         return def_name(DESC_THE);
 }
 
-void melee_attack::mons_announce_hit()
+void melee_attack::announce_hit()
 {
-    if (needs_message)
-    {
+	if (!needs_message)
+		return;
+
+	if (attacker->atype() == ACT_MONSTER)
+	{
         mprf("%s %s %s%s%s%s",
              atk_name(DESC_THE).c_str(),
              attacker->conj_verb(mons_attack_verb()).c_str(),
@@ -3998,7 +3985,18 @@ void melee_attack::mons_announce_hit()
              debug_damage_number().c_str(),
              mons_attack_desc().c_str(),
              attack_strength_punctuation().c_str());
-    }
+	}
+	else
+	{
+		if (!verb_degree.empty() && verb_degree[0] != ' ')
+			verb_degree = " " + verb_degree;
+
+		mprf("You %s %s%s%s%s",
+			 attack_verb.c_str(),
+			 defender->name(DESC_THE).c_str(),
+			 verb_degree, debug_damage_number().c_str(),
+			 attack_strength_punctuation().c_str());
+	}
 }
 
 void melee_attack::mons_announce_dud_hit()
