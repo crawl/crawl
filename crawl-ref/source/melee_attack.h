@@ -99,7 +99,6 @@ private:
     bool attack_shield_blocked(bool verbose);
     bool apply_damage_brand();
 
-    void drain_defender();
     void rot_defender(int amount, int immediate = 0);
     void splash_defender_with_acid(int strength);
     bool decapitate_hydra(int damage_done, int damage_type = -1);
@@ -107,8 +106,13 @@ private:
                           int dam_type,
                           int wpn_brand);
 
+    /* Mutation Effects */
+    void do_spines();
+    void do_passive_freeze();
+
     int inflict_damage(int dam, beam_type flavour = NUM_BEAMS, bool clean = false);
 
+    /* Brand / Attack Effects */
     // Returns true if the defender is banished.
     bool distortion_affects_defender();
     void antimagic_affects_defender();
@@ -119,6 +123,7 @@ private:
     void do_miscast();
     bool do_knockback(bool trample = true);
     bool attack_warded_off();
+    void drain_defender();
 
     /* Output methods */
     void adjust_noise();
@@ -143,8 +148,6 @@ private:
     void mons_do_poison();
     void mons_do_napalm();
     void wasp_paralyse_defender();
-    void mons_do_passive_freeze();
-    void mons_do_spines();
     void mons_do_eyeball_confusion();
 
     attack_flavour random_chaos_attack_flavour();

@@ -349,8 +349,8 @@ bool melee_attack::handle_phase_dodged()
         defender->atype() == ACT_PLAYER &&
         grid_distance(you.pos(), attacker->as_monster()->pos()) == 1)
     {
-        // Check for spiny mutation.
-        mons_do_spines();
+        // Check for defender Spines
+        do_spines();
 
         // Spines can kill!
         if (!attacker->alive())
@@ -726,7 +726,7 @@ bool melee_attack::handle_phase_end()
         && attacker != defender)
     {
         mons_do_eyeball_confusion();
-        mons_do_passive_freeze();
+        do_passive_freeze();
     }
 
     return(true);
@@ -1452,10 +1452,9 @@ void melee_attack::player_warn_miss()
     if (!defender->asleep())
         behaviour_event(defender->as_monster(), ME_WHACK, MHITYOU);
 
-    msg::stream << player_why_missed()
-                << defender->name(DESC_THE)
-                << "."
-                << std::endl;
+    mprf("%s%s.",
+    	 player_why_missed().c_str(),
+    	 defender->name(DESC_THE).c_str());
 }
 
 int melee_attack::player_stat_modify_damage(int damage)
@@ -4405,7 +4404,7 @@ void melee_attack::mons_apply_attack_flavour()
     }
 }
 
-void melee_attack::mons_do_passive_freeze()
+void melee_attack::do_passive_freeze()
 {
     if (you.mutation[MUT_PASSIVE_FREEZE]
         && attacker->alive()
@@ -4469,7 +4468,7 @@ void melee_attack::mons_do_eyeball_confusion()
     }
 }
 
-void melee_attack::mons_do_spines()
+void melee_attack::do_spines()
 {
     const item_def *body = you.slot_item(EQ_BODY_ARMOUR, false);
     const int mut = player_mutation_level(MUT_SPINY);
