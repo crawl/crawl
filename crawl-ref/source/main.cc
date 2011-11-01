@@ -638,7 +638,7 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case 'r': wizard_change_species();               break;
     case '>': wizard_place_stairs(true);             break;
     case '<': wizard_place_stairs(false);            break;
-    case 'P': wizard_create_portal();                break;
+    case 'p': wizard_create_portal();                break;
     case 'L': debug_place_map();                     break;
     case 'i': wizard_identify_pack();                break;
     case 'I': wizard_unidentify_pack();              break;
@@ -722,13 +722,6 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
         while (result == 0);
         break;
     }
-    case 'p':
-        dungeon_terrain_changed(you.pos(), DNGN_ENTER_PANDEMONIUM, false);
-        break;
-
-    case 'l':
-        dungeon_terrain_changed(you.pos(), DNGN_ENTER_LABYRINTH, false);
-        break;
 
     case 'k':
         if (player_in_branch(BRANCH_LABYRINTH))
