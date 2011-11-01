@@ -1,4 +1,4 @@
-﻿The Dungeon Crawl Stone Soup team (Peter Berger, Adam Borowski,
+﻿The Dungeon Crawl Stone Soup team (Peter Berger, Adam Borowski, Samuel Bronson,
 Jude Brown, Robert Burnham, Chris Campbell, Matthew Cline, Paul Du Bois,
 Eino Keskitalo, Vsevolod Kozlov, Janne Lahdenperä, Raphaël Langella, Nat Lanza,
 Jesse Luehrs, Neil Middleton, Steven Noonan, Haran Pilpel, Aaron Pixton, David
@@ -71,4 +71,5 @@ Brian Haase                  Dylan O'Donnell              Samuel Wilson
 Shayne Halvorson             Yuuma Oohara                 Yelve Yakut
 Sophie Hamilton              Malwyn P                     Zooko
 Anders Heggestøyl            Lothar Dierkes               Michael Gagno
-Samuel Bronson               Pete Hurst
+Samuel Bronson               Pete Hurst                   John McCartney
+Lantier
