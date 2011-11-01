@@ -91,6 +91,8 @@
     //
     // #define DGAMELAUNCH
 
+    #define USE_UNIX_SIGNALS
+
     #define FILE_SEPARATOR '/'
 #ifndef USE_TILE_LOCAL
     #define USE_CURSES
