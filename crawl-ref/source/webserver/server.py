@@ -136,7 +136,7 @@ if __name__ == "__main__":
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGHUP, signal_handler)
 
-    if umask:
+    if umask is not None:
         os.umask(umask)
 
     write_pidfile()
