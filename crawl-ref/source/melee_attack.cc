@@ -3999,17 +3999,6 @@ void melee_attack::announce_hit()
     }
 }
 
-void melee_attack::mons_announce_dud_hit()
-{
-    if (needs_message)
-    {
-        mprf("%s %s %s but does no damage.",
-             atk_name(DESC_THE).c_str(),
-             attacker->conj_verb(mons_attack_verb()).c_str(),
-             mons_defender_name().c_str());
-    }
-}
-
 void melee_attack::mons_do_poison()
 {
     if (attk_flavour == AF_POISON_NASTY
