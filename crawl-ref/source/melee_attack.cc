@@ -511,8 +511,7 @@ bool melee_attack::handle_phase_damaged()
         && !defender->is_summoned()
         && !defender->submerged())
     {
-        int blood = _modify_blood_amount(damage_done,
-                                         attacker->damage_type());
+        int blood = modify_blood_amount(damage_done, attacker->damage_type());
         if (blood > defender->stat_hp())
             blood = defender->stat_hp();
 
@@ -5005,41 +5004,6 @@ int melee_attack::apply_defender_ac(int damage, int damage_max)
     }
 
     return std::max(0, damage);
-}
-
-// TODO: Move this to attack, or remove it, or do something with it, its
-// not melee-attack specific, really. Bows can draw / modify blood amounts
-int melee_attack::_modify_blood_amount(const int damage, const int dam_type)
-{
-    int factor = 0; // DVORP_NONE
-
-    switch (dam_type)
-    {
-    case DVORP_CRUSHING: // flails, also unarmed
-    case DVORP_TENTACLE: // unarmed, tentacles
-        factor =  2;
-        break;
-    case DVORP_SLASHING: // whips
-        factor =  4;
-        break;
-    case DVORP_PIERCING: // pole-arms
-        factor =  5;
-        break;
-    case DVORP_STABBING: // knives, daggers
-        factor =  8;
-        break;
-    case DVORP_SLICING:  // other short/long blades, also blade hands
-        factor = 10;
-        break;
-    case DVORP_CHOPPING: // axes
-        factor = 17;
-        break;
-    case DVORP_CLAWING:  // unarmed, claws
-        factor = 24;
-        break;
-    }
-
-    return (damage * factor / 10);
 }
 
 // TODO: This code is only used from melee_attack methods, but perhaps it

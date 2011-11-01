@@ -93,8 +93,7 @@ public:
                            bool actor_visible, bool actor_invisible);
     std::string actor_pronoun(const actor *a, pronoun_type ptyp,
                               bool actor_visible);
-    std::string anon_name(description_level_type desc,
-                          bool actor_invisible);
+    std::string anon_name(description_level_type desc, bool actor_invisible);
     std::string anon_pronoun(pronoun_type ptyp);
 
 // Private Methods
@@ -133,6 +132,7 @@ protected:
                          iflags_t ignore_flags = ISFLAG_KNOW_CURSE
                                                | ISFLAG_KNOW_PLUSES);
 
+    int modify_blood_amount(const int damage, const int dam_type);
     // TODO: Used in elemental brand dmg, definitely want to get rid of this
     // which we can't really do until we refactor the whole pronoun / desc
     // usage from these lowly classes all the way up to monster/player (and

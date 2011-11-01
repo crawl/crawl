@@ -130,7 +130,6 @@ private:
     void handle_noise(const coord_def & pos);
 
     // Added from fight.cc, were static, should be removed
-    int _modify_blood_amount(const int damage, const int dam_type);
     bool _move_stairs();
 private:
     // Monster-attack specific stuff
