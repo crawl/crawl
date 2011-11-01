@@ -744,15 +744,13 @@ static NORETURN void _BreakStrToDebugger(const char *mesg, bool assert)
     *p = 0;
     abort();
 
-#elif defined(TARGET_OS_MACOSX) || defined(TARGET_COMPILER_MINGW)
-    fprintf(stderr, "%s", mesg);
+#else
+    fprintf(stderr, "%s\n", mesg);
+#if defined(TARGET_OS_MACOSX) || defined(TARGET_COMPILER_MINGW)
 // raise(SIGINT);               // this is what DebugStr() does on OS X according to Tech Note 2030
     int* p = NULL;              // but this gives us a stack crawl...
     *p = 0;
-    abort();                    // just to be sure
-
-#else
-    fprintf(stderr, "%s\n", mesg);
+#endif
     abort();
 #endif
 }
