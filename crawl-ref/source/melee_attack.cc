@@ -3985,7 +3985,7 @@ void melee_attack::announce_hit()
         mprf("You %s %s%s%s%s",
              attack_verb.c_str(),
              defender->name(DESC_THE).c_str(),
-             verb_degree, debug_damage_number().c_str(),
+             verb_degree.c_str(), debug_damage_number().c_str(),
              attack_strength_punctuation().c_str());
     }
 }
