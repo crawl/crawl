@@ -1449,7 +1449,8 @@ int prompt_eat_chunks(bool only_auto)
         chunks.push_back(item);
     }
 
-    const bool easy_eat = Options.easy_eat_chunks && !you.is_undead;
+    const bool easy_eat = Options.easy_eat_chunks && !you.is_undead
+        && !you.duration[DUR_NAUSEA];
     const bool easy_contam = easy_eat
         && (Options.easy_eat_gourmand && wearing_amulet(AMU_THE_GOURMAND)
             || Options.easy_eat_contaminated);
