@@ -120,6 +120,7 @@ enum translevel_prompt_flags
     TPF_ALLOW_UPDOWN      = 0x2,
     TPF_REMEMBER_TARGET   = 0x4,
     TPF_SHOW_ALL_BRANCHES = 0x8,
+    TPF_SHOW_PORTALS_ONLY = 0x10,
 
     TPF_DEFAULT_OPTIONS   = TPF_ALLOW_WAYPOINTS | TPF_ALLOW_UPDOWN
                                                 | TPF_REMEMBER_TARGET,
