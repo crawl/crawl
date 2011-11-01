@@ -667,7 +667,7 @@ static bool _eat_check(bool check_hunger = true, bool silent = false)
     {
         if (!silent)
         {
-            mpr("You'd puke it out immediately!");
+            mpr("You can't stomach food right now!");
             crawl_state.zero_turns_taken();
         }
         return (false);
