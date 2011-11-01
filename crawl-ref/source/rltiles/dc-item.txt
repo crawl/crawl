@@ -560,7 +560,6 @@ i-curse_weapon SCR_CURSE_WEAPON
 i-curse_armour SCR_CURSE_ARMOUR
 i-immolation SCR_IMMOLATION
 i-blinking SCR_BLINKING
-item/scroll/blank_paper SCR_PAPER
 i-magic_mapping SCR_MAGIC_MAPPING
 i-fog SCR_FOG
 i-acquirement SCR_ACQUIREMENT
