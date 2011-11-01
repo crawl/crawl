@@ -2040,12 +2040,18 @@ static bool _is_valid_branch(const Branch &br)
     return (br.shortname != NULL && brdepth[br.id] != -1);
 }
 
+static bool _is_disconnected_branch(const Branch &br)
+{
+    return !is_connected_branch(br.id);
+}
+
 static int _prompt_travel_branch(int prompt_flags, bool* to_entrance)
 {
     int branch = BRANCH_MAIN_DUNGEON;     // Default
     std::vector<branch_type> br =
         _get_branches(
-            (prompt_flags & TPF_SHOW_ALL_BRANCHES) ? _is_valid_branch
+            (prompt_flags & TPF_SHOW_ALL_BRANCHES) ? _is_valid_branch :
+            (prompt_flags & TPF_SHOW_PORTALS_ONLY) ? _is_disconnected_branch
                                                    : _is_known_branch);
 
     // Don't kill the prompt even if the only branch we know is the main dungeon

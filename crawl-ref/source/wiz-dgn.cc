@@ -203,31 +203,24 @@ void wizard_interlevel_travel()
 
 bool wizard_create_portal(const coord_def& pos)
 {
-    mpr("Destination for portal (defaults to 'bazaar')? ", MSGCH_PROMPT);
-    char specs[256];
-    if (cancelable_get_line(specs, sizeof(specs)))
+    mpr("Destination for portal:", MSGCH_PROMPT);
+
+    std::string dummy;
+    level_id dest = prompt_translevel_target(TPF_ALLOW_UPDOWN
+        | TPF_SHOW_PORTALS_ONLY, dummy).p.id;
+
+    if (dest.depth < 1 || dest.depth > brdepth[dest.branch])
     {
         canned_msg(MSG_OK);
         return false;
     }
 
-    std::string dst = specs;
-    dst = trim_string(dst);
-    dst = replace_all(dst, " ", "_");
-
-    if (dst.empty())
-        dst = "bazaar";
-
-    if (!find_map_by_name(dst) && !random_map_for_tag(dst))
-    {
-        mprf("No map named '%s' or tagged '%s'.", dst.c_str(), dst.c_str());
-        return false;
-    }
-
     map_wiz_props_marker *marker = new map_wiz_props_marker(you.pos());
-    marker->set_property("dst", dst);
+    marker->set_property("dst", dest.describe());
     marker->set_property("feature_description",
-                         "wizard portal, dest = " + dst);
+                         "wizard portal, dest = " + dest.describe());
+    marker->set_property("feature_description_long",
+                         "It's a multi-use portal.");
     env.markers.add(marker);
     env.markers.clear_need_activate();
     dungeon_terrain_changed(pos, DNGN_ENTER_PORTAL_VAULT, false);
