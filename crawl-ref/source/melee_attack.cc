@@ -4735,7 +4735,12 @@ int melee_attack::test_hit(int to_land, int ev)
 
 /* Returns base weapon damage for attacker
  *
- * TODO: Fill this in
+ * Because of the complex nature between player and monster base damage,
+ * a simple atype() check forks the logic for now. At the moment this is
+ * only is called within the context of ACT_PLAYER. Eventually, we should
+ * aim for a unified code for calculating all / most combat related figures
+ * and let the actor classes handle monster or player-specific scaling.
+ *
  */
 int melee_attack::calc_base_weapon_damage()
 {
