@@ -3112,8 +3112,6 @@ static void _place_traps(int level_number)
     }
     else if (player_in_branch(BRANCH_CRYPT))
         place_webs(random2(20));
-    else if (player_in_branch(BRANCH_MAIN_DUNGEON) && you.absdepth0 == 12)
-        place_webs(300);
 }
 
 static void _dgn_place_feature_at_random_floor_square(dungeon_feature_type feat,
