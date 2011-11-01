@@ -74,6 +74,7 @@ wchar_t oldTitle[80];
 
 static HANDLE inbuf = NULL;
 static HANDLE outbuf = NULL;
+static HANDLE old_outbuf = NULL;
 static int current_color = -1;
 static bool cursor_is_enabled = false;
 static CONSOLE_CURSOR_INFO initial_cci;
@@ -340,7 +341,18 @@ static void w32_term_resizer()
 void console_startup()
 {
     inbuf = GetStdHandle(STD_INPUT_HANDLE);
-    outbuf = GetStdHandle(STD_OUTPUT_HANDLE);
+    old_outbuf = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    // Create a new "console screen buffer" so we don't tramp all over
+    // the user's scrollback.
+    outbuf = CreateConsoleScreenBuffer(
+        GENERIC_READ |GENERIC_WRITE,
+        FILE_SHARE_READ | FILE_SHARE_WRITE, // shared
+        NULL,                    // default security attributes
+        CONSOLE_TEXTMODE_BUFFER, // must be TEXTMODE
+        NULL);                   // reserved; must be NULL
+
+    SetConsoleActiveScreenBuffer(outbuf);
 
     if (inbuf == INVALID_HANDLE_VALUE || outbuf == INVALID_HANDLE_VALUE)
     {
@@ -423,6 +435,14 @@ void console_shutdown()
     // finally, restore title
     if (*oldTitle)
         SetConsoleTitleW(oldTitle);
+
+    // and switch back to the former console buffer
+    if (old_outbuf)
+    {
+        SetConsoleActiveScreenBuffer(old_outbuf);
+        CloseHandle(outbuf);
+        old_outbuf = 0;
+    }
 }
 
 void set_cursor_enabled(bool enabled)
