@@ -1293,8 +1293,6 @@ bool melee_attack::player_aux_unarmed()
         to_hit = random2(calc_your_to_hit_unarmed(atk,
                          damage_brand == SPWPN_VAMPIRICISM));
 
-        make_hungry(2, true);
-
         handle_noise(defender->pos());
         alert_nearby_monsters();
 
