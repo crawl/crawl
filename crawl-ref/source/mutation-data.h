@@ -599,7 +599,7 @@
    "You rapidly evolve.",
    ""},
 
-  {"You feel the nature experimenting on you. Don't worry, failures die fast.",
+  {"You feel nature experimenting on you. Don't worry, failures die fast.",
    "Your genes go into a fast flux.",
    ""},
 
