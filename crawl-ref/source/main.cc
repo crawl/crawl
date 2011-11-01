@@ -2035,7 +2035,7 @@ void process_command(command_type cmd)
         // because we want to have CTRL-Y available...
         // and unfortunately they tend to be stuck together.
         clrscr();
-#ifndef USE_TILE_LOCAL
+#if !defined(USE_TILE_LOCAL) && !defined(TARGET_OS_WINDOWS)
         console_shutdown();
         kill(0, SIGTSTP);
         console_startup();
