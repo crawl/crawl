@@ -273,7 +273,7 @@ void attack::calc_elemental_brand_damage(beam_type flavour,
  * One could justify that blood amount varies based on the sharpness of the
  * weapon or some other arbitrary element of combat.
  */
-int melee_attack::modify_blood_amount(const int damage, const int dam_type)
+int attack::modify_blood_amount(const int damage, const int dam_type)
 {
     int factor = 0; // DVORP_NONE
 
