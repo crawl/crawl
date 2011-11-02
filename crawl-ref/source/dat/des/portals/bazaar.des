@@ -306,7 +306,7 @@ ENDMAP
 #
 # Maps are sorted by WEIGHTs: common (20), rare (5), very rare (1)
 
-default-depth:
+default-depth: Bazaar
 
 ##########################################################################
 # Common maps (weight 20)

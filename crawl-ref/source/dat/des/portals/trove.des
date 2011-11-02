@@ -353,13 +353,12 @@ ENDMAP
 #
 ##############################################################################
 
-# Reset default depth to prevent random generation of portal vaults.
-default-depth:
+default-depth: Trove
 
 NAME:    trove_simple
 WEIGHT:  60
 ORIENT:  encompass
-TAGS:    trove no_item_gen no_monster_gen allow_dup
+TAGS:    no_item_gen no_monster_gen allow_dup
 # Loot: 16 items.
 ITEM:   any useful good_item
 ITEM:   acquire jewellery / any useful good_item
@@ -384,7 +383,7 @@ ENDMAP
 NAME:    trove_garden
 WEIGHT:  40
 ORIENT:  encompass
-TAGS:    trove no_item_gen no_monster_gen allow_dup
+TAGS:    no_item_gen no_monster_gen allow_dup
 # Loot: 16 items, spread out a bit.
 KFEAT:   x = X
 COLOUR:  o = blue
@@ -471,7 +470,7 @@ WEIGHT: 30
 WEIGHT: 5
 : end
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   no_item_gen no_monster_gen allow_dup
 : trove.setup_features(_G)
 : trove.good_scroll(_G)
 ITEM:   acquire book
@@ -499,7 +498,7 @@ ENDMAP
 NAME:   trove_jewel_1
 WEIGHT: 20
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   no_item_gen no_monster_gen allow_dup
 # Loot: once again, 16 items.
 ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery
 COLOUR: o = blue
@@ -525,7 +524,7 @@ ENDMAP
 NAME:   trove_jewel_2
 WEIGHT: 20
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   no_item_gen no_monster_gen allow_dup
 # Loot: 15 items this time.
 ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
 COLOUR: x = blue
@@ -548,7 +547,7 @@ WEIGHT: 15
 WEIGHT: 5
 : end
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 # Loot: once again, 16 items.
 COLOUR: o = blue
 ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
@@ -578,7 +577,7 @@ WEIGHT: 15
 WEIGHT: 5
 : end
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 # Loot: 15 items.
 COLOUR: x = blue
 ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
@@ -597,7 +596,7 @@ ENDMAP
 NAME:   trove_armour_1
 WEIGHT: 15
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
 # Loot: once again, 16 items.
 COLOUR: o = blue
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
@@ -623,7 +622,7 @@ ENDMAP
 NAME:   trove_armour_2
 WEIGHT: 15
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
 # Loot: 15 items.
 COLOUR: x = blue
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
@@ -642,7 +641,7 @@ ENDMAP
 NAME:    trove_hunter_1
 WEIGHT:  5
 ORIENT:  encompass
-TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
+TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
 # Loot:  15 items, this time.
 COLOUR:  x = blue
 COLOUR:  o = blue
@@ -673,7 +672,7 @@ ENDMAP
 # A "nasty" monsters-behind-glass map for dpeg.
 NAME:   trove_nasty
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_vmirror no_rotate
+TAGS:   no_item_gen no_monster_gen allow_dup no_vmirror no_rotate
 WEIGHT: 2
 COLOUR: x = blue
 COLOUR: m = blue
@@ -704,7 +703,7 @@ ENDMAP
 # Another nasty vault, because dpeg asked.
 NAME:   trove_treasure_island
 ORIENT: encompass
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_vmirror no_rotate no_pool_fixup
+TAGS:   no_item_gen no_monster_gen allow_dup no_vmirror no_rotate no_pool_fixup
 WEIGHT: 2
 COLOUR: x = blue
 COLOUR: o = blue
@@ -759,7 +758,7 @@ ENDMAP
 # extremely useful or extremely useless.
 #
 NAME:    trove_artefacts
-TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe
 WEIGHT:  1
 ORIENT:  encompass
 ######## There should be a better way than listing all of the unrandarts...
@@ -827,7 +826,7 @@ ENDMAP
 
 # Alchemist's storehouse, has 14-26 desirable potions
 NAME:    trove_alchemists_storehouse
-TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_mu
+TAGS:    no_item_gen no_monster_gen allow_dup no_species_mu
 WEIGHT:  5
 ORIENT:  encompass
 ITEM:    potion of curing / potion of heal wounds / \
@@ -856,7 +855,7 @@ ENDMAP
 
 # 20 items, but you have to dig for them.  Wand is included.
 NAME:    trove_dig
-TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:    no_item_gen no_monster_gen allow_dup no_species_fe
 WEIGHT:  5
 ORIENT:  encompass
 ITEM:    acquire armour / any useful armour good_item / any armour w:2
@@ -894,7 +893,7 @@ ENDMAP
 
 # 16 pieces of armour
 NAME:   trove_armour_six_rooms
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe no_species_op no_species_oc
 ORIENT: encompass
 ITEM:   acquire armour / any useful armour good_item / any armour w:2
 : trove.setup_features(_G)
@@ -910,7 +909,7 @@ ENDMAP
 
 # 16 weapons
 NAME:   trove_weapons_four_rooms
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 ORIENT: encompass
 ITEM:   acquire weapon / any useful weapon good_item / any weapon w:2
 NSUBST: " = 16:d / *:.
@@ -935,7 +934,7 @@ ENDMAP
 
 # 16 pieces of jewellery
 NAME:   trove_jewellery_lava
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   no_item_gen no_monster_gen allow_dup
 ORIENT: encompass
 ITEM:   acquire jewellery / any useful jewellery good_item / any jewellery w:2
 : trove.setup_features(_G)
@@ -971,7 +970,7 @@ ENDMAP
 
 # 16 scrolls and books
 NAME:   trove_books_scrolls
-TAGS:   trove no_item_gen no_monster_gen allow_dup
+TAGS:   no_item_gen no_monster_gen allow_dup
 ORIENT: encompass
 ITEM:   acquire magical staff / acquire book / acquire:sif_muna book / any book
 SUBST:  d = de
@@ -997,7 +996,7 @@ ENDMAP
 
 # 16 scrolls and wands
 NAME:   trove_wands_scrolls
-TAGS:   trove no_item_gen no_monster_gen allow_dup no_species_fe
+TAGS:   no_item_gen no_monster_gen allow_dup no_species_fe
 ORIENT: encompass
 ITEM:   acquire wand
 SUBST:  e = eeed

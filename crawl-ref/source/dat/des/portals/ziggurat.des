@@ -266,8 +266,7 @@ MAP
 ENDMAP
 
 
-# Empty default-depth as vaults below may not occur randomly in the dungeon.
-default-depth:
+default-depth: Zig
 
 #######################################################################
 # Pillars for ziggurats.

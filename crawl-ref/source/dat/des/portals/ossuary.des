@@ -168,7 +168,7 @@ ENDMAP
 
 # Reset default depth to prevent random generation of portal vaults.
 # Sort destination maps by WEIGHT.
-default-depth:
+default-depth: Ossuary
 
 ###########################################################
 # Common: WEIGHT 40
@@ -177,7 +177,7 @@ default-depth:
 NAME:    ossuary_tomb_1
 WEIGHT:  40
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen no_rotate
+TAGS:    no_item_gen no_monster_gen no_rotate
 SHUFFLE: dwyz
 SUBST:   w=2, y=2
 NSUBST:  z= 1:1 / *:3
@@ -221,7 +221,7 @@ NAME:    ossuary_tomb_2
 # traps.
 WEIGHT:  40
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen no_rotate
+TAGS:    no_item_gen no_monster_gen no_rotate
 KFEAT:   ~ = dart trap w:1 / arrow trap w:1 / needle trap
 KFEAT:   ^ = dart trap / arrow trap
 # Number of 1's is 53, number of ~'s is 57.
@@ -277,7 +277,7 @@ ENDMAP
 NAME:    ossuary_tomb_3
 WEIGHT:  40
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen no_rotate no_vmirror
+TAGS:    no_item_gen no_monster_gen no_rotate no_vmirror
 # zombies should be awake, so they march downwards in a line
 MONS:    generate_awake orc zombie / generate_awake kobold zombie / \
          generate_awake hobgoblin zombie / generate_awake gnoll zombie
@@ -317,7 +317,7 @@ ENDMAP
 NAME:    minmay_ossuary_two_tombs
 WEIGHT:  20
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen
+TAGS:    no_item_gen no_monster_gen
 # Loot: between 5 scrolls/potions and 9 scrolls/potions, with some gold.
 # The tomb close to the player is a bit easier than the other one, and is
 # more likely to be the one with less loot, giving weak players a chance.
@@ -365,7 +365,7 @@ ENDMAP
 NAME:    ossuary_crypta
 WEIGHT:  20
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen no_rotate no_vmirror
+TAGS:    no_item_gen no_monster_gen no_rotate no_vmirror
 MONS:    mummy
 MONS:    gnoll zombie / hobgoblin zombie / orc zombie / \
          human zombie / kobold zombie / goblin zombie / \
@@ -424,7 +424,7 @@ ENDMAP
 NAME:   ossuary_minmay_scorpions
 WEIGHT: 20
 ORIENT: encompass
-TAGS:   ossuary no_item_gen no_monster_gen
+TAGS:   no_item_gen no_monster_gen
 MONS:   scorpion
 MONS:   mummy
 MONS:   gnoll zombie / hobgoblin zombie / orc zombie / \
@@ -467,7 +467,7 @@ ENDMAP
 NAME:    ossuary_minmay_tomb_2a
 WEIGHT:  20
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen no_rotate
+TAGS:    no_item_gen no_monster_gen no_rotate
 MONS:    rat zombie / jackal zombie / goblin zombie / hobgoblin zombie / \
          snake zombie / gnoll zombie / orc zombie / kobold zombie / \
          big kobold zombie / hound zombie / human zombie / elf zombie
@@ -514,7 +514,7 @@ ENDMAP
 NAME:    ossuary_zaba_flooded
 WEIGHT:  20
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen
+TAGS:    no_item_gen no_monster_gen
 {{
 local flood_x, flood_y, n = -1, -1, 0
 
@@ -612,7 +612,7 @@ ENDMAP
 NAME:   minmay_ossuary_gauntlet
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   ossuary no_item_gen no_monster_gen
+TAGS:   no_item_gen no_monster_gen
 NSUBST: 1 = 2:1 / *:2
 MONS:   mummy
 MONS:   goblin zombie / hobgoblin zombie / gnoll zombie / big kobold zombie / \
@@ -637,7 +637,7 @@ ENDMAP
 NAME:    ossuary_the_hunt_dpeg
 WEIGHT:  10
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen
+TAGS:    no_item_gen no_monster_gen
 # loot: 8 items of which 6 should be good.
 # Most of the loot helps right here, if need be.
 ITEM:    potion of curing / potion of heal wounds / potion of speed / \
@@ -690,7 +690,7 @@ ENDMAP
 NAME:    ossuary_due_mausoleum
 WEIGHT:  10
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen no_rotate no_vmirror
+TAGS:    no_item_gen no_monster_gen no_rotate no_vmirror
 MONS:    orc skeleton / kobold skeleton / gnoll skeleton / orc skeleton
 MONS:    mummy
 MONS:    patrolling guardian mummy
@@ -748,7 +748,7 @@ ENDMAP
 NAME:    ossuary_due_small_catacomb
 WEIGHT:  10
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen
+TAGS:    no_item_gen no_monster_gen
 ITEM:    any scroll / any potion
 MONS:    kobold skeleton / goblin skeleton / gnoll skeleton / \
          orc skeleton
@@ -798,7 +798,7 @@ ENDMAP
 NAME:    ossuary_due_pyramid
 WEIGHT:  10
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen no_rotate no_vmirror no_hmirror
+TAGS:    no_item_gen no_monster_gen no_rotate no_vmirror no_hmirror
 MONS:    kobold zombie / gnoll zombie / orc zombie / rat zombie / \
          goblin zombie / hobgoblin zombie
 MONS:    kobold skeleton / gnoll skeleton / orc skeleton / rat skeleton / \
@@ -850,7 +850,7 @@ NAME:   ossuary_zaba_two_paths
 # more time to go for a walk and another chance to meet the player.
 ORIENT: encompass
 WEIGHT: 10
-TAGS:   ossuary no_item_gen no_monster_gen no_rotate
+TAGS:   no_item_gen no_monster_gen no_rotate
 #
 # Standard monsters: small zombies, large zombies, boss:
 MONS:   kobold zombie / goblin zombie / orc zombie / hobgoblin zombie
@@ -921,7 +921,7 @@ ENDMAP
 NAME:    ossuary_due_cavern
 WEIGHT:  10
 ORIENT:  encompass
-TAGS:    ossuary no_item_gen no_monster_gen
+TAGS:    no_item_gen no_monster_gen
 MONS:    centaur zombie w:1 / orc zombie / hobgoblin zombie /\
          kobold zombie / snake zombie / orc skeleton / hobgoblin skeleton /\
          small snake skeleton / nothing w:5
@@ -982,7 +982,7 @@ ENDMAP
 NAME:   ossuary_minmay_four_chambers
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   ossuary no_item_gen no_monster_gen
+TAGS:   no_item_gen no_monster_gen
 MONS:   human zombie / elf zombie / centaur zombie
 MONS:   mummy
 ITEM:   any scroll / any potion / any scroll q:2 w:2 / any potion q:2 w:2
@@ -1022,7 +1022,7 @@ ENDMAP
 NAME:   ossuary_minmay_chase
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   ossuary no_item_gen no_monster_gen
+TAGS:   no_item_gen no_monster_gen
 MONS:   rat zombie / quokka zombie / snake zombie /\
         goblin zombie / hobgoblin zombie / kobold zombie / gnoll zombie w:2 /\
         big kobold zombie w:1 / human zombie w:1 / elf zombie w:1 / orc zombie w:1

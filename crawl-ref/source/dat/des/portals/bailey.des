@@ -361,7 +361,7 @@ MAP
 ENDMAP
 
 # The actual portal vaults #####################################
-default-depth:
+default-depth: Bailey
 
 ##########
 #        #
