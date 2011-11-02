@@ -41,6 +41,15 @@ static int file_marshall(lua_State *ls)
     return (0);
 }
 
+static int file_minor_version(lua_State *ls)
+{
+    if (lua_gettop(ls) != 1)
+        luaL_error(ls, "Need reader as one argument");
+    reader &th(*static_cast<reader*>(lua_touserdata(ls, 1)));
+    lua_pushnumber(ls, th.getMinorVersion());
+    return (1);
+}
+
 static int file_unmarshall_boolean(lua_State *ls)
 {
     if (lua_gettop(ls) != 1)
@@ -199,6 +208,7 @@ static const struct luaL_reg file_dlib[] =
     { "writefile", _file_writefile },
     { "datadir_files", _file_datadir_files },
     { "datadir_files_recursive", _file_datadir_files_recursive },
+    { "minor_version", file_minor_version },
     { NULL, NULL }
 };
 
