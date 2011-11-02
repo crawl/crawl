@@ -404,7 +404,7 @@ bool melee_attack::handle_phase_hit()
             if (damage_brand == SPWPN_SPEED)
                 final_attack_delay = final_attack_delay / 2 + 1;
 
-            // speed adjustment for weapon using monsters
+            // speed adjustment for weapon-using monsters
             if (final_attack_delay > 0)
             {
                 const int atk_speed =
@@ -494,7 +494,7 @@ bool melee_attack::handle_phase_hit()
     }
 
     if(defender->props.exists("helpless"))
-            defender->props.erase("helpless");
+       defender->props.erase("helpless");
 
     return (true);
 }
