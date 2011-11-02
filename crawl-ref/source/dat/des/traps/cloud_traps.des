@@ -40,6 +40,7 @@ function callback.cloud_trap_stepped(data, triggerable, triggerer, marker, ev)
   local colour = ""
   local name = ""
   local tile = ""
+  local excl_rad = -1
 
   -- Size based on depth (max. between 10-20 clouds at Zot:5)
   -- Size is at least 2, so that players note the effect on screen.
@@ -61,7 +62,8 @@ function callback.cloud_trap_stepped(data, triggerable, triggerer, marker, ev)
   end
   crawl.mpr(cloud_message)
   dgn.apply_area_cloud(x, y, pow_min, pow_max, pow_rolls, size,
-                       cloud_type, kill_cat, spread_rate, colour, name, tile)
+                       cloud_type, kill_cat, spread_rate, colour, name, tile,
+                       excl_rad)
 
   data.triggered = true
   -- remove the trap
