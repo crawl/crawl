@@ -4032,26 +4032,6 @@ void melee_attack::mons_do_napalm()
     }
 }
 
-void melee_attack::wasp_paralyse_defender()
-{
-    // [dshaligram] Adopted 4.1.2's wasp mechanics, in slightly modified
-    // form.
-    if (attacker->type == MONS_RED_WASP || one_chance_in(3))
-        defender->poison(attacker, coinflip() ? 2 : 1);
-
-    int paralyse_roll = (damage_done > 4 ? 3 : 20);
-    if (attacker->type == MONS_YELLOW_WASP)
-        paralyse_roll += 3;
-
-    if (defender->res_poison() <= 0)
-    {
-        if (one_chance_in(paralyse_roll))
-            defender->paralyse(attacker, roll_dice(1, 3));
-        else
-            defender->slow_down(attacker, roll_dice(1, 3));
-    }
-}
-
 void melee_attack::splash_defender_with_acid(int strength)
 {
     if (defender->atype() == ACT_PLAYER)
@@ -4273,9 +4253,24 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_PARALYSE:
+    {
         // Only wasps at the moment.
-        wasp_paralyse_defender();
+    	if (attacker->type == MONS_RED_WASP || one_chance_in(3))
+			defender->poison(attacker, coinflip() ? 2 : 1);
+
+		int paralyse_roll = (damage_done > 4 ? 3 : 20);
+		if (attacker->type == MONS_YELLOW_WASP)
+			paralyse_roll += 3;
+
+		if (defender->res_poison() <= 0)
+		{
+			if (one_chance_in(paralyse_roll))
+				defender->paralyse(attacker, roll_dice(1, 3));
+			else
+				defender->slow_down(attacker, roll_dice(1, 3));
+		}
         break;
+    }
 
     case AF_ACID:
         if (attacker->type == MONS_SPINY_WORM)
