@@ -1293,14 +1293,14 @@ static int lua_cloud_pow_rolls;
 
 static int make_a_lua_cloud(coord_def where, int garbage, int spread_rate,
                             cloud_type ctype, const actor *agent, int colour,
-                            std::string name, std::string tile)
+                            std::string name, std::string tile, int excl_rad)
 {
     UNUSED(garbage);
 
     const int pow = random_range(lua_cloud_pow_min,
                                  lua_cloud_pow_max,
                                  lua_cloud_pow_rolls);
-    place_cloud(ctype, where, pow, agent, spread_rate, colour, name, tile);
+    place_cloud(ctype, where, pow, agent, spread_rate, colour, name, tile, excl_rad);
     return 1;
 }
 
@@ -1323,6 +1323,7 @@ static int dgn_apply_area_cloud(lua_State *ls)
     const int colour    = lua_isstring(ls, 10) ? str_to_colour(luaL_checkstring(ls, 10)) : -1;
     std::string name = lua_isstring(ls, 11) ? luaL_checkstring(ls, 11) : "";
     std::string tile = lua_isstring(ls, 12) ? luaL_checkstring(ls, 12) : "";
+    const int excl_rad = lua_isnumber(ls, 13) ? luaL_checkint(ls, 13) : -1;
 
     if (!in_bounds(x, y))
     {
@@ -1388,7 +1389,8 @@ static int dgn_apply_area_cloud(lua_State *ls)
     }
 
     apply_area_cloud(make_a_lua_cloud, coord_def(x, y), 0, size,
-                     ctype, 0, spread_rate, colour, name, tile);
+                     ctype, 0, spread_rate, colour, name, tile,
+                     excl_rad);
 
     return (0);
 }
@@ -1418,6 +1420,7 @@ static int dgn_place_cloud(lua_State *ls)
     const int colour    = lua_isstring(ls, 7) ? str_to_colour(luaL_checkstring(ls, 7)) : -1;
     std::string name = lua_isstring(ls, 8) ? luaL_checkstring(ls, 8) : "";
     std::string tile = lua_isstring(ls, 9) ? luaL_checkstring(ls, 9) : "";
+    const int excl_rad = lua_isnumber(ls, 10) ? luaL_checkint(ls, 10) : -1;
 
     if (!in_bounds(x, y))
     {
@@ -1452,7 +1455,7 @@ static int dgn_place_cloud(lua_State *ls)
         return (0);
     }
 
-    place_cloud(ctype, coord_def(x, y), cl_range, 0, spread_rate, colour, name, tile);
+    place_cloud(ctype, coord_def(x, y), cl_range, 0, spread_rate, colour, name, tile, excl_rad);
 
     return (0);
 }

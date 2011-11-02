@@ -856,13 +856,17 @@ static int player_view_update_at(const coord_def &gc)
         cloud_type   ctype = cl.type;
 
         bool did_exclude = false;
-        if (cl.whose  == KC_OTHER
-            && cl.killer == KILL_MISC
-            && is_damaging_cloud(cl.type, false))
+        if (!cl.temporary() && is_damaging_cloud(cl.type, false))
         {
+            int size;
+
             // Steam clouds are less dangerous than the other ones,
             // so don't exclude the neighbour cells.
-            const int size = (ctype == CLOUD_STEAM ? 0 : 1);
+            if (ctype == CLOUD_STEAM && cl.exclusion_radius() == 1)
+                size = 0;
+            else
+                size = cl.exclusion_radius();
+
             bool was_exclusion = is_exclude_root(gc);
             set_exclude(gc, size, false, false, true);
             if (!did_exclude && !was_exclusion)

@@ -98,7 +98,7 @@ typedef int cell_func(coord_def where, int pow, int aux, actor *agent);
 typedef int monster_func(monster* mon, int pow);
 typedef int cloud_func(coord_def where, int pow, int spreadrate,
                        cloud_type type, const actor* agent, int colour,
-                       std::string name, std::string tile);
+                       std::string name, std::string tile, int excl_rad = -1);
 
 int apply_area_visible(cell_func cf, int power,
                        bool pass_through_trans = false, actor *agent = NULL,
@@ -127,7 +127,8 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
                       int pow, int number, cloud_type ctype,
                       const actor *agent,
                       int spread_rate = -1, int colour = -1,
-                      std::string name = "", std::string tile = "");
+                      std::string name = "", std::string tile = "",
+                      int excl_rad = -1);
 
 bool spell_direction(dist &spelld, bolt &pbolt,
                       targeting_type restrict = DIR_NONE,

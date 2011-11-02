@@ -286,14 +286,17 @@ struct cloud_struct
     int           colour;
     std::string   name;
     std::string   tile;
+    int           excl_rad;
 
     cloud_struct() : pos(), type(CLOUD_NONE), decay(0), spread_rate(0),
                      whose(KC_OTHER), killer(KILL_NONE), colour(-1),
-                     name(""), tile("")
+                     name(""), tile(""), excl_rad(-1)
     {
     }
 
     bool defined() const { return type != CLOUD_NONE; }
+    bool temporary() const { return excl_rad == -1; }
+    int exclusion_radius() const { return excl_rad; }
 
     void set_whose(kill_category _whose);
     void set_killer(killer_type _killer);
