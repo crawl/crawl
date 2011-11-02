@@ -210,13 +210,6 @@ function ice_cave_caverns_natural_giant_monster_set(e)
 end
 }}
 
-# Add a milestone for entering the Ice Cave.
-{{
-function ice_cave_milestone(e)
-  crawl.mark_milestone("br.enter", "entered an Ice Cave.", true)
-end
-}}
-
 # Entries ##########################################
 
 default-depth: D:11-19, Lair:1-8, Orc:1-4, Elf:1-5, Vault:1-7
@@ -433,9 +426,6 @@ SHUFFLE: "'
 SUBST:   "=. , ':x .:1
 : ice_cave_colours(_G)
 : ice_cave_random_monster_list_natural_giant(_G)
-epilogue{{
-ice_cave_milestone(_G)
-}}
 MONS:    yak / wolf / polar bear w:4
 MONS:    polar bear
 MONS:    frost giant
@@ -516,9 +506,6 @@ SHUFFLE: "'
 SUBST:   "=. , ':x .:1
 : ice_cave_colours(_G)
 : dgn.set_random_mon_list("ice beast w:90 / ice dragon / nothing")
-epilogue{{
-ice_cave_milestone(_G)
-}}
 MONS:    ice beast
 MONS:    ice dragon
 MONS:    ice beast generate_awake
@@ -579,9 +566,6 @@ SUBST:   - = ........-
 KFEAT:   - = alarm trap
 : ice_cave_colours(_G)
 : ice_cave_random_monster_list_undead_necromancer(_G)
-epilogue{{
-ice_cave_milestone(_G)
-}}
 MONS:    ice beast
 MONS:    white imp
 MONS:    freezing wraith
@@ -680,7 +664,6 @@ SUBST:   ! = w
 ice_cave_colours(_G)
 dgn.set_random_mon_list("white imp w:35 / ufetubus w:35 / blue devil w:20 / \
                          ice devil / nothing")
-ice_cave_milestone(_G)
 }}
 : --FIXME: if you.level_type_tag() == "ice_cave_hard" then
 : if false then
@@ -780,9 +763,6 @@ MONS:   necromancer
 ITEM:   any potion / any scroll / any weapon good_item / any armour good_item
 KFEAT:  ' = alarm trap / net trap / arrow trap / bolt trap w:5 / floor w:5
 : ice_cave_colours(_G)
-epilogue{{
-ice_cave_milestone(_G)
-}}
 : ice_cave_random_monster_list_undead_demon(_G)
 MAP
       xxxxx
@@ -856,9 +836,6 @@ SUBST: - = x
 SUBST: _ = w
 : end
 : ice_cave_colours(_G)
-epilogue{{
-ice_cave_milestone(_G)
-}}
 # Two different populations: undead/demon and natural/giant.
 : --FIXME: if you.level_type_tag() == "ice_cave_hard" then
 : if false then
@@ -967,9 +944,6 @@ SUBST: '=x , -=.
 SUBST: '=. , -=x
 : end
 : ice_cave_colours(_G)
-epilogue{{
-ice_cave_milestone(_G)
-}}
 MAP
  xxxxxxxxxx xxxxxxxxxxxxxxxxxxxxx xxxxxxxxx    xxxxxxxx    xxxxxxxx
  x::xxwwwwxxx.x.'x-;x5;;5xxwwwwwxxx1;;;x;Wxxxxxx15415;xx  xx......xx
@@ -1052,9 +1026,6 @@ SUBST: '=x , -=.
 SUBST: '=. , -=x
 : end
 : ice_cave_colours(_G)
-epilogue{{
-ice_cave_milestone(_G)
-}}
 MAP
                                  xxxxx
                                 xx.x.xx      xxxxxxxxxx
@@ -1129,9 +1100,6 @@ SUBST:  ! = *
 SUBST:  _ = <
 : dgn.set_random_mon_list("ice beast w:90 / nothing")
 : ice_cave_colours(_G)
-epilogue{{
-ice_cave_milestone(_G)
-}}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxccccccccccccccccccccccccc
 xxx.........xxxxxxxxxxxccccccccccccc---------ccc
@@ -1157,9 +1125,6 @@ ORIENT: encompass
 MONS:   ice beast, ice statue
 : dgn.set_random_mon_list("ice beast w:90 / nothing")
 : ice_cave_colours(_G)
-epilogue{{
-ice_cave_milestone(_G)
-}}
 MAP
 ccccccccccc
 c|*.....*|c

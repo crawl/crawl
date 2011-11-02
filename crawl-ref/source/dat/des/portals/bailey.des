@@ -73,10 +73,6 @@ function bailey_setup(e)
   e.lrocktile("wall_brick_brown")
 end
 
-function bailey_milestone(e)
-  crawl.mark_milestone("br.enter", "entered a Bailey.", true)
-end
-
 -- In order to avoid repeating the lengthy monster definitions:
 
 -- Axes.
@@ -411,9 +407,6 @@ NSUBST: s = 1:T / *:.
 NSUBST: t = 1:T / *:.
 KFEAT:  T = teleport trap
 : bailey_setup(_G)
-epilogue{{
-bailey_milestone(_G)
-}}
 MAP
   ccccccccc
   ccccZcccc
@@ -472,9 +465,6 @@ ITEM:   potion of experience w:30 / potion of cure mutation w:30 /\
         potion of gain intelligence q:2 / potion of gain strength q:2 /\
         potion of gain dexterity q:2
 : bailey_setup(_G)
-epilogue{{
-bailey_milestone(_G)
-}}
 MAP
 ccc ccc ccccc ccc ccc
 cAccc1ccc2+2ccc1ccc1c
@@ -522,9 +512,6 @@ KFEAT:  T = teleport trap
 : hard_axe_fighter(_G)
 #
 : bailey_setup(_G)
-epilogue{{
-bailey_milestone(_G)
-}}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxx.....xxxxxxxxxxx
@@ -603,9 +590,6 @@ SUBST:   N = nc
 SUBST:   2 = 223
 #
 : bailey_setup(_G)
-epilogue{{
-bailey_milestone(_G)
-}}
 MAP
 ccccccccccccccccccccccccccccccccccccccccccccccccccc
 cccccccccccccccccccccccccc..??.d.??d<cccccccccccccc
@@ -663,9 +647,6 @@ ITEM:   potion of gain strength / potion of gain intelligence / \
 : hard_axe_fighter(_G)
 MONS:   orc warlord
 : bailey_setup(_G)
-epilogue{{
-bailey_milestone(_G)
-}}
 SUBST:  I = t.
 MAP
 ttttttttttttttttttttttttttttttttttttt
@@ -752,9 +733,6 @@ ITEM:   good_item cloak race:orcish / good_item pair of gloves race:orcish /\
         good_item helmet race:orcish / good_item pair of boots race:orcish /\
         good_item large shield race:orcish / good_item shield race:orcish
 : bailey_setup(_G)
-epilogue{{
-bailey_milestone(_G)
-}}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xAxxxxxxxxxxx.........xxxxxxxxxxxxx
@@ -811,9 +789,6 @@ ITEM:   potion of experience q:2 / scroll of acquirement q:2 /\
         legendary deck of wonders
 SUBST:  d = de|
 : bailey_setup(_G)
-epilogue{{
-bailey_milestone(_G)
-}}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 x<.......................................<x
@@ -878,9 +853,6 @@ MONS:    deep elf soldier / deep elf fighter
 MONS:    deep elf summoner / deep elf priest / nothing
 MONS:    deep elf knight
 : bailey_setup(_G)
-epilogue{{
-bailey_milestone(_G)
-}}
 MAP
          ccccc
     cccccc...cccccc
@@ -924,9 +896,6 @@ MONS:   orc warrior ; crossbow . bolt | halberd
 : orc_knight_with_polearm(_G)
 SUBST:  1=112, 2=23, 3=34
 : bailey_setup(_G)
-epilogue{{
-bailey_milestone(_G)
-}}
 MAP
 ccccccccccccccccccccccccccccccc
 ccxxxcccccccccxxxcccccccccxxxcc
@@ -974,9 +943,6 @@ MONS:   orc warrior ; spear w:5 | trident w:5 | halberd | hand axe | war axe /\
 : orc_warrior_with_polearm(_G)
 : orc_knight_with_polearm(_G)
 : bailey_setup(_G)
-epilogue{{
-bailey_milestone(_G)
-}}
 MAP
 cccccccccccccccccccccccccccccccccccccccccccccccccccccc
 cc...<.....1cccccccc....1ccccccccc....1ccc..........cc

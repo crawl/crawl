@@ -25,43 +25,11 @@ function hive_portal()
                            dst = 'Hive', floor = 'stone_arch' }
 end
 
-function hive_message(e)
-  crawl.mpr("You enter a furiously buzzing hive!")
-end
-
-function hive_milestone(e)
-  crawl.mark_milestone("br.enter", "entered a Hive.", true)
-end
-
-function random_hive_colour()
-  local colours = {"blue", "red", "lightblue", "magenta", "green"}
-  return colours[crawl.random2(#colours) + 1]
-end
-
 function fixup_hive()
   dgn.fixup_stairs("stone_arch", "exit_portal_vault")
-
-  if (dgn.get_floor_colour() == "black") then
-    dgn.change_floor_colour(random_hive_colour())
-  end
-
-  if (dgn.get_rock_colour() == "black") then
-    dgn.change_rock_colour("yellow")
-  end
-
-  dgn.change_floor_tile("floor_hive")
-  dgn.change_rock_tile("wall_hive")
 end
 
 dgn.set_lt_callback("hive", "fixup_hive")
-
-function hive_epilogue(e)
-  e.hook("epilogue",
-         function ()
-           hive_message(_G)
-           hive_milestone(_G)
-         end)
-end
 
 }}
 
@@ -376,7 +344,6 @@ NSUBST: o = 1:. / *:aa.
 NSUBST: p = 1:. / *:aa.
 # At least 1 of q
 NSUBST: q = 1:. / *:aa.
-: hive_epilogue(_G)
 MAP
              aaaaa     aaaaa
             aa.<>aa   aa...aa

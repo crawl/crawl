@@ -54,13 +54,6 @@ function initialise_ziggurat(z, portal)
     z.portal = portal.props
   end
 
-  if not z.depth then
-    -- At this point we're still on the parent level (the level
-    -- containing the ziggurat entrance), barring wizmoded ziggurat
-    -- portals, which aren't our target demographic anyway.
-    crawl.mark_milestone("zig.enter", "entered a Ziggurat.")
-  end
-
   z.depth = 1
 
   -- Any given ziggurat will use the same builder for all its levels,
@@ -149,10 +142,6 @@ function ziggurat_awaken_all(mons)
 end
 
 function ziggurat_build_level(e)
-  if zig().depth == 1 then
-    e.welcome("You land on top of a ziggurat so tall you " ..
-              "cannot make out the ground.")
-  end
   local builder = zig().builder
 
   local depth = zig().depth
