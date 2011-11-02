@@ -197,7 +197,7 @@ bool can_wield(item_def *weapon, bool say_reason,
             {
                 set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
                 if (in_inventory(*weapon))
-                    mpr(weapon->name(DESC_INVENTORY_EQUIP).c_str());
+                    mpr_nocap(weapon->name(DESC_INVENTORY_EQUIP).c_str());
             }
             else if (is_artefact(*weapon) && !item_type_known(*weapon))
                 artefact_wpn_learn_prop(*weapon, ARTP_BRAND);
@@ -219,7 +219,7 @@ bool can_wield(item_def *weapon, bool say_reason,
             {
                 set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
                 if (in_inventory(*weapon))
-                    mpr(weapon->name(DESC_INVENTORY_EQUIP).c_str());
+                    mpr_nocap(weapon->name(DESC_INVENTORY_EQUIP).c_str());
             }
             else if (is_artefact(*weapon) && !item_type_known(*weapon))
                 artefact_wpn_learn_prop(*weapon, ARTP_BRAND);
@@ -411,7 +411,7 @@ bool wield_weapon(bool auto_wield, int slot, bool show_weff_messages,
     equip_item(EQ_WEAPON, item_slot, show_weff_messages);
 
     if (show_wield_msg)
-        mpr(new_wpn.name(DESC_INVENTORY_EQUIP).c_str());
+        mpr_nocap(new_wpn.name(DESC_INVENTORY_EQUIP).c_str());
 
     check_item_hint(new_wpn, old_talents);
 
@@ -3299,7 +3299,7 @@ static int _prompt_ring_to_remove_octopode(int new_ring)
 //         one_slot, two_slot, three_slot, four_slot, five_slot, six_slot, seven_slot, eight_slot);
 
     for (int i = 0; i < 8; i++)
-        mprf("%s", rings[i]->name(DESC_INVENTORY).c_str());
+        mprf_nocap("%s", rings[i]->name(DESC_INVENTORY).c_str());
     flush_prev_message();
 
     // Deactivate choice from tile inventory.
@@ -4132,7 +4132,7 @@ void zap_wand(int slot)
         if (wand.sub_type == WAND_RANDOM_EFFECTS)
             mpr("You feel that this wand is rather unreliable.");
 
-        mpr(wand.name(DESC_INVENTORY_EQUIP).c_str());
+        mpr_nocap(wand.name(DESC_INVENTORY_EQUIP).c_str());
     }
     else
         set_ident_type(wand, ID_TRIED_TYPE);

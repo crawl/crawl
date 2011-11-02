@@ -2778,7 +2778,7 @@ static void _safe_newline()
 void inscribe_item(item_def &item, bool msgwin)
 {
     if (msgwin)
-        mpr(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
+        mpr_nocap(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
 
     const bool is_inscribed = !item.inscription.empty();
 
@@ -2895,7 +2895,7 @@ void inscribe_item(item_def &item, bool msgwin)
 
     if (msgwin)
     {
-        mpr(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
+        mpr_nocap(item.name(DESC_INVENTORY).c_str(), MSGCH_EQUIPMENT);
         you.wield_change  = true;
         you.redraw_quiver = true;
     }

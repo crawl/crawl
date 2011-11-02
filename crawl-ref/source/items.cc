@@ -1757,8 +1757,8 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
                 if (!quiet)
                 {
-                    mpr(get_menu_colour_prefix_tags(you.inv[m],
-                                                    DESC_INVENTORY).c_str());
+                    mpr_nocap(get_menu_colour_prefix_tags(you.inv[m],
+                                                          DESC_INVENTORY).c_str());
                 }
                 you.turn_is_over = true;
 
@@ -1848,8 +1848,8 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
 
     if (!quiet)
     {
-        mpr(get_menu_colour_prefix_tags(you.inv[freeslot],
-                                        DESC_INVENTORY).c_str());
+        mpr_nocap(get_menu_colour_prefix_tags(you.inv[freeslot],
+                                              DESC_INVENTORY).c_str());
     }
     if (crawl_state.game_is_hints())
     {

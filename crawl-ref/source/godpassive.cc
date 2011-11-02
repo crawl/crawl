@@ -471,7 +471,7 @@ bool ash_id_item(item_def& item, bool silent)
             you.wield_change = true;
 
         if (!silent)
-            mpr(item.name(DESC_INVENTORY_EQUIP).c_str());
+            mpr_nocap(item.name(DESC_INVENTORY_EQUIP).c_str());
 
         seen_item(item);
         return true;

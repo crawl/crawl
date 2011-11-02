@@ -276,10 +276,10 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
 
     if (verbose)
     {
-        mpr(you.inv[to_slot].name(DESC_INVENTORY_EQUIP).c_str());
+        mpr_nocap(you.inv[to_slot].name(DESC_INVENTORY_EQUIP).c_str());
 
         if (you.inv[from_slot].defined())
-            mpr(you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
+            mpr_nocap(you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
     }
 
     if (to_slot == you.equip[EQ_WEAPON] || from_slot == you.equip[EQ_WEAPON])
@@ -315,7 +315,7 @@ static void _adjust_item(void)
     if (prompt_failed(from_slot))
         return;
 
-    mpr(you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
+    mpr_nocap(you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
 
     to_slot = prompt_invent_item("Adjust to which letter? ",
                                  MT_INVLIST,
