@@ -139,7 +139,6 @@ private:
     void mons_apply_attack_flavour();
     std::string mons_attack_verb();
     std::string mons_attack_desc();
-    void mons_set_weapon();
     // TODO: Generalizing do_poison is trivial, but what purpose would it serve
     // when all the player poisoning seems to be handled elsewhere...
     void mons_do_poison();

@@ -35,6 +35,8 @@ enum gender_type
     GENDER_FEMALE,
 };
 
+// TODO: Unify this and a player_equivilent (if applicable)
+// and move into attack.h
 enum attack_type
 {
     AT_NONE,
