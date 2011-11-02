@@ -2094,7 +2094,7 @@ static void _place_feature_mimics(int level_number,
                 dst = env.markers.property_at(pos, MAT_ANY, "dst");
             if (!dst.empty())
             {
-                const std::string tag = "uniq_" + dst;
+                const std::string tag = "uniq_" + lowercase_string(dst);
                 if (you.uniq_map_tags.find(tag) != you.uniq_map_tags.end())
                     you.uniq_map_tags.erase(tag);
             }

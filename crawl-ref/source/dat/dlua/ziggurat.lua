@@ -112,10 +112,8 @@ function ziggurat_portal(e, portal_only)
       desc = "gateway to a ziggurat",
       overview = "Ziggurat",
       overview_note = "" .. entry_fee .. " gp",
-      dst = "ziggurat",
-      dstname = "Ziggurat:1",
-      dstname_abbrev = "Zig:1",
-      dstorigin = "on level 1 of a ziggurat",
+      dst = "Zig:1",
+      dstname = "ziggurat",
       floor = "stone_arch",
       onclimb = "callback.ziggurat_initialiser"
     }
@@ -182,9 +180,6 @@ local function zig_go_deeper()
   local newdepth = zig().depth + 1
   return one_way_stair {
     onclimb = "callback.zig_depth_increment",
-    dstname = "Ziggurat:" .. newdepth,
-    dstname_abbrev = "Zig:" .. newdepth,
-    dstorigin = "on level " .. newdepth .. " of a ziggurat"
   }
 end
 

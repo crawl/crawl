@@ -166,8 +166,7 @@ The secrets of the gateways died with him when his fellow thieves, disgusted at 
             desc = "portal to a secret trove of treasure",
             desc_long = desc_long,
             overview = "Trove",
-            dst = "trove",
-            dstorigin = "in a treasure trove",
+            dst = "Trove",
             floor = "floor",
         }
     end
