@@ -157,13 +157,6 @@ void reassess_starting_skills()
             you.skills[sk] = 1;
         }
     }
-
-    // Vampires should always have Unarmed Combat skill.
-    if (you.species == SP_VAMPIRE && you.skills[SK_UNARMED_COMBAT] < 1)
-    {
-        you.skill_points[SK_UNARMED_COMBAT] = skill_exp_needed(1, SK_UNARMED_COMBAT);
-        you.skills[SK_UNARMED_COMBAT] = 1;
-    }
 }
 
 static void _change_skill_level(skill_type exsk, int n)
