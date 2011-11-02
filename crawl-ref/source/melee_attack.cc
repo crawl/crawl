@@ -2021,18 +2021,6 @@ bool melee_attack::player_monattk_hit_effects()
     if (!special_damage && apply_damage_brand())
         return (true);
 
-    if (!no_damage_message.empty())
-    {
-        if (special_damage > 0)
-            emit_nodmg_hit_message();
-        else
-        {
-            mprf("You %s %s, but do no damage.",
-                 attack_verb.c_str(),
-                 defender->name(DESC_THE).c_str());
-        }
-    }
-
     if (needs_message && !special_damage_message.empty())
     {
         mprf("%s", special_damage_message.c_str());
@@ -2146,7 +2134,6 @@ bool melee_attack::distortion_affects_defender()
     {
         if (one_chance_in(5))
         {
-            emit_nodmg_hit_message();
             if (defender_visible)
             {
                 special_damage_message =
@@ -2188,7 +2175,6 @@ bool melee_attack::distortion_affects_defender()
 
     if (one_chance_in(3))
     {
-        emit_nodmg_hit_message();
         if (defender_visible)
             obvious_effect = true;
         defender->blink();
@@ -2201,7 +2187,6 @@ bool melee_attack::distortion_affects_defender()
     // monsters.
     if (!one_chance_in(3))
     {
-        emit_nodmg_hit_message();
         if (defender_visible)
             obvious_effect = true;
         defender->teleport(coinflip(), one_chance_in(5));
@@ -2210,8 +2195,6 @@ bool melee_attack::distortion_affects_defender()
 
     if (you.level_type != LEVEL_ABYSS && coinflip())
     {
-        emit_nodmg_hit_message();
-
         if (defender->atype() == ACT_PLAYER && attacker_visible
             && weapon != NULL && !is_unrandom_artefact(*weapon)
             && !is_special_unrandom_artefact(*weapon))
@@ -2958,9 +2941,6 @@ bool melee_attack::apply_damage_brand()
                     (defender->as_monster()->get_ench(ENCH_POISON)).degree;
             }
 
-            // Poison monster message needs to arrive after hit message.
-            emit_nodmg_hit_message();
-
             // Weapons of venom do two levels of poisoning to the player,
             // but only one level to monsters.
             defender->poison(attacker, 2);
@@ -3064,8 +3044,6 @@ bool melee_attack::apply_damage_brand()
         // occassionally come up with this brand. -cao
         if (defender->atype() == ACT_PLAYER)
             break;
-
-        emit_nodmg_hit_message();
 
         const int hdcheck =
             (defender->holiness() == MH_NATURAL ? random2(30) : random2(22));
@@ -3301,15 +3279,6 @@ int melee_attack::player_staff_damage(skill_type skill)
     return 0;
 }
 
-void melee_attack::emit_nodmg_hit_message()
-{
-    if (!no_damage_message.empty())
-    {
-        mprf("%s", no_damage_message.c_str());
-        no_damage_message.clear();
-    }
-}
-
 void melee_attack::player_apply_staff_damage()
 {
     special_damage = 0;
@@ -3392,8 +3361,6 @@ void melee_attack::player_apply_staff_damage()
         // Base chance at 50% -- like mundane weapons.
         if (coinflip() || x_chance_in_y(you.skill(SK_POISON_MAGIC, 10), 80))
         {
-            // Poison monster message needs to arrive after hit message.
-            emit_nodmg_hit_message();
             defender->poison(attacker, 2, defender->has_lifeforce()
                 & x_chance_in_y(you.skill(SK_POISON_MAGIC, 10), 160));
         }
@@ -3424,7 +3391,6 @@ void melee_attack::player_apply_staff_damage()
         if (x_chance_in_y(you.skill(SK_EVOCATIONS, 20)
                         + you.skill(SK_SUMMONINGS, 10), 300))
         {
-            emit_nodmg_hit_message();
             cast_abjuration((you.skill(SK_SUMMONINGS, 100)
                             + you.skill(SK_EVOCATIONS, 50)) / 80,
                             defender->as_monster());
