@@ -471,7 +471,7 @@ void wizard_tweak_object(void)
 
         while (true)
         {
-            mpr(you.inv[item].name(DESC_INVENTORY_EQUIP).c_str());
+            mpr_nocap(you.inv[item].name(DESC_INVENTORY_EQUIP).c_str());
 
             if (is_art)
             {
@@ -726,7 +726,7 @@ void wizard_make_object_randart()
     if (eq != EQ_NONE)
         equip_item(eq, invslot);
 
-    mpr(item.name(DESC_INVENTORY_EQUIP).c_str());
+    mpr_nocap(item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
 // Returns whether an item of this type can be cursed.

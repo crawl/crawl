@@ -84,6 +84,12 @@ inline void mprnojoin(std::string text, msg_channel_type channel=MSGCH_PLAIN,
     mpr(text, channel, param, true);
 }
 
+inline void mpr_nocap(std::string text, msg_channel_type channel=MSGCH_PLAIN,
+                      int param=0, bool nojoin=false)
+{
+    mpr(text, channel, param, nojoin, false);
+}
+
 // 4.1-style mpr, currently named mprf for minimal disruption.
 void mprf(msg_channel_type channel, int param, PRINTF(2, ));
 void mprf(msg_channel_type channel, PRINTF(1, ));

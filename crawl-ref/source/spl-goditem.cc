@@ -97,7 +97,7 @@ int identify(int power, int item_slot, std::string *pre_msg)
         }
 
         // Output identified item.
-        mpr(item.name(DESC_INVENTORY_EQUIP).c_str());
+        mpr_nocap(item.name(DESC_INVENTORY_EQUIP).c_str());
         if (item_slot == you.equip[EQ_WEAPON])
             you.wield_change = true;
 

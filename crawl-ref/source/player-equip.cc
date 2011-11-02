@@ -1444,7 +1444,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
     // Cursed or not, we know that since we've put the ring on.
     set_ident_flags(item, ISFLAG_KNOW_CURSE);
 
-    mpr(item.name(DESC_INVENTORY_EQUIP).c_str());
+    mpr_nocap(item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
 static void _unequip_jewellery_effect(item_def &item, bool mesg)

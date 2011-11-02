@@ -533,7 +533,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         {
             set_ident_type(OBJ_POTIONS, POT_BLOOD_COAGULATED, ID_KNOWN_TYPE);
             if (blood.quantity >= 1)
-                mpr(blood.name(DESC_INVENTORY).c_str());
+                mpr_nocap(blood.name(DESC_INVENTORY).c_str());
         }
 
         if (blood.quantity < 1)
@@ -594,7 +594,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
             {
                 _compare_blood_quantity(blood, timer.size());
                 if (!knew_blood)
-                    mpr(blood.name(DESC_INVENTORY).c_str());
+                    mpr_nocap(blood.name(DESC_INVENTORY).c_str());
             }
 
             // Update timer -> push(pop).
@@ -609,7 +609,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
             you.inv[m].quantity += coag_count;
             ASSERT(timer2.size() == you.inv[m].quantity);
             if (!knew_coag)
-                mpr(you.inv[m].name(DESC_INVENTORY).c_str());
+                mpr_nocap(you.inv[m].name(DESC_INVENTORY).c_str());
 
             // re-sort timer
             _int_sort(timer2);
@@ -639,7 +639,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         _compare_blood_quantity(blood, timer.size());
 
         if (!knew_coag)
-            mpr(blood.name(DESC_INVENTORY).c_str());
+            mpr_nocap(blood.name(DESC_INVENTORY).c_str());
 
         return (rot_count > 0);
     }
@@ -682,9 +682,9 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         _compare_blood_quantity(blood, timer.size());
 
         if (!knew_blood)
-            mpr(blood.name(DESC_INVENTORY).c_str());
+            mpr_nocap(blood.name(DESC_INVENTORY).c_str());
         if (!knew_coag)
-            mpr(item.name(DESC_INVENTORY).c_str());
+            mpr_nocap(item.name(DESC_INVENTORY).c_str());
 
         return (rot_count > 0);
     }
@@ -722,7 +722,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
             dec_inv_item_quantity(blood.link, rot_count + coag_count);
             _compare_blood_quantity(blood, timer.size());
             if (!knew_blood)
-                mpr(blood.name(DESC_INVENTORY).c_str());
+                mpr_nocap(blood.name(DESC_INVENTORY).c_str());
 
             return (true);
         }
@@ -773,7 +773,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     {
         _compare_blood_quantity(blood, timer.size());
         if (!knew_blood)
-            mpr(blood.name(DESC_INVENTORY).c_str());
+            mpr_nocap(blood.name(DESC_INVENTORY).c_str());
     }
     return (true);
 }
