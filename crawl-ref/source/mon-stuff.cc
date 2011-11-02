@@ -1150,7 +1150,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
     // Inner-flamed monsters leave behind some flame clouds.
     if (mons->has_ench(ENCH_INNER_FLAME))
     {
-        for (adjacent_iterator ai(mons->pos()); ai; ++ai)
+        for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
             if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD && !one_chance_in(5))
                 place_cloud(CLOUD_FIRE, *ai, 10 + random2(10), mons);
     }
