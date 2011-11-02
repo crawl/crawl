@@ -33,6 +33,7 @@
 #include "random.h"
 #include "religion.h"
 #include "spl-miscast.h"
+#include "spl-summoning.h"
 #include "spl-util.h"
 #include "state.h"
 #include "stuff.h"
@@ -396,9 +397,137 @@ static int _do_split(monster* thing, coord_def & target)
     return (slime_idx);
 }
 
+// Merge a crawling corpse/macabre mass into another corpse/mass or an
+// abomination.
+static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
+{
+    // Combine enchantment durations.
+    _merge_ench_durations(crawlie, merge_to);
+
+    int orighd = merge_to->hit_dice;
+    int addhd = crawlie->hit_dice;
+
+    // Need twice as many HD past 15.
+    if (orighd > 15)
+        addhd = (1 + addhd)/2;
+    else if (orighd + addhd > 15)
+        addhd = (15 - orighd) + (1 + addhd - (15 - orighd))/2;
+
+    int newhd = orighd + addhd;
+    monster_type new_type;
+    int hp, mhp;
+
+    if (newhd >= 6)
+    {
+        // Need 11 HD and 3 corpses for a large abomination
+        if (newhd < 11
+            || (crawlie->type == MONS_CRAWLING_CORPSE
+                && merge_to->type == MONS_CRAWLING_CORPSE))
+        {
+            new_type = MONS_ABOMINATION_SMALL;
+            newhd = std::max(newhd, 15);
+        }
+        else
+        {
+            new_type = MONS_ABOMINATION_LARGE;
+            newhd = std::max(newhd, 30);
+        }
+
+        // Recompute in case we limited newhd.
+        addhd = newhd - orighd;
+
+        if (merge_to->type == MONS_ABOMINATION_SMALL
+            || merge_to->type == MONS_ABOMINATION_LARGE)
+        {
+            // Adding to an existing abomination
+            int hp_gain = hit_points(addhd, 2, 5);
+            mhp = merge_to->max_hit_points + hp_gain;
+            hp = merge_to->hit_points + hp_gain;
+        }
+        else
+            // Making a new abomination
+            hp = mhp = hit_points(newhd, 2, 5);
+    }
+    else
+    {
+        // Not big enough for an abomination yet
+        new_type = MONS_MACABRE_MASS;
+        mhp = merge_to->max_hit_points + crawlie->max_hit_points;
+        hp = merge_to->hit_points += crawlie->hit_points;
+    }
+
+
+    mgen_data mg(new_type, attitude_creation_behavior(merge_to->attitude),
+            &you, 0, 0, merge_to->pos(), MHITYOU, MG_FORCE_BEH, merge_to->god);
+
+    // Save information about the merged moster.
+    uint64_t merge_flags = merge_to->flags;
+    std::string merge_name = merge_to->name(DESC_NOCAP_A);
+    monster_type merge_type = merge_to->type;
+
+    // Kill the original monster so the new one can take its spot.
+    monster_die(merge_to, KILL_MISC, NON_MONSTER, true);
+
+    const int newidx = create_monster(mg);
+    if (newidx < 0)
+    {
+        // Explain the disappearance.
+        mprf("%s collapses into a pulpy mess!", merge_name);
+        return (false);
+    }
+
+    monster *new_mons = &menv[newidx];
+
+    undead_abomination_convert(new_mons, newhd);
+    new_mons->max_hit_points = mhp;
+    new_mons->hit_points = hp;
+    new_mons->flags = merge_flags | crawlie->flags;
+    new_mons->behaviour = crawlie->behaviour;
+    new_mons->foe = crawlie->foe;
+    new_mons->target = crawlie->target;
+
+    behaviour_event(new_mons, ME_EVAL);
+
+    // Messaging.
+    if (you.can_see(new_mons))
+    {
+        bool changed = new_type != merge_type;
+        if (you.can_see(crawlie))
+        {
+            if (crawlie->type == merge_type)
+                mprf("Two %s merge%s%s.",
+                     pluralise(crawlie->name(DESC_PLAIN)).c_str(),
+                     changed ? " to form " : "",
+                     changed ? new_mons->name(DESC_NOCAP_A).c_str() : "");
+            else
+                mprf("%s merges with %s%s%s.",
+                     crawlie->name(DESC_CAP_A).c_str(),
+                     merge_name.c_str(),
+                     changed ? " to form " : "",
+                     changed ? new_mons->name(DESC_NOCAP_A).c_str() : "");
+                     
+        }
+        else if (changed)
+            mprf("%s suddenly becomes %s.",
+                 uppercase_first(merge_name).c_str(),
+                 new_mons->name(DESC_NOCAP_A).c_str());
+        else
+            mprf("%s twists grotesquely.",
+                 uppercase_first(merge_name).c_str());
+    }
+    else if (you.can_see(crawlie))
+        mprf("%s suddenly disappears!",
+             crawlie->name(DESC_CAP_A).c_str());
+
+    // Now kill the other monster
+    monster_die(crawlie, KILL_MISC, NON_MONSTER, true);
+
+    return (true);
+}
+
 // Actually merge two slime creature, pooling their hp, etc.
 // initial_slime is the one that gets killed off by this process.
-static bool _do_merge(monster* initial_slime, monster* merge_to)
+static bool _do_merge_slimes(monster* initial_slime, monster* merge_to)
 {
     // Combine enchantment durations.
     _merge_ench_durations(initial_slime, merge_to);
@@ -481,7 +610,7 @@ static bool _unoccupied_slime(monster* thing)
 }
 
 // Slime creatures cannot split or merge under these conditions.
-static bool _disabled_slime(monster* thing)
+static bool _disabled_merge(monster* thing)
 {
     return (!thing
             || mons_is_fleeing(thing)
@@ -498,7 +627,7 @@ static bool _disabled_slime(monster* thing)
 // distance to the target.
 static bool _slime_merge(monster* thing)
 {
-    if (!thing || _disabled_slime(thing) || _unoccupied_slime(thing))
+    if (!thing || _disabled_merge(thing) || _unoccupied_slime(thing))
         return (false);
 
     int max_slime_merge = 5;
@@ -537,7 +666,7 @@ static bool _slime_merge(monster* thing)
             && other_thing->attitude == thing->attitude
             && other_thing->is_summoned() == thing->is_summoned()
             && !other_thing->is_shapeshifter()
-            && !_disabled_slime(other_thing))
+            && !_disabled_merge(other_thing))
         {
             // We can potentially merge if doing so won't take us over
             // the merge cap.
@@ -550,11 +679,65 @@ static bool _slime_merge(monster* thing)
     // We found a merge target and didn't find an open square that
     // would reduce distance to target, so we can actually merge.
     if (merge_target)
-        return (_do_merge(thing, merge_target));
+        return (_do_merge_slimes(thing, merge_target));
 
     // No adjacent slime creatures we could merge with.
     return (false);
 }
+
+static bool _crawlie_is_mergeable(monster *mons)
+{
+    if (!mons)
+        return false;
+
+    switch (mons->type)
+    {
+    case MONS_ABOMINATION_LARGE:
+        if (mons->hit_dice > 30)
+            return false;
+        break;
+    case MONS_ABOMINATION_SMALL:
+        if (mons->hit_dice > 15)
+            return false;
+        break;
+    case MONS_CRAWLING_CORPSE:
+    case MONS_MACABRE_MASS:
+        break;
+    default:
+        return false;
+    }
+
+    return !(mons->is_shapeshifter() || _disabled_merge(mons));
+}
+
+static bool _crawling_corpse_merge(monster *crawlie)
+{
+    if (!crawlie || _disabled_merge(crawlie))
+        return (false);
+
+    int compass_idx[8] = {0, 1, 2, 3, 4, 5, 6, 7};
+    std::random_shuffle(compass_idx, compass_idx + 8);
+    coord_def origin = crawlie->pos();
+
+    monster* merge_target = NULL;
+    // Check for adjacent crawlies
+    for (int i = 0; i < 8; ++i)
+    {
+        coord_def target = origin + Compass[compass_idx[i]];
+
+        // Is there a crawlie/abomination on this square we can merge with?
+        monster* other_thing = monster_at(target);
+        if (!merge_target && _crawlie_is_mergeable(other_thing))
+            merge_target = other_thing;
+    }
+
+    if (merge_target)
+        return (_do_merge_crawlies(crawlie, merge_target));
+
+    // No adjacent crawlies.
+    return (false);
+}
+
 
 static bool _slime_can_spawn(const coord_def target)
 {
@@ -569,7 +752,7 @@ static int _slime_split(monster* thing, bool force_split)
 {
     if (!thing || thing->number <= 1
         || (coinflip() && !force_split) // Don't make splitting quite so reliable. (jpeg)
-        || _disabled_slime(thing))
+        || _disabled_merge(thing))
     {
         return (-1);
     }
@@ -2122,7 +2305,8 @@ bool mon_special_ability(monster* mons, bolt & beem)
 
     // Slime creatures can split while out of sight.
     if ((!mons->near_foe() || mons->asleep() || mons->submerged())
-         && mons->type != MONS_SLIME_CREATURE)
+         && mons->type != MONS_SLIME_CREATURE
+         && !_crawlie_is_mergeable(mons))
     {
         return (false);
     }
@@ -2147,6 +2331,13 @@ bool mon_special_ability(monster* mons, bolt & beem)
         // Slime creatures may split or merge depending on the
         // situation.
         used = _slime_split_merge(mons);
+        if (!mons->alive())
+            return (true);
+        break;
+
+    case MONS_CRAWLING_CORPSE:
+    case MONS_MACABRE_MASS:
+        used = _crawling_corpse_merge(mons);
         if (!mons->alive())
             return (true);
         break;

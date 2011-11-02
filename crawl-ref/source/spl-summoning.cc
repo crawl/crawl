@@ -2037,7 +2037,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
 
 // Make the proper stat adjustments to turn a demonic abomination into
 // an undead abomination.
-static bool _undead_abomination_convert(monster* mon, int hd)
+bool undead_abomination_convert(monster* mon, int hd)
 {
     if (mon->type == MONS_CRAWLING_CORPSE
      || mon->type == MONS_MACABRE_MASS)
@@ -2139,7 +2139,7 @@ spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
         if (mons >= 0)
         {
             // Set hit dice.
-            _undead_abomination_convert(&menv[mons], hd);
+            undead_abomination_convert(&menv[mons], hd);
 
             std::vector<item_def *>::iterator vi;
             for (vi = corpses.begin(); vi != corpses.end(); ++vi)
