@@ -134,9 +134,6 @@ private:
 
     /* Misc methods */
     void handle_noise(const coord_def & pos);
-
-    // Added from fight.cc, were static, should be removed
-    bool _move_stairs();
 private:
     // Monster-attack specific stuff
     void mons_apply_attack_flavour();
