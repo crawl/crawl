@@ -107,47 +107,8 @@ static void _player_change_level_reset()
     you.prev_grd_targ.reset();
 }
 
-static level_id _stair_destination_override()
+static void _player_change_level_upstairs(dungeon_feature_type stair_find)
 {
-    const std::string force_place = (grd(you.pos()) == DNGN_EXIT_ABYSS) ?
-        static_cast<std::string>(you.props["abyss_return_desc"]) :
-        env.markers.property_at(you.pos(), MAT_ANY, "dstplace");
-
-    if (!force_place.empty())
-    {
-        try
-        {
-            const level_id place = level_id::parse_level_id(force_place);
-            return (place);
-        }
-        catch (const std::string &err)
-        {
-            end(1, false, "Marker set with invalid level name: %s",
-                force_place.c_str());
-        }
-    }
-
-    const level_id invalid;
-    return (invalid);
-}
-
-static bool _stair_force_destination(const level_id &override)
-{
-    if (override.is_valid())
-    {
-        you.where_are_you = override.branch;
-        you.absdepth0     = override.absdepth();
-        return (true);
-    }
-    return (false);
-}
-
-static void _player_change_level_upstairs(dungeon_feature_type stair_find,
-                                          const level_id &place_override)
-{
-    if (_stair_force_destination(place_override))
-        return;
-
     if (player_in_connected_branch())
         you.absdepth0--;
 
@@ -470,8 +431,6 @@ void up_stairs(dungeon_feature_type force_stair)
         return;
     }
 
-    const level_id destination_override(_stair_destination_override());
-
     // Bail if any markers veto the move.
     if (_marker_vetoes_level_change())
         return;
@@ -492,7 +451,7 @@ void up_stairs(dungeon_feature_type force_stair)
     }
 
     _player_change_level_reset();
-    _player_change_level_upstairs(stair_find, destination_override);
+    _player_change_level_upstairs(stair_find);
 
     if (you.absdepth0 < 0)
     {
@@ -572,68 +531,55 @@ void up_stairs(dungeon_feature_type force_stair)
     request_autopickup();
 }
 
-// All changes to you.level_type, you.where_are_you and you.absdepth0
-// for descending stairs should happen here.
-static void _player_change_level_downstairs(dungeon_feature_type stair_find,
-                                            const level_id &place_override,
-                                            bool shaft,
-                                            int shaft_level,
-                                            const level_id &shaft_dest)
+static level_id _downstairs_destination(dungeon_feature_type stair_find,
+                                        const std::string &dst)
 {
-    if (_stair_force_destination(place_override))
-        return;
-
-    const branch_type old_branch = you.where_are_you;
-
-    if (!player_in_connected_branch()
-        && (you.where_are_you != BRANCH_PANDEMONIUM
-            || stair_find != DNGN_TRANSIT_PANDEMONIUM)
-        && (you.where_are_you != BRANCH_ZIGGURAT
-            || !feat_is_stone_stair(stair_find)))
+    switch (stair_find)
     {
-        // TODO:LEVEL_STACK exit to main dungeon without a marker
-        die("branch exit without return destination");
+    case DNGN_ESCAPE_HATCH_DOWN:
+    case DNGN_STONE_STAIRS_DOWN_I:
+    case DNGN_STONE_STAIRS_DOWN_II:
+    case DNGN_STONE_STAIRS_DOWN_III:
+    {
+        ASSERT(!at_branch_bottom());
+        level_id lev = level_id::current();
+        lev.depth++;
+        return lev;
     }
 
-    if (stair_find == DNGN_ENTER_HELL)
-    {
+    case DNGN_TRANSIT_PANDEMONIUM:
+        return level_id(BRANCH_PANDEMONIUM);
+
+    case DNGN_ENTER_PORTAL_VAULT:
+        if (dst.empty())
+            die("portal without a destination");
+        return level_id::parse_level_id(dst);
+
+    case DNGN_ENTER_HELL:
         you.hell_branch = you.where_are_you;
-        you.where_are_you = BRANCH_VESTIBULE_OF_HELL;
         you.hell_exit = you.absdepth0;
+        return level_id(BRANCH_VESTIBULE_OF_HELL);
 
-        you.absdepth0 = 26;
+    default:
+        break;
     }
 
-    // Welcome message.
     // Try to find a branch stair.
     for (int i = 0; i < NUM_BRANCHES; ++i)
     {
         if (branches[i].entry_stairs == stair_find)
-        {
-            you.where_are_you = branches[i].id;
-            break;
-        }
+            return level_id(branches[i].id);
     }
 
-    if (stair_find == DNGN_ENTER_LABYRINTH)
-        you.where_are_you = BRANCH_LABYRINTH;
-    else if (stair_find == DNGN_ENTER_ABYSS)
-        you.where_are_you = BRANCH_ABYSS;
-    else if (stair_find == DNGN_ENTER_PANDEMONIUM)
-        you.where_are_you = BRANCH_PANDEMONIUM;
-    else if (stair_find == DNGN_ENTER_PORTAL_VAULT)
-        die("TODO: portal vault entrance");
+    die("Unknown down stair: %s", dungeon_feature_name(stair_find));
+}
 
-    if (shaft)
-    {
-        you.absdepth0    = shaft_level;
-        you.where_are_you = shaft_dest.branch;
-    }
-    else if (is_connected_branch(old_branch)
-             && player_in_connected_branch())
-    {
-        you.absdepth0++;
-    }
+static void _player_change_level_downstairs(dungeon_feature_type stair_find,
+                                            const std::string &dst)
+{
+    level_id lev = _downstairs_destination(stair_find, dst);
+    you.absdepth0     = lev.absdepth();
+    you.where_are_you = lev.branch;
 }
 
 static void _maybe_destroy_trap(const coord_def &p)
@@ -812,12 +758,13 @@ void down_stairs(dungeon_feature_type force_stair)
     if (_marker_vetoes_level_change())
         return;
 
-    level_id destination_override = _stair_destination_override();
-
     // All checks are done, the player is on the move now.
 
     // Magical level changes (Portal, Banishment) need this.
     clear_trapping_net();
+
+    // Markers might be deleted when removing portals.
+    const std::string dst = env.markers.property_at(you.pos(), MAT_ANY, "dst");
 
     // Fire level-leaving trigger.
     _leaving_level_now(stair_find);
@@ -855,8 +802,13 @@ void down_stairs(dungeon_feature_type force_stair)
 
     const int shaft_depth = (shaft ? shaft_level - you.absdepth0 : 1);
     _player_change_level_reset();
-    _player_change_level_downstairs(stair_find, destination_override, shaft,
-                                    shaft_level, shaft_dest);
+    if (shaft)
+    {
+        you.absdepth0     = shaft_level;
+        you.where_are_you = shaft_dest.branch;
+    }
+    else
+        _player_change_level_downstairs(stair_find, dst);
 
     // When going downstairs into a special level, delete any previous
     // instances of it.

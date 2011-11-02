@@ -22,7 +22,7 @@ function hive_portal()
   "place are dripping with honey, but the larvae are hungry, and the queen " ..
   "bee will not tolerate intruders."
   return one_way_stair { desc = 'gateway to a hive', desc_long = d,
-                           dst = 'hive', floor = 'stone_arch' }
+                           dst = 'Hive', floor = 'stone_arch' }
 end
 
 function hive_message(e)
