@@ -3146,7 +3146,7 @@ static monsterentry mondata[] = {
 {
     MONS_ICE_BEAST, 'I', WHITE, "ice beast",
     M_NO_FLAGS,
-    MR_RES_POISON | MR_RES_ASPHYX | MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
+    MR_RES_POISON | MR_VUL_FIRE | mrd(MR_RES_COLD, 3),
     0, 13, MONS_ICE_BEAST, MONS_ICE_BEAST, MH_NATURAL, -3,
     { {AT_HIT, AF_COLD, 5}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 5, 3, 5, 0 },
