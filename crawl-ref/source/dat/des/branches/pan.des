@@ -32,7 +32,8 @@ function pan_lord_epilogue(name)
     crawl.mark_milestone('br.enter', 'entered the realm of ' .. name .. '.')
 end
 
-function pan_lord_monsters(_G, name)
+function pan_lord_setup(_G, name)
+    -- Set level monsters.
     -- needs exactly 10 monsters, weights are not supported yet
     local monsters = {
         Mnoleg = "small abomination / small abomination / small abomination / " ..
@@ -49,6 +50,33 @@ function pan_lord_monsters(_G, name)
     }
 
     _G.set_random_mon_list(monsters[name])
+
+    -- Set level colours / tiles, and the rune.
+    if name == "Mnoleg" then
+        _G.lfloorcol("yellow")
+        _G.lrockcol("red")
+        _G.lfloortile("floor_nerves")
+        _G.lrocktile("wall_zot_yellow")
+        _G.kitem("O = glowing rune of Zot")
+    elseif name == "Lom Lobon" then
+        _G.lfloorcol("lightgrey")
+        _G.lrockcol("white")
+        _G.lfloortile("floor_rough_lightgray")
+        _G.lrocktile("wall_hall_white")
+        _G.kitem("O = magical rune of Zot")
+    elseif name == "Cerebov" then
+        _G.lfloorcol("red")
+        _G.lrockcol("red")
+        _G.lfloortile("floor_volcanic")
+        _G.lrocktile("wall_zot_red")
+        _G.kitem("O = fiery rune of Zot")
+    elseif name == "Gloorx Vloq" then
+        _G.lfloorcol("blue")
+        _G.lrockcol("blue")
+        _G.lfloortile("floor_grey_dirt")
+        _G.lrocktile("wall_hall_darkgray")
+        _G.kitem("O = dark rune of Zot")
+    end
 end
 
 colours = {
@@ -152,13 +180,11 @@ ENDMAP
 # Mnoleg
 #
 NAME:      mnoleg
-TAGS:      mnoleg uniq_mnoleg
 ORIENT:    northeast
-LFLOORCOL: yellow
-LROCKCOL:  red
+TAGS:      mnoleg uniq_mnoleg
+: pan_lord_setup(_G, 'Mnoleg')
+TILE:      c = dngn_stone_wall_yellow
 MONS:      patrolling Mnoleg, neqoxec
-KITEM:     O = glowing rune of Zot
-: pan_lord_monsters(_G, 'Mnoleg')
 epilogue{{
   pan_lord_epilogue('Mnoleg')
 }}
@@ -197,21 +223,19 @@ xxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 NAME:      mnoleg_st
-TAGS:      mnoleg uniq_mnoleg
 ORIENT:    southwest
-LFLOORCOL: yellow
-LROCKCOL:  red
+TAGS:      mnoleg uniq_mnoleg
+: pan_lord_setup(_G, 'Mnoleg')
+TILE:      c = dngn_stone_wall_yellow
 MONS:      patrolling Mnoleg, neqoxec
 MONS:      patrolling cacodemon, patrolling tormentor
 MONS:      large abomination, tentacled monstrosity
 KMONS:     w = brain worm
 KMONS:     u = very ugly thing
 KMONS:     U = ugly thing
-KITEM:     O = glowing rune of Zot
 NSUBST:    q = 2:u / *:.
 NSUBST:    e = 2:u / *:.
 NSUBST:    p = 3:u / *:.
-: pan_lord_monsters(_G, 'Mnoleg')
 epilogue{{
   pan_lord_epilogue('Mnoleg')
 }}
@@ -255,12 +279,11 @@ ENDMAP
 #
 # Note: if M were to cast malign gateway, there would be enough room for it here
 NAME:       evilmike_mnoleg_eyes
-TAGS:       mnoleg uniq_mnoleg
 ORIENT:     northwest
-LFLOORCOL:  yellow
-LROCKCOL:   red
+TAGS:       mnoleg uniq_mnoleg
+: pan_lord_setup(_G, 'Mnoleg')
 NSUBST:     O = 1:O / *:|
-KITEM:      O = glowing rune of Zot
+TILE:       c = dngn_stone_wall_yellow
 MONS:       patrolling mnoleg
 MONS:       giant eyeball / golden eye / eye of devastation / \
             eye of draining / shining eye
@@ -274,7 +297,6 @@ NSUBST:     E = 3:2 / 2:22. / 2:2.. / *:.
 SHUFFLE:    '-
 NSUBST:     ' = 5:3 / 2:3. / 1:4 / 3:5 / *:.
 NSUBST:     - = 5:2 / 2:2. / 1:4 / 3:5 / *:.
-: pan_lord_monsters(_G, 'Mnoleg')
 epilogue{{
   pan_lord_epilogue('Mnoleg')
 }}
@@ -323,14 +345,10 @@ ENDMAP
 # Lom Lobon
 #
 NAME:      lom_lobon
-TAGS:      lom_lobon uniq_lom_lobon
+TAGS:      lom_lobon uniq_lom_lobon no_rotate
 ORIENT:    north
-LFLOORCOL: lightgrey
-TAGS:      no_rotate
-LROCKCOL:  white
+: pan_lord_setup(_G, 'Lom Lobon')
 MONS:      patrolling Lom Lobon, giant orange brain, rakshasa, wizard
-KITEM:     O = magical rune of Zot
-: pan_lord_monsters(_G, 'Lom Lobon')
 epilogue{{
   pan_lord_epilogue('Lom Lobon')
 }}
@@ -371,16 +389,14 @@ ENDMAP
 NAME:      lom_lobon_st
 TAGS:      lom_lobon no_pool_fixup uniq_lom_lobon
 ORIENT:    northwest
-LFLOORCOL: lightgrey
-LROCKCOL:  white
-KITEM:     O = magical rune of zot
+: pan_lord_setup(_G, 'Lom Lobon')
 MONS:      patrolling Lom Lobon
 MONS:      blizzard demon, green death, wizard, draconian annihilator
 MONS:      sixfirhy
 SUBST:     0 = 23444445566
 NSUBST:    Q = 1:O / *:4
 NSUBST:    B = 1:. / *:b
-: pan_lord_monsters(_G, 'Lom Lobon')
+TILE:      v = dngn_metal_wall_blue
 epilogue{{
   pan_lord_epilogue('Lom Lobon')
 }}
@@ -434,9 +450,7 @@ ENDMAP
 NAME:      lom_lobon_spiral_st
 TAGS:      lom_lobon no_pool_fixup patrolling uniq_lom_lobon
 ORIENT:    northeast
-LFLOORCOL: lightgrey
-LROCKCOL:  white
-KITEM:     O = magical rune of zot
+: pan_lord_setup(_G, 'Lom Lobon')
 MONS:      patrolling Lom Lobon, titan, vapour, wizard
 KMONS:     S = storm dragon
 KMONS:     d = draconian annihilator
@@ -444,7 +458,7 @@ KMONS:     e = deep elf annihilator
 COLOUR:    c = white
 KFEAT:     S = deep_water
 NSUBST:    D = 1:S / *:w
-: pan_lord_monsters(_G, 'Lom Lobon')
+TILE:      c = dngn_stone_wall_white
 epilogue{{
   pan_lord_epilogue('Lom Lobon')
 }}
@@ -505,16 +519,14 @@ NAME:      cerebov
 TAGS:      cerebov uniq_cerebov
 DESC:      Cerebov's castle
 ORIENT:    northeast
-LFLOORCOL: red
-LROCKCOL:  red
+: pan_lord_setup(_G, 'Cerebov')
 MONS:      patrolling Cerebov, Balrug, Pit Fiend
-KITEM:     O = fiery rune of Zot
 epilogue{{
   pan_lord_epilogue('Cerebov')
 }}
 COLOUR:     n = blue
 TILE:       n = dngn_metal_wall_cracked
-: pan_lord_monsters(_G, 'Cerebov')
+TILE:       v = dngn_metal_wall_brown
 :           dgn.set_feature_desc_short("translucent stone wall",
 :                                      "cracked metal wall")
 :           dgn.set_feature_desc_long("translucent stone wall",
@@ -558,12 +570,10 @@ ENDMAP
 NAME:      cerebov_st
 TAGS:      cerebov patrolling uniq_cerebov
 ORIENT:    north
-LFLOORCOL: red
-LROCKCOL:  red
-KITEM:     O = fiery rune of zot
+: pan_lord_setup(_G, 'Cerebov')
+TILE:      v = dngn_metal_wall_brown
 MONS:      patrolling Cerebov, balrug, pit fiend
 MONS:      red devil, sun demon, crimson imp
-: pan_lord_monsters(_G, 'Cerebov')
 epilogue{{
   pan_lord_epilogue('Cerebov')
 }}
@@ -609,21 +619,18 @@ ENDMAP
 NAME:       evilmike_cerebov_lava
 TAGS:       cerebov patrolling uniq_cerebov
 ORIENT:     northwest
-LFLOORCOL:  red
-LROCKCOL:   red
+: pan_lord_setup(_G, 'Cerebov')
 SHUFFLE:    NM, XY
 SUBST:      N : L.., M = .
 SUBST:      X : .vvv, Y : ...v
 SUBST:      L : lll.
 SUBST:      U : W., W : V., V : v.
 SUBST:      P : lv
-TILE:       v = DNGN_METAL_WALL_BROWN
-KITEM:      O = fiery rune of zot
+TILE:       v = dngn_metal_wall_brown
 MONS:       Cerebov, balrug, pit fiend, sun demon
 NSUBST:     Q = 1:3 / 2:|
 NSUBST:     B = 3:2 / 3:4
 NSUBST:     C = 2:2 / 2:|
-: pan_lord_monsters(_G, 'Cerebov')
 epilogue{{
   pan_lord_epilogue('Cerebov')
 }}
@@ -676,11 +683,9 @@ ENDMAP
 NAME:      gloorx_vloq
 TAGS:      gloorx_vloq uniq_gloorx_vloq
 ORIENT:    southwest
-LFLOORCOL: blue
-LROCKCOL:  blue
+: pan_lord_setup(_G, 'Gloorx Vloq')
+TILE:      c = dngn_stone_wall_darkgray
 MONS:      patrolling Gloorx Vloq, Executioner, demonic crawler, shadow wraith
-KITEM:     O = dark rune of Zot
-: pan_lord_monsters(_G, 'Gloorx Vloq')
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
 }}
@@ -719,12 +724,10 @@ ENDMAP
 NAME:      gloorx_vloq_st
 TAGS:      gloorx_vloq uniq_gloorx_vloq
 ORIENT:    southeast
-LFLOORCOL: blue
-LROCKCOL:  blue
+: pan_lord_setup(_G, 'Gloorx Vloq')
+TILE:      c = dngn_stone_wall_darkgray
 MONS:      patrolling Gloorx Vloq, Executioner, shadow wraith
 MONS:      soul eater, unseen horror
-KITEM:     O = dark rune of Zot
-: pan_lord_monsters(_G, 'Gloorx Vloq')
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
 }}
@@ -765,20 +768,18 @@ ENDMAP
 NAME:       evilmike_gloorx_vloq_box
 TAGS:       gloorx_vloq uniq_gloorx_vloq
 ORIENT:     southeast
-LFLOORCOL:  blue
-LROCKCOL:   blue
-SUBST:      X : x.
+: pan_lord_setup(_G, 'Gloorx Vloq')
+SUBST:      X : xx.
 SUBST:      V : x.
 : if crawl.coinflip() then
 SUBST:      C : c, d : c
 : else
 SUBST:      C : ., d : =
 : end
+TILE:       c = dngn_stone_wall_darkgray
 MONS:       patrolling Gloorx Vloq
 MONS:       executioner, shadow demon, shadow wraith, demonic crawler
-KITEM:      O = dark rune of Zot
 KMONS:      O = demonic crawler
-: pan_lord_monsters(_G, 'Gloorx Vloq')
 epilogue{{
   pan_lord_epilogue('Gloorx Vloq')
 }}
