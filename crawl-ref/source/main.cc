@@ -639,7 +639,8 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case '>': wizard_place_stairs(true);             break;
     case '<': wizard_place_stairs(false);            break;
     case 'p': wizard_create_portal();                break;
-    case 'L': debug_place_map();                     break;
+    case 'L': debug_place_map(false);                break;
+    case 'P': debug_place_map(true);                 break;
     case 'i': wizard_identify_pack();                break;
     case 'I': wizard_unidentify_pack();              break;
     case 'z': wizard_cast_spec_spell();              break;

@@ -2454,7 +2454,12 @@ static const map_def *_dgn_random_map_for_place(bool minivault)
 
     const level_id lid = level_id::current();
 
-    const map_def *vault = random_map_for_place(lid, minivault);
+    const map_def *vault = 0;
+
+    if (you.props.exists("force_map"))
+        vault = find_map_by_name(you.props["force_map"].get_string());
+    else
+        vault = random_map_for_place(lid, minivault);
 
     if (!vault
         && lid.branch == BRANCH_MAIN_DUNGEON

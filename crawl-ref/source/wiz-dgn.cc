@@ -548,9 +548,9 @@ bool debug_make_shop(const coord_def& pos)
     return true;
 }
 
-static void debug_load_map_by_name(std::string name)
+static void debug_load_map_by_name(std::string name, bool primary)
 {
-    const bool place_on_us = strip_tag(name, "*", true);
+    const bool place_on_us = !primary && strip_tag(name, "*", true);
 
     level_clear_vault_memory();
     const map_def *toplace = find_map_by_name(name);
@@ -612,7 +612,21 @@ static void debug_load_map_by_name(std::string name)
         }
     }
 
-    if (dgn_place_map(toplace, true, false, where))
+    if (primary)
+    {
+        // FIXME: somehow minivaults get MAP_FLOAT here -- WTF?
+        dprf("map's orient = %d", toplace->orient);
+        if (toplace->orient == MAP_NONE)
+        {
+            mpr("This is a mini-vault, can't base a layout on it.");
+            return;
+        }
+
+        you.props["force_map"] = toplace->name;
+        wizard_recreate_level();
+        you.props.erase("force_map");
+    }
+    else if (dgn_place_map(toplace, true, false, where))
     {
         mprf("Successfully placed %s.", toplace->name.c_str());
 #ifdef USE_TILE
@@ -625,12 +639,16 @@ static void debug_load_map_by_name(std::string name)
         mprf("Failed to place %s.", toplace->name.c_str());
 }
 
-void debug_place_map()
+static input_history mini_hist(10), primary_hist(10);
+
+void debug_place_map(bool primary)
 {
     char what_to_make[100];
     mesclr();
-    mprf(MSGCH_PROMPT, "Enter map name (prefix it with * for local placement): ");
-    if (cancelable_get_line_autohist(what_to_make, sizeof what_to_make))
+    mprf(MSGCH_PROMPT, primary ? "Enter map name: " :
+         "Enter map name (prefix it with * for local placement): ");
+    if (cancelable_get_line(what_to_make, sizeof what_to_make,
+                            primary ? &primary_hist : &mini_hist))
     {
         canned_msg(MSG_OK);
         return;
@@ -644,7 +662,7 @@ void debug_place_map()
         return;
     }
 
-    debug_load_map_by_name(what);
+    debug_load_map_by_name(what, primary);
 }
 
 static void _debug_kill_traps()
