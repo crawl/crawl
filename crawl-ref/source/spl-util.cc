@@ -779,7 +779,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
                        int pow, int number, cloud_type ctype,
                        const actor *agent,
                        int spread_rate, int colour, std::string name,
-                       std::string tile)
+                       std::string tile, int excl_rad)
 {
     if (number <= 0)
         return;
@@ -801,7 +801,7 @@ void apply_area_cloud(cloud_func func, const coord_def& where,
 
         if (place.seen[c] <= 0)
             continue;
-        func(c, pow, spread_rate, ctype, agent, colour, name, tile);
+        func(c, pow, spread_rate, ctype, agent, colour, name, tile, excl_rad);
         number--;
     }
 }

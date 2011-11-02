@@ -205,7 +205,8 @@ void big_cloud(cloud_type cl_type, const actor *agent,
                int colour, std::string name, std::string tile)
 {
     apply_area_cloud(make_a_normal_cloud, where, pow, size,
-                     cl_type, agent, spread_rate, colour, name, tile);
+                     cl_type, agent, spread_rate, colour, name, tile,
+                     -1);
 }
 
 spret_type cast_ring_of_flames(int power, bool fail)
@@ -296,11 +297,11 @@ void corpse_rot(actor* caster)
 
 int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
                         cloud_type ctype, const actor *agent, int colour,
-                        std::string name, std::string tile)
+                        std::string name, std::string tile, int excl_rad)
 {
     place_cloud(ctype, where,
                 (3 + random2(pow / 4) + random2(pow / 4) + random2(pow / 4)),
-                agent, spread_rate, colour, name, tile);
+                agent, spread_rate, colour, name, tile, excl_rad);
 
     return 1;
 }
