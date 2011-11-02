@@ -73,19 +73,14 @@ equipment_type beastly_slot(int mut)
     switch (mut)
     {
     case MUT_HORNS:
-        return EQ_HELMET;
     case MUT_ANTENNAE:
-        return EQ_HELMET;
     case MUT_BEAK:
         return EQ_HELMET;
     case MUT_CLAWS:
-        return EQ_GLOVES;
     case MUT_TENTACLES:
         return EQ_GLOVES;
     case MUT_HOOVES:
-        return EQ_BOOTS;
     case MUT_TALONS:
-        return EQ_BOOTS;
     case MUT_TENTACLE_SPIKE:
         return EQ_BOOTS;
     default:
