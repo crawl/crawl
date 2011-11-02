@@ -139,11 +139,9 @@ private:
     void mons_apply_attack_flavour();
     std::string mons_attack_verb();
     std::string mons_attack_desc();
-    // TODO: Generalizing do_poison is trivial, but what purpose would it serve
-    // when all the player poisoning seems to be handled elsewhere...
+    // TODO: Unify do_poison and poison_monster
     void mons_do_poison();
     void mons_do_napalm();
-    void wasp_paralyse_defender();
     void mons_do_eyeball_confusion();
 
     attack_flavour random_chaos_attack_flavour();
