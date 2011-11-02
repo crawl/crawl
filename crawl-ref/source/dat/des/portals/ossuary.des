@@ -64,13 +64,6 @@ function ossuary_setup_features(e)
 end
 }}
 
-# Add the milestone.
-{{
-function ossuary_milestone(e)
-  crawl.mark_milestone("br.enter", "entered an Ossuary.", true)
-end
-}}
-
 #### Portal entry vaults.
 default-depth: D:4-8
 
@@ -198,9 +191,6 @@ MONS:    rat zombie / jackal zombie / snake zombie / goblin zombie / \
          human zombie / elf zombie / centaur zombie
 MONS:    kobold zombie / orc zombie / hobgoblin zombie
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 x.........<A.........x
@@ -260,9 +250,6 @@ MONS:    snake zombie / hobgoblin zombie / orc zombie / kobold zombie / nothing
 MONS:    big kobold zombie / water moccasin zombie / gnoll zombie / nothing
 MONS:    mummy
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
 cccccccccccccccccccccc
 c<11H~~~G1111F~~~E111c
@@ -300,9 +287,6 @@ MONS:    orc zombie / kobold zombie / big kobold zombie / hobgoblin zombie
 ITEM:    nothing / any scroll w:5 / any potion
 KFEAT:   ^ = alarm trap
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
 cccccccccccccccccccccc
 cccc.....2222.....cccc
@@ -353,9 +337,6 @@ MONS:    gnoll zombie / orc zombie / hound zombie / big kobold zombie / \
 KFEAT:   ~ = needle trap w:20 / arrow trap / spear trap w:5 / floor w:20
 KFEAT:   f = needle trap w:20 / arrow trap / spear trap w:5 / floor w:20
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
 xxxxxxxxxxxxxxxxxxxxxx
 x........<..A........x
@@ -415,9 +396,6 @@ KFEAT:   ^ = alarm trap / floor w:20
 SUBST:   = : =+
 SUBST:   = = =+
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
           vvv
         vvv1vvv
@@ -457,9 +435,6 @@ KFEAT:  ~ = needle trap / arrow trap / spear trap w:5 / dart trap w:2 / floor w:
 SUBST:  1 = 1.
 SUBST:  3 = 3.
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
 ccccccccccccccccccccccccc
 c...c..3c..1c~~~ndddc131c
@@ -507,9 +482,6 @@ KFEAT:   ~ = needle trap / arrow trap / spear trap / bolt trap / axe trap
 SUBST:   ~ = ~.
 NSUBST:  X = 1:< / *:.
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
 ccccccccccccccccccccccccccccccc
 c$$B~..........<..........~Cddc
@@ -595,9 +567,6 @@ MONS:    plant col:darkgrey name:withered n_adj tile:mons_withered_plant /\
 ITEM:    any potion / any scroll / any jewellery w:1
 : ossuary_setup_features(_G)
 : lrockcol('brown')
-epilogue {{
-ossuary_milestone(_G)
-}}
 MAP
       xxxxxxxxxxxxxxx
    xxxxxxxxxxxxxxxxxxxxx
@@ -649,9 +618,6 @@ MONS:   mummy
 MONS:   goblin zombie / hobgoblin zombie / gnoll zombie / big kobold zombie / \
         orc zombie / human zombie w:2 / elf zombie w:2 / centaur zombie w:2
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
          ccccccccccccccccc
          c1c1c1c1c1c1c1c1c
@@ -706,9 +672,6 @@ KFEAT:   ^ = net trap w:15 / needle trap w:4 / axe trap w:1 / floor w:20
 COLOUR:  ^ = red
 KFEAT:   W = dart trap / floor w:20
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
            cccccccccccccccccccc
    ccccccccc3c3c3c3c3c3c3cddddccc
@@ -740,9 +703,6 @@ KMONS:   x = guardian mummy
 : local x = {}
 : lua_marker("=", restrict_door(x))
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 : crawl.mpr("You feel the presence of a powerful and evil guardian...", "warning")
 MAP
 ccccccccccccccccccccccccccccc
@@ -811,9 +771,6 @@ KFEAT:   ^ = dart trap / arrow trap
 KITEM:   y = any scroll w:5 / any potion w:5 / nothing w:10
 KMONS:   y = rat skeleton
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
            ccc
          cccxccccc
@@ -858,9 +815,6 @@ SUBST:   X : XYc
 NSUBST:  X = 6:= / *:c
 NSUBST:  Y = 3:= / *:c
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
                             cc
                            cccc
@@ -919,9 +873,6 @@ KFEAT:  ' = arrow trap w:3 / dart trap w:5 / alarm trap w:7 / floor w:85
 KFEAT:  " = bolt trap w:1 / net trap w:3 / arrow trap w:5 / dart trap w:10
 #
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
 ccccccccccccccccccccccccccc
 c2c2c2cc...........cc2c2c2c
@@ -992,9 +943,6 @@ MARKER:  L = lua:message_at_spot ( \
                  "warning" \
              )
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
   ccccccccc
  cc.......cc
@@ -1039,9 +987,6 @@ MONS:   human zombie / elf zombie / centaur zombie
 MONS:   mummy
 ITEM:   any scroll / any potion / any scroll q:2 w:2 / any potion q:2 w:2
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
             ccc
           cccdccc
@@ -1085,9 +1030,6 @@ MONS:   generate_awake mummy
 ITEM:   any scroll / any potion / gold w:4
 KFEAT:  ~ = arrow trap / needle trap / floor w:40
 : ossuary_setup_features(_G)
-epilogue{{
-ossuary_milestone(_G)
-}}
 MAP
 ccccc     ccc ccc ccc
 cdddccccccc1ccc1ccc1ccccccc

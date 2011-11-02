@@ -147,10 +147,6 @@ function volcano_setup (e, metal, subvault)
     end
 end
 
-function volcano_milestone(e)
-    crawl.mark_milestone("br.enter", "entered a Volcano.", true)
-end
-
 -- "Volcano" functions. While the sizes may appear extreme, they are carefully
 -- weighted and balanced and have been tested extensively.
 function callback.volcano_in_radius_12(x, y)
@@ -620,9 +616,6 @@ KMONS:      l = lava snake w:2 / lava fish w:5 / nothing w:120
 KFEAT:      l = l
 :           volcano_setup(_G)
 :           place_tiny_volcano(_G)
-epilogue{{
-volcano_milestone(_G)
-}}
 MAP
                          xxxx
                     xxxxxxyyxxxx
@@ -857,9 +850,6 @@ MONS:       clay golem w:50 / molten gargoyle w:2
 #           Loot: 10 items, 6 gold.
 :           volcano_setup(_G)
 :           place_lake_volcanoes(_G, {"M", "E", "V", "Q", "T", "S"})
-epilogue{{
-volcano_milestone(_G)
-}}
 MAP
                       xxxx     xxxxx xxxxx xxxxxx
                     xxxyyxxx  xxyyxxxxyyyxxxyyyyxx
@@ -933,9 +923,6 @@ NSUBST:     Y = 2:1 / *:.
 KFEAT:      J = l
 MARKER:     J = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
                                   start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
-epilogue{{
-volcano_milestone(_G)
-}}
 MAP
           xxx
          xxyxx
@@ -990,9 +977,6 @@ KFEAT:      u = lava
 KMONS:      u = flying skull
 :           volcano_setup(_G)
 :           place_tiny_volcano(_G)
-epilogue{{
-volcano_milestone(_G)
-}}
 MAP
                  xxxx
             xxxxxxyyxxxxx
@@ -1128,9 +1112,6 @@ KFEAT:      K = l
 MARKER:     K = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
                                   start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
 # Sides:    Lindwurm # Vortex/elemental
-epilogue{{
-volcano_milestone(_G)
-}}
 MAP
                  xxxxxxxxx
                 xxKlllllKxx
@@ -1201,9 +1182,6 @@ MONS:       toenail golem
 KFEAT:      K = .
 MARKER:     K = lua:fog_machine ( { cloud_type = "rain", walk_dist=3, pow_max=2, \
                                     delay=300, size=3 } )
-epilogue{{
-volcano_milestone(_G)
-}}
 MAP
       xxxx                  vvvvvvvvvvvvv
    xxxxllxxx xxx            v...........v
@@ -1269,9 +1247,6 @@ SUBST:      R = defg$
 #           There are eight oportunities for loot! Seven single threat (1) plus two items,
 #           and one triple threat (121), plus six items. items can be any of: 1 armour,
 #           1 weapon, 1 potion, 1 any, 1 gold)
-epilogue{{
-volcano_milestone(_G)
-}}
 MAP
                cccc ccc
              cccXXcccZcccccc
@@ -1319,9 +1294,6 @@ KFEAT:      ' = alarm trap
 :           fiery_humans(_G)
 :           volcano_setup(_G)
 :           place_chained_volcano(_G)
-epilogue{{
-volcano_milestone(_G)
-}}
 MAP
 ###########################################
 #wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww#
@@ -1395,9 +1367,6 @@ lua_marker("M", sink_marker)
 SUBST:      M = c
 NSUBST:     123 = 8:d / 8:e / 8:f / 8:g / 8:h / *:.
 :           volcano_setup(_G)
-epilogue{{
-volcano_milestone(_G)
-}}
 MAP
                 xxxx         xxx xxx                   xxx
         xxxxx  xx33xxx     xxx3xxx3xxxx xxxxx xxx     xx3xx

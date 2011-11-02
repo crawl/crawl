@@ -222,7 +222,7 @@ const Branch branches[NUM_BRANCHES] = {
     { BRANCH_ZIGGURAT, NUM_BRANCHES, 27, 27, 27, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
       "Ziggurat", "a ziggurat", "Zig",
-      NULL,
+      "You land on top of a ziggurat so tall you cannot make out the ground.",
       false, BLACK, BLACK,
       mons_null_rare, mons_null_level, // overridden later
       'Q', false, false /* maybe, but Zig:26 is almost as bad */, 0 },
@@ -239,7 +239,7 @@ const Branch branches[NUM_BRANCHES] = {
     { BRANCH_BAZAAR, NUM_BRANCHES, 10, 27, 1, BFLAG_NO_XLEV_TRAVEL, 0,
       DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
       "Bazaar", "a bazaar", "Bazaar",
-      NULL,
+      "You enter an inter-dimensional bazaar!",
       false, BLUE, YELLOW,
       mons_null_rare, mons_null_level,
       '1', false, false, 0 },
