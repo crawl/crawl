@@ -1276,7 +1276,7 @@ bool zin_sanctuary()
 
     flash_view(WHITE);
 
-    holy_word(100, HOLY_WORD_ZIN, you.pos(), true);
+    holy_word(100, HOLY_WORD_ZIN, you.pos(), true, &you);
 
 #ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
