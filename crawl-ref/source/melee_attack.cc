@@ -3870,7 +3870,6 @@ std::string melee_attack::mons_attack_verb()
     if (attacker->type == MONS_KILLER_KLOWN && attk_type == AT_HIT)
         return (RANDOM_ELEMENT(klown_attack));
 
-
     if (mons_is_feat_mimic(attacker->type))
     {
         const dungeon_feature_type feat = get_mimic_feat(attacker->as_monster());

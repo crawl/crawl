@@ -169,7 +169,6 @@ private:
     int  player_stab_weapon_bonus(int damage);
     int  player_stab(int damage);
 
-    int  player_hits_monster();
     void player_exercise_combat_skills();
     bool player_monattk_hit_effects();
     void player_sustain_passive_damage();
