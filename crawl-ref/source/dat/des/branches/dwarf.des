@@ -424,7 +424,7 @@ ENDMAP
 
 NAME:     dhfh_alchemist
 TAGS:     extra
-DEPTH:    Dwarf:1
+DEPTH:    Dwarf, Lair
 SUBVAULT: Z : fruiting_plant
 SUBVAULT: Y : fruiting_plant
 SUBVAULT: X : fruiting_plant
