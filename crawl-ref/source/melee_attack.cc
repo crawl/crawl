@@ -2559,8 +2559,13 @@ void melee_attack::chaos_affects_attacker()
     if (miscast_level >= 1 || !attacker->alive())
         return;
 
+    coord_def dest(-1, -1);
+	// Prefer to send it under the defender.
+	if (defender->alive() && defender->pos() != attacker->pos())
+		dest = defender->pos();
+
     // Move stairs out from under the attacker.
-    if (one_chance_in(100) && _move_stairs())
+    if (one_chance_in(100) && move_stairs(attacker->pos(), dest))
     {
 #ifdef NOTE_DEBUG_CHAOS_EFFECTS
         take_note(Note(NOTE_MESSAGE, 0, 0,
@@ -5134,34 +5139,6 @@ bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
     // Don't drink poisonous or mutagenic blood.
     return (chunk_type == CE_CLEAN || chunk_type == CE_CONTAMINATED
             || (chunk_is_poisonous(chunk_type) && player_res_poison()));
-}
-
-bool melee_attack::_move_stairs()
-{
-    const coord_def orig_pos  = attacker->pos();
-    const dungeon_feature_type stair_feat = grd(orig_pos);
-
-    if (feat_stair_direction(stair_feat) == CMD_NO_CMD)
-        return (false);
-
-    // The player can't use shops to escape, so don't bother.
-    if (stair_feat == DNGN_ENTER_SHOP)
-        return (false);
-
-    // Don't move around notable terrain the player is aware of if it's
-    // out of sight.
-    if (is_notable_terrain(stair_feat)
-        && env.map_knowledge(orig_pos).known() && !you.see_cell(orig_pos))
-    {
-        return (false);
-    }
-
-    coord_def dest(-1, -1);
-    // Prefer to send it under the defender.
-    if (defender->alive() && defender->pos() != attacker->pos())
-        dest = defender->pos();
-
-    return slide_feature_over(attacker->pos(), dest);
 }
 
 int melee_attack::inflict_damage(int dam, beam_type flavour, bool clean)
