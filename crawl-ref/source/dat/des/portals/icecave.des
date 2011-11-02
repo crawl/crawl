@@ -403,7 +403,7 @@ ENDMAP
 # statue gardens (weight 5, total 10). Total weight of all types is
 # 12+15+10=37, so the latter types are more common in hard ice caves.
 
-default-depth:
+default-depth: IceCv
 
 ###############################################################################
 # The small caves.

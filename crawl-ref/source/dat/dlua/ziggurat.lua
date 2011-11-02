@@ -122,7 +122,6 @@ end
 
 -- Common setup for ziggurat levels.
 function ziggurat_level(e)
-  e.tags("ziggurat")
   e.tags("allow_dup")
   e.tags("no_dump")
   e.orient("encompass")
