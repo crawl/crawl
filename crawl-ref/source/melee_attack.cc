@@ -1929,7 +1929,12 @@ void melee_attack::player_exercise_combat_skills()
         practise(helpless ? EX_WILL_HIT_HELPLESS : EX_WILL_HIT, wpn_skill);
 }
 
-void melee_attack::player_check_weapon_effects()
+/*
+ * Applies god conduct for weapon ego
+ *
+ * Using haste as a chei worshiper, or holy/unholy weapons
+ */
+void melee_attack::player_weapon_affects_god()
 {
     if (weapon && weapon->base_type == OBJ_WEAPONS)
     {
@@ -1949,7 +1954,7 @@ void melee_attack::player_check_weapon_effects()
 bool melee_attack::player_monattk_hit_effects()
 {
     bool mondied = !defender->alive();
-    player_check_weapon_effects();
+    player_weapon_affects_god();
 
     mondied = check_unrand_effects() || mondied;
 

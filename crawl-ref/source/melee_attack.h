@@ -182,7 +182,7 @@ private:
     void player_announce_aux_hit();
     std::string player_why_missed();
     void player_warn_miss();
-    void player_check_weapon_effects();
+    void player_weapon_affects_god();
     void _monster_die(monster* mons, killer_type killer, int killer_index);
 
     // Output methods
