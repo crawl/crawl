@@ -2015,7 +2015,8 @@ static void _place_feature_mimics(int level_number,
 {
     if (player_in_branch(BRANCH_ECUMENICAL_TEMPLE)
         || player_in_branch(BRANCH_VESTIBULE_OF_HELL)
-        || player_in_branch(BRANCH_SLIME_PITS))
+        || player_in_branch(BRANCH_SLIME_PITS)
+        || !player_in_connected_branch())
     {
         return;
     }
@@ -2127,20 +2128,10 @@ static void _place_item_mimics(int level_number)
 
 static void _build_dungeon_level(int level_number, branch_type branch, dungeon_feature_type dest_stairs_type)
 {
-    // Generate a random monster table for Pan.
-    if (branch == BRANCH_PANDEMONIUM)
-    {
-        init_pandemonium();
-        setup_vault_mon_list();
-    }
-
     _build_layout_skeleton(level_number, branch);
 
-    if (branch == BRANCH_LABYRINTH
-        || is_portal_vault(branch))
-    {
+    if (branch == BRANCH_LABYRINTH)
         return;
-    }
 
     // Now place items, mons, gates, etc.
     // Stairs must exist by this point (except in Shoals where they are
@@ -2423,7 +2414,12 @@ static bool _builder_by_type(int level_number, branch_type branch)
     else if (branch == BRANCH_ABYSS)
         generate_abyss();
     else if (branch == BRANCH_PANDEMONIUM)
+    {
+        // Generate a random monster table for Pan.
+        init_pandemonium();
+        setup_vault_mon_list();
         _pan_level(level_number);
+    }
     else
         return true;
 
