@@ -1796,7 +1796,7 @@ ENDMAP
 
 # My mission is to annoy. -LP
 NAME:   lemuel_jelly_drop_a
-MONS:   jelly
+MONS:   jelly generate_awake
 TAGS:   uniq_jelly_drop
 WEIGHT: 5
 KFEAT:  a = teleport trap
