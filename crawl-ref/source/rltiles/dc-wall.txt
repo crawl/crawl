@@ -754,6 +754,28 @@ dngn_metal_wall_brown DNGN_METAL_WALL_BLUE
 
 dngn_metal_wall_cracked DNGN_METAL_WALL_CRACKED
 
+iron0-0 DNGN_METAL_IRON
+iron2-0
+iron3-0
+iron4-0
+iron5-0
+iron1-1
+iron2-1
+iron3-1
+iron0-2
+iron1-2
+iron2-2
+iron3-2
+iron4-2
+iron5-2
+iron1-3
+iron2-3
+iron3-3
+iron4-3
+iron0-4
+iron1-4
+iron2-4
+
 dc-dngn/grate DNGN_GRATE
 
 %hue 150 120
