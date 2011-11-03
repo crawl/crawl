@@ -132,6 +132,8 @@ function ($, cr, map_knowledge) {
                 this.set_cell_size(Math.floor(default_size.w * scale),
                                    Math.floor(default_size.h * scale));
             }
+            else
+                this.set_cell_size(default_size.w, default_size.h);
 
             var view_width = Math.floor(width / this.cell_width);
             var view_height = Math.floor(height / this.cell_height);
@@ -185,6 +187,11 @@ function ($, cr, map_knowledge) {
     var renderer = new DungeonViewRenderer();
 
     $(document).bind("game_init", function () {
+        renderer.cols = 0;
+        renderer.rows = 0;
+        renderer.view = { x: 0, y: 0 };
+        renderer.view_center = { x: 0, y: 0 };
+
         renderer.init($("#dungeon")[0]);
     });
 

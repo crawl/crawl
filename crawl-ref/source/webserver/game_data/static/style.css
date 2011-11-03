@@ -9,7 +9,9 @@ body {
 #right_column {
     display: inline-block;
     vertical-align: top;
-    float: right;
+    position: absolute;
+    right: 0px;
+    top: 0px;
 }
 
 #stats {

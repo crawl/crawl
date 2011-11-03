@@ -42,7 +42,7 @@ define(["jquery", "comm"], function ($, comm) {
 
     function handle_text_update(data)
     {
-        for (line in data.lines)
+        for (var line in data.lines)
             set_text_area_line(data.id, line, data.lines[line]);
     }
 

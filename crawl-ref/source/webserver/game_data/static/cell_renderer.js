@@ -282,8 +282,8 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge) {
 
             {
                 cell.bloodrot = cell.bloodrot || 0;
+                var basetile;
                 if (is_wall)
-
                 {
                     basetile = dngn.WALL_BLOOD_S + dngn.tile_count(dngn.WALL_BLOOD_S)
                         * cell.bloodrot;

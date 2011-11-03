@@ -60,7 +60,7 @@ function ($, map_knowledge, cr, dungeon_renderer) {
     {
         var monster_list = [];
 
-        for (loc in monsters)
+        for (var loc in monsters)
             monster_list.push(monsters[loc]);
 
         monster_list.sort(function (m1, m2) {
