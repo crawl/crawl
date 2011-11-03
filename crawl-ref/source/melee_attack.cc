@@ -458,6 +458,7 @@ bool melee_attack::handle_phase_hit()
         {
             announce_hit();
 
+
             if (!handle_phase_damaged())
                 return (false);
 
@@ -1368,6 +1369,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                  corrode_monster(defender->as_monster(), &you);
         }
 
+        // TODO: remove this? Unarmed poison attacks?
         if (damage_brand == SPWPN_VENOM && coinflip())
             poison_monster(defender->as_monster(), &you);
 
@@ -3990,22 +3992,9 @@ void melee_attack::mons_do_poison()
 
         if (needs_message)
         {
-            if (defender->atype() == ACT_PLAYER
-                && (attk_type == AT_BITE || attk_type == AT_STING))
-            {
-                if (attacker_visible)
-                {
-                    mprf("%s %s was poisonous!",
-                         apostrophise(attacker->name(DESC_THE)).c_str(),
-                         mons_attack_verb().c_str());
-                }
-            }
-            else
-            {
-                mprf("%s poisons %s!",
-                     atk_name(DESC_THE).c_str(),
-                     defender_name().c_str());
-            }
+			mprf("%s poisons %s!",
+				 atk_name(DESC_THE).c_str(),
+				 defender_name().c_str());
         }
     }
 }
