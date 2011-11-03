@@ -598,3 +598,11 @@ crypt4
 crypt5
 crypt6
 crypt7
+
+iron0 FLOOR_IRON
+%weight 1
+iron1
+iron2
+iron3
+iron4
+iron5
