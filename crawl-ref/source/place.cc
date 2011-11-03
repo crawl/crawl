@@ -115,7 +115,13 @@ int absdungeon_depth(branch_type branch, int subdepth)
 
 int subdungeon_depth(branch_type branch, int depth)
 {
-    return depth - absdungeon_depth(branch, 0);
+    int d = depth - absdungeon_depth(branch, 0);
+    // FIXME: assert instead once bugs are gone
+    if (d < 1)
+        d = 1;
+    else if (d > brdepth[branch])
+        d = brdepth[branch];
+    return d;
 }
 
 int player_branch_depth()
