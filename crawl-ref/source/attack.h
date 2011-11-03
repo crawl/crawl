@@ -73,9 +73,14 @@ public:
     std::string     special_damage_message;
     std::string     aux_attack, aux_verb;
 
-    // Fetched/Calculated from the defender, stored to save execution time
-    int     defender_body_armour_penalty;
-    int     defender_shield_penalty;
+    // Adjusted EV penalties for defender and attacker
+    int             defender_body_armour_penalty;
+    int             defender_shield_penalty;
+    int             attacker_body_armour_penalty;
+    int             attacker_shield_penalty;
+    // Combined to-hit penalty from armour and shield.
+    int             attacker_armour_tohit_penalty;
+    int             attacker_shield_tohit_penalty;
 
     item_def        *defender_shield;
 

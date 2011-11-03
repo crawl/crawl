@@ -39,14 +39,6 @@ public:
 
     beam_type special_damage_flavour;
 
-    // Adjusted EV penalty for body armour and shields.
-    int       attacker_body_armour_penalty;
-    int       attacker_shield_penalty;
-
-    // Combined to-hit penalty from armour and shield.
-    int       attacker_armour_tohit_penalty;
-    int       attacker_shield_tohit_penalty;
-
     bool      can_do_unarmed;
 
     bool    stab_attempt;

@@ -38,6 +38,8 @@ attack::attack(actor *attk, actor *defn, bool allow_unarmed)
     attack_verb("bug"), verb_degree(), no_damage_message(),
     special_damage_message(), aux_attack(), aux_verb(),
     defender_body_armour_penalty(0), defender_shield_penalty(0),
+    attacker_body_armour_penalty(0), attacker_shield_penalty(0),
+    attacker_armour_tohit_penalty(0), attacker_shield_tohit_penalty(0),
     defender_shield(NULL)
 {
     // No effective code should execute, we'll call init_attack again from
