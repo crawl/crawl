@@ -36,7 +36,6 @@ public:
     bool    apply_bleeding;
 
     int     noise_factor;
-    // int     extra_noise; May not be needed??
 
     // Fetched/Calculated from the attacker, stored to save execution time
     bool            unarmed_capable;
