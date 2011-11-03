@@ -2,7 +2,7 @@ define(["jquery", "./map_knowledge", "./dungeon_renderer", "./view_data",
         "./tileinfo-player", "./tileinfo-main", "./tileinfo-dngn", "./enums"],
 function ($, map_knowledge, dungeon_renderer, view_data,
           player, main, dngn, enums) {
-    minimap_colours = [
+    var minimap_colours = [
         "black",       // MF_UNSEEN
         "darkgrey",    // MF_FLOOR
         "grey",        // MF_WALL

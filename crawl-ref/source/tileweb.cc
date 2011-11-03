@@ -857,6 +857,7 @@ void TilesFramework::_send_everything()
     send_message("{msg:\"flash\",col:%d}", m_current_flash_colour);
     _send_map(true);
     finish_message();
+    send_message("{msg:'redraw'}");
     switch (m_active_layer)
     {
     case LAYER_CRT:

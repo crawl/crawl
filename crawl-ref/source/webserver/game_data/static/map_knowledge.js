@@ -105,7 +105,7 @@ define(["jquery", "./enums"], function ($, enums) {
 
     function clean_monster_table()
     {
-        for (id in monster_table)
+        for (var id in monster_table)
         {
             if (!monster_table[id].refs)
                 delete monster_table[id];
@@ -116,7 +116,7 @@ define(["jquery", "./enums"], function ($, enums) {
 
     function merge(val)
     {
-        var x;
+        var x, y;
         if (val.x === undefined)
             x = merge_last_x + 1;
         else

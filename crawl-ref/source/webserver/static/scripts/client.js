@@ -1,5 +1,6 @@
 define(["exports", "jquery", "key_conversion", "chat", "comm",
-        "contrib/jquery.cookie", "contrib/jquery.tablesorter"],
+        "contrib/jquery.cookie", "contrib/jquery.tablesorter",
+        "contrib/jquery.waitforimages"],
 function (exports, $, key_conversion, chat, comm) {
 
     // Need to keep this global for backwards compatibility :(
@@ -52,7 +53,7 @@ function (exports, $, key_conversion, chat, comm) {
         while (message_queue.length
                && (message_inhibit == 0))
         {
-            msg = message_queue.shift();
+            var msg = message_queue.shift();
             if (window.debug_mode)
             {
                 handle_message(msg);
@@ -108,13 +109,12 @@ function (exports, $, key_conversion, chat, comm) {
     {
         if (showing_close_message) return;
 
-        $.each(layers, function (i, l)
-               {
-                   if (l == layer)
-                       $("#" + l).show();
-                   else
-                       $("#" + l).hide();
-               });
+        $.each(layers, function (i, l) {
+            if (l == layer)
+                $("#" + l).show();
+            else
+                $("#" + l).hide();
+        });
         current_layer = layer;
 
         lobby(layer == "lobby");
@@ -622,7 +622,9 @@ function (exports, $, key_conversion, chat, comm) {
         inhibit_messages();
         show_loading_screen();
         $("#game").html(data.content);
-        $(document).ready(uninhibit_messages);
+        $(document).ready(function () {
+            $("#game").waitForImages(uninhibit_messages);
+        });
     }
 
     function do_set_layer(data)
