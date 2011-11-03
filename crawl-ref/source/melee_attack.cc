@@ -107,6 +107,15 @@ melee_attack::melee_attack(actor *attk, actor *defn, bool allow_unarmed,
     wpn_skill       = weapon ? weapon_skill(*weapon) : SK_UNARMED_COMBAT;
     to_hit          = calc_to_hit();
 
+    attacker_armour_tohit_penalty =
+        attacker->armour_tohit_penalty(random);
+    attacker_shield_tohit_penalty =
+        attacker->shield_tohit_penalty(random);
+
+    can_do_unarmed =
+        attacker->fights_well_unarmed(attacker_armour_tohit_penalty
+                                   + attacker_shield_tohit_penalty);
+
     if (attacker->atype() == ACT_MONSTER)
     {
         mon_attack_def mon_attk = mons_attack_spec(attacker->as_monster(),
@@ -713,9 +722,10 @@ bool melee_attack::handle_phase_killed()
 bool melee_attack::handle_phase_end()
 {
     if (attacker->atype() == ACT_PLAYER && can_do_unarmed
-        && adjacent(defender->pos(), attacker->pos()) && player_aux_unarmed())
+        && adjacent(defender->pos(), attacker->pos()))
     {
-        return (true);
+    	// returns whether an aux attack successfully took place
+    	player_aux_unarmed()
     }
 
     // Check for passive mutation effects.
@@ -1209,8 +1219,6 @@ bool melee_attack::player_aux_unarmed()
      * but still needs to pass the other checks in _extra_aux_attack().
      */
     unarmed_attack_type baseattack = UNAT_NO_ATTACK;
-    if (!can_do_unarmed)
-        return (false);
 
     baseattack = player_aux_choose_baseattack();
 
@@ -3425,18 +3433,6 @@ int melee_attack::calc_to_hit(bool random)
     // player_to_hit methods.
     if(attacker->atype() == ACT_PLAYER)
     {
-        attacker_armour_tohit_penalty =
-            attacker->armour_tohit_penalty(random);
-        attacker_shield_tohit_penalty =
-            attacker->shield_tohit_penalty(random);
-
-        dprf("Armour/shield to-hit penalty: %d/%d",
-             attacker_armour_tohit_penalty, attacker_shield_tohit_penalty);
-
-        can_do_unarmed =
-            attacker->fights_well_unarmed(attacker_armour_tohit_penalty
-                                       + attacker_shield_tohit_penalty);
-
         // fighting contribution
         mhit += maybe_random_div(you.skill(SK_FIGHTING, 100), 100, random);
 
