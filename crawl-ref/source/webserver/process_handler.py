@@ -26,7 +26,8 @@ class CrawlProcessHandlerBase(object):
         self.kill_timeout = None
 
         now = datetime.datetime.utcnow()
-        self.lock_basename = now.strftime("%Y-%m-%d.%H:%M:%S") + ".ttyrec"
+        self.formatted_time = now.strftime("%Y-%m-%d.%H:%M:%S")
+        self.lock_basename = self.formatted_time + ".ttyrec"
 
         self.end_callback = None
         self._watchers = set()
@@ -163,9 +164,118 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self.inprogress_lock = None
         self.inprogress_lock_file = None
 
+        self._stale_pid = None
+        self._stale_lockfile = None
+        self._purging_timer = None
+        self._process_hup_timeout = None
+
     def start(self):
+        print "starting"
+        self._purge_locks_and_start(True)
+
+    def _purge_locks_and_start(self, firsttime=False):
+        # Purge stale locks
+        lockfile = self._find_lock()
+        if lockfile:
+            try:
+                with open(lockfile) as f:
+                    pid = f.readline()
+                pid = int(pid)
+                self._stale_pid = pid
+                self._stale_lockfile = lockfile
+                if firsttime:
+                    hup_wait = 10
+                    self.send_to_all("stale_processes",
+                                     timeout=hup_wait, game=self.game_params["name"])
+                    to = self.io_loop.add_timeout(time.time() + hup_wait,
+                                                  self._kill_stale_process)
+                    self._process_hup_timeout = to
+                else:
+                    self._kill_stale_process()
+            except:
+                self.logger.error("Error while handling lockfile %s.", lockfile,
+                                  exc_info=True)
+                errmsg = ("Error while trying to terminate a stale process.<br>" +
+                          "Please contact an administrator.")
+                self.send_to_all("stale_process_fail", content=errmsg)
+                self.handle_process_end()
+        else:
+            # No more locks, can start
+            self._start_process()
+
+    def _stop_purging_stale_processes(self):
+        if not self._process_hup_timeout: return
+        self.io_loop.remove_timeout(self._process_hup_timeout)
+        self._stale_pid = None
+        self._stale_lockfile = None
+        self._purging_timer = None
+        self._process_hup_timeout = None
+        self.handle_process_end()
+
+    def _find_lock(self):
+        for path in os.listdir(self.config_path("inprogress_path")):
+            if path.startswith(self.username + ":"):
+                return os.path.join(self.config_path("inprogress_path"),
+                                    path)
+        return None
+
+    def _kill_stale_process(self, signal=subprocess.signal.SIGHUP):
+        self._process_hup_timeout = None
+        if signal == subprocess.signal.SIGHUP:
+            self.logger.info("Purging stale lock at %s, pid %s.",
+                             self._stale_lockfile, self._stale_pid)
+        elif signal == subprocess.signal.SIGTERM:
+            self.logger.warn("Terminating pid %s forcefully!",
+                             self._stale_lockfile, self._stale_pid)
+        try:
+            os.kill(self._stale_pid, signal)
+        except OSError, e:
+            if e.errno == errno.ESRCH:
+                # Process doesn't exist
+                self._purge_stale_lock()
+            else:
+                self.logger.error("Error while killing process %s.", self._stale_pid,
+                                  exc_info=True)
+                errmsg = ("Error while trying to terminate a stale process.<br>" +
+                          "Please contact an administrator.")
+                self.send_to_all("stale_process_fail", content=errmsg)
+                self.handle_process_end()
+        else:
+            if signal == subprocess.signal.SIGTERM:
+                self._purge_stale_lock()
+            else:
+                if signal == subprocess.signal.SIGHUP:
+                    self._purging_timer = 10
+                else:
+                    self._purging_timer -= 1
+
+                if self._purging_timer > 0:
+                    self.io_loop.add_timeout(time.time() + 1,
+                                             self._check_stale_process)
+                else:
+                    self.logger.warn("Couldn't terminate pid %s gracefully.",
+                                     self._stale_pid)
+                    self.send_to_all("force_terminate?")
+
+    def _check_stale_process(self):
+        self._kill_stale_process(0)
+
+    def _do_force_terminate(self, answer):
+        if answer:
+            self._kill_stale_process(subprocess.signal.SIGTERM)
+        else:
+            self.handle_process_end()
+
+    def _purge_stale_lock(self):
+        if os.path.exists(self._stale_lockfile):
+            os.remove(self._stale_lockfile)
+
+        self._purge_locks_and_start(False)
+
+    def _start_process(self):
         self.socketpath = os.path.join(self.config_path("socket_path"),
-                                       self.username + ".sock")
+                                       self.username + ":" +
+                                       self.formatted_time + ".sock")
 
         try: # Unlink if necessary
             os.unlink(self.socketpath)
@@ -261,6 +371,12 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
             data += obj.get("text", u"").encode("utf8")
 
             self.process.write_input(data)
+
+        elif obj["msg"] == "force_terminate":
+            self._do_force_terminate(obj["answer"])
+
+        elif obj["msg"] == "stop_stale_process_purge":
+            self._stop_purging_stale_processes()
 
         elif self.conn:
             self.conn.send_message(msg.encode("utf8"))
