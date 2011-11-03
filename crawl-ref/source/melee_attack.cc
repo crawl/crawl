@@ -458,7 +458,6 @@ bool melee_attack::handle_phase_hit()
         {
             announce_hit();
 
-
             if (!handle_phase_damaged())
                 return (false);
 
@@ -633,8 +632,7 @@ bool melee_attack::handle_phase_damaged()
             return (false);
         }
 
-        inflict_damage(damage_done + special_damage, special_damage_flavour,
-                       true);
+        inflict_damage(special_damage, special_damage_flavour, true);
 
         if (!defender->alive())
         {
