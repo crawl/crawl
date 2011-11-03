@@ -212,12 +212,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         self.process.end_callback = self._on_crawl_end
         self.process.add_watcher(self, hide=True)
-        self.process.start()
+        try:
+            self.process.start()
+        except:
+            self.process = None
+            self.send_message("go_lobby")
+        else:
+            self.send_message("game_started")
 
-        self.send_message("game_started")
-
-        if dgl_mode:
-            update_global_status()
+            if dgl_mode:
+                update_global_status()
 
     def _on_crawl_end(self):
         self.process = None

@@ -188,8 +188,7 @@ function (exports, $, key_conversion, chat, comm) {
             if (e.which == 27)
             {
                 e.preventDefault();
-                $("#register").hide();
-                $("#rc_edit").hide();
+                $(".floating_dialog").hide();
             }
             return;
         }
@@ -339,7 +338,10 @@ function (exports, $, key_conversion, chat, comm) {
 
     function show_dialog(id)
     {
-        $(id).fadeIn(100);
+        $(".floating_dialog").hide();
+        $(id).fadeIn(100, function () {
+            $(id).focus();
+        });
         var w = $(id).width();
         var ww = $(window).width();
         $(id).offset({ left: ww / 2 - w / 2, top: 50 });
@@ -512,6 +514,53 @@ function (exports, $, key_conversion, chat, comm) {
         old_list.replaceWith(l);
     }
 
+
+    function force_terminate_no()
+    {
+        send_message("force_terminate", { answer: false });
+        $("#force_terminate").hide().blur();
+    }
+    function force_terminate_yes()
+    {
+        send_message("force_terminate", { answer: true });
+        $("#force_terminate").hide().blur();
+    }
+    function stale_processes_keydown(ev)
+    {
+        ev.preventDefault();
+        send_message("stop_stale_process_purge");
+        $("#stale_processes_message").hide().blur();
+    }
+    function force_terminate_keydown(ev)
+    {
+        ev.preventDefault();
+        if (ev.which == "y".charCodeAt(0))
+            force_terminate_yes();
+        else
+            force_terminate_no();
+    }
+    function handle_stale_processes(data)
+    {
+        $(".game_name").html(data.game);
+        $(".recover_timeout").html("" + data.timeout);
+        show_dialog("#stale_processes_message");
+    }
+    function handle_stale_process_fail(data)
+    {
+        $("#message_box").html(data.content);
+        show_dialog("#message_box");
+    }
+    function handle_force_terminate(data)
+    {
+        show_dialog("#force_terminate");
+    }
+
+    comm.register_handlers({
+        "stale_processes": handle_stale_processes,
+        "stale_process_fail": handle_stale_process_fail,
+        "force_terminate?": handle_force_terminate
+    });
+
     var watching = false;
     function watching_started()
     {
@@ -588,6 +637,8 @@ function (exports, $, key_conversion, chat, comm) {
             message_queue.unshift(msg);
     }
 
+
+
     // Global functions for backwards compatibility (HACK)
     window.log = log;
     window.set_layer = set_layer;
@@ -650,6 +701,11 @@ function (exports, $, key_conversion, chat, comm) {
         $("#rc_edit_form").bind("submit", send_rc);
 
         $("#lobby_update_link").bind("click", lobby_update);
+
+        $("#force_terminate_no").click(force_terminate_no);
+        $("#force_terminate_yes").click(force_terminate_yes);
+        $("#stale_processes_message").keydown(stale_processes_keydown);
+        $("#force_terminate").keydown(force_terminate_keydown);
 
         do_layout();
 
