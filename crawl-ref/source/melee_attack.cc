@@ -98,7 +98,7 @@ melee_attack::melee_attack(actor *attk, actor *defn, bool allow_unarmed,
     skip_chaos_message(false), special_damage_flavour(BEAM_NONE),
     attacker_body_armour_penalty(0), attacker_shield_penalty(0),
     attacker_armour_tohit_penalty(0), attacker_shield_tohit_penalty(0),
-    can_do_unarmed(false), stab_attempt(false), stab_bonus(0),
+    can_do_unarmed(allow_unarmed), stab_attempt(false), stab_bonus(0),
     miscast_level(-1), miscast_type(SPTYP_NONE), miscast_target(NULL)
 {
     attack_occurred = false;
@@ -108,9 +108,9 @@ melee_attack::melee_attack(actor *attk, actor *defn, bool allow_unarmed,
     to_hit          = calc_to_hit();
 
     attacker_armour_tohit_penalty =
-        attacker->armour_tohit_penalty(random);
+        attacker->armour_tohit_penalty(true);
     attacker_shield_tohit_penalty =
-        attacker->shield_tohit_penalty(random);
+        attacker->shield_tohit_penalty(true);
 
     can_do_unarmed =
         attacker->fights_well_unarmed(attacker_armour_tohit_penalty
@@ -725,7 +725,7 @@ bool melee_attack::handle_phase_end()
         && adjacent(defender->pos(), attacker->pos()))
     {
     	// returns whether an aux attack successfully took place
-    	player_aux_unarmed()
+    	player_aux_unarmed();
     }
 
     // Check for passive mutation effects.
@@ -1903,7 +1903,7 @@ void melee_attack::player_exercise_combat_skills()
  *
  * Using haste as a chei worshiper, or holy/unholy weapons
  */
-void melee_attack::player_weapon_affects_god()
+void melee_attack::player_weapon_upsets_god()
 {
     if (weapon && weapon->base_type == OBJ_WEAPONS)
     {
@@ -1923,7 +1923,7 @@ void melee_attack::player_weapon_affects_god()
 bool melee_attack::player_monattk_hit_effects()
 {
     bool mondied = !defender->alive();
-    player_weapon_affects_god();
+    player_weapon_upsets_god();
 
     mondied = check_unrand_effects() || mondied;
 
