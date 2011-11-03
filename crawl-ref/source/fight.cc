@@ -5333,11 +5333,10 @@ void melee_attack::mons_emit_foul_stench()
     {
         const int mut = player_mutation_level(MUT_FOUL_STENCH);
 
-        if (x_chance_in_y(mut, 4))
-            mon->sicken(50 + random2(50) * mut);
+        if (one_chance_in(3))
+            mon->sicken(50 + random2(100));
 
-        if (damage_done >= you.hp_max / 6
-            && mut == 2
+        if (damage_done > 4 && x_chance_in_y(mut, 5)
             && !cell_is_solid(mon->pos())
             && env.cgrid(mon->pos()) == EMPTY_CLOUD)
         {
