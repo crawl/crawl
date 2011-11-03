@@ -3564,6 +3564,11 @@ int melee_attack::calc_to_hit(bool random)
                 mhit += maybe_random2(you.dex(), random);
             }
         }
+
+        // If stochastic, we're calculating to-hit for debug-display
+        // purposes, so don't drop down to defender code below (there is none)
+        if (!random)
+        	return (mhit);
     }
     else
     {

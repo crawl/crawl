@@ -3820,7 +3820,7 @@ static void _display_tohit()
 #ifdef DEBUG_DIAGNOSTICS
     melee_attack attk(&you, NULL);
 
-    const int to_hit = attk.calc_to_hit(false) * 2;
+    const int to_hit = attk.calc_to_hit(false);
 
     dprf("To-hit: %d", to_hit);
 #endif
