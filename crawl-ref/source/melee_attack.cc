@@ -146,7 +146,7 @@ melee_attack::melee_attack(actor *attk, actor *defn, bool allow_unarmed,
         }
     }
 
-    hand_half_bonus = (unarmed_ok
+    hand_half_bonus = (can_do_unarmed
                        && !shield
                        && weapon
                        && !weapon->cursed()
@@ -161,14 +161,12 @@ melee_attack::melee_attack(actor *attk, actor *defn, bool allow_unarmed,
 
     attacker_body_armour_penalty = attacker->adjusted_body_armour_penalty(1);
     attacker_shield_penalty = attacker->adjusted_shield_penalty(1);
-    //dprf("Player body armour penalty: %d, shield penalty: %d",
-    //     player_body_armour_penalty, player_shield_penalty);
 
-    if (defender && defender->submerged())
+    if (defender && defender->submerged() && can_do_unarmed)
     {
         // Unarmed attacks from tentacles are the only ones that can
         // reach submerged monsters.
-        unarmed_ok = (attacker->damage_type() == DVORP_TENTACLE);
+        can_do_unarmed = (attacker->damage_type() == DVORP_TENTACLE);
     }
 }
 
@@ -714,7 +712,7 @@ bool melee_attack::handle_phase_killed()
 
 bool melee_attack::handle_phase_end()
 {
-    if (attacker->atype() == ACT_PLAYER && unarmed_ok
+    if (attacker->atype() == ACT_PLAYER && can_do_unarmed
         && adjacent(defender->pos(), attacker->pos()) && player_aux_unarmed())
     {
         return (true);
@@ -816,7 +814,7 @@ bool melee_attack::attack()
         // Odd place to do this, we'll see if we want to move it
         // On a more up-to-date thought, this is already done in handle_phase_
         // end so we'll comment it out for now to see if it stops working
-        //if (unarmed_ok && where == defender->pos())
+        //if (can_do_unarmed && where == defender->pos())
         //    player_aux_unarmed();
     }
     else

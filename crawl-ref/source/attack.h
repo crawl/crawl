@@ -34,7 +34,6 @@ public:
     int     final_attack_delay;
 
     bool    apply_bleeding;
-    bool    unarmed_ok;
 
     int     noise_factor;
     // int     extra_noise; May not be needed??
