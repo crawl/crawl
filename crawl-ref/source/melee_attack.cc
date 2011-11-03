@@ -94,7 +94,7 @@ melee_attack::melee_attack(actor *attk, actor *defn, bool allow_unarmed,
     attack::attack(attk, defn, allow_unarmed),
 
     perceived_attack(false), obvious_effect(false), attack_number(attack_num),
-    effective_attack_number(effective_attack_num), extra_noise(0),
+    effective_attack_number(effective_attack_num),
     skip_chaos_message(false), special_damage_flavour(BEAM_NONE),
     attacker_body_armour_penalty(0), attacker_shield_penalty(0),
     attacker_armour_tohit_penalty(0), attacker_shield_tohit_penalty(0),
@@ -2815,7 +2815,7 @@ bool melee_attack::apply_damage_brand()
         calc_elemental_brand_damage(BEAM_FIRE, res,
                                     defender->is_icy() ? "melt" : "burn");
         defender->expose_to_element(BEAM_FIRE);
-        extra_noise += 1;
+        noise_factor += 400 / damage_done;
         break;
 
     case SPWPN_FREEZING:
@@ -2839,7 +2839,7 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_ELECTROCUTION:
-        extra_noise += 2;
+        noise_factor += 800 / damage_done;
         if (defender->airborne() || defender->res_elec() > 0)
             break;
         else if (one_chance_in(3))
@@ -3109,11 +3109,10 @@ void melee_attack::handle_noise(const coord_def & pos)
     if (stab_attempt)
     {
         noise_factor = 0;
-        extra_noise  = 0;
         return;
     }
 
-    int level = (noise_factor * damage_done / 100 / 4) + extra_noise;
+    int level = noise_factor * damage_done / 100 / 4;
 
     if (noise_factor > 0)
         level = std::max(1, level);
@@ -3125,7 +3124,6 @@ void melee_attack::handle_noise(const coord_def & pos)
         noisy(level, pos, attacker->mindex());
 
     noise_factor = 0;
-    extra_noise  = 0;
 }
 
 // Returns true if the attack cut off a head *and* cauterized it.
