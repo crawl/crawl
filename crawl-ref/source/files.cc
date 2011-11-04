@@ -1364,11 +1364,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
         // want them to attack players quite as soon:
         you.time_taken *= (just_created_level ? 1 : 2);
 
-        you.time_taken = div_rand_round(you.time_taken, 3);
+        you.time_taken = div_rand_round(you.time_taken * 2, 3);
 
         dprf("arrival time: %d", you.time_taken);
-
-        handle_monsters();
 
         if (just_created_level)
             run_map_epilogues();

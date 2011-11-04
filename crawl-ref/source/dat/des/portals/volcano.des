@@ -172,14 +172,14 @@ function place_large_volcano(e)
     e.kfeat("V = l")
     e.lua_marker('V', fog_machine { cloud_type = "flame", walk_dist=15, pow_max=6,
                                    delay = 300, size = 10000, spread_rate = 30,
-                                   listener = large_warning})
+                                   listener = large_warning, excl_rad = -1 })
 end
 
 function place_chained_volcano(e)
     e.kfeat("V = l")
     e.lua_marker('V', chained_fog_machine { cloud_type = "flame", walk_dist=15, pow_max=6,
-                                            delay = 300, size = 3000, spread_rate = 30,
-                                            listener = large_warning } )
+                                            delay = 300, size = 100, spread_rate = 30,
+                                            listener = large_warning, excl_rad = -1 } )
 end
 
 
@@ -187,7 +187,7 @@ function place_small_volcano(e)
     e.kfeat("V = l")
     e.lua_marker('V', fog_machine { cloud_type = "flame", walk_dist=15, pow_max=6,
                                    delay = 300, size = 800, spread_rate = 30,
-                                   listener = small_warning})
+                                   listener = small_warning, excl_rad = -1 })
 end
 
 function place_lake_volcanoes (e, glyphs)
@@ -200,15 +200,15 @@ function place_lake_volcano (e, glyph)
     e.kfeat(glyph .. " = l")
     e.lua_marker(glyph, chained_fog_machine { cloud_type = "flame", walk_dist=0,
                             pow_max=6, delay_min = 300, delay_max = 800,
-                            size = 300, spread_rate = 5,
-                            listener = small_warning})
+                            size = 125, spread_rate = 5,
+                            listener = small_warning, excl_rad = -1 })
 end
 
 function place_tiny_volcano(e)
     e.kfeat("V = l")
     e.lua_marker('V', fog_machine { cloud_type = "flame", walk_dist=10, pow_max=6,
                                    delay = 800, size = 80, spread_rate = 10,
-                                   listener = large_warning})
+                                   listener = large_warning, excl_rad = -1 })
 end
 -- #
 -- ###
@@ -930,14 +930,11 @@ NSUBST:     B = 1:A / *:.
 #           Loot + 10 trashy items.
 SUBST:      R = h
 NSUBST:     Y = 2:1 / *:.
-#           And the exit
-SHUFFLE:    <<<
-NSUBST:     < = 4:.
 :           volcano_setup(_G)
 :           place_tiny_volcano(_G)
 KFEAT:      J = l
 MARKER:     J = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
-                                  start_clouds = 1, cloud_type = "flame"}
+                                  start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
 epilogue{{
 volcano_milestone(_G)
 }}
@@ -1038,9 +1035,9 @@ MONS:    mummy
 SHUFFLE: 12K
 KFEAT:   JK = l
 MARKER:  J = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
-                               start_clouds = 1, cloud_type = "flame"}
+                               start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
 MARKER:  K = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
-                               start_clouds = 1, cloud_type = "flame"}
+                               start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxyyxxx
@@ -1128,10 +1125,10 @@ TAGS:       volcano no_item_gen no_monster_gen
 :           volcano_setup(_G)
 :           place_small_volcano(_G)
 MARKER:     J = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
-                                  start_clouds = 1, cloud_type = "flame"}
+                                  start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
 KFEAT:      K = l
 MARKER:     K = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
-                                  start_clouds = 1, cloud_type = "flame"}
+                                  start_clouds = 1, cloud_type = "flame", excl_rad = -1 }
 # Sides:    Lindwurm # Vortex/elemental
 epilogue{{
 volcano_milestone(_G)

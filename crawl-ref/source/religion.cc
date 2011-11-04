@@ -2048,9 +2048,9 @@ static bool _jiyva_mutate()
 
     if (rand < 10)
         return (delete_mutation(RANDOM_SLIME_MUTATION, true, false, true));
-    else if (rand < 35)
+    else if (rand < 30)
         return (delete_mutation(RANDOM_NON_SLIME_MUTATION, true, false, true));
-    else if (rand < 60)
+    else if (rand < 55)
         return (mutate(RANDOM_MUTATION, true, false, true));
     else if (rand < 75)
         return (mutate(RANDOM_SLIME_MUTATION, true, false, true));

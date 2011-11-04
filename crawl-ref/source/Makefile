@@ -46,6 +46,10 @@
 #    NOWIZARD      -- set to disable wizard mode.  Use if you have untrusted
 #                     remote players without DGL.
 #
+#    WEBTILES      -- set to anything to compile for Webtiles
+#    WEBDIR        -- place to hold the Webtiles client data. Can be either
+#                     relative to prefix or absolute.
+#
 #
 # Requirements:
 #    For tile builds, you need pkg-config.
@@ -767,6 +771,21 @@ else
 endif
 datadir_fp := $(abspath $(strip $(DESTDIR))$(strip $(DATADIR)))
 
+ifneq ($(strip $(WEBDIR)),)
+  ifeq ($(filter /%,$(WEBDIR)),)
+    #relative WEBDIR
+    ifneq ($(prefix),)
+	override WEBDIR := $(strip $(prefix))/$(strip $(WEBDIR))
+    endif
+  endif
+  CFOTHERS_L += -DWEB_DIR_PATH=\"$(abspath $(WEBDIR))/\"
+else
+  ifneq ($(prefix),)
+	WEBDIR := $(strip $(prefix))/$(strip $(WEBDIR))
+  endif
+endif
+webdir_fp := $(abspath $(strip $(DESTDIR))$(strip $(WEBDIR)))
+
 ifndef NO_NCURSES
 
 ifndef CROSSHOST
@@ -1144,6 +1163,10 @@ endif
 ifndef MONOSPACED_FONT
 	$(COPY) dat/tiles/VeraMono.ttf $(datadir_fp)/dat/tiles/
 endif
+endif
+ifneq ($(webdir_fp),)
+	mkdir -p $(webdir_fp)
+	$(COPY_R) webserver/game_data/* $(webdir_fp)/
 endif
 ifneq ($(savedir_fp),)
 	mkdir -p $(savedir_fp)/saves

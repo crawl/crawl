@@ -963,6 +963,8 @@ void behaviour_event(monster* mon, mon_event_type event, int src,
             }
             else if (!mons_is_cornered(mon) && (mon->hit_points > fleeThreshold))
                 mon->behaviour = BEH_SEEK;
+            else if (mon->asleep())
+                mon->behaviour = BEH_SEEK;
 
             if (src == MHITYOU)
             {

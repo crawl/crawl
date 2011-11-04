@@ -9,7 +9,7 @@
 # Labyrinth entry vaults
 
 NAME:   lab_entry_generic
-TAGS:   uniq_lab chance_lab transparent trowel_portal allow_dup extra
+TAGS:   transparent trowel_portal extra
 # (Jan 2010) With the reduction in placement of Labyrinths to 10-20 (roughly
 # across 24 levels) and changing to game-unique, chance of NOT having a
 # Labyrinth was (1-285/10^4)^24 = ~49%. Increasing chance to 5% gives you

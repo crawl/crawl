@@ -1746,7 +1746,7 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
                 if (you.species == SP_GHOUL)
                 {
                     int hp_amt = 1 + random2(5) + random2(1 + you.experience_level);
-                    if (!x_chance_in_y(contam + 1000, 5000))
+                    if (!x_chance_in_y(contam + 4000, 5000))
                         hp_amt = 0;
                     _heal_from_food(hp_amt, 0, !one_chance_in(4),
                                     x_chance_in_y(contam, 5000));

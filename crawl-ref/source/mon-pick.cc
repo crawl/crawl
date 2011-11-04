@@ -2805,7 +2805,7 @@ int mons_cocytus_rare(int mcls)
 
     case MONS_VAMPIRE:
         return 34;
-        
+
     case MONS_BLIZZARD_DEMON:
         return 30;
 
