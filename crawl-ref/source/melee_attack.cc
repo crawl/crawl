@@ -720,12 +720,13 @@ bool melee_attack::handle_phase_end()
         return (true);
     }
 
-    // Check for passive freeze or eyeball mutation.
+    // Check for passive mutation effects.
     if (defender->atype() == ACT_PLAYER && defender->alive()
         && attacker != defender)
     {
         mons_do_eyeball_confusion();
         do_passive_freeze();
+        mons_emit_foul_stench();
     }
 
     return(true);
@@ -1080,8 +1081,8 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
     case UNAT_BITE:
         aux_attack = aux_verb = "bite";
-        aux_damage += you.has_usable_fangs() * 2
-                      + you.skill_rdiv(SK_UNARMED_COMBAT, 1, 5);
+        aux_damage += you.has_usable_fangs() * 2;
+        aux_damage += div_rand_round(std::max(you.strength()-10, 0), 5);
         noise_factor = 75;
 
         // prob of vampiric bite:
@@ -1126,45 +1127,16 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 
 unarmed_attack_type melee_attack::player_aux_choose_baseattack()
 {
-    unarmed_attack_type baseattack = static_cast<unarmed_attack_type>
-        (random_choose(UNAT_HEADBUTT, UNAT_KICK, UNAT_PUNCH, UNAT_NO_ATTACK,
-                       -1));
+    unarmed_attack_type baseattack =
+        random_choose(UNAT_HEADBUTT, UNAT_KICK, UNAT_PUNCH, UNAT_NO_ATTACK,
+                       -1);
 
     // No punching with a shield or 2-handed wpn, except staves.
     // Octopodes aren't affected by this, though!
     if (you.species != SP_OCTOPODE && baseattack == UNAT_PUNCH && !you.has_usable_offhand())
         baseattack = UNAT_NO_ATTACK;
 
-    if (you.has_usable_tail()
-        && (baseattack == UNAT_HEADBUTT || baseattack == UNAT_KICK)
-        && one_chance_in(3))
-    {
-        baseattack = UNAT_TAILSLAP;
-    }
-
-    if (you.has_usable_pseudopods()
-        && baseattack == UNAT_KICK && coinflip())
-    {
-        baseattack = UNAT_PSEUDOPODS;
-    }
-
-    if (you.has_usable_tentacles()
-        && baseattack == UNAT_KICK && coinflip())
-    {
-        baseattack = UNAT_TENTACLES;
-    }
-
-    // With fangs, replace head attacks with bites.
-    if ((you.has_usable_fangs() || player_mutation_level(MUT_ACIDIC_BITE))
-        && (baseattack == UNAT_HEADBUTT
-            || baseattack == UNAT_KICK
-            || _vamp_wants_blood_from_monster(defender->as_monster())
-               && !one_chance_in(3)))
-    {
-        baseattack = UNAT_BITE;
-    }
-
-    // Move racial stuff to the bottom, so that nagas can use pseudopods
+    // Nagas turn kicks into headbutts.
     if (you.species == SP_NAGA && baseattack == UNAT_KICK)
         baseattack = UNAT_HEADBUTT;
 
@@ -1235,11 +1207,8 @@ bool melee_attack::player_aux_unarmed()
 
     /*
      * baseattack is the auxiliary unarmed attack the player gets
-     * for unarmed combat skill. Note that this can still be skipped,
-     * e.g. UNAT_PUNCH with a shield.
-     *
-     * Then, they can get extra attacks depending on mutations,
-     * through _extra_aux_attack().
+     * for unarmed combat skill, which doesn't require a mutation to use
+     * but still needs to pass the other checks in _extra_aux_attack().
      */
     unarmed_attack_type baseattack = UNAT_NO_ATTACK;
     if (!can_do_unarmed)
@@ -1254,7 +1223,7 @@ bool melee_attack::player_aux_unarmed()
 
         unarmed_attack_type atk = static_cast<unarmed_attack_type>(i);
 
-        if (baseattack != atk && !_extra_aux_attack(atk))
+        if (!_extra_aux_attack(atk, (baseattack == atk)))
             continue;
 
         // Determine and set damage and attack words.
@@ -1262,8 +1231,6 @@ bool melee_attack::player_aux_unarmed()
 
         to_hit = random2(calc_your_to_hit_unarmed(atk,
                          damage_brand == SPWPN_VAMPIRICISM));
-
-        make_hungry(2, true);
 
         handle_noise(defender->pos());
         alert_nearby_monsters();
@@ -1354,10 +1321,6 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
 
     if (damage_done > 0)
     {
-        // Clobber wpn_skill.
-        wpn_skill   = SK_UNARMED_COMBAT;
-        player_exercise_combat_skills();
-
         player_announce_aux_hit();
 
         if (damage_brand == SPWPN_ACID)
@@ -1475,16 +1438,16 @@ int melee_attack::player_stat_modify_damage(int damage)
 
 int melee_attack::player_aux_stat_modify_damage(int damage)
 {
-    int dammod = 10;
+    int dammod = 20;
     const int dam_stat_val = calc_stat_to_dam_base();
 
-    if (dam_stat_val > 11)
-        dammod += random2(dam_stat_val - 11) / 3;
-    else if (dam_stat_val < 9)
-        dammod -= random2(9 - dam_stat_val) / 2;
+    if (dam_stat_val > 10)
+        dammod += random2(dam_stat_val - 9);
+    else if (dam_stat_val < 10)
+        dammod -= random2(11 - dam_stat_val);
 
     damage *= dammod;
-    damage /= 10;
+    damage /= 20;
 
     return (damage);
 }
@@ -2691,9 +2654,9 @@ void melee_attack::do_miscast()
 // return a set of effects that are roughly the same, to make it easy
 // for chaos_affects_defender() not to do duplicate effects caused
 // by the non-chaos brands/flavours they return.
-int melee_attack::random_chaos_brand()
+brand_type melee_attack::random_chaos_brand()
 {
-    int brand = SPWPN_NORMAL;
+    brand_type brand = SPWPN_NORMAL;
     // Assuming the chaos to be mildly intelligent, try to avoid brands
     // that clash with the most basic resists of the defender,
     // i.e. its holiness.
@@ -3161,8 +3124,8 @@ void melee_attack::handle_noise(const coord_def & pos)
 
 // Returns true if the attack cut off a head *and* cauterized it.
 bool melee_attack::chop_hydra_head(int dam,
-                                    int dam_type,
-                                    int wpn_brand)
+                                   int dam_type,
+                                   brand_type wpn_brand)
 {
     // Monster attackers have only a 25% chance of making the
     // chop-check to prevent runaway head inflation.
@@ -3255,7 +3218,7 @@ bool melee_attack::decapitate_hydra(int dam, int damage_type)
     {
         const int dam_type = (damage_type != -1) ? damage_type
                                                  : attacker->damage_type();
-        const int wpn_brand = attacker->damage_brand();
+        const brand_type wpn_brand = attacker->damage_brand();
 
         return chop_hydra_head(dam, dam_type, wpn_brand);
     }
@@ -4469,6 +4432,29 @@ void melee_attack::do_spines()
     }
 }
 
+void melee_attack::mons_emit_foul_stench()
+{
+    monster* mon = attacker->as_monster();
+
+    if (you.mutation[MUT_FOUL_STENCH]
+        && attacker->alive()
+        && grid_distance(you.pos(), mon->pos()) == 1)
+    {
+        const int mut = player_mutation_level(MUT_FOUL_STENCH);
+
+        if (one_chance_in(3))
+            mon->sicken(50 + random2(100));
+
+        if (damage_done > 4 && x_chance_in_y(mut, 5)
+            && !cell_is_solid(mon->pos())
+            && env.cgrid(mon->pos()) == EMPTY_CLOUD)
+        {
+            mpr("You emit a cloud of foul miasma!");
+            place_cloud(CLOUD_MIASMA, mon->pos(), 5 + random2(6), &you);
+        }
+    }
+}
+
 bool melee_attack::do_knockback(bool trample)
 {
     do
@@ -4559,7 +4545,7 @@ bool melee_attack::_tran_forbid_aux_attack(unarmed_attack_type atk)
     }
 }
 
-bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
+bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_base)
 {
     // No extra unarmed attacks for disabled mutations.
     // XXX: It might be better to make player_mutation_level
@@ -4567,35 +4553,46 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk)
     if (_tran_forbid_aux_attack(atk))
         return (false);
 
+    if (you.strength() + you.dex() <= random2(50))
+        return (false);
+
     switch (atk)
     {
     case UNAT_KICK:
-        return ((player_mutation_level(MUT_HOOVES)
+        return (is_base
+                 || player_mutation_level(MUT_HOOVES)
                  || you.has_usable_talons()
-                 || player_mutation_level(MUT_TENTACLE_SPIKE))
-                && coinflip());
+                 || player_mutation_level(MUT_TENTACLE_SPIKE));
 
     case UNAT_HEADBUTT:
-        return ((player_mutation_level(MUT_HORNS)
+        return ((is_base
+                 || player_mutation_level(MUT_HORNS)
                  || player_mutation_level(MUT_BEAK))
-                && one_chance_in(3));
+                && !one_chance_in(3));
 
     case UNAT_TAILSLAP:
-        return (you.has_usable_tail()
-                && one_chance_in(4));
+        return ((is_base
+                 || you.has_usable_tail())
+                && coinflip());
 
     case UNAT_PSEUDOPODS:
-        return (you.has_usable_pseudopods()
-                && one_chance_in(3));
+        return ((is_base
+                 || you.has_usable_pseudopods())
+                && !one_chance_in(3));
 
     case UNAT_TENTACLES:
-        return (you.has_usable_tentacles()
-                && one_chance_in(3));
+        return ((is_base
+                 || you.has_usable_tentacles())
+                && !one_chance_in(3));
 
     case UNAT_BITE:
-        return ((you.has_usable_fangs()
+        return ((is_base
+                 || you.has_usable_fangs()
                  || player_mutation_level(MUT_ACIDIC_BITE))
-                && one_chance_in(5));
+                && x_chance_in_y(2, 5));
+
+    case UNAT_PUNCH:
+        return (is_base);
 
     default:
         return (false);
@@ -4613,8 +4610,8 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack, bool vampiric)
 
     your_to_hit = 1300
                 + you.dex() * 50
-                + you.skill(SK_UNARMED_COMBAT, 50)
-                + you.skill(SK_FIGHTING, 20);
+                + you.strength() * 20
+                + you.skill(SK_FIGHTING, 30);
     your_to_hit /= 100;
 
     if (wearing_amulet(AMU_INACCURACY))

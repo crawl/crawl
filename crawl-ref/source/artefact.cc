@@ -1797,6 +1797,9 @@ static bool _randart_is_conflicting(const item_def &item,
         return (true);
     }
 
+    if (item.sub_type == RING_WIZARDRY && proprt[ARTP_INTELLIGENCE] < 0)
+        return (true);
+
     artefact_prop_type conflicts = ARTP_NUM_PROPERTIES;
 
     switch (item.sub_type)

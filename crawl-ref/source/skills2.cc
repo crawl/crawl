@@ -185,8 +185,6 @@ static std::string _stk_adj_cap()
 
 static std::string _stk_genus_cap()
 {
-    if (Skill_Species == SP_FELID)
-        return "Cat";
     return species_name(Skill_Species, true, false);
 }
 
@@ -199,8 +197,6 @@ static std::string _stk_genus_nocap()
 static std::string _stk_genus_short_cap()
 {
     return (Skill_Species == SP_DEMIGOD ? "God" :
-            Skill_Species == SP_FELID   ? "Cat" :
-            Skill_Species == SP_OCTOPODE ? "Octopus" :
             _stk_genus_cap());
 }
 

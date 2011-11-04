@@ -94,9 +94,8 @@ static void _labyrinth_place_items(const coord_def &end)
     int num_items = 8 + random2avg(12, 2);
     for (int i = 0; i < num_items; i++)
     {
-        const object_class_type glopop =
-            static_cast<object_class_type>(
-                random_choose_weighted(14, OBJ_WEAPONS,
+        const object_class_type glopop = random_choose_weighted(
+                                       14, OBJ_WEAPONS,
                                        14, OBJ_ARMOUR,
                                        3, OBJ_MISSILES,
                                        3, OBJ_MISCELLANY,
@@ -105,7 +104,7 @@ static void _labyrinth_place_items(const coord_def &end)
                                        10, OBJ_JEWELLERY,
                                        8, OBJ_BOOKS,
                                        8, OBJ_STAVES,
-                                       0));
+                                       0);
 
         const int treasure_item =
             items(1, glopop, OBJ_RANDOM, true,

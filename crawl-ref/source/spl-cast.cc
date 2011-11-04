@@ -986,12 +986,6 @@ static bool _spellcasting_aborted(spell_type spell,
         return (true);
     }
 
-    if (spell == SPELL_GOLUBRIAS_PASSAGE && !can_cast_golubrias_passage())
-    {
-        mpr("Only one passage may be opened at a time.");
-        return (true);
-    }
-
     if (spell == SPELL_MALIGN_GATEWAY && !can_cast_malign_gateway())
     {
         mpr("The dungeon can only cope with one malign gateway at a time!");
@@ -1068,9 +1062,6 @@ spret_type your_spells(spell_type spell, int powc,
 
         if (spell == SPELL_DISPEL_UNDEAD)
             targ = TARG_HOSTILE_UNDEAD;
-
-        if (spell == SPELL_FRAGMENTATION)
-            targ = TARG_ANY;
 
         targeting_type dir  =
             (testbits(flags, SPFLAG_TARG_OBJ) ? DIR_TARGET_OBJECT :

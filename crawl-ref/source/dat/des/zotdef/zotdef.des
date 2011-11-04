@@ -28,6 +28,11 @@
         pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35,
         size = 2, walk_dist = 2, spread_rate= 35
     })
+    e.lua_marker("E", fog_machine {
+        cloud_type = "purple smoke",
+        pow_min = 6, pow_max = 12, delay_min = 15, delay_max = 35,
+        size = 2, walk_dist = 2, spread_rate= 35
+    })
 
   end
 }}
@@ -91,6 +96,8 @@ ENDMAP
 NAME:    zotvault2
 TAGS:    zotdef
 DESC:    Scenario II: Battle Heart
+FTILE:   "E[ = floor_rough_red
+COLOUR:  "E = red
 : zotdef_setup(_G)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -122,20 +129,20 @@ xxxxxxxxxxxxxXX.......XXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXX.......XXxxxxxxxxxxxxx
 xxxxxxxxxxxxxxXX.....XXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXX.....XXxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxXX...XXcccccccccxxxxxxxxxxxxxxxxxcccccccccXX...XXxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxc.............cccccccxxxxxccccccc.............cxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxccccccc.............cccxccc.............cccccccxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxcccccccccc......ccc......ccccccccccxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxcc........c........ccxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxc...................cxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxccccccccxxxxxxxc...................cxxxxxxxccccccccxxxxxxxxxxxxxx
-xxxxxxxxxxxxxcc......cccccxxxc...................cxxxccccc......ccxxxxxxxxxxxxx
-xxxxxxxxxxxccc...........ccxcc...................ccxcc...........cccxxxxxxxxxxx
-xxxxxxxxxxcc..............ccc.....................ccc..............ccxxxxxxxxxx
-xxxxxcccccc....................c...............cc...................ccccccxxxxx
-xxxxxc......................ccccc.............ccccc......................cxxxxx
-xxxxxc.........ccc........cccxxxccc.........cccxxxccc........ccc.........cxxxxx
-xxxxxcF{.......cxcc.....cccxxxxxxxccc..[..cccxxxxxxxccc.....ccxc.......(Fcxxxxx
-xxxxxc........ccxxcc..cccxxxxxxxxxxxcc.F.ccxxxxxxxxxxxccc..ccxxcc........cxxxxx
-xxxxxc........cxxxxccccxxxxxxxxxxxxxxcc.ccxxxxxxxxxxxxxxccccxxxxc........cxxxxx
+xxxxxxxxxxxxxxxxccccccc.........."""cccxccc"""..........cccccccxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxcccccccccc""""""ccc""""""ccccccccccxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxcc""""""""c""""""""ccxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxc"""""""""""""""""""cxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxccccccccxxxxxxxc"""""""""""""""""""cxxxxxxxccccccccxxxxxxxxxxxxxx
+xxxxxxxxxxxxxcc......cccccxxxc"""""""""""""""""""cxxxccccc......ccxxxxxxxxxxxxx
+xxxxxxxxxxxccc...........ccxcc"""""""""""""""""""ccxcc...........cccxxxxxxxxxxx
+xxxxxxxxxxcc..............ccc.."""""""""""""""""..ccc..............ccxxxxxxxxxx
+xxxxxcccccc....................c"""""""""""""""cc...................ccccccxxxxx
+xxxxxc......................ccccc"""""""""""""ccccc......................cxxxxx
+xxxxxc.........ccc........cccxxxccc"""""""""cccxxxccc........ccc.........cxxxxx
+xxxxxcF{.......cxcc.....cccxxxxxxxccc""[""cccxxxxxxxccc.....ccxc.......(Fcxxxxx
+xxxxxc........ccxxcc..cccxxxxxxxxxxxcc"E"ccxxxxxxxxxxxccc..ccxxcc........cxxxxx
+xxxxxc........cxxxxccccxxxxxxxxxxxxxxcc"ccxxxxxxxxxxxxxxccccxxxxc........cxxxxx
 xxxxxccccccccccxxxxxxxxxxxxxxxxxxxxxxxcccxxxxxxxxxxxxxxxxxxxxxxxccccccccccxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

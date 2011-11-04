@@ -1,5 +1,5 @@
 #!/usr/bin/env python2.7
-import os, os.path
+import os, os.path, errno, sys
 
 import tornado.httpserver
 import tornado.ioloop
@@ -13,11 +13,6 @@ from util import *
 from ws_handler import *
 from game_data_handler import GameDataHandler
 
-logging.basicConfig(**logging_config)
-logging.getLogger().addFilter(TornadoFilter())
-logging.addLevelName(logging.DEBUG, "DEBG")
-logging.addLevelName(logging.WARNING, "WARN")
-
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         host = self.request.host
@@ -28,71 +23,145 @@ class MainHandler(tornado.web.RequestHandler):
         self.render("client.html", socket_server = protocol + host + "/socket",
                     username = None)
 
+def daemonize():
+    try:
+        pid = os.fork()
+        if pid > 0:
+            os._exit(0)
+    except OSError, e:
+        logging.error("Fork #1 failed! (%s)", e.strerror)
+        sys.exit(1)
+
+    os.setsid()
+
+    try:
+        pid = os.fork()
+        if pid > 0:
+            os._exit(0)
+    except OSError, e:
+        logging.error("Fork #2 failed! (%s)", e.strerror)
+        sys.exit(1)
+
+    with open("/dev/null", "rw") as f:
+        os.dup2(f.fileno(), sys.stdin.fileno())
+        os.dup2(f.fileno(), sys.stdout.fileno())
+        os.dup2(f.fileno(), sys.stderr.fileno())
+
+def write_pidfile():
+    if not pidfile:
+        return
+    if os.path.exists(pidfile):
+        try:
+            with open(pidfile) as f:
+                pid = int(f.read())
+        except ValueError:
+            sys.exit("PIDfile %s contains non-numeric value" % pidfile)
+        try:
+            os.kill(pid, 0)
+        except OSError, why:
+            if why[0] == errno.ESRCH:
+                # The pid doesn't exist.
+                logging.warn("Removing stale pidfile %s" % pidfile)
+                os.remove(pidfile)
+            else:
+                sys.exit("Can't check status of PID %s from pidfile %s: %s" %
+                         (pid, pidfile, why[1]))
+        else:
+            sys.exit("Another Webtiles server is running, PID %s\n" % pid)
+
+    with open(pidfile, "w") as f:
+        f.write(str(os.getpid()))
+
+def remove_pidfile():
+    if not pidfile:
+        return
+    try:
+        os.remove(pidfile)
+    except OSError, e:
+        if e.errno == errno.EACCES or e.errno == errno.EPERM:
+            logging.warn("No permission to delete pidfile!")
+        else:
+            logging.error("Failed to delete pidfile!")
+    except:
+        logging.error("Failed to delete pidfile!")
+
+def shed_privileges():
+    if gid is not None:
+        os.setgid(gid)
+    if uid is not None:
+        os.setuid(uid)
+
+
 def signal_handler(signum, frame):
     logging.info("Received signal %i, shutting down.", signum)
     shutdown()
     if len(sockets) == 0:
         ioloop.stop()
 
-def purge_login_tokens():
-    for token in list(login_tokens):
-        if datetime.datetime.now() > login_tokens[token]:
-            del login_tokens[token]
+def bind_server():
+    settings = {
+        "static_path": static_path,
+        "template_loader": DynamicTemplateLoader.get(template_path)
+        }
 
-def purge_login_tokens_timeout():
-    purge_login_tokens()
-    ioloop.add_timeout(time.time() + 60 * 60 * 1000,
-                       purge_login_tokens_timeout)
+    application = tornado.web.Application([
+            (r"/", MainHandler),
+            (r"/socket", CrawlWebSocket),
+            (r"/gamedata/(.*)/(.*)", GameDataHandler)
+            ], **settings)
 
-def status_file_timeout():
-    write_dgl_status_file()
-    ioloop.add_timeout(time.time() + status_file_update_rate,
-                       status_file_timeout)
+    kwargs = {}
+    if http_connection_timeout is not None:
+        kwargs["connection_timeout"] = http_connection_timeout
 
-signal.signal(signal.SIGTERM, signal_handler)
-signal.signal(signal.SIGHUP, signal_handler)
+    if bind_nonsecure:
+        application.listen(bind_port, bind_address, **kwargs)
+    if ssl_options:
+        application.listen(ssl_port, ssl_address, ssl_options = ssl_options,
+                           **kwargs)
 
-settings = {
-    "static_path": static_path,
-    "template_loader": DynamicTemplateLoader.get(template_path)
-}
 
-application = tornado.web.Application([
-    (r"/", MainHandler),
-    (r"/socket", CrawlWebSocket),
-    (r"/gamedata/(.*)/(.*)", GameDataHandler)
-], **settings)
+if __name__ == "__main__":
+    if chroot:
+        os.chroot(chroot)
 
-kwargs = {}
-if http_connection_timeout is not None:
-    kwargs["connection_timeout"] = http_connection_timeout
+    logging.basicConfig(**logging_config)
+    logging.getLogger().addFilter(TornadoFilter())
+    logging.addLevelName(logging.DEBUG, "DEBG")
+    logging.addLevelName(logging.WARNING, "WARN")
 
-if bind_nonsecure:
-    application.listen(bind_port, bind_address, **kwargs)
-if ssl_options:
-    application.listen(ssl_port, ssl_address, ssl_options = ssl_options,
-                       **kwargs)
+    if daemon:
+        daemonize()
 
-if gid is not None:
-    os.setgid(gid)
-if uid is not None:
-    os.setuid(uid)
+    signal.signal(signal.SIGTERM, signal_handler)
+    signal.signal(signal.SIGHUP, signal_handler)
 
-ensure_user_db_exists()
+    if umask is not None:
+        os.umask(umask)
 
-ioloop = tornado.ioloop.IOLoop.instance()
-ioloop.set_blocking_log_threshold(0.5)
+    write_pidfile()
 
-if dgl_mode:
-    status_file_timeout()
-    purge_login_tokens_timeout()
+    bind_server()
 
-logging.info("Webtiles server started!")
+    shed_privileges()
 
-try:
-    ioloop.start()
-except KeyboardInterrupt:
-    logging.info("Received keyboard interrupt, shutting down.")
-    shutdown()
-    if len(sockets) > 0:
-        ioloop.start() # We'll wait until all crawl processes have ended.
+    ensure_user_db_exists()
+
+    ioloop = tornado.ioloop.IOLoop.instance()
+    ioloop.set_blocking_log_threshold(0.5)
+
+    if dgl_mode:
+        status_file_timeout()
+        purge_login_tokens_timeout()
+
+    logging.info("Webtiles server started!")
+
+    try:
+        ioloop.start()
+    except KeyboardInterrupt:
+        logging.info("Received keyboard interrupt, shutting down.")
+        shutdown()
+        if len(sockets) > 0:
+            ioloop.start() # We'll wait until all crawl processes have ended.
+
+    remove_pidfile()

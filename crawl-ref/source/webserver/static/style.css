@@ -139,6 +139,18 @@ a:hover {
     font-weight: bold;
 }
 
+#loader {
+    display: table;
+    text-align: center;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+#loader_center {
+    display: table-cell;
+    vertical-align: middle;
+}
+
 .fg0 { color: rgb(  0,   0,   0); }
 .fg1 { color: rgb(  0,  82, 255); }
 .fg2 { color: rgb(100, 185,  70); }

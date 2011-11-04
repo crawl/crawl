@@ -2659,12 +2659,11 @@ static monster_type _band_member(band_type band, int power)
         break;
 
     case BAND_DEEP_DWARF:
-        mon_type = static_cast<monster_type>(random_choose_weighted(
-                                           2, MONS_DEEP_DWARF_BERSERKER,
+        mon_type = random_choose_weighted( 2, MONS_DEEP_DWARF_BERSERKER,
                                            1, MONS_DEEP_DWARF_DEATH_KNIGHT,
                                            6, MONS_DEEP_DWARF_NECROMANCER,
                                           31, MONS_DEEP_DWARF,
-                                           0));
+                                           0);
         break;
 
     case BAND_BUMBLEBEES:
@@ -2712,28 +2711,24 @@ static monster_type _band_member(band_type band, int power)
     case BAND_PANDEMONIUM_LORD:
         if (one_chance_in(7))
         {
-            mon_type = static_cast<monster_type>(
-                random_choose_weighted(50, MONS_LICH,
+            mon_type = random_choose_weighted(50, MONS_LICH,
                                        10, MONS_ANCIENT_LICH,
-                                       0));
+                                               0);
         }
         else if (one_chance_in(6))
         {
-            mon_type = static_cast<monster_type>(
-                random_choose_weighted(50, MONS_ABOMINATION_SMALL,
+            mon_type = random_choose_weighted(50, MONS_ABOMINATION_SMALL,
                                        40, MONS_ABOMINATION_LARGE,
                                        10, MONS_TENTACLED_MONSTROSITY,
-                                       0));
+                                               0);
         }
         else
         {
-            mon_type =
-                summon_any_demon(
-                    static_cast<demon_class_type>(
-                        random_choose_weighted(50, DEMON_COMMON,
+            mon_type = summon_any_demon(random_choose_weighted(
+                                               50, DEMON_COMMON,
                                                20, DEMON_GREATER,
                                                10, DEMON_RANDOM,
-                                               0)));
+                                               0));
         }
         break;
 
@@ -2873,12 +2868,11 @@ static monster_type _band_member(band_type band, int power)
         break;
     }
     case BAND_ILSUIW:
-        mon_type = static_cast<monster_type>(
-            random_choose_weighted(30, MONS_MERMAID,
+        mon_type = random_choose_weighted(30, MONS_MERMAID,
                                    15, MONS_MERFOLK,
                                    10, MONS_MERFOLK_JAVELINEER,
                                    10, MONS_MERFOLK_IMPALER,
-                                   0));
+                                           0);
         break;
 
     case BAND_AZRAEL:
@@ -2906,10 +2900,9 @@ static monster_type _band_member(band_type band, int power)
         break;
 
     case BAND_MERFOLK_AQUAMANCER:
-        mon_type = static_cast<monster_type>(
-            random_choose_weighted(8, MONS_MERFOLK,
+        mon_type = random_choose_weighted(8, MONS_MERFOLK,
                                    10, MONS_ICE_BEAST,
-                                   0));
+                                          0);
         break;
 
     case BAND_MERFOLK_IMPALER:
@@ -3462,7 +3455,7 @@ monster_type summon_any_demon(demon_class_type dct)
     {
     case DEMON_LESSER:
         // tier 5
-        mon = static_cast<monster_type>(random_choose_weighted(
+        mon = random_choose_weighted(
             1, MONS_CRIMSON_IMP,
             1, MONS_QUASIT,
             1, MONS_WHITE_IMP,
@@ -3471,14 +3464,14 @@ monster_type summon_any_demon(demon_class_type dct)
             1, MONS_IRON_IMP,
             1, MONS_MIDGE,
             1, MONS_SHADOW_IMP,
-            0));
+            0);
         break;
 
     case DEMON_COMMON:
         if (x_chance_in_y(6, 10))
         {
             // tier 4
-            mon = static_cast<monster_type>(random_choose_weighted(
+            mon = random_choose_weighted(
                 1, MONS_BLUE_DEVIL,
                 1, MONS_IRON_DEVIL,
                 1, MONS_ORANGE_DEMON,
@@ -3487,12 +3480,12 @@ monster_type summon_any_demon(demon_class_type dct)
                 1, MONS_HAIRY_DEVIL,
                 1, MONS_SIXFIRHY,
                 1, MONS_HELLWING,
-                0));
+                0);
         }
         else
         {
             // tier 3
-            mon = static_cast<monster_type>(random_choose_weighted(
+            mon = random_choose_weighted(
                 1, MONS_SUN_DEMON,
                 1, MONS_SOUL_EATER,
                 1, MONS_ICE_DEVIL,
@@ -3500,7 +3493,7 @@ monster_type summon_any_demon(demon_class_type dct)
                 1, MONS_NEQOXEC,
                 1, MONS_YNOXINUL,
                 1, MONS_CHAOS_SPAWN,
-                0));
+                0);
         }
         break;
 
@@ -3508,7 +3501,7 @@ monster_type summon_any_demon(demon_class_type dct)
         if (x_chance_in_y(6, 10))
         {
             // tier 2
-            mon = static_cast<monster_type>(random_choose_weighted(
+            mon = random_choose_weighted(
                 1, MONS_GREEN_DEATH,
                 1, MONS_BLIZZARD_DEMON,
                 1, MONS_BALRUG,
@@ -3519,18 +3512,18 @@ monster_type summon_any_demon(demon_class_type dct)
                 1, MONS_LOROCYPROCA,
                 1, MONS_TORMENTOR,
                 1, MONS_SHADOW_DEMON,
-                0));
+                0);
         }
         else
         {
             // tier 1
-            mon = static_cast<monster_type>(random_choose_weighted(
+            mon = random_choose_weighted(
                 1, MONS_BRIMSTONE_FIEND,
                 1, MONS_ICE_FIEND,
                 1, MONS_SHADOW_FIEND,
                 1, MONS_PIT_FIEND,
                 1, MONS_EXECUTIONER,
-                0));
+                0);
         }
         break;
 
@@ -3549,10 +3542,10 @@ monster_type summon_any_holy_being(holy_being_class_type hbct)
     {
     case HOLY_BEING_WARRIOR:
         // XXX: Add MONS_CHERUB to this list when they're improved.
-        mon = static_cast<monster_type>(random_choose_weighted(
+        mon = random_choose_weighted(
             1, MONS_ANGEL,
             1, MONS_DAEVA,
-            0));
+            0);
         break;
 
     default:

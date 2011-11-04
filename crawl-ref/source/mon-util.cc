@@ -3516,11 +3516,10 @@ mon_inv_type item_to_mslot(const item_def &item)
 
 monster_type royal_jelly_ejectable_monster()
 {
-    return static_cast<monster_type>(
-        random_choose(MONS_ACID_BLOB,
+    return random_choose(MONS_ACID_BLOB,
                       MONS_AZURE_JELLY,
                       MONS_DEATH_OOZE,
-                      -1));
+                         -1);
 }
 
 // Replaces @foe_god@ and @god_is@ with foe's god name.

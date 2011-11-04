@@ -137,8 +137,6 @@ weapon_type str_to_weapon(const std::string &str)
         return (WPN_QUARTERSTAFF);
     else if (str == "mace")
         return (WPN_MACE);
-    else if (str == "ankus")
-        return (WPN_ANKUS);
     else if (str == "spear")
         return (WPN_SPEAR);
     else if (str == "trident")
@@ -177,8 +175,6 @@ static std::string _weapon_to_str(int weapon)
         return "quarterstaff";
     case WPN_MACE:
         return "mace";
-    case WPN_ANKUS:
-        return "ankus";
     case WPN_SPEAR:
         return "spear";
     case WPN_TRIDENT:

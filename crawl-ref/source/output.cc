@@ -17,6 +17,7 @@
 
 #include "abl-show.h"
 #include "areas.h"
+#include "artefact.h"
 #include "branch.h"
 #include "cio.h"
 #include "colour.h"
@@ -597,6 +598,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         DUR_MISLED,
         DUR_POISONING,
         STATUS_SICK,
+        DUR_NAUSEA,
         STATUS_ROT,
         STATUS_NET,
         STATUS_CONTAMINATION,
@@ -1760,6 +1762,12 @@ static std::vector<formatted_string> _get_overview_resistances(
     // 3 columns, splits at columns 21, 39
     column_composer cols(3, 21, 39);
 
+    // Don't show unreliable resistances granted by the cloak.  We could mark
+    // them somehow, but for now this will do.
+    bool dragonskin = player_equip_unrand(UNRAND_DRAGONSKIN);
+    unwind_var<bool> dragon_hack(you.melded[EQ_CLOAK], you.melded[EQ_CLOAK]
+                                                       || dragonskin);
+
     const int rfire = player_res_fire(calc_unid);
     const int rcold = player_res_cold(calc_unid);
     const int rlife = player_prot_life(calc_unid);
@@ -2053,6 +2061,7 @@ static std::string _status_mut_abilities(int sw)
         DUR_FIRE_SHIELD,
         DUR_POISONING,
         STATUS_SICK,
+        DUR_NAUSEA,
         STATUS_CONTAMINATION,
         STATUS_ROT,
         DUR_CONFUSING_TOUCH,

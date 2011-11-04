@@ -226,7 +226,7 @@ ENDMAP
 # Jelly drop Vaults version
 #
 NAME:   lemuel_jelly_drop_b
-MONS:   jelly
+MONS:   jelly generate_awake
 TAGS:   uniq_jelly_drop no_wall_fixup
 WEIGHT: 5
 KFEAT:  a = teleport trap

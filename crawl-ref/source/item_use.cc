@@ -4357,7 +4357,7 @@ static bool _drink_fountain()
 
         mpr("You drink the sparkling water.");
 
-        fountain_effect = static_cast<potion_type>(
+        fountain_effect =
             random_choose_weighted(467, POT_WATER,
                                    48,  POT_DECAY,
                                    40,  POT_MUTATION,
@@ -4382,7 +4382,7 @@ static bool _drink_fountain()
                                    4,   POT_GAIN_STRENGTH,
                                    4,   POT_GAIN_INTELLIGENCE,
                                    4,   POT_GAIN_DEXTERITY,
-                                   0));
+                                   0);
     }
 
     if (fountain_effect != POT_WATER && fountain_effect != POT_BLOOD)

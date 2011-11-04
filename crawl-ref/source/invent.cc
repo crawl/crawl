@@ -427,7 +427,7 @@ void InvMenu::set_title(const std::string &s)
             (you.burden * 100) / cap,
             inv_count());
 
-        std::string prompt = "_: help";
+        std::string prompt = "(_ for help)";
         stitle = stitle + std::string(std::max(0, get_number_of_cols()
                                                   - strwidth(stitle)
                                                   - strwidth(prompt)),
@@ -1075,13 +1075,14 @@ const char* item_slot_name(equipment_type type, bool terse)
 
 std::vector<SelItem> select_items(const std::vector<const item_def*> &items,
                                    const char *title, bool noselect,
-                                   menu_type mtype)
+                                   menu_type mtype, invtitle_annotator titlefn)
 {
     std::vector<SelItem> selected;
     if (!items.empty())
     {
         InvMenu menu;
         menu.set_type(mtype);
+        menu.set_title_annotator(titlefn);
         menu.set_title(title);
         if (mtype == MT_PICKUP)
             menu.set_tag("pickup");

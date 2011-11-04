@@ -27,8 +27,7 @@
 
 static void _give_monster_item(monster* mon, int thing,
                                bool force_item = false,
-                               bool (monster::*pickupfn)(item_def&, int) = NULL,
-                               bool keep_ident = false)
+                               bool (monster::*pickupfn)(item_def&, int) = NULL)
 {
     if (thing == NON_ITEM || thing == -1)
         return;
@@ -41,9 +40,6 @@ static void _give_monster_item(monster* mon, int thing,
 
     mthing.pos.reset();
     mthing.link = NON_ITEM;
-
-    if (!keep_ident)
-        unset_ident_flags(mthing, ISFLAG_IDENT_MASK);
 
     if ((mon->undead_or_demonic() || mon->god == GOD_YREDELEMNUL)
         && (is_blessed(mthing)
@@ -96,7 +92,7 @@ void give_specific_item(monster* mon, const item_def& tpl)
         return;
 
     mitm[thing] = tpl;
-    _give_monster_item(mon, thing, true, NULL, true);
+    _give_monster_item(mon, thing, true, NULL);
 }
 
 static void _give_scroll(monster* mon, int level)
@@ -443,6 +439,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
             set_item_ego_type(item, OBJ_WEAPONS, SPWPN_REACHING);
         item.plus  += -2 + random2(4);
         item.plus2 += -1 + random2(2);
+        item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_CRAZY_YIUF:
@@ -453,6 +450,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_CHAOS);
         item.plus        += 2 + random2(3);
         item.plus2       += 2 + random2(3);
+        item.flags       |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_JOSEPH:
@@ -764,6 +762,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.special = SPWPN_FREEZING;
         item.plus = random_range(-1, 6, 2);
         item.plus2 = random_range(-1, 6, 2);
+        item.flags |= ISFLAG_KNOW_TYPE;
         force_item = true;
         break;
 
@@ -855,6 +854,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.special   = SPWPN_FLAME;
         item.plus     += 1 + random2(3);
         item.plus2    += 1 + random2(3);
+        item.flags    |= ISFLAG_KNOW_TYPE;
         force_item     = true;
         break;
 
@@ -874,6 +874,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.sub_type  = WPN_SCIMITAR;
         item.plus      = random2(5);
         item.plus2     = random2(5);
+        item.flags    |= ISFLAG_KNOW_TYPE;
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
         break;
 
@@ -889,6 +890,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
         item.plus  = 1 + random2(3);
         item.plus2 = 1 + random2(3);
+        item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_CHERUB:
@@ -912,6 +914,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                        -1);
         // but flaming not holy wrath
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
+        item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_PALADIN:
@@ -931,6 +934,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_HOLY_WRATH);
         item.plus  = 1 + random2(3);
         item.plus2 = 1 + random2(3);
+        item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_PROFANE_SERVITOR:
@@ -944,6 +948,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         set_equip_desc(item, ISFLAG_GLOWING);
         item.plus  = 1 + random2(3);
         item.plus2 = 1 + random2(3);
+        item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_DONALD:
@@ -1016,6 +1021,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.sub_type  = WPN_GREAT_SWORD;
         item.plus      = 0;
         item.plus2     = 0;
+        item.flags    |= ISFLAG_KNOW_TYPE;
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
         break;
 
@@ -1026,6 +1032,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         item.sub_type  = WPN_BATTLEAXE;
         item.plus      = 0;
         item.plus2     = 0;
+        item.flags    |= ISFLAG_KNOW_TYPE;
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FREEZING);
         break;
 
@@ -1140,6 +1147,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
         item.plus      = random2(5);
         item.plus2     = random2(5);
+        item.flags    |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_CEREBOV:
@@ -1180,6 +1188,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
 
         item.plus   = random2(5);
         item.plus2  = random2(5);
+        item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
     case MONS_SPRIGGAN:
@@ -1247,6 +1256,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_PAIN);
         item.plus      = 2 + random2(7);
         item.plus2     = 2 + random2(7);
+        item.flags    |= ISFLAG_KNOW_TYPE;
         break;
 
     default:
@@ -1802,8 +1812,8 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
             level = MAKE_GOOD_ITEM;
 
         item.sub_type = random_choose_weighted(3, ARM_CHAIN_MAIL,
-                            3, ARM_BANDED_MAIL, 3, ARM_SPLINT_MAIL,
-                            10, ARM_PLATE_MAIL, 1, ARM_CRYSTAL_PLATE_MAIL,
+                            5, ARM_SPLINT_MAIL, 10, ARM_PLATE_ARMOUR,
+                            1, ARM_CRYSTAL_PLATE,
                             0);
         break;
 
@@ -1832,11 +1842,10 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     {
         item.base_type = OBJ_ARMOUR;
 
-        const int temp_rand = random2(4);
+        const int temp_rand = random2(3);
         item.sub_type = ((temp_rand == 0) ? ARM_CHAIN_MAIL :
-                         (temp_rand == 1) ? ARM_SPLINT_MAIL :
-                         (temp_rand == 2) ? ARM_BANDED_MAIL
-                                          : ARM_PLATE_MAIL);
+                         (temp_rand == 1) ? ARM_SPLINT_MAIL
+                                          : ARM_PLATE_ARMOUR);
         break;
     }
 
@@ -1858,9 +1867,8 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         item_race = MAKE_ITEM_DWARVEN;
         item.base_type = OBJ_ARMOUR;
         item.sub_type = random_choose_weighted(5, ARM_CHAIN_MAIL,
-                                               1, ARM_SPLINT_MAIL,
-                                               1, ARM_BANDED_MAIL,
-                                               1, ARM_PLATE_MAIL,
+                                               2, ARM_SPLINT_MAIL,
+                                               1, ARM_PLATE_ARMOUR,
                                                0);
         break;
 
@@ -2013,9 +2021,8 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         break;
 
     case MONS_TIAMAT:
-        item_race = MAKE_ITEM_NO_RACE;
-        item.base_type = OBJ_ARMOUR;
-        item.sub_type  = ARM_GOLD_DRAGON_ARMOUR;
+        force_item = true;
+        make_item_unrandart(item, UNRAND_DRAGONSKIN);
         break;
 
     case MONS_ORC_WIZARD:

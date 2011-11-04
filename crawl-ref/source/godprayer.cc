@@ -585,23 +585,10 @@ static void _ashenzari_sac_scroll(const item_def& item)
 static bool _destroyed_valuable_weapon(int value, int type)
 {
     // Artefacts, including most randarts.
-    if (random2(value) >= random2(250))
+    if (type != OBJ_MISSILES && random2(value) >= random2(250))
         return (true);
 
-    // Medium valuable items are more likely to net piety at low piety,
-    // more so for missiles, since they're worth less as single items.
-    if (random2(value) >= random2((type == OBJ_MISSILES) ? 10 : 100)
-        && one_chance_in(1 + you.piety / 50))
-    {
-        return (true);
-    }
-
-    // If not for the above, missiles shouldn't yield piety.
-    if (type == OBJ_MISSILES)
-        return (false);
-
-    // Weapons, on the other hand, are always acceptable to boost low
-    // piety.
+    // All weapons and missiles are acceptable at low piety.
     if (you.piety < piety_breakpoint(0) || player_under_penance())
         return (true);
 

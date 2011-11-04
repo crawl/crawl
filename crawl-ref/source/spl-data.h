@@ -1868,7 +1868,7 @@ struct spell_desc
      200,
      LOS_RADIUS, LOS_RADIUS,
      0,
-     "Fragment what (e.g. a wall or monster)?",
+     "Fragment what (e.g. wall or brittle monster)?",
      false,
      false
 },
@@ -2008,7 +2008,7 @@ struct spell_desc
 {
     SPELL_GOLUBRIAS_PASSAGE, "Passage of Golubria",
      SPTYP_TRANSLOCATION,
-     SPFLAG_GRID | SPFLAG_NEUTRAL | SPFLAG_NOT_SELF | SPFLAG_ESCAPE,
+     SPFLAG_GRID | SPFLAG_NEUTRAL | SPFLAG_ESCAPE,
      4,
      0,
      LOS_RADIUS, LOS_RADIUS,

@@ -61,6 +61,10 @@
 --     machine is reset. It will be called with a reference to the table,
 --     the fog machine, the Triggerer which was the cause, the marker,
 --     and the vevent which was the cause.
+-- excl_radius: A value determining how large an exclusion radius will be
+--     placed around this cloud. A value of -1 means that no exclusion will be
+--     placed, while a value of 0 means that only the cloud will be excluded.
+--     Any other value is used as the size of the exclusion.
 --
 ------------------------------------------------------------------------------
 
@@ -107,6 +111,7 @@ function FogMachine:new(pars)
   m.colour       = pars.colour       or ""
   m.name         = pars.name         or ""
   m.tile         = pars.tile         or ""
+  m.excl_rad     = pars.excl_rad     or 1
 
   m.size_buildup_amnt   = pars.size_buildup_amnt   or 0
   m.size_buildup_time   = pars.size_buildup_time   or 1
@@ -133,9 +138,9 @@ end
 
 function FogMachine:apply_cloud(point, pow_min, pow_max, pow_rolls,
                                 size, cloud_type, kill_cat, spread, colour,
-                                name, tile)
+                                name, tile, excl_rad)
   dgn.apply_area_cloud(point.x, point.y, pow_min, pow_max, pow_rolls, size,
-                       cloud_type, kill_cat, spread, colour, name, tile)
+                       cloud_type, kill_cat, spread, colour, name, tile, excl_rad)
 end
 
 function FogMachine:do_fog(point)
@@ -174,7 +179,7 @@ function FogMachine:do_fog(point)
   self:apply_cloud(p, self.pow_min, self.pow_max, self.pow_rolls,
                    crawl.random_range(size_min, size_max, 1),
                    self.cloud_type, self.kill_cat, spread, self.colour,
-                   self.name, self.tile)
+                   self.name, self.tile, self.excl_rad)
 end
 
 function FogMachine:do_trigger(triggerer, marker, ev)
@@ -237,6 +242,7 @@ function FogMachine:write(marker, th)
   file.marshall(th, self.colour)
   file.marshall(th, self.name)
   file.marshall(th, self.tile)
+  file.marshall(th, self.excl_rad)
 end
 
 function FogMachine:read(marker, th)
@@ -260,6 +266,11 @@ function FogMachine:read(marker, th)
   self.colour              = file.unmarshall_string(th)
   self.name                = file.unmarshall_string(th)
   self.tile                = file.unmarshall_string(th)
+  if file.minor_version(th) < 47 then -- TAG_MINOR_TEMPORARY_CLOUDS
+    self.excl_rad = -1
+  else
+    self.excl_rad            = file.unmarshall_number(th)
+  end
 
   setmetatable(self, FogMachine)
 

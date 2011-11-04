@@ -2412,6 +2412,22 @@ void handle_time()
     if (you.religion == GOD_JIYVA && one_chance_in(25))
         jiyva_eat_offlevel_items();
 
+    if (int lev = player_mutation_level(MUT_EVOLUTION))
+        if (one_chance_in(100 / lev)
+            && you.attribute[ATTR_EVOL_XP] * (1 + random2(10))
+               > (int)exp_needed(you.experience_level + 1))
+        {
+            you.attribute[ATTR_EVOL_XP] = 0;
+            mutate(coinflip() ? RANDOM_GOOD_MUTATION : RANDOM_MUTATION,
+                   false, false, false, false, false, true);
+            // it would kill itself anyway, but let's speed that up
+            if (one_chance_in(10)
+                && (wearing_amulet(AMU_RESIST_MUTATION) || one_chance_in(10)))
+            {
+                delete_mutation(MUT_EVOLUTION, false);
+            }
+        }
+
     if (player_in_branch(BRANCH_SPIDER_NEST) && coinflip())
         place_webs(random2(20 / (6 - player_branch_depth())), true);
 }

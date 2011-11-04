@@ -1064,6 +1064,12 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
     if (!spatter && !may_bleed)
         return;
 
+    bool ignite_blood = player_mutation_level(MUT_IGNITE_BLOOD)
+                        && you.see_cell(where);
+
+    if (ignite_blood)
+        amount *= 3;
+
     if (x_chance_in_y(amount, 20))
     {
         dprf("might bleed now; square: (%d, %d); amount = %d",
@@ -1077,6 +1083,13 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
 
             if (smell_alert && in_bounds(where))
                 blood_smell(12, where);
+
+            if (ignite_blood
+                && !cell_is_solid(where)
+                && env.cgrid(where) == EMPTY_CLOUD)
+            {
+                place_cloud(CLOUD_FIRE, where, 5 + random2(6), &you);
+            }
         }
 
         if (spatter)
@@ -2215,12 +2228,10 @@ bool bad_attack(const monster *mon, std::string& adj, std::string& suffix)
     {
         adj += "helpless ";
     }
-    if (mon->wont_attack())
-        adj += "non-hostile ";
     if (mon->neutral() && is_good_god(you.religion))
         adj += "neutral ";
-    if (mon->is_holy() && is_good_god(you.religion))
-        adj += "holy ";
+    else if (mon->wont_attack())
+        adj += "non-hostile ";
 
     if (you.religion == GOD_JIYVA && mons_is_slime(mon))
         retval = true;

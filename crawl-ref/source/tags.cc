@@ -2613,6 +2613,7 @@ static void tag_construct_level(writer &th)
         marshallShort(th, env.cloud[i].colour);
         marshallString(th, env.cloud[i].name);
         marshallString(th, env.cloud[i].tile);
+        marshallInt(th, env.cloud[i].excl_rad);
     }
 
     // how many shops?
@@ -3318,6 +3319,15 @@ static void tag_read_level(reader &th)
         env.cloud[i].name   = unmarshallString(th);
         env.cloud[i].tile   = unmarshallString(th);
 #if TAG_MAJOR_VERSION == 32
+        if (th.getMinorVersion() < TAG_MINOR_TEMPORARY_CLOUDS)
+        {
+            env.cloud[i].excl_rad = -1;
+        }
+        else
+        {
+            env.cloud[i].excl_rad = unmarshallInt(th);
+        }
+
         if (th.getMinorVersion() < TAG_MINOR_CLOUD_BUG
             && !in_bounds(env.cloud[i].pos))
         {

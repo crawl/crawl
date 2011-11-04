@@ -182,7 +182,7 @@ bool fight_melee(actor *attacker, actor *defender, bool allow_unarmed)
                                                attack_number);
 
         if (attk.type == AT_CHERUB)
-            attk.type = static_cast<attack_type>(random_choose(AT_HIT, AT_BITE, AT_PECK, AT_GORE, -1));
+            attk.type = random_choose(AT_HIT, AT_BITE, AT_PECK, AT_GORE, -1);
 
         if (attk.type == AT_NONE)
         {

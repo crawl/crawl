@@ -1,18 +1,15 @@
-<script type="text/javascript" src="/gamedata/{{ version }}/enums.js"></script>
-<script type="text/javascript" src="/gamedata/{{ version }}/cell_renderer.js"></script>
-<script type="text/javascript" src="/gamedata/{{ version }}/dungeon_renderer.js"></script>
-<script type="text/javascript" src="/gamedata/{{ version }}/game.js"></script>
-<script type="text/javascript" src="/gamedata/{{ version }}/map_knowledge.js"></script>
-<script type="text/javascript" src="/gamedata/{{ version }}/monster_list.js"></script>
-<script type="text/javascript" src="/gamedata/{{ version }}/tileinfo-floor.js"></script>
-<script type="text/javascript" src="/gamedata/{{ version }}/tileinfo-wall.js"></script>
-<script type="text/javascript" src="/gamedata/{{ version }}/tileinfo-feat.js"></script>
-<script type="text/javascript" src="/gamedata/{{ version }}/tileinfo-dngn.js"></script>
-<script type="text/javascript" src="/gamedata/{{ version }}/tileinfo-main.js"></script>
-<script type="text/javascript" src="/gamedata/{{ version }}/tileinfo-player.js"></script>
-<script type="text/javascript" src="/gamedata/{{ version }}/tileinfo-icons.js"></script>
-<script type="text/javascript" src="/gamedata/{{ version }}/tileinfo-gui.js"></script>
-<script type="text/javascript" src="/gamedata/{{ version }}/render.js"></script>
+<script>
+  require.config({
+    paths: { "game": "/gamedata/{{ version }}" }
+  });
+  require(['jquery', 'client'], function ($, client) {
+    client.inhibit_messages();
+    require(['game/game'], function (game) {
+      $(document).trigger("game_init");
+      client.uninhibit_messages();
+    });
+  });
+</script>
 <link rel="stylesheet" type="text/css" href="/gamedata/{{ version }}/style.css">
 
 <div id="crt" style="display: none;"></div>

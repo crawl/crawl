@@ -200,6 +200,11 @@ void monster_drop_things(monster* mons,
                 if (mark_item_origins && mitm[item].defined())
                     origin_set_monster(mitm[item], mons);
 
+                if (mons_is_unique(mons->type)
+                    && (mitm[item].base_type == OBJ_ARMOUR
+                        || mitm[item].base_type == OBJ_WEAPONS))
+                    add_inscription(mitm[item], mons->name(DESC_PLAIN, true));
+
                 // If a monster is swimming, the items are ALREADY
                 // underwater.
                 move_item_to_grid(&item, mons->pos(), mons->swimming());
@@ -1141,6 +1146,14 @@ static bool _explode_monster(monster* mons, killer_type killer,
 
     if (is_sanctuary(mons->pos()))
         return (false);
+
+    // Inner-flamed monsters leave behind some flame clouds.
+    if (mons->has_ench(ENCH_INNER_FLAME))
+    {
+        for (adjacent_iterator ai(mons->pos(), false); ai; ++ai)
+            if (!feat_is_solid(grd(*ai)) && env.cgrid(*ai) == EMPTY_CLOUD && !one_chance_in(5))
+                place_cloud(CLOUD_FIRE, *ai, 10 + random2(10), mons);
+    }
 
     // Detach monster from the grid first, so it doesn't get hit by
     // its own explosion. (GDL)

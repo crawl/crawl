@@ -157,13 +157,6 @@ void reassess_starting_skills()
             you.skills[sk] = 1;
         }
     }
-
-    // Vampires should always have Unarmed Combat skill.
-    if (you.species == SP_VAMPIRE && you.skills[SK_UNARMED_COMBAT] < 1)
-    {
-        you.skill_points[SK_UNARMED_COMBAT] = skill_exp_needed(1, SK_UNARMED_COMBAT);
-        you.skills[SK_UNARMED_COMBAT] = 1;
-    }
 }
 
 static void _change_skill_level(skill_type exsk, int n)
@@ -184,13 +177,6 @@ static void _change_skill_level(skill_type exsk, int n)
     {
         mprf(MSGCH_INTRINSIC_GAIN, "You have mastered %s!", skill_name(exsk));
     }
-    else if (you.skills[exsk] == 1 && n > 0)
-    {
-        mprf(MSGCH_INTRINSIC_GAIN, "You have gained %s skill!", skill_name(exsk));
-        hints_gained_new_skill(exsk);
-    }
-    else if (!you.skills[exsk])
-        mprf(MSGCH_INTRINSIC_GAIN, "You have lost %s skill!", skill_name(exsk));
     else if (abs(n) == 1 && you.num_turns)
     {
         mprf(MSGCH_INTRINSIC_GAIN, "Your %s skill %s to level %d!",
@@ -204,6 +190,9 @@ static void _change_skill_level(skill_type exsk, int n)
              abs(n), you.skills[exsk]);
     }
 
+    if (you.skills[exsk] == n && n > 0)
+        hints_gained_new_skill(exsk);
+
     if (n > 0 && you.num_turns)
         learned_something_new(HINT_SKILL_RAISE);
 
@@ -215,7 +204,7 @@ static void _change_skill_level(skill_type exsk, int n)
 
     const skill_type best_spell = best_skill(SK_SPELLCASTING,
                                              SK_LAST_MAGIC);
-    if (exsk == SK_SPELLCASTING && you.skills[exsk] == 1
+    if (exsk == SK_SPELLCASTING && you.skills[exsk] == n
         && best_spell == SK_SPELLCASTING && n > 0)
     {
         mpr("You're starting to get the hang of this magic thing.");

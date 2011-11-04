@@ -42,6 +42,7 @@ protected:
     std::string m_back_sdir;
     std::string m_prefix;
     std::string m_start_value;
+    std::string m_start_value_module;
     std::vector<std::string> m_include;
     std::vector<std::string> m_categories;
     std::vector<int> m_ctg_counts;

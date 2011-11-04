@@ -1,5 +1,5 @@
 %name player
-%startvalue TILE_MAIN_MAX tiledef-main.h
+%startvalue TILE_MAIN_MAX main
 %prefix TILEP
 
 %include dc-demon.txt
@@ -358,8 +358,8 @@ vest_red VEST_RED
 vest_red2 VEST_RED2
 bplate_green BPLATE_GREEN
 bplate_metal1 BPLATE_METAL1
-banded BANDED2
-banded2 SPLINT
+banded BANDED
+banded2 BANDED2
 armor_blue_gold
 ringmail RINGMAIL
 chainmail3 CHAINMAIL
@@ -367,7 +367,7 @@ plate_and_cloth PLATE_AND_CLOTH
 plate_and_cloth2 PLATE_AND_CLOTH2
 scalemail SCALEMAIL2
 scalemail2 SCALEMAIL
-leather_metal BANDED
+leather_metal SCALEMAIL3
 plate PLATE2
 plate2 PLATE
 plate_black PLATE_BLACK

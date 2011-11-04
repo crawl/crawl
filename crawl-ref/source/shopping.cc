@@ -1298,7 +1298,7 @@ unsigned int item_value(item_def item, bool ident)
             break;
 
         case ARM_FIRE_DRAGON_HIDE:
-        case ARM_CRYSTAL_PLATE_MAIL:
+        case ARM_CRYSTAL_PLATE:
         case ARM_TROLL_LEATHER_ARMOUR:
         case ARM_ICE_DRAGON_HIDE:
             valued += 500;
@@ -1314,7 +1314,7 @@ unsigned int item_value(item_def item, bool ident)
             valued += 300;
             break;
 
-        case ARM_PLATE_MAIL:
+        case ARM_PLATE_ARMOUR:
             valued += 230;
             break;
 
@@ -1322,7 +1322,9 @@ unsigned int item_value(item_def item, bool ident)
             valued += 200;
             break;
 
+#if TAG_MAJOR_VERSION == 32
         case ARM_BANDED_MAIL:
+#endif
         case ARM_CENTAUR_BARDING:
         case ARM_NAGA_BARDING:
             valued += 150;

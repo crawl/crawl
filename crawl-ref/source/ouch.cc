@@ -179,14 +179,20 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         break;
 
     case BEAM_POISON:
-
         if (doEffects)
-            resist = poison_player(coinflip() ? 2 : 1, source, kaux);
+        {
+            resist = poison_player(coinflip() ? 2 : 1, source, kaux) ? 0 : 1;
 
         hurted = resist_adjust_damage(&you, flavour, resist,
                                       hurted, true);
-        if (resist == 0 && doEffects)
+            if (resist > 0)
             canned_msg(MSG_YOU_RESIST);
+        }
+        else
+        {
+            hurted = resist_adjust_damage(&you, flavour, player_res_poison(),
+                                          hurted, true);
+        }
         break;
 
     case BEAM_POISON_ARROW:
@@ -196,7 +202,8 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
 
         resist = player_res_poison();
 
-        if (doEffects) {
+        if (doEffects)
+        {
             int poison_amount = 2 + random2(3);
             poison_amount += (resist ? 0 : 2);
             poison_player(poison_amount, source, kaux, true);
@@ -441,7 +448,7 @@ static void _item_corrode(int slot)
     switch (item.base_type)
     {
     case OBJ_ARMOUR:
-        if ((item.sub_type == ARM_CRYSTAL_PLATE_MAIL
+        if ((item.sub_type == ARM_CRYSTAL_PLATE
              || get_equip_race(item) == ISFLAG_DWARVEN)
             && !one_chance_in(5))
         {
@@ -1152,9 +1159,9 @@ void ouch(int dam, int death_source, kill_method_type death_type,
 
     if (dam != INSTANT_DEATH)
         if (you.petrified())
-            dam /= 3;
+            dam /= 2;
         else if (you.petrifying())
-            dam = dam * 1000 / 1732;
+            dam = dam * 10 / 15;
 
     ait_hp_loss hpl(dam, death_type);
     interrupt_activity(AI_HP_LOSS, &hpl);
