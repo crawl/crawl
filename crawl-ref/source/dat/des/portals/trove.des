@@ -181,10 +181,6 @@ end
 function trove.setup_features(e)
     e.kfeat("< = exit_portal_vault")
     e.colour("< = blue")
-    e.lrockcol("blue")
-    e.lfloorcol("darkgrey")
-    e.lrocktile("wall_vault")
-    e.lfloortile("floor_vault")
 end
 
 -- "any scroll good_item" still gets you 'scroll of noise', 'scroll of curse weapon', etc
