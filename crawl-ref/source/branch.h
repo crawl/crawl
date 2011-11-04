@@ -14,6 +14,7 @@ enum branch_flag_type
 
     BFLAG_ISLANDED        = (1 << 1), // May have isolated zones with no stairs.
     BFLAG_NO_XLEV_TRAVEL  = (1 << 2), // Can't cross-level travel to or from it.
+    BFLAG_NO_ITEMS        = (1 << 3), // Branch gets no random items.
 };
 
 struct Branch
