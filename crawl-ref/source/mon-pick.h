@@ -65,5 +65,7 @@ int mons_vestibule_level(int mcls);
 int mons_vestibule_rare(int mcls);
 int mons_sewer_level(int mcls);
 int mons_sewer_rare(int mcls);
+int mons_volcano_level(int mcls);
+int mons_volcano_rare(int mcls);
 
 #endif

@@ -303,7 +303,7 @@ const Branch branches[NUM_BRANCHES] = {
       "Volcano", "a volcano", "Volcano",
       NULL,
       false, RED, RED,
-      mons_null_rare, mons_null_level,
+      mons_volcano_rare, mons_volcano_level,
       '7', false, false, 0 },
 
     { BRANCH_WIZLAB, NUM_BRANCHES, 22, 27, 1,
