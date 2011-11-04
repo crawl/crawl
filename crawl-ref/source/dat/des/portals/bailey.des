@@ -68,7 +68,6 @@ end
 function bailey_setup(e)
   e.kfeat("< = exit_portal_vault")
   e.colour("< = darkgrey")
-  e.tile("c = wall_stone_brick")
 end
 
 -- In order to avoid repeating the lengthy monster definitions:
