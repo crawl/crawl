@@ -3478,9 +3478,9 @@ int melee_attack::calc_to_hit(bool random)
             }
         }
 
-        // If stochastic, we're calculating to-hit for debug-display
+        // If no defender, we're calculating to-hit for debug-display
         // purposes, so don't drop down to defender code below (there is none)
-        if (!random)
+        if (defender == NULL)
         	return (mhit);
     }
     else
