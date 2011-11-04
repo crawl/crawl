@@ -459,10 +459,12 @@ bool melee_attack::handle_phase_hit()
         // messages, etc.
         damage_done = calc_damage();
 
+        // Check if some hit-effect killed the monster
+        if (attacker->atype() == ACT_PLAYER && player_monattk_hit_effects())
+        	return (true);
+
         if (damage_done > 0)
         {
-            announce_hit();
-
             if (!handle_phase_damaged())
                 return (false);
 
@@ -487,15 +489,6 @@ bool melee_attack::handle_phase_hit()
                      defender->name(DESC_THE).c_str(),
                      attacker->atype() == ACT_PLAYER ? "do" : "does");
         }
-
-        // TODO: Remove this, placed here so we can do away with player_attack
-        if (did_hit && attacker->atype() == ACT_PLAYER)
-        {
-            if (player_monattk_hit_effects())
-                return (true);
-            if (!defender->alive())
-                return (true);
-        }
     }
 
     if(defender->props.exists("helpless"))
@@ -519,6 +512,8 @@ bool melee_attack::handle_phase_damaged()
         bleed_onto_floor(defender->pos(), defender->type, blood, true);
     }
 
+    // TODO: Move this somewhere else, this is a terrible place for a
+    // block-like (prevents all damage) effect.
     if (attacker != defender &&
         defender->atype() == ACT_PLAYER &&
         you.duration[DUR_SHROUD_OF_GOLUBRIA] && !one_chance_in(3))
@@ -547,16 +542,17 @@ bool melee_attack::handle_phase_damaged()
         }
     }
 
+    announce_hit();
+    // Inflict stored damage
     damage_done = inflict_damage(damage_done);
+    // Check for weapon brand & inflict that damage too
+    apply_damage_brand();
 
     // TODO: Unify these, added here so we can get rid of player_attack
     if (attacker->atype() == ACT_PLAYER)
     {
         if (damage_done)
             player_exercise_combat_skills();
-
-        if (player_check_monster_died())
-            return (true);
 
         // Always upset monster regardless of damage.
         // However, successful stabs inhibit shouting.
@@ -659,23 +655,6 @@ bool melee_attack::handle_phase_damaged()
             return (false);
         }
 
-        special_damage = 0;
-        special_damage_message.clear();
-        special_damage_flavour = BEAM_NONE;
-        apply_damage_brand();
-
-        if (needs_message && !special_damage_message.empty())
-        {
-            mprf("%s", special_damage_message.c_str());
-            // Don't do message-only miscasts along with a special
-            // damage message.
-            if (miscast_level == 0)
-                miscast_level = -1;
-        }
-
-        if (special_damage > 0)
-            inflict_damage(special_damage, special_damage_flavour, true);
-
         if (!defender->alive())
         {
             if (chaos_attack && attacker->alive())
@@ -714,6 +693,16 @@ bool melee_attack::handle_phase_damaged()
 
 bool melee_attack::handle_phase_killed()
 {
+    // Wyrmbane needs to be notified of deaths, including ones due to its
+    // Dragon slaying brand, but other users of melee_effects() don't want
+    // to possibly be called twice. Adding another entry for a single
+    // artefact would be overkill, so here we call it by hand:
+    if (unrand_entry && weapon && weapon->special == UNRAND_WYRMBANE)
+        unrand_entry->fight_func.melee_effects(weapon, attacker, defender,
+                                               true, special_damage);
+
+    _monster_die(defender->as_monster(), KILL_YOU, NON_MONSTER);
+
     return (true);
 }
 
@@ -853,6 +842,9 @@ bool melee_attack::attack()
         else
             you.pet_target = attacker->mindex();
     }
+
+    if (!defender->alive())
+    	handle_phase_killed();
 
     // This may invalidate both the attacker and defender.
     fire_final_effects();
@@ -1920,14 +1912,14 @@ void melee_attack::player_weapon_upsets_god()
 // Returns true if the combat round should end here.
 bool melee_attack::player_monattk_hit_effects()
 {
-    bool mondied = !defender->alive();
     player_weapon_upsets_god();
 
-    mondied = check_unrand_effects() || mondied;
+    if (check_unrand_effects())
+    	return (true);
 
     // Thirsty vampires will try to use a stabbing situation to draw blood.
     if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED
-        && mondied && stab_attempt && stab_bonus > 0
+        && damage_done > 0 && stab_attempt && stab_bonus > 0
         && _player_vampire_draws_blood(defender->as_monster(),
                                        damage_done, true))
     {
@@ -1937,37 +1929,12 @@ bool melee_attack::player_monattk_hit_effects()
              && damage_brand == SPWPN_VAMPIRICISM
              && you.weapon()
              && _player_vampire_draws_blood(defender->as_monster(),
-                                            damage_done, false,
-                                            (mondied ? 1 : 10)))
+                                            damage_done, false, 5))
     {
         // No further effects.
     }
-    // Vampiric *weapon* effects for the killing blow.
-    else if (mondied && damage_brand == SPWPN_VAMPIRICISM
-             && you.weapon()
-             && you.species != SP_VAMPIRE) // vampires get their bonus elsewhere
-    {
-        if (defender->holiness() == MH_NATURAL
-            && !defender->is_summoned()
-            && damage_done > 0
-            && you.hp < you.hp_max
-            && !one_chance_in(5)
-            && !you.duration[DUR_DEATHS_DOOR])
-        {
-            mpr("You feel better.");
 
-            // More than if not killed.
-            const int heal = 1 + random2(damage_done);
-
-            dprf("Vampiric healing: damage_done %d, healed %d",
-                 damage_done, heal);
-            inc_hp(heal);
-
-            did_god_conduct(DID_NECROMANCY, 2);
-        }
-    }
-
-    if (mondied)
+    if (!defender->alive())
         return (true);
 
     // These effects apply only to monsters that are still alive:
@@ -1984,10 +1951,6 @@ bool melee_attack::player_monattk_hit_effects()
     // These two (staff damage and damage brand) are mutually exclusive!
     player_apply_staff_damage();
 
-    // Returns true if the monster croaked.
-    if (!special_damage && apply_damage_brand())
-        return (true);
-
     if (needs_message && !special_damage_message.empty())
     {
         mprf("%s", special_damage_message.c_str());
@@ -2001,21 +1964,6 @@ bool melee_attack::player_monattk_hit_effects()
          special_damage, special_damage_flavour);
 
     special_damage = inflict_damage(special_damage);
-
-    if (!defender->alive())
-    {
-        // Wyrmbane needs to be notified of deaths, including ones due to its
-        // Dragon slaying brand, but other users of melee_effects() don't want
-        // to possibly be called twice. Adding another entry for a single
-        // artefact would be overkill, so here we call it by hand:
-        if (unrand_entry && weapon && weapon->special == UNRAND_WYRMBANE)
-            unrand_entry->fight_func.melee_effects(weapon, attacker, defender,
-                                                   true, special_damage);
-
-        _monster_die(defender->as_monster(), KILL_YOU, NON_MONSTER);
-
-        return (true);
-    }
 
     if (stab_attempt && stab_bonus > 0 && weapon
         && weapon->base_type == OBJ_WEAPONS && weapon->sub_type == WPN_CLUB
@@ -3067,6 +3015,18 @@ bool melee_attack::apply_damage_brand()
     }
     if (!obvious_effect)
         obvious_effect = !special_damage_message.empty();
+
+    if (needs_message && !special_damage_message.empty())
+    {
+        mprf("%s", special_damage_message.c_str());
+        // Don't do message-only miscasts along with a special
+        // damage message.
+        if (miscast_level == 0)
+            miscast_level = -1;
+    }
+
+    if (special_damage > 0)
+        inflict_damage(special_damage, special_damage_flavour, true);
 
     if (obvious_effect && attacker_visible && weapon != NULL)
     {
