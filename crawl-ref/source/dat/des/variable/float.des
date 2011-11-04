@@ -16,38 +16,6 @@
 default-depth: D:12-26
 
 ##############################################################################
-# Dummy probability balancer vault for depths 1-11.
-#
-# Why this is necessary: there are very few vaults in the 1-11 range (entries
-# are not considered here); to avoid too much repetition of the existing vaults,
-# we use this dummy vault.
-#
-NAME: dummy_balancer
-DEPTH: D:1-11
-# Vaults tagged "dummy" are no-ops when the dungeon builder is looking for maps
-# by depth.
-TAGS: dummy
-ORIENT: float
-WEIGHT: 100
-MAP
-x
-ENDMAP
-
-##############################################################################
-# Dummy probability balancer vault for non-dungeon branches.
-#
-NAME: dummy_balancer_other
-DEPTH: 1-, !D, !Zot:1-4
-# Vaults tagged "dummy" are no-ops when the dungeon builder is looking for maps
-# by depth.
-TAGS: dummy
-ORIENT: float
-WEIGHT: 60
-MAP
-x
-ENDMAP
-
-##############################################################################
 # Elevator
 #
 NAME:    lemuel_elevator

@@ -355,6 +355,16 @@ ENDMAP
 ##############################################################################
 ##############################################################################
 
+# There's few vaults on Zot:5, tone down their chances.
+NAME: dummy_balancer_zot
+DEPTH: Zot:5
+TAGS: dummy
+ORIENT: float
+WEIGHT: 60
+MAP
+x
+ENDMAP
+
 NAME:   lemuel_baited_zot_trap
 DEPTH:  Zot:*
 WEIGHT: 20
