@@ -56,7 +56,6 @@ end
 function ossuary_setup_features(e)
         e.kfeat("< = exit_portal_vault")
         e.colour("< = brown")
-        e.tile("c = dngn_stone_wall_brown")
 end
 }}
 
