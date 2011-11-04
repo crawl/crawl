@@ -862,7 +862,7 @@ Beogh newgame
 %%%%
 Cheibriados penance
 
-@Cheibriados welcome@
+Cheibriados says: Don't be so hasty! Slow down!
 %%%%
 Cheibriados welcome
 
@@ -882,7 +882,7 @@ Elyvilon newgame
 %%%%
 Fedhas penance
 
-@Fedhas welcome@
+Fedhas protests your encroaching upon nature.
 %%%%
 Fedhas welcome
 
@@ -1010,7 +1010,7 @@ Zin penance
 
 Zin castigates you for your disobedience of the Law.
 
-Zin sternly explains the importance of @important_subject@.
+Zin sternly explains the importance of @important_subject@
 %%%%
 Zin welcome
 

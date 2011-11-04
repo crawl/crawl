@@ -230,7 +230,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_FEDHAS_EVOLUTION, ABIL_FEDHAS_SUNLIGHT, ABIL_FEDHAS_PLANT_RING,
       ABIL_FEDHAS_SPAWN_SPORES, ABIL_FEDHAS_RAIN},
     // Cheibriados
-    { ABIL_NON_ABILITY, ABIL_CHEIBRIADOS_TIME_BEND, ABIL_NON_ABILITY,
+    { ABIL_CHEIBRIADOS_TIME_BEND, ABIL_NON_ABILITY, ABIL_CHEIBRIADOS_DISTORTION,
       ABIL_CHEIBRIADOS_SLOUCH, ABIL_CHEIBRIADOS_TIME_STEP },
     // Ashenzari
     { ABIL_NON_ABILITY, ABIL_NON_ABILITY, ABIL_NON_ABILITY,
@@ -416,6 +416,7 @@ static const ability_def Ability_List[] =
 
     // Cheibriados
     { ABIL_CHEIBRIADOS_TIME_BEND, "Bend Time", 3, 0, 50, 1, ABFLAG_NONE },
+    { ABIL_CHEIBRIADOS_DISTORTION, "Temporal Distortion", 4, 0, 100, 3, ABFLAG_INSTANT },
     { ABIL_CHEIBRIADOS_SLOUCH, "Slouch", 5, 0, 100, 8, ABFLAG_NONE },
     { ABIL_CHEIBRIADOS_TIME_STEP, "Step From Time",
       10, 0, 200, 10, ABFLAG_NONE },
@@ -1190,6 +1191,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     case ABIL_ZIN_IMPRISON:
     case ABIL_LUGONU_BANISH:
+    case ABIL_CHEIBRIADOS_DISTORTION:
         invoc = true;
         failure = 60 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 5);
         break;
@@ -1718,8 +1720,6 @@ static int _calc_breath_ability_range(ability_type ability)
     }
     return (-2);
 }
-
-#define random_mons(...) static_cast<monster_type>(random_choose(__VA_ARGS__))
 
 static bool _do_ability(const ability_def& abil)
 {
@@ -2353,7 +2353,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKHLEB_LESSER_SERVANT_OF_MAKHLEB:
-        summon_demon_type(random_mons(MONS_HELLWING, MONS_NEQOXEC,
+        summon_demon_type(random_choose(MONS_HELLWING, MONS_NEQOXEC,
                           MONS_ORANGE_DEMON, MONS_SMOKE_DEMON, MONS_YNOXINUL, -1),
                           20 + you.skill(SK_INVOCATIONS, 3), GOD_MAKHLEB);
         break;
@@ -2388,7 +2388,7 @@ static bool _do_ability(const ability_def& abil)
         break;
 
     case ABIL_MAKHLEB_GREATER_SERVANT_OF_MAKHLEB:
-        summon_demon_type(random_mons(MONS_EXECUTIONER, MONS_GREEN_DEATH,
+        summon_demon_type(random_choose(MONS_EXECUTIONER, MONS_GREEN_DEATH,
                           MONS_BLIZZARD_DEMON, MONS_BALRUG, MONS_CACODEMON, -1),
                           20 + you.skill(SK_INVOCATIONS, 3), GOD_MAKHLEB);
         break;
@@ -2658,6 +2658,10 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_CHEIBRIADOS_TIME_BEND:
         cheibriados_time_bend(16 + you.skill(SK_INVOCATIONS, 8));
+        break;
+
+    case ABIL_CHEIBRIADOS_DISTORTION:
+        cheibriados_temporal_distortion();
         break;
 
     case ABIL_CHEIBRIADOS_SLOUCH:

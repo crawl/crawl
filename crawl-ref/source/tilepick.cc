@@ -3033,19 +3033,20 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
             return TILE_ARM_CHAIN_MAIL_ORC;
         return TILE_ARM_CHAIN_MAIL;
 
+#if TAG_MAJOR_VERSION == 32
+    case ARM_BANDED_MAIL:
+#endif
     case ARM_SPLINT_MAIL:
         return TILE_ARM_SPLINT_MAIL;
 
-    case ARM_BANDED_MAIL:
-        return TILE_ARM_BANDED_MAIL;
 
-    case ARM_PLATE_MAIL:
+    case ARM_PLATE_ARMOUR:
         if (race == ISFLAG_ORCISH)
-            return TILE_ARM_PLATE_MAIL_ORC;
-        return TILE_ARM_PLATE_MAIL;
+            return TILE_ARM_PLATE_ARMOUR_ORC;
+        return TILE_ARM_PLATE_ARMOUR;
 
-    case ARM_CRYSTAL_PLATE_MAIL:
-        return TILE_ARM_CRYSTAL_PLATE_MAIL;
+    case ARM_CRYSTAL_PLATE:
+        return TILE_ARM_CRYSTAL_PLATE;
 
     case ARM_SHIELD:
         return TILE_ARM_SHIELD;

@@ -73,14 +73,14 @@ static bool _evoke_sceptre_of_asmodeus()
     bool rc = false;
     if (one_chance_in(3))
     {
-        const monster_type mon = static_cast<monster_type>(
-                random_choose_weighted(3, MONS_EFREET,
+        const monster_type mon = random_choose_weighted(
+                                       3, MONS_EFREET,
                                        3, MONS_SUN_DEMON,
                                        2, MONS_BALRUG,
                                        2, MONS_HELLION,
                                        1, MONS_PIT_FIEND,
                                        1, MONS_BRIMSTONE_FIEND,
-                                       0));
+                                       0);
 
         mgen_data mg(mon, BEH_CHARMED, &you,
                      0, 0, you.pos(), MHITYOU,
@@ -747,4 +747,15 @@ static void _DEVASTATOR_melee_effect(item_def* item, actor* attacker,
 {
     if (dam)
         shillelagh(attacker, defender->pos(), dam);
+}
+
+///////////////////////////////////////////////////
+static void _DRAGONSKIN_equip(item_def *item, bool *show_msgs, bool unmeld)
+{
+    _equip_mpr(show_msgs, "You feel oddly protected from the elements.");
+}
+
+static void _DRAGONSKIN_unequip(item_def *item, bool *show_msgs)
+{
+    _equip_mpr(show_msgs, "You no longer feel protected from the elements.");
 }

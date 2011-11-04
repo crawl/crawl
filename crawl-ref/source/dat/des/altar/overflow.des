@@ -43,8 +43,10 @@ NAME:   ashenzari_altar_1
 TAGS:   uniq_altar_ashenzari temple_overflow_ashenzari
 WEIGHT: 5
 KFEAT:  _ = altar_ashenzari
-ITEM:   cursed mace ident:curse / cursed trident ident:curse / \
-        cursed flail ident:curse w:1 / cursed whip ident:curse w:1
+ITEM:   cursed mundane mace ident:curse / \
+        cursed mundane trident ident:curse / \
+        cursed mundane flail ident:curse w:1 / \
+        cursed mundane whip ident:curse w:1
 #
 ### TODO: This still gives book names like "Ashenzari's Almanac of Skeletal
 ###       Cooking" and "Ashenzari's Compendium of Skeletal Cooking", whereas
@@ -74,6 +76,38 @@ b.b
 b.b
 ENDMAP
 
+# A ruined temple
+NAME:   evilmike_ruin_ashenzari
+TAGS:   uniq_altar_ashenzari temple_overflow_ashenzari
+SUBST:  x = xxxxx-, - = ----.
+TILE:   x = WALL_BRICK_VINES
+FTILE:  -V_ = FLOOR_SANDSTONE
+COLOUR: - = brown
+NSUBST: - = 1:d / 2:d- / *:-
+: dgn.delayed_decay(_G, 'd', 'human skeleton')
+KFEAT:  _ = altar_ashenzari
+SUBST:  - = .
+MAP
+      .......
+      .xx+xx.
+     ..x---x..
+   ....x---x....
+   .xxxx---xxxx.
+  ..xV-xx+xx-Vx..
+....x---------x....
+.xxxxx-------xxxxx.
+.x---x-------x---x.
+.x---+---_---+---x.
+.x---x-------x---x.
+.xxxxx-------xxxxx.
+....x---------x....
+  ..xV-xx+xx-Vx..
+   .xxxx---xxxx.
+   ....x---x....
+     ..x---x..
+      .xxxxx.
+      .......
+ENDMAP
 
 ### Cheibriados overflow altars ###############################################
 

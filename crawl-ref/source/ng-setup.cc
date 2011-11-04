@@ -272,7 +272,8 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_TOUGH_SKIN]      = 3;
         you.mutation[MUT_FAST]            = 2;
         you.mutation[MUT_DEFORMED]        = 1;
-        you.mutation[MUT_FAST_METABOLISM] = 2;
+        you.mutation[MUT_FAST_METABOLISM] = 1;
+        you.mutation[MUT_HERBIVOROUS]     = 1;
         you.mutation[MUT_HOOVES]          = 3;
         break;
     case SP_NAGA:
@@ -576,10 +577,13 @@ static void _give_items_skills(const newgame_def& ng)
             you.equip[EQ_WEAPON] = -1; // Trolls/Ghouls/Felids fight unarmed.
         else
         {
-            // Species skilled with maces/flails get one, the others axes.
             weapon_type startwep = WPN_HAND_AXE;
             if (species_apt(SK_MACES_FLAILS) > species_apt(SK_AXES))
-                startwep = (you.species == SP_OGRE) ? WPN_ANKUS : WPN_MACE;
+                startwep = WPN_MACE;
+            else if (species_apt(SK_POLEARMS) > species_apt(SK_AXES))
+                startwep = WPN_SPEAR;
+            else if (species_apt(SK_SHORT_BLADES) > species_apt(SK_AXES))
+                startwep = WPN_SHORT_SWORD;
 
             newgame_make_item(0, EQ_WEAPON, OBJ_WEAPONS, startwep);
         }

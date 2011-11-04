@@ -176,7 +176,7 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
 
     case BRANCH_DIS:
         flv.wall  = TILE_WALL_ZOT_CYAN;
-        flv.floor = TILE_FLOOR_TOMB;
+        flv.floor = TILE_FLOOR_IRON;
         return;
 
     case BRANCH_GEHENNA:
@@ -974,6 +974,13 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
     {
         if (orig == TILE_DNGN_STONE_WALL)
             orig = TILE_WALL_TOMB;
+    }
+    else if (player_in_branch(BRANCH_DIS))
+    {
+        if (orig == TILE_DNGN_METAL_WALL)
+            orig = TILE_DNGN_METAL_IRON;
+        else if (orig == TILE_DNGN_CRYSTAL)
+            orig = TILE_WALL_EMERALD;
     }
 
     const bool mimic = monster_at(gc) && mons_is_feat_mimic(monster_at(gc)->type);

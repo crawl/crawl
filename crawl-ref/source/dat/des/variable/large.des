@@ -2265,8 +2265,6 @@ FTILE:  .@~+23 = FLOOR_HALL
 TILE:   c = DNGN_STONE_WALL_DARKGRAY
 # This is to mark the wall clearly diggable.
 TILE:   y = WALL_NORMAL
-COLOUR: c = darkgrey
-COLOUR: -d|*$14567^ = darkgrey
 MONS:   patrolling silent spectre
 MONS:   curse skull, soul eater
 # Inmates are monsters capable of blinking, summoning or airstriking.
@@ -2648,4 +2646,93 @@ xcc%%2ccccc+ccccccccccc+cc.cc+ccAAAccc%%7%%c
 xcc%%.+..........A.1.A.........+2$Accc%%%%%c
 xcc2..c...........A.12A........cAAAccc%%%%%c
 xccccccccccccccccccccccccccccccccccccccccccc
+ENDMAP
+
+################################################################################
+# Two diamond shaped vaults
+
+NAME:   evilmike_diamond_1
+DEPTH:  D:12-
+ORIENT: northwest
+NSUBST: | = 2:* / *:|
+SUBST:  X : c.., Y : c..
+SUBST:  c : cx
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xcccccccccccccccccccccccccccccccx
+xcccc.......9cc...cc9.......ccccx
+xccc........cc.....cc........cccx
+xcc.8.cc...cc...c...cc...cc.8.ccx
+xc.....cc|cc...ccc...cc|cc.....cx
+xc..c...ccc.0.ccccc.0.ccc...c..cx
+xc..cc...c...ccccccc...c...cc..cx
+xc...cc.Y...ccccccccc...Y.cc...cx
+xc...|cc...ccccccccccc...cc|...cx
+xc...cc...X.ccccccccc.X...cc...cx
+xc..cc...c...ccc0ccc...c...cc..cx
+xc9cc.0.ccc...c...c...ccc.0.cc9cx
+xccc...ccccc.........ccccc...cccx
+xcc...ccccccc.......ccccccc...ccx
+xc...ccccccc.........ccccccc...cx
+xc..ccccccc0....9....0ccccccc..cx
+xc...ccccccc.........ccccccc...cx
+xcc...ccccccc.......ccccccc...ccx
+xccc...ccccc.........ccccc...cccx
+xc9cc.0.ccc...c...c...ccc.0.ccccx
+xc..cc...c...ccc0ccc...c...cccccx
+xc...cc...X.ccccccccc.X...ccccccx
+xc...|cc...ccccccccccc...cccccccx
+xc...cc.Y...ccccccccc...Y.ccccccx
+xc..cc...c...ccccccc...c...cccccx
+xc..c...ccc.0.ccccc.0.ccc...ccccx
+xc.....cc|cc...ccc...ccccc..0cccx
+xcc.8.cc...cc...c...ccccccc0..ccx
+xccc........cc.....ccccccccc..0cx
+xcccc.......9cc...ccccccccccc0..x
+xccccccccccccccccccccccccccccc...
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.@
+ENDMAP
+
+NAME:   evilmike_diamond_2
+DEPTH:  D:12-
+ORIENT: southeast
+SUBST:  X : xxxnb.
+SUBST:  c : ccxxb
+SUBST:  1 = 009.
+SUBST:  2 = 998.
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x9.............X.X.............9xx
+x.............X.x.X.............xx
+x..xxx.xxx...X.x1x.X...xxx.xxx..xx
+x..xx..xx...X.xcccx.X...xx..xx..xx
+x..x.0.x.0.X.x.c|c.x.X.0.x.0.x..xx
+x.........X.x.cc%cc.x.X.........xx
+x..xxx...X.x.cc.2.cc.x.X...xxx..xx
+x..xx...X.x.cc..x..cc.x.X...xx..xx
+x..x.0.X.x.cc..x9x..cc.x.X.0.x..xx
+x.....X.x.cc..x...x..cc.x.X.....xx
+x....X.x.cc..x.....x..cc.x.X....xx
+x...X.x.cc..x.......x..cc.x.X...xx
+x..X.x.cc..x.........x..cc.x.X..xx
+x.X.x.cc..x.....$.....x..cx.x.X.xx
+.X.xccc..x.............x...x.x.Xxx
+@.X1c|%2x9....$8T.$.....x...x1X.xx
+.X.xccc..x.............x...x.x.Xxx
+x.X.x.cc..x.....$.....x..cx.x.X.xx
+x..X.x.cc..x.........x..cc.x.X..xx
+x...X.x.cc..x.......x..cc.x.X...xx
+x....X.x.cc..x.....x..cc.x.X....xx
+x.....X.x.cc..x...x..cc.x.X.....xx
+x..x.0.X.x.cc..x9x..cc.x.X.0.x..xx
+x..xx...X.x.cc..x..cc.x.X...xx..xx
+x..xxx...X.x.cc.2.cc.x.X...xxx..xx
+x.........X.x.cc%cc.x.X.........xx
+x..x.0.x.0.X.x.c|c.x.X.0.x.0.x..xx
+x..xx..xx...X.xcccx.X...xx..xx..xx
+x..xxx.xxx...X.x1x.X...xxx.xxx..xx
+x.............X.x.X.............xx
+x9.............X.X.............9xx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP

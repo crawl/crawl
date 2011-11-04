@@ -3112,8 +3112,6 @@ static void _place_traps(int level_number)
     }
     else if (player_in_branch(BRANCH_CRYPT))
         place_webs(random2(20));
-    else if (player_in_branch(BRANCH_MAIN_DUNGEON) && you.absdepth0 == 12)
-        place_webs(300);
 }
 
 static void _dgn_place_feature_at_random_floor_square(dungeon_feature_type feat,
@@ -4705,14 +4703,14 @@ static void _vault_grid_glyph(vault_placement &place, const coord_def& where,
         }
         else if (vgrid == '|')
         {
-            which_class = static_cast<object_class_type>(random_choose_weighted(
+            which_class = random_choose_weighted(
                             2, OBJ_WEAPONS,
                             1, OBJ_ARMOUR,
                             1, OBJ_JEWELLERY,
                             1, OBJ_BOOKS,
                             1, OBJ_STAVES,
                             1, OBJ_MISCELLANY,
-                            0));
+                            0);
             which_depth = MAKE_GOOD_ITEM;
         }
         else if (vgrid == '*')
@@ -5822,9 +5820,11 @@ coord_def dgn_find_nearby_stair(dungeon_feature_type stair_to_find,
                 result = *ri;
         }
     }
+    if (found)
+        return result;
 
     // FAIL
-    die("Can't any place to put the player on.");
+    die("Can't find any floor to put the player on.");
 }
 
 void dgn_set_lt_callback(std::string level_type_tag,

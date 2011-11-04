@@ -939,6 +939,19 @@ xx44..........3.xx
 ENDMAP
 
 ##############################################################################
+# Do you explore carefully enough?
+#
+NAME:  explore_dammit
+DEPTH: Lair
+MONS:  plant / fungus w:3 / bush w:1
+MAP
+xxx
+x|xx
+xx1x
+ .xx
+ENDMAP
+
+##############################################################################
 #       Hibernating monster in a tunnel, can be pretty dangerous
 #
 NAME:   hibernation_bobbens

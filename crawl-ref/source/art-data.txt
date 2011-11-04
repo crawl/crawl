@@ -941,7 +941,7 @@ DESC:    A dull grey robe.
 ENUM:    MAXWELL
 NAME:    Maxwell's patent armour
 APPEAR:  weird-looking armour
-OBJ:     OBJ_ARMOUR/ARM_PLATE_MAIL
+OBJ:     OBJ_ARMOUR/ARM_PLATE_ARMOUR
 PLUS:    +15
 COLOUR:  LIGHTGREEN
 TILE:    urand_maxwell
@@ -1249,6 +1249,17 @@ BOOL:     special
 # hrm, nothing fitting, shouldn't be elemental but should be marked
 COLOUR:   WHITE
 DESC:     You guess this stick is loaded with something else than just lead.
+
+# Worn by Tiamat.
+ENUM:     DRAGONSKIN
+NAME:     dragonskin cloak
+APPEAR:   opalescent scaly cloak
+OBJ:      OBJ_ARMOUR/ARM_CLOAK
+PLUS:     +4
+COLOUR:   ETC_HEAL
+BOOL:     nogen
+DESC:     This opalescent cloak gleams with all dragon colours.
+
 
 # This entry must always be last.
 ENUM:   DUMMY2

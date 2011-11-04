@@ -78,6 +78,7 @@ skill_type abil_skill(ability_type abil)
     case ABIL_TSO_SUMMON_DIVINE_WARRIOR:
     case ABIL_YRED_ENSLAVE_SOUL:
     case ABIL_LUGONU_ABYSS_EXIT:
+    case ABIL_CHEIBRIADOS_DISTORTION:
         return (SK_INVOCATIONS);
 
     case ABIL_KIKU_RECEIVE_CORPSES:
@@ -149,6 +150,7 @@ static int _abil_degree(ability_type abil)
     case ABIL_ELYVILON_GREATER_HEALING_OTHERS:
     case ABIL_LUGONU_BANISH:
     case ABIL_JIYVA_SLIMIFY:
+    case ABIL_CHEIBRIADOS_DISTORTION:
         return (3 + random2(5));
     case ABIL_TSO_CLEANSING_FLAME:
         return (3 + random2(6));

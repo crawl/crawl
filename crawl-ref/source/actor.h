@@ -1,6 +1,7 @@
 #ifndef ACTOR_H
 #define ACTOR_H
 
+#include "itemprop-enum.h"
 #include "los_def.h"
 #include "itemprop-enum.h"
 

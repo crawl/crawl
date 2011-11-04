@@ -1,22 +1,33 @@
-var default_size = { w: 32, h: 32 };
+define(["jquery", "./cell_renderer", "./map_knowledge"],
+function ($, cr, map_knowledge) {
+    var default_size = { w: 32, h: 32 };
 
-function DungeonViewRenderer(element)
-{
-    DungeonCellRenderer.call(this, element);
+    function DungeonViewRenderer()
+    {
+        cr.DungeonCellRenderer.call(this);
 
-    this.cols = 0;
-    this.rows = 0;
+        this.cols = 0;
+        this.rows = 0;
 
-    this.view = { x: 0, y: 0 };
-    this.view_center = { x: 0, y: 0 };
-}
+        this.view = { x: 0, y: 0 };
+        this.view_center = { x: 0, y: 0 };
+    }
 
-(function() {
-
-    DungeonViewRenderer.prototype = new DungeonCellRenderer();
+    DungeonViewRenderer.prototype = new cr.DungeonCellRenderer();
 
     $.extend(DungeonViewRenderer.prototype, {
-        set_size: function(c, r)
+        init: function (element)
+        {
+            $(element).bind("update_cells", function (ev, cells) {
+                $.each(cells, function (i, loc) {
+                    renderer.render_loc(loc.x, loc.y);
+                });
+            });
+
+            cr.DungeonCellRenderer.prototype.init.call(this, element);
+        },
+
+        set_size: function (c, r)
         {
             if ((this.cols == c) && (this.rows == r))
                 return;
@@ -27,7 +38,7 @@ function DungeonViewRenderer(element)
             this.view.y = this.view_center.y - Math.floor(r / 2);
             this.element.width = c * this.cell_width;
             this.element.height = r * this.cell_height;
-            this.init();
+            this.init(this.element);
         },
 
         set_view_center: function(x, y)
@@ -121,6 +132,8 @@ function DungeonViewRenderer(element)
                 this.set_cell_size(Math.floor(default_size.w * scale),
                                    Math.floor(default_size.h * scale));
             }
+            else
+                this.set_cell_size(default_size.w, default_size.h);
 
             var view_width = Math.floor(width / this.cell_width);
             var view_height = Math.floor(height / this.cell_height);
@@ -143,13 +156,6 @@ function DungeonViewRenderer(element)
         {
             map_cell = map_cell || map_knowledge.get(cx, cy);
             var cell = map_cell.t;
-
-            // TODO: Extract into MinimapRenderer
-            if (cell)
-            {
-                var minimap_feat = get_cell_map_feature(map_cell);
-                set_minimap(cx, cy, minimap_colours[minimap_feat]);
-            }
 
             if (this.in_view(cx, cy))
             {
@@ -177,4 +183,17 @@ function DungeonViewRenderer(element)
                                (y - this.view.y) * this.cell_height);
         },
     });
-}) ();
+
+    var renderer = new DungeonViewRenderer();
+
+    $(document).bind("game_init", function () {
+        renderer.cols = 0;
+        renderer.rows = 0;
+        renderer.view = { x: 0, y: 0 };
+        renderer.view_center = { x: 0, y: 0 };
+
+        renderer.init($("#dungeon")[0]);
+    });
+
+    return renderer;
+});

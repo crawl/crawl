@@ -2224,16 +2224,11 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_CONTAMINATED_CHUNK:
         text << "Chunks that are described as <brown>contaminated</brown> will "
-                "occasionally make you sick when eaten. However, since food is "
-                "scarce in the dungeon, you'll often have to risk it.";
-
-        // Break if we've seen the sickness hint before.
-        if (!Hints.hints_events[HINT_YOU_SICK])
+                "occasionally make you nauseated when eaten. However, since food is "
+                "scarce in the dungeon, you'll often have to risk it.\n"
+                "While nauseated, you can't stomach anything, and your attributes "
+                "may occasionally decrease. Just go around, hunt for better food.";
             break;
-
-        // Mark HINT_YOU_SICK as seen, and fall through.
-        text << "\n";
-        Hints.hints_events[HINT_YOU_SICK] = false;
 
     case HINT_YOU_SICK:
         if (crawl_state.game_is_hints())

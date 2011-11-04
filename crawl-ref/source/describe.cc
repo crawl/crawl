@@ -775,7 +775,7 @@ static std::string _corrosion_resistance_string(const item_def &item)
     else if (ench >= 4 && item_ident(item, ISFLAG_KNOW_PLUSES))
         return make_stringf(format, "extremely resistant");
     else if (item.base_type == OBJ_ARMOUR
-             && item.sub_type == ARM_CRYSTAL_PLATE_MAIL)
+             && item.sub_type == ARM_CRYSTAL_PLATE)
     {
         return "\nBeing made of crystal renders it very resistant to acidic "
                "corrosion.";
@@ -1044,7 +1044,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
         if (item_ident(item, ISFLAG_KNOW_PLUSES)
             && item.plus >= MAX_WPN_ENCHANT && item.plus2 >= MAX_WPN_ENCHANT)
         {
-            description += "\nIt is maximally enchanted.";
+            description += "\nIt cannot be enchanted further.";
         }
         else
         {
@@ -1258,7 +1258,7 @@ static std::string _describe_ammo(const item_def &item)
         append_missile_info(description);
 
     if (item_ident(item, ISFLAG_KNOW_PLUSES) && item.plus >= MAX_WPN_ENCHANT)
-        description += "\nIt is maximally enchanted.";
+        description += "\nIt cannot be enchanted further.";
     else
     {
         description += "\nIt can be maximally enchanted to +";
@@ -1422,7 +1422,10 @@ static std::string _describe_armour(const item_def &item, bool verbose)
             description += "\nIt is well-crafted and durable.";
         else if (race == ISFLAG_ELVEN)
         {
+            if (get_item_slot(item) == EQ_BODY_ARMOUR)
             description += "\nIt is well-crafted and unobstructive";
+            else
+                description += "\nIt is well-crafted and lightweight";
             if (item.sub_type == ARM_CLOAK || item.sub_type == ARM_BOOTS)
                 description += ", and helps its wearer avoid being noticed";
             description += ".";
@@ -1450,7 +1453,7 @@ static std::string _describe_armour(const item_def &item, bool verbose)
             description += ".";
         }
         else
-            description += "\nIt is maximally enchanted.";
+            description += "\nIt cannot be enchanted further.";
     }
 
     description += _corrosion_resistance_string(item);
@@ -4563,6 +4566,17 @@ void describe_god(god_type which_god, bool give_title)
                                 "them.";
             _print_final_god_abil_desc(which_god, buf,
                                        ABIL_NON_ABILITY);
+        }
+        else if (which_god == GOD_CHEIBRIADOS)
+        {
+            if (you.piety >= piety_breakpoint(0))
+            {
+                have_any = true;
+                _print_final_god_abil_desc(which_god,
+                                           god_name(which_god)
+                                           + " slows and strengthens your metabolism.",
+                                           ABIL_NON_ABILITY);
+            }
         }
 
         // mv: No abilities (except divine protection) under penance

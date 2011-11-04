@@ -1150,11 +1150,10 @@ static int _xom_do_potion(bool debug = false)
     potion_type pot = POT_CURING;
     while (true)
     {
-        pot = static_cast<potion_type>(
-                random_choose(POT_CURING, POT_HEAL_WOUNDS, POT_MAGIC,
+        pot = random_choose(POT_CURING, POT_HEAL_WOUNDS, POT_MAGIC,
                               POT_SPEED, POT_MIGHT, POT_AGILITY, POT_BRILLIANCE,
                               POT_INVISIBILITY, POT_BERSERK_RAGE,
-                              POT_EXPERIENCE, -1));
+                            POT_EXPERIENCE, -1);
 
         if (pot == POT_EXPERIENCE && !one_chance_in(6))
             pot = POT_BERSERK_RAGE;
@@ -2664,7 +2663,7 @@ static void _xom_zero_miscast()
                 str += " primary";
             else
             {
-                str += random_choose_string(" front", " middle", " rear");
+                str += random_choose(" front", " middle", " rear");
                 str += " secondary";
             }
         str += " eye.";
@@ -2763,7 +2762,7 @@ static void _xom_zero_miscast()
             str += ".";
         }
         else if (item->sub_type >= ARM_RING_MAIL
-                 && item->sub_type <= ARM_PLATE_MAIL)
+                 && item->sub_type <= ARM_PLATE_ARMOUR)
         {
             str  = "Your ";
             str += name;

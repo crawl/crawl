@@ -522,8 +522,7 @@ bool bolt::can_affect_wall_actor(const actor *act) const
 
 static beam_type _chaos_beam_flavour()
 {
-    const beam_type flavour = static_cast<beam_type>(
-        random_choose_weighted(
+    const beam_type flavour = random_choose_weighted(
             10, BEAM_FIRE,
             10, BEAM_COLD,
             10, BEAM_ELECTRICITY,
@@ -544,7 +543,7 @@ static beam_type _chaos_beam_flavour()
             10, BEAM_BANISH,
             10, BEAM_DISINTEGRATION,
             10, BEAM_PETRIFY,
-            0));
+            0);
 
     return (flavour);
 }
@@ -3065,8 +3064,10 @@ void bolt::tracer_affect_player()
         // Don't ask if we're aiming at ourselves.
         if (!dont_stop_player && !harmless_to_player())
         {
-            if (yesno("That beam is likely to hit you. Continue anyway?",
-                      false, 'n'))
+            std::string prompt = make_stringf("That %s is likely to hit you. Continue anyway?",
+                                              item ? name.c_str() : "beam");
+
+            if (yesno(prompt.c_str(), false, 'n'))
             {
                 friend_info.count++;
                 friend_info.power += you.experience_level;

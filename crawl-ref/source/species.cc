@@ -184,6 +184,12 @@ std::string species_name(species_type speci, bool genus, bool adj)
             res = (adj ? "Dwarven" : genus ? "Dwarf" : "Mountain Dwarf");
             break;
 #endif
+        case SP_FELID:
+            res = (adj ? "Feline" : genus ? "Cat" : "Felid");
+            break;
+        case SP_OCTOPODE:
+            res = (adj ? "Octopoid" : genus ? "Octopus" : "Octopode");
+            break;
 
         case SP_OGRE:       res = (adj ? "Ogreish"    : "Ogre");       break;
         case SP_TROLL:      res = (adj ? "Trollish"   : "Troll");      break;
@@ -192,8 +198,6 @@ std::string species_name(species_type speci, bool genus, bool adj)
         case SP_GHOUL:      res = (adj ? "Ghoulish"   : "Ghoul");      break;
         case SP_MERFOLK:    res = (adj ? "Merfolkian" : "Merfolk");    break;
         case SP_VAMPIRE:    res = (adj ? "Vampiric"   : "Vampire");    break;
-        case SP_FELID:      res = (adj ? "Feline"     : "Felid");      break;
-        case SP_OCTOPODE:   res = (adj ? "Octopoid"   : "Octopode");   break;
         default:            res = (adj ? "Yakish"     : "Yak");        break;
         }
     }

@@ -655,7 +655,7 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
 
         // Maces and hand axes usually share the same restrictions.
     case WPN_MACE:
-        if (ng.species == SP_TROLL)
+        if (ng.species == SP_TROLL || ng.species == SP_OGRE)
             return (CC_UNRESTRICTED);
         if (ng.species == SP_VAMPIRE)
             return (CC_RESTRICTED);
@@ -784,10 +784,6 @@ char_choice_restriction weapon_restriction(weapon_type wpn,
         default:
             return (CC_RESTRICTED);
         }
-
-    case WPN_ANKUS:
-        if (ng.species == SP_OGRE)
-            return (CC_UNRESTRICTED);
 
     case WPN_CROSSBOW:
         switch(ng.species)

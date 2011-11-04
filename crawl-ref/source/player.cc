@@ -706,8 +706,7 @@ bool you_can_wear(int eq, bool special_armour)
             return (true);
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
-            || you.species == SP_OGRE
-            || player_genus(GENPC_DRACONIAN))
+            || you.species == SP_OGRE)
         {
             return (false);
         }
@@ -1461,13 +1460,10 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         // randart weapons:
         rf += scan_artefacts(ARTP_FIRE, calc_unid);
 
-        // Che bonus
-        if (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(3)
-            && !player_under_penance())
-        {
+        // dragonskin cloak: 0.5 to draconic resistances
+        if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
             rf++;
         }
-    }
 
     // species:
     if (you.species == SP_MUMMY)
@@ -1526,6 +1522,10 @@ int player_res_steam(bool calc_unid, bool temp, bool items)
 
     if (items && player_equip(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_HIDE))
         res += 2;
+
+    // dragonskin cloak: 0.5 to draconic resistances
+    if (items && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+        res++;
 
     return (res + player_res_fire(calc_unid, temp, items) / 2);
 }
@@ -1601,13 +1601,10 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         // randart weapons:
         rc += scan_artefacts(ARTP_COLD, calc_unid);
 
-        // Che bonus
-        if (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(2)
-            && !player_under_penance())
-        {
+        // dragonskin cloak: 0.5 to draconic resistances
+        if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
             rc++;
         }
-    }
 
     // mutations:
     rc += player_mutation_level(MUT_COLD_RESISTANCE);
@@ -1695,6 +1692,11 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
 
         // randart weapons:
         re += scan_artefacts(ARTP_ELECTRICITY, calc_unid);
+
+        // dragonskin cloak: 0.5 to draconic resistances
+        if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+            re++;
+
     }
 
     // mutations:
@@ -1765,6 +1767,10 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
 
         // randart weapons:
         rp += scan_artefacts(ARTP_POISON, calc_unid);
+
+        // dragonskin cloak: 0.5 to draconic resistances
+        if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
+            rp++;
 
     }
 
@@ -1839,6 +1845,10 @@ int player_res_sticky_flame(bool calc_unid, bool temp, bool items)
     if (items && player_equip(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_ARMOUR))
         rsf++;
     if (items && player_equip(EQ_BODY_ARMOUR, ARM_MOTTLED_DRAGON_HIDE))
+        rsf++;
+
+    // dragonskin cloak: 0.5 to draconic resistances
+    if (items && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
         rsf++;
 
     if (rsf > 1)
@@ -2051,12 +2061,10 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
         // randart wpns
         pl += scan_artefacts(ARTP_NEGATIVE_ENERGY, calc_unid);
 
-        // Che bonus
-        if (you.religion == GOD_CHEIBRIADOS && you.piety >= piety_breakpoint(1)
-            && !player_under_penance())
-        {
+        // dragonskin cloak: 0.5 to draconic resistances
+        // this one is dubious (no pearl draconians)
+        if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
             pl++;
-        }
 
         pl += player_equip(EQ_STAFF, STAFF_DEATH, calc_unid);
     }
@@ -2196,13 +2204,7 @@ static int _player_armour_racial_bonus(const item_def& item)
 
     int racial_bonus = 0;
     const iflags_t armour_race = get_equip_race(item);
-
-    // get the armour race value that corresponds to the character's race:
-    const iflags_t racial_type
-                            = ((you.species == SP_DEEP_DWARF)? ISFLAG_DWARVEN :
-                               (player_genus(GENPC_ELVEN))   ? ISFLAG_ELVEN :
-                               (you.species == SP_HILL_ORC)  ? ISFLAG_ORCISH
-                                                             : 0);
+    const iflags_t racial_type = get_species_race(you.species);
 
     // Dwarven armour is universally good -- bwr
     if (armour_race == ISFLAG_DWARVEN)
@@ -2457,14 +2459,8 @@ int player_body_armour_racial_spellcasting_bonus(const int scale)
         return (0);
 
     const iflags_t armour_race = get_equip_race(*body_armour);
+    const iflags_t player_race = get_species_race(you.species);
 
-    // Get the armour race value that corresponds to the character's
-    // race:
-    const iflags_t player_race
-                            = ((you.species == SP_DEEP_DWARF)? ISFLAG_DWARVEN :
-                               (player_genus(GENPC_ELVEN))   ? ISFLAG_ELVEN :
-                               (you.species == SP_HILL_ORC)  ? ISFLAG_ORCISH
-                                                             : 0);
     int armour_racial_spellcasting_bonus = 0;
     if (armour_race & ISFLAG_ELVEN)
         armour_racial_spellcasting_bonus += 25;
@@ -2820,6 +2816,8 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
         you.experience = MAX_EXP_TOTAL;
     else
         you.experience += exp_gained;
+
+    you.attribute[ATTR_EVOL_XP] += exp_gained;
 
     if (you.duration[DUR_SAGE])
     {
@@ -3700,6 +3698,7 @@ int get_expiration_threshold(duration_type dur)
         return (15 * BASELINE_DELAY);
 
     case DUR_CONFUSING_TOUCH:
+    case DUR_NAUSEA:
         return (20 * BASELINE_DELAY);
 
     default:
@@ -3961,6 +3960,7 @@ void display_char_status()
         STATUS_NET,
         DUR_POISONING,
         STATUS_SICK,
+        DUR_NAUSEA,
         STATUS_ROT,
         STATUS_CONTAMINATION,
         DUR_CONFUSING_TOUCH,
@@ -6226,6 +6226,9 @@ int player::res_rotting(bool temp) const
 {
     if (temp && (petrified() || form == TRAN_STATUE))
         return 3;
+
+    if (you.mutation[MUT_FOUL_STENCH])
+        return 1;
 
     switch (is_undead)
     {

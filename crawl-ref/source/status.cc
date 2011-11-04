@@ -229,6 +229,7 @@ static void _describe_hunger(status_info* inf);
 static void _describe_regen(status_info* inf);
 static void _describe_rotting(status_info* inf);
 static void _describe_sickness(status_info* inf);
+static void _describe_nausea(status_info* inf);
 static void _describe_speed(status_info* inf);
 static void _describe_poison(status_info* inf);
 static void _describe_transform(status_info* inf);
@@ -342,6 +343,10 @@ void fill_status_info(int status, status_info* inf)
 
     case STATUS_SICK:
         _describe_sickness(inf);
+        break;
+
+    case DUR_NAUSEA:
+        _describe_nausea(inf);
         break;
 
     case STATUS_SPEED:
@@ -749,6 +754,21 @@ static void _describe_sickness(status_info* inf)
         inf->short_text = mod + "diseased";
         inf->long_text  = "You are " + mod + "diseased.";
     }
+}
+
+static void _describe_nausea(status_info* inf)
+{
+    int nausea = you.duration[DUR_NAUSEA];
+    if (nausea <= 0)
+        return;
+
+    const int low     =  20 * BASELINE_DELAY;
+    inf->light_colour =  (nausea <= low) ? BROWN : YELLOW;
+    inf->light_text   = "Nausea";
+    inf->short_text   = "nauseated";
+    inf->long_text    = (you.hunger_state <= HS_STARVING) ?
+                "You would have trouble eating anything." :
+                "You cannot eat right now.";
 }
 
 static void _describe_burden(status_info* inf)

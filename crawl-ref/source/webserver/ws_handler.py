@@ -52,6 +52,23 @@ def write_dgl_status_file():
     finally:
         if f: f.close()
 
+def purge_login_tokens():
+    for token in list(login_tokens):
+        if datetime.datetime.now() > login_tokens[token]:
+            del login_tokens[token]
+
+def purge_login_tokens_timeout():
+    purge_login_tokens()
+    ioloop = tornado.ioloop.IOLoop.instance()
+    ioloop.add_timeout(time.time() + 60 * 60 * 1000,
+                       purge_login_tokens_timeout)
+
+def status_file_timeout():
+    write_dgl_status_file()
+    ioloop = tornado.ioloop.IOLoop.instance()
+    ioloop.add_timeout(time.time() + status_file_update_rate,
+                       status_file_timeout)
+
 def find_user_sockets(username):
     for socket in list(sockets):
         if socket.username and socket.username.lower() == username.lower():
@@ -195,12 +212,16 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         self.process.end_callback = self._on_crawl_end
         self.process.add_watcher(self, hide=True)
-        self.process.start()
+        try:
+            self.process.start()
+        except:
+            self.process = None
+            self.send_message("go_lobby")
+        else:
+            self.send_message("game_started")
 
-        self.send_message("game_started")
-
-        if dgl_mode:
-            update_global_status()
+            if dgl_mode:
+                update_global_status()
 
     def _on_crawl_end(self):
         self.process = None

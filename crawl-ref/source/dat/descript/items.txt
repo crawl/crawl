@@ -77,10 +77,6 @@ banana
 
 A delicious yellow fruit, probably grown and imported by some amoral multinational as the result of a corrupt trade deal.
 %%%%
-banded mail
-
-A suit made of bands of metal.
-%%%%
 bardiche
 
 A long pole with an enormous, cleaving blade on one end.
@@ -373,7 +369,7 @@ crystal ball of energy
 
 A magical device which can be used to restore one's reserves of magical energy, but the use of which carries the risk of draining all of those energies completely. This risk varies inversely with the proportion of their maximum energy which the user possesses; a user near his or her full potential will find this item most beneficial.
 %%%%
-crystal plate mail
+crystal plate
 
 An incredibly heavy but extremely effective suit of crystalline armour.
 %%%%
@@ -726,9 +722,14 @@ piece of ambrosia
 
 A portion of strange substance, produced by ghost moths. Consuming it provides magical energy as well as nutrition, at the cost of losing your mental focus for a short period.
 %%%%
-plate mail
+# Historical note: fully articulated plates came only in the last days of
+# plate armour popularity.  Before then, it had gaps on and under joints,
+# often filled with mail.
+plate armour
 
-A suit of mail and large plates of metal.
+A full suit of solid metal plate: cuirass, pauldrons, vambraces, waist plate and greaves. Chainmail covers gaps, allowing movement.
+
+It provides excellent protection, yet donning it takes forever.
 %%%%
 potion of agility
 
@@ -1186,7 +1187,7 @@ A flail with large spikes on the metal lump.
 %%%%
 splint mail
 
-A suit made of splints of metal.
+A suit made of rectangular plates of metal, connected with rings. Such platemail provides good protection, while nowhere as good as solid metal armour, it allows much greater freedom of movement.
 %%%%
 staff
 

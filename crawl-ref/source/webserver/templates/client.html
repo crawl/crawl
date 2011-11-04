@@ -102,6 +102,41 @@
       <div id="crt" style="display: none;"></div>
     </div>
 
+    <div id="loader">
+      <div id="loader_center">
+        <span id="loader_text">Loading...</span><br>
+        <img style="display:none;" src="/static/title_denzi_dragon.png">
+        <img style="display:none;" src="/static/title_denzi_kitchen_duty.png">
+        <img style="display:none;" src="/static/title_denzi_summoner.png">
+        <img style="display:none;" src="/static/title_denzi_undead_warrior.png">
+        <img style="display:none;" src="/static/title_omndra_zot_demon.png">
+      </div>
+
+      <div id="stale_processes_message" class="floating_dialog"
+           style="display: none;" tabindex="1000">
+        There are some stale <span class="game_name"></span> processes.
+        They'll be stopped in <span class="recover_timeout"></span> seconds.
+        Press a key now if you don't want this to happen!
+      </div>
+
+      <div id="force_terminate" class="floating_dialog"
+           style="display: none;" tabindex="1001">
+        Couldn't stop one of your stale <span class="game_name"></span> processes
+        gracefully. Force its termination? [yn]
+        <br>
+        <input class="button" type="button" name="force_terminate_no"
+               id="force_terminate_no" value="No" style="float: right;"></input>
+        <input class="button" type="button" name="force_terminate_yes"
+               id="force_terminate_yes" value="Yes" style="float: right;"></input>
+      </div>
+    </div>
+
+    <div>
+      <div id="message_box" class="floating_dialog"
+           style="display: none;">
+      </div>
+    </div>
+
     <div id="chat" style="display: none;">
       <a href="javascript:" id="chat_caption">
         <span id="spectator_count">0 spectators</span>

@@ -141,6 +141,7 @@ enum ability_type
     ABIL_CHEIBRIADOS_TIME_STEP = 201,
     ABIL_CHEIBRIADOS_TIME_BEND,
     ABIL_CHEIBRIADOS_SLOUCH,
+    ABIL_CHEIBRIADOS_DISTORTION,
     // Ashenzari
     ABIL_ASHENZARI_SCRYING = 210,
     ABIL_ASHENZARI_TRANSFER_KNOWLEDGE,
@@ -251,6 +252,7 @@ enum attribute_type
     ATTR_SEEN_INVIS_SEED,      // Random seed for invis monster positions.
     ATTR_APPENDAGE,            // eq slot of Beastly Appendage
     ATTR_TITHE_BASE,           // Remainder of untithed gold.
+    ATTR_EVOL_XP,              // XP gained since last evolved mutation
     NUM_ATTRIBUTES
 };
 
@@ -1379,6 +1381,7 @@ enum duration_type
     DUR_PETRIFYING,
     DUR_SHROUD_OF_GOLUBRIA,
     DUR_TORNADO_COOLDOWN,
+    DUR_NAUSEA,
     NUM_DURATIONS
 };
 
@@ -2588,9 +2591,15 @@ enum mutation_type
     MUT_FAST_METABOLISM,
     MUT_FLEXIBLE_WEAK,
     MUT_FRAIL,
+#if TAG_MAJOR_VERSION != 32
+    MUT_FOUL_STENCH,
+#endif
     MUT_GOURMAND,
     MUT_HIGH_MAGIC,
     MUT_ICEMAIL,
+#if TAG_MAJOR_VERSION != 32
+    MUT_IGNITE_BLOOD,
+#endif
     MUT_LOW_MAGIC,
     MUT_MAGIC_RESISTANCE,
     MUT_MUTATION_RESISTANCE,
@@ -2652,7 +2661,10 @@ enum mutation_type
     MUT_TENTACLES,      // Gloves but don't lose a slot yet.
     MUT_TENTACLE_SPIKE, // Octopode only.
     MUT_WILD_MAGIC,
+    MUT_IGNITE_BLOOD,
+    MUT_FOUL_STENCH,
 #endif
+    MUT_EVOLUTION,
     NUM_MUTATIONS,
 
     RANDOM_MUTATION = NUM_MUTATIONS + 1,

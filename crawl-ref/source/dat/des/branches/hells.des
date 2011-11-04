@@ -771,7 +771,7 @@ ENDMAP
 
 
 ##############################################################################
-# Asmodeus
+# Asmodeus (Gehenna) - the original
 ##############################################################################
 
 NAME:   geh_old
@@ -927,6 +927,118 @@ xxxxxxxxxxxxxx'.'''xxxxxxx''.'xx''...'xxxxxxxxxx'''...'xxxxxxxxxxxxxxx
 xxxxxxxxxxxxxx''''xxxxxxxxxxxxxxxx'''xxxxxxxxxxxxxx'''xxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Asmodeus (Gehenna) by evilmike
+##############################################################################
+
+# 70 x 68 - can be rotated
+NAME:    evilmike_geh
+ORIENT:  encompass
+SHUFFLE: ([{<
+NSUBST:  A = 1:+ / *:+cc
+SUBST:   B = ccc+
+SHUFFLE: CI / ''
+SHUFFLE: EF / ""
+SHUFFLE: CI, EF
+SUBST:   CE = +, IF : cc+
+SUBST:   '" = -
+SHUFFLE: O1$ / *3|
+MONS:    patrolling asmodeus, brimstone fiend, brimstone fiend
+MONS:    sun demon, balrug, hellion, fire giant
+KMONS:   8 = sun demon / efreet / w:20 molten gargoyle
+KMONS:   9 = efreet
+NSUBST:  l = 10:R / 25:V / *:l
+KMONS:   R = smoke demon
+KMONS:   V = fire vortex
+: serpent_of_hell_setup(_G)
+SUBST:   4 = 444499566-
+SUBST:   m : mnn
+COLOUR:  c = lightred
+COLOUR:  G = red
+FTILE:   .G{([<78m = FLOOR_PEBBLE_RED
+TILE:    v = DNGN_METAL_WALL_RED
+TILE:    c = DNGN_STONE_WALL_RED
+TILE:    n = DNGN_TRANSPARENT_WALL_RED
+SUBST:   - = .
+KFEAT:   RV = lava
+KFEAT:   L = endless_lava
+KFEAT:   m = iron_grate
+# This is needed to make it so the entire border is lava.
+# There might be a better way of doing this.
+: dgn.seen_replace_feat("rock_wall", "endless_lava")
+: geh_setup(_G)
+MAP
+LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
+LllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllL
+LllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllL
+LlllvvvvvvvvvvcccccccccccccccccnnccllllllllllllllllllllllllllllllllllL
+LlllvvvvvvvvvvcccccccccccccccccnncccllllllllcccnccclllllllcccncccllllL
+Llllvv------vvcccccc-cccccccc------cllRllcccc-----clllllllc--5--cllllL
+Llllvv-$$$$-vvccccc---ccccccc--4---ccllllc--c--4--ccccncccc-%-%-cllllL
+Llllvv-$%%$--v------1------c---vv---cvmmvc--+-----+-------+-%-%-nllllL
+Llllvv-$O%$--+------v------+--vvvv--+....+--c-----+-------+--%--cllllL
+Llllvv-$%%$--v------2------c---vv---cvmmvc--+-----cccc+cccc--%--cllllL
+Llllvv-$$$$-vvccccc---ccccccc--4---ccllllc--c-----c-------c-%-%-nllllL
+Llllvv------vvcccccc-cccccccc------cllRllcccc--4--c---5---c-%-%-cllllL
+Llllvvvvvvvvvvcccccccccccccccccnncccllllllllc-----c---v---c--2--cllllL
+Llllvvvvvvvvvvcccccccccccccccccnncclllllllllcccnccc--vvv--cccncccllllL
+Llllllllllllllllllllllllllllllllllllllllllllllllllc---v---cllllllllllL
+Llllllllllllllllllllllllllllllllllllllllllllllllllc-------cllllllllllL
+Llllllllllllllllllllllllllllllllllllllllllllllllllc-------cllllllllllL
+Llllllllllllllllllllllllllllllllllllllllllllllllllcccc+ccccllllllllllL
+Llllllllllllllllllllllllllllllllllllllllllllllllllllv.7.vllllllllllllL
+Lllllcccnnccclllllllllllllllcccnncccllllllllllllllllv.G.vllllllllllllL
+Lllllc------cllllccncnccllllc------cllllllllllllllllm...mllllllllllllL
+Lllllc------cccccc--4--cccccc------cllllllllllllllllm...mllllllllllllL
+Llllln--vv--C----E-----E----C--vv--nllllllllllllllRlv.G.vlRllllllllllL
+Llllln--vv--I----F-----F----I--vv--nllllllllllllllllv...vllllllllllllL
+Lllllc----5-cccccccc-cccccccc-5----cllllllllcccllccccc+cccccllcccllllL
+Lllllc------c.....GcAcG.....c------cllllllllcccncc----4----ccncccllllL
+LllllcccCIccc...............cccICcccllllllllcc%--c--v---v--c--%ccllllL
+Lllllllc--c...................c--cllllllllllln%5-+--v---v--+-5%nlllllL
+Lllllllc--c.........7.........c--clllllllllllc%--c---------c--%clllllL
+Lllllllc--c....vv.......vv....c--cllllllllRlcccccccccc+ccccccccccllllL
+Lllllllc--c....vv.......vv....c--cllllllllllcccccccccc----------cllllL
+LlllllccEFc......8.....8......cFEccvvmmvmmvvc--------cccccccccc-cllllL
+Llllllc---cG.................Gc---c.........+--v--v---4-------c-cllllL
+Lllllln---cc........{........cc---+..G.G.G.7c--------v--v--v-4+-cllllL
+Llllllc4---A..7....<G(....7..B---4c.....8...+----------------D+-nllllL
+Lllllln---cc........[........cc---+..G.G.G.7c--------v--v--v-4+-cllllL
+Llllllc---cG.................Gc---c.........+--v--v---4-------c-cllllL
+LlllllccEFc......8.....8......cFEccvvmmvmmvvc--------cccccccccc-cllllL
+Lllllllc--c....vv.......vv....c--cllllllllllcccccccccc-------+--cllllL
+Lllllllc--c....vv.......vv....c--cllllllllRlcc-------c--vvv--ccccllllL
+Lllllllc--c.........7.........c--clllllllllllc-4-----+-------c5clllllL
+Lllllllc--c...................c--cllllllllllln--4ccccccccccccc%nlllllL
+LllllcccCIccc...............cccICcccllllllllcc---+--------+--%%ccllllL
+Lllllc------c.....GcAcG.....c------cllllllllcccncc--------cccncccllllL
+Lllllc----5-cccccccc-cccccccc-5----cllllllllcccllccccc+cccccllcccllllL
+Llllln--vv--I----F-----F----I--vv--nllllllllllllllllv...vllllllllllllL
+Llllln--vv--C----E-----E----C--vv--nllllllllllllllRlvG.GvlRllllllllllL
+Lllllc------cccccc--4--cccccc------cllllllllllllllllm...mllllllllllllL
+Lllllc------cllllccncnccllllc------cllllllllllllllllm...mllllllllllllL
+LllllcccnnccclllllllllllllllcccnncccllllllllllllllllvG.GvllllllllllllL
+Llllllllllllllllllllllllllllllllllllllllllllllllllllv.7.vllllllllllllL
+Lllllllllllllllllllllllllllllllllllllllllllllllllllccc+ccclllllllllllL
+Llllllllllllllllllllllllllllllllllllllllllllllllllcc-----ccllllllllllL
+Lllllllllllllllllllllllllllllllllllllllllllllllllcc-------cclllllllllL
+Llllllllllllllllllllllllllllllllllllllllllllllllcc--ccccc--ccllllllllL
+Lllvvvvvvvvvvvcccccccccccccccccnnccllllllllllllcc--ccccccc--cclllllllL
+Lllvvvvvvvvvvvcccccccccccccccccnncccllllllllllcc--ccccccccc--ccllllllL
+Lllvvvv----vvvcccc--2--ccccccc----cccRlllllllcc-4cc%2%-%5%cc4-cclllllL
+Lllvvv-||||-vvcccc-----cccccc--4---cclllllllcc--ccc-%-%-%-ccc--ccllllL
+Lllvv--|%%|--v------v------c--v--v--cvmmvmmvc--cccc%-%-%-%cccc--cllllL
+Lllvv--|*%|--+-----vvv-----+--------+.......+--ccccccc+ccccccc--nllllL
+Lllvv--|%%|--v------v------c--v--v--cvmmvmmvc-------------------nllllL
+Lllvvv-||||-vvcccc-----cccccc--4---cclllllllc---------5---------cllllL
+Lllvvvv----vvvcccc--3--ccccccc----cccRllllllcccc---ccccccc---ccccllllL
+LllvvvvvvvvvvvcccccccccccccccccnnccclllllllllllccncclllllccncclllllllL
+LllvvvvvvvvvvvcccccccccccccccccnnccllllllllllllllllllllllllllllllllllL
+LllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllL
+LllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllL
+LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 ENDMAP
 
 
@@ -1111,66 +1223,76 @@ COLOUR:  # = lightcyan
 NSUBST:  - = 1:= / *:c
 : coc_setup(_G)
 MAP
-######################################################################
-#ccccc............wwwwwwwwwwwwwwwwxxxxxxxxxwwwwwww......3......cccccc#
-#cccc..............wwwwwwwwwwwwwwwwxxxxxxxwwwwwwww.3.3......c...ccccc#
-#ccc...wwwwwwwwww..wwwwwwwwwwwEwwwwwwxxxwwwwwwww....3..D.cccc....'.cc#
-#ccc..wwwwww8www.2.wwwwwwwwwEw.wEwwwwwwwwwwwwww...3..3...cccccc..c..c#
-#ccc..ww|$|www.......wwwwwwww...wwwwwwwwwwwwwwwww......ccccccc...cc.c#
-#ccc..ww$O$....1..............8..Ewwwwwwwwwwwwwwww...ccccc"c"c.cccc.'#
-#ccc..ww|$|www.......wwwwwwww...wwwwwwwwwwwwwwwwww.cccccc....c.cccc.'#
-#ccc..wwwwww8www.2.wwwwwwwwwEw.wEwwwwwwwwwwwwwwwwwccccc...cc...."cc.c#
-#ccc...wwwwwwwwww..wwwwwwwwwwwEwwwwwwwwwwwwwwwwwccccccc...ccccccccc.c#
-#cccc..............wwwwwwwwwwwwwwwwwwwwwwwwwwwwcccccc......cccccc"...#
-#ccccc............wwwwwwwwwwwwwwwwwwwwwwwwwwwwccccc..........ccccc"c.#
-#cccccccccccccccccwwwwwwwwwwwwwwwwwwwwwwwwwwccccc.....333......ccccc.#
-#ccccccccccccccccccwwwwwwwwwwwwwwwwwwwwwwwwcccc........333.......cc..#
-#cccccccccccccccccc;wwwwwwwwwwwwwwwwwwwwwwcccc..................ccc.c#
-#cccccc"c$.....ccc;cccwwwwwwwwwwwwwwwwwwccccc....................cc.c#
-#ccccc$$$$........cccccccwwwwwwwwwwwwwcccccc....cccccc..........ccc..#
-#ccc"$$$$...........ccccccccwwwwwwwcccccccc....cccccccc.......cccc...#
-#cccc$$$$.............ccccccccccccccccccc.....cccccwwwcc....cccccc...#
-#ccccc$$................ccccccccccccccc.....cccccccwwwwwwwcccccccc...#
-#cccccc$...........wwwwwwwccccccccccc......ccccc.cwwcwwwwccccccccc..c#
-#ccccccc.........wwwwwwwwwwww.............cccc333333cccwccccX.-....cc#
-#ccccccccc.....wwwwwwwwwwwwwwww........ccccccc.2....cccc-XXX..cc...cc#
-#ccccccccccccwwwwwwwwwwwwwwwwwwww.......cccccc333333ccccX....ccccX..c#
-#ccccccccccwwwwww..wwwwwwwwwwwwwww........ccccc$$$$$cccX....cccccX...#
-#cccccccccwwwwww..wwwwwwwwwwwwwwwww........cccc|||ccccc|.....ccc.....#
-#ccccccccwwwwww..www...wwwwwwwwwwwwwww......ccccccccccc|......-......#
-#ccccc..cwwww....ww....www..wwwwwwwwwwww.....ccccccccccX.2..Xcc......#
-#ccccc..www..ccccww...www..wwwwwwwwwwwwwwww..cccccccccccXXXXcccc.....#
-#cccc...ww..cc...ww...ww...ww..wwwwwwwwwwwwwwwcccccccccccccccccww...c#
-#cccc..www.cc....www...www.ww.wwwwwwwwwwwwwwwwwwccccccccccccwwwwwwwcc#
-#ccc...ww..c|..3..www..wwwwwwww^^^wwwwwwwwwwwwwwwccccccwwwccwwwwwwccc#
-#ccc...ww..c|233..cwwwwwwwwwwwcc+ccccccccccccwwwwwccccwwwwwwwwwwwwccc#
-#ccc..www..c|.33..c.wwwwwwwwwcc...2.$$$$$|||ccwwwwwwwwwwwwwwwwwwwcccc#
-#ccc..www..cc..3.cc....wwwww.cc..33.$$$$$|||cc..wwwwwwwwwwwwwwwwccccc#
-#ccc..wwww..cc$$cc....wwwwww.cc2333.$$$$$|||cc...wwwwwww^^wwwwwwccccc#
-#ccc..wwww...cccc....wwwwww...ccccccccccccccc.....wwwww^..^wwwwwwcccc#
-#ccc..wwwww........wwwwww......................c.wwwww^.6..^wwwwwcccc#
-#ccc..wwwwwww....wwwwwww......................cccwwwww^....^wwwwwwccc#
-#ccc..wwwwwwwwwwwwwwww........................cccwwwwww^..^wwwwwwwccc#
-#ccc...wwwwwwwwwwwww.........333.3...........ccc.wwwwwww^^wwwwwwwwccc#
-#cccc..wwwwwwwwwwww.............3............ccc.wwwwwwwwwwwwwwwww.cc#
-#cccc...wwwwwwwww.........ccc....333........cccc..wwwwwwwwwwwwwwww.cc#
-#cwccc....wwwww........cccccccc.....3......ccccc..wwwwwwwwwwwwwww..cc#
-#cwwc;ccc...........ccccccccccccc....333..ccccccc..wwww^wwwwwwww..ccc#
-#ccwwwcccccc.....cccccccccccccccccccc...ccccccccc..www^.wwwwww....ccc#
-#ccwwwwwcccccccccccccccccccccccccccccc;ccccccccccc..wwwwwwwww...3cccc#
-#cc.wwwwwcccccccccccccccccccccccccccccc;cccccccccccwwwwwwwwww..3ccccc#
-#c...wwwwwww..ccccccccccccc...........wwXXXXXccccccXwwwwwwwww...3cccc#
-#c....wwwww.....cccccccc...3.....wwwwwwwwwwwwXXccccXwwwwwwwwww....ccc#
-#..{..wwww...333...............wwwwwwwwwwwwwwwwXcccXwwwwwwwwwwww..ccc#
-#......www....333...........wwwwwwwwwwwwwwwwwwwwXccXwwwwwwwwwwwww..cc#
-#.[....wwww.............wwwwwwwwwwwwwwwwwwwwwwwwwXXwwwwwwwwwwwwwww.cc#
-#.......wwwww.......wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.^www.cc#
-#..(....wwwwwwwwwwwwwwwwwwwwwwwwwwwwww....wwwwwwwwwwwwwwwwww^.wwwwccc#
-#c.......wwwwwwwwwwwwwwwwwwwwwwwwww..........wwwwwwwwwwwwwwww^wwwwccc#
-#cc.......wwwwwwwwwwwwwwwwwwwww........333......wwwwwwwwwww^wwwwwwccc#
-#cc.........wwwwwwwwwwwwwwwww.........33.33.......wwwwwww^...wwwwcccc#
-#ccccc.........wwwwwwwwwww............................wwww^^^wwwwcccc#
-######################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+######ccccc............wwwwwwwwwwwwwwwwxxxxxxxxxwwwwwww......3......cccccc######
+######cccc..............wwwwwwwwwwwwwwwwxxxxxxxwwwwwwww.3.3......c...ccccc######
+######ccc...wwwwwwwwww..wwwwwwwwwwwEwwwwwwxxxwwwwwwww....3..D.cccc....'.cc######
+######ccc..wwwwww8www.2.wwwwwwwwwEw.wEwwwwwwwwwwwwww...3..3...cccccc..c..c######
+######ccc..ww|$|www.......wwwwwwww...wwwwwwwwwwwwwwwww......ccccccc...cc.c######
+######ccc..ww$O$....1..............8..Ewwwwwwwwwwwwwwww...ccccc"c"c.cccc.'######
+######ccc..ww|$|www.......wwwwwwww...wwwwwwwwwwwwwwwwww.cccccc....c.cccc.'######
+######ccc..wwwwww8www.2.wwwwwwwwwEw.wEwwwwwwwwwwwwwwwwwccccc...cc...."cc.c######
+######ccc...wwwwwwwwww..wwwwwwwwwwwEwwwwwwwwwwwwwwwwwccccccc...ccccccccc.c######
+######cccc..............wwwwwwwwwwwwwwwwwwwwwwwwwwwwcccccc......cccccc"...######
+######ccccc............wwwwwwwwwwwwwwwwwwwwwwwwwwwwccccc..........ccccc"c.######
+######cccccccccccccccccwwwwwwwwwwwwwwwwwwwwwwwwwwccccc.....333......ccccc.######
+######ccccccccccccccccccwwwwwwwwwwwwwwwwwwwwwwwwcccc........333.......cc..######
+######cccccccccccccccccc;wwwwwwwwwwwwwwwwwwwwwwcccc..................ccc.c######
+######cccccc"c$.....ccc;cccwwwwwwwwwwwwwwwwwwccccc....................cc.c######
+######ccccc$$$$........cccccccwwwwwwwwwwwwwcccccc....cccccc..........ccc..######
+######ccc"$$$$...........ccccccccwwwwwwwcccccccc....cccccccc.......cccc...######
+######cccc$$$$.............ccccccccccccccccccc.....cccccwwwcc....cccccc...######
+######ccccc$$................ccccccccccccccc.....cccccccwwwwwwwcccccccc...######
+######cccccc$...........wwwwwwwccccccccccc......ccccc.cwwcwwwwccccccccc..c######
+######ccccccc.........wwwwwwwwwwww.............cccc333333cccwccccX.-....cc######
+######ccccccccc.....wwwwwwwwwwwwwwww........ccccccc.2....cccc-XXX..cc...cc######
+######ccccccccccccwwwwwwwwwwwwwwwwwwww.......cccccc333333ccccX....ccccX..c######
+######ccccccccccwwwwww..wwwwwwwwwwwwwww........ccccc$$$$$cccX....cccccX...######
+######cccccccccwwwwww..wwwwwwwwwwwwwwwww........cccc|||ccccc|.....ccc.....######
+######ccccccccwwwwww..www...wwwwwwwwwwwwwww......ccccccccccc|......-......######
+######ccccc..cwwww....ww....www..wwwwwwwwwwww.....ccccccccccX.2..Xcc......######
+######ccccc..www..ccccww...www..wwwwwwwwwwwwwwww..cccccccccccXXXXcccc.....######
+######cccc...ww..cc...ww...ww...ww..wwwwwwwwwwwwwwwcccccccccccccccccww...c######
+######cccc..www.cc....www...www.ww.wwwwwwwwwwwwwwwwwwccccccccccccwwwwwwwcc######
+######ccc...ww..c|..3..www..wwwwwwww^^^wwwwwwwwwwwwwwwccccccwwwccwwwwwwccc######
+######ccc...ww..c|233..cwwwwwwwwwwwcc+ccccccccccccwwwwwccccwwwwwwwwwwwwccc######
+######ccc..www..c|.33..c.wwwwwwwwwcc...2.$$$$$|||ccwwwwwwwwwwwwwwwwwwwcccc######
+######ccc..www..cc..3.cc....wwwww.cc..33.$$$$$|||cc..wwwwwwwwwwwwwwwwccccc######
+######ccc..wwww..cc$$cc....wwwwww.cc2333.$$$$$|||cc...wwwwwww^^wwwwwwccccc######
+######ccc..wwww...cccc....wwwwww...ccccccccccccccc.....wwwww^..^wwwwwwcccc######
+######ccc..wwwww........wwwwww......................c.wwwww^.6..^wwwwwcccc######
+######ccc..wwwwwww....wwwwwww......................cccwwwww^....^wwwwwwccc######
+######ccc..wwwwwwwwwwwwwwww........................cccwwwwww^..^wwwwwwwccc######
+######ccc...wwwwwwwwwwwww.........333.3...........ccc.wwwwwww^^wwwwwwwwccc######
+######cccc..wwwwwwwwwwww.............3............ccc.wwwwwwwwwwwwwwwww.cc######
+######cccc...wwwwwwwww.........ccc....333........cccc..wwwwwwwwwwwwwwww.cc######
+######cwccc....wwwww........cccccccc.....3......ccccc..wwwwwwwwwwwwwww..cc######
+######cwwc;ccc...........ccccccccccccc....333..ccccccc..wwww^wwwwwwww..ccc######
+######ccwwwcccccc.....cccccccccccccccccccc...ccccccccc..www^.wwwwww....ccc######
+######ccwwwwwcccccccccccccccccccccccccccccc;ccccccccccc..wwwwwwwww...3cccc######
+######cc.wwwwwcccccccccccccccccccccccccccccc;cccccccccccwwwwwwwwww..3ccccc######
+######c...wwwwwww..ccccccccccccc...........wwXXXXXccccccXwwwwwwwww...3cccc######
+######c....wwwww.....cccccccc...3.....wwwwwwwwwwwwXXccccXwwwwwwwwww....ccc######
+######..{..wwww...333...............wwwwwwwwwwwwwwwwXcccXwwwwwwwwwwww..ccc######
+######......www....333...........wwwwwwwwwwwwwwwwwwwwXccXwwwwwwwwwwwww..cc######
+######.[....wwww.............wwwwwwwwwwwwwwwwwwwwwwwwwXXwwwwwwwwwwwwwww.cc######
+######.......wwwww.......wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww.^www.cc######
+######..(....wwwwwwwwwwwwwwwwwwwwwwwwwwwwww....wwwwwwwwwwwwwwwwww^.wwwwccc######
+######c.......wwwwwwwwwwwwwwwwwwwwwwwwww..........wwwwwwwwwwwwwwww^wwwwccc######
+######cc.......wwwwwwwwwwwwwwwwwwwww........333......wwwwwwwwwww^wwwwwwccc######
+######cc.........wwwwwwwwwwwwwwwww.........33.33.......wwwwwww^...wwwwcccc######
+######ccccc.........wwwwwwwwwww............................wwww^^^wwwwcccc######
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
 ENDMAP
 
 
@@ -1338,5 +1460,86 @@ xxxx..........................x....x...xxxBBBBxBBBBx...4..4.....$$$$xx
 xxxx.................................{xxxxBBBBxBBBBx.2..4..4...$$$$$xx
 xxxx................................[xxxxxBBBBxBBBBx..........$$$$$$xx
 xxxx...............................(xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+##############################################################################
+# Ereshkigal (Tartarus) by minmay
+##############################################################################
+
+NAME:   tar_minmay_river
+ORIENT: encompass
+MONS:   patrolling Ereshkigal, reaper, shadow demon, shadow fiend, soul eater
+SUBST:  " = .:298 *:1 5:1
+: serpent_of_hell_setup(_G)
+: tar_setup(_G)
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccx
+xc$$$$$cccc........cccc$$$$$c|||||O||||||c$$$$$cccc........cccc$$$$$cx
+xc$$$ccc....cccccc....ccc$$$c|cccccccccc|c$$$ccc....cccccc....ccc$$$cx
+xc$$cc...cccc....cccc...cc$$c+c........c+c$$cc...cccc....cccc...cc$$cx
+xc$cc..ccc....cc....ccc..cc+cc....14....cc+cc..ccc....cc....ccc..cc$cx
+xc$c..cc...cccccccc...cc...2c............c2...cc...cccccccc...cc..c$cx
+xc+c.cc..ccc......ccc..cc..cc............cc..cc..ccc......ccc..cc.c+cx
+xc2..c..cc...cccc...cc..c..c..............c..c..cc...cccc...cc..c..2cx
+xcc.cc.cc..ccc..ccc..cc.cc.c..............c.cc.cc..ccc..ccc..cc.cc.ccx
+xcc.c..c..cc......cc..c..c.c....cc++cc....c.c..c..cc......cc..c..c.ccx
+xc..c.cc.cc..cccc..cc.cc.c.c...cc....cc...c.c.cc.cc..cccc..cc.cc.c..cx
+xc.cc.c..c..cc..cc..c..c.c.cc..c......c..cc.c.c..c..cc..cc..c..c.cc.cx
+xc.c..c.cc.cc....cc.cc.c....c.cc...D..cc.c....c.cc.cc....cc.cc.c..c.cx
+xc.c.cc.c..c..cc.+2..c.c....c.c........c.c....c.c..2+.cc..c..c.cc.c.cx
+xc.c.cc.c..c..cc.ccc.c.c....c.c........c.c....c.c.ccc.cc..c..c.cc.c.cx
+xc.c..c.cc.cc......c.c.c....c3c........c3c....c.c.c......cc.cc.c..c.cx
+xc.cc.c..c..cc+c...c...c2cc.ccccc++++ccccc.cc2c...c...c+cc..c..c.cc.cx
+xc..c.cc.cc..c2c...ccc.c+c...cc........cc...c+c.ccc...c2c..cc.cc.c..cx
+xcc.c..c..cc...cccc33c...c...c..........c...c...c33cccc...cc..c..c.ccx
+xcc.cc.cc..ccc....c33cccccc..c..c....c..c..cccccc33c....ccc..cc.cc.ccx
+xcc..c..cc...cccc.ccc|||c2c.....c....c.....c2c|||ccc.cccc...cc..c..ccx
+xccc.cc..ccc........c||cc.cc...cc....cc...cc.cc||c........ccc..cc.cccx
+xc2c..cc...cccccccc.c|cc...cc2cccc33cccc2cc...cc|c.cccccccc...cc..c2cx
+xc.cc..ccc.......2+.ccc.....cccc2cccc2cccc.....ccc.+2.......ccc..cc.cx
+xc..cc...cccc....cccc............................cccc....cccc...cc..cx
+x..............WWWWWWWWWWWWWWWWWWWWWWW...............................x
+x..WWWWWWWWWWWWWWwwwwwwwwwwwwwwWwwwwwWWWWWWWW........................x
+xWWWWwwwwwwwwwwwWwwwwwwwwwwwwwWwwwwwwwwwwwwWWWWWWWWWW................x
+xwwwwWwwwwwwwwwwWwwwwwwwwwwwwwWwwwwwwwwwwwwWwwwwwwwwWWWWWWWWWWWWW....x
+xwwwwWwwwwwwwwwwwWwwwwwwwwwwwwWwwwwwwwwwwwWwwwwwwwwwwwWwwwwwwwwwWWWWWx
+xwwwwWwwwwwwwwwwwWwwwwwwwwwwwwWwwwwwwwwwwwWwwwwwwwwwwWwwwwwwwwwwWwwwwx
+xwwwwwWwwwwwwwwwwWwwwwwwwwwwwWwwwwwwwwwwwWwwwwwwwwwwwWwwwwwwwwwwWwwwwx
+xwwwwwWwwwwwwwWWWWWWWWWWWWWWWWWWWwwwwwwwwWwwwwwwwwwwwWwwwwwwwwwwWwwwwx
+xwwwWWWWWWWWWWWcc""""""""""cccccWWWWWWwwwWwwwwwwwwwwWwwwwwwwwwwwWwwwwx
+xWWWW""""""""ccc"""ccccccc""c""c"""""WWWWWWWWwwwwwwwWwwwwwwwwwwWwwwwwx
+x"""""""c""""""c""""c5"c""""c""c""""""""""""WWWWWWWWWWWwwwwwwwwWwwwwwx
+xc"""cccc""c""""""""c""c""""c"""""c"""cccc"""""""""c""WWWWWWWWWWWWWwwx
+xc""""c""""c""c"""ccc"""""""cc""""c""""""cccccc""""cccc"""""""""""WWWx
+xc""ccc""""c""c"""""c""""c""c"""c"c"""c"5c""""""""""""c""""c"""c"""""x
+xc""""c""""c""c"""""""cccc""c5""c"c"""cccc"""""c""""c"c""""c"""c"c""cx
+xcc""""""ccccccccc""""c""c""cccccccc"""c"c"""c"c""ccccc""""c""cccccccx
+xc""""""""c"""c"5cc""""""c""c""""""""""c"""""c"c"""c5""""""cccc5""c"cx
+x""""c""""c""""""c"""""""c"""""""c"""""""""cccccc""c""""c"""""c"""""cx
+x""ccc""""c""""""c""cccccc"""""""c""""""c"""""c""""ccccccc"""cc"""""cx
+x""""c""""""""cccc"""""c"""""""ccc""""""c""""cc""""c"5c"""""""cccc""cx
+x""""ccccc"""""""c"""""c"""""""""c""""""c"""""c""c""""c"""""""""c"""cx
+x"""""5c""""c""""c""""cc"""""c""5c"""cc"ccccc""""c""""c""c""""""c""""x
+x""ccccc""""c""""""""""c"""cccccccc"""c"""c""""""c""ccc""ccc""""c""""x
+x""""""c""""c""""""""""c"""""c""""""""c""5ccccc""c""""c""c"""""""""""x
+xc""""""""""c"c"""""""""""cccc""""""""ccccc""""""c"""""""c""c"""cccc"x
+xc"""""""""ccccccccccc"""""""c""""""""""""c""""""c"""""ccccccc""c5"""x
+xcccc""""ccc"""5c""""""""""""c""""""""""""c"""ccccc"""cc""""""""cc"""x
+xc5""""""""c""""c""""""""c"""""""""ccc""""c"""c""5cc"""""cc"""""c""ccx
+xc""""""""""""""cccc"""""c"""""ccccc""""""""""c"""c"""""""cccc""""""cx
+xccc"""""""""cccc""""""c"c""""""c""cccccc"""""c"""ccc"""ccc"""""""""cx
+x"""""""c""""c"c"""""""cccc"""""c""c5""""""cccc"ccc"""""""c""""c""cccx
+x""""""cc""""c"c""""""""""c""""""""c""""""""""c"""""""""""c""cccc"""cx
+x"""""""c""""c""""""""c""5cccc""""ccc""""""""cc"""""""c"cccccc"c""""cx
+x"""""cccc"""c"""""""cccccc"""""""""c"""""""""""""ccccc"c"""5c"c"""""x
+xc"""""""cc"""""c""""""c""c"""""c"""c""""""c""""""""""ccc""""c"""""c"x
+xc"c"""""c""""""c""""""c""""""ccc""""""""""c""""""""""""c""ccc""c""c"x
+xcccccc""c""""""cccc"""c""""""""ccccccc"""ccc"""""""""""c"""""""cccccx
+xc...c"""""""cccc""""""c""cc""""c...c"""""""c""""""c""""c""""""cc...cx
+xc.{..""""""""c"""""c""""""cc"""c.(.."""c""5cccc"""c"c""""""c"""..[.cx
+xc...c""""""""c"""""c""""""c"""cc...c"""ccccc""""""c"c""""""c"""c...cx
+xcccccccc"""""""""ccccccc"""""""ccccc"""""""""""""ccccc""""ccccccccccx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP

@@ -1,11 +1,14 @@
 define(["exports", "jquery", "key_conversion", "chat", "comm",
-        "contrib/jquery.cookie", "contrib/jquery.tablesorter"],
+        "contrib/jquery.cookie", "contrib/jquery.tablesorter",
+        "contrib/jquery.waitforimages"],
 function (exports, $, key_conversion, chat, comm) {
 
     // Need to keep this global for backwards compatibility :(
     window.current_layer = "crt";
 
-    exports.log_messages = true;
+    window.debug_mode = false;
+
+    exports.log_messages = false;
     exports.log_message_size = false;
 
     var delay_timeout = undefined;
@@ -18,10 +21,31 @@ function (exports, $, key_conversion, chat, comm) {
 
     var send_message = comm.send_message;
 
-    function log(text)
+    window.log = function (text)
     {
         if (window.console && window.console.log)
             window.console.log(text);
+    }
+
+    function handle_message(msg)
+    {
+        if (typeof msg === "string")
+        {
+            if (msg.match(/^{/))
+            {
+                // JSON message
+                comm.handle_message(msg);
+            }
+            else
+            {
+                // Javascript code
+                eval(msg);
+            }
+        }
+        else
+        {
+            comm.handle_message(msg);
+        }
     }
 
     function handle_message_backlog()
@@ -29,23 +53,23 @@ function (exports, $, key_conversion, chat, comm) {
         while (message_queue.length
                && (message_inhibit == 0))
         {
-            msg = message_queue.shift();
-            try
+            var msg = message_queue.shift();
+            if (window.debug_mode)
             {
-                if (msg.match(/^{/))
-                {
-                    // JSON message
-                    comm.handle_message(msg);
-                }
-                else
-                {
-                    // Javascript code
-                    eval(msg);
-                }
+                handle_message(msg);
             }
-            catch (err)
+            else
             {
-                console.error("Error in message: " + msg + " - " + err);
+                try
+                {
+                    handle_message(msg);
+                }
+                catch (err)
+                {
+                    console.error("Error in message: " + msg);
+                    console.error(err.message);
+                    console.error(err.stack);
+                }
             }
         }
     }
@@ -61,6 +85,9 @@ function (exports, $, key_conversion, chat, comm) {
         handle_message_backlog();
     }
 
+    exports.inhibit_messages = inhibit_messages;
+    exports.uninhibit_messages = uninhibit_messages;
+
     function delay(ms)
     {
         clearTimeout(delay_timeout);
@@ -74,22 +101,30 @@ function (exports, $, key_conversion, chat, comm) {
         uninhibit_messages();
     }
 
-    var layers = ["crt", "normal", "lobby"]
+    exports.delay = delay;
+
+    var layers = ["crt", "normal", "lobby", "loader"]
 
     function set_layer(layer)
     {
         if (showing_close_message) return;
 
-        $.each(layers, function (i, l)
-               {
-                   if (l == layer)
-                       $("#" + l).show();
-                   else
-                       $("#" + l).hide();
-               });
+        $.each(layers, function (i, l) {
+            if (l == layer)
+                $("#" + l).show();
+            else
+                $("#" + l).hide();
+        });
         current_layer = layer;
 
         lobby(layer == "lobby");
+    }
+
+    function do_layout()
+    {
+        $("#loader").height($(window).height());
+        if (window.do_layout)
+            window.do_layout();
     }
 
     function handle_keypress(e)
@@ -104,9 +139,12 @@ function (exports, $, key_conversion, chat, comm) {
             return;
         }
 
-        if (e.which == 0) return;
-        if (e.which == 8) return; // Backspace gets a keypress in FF, but not Chrome
-        // so we handle it in keydown
+        if ((e.which == 0) ||
+            (e.which == 8) || /* Backspace gets a keypress in FF, but not Chrome
+                                 so we handle it in keydown */
+            (e.which == 9))   /* Tab gives a keypress in Opera even when it is
+                                 suppressed in keydown */
+            return;
 
         e.preventDefault();
 
@@ -150,8 +188,7 @@ function (exports, $, key_conversion, chat, comm) {
             if (e.which == 27)
             {
                 e.preventDefault();
-                $("#register").hide();
-                $("#rc_edit").hide();
+                $(".floating_dialog").hide();
             }
             return;
         }
@@ -301,7 +338,10 @@ function (exports, $, key_conversion, chat, comm) {
 
     function show_dialog(id)
     {
-        $(id).fadeIn(100);
+        $(".floating_dialog").hide();
+        $(id).fadeIn(100, function () {
+            $(id).focus();
+        });
         var w = $(id).width();
         var ww = $(window).width();
         $(id).offset({ left: ww / 2 - w / 2, top: 50 });
@@ -402,6 +442,16 @@ function (exports, $, key_conversion, chat, comm) {
         });
     }
 
+    function show_loading_screen()
+    {
+        var imgs = $("#loader img");
+        imgs.hide();
+        var count = imgs.length;
+        var rand_index = Math.floor(Math.random() * count);
+        $(imgs[rand_index]).show();
+        set_layer("loader");
+    }
+
     var lobby_update_timeout = undefined;
     var lobby_update_rate = 30000;
 
@@ -445,16 +495,71 @@ function (exports, $, key_conversion, chat, comm) {
         var old_list = $("#player_list");
         var l = old_list.clone();
         l.find("tbody").html(data.content);
-        l.tablesorter({
-            sortList: old_list[0].config.sortList,
-            headers: {
-                3: {
-                    sorter: "timespan"
+        if (data.content.trim() != "")
+        {
+            var sortlist;
+            if (old_list[0].config)
+                sortlist = old_list[0].config.sortList;
+            else
+                sortlist = [[0, 0]];
+            l.tablesorter({
+                sortList: sortlist,
+                headers: {
+                    3: {
+                        sorter: "timespan"
+                    }
                 }
-            }
-        });
+            });
+        }
         old_list.replaceWith(l);
     }
+
+
+    function force_terminate_no()
+    {
+        send_message("force_terminate", { answer: false });
+        $("#force_terminate").hide().blur();
+    }
+    function force_terminate_yes()
+    {
+        send_message("force_terminate", { answer: true });
+        $("#force_terminate").hide().blur();
+    }
+    function stale_processes_keydown(ev)
+    {
+        ev.preventDefault();
+        send_message("stop_stale_process_purge");
+        $("#stale_processes_message").hide().blur();
+    }
+    function force_terminate_keydown(ev)
+    {
+        ev.preventDefault();
+        if (ev.which == "y".charCodeAt(0))
+            force_terminate_yes();
+        else
+            force_terminate_no();
+    }
+    function handle_stale_processes(data)
+    {
+        $(".game_name").html(data.game);
+        $(".recover_timeout").html("" + data.timeout);
+        show_dialog("#stale_processes_message");
+    }
+    function handle_stale_process_fail(data)
+    {
+        $("#message_box").html(data.content);
+        show_dialog("#message_box");
+    }
+    function handle_force_terminate(data)
+    {
+        show_dialog("#force_terminate");
+    }
+
+    comm.register_handlers({
+        "stale_processes": handle_stale_processes,
+        "stale_process_fail": handle_stale_process_fail,
+        "force_terminate?": handle_force_terminate
+    });
 
     var watching = false;
     function watching_started()
@@ -515,9 +620,26 @@ function (exports, $, key_conversion, chat, comm) {
     function receive_game_client(data)
     {
         inhibit_messages();
+        show_loading_screen();
         $("#game").html(data.content);
-        $(document).ready(uninhibit_messages);
+        $(document).ready(function () {
+            $("#game").waitForImages(uninhibit_messages);
+        });
     }
+
+    function do_set_layer(data)
+    {
+        set_layer(data.layer);
+    }
+
+    function handle_multi_message(data)
+    {
+        var msg;
+        while (msg = data.msgs.pop())
+            message_queue.unshift(msg);
+    }
+
+
 
     // Global functions for backwards compatibility (HACK)
     window.log = log;
@@ -525,6 +647,8 @@ function (exports, $, key_conversion, chat, comm) {
     window.assert = function () {};
 
     comm.register_handlers({
+        "multi": handle_multi_message,
+
         "set_game_links": set_game_links,
         "html": set_html,
         "lobby": lobby_data,
@@ -547,6 +671,8 @@ function (exports, $, key_conversion, chat, comm) {
         "rcfile_contents": rcfile_contents,
 
         "game_client": receive_game_client,
+
+        "layer": do_set_layer,
     });
 
     $(document).ready(function () {
@@ -577,6 +703,13 @@ function (exports, $, key_conversion, chat, comm) {
         $("#rc_edit_form").bind("submit", send_rc);
 
         $("#lobby_update_link").bind("click", lobby_update);
+
+        $("#force_terminate_no").click(force_terminate_no);
+        $("#force_terminate_yes").click(force_terminate_yes);
+        $("#stale_processes_message").keydown(stale_processes_keydown);
+        $("#force_terminate").keydown(force_terminate_keydown);
+
+        do_layout();
 
         if ("MozWebSocket" in window)
         {
@@ -651,11 +784,6 @@ function (exports, $, key_conversion, chat, comm) {
                     return s.substring(0, s.length - 1);
                 },
                 type: 'numeric'
-            });
-
-
-            $("#player_list").tablesorter({
-                sortList: [[0, 0]]
             });
         }
         else

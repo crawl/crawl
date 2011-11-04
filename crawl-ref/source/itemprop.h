@@ -37,6 +37,7 @@ void set_equip_race(item_def &item, iflags_t flags);
 void set_equip_desc(item_def &item, iflags_t flags);
 iflags_t get_equip_race(const item_def &item);
 iflags_t get_equip_desc(const item_def &item);
+iflags_t get_species_race(species_type sp);
 
 // helmet functions:
 void  set_helmet_desc(item_def &item, short flags);
@@ -51,7 +52,7 @@ void  set_gloves_random_desc(item_def &item);
 
 // ego items:
 bool set_item_ego_type(item_def &item, int item_type, int ego_type);
-int  get_weapon_brand(const item_def &item);
+brand_type get_weapon_brand(const item_def &item);
 special_armour_type get_armour_ego_type(const item_def &item);
 bool missile_brand_obvious(special_missile_type brand);
 special_missile_type get_ammo_brand(const item_def &item);

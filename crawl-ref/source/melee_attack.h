@@ -5,6 +5,7 @@
 #include "attack.h"
 #include "fight.h"
 #include "mon-enum.h"
+#include "itemprop-enum.h"
 #include "random-var.h"
 #include "random.h"
 
@@ -103,8 +104,8 @@ private:
     void splash_defender_with_acid(int strength);
     bool decapitate_hydra(int damage_done, int damage_type = -1);
     bool chop_hydra_head(int damage_done,
-                          int dam_type,
-                          int wpn_brand);
+                         int dam_type,
+                         brand_type wpn_brand);
 
     /* Mutation Effects */
     void do_spines();
@@ -119,7 +120,7 @@ private:
     void pain_affects_defender();
     void chaos_affects_defender();
     void chaos_affects_attacker();
-    int  random_chaos_brand();
+    brand_type random_chaos_brand();
     void do_miscast();
     bool do_knockback(bool trample = true);
     bool attack_warded_off();
@@ -143,6 +144,7 @@ private:
     void mons_do_poison();
     void mons_do_napalm();
     void mons_do_eyeball_confusion();
+    void mons_emit_foul_stench();
 
     attack_flavour random_chaos_attack_flavour();
     bool _make_zombie(monster* mon, int corpse_class, int corpse_index,
@@ -186,7 +188,7 @@ private:
 
     // Added in, were previously static methods of fight.cc
     bool _tran_forbid_aux_attack(unarmed_attack_type atk);
-    bool _extra_aux_attack(unarmed_attack_type atk);
+    bool _extra_aux_attack(unarmed_attack_type atk, bool is_base);
     int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
                                  bool vampiric = false);
     bool _player_vampire_draws_blood(const monster* mon, const int damage,

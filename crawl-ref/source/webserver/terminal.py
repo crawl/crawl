@@ -43,8 +43,7 @@ class TerminalRecorder(object):
         if self.pid == 0:
             # We're the child
             # Set window size
-            cols = 80
-            lines = 24
+            cols, lines = self.get_terminal_size()
             s = struct.pack("HHHH", lines, cols, 0, 0)
             fcntl.ioctl(sys.stdout.fileno(), termios.TIOCSWINSZ, s)
 
@@ -169,6 +168,9 @@ class TerminalRecorder(object):
                     self.end_callback()
 
         return self.returncode
+
+    def get_terminal_size(self):
+        return (80, 24)
 
     def write_input(self, data):
         if self.poll() is not None: return

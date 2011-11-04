@@ -981,17 +981,14 @@ int cast_semi_controlled_blink(int pow)
     return (result);
 }
 
-bool can_cast_golubrias_passage()
-{
-    return find_golubria_on_level().size() < 2;
-}
-
 spret_type cast_golubrias_passage(const coord_def& where, bool fail)
 {
     // randomize position a bit to make it not as useful to use on monsters
     // chasing you, as well as to not give away hidden trap positions
     int tries = 0;
+    int tries2 = 0;
     coord_def randomized_where = where;
+    coord_def randomized_here = you.pos();
     do
     {
         tries++;
@@ -1006,38 +1003,54 @@ spret_type cast_golubrias_passage(const coord_def& where, bool fail)
              randomized_where == you.pos()) &&
             tries < 100);
 
-    if (tries >= 100)
+    do
+    {
+        tries2++;
+        randomized_here = you.pos();
+        randomized_here.x += random_range(-2, 2);
+        randomized_here.y += random_range(-2, 2);
+    } while((!in_bounds(randomized_here) ||
+             grd(randomized_here) != DNGN_FLOOR ||
+             monster_at(randomized_here) ||
+             !you.see_cell(randomized_here) ||
+             you.trans_wall_blocking(randomized_here) ||
+             randomized_here == you.pos() ||
+             randomized_here == randomized_where) &&
+            tries2 < 100);
+
+    if (tries >= 100 || tries2 >= 100)
     {
         if (you.trans_wall_blocking(randomized_where))
             mpr("You cannot create a passage on the other side of the transparent wall.");
         else
             // XXX: bleh, dumb message
-            mpr("Creating a passage of Golubria requires sufficient empty space.");
+            mpr("Creating passages of Golubria requires sufficient empty space.");
         return SPRET_ABORT;
     }
 
     if (!allow_control_teleport(true) ||
-        testbits(env.pgrid(randomized_where), FPROP_NO_CTELE_INTO))
+        testbits(env.pgrid(randomized_where), FPROP_NO_CTELE_INTO) ||
+        testbits(env.pgrid(randomized_here), FPROP_NO_CTELE_INTO))
     {
-        fail_check();
-        // lose a turn
         mpr("A powerful magic interferes with the creation of the passage.");
-        place_cloud(CLOUD_TLOC_ENERGY, randomized_where, 3 + random2(3), &you);
-        return SPRET_SUCCESS;
+        return SPRET_ABORT;
     }
 
     fail_check();
     place_specific_trap(randomized_where, TRAP_GOLUBRIA);
+    place_specific_trap(randomized_here, TRAP_GOLUBRIA);
     env.level_state |= LSTATE_GOLUBRIA;
 
     trap_def *trap = find_trap(randomized_where);
-    if (!trap)
+    trap_def *trap2 = find_trap(randomized_here);
+    if (!trap || !trap2)
     {
         mpr("Something buggy happened.");
         return SPRET_ABORT;
     }
 
     trap->reveal();
+    trap2->reveal();
 
     return SPRET_SUCCESS;
 }
