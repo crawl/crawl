@@ -170,7 +170,6 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         self._process_hup_timeout = None
 
     def start(self):
-        print "starting"
         self._purge_locks_and_start(True)
 
     def _purge_locks_and_start(self, firsttime=False):
