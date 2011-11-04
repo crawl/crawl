@@ -1471,7 +1471,8 @@ static bool _check_ability_possible(const ability_def& abil,
             && you.strength() == you.max_strength()
             && you.intel() == you.max_intel()
             && you.dex() == you.max_dex()
-            && !player_rotted())
+            && !player_rotted()
+            && !you.duration[DUR_NAUSEA])
         {
             mpr("Nothing ails you!");
             return (false);
