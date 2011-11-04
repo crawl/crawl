@@ -116,7 +116,7 @@ end
 dgn.set_lt_callback("volcano", "volcano_feat_descs")
 
 -- Destinations:
-function volcano_setup (e, metal, subvault)
+function volcano_setup (e, subvault)
     setup_loot(e)
     e.kfeat("< = exit_portal_vault")
     e.kfeat("I = exit_portal_vault")
@@ -128,15 +128,9 @@ function volcano_setup (e, metal, subvault)
     e.subst("y : yyy.x")
     e.subst("y = xxx.")
     e.colour("< = red")
-    e.lrockcol("red")
-    e.lrocktile("wall_pebble_red")
-    if metal == nil or metal == false then
-        e.colour("c = lightred")
-        e.colour("G = lightred")
-        e.colour("= = lightred")
-        e.lfloorcol("red")
-        e.lfloortile("floor_rough_red")
-    end
+    e.colour("c = lightred")
+    e.colour("G = lightred")
+    e.colour("= = lightred")
     if subvault == nil then
         e.set_random_mon_list([[hog / fire elemental / fire vortex /
                                 worker ant / bumblebee / fire drake / lindwurm /
@@ -655,7 +649,7 @@ KFEAT: _ = altar_makhleb / altar_trog / altar_vehumet
 :      fiery_guardians(_G)
 MONS:  clay golem w:50 / molten gargoyle w:2
 #      Loot: 9 items, 8 gold.
-:      volcano_setup(_G, false, true)
+:      volcano_setup(_G, true)
 MAP
 xxxxxxxxx+xxxxxxxxx
 xxxxxxxx...xxxxxxxx
@@ -679,7 +673,7 @@ NSUBST: X = 1:= / *:x
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
 #       Loot: 8 items.
-:       volcano_setup(_G, false, true)
+:       volcano_setup(_G, true)
 COLOUR: = = red
 MAP
 xxxxxxxxx+xxxxxxxxx
@@ -706,7 +700,7 @@ NSUBST: Y = 1:= / *:x
 KMONS:  l = lava snake / lava fish w:20 / lava worm w:20 / nothing w:70
 KFEAT:  l = l
 #       Loot: 8 items.
-:       volcano_setup(_G, false, true)
+:       volcano_setup(_G, true)
 COLOUR: = = red
 MAP
 xxxxxxxxx.xxxxxxxxx
@@ -732,7 +726,7 @@ NSUBST: Y = 1:= / *:x
 :       fiery_guardians(_G)
 MONS:   clay golem w:50 / molten gargoyle w:2
 #       Loot: 8 items, 10 gold.
-:       volcano_setup(_G, false, true)
+:       volcano_setup(_G, true)
 COLOUR: = = red
 MAP
 xxxxxxxxx+xxxxxxxxx
@@ -760,7 +754,7 @@ KMONS:  G = statue name:firespitter name_adjective \
         spells:throw_flame;sticky_flame_range;.;bolt_of_magma;fireball;.
 MARKER: G = lua:MonPropsMarker:new { description = "Statue of a large head of a humanoid. Its mouth is blackened with scorch-marks. There is a faint ember glow in its empty eyes." }
 #       Loot: 12 items, 6 gold.
-:       volcano_setup(_G, false, true)
+:       volcano_setup(_G, true)
 MAP
 xxxxxxxxc+cxxxxxxxx
 xcccccccc.ccccccccx
@@ -785,7 +779,7 @@ KMONS:  F = statue name:firespitter name_adjective \
         spells:throw_flame;sticky_flame_range;.;bolt_of_magma;fireball;.
 MARKER: F = lua:MonPropsMarker:new { description = "Statue of a large head of a humanoid. Its mouth is blackened with scorch-marks. There is a faint ember glow in its empty eyes." }
 #       Loot: 10 items.
-:       volcano_setup(_G, false, true)
+:       volcano_setup(_G, true)
 MAP
 xxxxxxxxx+xxxxxxxxx
 xcccccccc.........x
@@ -810,7 +804,7 @@ KMONS:  G = statue name:lasher name_adjective \
 KMONS:  l = lava fish / lava worm / nothing
 KFEAT:  l = l
 #       Loot: 10 items.
-:       volcano_setup(_G, false, true)
+:       volcano_setup(_G, true)
 MAP
 xcccccccx+xxxxxxxxx
 xc.....cc.cxxxxxxxx
@@ -1013,7 +1007,7 @@ MONS:    menkaure / guardian mummy
 MONS:    fire drake skeleton w:5 / lindwurm skeleton w:1 / hog skeleton / hound skeleton
 MONS:    mummy
 #        Loot: 4 gold, 8 items.
-:        volcano_setup(_G, false, true)
+:        volcano_setup(_G, true)
 SHUFFLE: 12K
 KFEAT:   JK = l
 MARKER:  J = lua:fog_machine { size = 3, pow_min = 7, pow_max = 7, delay = 80, \
@@ -1063,7 +1057,7 @@ MONS:    ogre skeleton / troll skeleton / draconian skeleton / naga skeleton / \
          minotaur skeleton
 MONS:    patrolling menkaure / patrolling guardian mummy
 #        Loot: 21 gold, 10 items.
-:        volcano_setup(_G, false, true)
+:        volcano_setup(_G, true)
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxcccccxxxxxxxxxxxxxxxxx
@@ -1166,7 +1160,7 @@ WEIGHT:     30
 ORIENT:     encompass
 TAGS:       no_item_gen no_monster_gen no_rotate
 #           Loot: 11 items, 8 gold.
-:           volcano_setup(_G, true)
+:           volcano_setup(_G)
 ITEM:       apple / choko
 COLOUR:     m = blue
 COLOUR:     = = cyan
@@ -1217,7 +1211,6 @@ WEIGHT:     30
 ORIENT:     encompass
 TAGS:       no_item_gen no_monster_gen no_rotate
 LFLAGS:     no_tele_control
-:           volcano_setup(_G, true)
 {{
 local collapse_marker = TriggerableFunction:new (
   {

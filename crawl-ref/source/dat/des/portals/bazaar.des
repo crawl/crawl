@@ -73,13 +73,7 @@ end
 function fixup_bazaar()
   dgn.fixup_stairs("stone_arch", "exit_portal_vault")
 
-  if (dgn.get_floor_colour() == "black") then
-    dgn.change_floor_colour(random_bazaar_colour())
-  end
-
-  if (dgn.get_rock_colour() == "black") then
-    dgn.change_rock_colour("yellow")
-  end
+  dgn.change_floor_colour(random_bazaar_colour())
 
   local default = {rock="wall_vault", floor="floor_vault", halo="halo_vault"}
   local tileset = {
