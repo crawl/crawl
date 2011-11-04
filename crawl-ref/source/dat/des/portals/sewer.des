@@ -495,7 +495,7 @@ ENDMAP
 # Threat is mostly a single larger creature, often Purgy. Combined weight 30.
 
 NAME:     sewer_big_baddie
-TAGS:     no_item_gen no_monster_gen
+TAGS:     no_item_gen no_monster_gen no_pool_fixup
 ORIENT:   encompass
 WEIGHT:   10
 : sewer_setup(_G)
