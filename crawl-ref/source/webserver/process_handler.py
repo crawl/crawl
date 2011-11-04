@@ -93,6 +93,10 @@ class CrawlProcessHandlerBase(object):
     def watcher_count(self):
         return len(self._watchers)
 
+    def send_client_to_all(self):
+        for receiver in self._receivers:
+            self._send_client(receiver)
+
     def _send_client(self, watcher):
         v = hashlib.sha1(os.path.abspath(self.client_path)).hexdigest()
         GameDataHandler.add_version(v,
@@ -391,9 +395,21 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
         # we stop using stdout
         self.process.output_callback = None
 
-        self.check_where()
+        if msg.startswith("*"):
+            # Special message to the server
+            msg = msg[1:]
+            msgobj = json_decode(msg)
+            if msgobj["msg"] == "client_path":
+                if self.client_path == None:
+                    self.client_path = self.format_path(msgobj["path"])
+                    self.send_client_to_all()
+            else:
+                self.logger.warn("Unknown message from the crawl process: %s",
+                                 msgobj["msg"])
+        else:
+            self.check_where()
 
-        self.write_to_all(msg)
+            self.write_to_all(msg)
 
 
 
