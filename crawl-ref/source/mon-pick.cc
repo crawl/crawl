@@ -3042,3 +3042,41 @@ int mons_sewer_rare(int mcls)
         return 0;
     }
 }
+
+// Volcano
+int mons_volcano_level(int mcls)
+{
+    int mlev = absdungeon_depth(BRANCH_VOLCANO, 1);
+
+    if (!mons_volcano_rare(mcls))
+        return 0;
+    return mlev + 1;
+}
+
+int mons_volcano_rare(int mcls)
+{
+    switch (mcls)
+    {
+    case MONS_HOG:
+    case MONS_FIRE_ELEMENTAL:
+    case MONS_FIRE_VORTEX:
+    case MONS_WORKER_ANT:
+    case MONS_BUMBLEBEE:
+    case MONS_FIRE_DRAKE:
+    case MONS_LINDWURM:
+    case MONS_CRIMSON_IMP:
+    case MONS_REDBACK:
+    case MONS_MANTICORE:
+    case MONS_HELL_HOUND:
+    case MONS_HELL_HOG:
+    case MONS_FLAYED_GHOST:
+    case MONS_PULSATING_LUMP:
+    case MONS_TOENAIL_GOLEM:
+    case MONS_EFREET:
+    case MONS_VAMPIRE:
+        return 50;
+
+    default:
+        return 0;
+    }
+}
