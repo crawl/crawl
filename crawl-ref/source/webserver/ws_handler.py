@@ -370,13 +370,17 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def get_rc(self, game_id):
         if game_id not in games: return
-        rcfile_path = os.path.join(games[game_id]["rcfile_path"], self.username + ".rc")
+        rcfile_path = dgl_format_str(games[game_id]["rcfile_path"],
+                                     self.username, games[game_id])
+        rcfile_path = os.path.join(rcfile_path, self.username + ".rc")
         with open(rcfile_path, 'r') as f:
             contents = f.read()
         self.send_message("rcfile_contents", contents = contents)
 
     def set_rc(self, game_id, contents):
-        rcfile_path = os.path.join(games[game_id]["rcfile_path"], self.username + ".rc")
+        rcfile_path = dgl_format_str(games[game_id]["rcfile_path"],
+                                     self.username, games[game_id])
+        rcfile_path = os.path.join(rcfile_path, self.username + ".rc")
         with open(rcfile_path, 'w') as f:
             f.write(codecs.BOM_UTF8)
             f.write(contents.encode("utf8"))
@@ -401,7 +405,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
         elif self.process:
             # This is just for compatibility with 0.9, 0.10 only sends
             # JSON
-            self.logger.debug("Message: %s", message)
             self.process.handle_input(message)
 
     def write_message(self, msg):

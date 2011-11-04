@@ -2051,7 +2051,7 @@ void mons_cast_haunt(monster* mons)
     }
 
     _do_high_level_summon(mons, mons_near(mons), SPELL_HAUNT,
-                          _pick_random_wraith, random_range(3, 6),
+                          _pick_random_wraith, random_range(2, 4),
                           GOD_NO_GOD, &fpos);
 }
 

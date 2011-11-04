@@ -140,7 +140,7 @@ end
 function place_fog(e, type, strength)
    e.lua_marker("!", fog_machine { pow_max = strength, cloud_type = type,
                      delay_min = 50, delay_max = 300, size = 12,
-                     start_clouds = 1 } )
+                     start_clouds = 1, excl_rad = -1 } )
 end
 }}
 

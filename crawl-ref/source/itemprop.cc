@@ -1882,7 +1882,7 @@ skill_type range_skill(object_class_type wclass, int wtype)
 // Check whether an item can be easily and quickly equipped. This needs to
 // know which slot we're considering for cases like where we're already
 // wielding a cursed non-weapon.
-static bool _item_is_swappable(const item_def &item, equipment_type slot)
+static bool _item_is_swappable(const item_def &item, equipment_type slot, bool swap_in)
 {
     if (get_item_slot(item) != slot)
         return true;
@@ -1894,12 +1894,12 @@ static bool _item_is_swappable(const item_def &item, equipment_type slot)
     {
         if (item.sub_type == AMU_FAITH && you.religion != GOD_NO_GOD)
             return false;
-        return (item.sub_type != AMU_THE_GOURMAND
-                && item.sub_type != AMU_GUARDIAN_SPIRIT
-                && item.sub_type != RING_MAGICAL_POWER);
+        return !((item.sub_type == AMU_THE_GOURMAND && !swap_in)
+                || item.sub_type == AMU_GUARDIAN_SPIRIT
+                || (item.sub_type == RING_MAGICAL_POWER && !swap_in));
     }
 
-    if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_POWER)
+    if (item.base_type == OBJ_STAVES && item.sub_type == STAFF_POWER && !swap_in)
         return false;
 
     const brand_type brand = get_weapon_brand(item);
@@ -1908,9 +1908,9 @@ static bool _item_is_swappable(const item_def &item, equipment_type slot)
            && (brand != SPWPN_HOLY_WRATH || you.is_undead == US_ALIVE));
 }
 
-static bool _item_is_swappable(const item_def &item)
+static bool _item_is_swappable(const item_def &item, bool swap_in)
 {
-    return _item_is_swappable(item, get_item_slot(item));
+    return _item_is_swappable(item, get_item_slot(item), swap_in);
 }
 
 // Check whether the equipment slot of an item is occupied by an item which
@@ -1923,6 +1923,9 @@ static bool _slot_blocked(const item_def &item)
 
     if (eq == EQ_RINGS)
     {
+        if (you.equip[EQ_GLOVES] >= 0 && you.inv[you.equip[EQ_GLOVES]].cursed())
+            return true;
+
         equipment_type eq_from = EQ_LEFT_RING;
         equipment_type eq_to = EQ_RIGHT_RING;
         if (you.species == SP_OCTOPODE)
@@ -1932,14 +1935,21 @@ static bool _slot_blocked(const item_def &item)
         }
 
         for (int i = eq_from; i <= eq_to; ++i)
-            if (you.equip[i] == -1 || _item_is_swappable(you.inv[you.equip[i]]))
+            if (you.equip[i] == -1 || _item_is_swappable(you.inv[you.equip[i]], false))
                 return false;
 
         // No free slot found.
         return true;
     }
 
-    return (you.equip[eq] != -1 && !_item_is_swappable(you.inv[you.equip[eq]], eq));
+    if (eq == EQ_WEAPON && you.equip[EQ_SHIELD] >= 0
+        && you.inv[you.equip[EQ_SHIELD]].cursed()
+        && is_shield_incompatible(item, &you.inv[you.equip[EQ_SHIELD]]))
+    {
+        return true;
+    }
+
+    return (you.equip[eq] != -1 && !_item_is_swappable(you.inv[you.equip[eq]], eq, false));
 }
 
 bool item_skills(const item_def &item, std::set<skill_type> &skills)
@@ -1956,7 +1966,7 @@ bool item_skills(const item_def &item, std::set<skill_type> &skills)
     // - quick to equip (no armour)
     // - no effect that suffer from swapping (distortion, vampirism, faith,...)
     // - slot easily accessible (item in slot needs to meet the same conditions)
-    if (!equipped && (!_item_is_swappable(item) || _slot_blocked(item)))
+    if (!equipped && (!_item_is_swappable(item, true) || _slot_blocked(item)))
         return false;
 
     // Evokables that need to be equipped to be evoked. They can train
@@ -1994,10 +2004,15 @@ void maybe_change_train(const item_def& item, bool start)
         return;
 
     for (int i = 0; i < ENDOFPACK; ++i)
-        if (item.link != i && you.inv[i].defined()
-            && get_item_slot(you.inv[i]) == eq)
+        if (item.link != i && you.inv[i].defined())
         {
-            item_skills(you.inv[i], start ? you.start_train : you.stop_train);
+            equipment_type islot = get_item_slot(you.inv[i]);
+            if (islot == eq
+                || (eq == EQ_GLOVES && islot == EQ_RINGS)
+                || (eq == EQ_SHIELD && islot == EQ_WEAPON))
+            {
+                item_skills(you.inv[i], start ? you.start_train : you.stop_train);
+            }
         }
 }
 

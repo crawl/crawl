@@ -606,3 +606,17 @@ iron2
 iron3
 iron4
 iron5
+
+%weight 10
+black_cobalt01 FLOOR_BLACK_COBALT
+black_cobalt02
+black_cobalt03
+black_cobalt04
+black_cobalt05
+black_cobalt06
+black_cobalt07
+black_cobalt08
+black_cobalt09
+black_cobalt10
+black_cobalt11
+black_cobalt12

@@ -158,6 +158,8 @@ protected:
 
     dolls_data last_player_doll;
 
+    void _send_version();
+
     void _send_everything();
 
     void _send_map(bool force_full = false);
