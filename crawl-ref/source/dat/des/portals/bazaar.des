@@ -382,7 +382,7 @@ ENDMAP
 # bazaars in a row
 # ~4 shops
 NAME:    bazaar_short_row
-TAGS:    bazaar no_rotate
+TAGS:    bazaar no_rotate no_pool_fixup
 ORIENT:  encompass
 WEIGHT:  20
 SHUFFLE: Aa/Bb/Cc/Dd/Ee/Ff
@@ -729,7 +729,7 @@ ENDMAP
 
 # 2 shops, some items.
 NAME:    bazaar_mystics
-TAGS:    bazaar
+TAGS:    bazaar no_pool_fixup
 WEIGHT:  5
 ORIENT:  encompass
 SUBST:   w : wlx
@@ -764,7 +764,7 @@ ENDMAP
 
 # 2 wand shops, 2 potion shops
 NAME:    dpeg_bazaar_wands
-TAGS:    bazaar no_rotate
+TAGS:    bazaar no_rotate no_pool_fixup
 WEIGHT:  5
 ORIENT:  encompass
 KFEAT:   A = wand shop
@@ -1019,7 +1019,7 @@ ENDMAP
 
 # 4 shops
 NAME:    bazaar_jpeg_ribbon
-TAGS:    bazaar no_rotate
+TAGS:    bazaar no_rotate no_pool_fixup
 ORIENT:  encompass
 SHUFFLE: zZ
 SUBST:   z = ., Z = w

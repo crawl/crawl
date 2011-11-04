@@ -403,7 +403,7 @@ ENDMAP
 NAME:   bailey_axe_1
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   bailey_axe no_rotate no_item_gen no_monster_gen
+TAGS:   bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
 LFLAGS: no_tele_control
 #
 ITEM:   any good_item w:10 / nothing w:5
@@ -520,7 +520,7 @@ ENDMAP
 NAME:   bailey_axe_3
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   bailey_axe no_rotate no_item_gen no_monster_gen
+TAGS:   bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
 LFLAGS: no_tele_control
 SUBST:  ' : +".
 SUBST:  " : wW"
@@ -584,7 +584,7 @@ ENDMAP
 NAME:    bailey_axe_4
 WEIGHT:  10
 ORIENT:  encompass
-TAGS:    bailey_axe no_rotate no_item_gen no_monster_gen
+TAGS:    bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
 LFLAGS:  no_tele_control
 #
 ITEM:    any good_item
@@ -740,7 +740,7 @@ ENDMAP
 NAME:   bailey_polearm_1
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   bailey_polearm no_rotate
+TAGS:   bailey_polearm no_rotate no_pool_fixup
 LFLAGS: no_tele_control
 NSUBST: D = 1:= / *:c
 NSUBST: E = 1:= / *:c
@@ -794,7 +794,7 @@ ENDMAP
 #
 NAME:   bailey_polearm_2
 ORIENT: encompass
-TAGS:   bailey_polearm no_rotate
+TAGS:   bailey_polearm no_rotate no_pool_fixup
 MONS:   orc warrior ; crossbow . bolt w:5 / orc ; crossbow . bolt
 : orc_with_polearm(_G)
 : orc_warrior_with_polearm(_G)
@@ -911,7 +911,7 @@ ENDMAP
 NAME:   bailey_polearm_4
 WEIGHT: 10
 ORIENT: encompass
-TAGS:   bailey_polearm no_rotate no_item_gen no_monster_gen
+TAGS:   bailey_polearm no_rotate no_item_gen no_monster_gen no_pool_fixup
 LFLAGS: no_tele_control
 ITEM:   any good_item / nothing
 MONS:   orc warrior ; crossbow . bolt | halberd
