@@ -111,8 +111,7 @@ bool TilesFramework::initialise()
     if (m_await_connection)
         _await_connection();
 
-    std::string title = CRAWL " " + Version::Long();
-    send_message("{msg:\"version\",text:\"%s\"}", title.c_str());
+    _send_version();
 
     // Do our initialization here.
     m_active_layer = LAYER_CRT;
@@ -339,6 +338,17 @@ void TilesFramework::pop_prefix(std::string suffix)
 bool TilesFramework::prefix_popped()
 {
     return m_prefixes.empty();
+}
+
+void TilesFramework::_send_version()
+{
+    std::string title = CRAWL " " + Version::Long();
+    send_message("{msg:\"version\",text:\"%s\"}", title.c_str());
+
+#ifdef WEB_DIR_PATH
+    // The star signals a message to the server
+    send_message("*{\"msg\":\"client_path\",\"path\":\"%s\"}", WEB_DIR_PATH);
+#endif
 }
 
 static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
@@ -846,8 +856,7 @@ void TilesFramework::resize()
  */
 void TilesFramework::_send_everything()
 {
-    std::string title = CRAWL " " + Version::Long();
-    send_message("{msg:\"version\",text:\"%s\"}", title.c_str());
+    _send_version();
     m_text_crt.send(true);
     m_text_stat.send(true);
     m_text_message.send(true);
