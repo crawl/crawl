@@ -36,6 +36,8 @@ function bailey_portal(e, ptype)
                                "$F{The} is close to the ground.")
     }
 
+  dgn.persist.bailey_type = "bailey_" .. ptype
+
   e.lua_marker('O',
       timed_marker {
         disappear = "The portal closes with a thud.",
@@ -361,7 +363,29 @@ MAP
 ENDMAP
 
 # The actual portal vaults #####################################
-default-depth: Bailey
+default-depth:
+
+NAME:   bailey
+TAGS:   allow_dup
+PLACE:  Bailey
+ORIENT: encompass
+{{
+  local btype = dgn.persist.bailey_type
+  if not btype then -- Wizmode
+    if crawl.coinflip() then
+      btype = "bailey_axe"
+    else
+      btype = "bailey_polearm"
+    end
+  end
+  if crawl.game_started() then
+    local map = dgn.map_by_tag(btype)
+    assert(map, "Couldn't find a map for " .. btype)
+    dgn.place_map(map, true, false)
+  end
+}}
+MAP
+ENDMAP
 
 ##########
 #        #

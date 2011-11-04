@@ -57,6 +57,8 @@ function ice_cave_portal(e)
       difficulty = "ice_cave_hard"
   end
 
+  dgn.persist.ice_cave_type = difficulty
+
   e.lua_marker('O',
       timed_marker {
         disappear = "The archway melts and disappears.",
@@ -403,7 +405,30 @@ ENDMAP
 # statue gardens (weight 5, total 10). Total weight of all types is
 # 12+15+10=37, so the latter types are more common in hard ice caves.
 
-default-depth: IceCv
+default-depth:
+
+NAME:   ice_cave
+TAGS:   allow_dup
+PLACE:  IceCv
+ORIENT: encompass
+{{
+  local difficulty = dgn.persist.ice_cave_type
+  -- Wizmode
+  if not difficulty then
+    if crawl.coinflip() then
+      difficulty = "ice_cave_easy"
+    else
+      difficulty = "ice_cave_hard"
+    end
+  end
+  if crawl.game_started() then
+    local map = dgn.map_by_tag(difficulty)
+    assert(map, "Couldn't find a map for " .. difficulty)
+    dgn.place_map(map, true, false)
+  end
+}}
+MAP
+ENDMAP
 
 ###############################################################################
 # The small caves.
