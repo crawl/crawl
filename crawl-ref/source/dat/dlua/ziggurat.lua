@@ -347,7 +347,8 @@ mset(with_props("place:Slime:$", { jelly_protect = true }),
      with_props("fire elemental / fire drake / hell hound / efreet / " ..
                 "dragon / fire giant / orb of fire", { weight = 2 }),
      with_props("ice beast / polar bear / freezing wraith / ice dragon / " ..
-                "frost giant / ice devil / ice fiend / place:D:$ simulacrum", { weight = 2 }),
+                "frost giant / ice devil / ice fiend / place:D:$ simulacrum / " ..
+                "blizzard demon", { weight = 2 }),
      with_props("insubstantial wisp / air elemental / vapour / titan / " ..
                 "storm dragon / electric golem", { weight = 2 }),
      with_props("clay golem / earth elemental / stone golem / iron golem / " ..
