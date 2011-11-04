@@ -1272,6 +1272,9 @@ static int _num_mons_wanted(branch_type branch)
     if (branch == BRANCH_PANDEMONIUM)
         return random2avg(28, 3);
 
+    if (!branch_has_monsters(branch))
+        return 0;
+
     int mon_wanted = roll_dice(3, 10);
 
     if (player_in_hell())
