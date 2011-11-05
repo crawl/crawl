@@ -16,8 +16,7 @@
 #include "defines.h"
 #include "libutil.h"
 
-#ifdef USE_TILE_LOCAL
- #include "tilebuf.h"
+#ifdef USE_TILE
  #include "tiledoll.h"
 #endif
 
@@ -77,7 +76,7 @@ public:
     bool preselected;
     void *data;
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
     std::vector<tile_def> tiles;
 #endif
 
@@ -159,7 +158,7 @@ public:
         return get_text();
     }
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
     virtual bool get_tiles(std::vector<tile_def>& tileset) const;
 
     virtual void add_tile(tile_def tile);
@@ -186,12 +185,12 @@ class MonsterMenuEntry : public MenuEntry
 public:
     MonsterMenuEntry(const std::string &str, const monster* mon, int hotkey);
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
     virtual bool get_tiles(std::vector<tile_def>& tileset) const;
 #endif
 };
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
 class PlayerMenuEntry : public MenuEntry
 {
 public:
@@ -211,7 +210,7 @@ public:
     FeatureMenuEntry(const std::string &str, const dungeon_feature_type f,
                      int hotkey);
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
     virtual bool get_tiles(std::vector<tile_def>& tileset) const;
 #endif
 };
@@ -357,7 +356,7 @@ public:
     virtual int item_colour(int index, const MenuEntry *me) const;
     int get_y_offset() const { return y_offset; }
     int get_pagesize() const { return pagesize; }
-public:
+
     typedef std::string (*selitem_tfn)(const std::vector<MenuEntry*> *sel);
     typedef void (*drawitem_tfn)(int index, const MenuEntry *me);
     typedef int (*keyfilter_tfn)(int keyin);
@@ -369,6 +368,9 @@ public:
     enum cycle  { CYCLE_NONE, CYCLE_TOGGLE, CYCLE_CYCLE } action_cycle;
     enum action { ACT_EXECUTE, ACT_EXAMINE, ACT_MISC, ACT_NUM } menu_action;
 
+#ifdef USE_TILE_WEB
+    void webtiles_write_menu() const;
+#endif
 protected:
     MenuEntry *title;
     MenuEntry *title2;
@@ -402,10 +404,19 @@ protected:
     void check_add_formatted_line(int firstcol, int nextcol,
                                   std::string &line, bool check_eol);
     void do_menu();
+    virtual std::string get_select_count_string(int count) const;
     virtual void draw_select_count(int count, bool force = false);
     virtual void draw_item(int index) const;
     virtual void draw_index_item(int index, const MenuEntry *me) const;
     virtual void draw_stock_item(int index, const MenuEntry *me) const;
+
+#ifdef USE_TILE_WEB
+    void webtiles_update_item(int index) const;
+    void webtiles_update_title() const;
+
+    virtual void webtiles_write_title() const;
+    virtual void webtiles_write_item(int index, const MenuEntry *me) const;
+#endif
 
     virtual void draw_title();
     virtual void write_title();
@@ -512,6 +523,10 @@ protected:
     virtual void draw_index_item(int index, const MenuEntry* me) const;
     virtual bool process_key(int keyin);
     bool jump_to(int linenum);
+
+#ifdef USE_TILE_WEB
+    virtual void webtiles_write_item(int index, const MenuEntry* me) const;
+#endif
 };
 
 /**

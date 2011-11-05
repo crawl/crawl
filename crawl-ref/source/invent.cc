@@ -216,7 +216,7 @@ std::string InvEntry::get_text(bool need_cursor) const
     //XXX There should be a better way to determine this, for now we simply
     //estimate it by the following heuristics {kittel}.
     unsigned max_chars_in_line = get_number_of_cols() - 2;
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     if (Options.tile_menu_icons && Options.show_inventory_weights)
         max_chars_in_line = get_number_of_cols() * 4 / 9 - 2;
 #endif
@@ -414,6 +414,11 @@ void InvMenu::set_title(const std::string &s)
     std::string stitle = s;
     if (stitle.empty())
     {
+#ifdef USE_TILE_WEB
+        // Webtiles handles menus specially, so disable the crt
+        tiles_crt_control crt_enabled(false);
+#endif
+
         // We're not printing anything yet, but this select the crt layer
         // so that get_number_of_cols returns the appropriate value.
         cgotoxy(1, 1);
@@ -533,7 +538,7 @@ void InvMenu::load_inv_items(int item_selector, int excluded_slot,
         set_title("");
 }
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
 bool InvEntry::get_tiles(std::vector<tile_def>& tileset) const
 {
     if (!Options.tile_menu_icons)

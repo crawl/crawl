@@ -22,19 +22,21 @@
 #include "colour.h"
 
 #ifdef USE_TILE_LOCAL
+ #include "tilebuf.h"
+ #include "tilefont.h"
+ #include "tilereg-crt.h"
+ #include "tilereg-menu.h"
+#endif
+#ifdef USE_TILE
  #include "mon-stuff.h"
  #include "mon-util.h"
  #include "terrain.h"
- #include "tilebuf.h"
- #include "tilefont.h"
  #include "tiledef-dngn.h"
  #include "tiledef-icons.h"
  #include "tiledef-main.h"
  #include "tiledef-player.h"
  #include "tilepick.h"
  #include "tilepick-p.h"
- #include "tilereg-crt.h"
- #include "tilereg-menu.h"
  #include "travel.h"
 #endif
 
@@ -297,6 +299,9 @@ void Menu::reset()
 
 std::vector<MenuEntry *> Menu::show(bool reuse_selections)
 {
+#ifdef USE_TILE_WEB
+    tiles_crt_control crt_enabled(false);
+#endif
     cursor_control cs(false);
 
     if (reuse_selections)
@@ -324,7 +329,18 @@ std::vector<MenuEntry *> Menu::show(bool reuse_selections)
     if (is_set(MF_START_AT_END))
         first_entry = std::max((int)items.size() - pagesize, 0);
 
+#ifdef USE_TILE_WEB
+    webtiles_write_menu();
+    tiles.send_message();
+    tiles.push_menu(this);
+#endif
+
     do_menu();
+
+#ifdef USE_TILE_WEB
+    tiles.pop_menu();
+    tiles.send_message("{msg:'close_menu'}");
+#endif
 
     return (sel);
 }
@@ -501,6 +517,9 @@ bool Menu::process_key(int keyin)
                 select_index(next, num);
                 get_selected(&sel);
                 draw_select_count(sel.size());
+#ifdef USE_TILE_WEB
+                webtiles_update_title();
+#endif
                 if (get_cursor() < next)
                 {
                     first_entry = 0;
@@ -591,6 +610,9 @@ bool Menu::process_key(int keyin)
             return (false);
 
         draw_select_count(sel.size());
+#ifdef USE_TILE_WEB
+        webtiles_update_title();
+#endif
 
         if (flags & MF_ANYPRINTABLE
             && (!isadigit(keyin) || is_set(MF_NO_SELECT_QTY)))
@@ -610,7 +632,9 @@ bool Menu::process_key(int keyin)
     if (nav)
     {
         if (repaint)
+        {
             draw_menu();
+        }
         // Easy exit should not kill the menu if there are selected items.
         else if (sel.empty() && is_set(MF_EASY_EXIT))
         {
@@ -687,14 +711,11 @@ bool Menu::draw_title_suffix(const formatted_string &fs, bool titlefirst)
     return (true);
 }
 
-void Menu::draw_select_count(int count, bool force)
+std::string Menu::get_select_count_string(int count) const
 {
-    if (!force && !is_set(MF_MULTISELECT))
-        return;
-
     if (f_selitem)
     {
-        draw_title_suffix(f_selitem(&sel));
+        return f_selitem(&sel);
     }
     else
     {
@@ -704,8 +725,16 @@ void Menu::draw_select_count(int count, bool force)
             snprintf(buf, sizeof buf, "  (%d item%s)  ", count,
                     (count > 1? "s" : ""));
         }
-        draw_title_suffix(buf);
+        return std::string(buf);
     }
+}
+
+void Menu::draw_select_count(int count, bool force)
+{
+    if (!force && !is_set(MF_MULTISELECT))
+        return;
+
+    draw_title_suffix(get_select_count_string(count));
 }
 
 std::vector<MenuEntry*> Menu::selected_entries() const
@@ -732,7 +761,12 @@ void Menu::deselect_all(bool update_view)
         {
             items[i]->select(0);
             if (update_view)
+            {
                 draw_item(i);
+#ifdef USE_TILE_WEB
+                webtiles_update_item(i);
+#endif
+            }
         }
     }
 }
@@ -852,7 +886,7 @@ FeatureMenuEntry::FeatureMenuEntry(const std::string &str,
 }
 
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
 PlayerMenuEntry::PlayerMenuEntry(const std::string &str) :
     MenuEntry(str, MEL_ITEM, 1)
 {
@@ -1132,6 +1166,9 @@ void Menu::select_item_index(int idx, int qty, bool draw_cursor)
     last_selected = idx;
     items[idx]->select(qty);
     draw_item(idx);
+#ifdef USE_TILE_WEB
+    webtiles_update_item(idx);
+#endif
 
     if (draw_cursor)
     {
@@ -1234,6 +1271,10 @@ void Menu::draw_menu()
 
 void Menu::update_title()
 {
+#ifdef USE_TILE_WEB
+    webtiles_update_title();
+#endif
+
     int x = wherex(), y = wherey();
     draw_title();
     cgotoxy(x, y);
@@ -1367,6 +1408,134 @@ bool Menu::line_up()
     }
     return (false);
 }
+
+#ifdef USE_TILE_WEB
+void Menu::webtiles_write_menu() const
+{
+    if (crawl_state.doing_prev_cmd_again)
+        return;
+
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "menu");
+    tiles.json_write_string("tag", tag);
+    tiles.json_write_int("flags", flags);
+
+    webtiles_write_title();
+
+    tiles.json_write_string("more", more.to_colour_string());
+
+    tiles.json_open_array("items");
+
+    for (unsigned i = 0; i < items.size(); ++i)
+    {
+        webtiles_write_item(i, items[i]);
+    }
+
+    tiles.json_close_array();
+
+    tiles.json_close_object();
+}
+
+void Menu::webtiles_update_item(int index) const
+{
+    tiles.json_open_object();
+
+    tiles.json_write_string("msg", "update_menu_item");
+    tiles.json_write_int("i", index);
+
+    const MenuEntry* me = items[index];
+    if (me->selected_qty)
+        tiles.json_write_int("sq", me->selected_qty);
+    tiles.json_write_string("text", me->get_text());
+    int col = item_colour(index, me);
+    if (col != MENU_ITEM_STOCK_COLOUR)
+        tiles.json_write_int("colour", col);
+
+    tiles.json_close_object();
+    tiles.send_message();
+}
+
+void Menu::webtiles_update_title() const
+{
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "update_menu");
+    webtiles_write_title();
+    tiles.json_close_object();
+    tiles.send_message();
+}
+
+void Menu::webtiles_write_title() const
+{
+    if (!title) return;
+    const bool first = (action_cycle == CYCLE_NONE
+                        || menu_action == ACT_EXECUTE);
+    if (!first)
+        ASSERT(title2);
+
+    const MenuEntry* me = (first ? title : title2);
+
+    tiles.json_write_name("title");
+    webtiles_write_item(-1, me);
+
+    if (is_set(MF_MULTISELECT))
+    {
+        tiles.json_write_string("suffix", get_select_count_string(sel.size()));
+    }
+}
+
+void Menu::webtiles_write_item(int index, const MenuEntry* me) const
+{
+    tiles.json_open_object();
+
+    tiles.json_write_string("text", me->get_text());
+
+    if (me->quantity)
+        tiles.json_write_int("q", me->quantity);
+    if (me->selected_qty)
+        tiles.json_write_int("sq", me->selected_qty);
+
+    int col = item_colour(index, me);
+    if (col != MENU_ITEM_STOCK_COLOUR)
+        tiles.json_write_int("colour", col);
+
+    if (!me->hotkeys.empty())
+    {
+        tiles.json_open_array("hotkeys");
+        for (unsigned i = 0; i < me->hotkeys.size(); ++i)
+            tiles.json_write_int(me->hotkeys[i]);
+        tiles.json_close_array();
+    }
+
+    if (me->level != MEL_NONE)
+        tiles.json_write_int("level", me->level);
+
+    if (me->preselected)
+        tiles.json_write_int("preselected", me->preselected);
+
+    std::vector<tile_def> t;
+    if (me->get_tiles(t) && !t.empty())
+    {
+        tiles.json_open_array("tiles");
+
+        for (unsigned i = 0; i < t.size(); ++i)
+        {
+            tiles.json_open_object();
+
+            tiles.json_write_int("t", t[i].tile);
+            tiles.json_write_int("tex", t[i].tex);
+
+            if (t[i].ymax != TILE_Y)
+                tiles.json_write_int("ymax", t[i].ymax);
+
+            tiles.json_close_object();
+        }
+
+        tiles.json_close_array();
+    }
+
+    tiles.json_close_object();
+}
+#endif // USE_TILE_WEB
 
 /////////////////////////////////////////////////////////////////
 // Menu colouring
@@ -1559,6 +1728,19 @@ void formatted_scroller::draw_index_item(int index, const MenuEntry *me) const
     else
         static_cast<formatted_string*>(me->data)->display();
 }
+
+#ifdef USE_TILE_WEB
+void formatted_scroller::webtiles_write_item(int index, const MenuEntry* me) const
+{
+    if (me->data == NULL)
+        Menu::webtiles_write_item(index, me);
+    else
+    {
+        formatted_string* fs = static_cast<formatted_string*>(me->data);
+        tiles.json_write_string(fs->to_colour_string());
+    }
+}
+#endif
 
 formatted_scroller::~formatted_scroller()
 {
@@ -1778,6 +1960,12 @@ int ToggleableMenu::pre_process(int key)
 
         // Redraw
         draw_menu();
+
+#ifdef USE_TILE_WEB
+        webtiles_update_title();
+        for (unsigned int i = 0; i < items.size(); ++i)
+            webtiles_update_item(i);
+#endif
 
         // Don't further process the key
         return 0;

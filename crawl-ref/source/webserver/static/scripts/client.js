@@ -129,6 +129,15 @@ function (exports, $, key_conversion, chat, comm) {
         lobby(layer == "lobby");
     }
 
+    function register_layer(name)
+    {
+        if (layers.indexOf(name) == -1)
+            layers.push(name);
+    }
+
+    exports.set_layer = set_layer;
+    exports.register_layer = register_layer;
+
     function do_layout()
     {
         $("#loader").height($(window).height());
@@ -153,6 +162,10 @@ function (exports, $, key_conversion, chat, comm) {
                                  so we handle it in keydown */
             (e.which == 9))   /* Tab gives a keypress in Opera even when it is
                                  suppressed in keydown */
+            return;
+
+        // Give the game a chance to handle the key
+        if (!retrigger_event(e, "game_keypress"))
             return;
 
         e.preventDefault();
@@ -244,7 +257,7 @@ function (exports, $, key_conversion, chat, comm) {
         }
         else if (!e.ctrlKey && !e.shiftKey && e.altKey)
         {
-            if (e.which == 18) return;
+            if (e.which < 32) return;
 
             e.preventDefault();
             send_bytes([27, e.which]);

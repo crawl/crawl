@@ -1,6 +1,6 @@
 define(["jquery", "comm", "client", "./dungeon_renderer", "./display", "./minimap",
         "./settings",
-        "./text"],
+        "./text", "./menu"],
 function ($, comm, client, dungeon_renderer, display, minimap, settings) {
     var layout_parameters;
 
