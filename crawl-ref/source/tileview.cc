@@ -155,8 +155,8 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_TARTARUS:
-        flv.wall  = TILE_WALL_UNDEAD;
-        flv.floor = TILE_FLOOR_TOMB;
+        flv.wall  = TILE_WALL_COBALT_ROCK;
+        flv.floor = TILE_FLOOR_BLACK_COBALT;
         return;
 
     case BRANCH_CRYPT:
@@ -165,7 +165,7 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_TOMB:
-        flv.wall  = TILE_WALL_LAB_ROCK;
+        flv.wall  = TILE_WALL_UNDEAD;
         flv.floor = TILE_FLOOR_TOMB;
         return;
 
@@ -981,6 +981,15 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
             orig = TILE_DNGN_METAL_IRON;
         else if (orig == TILE_DNGN_CRYSTAL)
             orig = TILE_WALL_EMERALD;
+    }
+    else if (player_in_branch(BRANCH_TARTARUS))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_WALL_COBALT_STONE;
+        else if (orig == TILE_DNGN_CRYSTAL)
+            orig = TILE_WALL_EMERALD;
+        else if (orig == TILE_DNGN_METAL_WALL)
+            orig = TILE_DNGN_METAL_WALL_DARKGRAY;
     }
 
     const bool mimic = monster_at(gc) && mons_is_feat_mimic(monster_at(gc)->type);
