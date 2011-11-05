@@ -686,6 +686,37 @@ static bool _eat_check(bool check_hunger = true, bool silent = false)
     return (true);
 }
 
+static bool _has_edible_chunks()
+{
+    for (int i = 0; i < ENDOFPACK; ++i)
+    {
+        item_def &obj(you.inv[i]);
+        if (!obj.defined()
+            || obj.base_type != OBJ_FOOD || obj.sub_type != FOOD_CHUNK
+            || !can_ingest(obj, true, true))
+        {
+            continue;
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+void end_nausea()
+{
+    const char *add = "";
+    // spoilable food, need to interrupt before it can go bad
+    if (_has_edible_chunks() or count_corpses_in_pack(false))
+        add = ", and you want to eat";
+    else if (you.hunger_state <= HS_HUNGRY)
+        add = ", and you need some food";
+    else if (can_ingest(OBJ_FOOD, FOOD_CHUNK, true)) // carnivore/gourmand
+        add = ", let's find someone to eat";
+    mprf(MSGCH_DURATION, "Your stomach is not as upset anymore%s.", add);
+}
+
 // [ds] Returns true if something was eaten.
 bool eat_food(int slot)
 {
