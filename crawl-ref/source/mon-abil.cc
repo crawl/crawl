@@ -1669,7 +1669,7 @@ void collect_foe_positions(monster* mons, std::vector<coord_def> & foe_positions
     }
 }
 
-bool valid_kraken_connection(monster* mons)
+bool valid_kraken_connection(const monster* mons)
 {
     return (mons->type == MONS_KRAKEN_TENTACLE_SEGMENT
             || mons->type == MONS_KRAKEN_TENTACLE
