@@ -1251,11 +1251,11 @@ void bolt::affect_cell()
         affect_ground();
 }
 
-bool bolt::apply_hit_funcs(actor* victim, int dmg, int corpse)
+bool bolt::apply_hit_funcs(actor* victim, int dmg)
 {
     bool affected = false;
     for (unsigned int i = 0; i < hit_funcs.size(); ++i)
-        affected = (*hit_funcs[i])(*this, victim, dmg, corpse) || affected;
+        affected = (*hit_funcs[i])(*this, victim, dmg) || affected;
 
     return (affected);
 }
@@ -4536,7 +4536,6 @@ void bolt::affect_monster(monster* mon)
         mon->hurt(agent(), final, flavour, false);
     }
 
-    int      corpse = -1;
     monster  orig   = *mon;
 
     if (mon->alive())
@@ -4560,14 +4559,14 @@ void bolt::affect_monster(monster* mon)
         {
             if (mon->attitude == ATT_FRIENDLY)
                 mon->attitude = ATT_HOSTILE;
-            corpse = monster_die(mon, KILL_MON, beam_source_as_target());
+            monster_die(mon, KILL_MON, beam_source_as_target());
         }
         else
         {
             killer_type ref_killer = thrower;
             if (!YOU_KILL(thrower) && reflector == NON_MONSTER)
                 ref_killer = KILL_YOU_MISSILE;
-            corpse = monster_die(mon, ref_killer, beam_source_as_target());
+            monster_die(mon, ref_killer, beam_source_as_target());
         }
     }
 
@@ -4578,7 +4577,7 @@ void bolt::affect_monster(monster* mon)
         mon = &orig;
     }
 
-    apply_hit_funcs(mon, final, corpse);
+    apply_hit_funcs(mon, final);
     extra_range_used += range_used_on_hit(mon);
 }
 

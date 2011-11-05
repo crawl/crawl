@@ -1433,6 +1433,8 @@ static void _make_spectral_thing(monster* mons, bool quiet)
     }
 }
 
+static bool _mons_reaped(actor *killer, monster* victim);
+
 static bool _reaping(monster *mons)
 {
     if (!mons->props.exists("reaping_damage"))
@@ -1445,7 +1447,7 @@ static bool _reaping(monster *mons)
 
     actor *killer = actor_by_mid(mons->props["reaper"].get_int());
     if (killer)
-        return mons_reaped(killer, mons);
+        return _mons_reaped(killer, mons);
     return false;
 }
 
@@ -4462,7 +4464,7 @@ std::string summoned_poof_msg(const monster* mons, const item_def &item)
     return summoned_poof_msg(mons, item.quantity > 1);
 }
 
-bool mons_reaped(actor *killer, monster* victim)
+static bool _mons_reaped(actor *killer, monster* victim)
 {
     beh_type beh;
     unsigned short hitting;

@@ -47,8 +47,7 @@ typedef bool (*range_used_func)(const bolt& beam, const actor* victim,
                                 int &used);
 typedef bool (*beam_damage_func)(bolt& beam, actor* victim, int &dmg,
                                  std::string &dmg_msg);
-typedef bool (*beam_hit_func)(bolt& beam, actor* victim, int dmg,
-                              int corpse);
+typedef bool (*beam_hit_func)(bolt& beam, actor* victim, int dmg);
 typedef bool (*explosion_aoe_func)(bolt& beam, const coord_def& target);
 typedef bool (*beam_affect_func)(const bolt &beam, const actor *victim);
 
@@ -235,7 +234,7 @@ private:
     bool hit_wall();
 
     bool damage_ignores_armour() const;
-    bool apply_hit_funcs(actor* victim, int dmg, int corpse = -1);
+    bool apply_hit_funcs(actor* victim, int dmg);
     bool apply_dmg_funcs(actor* victim, int &dmg,
                          std::vector<std::string> &messages);
 

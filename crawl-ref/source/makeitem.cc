@@ -1491,7 +1491,6 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case SPWPN_SPEED:
     case SPWPN_VORPAL:
     case SPWPN_CHAOS:
-    case SPWPN_REAPING:
     case SPWPN_HOLY_WRATH:
     case SPWPN_ELECTROCUTION:
         break;
@@ -1509,6 +1508,7 @@ bool is_weapon_brand_ok(int type, int brand, bool strict)
     case SPWPN_RETURNING:
     case SPWPN_CONFUSE:
     case SPWPN_ANTIMAGIC:
+    case SPWPN_REAPING:
         if (is_range_weapon(item))
             return (false);
         break;
@@ -1870,7 +1870,6 @@ bool is_missile_brand_ok(int type, int brand, bool strict)
                 || type == MI_JAVELIN || type == MI_THROWING_NET);
     case SPMSL_PENETRATION:
         return (type == MI_JAVELIN || type == MI_BOLT);
-    case SPMSL_REAPING: // deliberate fall through
     case SPMSL_DISPERSAL:
         return (type == MI_ARROW || type == MI_DART);
     case SPMSL_EXPLODING:

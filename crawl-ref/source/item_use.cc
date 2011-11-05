@@ -1523,7 +1523,7 @@ bool elemental_missile_beam(int launcher_brand, int ammo_brand)
             launcher_brand == SPWPN_FLAME);
 }
 
-static bool _poison_hit_victim(bolt& beam, actor* victim, int dmg, int corpse)
+static bool _poison_hit_victim(bolt& beam, actor* victim, int dmg)
 {
     if (!victim->alive() || victim->res_poison() > 0)
         return (false);
@@ -1596,19 +1596,7 @@ static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
     return (false);
 }
 
-static bool _reaping_hit_victim(bolt& beam, actor* victim, int dmg, int corpse)
-{
-    if (beam.is_tracer || victim->alive() || corpse == -1
-        || corpse == NON_ITEM || victim->atype() == ACT_PLAYER)
-    {
-        return (false);
-    }
-
-    return (mons_reaped(beam.agent(), victim->as_monster()));
-}
-
-static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
-                                  int corpse)
+static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
 {
     const actor* agent = beam.agent();
 
@@ -1829,8 +1817,7 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
     return (true);
 }
 
-static bool _paralysis_hit_victim(bolt& beam, actor* victim, int dmg,
-                                 int corpse)
+static bool _paralysis_hit_victim(bolt& beam, actor* victim, int dmg)
 {
     if (beam.is_tracer)
         return (false);
@@ -1843,8 +1830,7 @@ static bool _paralysis_hit_victim(bolt& beam, actor* victim, int dmg,
     return (true);
 }
 
-static bool _sleep_hit_victim(bolt& beam, actor* victim, int dmg,
-                              int corpse)
+static bool _sleep_hit_victim(bolt& beam, actor* victim, int dmg)
 {
     if (beam.is_tracer)
         return (false);
@@ -1857,8 +1843,7 @@ static bool _sleep_hit_victim(bolt& beam, actor* victim, int dmg,
     return (true);
 }
 
-static bool _confusion_hit_victim(bolt &beam, actor* victim, int dmg,
-                                  int corpse)
+static bool _confusion_hit_victim(bolt &beam, actor* victim, int dmg)
 {
     if (beam.is_tracer)
         return (false);
@@ -1871,8 +1856,7 @@ static bool _confusion_hit_victim(bolt &beam, actor* victim, int dmg,
     return (true);
 }
 
-static bool _slow_hit_victim(bolt &beam, actor* victim, int dmg,
-                                  int corpse)
+static bool _slow_hit_victim(bolt &beam, actor* victim, int dmg)
 {
     if (beam.is_tracer)
         return (false);
@@ -1885,8 +1869,7 @@ static bool _slow_hit_victim(bolt &beam, actor* victim, int dmg,
     return (true);
 }
 
-static bool _sickness_hit_victim(bolt &beam, actor* victim, int dmg,
-                                 int corpse)
+static bool _sickness_hit_victim(bolt &beam, actor* victim, int dmg)
 {
     if (beam.is_tracer)
         return (false);
@@ -1899,8 +1882,7 @@ static bool _sickness_hit_victim(bolt &beam, actor* victim, int dmg,
     return (true);
 }
 
-static bool _rage_hit_victim(bolt &beam, actor* victim, int dmg,
-                             int corpse)
+static bool _rage_hit_victim(bolt &beam, actor* victim, int dmg)
 {
     if (beam.is_tracer)
         return (false);
@@ -2039,8 +2021,6 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
                                 || ammo_brand == SPMSL_PENETRATION);
     const bool silver       = (ammo_brand == SPMSL_SILVER);
     const bool disperses    = (ammo_brand == SPMSL_DISPERSAL);
-    const bool reaping      = (bow_brand  == SPWPN_REAPING
-                               || ammo_brand == SPMSL_REAPING);
     const bool charged      = bow_brand  == SPWPN_ELECTROCUTION;
     const bool blessed      = bow_brand == SPWPN_HOLY_WRATH;
 
@@ -2133,8 +2113,6 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         beam.range_funcs.push_back(_item_penetrates_victim);
         beam.hit_verb = "pierces through";
     }
-    if (reaping)
-        beam.hit_funcs.push_back(_reaping_hit_victim);
     if (disperses)
         beam.hit_funcs.push_back(_dispersal_hit_victim);
     if (charged)
@@ -2157,12 +2135,6 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
             beam.hit_funcs.push_back(_sickness_hit_victim);
         if (rage)
             beam.hit_funcs.push_back(_rage_hit_victim);
-    }
-
-    if (reaping && item.special != SPMSL_REAPING)
-    {
-        beam.name = "shadowy " + beam.name;
-        ammo_name = "shadowy " + ammo_name;
     }
 
     if (disperses && item.special != SPMSL_DISPERSAL)
@@ -2259,8 +2231,6 @@ static bool determines_ammo_brand(int bow_brand, int ammo_brand)
     if (bow_brand == SPWPN_CHAOS && ammo_brand == SPMSL_CHAOS)
         return (false);
     if (bow_brand == SPWPN_PENETRATION && ammo_brand == SPMSL_PENETRATION)
-        return (false);
-    if (bow_brand == SPWPN_REAPING && ammo_brand == SPMSL_REAPING)
         return (false);
 
     return (true);
@@ -3109,14 +3079,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                         bow_brand == SPWPN_CHAOS || ammo_brand_known);
     }
 
-    if (bow_brand == SPWPN_REAPING || ammo_brand == SPMSL_REAPING)
-    {
-        did_god_conduct(DID_NECROMANCY, 2,
-                        bow_brand == SPWPN_REAPING || ammo_brand_known);
-        did_god_conduct(DID_CORPSE_VIOLATION, 2,
-                        bow_brand == SPWPN_REAPING || ammo_brand_known);
-    }
-
     if (bow_brand == SPWPN_SPEED)
         did_god_conduct(DID_HASTY, 1, true);
 
@@ -3236,8 +3198,6 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
         chance /= 2;
     if (brand == SPMSL_FROST)
         chance /= 2;
-    if (brand == SPMSL_REAPING)
-        chance /= 4;
 
     // Enchanted projectiles get an extra shot at avoiding
     // destruction: plus / (3 + plus) chance of survival.
