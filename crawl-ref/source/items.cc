@@ -988,7 +988,7 @@ static void _origin_set_portal_vault(item_def &item)
         return;
 
     item.props[PORTAL_VAULT_ORIGIN_KEY] = you.level_type_origin;
-    add_inscription(item, "found in " + you.level_type_origin);
+    add_inscription(item, "found " + you.level_type_origin);
 }
 
 void origin_set_monster(item_def &item, const monster* mons)
