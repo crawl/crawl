@@ -381,8 +381,11 @@ std::string artefact_auto_inscription(const item_def& item)
 
     const std::vector<std::string> propnames = _randart_propnames(item);
 
-    return (comma_separated_line(propnames.begin(), propnames.end(),
-                                 " ", " "));
+    std::string insc = comma_separated_line(propnames.begin(), propnames.end(),
+                                 " ", " ");
+    if (!insc.empty() && insc[insc.length() - 1] == ',')
+        insc.erase(insc.length() - 1);
+    return insc;
 }
 
 void add_autoinscription(item_def &item, std::string ainscrip)
