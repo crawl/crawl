@@ -286,27 +286,27 @@ void init_monster_symbols()
             monster_symbols[i].glyph = mons_base_char(i);
 }
 
-static bool _get_kraken_head(monster& mon)
+static bool _get_kraken_head(const monster*& mon)
 {
-    if (!valid_kraken_connection(&mon))
+    if (!valid_kraken_connection(mon))
         return (false);
 
     // For kraken tentacle segments, find the associated tentacle.
-    if (mon.type == MONS_KRAKEN_TENTACLE_SEGMENT)
+    if (mon->type == MONS_KRAKEN_TENTACLE_SEGMENT)
     {
-        if (invalid_monster_index(mon.number))
+        if (invalid_monster_index(mon->number))
             return (false);
 
-        mon = menv[mon.number];
+        mon = &menv[mon->number];
     }
 
     // For kraken tentacles, find the associated head.
-    if (mon.type == MONS_KRAKEN_TENTACLE)
+    if (mon->type == MONS_KRAKEN_TENTACLE)
     {
-        if (invalid_monster_index(mon.number))
+        if (invalid_monster_index(mon->number))
             return (false);
 
-        mon = menv[mon.number];
+        mon = &menv[mon->number];
     }
 
     return (true);
@@ -349,36 +349,34 @@ static mon_resist_def serpent_of_hell_resists(const monster* mon)
 
 mon_resist_def get_mons_resists(const monster* mon)
 {
-    monster newmon = *mon;
-
-    _get_kraken_head(newmon);
+    _get_kraken_head(mon);
 
     mon_resist_def resists;
 
-    if (mons_is_ghost_demon(newmon.type))
-        resists = newmon.ghost->resists;
+    if (mons_is_ghost_demon(mon->type))
+        resists = mon->ghost->resists;
     else
         resists = mon_resist_def();
 
-    resists |= get_mons_class_resists(newmon.type);
+    resists |= get_mons_class_resists(mon->type);
 
     // Undead get one level of poison resistance.  Don't just add it; if
     // they're undead due to the MF_FAKE_UNDEAD flag, they might have at
     // least one level already, in which case they shouldn't get more.
-    if (newmon.holiness() == MH_UNDEAD)
+    if (mon->holiness() == MH_UNDEAD)
         resists.poison = std::max(static_cast<int>(resists.poison), 1);
 
-    if (mons_genus(newmon.type) == MONS_DRACONIAN
-            && newmon.type != MONS_DRACONIAN
-        || newmon.type == MONS_TIAMAT)
+    if (mons_genus(mon->type) == MONS_DRACONIAN
+            && mon->type != MONS_DRACONIAN
+        || mon->type == MONS_TIAMAT)
     {
-        monster_type draco_species = draco_subspecies(&newmon);
-        if (draco_species != newmon.type)
+        monster_type draco_species = draco_subspecies(mon);
+        if (draco_species != mon->type)
             resists |= get_mons_class_resists(draco_species);
     }
 
-    if (newmon.type == MONS_SERPENT_OF_HELL)
-        resists |= serpent_of_hell_resists(&newmon);
+    if (mon->type == MONS_SERPENT_OF_HELL)
+        resists |= serpent_of_hell_resists(mon);
 
     return (resists);
 }
@@ -1279,14 +1277,12 @@ bool mons_class_can_regenerate(int mc)
 
 bool mons_can_regenerate(const monster* mon)
 {
-    monster newmon = *mon;
+    _get_kraken_head(mon);
 
-    _get_kraken_head(newmon);
-
-    if (testbits(newmon.flags, MF_NO_REGEN))
+    if (testbits(mon->flags, MF_NO_REGEN))
         return (false);
 
-    return (mons_class_can_regenerate(newmon.type));
+    return (mons_class_can_regenerate(mon->type));
 }
 
 bool mons_class_can_display_wounds(int mc)
@@ -1296,11 +1292,9 @@ bool mons_class_can_display_wounds(int mc)
 
 bool mons_can_display_wounds(const monster* mon)
 {
-    monster newmon = *mon;
+    _get_kraken_head(mon);
 
-    _get_kraken_head(newmon);
-
-    return (mons_class_can_display_wounds(newmon.type));
+    return (mons_class_can_display_wounds(mon->type));
 }
 
 // Size based on zombie class.
@@ -2547,14 +2541,12 @@ mon_intel_type mons_class_intel(int mc)
 
 mon_intel_type mons_intel(const monster* mon)
 {
-    monster newmon = *mon;
-
-    _get_kraken_head(newmon);
+    _get_kraken_head(mon);
 
     if (mons_enslaved_soul(mon))
         return (mons_class_intel(mons_zombie_base(mon)));
 
-    return (mons_class_intel(newmon.type));
+    return (mons_class_intel(mon->type));
 }
 
 habitat_type mons_class_habitat(int mc, bool real_amphibious)
