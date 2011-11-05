@@ -2007,7 +2007,7 @@ void check_demonic_guardian()
 
 void check_antennae_detect()
 {
-    int radius = player_mutation_level(MUT_ANTENNAE) * 2 - 1;
+    int radius = player_mutation_level(MUT_ANTENNAE) * 2;
     if (you.religion == GOD_ASHENZARI && !player_under_penance())
         radius = std::max(radius, you.piety / 20);
     if (radius <= 0)
