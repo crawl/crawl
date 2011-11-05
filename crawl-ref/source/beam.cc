@@ -3103,7 +3103,7 @@ void bolt::tracer_affect_player()
         mpr(messages[i].c_str(), MSGCH_WARN);
 
     apply_hit_funcs(&you, 0);
-    extra_range_used += range_used_on_hit(&you);
+    extra_range_used += range_used_on_hit();
 }
 
 bool bolt::misses_player()
@@ -3253,7 +3253,7 @@ void bolt::affect_player_enchantment()
         if (flavour == BEAM_TELEPORT && you.level_type == LEVEL_ABYSS)
             xom_is_stimulated(200);
 
-        extra_range_used += range_used_on_hit(&you);
+        extra_range_used += range_used_on_hit();
         return;
     }
 
@@ -3518,7 +3518,7 @@ void bolt::affect_player_enchantment()
 
     // Regardless of effect, we need to know if this is a stopper
     // or not - it seems all of the above are.
-    extra_range_used += range_used_on_hit(&you);
+    extra_range_used += range_used_on_hit();
 }
 
 void bolt::affect_actor(actor *act)
@@ -3730,7 +3730,7 @@ void bolt::affect_player()
 
     internal_ouch(hurted);
 
-    extra_range_used += range_used_on_hit(&you);
+    extra_range_used += range_used_on_hit();
 
     if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
          || (name == "chilling blast" && you.airborne()))
@@ -3796,7 +3796,7 @@ void bolt::tracer_enchantment_affect_monster(monster* mon)
     if (!beam_cancelled)
     {
         apply_hit_funcs(mon, 0);
-        extra_range_used += range_used_on_hit(mon);
+        extra_range_used += range_used_on_hit();
     }
 }
 
@@ -3984,7 +3984,7 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
     apply_hit_funcs(mon, final);
 
     // Either way, we could hit this monster, so update range used.
-    extra_range_used += range_used_on_hit(mon);
+    extra_range_used += range_used_on_hit();
 }
 
 void bolt::tracer_affect_monster(monster* mon)
@@ -4089,7 +4089,7 @@ void bolt::enchantment_affect_monster(monster* mon)
     }
 
     apply_hit_funcs(mon, 0);
-    extra_range_used += range_used_on_hit(mon);
+    extra_range_used += range_used_on_hit();
 }
 
 void bolt::monster_post_hit(monster* mon, int dmg)
@@ -4578,7 +4578,7 @@ void bolt::affect_monster(monster* mon)
     }
 
     apply_hit_funcs(mon, final);
-    extra_range_used += range_used_on_hit(mon);
+    extra_range_used += range_used_on_hit();
 }
 
 bool bolt::has_saving_throw() const
@@ -5013,7 +5013,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
 
 // Extra range used on hit.
-int bolt::range_used_on_hit(const actor* victim) const
+int bolt::range_used_on_hit() const
 {
     int used = 0;
 
@@ -5048,7 +5048,7 @@ int bolt::range_used_on_hit(const actor* victim) const
         return (used);
 
     for (unsigned int i = 0; i < range_funcs.size(); ++i)
-        if ((*range_funcs[i])(*this, victim, used))
+        if ((*range_funcs[i])(*this, used))
             break;
 
     return (used);

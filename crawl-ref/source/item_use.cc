@@ -1549,8 +1549,7 @@ static bool _poison_hit_victim(bolt& beam, actor* victim, int dmg)
     return (true);
 }
 
-static bool _item_penetrates_victim(const bolt &beam, const actor *victim,
-                                    int &used)
+static bool _item_penetrates_victim(const bolt &beam, int &used)
 {
     if (beam.aimed_at_feet)
         return (false);

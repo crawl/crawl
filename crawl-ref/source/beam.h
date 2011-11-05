@@ -43,8 +43,7 @@ struct tracer_info
 
 struct bolt;
 
-typedef bool (*range_used_func)(const bolt& beam, const actor* victim,
-                                int &used);
+typedef bool (*range_used_func)(const bolt& beam, int &used);
 typedef bool (*beam_damage_func)(bolt& beam, actor* victim, int &dmg,
                                  std::string &dmg_msg);
 typedef bool (*beam_hit_func)(bolt& beam, actor* victim, int dmg);
@@ -224,7 +223,7 @@ private:
 
     int beam_source_as_target() const;
 
-    int range_used_on_hit(const actor* victim) const;
+    int range_used_on_hit() const;
 
     std::string zapper() const;
 
