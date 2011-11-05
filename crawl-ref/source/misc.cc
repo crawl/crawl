@@ -1507,8 +1507,6 @@ bool mons_can_hurt_player(const monster* mon, const bool want_move)
 static bool _mons_is_always_safe(const monster *mon)
 {
     return (mon->wont_attack()
-            || mons_class_flag(mon->type, M_NO_EXP_GAIN)
-               && !mons_is_tentacle_end(mon->type)
             || mon->withdrawn()
             || mon->type == MONS_BALLISTOMYCETE && mon->number == 0);
 }
@@ -1516,8 +1514,9 @@ static bool _mons_is_always_safe(const monster *mon)
 bool mons_is_safe(const monster* mon, const bool want_move,
                   const bool consider_user_options, bool check_dist)
 {
-    // Something of a speed hack, but some vaults have a TON of plants.
-    if (mon->type == MONS_PLANT)
+    // Short-circuit plants, some vaults have tons of those.
+    // Except for inactive ballistos, players may still want these.
+    if (mons_is_firewood(mon) && mon->type != MONS_BALLISTOMYCETE)
         return true;
 
     int  dist    = grid_distance(you.pos(), mon->pos());
