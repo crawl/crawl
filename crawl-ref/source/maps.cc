@@ -1143,6 +1143,7 @@ static bool load_map_index(const std::string& cache, const std::string &base)
 
     reader inf(fp, TAG_MINOR_VERSION);
     // Discard version (it's been checked by verify_map_index).
+    // FIXME: didn't mommy teach you about "race conditions"?
     (void) unmarshallInt(inf);
     const int nmaps = unmarshallShort(inf);
     const int nexist = vdefs.size();
