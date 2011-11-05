@@ -11,6 +11,7 @@
 #include "libutil.h"
 #include "macro.h"
 #include "map_knowledge.h"
+#include "menu.h"
 #include "message.h"
 #include "mon-util.h"
 #include "options.h"
@@ -349,6 +350,16 @@ void TilesFramework::_send_version()
     // The star signals a message to the server
     send_message("*{\"msg\":\"client_path\",\"path\":\"%s\"}", WEB_DIR_PATH);
 #endif
+}
+
+void TilesFramework::push_menu(Menu* m)
+{
+    m_menu_stack.push_back(m);
+}
+
+void TilesFramework::pop_menu()
+{
+    m_menu_stack.pop_back();
 }
 
 static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
@@ -917,6 +928,18 @@ void TilesFramework::_send_everything()
         // Cannot happen
         break;
     }
+
+    // Menus
+    json_open_object();
+    json_write_string("msg", "init_menus");
+    json_open_array("menus");
+    for (unsigned int i = 0; i < m_menu_stack.size(); ++i)
+    {
+        m_menu_stack[i]->webtiles_write_menu();
+    }
+    json_close_array();
+    json_close_object();
+    send_message();
 }
 
 void TilesFramework::clrscr()
@@ -1248,6 +1271,8 @@ void TilesFramework::write_message_escaped(const std::string& s)
             m_msg_buf.append("\\\"");
         else if (c == '\\')
             m_msg_buf.append("\\\\");
+        else if (c == '\n')
+            m_msg_buf.append("\\\n");
         else
             m_msg_buf.append(1, c);
     }

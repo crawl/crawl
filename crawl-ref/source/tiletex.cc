@@ -12,17 +12,6 @@
 #include "tiletex.h"
 #include "windowmanager.h"
 
-TextureID get_dngn_tex(tileidx_t idx)
-{
-    assert(idx < TILE_FEAT_MAX);
-    if (idx < TILE_FLOOR_MAX)
-        return (TEX_FLOOR);
-    else if (idx < TILE_WALL_MAX)
-        return (TEX_WALL);
-    else
-        return (TEX_FEAT);
-}
-
 GenericTexture::GenericTexture() :
     m_handle(0),
     m_width(0),

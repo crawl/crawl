@@ -85,3 +85,30 @@ body {
 #monster_list .ellipse {
     float: right;
 }
+
+/* menus */
+#menu {
+    line-height: 1.2em;
+}
+
+#menu_title {
+    white-space: pre;
+}
+
+#menu_more {
+    white-space: pre;
+}
+
+#menu_contents {
+    overflow: hidden;
+}
+
+#menu_contents ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#menu_contents li {
+    white-space: pre;
+}

@@ -1954,7 +1954,7 @@ static int _show_keyhelp_menu(const std::vector<formatted_string> &lines,
     // FIXME: Allow for hiding Page down when at the end of the listing, ditto
     // for page up at start of listing.
     cmd_help.set_more(formatted_string::parse_string(
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
                             "<cyan>[ +/L-click : Page down.   - : Page up."
                             "           Esc/R-click exits.]"));
 #else

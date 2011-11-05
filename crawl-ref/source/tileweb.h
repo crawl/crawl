@@ -14,6 +14,8 @@
 #include <map>
 #include <sys/un.h>
 
+class Menu;
+
 class TilesFramework
 {
 public:
@@ -58,6 +60,9 @@ public:
     void put_string(char *str);
     void put_ucs_string(ucs_t *str);
     void clear_to_end_of_line();
+
+    void push_menu(Menu* m);
+    void pop_menu();
 
     void write_message(const char *format, ...);
     void finish_message();
@@ -123,6 +128,8 @@ protected:
     std::vector<std::string> m_prefixes;
     int json_object_level;
     bool need_comma;
+
+    std::vector<Menu*> m_menu_stack;
 
     enum LayerID
     {

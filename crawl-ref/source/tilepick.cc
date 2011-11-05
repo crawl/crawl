@@ -70,6 +70,17 @@ COMPILE_CHECK(MAX_TERM_COLOUR - 1
 COMPILE_CHECK(MAX_TERM_COLOUR - 1
               == TILE_BOOK_COL_LAST - TILE_BOOK_COL_FIRST + 1);
 
+TextureID get_dngn_tex(tileidx_t idx)
+{
+    assert(idx < TILE_FEAT_MAX);
+    if (idx < TILE_FLOOR_MAX)
+        return (TEX_FLOOR);
+    else if (idx < TILE_WALL_MAX)
+        return (TEX_WALL);
+    else
+        return (TEX_FEAT);
+}
+
 static tileidx_t _tileidx_monster_base(int type,
                                        bool in_water = false,
                                        int colour = 0,
