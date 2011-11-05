@@ -274,7 +274,7 @@ void wizard_create_spec_object()
     }
 }
 
-const char* _prop_name[ARTP_NUM_PROPERTIES] = {
+const char* _prop_name[] = {
     "Brand",
     "AC",
     "EV",
@@ -304,16 +304,18 @@ const char* _prop_name[ARTP_NUM_PROPERTIES] = {
     "Curse",
     "Stlth",
     "MP",
-    "Slow",
+    "Delay",
     "HP",
     "Clar",
+    "BAcc",
+    "BDam",
 };
 
 #define ARTP_VAL_BOOL 0
 #define ARTP_VAL_POS  1
 #define ARTP_VAL_ANY  2
 
-int8_t _prop_type[ARTP_NUM_PROPERTIES] = {
+int8_t _prop_type[] = {
     ARTP_VAL_POS,  //BRAND
     ARTP_VAL_ANY,  //AC
     ARTP_VAL_ANY,  //EVASION
@@ -352,6 +354,9 @@ int8_t _prop_type[ARTP_NUM_PROPERTIES] = {
 
 static void _tweak_randart(item_def &item)
 {
+    COMPILE_CHECK(ARRAYSZ(_prop_name) == ARTP_NUM_PROPERTIES);
+    COMPILE_CHECK(ARRAYSZ(_prop_type) == ARTP_NUM_PROPERTIES);
+
     if (item_is_equipped(item))
     {
         mpr("You can't tweak the randart properties of an equipped item.",
