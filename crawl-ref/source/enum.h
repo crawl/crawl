@@ -545,7 +545,7 @@ enum cloud_type
     CLOUD_STEAM,
     CLOUD_GLOOM,
     CLOUD_INK,
-#if TAG_MAJOR_VERSION > 32
+#if TAG_MAJOR_VERSION != 32
     CLOUD_PETRIFY,
 #endif
     CLOUD_HOLY_FLAMES,
