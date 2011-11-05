@@ -1164,7 +1164,7 @@ ifndef MONOSPACED_FONT
 	$(COPY) dat/tiles/VeraMono.ttf $(datadir_fp)/dat/tiles/
 endif
 endif
-ifneq ($(webdir_fp),)
+ifdef WEBTILES
 	mkdir -p $(webdir_fp)
 	$(COPY_R) webserver/game_data/* $(webdir_fp)/
 endif
