@@ -713,7 +713,7 @@ void end_nausea()
     else if (you.hunger_state <= HS_HUNGRY)
         add = ", and you need some food";
     else if (can_ingest(OBJ_FOOD, FOOD_CHUNK, true)) // carnivore/gourmand
-        add = ", let's find someone to eat";
+        add = ", so let's find someone to eat";
     mprf(MSGCH_DURATION, "Your stomach is not as upset anymore%s.", add);
 }
 
