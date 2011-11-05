@@ -2250,7 +2250,8 @@ std::string map_def::desc_or_name() const
 void map_def::write_full(writer& outf) const
 {
     cache_offset = outf.tell();
-    marshallShort(outf, MAP_CACHE_VERSION);   // Level indicator.
+    marshallUByte(outf, TAG_MAJOR_VERSION);
+    marshallUByte(outf, TAG_MINOR_VERSION);
     marshallString4(outf, name);
     prelude.write(outf);
     mapchunk.write(outf);
@@ -2270,9 +2271,10 @@ void map_def::read_full(reader& inf, bool check_cache_version)
     // reloading the index), but it's easier to save the game at this
     // point and let the player reload.
 
-    const short fp_version = unmarshallShort(inf);
+    const uint8_t major = unmarshallUByte(inf);
+    const uint8_t minor = unmarshallUByte(inf);
 
-    if (check_cache_version && fp_version != MAP_CACHE_VERSION)
+    if (major != TAG_MAJOR_VERSION || minor > TAG_MINOR_VERSION)
         throw map_load_exception(name);
 
     std::string fp_name;
