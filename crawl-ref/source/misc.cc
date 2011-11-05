@@ -1516,6 +1516,10 @@ static bool _mons_is_always_safe(const monster *mon)
 bool mons_is_safe(const monster* mon, const bool want_move,
                   const bool consider_user_options, bool check_dist)
 {
+    // Something of a speed hack, but some vaults have a TON of plants.
+    if (mon->type == MONS_PLANT)
+        return true;
+
     int  dist    = grid_distance(you.pos(), mon->pos());
 
     bool is_safe = (_mons_is_always_safe(mon)
