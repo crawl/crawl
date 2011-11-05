@@ -176,7 +176,8 @@ void reader::read(void *data, size_t size)
     }
     else
     {
-        ASSERT(_read_offset+size <= _pbuf->size());
+        if (_read_offset+size > _pbuf->size())
+            throw short_read_exception();
         if (data)
             memcpy(data, &(*_pbuf)[_read_offset], size);
 
