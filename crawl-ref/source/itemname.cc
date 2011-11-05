@@ -429,8 +429,6 @@ const char* missile_brand_name(special_missile_type brand, mbn_type t)
         return "chaos";
     case SPMSL_PENETRATION:
         return (t == MBN_TERSE ? "penet" : "penetration");
-    case SPMSL_REAPING:
-        return (t == MBN_TERSE ? "reap" : "reaping");
     case SPMSL_DISPERSAL:
         return (t == MBN_TERSE ? "disperse" : "dispersal");
     case SPMSL_NORMAL:

@@ -948,18 +948,9 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
                 "its path until it reaches maximum range.";
             break;
         case SPWPN_REAPING:
-            if (is_range_weapon(item))
-            {
-                description += "If ammo fired by it kills a monster, "
-                    "causing it to leave a corpse, the corpse will be "
-                    "animated as a zombie friendly to the killer.";
-            }
-            else
-            {
-                description += "If a monster killed with it leaves a "
-                    "corpse in good enough shape, the corpse will be "
-                    "animated as a zombie friendly to the killer.";
-            }
+            description += "If a monster killed with it leaves a "
+                "corpse in good enough shape, the corpse will be "
+                "animated as a zombie friendly to the killer.";
             break;
         case SPWPN_ANTIMAGIC:
             description += "It disrupts the flow of magical energy around "
@@ -1183,11 +1174,6 @@ static std::string _describe_ammo(const item_def &item)
        case SPMSL_RETURNING:
             description += "A skilled user can throw it in such a way "
                 "that it will return to its owner.";
-            break;
-        case SPMSL_REAPING:
-            description += "If it kills a monster, causing it to leave "
-                "a corpse, the corpse will be animated as a zombie "
-                "friendly to the one who " + threw_or_fired + " it.";
             break;
         case SPMSL_PENETRATION:
             description += "It will pass through any targets it hits, "
