@@ -270,6 +270,9 @@ public:
   // Count of spells cast.
   std::map<spell_type, FixedVector<int, 27> > spell_usage;
 
+  // For now, only control the speed of abyss morphing.
+  int abyss_speed;
+
   // Non-saved UI state:
   unsigned short prev_targ;
   coord_def      prev_grd_targ;
@@ -315,9 +318,6 @@ public:
   int time_taken;
 
   int shield_blocks;         // number of shield blocks since last action
-
-  // For now, only control the speed of abyss morphing.
-  int abyss_speed;
 
   int           old_hunger;  // used for hunger delta-meter (see output.cc)
 
