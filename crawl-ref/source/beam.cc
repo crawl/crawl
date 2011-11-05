@@ -4539,7 +4539,10 @@ void bolt::affect_monster(monster* mon)
     monster  orig   = *mon;
 
     if (mon->alive())
+    {
+        apply_hit_funcs(mon, final);
         monster_post_hit(mon, final);
+    }
     else
     {
         // Preserve name of the source monster if it winds up killing
@@ -4570,14 +4573,6 @@ void bolt::affect_monster(monster* mon)
         }
     }
 
-    // Give the callbacks a dead-but-valid monster object.
-    if (mon->type == MONS_NO_MONSTER)
-    {
-        orig.hit_points = -1;
-        mon = &orig;
-    }
-
-    apply_hit_funcs(mon, final);
     extra_range_used += range_used_on_hit();
 }
 
