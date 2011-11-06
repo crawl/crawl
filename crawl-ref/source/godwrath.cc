@@ -701,13 +701,14 @@ static bool _beogh_retribution()
                 ASSERT(menv[mon].weapon() != NULL);
                 item_def& wpn(*menv[mon].weapon());
 
-                // FIXME: Mega-hack (breaks encapsulation too).
-                wpn.flags &= ~ISFLAG_RACIAL_MASK;
                 if (am_orc)
+                {
+                    set_equip_race(wpn, ISFLAG_NO_RACE);
                     set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ORC_SLAYING);
+                }
                 else
                 {
-                    wpn.flags |= ISFLAG_ORCISH;
+                    set_equip_race(wpn, ISFLAG_ORCISH);
                     set_item_ego_type(wpn, OBJ_WEAPONS, SPWPN_ELECTROCUTION);
                 }
 
