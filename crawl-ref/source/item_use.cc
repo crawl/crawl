@@ -1687,8 +1687,8 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
     return (true);
 }
 
-static bool _charged_hit_victim(bolt &beam, actor* victim, int &dmg,
-                                   std::string &dmg_msg)
+static bool _charged_damages_victim(bolt &beam, actor* victim, int &dmg,
+                                    std::string &dmg_msg)
 {
     if (victim->airborne() || victim->res_elec() > 0 || !one_chance_in(3))
         return (false);
@@ -1726,8 +1726,8 @@ static bool _charged_hit_victim(bolt &beam, actor* victim, int &dmg,
     return (false);
 }
 
-static bool _blessed_hit_victim(bolt &beam, actor* victim, int &dmg,
-                                   std::string &dmg_msg)
+static bool _blessed_damages_victim(bolt &beam, actor* victim, int &dmg,
+                                    std::string &dmg_msg)
 {
     if (victim->undead_or_demonic())
     {
@@ -2113,9 +2113,9 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
     if (disperses)
         beam.hit_funcs.push_back(_dispersal_hit_victim);
     if (charged)
-        beam.damage_funcs.push_back(_charged_hit_victim);
+        beam.damage_funcs.push_back(_charged_damages_victim);
     if (blessed)
-        beam.damage_funcs.push_back(_blessed_hit_victim);
+        beam.damage_funcs.push_back(_blessed_damages_victim);
 
     // New needle brands have no effect when thrown without launcher.
     if (launcher != NULL)
