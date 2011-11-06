@@ -3935,9 +3935,6 @@ static mon_body_shape _get_ghost_shape(const monster* mon)
     case SP_CENTAUR:
         return (MON_SHAPE_CENTAUR);
 
-    case SP_TENGU:
-        return (MON_SHAPE_HUMANOID_WINGED);
-
     case SP_RED_DRACONIAN:
     case SP_WHITE_DRACONIAN:
     case SP_GREEN_DRACONIAN:
@@ -4081,7 +4078,7 @@ mon_body_shape get_mon_shape(const int type)
     case 'G': // floating eyeballs and orbs
         return (MON_SHAPE_ORB);
     case 'H': // minotaurs, manticores, hippogriffs and griffins
-        if (type == MONS_MINOTAUR)
+        if (type == MONS_MINOTAUR || type == MONS_TENGU)
             return (MON_SHAPE_HUMANOID);
         else if (type == MONS_MANTICORE)
             return (MON_SHAPE_QUADRUPED);
