@@ -1098,6 +1098,8 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                               random_choose_weighted(3, SPWPN_CHAOS,
                                                      1, SPWPN_DISTORTION,
                                                      0));
+            item.plus  = random2(5);
+            item.plus2 = random2(5);
             item.props["autoinscribe"] = "Psyche";
         }
         break;
