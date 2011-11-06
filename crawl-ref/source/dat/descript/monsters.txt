@@ -76,7 +76,7 @@ Donald
 {{
 local descript = "An adventurer just like you, trying to find the Orb."
 
-if you.race() ~= "Merfolk" then
+if you.race() ~= "Merfolk" and you.race() ~= "Octopode" then
     descript = descript .. " Unlike you, and d"
 else
     descript = descript .. " D"
