@@ -2699,7 +2699,7 @@ static void _summon_dancing_weapon(int power, deck_rarity_type rarity)
         newstats.init_dancing_weapon(wpn, power / 4);
 
         menv[mon].set_ghost(newstats);
-        menv[mon].dancing_weapon_init();
+        menv[mon].ghost_demon_init();
     }
     else
         mpr("You see a puff of smoke.");

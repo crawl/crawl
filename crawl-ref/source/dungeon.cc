@@ -4505,7 +4505,7 @@ int dgn_place_monster(mons_spec &mspec,
         item_def *wpn = mons.mslot_item(MSLOT_WEAPON);
         ASSERT(wpn);
         mons.ghost->init_dancing_weapon(*wpn, 180);
-        mons.dancing_weapon_init();
+        mons.ghost_demon_init();
     }
 
     for (unsigned int i = 0; i < mspec.ench.size(); i++)

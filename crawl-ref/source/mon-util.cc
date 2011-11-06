@@ -2267,7 +2267,8 @@ void define_monster(monster* mons)
         ghost_demon ghost;
         ghost.init_random_demon();
         mons->set_ghost(ghost);
-        mons->pandemon_init();
+        mons->ghost_demon_init();
+        mons->flags |= MF_INTERESTING;
         mons->bind_melee_flags();
         mons->bind_spell_flags();
         break;
@@ -2292,7 +2293,7 @@ void define_monster(monster* mons)
     {
         ghost_demon ghost;
         ghost.init_ugly_thing(mcls == MONS_VERY_UGLY_THING);
-        mons->set_ghost(ghost, false);
+        mons->set_ghost(ghost);
         mons->uglything_init();
         break;
     }
@@ -2301,9 +2302,10 @@ void define_monster(monster* mons)
     {
         ghost_demon ghost;
         ghost.init_labrat();
-        mons->set_ghost(ghost, false);
-        mons->labrat_init();
+        mons->set_ghost(ghost);
+        mons->ghost_demon_init();
     }
+
     default:
         break;
     }
@@ -2526,6 +2528,9 @@ int mons_class_zombie_base_speed(int zombie_base_mc)
 
 int mons_base_speed(const monster* mon)
 {
+    if (mon->ghost.get())
+        return mon->ghost->speed;
+
     if (mons_enslaved_soul(mon))
         return (mons_class_base_speed(mons_zombie_base(mon)));
 
