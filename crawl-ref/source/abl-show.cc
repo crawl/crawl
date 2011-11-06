@@ -1034,7 +1034,7 @@ static talent _get_talent(ability_type ability, bool check_confused)
             failure -= 20;
         break;
 
-    case ABIL_FLY:              // this is for kenku {dlb}
+    case ABIL_FLY:              // this is for tengu {dlb}
         failure = 45 - (3 * you.experience_level);
         break;
 
@@ -1334,10 +1334,10 @@ bool activate_ability()
     {
         // Give messages if the character cannot use innate talents right now.
         // * Vampires can't turn into bats when full of blood.
-        // * Permanent flying (Kenku) cannot be turned off.
+        // * Permanent flying (Tengu) cannot be turned off.
         if (you.species == SP_VAMPIRE && you.experience_level >= 3)
             mpr("Sorry, you're too full to transform right now.");
-        else if (you.species == SP_KENKU && you.experience_level >= 5
+        else if (you.species == SP_TENGU && you.experience_level >= 5
                  || player_mutation_level(MUT_BIG_WINGS))
         {
             if (you.flight_mode() == FL_LEVITATE)
@@ -2106,7 +2106,7 @@ static bool _do_ability(const ability_def& abil)
         go_berserk(true);
         break;
 
-    // Fly (kenku) - eventually becomes permanent (see main.cc).
+    // Fly (tengu) - eventually becomes permanent (see main.cc).
     case ABIL_FLY:
         if (you.experience_level < 15)
             cast_fly(you.experience_level * 4);
@@ -2158,7 +2158,7 @@ static bool _do_ability(const ability_def& abil)
     case ABIL_EVOKE_STOP_LEVITATING:
         ASSERT(!you.attribute[ATTR_LEV_UNCANCELLABLE]);
         you.duration[DUR_LEVITATION] = 0;
-        // cancels all sources at once: boots + kenku
+        // cancels all sources at once: boots + tengu
         you.attribute[ATTR_PERM_LEVITATION] = 0;
         land_player();
         break;
@@ -3070,13 +3070,13 @@ std::vector<talent> your_talents(bool check_confused)
     if (you.species == SP_VAMPIRE && you.experience_level >= 6)
         _add_talent(talents, ABIL_BOTTLE_BLOOD, false);
 
-    if (you.species == SP_KENKU
+    if (you.species == SP_TENGU
         && !you.attribute[ATTR_PERM_LEVITATION]
         && you.experience_level >= 5
         && (you.experience_level >= 15 || !you.airborne())
         && (!form_changed_physiology() || you.form == TRAN_LICH))
     {
-        // Kenku can fly, but only from the ground
+        // Tengu can fly, but only from the ground
         // (until level 15, when it becomes permanent until revoked).
         // jmf: "upgrade" for draconians -- expensive flight
         _add_talent(talents, ABIL_FLY, check_confused);
@@ -3090,7 +3090,7 @@ std::vector<talent> your_talents(bool check_confused)
 
     if (you.attribute[ATTR_PERM_LEVITATION]
         && (!form_changed_physiology() || you.form == TRAN_LICH)
-        && you.species == SP_KENKU && you.experience_level >= 5)
+        && you.species == SP_TENGU && you.experience_level >= 5)
     {
         _add_talent(talents, ABIL_STOP_FLYING, check_confused);
     }
@@ -3160,7 +3160,7 @@ std::vector<talent> your_talents(bool check_confused)
 
     if (player_evokable_levitation())
     {
-        // Has no effect on permanently flying Kenku.
+        // Has no effect on permanently flying Tengu.
         if (!you.permanent_flight())
         {
             // You can still evoke perm levitation if you have temporary one.

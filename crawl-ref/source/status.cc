@@ -786,7 +786,7 @@ static void _describe_burden(status_info* inf)
         inf->long_text    = "You are burdened.";
         break;
     case BS_UNENCUMBERED:
-        if (you.species == SP_KENKU && you.flight_mode() == FL_FLY)
+        if (you.species == SP_TENGU && you.flight_mode() == FL_FLY)
         {
             if (you.travelling_light())
                 inf->long_text = "Your small burden allows quick flight.";

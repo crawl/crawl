@@ -3935,7 +3935,7 @@ static mon_body_shape _get_ghost_shape(const monster* mon)
     case SP_CENTAUR:
         return (MON_SHAPE_CENTAUR);
 
-    case SP_KENKU:
+    case SP_TENGU:
         return (MON_SHAPE_HUMANOID_WINGED);
 
     case SP_RED_DRACONIAN:

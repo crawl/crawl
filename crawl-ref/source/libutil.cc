@@ -523,7 +523,7 @@ std::string pluralise(const std::string &name,
     }
     else if (ends_with(name, "sheep") || ends_with(name, "fish")
              || ends_with(name, "folk") || ends_with(name, "spawn")
-             || ends_with(name, "kenku") || ends_with(name, "shedu")
+             || ends_with(name, "tengu") || ends_with(name, "shedu")
              // "shedu" is male, "lammasu" is female of the same creature
              || ends_with(name, "lammasu") || ends_with(name, "lamassu"))
     {

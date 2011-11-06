@@ -592,7 +592,7 @@ manticore MONS_MANTICORE
 griffon MONS_GRIFFON
 harpy MONS_HARPY
 sphinx MONS_SPHINX
-kenku MONS_KENKU
+tengu MONS_TENGU
 %sdir dc-mon/holy
 shedu MONS_SHEDU
 

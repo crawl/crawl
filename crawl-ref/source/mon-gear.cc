@@ -606,7 +606,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_YELLOW_DRACONIAN:
     case MONS_PURPLE_DRACONIAN:
     case MONS_GREY_DRACONIAN:
-    case MONS_KENKU:
+    case MONS_TENGU:
         if (mons_genus(mon->type) == MONS_NAGA)
             item_race = MAKE_ITEM_NO_RACE;
 
@@ -1610,7 +1610,7 @@ void give_shield(monster* mon, int level)
                                   level, MAKE_ITEM_NO_RACE);
         }
         break;
-    case MONS_KENKU:
+    case MONS_TENGU:
     case MONS_GNOLL_SERGEANT:
         if (one_chance_in(3))
         {

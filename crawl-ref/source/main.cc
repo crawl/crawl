@@ -2192,7 +2192,7 @@ static void _decrement_petrification(int delay)
             dur = 0;
             // If we'd kill the player when active flight stops, this will
             // need to pass the killer.  Unlike monsters, almost all cFly is
-            // magical (sans kenku) so there's no flapping of wings, though.
+            // magical (sans tengu) so there's no flapping of wings, though.
             you.fully_petrify(NULL);
         }
         else if (dur < 15 && old_dur >= 15)

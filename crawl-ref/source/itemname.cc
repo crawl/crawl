@@ -3064,7 +3064,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case AMU_CONTROLLED_FLIGHT:
             return (player_genus(GENPC_DRACONIAN)
-                    || (you.species == SP_KENKU && you.experience_level >= 5));
+                    || (you.species == SP_TENGU && you.experience_level >= 5));
 
         case RING_WIZARDRY:
             return (you.religion == GOD_TROG);

@@ -1597,18 +1597,18 @@ Minotaurs
   Minotaurs are extremely good at all forms of physical combat, but are awful at
   using any type of magic. They can wear all armour except for some headgear.
 
-Kenku
-  The Kenku are an ancient and feared species of bird-people with a legendary
+Tengu
+  The Tengu are an ancient and feared species of bird-people with a legendary
   propensity for violence. Basically humanoid with bird-like heads and clawed
-  feet, the Kenku can wear all types of armour except helmets and boots. Despite
-  their lack of wings, powerful Kenku can fly, and very powerful members of this
+  feet, the Tengu can wear all types of armour except helmets and boots. Despite
+  their lack of wings, powerful Tengu can fly, and very powerful members of this
   species can stay in the air for as long as they wish to do so. They fly a bit
   faster if they carry little load.
 
   They are experts at all forms of fighting, including the magical arts of
   combat (conjurations, summonings and, to a lesser extent, necromancy). They
   are good at air and fire elemental magic, but poor at ice and earth magic.
-  Kenku do not appreciate any form of servitude, and so are poor at using
+  Tengu do not appreciate any form of servitude, and so are poor at using
   invocations. Their light avian bodies cannot sustain a great deal of injury.
 
 Demigods
@@ -2804,7 +2804,7 @@ Shift-direction
 
 The stats area has room for showing the enchantments which you currently enjoy
 or have to suffer. Generally, these are only shown for temporary effects, so a
-Kenku's native flying ability is not noted, and neither is the effect of a ring
+Tengu's native flying ability is not noted, and neither is the effect of a ring
 of regeneration. A list of these enchantments follows, as some are either
 abbreviated or may have unusual effects.
 

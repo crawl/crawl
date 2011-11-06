@@ -203,7 +203,7 @@ static std::string _stk_genus_short_cap()
 static std::string _stk_walker()
 {
     return (Skill_Species == SP_NAGA    ? "Slider" :
-            Skill_Species == SP_KENKU   ? "Glider" :
+            Skill_Species == SP_TENGU   ? "Glider" :
             Skill_Species == SP_OCTOPODE ? "Wriggler"
                                         : "Walker");
 }
@@ -226,7 +226,7 @@ static std::string _stk_weight()
     case SP_HIGH_ELF:
     case SP_DEEP_ELF:
     case SP_SLUDGE_ELF:
-    case SP_KENKU:
+    case SP_TENGU:
         return "Light";
 
     case SP_HALFLING:

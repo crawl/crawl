@@ -3118,10 +3118,10 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_KENKU, 'H', LIGHTBLUE, "kenku", // likely to become 'Q'
+    MONS_TENGU, 'H', LIGHTBLUE, "tengu", // likely to become 'Q'
     M_WARM_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
-    550, 10, MONS_KENKU, MONS_KENKU, MH_NATURAL, -3,
+    550, 10, MONS_TENGU, MONS_TENGU, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 10}, {AT_PECK, AF_PLAIN, 5}, {AT_CLAW, AF_PLAIN, 5},
        AT_NO_ATK },
     { 5, 3, 5, 0 },

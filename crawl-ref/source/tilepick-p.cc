@@ -525,8 +525,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_DEMONSPAWN;
     case SP_GHOUL:
         return TILEP_BASE_GHOUL;
-    case SP_KENKU:
-        return TILEP_BASE_KENKU;
+    case SP_TENGU:
+        return TILEP_BASE_TENGU;
     case SP_MERFOLK:
         return TILEP_BASE_MERFOLK;
     case SP_VAMPIRE:
