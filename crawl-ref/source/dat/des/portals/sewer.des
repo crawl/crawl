@@ -234,7 +234,7 @@ SHUFFLE:  deef
 ITEM:     potion of heal wounds / potion of curing
 ITEM:     potion of curing / potion of curing q:2 w:5 / \
           potion of heal wounds / potion of heal wounds q:2 w:5
-KITEM:    f = potion of levitation q:2, potion of restore abilities w:7 / \
+KITEM:    f = potion of levitation q:2 ident:type, potion of restore abilities w:7 / \
           potion of gain intelligence / potion of gain strength / \
           potion of gain dexterity
 KFEAT:    f = shallow_water
@@ -814,8 +814,8 @@ COLOUR: HJ = blue
 KFEAT:  GnHJ = w
 COLOUR: G = green
 COLOUR: s = cyan
-KITEM:  M = potion of levitation q:4
-KITEM:  N = scroll of teleportation q:2
+KITEM:  M = potion of levitation q:4 ident:type
+KITEM:  N = scroll of teleportation q:2 ident:type
 : sewer_setup(_G)
 epilogue{{
 sewer_milestone(_G)
