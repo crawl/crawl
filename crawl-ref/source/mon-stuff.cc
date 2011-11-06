@@ -200,10 +200,12 @@ void monster_drop_things(monster* mons,
                 if (mark_item_origins && mitm[item].defined())
                     origin_set_monster(mitm[item], mons);
 
-                if (mons_is_unique(mons->type)
-                    && (mitm[item].base_type == OBJ_ARMOUR
-                        || mitm[item].base_type == OBJ_WEAPONS))
-                    add_inscription(mitm[item], mons->name(DESC_PLAIN, true));
+                if (mitm[item].props.exists("autoinscribe"))
+                {
+                    add_inscription(mitm[item],
+                        mitm[item].props["autoinscribe"].get_string());
+                    mitm[item].props.erase("autoinscribe");
+                }
 
                 // If a monster is swimming, the items are ALREADY
                 // underwater.

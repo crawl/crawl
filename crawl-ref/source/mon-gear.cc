@@ -1098,6 +1098,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                               random_choose_weighted(3, SPWPN_CHAOS,
                                                      1, SPWPN_DISTORTION,
                                                      0));
+            item.props["autoinscribe"] = "Psyche";
         }
         break;
 
@@ -1125,6 +1126,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                                  2, SPWPN_VENOM,
                                                  1, SPWPN_DRAINING,
                                                  0));
+        item.props["autoinscribe"] = "Sonja";
         break;
 
     case MONS_MAURICE:
@@ -1660,6 +1662,7 @@ void give_shield(monster* mon, int level)
             {
                 set_item_ego_type(*shield, OBJ_ARMOUR, SPARM_REFLECTION);
                 set_equip_desc(*shield, ISFLAG_GLOWING);
+                shield->props["autoinscribe"] = "Donald";
             }
         }
 
