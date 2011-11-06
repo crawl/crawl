@@ -1746,9 +1746,6 @@ bool is_dumpable_artefact(const item_def &item, bool verbose)
 //
 // get_item_description
 //
-// Note that the string will include dollar signs which should
-// be interpreted as carriage returns.
-//
 //---------------------------------------------------------------
 std::string get_item_description(const item_def &item, bool verbose,
                                  bool dump, bool noquote)
