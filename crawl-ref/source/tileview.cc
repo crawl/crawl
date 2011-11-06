@@ -76,16 +76,19 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
 
     if (lev == LEVEL_PANDEMONIUM)
     {
-        switch (random2(7))
+        switch (random2(9))
         {
-        default:
-        case 0: flv.wall = TILE_WALL_ZOT_BLUE; break;
-        case 1: flv.wall = TILE_WALL_ZOT_RED; break;
-        case 2: flv.wall = TILE_WALL_ZOT_MAGENTA; break;
-        case 3: flv.wall = TILE_WALL_ZOT_GREEN; break;
-        case 4: flv.wall = TILE_WALL_ZOT_CYAN; break;
-        case 5: flv.wall = TILE_WALL_ZOT_YELLOW; break;
-        case 6: flv.wall = TILE_WALL_ZOT_WHITE; break;
+            default:
+            case 0: flv.wall = TILE_WALL_BARS_RED; break;
+            case 1: flv.wall = TILE_WALL_BARS_BLUE; break;
+            case 2: flv.wall = TILE_WALL_BARS_CYAN; break;
+            case 3: flv.wall = TILE_WALL_BARS_GREEN; break;
+            case 4: flv.wall = TILE_WALL_BARS_MAGENTA; break;
+            case 5: flv.wall = TILE_WALL_BARS_BROWN; break;
+            case 6: flv.wall = TILE_WALL_BARS_LIGHTGRAY; break;
+            case 7: flv.wall = TILE_WALL_BARS_DARKGRAY; break;
+            // Wall_flesh used to have a 1/3 chance
+            case 8: flv.wall = TILE_WALL_FLESH; break;
         }
 
         switch (random2(8))
@@ -100,9 +103,6 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
             case 6: flv.floor = TILE_FLOOR_DEMONIC_LIGHTGRAY; break;
             case 7: flv.floor = TILE_FLOOR_DEMONIC_DARKGRAY; break;
         }
-
-        if (one_chance_in(3))
-            flv.wall = TILE_WALL_FLESH;
 
         return;
     }
