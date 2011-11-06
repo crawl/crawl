@@ -671,3 +671,18 @@ demonic_red9
 %lum 0 -10
 %repeat FLOOR_DEMONIC FLOOR_DEMONIC_DARKGRAY
 %resetcol
+
+%weight 10
+green_bones01 FLOOR_GREEN_BONES
+green_bones02
+green_bones03
+green_bones04
+green_bones05
+green_bones06
+green_bones07
+green_bones08
+%weight 3
+green_bones09
+green_bones10
+green_bones11
+green_bones12
