@@ -578,8 +578,8 @@ TAGS:    bailey_axe no_rotate no_item_gen no_monster_gen
 LFLAGS:  no_tele_control
 #
 ITEM:    any good_item
-ITEM:    potion of levitation
-ITEM:    ring of levitation
+ITEM:    potion of levitation ident:type
+ITEM:    ring of levitation ident:type
 SUBST:   e : eeef
 NSUBST:  f = 1:f / *:.
 SUBST:   e = e..
