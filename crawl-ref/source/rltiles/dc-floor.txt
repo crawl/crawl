@@ -620,3 +620,54 @@ black_cobalt09
 black_cobalt10
 black_cobalt11
 black_cobalt12
+
+%lum 0 -5
+%weight 50
+demonic_red1 FLOOR_DEMONIC FLOOR_DEMONIC_RED
+%weight 5
+demonic_red2
+demonic_red3
+demonic_red4
+%weight 10
+demonic_red5
+demonic_red6
+demonic_red7
+demonic_red8
+%weight 2
+demonic_red9
+
+%variation FLOOR_DEMONIC blue
+%hue 0 240
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_BLUE
+%resetcol
+
+%variation FLOOR_DEMONIC green
+%hue 0 90
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_GREEN
+%resetcol
+
+%variation FLOOR_DEMONIC cyan
+%hue 0 180
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_CYAN
+%resetcol
+
+%variation FLOOR_DEMONIC magenta
+%hue 0 300
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_MAGENTA
+%resetcol
+
+%variation FLOOR_DEMONIC brown
+%hue 0 30
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_BROWN
+%resetcol
+
+%variation FLOOR_DEMONIC lightgray
+%desat 0
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_LIGHTGRAY
+%resetcol
+
+%variation FLOOR_DEMONIC darkgray
+%desat 0
+%lum 0 -10
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_DARKGRAY
+%resetcol
