@@ -76,7 +76,6 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
 
     if (lev == LEVEL_PANDEMONIUM)
     {
-        flv.floor = TILE_FLOOR_TOMB;
         switch (random2(7))
         {
         default:
@@ -89,10 +88,21 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
         case 6: flv.wall = TILE_WALL_ZOT_WHITE; break;
         }
 
+        switch (random2(8))
+        {
+            default:
+            case 0: flv.floor = TILE_FLOOR_DEMONIC_RED; break;
+            case 1: flv.floor = TILE_FLOOR_DEMONIC_BLUE; break;
+            case 2: flv.floor = TILE_FLOOR_DEMONIC_GREEN; break;
+            case 3: flv.floor = TILE_FLOOR_DEMONIC_CYAN; break;
+            case 4: flv.floor = TILE_FLOOR_DEMONIC_MAGENTA; break;
+            case 5: flv.floor = TILE_FLOOR_DEMONIC_BROWN; break;
+            case 6: flv.floor = TILE_FLOOR_DEMONIC_LIGHTGRAY; break;
+            case 7: flv.floor = TILE_FLOOR_DEMONIC_DARKGRAY; break;
+        }
+
         if (one_chance_in(3))
             flv.wall = TILE_WALL_FLESH;
-        if (one_chance_in(3))
-            flv.floor = TILE_FLOOR_NERVES;
 
         return;
     }
