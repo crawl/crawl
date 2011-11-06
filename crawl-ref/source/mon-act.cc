@@ -2844,7 +2844,7 @@ static bool _handle_pickup(monster* mons)
 
     // Hack - Harpies fly over water, but we don't have a general
     // system for monster igrd yet.  Flying intelligent monsters
-    // (kenku!) would also count here.
+    // (tengu!) would also count here.
     dungeon_feature_type feat = grd(mons->pos());
 
     if ((feat == DNGN_LAVA || feat == DNGN_DEEP_WATER) && !mons->flight_mode())

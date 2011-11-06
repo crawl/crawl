@@ -232,7 +232,7 @@ formatted_string describe_mutations()
         have_any = true;
         break;
 
-    case SP_KENKU:
+    case SP_TENGU:
         if (you.experience_level > 4)
         {
             result += "You can fly";

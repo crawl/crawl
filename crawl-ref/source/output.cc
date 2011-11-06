@@ -2140,7 +2140,7 @@ static std::string _status_mut_abilities(int sw)
               mutations.push_back("breathe poison");
           break;
 
-      case SP_KENKU:
+      case SP_TENGU:
           if (you.experience_level > 4)
           {
               std::string help = "able to fly";

@@ -1686,7 +1686,7 @@ static const char* old_species[]=
     "Red Draconian", "White Draconian", "Green Draconian", "Yellow Draconian",
     "Grey Draconian", "Black Draconian", "Purple Draconian", "Mottled Draconian",
     "Pale Draconian", "Draconian", "Centaur", "Demigod", "Spriggan", "Minotaur",
-    "Demonspawn", "Ghoul", "Kenku", "Merfolk", "Vampire", "Deep Dwarf", "Felid",
+    "Demonspawn", "Ghoul", "Tengu", "Merfolk", "Vampire", "Deep Dwarf", "Felid",
     "Octopode",
 };
 

@@ -1329,8 +1329,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_MINOTAUR;
     case MONS_SHEDU:
         return TILEP_MONS_SHEDU;
-    case MONS_KENKU:
-        return TILEP_MONS_KENKU;
+    case MONS_TENGU:
+        return TILEP_MONS_TENGU;
 
     // ice beast ('I')
     case MONS_ICE_BEAST:
@@ -3623,8 +3623,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_HARPY;
     case MONS_MINOTAUR:
         return TILE_CORPSE_MINOTAUR;
-    case MONS_KENKU:
-        return TILE_CORPSE_KENKU;
+    case MONS_TENGU:
+        return TILE_CORPSE_TENGU;
     case MONS_SPHINX:
         return TILE_CORPSE_SPHINX;
     case MONS_SHEDU:

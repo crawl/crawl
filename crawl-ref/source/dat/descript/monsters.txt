@@ -1166,7 +1166,7 @@ jumping spider
 
 A large spider with an extraordinary ability to leap to its prey from a great distance.
 %%%%
-kenku
+tengu
 
 A bird-brained creature that looks at you with hatred.
 %%%%
@@ -2013,7 +2013,7 @@ A winged demon covered in shiny metallic scales. It has a legion of imp minions 
 # Vault-defined monsters
 air elemental statue
 
-A delicate statue of a kenku gliding through the air. It looks quite insubstantial.
+A delicate statue of a tengu gliding through the air. It looks quite insubstantial.
 %%%%
 ancient champion
 

@@ -29,7 +29,7 @@ static species_type species_order[] = {
     // significantly different body type from human
     SP_NAGA,           SP_CENTAUR,
     SP_OGRE,           SP_TROLL,
-    SP_MINOTAUR,       SP_KENKU,
+    SP_MINOTAUR,       SP_TENGU,
     SP_BASE_DRACONIAN,
     // celestial species
     SP_DEMIGOD,        SP_DEMONSPAWN,
@@ -171,7 +171,7 @@ std::string species_name(species_type speci, bool genus, bool adj)
         case SP_CENTAUR:    res = "Centaur";                           break;
         case SP_SPRIGGAN:   res = "Spriggan";                          break;
         case SP_MINOTAUR:   res = "Minotaur";                          break;
-        case SP_KENKU:      res = "Kenku";                             break;
+        case SP_TENGU:      res = "Tengu";                             break;
 
         case SP_HILL_ORC:
             res = (adj ? "Orcish" : genus ? "Orc" : "Hill Orc");
@@ -339,8 +339,8 @@ monster_type player_species_to_mons_species(species_type species)
         return (MONS_DEMONSPAWN);
     case SP_GHOUL:
         return (MONS_GHOUL);
-    case SP_KENKU:
-        return (MONS_KENKU);
+    case SP_TENGU:
+        return (MONS_TENGU);
     case SP_MERFOLK:
         return (MONS_MERFOLK);
     case SP_VAMPIRE:
@@ -389,7 +389,7 @@ int species_exp_modifier(species_type species)
     case SP_OCTOPODE:
         return 12;
     case SP_SPRIGGAN:
-    case SP_KENKU:
+    case SP_TENGU:
 #if TAG_MAJOR_VERSION == 32
     case SP_MOUNTAIN_DWARF:
 #endif
@@ -432,7 +432,7 @@ int species_hp_modifier(species_type species)
     case SP_SPRIGGAN:
         return -3;
     case SP_DEEP_ELF:
-    case SP_KENKU:
+    case SP_TENGU:
     case SP_KOBOLD:
         return -2;
     case SP_HIGH_ELF:
@@ -486,7 +486,7 @@ int species_mp_modifier(species_type species)
     default:
         return 0;
     case SP_SLUDGE_ELF:
-    case SP_KENKU:
+    case SP_TENGU:
         return 1;
     case SP_FELID:
     case SP_HIGH_ELF:

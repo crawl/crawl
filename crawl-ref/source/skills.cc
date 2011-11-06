@@ -59,7 +59,7 @@ int skill_cost_needed(int level)
         // as XL (a bit lower in the beginning).
         // Changed to exp apt 130 to slightly increase mid and late game prices.
         species_type sp = you.species;
-        you.species = SP_KENKU;
+        you.species = SP_TENGU;
 
         // The average starting skill total is actually lower, but monks get
         // about 1200, and they would start around skill cost level 4 if we

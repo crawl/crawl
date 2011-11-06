@@ -2376,7 +2376,7 @@ static int _player_para_evasion_bonuses(ev_ignore_type evit)
 }
 
 // Player EV bonuses for various effects and transformations. This
-// does not include kenku/merfolk EV bonuses for flight/swimming.
+// does not include tengu/merfolk EV bonuses for flight/swimming.
 int player_evasion_bonuses(ev_ignore_type evit)
 {
     int evbonus = _player_para_evasion_bonuses(evit);
@@ -2406,7 +2406,7 @@ int player_evasion_bonuses(ev_ignore_type evit)
     return (evbonus);
 }
 
-// Player EV scaling for being flying kenku or swimming merfolk.
+// Player EV scaling for being flying tengu or swimming merfolk.
 int player_scale_evasion(int prescaled_ev, const int scale)
 {
     if (you.duration[DUR_PETRIFYING])
@@ -2426,8 +2426,8 @@ int player_scale_evasion(int prescaled_ev, const int scale)
         }
         break;
 
-    case SP_KENKU:
-        // Flying Kenku get an evasion bonus.
+    case SP_TENGU:
+        // Flying Tengu get an evasion bonus.
         if (you.flight_mode() == FL_FLY)
         {
             const int ev_bonus =
@@ -3326,7 +3326,7 @@ void level_change(bool skip_attribute_increase)
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
-            case SP_KENKU:
+            case SP_TENGU:
                 if (!(you.experience_level % 4))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
 
@@ -4095,7 +4095,7 @@ bool extrinsic_amulet_effect(jewellery_type amulet)
     case AMU_CONTROLLED_FLIGHT:
         return (you.duration[DUR_CONTROLLED_FLIGHT]
                 || player_genus(GENPC_DRACONIAN)
-                || (you.species == SP_KENKU && you.experience_level >= 5)
+                || (you.species == SP_TENGU && you.experience_level >= 5)
                 || you.form == TRAN_DRAGON
                 || you.form == TRAN_BAT);
     case AMU_CLARITY:
@@ -6395,13 +6395,13 @@ bool player::permanent_levitation() const
 bool player::permanent_flight() const
 {
     return you.attribute[ATTR_PERM_LEVITATION]
-           && species == SP_KENKU && experience_level >= 15;
+           && species == SP_TENGU && experience_level >= 15;
 }
 
 bool player::light_flight() const
 {
-    // Only Kenku get perks for flying light.
-    return (species == SP_KENKU
+    // Only Tengu get perks for flying light.
+    return (species == SP_TENGU
             && flight_mode() == FL_FLY && travelling_light());
 }
 

@@ -2584,7 +2584,7 @@ std::string monster::arm_name(bool plural, bool *can_plural) const
         adj = "scaled";
         break;
 
-    case MONS_KENKU:
+    case MONS_TENGU:
         adj = "feathered";
         break;
 
