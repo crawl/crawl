@@ -35,6 +35,7 @@
 #include "env.h"
 #include "exercise.h"
 #include "fight.h"
+#include "fineff.h"
 #include "food.h"
 #include "godconduct.h"
 #include "goditem.h"
@@ -1718,11 +1719,8 @@ static bool _charged_hit_victim(bolt &beam, actor* victim, int &dmg,
 
     if (feat_is_water(grd(victim->pos())))
     {
-        if (you.can_see(victim))
-            mpr("Electricity arcs through the water!");
-
-        conduct_electricity(victim->pos(), beam.agent());
-        beam.finish_beam();
+        add_final_effect(FINEFF_LIGHTNING_DISCHARGE, beam.agent(), 0,
+                         victim->pos(), 0);
     }
 
     return (false);
