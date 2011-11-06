@@ -169,7 +169,7 @@ void ghost_demon::init_random_demon()
 
     // Is demon a spellcaster?
     // Non-spellcasters get some boosts to their melee and speed instead.
-    spellcaster = !one_chance_in(10);
+    spellcaster = !one_chance_in(3);
 
     see_invis = !one_chance_in(10);
 
@@ -204,7 +204,7 @@ void ghost_demon::init_random_demon()
     // special attack type (uses weapon brand code):
     brand = SPWPN_NORMAL;
 
-    if (!one_chance_in(3) || !spellcaster)
+    if (one_chance_in(3) || !spellcaster)
     {
         do
         {
