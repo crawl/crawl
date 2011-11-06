@@ -1337,7 +1337,7 @@
        SPELL_MAJOR_HEALING,
        SPELL_BLINK_RANGE,
        SPELL_BLINK_RANGE,
-       SPELL_BLINK_AWAY
+       SPELL_ICE_STORM
       }
     },
 
