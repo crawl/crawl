@@ -1822,15 +1822,15 @@ static int _place_monster_aux(const mgen_data &mg,
         ghost_demon ghost;
         ghost.init_ugly_thing(mon->type == MONS_VERY_UGLY_THING, false,
                               mg.colour);
-        mon->set_ghost(ghost, false);
+        mon->set_ghost(ghost);
         mon->uglything_init();
     }
     else if (mon->type == MONS_LABORATORY_RAT)
     {
         ghost_demon ghost;
         ghost.init_labrat(mg.colour);
-        mon->set_ghost(ghost, false);
-        mon->labrat_init();
+        mon->set_ghost(ghost);
+        mon->ghost_demon_init();
     }
     else if (mon->type == MONS_DANCING_WEAPON)
     {
@@ -1845,7 +1845,7 @@ static int _place_monster_aux(const mgen_data &mg,
         ghost.init_dancing_weapon(*(mon->mslot_item(MSLOT_WEAPON)),
                                   mg.summoner ? mg.power : 180);
         mon->set_ghost(ghost);
-        mon->dancing_weapon_init();
+        mon->ghost_demon_init();
     }
 
 #ifdef USE_TILE

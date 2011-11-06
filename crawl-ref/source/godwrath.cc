@@ -730,7 +730,7 @@ static bool _beogh_retribution()
                                              you.experience_level * 50 / 9);
 
                 menv[mon].set_ghost(newstats);
-                menv[mon].dancing_weapon_init();
+                menv[mon].ghost_demon_init();
 
                 num_created++;
             }

@@ -230,6 +230,18 @@ void ghost_demon::init_random_demon()
     // hit dice:
     xl = 10 + roll_dice(2, 10);
 
+    // Don't make greased-lightning Pandemonium demons in the dungeon
+    // max speed = 17). Demons in Pandemonium can be up to speed 20,
+    // possibly with haste. Non-caster demons are likely to be fast.
+    if (you.level_type == LEVEL_DUNGEON)
+        speed = (!spellcaster ? 11 + roll_dice(2, 3) :
+                 one_chance_in(3) ? 10 :
+                 7 + roll_dice(2, 5));
+    else
+        speed = (!spellcaster ? 12 + roll_dice(2, 4) :
+                 one_chance_in(3) ? 10 :
+                 8 + roll_dice(2, 6));
+
     // Does demon cycle colours?
     cycle_colours = one_chance_in(10);
 
