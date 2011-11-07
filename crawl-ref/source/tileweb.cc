@@ -1075,7 +1075,7 @@ void TilesFramework::add_text_tag(text_tag_type type, const std::string &tag,
 {
 }
 
-void TilesFramework::add_text_tag(text_tag_type type, const monster* mon)
+void TilesFramework::add_text_tag(text_tag_type type, const monster_info& mon)
 {
 }
 

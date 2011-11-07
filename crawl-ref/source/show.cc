@@ -423,7 +423,7 @@ static void _update_monster(monster* mons)
     env.map_knowledge(gp).set_monster(mi);
 
 #ifdef USE_TILE
-    tile_place_monster(mons->pos(), mons);
+    tile_place_monster(mons->pos(), *env.map_knowledge(gp).monsterinfo());
 #endif
 }
 

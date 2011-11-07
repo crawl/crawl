@@ -23,9 +23,9 @@ tileidx_t tileidx_out_of_bounds(int branch);
 void tileidx_from_map_cell(tileidx_t *fg, tileidx_t *bg, const map_cell &cell);
 void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, const coord_def& gc);
 
-tileidx_t tileidx_monster(const monster* mon);
-tileidx_t tileidx_draco_base(const monster* mon);
-tileidx_t tileidx_draco_job(const monster* mon);
+tileidx_t tileidx_monster(const monster_info& mon);
+tileidx_t tileidx_draco_base(const monster_info& mon);
+tileidx_t tileidx_draco_job(const monster_info& mon);
 
 tileidx_t tileidx_item(const item_def &item);
 tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy);

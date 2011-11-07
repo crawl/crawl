@@ -163,6 +163,9 @@ static bool _is_public_key(std::string key)
      || key == "wand_known"
      || key == "feat_type"
      || key == "glyph"
+     || key == "monster_tile"
+     || key == "tile_num"
+     || key == "tile_idx"
      || key == "serpent_of_hell_flavour")
     {
         return true;
@@ -793,6 +796,13 @@ dungeon_feature_type monster_info::get_mimic_feature() const
     return static_cast<dungeon_feature_type>(props["feat_type"].get_short());
 }
 
+const item_def* monster_info::get_mimic_item() const
+{
+    ASSERT(mons_is_item_mimic(type));
+
+    return inv[MSLOT_MISCELLANY].get();
+}
+
 std::string monster_info::mimic_name() const
 {
     std::string s;
@@ -1294,6 +1304,21 @@ size_type monster_info::body_size() const
     }
 
     return (ret);
+}
+
+bool monster_info::cannot_move() const
+{
+    return is(MB_PARALYSED) || is(MB_PETRIFIED) || is(MB_PREP_RESURRECT);
+}
+
+bool monster_info::airborne() const
+{
+    return (fly == FL_LEVITATE) || (fly == FL_FLY && !cannot_move());
+}
+
+bool monster_info::ground_level() const
+{
+    return (!airborne() && !is(MB_CLINGING));
 }
 
 void get_monster_info(std::vector<monster_info>& mons)
