@@ -665,7 +665,7 @@ void full_describe_view()
                      + "</" + col_string + ">) ";
 #endif
 
-            std::string str = get_monster_equipment_desc(mi->mon(), DESC_FULL,
+            std::string str = get_monster_equipment_desc(*mi, DESC_FULL,
                                                          DESC_A, true);
 
             if (mi->is(MB_MESMERIZING))
@@ -684,7 +684,7 @@ void full_describe_view()
             for (unsigned int j = 0; j < fss.size(); ++j)
             {
                 if (j == 0)
-                    me = new MonsterMenuEntry(prefix+str, mi->mon(), hotkey++);
+                    me = new MonsterMenuEntry(prefix+str, &(*mi), hotkey++);
 #ifndef USE_TILE_LOCAL
                 else
                 {
@@ -772,28 +772,27 @@ void full_describe_view()
         if (quant == 1)
         {
             // Get selected monster.
-            monster* m = static_cast<monster* >(sel[0]->data);
+            monster_info* m = static_cast<monster_info* >(sel[0]->data);
 
 #ifdef USE_TILE
             // Highlight selected monster on the screen.
-            const coord_def gc(m->pos());
+            const coord_def gc(m->pos);
             tiles.place_cursor(CURSOR_TUTORIAL, gc);
             const std::string &desc = get_terse_square_desc(gc);
             tiles.clear_text_tags(TAG_TUTORIAL);
             tiles.add_text_tag(TAG_TUTORIAL, desc, gc);
 #endif
 
-            monster_info mi(m);
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
             {
                 // View database entry.
-                describe_monsters(mi);
+                describe_monsters(*m);
                 redraw_screen();
                 mesclr();
             }
             else // ACT_EXECUTE, here used to display monster status.
             {
-                _describe_monster(mi);
+                _describe_monster(*m);
                 getchm();
             }
         }

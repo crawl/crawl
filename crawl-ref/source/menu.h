@@ -15,6 +15,7 @@
 #include "format.h"
 #include "defines.h"
 #include "libutil.h"
+#include "mon-info.h"
 
 #ifdef USE_TILE_LOCAL
  #include "tilebuf.h"
@@ -184,7 +185,7 @@ public:
 class MonsterMenuEntry : public MenuEntry
 {
 public:
-    MonsterMenuEntry(const std::string &str, const monster* mon, int hotkey);
+    MonsterMenuEntry(const std::string &str, const monster_info* mon, int hotkey);
 
 #ifdef USE_TILE_LOCAL
     virtual bool get_tiles(std::vector<tile_def>& tileset) const;
