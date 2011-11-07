@@ -1123,7 +1123,7 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
         for (unsigned int i_mon = start; i_mon < end; i_mon++)
         {
             monster_info mi = mons[i_mon];
-            glyph g = get_mons_glyph(mi.mon());
+            glyph g = get_mons_glyph(mi);
             textcolor(g.col);
             cprintf("%s", stringize_glyph(g.ch).c_str());
             ++printed;
