@@ -167,6 +167,8 @@ struct monster_info : public monster_info_base
             skill_type best_skill;
             short best_skill_rank;
             short xl_rank;
+            short damage;
+            short ac;
         } ghost;
     } u;
 
