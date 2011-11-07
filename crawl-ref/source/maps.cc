@@ -116,6 +116,9 @@ static map_section_type write_vault(map_def &mdef,
 
     while (tries-- > 0)
     {
+        if (place.map.test_lua_veto())
+            break;
+
         if (!resolve_map(place.map))
             continue;
 
@@ -145,9 +148,6 @@ static bool resolve_map_lua(map_def &map)
 {
     dgn_flush_map_environment_for(map.name);
     map.reinit();
-
-    if (map.test_lua_veto())
-        return (false);
 
     std::string err = map.run_lua(true);
     if (!err.empty())
@@ -205,6 +205,9 @@ bool resolve_subvault(map_def &map)
     ASSERT(map.is_subvault());
     if (!map.is_subvault())
         return false;
+
+    if (map.test_lua_veto())
+        return (false);
 
     if (!resolve_map_lua(map))
         return false;
