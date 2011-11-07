@@ -195,9 +195,11 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
 
     if (god == GOD_KIKUBAAQUDGHA)
     {
-        you.gift_timeout = 0; // no protection during pain branding weapon
+        you.gift_timeout = 1; // no protection during pain branding weapon
 
         torment(&you, TORMENT_KIKUBAAQUDGHA, you.pos());
+
+        you.gift_timeout = 0; // protection after pain branding weapon
 
         // Bloodify surrounding squares (75% chance).
         for (radius_iterator ri(you.pos(), 2, true, true); ri; ++ri)
