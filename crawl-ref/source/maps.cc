@@ -145,6 +145,10 @@ static bool resolve_map_lua(map_def &map)
 {
     dgn_flush_map_environment_for(map.name);
     map.reinit();
+
+    if (map.test_lua_veto())
+        return (false);
+
     std::string err = map.run_lua(true);
     if (!err.empty())
     {
