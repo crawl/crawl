@@ -171,6 +171,11 @@ static bool _is_public_key(std::string key)
     return false;
 }
 
+static int quantise(int value, int stepsize)
+{
+    return value + stepsize - value % stepsize;
+}
+
 monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 {
     mb.reset();
@@ -221,6 +226,8 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
         u.ghost.best_skill = SK_FIGHTING;
         u.ghost.best_skill_rank = 2;
         u.ghost.xl_rank = 3;
+        u.ghost.ac = 5;
+        u.ghost.damage = 5;
     }
 
     if (base_type == MONS_NO_MONSTER)
@@ -512,6 +519,8 @@ monster_info::monster_info(const monster* m, int milev)
         u.ghost.best_skill = ghost.best_skill;
         u.ghost.best_skill_rank = get_skill_rank(ghost.best_skill_level);
         u.ghost.xl_rank = ghost_level_to_rank(ghost.xl);
+        u.ghost.ac = quantise(ghost.ac, 5);
+        u.ghost.damage = quantise(ghost.damage, 5);
     }
 
     for (unsigned i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
