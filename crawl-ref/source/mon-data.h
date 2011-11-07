@@ -3382,7 +3382,7 @@ static monsterentry mondata[] = {
     MONS_GUARDIAN_MUMMY, 'M', YELLOW, "guardian mummy",
     M_FIGHTER | M_SEE_INVIS,
     MR_RES_COLD,
-    0, 13, MONS_MUMMY, MONS_GUARDIAN_MUMMY, MH_UNDEAD, -5,
+    0, 13, MONS_MUMMY, MONS_MUMMY, MH_UNDEAD, -5,
     { {AT_HIT, AF_PLAIN, 30}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 7, 5, 3, 0 },
     6, 9, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
