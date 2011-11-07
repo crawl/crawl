@@ -609,30 +609,20 @@ static void _DEMON_AXE_melee_effect(item_def* item, actor* attacker,
 
 static void _DEMON_AXE_world_reacts(item_def *item)
 {
-    std::vector<monster_info> targets;
-    get_monster_info(targets);
-
-    int dist = LOS_RADIUS + 1;
-
-    if (targets.empty())
-        return;
-
     monster* closest = NULL;
 
-    std::vector<monster_info>::const_iterator mi;
-
-    for (mi = targets.begin(); mi != targets.end(); ++mi)
+    for (distance_iterator di(you.pos(), true, true, LOS_RADIUS); di; ++di)
     {
-        if (grid_distance(you.pos(), mi->mon()->pos()) < dist
-            && you.possible_beholder(mi->mon()))
+        monster *mon = monster_at(*di);
+        if (mon && you.can_see(mon)
+            && you.possible_beholder(mon))
         {
-            dist = grid_distance(you.pos(), mi->mon()->pos());
-            closest = mi->mon();
+            closest = mon;
+            goto found;
         }
     }
-
-    if (!closest)
-        return;
+    return;
+found:
 
     if (!you.beheld_by(closest))
     {

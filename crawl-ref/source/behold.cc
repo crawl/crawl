@@ -271,11 +271,11 @@ bool player::possible_beholder(const monster* mon) const
          && !mon->wont_attack() && !mon->pacified()
          && ((mons_genus(mon->type) == MONS_MERMAID
               || mon->has_spell(SPELL_MESMERISE))
-         && !silenced(pos()) && !silenced(mon->pos())
-         && !mon->has_ench(ENCH_MUTE)
-         && !mon->confused()
-         && !mon->asleep() && !mon->cannot_move()
-         && !mon->berserk() && !mons_is_fleeing(mon)
-         && !is_sanctuary(you.pos())
-         || player_equip_unrand(UNRAND_DEMON_AXE)));
+             && !silenced(pos()) && !silenced(mon->pos())
+             && !mon->has_ench(ENCH_MUTE)
+             && !mon->confused()
+             && !mon->asleep() && !mon->cannot_move()
+             && !mon->berserk() && !mons_is_fleeing(mon)
+             && !is_sanctuary(you.pos())
+           || player_equip_unrand(UNRAND_DEMON_AXE)));
 }
