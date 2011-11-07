@@ -537,6 +537,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_FELID;
     case SP_OCTOPODE:
         return TILEP_BASE_OCTOPODE;
+    case SP_FORGE_DWARF:
+        return TILEP_BASE_DWARF;
     default:
         return TILEP_BASE_HUMAN;
     }
@@ -636,6 +638,10 @@ void tilep_race_default(int sp, int level, dolls_data *doll)
         case SP_SPRIGGAN:
             hair = 0;
             beard = TILEP_BEARD_MEDIUM_GREEN;
+            break;
+        case SP_FORGE_DWARF:
+            hair  = TILEP_HAIR_LONG_RED;
+            beard = TILEP_BEARD_FULL_RED;
             break;
         default:
             // nothing to do

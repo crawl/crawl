@@ -3023,6 +3023,7 @@ enum species_type
     SP_DEEP_DWARF,
     SP_FELID,
     SP_OCTOPODE,
+    SP_FORGE_DWARF,
 // The high scores viewer still needs enums for removed species.
     SP_ELF,                            // (placeholder)
     SP_HILL_DWARF,                     // (placeholder)

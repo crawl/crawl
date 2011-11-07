@@ -3123,6 +3123,18 @@ void level_change(bool skip_attribute_increase)
                 }
                 break;
 
+            case SP_FORGE_DWARF:
+                if ((you.experience_level == 11)
+                    || (you.experience_level == 21))
+                {
+                    mpr("You feel attuned to the forge.",
+                        MSGCH_INTRINSIC_GAIN);
+                    perma_mutate(MUT_HEAT_RESISTANCE, 1);
+                }
+                if (!(you.experience_level % 4))
+                    modify_stat(STAT_STR, 1, false, "level gain");
+                break;
+
             case SP_HALFLING:
                 if (!(you.experience_level % 5))
                     modify_stat(STAT_DEX, 1, false, "level gain");

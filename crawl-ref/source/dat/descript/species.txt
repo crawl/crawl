@@ -99,3 +99,7 @@ Vampire
 
 Shifting between the states of life and undeath, they're accomplished stabbers and casters.
 %%%%
+Forge Dwarf
+
+Master craftsmen and artificers. They love armour and shields, and are attuned to the elements of forging.
+%%%%

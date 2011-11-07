@@ -1655,10 +1655,11 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
                                          : (-random2(1 - wpn_damage_plus));
 
         if (get_equip_race(*weapon) == ISFLAG_DWARVEN
-            && you.species == SP_DEEP_DWARF)
+            && player_genus(GENPC_DWARVEN))
         {
             damage += random2(3);
         }
+
 
         if (get_equip_race(*weapon) == ISFLAG_ORCISH
             && you.species == SP_HILL_ORC)

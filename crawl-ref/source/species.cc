@@ -21,8 +21,8 @@ static species_type species_order[] = {
     // comparatively human-like looks
     SP_HUMAN,          SP_HIGH_ELF,
     SP_DEEP_ELF,       SP_SLUDGE_ELF,
-    SP_DEEP_DWARF,     SP_HILL_ORC,
-    SP_MERFOLK,
+    SP_DEEP_DWARF,     SP_FORGE_DWARF,
+    SP_HILL_ORC,       SP_MERFOLK,
     // small species
     SP_HALFLING,       SP_KOBOLD,
     SP_SPRIGGAN,
@@ -60,7 +60,7 @@ static const char * Species_Abbrev_List[NUM_SPECIES] =
       // the draconians
       "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr", "Dr",
       "Ce", "Dg", "Sp", "Mi", "Ds", "Gh", "Te", "Mf", "Vp", "DD",
-      "Fe", "Op",
+      "Fe", "Op", "FD",
       // placeholders
       "El", "HD", "OM", "GE", "Gn" };
 
@@ -179,6 +179,9 @@ std::string species_name(species_type speci, bool genus, bool adj)
         case SP_DEEP_DWARF:
             res = (adj ? "Dwarven" : genus ? "Dwarf" : "Deep Dwarf");
             break;
+        case SP_FORGE_DWARF:
+            res = (adj ? "Dwarven" : genus ? "Dwarf" : "Forge Dwarf");
+            break;
 #if TAG_MAJOR_VERSION == 32
         case SP_MOUNTAIN_DWARF:
             res = (adj ? "Dwarven" : genus ? "Dwarf" : "Mountain Dwarf");
@@ -246,6 +249,10 @@ genus_type species_genus(species_type species)
     case SP_DEEP_ELF:
     case SP_SLUDGE_ELF:
         return (GENPC_ELVEN);
+
+    case SP_DEEP_DWARF:
+    case SP_FORGE_DWARF:
+        return (GENPC_DWARVEN);
 
     default:
         return (GENPC_NONE);
@@ -351,6 +358,8 @@ monster_type player_species_to_mons_species(species_type species)
         return (MONS_FELID);
     case SP_OCTOPODE:
         return (MONS_OCTOPODE);
+    case SP_FORGE_DWARF:
+        return (MONS_DWARF);
     case SP_ELF:
     case SP_HILL_DWARF:
     case SP_OGRE_MAGE:
@@ -394,6 +403,7 @@ int species_exp_modifier(species_type species)
     case SP_MOUNTAIN_DWARF:
 #endif
     case SP_DEEP_DWARF:
+    case SP_FORGE_DWARF:
     case SP_MINOTAUR:
         return 13;
     case SP_BASE_DRACONIAN:
@@ -480,6 +490,7 @@ int species_mp_modifier(species_type species)
 #if TAG_MAJOR_VERSION == 32
     case SP_MOUNTAIN_DWARF:
 #endif
+    case SP_FORGE_DWARF:
     case SP_CENTAUR:
     case SP_GHOUL:
         return -1;

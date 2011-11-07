@@ -6,6 +6,7 @@ enum genus_type
     GENPC_DRACONIAN,
     GENPC_ELVEN,
     GENPC_NONE,
+    GENPC_DWARVEN,
 };
 
 genus_type species_genus(species_type species);
