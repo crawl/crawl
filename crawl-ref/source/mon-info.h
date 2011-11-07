@@ -190,6 +190,7 @@ struct monster_info : public monster_info_base
     std::string db_name() const;
     bool has_proper_name() const;
     dungeon_feature_type get_mimic_feature() const;
+    const item_def* get_mimic_item() const;
     std::string mimic_name() const;
     std::string pluralized_name(bool fullname = true) const;
     std::string common_name(description_level_type desc = DESC_PLAIN) const;
@@ -240,6 +241,17 @@ struct monster_info : public monster_info_base
     }
 
     size_type body_size() const;
+
+    // These should be kept in sync with the actor equivalents
+    // (Maybe unify somehow?)
+    bool cannot_move() const;
+    bool airborne() const;
+    bool ground_level() const;
+
+    bool is_named() const
+    {
+        return (!mname.empty() || mons_is_unique(type));
+    }
 
 protected:
     std::string _core_name() const;

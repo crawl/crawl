@@ -702,21 +702,20 @@ void tile_place_invisible_monster(const coord_def &gc)
 }
 
 // Called from _update_monster() in show.cc
-void tile_place_monster(const coord_def &gc, const monster* mon)
+void tile_place_monster(const coord_def &gc, const monster_info& mon)
 {
-    if (!mon)
-        return;
-
     const coord_def ep = grid2show(gc);
 
     tileidx_t t    = tileidx_monster(mon);
     tileidx_t t0   = t & TILE_FLAG_MASK;
     tileidx_t flag = t & (~TILE_FLAG_MASK);
 
-    if (mons_is_stationary(mon) && mon->type != MONS_TRAINING_DUMMY)
+    if ((mons_class_is_stationary(mon.type)
+         || mon.is(MB_WITHDRAWN))
+        && mon.type != MONS_TRAINING_DUMMY)
     {
         // If necessary add item brand.
-        if (you.visible_igrd(gc) != NON_ITEM)
+        if (env.map_knowledge(gc).item())
             t |= TILE_FLAG_S_UNDER;
     }
     else
@@ -733,9 +732,7 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
     env.tile_fg(ep) = t;
 
     // Add name tags.
-    if (!mon->visible_to(&you)
-        || mons_is_lurking(mon)
-        || mons_class_flag(mon->type, M_NO_EXP_GAIN))
+    if (mons_class_flag(mon.type, M_NO_EXP_GAIN))
     {
         return;
     }
@@ -745,24 +742,18 @@ void tile_place_monster(const coord_def &gc, const monster* mon)
         return;
     else if (pref == TAGPREF_TUTORIAL)
     {
-        const int kills = you.kills->num_kills(mon);
+        const int kills = you.kills->num_kills(mon.mon()); // FIXME!!
         const int limit  = 0;
 
-        if (!mon->is_named() && kills > limit)
+        if (!mon.is_named() && kills > limit)
             return;
     }
-    else if (!mon->is_named())
+    else if (!mon.is_named())
         return;
 
-    if (pref != TAGPREF_NAMED && mon->friendly())
+    if (pref != TAGPREF_NAMED && mon.attitude == ATT_FRIENDLY)
         return;
 
-    // HACK.  Large-tile monsters don't interact well with name tags.
-    if (mon->type == MONS_PANDEMONIUM_LORD
-        || mon->type == MONS_LERNAEAN_HYDRA)
-    {
-        return;
-    }
     tiles.add_text_tag(TAG_NAMED_MONSTER, mon);
 }
 
