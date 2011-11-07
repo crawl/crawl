@@ -3550,9 +3550,9 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.quote += "\n";
 
 #ifdef DEBUG_DIAGNOSTICS
-    if (mi.pos.origin())
+    if (mi.pos.origin() && !monster_at(mi.pos))
         return; // not a real monster
-    monster& mons = *mi.mon();
+    monster& mons = *monster_at(mi.pos);
 
     inf.body << "\nMonster health: "
              << mons.hit_points << "/" << mons.max_hit_points << "\n";
