@@ -2075,15 +2075,15 @@ spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
 {
     int num_orcs = 0;
     int num_holy = 0;
-    int num_ignored = 0;
     int num_crawlies = 0;
     int num_masses = 0;
+    int num_lost = 0;
 
     radius_iterator ri(you.pos(), pow / 25, C_ROUND, you.get_los_no_trans());
 
     for (; ri; ++ri)
     {
-        std::vector<item_def *> corpses;
+        int num_corpses = 0;
         int total_mass = 0;
 
         // Count up number/size of corpses at this location.
@@ -2102,32 +2102,38 @@ spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
                 else
                     total_mass += mons_weight(si->plus);
 
-                corpses.push_back(&(*si));
+                ++num_corpses;
+                destroy_item(si->index());
             }
         }
 
-        if (corpses.size() == 0)
+        if (num_corpses == 0)
             continue;
 
         // Maximum efficiency at 100 power: 1 HD per 20.0 aum.
         // Half that at zero power.
-        int hd = (pow < 100 ? pow + 100 : 200) * total_mass / (200*200);
+        int hd = div_rand_round((pow + 100) * total_mass, (200*300));
+
+        if (hd <= 0)
+        {
+            num_lost += num_corpses;
+            continue;
+        }
 
         // Getting a huge abomination shouldn't be too easy.
         if (hd > 15)
             hd = 15 + (hd - 15)/2;
 
-        hd = (hd < 1)  ? 1
-           : (hd > 30) ? 30 : hd;
+        hd = std::min(hd, 30);
 
         monster_type montype;
 
 
-        if (hd >= 11 && corpses.size() > 2)
+        if (hd >= 11 && num_corpses > 2)
             montype = MONS_ABOMINATION_LARGE;
-        else if (hd >= 6 && corpses.size() > 1)
+        else if (hd >= 6 && num_corpses > 1)
             montype = MONS_ABOMINATION_SMALL;
-        else if (corpses.size() > 1)
+        else if (num_corpses > 1)
             montype = MONS_MACABRE_MASS;
         else
             montype = MONS_CRAWLING_CORPSE;
@@ -2135,34 +2141,37 @@ spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
         mgen_data mg(montype, BEH_FRIENDLY, &you, 0, 0, *ri, MHITYOU,
                      MG_FORCE_BEH, god);
         const int mons = create_monster(mg);
-        
+       
         if (mons >= 0)
         {
             // Set hit dice.
             undead_abomination_convert(&menv[mons], hd);
 
-            std::vector<item_def *>::iterator vi;
-            for (vi = corpses.begin(); vi != corpses.end(); ++vi)
-                destroy_item((*vi)->index());
-
-            if (corpses.size() > 1)
+            if (num_corpses > 1)
                 ++num_masses;
             else
                 ++num_crawlies;
         }
         else
-            num_ignored += corpses.size();
+            num_lost += num_corpses;
     }
+
+    if (num_lost > 1)
+        mprf("%s corpses collapse into pulpy messes!",
+            (num_crawlies || num_masses) ? "Some" : "The");
+    else if (num_lost > 0)
+        mpr("A corpse collapses into a pulpy mess!");
 
     if (num_crawlies > 0)
         mprf("%s %s to drag %s along the ground!",
-            (num_ignored) && num_crawlies > 1 ? "Some" : "The",
+            num_lost && num_crawlies > 1 ? "Some" : "The",
             num_crawlies > 1 ? "corpses begin" : "corpse begins",
             num_crawlies > 1 ? "themselves" : "itself");
     if (num_masses > 0)
         mprf("%s corpses meld into %s of writhing flesh!",
-            num_crawlies || num_ignored ? "Some" : "The",
+            num_crawlies || num_lost ? "Some" : "The",
             num_masses > 1 ? "agglomerations" : "an agglomeration");
+
 
     if (num_orcs > 0)
         did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * num_orcs);

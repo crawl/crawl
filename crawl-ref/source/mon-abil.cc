@@ -464,8 +464,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
         // Recompute in case we limited newhd.
         addhd = newhd - orighd;
 
-        if (merge_to->type == MONS_ABOMINATION_SMALL
-            || merge_to->type == MONS_ABOMINATION_LARGE)
+        if (merge_to->type == MONS_ABOMINATION_SMALL)
         {
             // Adding to an existing abomination
             int hp_gain = hit_points(addhd, 2, 5);
@@ -684,10 +683,6 @@ static bool _crawlie_is_mergeable(monster *mons)
 
     switch (mons->type)
     {
-    case MONS_ABOMINATION_LARGE:
-        if (mons->hit_dice > 30)
-            return false;
-        break;
     case MONS_ABOMINATION_SMALL:
         if (mons->hit_dice > 15)
             return false;
