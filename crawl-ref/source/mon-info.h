@@ -126,9 +126,9 @@ struct monster_info : public monster_info_base
 #define MILEV_SKIP_SAFE -1
 #define MILEV_NAME -2
     monster_info() { client_id = 0; }
-    monster_info(const monster* m, int level = MILEV_ALL);
-    monster_info(monster_type p_type,
-                 monster_type p_base_type = MONS_NO_MONSTER);
+    explicit monster_info(const monster* m, int level = MILEV_ALL);
+    explicit monster_info(monster_type p_type,
+                          monster_type p_base_type = MONS_NO_MONSTER);
 
     monster_info(const monster_info& mi)
     : monster_info_base(mi)

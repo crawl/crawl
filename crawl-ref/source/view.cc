@@ -319,6 +319,8 @@ void update_monsters_in_view()
             if (!mon->props.exists("ash_id"))
                 continue;
 
+            monster_info mi(mon);
+
             if (warning)
                 warning_msg += " ";
             else
@@ -334,7 +336,7 @@ void update_monsters_in_view()
                 warning_msg += mon->full_name(DESC_A);
 
             warning_msg += " is";
-            warning_msg += get_monster_equipment_desc(mon, DESC_IDENTIFIED,
+            warning_msg += get_monster_equipment_desc(mi, DESC_IDENTIFIED,
                                                       DESC_NONE);
             warning_msg += ".";
         }

@@ -1717,7 +1717,7 @@ static void _find_description(bool *again, std::string *error_inout)
                        MF_ALWAYS_SHOW_MORE | MF_ALLOW_FORMATTING,
                        doing_mons, text_only);
     desc_menu.set_tag("description");
-    std::list<monster> monster_list;
+    std::list<monster_info> monster_list;
     std::list<item_def> item_list;
     for (unsigned int i = 0, size = key_list.size(); i < size; i++)
     {
@@ -1730,7 +1730,6 @@ static void _find_description(bool *again, std::string *error_inout)
         {
             // Create and store fake monsters, so the menu code will
             // have something valid to refer to.
-            monster     fake_mon;
             monster_type m_type = get_monster_by_name(str, true);
 
             // Not worth the effort handling the item; also, it would
@@ -1742,20 +1741,17 @@ static void _find_description(bool *again, std::string *error_inout)
             if (mons_is_tentacle_segment(m_type))
                 continue;
 
-            // NOTE: Initializing the demon_ghost part of (very) ugly
-            // things and player ghosts is taken care of in define_monster().
-            fake_mon.type = m_type;
-            fake_mon.props["fake"] = true;
-            // HACK: Set an arbitrary humanoid monster as base type.
+            monster_type base_type = MONS_NO_MONSTER;
             if (mons_class_is_zombified(m_type))
             {
-                monster_type base_type = MONS_GOBLIN;
+                // HACK: Set an arbitrary humanoid monster as base type.
                 if (zombie_class_size(m_type) == Z_BIG)
                     base_type = MONS_HILL_GIANT;
-                define_zombie(&fake_mon, base_type, m_type);
+                else
+                    base_type = MONS_GOBLIN;
             }
-            else
-                define_monster(&fake_mon);
+            monster_info fake_mon(m_type, base_type);
+            fake_mon.props["fake"] = true;
 
             // FIXME: This doesn't generate proper draconian monsters.
             monster_list.push_back(fake_mon);
@@ -1768,7 +1764,7 @@ static void _find_description(bool *again, std::string *error_inout)
             std::string prefix = "(<";
             prefix += colour_to_str(colour);
             prefix += ">";
-            prefix += stringize_glyph(mons_char(fake_mon.type));
+            prefix += stringize_glyph(mons_char(m_type));
             prefix += "</";
             prefix += colour_to_str(colour);
             prefix += ">) ";
@@ -1830,7 +1826,7 @@ static void _find_description(bool *again, std::string *error_inout)
 
             if (doing_mons)
             {
-                monster* mon = (monster*) sel[0]->data;
+                monster_info* mon = (monster_info*) sel[0]->data;
                 key = mons_type_name(mon->type, DESC_PLAIN);
             }
             else if (doing_features)
