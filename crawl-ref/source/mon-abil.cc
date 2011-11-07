@@ -293,20 +293,21 @@ static void _split_ench_durations(monster* initial_slime, monster* split_off)
 
 }
 
-// What to do about any enchantments these two slimes may have?  For
-// now, we are averaging the durations. -cao
-static void _merge_ench_durations(monster* initial_slime, monster* merge_to)
+// What to do about any enchantments these two creatures may have?
+// For now, we are averaging the durations, weighted by slime size
+// or by hit dice, depending on usehd.
+static void _merge_ench_durations(monster* initial, monster* merge_to, bool usehd = false)
 {
     mon_enchant_list::iterator i;
 
-    int initial_count = initial_slime->number;
-    int merge_to_count = merge_to->number;
+    int initial_count = usehd ? initial->hit_dice : initial->number;
+    int merge_to_count = usehd ? merge_to->hit_dice : merge_to->number;
     int total_count = initial_count + merge_to_count;
 
-    for (i = initial_slime->enchantments.begin();
-         i != initial_slime->enchantments.end(); ++i)
+    for (i = initial->enchantments.begin();
+         i != initial->enchantments.end(); ++i)
     {
-        // Does the other slime have this enchantment as well?
+        // Does the other creature have this enchantment as well?
         mon_enchant temp = merge_to->get_ench(i->first);
         bool no_initial = temp.ench == ENCH_NONE;        // If not, use duration 0 for their part of the average.
         int duration = no_initial ? 0 : temp.duration;
@@ -326,8 +327,8 @@ static void _merge_ench_durations(monster* initial_slime, monster* merge_to)
     for (i = merge_to->enchantments.begin();
          i != merge_to->enchantments.end(); ++i)
     {
-        if (initial_slime->enchantments.find(i->first)
-                == initial_slime->enchantments.end()
+        if (initial->enchantments.find(i->first)
+                == initial->enchantments.end()
             && i->second.duration > 1)
         {
             i->second.duration = (merge_to_count * i->second.duration)
@@ -397,13 +398,33 @@ static int _do_split(monster* thing, coord_def & target)
     return (slime_idx);
 }
 
+// Cause a monster to lose a turn.  has_gone should be true if the
+// monster has already moved this turn.
+void _lose_turn(monster* mons, bool has_gone)
+{
+    monsterentry* entry = get_monster_data(mons->type);
+
+    // We want to find out if mons will move next time it has a turn
+    // (assuming for the sake of argument the next delay is 10).  If it's
+    // already going to lose a turn we don't need to do anything.
+    mons->speed_increment += entry->speed;
+    if (!mons->has_action_energy())
+        return;
+    mons->speed_increment -= entry->speed;
+
+    mons->speed_increment -= entry->energy_usage.move;
+
+    // So we subtracted some energy above, but if mons hasn't moved yet
+    // /this turn, that will just cancel its turn in this round of
+    // world_reacts().
+    if (!has_gone)
+        mons->speed_increment -= entry->energy_usage.move;
+}
+
 // Merge a crawling corpse/macabre mass into another corpse/mass or an
 // abomination.
 static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
 {
-    // Combine enchantment durations.
-    _merge_ench_durations(crawlie, merge_to);
-
     int orighd = merge_to->hit_dice;
     int addhd = crawlie->hit_dice;
 
@@ -417,7 +438,14 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
     monster_type new_type;
     int hp, mhp;
 
-    if (newhd >= 6)
+    if (newhd < 6)
+    {
+        // Not big enough for an abomination yet
+        new_type = MONS_MACABRE_MASS;
+        mhp = merge_to->max_hit_points + crawlie->max_hit_points;
+        hp = merge_to->hit_points += crawlie->hit_points;
+    }
+    else
     {
         // Need 11 HD and 3 corpses for a large abomination
         if (newhd < 11
@@ -425,12 +453,12 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
                 && merge_to->type == MONS_CRAWLING_CORPSE))
         {
             new_type = MONS_ABOMINATION_SMALL;
-            newhd = std::max(newhd, 15);
+            newhd = std::min(newhd, 15);
         }
         else
         {
             new_type = MONS_ABOMINATION_LARGE;
-            newhd = std::max(newhd, 30);
+            newhd = std::min(newhd, 30);
         }
 
         // Recompute in case we limited newhd.
@@ -448,72 +476,56 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
             // Making a new abomination
             hp = mhp = hit_points(newhd, 2, 5);
     }
-    else
+
+    monster_type old_type = merge_to->type;
+    std::string old_name = merge_to->name(DESC_NOCAP_A);
+
+    if (new_type != merge_to->type)
     {
-        // Not big enough for an abomination yet
-        new_type = MONS_MACABRE_MASS;
-        mhp = merge_to->max_hit_points + crawlie->max_hit_points;
-        hp = merge_to->hit_points += crawlie->hit_points;
+        // TODO: also set speed, speed_increment, EV, (AC?)
+        merge_to->type = new_type;
+        merge_to->base_monster = MONS_NO_MONSTER;
+        merge_to->number = 0;
     }
 
+    // Combine enchantment durations.
+    _merge_ench_durations(crawlie, merge_to, true);
 
-    mgen_data mg(new_type, attitude_creation_behavior(merge_to->attitude),
-            &you, 0, 0, merge_to->pos(), MHITYOU, MG_FORCE_BEH, merge_to->god);
+    undead_abomination_convert(merge_to, newhd);
+    merge_to->max_hit_points = mhp;
+    merge_to->hit_points = hp;
+    // TODO: probably shouldn't do this
+    merge_to->flags = merge_to->flags | crawlie->flags;
+    _lose_turn(merge_to, merge_to->mindex() < crawlie->mindex());
 
-    // Save information about the merged moster.
-    uint64_t merge_flags = merge_to->flags;
-    std::string merge_name = merge_to->name(DESC_NOCAP_A);
-    monster_type merge_type = merge_to->type;
-
-    // Kill the original monster so the new one can take its spot.
-    monster_die(merge_to, KILL_MISC, NON_MONSTER, true);
-
-    const int newidx = create_monster(mg);
-    if (newidx < 0)
-    {
-        // Explain the disappearance.
-        mprf("%s collapses into a pulpy mess!", merge_name);
-        return (false);
-    }
-
-    monster *new_mons = &menv[newidx];
-
-    undead_abomination_convert(new_mons, newhd);
-    new_mons->max_hit_points = mhp;
-    new_mons->hit_points = hp;
-    new_mons->flags = merge_flags | crawlie->flags;
-    new_mons->behaviour = crawlie->behaviour;
-    new_mons->foe = crawlie->foe;
-    new_mons->target = crawlie->target;
-
-    behaviour_event(new_mons, ME_EVAL);
+    behaviour_event(merge_to, ME_EVAL);
 
     // Messaging.
-    if (you.can_see(new_mons))
+    if (you.can_see(merge_to))
     {
-        bool changed = new_type != merge_type;
+        bool changed = new_type != old_type;
         if (you.can_see(crawlie))
         {
-            if (crawlie->type == merge_type)
+            if (crawlie->type == old_type)
                 mprf("Two %s merge%s%s.",
                      pluralise(crawlie->name(DESC_PLAIN)).c_str(),
                      changed ? " to form " : "",
-                     changed ? new_mons->name(DESC_NOCAP_A).c_str() : "");
+                     changed ? merge_to->name(DESC_NOCAP_A).c_str() : "");
             else
                 mprf("%s merges with %s%s%s.",
                      crawlie->name(DESC_CAP_A).c_str(),
-                     merge_name.c_str(),
+                     old_name.c_str(),
                      changed ? " to form " : "",
-                     changed ? new_mons->name(DESC_NOCAP_A).c_str() : "");
+                     changed ? merge_to->name(DESC_NOCAP_A).c_str() : "");
                      
         }
         else if (changed)
             mprf("%s suddenly becomes %s.",
-                 uppercase_first(merge_name).c_str(),
-                 new_mons->name(DESC_NOCAP_A).c_str());
+                 uppercase_first(old_name).c_str(),
+                 merge_to->name(DESC_NOCAP_A).c_str());
         else
             mprf("%s twists grotesquely.",
-                 uppercase_first(merge_name).c_str());
+                 merge_to->name(DESC_CAP_A).c_str());
     }
     else if (you.can_see(crawlie))
         mprf("%s suddenly disappears!",
@@ -524,6 +536,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
 
     return (true);
 }
+
 
 // Actually merge two slime creature, pooling their hp, etc.
 // initial_slime is the one that gets killed off by this process.
@@ -541,34 +554,13 @@ static bool _do_merge_slimes(monster* initial_slime, monster* merge_to)
     // this won't do anything weird.
     merge_to->flags |= initial_slime->flags;
 
-    // Merging costs the combined slime some energy.
-    monsterentry* entry = get_monster_data(merge_to->type);
-
-    // We want to find out if merge_to will move next time it has a turn
-    // (assuming for the sake of argument the next delay is 10). The
-    // purpose of subtracting energy from merge_to is to make it lose a
-    // turn after the merge takes place, if it's already going to lose
-    // a turn we don't need to do anything.
-    merge_to->speed_increment += entry->speed;
-    bool can_move = merge_to->has_action_energy();
-    merge_to->speed_increment -= entry->speed;
-
-    if (can_move)
-    {
-        merge_to->speed_increment -= entry->energy_usage.move;
-
-        // This is dumb.  With that said, the idea is that if 2 slimes merge
-        // you can gain a space by moving away the turn after (maybe this is
-        // too nice but there will probably be a lot of complaints about the
-        // damage on higher level slimes).  So we subtracted some energy
-        // above, but if merge_to hasn't moved yet this turn, that will just
-        // cancel its turn in this round of world_reacts().  So we are going
-        // to see if merge_to has gone already by checking its mindex (this
-        // works because handle_monsters just iterates over env.mons in
-        // ascending order).
-        if (initial_slime->mindex() < merge_to->mindex())
-            merge_to->speed_increment -= entry->energy_usage.move;
-    }
+    // Merging costs the combined slime some energy.  The idea is that if 2
+    // slimes merge you can gain a space by moving away the turn after (maybe
+    // this is too nice but there will probably be a lot of complaints about
+    // the damage on higher level slimes).  We see if mons has gone already by
+    // checking its mindex (this works because handle_monsters just iterates
+    // over env.mons in ascending order).
+    _lose_turn(merge_to, merge_to->mindex() < initial_slime->mindex());
 
     // Overwrite the state of the slime getting merged into, because it
     // might have been resting or something.
