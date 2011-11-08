@@ -1057,7 +1057,7 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
                 "Servant Kill Chaotic", "Attack In Sanctuary",
                 "Kill Artificial", "Undead Slave Kill Artificial",
                 "Servant Kill Artificial", "Destroy Spellbook",
-                "Exploration", "Desecrated Holy Remains", "Seen Monster",
+                "Exploration", "Desecrate Holy Remains", "Seen Monster",
             };
 
             COMPILE_CHECK(ARRAYSZ(conducts) == NUM_CONDUCTS);
