@@ -742,7 +742,7 @@ void tile_place_monster(const coord_def &gc, const monster_info& mon)
         return;
     else if (pref == TAGPREF_TUTORIAL)
     {
-        const int kills = you.kills->num_kills(mon.mon()); // FIXME!!
+        const int kills = you.kills->num_kills(mon);
         const int limit  = 0;
 
         if (!mon.is_named() && kills > limit)

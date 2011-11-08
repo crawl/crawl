@@ -2529,7 +2529,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
             else
                 return TILEP_MONS_BUSH;
         case MONS_BALLISTOMYCETE:
-            if (mon.number) // FIXME! -- previously has_ench(ENCH_SPORE_PRODUCTION)
+            if (mon.number)
                 return TILEP_MONS_BALLISTOMYCETE_ACTIVE;
             else
                 return TILEP_MONS_BALLISTOMYCETE_INACTIVE;
