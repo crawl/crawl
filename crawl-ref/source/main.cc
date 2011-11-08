@@ -2102,6 +2102,19 @@ static void _prep_input()
 
         you.seen_portals = 0;
     }
+    if (you.seen_invis)
+    {
+        if (!you.can_see_invisible(false, true))
+        {
+            item_def *ring = get_only_unided_ring();
+            if (ring && !is_artefact(*ring)
+                && ring->sub_type == RING_SEE_INVISIBLE)
+            {
+                wear_id_type(*ring);
+            }
+        }
+        you.seen_invis = false;
+    }
 }
 
 // Decrement a single duration. Print the message if the duration runs out.

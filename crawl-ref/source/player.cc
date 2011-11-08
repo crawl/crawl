@@ -5581,6 +5581,7 @@ void player::init()
     on_current_level    = true;
     walking             = 0;
     seen_portals        = 0;
+    seen_invis          = false;
     frame_no            = 0;
 
     save                = 0;
