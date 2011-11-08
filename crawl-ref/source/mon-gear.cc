@@ -413,7 +413,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_GNOLL_SERGEANT:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_SPEAR;
+        item.sub_type  = one_chance_in(3) ? WPN_TRIDENT : WPN_SPEAR;
         if (one_chance_in(3))
             level = MAKE_GOOD_ITEM;
         break;
