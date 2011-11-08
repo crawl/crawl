@@ -2020,10 +2020,12 @@ std::string get_item_description(const item_def &item, bool verbose,
                 break;
             }
 
-            if (god_hates_cannibalism(you.religion)
-                   && is_player_same_species(item.plus)
-                || you.religion == GOD_ZIN
+            if ((god_hates_cannibalism(you.religion)
+                   && is_player_same_species(item.plus))
+                || (you.religion == GOD_ZIN
                    && mons_class_intel(item.plus) >= I_NORMAL)
+                || (is_good_god(you.religion)
+                   && mons_class_holiness(item.plus) == MH_HOLY))
             {
                 description << "\n\n" << god_name(you.religion) << " disapproves "
                                "of eating such meat.";
