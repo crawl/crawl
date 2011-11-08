@@ -2624,68 +2624,25 @@ static bool _is_poly_power_unsuitable(poly_power_type power,
     }
 }
 
-std::string change_monster_type(monster* mons, monster_type targetc)
+static bool _jiyva_slime_target(monster_type targetc)
 {
-    // Messaging.
-    bool can_see     = you.can_see(mons);
-    bool can_see_new = !mons_class_flag(targetc, M_INVIS) || you.can_see_invisible();
-    std::string str_polymon;
+    return (you.religion == GOD_JIYVA
+            && (targetc == MONS_DEATH_OOZE
+               || targetc == MONS_OOZE
+               || targetc == MONS_JELLY
+               || targetc == MONS_BROWN_OOZE
+               || targetc == MONS_SLIME_CREATURE
+               || targetc == MONS_GIANT_AMOEBA
+               || targetc == MONS_ACID_BLOB
+               || targetc == MONS_AZURE_JELLY));
 
-    bool degenerated = false;
-    if (targetc == MONS_PULSATING_LUMP)
-        degenerated = true;
+}
 
-    bool slimified = false;
-    if (you.religion == GOD_JIYVA
-        && (targetc == MONS_DEATH_OOZE
-            || targetc == MONS_OOZE
-            || targetc == MONS_JELLY
-            || targetc == MONS_BROWN_OOZE
-            || targetc == MONS_SLIME_CREATURE
-            || targetc == MONS_GIANT_AMOEBA
-            || targetc == MONS_ACID_BLOB
-            || targetc == MONS_AZURE_JELLY))
-    {
-        slimified = true;
-    }
-
-    if (can_see)
-    {
-        str_polymon = mons->name(DESC_CAP_THE);
-
-        if (mons->type == MONS_OGRE && targetc == MONS_TWO_HEADED_OGRE)
-            str_polymon += " grows a second head";
-        else
-        {
-            if (mons->is_shapeshifter())
-                str_polymon += " changes into ";
-            else if (degenerated)
-                str_polymon += " degenerates into ";
-            else if (slimified)
-            {
-                // Message used for the Slimify ability.
-                str_polymon += " quivers uncontrollably and liquefies into ";
-            }
-            else if (mons->type == MONS_KILLER_BEE_LARVA
-                && targetc == MONS_KILLER_BEE)
-            {
-                str_polymon += " metamorphoses into ";
-            }
-            else
-                str_polymon += " evaporates and reforms as ";
-
-            if (!can_see_new)
-                str_polymon += "something you cannot see";
-            else
-            {
-                str_polymon += mons_type_name(targetc, DESC_NOCAP_A);
-
-                if (targetc == MONS_PULSATING_LUMP)
-                    str_polymon += " of flesh";
-            }
-        }
-        str_polymon += "!";
-    }
+void change_monster_type(monster* mons, monster_type targetc)
+{
+    bool could_see     = you.can_see(mons);
+    bool degenerated = (targetc == MONS_PULSATING_LUMP);
+    bool slimified = _jiyva_slime_target(targetc);
 
     // Quietly remove the old monster's invisibility before transforming
     // it.  If we don't do this, it'll stay invisible even after losing
@@ -2845,12 +2802,6 @@ std::string change_monster_type(monster* mons, monster_type targetc)
     if (mons_class_flag(mons->type, M_INVIS))
         mons->add_ench(ENCH_INVIS);
 
-    if (str_polymon == "" && you.can_see(mons))
-    {
-        str_polymon = mons->name(DESC_CAP_A) + " appears out of thin air!";
-        autotoggle_autopickup(false);
-    }
-
     mons->hit_points = mons->max_hit_points
                                 * ((old_hp * 100) / old_hp_max) / 100
                                 + random2(mons->max_hit_points);
@@ -2874,7 +2825,7 @@ std::string change_monster_type(monster* mons, monster_type targetc)
         seen_monster(mons);
         // If the player saw both the beginning and end results of a
         // shifter changing, then s/he knows it must be a shifter.
-        if (can_see && shifter.ench != ENCH_NONE)
+        if (could_see && shifter.ench != ENCH_NONE)
             discover_shifter(mons);
     }
 
@@ -2882,8 +2833,6 @@ std::string change_monster_type(monster* mons, monster_type targetc)
         check_net_will_hold_monster(mons);
 
     mons->check_clinging(false);
-
-    return str_polymon;
 }
 
 // If targetc == RANDOM_MONSTER, then relpower indicates the desired
@@ -2949,30 +2898,67 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     if (!_valid_morph(mons, targetc))
         return (simple_monster_message(mons, " looks momentarily different."));
 
-    bool can_see     = you.can_see(mons);
-    bool can_see_new = !mons_class_flag(targetc, M_INVIS) || you.can_see_invisible();
-    bool need_note = (can_see && MONST_INTERESTING(mons));
-    std::string old_name = mons->full_name(DESC_CAP_A);
-    bool player_messaged = false;
+    bool could_see = you.can_see(mons);
+    bool need_note = (could_see && MONST_INTERESTING(mons));
+    const char *old_name_a = mons->full_name(DESC_CAP_A).c_str();
+    const char *old_name_the = mons->full_name(DESC_CAP_THE).c_str();
+    monster_type oldc = mons->type;
 
-    std::string message = change_monster_type(mons, targetc);
-
-    if (message != "")
-    {
-        mpr(message);
-        player_messaged = true;
-    }
+    change_monster_type(mons, targetc);
     
-    if (need_note
-        || can_see && you.can_see(mons) && MONST_INTERESTING(mons))
+    bool can_see = you.can_see(mons);
+
+    // Messaging
+    bool player_messaged = true;
+    if (could_see)
     {
-        std::string new_name = can_see_new ? mons->full_name(DESC_NOCAP_A)
-                                           : "something unseen";
+        const char *verb = "";
+        const char *obj = "";
+        const char *suffix = "";
 
-        take_note(Note(NOTE_POLY_MONSTER, 0, 0, old_name.c_str(),
-                       new_name.c_str()));
+        if (!can_see)
+            obj = "something you cannot see";
+        else
+        {
+            obj = mons_type_name(targetc, DESC_NOCAP_A).c_str();
+            if (targetc == MONS_PULSATING_LUMP)
+                suffix = " of flesh";
+        }
 
-        if (you.can_see(mons))
+        if (oldc == MONS_OGRE && targetc == MONS_TWO_HEADED_OGRE)
+        {
+            verb = "grows a second head";
+            obj = "";
+        }
+        else if (mons->is_shapeshifter())
+            verb = "changes into ";
+        else if (targetc == MONS_PULSATING_LUMP)
+            verb = "degenerates into ";
+        else if (_jiyva_slime_target(targetc))
+            verb = "quivers uncontrollably and liquefies into ";
+        else if (oldc == MONS_KILLER_BEE_LARVA && targetc == MONS_KILLER_BEE)
+            verb = "metamorphoses into ";
+        else
+            verb = "evaporates and reforms as ";
+
+        mprf("%s %s%s%s!", old_name_the, verb, obj, suffix);
+    }
+    else if (can_see)
+    {
+        mprf("%s appears out of thin air!", mons->name(DESC_CAP_A).c_str());
+        autotoggle_autopickup(false);
+    }
+    else
+        player_messaged = false;
+
+    if (need_note || could_see && can_see && MONST_INTERESTING(mons))
+    {
+        const char *new_name = can_see ? mons->full_name(DESC_NOCAP_A).c_str()
+                                       : "something unseen";
+
+        take_note(Note(NOTE_POLY_MONSTER, 0, 0, old_name_a, new_name));
+
+        if (can_see)
             mons->flags |= MF_SEEN;
     }
 
@@ -2980,7 +2966,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         player_angers_monster(mons);
 
     // Xom likes watching monsters being polymorphed.
-    if (you.can_see(mons))
+    if (can_see)
     {
         xom_is_stimulated(mons->is_shapeshifter()               ? 12 :
                           power == PPT_LESS || mons->friendly() ? 25 :

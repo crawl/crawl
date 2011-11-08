@@ -2070,6 +2070,18 @@ bool undead_abomination_convert(monster* mon, int hd)
     return (true);
 }
 
+// Return a definite/indefinite article for (number) things.
+const char *_count_article(int number, bool definite)
+{
+    if (number == 0)
+        return ("No");
+    else if (definite)
+        return ("The");
+    else if (number == 1)
+        return ("A");
+    else
+        return ("Some");
+}
 
 spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
 {
@@ -2078,6 +2090,7 @@ spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
     int num_crawlies = 0;
     int num_masses = 0;
     int num_lost = 0;
+    int num_lost_piles = 0;
 
     radius_iterator ri(you.pos(), pow / 25, C_ROUND, you.get_los_no_trans());
 
@@ -2117,6 +2130,7 @@ spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
         if (hd <= 0)
         {
             num_lost += num_corpses;
+            num_lost_piles++;
             continue;
         }
 
@@ -2144,8 +2158,11 @@ spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
        
         if (mons >= 0)
         {
-            // Set hit dice.
+            // Set hit dice, AC, and HP.
             undead_abomination_convert(&menv[mons], hd);
+
+            // Override Lugonu/Makhleb, since these are not really demonic.
+            menv[mons].god = god;
 
             if (num_corpses > 1)
                 ++num_masses;
@@ -2153,24 +2170,28 @@ spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
                 ++num_crawlies;
         }
         else
+        {
             num_lost += num_corpses;
+            num_lost_piles++;
+        }
     }
 
-    if (num_lost > 1)
-        mprf("%s corpses collapse into pulpy messes!",
-            (num_crawlies || num_masses) ? "Some" : "The");
-    else if (num_lost > 0)
-        mpr("A corpse collapses into a pulpy mess!");
+    if (num_lost)
+        mprf("%s %s into %s!",
+             _count_article(num_lost, num_crawlies + num_masses == 0),
+            num_lost == 1 ? "corpse collapses" : "corpses collapse",
+            num_lost_piles == 1 ? "a pulpy mess" : "pulpy messes");
 
     if (num_crawlies > 0)
         mprf("%s %s to drag %s along the ground!",
-            num_lost && num_crawlies > 1 ? "Some" : "The",
-            num_crawlies > 1 ? "corpses begin" : "corpse begins",
-            num_crawlies > 1 ? "themselves" : "itself");
+             _count_article(num_crawlies, num_lost + num_masses == 0),
+            num_crawlies == 1 ? "corpse begins" : "corpses begin",
+            num_crawlies == 1 ? "itself" : "themselves");
+
     if (num_masses > 0)
         mprf("%s corpses meld into %s of writhing flesh!",
-            num_crawlies || num_lost ? "Some" : "The",
-            num_masses > 1 ? "agglomerations" : "an agglomeration");
+            _count_article(2, num_crawlies + num_lost == 0),
+            num_masses == 1 ? "an agglomeration" : "agglomerations");
 
 
     if (num_orcs > 0)
