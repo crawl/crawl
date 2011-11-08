@@ -642,33 +642,38 @@ demonic_red9
 %resetcol
 
 %variation FLOOR_DEMONIC green
+%lum 0 -7
 %hue 0 90
 %repeat FLOOR_DEMONIC FLOOR_DEMONIC_GREEN
 %resetcol
 
 %variation FLOOR_DEMONIC cyan
+%lum 0 -10
 %hue 0 180
 %repeat FLOOR_DEMONIC FLOOR_DEMONIC_CYAN
 %resetcol
 
 %variation FLOOR_DEMONIC magenta
+%lum 0 -8
 %hue 0 300
 %repeat FLOOR_DEMONIC FLOOR_DEMONIC_MAGENTA
 %resetcol
 
 %variation FLOOR_DEMONIC brown
+%lum 0 -8
 %hue 0 30
 %repeat FLOOR_DEMONIC FLOOR_DEMONIC_BROWN
 %resetcol
 
 %variation FLOOR_DEMONIC lightgray
 %desat 0
+%lum 0 -9
 %repeat FLOOR_DEMONIC FLOOR_DEMONIC_LIGHTGRAY
 %resetcol
 
 %variation FLOOR_DEMONIC darkgray
 %desat 0
-%lum 0 -10
+%lum 0 -17
 %repeat FLOOR_DEMONIC FLOOR_DEMONIC_DARKGRAY
 %resetcol
 
