@@ -124,13 +124,13 @@ bool did_god_conduct(conduct_type thing_done, int level, bool known,
         case DID_NECROMANCY:
         case DID_UNHOLY:
         case DID_ATTACK_HOLY:
-        case DID_VIOLATE_HOLY_CORPSE:
+        case DID_DESECRATE_HOLY_REMAINS:
             switch (you.religion)
             {
             case GOD_ZIN:
             case GOD_SHINING_ONE:
             case GOD_ELYVILON:
-                if (!known && thing_done != DID_ATTACK_HOLY && thing_done != DID_VIOLATE_HOLY_CORPSE)
+                if (!known && thing_done != DID_ATTACK_HOLY && thing_done != DID_DESECRATE_HOLY_REMAINS)
                 {
                     simple_god_message(" forgives your inadvertent unholy act, "
                                        "just this once.");

@@ -333,7 +333,7 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
         if (was_orc)
             did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
         if (was_holy)
-            did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
+            did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
 
         delay.duration = 0;
         _pop_delay();
@@ -1061,7 +1061,7 @@ static void _finish_delay(const delay_queue_item &delay)
         if (was_orc)
             did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
         if (was_holy)
-            did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
+            did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
         break;
     }
 
@@ -1170,7 +1170,7 @@ static void _finish_delay(const delay_queue_item &delay)
                 if (was_orc)
                     did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
                 if (was_holy)
-                    did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
+                    did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
             }
             else
             {
@@ -1215,7 +1215,7 @@ static void _finish_delay(const delay_queue_item &delay)
                 if (was_orc)
                     did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
                 if (was_holy)
-                    did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
+                    did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
             }
 
             // Don't autopickup chunks/potions if there's still another

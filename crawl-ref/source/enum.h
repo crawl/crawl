@@ -916,7 +916,7 @@ enum conduct_type
     DID_ARTIFICIAL_KILLED_BY_SERVANT,     // Yredelemnul
     DID_DESTROY_SPELLBOOK,                // Sif Muna
     DID_EXPLORATION,                      // Ashenzari, wrath timers
-    DID_VIOLATE_HOLY_CORPSE,              // Zin/Ely/TSO butchering holy
+    DID_DESECRATE_HOLY_REMAINS,           // Zin/Ely/TSO
     DID_SEE_MONSTER,                      // TSO
 
     NUM_CONDUCTS
