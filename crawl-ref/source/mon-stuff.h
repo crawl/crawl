@@ -74,10 +74,10 @@ enum poly_power_type
     PPT_SAME,
 };
 
+std::string change_monster_type(monster* mons, monster_type targetc);
 bool monster_polymorph(monster* mons, monster_type targetc,
                        poly_power_type power = PPT_SAME,
-                       bool force_beh = false,
-                       bool messages = true);
+                       bool force_beh = false);
 
 int monster_die(monster* mons, killer_type killer,
                 int killer_index, bool silent = false, bool wizard = false,

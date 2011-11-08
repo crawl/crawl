@@ -481,7 +481,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
 
     // Change the monster's type if we need to.
     if (new_type != old_type)
-        monster_polymorph(merge_to, new_type, PPT_MORE, true, false);
+        change_monster_type(merge_to, new_type);
 
     // Combine enchantment durations (weighted by original HD).
     merge_to->hit_dice = orighd;
