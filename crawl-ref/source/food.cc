@@ -999,9 +999,9 @@ void eat_inventory_item(int which_inventory_slot)
     {
         const int mons_type  = food.plus;
         const bool cannibal  = is_player_same_species(mons_type);
-        const bool holy      = (mons_class_holiness(mons_type) == MH_HOLY);
         const int intel      = mons_class_intel(mons_type) - I_ANIMAL;
         const bool rotten    = food_is_rotten(food);
+        const bool holy      = (mons_class_holiness(mons_type) == MH_HOLY);
         const corpse_effect_type chunk_type = mons_corpse_effect(mons_type);
 
         if (rotten && !_player_can_eat_rotten_meat(true))
@@ -1032,8 +1032,8 @@ void eat_floor_item(int item_link)
     }
     else if (food.sub_type == FOOD_CHUNK)
     {
-        const int intel      = mons_class_intel(food.plus) - I_ANIMAL;
         const bool cannibal  = is_player_same_species(food.plus);
+        const int intel      = mons_class_intel(food.plus) - I_ANIMAL;
         const bool rotten    = food_is_rotten(food);
         const bool holy      = (mons_class_holiness(food.plus) == MH_HOLY);
         const corpse_effect_type chunk_type = mons_corpse_effect(food.plus);
