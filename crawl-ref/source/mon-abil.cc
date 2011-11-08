@@ -479,22 +479,21 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
     monster_type old_type = merge_to->type;
     std::string old_name = merge_to->name(DESC_NOCAP_A);
 
-    if (new_type != merge_to->type)
-    {
-        // TODO: also set speed, speed_increment, EV, (AC?)
-        merge_to->type = new_type;
-        merge_to->base_monster = MONS_NO_MONSTER;
-        merge_to->number = 0;
-    }
+    // Change the monster's type if we need to.
+    if (new_type != old_type)
+        monster_polymorph(merge_to, new_type, PPT_MORE, true, false);
 
-    // Combine enchantment durations.
+    // Combine enchantment durations (weighted by original HD).
+    merge_to->hit_dice = orighd;
     _merge_ench_durations(crawlie, merge_to, true);
 
     undead_abomination_convert(merge_to, newhd);
     merge_to->max_hit_points = mhp;
     merge_to->hit_points = hp;
-    // TODO: probably shouldn't do this
-    merge_to->flags = merge_to->flags | crawlie->flags;
+
+    // TODO: probably should be more careful about which flags.
+    merge_to->flags |= crawlie->flags;
+
     _lose_turn(merge_to, merge_to->mindex() < crawlie->mindex());
 
     behaviour_event(merge_to, ME_EVAL);
