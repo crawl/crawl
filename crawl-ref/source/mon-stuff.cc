@@ -2553,6 +2553,20 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
     // 'morph targets are _always_ "base" classes, not derived ones.
     new_mclass = mons_species(new_mclass);
 
+    // Handle corpse merging.
+    if (mons->type == MONS_CRAWLING_CORPSE || mons->type == MONS_MACABRE_MASS)
+        switch (new_mclass)
+        {
+        case MONS_MACABRE_MASS:
+        case MONS_ABOMINATION_SMALL:
+        case MONS_ABOMINATION_LARGE:
+            return true;
+        default:
+            return false;
+        }
+    if (mons->type == MONS_ABOMINATION_SMALL && new_mclass == MONS_ABOMINATION_LARGE)
+        return true;
+
     // Shapeshifters cannot polymorph into glowing shapeshifters or
     // vice versa.
     if ((new_mclass == MONS_GLOWING_SHAPESHIFTER
@@ -2631,7 +2645,8 @@ static bool _is_poly_power_unsuitable(poly_power_type power,
 // says.
 bool monster_polymorph(monster* mons, monster_type targetc,
                        poly_power_type power,
-                       bool force_beh)
+                       bool force_beh,
+                       bool messages)
 {
     // Don't attempt to polymorph a monster that is busy using the stairs.
     if (mons->flags & MF_TAKING_STAIRS)
@@ -2653,7 +2668,10 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     // There's not a single valid target on the '&' demon tier, so unless we
     // make one, let's ban this outright.
     if (source_tier == -1)
-        return (simple_monster_message(mons, "'s appearance momentarily alters."));
+    {
+        return (messages
+                && simple_monster_message(mons, "'s appearance momentarily alters."));
+    }
     relax = 1;
 
     if (targetc == RANDOM_MONSTER)
@@ -2676,7 +2694,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
                 relax++;
 
             if (relax > 50)
-                return (simple_monster_message(mons, " shudders."));
+                return (messages && simple_monster_message(mons, " shudders."));
         }
         while (tries-- && (!_valid_morph(mons, targetc)
                            || source_tier != target_tier && !x_chance_in_y(relax, 200)
@@ -2686,8 +2704,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
 
     if (!_valid_morph(mons, targetc))
     {
-        return (simple_monster_message(mons,
-                                       " looks momentarily different."));
+        return (messages && simple_monster_message(mons, " looks momentarily different."));
     }
 
     // Messaging.
@@ -2757,8 +2774,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     }
     str_polymon += "!";
 
-    bool player_messaged = can_see
-                       && simple_monster_message(mons, str_polymon.c_str());
+    bool player_messaged = can_see && messages
+                         && simple_monster_message(mons, str_polymon.c_str());
 
     // Quietly remove the old monster's invisibility before transforming
     // it.  If we don't do this, it'll stay invisible even after losing
@@ -2918,7 +2935,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     if (mons_class_flag(mons->type, M_INVIS))
         mons->add_ench(ENCH_INVIS);
 
-    if (!player_messaged && you.can_see(mons))
+    if (!player_messaged && messages && you.can_see(mons))
     {
         mprf("%s appears out of thin air!", mons->name(DESC_CAP_A).c_str());
         autotoggle_autopickup(false);
