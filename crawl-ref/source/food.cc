@@ -1822,7 +1822,7 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
         did_god_conduct(DID_EAT_SOULED_BEING, mon_intel);
 
     if (holy)
-        did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
+        did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
 
     if (do_eat)
     {

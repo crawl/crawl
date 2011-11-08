@@ -2192,7 +2192,7 @@ spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
     if (how_many_orcs > 0)
         did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * how_many_orcs);
     if (how_many_holy > 0)
-        did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2 * how_many_holy);
+        did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2 * how_many_holy);
 
     return SPRET_SUCCESS;
 }
