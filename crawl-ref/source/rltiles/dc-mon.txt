@@ -881,6 +881,9 @@ curse_toe MONS_CURSE_TOE
 flying_skull MONS_FLYING_SKULL
 ## From a special vault (ancient_champions.des)
 dc-mon/vault/ancient_champion MONS_ANCIENT_CHAMPION
+## Placeholders, please replace
+UNUSED/spells/components/corpse MONS_CRAWLING_CORPSE
+dc-mon/demons/abomination_large5 MONS_MACABRE_MASS
 
 %include dc-zombie.txt
 

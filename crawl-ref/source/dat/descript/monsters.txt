@@ -529,6 +529,10 @@ clay golem
 
 A huge animated clay statue.
 %%%%
+crawling corpse
+
+A corpse weakly animated by necromancy, easily destroyed but capable of merging with others to form more potent horrors.
+%%%%
 crimson imp
 
 A small, ugly minor demon. Its fanged maw seems locked in a permanent malign grin, and its horns protrude obscenely from its scaly pate.
@@ -1245,6 +1249,10 @@ This contraption, made from a coil and a rod, is buzzing with electricity and ca
 lindwurm
 
 A small serpentine dragon with a pair of strong forelimbs. Its thick scales give off an eerie green glow.
+%%%%
+macabre mass
+
+A fused and twisted collection of body parts, weakly animated by necromancy.  It is easily destroyed but capable of merging with others to form more potent horrors.
 %%%%
 mad acolyte of Lugonu
 

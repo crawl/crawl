@@ -610,7 +610,7 @@ This spell causes weapons on the ground near the caster to all leap into the air
 %%%%
 Twisted Resurrection
 
-This spell allows its caster to imbue a mass of deceased flesh with a magical life force. Casting this spell involves the assembling of several corpses together; the greater the combined mass of flesh available, the greater the chances of success.
+This spell causes nearby corpses to begin crawling together, merging into horrible agglomerations of flesh.  More and larger corpses result in more powerful creations.
 %%%%
 Vampiric Draining
 

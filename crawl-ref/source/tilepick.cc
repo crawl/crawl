@@ -1739,6 +1739,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SHADOW;
     case MONS_DEATH_COB:
         return TILEP_MONS_DEATH_COB;
+    case MONS_CRAWLING_CORPSE:
+        return TILEP_MONS_CRAWLING_CORPSE;
+    case MONS_MACABRE_MASS:
+        return TILEP_MONS_MACABRE_MASS;
 
     // -------------------------------------
     // non-human uniques, sorted by glyph, then difficulty
