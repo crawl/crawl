@@ -2900,8 +2900,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
 
     bool could_see = you.can_see(mons);
     bool need_note = (could_see && MONST_INTERESTING(mons));
-    const char *old_name_a = mons->full_name(DESC_CAP_A).c_str();
-    const char *old_name_the = mons->full_name(DESC_CAP_THE).c_str();
+    std::string old_name_a = mons->full_name(DESC_CAP_A);
+    std::string old_name_the = mons->full_name(DESC_CAP_THE);
     monster_type oldc = mons->type;
 
     change_monster_type(mons, targetc);
@@ -2912,17 +2912,16 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     bool player_messaged = true;
     if (could_see)
     {
-        const char *verb = "";
-        const char *obj = "";
-        const char *suffix = "";
+        std::string verb = "";
+        std::string obj = "";
 
         if (!can_see)
             obj = "something you cannot see";
         else
         {
-            obj = mons_type_name(targetc, DESC_NOCAP_A).c_str();
+            obj = mons_type_name(targetc, DESC_NOCAP_A);
             if (targetc == MONS_PULSATING_LUMP)
-                suffix = " of flesh";
+                obj += " of flesh";
         }
 
         if (oldc == MONS_OGRE && targetc == MONS_TWO_HEADED_OGRE)
@@ -2941,7 +2940,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         else
             verb = "evaporates and reforms as ";
 
-        mprf("%s %s%s%s!", old_name_the, verb, obj, suffix);
+        mprf("%s %s%s!", old_name_the.c_str(), verb.c_str(), obj.c_str());
     }
     else if (can_see)
     {
@@ -2953,10 +2952,11 @@ bool monster_polymorph(monster* mons, monster_type targetc,
 
     if (need_note || could_see && can_see && MONST_INTERESTING(mons))
     {
-        const char *new_name = can_see ? mons->full_name(DESC_NOCAP_A).c_str()
+        std::string new_name = can_see ? mons->full_name(DESC_NOCAP_A)
                                        : "something unseen";
 
-        take_note(Note(NOTE_POLY_MONSTER, 0, 0, old_name_a, new_name));
+        take_note(Note(NOTE_POLY_MONSTER, 0, 0, old_name_a.c_str(),
+                       new_name.c_str()));
 
         if (can_see)
             mons->flags |= MF_SEEN;
