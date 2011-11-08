@@ -22,6 +22,7 @@
 #include "artefact.h"
 #include "cio.h"
 #include "clua.h"
+#include "coord.h"
 #include "debug.h"
 #include "decks.h"
 #include "delay.h"
@@ -3550,9 +3551,9 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.quote += "\n";
 
 #ifdef DEBUG_DIAGNOSTICS
-    if (mi.pos.origin() && !monster_at(mi.pos))
+    if (mi.pos.origin() || !monster_at(player2grid(mi.pos)))
         return; // not a real monster
-    monster& mons = *monster_at(mi.pos);
+    monster& mons = *monster_at(player2grid(mi.pos));
 
     inf.body << "\nMonster health: "
              << mons.hit_points << "/" << mons.max_hit_points << "\n";
