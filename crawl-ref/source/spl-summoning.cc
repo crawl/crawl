@@ -2083,7 +2083,8 @@ const char *_count_article(int number, bool definite)
         return ("Some");
 }
 
-spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
+bool twisted_resurrection(actor *caster, int pow, beh_type beha,
+                          unsigned short foe, god_type god, bool actual)
 {
     int num_orcs = 0;
     int num_holy = 0;
@@ -2092,7 +2093,8 @@ spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
     int num_lost = 0;
     int num_lost_piles = 0;
 
-    radius_iterator ri(you.pos(), pow / 25, C_ROUND, you.get_los_no_trans());
+    radius_iterator ri(caster->pos(), pow / 25, C_ROUND,
+                       caster->get_los_no_trans());
 
     for (; ri; ++ri)
     {
@@ -2104,7 +2106,9 @@ spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
         {
             if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
             {
-                fail_check();
+                if(!actual)
+                    return true;
+
                 if (mons_genus(si->plus) == MONS_ORC)
                     num_orcs++;
                 if (mons_class_holiness(si->plus) == MH_HOLY)
@@ -2152,8 +2156,7 @@ spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
         else
             montype = MONS_CRAWLING_CORPSE;
 
-        mgen_data mg(montype, BEH_FRIENDLY, &you, 0, 0, *ri, MHITYOU,
-                     MG_FORCE_BEH, god);
+        mgen_data mg(montype, beha, caster, 0, 0, *ri, foe, MG_FORCE_BEH, god);
         const int mons = create_monster(mg);
        
         if (mons >= 0)
@@ -2175,6 +2178,12 @@ spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
             num_lost_piles++;
         }
     }
+    if (num_lost + num_crawlies + num_masses == 0)
+        return false;
+
+    // The tracer should have stopped at the first corpse, or found no
+    // corpses and returned false.
+    ASSERT(actual);
 
     if (num_lost)
         mprf("%s %s into %s!",
@@ -2193,13 +2202,23 @@ spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
             _count_article(2, num_crawlies + num_lost == 0),
             num_masses == 1 ? "an agglomeration" : "agglomerations");
 
-
-    if (num_orcs > 0)
+    if (num_orcs > 0 && caster == &you)
         did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * num_orcs);
-    if (num_holy > 0)
+    if (num_holy > 0 && caster == &you)
         did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2 * num_holy);
 
-    return SPRET_SUCCESS;
+    return true;
+}
+
+spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
+{
+    if (twisted_resurrection(&you, pow, BEH_FRIENDLY, MHITYOU, god, !fail))
+        return (fail ? SPRET_FAIL : SPRET_SUCCESS);
+    else
+    {
+        mpr("There are no corpses here!");
+        return SPRET_ABORT;
+    }
 }
 
 spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
