@@ -6,6 +6,7 @@
 #include "tilereg-mon.h"
 
 #include "cio.h"
+#include "coord.h"
 #include "directn.h"
 #include "env.h"
 #include "libutil.h"
@@ -65,11 +66,11 @@ int MonsterRegion::handle_mouse(MouseEvent &event)
 
 
     unsigned int item_idx = cursor_index();
-    const monster* mon = get_monster(item_idx);
+    const monster_info* mon = get_monster(item_idx);
     if (!mon)
         return (0);
 
-    const coord_def &gc = mon->position;
+    const coord_def &gc = player2grid(mon->pos);
     tiles.place_cursor(CURSOR_MOUSE, gc);
 
     if (event.event != MouseEvent::PRESS)
@@ -96,11 +97,11 @@ bool MonsterRegion::update_tip_text(std::string &tip)
         return (false);
 
     unsigned int item_idx = cursor_index();
-    const monster* mon = get_monster(item_idx);
+    const monster_info* mon = get_monster(item_idx);
     if (!mon)
         return (false);
 
-    return (tile_dungeon_tip(mon->position, tip));
+    return (tile_dungeon_tip(player2grid(mon->pos), tip));
 }
 
 bool MonsterRegion::update_tab_tip_text(std::string &tip, bool active)
@@ -120,11 +121,11 @@ bool MonsterRegion::update_alt_text(std::string &alt)
         return (false);
     }
 
-    const monster* mon = get_monster(item_idx);
+    const monster_info* mon = get_monster(item_idx);
     if (!mon)
         return (false);
 
-    const coord_def &gc = mon->position;
+    const coord_def &gc = player2grid(mon->pos);
 
     describe_info inf;
     if (!you.see_cell(gc))
@@ -140,7 +141,7 @@ bool MonsterRegion::update_alt_text(std::string &alt)
     return (true);
 }
 
-const monster* MonsterRegion::get_monster(unsigned int idx) const
+const monster_info* MonsterRegion::get_monster(unsigned int idx) const
 {
     if (idx >= m_items.size())
         return (NULL);
@@ -149,7 +150,7 @@ const monster* MonsterRegion::get_monster(unsigned int idx) const
     if (item.idx >= static_cast<int>(m_mon_info.size()))
         return (NULL);
 
-    return (m_mon_info[item.idx].mon());
+    return &(m_mon_info[item.idx]);
 }
 
 void MonsterRegion::pack_buffers()
@@ -165,10 +166,10 @@ void MonsterRegion::pack_buffers()
             bool cursor = (i < m_items.size()) ?
                 (m_items[i].flag & TILEI_FLAG_CURSOR) : false;
 
-            const monster* mon = get_monster(i++);
+            const monster_info* mon = get_monster(i++);
             if (mon)
             {
-                const coord_def gc = mon->position;
+                const coord_def gc = player2grid(mon->pos);
                 const coord_def ep = grid2show(gc);
 
                 if (crawl_view.in_los_bounds_g(gc))
@@ -207,11 +208,11 @@ void MonsterRegion::draw_tag()
     if (idx == -1)
         return;
 
-    const monster* mon = get_monster(idx);
+    const monster_info* mon = get_monster(idx);
     if (!mon)
         return;
 
-    std::string desc = mon->name(DESC_A);
+    std::string desc = mon->proper_name(DESC_A);
     draw_desc(desc.c_str());
 }
 
