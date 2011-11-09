@@ -364,6 +364,17 @@ formatted_string describe_mutations()
         have_any = true;
         break;
 
+    case SP_FORGE_DWARF:
+        if (you.experience_level > 3)
+        {
+            result += "You can reforge armour";
+            if (you.experience_level > 8)
+                result += " and weapons";
+            result += ".\n";
+            have_any = true;
+        }
+        break;
+
     default:
         break;
     }

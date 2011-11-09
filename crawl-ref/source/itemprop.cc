@@ -954,10 +954,11 @@ void set_equip_desc(item_def &item, iflags_t flags)
 
 iflags_t get_species_race(species_type sp)
 {
-    return you.species == SP_DEEP_DWARF ? ISFLAG_DWARVEN :
-           player_genus(GENPC_ELVEN)    ? ISFLAG_ELVEN :
-           you.species == SP_HILL_ORC   ? ISFLAG_ORCISH
-                                        : 0;
+    return you.species == SP_DEEP_DWARF  ? ISFLAG_DWARVEN :
+           you.species == SP_FORGE_DWARF ? ISFLAG_DWARVEN :
+           player_genus(GENPC_ELVEN)     ? ISFLAG_ELVEN :
+           you.species == SP_HILL_ORC    ? ISFLAG_ORCISH
+                                         : 0;
 }
 
 //

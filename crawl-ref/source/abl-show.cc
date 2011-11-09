@@ -32,6 +32,8 @@
 #include "food.h"
 #include "godabil.h"
 #include "godconduct.h"
+#include "invent.h"
+#include "itemprop.h"
 #include "items.h"
 #include "item_use.h"
 #include "evoke.h"
@@ -93,6 +95,7 @@ enum ability_flag_type
     ABFLAG_LEVEL_DRAIN    = 0x00010000, // drains 2 levels
     ABFLAG_STAT_DRAIN     = 0x00020000, // stat drain
     ABFLAG_ZOTDEF         = 0x00040000, // ZotDef ability, w/ appropriate hotkey
+    ABFLAG_PERMANENT_CHP  = 0x00080000, // costs constant permanent HPs
 };
 
 struct generic_cost
@@ -292,6 +295,8 @@ static const ability_def Ability_List[] =
       3, 0, 200, 0, ABFLAG_NONE },
     { ABIL_EVOKE_BLINK, "Evoke Blink", 1, 0, 50, 0, ABFLAG_NONE },
     { ABIL_RECHARGING, "Device Recharging", 1, 0, 0, 0, ABFLAG_PERMANENT_MP },
+    { ABIL_REFORGE_WEAPON, "Reforge Weapon", 1, 0, 0, 0, ABFLAG_PERMANENT_MP },
+    { ABIL_REFORGE_ARMOUR, "Reforge Armour", 1, 0, 0, 0, ABFLAG_PERMANENT_MP },
 
     { ABIL_EVOKE_BERSERK, "Evoke Berserk Rage", 0, 0, 0, 0, ABFLAG_NONE },
 
@@ -1053,6 +1058,14 @@ static talent _get_talent(ability_type ability, bool check_confused)
 
     case ABIL_RECHARGING:       // this is for deep dwarves {1KB}
         failure = 45 - (2 * you.experience_level);
+        break;
+
+    case ABIL_REFORGE_WEAPON:       // this is for forge dwarves
+        failure = 20 - (2 * you.experience_level);
+        break;
+
+    case ABIL_REFORGE_ARMOUR:       // this is for forge dwarves
+        failure = 20 - (2 * you.experience_level);
         break;
         // end species abilities (some mutagenic)
 
@@ -1909,6 +1922,94 @@ static bool _do_ability(const ability_def& abil)
         if (recharge_wand(-1) <= 0)
             return (false); // fail message is already given
         break;
+
+    case ABIL_REFORGE_WEAPON:
+    {
+        item_def& wpn = *you.weapon();
+
+        if (is_artefact(wpn))
+        {
+            canned_msg(MSG_NOTHING_HAPPENS);
+            return (false);
+        }
+        else if (wpn.base_type == OBJ_WEAPONS
+            || wpn.base_type == OBJ_MISSILES
+            || wpn.base_type == OBJ_STAVES)
+        {
+            std::string prompt = "Do you wish to imbue power into " + wpn.name(DESC_NOCAP_YOUR);
+            prompt += "?";
+
+            if (!yesno(prompt.c_str(), true, 'n'))
+                return (false);
+
+            mpr("You skillfully reforge your weapon.");
+
+            if (wpn.base_type == OBJ_MISSILES
+                || (wpn.base_type == OBJ_WEAPONS
+                    && wpn.sub_type == WPN_BLOWGUN))
+            {
+                enchant_weapon(wpn, 1 + random2(2), 0, 0);
+            }
+            else
+            {
+                set_equip_desc(wpn, ISFLAG_GLOWING);
+                wpn.flags |= ISFLAG_DWARVEN;
+
+                enchant_weapon(wpn, 1 + random2(3), 1 + random2(3), 0);
+            }
+
+        }
+        break;
+    }
+
+    case ABIL_REFORGE_ARMOUR:
+    {
+        int item_slot = prompt_invent_item("Reforge which item?",
+                               MT_INVLIST, OBJ_ARMOUR, true, true, false, 0,
+                               -1, NULL, OPER_ANY, false);
+
+        if (prompt_failed(item_slot))
+        {
+            return (false);
+            break;
+        }
+
+        item_def &arm(you.inv[item_slot]);
+
+        if (arm.base_type == OBJ_ARMOUR)
+        {
+            ASSERT(arm.defined() && arm.base_type == OBJ_ARMOUR);
+
+            int ac_change = 0;
+
+            if (!is_enchantable_armour(arm, true))
+                return (false);
+
+            if (armour_is_hide(arm, false))
+            {
+                ac_change = property(arm, PARM_AC);
+                hide2armour(arm);
+                ac_change = property(arm, PARM_AC) - ac_change;
+
+                arm.plus++;
+                you.redraw_armour_class = true;
+
+                mpr("You skillfully craft a new piece of armour.");
+            }
+            else
+            {
+                arm.plus++;
+                arm.flags |= ISFLAG_DWARVEN;
+                set_equip_desc(arm, ISFLAG_GLOWING);
+                you.redraw_armour_class = true;
+
+                mpr("You skillfully reforge you armour.");
+            }
+            return (true);
+        }
+        return (false);
+    }
+
 
     case ABIL_DELAYED_FIREBALL:
     {
@@ -3019,6 +3120,12 @@ std::vector<talent> your_talents(bool check_confused)
 
     if (you.species == SP_DEEP_DWARF)
         _add_talent(talents, ABIL_RECHARGING, check_confused);
+
+    if (you.species == SP_FORGE_DWARF && you.experience_level >= 9)
+        _add_talent(talents, ABIL_REFORGE_WEAPON, check_confused);
+
+    if (you.species == SP_FORGE_DWARF && you.experience_level >= 4)
+        _add_talent(talents, ABIL_REFORGE_ARMOUR, check_confused);
 
     // Spit Poison. Nontransformed nagas can upgrade to Breathe Poison.
     // Transformed nagas, or non-nagas, can only get Spit Poison.

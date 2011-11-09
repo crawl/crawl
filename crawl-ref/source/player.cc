@@ -3124,8 +3124,17 @@ void level_change(bool skip_attribute_increase)
                 break;
 
             case SP_FORGE_DWARF:
-                if ((you.experience_level == 11)
-                    || (you.experience_level == 21))
+                if (you.experience_level == 4)
+                {
+                    mpr("You feel an affinity for armour.",
+                        MSGCH_INTRINSIC_GAIN);
+                }
+                if (you.experience_level == 9)
+                {
+                    mpr("You feel an affinity for weapons.",
+                        MSGCH_INTRINSIC_GAIN);
+                }
+                if (you.experience_level == 16)
                 {
                     mpr("You feel attuned to the forge.",
                         MSGCH_INTRINSIC_GAIN);

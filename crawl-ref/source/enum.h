@@ -50,6 +50,9 @@ enum ability_type
     ABIL_BOTTLE_BLOOD,
     // Deep Dwarves
     ABIL_RECHARGING,
+    ABIL_REFORGE_WEAPON,
+    ABIL_REFORGE_ARMOUR,
+    // Forge Dwarves
 
     // Evoking items.
     ABIL_EVOKE_BERSERK = 40,
