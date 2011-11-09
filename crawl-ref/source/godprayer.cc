@@ -732,7 +732,7 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
         gain_piety(piety_change, piety_denom);
 
         // Preserving the old behaviour of giving the big message for
-        // artifacts and artifacts only.
+        // artefacts and artefacts only.
         relative_piety_gain = x_chance_in_y(piety_change, piety_denom) ?
                                 is_artefact(item) ?
                                   PIETY_LOTS : PIETY_SOME : PIETY_NONE;
