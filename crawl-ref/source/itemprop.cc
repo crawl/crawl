@@ -1967,7 +1967,7 @@ bool item_skills(const item_def &item, std::set<skill_type> &skills)
     // - no effect that suffer from swapping (distortion, vampirism, faith,...)
     // - slot easily accessible (item in slot needs to meet the same conditions)
     if (!equipped && (!_item_is_swappable(item, true) || _slot_blocked(item)))
-        return false;
+        return !skills.empty();
 
     // Evokables that need to be equipped to be evoked. They can train
     // evocations just by being carried, but they need to pass the equippable
