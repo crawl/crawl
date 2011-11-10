@@ -2150,7 +2150,7 @@ std::string shop_type_name (shop_type type)
     }
 }
 
-std::string shop_type_suffix (shop_type type, const coord_def &where)
+static std::string _shop_type_suffix(shop_type type, const coord_def &where)
 {
     if (type == SHOP_GENERAL
         || type == SHOP_GENERAL_ANTIQUE
@@ -2206,7 +2206,7 @@ std::string shop_name(const coord_def& where)
     }
     else
     {
-        std::string sh_suffix = shop_type_suffix(type, where);
+        std::string sh_suffix = _shop_type_suffix(type, where);
         if (!sh_suffix.empty())
             sh_name += " " + sh_suffix;
     }

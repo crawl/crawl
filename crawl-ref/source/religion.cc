@@ -2866,7 +2866,7 @@ void lose_piety(int pgn)
 // If fedhas worshipers kill a protected monster they lose piety,
 // if they attack a friendly one they get penance,
 // if a friendly one dies they lose piety.
-bool fedhas_protects_species(int mc)
+static bool _fedhas_protects_species(int mc)
 {
     return (mons_class_is_plant(mc)
             && mc != MONS_GIANT_SPORE);
@@ -2874,13 +2874,32 @@ bool fedhas_protects_species(int mc)
 
 bool fedhas_protects(const monster* target)
 {
-    return target && fedhas_protects_species(target->mons_species());
+    return target && _fedhas_protects_species(target->mons_species());
 }
 
 // Fedhas neutralises most plants and fungi
 bool fedhas_neutralises(const monster* target)
 {
     return (target && mons_is_plant(target));
+}
+
+static std::string _god_hates_your_god_reaction(god_type god, god_type your_god)
+{
+    if (god_hates_your_god(god, your_god))
+    {
+        // Non-good gods always hate your current god.
+        if (!is_good_god(god))
+            return ("");
+
+        // Zin hates chaotic gods.
+        if (god == GOD_ZIN && is_chaotic_god(your_god))
+            return (" for chaos");
+
+        if (is_evil_god(your_god))
+            return (" for evil");
+    }
+
+    return ("");
 }
 
 void excommunication(god_type new_god)
@@ -2930,7 +2949,7 @@ void excommunication(god_type new_god)
     {
         simple_god_message(
             make_stringf(" does not appreciate desertion%s!",
-                         god_hates_your_god_reaction(old_god, new_god).c_str()).c_str(),
+                         _god_hates_your_god_reaction(old_god, new_god).c_str()).c_str(),
             old_god);
     }
 
@@ -3195,7 +3214,7 @@ bool god_hates_attacking_friend(god_type god, int species)
         case GOD_JIYVA:
             return (mons_class_is_slime(species));
         case GOD_FEDHAS:
-            return fedhas_protects_species(species);
+            return _fedhas_protects_species(species);
         default:
             return (false);
     }
@@ -3289,7 +3308,7 @@ bool player_can_join_god(god_type which_god)
     return (true);
 }
 
-bool transformed_player_can_join_god(god_type which_god)
+static bool _transformed_player_can_join_god(god_type which_god)
 {
     if ((is_good_god(which_god) || which_god == GOD_FEDHAS)
         && you.form == TRAN_LICH)
@@ -3311,7 +3330,7 @@ bool transformed_player_can_join_god(god_type which_god)
 
 // Identify any interesting equipment when the player signs up with a
 // new Service Pro^W^Wdeity.
-void god_welcome_identify_gear()
+static void _god_welcome_identify_gear()
 {
     // Check for amulets of faith.
     item_def *amulet = you.slot_item(EQ_AMULET, false);
@@ -3362,7 +3381,7 @@ void god_pitch(god_type which_god)
         if (which_god == GOD_SIF_MUNA)
             simple_god_message(" does not accept worship from the ignorant!",
                                which_god);
-        else if (!transformed_player_can_join_god(which_god))
+        else if (!_transformed_player_can_join_god(which_god))
             simple_god_message(" says: How dare you come in such a loathsome form!",
                                which_god);
         else
@@ -3438,7 +3457,7 @@ void god_pitch(god_type which_god)
         gain_piety(35, 1, true, false);
     }
 
-    god_welcome_identify_gear();
+    _god_welcome_identify_gear();
     ash_check_bondage();
 
     // Chei worshippers start their stat gain immediately.
@@ -3619,25 +3638,6 @@ bool god_hates_your_god(god_type god, god_type your_god)
         return (true);
 
     return (is_evil_god(your_god));
-}
-
-std::string god_hates_your_god_reaction(god_type god, god_type your_god)
-{
-    if (god_hates_your_god(god, your_god))
-    {
-        // Non-good gods always hate your current god.
-        if (!is_good_god(god))
-            return ("");
-
-        // Zin hates chaotic gods.
-        if (god == GOD_ZIN && is_chaotic_god(your_god))
-            return (" for chaos");
-
-        if (is_evil_god(your_god))
-            return (" for evil");
-    }
-
-    return ("");
 }
 
 bool god_hates_cannibalism(god_type god)

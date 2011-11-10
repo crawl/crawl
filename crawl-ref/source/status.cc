@@ -186,7 +186,7 @@ static int _bad_ench_colour(int lvl, int orange, int red)
     return (YELLOW);
 }
 
-int dur_colour(int exp_colour, bool expiring)
+static int _dur_colour(int exp_colour, bool expiring)
 {
     if (expiring)
     {
@@ -260,7 +260,7 @@ void fill_status_info(int status, status_info* inf)
             inf->long_text    = ddef->long_text;
             if (ddef->expire)
             {
-                inf->light_colour = dur_colour(inf->light_colour,
+                inf->light_colour = _dur_colour(inf->light_colour,
                                                  dur_expiring(dur));
                 _mark_expiring(inf, dur_expiring(dur));
             }
@@ -386,9 +386,9 @@ void fill_status_info(int status, status_info* inf)
 
     case DUR_INVIS:
         if (you.attribute[ATTR_INVIS_UNCANCELLABLE])
-            inf->light_colour = dur_colour(BLUE, dur_expiring(DUR_INVIS));
+            inf->light_colour = _dur_colour(BLUE, dur_expiring(DUR_INVIS));
         else
-            inf->light_colour = dur_colour(MAGENTA, dur_expiring(DUR_INVIS));
+            inf->light_colour = _dur_colour(MAGENTA, dur_expiring(DUR_INVIS));
         inf->light_text   = "Invis";
         inf->short_text   = "invisible";
         if (you.backlit())
@@ -597,7 +597,7 @@ static void _describe_regen(status_info* inf)
 
     if (regen)
     {
-        inf->light_colour = dur_colour(BLUE, dur_expiring(DUR_REGENERATION));
+        inf->light_colour = _dur_colour(BLUE, dur_expiring(DUR_REGENERATION));
         inf->light_text   = "Regen";
         if (you.attribute[ATTR_DIVINE_REGENERATION])
             inf->light_text += " MR";
@@ -671,7 +671,7 @@ static void _describe_speed(status_info* inf)
     }
     else if (you.duration[DUR_HASTE])
     {
-        inf->light_colour = dur_colour(BLUE, dur_expiring(DUR_HASTE));
+        inf->light_colour = _dur_colour(BLUE, dur_expiring(DUR_HASTE));
         inf->light_text   = "Fast";
         inf->short_text = "hasted";
         inf->long_text = "Your actions are hasted.";
@@ -709,7 +709,7 @@ static void _describe_airborne(status_info* inf)
         inf->short_text   = "levitating";
         inf->long_text    = "You are hovering above the floor.";
     }
-    inf->light_colour = dur_colour(inf->light_colour, expiring);
+    inf->light_colour = _dur_colour(inf->light_colour, expiring);
     _mark_expiring(inf, expiring);
 }
 
@@ -856,7 +856,7 @@ static void _describe_transform(status_info* inf)
         break;
     }
 
-    inf->light_colour = dur_colour(GREEN, expire);
+    inf->light_colour = _dur_colour(GREEN, expire);
     _mark_expiring(inf, expire);
 }
 

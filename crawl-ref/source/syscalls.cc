@@ -301,15 +301,6 @@ int unlink_u(const char *pathname)
 #endif
 }
 
-int chmod_u(const char *path, mode_t mode)
-{
-#ifdef TARGET_OS_WINDOWS
-    return _wchmod(OUTW(path), mode);
-#else
-    return chmod(OUTS(path), mode);
-#endif
-}
-
 FILE *fopen_u(const char *path, const char *mode)
 {
 #ifdef TARGET_OS_WINDOWS

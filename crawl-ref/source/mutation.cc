@@ -1923,7 +1923,7 @@ int how_mutated(bool all, bool levels)
 }
 
 // Return whether current tension is balanced
-bool balance_demonic_guardian()
+static bool _balance_demonic_guardian()
 {
     const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
 
@@ -1960,12 +1960,12 @@ bool balance_demonic_guardian()
 // is unfavorably high and a guardian was not recently spawned, a new guardian
 // will be made, if tension is below a threshold (determined by the mutations
 // level and a bit of randomness), guardians may be dismissed in
-// balance_demonic_guardian()
+// _balance_demonic_guardian()
 void check_demonic_guardian()
 {
     const int mutlevel = player_mutation_level(MUT_DEMONIC_GUARDIAN);
 
-    if (!balance_demonic_guardian() &&
+    if (!_balance_demonic_guardian() &&
         you.duration[DUR_DEMONIC_GUARDIAN] == 0)
     {
         monster_type mt;

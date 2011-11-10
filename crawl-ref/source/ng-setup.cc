@@ -231,7 +231,7 @@ void unfocus_stats()
 }
 
 // Some consumables to make the starts of Sprint and Zotdef a little easier.
-void _give_bonus_items()
+static void _give_bonus_items()
 {
     newgame_give_item(OBJ_POTIONS, POT_CURING);
     newgame_give_item(OBJ_POTIONS, POT_HEAL_WOUNDS);

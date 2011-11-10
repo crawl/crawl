@@ -15,7 +15,6 @@ spret_type cast_regen(int pow, bool divine_ability = false, bool fail = false);
 spret_type cast_revivification(int pow, bool fail);
 
 spret_type cast_swiftness(int power, bool fail = false);
-spret_type cast_levitation(int power, bool fail);
 spret_type cast_fly(int power, bool fail = false);
 spret_type cast_insulation(int power, bool fail);
 

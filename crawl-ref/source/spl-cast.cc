@@ -1787,21 +1787,6 @@ std::string spell_noise_string(spell_type spell)
         return desc;
 }
 
-int spell_power_colour(spell_type spell)
-{
-    const int powercap = spell_power_cap(spell);
-    if (powercap == 0)
-        return DARKGREY;
-    const int power = calc_spell_power(spell, true);
-    if (power >= powercap)
-        return WHITE;
-    if (power * 3 < powercap)
-        return RED;
-    if (power * 3 < powercap * 2)
-        return YELLOW;
-    return GREEN;
-}
-
 static int _power_to_barcount(int power)
 {
     if (power == -1)
@@ -1811,7 +1796,7 @@ static int _power_to_barcount(int power)
     return (breakpoint_rank(power, breakpoints, ARRAYSZ(breakpoints)) + 1);
 }
 
-int spell_power_bars(spell_type spell, bool rod)
+static int _spell_power_bars(spell_type spell, bool rod)
 {
     const int cap = spell_power_cap(spell);
     if (cap == 0)
@@ -1838,7 +1823,7 @@ std::string spell_power_string(spell_type spell, bool rod)
         return _wizard_spell_power_numeric_string(spell, rod);
 #endif
 
-    const int numbars = spell_power_bars(spell, rod);
+    const int numbars = _spell_power_bars(spell, rod);
     const int capbars = _power_to_barcount(spell_power_cap(spell));
     ASSERT(numbars <= capbars);
     if (numbars < 0)

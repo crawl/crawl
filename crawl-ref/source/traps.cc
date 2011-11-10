@@ -509,7 +509,7 @@ static bool _find_other_passage_side(coord_def& to)
 // Returns an empty string if no direction could be
 // determined (if fuzz if false, this is only if
 // you.pos==pos).
-std::string direction_string(coord_def pos, bool fuzz)
+static std::string _direction_string(coord_def pos, bool fuzz)
 {
     int dx = you.pos().x - pos.x;
     if (fuzz)
@@ -662,7 +662,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 msg = "An alarm trap emits a blaring wail!";
             else
             {
-                std::string dir=direction_string(pos, !in_sight);
+                std::string dir = _direction_string(pos, !in_sight);
                 msg = std::string("You hear a ") +
                     ((in_sight) ? "" : "distant ")
                     + "blaring wail "

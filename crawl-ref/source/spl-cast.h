@@ -75,8 +75,6 @@ spret_type your_spells(spell_type spell, int powc = 0, bool allow_fail = true,
 
 const char* failure_rate_to_string(int fail);
 
-int spell_power_colour(spell_type spell);
-int spell_power_bars(spell_type spell, bool rod);
 std::string spell_power_string(spell_type spell, bool rod = false);
 std::string spell_range_string(spell_type spell, bool rod = false);
 std::string spell_schools_string(spell_type spell);

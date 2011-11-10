@@ -122,7 +122,7 @@ void add_monster_to_transit(const level_id &lid, const monster& m)
         cull_lost_mons(mlist, how_many);
 }
 
-void place_lost_ones(void (*placefn)(m_transit_list &ml))
+static void _place_lost_ones(void (*placefn)(m_transit_list &ml))
 {
     level_id c = level_id::current();
 
@@ -136,12 +136,12 @@ void place_lost_ones(void (*placefn)(m_transit_list &ml))
 
 void place_transiting_monsters()
 {
-    place_lost_ones(level_place_lost_monsters);
+    _place_lost_ones(level_place_lost_monsters);
 }
 
 void place_followers()
 {
-    place_lost_ones(level_place_followers);
+    _place_lost_ones(level_place_followers);
 }
 
 static bool place_lost_monster(follower &f)
