@@ -1252,7 +1252,7 @@ A small serpentine dragon with a pair of strong forelimbs. Its thick scales give
 %%%%
 macabre mass
 
-A fused and twisted collection of body parts, weakly animated by necromancy.  It is easily destroyed but capable of merging with others to form more potent horrors.
+A fused and twisted collection of body parts, weakly animated by necromancy. It is easily destroyed but capable of merging with others to form more potent horrors.
 %%%%
 mad acolyte of Lugonu
 
