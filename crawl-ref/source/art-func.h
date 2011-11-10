@@ -86,8 +86,6 @@ static bool _evoke_sceptre_of_asmodeus()
                      0, 0, you.pos(), MHITYOU,
                      MG_FORCE_BEH, you.religion);
 
-        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
         const int mons = create_monster(mg);
 
         if (mons != -1)
@@ -96,7 +94,10 @@ static bool _evoke_sceptre_of_asmodeus()
             mpr("The Sceptre summons one of its servants.");
             did_god_conduct(DID_UNHOLY, 3);
 
-            if (!player_angers_monster(&menv[mons]))
+            monster* m = &menv[mons];
+            m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+
+            if (!player_angers_monster(m))
             {
                 mpr("You don't feel so good about this...");
             }

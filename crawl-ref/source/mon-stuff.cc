@@ -2186,6 +2186,11 @@ int monster_die(monster* mons, killer_type killer,
                         // Death Channel
                         simple_monster_message(mons, " fades into mist!");
                     }
+                    else
+                    {
+                        std::string msg = " " + summoned_poof_msg(mons) + "!";
+                        simple_monster_message(mons, msg.c_str());
+                    }
                 }
                 else
                 {
