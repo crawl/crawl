@@ -2074,7 +2074,7 @@ bool undead_abomination_convert(monster* mon, int hd)
 }
 
 // Return a definite/indefinite article for (number) things.
-const char *_count_article(int number, bool definite)
+static const char *_count_article(int number, bool definite)
 {
     if (number == 0)
         return ("No");
