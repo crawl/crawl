@@ -2107,8 +2107,8 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
         {
             if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
             {
-                if(!actual)
-                    return true;
+                if (!actual)
+                    return (true);
 
                 if (mons_genus(si->plus) == MONS_ORC)
                     num_orcs++;
@@ -2141,12 +2141,11 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
 
         // Getting a huge abomination shouldn't be too easy.
         if (hd > 15)
-            hd = 15 + (hd - 15)/2;
+            hd = 15 + (hd - 15) / 2;
 
         hd = std::min(hd, 30);
 
         monster_type montype;
-
 
         if (hd >= 11 && num_corpses > 2)
             montype = MONS_ABOMINATION_LARGE;
@@ -2160,7 +2159,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
         mgen_data mg(montype, beha, caster, 0, 0, *ri, foe, MG_FORCE_BEH, god);
         const int mons = create_monster(mg);
 
-        if (mons >= 0)
+        if (mons != -1)
         {
             // Set hit dice, AC, and HP.
             undead_abomination_convert(&menv[mons], hd);
@@ -2179,8 +2178,9 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
             num_lost_piles++;
         }
     }
+
     if (num_lost + num_crawlies + num_masses == 0)
-        return false;
+        return (false);
 
     // The tracer should have stopped at the first corpse, or found no
     // corpses and returned false.
@@ -2189,26 +2189,26 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
     if (num_lost)
         mprf("%s %s into %s!",
              _count_article(num_lost, num_crawlies + num_masses == 0),
-            num_lost == 1 ? "corpse collapses" : "corpses collapse",
-            num_lost_piles == 1 ? "a pulpy mess" : "pulpy messes");
+             num_lost == 1 ? "corpse collapses" : "corpses collapse",
+             num_lost_piles == 1 ? "a pulpy mess" : "pulpy messes");
 
     if (num_crawlies > 0)
         mprf("%s %s to drag %s along the ground!",
              _count_article(num_crawlies, num_lost + num_masses == 0),
-            num_crawlies == 1 ? "corpse begins" : "corpses begin",
-            num_crawlies == 1 ? "itself" : "themselves");
+             num_crawlies == 1 ? "corpse begins" : "corpses begin",
+             num_crawlies == 1 ? "itself" : "themselves");
 
     if (num_masses > 0)
         mprf("%s corpses meld into %s of writhing flesh!",
-            _count_article(2, num_crawlies + num_lost == 0),
-            num_masses == 1 ? "an agglomeration" : "agglomerations");
+             _count_article(2, num_crawlies + num_lost == 0),
+             num_masses == 1 ? "an agglomeration" : "agglomerations");
 
     if (num_orcs > 0 && caster == &you)
         did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * num_orcs);
     if (num_holy > 0 && caster == &you)
         did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2 * num_holy);
 
-    return true;
+    return (true);
 }
 
 spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
