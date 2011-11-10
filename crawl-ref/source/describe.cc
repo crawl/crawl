@@ -812,6 +812,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
         append_weapon_stats(description, item);
 
     int spec_ench = get_weapon_brand(item);
+    int damtype = get_vorpal_type(item);
 
     if (!is_artefact(item) && !verbose)
         spec_ench = SPWPN_NORMAL;
@@ -827,7 +828,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             description += "It emits flame when wielded, causing extra "
                 "injury to most foes and up to double damage against "
                 "particularly susceptible opponents.";
-            if (get_vorpal_type(item) & (DVORP_SLICING | DVORP_CHOPPING))
+            if (damtype == DVORP_SLICING || damtype == DVORP_CHOPPING)
             {
                 description += " Big, fiery blades are also staple armaments "
                     "of hydra-hunters.";
