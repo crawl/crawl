@@ -514,7 +514,7 @@ void tileidx_from_map_cell(tileidx_t *fg, tileidx_t *bg, const map_cell &cell)
         *fg = TILE_UNSEEN_MONSTER;
         break;
     case SH_MONSTER:
-        *fg = _tileidx_monster_base(cell.monster());
+        *fg = tileidx_monster(*cell.monsterinfo());
         break;
     }
 }
