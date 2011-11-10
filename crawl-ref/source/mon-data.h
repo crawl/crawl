@@ -322,7 +322,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_FIRE_BAT, 'b', LIGHTRED, "fire bat",
+    MONS_FIRE_BAT, 'b', RED, "fire bat",
     M_SENSE_INVIS | M_WARM_BLOOD | M_BATTY,
     MR_RES_HELLFIRE | MR_VUL_COLD,
     0, 8, MONS_BAT, MONS_FIRE_BAT, MH_NATURAL, -1,

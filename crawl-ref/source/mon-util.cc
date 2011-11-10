@@ -2046,6 +2046,24 @@ uint8_t random_monster_colour()
     return (col);
 }
 
+// Butterflies
+uint8_t random_butterfly_colour()
+{
+    uint8_t col;
+    // Restricted to 'light' colours.
+    do
+        col = random_monster_colour();
+    while (col == BLACK
+           || col == BLUE
+           || col == GREEN
+           || col == CYAN
+           || col == RED
+           || col == MAGENTA
+           || col == BROWN);
+
+    return col;
+}
+
 // Abominations.
 uint8_t random_large_abomination_colour()
 {
@@ -2118,6 +2136,10 @@ void define_monster(monster* mons)
 
     switch (mcls)
     {
+    case MONS_BUTTERFLY:
+        col = random_butterfly_colour();
+        break;
+
     case MONS_ABOMINATION_SMALL:
         hd = 4 + random2(4);
         ac = 3 + random2(7);
