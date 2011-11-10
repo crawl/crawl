@@ -2060,9 +2060,7 @@ bool undead_abomination_convert(monster* mon, int hd)
     // Mark this abomination as undead.
     mon->flags |= MF_FAKE_UNDEAD;
 
-    mon->colour = ((hd > 2 * max_hd / 3) ? LIGHTRED :
-                   (hd > max_hd / 2)     ? RED
-                                         : BROWN);
+    mon->colour = ((hd > 2 * max_hd / 3) ? LIGHTRED : RED);
 
     mon->hit_dice = std::min(max_hd, hd);
 
@@ -2131,8 +2129,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
         if (num_corpses == 0)
             continue;
 
-        // Maximum efficiency at 100 power: 1 HD per 20.0 aum.
-        // Half that at zero power.
+        // 20 aum per HD at max power; 30 at 100 power; and 60 at 0 power.
         int hd = div_rand_round((pow + 100) * total_mass, (200*300));
 
         if (hd <= 0)

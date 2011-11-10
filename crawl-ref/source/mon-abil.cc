@@ -682,9 +682,6 @@ static bool _crawlie_is_mergeable(monster *mons)
     switch (mons->type)
     {
     case MONS_ABOMINATION_SMALL:
-        if (mons->hit_dice > 15)
-            return false;
-        break;
     case MONS_CRAWLING_CORPSE:
     case MONS_MACABRE_MASS:
         break;
