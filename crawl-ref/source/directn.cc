@@ -2359,7 +2359,9 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
     if (need_path && _blocked_ray(mon->pos()))
         return (false);
 
-    const monster* monl = mlist[real_idx].mon();
+    const monster* monl = monster_at(player2grid(mlist[real_idx].pos));
+    // FIXME: Is it really necessary to compare to the monster*
+    // instead of the monster_info?
     extern mon_attitude_type mons_attitude(const monster* m);
 
     if (mons_attitude(mon) != mlist[idx].attitude)

@@ -151,9 +151,6 @@ struct monster_info : public monster_info_base
 
     void to_string(int count, std::string& desc, int& desc_color, bool fullname = true) const;
 
-    // TODO: remove this
-    monster* mon() const;
-
     /* only real equipment is visible, miscellany is for mimic items */
     std::auto_ptr<item_def> inv[MSLOT_LAST_VISIBLE_SLOT + 1];
 
