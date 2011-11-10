@@ -667,17 +667,6 @@ monster_info::monster_info(const monster* m, int milev)
     client_id = m->get_client_id();
 }
 
-monster* monster_info::mon() const
-{
-    int m = env.mgrid(player2grid(pos));
-    ASSERT(m >= 0);
-#ifdef USE_TILE
-    if (m == NON_MONSTER)
-        return NULL;
-#endif
-    return &env.mons[m];
-}
-
 std::string monster_info::db_name() const
 {
     if (type == MONS_DANCING_WEAPON && inv[MSLOT_WEAPON].get())
