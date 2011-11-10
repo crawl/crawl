@@ -1735,11 +1735,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // Try to animate weapons: if none are animated, pretend we didn't cast it.
         if (spell_cast == SPELL_TUKIMAS_BALL)
         {
-            //friendly monsters cannot cast tukima's ball for now.
+            // Friendly monsters cannot cast Tukima's Ball for now.
             if (mons->friendly())
-                return false;
+                return (false);
+
             if (!cast_tukimas_ball(mons, 100, GOD_NO_GOD, true))
-                return false;
+                return (false);
         }
 
         // Try to animate dead: if nothing rises, pretend we didn't cast it.
