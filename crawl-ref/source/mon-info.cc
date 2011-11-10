@@ -12,6 +12,7 @@
 #include "areas.h"
 #include "artefact.h"
 #include "coord.h"
+#include "coordit.h"
 #include "env.h"
 #include "fight.h"
 #include "ghost.h"
@@ -179,6 +180,94 @@ static int quantise(int value, int stepsize)
     return value + stepsize - value % stepsize;
 }
 
+// Returns true if using a directional tentacle tile would leak
+// information the player doesn't have about a tentacle segment's
+// current position.
+static bool _tentacle_pos_unknown(const monster *tentacle,
+                                  const coord_def orig_pos)
+{
+    // We can see the segment, no guessing necessary.
+    if (!tentacle->submerged())
+        return (false);
+
+    const coord_def t_pos = tentacle->pos();
+
+    // Checks whether there are any positions adjacent to the
+    // original tentacle that might also contain the segment.
+    for (adjacent_iterator ai(orig_pos); ai; ++ai)
+    {
+        if (*ai == t_pos)
+            continue;
+
+        if (!in_bounds(*ai))
+            continue;
+
+        if (you.pos() == *ai)
+            continue;
+
+        // If there's an adjacent deep water tile, the segment
+        // might be there instead.
+        if (grd(*ai) == DNGN_DEEP_WATER)
+        {
+            const monster *mon = monster_at(*ai);
+            if (mon && you.can_see(mon))
+            {
+                // Could originate from the kraken.
+                if (mon->type == MONS_KRAKEN)
+                    return (true);
+
+                // Otherwise, we know the segment can't be there.
+                continue;
+            }
+            return (true);
+        }
+
+        if (grd(*ai) == DNGN_SHALLOW_WATER)
+        {
+            const monster *mon = monster_at(*ai);
+
+            // We know there's no segment there.
+            if (!mon)
+                continue;
+
+            // Disturbance in shallow water -> might be a tentacle.
+            if (mon->type == MONS_KRAKEN || mon->submerged())
+                return (true);
+        }
+    }
+
+    // Using a directional tile leaks no information.
+    return (false);
+}
+
+static void _translate_tentacle_ref(monster_info& mi, const monster* m,
+                                    std::string key)
+{
+    if (m->props.exists(key))
+    {
+        const int h_idx = m->props[key].get_int();
+        monster *other = NULL; // previous or next segment
+        if (h_idx != -1)
+        {
+            ASSERT(!invalid_monster_index(h_idx));
+            other = &menv[h_idx];
+            coord_def h_pos = other->pos();
+            // If the tentacle and the other segment are no longer adjacent
+            // (distortion etc.), just treat them as not connected.
+            if (adjacent(m->pos(), h_pos)
+                && other->type != MONS_KRAKEN
+                && other->type != MONS_ZOMBIE_LARGE
+                && other->type != MONS_SPECTRAL_THING
+                && other->type != MONS_SIMULACRUM_LARGE
+                && !_tentacle_pos_unknown(other, m->pos()))
+            {
+                mi.props[key] = grid2player(other->pos());
+            }
+        }
+    }
+}
+
+
 monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 {
     mb.reset();
@@ -278,6 +367,10 @@ monster_info::monster_info(const monster* m, int milev)
             if (_is_public_key(i->first))
                 props[i->first] = i->second;
     }
+
+    // Translate references to tentacles into just their locations
+    _translate_tentacle_ref(*this, m, "inwards");
+    _translate_tentacle_ref(*this, m, "outwards");
 
     if (type_known)
     {

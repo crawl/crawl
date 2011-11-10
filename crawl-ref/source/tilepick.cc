@@ -2004,66 +2004,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     return TILEP_MONS_PROGRAM_BUG;
 }
 
-// Returns true if using a directional tentacle tile would leak
-// information the player doesn't have about a tentacle segment's
-// current position.
-static bool _tentacle_pos_unknown(const monster *tentacle,
-                                  const coord_def orig_pos)
-{
-    // We can see the segment, no guessing necessary.
-    if (!tentacle->submerged())
-        return (false);
-
-    const coord_def t_pos = tentacle->pos();
-
-    // Checks whether there are any positions adjacent to the
-    // original tentacle that might also contain the segment.
-    for (adjacent_iterator ai(orig_pos); ai; ++ai)
-    {
-        if (*ai == t_pos)
-            continue;
-
-        if (!in_bounds(*ai))
-            continue;
-
-        if (you.pos() == *ai)
-            continue;
-
-        // If there's an adjacent deep water tile, the segment
-        // might be there instead.
-        if (grd(*ai) == DNGN_DEEP_WATER)
-        {
-            const monster *mon = monster_at(*ai);
-            if (mon && you.can_see(mon))
-            {
-                // Could originate from the kraken.
-                if (mon->type == MONS_KRAKEN)
-                    return (true);
-
-                // Otherwise, we know the segment can't be there.
-                continue;
-            }
-            return (true);
-        }
-
-        if (grd(*ai) == DNGN_SHALLOW_WATER)
-        {
-            const monster *mon = monster_at(*ai);
-
-            // We know there's no segment there.
-            if (!mon)
-                continue;
-
-            // Disturbance in shallow water -> might be a tentacle.
-            if (mon->type == MONS_KRAKEN || mon->submerged())
-                return (true);
-        }
-    }
-
-    // Using a directional tile leaks no information.
-    return (false);
-}
-
 enum main_dir
 {
     NORTH = 0,
@@ -2201,104 +2141,73 @@ static tileidx_t _tileidx_tentacle(const monster_info& mon)
     // Get tentacle position.
     const coord_def t_pos = mon.pos;
     // No parent tentacle, or the connection to the head is unknown.
-    bool no_head_connect  = false;
+    bool no_head_connect  = !mon.props.exists("inwards");
     coord_def h_pos       = coord_def(); // head position
-    if (mon.props.exists("inwards")) // FIXME!
+    if (!no_head_connect)
     {
-        // Get the parent tentacle.
-        const int h_idx = mon.props["inwards"].get_int();
-        monster *head = NULL;
-        if (h_idx == -1) // mon == head
-            no_head_connect = true;
-        else
-        {
-            ASSERT(!invalid_monster_index(h_idx));
-            head = &menv[h_idx];
-            h_pos = head->pos();  // head position
-            // If the tentacle and its "head" segment are no longer adjacent
-            // (distortion etc.), just treat them as not connected.
-            if (!adjacent(t_pos, h_pos))
-                no_head_connect = true;
-        }
-        if (!no_head_connect)
-        {
-            no_head_connect = (head->type == MONS_KRAKEN
-                               || head->type == MONS_ZOMBIE_LARGE
-                               || head->type == MONS_SPECTRAL_THING
-                               || head->type == MONS_SIMULACRUM_LARGE
-                               || _tentacle_pos_unknown(head, mon.pos));
-        }
-
-        // Tentacle end only requires checking of head position.
-        if (mons_is_tentacle_end(mon.type))
-        {
-            if (no_head_connect)
-            {
-                if (_mons_is_kraken_tentacle(mon.type))
-                    return _mon_random(TILEP_MONS_KRAKEN_TENTACLE_WATER);
-                return _mon_random(TILEP_MONS_ELDRITCH_TENTACLE_PORTAL);
-            }
-            ASSERT(mons_is_tentacle_segment(head->type));
-
-            // Different handling according to relative positions.
-            if (h_pos.x == t_pos.x)
-            {
-                if (h_pos.y < t_pos.y)
-                    return TILEP_MONS_KRAKEN_TENTACLE_N;
-                else
-                    return TILEP_MONS_KRAKEN_TENTACLE_S;
-            }
-            else if (h_pos.y == t_pos.y)
-            {
-                if (h_pos.x < t_pos.x)
-                    return TILEP_MONS_KRAKEN_TENTACLE_W;
-                else
-                    return TILEP_MONS_KRAKEN_TENTACLE_E;
-            }
-            else if (h_pos.x < t_pos.x)
-            {
-                if (h_pos.y < t_pos.y)
-                    return TILEP_MONS_KRAKEN_TENTACLE_NW;
-                else
-                    return TILEP_MONS_KRAKEN_TENTACLE_SW;
-            }
-            else if (h_pos.x > t_pos.x)
-            {
-                if (h_pos.y < t_pos.y)
-                    return TILEP_MONS_KRAKEN_TENTACLE_NE;
-                else
-                    return TILEP_MONS_KRAKEN_TENTACLE_SE;
-            }
-            die("impossible kraken direction");
-        }
-        // Only tentacle segments from now on.
-        ASSERT(mons_is_tentacle_segment(mon.type));
+        // Get the parent tentacle's location.
+        h_pos = mon.props["inwards"].get_coord();
     }
-    else
+
+    // Tentacle end only requires checking of head position.
+    if (mons_is_tentacle_end(mon.type))
     {
-        if (mons_is_tentacle_end(mon.type))
+        if (no_head_connect)
         {
-            // Can only happen during the database search.
             if (_mons_is_kraken_tentacle(mon.type))
                 return _mon_random(TILEP_MONS_KRAKEN_TENTACLE_WATER);
             return _mon_random(TILEP_MONS_ELDRITCH_TENTACLE_PORTAL);
         }
+
+        // Different handling according to relative positions.
+        if (h_pos.x == t_pos.x)
+        {
+            if (h_pos.y < t_pos.y)
+                return TILEP_MONS_KRAKEN_TENTACLE_N;
+            else
+                return TILEP_MONS_KRAKEN_TENTACLE_S;
+        }
+        else if (h_pos.y == t_pos.y)
+        {
+            if (h_pos.x < t_pos.x)
+                return TILEP_MONS_KRAKEN_TENTACLE_W;
+            else
+                return TILEP_MONS_KRAKEN_TENTACLE_E;
+        }
+        else if (h_pos.x < t_pos.x)
+        {
+            if (h_pos.y < t_pos.y)
+                return TILEP_MONS_KRAKEN_TENTACLE_NW;
+            else
+                return TILEP_MONS_KRAKEN_TENTACLE_SW;
+        }
+        else if (h_pos.x > t_pos.x)
+        {
+            if (h_pos.y < t_pos.y)
+                return TILEP_MONS_KRAKEN_TENTACLE_NE;
+            else
+                return TILEP_MONS_KRAKEN_TENTACLE_SE;
+        }
+        die("impossible kraken direction");
     }
+    // Only tentacle segments from now on.
+    ASSERT(mons_is_tentacle_segment(mon.type));
 
     // For segments, we also need the next segment (or end piece).
-    ASSERT(mon.props.exists("outwards"));
-    const int n_idx = mon.props["outwards"].get_int();
-    ASSERT(!invalid_monster_index(n_idx));
-    const monster next = menv[n_idx]; // FIXME!
+    coord_def n_pos;
+    bool no_next_connect = !mon.props.exists("outwards");
+    if (!no_next_connect)
+    {
+        n_pos = mon.props["outwards"].get_coord();
+    }
 
-    const coord_def n_pos = next.pos();  // next position
-    if (no_head_connect && next.submerged())
+    if (no_head_connect && no_next_connect)
     {
         // Both head and next are submerged.
         return TILEP_MONS_KRAKEN_TENTACLE_SEGMENT_WATER;
     }
 
-    if (no_head_connect || _tentacle_pos_unknown(&next, mon.pos))
+    if (no_head_connect || no_next_connect)
     {
         // One segment end goes into water, the other
         // into the direction of head or next.
