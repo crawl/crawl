@@ -583,6 +583,7 @@ lance2 LANCE2
 scythe SCYTHE
 scythe_slant SCYTHE_SLANT
 pike PIKE
+staff1 STAFF
 quarterstaff1 QUARTERSTAFF1
 quarterstaff2 QUARTERSTAFF2
 quarterstaff3 QUARTERSTAFF3
