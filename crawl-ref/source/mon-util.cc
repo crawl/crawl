@@ -2053,14 +2053,7 @@ uint8_t random_butterfly_colour()
     // Restricted to 'light' colours.
     do
         col = random_monster_colour();
-    while (col == BLACK
-           || col == BLUE
-           || col == GREEN
-           || col == CYAN
-           || col == RED
-           || col == MAGENTA
-           || col == BROWN
-           || col == LIGHTGRAY);
+    while (is_low_colour(col));
 
     return col;
 }
