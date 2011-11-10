@@ -4159,7 +4159,7 @@ int melee_attack::player_calc_base_unarmed_damage()
         damage = 12;
         break;
     case TRAN_BLADE_HANDS:
-        damage = 12 + div_rand_round(you.strength() + you.dex(), 4);
+        damage = 8 + div_rand_round(you.strength() + you.dex(), 3);
         break;
     case TRAN_STATUE: // multiplied by 1.5 later
         damage = 6 + div_rand_round(you.strength(), 3);
