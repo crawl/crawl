@@ -610,7 +610,7 @@ This spell causes weapons on the ground near the caster to all leap into the air
 %%%%
 Twisted Resurrection
 
-This spell causes nearby corpses to begin crawling together, merging into horrible agglomerations of flesh.  More and larger corpses result in more powerful creations.
+This spell causes nearby corpses to begin crawling together, merging into horrible agglomerations of flesh. More and larger corpses result in more powerful creations.
 %%%%
 Vampiric Draining
 
