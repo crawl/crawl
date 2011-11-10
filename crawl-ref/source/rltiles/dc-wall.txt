@@ -939,4 +939,3 @@ shadow_nw DNGN_WALL_SHADOW_NW
 shadow_n DNGN_WALL_SHADOW_N
 shadow_ne DNGN_WALL_SHADOW_NE
 shadow_e DNGN_WALL_SHADOW_E
-

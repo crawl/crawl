@@ -2863,7 +2863,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     // make one, let's ban this outright.
     if (source_tier == -1)
     {
-        return (simple_monster_message(mons, "'s appearance momentarily alters."));
+        return simple_monster_message(mons,
+            "'s appearance momentarily alters.");
     }
     relax = 1;
 
@@ -2905,7 +2906,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     monster_type oldc = mons->type;
 
     change_monster_type(mons, targetc);
-    
+
     bool can_see = you.can_see(mons);
 
     // Messaging

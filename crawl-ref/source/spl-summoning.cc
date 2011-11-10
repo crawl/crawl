@@ -2158,7 +2158,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
 
         mgen_data mg(montype, beha, caster, 0, 0, *ri, foe, MG_FORCE_BEH, god);
         const int mons = create_monster(mg);
-       
+
         if (mons >= 0)
         {
             // Set hit dice, AC, and HP.
