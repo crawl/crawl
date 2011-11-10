@@ -726,6 +726,10 @@ dwarf
 
 A short stout fella with a beard.
 %%%%
+dwarf mountain bat
+
+A species of bat that lives in mountain caves. How it got into the dungeon is a mystery - probably something related to the sudden demise of dwarves in those lands. But don't worry, an eradication team is on the way.
+%%%%
 earth elemental
 
 A spirit drawn from the elemental plane of earth, which exists in this world by inhabiting a lump of earth and rocks.
