@@ -2040,32 +2040,33 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
 bool undead_abomination_convert(monster* mon, int hd)
 {
     if (mon->type == MONS_CRAWLING_CORPSE
-     || mon->type == MONS_MACABRE_MASS)
+        || mon->type == MONS_MACABRE_MASS)
     {
         mon->hit_points = mon->max_hit_points = mon->hit_dice = hd;
         return (true);
     }
     else if (mon->type != MONS_ABOMINATION_LARGE
-          && mon->type != MONS_ABOMINATION_SMALL)
+             && mon->type != MONS_ABOMINATION_SMALL)
     {
         return (false);
     }
+
     const int max_hd = mon->type == MONS_ABOMINATION_LARGE ? 30 : 15;
     const int max_ac = mon->type == MONS_ABOMINATION_LARGE ? 20 : 10;
 
     // Mark this abomination as undead.
     mon->flags |= MF_FAKE_UNDEAD;
 
-    mon->colour = ((hd > 2*max_hd/3) ? LIGHTRED :
-                   (hd > max_hd/2)   ? RED
-                                     : BROWN);
+    mon->colour = ((hd > 2 * max_hd / 3) ? LIGHTRED :
+                   (hd > max_hd / 2)     ? RED
+                                         : BROWN);
 
     mon->hit_dice = std::min(max_hd, hd);
 
     mon->max_hit_points = std::max(1, hit_points(mon->hit_dice, 2, 5));
     mon->hit_points     = mon->max_hit_points;
 
-    mon->ac = std::min(max_ac, 2*hd/3);
+    mon->ac = std::min(max_ac, 2 * hd / 3);
 
     return (true);
 }
