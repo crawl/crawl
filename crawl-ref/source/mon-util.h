@@ -398,6 +398,7 @@ std::string ugly_thing_colour_name(const monster* mon);
 uint8_t ugly_thing_random_colour();
 int str_to_ugly_thing_colour(const std::string &s);
 uint8_t random_monster_colour();
+uint8_t random_butterfly_colour();
 uint8_t random_large_abomination_colour();
 uint8_t random_small_abomination_colour();
 int ugly_thing_colour_offset(const uint8_t colour);
