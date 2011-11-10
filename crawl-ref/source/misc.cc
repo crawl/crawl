@@ -54,6 +54,7 @@
 #include "mapmark.h"
 #include "message.h"
 #include "mgen_data.h"
+#include "mon-death.h"
 #include "mon-place.h"
 #include "mon-pathfind.h"
 #include "mon-info.h"
@@ -2149,6 +2150,7 @@ void run_environment_effects()
     abyss_morph(you.time_taken);
     timeout_tombs(you.time_taken);
     timeout_malign_gateways(you.time_taken);
+    timeout_phoenix_markers(you.time_taken);
 }
 
 coord_def pick_adjacent_free_square(const coord_def& p)

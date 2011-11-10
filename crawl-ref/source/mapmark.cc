@@ -664,9 +664,9 @@ std::string map_malign_gateway_marker::debug_describe() const
 // map_phoenix_marker
 
 map_phoenix_marker::map_phoenix_marker(const coord_def& p,
-                    int tst, int tso, beh_type bh, god_type gd, coord_def cp
+                    int dur, int mnum, beh_type bh, god_type gd, coord_def cp
                     )
-    : map_marker(MAT_PHOENIX, p), turn_start(tst), turn_stop(tso),
+    : map_marker(MAT_PHOENIX, p), duration(dur), mon_num(mnum),
             behaviour(bh), god(gd), corpse_pos(cp)
 {
 }
@@ -674,8 +674,8 @@ map_phoenix_marker::map_phoenix_marker(const coord_def& p,
 void map_phoenix_marker::write(writer &out) const
 {
     map_marker::write(out);
-    marshallShort(out, turn_start);
-    marshallShort(out, turn_stop);
+    marshallShort(out, duration);
+    marshallShort(out, mon_num);
     marshallUByte(out, behaviour);
     marshallUByte(out, god);
     marshallCoord(out, corpse_pos);
@@ -685,8 +685,8 @@ void map_phoenix_marker::read(reader &in)
 {
     map_marker::read(in);
 
-    turn_start = unmarshallShort(in);
-    turn_stop = unmarshallShort(in);
+    duration = unmarshallShort(in);
+    mon_num = unmarshallShort(in);
     behaviour = static_cast<beh_type>(unmarshallUByte(in));
     god       = static_cast<god_type>(unmarshallByte(in));
     corpse_pos = unmarshallCoord(in);
@@ -701,13 +701,13 @@ map_marker *map_phoenix_marker::read(reader &in, map_marker_type)
 
 map_marker *map_phoenix_marker::clone() const
 {
-    map_phoenix_marker *mark = new map_phoenix_marker(pos, turn_start, turn_stop, behaviour, god, corpse_pos);
+    map_phoenix_marker *mark = new map_phoenix_marker(pos, duration, mon_num, behaviour, god, corpse_pos);
     return (mark);
 }
 
 std::string map_phoenix_marker::debug_describe() const
 {
-    return make_stringf("Phoenix marker (%d, %d)", turn_start, turn_stop);
+    return make_stringf("Phoenix marker (%d, %d)", duration, mon_num);
 }
 
 ////////////////////////////////////////////////////////////////////////////

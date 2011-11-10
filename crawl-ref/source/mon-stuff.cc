@@ -2354,6 +2354,11 @@ int monster_die(monster* mons, killer_type killer,
         else
             shedu_do_resurrection(mons);
     }
+    else if (mons_is_phoenix(mons))
+    {
+        if (!was_banished)
+            phoenix_died(mons);
+    }
     else if (mons_is_mimic(mons->type))
         drop_items = false;
     else if (!mons->is_summoned())
