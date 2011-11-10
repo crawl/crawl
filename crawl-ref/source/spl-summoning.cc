@@ -243,8 +243,9 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
             else
                 mon = MONS_SMALL_SNAKE;
 
-            int mon_index = create_monster(mgen_data(mon, beha, &you,
-                              0, SPELL_STICKS_TO_SNAKES, you.pos(), MHITYOU, 0, god), false);
+            const int mon_index = create_monster(mgen_data(mon, beha, &you,
+                                      0, SPELL_STICKS_TO_SNAKES, you.pos(),
+                                      MHITYOU, 0, god), false);
             if (mon_index != -1)
             {
                 count++;
@@ -278,8 +279,9 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
         if (pow > 90 && one_chance_in(3))
             mon = MONS_ANACONDA;
 
-        int mon_index = create_monster(mgen_data(mon, beha, &you,
-                          0, SPELL_STICKS_TO_SNAKES, you.pos(), MHITYOU, 0, god), false);
+        const int mon_index = create_monster(mgen_data(mon, beha, &you,
+                                  0, SPELL_STICKS_TO_SNAKES, you.pos(),
+                                  MHITYOU, 0, god), false);
         if (mon_index != -1)
         {
             count++;
