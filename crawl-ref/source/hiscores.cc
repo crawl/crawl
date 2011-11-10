@@ -424,7 +424,7 @@ static const char *kill_method_names[] =
     "stupidity", "weakness", "clumsiness", "trap", "leaving", "winning",
     "quitting", "draining", "starvation", "freezing", "burning",
     "wild_magic", "xom", "rotting", "targeting", "spore",
-    "tso_smiting", "petrification", "something",
+    "tso_smiting", "something",
     "falling_down_stairs", "acid", "curare",
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
     "falling_through_gate", "disintegration",
@@ -432,7 +432,7 @@ static const char *kill_method_names[] =
 
 const char *kill_method_name(kill_method_type kmt)
 {
-    ASSERT(NUM_KILLBY == ARRAYSZ(kill_method_names));
+    COMPILE_CHECK(NUM_KILLBY == ARRAYSZ(kill_method_names));
 
     if (kmt == NUM_KILLBY)
         return ("");
@@ -442,7 +442,7 @@ const char *kill_method_name(kill_method_type kmt)
 
 kill_method_type str_to_kill_method(const std::string &s)
 {
-    ASSERT(NUM_KILLBY == ARRAYSZ(kill_method_names));
+    COMPILE_CHECK(NUM_KILLBY == ARRAYSZ(kill_method_names));
 
     for (int i = 0; i < NUM_KILLBY; ++i)
     {
