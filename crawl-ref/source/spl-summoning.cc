@@ -2096,7 +2096,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
     int num_lost = 0;
     int num_lost_piles = 0;
 
-    radius_iterator ri(caster->pos(), pow / 25, C_ROUND,
+    radius_iterator ri(caster->pos(), LOS_RADIUS, C_ROUND,
                        caster->get_los_no_trans());
 
     for (; ri; ++ri)
