@@ -1599,12 +1599,13 @@ brand_ok:
     if (no_brand)
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_NORMAL);
 
-    // If it's forced to be a good item, upgrade the worst weapons.
+    // If it's forced to be a good item, reroll the worst weapons.
     if (force_good
         && force_type == OBJ_RANDOM
-        && (item.sub_type == WPN_CLUB || item.sub_type == WPN_SLING))
+        && (item.sub_type == WPN_CLUB || item.sub_type == WPN_SLING
+            || item.sub_type == WPN_STAFF))
     {
-        item.sub_type = WPN_LONG_SWORD;
+        item.sub_type = _determine_weapon_subtype(item_level);
     }
 
     item.plus  = 0;
