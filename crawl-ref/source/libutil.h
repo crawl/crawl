@@ -89,8 +89,6 @@ bool version_is_stable(const char *ver);
 bool strip_tag(std::string &s, const std::string &tag, bool nopad = false);
 bool strip_suffix(std::string &s, const std::string &suffix);
 int strip_number_tag(std::string &s, const std::string &tagprefix);
-bool strip_bool_tag(std::string &s, const std::string &name,
-                    bool defval = false);
 std::vector<std::string> strip_multiple_tag_prefix(std::string &s, const std::string &tagprefix);
 std::string strip_tag_prefix(std::string &s, const std::string &tagprefix);
 bool parse_int(const char *s, int &i);
@@ -104,7 +102,6 @@ std::string apostrophise(const std::string &name);
 std::string apostrophise_fixup(const std::string &msg);
 
 std::string number_in_words(unsigned number, int pow = 0);
-std::string number_to_string(unsigned number, bool in_words = false);
 
 bool shell_safe(const char *file);
 

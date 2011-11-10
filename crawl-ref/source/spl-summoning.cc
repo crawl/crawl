@@ -1214,16 +1214,16 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
                                  quiet);
 }
 
-bool summon_lesser_demon(int pow, god_type god, int spell,
-                         bool quiet)
+bool _summon_lesser_demon(int pow, god_type god, int spell,
+                          bool quiet)
 {
     return _summon_demon_wrapper(pow, god, spell, DEMON_LESSER,
                                  std::min(2 + (random2(pow) / 4), 6),
                                  random2(pow) > 3, false, quiet);
 }
 
-bool summon_common_demon(int pow, god_type god, int spell,
-                         bool quiet)
+bool _summon_common_demon(int pow, god_type god, int spell,
+                          bool quiet)
 {
     return _summon_demon_wrapper(pow, god, spell, DEMON_COMMON,
                                  std::min(2 + (random2(pow) / 4), 6),
@@ -1255,7 +1255,7 @@ spret_type cast_summon_demon(int pow, god_type god, bool fail)
     fail_check();
     mpr("You open a gate to Pandemonium!");
 
-    if (!summon_common_demon(pow, god, SPELL_SUMMON_DEMON))
+    if (!_summon_common_demon(pow, god, SPELL_SUMMON_DEMON, false))
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return SPRET_SUCCESS;
@@ -1272,7 +1272,7 @@ spret_type cast_demonic_horde(int pow, god_type god, bool fail)
 
     for (int i = 0; i < how_many; ++i)
     {
-        if (summon_lesser_demon(pow, god, SPELL_DEMONIC_HORDE, true))
+        if (_summon_lesser_demon(pow, god, SPELL_DEMONIC_HORDE, true))
             success = true;
     }
 
@@ -1502,7 +1502,7 @@ static bool _animatable_remains(const item_def& item)
 // undead can be equipped with the second monster's items if the second
 // monster is either of the same type as the first, or if the second
 // monster wasn't killed by the player or a player's pet.
-void equip_undead(const coord_def &a, int corps, int mons, int monnum)
+static void _equip_undead(const coord_def &a, int corps, int mons, int monnum)
 {
     monster* mon = &menv[mons];
 
@@ -1762,7 +1762,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     }
 
     // Re-equip the zombie.
-    equip_undead(pos, corps, mons, monnum);
+    _equip_undead(pos, corps, mons, monnum);
 
     // Destroy the monster's corpse, as it's no longer needed.
     destroy_item(corps);

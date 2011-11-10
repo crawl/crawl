@@ -20,7 +20,7 @@
 #include "view.h"
 #include "xom.h"
 
-bool unsuitable_misled_monster(monster_type mons)
+static bool _unsuitable_misled_monster(monster_type mons)
 {
     return (mons_is_unique(mons)
             || mons_is_mimic(mons)
@@ -43,13 +43,13 @@ bool unsuitable_misled_monster(monster_type mons)
             || mons == MONS_BAT);
 }
 
-monster_type get_misled_monster(monster* mons)
+static monster_type _get_misled_monster(monster* mons)
 {
     monster_type mt = random_monster_at_grid(mons->pos());
-    if (unsuitable_misled_monster(mt))
+    if (_unsuitable_misled_monster(mt))
         mt = random_monster_at_grid(mons->pos());
 
-    if (unsuitable_misled_monster(mt))
+    if (_unsuitable_misled_monster(mt))
         return (MONS_BAT);
 
     return mt;
@@ -68,7 +68,7 @@ bool update_mislead_monster(monster* mons)
     }
 
     monster misled_as;
-    misled_as.type = get_misled_monster(mons);
+    misled_as.type = _get_misled_monster(mons);
     misled_as.mid = mons->mid;
     define_monster(&misled_as);
     mons->props["mislead_as"] = misled_as;
@@ -79,7 +79,7 @@ bool update_mislead_monster(monster* mons)
     return (true);
 }
 
-int update_mislead_monsters(monster* caster)
+static int _update_mislead_monsters(monster* caster)
 {
     int count = 0;
 
@@ -118,7 +118,7 @@ void mons_cast_mislead(monster* mons)
         return;
     }
 
-    update_mislead_monsters(mons);
+    _update_mislead_monsters(mons);
 
     const int old_value = you.duration[DUR_MISLED];
     you.increase_duration(DUR_MISLED, mons->hit_dice * 12 / 3, 50);

@@ -446,7 +446,7 @@ static const char *shield_impact_degree(int impact)
                          : NULL);
 }
 
-static void warn_launcher_shield_slowdown(const item_def &launcher)
+static void _warn_launcher_shield_slowdown(const item_def &launcher)
 {
     const int slowspeed =
         launcher_final_speed(launcher, you.shield()) * player_speed() / 100;
@@ -481,7 +481,7 @@ void warn_shield_penalties()
         return;
 
     if (is_range_weapon(*weapon))
-        warn_launcher_shield_slowdown(*weapon);
+        _warn_launcher_shield_slowdown(*weapon);
     else if (weapon_skill(*weapon) == SK_STAVES
              && cmp_weapon_size(*weapon, SIZE_LARGE) >= 0)
     {
@@ -1409,7 +1409,8 @@ void throw_item_no_quiver()
 
 // Returns delay multiplier numerator (denominator should be 100) for the
 // launcher with the currently equipped shield.
-int launcher_shield_slowdown(const item_def &launcher, const item_def *shield)
+static int _launcher_shield_slowdown(const item_def &launcher,
+                                     const item_def *shield)
 {
     int speed_adjust = 100;
     if (!shield)
@@ -1465,7 +1466,7 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield)
 
     if (shield)
     {
-        const int speed_adjust = launcher_shield_slowdown(launcher, shield);
+        const int speed_adjust = _launcher_shield_slowdown(launcher, shield);
 
         // Shields also reduce the speed cap.
         speed_base = speed_base * speed_adjust / 100;
@@ -3552,7 +3553,7 @@ static bool _swap_rings_octopode(int ring_slot)
     return (true);
 }
 
-bool puton_item(int item_slot)
+static bool _puton_item(int item_slot)
 {
     item_def& item = you.inv[item_slot];
 
@@ -3708,7 +3709,7 @@ bool puton_ring(int slot)
     if (prompt_failed(item_slot))
         return (false);
 
-    return puton_item(item_slot);
+    return _puton_item(item_slot);
 }
 
 bool remove_ring(int slot, bool announce)

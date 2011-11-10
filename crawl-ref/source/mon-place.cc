@@ -246,8 +246,7 @@ bool monster_can_submerge(const monster* mon, dungeon_feature_type feat)
         return (false);
 }
 
-
-bool is_spawn_scaled_area(const level_id &here)
+static bool _is_spawn_scaled_area(const level_id &here)
 {
     return (here.level_type == LEVEL_DUNGEON
             && !is_hell_subbranch(here.branch)
@@ -262,7 +261,7 @@ static int _scale_spawn_parameter(int base_value,
                                   int dropoff_start_turns = 3000,
                                   int dropoff_ramp_turns  = 12000)
 {
-    if (!is_spawn_scaled_area(level_id::current()))
+    if (!_is_spawn_scaled_area(level_id::current()))
         return base_value;
 
     const int turns_on_level = env.turns_on_level;
@@ -647,9 +646,9 @@ bool drac_colour_incompatible(int drac, int colour)
 }
 
 // Finds a random square as close to a staircase as possible
-bool find_mon_place_near_stairs(coord_def& pos,
-                            dungeon_char_type *stair_type,
-                            branch_type &branch)
+static bool _find_mon_place_near_stairs(coord_def& pos,
+                                        dungeon_char_type *stair_type,
+                                        branch_type &branch)
 {
     pos = get_random_stair();
     const dungeon_feature_type feat = grd(pos);
@@ -717,7 +716,7 @@ static monster_type _resolve_monster_type(monster_type mon_type,
         // Respect destination level for staircases.
         if (proximity == PROX_NEAR_STAIRS)
         {
-            if (find_mon_place_near_stairs(pos, stair_type, place.branch))
+            if (_find_mon_place_near_stairs(pos, stair_type, place.branch))
             {
                 // No monsters spawned in the Temple.
                 if (branches[place.branch].id == BRANCH_ECUMENICAL_TEMPLE)
@@ -886,26 +885,6 @@ monster_type resolve_monster_type(monster_type mon_type,
                                  &chose_ood);
 }
 
-// Converts a randomised monster_type into a concrete monster_type, optionally
-// choosing monsters suitable for generation at the supplied place.
-monster_type resolve_corpse_monster_type(monster_type mon_type,
-                                         dungeon_feature_type feat,
-                                         level_id place)
-{
-    if (mon_type == RANDOM_MONSTER && place.is_valid())
-        return (pick_random_monster_for_place(place, MONS_NO_MONSTER,
-                                              false, false, true));
-
-    for (int i = 0; i < 1000; ++i)
-    {
-        const monster_type mon = resolve_monster_type(mon_type, feat);
-        if (mons_class_can_leave_corpse(mons_species(mon)))
-            return (mon);
-    }
-
-    return (MONS_NO_MONSTER);
-}
-
 // A short function to check the results of near_stairs().
 // Returns 0 if the point is not near stairs.
 // Returns 1 if the point is near unoccupied stairs.
@@ -1032,7 +1011,7 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
     if (mg.proximity == PROX_NEAR_STAIRS && mg.pos.origin())
     {
         branch_type b;
-        if (!find_mon_place_near_stairs(mg.pos, &stair_type, b))
+        if (!_find_mon_place_near_stairs(mg.pos, &stair_type, b))
             mg.proximity = PROX_AWAY_FROM_PLAYER;
     } // end proximity check
 
@@ -3649,7 +3628,7 @@ void set_vault_mon_list(const std::vector<mons_spec> &list)
     setup_vault_mon_list();
 }
 
-void get_vault_mon_list(std::vector<mons_spec> &list)
+static void _get_vault_mon_list(std::vector<mons_spec> &list)
 {
     list.clear();
 
@@ -3703,7 +3682,7 @@ void setup_vault_mon_list()
     vault_mon_weights.clear();
 
     std::vector<mons_spec> list;
-    get_vault_mon_list(list);
+    _get_vault_mon_list(list);
 
     unsigned int size = list.size();
 

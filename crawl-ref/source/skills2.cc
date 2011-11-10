@@ -637,7 +637,7 @@ static skill_type _get_opposite(skill_type sk)
  * @param sk2 Second skill.
  * @return Whether first skill is higher than second skill.
  */
-bool compare_skills(skill_type sk1, skill_type sk2)
+static bool _compare_skills(skill_type sk1, skill_type sk2)
 {
     if (is_invalid_skill(sk1))
         return false;
@@ -655,7 +655,7 @@ bool is_antitrained(skill_type sk)
     if (opposite == SK_NONE || you.skills[sk] >= 27)
         return false;
 
-    return compare_skills(opposite, sk) && you.skills[opposite];
+    return _compare_skills(opposite, sk) && you.skills[opposite];
 }
 
 bool antitrain_other(skill_type sk, bool show_zero)
@@ -665,7 +665,7 @@ bool antitrain_other(skill_type sk, bool show_zero)
         return false;
 
     return ((you.skills[opposite] > 0 || show_zero) && you.skills[sk] > 0
-            && you.skills[opposite] < 27 && compare_skills(sk, opposite));
+            && you.skills[opposite] < 27 && _compare_skills(sk, opposite));
 }
 
 bool is_invalid_skill(skill_type skill)

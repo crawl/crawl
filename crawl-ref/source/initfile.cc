@@ -3412,7 +3412,7 @@ static const char *cmd_ops[] = {
 static const int num_cmd_ops = CLO_NOPS;
 static bool arg_seen[num_cmd_ops];
 
-std::string find_executable_path()
+static std::string _find_executable_path()
 {
     // A lot of OSes give ways to find the location of the running app's
     // binary executable. This is useful, because argv[0] can be relative
@@ -3715,7 +3715,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             argv, argv + argc);
     }
 
-    std::string exe_path = find_executable_path();
+    std::string exe_path = _find_executable_path();
 
     if (!exe_path.empty())
         set_crawl_base_dir(exe_path.c_str());

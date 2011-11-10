@@ -769,7 +769,7 @@ void blood_smell(int strength, const coord_def& where)
 
 // Currently noise attenuation depends solely on the feature in question.
 // Walls are assumed to completely kill noise.
-int noise_attenuation_millis(const coord_def &pos)
+static int _noise_attenuation_millis(const coord_def &pos)
 {
     const dungeon_feature_type feat = grd(pos);
     switch (feat)
@@ -889,7 +889,7 @@ void noise_grid::propagate_noise()
                                     noises[cell.noise_id],
                                     travel_distance - 1);
 
-                const int attenuation = noise_attenuation_millis(p);
+                const int attenuation = _noise_attenuation_millis(p);
                 // If the base noise attenuation kills the noise, go no farther:
                 if (noise_is_audible(cell.noise_intensity_millis - attenuation))
                 {
