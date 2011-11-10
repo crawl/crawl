@@ -459,7 +459,7 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
         return (false);
     }
 
-    if (one_chance_in(5))
+    if (one_chance_in(4))
     {
         _wucad_miscast(&you, random2(9), random2(70));
         return (false);
