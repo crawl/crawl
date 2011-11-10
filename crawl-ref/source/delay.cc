@@ -1104,8 +1104,8 @@ static void _finish_delay(const delay_queue_item &delay)
             default:
                 if (!you.can_pass_through_feat(grd(pass)))
                 {
-                    mpr("... yet there is something new on the other side, "
-                        "you quickly turn back.");
+                    mpr("...yet there is something new on the other side. "
+                        "You quickly turn back.");
                     goto passwall_aborted;
                 }
                 break;
@@ -1127,7 +1127,7 @@ static void _finish_delay(const delay_queue_item &delay)
                 // Might still fail.
                 if (monster_at(pass))
                 {
-                    mpr("... and sense your way blocked. You quickly turn back.");
+                    mpr("...and sense your way blocked. You quickly turn back.");
                     goto passwall_aborted;
                 }
 
