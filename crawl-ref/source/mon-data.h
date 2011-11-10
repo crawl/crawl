@@ -322,7 +322,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_FIRE_BAT, 'b', RED, "fire bat",
+    MONS_FIRE_BAT, 'b', ETC_FIRE, "fire bat",
     M_SENSE_INVIS | M_WARM_BLOOD | M_BATTY,
     MR_RES_HELLFIRE | MR_VUL_COLD,
     0, 8, MONS_BAT, MONS_FIRE_BAT, MH_NATURAL, -1,
@@ -346,7 +346,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_PHOENIX, 'b', ETC_FIRE, "phoenix",
+    MONS_PHOENIX, 'b', RED, "phoenix",
     M_WARM_BLOOD | M_ALWAYS_CORPSE,
     MR_RES_POISON,
     480, 12, MONS_PHOENIX, MONS_PHOENIX, MH_HOLY, -3,

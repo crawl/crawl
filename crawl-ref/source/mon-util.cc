@@ -2059,7 +2059,8 @@ uint8_t random_butterfly_colour()
            || col == CYAN
            || col == RED
            || col == MAGENTA
-           || col == BROWN);
+           || col == BROWN
+           || col == LIGHTGRAY);
 
     return col;
 }
