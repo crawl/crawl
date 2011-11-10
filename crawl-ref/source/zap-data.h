@@ -366,7 +366,7 @@
     NULL,
     BLACK,
     true,
-    BEAM_CHARM,
+    BEAM_ENSLAVE,
     NUM_DCHAR_TYPES,
     false,
     false,

@@ -313,7 +313,7 @@ enum beam_type                  // beam[].flavour
     BEAM_DIGGING,
     BEAM_TELEPORT,
     BEAM_POLYMORPH,
-    BEAM_CHARM,
+    BEAM_ENSLAVE,
     BEAM_BANISH,
     BEAM_DEGENERATE,
     BEAM_ENSLAVE_SOUL,

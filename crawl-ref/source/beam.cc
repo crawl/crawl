@@ -3358,7 +3358,7 @@ void bolt::affect_player_enchantment()
         obvious_effect = true;
         break;
 
-    case BEAM_CHARM:
+    case BEAM_ENSLAVE:
         potion_effect(POT_CONFUSION, ench_power);
         obvious_effect = true;
         break;     // enslavement - confusion?
@@ -4933,7 +4933,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return (MON_AFFECTED);
     }
 
-    case BEAM_CHARM:
+    case BEAM_ENSLAVE:
         if (player_will_anger_monster(mon))
         {
             simple_monster_message(mon, " is repulsed!");
@@ -5810,7 +5810,7 @@ static std::string _beam_type_name(beam_type type)
     case BEAM_DIGGING:               return ("digging");
     case BEAM_TELEPORT:              return ("teleportation");
     case BEAM_POLYMORPH:             return ("polymorph");
-    case BEAM_CHARM:                 return ("enslave");
+    case BEAM_ENSLAVE:               return ("enslave");
     case BEAM_BANISH:                return ("banishment");
     case BEAM_DEGENERATE:            return ("degeneration");
     case BEAM_ENSLAVE_SOUL:          return ("enslave soul");
