@@ -550,7 +550,7 @@ static const char *trap_names[] =
 
 std::string trap_name(trap_type trap)
 {
-    ASSERT(NUM_TRAPS == sizeof(trap_names) / sizeof(*trap_names));
+    COMPILE_CHECK(ARRAYSZ(trap_names) == NUM_TRAPS);
 
     if (trap >= TRAP_DART && trap < NUM_TRAPS)
         return (trap_names[trap]);
@@ -559,8 +559,6 @@ std::string trap_name(trap_type trap)
 
 int str_to_trap(const std::string &s)
 {
-    ASSERT(NUM_TRAPS == sizeof(trap_names) / sizeof(*trap_names));
-
     // "Zot trap" is capitalised in trap_names[], but the other trap
     // names aren't.
     const std::string tspec = lowercase_string(s);

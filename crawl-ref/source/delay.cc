@@ -1894,7 +1894,7 @@ static const char *delay_names[] =
 // name must be lowercased already!
 delay_type get_delay(const std::string &name)
 {
-    ASSERT(sizeof(delay_names) / sizeof(*delay_names) == NUM_DELAYS);
+    COMPILE_CHECK(ARRAYSZ(delay_names) == NUM_DELAYS);
 
     for (int i = 0; i < NUM_DELAYS; ++i)
     {
@@ -1920,8 +1920,6 @@ delay_type get_delay(const std::string &name)
 
 const char *delay_name(int delay)
 {
-    ASSERT(sizeof(delay_names) / sizeof(*delay_names) == NUM_DELAYS);
-
     if (delay < 0 || delay >= NUM_DELAYS)
         return ("");
 
