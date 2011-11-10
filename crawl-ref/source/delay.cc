@@ -1103,7 +1103,11 @@ static void _finish_delay(const delay_queue_item &delay)
             {
             default:
                 if (!you.can_pass_through_feat(grd(pass)))
-                    ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_PETRIFICATION);
+                {
+                    mpr("... yet there is something new on the other side, "
+                        "you quickly turn back.");
+                    goto passwall_aborted;
+                }
                 break;
 
             case DNGN_SECRET_DOOR:      // oughtn't happen
@@ -1115,20 +1119,28 @@ static void _finish_delay(const delay_queue_item &delay)
             }
 
             // Move any monsters out of the way.
-            monster* m = monster_at(pass);
-            if (m)
+            if (monster* m = monster_at(pass))
             {
                 // One square, a few squares, anywhere...
                 if (!shift_monster(m) && !monster_blink(m, true))
                     monster_teleport(m, true, true);
+                // Might still fail.
+                if (monster_at(pass))
+                {
+                    mpr("... and sense your way blocked. You quickly turn back.");
+                    goto passwall_aborted;
+                }
+
+                move_player_to_grid(pass, false, true);
+
+                // Wake the monster if it's asleep.
+                if (m)
+                    behaviour_event(m, ME_ALERT, MHITYOU);
             }
+            else
+                move_player_to_grid(pass, false, true);
 
-            move_player_to_grid(pass, false, true);
-
-            // Wake the monster if it's asleep.
-            if (m)
-                behaviour_event(m, ME_ALERT, MHITYOU);
-
+        passwall_aborted:
             redraw_screen();
         }
         break;
