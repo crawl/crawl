@@ -1958,10 +1958,6 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
         needs_damage = true;
         break;
 
-    case KILLED_BY_PETRIFICATION:
-        desc += terse? "petrified" : "Turned to stone";
-        break;
-
     case KILLED_BY_SOMETHING:
         if (!auxkilldata.empty())
             desc += auxkilldata;
