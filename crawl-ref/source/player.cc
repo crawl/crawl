@@ -6916,8 +6916,7 @@ bool player::visible_to(const actor *looker) const
         return (can_see_invisible() || !invisible());
 
     const monster* mon = looker->as_monster();
-    return (!mon->has_ench(ENCH_BLIND)
-            && !invisible()
+    return (!mon->has_ench(ENCH_BLIND) && !invisible()
             || in_water()
             || mon->can_see_invisible()
             || mons_sense_invis(mon)
