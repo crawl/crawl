@@ -448,7 +448,7 @@ static void _item_corrode(int slot)
     switch (item.base_type)
     {
     case OBJ_ARMOUR:
-        if ((item.sub_type == ARM_CRYSTAL_PLATE
+        if ((item.sub_type == ARM_CRYSTAL_PLATE_ARMOUR
              || get_equip_race(item) == ISFLAG_DWARVEN)
             && !one_chance_in(5))
         {
