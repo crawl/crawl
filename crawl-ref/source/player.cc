@@ -6619,7 +6619,7 @@ void player::petrify(actor *who)
     you.duration[DUR_PETRIFYING] = 3 * BASELINE_DELAY;
 
     you.redraw_evasion = true;
-    mprf(MSGCH_WARN, "You are slowing down.");
+    mpr("You are slowing down.", MSGCH_WARN);
 }
 
 bool player::fully_petrify(actor *foe, bool quiet)
