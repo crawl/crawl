@@ -134,3 +134,30 @@ on, we should add placeholder tiles before the official release, that can
 later be replaced without affecting saved games.
 
 Johanna
+
+
+A few comments on map caches and Lua markers
+--------------------------------------------
+Map and vault definitions are read from the relevant .des files and are stored
+in a binary format to prevent slow-down every time crawl starts. If new
+attributes or properties are added to vault definitions, save-compatibility
+needs to be ensured in much the same way as for normal saves. Until recently,
+the .des cache used a different version number to the main major/minor system.
+In theory, all that needs to be done now is to bump the minor version, which
+will cause the being-loaded .des cache file to be considered invalid, and thus
+rebuilt.
+
+When modifying a Lua marker, specifically when adding new options, etc, you'll
+need to likewise ensure save compatibility. The minor version is currently
+accessible by calling file.minor_version(reader). This will return a numeric
+value that has to be manually compared to the relevant minor tag.
+
+The current major version of the software is accessible by calling
+file.major_version(). There's no need to pass the reader in, as if the major
+version of a file mis-matches, the game won't attempt to load it, and you will
+never get to a stage of being able to look for it.
+
+All Lua markers will need to be checked for minor-version checks when updating
+the major version.
+
+due
