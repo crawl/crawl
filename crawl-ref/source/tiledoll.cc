@@ -279,22 +279,44 @@ void fill_doll_equipment(dolls_data &result)
     {
         const int item = you.equip[EQ_WEAPON];
         if (you.form == TRAN_BLADE_HANDS)
+        {
             result.parts[TILEP_PART_HAND1] = TILEP_HAND1_BLADEHAND;
+        }
+        else if (item == -1 && you.has_tentacles(false)
+                 && you.species != SP_OCTOPODE)
+        {
+            result.parts[TILEP_PART_HAND1] = TILEP_HAND1_TENTACLE;
+        }
         else if (item == -1)
+        {
             result.parts[TILEP_PART_HAND1] = 0;
+        }
         else
+        {
             result.parts[TILEP_PART_HAND1] = tilep_equ_weapon(you.inv[item]);
+        }
     }
     // Off hand.
     if (result.parts[TILEP_PART_HAND2] == TILEP_SHOW_EQUIP)
     {
         const int item = you.equip[EQ_SHIELD];
         if (you.form == TRAN_BLADE_HANDS)
+        {
             result.parts[TILEP_PART_HAND2] = TILEP_HAND2_BLADEHAND;
+        }
+        else if (item == -1 && you.has_tentacles(false)
+                 && you.species != SP_OCTOPODE)
+        {
+            result.parts[TILEP_PART_HAND2] = TILEP_HAND2_TENTACLE;
+        }
         else if (item == -1)
+        {
             result.parts[TILEP_PART_HAND2] = 0;
+        }
         else
+        {
             result.parts[TILEP_PART_HAND2] = tilep_equ_shield(you.inv[item]);
+        }
     }
     // Body armour.
     if (result.parts[TILEP_PART_BODY] == TILEP_SHOW_EQUIP)

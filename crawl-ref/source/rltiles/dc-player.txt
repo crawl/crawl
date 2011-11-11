@@ -697,6 +697,7 @@ fire_dark FIRE_DARK
 fire_white2 FIRE_WHITE2
 
 bladehands BLADEHAND
+tentacle TENTACLE
 %end_ctg
 
 ### Hand 2
@@ -777,6 +778,8 @@ pj PJ
 torch2 TORCH2
 
 bladehands BLADEHAND
+tentacle TENTACLE
+
 dagger DAGGER
 sabre SABRE
 short_sword_slant SHORT_SWORD_SLANT
