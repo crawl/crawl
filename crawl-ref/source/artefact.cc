@@ -429,12 +429,33 @@ void artefact_desc_properties(const item_def &item,
 
     artefact_wpn_properties(item, proprt, known);
 
-    if (item.base_type == OBJ_ARMOUR
-        && item.sub_type == ARM_GOLD_DRAGON_ARMOUR)
+    if (item.base_type == OBJ_ARMOUR)
     {
-        ++proprt[ARTP_POISON];
-        ++proprt[ARTP_FIRE];
-        ++proprt[ARTP_COLD];
+        switch (item.sub_type)
+        {
+        case ARM_SWAMP_DRAGON_ARMOUR:
+            ++proprt[ARTP_POISON];
+            break;
+        case ARM_FIRE_DRAGON_ARMOUR:
+            ++proprt[ARTP_FIRE];
+            --proprt[ARTP_COLD];
+            break;
+        case ARM_ICE_DRAGON_ARMOUR:
+            --proprt[ARTP_FIRE];
+            ++proprt[ARTP_COLD];
+            break;
+        case ARM_PEARL_DRAGON_ARMOUR:
+            ++proprt[ARTP_NEGATIVE_ENERGY];
+            break;
+        case ARM_STORM_DRAGON_ARMOUR:
+            ++proprt[ARTP_ELECTRICITY];
+            break;
+        case ARM_GOLD_DRAGON_ARMOUR:
+            ++proprt[ARTP_POISON];
+            ++proprt[ARTP_FIRE];
+            ++proprt[ARTP_COLD];
+            break;
+        }
     }
 
     if (!force_fake_props && item_ident(item, ISFLAG_KNOW_PROPERTIES))
