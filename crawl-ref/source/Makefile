@@ -946,7 +946,7 @@ GENERATED_HEADERS := art-enum.h #the rest are private
 GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mon-mst.h \
                    $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua
 
-GAME_DEPENDS  := $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
+GAME_DEPENDS  := $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS) dat/dlua/tags.lua
 SRC_PKG_BASE  := stone_soup
 SRC_VERSION   := $(shell git describe --tags $(MERGE_BASE) 2>/dev/null || cat util/release_ver)
 
@@ -1299,6 +1299,7 @@ mon-mst.h: mon-spll.h util/gen-mst.pl
 	$(QUIET_GEN)util/gen-mst.pl
 
 dat/dlua/tags.lua: tag-version.h util/gen-luatags.pl
+	$(QUIET_GEN)util/gen-luatags.pl
 
 $(RLTILES)/dc-unrand.txt: art-data.h
 
