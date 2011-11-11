@@ -4942,10 +4942,14 @@ static void _vulnerability_scroll()
 bool _is_cancellable_scroll(scroll_type scroll)
 {
     return (scroll == SCR_IDENTIFY
-            || scroll == SCR_BLINKING || scroll == SCR_RECHARGING
-            || scroll == SCR_ENCHANT_ARMOUR || scroll == SCR_AMNESIA
-            || scroll == SCR_REMOVE_CURSE || scroll == SCR_CURSE_ARMOUR
-            || scroll == SCR_CURSE_JEWELLERY);
+            || scroll == SCR_BLINKING
+            || scroll == SCR_RECHARGING
+            || scroll == SCR_ENCHANT_ARMOUR
+            || scroll == SCR_AMNESIA
+            || scroll == SCR_REMOVE_CURSE
+            || scroll == SCR_CURSE_ARMOUR
+            || scroll == SCR_CURSE_JEWELLERY
+            || scroll == SCR_VORPALISE_WEAPON);
 }
 
 void read_scroll(int slot)
@@ -5269,14 +5273,21 @@ void read_scroll(int slot)
         break;
 
     case SCR_VORPALISE_WEAPON:
+        if (!alreadyknown)
+            mpr(pre_succ_msg);
         id_the_scroll = _vorpalise_weapon(alreadyknown);
-        if (!id_the_scroll && item_type_known(OBJ_SCROLLS, SCR_CURSE_WEAPON))
-        {
-            mpr("You feel like taking on a jabberwock.");
-            id_the_scroll = true;
-        }
         if (!id_the_scroll)
-            canned_msg(MSG_NOTHING_HAPPENS);
+            if (alreadyknown)
+            {
+                mpr("This will not work.");
+                cancel_scroll = true;
+                break;
+            }
+            else if (item_type_known(OBJ_SCROLLS, SCR_CURSE_WEAPON))
+            {
+                mpr("You feel like taking on a jabberwock.");
+                id_the_scroll = true;
+            }
         break;
 
     case SCR_IDENTIFY:
