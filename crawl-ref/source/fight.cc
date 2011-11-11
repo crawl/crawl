@@ -1041,9 +1041,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         }
         else if (you.has_usable_tentacles())
         {
-            // From 1 to 3 bonus damage, so not as good as claws.
             aux_verb = "tentacle-slap";
-            aux_damage += you.has_usable_tentacles();
             noise_factor = 125;
         }
 
@@ -4183,10 +4181,6 @@ int melee_attack::player_calc_base_unarmed_damage()
         damage += you.has_claws(false) * 2;
         apply_bleeding = true;
     }
-
-    // Tentacles give less bonus damage on hits.
-    if (you.has_usable_tentacles())
-        damage += you.has_tentacles(false);
 
     if (player_in_bat_form())
     {
