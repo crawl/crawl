@@ -2199,6 +2199,10 @@ std::string get_item_description(const item_def &item, bool verbose,
     if (origin_describable(item))
         description << "\n" << origin_desc(item) << ".";
 
+    if (verbose)
+        description << "\n\n" << "Stash search prefixes: "
+                    << userdef_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
+
     return description.str();
 }
 
