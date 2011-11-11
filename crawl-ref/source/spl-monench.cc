@@ -22,37 +22,6 @@
 #include "terrain.h"
 #include "viewmap.h"
 
-static int _sleep_monsters(coord_def where, int pow, int, actor *)
-{
-    monster* mons = monster_at(where);
-    if (!mons)
-        return (0);
-
-    if (!mons->can_hibernate(true))
-        return (0);
-
-    if (mons->check_res_magic(pow) > 0)
-        return (0);
-
-    const int res = mons->res_cold();
-    if (res > 0 && one_chance_in(std::max(4 - res, 1)))
-        return (0);
-
-    if (mons->has_ench(ENCH_SLEEP_WARY) && !one_chance_in(3))
-        return (0);
-
-    mons->hibernate();
-    mons->expose_to_element(BEAM_COLD, 2);
-    return (1);
-}
-
-spret_type cast_mass_sleep(int pow, bool fail)
-{
-    fail_check();
-    apply_area_visible(_sleep_monsters, pow, true);
-    return SPRET_SUCCESS;
-}
-
 bool backlight_monsters(coord_def where, int pow, int garbage)
 {
     UNUSED(pow);

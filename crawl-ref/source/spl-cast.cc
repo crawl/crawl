@@ -1455,8 +1455,11 @@ static spret_type _do_cast(spell_type spell, int powc,
     case SPELL_MASS_CONFUSION:
         return mass_enchantment(ENCH_CONFUSION, powc, NULL, NULL, fail);
 
+#if TAG_MAJOR_VERSION == 32
     case SPELL_ENGLACIATION:
-        return cast_mass_sleep(powc, fail);
+        mpr("Sorry, this spell is gone!");
+        return SPRET_ABORT;
+#endif
 
     case SPELL_CONTROL_UNDEAD:
         return mass_enchantment(ENCH_CHARM, powc, NULL, NULL, fail);
