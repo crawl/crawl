@@ -414,7 +414,7 @@ spret_type cast_toxic_radiance(int pow, bool non_player, bool fail)
             else
                 mpr("The monsters around you are poisoned!");
         }
-        // Sanctuary if violated if either you or any of victims are in it.
+        // Sanctuary is violated if either you or any victims are in it.
         if (!non_player && (sanct || is_sanctuary(you.pos())))
             remove_sanctuary(true);
 
