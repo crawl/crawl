@@ -64,6 +64,7 @@ mapgen.log
 *.stat
 webtiles.log
 debuglog.txt
+dolls.txt
 
 # Tile copied files
 /source/dat/tiles/dngn.png
