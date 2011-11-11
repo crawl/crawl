@@ -943,6 +943,7 @@ SHUFFLE: CI / ''
 SHUFFLE: EF / ""
 SHUFFLE: CI, EF
 SUBST:   CE = +, IF : cc+
+SUBST:   N = ncc
 SUBST:   '" = -
 SHUFFLE: O1$ / *3|
 MONS:    patrolling asmodeus, brimstone fiend, brimstone fiend
@@ -950,7 +951,8 @@ MONS:    sun demon, balrug, hellion, fire giant
 KMONS:   8 = sun demon / efreet / w:20 molten gargoyle
 KMONS:   9 = efreet
 NSUBST:  l = 10:R / 25:V / *:l
-KMONS:   R = smoke demon
+SUBST:   R = RRV
+KMONS:   R = patrolling smoke demon
 KMONS:   V = fire vortex
 : serpent_of_hell_setup(_G)
 SUBST:   4 = 444499566-
@@ -974,7 +976,7 @@ LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL
 LllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllL
 LllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllL
 LlllvvvvvvvvvvcccccccccccccccccnnccllllllllllllllllllllllllllllllllllL
-LlllvvvvvvvvvvcccccccccccccccccnncccllllllllcccnccclllllllcccncccllllL
+LlllvvvvvvvvvvcccccccccccccccccnncccllllllllccccccclllllllcccncccllllL
 Llllvv------vvcccccc-cccccccc------cllRllcccc-----clllllllc--5--cllllL
 Llllvv-$$$$-vvccccc---ccccccc--4---ccllllc--c--4--ccccncccc-%-%-cllllL
 Llllvv-$%%$--v------1------c---vv---cvmmvc--+-----+-------+-%-%-nllllL
@@ -983,14 +985,14 @@ Llllvv-$%%$--v------2------c---vv---cvmmvc--+-----cccc+cccc--%--cllllL
 Llllvv-$$$$-vvccccc---ccccccc--4---ccllllc--c-----c-------c-%-%-nllllL
 Llllvv------vvcccccc-cccccccc------cllRllcccc--4--c---5---c-%-%-cllllL
 Llllvvvvvvvvvvcccccccccccccccccnncccllllllllc-----c---v---c--2--cllllL
-Llllvvvvvvvvvvcccccccccccccccccnncclllllllllcccnccc--vvv--cccncccllllL
+Llllvvvvvvvvvvcccccccccccccccccnncclllllllllccccccc--vvv--cccncccllllL
 Llllllllllllllllllllllllllllllllllllllllllllllllllc---v---cllllllllllL
 Llllllllllllllllllllllllllllllllllllllllllllllllllc-------cllllllllllL
 Llllllllllllllllllllllllllllllllllllllllllllllllllc-------cllllllllllL
 Llllllllllllllllllllllllllllllllllllllllllllllllllcccc+ccccllllllllllL
 Llllllllllllllllllllllllllllllllllllllllllllllllllllv.7.vllllllllllllL
 Lllllcccnnccclllllllllllllllcccnncccllllllllllllllllv.G.vllllllllllllL
-Lllllc------cllllccncnccllllc------cllllllllllllllllm...mllllllllllllL
+Lllllc------cllllccNcNccllllc------cllllllllllllllllm...mllllllllllllL
 Lllllc------cccccc--4--cccccc------cllllllllllllllllm...mllllllllllllL
 Llllln--vv--C----E-----E----C--vv--nllllllllllllllRlv.G.vlRllllllllllL
 Llllln--vv--I----F-----F----I--vv--nllllllllllllllllv...vllllllllllllL
@@ -1003,9 +1005,9 @@ Lllllllc--c....vv.......vv....c--cllllllllRlcccccccccc+ccccccccccllllL
 Lllllllc--c....vv.......vv....c--cllllllllllcccccccccc----------cllllL
 LlllllccEFc......8.....8......cFEccvvmmvmmvvc--------cccccccccc-cllllL
 Llllllc---cG.................Gc---c.........+--v--v---4-------c-cllllL
-Lllllln---cc........{........cc---+..G.G.G.7c--------v--v--v-4+-cllllL
+LlllllN---cc........{........cc---+..G.G.G.7c--------v--v--v-4+-cllllL
 Llllllc4---A..7....<G(....7..B---4c.....8...+----------------D+-nllllL
-Lllllln---cc........[........cc---+..G.G.G.7c--------v--v--v-4+-cllllL
+LlllllN---cc........[........cc---+..G.G.G.7c--------v--v--v-4+-cllllL
 Llllllc---cG.................Gc---c.........+--v--v---4-------c-cllllL
 LlllllccEFc......8.....8......cFEccvvmmvmmvvc--------cccccccccc-cllllL
 Lllllllc--c....vv.......vv....c--cllllllllllcccccccccc-------+--cllllL
@@ -1018,7 +1020,7 @@ Lllllc----5-cccccccc-cccccccc-5----cllllllllcccllccccc+cccccllcccllllL
 Llllln--vv--I----F-----F----I--vv--nllllllllllllllllv...vllllllllllllL
 Llllln--vv--C----E-----E----C--vv--nllllllllllllllRlvG.GvlRllllllllllL
 Lllllc------cccccc--4--cccccc------cllllllllllllllllm...mllllllllllllL
-Lllllc------cllllccncnccllllc------cllllllllllllllllm...mllllllllllllL
+Lllllc------cllllccNcNccllllc------cllllllllllllllllm...mllllllllllllL
 LllllcccnnccclllllllllllllllcccnncccllllllllllllllllvG.GvllllllllllllL
 Llllllllllllllllllllllllllllllllllllllllllllllllllllv.7.vllllllllllllL
 Lllllllllllllllllllllllllllllllllllllllllllllllllllccc+ccclllllllllllL
@@ -1034,7 +1036,7 @@ Lllvv--|*%|--+-----vvv-----+--------+.......+--ccccccc+ccccccc--nllllL
 Lllvv--|%%|--v------v------c--v--v--cvmmvmmvc-------------------nllllL
 Lllvvv-||||-vvcccc-----cccccc--4---cclllllllc---------5---------cllllL
 Lllvvvv----vvvcccc--3--ccccccc----cccRllllllcccc---ccccccc---ccccllllL
-LllvvvvvvvvvvvcccccccccccccccccnnccclllllllllllccncclllllccncclllllllL
+LllvvvvvvvvvvvcccccccccccccccccnnccclllllllllllccccclllllccncclllllllL
 LllvvvvvvvvvvvcccccccccccccccccnnccllllllllllllllllllllllllllllllllllL
 LllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllL
 LllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllL
