@@ -341,7 +341,7 @@ plate2
 orcish_plate ARM_PLATE_ARMOUR_ORC
 orcish_plate2
 
-crystal_plate ARM_CRYSTAL_PLATE
+crystal_plate ARM_CRYSTAL_PLATE_ARMOUR
 crystal_plate2
 crystal_plate3
 crystal_plate4
