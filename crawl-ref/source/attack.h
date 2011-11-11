@@ -28,7 +28,7 @@ public:
     int     to_hit;
     int     damage_done;
     int     special_damage; // TODO: We'll see if we can remove this
-    int     aux_damage;
+    int     aux_damage;     // TOOD: And this too
 
     int     min_delay;
     int     final_attack_delay;
@@ -38,7 +38,6 @@ public:
     int     noise_factor;
 
     // Fetched/Calculated from the attacker, stored to save execution time
-    bool            unarmed_capable;
     int             ev_margin;
 
     // TODO: Expand the implementation of attack_type/attack_flavour to be used
