@@ -2751,12 +2751,7 @@ void bolt::affect_place_explosion_clouds()
 
     if (name == "great blast of fire")
     {
-        int duration = 1 + random2(5) + roll_dice(2, ench_power / 5);
-
-        if (duration > 20)
-            duration = 20 + random2(4);
-
-        place_cloud(CLOUD_FIRE, p, duration, agent());
+        place_cloud(CLOUD_FIRE, p, 2 + random2avg(5,2), agent());
 
         if (grd(p) == DNGN_FLOOR && !monster_at(p) && one_chance_in(4))
         {
@@ -2767,7 +2762,7 @@ void bolt::affect_place_explosion_clouds()
                 (whose_kill() == KC_OTHER ? BEH_HOSTILE : BEH_FRIENDLY);
 
             actor* summ = agent();
-            mgen_data mg(MONS_FIRE_VORTEX, att, summ, 2, SPELL_FIRE_STORM,
+            mgen_data mg(MONS_FIRE_VORTEX, att, summ, 1, SPELL_FIRE_STORM,
                          p, MHITNOT, 0, god);
 
             // Spell-summoned monsters need to have a live summoner.
