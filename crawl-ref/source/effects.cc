@@ -1276,24 +1276,14 @@ static void _hell_effects()
         return;
     }
 
-    switch (random2(4))
-    {
-    case 0:
-        mpr(getMiscString("hell_effect_plain").c_str(), MSGCH_PLAIN);
-        break;
-    case 1:
-        mpr(getMiscString("hell_effect_warn").c_str(), MSGCH_WARN);
-        break;
-    case 2:
-        mpr(getMiscString("hell_effect_talk").c_str(), MSGCH_TALK);
-        break;
-    case 3:
-        mpr(getMiscString("hell_effect_sound").c_str(), MSGCH_SOUND);
+    std::string msg = getMiscString("hell_effect");
+    if (msg.empty())
+        msg = "Something hellishly buggy happens.";
+    msg_channel_type chan = MSGCH_PLAIN;
+    strip_channel_prefix(msg, chan);
+    mpr(msg.c_str(), chan);
+    if (chan == MSGCH_SOUND)
         noisy(15, you.pos());
-        break;
-    default:
-        break;
-    }
 
     spschool_flag_type which_miscast = SPTYP_RANDOM;
     bool summon_instead = false;
