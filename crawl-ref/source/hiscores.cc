@@ -976,6 +976,9 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
         else if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
             death_source_name += " (glowing shapeshifter)";
 
+        if (mons->type == MONS_PANDEMONIUM_LORD)
+            death_source_name += " the pandemonium lord";
+
         if (mons->props.exists("blame"))
         {
             const CrawlVector& blame = mons->props["blame"].get_vector();
