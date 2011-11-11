@@ -5358,7 +5358,6 @@ void player::init()
     base_stats.init(0);
     stat_zero.init(0);
     stat_zero_cause.init("");
-    last_chosen        = STAT_RANDOM;
 
     hunger          = 6000;
     hunger_state    = HS_SATIATED;

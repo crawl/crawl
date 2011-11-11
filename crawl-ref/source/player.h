@@ -60,7 +60,6 @@ public:
   FixedVector<int8_t, NUM_STATS> base_stats;
   FixedVector<int, NUM_STATS> stat_zero;
   FixedVector<std::string, NUM_STATS> stat_zero_cause;
-  stat_type last_chosen;
 
   int hunger;
   int disease;
