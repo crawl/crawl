@@ -1743,8 +1743,11 @@ int player_res_torment(bool, bool temp)
 // If temp is set to false, temporary sources or resistance won't be counted.
 int player_res_poison(bool calc_unid, bool temp, bool items)
 {
-    if (you.are_currently_undead())
-        return 1;
+    if (you.is_undead == US_SEMI_UNDEAD ? you.hunger_state == HS_STARVING
+            : you.is_undead && (temp || you.form != TRAN_LICH))
+    {
+        return 3;
+    }
 
     int rp = 0;
 
@@ -4805,7 +4808,7 @@ bool curare_hits_player(int death_source, int amount, const bolt &beam)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (you.are_currently_undead())
+    if (player_res_poison() >= 3)
         return (false);
 
     if(!poison_player(amount, beam.get_source_name(), beam.name))
@@ -4844,9 +4847,9 @@ bool poison_player(int amount, std::string source, std::string source_aux,
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (you.are_currently_undead())
+    if (player_res_poison() >= 3)
     {
-        dprf("Cannot poison, you are undead!");
+        dprf("Cannot poison, you are immune!");
         return (false);
     }
 
@@ -4892,7 +4895,7 @@ void dec_poison_player()
         && coinflip())
         return;
 
-    if (you.are_currently_undead())
+    if (player_res_poison() >= 3)
         return;
 
     if (you.duration[DUR_POISONING] > 0)
@@ -7043,13 +7046,6 @@ bool player::is_fiery() const
 bool player::is_skeletal() const
 {
     return (false);
-}
-
-bool player::are_currently_undead() const {
-    return (form == TRAN_LICH
-            || (is_undead == US_SEMI_UNDEAD && hunger_state == HS_STARVING)
-            || (is_undead == US_UNDEAD)
-            || (is_undead == US_HUNGRY_DEAD));
 }
 
 void player::shiftto(const coord_def &c)

@@ -437,7 +437,6 @@ public:
     bool is_icy() const;
     bool is_fiery() const;
     bool is_skeletal() const;
-    bool are_currently_undead() const;
 
     bool light_flight() const;
     bool travelling_light() const;

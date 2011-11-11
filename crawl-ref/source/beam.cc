@@ -2069,10 +2069,11 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
 bool poison_monster(monster* mons, const actor *who, int levels,
                     bool force, bool verbose)
 {
-    if (!mons->alive())
+    if (!mons->alive() || levels <= 0)
         return (false);
 
-    if ((!force && mons->res_poison() > 0) || levels <= 0)
+    int res = mons->res_poison();
+    if (res >= (force ? 3 : 1))
         return (false);
 
     const mon_enchant old_pois = mons->get_ench(ENCH_POISON);
@@ -2981,7 +2982,7 @@ bool bolt::harmless_to_player() const
         return (player_prot_life(false) >= 3);
 
     case BEAM_POISON:
-        return (player_res_poison(false) > 0);
+        return (player_res_poison(false) >= 3);
 
     case BEAM_POTION_STINKING_CLOUD:
         return (player_res_poison(false) > 0 || player_mental_clarity(false)
