@@ -712,7 +712,7 @@ void update_stat_zero()
     default:
         if (you.duration[DUR_PARALYSIS])
             break;
-        mprf(MSGCH_WARN, "Your lost attributes cause you to faint.");
+        mpr("Your lost attributes cause you to faint.", MSGCH_WARN);
         you.increase_duration(DUR_PARALYSIS, 1 + roll_dice(num_para, 3));
         break;
     }
