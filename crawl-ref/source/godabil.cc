@@ -577,7 +577,7 @@ bool zin_check_able_to_recite()
         return (false);
     }
 
-        return (true);
+    return (true);
 }
 
 static const char* zin_book_desc[NUM_RECITE_TYPES] =
