@@ -4893,7 +4893,9 @@ void dec_poison_player()
     if (GOD_CHEIBRIADOS == you.religion
         && you.piety >= piety_breakpoint(0)
         && coinflip())
+    {
         return;
+    }
 
     if (player_res_poison() >= 3)
         return;
