@@ -366,6 +366,7 @@ spret_type cast_toxic_radiance(int pow, bool non_player, bool fail)
             mpr("You feel rather sick.");
     }
 
+    bool sanct = false;
     counted_monster_list affected_monsters;
     // determine which monsters are hit by the radiance: {dlb}
     for (monster_iterator mi(you.get_los()); mi; ++mi)
@@ -380,10 +381,12 @@ spret_type cast_toxic_radiance(int pow, bool non_player, bool fail)
                 const actor* agent = non_player ? 0 : &you;
                 const int levels = 1 + random2(pow / 20);
 
-                bool affected = poison_monster(*mi, agent, levels, false, false);
-
-                if (affected)
+                if (poison_monster(*mi, agent, levels, false, false))
+                {
+                    if (is_sanctuary(mi->pos()))
+                        sanct = true;
                     affected_monsters.add(*mi);
+                }
             }
             else if (you.can_see_invisible())
             {
@@ -411,6 +414,10 @@ spret_type cast_toxic_radiance(int pow, bool non_player, bool fail)
             else
                 mpr("The monsters around you are poisoned!");
         }
+        // Sanctuary if violated if either you or any of victims are in it.
+        if (!non_player && (sanct || is_sanctuary(you.pos())))
+            remove_sanctuary(true);
+
     }
     return SPRET_SUCCESS;
 }
