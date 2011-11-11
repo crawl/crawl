@@ -118,10 +118,8 @@ private:
 
     /* Output methods */
     void adjust_noise();
-    void emit_nodmg_hit_message();
-    void announce_hit();
-
     void set_attack_verb();
+    void announce_hit();
 
     /* Misc methods */
     void handle_noise(const coord_def & pos);

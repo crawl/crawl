@@ -3578,8 +3578,16 @@ int melee_attack::calc_attack_delay(bool random)
 
 void melee_attack::player_stab_check()
 {
+    if (you.stat_zero[STAT_DEX] || you.confused())
+    {
+        stab_attempt = false;
+        stab_bonus = 0;
+        return;
+    }
+
     const unchivalric_attack_type uat = is_unchivalric_attack(&you, defender);
     stab_attempt = (uat != UCAT_NO_ATTACK);
+    const bool roll_needed = (uat != UCAT_SLEEPING && uat != UCAT_PARALYSED);
 
     int roll = 100;
     if (uat == UCAT_INVISIBLE && !mons_sense_invis(defender->as_monster()))
@@ -3610,20 +3618,9 @@ void melee_attack::player_stab_check()
         break;
     }
 
-    if (you.stat_zero[STAT_DEX] || you.confused())
-    {
-        stab_attempt = false;
-        stab_bonus = 0;
-    }
-
     // See if we need to roll against dexterity / stabbing.
-    if (stab_attempt)
+    if (stab_attempt && roll_needed)
     {
-        /*if (defender->cannot_act() || defender->asleep())
-            stab_attempt =
-                !x_chance_in_y(10, 100 + you.skill_rdiv(SK_STABBING, 10) + you.dex());
-        else if (defender->petrifying())
-            stab_attempt = !x_chance_in_y(10, 20+you.skill_rdiv(SK_STABBING, 10));*/
         stab_attempt = x_chance_in_y(you.skill_rdiv(SK_STABBING) + you.dex() + 1,
                                      roll);
     }
@@ -4610,8 +4607,6 @@ int melee_attack::test_hit(int to_land, int ev)
 {
     int   roll = -1;
     int margin = AUTOMATIC_HIT;
-
-    //ev *= 2; ???
 
     if (to_land >= AUTOMATIC_HIT)
         return (true);
