@@ -668,6 +668,7 @@ void CLua::init_lua()
 
     execfile("dlua/util.lua", true, true);
     execfile("dlua/iter.lua", true, true);
+    execfile("dlua/tags.lua", true, true);
     execfile("dlua/init.lua", true, true);
 
     if (managed_vm)
