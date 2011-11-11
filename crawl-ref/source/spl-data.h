@@ -1704,6 +1704,7 @@ struct spell_desc
      false
 },
 
+#if TAG_MAJOR_VERSION == 32
 {
     SPELL_ENGLACIATION, "Metabolic Englaciation",
      SPTYP_HEXES | SPTYP_ICE,
@@ -1716,6 +1717,7 @@ struct spell_desc
      false,
      false
 },
+#endif
 
 {
     SPELL_SEE_INVISIBLE, "See Invisible",

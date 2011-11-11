@@ -350,10 +350,6 @@ Mephitic Cloud
 
 This spell conjures up a large but short-lived cloud of vile fumes.
 %%%%
-Metabolic Englaciation
-
-This spell tries to lower the metabolic rate of every creature within the caster's view enough to induce hypothermic hibernation. It may have side effects on cold-blooded creatures.
-%%%%
 Necromutation
 
 This spell first transforms the caster into a semi-corporeal apparition receptive to negative energy, then infuses that form with the powers of Death. The caster becomes more resistant to cold and hostile enchantments and completely immune to poison, rotting, and negative energy, and requires no food at all for the duration of the spell.
