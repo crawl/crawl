@@ -544,6 +544,7 @@ void phoenix_died (monster* mons)
                         durt,
                         static_cast<int>(mons->mid),
                         mons->behaviour,
+                        mons->attitude,
                         mons->deity(),
                         mons->pos()));
     env.markers.clear_need_activate();
@@ -596,9 +597,6 @@ void timeout_phoenix_markers (int duration)
             coord_def place_at;
             bool from_inventory;
 
-            // Actually time-out this marker; if we don't find a body, too bad.
-            env.markers.remove(mmark);
-
             for (radius_iterator ri(mmark->corpse_pos, LOS_RADIUS, C_ROUND, NULL, false); ri; ++ri)
             {
                 for (stack_iterator si(*ri); si; ++si)
@@ -639,7 +637,11 @@ void timeout_phoenix_markers (int duration)
             }
 
             if (!found_body)
+            {
+                // Actually time-out this marker; we didn't find a body, too bad.
+                env.markers.remove(mmark);
                 continue;
+            }
 
             // Okay, we have a corpse, which we've destroyed. We'll place a cloud!
             mgen_data new_pho;
@@ -665,10 +667,16 @@ void timeout_phoenix_markers (int duration)
             if (id == -1)
             {
                 dprf("Couldn't place new phoenix!");
+                // We couldn't place it, so nuke the marker.
+                env.markers.remove(mmark);
                 continue;
             }
 
             mons = &menv[id];
+            mons->attitude = mmark->attitude;
+
+            // We no longer need the marker now, so free it.
+            env.markers.remove(mmark);
 
             if (from_inventory)
                 simple_monster_message(mons, " is reborn from your pack in a blaze of fire!");
