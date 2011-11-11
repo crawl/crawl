@@ -4507,9 +4507,9 @@ static bool _vorpalise_weapon(bool already_known)
         // need to affix it immediately, otherwise transformation will break it
         if (success)
             you.duration[DUR_WEAPON_BRAND] = 0;
+        xom_is_stimulated(200);
         // but the eruption _is_ guaranteed.  What it will do is not.
         _explosion(you.pos(), &you, BEAM_CHAOS, "chaos eruption", "chaos affixation");
-        xom_is_stimulated(200);
         switch (random2(success ? 2 : 4))
         {
         case 3:
