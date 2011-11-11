@@ -201,8 +201,8 @@ static void _jobs_stat_init(job_type which_job)
     you.base_stats[STAT_INT] += i;
     you.base_stats[STAT_DEX] += d;
 
-    // Used for Jiyva's stat swapping if the player has not reached
-    // experience level 3.
+    // Currently you.last_chosen isn't actually used anywhere, but let's
+    // initialize it to a random value at start anyway.
     you.last_chosen = (stat_type) random2(NUM_STATS);
 
     you.hp_max_perm = hp - 2;
