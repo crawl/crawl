@@ -1468,7 +1468,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_mass_abjuration(powc, fail);
 
     case SPELL_OLGREBS_TOXIC_RADIANCE:
-        return cast_toxic_radiance(false, fail);
+        return cast_toxic_radiance(powc, false, fail);
 
     // XXX: I don't think any call to healing goes through here. --rla
     case SPELL_MINOR_HEALING:

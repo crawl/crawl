@@ -337,7 +337,7 @@ static bool _toxic_radianceable(const actor *act)
     return (act->res_poison() < (act->atype() == ACT_PLAYER ? 3 : 1));
 }
 
-spret_type cast_toxic_radiance(bool non_player, bool fail)
+spret_type cast_toxic_radiance(int pow, bool non_player, bool fail)
 {
     if (!non_player)
     {
@@ -378,10 +378,9 @@ spret_type cast_toxic_radiance(bool non_player, bool fail)
             if (!mi->has_ench(ENCH_INVIS))
             {
                 const actor* agent = non_player ? 0 : &you;
-                bool affected = poison_monster(*mi, agent, 1, false, false);
+                const int levels = 1 + random2(pow / 20);
 
-                if (coinflip() && poison_monster(*mi, agent, 1, false, false))
-                    affected = true;
+                bool affected = poison_monster(*mi, agent, levels, false, false);
 
                 if (affected)
                     affected_monsters.add(*mi);
