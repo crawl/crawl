@@ -4471,8 +4471,13 @@ static bool _vorpalise_weapon(bool already_known)
 
     case SPWPN_FROST:
     case SPWPN_FREEZING:
-        mprf("%s is covered with a thick layer of frost!", itname.c_str());
-        cast_refrigeration(60, false, false);
+        if (cast_refrigeration(60, false, false) != SPRET_SUCCESS)
+        {
+            canned_msg(MSG_OK);
+            success = false;
+        }
+        else
+            mprf("%s is covered with a thick layer of frost!", itname.c_str());
         break;
 
     case SPWPN_DRAINING:
@@ -4481,8 +4486,13 @@ static bool _vorpalise_weapon(bool already_known)
         break;
 
     case SPWPN_VENOM:
-        mprf("%s seems more permanently poisoned.", itname.c_str());
-        cast_toxic_radiance();
+        if (cast_toxic_radiance() != SPRET_SUCCESS)
+        {
+            canned_msg(MSG_OK);
+            success = false;
+        }
+        else
+            mprf("%s seems more permanently poisoned.", itname.c_str());
         break;
 
     case SPWPN_ELECTROCUTION:

@@ -331,6 +331,7 @@ spret_type cast_chain_lightning(int pow, const actor *caster, bool fail)
 // assumes only you can cast this spell (or would want to).
 spret_type cast_toxic_radiance(bool non_player, bool fail)
 {
+    // XXX: stop_attack_prompt() should be used to avoid poisoning allies!
     fail_check();
     if (non_player)
         mpr("The air is filled with a sickly green light!");
