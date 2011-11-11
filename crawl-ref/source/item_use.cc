@@ -4471,10 +4471,7 @@ static bool _vorpalise_weapon(bool already_known)
 
     case SPWPN_FROST:
     case SPWPN_FREEZING:
-        if (get_weapon_brand(wpn) == SPWPN_FROST)
-            mprf("%s is covered with a thick layer of frost!", itname.c_str());
-        else
-            mprf("%s glows brilliantly blue for a moment.", itname.c_str());
+        mprf("%s is covered with a thick layer of frost!", itname.c_str());
         cast_refrigeration(60, false, false);
         break;
 
