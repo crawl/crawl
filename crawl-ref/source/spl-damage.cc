@@ -329,9 +329,23 @@ spret_type cast_chain_lightning(int pow, const actor *caster, bool fail)
 // Poisonous light passes right through invisible players
 // and monsters, and so, they are unaffected by this spell --
 // assumes only you can cast this spell (or would want to).
+static bool _toxic_radianceable(const actor *act)
+{
+    if (act->invisible())
+        return false;
+    // currently monsters are still immune at rPois 1
+    return (act->res_poison() < (act->atype() == ACT_PLAYER ? 3 : 1));
+}
+
 spret_type cast_toxic_radiance(bool non_player, bool fail)
 {
-    // XXX: stop_attack_prompt() should be used to avoid poisoning allies!
+    if (!non_player)
+    {
+        targetter_los hitfunc(&you, LOS_DEFAULT);
+        if (stop_attack_prompt(hitfunc, "poison", _toxic_radianceable))
+            return SPRET_ABORT;
+    }
+
     fail_check();
     if (non_player)
         mpr("The air is filled with a sickly green light!");
@@ -344,9 +358,7 @@ spret_type cast_toxic_radiance(bool non_player, bool fail)
 
     // Determine whether the player is hit by the radiance. {dlb}
     if (you.duration[DUR_INVIS])
-    {
         mpr("The light passes straight through your body.");
-    }
     else
     {
         int poison_amount = poison_player(2, "", "toxic radiance");
