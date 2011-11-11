@@ -749,9 +749,9 @@ struct spell_desc
 
 {
     SPELL_CONTROL_UNDEAD, "Control Undead",
-     SPTYP_HEXES | SPTYP_NECROMANCY,
+     SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     5,
+     4,
      200,
      -1, -1,
      0,
@@ -945,7 +945,7 @@ struct spell_desc
     SPELL_DISPEL_UNDEAD, "Dispel Undead",
      SPTYP_NECROMANCY,
      SPFLAG_DIR_OR_TARGET,
-     4,
+     5,
      100,
      5, 5,
      0,
