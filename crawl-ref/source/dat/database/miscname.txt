@@ -295,3 +295,47 @@ Stand and defend the Orb!
 
 The safety of the most sacred Orb of Zot relies on you.
 %%%%
+hell_effect_plain
+
+Brimstone rains from above.
+
+You feel lost and a long, long way from home...
+
+You shiver with fear.
+%%%%
+hell_effect_warn
+
+You feel a terrible foreboding...
+
+Something frightening happens.
+
+You sense an ancient evil watching you...
+
+You suddenly feel all small and vulnerable.
+
+You sense a hostile presence.
+%%%%
+hell_effect_talk
+
+"You will not leave this place."
+
+"Die, mortal!"
+
+"We do not forgive those who trespass against us!"
+
+"Trespassers are not welcome here!"
+
+"You do not belong in this place!"
+
+"Leave now, before it is too late!"
+
+"We have you now!"
+%%%%
+hell_effect_sound
+
+A gut-wrenching scream fills the air!
+
+You hear words spoken in a strange and terrible language...
+
+You hear diabolical laughter!
+%%%%
