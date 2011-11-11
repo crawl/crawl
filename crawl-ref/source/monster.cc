@@ -3370,6 +3370,8 @@ int monster::res_poison(bool temp) const
     UNUSED(temp);
 
     int u = get_mons_resists(this).poison;
+    if (u > 0)
+        return u;
 
     if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
     {
@@ -3385,8 +3387,10 @@ int monster::res_poison(bool temp) const
             u += get_armour_res_poison(mitm[shld], false);
     }
 
-    // Monsters can legitimately get multiple levels of poison resistance.
-
+    // Monsters can have multiple innate levels of poison resistance, but
+    // like players, equipment doesn't stack.
+    if (u > 0)
+        return 1;
     return (u);
 }
 
