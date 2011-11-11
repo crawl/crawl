@@ -3118,4 +3118,14 @@ void seen_item(const item_def &item)
         ((item_def*)&item)->flags |= ISFLAG_KNOW_CURSE;
     if (item.base_type == OBJ_GOLD && !item.plus)
         ((item_def*)&item)->plus = (you.religion == GOD_ZIN) ? 2 : 1;
+
+    if (item_type_has_ids(item.base_type) && !is_artefact(item)
+        && item_ident(item, ISFLAG_KNOW_TYPE)
+        && you.type_ids[item.base_type][item.sub_type] != ID_KNOWN_TYPE)
+    {
+        // Can't cull shop items here -- when called from view, we shouldn't
+        // access the UI.  Old ziggurat prompts are a very minor case of what
+        // could go wrong.
+        set_ident_type(item.base_type, item.sub_type, ID_KNOWN_TYPE);
+    }
 }
