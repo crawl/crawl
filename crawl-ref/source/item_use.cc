@@ -4471,7 +4471,7 @@ static bool _vorpalise_weapon(bool already_known)
 
     case SPWPN_FROST:
     case SPWPN_FREEZING:
-        if (cast_refrigeration(60, false, false) != SPRET_SUCCESS)
+        if (cast_refrigeration(60, !already_known, false) != SPRET_SUCCESS)
         {
             canned_msg(MSG_OK);
             success = false;
@@ -4486,7 +4486,7 @@ static bool _vorpalise_weapon(bool already_known)
         break;
 
     case SPWPN_VENOM:
-        if (cast_toxic_radiance() != SPRET_SUCCESS)
+        if (cast_toxic_radiance(!already_known) != SPRET_SUCCESS)
         {
             canned_msg(MSG_OK);
             success = false;
