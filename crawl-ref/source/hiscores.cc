@@ -424,7 +424,7 @@ static const char *kill_method_names[] =
     "stupidity", "weakness", "clumsiness", "trap", "leaving", "winning",
     "quitting", "draining", "starvation", "freezing", "burning",
     "wild_magic", "xom", "rotting", "targeting", "spore",
-    "tso_smiting", "something",
+    "tso_smiting", "petrification", "something",
     "falling_down_stairs", "acid", "curare",
     "beogh_smiting", "divine_wrath", "bounce", "reflect", "self_aimed",
     "falling_through_gate", "disintegration",
@@ -1959,6 +1959,10 @@ std::string scorefile_entry::death_description(death_desc_verbosity verbosity)
     case KILLED_BY_BEOGH_SMITING:
         desc += terse? "smitten by Beogh" : "Smitten by Beogh";
         needs_damage = true;
+        break;
+
+    case KILLED_BY_PETRIFICATION:
+        desc += terse? "petrified" : "Turned to stone";
         break;
 
     case KILLED_BY_SOMETHING:
