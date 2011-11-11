@@ -1255,6 +1255,8 @@ ENUM:     DRAGONSKIN
 NAME:     dragonskin cloak
 APPEAR:   opalescent scaly cloak
 OBJ:      OBJ_ARMOUR/ARM_CLOAK
+TILE:     urand_dragonskin
+TILE_EQ:  dragonskin
 PLUS:     +4
 COLOUR:   ETC_HEAL
 BOOL:     nogen
