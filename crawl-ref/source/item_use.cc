@@ -4466,7 +4466,7 @@ static bool _vorpalise_weapon(bool already_known)
     case SPWPN_FLAME:
     case SPWPN_FLAMING:
         mprf("%s is engulfed in an explosion of flames!", itname.c_str());
-        immolation(10, IMMOLATION_SCROLL, you.pos(), already_known, &you);
+        immolation(10, IMMOLATION_SPELL, you.pos(), already_known, &you);
         break;
 
     case SPWPN_FROST:
