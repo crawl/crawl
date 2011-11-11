@@ -1830,11 +1830,11 @@ int _maybe_reduce_poison(int amount)
     int reduction = binomial_generator(amount, 90);
     int new_amount = amount - reduction;
 
-    if (amount != new_amount) {
+    if (amount != new_amount)
         dprf("Poison reduced (%d -> %d)", amount, new_amount);
-    } else {
+    else
         dprf("Poison not reduced (%d)", amount);
-    }
+
     return new_amount;
 }
 
@@ -4811,7 +4811,7 @@ bool curare_hits_player(int death_source, int amount, const bolt &beam)
     if (player_res_poison() >= 3)
         return (false);
 
-    if(!poison_player(amount, beam.get_source_name(), beam.name))
+    if (!poison_player(amount, beam.get_source_name(), beam.name))
         return (false);
 
     int hurted = 0;
