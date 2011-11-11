@@ -943,7 +943,8 @@ DOC_BASE        := ../docs
 DOC_TEMPLATES   := $(DOC_BASE)/template
 GENERATED_DOCS  := $(DOC_BASE)/aptitudes.txt $(DOC_BASE)/FAQ.html $(DOC_BASE)/crawl_manual.txt
 GENERATED_HEADERS := art-enum.h #the rest are private
-GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mon-mst.h $(RLTILES)/dc-unrand.txt build.h compflag.h
+GENERATED_FILES := $(GENERATED_HEADERS) art-data.h mon-mst.h \
+                   $(RLTILES)/dc-unrand.txt build.h compflag.h dat/dlua/tags.lua
 
 GAME_DEPENDS  := $(OBJECTS) $(EXTRA_OBJECTS) $(CONTRIB_LIBS)
 SRC_PKG_BASE  := stone_soup
@@ -1296,6 +1297,8 @@ art-enum.h: art-data.h
 
 mon-mst.h: mon-spll.h util/gen-mst.pl
 	$(QUIET_GEN)util/gen-mst.pl
+
+dat/dlua/tags.lua: tag-version.h util/gen-luatags.pl
 
 $(RLTILES)/dc-unrand.txt: art-data.h
 
