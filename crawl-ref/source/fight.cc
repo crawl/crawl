@@ -3344,7 +3344,8 @@ bool melee_attack::apply_damage_brand()
             (defender->holiness() == MH_NATURAL ? random2(30) : random2(22));
 
         if (mons_class_is_confusable(defender->type)
-            && hdcheck >= defender->get_experience_level())
+            && hdcheck >= defender->get_experience_level()
+            && !one_chance_in(5))
         {
             // Declaring these just to pass to the enchant function.
             bolt beam_temp;
