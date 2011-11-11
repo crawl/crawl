@@ -1082,7 +1082,8 @@ void static _get_randart_properties(const item_def &item,
                 break;              // already does this or something
             }
             if (aclass == OBJ_ARMOUR
-                && (atype == ARM_FIRE_DRAGON_ARMOUR || atype == ARM_ICE_DRAGON_ARMOUR
+                && (atype == ARM_FIRE_DRAGON_ARMOUR
+                    || atype == ARM_ICE_DRAGON_ARMOUR
                     || atype == ARM_GOLD_DRAGON_ARMOUR))
             {
                 break;
@@ -1097,7 +1098,8 @@ void static _get_randart_properties(const item_def &item,
                 break;              // already does this or something
             }
             if (aclass == OBJ_ARMOUR
-                && (atype == ARM_FIRE_DRAGON_ARMOUR || atype == ARM_ICE_DRAGON_ARMOUR
+                && (atype == ARM_FIRE_DRAGON_ARMOUR
+                    || atype == ARM_ICE_DRAGON_ARMOUR
                     || atype == ARM_GOLD_DRAGON_ARMOUR))
             {
                 break;

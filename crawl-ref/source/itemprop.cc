@@ -93,7 +93,6 @@ static armour_def Armour_prop[NUM_ARMOURS] =
         true,  EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_MOTTLED_DRAGON_ARMOUR,"mottled dragon armour",  6, -1,  150,
         true,  EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
-
     { ARM_SWAMP_DRAGON_HIDE,    "swamp dragon hide",      3, -2,  200,
         false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_SWAMP_DRAGON_ARMOUR,  "swamp dragon armour",    7, -2,  200,
@@ -522,7 +521,8 @@ void do_curse_item(item_def &item, bool quiet)
 
     // Neither can pearl dragon hides
     if (item.base_type == OBJ_ARMOUR
-        && (item.sub_type == ARM_PEARL_DRAGON_HIDE || item.sub_type == ARM_PEARL_DRAGON_ARMOUR))
+        && (item.sub_type == ARM_PEARL_DRAGON_HIDE
+            || item.sub_type == ARM_PEARL_DRAGON_ARMOUR))
     {
         if (!quiet)
         {
