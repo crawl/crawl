@@ -1956,11 +1956,11 @@ static uint8_t _random_large_abomination_colour()
     //  MAGENTA = orb guardian
     //  GREEN = tentacled monstrosity
     //  LIGHTCYAN = octopode
-    //  RED, LIGHTRED, BROWN = used for twisted resurrection
+    //  RED, LIGHTRED = used for undead abominations (Twisted Resurrection)
     do
         col = random_monster_colour();
     while (col == MAGENTA || col == GREEN || col == LIGHTCYAN || col == RED
-           || col == LIGHTRED || col == BROWN);
+           || col == LIGHTRED);
 
     return (col);
 }
@@ -1970,7 +1970,8 @@ static uint8_t _random_small_abomination_colour()
     uint8_t col;
     // Restricted colours:
     //  MAGENTA = unseen horror
-    //  RED, LIGHTRED, BROWN = used for twisted resurrection
+    //  RED, LIGHTRED = used for undead abominations (Twisted Resurrection)
+    //  BROWN = used for crawling corpses/macabre masses
     do
         col = random_monster_colour();
     while (col == MAGENTA || col == RED || col == LIGHTRED || col == BROWN);
