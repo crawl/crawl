@@ -1123,7 +1123,11 @@ bool bolt::need_regress() const
 bool bolt::hit_wall()
 {
     const dungeon_feature_type feat = grd(pos());
-    ASSERT(feat_is_solid(feat));
+
+#ifdef ASSERTS
+    if (!feat_is_solid(feat))
+        die("beam::hit_wall yet not solid: %s", dungeon_feature_name(feat));
+#endif
 
     if (is_tracer && YOU_KILL(thrower) && in_bounds(target) && !passed_target
         && pos() != target  && pos() != source && foe_info.count == 0
