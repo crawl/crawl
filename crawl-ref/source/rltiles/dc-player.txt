@@ -165,6 +165,7 @@ cyan CYAN
 white WHITE LAST_NORM
 #unrand
 ratskin RATSKIN_CLOAK
+dragonskin DRAGONSKIN_CLOAK
 %end_ctg
 
 ###Boots
