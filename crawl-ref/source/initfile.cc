@@ -95,28 +95,34 @@ static msg_colour_type _str_to_channel_colour(const std::string &str)
     return (ret);
 }
 
-static const std::string message_channel_names[ NUM_MESSAGE_CHANNELS ] =
+static const std::string message_channel_names[] =
 {
     "plain", "friend_action", "prompt", "god", "pray", "duration", "danger",
     "warning", "food", "recovery", "sound", "talk", "talk_visual",
     "intrinsic_gain", "mutation", "monster_spell", "monster_enchant",
     "friend_spell", "friend_enchant", "monster_damage", "monster_target",
     "banishment", "rotten_meat", "equipment", "floor", "multiturn", "examine",
-    "examine_filter", "diagnostic", "error", "tutorial", "orb"
+    "examine_filter", "diagnostic", "error", "tutorial", "orb",
 };
 
 // returns -1 if unmatched else returns 0--(NUM_MESSAGE_CHANNELS-1)
 int str_to_channel(const std::string &str)
 {
-    int ret;
+    COMPILE_CHECK(ARRAYSZ(message_channel_names) == NUM_MESSAGE_CHANNELS);
 
-    for (ret = 0; ret < NUM_MESSAGE_CHANNELS; ret++)
+    // widespread aliases
+    if (str == "visual")
+        return MSGCH_TALK_VISUAL;
+    else if (str == "spell")
+        return MSGCH_MONSTER_SPELL;
+
+    for (int ret = 0; ret < NUM_MESSAGE_CHANNELS; ret++)
     {
         if (str == message_channel_names[ret])
-            break;
+            return ret;
     }
 
-    return (ret == NUM_MESSAGE_CHANNELS ? -1 : ret);
+    return -1;
 }
 
 std::string channel_to_str(int channel)
