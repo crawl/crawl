@@ -208,6 +208,7 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 # easy_eat_chunks        = true
 # easy_eat_gourmand      = true
 # easy_eat_contaminated  = true
+# auto_eat_chunks        = true
 # prompt_for_swap        = false
 # easy_quit_item_prompts = false
 # easy_exit_menu         = true
