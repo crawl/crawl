@@ -860,7 +860,7 @@ static int _shatter_mon_dice(const monster *mon)
         // Extra damage to petrifying/petrified things.
         // Undo the damage reduction as well; base damage is 4 : 6.
         if (petrifying || petrified)
-            return petrifying ? 7 : 18;
+            return petrifying ? 6 : 12;
         // No damage to insubstantials.
         else if (mon->is_insubstantial())
             return 0;
@@ -1056,9 +1056,9 @@ static int _shatter_player(int pow, actor *wielder)
     dice_def dam_dice(0, 5 + pow / 3); // Number of dice set below.
 
     if (you.petrified())
-        dam_dice.num = 18; // reduced later
+        dam_dice.num = 12; // reduced later
     else if (you.petrifying())
-        dam_dice.num = 7;  // reduced later
+        dam_dice.num = 6;  // reduced later
     // Same order as for monsters -- petrified flyers get hit hard, skeletal
     // flyers get no extra damage.
     else if (you.airborne())
