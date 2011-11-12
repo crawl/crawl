@@ -118,6 +118,7 @@ public:
                                    // chunks if no safe ones are present
     bool        easy_eat_contaminated; // like easy_eat_gourmand, but
                                        // always active.
+    bool        auto_eat_chunks; // allow eating chunks while resting or travelling
     bool        default_target;  // start targeting on a real target
     bool        autopickup_no_burden;   // don't autopickup if it changes burden
     skill_focus_mode skill_focus; // is the focus skills available
