@@ -4399,7 +4399,9 @@ static bool _mons_is_skeletal(int mc)
             || mc == MONS_SKELETON_LARGE
             || mc == MONS_BONE_DRAGON
             || mc == MONS_SKELETAL_WARRIOR
-            || mc == MONS_FLYING_SKULL);
+            || mc == MONS_FLYING_SKULL
+            || mc == MONS_CURSE_SKULL
+            || mc == MONS_MURRAY);
 }
 
 bool monster::is_skeletal() const
