@@ -1175,7 +1175,11 @@ int yred_random_servants(unsigned int threshold, bool force_hostile)
                      threshold);
     }
 
-    monster_type mon_type = _yred_servants[random2(threshold)];
+    const unsigned int servant = random2(threshold);
+    if ((servant + 2) * 2 < threshold && !force_hostile)
+        return (-1);
+
+    monster_type mon_type = _yred_servants[servant];
     int how_many = (mon_type == MONS_FLYING_SKULL) ? 2 + random2(4)
                                                    : 1;
 
@@ -2147,16 +2151,18 @@ bool do_god_gift(bool forced)
                     && one_chance_in(4)))
             {
                 unsigned int threshold = MIN_YRED_SERVANT_THRESHOLD
-                                         + you.num_current_gifts[you.religion];
+                                         + you.num_current_gifts[you.religion] / 2;
                 threshold = std::max(threshold,
                     static_cast<unsigned int>(MIN_YRED_SERVANT_THRESHOLD));
                 threshold = std::min(threshold,
                     static_cast<unsigned int>(MAX_YRED_SERVANT_THRESHOLD));
-                yred_random_servants(threshold);
 
-                _delayed_monster_done(" grants you @an@ undead servant@s@!",
-                                      "", _delayed_gift_callback);
-                success = true;
+                if (yred_random_servants(threshold) != -1)
+                {
+                    _delayed_monster_done(" grants you @an@ undead servant@s@!",
+                                          "", _delayed_gift_callback);
+                    success = true;
+                }
             }
             break;
 
