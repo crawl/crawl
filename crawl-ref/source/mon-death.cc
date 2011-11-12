@@ -478,7 +478,7 @@ void elven_twins_unpacify (monster* twin)
 **/
 void spirit_fades (monster *spirit)
 {
-    // XXX: No check for silence
+    // XXX: No check for silence; summoned?
     if (mons_near(spirit))
         simple_monster_message(spirit, " fades away with a wail!", MSGCH_TALK);
     else
