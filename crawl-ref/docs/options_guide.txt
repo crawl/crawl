@@ -170,12 +170,12 @@ See the header of the default init.txt for more details.
 A quick way to make small changes to the options, without having to
 switch to a different option file, is to use the command line options
 -extra-opt-first or -extra-opt-last, which make it as if the given
-option was (repsecitvely) at the top or bottom of the option file.  For
+option was (respectively) at the top or bottom of the option file. For
 example,
 
     -extra-opt-last wiz_mode=yes
 
-will cause any new game to start in wizard mode.  -extra-opt-first and
+will cause any new game to start in wizard mode. -extra-opt-first and
 -extra-opt-last can be used multiple times on the same command line.
 
 0-c     Options and how to set them.
@@ -470,7 +470,7 @@ chunks_autopickup = true
         If true then butchered flesh will be automatically picked up
         right after they're generated (and after switching back from
         the butchering weapon to the usual weapon, if necessary).
-        Respects all of the autopickup options.  Requires '%' to be
+        Respects all of the autopickup options. Requires '%' to be
         in the autopickup line.
         Does not apply to Vampires who will pick up bottled potions
         of blood regardless of this option, and not pick up chunks.
@@ -528,7 +528,7 @@ drop_filter = <regex>
 
         drop_filter will match against the same keywords menu_colour uses,
         except that it lacks identification status and corpse/chunk
-        information.  It defaults to useless_item.
+        information. It defaults to useless_item.
 
         When a drop_filter is set, using the select/deselect keys will
         set/clear selection of items that match the filter
@@ -778,7 +778,7 @@ travel_delay = 20
 
 explore_delay = -1
         How long auto-explore waits after each move (milliseconds). Depends on
-        platform.  In particular, setting travel_delay = -1 and
+        platform. In particular, setting travel_delay = -1 and
         explore_delay = 20 means you will see the invividual moves of
         autoexplore, but not the invidivual moves of other forms of travel.
         Setting to -1 means the auto-explore delay will be the same as
@@ -810,7 +810,7 @@ explore_stop += greedy_visited_item_stack
         NOTE: runrest_ignore_message has no effect on explore_stop.
 
         When using non-greedy explore, items causes explore to stop
-        when any new item comes into view.  When using greedy explore,
+        when any new item comes into view. When using greedy explore,
         the conditions act as follows:
 
         items: stop when items that aren't eligible for autopickup come
@@ -821,7 +821,7 @@ explore_stop += greedy_visited_item_stack
 
         greedy_pickup: stop after you automatically pick up any item
             eligible for autopickup, excluding gold, but including
-            items thrown/fired by the player.  You can make certain items
+            items thrown/fired by the player. You can make certain items
             *not* trigger this with the option explore_stop_pickup_ignore
 
         greedy_pickup_gold: stop when automatically picking up gold during
@@ -829,14 +829,14 @@ explore_stop += greedy_visited_item_stack
 
         greedy_pickup_smart: Similar to greedy_pickup, but tries to be
             smart about it, meaning only stopping for items which aren't
-            similar to any you already have in your inventory.  It
+            similar to any you already have in your inventory. It
             doesn't stop for automatically picking up items which were
             thrown/fired by the player; you can add "greedy_pickup_thrown"
             if you want to stop for those.
 
         greedy_pickup_thrown: Stops after you pick up any item you've
-            thrown/fired.   greedy_pickup automatically does this, but
-            greedy_pickup_smart does not.  explore_stop_pickup_ignore
+            thrown/fired. greedy_pickup automatically does this, but
+            greedy_pickup_smart does not. explore_stop_pickup_ignore
             does not affect this condition.
 
         greedy_visited_item_stack: Stop when visiting a stack of items
@@ -853,7 +853,7 @@ explore_stop += greedy_visited_item_stack
 explore_stop_pickup_ignore = <regex list>
         If explore_stop has greedy_pickup or greedy_pickup_smart set,
         then picking up any items matching any of the regexes in the list
-        will *not* stop auto-explore.  For example, by default curare-
+        will *not* stop auto-explore. For example, by default curare-
         tipped needles are automatically picked up to keep them out of
         the hands of monsters, even if you don't have a blowgun, so to
         not stop auto-explore because of this use
@@ -870,7 +870,7 @@ explore_wall_bias = 0
 
 explore_improved = false
         If set to true explore will attempt to reduce zig-zagging during
-        auto-explore.  On average it increases the number of turns taken
+        auto-explore. On average it increases the number of turns taken
         by about 0.9%, sometimes actually speeding it up slightly and
         sometimes increasing the turns taken by up to 5%, with
         pathological cases causing a 13% increase.
@@ -926,7 +926,7 @@ runrest_ignore_poison = <poison damage>:<minimum hp>
         init.txt. Poison damage of x will be ignored if you have at
         least y hp if you've defined a runrest_ignore_poison = x:y
         option. Running here means shift-running and resting only. Only
-        one runrest_ignore_poison line is considered.  Note that for
+        one runrest_ignore_poison line is considered. Note that for
         this work, you should also tell Crawl to ignore the
         "You feel sick" messages. For example,
              runrest_ignore_message = You feel.*sick
@@ -1061,7 +1061,7 @@ easy_eat_chunks = false
 easy_eat_gourmand = false
         If both this and easy_eat_chunks are true, and you're wearing an
         amulet of the Gourmand, then religion-safe contaminated chunks will
-        be eaten without prompting.  If prefer_safe_chunks is true then this
+        be eaten without prompting. If prefer_safe_chunks is true then this
         will only be done if you have no safe chunks to eat, but if it's
         false then you'll auto-eat older contaminated chunks before fresher
         safe chunks.
@@ -1074,7 +1074,7 @@ prompt_for_swap = true
         If true, then if an auto-switch butchery is interrupted by a
         hostile monster, the game will ask if you wish to switch back to
         your weapon. It will also prompt you if after butchery is interupted
-        you teleport orchange levels and find yourself near hostile monsters.
+        you teleport or change levels and find yourself near hostile monsters.
 
 easy_quit_item_prompts = true
         Setting this option to true allows the quitting of item listing
@@ -1111,7 +1111,7 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
              sort_menus = true : art, basename, qualname, curse, qty
 
         Two items will be compared based on the first sort criteria
-        where they differ.  So with the sort_menus line given above,
+        where they differ. So with the sort_menus line given above,
         if only one of two different items is a known artefact, it will be
         listed first, else (if both or neither are artefacts) if their
         basenames are different they will be alphabetically compared using
@@ -1124,14 +1124,14 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
         * basename:
           This is the name of the item type. The basename for all of
           "a +0 robe", "an embroidered robe" and "the cursed +2 robe of
-          Ponies" is just "robe".  The basename for both of "a brass
+          Ponies" is just "robe". The basename for both of "a brass
           ring" and "a ring of fire resistance" are "ring".
 
         * qualname:
           The name of the item without articles (a/an/the), quantities,
           enchantments, or curse-status. The qualified names for the
           robes described above are "robe", "embroidered robe" and "robe
-          of Ponies", respectively.  The qualified names for the rings
+          of Ponies", respectively. The qualified names for the rings
           described above are "brass ring" and "ring of fire
           resistance", respectively.
 
@@ -1170,7 +1170,7 @@ sort_menus = [menu:](true | false | auto:X)[:sort_order]
 
         * freshness:
           The freshness of chunks of meat; irrelevant for everything
-          else.  It makes the oldest chunks of meat show up first, with
+          else. It makes the oldest chunks of meat show up first, with
           rotting chunks listed last for non-Saprovores.
           If this sort criteria is placed before (or in the absence of)
           basename and qualname, then non-chunk food items will be
@@ -1476,7 +1476,7 @@ force_more_message = <list of regexes>
 msg_condense_repeats = true
         If the same message is repeated multiple times during the same
         turn, then it will be output in a condensed format indicating
-        how many times it was repeated.  If the same output (including the
+        how many times it was repeated. If the same output (including the
         counter) is repeated over several turns, the Show Previous Message
         command (Ctrl-P) will likewise condense them into one. For example:
             The killer bee misses you. (x5)
@@ -1521,7 +1521,7 @@ fire_order += inscribed
         wielding a ranged weapon. 'return' refers to (identified)
         weapons of returning.
 
-        'inscribed' refers to any item with the "+f" inscription.  See
+        'inscribed' refers to any item with the "+f" inscription. See
         the "Inscriptions" section of Crawl's manual for more information
         about inscriptions.
 
@@ -1633,7 +1633,7 @@ additional_macro_file = path/to/filename
 
 bindkey = [^D] CMD_BUTCHER
         Change which key invokes which command at a lower level of
-        operation than macros.  Useful in that macros cannot (yet)
+        operation than macros. Useful in that macros cannot (yet)
         invoke each other, but a macro can invoke a command whose
         key has changed.
         The syntax is always the same: [key] command
@@ -1651,7 +1651,7 @@ In non-tile games the tile options are ignored.
 
 tile_show_items = <glyphs>
         This option controls the order of items in the tiles
-        inventory.  By default, its value is "!?/%=([)x}+\".
+        inventory. By default, its value is "!?/%=([)x}+\".
         Items with glyphs not in the list will be shown last.
 
 tile_skip_title = false
@@ -1722,7 +1722,7 @@ tile_update_rate = 1000
 
 tile_runrest_rate = 100
         The number of milliseconds that tick by before the screen is redrawn
-        when running or resting.  If Crawl is slow while running or resting,
+        when running or resting. If Crawl is slow while running or resting,
         increase this number.
 
 tile_key_repeat_delay = 200
@@ -1737,7 +1737,7 @@ tile_tooltip_ms = 500
 
 tile_tag_pref = (none| named | enemy | tutorial )
         This option defaults to "enemy" normally and "tutorial" in tutorial
-        modes.  This setting determines which monsters receive text tag
+        modes. This setting determines which monsters receive text tag
             none     - turns off all tags.
             named    - shows names of all named monsters, ally or enemy
             enemy    - shows names of named enemy monsters
@@ -1747,7 +1747,7 @@ tile_tag_pref = (none| named | enemy | tutorial )
 
 tile_window_width  = 0
 tile_window_height = 0
-        The width and height of the window, in pixels.  If set to zero, it
+        The width and height of the window, in pixels. If set to zero, it
         will auto-size the window.
 
 tile_map_pixels = 3
@@ -1838,7 +1838,7 @@ grouped in three parts:
 
 kill_map = friend:you, other:you
         will merge friendly and other kills into the main vanquished
-        creatures list.  Note that the merging is only for display (the
+        creatures list. Note that the merging is only for display (the
         game still maintains three separate lists internally) and that
         kill places (see below) may be in the wrong order for merged
         entries. The default is an empty list.
@@ -1886,7 +1886,7 @@ dump_order += monlist,kills
 
         Another optional dump section is "vaults", which will list the
         locations and names of all the vaults that have been generated
-        in the game.  This will only be included in the final dump
+        in the game. This will only be included in the final dump
         which happens when you die, quit or win (or in ordinary dumps
         while in wizard mode).
 
@@ -1952,7 +1952,7 @@ ood_interesting = 8
 
 rare_interesting = 9
         Monsters which are rare for the location they're in will be
-        noted.  Increasing the number causes more common monsters to
+        noted. Increasing the number causes more common monsters to
         be noted, while decreasing it causes only the most rare of
         monsters to be noted; setting it to 0 will turn noting of rare
         monsters off. Really wimpy monsters (such as rats or butterflies)
@@ -2071,7 +2071,7 @@ cset = <dungeon_character_name : symbol>
            fired_scroll, fired_debug, fired_armour, fired_missile,
            explosion
         Most of these are self-explanatory. "arch" is used for shops and
-        portals.  "floor_magic" and "wall_magic" are used to display
+        portals. "floor_magic" and "wall_magic" are used to display
         magic-mapped squares on the level map. "invis_exposed" is the
         character for water creatures submerged in shallow water, or
         invisible creatures wading in shallow water.
@@ -2243,7 +2243,7 @@ execute Lua code using the following syntax.
 In the second and third cases, the restriction is that the delimiter
 characters appear at the beginning and end of a line, respectively.
 The difference between the <> and {} is when the code gets executed.
-Code {}, it is executed right away.  Other Lua code is executed only
+Code {}, it is executed right away. Other Lua code is executed only
 after the entire init file is read in.
 
 Examples:
@@ -2274,7 +2274,7 @@ autopickup = $?+"/
 autopickup = $?+"/!%
 : end
 
-Options can be rerefenced by lua via "options.option_name".  For
+Options can be rerefenced by lua via "options.option_name". For
 example:
 
 :if string.find(options.autopickup, "!") then
@@ -2282,9 +2282,9 @@ example:
 :end
 
 "options.option_name" can even be used for options that crawl itself
-doesn't recognize.  This can be combined with setting options on the
+doesn't recognize. This can be combined with setting options on the
 command line (see section 0-b) to use the command line to control
-conditionalization of options in the options files.  For example, on the
+conditionalization of options in the options files. For example, on the
 command line you could set the option "foobar" with "-extra-opt-first
 foobar=true", and then do:
 
@@ -2296,14 +2296,14 @@ foobar=true", and then do:
 -----------------------------------
 
 Note that none of the options listed under "Starting Screen" (section 1)
-can be set conditionally.  This is because the options files are
+can be set conditionally. This is because the options files are
 actually read in twice: once before character creation with Lua turned
-off, and a second time after character creation with Lua turned on.  If
+off, and a second time after character creation with Lua turned on. If
 you attempt to set a starting-screen option conditionally then the value
 furthest down in the options file will be used regardless of what
 conditions you set.
 
-The above caveat applies to the "wiz_mode" option as well.  Instead of
+The above caveat applies to the "wiz_mode" option as well. Instead of
 conditionalized wiz_mode, you can add to the command line
 "-extra-opt-last wiz_mode=yes" to make any new game start in wizard
 mode.
