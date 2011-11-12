@@ -487,9 +487,9 @@ void spirit_fades (monster *spirit)
     const coord_def c = spirit->pos();
 
     mgen_data mon = mgen_data(random_choose_weighted(
-                        10, MONS_SILVER_STAR, 10, MONS_PHOENIX,
-                        10, MONS_APIS,        5,  MONS_DAEVA,
-                        2,  MONS_PEARL_DRAGON,
+                        10, MONS_ANGEL, 10, MONS_CHERUB,
+                        5, MONS_APIS, 2, MONS_PHOENIX,
+                        1, MONS_DAEVA, 1, MONS_PEARL_DRAGON,
                       0), SAME_ATTITUDE(spirit),
                       NULL, 0, 0, c,
                       spirit->foe, 0);
