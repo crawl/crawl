@@ -636,7 +636,7 @@ void timeout_phoenix_markers (int duration)
                     place_at = you.pos();
             }
 
-            if (!found_body)
+            if (!found_body || place_at.origin())
             {
                 // Actually time-out this marker; we didn't find a body, too bad.
                 env.markers.remove(mmark);
@@ -647,7 +647,6 @@ void timeout_phoenix_markers (int duration)
             mgen_data new_pho;
             new_pho.cls = MONS_PHOENIX;
             new_pho.behaviour = mmark->behaviour;
-            ASSERT(!place_at.origin());
             new_pho.god = mmark->god;
 
             monster* mons;
