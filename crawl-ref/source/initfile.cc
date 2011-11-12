@@ -738,7 +738,7 @@ void game_options::reset_options()
     easy_open              = true;
     easy_unequip           = true;
     equip_unequip          = false;
-    always_confirm_butcher = false;
+    confirm_butcher        = CONFIRM_AUTO;
     chunks_autopickup      = true;
     prompt_for_swap        = true;
     list_rotten            = true;
@@ -2220,7 +2220,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(equip_unequip);
     else BOOL_OPTION_NAMED("easy_armour", easy_unequip);
     else BOOL_OPTION_NAMED("easy_armor", easy_unequip);
-    else BOOL_OPTION(always_confirm_butcher);
+    else if (key == "confirm_butcher")
+    {
+        if (field == "always")
+            confirm_butcher = CONFIRM_ALWAYS;
+        else if (field == "never")
+            confirm_butcher = CONFIRM_NEVER;
+        else if (field == "auto")
+            confirm_butcher = CONFIRM_AUTO;
+    }
     else BOOL_OPTION(chunks_autopickup);
     else BOOL_OPTION(prompt_for_swap);
     else BOOL_OPTION(list_rotten);

@@ -57,8 +57,8 @@ The contents of this text are:
 4-i     Command Enhancements.
                 auto_list, auto_switch, easy_open, easy_unequip,
                 equip_unequip, easy_confirm, allow_self_target,
-                always_confirm_butcher, prefer_safe_chunks,
-                easy_eat_chunks, easy_eat_gourmand, easy_eat_contaminated,
+                confirm_butcher, prefer_safe_chunks, easy_eat_chunks,
+                easy_eat_gourmand, easy_eat_contaminated,
                 prompt_for_swap, easy_quit_item_prompts,
                 easy_exit_menu, sort_menus, spell_slot
 4-j     Message and Display Improvements.
@@ -1033,11 +1033,12 @@ allow_self_target = (yes | no | prompt)
         spells, such as Mephitic Cloud or Evaporate, where you
         are always a valid target.
 
-always_confirm_butcher = false
-        If true, always request confirmation before butchering. If
-        false, butchering will proceed automatically if there is exactly
-        one corpse on the square. If there are multiple corpses on a
-        square, you will always be prompted, regardless of this option.
+confirm_butcher = (always | never | auto)
+        If auto (default) you will be prompted for which corpses to butcher if
+        there are multiple corpses on the square, and not prompted otherwise.
+        If never, you will automatically butcher the first available corpse,
+        even if there are multiple corpses on the square. If always, you will
+        be prompted before butchering any number of corpses.
 
 prefer_safe_chunks = true
         The (e)at command will prompt for all chunks on the floor and in your

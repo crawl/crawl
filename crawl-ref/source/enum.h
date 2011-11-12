@@ -922,6 +922,13 @@ enum conduct_type
     NUM_CONDUCTS
 };
 
+enum confirm_butcher_type
+{
+    CONFIRM_NEVER,
+    CONFIRM_ALWAYS,
+    CONFIRM_AUTO,
+};
+
 enum confirm_prompt_type
 {
     CONFIRM_CANCEL,             // automatically answer 'no', i.e. disallow

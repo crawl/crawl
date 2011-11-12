@@ -106,7 +106,7 @@ public:
     bool        easy_open;       // open doors with movement
     bool        easy_unequip;    // allow auto-removing of armour / jewellery
     bool        equip_unequip;   // Make 'W' = 'T', and 'P' = 'R'.
-    bool        always_confirm_butcher; // even if only one corpse
+    int         confirm_butcher; // When to prompt for butchery
     bool        chunks_autopickup; // Autopickup chunks after butchering
     bool        prompt_for_swap; // Prompt to switch back from butchering
                                  // tool if hostile monsters are around.
