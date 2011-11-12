@@ -359,8 +359,8 @@ vest_red VEST_RED
 vest_red2 VEST_RED2
 bplate_green BPLATE_GREEN
 bplate_metal1 BPLATE_METAL1
-banded BANDED
-banded2 BANDED2
+splint SPLINT
+splint2 SPLINT2
 armor_blue_gold
 ringmail RINGMAIL
 chainmail3 CHAINMAIL
