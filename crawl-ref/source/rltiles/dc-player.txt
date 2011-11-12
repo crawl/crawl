@@ -366,11 +366,11 @@ ringmail RINGMAIL
 chainmail3 CHAINMAIL
 plate_and_cloth PLATE_AND_CLOTH
 plate_and_cloth2 PLATE_AND_CLOTH2
-scalemail SCALEMAIL2
-scalemail2 SCALEMAIL
+scalemail SCALEMAIL
+scalemail2 SCALEMAIL2
 leather_metal SCALEMAIL3
-plate PLATE2
-plate2 PLATE
+plate PLATE
+plate2 PLATE2
 plate_black PLATE_BLACK
 crystal_plate CRYSTAL_PLATE
 armor_mummy ARMOR_MUMMY
