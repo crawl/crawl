@@ -3721,19 +3721,6 @@ void melee_attack::player_apply_staff_damage()
             MSGCH_ERROR);
         break;
     }
-
-    if (special_damage > 0)
-    {
-        if (!item_type_known(*weapon))
-        {
-            set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
-            set_ident_type(*weapon, ID_KNOWN_TYPE);
-
-            mprf("You are wielding %s.", weapon->name(DESC_NOCAP_A).c_str());
-            more();
-            you.wield_change = true;
-        }
-    }
 }
 
 bool melee_attack::player_check_monster_died()
