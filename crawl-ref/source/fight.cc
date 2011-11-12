@@ -1421,19 +1421,22 @@ std::string melee_attack::special_attack_punctuation()
         return "!";
 }
 
+std::string melee_attack::get_exclams(int dmg)
+{
+    if (dmg < HIT_WEAK)
+        return ".";
+    else if (dmg < HIT_MED)
+        return "!";
+    else if (dmg < HIT_STRONG)
+        return "!!";
+    else
+        return "!!!";
+}
+
 std::string melee_attack::attack_strength_punctuation()
 {
     if (attacker->atype() == ACT_PLAYER)
-    {
-        if (damage_done < HIT_WEAK)
-            return ".";
-        else if (damage_done < HIT_MED)
-            return "!";
-        else if (damage_done < HIT_STRONG)
-            return "!!";
-        else
-            return "!!!";
-    }
+        return get_exclams(damage_done);
     else
         return (damage_done < HIT_WEAK ? "." : "!");
 }
@@ -5318,6 +5321,43 @@ void melee_attack::mons_do_spines()
     }
 }
 
+bool melee_attack::mons_do_minotaur_retaliation()
+{
+    // This will usually be 2, but could be 3 if the player mutated more.
+    const int mut = player_mutation_level(MUT_HORNS);
+
+    const int slaying = slaying_bonus(PWPN_DAMAGE);
+
+    if (attacker->alive() && you.strength() + you.dex() > random2(100))
+    {
+        // Use the same damage formula as a regular headbutt.
+        int dmg = 5 + mut * 3;
+        dmg = player_aux_stat_modify_damage(dmg);
+        dmg = random2(dmg);
+        dmg = player_apply_fighting_skill(dmg, true);
+        dmg += (slaying > -1) ? (random2(1 + slaying))
+                              : (-random2(1 - slaying));
+        dmg = player_apply_misc_modifiers(dmg);
+        int ac = random2(1 + attacker->armour_class());
+        int hurt = dmg - ac;
+
+        mpr("You furiously retaliate!");
+        dprf("Retaliation: dmg = %d ac = %d hurt = %d", dmg, ac, hurt);
+        if (hurt <= 0)
+        {
+            mprf("You headbutt %s, but do no damage.",
+                 attacker->name(DESC_NOCAP_THE).c_str());
+            return true;
+        }
+        mprf("You headbutt %s%s",
+             attacker->name(DESC_NOCAP_THE).c_str(),
+             get_exclams(hurt).c_str());
+        attacker->hurt(&you, hurt);
+        return true;
+    }
+    return false;
+}
+
 void melee_attack::mons_emit_foul_stench()
 {
     monster* mon = attacker->as_monster();
@@ -5406,6 +5446,8 @@ void melee_attack::mons_perform_attack_rounds()
         attacker->as_monster()->number : 4;
           coord_def pos    = defender->pos();
     const bool was_delayed = you_are_delayed();
+
+    bool already_retaliated = false;
 
     // Melee combat, tell attacker to wield its melee weapon.
     attacker->as_monster()->wield_melee_weapon();
@@ -5694,6 +5736,22 @@ void melee_attack::mons_perform_attack_rounds()
                 mons_do_spines();
 
                 // Spines can kill!
+                if (!attacker->alive())
+                    break;
+            }
+
+            if (attacker != defender &&
+                defender->atype() == ACT_PLAYER &&
+                you.species == SP_MINOTAUR &&
+                !this_round_hit &&
+                !already_retaliated &&
+                grid_distance(you.pos(), attacker->as_monster()->pos()) == 1 &&
+                you.can_see(attacker))
+            {
+                // Try to retaliate as you dodge, if you haven't yet.
+                already_retaliated = mons_do_minotaur_retaliation();
+
+                // Horns can kill!
                 if (!attacker->alive())
                     break;
             }
