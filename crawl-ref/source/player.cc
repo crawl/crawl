@@ -1364,7 +1364,6 @@ int player_hunger_rate(void)
     }
 
     hunger += 4 * player_equip(EQ_RINGS, RING_HUNGER);
-    hunger /= 1 + player_equip(EQ_RINGS, RING_SUSTENANCE);
 
     // troll leather armour
     if (you.species != SP_TROLL && you.hp < you.hp_max)
@@ -1378,6 +1377,12 @@ int player_hunger_rate(void)
 
     // burden
     hunger += you.burden_state;
+
+    // sustenance affects things at the end, because it is multiplicative
+    if (player_equip(EQ_RINGS, RING_SUSTENANCE) > 0)
+        hunger = (3*hunger)/5;
+    if (player_equip(EQ_RINGS, RING_SUSTENANCE) > 1)
+        hunger = (3*hunger)/5;
 
     if (hunger < 1)
         hunger = 1;
