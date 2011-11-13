@@ -504,14 +504,15 @@ ENDMAP
 
 ###################################################################
 # Draconian Sentry Boxes
-# There is an 8/27 chance all three downstairs will be here.
+# There is an 70% chance all three downstairs will be here.
 #
 NAME:   lemuel_draconian_sentries
 DEPTH:  Zot:1-4
 ORIENT: float
-TAGS:   uniq_sentry no_rotate
+TAGS:   no_rotate
 MONS:   red draconian scorcher / green draconian zealot / yellow draconian caller
-SUBST:  }=}}> , )=))> , ]=]]> , 1=123, w:w. , m:mn
+SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
+SUBST:  1=123, w:w., w=Ww, m:mn
 MAP
 ............................
 ..mmm..................mmm..
@@ -533,9 +534,10 @@ ENDMAP
 NAME:   lemuel_draconian_sentries_small
 DEPTH:  Zot:1-4
 ORIENT: float
-TAGS:   uniq_sentry no_rotate
+TAGS:   no_rotate
 MONS:   red draconian scorcher / green draconian zealot / yellow draconian caller
-SUBST:  }=}}> , )=))> , ]=]]>, 1=123 , w:w. , m:mn
+SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 > 
+SUBST:  1=123, w:w., w=Ww, m:mn
 MAP
 ................
 ................
@@ -554,8 +556,7 @@ ENDMAP
 
 ###########################
 # Acid trip
-# chance for having all downstairs in the vault is 12.5%
-#
+# 70% chance of having all stairs.
 NAME:   lemuel_acid_trip
 DEPTH:  Zot:1-4
 ORIENT: float
@@ -563,7 +564,7 @@ MONS:   oklob plant, acid blob, jelly, yellow draconian
 MONS:   any nonbase yellow draconian
 SUBST:  1 = 1:2 .
 SUBST:  . = .:20 3:3 2:1
-SUBST:  }=}>, )=)>, ]=]>
+SUBST:  } = }:80 >, ) = ):80 >, ] = ]:80 >
 MAP
        xx++xx
      xxx....xxx
