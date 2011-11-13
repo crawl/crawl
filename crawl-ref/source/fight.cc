@@ -167,8 +167,8 @@ static int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
     int your_to_hit;
 
     your_to_hit = 1300
-                + you.dex() * 50
-                + you.strength() * 20
+                + you.dex() * 60
+                + you.strength() * 15
                 + you.skill(SK_FIGHTING, 30);
     your_to_hit /= 100;
 
@@ -5328,7 +5328,7 @@ bool melee_attack::mons_do_minotaur_retaliation()
 
     const int slaying = slaying_bonus(PWPN_DAMAGE);
 
-    if (attacker->alive() && you.strength() + you.dex() > random2(100))
+    if (attacker->alive() && 5*you.strength() + 7*you.dex() > random2(600))
     {
         // Use the same damage formula as a regular headbutt.
         int dmg = 5 + mut * 3;
