@@ -972,6 +972,7 @@ KMASK:  Z1! = no_item_gen
 SUBST:  ! = ^ .:40
 SUBST:  . = .:500 ^
 COLOUR: cn = magenta
+TILE:   n = dngn_transparent_wall_magenta
 KMONS:  1 = patrolling Orb Guardian
 MAP
    ccccccccc
@@ -1008,6 +1009,7 @@ KMASK:  Z1! = no_item_gen
 SUBST:  ! = ^ .:40
 SUBST:  . = .:500 ^
 COLOUR: cn = magenta
+TILE:   n = dngn_transparent_wall_magenta
 KMONS:  1 = patrolling Orb Guardian
 MAP
    ccccccccc
