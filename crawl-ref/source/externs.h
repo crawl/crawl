@@ -255,6 +255,9 @@ struct coord_def
     {
         return (xi == x && yi == y);
     }
+
+    int range() const;
+    int range(const coord_def other) const;
 };
 
 const coord_def INVALID_COORD(-1, -1);

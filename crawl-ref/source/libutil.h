@@ -183,6 +183,9 @@ inline int sqr(int x)
     return x * x;
 }
 
+unsigned int isqrt(unsigned int x);
+int isqrt_ceil(int x);
+
 inline bool testbits(uint64_t flags, uint64_t test)
 {
     return ((flags & test) == test);
