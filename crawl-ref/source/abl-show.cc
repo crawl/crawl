@@ -921,8 +921,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     ASSERT(ability != ABIL_NON_ABILITY);
 
     talent result;
-    // Only replace placeholder abilities here, so that the replaced
-    // abilities keep the same slots if they change.
     result.which = _fixup_ability(ability);
 
     const ability_def &abil = _get_ability_def(result.which);
@@ -1152,11 +1150,6 @@ static talent _get_talent(ability_type ability, bool check_confused)
     case ABIL_YRED_ANIMATE_DEAD:
         invoc = true;
         failure = 40 - (you.piety / 20) - you.skill(SK_INVOCATIONS, 4);
-        break;
-
-    // Placeholder for Animate Remains or Animate Dead.
-    case ABIL_YRED_ANIMATE_REMAINS_OR_DEAD:
-        invoc = true;
         break;
 
     case ABIL_ZIN_VITALISATION:
