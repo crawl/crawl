@@ -1060,17 +1060,9 @@ void bolt::nuke_wall_effect()
     finish_beam();
 }
 
-// integer square root, such that _length((8,1)) == 8.
-static int _length(const coord_def& c)
-{
-    if (c.origin())
-        return (0);
-    return (int)(ceil(sqrt(c.abs()-1)));
-}
-
 int bolt::range_used(bool leg_only) const
 {
-    const int leg_length = _length(pos() - leg_source());
+    const int leg_length = pos().range(leg_source());
     return (leg_only ? leg_length : leg_length + extra_range_used);
 }
 

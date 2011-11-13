@@ -40,6 +40,29 @@
     #include <sys/resource.h>
 #endif
 
+unsigned int isqrt(unsigned int a)
+{
+    unsigned int rem = 0, root = 0;
+    for (int i = 0; i < 16; i++)
+    {
+        root <<= 1;
+        rem = (rem << 2) + (a >> 30);
+        a <<= 2;
+        if (++root <= rem)
+            rem -= root++;
+        else
+            root--;
+    }
+    return (root >> 1);
+}
+
+int isqrt_ceil(int x)
+{
+    if (x <= 0)
+        return 0;
+    return isqrt(x - 1) + 1;
+}
+
 description_level_type description_type_by_name(const char *desc)
 {
     if (!desc)
