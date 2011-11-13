@@ -5310,9 +5310,9 @@ void melee_attack::mons_do_spines()
 
 bool melee_attack::mons_do_minotaur_retaliation()
 {
-    if (!(you.form == TRAN_NONE || you.form == TRAN_BLADE_HANDS ||
-        you.form == TRAN_STATUE || you.form == TRAN_LICH ||
-        you.form == TRAN_APPENDAGE))
+    if (!(you.form == TRAN_NONE || you.form == TRAN_APPENDAGE
+          || you.form == TRAN_BLADE_HANDS || you.form == TRAN_STATUE
+          || you.form == TRAN_LICH))
     {
         // You are in a non-minotaur form.
         return false;
