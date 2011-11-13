@@ -1174,6 +1174,17 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
     if (you.species != SP_OCTOPODE && baseattack == UNAT_PUNCH && !you.has_usable_offhand())
         baseattack = UNAT_NO_ATTACK;
 
+    // With fangs, replace head attacks with bites.
+    if ((you.has_usable_fangs() || player_mutation_level(MUT_ACIDIC_BITE))
+        && baseattack == UNAT_HEADBUTT)
+    {
+        baseattack = UNAT_BITE;
+    }
+
+    // Felids turn kicks into bites.
+    if (you.species == SP_FELID && baseattack == UNAT_KICK)
+        baseattack = UNAT_BITE;
+
     // Nagas turn kicks into headbutts.
     if (you.species == SP_NAGA && baseattack == UNAT_KICK)
         baseattack = UNAT_HEADBUTT;
