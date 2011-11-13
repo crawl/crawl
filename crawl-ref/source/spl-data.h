@@ -459,7 +459,7 @@ struct spell_desc
     SPELL_MASS_ABJURATION, "Mass Abjuration",
      SPTYP_SUMMONING,
      SPFLAG_AREA | SPFLAG_NEUTRAL | SPFLAG_ESCAPE,
-     7,
+     6,
      200,
      -1, -1,
      0,
