@@ -822,7 +822,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
         if (eq == EQ_BOOTS
             && (you.fishtail
                 || player_mutation_level(MUT_HOOVES) == 3
-                || player_mutation_level(MUT_TALONS) == 3))
+                || you.has_talons(false) == 3))
         {
             return (false);
         }

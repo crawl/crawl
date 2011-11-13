@@ -677,7 +677,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return (false);
         }
 
-        if (player_mutation_level(MUT_TALONS) == 3)
+        if (you.has_talons(false) == 3)
         {
             if (verbose)
                 mpr("Boots don't fit your talons!");
