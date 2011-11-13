@@ -64,6 +64,7 @@ static const body_facet_def _body_facets[] =
     { EQ_HELMET, MUT_ANTENNAE, 1 },
     //{ EQ_HELMET, MUT_BEAK, 1 },
     { EQ_GLOVES, MUT_CLAWS, 3 },
+    { EQ_GLOVES, MUT_TENTACLES, 3 },
     { EQ_BOOTS, MUT_HOOVES, 3 },
     { EQ_BOOTS, MUT_TALONS, 3 }
 };
@@ -1252,7 +1253,8 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         break;
 
     case MUT_CLAWS:
-        // Gloves aren't prevented until level 3.
+    case MUT_TENTACLES:
+        // Gloves aren't prevented until level 3 of claws or tentacles.
         if (you.mutation[mutat] >= 3 && !you.melded[EQ_GLOVES])
             remove_one_equip(EQ_GLOVES, false, true);
         break;
@@ -1736,6 +1738,7 @@ try_again:
                     fire_elemental++;
 
                 if (m == MUT_CLAWS && i == 2
+                    || m == MUT_TENTACLES && i == 2
                     || m == MUT_HORNS && i == 0
                     || m == MUT_BEAK && i == 0
                     || m == MUT_ANTENNAE && i == 0
