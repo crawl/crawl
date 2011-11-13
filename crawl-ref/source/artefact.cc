@@ -217,9 +217,16 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         break;
 
     case GOD_ASHENZARI:
-        // Cursed god: no holy wrath (since that brand repels curses).
+        // Cursed god: no holy wrath (since that brand repels curses) or
+        // pearl dragon armour (ditto).
         if (brand == SPWPN_HOLY_WRATH)
             return (false);
+
+        if (item.base_type == OBJ_ARMOUR
+            && item.sub_type == ARM_PEARL_DRAGON_ARMOUR)
+        {
+            return (false);
+        }
         break;
 
     default:
