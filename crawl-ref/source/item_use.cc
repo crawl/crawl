@@ -666,6 +666,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 mpr("You can't wear gloves with your huge claws!");
             return (false);
         }
+
+        if (you.has_tentacles(false) == 3)
+        {
+            if (verbose)
+                mpr("Gloves don't fit your tentacles!");
+            return (false);
+        }
     }
 
     if (sub_type == ARM_BOOTS)
