@@ -5317,6 +5317,11 @@ bool melee_attack::mons_do_minotaur_retaliation()
         // You are in a non-minotaur form.
         return false;
     }
+    if (you.petrified() || you.duration[DUR_PARALYSIS])
+    {
+        // You can't move.
+        return false;
+    }
     // This will usually be 2, but could be 3 if the player mutated more.
     const int mut = player_mutation_level(MUT_HORNS);
 
