@@ -1379,9 +1379,7 @@ int player_hunger_rate(void)
     hunger += you.burden_state;
 
     // sustenance affects things at the end, because it is multiplicative
-    if (player_equip(EQ_RINGS, RING_SUSTENANCE) > 0)
-        hunger = (3*hunger)/5;
-    if (player_equip(EQ_RINGS, RING_SUSTENANCE) > 1)
+    for (int s = player_equip(EQ_RINGS, RING_SUSTENANCE); s > 0; s--)
         hunger = (3*hunger)/5;
 
     if (hunger < 1)
