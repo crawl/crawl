@@ -1574,7 +1574,8 @@ int melee_attack::player_stat_modify_damage(int damage)
 int melee_attack::player_aux_stat_modify_damage(int damage)
 {
     int dammod = 20;
-    const int dam_stat_val = calc_stat_to_dam_base();
+    // Use the same str/dex weighting that unarmed combat gets, for now.
+    const int dam_stat_val = (7 * you.strength() + 3 * you.dex())/10;
 
     if (dam_stat_val > 10)
         dammod += random2(dam_stat_val - 9);
