@@ -5310,6 +5310,13 @@ void melee_attack::mons_do_spines()
 
 bool melee_attack::mons_do_minotaur_retaliation()
 {
+    if (!(you.form == TRAN_NONE || you.form == TRAN_BLADE_HANDS ||
+        you.form == TRAN_STATUE || you.form == TRAN_LICH ||
+        you.form == TRAN_APPENDAGE))
+    {
+        // You are in a non-minotaur form.
+        return false;
+    }
     // This will usually be 2, but could be 3 if the player mutated more.
     const int mut = player_mutation_level(MUT_HORNS);
 
