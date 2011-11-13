@@ -700,6 +700,7 @@ bool you_can_wear(int eq, bool special_armour)
     case EQ_BODY_ARMOUR:
         if (player_genus(GENPC_DRACONIAN))
             return (false);
+
     case EQ_SHIELD:
         // Most races can wear robes or a buckler/shield.
         if (special_armour)
@@ -716,7 +717,9 @@ bool you_can_wear(int eq, bool special_armour)
         // No caps or hats with Horns 3 or Antennae 3.
         if (player_mutation_level(MUT_HORNS) == 3
             || player_mutation_level(MUT_ANTENNAE) == 3)
-            return(false);
+        {
+            return (false);
+        }
         // Anyone else can wear caps.
         if (special_armour)
             return (true);
@@ -862,7 +865,9 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     {
         if (eq == EQ_WEAPON || eq == EQ_SHIELD
             || eq == EQ_CLOAK || eq == EQ_HELMET)
+        {
             return (true);
+        }
         return (false);
     }
 
