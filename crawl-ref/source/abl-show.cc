@@ -1925,6 +1925,12 @@ static bool _do_ability(const ability_def& abil)
 
     case ABIL_REFORGE_WEAPON:
     {
+        if (!you.weapon())
+        {
+            mpr("But you're empty handed!");
+            return (false);
+        }
+
         item_def& wpn = *you.weapon();
 
         if (is_artefact(wpn))
@@ -1970,8 +1976,8 @@ static bool _do_ability(const ability_def& abil)
 
         if (prompt_failed(item_slot))
         {
+            canned_msg(MSG_NOTHING_HAPPENS);
             return (false);
-            break;
         }
 
         item_def &arm(you.inv[item_slot]);
