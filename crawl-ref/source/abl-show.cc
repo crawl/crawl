@@ -3244,7 +3244,7 @@ static void _set_god_ability_helper(ability_type abil, char letter)
 
 // Return GOD_NO_GOD if it isn't a god ability, otherwise return
 // the index of the god.
-static int _is_god_ability(int abil)
+static int _is_god_ability(ability_type abil)
 {
     if (abil == ABIL_NON_ABILITY)
         return (GOD_NO_GOD);
