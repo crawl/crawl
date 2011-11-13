@@ -1742,8 +1742,8 @@ try_again:
                     || m == MUT_HORNS && i == 0
                     || m == MUT_BEAK && i == 0
                     || m == MUT_ANTENNAE && i == 0
-                    || m == MUT_TALONS && i == 2
-                    || m == MUT_HOOVES && i == 2)
+                    || m == MUT_HOOVES && i == 2
+                    || m == MUT_TALONS && i == 2)
                 {
                     ++slots_lost;
                 }
