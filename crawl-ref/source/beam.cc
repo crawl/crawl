@@ -2046,6 +2046,7 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
 
         if (hurted)
         {
+            mons->add_ench(mon_enchant(ENCH_BREATH_WEAPON, 0, agent, hurted));
             simple_monster_message(mons, " convulses.");
             mons->hurt(agent, hurted, BEAM_POISON);
         }

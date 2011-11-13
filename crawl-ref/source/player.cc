@@ -4825,6 +4825,7 @@ bool curare_hits_player(int death_source, int amount, const bolt &beam)
 
         if (hurted)
         {
+            you.increase_duration(DUR_BREATH_WEAPON, hurted, 20 + random2(20));
             mpr("You have difficulty breathing.");
             ouch(hurted, death_source, KILLED_BY_CURARE,
                  "curare-induced apnoea");
