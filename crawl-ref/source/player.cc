@@ -669,14 +669,15 @@ bool you_can_wear(int eq, bool special_armour)
         return (true);
 
     case EQ_GLOVES:
+        if (player_mutation_level(MUT_CLAWS) == 3)
+            return (false);
+        // These species cannot wear gloves.
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
             || you.species == SP_OGRE)
         {
             return (false);
         }
-        if (player_mutation_level(MUT_CLAWS) == 3)
-            return (false);
         return (true);
 
     case EQ_BOOTS:
