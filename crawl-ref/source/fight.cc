@@ -5317,7 +5317,7 @@ bool melee_attack::mons_do_minotaur_retaliation()
         // You are in a non-minotaur form.
         return false;
     }
-    if (you.petrified() || you.duration[DUR_PARALYSIS])
+    if (you.cannot_act())
     {
         // You can't move.
         return false;
