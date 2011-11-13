@@ -2904,11 +2904,6 @@ static monster_type _band_member(band_type band, int power)
     return (mon_type);
 }
 
-static int _ood_limit()
-{
-    return Options.ood_interesting;
-}
-
 void mark_interesting_monst(monster* mons, beh_type behaviour)
 {
     if (crawl_state.game_is_arena())
@@ -2925,9 +2920,15 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
     // Jellies are never interesting to Jiyva.
     else if (mons->type == MONS_JELLY && you.religion == GOD_JIYVA)
         interesting = false;
+    else if (crawl_state.game_is_zotdef()
+             && mons_level(mons->type) > you.experience_level)
+    {
+        interesting = true;
+    }
     else if (you.where_are_you == BRANCH_MAIN_DUNGEON
              && you.level_type == LEVEL_DUNGEON
-             && mons_level(mons->type) >= you.absdepth0 + _ood_limit()
+             && !crawl_state.game_is_zotdef()
+             && mons_level(mons->type) >= you.absdepth0 + Options.ood_interesting
              && mons_level(mons->type) < 99
              && !(mons->type >= MONS_EARTH_ELEMENTAL
                   && mons->type <= MONS_AIR_ELEMENTAL)
