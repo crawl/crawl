@@ -2199,11 +2199,13 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(clean_map);
     else if (key == "easy_confirm")
     {
-        // allows both 'Y'/'N' and 'y'/'n' on yesno() prompts
+        // decide when to allow both 'Y'/'N' and 'y'/'n' on yesno() prompts
         if (field == "none")
             easy_confirm = CONFIRM_NONE_EASY;
         else if (field == "safe")
             easy_confirm = CONFIRM_SAFE_EASY;
+        else if (field == "all")
+            easy_confirm = CONFIRM_ALL_EASY;
     }
     else if (key == "allow_self_target")
     {
