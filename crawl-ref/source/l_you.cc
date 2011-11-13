@@ -34,6 +34,12 @@
 #include "transform.h"
 #include "travel.h"
 
+/*
+--- Player-related bindings.
+
+module "you"
+*/
+
 /////////////////////////////////////////////////////////////////////
 // Bindings to get information on the player (clua).
 //
@@ -65,17 +71,44 @@ static const char *transform_name()
     }
 }
 
+/*
+--- Has player done something that takes time?
+function turn_is_over() */
 LUARET1(you_turn_is_over, boolean, you.turn_is_over)
+/*
+--- Get player's name
+function name() */
 LUARET1(you_name, string, you.your_name.c_str())
+/*
+--- Get name of player's race
+function race() */
 LUARET1(you_race, string, species_name(you.species).c_str())
+/*
+--- Get name of player's background
+function class() */
 LUARET1(you_class, string, get_job_name(you.char_class))
+/*
+--- Get name of player's god
+function god() */
 LUARET1(you_god, string, god_name(you.religion).c_str())
+/*
+--- Is this [player's] god good?
+-- @param god defaults to you.god()
+function good_god(god) */
 LUARET1(you_good_god, boolean,
         lua_isstring(ls, 1) ? is_good_god(str_to_god(lua_tostring(ls, 1)))
         : is_good_god(you.religion))
+/*
+--- Is this [player's] god evil?
+-- @param god defaults to you.god()
+function evil_god(god) */
 LUARET1(you_evil_god, boolean,
         lua_isstring(ls, 1) ? is_evil_god(str_to_god(lua_tostring(ls, 1)))
         : is_evil_god(you.religion))
+/*
+--- Does this [player's] god like fresh corpses?
+-- @param god defaults to you.god()
+function god_likes_fresh_corpses(god) */
 LUARET1(you_god_likes_fresh_corpses, boolean,
         lua_isstring(ls, 1) ?
         god_likes_fresh_corpses(str_to_god(lua_tostring(ls, 1))) :
