@@ -2883,14 +2883,6 @@ bool melee_attack::apply_damage_brand()
 
     case SPWPN_VAMPIRICISM:
     {
-        // Vampire bat form -- why the special handling?
-        if (attacker->atype() == ACT_PLAYER && you.species == SP_VAMPIRE
-            && player_in_bat_form())
-        {
-            _player_vampire_draws_blood(defender->as_monster(), damage_done);
-            break;
-        }
-
         if (x_chance_in_y(defender->res_negative_energy(), 3))
             break;
 
@@ -2926,16 +2918,8 @@ bool melee_attack::apply_damage_brand()
             }
         }
 
-        int hp_boost = 0;
-
-        // Thus is probably more valuable on larger weapons?
-        if (weapon && is_unrandom_artefact(*weapon)
-            && weapon->special == UNRAND_VAMPIRES_TOOTH)
-        {
-            hp_boost = damage_done;
-        }
-        else
-            hp_boost = 1 + random2(damage_done);
+        int hp_boost = weapon->special == UNRAND_VAMPIRES_TOOTH
+                     ? damage_done : 1 + random2(damage_done);
 
         dprf("Vampiric Healing: damage %d, healed %d",
              damage_done, hp_boost);
