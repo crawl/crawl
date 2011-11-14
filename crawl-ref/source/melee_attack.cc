@@ -233,14 +233,19 @@ bool melee_attack::handle_phase_attempted()
 
     attack_occurred = true;
 
-    // TODO Relocate this?
+    // Based on pre-unification code, this looks to be the appropriate place
+    // to check unrand effects, but this will result in behavior where unrand
+    // effects will occur regardless of whether the attacker hits or misses
+    if (check_unrand_effects())
+        return (false);
+
+    /* TODO Permanently remove this? Commented out for temporary removal
+     *
+     * The only scenario this handles that isn't handled elsewhere (later on)
+     * is identifying a ranged, cursed weapon wielded by a monster...which
+     * seems like an information leak and very much a special-case. -Cryptic
     if (attacker->atype() == ACT_MONSTER)
     {
-        // check_unrand_effects returns the living condition of defender for
-        // early exit purposes
-        if (check_unrand_effects())
-            return (false);
-
         item_def *weap = attacker->as_monster()->mslot_item(MSLOT_WEAPON);
         if (weap && you.can_see(attacker) && weap->cursed()
             && is_range_weapon(*weap))
@@ -248,6 +253,7 @@ bool melee_attack::handle_phase_attempted()
             set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
         }
     }
+     */
 
     // Check for player practicing dodging
     if (one_chance_in(3) && defender == &you)
@@ -1913,9 +1919,6 @@ void melee_attack::player_weapon_upsets_god()
 bool melee_attack::player_monattk_hit_effects()
 {
     player_weapon_upsets_god();
-
-    if (check_unrand_effects())
-    	return (true);
 
     // Thirsty vampires will try to use a stabbing situation to draw blood.
     if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED
@@ -4657,7 +4660,8 @@ int melee_attack::calc_base_weapon_damage()
 /* Returns attacker base unarmed damage
  *
  * Scales for current mutations and unarmed effects
- * TODO: More here?
+ * TODO: Complete symmetry for base_unarmed damage
+ * between monsters and players.
  */
 int melee_attack::calc_base_unarmed_damage()
 {
@@ -4877,11 +4881,15 @@ int melee_attack::apply_defender_ac(int damage, int damage_max)
     return std::max(0, damage);
 }
 
-// TODO: This code is only used from melee_attack methods, but perhaps it
-// should be ambigufied and moved to the actor class
-// Should life protection protect from this?
-// Called when stabbing, for bite attacks, and vampires wielding vampiric weapons
-// Returns true if blood was drawn.
+/* TODO: This code is only used from melee_attack methods, but perhaps it
+ * should be ambigufied and moved to the actor class
+ * Should life protection protect from this?
+ *
+ * Should eventually remove in favor of player/monster symmetry
+ *
+ * Called when stabbing, for bite attacks, and vampires wielding vampiric weapons
+ * Returns true if blood was drawn.
+ */
 bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int damage,
                                                bool needs_bite_msg, int reduction)
 {
