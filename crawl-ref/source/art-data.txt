@@ -740,10 +740,10 @@ TILE:     urand_cutlass
 TILE_EQ:  cutlass
 BRAND:    SPWPN_SPEED
 DESC_END: This infamous weapon was used by a vile pirate captain to
-          slaughter countless innocents.  Finally, he met his destiny
+          slaughter countless innocents. Finally, he met his destiny
           when a kraken swallowed his ship with all the crew aboard.
           The cutlass was thought to be forever lost, but now you have
-          a proof to the contrary in your very hands.
+          proof to the contrary in your very hands.
 
 NAME:     storm bow
 APPEAR:   night blue bow
