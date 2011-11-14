@@ -3400,11 +3400,11 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     std::string quote2;
     if (!mons_is_unique(mi.type))
     {
-        std::string symbol_prefix = "__";
-        symbol_prefix += symbol;
-        symbol_prefix += "_prefix";
+        std::string symbol_prefix = "__" + symbol + "_prefix";
         inf.prefix = getLongDescription(symbol_prefix);
-        quote2 = getQuoteString(symbol_prefix);
+
+        std::string symbol_suffix = "__" + symbol + "_suffix";
+        quote2 = getQuoteString(symbol_suffix);
     }
 
     if (!inf.quote.empty() && !quote2.empty())
