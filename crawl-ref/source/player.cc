@@ -2987,15 +2987,9 @@ static void _draconian_scale_colour_message()
 
 static void _felid_extra_life()
 {
-    int xl = you.max_level;
-    int liv = 0;
-    while (xl > 3 + liv / 2)
-    {
-        xl -= 3 + liv / 2;
-        liv++;
-    }
-
-    if (you.lives + you.deaths < liv && you.lives < 2)
+    if (you.lives + you.deaths < (you.max_level - 1) / 3
+        && you.lives + you.deaths < 8
+        && you.lives < 2)
     {
         you.lives++;
         mpr("Extra life!", MSGCH_INTRINSIC_GAIN);
