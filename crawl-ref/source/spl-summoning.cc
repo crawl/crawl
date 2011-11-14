@@ -2037,7 +2037,6 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     }
 }
 
-
 // Make the proper stat adjustments to turn a demonic abomination into
 // an undead abomination.
 bool undead_abomination_convert(monster* mon, int hd)
