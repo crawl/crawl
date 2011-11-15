@@ -756,7 +756,8 @@ struct spell_desc
      -1, -1,
      0,
      NULL,
-     true
+     true,
+     false
 },
 
 {
