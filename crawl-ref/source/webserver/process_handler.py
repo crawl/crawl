@@ -217,7 +217,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
     def _find_lock(self):
         for path in os.listdir(self.config_path("inprogress_path")):
-            if path.startswith(self.username + ":"):
+            if (path.startswith(self.username + ":") and
+                path.endswith(".ttyrec")):
                 return os.path.join(self.config_path("inprogress_path"),
                                     path)
         return None
