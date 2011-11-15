@@ -415,7 +415,6 @@ static void _tweak_randart(item_def &item)
         return;
 
     unsigned int prop = choice_to_prop[choice];
-    ASSERT(prop >= 0);
     ASSERT(prop < ARRAYSZ(_prop_type));
 
     int val;
