@@ -238,13 +238,13 @@ spret_type cast_blink(bool allow_partial_control, bool fail)
     return SPRET_SUCCESS;
 }
 
-void random_blink(bool allow_partial_control, bool override_abyss)
+void random_blink(bool allow_partial_control, bool override_abyss, bool override_stasis)
 {
     ASSERT(!crawl_state.game_is_arena());
 
     coord_def target;
 
-    if (item_blocks_teleport(true, true))
+    if (item_blocks_teleport(true, true) && !override_stasis)
         canned_msg(MSG_STRANGE_STASIS);
     else if (you.level_type == LEVEL_ABYSS
              && !override_abyss
@@ -408,9 +408,10 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
     if (wizard_tele)
         is_controlled = true;
 
+    // Stasis can't block the Abyss from shifting.
     if (!wizard_tele
-        && ((!new_abyss_area && crawl_state.game_is_sprint())
-            || item_blocks_teleport(true, true)))
+        && (crawl_state.game_is_sprint() || item_blocks_teleport(true, true))
+            && !new_abyss_area)
     {
         canned_msg(MSG_STRANGE_STASIS);
         return (false);
