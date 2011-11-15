@@ -22,6 +22,43 @@
 #include "terrain.h"
 #include "viewmap.h"
 
+static int _englaciate_monsters(coord_def where, int pow, int, actor *actor)
+{
+    monster* mons = monster_at(where);
+
+    if (!mons)
+        return (0);
+
+    if (mons->res_cold() > 0 || mons_is_stationary(mons))
+    {
+        if (!mons_is_firewood(mons))
+            simple_monster_message(mons, " is unaffected.");
+        return (0);
+    }
+
+    int duration = (roll_dice(3, pow) / 6 - random2(mons->get_experience_level()))
+                    * BASELINE_DELAY;
+
+    if (duration <= 0)
+    {
+        simple_monster_message(mons, " resists.");
+        return (0);
+    }
+
+    if (mons_class_flag(mons->type, M_COLD_BLOOD))
+        duration *= 2;
+
+    return (do_slow_monster(mons, actor, duration));
+}
+
+spret_type cast_englaciation(int pow, bool fail)
+{
+    fail_check();
+    mpr("You radiate an aura of cold.");
+    apply_area_visible(_englaciate_monsters, pow, false, &you);
+    return SPRET_SUCCESS;
+}
+
 bool backlight_monsters(coord_def where, int pow, int garbage)
 {
     UNUSED(pow);
@@ -63,7 +100,7 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
     return (true);
 }
 
-bool do_slow_monster(monster* mon, const actor* agent)
+bool do_slow_monster(monster* mon, const actor* agent, int dur)
 {
     // Try to remove haste, if monster is hasted.
     if (mon->del_ench(ENCH_HASTE, true))
@@ -75,7 +112,7 @@ bool do_slow_monster(monster* mon, const actor* agent)
     // Not hasted, slow it.
     if (!mon->has_ench(ENCH_SLOW)
         && !mons_is_stationary(mon)
-        && mon->add_ench(mon_enchant(ENCH_SLOW, 0, agent)))
+        && mon->add_ench(mon_enchant(ENCH_SLOW, 0, agent, dur)))
     {
         if (!mon->paralysed() && !mon->petrified()
             && simple_monster_message(mon, " seems to slow down."))
