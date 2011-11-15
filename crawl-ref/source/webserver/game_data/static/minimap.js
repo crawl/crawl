@@ -191,6 +191,21 @@ function ($, map_knowledge, dungeon_renderer, view_data,
         update_overlay();
     }
 
+    function do_view_center_update(x, y)
+    {
+        // Update the viewpoint, unless the user is currently
+        // right-clicking on the map
+        if (farview_old_vc)
+        {
+            farview_old_vc.x = x;
+            farview_old_vc.y = y;
+        }
+        else
+        {
+            vgrdc(x, y);
+        }
+    }
+
     var farview_old_vc;
     var farview_old_map_cursor;
     function minimap_farview(ev)
@@ -228,7 +243,9 @@ function ($, map_knowledge, dungeon_renderer, view_data,
         }
     }
 
-    $(document).ready(function () {
+    $(document).bind("game_init", function () {
+        cell_x = cell_y = display_x = display_y = 0;
+
         $("#minimap_overlay")
             .mousedown(minimap_farview)
             .mousemove(minimap_farview)
@@ -242,5 +259,6 @@ function ($, map_knowledge, dungeon_renderer, view_data,
         clear: clear,
         center: center,
         update: update,
+        do_view_center_update: do_view_center_update,
     }
 });
