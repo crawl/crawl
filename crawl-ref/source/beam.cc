@@ -1937,6 +1937,10 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow,
     if (m_attempted)
         *m_attempted = 0;
 
+    // Give mass enchantments a power multiplier.
+    pow *= 3;
+    pow /= 2;
+
     pow = std::min(pow, 200);
 
     for (monster_iterator mi(you.get_los()); mi; ++mi)
