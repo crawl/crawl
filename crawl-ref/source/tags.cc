@@ -3341,6 +3341,8 @@ static void tag_read_level(reader &th)
             env.cloud[i].type = CLOUD_NONE;
             continue;
         }
+#else
+        env.cloud[i].excl_rad = unmarshallInt(th);
 #endif
         ASSERT(in_bounds(env.cloud[i].pos));
         env.cgrid(env.cloud[i].pos) = i;
