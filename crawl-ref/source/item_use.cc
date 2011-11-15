@@ -104,7 +104,7 @@ static bool _is_cancellable_scroll(scroll_type scroll);
 bool can_wield(item_def *weapon, bool say_reason,
                bool ignore_temporary_disability, bool unwield)
 {
-#define SAY(x) if (say_reason) { x; } else
+#define SAY(x) {if (say_reason) { x; }}
 
     if (!ignore_temporary_disability && you.berserk())
     {
