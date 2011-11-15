@@ -119,9 +119,8 @@ LUARET1(you_hunger, string, hunger_level())
 LUARET2(you_strength, number, you.strength(), you.max_strength())
 LUARET2(you_intelligence, number, you.intel(), you.max_intel())
 LUARET2(you_dexterity, number, you.dex(), you.max_dex())
-LUARET1(you_exp, number, you.experience_level)
-LUARET1(you_exp_pool, number, you.exp_available)
-LUARET1(you_exp_points, number, you.experience)
+LUARET1(you_xl, number, you.experience_level)
+LUARET1(you_xl_progress, number, get_exp_progress())
 LUARET1(you_skill, number,
         lua_isstring(ls, 1) ? you.skills[str_to_skill(lua_tostring(ls, 1))]
                             : 0)
@@ -323,9 +322,8 @@ static const struct luaL_reg you_clib[] =
     { "dexterity"   , you_dexterity },
     { "skill"       , you_skill },
     { "skill_progress", you_skill_progress },
-    { "xl"          , you_exp },
-    { "exp_pool"    , you_exp_pool },
-    { "exp"         , you_exp_points },
+    { "xl"          , you_xl },
+    { "xl_progress" , you_xl_progress },
     { "res_poison"  , you_res_poison },
     { "res_fire"    , you_res_fire   },
     { "res_cold"    , you_res_cold   },
