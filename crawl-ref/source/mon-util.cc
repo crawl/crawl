@@ -1595,19 +1595,38 @@ int mons_avg_hp(int mc)
             + me->hpdice[3]);
 }
 
-int exper_value(const monster* mon)
+int exper_value(const monster* mon, bool real)
 {
     long x_val = 0;
 
     // These four are the original arguments.
     const int mc          = mon->type;
-    const int hd          = mon->hit_dice;
+    int hd                = mon->hit_dice;
     int maxhp             = mon->max_hit_points;
 
-    // A berserking monster is much harder, but the xp value shouldn't depend
-    // on whether it was berserk at the moment of death.
-    if (mon->has_ench(ENCH_BERSERK))
-        maxhp = (maxhp * 2 + 1) / 3;
+    // pghosts and pillusions have no reasonable base values, and you can look
+    // up the exact value anyway.  Especially for pillusions.
+    if (real || mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PLAYER_ILLUSION)
+    {
+        // A berserking monster is much harder, but the xp value shouldn't
+        // depend on whether it was berserk at the moment of death.
+        if (mon->has_ench(ENCH_BERSERK))
+            maxhp = (maxhp * 2 + 1) / 3;
+    }
+    else
+    {
+        const monsterentry *m = get_monster_data(mons_base_type(mon));
+        ASSERT(m);
+
+        // Use real hd, zombies would use the basic species and lose
+        // information known to the player ("orc warrior zombie").  Monsters
+        // levelling up is visible (although it may happen off-screen), so
+        // this is hardly ever a leak.  Only Pan lords are unknown in the
+        // general.
+        if (m->mc == MONS_PANDEMONIUM_LORD)
+            hd = m->hpdice[0];
+        maxhp = hd * m->hpdice[1] + (hd * (1 + m->hpdice[2])) / 2 + m->hpdice[3];
+    }
 
     // Hacks to make merged slime creatures not worth so much exp.  We
     // will calculate the experience we would get for 1 blob, and then
@@ -4237,7 +4256,7 @@ bool mons_is_tentacle_end(const int mtype)
 mon_threat_level_type mons_threat_level(const monster *mon, bool real)
 {
     const double factor = sqrt(exp_needed(you.experience_level) / 30.0);
-    const int tension = exper_value(mon) / (1 + factor);
+    const int tension = exper_value(mon, real) / (1 + factor);
 
     if (tension <= 0)
         // Conjurators use melee to conserve mana, MDFis switch plates...
