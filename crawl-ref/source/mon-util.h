@@ -207,7 +207,7 @@ bool mons_is_unique(int mc);
 bool mons_is_pghost(int mc);
 
 int mons_avg_hp(int mc);
-int exper_value(const monster* mon);
+int exper_value(const monster* mon, bool real = true);
 
 int hit_points(int hit_dice, int min_hp, int rand_hp);
 
