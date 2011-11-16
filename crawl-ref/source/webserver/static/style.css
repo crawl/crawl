@@ -41,6 +41,24 @@ body {
     padding-right: 1px;
 }
 
+#player_list th.xl.header {
+    width: 2em;
+    text-align: right;
+    padding-left: 17px;
+    padding-right: 5px;
+}
+#player_list th.xl.headerSortDown,
+#player_list th.xl.headerSortUp {
+    padding-right: 5px;
+}
+#player_list td.xl {
+    text-align: right;
+    padding-right: 5px;
+}
+#player_list th.char {
+    width: 4em;
+}
+
 #player_list tr:hover {
     background-color: #101010;
 }
