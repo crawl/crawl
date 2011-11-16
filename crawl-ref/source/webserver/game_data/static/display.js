@@ -94,9 +94,7 @@ function ($, comm, map_knowledge, view_data, monster_list, minimap,
 
     function handle_vgrdc(data)
     {
-        dungeon_renderer.set_view_center(data.x, data.y);
-
-        minimap.update_overlay();
+        minimap.do_view_center_update(data.x, data.y);
     }
 
     comm.register_handlers({

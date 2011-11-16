@@ -1274,11 +1274,6 @@ NAME:  einodemon_rotting_minivault
 TAGS:  patrolling mini_float
 MONS:  rotting devil
 MONS:  necrophage
-MARKER:  + = lua:props_marker { \
-            door_open_prompt="This door is covered in warnings. Open " .. \
-                             "it anyway?", \
-            door_description_prefix="warning-scrawled " \
-         }
 MAP
 ...........
 .cccc+cccc.
@@ -2294,6 +2289,7 @@ SHUFFLE: vcb, AB?/CD!, d<>, de
 SUBST:   A=9, B=8, C=1, D=9
 SUBST:   ? = %:10 *:50 |:60
 SUBST:   ! = %:90 *:30 |:10
+KMASK:   x = no_wall_fixup
 ITEM:    wand of digging / wand of disintegration
 ITEM:    ring of teleportation / stone of earth elementals
 MAP

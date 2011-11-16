@@ -233,23 +233,10 @@ static const unsigned short ripple_table[] =
      BROWN,         // YELLOW       => BROWN
      LIGHTGREY};    // WHITE        => LIGHTGREY
 
-glyph get_cell_glyph(const coord_def& loc, bool only_stationary_monsters,
-                     int colour_mode)
-{
-    return get_cell_glyph(env.map_knowledge(loc), loc,
-                          only_stationary_monsters, colour_mode);
-}
-
-glyph get_cell_glyph(const map_cell& cell, const coord_def& loc,
-                     bool only_stationary_monsters, int colour_mode)
-{
-    const show_class cell_show_class =
-        get_cell_show_class(cell, only_stationary_monsters);
-    return get_cell_glyph_with_class(cell, loc, cell_show_class, colour_mode);
-}
-
-glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc,
-                                const show_class cls, int colour_mode)
+static glyph _get_cell_glyph_with_class(const map_cell& cell,
+                                        const coord_def& loc,
+                                        const show_class cls,
+                                        int colour_mode)
 {
     const bool coloured = colour_mode == 0 ? cell.visible() : (colour_mode > 0);
     glyph g;
@@ -390,6 +377,15 @@ glyph get_cell_glyph_with_class(const map_cell& cell, const coord_def& loc,
         g.col = real_colour(g.col, loc);
 
     return g;
+}
+
+glyph get_cell_glyph(const coord_def& loc, bool only_stationary_monsters,
+                     int colour_mode)
+{
+    const map_cell& cell = env.map_knowledge(loc);
+    const show_class cell_show_class =
+        get_cell_show_class(cell, only_stationary_monsters);
+    return _get_cell_glyph_with_class(cell, loc, cell_show_class, colour_mode);
 }
 
 ucs_t get_feat_symbol(dungeon_feature_type feat)

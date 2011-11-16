@@ -14,7 +14,7 @@ spret_type cast_fire_storm(int pow, bolt &beam, bool fail);
 bool cast_hellfire_burst(int pow, bolt &beam);
 spret_type cast_chain_lightning(int pow, const actor *caster, bool fail = false);
 
-spret_type cast_toxic_radiance(bool non_player = false, bool fail = false);
+spret_type cast_toxic_radiance(int pow, bool non_player = false, bool fail = false);
 spret_type cast_refrigeration(int pow, bool non_player = false,
                               bool freeze_potions = true, bool fail = false);
 void sonic_damage(bool scream);

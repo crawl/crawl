@@ -117,6 +117,8 @@ inline std::vector<std::string> get_recent_messages(int &message_pos,
 
 
 int channel_to_colour(msg_channel_type channel, int param = 0);
+bool strip_channel_prefix(std::string &text, msg_channel_type &channel,
+                          bool silence = false);
 
 namespace msg
 {

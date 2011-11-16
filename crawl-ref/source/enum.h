@@ -922,6 +922,13 @@ enum conduct_type
     NUM_CONDUCTS
 };
 
+enum confirm_butcher_type
+{
+    CONFIRM_NEVER,
+    CONFIRM_ALWAYS,
+    CONFIRM_AUTO,
+};
+
 enum confirm_prompt_type
 {
     CONFIRM_CANCEL,             // automatically answer 'no', i.e. disallow
@@ -2548,7 +2555,7 @@ enum mutation_type
     MUT_STINGER,
     MUT_TALONS,         // feet
 #if TAG_MAJOR_VERSION != 32
-    MUT_TENTACLES,      // Gloves but don't lose a slot yet.
+    MUT_TENTACLES,      // hands
     MUT_TENTACLE_SPIKE, // Octopode only.
 #endif
 
@@ -2660,7 +2667,7 @@ enum mutation_type
 #if TAG_MAJOR_VERSION == 32
     MUT_POWERED_BY_PAIN,
     MUT_CAMOUFLAGE,
-    MUT_TENTACLES,      // Gloves but don't lose a slot yet.
+    MUT_TENTACLES,      // hands
     MUT_TENTACLE_SPIKE, // Octopode only.
     MUT_WILD_MAGIC,
     MUT_IGNITE_BLOOD,

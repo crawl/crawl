@@ -459,69 +459,33 @@ static monster_type _feature_to_elemental(const coord_def& where,
 
     const bool any_elem = strict_elem == MONS_NO_MONSTER;
 
-    bool elem_earth;
-    if (any_elem || strict_elem == MONS_EARTH_ELEMENTAL)
+    if ((any_elem || strict_elem == MONS_EARTH_ELEMENTAL)
+        && (grd(where) == DNGN_ROCK_WALL || grd(where) == DNGN_CLEAR_ROCK_WALL))
     {
-        elem_earth = grd(where) == DNGN_ROCK_WALL
-                     || grd(where) == DNGN_CLEAR_ROCK_WALL;
-    }
-    else
-        elem_earth = false;
-
-    bool elem_fire_cloud;
-    bool elem_fire_lava;
-    bool elem_fire;
-    if (any_elem || strict_elem == MONS_FIRE_ELEMENTAL)
-    {
-        elem_fire_cloud = env.cgrid(where) != EMPTY_CLOUD
-                          && env.cloud[env.cgrid(where)].type == CLOUD_FIRE;
-        elem_fire_lava = grd(where) == DNGN_LAVA;
-        elem_fire = elem_fire_cloud || elem_fire_lava;
-    }
-    else
-    {
-        elem_fire_cloud = false;
-        elem_fire_lava = false;
-        elem_fire = false;
+            return (MONS_EARTH_ELEMENTAL);
     }
 
-    bool elem_water;
-    if (any_elem || strict_elem == MONS_WATER_ELEMENTAL)
-        elem_water = feat_is_watery(grd(where));
-    else
-        elem_water = false;
-
-    bool elem_air;
-    if (any_elem || strict_elem == MONS_AIR_ELEMENTAL)
+    if ((any_elem || strict_elem == MONS_FIRE_ELEMENTAL)
+        && (env.cgrid(where) != EMPTY_CLOUD
+            && env.cloud[env.cgrid(where)].type == CLOUD_FIRE
+            || grd(where) == DNGN_LAVA))
     {
-        elem_air = grd(where) >= DNGN_FLOOR
-                   && env.cgrid(where) == EMPTY_CLOUD;
+        return (MONS_FIRE_ELEMENTAL);
     }
-    else
-        elem_air = false;
 
-    monster_type elemental = MONS_NO_MONSTER;
-
-    if (elem_earth)
+    if ((any_elem || strict_elem == MONS_WATER_ELEMENTAL)
+        && feat_is_watery(grd(where)))
     {
-        grd(where) = DNGN_FLOOR;
-        set_terrain_changed(where);
-
-        elemental = MONS_EARTH_ELEMENTAL;
+        return (MONS_WATER_ELEMENTAL);
     }
-    else if (elem_fire)
+
+    if ((any_elem || strict_elem == MONS_AIR_ELEMENTAL)
+        && grd(where) >= DNGN_FLOOR && env.cgrid(where) == EMPTY_CLOUD)
     {
-        if (elem_fire_cloud)
-            delete_cloud(env.cgrid(where));
-
-        elemental = MONS_FIRE_ELEMENTAL;
+        return (MONS_AIR_ELEMENTAL);
     }
-    else if (elem_water)
-        elemental = MONS_WATER_ELEMENTAL;
-    else if (elem_air)
-        elemental = MONS_AIR_ELEMENTAL;
 
-    return (elemental);
+    return (MONS_NO_MONSTER);
 }
 
 // 'unfriendly' is percentage chance summoned elemental goes
@@ -588,6 +552,19 @@ spret_type cast_summon_elemental(int pow, god_type god,
     }
 
     fail_check();
+
+    if (mon == MONS_EARTH_ELEMENTAL)
+    {
+        grd(targ) = DNGN_FLOOR;
+        set_terrain_changed(targ);
+    }
+    if (mon == MONS_FIRE_ELEMENTAL
+        && env.cgrid(targ) != EMPTY_CLOUD
+        && env.cloud[env.cgrid(targ)].type == CLOUD_FIRE)
+    {
+        delete_cloud(env.cgrid(targ));
+    }
+
     if (horde_penalty)
         horde_penalty *= _count_summons(mon);
 
@@ -1214,16 +1191,16 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
                                  quiet);
 }
 
-bool summon_lesser_demon(int pow, god_type god, int spell,
-                         bool quiet)
+bool _summon_lesser_demon(int pow, god_type god, int spell,
+                          bool quiet)
 {
     return _summon_demon_wrapper(pow, god, spell, DEMON_LESSER,
                                  std::min(2 + (random2(pow) / 4), 6),
                                  random2(pow) > 3, false, quiet);
 }
 
-bool summon_common_demon(int pow, god_type god, int spell,
-                         bool quiet)
+bool _summon_common_demon(int pow, god_type god, int spell,
+                          bool quiet)
 {
     return _summon_demon_wrapper(pow, god, spell, DEMON_COMMON,
                                  std::min(2 + (random2(pow) / 4), 6),
@@ -1255,7 +1232,7 @@ spret_type cast_summon_demon(int pow, god_type god, bool fail)
     fail_check();
     mpr("You open a gate to Pandemonium!");
 
-    if (!summon_common_demon(pow, god, SPELL_SUMMON_DEMON))
+    if (!_summon_common_demon(pow, god, SPELL_SUMMON_DEMON, false))
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return SPRET_SUCCESS;
@@ -1272,7 +1249,7 @@ spret_type cast_demonic_horde(int pow, god_type god, bool fail)
 
     for (int i = 0; i < how_many; ++i)
     {
-        if (summon_lesser_demon(pow, god, SPELL_DEMONIC_HORDE, true))
+        if (_summon_lesser_demon(pow, god, SPELL_DEMONIC_HORDE, true))
             success = true;
     }
 
@@ -1502,7 +1479,7 @@ static bool _animatable_remains(const item_def& item)
 // undead can be equipped with the second monster's items if the second
 // monster is either of the same type as the first, or if the second
 // monster wasn't killed by the player or a player's pet.
-void equip_undead(const coord_def &a, int corps, int mons, int monnum)
+static void _equip_undead(const coord_def &a, int corps, int mons, int monnum)
 {
     monster* mon = &menv[mons];
 
@@ -1726,7 +1703,8 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     mgen_data mg(mon, beha, as, 0, 0, pos, hitting, MG_FORCE_BEH|MG_FORCE_PLACE,
                  god, static_cast<monster_type>(monnum), number);
 
-    // No experience for monsters animated by god wrath or the Sword of Zongulrok
+    // No experience for monsters animated by god wrath or the Sword of
+    // Zonguldrok.
     if (nas != "")
         mg.extra_flags |= MF_NO_REWARD;
 
@@ -1761,7 +1739,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     }
 
     // Re-equip the zombie.
-    equip_undead(pos, corps, mons, monnum);
+    _equip_undead(pos, corps, mons, monnum);
 
     // Destroy the monster's corpse, as it's no longer needed.
     destroy_item(corps);
@@ -2036,7 +2014,6 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     }
 }
 
-
 // Make the proper stat adjustments to turn a demonic abomination into
 // an undead abomination.
 bool undead_abomination_convert(monster* mon, int hd)
@@ -2059,9 +2036,7 @@ bool undead_abomination_convert(monster* mon, int hd)
     // Mark this abomination as undead.
     mon->flags |= MF_FAKE_UNDEAD;
 
-    mon->colour = ((hd > 2 * max_hd / 3) ? LIGHTRED :
-                   (hd > max_hd / 2)     ? RED
-                                         : BROWN);
+    mon->colour = ((hd > 2 * max_hd / 3) ? LIGHTRED : RED);
 
     mon->hit_dice = std::min(max_hd, hd);
 
@@ -2074,7 +2049,7 @@ bool undead_abomination_convert(monster* mon, int hd)
 }
 
 // Return a definite/indefinite article for (number) things.
-const char *_count_article(int number, bool definite)
+static const char *_count_article(int number, bool definite)
 {
     if (number == 0)
         return ("No");
@@ -2096,7 +2071,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
     int num_lost = 0;
     int num_lost_piles = 0;
 
-    radius_iterator ri(caster->pos(), pow / 25, C_ROUND,
+    radius_iterator ri(caster->pos(), LOS_RADIUS, C_ROUND,
                        caster->get_los_no_trans());
 
     for (; ri; ++ri)
@@ -2130,8 +2105,7 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
         if (num_corpses == 0)
             continue;
 
-        // Maximum efficiency at 100 power: 1 HD per 20.0 aum.
-        // Half that at zero power.
+        // 20 aum per HD at max power; 30 at 100 power; and 60 at 0 power.
         int hd = div_rand_round((pow + 100) * total_mass, (200*300));
 
         if (hd <= 0)

@@ -43,7 +43,7 @@ static void _dump_vault_table(const CrawlHashTable &table)
         CrawlHashTable::const_iterator i = table.begin();
 
         for (; i != table.end(); ++i)
-            mprf(MSGCH_WIZARD, "    %s: %s", i->first.c_str(),
+            mprf("    %s: %s", i->first.c_str(),
                        i->second.get_string().c_str());
     }
 }
@@ -78,8 +78,8 @@ void debug_dump_levgen()
             type = props[LAYOUT_TYPE_KEY].get_string();
     }
 
-    mprf(MSGCH_WIZARD, "level build method = %s", method.c_str());
-    mprf(MSGCH_WIZARD, "level layout type  = %s", type.c_str());
+    mprf("level build method = %s", method.c_str());
+    mprf("level layout type  = %s", type.c_str());
 
     if (props.exists(LEVEL_EXTRAS_KEY))
     {

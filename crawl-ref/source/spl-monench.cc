@@ -22,34 +22,40 @@
 #include "terrain.h"
 #include "viewmap.h"
 
-static int _sleep_monsters(coord_def where, int pow, int, actor *)
+static int _englaciate_monsters(coord_def where, int pow, int, actor *actor)
 {
     monster* mons = monster_at(where);
+
     if (!mons)
         return (0);
 
-    if (!mons->can_hibernate(true))
+    if (mons->res_cold() > 0 || mons_is_stationary(mons))
+    {
+        if (!mons_is_firewood(mons))
+            simple_monster_message(mons, " is unaffected.");
         return (0);
+    }
 
-    if (mons->check_res_magic(pow) > 0)
+    int duration = (roll_dice(3, pow) / 6 - random2(mons->get_experience_level()))
+                    * BASELINE_DELAY;
+
+    if (duration <= 0)
+    {
+        simple_monster_message(mons, " resists.");
         return (0);
+    }
 
-    const int res = mons->res_cold();
-    if (res > 0 && one_chance_in(std::max(4 - res, 1)))
-        return (0);
+    if (mons_class_flag(mons->type, M_COLD_BLOOD))
+        duration *= 2;
 
-    if (mons->has_ench(ENCH_SLEEP_WARY) && !one_chance_in(3))
-        return (0);
-
-    mons->hibernate();
-    mons->expose_to_element(BEAM_COLD, 2);
-    return (1);
+    return (do_slow_monster(mons, actor, duration));
 }
 
-spret_type cast_mass_sleep(int pow, bool fail)
+spret_type cast_englaciation(int pow, bool fail)
 {
     fail_check();
-    apply_area_visible(_sleep_monsters, pow, true);
+    mpr("You radiate an aura of cold.");
+    apply_area_visible(_englaciate_monsters, pow, false, &you);
     return SPRET_SUCCESS;
 }
 
@@ -94,7 +100,7 @@ bool backlight_monsters(coord_def where, int pow, int garbage)
     return (true);
 }
 
-bool do_slow_monster(monster* mon, const actor* agent)
+bool do_slow_monster(monster* mon, const actor* agent, int dur)
 {
     // Try to remove haste, if monster is hasted.
     if (mon->del_ench(ENCH_HASTE, true))
@@ -106,7 +112,7 @@ bool do_slow_monster(monster* mon, const actor* agent)
     // Not hasted, slow it.
     if (!mon->has_ench(ENCH_SLOW)
         && !mons_is_stationary(mon)
-        && mon->add_ench(mon_enchant(ENCH_SLOW, 0, agent)))
+        && mon->add_ench(mon_enchant(ENCH_SLOW, 0, agent, dur)))
     {
         if (!mon->paralysed() && !mon->petrified()
             && simple_monster_message(mon, " seems to slow down."))

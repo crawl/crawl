@@ -3372,6 +3372,8 @@ int monster::res_poison(bool temp) const
     UNUSED(temp);
 
     int u = get_mons_resists(this).poison;
+    if (u > 0)
+        return u;
 
     if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
     {
@@ -3387,8 +3389,10 @@ int monster::res_poison(bool temp) const
             u += get_armour_res_poison(mitm[shld], false);
     }
 
-    // Monsters can legitimately get multiple levels of poison resistance.
-
+    // Monsters can have multiple innate levels of poison resistance, but
+    // like players, equipment doesn't stack.
+    if (u > 0)
+        return 1;
     return (u);
 }
 
@@ -3716,7 +3720,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             else if (petrified())
                 amount /= 2;
             else if (petrifying())
-                amount = amount * 10 / 15;
+                amount = amount * 2 / 3;
 
         if (amount == INSTANT_DEATH)
             amount = hit_points;
@@ -4468,7 +4472,9 @@ static bool _mons_is_skeletal(int mc)
             || mc == MONS_SKELETON_LARGE
             || mc == MONS_BONE_DRAGON
             || mc == MONS_SKELETAL_WARRIOR
-            || mc == MONS_FLYING_SKULL);
+            || mc == MONS_FLYING_SKULL
+            || mc == MONS_CURSE_SKULL
+            || mc == MONS_MURRAY);
 }
 
 bool monster::is_skeletal() const

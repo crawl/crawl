@@ -34,6 +34,12 @@
 #include "transform.h"
 #include "travel.h"
 
+/*
+--- Player-related bindings.
+
+module "you"
+*/
+
 /////////////////////////////////////////////////////////////////////
 // Bindings to get information on the player (clua).
 //
@@ -65,17 +71,44 @@ static const char *transform_name()
     }
 }
 
+/*
+--- Has player done something that takes time?
+function turn_is_over() */
 LUARET1(you_turn_is_over, boolean, you.turn_is_over)
+/*
+--- Get player's name
+function name() */
 LUARET1(you_name, string, you.your_name.c_str())
+/*
+--- Get name of player's race
+function race() */
 LUARET1(you_race, string, species_name(you.species).c_str())
+/*
+--- Get name of player's background
+function class() */
 LUARET1(you_class, string, get_job_name(you.char_class))
+/*
+--- Get name of player's god
+function god() */
 LUARET1(you_god, string, god_name(you.religion).c_str())
+/*
+--- Is this [player's] god good?
+-- @param god defaults to you.god()
+function good_god(god) */
 LUARET1(you_good_god, boolean,
         lua_isstring(ls, 1) ? is_good_god(str_to_god(lua_tostring(ls, 1)))
         : is_good_god(you.religion))
+/*
+--- Is this [player's] god evil?
+-- @param god defaults to you.god()
+function evil_god(god) */
 LUARET1(you_evil_god, boolean,
         lua_isstring(ls, 1) ? is_evil_god(str_to_god(lua_tostring(ls, 1)))
         : is_evil_god(you.religion))
+/*
+--- Does this [player's] god like fresh corpses?
+-- @param god defaults to you.god()
+function god_likes_fresh_corpses(god) */
 LUARET1(you_god_likes_fresh_corpses, boolean,
         lua_isstring(ls, 1) ?
         god_likes_fresh_corpses(str_to_god(lua_tostring(ls, 1))) :
@@ -86,9 +119,8 @@ LUARET1(you_hunger, string, hunger_level())
 LUARET2(you_strength, number, you.strength(), you.max_strength())
 LUARET2(you_intelligence, number, you.intel(), you.max_intel())
 LUARET2(you_dexterity, number, you.dex(), you.max_dex())
-LUARET1(you_exp, number, you.experience_level)
-LUARET1(you_exp_pool, number, you.exp_available)
-LUARET1(you_exp_points, number, you.experience)
+LUARET1(you_xl, number, you.experience_level)
+LUARET1(you_xl_progress, number, get_exp_progress())
 LUARET1(you_skill, number,
         lua_isstring(ls, 1) ? you.skills[str_to_skill(lua_tostring(ls, 1))]
                             : 0)
@@ -290,9 +322,8 @@ static const struct luaL_reg you_clib[] =
     { "dexterity"   , you_dexterity },
     { "skill"       , you_skill },
     { "skill_progress", you_skill_progress },
-    { "xl"          , you_exp },
-    { "exp_pool"    , you_exp_pool },
-    { "exp"         , you_exp_points },
+    { "xl"          , you_xl },
+    { "xl_progress" , you_xl_progress },
     { "res_poison"  , you_res_poison },
     { "res_fire"    , you_res_fire   },
     { "res_cold"    , you_res_cold   },

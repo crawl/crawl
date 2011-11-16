@@ -52,7 +52,7 @@ const int MAX_KRAKEN_TENTACLE_DIST = 12;
 
 static bool _slime_split_merge(monster* thing);
 template<typename valid_T, typename connect_T>
-void search_dungeon(const coord_def & start,
+static void _search_dungeon(const coord_def & start,
                     valid_T & valid_target,
                     connect_T & connecting_square,
                     std::set<position_node> & visited,
@@ -400,7 +400,7 @@ static int _do_split(monster* thing, coord_def & target)
 
 // Cause a monster to lose a turn.  has_gone should be true if the
 // monster has already moved this turn.
-void _lose_turn(monster* mons, bool has_gone)
+static void _lose_turn(monster* mons, bool has_gone)
 {
     monsterentry* entry = get_monster_data(mons->type);
 
@@ -682,9 +682,6 @@ static bool _crawlie_is_mergeable(monster *mons)
     switch (mons->type)
     {
     case MONS_ABOMINATION_SMALL:
-        if (mons->hit_dice > 15)
-            return false;
-        break;
     case MONS_CRAWLING_CORPSE:
     case MONS_MACABRE_MASS:
         break;
@@ -1645,7 +1642,7 @@ struct multi_target
 };
 
 // returns pathfinding success/failure
-bool tentacle_pathfind(monster* tentacle,
+static bool _tentacle_pathfind(monster* tentacle,
                        tentacle_attack_constraints & attack_constraints,
                        coord_def & new_position,
                        std::vector<coord_def> & target_positions,
@@ -1702,11 +1699,12 @@ bool tentacle_pathfind(monster* tentacle,
     return (path_found);
 }
 
-bool try_tentacle_connect(const coord_def & new_pos, const coord_def & base_position,
-                          int tentacle_idx,
-                          int base_idx,
-                          tentacle_connect_constraints & connect_costs,
-                          monster_type connect_type)
+static bool _try_tentacle_connect(const coord_def & new_pos,
+                                  const coord_def & base_position,
+                                  int tentacle_idx,
+                                  int base_idx,
+                                  tentacle_connect_constraints & connect_costs,
+                                  monster_type connect_type)
 {
     // Nothing to do here.
     // Except fix the tentacle end's pointer, idiot.
@@ -1760,23 +1758,22 @@ bool try_tentacle_connect(const coord_def & new_pos, const coord_def & base_posi
     return (true);
 }
 
-void collect_tentacles(int headnum, std::vector<monster_iterator> & tentacles)
+static void _collect_tentacles(int headnum,
+                               std::vector<monster_iterator> & tentacles)
 {
     // TODO: reorder tentacles based on distance to head or something.
     for (monster_iterator mi; mi; ++mi)
-     {
+    {
          if (int (mi->number) == headnum)
          {
              if (mi->type == MONS_KRAKEN_TENTACLE)
-             {
                  tentacles.push_back(mi);
-             }
          }
-     }
+    }
 }
 
-void purge_connectors(int tentacle_idx,
-                      bool (*valid_mons)(monster*))
+static void _purge_connectors(int tentacle_idx,
+                              bool (*valid_mons)(monster*))
 {
     for (monster_iterator mi; mi; ++mi)
     {
@@ -1813,8 +1810,9 @@ static bool _basic_sight_check(monster* mons, actor * test)
 }
 
 template<typename T>
-void collect_foe_positions(monster* mons, std::vector<coord_def> & foe_positions,
-                           T & sight_check)
+static void _collect_foe_positions(monster* mons,
+                                   std::vector<coord_def> & foe_positions,
+                                   T & sight_check)
 {
     coord_def foe_pos(-1, -1);
     actor * foe = mons->get_foe();
@@ -1860,10 +1858,10 @@ bool valid_demonic_connection(monster* mons)
 //
 // move_kraken_tentacle should check retract pos, it could potentially
 // give the kraken head's position as a retract pos.
-int collect_connection_data(monster* start_monster,
-                            bool (*valid_segment_type)(monster*),
-                            std::map<coord_def, std::set<int> > & connection_data,
-                            coord_def & retract_pos)
+static int _collect_connection_data(monster* start_monster,
+               bool (*valid_segment_type)(monster*),
+               std::map<coord_def, std::set<int> > & connection_data,
+               coord_def & retract_pos)
 {
     int current_count = 0;
     monster* current_mon = start_monster;
@@ -1940,7 +1938,7 @@ void move_demon_tentacle(monster* tentacle)
     {
         complicated_sight_check base_sight;
         base_sight.base_position = base_position;
-        collect_foe_positions(tentacle, foe_positions, base_sight);
+        _collect_foe_positions(tentacle, foe_positions, base_sight);
         attack_foe = !foe_positions.empty();
     }
 
@@ -1948,14 +1946,14 @@ void move_demon_tentacle(monster* tentacle)
     coord_def retract_pos;
     std::map<coord_def, std::set<int> > connection_data;
 
-    int visited_count = collect_connection_data(tentacle,
-                                                valid_demonic_connection,
-                                                connection_data,
-                                                retract_pos);
+    int visited_count = _collect_connection_data(tentacle,
+                                                 valid_demonic_connection,
+                                                 connection_data,
+                                                 retract_pos);
 
     //bool retract_found = retract_pos.x == -1 && retract_pos.y == -1;
 
-    purge_connectors(tentacle->mindex(), valid_demonic_connection);
+    _purge_connectors(tentacle->mindex(), valid_demonic_connection);
 
     if (severed)
     {
@@ -1986,8 +1984,8 @@ void move_demon_tentacle(monster* tentacle)
     bool path_found = false;
     if (attack_foe)
     {
-        path_found = tentacle_pathfind(tentacle, attack_constraints,
-                                       new_pos, foe_positions, visited_count);
+        path_found = _tentacle_pathfind(tentacle, attack_constraints,
+                                        new_pos, foe_positions, visited_count);
     }
 
 
@@ -2070,10 +2068,10 @@ void move_demon_tentacle(monster* tentacle)
     connect_costs.connection_constraints = &connection_data;
     connect_costs.base_monster = tentacle;
 
-    bool connected = try_tentacle_connect(new_pos, base_position,
-                                          tentacle_idx, tentacle_idx,
-                                          connect_costs,
-                                          MONS_ELDRITCH_TENTACLE_SEGMENT);
+    bool connected = _try_tentacle_connect(new_pos, base_position,
+                                           tentacle_idx, tentacle_idx,
+                                           connect_costs,
+                                           MONS_ELDRITCH_TENTACLE_SEGMENT);
 
     if (!connected)
     {
@@ -2104,11 +2102,10 @@ void move_kraken_tentacles(monster* kraken)
         return;
     }
 
-
     bool no_foe = false;
 
     std::vector<coord_def> foe_positions;
-    collect_foe_positions(kraken, foe_positions, _basic_sight_check);
+    _collect_foe_positions(kraken, foe_positions, _basic_sight_check);
 
     //if (!kraken->near_foe())
     if (foe_positions.empty()
@@ -2118,15 +2115,12 @@ void move_kraken_tentacles(monster* kraken)
         no_foe = true;
     }
     std::vector<monster_iterator> tentacles;
-
     int headnum = kraken->mindex();
 
-    collect_tentacles(headnum, tentacles);
-
-
+    _collect_tentacles(headnum, tentacles);
 
     // Move each tentacle in turn
-    for (unsigned i=0;i<tentacles.size();i++)
+    for (unsigned i = 0; i < tentacles.size(); i++)
     {
         monster* tentacle = monster_at(tentacles[i]->pos());
 
@@ -2177,7 +2171,7 @@ void move_kraken_tentacles(monster* kraken)
 
         int tentacle_idx = tentacle->mindex();
 
-        purge_connectors(tentacle_idx, valid_kraken_segment);
+        _purge_connectors(tentacle_idx, valid_kraken_segment);
 
         if (no_foe
             && grid_distance(tentacle->pos(), kraken->pos()) == 1)
@@ -2200,13 +2194,11 @@ void move_kraken_tentacles(monster* kraken)
         attack_constraints.connection_constraints = &connection_data;
         attack_constraints.target_positions = &foe_positions;
 
-
-
         if (!no_foe)
         {
-            path_found = tentacle_pathfind(tentacle, attack_constraints, new_pos,
+            path_found = _tentacle_pathfind(tentacle, attack_constraints, new_pos,
                                             foe_positions,
-                                           current_count);
+                                            current_count);
         }
 
         if (no_foe || !path_found)
@@ -2251,11 +2243,10 @@ void move_kraken_tentacles(monster* kraken)
 
         connect_costs.connection_constraints = &connection_data;
         connect_costs.base_monster = tentacle;
-        //bool connected = try_tentacle_connect(new_pos, headnum, tentacle_idx, connect_costs);
-        bool connected = try_tentacle_connect(new_pos, kraken->pos(),
-                                              tentacle_idx, kraken->mindex(),
-                                              connect_costs,
-                                              MONS_KRAKEN_TENTACLE_SEGMENT);
+        bool connected = _try_tentacle_connect(new_pos, kraken->pos(),
+                                               tentacle_idx, kraken->mindex(),
+                                               connect_costs,
+                                               MONS_KRAKEN_TENTACLE_SEGMENT);
 
 
         // Can't connect, usually the head moved and invalidated our position
@@ -3115,8 +3106,8 @@ void activate_ballistomycetes(monster* mons, const coord_def & origin,
         valid_target = _player_at;
     }
 
-    search_dungeon(origin, valid_target, connecting_square, visited,
-                   candidates, exhaustive);
+    _search_dungeon(origin, valid_target, connecting_square, visited,
+                    candidates, exhaustive);
 
     if (candidates.empty())
     {

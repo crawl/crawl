@@ -649,7 +649,7 @@
 { MUT_UNBREATHING,                0,  1, false, false,
   "unbreathing",
 
-  {"You do not need to breathe.", "", ""},
+  {"You can survive without breathing.", "", ""},
   {"You feel breathless.", "", ""},
   {"", "", ""},
 

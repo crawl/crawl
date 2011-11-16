@@ -75,7 +75,6 @@ void pickup_menu(int item_link);
 void pickup(bool partial_quantity = false);
 
 bool item_is_branded(const item_def& item);
-int item_name_specialness(const item_def& item);
 void item_list_on_square(std::vector<const item_def*>& items,
                           int obj, bool force_squelch = false);
 
@@ -121,7 +120,6 @@ void origin_set_inventory(void (*oset)(item_def &item));
 bool origin_is_god_gift(const item_def& item, god_type *god = NULL);
 bool origin_is_acquirement(const item_def& item,
                            item_source_type *type = NULL);
-std::string origin_monster_name(const item_def &item);
 
 bool item_needs_autopickup(const item_def &);
 bool can_autopickup();

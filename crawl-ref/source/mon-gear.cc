@@ -1818,7 +1818,7 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
 
         item.sub_type = random_choose_weighted(3, ARM_CHAIN_MAIL,
                             5, ARM_SPLINT_MAIL, 10, ARM_PLATE_ARMOUR,
-                            1, ARM_CRYSTAL_PLATE,
+                            1, ARM_CRYSTAL_PLATE_ARMOUR,
                             0);
         break;
 

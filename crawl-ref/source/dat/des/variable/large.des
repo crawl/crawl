@@ -2323,7 +2323,7 @@ ENDMAP
 #
 NAME:   evilmike_makhleb_hellhole
 ORIENT: southeast
-DEPTH:  D:19-
+DEPTH:  D:17-
 TAGS:   no_monster_gen
 COLOUR: v = lightred
 COLOUR: = = lightred
@@ -2344,9 +2344,10 @@ MONS:   kobold demonologist, deep elf demonologist
 MONS:   blizzard demon / green death / patrolling executioner / balrug / cacodemon
 MONS:   orange demon / ynoxinul / w:4 neqoxec / hellwing / smoke demon
 # depth controls the number of greater servants... amount ranges from 1 to 3
-: if you.absdepth() < 23 then
+: if you.absdepth() < 21 then
 NSUBST: 4 = 1:4 / 2:5
-: elseif you.absdepth() < 26 then
+NSUBST: 3 = 1:3 / 1:9
+: elseif you.absdepth() < 24 then
 NSUBST: 4 = 2:4 / 1:5
 : end
 MONS:   human name:sacrificial n_adj n_spe att:neutral
@@ -2525,7 +2526,7 @@ ENDMAP
 #
 NAME:   evilmike_halls_of_destruction
 ORIENT: northeast
-DEPTH:  D:18-
+DEPTH:  D:16-
 TAGS:   no_monster_gen
 COLOUR: v'4! = red
 COLOUR: = = red
@@ -2541,7 +2542,7 @@ MARKER: ! = lua:fog_machine { \
 # let's not have enemies opening the door and roasting themselves...
 MARKER: = = lua:restrict_door()
 KFEAT:  _ = altar_vehumet
-: if you.absdepth() < 23 then
+: if you.absdepth() < 22 then
 # Given a special name so they stand out in tiles mode
 MONS:   statue hd:9 spells:orb_of_destruction tile:mons_statue_mage col:vehumet \
         name:conjurer n_adj

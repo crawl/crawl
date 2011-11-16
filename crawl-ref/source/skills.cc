@@ -359,7 +359,7 @@ static void _check_abil_skills()
     std::vector<ability_type> abilities = get_god_abilities();
     for (unsigned int i = 0; i < abilities.size(); ++i)
     {
-        // Exit early if ther's no more skill to check.
+        // Exit early if there's no more skill to check.
         if (you.stop_train.empty())
             return;
 

@@ -1,30 +1,44 @@
-%rim 1
+%rim 0
 %sdir dc-mon/panlord
 
-demon_body_fat DEMON_BODY
+demon_body_armor DEMON_BODY
+demon_body_crouch
+demon_body_fat
 demon_body_fatter
 demon_body_normal
 demon_body_spiked
 demon_body_spotty
+demon_body_succubus
+demon_body_tentacley
 demon_body_thin
 
-demon_head_cthulhu DEMON_HEAD
+demon_head_boxes DEMON_HEAD
+demon_head_brain
+demon_head_cthulhu
 demon_head_elephant
 demon_head_eyeball
-demon_head_heads
 demon_head_helmet
+demon_head_horn
 demon_head_horns
 demon_head_horse
+demon_head_incubus
 demon_head_medusa
 demon_head_monkey
 demon_head_mouse
 demon_head_ram
 demon_head_rhino
+demon_head_succubus
+demon_head_teeth
 demon_head_tentacles
+demon_head_worm
 
-demon_wings_bones DEMON_WINGS
+demon_wings_bat DEMON_WINGS
+demon_wings_bones
 demon_wings_butterfly
+demon_wings_butterfly_small
 demon_wings_demonic
+demon_wings_dragonfly
 demon_wings_large
 demon_wings_medium
 demon_wings_red
+demon_wings_torn

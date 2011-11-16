@@ -207,7 +207,7 @@ bool mons_is_unique(int mc);
 bool mons_is_pghost(int mc);
 
 int mons_avg_hp(int mc);
-int exper_value(const monster* mon);
+int exper_value(const monster* mon, bool real = true);
 
 int hit_points(int hit_dice, int min_hp, int rand_hp);
 
@@ -217,14 +217,11 @@ bool mons_immune_magic(const monster* mon);
 std::string mons_resist_string(const monster* mon, int res_margin);
 std::string resist_margin_phrase(int margin);
 
-int mons_damage(int mc, int rt);
 mon_attack_def mons_attack_spec(const monster* mon, int attk_number);
 
 corpse_effect_type mons_corpse_effect(int mc);
 
 bool mons_class_flag(int mc, uint64_t bf);
-
-int mons_unusable_items(const monster* mon);
 
 mon_holy_type mons_class_holiness(int mc);
 
@@ -261,8 +258,6 @@ bool intelligent_ally(const monster* mon);
 bool mons_skeleton(int mc);
 
 int mons_weight(int mc);
-mon_resist_def serpent_of_hell_resists(int flavour);
-
 int mons_class_base_speed(int mc);
 int mons_class_zombie_base_speed(int zombie_base_mc);
 int mons_base_speed(const monster* mon);
@@ -343,7 +338,6 @@ bool mons_is_lurking(const monster* m);
 bool mons_is_batty(const monster* m);
 bool mons_is_influenced_by_sanctuary(const monster* m);
 bool mons_is_fleeing_sanctuary(const monster* m);
-bool mons_was_seen(const monster* m);
 bool mons_class_is_slime(int mc);
 bool mons_is_slime(const monster* mon);
 bool mons_class_is_plant(int mc);
@@ -364,7 +358,6 @@ void mons_stop_fleeing_from_sanctuary(monster* mons);
 bool mons_landlubbers_in_reach(const monster* mons);
 
 bool mons_class_is_confusable(int mc);
-bool mons_class_is_slowable(int mc);
 bool mons_class_is_stationary(int mc);
 bool mons_is_stationary(const monster* mon);
 bool mons_class_is_firewood(int mc);
@@ -372,7 +365,6 @@ bool mons_is_firewood(const monster* mon);
 bool mons_has_body(const monster* mon);
 bool mons_has_flesh(const monster* mon);
 
-bool herd_monster_class(int mc);
 bool herd_monster(const monster * mon);
 
 int cheibriados_monster_player_speed_delta(const monster* mon);
@@ -398,9 +390,6 @@ std::string ugly_thing_colour_name(const monster* mon);
 uint8_t ugly_thing_random_colour();
 int str_to_ugly_thing_colour(const std::string &s);
 uint8_t random_monster_colour();
-uint8_t random_butterfly_colour();
-uint8_t random_large_abomination_colour();
-uint8_t random_small_abomination_colour();
 int ugly_thing_colour_offset(const uint8_t colour);
 std::string  draconian_colour_name(monster_type mon_type);
 monster_type draconian_colour_by_name(const std::string &colour);

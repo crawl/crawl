@@ -269,7 +269,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
                 result = static_cast<armour_type>(RANDOM_ELEMENT(armours));
 
                 if (one_chance_in(10) && you.skills[SK_ARMOUR] >= 10)
-                    result = ARM_CRYSTAL_PLATE;
+                    result = ARM_CRYSTAL_PLATE_ARMOUR;
 
                 if (one_chance_in(12))
                     result = ARM_ANIMAL_SKIN;
@@ -280,7 +280,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
                     { ARM_ANIMAL_SKIN, ARM_ROBE, ARM_LEATHER_ARMOUR,
                       ARM_RING_MAIL, ARM_SCALE_MAIL, ARM_CHAIN_MAIL,
                       ARM_SPLINT_MAIL, ARM_PLATE_ARMOUR,
-                      ARM_CRYSTAL_PLATE };
+                      ARM_CRYSTAL_PLATE_ARMOUR };
 
                 const int num_arms = ARRAYSZ(armours);
 
@@ -308,7 +308,7 @@ static armour_type _acquirement_armour_subtype(bool divine)
                             + you.skills[SK_DODGING])
                     < random2(you.skills[SK_ARMOUR] * 2))
                 {
-                    result = one_chance_in(4) ? ARM_CRYSTAL_PLATE :
+                    result = one_chance_in(4) ? ARM_CRYSTAL_PLATE_ARMOUR :
                                                 ARM_PLATE_ARMOUR;
                 }
             }

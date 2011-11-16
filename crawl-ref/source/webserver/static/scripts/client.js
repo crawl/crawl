@@ -31,21 +31,30 @@ function (exports, $, key_conversion, chat, comm) {
     {
         if (typeof msg === "string")
         {
-            if (msg.match(/^{/))
-            {
-                // JSON message
-                comm.handle_message(msg);
-            }
-            else
-            {
-                // Javascript code
-                eval(msg);
-            }
+            // Javascript code
+            eval(msg);
         }
         else
         {
             comm.handle_message(msg);
         }
+    }
+
+    function enqueue_message(msgtext)
+    {
+        if (msgtext.match(/^{/))
+        {
+            // JSON message
+            var msgobj = eval("(" + msgtext + ")");
+            if (!comm.handle_message_immediately(msgobj))
+                message_queue.push(msgobj);
+        }
+        else
+        {
+            // Javascript code
+            message_queue.push(msgtext);
+        }
+        handle_message_backlog();
     }
 
     function handle_message_backlog()
@@ -425,6 +434,7 @@ function (exports, $, key_conversion, chat, comm) {
     function pong(data)
     {
         send_message("pong");
+        return true;
     }
 
     function connection_closed(data)
@@ -434,6 +444,7 @@ function (exports, $, key_conversion, chat, comm) {
         $("#chat").hide();
         $("#crt").html(msg + "<br><br>");
         showing_close_message = true;
+        return true;
     }
 
     function play_now(id)
@@ -647,6 +658,11 @@ function (exports, $, key_conversion, chat, comm) {
     window.set_layer = set_layer;
     window.assert = function () {};
 
+    comm.register_immediate_handlers({
+        "ping": pong,
+        "close": connection_closed,
+    });
+
     comm.register_handlers({
         "multi": handle_multi_message,
 
@@ -654,13 +670,9 @@ function (exports, $, key_conversion, chat, comm) {
         "html": set_html,
         "lobby": lobby_data,
 
-        "ping": pong,
-
         "go_lobby": go_lobby,
         "game_started": crawl_started,
         "game_ended": crawl_ended,
-
-        "close": connection_closed,
 
         "login_success": logged_in,
         "login_fail": login_failed,
@@ -745,8 +757,7 @@ function (exports, $, key_conversion, chat, comm) {
                 {
                     console.log("Message size: " + msg.data.length);
                 }
-                message_queue.push(msg.data);
-                handle_message_backlog();
+                enqueue_message(msg.data);
             };
 
             socket.onerror = function ()

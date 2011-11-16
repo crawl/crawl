@@ -1104,7 +1104,9 @@ static void tag_construct_you(writer &th)
     for (i = 0; i < NUM_STATS; ++i)
         marshallString(th, you.stat_zero_cause[i]);
 
-    marshallByte(th, you.last_chosen);
+#if TAG_MAJOR_VERSION == 32
+    marshallByte(th, 0);
+#endif
     marshallByte(th, you.hit_points_regeneration);
     marshallByte(th, you.magic_points_regeneration);
 
@@ -1821,7 +1823,9 @@ static void tag_read_you(reader &th)
     for (i = 0; i < NUM_STATS; ++i)
         you.stat_zero_cause[i] = unmarshallString(th);
 
-    you.last_chosen = (stat_type) unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 32
+    unmarshallByte(th);
+#endif
 
     you.hit_points_regeneration   = unmarshallByte(th);
     you.magic_points_regeneration = unmarshallByte(th);
@@ -3337,6 +3341,8 @@ static void tag_read_level(reader &th)
             env.cloud[i].type = CLOUD_NONE;
             continue;
         }
+#else
+        env.cloud[i].excl_rad = unmarshallInt(th);
 #endif
         ASSERT(in_bounds(env.cloud[i].pos));
         env.cgrid(env.cloud[i].pos) = i;

@@ -1735,11 +1735,12 @@ bool handle_mon_spell(monster* mons, bolt &beem)
         // Try to animate weapons: if none are animated, pretend we didn't cast it.
         if (spell_cast == SPELL_TUKIMAS_BALL)
         {
-            //friendly monsters cannot cast tukima's ball for now.
+            // Friendly monsters cannot cast Tukima's Ball for now.
             if (mons->friendly())
-                return false;
+                return (false);
+
             if (!cast_tukimas_ball(mons, 100, GOD_NO_GOD, true))
-                return false;
+                return (false);
         }
 
         // Try to animate dead: if nothing rises, pretend we didn't cast it.
@@ -3243,10 +3244,9 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         {
             create_monster(
                 mgen_data(random_choose_weighted(
-                            90, MONS_CHERUB,    5,  MONS_SILVER_STAR,
-                            20, MONS_SPIRIT,    5,  MONS_OPHAN,
-                            8,  MONS_SHEDU,     20, MONS_PALADIN,
-                            2,  MONS_PHOENIX,   1,  MONS_APIS,
+                            100, MONS_ANGEL,     80,  MONS_CHERUB,
+                            5,   MONS_SPIRIT,    1,   MONS_SHEDU,
+                            1,   MONS_OPHAN,     1,   MONS_PALADIN,
                             // No holy dragons
                           0), SAME_ATTITUDE(mons),
                           mons, duration, spell_cast, mons->pos(),

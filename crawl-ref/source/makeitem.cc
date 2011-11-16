@@ -222,7 +222,7 @@ static int _armour_colour(const item_def &item)
       case ARM_ANIMAL_SKIN:
         item_colour = LIGHTGREY;
         break;
-      case ARM_CRYSTAL_PLATE:
+      case ARM_CRYSTAL_PLATE_ARMOUR:
         item_colour = WHITE;
         break;
       case ARM_SHIELD:
@@ -2207,7 +2207,7 @@ static special_armour_type _determine_armour_ego(const item_def& item,
     default:
         if (armour_is_hide(item, true)
             || item.sub_type == ARM_ANIMAL_SKIN
-            || item.sub_type == ARM_CRYSTAL_PLATE)
+            || item.sub_type == ARM_CRYSTAL_PLATE_ARMOUR)
         {
             rc = SPARM_NORMAL;
             break;
@@ -2683,7 +2683,7 @@ static void _generate_scroll_item(item_def& item, int force_type,
             item.sub_type = random_choose_weighted(
                 1800, SCR_IDENTIFY,
                 1115, SCR_REMOVE_CURSE,
-                 511, SCR_DETECT_CURSE,
+                 381, SCR_DETECT_CURSE,
                  331, SCR_FEAR,
                  331, SCR_MAGIC_MAPPING,
                  331, SCR_FOG,
@@ -2706,14 +2706,12 @@ static void _generate_scroll_item(item_def& item, int force_type,
                  140, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ACQUIREMENT),
                  140, (depth_mod < 4 ? SCR_TELEPORTATION : SCR_ENCHANT_WEAPON_III),
                  140, (depth_mod < 4 ? SCR_DETECT_CURSE  : SCR_SUMMONING),
+                 140, (depth_mod < 4 ? SCR_DETECT_CURSE  : SCR_SILENCE),
 
                  // High-level scrolls.
                  140, (depth_mod < 7 ? SCR_TELEPORTATION : SCR_VORPALISE_WEAPON),
                  140, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_TORMENT),
                  140, (depth_mod < 7 ? SCR_DETECT_CURSE  : SCR_HOLY_WORD),
-
-                 // Balanced by rarity.
-                 10, SCR_SILENCE,
 
                 // [ds] Zero-weights should always be at the end,
                 // since random_choose_weighted stops at the first
@@ -3451,7 +3449,7 @@ armour_type get_random_armour_type(int item_level)
     if (one_chance_in(20) && x_chance_in_y(11 + item_level, 400))
     {
         // High-level armours, including troll and some dragon armours.
-        const armour_type hiarmours[] = { ARM_CRYSTAL_PLATE,
+        const armour_type hiarmours[] = { ARM_CRYSTAL_PLATE_ARMOUR,
                                           ARM_TROLL_HIDE,
                                           ARM_TROLL_LEATHER_ARMOUR,
                                           ARM_FIRE_DRAGON_HIDE, ARM_FIRE_DRAGON_ARMOUR,
@@ -3482,7 +3480,7 @@ armour_type get_random_armour_type(int item_level)
         armtype = RANDOM_ELEMENT(morehiarmours);
 
         if (armtype == ARM_ANIMAL_SKIN && one_chance_in(20))
-            armtype = ARM_CRYSTAL_PLATE;
+            armtype = ARM_CRYSTAL_PLATE_ARMOUR;
     }
 
     // Secondary armours.

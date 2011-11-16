@@ -40,6 +40,29 @@
     #include <sys/resource.h>
 #endif
 
+unsigned int isqrt(unsigned int a)
+{
+    unsigned int rem = 0, root = 0;
+    for (int i = 0; i < 16; i++)
+    {
+        root <<= 1;
+        rem = (rem << 2) + (a >> 30);
+        a <<= 2;
+        if (++root <= rem)
+            rem -= root++;
+        else
+            root--;
+    }
+    return (root >> 1);
+}
+
+int isqrt_ceil(int x)
+{
+    if (x <= 0)
+        return 0;
+    return isqrt(x - 1) + 1;
+}
+
 description_level_type description_type_by_name(const char *desc)
 {
     if (!desc)
@@ -67,7 +90,7 @@ description_level_type description_type_by_name(const char *desc)
     return DESC_PLAIN;
 }
 
-std::string number_to_string(unsigned number, bool in_words)
+static std::string _number_to_string(unsigned number, bool in_words)
 {
     return (in_words? number_in_words(number) : make_stringf("%u", number));
 }
@@ -81,7 +104,7 @@ std::string apply_description(description_level_type desc,
     case DESC_THE:
         return ("the " + name);
     case DESC_A:
-        return (quantity > 1 ? number_to_string(quantity, in_words) + name
+        return (quantity > 1 ? _number_to_string(quantity, in_words) + name
                              : article_a(name, true));
     case DESC_YOUR:
         return ("your " + name);
@@ -357,18 +380,6 @@ std::string strip_tag_prefix(std::string &s, const std::string &tagprefix)
     trim_string(s);
 
     return (argument);
-}
-
-// Get a boolean flag from embedded tags in a string, using "<flag>"
-// for true and "no_<flag>" for false. If neither tag is found,
-// returns the default value.
-bool strip_bool_tag(std::string &s, const std::string &name, bool defval)
-{
-    if (strip_tag(s, name))
-        return (true);
-    if (strip_tag(s, "no_" + name))
-        return (false);
-    return (defval);
 }
 
 int strip_number_tag(std::string &s, const std::string &tagprefix)
@@ -893,7 +904,7 @@ bool version_is_stable(const char *v)
 }
 
 #ifndef USE_TILE_LOCAL
-coord_def cgettopleft(GotoRegion region)
+static coord_def _cgettopleft(GotoRegion region)
 {
     switch (region)
     {
@@ -914,7 +925,7 @@ coord_def cgettopleft(GotoRegion region)
 coord_def cgetpos(GotoRegion region)
 {
     const coord_def where = coord_def(wherex(), wherey());
-    return (where - cgettopleft(region) + coord_def(1, 1));
+    return (where - _cgettopleft(region) + coord_def(1, 1));
 }
 
 static GotoRegion _current_region = GOTO_CRT;
@@ -922,7 +933,7 @@ static GotoRegion _current_region = GOTO_CRT;
 void cgotoxy(int x, int y, GotoRegion region)
 {
     _current_region = region;
-    const coord_def tl = cgettopleft(region);
+    const coord_def tl = _cgettopleft(region);
     const coord_def sz = cgetsize(region);
 
     ASSERT_SAVE(x >= 1 && x <= sz.x);
