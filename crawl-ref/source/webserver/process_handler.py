@@ -311,7 +311,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
         self.process = TerminalRecorder(call, self.ttyrec_filename,
                                         self._ttyrec_id_header(),
-                                        self.logger, self.io_loop)
+                                        self.logger, self.io_loop,
+                                        config.recording_term_size)
         self.process.end_callback = self._on_process_end
         self.process.output_callback = self._on_process_output
         self.process.activity_callback = self.note_activity
