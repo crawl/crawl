@@ -1062,6 +1062,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_DEMON:
     case SPELL_SUMMON_UGLY_THING:
     case SPELL_ANIMATE_DEAD:
+    case SPELL_TWISTED_RESURRECTION:
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_SCORPIONS:
     case SPELL_SUMMON_SWARM:
@@ -1301,8 +1302,8 @@ static void _mons_set_priest_wizard_god(monster* mons, bool& priest,
 
     // Permanent wizard summons of Yred should have the same god even
     // though they aren't priests. This is so that e.g. the zombies of
-    // Yred's skeletal warriors will properly turn on you if you abandon
-    // Yred.
+    // Yred's skeletal warriors or enslaved souls will properly turn on
+    // you if you abandon Yred.
     if (mons->god == GOD_YREDELEMNUL)
         god = mons->god;
 }
@@ -1749,6 +1750,19 @@ bool handle_mon_spell(monster* mons, bolt &beem)
 
             if (!animate_dead(mons, 100, SAME_ATTITUDE(mons),
                               mons->foe, mons, "", god, false))
+            {
+                return (false);
+            }
+        }
+
+        // Try to raise crawling corpses: if nothing rises, pretend we didn't cast it.
+        if (spell_cast == SPELL_TWISTED_RESURRECTION)
+        {
+            if (mons->friendly() && !_animate_dead_okay())
+                return (false);
+
+            if (!twisted_resurrection(mons, 100, SAME_ATTITUDE(mons),
+                                      mons->foe, god, false))
             {
                 return (false);
             }
@@ -2446,6 +2460,7 @@ static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
     switch (spell_cast)
     {
     case SPELL_ANIMATE_DEAD:
+    case SPELL_TWISTED_RESURRECTION:
         // see special handling in mon-stuff::handle_spell() {dlb}
         if (mons->friendly() && !_animate_dead_okay())
             return (true);
@@ -2966,6 +2981,11 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_ANIMATE_DEAD:
         animate_dead(mons, 5 + random2(5), SAME_ATTITUDE(mons),
                      mons->foe, mons, "", god);
+        return;
+
+    case SPELL_TWISTED_RESURRECTION:
+        twisted_resurrection(mons, 100, SAME_ATTITUDE(mons),
+                             mons->foe, god);
         return;
 
     case SPELL_CALL_IMP: // class 5 demons
@@ -4114,6 +4134,7 @@ bool ms_useful_fleeing_out_of_sight(const monster* mon, spell_type monspell)
     case SPELL_MINOR_HEALING:
     case SPELL_MAJOR_HEALING:
     case SPELL_ANIMATE_DEAD:
+    case SPELL_TWISTED_RESURRECTION:
         return (true);
 
     default:

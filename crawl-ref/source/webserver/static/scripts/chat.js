@@ -21,8 +21,8 @@ define(["jquery", "comm"], function ($, comm) {
 
     function update_message_count()
     {
-        var press_ = new_message_count > 0 ? " (Press _)" : "";
-        $("#message_count").html(new_message_count + " new messages" + press_);
+        var press_key = new_message_count > 0 ? " (Press F12)" : "";
+        $("#message_count").html(new_message_count + " new messages" + press_key);
         $("#message_count").toggleClass("has_new", new_message_count > 0);
     }
 

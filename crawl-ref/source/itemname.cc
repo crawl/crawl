@@ -394,8 +394,6 @@ const char* missile_brand_name(special_missile_type brand, mbn_type t)
         return "chaos";
     case SPMSL_PENETRATION:
         return (t == MBN_TERSE ? "penet" : "penetration");
-    case SPMSL_REAPING:
-        return (t == MBN_TERSE ? "reap" : "reaping");
     case SPMSL_DISPERSAL:
         return (t == MBN_TERSE ? "disperse" : "dispersal");
     case SPMSL_NORMAL:
@@ -3029,7 +3027,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case AMU_CONTROLLED_FLIGHT:
             return (player_genus(GENPC_DRACONIAN)
-                    || (you.species == SP_KENKU && you.experience_level >= 5));
+                    || (you.species == SP_TENGU && you.experience_level >= 5));
 
         case RING_WIZARDRY:
             return (you.religion == GOD_TROG);

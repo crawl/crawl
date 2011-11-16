@@ -2599,10 +2599,10 @@ static void _xom_zero_miscast()
 
         if (you.airborne())
         {
-            // Kenku fly a lot, so don't put airborne messages into the
+            // Tengu fly a lot, so don't put airborne messages into the
             // priority vector for them.
             std::vector<std::string>* vec;
-            if (you.species == SP_KENKU)
+            if (you.species == SP_TENGU)
                 vec = &messages;
             else
                 vec = &priority;

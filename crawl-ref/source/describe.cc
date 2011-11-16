@@ -22,6 +22,7 @@
 #include "artefact.h"
 #include "cio.h"
 #include "clua.h"
+#include "coord.h"
 #include "debug.h"
 #include "decks.h"
 #include "delay.h"
@@ -381,8 +382,11 @@ std::string artefact_auto_inscription(const item_def& item)
 
     const std::vector<std::string> propnames = _randart_propnames(item);
 
-    return (comma_separated_line(propnames.begin(), propnames.end(),
-                                 " ", " "));
+    std::string insc = comma_separated_line(propnames.begin(), propnames.end(),
+                                 " ", " ");
+    if (!insc.empty() && insc[insc.length() - 1] == ',')
+        insc.erase(insc.length() - 1);
+    return insc;
 }
 
 void add_autoinscription(item_def &item, std::string ainscrip)
@@ -546,7 +550,7 @@ static const char *trap_names[] =
 
 std::string trap_name(trap_type trap)
 {
-    ASSERT(NUM_TRAPS == sizeof(trap_names) / sizeof(*trap_names));
+    COMPILE_CHECK(ARRAYSZ(trap_names) == NUM_TRAPS);
 
     if (trap >= TRAP_DART && trap < NUM_TRAPS)
         return (trap_names[trap]);
@@ -555,8 +559,6 @@ std::string trap_name(trap_type trap)
 
 int str_to_trap(const std::string &s)
 {
-    ASSERT(NUM_TRAPS == sizeof(trap_names) / sizeof(*trap_names));
-
     // "Zot trap" is capitalised in trap_names[], but the other trap
     // names aren't.
     const std::string tspec = lowercase_string(s);
@@ -810,6 +812,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
         append_weapon_stats(description, item);
 
     int spec_ench = get_weapon_brand(item);
+    int damtype = get_vorpal_type(item);
 
     if (!is_artefact(item) && !verbose)
         spec_ench = SPWPN_NORMAL;
@@ -825,7 +828,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
             description += "It emits flame when wielded, causing extra "
                 "injury to most foes and up to double damage against "
                 "particularly susceptible opponents.";
-            if (get_vorpal_type(item) & (DVORP_SLICING | DVORP_CHOPPING))
+            if (damtype == DVORP_SLICING || damtype == DVORP_CHOPPING)
             {
                 description += " Big, fiery blades are also staple armaments "
                     "of hydra-hunters.";
@@ -945,18 +948,9 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
                 "its path until it reaches maximum range.";
             break;
         case SPWPN_REAPING:
-            if (is_range_weapon(item))
-            {
-                description += "If ammo fired by it kills a monster, "
-                    "causing it to leave a corpse, the corpse will be "
-                    "animated as a zombie friendly to the killer.";
-            }
-            else
-            {
-                description += "If a monster killed with it leaves a "
-                    "corpse in good enough shape, the corpse will be "
-                    "animated as a zombie friendly to the killer.";
-            }
+            description += "If a monster killed with it leaves a "
+                "corpse in good enough shape, the corpse will be "
+                "animated as a zombie friendly to the killer.";
             break;
         case SPWPN_ANTIMAGIC:
             description += "It disrupts the flow of magical energy around "
@@ -1180,11 +1174,6 @@ static std::string _describe_ammo(const item_def &item)
        case SPMSL_RETURNING:
             description += "A skilled user can throw it in such a way "
                 "that it will return to its owner.";
-            break;
-        case SPMSL_REAPING:
-            description += "If it kills a monster, causing it to leave "
-                "a corpse, the corpse will be animated as a zombie "
-                "friendly to the one who " + threw_or_fired + " it.";
             break;
         case SPMSL_PENETRATION:
             description += "It will pass through any targets it hits, "
@@ -1757,9 +1746,6 @@ bool is_dumpable_artefact(const item_def &item, bool verbose)
 //
 // get_item_description
 //
-// Note that the string will include dollar signs which should
-// be interpreted as carriage returns.
-//
 //---------------------------------------------------------------
 std::string get_item_description(const item_def &item, bool verbose,
                                  bool dump, bool noquote)
@@ -2033,10 +2019,12 @@ std::string get_item_description(const item_def &item, bool verbose,
                 break;
             }
 
-            if (god_hates_cannibalism(you.religion)
-                   && is_player_same_species(item.plus)
-                || you.religion == GOD_ZIN
+            if ((god_hates_cannibalism(you.religion)
+                   && is_player_same_species(item.plus))
+                || (you.religion == GOD_ZIN
                    && mons_class_intel(item.plus) >= I_NORMAL)
+                || (is_good_god(you.religion)
+                   && mons_class_holiness(item.plus) == MH_HOLY))
             {
                 description << "\n\n" << god_name(you.religion) << " disapproves "
                                "of eating such meat.";
@@ -2207,6 +2195,9 @@ std::string get_item_description(const item_def &item, bool verbose,
         description << "\n\n" << god_name(you.religion) << " disapproves of the "
                     << "use of such an item.";
     }
+
+    if (origin_describable(item))
+        description << "\n" << origin_desc(item) << ".";
 
     return description.str();
 }
@@ -3561,9 +3552,9 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
         inf.quote += "\n";
 
 #ifdef DEBUG_DIAGNOSTICS
-    if (mi.pos.origin())
+    if (mi.pos.origin() || !monster_at(player2grid(mi.pos)))
         return; // not a real monster
-    monster& mons = *mi.mon();
+    monster& mons = *monster_at(player2grid(mi.pos));
 
     inf.body << "\nMonster health: "
              << mons.hit_points << "/" << mons.max_hit_points << "\n";

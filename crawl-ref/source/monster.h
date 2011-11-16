@@ -172,11 +172,9 @@ public:
     bool find_home_near_player();
     bool find_home_anywhere();
 
-    void set_ghost(const ghost_demon &ghost, bool has_name = true);
+    void set_ghost(const ghost_demon &ghost);
     void ghost_init(bool need_pos = true);
-    void pandemon_init();
-    void dancing_weapon_init();
-    void labrat_init();
+    void ghost_demon_init();
     void uglything_init(bool only_mutate = false);
     void uglything_mutate(uint8_t force_colour = BLACK);
     void uglything_upgrade();

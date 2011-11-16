@@ -203,7 +203,7 @@ static std::string _stk_genus_short_cap()
 static std::string _stk_walker()
 {
     return (Skill_Species == SP_NAGA    ? "Slider" :
-            Skill_Species == SP_KENKU   ? "Glider" :
+            Skill_Species == SP_TENGU   ? "Glider" :
             Skill_Species == SP_OCTOPODE ? "Wriggler"
                                         : "Walker");
 }
@@ -226,7 +226,7 @@ static std::string _stk_weight()
     case SP_HIGH_ELF:
     case SP_DEEP_ELF:
     case SP_SLUDGE_ELF:
-    case SP_KENKU:
+    case SP_TENGU:
         return "Light";
 
     case SP_HALFLING:
@@ -683,17 +683,21 @@ void dump_skills(std::string &text)
 {
     for (uint8_t i = 0; i < NUM_SKILLS; i++)
     {
-        if (you.skills[i] > 0)
+        int real = you.skill((skill_type)i, 10, true);
+        int cur  = you.skill((skill_type)i, 10);
+        if (real > 0)
         {
-            skill_type sk = skill_type(i);
-            text += make_stringf(" %c Level %d%s %s\n",
-                                 (you.skills[i] == 27 ? 'O' :
-                                  you.train[i] == 2   ? '*' :
-                                  you.train[i]        ? '+'
-                                                      : '-'),
-                                 you.skills[i],
-                                 you.skill(sk) != you.skills[i]
-                                     ? make_stringf("(%d)", you.skill(sk)).c_str()
+            text += make_stringf(" %c Level %.*f%s %s\n",
+                                 real == 270       ? 'O' :
+                                 you.train[i] == 2 ? '*' :
+                                 you.train[i]      ? '+' :
+                                                     '-',
+                                 real == 270 ? 0 : 1,
+                                 real * 0.1,
+                                 real != cur
+                                     ? make_stringf("(%.*f)",
+                                           cur == 270 ? 0 : 1,
+                                           cur * 0.1).c_str()
                                      : "",
                                  skill_name(static_cast<skill_type>(i)));
         }

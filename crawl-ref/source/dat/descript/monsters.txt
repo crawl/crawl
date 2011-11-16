@@ -76,7 +76,7 @@ Donald
 {{
 local descript = "An adventurer just like you, trying to find the Orb."
 
-if you.race() ~= "Merfolk" then
+if you.race() ~= "Merfolk" and you.race() ~= "Octopode" then
     descript = descript .. " Unlike you, and d"
 else
     descript = descript .. " D"
@@ -529,6 +529,10 @@ clay golem
 
 A huge animated clay statue.
 %%%%
+crawling corpse
+
+A corpse weakly animated by necromancy. It is easily destroyed, but capable of merging with others to form more potent horrors.
+%%%%
 crimson imp
 
 A small, ugly minor demon. Its fanged maw seems locked in a permanent malign grin, and its horns protrude obscenely from its scaly pate.
@@ -721,6 +725,10 @@ A great reptilian beast, covered in thick green scales and with two huge bat-lik
 dwarf
 
 A short stout fella with a beard.
+%%%%
+dwarf mountain bat
+
+A species of bat that lives in mountain caves. How it got into the dungeon is a mystery - probably something related to the sudden demise of dwarves in those lands. But don't worry, an eradication team is on the way.
 %%%%
 earth elemental
 
@@ -1166,7 +1174,7 @@ jumping spider
 
 A large spider with an extraordinary ability to leap to its prey from a great distance.
 %%%%
-kenku
+tengu
 
 A bird-brained creature that looks at you with hatred.
 %%%%
@@ -1245,6 +1253,10 @@ This contraption, made from a coil and a rod, is buzzing with electricity and ca
 lindwurm
 
 A small serpentine dragon with a pair of strong forelimbs. Its thick scales give off an eerie green glow.
+%%%%
+macabre mass
+
+A fused and twisted collection of body parts, weakly animated by necromancy. It is easily destroyed, but capable of merging with others to form more potent horrors.
 %%%%
 mad acolyte of Lugonu
 
@@ -2013,7 +2025,7 @@ A winged demon covered in shiny metallic scales. It has a legion of imp minions 
 # Vault-defined monsters
 air elemental statue
 
-A delicate statue of a kenku gliding through the air. It looks quite insubstantial.
+A delicate statue of a tengu gliding through the air. It looks quite insubstantial.
 %%%%
 ancient champion
 

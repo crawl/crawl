@@ -5,22 +5,6 @@
 ##############################################################################
 
 ###############################################################################
-# Not a real entry, rather an addition
-# Please axe this vault soon, once the message gets through.
-NAME:   bring_back_dorfs_(not)
-TAGS:   extra
-DEPTH:  D:1
-WEIGHT: 1000
-MONS:   bat name:mountain n_adj n_spe col:brown
-MARKER: 1 = lua:MonPropsMarker:new {description="A species of bat that lives at high " .. \
-        "altitudes. How it got into the dungeon is a mystery - probably something " .. \
-        "related to the sudden demise of dwarves in those lands. But don't worry, an " .. \
-        "eradication team is on the way."}
-MAP
-1
-ENDMAP
-
-###############################################################################
 # Probably looks better in tiles
 NAME:   evilmike_entry_home_sweet_home
 WEIGHT: 3

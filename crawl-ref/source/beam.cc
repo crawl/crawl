@@ -1251,11 +1251,11 @@ void bolt::affect_cell()
         affect_ground();
 }
 
-bool bolt::apply_hit_funcs(actor* victim, int dmg, int corpse)
+bool bolt::apply_hit_funcs(actor* victim, int dmg)
 {
     bool affected = false;
     for (unsigned int i = 0; i < hit_funcs.size(); ++i)
-        affected = (*hit_funcs[i])(*this, victim, dmg, corpse) || affected;
+        affected = (*hit_funcs[i])(*this, victim, dmg) || affected;
 
     return (affected);
 }
@@ -3103,7 +3103,7 @@ void bolt::tracer_affect_player()
         mpr(messages[i].c_str(), MSGCH_WARN);
 
     apply_hit_funcs(&you, 0);
-    extra_range_used += range_used_on_hit(&you);
+    extra_range_used += range_used_on_hit();
 }
 
 bool bolt::misses_player()
@@ -3225,10 +3225,6 @@ bool bolt::misses_player()
 
 void bolt::affect_player_enchantment()
 {
-    // boost paralysis odds a bit, since chain paralysis from beams was removed
-    if (flavour == BEAM_PARALYSIS)
-        ench_power = ench_power * 6 / 5;
-
     if (flavour != BEAM_POLYMORPH && has_saving_throw()
         && you.check_res_magic(ench_power) > 0)
     {
@@ -3253,7 +3249,7 @@ void bolt::affect_player_enchantment()
         if (flavour == BEAM_TELEPORT && you.level_type == LEVEL_ABYSS)
             xom_is_stimulated(200);
 
-        extra_range_used += range_used_on_hit(&you);
+        extra_range_used += range_used_on_hit();
         return;
     }
 
@@ -3362,7 +3358,7 @@ void bolt::affect_player_enchantment()
         obvious_effect = true;
         break;
 
-    case BEAM_CHARM:
+    case BEAM_ENSLAVE:
         potion_effect(POT_CONFUSION, ench_power);
         obvious_effect = true;
         break;     // enslavement - confusion?
@@ -3518,7 +3514,7 @@ void bolt::affect_player_enchantment()
 
     // Regardless of effect, we need to know if this is a stopper
     // or not - it seems all of the above are.
-    extra_range_used += range_used_on_hit(&you);
+    extra_range_used += range_used_on_hit();
 }
 
 void bolt::affect_actor(actor *act)
@@ -3730,7 +3726,7 @@ void bolt::affect_player()
 
     internal_ouch(hurted);
 
-    extra_range_used += range_used_on_hit(&you);
+    extra_range_used += range_used_on_hit();
 
     if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
          || (name == "chilling blast" && you.airborne()))
@@ -3796,7 +3792,7 @@ void bolt::tracer_enchantment_affect_monster(monster* mon)
     if (!beam_cancelled)
     {
         apply_hit_funcs(mon, 0);
-        extra_range_used += range_used_on_hit(mon);
+        extra_range_used += range_used_on_hit();
     }
 }
 
@@ -3984,7 +3980,7 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
     apply_hit_funcs(mon, final);
 
     // Either way, we could hit this monster, so update range used.
-    extra_range_used += range_used_on_hit(mon);
+    extra_range_used += range_used_on_hit();
 }
 
 void bolt::tracer_affect_monster(monster* mon)
@@ -4089,7 +4085,7 @@ void bolt::enchantment_affect_monster(monster* mon)
     }
 
     apply_hit_funcs(mon, 0);
-    extra_range_used += range_used_on_hit(mon);
+    extra_range_used += range_used_on_hit();
 }
 
 void bolt::monster_post_hit(monster* mon, int dmg)
@@ -4536,11 +4532,13 @@ void bolt::affect_monster(monster* mon)
         mon->hurt(agent(), final, flavour, false);
     }
 
-    int      corpse = -1;
     monster  orig   = *mon;
 
     if (mon->alive())
+    {
+        apply_hit_funcs(mon, final);
         monster_post_hit(mon, final);
+    }
     else
     {
         // Preserve name of the source monster if it winds up killing
@@ -4560,26 +4558,18 @@ void bolt::affect_monster(monster* mon)
         {
             if (mon->attitude == ATT_FRIENDLY)
                 mon->attitude = ATT_HOSTILE;
-            corpse = monster_die(mon, KILL_MON, beam_source_as_target());
+            monster_die(mon, KILL_MON, beam_source_as_target());
         }
         else
         {
             killer_type ref_killer = thrower;
             if (!YOU_KILL(thrower) && reflector == NON_MONSTER)
                 ref_killer = KILL_YOU_MISSILE;
-            corpse = monster_die(mon, ref_killer, beam_source_as_target());
+            monster_die(mon, ref_killer, beam_source_as_target());
         }
     }
 
-    // Give the callbacks a dead-but-valid monster object.
-    if (mon->type == MONS_NO_MONSTER)
-    {
-        orig.hit_points = -1;
-        mon = &orig;
-    }
-
-    apply_hit_funcs(mon, final, corpse);
-    extra_range_used += range_used_on_hit(mon);
+    extra_range_used += range_used_on_hit();
 }
 
 bool bolt::has_saving_throw() const
@@ -4943,7 +4933,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return (MON_AFFECTED);
     }
 
-    case BEAM_CHARM:
+    case BEAM_ENSLAVE:
         if (player_will_anger_monster(mon))
         {
             simple_monster_message(mon, " is repulsed!");
@@ -5014,7 +5004,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
 
 // Extra range used on hit.
-int bolt::range_used_on_hit(const actor* victim) const
+int bolt::range_used_on_hit() const
 {
     int used = 0;
 
@@ -5049,7 +5039,7 @@ int bolt::range_used_on_hit(const actor* victim) const
         return (used);
 
     for (unsigned int i = 0; i < range_funcs.size(); ++i)
-        if ((*range_funcs[i])(*this, victim, used))
+        if ((*range_funcs[i])(*this, used))
             break;
 
     return (used);
@@ -5511,7 +5501,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
             continue;
 
         // If we were at a wall, only move to visible squares.
-        if (at_wall && !you.see_cell(loc + Compass[i]))
+        if (at_wall && !cell_see_cell(you.pos(), loc + Compass[i], LOS_SOLID))
             continue;
 
         int cadd = 5;
@@ -5820,7 +5810,7 @@ static std::string _beam_type_name(beam_type type)
     case BEAM_DIGGING:               return ("digging");
     case BEAM_TELEPORT:              return ("teleportation");
     case BEAM_POLYMORPH:             return ("polymorph");
-    case BEAM_CHARM:                 return ("enslave");
+    case BEAM_ENSLAVE:               return ("enslave");
     case BEAM_BANISH:                return ("banishment");
     case BEAM_DEGENERATE:            return ("degeneration");
     case BEAM_ENSLAVE_SOUL:          return ("enslave soul");

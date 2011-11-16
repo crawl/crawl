@@ -7,13 +7,14 @@ Part III:  Advanced Methods
 
 Contents:  I. Conditionalising levels
            J. Validating levels
-           K. Abyss vaults
-           L. Portal vaults
-           M. Lua reference
-           N. Lua hooks
-           O. Feature names
-           P. Map statistics
-           Q. Map generation
+           K. Vetoing levels
+           L. Abyss vaults
+           M. Portal vaults
+           N. Lua reference
+           O. Lua hooks
+           P. Feature names
+           Q. Map statistics
+           R. Map generation
 
 This document describes the advanced features of vault making. This includes
 usage of lua and how to create portal vaults. Triggerables are covered in a separate document: triggerables.txt.
@@ -216,8 +217,35 @@ validate {{
     return true
 }}
 
+K.   Vetoing Levels
+===================
 
-K.   Abyss Vaults
+Similarly to validating a level post-placement, it is possible to veto
+placement of a map before it is even considered. This can be especially useful
+if, in the example of due_tower_of_silence, you don't want a unique-specific
+map to be placed if that unique has already been placed by another map.
+
+Veto blocks, however, use the inverse logic to validate blocks: if a veto block
+returns true, the map will not be placed, otherwise placement will continue as
+normal. For example:
+
+veto {{
+    if you.uniques("Jory") then
+      return true
+    else
+      return false
+    end
+}}
+
+In the event that a map that has been chosen via a PLACE tag is vetoed, and
+there are no other suitable maps to replace it as a primary vault, then the
+dungeon builder will fail to generate a level for that place. This will cause
+the game to close.
+
+Do not use veto chunks with vaults tagged with PLACE unless you are absolutely
+certain this will not happen.
+
+L.   Abyss Vaults
 =================
 
 Abyssal vaults have more limitations than vaults in the regular
@@ -258,7 +286,7 @@ d. Timers and other listeners in an abyssal vault may be discarded at
    vault.
 
 
-L.   Portal Vaults
+M.   Portal Vaults
 ==================
 
 Portal vaults are vaults accessed by portals in the dungeon (labyrinths
@@ -475,7 +503,7 @@ epilogues are only run after the map is validated, that is, it ensures that
 the map was actually used.
 
 
-M.    Lua reference
+N.    Lua reference
 ===================
 
 How maps are processed
@@ -954,7 +982,7 @@ The "colour" module provides functions for defining new colour patterns.
 add_colour
 
 
-N.    Lua hooks
+O.    Lua hooks
 ===============
 
 When the dungeon builder places a vault, it runs hooks at certain
@@ -1030,7 +1058,7 @@ the "post_place" hook -- errors in the post_place hook will cause the
 dungeon builder to veto its current level and retry level generation.
 
 
-O.   Feature Names
+P.   Feature Names
 ==================
 
 These are the feature names usable in MARKER declarations:
@@ -1065,7 +1093,7 @@ fountain_sparkling, fountain_blood, dry_fountain_blue,
 dry_fountain_sparkling, dry_fountain_blood, permadry_fountain
 
 
-P.   Map Statistics
+Q.   Map Statistics
 ===================
 
 Full-debug Crawl builds (this does not include normal Crawl builds
@@ -1088,7 +1116,7 @@ probabilities of the random map on each level, use:
 crawl -mapstat 1
 
 
-Q.   Map Generation
+R.   Map Generation
 ===================
 
 Full-debug Crawl builds (see above for more information) include a test for

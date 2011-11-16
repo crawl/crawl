@@ -783,9 +783,9 @@ key-stepping
 rot-lapping
 %%%%
 ##########################################################
-# adjective2, Kenku special
+# adjective2, Tengu special
 ##########################################################
-insult kenku adj2
+insult tengu adj2
 
 hollow-boned
 

@@ -149,11 +149,7 @@ function (exports, $, key_conversion, chat, comm) {
         e.preventDefault();
 
         var s = String.fromCharCode(e.which);
-        if (s == "_")
-        {
-            chat.focus();
-        }
-        else if (s == "{")
+        if (s == "{")
         {
             send_bytes(["{".charCodeAt(0)]);
         }
@@ -230,6 +226,11 @@ function (exports, $, key_conversion, chat, comm) {
             {
                 e.preventDefault();
                 location.hash = "#lobby";
+            }
+            else if (e.which == 123)
+            {
+                e.preventDefault();
+                chat.focus();
             }
             else if (e.which in key_conversion.simple)
             {

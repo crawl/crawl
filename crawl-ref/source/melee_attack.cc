@@ -319,6 +319,8 @@ bool melee_attack::handle_phase_blocked()
 
 bool melee_attack::handle_phase_dodged()
 {
+    did_hit = false;
+
     const int ev = defender->melee_evasion(attacker);
     const int ev_nophase = defender->melee_evasion(attacker, EV_IGNORE_PHASESHIFT);
 
@@ -363,7 +365,19 @@ bool melee_attack::handle_phase_dodged()
         // Check for defender Spines
         do_spines();
 
-        // Spines can kill!
+        // In master, this only allows one retaliation per player attack round
+        // but implementing that here (now that mons_atack_rounds is gone)
+        // would be quite cludgy and awkward, so we'll reduce the chance of
+        // retaliation for monster-attacks above 1.
+        if (attacker->alive() &&
+            you.species == SP_MINOTAUR &&
+            you.can_see(attacker) &&
+            one_chance_in(effective_attack_number))
+        {
+            do_minotaur_retaliation();
+        }
+
+        // Spines and retaliations can kill!
         if (!attacker->alive())
             return (false);
     }
@@ -1075,9 +1089,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         }
         else if (you.has_usable_tentacles())
         {
-            // From 1 to 3 bonus damage, so not as good as claws.
             aux_verb = "tentacle-slap";
-            aux_damage += you.has_usable_tentacles();
             noise_factor = 125;
         }
 
@@ -2951,7 +2963,8 @@ bool melee_attack::apply_damage_brand()
             (defender->holiness() == MH_NATURAL ? random2(30) : random2(22));
 
         if (mons_class_is_confusable(defender->type)
-            && hdcheck >= defender->get_experience_level())
+            && hdcheck >= defender->get_experience_level()
+            && !one_chance_in(5))
         {
             // Declaring these just to pass to the enchant function.
             bolt beam_temp;
@@ -3321,19 +3334,6 @@ void melee_attack::player_apply_staff_damage()
         mpr("You're wielding some staff I've never heard of! (melee_attack.cc)",
             MSGCH_ERROR);
         break;
-    }
-
-    if (special_damage > 0)
-    {
-        if (!item_type_known(*weapon))
-        {
-            set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
-            set_ident_type(*weapon, ID_KNOWN_TYPE);
-
-            mprf("You are wielding %s.", weapon->name(DESC_A).c_str());
-            more();
-            you.wield_change = true;
-        }
     }
 }
 
@@ -4389,6 +4389,46 @@ void melee_attack::mons_emit_foul_stench()
     }
 }
 
+void melee_attack::do_minotaur_retaliation()
+{
+    // This will usually be 2, but could be 3 if the player mutated more
+    const int mut = player_mutation_level(MUT_HORNS);
+    const int slaying = slaying_bonus(PWPN_DAMAGE);
+
+    if (attacker->alive() && you.strength() + you.dex() > random2(100))
+    {
+        // Use the same damage forula as a regular headbutt.
+        int dmg = 5 + mut * 2;
+        dmg = player_aux_stat_modify_damage(dmg);
+        dmg = random2(dmg);
+        dmg = player_apply_fighting_skill(dmg, true);
+        dmg += (slaying > -1) ? (random2(1 + slaying))
+                              : (-random2(1 - slaying));
+        dmg = player_apply_misc_modifiers(dmg);
+        int ac = random2(1 + attacker->armour_class());
+        int hurt = dmg - ac;
+
+        mpr("You furiously reltaliate!");
+        dprf("Retaliation: dmg = %d ac = %d hurt = %d", dmg, ac, hurt);
+        if (hurt <= 0)
+        {
+            mprf("You headbutt %s but do no damage",
+                 attacker->name(DESC_THE).c_str());
+
+            return;
+        }
+        else
+        {
+            mprf("You headbutt %s%s",
+                 attacker->name(DESC_THE).c_str(),
+                 get_exclams(hurt).c_str());
+            attacker->hurt(&you, hurt);
+        }
+    }
+
+    return;
+}
+
 bool melee_attack::do_knockback(bool trample)
 {
     do
@@ -4683,7 +4723,7 @@ int melee_attack::calc_base_unarmed_damage()
             damage = 12;
             break;
         case TRAN_BLADE_HANDS:
-            damage = 12 + div_rand_round(you.strength() + you.dex(), 4);
+            damage = 8 + div_rand_round(you.strength() + you.dex(), 3);
             break;
         case TRAN_STATUE: // multiplied by 1.5 later
             damage = 6 + you.strength();

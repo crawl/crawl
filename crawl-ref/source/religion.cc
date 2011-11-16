@@ -820,6 +820,8 @@ std::string get_god_dislikes(god_type which_god, bool /*verbose*/)
 
     if (is_good_god(which_god))
     {
+        really_dislikes.push_back("you desecrate holy remains");
+
         if (which_god == GOD_SHINING_ONE)
             really_dislikes.push_back("you drink blood");
         else

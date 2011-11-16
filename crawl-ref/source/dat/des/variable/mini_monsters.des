@@ -405,7 +405,10 @@ KMONS:  8 = spectral bat name:ghost-faced_bat n_rpl n_spe n_zom
 # Just an US WW2 military project, but that's good enough.
 KMONS:  9 = fire bat hd:1
 KMONS:  0 = bat zombie name:rotten_bat n_rpl n_spe n_zom
+# Correction, this one, added because of a tile, is not real as well.
 KMONS:  A = bat name:phase n_adj n_spe col:lightgreen spells:blink tile:mons_phase_bat
+# Carpathian Dwarf Mountain Bat.  Sadly the adjectives are in a wrong order.
+KMONS:  B = bat name:dwarf_mountain n_adj n_spe
 MAP
        xxxxx
       xxxxxxx
@@ -421,7 +424,7 @@ MAP
 xxx.4xxxx..x..xx
 xxx12.xxx.xx...xx
 xxxx.xxx.xxxx6..x
-xxxxx.xx.xxxx66.x
+xxxxxBxx.xxxx66.x
 xx33.x...xxxxx.xxx
 xxxxxxx...xxxxx.xx
  xxxx21xx.xxxxx5xx
@@ -1105,12 +1108,12 @@ MAP
 .............
 ENDMAP
 
-NAME:    kenku_band
+NAME:    tengu_band
 DEPTH:   D:9-, Shoals, Swamp
 TAGS:    no_pool_fixup
-MONS:    kenku
-MONS:    kenku ; war axe / kenku ; long sword / kenku ; scimitar
-MONS:    kenku spells:airstrike;magic_dart;iskenderun's_mystic_blast
+MONS:    tengu
+MONS:    tengu ; war axe / tengu ; long sword / tengu ; scimitar
+MONS:    tengu spells:airstrike;magic_dart;iskenderun's_mystic_blast
 MAP
  .........
 ..wwwww.1..
