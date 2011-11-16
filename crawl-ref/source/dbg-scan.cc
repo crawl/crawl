@@ -25,7 +25,7 @@ static void _dump_item(const char *name, int num, const item_def &item)
 {
     mpr(name, MSGCH_ERROR);
 
-    mprf(MSGCH_WIZARD, "    item #%d:  base: %d; sub: %d; plus: %d; plus2: %d; special: %d",
+    mprf("    item #%d:  base: %d; sub: %d; plus: %d; plus2: %d; special: %d",
          num, item.base_type, item.sub_type,
          item.plus, item.plus2, item.special);
 
@@ -33,7 +33,7 @@ static void _dump_item(const char *name, int num, const item_def &item)
          item.quantity, item.colour, item.flags,
          get_ident_type(item));
 
-    mprf(MSGCH_WIZARD, "    x: %d; y: %d; link: %d", item.pos.x, item.pos.y, item.link);
+    mprf("    x: %d; y: %d; link: %d", item.pos.x, item.pos.y, item.link);
 
     crawl_state.cancel_cmd_repeat();
 }
@@ -142,7 +142,7 @@ void debug_item_scan(void)
             }
             else
             {
-                mprf(MSGCH_WIZARD, "igrd(%d,%d) = %d",
+                mprf("igrd(%d,%d) = %d",
                      mitm[i].pos.x, mitm[i].pos.y, igrd(mitm[i].pos));
             }
 

@@ -577,7 +577,7 @@ bool zin_check_able_to_recite()
         return (false);
     }
 
-        return (true);
+    return (true);
 }
 
 static const char* zin_book_desc[NUM_RECITE_TYPES] =
@@ -3046,7 +3046,7 @@ void lugonu_bend_space()
     if (area_warp)
         _lugonu_warp_area(pow);
 
-    random_blink(false, true);
+    random_blink(false, true, true);
 
     const int damage = roll_dice(1, 4);
     ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC, "a spatial distortion");

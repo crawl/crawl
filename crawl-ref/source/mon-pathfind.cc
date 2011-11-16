@@ -211,12 +211,13 @@ bool monster_pathfind::calc_path_to_neighbours()
         if (!traversable(npos) && npos != target)
             continue;
 
-        // Ignore this grid if it takes us above the allowed distance.
-        if (range && estimated_cost(npos) > range)
-            continue;
-
         distance = dist[pos.x][pos.y] + travel_cost(npos);
         old_dist = dist[npos.x][npos.y];
+
+        // Ignore this grid if it takes us above the allowed distance.
+        if (range && distance > range)
+            continue;
+
 #ifdef DEBUG_PATHFIND
         mprf("old dist: %d, new dist: %d, infinite: %d", old_dist, distance,
              INFINITE_DISTANCE);

@@ -237,6 +237,28 @@ static bool _prepare_butchery(bool can_butcher, bool removed_gloves,
     return (true);
 }
 
+static bool _should_butcher(int corpse_id, bool bottle_blood = false)
+{
+    if (is_forbidden_food(mitm[corpse_id])
+        && (Options.confirm_butcher == CONFIRM_NEVER
+            || !yesno("Desecrating this corpse would be a sin. Continue anyway?",
+                      false, 'n')))
+    {
+        return (false);
+    }
+    else if (!bottle_blood && you.species == SP_VAMPIRE
+             && !you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
+             && !you.has_spell(SPELL_SIMULACRUM)
+             && (Options.confirm_butcher == CONFIRM_NEVER
+                 || !yesno("You could drain or bottle this corpse instead. "
+                           "Continue anyway?", true, 'n')))
+    {
+        return (false);
+    }
+
+    return (true);
+}
+
 static bool _butcher_corpse(int corpse_id, int butcher_tool,
                             bool first_corpse = true,
                             bool bottle_blood = false)
@@ -245,20 +267,8 @@ static bool _butcher_corpse(int corpse_id, int butcher_tool,
 
     const bool rotten = food_is_rotten(mitm[corpse_id]);
 
-    if (is_forbidden_food(mitm[corpse_id])
-        && !yesno("Desecrating this corpse would be a sin. Continue anyway?",
-                  false, 'n'))
-    {
-        return false;
-    }
-    else if (!bottle_blood && you.species == SP_VAMPIRE
-             && !you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
-             && !you.has_spell(SPELL_SIMULACRUM)
-             && !yesno("You'd want to drain or bottle this corpse instead. "
-                       "Continue anyway?", true, 'n'))
-    {
-        return false;
-    }
+    if (!_should_butcher(corpse_id, bottle_blood))
+        return (false);
 
     // Start work on the first corpse we butcher.
     if (first_corpse)
@@ -465,8 +475,16 @@ bool butchery(int which_corpse, bool bottle_blood)
     // Butcher pre-chosen corpse, if found, or if there is only one corpse.
     bool success = false;
     if (prechosen && corpse_id == which_corpse
-        || num_corpses == 1 && !Options.always_confirm_butcher)
+        || num_corpses == 1 && Options.confirm_butcher != CONFIRM_ALWAYS)
     {
+        if (Options.confirm_butcher == CONFIRM_NEVER
+            && !_should_butcher(corpse_id, bottle_blood))
+        {
+            mprf("There isn't anything suitable to %s here.",
+                 bottle_blood ? "bottle" : "butcher");
+            return (false);
+        }
+
         if (!_prepare_butchery(can_butcher, removed_gloves, wpn_switch))
             return (false);
 
@@ -502,6 +520,18 @@ bool butchery(int which_corpse, bool bottle_blood)
         else
         {
             corpse_id = -1;
+
+            if (Options.confirm_butcher == CONFIRM_NEVER)
+            {
+                if (!_should_butcher(si->index(), bottle_blood))
+                    continue;
+                if (!_prepare_butchery(can_butcher, removed_gloves, wpn_switch))
+                    return (false);
+
+                corpse_id = si->index();
+                _butcher_corpse(corpse_id, butcher_tool, true, bottle_blood);
+                break;
+            }
 
             std::string corpse_name = si->name(DESC_A);
 
@@ -577,7 +607,8 @@ bool butchery(int which_corpse, bool bottle_blood)
 
     if (!butcher_all && corpse_id == -1)
     {
-        mprf("There isn't anything else to %s here.",
+        mprf("There isn't anything %s to %s here.",
+             Options.confirm_butcher == CONFIRM_NEVER ? "suitable" : "else",
              bottle_blood ? "bottle" : "butcher");
     }
     _terminate_butchery(wpn_switch, removed_gloves, old_weapon, old_gloves);
@@ -1482,8 +1513,8 @@ int prompt_eat_chunks(bool only_auto)
         chunks.push_back(item);
     }
 
-    const bool easy_eat = Options.easy_eat_chunks && !you.is_undead
-        && !you.duration[DUR_NAUSEA];
+    const bool easy_eat = (Options.easy_eat_chunks || only_auto)
+        && !you.is_undead && !you.duration[DUR_NAUSEA];
     const bool easy_contam = easy_eat
         && (Options.easy_eat_gourmand && wearing_amulet(AMU_THE_GOURMAND)
             || Options.easy_eat_contaminated);

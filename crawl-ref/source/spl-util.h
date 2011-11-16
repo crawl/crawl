@@ -80,7 +80,6 @@ bool spell_is_direct_explosion(spell_type spell);
 bool spell_needs_foe(spell_type spell);
 bool spell_harms_target(spell_type spell);
 bool spell_harms_area(spell_type spell);
-bool spell_sanctuary_castable(spell_type spell);
 int spell_levels_required(spell_type which_spell);
 
 unsigned int get_spell_flags(spell_type which_spell);
@@ -98,17 +97,11 @@ typedef int cell_func(coord_def where, int pow, int aux, actor *agent);
 typedef int monster_func(monster* mon, int pow);
 typedef int cloud_func(coord_def where, int pow, int spreadrate,
                        cloud_type type, const actor* agent, int colour,
-                       std::string name, std::string tile, int excl_rad = -1);
+                       std::string name, std::string tile, int excl_rad);
 
 int apply_area_visible(cell_func cf, int power,
                        bool pass_through_trans = false, actor *agent = NULL,
                        bool affect_scryed = false);
-
-int apply_area_square(cell_func cf, const coord_def& where, int power,
-                      actor *agent = NULL);
-
-int apply_area_around_square(cell_func cf, const coord_def& where, int power,
-                             actor *agent = NULL);
 
 int apply_monsters_around_square(monster_func mf, const coord_def& where,
                                  int power);
@@ -148,7 +141,6 @@ skill_type spell_type2skill (unsigned int which_spelltype);
 spell_type zap_type_to_spell(zap_type zap);
 
 bool spell_is_useless(spell_type spell, bool transient = false);
-bool spell_is_empowered(spell_type spell);
 bool spell_is_useful(spell_type spell);
 bool spell_is_risky(spell_type spell);
 

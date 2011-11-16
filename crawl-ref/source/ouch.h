@@ -14,6 +14,8 @@
 #include "beam.h"
 
 // Keep in sync with names in hiscores.cc.
+// Note that you can't ever remove entries from here -- not even when a major
+// save tag is bumped, or listing scores will break.  The order doesn't matter.
 enum kill_method_type
 {
     KILLED_BY_MONSTER,
@@ -39,6 +41,7 @@ enum kill_method_type
     KILLED_BY_TARGETING,
     KILLED_BY_SPORE,
     KILLED_BY_TSO_SMITING,
+    KILLED_BY_PETRIFICATION,
     KILLED_BY_SOMETHING,
     KILLED_BY_FALLING_DOWN_STAIRS,
     KILLED_BY_ACID,

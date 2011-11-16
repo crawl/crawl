@@ -88,7 +88,8 @@ bool form_can_butcher_barehanded(transformation_type form)
 // Used to mark transformations which override species/mutation intrinsics.
 bool form_changed_physiology(transformation_type form)
 {
-    return (form != TRAN_NONE && form != TRAN_BLADE_HANDS && form != TRAN_APPENDAGE);
+    return (form != TRAN_NONE && form != TRAN_APPENDAGE
+            && form != TRAN_BLADE_HANDS);
 }
 
 bool form_can_wear_item(const item_def& item, transformation_type form)

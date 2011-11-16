@@ -1050,7 +1050,7 @@ void MiscastEffect::_enchantment(int severity)
         switch (random2(target->atype() == ACT_PLAYER ? 4 : 2))
         {
         case 0:
-            _potion_effect(POT_PARALYSIS, 10);
+            target->paralyse(act_source, 2 + random2(6), cause);
             break;
         case 1:
             _potion_effect(POT_CONFUSION, 10);

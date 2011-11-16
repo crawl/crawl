@@ -105,18 +105,6 @@ bool mimic_at(const coord_def &c)
     return (feature_mimic_at(c) || item_mimic_at(c));
 }
 
-// Sets the colour of a mimic to match its description... should be called
-// whenever a mimic is created or teleported. - bwr
-int get_mimic_colour(const monster* mimic)
-{
-    ASSERT(mimic != NULL);
-
-    if (mons_is_item_mimic(mimic->type))
-        return (get_mimic_item(mimic)->colour);
-    else
-        return (mimic->colour);
-}
-
 // Monster curses a random player inventory item.
 bool curse_an_item(bool quiet)
 {
@@ -1063,7 +1051,7 @@ void setup_spore_explosion(bolt & beam, const monster& origin)
     beam.ex_size = 2;
 }
 
-void setup_lightning_explosion(bolt & beam, const monster& origin)
+static void _setup_lightning_explosion(bolt & beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
     beam.flavour = BEAM_ELECTRICITY;
@@ -1073,7 +1061,7 @@ void setup_lightning_explosion(bolt & beam, const monster& origin)
     beam.ex_size = coinflip() ? 3 : 2;
 }
 
-void setup_inner_flame_explosion(bolt & beam, const monster& origin)
+static void _setup_inner_flame_explosion(bolt & beam, const monster& origin)
 {
     _setup_base_explosion(beam, origin);
     const int size = origin.body_size(PSIZE_BODY);
@@ -1109,13 +1097,13 @@ static bool _explode_monster(monster* mons, killer_type killer,
     }
     else if (type == MONS_BALL_LIGHTNING)
     {
-        setup_lightning_explosion(beam, *mons);
+        _setup_lightning_explosion(beam, *mons);
         sanct_msg    = "By Zin's power, the ball lightning's explosion "
                        "is contained.";
     }
     else if (mons->has_ench(ENCH_INNER_FLAME))
     {
-        setup_inner_flame_explosion(beam, *mons);
+        _setup_inner_flame_explosion(beam, *mons);
         mons->flags    |= MF_EXPLODE_KILL;
         sanct_msg       = "By Zin's power, the fiery explosion "
                           "is contained.";
@@ -3342,33 +3330,6 @@ std::string get_damage_level_string(mon_holy_type holi,
     }
     ss << (_wounded_damaged(holi) ? " damaged" : " wounded");
     return ss.str();
-}
-
-std::string get_wounds_description_sentence(const monster* mons)
-{
-    const std::string wounds = get_wounds_description(mons);
-    if (wounds.empty())
-        return "";
-    else
-        return mons->pronoun(PRONOUN) + " is " + wounds + ".";
-}
-
-std::string get_wounds_description(const monster* mons, bool colour)
-{
-    if (!mons->alive() || mons->hit_points == mons->max_hit_points)
-        return "";
-
-    if (!mons_can_display_wounds(mons))
-        return "";
-
-    mon_dam_level_type dam_level = mons_get_damage_level(mons);
-    std::string desc = get_damage_level_string(mons->holiness(), dam_level);
-    if (colour)
-    {
-        const int col = channel_to_colour(MSGCH_MONSTER_DAMAGE, dam_level);
-        desc = colour_string(desc, col);
-    }
-    return desc;
 }
 
 void print_wounds(const monster* mons)

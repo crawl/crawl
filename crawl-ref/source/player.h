@@ -60,7 +60,6 @@ public:
   FixedVector<int8_t, NUM_STATS> base_stats;
   FixedVector<int, NUM_STATS> stat_zero;
   FixedVector<std::string, NUM_STATS> stat_zero_cause;
-  stat_type last_chosen;
 
   int hunger;
   int disease;
@@ -438,7 +437,6 @@ public:
     bool is_icy() const;
     bool is_fiery() const;
     bool is_skeletal() const;
-    bool are_currently_undead() const;
 
     bool light_flight() const;
     bool travelling_light() const;

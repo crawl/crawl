@@ -39,7 +39,6 @@
 # get back parts of it by uncommenting the following options:
 
 # include                 = 034_command_keys.txt
-# always_confirm_butcher  = true
 # target_unshifted_dirs   = true
 # clear_messages          = true
 #
@@ -202,13 +201,14 @@ trapwalk_safe_hp = dart:20,needle:15,arrow:35,bolt:45,spear:40,axe:45,blade:95
 # easy_open     = false
 # easy_unequip  = false
 # equip_unequip = true
-# easy_confirm  = (none | safe)
+# easy_confirm  = (none | safe | all)
 # allow_self_target      = (yes | no | prompt)
-# always_confirm_butcher = true
+# confirm_butcher        = (auto | always | never)
 # prefer_safe_chunks     = false
 # easy_eat_chunks        = true
 # easy_eat_gourmand      = true
 # easy_eat_contaminated  = true
+# auto_eat_chunks        = true
 # prompt_for_swap        = false
 # easy_quit_item_prompts = false
 # easy_exit_menu         = true

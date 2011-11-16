@@ -718,7 +718,7 @@ mcache_ghost::mcache_ghost(const monster* mon)
     if (ac > 25)
         m_doll.parts[TILEP_PART_BODY] = TILEP_BODY_PLATE_BLACK;
     else if (ac > 20)
-        m_doll.parts[TILEP_PART_BODY]= TILEP_BODY_BANDED;
+        m_doll.parts[TILEP_PART_BODY]= TILEP_BODY_SPLINT;
     else if (ac > 15)
         m_doll.parts[TILEP_PART_BODY]= TILEP_BODY_SCALEMAIL;
     else if (ac > 10)

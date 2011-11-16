@@ -121,9 +121,6 @@ std::string menu_colour_item_prefix(const item_def &item, bool temp = true);
 std::string filtering_item_prefix(const item_def &item, bool temp = true);
 std::string get_menu_colour_prefix_tags(const item_def &item,
                                         description_level_type desc);
-std::string get_message_colour_tags(const item_def &item,
-                                    description_level_type desc,
-                                    msg_channel_type channel = MSGCH_PLAIN);
 
 void            init_item_name_cache();
 item_types_pair item_types_by_name(std::string name);

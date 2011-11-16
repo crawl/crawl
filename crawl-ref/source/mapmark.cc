@@ -664,10 +664,10 @@ std::string map_malign_gateway_marker::debug_describe() const
 // map_phoenix_marker
 
 map_phoenix_marker::map_phoenix_marker(const coord_def& p,
-                    int dur, int mnum, beh_type bh, god_type gd, coord_def cp
-                    )
+                    int dur, int mnum, beh_type bh, mon_attitude_type at,
+                    god_type gd, coord_def cp)
     : map_marker(MAT_PHOENIX, p), duration(dur), mon_num(mnum),
-            behaviour(bh), god(gd), corpse_pos(cp)
+            behaviour(bh), attitude(at), god(gd), corpse_pos(cp)
 {
 }
 
@@ -677,6 +677,7 @@ void map_phoenix_marker::write(writer &out) const
     marshallShort(out, duration);
     marshallShort(out, mon_num);
     marshallUByte(out, behaviour);
+    marshallUByte(out, attitude);
     marshallUByte(out, god);
     marshallCoord(out, corpse_pos);
 }
@@ -688,6 +689,12 @@ void map_phoenix_marker::read(reader &in)
     duration = unmarshallShort(in);
     mon_num = unmarshallShort(in);
     behaviour = static_cast<beh_type>(unmarshallUByte(in));
+#if TAG_MAJOR_VERSION == 32
+    if (in.getMinorVersion() < TAG_MINOR_PHOENIX_ATTITUDE)
+        attitude = ATT_HOSTILE;
+    else
+#endif
+        attitude = static_cast<mon_attitude_type>(unmarshallUByte(in));
     god       = static_cast<god_type>(unmarshallByte(in));
     corpse_pos = unmarshallCoord(in);
 }
@@ -701,7 +708,8 @@ map_marker *map_phoenix_marker::read(reader &in, map_marker_type)
 
 map_marker *map_phoenix_marker::clone() const
 {
-    map_phoenix_marker *mark = new map_phoenix_marker(pos, duration, mon_num, behaviour, god, corpse_pos);
+    map_phoenix_marker *mark = new map_phoenix_marker(pos, duration, mon_num,
+                                    behaviour, attitude, god, corpse_pos);
     return (mark);
 }
 

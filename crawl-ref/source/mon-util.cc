@@ -318,7 +318,7 @@ const mon_resist_def &get_mons_class_resists(int mc)
     return (me ? me->resists : get_monster_data(MONS_PROGRAM_BUG)->resists);
 }
 
-mon_resist_def serpent_of_hell_resists(int flavour)
+static mon_resist_def _serpent_of_hell_resists(int flavour)
 {
     mon_resist_def res;
 
@@ -341,10 +341,10 @@ mon_resist_def serpent_of_hell_resists(int flavour)
     return res;
 }
 
-static mon_resist_def serpent_of_hell_resists(const monster* mon)
+static mon_resist_def _serpent_of_hell_resists(const monster* mon)
 {
     int flavour = mon->props["serpent_of_hell_flavour"].get_int();
-    return serpent_of_hell_resists(flavour);
+    return _serpent_of_hell_resists(flavour);
 }
 
 mon_resist_def get_mons_resists(const monster* mon)
@@ -376,7 +376,7 @@ mon_resist_def get_mons_resists(const monster* mon)
     }
 
     if (mon->type == MONS_SERPENT_OF_HELL)
-        resists |= serpent_of_hell_resists(mon);
+        resists |= _serpent_of_hell_resists(mon);
 
     return (resists);
 }
@@ -392,15 +392,6 @@ monster* monster_at(const coord_def &pos)
 
     ASSERT(mindex <= MAX_MONSTERS);
     return (&menv[mindex]);
-}
-
-int mons_piety(const monster* mon)
-{
-    if (mon->god == GOD_NO_GOD)
-        return (0);
-
-    // We're open to fine-tuning.
-    return (mon->hit_dice * 14);
 }
 
 bool mons_class_flag(int mc, uint64_t bf)
@@ -449,96 +440,6 @@ int scan_mon_inv_randarts(const monster* mon,
     return (ret);
 }
 
-static int _scan_mon_inv_items(const monster* mon,
-                               bool (*item_type)(const item_def&))
-{
-    int ret = 0;
-
-    if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
-    {
-        const int weapon = mon->inv[MSLOT_WEAPON];
-        const int second = mon->inv[MSLOT_ALT_WEAPON]; // Two-headed ogres, etc.
-        const int misc   = mon->inv[MSLOT_MISCELLANY];
-        const int potion = mon->inv[MSLOT_POTION];
-        const int wand   = mon->inv[MSLOT_WAND];
-        const int scroll = mon->inv[MSLOT_SCROLL];
-
-        if (weapon != NON_ITEM && mitm[weapon].base_type == OBJ_WEAPONS
-            && item_type(mitm[weapon]))
-        {
-            ret++;
-        }
-
-        if (second != NON_ITEM && mitm[second].base_type == OBJ_WEAPONS
-            && item_type(mitm[second]))
-        {
-            ret++;
-        }
-
-        if (misc != NON_ITEM && mitm[misc].base_type == OBJ_MISCELLANY
-            && item_type(mitm[misc]))
-        {
-            ret++;
-        }
-
-        if (potion != NON_ITEM && mitm[potion].base_type == OBJ_POTIONS
-            && item_type(mitm[potion]))
-        {
-            ret++;
-        }
-
-        if (wand != NON_ITEM && mitm[misc].base_type == OBJ_WANDS
-            && item_type(mitm[wand]))
-        {
-            ret++;
-        }
-
-        if (scroll != NON_ITEM && mitm[scroll].base_type == OBJ_SCROLLS
-            && item_type(mitm[scroll]))
-        {
-            ret++;
-        }
-    }
-
-    return (ret);
-}
-
-static bool _mons_has_undrinkable_potion(const monster* mon)
-{
-    if (mons_itemuse(mon) >= MONUSE_STARTING_EQUIPMENT)
-    {
-        const int potion = mon->inv[MSLOT_POTION];
-
-        if (potion != NON_ITEM && mitm[potion].base_type == OBJ_POTIONS)
-        {
-            const potion_type ptype =
-                static_cast<potion_type>(mitm[potion].sub_type);
-
-            if (!mon->can_drink_potion(ptype))
-                return (true);
-        }
-    }
-
-    return (false);
-}
-
-int mons_unusable_items(const monster* mon)
-{
-    int ret = 0;
-
-    if (mon->is_holy())
-        ret += _scan_mon_inv_items(mon, is_evil_item) > 0;
-    else if (mon->undead_or_demonic())
-    {
-        ret += _scan_mon_inv_items(mon, is_holy_item) > 0;
-
-        if (mon->holiness() == MH_UNDEAD && _mons_has_undrinkable_potion(mon))
-            ret++;
-    }
-
-    return (ret);
-}
-
 mon_holy_type mons_class_holiness(int mc)
 {
     ASSERT(smc);
@@ -551,12 +452,6 @@ bool mons_class_is_confusable(int mc)
     return (smc->resist_magic < MAG_IMMUNE
             && mons_class_holiness(mc) != MH_NONLIVING
             && mons_class_holiness(mc) != MH_PLANT);
-}
-
-bool mons_class_is_slowable(int mc)
-{
-    ASSERT(smc);
-    return (smc->resist_magic < MAG_IMMUNE);
 }
 
 bool mons_class_is_stationary(int mc)
@@ -787,14 +682,9 @@ bool mons_is_slime(const monster* mon)
     return (mons_class_is_slime(mon->type));
 }
 
-bool herd_monster_class(int mc)
-{
-    return (mons_class_flag(mc, M_HERD));
-}
-
 bool herd_monster(const monster * mon)
 {
-    return (herd_monster_class(mon->type));
+    return (mons_class_flag(mon->type, M_HERD));
 }
 
 // Plant or fungus really
@@ -1553,7 +1443,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
     return (zombified ? _downscale_zombie_attack(mon, attk) : attk);
 }
 
-int mons_damage(int mc, int rt)
+static int _mons_damage(int mc, int rt)
 {
     if (rt < 0 || rt > 3)
         rt = 0;
@@ -1705,19 +1595,38 @@ int mons_avg_hp(int mc)
             + me->hpdice[3]);
 }
 
-int exper_value(const monster* mon)
+int exper_value(const monster* mon, bool real)
 {
     long x_val = 0;
 
     // These four are the original arguments.
     const int mc          = mon->type;
-    const int hd          = mon->hit_dice;
+    int hd                = mon->hit_dice;
     int maxhp             = mon->max_hit_points;
 
-    // A berserking monster is much harder, but the xp value shouldn't depend
-    // on whether it was berserk at the moment of death.
-    if (mon->has_ench(ENCH_BERSERK))
-        maxhp = (maxhp * 2 + 1) / 3;
+    // pghosts and pillusions have no reasonable base values, and you can look
+    // up the exact value anyway.  Especially for pillusions.
+    if (real || mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PLAYER_ILLUSION)
+    {
+        // A berserking monster is much harder, but the xp value shouldn't
+        // depend on whether it was berserk at the moment of death.
+        if (mon->has_ench(ENCH_BERSERK))
+            maxhp = (maxhp * 2 + 1) / 3;
+    }
+    else
+    {
+        const monsterentry *m = get_monster_data(mons_base_type(mon));
+        ASSERT(m);
+
+        // Use real hd, zombies would use the basic species and lose
+        // information known to the player ("orc warrior zombie").  Monsters
+        // levelling up is visible (although it may happen off-screen), so
+        // this is hardly ever a leak.  Only Pan lords are unknown in the
+        // general.
+        if (m->mc == MONS_PANDEMONIUM_LORD)
+            hd = m->hpdice[0];
+        maxhp = hd * m->hpdice[1] + (hd * (1 + m->hpdice[2])) / 2 + m->hpdice[3];
+    }
 
     // Hacks to make merged slime creatures not worth so much exp.  We
     // will calculate the experience we would get for 1 blob, and then
@@ -1803,7 +1712,7 @@ int exper_value(const monster* mon)
     {
         int max_melee = 0;
         for (int i = 0; i < 4; ++i)
-            max_melee += mons_damage(mc, i);
+            max_melee += _mons_damage(mc, i);
 
         if (max_melee > 30)
             diff += (max_melee / ((speed == 10) ? 2 : 1));
@@ -1924,11 +1833,6 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[1] = MST_NECROMANCER_II;
         break;
 
-    case MONS_DEEP_DWARF_NECROMANCER:
-        book[0] = MST_DEEP_DWARF_NECROMANCER;
-        book[1] = MST_JESSICA;
-        break;
-
     case MONS_UNBORN_DEEP_DWARF:
         book[0] = MST_UNBORN_DEEP_DWARF;
         book[1] = MST_NECROMANCER_I;
@@ -2047,7 +1951,7 @@ uint8_t random_monster_colour()
 }
 
 // Butterflies
-uint8_t random_butterfly_colour()
+static uint8_t _random_butterfly_colour()
 {
     uint8_t col;
     // Restricted to 'light' colours.
@@ -2059,28 +1963,29 @@ uint8_t random_butterfly_colour()
 }
 
 // Abominations.
-uint8_t random_large_abomination_colour()
+static uint8_t _random_large_abomination_colour()
 {
     uint8_t col;
     // Restricted colours:
     //  MAGENTA = orb guardian
     //  GREEN = tentacled monstrosity
     //  LIGHTCYAN = octopode
-    //  RED, LIGHTRED, BROWN = used for twisted resurrection
+    //  RED, LIGHTRED = used for undead abominations (Twisted Resurrection)
     do
         col = random_monster_colour();
     while (col == MAGENTA || col == GREEN || col == LIGHTCYAN || col == RED
-           || col == LIGHTRED || col == BROWN);
+           || col == LIGHTRED);
 
     return (col);
 }
 
-uint8_t random_small_abomination_colour()
+static uint8_t _random_small_abomination_colour()
 {
     uint8_t col;
     // Restricted colours:
     //  MAGENTA = unseen horror
-    //  RED, LIGHTRED, BROWN = used for twisted resurrection
+    //  RED, LIGHTRED = used for undead abominations (Twisted Resurrection)
+    //  BROWN = used for crawling corpses/macabre masses
     do
         col = random_monster_colour();
     while (col == MAGENTA || col == RED || col == LIGHTRED || col == BROWN);
@@ -2131,14 +2036,14 @@ void define_monster(monster* mons)
     switch (mcls)
     {
     case MONS_BUTTERFLY:
-        col = random_butterfly_colour();
+        col = _random_butterfly_colour();
         break;
 
     case MONS_ABOMINATION_SMALL:
         hd = 4 + random2(4);
         ac = 3 + random2(7);
         ev = 7 + random2(6);
-        col = random_small_abomination_colour();
+        col = _random_small_abomination_colour();
         break;
 
     case MONS_ZOMBIE_SMALL:
@@ -2149,7 +2054,7 @@ void define_monster(monster* mons)
         hd = 8 + random2(4);
         ac = 5 + random2avg(9, 2);
         ev = 3 + random2(5);
-        col = random_large_abomination_colour();
+        col = _random_large_abomination_colour();
         break;
 
     case MONS_ZOMBIE_LARGE:
@@ -2688,14 +2593,6 @@ bool mons_self_destructs(const monster* m)
             || m->type == MONS_ORB_OF_DESTRUCTION);
 }
 
-int mons_base_damage_brand(const monster* m)
-{
-    if (mons_is_ghost_demon(m->type))
-        return (m->ghost->brand);
-
-    return (SPWPN_NORMAL);
-}
-
 bool mons_att_wont_attack(mon_attitude_type fr)
 {
     return (fr == ATT_FRIENDLY || fr == ATT_GOOD_NEUTRAL
@@ -2782,11 +2679,6 @@ bool mons_is_immotile(const monster* mons)
 bool mons_is_batty(const monster* m)
 {
     return mons_class_flag(m->type, M_BATTY);
-}
-
-bool mons_was_seen(const monster* m)
-{
-    return testbits(m->flags, MF_SEEN);
 }
 
 bool mons_looks_stabbable(const monster* m)
@@ -4354,7 +4246,7 @@ bool mons_is_tentacle_end(const int mtype)
 mon_threat_level_type mons_threat_level(const monster *mon, bool real)
 {
     const double factor = sqrt(exp_needed(you.experience_level) / 30.0);
-    const int tension = exper_value(mon) / (1 + factor);
+    const int tension = exper_value(mon, real) / (1 + factor);
 
     if (tension <= 0)
         // Conjurators use melee to conserve mana, MDFis switch plates...

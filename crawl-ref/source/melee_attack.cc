@@ -1152,6 +1152,17 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
     if (you.species != SP_OCTOPODE && baseattack == UNAT_PUNCH && !you.has_usable_offhand())
         baseattack = UNAT_NO_ATTACK;
 
+    // With fangs, replace head attacks with bites.
+    if ((you.has_usable_fangs() || player_mutation_level(MUT_ACIDIC_BITE))
+        && baseattack == UNAT_HEADBUTT)
+    {
+        baseattack = UNAT_BITE;
+    }
+
+    // Felids turn kicks into bites.
+    if (you.species == SP_FELID && baseattack == UNAT_KICK)
+        baseattack = UNAT_BITE;
+
     // Nagas turn kicks into headbutts.
     if (you.species == SP_NAGA && baseattack == UNAT_KICK)
         baseattack = UNAT_HEADBUTT;
@@ -1437,7 +1448,8 @@ void melee_attack::player_warn_miss()
 int melee_attack::player_stat_modify_damage(int damage)
 {
     int dammod = 78;
-    const int dam_stat_val = calc_stat_to_dam_base();
+    // Use the same str/dex weighting that unarmed combat does, for now.
+    const int dam_stat_val = (7 * you.strength() + 3 * you.dex())/10;
 
     if (dam_stat_val > 11)
         dammod += (random2(dam_stat_val - 11) * 2);
@@ -4583,8 +4595,8 @@ int melee_attack::calc_your_to_hit_unarmed(int uattack, bool vampiric)
     int your_to_hit;
 
     your_to_hit = 1300
-                + you.dex() * 50
-                + you.strength() * 20
+                + you.dex() * 60
+                + you.strength() * 15
                 + you.skill(SK_FIGHTING, 30);
     your_to_hit /= 100;
 

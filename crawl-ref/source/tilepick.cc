@@ -1165,6 +1165,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_UNSEEN_HORROR;
     case MONS_ABOMINATION_SMALL:
         return TILEP_MONS_ABOMINATION_SMALL;
+    case MONS_CRAWLING_CORPSE:
+        return TILEP_MONS_CRAWLING_CORPSE;
+    case MONS_MACABRE_MASS:
+        return TILEP_MONS_MACABRE_MASS;
 
     // abyssal monsters (not assigned/implemented yet)
     case MONS_LURKING_HORROR:
@@ -1739,10 +1743,6 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_SHADOW;
     case MONS_DEATH_COB:
         return TILEP_MONS_DEATH_COB;
-    case MONS_CRAWLING_CORPSE:
-        return TILEP_MONS_CRAWLING_CORPSE;
-    case MONS_MACABRE_MASS:
-        return TILEP_MONS_MACABRE_MASS;
 
     // -------------------------------------
     // non-human uniques, sorted by glyph, then difficulty
@@ -3049,8 +3049,8 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
             return TILE_ARM_PLATE_ARMOUR_ORC;
         return TILE_ARM_PLATE_ARMOUR;
 
-    case ARM_CRYSTAL_PLATE:
-        return TILE_ARM_CRYSTAL_PLATE;
+    case ARM_CRYSTAL_PLATE_ARMOUR:
+        return TILE_ARM_CRYSTAL_PLATE_ARMOUR;
 
     case ARM_SHIELD:
         return TILE_ARM_SHIELD;

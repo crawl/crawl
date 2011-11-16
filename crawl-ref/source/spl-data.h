@@ -369,7 +369,7 @@ struct spell_desc
      SPTYP_POISON,
      SPFLAG_AREA | SPFLAG_BATTLE,
      4,
-     0,
+     100,
      -1, -1,
      0,
      NULL,
@@ -459,7 +459,7 @@ struct spell_desc
     SPELL_MASS_ABJURATION, "Mass Abjuration",
      SPTYP_SUMMONING,
      SPFLAG_AREA | SPFLAG_NEUTRAL | SPFLAG_ESCAPE,
-     7,
+     6,
      200,
      -1, -1,
      0,
@@ -749,14 +749,15 @@ struct spell_desc
 
 {
     SPELL_CONTROL_UNDEAD, "Control Undead",
-     SPTYP_HEXES | SPTYP_NECROMANCY,
+     SPTYP_NECROMANCY,
      SPFLAG_NONE,
-     5,
+     4,
      200,
      -1, -1,
      0,
      NULL,
-     true
+     true,
+     false
 },
 
 {
@@ -945,7 +946,7 @@ struct spell_desc
     SPELL_DISPEL_UNDEAD, "Dispel Undead",
      SPTYP_NECROMANCY,
      SPFLAG_DIR_OR_TARGET,
-     4,
+     5,
      100,
      5, 5,
      0,
@@ -1708,10 +1709,10 @@ struct spell_desc
     SPELL_ENGLACIATION, "Metabolic Englaciation",
      SPTYP_HEXES | SPTYP_ICE,
      SPFLAG_AREA,
-     7,
+     6,
      200,
      -1, -1,
-     -7,//putting a monster to sleep should be silent
+     0,
      NULL,
      false,
      false

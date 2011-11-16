@@ -104,7 +104,7 @@ static bool _is_cancellable_scroll(scroll_type scroll);
 bool can_wield(item_def *weapon, bool say_reason,
                bool ignore_temporary_disability, bool unwield)
 {
-#define SAY(x) if (say_reason) { x; } else
+#define SAY(x) {if (say_reason) { x; }}
 
     if (!ignore_temporary_disability && you.berserk())
     {
@@ -446,7 +446,7 @@ static const char *shield_impact_degree(int impact)
                          : NULL);
 }
 
-static void warn_launcher_shield_slowdown(const item_def &launcher)
+static void _warn_launcher_shield_slowdown(const item_def &launcher)
 {
     const int slowspeed =
         launcher_final_speed(launcher, you.shield()) * player_speed() / 100;
@@ -481,7 +481,7 @@ void warn_shield_penalties()
         return;
 
     if (is_range_weapon(*weapon))
-        warn_launcher_shield_slowdown(*weapon);
+        _warn_launcher_shield_slowdown(*weapon);
     else if (weapon_skill(*weapon) == SK_STAVES
              && cmp_weapon_size(*weapon, SIZE_LARGE) >= 0)
     {
@@ -666,6 +666,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 mpr("You can't wear gloves with your huge claws!");
             return (false);
         }
+
+        if (you.has_tentacles(false) == 3)
+        {
+            if (verbose)
+                mpr("Gloves don't fit your tentacles!");
+            return (false);
+        }
     }
 
     if (sub_type == ARM_BOOTS)
@@ -677,7 +684,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return (false);
         }
 
-        if (player_mutation_level(MUT_TALONS) == 3)
+        if (you.has_talons(false) == 3)
         {
             if (verbose)
                 mpr("Boots don't fit your talons!");
@@ -1409,7 +1416,8 @@ void throw_item_no_quiver()
 
 // Returns delay multiplier numerator (denominator should be 100) for the
 // launcher with the currently equipped shield.
-int launcher_shield_slowdown(const item_def &launcher, const item_def *shield)
+static int _launcher_shield_slowdown(const item_def &launcher,
+                                     const item_def *shield)
 {
     int speed_adjust = 100;
     if (!shield)
@@ -1465,7 +1473,7 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield)
 
     if (shield)
     {
-        const int speed_adjust = launcher_shield_slowdown(launcher, shield);
+        const int speed_adjust = _launcher_shield_slowdown(launcher, shield);
 
         // Shields also reduce the speed cap.
         speed_base = speed_base * speed_adjust / 100;
@@ -1655,6 +1663,8 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
 
     if (victim->atype() == ACT_PLAYER)
     {
+        stop_delay(true);
+
         // Leave a purple cloud.
         place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
 
@@ -3550,7 +3560,7 @@ static bool _swap_rings_octopode(int ring_slot)
     return (true);
 }
 
-bool puton_item(int item_slot)
+static bool _puton_item(int item_slot)
 {
     item_def& item = you.inv[item_slot];
 
@@ -3706,7 +3716,7 @@ bool puton_ring(int slot)
     if (prompt_failed(item_slot))
         return (false);
 
-    return puton_item(item_slot);
+    return _puton_item(item_slot);
 }
 
 bool remove_ring(int slot, bool announce)
@@ -4416,7 +4426,7 @@ static void _explosion(coord_def where, actor *agent, beam_type flavour,
 }
 
 // Returns true if a message has already been printed (which will identify
-// the scroll.)
+// the scroll).
 static bool _vorpalise_weapon(bool already_known)
 {
     if (!you.weapon())
@@ -4463,16 +4473,18 @@ static bool _vorpalise_weapon(bool already_known)
     case SPWPN_FLAME:
     case SPWPN_FLAMING:
         mprf("%s is engulfed in an explosion of flames!", itname.c_str());
-        immolation(10, IMMOLATION_SCROLL, you.pos(), already_known, &you);
+        immolation(10, IMMOLATION_SPELL, you.pos(), already_known, &you);
         break;
 
     case SPWPN_FROST:
     case SPWPN_FREEZING:
-        if (get_weapon_brand(wpn) == SPWPN_FROST)
-            mprf("%s is covered with a thick layer of frost!", itname.c_str());
+        if (cast_refrigeration(60, !already_known, false) != SPRET_SUCCESS)
+        {
+            canned_msg(MSG_OK);
+            success = false;
+        }
         else
-            mprf("%s glows brilliantly blue for a moment.", itname.c_str());
-        cast_refrigeration(60, false, false);
+            mprf("%s is covered with a thick layer of frost!", itname.c_str());
         break;
 
     case SPWPN_DRAINING:
@@ -4481,8 +4493,13 @@ static bool _vorpalise_weapon(bool already_known)
         break;
 
     case SPWPN_VENOM:
-        mprf("%s seems more permanently poisoned.", itname.c_str());
-        cast_toxic_radiance();
+        if (cast_toxic_radiance(!already_known) != SPRET_SUCCESS)
+        {
+            canned_msg(MSG_OK);
+            success = false;
+        }
+        else
+            mprf("%s seems more permanently poisoned.", itname.c_str());
         break;
 
     case SPWPN_ELECTROCUTION:
@@ -4497,10 +4514,10 @@ static bool _vorpalise_weapon(bool already_known)
         // need to affix it immediately, otherwise transformation will break it
         if (success)
             you.duration[DUR_WEAPON_BRAND] = 0;
+        xom_is_stimulated(200);
         // but the eruption _is_ guaranteed.  What it will do is not.
         _explosion(you.pos(), &you, BEAM_CHAOS, "chaos eruption", "chaos affixation");
-        xom_is_stimulated(200);
-        switch(random2(success? 2 : 4))
+        switch (random2(success ? 2 : 4))
         {
         case 3:
             if (transform(50, coinflip() ? TRAN_PIG :
@@ -4932,10 +4949,14 @@ static void _vulnerability_scroll()
 bool _is_cancellable_scroll(scroll_type scroll)
 {
     return (scroll == SCR_IDENTIFY
-            || scroll == SCR_BLINKING || scroll == SCR_RECHARGING
-            || scroll == SCR_ENCHANT_ARMOUR || scroll == SCR_AMNESIA
-            || scroll == SCR_REMOVE_CURSE || scroll == SCR_CURSE_ARMOUR
-            || scroll == SCR_CURSE_JEWELLERY);
+            || scroll == SCR_BLINKING
+            || scroll == SCR_RECHARGING
+            || scroll == SCR_ENCHANT_ARMOUR
+            || scroll == SCR_AMNESIA
+            || scroll == SCR_REMOVE_CURSE
+            || scroll == SCR_CURSE_ARMOUR
+            || scroll == SCR_CURSE_JEWELLERY
+            || scroll == SCR_VORPALISE_WEAPON);
 }
 
 void read_scroll(int slot)
@@ -5259,14 +5280,21 @@ void read_scroll(int slot)
         break;
 
     case SCR_VORPALISE_WEAPON:
+        if (!alreadyknown)
+            mpr(pre_succ_msg);
         id_the_scroll = _vorpalise_weapon(alreadyknown);
-        if (!id_the_scroll && item_type_known(OBJ_SCROLLS, SCR_CURSE_WEAPON))
-        {
-            mpr("You feel like taking on a jabberwock.");
-            id_the_scroll = true;
-        }
         if (!id_the_scroll)
-            canned_msg(MSG_NOTHING_HAPPENS);
+            if (alreadyknown)
+            {
+                mpr("This will not work.");
+                cancel_scroll = true;
+                break;
+            }
+            else if (item_type_known(OBJ_SCROLLS, SCR_CURSE_WEAPON))
+            {
+                mpr("You feel like taking on a jabberwock.");
+                id_the_scroll = true;
+            }
         break;
 
     case SCR_IDENTIFY:

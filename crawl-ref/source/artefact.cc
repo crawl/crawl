@@ -217,9 +217,16 @@ static bool _god_fits_artefact(const god_type which_god, const item_def &item,
         break;
 
     case GOD_ASHENZARI:
-        // Cursed god: no holy wrath (since that brand repels curses).
+        // Cursed god: no holy wrath (since that brand repels curses) or
+        // pearl dragon armour (since that armour type repels curses).
         if (brand == SPWPN_HOLY_WRATH)
             return (false);
+
+        if (item.base_type == OBJ_ARMOUR
+            && item.sub_type == ARM_PEARL_DRAGON_ARMOUR)
+        {
+            return (false);
+        }
         break;
 
     default:
@@ -429,12 +436,33 @@ void artefact_desc_properties(const item_def &item,
 
     artefact_wpn_properties(item, proprt, known);
 
-    if (item.base_type == OBJ_ARMOUR
-        && item.sub_type == ARM_GOLD_DRAGON_ARMOUR)
+    if (item.base_type == OBJ_ARMOUR)
     {
-        ++proprt[ARTP_POISON];
-        ++proprt[ARTP_FIRE];
-        ++proprt[ARTP_COLD];
+        switch (item.sub_type)
+        {
+        case ARM_SWAMP_DRAGON_ARMOUR:
+            ++proprt[ARTP_POISON];
+            break;
+        case ARM_FIRE_DRAGON_ARMOUR:
+            ++proprt[ARTP_FIRE];
+            --proprt[ARTP_COLD];
+            break;
+        case ARM_ICE_DRAGON_ARMOUR:
+            --proprt[ARTP_FIRE];
+            ++proprt[ARTP_COLD];
+            break;
+        case ARM_PEARL_DRAGON_ARMOUR:
+            ++proprt[ARTP_NEGATIVE_ENERGY];
+            break;
+        case ARM_STORM_DRAGON_ARMOUR:
+            ++proprt[ARTP_ELECTRICITY];
+            break;
+        case ARM_GOLD_DRAGON_ARMOUR:
+            ++proprt[ARTP_POISON];
+            ++proprt[ARTP_FIRE];
+            ++proprt[ARTP_COLD];
+            break;
+        }
     }
 
     if (!force_fake_props && item_ident(item, ISFLAG_KNOW_PROPERTIES))
@@ -1082,7 +1110,8 @@ void static _get_randart_properties(const item_def &item,
                 break;              // already does this or something
             }
             if (aclass == OBJ_ARMOUR
-                && (atype == ARM_FIRE_DRAGON_ARMOUR || atype == ARM_ICE_DRAGON_ARMOUR
+                && (atype == ARM_FIRE_DRAGON_ARMOUR
+                    || atype == ARM_ICE_DRAGON_ARMOUR
                     || atype == ARM_GOLD_DRAGON_ARMOUR))
             {
                 break;
@@ -1097,7 +1126,8 @@ void static _get_randart_properties(const item_def &item,
                 break;              // already does this or something
             }
             if (aclass == OBJ_ARMOUR
-                && (atype == ARM_FIRE_DRAGON_ARMOUR || atype == ARM_ICE_DRAGON_ARMOUR
+                && (atype == ARM_FIRE_DRAGON_ARMOUR
+                    || atype == ARM_ICE_DRAGON_ARMOUR
                     || atype == ARM_GOLD_DRAGON_ARMOUR))
             {
                 break;

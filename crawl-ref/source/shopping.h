@@ -27,7 +27,6 @@ void destroy_shop_at(coord_def p);
 void destroy_shop(shop_struct *shop);
 
 std::string shop_type_name (shop_type type);
-std::string shop_type_suffix (shop_type type, const coord_def &where);
 std::string shop_name(const coord_def& where);
 std::string shop_name(const coord_def& where, bool add_stop);
 

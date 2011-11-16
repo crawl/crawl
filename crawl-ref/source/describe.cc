@@ -777,7 +777,7 @@ static std::string _corrosion_resistance_string(const item_def &item)
     else if (ench >= 4 && item_ident(item, ISFLAG_KNOW_PLUSES))
         return make_stringf(format, "extremely resistant");
     else if (item.base_type == OBJ_ARMOUR
-             && item.sub_type == ARM_CRYSTAL_PLATE)
+             && item.sub_type == ARM_CRYSTAL_PLATE_ARMOUR)
     {
         return "\nBeing made of crystal renders it very resistant to acidic "
                "corrosion.";
@@ -2199,6 +2199,10 @@ std::string get_item_description(const item_def &item, bool verbose,
     if (origin_describable(item))
         description << "\n" << origin_desc(item) << ".";
 
+    if (verbose)
+        description << "\n\n" << "Stash search prefixes: "
+                    << userdef_annotate_item(STASH_LUA_SEARCH_ANNOTATE, &item);
+
     return description.str();
 }
 
@@ -3396,11 +3400,11 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
     std::string quote2;
     if (!mons_is_unique(mi.type))
     {
-        std::string symbol_prefix = "__";
-        symbol_prefix += symbol;
-        symbol_prefix += "_prefix";
+        std::string symbol_prefix = "__" + symbol + "_prefix";
         inf.prefix = getLongDescription(symbol_prefix);
-        quote2 = getQuoteString(symbol_prefix);
+
+        std::string symbol_suffix = "__" + symbol + "_suffix";
+        quote2 = getQuoteString(symbol_suffix);
     }
 
     if (!inf.quote.empty() && !quote2.empty())

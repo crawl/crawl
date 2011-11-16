@@ -35,8 +35,6 @@ struct status_info
     std::string long_text;  // @ message
 };
 
-int dur_colour(int exp_colour, bool expiring);
-
 // status should be a duration or status_type
 // *info will be filled in as appropriate for current
 // character state

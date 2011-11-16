@@ -444,11 +444,6 @@ bool spell_harms_area(spell_type spell)
     return false;
 }
 
-bool spell_sanctuary_castable(spell_type spell)
-{
-    return false;
-}
-
 // applied to spell misfires (more power = worse) and triggers
 // for Xom acting (more power = more likely to grab his attention) {dlb}
 int spell_mana(spell_type which_spell)
@@ -574,8 +569,8 @@ int apply_area_visible(cell_func cf, int power,
 
 // Applies the effect to all nine squares around/including the target.
 // Returns summation of return values from passed in function.
-int apply_area_square(cell_func cf, const coord_def& where, int power,
-                      actor *agent)
+static int _apply_area_square(cell_func cf, const coord_def& where,
+                              int power, actor *agent)
 {
     int rv = 0;
 
@@ -588,8 +583,8 @@ int apply_area_square(cell_func cf, const coord_def& where, int power,
 
 // Applies the effect to the eight squares beside the target.
 // Returns summation of return values from passed in function.
-int apply_area_around_square(cell_func cf, const coord_def& where, int power,
-                             actor *agent)
+static int _apply_area_around_square(cell_func cf, const coord_def& where,
+                                     int power, actor *agent)
 {
     int rv = 0;
 
@@ -631,10 +626,10 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
         return 0;
 
     if (max_targs >= 9 && !exclude_center)
-        return (apply_area_square(cf, where, power, agent));
+        return (_apply_area_square(cf, where, power, agent));
 
     if (max_targs >= 8 && exclude_center)
-        return (apply_area_around_square(cf, where, power, agent));
+        return (_apply_area_around_square(cf, where, power, agent));
 
     coord_def targs[8];
 
@@ -1145,7 +1140,7 @@ spell_type zap_type_to_spell(zap_type zap)
     return SPELL_NO_SPELL;
 }
 
-bool spell_is_empowered(spell_type spell)
+static bool _spell_is_empowered(spell_type spell)
 {
     if ((you.religion == GOD_VEHUMET)
         && vehumet_supports_spell(spell)
@@ -1258,7 +1253,7 @@ bool spell_is_useless(spell_type spell, bool transient)
 // as you can see, the functions it uses to determine highlights are:
 //       god_hates_spell(spell, god)
 //       god_likes_spell(spell, god)
-//       spell_is_empowered(spell)
+//       _spell_is_empowered(spell)
 //       spell_is_useless(spell, transient)
 int spell_highlight_by_utility(spell_type spell, int default_color,
                                bool transient, bool rod_spell)
@@ -1268,7 +1263,7 @@ int spell_highlight_by_utility(spell_type spell, int default_color,
     if (god_hates_spell(spell, you.religion))
         return (COL_FORBIDDEN);
 
-    if (spell_is_empowered(spell) && !rod_spell)
+    if (_spell_is_empowered(spell) && !rod_spell)
         default_color = COL_EMPOWERED;
 
     if (spell_is_useless(spell, transient))

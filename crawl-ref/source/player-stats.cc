@@ -93,19 +93,16 @@ void attribute_increase()
         case 's':
         case 'S':
             modify_stat(STAT_STR, 1, false, "level gain");
-            you.last_chosen = STAT_STR;
             return;
 
         case 'i':
         case 'I':
             modify_stat(STAT_INT, 1, false, "level gain");
-            you.last_chosen = STAT_INT;
             return;
 
         case 'd':
         case 'D':
             modify_stat(STAT_DEX, 1, false, "level gain");
-            you.last_chosen = STAT_DEX;
             return;
         }
     }
@@ -712,7 +709,7 @@ void update_stat_zero()
     default:
         if (you.duration[DUR_PARALYSIS])
             break;
-        mprf(MSGCH_WARN, "Your lost attributes cause you to faint.");
+        mpr("Your lost attributes cause you to faint.", MSGCH_WARN);
         you.increase_duration(DUR_PARALYSIS, 1 + roll_dice(num_para, 3));
         break;
     }
