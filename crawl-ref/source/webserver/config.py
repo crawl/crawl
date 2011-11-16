@@ -76,6 +76,8 @@ dgl_status_file = "./rcs/status"
 
 status_file_update_rate = 5
 
+recording_term_size = (80, 24)
+
 max_connections = 100
 
 # Script to initialize a user, e.g. make sure the paths
