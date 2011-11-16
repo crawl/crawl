@@ -19,6 +19,7 @@
 #include "newgame.h"
 #include "ng-setup.h"
 #include "mapmark.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "jobs.h"
@@ -157,6 +158,8 @@ LUARET1(you_nauseous, boolean, you.duration[DUR_NAUSEA])
 LUARET1(you_rotting, boolean, you.rotting)
 LUARET1(you_silenced, boolean, silenced(you.pos()))
 LUARET1(you_sick, boolean, you.disease)
+LUARET1(you_contaminated, boolean, you.magic_contamination!=0)
+LUARET1(you_feel_safe, boolean, i_feel_safe())
 LUARET1(you_deaths, number, you.deaths)
 LUARET1(you_lives, number, you.lives)
 
@@ -354,6 +357,8 @@ static const struct luaL_reg you_clib[] =
     { "rotting",      you_rotting },
     { "silenced",     you_silenced },
     { "sick",         you_sick },
+    { "contaminated", you_contaminated },
+    { "feel_safe",    you_feel_safe },
     { "deaths",       you_deaths },
     { "lives",        you_lives },
     { "piety_rank",   you_piety_rank },
