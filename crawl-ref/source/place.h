@@ -35,8 +35,6 @@ int absdungeon_depth(branch_type branch, int depth);
 
 bool single_level_branch(branch_type branch);
 
-bool branch_exits_up(branch_type branch);
-bool branch_exits_down(branch_type branch);
 bool branch_allows_followers(branch_type branch);
 bool branch_is_stash_trackable(branch_type branch);
 

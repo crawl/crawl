@@ -107,32 +107,6 @@ int absdungeon_depth(branch_type branch, int subdepth)
     return subdepth;
 }
 
-// Returns true if exits from this type of level involve going upstairs.
-bool branch_exits_up(branch_type branch)
-{
-    switch (branch)
-    {
-    case BRANCH_ZIGGURAT:
-    case BRANCH_LABYRINTH:
-    case BRANCH_BAZAAR:
-    case BRANCH_TROVE:
-    case BRANCH_SEWER:
-    case BRANCH_OSSUARY:
-    case BRANCH_BAILEY:
-    case BRANCH_ICE_CAVE:
-    case BRANCH_VOLCANO:
-    case BRANCH_WIZLAB:
-        return true;
-    default:
-        return false;
-    }
-}
-
-bool branch_exits_down(branch_type branch)
-{
-    return (branch == BRANCH_PANDEMONIUM || branch == BRANCH_ABYSS);
-}
-
 bool branch_allows_followers(branch_type branch)
 {
     return (is_connected_branch(branch) || branch == BRANCH_PANDEMONIUM);

@@ -298,7 +298,7 @@ bool wizard_create_feature(const coord_def& pos)
     if (feat == DNGN_ENTER_SHOP)
         return debug_make_shop(pos);
 
-    if (feat_is_portal(feat))
+    if (feat == DNGN_ENTER_PORTAL_VAULT)
         return wizard_create_portal(pos);
 
     env.tile_flv(pos).special = 0;
@@ -733,6 +733,17 @@ void debug_test_explore()
 
 void wizard_list_levels()
 {
+    if (!you.level_stack.empty())
+    {
+        mpr("Level stack:");
+        for (unsigned int i = 0; i < you.level_stack.size(); i++)
+        {
+            mprf(MSGCH_DIAGNOSTICS, i+1, // inhibit merging
+                 "%-10s (%d,%d)", you.level_stack[i].id.describe().c_str(),
+                 you.level_stack[i].pos.x, you.level_stack[i].pos.y);
+        }
+    }
+
     travel_cache.update_da_counters();
 
     std::vector<level_id> levs = travel_cache.known_levels();
