@@ -458,7 +458,7 @@ std::string pluralise(const std::string &name,
         // Vortex; vortexes is legal, but the classic plural is cooler.
         return name.substr(0, name.length() - 2) + "ices";
     }
-    else if (ends_with(name, "mosquito"))
+    else if (ends_with(name, "mosquito") || ends_with(name, "ss"))
     {
         return name + "es";
     }
@@ -510,7 +510,7 @@ std::string pluralise(const std::string &name,
     }
     else if (ends_with(name, "sheep") || ends_with(name, "fish")
              || ends_with(name, "folk") || ends_with(name, "spawn")
-             || ends_with(name, "kenku") || ends_with(name, "shedu")
+             || ends_with(name, "tengu") || ends_with(name, "shedu")
              // "shedu" is male, "lammasu" is female of the same creature
              || ends_with(name, "lammasu") || ends_with(name, "lamassu"))
     {

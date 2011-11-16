@@ -1902,7 +1902,7 @@ int mon_enchant::calc_duration(const monster* mons,
         // This may be a little too direct but the randomization at the end
         // of this function is excessive for toadstools. -cao
         return (2 * FRESHEST_CORPSE + random2(10))
-                  * speed_to_duration(mons->speed) * mons->speed / 10;
+                  * speed_to_duration(mons->speed);
     case ENCH_SPORE_PRODUCTION:
         // This is used as a simple timer, when the enchantment runs out
         // the monster will create a giant spore.

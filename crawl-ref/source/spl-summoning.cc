@@ -243,8 +243,9 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
             else
                 mon = MONS_SMALL_SNAKE;
 
-            int mon_index = create_monster(mgen_data(mon, beha, &you,
-                              0, SPELL_STICKS_TO_SNAKES, you.pos(), MHITYOU, 0, god), false);
+            const int mon_index = create_monster(mgen_data(mon, beha, &you,
+                                      0, SPELL_STICKS_TO_SNAKES, you.pos(),
+                                      MHITYOU, 0, god), false);
             if (mon_index != -1)
             {
                 count++;
@@ -278,8 +279,9 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
         if (pow > 90 && one_chance_in(3))
             mon = MONS_ANACONDA;
 
-        int mon_index = create_monster(mgen_data(mon, beha, &you,
-                          0, SPELL_STICKS_TO_SNAKES, you.pos(), MHITYOU, 0, god), false);
+        const int mon_index = create_monster(mgen_data(mon, beha, &you,
+                                  0, SPELL_STICKS_TO_SNAKES, you.pos(),
+                                  MHITYOU, 0, god), false);
         if (mon_index != -1)
         {
             count++;
@@ -2034,167 +2036,192 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     }
 }
 
-// Return the minimum mass for the specified undead abomination type.
-static int _undead_abomination_min_mass(monster_type abom_type)
-{
-    if (abom_type == MONS_ABOMINATION_LARGE)
-        return (500 + roll_dice(3, 1000));
-    else if (abom_type == MONS_ABOMINATION_SMALL)
-        return (400 + roll_dice(2, 500));
-    else
-        return (-1);
-}
 
 // Make the proper stat adjustments to turn a demonic abomination into
 // an undead abomination.
-static bool _undead_abomination_convert(monster* mon, int mass = -1,
-                                        int strength = -1)
+bool undead_abomination_convert(monster* mon, int hd)
 {
-    if (mon->type != MONS_ABOMINATION_LARGE
-        && mon->type != MONS_ABOMINATION_SMALL)
+    if (mon->type == MONS_CRAWLING_CORPSE
+        || mon->type == MONS_MACABRE_MASS)
+    {
+        mon->hit_points = mon->max_hit_points = mon->hit_dice = hd;
+        return (true);
+    }
+    else if (mon->type != MONS_ABOMINATION_LARGE
+             && mon->type != MONS_ABOMINATION_SMALL)
     {
         return (false);
     }
 
-    const int min_mass = _undead_abomination_min_mass(mon->type);
-
-    // Set 1 of 2 minimum masses: large or small.
-    if (mass == -1)
-        mass = min_mass;
-    else
-        mass = std::max(min_mass, mass);
-
-    // Set 1 of 3 strengths: 0 (low), 1 (medium) or 2 (high).
-    if (strength == -1)
-        strength = random2(3);
-    else
-        strength = std::min(2, std::max(0, strength));
+    const int max_hd = mon->type == MONS_ABOMINATION_LARGE ? 30 : 15;
+    const int max_ac = mon->type == MONS_ABOMINATION_LARGE ? 20 : 10;
 
     // Mark this abomination as undead.
     mon->flags |= MF_FAKE_UNDEAD;
 
-    mon->colour = ((strength == 2) ? LIGHTRED :
-                   (strength == 1) ? RED
-                                   : BROWN);
+    mon->colour = ((hd > 2 * max_hd / 3) ? LIGHTRED :
+                   (hd > max_hd / 2)     ? RED
+                                         : BROWN);
 
-    const int min_hd = mon->type == MONS_ABOMINATION_LARGE ?  8 :  4;
-    const int max_hd = mon->type == MONS_ABOMINATION_LARGE ? 30 : 15;
-    const int min_ac = mon->type == MONS_ABOMINATION_LARGE ?  5 :  3;
-    const int max_ac = mon->type == MONS_ABOMINATION_LARGE ? 20 : 10;
+    mon->hit_dice = std::min(max_hd, hd);
 
-    mon->hit_dice = min_hd + mass / ((strength == 2) ?  500 :
-                                     (strength == 1) ? 1000
-                                                     : 2500);
-    mon->hit_dice = std::min(max_hd, mon->hit_dice);
-
-    mon->max_hit_points = hit_points(mon->hit_dice, 2, 5);
-    mon->max_hit_points = std::max(mon->max_hit_points, 1);
+    mon->max_hit_points = std::max(1, hit_points(mon->hit_dice, 2, 5));
     mon->hit_points     = mon->max_hit_points;
 
-    mon->ac = min_ac + mass / ((strength == 2) ? 1000 :
-                               (strength == 1) ? 1500
-                                               : 3750);
-    mon->ac = std::min(max_ac, mon->ac);
+    mon->ac = std::min(max_ac, 2 * hd / 3);
 
     return (true);
 }
 
-static bool _make_undead_abomination(int mass, int strength,
-                                     int pow, god_type god = GOD_NO_GOD,
-                                     bool force_hostile = false)
+// Return a definite/indefinite article for (number) things.
+const char *_count_article(int number, bool definite)
 {
-    const int min_large = _undead_abomination_min_mass(MONS_ABOMINATION_LARGE);
-    const int min_small = _undead_abomination_min_mass(MONS_ABOMINATION_SMALL);
+    if (number == 0)
+        return ("No");
+    else if (definite)
+        return ("The");
+    else if (number == 1)
+        return ("A");
+    else
+        return ("Some");
+}
 
-    if (mass < min_small)
+bool twisted_resurrection(actor *caster, int pow, beh_type beha,
+                          unsigned short foe, god_type god, bool actual)
+{
+    int num_orcs = 0;
+    int num_holy = 0;
+    int num_crawlies = 0;
+    int num_masses = 0;
+    int num_lost = 0;
+    int num_lost_piles = 0;
+
+    radius_iterator ri(caster->pos(), pow / 25, C_ROUND,
+                       caster->get_los_no_trans());
+
+    for (; ri; ++ri)
+    {
+        int num_corpses = 0;
+        int total_mass = 0;
+
+        // Count up number/size of corpses at this location.
+        for (stack_iterator si(*ri); si; ++si)
+        {
+            if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
+            {
+                if (!actual)
+                    return (true);
+
+                if (mons_genus(si->plus) == MONS_ORC)
+                    num_orcs++;
+                if (mons_class_holiness(si->plus) == MH_HOLY)
+                    num_holy++;
+
+                if (food_is_rotten(*si))
+                    total_mass += mons_weight(si->plus) / 4;
+                else
+                    total_mass += mons_weight(si->plus);
+
+                ++num_corpses;
+                destroy_item(si->index());
+            }
+        }
+
+        if (num_corpses == 0)
+            continue;
+
+        // Maximum efficiency at 100 power: 1 HD per 20.0 aum.
+        // Half that at zero power.
+        int hd = div_rand_round((pow + 100) * total_mass, (200*300));
+
+        if (hd <= 0)
+        {
+            num_lost += num_corpses;
+            num_lost_piles++;
+            continue;
+        }
+
+        // Getting a huge abomination shouldn't be too easy.
+        if (hd > 15)
+            hd = 15 + (hd - 15) / 2;
+
+        hd = std::min(hd, 30);
+
+        monster_type montype;
+
+        if (hd >= 11 && num_corpses > 2)
+            montype = MONS_ABOMINATION_LARGE;
+        else if (hd >= 6 && num_corpses > 1)
+            montype = MONS_ABOMINATION_SMALL;
+        else if (num_corpses > 1)
+            montype = MONS_MACABRE_MASS;
+        else
+            montype = MONS_CRAWLING_CORPSE;
+
+        mgen_data mg(montype, beha, caster, 0, 0, *ri, foe, MG_FORCE_BEH, god);
+        const int mons = create_monster(mg);
+
+        if (mons != -1)
+        {
+            // Set hit dice, AC, and HP.
+            undead_abomination_convert(&menv[mons], hd);
+
+            // Override Lugonu/Makhleb, since these are not really demonic.
+            menv[mons].god = god;
+
+            if (num_corpses > 1)
+                ++num_masses;
+            else
+                ++num_crawlies;
+        }
+        else
+        {
+            num_lost += num_corpses;
+            num_lost_piles++;
+        }
+    }
+
+    if (num_lost + num_crawlies + num_masses == 0)
         return (false);
 
-    if (strength < 0 || strength > 2)
-        return (false);
+    // The tracer should have stopped at the first corpse, or found no
+    // corpses and returned false.
+    ASSERT(actual);
 
-    dprf("Mass for abomination: %d", mass);
+    if (num_lost)
+        mprf("%s %s into %s!",
+             _count_article(num_lost, num_crawlies + num_masses == 0),
+             num_lost == 1 ? "corpse collapses" : "corpses collapse",
+             num_lost_piles == 1 ? "a pulpy mess" : "pulpy messes");
 
-    // This is what the old statement pretty much boils down to;
-    // the average will be approximately 10 * pow (or about 1000
-    // at the practical maximum).  That's the same as the mass
-    // of a hippogriff, a spiny frog, or a steam dragon.  Thus,
-    // material components are far more important to this spell. - bwr
-    mass += roll_dice(20, pow);
+    if (num_crawlies > 0)
+        mprf("%s %s to drag %s along the ground!",
+             _count_article(num_crawlies, num_lost + num_masses == 0),
+             num_crawlies == 1 ? "corpse begins" : "corpses begin",
+             num_crawlies == 1 ? "itself" : "themselves");
 
-    dprf("Mass for abomination with power bonus: %d", mass);
+    if (num_masses > 0)
+        mprf("%s corpses meld into %s of writhing flesh!",
+             _count_article(2, num_crawlies + num_lost == 0),
+             num_masses == 1 ? "an agglomeration" : "agglomerations");
 
-    const monster_type abom_type =
-        mass >= min_large ? MONS_ABOMINATION_LARGE : MONS_ABOMINATION_SMALL;
-
-    mgen_data mg(abom_type, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
-                 !force_hostile ? &you : 0, 0, 0, you.pos(),
-                 MHITYOU, MG_FORCE_BEH, god);
-
-    const int mons = create_monster(mg);
-
-    if (mons == -1)
-        return (false);
-
-    _undead_abomination_convert(&menv[mons], mass, strength);
-
-    player_angers_monster(&menv[mons]);
+    if (num_orcs > 0 && caster == &you)
+        did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * num_orcs);
+    if (num_holy > 0 && caster == &you)
+        did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2 * num_holy);
 
     return (true);
 }
 
 spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
 {
-    int how_many_corpses = 0;
-    int how_many_orcs = 0;
-    int how_many_holy = 0;
-    int total_mass = 0;
-    int unrotted = 0;
-
-    for (stack_iterator si(you.pos()); si; ++si)
-    {
-        if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
-        {
-            fail_check();
-            total_mass += mons_weight(si->plus);
-            how_many_corpses++;
-            if (mons_genus(si->plus) == MONS_ORC)
-                how_many_orcs++;
-            if (mons_class_holiness(si->plus) == MH_HOLY)
-                how_many_holy++;
-            if (!food_is_rotten(*si))
-                unrotted++;
-            destroy_item(si->index());
-        }
-    }
-
-    if (how_many_corpses == 0)
+    if (twisted_resurrection(&you, pow, BEH_FRIENDLY, MHITYOU, god, !fail))
+        return (fail ? SPRET_FAIL : SPRET_SUCCESS);
+    else
     {
         mpr("There are no corpses here!");
         return SPRET_ABORT;
     }
-
-    const int strength = (unrotted == how_many_corpses)          ? 2 :
-                         (unrotted >= random2(how_many_corpses)) ? 1
-                                                                 : 0;
-
-    const bool success =
-        how_many_corpses > (coinflip() ? 2 : 1)
-            && _make_undead_abomination(total_mass, strength, pow, god);
-
-    if (success)
-        mpr("The corpses meld into an agglomeration of writhing flesh!");
-    else
-    {
-        mprf("The corpse%s collapse%s into a pulpy mess.",
-             how_many_corpses > 1 ? "s": "", how_many_corpses > 1 ? "": "s");
-    }
-
-    if (how_many_orcs > 0)
-        did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * how_many_orcs);
-    if (how_many_holy > 0)
-        did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2 * how_many_holy);
-
-    return SPRET_SUCCESS;
 }
 
 spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)

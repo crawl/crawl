@@ -126,6 +126,7 @@ protected:
     std::string debug_damage_number();
     std::string special_attack_punctuation();
     std::string attack_strength_punctuation();
+    std::string get_exclams(int dmg);
     std::string evasion_margin_adverb();
 
     std::string atk_name(description_level_type desc);

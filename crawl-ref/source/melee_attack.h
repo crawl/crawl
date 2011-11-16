@@ -100,6 +100,8 @@ private:
     /* Mutation Effects */
     void do_spines();
     void do_passive_freeze();
+    /* Race Effects */
+    void do_minotaur_retaliation();
 
     int inflict_damage(int dam, beam_type flavour = NUM_BEAMS, bool clean = false);
 

@@ -200,10 +200,12 @@ void monster_drop_things(monster* mons,
                 if (mark_item_origins && mitm[item].defined())
                     origin_set_monster(mitm[item], mons);
 
-                if (mons_is_unique(mons->type)
-                    && (mitm[item].base_type == OBJ_ARMOUR
-                        || mitm[item].base_type == OBJ_WEAPONS))
-                    add_inscription(mitm[item], mons->name(DESC_PLAIN, true));
+                if (mitm[item].props.exists("autoinscribe"))
+                {
+                    add_inscription(mitm[item],
+                        mitm[item].props["autoinscribe"].get_string());
+                    mitm[item].props.erase("autoinscribe");
+                }
 
                 // If a monster is swimming, the items are ALREADY
                 // underwater.
@@ -1297,7 +1299,6 @@ static int _destroy_tentacle(int tentacle_idx, monster* origin)
     if (invalid_monster_index(tentacle_idx))
         return (0);
 
-
     // Some issue with using monster_die leading to DEAD_MONSTER
     // or w/e. Using hurt seems to cause more problems though.
     for (monster_iterator mi; mi; ++mi)
@@ -1433,6 +1434,8 @@ static void _make_spectral_thing(monster* mons, bool quiet)
     }
 }
 
+static bool _mons_reaped(actor *killer, monster* victim);
+
 static bool _reaping(monster *mons)
 {
     if (!mons->props.exists("reaping_damage"))
@@ -1445,7 +1448,7 @@ static bool _reaping(monster *mons)
 
     actor *killer = actor_by_mid(mons->props["reaper"].get_int());
     if (killer)
-        return mons_reaped(killer, mons);
+        return _mons_reaped(killer, mons);
     return false;
 }
 
@@ -2183,6 +2186,11 @@ int monster_die(monster* mons, killer_type killer,
                         // Death Channel
                         simple_monster_message(mons, " fades into mist!");
                     }
+                    else
+                    {
+                        std::string msg = " " + summoned_poof_msg(mons) + "!";
+                        simple_monster_message(mons, msg.c_str());
+                    }
                 }
                 else
                 {
@@ -2350,6 +2358,11 @@ int monster_die(monster* mons, killer_type killer,
             mons->number = 0;
         else
             shedu_do_resurrection(mons);
+    }
+    else if (mons_is_phoenix(mons))
+    {
+        if (!was_banished)
+            phoenix_died(mons);
     }
     else if (mons_is_mimic(mons->type))
         drop_items = false;
@@ -2621,140 +2634,25 @@ static bool _is_poly_power_unsuitable(poly_power_type power,
     }
 }
 
-// If targetc == RANDOM_MONSTER, then relpower indicates the desired
-// power of the new monster, relative to the current monster.
-// Relaxation still takes effect when needed, no matter what relpower
-// says.
-bool monster_polymorph(monster* mons, monster_type targetc,
-                       poly_power_type power,
-                       bool force_beh)
+static bool _jiyva_slime_target(monster_type targetc)
 {
-    // Don't attempt to polymorph a monster that is busy using the stairs.
-    if (mons->flags & MF_TAKING_STAIRS)
-        return (false);
-    ASSERT(!(mons->flags & MF_BANISHED) || you.level_type == LEVEL_ABYSS);
+    return (you.religion == GOD_JIYVA
+            && (targetc == MONS_DEATH_OOZE
+               || targetc == MONS_OOZE
+               || targetc == MONS_JELLY
+               || targetc == MONS_BROWN_OOZE
+               || targetc == MONS_SLIME_CREATURE
+               || targetc == MONS_GIANT_AMOEBA
+               || targetc == MONS_ACID_BLOB
+               || targetc == MONS_AZURE_JELLY));
 
-    std::string str_polymon;
-    int source_power, target_power, relax;
-    int source_tier, target_tier;
-    int tries = 1000;
+}
 
-    // Used to be mons_power, but that just returns hit_dice
-    // for the monster class.  By using the current hit dice
-    // the player gets the opportunity to use draining more
-    // effectively against shapeshifters. - bwr
-    source_power = mons->hit_dice;
-    source_tier = mons_demon_tier(mons->type);
-
-    // There's not a single valid target on the '&' demon tier, so unless we
-    // make one, let's ban this outright.
-    if (source_tier == -1)
-        return (simple_monster_message(mons, "'s appearance momentarily alters."));
-    relax = 1;
-
-    if (targetc == RANDOM_MONSTER)
-    {
-        do
-        {
-            // Pick a monster that's guaranteed happy at this grid.
-            targetc = random_monster_at_grid(mons->pos());
-
-            // Valid targets are always base classes ([ds] which is unfortunate
-            // in that well-populated monster classes will dominate polymorphs).
-            targetc = mons_species(targetc);
-
-            target_power = mons_power(targetc);
-            // Can't compare tiers in valid_morph, since we want to affect only
-            // random polymorphs, and not absolutely, too.
-            target_tier = mons_demon_tier(targetc);
-
-            if (one_chance_in(200))
-                relax++;
-
-            if (relax > 50)
-                return (simple_monster_message(mons, " shudders."));
-        }
-        while (tries-- && (!_valid_morph(mons, targetc)
-                           || source_tier != target_tier && !x_chance_in_y(relax, 200)
-                           || _is_poly_power_unsuitable(power, source_power,
-                                                        target_power, relax)));
-    }
-
-    if (!_valid_morph(mons, targetc))
-    {
-        return (simple_monster_message(mons,
-                                       " looks momentarily different."));
-    }
-
-    // Messaging.
-    bool can_see     = you.can_see(mons);
-    bool can_see_new = !mons_class_flag(targetc, M_INVIS) || you.can_see_invisible();
-
-    bool need_note = false;
-    std::string old_name = mons->full_name(DESC_A);
-
-    // If the old monster is visible to the player, and is interesting,
-    // then note why the interesting monster went away.
-    if (can_see && MONST_INTERESTING(mons))
-        need_note = true;
-
-    bool degenerated = false;
-    if (targetc == MONS_PULSATING_LUMP)
-        degenerated = true;
-
-    bool slimified = false;
-    if (you.religion == GOD_JIYVA
-        && (targetc == MONS_DEATH_OOZE
-            || targetc == MONS_OOZE
-            || targetc == MONS_JELLY
-            || targetc == MONS_BROWN_OOZE
-            || targetc == MONS_SLIME_CREATURE
-            || targetc == MONS_GIANT_AMOEBA
-            || targetc == MONS_ACID_BLOB
-            || targetc == MONS_AZURE_JELLY))
-    {
-        slimified = true;
-    }
-
-    std::string new_name = "";
-    if (mons->type == MONS_OGRE && targetc == MONS_TWO_HEADED_OGRE)
-        str_polymon = " grows a second head";
-    else
-    {
-        if (mons->is_shapeshifter())
-            str_polymon = " changes into ";
-        else if (degenerated)
-            str_polymon = " degenerates into ";
-        else if (slimified)
-        {
-            // Message used for the Slimify ability.
-            str_polymon = " quivers uncontrollably and liquefies into ";
-        }
-        else if (mons->type == MONS_KILLER_BEE_LARVA
-            && targetc == MONS_KILLER_BEE)
-        {
-            str_polymon = " metamorphoses into ";
-        }
-        else
-            str_polymon = " evaporates and reforms as ";
-
-        if (!can_see_new)
-        {
-            new_name = "something unseen";
-            str_polymon += "something you cannot see";
-        }
-        else
-        {
-            str_polymon += mons_type_name(targetc, DESC_A);
-
-            if (targetc == MONS_PULSATING_LUMP)
-                str_polymon += " of flesh";
-        }
-    }
-    str_polymon += "!";
-
-    bool player_messaged = can_see
-                       && simple_monster_message(mons, str_polymon.c_str());
+void change_monster_type(monster* mons, monster_type targetc)
+{
+    bool could_see     = you.can_see(mons);
+    bool degenerated = (targetc == MONS_PULSATING_LUMP);
+    bool slimified = _jiyva_slime_target(targetc);
 
     // Quietly remove the old monster's invisibility before transforming
     // it.  If we don't do this, it'll stay invisible even after losing
@@ -2914,13 +2812,6 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     if (mons_class_flag(mons->type, M_INVIS))
         mons->add_ench(ENCH_INVIS);
 
-    if (!player_messaged && you.can_see(mons))
-    {
-        mprf("%s appears out of thin air!", mons->name(DESC_A).c_str());
-        autotoggle_autopickup(false);
-        player_messaged = true;
-    }
-
     mons->hit_points = mons->max_hit_points
                                 * ((old_hp * 100) / old_hp_max) / 100
                                 + random2(mons->max_hit_points);
@@ -2937,18 +2828,6 @@ bool monster_polymorph(monster* mons, monster_type targetc,
 
     // New monster type might be interesting.
     mark_interesting_monst(mons);
-    if (new_name.empty())
-        new_name = mons->full_name(DESC_A);
-
-    if (need_note
-        || can_see && you.can_see(mons) && MONST_INTERESTING(mons))
-    {
-        take_note(Note(NOTE_POLY_MONSTER, 0, 0, old_name.c_str(),
-                       new_name.c_str()));
-
-        if (you.can_see(mons))
-            mons->flags |= MF_SEEN;
-    }
 
     // If new monster is visible to player, then we've seen it.
     if (you.can_see(mons))
@@ -2956,7 +2835,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         seen_monster(mons);
         // If the player saw both the beginning and end results of a
         // shifter changing, then s/he knows it must be a shifter.
-        if (can_see && shifter.ench != ENCH_NONE)
+        if (could_see && shifter.ench != ENCH_NONE)
             discover_shifter(mons);
     }
 
@@ -2964,12 +2843,141 @@ bool monster_polymorph(monster* mons, monster_type targetc,
         check_net_will_hold_monster(mons);
 
     mons->check_clinging(false);
+}
+
+// If targetc == RANDOM_MONSTER, then relpower indicates the desired
+// power of the new monster, relative to the current monster.
+// Relaxation still takes effect when needed, no matter what relpower
+// says.
+bool monster_polymorph(monster* mons, monster_type targetc,
+                       poly_power_type power,
+                       bool force_beh)
+{
+    // Don't attempt to polymorph a monster that is busy using the stairs.
+    if (mons->flags & MF_TAKING_STAIRS)
+        return (false);
+    ASSERT(!(mons->flags & MF_BANISHED) || you.level_type == LEVEL_ABYSS);
+
+    int source_power, target_power, relax;
+    int source_tier, target_tier;
+    int tries = 1000;
+
+    // Used to be mons_power, but that just returns hit_dice
+    // for the monster class.  By using the current hit dice
+    // the player gets the opportunity to use draining more
+    // effectively against shapeshifters. - bwr
+    source_power = mons->hit_dice;
+    source_tier = mons_demon_tier(mons->type);
+
+    // There's not a single valid target on the '&' demon tier, so unless we
+    // make one, let's ban this outright.
+    if (source_tier == -1)
+    {
+        return simple_monster_message(mons,
+            "'s appearance momentarily alters.");
+    }
+    relax = 1;
+
+    if (targetc == RANDOM_MONSTER)
+    {
+        do
+        {
+            // Pick a monster that's guaranteed happy at this grid.
+            targetc = random_monster_at_grid(mons->pos());
+
+            // Valid targets are always base classes ([ds] which is unfortunate
+            // in that well-populated monster classes will dominate polymorphs).
+            targetc = mons_species(targetc);
+
+            target_power = mons_power(targetc);
+            // Can't compare tiers in valid_morph, since we want to affect only
+            // random polymorphs, and not absolutely, too.
+            target_tier = mons_demon_tier(targetc);
+
+            if (one_chance_in(200))
+                relax++;
+
+            if (relax > 50)
+                return (simple_monster_message(mons, " shudders."));
+        }
+        while (tries-- && (!_valid_morph(mons, targetc)
+                           || source_tier != target_tier && !x_chance_in_y(relax, 200)
+                           || _is_poly_power_unsuitable(power, source_power,
+                                                        target_power, relax)));
+    }
+
+    if (!_valid_morph(mons, targetc))
+        return (simple_monster_message(mons, " looks momentarily different."));
+
+    bool could_see = you.can_see(mons);
+    bool need_note = (could_see && MONST_INTERESTING(mons));
+    std::string old_name_a = mons->full_name(DESC_A);
+    std::string old_name_the = mons->full_name(DESC_THE);
+    monster_type oldc = mons->type;
+
+    change_monster_type(mons, targetc);
+
+    bool can_see = you.can_see(mons);
+
+    // Messaging
+    bool player_messaged = true;
+    if (could_see)
+    {
+        std::string verb = "";
+        std::string obj = "";
+
+        if (!can_see)
+            obj = "something you cannot see";
+        else
+        {
+            obj = mons_type_name(targetc, DESC_A);
+            if (targetc == MONS_PULSATING_LUMP)
+                obj += " of flesh";
+        }
+
+        if (oldc == MONS_OGRE && targetc == MONS_TWO_HEADED_OGRE)
+        {
+            verb = "grows a second head";
+            obj = "";
+        }
+        else if (mons->is_shapeshifter())
+            verb = "changes into ";
+        else if (targetc == MONS_PULSATING_LUMP)
+            verb = "degenerates into ";
+        else if (_jiyva_slime_target(targetc))
+            verb = "quivers uncontrollably and liquefies into ";
+        else if (oldc == MONS_KILLER_BEE_LARVA && targetc == MONS_KILLER_BEE)
+            verb = "metamorphoses into ";
+        else
+            verb = "evaporates and reforms as ";
+
+        mprf("%s %s%s!", old_name_the.c_str(), verb.c_str(), obj.c_str());
+    }
+    else if (can_see)
+    {
+        mprf("%s appears out of thin air!", mons->name(DESC_A).c_str());
+        autotoggle_autopickup(false);
+    }
+    else
+        player_messaged = false;
+
+    if (need_note || could_see && can_see && MONST_INTERESTING(mons))
+    {
+        std::string new_name = can_see ? mons->full_name(DESC_A)
+                                       : "something unseen";
+
+        take_note(Note(NOTE_POLY_MONSTER, 0, 0, old_name_a.c_str(),
+                       new_name.c_str()));
+
+        if (can_see)
+            mons->flags |= MF_SEEN;
+    }
 
     if (!force_beh)
         player_angers_monster(mons);
 
     // Xom likes watching monsters being polymorphed.
-    if (you.can_see(mons))
+    if (can_see)
     {
         xom_is_stimulated(mons->is_shapeshifter()               ? 12 :
                           power == PPT_LESS || mons->friendly() ? 25 :
@@ -4462,7 +4470,7 @@ std::string summoned_poof_msg(const monster* mons, const item_def &item)
     return summoned_poof_msg(mons, item.quantity > 1);
 }
 
-bool mons_reaped(actor *killer, monster* victim)
+static bool _mons_reaped(actor *killer, monster* victim)
 {
     beh_type beh;
     unsigned short hitting;

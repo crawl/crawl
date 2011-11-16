@@ -80,7 +80,10 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
     case ENCH_CONFUSION:
         return MB_CONFUSED;
     case ENCH_INVIS:
+    {
+        you.seen_invis = true;
         return MB_INVISIBLE;
+    }
     case ENCH_CHARM:
         return MB_CHARMED;
     case ENCH_STICKY_FLAME:

@@ -1076,7 +1076,7 @@ KFEAT:   s = axe trap
 #        "answering" the alarm traps though.
 MONS:    patrolling mummy
 MONS:    human skeleton / elf skeleton / dwarf skeleton / merfolk skeleton / \
-         kenku skeleton
+         tengu skeleton
 MONS:    ogre skeleton / troll skeleton / draconian skeleton / naga skeleton / \
          minotaur skeleton
 MONS:    patrolling menkaure / patrolling guardian mummy

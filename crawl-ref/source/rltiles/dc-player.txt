@@ -101,12 +101,12 @@ demonspawn_black_m
 ghoul_m GHOUL
 ghoul2_m
 ghoul2_f
-kenku_wingless_f KENKU
-kenku_wingless_m
-kenku_winged_f
-kenku_winged_m
-kenku_wingless_brown_f
-kenku_wingless_brown_m
+tengu_wingless_f TENGU
+tengu_wingless_m
+tengu_winged_f
+tengu_winged_m
+tengu_wingless_brown_f
+tengu_wingless_brown_m
 merfolk_m MERFOLK
 merfolk_f
 merfolk_water_m MERFOLK_WATER
@@ -583,6 +583,7 @@ lance2 LANCE2
 scythe SCYTHE
 scythe_slant SCYTHE_SLANT
 pike PIKE
+staff1 STAFF
 quarterstaff1 QUARTERSTAFF1
 quarterstaff2 QUARTERSTAFF2
 quarterstaff3 QUARTERSTAFF3
@@ -815,7 +816,7 @@ knot_red KNOT_RED
 brown1 BROWN1
 brown2 BROWN2
 green GREEN
-kenku_comb KENKU_COMB
+tengu_comb TENGU_COMB
 %end_ctg
 
 ###Beard

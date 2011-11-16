@@ -413,7 +413,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_GNOLL_SERGEANT:
         item_race      = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_WEAPONS;
-        item.sub_type  = WPN_SPEAR;
+        item.sub_type  = one_chance_in(3) ? WPN_TRIDENT : WPN_SPEAR;
         if (one_chance_in(3))
             level = MAKE_GOOD_ITEM;
         break;
@@ -606,7 +606,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
     case MONS_YELLOW_DRACONIAN:
     case MONS_PURPLE_DRACONIAN:
     case MONS_GREY_DRACONIAN:
-    case MONS_KENKU:
+    case MONS_TENGU:
         if (mons_genus(mon->type) == MONS_NAGA)
             item_race = MAKE_ITEM_NO_RACE;
 
@@ -1098,6 +1098,9 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                               random_choose_weighted(3, SPWPN_CHAOS,
                                                      1, SPWPN_DISTORTION,
                                                      0));
+            item.plus  = random2(5);
+            item.plus2 = random2(5);
+            item.props["autoinscribe"] = "Psyche";
         }
         break;
 
@@ -1125,6 +1128,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                                  2, SPWPN_VENOM,
                                                  1, SPWPN_DRAINING,
                                                  0));
+        item.props["autoinscribe"] = "Sonja";
         break;
 
     case MONS_MAURICE:
@@ -1610,7 +1614,7 @@ void give_shield(monster* mon, int level)
                                   level, MAKE_ITEM_NO_RACE);
         }
         break;
-    case MONS_KENKU:
+    case MONS_TENGU:
     case MONS_GNOLL_SERGEANT:
         if (one_chance_in(3))
         {
@@ -1660,6 +1664,7 @@ void give_shield(monster* mon, int level)
             {
                 set_item_ego_type(*shield, OBJ_ARMOUR, SPARM_REFLECTION);
                 set_equip_desc(*shield, ISFLAG_GLOWING);
+                shield->props["autoinscribe"] = "Donald";
             }
         }
 

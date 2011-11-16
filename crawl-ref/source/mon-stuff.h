@@ -74,6 +74,7 @@ enum poly_power_type
     PPT_SAME,
 };
 
+void change_monster_type(monster* mons, monster_type targetc);
 bool monster_polymorph(monster* mons, monster_type targetc,
                        poly_power_type power = PPT_SAME,
                        bool force_beh = false);
@@ -191,8 +192,6 @@ void mons_clear_trapping_net(monster* mon);
 std::string summoned_poof_msg(const monster* mons, bool plural = false);
 std::string summoned_poof_msg(const int midx, const item_def &item);
 std::string summoned_poof_msg(const monster* mons, const item_def &item);
-
-bool mons_reaped(actor *killer, monster* victim);
 
 struct bolt;
 

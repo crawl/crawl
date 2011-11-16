@@ -385,7 +385,7 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
     case TILEP_MONS_ILSUIW:
     case TILEP_MONS_ILSUIW_WATER:
     case TILEP_MONS_SPRIGGAN:
-    case TILEP_MONS_KENKU:
+    case TILEP_MONS_TENGU:
     case TILEP_MONS_DEEP_DWARF_ARTIFICER:
     case TILEP_MONS_DEEP_DWARF_DEATH_KNIGHT:
     case TILEP_MONS_KOBOLD:
@@ -395,6 +395,8 @@ bool mcache_monster::get_weapon_offset(tileidx_t mon_tile,
         break;
     // Shift to the left.
     case TILEP_MONS_GNOLL:
+    case TILEP_MONS_GNOLL_SHAMAN:
+    case TILEP_MONS_GNOLL_SERGEANT:
     case TILEP_MONS_GRUM:
     case TILEP_MONS_CRAZY_YIUF:
     case TILEP_MONS_DEEP_ELF_DEATH_MAGE:

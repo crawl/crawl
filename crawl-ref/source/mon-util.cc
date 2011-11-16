@@ -286,27 +286,27 @@ void init_monster_symbols()
             monster_symbols[i].glyph = mons_base_char(i);
 }
 
-static bool _get_kraken_head(monster& mon)
+static bool _get_kraken_head(const monster*& mon)
 {
-    if (!valid_kraken_connection(&mon))
+    if (!valid_kraken_connection(mon))
         return (false);
 
     // For kraken tentacle segments, find the associated tentacle.
-    if (mon.type == MONS_KRAKEN_TENTACLE_SEGMENT)
+    if (mon->type == MONS_KRAKEN_TENTACLE_SEGMENT)
     {
-        if (invalid_monster_index(mon.number))
+        if (invalid_monster_index(mon->number))
             return (false);
 
-        mon = menv[mon.number];
+        mon = &menv[mon->number];
     }
 
     // For kraken tentacles, find the associated head.
-    if (mon.type == MONS_KRAKEN_TENTACLE)
+    if (mon->type == MONS_KRAKEN_TENTACLE)
     {
-        if (invalid_monster_index(mon.number))
+        if (invalid_monster_index(mon->number))
             return (false);
 
-        mon = menv[mon.number];
+        mon = &menv[mon->number];
     }
 
     return (true);
@@ -349,36 +349,34 @@ static mon_resist_def serpent_of_hell_resists(const monster* mon)
 
 mon_resist_def get_mons_resists(const monster* mon)
 {
-    monster newmon = *mon;
-
-    _get_kraken_head(newmon);
+    _get_kraken_head(mon);
 
     mon_resist_def resists;
 
-    if (mons_is_ghost_demon(newmon.type))
-        resists = newmon.ghost->resists;
+    if (mons_is_ghost_demon(mon->type))
+        resists = mon->ghost->resists;
     else
         resists = mon_resist_def();
 
-    resists |= get_mons_class_resists(newmon.type);
+    resists |= get_mons_class_resists(mon->type);
 
     // Undead get one level of poison resistance.  Don't just add it; if
     // they're undead due to the MF_FAKE_UNDEAD flag, they might have at
     // least one level already, in which case they shouldn't get more.
-    if (newmon.holiness() == MH_UNDEAD)
+    if (mon->holiness() == MH_UNDEAD)
         resists.poison = std::max(static_cast<int>(resists.poison), 1);
 
-    if (mons_genus(newmon.type) == MONS_DRACONIAN
-            && newmon.type != MONS_DRACONIAN
-        || newmon.type == MONS_TIAMAT)
+    if (mons_genus(mon->type) == MONS_DRACONIAN
+            && mon->type != MONS_DRACONIAN
+        || mon->type == MONS_TIAMAT)
     {
-        monster_type draco_species = draco_subspecies(&newmon);
-        if (draco_species != newmon.type)
+        monster_type draco_species = draco_subspecies(mon);
+        if (draco_species != mon->type)
             resists |= get_mons_class_resists(draco_species);
     }
 
-    if (newmon.type == MONS_SERPENT_OF_HELL)
-        resists |= serpent_of_hell_resists(&newmon);
+    if (mon->type == MONS_SERPENT_OF_HELL)
+        resists |= serpent_of_hell_resists(mon);
 
     return (resists);
 }
@@ -1279,14 +1277,12 @@ bool mons_class_can_regenerate(int mc)
 
 bool mons_can_regenerate(const monster* mon)
 {
-    monster newmon = *mon;
+    _get_kraken_head(mon);
 
-    _get_kraken_head(newmon);
-
-    if (testbits(newmon.flags, MF_NO_REGEN))
+    if (testbits(mon->flags, MF_NO_REGEN))
         return (false);
 
-    return (mons_class_can_regenerate(newmon.type));
+    return (mons_class_can_regenerate(mon->type));
 }
 
 bool mons_class_can_display_wounds(int mc)
@@ -1296,11 +1292,9 @@ bool mons_class_can_display_wounds(int mc)
 
 bool mons_can_display_wounds(const monster* mon)
 {
-    monster newmon = *mon;
+    _get_kraken_head(mon);
 
-    _get_kraken_head(newmon);
-
-    return (mons_class_can_display_wounds(newmon.type));
+    return (mons_class_can_display_wounds(mon->type));
 }
 
 // Size based on zombie class.
@@ -2052,6 +2046,18 @@ uint8_t random_monster_colour()
     return (col);
 }
 
+// Butterflies
+uint8_t random_butterfly_colour()
+{
+    uint8_t col;
+    // Restricted to 'light' colours.
+    do
+        col = random_monster_colour();
+    while (is_low_colour(col));
+
+    return col;
+}
+
 // Abominations.
 uint8_t random_large_abomination_colour()
 {
@@ -2124,6 +2130,10 @@ void define_monster(monster* mons)
 
     switch (mcls)
     {
+    case MONS_BUTTERFLY:
+        col = random_butterfly_colour();
+        break;
+
     case MONS_ABOMINATION_SMALL:
         hd = 4 + random2(4);
         ac = 3 + random2(7);
@@ -2273,7 +2283,8 @@ void define_monster(monster* mons)
         ghost_demon ghost;
         ghost.init_random_demon();
         mons->set_ghost(ghost);
-        mons->pandemon_init();
+        mons->ghost_demon_init();
+        mons->flags |= MF_INTERESTING;
         mons->bind_melee_flags();
         mons->bind_spell_flags();
         break;
@@ -2298,7 +2309,7 @@ void define_monster(monster* mons)
     {
         ghost_demon ghost;
         ghost.init_ugly_thing(mcls == MONS_VERY_UGLY_THING);
-        mons->set_ghost(ghost, false);
+        mons->set_ghost(ghost);
         mons->uglything_init();
         break;
     }
@@ -2307,9 +2318,10 @@ void define_monster(monster* mons)
     {
         ghost_demon ghost;
         ghost.init_labrat();
-        mons->set_ghost(ghost, false);
-        mons->labrat_init();
+        mons->set_ghost(ghost);
+        mons->ghost_demon_init();
     }
+
     default:
         break;
     }
@@ -2530,6 +2542,9 @@ int mons_class_zombie_base_speed(int zombie_base_mc)
 
 int mons_base_speed(const monster* mon)
 {
+    if (mon->ghost.get())
+        return mon->ghost->speed;
+
     if (mons_enslaved_soul(mon))
         return (mons_class_base_speed(mons_zombie_base(mon)));
 
@@ -2545,14 +2560,12 @@ mon_intel_type mons_class_intel(int mc)
 
 mon_intel_type mons_intel(const monster* mon)
 {
-    monster newmon = *mon;
-
-    _get_kraken_head(newmon);
+    _get_kraken_head(mon);
 
     if (mons_enslaved_soul(mon))
         return (mons_class_intel(mons_zombie_base(mon)));
 
-    return (mons_class_intel(newmon.type));
+    return (mons_class_intel(mon->type));
 }
 
 habitat_type mons_class_habitat(int mc, bool real_amphibious)
@@ -3933,9 +3946,6 @@ static mon_body_shape _get_ghost_shape(const monster* mon)
     case SP_CENTAUR:
         return (MON_SHAPE_CENTAUR);
 
-    case SP_KENKU:
-        return (MON_SHAPE_HUMANOID_WINGED);
-
     case SP_RED_DRACONIAN:
     case SP_WHITE_DRACONIAN:
     case SP_GREEN_DRACONIAN:
@@ -4079,7 +4089,7 @@ mon_body_shape get_mon_shape(const int type)
     case 'G': // floating eyeballs and orbs
         return (MON_SHAPE_ORB);
     case 'H': // minotaurs, manticores, hippogriffs and griffins
-        if (type == MONS_MINOTAUR)
+        if (type == MONS_MINOTAUR || type == MONS_TENGU)
             return (MON_SHAPE_HUMANOID);
         else if (type == MONS_MANTICORE)
             return (MON_SHAPE_QUADRUPED);

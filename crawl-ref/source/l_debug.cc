@@ -198,6 +198,20 @@ LUAFN(debug_dismiss_adjacent)
     return (0);
 }
 
+LUAFN(debug_dismiss_monsters)
+{
+    for (monster_iterator mi; mi; ++mi)
+    {
+        if (mi)
+        {
+            mi->flags |= MF_HARD_RESET;
+            monster_die(*mi, KILL_DISMISSED, NON_MONSTER);
+        }
+    }
+
+    return (0);
+}
+
 LUAFN(debug_god_wrath)
 {
     const char *god_name = luaL_checkstring(ls, 1);
@@ -354,6 +368,7 @@ const struct luaL_reg debug_dlib[] =
 { "bouncy_beam", debug_bouncy_beam },
 { "cull_monsters", debug_cull_monsters},
 { "dismiss_adjacent", debug_dismiss_adjacent},
+{ "dismiss_monsters", debug_dismiss_monsters},
 { "god_wrath", debug_god_wrath},
 { "handle_monster_move", debug_handle_monster_move },
 { "save_uniques", debug_save_uniques },

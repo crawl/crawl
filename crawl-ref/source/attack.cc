@@ -161,17 +161,22 @@ std::string attack::attack_strength_punctuation()
 {
     if (attacker->atype() == ACT_PLAYER)
     {
-        if (damage_done < HIT_WEAK)
-            return ".";
-        else if (damage_done < HIT_MED)
-            return "!";
-        else if (damage_done < HIT_STRONG)
-            return "!!";
-        else
-            return "!!!";
+        return get_exclams(damage_done);
     }
     else
         return (damage_done < HIT_WEAK ? "." : "!");
+}
+
+std::string attack::get_exclams(int dmg)
+{
+    if (dmg < HIT_WEAK)
+        return ".";
+    else if (dmg < HIT_MED)
+        return "!";
+    else if (dmg < HIT_STRONG)
+        return "!!";
+    else
+        return "!!!";
 }
 
 /* Returns evasion adverb

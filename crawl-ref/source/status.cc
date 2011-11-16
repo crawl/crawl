@@ -758,12 +758,10 @@ static void _describe_sickness(status_info* inf)
 
 static void _describe_nausea(status_info* inf)
 {
-    int nausea = you.duration[DUR_NAUSEA];
-    if (nausea <= 0)
+    if (!you.duration[DUR_NAUSEA])
         return;
 
-    const int low     =  20 * BASELINE_DELAY;
-    inf->light_colour =  (nausea <= low) ? BROWN : YELLOW;
+    inf->light_colour = BROWN;
     inf->light_text   = "Nausea";
     inf->short_text   = "nauseated";
     inf->long_text    = (you.hunger_state <= HS_STARVING) ?
@@ -788,7 +786,7 @@ static void _describe_burden(status_info* inf)
         inf->long_text    = "You are burdened.";
         break;
     case BS_UNENCUMBERED:
-        if (you.species == SP_KENKU && you.flight_mode() == FL_FLY)
+        if (you.species == SP_TENGU && you.flight_mode() == FL_FLY)
         {
             if (you.travelling_light())
                 inf->long_text = "Your small burden allows quick flight.";

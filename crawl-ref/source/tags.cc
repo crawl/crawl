@@ -176,7 +176,8 @@ void reader::read(void *data, size_t size)
     }
     else
     {
-        ASSERT(_read_offset+size <= _pbuf->size());
+        if (_read_offset+size > _pbuf->size())
+            throw short_read_exception();
         if (data)
             memcpy(data, &(*_pbuf)[_read_offset], size);
 
@@ -953,7 +954,9 @@ void tag_write(tag_type tagID, writer &outf)
         tag_construct_level_monsters(th);
         tag_construct_level_tiles(th);
         break;
-    case TAG_GHOST:          tag_construct_ghost(th);          break;
+    case TAG_GHOST:
+        tag_construct_ghost(th);
+        break;
     default:
         // I don't know how to make that!
         break;
@@ -1685,7 +1688,7 @@ static const char* old_species[]=
     "Red Draconian", "White Draconian", "Green Draconian", "Yellow Draconian",
     "Grey Draconian", "Black Draconian", "Purple Draconian", "Mottled Draconian",
     "Pale Draconian", "Draconian", "Centaur", "Demigod", "Spriggan", "Minotaur",
-    "Demonspawn", "Ghoul", "Kenku", "Merfolk", "Vampire", "Deep Dwarf", "Felid",
+    "Demonspawn", "Ghoul", "Tengu", "Merfolk", "Vampire", "Deep Dwarf", "Felid",
     "Octopode",
 };
 
@@ -3959,6 +3962,8 @@ static ghost_demon unmarshallGhost(reader &th)
     ghost.see_invis        = unmarshallByte(th);
     ghost.brand            = static_cast<brand_type>(unmarshallShort(th));
 #if TAG_MAJOR_VERSION == 32
+    if (!ghost.speed)
+        ghost.speed = 15;
     short temp_attk = unmarshallShort(th);
     if (th.getMinorVersion() < TAG_MINOR_CHERUB_ATTACKS
         && static_cast<attack_type>(temp_attk) == AT_CHERUB)

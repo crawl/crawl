@@ -2987,7 +2987,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 dump_item_origins |= IODS_ARTEFACTS;
             }
             else if (ch == "ego_arm" || ch == "ego armour"
-                     || ch == "ego_armour")
+                     || ch == "ego_armour" || ch == "ego armor"
+                     || ch == "ego_armor")
             {
                 dump_item_origins |= IODS_EGO_ARMOUR;
             }

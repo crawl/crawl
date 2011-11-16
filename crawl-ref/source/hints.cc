@@ -249,7 +249,7 @@ static species_type _get_hints_species(unsigned int type)
           return SP_CENTAUR;
       default:
           // Use something fancy for debugging.
-          return SP_KENKU;
+          return SP_TENGU;
     }
 }
 

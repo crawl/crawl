@@ -147,12 +147,6 @@ bool is_corpse_violating_item(const item_def& item)
         retval = (item_brand == SPWPN_REAPING);
         break;
     }
-    case OBJ_MISSILES:
-    {
-        const int item_brand = get_ammo_brand(item);
-        retval = (item_brand == SPMSL_REAPING);
-        break;
-    }
     case OBJ_BOOKS:
         retval = (is_corpse_violating_spellbook(item));
         break;
@@ -187,12 +181,6 @@ bool is_evil_item(const item_def& item)
                   || item_brand == SPWPN_PAIN
                   || item_brand == SPWPN_VAMPIRICISM
                   || item_brand == SPWPN_REAPING);
-        }
-        break;
-    case OBJ_MISSILES:
-        {
-        const int item_brand = get_ammo_brand(item);
-        retval = (item_brand == SPMSL_REAPING);
         }
         break;
     case OBJ_WANDS:

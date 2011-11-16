@@ -1216,7 +1216,7 @@ bool spell_is_useless(spell_type spell, bool transient)
     case SPELL_LEVITATION:
 #endif
     case SPELL_FLY:
-        if (you.species == SP_KENKU && you.experience_level >= 15)
+        if (you.species == SP_TENGU && you.experience_level >= 15)
             return (true);
         if (transient && you.is_levitating())
             return (true);
@@ -1292,6 +1292,7 @@ bool spell_no_hostile_in_range(spell_type spell, int minRange)
     case SPELL_DIG:
     case SPELL_PASSWALL:
     case SPELL_GOLUBRIAS_PASSAGE:
+    case SPELL_FRAGMENTATION:
 
     // Airstrike has LOS_RANGE and can go through glass walls.
     case SPELL_AIRSTRIKE:

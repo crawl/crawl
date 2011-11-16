@@ -160,7 +160,7 @@ KMONS:   J = centaur ; nothing
 KMONS:   K = ogre ; nothing
 KMONS:   L = troll
 KMONS:   M = minotaur ; nothing
-KMONS:   N = kenku ; nothing
+KMONS:   N = tengu ; nothing
 KMONS:   O = draconian ; nothing
 KMONS:   P = demonspawn ; nothing
 KMONS:   Q = mummy
@@ -299,6 +299,7 @@ MONS:   kobold / goblin / hobgoblin / nothing
 MARKER: # = lua:fog_machine { \
             pow_max = 5, delay_min = 100, delay_max = 150, \
             size = 5, start_clouds = 1, \
+            excl_rad = 0, \
             cloud_type = "flame" }
 KFEAT:  # = l
 FTILE:  ' = floor_rough_red

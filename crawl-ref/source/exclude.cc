@@ -72,6 +72,10 @@ void set_auto_exclude(const monster* mon)
     if (!is_map_persistent())
         return;
 
+    // Something of a speed hack, but some vaults have a TON of plants.
+    if (mon->type == MONS_PLANT)
+        return;
+
     if (_need_auto_exclude(mon) && !is_exclude_root(mon->pos()))
     {
         int rad = _get_full_exclusion_radius();

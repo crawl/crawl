@@ -195,9 +195,11 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
 
     if (god == GOD_KIKUBAAQUDGHA)
     {
-        you.gift_timeout = 0; // no protection during pain branding weapon
+        you.gift_timeout = 1; // no protection during pain branding weapon
 
         torment(&you, TORMENT_KIKUBAAQUDGHA, you.pos());
+
+        you.gift_timeout = 0; // protection after pain branding weapon
 
         // Bloodify surrounding squares (75% chance).
         for (radius_iterator ri(you.pos(), 2, true, true); ri; ++ri)
@@ -730,7 +732,7 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
         gain_piety(piety_change, piety_denom);
 
         // Preserving the old behaviour of giving the big message for
-        // artifacts and artifacts only.
+        // artefacts and artefacts only.
         relative_piety_gain = x_chance_in_y(piety_change, piety_denom) ?
                                 is_artefact(item) ?
                                   PIETY_LOTS : PIETY_SOME : PIETY_NONE;

@@ -1283,8 +1283,6 @@ static bool _nonredundant_launcher_ammo_brands(item_def *launcher,
         return (bow_brand != SPWPN_FROST);
     case SPMSL_CHAOS:
         return (bow_brand != SPWPN_CHAOS);
-    case SPMSL_REAPING:
-        return (bow_brand != SPWPN_REAPING);
     case SPMSL_PENETRATION:
         return (bow_brand != SPWPN_PENETRATION);
     default:
@@ -2586,7 +2584,7 @@ std::string monster::arm_name(bool plural, bool *can_plural) const
         adj = "scaled";
         break;
 
-    case MONS_KENKU:
+    case MONS_TENGU:
         adj = "feathered";
         break;
 
@@ -3811,39 +3809,12 @@ void monster::slow_down(actor *atk, int strength)
     enchant_monster_with_flavour(this, atk, BEAM_SLOW, strength);
 }
 
-void monster::set_ghost(const ghost_demon &g, bool has_name)
+void monster::set_ghost(const ghost_demon &g)
 {
     ghost.reset(new ghost_demon(g));
 
-    if (has_name)
+    if (!ghost->name.empty())
         mname = ghost->name;
-}
-
-void monster::pandemon_init()
-{
-    hit_dice        = ghost->xl;
-    max_hit_points  = std::min<int>(ghost->max_hp, MAX_MONSTER_HP);
-    hit_points      = max_hit_points;
-    ac              = ghost->ac;
-    ev              = ghost->ev;
-    flags           = MF_INTERESTING;
-    // Don't make greased-lightning Pandemonium demons in the dungeon
-    // max speed = 17). Demons in Pandemonium can be up to speed 20,
-    // possibly with haste. Non-caster demons are likely to be fast.
-    if (you.level_type == LEVEL_DUNGEON)
-        speed = (!ghost->spellcaster ? 11 + roll_dice(2, 3) :
-                 one_chance_in(3) ? 10 :
-                 7 + roll_dice(2, 5));
-    else
-        speed = (!ghost->spellcaster ? 12 + roll_dice(2, 4) :
-                 one_chance_in(3) ? 10 :
-                 8 + roll_dice(2, 6));
-
-    speed_increment = 70;
-
-    colour = ghost->colour;
-
-    load_ghost_spells();
 }
 
 void monster::set_new_monster_id()
@@ -3853,24 +3824,17 @@ void monster::set_new_monster_id()
 
 void monster::ghost_init(bool need_pos)
 {
+    ghost_demon_init();
+
     set_new_monster_id();
     type            = MONS_PLAYER_GHOST;
     god             = ghost->religion;
-    hit_dice        = ghost->xl;
-    max_hit_points  = std::min<int>(ghost->max_hp, MAX_MONSTER_HP);
-    hit_points      = max_hit_points;
-    ac              = ghost->ac;
-    ev              = ghost->ev;
-    speed           = ghost->speed;
-    speed_increment = 70;
     attitude        = ATT_HOSTILE;
     behaviour       = BEH_WANDER;
     flags           = MF_INTERESTING;
     foe             = MHITNOT;
     foe_memory      = 0;
-    colour          = ghost->colour;
     number          = MONS_NO_MONSTER;
-    load_ghost_spells();
 
     inv.init(NON_ITEM);
     enchantments.clear();
@@ -3902,22 +3866,10 @@ void monster::uglything_init(bool only_mutate)
     colour          = ghost->colour;
 }
 
-void monster::dancing_weapon_init()
+void monster::ghost_demon_init()
 {
     hit_dice        = ghost->xl;
-    max_hit_points  = ghost->max_hp;
-    hit_points      = max_hit_points;
-    ac              = ghost->ac;
-    ev              = ghost->ev;
-    speed           = ghost->speed;
-    speed_increment = 70;
-    colour          = ghost->colour;
-}
-
-void monster::labrat_init ()
-{
-    hit_dice        = ghost->xl;
-    max_hit_points  = ghost->max_hp;
+    max_hit_points  = std::min<short int>(ghost->max_hp, MAX_MONSTER_HP);
     hit_points      = max_hit_points;
     ac              = ghost->ac;
     ev              = ghost->ev;

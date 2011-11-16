@@ -29,6 +29,13 @@ stop = You fall through a shaft
 #
 stop = flesh start
 
+# Nausea
+#
+# By default, stop if you have spoilable food you can eat right now,
+# don't in other cases.
+stop = Your stomach is not as upset anymore. and you want to eat\.
+ignore = Your stomach is not as upset anymore
+
 # Ghouls
 #
 : if you.race() == "Ghoul" then
