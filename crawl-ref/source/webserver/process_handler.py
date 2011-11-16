@@ -136,7 +136,9 @@ class CrawlProcessHandlerBase(object):
                     self.logger.warn("Exception while trying to parse where file!",
                                      exc_info=True)
                 else:
-                    self.where = newwhere
+                    if (newwhere.get("status") == "active" or
+                        newwhere.get("status") == "saved"):
+                        self.where = newwhere
         except (OSError, IOError):
             pass
 
