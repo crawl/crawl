@@ -379,7 +379,7 @@ end}}
 %%%%
 An orcish idol
 
-An idol of the orc god Beogh.
+An idol of the orc god Beogh. Destroying it is likely to incur Beogh's wrath.
 %%%%
 An unnaturally hard rock wall
 
