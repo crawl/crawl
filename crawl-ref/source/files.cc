@@ -1267,10 +1267,17 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     if (make_changes)
     {
         _clear_clouds();
-        if (!player_in_branch(BRANCH_ABYSS))
-            _place_player_on_stair(old_level.branch, stair_taken, dest_pos);
-        else
+
+        if (!you.level_stack.empty()
+            && you.level_stack.back().id == level_id::current())
+        {
+            you.moveto(you.level_stack.back().pos);
+            you.level_stack.pop_back();
+        }
+        else if (just_created_level && player_in_branch(BRANCH_ABYSS))
             you.moveto(ABYSS_CENTRE);
+        else
+            _place_player_on_stair(old_level.branch, stair_taken, dest_pos);
 
         // This should fix the "monster occurring under the player" bug.
         if (monster* mon = monster_at(you.pos()))

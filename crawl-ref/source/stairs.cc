@@ -109,43 +109,49 @@ static void _player_change_level_reset()
 
 static void _player_change_level_upstairs(dungeon_feature_type stair_find)
 {
-    if (player_in_connected_branch())
-        you.depth--;
-
-    // Make sure we return to our main dungeon level... labyrinth entrances
-    // in the abyss or pandemonium are a bit trouble (well the labyrinth does
-    // provide a way out of those places, its really not that bad I suppose).
-    if (branch_exits_up(you.where_are_you))
+    if (player_in_hell())
     {
-        // TODO:LEVEL_STACK exit to main dungeon without a marker
-        die("branch exit without return destination");
+        you.where_are_you = BRANCH_VESTIBULE_OF_HELL;
+        you.depth = 1;
+        return;
     }
+
+    if (--you.depth)
+        return;
+
+    // We're changing branches.
 
     if (player_in_branch(BRANCH_VESTIBULE_OF_HELL))
     {
         you.where_are_you = you.hell_branch;
         you.depth = you.hell_exit;
+        return;
     }
 
-    if (player_in_hell())
+    you.depth = startdepth[you.where_are_you];
+    if (you.depth == -1)
     {
-        you.where_are_you = BRANCH_VESTIBULE_OF_HELL;
-        you.depth = 1;
+        // Wizmode, the branch wasn't generated this game.
+        // Pick the middle of the range instead.
+        you.depth = (branches[you.where_are_you].mindepth
+                   + branches[you.where_are_you].maxdepth) / 2;
     }
+    you.where_are_you = branches[you.where_are_you].parent_branch;
 
-    if (you.depth == 0)
+    if (you.where_are_you == NUM_BRANCHES)
     {
-        you.depth = startdepth[you.where_are_you];
-        if (you.depth == -1)
+        // Ie, it was a portal of some kind.
+        if (you.level_stack.empty())
         {
-            // Wizmode, the branch wasn't generated this game.
-            // Pick the middle of the range instead.
-            you.depth = (branches[you.where_are_you].mindepth
-                       + branches[you.where_are_you].maxdepth) / 2;
+            die("portal exit without return destination (%s)",
+                level_id::current().describe().c_str());
         }
-        you.where_are_you = branches[you.where_are_you].parent_branch;
-        ASSERT(you.where_are_you < NUM_BRANCHES);
+
+        you.where_are_you = you.level_stack.back().id.branch;
+        you.depth =         you.level_stack.back().id.depth;
     }
+
+    ASSERT(you.where_are_you < NUM_BRANCHES);
 }
 
 static bool _marker_vetoes_level_change()
@@ -196,32 +202,6 @@ static bool _stair_moves_pre(dungeon_feature_type stair)
     you.turn_is_over = true;
 
     return (true);
-}
-
-// Adds a dungeon marker at the point of the level where returning from
-// a labyrinth or portal vault should drop the player.
-static void _mark_portal_return_point(const coord_def &pos)
-{
-    // First toss all markers of this type. Stale markers are possible
-    // if the player goes to the Abyss from a portal vault /
-    // labyrinth, thus returning to this level without activating a
-    // previous portal vault exit marker.
-    const std::vector<map_marker*> markers = env.markers.get_all(MAT_FEATURE);
-    for (int i = 0, size = markers.size(); i < size; ++i)
-    {
-        if (dynamic_cast<map_feature_marker*>(markers[i])->feat ==
-            DNGN_EXIT_PORTAL_VAULT)
-        {
-            env.markers.remove(markers[i]);
-        }
-    }
-
-    if (!env.markers.find(pos, MAT_FEATURE))
-    {
-        map_feature_marker *mfeat =
-            new map_feature_marker(pos, DNGN_EXIT_PORTAL_VAULT);
-        env.markers.add(mfeat);
-    }
 }
 
 static void _exit_stair_message(dungeon_feature_type stair, bool /* going_up */)
@@ -294,17 +274,6 @@ static void _leaving_level_now(dungeon_feature_type stair_used)
     dungeon_events.fire_event(DET_LEAVING_LEVEL);
 
     _clear_golubria_traps();
-
-    if (grd(you.pos()) == DNGN_EXIT_ABYSS)
-    {
-        // TODO:LEVEL_STACK
-        you.props.erase("abyss_return_desc");
-        you.props.erase("abyss_return_name");
-        you.props.erase("abyss_return_abbrev");
-        you.props.erase("abyss_return_origin");
-        you.props.erase("abyss_return_tag");
-        you.props.erase("abyss_return_ext");
-    }
 }
 
 static void _update_travel_cache(bool collect_travel_data,
@@ -557,6 +526,16 @@ static level_id _downstairs_destination(dungeon_feature_type stair_find,
         you.hell_exit = you.depth;
         return level_id(BRANCH_VESTIBULE_OF_HELL);
 
+    case DNGN_EXIT_PORTAL_VAULT:
+    case DNGN_EXIT_ABYSS:
+    case DNGN_EXIT_PANDEMONIUM:
+        if (you.level_stack.empty())
+        {
+            die("no return path from a portal (%s)",
+                level_id::current().describe().c_str());
+        }
+        return you.level_stack.back().id;
+
     default:
         break;
     }
@@ -790,9 +769,11 @@ void down_stairs(dungeon_feature_type force_stair)
         dungeon_terrain_changed(you.pos(), DNGN_STONE_ARCH);
 
     if (stair_find == DNGN_ENTER_LABYRINTH
-        || stair_find == DNGN_ENTER_PORTAL_VAULT)
+        || stair_find == DNGN_ENTER_PORTAL_VAULT
+        || stair_find == DNGN_ENTER_PANDEMONIUM
+        || stair_find == DNGN_ENTER_ABYSS)
     {
-        _mark_portal_return_point(you.pos());
+        you.level_stack.push_back(level_pos::current());
     }
 
     const int shaft_depth = (shaft ? shaft_dest.depth - you.depth : 1);
