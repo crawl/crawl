@@ -459,69 +459,33 @@ static monster_type _feature_to_elemental(const coord_def& where,
 
     const bool any_elem = strict_elem == MONS_NO_MONSTER;
 
-    bool elem_earth;
-    if (any_elem || strict_elem == MONS_EARTH_ELEMENTAL)
+    if ((any_elem || strict_elem == MONS_EARTH_ELEMENTAL)
+        && (grd(where) == DNGN_ROCK_WALL || grd(where) == DNGN_CLEAR_ROCK_WALL))
     {
-        elem_earth = grd(where) == DNGN_ROCK_WALL
-                     || grd(where) == DNGN_CLEAR_ROCK_WALL;
-    }
-    else
-        elem_earth = false;
-
-    bool elem_fire_cloud;
-    bool elem_fire_lava;
-    bool elem_fire;
-    if (any_elem || strict_elem == MONS_FIRE_ELEMENTAL)
-    {
-        elem_fire_cloud = env.cgrid(where) != EMPTY_CLOUD
-                          && env.cloud[env.cgrid(where)].type == CLOUD_FIRE;
-        elem_fire_lava = grd(where) == DNGN_LAVA;
-        elem_fire = elem_fire_cloud || elem_fire_lava;
-    }
-    else
-    {
-        elem_fire_cloud = false;
-        elem_fire_lava = false;
-        elem_fire = false;
+            return (MONS_EARTH_ELEMENTAL);
     }
 
-    bool elem_water;
-    if (any_elem || strict_elem == MONS_WATER_ELEMENTAL)
-        elem_water = feat_is_watery(grd(where));
-    else
-        elem_water = false;
-
-    bool elem_air;
-    if (any_elem || strict_elem == MONS_AIR_ELEMENTAL)
+    if ((any_elem || strict_elem == MONS_FIRE_ELEMENTAL)
+        && (env.cgrid(where) != EMPTY_CLOUD
+            && env.cloud[env.cgrid(where)].type == CLOUD_FIRE
+            || grd(where) == DNGN_LAVA))
     {
-        elem_air = grd(where) >= DNGN_FLOOR
-                   && env.cgrid(where) == EMPTY_CLOUD;
+        return (MONS_FIRE_ELEMENTAL);
     }
-    else
-        elem_air = false;
 
-    monster_type elemental = MONS_NO_MONSTER;
-
-    if (elem_earth)
+    if ((any_elem || strict_elem == MONS_WATER_ELEMENTAL)
+        && feat_is_watery(grd(where)))
     {
-        grd(where) = DNGN_FLOOR;
-        set_terrain_changed(where);
-
-        elemental = MONS_EARTH_ELEMENTAL;
+        return (MONS_WATER_ELEMENTAL);
     }
-    else if (elem_fire)
+
+    if ((any_elem || strict_elem == MONS_AIR_ELEMENTAL)
+        && grd(where) >= DNGN_FLOOR && env.cgrid(where) == EMPTY_CLOUD)
     {
-        if (elem_fire_cloud)
-            delete_cloud(env.cgrid(where));
-
-        elemental = MONS_FIRE_ELEMENTAL;
+        return (MONS_AIR_ELEMENTAL);
     }
-    else if (elem_water)
-        elemental = MONS_WATER_ELEMENTAL;
-    else if (elem_air)
-        elemental = MONS_AIR_ELEMENTAL;
 
-    return (elemental);
+    return (MONS_NO_MONSTER);
 }
 
 // 'unfriendly' is percentage chance summoned elemental goes
@@ -588,6 +552,19 @@ spret_type cast_summon_elemental(int pow, god_type god,
     }
 
     fail_check();
+
+    if (mon == MONS_EARTH_ELEMENTAL)
+    {
+        grd(targ) = DNGN_FLOOR;
+        set_terrain_changed(targ);
+    }
+    if (mon == MONS_FIRE_ELEMENTAL
+        && env.cgrid(targ) != EMPTY_CLOUD
+        && env.cloud[env.cgrid(targ)].type == CLOUD_FIRE)
+    {
+        delete_cloud(env.cgrid(targ));
+    }
+
     if (horde_penalty)
         horde_penalty *= _count_summons(mon);
 
