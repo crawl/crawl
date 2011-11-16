@@ -247,10 +247,11 @@ static bool _should_butcher(int corpse_id, bool bottle_blood = false)
         return (false);
     }
     else if (!bottle_blood && you.species == SP_VAMPIRE
+             && mons_has_blood(mitm[corpse_id].plus)
              && !you.has_spell(SPELL_SUBLIMATION_OF_BLOOD)
              && !you.has_spell(SPELL_SIMULACRUM)
              && (Options.confirm_butcher == CONFIRM_NEVER
-                 || !yesno("You could drain or bottle this corpse instead. "
+                 || !yesno("You could drain or bottle this corpse's blood instead. "
                            "Continue anyway?", true, 'n')))
     {
         return (false);
@@ -373,7 +374,7 @@ bool butchery(int which_corpse, bool bottle_blood)
 {
     if (you.visible_igrd(you.pos()) == NON_ITEM)
     {
-        if (!_have_corpses_in_pack(false))
+        if (!_have_corpses_in_pack(false, bottle_blood))
             mpr("There isn't anything here!");
         return (false);
     }
@@ -408,6 +409,10 @@ bool butchery(int which_corpse, bool bottle_blood)
     // The old code did it the other way.
     if (!can_butcher && you.berserk())
     {
+        // NB: Normally can't get here with bottle_blood == true because it's an
+        // ability and thus also blocked when berserking.  If bottle_blood was
+        // somehow true at the point, the following message would be wrong and
+        // (even worse) bottling success would depend on can_butcher == true.
         mpr("You are too berserk to search for a butchering tool!");
         return (false);
     }
