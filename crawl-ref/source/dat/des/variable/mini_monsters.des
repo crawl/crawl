@@ -2289,6 +2289,7 @@ SHUFFLE: vcb, AB?/CD!, d<>, de
 SUBST:   A=9, B=8, C=1, D=9
 SUBST:   ? = %:10 *:50 |:60
 SUBST:   ! = %:90 *:30 |:10
+KMASK:   x = no_wall_fixup
 ITEM:    wand of digging / wand of disintegration
 ITEM:    ring of teleportation / stone of earth elementals
 MAP
