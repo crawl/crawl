@@ -44,7 +44,7 @@ def write_dgl_status_file():
             if socket.username and socket.is_running():
                 f.write("%s#%s#%s#0x0#%s#%s#\n" %
                         (socket.username, socket.game_id,
-                         (socket.process.where or ""),
+                         (socket.process.human_readable_where()),
                          str(int(socket.process.idle_time())),
                          str(socket.process.watcher_count())))
     except (OSError, IOError) as e:

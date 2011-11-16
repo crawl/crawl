@@ -6,7 +6,9 @@
     </a>
   </td>
   <td>{{ running_game.game_id }}</td>
-  <td>{{ (running_game.process.where or "") }}</td>
+  <td>{{ running_game.process.where.get("xl") or "" }}</td>
+  <td>{{ running_game.process.where.get("char") or "" }}</td>
+  <td>{{ running_game.process.where.get("place") or "" }}</td>
   <td>{{ int(running_game.process.idle_time()) }}s</td>
   <td>{{ running_game.process.watcher_count() }}</td>
 </tr>

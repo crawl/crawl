@@ -9,7 +9,7 @@ from tornado.escape import json_decode, json_encode
 
 from terminal import TerminalRecorder
 from connection import WebtilesSocketConnection
-from util import DynamicTemplateLoader, dgl_format_str
+from util import DynamicTemplateLoader, dgl_format_str, parse_where_data
 from game_data_handler import GameDataHandler
 
 class CrawlProcessHandlerBase(object):
@@ -21,8 +21,8 @@ class CrawlProcessHandlerBase(object):
 
         self.process = None
         self.client_path = self.config_path("client_path")
-        self.where = None
-        self.wheretime = time.time()
+        self.where = {}
+        self.wheretime = 0
         self.kill_timeout = None
 
         now = datetime.datetime.utcnow()
@@ -121,20 +121,30 @@ class CrawlProcessHandlerBase(object):
 
     def check_where(self):
         morgue_path = self.config_path("morgue_path")
-        wherefile = os.path.join(morgue_path, self.username + ".dglwhere")
+        wherefile = os.path.join(morgue_path, self.username + ".where")
         try:
             if os.path.getmtime(wherefile) > self.wheretime:
                 self.wheretime = time.time()
-                f = open(wherefile, "r")
-                _, _, newwhere = f.readline().partition("|")
-                f.close()
+                with open(wherefile, "r") as f:
+                    wheredata = f.read()
 
-                newwhere = newwhere.strip()
+                if wheredata.strip() == "": return
 
-                if self.where != newwhere:
+                try:
+                    newwhere = parse_where_data(wheredata)
+                except:
+                    self.logger.warn("Exception while trying to parse where file!",
+                                     exc_info=True)
+                else:
                     self.where = newwhere
         except (OSError, IOError):
             pass
+
+    def human_readable_where(self):
+        try:
+            return "L{xl} {char}, {place}".format(**self.where)
+        except KeyError:
+            return ""
 
     def _base_call(self):
         game = self.game_params
@@ -312,6 +322,8 @@ class CrawlProcessHandler(CrawlProcessHandlerBase):
 
         self.last_activity_time = time.time()
 
+        self.check_where()
+
     def gen_inprogress_lock(self):
         self.inprogress_lock = os.path.join(self.config_path("inprogress_path"),
                                             self.username + ":" + self.lock_basename)
@@ -458,6 +470,8 @@ class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
         self.last_activity_time = time.time()
 
         self.create_mock_ttyrec()
+
+        self.check_where()
 
     def create_mock_ttyrec(self):
         running_game_path = self.config_path("running_game_path")
