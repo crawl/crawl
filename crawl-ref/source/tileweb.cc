@@ -485,6 +485,13 @@ void TilesFramework::_send_cell(const coord_def &gc,
     else if (!force_full && current_mc.monsterinfo())
         write_message("mon:null,");
 
+    map_feature mf = get_cell_map_feature(next_mc);
+    if ((force_full && mf)
+        || (get_cell_map_feature(current_mc) != mf))
+    {
+        write_message("mf:%u,", mf);
+    }
+
     push_prefix("t:{");
     {
         // Tile data

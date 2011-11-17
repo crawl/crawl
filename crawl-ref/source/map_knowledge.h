@@ -277,4 +277,6 @@ void map_knowledge_forget_mons(const coord_def &c);
 
 void clear_map(bool clear_items = false, bool clear_mons = true);
 
+map_feature get_cell_map_feature(const map_cell& cell);
+
 #endif
