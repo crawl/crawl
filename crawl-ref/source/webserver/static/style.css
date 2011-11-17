@@ -56,7 +56,10 @@ body {
     padding-right: 5px;
 }
 #player_list th.char {
-    width: 4em;
+    width: 3em;
+}
+#player_list th.place {
+    width: 3em;
 }
 
 #player_list tr:hover {

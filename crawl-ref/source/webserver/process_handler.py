@@ -6,11 +6,15 @@ import hashlib
 import config
 
 from tornado.escape import json_decode, json_encode
+from tornado.ioloop import PeriodicCallback
 
 from terminal import TerminalRecorder
 from connection import WebtilesSocketConnection
 from util import DynamicTemplateLoader, dgl_format_str, parse_where_data
 from game_data_handler import GameDataHandler
+from ws_handler import update_all_lobbys
+
+last_game_id = 0
 
 class CrawlProcessHandlerBase(object):
     def __init__(self, game_params, username, logger, io_loop):
@@ -33,6 +37,14 @@ class CrawlProcessHandlerBase(object):
         self._watchers = set()
         self._receivers = set()
         self.last_activity_time = time.time()
+        self.idle_checker = PeriodicCallback(self.check_idle, 10000,
+                                             io_loop = self.io_loop)
+        self.idle_checker.start()
+        self._was_idle = False
+
+        global last_game_id
+        self.id = last_game_id + 1
+        last_game_id = self.id
 
     def format_path(self, path):
         return dgl_format_str(path, self.username, self.game_params)
@@ -42,7 +54,15 @@ class CrawlProcessHandlerBase(object):
         return self.format_path(self.game_params[key])
 
     def idle_time(self):
-        return time.time() - self.last_activity_time
+        return int(time.time() - self.last_activity_time)
+
+    def is_idle(self):
+        return self.idle_time() > 30
+
+    def check_idle(self):
+        if self.is_idle() != self._was_idle:
+            self._was_idle = self.is_idle()
+            update_all_lobbys(self)
 
     def write_to_all(self, msg):
         for receiver in self._receivers:
@@ -56,6 +76,8 @@ class CrawlProcessHandlerBase(object):
         if self.kill_timeout:
             self.io_loop.remove_timeout(self.kill_timeout)
             self.kill_timeout = None
+
+        self.idle_checker.stop()
 
         for watcher in list(self._watchers):
             watcher.stop_watching()
@@ -76,13 +98,16 @@ class CrawlProcessHandlerBase(object):
                          count = len(self._watchers),
                          names = s)
 
+        update_all_lobbys(self)
+
     def add_watcher(self, watcher, hide = False):
         if not hide:
             self._watchers.add(watcher)
         self._receivers.add(watcher)
         if self.client_path:
             self._send_client(watcher)
-        self.update_watcher_description()
+        if not hide:
+            self.update_watcher_description()
 
     def remove_watcher(self, watcher):
         if watcher in self._watchers:
@@ -119,6 +144,16 @@ class CrawlProcessHandlerBase(object):
             self.process.send_signal(subprocess.signal.SIGTERM)
             self.kill_timeout = None
 
+    interesting_info = ("xl", "char", "place", "god", "title")
+    def set_where_info(self, newwhere):
+        interesting = False
+        for key in CrawlProcessHandlerBase.interesting_info:
+            if self.where.get(key) != newwhere.get(key):
+                interesting = True
+        self.where = newwhere
+        if interesting:
+            update_all_lobbys(self)
+
     def check_where(self):
         morgue_path = self.config_path("morgue_path")
         wherefile = os.path.join(morgue_path, self.username + ".where")
@@ -138,9 +173,22 @@ class CrawlProcessHandlerBase(object):
                 else:
                     if (newwhere.get("status") == "active" or
                         newwhere.get("status") == "saved"):
-                        self.where = newwhere
+                        self.set_where_info(newwhere)
         except (OSError, IOError):
             pass
+
+    def lobby_entry(self):
+        entry = {
+            "id": self.id,
+            "username": self.username,
+            "spectator_count": len(self._watchers),
+            "idle_time": (self.idle_time() if self.is_idle() else 0),
+            "game_id": self.game_params["id"],
+            }
+        for key in CrawlProcessHandlerBase.interesting_info:
+            if key in self.where:
+                entry[key] = self.where[key]
+        return entry
 
     def human_readable_where(self):
         try:
@@ -166,6 +214,7 @@ class CrawlProcessHandlerBase(object):
 
     def note_activity(self):
         self.last_activity_time = time.time()
+        self.check_idle()
 
     def handle_input(self, msg):
         raise NotImplementedError()
