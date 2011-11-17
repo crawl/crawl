@@ -83,10 +83,10 @@ void clear_map(bool clear_detected_items, bool clear_detected_monsters)
         if (!cell.known() || cell.visible())
             continue;
 
-        if (!clear_detected_items || !cell.detected_item())
+        if (clear_detected_items || !cell.detected_item())
             cell.clear_item();
 
-        if ((!clear_detected_monsters || !cell.detected_monster())
+        if ((clear_detected_monsters || !cell.detected_monster())
             && !mons_class_is_stationary(cell.monster()))
         {
             cell.clear_monster();
