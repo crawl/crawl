@@ -333,11 +333,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def set_login_cookie(self):
         if self.username is None: return
         token = rand.getrandbits(128)
-        expires = datetime.datetime.now() + datetime.timedelta(login_token_lifetime)
+        expires = datetime.datetime.now() + datetime.timedelta(config.login_token_lifetime)
         login_tokens[(token, self.username)] = expires
         cookie = self.username + " " + str(token)
         self.send_message("login_cookie", cookie = cookie,
-                          expires = login_token_lifetime)
+                          expires = config.login_token_lifetime)
 
     def forget_login_cookie(self, cookie):
         try:

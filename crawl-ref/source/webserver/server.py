@@ -12,6 +12,7 @@ from config import *
 from util import *
 from ws_handler import *
 from game_data_handler import GameDataHandler
+import process_handler
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
