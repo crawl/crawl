@@ -27,6 +27,7 @@ class CrawlProcessHandlerBase(object):
         self.client_path = self.config_path("client_path")
         self.where = {}
         self.wheretime = 0
+        self.last_milestone = None
         self.kill_timeout = None
 
         now = datetime.datetime.utcnow()
@@ -188,6 +189,8 @@ class CrawlProcessHandlerBase(object):
         for key in CrawlProcessHandlerBase.interesting_info:
             if key in self.where:
                 entry[key] = self.where[key]
+        if self.last_milestone:
+            entry["milestone"] = self.last_milestone.get("milestone")
         return entry
 
     def human_readable_where(self):
@@ -195,6 +198,13 @@ class CrawlProcessHandlerBase(object):
             return "L{xl} {char}, {place}".format(**self.where)
         except KeyError:
             return ""
+
+    def log_milestone(self, milestone):
+        # Use the updated where info in the milestone
+        self.where = milestone
+
+        self.last_milestone = milestone
+        update_all_lobbys(self)
 
     def _base_call(self):
         game = self.game_params

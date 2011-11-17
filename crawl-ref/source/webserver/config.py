@@ -74,6 +74,9 @@ games = OrderedDict([
 
 dgl_status_file = "./rcs/status"
 
+# Set to None not to read milestones
+milestone_file = "./milestones"
+
 status_file_update_rate = 5
 
 recording_term_size = (80, 24)

@@ -20,6 +20,7 @@ body {
 #player_list {
     width: 100%;
     text-align: left;
+    line-height: 1.1em;
 }
 
 #player_list th.header {
@@ -62,8 +63,26 @@ body {
     width: 3em;
 }
 
+#player_list th.idle_time {
+    width: 3em;
+}
+#player_list th.spectator_count {
+    width: 1em;
+}
+
 #player_list tr:hover {
     background-color: #101010;
+}
+
+#player_list .milestone_container {
+    overflow-y: hidden;
+    height: 1.1em;
+}
+#player_list .milestone {
+    position: relative;
+}
+#player_list .new_milestone {
+    position: relative;
 }
 
 .floating_dialog {
