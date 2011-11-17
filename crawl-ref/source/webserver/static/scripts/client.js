@@ -517,7 +517,7 @@ function (exports, $, key_conversion, chat, comm) {
         set("xl", data.xl);
         set("char", data.char);
         set("place", data.place);
-        set("god", data.god);
+        set("god", data.god || "");
         set("title", data.title);
         set("idle_time", format_idle_time(data.idle_time));
         entry.find(".idle_time").data("sort", "" + data.idle_time);
