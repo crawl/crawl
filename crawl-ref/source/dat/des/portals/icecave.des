@@ -453,9 +453,9 @@ ITEM:    battleaxe ego:freezing / glaive ego:freezing / halberd ego:freezing / \
          great sword ego:freezing / battleaxe ego:freezing good_item / \
          glaive ego:freezing good_item / halberd ego:freezing good_item / \
          great sword ego:freezing good_item / nothing w:80
-ITEM:    cap ego:cold_resistance w:9 / cap ego:resistance w:1 / \
-         cloak ego:cold_resistance w:9 / cloak ego:resistance w:1 / \
-         shield ego:cold_resistance w:9 / shield ego:protection w:1 / \
+ITEM:    cap ego:cold_resistance w:10 / \
+         cloak ego:cold_resistance w:10 / \
+         shield ego:cold_resistance w:10 / \
          large shield ego:cold_resistance w:5 / \
          animal skin ego:cold_resistance / nothing w:60
 ITEM:    potion of resistance w:5 / potion of gain strength / \
@@ -605,13 +605,11 @@ ITEM:    nothing
 ITEM:    book of ice / book of frost / book of conjurations
 ITEM:    book of ice / book of frost / book of conjurations
 : end
-ITEM:    cap ego:cold_resistance w:9 / \
-         pair of gloves ego:cold_resistance w:9 / \
-         cloak ego:cold_resistance w:9 / \
+ITEM:    cap ego:cold_resistance w:10 / \
+         pair of gloves ego:cold_resistance w:10 / \
+         cloak ego:cold_resistance w:10 / \
          naga barding ego:cold_resistance w:5 / \
          centaur barding ego:cold_resistance w:5 / \
-         cap ego:resistance w:1 / pair of gloves ego:resistance w:1 / \
-         cloak ego:resistance w:1 / \
          buckler ego:cold_resistance / helmet ego:cold_resistance
 MAP
                           xxxxxx
