@@ -70,6 +70,10 @@ body {
     width: 1em;
 }
 
+#player_list th.milestone_col {
+    width: 20em;
+}
+
 #player_list tr:hover {
     background-color: #101010;
 }
