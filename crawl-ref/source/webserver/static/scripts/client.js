@@ -522,6 +522,10 @@ function (exports, $, key_conversion, chat, comm) {
         set("idle_time", format_idle_time(data.idle_time));
         entry.find(".idle_time").data("sort", "" + data.idle_time);
         set("spectator_count", data.spectator_count);
+        if (entry.find(".milestone").text() !== data.milestone)
+        {
+            roll_in_new_milestone(entry, data.milestone);
+        }
 
         if (single)
             lobby_complete();
@@ -594,6 +598,21 @@ function (exports, $, key_conversion, chat, comm) {
             return $elem.data("sort");
         else
             return $elem.text();
+    }
+
+    function roll_in_new_milestone(row, milestone)
+    {
+        var td = row.find(".milestone_col");
+        if (td.length == 0) return;
+
+        var new_milestone = td.find(".new_milestone");
+        new_milestone.text(milestone);
+
+        var milestones = td.find(".new_milestone, .milestone");
+        milestones.animate({ top: "-1.1em" }, function () {
+            milestones.text(milestone);
+            milestones.css({ top: 0 });
+        });
     }
 
 

@@ -74,6 +74,27 @@ def find_user_sockets(username):
         if socket.username and socket.username.lower() == username.lower():
             yield socket
 
+def find_running_game(charname, start):
+    for socket in list(sockets):
+        if (socket.is_running() and
+            socket.process.where.get("name") == charname and
+            socket.process.where.get("start") == start):
+            return socket.process
+    return None
+
+milestone_file_tailer = None
+def start_reading_milestones():
+    if config.milestone_file is None: return
+
+    global milestone_file_tailer
+    milestone_file_tailer = FileTailer(config.milestone_file, handle_new_milestone)
+
+def handle_new_milestone(line):
+    data = parse_where_data(line)
+    if "name" not in data: return
+    game = find_running_game(data.get("name"), data.get("start"))
+    game.log_milestone(data)
+
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def __init__(self, app, req, **kwargs):
         tornado.websocket.WebSocketHandler.__init__(self, app, req, **kwargs)
