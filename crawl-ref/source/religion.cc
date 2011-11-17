@@ -2950,6 +2950,9 @@ void excommunication(god_type new_god)
     more();
 
     mark_milestone("god.renounce", "abandoned " + god_name(old_god) + ".");
+#ifdef DGL_WHEREIS
+    whereis_record();
+#endif
 
     if (god_hates_your_god(old_god, new_god))
     {
