@@ -524,7 +524,10 @@ function (exports, $, key_conversion, chat, comm) {
         set("spectator_count", data.spectator_count);
         if (entry.find(".milestone").text() !== data.milestone)
         {
-            roll_in_new_milestone(entry, data.milestone);
+            if (single)
+                roll_in_new_milestone(entry, data.milestone);
+            else
+                set("milestone", data.milestone);
         }
 
         if (single)
