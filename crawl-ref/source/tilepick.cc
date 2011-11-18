@@ -220,7 +220,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ABANDONED_SHOP:
         return TILE_DNGN_ABANDONED_SHOP;
     case DNGN_ENTER_LABYRINTH:
-        return TILE_DNGN_ENTER_LABYRINTH;
+        return TILE_DNGN_PORTAL_LABYRINTH;
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
