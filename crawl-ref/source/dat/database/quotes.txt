@@ -10,6 +10,12 @@ Tomb
 ####################################################
 # Features
 ####################################################
+A gateway to a ziggurat
+
+"Captain: Take off every 'zig'!!
+ Captain: For great justice."
+   -Zero Wing
+%%%%
 A gateway to Hell
 
 "Lasciate ogne speranza, voi ch'intrate."
