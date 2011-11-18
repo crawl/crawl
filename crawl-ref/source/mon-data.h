@@ -1687,7 +1687,7 @@ static monsterentry mondata[] = {
     MONS_SPIRIT, 'p', YELLOW, "spirit",
     M_SPELLCASTER | M_INSUBSTANTIAL | M_FLEEING,
     MR_RES_POISON,
-    0, 5, MONS_SPIRIT, MONS_SPIRIT, MH_HOLY, -4,
+    0, 5, MONS_GHOST, MONS_SPIRIT, MH_HOLY, -4,
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 7, 5, 5, 0 },
     3, 19, MST_SPIRIT, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
