@@ -1827,7 +1827,6 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 # A generated bazaar map.
-# Would look a lot better if shops and exits didn't clump -- TODO.
 NAME:   bazaar_kb_twisted_cavern
 TAGS:   bazaar allow_dup
 ORIENT: encompass
@@ -1841,7 +1840,15 @@ WEIGHT: 1
 
     -- 4th argument is the size of the cavern to be delved.
     delve(3, 3, 0, 100, 1)
-    _G.nsubst('. = 4:C / 1:< / 1:> / *:.')
+
+    -- place one marker (shop / entrance / exit) at random
+    _G.nsubst('. = 1:C / *:.')
+    -- then add five more, using a greedy algorithm
+    for i = 1, 5 do
+      local x, y = farthest_from('C')
+      mapgrd[x][y] = 'C'
+    end
+    _G.nsubst('C = 1:< / 1:> / *:C')
     _G.subst('X = x')
     _G.kfeat('C = any shop')
     bazaar_epilogue(_G)
