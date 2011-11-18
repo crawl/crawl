@@ -24,6 +24,9 @@ server_socket_path = None # Uses global temp dir
 # Server name, so far only used in the ttyrec metadata
 server_id = ""
 
+# Disable caching of game data files
+game_data_no_cache = True
+
 # Game configs
 # %n in paths is replaced by the current username
 games = OrderedDict([
