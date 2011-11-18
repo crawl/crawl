@@ -1735,8 +1735,9 @@ static std::vector<formatted_string> _get_overview_resistances(
     // Don't show unreliable resistances granted by the cloak.  We could mark
     // them somehow, but for now this will do.
     bool dragonskin = player_equip_unrand(UNRAND_DRAGONSKIN);
-    unwind_var<bool> dragon_hack(you.melded[EQ_CLOAK], you.melded[EQ_CLOAK]
-                                                       || dragonskin);
+    bool cloak_was_melded = you.melded[EQ_CLOAK];
+    if (dragonskin)
+        you.melded[EQ_CLOAK] = true; // hack!
 
     const int rfire = player_res_fire(calc_unid);
     const int rcold = player_res_cold(calc_unid);
@@ -1848,6 +1849,8 @@ static std::vector<formatted_string> _get_overview_resistances(
              _determine_colour_string(rlevi, 1), _itosym1(rlevi),
              _determine_colour_string(rcfli, 1), _itosym1(rcfli));
     cols.add_formatted(1, buf, false);
+
+    you.melded[EQ_CLOAK] = cloak_was_melded;
 
     _print_overview_screen_equip(cols, equip_chars);
 
