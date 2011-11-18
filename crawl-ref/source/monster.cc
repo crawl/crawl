@@ -4315,8 +4315,7 @@ bool monster::can_mutate() const
 {
     const mon_holy_type holi = holiness();
 
-    return (holi != MH_UNDEAD && holi != MH_NONLIVING
-            && holi != MH_HOLY);
+    return (holi != MH_UNDEAD && holi != MH_NONLIVING);
 }
 
 bool monster::can_safely_mutate() const
