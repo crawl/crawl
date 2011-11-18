@@ -1825,3 +1825,24 @@ xxxxxxxxxxx...C...xxxxxxxxxxx
 xxxxxxxxxxxx.....xxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
+
+# A generated bazaar map.
+# Would look a lot better if shops and exits didn't clump -- TODO.
+NAME:   bazaar_kb_twisted_cavern
+TAGS:   bazaar allow_dup
+ORIENT: encompass
+WEIGHT: 1
+{{
+    -- Restricting the map to a smaller box might be good (more forks) but
+    -- by allowing the whole level we mostly avoid straight borders.
+    local gxm, gym = dgn.max_bounds()
+    extend_map{width = gxm, height = gym}
+    fill_area{fill = 'x', border = 'X'}
+
+    -- 4th argument is the size of the cavern to be delved.
+    delve(3, 3, 0, 100, 1)
+    _G.nsubst('. = 4:C / 1:< / 1:> / *:.')
+    _G.subst('X = x')
+    _G.kfeat('C = any shop')
+    bazaar_epilogue(_G)
+}}
