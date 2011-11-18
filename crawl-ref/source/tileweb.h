@@ -61,7 +61,7 @@ public:
 
     void write_message(const char *format, ...);
     void finish_message();
-    void send_message(const char *format, ...);
+    void send_message(const char *format = "", ...);
 
     /* Webtiles can receive input both via stdin, and on the
        socket. Also, while waiting for input, it should be
@@ -87,9 +87,22 @@ public:
        data is sent until pop_prefix is called. The suffix
        passed to pop_prefix will only be sent if the prefix
        was sent. */
-    void push_prefix(std::string prefix);
-    void pop_prefix(std::string suffix);
+    void push_prefix(const std::string& prefix);
+    void pop_prefix(const std::string& suffix);
     bool prefix_popped();
+
+    // Helper functions for writing JSON
+    void write_message_escaped(const std::string& s);
+    void json_open_object(const std::string& name = "");
+    void json_close_object();
+    void json_open_array(const std::string& name = "");
+    void json_close_array();
+    void json_write_comma();
+    void json_write_name(const std::string& name);
+    void json_write_int(int value);
+    void json_write_int(const std::string& name, int value);
+    void json_write_string(const std::string& value);
+    void json_write_string(const std::string& name, const std::string& value);
 
     std::string m_sock_name;
     bool m_await_connection;
@@ -108,6 +121,8 @@ protected:
     wint_t _receive_control_message();
 
     std::vector<std::string> m_prefixes;
+    int json_object_level;
+    bool need_comma;
 
     enum LayerID
     {

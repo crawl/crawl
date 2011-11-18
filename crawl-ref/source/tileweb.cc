@@ -318,12 +318,12 @@ bool TilesFramework::await_input(wint_t& c, bool block)
     }
 }
 
-void TilesFramework::push_prefix(std::string prefix)
+void TilesFramework::push_prefix(const std::string& prefix)
 {
     m_prefixes.push_back(prefix);
 }
 
-void TilesFramework::pop_prefix(std::string suffix)
+void TilesFramework::pop_prefix(const std::string& suffix)
 {
     if (!m_prefixes.empty())
     {
@@ -1234,5 +1234,113 @@ void TilesFramework::clear_to_end_of_line()
 
     for (int x = m_print_x; x < m_print_area->mx; ++x)
         m_print_area->put_character(' ', m_print_fg, m_print_bg, x, m_print_y);
+}
+
+
+void TilesFramework::write_message_escaped(const std::string& s)
+{
+    m_msg_buf.reserve(m_msg_buf.size() + s.size());
+
+    for (size_t i = 0; i < s.size(); ++i)
+    {
+        char c = s[i];
+        if (c == '"')
+            m_msg_buf.append("\\\"");
+        else if (c == '\\')
+            m_msg_buf.append("\\\\");
+        else
+            m_msg_buf.append(1, c);
+    }
+}
+
+void TilesFramework::json_open_object(const std::string& name)
+{
+    json_write_comma();
+    if (!name.empty())
+        json_write_name(name);
+
+    write_message("{");
+    json_object_level++;
+    need_comma = false;
+}
+
+void TilesFramework::json_close_object()
+{
+    write_message("}");
+    json_object_level--;
+    need_comma = true;
+}
+
+void TilesFramework::json_open_array(const std::string& name)
+{
+    json_write_comma();
+    if (!name.empty())
+        json_write_name(name);
+
+    write_message("[");
+    json_object_level++;
+    need_comma = false;
+}
+
+void TilesFramework::json_close_array()
+{
+    write_message("]");
+    json_object_level--;
+    need_comma = true;
+}
+
+void TilesFramework::json_write_comma()
+{
+    if (json_object_level > 0 && need_comma)
+    {
+        write_message(",");
+        need_comma = false;
+    }
+}
+
+void TilesFramework::json_write_name(const std::string& name)
+{
+    json_write_comma();
+
+    write_message("\"");
+    write_message_escaped(name);
+    write_message("\":");
+}
+
+void TilesFramework::json_write_int(int value)
+{
+    json_write_comma();
+
+    write_message("%d", value);
+
+    need_comma = true;
+}
+
+void TilesFramework::json_write_int(const std::string& name, int value)
+{
+    if (!name.empty())
+        json_write_name(name);
+
+    json_write_int(value);
+}
+
+void TilesFramework::json_write_string(const std::string& value)
+{
+    json_write_comma();
+
+    write_message("\"");
+    write_message_escaped(value);
+    write_message("\"");
+
+    need_comma = true;
+}
+
+void TilesFramework::json_write_string(const std::string& name,
+                                       const std::string& value)
+{
+    if (!name.empty())
+        json_write_name(name);
+
+    json_write_string(value);
 }
 #endif
