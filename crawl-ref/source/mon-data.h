@@ -3161,7 +3161,7 @@ static monsterentry mondata[] = {
     MONS_SHEDU, 'H', WHITE, "shedu",
     M_WARM_BLOOD | M_ALWAYS_CORPSE | M_SPELLCASTER,
     MR_RES_POISON,
-    480, 12, MONS_PHOENIX, MONS_SHEDU, MH_HOLY, -3,
+    480, 12, MONS_SHEDU, MONS_SHEDU, MH_HOLY, -3,
     { {AT_KICK, AF_HOLY, 19}, {AT_KICK, AF_HOLY, 23}, AT_NO_ATK, AT_NO_ATK },
     { 13, 6, 5, 0 },
     2, 10, MST_SHEDU, CE_CLEAN, Z_BIG, S_SCREECH,
