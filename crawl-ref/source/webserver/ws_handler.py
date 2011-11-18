@@ -397,7 +397,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.stop_watching()
 
     def get_rc(self, game_id):
-        if game_id not in games: return
+        if game_id not in config.games: return
         rcfile_path = dgl_format_str(config.games[game_id]["rcfile_path"],
                                      self.username, config.games[game_id])
         rcfile_path = os.path.join(rcfile_path, self.username + ".rc")
