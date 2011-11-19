@@ -321,16 +321,9 @@ static void _exercise_passive()
     }
 }
 
-static void _exercise(skill_type sk, int degree, int limit)
-{
-    if (limit < 0 || you.skills[sk] < limit)
-        exercise(sk, degree);
-}
-
 void practise(exer_type ex, int param1)
 {
     skill_type sk = SK_NONE;
-    int limit = -1;
     int deg = 0;
 
     switch (ex)
@@ -341,13 +334,11 @@ void practise(exer_type ex, int param1)
         exercise(sk, deg);
         break;
 
-    case EX_WILL_HIT_HELPLESS:
-        limit = 1;
     case EX_WILL_HIT:
         sk = static_cast<skill_type>(param1);
-        _exercise(sk, 1, limit);
+        exercise(sk, 1);
         if (coinflip())
-            _exercise(SK_FIGHTING, 1, limit);
+            exercise(SK_FIGHTING, 1);
         break;
 
     case EX_MONSTER_WILL_HIT:
