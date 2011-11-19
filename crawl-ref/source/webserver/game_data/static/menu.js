@@ -138,6 +138,12 @@ define(["jquery", "comm", "client", "./enums"], function ($, comm, client, enums
             item.elem = elem;
             set_item_contents(item, elem);
 
+            if (item_selectable(item))
+            {
+                elem.addClass("selectable");
+                elem.click(item_click_handler);
+            }
+
             container.append(elem);
         }
 
@@ -387,6 +393,14 @@ define(["jquery", "comm", "client", "./enums"], function ($, comm, client, enums
             event.preventDefault();
             return false;
         }
+    }
+
+    function item_click_handler(event)
+    {
+        var item = $(this).data("item");
+        if (!item) return;
+        if (item.hotkeys && item.hotkeys.length)
+            comm.send_message("input", { data: [ item.hotkeys[0] ] });
     }
 
     $(document).off("game_init.menu");
