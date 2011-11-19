@@ -14,6 +14,7 @@ lua {{
 
 function place_hive_portal(e, perm)
   e.kfeat("O = enter_portal_vault")
+  e.tile("O = dngn_portal_hive")
   e.lua_marker('O', hive_portal())
 end
 
@@ -22,7 +23,8 @@ function hive_portal()
   "place are dripping with honey, but the larvae are hungry, and the queen " ..
   "bee will not tolerate intruders."
   return one_way_stair { desc = 'gateway to a hive', desc_long = d,
-                           dst = 'hive', floor = 'stone_arch' }
+                           dst = 'hive', floor = 'stone_arch',
+                           feat_tile = 'dngn_portal_hive_gone' }
 end
 
 function hive_message(e)
