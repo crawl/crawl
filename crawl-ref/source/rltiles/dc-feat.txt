@@ -343,6 +343,7 @@ dngn_transit_pandemonium DNGN_TRANSIT_PANDEMONIUM
 # portal vault entrances
 volcano_portal DNGN_PORTAL_VOLCANO
 volcano_gone DNGN_PORTAL_VOLCANO_GONE
+volcano_exit DNGN_EXIT_VOLCANO
 sewer_portal DNGN_PORTAL_SEWER
 sewer_portal_rusted DNGN_PORTAL_SEWER_RUSTED
 ice_cave_portal DNGN_PORTAL_ICE_CAVE
