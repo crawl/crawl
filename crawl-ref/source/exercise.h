@@ -24,7 +24,6 @@ enum exer_type
     EX_USED_ABIL,
     EX_DID_CAST,
     EX_DID_MISCAST,
-    EX_WILL_READ_SCROLL,
     EX_SHIELD_BLOCK,
     EX_SHIELD_TRAP,
     EX_DODGE_TRAP,

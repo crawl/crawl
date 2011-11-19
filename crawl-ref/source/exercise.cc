@@ -417,10 +417,6 @@ void practise(exer_type ex, int param1)
                         ex == EX_DID_CAST);
         break;
 
-    case EX_WILL_READ_SCROLL:
-        _exercise(SK_SPELLCASTING, coinflip() ? 2 : 1, 1);
-        break;
-
     case EX_FOUND_SECRET_DOOR:
     case EX_TRAP_FOUND:
         exercise(SK_TRAPS_DOORS, 1 + random2(2));
