@@ -58,7 +58,6 @@ end
 function spiders_nest_colours(e)
   e.kfeat("< = exit_portal_vault")
   e.colour("< = white")
-  e.tile("< = dngn_portal")
   e.lrockcol("yellow")
   e.lfloorcol("brown")
   e.lrocktile("wall_yellow_rock")
