@@ -99,7 +99,6 @@ function volcano_portal (e)
         overview = "dark tunnel",
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
-	floor = "stone_arch",
         floor_tile = "dngn_portal_volcano_gone",
         msg = messager })
     e.kfeat("O = enter_portal_vault")

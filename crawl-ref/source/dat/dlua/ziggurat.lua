@@ -117,7 +117,7 @@ function ziggurat_portal(e, portal_only)
       dstname_abbrev = "Zig:1",
       dstorigin = "on level 1 of a ziggurat",
       floor = "stone_arch",
-      floor_tile = "dngn_portal_ziggurat_gone",
+      feat_tile = "dngn_portal_ziggurat_gone",
       onclimb = "callback.ziggurat_initialiser"
     }
   end
