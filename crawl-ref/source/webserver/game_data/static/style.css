@@ -106,9 +106,14 @@ body {
 #menu_contents ol {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 2px;
 }
 
 #menu_contents li {
     white-space: pre;
+}
+
+#menu_contents li.selectable:hover {
+    outline: 1px solid lightgray;
+    cursor: pointer;
 }
