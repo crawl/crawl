@@ -13,7 +13,6 @@ enum exer_type
     EX_BEAM_WILL_HIT,        // beam was not blocked or dodged
     EX_WILL_STAB,
     EX_WILL_HIT,             // melee
-    EX_WILL_HIT_HELPLESS,    // meleeing plants
     EX_MONSTER_MAY_HIT,      // melee attack was not blocked
     EX_MONSTER_WILL_HIT,     // melee attack was not blocked or dodged
     EX_WILL_LAUNCH,          // launchers
