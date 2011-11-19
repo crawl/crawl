@@ -4712,8 +4712,6 @@ tileidx_t tileidx_known_brand(const item_def &item)
             return TILE_BRAND_CHAOS;
         case SPMSL_PENETRATION:
             return TILE_BRAND_PENETRATION;
-        case SPMSL_REAPING:
-            return TILE_BRAND_REAPING;
         case SPMSL_DISPERSAL:
             return TILE_BRAND_DISPERSAL;
         case SPMSL_EXPLODING:
