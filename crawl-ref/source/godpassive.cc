@@ -372,8 +372,6 @@ static bool _jewel_auto_id(const item_def& item)
         return !!item.plus;
     case AMU_FAITH:
         return (you.religion != GOD_NO_GOD);
-    case RING_WIZARDRY:
-        return !!player_spell_skills();
     case AMU_THE_GOURMAND:
         return (you.species != SP_MUMMY
                 && player_mutation_level(MUT_HERBIVOROUS) < 3);
@@ -383,6 +381,7 @@ static bool _jewel_auto_id(const item_def& item)
     case RING_LEVITATION:
     case RING_ICE:
     case RING_FIRE:
+    case RING_WIZARDRY:
     case AMU_RAGE:
     case AMU_GUARDIAN_SPIRIT:
         return true;
