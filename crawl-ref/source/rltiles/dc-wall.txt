@@ -223,7 +223,7 @@ zot_blue3
 %variation WALL_ZOT cyan
 %hue 240 180
 %lum 240 -5
-%repeat WALL_ZOT WALL_ZOT_CYAN WALL_ICE
+%repeat WALL_ZOT WALL_ZOT_CYAN
 %resetcol
 
 %variation WALL_ZOT red
@@ -554,6 +554,16 @@ hell08
 hell09
 hell10
 hell11
+
+ice_wall0 WALL_ICE
+ice_wall1
+ice_wall2
+ice_wall3
+
+icy_stone0 WALL_ICY_STONE
+icy_stone1
+icy_stone2
+icy_stone3
 
 lab-rock0 WALL_LAB_ROCK
 lab-rock1

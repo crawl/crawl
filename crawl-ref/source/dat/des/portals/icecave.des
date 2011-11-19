@@ -77,7 +77,7 @@ function ice_cave_portal(e)
   e.tile("O = dngn_portal_ice_cave")
   e.colour("X = white")
   e.kfeat("X = x")
-  e.rtile("X = wall_ice")
+  e.rtile("X = wall_zot_cyan")
   e.colour(".1234 = blue")
   e.ftile(".1234O+ = floor_ice")
 end
@@ -128,7 +128,7 @@ function ice_cave_colours(e)
   e.tile("< = dngn_portal_ice_cave")
   e.lrockcol("white")
   e.lfloorcol("blue")
-  e.lrocktile("wall_ice")
+  e.lrocktile("wall_zot_cyan")
   e.lfloortile("floor_ice")
 end
 }}
