@@ -4545,12 +4545,6 @@ static void _update_replay_state()
 
 static void _compile_time_asserts()
 {
-    // Check that the numbering comments in enum.h haven't been
-    // disturbed accidentally.
-    COMPILE_CHECK(SK_UNARMED_COMBAT == 17);
-    COMPILE_CHECK(SK_EVOCATIONS == 32);
-    COMPILE_CHECK(SP_VAMPIRE == 30);
-
     //jmf: NEW ASSERTS: we ought to do a *lot* of these
     COMPILE_CHECK(NUM_SPECIES < SP_UNKNOWN);
     COMPILE_CHECK(NUM_JOBS < JOB_UNKNOWN);
