@@ -448,7 +448,7 @@ static void _item_corrode(int slot)
     switch (item.base_type)
     {
     case OBJ_ARMOUR:
-        if ((item.sub_type == ARM_CRYSTAL_PLATE
+        if ((item.sub_type == ARM_CRYSTAL_PLATE_ARMOUR
              || get_equip_race(item) == ISFLAG_DWARVEN)
             && !one_chance_in(5))
         {
@@ -1196,7 +1196,7 @@ void ouch(int dam, int death_source, kill_method_type death_type,
                 return;
         }
 
-        if (dam >= you.hp && god_protects_from_harm())
+        if (dam >= you.hp && you.hp_max > 0 && god_protects_from_harm())
         {
             simple_god_message(" protects you from harm!");
             return;

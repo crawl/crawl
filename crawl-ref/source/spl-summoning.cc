@@ -243,8 +243,9 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
             else
                 mon = MONS_SMALL_SNAKE;
 
-            int mon_index = create_monster(mgen_data(mon, beha, &you,
-                              0, SPELL_STICKS_TO_SNAKES, you.pos(), MHITYOU, 0, god), false);
+            const int mon_index = create_monster(mgen_data(mon, beha, &you,
+                                      0, SPELL_STICKS_TO_SNAKES, you.pos(),
+                                      MHITYOU, 0, god), false);
             if (mon_index != -1)
             {
                 count++;
@@ -278,8 +279,9 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
         if (pow > 90 && one_chance_in(3))
             mon = MONS_ANACONDA;
 
-        int mon_index = create_monster(mgen_data(mon, beha, &you,
-                          0, SPELL_STICKS_TO_SNAKES, you.pos(), MHITYOU, 0, god), false);
+        const int mon_index = create_monster(mgen_data(mon, beha, &you,
+                                  0, SPELL_STICKS_TO_SNAKES, you.pos(),
+                                  MHITYOU, 0, god), false);
         if (mon_index != -1)
         {
             count++;
@@ -457,69 +459,33 @@ static monster_type _feature_to_elemental(const coord_def& where,
 
     const bool any_elem = strict_elem == MONS_NO_MONSTER;
 
-    bool elem_earth;
-    if (any_elem || strict_elem == MONS_EARTH_ELEMENTAL)
+    if ((any_elem || strict_elem == MONS_EARTH_ELEMENTAL)
+        && (grd(where) == DNGN_ROCK_WALL || grd(where) == DNGN_CLEAR_ROCK_WALL))
     {
-        elem_earth = grd(where) == DNGN_ROCK_WALL
-                     || grd(where) == DNGN_CLEAR_ROCK_WALL;
-    }
-    else
-        elem_earth = false;
-
-    bool elem_fire_cloud;
-    bool elem_fire_lava;
-    bool elem_fire;
-    if (any_elem || strict_elem == MONS_FIRE_ELEMENTAL)
-    {
-        elem_fire_cloud = env.cgrid(where) != EMPTY_CLOUD
-                          && env.cloud[env.cgrid(where)].type == CLOUD_FIRE;
-        elem_fire_lava = grd(where) == DNGN_LAVA;
-        elem_fire = elem_fire_cloud || elem_fire_lava;
-    }
-    else
-    {
-        elem_fire_cloud = false;
-        elem_fire_lava = false;
-        elem_fire = false;
+            return (MONS_EARTH_ELEMENTAL);
     }
 
-    bool elem_water;
-    if (any_elem || strict_elem == MONS_WATER_ELEMENTAL)
-        elem_water = feat_is_watery(grd(where));
-    else
-        elem_water = false;
-
-    bool elem_air;
-    if (any_elem || strict_elem == MONS_AIR_ELEMENTAL)
+    if ((any_elem || strict_elem == MONS_FIRE_ELEMENTAL)
+        && (env.cgrid(where) != EMPTY_CLOUD
+            && env.cloud[env.cgrid(where)].type == CLOUD_FIRE
+            || grd(where) == DNGN_LAVA))
     {
-        elem_air = grd(where) >= DNGN_FLOOR
-                   && env.cgrid(where) == EMPTY_CLOUD;
+        return (MONS_FIRE_ELEMENTAL);
     }
-    else
-        elem_air = false;
 
-    monster_type elemental = MONS_NO_MONSTER;
-
-    if (elem_earth)
+    if ((any_elem || strict_elem == MONS_WATER_ELEMENTAL)
+        && feat_is_watery(grd(where)))
     {
-        grd(where) = DNGN_FLOOR;
-        set_terrain_changed(where);
-
-        elemental = MONS_EARTH_ELEMENTAL;
+        return (MONS_WATER_ELEMENTAL);
     }
-    else if (elem_fire)
+
+    if ((any_elem || strict_elem == MONS_AIR_ELEMENTAL)
+        && grd(where) >= DNGN_FLOOR && env.cgrid(where) == EMPTY_CLOUD)
     {
-        if (elem_fire_cloud)
-            delete_cloud(env.cgrid(where));
-
-        elemental = MONS_FIRE_ELEMENTAL;
+        return (MONS_AIR_ELEMENTAL);
     }
-    else if (elem_water)
-        elemental = MONS_WATER_ELEMENTAL;
-    else if (elem_air)
-        elemental = MONS_AIR_ELEMENTAL;
 
-    return (elemental);
+    return (MONS_NO_MONSTER);
 }
 
 // 'unfriendly' is percentage chance summoned elemental goes
@@ -586,6 +552,19 @@ spret_type cast_summon_elemental(int pow, god_type god,
     }
 
     fail_check();
+
+    if (mon == MONS_EARTH_ELEMENTAL)
+    {
+        grd(targ) = DNGN_FLOOR;
+        set_terrain_changed(targ);
+    }
+    if (mon == MONS_FIRE_ELEMENTAL
+        && env.cgrid(targ) != EMPTY_CLOUD
+        && env.cloud[env.cgrid(targ)].type == CLOUD_FIRE)
+    {
+        delete_cloud(env.cgrid(targ));
+    }
+
     if (horde_penalty)
         horde_penalty *= _count_summons(mon);
 
@@ -1212,16 +1191,16 @@ static bool _summon_demon_wrapper(int pow, god_type god, int spell,
                                  quiet);
 }
 
-bool summon_lesser_demon(int pow, god_type god, int spell,
-                         bool quiet)
+bool _summon_lesser_demon(int pow, god_type god, int spell,
+                          bool quiet)
 {
     return _summon_demon_wrapper(pow, god, spell, DEMON_LESSER,
                                  std::min(2 + (random2(pow) / 4), 6),
                                  random2(pow) > 3, false, quiet);
 }
 
-bool summon_common_demon(int pow, god_type god, int spell,
-                         bool quiet)
+bool _summon_common_demon(int pow, god_type god, int spell,
+                          bool quiet)
 {
     return _summon_demon_wrapper(pow, god, spell, DEMON_COMMON,
                                  std::min(2 + (random2(pow) / 4), 6),
@@ -1253,7 +1232,7 @@ spret_type cast_summon_demon(int pow, god_type god, bool fail)
     fail_check();
     mpr("You open a gate to Pandemonium!");
 
-    if (!summon_common_demon(pow, god, SPELL_SUMMON_DEMON))
+    if (!_summon_common_demon(pow, god, SPELL_SUMMON_DEMON, false))
         canned_msg(MSG_NOTHING_HAPPENS);
 
     return SPRET_SUCCESS;
@@ -1270,7 +1249,7 @@ spret_type cast_demonic_horde(int pow, god_type god, bool fail)
 
     for (int i = 0; i < how_many; ++i)
     {
-        if (summon_lesser_demon(pow, god, SPELL_DEMONIC_HORDE, true))
+        if (_summon_lesser_demon(pow, god, SPELL_DEMONIC_HORDE, true))
             success = true;
     }
 
@@ -1500,7 +1479,7 @@ static bool _animatable_remains(const item_def& item)
 // undead can be equipped with the second monster's items if the second
 // monster is either of the same type as the first, or if the second
 // monster wasn't killed by the player or a player's pet.
-void equip_undead(const coord_def &a, int corps, int mons, int monnum)
+static void _equip_undead(const coord_def &a, int corps, int mons, int monnum)
 {
     monster* mon = &menv[mons];
 
@@ -1724,7 +1703,8 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     mgen_data mg(mon, beha, as, 0, 0, pos, hitting, MG_FORCE_BEH|MG_FORCE_PLACE,
                  god, static_cast<monster_type>(monnum), number);
 
-    // No experience for monsters animated by god wrath or the Sword of Zongulrok
+    // No experience for monsters animated by god wrath or the Sword of
+    // Zonguldrok.
     if (nas != "")
         mg.extra_flags |= MF_NO_REWARD;
 
@@ -1759,7 +1739,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
     }
 
     // Re-equip the zombie.
-    equip_undead(pos, corps, mons, monnum);
+    _equip_undead(pos, corps, mons, monnum);
 
     // Destroy the monster's corpse, as it's no longer needed.
     destroy_item(corps);
@@ -2034,167 +2014,188 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     }
 }
 
-// Return the minimum mass for the specified undead abomination type.
-static int _undead_abomination_min_mass(monster_type abom_type)
-{
-    if (abom_type == MONS_ABOMINATION_LARGE)
-        return (500 + roll_dice(3, 1000));
-    else if (abom_type == MONS_ABOMINATION_SMALL)
-        return (400 + roll_dice(2, 500));
-    else
-        return (-1);
-}
-
 // Make the proper stat adjustments to turn a demonic abomination into
 // an undead abomination.
-static bool _undead_abomination_convert(monster* mon, int mass = -1,
-                                        int strength = -1)
+bool undead_abomination_convert(monster* mon, int hd)
 {
-    if (mon->type != MONS_ABOMINATION_LARGE
-        && mon->type != MONS_ABOMINATION_SMALL)
+    if (mon->type == MONS_CRAWLING_CORPSE
+        || mon->type == MONS_MACABRE_MASS)
+    {
+        mon->hit_points = mon->max_hit_points = mon->hit_dice = hd;
+        return (true);
+    }
+    else if (mon->type != MONS_ABOMINATION_LARGE
+             && mon->type != MONS_ABOMINATION_SMALL)
     {
         return (false);
     }
 
-    const int min_mass = _undead_abomination_min_mass(mon->type);
-
-    // Set 1 of 2 minimum masses: large or small.
-    if (mass == -1)
-        mass = min_mass;
-    else
-        mass = std::max(min_mass, mass);
-
-    // Set 1 of 3 strengths: 0 (low), 1 (medium) or 2 (high).
-    if (strength == -1)
-        strength = random2(3);
-    else
-        strength = std::min(2, std::max(0, strength));
+    const int max_hd = mon->type == MONS_ABOMINATION_LARGE ? 30 : 15;
+    const int max_ac = mon->type == MONS_ABOMINATION_LARGE ? 20 : 10;
 
     // Mark this abomination as undead.
     mon->flags |= MF_FAKE_UNDEAD;
 
-    mon->colour = ((strength == 2) ? LIGHTRED :
-                   (strength == 1) ? RED
-                                   : BROWN);
+    mon->colour = ((hd > 2 * max_hd / 3) ? LIGHTRED : RED);
 
-    const int min_hd = mon->type == MONS_ABOMINATION_LARGE ?  8 :  4;
-    const int max_hd = mon->type == MONS_ABOMINATION_LARGE ? 30 : 15;
-    const int min_ac = mon->type == MONS_ABOMINATION_LARGE ?  5 :  3;
-    const int max_ac = mon->type == MONS_ABOMINATION_LARGE ? 20 : 10;
+    mon->hit_dice = std::min(max_hd, hd);
 
-    mon->hit_dice = min_hd + mass / ((strength == 2) ?  500 :
-                                     (strength == 1) ? 1000
-                                                     : 2500);
-    mon->hit_dice = std::min(max_hd, mon->hit_dice);
-
-    mon->max_hit_points = hit_points(mon->hit_dice, 2, 5);
-    mon->max_hit_points = std::max(mon->max_hit_points, 1);
+    mon->max_hit_points = std::max(1, hit_points(mon->hit_dice, 2, 5));
     mon->hit_points     = mon->max_hit_points;
 
-    mon->ac = min_ac + mass / ((strength == 2) ? 1000 :
-                               (strength == 1) ? 1500
-                                               : 3750);
-    mon->ac = std::min(max_ac, mon->ac);
+    mon->ac = std::min(max_ac, 2 * hd / 3);
 
     return (true);
 }
 
-static bool _make_undead_abomination(int mass, int strength,
-                                     int pow, god_type god = GOD_NO_GOD,
-                                     bool force_hostile = false)
+// Return a definite/indefinite article for (number) things.
+static const char *_count_article(int number, bool definite)
 {
-    const int min_large = _undead_abomination_min_mass(MONS_ABOMINATION_LARGE);
-    const int min_small = _undead_abomination_min_mass(MONS_ABOMINATION_SMALL);
+    if (number == 0)
+        return ("No");
+    else if (definite)
+        return ("The");
+    else if (number == 1)
+        return ("A");
+    else
+        return ("Some");
+}
 
-    if (mass < min_small)
+bool twisted_resurrection(actor *caster, int pow, beh_type beha,
+                          unsigned short foe, god_type god, bool actual)
+{
+    int num_orcs = 0;
+    int num_holy = 0;
+    int num_crawlies = 0;
+    int num_masses = 0;
+    int num_lost = 0;
+    int num_lost_piles = 0;
+
+    radius_iterator ri(caster->pos(), LOS_RADIUS, C_ROUND,
+                       caster->get_los_no_trans());
+
+    for (; ri; ++ri)
+    {
+        int num_corpses = 0;
+        int total_mass = 0;
+
+        // Count up number/size of corpses at this location.
+        for (stack_iterator si(*ri); si; ++si)
+        {
+            if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
+            {
+                if (!actual)
+                    return (true);
+
+                if (mons_genus(si->plus) == MONS_ORC)
+                    num_orcs++;
+                if (mons_class_holiness(si->plus) == MH_HOLY)
+                    num_holy++;
+
+                if (food_is_rotten(*si))
+                    total_mass += mons_weight(si->plus) / 4;
+                else
+                    total_mass += mons_weight(si->plus);
+
+                ++num_corpses;
+                destroy_item(si->index());
+            }
+        }
+
+        if (num_corpses == 0)
+            continue;
+
+        // 20 aum per HD at max power; 30 at 100 power; and 60 at 0 power.
+        int hd = div_rand_round((pow + 100) * total_mass, (200*300));
+
+        if (hd <= 0)
+        {
+            num_lost += num_corpses;
+            num_lost_piles++;
+            continue;
+        }
+
+        // Getting a huge abomination shouldn't be too easy.
+        if (hd > 15)
+            hd = 15 + (hd - 15) / 2;
+
+        hd = std::min(hd, 30);
+
+        monster_type montype;
+
+        if (hd >= 11 && num_corpses > 2)
+            montype = MONS_ABOMINATION_LARGE;
+        else if (hd >= 6 && num_corpses > 1)
+            montype = MONS_ABOMINATION_SMALL;
+        else if (num_corpses > 1)
+            montype = MONS_MACABRE_MASS;
+        else
+            montype = MONS_CRAWLING_CORPSE;
+
+        mgen_data mg(montype, beha, caster, 0, 0, *ri, foe, MG_FORCE_BEH, god);
+        const int mons = create_monster(mg);
+
+        if (mons != -1)
+        {
+            // Set hit dice, AC, and HP.
+            undead_abomination_convert(&menv[mons], hd);
+
+            // Override Lugonu/Makhleb, since these are not really demonic.
+            menv[mons].god = god;
+
+            if (num_corpses > 1)
+                ++num_masses;
+            else
+                ++num_crawlies;
+        }
+        else
+        {
+            num_lost += num_corpses;
+            num_lost_piles++;
+        }
+    }
+
+    if (num_lost + num_crawlies + num_masses == 0)
         return (false);
 
-    if (strength < 0 || strength > 2)
-        return (false);
+    // The tracer should have stopped at the first corpse, or found no
+    // corpses and returned false.
+    ASSERT(actual);
 
-    dprf("Mass for abomination: %d", mass);
+    if (num_lost)
+        mprf("%s %s into %s!",
+             _count_article(num_lost, num_crawlies + num_masses == 0),
+             num_lost == 1 ? "corpse collapses" : "corpses collapse",
+             num_lost_piles == 1 ? "a pulpy mess" : "pulpy messes");
 
-    // This is what the old statement pretty much boils down to;
-    // the average will be approximately 10 * pow (or about 1000
-    // at the practical maximum).  That's the same as the mass
-    // of a hippogriff, a spiny frog, or a steam dragon.  Thus,
-    // material components are far more important to this spell. - bwr
-    mass += roll_dice(20, pow);
+    if (num_crawlies > 0)
+        mprf("%s %s to drag %s along the ground!",
+             _count_article(num_crawlies, num_lost + num_masses == 0),
+             num_crawlies == 1 ? "corpse begins" : "corpses begin",
+             num_crawlies == 1 ? "itself" : "themselves");
 
-    dprf("Mass for abomination with power bonus: %d", mass);
+    if (num_masses > 0)
+        mprf("%s corpses meld into %s of writhing flesh!",
+             _count_article(2, num_crawlies + num_lost == 0),
+             num_masses == 1 ? "an agglomeration" : "agglomerations");
 
-    const monster_type abom_type =
-        mass >= min_large ? MONS_ABOMINATION_LARGE : MONS_ABOMINATION_SMALL;
-
-    mgen_data mg(abom_type, !force_hostile ? BEH_FRIENDLY : BEH_HOSTILE,
-                 !force_hostile ? &you : 0, 0, 0, you.pos(),
-                 MHITYOU, MG_FORCE_BEH, god);
-
-    const int mons = create_monster(mg);
-
-    if (mons == -1)
-        return (false);
-
-    _undead_abomination_convert(&menv[mons], mass, strength);
-
-    player_angers_monster(&menv[mons]);
+    if (num_orcs > 0 && caster == &you)
+        did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * num_orcs);
+    if (num_holy > 0 && caster == &you)
+        did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2 * num_holy);
 
     return (true);
 }
 
 spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
 {
-    int how_many_corpses = 0;
-    int how_many_orcs = 0;
-    int how_many_holy = 0;
-    int total_mass = 0;
-    int unrotted = 0;
-
-    for (stack_iterator si(you.pos()); si; ++si)
-    {
-        if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
-        {
-            fail_check();
-            total_mass += mons_weight(si->plus);
-            how_many_corpses++;
-            if (mons_genus(si->plus) == MONS_ORC)
-                how_many_orcs++;
-            if (mons_class_holiness(si->plus) == MH_HOLY)
-                how_many_holy++;
-            if (!food_is_rotten(*si))
-                unrotted++;
-            destroy_item(si->index());
-        }
-    }
-
-    if (how_many_corpses == 0)
+    if (twisted_resurrection(&you, pow, BEH_FRIENDLY, MHITYOU, god, !fail))
+        return (fail ? SPRET_FAIL : SPRET_SUCCESS);
+    else
     {
         mpr("There are no corpses here!");
         return SPRET_ABORT;
     }
-
-    const int strength = (unrotted == how_many_corpses)          ? 2 :
-                         (unrotted >= random2(how_many_corpses)) ? 1
-                                                                 : 0;
-
-    const bool success =
-        how_many_corpses > (coinflip() ? 2 : 1)
-            && _make_undead_abomination(total_mass, strength, pow, god);
-
-    if (success)
-        mpr("The corpses meld into an agglomeration of writhing flesh!");
-    else
-    {
-        mprf("The corpse%s collapse%s into a pulpy mess.",
-             how_many_corpses > 1 ? "s": "", how_many_corpses > 1 ? "": "s");
-    }
-
-    if (how_many_orcs > 0)
-        did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2 * how_many_orcs);
-    if (how_many_holy > 0)
-        did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2 * how_many_holy);
-
-    return SPRET_SUCCESS;
 }
 
 spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)

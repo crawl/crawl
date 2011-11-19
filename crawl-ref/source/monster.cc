@@ -1279,8 +1279,6 @@ static bool _nonredundant_launcher_ammo_brands(item_def *launcher,
         return (bow_brand != SPWPN_FROST);
     case SPMSL_CHAOS:
         return (bow_brand != SPWPN_CHAOS);
-    case SPMSL_REAPING:
-        return (bow_brand != SPWPN_REAPING);
     case SPMSL_PENETRATION:
         return (bow_brand != SPWPN_PENETRATION);
     default:
@@ -2584,7 +2582,7 @@ std::string monster::arm_name(bool plural, bool *can_plural) const
         adj = "scaled";
         break;
 
-    case MONS_KENKU:
+    case MONS_TENGU:
         adj = "feathered";
         break;
 
@@ -3372,6 +3370,8 @@ int monster::res_poison(bool temp) const
     UNUSED(temp);
 
     int u = get_mons_resists(this).poison;
+    if (u > 0)
+        return u;
 
     if (mons_itemuse(this) >= MONUSE_STARTING_EQUIPMENT)
     {
@@ -3387,8 +3387,10 @@ int monster::res_poison(bool temp) const
             u += get_armour_res_poison(mitm[shld], false);
     }
 
-    // Monsters can legitimately get multiple levels of poison resistance.
-
+    // Monsters can have multiple innate levels of poison resistance, but
+    // like players, equipment doesn't stack.
+    if (u > 0)
+        return 1;
     return (u);
 }
 
@@ -3711,7 +3713,7 @@ int monster::hurt(const actor *agent, int amount, beam_type flavour,
             else if (petrified())
                 amount /= 2;
             else if (petrifying())
-                amount = amount * 10 / 15;
+                amount = amount * 2 / 3;
 
         if (amount == INSTANT_DEATH)
             amount = hit_points;
@@ -3804,39 +3806,12 @@ void monster::slow_down(actor *atk, int strength)
     enchant_monster_with_flavour(this, atk, BEAM_SLOW, strength);
 }
 
-void monster::set_ghost(const ghost_demon &g, bool has_name)
+void monster::set_ghost(const ghost_demon &g)
 {
     ghost.reset(new ghost_demon(g));
 
-    if (has_name)
+    if (!ghost->name.empty())
         mname = ghost->name;
-}
-
-void monster::pandemon_init()
-{
-    hit_dice        = ghost->xl;
-    max_hit_points  = std::min<int>(ghost->max_hp, MAX_MONSTER_HP);
-    hit_points      = max_hit_points;
-    ac              = ghost->ac;
-    ev              = ghost->ev;
-    flags           = MF_INTERESTING;
-    // Don't make greased-lightning Pandemonium lords in the dungeon
-    // max speed = 17). Demons in Pandemonium can be up to speed 20,
-    // possibly with haste. Non-caster demons are likely to be fast.
-    if (player_in_branch(BRANCH_PANDEMONIUM) || player_in_branch(BRANCH_ZIGGURAT))
-        speed = (!ghost->spellcaster ? 12 + roll_dice(2, 4) :
-                 one_chance_in(3) ? 10 :
-                 8 + roll_dice(2, 6));
-    else
-        speed = (!ghost->spellcaster ? 11 + roll_dice(2, 3) :
-                 one_chance_in(3) ? 10 :
-                 7 + roll_dice(2, 5));
-
-    speed_increment = 70;
-
-    colour = ghost->colour;
-
-    load_ghost_spells();
 }
 
 void monster::set_new_monster_id()
@@ -3846,24 +3821,17 @@ void monster::set_new_monster_id()
 
 void monster::ghost_init(bool need_pos)
 {
+    ghost_demon_init();
+
     set_new_monster_id();
     type            = MONS_PLAYER_GHOST;
     god             = ghost->religion;
-    hit_dice        = ghost->xl;
-    max_hit_points  = std::min<int>(ghost->max_hp, MAX_MONSTER_HP);
-    hit_points      = max_hit_points;
-    ac              = ghost->ac;
-    ev              = ghost->ev;
-    speed           = ghost->speed;
-    speed_increment = 70;
     attitude        = ATT_HOSTILE;
     behaviour       = BEH_WANDER;
     flags           = MF_INTERESTING;
     foe             = MHITNOT;
     foe_memory      = 0;
-    colour          = ghost->colour;
     number          = MONS_NO_MONSTER;
-    load_ghost_spells();
 
     inv.init(NON_ITEM);
     enchantments.clear();
@@ -3895,22 +3863,10 @@ void monster::uglything_init(bool only_mutate)
     colour          = ghost->colour;
 }
 
-void monster::dancing_weapon_init()
+void monster::ghost_demon_init()
 {
     hit_dice        = ghost->xl;
-    max_hit_points  = ghost->max_hp;
-    hit_points      = max_hit_points;
-    ac              = ghost->ac;
-    ev              = ghost->ev;
-    speed           = ghost->speed;
-    speed_increment = 70;
-    colour          = ghost->colour;
-}
-
-void monster::labrat_init ()
-{
-    hit_dice        = ghost->xl;
-    max_hit_points  = ghost->max_hp;
+    max_hit_points  = std::min<short int>(ghost->max_hp, MAX_MONSTER_HP);
     hit_points      = max_hit_points;
     ac              = ghost->ac;
     ev              = ghost->ev;
@@ -4358,8 +4314,7 @@ bool monster::can_mutate() const
 {
     const mon_holy_type holi = holiness();
 
-    return (holi != MH_UNDEAD && holi != MH_NONLIVING
-            && holi != MH_HOLY);
+    return (holi != MH_UNDEAD && holi != MH_NONLIVING);
 }
 
 bool monster::can_safely_mutate() const
@@ -4442,7 +4397,9 @@ static bool _mons_is_skeletal(int mc)
             || mc == MONS_SKELETON_LARGE
             || mc == MONS_BONE_DRAGON
             || mc == MONS_SKELETAL_WARRIOR
-            || mc == MONS_FLYING_SKULL);
+            || mc == MONS_FLYING_SKULL
+            || mc == MONS_CURSE_SKULL
+            || mc == MONS_MURRAY);
 }
 
 bool monster::is_skeletal() const

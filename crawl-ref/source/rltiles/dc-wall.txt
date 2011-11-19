@@ -62,7 +62,7 @@ brick_brown7
 %variation WALL_BRICK green
 %hue 30 90
 %hue 0 90
-%repeat WALL_BRICK WALL_BRICK_GREEN WALL_SNAKE
+%repeat WALL_BRICK WALL_BRICK_GREEN
 %resetcol
 
 %variation WALL_BRICK cyan
@@ -223,7 +223,7 @@ zot_blue3
 %variation WALL_ZOT cyan
 %hue 240 180
 %lum 240 -5
-%repeat WALL_ZOT WALL_ZOT_CYAN WALL_ICE
+%repeat WALL_ZOT WALL_ZOT_CYAN
 %resetcol
 
 %variation WALL_ZOT red
@@ -488,6 +488,20 @@ crystal_wall12
 %weight 1
 crystal_wall13
 
+%weight 10
+snake0 WALL_SNAKE
+snake1
+snake2
+snake3
+snake4
+snake5
+snake6
+%weight 3
+snake7
+%weight 2
+snake8
+%weight 10
+snake9
 
 stone_gray0 WALL_STONE_GRAY
 stone_gray1
@@ -541,6 +555,16 @@ hell09
 hell10
 hell11
 
+ice_wall0 WALL_ICE
+ice_wall1
+ice_wall2
+ice_wall3
+
+icy_stone0 WALL_ICY_STONE
+icy_stone1
+icy_stone2
+icy_stone3
+
 lab-rock0 WALL_LAB_ROCK
 lab-rock1
 lab-rock2
@@ -581,6 +605,24 @@ crypt-metal1
 crypt-metal2
 crypt-metal3
 crypt-metal4
+
+cobalt_rock1 WALL_COBALT_ROCK
+cobalt_rock2
+cobalt_rock3
+cobalt_rock4
+
+cobalt_stone01 WALL_COBALT_STONE
+cobalt_stone02
+cobalt_stone03
+cobalt_stone04
+cobalt_stone05
+cobalt_stone06
+cobalt_stone07
+cobalt_stone08
+cobalt_stone09
+cobalt_stone10
+cobalt_stone11
+cobalt_stone12
 
 stone2_gray0 DNGN_STONE_WALL DNGN_STONE_WALL_LIGHTGRAY
 stone2_gray1
@@ -867,6 +909,54 @@ emerald5
 emerald6
 emerald7
 emerald8
+
+%weight 20
+bars_red01 WALL_BARS WALL_BARS_RED
+bars_red02
+bars_red03
+bars_red04
+%weight 10
+bars_red05
+bars_red06
+bars_red07
+bars_red08
+
+%variation WALL_BARS blue
+%hue 0 240
+%repeat WALL_BARS WALL_BARS_BLUE
+%resetcol
+
+%variation WALL_BARS green
+%hue 0 90
+%repeat WALL_BARS WALL_BARS_GREEN
+%resetcol
+
+%variation WALL_BARS cyan
+%hue 0 180
+%repeat WALL_BARS WALL_BARS_CYAN
+%resetcol
+
+%variation WALL_BARS magenta
+%hue 0 300
+%repeat WALL_BARS WALL_BARS_MAGENTA
+%resetcol
+
+%variation WALL_BARS brown
+%hue 0 30
+%repeat WALL_BARS WALL_BARS_BROWN
+%resetcol
+
+%variation WALL_BARS lightgray
+%desat 0
+%lum 0 -10
+%repeat WALL_BARS WALL_BARS_LIGHTGRAY
+%resetcol
+
+%variation WALL_BARS darkgray
+%desat 0
+%lum 0 -30
+%repeat WALL_BARS WALL_BARS_DARKGRAY
+%resetcol
 
 shadow_w DNGN_WALL_SHADOW_W
 shadow_nw DNGN_WALL_SHADOW_NW

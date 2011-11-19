@@ -56,7 +56,6 @@ struct level_exit
 
 const item_def *give_mimic_item(monster* mimic);
 const item_def* get_mimic_item(const monster* mimic);
-int  get_mimic_colour(const monster* mimic);
 dungeon_feature_type get_mimic_feat (const monster* mimic);
 bool feature_mimic_at (const coord_def &c);
 item_def* item_mimic_at(const coord_def &c);
@@ -74,6 +73,7 @@ enum poly_power_type
     PPT_SAME,
 };
 
+void change_monster_type(monster* mons, monster_type targetc);
 bool monster_polymorph(monster* mons, monster_type targetc,
                        poly_power_type power = PPT_SAME,
                        bool force_beh = false);
@@ -145,8 +145,6 @@ bool swap_places(monster* mons, const coord_def &loc);
 bool swap_check(monster* mons, coord_def &loc, bool quiet = false);
 
 
-std::string get_wounds_description(const monster* mons, bool colour=false);
-std::string get_wounds_description_sentence(const monster* mons);
 void print_wounds(const monster* mons);
 bool monster_descriptor(int which_class, mon_desc_type which_descriptor);
 
@@ -192,13 +190,9 @@ std::string summoned_poof_msg(const monster* mons, bool plural = false);
 std::string summoned_poof_msg(const int midx, const item_def &item);
 std::string summoned_poof_msg(const monster* mons, const item_def &item);
 
-bool mons_reaped(actor *killer, monster* victim);
-
 struct bolt;
 
 void setup_spore_explosion(bolt & beam, const monster& origin);
-void setup_lightning_explosion(bolt & beam, const monster& origin);
-void setup_inner_flame_explosion(bolt & beam, const monster& origin);
 
 bool mons_avoids_cloud(const monster* mons, cloud_type cl_type,
                        bool placement = false);

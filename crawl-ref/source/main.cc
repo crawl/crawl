@@ -2082,6 +2082,19 @@ static void _prep_input()
 
         you.seen_portals = 0;
     }
+    if (you.seen_invis)
+    {
+        if (!you.can_see_invisible(false, true))
+        {
+            item_def *ring = get_only_unided_ring();
+            if (ring && !is_artefact(*ring)
+                && ring->sub_type == RING_SEE_INVISIBLE)
+            {
+                wear_id_type(*ring);
+            }
+        }
+        you.seen_invis = false;
+    }
 }
 
 // Decrement a single duration. Print the message if the duration runs out.
@@ -2172,7 +2185,7 @@ static void _decrement_petrification(int delay)
             dur = 0;
             // If we'd kill the player when active flight stops, this will
             // need to pass the killer.  Unlike monsters, almost all cFly is
-            // magical (sans kenku) so there's no flapping of wings, though.
+            // magical (sans tengu) so there's no flapping of wings, though.
             you.fully_petrify(NULL);
         }
         else if (dur < 15 && old_dur >= 15)
@@ -2274,7 +2287,9 @@ static void _decrement_durations()
     }
 
     _decrement_a_duration(DUR_JELLY_PRAYER, delay, "Your prayer is over.");
-    _decrement_a_duration(DUR_NAUSEA, delay, "Your stomach is not as upset anymore.");
+
+    if (_decrement_a_duration(DUR_NAUSEA, delay))
+        end_nausea();
 
     if (you.duration[DUR_DIVINE_SHIELD] > 0)
     {

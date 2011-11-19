@@ -3,9 +3,8 @@
 #include "coord-circle.h"
 
 #include "coordit.h"
+#include "libutil.h"
 #include "los.h"
-
-#include <cmath>
 
 bool rect_def::contains(const coord_def& p) const
 {
@@ -67,7 +66,7 @@ void circle_def::init(int param, circle_type ctype)
     case C_CIRCLE:
         shape = SH_CIRCLE;
         radius_sq = param;
-        radius = ceil(sqrt((float)radius_sq));
+        radius = isqrt_ceil(radius_sq);
         break;
     case C_ROUND:
         shape = SH_CIRCLE;

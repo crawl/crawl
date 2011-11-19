@@ -961,11 +961,6 @@ void draw_border(void)
 // Monster pane
 // ----------------------------------------------------------------------
 
-static bool _mons_hostile(const monster* mon)
-{
-    return (!mon->friendly() && !mon->neutral());
-}
-
 static std::string _get_monster_name(const monster_info& mi,
                                      int count, bool fullname)
 {
@@ -1001,31 +996,6 @@ static std::string _get_monster_name(const monster_info& mi,
 
     desc += monpane_desc;
     return (desc);
-}
-
-// Returns true if the first monster is more aggressive (in terms of
-// hostile/neutral/friendly) than the second, or, if both monsters share the
-// same attitude, if the first monster has a lower type.
-// If monster type and attitude are the same, return false.
-bool compare_monsters_attitude(const monster* m1, const monster* m2)
-{
-    if (_mons_hostile(m1) && !_mons_hostile(m2))
-        return (true);
-
-    if (m1->neutral())
-    {
-        if (m2->friendly())
-            return (true);
-        if (_mons_hostile(m2))
-            return (false);
-    }
-
-    if (m1->friendly() && !m2->friendly())
-        return (false);
-
-    // If we get here then monsters have the same attitude.
-    // FIXME: replace with difficulty comparison
-    return (m1->type < m2->type);
 }
 
 // If past is true, the messages should be printed in the past tense
@@ -1106,7 +1076,7 @@ static void _print_next_monster_desc(const std::vector<monster_info>& mons,
         for (unsigned int i_mon = start; i_mon < end; i_mon++)
         {
             monster_info mi = mons[i_mon];
-            glyph g = get_mons_glyph(mi.mon());
+            glyph g = get_mons_glyph(mi);
             textcolor(g.col);
             cprintf("%s", stringize_glyph(g.ch).c_str());
             ++printed;
@@ -1748,8 +1718,9 @@ static std::vector<formatted_string> _get_overview_resistances(
     // Don't show unreliable resistances granted by the cloak.  We could mark
     // them somehow, but for now this will do.
     bool dragonskin = player_equip_unrand(UNRAND_DRAGONSKIN);
-    unwind_var<bool> dragon_hack(you.melded[EQ_CLOAK], you.melded[EQ_CLOAK]
-                                                       || dragonskin);
+    bool cloak_was_melded = you.melded[EQ_CLOAK];
+    if (dragonskin)
+        you.melded[EQ_CLOAK] = true; // hack!
 
     const int rfire = player_res_fire(calc_unid);
     const int rcold = player_res_cold(calc_unid);
@@ -1861,6 +1832,8 @@ static std::vector<formatted_string> _get_overview_resistances(
              _determine_colour_string(rlevi, 1), _itosym1(rlevi),
              _determine_colour_string(rcfli, 1), _itosym1(rcfli));
     cols.add_formatted(1, buf, false);
+
+    you.melded[EQ_CLOAK] = cloak_was_melded;
 
     _print_overview_screen_equip(cols, equip_chars);
 
@@ -2123,7 +2096,7 @@ static std::string _status_mut_abilities(int sw)
               mutations.push_back("breathe poison");
           break;
 
-      case SP_KENKU:
+      case SP_TENGU:
           if (you.experience_level > 4)
           {
               std::string help = "able to fly";

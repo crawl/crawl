@@ -109,6 +109,7 @@ private:
 
     std::string debug_damage_number();
     std::string special_attack_punctuation();
+    std::string get_exclams(int dmg);
     std::string attack_strength_punctuation();
     std::string evasion_margin_adverb();
 
@@ -172,6 +173,7 @@ private:
     std::string mons_defender_name();
     void wasp_paralyse_defender();
     void mons_do_passive_freeze();
+    bool mons_do_minotaur_retaliation();
     void mons_do_spines();
     void mons_do_eyeball_confusion();
     void mons_emit_foul_stench();

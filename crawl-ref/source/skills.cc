@@ -59,7 +59,7 @@ int skill_cost_needed(int level)
         // as XL (a bit lower in the beginning).
         // Changed to exp apt 130 to slightly increase mid and late game prices.
         species_type sp = you.species;
-        you.species = SP_KENKU;
+        you.species = SP_TENGU;
 
         // The average starting skill total is actually lower, but monks get
         // about 1200, and they would start around skill cost level 4 if we
@@ -359,7 +359,7 @@ static void _check_abil_skills()
     std::vector<ability_type> abilities = get_god_abilities();
     for (unsigned int i = 0; i < abilities.size(); ++i)
     {
-        // Exit early if ther's no more skill to check.
+        // Exit early if there's no more skill to check.
         if (you.stop_train.empty())
             return;
 
@@ -903,7 +903,7 @@ static int _stat_mult(skill_type exsk, int skill_inc)
 
     if ((exsk >= SK_FIGHTING && exsk <= SK_STAVES) || exsk == SK_ARMOUR)
     {
-        // These skills are Easier for the strong.
+        // These skills are easier for the strong.
         stat = you.strength();
     }
     else if (exsk >= SK_SLINGS && exsk <= SK_UNARMED_COMBAT)
@@ -961,7 +961,7 @@ static int _train(skill_type exsk, int &max_exp, bool simu)
         skill_inc *= crosstrain_bonus(exsk);
 
     // Starting to learn skills is easier if the appropriate stat is high.
-        // We check skill points in case skill level hasn't been updated yet
+    // We check skill points in case skill level hasn't been updated yet.
     if (you.skill_points[exsk] < skill_exp_needed(1, exsk))
         skill_inc = _stat_mult(exsk, skill_inc);
 

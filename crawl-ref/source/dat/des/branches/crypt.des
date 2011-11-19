@@ -1043,3 +1043,128 @@ tttt"""ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
 ENDMAP
+
+###############################################################################
+# due -- elkab
+#
+# The triparte Egyptian temple! Like Bobbens' church of pain, it has four sets
+# of monsters: skeletal, ghost, vampire, mummy and demon.
+#
+# There are also three distinct sections:
+#
+# Monster layouts:
+#  skeletal (ancient lich, liches, bone dragons)
+#  vampire (vampire knight, vampire mage, Jory)
+#  ghostly (ghost moth, shadow dragon, phantasmal warrior, eidolon)
+#  mummy (greater mummy, mummy priests, buffed guardian mummy, sphinx)
+#
+# Loot:
+#  around 30k per map, regardless of monster set
+#  roughly similar loot to evilmike's haunted forest
+NAME:   due_elkab
+PLACE:  Crypt:5
+ORIENT: float
+TAGS:   no_monster_gen no_item_gen no_pool_fixup no_rotate no_trap_gen
+NSUBST: A = 1:= / *:c
+NSUBST: B = 1:= / *:c
+NSUBST: C = 1:6 / *:5
+KFEAT:  YD = closed_door
+KFEAT:  ER = alarm trap
+KFEAT:  CSd = floor
+COLOUR: YsDdE = darkgrey
+SUBST:  - = ^.....
+: local brnd = crawl.random2(15)
+: if brnd > 10 then
+MONS:   patrolling skeletal warrior w:8 / patrolling wight
+MONS:   ancient lich
+MONS:   bone dragon w:1 / skeletal warrior / lich w:1
+MONS:   flying skull w:20 / large skeleton / small skeleton
+MONS:   w:40 large skeleton / small skeleton / wight
+MONS:   generate_awake curse skull / generate_awake curse toe
+: elseif brnd > 6 then
+MONS:   patrolling vampire hd:8 col:green name:noble n_suf / patrolling \
+        vampire hd:10 col:blue spells:.;.;haste;.;.;.; name:vampire_warrior \
+        n_rpl n_des actual_spells ; long sword | great sword | battleaxe | \
+        war axe | broad axe . chain mail w:10 | splint mail w:5 | plate armour \
+        w:1
+MONS:   vampire knight / Jory
+MONS:   dancing weapon ; any weapon ego:vampiricism / vampire hd:10 col:blue \
+        spells:.;.;haste;.;.;.; name:vampire_warrior n_rpl n_des actual_spells \
+        ; long sword | great sword | battleaxe | war axe | broad axe . chain \
+        mail w:10 | splint mail w:5 | plate armour w:1
+MONS:   phantasmal warrior / vampire hd:10 col:blue spells:.;.;haste;.;.;.; \
+        name:vampire_warrior n_rpl n_des actual_spells ; long sword | great \
+        sword | battleaxe | war axe | broad axe . chain mail w:10 | splint \
+        mail w:5 | plate armour w:1
+MONS:   vampire / large zombie / golden dragon zombie w:3 / storm dragon zombie \
+        w:3
+MONS:   generate_awake vampire mage
+: elseif brnd > 2 then
+MONS:   patrolling freezing wraith / patrolling phantasmal warrior
+MONS:   ghost moth name:greater col:lightmagenta n_adj hd:15
+MONS:   eidolon / shadow wraith
+MONS:   freezing wraith / phantasmal warrior
+MONS:   spectral thing / large simulacrum / shadow wraith / phantasmal warrior \
+        / spectral storm dragon / spectral ice dragon / spectral iron dragon
+MONS:   generate_awake shadow dragon / generate_awake spectral golden dragon
+: else
+MONS:   patrolling guardian mummy
+MONS:   greater mummy
+MONS:   mummy priest w:8 / guardian mummy hd:9 col:lightcyan spells:.;.;haste;\
+        .;.;.; name:mummy_warrior n_rpl n_des actual_spells ; long sword | great \
+        sword | battleaxe | war axe | broad axe . chain mail w:10 | splint mail \
+        w:5 | plate armour w:1
+MONS:   guardian mummy
+MONS:   bog mummy / mummy / guardian mummy
+MONS:   generate_awake sphinx
+: end
+KFEAT:  Q = closed_door
+NSUBST: T = 1:= / 1:+
+MARKER: Q = lua:restrict_door()
+MAP
+                 ccccccccccccccccccccccccccccc
+                 c*$*c|%*.......**|c.........c
+                 c$3$c|*....2....%|c..G.3.G..c
+                 c...c|%|.......|%|c.........c
+                 cc+cccccc.....ccccccc+cccBBBc
+                 c...c---ccc+ccc---c-----c$$$c
+                 c.4.c-G-4-RRR-4-G-=--G--c$$$c
+                 c...c-------------c-----c%%*c
+ccccccccccccccccccc+ccccccc+++ccccccc+cccccccc
+c$$A...c|...*c%.*cc...ccc-------ccc...cc%*|%*c
+c$$A.3.c..3..c.3.c..G..---G---G---..G..c..3..c
+c$$A...c.....c...c..1...............1..c.....c
+c$$Ac+cccc+cccc+cc..G..G..G...G..G..G..cc+++cc
+ccccc-----------cc..1...............1..c-----c
+---cc--G4---4G--cc..G..G..G...G..G..G..c-4-4-c
+---ccc---------ccc..1...............1..c-----c
+@--cccccc+++cccccc..G..G..G...G..G..G..c-----c
+---ccc.........cccc...................ccc---cc
+---cc..G1...1G..cccQcQcQcQc...cQcQcQcQccc+++cccc
+c..cc...........ccc5c5c5c5c+++c5c5c5c5ccc...cQCc
+c..ccccc.....cccccc=ccccccc---cccccccccc.....ccc
+c..c...c.....c...cc.c.....-----.....ccCQ.....QCc
+c--c.............cc.c....1-----1....cccc.....ccc
+c---...G.....G...cc.cc....-----....=ccCQ.....QCc
+c---....1...1....cc.cccccc-----ccccc.ccc.....ccc
+c---...G.....G...cc=cc....-----....cc=CQ.....QCc
+c---....1...1....+..+....1-----1....cccc.....ccc
+c---...G.....G...cccc.....-----.....ccCQ.....QCc
+c..c.............cccccccccc+++cccccccccc.....ccc
+c..c...c-----c...c.......--------............QCc
+cccccccc-----ccccc...........................ccc
+   c.............c...........................QCc
+   c.G.G.....G.G.c.cccccc.......ccccccc......ccc
+   c..1.......1..ccT$$$$cc-----cc%....Tc.....QCc
+   c.G.........G.cc$$$$$cc-----cc%1...cccccccccc
+   c..1.......1..cc$$$$1cc-----cc*%%%%cc...----.
+   c.G.........G.cccccccc.......ccccccc....----.
+   c..1.......1..c.........................----@
+  cc.G.........G.c.........................----.
+  @-.......................................----.
+  cccccc-----ccccccccccccccccccccccccccccccccccc
+  cccccc-----ccccc
+  cc.............c
+    .............c
+  ........@.......
+ENDMAP

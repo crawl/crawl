@@ -111,8 +111,7 @@ bool TilesFramework::initialise()
     if (m_await_connection)
         _await_connection();
 
-    std::string title = CRAWL " " + Version::Long();
-    send_message("{msg:\"version\",text:\"%s\"}", title.c_str());
+    _send_version();
 
     // Do our initialization here.
     m_active_layer = LAYER_CRT;
@@ -341,6 +340,17 @@ bool TilesFramework::prefix_popped()
     return m_prefixes.empty();
 }
 
+void TilesFramework::_send_version()
+{
+    std::string title = CRAWL " " + Version::Long();
+    send_message("{msg:\"version\",text:\"%s\"}", title.c_str());
+
+#ifdef WEB_DIR_PATH
+    // The star signals a message to the server
+    send_message("*{\"msg\":\"client_path\",\"path\":\"%s\"}", WEB_DIR_PATH);
+#endif
+}
+
 static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
 {
     // Ordered from back to front.
@@ -474,6 +484,13 @@ void TilesFramework::_send_cell(const coord_def &gc,
         _send_monster(gc, next_mc.monsterinfo(), new_monster_locs, force_full);
     else if (!force_full && current_mc.monsterinfo())
         write_message("mon:null,");
+
+    map_feature mf = get_cell_map_feature(next_mc);
+    if ((force_full && mf)
+        || (get_cell_map_feature(current_mc) != mf))
+    {
+        write_message("mf:%u,", mf);
+    }
 
     push_prefix("t:{");
     {
@@ -846,8 +863,7 @@ void TilesFramework::resize()
  */
 void TilesFramework::_send_everything()
 {
-    std::string title = CRAWL " " + Version::Long();
-    send_message("{msg:\"version\",text:\"%s\"}", title.c_str());
+    _send_version();
     m_text_crt.send(true);
     m_text_stat.send(true);
     m_text_message.send(true);

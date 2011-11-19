@@ -333,7 +333,7 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
         if (was_orc)
             did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
         if (was_holy)
-            did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
+            did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
 
         delay.duration = 0;
         _pop_delay();
@@ -1061,7 +1061,7 @@ static void _finish_delay(const delay_queue_item &delay)
         if (was_orc)
             did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
         if (was_holy)
-            did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
+            did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
         break;
     }
 
@@ -1103,7 +1103,11 @@ static void _finish_delay(const delay_queue_item &delay)
             {
             default:
                 if (!you.can_pass_through_feat(grd(pass)))
-                    ouch(INSTANT_DEATH, NON_MONSTER, KILLED_BY_PETRIFICATION);
+                {
+                    mpr("...yet there is something new on the other side. "
+                        "You quickly turn back.");
+                    goto passwall_aborted;
+                }
                 break;
 
             case DNGN_SECRET_DOOR:      // oughtn't happen
@@ -1115,20 +1119,28 @@ static void _finish_delay(const delay_queue_item &delay)
             }
 
             // Move any monsters out of the way.
-            monster* m = monster_at(pass);
-            if (m)
+            if (monster* m = monster_at(pass))
             {
                 // One square, a few squares, anywhere...
                 if (!shift_monster(m) && !monster_blink(m, true))
                     monster_teleport(m, true, true);
+                // Might still fail.
+                if (monster_at(pass))
+                {
+                    mpr("...and sense your way blocked. You quickly turn back.");
+                    goto passwall_aborted;
+                }
+
+                move_player_to_grid(pass, false, true);
+
+                // Wake the monster if it's asleep.
+                if (m)
+                    behaviour_event(m, ME_ALERT, MHITYOU);
             }
+            else
+                move_player_to_grid(pass, false, true);
 
-            move_player_to_grid(pass, false, true);
-
-            // Wake the monster if it's asleep.
-            if (m)
-                behaviour_event(m, ME_ALERT, MHITYOU);
-
+        passwall_aborted:
             redraw_screen();
         }
         break;
@@ -1170,7 +1182,7 @@ static void _finish_delay(const delay_queue_item &delay)
                 if (was_orc)
                     did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
                 if (was_holy)
-                    did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
+                    did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
             }
             else
             {
@@ -1215,7 +1227,7 @@ static void _finish_delay(const delay_queue_item &delay)
                 if (was_orc)
                     did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
                 if (was_holy)
-                    did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
+                    did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
             }
 
             // Don't autopickup chunks/potions if there's still another
@@ -1786,8 +1798,11 @@ bool interrupt_activity(activity_interrupt_type ai,
     }
 
     // If we get hungry while traveling, let's try to auto-eat a chunk.
-    if (delay_is_run(delay) && ai == AI_HUNGRY && prompt_eat_chunks(true) == 1)
+    if (delay_is_run(delay) && ai == AI_HUNGRY
+        && Options.auto_eat_chunks && prompt_eat_chunks(true) == 1)
+    {
         return false;
+    }
 
     dprf("Activity interrupt: %s", _activity_interrupt_name(ai));
 
@@ -1882,7 +1897,7 @@ static const char *delay_names[] =
 // name must be lowercased already!
 delay_type get_delay(const std::string &name)
 {
-    ASSERT(sizeof(delay_names) / sizeof(*delay_names) == NUM_DELAYS);
+    COMPILE_CHECK(ARRAYSZ(delay_names) == NUM_DELAYS);
 
     for (int i = 0; i < NUM_DELAYS; ++i)
     {
@@ -1897,7 +1912,7 @@ delay_type get_delay(const std::string &name)
     if (name == "armor_off")
         return (DELAY_ARMOUR_OFF);
 
-    if (name == "memorise")
+    if (name == "memorize")
         return (DELAY_MEMORISE);
 
     if (name == "jewelry_on")
@@ -1908,8 +1923,6 @@ delay_type get_delay(const std::string &name)
 
 const char *delay_name(int delay)
 {
-    ASSERT(sizeof(delay_names) / sizeof(*delay_names) == NUM_DELAYS);
-
     if (delay < 0 || delay >= NUM_DELAYS)
         return ("");
 

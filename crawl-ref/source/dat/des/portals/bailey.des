@@ -50,9 +50,11 @@ function bailey_portal(e, ptype)
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
         floor = "stone_arch",
+        feat_tile = "dngn_portal_bailey_gone",
         msg = messager })
   e.kfeat("O = enter_portal_vault")
   e.colour("O = lightred")
+  e.tile("O = dngn_portal_bailey")
   e.tile("c = wall_stone_brick")
 end
 
@@ -121,7 +123,7 @@ function orc_warrior_with_polearm(e)
           ring mail race:orcish     | ring mail |\
           splint mail race:orcish   | splint mail |\
           plate armour race:orcish  | plate armour |\
-          crystal plate w:1")
+          crystal plate armour w:1")
 end
 
 function orc_knight_with_polearm(e)
@@ -134,7 +136,7 @@ function orc_knight_with_polearm(e)
           splint mail race:orcish   | splint mail |\
           chain mail race:orcish    | chain mail |\
           plate armour race:orcish  | plate armour |\
-          crystal plate w:1")
+          crystal plate armour w:1")
 end
 
 -- defined but not used, since the depth for the current entry vaults is 7-16
@@ -146,7 +148,7 @@ function orc_warlord_with_polearm(e)
           splint mail race:orcish   | splint mail |\
           chain mail race:orcish    | chain mail |\
           plate armour race:orcish  | plate armour |\
-          crystal plate w:1")
+          crystal plate armour w:1")
 end
 
 }}
@@ -583,8 +585,8 @@ TAGS:    bailey_axe no_rotate no_item_gen no_monster_gen no_pool_fixup
 LFLAGS:  no_tele_control
 #
 ITEM:    any good_item
-ITEM:    potion of levitation
-ITEM:    ring of levitation
+ITEM:    potion of levitation ident:type
+ITEM:    ring of levitation ident:type
 SUBST:   e : eeef
 NSUBST:  f = 1:f / *:.
 SUBST:   e = e..
@@ -744,7 +746,7 @@ NSUBST: E = 1:= / *:c
 : orc_knight_with_polearm(_G)
 SUBST:  2 = 223.
 SUBST:  1 = 1 2:1 .
-ITEM:   good_item crystal plate / good_item plate armour race:orcish /\
+ITEM:   good_item crystal plate armour / good_item plate armour race:orcish /\
         good_item gold dragon armour w:5 / good_item ice dragon armour w:5 /\
         good_item fire dragon armour w:5 / good_item steam dragon armour w:5
 # XXX: Which armour pieces can be orcish?

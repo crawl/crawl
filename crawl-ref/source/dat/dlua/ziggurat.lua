@@ -108,6 +108,7 @@ function ziggurat_portal(e, portal_only)
       dst = "Zig:1",
       dstname = "ziggurat",
       floor = "stone_arch",
+      feat_tile = "dngn_portal_ziggurat_gone",
       onclimb = "callback.ziggurat_initialiser"
     }
   end
@@ -118,6 +119,7 @@ function ziggurat_portal(e, portal_only)
 
   e.lua_marker("O", stair)
   e.kfeat("O = enter_portal_vault")
+  e.tile("O = dngn_portal_ziggurat")
 end
 
 -- Common setup for ziggurat levels.

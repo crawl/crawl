@@ -1219,7 +1219,6 @@ unsigned int item_value(item_def item, bool ident)
 
             case SPMSL_CURARE:
             case SPMSL_PENETRATION:
-            case SPMSL_REAPING:
             case SPMSL_SILVER:
             case SPMSL_STEEL:
             case SPMSL_DISPERSAL:
@@ -1305,7 +1304,7 @@ unsigned int item_value(item_def item, bool ident)
             break;
 
         case ARM_FIRE_DRAGON_HIDE:
-        case ARM_CRYSTAL_PLATE:
+        case ARM_CRYSTAL_PLATE_ARMOUR:
         case ARM_TROLL_LEATHER_ARMOUR:
         case ARM_ICE_DRAGON_HIDE:
             valued += 500;
@@ -2158,7 +2157,7 @@ std::string shop_type_name (shop_type type)
     }
 }
 
-std::string shop_type_suffix (shop_type type, const coord_def &where)
+static std::string _shop_type_suffix(shop_type type, const coord_def &where)
 {
     if (type == SHOP_GENERAL
         || type == SHOP_GENERAL_ANTIQUE
@@ -2214,7 +2213,7 @@ std::string shop_name(const coord_def& where)
     }
     else
     {
-        std::string sh_suffix = shop_type_suffix(type, where);
+        std::string sh_suffix = _shop_type_suffix(type, where);
         if (!sh_suffix.empty())
             sh_name += " " + sh_suffix;
     }

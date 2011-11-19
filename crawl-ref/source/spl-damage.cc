@@ -329,8 +329,23 @@ spret_type cast_chain_lightning(int pow, const actor *caster, bool fail)
 // Poisonous light passes right through invisible players
 // and monsters, and so, they are unaffected by this spell --
 // assumes only you can cast this spell (or would want to).
-spret_type cast_toxic_radiance(bool non_player, bool fail)
+static bool _toxic_radianceable(const actor *act)
 {
+    if (act->invisible())
+        return false;
+    // currently monsters are still immune at rPois 1
+    return (act->res_poison() < (act->atype() == ACT_PLAYER ? 3 : 1));
+}
+
+spret_type cast_toxic_radiance(int pow, bool non_player, bool fail)
+{
+    if (!non_player)
+    {
+        targetter_los hitfunc(&you, LOS_DEFAULT);
+        if (stop_attack_prompt(hitfunc, "poison", _toxic_radianceable))
+            return SPRET_ABORT;
+    }
+
     fail_check();
     if (non_player)
         mpr("The air is filled with a sickly green light!");
@@ -343,9 +358,7 @@ spret_type cast_toxic_radiance(bool non_player, bool fail)
 
     // Determine whether the player is hit by the radiance. {dlb}
     if (you.duration[DUR_INVIS])
-    {
         mpr("The light passes straight through your body.");
-    }
     else
     {
         int poison_amount = poison_player(2, "", "toxic radiance");
@@ -353,6 +366,7 @@ spret_type cast_toxic_radiance(bool non_player, bool fail)
             mpr("You feel rather sick.");
     }
 
+    bool sanct = false;
     counted_monster_list affected_monsters;
     // determine which monsters are hit by the radiance: {dlb}
     for (monster_iterator mi(you.get_los()); mi; ++mi)
@@ -365,13 +379,14 @@ spret_type cast_toxic_radiance(bool non_player, bool fail)
             if (!mi->has_ench(ENCH_INVIS))
             {
                 const actor* agent = non_player ? 0 : &you;
-                bool affected = poison_monster(*mi, agent, 1, false, false);
+                const int levels = 1 + random2(pow / 20);
 
-                if (coinflip() && poison_monster(*mi, agent, 1, false, false))
-                    affected = true;
-
-                if (affected)
+                if (poison_monster(*mi, agent, levels, false, false))
+                {
+                    if (is_sanctuary(mi->pos()))
+                        sanct = true;
                     affected_monsters.add(*mi);
+                }
             }
             else if (you.can_see_invisible())
             {
@@ -399,6 +414,10 @@ spret_type cast_toxic_radiance(bool non_player, bool fail)
             else
                 mpr("The monsters around you are poisoned!");
         }
+        // Sanctuary is violated if either you or any victims are in it.
+        if (!non_player && (sanct || is_sanctuary(you.pos())))
+            remove_sanctuary(true);
+
     }
     return SPRET_SUCCESS;
 }
@@ -841,7 +860,7 @@ static int _shatter_mon_dice(const monster *mon)
         // Extra damage to petrifying/petrified things.
         // Undo the damage reduction as well; base damage is 4 : 6.
         if (petrifying || petrified)
-            return petrifying ? 7 : 18;
+            return petrifying ? 6 : 12;
         // No damage to insubstantials.
         else if (mon->is_insubstantial())
             return 0;
@@ -1037,9 +1056,9 @@ static int _shatter_player(int pow, actor *wielder)
     dice_def dam_dice(0, 5 + pow / 3); // Number of dice set below.
 
     if (you.petrified())
-        dam_dice.num = 18; // reduced later
+        dam_dice.num = 12; // reduced later
     else if (you.petrifying())
-        dam_dice.num = 7;  // reduced later
+        dam_dice.num = 6;  // reduced later
     // Same order as for monsters -- petrified flyers get hit hard, skeletal
     // flyers get no extra damage.
     else if (you.airborne())
@@ -1546,19 +1565,15 @@ spret_type cast_dispersal(int pow, bool fail)
 
 spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
 {
-    bool explode = false;
-    bool hole    = true;
-    const char *what = NULL;
+    bool destroy_wall = false;
+    bool hole         = true;
+    const char *what  = NULL;
 
     if (!cell_see_cell(you.pos(), spd.target, LOS_SOLID))
     {
         mpr("There's something in the way!");
         return SPRET_ABORT;
     }
-
-    fail_check();
-
-    //FIXME: If (player typed '>' to attack floor) goto do_terrain;
 
     bolt beam;
 
@@ -1576,45 +1591,35 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
     // Number of dice vary... 3 is easy/common, but it can get as high as 6.
     beam.damage = dice_def(0, 5 + pow / 5);
 
+    monster* mon = monster_at(spd.target);
     const dungeon_feature_type grid = grd(spd.target);
 
-    if (monster* mon = monster_at(spd.target))
+    // Set up the explosion if there's a visible monster.
+    if (mon && you.can_see(mon))
     {
-        // Save the monster's name in case it isn't available later.
-        const std::string name_cap_the = mon->name(DESC_CAP_THE);
-
         switch (mon->type)
         {
         case MONS_WOOD_GOLEM:
-            explode         = true;
-            beam.name       = "blast of splinters";
-            beam.colour     = BROWN;
-            beam.damage.num = 2;
-            if (_player_hurt_monster(*mon, beam.damage.roll(),
-                                     BEAM_DISINTEGRATION))
-                beam.damage.num++;
-            break;
-
         case MONS_TOENAIL_GOLEM:
-            explode         = true;
-            beam.name       = "blast of toenail fragments";
-            beam.colour     = RED;
             beam.damage.num = 2;
-            if (_player_hurt_monster(*mon, beam.damage.roll(),
-                                     BEAM_DISINTEGRATION))
-                beam.damage.num++;
+            if (mon->type == MONS_WOOD_GOLEM)
+            {
+                beam.name       = "blast of splinters";
+                beam.colour     = BROWN;
+            }
+            else
+            {
+                beam.name       = "blast of toenail fragments";
+                beam.colour     = RED;
+            }
             break;
 
         case MONS_IRON_ELEMENTAL:
         case MONS_IRON_GOLEM:
         case MONS_METAL_GARGOYLE:
-            explode         = true;
             beam.name       = "blast of metal fragments";
             beam.colour     = CYAN;
             beam.damage.num = 4;
-            if (_player_hurt_monster(*mon, beam.damage.roll(),
-                                     BEAM_DISINTEGRATION))
-                beam.damage.num += 2;
             break;
 
         case MONS_EARTH_ELEMENTAL:
@@ -1622,19 +1627,16 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
         case MONS_STONE_GOLEM:
         case MONS_STATUE:
         case MONS_GARGOYLE:
-            explode         = true;
             beam.ex_size    = 2;
             beam.name       = "blast of rock fragments";
             beam.colour     = BROWN;
             beam.damage.num = 3;
-            if (_player_hurt_monster(*mon, beam.damage.roll(),
-                                     BEAM_DISINTEGRATION))
-                beam.damage.num++;
             break;
 
         case MONS_SILVER_STATUE:
         case MONS_ORANGE_STATUE:
-            explode         = true;
+        case MONS_CRYSTAL_GOLEM:
+        case MONS_ROXANNE:
             beam.ex_size    = 2;
             beam.damage.num = 4;
             if (mon->type == MONS_SILVER_STATUE)
@@ -1642,29 +1644,12 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
                 beam.name       = "blast of silver fragments";
                 beam.colour     = WHITE;
             }
-            else
+            else if (mon->type == MONS_ORANGE_STATUE)
             {
                 beam.name       = "blast of orange crystal shards";
                 beam.colour     = LIGHTRED;
             }
-
-            {
-                int statue_damage = beam.damage.roll() * 2;
-                if (pow >= 50 && one_chance_in(10))
-                    statue_damage = mon->hit_points;
-
-                if (_player_hurt_monster(*mon, statue_damage,
-                                         BEAM_DISINTEGRATION))
-                    beam.damage.num += 2;
-            }
-            break;
-
-        case MONS_CRYSTAL_GOLEM:
-        case MONS_ROXANNE:
-            explode         = true;
-            beam.ex_size    = 2;
-            beam.damage.num = 4;
-            if (mon->type == MONS_CRYSTAL_GOLEM)
+            else if (mon->type == MONS_CRYSTAL_GOLEM)
             {
                 beam.name       = "blast of crystal shards";
                 beam.colour     = GREEN;
@@ -1674,9 +1659,6 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
                 beam.name       = "blast of sapphire shards";
                 beam.colour     = BLUE;
             }
-            if (_player_hurt_monster(*mon, beam.damage.roll(),
-                                     BEAM_DISINTEGRATION))
-                beam.damage.num += 2;
             break;
 
         default:
@@ -1686,97 +1668,47 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
             // Petrifying or petrified monsters can be exploded.
             if (petrifying || petrified)
             {
-                explode         = true;
                 beam.ex_size    = petrifying ? 1 : 2;
                 beam.name       = "blast of petrified fragments";
                 beam.colour     = mons_class_colour(mon->type);
                 beam.damage.num = petrifying ? 2 : 3;
-                if (_player_hurt_monster(*mon, beam.damage.roll(),
-                                         BEAM_DISINTEGRATION))
-                    beam.damage.num++;
                 break;
             }
             else if (mon->is_icy()) // blast of ice
             {
-                explode         = true;
                 beam.name       = "icy blast";
                 beam.colour     = WHITE;
                 beam.damage.num = 2;
                 beam.flavour    = BEAM_ICE;
-                if (_player_hurt_monster(*mon, beam.damage.roll()),
-                                         BEAM_DISINTEGRATION)
-                    beam.damage.num++;
                 break;
             }
             else if (mon->is_skeletal()) // blast of bone
             {
-                mprf("The %s explodes into sharp fragments of bone!",
-                     (mon->type == MONS_FLYING_SKULL) ? "skull" : "skeleton");
-
-                explode     = true;
                 beam.name   = "blast of bone shards";
                 beam.colour = LIGHTGREY;
-
-                if (x_chance_in_y(pow / 5, 50)) // potential insta-kill
-                {
-                    monster_die(mon, KILL_YOU, NON_MONSTER);
-                    beam.damage.num = 4;
-                }
-                else
-                {
-                      beam.damage.num = 2;
-                      if (_player_hurt_monster(*mon, beam.damage.roll(),
-                                               BEAM_DISINTEGRATION))
-                          beam.damage.num += 2;
-                }
-                goto all_done; // Messaging already handled for skeletons.
+                beam.damage.num = 2;
+                break;
             }
-            goto do_terrain;  // Targeted monster not shatterable.
+            // Targeted monster not shatterable, try the terrain instead.
+            goto do_terrain;
         }
-
-        mprf("%s shatters!", name_cap_the.c_str());
+        // Got a target, let's blow it up.
         goto all_done;
     }
 
-    for (stack_iterator si(spd.target, true); si; ++si)
-    {
-        if (si->base_type == OBJ_CORPSES)
-        {
-            std::string nm = si->name(DESC_CAP_THE);
-            if (si->sub_type == CORPSE_BODY)
-            {
-                if (!explode_corpse(*si, spd.target))
-                {
-                    mprf("%s seems to be exceptionally well connected.",
-                         nm.c_str());
-
-                    goto all_done;
-                }
-            }
-
-            mprf("%s explodes!", nm.c_str());
-            destroy_item(si.link());
-            // si invalid now!
-            goto all_done;
-        }
-    }
+  do_terrain:
 
     if (env.markers.property_at(spd.target, MAT_ANY,
                                 "veto_fragmentation") == "veto")
     {
         mprf("%s seems to be unnaturally hard.",
              feature_description(spd.target, false, DESC_CAP_THE, false).c_str());
-        canned_msg(MSG_SPELL_FIZZLES);
-        return SPRET_SUCCESS;
+        return SPRET_ABORT;
     }
-
-  do_terrain:
 
     switch (grid)
     {
-    //
     // Stone and rock terrain
-    //
     case DNGN_ROCK_WALL:
     case DNGN_SECRET_DOOR:
         beam.colour = env.rock_colour;
@@ -1800,8 +1732,6 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
         if (what == NULL)
             what = "statue";
 
-        explode = true;
-
         beam.name       = "blast of rock fragments";
         beam.damage.num = 3;
         if (beam.colour == 0)
@@ -1817,16 +1747,12 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
              || pow >= 60 && grid == DNGN_CLEAR_STONE_WALL
                  && one_chance_in(10)))
         {
-            // terrain blew up real good:
-            beam.ex_size        = 2;
-            nuke_wall(spd.target);
+            beam.ex_size = 2;
+            destroy_wall = true;
         }
         break;
 
-    //
     // Metal -- small but nasty explosion
-    //
-
     case DNGN_METAL_WALL:
         what            = "metal wall";
         // fall through
@@ -1834,78 +1760,44 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
         if (what == NULL)
             what        = "iron grate";
         beam.colour     = CYAN;
-        explode         = true;
         beam.name       = "blast of metal fragments";
         beam.damage.num = 4;
 
         if (pow >= 80 && x_chance_in_y(pow / 5, 500) || grid == DNGN_GRATE)
         {
             beam.damage.num += 2;
-            nuke_wall(spd.target);
+            destroy_wall     = true;
         }
         break;
 
-    //
     // Crystal
-    //
-
     case DNGN_GREEN_CRYSTAL_WALL:       // crystal -- large & nasty explosion
         what            = "crystal wall";
         beam.colour     = GREEN;
-        explode         = true;
         beam.ex_size    = 2;
         beam.name       = "blast of crystal shards";
-        beam.damage.num = 5;
+        beam.damage.num = 4;
 
         if (coinflip())
         {
-            beam.ex_size    = coinflip() ? 3 : 2;
-            nuke_wall(spd.target);
+            beam.ex_size = 3;
+            destroy_wall = true;
         }
         break;
 
-    //
-    // Traps
-    //
-
-    case DNGN_UNDISCOVERED_TRAP:
-    case DNGN_TRAP_MECHANICAL:
-    {
-        trap_def* ptrap = find_trap(spd.target);
-        ASSERT(ptrap);
-        if (ptrap->category() != DNGN_TRAP_MECHANICAL)
-        {
-            // Non-mechanical traps don't explode with this spell. -- bwr
-            break;
-        }
-
-        // Undiscovered traps appear as exploding from the floor. -- bwr
-        what = ((grid == DNGN_UNDISCOVERED_TRAP) ? "floor" : "trap");
-
-        explode         = true;
-        hole            = false;    // to hit monsters standing on traps
-        beam.name       = "blast of fragments";
-        beam.colour     = env.floor_colour;  // in order to blend in
-        beam.damage.num = 2;
-
-        // Exploded traps are nonfunctional, ammo is also ruined -- bwr
-        ptrap->destroy();
-        break;
-    }
-
-    //
     // Stone doors and arches
-    //
 
     case DNGN_OPEN_DOOR:
     case DNGN_CLOSED_DOOR:
     case DNGN_DETECTED_SECRET_DOOR:
         // Doors always blow up, stone arches never do (would cause problems).
-        nuke_wall(spd.target);
+        what         = "door";
+        destroy_wall = true;
 
         // fall-through
     case DNGN_STONE_ARCH:          // Floor -- small explosion.
-        explode         = true;
+        if (what == NULL)
+            what        = "stone arch";
         hole            = false;  // to hit monsters standing on doors
         beam.name       = "blast of rock fragments";
         beam.colour     = LIGHTGREY;
@@ -1913,8 +1805,9 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
         break;
 
     default:
-        // FIXME: cute message for water?
-        break;
+        // Couldn't find a monster or wall to shatter - abort casting!
+        mpr("You can't deconstruct that!");
+        return SPRET_ABORT;
     }
 
     // If it was recoloured, use that colour instead.
@@ -1922,21 +1815,36 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
         beam.colour = env.grid_colours(spd.target);
 
   all_done:
-    if (explode && beam.damage.num > 0)
-    {
-        if (what != NULL)
-            mprf("The %s shatters!", what);
 
-        beam.explode(true, hole);
+    fail_check();
 
-        if (grid == DNGN_ORCISH_IDOL)
-            did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
-    }
-    else if (beam.damage.num == 0)
+    if (what != NULL) // Terrain explodes.
     {
-        // If damage dice are zero, assume that nothing happened at all.
-        canned_msg(MSG_SPELL_FIZZLES);
+        mprf("The %s shatters!", what);
+        if (destroy_wall)
+            nuke_wall(spd.target);
     }
+    else // Monster explodes.
+    {
+        mprf("%s shatters!", mon->name(DESC_CAP_THE).c_str());
+
+        if ((mons_is_statue(mon->type) || mon->is_skeletal())
+             && x_chance_in_y(pow / 5, 50)) // potential insta-kill
+        {
+            monster_die(mon, KILL_YOU, NON_MONSTER);
+            beam.damage.num += 2;
+        }
+        else if (_player_hurt_monster(*mon, beam.damage.roll(),
+                                      BEAM_DISINTEGRATION))
+        {
+            beam.damage.num += 2;
+        }
+    }
+
+    beam.explode(true, hole);
+
+    if (grid == DNGN_ORCISH_IDOL)
+        did_god_conduct(DID_DESTROY_ORCISH_IDOL, 8);
 
     return SPRET_SUCCESS;
 }
@@ -1969,7 +1877,7 @@ spret_type cast_sandblast(int pow, bolt &beam, bool fail)
         break;
     }
 
-    const spret_type ret = zapping(zap, pow, beam, true, "", fail);
+    const spret_type ret = zapping(zap, pow, beam, true, NULL, fail);
 
     if (ret == SPRET_SUCCESS && zap != ZAP_SMALL_SANDBLAST)
         dec_inv_item_quantity(you.equip[EQ_WEAPON], 1);

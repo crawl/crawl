@@ -750,7 +750,7 @@ static bool _has_hair(actor* target)
 
     return (!form_changed_physiology() && you.species != SP_GHOUL
             && you.species != SP_OCTOPODE
-            && you.species != SP_KENKU && !player_genus(GENPC_DRACONIAN));
+            && you.species != SP_TENGU && !player_genus(GENPC_DRACONIAN));
 }
 
 static std::string _hair_str(actor* target, bool &plural)
@@ -1049,7 +1049,7 @@ void MiscastEffect::_enchantment(int severity)
         switch (random2(target->atype() == ACT_PLAYER ? 4 : 2))
         {
         case 0:
-            _potion_effect(POT_PARALYSIS, 10);
+            target->paralyse(act_source, 2 + random2(6), cause);
             break;
         case 1:
             _potion_effect(POT_CONFUSION, 10);

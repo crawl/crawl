@@ -206,6 +206,37 @@ LUAFN(dgn_tile_feat_changed)
     return (0);
 }
 
+LUAFN(dgn_tile_floor_changed)
+{
+#ifdef USE_TILE
+    COORDS(c, 1, 2);
+
+    if (lua_isnil(ls, 3))
+    {
+        env.tile_flv(c).floor     = 0;
+        env.tile_flv(c).floor_idx = 0;
+        return (0);
+    }
+
+    std::string tilename = luaL_checkstring(ls, 3);
+
+    tileidx_t floor;
+    if (!tile_dngn_index(tilename.c_str(), &floor))
+    {
+        std::string error = "Couldn't find tile '";
+        error += tilename;
+        error += "'";
+        luaL_argerror(ls, 1, error.c_str());
+        return 0;
+    }
+    env.tile_flv(c).floor     = floor;
+    env.tile_flv(c).floor_idx =
+        store_tilename_get_index(tilename);
+#endif
+
+    return (0);
+}
+
 const struct luaL_reg dgn_tile_dlib[] =
 {
 { "lrocktile", dgn_lrocktile },
@@ -218,6 +249,7 @@ const struct luaL_reg dgn_tile_dlib[] =
 { "lev_floortile", dgn_lev_floortile },
 { "lev_rocktile", dgn_lev_rocktile },
 { "tile_feat_changed", dgn_tile_feat_changed },
+{ "tile_floor_changed", dgn_tile_floor_changed },
 
 { NULL, NULL }
 };

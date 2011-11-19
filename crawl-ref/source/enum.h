@@ -39,7 +39,7 @@ enum ability_type
     ABIL_THROW_FROST,
 #endif
     ABIL_HELLFIRE,
-    // Kenku, Draconians
+    // Tengu, Draconians
     ABIL_FLY,
     ABIL_FLY_II,
     ABIL_STOP_FLYING,
@@ -247,7 +247,7 @@ enum attribute_type
     ATTR_FRUIT_FOUND,          // Mask of fruit types found.
     ATTR_LEV_UNCANCELLABLE,    // Potion or spell of levitation is in effect.
     ATTR_INVIS_UNCANCELLABLE,  // Potion/spell/wand of invis is in effect.
-    ATTR_PERM_LEVITATION,      // Kenku flight or boots of lev are on.
+    ATTR_PERM_LEVITATION,      // Tengu flight or boots of lev are on.
     ATTR_SEEN_INVIS_TURN,      // Last turn you saw something invisible.
     ATTR_SEEN_INVIS_SEED,      // Random seed for invis monster positions.
     ATTR_APPENDAGE,            // eq slot of Beastly Appendage
@@ -313,7 +313,7 @@ enum beam_type                  // beam[].flavour
     BEAM_DIGGING,
     BEAM_TELEPORT,
     BEAM_POLYMORPH,
-    BEAM_CHARM,
+    BEAM_ENSLAVE,
     BEAM_BANISH,
     BEAM_DEGENERATE,
     BEAM_ENSLAVE_SOUL,
@@ -928,10 +928,17 @@ enum conduct_type
     DID_ARTIFICIAL_KILLED_BY_SERVANT,     // Yredelemnul
     DID_DESTROY_SPELLBOOK,                // Sif Muna
     DID_EXPLORATION,                      // Ashenzari, wrath timers
-    DID_VIOLATE_HOLY_CORPSE,              // Zin/Ely/TSO butchering holy
+    DID_DESECRATE_HOLY_REMAINS,           // Zin/Ely/TSO
     DID_SEE_MONSTER,                      // TSO
 
     NUM_CONDUCTS
+};
+
+enum confirm_butcher_type
+{
+    CONFIRM_NEVER,
+    CONFIRM_ALWAYS,
+    CONFIRM_AUTO,
 };
 
 enum confirm_prompt_type
@@ -2134,7 +2141,7 @@ enum monster_type                      // (int) menv[].type
     MONS_SPRIGGAN_BERSERKER,
     MONS_SPRIGGAN_DEFENDER,
     MONS_FIREFLY,
-    MONS_KENKU,
+    MONS_TENGU,
     MONS_MINOTAUR,
     MONS_NAGA,
     MONS_NAGA_WARRIOR,
@@ -2448,6 +2455,8 @@ enum monster_type                      // (int) menv[].type
     MONS_PROFANE_SERVITOR,
     MONS_GNOLL_SHAMAN,
     MONS_GNOLL_SERGEANT,
+    MONS_CRAWLING_CORPSE,
+    MONS_MACABRE_MASS,
 
     NUM_MONSTERS,                      // used for polymorph
 
@@ -2537,7 +2546,7 @@ enum mutation_type
     MUT_STINGER,
     MUT_TALONS,         // feet
 #if TAG_MAJOR_VERSION != 32
-    MUT_TENTACLES,      // Gloves but don't lose a slot yet.
+    MUT_TENTACLES,      // hands
     MUT_TENTACLE_SPIKE, // Octopode only.
 #endif
 
@@ -2649,7 +2658,7 @@ enum mutation_type
 #if TAG_MAJOR_VERSION == 32
     MUT_POWERED_BY_PAIN,
     MUT_CAMOUFLAGE,
-    MUT_TENTACLES,      // Gloves but don't lose a slot yet.
+    MUT_TENTACLES,      // hands
     MUT_TENTACLE_SPIKE, // Octopode only.
     MUT_WILD_MAGIC,
     MUT_IGNITE_BLOOD,
@@ -2996,7 +3005,7 @@ enum species_type
     SP_MINOTAUR,
     SP_DEMONSPAWN,
     SP_GHOUL,
-    SP_KENKU,
+    SP_TENGU,
     SP_MERFOLK,
     SP_VAMPIRE,
     SP_DEEP_DWARF,

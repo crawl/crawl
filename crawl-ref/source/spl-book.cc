@@ -84,15 +84,6 @@ spell_type which_spell_in_book(int sbook_type, int spl)
     return spellbook_template_array[sbook_type][spl];
 }
 
-int player_spell_skills()
-{
-    int sum = 0;
-    for (int i = SK_SPELLCASTING; i <= SK_LAST_MAGIC; i++)
-        sum += you.skills[i];
-
-    return (sum);
-}
-
 // If fs is not NULL, updates will be to the formatted_string instead of
 // the display.
 int spellbook_contents(item_def &book, read_book_action_type action,
@@ -103,8 +94,6 @@ int spellbook_contents(item_def &book, read_book_action_type action,
     bool update_screen = !fs;
 
     const int spell_levels = player_spell_levels();
-
-    bool spell_skills = player_spell_skills();
 
     set_ident_flags(book, ISFLAG_KNOW_TYPE);
 
@@ -142,7 +131,6 @@ int spellbook_contents(item_def &book, read_book_action_type action,
             else if (you_cannot_memorise(stype)
                 || you.experience_level < level_diff
                 || spell_levels < levels_req
-                || !spell_skills
                 || book.base_type == OBJ_BOOKS
                    && !player_can_memorise_from_spellbook(book))
             {
@@ -1103,16 +1091,6 @@ bool can_learn_spell(bool silent)
     {
         if (!silent)
             mpr("Your brain is not functional enough to learn spells.");
-        return (false);
-    }
-
-    if (!player_spell_skills())
-    {
-        if (!silent)
-        {
-            mpr("You can't use spell magic! I'm afraid it's scrolls only "
-                "for now.");
-        }
         return (false);
     }
 

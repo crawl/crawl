@@ -93,6 +93,7 @@ static spell_type search_order_third[] = {
     SPELL_SWIFTNESS,
     SPELL_SUMMON_ICE_BEAST,
     SPELL_ANIMATE_DEAD,
+    SPELL_TWISTED_RESURRECTION,
     SPELL_INVISIBILITY,
     SPELL_SUMMON_SCORPIONS,
     SPELL_CALL_IMP,
@@ -169,7 +170,7 @@ void ghost_demon::init_random_demon()
 
     // Is demon a spellcaster?
     // Non-spellcasters get some boosts to their melee and speed instead.
-    spellcaster = !one_chance_in(10);
+    spellcaster = !one_chance_in(3);
 
     see_invis = !one_chance_in(10);
 
@@ -204,7 +205,7 @@ void ghost_demon::init_random_demon()
     // special attack type (uses weapon brand code):
     brand = SPWPN_NORMAL;
 
-    if (!one_chance_in(3) || !spellcaster)
+    if (one_chance_in(3) || !spellcaster)
     {
         do
         {
@@ -229,6 +230,11 @@ void ghost_demon::init_random_demon()
 
     // hit dice:
     xl = 10 + roll_dice(2, 10);
+
+    // Non-caster demons are likely to be fast, casters may get haste.
+    speed = (!spellcaster ? 11 + roll_dice(2, 4) :
+             one_chance_in(3) ? 10 :
+             8 + roll_dice(2, 5));
 
     // Does demon cycle colours?
     cycle_colours = one_chance_in(10);

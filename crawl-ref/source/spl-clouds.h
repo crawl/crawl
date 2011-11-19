@@ -21,11 +21,6 @@ void manage_fire_shield(int delay);
 spret_type cast_corpse_rot(bool fail);
 void corpse_rot(actor* caster);
 
-int make_a_normal_cloud(coord_def where, int pow, int spread_rate,
-                        cloud_type ctype, const actor *agent, int colour = -1,
-                        std::string name = "", std::string tile = "",
-                        int excl_rad = -1);
-
 std::string get_evaporate_result_list(int potion);
 spret_type cast_evaporate(int pow, bolt& beem, int potion, bool fail);
 

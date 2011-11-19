@@ -31,9 +31,11 @@ DEPTH:  10-20, !Orc, !Swamp, !Shoals, !Hive, !Snake, !Slime
 }}
 MARKER: O = lua: timed_marker {  \
                  low=400, high=600, msg=messager, floor = 'stone_arch', \
+                 feat_tile = 'dngn_portal_labyrinth_gone', \
                  single_timed=true, dstname = 'lab' \
             }
 KFEAT: O = enter_labyrinth
+TILE:  O = dngn_portal_labyrinth
 MAP
 O
 ENDMAP

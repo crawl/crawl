@@ -526,17 +526,6 @@ bool choose_game(newgame_def* ng, newgame_def* choice,
     return (false);
 }
 
-void make_rod(item_def &item, stave_type rod_type, int ncharges)
-{
-    item.base_type = OBJ_STAVES;
-    item.sub_type  = rod_type;
-    item.quantity  = 1;
-    item.special   = you.item_description[IDESC_STAVES][rod_type];
-    item.colour    = BROWN;
-
-    init_rod_mp(item, ncharges);
-}
-
 // Set ng_choice to defaults without overwriting name and game type.
 static void _set_default_choice(newgame_def* ng, newgame_def* ng_choice,
                                 const newgame_def& defaults)

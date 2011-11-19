@@ -1060,17 +1060,9 @@ void bolt::nuke_wall_effect()
     finish_beam();
 }
 
-// integer square root, such that _length((8,1)) == 8.
-static int _length(const coord_def& c)
-{
-    if (c.origin())
-        return (0);
-    return (int)(ceil(sqrt(c.abs()-1)));
-}
-
 int bolt::range_used(bool leg_only) const
 {
-    const int leg_length = _length(pos() - leg_source());
+    const int leg_length = pos().range(leg_source());
     return (leg_only ? leg_length : leg_length + extra_range_used);
 }
 
@@ -1123,7 +1115,11 @@ bool bolt::need_regress() const
 bool bolt::hit_wall()
 {
     const dungeon_feature_type feat = grd(pos());
-    ASSERT(feat_is_solid(feat));
+
+#ifdef ASSERTS
+    if (!feat_is_solid(feat))
+        die("beam::hit_wall yet not solid: %s", dungeon_feature_name(feat));
+#endif
 
     if (is_tracer && YOU_KILL(thrower) && in_bounds(target) && !passed_target
         && pos() != target  && pos() != source && foe_info.count == 0
@@ -1251,11 +1247,11 @@ void bolt::affect_cell()
         affect_ground();
 }
 
-bool bolt::apply_hit_funcs(actor* victim, int dmg, int corpse)
+bool bolt::apply_hit_funcs(actor* victim, int dmg)
 {
     bool affected = false;
     for (unsigned int i = 0; i < hit_funcs.size(); ++i)
-        affected = (*hit_funcs[i])(*this, victim, dmg, corpse) || affected;
+        affected = (*hit_funcs[i])(*this, victim, dmg) || affected;
 
     return (affected);
 }
@@ -1941,6 +1937,10 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow,
     if (m_attempted)
         *m_attempted = 0;
 
+    // Give mass enchantments a power multiplier.
+    pow *= 3;
+    pow /= 2;
+
     pow = std::min(pow, 200);
 
     for (monster_iterator mi(you.get_los()); mi; ++mi)
@@ -2050,6 +2050,7 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
 
         if (hurted)
         {
+            mons->add_ench(mon_enchant(ENCH_BREATH_WEAPON, 0, agent, hurted));
             simple_monster_message(mons, " convulses.");
             mons->hurt(agent, hurted, BEAM_POISON);
         }
@@ -2069,10 +2070,11 @@ static bool _curare_hits_monster(actor *agent, monster* mons, int levels)
 bool poison_monster(monster* mons, const actor *who, int levels,
                     bool force, bool verbose)
 {
-    if (!mons->alive())
+    if (!mons->alive() || levels <= 0)
         return (false);
 
-    if ((!force && mons->res_poison() > 0) || levels <= 0)
+    int res = mons->res_poison();
+    if (res >= (force ? 3 : 1))
         return (false);
 
     const mon_enchant old_pois = mons->get_ench(ENCH_POISON);
@@ -2751,12 +2753,7 @@ void bolt::affect_place_explosion_clouds()
 
     if (name == "great blast of fire")
     {
-        int duration = 1 + random2(5) + roll_dice(2, ench_power / 5);
-
-        if (duration > 20)
-            duration = 20 + random2(4);
-
-        place_cloud(CLOUD_FIRE, p, duration, agent());
+        place_cloud(CLOUD_FIRE, p, 2 + random2avg(5,2), agent());
 
         if (grd(p) == DNGN_FLOOR && !monster_at(p) && one_chance_in(4))
         {
@@ -2767,7 +2764,7 @@ void bolt::affect_place_explosion_clouds()
                 (whose_kill() == KC_OTHER ? BEH_HOSTILE : BEH_FRIENDLY);
 
             actor* summ = agent();
-            mgen_data mg(MONS_FIRE_VORTEX, att, summ, 2, SPELL_FIRE_STORM,
+            mgen_data mg(MONS_FIRE_VORTEX, att, summ, 1, SPELL_FIRE_STORM,
                          p, MHITNOT, 0, god);
 
             // Spell-summoned monsters need to have a live summoner.
@@ -2986,7 +2983,7 @@ bool bolt::harmless_to_player() const
         return (player_prot_life(false) >= 3);
 
     case BEAM_POISON:
-        return (player_res_poison(false) > 0);
+        return (player_res_poison(false) >= 3);
 
     case BEAM_POTION_STINKING_CLOUD:
         return (player_res_poison(false) > 0 || player_mental_clarity(false)
@@ -3103,7 +3100,7 @@ void bolt::tracer_affect_player()
         mpr(messages[i].c_str(), MSGCH_WARN);
 
     apply_hit_funcs(&you, 0);
-    extra_range_used += range_used_on_hit(&you);
+    extra_range_used += range_used_on_hit();
 }
 
 bool bolt::misses_player()
@@ -3225,10 +3222,6 @@ bool bolt::misses_player()
 
 void bolt::affect_player_enchantment()
 {
-    // boost paralysis odds a bit, since chain paralysis from beams was removed
-    if (flavour == BEAM_PARALYSIS)
-        ench_power = ench_power * 6 / 5;
-
     if (flavour != BEAM_POLYMORPH && has_saving_throw()
         && you.check_res_magic(ench_power) > 0)
     {
@@ -3253,7 +3246,7 @@ void bolt::affect_player_enchantment()
         if (flavour == BEAM_TELEPORT && player_in_branch(BRANCH_ABYSS))
             xom_is_stimulated(200);
 
-        extra_range_used += range_used_on_hit(&you);
+        extra_range_used += range_used_on_hit();
         return;
     }
 
@@ -3362,7 +3355,7 @@ void bolt::affect_player_enchantment()
         obvious_effect = true;
         break;
 
-    case BEAM_CHARM:
+    case BEAM_ENSLAVE:
         potion_effect(POT_CONFUSION, ench_power);
         obvious_effect = true;
         break;     // enslavement - confusion?
@@ -3518,7 +3511,7 @@ void bolt::affect_player_enchantment()
 
     // Regardless of effect, we need to know if this is a stopper
     // or not - it seems all of the above are.
-    extra_range_used += range_used_on_hit(&you);
+    extra_range_used += range_used_on_hit();
 }
 
 void bolt::affect_actor(actor *act)
@@ -3730,7 +3723,7 @@ void bolt::affect_player()
 
     internal_ouch(hurted);
 
-    extra_range_used += range_used_on_hit(&you);
+    extra_range_used += range_used_on_hit();
 
     if ((flavour == BEAM_WATER && origin_spell == SPELL_PRIMAL_WAVE)
          || (name == "chilling blast" && you.airborne()))
@@ -3796,7 +3789,7 @@ void bolt::tracer_enchantment_affect_monster(monster* mon)
     if (!beam_cancelled)
     {
         apply_hit_funcs(mon, 0);
-        extra_range_used += range_used_on_hit(mon);
+        extra_range_used += range_used_on_hit();
     }
 }
 
@@ -3984,7 +3977,7 @@ void bolt::tracer_nonenchantment_affect_monster(monster* mon)
     apply_hit_funcs(mon, final);
 
     // Either way, we could hit this monster, so update range used.
-    extra_range_used += range_used_on_hit(mon);
+    extra_range_used += range_used_on_hit();
 }
 
 void bolt::tracer_affect_monster(monster* mon)
@@ -4089,7 +4082,7 @@ void bolt::enchantment_affect_monster(monster* mon)
     }
 
     apply_hit_funcs(mon, 0);
-    extra_range_used += range_used_on_hit(mon);
+    extra_range_used += range_used_on_hit();
 }
 
 void bolt::monster_post_hit(monster* mon, int dmg)
@@ -4536,11 +4529,13 @@ void bolt::affect_monster(monster* mon)
         mon->hurt(agent(), final, flavour, false);
     }
 
-    int      corpse = -1;
     monster  orig   = *mon;
 
     if (mon->alive())
+    {
+        apply_hit_funcs(mon, final);
         monster_post_hit(mon, final);
+    }
     else
     {
         // Preserve name of the source monster if it winds up killing
@@ -4560,26 +4555,18 @@ void bolt::affect_monster(monster* mon)
         {
             if (mon->attitude == ATT_FRIENDLY)
                 mon->attitude = ATT_HOSTILE;
-            corpse = monster_die(mon, KILL_MON, beam_source_as_target());
+            monster_die(mon, KILL_MON, beam_source_as_target());
         }
         else
         {
             killer_type ref_killer = thrower;
             if (!YOU_KILL(thrower) && reflector == NON_MONSTER)
                 ref_killer = KILL_YOU_MISSILE;
-            corpse = monster_die(mon, ref_killer, beam_source_as_target());
+            monster_die(mon, ref_killer, beam_source_as_target());
         }
     }
 
-    // Give the callbacks a dead-but-valid monster object.
-    if (mon->type == MONS_NO_MONSTER)
-    {
-        orig.hit_points = -1;
-        mon = &orig;
-    }
-
-    apply_hit_funcs(mon, final, corpse);
-    extra_range_used += range_used_on_hit(mon);
+    extra_range_used += range_used_on_hit();
 }
 
 bool bolt::has_saving_throw() const
@@ -4943,7 +4930,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
         return (MON_AFFECTED);
     }
 
-    case BEAM_CHARM:
+    case BEAM_ENSLAVE:
         if (player_will_anger_monster(mon))
         {
             simple_monster_message(mon, " is repulsed!");
@@ -5014,7 +5001,7 @@ mon_resist_type bolt::apply_enchantment_to_monster(monster* mon)
 
 
 // Extra range used on hit.
-int bolt::range_used_on_hit(const actor* victim) const
+int bolt::range_used_on_hit() const
 {
     int used = 0;
 
@@ -5049,7 +5036,7 @@ int bolt::range_used_on_hit(const actor* victim) const
         return (used);
 
     for (unsigned int i = 0; i < range_funcs.size(); ++i)
-        if ((*range_funcs[i])(*this, victim, used))
+        if ((*range_funcs[i])(*this, used))
             break;
 
     return (used);
@@ -5511,7 +5498,7 @@ void bolt::determine_affected_cells(explosion_map& m, const coord_def& delta,
             continue;
 
         // If we were at a wall, only move to visible squares.
-        if (at_wall && !you.see_cell(loc + Compass[i]))
+        if (at_wall && !cell_see_cell(you.pos(), loc + Compass[i], LOS_SOLID))
             continue;
 
         int cadd = 5;
@@ -5820,7 +5807,7 @@ static std::string _beam_type_name(beam_type type)
     case BEAM_DIGGING:               return ("digging");
     case BEAM_TELEPORT:              return ("teleportation");
     case BEAM_POLYMORPH:             return ("polymorph");
-    case BEAM_CHARM:                 return ("enslave");
+    case BEAM_ENSLAVE:               return ("enslave");
     case BEAM_BANISH:                return ("banishment");
     case BEAM_DEGENERATE:            return ("degeneration");
     case BEAM_ENSLAVE_SOUL:          return ("enslave soul");

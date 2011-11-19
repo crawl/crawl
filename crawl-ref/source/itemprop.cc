@@ -78,7 +78,7 @@ static armour_def Armour_prop[NUM_ARMOURS] =
         false, EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
     { ARM_PLATE_ARMOUR,         "plate armour",          10, -6,  650,
         false, EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
-    { ARM_CRYSTAL_PLATE,        "crystal plate",         14, -8, 1200,
+    { ARM_CRYSTAL_PLATE_ARMOUR, "crystal plate armour",  14, -8, 1200,
         false, EQ_BODY_ARMOUR, SIZE_SMALL, SIZE_MEDIUM },
 
     { ARM_TROLL_HIDE,           "troll hide",             2, -1,  220,
@@ -93,7 +93,6 @@ static armour_def Armour_prop[NUM_ARMOURS] =
         true,  EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_MOTTLED_DRAGON_ARMOUR,"mottled dragon armour",  6, -1,  150,
         true,  EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
-
     { ARM_SWAMP_DRAGON_HIDE,    "swamp dragon hide",      3, -2,  200,
         false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_SWAMP_DRAGON_ARMOUR,  "swamp dragon armour",    7, -2,  200,
@@ -108,15 +107,15 @@ static armour_def Armour_prop[NUM_ARMOURS] =
         false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_PEARL_DRAGON_HIDE,    "pearl dragon hide",      3, -3,  400,
         false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
-    { ARM_PEARL_DRAGON_ARMOUR,  "pearl dragon armour",    10, -3, 400,
+    { ARM_PEARL_DRAGON_ARMOUR,  "pearl dragon armour",   10, -3,  400,
         false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_STORM_DRAGON_HIDE,    "storm dragon hide",      4, -3,  600,
         false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
-    { ARM_STORM_DRAGON_ARMOUR,  "storm dragon armour",    10, -5,  600,
+    { ARM_STORM_DRAGON_ARMOUR,  "storm dragon armour",   10, -5,  600,
         false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
     { ARM_GOLD_DRAGON_HIDE,     "gold dragon hide",       4, -5, 1100,
         false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
-    { ARM_GOLD_DRAGON_ARMOUR,   "gold dragon armour",   11, -9, 1100,
+    { ARM_GOLD_DRAGON_ARMOUR,   "gold dragon armour",    12, -9, 1100,
         false, EQ_BODY_ARMOUR, SIZE_LITTLE, SIZE_GIANT },
 
     { ARM_CLOAK,                "cloak",                  1,  0,   40,
@@ -522,7 +521,8 @@ void do_curse_item(item_def &item, bool quiet)
 
     // Neither can pearl dragon hides
     if (item.base_type == OBJ_ARMOUR
-        && (item.sub_type == ARM_PEARL_DRAGON_HIDE || item.sub_type == ARM_PEARL_DRAGON_ARMOUR))
+        && (item.sub_type == ARM_PEARL_DRAGON_HIDE
+            || item.sub_type == ARM_PEARL_DRAGON_ARMOUR))
     {
         if (!quiet)
         {
@@ -1967,7 +1967,7 @@ bool item_skills(const item_def &item, std::set<skill_type> &skills)
     // - no effect that suffer from swapping (distortion, vampirism, faith,...)
     // - slot easily accessible (item in slot needs to meet the same conditions)
     if (!equipped && (!_item_is_swappable(item, true) || _slot_blocked(item)))
-        return false;
+        return !skills.empty();
 
     // Evokables that need to be equipped to be evoked. They can train
     // evocations just by being carried, but they need to pass the equippable
@@ -3118,4 +3118,14 @@ void seen_item(const item_def &item)
         ((item_def*)&item)->flags |= ISFLAG_KNOW_CURSE;
     if (item.base_type == OBJ_GOLD && !item.plus)
         ((item_def*)&item)->plus = (you.religion == GOD_ZIN) ? 2 : 1;
+
+    if (item_type_has_ids(item.base_type) && !is_artefact(item)
+        && item_ident(item, ISFLAG_KNOW_TYPE)
+        && you.type_ids[item.base_type][item.sub_type] != ID_KNOWN_TYPE)
+    {
+        // Can't cull shop items here -- when called from view, we shouldn't
+        // access the UI.  Old ziggurat prompts are a very minor case of what
+        // could go wrong.
+        set_ident_type(item.base_type, item.sub_type, ID_KNOWN_TYPE);
+    }
 }

@@ -95,28 +95,34 @@ static msg_colour_type _str_to_channel_colour(const std::string &str)
     return (ret);
 }
 
-static const std::string message_channel_names[ NUM_MESSAGE_CHANNELS ] =
+static const std::string message_channel_names[] =
 {
     "plain", "friend_action", "prompt", "god", "pray", "duration", "danger",
     "warning", "food", "recovery", "sound", "talk", "talk_visual",
     "intrinsic_gain", "mutation", "monster_spell", "monster_enchant",
     "friend_spell", "friend_enchant", "monster_damage", "monster_target",
     "banishment", "rotten_meat", "equipment", "floor", "multiturn", "examine",
-    "examine_filter", "diagnostic", "error", "tutorial", "orb"
+    "examine_filter", "diagnostic", "error", "tutorial", "orb",
 };
 
 // returns -1 if unmatched else returns 0--(NUM_MESSAGE_CHANNELS-1)
 int str_to_channel(const std::string &str)
 {
-    int ret;
+    COMPILE_CHECK(ARRAYSZ(message_channel_names) == NUM_MESSAGE_CHANNELS);
 
-    for (ret = 0; ret < NUM_MESSAGE_CHANNELS; ret++)
+    // widespread aliases
+    if (str == "visual")
+        return MSGCH_TALK_VISUAL;
+    else if (str == "spell")
+        return MSGCH_MONSTER_SPELL;
+
+    for (int ret = 0; ret < NUM_MESSAGE_CHANNELS; ret++)
     {
         if (str == message_channel_names[ret])
-            break;
+            return ret;
     }
 
-    return (ret == NUM_MESSAGE_CHANNELS ? -1 : ret);
+    return -1;
 }
 
 std::string channel_to_str(int channel)
@@ -732,7 +738,7 @@ void game_options::reset_options()
     easy_open              = true;
     easy_unequip           = true;
     equip_unequip          = false;
-    always_confirm_butcher = false;
+    confirm_butcher        = CONFIRM_AUTO;
     chunks_autopickup      = true;
     prompt_for_swap        = true;
     list_rotten            = true;
@@ -740,6 +746,7 @@ void game_options::reset_options()
     easy_eat_chunks        = false;
     easy_eat_gourmand      = false;
     easy_eat_contaminated  = false;
+    auto_eat_chunks        = false;
     easy_confirm           = CONFIRM_SAFE_EASY;
     easy_quit_item_prompts = true;
     allow_self_target      = CONFIRM_PROMPT;
@@ -2192,11 +2199,13 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(clean_map);
     else if (key == "easy_confirm")
     {
-        // allows both 'Y'/'N' and 'y'/'n' on yesno() prompts
+        // decide when to allow both 'Y'/'N' and 'y'/'n' on yesno() prompts
         if (field == "none")
             easy_confirm = CONFIRM_NONE_EASY;
         else if (field == "safe")
             easy_confirm = CONFIRM_SAFE_EASY;
+        else if (field == "all")
+            easy_confirm = CONFIRM_ALL_EASY;
     }
     else if (key == "allow_self_target")
     {
@@ -2214,7 +2223,15 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(equip_unequip);
     else BOOL_OPTION_NAMED("easy_armour", easy_unequip);
     else BOOL_OPTION_NAMED("easy_armor", easy_unequip);
-    else BOOL_OPTION(always_confirm_butcher);
+    else if (key == "confirm_butcher")
+    {
+        if (field == "always")
+            confirm_butcher = CONFIRM_ALWAYS;
+        else if (field == "never")
+            confirm_butcher = CONFIRM_NEVER;
+        else if (field == "auto")
+            confirm_butcher = CONFIRM_AUTO;
+    }
     else BOOL_OPTION(chunks_autopickup);
     else BOOL_OPTION(prompt_for_swap);
     else BOOL_OPTION(list_rotten);
@@ -2222,6 +2239,7 @@ void game_options::read_option_line(const std::string &str, bool runscript)
     else BOOL_OPTION(easy_eat_chunks);
     else BOOL_OPTION(easy_eat_gourmand);
     else BOOL_OPTION(easy_eat_contaminated);
+    else BOOL_OPTION(auto_eat_chunks);
     else if (key == "lua_file" && runscript)
     {
 #ifdef CLUA_BINDINGS
@@ -2987,7 +3005,8 @@ void game_options::read_option_line(const std::string &str, bool runscript)
                 dump_item_origins |= IODS_ARTEFACTS;
             }
             else if (ch == "ego_arm" || ch == "ego armour"
-                     || ch == "ego_armour")
+                     || ch == "ego_armour" || ch == "ego armor"
+                     || ch == "ego_armor")
             {
                 dump_item_origins |= IODS_EGO_ARMOUR;
             }
@@ -3411,7 +3430,7 @@ static const char *cmd_ops[] = {
 static const int num_cmd_ops = CLO_NOPS;
 static bool arg_seen[num_cmd_ops];
 
-std::string find_executable_path()
+static std::string _find_executable_path()
 {
     // A lot of OSes give ways to find the location of the running app's
     // binary executable. This is useful, because argv[0] can be relative
@@ -3714,7 +3733,7 @@ bool parse_args(int argc, char **argv, bool rc_only)
             argv, argv + argc);
     }
 
-    std::string exe_path = find_executable_path();
+    std::string exe_path = _find_executable_path();
 
     if (!exe_path.empty())
         set_crawl_base_dir(exe_path.c_str());

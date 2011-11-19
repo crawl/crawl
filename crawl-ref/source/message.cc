@@ -243,7 +243,7 @@ enum prefix_type
 };
 
 // Could also go with coloured glyphs.
-glyph prefix_glyph(prefix_type p)
+static glyph _prefix_glyph(prefix_type p)
 {
     glyph g;
     switch (p)
@@ -382,7 +382,7 @@ class message_window
         if (next_line > 0)
         {
             formatted_string line;
-            line.add_glyph(prefix_glyph(prompt));
+            line.add_glyph(_prefix_glyph(prompt));
             lines[next_line-1].del_char();
             line += lines[next_line-1];
             lines[next_line-1] = line;
@@ -487,7 +487,7 @@ public:
             temp_line -= make_space(1);
             formatted_string line;
             if (use_first_col())
-                line.add_glyph(prefix_glyph(first_col));
+                line.add_glyph(_prefix_glyph(first_col));
             line += newlines[i];
             add_line(line);
         }
@@ -539,7 +539,7 @@ public:
         if (first_col_more())
         {
             cgotoxy(1, last_row, GOTO_MSG);
-            glyph g = prefix_glyph(full ? P_FULL_MORE : P_OTHER_MORE);
+            glyph g = _prefix_glyph(full ? P_FULL_MORE : P_OTHER_MORE);
             formatted_string f;
             f.add_glyph(g);
             f.display();
@@ -962,6 +962,42 @@ static void debug_channel_arena(msg_channel_type channel)
     default:
         break;
     }
+}
+
+bool strip_channel_prefix(std::string &text, msg_channel_type &channel, bool silence)
+{
+    std::string::size_type pos = text.find(":");
+    if (pos == std::string::npos)
+        return false;
+
+    std::string param = text.substr(0, pos);
+    bool sound = false;
+
+    if (param == "WARN")
+        channel = MSGCH_WARN, sound = true;
+    else if (param == "SOUND")
+        channel = MSGCH_SOUND, sound = true;
+    else if (param == "VISUAL")
+        channel = MSGCH_TALK_VISUAL;
+    else if (param == "SPELL")
+        channel = MSGCH_MONSTER_SPELL, sound = true;
+    else if (param == "ENCHANT")
+        channel = MSGCH_MONSTER_ENCHANT, sound = true;
+    else
+    {
+        param = replace_all(param, " ", "_");
+        lowercase(param);
+        int ch = str_to_channel(param);
+        if (ch == -1)
+            return false;
+        channel = static_cast<msg_channel_type>(ch);
+    }
+
+    if (sound && silence)
+        text = "";
+    else
+        text = text.substr(pos + 1);
+    return true;
 }
 
 void msgwin_set_temporary(bool temp)
@@ -1420,7 +1456,7 @@ void replay_messages(void)
                 {
                     p = P_TURN_END;
                 }
-                line.add_glyph(prefix_glyph(p));
+                line.add_glyph(_prefix_glyph(p));
                 line += parts[j];
                 hist.add_item_formatted_string(line);
             }

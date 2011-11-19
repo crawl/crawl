@@ -203,7 +203,7 @@ static std::string _stk_genus_short_cap()
 static std::string _stk_walker()
 {
     return (Skill_Species == SP_NAGA    ? "Slider" :
-            Skill_Species == SP_KENKU   ? "Glider" :
+            Skill_Species == SP_TENGU   ? "Glider" :
             Skill_Species == SP_OCTOPODE ? "Wriggler"
                                         : "Walker");
 }
@@ -226,7 +226,7 @@ static std::string _stk_weight()
     case SP_HIGH_ELF:
     case SP_DEEP_ELF:
     case SP_SLUDGE_ELF:
-    case SP_KENKU:
+    case SP_TENGU:
         return "Light";
 
     case SP_HALFLING:
@@ -637,7 +637,7 @@ static skill_type _get_opposite(skill_type sk)
  * @param sk2 Second skill.
  * @return Whether first skill is higher than second skill.
  */
-bool compare_skills(skill_type sk1, skill_type sk2)
+static bool _compare_skills(skill_type sk1, skill_type sk2)
 {
     if (is_invalid_skill(sk1))
         return false;
@@ -655,7 +655,7 @@ bool is_antitrained(skill_type sk)
     if (opposite == SK_NONE || you.skills[sk] >= 27)
         return false;
 
-    return compare_skills(opposite, sk) && you.skills[opposite];
+    return _compare_skills(opposite, sk) && you.skills[opposite];
 }
 
 bool antitrain_other(skill_type sk, bool show_zero)
@@ -665,7 +665,7 @@ bool antitrain_other(skill_type sk, bool show_zero)
         return false;
 
     return ((you.skills[opposite] > 0 || show_zero) && you.skills[sk] > 0
-            && you.skills[opposite] < 27 && compare_skills(sk, opposite));
+            && you.skills[opposite] < 27 && _compare_skills(sk, opposite));
 }
 
 bool is_invalid_skill(skill_type skill)
@@ -683,17 +683,21 @@ void dump_skills(std::string &text)
 {
     for (uint8_t i = 0; i < NUM_SKILLS; i++)
     {
-        if (you.skills[i] > 0)
+        int real = you.skill((skill_type)i, 10, true);
+        int cur  = you.skill((skill_type)i, 10);
+        if (real > 0)
         {
-            skill_type sk = skill_type(i);
-            text += make_stringf(" %c Level %d%s %s\n",
-                                 (you.skills[i] == 27 ? 'O' :
-                                  you.train[i] == 2   ? '*' :
-                                  you.train[i]        ? '+'
-                                                      : '-'),
-                                 you.skills[i],
-                                 you.skill(sk) != you.skills[i]
-                                     ? make_stringf("(%d)", you.skill(sk)).c_str()
+            text += make_stringf(" %c Level %.*f%s %s\n",
+                                 real == 270       ? 'O' :
+                                 you.train[i] == 2 ? '*' :
+                                 you.train[i]      ? '+' :
+                                                     '-',
+                                 real == 270 ? 0 : 1,
+                                 real * 0.1,
+                                 real != cur
+                                     ? make_stringf("(%.*f)",
+                                           cur == 270 ? 0 : 1,
+                                           cur * 0.1).c_str()
                                      : "",
                                  skill_name(static_cast<skill_type>(i)));
         }
