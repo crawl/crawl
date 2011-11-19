@@ -658,7 +658,7 @@ void full_describe_view()
 
             std::string prefix = "";
 #ifndef USE_TILE_LOCAL
-            glyph g = get_mons_glyph(mi->mon());
+            glyph g = get_mons_glyph(*mi);
             const std::string col_string = colour_to_str(g.col);
             prefix = "(<" + col_string + ">"
                      + stringize_glyph(g.ch)

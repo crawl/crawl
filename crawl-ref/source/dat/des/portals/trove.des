@@ -763,7 +763,7 @@ ITEM:    chain mail unrand:lears_chain_mail                                  /\
          plate armour unrand:maxwells_patent_armour                          /\
  randart fire dragon armour                                                  /\
          gold dragon armour unrand:armour_of_the_dragon_king                 /\
- randart crystal plate                                                       /\
+ randart crystal plate armour                                                       /\
  randart robe w:50                                                           /\
          leather armour unrand:salamander_hide_armour / robe unrand:robe_of_night /\
          robe unrand:robe_of_misfortune / animal skin unrand:skin_of_zhor    /\

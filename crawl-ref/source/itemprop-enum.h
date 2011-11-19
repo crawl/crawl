@@ -31,8 +31,8 @@ enum armour_type
     ARM_LARGE_SHIELD,
     ARM_MAX_RACIAL = ARM_LARGE_SHIELD,
 
-    ARM_CRYSTAL_PLATE,
-    ARM_MIN_UNBRANDED = ARM_CRYSTAL_PLATE,
+    ARM_CRYSTAL_PLATE_ARMOUR,
+    ARM_MIN_UNBRANDED = ARM_CRYSTAL_PLATE_ARMOUR,
 
     ARM_ANIMAL_SKIN,
 
@@ -377,7 +377,9 @@ enum special_missile_type // to separate from weapons in general {dlb}
     SPMSL_RETURNING,                   //    5
     SPMSL_CHAOS,
     SPMSL_PENETRATION,
+#if TAG_MAJOR_VERSION == 32
     SPMSL_REAPING,
+#endif
     SPMSL_DISPERSAL,
     SPMSL_EXPLODING,                   //   10
     SPMSL_STEEL,

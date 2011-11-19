@@ -19,6 +19,9 @@
 #include "areas.h"
 #include "artefact.h"
 #include "branch.h"
+#ifdef DGL_WHEREIS
+ #include "chardump.h"
+#endif
 #include "cloud.h"
 #include "clua.h"
 #include "coord.h"
@@ -663,14 +666,18 @@ bool you_can_wear(int eq, bool special_armour)
         return (true);
 
     case EQ_GLOVES:
+        if (player_mutation_level(MUT_CLAWS) == 3
+            || player_mutation_level(MUT_TENTACLES) == 3)
+        {
+            return (false);
+        }
+        // These species cannot wear gloves.
         if (you.species == SP_TROLL
             || you.species == SP_SPRIGGAN
             || you.species == SP_OGRE)
         {
             return (false);
         }
-        if (player_mutation_level(MUT_CLAWS) == 3)
-            return (false);
         return (true);
 
     case EQ_BOOTS:
@@ -694,6 +701,7 @@ bool you_can_wear(int eq, bool special_armour)
     case EQ_BODY_ARMOUR:
         if (player_genus(GENPC_DRACONIAN))
             return (false);
+
     case EQ_SHIELD:
         // Most races can wear robes or a buckler/shield.
         if (special_armour)
@@ -710,7 +718,9 @@ bool you_can_wear(int eq, bool special_armour)
         // No caps or hats with Horns 3 or Antennae 3.
         if (player_mutation_level(MUT_HORNS) == 3
             || player_mutation_level(MUT_ANTENNAE) == 3)
-            return(false);
+        {
+            return (false);
+        }
         // Anyone else can wear caps.
         if (special_armour)
             return (true);
@@ -804,8 +814,12 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     // Not a transformation, but also temporary -> check first.
     if (check_mutation)
     {
-        if (eq == EQ_GLOVES && you.has_claws(false) == 3)
+        if (eq == EQ_GLOVES
+            && (you.has_claws(false) == 3
+                || you.has_tentacles(false) == 3))
+        {
             return (false);
+        }
 
         if (eq == EQ_HELMET && player_mutation_level(MUT_HORNS) == 3)
             return (false);
@@ -816,7 +830,7 @@ bool you_tran_can_wear(int eq, bool check_mutation)
         if (eq == EQ_BOOTS
             && (you.fishtail
                 || player_mutation_level(MUT_HOOVES) == 3
-                || player_mutation_level(MUT_TALONS) == 3))
+                || you.has_talons(false) == 3))
         {
             return (false);
         }
@@ -856,7 +870,9 @@ bool you_tran_can_wear(int eq, bool check_mutation)
     {
         if (eq == EQ_WEAPON || eq == EQ_SHIELD
             || eq == EQ_CLOAK || eq == EQ_HELMET)
+        {
             return (true);
+        }
         return (false);
     }
 
@@ -1358,7 +1374,6 @@ int player_hunger_rate(void)
     }
 
     hunger += 4 * player_equip(EQ_RINGS, RING_HUNGER);
-    hunger -= 2 * player_equip(EQ_RINGS, RING_SUSTENANCE);
 
     // troll leather armour
     if (you.species != SP_TROLL && you.hp < you.hp_max)
@@ -1372,6 +1387,10 @@ int player_hunger_rate(void)
 
     // burden
     hunger += you.burden_state;
+
+    // sustenance affects things at the end, because it is multiplicative
+    for (int s = player_equip(EQ_RINGS, RING_SUSTENANCE); s > 0; s--)
+        hunger = (3*hunger)/5;
 
     if (hunger < 1)
         hunger = 1;
@@ -1737,8 +1756,11 @@ int player_res_torment(bool, bool temp)
 // If temp is set to false, temporary sources or resistance won't be counted.
 int player_res_poison(bool calc_unid, bool temp, bool items)
 {
-    if (you.are_currently_undead())
-        return 1;
+    if (you.is_undead == US_SEMI_UNDEAD ? you.hunger_state == HS_STARVING
+            : you.is_undead && (temp || you.form != TRAN_LICH))
+    {
+        return 3;
+    }
 
     int rp = 0;
 
@@ -1821,11 +1843,11 @@ int _maybe_reduce_poison(int amount)
     int reduction = binomial_generator(amount, 90);
     int new_amount = amount - reduction;
 
-    if (amount != new_amount) {
+    if (amount != new_amount)
         dprf("Poison reduced (%d -> %d)", amount, new_amount);
-    } else {
+    else
         dprf("Poison not reduced (%d)", amount);
-    }
+
     return new_amount;
 }
 
@@ -2370,7 +2392,7 @@ static int _player_para_evasion_bonuses(ev_ignore_type evit)
 }
 
 // Player EV bonuses for various effects and transformations. This
-// does not include kenku/merfolk EV bonuses for flight/swimming.
+// does not include tengu/merfolk EV bonuses for flight/swimming.
 int player_evasion_bonuses(ev_ignore_type evit)
 {
     int evbonus = _player_para_evasion_bonuses(evit);
@@ -2400,7 +2422,7 @@ int player_evasion_bonuses(ev_ignore_type evit)
     return (evbonus);
 }
 
-// Player EV scaling for being flying kenku or swimming merfolk.
+// Player EV scaling for being flying tengu or swimming merfolk.
 int player_scale_evasion(int prescaled_ev, const int scale)
 {
     if (you.duration[DUR_PETRIFYING])
@@ -2420,8 +2442,8 @@ int player_scale_evasion(int prescaled_ev, const int scale)
         }
         break;
 
-    case SP_KENKU:
-        // Flying Kenku get an evasion bonus.
+    case SP_TENGU:
+        // Flying Tengu get an evasion bonus.
         if (you.flight_mode() == FL_FLY)
         {
             const int ev_bonus =
@@ -2962,15 +2984,9 @@ static void _draconian_scale_colour_message()
 
 static void _felid_extra_life()
 {
-    int xl = you.max_level;
-    int liv = 0;
-    while (xl > 3 + liv / 2)
-    {
-        xl -= 3 + liv / 2;
-        liv++;
-    }
-
-    if (you.lives + you.deaths < liv && you.lives < 2)
+    if (you.lives + you.deaths < (you.max_level - 1) / 3
+        && you.lives + you.deaths < 8
+        && you.lives < 2)
     {
         you.lives++;
         mpr("Extra life!", MSGCH_INTRINSIC_GAIN);
@@ -3320,7 +3336,7 @@ void level_change(bool skip_attribute_increase)
                     modify_stat(STAT_STR, 1, false, "level gain");
                 break;
 
-            case SP_KENKU:
+            case SP_TENGU:
                 if (!(you.experience_level % 4))
                     modify_stat(STAT_RANDOM, 1, false, "level gain");
 
@@ -3471,6 +3487,10 @@ void level_change(bool skip_attribute_increase)
     }
 
     you.redraw_title = true;
+
+#ifdef DGL_WHEREIS
+    whereis_record();
+#endif
 
     // Hints mode arbitrarily ends at xp 7.
     if (crawl_state.game_is_hints() && you.experience_level >= 7)
@@ -4089,7 +4109,7 @@ bool extrinsic_amulet_effect(jewellery_type amulet)
     case AMU_CONTROLLED_FLIGHT:
         return (you.duration[DUR_CONTROLLED_FLIGHT]
                 || player_genus(GENPC_DRACONIAN)
-                || (you.species == SP_KENKU && you.experience_level >= 5)
+                || (you.species == SP_TENGU && you.experience_level >= 5)
                 || you.form == TRAN_DRAGON
                 || you.form == TRAN_BAT);
     case AMU_CLARITY:
@@ -4799,10 +4819,10 @@ bool curare_hits_player(int death_source, int amount, const bolt &beam)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (you.are_currently_undead())
+    if (player_res_poison() >= 3)
         return (false);
 
-    if(!poison_player(amount, beam.get_source_name(), beam.name))
+    if (!poison_player(amount, beam.get_source_name(), beam.name))
         return (false);
 
     int hurted = 0;
@@ -4813,6 +4833,7 @@ bool curare_hits_player(int death_source, int amount, const bolt &beam)
 
         if (hurted)
         {
+            you.increase_duration(DUR_BREATH_WEAPON, hurted, 20 + random2(20));
             mpr("You have difficulty breathing.");
             ouch(hurted, death_source, KILLED_BY_CURARE,
                  "curare-induced apnoea");
@@ -4838,9 +4859,9 @@ bool poison_player(int amount, std::string source, std::string source_aux,
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (you.are_currently_undead())
+    if (player_res_poison() >= 3)
     {
-        dprf("Cannot poison, you are undead!");
+        dprf("Cannot poison, you are immune!");
         return (false);
     }
 
@@ -4884,9 +4905,11 @@ void dec_poison_player()
     if (GOD_CHEIBRIADOS == you.religion
         && you.piety >= piety_breakpoint(0)
         && coinflip())
+    {
         return;
+    }
 
-    if (you.are_currently_undead())
+    if (player_res_poison() >= 3)
         return;
 
     if (you.duration[DUR_POISONING] > 0)
@@ -5347,7 +5370,6 @@ void player::init()
     base_stats.init(0);
     stat_zero.init(0);
     stat_zero_cause.init("");
-    last_chosen        = STAT_RANDOM;
 
     hunger          = 6000;
     hunger_state    = HS_SATIATED;
@@ -5567,6 +5589,7 @@ void player::init()
     on_current_level    = true;
     walking             = 0;
     seen_portals        = 0;
+    seen_invis          = false;
     frame_no            = 0;
 
     save                = 0;
@@ -6373,13 +6396,13 @@ bool player::permanent_levitation() const
 bool player::permanent_flight() const
 {
     return you.attribute[ATTR_PERM_LEVITATION]
-           && species == SP_KENKU && experience_level >= 15;
+           && species == SP_TENGU && experience_level >= 15;
 }
 
 bool player::light_flight() const
 {
-    // Only Kenku get perks for flying light.
-    return (species == SP_KENKU
+    // Only Tengu get perks for flying light.
+    return (species == SP_TENGU
             && flight_mode() == FL_FLY && travelling_light());
 }
 
@@ -6593,7 +6616,7 @@ void player::petrify(actor *who)
     you.duration[DUR_PETRIFYING] = 3 * BASELINE_DELAY;
 
     you.redraw_evasion = true;
-    mprf(MSGCH_WARN, "You are slowing down.");
+    mpr("You are slowing down.", MSGCH_WARN);
 }
 
 bool player::fully_petrify(actor *foe, bool quiet)
@@ -6893,8 +6916,7 @@ bool player::visible_to(const actor *looker) const
         return (can_see_invisible() || !invisible());
 
     const monster* mon = looker->as_monster();
-    return (!mon->has_ench(ENCH_BLIND)
-            && !invisible()
+    return (!mon->has_ench(ENCH_BLIND) && !invisible()
             || in_water()
             || mon->can_see_invisible()
             || mons_sense_invis(mon)
@@ -7021,13 +7043,6 @@ bool player::is_fiery() const
 bool player::is_skeletal() const
 {
     return (false);
-}
-
-bool player::are_currently_undead() const {
-    return (form == TRAN_LICH
-            || (is_undead == US_SEMI_UNDEAD && hunger_state == HS_STARVING)
-            || (is_undead == US_UNDEAD)
-            || (is_undead == US_HUNGRY_DEAD));
 }
 
 void player::shiftto(const coord_def &c)

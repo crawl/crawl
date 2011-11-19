@@ -97,6 +97,7 @@ function volcano_portal (e)
         overview = "dark tunnel",
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
+        floor_tile = "dngn_portal_volcano_gone",
         msg = messager })
     e.kfeat("O = enter_portal_vault")
     e.tile("O = dngn_portal_volcano")
@@ -120,8 +121,8 @@ function volcano_setup (e)
     setup_loot(e)
     e.kfeat("< = exit_portal_vault")
     e.kfeat("I = exit_portal_vault")
-    e.tile("< = dngn_portal_volcano")
-    e.tile("I = dngn_portal_volcano")
+    e.tile("< = dngn_exit_volcano")
+    e.tile("I = dngn_exit_volcano")
     e.kfeat("^ = known alarm trap")
     e.subst("L : LLL.l")
     e.subst("L = lll.")
@@ -1044,7 +1045,7 @@ KFEAT:   s = axe trap
 #        "answering" the alarm traps though.
 MONS:    patrolling mummy
 MONS:    human skeleton / elf skeleton / dwarf skeleton / merfolk skeleton / \
-         kenku skeleton
+         tengu skeleton
 MONS:    ogre skeleton / troll skeleton / draconian skeleton / naga skeleton / \
          minotaur skeleton
 MONS:    patrolling menkaure / patrolling guardian mummy

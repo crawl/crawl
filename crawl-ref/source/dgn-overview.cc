@@ -880,6 +880,16 @@ static void _update_unique_annotation(level_id level)
     set_level_unique_annotation(note, level);
 }
 
+static std::string unique_name(monster* mons)
+{
+    std::string name = mons->name(DESC_PLAIN, true);
+    if (mons->type == MONS_LERNAEAN_HYDRA)
+        name = "Lernaean hydra";
+    if (mons->type == MONS_PLAYER_GHOST)
+        name += ", " + short_ghost_description(mons, true);
+    return name;
+}
+
 void set_unique_annotation(monster* mons, const level_id level)
 {
     // Abyss persists its denizens.
@@ -889,20 +899,15 @@ void set_unique_annotation(monster* mons, const level_id level)
         return;
 
     remove_unique_annotation(mons);
-    std::string name = mons->name(DESC_PLAIN, true);
-    if (mons->type == MONS_PLAYER_GHOST)
-        name += ", " + short_ghost_description(mons, true);
     auto_unique_annotations.insert(std::make_pair(
-                name, level));
+                unique_name(mons), level));
     _update_unique_annotation(level);
 }
 
 void remove_unique_annotation(monster* mons)
 {
     std::set<level_id> affected_levels;
-    std::string name = mons->name(DESC_PLAIN, true);
-    if (mons->type == MONS_PLAYER_GHOST)
-        name += ", " + short_ghost_description(mons, true);
+    std::string name = unique_name(mons);
     for (std::set<monster_annotation>::iterator i = auto_unique_annotations.begin();
          i != auto_unique_annotations.end();)
     {

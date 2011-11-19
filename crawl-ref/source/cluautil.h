@@ -154,7 +154,7 @@ void push_item(lua_State *ls, item_def *item);
             ls,                                                 \
             make_stringf("Point (%d,%d) is out of bounds",      \
                          c.x, c.y).c_str());                    \
-    else ;
+    else {};
 
 
 #define COORDS(c, p1, p2)                                \

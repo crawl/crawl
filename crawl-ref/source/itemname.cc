@@ -429,8 +429,6 @@ const char* missile_brand_name(special_missile_type brand, mbn_type t)
         return "chaos";
     case SPMSL_PENETRATION:
         return (t == MBN_TERSE ? "penet" : "penetration");
-    case SPMSL_REAPING:
-        return (t == MBN_TERSE ? "reap" : "reaping");
     case SPMSL_DISPERSAL:
         return (t == MBN_TERSE ? "disperse" : "dispersal");
     case SPMSL_NORMAL:
@@ -2151,8 +2149,8 @@ static MenuEntry *discoveries_item_mangle(MenuEntry *me)
     return (newme);
 }
 
-bool identified_item_names(const item_def *it1,
-                            const item_def *it2)
+static bool _identified_item_names(const item_def *it1,
+                                   const item_def *it2)
 {
     int flags = it1->base_type == OBJ_WANDS ? 0 : ISFLAG_KNOW_PLUSES;
     return it1->name(DESC_PLAIN, false, true, false, false, flags)
@@ -2228,7 +2226,7 @@ void check_item_knowledge(bool unknown_items)
         return;
     }
 
-    std::sort(items.begin(), items.end(), identified_item_names);
+    std::sort(items.begin(), items.end(), _identified_item_names);
     InvMenu menu;
 
     if (unknown_items)
@@ -3064,7 +3062,7 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case AMU_CONTROLLED_FLIGHT:
             return (player_genus(GENPC_DRACONIAN)
-                    || (you.species == SP_KENKU && you.experience_level >= 5));
+                    || (you.species == SP_TENGU && you.experience_level >= 5));
 
         case RING_WIZARDRY:
             return (you.religion == GOD_TROG);
@@ -3313,44 +3311,6 @@ std::string get_menu_colour_prefix_tags(const item_def &item,
         colour_off  = "</" + colour + ">";
         colour      = "<" + colour + ">";
         item_name = colour + item_name + colour_off;
-    }
-
-    return (item_name);
-}
-
-std::string get_message_colour_tags(const item_def &item,
-                                    description_level_type desc,
-                                    msg_channel_type channel)
-{
-    std::string cprf       = menu_colour_item_prefix(item);
-    std::string colour     = "";
-    std::string colour_off = "";
-    std::string item_name  = item.name(desc);
-    cprf += " " + item_name;
-
-    int col = -1;
-    const std::vector<message_colour_mapping>& mcm
-               = Options.message_colour_mappings;
-    typedef std::vector<message_colour_mapping>::const_iterator mcmci;
-
-    for (mcmci ci = mcm.begin(); ci != mcm.end(); ++ci)
-    {
-        if (ci->message.is_filtered(channel, cprf))
-        {
-            col = ci->colour;
-            break;
-        }
-    }
-
-    if (col != -1)
-        colour = colour_to_str(col);
-
-    if (!colour.empty())
-    {
-        // Order is important here.
-        colour_off  = "</" + colour + ">";
-        colour      = "<" + colour + ">";
-        item_name   = colour + item_name + colour_off;
     }
 
     return (item_name);

@@ -257,20 +257,10 @@ void handle_monster_shouts(monster* mons, bool force)
     else
     {
         msg_channel_type channel = MSGCH_TALK;
-
-        std::string param = "";
-        std::string::size_type pos = msg.find(":");
-
-        if (pos != std::string::npos)
-        {
-            param = msg.substr(0, pos);
-            msg   = msg.substr(pos + 1);
-        }
-
-        if (s_type == S_SILENT || param == "VISUAL")
+        if (s_type == S_SILENT)
             channel = MSGCH_TALK_VISUAL;
-        else if (param == "SOUND")
-            channel = MSGCH_SOUND;
+
+        strip_channel_prefix(msg, channel);
 
         // Monster must come up from being submerged if it wants to shout.
         if (mons->submerged())
@@ -769,7 +759,7 @@ void blood_smell(int strength, const coord_def& where)
 
 // Currently noise attenuation depends solely on the feature in question.
 // Walls are assumed to completely kill noise.
-int noise_attenuation_millis(const coord_def &pos)
+static int _noise_attenuation_millis(const coord_def &pos)
 {
     const dungeon_feature_type feat = grd(pos);
     switch (feat)
@@ -889,7 +879,7 @@ void noise_grid::propagate_noise()
                                     noises[cell.noise_id],
                                     travel_distance - 1);
 
-                const int attenuation = noise_attenuation_millis(p);
+                const int attenuation = _noise_attenuation_millis(p);
                 // If the base noise attenuation kills the noise, go no farther:
                 if (noise_is_audible(cell.noise_intensity_millis - attenuation))
                 {

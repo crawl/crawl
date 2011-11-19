@@ -86,8 +86,6 @@ static bool _evoke_sceptre_of_asmodeus()
                      0, 0, you.pos(), MHITYOU,
                      MG_FORCE_BEH, you.religion);
 
-        mg.extra_flags |= (MF_NO_REWARD | MF_HARD_RESET);
-
         const int mons = create_monster(mg);
 
         if (mons != -1)
@@ -96,7 +94,10 @@ static bool _evoke_sceptre_of_asmodeus()
             mpr("The Sceptre summons one of its servants.");
             did_god_conduct(DID_UNHOLY, 3);
 
-            if (!player_angers_monster(&menv[mons]))
+            monster* m = &menv[mons];
+            m->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+
+            if (!player_angers_monster(m))
             {
                 mpr("You don't feel so good about this...");
             }
@@ -458,7 +459,7 @@ static bool _WUCAD_MU_evoke(item_def *item, int* pract, bool* did_work,
         return (false);
     }
 
-    if (one_chance_in(5))
+    if (one_chance_in(4))
     {
         _wucad_miscast(&you, random2(9), random2(70));
         return (false);
@@ -609,30 +610,20 @@ static void _DEMON_AXE_melee_effect(item_def* item, actor* attacker,
 
 static void _DEMON_AXE_world_reacts(item_def *item)
 {
-    std::vector<monster_info> targets;
-    get_monster_info(targets);
-
-    int dist = LOS_RADIUS + 1;
-
-    if (targets.empty())
-        return;
-
     monster* closest = NULL;
 
-    std::vector<monster_info>::const_iterator mi;
-
-    for (mi = targets.begin(); mi != targets.end(); ++mi)
+    for (distance_iterator di(you.pos(), true, true, LOS_RADIUS); di; ++di)
     {
-        if (grid_distance(you.pos(), mi->mon()->pos()) < dist
-            && you.possible_beholder(mi->mon()))
+        monster *mon = monster_at(*di);
+        if (mon && you.can_see(mon)
+            && you.possible_beholder(mon))
         {
-            dist = grid_distance(you.pos(), mi->mon()->pos());
-            closest = mi->mon();
+            closest = mon;
+            goto found;
         }
     }
-
-    if (!closest)
-        return;
+    return;
+found:
 
     if (!you.beheld_by(closest))
     {

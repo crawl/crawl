@@ -695,7 +695,7 @@ bool item_is_branded(const item_def& item)
 }
 
 // 2 - artefact, 1 - glowing/runed, 0 - mundane
-int item_name_specialness(const item_def& item)
+static int _item_name_specialness(const item_def& item)
 {
     if (item.base_type != OBJ_WEAPONS && item.base_type != OBJ_ARMOUR
         && item.base_type != OBJ_MISSILES && item.base_type != OBJ_JEWELLERY)
@@ -779,7 +779,7 @@ void item_check(bool verbose)
             glyph g = get_item_glyph(items[i]);
             get_item_glyph(items[i]);
             item_chars.push_back(g.ch * 0x100 +
-                                 (10 - item_name_specialness(*(items[i]))));
+                                 (10 - _item_name_specialness(*(items[i]))));
         }
         std::sort(item_chars.begin(), item_chars.end());
 
@@ -1073,24 +1073,19 @@ void origin_set(const coord_def& where)
     }
 }
 
-void origin_set_monstercorpse(item_def &item, const coord_def& where)
-{
-    item.orig_monnum = _first_corpse_monnum(where);
-}
-
 static void _origin_freeze(item_def &item, const coord_def& where)
 {
     if (!origin_known(item))
     {
         if (!item.orig_monnum && where.x != -1 && where.y != -1)
-            origin_set_monstercorpse(item, where);
+            item.orig_monnum = _first_corpse_monnum(where);
 
         item.orig_place = get_packed_place();
         _check_note_item(item);
     }
 }
 
-std::string origin_monster_name(const item_def &item)
+static std::string _origin_monster_name(const item_def &item)
 {
     const int monnum = item.orig_monnum - 1;
     if (monnum == MONS_PLAYER_GHOST)
@@ -1214,7 +1209,7 @@ std::string origin_desc(const item_def &item)
         else
         {
             desc += "You took " + _article_it(item) + " off "
-                    + origin_monster_name(item) + " ";
+                    + _origin_monster_name(item) + " ";
         }
     }
     else

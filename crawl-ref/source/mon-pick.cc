@@ -195,7 +195,7 @@ int mons_abyss_rare(int mcls)
     case MONS_DEEP_DWARF_BERSERKER:
     case MONS_DEEP_DWARF_DEATH_KNIGHT:
     case MONS_UNBORN_DEEP_DWARF:
-    case MONS_KENKU:
+    case MONS_TENGU:
     case MONS_SHADOW_DEMON:
     case MONS_OCTOPODE:
         return 5;

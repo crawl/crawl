@@ -10,6 +10,7 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "delay.h"
 #include "env.h"
 #include "fprop.h"
 #include "item_use.h"
@@ -40,6 +41,8 @@ bool player::blink_to(const coord_def& dest, bool quiet)
 
     if (!quiet)
         canned_msg(MSG_YOU_BLINK);
+
+    stop_delay(true);
 
     const coord_def origin = pos();
     move_player_to_grid(dest, false, true);

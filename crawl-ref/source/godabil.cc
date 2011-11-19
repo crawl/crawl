@@ -377,14 +377,10 @@ typedef FixedVector<int, NUM_RECITE_TYPES> recite_counts;
 // Returns 0, if no monster found.
 // Returns 1, if eligible monster found.
 // Returns -1, if monster already affected or too dumb to understand.
-static int _zin_check_recite_to_single_monster(const coord_def& where,
+static int _zin_check_recite_to_single_monster(const monster *mon,
                                                recite_counts &eligibility)
 {
-    monster* mon = monster_at(where);
-
-    // Can't recite at nothing!
-    if (mon == NULL || !you.can_see(mon))
-        return 0;
+    ASSERT(mon);
 
     // Can't recite if they were recently recited to.
     if (mon->has_ench(ENCH_RECITE_TIMER))
@@ -581,7 +577,7 @@ bool zin_check_able_to_recite()
         return (false);
     }
 
-        return (true);
+    return (true);
 }
 
 static const char* zin_book_desc[NUM_RECITE_TYPES] =
@@ -601,8 +597,12 @@ int zin_check_recite_to_monsters(recite_type *prayertype)
 
     for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
+        const monster *mon = monster_at(*ri);
+        if (!mon || !you.can_see(mon))
+            continue;
+
         recite_counts retval;
-        switch (_zin_check_recite_to_single_monster(*ri, retval))
+        switch (_zin_check_recite_to_single_monster(mon, retval))
         {
         case -1:
             found_ineligible = true;
@@ -712,13 +712,14 @@ bool zin_recite_to_single_monster(const coord_def& where,
 
     monster* mon = monster_at(where);
 
-    if (!mon)
+    // Once you're already reciting, invis is ok.
+    if (!mon || !cell_see_cell(where, you.pos(), LOS_DEFAULT))
         return (false);
 
     recite_counts eligibility;
     bool affected = false;
 
-    if (_zin_check_recite_to_single_monster(where, eligibility) < 1)
+    if (_zin_check_recite_to_single_monster(mon, eligibility) < 1)
         return (false);
 
     // First check: are they even eligible for this kind of recitation?
@@ -1345,6 +1346,7 @@ void elyvilon_purification()
     you.duration[DUR_CONF] = 0;
     you.duration[DUR_SLOW] = 0;
     you.duration[DUR_PETRIFYING] = 0;
+    you.duration[DUR_NAUSEA] = 0;
     restore_stat(STAT_ALL, 0, false);
     unrot_hp(10000);
 }
@@ -3044,7 +3046,7 @@ void lugonu_bend_space()
     if (area_warp)
         _lugonu_warp_area(pow);
 
-    random_blink(false, true);
+    random_blink(false, true, true);
 
     const int damage = roll_dice(1, 4);
     ouch(damage, NON_MONSTER, KILLED_BY_WILD_MAGIC, "a spatial distortion");

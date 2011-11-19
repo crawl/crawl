@@ -1883,8 +1883,8 @@ std::string ShopInfo::get_shop_item_name(const item_def& search_item) const
     return "";
 }
 
-void _stash_flatten_results(const std::vector<stash_search_result> &in,
-                            std::vector<stash_search_result> &out)
+static void _stash_flatten_results(const std::vector<stash_search_result> &in,
+                                   std::vector<stash_search_result> &out)
 {
     // Creates search results vector with at most one item in each entry
     out.clear();

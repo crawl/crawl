@@ -60,7 +60,6 @@ public:
   FixedVector<int8_t, NUM_STATS> base_stats;
   FixedVector<int, NUM_STATS> stat_zero;
   FixedVector<std::string, NUM_STATS> stat_zero_cause;
-  stat_type last_chosen;
 
   int hunger;
   int disease;
@@ -343,6 +342,8 @@ public:
   // View code clears and needs new data in places where we can't announce the
   // portal right away; delay the announcements then.
   int seen_portals;
+  // Same with invisible monsters, for ring auto-id.
+  bool seen_invis;
 
   // Number of viewport refreshes.
   unsigned int frame_no;
@@ -409,7 +410,6 @@ public:
     bool is_icy() const;
     bool is_fiery() const;
     bool is_skeletal() const;
-    bool are_currently_undead() const;
 
     bool light_flight() const;
     bool travelling_light() const;

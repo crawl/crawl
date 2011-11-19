@@ -54,19 +54,19 @@ static bool _monster_clone_exists(monster* mons)
     return (false);
 }
 
-bool mons_is_illusion(monster* mons)
+static bool _mons_is_illusion(monster* mons)
 {
     return (mons->type == MONS_PLAYER_ILLUSION
             || mons->type == MONS_MARA_FAKE
             || mons->props.exists(clone_slave_key));
 }
 
-bool mons_is_illusion_cloneable(monster* mons)
+static bool _mons_is_illusion_cloneable(monster* mons)
 {
-    return (!mons_is_illusion(mons) && !_monster_clone_exists(mons));
+    return (!_mons_is_illusion(mons) && !_monster_clone_exists(mons));
 }
 
-bool player_is_illusion_cloneable()
+static bool _player_is_illusion_cloneable()
 {
     for (monster_iterator mi; mi; ++mi)
     {
@@ -81,11 +81,11 @@ bool actor_is_illusion_cloneable(actor *target)
     if (target->atype() == ACT_PLAYER)
     {
         ASSERT(target == &you);
-        return player_is_illusion_cloneable();
+        return _player_is_illusion_cloneable();
     }
     else
     {
-        return mons_is_illusion_cloneable(target->as_monster());
+        return _mons_is_illusion_cloneable(target->as_monster());
     }
 }
 
@@ -93,7 +93,7 @@ static void _mons_summon_monster_illusion(monster* caster,
                                           monster* foe)
 {
     // If the monster's clone is still kicking around, don't clone it again.
-    if (!mons_is_illusion_cloneable(foe))
+    if (!_mons_is_illusion_cloneable(foe))
         return;
 
     // [ds] Bind the original target's attitude before calling
@@ -156,7 +156,7 @@ static void _init_player_illusion_properties(monsterentry *me)
 // that are (presumably) internal to the body, like haste and
 // poisoning, and specifically not external effects like corona and
 // sticky flame.
-enchant_type player_duration_to_mons_enchantment(duration_type dur)
+static enchant_type _player_duration_to_mons_enchantment(duration_type dur)
 {
     switch (dur)
     {
@@ -182,7 +182,7 @@ static void _mons_load_player_enchantments(monster* creator, monster* target)
         {
             const duration_type dur(static_cast<duration_type>(i));
             const enchant_type ench =
-                player_duration_to_mons_enchantment(dur);
+                _player_duration_to_mons_enchantment(dur);
             if (ench == ENCH_NONE)
                 continue;
             target->add_ench(mon_enchant(ench,

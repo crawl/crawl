@@ -249,7 +249,7 @@ static species_type _get_hints_species(unsigned int type)
           return SP_CENTAUR;
       default:
           // Use something fancy for debugging.
-          return SP_KENKU;
+          return SP_TENGU;
     }
 }
 
@@ -1476,11 +1476,6 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                     "of hated magic by using the corresponding "
                     "<w>%</w>bility.";
             cmd.push_back(CMD_USE_ABILITY);
-        }
-        else if (!you.skills[SK_SPELLCASTING])
-        {
-            text << "\nHowever, first you will have to get accustomed to "
-                    "spellcasting by reading lots of scrolls.";
         }
         text << "\nIn hint mode you can reread this information at "
                 "any time by "
@@ -4004,18 +3999,7 @@ void hints_describe_item(const item_def &item)
                     ostr << "This magical item can cause great destruction "
                             "- to you, or your surroundings. Use with care!";
                 }
-                else if (!you.skills[SK_SPELLCASTING])
-                {
-                    ostr << "A spellbook! You could <w>%</w>emorise some "
-                            "spells and then cast them with <w>%</w>. ";
-                    cmd.push_back(CMD_MEMORISE_SPELL);
-                    cmd.push_back(CMD_CAST_SPELL);
-
-                    ostr << "\nFor now, however, that will have to wait until "
-                            "you've learned the basics of Spellcasting by "
-                            "reading lots of scrolls.";
-                }
-                else // You actually can cast spells.
+                else
                 {
                     if (player_can_memorise(item))
                     {

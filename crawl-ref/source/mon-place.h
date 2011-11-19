@@ -71,13 +71,6 @@ monster_type pick_random_monster_for_place(const level_id &place,
                                            bool super_ood,
                                            bool want_corpse_capable);
 
-// Converts a randomised monster_type into a concrete monster_type, optionally
-// choosing monsters suitable for generation at the supplied place.
-monster_type resolve_corpse_monster_type(monster_type mon_type,
-                                         dungeon_feature_type feat,
-                                         level_id place);
-
-
 class level_id;
 
 monster_type pick_random_monster(const level_id &place,
@@ -132,8 +125,6 @@ coord_def find_newmons_square_contiguous(monster_type mons_class,
 void spawn_random_monsters();
 
 void set_vault_mon_list(const std::vector<mons_spec> &list);
-
-void get_vault_mon_list(std::vector<mons_spec> &list);
 
 void setup_vault_mon_list();
 

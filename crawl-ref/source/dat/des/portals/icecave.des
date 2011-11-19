@@ -78,7 +78,7 @@ function ice_cave_portal(e)
   e.tile("O = dngn_portal_ice_cave")
   e.colour("X = white")
   e.kfeat("X = x")
-  e.rtile("X = wall_ice")
+  e.rtile("X = wall_zot_cyan")
   e.colour(".1234 = blue")
   e.ftile(".1234O+ = floor_ice")
 end
@@ -463,9 +463,9 @@ ITEM:    battleaxe ego:freezing / glaive ego:freezing / halberd ego:freezing / \
          great sword ego:freezing / battleaxe ego:freezing good_item / \
          glaive ego:freezing good_item / halberd ego:freezing good_item / \
          great sword ego:freezing good_item / nothing w:80
-ITEM:    cap ego:cold_resistance w:9 / cap ego:resistance w:1 / \
-         cloak ego:cold_resistance w:9 / cloak ego:resistance w:1 / \
-         shield ego:cold_resistance w:9 / shield ego:protection w:1 / \
+ITEM:    cap ego:cold_resistance w:10 / \
+         cloak ego:cold_resistance w:10 / \
+         shield ego:cold_resistance w:10 / \
          large shield ego:cold_resistance w:5 / \
          animal skin ego:cold_resistance / nothing w:60
 ITEM:    potion of resistance w:5 / potion of gain strength / \
@@ -609,13 +609,11 @@ ITEM:    nothing
 ITEM:    book of ice / book of frost / book of conjurations
 ITEM:    book of ice / book of frost / book of conjurations
 : end
-ITEM:    cap ego:cold_resistance w:9 / \
-         pair of gloves ego:cold_resistance w:9 / \
-         cloak ego:cold_resistance w:9 / \
+ITEM:    cap ego:cold_resistance w:10 / \
+         pair of gloves ego:cold_resistance w:10 / \
+         cloak ego:cold_resistance w:10 / \
          naga barding ego:cold_resistance w:5 / \
          centaur barding ego:cold_resistance w:5 / \
-         cap ego:resistance w:1 / pair of gloves ego:resistance w:1 / \
-         cloak ego:resistance w:1 / \
          buckler ego:cold_resistance / helmet ego:cold_resistance
 MAP
                           xxxxxx
@@ -715,12 +713,12 @@ ITEM: demon whip good_item / demon blade good_item / demon trident good_item
 ITEM: cap ego:cold_resistance / pair of gloves ego:cold_resistance / \
       cloak ego:cold_resistance / buckler ego:cold_resistance / \
       pair of boots ego:cold_resistance
-ITEM: crystal plate ego:cold_resistance / \
+ITEM: crystal plate armour ego:cold_resistance / \
       troll leather armour ego:cold_resistance / \
       ice dragon armour good_item / robe ego:resistance / \
       naga barding ego:cold_resistance good_item w:5 / \
       centaur barding ego:cold_resistance good_item w:5 / \
-      crystal plate ego:cold_resistance good_item / \
+      crystal plate armour ego:cold_resistance good_item / \
       troll leather armour ego:cold_resistance good_item
 MAP
                     xxxxxx

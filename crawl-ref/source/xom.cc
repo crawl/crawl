@@ -109,9 +109,9 @@ static const spell_type _xom_tension_spells[] =
     SPELL_SUMMON_BUTTERFLIES, SPELL_SUMMON_SMALL_MAMMALS,
     SPELL_SUMMON_SCORPIONS, SPELL_SUMMON_SWARM, SPELL_FLY,
     SPELL_BEASTLY_APPENDAGE, SPELL_SPIDER_FORM, SPELL_STATUE_FORM,
-    SPELL_ICE_FORM, SPELL_DRAGON_FORM, SPELL_ANIMATE_DEAD,
-    SPELL_SHADOW_CREATURES, SPELL_SUMMON_HORRIBLE_THINGS,
-    SPELL_CALL_CANINE_FAMILIAR, SPELL_SUMMON_ICE_BEAST, SPELL_SUMMON_UGLY_THING,
+    SPELL_ICE_FORM, SPELL_DRAGON_FORM, SPELL_SHADOW_CREATURES,
+    SPELL_SUMMON_HORRIBLE_THINGS, SPELL_CALL_CANINE_FAMILIAR,
+    SPELL_SUMMON_ICE_BEAST, SPELL_SUMMON_UGLY_THING,
     SPELL_CONJURE_BALL_LIGHTNING, SPELL_SUMMON_HYDRA, SPELL_SUMMON_DRAGON,
     SPELL_DEATH_CHANNEL, SPELL_NECROMUTATION
 };
@@ -2596,10 +2596,10 @@ static void _xom_zero_miscast()
 
         if (you.airborne())
         {
-            // Kenku fly a lot, so don't put airborne messages into the
+            // Tengu fly a lot, so don't put airborne messages into the
             // priority vector for them.
             std::vector<std::string>* vec;
-            if (you.species == SP_KENKU)
+            if (you.species == SP_TENGU)
                 vec = &messages;
             else
                 vec = &priority;

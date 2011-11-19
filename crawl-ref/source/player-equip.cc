@@ -1043,7 +1043,7 @@ static void _unequip_armour_effect(item_def& item, bool meld)
     case SPARM_LEVITATION:
         if (you.attribute[ATTR_PERM_LEVITATION] == 0)
             break;
-        else if (you.species != SP_KENKU || you.experience_level < 15)
+        else if (you.species != SP_TENGU || you.experience_level < 15)
         {
             if (!player_equip_ego_type(EQ_ALL_ARMOUR, SPARM_LEVITATION))
                 you.attribute[ATTR_PERM_LEVITATION] = 0;
@@ -1162,8 +1162,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         break;
 
     case RING_WIZARDRY:
-        if (player_spell_skills())
-            ident = ID_KNOWN_TYPE;
+        ident = ID_KNOWN_TYPE;
         break;
 
     case RING_SEE_INVISIBLE:

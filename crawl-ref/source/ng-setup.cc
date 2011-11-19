@@ -72,7 +72,7 @@ static void _species_stat_init(species_type which_species)
     case SP_NAGA:               sb =  8; ib =  6; db =  4;      break;  // 18
 
     case SP_MERFOLK:            sb =  6; ib =  5; db =  7;      break;  // 18
-    case SP_KENKU:              sb =  6; ib =  6; db =  7;      break;  // 19
+    case SP_TENGU:              sb =  6; ib =  6; db =  7;      break;  // 19
 
     case SP_KOBOLD:             sb =  5; ib =  4; db =  8;      break;  // 17
     case SP_HALFLING:           sb =  3; ib =  6; db =  9;      break;  // 18
@@ -201,10 +201,6 @@ static void _jobs_stat_init(job_type which_job)
     you.base_stats[STAT_INT] += i;
     you.base_stats[STAT_DEX] += d;
 
-    // Used for Jiyva's stat swapping if the player has not reached
-    // experience level 3.
-    you.last_chosen = (stat_type) random2(NUM_STATS);
-
     you.hp_max_perm = hp - 2;
     you.mp_max_perm = mp - 1;
 }
@@ -231,7 +227,7 @@ void unfocus_stats()
 }
 
 // Some consumables to make the starts of Sprint and Zotdef a little easier.
-void _give_bonus_items()
+static void _give_bonus_items()
 {
     newgame_give_item(OBJ_POTIONS, POT_CURING);
     newgame_give_item(OBJ_POTIONS, POT_HEAL_WOUNDS);
@@ -303,7 +299,7 @@ void give_basic_mutations(species_type speci)
         you.mutation[MUT_SLOW_HEALING]               = 1;
         you.mutation[MUT_UNBREATHING]                = 1;
         break;
-    case SP_KENKU:
+    case SP_TENGU:
         you.mutation[MUT_BEAK]   = 1;
         you.mutation[MUT_TALONS] = 3;
         break;

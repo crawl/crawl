@@ -744,8 +744,9 @@ static const char *targeting_help_1 =
     "<w>Ctrl-L</w> : targeting via monster list\n"
 #endif
     "<w>Ctrl-P</w> : repeat prompt\n"
+;
 #ifdef WIZARD
-    " \n"
+static const char *targeting_help_wiz =
     "<h>Wizard targeting commands:</h>\n"
     "<w>Ctrl-C</w> : cycle through beam paths\n"
     "<w>D</w>: get debugging information about the monster\n"
@@ -763,8 +764,8 @@ static const char *targeting_help_1 =
     "<w>,</w>: bring down the monster to 1 hp\n"
     "<w>Ctrl-B</w>: banish monster\n"
     "<w>Ctrl-K</w>: kill monster\n"
-#endif
 ;
+#endif
 
 static const char *targeting_help_2 =
     "<h>Targeting (zap wands, cast spells, etc.):\n"
@@ -2089,6 +2090,10 @@ void show_targeting_help()
     cols.set_pagesize(get_number_of_lines() - 1);
 
     cols.add_formatted(0, targeting_help_1, true, true);
+#ifdef WIZARD
+    if (you.wizard)
+        cols.add_formatted(0, targeting_help_wiz, true, true);
+#endif
     cols.add_formatted(1, targeting_help_2, true, true);
     _show_keyhelp_menu(cols.formatted_lines(), false, Options.easy_exit_menu);
 }

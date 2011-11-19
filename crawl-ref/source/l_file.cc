@@ -50,6 +50,12 @@ static int file_minor_version(lua_State *ls)
     return (1);
 }
 
+static int file_major_version(lua_State *ls)
+{
+    lua_pushnumber(ls, TAG_MAJOR_VERSION);
+    return (1);
+}
+
 static int file_unmarshall_boolean(lua_State *ls)
 {
     if (lua_gettop(ls) != 1)
@@ -209,6 +215,7 @@ static const struct luaL_reg file_dlib[] =
     { "datadir_files", _file_datadir_files },
     { "datadir_files_recursive", _file_datadir_files_recursive },
     { "minor_version", file_minor_version },
+    { "major_version", file_major_version },
     { NULL, NULL }
 };
 

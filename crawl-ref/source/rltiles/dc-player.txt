@@ -101,12 +101,12 @@ demonspawn_black_m
 ghoul_m GHOUL
 ghoul2_m
 ghoul2_f
-kenku_wingless_f KENKU
-kenku_wingless_m
-kenku_winged_f
-kenku_winged_m
-kenku_wingless_brown_f
-kenku_wingless_brown_m
+tengu_wingless_f TENGU
+tengu_wingless_m
+tengu_winged_f
+tengu_winged_m
+tengu_wingless_brown_f
+tengu_wingless_brown_m
 merfolk_m MERFOLK
 merfolk_f
 merfolk_water_m MERFOLK_WATER
@@ -165,6 +165,7 @@ cyan CYAN
 white WHITE LAST_NORM
 #unrand
 ratskin RATSKIN_CLOAK
+dragonskin DRAGONSKIN_CLOAK
 %end_ctg
 
 ###Boots
@@ -358,18 +359,18 @@ vest_red VEST_RED
 vest_red2 VEST_RED2
 bplate_green BPLATE_GREEN
 bplate_metal1 BPLATE_METAL1
-banded BANDED
-banded2 BANDED2
+splint SPLINT
+splint2 SPLINT2
 armor_blue_gold
 ringmail RINGMAIL
 chainmail3 CHAINMAIL
 plate_and_cloth PLATE_AND_CLOTH
 plate_and_cloth2 PLATE_AND_CLOTH2
-scalemail SCALEMAIL2
-scalemail2 SCALEMAIL
+scalemail SCALEMAIL
+scalemail2 SCALEMAIL2
 leather_metal SCALEMAIL3
-plate PLATE2
-plate2 PLATE
+plate PLATE
+plate2 PLATE2
 plate_black PLATE_BLACK
 crystal_plate CRYSTAL_PLATE
 armor_mummy ARMOR_MUMMY
@@ -583,6 +584,7 @@ lance2 LANCE2
 scythe SCYTHE
 scythe_slant SCYTHE_SLANT
 pike PIKE
+staff1 STAFF
 quarterstaff1 QUARTERSTAFF1
 quarterstaff2 QUARTERSTAFF2
 quarterstaff3 QUARTERSTAFF3
@@ -695,6 +697,7 @@ fire_dark FIRE_DARK
 fire_white2 FIRE_WHITE2
 
 bladehands BLADEHAND
+tentacle TENTACLE
 %end_ctg
 
 ### Hand 2
@@ -775,6 +778,8 @@ pj PJ
 torch2 TORCH2
 
 bladehands BLADEHAND
+tentacle TENTACLE
+
 dagger DAGGER
 sabre SABRE
 short_sword_slant SHORT_SWORD_SLANT
@@ -815,7 +820,7 @@ knot_red KNOT_RED
 brown1 BROWN1
 brown2 BROWN2
 green GREEN
-kenku_comb KENKU_COMB
+tengu_comb TENGU_COMB
 %end_ctg
 
 ###Beard

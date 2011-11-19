@@ -136,7 +136,7 @@ tileidx_t tilep_equ_weapon(const item_def &item)
     case WPN_SPEAR:         return TILEP_HAND1_SPEAR;
     case WPN_HALBERD:       return TILEP_HAND1_HALBERD;
     case WPN_GLAIVE:        return TILEP_HAND1_GLAIVE;
-    case WPN_STAFF:         return TILEP_HAND1_QUARTERSTAFF1;
+    case WPN_STAFF:         return TILEP_HAND1_STAFF;
     case WPN_QUARTERSTAFF:  return TILEP_HAND1_QUARTERSTAFF1;
     case WPN_LAJATANG:      return TILEP_HAND1_DIRE_LAJATANG;
     case WPN_SCYTHE:        return TILEP_HAND1_SCYTHE;
@@ -202,12 +202,12 @@ tileidx_t tilep_equ_armour(const item_def &item)
     case ARM_RING_MAIL:          return TILEP_BODY_RINGMAIL;
     case ARM_CHAIN_MAIL:         return TILEP_BODY_CHAINMAIL;
     case ARM_SCALE_MAIL:         return TILEP_BODY_SCALEMAIL;
-    case ARM_SPLINT_MAIL:        return TILEP_BODY_BANDED;
+    case ARM_SPLINT_MAIL:        return TILEP_BODY_SPLINT;
 #if TAG_MAJOR_VERSION == 32
-    case ARM_BANDED_MAIL:        return TILEP_BODY_BANDED;
+    case ARM_BANDED_MAIL:        return TILEP_BODY_SPLINT;
 #endif
     case ARM_PLATE_ARMOUR:       return TILEP_BODY_PLATE_BLACK;
-    case ARM_CRYSTAL_PLATE:      return TILEP_BODY_CRYSTAL_PLATE;
+    case ARM_CRYSTAL_PLATE_ARMOUR:return TILEP_BODY_CRYSTAL_PLATE;
 
     case ARM_FIRE_DRAGON_HIDE:    return TILEP_BODY_DRAGONSC_GREEN;
     case ARM_ICE_DRAGON_HIDE:     return TILEP_BODY_DRAGONSC_CYAN;
@@ -525,8 +525,8 @@ tileidx_t tilep_species_to_base_tile(int sp, int level)
         return TILEP_BASE_DEMONSPAWN;
     case SP_GHOUL:
         return TILEP_BASE_GHOUL;
-    case SP_KENKU:
-        return TILEP_BASE_KENKU;
+    case SP_TENGU:
+        return TILEP_BASE_TENGU;
     case SP_MERFOLK:
         return TILEP_BASE_MERFOLK;
     case SP_VAMPIRE:

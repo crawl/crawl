@@ -54,6 +54,7 @@
 #include "mapmark.h"
 #include "message.h"
 #include "mgen_data.h"
+#include "mon-death.h"
 #include "mon-place.h"
 #include "mon-pathfind.h"
 #include "mon-info.h"
@@ -1505,8 +1506,7 @@ bool mons_can_hurt_player(const monster* mon, const bool want_move)
 static bool _mons_is_always_safe(const monster *mon)
 {
     return (mon->wont_attack()
-            || mons_class_flag(mon->type, M_NO_EXP_GAIN)
-               && !mons_is_tentacle_end(mon->type)
+            || mon->type == MONS_BUTTERFLY
             || mon->withdrawn()
             || mon->type == MONS_BALLISTOMYCETE && mon->number == 0);
 }
@@ -1514,6 +1514,11 @@ static bool _mons_is_always_safe(const monster *mon)
 bool mons_is_safe(const monster* mon, const bool want_move,
                   const bool consider_user_options, bool check_dist)
 {
+    // Short-circuit plants, some vaults have tons of those.
+    // Except for inactive ballistos, players may still want these.
+    if (mons_is_firewood(mon) && mon->type != MONS_BALLISTOMYCETE)
+        return true;
+
     int  dist    = grid_distance(you.pos(), mon->pos());
 
     bool is_safe = (_mons_is_always_safe(mon)
@@ -2144,6 +2149,7 @@ void run_environment_effects()
     abyss_morph(you.time_taken);
     timeout_tombs(you.time_taken);
     timeout_malign_gateways(you.time_taken);
+    timeout_phoenix_markers(you.time_taken);
 }
 
 coord_def pick_adjacent_free_square(const coord_def& p)

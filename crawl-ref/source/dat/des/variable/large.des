@@ -2063,6 +2063,13 @@ SUBST:  MV = .
 :       dgn.set_feature_desc_short("granite statue", "iron statue")
 :       dgn.set_feature_desc_long("granite statue", "The statue has no mouth. Creepy!\n")
 :       dgn.delayed_decay(_G, '%', 'human corpse / human skeleton')
+veto {{
+    if you.uniques("Jory") then
+      return true
+    else
+      return false
+    end
+}}
 MAP
   @@@@@@ @@@@@@@@@@@@@@@@@@@ @@@@@@
 xx......v...................v.......xxxxxxxxxxxxxxxxx
@@ -2316,7 +2323,7 @@ ENDMAP
 #
 NAME:   evilmike_makhleb_hellhole
 ORIENT: southeast
-DEPTH:  D:19-
+DEPTH:  D:17-
 TAGS:   no_monster_gen
 COLOUR: v = lightred
 COLOUR: = = lightred
@@ -2337,9 +2344,10 @@ MONS:   kobold demonologist, deep elf demonologist
 MONS:   blizzard demon / green death / patrolling executioner / balrug / cacodemon
 MONS:   orange demon / ynoxinul / w:4 neqoxec / hellwing / smoke demon
 # depth controls the number of greater servants... amount ranges from 1 to 3
-: if you.absdepth() < 23 then
+: if you.absdepth() < 21 then
 NSUBST: 4 = 1:4 / 2:5
-: elseif you.absdepth() < 26 then
+NSUBST: 3 = 1:3 / 1:9
+: elseif you.absdepth() < 24 then
 NSUBST: 4 = 2:4 / 1:5
 : end
 MONS:   human name:sacrificial n_adj n_spe att:neutral
@@ -2518,7 +2526,7 @@ ENDMAP
 #
 NAME:   evilmike_halls_of_destruction
 ORIENT: northeast
-DEPTH:  D:18-
+DEPTH:  D:16-
 TAGS:   no_monster_gen
 COLOUR: v'4! = red
 COLOUR: = = red
@@ -2534,7 +2542,7 @@ MARKER: ! = lua:fog_machine { \
 # let's not have enemies opening the door and roasting themselves...
 MARKER: = = lua:restrict_door()
 KFEAT:  _ = altar_vehumet
-: if you.absdepth() < 23 then
+: if you.absdepth() < 22 then
 # Given a special name so they stand out in tiles mode
 MONS:   statue hd:9 spells:orb_of_destruction tile:mons_statue_mage col:vehumet \
         name:conjurer n_adj
@@ -2735,4 +2743,62 @@ x.............X.x.X.............xx
 x9.............X.X.............9xx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ENDMAP
+
+###############################################################################
+NAME:    spider_temple_joshua
+DEPTH:   D:20-26
+ORIENT:  north
+MONS:    naga mage / naga w:5 / naga skeleton w:2
+MONS:    wolf spider w:7 / giant mite w:3
+MONS:    oklob plant
+MONS:    jelly
+MONS:    trapdoor spider / wolf spider
+MONS:    guardian serpent
+MONS:    curse skull
+# Randomise wall type: in 50% of maps, you cannot dig to the stairs.
+SUBST:   x : xxxxxxvvvccb
+# Hints at the important secret doors (red colour). On the one hand, we
+# may be too nice here; on the other hand, that's spoily information.
+# (red blood tiles at the claws)
+COLOUR:  ' = red
+FTILE:   ' = floor_rough_red
+SUBST:   ' = .
+# With 25% chance, have lava and curse skull instead of water and oklobs:
+SUBST:   w : Ww.
+SUBST:   w = W.
+SHUFFLE: wU3 / wU3 / wU3 / l7L
+SUBST:   L = l
+# The legs are coloured and contain 10 spider monsters:
+COLOUR:  " : white / yellow / brown
+NSUBST:  " = 10:5 / *:"
+SUBST:   " = .
+MAP
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxx"""""""xxxxxxxxxxxxxx""""""xxxxx
+xxxxx"xxxxxx"xxx..}...xxx"xxxxx"xxxxx
+xxxxx=xxxxxxx"xx...)..xx"xxxxxx=xxxxx
+xxxxx'xxxxxxxx"x..]...x"xxxxxxx'xxxxx
+xx"""""""xxxxxx=......=xxxxx"""""""xx
+x"xxxxxxx"xxwWxxxx+xxxxxW.x"xxxxxxx"x
+xx"xxxxxxx=..wWWw.1...wWW.=xxxxxxx"xx
+xxx"xxxxxxx.4WWW.2.2.WWWW.xxxxxxx"xxx
+xxxx"xxxxxx..wWWw.W3WWWWw.xxxxxx"xxxx
+xxxxx"xxxxx.1.wWWW3U3WWw2.xxxxx"xxxxx
+xxxxxx=xxxx2.1.wWWW3WWw12.xxxx=xxxxxx
+xxxxxx'xxxx.2.wWWWWWWw....xxxx'xxxxxx
+x"""""""""=x..WW....WW...x="""""""""x
+x"xxxxxxxxxxxxW...1...Wxxxxxxxxxxxx"x
+x"xxx""""""""+W.4...4.W+""""""""xxx"x
+x""='"xxxxxxxxxm.....mxxxxxxxxx"'=""x
+xxxxx"x........x+xxxxx........x"xxxxx
+....x"x........xWWWWWx........x"x....
+....x"x........xxxxxWx........x"x....
+....x"xx.......xxxWWWx.......xx"x....
+....xx"xx.....xxxx+xxxx.....xx"xx....
+.....xx"xx....x.......x....xx"xx.....
+......xx"xx...x..262..x...xx"xx......
+.......xx=xx..mx.....xm..xx=xx.......
+........xx'x...xm+++mx...x'xx........
+..................@..................
 ENDMAP

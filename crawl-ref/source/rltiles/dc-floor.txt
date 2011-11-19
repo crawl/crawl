@@ -620,3 +620,83 @@ black_cobalt09
 black_cobalt10
 black_cobalt11
 black_cobalt12
+
+frozen0 FLOOR_FROZEN
+frozen1
+frozen2
+frozen3
+frozen4
+frozen5
+frozen6
+frozen7
+
+%lum 0 -5
+%weight 50
+demonic_red1 FLOOR_DEMONIC FLOOR_DEMONIC_RED
+%weight 5
+demonic_red2
+demonic_red3
+demonic_red4
+%weight 10
+demonic_red5
+demonic_red6
+demonic_red7
+demonic_red8
+%weight 2
+demonic_red9
+
+%variation FLOOR_DEMONIC blue
+%hue 0 240
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_BLUE
+%resetcol
+
+%variation FLOOR_DEMONIC green
+%lum 0 -7
+%hue 0 90
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_GREEN
+%resetcol
+
+%variation FLOOR_DEMONIC cyan
+%lum 0 -10
+%hue 0 180
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_CYAN
+%resetcol
+
+%variation FLOOR_DEMONIC magenta
+%lum 0 -8
+%hue 0 300
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_MAGENTA
+%resetcol
+
+%variation FLOOR_DEMONIC brown
+%lum 0 -8
+%hue 0 30
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_BROWN
+%resetcol
+
+%variation FLOOR_DEMONIC lightgray
+%desat 0
+%lum 0 -9
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_LIGHTGRAY
+%resetcol
+
+%variation FLOOR_DEMONIC darkgray
+%desat 0
+%lum 0 -17
+%repeat FLOOR_DEMONIC FLOOR_DEMONIC_DARKGRAY
+%resetcol
+
+%weight 10
+green_bones01 FLOOR_GREEN_BONES
+green_bones02
+green_bones03
+green_bones04
+green_bones05
+green_bones06
+green_bones07
+green_bones08
+%weight 3
+green_bones09
+green_bones10
+green_bones11
+green_bones12

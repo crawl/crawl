@@ -35,6 +35,7 @@
 #include "env.h"
 #include "exercise.h"
 #include "fight.h"
+#include "fineff.h"
 #include "food.h"
 #include "godconduct.h"
 #include "goditem.h"
@@ -103,7 +104,7 @@ static bool _is_cancellable_scroll(scroll_type scroll);
 bool can_wield(item_def *weapon, bool say_reason,
                bool ignore_temporary_disability, bool unwield)
 {
-#define SAY(x) if (say_reason) { x; } else
+#define SAY(x) {if (say_reason) { x; }}
 
     if (!ignore_temporary_disability && you.berserk())
     {
@@ -445,7 +446,7 @@ static const char *shield_impact_degree(int impact)
                          : NULL);
 }
 
-static void warn_launcher_shield_slowdown(const item_def &launcher)
+static void _warn_launcher_shield_slowdown(const item_def &launcher)
 {
     const int slowspeed =
         launcher_final_speed(launcher, you.shield()) * player_speed() / 100;
@@ -480,7 +481,7 @@ void warn_shield_penalties()
         return;
 
     if (is_range_weapon(*weapon))
-        warn_launcher_shield_slowdown(*weapon);
+        _warn_launcher_shield_slowdown(*weapon);
     else if (weapon_skill(*weapon) == SK_STAVES
              && cmp_weapon_size(*weapon, SIZE_LARGE) >= 0)
     {
@@ -665,6 +666,13 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
                 mpr("You can't wear gloves with your huge claws!");
             return (false);
         }
+
+        if (you.has_tentacles(false) == 3)
+        {
+            if (verbose)
+                mpr("Gloves don't fit your tentacles!");
+            return (false);
+        }
     }
 
     if (sub_type == ARM_BOOTS)
@@ -676,7 +684,7 @@ bool can_wear_armour(const item_def &item, bool verbose, bool ignore_temporary)
             return (false);
         }
 
-        if (player_mutation_level(MUT_TALONS) == 3)
+        if (you.has_talons(false) == 3)
         {
             if (verbose)
                 mpr("Boots don't fit your talons!");
@@ -1408,7 +1416,8 @@ void throw_item_no_quiver()
 
 // Returns delay multiplier numerator (denominator should be 100) for the
 // launcher with the currently equipped shield.
-int launcher_shield_slowdown(const item_def &launcher, const item_def *shield)
+static int _launcher_shield_slowdown(const item_def &launcher,
+                                     const item_def *shield)
 {
     int speed_adjust = 100;
     if (!shield)
@@ -1464,7 +1473,7 @@ int launcher_final_speed(const item_def &launcher, const item_def *shield)
 
     if (shield)
     {
-        const int speed_adjust = launcher_shield_slowdown(launcher, shield);
+        const int speed_adjust = _launcher_shield_slowdown(launcher, shield);
 
         // Shields also reduce the speed cap.
         speed_base = speed_base * speed_adjust / 100;
@@ -1523,7 +1532,7 @@ bool elemental_missile_beam(int launcher_brand, int ammo_brand)
             launcher_brand == SPWPN_FLAME);
 }
 
-static bool _poison_hit_victim(bolt& beam, actor* victim, int dmg, int corpse)
+static bool _poison_hit_victim(bolt& beam, actor* victim, int dmg)
 {
     if (!victim->alive() || victim->res_poison() > 0)
         return (false);
@@ -1549,8 +1558,7 @@ static bool _poison_hit_victim(bolt& beam, actor* victim, int dmg, int corpse)
     return (true);
 }
 
-static bool _item_penetrates_victim(const bolt &beam, const actor *victim,
-                                    int &used)
+static bool _item_penetrates_victim(const bolt &beam, int &used)
 {
     if (beam.aimed_at_feet)
         return (false);
@@ -1596,19 +1604,7 @@ static bool _silver_damages_victim(bolt &beam, actor* victim, int &dmg,
     return (false);
 }
 
-static bool _reaping_hit_victim(bolt& beam, actor* victim, int dmg, int corpse)
-{
-    if (beam.is_tracer || victim->alive() || corpse == -1
-        || corpse == NON_ITEM || victim->atype() == ACT_PLAYER)
-    {
-        return (false);
-    }
-
-    return (mons_reaped(beam.agent(), victim->as_monster()));
-}
-
-static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
-                                  int corpse)
+static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
 {
     const actor* agent = beam.agent();
 
@@ -1667,6 +1663,8 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
 
     if (victim->atype() == ACT_PLAYER)
     {
+        stop_delay(true);
+
         // Leave a purple cloud.
         place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
 
@@ -1699,8 +1697,8 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg,
     return (true);
 }
 
-static bool _charged_hit_victim(bolt &beam, actor* victim, int &dmg,
-                                   std::string &dmg_msg)
+static bool _charged_damages_victim(bolt &beam, actor* victim, int &dmg,
+                                    std::string &dmg_msg)
 {
     if (victim->airborne() || victim->res_elec() > 0 || !one_chance_in(3))
         return (false);
@@ -1731,18 +1729,15 @@ static bool _charged_hit_victim(bolt &beam, actor* victim, int &dmg,
 
     if (feat_is_water(grd(victim->pos())))
     {
-        if (you.can_see(victim))
-            mpr("Electricity arcs through the water!");
-
-        conduct_electricity(victim->pos(), beam.agent());
-        beam.finish_beam();
+        add_final_effect(FINEFF_LIGHTNING_DISCHARGE, beam.agent(), 0,
+                         victim->pos(), 0);
     }
 
     return (false);
 }
 
-static bool _blessed_hit_victim(bolt &beam, actor* victim, int &dmg,
-                                   std::string &dmg_msg)
+static bool _blessed_damages_victim(bolt &beam, actor* victim, int &dmg,
+                                    std::string &dmg_msg)
 {
     if (victim->undead_or_demonic())
     {
@@ -1829,8 +1824,7 @@ static bool _blowgun_check(bolt &beam, actor* victim, bool message = true)
     return (true);
 }
 
-static bool _paralysis_hit_victim(bolt& beam, actor* victim, int dmg,
-                                 int corpse)
+static bool _paralysis_hit_victim(bolt& beam, actor* victim, int dmg)
 {
     if (beam.is_tracer)
         return (false);
@@ -1843,8 +1837,7 @@ static bool _paralysis_hit_victim(bolt& beam, actor* victim, int dmg,
     return (true);
 }
 
-static bool _sleep_hit_victim(bolt& beam, actor* victim, int dmg,
-                              int corpse)
+static bool _sleep_hit_victim(bolt& beam, actor* victim, int dmg)
 {
     if (beam.is_tracer)
         return (false);
@@ -1857,8 +1850,7 @@ static bool _sleep_hit_victim(bolt& beam, actor* victim, int dmg,
     return (true);
 }
 
-static bool _confusion_hit_victim(bolt &beam, actor* victim, int dmg,
-                                  int corpse)
+static bool _confusion_hit_victim(bolt &beam, actor* victim, int dmg)
 {
     if (beam.is_tracer)
         return (false);
@@ -1871,8 +1863,7 @@ static bool _confusion_hit_victim(bolt &beam, actor* victim, int dmg,
     return (true);
 }
 
-static bool _slow_hit_victim(bolt &beam, actor* victim, int dmg,
-                                  int corpse)
+static bool _slow_hit_victim(bolt &beam, actor* victim, int dmg)
 {
     if (beam.is_tracer)
         return (false);
@@ -1885,8 +1876,7 @@ static bool _slow_hit_victim(bolt &beam, actor* victim, int dmg,
     return (true);
 }
 
-static bool _sickness_hit_victim(bolt &beam, actor* victim, int dmg,
-                                 int corpse)
+static bool _sickness_hit_victim(bolt &beam, actor* victim, int dmg)
 {
     if (beam.is_tracer)
         return (false);
@@ -1899,8 +1889,7 @@ static bool _sickness_hit_victim(bolt &beam, actor* victim, int dmg,
     return (true);
 }
 
-static bool _rage_hit_victim(bolt &beam, actor* victim, int dmg,
-                             int corpse)
+static bool _rage_hit_victim(bolt &beam, actor* victim, int dmg)
 {
     if (beam.is_tracer)
         return (false);
@@ -2039,8 +2028,6 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
                                 || ammo_brand == SPMSL_PENETRATION);
     const bool silver       = (ammo_brand == SPMSL_SILVER);
     const bool disperses    = (ammo_brand == SPMSL_DISPERSAL);
-    const bool reaping      = (bow_brand  == SPWPN_REAPING
-                               || ammo_brand == SPMSL_REAPING);
     const bool charged      = bow_brand  == SPWPN_ELECTROCUTION;
     const bool blessed      = bow_brand == SPWPN_HOLY_WRATH;
 
@@ -2133,14 +2120,12 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
         beam.range_funcs.push_back(_item_penetrates_victim);
         beam.hit_verb = "pierces through";
     }
-    if (reaping)
-        beam.hit_funcs.push_back(_reaping_hit_victim);
     if (disperses)
         beam.hit_funcs.push_back(_dispersal_hit_victim);
     if (charged)
-        beam.damage_funcs.push_back(_charged_hit_victim);
+        beam.damage_funcs.push_back(_charged_damages_victim);
     if (blessed)
-        beam.damage_funcs.push_back(_blessed_hit_victim);
+        beam.damage_funcs.push_back(_blessed_damages_victim);
 
     // New needle brands have no effect when thrown without launcher.
     if (launcher != NULL)
@@ -2157,12 +2142,6 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
             beam.hit_funcs.push_back(_sickness_hit_victim);
         if (rage)
             beam.hit_funcs.push_back(_rage_hit_victim);
-    }
-
-    if (reaping && item.special != SPMSL_REAPING)
-    {
-        beam.name = "shadowy " + beam.name;
-        ammo_name = "shadowy " + ammo_name;
     }
 
     if (disperses && item.special != SPMSL_DISPERSAL)
@@ -2259,8 +2238,6 @@ static bool determines_ammo_brand(int bow_brand, int ammo_brand)
     if (bow_brand == SPWPN_CHAOS && ammo_brand == SPMSL_CHAOS)
         return (false);
     if (bow_brand == SPWPN_PENETRATION && ammo_brand == SPMSL_PENETRATION)
-        return (false);
-    if (bow_brand == SPWPN_REAPING && ammo_brand == SPMSL_REAPING)
         return (false);
 
     return (true);
@@ -3109,14 +3086,6 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
                         bow_brand == SPWPN_CHAOS || ammo_brand_known);
     }
 
-    if (bow_brand == SPWPN_REAPING || ammo_brand == SPMSL_REAPING)
-    {
-        did_god_conduct(DID_NECROMANCY, 2,
-                        bow_brand == SPWPN_REAPING || ammo_brand_known);
-        did_god_conduct(DID_CORPSE_VIOLATION, 2,
-                        bow_brand == SPWPN_REAPING || ammo_brand_known);
-    }
-
     if (bow_brand == SPWPN_SPEED)
         did_god_conduct(DID_HASTY, 1, true);
 
@@ -3236,8 +3205,6 @@ bool thrown_object_destroyed(item_def *item, const coord_def& where)
         chance /= 2;
     if (brand == SPMSL_FROST)
         chance /= 2;
-    if (brand == SPMSL_REAPING)
-        chance /= 4;
 
     // Enchanted projectiles get an extra shot at avoiding
     // destruction: plus / (3 + plus) chance of survival.
@@ -3593,7 +3560,7 @@ static bool _swap_rings_octopode(int ring_slot)
     return (true);
 }
 
-bool puton_item(int item_slot)
+static bool _puton_item(int item_slot)
 {
     item_def& item = you.inv[item_slot];
 
@@ -3749,7 +3716,7 @@ bool puton_ring(int slot)
     if (prompt_failed(item_slot))
         return (false);
 
-    return puton_item(item_slot);
+    return _puton_item(item_slot);
 }
 
 bool remove_ring(int slot, bool announce)
@@ -4459,7 +4426,7 @@ static void _explosion(coord_def where, actor *agent, beam_type flavour,
 }
 
 // Returns true if a message has already been printed (which will identify
-// the scroll.)
+// the scroll).
 static bool _vorpalise_weapon(bool already_known)
 {
     if (!you.weapon())
@@ -4506,16 +4473,18 @@ static bool _vorpalise_weapon(bool already_known)
     case SPWPN_FLAME:
     case SPWPN_FLAMING:
         mprf("%s is engulfed in an explosion of flames!", itname.c_str());
-        immolation(10, IMMOLATION_SCROLL, you.pos(), already_known, &you);
+        immolation(10, IMMOLATION_SPELL, you.pos(), already_known, &you);
         break;
 
     case SPWPN_FROST:
     case SPWPN_FREEZING:
-        if (get_weapon_brand(wpn) == SPWPN_FROST)
-            mprf("%s is covered with a thick layer of frost!", itname.c_str());
+        if (cast_refrigeration(60, !already_known, false) != SPRET_SUCCESS)
+        {
+            canned_msg(MSG_OK);
+            success = false;
+        }
         else
-            mprf("%s glows brilliantly blue for a moment.", itname.c_str());
-        cast_refrigeration(60, false, false);
+            mprf("%s is covered with a thick layer of frost!", itname.c_str());
         break;
 
     case SPWPN_DRAINING:
@@ -4524,8 +4493,13 @@ static bool _vorpalise_weapon(bool already_known)
         break;
 
     case SPWPN_VENOM:
-        mprf("%s seems more permanently poisoned.", itname.c_str());
-        cast_toxic_radiance();
+        if (cast_toxic_radiance(!already_known) != SPRET_SUCCESS)
+        {
+            canned_msg(MSG_OK);
+            success = false;
+        }
+        else
+            mprf("%s seems more permanently poisoned.", itname.c_str());
         break;
 
     case SPWPN_ELECTROCUTION:
@@ -4540,10 +4514,10 @@ static bool _vorpalise_weapon(bool already_known)
         // need to affix it immediately, otherwise transformation will break it
         if (success)
             you.duration[DUR_WEAPON_BRAND] = 0;
+        xom_is_stimulated(200);
         // but the eruption _is_ guaranteed.  What it will do is not.
         _explosion(you.pos(), &you, BEAM_CHAOS, "chaos eruption", "chaos affixation");
-        xom_is_stimulated(200);
-        switch(random2(success? 2 : 4))
+        switch (random2(success ? 2 : 4))
         {
         case 3:
             if (transform(50, coinflip() ? TRAN_PIG :
@@ -4975,10 +4949,14 @@ static void _vulnerability_scroll()
 bool _is_cancellable_scroll(scroll_type scroll)
 {
     return (scroll == SCR_IDENTIFY
-            || scroll == SCR_BLINKING || scroll == SCR_RECHARGING
-            || scroll == SCR_ENCHANT_ARMOUR || scroll == SCR_AMNESIA
-            || scroll == SCR_REMOVE_CURSE || scroll == SCR_CURSE_ARMOUR
-            || scroll == SCR_CURSE_JEWELLERY);
+            || scroll == SCR_BLINKING
+            || scroll == SCR_RECHARGING
+            || scroll == SCR_ENCHANT_ARMOUR
+            || scroll == SCR_AMNESIA
+            || scroll == SCR_REMOVE_CURSE
+            || scroll == SCR_CURSE_ARMOUR
+            || scroll == SCR_CURSE_JEWELLERY
+            || scroll == SCR_VORPALISE_WEAPON);
 }
 
 void read_scroll(int slot)
@@ -5157,8 +5135,6 @@ void read_scroll(int slot)
         return;
     }
 
-    practise(EX_WILL_READ_SCROLL);
-
     // It is the exception, not the rule, that the scroll will not
     // be identified. {dlb}
     bool id_the_scroll = true;  // to prevent unnecessary repetition
@@ -5302,14 +5278,21 @@ void read_scroll(int slot)
         break;
 
     case SCR_VORPALISE_WEAPON:
+        if (!alreadyknown)
+            mpr(pre_succ_msg);
         id_the_scroll = _vorpalise_weapon(alreadyknown);
-        if (!id_the_scroll && item_type_known(OBJ_SCROLLS, SCR_CURSE_WEAPON))
-        {
-            mpr("You feel like taking on a jabberwock.");
-            id_the_scroll = true;
-        }
         if (!id_the_scroll)
-            canned_msg(MSG_NOTHING_HAPPENS);
+            if (alreadyknown)
+            {
+                mpr("This will not work.");
+                cancel_scroll = true;
+                break;
+            }
+            else if (item_type_known(OBJ_SCROLLS, SCR_CURSE_WEAPON))
+            {
+                mpr("You feel like taking on a jabberwock.");
+                id_the_scroll = true;
+            }
         break;
 
     case SCR_IDENTIFY:

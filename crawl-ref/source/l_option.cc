@@ -41,7 +41,6 @@ static option_handler handlers[] =
     { "easy_open",     &Options.easy_open, option_hboolean },
     { "easy_armour",   &Options.easy_unequip, option_hboolean },
     { "easy_unequip",  &Options.easy_unequip, option_hboolean },
-    { "always_confirm_butcher", &Options.always_confirm_butcher, option_hboolean },
     { "default_target",       &Options.default_target, option_hboolean },
     { "autopickup_no_burden", &Options.autopickup_no_burden, option_hboolean },
     { "note_skill_max",       &Options.note_skill_max, option_hboolean },

@@ -89,5 +89,6 @@ int you_min_hunger();
 
 void handle_starvation();
 const char* hunger_cost_string(const int hunger);
+void end_nausea();
 
 #endif

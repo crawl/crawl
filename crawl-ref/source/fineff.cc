@@ -5,10 +5,10 @@
 **/
 
 #include "AppHdr.h"
-#include <math.h>
 #include "effects.h"
 #include "env.h"
 #include "fineff.h"
+#include "libutil.h"
 #include "ouch.h"
 #include "religion.h"
 #include "view.h"
@@ -92,7 +92,7 @@ void fire_final_effects()
                 if (attacker->alive())
                     print_wounds(attacker->as_monster());
 
-                lose_piety(ceil(sqrt((float)fe.x)));
+                lose_piety(isqrt_ceil(fe.x));
             }
             else
             {

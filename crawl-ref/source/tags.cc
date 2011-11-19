@@ -173,7 +173,8 @@ void reader::read(void *data, size_t size)
     }
     else
     {
-        ASSERT(_read_offset+size <= _pbuf->size());
+        if (_read_offset+size > _pbuf->size())
+            throw short_read_exception();
         if (data)
             memcpy(data, &(*_pbuf)[_read_offset], size);
 
@@ -943,7 +944,9 @@ void tag_write(tag_type tagID, writer &outf)
         tag_construct_level_monsters(th);
         tag_construct_level_tiles(th);
         break;
-    case TAG_GHOST:          tag_construct_ghost(th);          break;
+    case TAG_GHOST:
+        tag_construct_ghost(th);
+        break;
     default:
         // I don't know how to make that!
         break;
@@ -1083,7 +1086,9 @@ static void tag_construct_you(writer &th)
     for (i = 0; i < NUM_STATS; ++i)
         marshallString(th, you.stat_zero_cause[i]);
 
-    marshallByte(th, you.last_chosen);
+#if TAG_MAJOR_VERSION == 32
+    marshallByte(th, 0);
+#endif
     marshallByte(th, you.hit_points_regeneration);
     marshallByte(th, you.magic_points_regeneration);
 
@@ -1668,7 +1673,7 @@ static const char* old_species[]=
     "Red Draconian", "White Draconian", "Green Draconian", "Yellow Draconian",
     "Grey Draconian", "Black Draconian", "Purple Draconian", "Mottled Draconian",
     "Pale Draconian", "Draconian", "Centaur", "Demigod", "Spriggan", "Minotaur",
-    "Demonspawn", "Ghoul", "Kenku", "Merfolk", "Vampire", "Deep Dwarf", "Felid",
+    "Demonspawn", "Ghoul", "Tengu", "Merfolk", "Vampire", "Deep Dwarf", "Felid",
     "Octopode",
 };
 
@@ -1792,7 +1797,9 @@ static void tag_read_you(reader &th)
     for (i = 0; i < NUM_STATS; ++i)
         you.stat_zero_cause[i] = unmarshallString(th);
 
-    you.last_chosen = (stat_type) unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 32
+    unmarshallByte(th);
+#endif
 
     you.hit_points_regeneration   = unmarshallByte(th);
     you.magic_points_regeneration = unmarshallByte(th);
@@ -3315,6 +3322,8 @@ static void tag_read_level(reader &th)
             env.cloud[i].type = CLOUD_NONE;
             continue;
         }
+#else
+        env.cloud[i].excl_rad = unmarshallInt(th);
 #endif
         ASSERT(in_bounds(env.cloud[i].pos));
         env.cgrid(env.cloud[i].pos) = i;
@@ -3940,6 +3949,8 @@ static ghost_demon unmarshallGhost(reader &th)
     ghost.see_invis        = unmarshallByte(th);
     ghost.brand            = static_cast<brand_type>(unmarshallShort(th));
 #if TAG_MAJOR_VERSION == 32
+    if (!ghost.speed)
+        ghost.speed = 15;
     short temp_attk = unmarshallShort(th);
     if (th.getMinorVersion() < TAG_MINOR_CHERUB_ATTACKS
         && static_cast<mon_attack_type>(temp_attk) == AT_CHERUB)

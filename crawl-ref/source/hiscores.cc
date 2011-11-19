@@ -432,7 +432,7 @@ static const char *kill_method_names[] =
 
 const char *kill_method_name(kill_method_type kmt)
 {
-    ASSERT(NUM_KILLBY == ARRAYSZ(kill_method_names));
+    COMPILE_CHECK(NUM_KILLBY == ARRAYSZ(kill_method_names));
 
     if (kmt == NUM_KILLBY)
         return ("");
@@ -442,7 +442,7 @@ const char *kill_method_name(kill_method_type kmt)
 
 kill_method_type str_to_kill_method(const std::string &s)
 {
-    ASSERT(NUM_KILLBY == ARRAYSZ(kill_method_names));
+    COMPILE_CHECK(NUM_KILLBY == ARRAYSZ(kill_method_names));
 
     for (int i = 0; i < NUM_KILLBY; ++i)
     {
@@ -968,6 +968,9 @@ void scorefile_entry::init_death_cause(int dam, int dsrc,
             death_source_name += " (shapeshifter)";
         else if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
             death_source_name += " (glowing shapeshifter)";
+
+        if (mons->type == MONS_PANDEMONIUM_LORD)
+            death_source_name += " the pandemonium lord";
 
         if (mons->props.exists("blame"))
         {

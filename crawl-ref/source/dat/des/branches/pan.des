@@ -776,6 +776,7 @@ SUBST:      C : c, d : c
 : else
 SUBST:      C : ., d : =
 : end
+MARKER:     + = lua:restrict_door()
 TILE:       c = dngn_stone_wall_darkgray
 MONS:       patrolling Gloorx Vloq
 MONS:       executioner, shadow demon, shadow wraith, demonic crawler
@@ -1463,8 +1464,7 @@ SUBST:   a=m, b=m, c=m, d=m, e=m, f=m, g=., h=.
 SUBST:   A=2, B=2, C=2, D=2, E=2, F=2, G=., H=.
 # the two center boxes are granted;
 # of the six outer boxes, one or two may be missing
-SUBST:   n=n =:1
-SUBST:   m:mn
+SUBST:   n = m
 KMONS:   O = eye of draining
 KITEM:   O = demonic rune of Zot
 MAP

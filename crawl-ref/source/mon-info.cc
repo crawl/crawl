@@ -80,7 +80,10 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
     case ENCH_CONFUSION:
         return MB_CONFUSED;
     case ENCH_INVIS:
+    {
+        you.seen_invis = true;
         return MB_INVISIBLE;
+    }
     case ENCH_CHARM:
         return MB_CHARMED;
     case ENCH_STICKY_FLAME:
@@ -1148,11 +1151,15 @@ std::vector<std::string> monster_info::attributes() const
     if (is(MB_FEAR_INSPIRING))
         v.push_back("inspiring fear");
     if (is(MB_BREATH_WEAPON))
-        v.push_back("catching its breath");
+    {
+        v.push_back(std::string("catching ")
+                    + pronoun(PRONOUN_NOCAP_POSSESSIVE) + " breath");
+    }
     if (is(MB_WITHDRAWN))
     {
         v.push_back("regenerating health quickly");
-        v.push_back("protected by its shell");
+        v.push_back(std::string("protected by ")
+                    + pronoun(PRONOUN_NOCAP_POSSESSIVE) + " shell");
     }
     if (is(MB_ATTACHED))
         v.push_back("attached and sucking blood");

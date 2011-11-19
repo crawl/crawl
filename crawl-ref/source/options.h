@@ -106,7 +106,7 @@ public:
     bool        easy_open;       // open doors with movement
     bool        easy_unequip;    // allow auto-removing of armour / jewellery
     bool        equip_unequip;   // Make 'W' = 'T', and 'P' = 'R'.
-    bool        always_confirm_butcher; // even if only one corpse
+    int         confirm_butcher; // When to prompt for butchery
     bool        chunks_autopickup; // Autopickup chunks after butchering
     bool        prompt_for_swap; // Prompt to switch back from butchering
                                  // tool if hostile monsters are around.
@@ -118,6 +118,7 @@ public:
                                    // chunks if no safe ones are present
     bool        easy_eat_contaminated; // like easy_eat_gourmand, but
                                        // always active.
+    bool        auto_eat_chunks; // allow eating chunks while resting or travelling
     bool        default_target;  // start targeting on a real target
     bool        autopickup_no_burden;   // don't autopickup if it changes burden
     skill_focus_mode skill_focus; // is the focus skills available

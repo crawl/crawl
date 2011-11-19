@@ -487,7 +487,7 @@ std::string player::arm_name(bool plural, bool *can_plural) const
 
     if (player_genus(GENPC_DRACONIAN) || species == SP_NAGA)
         adj = "scaled";
-    else if (species == SP_KENKU)
+    else if (species == SP_TENGU)
         adj = "feathered";
     else if (species == SP_MUMMY)
         adj = "bandage-wrapped";

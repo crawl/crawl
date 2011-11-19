@@ -70,7 +70,7 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
             if (mons_genus(you.inv[wielded].plus) == MONS_ORC)
                 did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
             if (mons_class_holiness(you.inv[wielded].plus) == MH_HOLY)
-                did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
+                did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
         }
         else if (is_blood_potion(you.inv[wielded]))
         {
@@ -510,7 +510,7 @@ spret_type cast_fulsome_distillation(int pow, bool check_range, bool fail)
     if (was_orc)
         did_god_conduct(DID_DESECRATE_ORCISH_REMAINS, 2);
     if (was_holy)
-        did_god_conduct(DID_VIOLATE_HOLY_CORPSE, 2);
+        did_god_conduct(DID_DESECRATE_HOLY_REMAINS, 2);
 
     return SPRET_SUCCESS;
 }

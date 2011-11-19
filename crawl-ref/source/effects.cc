@@ -26,6 +26,7 @@
 #include "colour.h"
 #include "coord.h"
 #include "coordit.h"
+#include "database.h"
 #include "delay.h"
 #include "dgn-shoals.h"
 #include "dgnevent.h"
@@ -1148,43 +1149,20 @@ static void _hell_effects()
         return;
     }
 
-    int temp_rand = random2(17);
+    std::string msg = getMiscString("hell_effect");
+    if (msg.empty())
+        msg = "Something hellishly buggy happens.";
+    msg_channel_type chan = MSGCH_PLAIN;
+    strip_channel_prefix(msg, chan);
+    mpr(msg.c_str(), chan);
+    if (chan == MSGCH_SOUND)
+        noisy(15, you.pos());
+
     spschool_flag_type which_miscast = SPTYP_RANDOM;
     bool summon_instead = false;
     monster_type which_beastie = MONS_NO_MONSTER;
 
-    mpr((temp_rand ==  0) ? "\"You will not leave this place.\"" :
-        (temp_rand ==  1) ? "\"Die, mortal!\"" :
-        (temp_rand ==  2) ? "\"We do not forgive those who trespass against us!\"" :
-        (temp_rand ==  3) ? "\"Trespassers are not welcome here!\"" :
-        (temp_rand ==  4) ? "\"You do not belong in this place!\"" :
-        (temp_rand ==  5) ? "\"Leave now, before it is too late!\"" :
-        (temp_rand ==  6) ? "\"We have you now!\"" :
-        // plain messages
-        (temp_rand ==  7) ? (you.can_smell()) ? "You smell brimstone."
-                                                 : "Brimstone rains from above." :
-        (temp_rand ==  8) ? "You feel lost and a long, long way from home..." :
-        (temp_rand ==  9) ? "You shiver with fear." :
-        // warning
-        (temp_rand == 10) ? "You feel a terrible foreboding..." :
-        (temp_rand == 11) ? "Something frightening happens." :
-        (temp_rand == 12) ? "You sense an ancient evil watching you..." :
-        (temp_rand == 13) ? "You suddenly feel all small and vulnerable." :
-        (temp_rand == 14) ? "You sense a hostile presence." :
-        // sounds
-        (temp_rand == 15) ? "A gut-wrenching scream fills the air!" :
-        (temp_rand == 16) ? "You hear words spoken in a strange and terrible language..."
-                          : "You hear diabolical laughter!",
-        (temp_rand <  7 ? MSGCH_TALK :
-         temp_rand < 10 ? MSGCH_PLAIN :
-         temp_rand < 15 ? MSGCH_WARN
-                        : MSGCH_SOUND));
-
-    if (temp_rand >= 15)
-        noisy(15, you.pos());
-
-    temp_rand = random2(27);
-
+    int temp_rand = random2(27);
     if (temp_rand > 17)     // 9 in 27 odds {dlb}
     {
         temp_rand = random2(8);

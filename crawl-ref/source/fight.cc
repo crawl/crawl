@@ -167,8 +167,8 @@ static int calc_your_to_hit_unarmed(int uattack = UNAT_NO_ATTACK,
     int your_to_hit;
 
     your_to_hit = 1300
-                + you.dex() * 50
-                + you.strength() * 20
+                + you.dex() * 60
+                + you.strength() * 15
                 + you.skill(SK_FIGHTING, 30);
     your_to_hit /= 100;
 
@@ -1041,9 +1041,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         }
         else if (you.has_usable_tentacles())
         {
-            // From 1 to 3 bonus damage, so not as good as claws.
             aux_verb = "tentacle-slap";
-            aux_damage += you.has_usable_tentacles();
             noise_factor = 125;
         }
 
@@ -1175,6 +1173,17 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
     // Octopodes aren't affectd by this, though!
     if (you.species != SP_OCTOPODE && baseattack == UNAT_PUNCH && !you.has_usable_offhand())
         baseattack = UNAT_NO_ATTACK;
+
+    // With fangs, replace head attacks with bites.
+    if ((you.has_usable_fangs() || player_mutation_level(MUT_ACIDIC_BITE))
+        && baseattack == UNAT_HEADBUTT)
+    {
+        baseattack = UNAT_BITE;
+    }
+
+    // Felids turn kicks into bites.
+    if (you.species == SP_FELID && baseattack == UNAT_KICK)
+        baseattack = UNAT_BITE;
 
     // Nagas turn kicks into headbutts.
     if (you.species == SP_NAGA && baseattack == UNAT_KICK)
@@ -1423,19 +1432,22 @@ std::string melee_attack::special_attack_punctuation()
         return "!";
 }
 
+std::string melee_attack::get_exclams(int dmg)
+{
+    if (dmg < HIT_WEAK)
+        return ".";
+    else if (dmg < HIT_MED)
+        return "!";
+    else if (dmg < HIT_STRONG)
+        return "!!";
+    else
+        return "!!!";
+}
+
 std::string melee_attack::attack_strength_punctuation()
 {
     if (attacker->atype() == ACT_PLAYER)
-    {
-        if (damage_done < HIT_WEAK)
-            return ".";
-        else if (damage_done < HIT_MED)
-            return "!";
-        else if (damage_done < HIT_STRONG)
-            return "!!";
-        else
-            return "!!!";
-    }
+        return get_exclams(damage_done);
     else
         return (damage_done < HIT_WEAK ? "." : "!");
 }
@@ -1573,7 +1585,8 @@ int melee_attack::player_stat_modify_damage(int damage)
 int melee_attack::player_aux_stat_modify_damage(int damage)
 {
     int dammod = 20;
-    const int dam_stat_val = calc_stat_to_dam_base();
+    // Use the same str/dex weighting that unarmed combat gets, for now.
+    const int dam_stat_val = (7 * you.strength() + 3 * you.dex())/10;
 
     if (dam_stat_val > 10)
         dammod += random2(dam_stat_val - 9);
@@ -2059,6 +2072,9 @@ int melee_attack::player_weapon_type_modify(int damage)
 
 void melee_attack::player_exercise_combat_skills()
 {
+    if (defender->cannot_fight())
+        return;
+
     int damage = 10; // Default for unarmed.
     if (weapon && (weapon->base_type == OBJ_WEAPONS
                       && !is_range_weapon(*weapon)
@@ -2067,11 +2083,9 @@ void melee_attack::player_exercise_combat_skills()
         damage = property(*weapon, PWPN_DAMAGE);
     }
 
-    const bool helpless = defender->cannot_fight();
-
     // Slow down the practise of low damage weapons.
-    if (helpless || x_chance_in_y(damage, 20))
-        practise(helpless ? EX_WILL_HIT_HELPLESS : EX_WILL_HIT, wpn_skill);
+    if (x_chance_in_y(damage, 20))
+        practise(EX_WILL_HIT, wpn_skill);
 }
 
 void melee_attack::player_check_weapon_effects()
@@ -3346,7 +3360,8 @@ bool melee_attack::apply_damage_brand()
             (defender->holiness() == MH_NATURAL ? random2(30) : random2(22));
 
         if (mons_class_is_confusable(defender->type)
-            && hdcheck >= defender->get_experience_level())
+            && hdcheck >= defender->get_experience_level()
+            && !one_chance_in(5))
         {
             // Declaring these just to pass to the enchant function.
             bolt beam_temp;
@@ -3718,19 +3733,6 @@ void melee_attack::player_apply_staff_damage()
         mpr("You're wielding some staff I've never heard of! (fight.cc)",
             MSGCH_ERROR);
         break;
-    }
-
-    if (special_damage > 0)
-    {
-        if (!item_type_known(*weapon))
-        {
-            set_ident_flags(*weapon, ISFLAG_KNOW_TYPE);
-            set_ident_type(*weapon, ID_KNOWN_TYPE);
-
-            mprf("You are wielding %s.", weapon->name(DESC_NOCAP_A).c_str());
-            more();
-            you.wield_change = true;
-        }
     }
 }
 
@@ -4159,7 +4161,7 @@ int melee_attack::player_calc_base_unarmed_damage()
         damage = 12;
         break;
     case TRAN_BLADE_HANDS:
-        damage = 12 + div_rand_round(you.strength() + you.dex(), 4);
+        damage = 8 + div_rand_round(you.strength() + you.dex(), 3);
         break;
     case TRAN_STATUE: // multiplied by 1.5 later
         damage = 6 + div_rand_round(you.strength(), 3);
@@ -4183,10 +4185,6 @@ int melee_attack::player_calc_base_unarmed_damage()
         damage += you.has_claws(false) * 2;
         apply_bleeding = true;
     }
-
-    // Tentacles give less bonus damage on hits.
-    if (you.has_usable_tentacles())
-        damage += you.has_tentacles(false);
 
     if (player_in_bat_form())
     {
@@ -5323,6 +5321,55 @@ void melee_attack::mons_do_spines()
     }
 }
 
+bool melee_attack::mons_do_minotaur_retaliation()
+{
+    if (!(you.form == TRAN_NONE || you.form == TRAN_APPENDAGE
+          || you.form == TRAN_BLADE_HANDS || you.form == TRAN_STATUE
+          || you.form == TRAN_LICH))
+    {
+        // You are in a non-minotaur form.
+        return false;
+    }
+    if (you.cannot_act())
+    {
+        // You can't move.
+        return false;
+    }
+    // This will usually be 2, but could be 3 if the player mutated more.
+    const int mut = player_mutation_level(MUT_HORNS);
+
+    const int slaying = slaying_bonus(PWPN_DAMAGE);
+
+    if (attacker->alive() && 5*you.strength() + 7*you.dex() > random2(600))
+    {
+        // Use the same damage formula as a regular headbutt.
+        int dmg = 5 + mut * 3;
+        dmg = player_aux_stat_modify_damage(dmg);
+        dmg = random2(dmg);
+        dmg = player_apply_fighting_skill(dmg, true);
+        dmg += (slaying > -1) ? (random2(1 + slaying))
+                              : (-random2(1 - slaying));
+        dmg = player_apply_misc_modifiers(dmg);
+        int ac = random2(1 + attacker->armour_class());
+        int hurt = dmg - ac;
+
+        mpr("You furiously retaliate!");
+        dprf("Retaliation: dmg = %d ac = %d hurt = %d", dmg, ac, hurt);
+        if (hurt <= 0)
+        {
+            mprf("You headbutt %s, but do no damage.",
+                 attacker->name(DESC_NOCAP_THE).c_str());
+            return true;
+        }
+        mprf("You headbutt %s%s",
+             attacker->name(DESC_NOCAP_THE).c_str(),
+             get_exclams(hurt).c_str());
+        attacker->hurt(&you, hurt);
+        return true;
+    }
+    return false;
+}
+
 void melee_attack::mons_emit_foul_stench()
 {
     monster* mon = attacker->as_monster();
@@ -5411,6 +5458,8 @@ void melee_attack::mons_perform_attack_rounds()
         attacker->as_monster()->number : 4;
           coord_def pos    = defender->pos();
     const bool was_delayed = you_are_delayed();
+
+    bool already_retaliated = false;
 
     // Melee combat, tell attacker to wield its melee weapon.
     attacker->as_monster()->wield_melee_weapon();
@@ -5699,6 +5748,22 @@ void melee_attack::mons_perform_attack_rounds()
                 mons_do_spines();
 
                 // Spines can kill!
+                if (!attacker->alive())
+                    break;
+            }
+
+            if (attacker != defender &&
+                defender->atype() == ACT_PLAYER &&
+                you.species == SP_MINOTAUR &&
+                !this_round_hit &&
+                !already_retaliated &&
+                grid_distance(you.pos(), attacker->as_monster()->pos()) == 1 &&
+                you.can_see(attacker))
+            {
+                // Try to retaliate as you dodge, if you haven't yet.
+                already_retaliated = mons_do_minotaur_retaliation();
+
+                // Horns can kill!
                 if (!attacker->alive())
                     break;
             }

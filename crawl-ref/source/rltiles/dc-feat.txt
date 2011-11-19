@@ -332,7 +332,6 @@ dngn_enter_abyss DNGN_ENTER_ABYSS
 dngn_exit_abyss DNGN_EXIT_ABYSS
 dngn_exit_abyss_flickering
 
-dngn_enter_labyrinth DNGN_ENTER_LABYRINTH
 dngn_enter_pandemonium DNGN_ENTER_PANDEMONIUM
 dngn_portal DNGN_PORTAL
 dngn_portal_rotated
@@ -343,6 +342,8 @@ dngn_transit_pandemonium DNGN_TRANSIT_PANDEMONIUM
 
 # portal vault entrances
 volcano_portal DNGN_PORTAL_VOLCANO
+volcano_gone DNGN_PORTAL_VOLCANO_GONE
+volcano_exit DNGN_EXIT_VOLCANO
 sewer_portal DNGN_PORTAL_SEWER
 sewer_portal_rusted DNGN_PORTAL_SEWER_RUSTED
 ice_cave_portal DNGN_PORTAL_ICE_CAVE
@@ -355,17 +356,17 @@ wizlab_portal5
 wizlab_portal6
 wizlab_portal7
 wizlab_portal8
-# More placeholders for portal vault entries
-dc-misc/error PLACEHOLDER9
-dc-misc/error PLACEHOLDER10
-dc-misc/error PLACEHOLDER11
-dc-misc/error PLACEHOLDER12
-dc-misc/error PLACEHOLDER13
-dc-misc/error PLACEHOLDER14
-dc-misc/error PLACEHOLDER15
-dc-misc/error PLACEHOLDER16
-dc-misc/error PLACEHOLDER17
-dc-misc/error PLACEHOLDER18
+ossuary_portal DNGN_PORTAL_OSSUARY
+ossuary_gone DNGN_PORTAL_OSSUARY_GONE
+bailey_portal DNGN_PORTAL_BAILEY
+bailey_gone DNGN_PORTAL_BAILEY_GONE
+lab_portal DNGN_PORTAL_LABYRINTH
+lab_gone DNGN_PORTAL_LABYRINTH_GONE
+spider_portal DNGN_PORTAL_SPIDER
+hive_portal DNGN_PORTAL_HIVE
+hive_gone DNGN_PORTAL_HIVE_GONE
+zig_portal DNGN_PORTAL_ZIGGURAT
+zig_used DNGN_PORTAL_ZIGGURAT_GONE
 
 %sdir dc-dngn/altars
 dngn_altar DNGN_UNSEEN_ALTAR

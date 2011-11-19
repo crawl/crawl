@@ -220,7 +220,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ABANDONED_SHOP:
         return TILE_DNGN_ABANDONED_SHOP;
     case DNGN_ENTER_LABYRINTH:
-        return TILE_DNGN_ENTER_LABYRINTH;
+        return TILE_DNGN_PORTAL_LABYRINTH;
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
@@ -1161,6 +1161,10 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_UNSEEN_HORROR;
     case MONS_ABOMINATION_SMALL:
         return TILEP_MONS_ABOMINATION_SMALL;
+    case MONS_CRAWLING_CORPSE:
+        return TILEP_MONS_CRAWLING_CORPSE;
+    case MONS_MACABRE_MASS:
+        return TILEP_MONS_MACABRE_MASS;
 
     // abyssal monsters (not assigned/implemented yet)
     case MONS_LURKING_HORROR:
@@ -1325,8 +1329,8 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
         return TILEP_MONS_MINOTAUR;
     case MONS_SHEDU:
         return TILEP_MONS_SHEDU;
-    case MONS_KENKU:
-        return TILEP_MONS_KENKU;
+    case MONS_TENGU:
+        return TILEP_MONS_TENGU;
 
     // ice beast ('I')
     case MONS_ICE_BEAST:
@@ -3041,8 +3045,8 @@ static tileidx_t _tileidx_armour_base(const item_def &item)
             return TILE_ARM_PLATE_ARMOUR_ORC;
         return TILE_ARM_PLATE_ARMOUR;
 
-    case ARM_CRYSTAL_PLATE:
-        return TILE_ARM_CRYSTAL_PLATE;
+    case ARM_CRYSTAL_PLATE_ARMOUR:
+        return TILE_ARM_CRYSTAL_PLATE_ARMOUR;
 
     case ARM_SHIELD:
         return TILE_ARM_SHIELD;
@@ -3619,8 +3623,8 @@ static tileidx_t _tileidx_corpse(const item_def &item)
         return TILE_CORPSE_HARPY;
     case MONS_MINOTAUR:
         return TILE_CORPSE_MINOTAUR;
-    case MONS_KENKU:
-        return TILE_CORPSE_KENKU;
+    case MONS_TENGU:
+        return TILE_CORPSE_TENGU;
     case MONS_SPHINX:
         return TILE_CORPSE_SPHINX;
     case MONS_SHEDU:
@@ -4704,8 +4708,6 @@ tileidx_t tileidx_known_brand(const item_def &item)
             return TILE_BRAND_CHAOS;
         case SPMSL_PENETRATION:
             return TILE_BRAND_PENETRATION;
-        case SPMSL_REAPING:
-            return TILE_BRAND_REAPING;
         case SPMSL_DISPERSAL:
             return TILE_BRAND_DISPERSAL;
         case SPMSL_EXPLODING:
