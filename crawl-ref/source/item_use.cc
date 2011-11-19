@@ -5135,8 +5135,6 @@ void read_scroll(int slot)
         return;
     }
 
-    practise(EX_WILL_READ_SCROLL);
-
     // It is the exception, not the rule, that the scroll will not
     // be identified. {dlb}
     bool id_the_scroll = true;  // to prevent unnecessary repetition
