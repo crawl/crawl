@@ -1473,7 +1473,7 @@ Hill Orcs
   elemental magic of earth and fire. They advance in levels as quickly as
   Humans.
 
-  Many orcs feel superior to all other species and beings, and they have formed
+  Many Orcs feel superior to all other species and beings, and they have formed
   a religion around that idea. Only Hill Orcs can worship Beogh, the Orc god,
   and Hill Orc Priests start in Beogh's service.
 
@@ -1640,7 +1640,7 @@ Demonspawn
   them.
 
 Deep Dwarves
-  Deep Dwarves are short, hardly people who, unlike their extinct surface
+  Deep Dwarves are short, hardy people who, unlike their extinct surface
   relatives, never left the underground homelands. Living there for
   countless generations made them turn pale and lose all ability to
   regenerate on their own (nor are they receptive to any effects which
@@ -1663,7 +1663,7 @@ Deep Dwarves
 
   Like all other Dwarves, they are gifted forgers. Their armour and weapons
   are very well-crafted and much more durable than the products of lesser
-  artisans, and particularly dangerous when in the hands of a true dwarf. In
+  artisans, and particularly dangerous when in the hands of a true Dwarf. In
   addition, Deep Dwarves can tinker with gadgets so as to recharge them.
   However, each time they do so, they lose a bit of their magical essence.
 
@@ -1729,7 +1729,7 @@ Deep Elves
   underground. There, they developed their mental powers, evolving a natural
   gift for all forms of magic (including necromancy and earth magic), and
   adapted physically to their new environment, becoming shorter and weaker than
-  other elves and losing all colouration. They are poor at hand-to-hand combat,
+  other Elves and losing all colouration. They are poor at hand-to-hand combat,
   but excellent at fighting from a distance. They advance in levels slightly
   faster than High Elves.
 
@@ -1885,7 +1885,7 @@ Priests
   Priests serve Zin, the ancient and revered God of Law, and are tasked with
   bringing Zin's teachings to the creatures of the Dungeon. Hill Orcs follow
   the Orc god Beogh instead, who will eventually allow them to convert an army
-  of orcs to their cause. Priests enter the dungeon with a traditional weapon
+  of Orcs to their cause. Priests enter the dungeon with a traditional weapon
   and a priestly robe.
 
 Healers
@@ -2105,13 +2105,6 @@ spell levels. This skill greatly influences the amount by which casting causes
 hunger. Spellcasting also helps with the power of your spells, but to a lesser
 extent than the more specialised magical skills. This skill is very difficult to
 learn, and requires a large amount of practice and experience.
-
-Only those characters with at least one magic skill at level one or above can
-learn magical spells. If your character has no magic skills, he or she can learn
-the basic principles of the hermetic arts by reading and reciting the spells
-inscribed on magical scrolls (this stops being useful once you reach level one
-in Spellcasting). Note that characters starting with spells always have at least
-one level of Spellcasting.
 
 There are also individual skills for each different type of magic; the higher
 the skill, the more powerful the spell. Multidisciplinary spells use an average
