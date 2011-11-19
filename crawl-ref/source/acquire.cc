@@ -656,7 +656,10 @@ static int _acquirement_jewellery_subtype()
 static int _acquirement_staff_subtype(const has_vector& already_has)
 {
     // First look at skills to determine whether the player gets a rod.
-    int spell_skills = player_spell_skills();
+    int spell_skills = 0;
+    for (int i = SK_SPELLCASTING; i <= SK_LAST_MAGIC; i++)
+        spell_skills += you.skills[i];
+
     if (random2(spell_skills) < you.skills[SK_EVOCATIONS] + 3
             && !one_chance_in(5))
     {
