@@ -361,21 +361,6 @@ bool check_awaken(monster* mons)
         }
     }
 
-    // If you've been tagged with Corona or are Glowing, the glow
-    // makes you extremely unstealthy.
-    // The darker it is, the bigger the penalty.
-    if (you.backlit() && you.visible_to(mons))
-        mons_perc += 50 * LOS_RADIUS / you.current_vision;
-
-    // On the other hand, shrouding has the reverse effect:
-    if (you.umbra() && you.visible_to(mons))
-        mons_perc -= 30 * LOS_RADIUS / you.current_vision;
-
-    // The shifting glow from the Orb, while too unstable to negate invis
-    // or affect to-hit, affects stealth even more than regular glow.
-    if (orb_haloed(you.pos()))
-        mons_perc += 80;
-
     if (mons_perc < 0)
         mons_perc = 0;
 

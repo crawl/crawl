@@ -3719,6 +3719,19 @@ int check_stealth(void)
     // it's easier to be stealthy when there's a lot of background noise
     stealth += 2 * current_level_ambient_noise();
 
+    // If you've been tagged with Corona or are Glowing, the glow
+    // makes you extremely unstealthy.
+    // The darker it is, the bigger the penalty.
+    if (you.backlit())
+        stealth = (2 * you.current_vision * stealth) / (5 * LOS_RADIUS);
+    // On the other hand, shrouding has the reverse effect:
+    if (you.umbra())
+        stealth = (2 * LOS_RADIUS * stealth) / you.current_vision;
+    // The shifting glow from the Orb, while too unstable to negate invis
+    // or affect to-hit, affects stealth even more than regular glow.
+    if (orb_haloed(you.pos()))
+        stealth /= 3;
+
     stealth = std::max(0, stealth);
 
     return (stealth);
