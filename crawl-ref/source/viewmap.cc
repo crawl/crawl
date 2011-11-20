@@ -209,7 +209,6 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_UP_III:
         case DNGN_RETURN_FROM_DWARVEN_HALL:
         case DNGN_RETURN_FROM_ORCISH_MINES:
-        case DNGN_RETURN_FROM_HIVE:
         case DNGN_RETURN_FROM_LAIR:
         case DNGN_RETURN_FROM_SLIME_PITS:
         case DNGN_RETURN_FROM_VAULTS:
@@ -237,7 +236,6 @@ bool is_feature(ucs_t feature, const coord_def& where)
         case DNGN_STONE_STAIRS_DOWN_III:
         case DNGN_ENTER_DWARVEN_HALL:
         case DNGN_ENTER_ORCISH_MINES:
-        case DNGN_ENTER_HIVE:
         case DNGN_ENTER_LAIR:
         case DNGN_ENTER_SLIME_PITS:
         case DNGN_ENTER_VAULTS:

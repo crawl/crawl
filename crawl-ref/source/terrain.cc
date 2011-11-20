@@ -173,7 +173,6 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_ENTER_TARTARUS:
     case DNGN_ENTER_DWARVEN_HALL:
     case DNGN_ENTER_ORCISH_MINES:
-    case DNGN_ENTER_HIVE:
     case DNGN_ENTER_LAIR:
     case DNGN_ENTER_SLIME_PITS:
     case DNGN_ENTER_VAULTS:
@@ -190,7 +189,6 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_ENTER_FOREST:
     case DNGN_RETURN_FROM_DWARVEN_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
-    case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_SLIME_PITS:
     case DNGN_RETURN_FROM_VAULTS:
@@ -262,7 +260,6 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_EXIT_DUNGEON:
     case DNGN_RETURN_FROM_DWARVEN_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
-    case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_SLIME_PITS:
     case DNGN_RETURN_FROM_VAULTS:
@@ -300,7 +297,6 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_TRANSIT_PANDEMONIUM:
     case DNGN_ENTER_DWARVEN_HALL:
     case DNGN_ENTER_ORCISH_MINES:
-    case DNGN_ENTER_HIVE:
     case DNGN_ENTER_LAIR:
     case DNGN_ENTER_SLIME_PITS:
     case DNGN_ENTER_VAULTS:
@@ -1676,20 +1672,20 @@ const char *dngn_feature_names[] =
 "enter_tartarus", "enter_abyss", "exit_abyss", "stone_arch",
 "enter_pandemonium", "exit_pandemonium", "transit_pandemonium",
 "exit_dungeon", "", "", "", "", "",
-"", "", "enter_dwarven_hall", "enter_orcish_mines", "enter_hive", "enter_lair",
+"", "", "enter_dwarven_hall", "enter_orcish_mines", "enter_lair",
 "enter_slime_pits", "enter_vaults", "enter_crypt",
 "enter_hall_of_blades", "enter_zot", "enter_temple",
 "enter_snake_pit", "enter_elven_halls", "enter_tomb",
 "enter_swamp", "enter_shoals", "enter_spider_nest",
-"enter_forest", "enter_reserved_1", "", "",
-"return_from_dwarven_hall", "return_from_orcish_mines", "return_from_hive",
+"enter_forest", "", "", "", "",
+"return_from_dwarven_hall", "return_from_orcish_mines",
 "return_from_lair", "return_from_slime_pits",
 "return_from_vaults", "return_from_crypt",
 "return_from_hall_of_blades", "return_from_zot",
 "return_from_temple", "return_from_snake_pit",
 "return_from_elven_halls", "return_from_tomb",
 "return_from_swamp", "return_from_shoals", "return_from_spider_nest",
-"return_from_forest", "return_reserved_1", "", "", "", "", "",
+"return_from_forest", "", "", "", "", "", "", "",
 "", "", "", "", "", "", "", "enter_portal_vault", "exit_portal_vault",
 "malign_gateway", "expired_portal", "", "", "", "", "",
 "", "", "", "", "", "", "", "", "",
