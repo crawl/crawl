@@ -153,6 +153,7 @@ LUARET1(you_teleporting, boolean, you.duration[DUR_TELEPORT])
 LUARET1(you_poisoned, boolean, you.duration[DUR_POISONING])
 LUARET1(you_invisible, boolean, you.duration[DUR_INVIS])
 LUARET1(you_mesmerised, boolean, you.duration[DUR_MESMERISED])
+LUARET1(you_nauseous, boolean, you.duration[DUR_NAUSEA])
 LUARET1(you_rotting, boolean, you.rotting)
 LUARET1(you_silenced, boolean, silenced(you.pos()))
 LUARET1(you_sick, boolean, you.disease)
@@ -349,6 +350,7 @@ static const struct luaL_reg you_clib[] =
     { "poisoned",     you_poisoned },
     { "invisible",    you_invisible },
     { "mesmerised",   you_mesmerised },
+    { "nauseous",     you_nauseous },
     { "rotting",      you_rotting },
     { "silenced",     you_silenced },
     { "sick",         you_sick },
