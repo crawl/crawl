@@ -90,7 +90,7 @@ const Branch branches[NUM_BRANCHES] = {
       'P', false, true, 0 },
 
     { BRANCH_HIVE, NUM_BRANCHES, 11, 16, 1, BFLAG_NO_XLEV_TRAVEL, 0,
-      DNGN_ENTER_HIVE, DNGN_RETURN_FROM_HIVE,
+      DNGN_ENTER_PORTAL_VAULT, DNGN_EXIT_PORTAL_VAULT,
       "Hive", "the Hive", "Hive",
       "You hear a buzzing sound coming from all directions.",
       false, YELLOW, BROWN,

@@ -3068,8 +3068,6 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("staircase to the Dwarven Hall");
     case DNGN_ENTER_ORCISH_MINES:
         return ("staircase to the Orcish Mines");
-    case DNGN_ENTER_HIVE:
-        return ("staircase to the Hive");
     case DNGN_ENTER_LAIR:
         return ("staircase to the Lair");
     case DNGN_ENTER_SLIME_PITS:
@@ -3111,7 +3109,6 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
         return ("collapsed entrance");
     case DNGN_RETURN_FROM_DWARVEN_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
-    case DNGN_RETURN_FROM_HIVE:
     case DNGN_RETURN_FROM_LAIR:
     case DNGN_RETURN_FROM_VAULTS:
     case DNGN_RETURN_FROM_TEMPLE:
