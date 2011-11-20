@@ -146,6 +146,7 @@ LUARET1(you_transform, string, transform_name())
 LUARET1(you_berserk, boolean, you.berserk())
 LUARET1(you_confused, boolean, you.confused())
 LUARET1(you_paralysed, boolean, you.paralysed())
+LUARET1(you_caught, boolean, you.caught())
 LUARET1(you_asleep, boolean, you.asleep())
 LUARET1(you_hasted, boolean, you.duration[DUR_HASTE])
 LUARET1(you_slowed, boolean, you.duration[DUR_SLOW])
@@ -345,6 +346,7 @@ static const struct luaL_reg you_clib[] =
     { "berserk",      you_berserk },
     { "confused",     you_confused },
     { "paralysed",    you_paralysed },
+    { "caught",       you_caught },
     { "asleep",       you_asleep },
     { "hasted",       you_hasted },
     { "slowed",       you_slowed },
