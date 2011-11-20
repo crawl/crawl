@@ -30,7 +30,9 @@ function ($, cr, map_knowledge) {
 
         set_size: function (c, r)
         {
-            if ((this.cols == c) && (this.rows == r))
+            if ((this.cols == c) && (this.rows == r) &&
+                (this.element.width == c * this.cell_width) &&
+                (this.element.height == r * this.cell_height))
                 return;
 
             this.cols = c;
