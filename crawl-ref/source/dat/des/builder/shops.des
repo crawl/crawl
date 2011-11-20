@@ -62,7 +62,7 @@ T.T
 ENDMAP
 
 NAME:   shop_statue
-TAGS:   allow_dup extra shop
+TAGS:   allow_dup extra shop no_rtele_into
 WEIGHT: 10
 KFEAT:  O = any shop
 MAP
