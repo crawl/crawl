@@ -81,10 +81,10 @@
 #include "viewchar.h"
 #include "xom.h"
 
-int holy_word_player(int pow, int caster, actor *attacker)
+void holy_word_player(int pow, int caster, actor *attacker)
 {
     if (!you.undead_or_demonic())
-        return (0);
+        return;
 
     int hploss;
 
@@ -95,7 +95,7 @@ int holy_word_player(int pow, int caster, actor *attacker)
         hploss = roll_dice(3, 15) + (random2(pow) / 3);
 
     if (!hploss)
-        return (0);
+        return;
 
     mpr("You are blasted by holy energy!");
 
@@ -126,27 +126,22 @@ int holy_word_player(int pow, int caster, actor *attacker)
 
     ouch(hploss, caster, type, aux);
 
-    return (1);
+    return;
 }
 
-int holy_word_monsters(coord_def where, int pow, int caster,
-                       actor *attacker)
+void holy_word_monsters(coord_def where, int pow, int caster,
+                        actor *attacker)
 {
     pow = std::min(300, pow);
 
-    int retval = 0;
-
     // Is the player in this cell?
     if (where == you.pos())
-        retval = holy_word_player(pow, caster, attacker);
+        holy_word_player(pow, caster, attacker);
 
     // Is a monster in this cell?
     monster* mons = monster_at(where);
-    if (mons == NULL)
-        return (retval);
-
-    if (!mons->alive() || !mons->undead_or_demonic())
-        return (retval);
+    if (!mons || !mons->alive() || !mons->undead_or_demonic())
+        return;
 
     int hploss;
 
@@ -161,38 +156,28 @@ int holy_word_monsters(coord_def where, int pow, int caster,
     if (hploss && caster == HOLY_WORD_ZIN)
         simple_monster_message(mons, " is blasted by Zin's holy word!");
 
-    mons->hurt(attacker, hploss, BEAM_MISSILE, false);
+    mons->hurt(attacker, hploss, BEAM_MISSILE);
 
-    if (hploss)
+    if (!hploss || !mons->alive())
+        return;
+    // Holy word won't annoy, slow, or frighten its user.
+    if (attacker != mons)
     {
-        retval = 1;
+        // Currently, holy word annoys the monsters it affects
+        // because it can kill them, and because hostile
+        // monsters don't use it.
+        if (attacker != NULL)
+            behaviour_event(mons, ME_ANNOY, attacker->mindex());
 
-        if (mons->alive())
-        {
-            // Holy word won't annoy, slow, or frighten its user.
-            if (attacker != mons)
-            {
-                // Currently, holy word annoys the monsters it affects
-                // because it can kill them, and because hostile
-                // monsters don't use it.
-                if (attacker != NULL)
-                    behaviour_event(mons, ME_ANNOY, attacker->mindex());
+        if (mons->speed_increment >= 25)
+            mons->speed_increment -= 20;
 
-                if (mons->speed_increment >= 25)
-                    mons->speed_increment -= 20;
-
-                mons->add_ench(ENCH_FEAR);
-            }
-        }
-        else
-            mons->hurt(attacker, INSTANT_DEATH);
+        mons->add_ench(ENCH_FEAR);
     }
-
-    return (retval);
 }
 
-int holy_word(int pow, int caster, const coord_def& where, bool silent,
-              actor *attacker)
+void holy_word(int pow, int caster, const coord_def& where, bool silent,
+               actor *attacker)
 {
     if (!silent && attacker)
     {
@@ -204,10 +189,8 @@ int holy_word(int pow, int caster, const coord_def& where, bool silent,
     // We could use actor.get_los(), but maybe it's NULL.
     los_def los(where);
     los.update();
-    int r = 0;
     for (radius_iterator ri(&los); ri; ++ri)
-        r += holy_word_monsters(*ri, pow, caster, attacker);
-    return (r);
+        holy_word_monsters(*ri, pow, caster, attacker);
 }
 
 int torment_player(actor *attacker, int taux)
