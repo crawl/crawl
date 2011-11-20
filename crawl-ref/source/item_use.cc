@@ -5190,12 +5190,9 @@ void read_scroll(int slot)
         break;
 
     case SCR_FEAR:
-    {
-        int fear_influenced = 0;
-        mass_enchantment(ENCH_FEAR, 1000, NULL, &fear_influenced);
-        id_the_scroll = fear_influenced;
+        mpr("You assume a fearsome visage.");
+        mass_enchantment(ENCH_FEAR, 1000);
         break;
-    }
 
     case SCR_NOISE:
         noisy(25, you.pos(), "You hear a loud clanging noise!");

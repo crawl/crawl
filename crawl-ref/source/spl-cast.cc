@@ -1447,19 +1447,19 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_confusing_touch(powc, fail);
 
     case SPELL_CAUSE_FEAR:
-        return mass_enchantment(ENCH_FEAR, powc, NULL, NULL, fail);
+        return mass_enchantment(ENCH_FEAR, powc, fail);
 
     case SPELL_INTOXICATE:
         return cast_intoxicate(powc, fail);
 
     case SPELL_MASS_CONFUSION:
-        return mass_enchantment(ENCH_CONFUSION, powc, NULL, NULL, fail);
+        return mass_enchantment(ENCH_CONFUSION, powc, fail);
 
     case SPELL_ENGLACIATION:
         return cast_englaciation(powc, fail);
 
     case SPELL_CONTROL_UNDEAD:
-        return mass_enchantment(ENCH_CHARM, powc, NULL, NULL, fail);
+        return mass_enchantment(ENCH_CHARM, powc, fail);
 
     case SPELL_ABJURATION:
         return cast_abjuration(powc, monster_at(target), fail);
