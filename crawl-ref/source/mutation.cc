@@ -1056,7 +1056,9 @@ bool mutate(mutation_type which_mutation, bool failMsg,
         }
 
         // Zin's protection.
-        if (you.religion == GOD_ZIN && x_chance_in_y(you.piety, MAX_PIETY)
+        if (you.religion == GOD_ZIN
+            && (x_chance_in_y(you.piety, MAX_PIETY)
+                || x_chance_in_y(you.piety, MAX_PIETY + 22))
             && !stat_gain_potion)
         {
             simple_god_message(" protects your body from mutation!");
