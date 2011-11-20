@@ -315,7 +315,6 @@ liquefaction1 LIQUEFACTION
 liquefaction2
 
 %sdir dc-dngn/gateways
-dngn_entrance DNGN_UNSEEN_ENTRANCE
 %rim 1
 dngn_enter_hell DNGN_ENTER_HELL
 dngn_enter_zot_closed DNGN_ENTER_ZOT_CLOSED
