@@ -1165,7 +1165,7 @@
     "Your body becomes viscous."},
 
    {"Your body returns to its normal consistency.",
-    "Your body becomes less viscous.",
+    "Your body becomes less malleable.",
     "Your body becomes less viscous."},
 
     "gelatinous body"
