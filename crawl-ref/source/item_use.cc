@@ -5361,19 +5361,11 @@ void read_scroll(int slot)
                                                        you.piety / 2;
         }
 
-        const bool success = holy_word(pow, HOLY_WORD_SCROLL, you.pos(),
-                                       !item_type_known(scroll), &you);
+        holy_word(pow, HOLY_WORD_SCROLL, you.pos(), false, &you);
 
-        if (!success)
-        {
-            canned_msg(MSG_NOTHING_HAPPENS);
-            id_the_scroll = false;
-        }
-
-        // This is only naughty if you know you're doing it, or if it's
-        // succeeded, in which case you'll know for next time.
-        if (item_type_known(scroll) || success)
-            did_god_conduct(DID_HOLY, 10, item_type_known(scroll));
+        // This is always naughty, even if you didn't affect anyone.
+        // Don't speak those foul holy words even in jest!
+        did_god_conduct(DID_HOLY, 10, item_type_known(scroll));
         break;
     }
 
