@@ -1901,7 +1901,7 @@ VISUAL SPELL:@The_monster@ gestures.
 %%%%
 _visual_fake_spell_effect_
 
-VISUAL WARN:You feel drained.
+VISUAL WARN:You feel disoriented.
 
 VISUAL WARN:You feel weakened.
 
