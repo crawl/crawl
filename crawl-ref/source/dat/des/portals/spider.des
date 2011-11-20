@@ -42,8 +42,8 @@ function spiders_nest_portal(e)
         overview = "crumbling entrance",
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
-        floor = "floor",
-        floor_tile = "dngn_portal_spider_gone",
+        floor = "expired_portal",
+        feat_tile = "dngn_portal_spider_gone",
         msg = messager })
   e.kfeat("O = enter_portal_vault")
   e.colour("O = white")

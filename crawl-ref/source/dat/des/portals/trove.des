@@ -168,7 +168,7 @@ The secrets of the gateways died with him when his fellow thieves, disgusted at 
             overview = "Trove",
             dst = "trove",
             dstorigin = "in a treasure trove",
-            floor = "floor",
+            floor = "expired_portal",
         }
     end
     e.lua_marker("O", stair)
