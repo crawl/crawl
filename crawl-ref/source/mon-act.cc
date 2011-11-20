@@ -667,9 +667,7 @@ static void _handle_movement(monster* mons)
     // Did we just come into view?
     if (mons->seen_context != _just_seen)
         return;
-
-    // If the player can't see us, it doesn't matter.
-    if (!(mons->flags & MF_WAS_IN_VIEW))
+    if (testbits(mons->flags, MF_WAS_IN_VIEW))
         return;
 
     const coord_def old_pos  = mons->pos();
