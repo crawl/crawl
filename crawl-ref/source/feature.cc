@@ -303,6 +303,13 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap     = MF_STAIR_UP;
             break;
 
+        case DNGN_EXPIRED_PORTAL:
+            f.dchar        = DCHAR_FLOOR;
+            f.colour       = BROWN;
+            f.magic_symbol = Options.char_table[ DCHAR_FLOOR_MAGIC ];
+            f.minimap      = MF_FLOOR;
+            break;
+
 
         case DNGN_ESCAPE_HATCH_DOWN:
             f.dchar      = DCHAR_STAIRS_DOWN;
