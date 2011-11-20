@@ -1509,6 +1509,16 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
         ostr << mdef.have[0] << player_icemail_armour_class() << ").";
         result = ostr.str();
     }
+    else if (mut == MUT_DEFORMED && is_useless_skill(SK_ARMOUR))
+    {
+        switch (level)
+        {
+        case 1: result = ""; break;
+        case 2: result = "very "; break;
+        case 3: result = "horribly "; break;
+        }
+        result = "Your body is " + result + "strangely shaped.";
+    }
     else if (result.empty() && level > 0)
         result = mdef.have[level - 1];
 
