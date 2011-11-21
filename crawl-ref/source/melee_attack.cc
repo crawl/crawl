@@ -370,7 +370,7 @@ bool melee_attack::handle_phase_dodged()
         if (attacker->alive() &&
             you.species == SP_MINOTAUR &&
             you.can_see(attacker) &&
-            (effective_attack_number == 1 || coinflip()))
+            (effective_attack_number == 0 || coinflip()))
         {
             do_minotaur_retaliation();
         }
