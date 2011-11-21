@@ -365,14 +365,12 @@ bool melee_attack::handle_phase_dodged()
         // Check for defender Spines
         do_spines();
 
-        // In master, this only allows one retaliation per player attack round
-        // but implementing that here (now that mons_atack_rounds is gone)
-        // would be quite cludgy and awkward, so we'll reduce the chance of
-        // retaliation for monster-attacks above 1.
+        // Only half the normal chance of retaliation for attacks after the
+        // first one.
         if (attacker->alive() &&
             you.species == SP_MINOTAUR &&
             you.can_see(attacker) &&
-            one_chance_in(effective_attack_number))
+            (effective_attack_number == 1 || coinflip()))
         {
             do_minotaur_retaliation();
         }
@@ -4413,14 +4411,26 @@ void melee_attack::emit_foul_stench()
 
 void melee_attack::do_minotaur_retaliation()
 {
-    // This will usually be 2, but could be 3 if the player mutated more
+    if (!(you.form == TRAN_NONE || you.form == TRAN_APPENDAGE
+          || you.form == TRAN_BLADE_HANDS || you.form == TRAN_STATUE
+          || you.form == TRAN_LICH))
+    {
+        // You are in a non-minotaur form.
+        return;
+    }
+    if (you.cannot_act())
+    {
+        // You can't move.
+        return;
+    }
+    // This will usually be 2, but could be 3 if the player mutated more.
     const int mut = player_mutation_level(MUT_HORNS);
     const int slaying = slaying_bonus(PWPN_DAMAGE);
 
-    if (attacker->alive() && you.strength() + you.dex() > random2(100))
+    if (attacker->alive() && 5*you.strength() + 7*you.dex() > random2(600))
     {
-        // Use the same damage forula as a regular headbutt.
-        int dmg = 5 + mut * 2;
+        // Use the same damage formula as a regular headbutt.
+        int dmg = 5 + mut * 3;
         dmg = player_aux_stat_modify_damage(dmg);
         dmg = random2(dmg);
         dmg = player_apply_fighting_skill(dmg, true);
@@ -4430,13 +4440,12 @@ void melee_attack::do_minotaur_retaliation()
         int ac = random2(1 + attacker->armour_class());
         int hurt = dmg - ac;
 
-        mpr("You furiously reltaliate!");
+        mpr("You furiously retaliate!");
         dprf("Retaliation: dmg = %d ac = %d hurt = %d", dmg, ac, hurt);
         if (hurt <= 0)
         {
-            mprf("You headbutt %s but do no damage",
+            mprf("You headbutt %s, but do no damage.",
                  attacker->name(DESC_THE).c_str());
-
             return;
         }
         else
@@ -4447,7 +4456,6 @@ void melee_attack::do_minotaur_retaliation()
             attacker->hurt(&you, hurt);
         }
     }
-
     return;
 }
 
