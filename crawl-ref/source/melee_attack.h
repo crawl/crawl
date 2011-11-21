@@ -100,6 +100,7 @@ private:
     /* Mutation Effects */
     void do_spines();
     void do_passive_freeze();
+    void emit_foul_stench();
     /* Race Effects */
     void do_minotaur_retaliation();
 
@@ -134,7 +135,6 @@ private:
     void mons_do_poison();
     void mons_do_napalm();
     void mons_do_eyeball_confusion();
-    void mons_emit_foul_stench();
 
     attack_flavour random_chaos_attack_flavour();
     bool _make_zombie(monster* mon, int corpse_class, int corpse_index,
