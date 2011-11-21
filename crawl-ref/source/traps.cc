@@ -464,8 +464,7 @@ bool player_caught_in_web()
         return false;
 
     you.attribute[ATTR_HELD] = 10;
-    stop_running();
-    stop_delay(true); // even stair delays
+    // No longer stop_running() and stop_delay().
     redraw_screen(); // Account for changes in display.
     return (true);
 }
