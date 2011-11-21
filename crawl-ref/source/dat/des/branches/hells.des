@@ -937,7 +937,7 @@ ENDMAP
 NAME:    evilmike_geh
 ORIENT:  encompass
 SHUFFLE: ([{<
-NSUBST:  A = 1:+ / *:+cc
+NSUBST:  A = 1:+ / *=+cc
 SUBST:   B = ccc+
 SHUFFLE: CI / ''
 SHUFFLE: EF / ""

@@ -1715,7 +1715,7 @@ ORIENT: float
 COLOUR: b-+89*| = white
 FTILE:  b-+89*| = FLOOR_MARBLE
 TILE:   b = WALL_MARBLE
-NSUBST:  0 = 3:9 / 7:0 / 20:0.. / *:.
+NSUBST:  0 = 3:9 / 7:0 / 20=0.. / *:.
 # can rarely be a statue gallery, otherwise use stone pillars
 : if crawl.one_chance_in(4) then
 SUBST:  c = G, v = .
@@ -1758,7 +1758,7 @@ ORIENT: float
 NSUBST: . = 7:0 / 2:9 / 1:8 / *:.
 NSUBST: ' = 7:0 / 2:9 / 1:8 / *:.
 SUBST:  . = .:90 ~
-NSUBST: % = 6:* / 3:| / *:%$
+NSUBST: % = 6:* / 3:| / *=%$
 SUBST:  - = .
 MAP
 xxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx

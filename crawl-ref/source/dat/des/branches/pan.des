@@ -292,11 +292,11 @@ MONS:       cacodemon
 MONS:       neqoxec / brain worm
 NSUBST:     C = 1:4 / *:N
 NSUBST:     N = 2:4 / *:5
-NSUBST:     M = 5:3 / 2:3. / *:.
-NSUBST:     E = 3:2 / 2:22. / 2:2.. / *:.
+NSUBST:     M = 5:3 / 2=3. / *:.
+NSUBST:     E = 3:2 / 2=22. / 2=2.. / *:.
 SHUFFLE:    '-
-NSUBST:     ' = 5:3 / 2:3. / 1:4 / 3:5 / *:.
-NSUBST:     - = 5:2 / 2:2. / 1:4 / 3:5 / *:.
+NSUBST:     ' = 5:3 / 2=3. / 1:4 / 3:5 / *:.
+NSUBST:     - = 5:2 / 2=2. / 1:4 / 3:5 / *:.
 epilogue{{
   pan_lord_epilogue('Mnoleg')
 }}
