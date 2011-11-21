@@ -421,6 +421,12 @@ bool melee_attack::handle_phase_hit()
     }
     else
     {
+        // These effects (mutations right now) are only triggered when
+        // the player is hit, each of them will verify their own required
+        // parameters of the effect.
+        do_passive_freeze();
+        emit_foul_stench();
+
         // Monsters lose additional energy only for the first two weapon
         // attacks; subsequent hits are free.
         if (effective_attack_number < 1)
@@ -742,8 +748,6 @@ bool melee_attack::handle_phase_end()
         && attacker != defender)
     {
         mons_do_eyeball_confusion();
-        do_passive_freeze();
-        mons_emit_foul_stench();
     }
 
     // This may invalidate both the attacker and defender.
@@ -4383,7 +4387,7 @@ void melee_attack::do_spines()
     }
 }
 
-void melee_attack::mons_emit_foul_stench()
+void melee_attack::emit_foul_stench()
 {
     monster* mon = attacker->as_monster();
 
