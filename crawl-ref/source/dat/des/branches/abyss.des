@@ -84,6 +84,106 @@ MAP
 .......t......ttt....
 ENDMAP
 
+# Inspired by a bug which turned Lemuel's castle moat into draconians,
+# a little outpost with either easier interior or exterior. ~HangedMan
+NAME:	hangedman_abyss_monster_moat
+TAGS:	abyss
+MONS:	fire bat / bat simulacrum / spectral bat / vampire bat, \
+        vampire, vampire knight / vampire mage w:7, \
+        crimson imp / white imp / shadow imp / iron imp, \
+        kobold demonologist, deep elf summoner / orc sorcerer w:7, \
+        tarantella / vampire mosquito w:4 / rock worm w:3 / yellow wasp w:8
+KMONS:	8 = demonic crawler
+KMONS:	9 = emperor scorpion / spiny worm w:7
+KMONS:	D = chaos spawn w:7 / ugly thing w:4 / small abomination / shapeshifter w:2
+KMONS:	E = large abomination
+KMONS:	F = very ugly thing / glowing shapeshifter w:7
+SHUFFLE: 123/456/789/DEF
+SUBST:	C = xccv
+MAP
+ CCCC  CCCCCCCCCC  CCCC
+CC 1cccc+2....2+cccc1 CC
+C 11n|3.ccc++ccc.3|n11 C
+C 11c3|3c1 .. 1c3|3c11 C
+  11ccncc11..11ccncc11
+   11111111..11111111
+    111111 .. 111111
+ CC                  CC
+  CCCCCC        CCCCCC
+ENDMAP
+
+NAME:	hangedman_abyss_sting
+TAGS:	abyss no_item_gen no_monster_gen
+KMONS:	1 = orange demon
+KMONS:  2 = red wasp / yellow wasp / bumblebee w:2
+KMONS:  3 = death drake / green death
+KFEAT:	123 = W
+KITEM:	23 = honeycomb / royal jelly w:2 / nothing
+MAP
+ xxxxxxx
+xx22222xx
+x2222222x
+x22++xx3x
+x22+1 xxx
+x22x 1 xx
+x22xx W x
+xx23xx W
+ xxxxxx W
+ENDMAP
+
+# "(He) opened the mailbox. There was nothing inside. Nothing after nothing came pouring out."
+NAME:	not_minivault_9_hangedman
+TAGS:	abyss
+MARKER: X = lua: props_marker { connected_exclude="true" }
+SUBST:  X = =
+MONS:	lorocyproca / vapour / ghost moth w:2, unseen horror / shadow wraith
+MAP
+XXXXXXXXXX
+XmXXmmXXmX
+XXXXXXXXXX
+XXX1111XXX
+XmX1221XmX
+XmX1221XmX
+XXX1111XXX
+XXXXXXXXXX
+XmXXmmXXmX
+XXXXXXXXXX
+ENDMAP
+
+NAME:	hangedman_abyss_overflow_altar
+TAGS:	abyss no_item_gen no_monster_gen no_pool_fixup
+MONS:	stone golem
+KFEAT:	A = altar_lugonu
+KFEAT:	B = permadry_fountain
+SUBST:  x = xcv++, y = ..w, z = Wl
+MAP
+yyyyyyyy
+yxxxxxxy
+yxzzzzxy
+yxzA1zxy
+yxz.Bzxy
+yxzzzzxy
+yxxxxxxy
+yyyyyyyy
+ENDMAP
+
+NAME:	hangedman_abyss_mock_shop
+TAGS:	abyss no_monster_gen
+KFEAT:	0 = stone_arch
+MONS:	patrolling water elemental, statue name:archer tile:mons_statue_archer \
+        n_adj; longbow ego:chaos . arrow q:40
+KFEAT:	1 = permadry_fountain
+SUBST:	x = xcv, . = ..W
+MAP
+     . .
+  ..xx.xx..
+xxxxx1$1xxxxx
+x.2..$0$..2.x
+xxxxx1$1xxxxx
+  ..xx.xx..
+     . .
+ENDMAP
+
 ###############################################################################
 # abyss rune vaults
 ###############################################################################
@@ -366,6 +466,67 @@ MAP
  1.1
 ENDMAP
 
+NAME:	hangedman_abyss_rune_flesh_and_stone
+TAGS:	abyss_rune no_monster_gen no_item_gen
+MONS:	catoblepas, stone golem, stone giant
+KMONS:	O = stone giant
+KITEM:	O = abyssal rune of Zot
+KPROP:  l = no_cloud_gen
+NSUBST:	P = 1:O / 1:3
+MAP
+    .......
+.ccccGclcGcccc.
+ .cPccclcccPc.
+  c+c2.l.2c+c
+.cc1ccclccc1cc.
+ .clc2.l.2clc.
+  c ccclccc c
+.cc c2.l.2c cc.
+ .c ccclccc c.
+  c c2.l.2c c
+.cc.ccclccc.cc.
+ .c+c2c.c2c+c.
+  c2  c1c  2c
+.cc2  + +  2cc.
+ .ccccccccccc.
+  .c c. .c c.
+ENDMAP
+
+NAME:	hangedman_abyss_rune_macabre_mess
+TAGS:	abyss_rune
+KMONS:	1 = giant orange brain spells:brain_feed;cause_fear;shadow_creatures;confuse;.;.
+KMONS:  2 = golden eye
+KMONS:  3 = flying skull
+KMONS:  4 = insubstantial wisp
+KMONS:  5 = macabre mass / small abomination w:2
+KMONS:  6 = neqoxec
+KMONS:  7 = cacodemon
+KMONS:  8 = pulsating lump
+KMONS:	9 = flying skull
+KITEM:	9 = abyssal rune of Zot
+KFEAT:	12 = W
+KFEAT:	* = +
+MARKER:	* = lua:restrict_door()
+SUBST:  c = ccv, . = .....W
+MAP
+ .cccccc5 5cccccc.
+ cc .. cc8cc .. cc
+.c .55..c2c..55. c.
+cc.5nnn.c+c.nnn5.cc
+c 5nn2n.....n2nn5 c
+c64*13n.....n31*46c
+c 5nn2n.....n2nn5 c
+cc.5nnn.....nnn5.cc
+.c .55.......55. c.
+ ccc ......... ccc
+  .cc55nnnnn55cc.
+   .c55n292n55c.
+    c 5nn1nn5 c
+    cc55n*n55cc
+    .c 55455 c.
+     ccc 7 ccc
+      .ccccc.
+ENDMAP
 
 ###############################################################################
 # abyss exit vaults
@@ -815,6 +976,47 @@ xx...............x
  xxx....x...x..xxx
    xxx1xxx1xxx1x
      xxx xxx xxx
+ENDMAP
+
+NAME:	hangedman_abyss_exit_choices
+TAGS:	abyss_exit allow_dup no_monster_gen
+MONS:	warg, hell hound, giant leech, spiny worm, \
+        crocodile, alligator, black mamba
+KMONS:	8 = anaconda
+KMONS:	9 = fire drake
+KMONS:	0 = mottled dragon
+KMONS:	A = elephant
+KMONS:	B = catoblepas
+KMONS:	C = golden eye
+KMONS:	D = great orb of eyes
+KMONS:	E = vapour
+KMONS:	F = ball lightning
+KMONS:	G = shadow wraith
+KMONS:	H = unseen horror
+NSUBST:	J = 1/2, K = 5/6, L = 9/0, M = r/s
+SHUFFLE: 12/34, 56/78, 90/AB, CD/EF/GH
+KFEAT:	I = exit_abyss
+SUBST:	c = ccv
+MAP
+. ..... .
+ .ccccc.
+.cc I cc.
+ cc+c+cc
+. cLmLc .
+ cc+c+cc
+. c . c .
+ cc+c+cc
+. cLmLc .
+ cc+c+cc
+. c . c .
+ cc+c+cc
+. cKmKc .
+ cc+c+cc
+. c . c .
+ cc+c+cc
+. cJmJc .
+ .c+c+c.
+. ..m.. .
 ENDMAP
 
 ###################################################################
