@@ -1474,6 +1474,11 @@ ORIENT: encompass
 MONS:   patrolling Ereshkigal, reaper, shadow demon, shadow fiend, soul eater
 FTILE:  "5 = floor_green_bones
 SUBST:  " = .:298 *:1 5:1
+NSUBST: w = 3=Ew / 20=Fw / *:w
+KMONS:  E = kraken spectre
+KMONS:  F = shark spectre / big fish spectre / electric eel spectre
+KFEAT:  EFw = deep_water
+KMASK:  Ww = no_monster_gen
 : serpent_of_hell_setup(_G)
 : tar_setup(_G)
 MAP
