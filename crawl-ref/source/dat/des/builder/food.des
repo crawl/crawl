@@ -45,3 +45,36 @@ MAP
 ....aaaa....
 ............
 ENDMAP
+
+NAME:     blue_anna_alchemist
+DEPTH:    D:8-14
+CHANCE:   100% (D:14), 15%
+TAGS:     uniq_second_food extra chance_second_food
+SUBVAULT: Z : fruiting_plant
+SUBVAULT: Y : fruiting_plant
+SUBVAULT: X : fruiting_plant
+SUBVAULT: W : fruiting_plant
+NSUBST:   p = 1:q / *:p
+KITEM:    p = potion of curing / potion of heal wounds / \
+              potion of restore abilities w:1 / potion of poison w:3 / \
+              potion of strong poison w:1 / potion of confusion w:1 / nothing
+KITEM:    q = potion of porridge
+KMONS:    1 = deep dwarf artificer
+MAP
+ZZZZZ..YYYYY
+ZZZZZ..YYYYY
+ZZZZZ..YYYYY
+ZZZZZ..YYYYY
+............
+............
+XXXXX..WWWWW
+XXXXX..WWWWW
+XXXXX..WWWWW
+XXXXX..WWWWW
+x.x.c++c.x.x
+ccccc..ccccc
+cppc....cppc
+cpp+.1..+ppc
+cccc....cccc
+cccccccccccc
+ENDMAP
