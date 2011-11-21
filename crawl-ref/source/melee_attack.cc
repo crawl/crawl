@@ -3239,9 +3239,6 @@ void melee_attack::player_apply_staff_damage()
     if (!weapon || !item_is_staff(*weapon))
         return;
 
-    if (random2(15) > you.skill(SK_EVOCATIONS))
-        return;
-
     switch (weapon->sub_type)
     {
     case STAFF_AIR:
@@ -3311,6 +3308,9 @@ void melee_attack::player_apply_staff_damage()
 
     case STAFF_POISON:
     {
+        if (random2(300) >= you.skill(SK_EVOCATIONS, 20) + you.skill(SK_POISON_MAGIC, 10))
+            return;
+
         // Base chance at 50% -- like mundane weapons.
         if (coinflip() || x_chance_in_y(you.skill(SK_POISON_MAGIC, 10), 80))
         {
