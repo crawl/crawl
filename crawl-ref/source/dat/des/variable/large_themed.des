@@ -1278,7 +1278,7 @@ KMONS:  5 = frederick, boris, draconian annihilator
 : end
 MONS:   fire vortex
 NSUBST: G = 1:1 / 1:1G / *:G
-NSUBST: A = 4:2 / 2:2*. / 1:|
+NSUBST: A = 4:2 / 2=2*. / 1:|
 NSUBST: B = 1:1 / *:G
 NSUBST: C = 1:1 / *:G
 SUBST:  v = c, '! = .
