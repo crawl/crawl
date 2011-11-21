@@ -49,9 +49,11 @@ function bailey_portal(e, ptype)
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
         floor = "stone_arch",
+        feat_tile = "dngn_portal_bailey_gone",
         msg = messager })
   e.kfeat("O = enter_portal_vault")
   e.colour("O = lightred")
+  e.tile("O = dngn_portal_bailey")
   e.tile("c = wall_stone_brick")
 end
 

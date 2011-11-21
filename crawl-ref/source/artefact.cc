@@ -444,12 +444,12 @@ void artefact_desc_properties(const item_def &item,
             ++proprt[ARTP_POISON];
             break;
         case ARM_FIRE_DRAGON_ARMOUR:
-            ++proprt[ARTP_FIRE];
+            proprt[ARTP_FIRE] += 2;
             --proprt[ARTP_COLD];
             break;
         case ARM_ICE_DRAGON_ARMOUR:
             --proprt[ARTP_FIRE];
-            ++proprt[ARTP_COLD];
+            proprt[ARTP_COLD] += 2;
             break;
         case ARM_PEARL_DRAGON_ARMOUR:
             ++proprt[ARTP_NEGATIVE_ENERGY];

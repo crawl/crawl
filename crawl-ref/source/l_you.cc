@@ -19,6 +19,7 @@
 #include "newgame.h"
 #include "ng-setup.h"
 #include "mapmark.h"
+#include "misc.h"
 #include "mon-util.h"
 #include "mutation.h"
 #include "jobs.h"
@@ -145,6 +146,7 @@ LUARET1(you_transform, string, transform_name())
 LUARET1(you_berserk, boolean, you.berserk())
 LUARET1(you_confused, boolean, you.confused())
 LUARET1(you_paralysed, boolean, you.paralysed())
+LUARET1(you_caught, boolean, you.caught())
 LUARET1(you_asleep, boolean, you.asleep())
 LUARET1(you_hasted, boolean, you.duration[DUR_HASTE])
 LUARET1(you_slowed, boolean, you.duration[DUR_SLOW])
@@ -153,9 +155,12 @@ LUARET1(you_teleporting, boolean, you.duration[DUR_TELEPORT])
 LUARET1(you_poisoned, boolean, you.duration[DUR_POISONING])
 LUARET1(you_invisible, boolean, you.duration[DUR_INVIS])
 LUARET1(you_mesmerised, boolean, you.duration[DUR_MESMERISED])
+LUARET1(you_nauseous, boolean, you.duration[DUR_NAUSEA])
 LUARET1(you_rotting, boolean, you.rotting)
 LUARET1(you_silenced, boolean, silenced(you.pos()))
 LUARET1(you_sick, boolean, you.disease)
+LUARET1(you_contaminated, number, get_contamination_level())
+LUARET1(you_feel_safe, boolean, i_feel_safe())
 LUARET1(you_deaths, number, you.deaths)
 LUARET1(you_lives, number, you.lives)
 
@@ -341,6 +346,7 @@ static const struct luaL_reg you_clib[] =
     { "berserk",      you_berserk },
     { "confused",     you_confused },
     { "paralysed",    you_paralysed },
+    { "caught",       you_caught },
     { "asleep",       you_asleep },
     { "hasted",       you_hasted },
     { "slowed",       you_slowed },
@@ -349,9 +355,12 @@ static const struct luaL_reg you_clib[] =
     { "poisoned",     you_poisoned },
     { "invisible",    you_invisible },
     { "mesmerised",   you_mesmerised },
+    { "nauseous",     you_nauseous },
     { "rotting",      you_rotting },
     { "silenced",     you_silenced },
     { "sick",         you_sick },
+    { "contaminated", you_contaminated },
+    { "feel_safe",    you_feel_safe },
     { "deaths",       you_deaths },
     { "lives",        you_lives },
     { "piety_rank",   you_piety_rank },

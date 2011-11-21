@@ -10,13 +10,14 @@ import time
 BUFSIZ = 2048
 
 class TerminalRecorder(object):
-    def __init__(self, command, filename, id_header, logger, io_loop):
+    def __init__(self, command, filename, id_header, logger, io_loop, termsize):
         self.io_loop = io_loop
         self.command = command
         self.ttyrec = open(filename, "w", 0)
         self.id = id
         self.returncode = None
         self.output_buffer = ""
+        self.termsize = termsize
 
         self.pid = None
         self.child_fd = None
@@ -170,7 +171,7 @@ class TerminalRecorder(object):
         return self.returncode
 
     def get_terminal_size(self):
-        return (80, 24)
+        return self.termsize
 
     def write_input(self, data):
         if self.poll() is not None: return

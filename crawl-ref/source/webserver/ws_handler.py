@@ -11,9 +11,8 @@ import time, datetime
 import codecs
 import random
 
-from config import *
+import config
 from userdb import *
-from process_handler import *
 from util import *
 
 sockets = set()
@@ -29,23 +28,24 @@ def shutdown():
         socket.shutdown()
 
 def update_global_status():
-    update_all_lobbys()
     write_dgl_status_file()
 
-def update_all_lobbys():
+def update_all_lobbys(game):
+    lobby_entry = game.lobby_entry()
     for socket in list(sockets):
         if socket.is_in_lobby():
-            socket.update_lobby()
+            socket.send_message("lobby_entry", **lobby_entry)
 
 def write_dgl_status_file():
+    f = None
     try:
-        f = open(dgl_status_file, "w")
+        f = open(config.dgl_status_file, "w")
         for socket in list(sockets):
             if socket.username and socket.is_running():
                 f.write("%s#%s#%s#0x0#%s#%s#\n" %
                         (socket.username, socket.game_id,
-                         (socket.process.where or ""),
-                         str(int(socket.process.idle_time())),
+                         (socket.process.human_readable_where()),
+                         str(socket.process.idle_time()),
                          str(socket.process.watcher_count())))
     except (OSError, IOError) as e:
         logging.warning("Could not write dgl status file: %s", e)
@@ -66,13 +66,34 @@ def purge_login_tokens_timeout():
 def status_file_timeout():
     write_dgl_status_file()
     ioloop = tornado.ioloop.IOLoop.instance()
-    ioloop.add_timeout(time.time() + status_file_update_rate,
+    ioloop.add_timeout(time.time() + config.status_file_update_rate,
                        status_file_timeout)
 
 def find_user_sockets(username):
     for socket in list(sockets):
         if socket.username and socket.username.lower() == username.lower():
             yield socket
+
+def find_running_game(charname, start):
+    for socket in list(sockets):
+        if (socket.is_running() and
+            socket.process.where.get("name") == charname and
+            socket.process.where.get("start") == start):
+            return socket.process
+    return None
+
+milestone_file_tailer = None
+def start_reading_milestones():
+    if config.milestone_file is None: return
+
+    global milestone_file_tailer
+    milestone_file_tailer = FileTailer(config.milestone_file, handle_new_milestone)
+
+def handle_new_milestone(line):
+    data = parse_where_data(line)
+    if "name" not in data: return
+    game = find_running_game(data.get("name"), data.get("start"))
+    game.log_milestone(data)
 
 class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def __init__(self, app, req, **kwargs):
@@ -100,7 +121,6 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             "forget_login_cookie": self.forget_login_cookie,
             "play": self.start_crawl,
             "pong": self.pong,
-            "update_lobby": self.update_lobby,
             "watch": self.watch,
             "chat_msg": self.post_chat_message,
             "register": self.register,
@@ -126,15 +146,15 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         self.reset_timeout()
 
-        if max_connections < len(sockets):
+        if config.max_connections < len(sockets):
             self.write_message("connection_closed('The maximum number of connections "
                                + "has been reached, sorry :(');")
             self.close()
         elif shutting_down:
             self.close()
         else:
-            if dgl_mode:
-                self.update_lobby()
+            if config.dgl_mode:
+                self.send_lobby()
             else:
                 self.start_crawl(None)
 
@@ -147,24 +167,18 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def is_in_lobby(self):
         return not self.is_running() and self.watched_game is None
 
-    def update_lobby(self):
-        if self.client_terminated:
-            self.logger.warning("update_lobby called for closed " +
-                                "socket! (Crawl is %srunning)",
-                                "not " if self.is_running() else "")
-            if not self.is_running():
-                sockets.remove(self)
-            return
-
-        running_games = [game for game in sockets if game.is_running()]
-        lobby_html = self.render_string("lobby.html", running_games = running_games)
-        self.send_message("lobby", content = lobby_html);
+    def send_lobby(self):
+        self.send_message("lobby_clear")
+        for socket in sockets:
+            if socket.is_running():
+                self.send_message("lobby_entry", **socket.process.lobby_entry())
+        self.send_message("lobby_complete")
 
     def send_game_links(self):
         # Rerender Banner
         banner_html = self.render_string("banner.html", username = self.username)
         self.send_message("html", id = "banner", content = banner_html)
-        play_html = self.render_string("game_links.html", games = games)
+        play_html = self.render_string("game_links.html", games = config.games)
         self.send_message("set_game_links", content = play_html)
 
     def reset_timeout(self):
@@ -173,7 +187,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
         self.received_pong = False
         self.send_message("ping")
-        self.timeout = self.ioloop.add_timeout(time.time() + connection_timeout,
+        self.timeout = self.ioloop.add_timeout(time.time() + config.connection_timeout,
                                                self.check_connection)
 
     def check_connection(self):
@@ -183,7 +197,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.logger.info("Connection timed out.")
             self.close()
         else:
-            if self.is_running() and self.process.idle_time() > max_idle_time:
+            if self.is_running() and self.process.idle_time() > config.max_idle_time:
                 self.logger.info("Stopping crawl after idle time limit.")
                 self.process.stop()
 
@@ -191,39 +205,52 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.reset_timeout()
 
     def start_crawl(self, game_id):
-        if dgl_mode:
+        if config.dgl_mode:
             if self.username == None:
                 self.send_message("go_lobby")
                 return
 
-        if dgl_mode and game_id not in games: return
+        if config.dgl_mode and game_id not in config.games: return
 
         self.game_id = game_id
 
-        if dgl_mode:
-            args = (games[game_id], self.username, self.logger, self.ioloop)
-            if (games[game_id].get("compat_mode") or
-                "client_prefix" in games[game_id]):
-                self.process = CompatCrawlProcessHandler(*args)
+        import process_handler
+
+        if config.dgl_mode:
+            game_params = dict(config.games[game_id])
+            game_params["id"] = game_id
+            args = (game_params, self.username, self.logger, self.ioloop)
+            if (game_params.get("compat_mode") or
+                "client_prefix" in game_params):
+                self.process = process_handler.CompatCrawlProcessHandler(*args)
             else:
-                self.process = CrawlProcessHandler(*args)
+                self.process = process_handler.CrawlProcessHandler(*args)
         else:
-            self.process = DGLLessCrawlProcessHandler(self.logger, self.ioloop)
+            self.process = process_handler.DGLLessCrawlProcessHandler(self.logger, self.ioloop)
 
         self.process.end_callback = self._on_crawl_end
         self.process.add_watcher(self, hide=True)
         try:
             self.process.start()
         except:
+            self.logger.warning("Exception starting process!", exc_info=True)
             self.process = None
             self.send_message("go_lobby")
         else:
             self.send_message("game_started")
 
-            if dgl_mode:
+            if config.dgl_mode:
+                if self.process.where == {}:
+                    # If location info was found, the lobbys were already
+                    # updated by set_where_data
+                    update_all_lobbys(self.process)
                 update_global_status()
 
     def _on_crawl_end(self):
+        if config.dgl_mode:
+            for socket in list(sockets):
+                if socket.is_in_lobby():
+                    socket.send_message("lobby_remove", id=self.process.id)
         self.process = None
 
         if self.client_terminated:
@@ -234,12 +261,13 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             else:
                 # Go back to lobby
                 self.send_message("game_ended")
-                if dgl_mode:
-                    self.update_lobby()
+                if config.dgl_mode:
+                    self.send_lobby()
                 else:
                     self.start_crawl(None)
 
-        if dgl_mode: update_global_status()
+        if config.dgl_mode:
+            update_global_status()
 
         if shutting_down and len(sockets) == 0:
             # The last crawl process has ended, now we can go
@@ -247,7 +275,7 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
 
     def init_user(self):
         with open("/dev/null", "w") as f:
-            result = subprocess.call([init_player_program, self.username],
+            result = subprocess.call([config.init_player_program, self.username],
                                      stdout = f, stderr = subprocess.STDOUT)
             return result == 0
 
@@ -305,11 +333,11 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
     def set_login_cookie(self):
         if self.username is None: return
         token = rand.getrandbits(128)
-        expires = datetime.datetime.now() + datetime.timedelta(login_token_lifetime)
+        expires = datetime.datetime.now() + datetime.timedelta(config.login_token_lifetime)
         login_tokens[(token, self.username)] = expires
         cookie = self.username + " " + str(token)
         self.send_message("login_cookie", cookie = cookie,
-                          expires = login_token_lifetime)
+                          expires = config.login_token_lifetime)
 
     def forget_login_cookie(self, cookie):
         try:
@@ -369,17 +397,17 @@ class CrawlWebSocket(tornado.websocket.WebSocketHandler):
             self.stop_watching()
 
     def get_rc(self, game_id):
-        if game_id not in games: return
-        rcfile_path = dgl_format_str(games[game_id]["rcfile_path"],
-                                     self.username, games[game_id])
+        if game_id not in config.games: return
+        rcfile_path = dgl_format_str(config.games[game_id]["rcfile_path"],
+                                     self.username, config.games[game_id])
         rcfile_path = os.path.join(rcfile_path, self.username + ".rc")
         with open(rcfile_path, 'r') as f:
             contents = f.read()
         self.send_message("rcfile_contents", contents = contents)
 
     def set_rc(self, game_id, contents):
-        rcfile_path = dgl_format_str(games[game_id]["rcfile_path"],
-                                     self.username, games[game_id])
+        rcfile_path = dgl_format_str(config.games[game_id]["rcfile_path"],
+                                     self.username, config.games[game_id])
         rcfile_path = os.path.join(rcfile_path, self.username + ".rc")
         with open(rcfile_path, 'w') as f:
             f.write(codecs.BOM_UTF8)

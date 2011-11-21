@@ -220,7 +220,7 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ABANDONED_SHOP:
         return TILE_DNGN_ABANDONED_SHOP;
     case DNGN_ENTER_LABYRINTH:
-        return TILE_DNGN_ENTER_LABYRINTH;
+        return TILE_DNGN_PORTAL_LABYRINTH;
     case DNGN_STONE_STAIRS_DOWN_I:
     case DNGN_STONE_STAIRS_DOWN_II:
     case DNGN_STONE_STAIRS_DOWN_III:
@@ -304,6 +304,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ENTER_PORTAL_VAULT:
     case DNGN_EXIT_PORTAL_VAULT:
         return TILE_DNGN_PORTAL;
+    case DNGN_EXPIRED_PORTAL:
+        return TILE_DNGN_PORTAL_EXPIRED;
     case DNGN_MALIGN_GATEWAY:
         return TILE_DNGN_STARRY_PORTAL;
 
@@ -4712,8 +4714,6 @@ tileidx_t tileidx_known_brand(const item_def &item)
             return TILE_BRAND_CHAOS;
         case SPMSL_PENETRATION:
             return TILE_BRAND_PENETRATION;
-        case SPMSL_REAPING:
-            return TILE_BRAND_REAPING;
         case SPMSL_DISPERSAL:
             return TILE_BRAND_DISPERSAL;
         case SPMSL_EXPLODING:

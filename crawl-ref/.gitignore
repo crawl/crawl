@@ -9,7 +9,9 @@ core.*
 err.txt
 TAGS
 tags
+cscope.*
 *.massif
+callgrind.out.*
 *.dSYM
 tmp/
 
@@ -152,3 +154,6 @@ Thumbs.db
 
 # Python (webtiles) junk
 *.pyc
+
+# junk when compiled with DGAMELAUNCH
+/source/cache*

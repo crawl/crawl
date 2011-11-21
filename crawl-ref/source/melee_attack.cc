@@ -423,7 +423,7 @@ bool melee_attack::handle_phase_hit()
     {
         // These effects (mutations right now) are only triggered when
         // the player is hit, each of them will verify their own required
-        // parameters of the effect.
+        // parameters of the effec
         do_passive_freeze();
         emit_foul_stench();
 
@@ -1912,6 +1912,9 @@ void melee_attack::set_attack_verb()
 
 void melee_attack::player_exercise_combat_skills()
 {
+    if (defender->cannot_fight())
+        return;
+
     int damage = 10; // Default for unarmed.
     if (weapon && (weapon->base_type == OBJ_WEAPONS
                       && !is_range_weapon(*weapon)
@@ -1920,11 +1923,9 @@ void melee_attack::player_exercise_combat_skills()
         damage = property(*weapon, PWPN_DAMAGE);
     }
 
-    const bool helpless = defender->cannot_fight();
-
     // Slow down the practice of low-damage weapons.
-    if (helpless || x_chance_in_y(damage, 20))
-        practise(helpless ? EX_WILL_HIT_HELPLESS : EX_WILL_HIT, wpn_skill);
+    if (x_chance_in_y(damage, 20))
+        practise(EX_WILL_HIT, wpn_skill);
 }
 
 /*

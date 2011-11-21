@@ -62,7 +62,7 @@ brick_brown7
 %variation WALL_BRICK green
 %hue 30 90
 %hue 0 90
-%repeat WALL_BRICK WALL_BRICK_GREEN WALL_SNAKE
+%repeat WALL_BRICK WALL_BRICK_GREEN
 %resetcol
 
 %variation WALL_BRICK cyan
@@ -223,7 +223,7 @@ zot_blue3
 %variation WALL_ZOT cyan
 %hue 240 180
 %lum 240 -5
-%repeat WALL_ZOT WALL_ZOT_CYAN WALL_ICE
+%repeat WALL_ZOT WALL_ZOT_CYAN
 %resetcol
 
 %variation WALL_ZOT red
@@ -488,6 +488,20 @@ crystal_wall12
 %weight 1
 crystal_wall13
 
+%weight 10
+snake0 WALL_SNAKE
+snake1
+snake2
+snake3
+snake4
+snake5
+snake6
+%weight 3
+snake7
+%weight 2
+snake8
+%weight 10
+snake9
 
 stone_gray0 WALL_STONE_GRAY
 stone_gray1
@@ -540,6 +554,16 @@ hell08
 hell09
 hell10
 hell11
+
+ice_wall0 WALL_ICE
+ice_wall1
+ice_wall2
+ice_wall3
+
+icy_stone0 WALL_ICY_STONE
+icy_stone1
+icy_stone2
+icy_stone3
 
 lab-rock0 WALL_LAB_ROCK
 lab-rock1

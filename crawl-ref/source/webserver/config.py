@@ -24,6 +24,9 @@ server_socket_path = None # Uses global temp dir
 # Server name, so far only used in the ttyrec metadata
 server_id = ""
 
+# Disable caching of game data files
+game_data_no_cache = True
+
 # Game configs
 # %n in paths is replaced by the current username
 games = OrderedDict([
@@ -74,7 +77,12 @@ games = OrderedDict([
 
 dgl_status_file = "./rcs/status"
 
+# Set to None not to read milestones
+milestone_file = "./milestones"
+
 status_file_update_rate = 5
+
+recording_term_size = (80, 24)
 
 max_connections = 100
 
