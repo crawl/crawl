@@ -86,20 +86,20 @@ ENDMAP
 
 # Inspired by a bug which turned Lemuel's castle moat into draconians,
 # a little outpost with either easier interior or exterior. ~HangedMan
-NAME:	hangedman_abyss_monster_moat
-TAGS:	abyss
-MONS:	fire bat / bat simulacrum / spectral bat / vampire bat, \
+NAME:   hangedman_abyss_monster_moat
+TAGS:   abyss
+MONS:   fire bat / bat simulacrum / spectral bat / vampire bat, \
         vampire, vampire knight / vampire mage w:7, \
         crimson imp / white imp / shadow imp / iron imp, \
         kobold demonologist, deep elf summoner / orc sorcerer w:7, \
         tarantella / vampire mosquito w:4 / rock worm w:3 / yellow wasp w:8
-KMONS:	8 = demonic crawler
-KMONS:	9 = emperor scorpion / spiny worm w:7
-KMONS:	D = chaos spawn w:7 / ugly thing w:4 / small abomination / shapeshifter w:2
-KMONS:	E = large abomination
-KMONS:	F = very ugly thing / glowing shapeshifter w:7
+KMONS:  8 = demonic crawler
+KMONS:  9 = emperor scorpion / spiny worm w:7
+KMONS:  D = chaos spawn w:7 / ugly thing w:4 / small abomination / shapeshifter w:2
+KMONS:  E = large abomination
+KMONS:  F = very ugly thing / glowing shapeshifter w:7
 SHUFFLE: 123/456/789/DEF
-SUBST:	C = xccv
+SUBST:  C = xccv
 MAP
  CCCC  CCCCCCCCCC  CCCC
 CC 1cccc+2....2+cccc1 CC
@@ -112,13 +112,13 @@ C 11c3|3c1 .. 1c3|3c11 C
   CCCCCC        CCCCCC
 ENDMAP
 
-NAME:	hangedman_abyss_sting
-TAGS:	abyss no_item_gen no_monster_gen
-KMONS:	1 = orange demon
+NAME:   hangedman_abyss_sting
+TAGS:   abyss no_item_gen no_monster_gen
+KMONS:  1 = orange demon
 KMONS:  2 = red wasp / yellow wasp / bumblebee w:2
 KMONS:  3 = death drake / green death
-KFEAT:	123 = W
-KITEM:	23 = honeycomb / royal jelly w:2 / nothing
+KFEAT:  123 = W
+KITEM:  23 = honeycomb / royal jelly w:2 / nothing
 MAP
  xxxxxxx
 xx22222xx
@@ -132,11 +132,11 @@ xx23xx W
 ENDMAP
 
 # "(He) opened the mailbox. There was nothing inside. Nothing after nothing came pouring out."
-NAME:	not_minivault_9_hangedman
-TAGS:	abyss
+NAME:   not_minivault_9_hangedman
+TAGS:   abyss
 MARKER: X = lua: props_marker { connected_exclude="true" }
 SUBST:  X = =
-MONS:	lorocyproca / vapour / ghost moth w:2, unseen horror / shadow wraith
+MONS:   lorocyproca / vapour / ghost moth w:2, unseen horror / shadow wraith
 MAP
 XXXXXXXXXX
 XmXXmmXXmX
@@ -150,11 +150,11 @@ XmXXmmXXmX
 XXXXXXXXXX
 ENDMAP
 
-NAME:	hangedman_abyss_overflow_altar
-TAGS:	abyss no_item_gen no_monster_gen no_pool_fixup
-MONS:	stone golem
-KFEAT:	A = altar_lugonu
-KFEAT:	B = permadry_fountain
+NAME:   hangedman_abyss_overflow_altar
+TAGS:   abyss no_item_gen no_monster_gen no_pool_fixup
+MONS:   stone golem
+KFEAT:  A = altar_lugonu
+KFEAT:  B = permadry_fountain
 SUBST:  x = xcv++, y = ..w, z = Wl
 MAP
 yyyyyyyy
@@ -167,13 +167,13 @@ yxxxxxxy
 yyyyyyyy
 ENDMAP
 
-NAME:	hangedman_abyss_mock_shop
-TAGS:	abyss no_monster_gen
-KFEAT:	0 = stone_arch
-MONS:	patrolling water elemental, statue name:archer tile:mons_statue_archer \
+NAME:   hangedman_abyss_mock_shop
+TAGS:   abyss no_monster_gen
+KFEAT:  0 = stone_arch
+MONS:   patrolling water elemental, statue name:archer tile:mons_statue_archer \
         n_adj; longbow ego:chaos . arrow q:40
-KFEAT:	1 = permadry_fountain
-SUBST:	x = xcv, . = ..W
+KFEAT:  1 = permadry_fountain
+SUBST:  x = xcv, . = ..W
 MAP
      . .
   ..xx.xx..
@@ -466,13 +466,13 @@ MAP
  1.1
 ENDMAP
 
-NAME:	hangedman_abyss_rune_flesh_and_stone
-TAGS:	abyss_rune no_monster_gen no_item_gen
-MONS:	catoblepas, stone golem, stone giant
-KMONS:	O = stone giant
-KITEM:	O = abyssal rune of Zot
+NAME:   hangedman_abyss_rune_flesh_and_stone
+TAGS:   abyss_rune no_monster_gen no_item_gen
+MONS:   catoblepas, stone golem, stone giant
+KMONS:  O = stone giant
+KITEM:  O = abyssal rune of Zot
 KPROP:  l = no_cloud_gen
-NSUBST:	P = 1:O / 1:3
+NSUBST: P = 1:O / 1:3
 MAP
     .......
 .ccccGclcGcccc.
@@ -492,9 +492,9 @@ MAP
   .c c. .c c.
 ENDMAP
 
-NAME:	hangedman_abyss_rune_macabre_mess
-TAGS:	abyss_rune
-KMONS:	1 = giant orange brain spells:brain_feed;cause_fear;shadow_creatures;confuse;.;.
+NAME:   hangedman_abyss_rune_macabre_mess
+TAGS:   abyss_rune
+KMONS:  1 = giant orange brain spells:brain_feed;cause_fear;shadow_creatures;confuse;.;.
 KMONS:  2 = golden eye
 KMONS:  3 = flying skull
 KMONS:  4 = insubstantial wisp
@@ -502,11 +502,11 @@ KMONS:  5 = macabre mass / small abomination w:2
 KMONS:  6 = neqoxec
 KMONS:  7 = cacodemon
 KMONS:  8 = pulsating lump
-KMONS:	9 = flying skull
-KITEM:	9 = abyssal rune of Zot
-KFEAT:	12 = W
-KFEAT:	* = +
-MARKER:	* = lua:restrict_door()
+KMONS:  9 = flying skull
+KITEM:  9 = abyssal rune of Zot
+KFEAT:  12 = W
+KFEAT:  * = +
+MARKER: * = lua:restrict_door()
 SUBST:  c = ccv, . = .....W
 MAP
  .cccccc5 5cccccc.
@@ -978,25 +978,25 @@ xx...............x
      xxx xxx xxx
 ENDMAP
 
-NAME:	hangedman_abyss_exit_choices
-TAGS:	abyss_exit allow_dup no_monster_gen
-MONS:	warg, hell hound, giant leech, spiny worm, \
+NAME:   hangedman_abyss_exit_choices
+TAGS:   abyss_exit allow_dup no_monster_gen
+MONS:   warg, hell hound, giant leech, spiny worm, \
         crocodile, alligator, black mamba
-KMONS:	8 = anaconda
-KMONS:	9 = fire drake
-KMONS:	0 = mottled dragon
-KMONS:	A = elephant
-KMONS:	B = catoblepas
-KMONS:	C = golden eye
-KMONS:	D = great orb of eyes
-KMONS:	E = vapour
-KMONS:	F = ball lightning
-KMONS:	G = shadow wraith
-KMONS:	H = unseen horror
-NSUBST:	J = 1/2, K = 5/6, L = 9/0, M = r/s
+KMONS:  8 = anaconda
+KMONS:  9 = fire drake
+KMONS:  0 = mottled dragon
+KMONS:  A = elephant
+KMONS:  B = catoblepas
+KMONS:  C = golden eye
+KMONS:  D = great orb of eyes
+KMONS:  E = vapour
+KMONS:  F = ball lightning
+KMONS:  G = shadow wraith
+KMONS:  H = unseen horror
+NSUBST: J = 1/2, K = 5/6, L = 9/0, M = r/s
 SHUFFLE: 12/34, 56/78, 90/AB, CD/EF/GH
-KFEAT:	I = exit_abyss
-SUBST:	c = ccv
+KFEAT:  I = exit_abyss
+SUBST:  c = ccv
 MAP
 . ..... .
  .ccccc.
