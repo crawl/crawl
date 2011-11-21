@@ -16,6 +16,13 @@
 
 class Menu;
 
+enum WebtilesCRTMode
+{
+    CRT_DISABLED,
+    CRT_NORMAL,
+    CRT_MENU
+};
+
 class TilesFramework
 {
 public:
@@ -62,7 +69,9 @@ public:
     void clear_to_end_of_line();
 
     void push_menu(Menu* m);
+    void push_crt_menu(std::string tag);
     void pop_menu();
+    void close_all_menus();
 
     void write_message(const char *format, ...);
     void finish_message();
@@ -112,9 +121,9 @@ public:
     std::string m_sock_name;
     bool m_await_connection;
 
-    void set_crt_enabled(bool value);
-    bool is_crt_enabled();
+    WebtilesCRTMode m_crt_mode;
 
+    void clear_crt_menu() { m_text_menu.clear(); }
 protected:
     int m_sock;
     int m_max_msg_size;
@@ -129,7 +138,12 @@ protected:
     int json_object_level;
     bool need_comma;
 
-    std::vector<Menu*> m_menu_stack;
+    struct MenuInfo
+    {
+        std::string tag;
+        Menu* menu;
+    };
+    std::vector<MenuInfo> m_menu_stack;
 
     enum LayerID
     {
@@ -139,7 +153,6 @@ protected:
         LAYER_MAX,
     };
     LayerID m_active_layer;
-    bool m_crt_enabled;
 
     unsigned int m_last_tick_redraw;
     bool m_need_redraw;
@@ -169,6 +182,7 @@ protected:
     bool m_has_overlays;
 
     WebTextArea m_text_crt;
+    WebTextArea m_text_menu;
     WebTextArea m_text_stat;
     WebTextArea m_text_message;
 
@@ -202,18 +216,34 @@ class tiles_crt_control
 {
 public:
     tiles_crt_control(bool crt_enabled)
-        : m_was_enabled(tiles.is_crt_enabled())
+        : m_old_mode(tiles.m_crt_mode)
     {
-        tiles.set_crt_enabled(crt_enabled);
+        tiles.m_crt_mode = crt_enabled ? CRT_NORMAL : CRT_DISABLED;
+    }
+
+    tiles_crt_control(WebtilesCRTMode mode,
+                      std::string tag = "")
+        : m_old_mode(tiles.m_crt_mode)
+    {
+        tiles.m_crt_mode = mode;
+        if (mode == CRT_MENU)
+        {
+            tiles.push_crt_menu(tag);
+        }
     }
 
     ~tiles_crt_control()
     {
-        tiles.set_crt_enabled(m_was_enabled);
+        if (tiles.m_crt_mode == CRT_MENU)
+        {
+            tiles.pop_menu();
+            tiles.clear_crt_menu();
+        }
+        tiles.m_crt_mode = m_old_mode;
     }
 
 private:
-    bool m_was_enabled;
+    WebtilesCRTMode m_old_mode;
 };
 
 #endif

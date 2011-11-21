@@ -1042,6 +1042,10 @@ bool deck_stack()
     }
     more();
 
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "deck_stack");
+#endif
+
     std::vector<card_type> draws;
     std::vector<uint8_t>   flags;
     for (int i = 0; i < num_cards; ++i)

@@ -330,8 +330,6 @@ std::vector<MenuEntry *> Menu::show(bool reuse_selections)
         first_entry = std::max((int)items.size() - pagesize, 0);
 
 #ifdef USE_TILE_WEB
-    webtiles_write_menu();
-    tiles.send_message();
     tiles.push_menu(this);
 #endif
 
@@ -339,7 +337,6 @@ std::vector<MenuEntry *> Menu::show(bool reuse_selections)
 
 #ifdef USE_TILE_WEB
     tiles.pop_menu();
-    tiles.send_message("{msg:'close_menu'}");
 #endif
 
     return (sel);
