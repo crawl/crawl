@@ -362,9 +362,6 @@ bool melee_attack::handle_phase_dodged()
         defender->atype() == ACT_PLAYER &&
         grid_distance(you.pos(), attacker->as_monster()->pos()) == 1)
     {
-        // Check for defender Spines
-        do_spines();
-
         // Only half the normal chance of retaliation for attacks after the
         // first one.
         if (attacker->alive() &&
@@ -375,7 +372,7 @@ bool melee_attack::handle_phase_dodged()
             do_minotaur_retaliation();
         }
 
-        // Spines and retaliations can kill!
+        // Retaliations can kill!
         if (!attacker->alive())
             return (false);
     }
@@ -812,6 +809,17 @@ bool melee_attack::attack()
     else
     {
         handle_phase_dodged();
+    }
+
+    if (attacker != defender && defender->atype() == ACT_PLAYER &&
+        grid_distance(you.pos(), attacker->as_monster()->pos()) == 1)
+    {
+        // Check for defender Spines
+        do_spines();
+
+        // Spines can kill!
+        if (!attacker->alive())
+            return (false);
     }
 
     // Remove sanctuary if - through some attack - it was violated.
