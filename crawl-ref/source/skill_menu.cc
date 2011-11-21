@@ -1370,6 +1370,10 @@ void SkillMenu::set_links()
 
 void skill_menu(int flag, int exp)
 {
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "skills");
+#endif
+
     clrscr();
     SkillMenu skm(flag, exp);
     int keyn;

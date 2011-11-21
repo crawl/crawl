@@ -275,6 +275,10 @@ void redraw_screen(void)
         return;
     }
 
+#ifdef USE_TILE_WEB
+    tiles.close_all_menus();
+#endif
+
     draw_border();
 
     you.redraw_title        = true;

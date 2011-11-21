@@ -2324,6 +2324,10 @@ void describe_feature_wide(const coord_def& pos, bool show_quote)
     describe_info inf;
     get_feature_desc(pos, inf);
 
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "describe_feature");
+#endif
+
     if (show_quote)
         print_quote(inf);
     else
@@ -2730,6 +2734,10 @@ bool describe_item(item_def &item, bool allow_inscribe, bool shopping)
 {
     if (!item.defined())
         return (true);
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "describe_item");
+#endif
 
     if (_can_show_spells(item))
       return _describe_spellbook(item);
@@ -3657,6 +3665,10 @@ void describe_monsters(const monster_info &mi, bool force_seen,
         else
             inf.footer += "\n" + footer;
     }
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "describe_monster");
+#endif
 
     if (show_quote)
     {
@@ -4739,6 +4751,10 @@ std::string get_skill_description(skill_type skill, bool need_title)
 void describe_skill(skill_type skill)
 {
     std::ostringstream data;
+
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "describe_skill");
+#endif
 
     data << get_skill_description(skill, true);
 

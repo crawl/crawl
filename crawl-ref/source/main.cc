@@ -1990,9 +1990,14 @@ void process_command(command_type cmd)
     case CMD_RESISTS_SCREEN:           print_overview_screen();        break;
 
     case CMD_DISPLAY_RELIGION:
+    {
+#ifdef USE_TILE_WEB
+        tiles_crt_control show_as_menu(CRT_MENU, "describe_god");
+#endif
         describe_god(you.religion, true);
         redraw_screen();
         break;
+    }
 
     case CMD_READ_MESSAGES:
 #ifdef DGL_SIMPLE_MESSAGING

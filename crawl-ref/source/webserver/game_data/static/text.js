@@ -1,49 +1,40 @@
 define(["jquery", "comm"], function ($, comm) {
+    var line_span = $("<span>");
+    line_span.css("white-space", "pre");
+
     function get_text_area_line(name, line)
     {
         var area = $("#" + name);
-        var current_line = line;
-        var append = "";
-        do
+        var lines = $("#" + name + " > span");
+        for (var i = lines.length; i <= line; ++i)
         {
-            var line_span = $("#" + name + "-" + current_line);
-            if (line_span[0])
-                break;
-
-            append = "<span style='white-space: pre;' id='" + name +
-                "-" + current_line + "'></span>" + append;
-
-            if (current_line == 0)
-            {
-                // first line didn't exist, so this wasn't handled by this function before
-                // -> clean up first
-                $("#" + name).html("");
-                break;
-            }
-            else
-            {
-                append = "<br>" + append;
-            }
-
-            current_line--;
+            if (i != 0)
+                area.append("<br>");
+            area.append(line_span.clone());
         }
-        while (true);
-
-        if (append !== "")
-            $("#" + name).append(append);
-
-        return $("#" + name + "-" + line);
+        return $("#" + name + " > span").eq(line);
     }
 
     function set_text_area_line(name, line, content)
     {
-        get_text_area_line(name, line).html(content);
+        var span = get_text_area_line(name, line);
+        span.html(content);
     }
 
     function handle_text_update(data)
     {
+        if (data.clear)
+        {
+            var lines = $("#" + data.id + " > span");
+            for (var i = 0; i < lines.length; ++i)
+            {
+                if (!(i in data.lines))
+                    lines.eq(i).html("");
+            }
+        }
         for (var line in data.lines)
             set_text_area_line(data.id, line, data.lines[line]);
+        $("#" + data.id).trigger("text_update");
     }
 
     comm.register_handlers({

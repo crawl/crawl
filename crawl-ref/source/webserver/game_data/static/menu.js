@@ -98,6 +98,18 @@ define(["jquery", "comm", "client", "./enums"], function ($, comm, client, enums
 
         $("#menu").html(menu_div);
 
+        if (menu.type === "crt")
+        {
+            // Custom-drawn CRT menu
+            menu_div.attr("id", "menu_txt");
+            client.show_dialog("#menu");
+            menu_div.bind("text_update", function () {
+                client.center_element($("#menu"));
+            });
+            return;
+        }
+
+        // Normal menu
         if (menu.title && menu.title.text)
         {
             menu_div.prepend("<div id='menu_title'>");

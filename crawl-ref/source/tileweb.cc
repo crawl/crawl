@@ -54,7 +54,7 @@ static unsigned int get_milliseconds()
 TilesFramework tiles;
 
 TilesFramework::TilesFramework()
-    : m_crt_enabled(true),
+    : m_crt_mode(CRT_NORMAL),
       m_view_loaded(false),
       m_next_view_tl(0, 0),
       m_next_view_br(-1, -1),
@@ -62,6 +62,7 @@ TilesFramework::TilesFramework()
       m_next_flash_colour(BLACK),
       m_need_full_map(true),
       m_text_crt("crt"),
+      m_text_menu("menu_txt"),
       m_text_stat("stats"),
       m_text_message("messages"),
       m_print_fg(15)
@@ -354,12 +355,40 @@ void TilesFramework::_send_version()
 
 void TilesFramework::push_menu(Menu* m)
 {
-    m_menu_stack.push_back(m);
+    MenuInfo mi;
+    mi.menu = m;
+    m_menu_stack.push_back(mi);
+    m->webtiles_write_menu();
+    tiles.send_message();
+}
+
+void TilesFramework::push_crt_menu(std::string tag)
+{
+    MenuInfo mi;
+    mi.menu = NULL;
+    mi.tag = tag;
+    m_menu_stack.push_back(mi);
+
+    json_open_object();
+    json_write_string("msg", "menu");
+    json_write_string("type", "crt");
+    json_write_string("tag", tag);
+    json_close_object();
+    send_message();
 }
 
 void TilesFramework::pop_menu()
 {
+    if (m_menu_stack.empty()) return;
+    MenuInfo mi = m_menu_stack.back();
     m_menu_stack.pop_back();
+    send_message("{msg:'close_menu'}");
+}
+
+void TilesFramework::close_all_menus()
+{
+    while (m_menu_stack.size())
+        pop_menu();
 }
 
 static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
@@ -898,6 +927,7 @@ void TilesFramework::resize()
     m_text_message.resize(crawl_view.msgsz.x, crawl_view.msgsz.y);
     m_text_stat.resize(crawl_view.hudsz.x, crawl_view.hudsz.y);
     m_text_crt.resize(crawl_view.termsz.x, crawl_view.termsz.y);
+    m_text_menu.resize(crawl_view.termsz.x, crawl_view.termsz.y);
 }
 
 /*
@@ -906,16 +936,17 @@ void TilesFramework::resize()
 void TilesFramework::_send_everything()
 {
     _send_version();
-    m_text_crt.send(true);
-    m_text_stat.send(true);
-    m_text_message.send(true);
     _send_layout_data();
+
     send_message("{msg:\"vgrdc\",x:%d,y:%d}",
                  m_current_gc.x - m_origin.x, m_current_gc.y - m_origin.y);
     send_message("{msg:\"flash\",col:%d}", m_current_flash_colour);
+
     _send_map(true);
     finish_message();
+
     send_message("{msg:'redraw'}");
+
     switch (m_active_layer)
     {
     case LAYER_CRT:
@@ -935,30 +966,35 @@ void TilesFramework::_send_everything()
     json_open_array("menus");
     for (unsigned int i = 0; i < m_menu_stack.size(); ++i)
     {
-        m_menu_stack[i]->webtiles_write_menu();
+        if (m_menu_stack[i].menu)
+            m_menu_stack[i].menu->webtiles_write_menu();
+        else
+        {
+            json_open_object();
+            json_write_string("msg", "menu");
+            json_write_string("type", "crt");
+            json_write_string("tag", m_menu_stack[i].tag);
+            json_close_object();
+        }
     }
     json_close_array();
     json_close_object();
     send_message();
+
+    m_text_crt.send(true);
+    m_text_stat.send(true);
+    m_text_message.send(true);
+    m_text_menu.send(true);
 }
 
 void TilesFramework::clrscr()
 {
     m_text_crt.clear();
+    m_text_menu.clear();
 
     this->cgotoxy(1, 1);
 
     set_need_redraw();
-}
-
-void TilesFramework::set_crt_enabled(bool value)
-{
-    m_crt_enabled = value;
-}
-
-bool TilesFramework::is_crt_enabled()
-{
-    return m_crt_enabled;
 }
 
 void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
@@ -968,16 +1004,20 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
     switch (region)
     {
     case GOTO_CRT:
-        if (m_crt_enabled > 0)
+        switch (m_crt_mode)
         {
+        case CRT_DISABLED:
+            m_print_area = NULL;
+            break;
+        case CRT_NORMAL:
             if (m_active_layer != LAYER_CRT)
                 send_message("{msg:'layer',layer:'crt'}");
             m_active_layer = LAYER_CRT;
             m_print_area = &m_text_crt;
-        }
-        else
-        {
-            m_print_area = NULL;
+            break;
+        case CRT_MENU:
+            m_print_area = &m_text_menu;
+            break;
         }
         break;
     case GOTO_MSG:
@@ -1004,6 +1044,7 @@ void TilesFramework::redraw()
     m_text_crt.send();
     m_text_stat.send();
     m_text_message.send();
+    m_text_menu.send();
 
     if (m_need_redraw)
     {

@@ -3413,6 +3413,10 @@ void god_pitch(god_type which_god)
         return;
     }
 
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "god_pitch");
+#endif
+
     describe_god(which_god, false);
 
     snprintf(info, INFO_SIZE, "Do you wish to %sjoin this religion?",
