@@ -2206,7 +2206,7 @@ void melee_attack::pain_affects_defender()
     if (defender->res_negative_energy())
         return;
 
-    if (x_chance_in_y(attacker->skill(SK_NECROMANCY) + 1, 8))
+    if (x_chance_in_y(attacker->skill_rdiv(SK_NECROMANCY) + 1, 8))
     {
         if (defender_visible)
         {
