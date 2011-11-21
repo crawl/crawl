@@ -746,6 +746,9 @@ bool melee_attack::handle_phase_end()
         mons_emit_foul_stench();
     }
 
+    // This may invalidate both the attacker and defender.
+    fire_final_effects();
+
     return(true);
 }
 
@@ -869,8 +872,7 @@ bool melee_attack::attack()
     if (!defender->alive())
     	handle_phase_killed();
 
-    // This may invalidate both the attacker and defender.
-    fire_final_effects();
+    handle_phase_end();
 
     enable_attack_conducts(conducts);
 
