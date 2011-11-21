@@ -454,63 +454,53 @@ bool melee_attack::handle_phase_hit()
     if (attacker != defender && attacker->self_destructs())
         return (did_hit = perceived_attack = true);
 
-    const bool shield_blocked = attack_shield_blocked(true);
+	// Slimify does no damage and serves as an on-hit effect, handle it
+	if (attacker->atype() == ACT_PLAYER && you.duration[DUR_SLIMIFY]
+		&& mon_can_be_slimified(defender->as_monster()))
+	{
+		// Bail out after sliming so we don't get aux unarmed and
+		// attack a fellow slime.
+		damage_done = 0;
+		slimify_monster(defender->as_monster());
+		you.duration[DUR_SLIMIFY] = 0;
 
-    if (shield_blocked)
-    {
-        if (!handle_phase_blocked())
-            return (false);
-    }
-    else
-    {
-        // Slimify does no damage and serves as an on-hit effect, handle it
-        if (attacker->atype() == ACT_PLAYER && you.duration[DUR_SLIMIFY]
-            && mon_can_be_slimified(defender->as_monster()))
-        {
-            // Bail out after sliming so we don't get aux unarmed and
-            // attack a fellow slime.
-            damage_done = 0;
-            slimify_monster(defender->as_monster());
-            you.duration[DUR_SLIMIFY] = 0;
+		return (true);
+	}
 
-            return (true);
-        }
+	// This does more than just calculate the damage, it also sets up
+	// messages, etc.
+	damage_done = calc_damage();
 
-        // This does more than just calculate the damage, it also sets up
-        // messages, etc.
-        damage_done = calc_damage();
+	// Check if some hit-effect killed the monster
+	if (attacker->atype() == ACT_PLAYER && player_monattk_hit_effects())
+		return (true);
 
-        // Check if some hit-effect killed the monster
-        if (attacker->atype() == ACT_PLAYER && player_monattk_hit_effects())
-        	return (true);
+	if (damage_done > 0)
+	{
+		if (!handle_phase_damaged())
+			return (false);
 
-        if (damage_done > 0)
-        {
-            if (!handle_phase_damaged())
-                return (false);
+		// TODO: Remove this, (placed here to remove player_attack)
+		if (attacker->atype() == ACT_PLAYER && hit_woke_orc)
+		{
+			// Call function of orcs first noticing you, but with
+			// beaten-up conversion messages (if applicable).
+			beogh_follower_convert(defender->as_monster(), true);
+		}
+	}
+	else
+	{
+		attack_verb = attacker->atype() == ACT_PLAYER
+								? attack_verb
+								: attacker->conj_verb(mons_attack_verb());
 
-            // TODO: Remove this, (placed here to remove player_attack)
-            if (attacker->atype() == ACT_PLAYER && hit_woke_orc)
-            {
-                // Call function of orcs first noticing you, but with
-                // beaten-up conversion messages (if applicable).
-                beogh_follower_convert(defender->as_monster(), true);
-            }
-        }
-        else
-        {
-            attack_verb = attacker->atype() == ACT_PLAYER
-                                    ? attack_verb
-                                    : attacker->conj_verb(mons_attack_verb());
-
-            // TODO: Clean this up if possible, checking atype for do / does is ugly
-            mprf("%s %s %s but %s no damage.",
-                     attacker->name(DESC_THE).c_str(),
-                     attack_verb.c_str(),
-                     defender->name(DESC_THE).c_str(),
-                     attacker->atype() == ACT_PLAYER ? "do" : "does");
-        }
-    }
+		// TODO: Clean this up if possible, checking atype for do / does is ugly
+		mprf("%s %s %s but %s no damage.",
+				 attacker->name(DESC_THE).c_str(),
+				 attack_verb.c_str(),
+				 defender->name(DESC_THE).c_str(),
+				 attacker->atype() == ACT_PLAYER ? "do" : "does");
+	}
 
     if(defender->props.exists("helpless"))
        defender->props.erase("helpless");
@@ -784,6 +774,7 @@ bool melee_attack::attack()
         : defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
 
     ev_margin = test_hit(to_hit, ev);
+    const bool shield_blocked = attack_shield_blocked(true);
 
     // Check for a stab (helpless or petrifying)
     if (to_hit >= ev && ev_helpless > ev)
@@ -805,6 +796,11 @@ bool melee_attack::attack()
         }
 
         handle_phase_hit();
+    }
+    else if (shield_blocked)
+    {
+        if (!handle_phase_blocked())
+            return (false);
     }
     else
     {
@@ -4672,6 +4668,8 @@ int melee_attack::test_hit(int to_land, int ev)
 {
     int   roll = -1;
     int margin = AUTOMATIC_HIT;
+
+    ev *= 2;
 
     if (to_land >= AUTOMATIC_HIT)
         return (true);
