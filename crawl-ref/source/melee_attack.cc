@@ -635,12 +635,19 @@ bool melee_attack::handle_phase_damaged()
 
         // Monsters attacking themselves don't get attack flavour.
         // The message sequences look too weird.  Also, stealing
-        // attacks aren't handled until after the damage msg.
-        if (attacker != defender && attk_flavour != AF_STEAL)
+        // attacks aren't handled until after the damage msg. Also,
+        // no attack flavours for dead defenders
+        if (attacker != defender && attk_flavour != AF_STEAL
+            && defender->alive())
+        {
             mons_apply_attack_flavour();
 
-        if (needs_message && !special_damage_message.empty())
-            mprf("%s", special_damage_message.c_str());
+            if (needs_message && !special_damage_message.empty())
+                mprf("%s", special_damage_message.c_str());
+
+            inflict_damage(special_damage, special_damage_flavour, true);
+        }
+
 
         // Defender banished.  Bail since the defender is still alive in the
         // Abyss.
@@ -652,8 +659,6 @@ bool melee_attack::handle_phase_damaged()
             do_miscast();
             return (false);
         }
-
-        inflict_damage(special_damage, special_damage_flavour, true);
 
         if (!defender->alive())
         {
@@ -700,9 +705,6 @@ bool melee_attack::handle_phase_damaged()
         // Miscast might have killed the attacker.
         if (!attacker->alive())
             return (false);
-
-        if (attk_flavour == AF_STEAL)
-            mons_apply_attack_flavour();
     }
 
     if (shroud_broken)
@@ -2789,7 +2791,7 @@ bool melee_attack::apply_damage_brand()
         calc_elemental_brand_damage(BEAM_FIRE, res,
                                     defender->is_icy() ? "melt" : "burn");
         defender->expose_to_element(BEAM_FIRE);
-        noise_factor += 400 / damage_done;
+        noise_factor += 400 / std::max(1, damage_done);
         break;
 
     case SPWPN_FREEZING:
@@ -2813,7 +2815,7 @@ bool melee_attack::apply_damage_brand()
         break;
 
     case SPWPN_ELECTROCUTION:
-        noise_factor += 800 / damage_done;
+        noise_factor += 800 / std::max(1, damage_done);
         if (defender->airborne() || defender->res_elec() > 0)
             break;
         else if (one_chance_in(3))
@@ -2842,7 +2844,7 @@ bool melee_attack::apply_damage_brand()
     case SPWPN_ORC_SLAYING:
         if (is_orckind(defender))
         {
-            special_damage = 1 + random2(3*damage_done/2);
+            special_damage = 1 + random2(3 * damage_done / 2);
             if (defender_visible)
             {
                 special_damage_message =
