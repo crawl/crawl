@@ -1926,16 +1926,10 @@ static bool _monster_resists_mass_enchantment(monster* mons,
 // If m_succumbed is non-NULL, will be set to the number of monsters that
 // were enchanted. If m_attempted is non-NULL, will be set to the number of
 // monsters that we tried to enchant.
-spret_type mass_enchantment(enchant_type wh_enchant, int pow,
-                            int *m_succumbed, int *m_attempted, bool fail)
+spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
 {
     fail_check();
     bool did_msg = false;
-
-    if (m_succumbed)
-        *m_succumbed = 0;
-    if (m_attempted)
-        *m_attempted = 0;
 
     // Give mass enchantments a power multiplier.
     pow *= 3;
@@ -1951,17 +1945,11 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow,
         bool resisted = _monster_resists_mass_enchantment(*mi, wh_enchant,
                                                           pow, &did_msg);
 
-        if (m_attempted && did_msg)
-            ++*m_attempted;
-
         if (resisted)
             continue;
 
         if (mi->add_ench(mon_enchant(wh_enchant, 0, &you)))
         {
-            if (m_succumbed)
-                ++*m_succumbed;
-
             // Do messaging.
             const char* msg;
             switch (wh_enchant)

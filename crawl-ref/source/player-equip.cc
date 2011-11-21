@@ -1162,8 +1162,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         break;
 
     case RING_WIZARDRY:
-        if (player_spell_skills())
-            ident = ID_KNOWN_TYPE;
+        ident = ID_KNOWN_TYPE;
         break;
 
     case RING_SEE_INVISIBLE:

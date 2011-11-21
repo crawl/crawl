@@ -3735,7 +3735,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         // No verb needed.
         msg = replace_all(msg, "@foe_god@",
                           _replace_god_name(god, false, false));
-        msg = replace_all(msg, "@foe_god@",
+        msg = replace_all(msg, "@Foe_god@",
                           _replace_god_name(god, false, true));
     }
 

@@ -940,6 +940,30 @@ xttttttttxxttxxx
 xxxxxxxxxxxxxx
 ENDMAP
 
+NAME:  nooodl_orcs_dogs
+DEPTH: D:10-, Orc
+: if you.absdepth() > 18 then
+MONS:  w:5 orc warlord / orc knight / orc warrior / orc sorcerer / w:5 orc wizard
+: elseif you.absdepth() > 13 then
+MONS:  orc knight / orc warrior / orc wizard / w:5 orc
+: else
+MONS:  orc warrior / orc wizard / orc
+: end
+MONS:  warg
+MAP
+.................
+.wwwwwww..wwwwwww.
+.wxxxxxx++xxxxxxw.
+.wx%...x..x...%xw.
+.wx.11.x..x.11.xw.
+.wx.22.+..+.22.xw.
+.wx.11.x..x.11.xw.
+.wx%..%x..x%..%xw.
+.wxxxxxxxxxxxxxxw.
+.wwwwwwwwwwwwwwww.
+..................
+ENDMAP
+
 #################################################################
 # checkpoints with guards to alert nearby monsters, by Core Xii
 NAME:   corexii_checkpoint_a
@@ -2225,63 +2249,6 @@ MAP
 .............
 ENDMAP
 
-NAME:    spider_temple_joshua
-DEPTH:   D:20-26
-TAGS:    no_rotate
-MONS:    naga mage / naga w:5 / naga skeleton w:2
-MONS:    wolf spider w:7 / giant mite w:3
-MONS:    oklob plant
-MONS:    jelly
-MONS:    trapdoor spider / wolf spider
-MONS:    guardian serpent
-MONS:    curse skull
-# Randomise wall type: in 50% of maps, you cannot dig to the stairs.
-SUBST:   x : xxxxxxvvvccb
-# Hints at the important secret doors (red colour). On the one hand, we
-# may be too nice here; on the other hand, that's spoily information.
-# (red blood tiles at the claws)
-COLOUR:  ' = red
-FTILE:   ' = floor_rough_red
-SUBST:   ' = .
-# With 25% chance, have lava and curse skull instead of water and oklobs:
-SUBST:   w : Ww.
-SUBST:   w = W.
-SHUFFLE: wU3 / wU3 / wU3 / l7L
-SUBST:   L = l
-# The legs are coloured and contain 10 spider monsters:
-COLOUR:  " : white / yellow / brown
-NSUBST:  " = 10:5 / *:"
-SUBST:   " = .
-MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxx"""""""xxxxxxxxxxxxxx""""""xxxxx
-xxxxx"xxxxxx"xxx..}...xxx"xxxxx"xxxxx
-xxxxx=xxxxxxx"xx...)..xx"xxxxxx=xxxxx
-xxxxx'xxxxxxxx"x..]...x"xxxxxxx'xxxxx
-xx"""""""xxxxxx=......=xxxxx"""""""xx
-x"xxxxxxx"xxwWxxxx+xxxxxW.x"xxxxxxx"x
-xx"xxxxxxx=..wWWw.1...wWW.=xxxxxxx"xx
-xxx"xxxxxxx.4WWW.2.2.WWWW.xxxxxxx"xxx
-xxxx"xxxxxx..wWWw.W3WWWWw.xxxxxx"xxxx
-xxxxx"xxxxx.1.wWWW3U3WWw2.xxxxx"xxxxx
-xxxxxx=xxxx2.1.wWWW3WWw12.xxxx=xxxxxx
-xxxxxx'xxxx.2.wWWWWWWw....xxxx'xxxxxx
-x"""""""""=x..WW....WW...x="""""""""x
-x"xxxxxxxxxxxxW...1...Wxxxxxxxxxxxx"x
-x"xxx""""""""+W.4...4.W+""""""""xxx"x
-x""='"xxxxxxxxxm.....mxxxxxxxxx"'=""x
-xxxxx"x........x+xxxxx........x"xxxxx
-....x"x........xWWWWWx........x"x....
-....x"x........xxxxxWx........x"x....
-....x"xx.......xxxWWWx.......xx"x....
-....xx"xx.....xxxx+xxxx.....xx"xx....
-.....xx"xx....x.......x....xx"xx.....
-......xx"xx...x..262..x...xx"xx......
-.......xx=xx..mx.....xm..xx=xx.......
-........xx'x...xm+++mx...x'xx........
-..................@..................
-ENDMAP
-
 NAME:    onia_ninara_dug_in_and_dangerous
 TAGS:    allow_dup abyss ruin_abyss
 DEPTH:   D:8-26, Vault
@@ -2336,6 +2303,20 @@ xd.........dx
 xxxxxx+xxxxxx
 ENDMAP
 
+NAME:  nooodl_food_tri
+TAGS:  no_rotate
+ITEM:  any food
+SUBST: R = 0d$...
+MAP
+       x
+      xxx
+     xxRxx
+    xxRRRxx
+   xxRRRRRxx
+  xxRRRRRRRxx
+ xxRRRRRRRRRxx
+xxxxxxx+xxxxxxx
+ENDMAP
 
 ################################################################
 #

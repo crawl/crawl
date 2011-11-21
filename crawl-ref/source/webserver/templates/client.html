@@ -78,21 +78,48 @@
       <div id="lobby_body">
         <span>
           Games currently running:
-          <a id="lobby_update_link" href="javascript:">(Refresh)</a>
         </span>
         <table id="player_list">
           <thead>
             <tr>
-              <th>User</th>
-              <th>Game</th>
-              <th>Where</th>
-              <th>Idle</th>
-              <th>Spectators</th>
+              <th class="username">User</th>
+              <th class="game_id">Game</th>
+              <th class="xl">XL</th>
+              <th class="char">Char</th>
+              <th class="place">Place</th>
+              <th class="god">God</th>
+              <th class="idle_time">Idle</th>
+              <th class="spectator_count">Specs</th>
+{% if config.milestone_file %}
+              <th class="milestone_col">Milestone</th>
+{% end %}
             </tr>
           </thead>
           <tbody>
           </tbody>
         </table>
+        <div style="display: none">
+          <table>
+            <tr id="game_entry_template">
+              <td class="username"></td>
+              <td class="game_id"></td>
+              <td class="xl"></td>
+              <td class="char"></td>
+              <td class="place"></td>
+              <td class="god"></td>
+              <td class="idle_time"></td>
+              <td class="spectator_count"></td>
+{% if config.milestone_file %}
+              <td class="milestone_col">
+                <div class="milestone_container">
+                  <div class="milestone">&nbsp;</div>
+                  <div class="new_milestone"></div>
+                </div>
+              </td>
+{% end %}
+            </tr>
+          </table>
+        </div>
       </div>
 
       <div id="footer">{% include footer.html %}</div>
@@ -105,11 +132,11 @@
     <div id="loader">
       <div id="loader_center">
         <span id="loader_text">Loading...</span><br>
-        <img style="display:none;" src="/static/title_denzi_dragon.png">
-        <img style="display:none;" src="/static/title_denzi_kitchen_duty.png">
-        <img style="display:none;" src="/static/title_denzi_summoner.png">
-        <img style="display:none;" src="/static/title_denzi_undead_warrior.png">
-        <img style="display:none;" src="/static/title_omndra_zot_demon.png">
+        <img style="display:none;" src="{{ static_url("title_denzi_dragon.png") }}">
+        <img style="display:none;" src="{{ static_url("title_denzi_kitchen_duty.png") }}">
+        <img style="display:none;" src="{{ static_url("title_denzi_summoner.png") }}">
+        <img style="display:none;" src="{{ static_url("title_denzi_undead_warrior.png") }}">
+        <img style="display:none;" src="{{ static_url("title_omndra_zot_demon.png") }}">
       </div>
 
       <div id="stale_processes_message" class="floating_dialog"

@@ -99,6 +99,8 @@ function volcano_portal (e)
         overview = "dark tunnel",
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
+        floor = "expired_portal",
+        feat_tile = "dngn_portal_volcano_gone",
         msg = messager })
     e.kfeat("O = enter_portal_vault")
     e.tile("O = dngn_portal_volcano")
@@ -122,8 +124,8 @@ function volcano_setup (e, metal, subvault)
     setup_loot(e)
     e.kfeat("< = exit_portal_vault")
     e.kfeat("I = exit_portal_vault")
-    e.tile("< = dngn_portal_volcano")
-    e.tile("I = dngn_portal_volcano")
+    e.tile("< = dngn_exit_volcano")
+    e.tile("I = dngn_exit_volcano")
     e.kfeat("^ = known alarm trap")
     e.subst("L : LLL.l")
     e.subst("L = lll.")

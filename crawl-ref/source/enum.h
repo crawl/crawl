@@ -1262,6 +1262,7 @@ enum dungeon_feature_type
     DNGN_ENTER_PORTAL_VAULT = 160,
     DNGN_EXIT_PORTAL_VAULT,
     DNGN_MALIGN_GATEWAY,
+    DNGN_EXPIRED_PORTAL,
 
     // Order of altars must match order of gods (god_type)
     DNGN_ALTAR_FIRST_GOD = 180,        // 180

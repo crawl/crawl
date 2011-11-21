@@ -45,10 +45,12 @@ function ossuary_portal(e)
         overview = "sand-covered staircase",
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
-        floor = "floor",
+        floor = "expired_portal",
+        feat_tile = "dngn_portal_ossuary_gone",
         msg = messager })
   e.kfeat("O = enter_portal_vault")
   e.colour("O = brown")
+  e.tile("O = dngn_portal_ossuary")
 end
 
 -- Use the following line in destination maps after all SUBSTs

@@ -196,7 +196,7 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
 
     case BRANCH_COCYTUS:
         flv.wall  = TILE_WALL_ICE;
-        flv.floor = TILE_FLOOR_ICE;
+        flv.floor = TILE_FLOOR_FROZEN;
         return;
 
     case BRANCH_ORCISH_MINES:
@@ -991,6 +991,11 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
             orig = TILE_DNGN_METAL_IRON;
         else if (orig == TILE_DNGN_CRYSTAL)
             orig = TILE_WALL_EMERALD;
+    }
+    else if (player_in_branch(BRANCH_COCYTUS))
+    {
+        if (orig == TILE_DNGN_STONE_WALL)
+            orig = TILE_WALL_ICY_STONE;
     }
     else if (player_in_branch(BRANCH_TARTARUS))
     {

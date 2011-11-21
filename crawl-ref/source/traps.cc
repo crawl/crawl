@@ -71,12 +71,6 @@ bool trap_def::type_has_ammo() const
     return (false);
 }
 
-void trap_def::message_trap_entry()
-{
-    if (type == TRAP_TELEPORT)
-        mpr("You enter a teleport trap!");
-}
-
 void trap_def::disarm()
 {
     if (type_has_ammo() && ammo_qty > 0 || type == TRAP_NET)
@@ -468,8 +462,7 @@ bool player_caught_in_web()
         return false;
 
     you.attribute[ATTR_HELD] = 10;
-    stop_running();
-    stop_delay(true); // even stair delays
+    // No longer stop_running() and stop_delay().
     redraw_screen(); // Account for changes in display.
     return (true);
 }
@@ -580,10 +573,6 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     if (in_sight)
         reveal();
 
-    // OK, something is going to happen.
-    if (you_trigger)
-        message_trap_entry();
-
     // Store the position now in case it gets cleared inbetween.
     const coord_def p(pos);
 
@@ -622,6 +611,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         // except when it's in sight, it's pretty obvious what happened. -doy
         if (!you_trigger && !you_know && !in_sight)
             hide();
+        if (you_trigger)
+            mpr("You enter a teleport trap!");
         if (ammo_qty > 0 && !--ammo_qty)
         {
             // can't use trap_destroyed, as we might recurse into a shaft

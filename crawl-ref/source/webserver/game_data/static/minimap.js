@@ -81,49 +81,11 @@ function ($, map_knowledge, dungeon_renderer, view_data,
     function get_cell_map_feature(map_cell)
     {
         var cell = map_cell.t;
-        if (!cell) return enums.MF_UNSEEN;
 
-        var fg_idx = cell.fg & enums.TILE_FLAG_MASK;
-        var bg_idx = cell.bg & enums.TILE_FLAG_MASK;
-
-        // TODO: This needs feature data
-        // Or at least send the minimap feature. Using tile data is very hacky
-
-        if (fg_idx == player.PLAYER)
+        if (cell && (cell.fg & enums.TILE_FLAG_MASK) == player.PLAYER)
             return enums.MF_PLAYER;
-        else if (fg_idx >= main.MAIN_MAX)
-        {
-            var att_flag = cell.fg & enums.TILE_FLAG_ATT_MASK;
-            if (att_flag == enums.TILE_FLAG_NEUTRAL)
-                return enums.MF_MONS_NEUTRAL;
-            else if (att_flag == enums.TILE_FLAG_GD_NEUTRAL)
-                return enums.MF_MONS_PEACEFUL;
-            else if (att_flag == enums.TILE_FLAG_PET)
-                return enums.MF_MONS_FRIENDLY;
-
-            if (map_cell.mon && map_cell.mon.typedata.no_exp)
-                return enums.MF_MONS_NO_EXP;
-            else
-                return enums.MF_MONS_HOSTILE;
-        }
-        else if (fg_idx >= main.CLOUD_FIRE_0 && fg_idx <= main.CLOUD_RAGING_WINDS_1)
-            return enums.MF_FEATURE;
-        else if (fg_idx > 0)
-            return enums.MF_ITEM;
-        else if (cell.bg & enums.TILE_FLAG_EXCL_CTR && (cell.bg & enums.TILE_FLAG_UNSEEN))
-            return enums.MF_EXCL_ROOT;
-        else if (cell.bg & enums.TILE_FLAG_TRAV_EXCL && (cell.bg & enums.TILE_FLAG_UNSEEN))
-            return enums.MF_EXCL;
-        else if (cell.bg & enums.TILE_FLAG_WATER)
-            return enums.MF_WATER;
-        else if (bg_idx > dngn.WALL_MAX)
-            return enums.MF_FEATURE;
-        else if (bg_idx >= dngn.FLOOR_MAX)
-            return enums.MF_WALL;
-        else if (bg_idx == 0)
-            return enums.MF_UNSEEN;
         else
-            return enums.MF_FLOOR;
+            return map_cell.mf;
     }
 
     function center()

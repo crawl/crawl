@@ -308,9 +308,7 @@ bool enchant_monster_with_flavour(monster* mon, actor *atk,
 
 bool enchant_monster_invisible(monster* mon, const std::string &how);
 
-spret_type mass_enchantment(enchant_type wh_enchant, int pow,
-                            int *m_succumbed = NULL, int *m_attempted = NULL,
-                            bool fail = false);
+spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail = false);
 
 bool poison_monster(monster* mons, const actor* who, int levels = 1,
                     bool force = false, bool verbose = true);

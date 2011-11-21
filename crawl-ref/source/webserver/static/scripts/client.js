@@ -464,9 +464,6 @@ function (exports, $, key_conversion, chat, comm) {
         set_layer("loader");
     }
 
-    var lobby_update_timeout = undefined;
-    var lobby_update_rate = 30000;
-
     function go_lobby()
     {
         document.title = "WebTiles - Dungeon Crawl Stone Soup";
@@ -481,49 +478,144 @@ function (exports, $, key_conversion, chat, comm) {
         chat.clear();
 
         watching = false;
-
-        lobby_update();
     }
 
     function lobby(enable)
     {
-        if (enable && lobby_update_timeout == undefined)
-        {
-            lobby_update_timeout = setInterval(lobby_update, lobby_update_rate);
-        }
-        else if (!enable && lobby_update_timeout != undefined)
-        {
-            clearInterval(lobby_update_timeout);
-        }
-
         $("#chat").toggle(!enable);
     }
-    function lobby_update()
+
+    var new_list = null;
+
+    function lobby_entry(data)
     {
-        send_message("update_lobby");
+        var single = false;
+        if (new_list == null)
+        {
+            single = true;
+            new_list = $("#player_list").clone();
+        }
+
+        var id = "game-" + data.id;
+        var entry = new_list.find("#" + id);
+        if (entry.length == 0)
+        {
+            entry = $("#game_entry_template").clone();
+            entry.attr("id", id);
+            new_list.append(entry);
+        }
+
+        function set(key, value)
+        {
+            entry.find("." + key).html(value);
+        }
+
+        var username_entry = $(make_watch_link(data));
+        username_entry.text(data.username);
+        set("username", username_entry);
+        set("game_id", data.game_id);
+        set("xl", data.xl);
+        set("char", data.char);
+        set("place", data.place);
+        set("god", data.god || "");
+        set("title", data.title);
+        set("idle_time", format_idle_time(data.idle_time));
+        entry.find(".idle_time").data("sort", "" + data.idle_time);
+        set("spectator_count", data.spectator_count);
+        if (entry.find(".milestone").text() !== data.milestone)
+        {
+            if (single)
+                roll_in_new_milestone(entry, data.milestone);
+            else
+                set("milestone", data.milestone);
+        }
+
+        if (single)
+            lobby_complete();
     }
-    function lobby_data(data)
+    function lobby_remove(data)
+    {
+        $("#game-" + data.id).remove();
+        if ($("#player_list tbody tr").length == 0)
+            $("#lobby_body").hide();
+    }
+
+    function lobby_clear()
+    {
+        new_list = $("#player_list").clone();
+        new_list.find("tbody").html("");
+    }
+    function lobby_complete()
     {
         var old_list = $("#player_list");
-        var l = old_list.clone();
-        l.find("tbody").html(data.content);
-        if (data.content.trim() != "")
+        var sortlist;
+        if (new_list.find("tbody tr").length > 0)
         {
-            var sortlist;
+            $("#lobby_body").show();
             if (old_list[0].config)
                 sortlist = old_list[0].config.sortList;
             else
                 sortlist = [[0, 0]];
-            l.tablesorter({
+            new_list.tablesorter({
                 sortList: sortlist,
-                headers: {
-                    3: {
-                        sorter: "timespan"
-                    }
-                }
+                textExtraction: extract_text_or_data
             });
         }
-        old_list.replaceWith(l);
+        else
+            $("#lobby_body").hide();
+        old_list.replaceWith(new_list);
+        new_list = null;
+    }
+
+    function make_watch_link(data)
+    {
+        return "<a href='#watch-" + data.username + "'></a>";
+    }
+
+    function format_idle_time(seconds)
+    {
+        var elem = $("<span></span>");
+        if (seconds == 0)
+        {
+            elem.text("");
+        }
+        else if (seconds < 120)
+        {
+            elem.text(seconds + " s");
+        }
+        else if (seconds < (60 * 60))
+        {
+            elem.text(Math.round(seconds / 60) + " min");
+        }
+        else
+        {
+            elem.text(Math.round(seconds / (60 * 60)) + " h");
+        }
+        return elem;
+    }
+
+    function extract_text_or_data(elem)
+    {
+        var $elem = $(elem);
+        if ($elem.data("sort"))
+            return $elem.data("sort");
+        else
+            return $elem.text();
+    }
+
+    function roll_in_new_milestone(row, milestone)
+    {
+        var td = row.find(".milestone_col");
+        if (td.length == 0) return;
+
+        var new_milestone = td.find(".new_milestone");
+        new_milestone.text(milestone);
+
+        var milestones = td.find(".new_milestone, .milestone");
+        milestones.animate({ top: "-1.1em" }, function () {
+            milestones.text(milestone);
+            milestones.css({ top: 0 });
+        });
     }
 
 
@@ -668,7 +760,11 @@ function (exports, $, key_conversion, chat, comm) {
 
         "set_game_links": set_game_links,
         "html": set_html,
-        "lobby": lobby_data,
+
+        "lobby_clear": lobby_clear,
+        "lobby_entry": lobby_entry,
+        "lobby_remove": lobby_remove,
+        "lobby_complete": lobby_complete,
 
         "go_lobby": go_lobby,
         "game_started": crawl_started,
@@ -714,8 +810,6 @@ function (exports, $, key_conversion, chat, comm) {
         $("#reg_cancel").bind("click", cancel_register);
 
         $("#rc_edit_form").bind("submit", send_rc);
-
-        $("#lobby_update_link").bind("click", lobby_update);
 
         $("#force_terminate_no").click(force_terminate_no);
         $("#force_terminate_yes").click(force_terminate_yes);
@@ -786,17 +880,6 @@ function (exports, $, key_conversion, chat, comm) {
                     showing_close_message = true;
                 }
             };
-
-            $.tablesorter.addParser({
-                id: 'timespan',
-                is: function(s) {
-                    return false;
-                },
-                format: function(s) {
-                    return s.substring(0, s.length - 1);
-                },
-                type: 'numeric'
-            });
         }
         else
         {
