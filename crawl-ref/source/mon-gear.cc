@@ -1056,12 +1056,7 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         break;
 
     case MONS_DEEP_DWARF_ARTIFICER:
-        if (coinflip())
-        {
-            item.base_type = OBJ_STAVES;
-            item.sub_type  = STAFF_STRIKING;
-        }
-        else if (one_chance_in(100))
+        if (one_chance_in(25))
         {
             dprf("generating a rare rod");
             const int rand_staff = random2(NUM_STAVES - STAFF_FIRST_ROD)
@@ -1071,9 +1066,8 @@ static item_make_species_type _give_weapon(monster* mon, int level,
         }
         else
         {
-            item_race = MAKE_ITEM_DWARVEN;
-            item.base_type = OBJ_WEAPONS;
-            item.sub_type  = ((one_chance_in(3))? WPN_HAND_AXE: WPN_BROAD_AXE);
+            item.base_type = OBJ_STAVES;
+            item.sub_type  = STAFF_STRIKING;
         }
         break;
 

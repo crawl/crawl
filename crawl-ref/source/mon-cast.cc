@@ -573,7 +573,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_STRIKING:
         beam.name      = "force bolt",
-        beam.damage    = dice_def(1, 8),
+        beam.damage    = dice_def(3, 10),
         beam.colour    = BLACK,
         beam.glyph    = dchar_glyph(DCHAR_FIRED_MISSILE);
         beam.flavour  = BEAM_MMISSILE;
