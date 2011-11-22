@@ -1035,6 +1035,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         }
         else if (player_mutation_level(MUT_TENTACLE_SPIKE))
         {
+            aux_attack = "tentacle spike";
             aux_verb = "pierce";
 
             // Max spike damage: 8.
@@ -1105,7 +1106,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
         }
         else if (you.has_usable_tentacles())
         {
-            aux_verb = "tentacle-slap";
+            aux_attack = aux_verb = "tentacle-slap";
             noise_factor = 125;
         }
 
