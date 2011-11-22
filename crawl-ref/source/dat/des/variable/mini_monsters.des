@@ -983,6 +983,7 @@ MARKER: + = lua:props_marker { \
             }
 MARKER: + = lua:restrict_door()
 MARKER: = = lua:restrict_door()
+SUBST:  ! = .
 MAP
 xxxxxxxxxx
 xxxxx=xxxx
