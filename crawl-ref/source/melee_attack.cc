@@ -837,12 +837,6 @@ bool melee_attack::attack()
             chaos_affects_attacker();
 
         do_miscast();
-
-        // Odd place to do this, we'll see if we want to move it
-        // On a more up-to-date thought, this is already done in handle_phase_
-        // end so we'll comment it out for now to see if it stops working
-        //if (can_do_unarmed && where == defender->pos())
-        //    player_aux_unarmed();
     }
     else
     {
@@ -1178,11 +1172,8 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
         baseattack = UNAT_HEADBUTT;
 
     // Octopodes turn kicks into punches.
-    if (you.species == SP_OCTOPODE && baseattack == UNAT_KICK
-        && (!player_mutation_level(MUT_TENTACLE_SPIKE) || coinflip()))
-    {
+    if (you.species == SP_OCTOPODE && baseattack == UNAT_KICK)
         baseattack = UNAT_PUNCH;
-    }
 
     if (_tran_forbid_aux_attack(baseattack))
         baseattack = UNAT_NO_ATTACK;
