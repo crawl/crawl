@@ -768,7 +768,6 @@ bool melee_attack::attack()
 
     // Calculate various ev values and begin to check them to determine the
     // correct handle_phase_ handler.
-    coord_def where = defender->pos();
     const int ev = defender->melee_evasion(attacker);
     const int ev_helpless = defender_invisible ? ev
         : defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
@@ -1555,7 +1554,9 @@ int melee_attack::player_apply_weapon_bonuses(int damage)
         {
             if (you.religion == GOD_BEOGH && !player_under_penance())
             {
+#ifdef DEBUG_DIAGNOSTICS
                 const int orig_damage = damage;
+#endif
 
                 if (you.piety > 80 || coinflip())
                     damage++;
@@ -3389,7 +3390,9 @@ int melee_attack::calc_to_hit(bool random)
                 15 + (calc_stat_to_hit_base() / 2)
               : 18 + attacker->get_experience_level() * hd_mult / 10;
 
+#ifdef DEBUG_DIAGNOSTICS
     const int base_hit = mhit;
+#endif
 
     if (wearing_amulet(AMU_INACCURACY))
         mhit -= 5;
@@ -4853,8 +4856,9 @@ int melee_attack::calc_damage()
 
         if (frenzy_degree == -1)
         {
-
+#ifdef DEBUG_DIAGNOSTICS
             const int orig_damage = damage;
+#endif
 
             damage = damage * (115 + frenzy_degree * 15) / 100;
 
