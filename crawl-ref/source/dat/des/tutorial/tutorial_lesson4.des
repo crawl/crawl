@@ -332,7 +332,7 @@ FTILE:   dABCDE = tutorial_pad
 ITEM:    scroll of amnesia
 ITEM:    randbook numspells:1 spells:animate_skeleton title:Necromancy_for_Newbies owner:player
 ITEM:    never_decay bat skeleton / never_decay goblin; nothing skeleton
-ITEM:    never_decay small snake skeleton / never_decay jackal skeleton
+ITEM:    never_decay ball python skeleton / never_decay jackal skeleton
 MONS:    hobgoblin always_corpse; shield not_cursed . ring mail race:none not_cursed
 MONS:    rat
 MONS:    goblin

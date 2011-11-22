@@ -3633,7 +3633,7 @@ static monsterentry mondata[] = {
 
 // snakes ('S')
 {
-    MONS_SMALL_SNAKE, 'S', GREEN, "small snake",
+    MONS_SMALL_SNAKE, 'S', GREEN, "ball python",
     M_COLD_BLOOD,
     MR_NO_FLAGS,
     100, 13, MONS_SNAKE, MONS_SMALL_SNAKE, MH_NATURAL, -1,
@@ -3645,7 +3645,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_SNAKE, 'S', LIGHTGREEN, "snake",
+    MONS_SNAKE, 'S', LIGHTGREEN, "adder",
     M_COLD_BLOOD,
     MR_NO_FLAGS,
     200, 10, MONS_SNAKE, MONS_SNAKE, MH_NATURAL, -3,
