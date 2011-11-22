@@ -305,3 +305,13 @@ void actor::clear_clinging()
     if (props.exists("clinging"))
         props["clinging"] = false;
 }
+
+bool actor::is_constricting()
+{
+    for (int i=0; i<8; i++)
+        if (constricting[i] != 0)
+	    return true;
+
+    return false;
+}
+

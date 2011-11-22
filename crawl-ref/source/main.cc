@@ -3000,6 +3000,9 @@ static void _player_reacts()
         expose_player_to_element(BEAM_LAVA);
 
     _decrement_durations();
+    // increment constriction durations
+    you.accum_been_constricted();
+    you.accum_has_constricted();
 
     int capped_time = you.time_taken;
     if (you.walking && capped_time > BASELINE_DELAY)

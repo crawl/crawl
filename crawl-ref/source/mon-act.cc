@@ -1952,6 +1952,10 @@ void handle_monster_move(monster* mons)
     if (mons->speed == 0)
         _mons_in_cloud(mons);
 
+    // Update constriction durations
+    mons->accum_been_constricted();
+    mons->accum_has_constricted();
+
     // Apply monster enchantments once for every normal-speed
     // player turn.
     mons->ench_countdown -= you.time_taken;

@@ -5337,3 +5337,16 @@ bool monster::nightvision() const
 {
     return (undead_or_demonic() || god == GOD_YREDELEMNUL);
 }
+
+void monster::accum_been_constricted()
+{
+    if (constricted_by)
+            dur_been_constricted += you.time_taken;
+}
+
+void monster::accum_has_constricted()
+{
+    for (int i = 0; i < 8; i++)
+        if (constricting[i])
+            dur_has_constricted[i] += you.time_taken;
+}
