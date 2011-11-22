@@ -137,8 +137,6 @@ private:
     void mons_do_eyeball_confusion();
 
     attack_flavour random_chaos_attack_flavour();
-    bool _make_zombie(monster* mon, int corpse_class, int corpse_index,
-                      item_def &fake_corpse, int last_item);
 private:
     // Player-attack specific stuff
     // Auxiliary unarmed attacks.
