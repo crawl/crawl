@@ -1833,11 +1833,6 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
         book[1] = MST_NECROMANCER_II;
         break;
 
-    case MONS_UNBORN_DEEP_DWARF:
-        book[0] = MST_UNBORN_DEEP_DWARF;
-        book[1] = MST_NECROMANCER_I;
-        break;
-
     case MONS_ORC_WIZARD:
     case MONS_DEEP_ELF_SOLDIER:
     case MONS_DEEP_ELF_FIGHTER:
