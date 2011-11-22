@@ -365,7 +365,7 @@ ENDMAP
 NAME:  minmay_snake_closets
 TAGS:  no_monster_gen no_item_gen
 DEPTH: D:2-4
-MONS:  snake / small snake
+MONS:  adder / ball python
 ITEM:  any scroll / any potion
 SUBST: ? = 111d
 MAP
@@ -435,7 +435,7 @@ ENDMAP
 NAME:   saegor_snake_ambush
 TAGS:   no_monster_gen no_pool_fixup
 DEPTH:  D:3-5
-KMONS:  S = w:3 snake / w:4 small_snake / w:5 plant / nothing
+KMONS:  S = w:3 adder / w:4 ball python / w:5 plant / nothing
 KFEAT:  SX = W
 KITEM:  X = gold
 KPROP:  W = no_rtele_into
@@ -490,7 +490,7 @@ ENDMAP
 NAME:  pond
 DEPTH: D:10-27, Lair
 MONS:  plant w:30 / fungus
-MONS:  giant frog w:30 / snake / rat / green rat / swamp drake w:2
+MONS:  giant frog w:30 / adder / rat / green rat / swamp drake w:2
 MONS:  vampire mosquito
 SUBST: ! : w.
 SUBST: 2 : 23
@@ -603,7 +603,7 @@ NAME:  minmay_serpent_palace
 TAGS:  no_monster_gen no_item_gen
 DEPTH: D:18-
 MONS:  naga / naga warrior w:2 / naga mage w:1, greater naga / guardian serpent
-MONS:  small snake / snake / water moccasin / black mamba / anaconda
+MONS:  ball python / adder / water moccasin / black mamba / anaconda
 MONS:  lindwurm
 SUBST: 1 = 11., 3 = ...3
 SUBST: c : cv
