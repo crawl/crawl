@@ -640,7 +640,7 @@ void update_vision_range()
     set_los_radius(you.current_vision);
 }
 
-// Checks whether the player's current species can use
+// Checks whether the player's current species can
 // use (usually wear) a given piece of equipment.
 // Note that EQ_BODY_ARMOUR and EQ_HELMET only check
 // the ill-fitting variant (i.e., not caps and robes).
