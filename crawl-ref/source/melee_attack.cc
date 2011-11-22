@@ -454,56 +454,56 @@ bool melee_attack::handle_phase_hit()
     if (attacker != defender && attacker->self_destructs())
         return (did_hit = perceived_attack = true);
 
-	// Slimify does no damage and serves as an on-hit effect, handle it
-	if (attacker->atype() == ACT_PLAYER && you.duration[DUR_SLIMIFY]
-		&& mon_can_be_slimified(defender->as_monster()))
-	{
-		// Bail out after sliming so we don't get aux unarmed and
-		// attack a fellow slime.
-		damage_done = 0;
-		slimify_monster(defender->as_monster());
-		you.duration[DUR_SLIMIFY] = 0;
+    // Slimify does no damage and serves as an on-hit effect, handle it
+    if (attacker->atype() == ACT_PLAYER && you.duration[DUR_SLIMIFY]
+        && mon_can_be_slimified(defender->as_monster()))
+    {
+        // Bail out after sliming so we don't get aux unarmed and
+        // attack a fellow slime.
+        damage_done = 0;
+        slimify_monster(defender->as_monster());
+        you.duration[DUR_SLIMIFY] = 0;
 
-		return (true);
-	}
+        return (true);
+    }
 
-	// This does more than just calculate the damage, it also sets up
-	// messages, etc.
-	damage_done = calc_damage();
+    // This does more than just calculate the damage, it also sets up
+    // messages, etc.
+    damage_done = calc_damage();
 
-	// Check if some hit-effect killed the monster
-	if (attacker->atype() == ACT_PLAYER && player_monattk_hit_effects())
-		return (true);
+    // Check if some hit-effect killed the monster
+    if (attacker->atype() == ACT_PLAYER && player_monattk_hit_effects())
+        return (true);
 
-	if (damage_done > 0)
-	{
-		if (!handle_phase_damaged())
-			return (false);
+    if (damage_done > 0)
+    {
+        if (!handle_phase_damaged())
+            return (false);
 
-		// TODO: Remove this, (placed here to remove player_attack)
-		if (attacker->atype() == ACT_PLAYER && hit_woke_orc)
-		{
-			// Call function of orcs first noticing you, but with
-			// beaten-up conversion messages (if applicable).
-			beogh_follower_convert(defender->as_monster(), true);
-		}
-	}
-	else
-	{
-		attack_verb = attacker->atype() == ACT_PLAYER
-								? attack_verb
-								: attacker->conj_verb(mons_attack_verb());
+        // TODO: Remove this, (placed here to remove player_attack)
+        if (attacker->atype() == ACT_PLAYER && hit_woke_orc)
+        {
+            // Call function of orcs first noticing you, but with
+            // beaten-up conversion messages (if applicable).
+            beogh_follower_convert(defender->as_monster(), true);
+        }
+    }
+    else
+    {
+        attack_verb = attacker->atype() == ACT_PLAYER
+                      ? attack_verb
+                      : attacker->conj_verb(mons_attack_verb());
 
-		// TODO: Clean this up if possible, checking atype for do / does is ugly
-		mprf("%s %s %s but %s no damage.",
-				 attacker->name(DESC_THE).c_str(),
-				 attack_verb.c_str(),
-				 defender->name(DESC_THE).c_str(),
-				 attacker->atype() == ACT_PLAYER ? "do" : "does");
-	}
+        // TODO: Clean this up if possible, checking atype for do / does is ugly
+        mprf("%s %s %s but %s no damage.",
+             attacker->name(DESC_THE).c_str(),
+             attack_verb.c_str(),
+             defender->name(DESC_THE).c_str(),
+             attacker->atype() == ACT_PLAYER ? "do" : "does");
+    }
 
-    if(defender->props.exists("helpless"))
-       defender->props.erase("helpless");
+    if (defender->props.exists("helpless"))
+        defender->props.erase("helpless");
 
     return (true);
 }
@@ -724,8 +724,8 @@ bool melee_attack::handle_phase_end()
     if (attacker->atype() == ACT_PLAYER && can_do_unarmed
         && adjacent(defender->pos(), attacker->pos()))
     {
-    	// returns whether an aux attack successfully took place
-    	player_aux_unarmed();
+        // returns whether an aux attack successfully took place
+        player_aux_unarmed();
     }
 
     // Check for passive mutation effects.
@@ -743,7 +743,7 @@ bool melee_attack::handle_phase_end()
 
 bool melee_attack::attack()
 {
-    if(!handle_phase_attempted())
+    if (!handle_phase_attempted())
         return (false);
 
     // Stuff for god conduct, this has to remain here for scope reasons.
@@ -875,7 +875,7 @@ bool melee_attack::attack()
     }
 
     if (!defender->alive())
-    	handle_phase_killed();
+        handle_phase_killed();
 
     handle_phase_end();
 
@@ -1391,7 +1391,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
              you.can_see(defender) ? ", but do no damage" : "");
     }
 
-    if(defender->props.exists("helpless"))
+    if (defender->props.exists("helpless"))
         defender->props.erase("helpless");
 
     if (defender->as_monster()->hit_points < 1)
@@ -1451,8 +1451,8 @@ void melee_attack::player_warn_miss()
         behaviour_event(defender->as_monster(), ME_WHACK, MHITYOU);
 
     mprf("%s%s.",
-    	 player_why_missed().c_str(),
-    	 defender->name(DESC_THE).c_str());
+         player_why_missed().c_str(),
+         defender->name(DESC_THE).c_str());
 }
 
 int melee_attack::player_stat_modify_damage(int damage)
@@ -2503,9 +2503,9 @@ void melee_attack::chaos_affects_attacker()
         return;
 
     coord_def dest(-1, -1);
-	// Prefer to send it under the defender.
-	if (defender->alive() && defender->pos() != attacker->pos())
-		dest = defender->pos();
+    // Prefer to send it under the defender.
+    if (defender->alive() && defender->pos() != attacker->pos())
+        dest = defender->pos();
 
     // Move stairs out from under the attacker.
     if (one_chance_in(100) && move_stairs(attacker->pos(), dest))
@@ -3401,7 +3401,7 @@ int melee_attack::calc_to_hit(bool random)
     // implementation of a more universal (and elegant) to-hit calculation
     // is designed. The actual code is copied from the old mons_to_hit and
     // player_to_hit methods.
-    if(attacker->atype() == ACT_PLAYER)
+    if (attacker->atype() == ACT_PLAYER)
     {
         // fighting contribution
         mhit += maybe_random_div(you.skill(SK_FIGHTING, 100), 100, random);
@@ -3495,7 +3495,7 @@ int melee_attack::calc_to_hit(bool random)
         // If no defender, we're calculating to-hit for debug-display
         // purposes, so don't drop down to defender code below (there is none)
         if (defender == NULL)
-        	return (mhit);
+            return (mhit);
     }
     else
     {
@@ -3507,7 +3507,7 @@ int melee_attack::calc_to_hit(bool random)
             mhit += weapon->plus + property(*weapon, PWPN_HIT);
         }
 
-        if(weapon && item_is_rod(*weapon))
+        if (weapon && item_is_rod(*weapon))
             mhit += (short)weapon->props["rod_enchantment"];
     }
 
@@ -3549,7 +3549,7 @@ int melee_attack::calc_to_hit(bool random)
  */
 int melee_attack::calc_attack_delay(bool random)
 {
-    if(attacker->atype() == ACT_PLAYER)
+    if (attacker->atype() == ACT_PLAYER)
     {
         random_var attack_delay = weapon ? player_weapon_speed()
                                          : player_unarmed_speed();
@@ -3914,9 +3914,9 @@ void melee_attack::mons_do_poison()
 
         if (needs_message)
         {
-			mprf("%s poisons %s!",
-				 atk_name(DESC_THE).c_str(),
-				 defender_name().c_str());
+            mprf("%s poisons %s!",
+                 atk_name(DESC_THE).c_str(),
+                 defender_name().c_str());
         }
     }
 }
@@ -4171,20 +4171,20 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_PARALYSE:
     {
         // Only wasps at the moment.
-    	if (attacker->type == MONS_RED_WASP || one_chance_in(3))
-			defender->poison(attacker, coinflip() ? 2 : 1);
+        if (attacker->type == MONS_RED_WASP || one_chance_in(3))
+            defender->poison(attacker, coinflip() ? 2 : 1);
 
-		int paralyse_roll = (damage_done > 4 ? 3 : 20);
-		if (attacker->type == MONS_YELLOW_WASP)
-			paralyse_roll += 3;
+        int paralyse_roll = (damage_done > 4 ? 3 : 20);
+        if (attacker->type == MONS_YELLOW_WASP)
+            paralyse_roll += 3;
 
-		if (defender->res_poison() <= 0)
-		{
-			if (one_chance_in(paralyse_roll))
-				defender->paralyse(attacker, roll_dice(1, 3));
-			else
-				defender->slow_down(attacker, roll_dice(1, 3));
-		}
+        if (defender->res_poison() <= 0)
+        {
+            if (one_chance_in(paralyse_roll))
+                defender->paralyse(attacker, roll_dice(1, 3));
+            else
+                defender->slow_down(attacker, roll_dice(1, 3));
+        }
         break;
     }
 
@@ -4716,7 +4716,7 @@ int melee_attack::calc_base_weapon_damage()
 {
     int damage = 0;
 
-    if(attacker->atype() == ACT_PLAYER)
+    if (attacker->atype() == ACT_PLAYER)
     {
         if (weapon->base_type == OBJ_WEAPONS && !is_range_weapon(*weapon)
             || weapon->base_type == OBJ_STAVES)
@@ -4746,7 +4746,7 @@ int melee_attack::calc_base_unarmed_damage()
 {
     int damage = 0;
 
-    if(attacker->atype() == ACT_PLAYER)
+    if (attacker->atype() == ACT_PLAYER)
     {
         damage = you.duration[DUR_CONFUSING_TOUCH] ? 0 : 3;
 
@@ -4801,7 +4801,7 @@ int melee_attack::calc_base_unarmed_damage()
 
 int melee_attack::calc_damage()
 {
-    if(attacker->atype() == ACT_MONSTER)
+    if (attacker->atype() == ACT_MONSTER)
     {
         monster *as_mon = attacker->as_monster();
 
@@ -4823,7 +4823,7 @@ int melee_attack::calc_damage()
             }
 
             int wpn_damage_plus = weapon->plus2;
-            if(item_is_rod(*weapon))
+            if (item_is_rod(*weapon))
                 wpn_damage_plus = (short)weapon->props["rod_enchantment"];
 
             if (wpn_damage_plus >= 0)
@@ -4929,7 +4929,7 @@ int melee_attack::apply_defender_ac(int damage, int damage_max)
                       : 0;
     if (ac > 0)
     {
-        if(attacker->atype() == ACT_PLAYER)
+        if (attacker->atype() == ACT_PLAYER)
         {
             damage -= random2(1 + defender->armour_class() - stab_bypass);
         }
