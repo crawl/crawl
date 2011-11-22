@@ -312,7 +312,6 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
 int spell_fail(spell_type spell)
 {
     int chance = 60;
-    int chance2 = 0;
 
     // Don't cap power for failure rate purposes.
     chance -= 6 * calc_spell_power(spell, false, true, false);
@@ -339,7 +338,7 @@ int spell_fail(spell_type spell)
     default: chance += 750; break;
     }
 
-    chance2 = chance;
+    int chance2 = chance;
 
     const int chance_breaks[][2] = {
         {45, 45}, {42, 43}, {38, 41}, {35, 40}, {32, 38}, {28, 36},
