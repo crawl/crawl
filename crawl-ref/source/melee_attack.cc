@@ -871,11 +871,10 @@ bool melee_attack::attack()
             // Try to switch to a melee weapon in a/b slot if we don't have one
             // wielded and end the turn.
             if (Options.auto_switch && !wielded_weapon_check(weapon, true))
-                for(int i = 0; i <= 1; ++i)
-                    if(is_melee_weapon(&you.inv[i]))
-                        if(wield_weapon(true, i))
-                             return (false);
-
+                for (int i = 0; i <= 1; ++i)
+                    if (is_melee_weapon(&you.inv[i]))
+                        if (wield_weapon(true, i))
+                            return (false);
         }
         else
             you.pet_target = attacker->mindex();
@@ -961,7 +960,7 @@ void melee_attack::adjust_noise()
             break;
         }
 
-        switch(attk_flavour)
+        switch (attk_flavour)
         {
         case AF_FIRE:
             noise_factor += 50;
@@ -1325,7 +1324,7 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
     aux_damage = inflict_damage(aux_damage, BEAM_MISSILE);
     damage_done = aux_damage;
 
-    switch(atk)
+    switch (atk)
     {
         case UNAT_PUNCH:
             apply_bleeding = true;
@@ -1864,7 +1863,7 @@ void melee_attack::set_attack_verb()
             attack_verb = "thrash";
         else
         {
-            switch(defender->holiness())
+            switch (defender->holiness())
             {
             case MH_HOLY:
             case MH_NATURAL:
