@@ -34,6 +34,7 @@ int resist_adjust_damage(actor *defender, beam_type flavour,
 
 int weapon_str_weight(object_class_type wpn_class, int wpn_type);
 
+bool is_melee_weapon(const item_def *weapon);
 bool wielded_weapon_check(item_def *weapon, bool no_message = false);
 int calc_heavy_armour_penalty(bool random_factor);
 

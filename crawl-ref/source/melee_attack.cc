@@ -30,6 +30,7 @@
 #include "map_knowledge.h"
 #include "feature.h"
 #include "fineff.h"
+#include "fight.h"
 #include "fprop.h"
 #include "food.h"
 #include "goditem.h"
@@ -53,6 +54,7 @@
 #include "mon-stuff.h"
 #include "mon-util.h"
 #include "mutation.h"
+#include "options.h"
 #include "ouch.h"
 #include "player.h"
 #include "random-var.h"
@@ -868,9 +870,9 @@ bool melee_attack::attack()
 
             // Try to switch to a melee weapon in a/b slot if we don't have one
             // wielded and end the turn.
-            if (Options.auto_switch && !wielded_weapon_check(attk.weapon,true))
+            if (Options.auto_switch && !wielded_weapon_check(weapon, true))
                 for(int i = 0; i <= 1; ++i)
-                    if(_is_melee_weapon(&you.inv[i]))
+                    if(is_melee_weapon(&you.inv[i]))
                         if(wield_weapon(true, i))
                              return (false);
 
