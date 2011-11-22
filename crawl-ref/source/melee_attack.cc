@@ -863,7 +863,18 @@ bool melee_attack::attack()
         && env.sanctuary_time <= 0)
     {
         if (defender->atype() == ACT_PLAYER)
+        {
             interrupt_activity(AI_MONSTER_ATTACKS, attacker->as_monster());
+
+            // Try to switch to a melee weapon in a/b slot if we don't have one
+            // wielded and end the turn.
+            if (Options.auto_switch && !wielded_weapon_check(attk.weapon,true))
+                for(int i = 0; i <= 1; ++i)
+                    if(_is_melee_weapon(&you.inv[i]))
+                        if(wield_weapon(true, i))
+                             return (false);
+
+        }
         else
             you.pet_target = attacker->mindex();
     }
@@ -1191,7 +1202,7 @@ bool melee_attack::player_aux_test_hit()
         defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
 
     if (you.penance[GOD_ELYVILON]
-        && god_hates_your_god(GOD_ELYVILON, you.religion))
+        && god_hates_your_god(GOD_ELYVILON))
     {
         simple_god_message(" blocks your attack.", GOD_ELYVILON);
         dec_penance(GOD_ELYVILON, 1);
@@ -4354,9 +4365,7 @@ void melee_attack::do_spines()
     if (body)
         evp = -property(*body, PARM_EVASION);
 
-    if (you.mutation[MUT_SPINY]
-        && attacker->alive()
-        && one_chance_in(evp + 1))
+    if (you.mutation[MUT_SPINY] && attacker->alive() && one_chance_in(evp + 1))
     {
         if (test_hit(2 + 4 * mut, attacker->melee_evasion(defender)) < 0)
         {
