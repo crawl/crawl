@@ -11,7 +11,7 @@
  * cell in between, and if the cells are in LOS range of each
  * other.
  *
- * Here, to "meet" a cell means to intersect the interiour. In
+ * Here, to "meet" a cell means to intersect the interior. In
  * particular, rays can pass between to diagonally adjacent
  * walls (as can the player).
  *
