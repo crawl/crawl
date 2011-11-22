@@ -364,10 +364,10 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
 
 tileidx_t tileidx_feature(const coord_def &gc)
 {
-    dungeon_feature_type feat = env.grid(gc);
+    dungeon_feature_type feat = env.map_knowledge(gc).feat();
 
     tileidx_t override = env.tile_flv(gc).feat;
-    bool can_override = !feat_is_door(grd(gc))
+    bool can_override = !feat_is_door(feat)
                         && feat != DNGN_FLOOR
                         && feat != DNGN_UNSEEN;
     if (override && can_override)
@@ -385,6 +385,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
     {
         coord_def door;
         dungeon_feature_type door_feat;
+        // FIXME: This accesses grd directly, instead of map_knowledge
         find_secret_door_info(gc, &door_feat, &door);
 
         // If surrounding tiles from a secret door are using tile
@@ -399,8 +400,8 @@ tileidx_t tileidx_feature(const coord_def &gc)
         const coord_def left(gc.x - 1, gc.y);
         const coord_def right(gc.x + 1, gc.y);
 
-        bool door_left  = feat_is_closed_door(grd(left));
-        bool door_right = feat_is_closed_door(grd(right));
+        bool door_left  = feat_is_closed_door(env.map_knowledge(left).feat());
+        bool door_right = feat_is_closed_door(env.map_knowledge(right).feat());
 
         if (door_left || door_right)
         {
@@ -416,7 +417,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
     case DNGN_TRAP_MECHANICAL:
     case DNGN_TRAP_MAGICAL:
     case DNGN_TRAP_NATURAL:
-                return (_tileidx_trap(get_trap_type(gc)));
+        return (_tileidx_trap(env.map_knowledge(gc).trap()));
 
     case DNGN_TRAP_WEB:
     {
@@ -434,9 +435,8 @@ tileidx_t tileidx_feature(const coord_def &gc)
         };
         int solid = 0;
         for (int i = 0; i < 4; i++)
-            if (feat_is_solid(grd(neigh[i]))
-                || grd(neigh[i]) != DNGN_UNDISCOVERED_TRAP
-                   && get_trap_type(neigh[i]) == TRAP_WEB)
+            if (feat_is_solid(env.map_knowledge(neigh[i]).feat())
+                || env.map_knowledge(neigh[i]).trap() == TRAP_WEB)
             {
                 solid |= 1 << i;
             }
@@ -447,8 +447,8 @@ tileidx_t tileidx_feature(const coord_def &gc)
     case DNGN_ENTER_SHOP:
         return (_tileidx_shop(gc));
     case DNGN_DEEP_WATER:
-        if (env.grid_colours(gc) == GREEN
-            || env.grid_colours(gc) == LIGHTGREEN)
+        if (env.map_knowledge(gc).feat_colour() == GREEN
+            || env.map_knowledge(gc).feat_colour() == LIGHTGREEN)
         {
             return (TILE_DNGN_DEEP_WATER_MURKY);
         }
@@ -459,8 +459,8 @@ tileidx_t tileidx_feature(const coord_def &gc)
     case DNGN_SHALLOW_WATER:
         {
             tileidx_t t = TILE_DNGN_SHALLOW_WATER;
-            if (env.grid_colours(gc) == GREEN
-                || env.grid_colours(gc) == LIGHTGREEN)
+            if (env.map_knowledge(gc).feat_colour() == GREEN
+                || env.map_knowledge(gc).feat_colour() == LIGHTGREEN)
             {
                 t = TILE_DNGN_SHALLOW_WATER_MURKY;
             }
@@ -493,9 +493,10 @@ tileidx_t tileidx_out_of_bounds(int branch)
         return (TILE_DNGN_UNSEEN | TILE_FLAG_UNSEEN);
 }
 
-void tileidx_from_map_cell(tileidx_t *fg, tileidx_t *bg, const map_cell &cell)
+void tileidx_from_map_cell(tileidx_t *fg, tileidx_t *bg, const coord_def& gc)
 {
-    *bg = _tileidx_feature_base(cell.feat());
+    const map_cell& cell = env.map_knowledge(gc);
+    *bg = tileidx_feature(gc);
 
     switch (get_cell_show_class(cell))
     {
