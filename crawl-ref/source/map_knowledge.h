@@ -33,7 +33,7 @@
 
 /*
  * A map_cell stores what the player knows about a cell.
- * These go in env.map_knowledge_knowledge.
+ * These go in env.map_knowledge.
  */
 struct map_cell
 {

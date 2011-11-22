@@ -3907,7 +3907,7 @@ static void _reinit_flavour_tiles()
                 env.tile_flv(*ri).feat_idx = 0;
         }
         tileidx_t fg, bg;
-        tileidx_from_map_cell(&fg, &bg, env.map_knowledge(*ri));
+        tileidx_from_map_cell(&fg, &bg, *ri);
 
         env.tile_bk_bg(*ri) = bg;
         env.tile_bk_fg(*ri) = fg;

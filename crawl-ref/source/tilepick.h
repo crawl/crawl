@@ -20,7 +20,7 @@ struct show_type;
 // Tile index lookup from Crawl data.
 tileidx_t tileidx_feature(const coord_def &gc);
 tileidx_t tileidx_out_of_bounds(int branch);
-void tileidx_from_map_cell(tileidx_t *fg, tileidx_t *bg, const map_cell &cell);
+void tileidx_from_map_cell(tileidx_t *fg, tileidx_t *bg, const coord_def& gc);
 void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, const coord_def& gc);
 
 tileidx_t tileidx_monster(const monster_info& mon);

@@ -775,12 +775,9 @@ void tile_place_cloud(const coord_def &gc, const cloud_struct &cl)
     if (cl.type == CLOUD_INK && player_in_branch(BRANCH_SHOALS))
         return;
 
-    const monster* mon = monster_at(gc);
     bool disturbance = false;
 
-    if (mon && !mon->visible_to(&you) && you.see_cell(gc)
-        && is_opaque_cloud(env.cgrid(gc))
-        && !mon->is_insubstantial())
+    if (env.map_knowledge(gc).invisible_monster())
     {
         disturbance = true;
     }
