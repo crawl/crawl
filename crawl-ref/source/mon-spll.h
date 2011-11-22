@@ -56,10 +56,10 @@
       {
        SPELL_PAIN,
        SPELL_DISPEL_UNDEAD,
-       SPELL_NO_SPELL,
        SPELL_ANIMATE_DEAD,
-       SPELL_VAMPIRIC_DRAINING, // offense
-       SPELL_VAMPIRIC_DRAINING  // and defensive
+       SPELL_VAMPIRIC_DRAINING,
+       SPELL_AGONY,
+       SPELL_VAMPIRIC_DRAINING
       }
     },
 
