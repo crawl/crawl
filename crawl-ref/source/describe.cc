@@ -3255,11 +3255,12 @@ static std::string _monster_stat_description(const monster_info& mi)
     const char* pronoun = mi.pronoun(PRONOUN);
 
     if (mi.threat != MTHRT_UNDEF)
-        result << pronoun << " looks " << _get_threat_desc(mi.threat) << ".\n";
+        result << uppercase_first(pronoun) << " looks "
+               << _get_threat_desc(mi.threat) << ".\n";
 
     if (!resist_descriptions.empty())
     {
-        result << pronoun << " is "
+        result << uppercase_first(pronoun) << " is "
                << comma_separated_line(resist_descriptions.begin(),
                                        resist_descriptions.end(),
                                        "; and ", "; ")
@@ -3269,7 +3270,7 @@ static std::string _monster_stat_description(const monster_info& mi)
     // Is monster susceptible to anything? (On a new line.)
     if (!suscept.empty())
     {
-        result << pronoun << " is susceptible to "
+        result << uppercase_first(pronoun) << " is susceptible to "
                << comma_separated_line(suscept.begin(), suscept.end())
                << ".\n";
     }
@@ -3278,33 +3279,34 @@ static std::string _monster_stat_description(const monster_info& mi)
     // How resistant is it? Same scale as the player.
     if (mr >= 10)
     {
-        result << pronoun << make_stringf(" is %s to hostile enchantments.\n",
-                                          magic_res_adjective(mr).c_str());
+        result << uppercase_first(pronoun)
+               << make_stringf(" is %s to hostile enchantments.\n",
+                               magic_res_adjective(mr).c_str());
     }
 
     if (mons_class_flag(mi.type, M_STATIONARY) && !mons_is_tentacle(mi.type))
-        result << pronoun << " cannot move.\n";
+        result << uppercase_first(pronoun) << " cannot move.\n";
 
     // Monsters can glow from both light and radiation.
     if (mons_class_flag(mi.type, M_GLOWS_LIGHT))
-        result << pronoun << " is outlined in light.\n";
+        result << uppercase_first(pronoun) << " is outlined in light.\n";
     if (mons_class_flag(mi.type, M_GLOWS_RADIATION))
-        result << pronoun << " is glowing with mutagenic radiation.\n";
+        result << uppercase_first(pronoun) << " is glowing with mutagenic radiation.\n";
 
     // These differ between ghost demon monsters, so would be spoily.
     if (!mons_is_ghost_demon(mi.type))
     {
         // Seeing/sensing invisible.
         if (mons_class_flag(mi.type, M_SEE_INVIS))
-            result << pronoun << " can see invisible.\n";
+            result << uppercase_first(pronoun) << " can see invisible.\n";
         else if (mons_class_flag(mi.type, M_SENSE_INVIS))
-            result << pronoun << " can sense the presence of invisible creatures.\n";
+            result << uppercase_first(pronoun) << " can sense the presence of invisible creatures.\n";
 
         // Unusual monster speed.
         const int speed = mi.base_speed();
         if (speed != 10 && speed != 0)
         {
-            result << pronoun << " is ";
+            result << uppercase_first(pronoun) << " is ";
             if (speed < 7)
                 result << "very slow";
             else if (speed < 10)
@@ -3325,15 +3327,15 @@ static std::string _monster_stat_description(const monster_info& mi)
     // their flavour description.
     if (mi.fly != FL_NONE)
     {
-        result << pronoun << " can "
+        result << uppercase_first(pronoun) << " can "
                << (mi.fly == FL_FLY ? "fly" : "levitate") << ".\n";
     }
 
     // Unusual regeneration rates.
     if (!mi.can_regenerate())
-        result << pronoun << " cannot regenerate.\n";
+        result << uppercase_first(pronoun) << " cannot regenerate.\n";
     else if (monster_descriptor(mi.type, MDSC_REGENERATES))
-        result << pronoun << " regenerates quickly.\n";
+        result << uppercase_first(pronoun) << " regenerates quickly.\n";
 
     // Size
     const char *sizes[NUM_SIZE_LEVELS] = {
@@ -3349,13 +3351,13 @@ static std::string _monster_stat_description(const monster_info& mi)
 
     if (mons_is_feat_mimic(mi.type))
     {
-        result << pronoun << " is as big as "
+        result << uppercase_first(pronoun) << " is as big as "
                << thing_do_grammar(DESC_A, true, false,
                                    feat_type_name(mi.get_mimic_feature()))
                << "\n";
     }
     else if (sizes[mi.body_size()])
-        result << pronoun << " is " << sizes[mi.body_size()] << ".\n";
+        result << uppercase_first(pronoun) << " is " << sizes[mi.body_size()] << ".\n";
 
     return (result.str());
 }
@@ -3524,16 +3526,16 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 
     if (!mons_class_can_use_stairs(mi.type))
     {
-        inf.body << "\n" << mi.pronoun(PRONOUN)
+        inf.body << "\n" << uppercase_first(mi.pronoun(PRONOUN))
                  << " is incapable of using stairs.\n";
     }
 
     if (mi.intel() == I_PLANT)
-        inf.body << mi.pronoun(PRONOUN) << " is mindless.\n";
+        inf.body << uppercase_first(mi.pronoun(PRONOUN)) << " is mindless.\n";
 
     if (mi.is(MB_CHAOTIC))
     {
-        inf.body << mi.pronoun(PRONOUN)
+        inf.body << uppercase_first(mi.pronoun(PRONOUN))
                  << " is vulnerable to silver and hated by Zin.\n";
     }
 
