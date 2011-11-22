@@ -1890,7 +1890,7 @@ std::string item_def::name_aux(description_level_type desc,
                 buff << " [ice]";
                 break;
             case STAFF_DESTRUCTION_III:
-                buff << " [lightning,iron,fireball]";
+                buff << " [lightning,fireball,iron]";
                 break;
             case STAFF_DESTRUCTION_IV:
                 buff << " [inacc,magma,cold]";
