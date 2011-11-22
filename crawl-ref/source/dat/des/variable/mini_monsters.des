@@ -964,6 +964,33 @@ MAP
 ..................
 ENDMAP
 
+# This vault was built by evilmike, but the idea is mikee's. Who is really the
+# evil one here?
+NAME:   mikee_hates_you
+DEPTH:  D:9-27
+KPROP:  l = no_cloud_gen
+KMONS:  1 = generate_awake siren ; trident ego:distortion | trident ego:venom
+KITEM:  1 = acquire any
+MARKER: ! = lua:fog_machine { \
+                cloud_type = "foul pestilence", \
+                pow_min = 100, pow_max = 100, delay = 10, \
+                size = 1, walk_dist = 0, start_clouds = 1 \
+            }
+MARKER: + = lua:props_marker { \
+                door_open_prompt= "This door is covered in warnings. Open " .. \
+                                  "it anyway?", \
+                door_description_prefix= "warning-scrawled " \
+            }
+MARKER: + = lua:restrict_door()
+MARKER: = = lua:restrict_door()
+MAP
+xxxxxxxxxx
+xxxxx=xxxx
++!!!!l1=>x
+xxxxxxxxxx
+xxxxxxxxxx
+ENDMAP
+
 #################################################################
 # checkpoints with guards to alert nearby monsters, by Core Xii
 NAME:   corexii_checkpoint_a
