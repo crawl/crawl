@@ -435,6 +435,8 @@ public:
     void bind_melee_flags();
     void bind_spell_flags();
     void calc_speed();
+    void accum_been_constricted();
+    void accum_has_constricted();
 
 private:
     void init_with(const monster& mons);
@@ -457,6 +459,7 @@ private:
     bool check_set_valid_home(const coord_def &place,
                               coord_def &chosen,
                               int &nvalid) const;
+		      
 };
 
 #endif

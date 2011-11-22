@@ -1312,6 +1312,14 @@ static void tag_construct_you(writer &th)
     marshallCoord(th, abyssal_state.major_coord);
     marshallFloat(th, abyssal_state.depth);
 
+    marshallShort(th, you.constricted_by);
+    marshallInt(th, you.dur_been_constricted);
+    for (unsigned int k = 0; k < 8; k++)
+    {
+        marshallShort(th, you.constricting[k]);
+	marshallInt(th, you.dur_has_constricted[k]);
+    }
+	
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
 
@@ -2331,6 +2339,14 @@ static void tag_read_you(reader &th)
     }
 #endif
 
+    you.constricted_by = unmarshallShort(th);
+    you.dur_been_constricted = unmarshallInt(th);
+    for (unsigned int k = 0; k < 8; k++)
+    {
+        you.constricting[k] = unmarshallShort(th);
+	you.dur_has_constricted[k] = unmarshallInt(th);
+    }
+
     if (!dlua.callfn("dgn_load_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to load Lua persist table: %s",
              dlua.error.c_str());
@@ -3093,7 +3109,14 @@ void marshallMonster(writer &th, const monster& m)
         ASSERT(m.ghost.get());
         marshallGhost(th, *m.ghost);
     }
-
+    marshallShort(th, m.constricted_by);
+    marshallInt(th, m.dur_been_constricted);
+    for (unsigned int k = 0; k < 8; k++)
+    {
+        marshallShort(th, m.constricting[k]);
+	marshallInt(th, m.dur_has_constricted[k]);
+    }
+	
     m.props.write(th);
 }
 
@@ -3607,6 +3630,14 @@ void unmarshallMonster(reader &th, monster& m)
 
     if (mons_is_ghost_demon(m.type))
         m.set_ghost(unmarshallGhost(th));
+
+    m.constricted_by = unmarshallShort(th);
+    m.dur_been_constricted = unmarshallInt(th);
+        for (unsigned int k = 0; k < 8; k++)
+	{
+	    m.constricting[k] = unmarshallShort(th);
+	    m.dur_has_constricted[k] = unmarshallInt(th);
+	}
 
     m.props.clear();
     m.props.read(th);

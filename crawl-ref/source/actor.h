@@ -345,6 +345,18 @@ public:
 
     CrawlHashTable props;
 
+    // Constriction stuff
+    unsigned short constricted_by;
+    unsigned short constricting[8]; // max 8 for octopode
+    int dur_been_constricted;
+    int dur_has_constricted[8];     // max 8 for octopode
+
+    virtual bool is_constricted()
+    {
+        return (constricted_by != 0);
+    }
+    virtual bool is_constricting();
+    
 protected:
     // These are here for memory management reasons...
     los_glob los;

@@ -4007,6 +4007,7 @@ void display_char_status()
         DUR_SHROUD_OF_GOLUBRIA,
         STATUS_BACKLIT,
         STATUS_UMBRA,
+	STATUS_CONSTRICTED,
     };
 
     status_info inf;
@@ -7334,6 +7335,19 @@ void player::goto_place(const level_id &lid)
         where_are_you = static_cast<branch_type>(lid.branch);
         absdepth0 = absdungeon_depth(lid.branch, lid.depth);
     }
+}
+
+void player::accum_been_constricted()
+{
+    if (constricted_by)
+        dur_been_constricted += you.time_taken;
+}
+
+void player::accum_has_constricted()
+{
+    for (int i = 0; i < 8; i++)
+        if (constricting[i])
+	    dur_has_constricted[i] += you.time_taken;
 }
 
 /*
