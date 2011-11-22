@@ -978,45 +978,35 @@ xx...............x
      xxx xxx xxx
 ENDMAP
 
-NAME:   hangedman_abyss_exit_choices
-TAGS:   abyss_exit allow_dup no_monster_gen
-MONS:   warg, hell hound, giant leech, spiny worm, \
-        crocodile, alligator, black mamba
-KMONS:  8 = anaconda
-KMONS:  9 = fire drake
-KMONS:  0 = mottled dragon
-KMONS:  A = elephant
-KMONS:  B = catoblepas
-KMONS:  C = golden eye
-KMONS:  D = great orb of eyes
-KMONS:  E = vapour
-KMONS:  F = ball lightning
-KMONS:  G = shadow wraith
-KMONS:  H = unseen horror
-NSUBST: J = 1/2, K = 5/6, L = 9/0, M = r/s
-SHUFFLE: 12/34, 56/78, 90/AB, CD/EF/GH
-KFEAT:  I = exit_abyss
-SUBST:  c = ccv
+NAME:     hangedman_abyss_exit_choices
+TAGS:     abyss_exit allow_dup no_monster_gen
+MONS:     warg, hell hound, giant leech, spiny worm, \
+          crocodile, alligator, black mamba
+KMONS:    8 = anaconda
+KMONS:    9 = fire drake
+KMONS:    0 = mottled dragon
+KMONS:    A = elephant
+KMONS:    B = catoblepas
+KMONS:    C = golden eye
+KMONS:    D = great orb of eyes
+KMONS:    E = vapour
+KMONS:    F = ball lightning
+KMONS:    G = shadow wraith
+KMONS:    H = unseen horror
+NSUBST:   J = 1/2, K = 5/6, L = 9/0, M = C/D
+SHUFFLE:  12/34, 56/78, 90/AB, CD/EF/GH
+KFEAT:    N = exit_abyss
+SUBST:    c = ccv
 MAP
-. ..... .
- .ccccc.
-.cc I cc.
- cc+c+cc
-. cLmLc .
- cc+c+cc
-. c . c .
- cc+c+cc
-. cLmLc .
- cc+c+cc
-. c . c .
- cc+c+cc
-. cKmKc .
- cc+c+cc
-. c . c .
- cc+c+cc
-. cJmJc .
- .c+c+c.
-. ..m.. .
+. . . . . . . . . .
+ .CC C C C C C C .
+.ccccccccccccccccc.
+.c +M+ +L+ +K+ +J+.
+.cNcmc.cmc.cmc.cmcm
+.c +M+ +L+ +K+ +J+.
+.ccccccccccccccccc.
+ .CC C C C C C C .
+. . . . . . . . . .
 ENDMAP
 
 ###################################################################
