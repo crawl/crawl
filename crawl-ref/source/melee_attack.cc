@@ -453,9 +453,6 @@ bool melee_attack::handle_phase_hit()
         }
     }
 
-    if (attacker != defender && attacker->self_destructs())
-        return (did_hit = perceived_attack = true);
-
     // Slimify does no damage and serves as an on-hit effect, handle it
     if (attacker->atype() == ACT_PLAYER && you.duration[DUR_SLIMIFY]
         && mon_can_be_slimified(defender->as_monster()))
@@ -751,6 +748,9 @@ bool melee_attack::attack()
 {
     if (!handle_phase_attempted())
         return (false);
+
+    if (attacker != defender && attacker->self_destructs())
+        return (did_hit = perceived_attack = true);
 
     // Apparently I'm insane for believing that we can still stay general past
     // this point in the combat code, mebe I am! --Cryptic
