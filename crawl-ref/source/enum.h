@@ -181,6 +181,7 @@ enum ability_type
     ABIL_MAKE_OKLOB_PLANT,
     ABIL_MAKE_BURNING_BUSH,
     ABIL_REMOVE_CURSE,
+    NUM_ABILITIES
 };
 
 enum activity_interrupt_type
@@ -268,6 +269,8 @@ enum transformation_type
     TRAN_BAT,
     TRAN_PIG,
     TRAN_APPENDAGE,
+    // no NUM_TRANSFORMS due to too many switch statements
+    LAST_FORM = TRAN_APPENDAGE - 1
 };
 
 enum beam_type                  // beam[].flavour
@@ -1696,6 +1699,7 @@ enum item_type_id_state_type
     ID_TRIED_TYPE,
     ID_TRIED_ITEM_TYPE,
     ID_KNOWN_TYPE,
+    NUM_ID_STATE_TYPES
 };
 
 enum job_type
