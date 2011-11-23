@@ -865,7 +865,8 @@ bool melee_attack::attack()
     // already, but not if sanctuary is in effect (pet target must be
     // set explicitly by the player during sanctuary).
     if (perceived_attack && attacker->alive()
-        && defender->as_monster()->friendly()
+        && (defender->atype() == ACT_PLAYER
+            || defender->as_monster()->friendly())
         && attacker->atype() != ACT_PLAYER
         && !crawl_state.game_is_arena()
         && !attacker->as_monster()->wont_attack()
