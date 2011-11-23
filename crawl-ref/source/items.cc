@@ -818,7 +818,7 @@ void item_check(bool verbose)
         {
             item_def it(*items[i]);
             std::string name = get_menu_colour_prefix_tags(it, DESC_A);
-            strm << name << std::endl;
+            mpr_nocap(name);
             _maybe_give_corpse_hint(it);
         }
     }
