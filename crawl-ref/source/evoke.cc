@@ -186,13 +186,8 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         mpr("You attack empty space.");
         return (true);
     }
-//<<<<<<< HEAD
     else
         fight_melee(&you, mons, false);
-    /* Conflict from fight_rewrite
-=======
-    you_attack(mons->mindex(), false);
->>>>>>> master */
 
     return (true);
 }
