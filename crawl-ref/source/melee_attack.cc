@@ -779,6 +779,19 @@ bool melee_attack::attack()
             return (false);
         }
     }
+	
+    if (!shield_blocked
+        && attacker != defender 
+        && defender->atype() == ACT_PLAYER 
+        && grid_distance(you.pos(), attacker->as_monster()->pos()) == 1)
+    {
+        // Check for defender Spines
+        do_spines();
+
+        // Spines can kill!
+        if (!attacker->alive())
+            return (false);
+    }
 
     // Check for a stab (helpless or petrifying)
     if (to_hit >= ev && ev_helpless > ev)
@@ -808,19 +821,6 @@ bool melee_attack::attack()
     else
     {
         handle_phase_dodged();
-    }
-
-    if (!shield_blocked
-        && attacker != defender 
-        && defender->atype() == ACT_PLAYER 
-        && grid_distance(you.pos(), attacker->as_monster()->pos()) == 1)
-    {
-        // Check for defender Spines
-        do_spines();
-
-        // Spines can kill!
-        if (!attacker->alive())
-            return (false);
     }
 
     // Remove sanctuary if - through some attack - it was violated.
