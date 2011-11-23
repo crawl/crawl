@@ -3023,12 +3023,9 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_STONE_STAIRS_UP_I:
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
-        if (player_in_branch(BRANCH_MAIN_DUNGEON)
-            && player_branch_depth() == 1)
-        {
-            return ("staircase leading out of the dungeon");
-        }
         return ("stone staircase leading up");
+    case DNGN_EXIT_DUNGEON:
+        return ("staircase leading out of the dungeon");
     case DNGN_ENTER_HELL:
         return ("gateway to Hell");
     case DNGN_EXIT_HELL:

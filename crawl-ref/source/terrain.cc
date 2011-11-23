@@ -105,26 +105,14 @@ bool feat_is_stone_stair(dungeon_feature_type feat)
 bool feat_is_staircase(dungeon_feature_type feat)
 {
     if (feat_is_stone_stair(feat))
-    {
-        // Make up staircases in hell appear as gates.
-        if (player_in_hell())
-        {
-            switch (feat)
-            {
-                case DNGN_STONE_STAIRS_UP_I:
-                case DNGN_STONE_STAIRS_UP_II:
-                case DNGN_STONE_STAIRS_UP_III:
-                    return (false);
-                default:
-                    return (true);
-            }
-        }
         return (true);
-    }
 
     // All branch entries/exits are staircases, except for Zot.
     if (feat == DNGN_ENTER_ZOT || feat == DNGN_RETURN_FROM_ZOT)
         return (false);
+
+    if (feat == DNGN_EXIT_DUNGEON)
+        return (true);
 
     return (feat >= DNGN_ENTER_FIRST_BRANCH && feat <= DNGN_ENTER_LAST_BRANCH
             || feat >= DNGN_RETURN_FROM_FIRST_BRANCH
@@ -176,6 +164,7 @@ bool feat_is_travelable_stair(dungeon_feature_type feat)
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ESCAPE_HATCH_UP:
+    case DNGN_EXIT_DUNGEON:
     case DNGN_ENTER_HELL:
     case DNGN_EXIT_HELL:
     case DNGN_ENTER_DIS:
@@ -238,20 +227,6 @@ bool feat_is_escape_hatch(dungeon_feature_type feat)
 // Returns true if the given dungeon feature can be considered a gate.
 bool feat_is_gate(dungeon_feature_type feat)
 {
-    // Make up staircases in hell appear as gates.
-    if (player_in_hell())
-    {
-        switch (feat)
-        {
-        case DNGN_STONE_STAIRS_UP_I:
-        case DNGN_STONE_STAIRS_UP_II:
-        case DNGN_STONE_STAIRS_UP_III:
-            return (true);
-        default:
-            break;
-        }
-    }
-
     switch (feat)
     {
     case DNGN_ENTER_ABYSS:
@@ -284,6 +259,7 @@ command_type feat_stair_direction(dungeon_feature_type feat)
     case DNGN_STONE_STAIRS_UP_II:
     case DNGN_STONE_STAIRS_UP_III:
     case DNGN_ESCAPE_HATCH_UP:
+    case DNGN_EXIT_DUNGEON:
     case DNGN_RETURN_FROM_DWARVEN_HALL:
     case DNGN_RETURN_FROM_ORCISH_MINES:
     case DNGN_RETURN_FROM_HIVE:
@@ -1699,7 +1675,7 @@ const char *dngn_feature_names[] =
 "", "enter_dis", "enter_gehenna", "enter_cocytus",
 "enter_tartarus", "enter_abyss", "exit_abyss", "stone_arch",
 "enter_pandemonium", "exit_pandemonium", "transit_pandemonium",
-"", "", "", "", "", "",
+"exit_dungeon", "", "", "", "", "",
 "", "", "enter_dwarven_hall", "enter_orcish_mines", "enter_hive", "enter_lair",
 "enter_slime_pits", "enter_vaults", "enter_crypt",
 "enter_hall_of_blades", "enter_zot", "enter_temple",

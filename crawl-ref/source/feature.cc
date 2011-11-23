@@ -464,6 +464,7 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             f.minimap     = MF_STAIR_BRANCH;
             break;
 
+        case DNGN_EXIT_DUNGEON:
         case DNGN_RETURN_FROM_DWARVEN_HALL:
         case DNGN_RETURN_FROM_ORCISH_MINES:
         case DNGN_RETURN_FROM_HIVE:
