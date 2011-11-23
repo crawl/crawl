@@ -931,45 +931,45 @@ SHUFFLE: AC / B8
 SHUFFLE: YZ / w" / l"
 SUBST:   " = .
 SUBST:   YZ = W
-SUBST:   ' = .....0%
+SUBST:   ' = .:120 0%
 SUBST:   A = $
 SUBST:   B = %*
 SUBST:   C = 9
 MAP
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx@@xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx++xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxWWWWxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxWWWWWWxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxWWWWWWWWxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxWWWWWWWWWWxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxWWGWWWWWWGWWxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxWWWWWWWWWWWWWWxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                           xxxxxxx@@xxxxxxx
+                           xxxxxxx++xxxxxxx
+                           xxxxxxWWWWxxxxxx
+                           xxxxxWWWWWWxxxxx
+                           xxxxWWWWWWWWxxxx
+                           xxxWWWWWWWWWWxxx
+                           xxWWGWWWWWWGWWxx
+                           xWWWWWWWWWWWWWWx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx++xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxx''''''''''xx..................xx''''''''''xxxxxxxxxxxxxx
 xxxxxxxxxxxxxx'''''''''xx..YYYYYYYZZYYYYYYY..xx'''''''''xxxxxxxxxxxxxx
-x0.00xxxxxxxxxx'''''''xx..YY..............YY..xx'''''''xxxxxxxxxx00.0x
-x....+........+''''''xx..YY................YY..xx''''''+........+....x
-x....x...00...+''''''+..YY..................YY..+''''''+.0.00.0.x....x
-x0900xxxxxxxxxx'''''xx..Z........xxxx........Z..xx'''''xxxxxxxxxx0090x
-xx+xxxxxxxxxxxxx'''xx..YY........xxxx........YY..xx'''xxxxxxxxxxxxx+xx
-xx..xxxxxxxxxxxx''xx..YY.........xxxx.........YY..xx''xxxxxxxxxxxx..xx
-xx..xxxxxxxxxxxx'xx..YY..........xxxx..........YY..xx'xxxxxxxxxxxx..xx
-xx..xxxxxxxxxxxxxx..YY...........................Y..xxxxxxxxxxxxxx..xx
-xx.0xxxxxxxxxxxxx..YY.....G................G.....YY..xxxxxxxxxxxxx0.xx
-xx..xxxxxxxxxxxxx..Y........0....YYYY....0........Y..xxxxxxxxxxxxx..xx
+x0..0xxxxxxxxxx'''''''xx..YY..............YY..xx'''''''xxxxxxxxxx0..0x
+x....+...0....+''''''xx..YY................YY..xx''''''+....0...+....x
+x....x........+''''''+..YY........xx........YY..+''''''+........x....x
+x9..0xxxxxxxxxx'''''xx..Z........xxxx........Z..xx'''''xxxxxxxxxx0..9x
+xx+xxxxxxxxxxxxx'''xx..YY.......xxxxxx.......YY..xx'''xxxxxxxxxxxxx+xx
+xx..xxxxxxxxxxxx''xx..YY...x....xxxxxx....x...YY..xx''xxxxxxxxxxxx..xx
+xx..xxxxxxxxxxxx'xx..YY...xxx....xxxx....xxx...YY..xx'xxxxxxxxxxxx..xx
+xx..xxxxxxxxxxxxxx..YY...xxxxx....xx....xxxxx...YY..xxxxxxxxxxxxxx..xx
+xx..xxxxxxxxxxxxx..YY.....xxx............xxx.....YY..xxxxxxxxxxxxx..xx
+xx..xxxxxxxxxxxxx..Y.......x0....YYYY....0x.......Y..xxxxxxxxxxxxx..xx
 xx.0xxxxxxxxxxx'x..Y..............................Y..x'xxxxxxxxxxx0.xx
 xx..xxxxxxxxxx''xx.Y..............[{..............Y.xx''xxxxxxxxxx..xx
-xx..xxxxxxxxx''''x.Y........G............G........Y.x''''xxxxxxxxx..xx
-xxC9xxxxxxxx'''''x.YY.........0..YYYY..0.........YY.x'''''xxxxxxxx98xx
+xx..xxxxxxxxx''''x.Y..............................Y.x''''xxxxxxxxx..xx
+xxC9xxxxxxxx'''''x.YY....xx...0..YYYY..0...xx....YY.x'''''xxxxxxxx98xx
 xx+xxxxxxxx''''''x..Y...xxxx..............xxxx...Y..x''''''xxxxxxxx+xx
-xAAAAxxxxxx''''''x+.Z...xxxx..............xxxx...Z.+x''''''xxxxxxBBBBx
-xAAAAx.9.x''''''''x.Y...xxxx..G........G..xxxx...Y.x''''''''x.9.xBBBBx
-xAAAA+...=''''''''x.YY..xxxx....0....0....xxxx..YY.x''''''''=...+BBBBx
-xAAAAxxxxxxx''''''x..Y..........................Y..x''''''xxxxxxxBBBBx
-xxxxxxxxxxxxxx''''xx.YY........................YY.xx''''xxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxx''x..YY........G....G........YY..x''xxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxx..YYY..................YYY..xxxxxxxxxxxxxxxxxxxxx
-xxxxxxxxxxxxxxxxxxxxxx...YYY..............YYY...xxxxxxxxxxxxxxxxxxxxxx
+xAAAAxxxxxx''''''x+.Z..xxxxxx............xxxxxx..Z.+x''''''xxxxxxBBBBx
+xAAAAx.9.x''''''''x.Y..xxxxxx............xxxxxx..Y.x''''''''x.9.xBBBBx
+xAAAA+...=''''''''x.YY..xxxx..0...xx...0..xxxx..YY.x''''''''=...+BBBBx
+xAAAAxxxxxxx''''''x..Y...xx......xxxx......xx...Y..x''''''xxxxxxxBBBBx
+xxxxxxxxxxxxxx''''xx.YY.........xxxxxx.........YY.xx''''xxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxx''x..YY........xxxxxx........YY..x''xxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxx..YYY.......xxxx.......YYY..xxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxx...YYY......xx......YYY...xxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxx...YYY..........YYY...xxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxx''xxx...YZYY....YYZY...xxx''xxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxx''''xx+....YYYYYY....+xx''''xxxxxxxxxxxxxxxxxxxxx
