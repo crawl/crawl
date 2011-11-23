@@ -501,9 +501,6 @@ bool melee_attack::handle_phase_hit()
              attacker->atype() == ACT_PLAYER ? "do" : "does");
     }
 
-    if (defender->props.exists("helpless"))
-        defender->props.erase("helpless");
-
     return (true);
 }
 
@@ -797,15 +794,7 @@ bool melee_attack::attack()
             return (false);
     }
 
-    // Check for a stab (helpless or petrifying)
-    if (to_hit >= ev && ev_helpless > ev)
-    {
-        defender->props["helpless"] = true;
-        ev_margin = 1;
-
-        handle_phase_hit();
-    }
-    else if (shield_blocked)
+    if (shield_blocked)
     {
         handle_phase_blocked();
     }
@@ -819,6 +808,9 @@ bool melee_attack::attack()
             perceived_attack = true;
             return (false);
         }
+
+        if (to_hit >= ev && ev_helpless > ev)
+            defender->props["helpless"] = true;
 
         handle_phase_hit();
     }
@@ -1664,6 +1656,9 @@ int melee_attack::player_stab(int damage)
     {
         // Construct reasonable message.
         stab_message();
+
+        if (defender->props.exists("helpless"))
+            defender->props.erase("helpless");
 
         practise(EX_WILL_STAB);
     }
