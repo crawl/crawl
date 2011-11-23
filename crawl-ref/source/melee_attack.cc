@@ -748,23 +748,6 @@ bool melee_attack::attack()
     if (!handle_phase_attempted())
         return (false);
 
-    // Stuff for god conduct, this has to remain here for scope reasons.
-    god_conduct_trigger conducts[3];
-    disable_attack_conducts(conducts);
-
-    if (attacker->atype() == ACT_PLAYER && attacker != defender)
-    {
-        set_attack_conducts(conducts, defender->as_monster());
-
-        if (you.penance[GOD_ELYVILON] && god_hates_your_god(GOD_ELYVILON))
-        {
-            simple_god_message(" blocks your attack.", GOD_ELYVILON);
-            dec_penance(GOD_ELYVILON, 1);
-
-            return (false);
-        }
-    }
-
     // Apparently I'm insane for believing that we can still stay general past
     // this point in the combat code, mebe I am! --Cryptic
 
@@ -776,6 +759,26 @@ bool melee_attack::attack()
 
     ev_margin = test_hit(to_hit, ev);
     const bool shield_blocked = attack_shield_blocked(true);
+
+    // Stuff for god conduct, this has to remain here for scope reasons.
+    god_conduct_trigger conducts[3];
+    disable_attack_conducts(conducts);
+
+    if (attacker->atype() == ACT_PLAYER && attacker != defender)
+    {
+        set_attack_conducts(conducts, defender->as_monster());
+
+        if (you.penance[GOD_ELYVILON]
+            && god_hates_your_god(GOD_ELYVILON)
+            && ev_margin >= 0
+            && one_chance_in(20))
+        {
+            simple_god_message(" blocks your attack.", GOD_ELYVILON);
+            dec_penance(GOD_ELYVILON, 1);
+
+            return (false);
+        }
+    }
 
     // Check for a stab (helpless or petrifying)
     if (to_hit >= ev && ev_helpless > ev)
@@ -1204,7 +1207,9 @@ bool melee_attack::player_aux_test_hit()
         defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
 
     if (you.penance[GOD_ELYVILON]
-        && god_hates_your_god(GOD_ELYVILON))
+        && god_hates_your_god(GOD_ELYVILON)
+        && to_hit >= evasion
+        && one_chance_in(20))
     {
         simple_god_message(" blocks your attack.", GOD_ELYVILON);
         dec_penance(GOD_ELYVILON, 1);
