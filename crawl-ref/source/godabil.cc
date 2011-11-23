@@ -1016,7 +1016,7 @@ bool zin_recite_to_single_monster(const coord_def& where,
                 {
                     mprf("%s bleeds profusely from %s eyes and ears.",
                          mon->name(DESC_THE).c_str(),
-                         mons_pronoun(mon->type, PRONOUN_POSSESSIVE));
+                         mon->pronoun(PRONOUN_POSSESSIVE).c_str());
                 }
                 break;
             case RECITE_CHAOTIC:
