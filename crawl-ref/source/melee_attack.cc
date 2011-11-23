@@ -3871,7 +3871,7 @@ std::string melee_attack::mons_attack_desc()
     if (dist > 2)
     {
         ASSERT(attk_flavour == AF_REACH || weapon && weapon_reach(*weapon));
-        ret = "from afar";
+        ret = " from afar";
     }
 
     if (weapon && attacker->type != MONS_DANCING_WEAPON)
