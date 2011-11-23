@@ -3394,15 +3394,20 @@ int melee_attack::calc_to_hit(bool random)
     const int base_hit = mhit;
 #endif
 
-    if (wearing_amulet(AMU_INACCURACY))
-        mhit -= 5;
-
     // This if statement is temporary, it should be removed when the
     // implementation of a more universal (and elegant) to-hit calculation
     // is designed. The actual code is copied from the old mons_to_hit and
     // player_to_hit methods.
     if (attacker->atype() == ACT_PLAYER)
     {
+        if (wearing_amulet(AMU_INACCURACY))
+            mhit -= 5;
+
+        // If you can't see yourself, you're a little less accurate. Maybe
+        // monsters should get this penalty too? (would nerf orc wizards a bit)
+        if (!you.visible_to(&you))
+            mhit -= 5;
+
         // fighting contribution
         mhit += maybe_random_div(you.skill(SK_FIGHTING, 100), 100, random);
 
@@ -3539,10 +3544,11 @@ int melee_attack::calc_to_hit(bool random)
 
         if (weapon && item_is_rod(*weapon))
             mhit += (short)weapon->props["rod_enchantment"];
-    }
 
-    if (attacker->confused())
-        mhit -= 5;
+        // Probably players should get this penalty too.
+        if (attacker->confused())
+            mhit -= 5;
+    }
 
     if (!defender->visible_to(attacker))
         if (attacker->atype() == ACT_PLAYER)
@@ -4703,32 +4709,31 @@ int melee_attack::test_hit(int to_land, int ev)
     int   roll = -1;
     int margin = AUTOMATIC_HIT;
 
-    ev *= 2;
-
     if (to_land >= AUTOMATIC_HIT)
         return (true);
     else if (x_chance_in_y(MIN_HIT_MISS_PERCENTAGE, 100))
         margin = (random2(2) ? 1 : -1) * AUTOMATIC_HIT;
+    else if (attacker->atype() == ACT_PLAYER)
+        margin = to_land - ev;
     else
     {
         roll = random2(to_land + 1);
-        margin = (roll - random2avg(ev, 2));
+        margin = (roll - random2avg(2*ev, 2));
     }
 
 #ifdef DEBUG_DIAGNOSTICS
-    float miss;
-
-    if (to_hit < ev)
-        miss = 100.0 - MIN_HIT_MISS_PERCENTAGE / 2.0;
+    // Giving less info for now, since this is better than giving incorrect
+    // info.
+    if (attacker->atype() == ACT_PLAYER)
+    {
+        dprf("to hit: %d; ev: %d; result: %s (%d)",
+         to_hit, ev, (margin >= 0) ? "hit" : "miss", margin);
+    }
     else
     {
-        miss = MIN_HIT_MISS_PERCENTAGE / 2.0 +
-            ((100.0 - MIN_HIT_MISS_PERCENTAGE) * ev) / to_hit;
+        dprf("to hit: %d; to hit roll: %d; ev: %d; result: %s (%d)",
+             to_hit, roll, ev, (margin >= 0) ? "hit" : "miss", margin);
     }
-
-    dprf("to hit: %d; ev: %d; miss: %0.2f%%; roll: %d; result: %s%s (%d)",
-         to_hit, ev, miss, roll, (margin >= 0) ? "hit" : "miss",
-            (roll == -1) ? "!!!" : "", margin);
 #endif
 
     return (margin);
