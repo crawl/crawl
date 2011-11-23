@@ -1221,7 +1221,9 @@ static void tag_construct_you(writer &th)
         marshallByte(th, you.penance[i]);
 
     // which gods have been worshipped by this character?
+#if TAG_MAJOR_VERSION == 32
     marshallByte(th, MAX_NUM_GODS);
+#endif
     for (i = 0; i < MAX_NUM_GODS; i++)
         marshallByte(th, you.worshipped[i]);
 
@@ -1704,20 +1706,22 @@ static const char* old_gods[]=
 
 void tag_read_char(reader &th, uint8_t format, uint8_t major, uint8_t minor)
 {
+    // Important: values out of bounds are good here, the save browser needs to
+    // be forward-compatible.  We validate them only on an actual restore.
     you.your_name         = unmarshallString(th);
     you.prev_save_version = unmarshallString(th);
     dprf("Last save Crawl version: %s", you.prev_save_version.c_str());
 
-    you.species           = static_cast<species_type>(unmarshallByte(th));
-    you.char_class        = static_cast<job_type>(unmarshallByte(th));
+    you.species           = static_cast<species_type>(unmarshallUByte(th));
+    you.char_class        = static_cast<job_type>(unmarshallUByte(th));
     you.experience_level  = unmarshallByte(th);
     you.class_name        = unmarshallString(th);
-    you.religion          = static_cast<god_type>(unmarshallByte(th));
+    you.religion          = static_cast<god_type>(unmarshallUByte(th));
     you.jiyva_second_name = unmarshallString(th);
 
     you.wizard            = unmarshallBoolean(th);
 
-    crawl_state.type = (game_type) unmarshallByte(th);
+    crawl_state.type = (game_type) unmarshallUByte(th);
     if (crawl_state.game_is_tutorial())
         crawl_state.map = unmarshallString(th);
 
@@ -1744,26 +1748,36 @@ static void tag_read_you(reader &th)
     int i,j;
     int count;
 
+    ASSERT(is_valid_species(you.species) && species_exp_modifier(you.species));
+    ASSERT(you.char_class < NUM_JOBS);
+    ASSERT(you.experience_level > 0);
+    ASSERT(you.experience_level <= 27);
+    ASSERT(you.religion < NUM_GODS);
+    ASSERT(crawl_state.type > GAME_TYPE_UNSPECIFIED);
+    ASSERT(crawl_state.type < NUM_GAME_TYPE);
     you.last_mid          = unmarshallInt(th);
-    you.piety             = unmarshallByte(th);
-    you.rotting           = unmarshallByte(th);
+    you.piety             = unmarshallUByte(th);
+    ASSERT(you.piety <= MAX_PIETY);
+    you.rotting           = unmarshallUByte(th);
     you.pet_target        = unmarshallShort(th);
 
     you.max_level         = unmarshallByte(th);
-    you.where_are_you     = static_cast<branch_type>(unmarshallByte(th));
-    you.char_direction    = static_cast<game_direction_type>(unmarshallByte(th));
+    you.where_are_you     = static_cast<branch_type>(unmarshallUByte(th));
+    ASSERT(you.where_are_you < NUM_BRANCHES);
+    you.char_direction    = static_cast<game_direction_type>(unmarshallUByte(th));
+    ASSERT(you.char_direction <= GDT_ASCENDING);
 
     you.opened_zot = unmarshallBoolean(th);
-
     you.royal_jelly_dead = unmarshallBoolean(th);
-
     you.transform_uncancellable = unmarshallBoolean(th);
 
     you.absdepth0         = unmarshallByte(th);
-    you.is_undead         = static_cast<undead_state_type>(unmarshallByte(th));
+    you.is_undead         = static_cast<undead_state_type>(unmarshallUByte(th));
+    ASSERT(you.is_undead <= US_SEMI_UNDEAD);
     you.unrand_reacts     = unmarshallShort(th);
     you.berserk_penalty   = unmarshallByte(th);
     you.sage_bonus_skill  = static_cast<skill_type>(unmarshallShort(th));
+    ASSERT(you.sage_bonus_skill <= NUM_SKILLS);
     you.sage_bonus_degree = unmarshallInt(th);
 #if TAG_MAJOR_VERSION == 32
     if (th.getMinorVersion() >= TAG_MINOR_MANUAL)
@@ -1790,17 +1804,21 @@ static void tag_read_you(reader &th)
         you.abyss_speed = unmarshallInt(th);
 
     you.disease         = unmarshallInt(th);
-
     you.hp              = unmarshallShort(th);
     you.hunger          = unmarshallShort(th);
     you.fishtail        = unmarshallBoolean(th);
     you.earth_attunement= unmarshallInt(th);
     you.form            = static_cast<transformation_type>(unmarshallInt(th));
+    ASSERT(you.form >= TRAN_NONE && you.form <= LAST_FORM);
 
     // How many you.equip?
     count = unmarshallByte(th);
+    ASSERT(count == NUM_EQUIP);
     for (i = 0; i < count; ++i)
+    {
         you.equip[i] = unmarshallByte(th);
+        ASSERT(you.equip[i] >= -1 && you.equip[i] < ENDOFPACK);
+    }
     for (i = 0; i < count; ++i)
         you.melded[i] = unmarshallBoolean(th);
 #if TAG_MAJOR_VERSION == 32
@@ -1965,6 +1983,8 @@ static void tag_read_you(reader &th)
 
     const int x = unmarshallShort(th);
     const int y = unmarshallShort(th);
+    // SIGHUP during Step from Time/etc is ok.
+    ASSERT(!x && !y || in_bounds(x, y));
     you.moveto(coord_def(x, y));
 
     you.burden = unmarshallShort(th);
@@ -1983,18 +2003,26 @@ static void tag_read_you(reader &th)
         unmarshallUByte(th);
 
     count = unmarshallByte(th);
-    for (i = 0; i < count; i++)
-        you.spell_letter_table[i] = unmarshallByte(th);
-
-    count = unmarshallByte(th);
+    ASSERT(count == (int)you.spell_letter_table.size());
     for (i = 0; i < count; i++)
     {
-        you.ability_letter_table[i] =
-            static_cast<ability_type>(unmarshallShort(th));
+        int s = unmarshallByte(th);
+        ASSERT(s >= -1 && s < MAX_KNOWN_SPELLS);
+        you.spell_letter_table[i] = s;
+    }
+
+    count = unmarshallByte(th);
+    ASSERT(count == (int)you.ability_letter_table.size());
+    for (i = 0; i < count; i++)
+    {
+        int a = unmarshallShort(th);
+        ASSERT(a >= -1 && a != 0 && a < NUM_ABILITIES);
+        you.ability_letter_table[i] = static_cast<ability_type>(a);
     }
 
     // how many skills?
-    count = unmarshallByte(th);
+    count = unmarshallUByte(th);
+    ASSERT(count <= NUM_SKILLS);
     for (j = 0; j < count; ++j)
     {
 #if TAG_MAJOR_VERSION == 32
@@ -2002,7 +2030,8 @@ static void tag_read_you(reader &th)
             you.skills[j]          = unmarshallByte(th);
         else
 #endif
-            you.skills[j]          = unmarshallUByte(th);
+        you.skills[j]          = unmarshallUByte(th);
+        ASSERT(you.skills[j] <= 27 || you.wizard);
 
 #if TAG_MAJOR_VERSION == 32
         if (th.getMinorVersion() < TAG_MINOR_SKILL_TRAINING)
@@ -2088,7 +2117,9 @@ static void tag_read_you(reader &th)
     }
 #endif
     you.transfer_from_skill = static_cast<skill_type>(unmarshallInt(th));
+    ASSERT(you.transfer_from_skill == SK_NONE || you.transfer_from_skill < NUM_SKILLS);
     you.transfer_to_skill = static_cast<skill_type>(unmarshallInt(th));
+    ASSERT(you.transfer_to_skill == SK_NONE || you.transfer_to_skill < NUM_SKILLS);
     you.transfer_skill_points = unmarshallInt(th);
     you.transfer_total_skill_points = unmarshallInt(th);
 
@@ -2096,16 +2127,16 @@ static void tag_read_you(reader &th)
     calc_total_skill_points();
 
     // how many durations?
-    count = unmarshallByte(th);
-    ASSERT(count >= 0);
+    count = unmarshallUByte(th);
+    COMPILE_CHECK(NUM_DURATIONS <= 256);
     for (j = 0; j < count && j < NUM_DURATIONS; ++j)
         you.duration[j] = unmarshallInt(th);
     for (j = NUM_DURATIONS; j < count; ++j)
         unmarshallInt(th);
 
     // how many attributes?
-    count = unmarshallByte(th);
-    ASSERT(count >= 0);
+    count = unmarshallUByte(th);
+    COMPILE_CHECK(NUM_ATTRIBUTES <= 256);
     for (j = 0; j < count && j < NUM_ATTRIBUTES; ++j)
         you.attribute[j] = unmarshallInt(th);
     for (j = count; j < NUM_ATTRIBUTES; ++j)
@@ -2123,8 +2154,8 @@ static void tag_read_you(reader &th)
     ASSERT(count >= 0 && count <= NUM_MUTATIONS);
     for (j = 0; j < count; ++j)
     {
-        you.mutation[j]  = unmarshallByte(th);
-        you.innate_mutations[j] = unmarshallByte(th);
+        you.mutation[j]         = unmarshallUByte(th);
+        you.innate_mutations[j] = unmarshallUByte(th);
     }
     for (j = count; j < NUM_MUTATIONS; ++j)
         you.mutation[j] = you.innate_mutations[j] = 0;
@@ -2156,8 +2187,7 @@ static void tag_read_you(reader &th)
     }
 #endif
 
-    count = unmarshallByte(th);
-    ASSERT(count >= 0);
+    count = unmarshallUByte(th);
     you.demonic_traits.clear();
     for (j = 0; j < count; ++j)
     {
@@ -2165,15 +2195,22 @@ static void tag_read_you(reader &th)
         dt.level_gained = unmarshallByte(th);
         ASSERT(dt.level_gained > 1 && dt.level_gained <= 27);
         dt.mutation = static_cast<mutation_type>(unmarshallShort(th));
+        ASSERT(dt.mutation >= 0 && dt.mutation < NUM_MUTATIONS);
         you.demonic_traits.push_back(dt);
     }
 
     // how many penances?
-    count = unmarshallByte(th);
+    count = unmarshallUByte(th);
+    ASSERT(count <= MAX_NUM_GODS);
     for (i = 0; i < count; i++)
-        you.penance[i] = unmarshallByte(th);
+    {
+        you.penance[i] = unmarshallUByte(th);
+        ASSERT(you.penance[i] <= MAX_PENANCE);
+    }
 
-    count = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 32
+    unmarshallByte(th);
+#endif
     for (i = 0; i < count; i++)
         you.worshipped[i] = unmarshallByte(th);
 
@@ -2191,6 +2228,7 @@ static void tag_read_you(reader &th)
     }
 #endif
     count = unmarshallByte(th);
+    ASSERT(count == NUM_NEMELEX_GIFT_TYPES);
     for (i = 0; i < count; i++)
         you.nemelex_sacrificing[i] = unmarshallBoolean(th);
 
@@ -2198,6 +2236,8 @@ static void tag_read_you(reader &th)
 
     you.hell_exit      = unmarshallByte(th);
     you.hell_branch = static_cast<branch_type>(unmarshallByte(th));
+    ASSERT(you.hell_branch <= NUM_BRANCHES);
+    ASSERT(you.hell_branch != NUM_BRANCHES || !player_in_hell());
 
 #if TAG_MAJOR_VERSION == 32
     if (th.getMinorVersion() >= TAG_MINOR_ASH_PENANCE)
@@ -2230,17 +2270,25 @@ static void tag_read_you(reader &th)
     you.dead = !you.hp;
 
     int n_dact = unmarshallInt(th);
+    ASSERT(n_dact >= 0);
+    ASSERT(n_dact < 100000); // arbitrary, sanity check
     you.dactions.resize(n_dact, NUM_DACTIONS);
     for (i = 0; i < n_dact; i++)
-        you.dactions[i] = static_cast<daction_type>(unmarshallByte(th));
+    {
+        int a = unmarshallUByte(th);
+        ASSERT(a < NUM_DACTIONS);
+        you.dactions[i] = static_cast<daction_type>(a);
+    }
 
     // List of currently beholding monsters (usually empty).
     count = unmarshallShort(th);
+    ASSERT(count >= 0);
     for (i = 0; i < count; i++)
         you.beholders.push_back(unmarshallShort(th));
 
     // Also usually empty.
     count = unmarshallShort(th);
+    ASSERT(count >= 0);
     for (i = 0; i < count; i++)
         you.fearmongers.push_back(unmarshallShort(th));
 
@@ -2347,6 +2395,7 @@ static void tag_read_you_items(reader &th)
     // Item descrip for each type & subtype.
     // how many types?
     count = unmarshallByte(th);
+    ASSERT(count <= NUM_IDESC);
     // how many subtypes?
     count2 = unmarshallByte(th);
     ASSERT(count2 == MAX_SUBTYPES); // if not, initialize the rest
@@ -2367,16 +2416,19 @@ static void tag_read_you_items(reader &th)
         if (!item_type_has_ids((object_class_type)i))
             continue;
         for (j = 0; j < MAX_SUBTYPES; ++j)
-            you.type_ids[i][j] =
-                static_cast<item_type_id_state_type>(unmarshallByte(th));
+        {
+            uint8_t x = unmarshallUByte(th);
+            ASSERT(x < NUM_ID_STATE_TYPES);
+            you.type_ids[i][j] = static_cast<item_type_id_state_type>(x);
+        }
     }
 
     // Additional identification info
     you.type_id_props.read(th);
 
     // how many unique items?
-    count = unmarshallByte(th);
-    ASSERT(count >= 0);
+    count = unmarshallUByte(th);
+    COMPILE_CHECK(NO_UNRANDARTS <= 256);
     for (j = 0; j < count && j < NO_UNRANDARTS; ++j)
     {
         you.unique_items[j] =
@@ -2390,8 +2442,8 @@ static void tag_read_you_items(reader &th)
         unmarshallByte(th);
 
     // how many books?
-    count = unmarshallByte(th);
-    ASSERT(count >= 0);
+    count = unmarshallUByte(th);
+    COMPILE_CHECK(NUM_FIXED_BOOKS <= 256);
     for (j = 0; j < count && j < NUM_FIXED_BOOKS; ++j)
         you.had_book[j] = unmarshallByte(th);
     for (j = count; j < NUM_FIXED_BOOKS; ++j)
@@ -2481,7 +2533,8 @@ static void tag_read_you_dungeon(reader &th)
     }
 
     // how many branches?
-    count = unmarshallByte(th);
+    count = unmarshallUByte(th);
+    ASSERT(count <= NUM_BRANCHES);
     for (int j = 0; j < count; ++j)
     {
         branches[j].startdepth   = unmarshallInt(th);
@@ -3277,6 +3330,8 @@ static void tag_read_level(reader &th)
     const int gx = unmarshallShort(th);
     // how many Y?
     const int gy = unmarshallShort(th);
+    ASSERT(gx == GXM);
+    ASSERT(gy == GYM);
 
     env.turns_on_level = unmarshallInt(th);
 
@@ -3284,6 +3339,7 @@ static void tag_read_level(reader &th)
         for (int j = 0; j < gy; j++)
         {
             grd[i][j] = static_cast<dungeon_feature_type>(unmarshallUByte(th));
+            ASSERT(grd[i][j] < NUM_FEATURES);
 
             unmarshallMapCell(th, env.map_knowledge[i][j]);
             env.map_knowledge[i][j].flags &=~ MAP_VISIBLE_FLAG;
@@ -3679,6 +3735,8 @@ void tag_read_level_tiles(reader &th)
     const int gx = unmarshallShort(th);
     // how many Y?
     const int gy = unmarshallShort(th);
+    ASSERT(gx == GXM);
+    ASSERT(gy == GYM);
 
     // BG first
     for (int i = 0; i < gx; i++)
