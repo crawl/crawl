@@ -790,8 +790,7 @@ bool melee_attack::attack()
     }
     else if (shield_blocked)
     {
-        if (!handle_phase_blocked())
-            return (false);
+        handle_phase_blocked();
     }
     else if (ev_margin >= 0)
     {
@@ -811,8 +810,10 @@ bool melee_attack::attack()
         handle_phase_dodged();
     }
 
-    if (attacker != defender && defender->atype() == ACT_PLAYER &&
-        grid_distance(you.pos(), attacker->as_monster()->pos()) == 1)
+    if (!shield_blocked
+        && attacker != defender 
+        && defender->atype() == ACT_PLAYER 
+        && grid_distance(you.pos(), attacker->as_monster()->pos()) == 1)
     {
         // Check for defender Spines
         do_spines();
