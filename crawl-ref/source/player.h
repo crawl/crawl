@@ -712,6 +712,7 @@ public:
 
     void accum_been_constricted();
     void accum_has_constricted();
+    bool attempt_escape();
 
 protected:
     void _removed_beholder();

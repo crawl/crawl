@@ -1367,6 +1367,11 @@ static void _go_upstairs()
         return;
     }
 
+    if (!you.attempt_escape()) // false means constricted and don't escape
+    {
+        mpr("You can't go up stairs while constricted.");
+	return;
+    }
     if (ygrd == DNGN_ENTER_SHOP)
     {
         if (you.berserk())
@@ -1518,6 +1523,12 @@ static void _go_downstairs()
     {
         mpr("You're held in a net!");
         return;
+    }
+
+    if (!you.attempt_escape()) // false means constricted and don't escape
+    {
+        mpr("You can't go down stairs while constricted.");
+	return;
     }
 
     if (!feat_is_gate(ygrd) && !player_can_reach_floor("floor"))
@@ -3452,6 +3463,12 @@ static void _open_door(coord_def move, bool check_confused)
         return;
     }
 
+    if (!you.attempt_escape()) // false means constricted and don't escape
+    {
+        mpr("You can't open doors while constricted.");
+	return;
+    }
+
     // The player used Ctrl + dir or a variant thereof.
     if (!move.origin())
     {
@@ -3747,6 +3764,12 @@ static void _close_door(coord_def move)
         return;
     }
 
+    if (!you.attempt_escape()) // false means constricted and don't escape
+    {
+        mpr("You can't close doors while constricted.");
+	return;
+    }
+
     dist door_move;
 
     // The player hasn't yet told us a direction.
@@ -4029,6 +4052,16 @@ static void _move_player(coord_def move)
         free_self_from_net();
         you.turn_is_over = true;
         return;
+    }
+
+    if (!you.attempt_escape()) // false means constricted and did not escape
+    {
+        std::string emsg = "While you don't manage to break free from ";
+	emsg += env.mons[you.constricted_by].name(DESC_THE,true);
+	emsg += ", you feel that another attempt might be more successful.";
+	mpr(emsg);
+	you.turn_is_over = true;
+	return;
     }
 
     // When confused, sometimes make a random move

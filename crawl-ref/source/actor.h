@@ -348,12 +348,13 @@ public:
     // Constriction stuff
     unsigned short constricted_by;
     unsigned short constricting[8]; // max 8 for octopode
+    int escape_attempts;
     int dur_been_constricted;
     int dur_has_constricted[8];     // max 8 for octopode
 
     virtual bool is_constricted()
     {
-        return (constricted_by != 0);
+        return (constricted_by != NON_ENTITY);
     }
     virtual bool is_constricting();
     
