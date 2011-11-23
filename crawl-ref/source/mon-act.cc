@@ -2724,6 +2724,7 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
     // from misc.cc:turn_corpse_into_chunks() and the butchery-related
     // delays in delay.cc:stop_delay().
 
+    const item_def corpse = item;
     const int max_chunks = get_max_corpse_chunks(mt);
 
     // Only fresh corpses bleed enough to colour the ground.
@@ -2734,6 +2735,9 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
         turn_corpse_into_skeleton(item);
     else
         destroy_item(item.index());
+
+    // Happens after the corpse has been butchered.
+    maybe_drop_monster_hide(corpse);
 
     return (true);
 }
