@@ -3421,7 +3421,7 @@ int melee_attack::calc_to_hit(bool random)
         {                       // ...you must be unarmed
             mhit += species_has_claws(you.species) ? 4 : 2;
 
-            mhit += maybe_random2(1 + you.skill(SK_UNARMED_COMBAT),
+            mhit += maybe_random_div(you.skill(SK_UNARMED_COMBAT, 100), 100,
                                          random);
         }
 
@@ -3463,8 +3463,7 @@ int melee_attack::calc_to_hit(bool random)
             mhit -= 3;
 
         // armour penalty
-        mhit -= (attacker_armour_tohit_penalty
-                        + attacker_shield_tohit_penalty);
+        mhit -= (attacker_armour_tohit_penalty + attacker_shield_tohit_penalty);
 
         //mutation
         if (player_mutation_level(MUT_EYEBALLS))
@@ -3489,10 +3488,41 @@ int melee_attack::calc_to_hit(bool random)
                 // Just trying to touch is easier that trying to damage.
                 mhit += maybe_random2(you.dex(), random);
             }
+
+            // TODO: Review this later (transformations getting extra hit
+            // almost across the board seems bad) - Cryp71c
+            switch (you.form)
+            {
+            case TRAN_SPIDER:
+                mhit += maybe_random2(10, random);
+                break;
+            case TRAN_BAT:
+                mhit += maybe_random2(12, random);
+                break;
+            case TRAN_ICE_BEAST:
+                mhit += maybe_random2(10, random);
+                break;
+            case TRAN_BLADE_HANDS:
+                mhit += maybe_random2(12, random);
+                break;
+            case TRAN_STATUE:
+                mhit += maybe_random2(9, random);
+                break;
+            case TRAN_DRAGON:
+                mhit += maybe_random2(10, random);
+                break;
+            case TRAN_LICH:
+                mhit += maybe_random2(10, random);
+                break;
+            case TRAN_PIG:
+            case TRAN_APPENDAGE:
+            case TRAN_NONE:
+                break;
+            }
         }
 
         // If no defender, we're calculating to-hit for debug-display
-        // purposes, so don't drop down to defender code below (there is none)
+        // purposes, so don't drop down to defender code below
         if (defender == NULL)
             return (mhit);
     }
@@ -3514,7 +3544,10 @@ int melee_attack::calc_to_hit(bool random)
         mhit -= 5;
 
     if (!defender->visible_to(attacker))
-        mhit = mhit * 75 / 100;
+        if (attacker->atype() == ACT_PLAYER)
+            mhit -= 6;
+        else
+            mhit = mhit * 65 / 100;
     else
     {
         // This can only help if you're visible!
