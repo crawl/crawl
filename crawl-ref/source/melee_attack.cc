@@ -779,10 +779,10 @@ bool melee_attack::attack()
             return (false);
         }
     }
-	
+
     if (!shield_blocked
-        && attacker != defender 
-        && defender->atype() == ACT_PLAYER 
+        && attacker != defender
+        && defender->atype() == ACT_PLAYER
         && grid_distance(you.pos(), attacker->as_monster()->pos()) == 1)
     {
         // Check for defender Spines
