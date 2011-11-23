@@ -2864,7 +2864,7 @@ static void _regenerate_hp_and_mp(int delay)
 
     if (you.hp < you.hp_max && !you.disease && !you.duration[DUR_DEATHS_DOOR])
     {
-        int base_val = player_regen();
+        const int base_val = player_regen();
         tmp += div_rand_round(base_val * delay, BASELINE_DELAY);
     }
 
@@ -2887,7 +2887,7 @@ static void _regenerate_hp_and_mp(int delay)
 
     if (you.magic_points < you.max_magic_points)
     {
-        int base_val = 7 + you.max_magic_points / 2;
+        const int base_val = 7 + you.max_magic_points / 2;
         tmp += div_rand_round(base_val * delay, BASELINE_DELAY);
     }
 
