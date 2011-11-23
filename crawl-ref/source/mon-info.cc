@@ -261,7 +261,7 @@ static void _translate_tentacle_ref(monster_info& mi, const monster* m,
                 && other->type != MONS_SIMULACRUM_LARGE
                 && !_tentacle_pos_unknown(other, m->pos()))
             {
-                mi.props[key] = grid2player(other->pos());
+                mi.props[key] = h_pos - m->pos();
             }
         }
     }
@@ -334,7 +334,7 @@ monster_info::monster_info(const monster* m, int milev)
 {
     mb.reset();
     attitude = ATT_HOSTILE;
-    pos = grid2player(m->pos());
+    pos = m->pos();
 
     attitude = mons_attitude(m);
 

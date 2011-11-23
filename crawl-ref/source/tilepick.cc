@@ -2147,7 +2147,7 @@ static tileidx_t _tileidx_tentacle(const monster_info& mon)
     if (!no_head_connect)
     {
         // Get the parent tentacle's location.
-        h_pos = mon.props["inwards"].get_coord();
+        h_pos = t_pos + mon.props["inwards"].get_coord();
     }
 
     // Tentacle end only requires checking of head position.
@@ -2199,7 +2199,7 @@ static tileidx_t _tileidx_tentacle(const monster_info& mon)
     bool no_next_connect = !mon.props.exists("outwards");
     if (!no_next_connect)
     {
-        n_pos = mon.props["outwards"].get_coord();
+        n_pos = t_pos + mon.props["outwards"].get_coord();
     }
 
     if (no_head_connect && no_next_connect)
@@ -2400,7 +2400,7 @@ static bool _tentacle_tile_not_levitating(tileidx_t tile)
 
 static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
 {
-    bool in_water = feat_is_water(env.map_knowledge(player2grid(mon.pos)).feat());
+    bool in_water = feat_is_water(env.map_knowledge(mon.pos).feat());
 
     // Show only base class for detected monsters.
     if (mons_class_is_zombified(mon.type))
@@ -2434,7 +2434,7 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_YAKTAUR_CAPTAIN:
             return TILEP_MONS_YAKTAUR_CAPTAIN + _bow_offset(mon);
         case MONS_BUSH:
-            if (env.map_knowledge(player2grid(mon.pos)).cloud() == CLOUD_FIRE)
+            if (env.map_knowledge(mon.pos).cloud() == CLOUD_FIRE)
                 return TILEP_MONS_BUSH_BURNING;
             else
                 return TILEP_MONS_BUSH;
