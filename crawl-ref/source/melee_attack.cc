@@ -787,21 +787,24 @@ bool melee_attack::attack()
     }
     else if (ev_margin >= 0)
     {
-        if (attacker != defender && attack_warded_off())
+        if (shield_blocked))
         {
-            // A warded-off attack takes half the normal energy.
-            attacker->gain_energy(EUT_ATTACK, 2);
-
-            perceived_attack = true;
-            return (false);
+            if (!handle_phase_blocked())
+                return (false);
         }
+        else
+        {
+            if (attacker != defender && attack_warded_off())
+            {
+                // A warded-off attack takes half the normal energy.
+                attacker->gain_energy(EUT_ATTACK, 2);
 
-        handle_phase_hit();
-    }
-    else if (shield_blocked)
-    {
-        if (!handle_phase_blocked())
-            return (false);
+                perceived_attack = true;
+                return (false);
+            }
+
+            handle_phase_hit();
+        }
     }
     else
     {
