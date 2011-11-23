@@ -3636,6 +3636,8 @@ int monster::skill(skill_type sk, int scale, bool real) const
 
 void monster::blink(bool)
 {
+    if (is_constricted_larger())  // disallow blink if constricted by larger
+        return;
     monster_blink(this);
 }
 
@@ -5364,4 +5366,17 @@ void monster::accum_has_constricted()
     for (int i = 0; i < 8; i++)
         if (constricting[i])
             dur_has_constricted[i] += you.time_taken;
+}
+
+bool monster::is_constricted_larger()
+{
+    size_type csize;
+    size_type msize;
+
+    if (!is_constricted())
+        return false;
+    msize = body_size();
+    csize = env.mons[constricted_by].body_size();
+    return (csize > msize);
+
 }

@@ -437,6 +437,7 @@ public:
     void calc_speed();
     void accum_been_constricted();
     void accum_has_constricted();
+    bool is_constricted_larger();
 
 private:
     void init_with(const monster& mons);

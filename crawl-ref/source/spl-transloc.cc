@@ -28,6 +28,7 @@
 #include "mon-behv.h"
 #include "mon-iter.h"
 #include "mon-util.h"
+#include "mon-stuff.h"
 #include "orb.h"
 #include "player.h"
 #include "random.h"
@@ -92,6 +93,11 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
         if (pre_msg)
             mpr(pre_msg->c_str());
         mpr("The power of the Abyss keeps you in your place!");
+    }
+    // Check to see if being constricted will prevent a teleport
+    else if (you.is_constricted_larger())
+    {
+        mpr("You can't blink while constricted");
     }
     else if (you.confused() && !wizard_blink)
     {
@@ -219,6 +225,8 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             place_cloud(CLOUD_TLOC_ENERGY, you.pos(), 1 + random2(3), &you);
             move_player_to_grid(beam.target, false, true);
 
+	    if (you.is_constricted())
+	        monster_teleport_to_player(you.constricted_by, beam.target);
             // Controlling teleport contaminates the player. -- bwr
             if (!wizard_blink)
                 contaminate_player(1, true);
@@ -274,6 +282,8 @@ void random_blink(bool allow_partial_control, bool override_abyss, bool override
         coord_def origin = you.pos();
         move_player_to_grid(target, false, true);
 
+	if (you.is_constricted())
+	    monster_teleport_to_player(you.constricted_by, target);
         // Leave a purple cloud.
         place_cloud(CLOUD_TLOC_ENERGY, origin, 1 + random2(3), &you);
     }
@@ -415,6 +425,13 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
     {
         canned_msg(MSG_STRANGE_STASIS);
         return (false);
+    }
+
+    // Check to see if being constricted will prevent a teleport
+    if (you.is_constricted_larger())
+    {
+        mpr("Teleport cancelled by constriction");
+	return (false);
     }
 
     // After this point, we're guaranteed to teleport. Kill the appropriate
@@ -562,6 +579,8 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
 
                 // Controlling teleport contaminates the player. - bwr
                 move_player_to_grid(pos, false, true);
+		if (you.is_constricted())
+		    monster_teleport_to_player(you.constricted_by, pos);
                 if (!wizard_tele)
                     contaminate_player(1, true);
             }
@@ -619,6 +638,8 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
         place_cloud(CLOUD_TLOC_ENERGY, old_pos, 1 + random2(3), &you);
 
         move_player_to_grid(newpos, false, true);
+	if (you.is_constricted())
+	    monster_teleport_to_player(you.constricted_by, newpos);
     }
 
     _handle_teleport_update(large_change, check_ring_TC, old_pos);
