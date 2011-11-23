@@ -132,7 +132,7 @@ static void _create_monster_hide(const item_def corpse)
     if (!invalid_monster_type(montype) && mons_is_unique(montype))
         item.inscription = mons_type_name(montype, DESC_PLAIN);
 
-    move_item_to_grid(&o, you.pos());
+    move_item_to_grid(&o, corpse.pos);
 }
 
 static void _maybe_drop_monster_hide(const item_def corpse)
