@@ -792,7 +792,7 @@ static void _clear_net_trapping_status(coord_def c)
     {
         monster* mvictim = victim->as_monster();
         if (you.can_see(mvictim))
-            mprf("The net is swept off %s.", mvictim->name(DESC_NOCAP_THE).c_str());
+            mprf("The net is swept off %s.", mvictim->name(DESC_THE).c_str());
         mons_clear_trapping_net(mvictim);
     }
     else
@@ -1145,7 +1145,7 @@ void shoals_release_tide(monster* mons)
         if (player_can_hear(mons->pos()))
         {
             mprf(MSGCH_SOUND, "The tide is released from %s call.",
-                 apostrophise(mons->name(DESC_NOCAP_YOUR, true)).c_str());
+                 apostrophise(mons->name(DESC_YOUR, true)).c_str());
             if (you.see_cell(mons->pos()))
                 flash_view_delay(ETC_WATER, 150);
         }

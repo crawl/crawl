@@ -141,7 +141,7 @@ void set_terrain_seen(int x, int y)
         if (!is_boring_terrain(feat))
         {
             coord_def pos(x, y);
-            std::string desc = feature_description(pos, false, DESC_NOCAP_A);
+            std::string desc = feature_description(pos, false, DESC_A);
             take_note(Note(NOTE_SEEN_FEAT, 0, 0, desc.c_str()));
         }
     }

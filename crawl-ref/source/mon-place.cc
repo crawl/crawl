@@ -1195,7 +1195,7 @@ int place_monster(mgen_data mg, bool force_pos, bool dont_place)
         std::string msg;
 
         if (menv[id].visible_to(&you))
-            msg = menv[id].name(DESC_CAP_A);
+            msg = menv[id].name(DESC_A);
         else if (shoved)
             msg = "Something";
 
@@ -1772,7 +1772,7 @@ static int _place_monster_aux(const mgen_data &mg,
         {
             monster* sum = mg.summoner->as_monster();
             mons_add_blame(mon, (blame_prefix
-                                 + sum->full_name(DESC_NOCAP_A, true)));
+                                 + sum->full_name(DESC_A, true)));
             if (sum->props.exists("blame"))
             {
                 CrawlVector& oldblame = sum->props["blame"].get_vector();
@@ -2682,14 +2682,14 @@ static monster_type _band_member(band_type band, int power)
         if (one_chance_in(7))
         {
             mon_type = random_choose_weighted(50, MONS_LICH,
-                                              10, MONS_ANCIENT_LICH,
+                                       10, MONS_ANCIENT_LICH,
                                                0);
         }
         else if (one_chance_in(6))
         {
             mon_type = random_choose_weighted(50, MONS_ABOMINATION_SMALL,
-                                              40, MONS_ABOMINATION_LARGE,
-                                              10, MONS_TENTACLED_MONSTROSITY,
+                                       40, MONS_ABOMINATION_LARGE,
+                                       10, MONS_TENTACLED_MONSTROSITY,
                                                0);
         }
         else
@@ -2839,9 +2839,9 @@ static monster_type _band_member(band_type band, int power)
     }
     case BAND_ILSUIW:
         mon_type = random_choose_weighted(30, MONS_MERMAID,
-                                          15, MONS_MERFOLK,
-                                          10, MONS_MERFOLK_JAVELINEER,
-                                          10, MONS_MERFOLK_IMPALER,
+                                   15, MONS_MERFOLK,
+                                   10, MONS_MERFOLK_JAVELINEER,
+                                   10, MONS_MERFOLK_IMPALER,
                                            0);
         break;
 
@@ -2871,7 +2871,7 @@ static monster_type _band_member(band_type band, int power)
 
     case BAND_MERFOLK_AQUAMANCER:
         mon_type = random_choose_weighted(8, MONS_MERFOLK,
-                                         10, MONS_ICE_BEAST,
+                                   10, MONS_ICE_BEAST,
                                           0);
         break;
 
@@ -2937,7 +2937,7 @@ void mark_interesting_monst(monster* mons, beh_type behaviour)
     // Don't waste time on moname() if user isn't using this option
     else if (!Options.note_monsters.empty())
     {
-        const std::string iname = mons_type_name(mons->type, DESC_NOCAP_A);
+        const std::string iname = mons_type_name(mons->type, DESC_A);
         for (unsigned i = 0; i < Options.note_monsters.size(); ++i)
         {
             if (Options.note_monsters[i].matches(iname))
@@ -3279,7 +3279,7 @@ bool player_angers_monster(monster* mon)
                 aura = "anti-magical";
 
             mprf("%s is enraged by your %s aura!",
-                 mon->name(DESC_CAP_THE).c_str(), aura.c_str());
+                 mon->name(DESC_THE).c_str(), aura.c_str());
         }
 
         return (true);

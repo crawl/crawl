@@ -114,7 +114,7 @@ static void _moveto_maybe_repel_stairs()
         {
             std::string stair_str =
                 feature_description(new_grid, NUM_TRAPS, "",
-                                    DESC_CAP_THE, false);
+                                    DESC_THE, false);
             std::string prep = feat_preposition(new_grid, true, &you);
 
             mprf("%s slides away as you move %s it!", stair_str.c_str(),
@@ -185,7 +185,7 @@ static bool _check_moveto_trap(const coord_def& p, const std::string &move_verb)
 
             mprf(MSGCH_WARN,
                  "You found %s trap!",
-                 trap->name(DESC_NOCAP_A).c_str());
+                 trap->name(DESC_A).c_str());
 
             if (!you.running.is_any_travel())
                 more();
@@ -634,7 +634,7 @@ void update_vision_range()
     set_los_radius(you.current_vision);
 }
 
-// Checks whether the player's current species can use
+// Checks whether the player's current species can
 // use (usually wear) a given piece of equipment.
 // Note that EQ_BODY_ARMOUR and EQ_HELMET only check
 // the ill-fitting variant (i.e., not caps and robes).
@@ -910,7 +910,7 @@ bool berserk_check_wielded_weapon()
         || you.attribute[ATTR_WEAPON_SWAP_INTERRUPTED])
     {
         std::string prompt = "Do you really want to go berserk while "
-                             "wielding " + weapon.name(DESC_NOCAP_YOUR)
+                             "wielding " + weapon.name(DESC_YOUR)
                              + "?";
 
         if (!yesno(prompt.c_str(), true, 'n'))
@@ -1476,7 +1476,7 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         // dragonskin cloak: 0.5 to draconic resistances
         if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
             rf++;
-    }
+        }
 
     // species:
     if (you.species == SP_MUMMY)
@@ -1617,7 +1617,7 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         // dragonskin cloak: 0.5 to draconic resistances
         if (player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
             rc++;
-    }
+        }
 
     // mutations:
     rc += player_mutation_level(MUT_COLD_RESISTANCE);
@@ -2297,62 +2297,6 @@ int player_evasion_size_factor()
     return 2 * (SIZE_MEDIUM - size);
 }
 
-// The EV penalty to the player for wearing their current shield.
-int player_adjusted_shield_evasion_penalty(int scale)
-{
-    const item_def *shield = you.slot_item(EQ_SHIELD, false);
-    if (!shield)
-        return (0);
-
-    const int base_shield_penalty = -property(*shield, PARM_EVASION);
-    return std::max(0,
-                    (base_shield_penalty * scale
-                     - you.skill(SK_SHIELDS, scale)
-                     / std::max(1, 5 + player_evasion_size_factor())));
-}
-
-int player_raw_body_armour_evasion_penalty()
-{
-    const item_def *body_armour = you.slot_item(EQ_BODY_ARMOUR, false);
-    if (!body_armour)
-        return (0);
-
-    const int base_ev_penalty = -property(*body_armour, PARM_EVASION);
-    return base_ev_penalty;
-}
-
-int player_size_adjusted_body_armour_evasion_penalty(int scale)
-{
-    const int base_ev_penalty = player_raw_body_armour_evasion_penalty();
-    if (!base_ev_penalty)
-        return (0);
-
-    const int size = you.body_size(PSIZE_BODY);
-
-    const int size_bonus_factor = (size - SIZE_MEDIUM) * scale / 4;
-
-    const int size_adjusted_penalty =
-        std::max(0,
-                 scale * base_ev_penalty
-                 - size_bonus_factor * base_ev_penalty);
-
-    return (size_adjusted_penalty);
-}
-
-// The EV penalty to the player for their worn body armour.
-int player_adjusted_body_armour_evasion_penalty(int scale)
-{
-    const int base_ev_penalty = player_raw_body_armour_evasion_penalty();
-    if (!base_ev_penalty)
-        return (0);
-
-    return ((base_ev_penalty
-             + std::max(0, 3 * base_ev_penalty - you.strength()))
-            * (450 - you.skill(SK_ARMOUR, 10))
-            * scale
-            / 450);
-}
-
 // The total EV penalty to the player for all their worn armour items
 // with a base EV penalty (i.e. EV penalty as a base armour property,
 // not as a randart property).
@@ -2374,7 +2318,7 @@ static int _player_adjusted_evasion_penalty(const int scale)
     }
 
     return (piece_armour_evasion_penalty * scale +
-            player_adjusted_body_armour_evasion_penalty(scale));
+            you.adjusted_body_armour_penalty(scale));
 }
 
 // EV bonuses that work even when helpless.
@@ -2494,7 +2438,7 @@ int player_evasion(ev_ignore_type evit)
     // adjusted_evasion_penalty, however.
     const int armour_dodge_penalty =
         std::max(0,
-                 (30 * player_size_adjusted_body_armour_evasion_penalty(scale)
+                 (30 * you.adjusted_body_armour_penalty(scale, true)
                   - 30 * scale)
                  / std::max(1, (int) you.strength()));
 
@@ -2502,8 +2446,7 @@ int player_evasion(ev_ignore_type evit)
     const int armour_adjusted_dodge_bonus =
         std::max(0, dodge_bonus - armour_dodge_penalty);
 
-    const int adjusted_shield_penalty =
-        player_adjusted_shield_evasion_penalty(scale);
+    const int adjusted_shield_penalty = you.adjusted_shield_penalty(scale);
 
     const int prestepdown_evasion =
         size_base_ev
@@ -2554,12 +2497,12 @@ int player_armour_shield_spell_penalty()
     const int scale = 100;
 
     const int body_armour_penalty =
-        std::max(25 * player_adjusted_body_armour_evasion_penalty(scale)
+        std::max(25 * you.adjusted_body_armour_penalty(scale)
                     - player_body_armour_racial_spellcasting_bonus(scale),
                  0);
 
     const int total_penalty = body_armour_penalty
-                 + 25 * player_adjusted_shield_evasion_penalty(scale)
+                 + 25 * you.adjusted_shield_penalty(scale)
                  - 20 * scale;
 
     return (std::max(total_penalty, 0) / scale);
@@ -3713,6 +3656,19 @@ int check_stealth(void)
     // it's easier to be stealthy when there's a lot of background noise
     stealth += 2 * current_level_ambient_noise();
 
+    // If you've been tagged with Corona or are Glowing, the glow
+    // makes you extremely unstealthy.
+    // The darker it is, the bigger the penalty.
+    if (you.backlit())
+        stealth = (2 * you.current_vision * stealth) / (5 * LOS_RADIUS);
+    // On the other hand, shrouding has the reverse effect:
+    if (you.umbra())
+        stealth = (2 * LOS_RADIUS * stealth) / you.current_vision;
+    // The shifting glow from the Orb, while too unstable to negate invis
+    // or affect to-hit, affects stealth even more than regular glow.
+    if (orb_haloed(you.pos()))
+        stealth /= 3;
+
     stealth = std::max(0, stealth);
 
     return (stealth);
@@ -3888,7 +3844,10 @@ static void _display_movement_speed()
 static void _display_tohit()
 {
 #ifdef DEBUG_DIAGNOSTICS
-    const int to_hit = calc_your_to_hit(false) * 2;
+    melee_attack attk(&you, NULL);
+
+    const int to_hit = attk.calc_to_hit(false);
+
     dprf("To-hit: %d", to_hit);
 #endif
 /*
@@ -3929,7 +3888,8 @@ static std::string _attack_delay_desc(int attack_delay)
 
 static void _display_attack_delay()
 {
-    const random_var delay = calc_your_attack_delay();
+    melee_attack attk(&you, NULL);
+    const int delay = attk.calc_attack_delay();
 
     // Scale to fit the displayed weapon base delay, i.e.,
     // normal speed is 100 (as in 100%).
@@ -3939,7 +3899,7 @@ static void _display_attack_delay()
     if (weapon && is_range_weapon(*weapon))
         avg = launcher_final_speed(*weapon, you.shield());
     else
-        avg = static_cast<int>(round(10 * delay.expected()));
+        avg = static_cast<int>(round(10 * delay));
 
     // Haste wasn't counted here, but let's show finesse.
     // Can't be done in the above function because of interactions with
@@ -3948,16 +3908,6 @@ static void _display_attack_delay()
         avg = std::max(20, avg / 2);
 
     std::string msg = "Your attack speed is " + _attack_delay_desc(avg) + ".";
-
-#ifdef DEBUG_DIAGNOSTICS
-    if (you.wizard)
-    {
-        const int max = 10 * delay.max();
-
-        msg += colour_string(make_stringf(" %d%% (max %d%%)", avg, max),
-                             channel_to_colour(MSGCH_DIAGNOSTICS));
-    }
-#endif
 
     mpr(msg);
 }
@@ -5675,6 +5625,11 @@ bool player::is_levitating() const
     return duration[DUR_LEVITATION] || you.attribute[ATTR_PERM_LEVITATION];
 }
 
+bool player::is_banished() const
+{
+    return (!alive() && banished);
+}
+
 bool player::in_water() const
 {
     return (ground_level() && !beogh_water_walk()
@@ -5840,6 +5795,67 @@ void player::shield_block_succeeded(actor *foe)
 
     shield_blocks++;
     practise(EX_SHIELD_BLOCK);
+}
+
+int player::unadjusted_body_armour_penalty() const
+{
+    const item_def *body_armour = slot_item(EQ_BODY_ARMOUR, false);
+    if (!body_armour)
+        return (0);
+
+    const int base_ev_penalty = -property(*body_armour, PARM_EVASION);
+    return base_ev_penalty;
+}
+
+// The EV penalty to the player for their worn body armour.
+int player::adjusted_body_armour_penalty(int scale, bool use_size) const
+{
+    const int base_ev_penalty = unadjusted_body_armour_penalty();
+    if (!base_ev_penalty)
+        return (0);
+
+    if(use_size)
+    {
+        const int size = you.body_size(PSIZE_BODY);
+
+        const int size_bonus_factor = (size - SIZE_MEDIUM) * scale / 4;
+
+        return std::max(0, scale * base_ev_penalty
+                           - size_bonus_factor * base_ev_penalty);
+    }
+
+    return ((base_ev_penalty
+             + std::max(0, 3 * base_ev_penalty - strength()))
+            * (450 - skill(SK_ARMOUR))
+            * scale
+            / 450);
+}
+
+// The EV penalty to the player for wearing their current shield.
+int player::adjusted_shield_penalty(int scale) const
+{
+    const item_def *shield_l = you.slot_item(EQ_SHIELD, false);
+    if (!shield_l)
+        return (0);
+
+    const int base_shield_penalty = -property(*shield_l, PARM_EVASION);
+    return std::max(0,
+                    (base_shield_penalty * scale
+                     - you.skill(SK_SHIELDS, scale)
+                     / std::max(1, 5 + player_evasion_size_factor())));
+}
+
+int player::armour_tohit_penalty(bool random_factor) const
+{
+    return maybe_roll_dice(1, adjusted_body_armour_penalty(), random_factor);
+}
+
+int player::shield_tohit_penalty(bool random_factor) const
+{
+    const item_def* wp = slot_item(EQ_WEAPON);
+    int factor = (wp && hands_reqd(*wp, body_size()) == HANDS_HALF) ? 2 : 1;
+
+    return maybe_roll_dice(factor, adjusted_shield_penalty(), random_factor);
 }
 
 int player::skill(skill_type sk, int scale, bool real) const
@@ -6360,6 +6376,13 @@ int player_res_magic(bool calc_unid, bool temp)
     return (rm);
 }
 
+bool player::fights_well_unarmed(int heavy_armour_penalty)
+{
+    return (you.burden_state == BS_UNENCUMBERED
+            && x_chance_in_y(you.skill(SK_UNARMED_COMBAT, 10), 200)
+            && x_chance_in_y(2, 1 + heavy_armour_penalty));
+}
+
 bool player::confusable() const
 {
     return (player_mental_clarity() == 0);
@@ -6436,7 +6459,7 @@ int player::mons_species() const
 
 bool player::poison(actor *agent, int amount, bool force)
 {
-    return ::poison_player(amount, agent? agent->name(DESC_NOCAP_A, true) : "");
+    return ::poison_player(amount, agent? agent->name(DESC_A, true) : "");
 }
 
 void player::expose_to_element(beam_type element, int st)
@@ -6570,7 +6593,7 @@ void player::paralyse(actor *who, int str, std::string source)
     int &paralysis(duration[DUR_PARALYSIS]);
 
     if (source.empty() && who)
-        source = who->name(DESC_NOCAP_A);
+        source = who->name(DESC_A);
 
     if (!paralysis && !source.empty())
     {

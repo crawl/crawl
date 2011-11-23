@@ -310,7 +310,7 @@ static void _SINGING_SWORD_equip(item_def *item, bool *show_msgs, bool unmeld)
     if (!item_type_known(*item))
     {
         mprf(MSGCH_TALK, "%s says, \"Hi!  I'm the Singing Sword!\"",
-             item->name(DESC_CAP_THE).c_str());
+             item->name(DESC_THE).c_str());
     }
     else
         mpr("The Singing Sword hums in delight!", MSGCH_TALK);
@@ -628,7 +628,7 @@ found:
     if (!you.beheld_by(closest))
     {
          mprf("Visions of slaying %s flood into your mind.",
-              closest->name(DESC_NOCAP_THE).c_str());
+              closest->name(DESC_THE).c_str());
 
          // The monsters (if any) currently mesmerising the player do not include
          // this monster. To avoid trapping the player, all other beholders
@@ -707,7 +707,7 @@ static void _UNDEADHUNTER_melee_effect(item_def* item, actor* attacker,
     if (defender->holiness() == MH_UNDEAD && !one_chance_in(3) && !mondied)
     {
         mprf("%s %s blasted by disruptive energy!",
-              defender->name(DESC_CAP_THE).c_str(),
+              defender->name(DESC_THE).c_str(),
               defender->atype() == ACT_PLAYER ? "are" : "is");
         defender->hurt(attacker, random2avg((1 + (dam * 3)), 3));
     }

@@ -378,7 +378,7 @@ static int _do_split(monster* thing, coord_def & target)
     // XXX copy summoner info
 
     if (you.can_see(thing))
-        mprf("%s splits.", thing->name(DESC_CAP_A).c_str());
+        mprf("%s splits.", thing->name(DESC_A).c_str());
 
     int split_off = thing->number / 2;
     float max_per_blob = thing->max_hit_points / float(thing->number);
@@ -477,7 +477,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
     }
 
     monster_type old_type = merge_to->type;
-    std::string old_name = merge_to->name(DESC_NOCAP_A);
+    std::string old_name = merge_to->name(DESC_A);
 
     // Change the monster's type if we need to.
     if (new_type != old_type)
@@ -508,25 +508,25 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
                 mprf("Two %s merge%s%s.",
                      pluralise(crawlie->name(DESC_PLAIN)).c_str(),
                      changed ? " to form " : "",
-                     changed ? merge_to->name(DESC_NOCAP_A).c_str() : "");
+                     changed ? merge_to->name(DESC_A).c_str() : "");
             else
                 mprf("%s merges with %s%s%s.",
-                     crawlie->name(DESC_CAP_A).c_str(),
+                     crawlie->name(DESC_A).c_str(),
                      old_name.c_str(),
                      changed ? " to form " : "",
-                     changed ? merge_to->name(DESC_NOCAP_A).c_str() : "");
+                     changed ? merge_to->name(DESC_A).c_str() : "");
         }
         else if (changed)
         {
             mprf("%s suddenly becomes %s.",
                  uppercase_first(old_name).c_str(),
-                 merge_to->name(DESC_NOCAP_A).c_str());
+                 merge_to->name(DESC_A).c_str());
         }
         else
-            mprf("%s twists grotesquely.", merge_to->name(DESC_CAP_A).c_str());
+            mprf("%s twists grotesquely.", merge_to->name(DESC_A).c_str());
     }
     else if (you.can_see(crawlie))
-        mprf("%s suddenly disappears!", crawlie->name(DESC_CAP_A).c_str());
+        mprf("%s suddenly disappears!", crawlie->name(DESC_A).c_str());
 
     // Now kill the other monster
     monster_die(crawlie, KILL_MISC, NON_MONSTER, true);
@@ -572,12 +572,12 @@ static bool _do_merge_slimes(monster* initial_slime, monster* merge_to)
         if (you.can_see(initial_slime))
         {
             mprf("Two slime creatures merge to form %s.",
-                 merge_to->name(DESC_NOCAP_A).c_str());
+                 merge_to->name(DESC_A).c_str());
         }
         else
         {
             mprf("A slime creature suddenly becomes %s.",
-                 merge_to->name(DESC_NOCAP_A).c_str());
+                 merge_to->name(DESC_A).c_str());
         }
 
         flash_view_delay(LIGHTGREEN, 150);
@@ -885,7 +885,7 @@ static bool _siren_movement_effect(const monster* mons)
                     {
                         mprf("Something prevents you from swapping places "
                              "with %s.",
-                             mon->name(DESC_NOCAP_THE).c_str());
+                             mon->name(DESC_THE).c_str());
                         return (do_resist);
                     }
 
@@ -898,7 +898,7 @@ static bool _siren_movement_effect(const monster* mons)
                     mgrd(mon->pos()) = swap_mon;
 
                     mprf("You swap places with %s.",
-                         mon->name(DESC_NOCAP_THE).c_str());
+                         mon->name(DESC_THE).c_str());
                 }
                 move_player_to_grid(newpos, true, true);
 
@@ -968,9 +968,9 @@ static bool _orange_statue_effects(monster* mons)
                 mprf(MSGCH_WARN, "A hostile presence attacks your mind!");
             else if (you.can_see(mons))
                 mprf(MSGCH_WARN, "%s fixes %s piercing gaze on %s.",
-                     mons->name(DESC_CAP_THE).c_str(),
-                     mons->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
-                     foe->name(DESC_NOCAP_THE).c_str());
+                     mons->name(DESC_THE).c_str(),
+                     mons->pronoun(PRONOUN_POSSESSIVE).c_str(),
+                     foe->name(DESC_THE).c_str());
         }
 
         MiscastEffect(foe, mons->mindex(), SPTYP_DIVINATION,
@@ -1039,7 +1039,7 @@ static void _orc_battle_cry(monster* chief)
             if (you.can_see(chief) && player_can_hear(chief->pos()))
             {
                 mprf(MSGCH_SOUND, "%s roars a battle-cry!",
-                     chief->name(DESC_CAP_THE).c_str());
+                     chief->name(DESC_THE).c_str());
             }
 
             // The yell happens whether you happen to see it or not.
@@ -1055,7 +1055,7 @@ static void _orc_battle_cry(monster* chief)
                 std::string who;
                 if (seen_affected.size() == 1)
                 {
-                    who = seen_affected[0]->name(DESC_CAP_THE);
+                    who = seen_affected[0]->name(DESC_THE);
                     mprf(channel, "%s goes into a battle-frenzy!", who.c_str());
                 }
                 else
@@ -1138,7 +1138,7 @@ static void _cherub_hymn(monster* chief)
             if (you.can_see(chief) && player_can_hear(chief->pos()))
             {
                 mprf(MSGCH_SOUND, "%s sings a powerful hymn!",
-                     chief->name(DESC_CAP_THE).c_str());
+                     chief->name(DESC_THE).c_str());
             }
 
             // The yell happens whether you happen to see it or not.
@@ -1154,7 +1154,7 @@ static void _cherub_hymn(monster* chief)
                 std::string who;
                 if (seen_affected.size() == 1)
                 {
-                    who = seen_affected[0]->name(DESC_CAP_THE);
+                    who = seen_affected[0]->name(DESC_THE);
                     mprf(channel, "%s is roused by the hymn!", who.c_str());
                 }
                 else
@@ -1202,12 +1202,12 @@ static bool _make_monster_angry(const monster* mon, monster* targ)
         if (mon->type == MONS_QUEEN_BEE && targ->type == MONS_KILLER_BEE)
         {
             mprf("%s calls on %s to defend her!",
-                mon->name(DESC_CAP_THE).c_str(),
-                targ->name(DESC_NOCAP_THE).c_str());
+                mon->name(DESC_THE).c_str(),
+                targ->name(DESC_THE).c_str());
         }
         else
-            mprf("%s goads %s on!", mon->name(DESC_CAP_THE).c_str(),
-                 targ->name(DESC_NOCAP_THE).c_str());
+            mprf("%s goads %s on!", mon->name(DESC_THE).c_str(),
+                 targ->name(DESC_THE).c_str());
     }
 
     targ->go_berserk(false);
@@ -2899,8 +2899,8 @@ void mon_nearby_ability(monster* mons)
             const bool can_see = you.can_see(mons);
             if (can_see && you.can_see(foe))
                 mprf("%s blinks at %s.",
-                     mons->name(DESC_CAP_THE).c_str(),
-                     foe->name(DESC_NOCAP_THE).c_str());
+                     mons->name(DESC_THE).c_str(),
+                     foe->name(DESC_THE).c_str());
 
             int confuse_power = 2 + random2(3);
 
@@ -2932,8 +2932,8 @@ void mon_nearby_ability(monster* mons)
             const bool can_see = you.can_see(mons);
             if (can_see && you.can_see(foe))
                 mprf("%s stares at %s.",
-                     mons->name(DESC_CAP_THE).c_str(),
-                     foe->name(DESC_NOCAP_THE).c_str());
+                     mons->name(DESC_THE).c_str(),
+                     foe->name(DESC_THE).c_str());
 
             if (foe->atype() == ACT_PLAYER && !can_see)
                 mpr("You feel you are being watched by something.");

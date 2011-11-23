@@ -249,7 +249,7 @@ brand_type player::damage_brand(int)
         }
     }
 
-    return (ret);
+    return (static_cast<brand_type>(ret));
 }
 
 // Returns the item in the given equipment slot, NULL if the slot is empty.
@@ -350,28 +350,19 @@ void player::make_hungry(int hunger_increase, bool silent)
         ::lessen_hunger(-hunger_increase, silent);
 }
 
-static std::string _pronoun_you(description_level_type desc)
+std::string player::name(description_level_type dt, bool) const
 {
-    switch (desc)
+    switch (dt)
     {
     case DESC_NONE:
         return "";
-    case DESC_CAP_A: case DESC_CAP_THE:
-        return "You";
-    case DESC_NOCAP_A: case DESC_NOCAP_THE:
+    case DESC_A: case DESC_THE:
     default:
         return "you";
-    case DESC_CAP_YOUR:
-        return "Your";
-    case DESC_NOCAP_YOUR:
-    case DESC_NOCAP_ITS:
+    case DESC_YOUR:
+    case DESC_ITS:
         return "your";
     }
-}
-
-std::string player::name(description_level_type dt, bool) const
-{
-    return (_pronoun_you(dt));
 }
 
 std::string player::pronoun(pronoun_type pro, bool) const
@@ -379,10 +370,8 @@ std::string player::pronoun(pronoun_type pro, bool) const
     switch (pro)
     {
     default:
-    case PRONOUN_CAP:               return "You";
-    case PRONOUN_NOCAP:             return "you";
-    case PRONOUN_CAP_POSSESSIVE:    return "Your";
-    case PRONOUN_NOCAP_POSSESSIVE:  return "your";
+    case PRONOUN:                   return "you";
+    case PRONOUN_POSSESSIVE:        return "your";
     case PRONOUN_REFLEXIVE:         return "yourself";
     case PRONOUN_OBJECTIVE:         return "you";
     }
@@ -645,7 +634,7 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         {
             const item_def *amulet = you.slot_item(EQ_AMULET, false);
             mprf("You cannot go berserk with %s on.",
-                 amulet? amulet->name(DESC_NOCAP_YOUR).c_str() : "your amulet");
+                 amulet? amulet->name(DESC_YOUR).c_str() : "your amulet");
         }
         return (false);
     }

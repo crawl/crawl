@@ -51,7 +51,7 @@ static bool _confirm_pray_sacrifice(god_type god)
             && needs_handle_warning(*si, OPER_PRAY))
         {
             std::string prompt = "Really sacrifice stack with ";
-            prompt += si->name(DESC_NOCAP_A);
+            prompt += si->name(DESC_A);
             prompt += " in it?";
 
             if (!yesno(prompt.c_str(), false, 'n'))
@@ -116,7 +116,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
         return (false);
     }
 
-    std::string prompt = "Do you wish to have " + wpn.name(DESC_NOCAP_YOUR)
+    std::string prompt = "Do you wish to have " + wpn.name(DESC_YOUR)
                        + " ";
     if (brand == SPWPN_PAIN)
         prompt += "bloodied with pain";
@@ -131,7 +131,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
 
     you.duration[DUR_WEAPON_BRAND] = 0;     // just in case
 
-    std::string old_name = wpn.name(DESC_NOCAP_A);
+    std::string old_name = wpn.name(DESC_A);
     set_equip_desc(wpn, ISFLAG_GLOWING);
     set_item_ego_type(wpn, OBJ_WEAPONS, brand);
     wpn.colour = colour;
@@ -174,7 +174,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
                                               : "touched by the gods");
 
     take_note(Note(NOTE_ID_ITEM, 0, 0,
-              wpn.name(DESC_NOCAP_A).c_str(), desc.c_str()));
+              wpn.name(DESC_A).c_str(), desc.c_str()));
     wpn.flags |= ISFLAG_NOTED_ID;
 
     mpr("Your weapon shines brightly!", MSGCH_GOD);
@@ -891,7 +891,7 @@ static bool _offer_items()
             && (item.inscription.find("=p") != std::string::npos))
         {
             const std::string msg =
-                  "Really sacrifice " + item.name(DESC_NOCAP_A) + "?";
+                  "Really sacrifice " + item.name(DESC_A) + "?";
 
             if (!yesno(msg.c_str(), false, 'n'))
             {

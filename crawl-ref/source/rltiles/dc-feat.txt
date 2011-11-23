@@ -315,13 +315,13 @@ liquefaction1 LIQUEFACTION
 liquefaction2
 
 %sdir dc-dngn/gateways
-dngn_entrance DNGN_UNSEEN_ENTRANCE
 %rim 1
 dngn_enter_hell DNGN_ENTER_HELL
 dngn_enter_zot_closed DNGN_ENTER_ZOT_CLOSED
 dngn_enter_zot_open DNGN_ENTER_ZOT_OPEN
 %rim 0
 dngn_return_zot DNGN_RETURN_ZOT
+spider_portal DNGN_ENTER_SPIDER_NEST
 dngn_enter_dis DNGN_ENTER_DIS
 dngn_enter_gehenna DNGN_ENTER_GEHENNA
 dngn_enter_cocytus DNGN_ENTER_COCYTUS
@@ -335,6 +335,7 @@ dngn_exit_abyss_flickering
 dngn_enter_pandemonium DNGN_ENTER_PANDEMONIUM
 dngn_portal DNGN_PORTAL
 dngn_portal_rotated
+expired_portal DNGN_PORTAL_EXPIRED
 dngn_starry_portal DNGN_STARRY_PORTAL
 %rim 1
 dngn_transit_pandemonium DNGN_TRANSIT_PANDEMONIUM
@@ -362,7 +363,6 @@ bailey_portal DNGN_PORTAL_BAILEY
 bailey_gone DNGN_PORTAL_BAILEY_GONE
 lab_portal DNGN_PORTAL_LABYRINTH
 lab_gone DNGN_PORTAL_LABYRINTH_GONE
-spider_portal DNGN_PORTAL_SPIDER
 hive_portal DNGN_PORTAL_HIVE
 hive_gone DNGN_PORTAL_HIVE_GONE
 zig_portal DNGN_PORTAL_ZIGGURAT

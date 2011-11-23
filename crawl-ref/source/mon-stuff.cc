@@ -463,7 +463,7 @@ int place_monster_corpse(const monster* mons, bool silent,
             else
             {
                 mprf("%s appears out of nowhere!",
-                     mitm[o].name(DESC_CAP_A).c_str());
+                     mitm[o].name(DESC_A).c_str());
             }
         }
         if (o != NON_ITEM && !silent)
@@ -510,7 +510,7 @@ static void _check_kill_milestone(const monster* mons,
     {
         mark_milestone("uniq",
                        _milestone_kill_verb(killer)
-                       + mons->name(DESC_NOCAP_THE, true)
+                       + mons->name(DESC_THE, true)
                        + ".");
     }
 }
@@ -731,7 +731,7 @@ static bool _ely_protect_ally(monster* mons, killer_type killer)
     mons->hit_points = 1;
 
     snprintf(info, INFO_SIZE, " protects %s from harm!%s",
-             mons->name(DESC_NOCAP_THE).c_str(),
+             mons->name(DESC_THE).c_str(),
              coinflip() ? "" : " You feel responsible.");
 
     simple_god_message(info);
@@ -775,7 +775,7 @@ static bool _ely_heal_monster(monster* mons, killer_type killer, int i)
 
     snprintf(info, INFO_SIZE, "%s heals %s%s",
              god_name(god, false).c_str(),
-             mons->name(DESC_NOCAP_THE).c_str(),
+             mons->name(DESC_THE).c_str(),
              mons->hit_points * 2 <= mons->max_hit_points ? "." : "!");
 
     god_speaks(god, info);
@@ -1010,7 +1010,7 @@ static void _mummy_curse(monster* mons, killer_type killer, int index)
         else if (you.can_see(target))
         {
             mprf(MSGCH_MONSTER_SPELL, "A malignant aura surrounds %s.",
-                 target->name(DESC_NOCAP_THE).c_str());
+                 target->name(DESC_THE).c_str());
         }
         MiscastEffect(target, mons->mindex(), SPTYP_NECROMANCY,
                       pow, random2avg(88, 3), "a mummy death curse");
@@ -1131,7 +1131,7 @@ static bool _explode_monster(monster* mons, killer_type killer,
             mpr(sanct_msg, MSGCH_GOD);
         else
             mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s explodes!",
-                 mons->full_name(DESC_CAP_THE).c_str());
+                 mons->full_name(DESC_THE).c_str());
     }
 
     if (is_sanctuary(mons->pos()))
@@ -1558,7 +1558,7 @@ int monster_die(monster* mons, killer_type killer,
         take_note(Note(killer == KILL_BANISHED ? NOTE_BANISH_MONSTER
                                                : NOTE_KILL_MONSTER,
                        mons->type, mons->friendly(),
-                       mons->full_name(DESC_NOCAP_A).c_str()));
+                       mons->full_name(DESC_A).c_str()));
     }
 
     // From time to time Trog gives you a little bonus.
@@ -1724,7 +1724,7 @@ int monster_die(monster* mons, killer_type killer,
                     && (anon || !invalid_monster_index(killer_index)))
                 {
                     mprf(MSGCH_MONSTER_DAMAGE, MDAM_DEAD, "%s is %s!",
-                         mons->name(DESC_CAP_THE).c_str(),
+                         mons->name(DESC_THE).c_str(),
                          exploded                        ? "blown up" :
                          _wounded_damaged(targ_holy)     ? "destroyed"
                                                          : "killed");
@@ -1735,7 +1735,7 @@ int monster_die(monster* mons, killer_type killer,
                          exploded                        ? "blow up" :
                          _wounded_damaged(targ_holy)     ? "destroy"
                                                          : "kill",
-                         mons->name(DESC_NOCAP_THE).c_str());
+                         mons->name(DESC_THE).c_str());
                 }
 
                 if ((created_friendly || was_neutral) && gives_xp)
@@ -2899,8 +2899,8 @@ bool monster_polymorph(monster* mons, monster_type targetc,
 
     bool could_see = you.can_see(mons);
     bool need_note = (could_see && MONST_INTERESTING(mons));
-    std::string old_name_a = mons->full_name(DESC_CAP_A);
-    std::string old_name_the = mons->full_name(DESC_CAP_THE);
+    std::string old_name_a = mons->full_name(DESC_A);
+    std::string old_name_the = mons->full_name(DESC_THE);
     monster_type oldc = mons->type;
 
     change_monster_type(mons, targetc);
@@ -2918,7 +2918,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
             obj = "something you cannot see";
         else
         {
-            obj = mons_type_name(targetc, DESC_NOCAP_A);
+            obj = mons_type_name(targetc, DESC_A);
             if (targetc == MONS_PULSATING_LUMP)
                 obj += " of flesh";
         }
@@ -2943,7 +2943,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
     }
     else if (can_see)
     {
-        mprf("%s appears out of thin air!", mons->name(DESC_CAP_A).c_str());
+        mprf("%s appears out of thin air!", mons->name(DESC_A).c_str());
         autotoggle_autopickup(false);
     }
     else
@@ -2951,7 +2951,7 @@ bool monster_polymorph(monster* mons, monster_type targetc,
 
     if (need_note || could_see && can_see && MONST_INTERESTING(mons))
     {
-        std::string new_name = can_see ? mons->full_name(DESC_NOCAP_A)
+        std::string new_name = can_see ? mons->full_name(DESC_A)
                                        : "something unseen";
 
         take_note(Note(NOTE_POLY_MONSTER, 0, 0, old_name_a.c_str(),
@@ -3134,7 +3134,7 @@ void corrode_monster(monster* mons, const actor* evildoer)
                 if (you.can_see(mons))
                 {
                     mprf("The acid corrodes %s %s!",
-                         apostrophise(mons->name(DESC_NOCAP_THE)).c_str(),
+                         apostrophise(mons->name(DESC_THE)).c_str(),
                          thing_chosen.name(DESC_PLAIN).c_str());
                 }
             }
@@ -3148,8 +3148,8 @@ void corrode_monster(monster* mons, const actor* evildoer)
         if (you.can_see(mons))
         {
             mprf("%s writhes in agony as %s flesh is eaten away!",
-                 mons->name(DESC_CAP_THE).c_str(),
-                 mons->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
+                 mons->name(DESC_THE).c_str(),
+                 mons->pronoun(PRONOUN_POSSESSIVE).c_str());
         }
     }
 }
@@ -3848,7 +3848,7 @@ void mons_check_pool(monster* mons, const coord_def &oldpos,
         if (message && (oldpos == mons->pos() || grd(oldpos) != grid))
         {
             mprf("%s falls into the %s!",
-                 mons->name(DESC_CAP_THE).c_str(),
+                 mons->name(DESC_THE).c_str(),
                  grid == DNGN_LAVA ? "lava" : "water");
         }
 
@@ -4000,7 +4000,7 @@ void seen_monster(monster* mons)
 
         if (MONST_INTERESTING(mons))
         {
-            std::string name = mons->name(DESC_NOCAP_A, true);
+            std::string name = mons->name(DESC_A, true);
             if (mons->type == MONS_PLAYER_GHOST)
             {
                 name += make_stringf(" (%s)",
@@ -4462,9 +4462,9 @@ static bool _mons_reaped(actor *killer, monster* victim)
     monster* zombie = &menv[midx];
 
     if (you.can_see(victim))
-        mprf("%s turns into a zombie!", victim->name(DESC_CAP_THE).c_str());
+        mprf("%s turns into a zombie!", victim->name(DESC_THE).c_str());
     else if (you.can_see(zombie))
-        mprf("%s appears out of thin air!", zombie->name(DESC_CAP_THE).c_str());
+        mprf("%s appears out of thin air!", zombie->name(DESC_THE).c_str());
 
     player_angers_monster(zombie);
 

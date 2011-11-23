@@ -538,14 +538,14 @@ bool butchery(int which_corpse, bool bottle_blood)
                 break;
             }
 
-            std::string corpse_name = si->name(DESC_NOCAP_A);
+            std::string corpse_name = si->name(DESC_A);
 
             // We don't need to check for undead because
             // * Mummies can't eat.
             // * Ghouls relish the bad things.
             // * Vampires won't bottle bad corpses.
             if (!you.is_undead)
-                corpse_name = get_menu_colour_prefix_tags(*si, DESC_NOCAP_A);
+                corpse_name = get_menu_colour_prefix_tags(*si, DESC_A);
 
             // Shall we butcher this corpse?
             do
@@ -1222,7 +1222,7 @@ int eat_from_floor(bool skip_chunks)
         {
             item_def *item = food_items[i];
             std::string item_name = get_menu_colour_prefix_tags(*item,
-                                                                DESC_NOCAP_A);
+                                                                DESC_A);
 
             mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q/i?)",
                  (you.species == SP_VAMPIRE ? "Drink blood from" : "Eat"),
@@ -1380,7 +1380,7 @@ bool eat_from_inventory()
         {
             item_def *item = food_items[i];
             std::string item_name = get_menu_colour_prefix_tags(*item,
-                                                                DESC_NOCAP_A);
+                                                                DESC_A);
 
             mprf(MSGCH_PROMPT, "%s %s%s? (ye/n/q)",
                  (you.species == SP_VAMPIRE ? "Drink blood from" : "Eat"),
@@ -1532,7 +1532,7 @@ int prompt_eat_chunks(bool only_auto)
             bool autoeat = false;
             item_def *item = chunks[i];
             std::string item_name = get_menu_colour_prefix_tags(*item,
-                                                                DESC_NOCAP_A);
+                                                                DESC_A);
 
             const bool contam = is_contaminated(*item);
             const bool bad    = is_bad_food(*item);

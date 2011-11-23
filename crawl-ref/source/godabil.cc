@@ -1015,8 +1015,8 @@ bool zin_recite_to_single_monster(const coord_def& where,
                 else
                 {
                     mprf("%s bleeds profusely from %s eyes and ears.",
-                         mon->name(DESC_CAP_THE).c_str(),
-                         mons_pronoun(mon->type, PRONOUN_NOCAP_POSSESSIVE));
+                         mon->name(DESC_THE).c_str(),
+                         mons_pronoun(mon->type, PRONOUN_POSSESSIVE));
                 }
                 break;
             case RECITE_CHAOTIC:
@@ -1629,7 +1629,7 @@ void yred_drain_life()
             continue;
 
         mprf("You draw life from %s.",
-             mi->name(DESC_NOCAP_THE).c_str());
+             mi->name(DESC_THE).c_str());
 
         behaviour_event(*mi, ME_WHACK, MHITYOU, you.pos());
 
@@ -1660,8 +1660,8 @@ void yred_make_enslaved_soul(monster* mon, bool force_hostile)
     add_daction(DACT_OLD_ENSLAVED_SOULS_POOF);
 
     const std::string whose =
-        you.can_see(mon) ? apostrophise(mon->name(DESC_CAP_THE))
-                         : mon->pronoun(PRONOUN_CAP_POSSESSIVE);
+        you.can_see(mon) ? apostrophise(mon->name(DESC_THE))
+                         : mon->pronoun(PRONOUN_POSSESSIVE);
 
     // Remove the monster's soul-enslaving enchantment, as it's no
     // longer needed.
@@ -3011,7 +3011,7 @@ static int _lugonu_warp_monster(monster* mon, int pow)
     if (res_margin > 0)
     {
         mprf("%s%s",
-             mon->name(DESC_CAP_THE).c_str(),
+             mon->name(DESC_THE).c_str(),
              mons_resist_string(mon, res_margin).c_str());
         return (1);
     }
@@ -3065,14 +3065,14 @@ void cheibriados_time_bend(int pow)
             if (res_margin > 0)
             {
                 mprf("%s%s",
-                     mon->name(DESC_CAP_THE).c_str(),
+                     mon->name(DESC_THE).c_str(),
                      mons_resist_string(mon, res_margin).c_str());
                 continue;
             }
 
             simple_god_message(
                 make_stringf(" rebukes %s.",
-                             mon->name(DESC_NOCAP_THE).c_str()).c_str(),
+                             mon->name(DESC_THE).c_str()).c_str(),
                              GOD_CHEIBRIADOS);
             do_slow_monster(mon, &you);
         }

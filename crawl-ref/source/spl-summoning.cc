@@ -207,7 +207,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
     const item_def& wpn = *you.weapon();
     const std::string abort_msg =
             make_stringf("%s feel%s slithery for a moment!",
-                         wpn.name(DESC_CAP_YOUR).c_str(),
+                         wpn.name(DESC_YOUR).c_str(),
                          wpn.quantity > 1 ? "" : "s");
 
     // Don't enchant sticks marked with {!D}.
@@ -940,7 +940,7 @@ spret_type cast_tukimas_ball(actor *caster, int pow, god_type god,
                 if (!_can_weapon_dance(&*si))
                 {
                     mprf("%s flop%s limply for a second.",
-                    si->name(DESC_CAP_THE).c_str(),
+                    si->name(DESC_THE).c_str(),
                     si->quantity > 1 ? "" : "s");
                     continue;
                 }
@@ -1001,7 +1001,7 @@ spret_type cast_tukimas_dance(int pow, god_type god, bool force_hostile,
         if (wpn)
         {
             mprf("%s vibrate%s crazily for a second.",
-                 wpn->name(DESC_CAP_YOUR).c_str(),
+                 wpn->name(DESC_YOUR).c_str(),
                  wpn->quantity > 1 ? "" : "s");
         }
         else
@@ -1043,7 +1043,7 @@ spret_type cast_tukimas_dance(int pow, god_type god, bool force_hostile,
     // effects.
     unwield_item();
 
-    mprf("%s dances into the air!", wpn->name(DESC_CAP_YOUR).c_str());
+    mprf("%s dances into the air!", wpn->name(DESC_YOUR).c_str());
 
     // Find out what our god thinks before killing the item.
     conduct_type why = good_god_hates_item_handling(*wpn);
@@ -1369,7 +1369,7 @@ spret_type cast_malign_gateway(actor * caster, int pow, god_type god, bool fail)
         env.markers.add(new map_malign_gateway_marker(point,
                                 malign_gateway_duration,
                                 is_player,
-                                is_player ? "" : caster->as_monster()->full_name(DESC_NOCAP_A, true),
+                                is_player ? "" : caster->as_monster()->full_name(DESC_A, true),
                                 is_player ? BEH_FRIENDLY : attitude_creation_behavior(caster->as_monster()->attitude),
                                 god,
                                 pow));

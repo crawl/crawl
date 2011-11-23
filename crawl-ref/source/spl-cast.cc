@@ -312,7 +312,6 @@ static int _apply_spellcasting_success_boosts(spell_type spell, int chance)
 int spell_fail(spell_type spell)
 {
     int chance = 60;
-    int chance2 = 0;
 
     // Don't cap power for failure rate purposes.
     chance -= 6 * calc_spell_power(spell, false, true, false);
@@ -339,7 +338,7 @@ int spell_fail(spell_type spell)
     default: chance += 750; break;
     }
 
-    chance2 = chance;
+    int chance2 = chance;
 
     const int chance_breaks[][2] = {
         {45, 45}, {42, 43}, {38, 41}, {35, 40}, {32, 38}, {28, 36},
@@ -936,7 +935,7 @@ static int _setup_evaporate_cast()
     else
     {
         mprf(MSGCH_PROMPT, "Where do you want to aim %s?",
-             you.inv[rc].name(DESC_NOCAP_YOUR).c_str());
+             you.inv[rc].name(DESC_YOUR).c_str());
     }
     return rc;
 }
@@ -1447,19 +1446,19 @@ static spret_type _do_cast(spell_type spell, int powc,
         return cast_confusing_touch(powc, fail);
 
     case SPELL_CAUSE_FEAR:
-        return mass_enchantment(ENCH_FEAR, powc, NULL, NULL, fail);
+        return mass_enchantment(ENCH_FEAR, powc, fail);
 
     case SPELL_INTOXICATE:
         return cast_intoxicate(powc, fail);
 
     case SPELL_MASS_CONFUSION:
-        return mass_enchantment(ENCH_CONFUSION, powc, NULL, NULL, fail);
+        return mass_enchantment(ENCH_CONFUSION, powc, fail);
 
     case SPELL_ENGLACIATION:
         return cast_englaciation(powc, fail);
 
     case SPELL_CONTROL_UNDEAD:
-        return mass_enchantment(ENCH_CHARM, powc, NULL, NULL, fail);
+        return mass_enchantment(ENCH_CHARM, powc, fail);
 
     case SPELL_ABJURATION:
         return cast_abjuration(powc, monster_at(target), fail);

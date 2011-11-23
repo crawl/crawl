@@ -9,6 +9,7 @@ areas.o \
 arena.o \
 artefact.o \
 asg.o \
+attack.o \
 attitude-change.o \
 beam.o \
 behold.o \
@@ -120,6 +121,7 @@ map_knowledge.o \
 mapdef.o \
 mapmark.o \
 maps.o \
+melee_attack.o \
 menu.o \
 message-stream.o \
 message.o \

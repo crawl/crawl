@@ -1060,8 +1060,8 @@ static void _do_chaos_upgrade(item_def &item, const monster* mon)
     {
         seen = true;
 
-        description_level_type desc = mon->friendly() ? DESC_CAP_YOUR :
-                                                        DESC_CAP_THE;
+        description_level_type desc = mon->friendly() ? DESC_YOUR :
+                                                        DESC_THE;
         std::string msg = apostrophise(mon->name(desc));
 
         msg += " ";
@@ -1148,8 +1148,8 @@ static int _xom_do_potion(bool debug = false)
     while (true)
     {
         pot = random_choose(POT_CURING, POT_HEAL_WOUNDS, POT_MAGIC,
-                            POT_SPEED, POT_MIGHT, POT_AGILITY, POT_BRILLIANCE,
-                            POT_INVISIBILITY, POT_BERSERK_RAGE,
+                              POT_SPEED, POT_MIGHT, POT_AGILITY, POT_BRILLIANCE,
+                              POT_INVISIBILITY, POT_BERSERK_RAGE,
                             POT_EXPERIENCE, -1);
 
         if (pot == POT_EXPERIENCE && !one_chance_in(6))
@@ -1643,8 +1643,8 @@ static int _xom_swap_weapons(bool debug = false)
     mitm[index].flags |= ISFLAG_THROWN;
 
     mprf("%s wields %s!",
-         mon->name(DESC_CAP_THE).c_str(),
-         myweapon.name(DESC_NOCAP_YOUR).c_str());
+         mon->name(DESC_THE).c_str(),
+         myweapon.name(DESC_YOUR).c_str());
     mon->equip(myweapon, MSLOT_WEAPON, 0);
 
     // Item is gone from player's inventory.
@@ -1679,7 +1679,7 @@ static int _xom_swap_weapons(bool debug = false)
     burden_change();
 
     mprf("You wield %s %s!",
-         mon->name(DESC_NOCAP_ITS).c_str(),
+         mon->name(DESC_ITS).c_str(),
          you.inv[freeslot].name(DESC_PLAIN).c_str());
 
     equip_item(EQ_WEAPON, freeslot);
@@ -1816,8 +1816,8 @@ static int _xom_snakes_to_sticks(int sever, bool debug = false)
             doodad.quantity = 1;
 
             // Output some text since otherwise snakes will disappear silently.
-            mprf("%s reforms as %s.", mi->name(DESC_CAP_THE).c_str(),
-                 doodad.name(DESC_NOCAP_A).c_str());
+            mprf("%s reforms as %s", mi->name(DESC_THE).c_str(),
+                 doodad.name(DESC_A).c_str());
 
             // Dismiss monster silently.
             move_item_to_grid(&thing_created, mi->pos());
@@ -1915,7 +1915,7 @@ static int _xom_animate_monster_weapon(int sever, bool debug = false)
     mon->inv[MSLOT_WEAPON] = NON_ITEM;
 
     mprf("%s %s dances into the air!",
-         apostrophise(mon->name(DESC_CAP_THE)).c_str(),
+         apostrophise(mon->name(DESC_THE)).c_str(),
          mitm[wpn].name(DESC_PLAIN).c_str());
 
     destroy_item(menv[mons].inv[MSLOT_WEAPON]);
@@ -2592,7 +2592,7 @@ static void _xom_zero_miscast()
         && feat != DNGN_OPEN_DOOR && feat != DNGN_ABANDONED_SHOP)
     {
         const std::string feat_name =
-            feature_description(you.pos(), false, DESC_CAP_THE, false);
+            feature_description(you.pos(), false, DESC_THE, false);
 
         if (you.airborne())
         {
@@ -2632,11 +2632,11 @@ static void _xom_zero_miscast()
 
         std::string name;
         if (item.quantity == 1)
-            name = item.name(DESC_CAP_YOUR, false, false, false);
+            name = item.name(DESC_YOUR, false, false, false);
         else
         {
             name  = "One of ";
-            name += item.name(DESC_NOCAP_YOUR, false, false, false);
+            name += item.name(DESC_YOUR, false, false, false);
         }
         messages.push_back(name + " falls out of your pack, then "
                            "immediately jumps back in!");
@@ -2778,7 +2778,7 @@ static void _xom_zero_miscast()
 
         item = &you.inv[idx];
 
-        std::string name = item->name(DESC_CAP_YOUR, false, false, false);
+        std::string name = item->name(DESC_YOUR, false, false, false);
         std::string verb = coinflip() ? "glow" : "vibrate";
 
         if (item->quantity == 1)
@@ -3197,7 +3197,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
     ASSERT(stair_pos != ray.pos());
 
     std::string stair_str =
-        feature_description(stair_pos, false, DESC_CAP_THE, false);
+        feature_description(stair_pos, false, DESC_THE, false);
 
     mprf("%s slides %s you!", stair_str.c_str(),
          away ? "away from" : "towards");

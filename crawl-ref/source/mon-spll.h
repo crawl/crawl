@@ -56,10 +56,10 @@
       {
        SPELL_PAIN,
        SPELL_DISPEL_UNDEAD,
-       SPELL_NO_SPELL,
        SPELL_ANIMATE_DEAD,
-       SPELL_VAMPIRIC_DRAINING, // offense
-       SPELL_VAMPIRIC_DRAINING  // and defensive
+       SPELL_VAMPIRIC_DRAINING,
+       SPELL_AGONY,
+       SPELL_VAMPIRIC_DRAINING
       }
     },
 
@@ -91,9 +91,9 @@
        SPELL_NO_SPELL,
        SPELL_ANIMATE_DEAD,
        SPELL_MIRROR_DAMAGE,
-       SPELL_SUMMON_UNDEAD, // cheaper to fake recall and gift with summon spell
+       SPELL_NO_SPELL,
        SPELL_DRAIN_LIFE,
-       SPELL_MIRROR_DAMAGE
+       SPELL_DRAIN_LIFE
       }
     },
 

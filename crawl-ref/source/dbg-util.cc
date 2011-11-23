@@ -44,7 +44,7 @@ static void _dump_vault_table(const CrawlHashTable &table)
 
         for (; i != table.end(); ++i)
             mprf("    %s: %s", i->first.c_str(),
-                 i->second.get_string().c_str());
+                       i->second.get_string().c_str());
     }
 }
 
@@ -333,9 +333,6 @@ skill_type debug_prompt_for_skill(const char *prompt)
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; ++i)
     {
         skill_type sk = static_cast<skill_type>(i);
-        // Avoid the bad values.
-        if (is_invalid_skill(sk))
-            continue;
 
         std::string sk_name = lowercase_string(skill_name(sk));
 

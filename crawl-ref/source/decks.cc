@@ -779,7 +779,7 @@ static void _deck_ident(item_def& deck)
     if (in_inventory(deck) && !item_ident(deck, ISFLAG_KNOW_TYPE))
     {
         set_ident_flags(deck, ISFLAG_KNOW_TYPE);
-        mprf("This is %s.", deck.name(DESC_NOCAP_A).c_str());
+        mprf("This is %s.", deck.name(DESC_A).c_str());
         you.wield_change = true;
     }
 }
@@ -1931,7 +1931,7 @@ static void _blade_card(int power, deck_rarity_type rarity)
         if (wpn)
         {
             mprf("%s vibrate%s crazily for a second.",
-                 wpn->name(DESC_CAP_YOUR).c_str(),
+                 wpn->name(DESC_YOUR).c_str(),
                  wpn->quantity == 1 ? "s" : "");
         }
         else

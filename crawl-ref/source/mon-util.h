@@ -20,13 +20,13 @@ struct bolt;
 
 struct mon_attack_def
 {
-    mon_attack_type     type;
-    mon_attack_flavour  flavour;
-    int                 damage;
+    attack_type     type;
+    attack_flavour  flavour;
+    int             damage;
 
     static mon_attack_def attk(int dam,
-                               mon_attack_type typ = AT_HIT,
-                               mon_attack_flavour flav = AF_PLAIN)
+                               attack_type typ = AT_HIT,
+                               attack_flavour flav = AF_PLAIN)
     {
         mon_attack_def def = { typ, flav, dam };
         return (def);

@@ -613,7 +613,7 @@ static bool _cast_spell_on_target(actor* target)
     if (!_spell_in_range(spell, target))
     {
         mprf("%s is out of range for that spell.",
-             target->name(DESC_CAP_THE).c_str());
+             target->name(DESC_THE).c_str());
         return (true);
     }
 
@@ -1079,7 +1079,7 @@ bool tile_dungeon_tip(const coord_def &gc, std::string &tip)
                         _add_tip(tip, "[L-Click] Move");
                     else if (mon)
                     {
-                        tip = mon->name(DESC_CAP_A);
+                        tip = mon->name(DESC_A);
                         _add_tip(tip, "[L-Click] Attack");
                     }
                 }

@@ -32,8 +32,8 @@ public:
     short max_hp, ev, ac, damage, speed;
     bool see_invis;
     brand_type brand;
-    mon_attack_type att_type;
-    mon_attack_flavour att_flav;
+    attack_type att_type;
+    attack_flavour att_flav;
     mon_resist_def resists;
 
     bool spellcaster, cycle_colours;
@@ -67,7 +67,7 @@ private:
     void add_spells();
     spell_type translate_spell(spell_type playerspell) const;
     void ugly_thing_add_resistance(bool very_ugly,
-                                   mon_attack_flavour u_att_flav);
+                                   attack_flavour u_att_flav);
 };
 
 bool debug_check_ghosts();

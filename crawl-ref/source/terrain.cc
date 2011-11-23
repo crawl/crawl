@@ -1143,7 +1143,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
 
     const std::string orig_name =
         feature_description(dest_pos, false,
-                            you.see_cell(orig_pos) ? DESC_CAP_THE : DESC_CAP_A,
+                            you.see_cell(orig_pos) ? DESC_THE : DESC_A,
                             false);
 
     std::string prep = feat_preposition(orig_feat, false);
@@ -1154,7 +1154,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
     else if (const monster* m = monster_at(orig_pos))
     {
         if (you.can_see(m))
-            orig_actor = m->name(DESC_NOCAP_THE);
+            orig_actor = m->name(DESC_THE);
     }
 
     if (dest_pos == you.pos())
@@ -1162,7 +1162,7 @@ static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)
     else if (const monster* m = monster_at(dest_pos))
     {
         if (you.can_see(m))
-            dest_actor = m->name(DESC_NOCAP_THE);
+            dest_actor = m->name(DESC_THE);
     }
 
     std::ostringstream str;
@@ -1715,7 +1715,8 @@ const char *dngn_feature_names[] =
 "return_from_swamp", "return_from_shoals", "return_from_spider_nest",
 "return_from_forest", "return_reserved_1", "", "", "", "", "",
 "", "", "", "", "", "", "", "enter_portal_vault", "exit_portal_vault",
-"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+"malign_gateway", "expired_portal", "", "", "", "", "",
+"", "", "", "", "", "", "", "", "",
 "", "", "altar_zin", "altar_the_shining_one", "altar_kikubaaqudgha",
 "altar_yredelemnul", "altar_xom", "altar_vehumet",
 "altar_okawaru", "altar_makhleb", "altar_sif_muna", "altar_trog",

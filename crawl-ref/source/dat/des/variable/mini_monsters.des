@@ -940,6 +940,58 @@ xttttttttxxttxxx
 xxxxxxxxxxxxxx
 ENDMAP
 
+NAME:  nooodl_orcs_dogs
+DEPTH: D:10-, Orc
+: if you.absdepth() > 18 then
+MONS:  w:5 orc warlord / orc knight / orc warrior / orc sorcerer / w:5 orc wizard
+: elseif you.absdepth() > 13 then
+MONS:  orc knight / orc warrior / orc wizard / w:5 orc
+: else
+MONS:  orc warrior / orc wizard / orc
+: end
+MONS:  warg
+MAP
+.................
+.wwwwwww..wwwwwww.
+.wxxxxxx++xxxxxxw.
+.wx%...x..x...%xw.
+.wx.11.x..x.11.xw.
+.wx.22.+..+.22.xw.
+.wx.11.x..x.11.xw.
+.wx%..%x..x%..%xw.
+.wxxxxxxxxxxxxxxw.
+.wwwwwwwwwwwwwwww.
+..................
+ENDMAP
+
+# This vault was built by evilmike, but the idea is mikee's. Who is really the
+# evil one here?
+NAME:   mikee_hates_you
+DEPTH:  D:9-27
+KPROP:  l = no_cloud_gen
+KMONS:  1 = generate_awake siren ; trident ego:distortion | trident ego:venom
+KITEM:  1 = acquire any
+MARKER: ! = lua:fog_machine { \
+                cloud_type = "foul pestilence", \
+                pow_min = 100, pow_max = 100, delay = 10, \
+                size = 1, walk_dist = 0, start_clouds = 1 \
+            }
+MARKER: + = lua:props_marker { \
+                door_open_prompt= "This door is covered in warnings. Open " .. \
+                                  "it anyway?", \
+                door_description_prefix= "warning-scrawled " \
+            }
+MARKER: + = lua:restrict_door()
+MARKER: = = lua:restrict_door()
+SUBST:  ! = .
+MAP
+xxxxxxxxxx
+xxxxx=xxxx
++!!!!l1=>x
+xxxxxxxxxx
+xxxxxxxxxx
+ENDMAP
+
 #################################################################
 # checkpoints with guards to alert nearby monsters, by Core Xii
 NAME:   corexii_checkpoint_a
@@ -2279,6 +2331,20 @@ xd.........dx
 xxxxxx+xxxxxx
 ENDMAP
 
+NAME:  nooodl_food_tri
+TAGS:  no_rotate
+ITEM:  any food
+SUBST: R = 0d$...
+MAP
+       x
+      xxx
+     xxRxx
+    xxRRRxx
+   xxRRRRRxx
+  xxRRRRRRRxx
+ xxRRRRRRRRRxx
+xxxxxxx+xxxxxxx
+ENDMAP
 
 ################################################################
 #

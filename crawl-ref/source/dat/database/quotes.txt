@@ -281,7 +281,7 @@ Antaeus
 Asmodeus
 
 "For myself, I have other occupations:  I make absurd matches; I marry greybeards with minors, masters with servants, girls with small fortunes with tender lovers who have none. It is I who introduced into this world luxury, debauchery, games of chance, and chemistry. I am the author of the first cookery book, the inventor of festivals, of dancing, music, plays, and of the newest fashions; in a word, I am ASMODEUS, surnamed The Devil on Two Sticks."
-    -Alain René Le Sage, _Asmodeus: Or,The Devil on Two Sticks. 1707.
+    -Alain René Le Sage, _Asmodeus: Or, The Devil on Two Sticks_. 1707.
 %%%%
 Cacodemon
 
@@ -719,6 +719,14 @@ small skeleton
  T'ain't no sin to take off your skin
  And dance around in your bones."
     -William S. Burroughs and Tom Waits, "T'ain't no sin"
+%%%%
+toenail golem
+
+"Gentle socks pamper them by day, and shoes cobbled of leather fortify them,
+ but my toes hardly notice. All they’re interested in is turning out
+ toenails—semitransparent, flexible sheets of a hornlike material, as
+ defense against—whom?"
+    -Jorge Luis Borges
 %%%%
 worm
 

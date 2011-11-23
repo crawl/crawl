@@ -71,12 +71,6 @@ bool trap_def::type_has_ammo() const
     return (false);
 }
 
-void trap_def::message_trap_entry()
-{
-    if (type == TRAP_TELEPORT)
-        mpr("You enter a teleport trap!");
-}
-
 void trap_def::disarm()
 {
     if (type_has_ammo() && ammo_qty > 0 || type == TRAP_NET)
@@ -162,17 +156,15 @@ std::string trap_def::name(description_level_type desc) const
         return ("buggy");
 
     std::string basename = trap_name(type);
-    if (desc == DESC_CAP_A || desc == DESC_NOCAP_A)
+    if (desc == DESC_A)
     {
-        std::string prefix = (desc == DESC_CAP_A ? "A" : "a");
+        std::string prefix = "a";
         if (is_vowel(basename[0]))
             prefix += 'n';
         prefix += ' ';
         return (prefix + basename);
     }
-    else if (desc == DESC_CAP_THE)
-        return (std::string("The ") + basename);
-    else if (desc == DESC_NOCAP_THE)
+    else if (desc == DESC_THE)
         return (std::string("the ") + basename);
     else                        // everything else
         return (basename);
@@ -344,7 +336,7 @@ void monster_caught_in_net(monster* mon, bolt &pbolt)
             if (mon->visible_to(&you))
             {
                 mprf("The net is caught on %s!",
-                     mon->name(DESC_NOCAP_THE).c_str());
+                     mon->name(DESC_THE).c_str());
             }
             else
                 mpr("The net is caught on something unseen!");
@@ -357,7 +349,7 @@ void monster_caught_in_net(monster* mon, bolt &pbolt)
         if (you.can_see(mon))
         {
             mprf("The net passes right through %s!",
-                 mon->name(DESC_NOCAP_THE).c_str());
+                 mon->name(DESC_THE).c_str());
         }
         return;
     }
@@ -435,7 +427,7 @@ void check_net_will_hold_monster(monster* mons)
             if (mons->visible_to(&you))
             {
                 mprf("The net rips apart, and %s comes free!",
-                     mons->name(DESC_NOCAP_THE).c_str());
+                     mons->name(DESC_THE).c_str());
             }
             else
                 mpr("All of a sudden the net rips apart!");
@@ -470,8 +462,7 @@ bool player_caught_in_web()
         return false;
 
     you.attribute[ATTR_HELD] = 10;
-    stop_running();
-    stop_delay(true); // even stair delays
+    // No longer stop_running() and stop_delay().
     redraw_screen(); // Account for changes in display.
     return (true);
 }
@@ -501,7 +492,7 @@ static bool _find_other_passage_side(coord_def& to)
     if (choices < 1)
         return false;
     to = clear_passages[random2(choices)];
-    return true;
+        return true;
 }
 
 // Returns a direction string from you.pos to the
@@ -582,10 +573,6 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
     if (in_sight)
         reveal();
 
-    // OK, something is going to happen.
-    if (you_trigger)
-        message_trap_entry();
-
     // Store the position now in case it gets cleared inbetween.
     const coord_def p(pos);
 
@@ -624,6 +611,8 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
         // except when it's in sight, it's pretty obvious what happened. -doy
         if (!you_trigger && !you_know && !in_sight)
             hide();
+        if (you_trigger)
+            mpr("You enter a teleport trap!");
         if (ammo_qty > 0 && !--ammo_qty)
         {
             // can't use trap_destroyed, as we might recurse into a shaft
@@ -696,7 +685,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 mpr("A huge blade swings out and slices into you!");
                 const int damage = (you.absdepth0 * 2) + random2avg(29, 2)
                     - random2(1 + you.armour_class());
-                std::string n = name(DESC_NOCAP_A) + " trap";
+                std::string n = name(DESC_A) + " trap";
                 ouch(damage, NON_MONSTER, KILLED_BY_TRAP, n.c_str());
                 bleed_onto_floor(you.pos(), MONS_PLAYER, damage, true);
             }
@@ -731,7 +720,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                     if (m->visible_to(&you))
                     {
                         msg += " and slices into ";
-                        msg += m->name(DESC_NOCAP_THE);
+                        msg += m->name(DESC_THE);
                     }
                     msg += "!";
                     mpr(msg.c_str());
@@ -825,7 +814,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                     if (m->visible_to(&you))
                     {
                         mprf("A large net falls down onto %s!",
-                             m->name(DESC_NOCAP_THE).c_str());
+                             m->name(DESC_THE).c_str());
                     }
                     else
                         mpr("A large net falls down!");
@@ -961,7 +950,7 @@ void trap_def::trigger(actor& triggerer, bool flat_footed)
                 if (in_sight)
                 {
                     mprf("The power of Zot is invoked against %s!",
-                         targ->name(DESC_NOCAP_THE).c_str());
+                         targ->name(DESC_THE).c_str());
                 }
                 MiscastEffect(targ, ZOT_TRAP_MISCAST, SPTYP_RANDOM,
                               3, "the power of Zot");
@@ -1255,7 +1244,7 @@ void remove_net_from(monster* mon)
             if (mon->visible_to(&you))
             {
                 mprf("You fail to remove the net from %s.",
-                     mon->name(DESC_NOCAP_THE).c_str());
+                     mon->name(DESC_THE).c_str());
             }
             else
                 mpr("You fail to remove the net.");
@@ -1269,7 +1258,7 @@ void remove_net_from(monster* mon)
     remove_item_stationary(mitm[net]);
 
     if (mon->visible_to(&you))
-        mprf("You free %s.", mon->name(DESC_NOCAP_THE).c_str());
+        mprf("You free %s.", mon->name(DESC_THE).c_str());
     else
         mpr("You loosen the net.");
 
@@ -1575,13 +1564,13 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
             if (!force_hit && (one_chance_in(5) || was_known && !one_chance_in(4)))
             {
                 mprf("You avoid triggering %s trap.",
-                      name(DESC_NOCAP_A).c_str());
+                      this->name(DESC_A).c_str());
 
                 return;         // no ammo generated either
             }
 
             // Start constructing the message.
-            std::string msg = shot.name(DESC_CAP_A) + " shoots out and ";
+            std::string msg = shot.name(DESC_A) + " shoots out and ";
 
             // Check for shield blocking.
             // Exercise only if the trap was unknown (to prevent scumming.)
@@ -1618,7 +1607,7 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
                     msg += "hits you!";
                     mpr(msg.c_str());
 
-                    std::string n = name(DESC_NOCAP_A) + " trap";
+                    std::string n = name(DESC_A) + " trap";
 
                     // Needle traps can poison.
                     if (poison)
@@ -1645,9 +1634,9 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
             if (you.see_cell(act.pos()))
             {
                 mprf("%s %s %s%s!",
-                     shot.name(DESC_CAP_A).c_str(),
+                     shot.name(DESC_A).c_str(),
                      hit ? "hits" : "misses",
-                     act.name(DESC_NOCAP_THE).c_str(),
+                     act.name(DESC_THE).c_str(),
                      (hit && damage_taken == 0
                          && !poison) ? ", but does no damage" : "");
             }
@@ -1857,7 +1846,7 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
         {
             if (env.map_knowledge(pos).seen())
             {
-                mprf("%s falls through the shaft.",
+                mprf_nocap("%s falls through the shaft.",
                      mitm[o].name(DESC_INVENTORY).c_str());
             }
             // Item will be randomly placed on the destination level.

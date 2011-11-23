@@ -172,10 +172,7 @@ static std::string _desc_mons_type_map(std::map<monster_type, int> types)
         std::string name;
         description_level_type desc;
         if (it->second == 1)
-        {
-            desc = (it == types.begin() ? DESC_CAP_A
-                                                : DESC_NOCAP_A);
-        }
+            desc = DESC_A;
         else
             desc = DESC_PLAIN;
 
@@ -328,13 +325,13 @@ void update_monsters_in_view()
                 warning = true;
 
             if (size == 1)
-                warning_msg += mon->pronoun(PRONOUN_CAP);
+                warning_msg += mon->pronoun(PRONOUN);
             else if (mon->type == MONS_DANCING_WEAPON)
                 warning_msg += "There";
             else if (types[mon->type] == 1)
-                warning_msg += mon->full_name(DESC_CAP_THE);
+                warning_msg += mon->full_name(DESC_THE);
             else
-                warning_msg += mon->full_name(DESC_CAP_A);
+                warning_msg += mon->full_name(DESC_A);
 
             warning_msg += " is";
             warning_msg += get_monster_equipment_desc(mon, DESC_IDENTIFIED,

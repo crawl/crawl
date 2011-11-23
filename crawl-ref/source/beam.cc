@@ -1135,7 +1135,7 @@ bool bolt::hit_wall()
         const monster* mon = monster_at(target);
 
         if (mon && mon->observable())
-            prompt += mon->name(DESC_NOCAP_THE);
+            prompt += mon->name(DESC_THE);
         else
         {
             prompt += "the targeted "
@@ -1143,7 +1143,7 @@ bool bolt::hit_wall()
         }
 
         prompt += " is blocked by "
-                + feature_description(pos(), false, DESC_NOCAP_A, false);
+                + feature_description(pos(), false, DESC_A, false);
 
         prompt += ". Continue anyway?";
 
@@ -1216,7 +1216,7 @@ void bolt::affect_cell()
             {
                 mprf("The %s protects %s from harm.",
                      raw_feature_description(grd(act->pos())).c_str(),
-                     act->name(DESC_NOCAP_THE).c_str());
+                     act->name(DESC_THE).c_str());
             }
         }
 
@@ -1814,7 +1814,7 @@ int mons_adjust_flavoured(monster* mons, bolt &pbolt, int hurted,
                     simple_monster_message(mons, " appears unharmed.");
                 else if (mons->observable())
                     mprf("The beam of light passes harmlessly through %s.",
-                         mons->name(DESC_NOCAP_THE, true).c_str());
+                         mons->name(DESC_THE, true).c_str());
             }
         }
         else if (original < hurted)
@@ -1926,16 +1926,10 @@ static bool _monster_resists_mass_enchantment(monster* mons,
 // If m_succumbed is non-NULL, will be set to the number of monsters that
 // were enchanted. If m_attempted is non-NULL, will be set to the number of
 // monsters that we tried to enchant.
-spret_type mass_enchantment(enchant_type wh_enchant, int pow,
-                            int *m_succumbed, int *m_attempted, bool fail)
+spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
 {
     fail_check();
     bool did_msg = false;
-
-    if (m_succumbed)
-        *m_succumbed = 0;
-    if (m_attempted)
-        *m_attempted = 0;
 
     // Give mass enchantments a power multiplier.
     pow *= 3;
@@ -1951,17 +1945,11 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow,
         bool resisted = _monster_resists_mass_enchantment(*mi, wh_enchant,
                                                           pow, &did_msg);
 
-        if (m_attempted && did_msg)
-            ++*m_attempted;
-
         if (resisted)
             continue;
 
         if (mi->add_ench(mon_enchant(wh_enchant, 0, &you)))
         {
-            if (m_succumbed)
-                ++*m_succumbed;
-
             // Do messaging.
             const char* msg;
             switch (wh_enchant)
@@ -2434,7 +2422,7 @@ void bolt::drop_object()
         if (you.see_cell(pos()))
         {
             mprf("%s %s!",
-                 item->name(DESC_CAP_THE).c_str(),
+                 item->name(DESC_THE).c_str(),
                  summoned_poof_msg(beam_source, *item).c_str());
         }
         item_was_destroyed(*item, beam_source);
@@ -2463,7 +2451,7 @@ void bolt::drop_object()
         // Large rocks mulch to stone.
         bool in_view = you.see_cell(pos());
         if (in_view)
-            mprf("%s shatters into pieces!", item->name(DESC_CAP_THE).c_str());
+            mprf("%s shatters into pieces!", item->name(DESC_THE).c_str());
         noisy(12, pos(), in_view ? NULL : "You hear a cracking sound!");
 
         item->sub_type = MI_STONE;
@@ -4110,7 +4098,7 @@ void bolt::monster_post_hit(monster* mon, int dmg)
                     grid_distance(mon->pos(), mi->pos()) == 1)
                 {
                     mprf("The sticky flame splashes onto %s!",
-                         mi->name(DESC_NOCAP_THE).c_str());
+                         mi->name(DESC_THE).c_str());
                     napalm_monster(*mi, agent(), levels);
                 }
             }
@@ -4151,14 +4139,14 @@ void bolt::beam_hits_actor(actor *act)
             if (drac_breath)
             {
                 mprf("%s %s blown backwards by the freezing wind.",
-                     act->name(DESC_CAP_THE).c_str(),
+                     act->name(DESC_THE).c_str(),
                      act->conj_verb("are").c_str());
                 knockback_actor(act);
             }
             else
             {
                 mprf("%s %s knocked back by the %s.",
-                     act->name(DESC_CAP_THE).c_str(),
+                     act->name(DESC_THE).c_str(),
                      act->conj_verb("are").c_str(),
                      this->name.c_str());
             }
@@ -4184,9 +4172,9 @@ bool bolt::attempt_block(monster* mon)
                 if (mon->observable())
                 {
                     mprf("%s reflects the %s off %s %s!",
-                         mon->name(DESC_CAP_THE).c_str(),
+                         mon->name(DESC_THE).c_str(),
                          name.c_str(),
-                         mon->pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
+                         mon->pronoun(PRONOUN_POSSESSIVE).c_str(),
                          shield->name(DESC_PLAIN).c_str());
                     ident_reflector(shield);
                 }
@@ -4198,7 +4186,7 @@ bool bolt::attempt_block(monster* mon)
             else if (you.see_cell(pos()))
             {
                 mprf("%s blocks the %s.",
-                     mon->name(DESC_CAP_THE).c_str(), name.c_str());
+                     mon->name(DESC_THE).c_str(), name.c_str());
                 finish_beam();
             }
 
@@ -4419,21 +4407,21 @@ void bolt::affect_monster(monster* mon)
             // if it would have hit otherwise...
             if (_test_beam_hit(beam_hit, rand_ev, is_beam, false, false, r))
             {
-                msg::stream << mon->name(DESC_CAP_THE) << " deflects the "
+                msg::stream << mon->name(DESC_THE) << " deflects the "
                             << name << '!' << std::endl;
             }
             else if (mons_class_flag(mon->type, M_PHASE_SHIFT)
                      && _test_beam_hit(beam_hit, rand_ev - random2(8),
                                        is_beam, false, false, r))
             {
-                msg::stream << mon->name(DESC_CAP_THE) << " momentarily phases "
+                msg::stream << mon->name(DESC_THE) << " momentarily phases "
                             << "out as the " << name << " passes through "
                             << mon->pronoun(PRONOUN_OBJECTIVE) << ".\n";
             }
             else
             {
                 msg::stream << "The " << name << " misses "
-                            << mon->name(DESC_NOCAP_THE) << '.' << std::endl;
+                            << mon->name(DESC_THE) << '.' << std::endl;
             }
         }
         return;
@@ -4481,7 +4469,7 @@ void bolt::affect_monster(monster* mon)
              name.c_str(),
              hit_verb.c_str(),
              mon->observable() ?
-                 mon->name(DESC_NOCAP_THE).c_str() : "something");
+                 mon->name(DESC_THE).c_str() : "something");
 
     }
     else if (heard && !noise_msg.empty())
@@ -4541,7 +4529,7 @@ void bolt::affect_monster(monster* mon)
         // Preserve name of the source monster if it winds up killing
         // itself.
         if (mon->mindex() == beam_source && source_name.empty())
-            source_name = orig.name(DESC_NOCAP_A, true);
+            source_name = orig.name(DESC_A, true);
 
         // Prevent spore explosions killing plants from being registered
         // as a Fedhas misconduct.  Deaths can trigger the ally dying or
@@ -4646,7 +4634,7 @@ bool enchant_monster_with_flavour(monster* mon, actor *foe,
 bool enchant_monster_invisible(monster* mon, const std::string &how)
 {
     // Store the monster name before it becomes an "it". - bwr
-    const std::string monster_name = mon->name(DESC_CAP_THE);
+    const std::string monster_name = mon->name(DESC_THE);
 
     if (!mon->has_ench(ENCH_INVIS) && mon->add_ench(ENCH_INVIS))
     {
@@ -5729,7 +5717,7 @@ std::string bolt::get_short_name() const
         return (short_name);
 
     if (item != NULL && item->defined())
-        return item->name(DESC_NOCAP_A, false, false, false, false,
+        return item->name(DESC_A, false, false, false, false,
                           ISFLAG_IDENT_MASK | ISFLAG_COSMETIC_MASK
                           | ISFLAG_RACIAL_MASK);
 
@@ -5852,7 +5840,7 @@ std::string bolt::get_source_name() const
         return source_name;
     const actor *a = agent();
     if (a)
-        return a->name(DESC_NOCAP_A, true);
+        return a->name(DESC_A, true);
     return "";
 }
 

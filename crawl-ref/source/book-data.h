@@ -609,7 +609,7 @@
     SPELL_NO_SPELL,
 },
 
-{   // Rod of destruction (lightning, iron, fireball)
+{   // Rod of destruction (lightning, fireball, iron)
     SPELL_LIGHTNING_BOLT,
     SPELL_FIREBALL,
     SPELL_IRON_SHOT,
