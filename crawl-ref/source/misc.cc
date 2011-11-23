@@ -135,6 +135,12 @@ static void _create_monster_hide(const item_def corpse)
     move_item_to_grid(&o, you.pos());
 }
 
+static void _maybe_drop_monster_hide(const item_def corpse)
+{
+    if (monster_descriptor(corpse.plus, MDSC_LEAVES_HIDE) && !one_chance_in(3))
+        _create_monster_hide(corpse);
+}
+
 int get_max_corpse_chunks(int mons_class)
 {
     return (mons_weight(mons_class) / 150);
@@ -158,6 +164,7 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
                              bool make_hide)
 {
     ASSERT(item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY);
+    const item_def corpse = item;
     const monster_type montype = static_cast<monster_type>(item.plus);
     const int max_chunks = get_max_corpse_chunks(item.plus);
 
@@ -176,11 +183,8 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
         item.flags &= ~(ISFLAG_THROWN | ISFLAG_DROPPED);
 
     // Happens after the corpse has been butchered.
-    if (make_hide && monster_descriptor(item.plus, MDSC_LEAVES_HIDE)
-        && !one_chance_in(3))
-    {
-        _create_monster_hide(item);
-    }
+    if (make_hide)
+        _maybe_drop_monster_hide(corpse);
 }
 
 void turn_corpse_into_skeleton_and_chunks(item_def &item)
@@ -929,7 +933,7 @@ void turn_corpse_into_blood_potions(item_def &item)
     ASSERT(item.base_type == OBJ_CORPSES);
     ASSERT(!food_is_rotten(item));
 
-    item_def corpse = item;
+    const item_def corpse = item;
     const int mons_class = corpse.plus;
 
     ASSERT(can_bottle_blood_from_corpse(mons_class));
@@ -947,8 +951,7 @@ void turn_corpse_into_blood_potions(item_def &item)
     init_stack_blood_potions(item, (item.special - 100) * 20 + 500);
 
     // Happens after the blood has been bottled.
-    if (monster_descriptor(mons_class, MDSC_LEAVES_HIDE) && !one_chance_in(3))
-        _create_monster_hide(corpse);
+    _maybe_drop_monster_hide(corpse);
 }
 
 void turn_corpse_into_skeleton_and_blood_potions(item_def &item)
