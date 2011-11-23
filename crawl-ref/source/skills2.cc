@@ -385,14 +385,16 @@ std::string player_title()
 skill_type best_skill(skill_type min_skill, skill_type max_skill,
                       skill_type excl_skill)
 {
+    ASSERT(min_skill < NUM_SKILLS);
+    ASSERT(max_skill < NUM_SKILLS);
     skill_type ret = SK_FIGHTING;
     unsigned int best_skill_level = 0;
     unsigned int best_position = 1000;
 
-    for (int i = min_skill; i <= max_skill; i++)    // careful!!!
+    for (int i = min_skill; i <= max_skill; i++)
     {
         skill_type sk = static_cast<skill_type>(i);
-        if (sk == excl_skill || is_invalid_skill(sk))
+        if (sk == excl_skill)
             continue;
 
         const unsigned int skill_level = you.skill(sk, 10, true);
@@ -431,11 +433,6 @@ void init_skill_order(void)
     for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
     {
         skill_type si = static_cast<skill_type>(i);
-        if (is_invalid_skill(si))
-        {
-            you.skill_order[si] = MAX_SKILL_ORDER;
-            continue;
-        }
 
         const unsigned int i_points = you.skill_points[si]
                                       / species_apt_factor(si);
@@ -445,7 +442,7 @@ void init_skill_order(void)
         for (int j = SK_FIRST_SKILL; j < NUM_SKILLS; j++)
         {
             skill_type sj = static_cast<skill_type>(j);
-            if (si == sj || is_invalid_skill(sj))
+            if (si == sj)
                 continue;
 
             const unsigned int j_points = you.skill_points[sj]
@@ -666,17 +663,6 @@ bool antitrain_other(skill_type sk, bool show_zero)
 
     return ((you.skills[opposite] > 0 || show_zero) && you.skills[sk] > 0
             && you.skills[opposite] < 27 && _compare_skills(sk, opposite));
-}
-
-bool is_invalid_skill(skill_type skill)
-{
-    if (skill < 0 || skill >= NUM_SKILLS)
-        return (true);
-
-    if (skill > SK_UNARMED_COMBAT && skill < SK_SPELLCASTING)
-        return (true);
-
-    return (false);
 }
 
 void dump_skills(std::string &text)
