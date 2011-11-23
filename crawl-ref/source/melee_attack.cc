@@ -3378,23 +3378,6 @@ void melee_attack::player_apply_staff_damage()
     }
 }
 
-bool melee_attack::player_check_monster_died()
-{
-    if (!defender->alive())
-    {
-        // note: doesn't take account of special weapons, etc.
-        dprf("Hit for %d.", damage_done);
-
-        player_monattk_hit_effects();
-
-        _monster_die(defender->as_monster(), KILL_YOU, NON_MONSTER);
-
-        return (true);
-    }
-
-    return (false);
-}
-
 /* Calculate the to-hit for an attacker
  *
  * @param random deterministic or stochastic calculation(s)

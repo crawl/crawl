@@ -161,7 +161,6 @@ private:
     void player_sustain_passive_damage();
     int  player_staff_damage(skill_type skill);
     void player_apply_staff_damage();
-    bool player_check_monster_died();
     void player_stab_check();
     random_var player_weapon_speed();
     random_var player_unarmed_speed();
