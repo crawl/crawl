@@ -104,7 +104,7 @@ struct monster_info_base
     mon_itemuse_type mitemuse;
     int mbase_speed;
     flight_type fly;
-    bool two_weapons;
+    bool two_weapons; // FIXME: Why are these two not simply in mb?
     bool no_regen;
     CrawlHashTable props;
 

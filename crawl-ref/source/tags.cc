@@ -3097,11 +3097,12 @@ void marshallMonster(writer &th, const monster& m)
 
 void marshallMonsterInfo(writer &th, const monster_info& mi)
 {
-    marshallCoord(th, mi.pos);
     marshallFixedBitArray<NUM_MB_FLAGS>(th, mi.mb);
     marshallString(th, mi.mname);
     marshallUnsigned(th, mi.type);
     marshallUnsigned(th, mi.base_type);
+    if (mons_genus(mi.type) == MONS_DRACONIAN)
+        marshallUnsigned(th, mi.draco_type);
     marshallUnsigned(th, mi.number);
     marshallUnsigned(th, mi.colour);
     marshallUnsigned(th, mi.attitude);
@@ -3110,15 +3111,45 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallUnsigned(th, mi.fire_blocker);
     marshallString(th, mi.description);
     marshallString(th, mi.quote);
+    marshallUnsigned(th, mi.holi);
+    marshallUnsigned(th, mi.mintel);
+    marshallResists(th, mi.mresists);
+    marshallUnsigned(th, mi.mitemuse);
+    marshallByte(th, mi.mbase_speed);
     marshallUnsigned(th, mi.fly);
+    marshallBoolean(th, mi.two_weapons);
+    marshallBoolean(th, mi.no_regen);
+    for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
+    {
+        if (mi.inv[i].get())
+        {
+            marshallBoolean(th, true);
+            marshallItem(th, *mi.inv[i].get());
+        }
+        else
+            marshallBoolean(th, false);
+    }
+    if (mons_is_pghost(mi.type))
+    {
+        marshallUnsigned(th, mi.u.ghost.species);
+        marshallUnsigned(th, mi.u.ghost.job);
+        marshallUnsigned(th, mi.u.ghost.religion);
+        marshallUnsigned(th, mi.u.ghost.best_skill);
+        marshallShort(th, mi.u.ghost.best_skill_rank);
+        marshallShort(th, mi.u.ghost.xl_rank);
+        marshallShort(th, mi.u.ghost.damage);
+        marshallShort(th, mi.u.ghost.ac);
+    }
 
     mi.props.write(th);
 }
 
 void unmarshallMonsterInfo(reader &th, monster_info& mi)
 {
-    mi.pos = unmarshallCoord(th);
 #if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_MINOR_TRANSIENT_MCACHE)
+        mi.pos = unmarshallCoord(th);
+
     if (th.getMinorVersion() < TAG_MINOR_64_MB)
     {
         mi.mb.reset();
@@ -3134,6 +3165,11 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     unmarshallUnsigned(th, mi.type);
     ASSERT(!invalid_monster_type(mi.type));
     unmarshallUnsigned(th, mi.base_type);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_TRANSIENT_MCACHE)
+#endif
+        if (mons_genus(mi.type) == MONS_DRACONIAN)
+            unmarshallUnsigned(th, mi.draco_type);
     unmarshallUnsigned(th, mi.number);
     unmarshallUnsigned(th, mi.colour);
     unmarshallUnsigned(th, mi.attitude);
@@ -3145,11 +3181,57 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     unmarshallUnsigned(th, mi.fire_blocker);
     mi.description = unmarshallString(th);
     mi.quote = unmarshallString(th);
-    unmarshallUnsigned(th, mi.fly);
+
 #if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_TRANSIENT_MCACHE)
+    {
+#endif
+        unmarshallUnsigned(th, mi.holi);
+        unmarshallUnsigned(th, mi.mintel);
+        unmarshallResists(th, mi.mresists);
+        unmarshallUnsigned(th, mi.mitemuse);
+        mi.mbase_speed = unmarshallByte(th);
+#if TAG_MAJOR_VERSION == 32
+    }
+#endif
+
+    unmarshallUnsigned(th, mi.fly);
+
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_TRANSIENT_MCACHE)
+    {
+#endif
+        mi.two_weapons = unmarshallBoolean(th);
+        mi.no_regen = unmarshallBoolean(th);
+#if TAG_MAJOR_VERSION == 32
+    }
     if (th.getMinorVersion() < TAG_MINOR_NEW_MIMICS)
         unmarshallUnsigned(th);
+
+    if (th.getMinorVersion() >= TAG_MINOR_TRANSIENT_MCACHE)
 #endif
+    {
+        for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
+        {
+            if (unmarshallBoolean(th))
+            {
+                mi.inv[i].reset(new item_def());
+                unmarshallItem(th, *mi.inv[i].get());
+            }
+        }
+
+        if (mons_is_pghost(mi.type))
+        {
+            unmarshallUnsigned(th, mi.u.ghost.species);
+            unmarshallUnsigned(th, mi.u.ghost.job);
+            unmarshallUnsigned(th, mi.u.ghost.religion);
+            unmarshallUnsigned(th, mi.u.ghost.best_skill);
+            mi.u.ghost.best_skill_rank = unmarshallShort(th);
+            mi.u.ghost.xl_rank = unmarshallShort(th);
+            mi.u.ghost.damage = unmarshallShort(th);
+            mi.u.ghost.ac = unmarshallShort(th);
+        }
+    }
 
     mi.props.clear();
 #if TAG_MAJOR_VERSION == 32
@@ -3308,9 +3390,6 @@ void tag_construct_level_tiles(writer &th)
             marshallShort(th, env.tile_flv[count_x][count_y].special);
         }
 
-    mcache.construct(th);
-    marshallInt(th, TILEP_PLAYER_MAX);
-
     marshallInt(th, TILE_WALL_MAX);
 #endif
 }
@@ -3342,6 +3421,9 @@ static void tag_read_level(reader &th)
             ASSERT(grd[i][j] < NUM_FEATURES);
 
             unmarshallMapCell(th, env.map_knowledge[i][j]);
+            if (env.map_knowledge[i][j].monsterinfo())
+                env.map_knowledge[i][j].monsterinfo()->pos = coord_def(i, j);
+
             env.map_knowledge[i][j].flags &=~ MAP_VISIBLE_FLAG;
             env.pgrid[i][j] = unmarshallInt(th);
 
@@ -3706,6 +3788,22 @@ static void _debug_count_tiles()
 #endif
 }
 
+#ifdef USE_TILE
+static void _reinit_mcache()
+{
+    for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1));
+         ri; ++ri)
+    {
+        if (env.tile_bk_fg(*ri) >= TILEP_MCACHE_START)
+            env.tile_bk_fg(*ri) = 0;
+        if (env.map_knowledge(*ri).monsterinfo())
+        {
+            tile_place_monster(*ri, *env.map_knowledge(*ri).monsterinfo());
+        }
+   }
+}
+#endif
+
 void tag_read_level_tiles(reader &th)
 {
     if (!unmarshallBoolean(th))
@@ -3799,25 +3897,24 @@ void tag_read_level_tiles(reader &th)
         }
     _debug_count_tiles();
 
-    mcache.read(th);
 #if TAG_MAJOR_VERSION == 32
-    if (th.getMinorVersion() < TAG_MINOR_MONSTER_TILES)
-        mcache.clear_all();
-    else
-#endif
-    if (unmarshallInt(th) != TILEP_PLAYER_MAX)
+    if (th.getMinorVersion() < TAG_MINOR_TRANSIENT_MCACHE)
     {
-        dprf("MON/PLAYER tilecount has changed -- dropping tilemcache.");
-        mcache.clear_all();
+        mcache.read(th);
+        if (th.getMinorVersion() >= TAG_MINOR_MONSTER_TILES)
+            unmarshallInt(th); // TILEP_PLAYER_MAX
     }
-
-    if (mcache.empty())
-        env.tile_bk_fg.init(0);
+    mcache.clear_all();
+#endif
 
     if (unmarshallInt(th) != TILE_WALL_MAX)
     {
         dprf("DNGN tilecount has changed -- recreating tile data.");
         tag_missing_level_tiles();
+    }
+    else
+    {
+        _reinit_mcache();
     }
 
 #else // not Tiles
@@ -3907,6 +4004,7 @@ static void _reinit_flavour_tiles()
                 env.tile_flv(*ri).feat_idx = 0;
         }
         tileidx_t fg, bg;
+        // FIXME: This should use the functions from tileview.cc
         tileidx_from_map_cell(&fg, &bg, *ri);
 
         env.tile_bk_bg(*ri) = bg;
