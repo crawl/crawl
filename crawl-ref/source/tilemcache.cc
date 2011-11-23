@@ -34,17 +34,12 @@ struct demon_data
     tileidx_t wings;
 };
 
-// Custom marshall/unmarshall functions.
+#if TAG_MAJOR_VERSION == 32
+// Custom unmarshall functions.
 static void unmarshallDoll(reader &th, dolls_data &doll)
 {
     for (unsigned int i = 0; i < TILEP_PART_MAX; i++)
         doll.parts[i] = unmarshallInt(th);
-}
-
-static void marshallDoll(writer &th, const dolls_data &doll)
-{
-    for (unsigned int i = 0; i < TILEP_PART_MAX; i++)
-        marshallInt(th, doll.parts[i]);
 }
 
 static void unmarshallDemon(reader &th, demon_data &demon)
@@ -53,13 +48,7 @@ static void unmarshallDemon(reader &th, demon_data &demon)
     demon.body = unmarshallInt(th);
     demon.wings = unmarshallInt(th);
 }
-
-static void marshallDemon(writer &th, const demon_data &demon)
-{
-    marshallInt(th, demon.head);
-    marshallInt(th, demon.body);
-    marshallInt(th, demon.wings);
-}
+#endif
 
 // Internal mcache classes.  The mcache_manager creates these internally.
 // The only access external clients need is through the virtual
@@ -69,15 +58,15 @@ class mcache_monster : public mcache_entry
 {
 public:
     mcache_monster(const monster_info& mon);
+#if TAG_MAJOR_VERSION == 32
     mcache_monster(reader &th);
+#endif
 
     virtual int info(tile_draw_info *dinfo) const;
 
     static bool valid(const monster_info& mon);
 
     static bool get_weapon_offset(tileidx_t mon_tile, int *ofs_x, int *ofs_y);
-
-    virtual void construct(writer &th);
 
 protected:
     tileidx_t m_mon_tile;
@@ -88,13 +77,13 @@ class mcache_draco : public mcache_entry
 {
 public:
     mcache_draco(const monster_info& mon);
+#if TAG_MAJOR_VERSION == 32
     mcache_draco(reader &th);
+#endif
 
     virtual int info(tile_draw_info *dinfo) const;
 
     static bool valid(const monster_info& mon);
-
-    virtual void construct(writer &th);
 
 protected:
     tileidx_t m_mon_tile;
@@ -106,13 +95,13 @@ class mcache_ghost : public mcache_entry
 {
 public:
     mcache_ghost(const monster_info& mon);
+#if TAG_MAJOR_VERSION == 32
     mcache_ghost(reader &th);
+#endif
 
     virtual const dolls_data *doll() const;
 
     static bool valid(const monster_info& mon);
-
-    virtual void construct(writer &th);
 
     virtual bool transparent() const;
 
@@ -124,13 +113,13 @@ class mcache_demon : public mcache_entry
 {
 public:
     mcache_demon(const monster_info& minf);
+#if TAG_MAJOR_VERSION == 32
     mcache_demon(reader &th);
+#endif
 
     virtual int info(tile_draw_info *dinfo) const;
 
     static bool valid(const monster_info& mon);
-
-    virtual void construct(writer &th);
 
 protected:
     demon_data m_demon;
@@ -242,6 +231,7 @@ mcache_entry *mcache_manager::get(tileidx_t tile)
     return (entry);
 }
 
+#if TAG_MAJOR_VERSION == 32
 void mcache_manager::read(reader &th)
 {
     unsigned int size = unmarshallInt(th);
@@ -277,48 +267,17 @@ void mcache_manager::read(reader &th)
         m_entries.push_back(entry);
     }
 }
-
-void mcache_manager::construct(writer &th)
-{
-    marshallInt(th, m_entries.size());
-    for (unsigned int i = 0; i < m_entries.size(); i++)
-    {
-        if (m_entries[i] == NULL)
-        {
-            marshallByte(th, MCACHE_NULL);
-            continue;
-        }
-
-        if (dynamic_cast<mcache_monster*>(m_entries[i]))
-            marshallByte(th, MCACHE_MONSTER);
-        else if (dynamic_cast<mcache_draco*>(m_entries[i]))
-            marshallByte(th, MCACHE_DRACO);
-        else if (dynamic_cast<mcache_ghost*>(m_entries[i]))
-            marshallByte(th, MCACHE_GHOST);
-        else if (dynamic_cast<mcache_demon*>(m_entries[i]))
-            marshallByte(th, MCACHE_DEMON);
-        else
-        {
-            marshallByte(th, MCACHE_NULL);
-            continue;
-        }
-
-        m_entries[i]->construct(th);
-    }
-}
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // mcache_entry
 
+#if TAG_MAJOR_VERSION == 32
 mcache_entry::mcache_entry(reader &th)
 {
     m_ref_count = unmarshallInt(th);
 }
-
-void mcache_entry::construct(writer &th)
-{
-    marshallInt(th, m_ref_count);
-}
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // mcache_monster
@@ -618,19 +577,13 @@ bool mcache_monster::valid(const monster_info& mon)
     return get_weapon_offset(mon_tile, &ox, &oy);
 }
 
+#if TAG_MAJOR_VERSION == 32
 mcache_monster::mcache_monster(reader &th) : mcache_entry(th)
 {
     m_mon_tile = unmarshallInt(th);
     m_equ_tile = unmarshallInt(th);
 }
-
-void mcache_monster::construct(writer &th)
-{
-    mcache_entry::construct(th);
-
-    marshallInt(th, m_mon_tile);
-    marshallInt(th, m_equ_tile);
-}
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // mcache_draco
@@ -663,21 +616,14 @@ bool mcache_draco::valid(const monster_info& mon)
     return (mons_is_draconian(mon.type));
 }
 
+#if TAG_MAJOR_VERSION == 32
 mcache_draco::mcache_draco(reader &th) : mcache_entry(th)
 {
     m_mon_tile = unmarshallInt(th);
     m_job_tile = unmarshallInt(th);
     m_equ_tile = unmarshallInt(th);
 }
-
-void mcache_draco::construct(writer &th)
-{
-    mcache_entry::construct(th);
-
-    marshallInt(th, m_mon_tile);
-    marshallInt(th, m_job_tile);
-    marshallInt(th, m_equ_tile);
-}
+#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // mcache_ghost
@@ -822,17 +768,12 @@ bool mcache_ghost::valid(const monster_info& mon)
     return (mons_is_pghost(mon.type));
 }
 
+#if TAG_MAJOR_VERSION == 32
 mcache_ghost::mcache_ghost(reader &th) : mcache_entry(th)
 {
     unmarshallDoll(th, m_doll);
 }
-
-void mcache_ghost::construct(writer &th)
-{
-    mcache_entry::construct(th);
-
-    marshallDoll(th, m_doll);
-}
+#endif
 
 bool mcache_ghost::transparent() const
 {
@@ -884,16 +825,11 @@ bool mcache_demon::valid(const monster_info& mon)
     return (mon.type == MONS_PANDEMONIUM_LORD);
 }
 
+#if TAG_MAJOR_VERSION == 32
 mcache_demon::mcache_demon(reader &th) : mcache_entry(th)
 {
     unmarshallDemon(th, m_demon);
 }
-
-void mcache_demon::construct(writer &th)
-{
-    mcache_entry::construct(th);
-
-    marshallDemon(th, m_demon);
-}
+#endif
 
 #endif
