@@ -59,7 +59,7 @@ Press 'q' to drink from this magic fountain. Expect magical effects, as long as 
 %%%%
 A gate leading back out of this place
 
-This gate leads back to the dungeon. Just don't forget your runes if you intend to return.
+This gate leads back to the dungeon.
 %%%%
 A gate leading out of Pandemonium
 
