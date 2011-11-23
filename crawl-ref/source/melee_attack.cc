@@ -716,7 +716,11 @@ bool melee_attack::handle_phase_killed()
         unrand_entry->fight_func.melee_effects(weapon, attacker, defender,
                                                true, special_damage);
 
-    _monster_die(defender->as_monster(), KILL_YOU, NON_MONSTER);
+    killer_type killer = attacker->atype() == ACT_PLAYER
+                   ? KILL_YOU
+                   : (attacker->as_monster()->confused_by_you() ? KILL_YOU_CONF
+                                                                : KILL_MON);
+    _monster_die(defender->as_monster(), killer, NON_MONSTER);
 
     return (true);
 }
@@ -861,8 +865,7 @@ bool melee_attack::attack()
     // already, but not if sanctuary is in effect (pet target must be
     // set explicitly by the player during sanctuary).
     if (perceived_attack && attacker->alive()
-        && (defender->atype() == ACT_PLAYER
-            || defender->as_monster()->friendly())
+        && defender->as_monster()->friendly()
         && attacker->atype() != ACT_PLAYER
         && !crawl_state.game_is_arena()
         && !attacker->as_monster()->wont_attack()
@@ -881,8 +884,8 @@ bool melee_attack::attack()
                         if (wield_weapon(true, i))
                             return (false);
         }
-        else
-            you.pet_target = attacker->mindex();
+
+        you.pet_target = attacker->mindex();
     }
 
     if (!defender->alive())
@@ -950,7 +953,6 @@ void melee_attack::adjust_noise()
             break;
 
         case AT_WEAP_ONLY:
-            noise_factor = noise_factor;
             break;
 
         // To prevent compiler warnings.
