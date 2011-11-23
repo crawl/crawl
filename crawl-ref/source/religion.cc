@@ -2324,36 +2324,33 @@ std::string god_name(god_type which_god, bool long_name)
 
     switch (which_god)
     {
-    case GOD_NO_GOD: return "No God";
-    case GOD_RANDOM: return "random";
-    case GOD_NAMELESS: return "nameless";
-    case GOD_VIABLE: return "viable";
+    case GOD_NO_GOD:        return "No God";
+    case GOD_RANDOM:        return "random";
+    case GOD_NAMELESS:      return "nameless";
+    case GOD_VIABLE:        return "viable";
     case GOD_ZIN:           return "Zin";
     case GOD_SHINING_ONE:   return "The Shining One";
     case GOD_KIKUBAAQUDGHA: return "Kikubaaqudgha";
-    case GOD_YREDELEMNUL:
-        return "Yredelemnul";
-    case GOD_VEHUMET: return "Vehumet";
-    case GOD_OKAWARU: return "Okawaru";
-    case GOD_MAKHLEB: return "Makhleb";
-    case GOD_SIF_MUNA:
-        return "Sif Muna";
-    case GOD_TROG: return "Trog";
+    case GOD_YREDELEMNUL:   return "Yredelemnul";
+    case GOD_VEHUMET:       return "Vehumet";
+    case GOD_OKAWARU:       return "Okawaru";
+    case GOD_MAKHLEB:       return "Makhleb";
+    case GOD_SIF_MUNA:      return "Sif Muna";
+    case GOD_TROG:          return "Trog";
     case GOD_NEMELEX_XOBEH: return "Nemelex Xobeh";
-    case GOD_ELYVILON: return "Elyvilon";
-    case GOD_LUGONU:   return "Lugonu";
-    case GOD_BEOGH:    return "Beogh";
+    case GOD_ELYVILON:      return "Elyvilon";
+    case GOD_LUGONU:        return "Lugonu";
+    case GOD_BEOGH:         return "Beogh";
     case GOD_JIYVA:
     {
         return (long_name ? god_name_jiyva(true) + " the Shapeless"
                           : god_name_jiyva(false));
     }
     case GOD_FEDHAS:        return "Fedhas";
-    case GOD_CHEIBRIADOS: return "Cheibriados";
-    case GOD_XOM: return "Xom";
-    case GOD_ASHENZARI:
-        return "Ashenzari";
-    case NUM_GODS: return "Buggy";
+    case GOD_CHEIBRIADOS:   return "Cheibriados";
+    case GOD_XOM:           return "Xom";
+    case GOD_ASHENZARI:     return "Ashenzari";
+    case NUM_GODS:          return "Buggy";
     }
     return ("");
 }
