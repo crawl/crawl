@@ -686,12 +686,13 @@ std::string monster_info::_apply_adjusted_description(description_level_type des
 {
     if (desc == DESC_ITS)
         desc = DESC_THE;
-    if (is(MB_NAME_THE))
-        desc = desc == DESC_A ? DESC_THE : desc;
-    if (attitude == ATT_FRIENDLY)
-    {
-        desc = desc == DESC_THE ? DESC_YOUR : desc;
-    }
+		
+    if (is(MB_NAME_THE) && desc == DESC_A)
+        desc = DESC_THE;
+		
+    if (attitude == ATT_FRIENDLY && desc == DESC_THE)
+        desc = DESC_YOUR;
+		
     return apply_description(desc, s);
 }
 
