@@ -1313,6 +1313,7 @@ static void tag_construct_you(writer &th)
     marshallFloat(th, abyssal_state.depth);
 
     marshallShort(th, you.constricted_by);
+    marshallInt(th, you.escape_attempts);
     marshallInt(th, you.dur_been_constricted);
     for (unsigned int k = 0; k < 8; k++)
     {
@@ -2340,6 +2341,7 @@ static void tag_read_you(reader &th)
 #endif
 
     you.constricted_by = unmarshallShort(th);
+    you.escape_attempts = unmarshallInt(th);
     you.dur_been_constricted = unmarshallInt(th);
     for (unsigned int k = 0; k < 8; k++)
     {
@@ -3110,6 +3112,7 @@ void marshallMonster(writer &th, const monster& m)
         marshallGhost(th, *m.ghost);
     }
     marshallShort(th, m.constricted_by);
+    marshallInt(th, m.escape_attempts);
     marshallInt(th, m.dur_been_constricted);
     for (unsigned int k = 0; k < 8; k++)
     {
@@ -3632,6 +3635,7 @@ void unmarshallMonster(reader &th, monster& m)
         m.set_ghost(unmarshallGhost(th));
 
     m.constricted_by = unmarshallShort(th);
+    m.escape_attempts = unmarshallInt(th);
     m.dur_been_constricted = unmarshallInt(th);
         for (unsigned int k = 0; k < 8; k++)
 	{

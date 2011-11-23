@@ -5561,6 +5561,15 @@ void player::init()
     save                = 0;
     prev_save_version.clear();
 
+    constricted_by = NON_ENTITY;
+    escape_attempts = 0;
+    dur_been_constricted = 0;
+    for (int i = 0; i < 8; i++)
+    {
+        constricting[i] = NON_ENTITY;
+	dur_has_constricted[i] = 0;
+    }
+
     // Protected fields:
     for (int i = 0; i < NUM_BRANCHES; i++)
     {
@@ -7339,7 +7348,7 @@ void player::goto_place(const level_id &lid)
 
 void player::accum_been_constricted()
 {
-    if (constricted_by)
+    if (!is_constricted())
         dur_been_constricted += you.time_taken;
 }
 
@@ -7348,6 +7357,49 @@ void player::accum_has_constricted()
     for (int i = 0; i < 8; i++)
         if (constricting[i])
 	    dur_has_constricted[i] += you.time_taken;
+}
+
+bool player::attempt_escape()
+{
+    size_type thesize;
+    int attfactor;
+    int randfact;
+    monster themonst;
+
+    if (!is_constricted())
+        return true;
+
+    escape_attempts++;
+    // player breaks free if size*attempts > 5 + d(12) + d(HD)
+    // this is inefficient on purpose, simplify after debug
+    thesize = transform_size(form);
+    attfactor = thesize * escape_attempts;
+
+    randfact = roll_dice(1,5) + 5;
+    themonst = env.mons[constricted_by];
+    randfact += roll_dice(1,themonst.hit_dice);
+
+    if (attfactor > randfact)
+    {
+        // message that you escaped 
+
+        std::string emsg = "You escape ";
+	emsg += env.mons[you.constricted_by].name(DESC_THE,true);
+	emsg += "'s grasp.";
+	mpr(emsg);
+	// update monster's has constricted info
+        for (int i = 0; i < 8; i++)
+	    if (themonst.constricting[i] == MHITYOU)
+	        themonst.constricting[i] = 0;
+
+	// update your constricted by info
+	constricted_by = NON_ENTITY;
+	escape_attempts = 0;
+
+	return true;
+    }
+    else
+        return false;
 }
 
 /*

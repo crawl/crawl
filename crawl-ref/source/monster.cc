@@ -70,14 +70,21 @@ monster::monster()
       enchantments(), flags(0), experience(0), base_monster(MONS_NO_MONSTER),
       number(0), colour(BLACK), foe_memory(0), shield_blocks(0),
       god(GOD_NO_GOD), ghost(), seen_context(""), client_id(0)
-
 {
     type = MONS_NO_MONSTER;
     travel_path.clear();
     props.clear();
     if (crawl_state.game_is_arena())
         foe = MHITNOT;
-}
+    constricted_by = NON_ENTITY;
+    escape_attempts = 0;
+    dur_been_constricted = 0;
+    for (int i = 0; i < 8; i++)
+    {
+        constricting[i] = NON_ENTITY;
+	dur_has_constricted[i] = 0;
+    }
+};
 
 // Empty destructor to keep auto_ptr happy with incomplete ghost_demon type.
 monster::~monster()
@@ -132,6 +139,14 @@ void monster::reset()
     props.clear();
 
     client_id = 0;
+    constricted_by = NON_ENTITY;
+    escape_attempts = 0;
+    dur_been_constricted = 0;
+    for (int i = 0; i < 8; i++)
+    {
+        constricting[i] = NON_ENTITY;
+	dur_has_constricted[i] = 0;
+    }
 }
 
 void monster::init_with(const monster& mon)
@@ -5340,7 +5355,7 @@ bool monster::nightvision() const
 
 void monster::accum_been_constricted()
 {
-    if (constricted_by)
+    if (is_constricted())
             dur_been_constricted += you.time_taken;
 }
 
