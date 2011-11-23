@@ -486,8 +486,6 @@ static int _acquirement_weapon_subtype(bool divine)
     for (int i = SK_SHORT_BLADES; i <= SK_CROSSBOWS; i++)
     {
         skill_type sk = static_cast<skill_type>(i);
-        if (is_invalid_skill(sk))
-            continue;
 
         // Adding a small constant allows for the occasional
         // weapon in an untrained skill.
@@ -995,9 +993,6 @@ static bool _do_book_acquirement(item_def &book, int agent)
         for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
         {
             skill_type sk = static_cast<skill_type>(i);
-            if (is_invalid_skill(sk))
-                continue;
-
             int weight = you.skills[sk];
 
             // Anyone can get Spellcasting 1. Doesn't prove anything.
@@ -1104,11 +1099,6 @@ static bool _do_book_acquirement(item_def &book, int agent)
         for (int i = SK_FIRST_SKILL; i < NUM_SKILLS; i++)
         {
             skill_type sk = static_cast<skill_type>(i);
-            if (is_invalid_skill(sk))
-            {
-                weights[sk] = 0;
-                continue;
-            }
 
             int skl = you.skills[sk];
 

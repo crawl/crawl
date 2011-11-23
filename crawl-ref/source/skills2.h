@@ -71,7 +71,6 @@ bool is_antitrained(skill_type sk);
 bool antitrain_other(skill_type sk, bool show_zero);
 
 void skill_menu(int flag = 0, int exp = 0);
-bool is_invalid_skill(skill_type skill);
 void dump_skills(std::string &text);
 int skill_transfer_amount(skill_type sk);
 int transfer_skill_points(skill_type fsk, skill_type tsk, int skp_max,
@@ -111,5 +110,10 @@ static const skill_type skill_display_order[] =
 };
 
 static const int ndisplayed_skills = ARRAYSZ(skill_display_order);
+
+static inline bool is_invalid_skill(skill_type skill)
+{
+    return (skill < SK_FIRST_SKILL || skill >= NUM_SKILLS);
+}
 
 #endif
