@@ -185,6 +185,8 @@ bool monster_random_space(monster_type mon, coord_def& target,
 bool shove_monster(monster* mons);
 void monster_teleport(monster* mons, bool instan, bool silent = false);
 void mons_clear_trapping_net(monster* mon);
+void monster_teleport_to_player(int mindex, coord_def playerpos);
+void player_teleport_to_monster(monster *mons, coord_def playerpos);
 
 std::string summoned_poof_msg(const monster* mons, bool plural = false);
 std::string summoned_poof_msg(const int midx, const item_def &item);

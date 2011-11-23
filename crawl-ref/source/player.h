@@ -713,6 +713,7 @@ public:
     void accum_been_constricted();
     void accum_has_constricted();
     bool attempt_escape();
+    bool is_constricted_larger();
 
 protected:
     void _removed_beholder();

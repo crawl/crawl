@@ -7359,6 +7359,19 @@ void player::accum_has_constricted()
 	    dur_has_constricted[i] += you.time_taken;
 }
 
+bool player::is_constricted_larger()
+{
+    size_type psize;
+    size_type msize;
+
+    if (!is_constricted())
+        return false;
+    psize = body_size();
+    msize = env.mons[constricted_by].body_size();
+    return (msize > psize);
+
+}
+
 bool player::attempt_escape()
 {
     size_type thesize;
