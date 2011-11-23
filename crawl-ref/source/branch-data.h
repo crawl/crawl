@@ -17,7 +17,7 @@ const Branch branches[NUM_BRANCHES] = {
 
     { BRANCH_MAIN_DUNGEON, BRANCH_MAIN_DUNGEON, -1, -1,
           BRANCH_DUNGEON_DEPTH, 0, 0,
-      NUM_FEATURES, NUM_FEATURES,  // sentinel values
+      NUM_FEATURES, DNGN_EXIT_DUNGEON,
       "Dungeon", "the Dungeon", "D",
       NULL,
       true, LIGHTGREY, BROWN,

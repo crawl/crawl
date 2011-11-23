@@ -223,6 +223,12 @@ A staircase back to the Vaults
 
 These stairs lead back to the mighty Vaults.
 %%%%
+A staircase leading out of the dungeon
+
+This exit leads to the Big Blue Room. Sky, singing birds, fresh air -- that kind of stuff. Also taxes and whatever else you ran from.
+
+Climbing these stairs will end your quest, whatever you'll carry the Orb with you or not.
+%%%%
 A staircase to the Crypt
 
 These stairs lead to an ancient crypt. Unfortunately, not everything that was buried there had the decency to stay dead.
