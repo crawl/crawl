@@ -319,6 +319,8 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
             bleed_onto_floor(you.pos(), static_cast<monster_type>(item.plus),
                              delay.duration, false);
 
+            const item_def corpse = item;
+
             if (mons_skeleton(item.plus) && one_chance_in(3))
                 turn_corpse_into_skeleton(item);
             else
@@ -328,6 +330,8 @@ void stop_delay(bool stop_stair_travel, bool force_unsafe)
                 else
                     dec_mitm_item_quantity(delay.parm2, 1);
             }
+
+            maybe_drop_monster_hide(corpse);
         }
 
         if (was_orc)
@@ -1044,6 +1048,8 @@ static void _finish_delay(const delay_queue_item &delay)
         // vampire_nutrition_per_turn did a stop_delay already:
         if (is_vampire_feeding())
         {
+            const item_def corpse = item;
+
             if (mons_skeleton(item.plus) && one_chance_in(3))
             {
                 turn_corpse_into_skeleton(item);
@@ -1056,6 +1062,8 @@ static void _finish_delay(const delay_queue_item &delay)
                 else
                     dec_mitm_item_quantity(delay.parm2, 1);
             }
+
+            maybe_drop_monster_hide(corpse);
         }
 
         if (was_orc)
