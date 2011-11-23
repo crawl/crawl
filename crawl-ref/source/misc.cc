@@ -135,7 +135,7 @@ static void _create_monster_hide(const item_def corpse)
     move_item_to_grid(&o, corpse.pos);
 }
 
-static void _maybe_drop_monster_hide(const item_def corpse)
+void maybe_drop_monster_hide(const item_def corpse)
 {
     if (monster_descriptor(corpse.plus, MDSC_LEAVES_HIDE) && !one_chance_in(3))
         _create_monster_hide(corpse);
@@ -184,7 +184,7 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
 
     // Happens after the corpse has been butchered.
     if (make_hide)
-        _maybe_drop_monster_hide(corpse);
+        maybe_drop_monster_hide(corpse);
 }
 
 void turn_corpse_into_skeleton_and_chunks(item_def &item)
@@ -951,7 +951,7 @@ void turn_corpse_into_blood_potions(item_def &item)
     init_stack_blood_potions(item, (item.special - 100) * 20 + 500);
 
     // Happens after the blood has been bottled.
-    _maybe_drop_monster_hide(corpse);
+    maybe_drop_monster_hide(corpse);
 }
 
 void turn_corpse_into_skeleton_and_blood_potions(item_def &item)
