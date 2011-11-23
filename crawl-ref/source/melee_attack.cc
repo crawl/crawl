@@ -1188,8 +1188,11 @@ unarmed_attack_type melee_attack::player_aux_choose_baseattack()
         baseattack = UNAT_HEADBUTT;
 
     // Octopodes turn kicks into punches.
-    if (you.species == SP_OCTOPODE && baseattack == UNAT_KICK)
+    if (you.species == SP_OCTOPODE && baseattack == UNAT_KICK
+        && (!player_mutation_level(MUT_TENTACLE_SPIKE) || coinflip()))
+    {
         baseattack = UNAT_PUNCH;
+    }
 
     if (_tran_forbid_aux_attack(baseattack))
         baseattack = UNAT_NO_ATTACK;
