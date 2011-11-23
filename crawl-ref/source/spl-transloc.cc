@@ -147,7 +147,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             if (!wizard_blink && beholder)
             {
                 mprf("You cannot blink away from %s!",
-                    beholder->name(DESC_NOCAP_THE, true).c_str());
+                    beholder->name(DESC_THE, true).c_str());
                 continue;
             }
 
@@ -155,7 +155,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
             if (!wizard_blink && fearmonger)
             {
                 mprf("You cannot blink closer to %s!",
-                    fearmonger->name(DESC_NOCAP_THE, true).c_str());
+                    fearmonger->name(DESC_THE, true).c_str());
                 continue;
             }
 
@@ -492,7 +492,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             if (beholder && !wizard_tele)
             {
                 mprf("You cannot teleport away from %s!",
-                     beholder->name(DESC_NOCAP_THE, true).c_str());
+                     beholder->name(DESC_THE, true).c_str());
                 mpr("Choose another destination (press '.' or delete to select).");
                 more();
                 continue;
@@ -502,7 +502,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
             if (fearmonger && !wizard_tele)
             {
                 mprf("You cannot teleport closer to %s!",
-                     fearmonger->name(DESC_NOCAP_THE, true).c_str());
+                     fearmonger->name(DESC_THE, true).c_str());
                 mpr("Choose another destination (press '.' or delete to select).");
                 more();
                 continue;

@@ -814,7 +814,7 @@ void discover_mimic(const coord_def& pos)
         // If we took a note of this feature, then note that it was a mimic.
         if (!is_boring_terrain(feat))
         {
-            std::string desc = feature_description(pos, false, DESC_CAP_THE, false);
+            std::string desc = feature_description(pos, false, DESC_THE, false);
             take_note(Note(NOTE_FEAT_MIMIC, 0, 0, desc.c_str()));
         }
 
@@ -1406,12 +1406,12 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
     mon_attack_def attk = smc->attack[attk_number];
 
     if (attk.type == AT_RANDOM)
-        attk.type = static_cast<mon_attack_type>(random_range(AT_HIT,
+        attk.type = static_cast<attack_type>(random_range(AT_HIT,
                                                               AT_GORE));
 
     if (attk.flavour == AF_KLOWN)
     {
-        mon_attack_flavour flavours[] =
+        attack_flavour flavours[] =
             {AF_POISON_NASTY, AF_ROT, AF_DRAIN_XP, AF_FIRE, AF_COLD, AF_BLINK};
 
         attk.flavour = RANDOM_ELEMENT(flavours);
@@ -1419,7 +1419,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
 
     if (attk.flavour == AF_POISON_STAT)
     {
-        mon_attack_flavour flavours[] =
+        attack_flavour flavours[] =
             {AF_POISON_STR, AF_POISON_INT, AF_POISON_DEX};
 
         attk.flavour = RANDOM_ELEMENT(flavours);
@@ -1427,7 +1427,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
 
     if (attk.flavour == AF_DRAIN_STAT)
     {
-        mon_attack_flavour flavours[] =
+        attack_flavour flavours[] =
             {AF_DRAIN_STR, AF_DRAIN_INT, AF_DRAIN_DEX};
 
         attk.flavour = RANDOM_ELEMENT(flavours);
@@ -1831,11 +1831,6 @@ static bool _get_spellbook_list(mon_spellbook_type book[6],
     case MONS_NECROMANCER:
         book[0] = MST_NECROMANCER_I;
         book[1] = MST_NECROMANCER_II;
-        break;
-
-    case MONS_UNBORN_DEEP_DWARF:
-        book[0] = MST_UNBORN_DEEP_DWARF;
-        book[1] = MST_NECROMANCER_I;
         break;
 
     case MONS_ORC_WIZARD:
@@ -2322,10 +2317,8 @@ std::string mons_type_name(int type, description_level_type desc)
     {
         switch (desc)
         {
-        case DESC_CAP_THE:   result = "The "; break;
-        case DESC_NOCAP_THE: result = "the "; break;
-        case DESC_CAP_A:     result = "A ";   break;
-        case DESC_NOCAP_A:   result = "a ";   break;
+        case DESC_THE:       result = "the "; break;
+        case DESC_A:         result = "a ";   break;
         case DESC_PLAIN: default:             break;
         }
     }
@@ -3116,19 +3109,11 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
 
     switch (variant)
     {
-        case PRONOUN_CAP:
-            return ((gender == GENDER_NEUTER) ? "It" :
-                    (gender == GENDER_MALE)   ? "He" : "She");
-
-        case PRONOUN_NOCAP:
+        case PRONOUN:
             return ((gender == GENDER_NEUTER) ? "it" :
                     (gender == GENDER_MALE)   ? "he" : "she");
 
-        case PRONOUN_CAP_POSSESSIVE:
-            return ((gender == GENDER_NEUTER) ? "Its" :
-                    (gender == GENDER_MALE)   ? "His" : "Her");
-
-        case PRONOUN_NOCAP_POSSESSIVE:
+        case PRONOUN_POSSESSIVE:
             return ((gender == GENDER_NEUTER) ? "its" :
                     (gender == GENDER_MALE)   ? "his" : "her");
 
@@ -3432,8 +3417,8 @@ mon_inv_type item_to_mslot(const item_def &item)
 monster_type royal_jelly_ejectable_monster()
 {
     return random_choose(MONS_ACID_BLOB,
-                         MONS_AZURE_JELLY,
-                         MONS_DEATH_OOZE,
+                      MONS_AZURE_JELLY,
+                      MONS_DEATH_OOZE,
                          -1);
 }
 
@@ -3553,13 +3538,13 @@ std::string do_mon_str_replacements(const std::string &in_msg,
                 && !mons_is_unique(m_foe->type)
                 && !crawl_state.game_is_arena())
             {
-                foe_name = foe->name(DESC_NOCAP_YOUR);
+                foe_name = foe->name(DESC_YOUR);
                 const std::string::size_type pos = foe_name.find("'");
                 if (pos != std::string::npos)
                     foe_name = foe_name.substr(0, pos);
             }
             else
-                foe_name = foe->name(DESC_NOCAP_THE);
+                foe_name = foe->name(DESC_THE);
         }
         else
             foe_name = "something";
@@ -3594,11 +3579,11 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         foe_species = genus;
     }
 
-    description_level_type nocap = DESC_NOCAP_THE, cap = DESC_CAP_THE;
+    description_level_type nocap = DESC_THE, cap = DESC_THE;
 
     if (mons->is_named() && you.can_see(mons))
     {
-        const std::string name = mons->name(DESC_CAP_THE);
+        const std::string name = mons->name(DESC_THE);
 
         msg = replace_all(msg, "@the_something@", name);
         msg = replace_all(msg, "@The_something@", name);
@@ -3645,12 +3630,12 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     {
         std::string something = mons->name(DESC_PLAIN);
         msg = replace_all(msg, "@something@",   something);
-        msg = replace_all(msg, "@a_something@", mons->name(DESC_NOCAP_A));
+        msg = replace_all(msg, "@a_something@", mons->name(DESC_A));
         msg = replace_all(msg, "@the_something@", mons->name(nocap));
 
         something[0] = toupper(something[0]);
         msg = replace_all(msg, "@Something@",   something);
-        msg = replace_all(msg, "@A_something@", mons->name(DESC_CAP_A));
+        msg = replace_all(msg, "@A_something@", mons->name(DESC_A));
         msg = replace_all(msg, "@The_something@", mons->name(cap));
     }
     else
@@ -3669,22 +3654,22 @@ std::string do_mon_str_replacements(const std::string &in_msg,
 
     std::string plain = mons->name(DESC_PLAIN);
     msg = replace_all(msg, "@monster@",     plain);
-    msg = replace_all(msg, "@a_monster@",   mons->name(DESC_NOCAP_A));
+    msg = replace_all(msg, "@a_monster@",   mons->name(DESC_A));
     msg = replace_all(msg, "@the_monster@", mons->name(nocap));
 
     plain[0] = toupper(plain[0]);
     msg = replace_all(msg, "@Monster@",     plain);
-    msg = replace_all(msg, "@A_monster@",   mons->name(DESC_CAP_A));
+    msg = replace_all(msg, "@A_monster@",   mons->name(DESC_A));
     msg = replace_all(msg, "@The_monster@", mons->name(cap));
 
     msg = replace_all(msg, "@Pronoun@",
-                      mons->pronoun(PRONOUN_CAP));
+                      mons->pronoun(PRONOUN));
     msg = replace_all(msg, "@pronoun@",
-                      mons->pronoun(PRONOUN_NOCAP));
+                      mons->pronoun(PRONOUN));
     msg = replace_all(msg, "@Possessive@",
-                      mons->pronoun(PRONOUN_CAP_POSSESSIVE));
+                      mons->pronoun(PRONOUN_POSSESSIVE));
     msg = replace_all(msg, "@possessive@",
-                      mons->pronoun(PRONOUN_NOCAP_POSSESSIVE));
+                      mons->pronoun(PRONOUN_POSSESSIVE));
     msg = replace_all(msg, "@reflexive@",
                       mons->pronoun(PRONOUN_REFLEXIVE));
     msg = replace_all(msg, "@objective@",
@@ -3745,7 +3730,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
         // No verb needed.
         msg = replace_all(msg, "@foe_god@",
                           _replace_god_name(god, false, false));
-        msg = replace_all(msg, "@foe_god@",
+        msg = replace_all(msg, "@Foe_god@",
                           _replace_god_name(god, false, true));
     }
 
@@ -3767,7 +3752,7 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     {
         msg = replace_all(msg, "@God@", "a god");
         std::string possessive =
-            mons->pronoun(PRONOUN_NOCAP_POSSESSIVE) + " god";
+            mons->pronoun(PRONOUN_POSSESSIVE) + " god";
         msg = replace_all(msg, "@possessive_God@", possessive.c_str());
 
         msg = replace_all(msg, "@my_God@", "my God");

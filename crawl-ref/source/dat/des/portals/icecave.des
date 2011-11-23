@@ -71,7 +71,7 @@ function ice_cave_portal(e)
         overview = "frozen archway",
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
-        floor = "floor",
+        floor = "expired_portal",
         msg = messager })
   e.kfeat("O = enter_portal_vault")
   e.colour("O = white")

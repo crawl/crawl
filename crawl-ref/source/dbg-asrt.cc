@@ -199,8 +199,6 @@ static void _dump_player(FILE *file)
     for (size_t i = 0; i < NUM_SKILLS; ++i)
     {
         const skill_type sk = skill_type(i);
-        if (is_invalid_skill(sk))
-            continue;
         int needed_min = 0, needed_max = 0;
         if (sk >= 0 && you.skills[sk] <= 27)
             needed_min = skill_exp_needed(you.skills[sk], sk);

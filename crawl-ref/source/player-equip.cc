@@ -536,7 +536,7 @@ static void _equip_weapon_effect(item_def& item, bool showMsgs, bool unmeld)
                     add_autoinscription(item, artefact_auto_inscription(item));
 
                 // Make a note of it.
-                take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),
+                take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A).c_str(),
                                origin_desc(item).c_str()));
             }
             else
@@ -744,7 +744,7 @@ static void _unequip_weapon_effect(item_def& item, bool showMsgs, bool meld)
 
         if (brand != SPWPN_NORMAL)
         {
-            const std::string msg = item.name(DESC_CAP_YOUR);
+            const std::string msg = item.name(DESC_YOUR);
 
             switch (brand)
             {
@@ -1114,7 +1114,7 @@ static void _remove_amulet_of_faith(item_def &item)
         {
             mprf(MSGCH_GOD,
                  "%s leaches power out of you as you remove it.",
-                 item.name(DESC_CAP_YOUR).c_str());
+                 item.name(DESC_YOUR).c_str());
             dprf("%s: piety leach: %d",
                  item.name(DESC_PLAIN).c_str(), piety_loss);
             lose_piety(piety_loss);
@@ -1443,7 +1443,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
     // Cursed or not, we know that since we've put the ring on.
     set_ident_flags(item, ISFLAG_KNOW_CURSE);
 
-    mpr(item.name(DESC_INVENTORY_EQUIP).c_str());
+    mpr_nocap(item.name(DESC_INVENTORY_EQUIP).c_str());
 }
 
 static void _unequip_jewellery_effect(item_def &item, bool mesg)

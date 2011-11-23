@@ -181,6 +181,7 @@ enum ability_type
     ABIL_MAKE_OKLOB_PLANT,
     ABIL_MAKE_BURNING_BUSH,
     ABIL_REMOVE_CURSE,
+    NUM_ABILITIES
 };
 
 enum activity_interrupt_type
@@ -268,6 +269,8 @@ enum transformation_type
     TRAN_BAT,
     TRAN_PIG,
     TRAN_APPENDAGE,
+    // no NUM_TRANSFORMS due to too many switch statements
+    LAST_FORM = TRAN_APPENDAGE - 1
 };
 
 enum beam_type                  // beam[].flavour
@@ -996,14 +999,11 @@ enum delay_type
 
 enum description_level_type
 {
-    DESC_CAP_THE,
-    DESC_NOCAP_THE,
-    DESC_CAP_A,
-    DESC_NOCAP_A,
-    DESC_CAP_YOUR,
-    DESC_NOCAP_YOUR,
+    DESC_THE,
+    DESC_A,
+    DESC_YOUR,
     DESC_PLAIN,
-    DESC_NOCAP_ITS,
+    DESC_ITS,
     DESC_INVENTORY_EQUIP,
     DESC_INVENTORY,
 
@@ -1280,6 +1280,7 @@ enum dungeon_feature_type
     DNGN_ENTER_PORTAL_VAULT = 160,
     DNGN_EXIT_PORTAL_VAULT,
     DNGN_MALIGN_GATEWAY,
+    DNGN_EXPIRED_PORTAL,
 
     // Order of altars must match order of gods (god_type)
     DNGN_ALTAR_FIRST_GOD = 180,        // 180
@@ -1713,6 +1714,7 @@ enum item_type_id_state_type
     ID_TRIED_TYPE,
     ID_TRIED_ITEM_TYPE,
     ID_KNOWN_TYPE,
+    NUM_ID_STATE_TYPES
 };
 
 enum job_type
@@ -2788,10 +2790,8 @@ enum potion_type
 
 enum pronoun_type
 {
-    PRONOUN_CAP,
-    PRONOUN_NOCAP,
-    PRONOUN_CAP_POSSESSIVE,
-    PRONOUN_NOCAP_POSSESSIVE,
+    PRONOUN,
+    PRONOUN_POSSESSIVE,
     PRONOUN_REFLEXIVE,                  // reflexive is always lowercase
     PRONOUN_OBJECTIVE,                  // objective is always lowercase
 };

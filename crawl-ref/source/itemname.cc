@@ -101,7 +101,7 @@ std::string item_def::name(description_level_type descrip,
                 buff << " - ";
         }
         else
-            descrip = DESC_CAP_A;
+            descrip = DESC_A;
     }
 
     if (base_type == OBJ_BOOKS && (ident || item_type_known(*this))
@@ -127,24 +127,7 @@ std::string item_def::name(description_level_type descrip,
              && !(corpse_flags & MF_NAME_SUFFIX)
         && !starts_with(get_corpse_name(*this), "shaped "))
     {
-        switch (descrip)
-        {
-        case DESC_CAP_A:
-        case DESC_CAP_YOUR:
-            descrip = DESC_CAP_THE;
-            break;
-
-        case DESC_NOCAP_A:
-        case DESC_NOCAP_YOUR:
-        case DESC_NOCAP_ITS:
-        case DESC_INVENTORY_EQUIP:
-        case DESC_INVENTORY:
-            descrip = DESC_NOCAP_THE;
-            break;
-
-        default:
-            break;
-        }
+        descrip = DESC_THE;
     }
 
     if (item_is_orb(*this)
@@ -155,20 +138,8 @@ std::string item_def::name(description_level_type descrip,
         // Artefacts always get "the" unless we just want the plain name.
         switch (descrip)
         {
-        case DESC_CAP_A:
-        case DESC_CAP_YOUR:
-        case DESC_CAP_THE:
-            buff << "The ";
-            break;
-        case DESC_NOCAP_A:
-        case DESC_NOCAP_YOUR:
-        case DESC_NOCAP_THE:
-        case DESC_NOCAP_ITS:
-        case DESC_INVENTORY_EQUIP:
-        case DESC_INVENTORY:
-            buff << "the ";
-            break;
         default:
+            buff << "the ";
         case DESC_PLAIN:
             break;
         }
@@ -177,13 +148,10 @@ std::string item_def::name(description_level_type descrip,
     {
         switch (descrip)
         {
-        case DESC_CAP_THE:    buff << "The "; break;
-        case DESC_NOCAP_THE:  buff << "the "; break;
-        case DESC_CAP_YOUR:   buff << "Your "; break;
-        case DESC_NOCAP_YOUR: buff << "your "; break;
-        case DESC_NOCAP_ITS:  buff << "its "; break;
-        case DESC_CAP_A:
-        case DESC_NOCAP_A:
+        case DESC_THE:        buff << "the "; break;
+        case DESC_YOUR:       buff << "your "; break;
+        case DESC_ITS:        buff << "its "; break;
+        case DESC_A:
         case DESC_INVENTORY_EQUIP:
         case DESC_INVENTORY:
         case DESC_PLAIN:
@@ -204,15 +172,12 @@ std::string item_def::name(description_level_type descrip,
     {
         switch (descrip)
         {
-        case DESC_CAP_THE:    buff << "The "; break;
-        case DESC_NOCAP_THE:  buff << "the "; break;
-        case DESC_CAP_A:      buff << (startvowel ? "An " : "A "); break;
+        case DESC_THE:        buff << "the "; break;
 
-        case DESC_CAP_YOUR:   buff << "Your "; break;
-        case DESC_NOCAP_YOUR: buff << "your "; break;
-        case DESC_NOCAP_ITS:  buff << "its "; break;
+        case DESC_YOUR:       buff << "your "; break;
+        case DESC_ITS:        buff << "its "; break;
 
-        case DESC_NOCAP_A:
+        case DESC_A:
         case DESC_INVENTORY_EQUIP:
         case DESC_INVENTORY:
                               buff << (startvowel ? "an " : "a "); break;
@@ -1925,7 +1890,7 @@ std::string item_def::name_aux(description_level_type desc,
                 buff << " [ice]";
                 break;
             case STAFF_DESTRUCTION_III:
-                buff << " [lightning,iron,fireball]";
+                buff << " [lightning,fireball,iron]";
                 break;
             case STAFF_DESTRUCTION_IV:
                 buff << " [inacc,magma,cold]";
@@ -2078,7 +2043,7 @@ void set_ident_type(item_def &item, item_type_id_state_type setting,
         && !(item.flags & (ISFLAG_NOTED_ID | ISFLAG_NOTED_GET)))
     {
         // Make a note of it.
-        take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_NOCAP_A).c_str(),
+        take_note(Note(NOTE_ID_ITEM, 0, 0, item.name(DESC_A).c_str(),
                        origin_desc(item).c_str()));
 
         // Sometimes (e.g. shops) you can ID an item before you get it;

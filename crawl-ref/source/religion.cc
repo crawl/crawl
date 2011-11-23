@@ -2014,7 +2014,7 @@ blessing_done:
     else
     {
         if (you.can_see(follower))
-            whom = follower->name(DESC_NOCAP_THE);
+            whom = follower->name(DESC_THE);
         else
             whom = "a follower";
     }
@@ -2324,36 +2324,33 @@ std::string god_name(god_type which_god, bool long_name)
 
     switch (which_god)
     {
-    case GOD_NO_GOD: return "No God";
-    case GOD_RANDOM: return "random";
-    case GOD_NAMELESS: return "nameless";
-    case GOD_VIABLE: return "viable";
+    case GOD_NO_GOD:        return "No God";
+    case GOD_RANDOM:        return "random";
+    case GOD_NAMELESS:      return "nameless";
+    case GOD_VIABLE:        return "viable";
     case GOD_ZIN:           return "Zin";
     case GOD_SHINING_ONE:   return "The Shining One";
     case GOD_KIKUBAAQUDGHA: return "Kikubaaqudgha";
-    case GOD_YREDELEMNUL:
-        return "Yredelemnul";
-    case GOD_VEHUMET: return "Vehumet";
-    case GOD_OKAWARU: return "Okawaru";
-    case GOD_MAKHLEB: return "Makhleb";
-    case GOD_SIF_MUNA:
-        return "Sif Muna";
-    case GOD_TROG: return "Trog";
+    case GOD_YREDELEMNUL:   return "Yredelemnul";
+    case GOD_VEHUMET:       return "Vehumet";
+    case GOD_OKAWARU:       return "Okawaru";
+    case GOD_MAKHLEB:       return "Makhleb";
+    case GOD_SIF_MUNA:      return "Sif Muna";
+    case GOD_TROG:          return "Trog";
     case GOD_NEMELEX_XOBEH: return "Nemelex Xobeh";
-    case GOD_ELYVILON: return "Elyvilon";
-    case GOD_LUGONU:   return "Lugonu";
-    case GOD_BEOGH:    return "Beogh";
+    case GOD_ELYVILON:      return "Elyvilon";
+    case GOD_LUGONU:        return "Lugonu";
+    case GOD_BEOGH:         return "Beogh";
     case GOD_JIYVA:
     {
         return (long_name ? god_name_jiyva(true) + " the Shapeless"
                           : god_name_jiyva(false));
     }
     case GOD_FEDHAS:        return "Fedhas";
-    case GOD_CHEIBRIADOS: return "Cheibriados";
-    case GOD_XOM: return "Xom";
-    case GOD_ASHENZARI:
-        return "Ashenzari";
-    case NUM_GODS: return "Buggy";
+    case GOD_CHEIBRIADOS:   return "Cheibriados";
+    case GOD_XOM:           return "Xom";
+    case GOD_ASHENZARI:     return "Ashenzari";
+    case NUM_GODS:          return "Buggy";
     }
     return ("");
 }
@@ -3179,11 +3176,11 @@ void print_sacrifice_message(god_type god, const item_def &item,
         simple_god_message(
             make_stringf(" %sreclaims %s.",
                          piety_gain ? "gladly " : "",
-                         item.name(DESC_NOCAP_THE).c_str()).c_str(),
+                         item.name(DESC_THE).c_str()).c_str(),
             GOD_SHINING_ONE);
         return;
     }
-    const std::string itname = item.name(your ? DESC_CAP_YOUR : DESC_CAP_THE);
+    const std::string itname = item.name(your ? DESC_YOUR : DESC_THE);
     mpr(_sacrifice_message(_Sacrifice_Messages[god][piety_gain], itname,
                            itname.find("glowing") != std::string::npos,
                            item.quantity > 1,

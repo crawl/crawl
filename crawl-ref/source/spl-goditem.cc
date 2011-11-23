@@ -97,7 +97,7 @@ int identify(int power, int item_slot, std::string *pre_msg)
         }
 
         // Output identified item.
-        mpr(item.name(DESC_INVENTORY_EQUIP).c_str());
+        mpr_nocap(item.name(DESC_INVENTORY_EQUIP).c_str());
         if (item_slot == you.equip[EQ_WEAPON])
             you.wield_change = true;
 
@@ -281,7 +281,7 @@ static int _healing_spell(int healed, bool divine_ability,
             if (can_pacify == -2)
             {
                 mprf("You cannot pacify this monster while %s is sleeping!",
-                     mons->pronoun(PRONOUN_NOCAP).c_str());
+                     mons->pronoun(PRONOUN).c_str());
             }
             else
                 mpr("You cannot pacify this monster!");
@@ -328,7 +328,7 @@ static int _healing_spell(int healed, bool divine_ability,
     if (mons->heal(healed))
     {
         did_something = true;
-        mprf("You heal %s.", mons->name(DESC_NOCAP_THE).c_str());
+        mprf("You heal %s.", mons->name(DESC_THE).c_str());
 
         if (mons->hit_points == mons->max_hit_points)
             simple_monster_message(mons, " is completely healed.");
@@ -786,7 +786,7 @@ bool detect_curse(int scroll, bool suppress_msg)
                 item.quantity--;
 
             mprf("%s softly glows as it is inspected for curses.",
-                 item.name(DESC_CAP_YOUR).c_str());
+                 item.name(DESC_YOUR).c_str());
         }
         else
             mpr("Your items softly glow as they are inspected for curses.");
@@ -816,7 +816,7 @@ static bool _do_imprison(int pow, const coord_def& where, bool zin)
         // We need to get this now because we won't be able to see
         // the monster once the walls go up!
         mon = monster_at(where);
-        targname = mon->name(DESC_NOCAP_THE);
+        targname = mon->name(DESC_THE);
         bool success = true;
         bool none_vis = true;
 
@@ -973,7 +973,7 @@ bool cast_smiting(int pow, monster* mons)
     {
         set_attack_conducts(conducts, mons);
 
-        mprf("You smite %s!", mons->name(DESC_NOCAP_THE).c_str());
+        mprf("You smite %s!", mons->name(DESC_THE).c_str());
 
         behaviour_event(mons, ME_ANNOY, MHITYOU);
     }

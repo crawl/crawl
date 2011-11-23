@@ -276,10 +276,10 @@ void swap_inv_slots(int from_slot, int to_slot, bool verbose)
 
     if (verbose)
     {
-        mpr(you.inv[to_slot].name(DESC_INVENTORY_EQUIP).c_str());
+        mpr_nocap(you.inv[to_slot].name(DESC_INVENTORY_EQUIP).c_str());
 
         if (you.inv[from_slot].defined())
-            mpr(you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
+            mpr_nocap(you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
     }
 
     if (to_slot == you.equip[EQ_WEAPON] || from_slot == you.equip[EQ_WEAPON])
@@ -315,7 +315,7 @@ static void _adjust_item(void)
     if (prompt_failed(from_slot))
         return;
 
-    mpr(you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
+    mpr_nocap(you.inv[from_slot].name(DESC_INVENTORY_EQUIP).c_str());
 
     to_slot = prompt_invent_item("Adjust to which letter? ",
                                  MT_INVLIST,
@@ -371,7 +371,7 @@ static void _adjust_spell(void)
     }
 
     // Print targeted spell.
-    mprf("%c - %s", keyin, spell_title(spell));
+    mprf_nocap("%c - %s", keyin, spell_title(spell));
 
     // Select target slot.
     keyin = 0;
@@ -397,13 +397,13 @@ static void _adjust_spell(void)
     you.spell_letter_table[index_1] = tmp;
 
     // print out spell in new slot
-    mprf("%c - %s", input_2, spell_title(get_spell_by_letter(input_2)));
+    mprf_nocap("%c - %s", input_2, spell_title(get_spell_by_letter(input_2)));
 
     // print out other spell if one was involved (now at input_1)
     spell = get_spell_by_letter(input_1);
 
     if (spell != SPELL_NO_SPELL)
-        mprf("%c - %s", input_1, spell_title(spell));
+        mprf_nocap("%c - %s", input_1, spell_title(spell));
 }
 
 static void _adjust_ability(void)
@@ -695,7 +695,7 @@ void list_weapons(void)
         else
         {
             wstring += "  - ";
-            wstring += item->name(DESC_NOCAP_A);
+            wstring += item->name(DESC_A);
             wstring += " (empty)";
         }
     }
@@ -1144,7 +1144,7 @@ static void _recap_feat_keys(std::vector<std::string> &keys)
             keys[i] = "A shop";
         else
         {
-            keys[i] = feature_description(type, NUM_TRAPS, "", DESC_CAP_A,
+            keys[i] = feature_description(type, NUM_TRAPS, "", DESC_A,
                                           false);
         }
     }

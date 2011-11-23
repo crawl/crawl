@@ -138,7 +138,7 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
         temp_brand = false;
     }
 
-    std::string msg = weapon.name(DESC_CAP_YOUR);
+    std::string msg = weapon.name(DESC_YOUR);
 
     bool emit_special_message = !temp_brand;
     int duration_affected = 10;
@@ -178,7 +178,7 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
     case SPWPN_DISTORTION:
         msg += " seems to ";
         msg += random_choose("twist", "bend", "vibrate",
-                             "flex", "wobble", "twang", NULL);
+                                    "flex", "wobble", "twang", NULL);
         msg += (coinflip() ? " oddly." : " strangely.");
         duration_affected = 5;
 
@@ -236,7 +236,7 @@ spret_type brand_weapon(brand_type which_brand, int power, bool fail)
     if (emit_special_message)
         mpr(msg.c_str());
     else
-        mprf("%s flashes.", weapon.name(DESC_CAP_YOUR).c_str());
+        mprf("%s flashes.", weapon.name(DESC_YOUR).c_str());
 
     you.increase_duration(DUR_WEAPON_BRAND,
                           duration_affected + roll_dice(2, power), 50);

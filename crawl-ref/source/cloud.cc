@@ -867,7 +867,7 @@ bool _actor_apply_cloud_side_effects(actor *act,
             if (you.can_see(act))
             {
                 mprf("%s %s in the rain.",
-                     act->name(DESC_CAP_THE).c_str(),
+                     act->name(DESC_THE).c_str(),
                      act->conj_verb(silenced(act->pos())?
                                     "steam" : "sizzle").c_str());
             }
@@ -952,7 +952,7 @@ bool _actor_apply_cloud_side_effects(actor *act,
         if (player)
         {
             const actor* agent = find_agent(cloud.source, cloud.whose);
-            poison_player(1, agent ? agent->name(DESC_NOCAP_A) : "",
+            poison_player(1, agent ? agent->name(DESC_A) : "",
                           cloud.cloud_name());
         }
         else
@@ -967,7 +967,7 @@ bool _actor_apply_cloud_side_effects(actor *act,
         {
             const actor* agent = find_agent(cloud.source, cloud.whose);
             if (agent)
-                miasma_player(agent->name(DESC_NOCAP_A), cloud.cloud_name());
+                miasma_player(agent->name(DESC_A), cloud.cloud_name());
             else
                 miasma_player(cloud.cloud_name());
         }
@@ -1001,7 +1001,8 @@ bool _actor_apply_cloud_side_effects(actor *act,
     case CLOUD_CHAOS:
         if (coinflip())
         {
-            chaos_affect_actor(act);
+            // TODO: Not have this in melee_attack
+            melee_attack::chaos_affect_actor(act);
             return true;
         }
         break;
@@ -1128,7 +1129,7 @@ int actor_apply_cloud(actor *act)
     {
 #ifdef DEBUG_DIAGNOSTICS
         mprf(MSGCH_DIAGNOSTICS, "%s %s %d damage from cloud: %s.",
-             act->name(DESC_CAP_THE).c_str(),
+             act->name(DESC_THE).c_str(),
              act->conj_verb("take").c_str(),
              final_damage,
              cloud.cloud_name().c_str());
@@ -1359,14 +1360,14 @@ void cloud_struct::announce_actor_engulfed(const actor *act,
             if (act->is_player())
             {
                 mprf("%s %s standing in the rain.",
-                     act->name(DESC_CAP_THE).c_str(),
+                     act->name(DESC_THE).c_str(),
                      act->conj_verb("are").c_str());
             }
         }
         else
         {
             mprf("%s %s in %s.",
-                 act->name(DESC_CAP_THE).c_str(),
+                 act->name(DESC_THE).c_str(),
                  beneficial ? act->conj_verb("bask").c_str()
                  : (act->conj_verb("are") + " engulfed").c_str(),
                  cloud_name().c_str());

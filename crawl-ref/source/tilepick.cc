@@ -273,9 +273,11 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ENTER_TOMB:
     case DNGN_ENTER_SWAMP:
     case DNGN_ENTER_SHOALS:
-    case DNGN_ENTER_SPIDER_NEST:
     case DNGN_ENTER_FOREST:
         return TILE_DNGN_ENTER;
+
+    case DNGN_ENTER_SPIDER_NEST:
+        return TILE_DNGN_ENTER_SPIDER_NEST;
 
     case DNGN_ENTER_ZOT:
         if (you.opened_zot)
@@ -304,6 +306,8 @@ static tileidx_t _tileidx_feature_base(dungeon_feature_type feat)
     case DNGN_ENTER_PORTAL_VAULT:
     case DNGN_EXIT_PORTAL_VAULT:
         return TILE_DNGN_PORTAL;
+    case DNGN_EXPIRED_PORTAL:
+        return TILE_DNGN_PORTAL_EXPIRED;
     case DNGN_MALIGN_GATEWAY:
         return TILE_DNGN_STARRY_PORTAL;
 

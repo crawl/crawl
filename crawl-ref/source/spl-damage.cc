@@ -392,7 +392,7 @@ spret_type cast_toxic_radiance(int pow, bool non_player, bool fail)
             {
                 // message player re:"miss" where appropriate {dlb}
                 mprf("The light passes through %s.",
-                     mi->name(DESC_NOCAP_THE).c_str());
+                     mi->name(DESC_THE).c_str());
             }
         }
     }
@@ -693,7 +693,7 @@ spret_type cast_freeze(int pow, monster* mons, bool fail)
     {
         set_attack_conducts(conducts, mons);
 
-        mprf("You freeze %s.", mons->name(DESC_NOCAP_THE).c_str());
+        mprf("You freeze %s.", mons->name(DESC_THE).c_str());
 
         behaviour_event(mons, ME_ANNOY, MHITYOU);
     }
@@ -751,13 +751,13 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
         if (mons->observable())
         {
             mprf("But air would do no harm to %s!",
-                 mons->name(DESC_NOCAP_THE).c_str());
+                 mons->name(DESC_THE).c_str());
             return SPRET_ABORT;
         }
 
         fail_check();
         mprf("The air twists arounds and harmlessly tosses %s around.",
-             mons->name(DESC_NOCAP_THE).c_str());
+             mons->name(DESC_THE).c_str());
         // Bailing out early, no need to upset the gods or the target.
         return SPRET_SUCCESS; // you still did discover the invisible monster
     }
@@ -772,7 +772,7 @@ spret_type cast_airstrike(int pow, const dist &beam, bool fail)
     set_attack_conducts(conducts, mons);
 
     mprf("The air twists around and strikes %s!",
-         mons->name(DESC_NOCAP_THE).c_str());
+         mons->name(DESC_THE).c_str());
     noisy(4, beam.target);
 
     behaviour_event(mons, ME_ANNOY, MHITYOU);
@@ -1139,7 +1139,7 @@ static int _ignite_poison_affect_item(item_def& item, bool in_inv)
         if (set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING))
         {
             mprf("%s bursts into flame!",
-                 item.name(DESC_CAP_YOUR).c_str());
+                 item.name(DESC_YOUR).c_str());
 
             you.wield_change = true;
 
@@ -1394,7 +1394,7 @@ static int _ignite_poison_player(coord_def where, int pow, int, actor *actor)
             mpr("The poison in your system burns!");
 
         ouch(damage, actor->as_monster()->mindex(), KILLED_BY_MONSTER,
-             actor->as_monster()->name(DESC_NOCAP_A).c_str());
+             actor->as_monster()->name(DESC_A).c_str());
 
         if (you.duration[DUR_POISONING] > 0)
         {
@@ -1462,7 +1462,7 @@ static int _discharge_monsters(coord_def where, int pow, int, actor *)
         if (damage)
         {
             mprf("%s is struck by lightning.",
-                 mons->name(DESC_CAP_THE).c_str());
+                 mons->name(DESC_THE).c_str());
             _player_hurt_monster(*mons, damage);
         }
     }
@@ -1702,7 +1702,7 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
                                 "veto_fragmentation") == "veto")
     {
         mprf("%s seems to be unnaturally hard.",
-             feature_description(spd.target, false, DESC_CAP_THE, false).c_str());
+             feature_description(spd.target, false, DESC_THE, false).c_str());
         return SPRET_ABORT;
     }
 
@@ -1826,7 +1826,7 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
     }
     else // Monster explodes.
     {
-        mprf("%s shatters!", mon->name(DESC_CAP_THE).c_str());
+        mprf("%s shatters!", mon->name(DESC_THE).c_str());
 
         if ((mons_is_statue(mon->type) || mon->is_skeletal())
              && x_chance_in_y(pow / 5, 50)) // potential insta-kill
@@ -1959,12 +1959,9 @@ void forest_damage(const actor *mon)
                             "A tree reaches out and hits %s!",
                             "A root smacks %s from below.",
                             0);
-                        const bool up = *msg == '%';
                         // "it" looks butt-ugly here...
                         mprf(msg, foe->visible_to(&you) ?
-                                      foe->name(up ? DESC_CAP_THE
-                                                   : DESC_NOCAP_THE).c_str()
-                                    : up ? "Something" : "something");
+                                      foe->name(DESC_THE).c_str() : "something");
                     }
                     foe->hurt(mon, damage);
                 }

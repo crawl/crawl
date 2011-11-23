@@ -534,7 +534,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         {
             set_ident_type(OBJ_POTIONS, POT_BLOOD_COAGULATED, ID_KNOWN_TYPE);
             if (blood.quantity >= 1)
-                mpr(blood.name(DESC_INVENTORY).c_str());
+                mpr_nocap(blood.name(DESC_INVENTORY).c_str());
         }
 
         if (blood.quantity < 1)
@@ -595,7 +595,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
             {
                 _compare_blood_quantity(blood, timer.size());
                 if (!knew_blood)
-                    mpr(blood.name(DESC_INVENTORY).c_str());
+                    mpr_nocap(blood.name(DESC_INVENTORY).c_str());
             }
 
             // Update timer -> push(pop).
@@ -610,7 +610,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
             you.inv[m].quantity += coag_count;
             ASSERT(timer2.size() == you.inv[m].quantity);
             if (!knew_coag)
-                mpr(you.inv[m].name(DESC_INVENTORY).c_str());
+                mpr_nocap(you.inv[m].name(DESC_INVENTORY).c_str());
 
             // re-sort timer
             _int_sort(timer2);
@@ -640,7 +640,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         _compare_blood_quantity(blood, timer.size());
 
         if (!knew_coag)
-            mpr(blood.name(DESC_INVENTORY).c_str());
+            mpr_nocap(blood.name(DESC_INVENTORY).c_str());
 
         return (rot_count > 0);
     }
@@ -683,9 +683,9 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
         _compare_blood_quantity(blood, timer.size());
 
         if (!knew_blood)
-            mpr(blood.name(DESC_INVENTORY).c_str());
+            mpr_nocap(blood.name(DESC_INVENTORY).c_str());
         if (!knew_coag)
-            mpr(item.name(DESC_INVENTORY).c_str());
+            mpr_nocap(item.name(DESC_INVENTORY).c_str());
 
         return (rot_count > 0);
     }
@@ -723,7 +723,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
             dec_inv_item_quantity(blood.link, rot_count + coag_count);
             _compare_blood_quantity(blood, timer.size());
             if (!knew_blood)
-                mpr(blood.name(DESC_INVENTORY).c_str());
+                mpr_nocap(blood.name(DESC_INVENTORY).c_str());
 
             return (true);
         }
@@ -774,7 +774,7 @@ bool maybe_coagulate_blood_potions_inv(item_def &blood)
     {
         _compare_blood_quantity(blood, timer.size());
         if (!knew_blood)
-            mpr(blood.name(DESC_INVENTORY).c_str());
+            mpr_nocap(blood.name(DESC_INVENTORY).c_str());
     }
     return (true);
 }
@@ -1258,7 +1258,7 @@ void search_around(bool only_adjacent)
                 {
                     ptrap->reveal();
                     mprf("You found %s trap!",
-                         ptrap->name(DESC_NOCAP_A).c_str());
+                         ptrap->name(DESC_A).c_str());
                     learned_something_new(HINT_SEEN_TRAP, *ri);
                     practise(EX_TRAP_FOUND);
                 }
@@ -1651,7 +1651,7 @@ bool i_feel_safe(bool announce, bool want_move, bool just_monsters,
         const monster& m = *visible[0];
         const std::string monname = mons_is_mimic(m.type)
                                   ? "A mimic"
-                                  : m.name(DESC_CAP_A);
+                                  : m.name(DESC_A);
         msg = make_stringf("%s is nearby!", monname.c_str());
     }
     else if (visible.size() > 1)
@@ -1805,7 +1805,7 @@ static void _drop_tomb(const coord_def& pos, bool premature)
         else if (seen_change && zin)
             mprf("Zin %s %s %s.",
             (mon) ? "releases" : "dismisses",
-            (mon) ? mon->name(DESC_NOCAP_THE).c_str() : "the silver walls,",
+            (mon) ? mon->name(DESC_THE).c_str() : "the silver walls,",
             (mon) ? "from its prison" : "but there is nothing inside them");
         else
         {
@@ -2406,7 +2406,7 @@ void swap_with_monster(monster* mon_to_swap)
     // If it was submerged, it surfaces first.
     mon.del_ench(ENCH_SUBMERGED);
 
-    mprf("You swap places with %s.", mon.name(DESC_NOCAP_THE).c_str());
+    mprf("You swap places with %s.", mon.name(DESC_THE).c_str());
 
     // Pick the monster up.
     mgrd(newpos) = NON_MONSTER;
@@ -2534,7 +2534,7 @@ int apply_chunked_AC(int dam, int ac)
 void entered_malign_portal(actor* act)
 {
     if (you.can_see(act))
-        mprf("The portal repels %s, its terrible forces doing untold damage!", (act->atype() == ACT_PLAYER) ? "you" : act->name(DESC_NOCAP_THE).c_str());
+        mprf("The portal repels %s, its terrible forces doing untold damage!", (act->atype() == ACT_PLAYER) ? "you" : act->name(DESC_THE).c_str());
 
     act->blink(false);
     if (act->atype() == ACT_PLAYER)
@@ -2610,10 +2610,30 @@ std::string counted_monster_list::describe(description_level_type desc)
 
         out += cm.second > 1 ? pluralise(cm.first->name(desc))
                              : cm.first->name(desc);
-
-        // yay capitalization hacks, may we merge Cryp71c's branch already please?
-        if (desc == DESC_CAP_THE)
-            desc = DESC_NOCAP_THE;
     }
     return out;
+}
+
+
+
+bool move_stairs(coord_def orig, coord_def dest)
+{
+    const dungeon_feature_type stair_feat = grd(orig);
+
+    if (feat_stair_direction(stair_feat) == CMD_NO_CMD)
+        return (false);
+
+    // The player can't use shops to escape, so don't bother.
+    if (stair_feat == DNGN_ENTER_SHOP)
+        return (false);
+
+    // Don't move around notable terrain the player is aware of if it's
+    // out of sight.
+    if (is_notable_terrain(stair_feat)
+        && env.map_knowledge(orig).known() && !you.see_cell(orig))
+    {
+        return (false);
+    }
+
+    return slide_feature_over(orig, dest);
 }

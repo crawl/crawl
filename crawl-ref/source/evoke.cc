@@ -174,7 +174,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         else
         {
             mprf("%s is in the way.",
-                 mons->observable() ? mons->name(DESC_CAP_THE).c_str()
+                 mons->observable() ? mons->name(DESC_THE).c_str()
                                     : "Something you can't see");
         }
     }
@@ -186,7 +186,13 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         mpr("You attack empty space.");
         return (true);
     }
+//<<<<<<< HEAD
+    else
+        fight_melee(&you, mons, false);
+    /* Conflict from fight_rewrite
+=======
     you_attack(mons->mindex(), false);
+>>>>>>> master */
 
     return (true);
 }
@@ -888,7 +894,7 @@ bool evoke_item(int slot)
         set_ident_flags(item, ISFLAG_KNOW_TYPE);
 
         mprf("You are wielding %s.",
-             item.name(DESC_NOCAP_A).c_str());
+             item.name(DESC_A).c_str());
 
         you.wield_change = true;
     }

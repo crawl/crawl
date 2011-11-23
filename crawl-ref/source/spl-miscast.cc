@@ -270,7 +270,7 @@ std::string MiscastEffect::get_default_cause(bool attribute_to_user) const
     if (attribute_to_user)
     {
         return (std::string(you.can_see(act_source)?
-                            act_source->name(DESC_NOCAP_A)
+                            act_source->name(DESC_A)
                             : "something")
                 + " miscasting " + spell_title(spell));
     }
@@ -2214,7 +2214,7 @@ void MiscastEffect::_ice(int severity)
          || feat_is_staircase(feat) || feat_is_water(feat));
 
     const std::string feat_name = (feat == DNGN_FLOOR ? "the " : "") +
-        feature_description(target->pos(), false, DESC_NOCAP_THE);
+        feature_description(target->pos(), false, DESC_THE);
 
     int num;
     switch (severity)

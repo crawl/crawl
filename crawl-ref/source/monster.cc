@@ -11,6 +11,7 @@
 #include "cloud.h"
 #include "coord.h"
 #include "coordit.h"
+#include "database.h"
 #include "delay.h"
 #include "dgnevent.h"
 #include "dgn-overview.h"
@@ -27,10 +28,12 @@
 #include "items.h"
 #include "kills.h"
 #include "libutil.h"
+#include "makeitem.h"
 #include "misc.h"
 #include "mon-abil.h"
 #include "mon-act.h"
 #include "mon-behv.h"
+#include "mon-cast.h"
 #include "mon-death.h"
 #include "mon-place.h"
 #include "mon-stuff.h"
@@ -439,7 +442,8 @@ brand_type monster::damage_brand(int which_attack)
         return (SPWPN_NORMAL);
     }
 
-    return (!is_range_weapon(*mweap) ? get_weapon_brand(*mweap) : SPWPN_NORMAL);
+    return (!is_range_weapon(*mweap) ?
+            static_cast<brand_type>(get_weapon_brand(*mweap)) : SPWPN_NORMAL);
 }
 
 int monster::damage_type(int which_attack)
@@ -827,7 +831,7 @@ void monster::equip_weapon(item_def &item, int near, bool msg)
     if (msg)
     {
         snprintf(info, INFO_SIZE, " wields %s.",
-                 item.name(DESC_NOCAP_A, false, false, true, false,
+                 item.name(DESC_A, false, false, true, false,
                            ISFLAG_CURSED).c_str());
         msg = simple_monster_message(this, info);
     }
@@ -880,9 +884,9 @@ void monster::equip_weapon(item_def &item, int near, bool msg)
         case SPWPN_PENETRATION:
             mprf("%s %s briefly pass through it before %s manages to get a "
                  "firm grip on it.",
-                 pronoun(PRONOUN_CAP_POSSESSIVE).c_str(),
+                 pronoun(PRONOUN_POSSESSIVE).c_str(),
                  hand_name(true).c_str(),
-                 pronoun(PRONOUN_NOCAP).c_str());
+                 pronoun(PRONOUN).c_str());
             break;
         case SPWPN_REAPING:
             mpr("It is briefly surrounded by shifting shadows.");
@@ -909,7 +913,7 @@ void monster::equip_armour(item_def &item, int near)
     if (need_message(near))
     {
         snprintf(info, INFO_SIZE, " wears %s.",
-                 item.name(DESC_NOCAP_A).c_str());
+                 item.name(DESC_A).c_str());
         simple_monster_message(this, info);
     }
 
@@ -957,7 +961,7 @@ void monster::unequip_weapon(item_def &item, int near, bool msg)
     if (msg)
     {
         snprintf(info, INFO_SIZE, " unwields %s.",
-                             item.name(DESC_NOCAP_A, false, false, true, false,
+                             item.name(DESC_A, false, false, true, false,
                              ISFLAG_CURSED).c_str());
         msg = simple_monster_message(this, info);
     }
@@ -1011,7 +1015,7 @@ void monster::unequip_armour(item_def &item, int near)
     if (need_message(near))
     {
         snprintf(info, INFO_SIZE, " takes off %s.",
-                 item.name(DESC_NOCAP_A).c_str());
+                 item.name(DESC_A).c_str());
         simple_monster_message(this, info);
     }
 
@@ -1073,9 +1077,9 @@ void monster::pickup_message(const item_def &item, int near)
     if (need_message(near))
     {
         mprf("%s picks up %s.",
-             name(DESC_CAP_THE).c_str(),
+             name(DESC_THE).c_str(),
              item.base_type == OBJ_GOLD ? "some gold"
-                                        : item.name(DESC_NOCAP_A).c_str());
+                                        : item.name(DESC_A).c_str());
     }
 }
 
@@ -1214,9 +1218,9 @@ bool monster::drop_item(int eslot, int near)
         if (need_message(near))
         {
             mprf("%s %s as %s drops %s!",
-                 pitem->name(DESC_CAP_THE).c_str(),
+                 pitem->name(DESC_THE).c_str(),
                  summoned_poof_msg(this, *pitem).c_str(),
-                 name(DESC_NOCAP_THE).c_str(),
+                 name(DESC_THE).c_str(),
                  pitem->quantity > 1 ? "them" : "it");
         }
 
@@ -1227,8 +1231,8 @@ bool monster::drop_item(int eslot, int near)
     {
         if (need_message(near))
         {
-            mprf("%s drops %s.", name(DESC_CAP_THE).c_str(),
-                 pitem->name(DESC_NOCAP_A).c_str());
+            mprf("%s drops %s.", name(DESC_THE).c_str(),
+                 pitem->name(DESC_A).c_str());
         }
 
         if (!move_item_to_grid(&item_index, pos(), swimming()))
@@ -2251,9 +2255,7 @@ static std::string _mon_special_name(const monster& mon, description_level_type 
     {
         switch (desc)
         {
-        case DESC_CAP_THE: case DESC_CAP_A:
-            return ("It");
-        case DESC_NOCAP_THE: case DESC_NOCAP_A: case DESC_PLAIN:
+        case DESC_THE: case DESC_A: case DESC_PLAIN:
             return ("it");
         default:
             return ("it (buggy)");
@@ -2645,7 +2647,7 @@ bool monster::fumbles_attack(bool verbose)
         {
             if (you.can_see(this))
             {
-                mpr(name(DESC_CAP_THE)
+                mpr(name(DESC_THE)
                     + (liquefied(pos())
                        ? " becomes momentarily stuck in the liquid earth."
                        : " splashes around in the water."));
@@ -2684,7 +2686,7 @@ void monster::go_frenzy()
         del_ench(ENCH_SLOW, true); // Give no additional message.
         simple_monster_message(this,
             make_stringf(" shakes off %s lethargy.",
-                         pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str()).c_str());
+                         pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
     }
     del_ench(ENCH_HASTE, true);
     del_ench(ENCH_FATIGUE, true); // Give no additional message.
@@ -2715,7 +2717,7 @@ void monster::go_berserk(bool /* intentional */, bool /* potion */)
         del_ench(ENCH_SLOW, true); // Give no additional message.
         simple_monster_message(this,
             make_stringf(" shakes off %s lethargy.",
-                         pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str()).c_str());
+                         pronoun(PRONOUN_POSSESSIVE).c_str()).c_str());
     }
     del_ench(ENCH_FATIGUE, true); // Give no additional message.
 
@@ -3575,6 +3577,11 @@ bool monster::is_levitating() const
     return (flight_mode() == FL_LEVITATE);
 }
 
+bool monster::is_banished() const
+{
+    return (!alive() && flags & MF_BANISHED);
+}
+
 int monster::mons_species() const
 {
     return ::mons_species(type);
@@ -3637,7 +3644,7 @@ bool monster::drain_exp(actor *agent, bool quiet, int pow)
         return (false);
 
     if (!quiet && you.can_see(this))
-        mprf("%s is drained!", name(DESC_CAP_THE).c_str());
+        mprf("%s is drained!", name(DESC_THE).c_str());
 
     // If quiet, don't clean up the monster in order to credit properly.
     hurt(agent, 2 + random2(pow), BEAM_NEG, !quiet);
@@ -3664,7 +3671,7 @@ bool monster::rot(actor *agent, int amount, int immediate, bool quiet)
 
     if (!quiet && you.can_see(this))
     {
-        mprf("%s %s!", name(DESC_CAP_THE).c_str(),
+        mprf("%s %s!", name(DESC_THE).c_str(),
              amount > 0 ? "rots" : "looks less resilient");
     }
 
@@ -4106,7 +4113,7 @@ bool monster::sicken(int amount, bool unused)
     if (!has_ench(ENCH_SICK) && you.can_see(this))
     {
         // Yes, could be confused with poisoning.
-        mprf("%s looks sick.", name(DESC_CAP_THE).c_str());
+        mprf("%s looks sick.", name(DESC_THE).c_str());
     }
 
     add_ench(mon_enchant(ENCH_SICK, 0, 0, amount * 10));
@@ -4118,9 +4125,83 @@ bool monster::bleed(const actor* agent, int amount, int degree)
 {
     if (!has_ench(ENCH_BLEED) && you.can_see(this))
     {
-        mprf("%s begins to bleed from %s wounds!", name(DESC_CAP_THE).c_str(),
-             pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
+/* Removed during merge
+ * <<<<<<< HEAD
+    case ENCH_INSANE:
+    case ENCH_BERSERK:
+        // Inflate hp.
+        scale_hp(3, 2);
+
+        if (has_ench(ENCH_SUBMERGED))
+            del_ench(ENCH_SUBMERGED);
+
+        if (mons_is_lurking(this))
+        {
+            behaviour = BEH_WANDER;
+            behaviour_event(this, ME_EVAL);
+        }
+        calc_speed();
+        break;
+
+    case ENCH_HASTE:
+        calc_speed();
+        break;
+
+    case ENCH_SLOW:
+        calc_speed();
+        break;
+
+    case ENCH_STONESKIN:
+        {
+            // player gets 2+earth/5
+            const int ac_bonus = hit_dice / 2;
+
+            ac += ac_bonus;
+            // the monster may get drained or level up, we need to store the bonus
+            props["stoneskin_ac"].get_byte() = ac_bonus;
+        }
+        break;
+
+    case ENCH_SUBMERGED:
+        mons_clear_trapping_net(this);
+
+        // Don't worry about invisibility.  You should be able to see if
+        // something has submerged.
+        if (!quiet && mons_near(this))
+        {
+            if (type == MONS_AIR_ELEMENTAL)
+            {
+                mprf("%s merges itself into the air.",
+                     name(DESC_A, true).c_str());
+            }
+            else if (type == MONS_TRAPDOOR_SPIDER)
+            {
+                mprf("%s hides itself under the floor.",
+                     name(DESC_A, true).c_str());
+            }
+            else if (seen_context == "surfaces"
+                     || seen_context == "bursts forth"
+                     || seen_context == "emerges")
+            {
+                // The monster surfaced and submerged in the same turn
+                // without doing anything else.
+                interrupt_activity(AI_SEE_MONSTER,
+                                   activity_interrupt_data(this,
+                                                           "surfaced"));
+            }
+            else if (crawl_state.game_is_arena())
+                mprf("%s submerges.", name(DESC_A, true).c_str());
+        }
+
+        // Pacified monsters leave the level when they submerge.
+        if (pacified())
+            make_mons_leave_level(this);
+        break;
+=======*/
+        mprf("%s begins to bleed from %s wounds!", name(DESC_THE).c_str(),
+             pronoun(PRONOUN_POSSESSIVE).c_str());
     }
+//>>>>>>> master
 
     add_ench(mon_enchant(ENCH_BLEED, degree, agent, amount * 10));
 
@@ -4165,20 +4246,14 @@ void monster::check_speed()
     // speed is getting borked.
     if (speed < 0 || speed > 130)
     {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-             "Bad speed: %s, spd: %d, spi: %d, hd: %d, ench: %s",
+        dprf("Bad speed: %s, spd: %d, spi: %d, hd: %d, ench: %s",
              name(DESC_PLAIN).c_str(),
              speed, speed_increment, hit_dice,
              describe_enchantments().c_str());
-#endif
 
         calc_speed();
 
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS, "Fixed speed for %s to %d",
-             name(DESC_PLAIN).c_str(), speed);
-#endif
+        dprf("Fixed speed for %s to %d", name(DESC_PLAIN).c_str(), speed);
     }
 
     if (speed_increment < 0)
@@ -4186,11 +4261,9 @@ void monster::check_speed()
 
     if (speed_increment > 200)
     {
-#ifdef DEBUG_DIAGNOSTICS
-        mprf(MSGCH_DIAGNOSTICS,
-             "Clamping speed increment on %s: %d",
+        dprf("Clamping speed increment on %s: %d",
              name(DESC_PLAIN).c_str(), speed_increment);
-#endif
+
         speed_increment = 140;
     }
 }
@@ -4500,11 +4573,25 @@ void monster::apply_location_effects(const coord_def &oldpos,
             if (you.see_cell(pos()) && !visible_to(&you))
             {
                std::string desc =
-                   feature_description(pos(), false, DESC_NOCAP_THE, false);
+                   feature_description(pos(), false, DESC_THE, false);
                mprf("The bloodstain on %s disappears!", desc.c_str());
             }
         }
     }
+}
+
+bool monster::self_destructs()
+{
+    if (type == MONS_GIANT_SPORE
+        || type == MONS_BALL_LIGHTNING
+        || type == MONS_ORB_OF_DESTRUCTION)
+    {
+        suicide();
+        // Do the explosion right now.
+        monster_die(as_monster(), KILL_MON, mindex());
+        return (true);
+    }
+    return (false);
 }
 
 bool monster::move_to_pos(const coord_def &newpos, bool clear_net)
@@ -4561,7 +4648,7 @@ bool monster::do_shaft()
                 if (visible_to(&you))
                 {
                     mprf("A shaft briefly opens up underneath %s!",
-                         name(DESC_NOCAP_THE).c_str());
+                         name(DESC_THE).c_str());
                 }
                 else
                     mpr("A shaft briefly opens up in the floor!");
@@ -4694,6 +4781,18 @@ void monster::lose_energy(energy_use_type et, int div, int mult)
     speed_increment -= energy_loss;
 }
 
+void monster::gain_energy(energy_use_type et, int div, int mult)
+{
+    int energy_gain  = div_round_up(mult * action_energy(et), div);
+    if (has_ench(ENCH_PETRIFYING))
+    {
+        energy_gain *= 2;
+        energy_gain /= 3;
+    }
+
+    speed_increment += energy_gain;
+}
+
 bool monster::can_drink_potion(potion_type ptype) const
 {
     if (mons_class_is_stationary(type))
@@ -4782,7 +4881,7 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff)
     case POT_CURING:
     {
         if (heal(5 + random2(7)))
-            simple_monster_message(this, " is healed!");
+        simple_monster_message(this, " is healed!");
 
         const enchant_type cured_enchants[] = {
             ENCH_POISON, ENCH_SICK, ENCH_CONFUSION, ENCH_ROT
@@ -4798,7 +4897,7 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff)
 
     case POT_HEAL_WOUNDS:
         if (heal(10 + random2avg(28, 3)))
-            simple_monster_message(this, " is healed!");
+        simple_monster_message(this, " is healed!");
         break;
 
     case POT_BLOOD:
@@ -4894,7 +4993,7 @@ void monster::react_to_damage(const actor *oppressor, int damage,
 
         if (needs_message)
         {
-            const std::string monnam = name(DESC_CAP_THE);
+            const std::string monnam = name(DESC_THE);
             mprf("%s shudders%s.", monnam.c_str(),
                  spawned >= 5 ? " alarmingly" :
                  spawned >= 3 ? " violently" :
@@ -5011,8 +5110,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
                 hit_points = 0;
                 if (observable())
                     mprf("As %s mount dies, %s plunges down into %s!",
-                         pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str(),
-                         name(DESC_NOCAP_THE).c_str(),
+                         pronoun(PRONOUN_POSSESSIVE).c_str(),
+                         name(DESC_THE).c_str(),
                          grd(pos()) == DNGN_LAVA ?
                              "lava and is incinerated" :
                              "deep water and drowns");
@@ -5020,8 +5119,8 @@ void monster::react_to_damage(const actor *oppressor, int damage,
             else if (fly_died && observable())
             {
                 mprf("%s jumps down from %s now dead mount.",
-                     name(DESC_CAP_THE).c_str(),
-                     pronoun(PRONOUN_NOCAP_POSSESSIVE).c_str());
+                     name(DESC_THE).c_str(),
+                     pronoun(PRONOUN_POSSESSIVE).c_str());
             }
         }
     }
@@ -5044,6 +5143,180 @@ bool monster::can_cling_to_walls() const
     return (mons_genus(type) == MONS_SPIDER || type == MONS_GIANT_GECKO
             || type == MONS_GIANT_COCKROACH || type == MONS_GIANT_MITE
             || type == MONS_DEMONIC_CRAWLER);
+}
+
+void monster::steal_item_from_player()
+{
+    if (confused())
+    {
+        std::string msg = getSpeakString("Maurice confused nonstealing");
+        if (!msg.empty() && msg != "__NONE")
+        {
+            msg = replace_all(msg, "@The_monster@", name(DESC_THE));
+            mpr(msg.c_str(), MSGCH_TALK);
+        }
+        return;
+    }
+
+    mon_inv_type mslot = NUM_MONSTER_SLOTS;
+    int steal_what  = -1;
+    int total_value = 0;
+    for (int m = 0; m < ENDOFPACK; ++m)
+    {
+        if (!you.inv[m].defined())
+            continue;
+
+        // Cannot unequip player.
+        // TODO: Allow stealing of the wielded weapon?
+        //       Needs to be unwielded properly and should never lead to
+        //       fatal stat loss.
+        // 1KB: I'd say no, weapon is being held, it's different from pulling
+        //      a wand from your pocket.
+        if (item_is_equipped(you.inv[m]))
+            continue;
+
+        mon_inv_type monslot = item_to_mslot(you.inv[m]);
+        if (monslot == NUM_MONSTER_SLOTS)
+        {
+            // Try a related slot instead to allow for stealing of other
+            // valuable items.
+            if (you.inv[m].base_type == OBJ_BOOKS)
+                monslot = MSLOT_SCROLL;
+            else if (you.inv[m].base_type == OBJ_JEWELLERY)
+                monslot = MSLOT_MISCELLANY;
+            else
+                continue;
+        }
+
+        // Only try to steal stuff we can still store somewhere.
+        if (inv[monslot] != NON_ITEM)
+        {
+            if (monslot == MSLOT_WEAPON
+                && inv[MSLOT_ALT_WEAPON] == NON_ITEM)
+            {
+                monslot = MSLOT_ALT_WEAPON;
+            }
+            else
+                continue;
+        }
+
+        // Candidate for stealing.
+        const int value = item_value(you.inv[m], true);
+        total_value += value;
+
+        if (x_chance_in_y(value, total_value))
+        {
+            steal_what = m;
+            mslot      = monslot;
+        }
+    }
+
+    if (steal_what == -1 || you.gold > 0 && one_chance_in(10))
+    {
+        // Found no item worth stealing, try gold.
+        if (you.gold == 0)
+        {
+            if (silenced(pos()))
+                return;
+
+            std::string complaint = getSpeakString("Maurice nonstealing");
+            if (!complaint.empty())
+            {
+                complaint = replace_all(complaint, "@The_monster@",
+                                        name(DESC_THE));
+                mpr(complaint.c_str(), MSGCH_TALK);
+            }
+
+            bolt beem;
+            beem.source      = pos();
+            beem.target      = pos();
+            beem.beam_source = mindex();
+
+            // Try to teleport away.
+            if (has_ench(ENCH_TP))
+            {
+                mons_cast_noise(this, beem, SPELL_BLINK);
+                monster_blink(this);
+            }
+            else
+                mons_cast(this, beem, SPELL_TELEPORT_SELF);
+
+            return;
+        }
+
+        const int stolen_amount = std::min(20 + random2(800), you.gold);
+        if (inv[MSLOT_GOLD] != NON_ITEM)
+        {
+            // If Maurice already's got some gold, simply increase the amount.
+            mitm[inv[MSLOT_GOLD]].quantity += stolen_amount;
+        }
+        else
+        {
+            // Else create a new item for this pile of gold.
+            const int idx = items(0, OBJ_GOLD, OBJ_RANDOM, true, 0, 0);
+            if (idx == NON_ITEM)
+                return;
+
+            item_def &new_item = mitm[idx];
+            new_item.base_type = OBJ_GOLD;
+            new_item.sub_type  = 0;
+            new_item.plus      = 0;
+            new_item.plus2     = 0;
+            new_item.special   = 0;
+            new_item.flags     = 0;
+            new_item.link      = NON_ITEM;
+            new_item.quantity  = stolen_amount;
+            new_item.pos.reset();
+            item_colour(new_item);
+
+            unlink_item(idx);
+
+            inv[MSLOT_GOLD] = idx;
+            new_item.set_holding_monster(mindex());
+        }
+        mitm[inv[MSLOT_GOLD]].flags |= ISFLAG_THROWN;
+        mprf("%s steals %s your gold!",
+             name(DESC_THE).c_str(),
+             stolen_amount == you.gold ? "all" : "some of");
+
+        you.attribute[ATTR_GOLD_FOUND] -= stolen_amount;
+
+        you.del_gold(stolen_amount);
+        return;
+    }
+
+    ASSERT(steal_what != -1);
+    ASSERT(mslot != NUM_MONSTER_SLOTS);
+    ASSERT(inv[mslot] == NON_ITEM);
+
+    // Create new item.
+    int index = get_mitm_slot(10);
+    if (index == NON_ITEM)
+        return;
+
+    item_def &new_item = mitm[index];
+
+    // Copy item.
+    new_item = you.inv[steal_what];
+
+    // Set quantity, and set the item as unlinked.
+    new_item.quantity -= random2(new_item.quantity);
+    new_item.pos.reset();
+    new_item.link = NON_ITEM;
+
+    mprf("%s steals %s!",
+         name(DESC_THE).c_str(),
+         new_item.name(DESC_YOUR).c_str());
+
+    unlink_item(index);
+    inv[mslot] = index;
+    new_item.set_holding_monster(mindex());
+    // You'll want to autopickup it after killing Maurice.
+    new_item.flags |= ISFLAG_THROWN;
+    equip(new_item, mslot, true);
+
+    // Item is gone from player's inventory.
+    dec_inv_item_quantity(steal_what, new_item.quantity);
 }
 
 bool monster::is_web_immune() const

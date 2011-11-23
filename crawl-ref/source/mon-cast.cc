@@ -573,7 +573,7 @@ bolt mons_spells(monster* mons, spell_type spell_cast, int power,
 
     case SPELL_STRIKING:
         beam.name      = "force bolt",
-        beam.damage    = dice_def(1, 8),
+        beam.damage    = dice_def(3, 10),
         beam.colour    = BLACK,
         beam.glyph    = dchar_glyph(DCHAR_FIRED_MISSILE);
         beam.flavour  = BEAM_MMISSILE;
@@ -2172,14 +2172,14 @@ static bool _mons_vampiric_drain(monster *mons)
 
     if (target->atype() == ACT_PLAYER)
     {
-        ouch(hp_cost, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_NOCAP_A).c_str());
+        ouch(hp_cost, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_A).c_str());
         simple_monster_message(mons,
                                " draws life force from you and is healed!");
     }
     else
     {
         monster* mtarget = target->as_monster();
-        const std::string targname = mtarget->name(DESC_NOCAP_THE);
+        const std::string targname = mtarget->name(DESC_THE);
         mtarget->hurt(mons, hp_cost);
         simple_monster_message(mons,
                                make_stringf(" draws life force from %s and is healed!", targname.c_str()).c_str());
@@ -2409,7 +2409,7 @@ static bool _mons_drain_life(monster* mons, bool actual)
                 continue;
 
             if (actual)
-                ouch(hurted, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_NOCAP_A).c_str());
+                ouch(hurted, mons->mindex(), KILLED_BY_BEAM, mons->name(DESC_A).c_str());
 
             success = true;
 
@@ -3078,7 +3078,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
 
     case SPELL_MALIGN_GATEWAY:
         if (!can_cast_malign_gateway())
-            dprf("ERROR: %s can't cast malign gateway, but is casting anyway! Counted %d gateways.", mons->name(DESC_CAP_THE).c_str(), count_malign_gateways());
+            dprf("ERROR: %s can't cast malign gateway, but is casting anyway! Counted %d gateways.", mons->name(DESC_THE).c_str(), count_malign_gateways());
         cast_malign_gateway(mons, 200);
         return;
 
@@ -3147,7 +3147,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_LEDAS_LIQUEFACTION:
         if (!mons->has_ench(ENCH_LIQUEFYING))
         {
-            mprf("%s liquefies the ground around %s!", mons->name(DESC_CAP_THE).c_str(),
+            mprf("%s liquefies the ground around %s!", mons->name(DESC_THE).c_str(),
                 mons->pronoun(PRONOUN_REFLEXIVE).c_str());
             flash_view_delay(BROWN, 80);
         }
@@ -3304,7 +3304,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 if (!dance_compulsion.empty())
                 {
                     dance_compulsion = replace_all(dance_compulsion, "@The_monster@",
-                                           mons->name(DESC_CAP_THE));
+                                           mons->name(DESC_THE));
                     mpr(dance_compulsion.c_str(), channel);
                 }
             }
@@ -3323,7 +3323,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 if (!dance_compulsion.empty())
                 {
                     dance_compulsion = replace_all(dance_compulsion,
-                        "@The_monster@", foe->name(DESC_CAP_THE));
+                        "@The_monster@", foe->name(DESC_THE));
                     mpr(dance_compulsion.c_str(), MSGCH_MONSTER_ENCHANT);
                 }
             }
@@ -3339,7 +3339,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 if (!slugform.empty())
                 {
                     slugform = replace_all(slugform, "@The_monster@",
-                                           mons->name(DESC_CAP_THE));
+                                           mons->name(DESC_THE));
                     mpr(slugform.c_str(), channel);
                 }
             }
@@ -3364,7 +3364,7 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 if (!slugform.empty())
                 {
                     slugform = replace_all(slugform, "@The_monster@",
-                                           foe->name(DESC_CAP_THE));
+                                           foe->name(DESC_THE));
                     mpr(slugform.c_str(), MSGCH_MONSTER_ENCHANT);
                 }
             }
@@ -3860,7 +3860,7 @@ static void _noise_fill_target(std::string& targ_prep, std::string& target,
         if (const monster* mtarg = monster_at(pbolt.target))
         {
             if (you.can_see(mtarg))
-                target = mtarg->name(DESC_NOCAP_THE);
+                target = mtarg->name(DESC_THE);
         }
     }
 
@@ -3881,7 +3881,7 @@ static void _noise_fill_target(std::string& targ_prep, std::string& target,
                     targ_prep = "next to";
 
                     if (act->atype() == ACT_PLAYER || one_chance_in(++count))
-                        target = act->name(DESC_NOCAP_THE);
+                        target = act->name(DESC_THE);
 
                     if (act->atype() == ACT_PLAYER)
                         break;
@@ -3925,7 +3925,7 @@ static void _noise_fill_target(std::string& targ_prep, std::string& target,
             else if (visible_path && m && you.can_see(m))
             {
                 bool is_aligned  = mons_aligned(m, mons);
-                std::string name = m->name(DESC_NOCAP_THE);
+                std::string name = m->name(DESC_THE);
 
                 if (target == "nothing")
                 {
@@ -3954,7 +3954,7 @@ static void _noise_fill_target(std::string& targ_prep, std::string& target,
                         if (act->atype() == ACT_PLAYER
                             || one_chance_in(++count))
                         {
-                            target = act->name(DESC_NOCAP_THE);
+                            target = act->name(DESC_THE);
                         }
 
                         if (act->atype() == ACT_PLAYER)
@@ -3981,7 +3981,7 @@ static void _noise_fill_target(std::string& targ_prep, std::string& target,
         && !mons->confused()
         && visible_path)
     {
-        target = foe->name(DESC_NOCAP_THE);
+        target = foe->name(DESC_THE);
         targ_prep = (pbolt.aimed_at_spot ? "next to" : "past");
     }
 

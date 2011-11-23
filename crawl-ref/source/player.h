@@ -391,6 +391,7 @@ public:
     int visible_igrd(const coord_def&) const;
     bool is_levitating() const;
     bool can_cling_to_walls() const;
+    bool is_banished() const;
     bool is_web_immune() const;
     bool cannot_speak() const;
     bool invisible() const;
@@ -467,17 +468,17 @@ public:
     bool      alive() const;
     bool      is_summoned(int* duration = NULL, int* summon_type = NULL) const;
 
-    bool      swimming() const;
-    bool      submerged() const;
-    bool      floundering() const;
-    bool      extra_balanced() const;
-    bool      can_pass_through_feat(dungeon_feature_type grid) const;
-    bool      is_habitable_feat(dungeon_feature_type actual_grid) const;
-    size_type body_size(size_part_type psize = PSIZE_TORSO, bool base = false) const;
-    int       body_weight(bool base = false) const;
-    int       total_weight() const;
-    brand_type damage_brand(int which_attack = -1);
-    int       damage_type(int which_attack = -1);
+    bool        swimming() const;
+    bool        submerged() const;
+    bool        floundering() const;
+    bool        extra_balanced() const;
+    bool        can_pass_through_feat(dungeon_feature_type grid) const;
+    bool        is_habitable_feat(dungeon_feature_type actual_grid) const;
+    size_type   body_size(size_part_type psize = PSIZE_TORSO, bool base = false) const;
+    int         body_weight(bool base = false) const;
+    int         total_weight() const;
+    brand_type  damage_brand(int which_attack = -1);
+    int         damage_type(int which_attack = -1);
 
     int       has_claws(bool allow_tran = true) const;
     bool      has_usable_claws(bool allow_tran = true) const;
@@ -515,6 +516,7 @@ public:
 
     bool fumbles_attack(bool verbose = true);
     bool cannot_fight() const;
+    bool fights_well_unarmed(int heavy_armour_penalty);
 
     void attacking(actor *other);
     bool can_go_berserk() const;
@@ -635,6 +637,15 @@ public:
 
     void shield_block_succeeded(actor *foe);
 
+
+    // Combat-related adjusted penalty calculation methods
+    int unadjusted_body_armour_penalty() const;
+    int adjusted_body_armour_penalty(int scale = 1,
+                                     bool use_size = false) const;
+    int adjusted_shield_penalty(int scale = 1) const;
+    int armour_tohit_penalty(bool random_factor) const;
+    int shield_tohit_penalty(bool random_factor) const;
+
     bool wearing_light_armour(bool with_skill = false) const;
     int  skill(skill_type skill, int scale =1, bool real = false) const;
     int  traps_skill() const;
@@ -679,6 +690,7 @@ protected:
 
     void _removed_fearmonger();
     bool _possible_fearmonger(const monster* mon) const;
+
 };
 
 #ifdef DEBUG_GLOBALS
@@ -759,7 +771,6 @@ int player_energy(void);
 
 int player_raw_body_armour_evasion_penalty();
 int player_adjusted_shield_evasion_penalty(int scale);
-int player_adjusted_body_armour_evasion_penalty(int scale);
 int player_armour_shield_spell_penalty();
 int player_evasion(ev_ignore_type evit = EV_IGNORE_NONE);
 

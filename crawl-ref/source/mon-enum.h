@@ -35,7 +35,9 @@ enum gender_type
     GENDER_FEMALE,
 };
 
-enum mon_attack_type
+// TODO: Unify this and a player_equivilent (if applicable)
+// and move into attack.h
+enum attack_type
 {
     AT_NONE,
     AT_HIT,         // Including weapon attacks.
@@ -60,12 +62,12 @@ enum mon_attack_type
     AT_CHERUB,
 
     AT_SHOOT,       // Attack representing missile damage for M_ARCHER.
-    AT_WEAP_ONLY,   // Ranged weap: shoot point-blank like AT_SHOOT, melee weap:
+    AT_WEAP_ONLY,   // Ranged weap: shoot point-blank like AT_SHOOT, melee weap
                     //   use it, no weapon: stand there doing nothing.
     AT_RANDOM,      // Anything but AT_SHOOT and AT_WEAP_ONLY.
 };
 
-enum mon_attack_flavour
+enum attack_flavour
 {
     AF_PLAIN,
     AF_ACID,

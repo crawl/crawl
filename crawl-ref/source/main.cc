@@ -1296,7 +1296,7 @@ static bool _stairs_check_mesmerised()
     {
         const monster* beholder = you.get_any_beholder();
         mprf("You cannot move away from %s!",
-             beholder->name(DESC_NOCAP_THE, true).c_str());
+             beholder->name(DESC_THE, true).c_str());
         return (true);
     }
 
@@ -2328,7 +2328,7 @@ static void _decrement_durations()
             const int temp_effect = get_weapon_brand(weapon);
 
             set_item_ego_type(weapon, OBJ_WEAPONS, SPWPN_NORMAL);
-            std::string msg = weapon.name(DESC_CAP_YOUR);
+            std::string msg = weapon.name(DESC_YOUR);
 
             switch (temp_effect)
             {
@@ -3330,7 +3330,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
         {
             const std::string prompt =
                 make_stringf("Do you want to try to take the net off %s?",
-                             mon->name(DESC_NOCAP_THE).c_str());
+                             mon->name(DESC_THE).c_str());
 
             if (yesno(prompt.c_str(), true, 'n'))
             {
@@ -3340,7 +3340,7 @@ static bool _untrap_target(const coord_def move, bool check_confused)
         }
 
         you.turn_is_over = true;
-        you_attack(mon->mindex(), true);
+        fight_melee(&you, mon, true);
 
         if (you.berserk_penalty != NO_BERSERK_PENALTY)
             you.berserk_penalty = 0;
@@ -4131,7 +4131,7 @@ static void _move_player(coord_def move)
             // the player to figure out which adjacent wall an invis
             // monster is in "for free".
             you.turn_is_over = true;
-            you_attack(targ_monst->mindex(), true);
+            fight_melee(&you, targ_monst, true);
 
             // We don't want to create a penalty if there isn't
             // supposed to be one.
@@ -4252,13 +4252,13 @@ static void _move_player(coord_def move)
     else if (beholder && !attacking)
     {
         mprf("You cannot move away from %s!",
-            beholder->name(DESC_NOCAP_THE, true).c_str());
+            beholder->name(DESC_THE, true).c_str());
         return;
     }
     else if (fmonger && !attacking)
     {
         mprf("You cannot move closer to %s!",
-            fmonger->name(DESC_NOCAP_THE, true).c_str());
+            fmonger->name(DESC_THE, true).c_str());
         return;
     }
 

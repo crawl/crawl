@@ -100,7 +100,7 @@ int spellbook_contents(item_def &book, read_book_action_type action,
     formatted_string out;
     out.textcolor(LIGHTGREY);
 
-    out.cprintf("%s", book.name(DESC_CAP_THE).c_str());
+    out.cprintf("%s", book.name(DESC_THE).c_str());
 
     out.cprintf("\n\n Spells                             Type                      Level\n");
 
@@ -1228,7 +1228,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
         prompt += make_stringf("is %s, a dangerous spellbook which will "
                                "strike back at you if your memorisation "
                                "attempt fails. Attempt to memorise anyway?",
-                               fakebook.name(DESC_NOCAP_THE).c_str());
+                               fakebook.name(DESC_THE).c_str());
 
         // Deactivate choice from tile inventory.
         mouse_control mc(MOUSE_MODE_MORE);
@@ -1331,7 +1331,7 @@ bool forget_spell_from_book(spell_type spell, const item_def* book)
     prompt += make_stringf("Forgetting %s from %s will destroy the book! "
                            "Are you sure?",
                            spell_title(spell),
-                           book->name(DESC_NOCAP_THE).c_str());
+                           book->name(DESC_THE).c_str());
 
     // Deactivate choice from tile inventory.
     mouse_control mc(MOUSE_MODE_MORE);

@@ -220,5 +220,4 @@ and Spellcasting can always be trained. For the rest:
 * Spell schools require knowing a spell of the school.
 * Necromancy can also be trained when having a Kikubaaqudgha ability.
 * Invocations requires having at least one divine ability that exercises it.
-
 %%%%

@@ -3,6 +3,7 @@
 
 #include "itemprop-enum.h"
 #include "los_def.h"
+#include "itemprop-enum.h"
 
 enum ev_ignore_type
 {
@@ -56,6 +57,8 @@ public:
     virtual void set_position(const coord_def &c);
     virtual const coord_def& pos() const { return position; }
 
+    virtual bool self_destructs() { return false; }
+
     // Blink the actor to the destination. c should be a
     // valid target, though the method returns false
     // if the blink fails.
@@ -83,8 +86,8 @@ public:
     virtual int       total_weight() const = 0;
 
     virtual brand_type damage_brand(int which_attack = -1) = 0;
-    virtual int        damage_type(int which_attack = -1) = 0;
-    virtual item_def  *weapon(int which_attack = -1) = 0;
+    virtual int       damage_type(int which_attack = -1) = 0;
+    virtual item_def *weapon(int which_attack = -1) = 0;
     // Yay for broken overloading.
     const item_def *primary_weapon() const
     {
@@ -120,9 +123,10 @@ public:
     {
     }
 
-    // Need not be implemented for the player - player action costs
-    // are explicitly calculated.
     virtual void lose_energy(energy_use_type, int div = 1, int mult = 1)
+    {
+    }
+    virtual void gain_energy(energy_use_type, int div = 1, int mult = 1)
     {
     }
 
@@ -140,6 +144,10 @@ public:
 
     virtual bool fumbles_attack(bool verbose = true) = 0;
 
+    virtual bool fights_well_unarmed(int heavy_armour_penalty)
+    {
+         return (true);
+    }
     // Returns true if the actor has no way to attack (plants, statues).
     // (statues have only indirect attacks).
     virtual bool cannot_fight() const = 0;
@@ -222,8 +230,15 @@ public:
     virtual int shield_bonus() const = 0;
     virtual int shield_block_penalty() const = 0;
     virtual int shield_bypass_ability(int tohit) const = 0;
-
     virtual void shield_block_succeeded(actor *foe);
+
+    // Combat-related virtual class methods
+    virtual int unadjusted_body_armour_penalty() const = 0;
+    virtual int adjusted_body_armour_penalty(int scale = 1,
+                                             bool use_size = false) const = 0;
+    virtual int adjusted_shield_penalty(int scale) const = 0;
+    virtual int armour_tohit_penalty(bool random_factor) const = 0;
+    virtual int shield_tohit_penalty(bool random_factor) const = 0;
 
     virtual int mons_species() const = 0;
 
@@ -258,6 +273,7 @@ public:
     virtual flight_type flight_mode() const = 0;
     virtual bool is_levitating() const = 0;
     virtual bool is_wall_clinging() const;
+    virtual bool is_banished() const = 0;
     virtual bool can_cling_to_walls() const = 0;
     virtual bool can_cling_to(const coord_def& p) const;
     virtual bool check_clinging(bool stepped, bool door = false);

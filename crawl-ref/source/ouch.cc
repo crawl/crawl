@@ -183,10 +183,10 @@ int check_your_resists(int hurted, beam_type flavour, std::string source,
         {
             resist = poison_player(coinflip() ? 2 : 1, source, kaux) ? 0 : 1;
 
-            hurted = resist_adjust_damage(&you, flavour, resist,
-                                          hurted, true);
+        hurted = resist_adjust_damage(&you, flavour, resist,
+                                      hurted, true);
             if (resist > 0)
-                canned_msg(MSG_YOU_RESIST);
+            canned_msg(MSG_YOU_RESIST);
         }
         else
         {
@@ -492,9 +492,9 @@ static void _item_corrode(int slot)
     if (!suppress_msg)
     {
         if (it_resists)
-            mprf("%s resists.", item.name(DESC_CAP_YOUR).c_str());
+            mprf("%s resists.", item.name(DESC_YOUR).c_str());
         else
-            mprf("The acid corrodes %s!", item.name(DESC_NOCAP_YOUR).c_str());
+            mprf("The acid corrodes %s!", item.name(DESC_YOUR).c_str());
     }
 
     if (!it_resists)

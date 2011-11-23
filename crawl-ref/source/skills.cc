@@ -125,7 +125,6 @@ void reassess_starting_skills()
         skill_type sk = static_cast<skill_type>(i);
         if (you.skills[sk] == 0)
             continue;
-        ASSERT(!is_invalid_skill(sk));
         ASSERT(!is_useless_skill(sk));
 
         // Grant the amount of skill points required for a human.

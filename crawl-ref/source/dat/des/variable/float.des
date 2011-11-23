@@ -1683,7 +1683,7 @@ ORIENT: float
 COLOUR: b-+89*| = white
 FTILE:  b-+89*| = FLOOR_MARBLE
 TILE:   b = WALL_MARBLE
-NSUBST:  0 = 3:9 / 7:0 / 20:0.. / *:.
+NSUBST:  0 = 3:9 / 7:0 / 20=0.. / *:.
 # can rarely be a statue gallery, otherwise use stone pillars
 : if crawl.one_chance_in(4) then
 SUBST:  c = G, v = .
@@ -1726,7 +1726,7 @@ ORIENT: float
 NSUBST: . = 7:0 / 2:9 / 1:8 / *:.
 NSUBST: ' = 7:0 / 2:9 / 1:8 / *:.
 SUBST:  . = .:90 ~
-NSUBST: % = 6:* / 3:| / *:%$
+NSUBST: % = 6:* / 3:| / *=%$
 SUBST:  - = .
 MAP
 xxxxxxxxxxxxxxxxxx@xxxxxxxxxxxxxxxxxx
@@ -1943,4 +1943,29 @@ xxxx@xx.xxxxxxxxx.xxxxxxx
       x.xxx.x.xxx.x
       x.....x.....x
       xxxxxxxxxxxxx
+ENDMAP
+
+NAME:   nooodl_glass_maze
+ORIENT: float
+SUBST:  M = cm..
+NSUBST: N = 1:+ / *:m
+MAP
+cccccccccccccccc@c
+c*..........M....c
+c.cc.cc.cc.cc.cc.c
+c.ccMcc.cc.cc.ccMc
+c.M......M...0...c
+c.cc0cc.cc.cc.cc.c
+c.cc.ccNccNcc.ccMc
+c..M..N....N.....c
+c.cc.cc.*0.cc.cc.c
+cMcc.cc.0*.ccMcc.c
+c...0.N....N.....c
+c.cc.ccNccNcc.cc.c
+cMcc.cc.cc.cc.cc.c
+c....M...M.M...M.c
+c.cc.cc.cc.cc.cc.c
+c.cc.cc.cc.cc.cc.c
+c..M....M.....0.*c
+c@cccccccccccccccc
 ENDMAP

@@ -871,12 +871,12 @@ void handle_delay()
         {
         case DELAY_ARMOUR_ON:
             mprf(MSGCH_MULTITURN_ACTION, "You continue putting on %s.",
-                 you.inv[delay.parm1].name(DESC_NOCAP_YOUR).c_str());
+                 you.inv[delay.parm1].name(DESC_YOUR).c_str());
             break;
 
         case DELAY_ARMOUR_OFF:
             mprf(MSGCH_MULTITURN_ACTION, "You continue taking off %s.",
-                 you.inv[delay.parm1].name(DESC_NOCAP_YOUR).c_str());
+                 you.inv[delay.parm1].name(DESC_YOUR).c_str());
             break;
 
         case DELAY_BUTCHER:
@@ -1010,7 +1010,7 @@ static void _finish_delay(const delay_queue_item &delay)
         ASSERT(you.equip[slot] == delay.parm1);
 
         mprf("You finish taking off %s.",
-             you.inv[delay.parm1].name(DESC_NOCAP_YOUR).c_str());
+             you.inv[delay.parm1].name(DESC_YOUR).c_str());
         unequip_item(slot);
 
         break;
@@ -1320,7 +1320,7 @@ static void _armour_wear_effects(const int item_slot)
         if (Options.autoinscribe_artefacts && is_artefact(arm))
             add_autoinscription(arm, artefact_auto_inscription(arm));
     }
-    mprf("You finish putting on %s.", arm.name(DESC_NOCAP_YOUR).c_str());
+    mprf("You finish putting on %s.", arm.name(DESC_YOUR).c_str());
 
     if (eq_slot == EQ_BODY_ARMOUR)
     {
@@ -1647,14 +1647,14 @@ inline static bool _monster_warning(activity_interrupt_type ai,
             && !(atype == DELAY_NOT_DELAYED))
         {
             mprf(MSGCH_WARN, "%s is too close now for your liking.",
-                 mon->name(DESC_CAP_THE).c_str());
+                 mon->name(DESC_THE).c_str());
         }
     }
     else if (mon->seen_context == "just seen")
         return false;
     else
     {
-        std::string text = mon->full_name(DESC_CAP_A);
+        std::string text = mon->full_name(DESC_A);
         if (mon->type == MONS_PLAYER_GHOST)
         {
             text += make_stringf(" (%s)",
@@ -1717,7 +1717,7 @@ inline static bool _monster_warning(activity_interrupt_type ai,
             if (ash_id)
                 ash_warning = "Ashenzari warns you:";
 
-            (ash_id ? ash_warning : text) += " " + mon->pronoun(PRONOUN_CAP)
+            (ash_id ? ash_warning : text) += " " + mon->pronoun(PRONOUN)
                                              + " is" + mweap + ".";
         }
 

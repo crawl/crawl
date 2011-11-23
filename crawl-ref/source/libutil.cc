@@ -68,20 +68,14 @@ description_level_type description_type_by_name(const char *desc)
     if (!desc)
         return DESC_PLAIN;
 
-    if (!strcmp("The", desc))
-        return DESC_CAP_THE;
-    else if (!strcmp("the", desc))
-        return DESC_NOCAP_THE;
-    else if (!strcmp("A", desc))
-        return DESC_CAP_A;
-    else if (!strcmp("a", desc))
-        return DESC_NOCAP_A;
-    else if (!strcmp("Your", desc))
-        return DESC_CAP_YOUR;
-    else if (!strcmp("your", desc))
-        return DESC_NOCAP_YOUR;
+    if (!strcmp("The", desc) || !strcmp("the", desc))
+        return DESC_THE;
+    else if (!strcmp("A", desc) || !strcmp("a", desc))
+        return DESC_A;
+    else if (!strcmp("Your", desc) || !strcmp("your", desc))
+        return DESC_YOUR;
     else if (!strcmp("its", desc))
-        return DESC_NOCAP_ITS;
+        return DESC_ITS;
     else if (!strcmp("worn", desc))
         return DESC_INVENTORY_EQUIP;
     else if (!strcmp("inv", desc))
@@ -107,19 +101,12 @@ std::string apply_description(description_level_type desc,
 {
     switch (desc)
     {
-    case DESC_CAP_THE:
-        return ("The " + name);
-    case DESC_NOCAP_THE:
+    case DESC_THE:
         return ("the " + name);
-    case DESC_CAP_A:
-        return (quantity > 1 ? _number_to_string(quantity, in_words) + name
-                             : article_a(name, false));
-    case DESC_NOCAP_A:
+    case DESC_A:
         return (quantity > 1 ? _number_to_string(quantity, in_words) + name
                              : article_a(name, true));
-    case DESC_CAP_YOUR:
-        return ("Your " + name);
-    case DESC_NOCAP_YOUR:
+    case DESC_YOUR:
         return ("your " + name);
     case DESC_PLAIN:
     default:
