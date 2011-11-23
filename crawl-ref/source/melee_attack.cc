@@ -514,17 +514,6 @@ bool melee_attack::handle_phase_damaged()
 {
     bool shroud_broken = false;
 
-    if (defender->can_bleed()
-        && !defender->is_summoned()
-        && !defender->submerged())
-    {
-        int blood = modify_blood_amount(damage_done, attacker->damage_type());
-        if (blood > defender->stat_hp())
-            blood = defender->stat_hp();
-
-        bleed_onto_floor(defender->pos(), defender->type, blood, true);
-    }
-
     // TODO: Move this somewhere else, this is a terrible place for a
     // block-like (prevents all damage) effect.
     if (attacker != defender &&
@@ -553,6 +542,17 @@ bool melee_attack::handle_phase_damaged()
 
             return false;
         }
+    }
+
+    if (defender->can_bleed()
+        && !defender->is_summoned()
+        && !defender->submerged())
+    {
+        int blood = modify_blood_amount(damage_done, attacker->damage_type());
+        if (blood > defender->stat_hp())
+            blood = defender->stat_hp();
+
+        bleed_onto_floor(defender->pos(), defender->type, blood, true);
     }
 
     announce_hit();
