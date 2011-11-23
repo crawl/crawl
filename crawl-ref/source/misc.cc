@@ -1808,10 +1808,16 @@ static void _drop_tomb(const coord_def& pos, bool premature)
             mprf("The walls disappear%s!",
                  premature ? " prematurely" : "");
         else if (seen_change && zin)
+        {
             mprf("Zin %s %s %s.",
-            (mon) ? "releases" : "dismisses",
-            (mon) ? mon->name(DESC_THE).c_str() : "the silver walls,",
-            (mon) ? "from its prison" : "but there is nothing inside them");
+                 (mon) ? "releases"
+                       : "dismisses",
+                 (mon) ? mon->name(DESC_THE).c_str()
+                       : "the silver walls,",
+                 (mon) ? make_stringf("from %s prison",
+                             mon->pronoun(PRONOUN_POSSESSIVE).c_str()).c_str()
+                       : "but there is nothing inside them");
+        }
         else
         {
             if (!silenced(you.pos()))
