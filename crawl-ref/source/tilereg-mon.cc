@@ -70,7 +70,7 @@ int MonsterRegion::handle_mouse(MouseEvent &event)
     if (!mon)
         return (0);
 
-    const coord_def &gc = player2grid(mon->pos);
+    const coord_def &gc = mon->pos;
     tiles.place_cursor(CURSOR_MOUSE, gc);
 
     if (event.event != MouseEvent::PRESS)
@@ -101,7 +101,7 @@ bool MonsterRegion::update_tip_text(std::string &tip)
     if (!mon)
         return (false);
 
-    return (tile_dungeon_tip(player2grid(mon->pos), tip));
+    return (tile_dungeon_tip(mon->pos, tip));
 }
 
 bool MonsterRegion::update_tab_tip_text(std::string &tip, bool active)
@@ -125,7 +125,7 @@ bool MonsterRegion::update_alt_text(std::string &alt)
     if (!mon)
         return (false);
 
-    const coord_def &gc = player2grid(mon->pos);
+    const coord_def &gc = mon->pos;
 
     describe_info inf;
     if (!you.see_cell(gc))
@@ -169,7 +169,7 @@ void MonsterRegion::pack_buffers()
             const monster_info* mon = get_monster(i++);
             if (mon)
             {
-                const coord_def gc = player2grid(mon->pos);
+                const coord_def gc = mon->pos;
                 const coord_def ep = grid2show(gc);
 
                 if (crawl_view.in_los_bounds_g(gc))

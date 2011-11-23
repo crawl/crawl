@@ -160,13 +160,13 @@ static int _get_mons_colour(const monster_info& mi)
     else if (mons_class_is_stationary(mi.type))
     {
         if (Options.feature_item_brand != CHATTR_NORMAL
-            && is_critical_feature(grd(player2grid(mi.pos)))
-            && feat_stair_direction(grd(player2grid(mi.pos))) != CMD_NO_CMD)
+            && is_critical_feature(grd(mi.pos))
+            && feat_stair_direction(grd(mi.pos)) != CMD_NO_CMD)
         {
             col |= COLFLAG_FEATURE_ITEM;
         }
         else if (Options.heap_brand != CHATTR_NORMAL
-                 && you.visible_igrd(player2grid(mi.pos)) != NON_ITEM
+                 && you.visible_igrd(mi.pos) != NON_ITEM
                  && !crawl_state.game_is_arena())
         {
             col |= COLFLAG_ITEM_HEAP;

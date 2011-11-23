@@ -1234,7 +1234,7 @@ void TilesFramework::add_text_tag(text_tag_type type, const monster_info& mon)
         return;
     }
 
-    const coord_def &gc = player2grid(mon.pos);
+    const coord_def &gc = mon.pos;
 
     if (mons_is_pghost(mon.type))
     {
