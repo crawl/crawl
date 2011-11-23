@@ -863,6 +863,7 @@ bool melee_attack::attack()
     if (perceived_attack && attacker->alive()
         && (defender->atype() == ACT_PLAYER
             || defender->as_monster()->friendly())
+        && attacker->atype() != ACT_PLAYER
         && !crawl_state.game_is_arena()
         && !attacker->as_monster()->wont_attack()
         && you.pet_target == MHITNOT
