@@ -1742,12 +1742,11 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         if (x_chance_in_y(2, 5))
         {
             item.base_type = OBJ_ARMOUR;
-
-            const int temp_rand = random2(8);
-            item.sub_type = ((temp_rand  < 4) ? ARM_LEATHER_ARMOUR :
-                             (temp_rand  < 6) ? ARM_RING_MAIL :
-                             (temp_rand == 6) ? ARM_SCALE_MAIL
-                                              : ARM_CHAIN_MAIL);
+            item.sub_type  = random_choose_weighted(4, ARM_LEATHER_ARMOUR,
+                                                    2, ARM_RING_MAIL,
+                                                    1, ARM_SCALE_MAIL,
+                                                    1, ARM_CHAIN_MAIL,
+                                                    0);
         }
         else
             return;
@@ -1795,12 +1794,8 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_RUPERT:
     {
         item.base_type = OBJ_ARMOUR;
-
-        const int temp_rand = random2(4);
-        item.sub_type = ((temp_rand == 0) ? ARM_LEATHER_ARMOUR :
-                         (temp_rand == 1) ? ARM_RING_MAIL :
-                         (temp_rand == 2) ? ARM_SCALE_MAIL
-                                          : ARM_CHAIN_MAIL);
+        item.sub_type  = random_choose(ARM_LEATHER_ARMOUR, ARM_RING_MAIL,
+                                       ARM_SCALE_MAIL,     ARM_CHAIN_MAIL, -1);
         break;
     }
 
@@ -1840,11 +1835,8 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_VAULT_GUARD:
     {
         item.base_type = OBJ_ARMOUR;
-
-        const int temp_rand = random2(3);
-        item.sub_type = ((temp_rand == 0) ? ARM_CHAIN_MAIL :
-                         (temp_rand == 1) ? ARM_SPLINT_MAIL
-                                          : ARM_PLATE_ARMOUR);
+        item.sub_type  = random_choose(ARM_CHAIN_MAIL,   ARM_SPLINT_MAIL,
+                                       ARM_PLATE_ARMOUR, -1);
         break;
     }
 
