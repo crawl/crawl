@@ -1924,9 +1924,9 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
     case MONS_NAGA_WARRIOR:
     case MONS_GREATER_NAGA:
         if (one_chance_in(mon->type == MONS_NAGA         ?  800 :
-                            mon->type == MONS_NAGA_WARRIOR ?  300 :
-                            mon->type == MONS_NAGA_MAGE    ?  200
-                                                           :  100))
+                          mon->type == MONS_NAGA_WARRIOR ?  300 :
+                          mon->type == MONS_NAGA_MAGE    ?  200
+                                                         :  100))
         {
             item_race      = MAKE_ITEM_NO_RACE;
             item.base_type = OBJ_ARMOUR;
