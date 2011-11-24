@@ -2565,9 +2565,11 @@ static void tag_read_you_dungeon(reader &th)
 #if TAG_MAJOR_VERSION == 32
     if (th.getMinorVersion() >= TAG_MINOR_UNIQUE_NOTES)
     {
-        unmarshallMap(th, level_uniques,
-                unmarshall_level_id, unmarshallStringNoMax);
-        unmarshallUniqueAnnotations(th);
+#endif
+    unmarshallMap(th, level_uniques,
+                  unmarshall_level_id, unmarshallStringNoMax);
+    unmarshallUniqueAnnotations(th);
+#if TAG_MAJOR_VERSION == 32
     }
 #endif
 
