@@ -2483,9 +2483,9 @@ void melee_attack::chaos_affects_defender()
             beam.name = atk_name(DESC_THE);
 
         beam.thrower =
-            (attacker->atype() == ACT_PLAYER)          ? KILL_YOU
+            (attacker->atype() == ACT_PLAYER)           ? KILL_YOU
             : attacker->as_monster()->confused_by_you() ? KILL_YOU_CONF
-                                                       : KILL_MON;
+                                                        : KILL_MON;
 
         if (beam.thrower == KILL_YOU || attacker->as_monster()->friendly())
             beam.attitude = ATT_FRIENDLY;
