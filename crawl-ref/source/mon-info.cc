@@ -336,9 +336,9 @@ monster_info::monster_info(const monster* m, int milev)
         mb.set(MB_NAME_REPLACE);
 
     const bool need_name_desc =
-        (m->flags & MF_NAME_SUFFIX)
-            || (m->flags & MF_NAME_ADJECTIVE)
-            || (m->flags & MF_NAME_DEFINITE);
+        (m->flags & MF_NAME_MASK) == MF_NAME_SUFFIX
+        || (m->flags & MF_NAME_MASK) == MF_NAME_ADJECTIVE
+        || (m->flags & MF_NAME_DEFINITE);
 
     if (!mname.empty()
         && !(m->flags & MF_NAME_DESCRIPTOR)
