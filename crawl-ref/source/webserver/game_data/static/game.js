@@ -1,6 +1,7 @@
 define(["jquery", "comm", "client", "./dungeon_renderer", "./display", "./minimap",
+        "./settings",
         "./text"],
-function ($, comm, client, dungeon_renderer, display, minimap) {
+function ($, comm, client, dungeon_renderer, display, minimap, settings) {
     var layout_parameters;
 
     function init()
@@ -22,13 +23,13 @@ function ($, comm, client, dungeon_renderer, display, minimap) {
         return false;
     }
 
-    function layout(params)
+    function layout(params, force)
     {
         var window_width = params.window_width = $(window).width();
         var window_height = params.window_height = $(window).height();
         log(params);
 
-        if (!layout_params_differ(layout_parameters, params))
+        if (!force && !layout_params_differ(layout_parameters, params))
             return false;
 
         layout_parameters = params;
@@ -101,6 +102,30 @@ function ($, comm, client, dungeon_renderer, display, minimap) {
         game_version = data;
         document.title = data.text;
     }
+
+    var glyph_mode_settings = {
+        glyph_mode: false,
+        glyph_mode_font_size: 24,
+        glyph_mode_font: "monospace"
+    };
+
+    settings.set_defaults(glyph_mode_settings);
+    $.extend(dungeon_renderer, glyph_mode_settings);
+
+    $(document).off("settings_changed.game");
+    $(document).on("settings_changed.game", function (ev, map) {
+        var relayout = false;
+        for (key in glyph_mode_settings)
+        {
+            if (key in map)
+            {
+                dungeon_renderer[key] = settings.get(key);
+                relayout = true;
+            }
+        }
+        if (relayout)
+            layout(layout_parameters, true);
+    });
 
     $(document).ready(function () {
         $(window).resize(function () {

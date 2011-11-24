@@ -90,9 +90,43 @@ define(function () {
     // General
     exports.TILE_FLAG_MASK       = 0x000007FF;
 
+    function rgb(r, g, b)
+    {
+        return "rgb(" + r + "," + g + "," + b + ")";
+    }
+    exports.term_colours = [
+        rgb(  0,   0,   0),
+        rgb(  0,  82, 255),
+        rgb(100, 185,  70),
+        rgb(  0, 180, 180),
+        rgb(255,  48,   0),
+        rgb(238,  92, 238),
+        rgb(165,  91,   0),
+        rgb(162, 162, 162),
+        rgb( 82,  82,  82),
+        rgb( 82, 102, 255),
+        rgb( 82, 255,  82),
+        rgb( 82, 255, 255),
+        rgb(255,  82,  82),
+        rgb(255,  82, 255),
+        rgb(255, 255,  82),
+        rgb(255, 255, 255),
+    ];
+
+    var val = 0;
+    exports.CHATTR = {};
+    exports.CHATTR.NORMAL = val++;
+    exports.CHATTR.STANDOUT = val++;
+    exports.CHATTR.BOLD = val++;
+    exports.CHATTR.BLINK = val++;
+    exports.CHATTR.UNDERLINE = val++;
+    exports.CHATTR.REVERSE = val++;
+    exports.CHATTR.DIM = val++;
+    exports.CHATTR.HILITE = val++;
+    exports.CHATTR.ATTRMASK = 0xF;
 
     // Minimap features
-    var val = 0;
+    val = 0;
     exports.MF_UNSEEN = val++;
     exports.MF_FLOOR = val++;
     exports.MF_WALL = val++;
