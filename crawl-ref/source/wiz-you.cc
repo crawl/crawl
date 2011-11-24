@@ -65,7 +65,8 @@ void wizard_change_species(void)
         }
     }
 
-    if (sp == SP_UNKNOWN)
+    // Can't use magic cookies or placeholder species.
+    if (!is_valid_species(sp) || !species_exp_modifier(sp))
     {
         mpr("That species isn't available.");
         return;
