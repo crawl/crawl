@@ -173,15 +173,12 @@ std::string item_def::name(description_level_type descrip,
         switch (descrip)
         {
         case DESC_THE:        buff << "the "; break;
-
         case DESC_YOUR:       buff << "your "; break;
         case DESC_ITS:        buff << "its "; break;
-
         case DESC_A:
         case DESC_INVENTORY_EQUIP:
         case DESC_INVENTORY:
                               buff << (startvowel ? "an " : "a "); break;
-
         case DESC_PLAIN:
         default:
             break;
