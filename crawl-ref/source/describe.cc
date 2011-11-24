@@ -119,7 +119,7 @@ void print_description(const std::string &body)
     print_description(inf);
 }
 
-void print_quote (const std::string &body)
+void print_quote(const std::string &body)
 {
     describe_info inf;
     inf.quote = body;
@@ -153,7 +153,7 @@ void print_description(const describe_info &inf)
     process_description<default_desc_proc>(proc, inf);
 }
 
-void print_quote (const describe_info &inf)
+void print_quote(const describe_info &inf)
 {
     clrscr();
     textcolor(LIGHTGREY);

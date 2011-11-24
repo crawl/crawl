@@ -98,8 +98,8 @@ std::string get_command_description(const command_type cmd,
 void print_description(const std::string &desc);
 void print_description(const describe_info &inf);
 
-void print_quote (const describe_info &inf);
-void print_quote (const std::string &desc);
+void print_quote(const describe_info &inf);
+void print_quote(const std::string &desc);
 
 template<class T> void process_description(T &proc, const describe_info &inf);
 template<class T> void process_quote(T &proc, const describe_info &inf);
