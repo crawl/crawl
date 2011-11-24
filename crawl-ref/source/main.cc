@@ -790,6 +790,7 @@ static void _handle_wizard_command(void)
         take_note(Note(NOTE_MESSAGE, 0, 0, "Entered wizard mode."));
 
         you.wizard = true;
+        save_game(false);
         redraw_screen();
 
         if (crawl_state.cmd_repeat_start)
