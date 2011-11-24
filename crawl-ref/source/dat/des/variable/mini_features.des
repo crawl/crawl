@@ -1955,6 +1955,31 @@ x++xxxx
 xxxxxxx
 ENDMAP
 
+NAME:   evilmike_butchery
+TAGS:   no_item_gen
+SUBST:  . = ..", X = xxB
+KPROP:  "B = bloody
+SUBST:  " = ., B = x
+NSUBST: . = 5:d / 10=d. / 2:e / 1:e. / *=.^
+: if you.absdepth() > 12 then
+KFEAT:  ^ = blade trap
+: else
+KITEM:  ^ = hand axe
+: end
+ITEM:   beef jerky / w:5 minotaur chunk
+: dgn.delayed_decay(_G, 'e', 'minotaur corpse')
+SUBST:  ' = .
+MAP
+xxxxxxxxx
+xXXXXXXXx
+xX.....Xx
+xX.....xx
++'.....Xx
+xX.....Xx
+xX.....Xx
+xXXXXXXXx
+xxxxxxxxx
+ENDMAP
 
 ##########################################################################
 #
