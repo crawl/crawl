@@ -3142,6 +3142,7 @@ void level_change(bool skip_attribute_increase)
                 if (you.experience_level >= 7)
                 {
                     you.species = random_draconian_player_species();
+                    // The player symbol depends on species.
                     update_player_symbol();
 #ifdef USE_TILE
                     init_player_doll();

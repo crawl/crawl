@@ -246,7 +246,11 @@ void redraw_skill(skill_type exsk, skill_type old_best_skill)
 
     const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
     if (best != old_best_skill || old_best_skill == exsk)
+    {
         you.redraw_title = true;
+        // The player symbol depends on best skill title.
+        update_player_symbol();
+    }
 }
 
 void check_skill_level_change(skill_type sk, bool do_level_up)

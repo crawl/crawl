@@ -2707,7 +2707,7 @@ static void _gain_piety_point()
     {
         // Every piety level change also affects AC from orcish gear.
         you.redraw_armour_class = true;
-        // Or the player's symbol.
+        // The player's symbol depends on Beogh piety.
         update_player_symbol();
     }
 
@@ -2945,6 +2945,12 @@ void excommunication(god_type new_god)
 
     mpr("You have lost your religion!");
     more();
+
+    if (old_god == GOD_BEOGH)
+    {
+        // The player's symbol depends on Beogh worship.
+        update_player_symbol();
+    }
 
     mark_milestone("god.renounce", "abandoned " + god_name(old_god) + ".");
 #ifdef DGL_WHEREIS
@@ -3461,6 +3467,12 @@ void god_pitch(god_type which_god)
     {
         // Tutorial needs minor destruction usable.
         gain_piety(35, 1, true, false);
+    }
+
+    if (you.religion == GOD_BEOGH)
+    {
+        // The player's symbol depends on Beogh worship.
+        update_player_symbol();
     }
 
     _god_welcome_identify_gear();
