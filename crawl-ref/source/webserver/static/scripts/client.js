@@ -193,7 +193,7 @@ function (exports, $, key_conversion, chat, comm) {
             if (e.which == 27)
             {
                 e.preventDefault();
-                $(".floating_dialog").hide();
+                hide_dialog();
             }
             return;
         }
@@ -349,13 +349,32 @@ function (exports, $, key_conversion, chat, comm) {
     function show_dialog(id)
     {
         $(".floating_dialog").hide();
-        $(id).fadeIn(100, function () {
-            $(id).focus();
+        var elem = $(id);
+        elem.fadeIn(100, function () {
+            elem.focus();
         });
-        var w = $(id).width();
-        var ww = $(window).width();
-        $(id).offset({ left: ww / 2 - w / 2, top: 50 });
+        center_element(elem);
+        $("#overlay").show();
     }
+    function center_element(elem)
+    {
+        var left = $(window).width() / 2 - elem.outerWidth() / 2;
+        if (left < 0) left = 0;
+        var top = $(window).height() / 2 - elem.outerHeight() / 2;
+        if (top < 0) top = 0;
+        if (top > 50) top = 50;
+        var offset = elem.offset();
+        if (offset.left != left || offset.top != top)
+            elem.offset({ left: left, top: top });
+    }
+    function hide_dialog()
+    {
+        $(".floating_dialog").blur().hide();
+        $("#overlay").hide();
+    }
+    exports.show_dialog = show_dialog;
+    exports.hide_dialog = hide_dialog;
+    exports.center_element = center_element;
 
     function start_register()
     {
@@ -365,7 +384,7 @@ function (exports, $, key_conversion, chat, comm) {
 
     function cancel_register()
     {
-        $("#register").hide();
+        hide_dialog();
     }
 
     function register()
@@ -427,7 +446,7 @@ function (exports, $, key_conversion, chat, comm) {
             game_id: editing_rc,
             contents: $("#rc_file_contents").val()
         });
-        $("#rc_edit").hide();
+        hide_dialog();
         return false;
     }
 
@@ -470,6 +489,8 @@ function (exports, $, key_conversion, chat, comm) {
         location.hash = "#lobby";
 
         set_layer("lobby");
+
+        hide_dialog();
 
         $("#game").html('<div id="crt" style="display: none;"></div>');
 
@@ -622,18 +643,18 @@ function (exports, $, key_conversion, chat, comm) {
     function force_terminate_no()
     {
         send_message("force_terminate", { answer: false });
-        $("#force_terminate").hide().blur();
+        hide_dialog();
     }
     function force_terminate_yes()
     {
         send_message("force_terminate", { answer: true });
-        $("#force_terminate").hide().blur();
+        hide_dialog();
     }
     function stale_processes_keydown(ev)
     {
         ev.preventDefault();
         send_message("stop_stale_process_purge");
-        $("#stale_processes_message").hide().blur();
+        hide_dialog();
     }
     function force_terminate_keydown(ev)
     {
