@@ -429,7 +429,7 @@ void line_reader::killword()
     calc_pos();
 
     cursorto(0);
-    wrapcprintf(wrapcol, "%s%*s", buffer, ew);
+    wrapcprintf(wrapcol, "%s%*s", buffer, ew, "");
     cursorto(pos);
 }
 
