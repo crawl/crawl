@@ -245,8 +245,8 @@ void redraw_skill(skill_type exsk, skill_type old_best_skill)
     }
 
     const skill_type best = best_skill(SK_FIRST_SKILL, SK_LAST_SKILL);
-        if (best != old_best_skill || old_best_skill == exsk)
-            you.redraw_title = true;
+    if (best != old_best_skill || old_best_skill == exsk)
+        you.redraw_title = true;
 }
 
 void check_skill_level_change(skill_type sk, bool do_level_up)
