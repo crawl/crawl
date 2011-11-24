@@ -3340,6 +3340,7 @@ static void _place_aquatic_monsters(int level_number)
     // Also disallow water creatures below D:6.
     //
     if (player_in_branch(BRANCH_SHOALS)
+        || player_in_branch(BRANCH_ABYSS)
         || (player_in_branch(BRANCH_MAIN_DUNGEON)
             && you.absdepth0 < 5))
     {
