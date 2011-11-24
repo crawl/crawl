@@ -471,6 +471,19 @@ static bool _needs_flavour(const packed_cell &cell)
     return false;
 }
 
+inline unsigned _get_brand(int col)
+{
+    return (col & COLFLAG_FRIENDLY_MONSTER) ? Options.friend_brand :
+           (col & COLFLAG_NEUTRAL_MONSTER)  ? Options.neutral_brand :
+           (col & COLFLAG_ITEM_HEAP)        ? Options.heap_brand :
+           (col & COLFLAG_WILLSTAB)         ? Options.stab_brand :
+           (col & COLFLAG_MAYSTAB)          ? Options.may_stab_brand :
+           (col & COLFLAG_FEATURE_ITEM)     ? Options.feature_item_brand :
+           (col & COLFLAG_TRAP_ITEM)        ? Options.trap_item_brand :
+           (col & COLFLAG_REVERSE)          ? CHATTR_REVERSE
+                                            : CHATTR_NORMAL;
+}
+
 void TilesFramework::_send_cell(const coord_def &gc,
                                 const screen_cell_t &current_sc, const screen_cell_t &next_sc,
                                 const map_cell &current_mc, const map_cell &next_mc,
@@ -490,6 +503,24 @@ void TilesFramework::_send_cell(const coord_def &gc,
         || (get_cell_map_feature(current_mc) != mf))
     {
         write_message("mf:%u,", mf);
+    }
+
+    // Glyph and colour
+    ucs_t glyph = next_sc.glyph;
+    if (force_full ? (glyph != ' ') : (current_sc.glyph != glyph))
+    {
+        if (glyph == '\\')
+            write_message("g:'\\\\',");
+        else if (glyph == '\'')
+            write_message("g:'\\'',");
+        else
+            write_message("g:'%lc',", glyph);
+    }
+    if (force_full ? (next_sc.colour != 7) : (current_sc.colour != next_sc.colour))
+    {
+        int col = next_sc.colour;
+        col = (_get_brand(col) << 4) | (col & 0xF);
+        write_message("col:%d,", col);
     }
 
     push_prefix("t:{");

@@ -18,7 +18,8 @@ function ($, cr, map_knowledge) {
     $.extend(DungeonViewRenderer.prototype, {
         init: function (element)
         {
-            $(element).bind("update_cells", function (ev, cells) {
+            $(element).off("update_cells");
+            $(element).on("update_cells", function (ev, cells) {
                 $.each(cells, function (i, loc) {
                     renderer.render_loc(loc.x, loc.y);
                 });
@@ -124,7 +125,13 @@ function ($, cr, map_knowledge) {
 
         fit_to: function(width, height, min_diameter)
         {
-            if ((min_diameter * default_size.w > width)
+            if (this.glyph_mode)
+            {
+                this.ctx.font = this.glyph_mode_font_name();
+                var metrics = this.ctx.measureText("@");
+                this.set_cell_size(metrics.width + 2, this.glyph_mode_font_size + 2);
+            }
+            else if ((min_diameter * default_size.w > width)
                 || (min_diameter * default_size.h > height))
             {
                 var scale = Math.min(width / (min_diameter * default_size.w),
@@ -186,7 +193,8 @@ function ($, cr, map_knowledge) {
 
     var renderer = new DungeonViewRenderer();
 
-    $(document).bind("game_init", function () {
+    $(document).off("game_init.dungeon_renderer");
+    $(document).on("game_init.dungeon_renderer", function () {
         renderer.cols = 0;
         renderer.rows = 0;
         renderer.view = { x: 0, y: 0 };

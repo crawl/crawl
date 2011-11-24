@@ -143,6 +143,11 @@ function ($, map_knowledge, cr, dungeon_renderer) {
 
             renderer.set_cell_size(dungeon_renderer.cell_width,
                                    dungeon_renderer.cell_height);
+            for (key in dungeon_renderer)
+            {
+                if (key.match(/^glyph_mode/))
+                    renderer[key] = dungeon_renderer[key];
+            }
             var w = renderer.cell_width;
             var displayed_monsters = Math.min(monsters.length, 6);
             var needed_width = w * displayed_monsters;
