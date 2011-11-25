@@ -1619,6 +1619,12 @@ bool is_whip_type(int wpn_type)
             || wpn_type == WPN_SACRED_SCOURGE);
 }
 
+bool is_giant_club_type(int wpn_type)
+{
+    return (wpn_type == WPN_GIANT_CLUB
+            || wpn_type == WPN_GIANT_SPIKED_CLUB);
+}
+
 bool is_demonic(const item_def &item)
 {
     if (item.base_type == OBJ_WEAPONS)

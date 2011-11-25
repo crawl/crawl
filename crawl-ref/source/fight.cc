@@ -486,7 +486,7 @@ int weapon_str_weight(object_class_type wpn_class, int wpn_type)
     if (ret > 8)
     {
         // these weapons are huge, so strength plays a larger role
-        if (wpn_type == WPN_GIANT_CLUB || wpn_type == WPN_GIANT_SPIKED_CLUB)
+        if (is_giant_club_type(wpn_type))
             ret = 9;
         else
             ret = 8;
