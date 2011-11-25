@@ -1757,10 +1757,15 @@ static int _xom_rearrange_pieces(int sever, bool debug = false)
 static int _xom_random_stickable(const int HD)
 {
     int c;
-    static const int arr[13] = {WPN_CLUB, WPN_STAFF, WPN_QUARTERSTAFF, WPN_BOW,
-                                WPN_SPEAR, WPN_BLOWGUN, WPN_GLAIVE, WPN_HALBERD,
-                                WPN_ANKUS, WPN_SCYTHE, WPN_LONGBOW,
-                                WPN_GIANT_CLUB, WPN_GIANT_SPIKED_CLUB};
+    // XXX: Unify this with the list in spl-summoning:_snakable_weapon().
+    // It has everything but tridents, demon tridents and bardiches, and
+    // puts the giant club types at the end as special cases.
+    static const int arr[13] = {
+        WPN_CLUB,    WPN_ANKUS,      WPN_SPEAR,        WPN_HALBERD,
+        WPN_SCYTHE,  WPN_GLAIVE,     WPN_STAFF,        WPN_QUARTERSTAFF,
+        WPN_BLOWGUN, WPN_BOW,        WPN_LONGBOW,      WPN_GIANT_CLUB,
+        WPN_GIANT_SPIKED_CLUB
+    };
 
     // Maximum snake hd is 11 (anaconda) so random2(hd) gives us 0-10, and
     // weapon_rarity also gives us 1-10.
@@ -1803,8 +1808,10 @@ static int _xom_snakes_to_sticks(int sever, bool debug = false)
                     x_chance_in_y(3,5) ? OBJ_MISSILES
                                        : OBJ_WEAPONS;
 
-            const int sub_type  = (base_type == OBJ_MISSILES ? MI_ARROW
-                                        : _xom_random_stickable(mi->hit_dice));
+            const int sub_type =
+                    (base_type == OBJ_MISSILES ?
+                        (x_chance_in_y(3,5) ? MI_ARROW : MI_JAVELIN)
+                            : _xom_random_stickable(mi->hit_dice));
 
             int thing_created = items(0, base_type, sub_type, true,
                                       mi->hit_dice / 3 - 1, MAKE_ITEM_NO_RACE,
