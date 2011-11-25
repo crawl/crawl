@@ -158,37 +158,35 @@ spret_type cast_summon_small_mammals(int pow, god_type god, bool fail)
 
 static bool _snakable_missile(const item_def& item)
 {
-    if (item.base_type != OBJ_MISSILES
-        || item.sub_type != MI_ARROW && item.sub_type != MI_JAVELIN)
-    {
-        return false;
-    }
-
-    return item.special != SPMSL_SILVER && item.special != SPMSL_STEEL;
+    return (item.base_type == OBJ_MISSILES
+            && (item.sub_type == MI_ARROW || item.sub_type == MI_JAVELIN)
+            && item.special != SPMSL_SILVER
+            && item.special != SPMSL_STEEL);
 }
 
 static bool _snakable_weapon(const item_def& item)
 {
     if (item.base_type == OBJ_STAVES)
         return true;
+
     return (item.base_type == OBJ_WEAPONS
-           && (item.sub_type == WPN_CLUB
-            || item.sub_type == WPN_SPEAR
-            || item.sub_type == WPN_TRIDENT
-            || item.sub_type == WPN_DEMON_TRIDENT
-            || item.sub_type == WPN_STAFF
-            || item.sub_type == WPN_QUARTERSTAFF
-            || item.sub_type == WPN_SCYTHE
-            || item.sub_type == WPN_GIANT_CLUB
-            || item.sub_type == WPN_GIANT_SPIKED_CLUB
-            || item.sub_type == WPN_BOW
-            || item.sub_type == WPN_LONGBOW
-            || item.sub_type == WPN_ANKUS
-            || item.sub_type == WPN_HALBERD
-            || item.sub_type == WPN_GLAIVE
-            || item.sub_type == WPN_BARDICHE
-            || item.sub_type == WPN_BLOWGUN)
-           && !is_artefact(item));
+            && !is_artefact(item)
+            && (item.sub_type == WPN_CLUB
+                || item.sub_type == WPN_SPEAR
+                || item.sub_type == WPN_TRIDENT
+                || item.sub_type == WPN_DEMON_TRIDENT
+                || item.sub_type == WPN_STAFF
+                || item.sub_type == WPN_QUARTERSTAFF
+                || item.sub_type == WPN_SCYTHE
+                || item.sub_type == WPN_GIANT_CLUB
+                || item.sub_type == WPN_GIANT_SPIKED_CLUB
+                || item.sub_type == WPN_BOW
+                || item.sub_type == WPN_LONGBOW
+                || item.sub_type == WPN_ANKUS
+                || item.sub_type == WPN_HALBERD
+                || item.sub_type == WPN_GLAIVE
+                || item.sub_type == WPN_BARDICHE
+                || item.sub_type == WPN_BLOWGUN));
 }
 
 bool item_is_snakable(const item_def& item)
