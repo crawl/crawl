@@ -3167,7 +3167,7 @@ bool melee_attack::chop_hydra_head(int dam,
                 bleed_onto_floor(defender->pos(), defender->type,
                                  defender->as_monster()->hit_points, true);
 
-            defender->hurt(attacker, defender->as_monster()->hit_points);
+            defender->hurt(attacker, INSTANT_DEATH);
 
             return (true);
         }
