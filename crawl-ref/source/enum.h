@@ -270,7 +270,7 @@ enum transformation_type
     TRAN_PIG,
     TRAN_APPENDAGE,
     // no NUM_TRANSFORMS due to too many switch statements
-    LAST_FORM = TRAN_APPENDAGE - 1
+    LAST_FORM = TRAN_APPENDAGE
 };
 
 enum beam_type                  // beam[].flavour
