@@ -570,20 +570,6 @@ MAP
  .......
 ENDMAP
 
-NAME:  evilmike_abyss_exit_teleports
-TAGS:  abyss_exit allow_dup
-KFEAT: O = exit_abyss
-KFEAT: ^ = teleport trap
-SUBST: ^ = ^:40 . x:5,  . = .:80 ^ x
-SUBST: x:xcv
-MAP
-.....
-.^^^.
-.^O^.
-.^^^.
-.....
-ENDMAP
-
 NAME:  evilmike_abyss_exit_1
 TAGS:  abyss_exit allow_dup
 KFEAT: O = exit_abyss
