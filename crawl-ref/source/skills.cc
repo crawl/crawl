@@ -212,6 +212,11 @@ static void _change_skill_level(skill_type exsk, int n)
 
     if (need_reset)
         reset_training();
+
+    // calc_hp() has to be called here because it currently doesn't work
+    // right if you.skills[] hasn't been updated yet.
+    if (exsk == SK_FIGHTING)
+        calc_hp();
     // TODO: also identify rings of wizardry.
 }
 
