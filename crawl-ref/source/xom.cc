@@ -1833,28 +1833,6 @@ static int _xom_snakes_to_sticks(int sever, bool debug = false)
             move_item_to_grid(&thing_created, mi->pos());
             monster_die(*mi, KILL_DISMISSED, NON_MONSTER, true, false);
         }
-#if 0
-        // Polymorph naga into wood golem, undecided as to whether it will
-        // remain or not.
-        else if (mons_genus(mi->type) == MONS_NAGA)
-        {
-            if (!action)
-            {
-                if (debug)
-                    return (XOM_GOOD_SNAKES);
-
-                take_note(Note(NOTE_XOM_EFFECT, you.piety, -1,
-                               "snakes to sticks"), true);
-                god_speaks(GOD_XOM, _get_xom_speech("snakes to sticks").c_str());
-                action = true;
-            }
-
-            // MONS_WOOD_GOLEM is not normally a suitable polymorph form
-            // so we have to force it using the last 'true' in the parameter
-            // list
-            monster_polymorph(*mi, MONS_WOOD_GOLEM, PPT_SAME, false, true);
-        }
-#endif
     }
 
     if (action)
