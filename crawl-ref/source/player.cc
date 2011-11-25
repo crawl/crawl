@@ -6849,6 +6849,30 @@ bool player::has_usable_offhand() const
             || weapon_skill(*wp) == SK_STAVES);
 }
 
+bool player::has_usable_tentacle() 
+{
+    if (species != SP_OCTOPODE)
+        return(false);
+
+    int free_tentacles = 8;
+    for (int i = 0; i < 8; i++)
+        if (constricting[i] != NON_ENTITY)
+	    free_tentacles--;
+
+    const item_def* wp = slot_item(EQ_WEAPON);
+    if (wp)
+    {
+        if (hands_reqd(*wp, body_size()) == HANDS_TWO)
+	    free_tentacles -= 2;
+	else if (wp->base_type != OBJ_STAVES &&
+	         weapon_skill(*wp) != SK_STAVES)
+            free_tentacles--;
+    }
+
+    return (free_tentacles > 0);
+	    
+}
+
 int player::has_pseudopods(bool allow_tran) const
 {
     if (allow_tran)
@@ -7355,7 +7379,7 @@ void player::accum_been_constricted()
 void player::accum_has_constricted()
 {
     for (int i = 0; i < 8; i++)
-        if (constricting[i])
+        if (constricting[i] != NON_ENTITY)
 	    dur_has_constricted[i] += you.time_taken;
 }
 
@@ -7403,7 +7427,7 @@ bool player::attempt_escape()
 	// update monster's has constricted info
         for (int i = 0; i < 8; i++)
 	    if (themonst.constricting[i] == MHITYOU)
-	        themonst.constricting[i] = 0;
+	        themonst.constricting[i] = NON_ENTITY;
 
 	// update your constricted by info
 	constricted_by = NON_ENTITY;
