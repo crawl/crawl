@@ -934,6 +934,9 @@ static talent _get_talent(ability_type ability, bool check_confused)
     ASSERT(ability != ABIL_NON_ABILITY);
 
     talent result;
+    // Placeholder handling, part 1: The ability we have might be a
+    // placeholder, so convert it into its corresponding ability before
+    // doing anything else, so that we'll handle its flags properly.
     result.which = _fixup_ability(ability);
 
     const ability_def &abil = _get_ability_def(result.which);
@@ -3323,7 +3326,12 @@ void set_god_ability_slots()
 static int _find_ability_slot(const ability_def &abil)
 {
     for (int slot = 0; slot < 52; slot++)
-        if (you.ability_letter_table[slot] == abil.ability)
+        // Placeholder handling, part 2: The ability we have might
+        // correspond to a placeholder, in which case the ability letter
+        // table will contain that placeholder.  Convert the latter to
+        // its corresponding ability before comparing the two, so that
+        // we'll find the placeholder's index properly.
+        if (_fixup_ability(you.ability_letter_table[slot]) == abil.ability)
             return (slot);
 
     // No requested slot, find new one and make it preferred.
