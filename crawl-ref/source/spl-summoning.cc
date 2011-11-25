@@ -172,21 +172,21 @@ static bool _snakable_weapon(const item_def& item)
     return (item.base_type == OBJ_WEAPONS
             && !is_artefact(item)
             && (item.sub_type == WPN_CLUB
-                || item.sub_type == WPN_SPEAR
-                || item.sub_type == WPN_TRIDENT
-                || item.sub_type == WPN_DEMON_TRIDENT
-                || item.sub_type == WPN_STAFF
-                || item.sub_type == WPN_QUARTERSTAFF
-                || item.sub_type == WPN_SCYTHE
+                || item.sub_type == WPN_ANKUS
                 || item.sub_type == WPN_GIANT_CLUB
                 || item.sub_type == WPN_GIANT_SPIKED_CLUB
-                || item.sub_type == WPN_BOW
-                || item.sub_type == WPN_LONGBOW
-                || item.sub_type == WPN_ANKUS
+                || item.sub_type == WPN_SPEAR
+                || item.sub_type == WPN_TRIDENT
                 || item.sub_type == WPN_HALBERD
+                || item.sub_type == WPN_SCYTHE
+                || item.sub_type == WPN_DEMON_TRIDENT
                 || item.sub_type == WPN_GLAIVE
                 || item.sub_type == WPN_BARDICHE
-                || item.sub_type == WPN_BLOWGUN));
+                || item.sub_type == WPN_STAFF
+                || item.sub_type == WPN_QUARTERSTAFF
+                || item.sub_type == WPN_BLOWGUN
+                || item.sub_type == WPN_BOW
+                || item.sub_type == WPN_LONGBOW));
 }
 
 bool item_is_snakable(const item_def& item)
