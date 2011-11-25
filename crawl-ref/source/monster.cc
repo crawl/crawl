@@ -1383,8 +1383,6 @@ static bool _is_signature_weapon(monster* mons, const item_def &weapon)
         if (mons->type == MONS_NIKOLA)
             return (get_weapon_brand(weapon) == SPWPN_ELECTROCUTION);
 
-        // Technically, this includes knives, but it would have to be
-        // a superpowered knife to be an upgrade to a short sword.
         if (mons->type == MONS_DUVESSA)
         {
             return (weapon_skill(weapon) == SK_SHORT_BLADES
