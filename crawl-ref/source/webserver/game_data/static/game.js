@@ -123,7 +123,7 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings) {
                 relayout = true;
             }
         }
-        if (relayout)
+        if (relayout && layout_parameters)
             layout(layout_parameters, true);
     });
 
