@@ -1545,8 +1545,7 @@ int acquirement_create_item(object_class_type class_wanted,
 
         // These can never get egos, and mundane versions are quite common, so
         // guarantee artifact status.  Rarity is a bit low to compensate.
-        if (thing.sub_type == WPN_GIANT_CLUB
-            || thing.sub_type == WPN_GIANT_SPIKED_CLUB)
+        if (is_giant_club_type(thing.sub_type))
         {
             if (!one_chance_in(25))
                 make_item_randart(thing, true);

@@ -1632,11 +1632,8 @@ bool monster::wants_weapon(const item_def &weap) const
     }
 
     // Nobody picks up giant clubs. Starting equipment is okay, of course.
-    if (weap.sub_type == WPN_GIANT_CLUB
-        || weap.sub_type == WPN_GIANT_SPIKED_CLUB)
-    {
+    if (is_giant_club_type(weap.sub_type))
         return (false);
-    }
 
     return (true);
 }
