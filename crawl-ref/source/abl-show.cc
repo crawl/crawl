@@ -957,8 +957,8 @@ static talent _get_talent(ability_type ability, bool check_confused)
         }
     }
 
-    // Look through the table to see if there's a preference, else
-    // find a new empty slot for this ability. -- bwr
+    // Look through the table to see if there's a preference, else find
+    // a new empty slot for this ability. - bwr
     const int index = _find_ability_slot(abil);
     if (index != -1)
         result.hotkey = index_to_letter(index);
