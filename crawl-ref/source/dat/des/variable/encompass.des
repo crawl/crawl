@@ -325,9 +325,9 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
-# A mockup of the Forest branch for 0.8 (1KB)
+# A mockup of the Forest branch (1KB)
 #
-NAME:    forest_0.8
+NAME:    spriggan_forest
 DEPTH:   D:19-26
 ORIENT:  encompass
 TAGS:    no_pool_fixup
