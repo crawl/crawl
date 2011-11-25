@@ -1846,8 +1846,9 @@ void handle_items_on_shaft(const coord_def& pos, bool open_shaft)
         {
             if (env.map_knowledge(pos).seen())
             {
-                mprf("%s falls through the shaft.",
-                     mitm[o].name(DESC_INVENTORY).c_str());
+                mprf("%s fall%s through the shaft.",
+                     mitm[o].name(DESC_INVENTORY).c_str(),
+                     mitm[o].quantity == 1 ? "s" : "");
             }
             // Item will be randomly placed on the destination level.
             mitm[o].pos = INVALID_COORD;
