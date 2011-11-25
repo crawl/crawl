@@ -1799,6 +1799,20 @@ c.....c.....c.....c
 cccbcccc.@.ccccbccc
 ENDMAP
 
+NAME:   evilmike_surprise_oklob
+DEPTH:  D:9-, Elf, Vault
+WEIGHT: 5
+KMASK:  x = no_wall_fixup
+KMONS:  1 = oklob plant
+KITEM:  1 = star_item / nothing
+KITEM:  | = gold, superb_item
+MAP
+ccccccccccc
+c1x|mmm...c
+ccccccccc.c
+ccccccccc@c
+ENDMAP
+
 
 ###################################################################
 #
