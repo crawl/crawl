@@ -1762,7 +1762,7 @@ static int _xom_random_stickable(const int HD)
                                 WPN_ANKUS, WPN_SCYTHE, WPN_LONGBOW,
                                 WPN_GIANT_CLUB, WPN_GIANT_SPIKED_CLUB};
 
-    // Maximum snake hd is 11 (anaconda) so random2(hd) gives us 0-10
+    // Maximum snake hd is 11 (anaconda) so random2(hd) gives us 0-10, and
     // weapon_rarity also gives us 1-10.
     do
         c = random2(HD);
