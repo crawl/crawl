@@ -186,6 +186,22 @@ function (exports, $, key_conversion, chat, comm) {
         socket.send(s);
     }
 
+    function retrigger_event(ev, new_type)
+    {
+        var new_ev = $.extend({}, ev);
+        new_ev.type = new_type;
+        $(new_ev.target).trigger(new_ev);
+        if (new_ev.isDefaultPrevented())
+            ev.preventDefault();
+        if (new_ev.isPropagationStopped())
+        {
+            ev.stopImmediatePropagation();
+            return false;
+        }
+        else
+            return true;
+    }
+
     function handle_keydown(e)
     {
         if (current_layer == "lobby")
@@ -198,6 +214,10 @@ function (exports, $, key_conversion, chat, comm) {
             return;
         }
         if ($(document.activeElement).hasClass("text")) return;
+
+        // Give the game a chance to handle the key
+        if (!retrigger_event(e, "game_keydown"))
+            return;
 
         if (e.ctrlKey && !e.shiftKey && !e.altKey)
         {

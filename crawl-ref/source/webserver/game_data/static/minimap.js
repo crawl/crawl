@@ -128,7 +128,7 @@ function ($, map_knowledge, dungeon_renderer, view_data,
 
     function set(cx, cy, colour)
     {
-        if (!enabled) return;
+        if (!enabled || colour === undefined) return;
 
         var x = cx - cell_x;
         var y = cy - cell_y;
