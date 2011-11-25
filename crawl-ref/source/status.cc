@@ -725,14 +725,20 @@ static void _describe_rotting(status_info* inf)
     {
         inf->short_text = "rotting";
         inf->long_text = "Your flesh is rotting";
-        if (you.rotting > 15)
+        int rot = you.rotting;
+        if (you.species == SP_GHOUL)
+            rot += 1 + (1 << std::max(0, HS_SATIATED - you.hunger_state));
+        if (rot > 15)
             inf->long_text += " before your eyes";
-        else if (you.rotting > 8)
+        else if (rot > 8)
             inf->long_text += " away quickly";
-        else if (you.rotting > 4)
+        else if (rot > 4)
             inf->long_text += " badly";
         else if (you.species == SP_GHOUL)
-            inf->long_text += " faster than usual";
+            if (rot > 2)
+                inf->long_text += " faster than usual";
+            else
+                inf->long_text += " at the usual pace";
         inf->long_text += ".";
     }
 }
