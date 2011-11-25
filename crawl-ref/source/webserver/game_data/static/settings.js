@@ -1,5 +1,7 @@
-define(["jquery", "client"], function ($, client) {
+define(["jquery", "client", "contrib/jquery.cookie", "contrib/jquery.json"],
+function ($, client) {
     var settings = {};
+    var settings_cookie = "settings";
 
     function get(key)
     {
@@ -28,7 +30,22 @@ define(["jquery", "client"], function ($, client) {
 
         $.extend(settings, map);
 
+        save_to_cookie();
+
         $(document).trigger("settings_changed", [map]);
+    }
+
+    function save_to_cookie()
+    {
+        $.cookie(settings_cookie, $.toJSON(settings));
+    }
+
+    function load_from_cookie()
+    {
+        var cookie = $.cookie(settings_cookie);
+        if (!cookie) return;
+        var val = $.secureEvalJSON(cookie);
+        set(val);
     }
 
     function show_dialog()
@@ -89,6 +106,8 @@ define(["jquery", "client"], function ($, client) {
         $(document).on("game_keydown.settings", settings_keydown_handler);
         $("#settings").on("change", "input", dialog_element_changed);
         $("#close_settings").click(close_dialog);
+
+        load_from_cookie();
     });
 
     return {
