@@ -101,6 +101,10 @@ body {
     z-index: 3000;
 }
 
+.floating_dialog .title {
+    text-align: center;
+}
+
 #register label {
     width: 200px;
     float: left;
