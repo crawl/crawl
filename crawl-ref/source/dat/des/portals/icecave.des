@@ -60,6 +60,9 @@ function ice_cave_portal(e)
   e.rtile("X = wall_zot_cyan")
   e.colour(".1234 = blue")
   e.ftile(".1234O+ = floor_ice")
+
+  dgn.set_lt_callback(difficulty, "ice_cave_feat_descs")
+
 end
 
 }}
@@ -124,8 +127,6 @@ function ice_cave_feat_descs()
     dgn.set_feature_desc_long("Some deep water",
                               "It looks freezing!");
 end
-
-dgn.set_lt_callback("ice_cave", "ice_cave_feat_descs")
 }}
 
 # For destination (not entry) vaults, use the following line after all
