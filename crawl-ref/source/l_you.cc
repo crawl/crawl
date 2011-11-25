@@ -136,6 +136,7 @@ LUARET1(you_res_draining, number, player_prot_life(false))
 LUARET1(you_res_shock, number, player_res_electricity(false))
 LUARET1(you_res_statdrain, number, player_sust_abil(false))
 LUARET1(you_res_mutation, number, wearing_amulet(AMU_RESIST_MUTATION, false))
+LUARET1(you_see_invisible, boolean, you.can_see_invisible(false, true))
 LUARET1(you_spirit_shield, number, player_spirit_shield())
 LUARET1(you_gourmand, boolean, wearing_amulet(AMU_THE_GOURMAND, false))
 LUARET1(you_like_chunks, number, player_likes_chunks(true))
@@ -336,6 +337,7 @@ static const struct luaL_reg you_clib[] =
     { "res_shock"   , you_res_shock },
     { "res_statdrain", you_res_statdrain },
     { "res_mutation", you_res_mutation },
+    { "see_invisible", you_see_invisible },
     { "spirit_shield", you_spirit_shield },
     { "saprovorous",  you_saprovorous },
     { "like_chunks",  you_like_chunks },
