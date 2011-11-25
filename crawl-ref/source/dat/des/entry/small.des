@@ -174,35 +174,32 @@ yyyyyyUU.`````......`.`.`.`...xy
 ENDMAP
 
 ##############################################################################
-NAME:    evilmike_entry_teleporters
+# Was evilmike_entry_teleporters
+NAME:    evilmike_entry_plus
 TAGS:    entry
 ORIENT:  float
-SHUFFLE: GTVt1`, pqr?
-SUBST:   `=. , p=?'', q=?''', r=?'''' , '=2d..
+SHUFFLE: GTVt1`
+SUBST:   `=.
 SUBST:   X:Y. , Y:xx.
-KFEAT:   ? = teleport trap
-MONS:    plant, rat / giant newt / goblin w:5
-ITEM:    dart w:5 / stone
+MONS:    plant
 MAP
-        xxx
-        xpx
-       xx+xx
-       xY.Yx
-       xX.Xx
-       xX.Xx
-      =x...xx
-  xxxxx..G..xxxxx
-xxxYXX.......XXYxxx
-x?+....G.{.G....+qx
-xxxYXX.......XXYxxx
-  xxxxx..G..xxxxx
-      xx...xx
-       xX.Xx
-       xX.Xx
-       xY.Yx
-       xx+xx
-        xrx
-        xxx
+       x+x
+      xx.xx
+      xY.Yx
+      xX.Xx
+      xX.Xx
+     xx...xx
+ xxxxx..G..xxxxx
+xxYXX.......XXYxx
++.....G.{.G.....+
+xxYXX.......XXYxx
+ xxxxx..G..xxxxx
+     xx...xx
+      xX.Xx
+      xX.Xx
+      xY.Yx
+      xx.xx
+       x+x
 ENDMAP
 
 ##############################################################
