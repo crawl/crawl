@@ -487,6 +487,13 @@ static int crawl_take_note(lua_State *ls)
     return (0);
 }
 
+static int crawl_messages(lua_State *ls)
+{
+    const int count = luaL_checkint(ls, 1);
+    lua_pushstring(ls, get_last_messages(count).c_str());
+    return (1);
+}
+
 #define REGEX_METATABLE "crawl.regex"
 #define MESSF_METATABLE "crawl.messf"
 
@@ -857,6 +864,7 @@ static const struct luaL_reg crawl_clib[] =
     { "msgch_num",      crawl_msgch_num },
     { "msgch_name",     crawl_msgch_name },
     { "take_note",      crawl_take_note },
+    { "messages",       crawl_messages },
 
     { "regex",          crawl_regex },
     { "message_filter", crawl_message_filter },
