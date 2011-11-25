@@ -1553,7 +1553,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 if (spell_cast != SPELL_MELEE)
                     setup_mons_cast(mons, beem, spell_cast);
 
-                // Try to find a nearby ally to haste, heal
+                // Try to find a nearby ally to haste, heal,
                 // resurrect, or sacrifice itself for.
                 if ((spell_cast == SPELL_HASTE_OTHER
                      || spell_cast == SPELL_HEAL_OTHER
