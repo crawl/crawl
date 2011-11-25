@@ -93,7 +93,7 @@ Summoners start with the book of Callings and are able to Summon Small Mammals f
 %%%%
 Transmuter
 
-Transmuters are specialists in changes of form. They start with arrows and potions to be used with some of their spells.
+Transmuters shift their form to fight in a beast's shape. They can turn sticks into snakes as well.
 %%%%
 Venom Mage
 
