@@ -82,6 +82,7 @@ function ($, client) {
 
     function close_dialog()
     {
+        $("#settings :focus").blur();
         client.hide_dialog("#settings");
         $(document).focus();
     }
