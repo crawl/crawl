@@ -180,5 +180,3 @@ Evocations
 
 Evocations is all about using magical items like wands, decks or other uncommon objects. The higher your skill, the more likely is a positive outcome when evoking items. Also, high skill may let you determine the amount of charges a zapped wand has left.
 %%%%
-# LocalWords:  Polearms spellcasting Summonings undead Translocations
-# LocalWords:  versa
