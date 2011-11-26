@@ -1589,18 +1589,15 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
             }
             else
             {
-                int repel_turns = you.duration[DUR_REPEL_MISSILES]
-                                               / BASELINE_DELAY;
-                // Note that this uses full (not random2limit(foo,40))
-                // player_evasion.
+                if (int defl = you.missile_deflection())
+                    trap_hit = random2(trap_hit / defl);
+
                 int your_dodge = you.melee_evasion(NULL) - 2
-                    + (random2(you.dex()) / 3)
-                    + (repel_turns * 10);
+                    + (random2(you.dex()) / 3);
 
                 // Check if it got past dodging. Deflect Missiles provides
                 // immunity to such traps.
                 if (trap_hit >= your_dodge
-                    && you.duration[DUR_DEFLECT_MISSILES] == 0
                     || force_hit)
                 {
                     // OK, we've been hit.
