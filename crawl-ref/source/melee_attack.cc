@@ -341,7 +341,7 @@ bool melee_attack::handle_phase_dodged()
     }
     else
     {
-        if (needs_message && !defender_invisible)
+        if (needs_message)
         {
             // TODO: Unify these, placed player_warn_miss here so I can remove
             // player_attack
