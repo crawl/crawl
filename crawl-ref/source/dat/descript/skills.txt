@@ -98,7 +98,7 @@ A character trained in Unarmed Combat will occasionally do an additional melee a
 %%%%
 Spellcasting
 
-Training Spellcasting makes it easier to learn and cast spells, along with increasing your magical reserves. Gaining a level in Spellcasting will occasionally increase the magic, and gives you more "spell slots" to spend on new spells. Spellcasting skill and your intelligence are the only factors countering spell hunger.
+Training Spellcasting makes it easier to learn and cast spells, along with increasing your magical reserves. Gaining a level in Spellcasting gives you more "spell slots" to spend on new spells. Spellcasting skill and your intelligence are the only factors countering spell hunger.
 %%%%
 Conjurations
 
