@@ -1534,125 +1534,119 @@ void trap_def::shoot_ammo(actor& act, bool was_known)
             mpr("You hear a soft click.");
 
         disarm();
+        return;
     }
-    else
+
+    bool force_hit = (env.markers.property_at(pos, MAT_ANY,
+                            "force_hit") == "true");
+
+    if (act.atype() == ACT_PLAYER)
     {
-        // Record position now, in case it's a monster and dies (thus
-        // resetting its position) before the ammo can be dropped.
-        const coord_def apos = act.pos();
+        if (!force_hit && (one_chance_in(5) || was_known && !one_chance_in(4)))
+        {
+            mprf("You avoid triggering %s trap.",
+                  this->name(DESC_A).c_str());
 
-        item_def shot = generate_trap_item();
+            return;         // no ammo generated either
+        }
+    }
+    else if (!force_hit && one_chance_in(5))
+    {
+        if (was_known && you.see_cell(pos) && you.can_see(&act))
+            mprf("%s avoids triggring %s trap.", act.name(DESC_THE).c_str(),
+                 name(DESC_A).c_str());
+        return;
+    }
 
+    // Record position now, in case it's a monster and dies (thus
+    // resetting its position) before the ammo can be dropped.
+    const coord_def apos = act.pos();
+
+    item_def shot = generate_trap_item();
+
+    int trap_hit = (20 + (you.absdepth0*2)) * random2(200) / 100;
+    if (int defl = act.missile_deflection())
+        trap_hit = random2(trap_hit / defl);
+
+    const int con_block = random2(20 + act.shield_block_penalty());
+    const int pro_block = act.shield_bonus();
+    dprf("%s trap: hit %d EV %d, shield hit %d block %d", name(DESC_PLAIN).c_str(),
+         trap_hit, act.melee_evasion(0), con_block, pro_block);
+
+    // Determine whether projectile hits.
+    if (!force_hit && trap_hit < act.melee_evasion(NULL))
+    {
+        if (act.atype() == ACT_PLAYER)
+        {
+            mprf("%s shoots out and misses you.", shot.name(DESC_A).c_str());
+            practise(EX_DODGE_TRAP);
+        }
+        else if (you.see_cell(act.pos()))
+        {
+            mprf("%s misses %s!", shot.name(DESC_A).c_str(),
+                 act.name(DESC_THE).c_str());
+        }
+    }
+    else if (!force_hit && pro_block >= con_block)
+    {
+        std::string owner;
+        if (act.atype() == ACT_PLAYER)
+            owner = "your";
+        else if (you.can_see(&act))
+            owner = apostrophise(act.name(DESC_THE));
+        else // "its" sounds abysmal; animals don't use shields
+            owner = "someone's";
+        mprf("%s shoots out and hits %s shield.", shot.name(DESC_A).c_str(),
+             owner.c_str());
+
+        act.shield_block_succeeded(0);
+    }
+    else // OK, we've been hit.
+    {
         bool force_poison = (env.markers.property_at(pos, MAT_ANY,
                                 "poisoned_needle_trap") == "true");
 
-        bool force_hit = (env.markers.property_at(pos, MAT_ANY,
-                                "force_hit") == "true");
-
         bool poison = (type == TRAP_NEEDLE
-                       && act.res_poison() <= 0
                        && (x_chance_in_y(50 - (3*act.armour_class()) / 2, 100)
                             || force_poison));
 
         int damage_taken =
             std::max(shot_damage(act) - random2(act.armour_class()+1),0);
 
-        int trap_hit = (20 + (you.absdepth0*2)) * random2(200) / 100;
-
         if (act.atype() == ACT_PLAYER)
         {
-            if (!force_hit && (one_chance_in(5) || was_known && !one_chance_in(4)))
-            {
-                mprf("You avoid triggering %s trap.",
-                      this->name(DESC_A).c_str());
+            mprf("%s shoots out and hits you!", shot.name(DESC_A).c_str());
 
-                return;         // no ammo generated either
-            }
+            std::string n = name(DESC_A) + " trap";
 
-            // Start constructing the message.
-            std::string msg = shot.name(DESC_A) + " shoots out and ";
+            // Needle traps can poison.
+            if (poison)
+                poison_player(1 + random2(3), "", n);
 
-            // Check for shield blocking.
-            // Exercise only if the trap was unknown (to prevent scumming.)
-            if (!was_known && player_shield_class())
-                practise(EX_SHIELD_TRAP);
-
-            const int con_block = random2(20 + you.shield_block_penalty());
-            const int pro_block = you.shield_bonus();
-            if (pro_block >= con_block && !force_hit)
-            {
-                // Note that we don't call shield_block_succeeded()
-                // because that can exercise Shields skill.
-                you.shield_blocks++;
-                msg += "hits your shield.";
-                mpr(msg.c_str());
-            }
-            else
-            {
-                if (int defl = you.missile_deflection())
-                    trap_hit = random2(trap_hit / defl);
-
-                int your_dodge = you.melee_evasion(NULL) - 2
-                    + (random2(you.dex()) / 3);
-
-                // Check if it got past dodging. Deflect Missiles provides
-                // immunity to such traps.
-                if (trap_hit >= your_dodge
-                    || force_hit)
-                {
-                    // OK, we've been hit.
-                    msg += "hits you!";
-                    mpr(msg.c_str());
-
-                    std::string n = name(DESC_A) + " trap";
-
-                    // Needle traps can poison.
-                    if (poison)
-                        poison_player(1 + random2(3), "", n);
-
-                    ouch(damage_taken, NON_MONSTER, KILLED_BY_TRAP, n.c_str());
-                }
-                else            // trap dodged
-                {
-                    msg += "misses you.";
-                    mpr(msg.c_str());
-                }
-
-                // Exercise only if the trap was unknown (to prevent scumming.)
-                if (!was_known)
-                    practise(EX_DODGE_TRAP);
-            }
+            ouch(damage_taken, NON_MONSTER, KILLED_BY_TRAP, n.c_str());
         }
-        else if (act.atype() == ACT_MONSTER)
+        else
         {
-            // Determine whether projectile hits.
-            bool hit = (trap_hit >= act.melee_evasion(NULL));
-
             if (you.see_cell(act.pos()))
             {
-                mprf("%s %s %s%s!",
+                mprf("%s hits %s%s!",
                      shot.name(DESC_A).c_str(),
-                     hit ? "hits" : "misses",
                      act.name(DESC_THE).c_str(),
-                     (hit && damage_taken == 0
-                         && !poison) ? ", but does no damage" : "");
+                     (damage_taken == 0 && !poison) ?
+                         ", but does no damage" : "");
             }
 
-            // Apply damage.
-            if (hit)
-            {
-                if (poison)
-                    act.poison(NULL, 1 + random2(3));
-                act.hurt(NULL, damage_taken);
-            }
+            if (poison)
+                act.poison(NULL, 1 + random2(3));
+            act.hurt(NULL, damage_taken);
         }
-
-        // Drop the item (sometimes.)
-        if (coinflip())
-            copy_item_to_grid(shot, apos);
-
-        ammo_qty--;
     }
+
+    // Drop the item (sometimes.)
+    if (coinflip())
+        copy_item_to_grid(shot, apos);
+
+    ammo_qty--;
 }
 
 // returns appropriate trap symbol
