@@ -30,6 +30,13 @@ function ($, map_knowledge, cr, dungeon_renderer) {
         return (monster_sort(monster1, monster2) == 0);
     }
 
+    function is_excluded(monster)
+    {
+        return (monster.typedata.no_exp &&
+                !(monster.name == "active ballistomycete"
+                  || monster.name.match(/tentacle$/)));
+    }
+
     function monster_sort(m1, m2)
     {
         // Compare monster_info::less_than
@@ -61,7 +68,10 @@ function ($, map_knowledge, cr, dungeon_renderer) {
         var monster_list = [];
 
         for (var loc in monsters)
+        {
+            if (is_excluded(monsters[loc].mon)) continue;
             monster_list.push(monsters[loc]);
+        }
 
         monster_list.sort(function (m1, m2) {
             return monster_sort(m1.mon, m2.mon);
