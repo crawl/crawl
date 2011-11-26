@@ -2989,6 +2989,12 @@ int monster::shield_bypass_ability(int) const
     return (15 + hit_dice * 2 / 3);
 }
 
+int monster::missile_deflection() const
+{
+    // No temporary effects, no RMsl as well.
+    return mons_class_flag(type, M_DEFLECT_MISSILES) ? 2 : 0;
+}
+
 int monster::armour_class() const
 {
     // Extra AC for snails/turtles drawn into their shells.
