@@ -2003,14 +2003,6 @@ bool melee_attack::player_monattk_hit_effects()
     // These two (staff damage and damage brand) are mutually exclusive!
     player_apply_staff_damage();
 
-    if (needs_message && !special_damage_message.empty())
-    {
-        mprf("%s", special_damage_message.c_str());
-        // Don't do a message-only miscast right after a special damage.
-        if (miscast_level == 0)
-            miscast_level = -1;
-    }
-
     dprf("Special damage to %s: %d, flavour: %d",
          defender->name(DESC_THE).c_str(),
          special_damage, special_damage_flavour);
