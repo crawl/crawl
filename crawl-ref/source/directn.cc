@@ -2972,7 +2972,7 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_OPEN_SEA:
         return ("open sea");
     case DNGN_LAVA_SEA:
-        return ("Endless lava");
+        return ("endless lava");
     case DNGN_CLOSED_DOOR:
         return ("closed door");
     case DNGN_DETECTED_SECRET_DOOR:
@@ -3002,14 +3002,14 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_GRANITE_STATUE:
         return ("granite statue");
     case DNGN_LAVA:
-        return ("Some lava");
+        return ("some lava");
     case DNGN_DEEP_WATER:
-        return ("Some deep water");
+        return ("some deep water");
     case DNGN_SHALLOW_WATER:
-        return ("Some shallow water");
+        return ("some shallow water");
     case DNGN_UNDISCOVERED_TRAP:
     case DNGN_FLOOR:
-        return ("Floor");
+        return ("floor");
     case DNGN_OPEN_DOOR:
         return ("open door");
     case DNGN_ESCAPE_HATCH_DOWN:
