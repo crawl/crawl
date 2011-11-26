@@ -5820,6 +5820,18 @@ void player::shield_block_succeeded(actor *foe)
     practise(EX_SHIELD_BLOCK);
 }
 
+int player::missile_deflection() const
+{
+    if (you.duration[DUR_DEFLECT_MISSILES])
+        return 2;
+    if (you.duration[DUR_REPEL_MISSILES]
+        || player_mutation_level(MUT_DISTORTION_FIELD) == 3)
+    {
+        return 1;
+    }
+    return 0;
+}
+
 int player::unadjusted_body_armour_penalty() const
 {
     const item_def *body_armour = slot_item(EQ_BODY_ARMOUR, false);

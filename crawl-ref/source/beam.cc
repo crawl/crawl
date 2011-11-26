@@ -2850,28 +2850,20 @@ bool bolt::fuzz_invis_tracer()
 // very kind to the player, but it should be fairer to monsters than
 // 4.0.
 static bool _test_beam_hit(int attack, int defence, bool is_beam,
-                           bool deflect, bool repel, defer_rand &r)
+                           int defl, defer_rand &r)
 {
     if (attack == AUTOMATIC_HIT)
         return (true);
 
-    if (is_beam && deflect)
+    if (is_beam)
     {
-        attack = r[0].random2(attack * 2) / 3;
-    }
-    else if (is_beam && repel)
-    {
-        if (attack >= 2)
+        if (defl > 1)
+            attack = r[0].random2(attack * 2) / 3;
+        else if (defl && attack >= 2) // don't increase acc of 0
             attack = r[0].random_range((attack + 1) / 2 + 1, attack);
     }
-    else if (deflect)
-    {
-        attack = r[0].random2(attack / 2);
-    }
-    else if (repel)
-    {
-        attack = r[0].random2(attack);
-    }
+    else if (defl)
+        attack = r[0].random2(attack / defl);
 
     dprf("Beam attack: %d, defence: %d", attack, defence);
 
@@ -3158,26 +3150,19 @@ bool bolt::misses_player()
     defer_rand r;
     bool miss = true;
 
-    bool dmsl = you.duration[DUR_DEFLECT_MISSILES];
-    bool rmsl = dmsl || you.duration[DUR_REPEL_MISSILES]
-                || player_mutation_level(MUT_DISTORTION_FIELD) == 3;
+    int defl = you.missile_deflection();
     if (flavour == BEAM_LIGHT)
-        dmsl = rmsl = false;
+        defl = 0;
 
-    if (!_test_beam_hit(real_tohit, dodge_less, is_beam, false, false, r))
-    {
+    if (!_test_beam_hit(real_tohit, dodge_less, is_beam, 0, r))
         mprf("The %s misses you.", name.c_str());
-    }
-    else if (!_test_beam_hit(real_tohit, dodge_less, is_beam, false, rmsl, r))
-    {
-        mprf("The %s is repelled.", name.c_str());
-    }
-    else if (!_test_beam_hit(real_tohit, dodge_less, is_beam, dmsl, rmsl, r))
+    else if (defl && !_test_beam_hit(real_tohit, dodge_less, is_beam, defl, r))
     {
         // active voice to imply stronger effect
-        mprf("You deflect the %s!", name.c_str());
+        mprf(defl == 1 ? "The %s is repelled." : "You deflect the %s!",
+             name.c_str());
     }
-    else if (!_test_beam_hit(real_tohit, dodge, is_beam, dmsl, rmsl, r))
+    else if (!_test_beam_hit(real_tohit, dodge, is_beam, defl, r))
     {
         mprf("You momentarily phase out as the %s "
              "passes through you.", name.c_str());
@@ -3190,14 +3175,10 @@ bool bolt::misses_player()
         if (hit_verb.empty())
             hit_verb = engulfs ? "engulfs" : "hits";
 
-        if (_test_beam_hit(real_tohit, dodge_more, is_beam, dmsl, rmsl, r))
-        {
+        if (_test_beam_hit(real_tohit, dodge_more, is_beam, defl, r))
             mprf("The %s %s you!", name.c_str(), hit_verb.c_str());
-        }
         else
-        {
             mprf("Helpless, you fail to dodge the %s.", name.c_str());
-        }
 
         miss = false;
     }
@@ -4394,25 +4375,25 @@ void bolt::affect_monster(monster* mon)
 
     defer_rand r;
     int rand_ev = random2(mon->ev);
-    bool dmsl = mons_class_flag(mon->type, M_DEFLECT_MISSILES);
+    int defl = mon->missile_deflection();
 
     // FIXME: We're randomising mon->evasion, which is further
     // randomised inside test_beam_hit.  This is so we stay close to the
     // 4.0 to-hit system (which had very little love for monsters).
-    if (!engulfs && !_test_beam_hit(beam_hit, rand_ev, is_beam, dmsl, false, r))
+    if (!engulfs && !_test_beam_hit(beam_hit, rand_ev, is_beam, defl, r))
     {
         // If the PLAYER cannot see the monster, don't tell them anything!
         if (mon->observable())
         {
             // if it would have hit otherwise...
-            if (_test_beam_hit(beam_hit, rand_ev, is_beam, false, false, r))
+            if (_test_beam_hit(beam_hit, rand_ev, is_beam, 0, r))
             {
                 msg::stream << mon->name(DESC_THE) << " deflects the "
                             << name << '!' << std::endl;
             }
             else if (mons_class_flag(mon->type, M_PHASE_SHIFT)
                      && _test_beam_hit(beam_hit, rand_ev - random2(8),
-                                       is_beam, false, false, r))
+                                       is_beam, 0, r))
             {
                 msg::stream << mon->name(DESC_THE) << " momentarily phases "
                             << "out as the " << name << " passes through "
