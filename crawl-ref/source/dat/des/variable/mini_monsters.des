@@ -2697,8 +2697,8 @@ ENDMAP
 
 # This wizard likes to experiment!
 NAME:    laboratory_2
-MONS:    col:lightred wizard spells:polymorph_other;paralyse;blink\
-         ;bolt_of_fire;bolt_of_fire;teleport_self
+MONS:    wizard col:lightred name:mad n_adj n_spe spells:polymorph_other;\
+         paralyse;blink;bolt_of_fire;bolt_of_fire;teleport_self
 DEPTH:   D:10-26, Vault
 MONS:    laboratory rat
 MAP
