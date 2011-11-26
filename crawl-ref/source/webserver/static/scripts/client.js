@@ -561,6 +561,7 @@ function (exports, $, key_conversion, chat, comm) {
         set("god", data.god || "");
         set("title", data.title);
         set("idle_time", format_idle_time(data.idle_time));
+        entry.find(".idle_time").data("time", data.idle_time);
         entry.find(".idle_time").data("sort", "" + data.idle_time);
         set("spectator_count", data.spectator_count);
         if (entry.find(".milestone").text() !== data.milestone)
@@ -574,6 +575,23 @@ function (exports, $, key_conversion, chat, comm) {
         if (single)
             lobby_complete();
     }
+
+    var lobby_idle_timer = setInterval(update_lobby_idle_times, 1000);
+    function update_lobby_idle_times()
+    {
+        $("#player_list .idle_time").each(function () {
+            var $this = $(this);
+            var time = $this.data("time");
+            if (time)
+            {
+                time++;
+                $this.html(format_idle_time(time));
+                $this.data("time", time);
+                $this.data("sort", "" + time);
+            }
+        });
+    }
+
     function lobby_remove(data)
     {
         $("#game-" + data.id).remove();
