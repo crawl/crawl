@@ -487,7 +487,7 @@ bool melee_attack::handle_phase_hit()
             beogh_follower_convert(defender->as_monster(), true);
         }
     }
-    else if(needs_message)
+    else if (needs_message)
     {
         attack_verb = attacker->atype() == ACT_PLAYER
                       ? attack_verb
