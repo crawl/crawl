@@ -1290,16 +1290,14 @@ static bool _append_books(std::string &desc, item_def &item, std::string key)
     return (true);
 }
 
-// Does not wait for keypress; the caller must do that if necessary.
-// Returns true if we need to wait for keypress.
-static bool _do_description(std::string key, std::string type,
+// Returns the result of the keypress.
+static int _do_description(std::string key, std::string type,
                             std::string footer = "")
 {
     describe_info inf;
     inf.quote = getQuoteString(key);
 
     std::string desc = getLongDescription(key);
-
     int width = std::min(80, get_number_of_cols());
 
     god_type which_god = str_to_god(key);
@@ -1337,8 +1335,7 @@ static bool _do_description(std::string key, std::string type,
             && !mons_class_is_zombified(mon_num) && !mons_is_mimic(mon_num))
         {
             monster_info mi(mon_num);
-            describe_monsters(mi, true, footer);
-            return (false);
+            return describe_monsters(mi, true, footer);
         }
         else
         {
@@ -1409,8 +1406,12 @@ static bool _do_description(std::string key, std::string type,
     inf.footer = footer;
     inf.title  = key;
 
+#ifdef USE_TILE_WEB
+    tiles_crt_control show_as_menu(CRT_MENU, "description");
+#endif
+
     print_description(inf);
-    return (true);
+    return getchm();
 }
 
 // Reads all questions from database/FAQ.txt, outputs them in the form of
@@ -1491,8 +1492,7 @@ static void _find_description(bool *again, std::string *error_inout)
 {
     *again = true;
 
-    clrscr();
-    viewwindow();
+    redraw_screen();
 
     if (!error_inout->empty())
         mpr(error_inout->c_str(), MSGCH_PROMPT);
@@ -1680,8 +1680,7 @@ static void _find_description(bool *again, std::string *error_inout)
     }
     else if (key_list.size() == 1)
     {
-        if (_do_description(key_list[0], type))
-            getchm();
+        _do_description(key_list[0], type);
         return;
     }
 
@@ -1691,11 +1690,7 @@ static void _find_description(bool *again, std::string *error_inout)
         footer += regex;
         footer += "'. To see non-exact matches, press space.";
 
-        _do_description(regex, type, footer);
-        // FIXME: This results in an *additional* getchm(). We might have
-        // to check for this eventuality way over in describe.cc and
-        // _print_toggle_message. (jpeg)
-        if (getchm() != ' ')
+        if (_do_description(regex, type, footer) != ' ')
             return;
     }
 
@@ -1835,8 +1830,7 @@ static void _find_description(bool *again, std::string *error_inout)
             else
                 key = *((std::string*) sel[0]->data);
 
-            if (_do_description(key, type))
-                getchm();
+            _do_description(key, type);
         }
     }
 }

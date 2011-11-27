@@ -72,10 +72,8 @@ void append_weapon_stats(std::string &description, const item_def &item);
 void append_armour_stats(std::string &description, const item_def &item);
 void append_missile_info(std::string &description);
 
-void describe_monsters(const monster_info &mi, bool force_seen = false,
-                       const std::string &footer = "",
-                       bool wait_until_key_pressed = true,
-                       bool show_quote = false);
+int describe_monsters(const monster_info &mi, bool force_seen = false,
+                      const std::string &footer = "");
 
 void get_monster_db_desc(const monster_info &mi, describe_info &inf,
                          bool &has_stat_desc, bool force_seen = false);

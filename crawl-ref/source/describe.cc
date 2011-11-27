@@ -2289,12 +2289,13 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     }
 }
 
-static bool _print_toggle_message(const describe_info &inf)
+// Returns the pressed key in key
+static int _print_toggle_message(const describe_info &inf, int& key)
 {
     if (inf.quote.empty())
     {
         mouse_control mc(MOUSE_MODE_MORE);
-        getchm();
+        key = getchm();
         return (false);
     }
     else
@@ -2310,9 +2311,9 @@ static bool _print_toggle_message(const describe_info &inf)
             " to toggle between the overview and the extended description.").display();
 
         mouse_control mc(MOUSE_MODE_MORE);
-        const int keyin = getchm();
+        key = getchm();
 
-        if (keyin == '!' || keyin == CK_MOUSE_CMD)
+        if (key == '!' || key == CK_MOUSE_CMD)
             return (true);
 
         return (false);
@@ -2336,7 +2337,8 @@ void describe_feature_wide(const coord_def& pos, bool show_quote)
     if (crawl_state.game_is_hints())
         hints_describe_pos(pos.x, pos.y);
 
-    if (_print_toggle_message(inf))
+    int key;
+    if (_print_toggle_message(inf, key))
         describe_feature_wide(pos, !show_quote);
 }
 
@@ -3649,14 +3651,14 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
 #endif
 }
 
-void describe_monsters(const monster_info &mi, bool force_seen,
-                       const std::string &footer,
-                       bool wait_until_key_pressed,
-                       bool show_quote)
+int describe_monsters(const monster_info &mi, bool force_seen,
+                      const std::string &footer)
 {
     describe_info inf;
     bool has_stat_desc = false;
     get_monster_db_desc(mi, inf, has_stat_desc, force_seen);
+
+    bool show_quote = false;
 
     if (!footer.empty())
     {
@@ -3670,25 +3672,28 @@ void describe_monsters(const monster_info &mi, bool force_seen,
     tiles_crt_control show_as_menu(CRT_MENU, "describe_monster");
 #endif
 
-    if (show_quote)
+    int key;
+    do
     {
-        print_quote(inf);
+        if (show_quote)
+        {
+            print_quote(inf);
+        }
+        else
+        {
+            print_description(inf);
+
+            // TODO enne - this should really move into get_monster_db_desc
+            // and an additional tutorial string added to describe_info.
+            if (crawl_state.game_is_hints())
+                hints_describe_monster(mi, has_stat_desc);
+        }
+
+        show_quote = !show_quote;
     }
-    else
-    {
-        print_description(inf);
+    while (_print_toggle_message(inf, key));
 
-        // TODO enne - this should really move into get_monster_db_desc
-        // and an additional tutorial string added to describe_info.
-        if (crawl_state.game_is_hints())
-            hints_describe_monster(mi, has_stat_desc);
-    }
-
-
-    mouse_control mc(MOUSE_MODE_MORE);
-
-    if (wait_until_key_pressed && _print_toggle_message(inf))
-        describe_monsters(mi, force_seen, footer, wait_until_key_pressed, !show_quote);
+    return key;
 }
 
 static const char* xl_rank_names[] = {
