@@ -11,6 +11,16 @@ MAP
 d
 ENDMAP
 
+##########################################################################
+# Midgame food supply.
+#
+# These should give around 20k nutrition.  Currently all strict
+# carnivores have a large buffer so they can survive lulls in edible supply
+# well until Crypt, so all-veggie is ok.
+#
+# normal/herbi/carni
+
+# 17.6k/26.6k/0
 NAME:   the_bakery
 DEPTH:  D:7-14
 CHANCE: 100% (D:14), 15%
@@ -25,6 +35,7 @@ x.1x
 x+xx
 ENDMAP
 
+# 18.6k, min 14k
 NAME:   david_nohive_1
 DEPTH:  D:8-14
 CHANCE: 100% (D:14), 15%
@@ -46,6 +57,7 @@ MAP
 ............
 ENDMAP
 
+# 20.6k/47.2k/0
 NAME:     blue_anna_alchemist
 DEPTH:    D:8-14
 CHANCE:   100% (D:14), 15%
