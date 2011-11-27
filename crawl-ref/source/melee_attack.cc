@@ -132,11 +132,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
                 attk_type = AT_HIT;
         }
     }
-    else // player, can check species to force constriction ability
-    {
-        if (you.species == SP_OCTOPODE || you.species == SP_NAGA)
-            can_do_unarmed = true;
-    }
+    else
+        attk_type = AT_HIT;
 
     shield = attacker->shield();
     defender_shield = defender ? defender->shield() : defender_shield;
@@ -752,6 +749,13 @@ bool melee_attack::handle_phase_end()
 
 bool melee_attack::attack()
 {
+
+    // monster constriction is completely different. 
+    // I hate to special case so soon after the rewrite, it just doesn't fit
+
+    if (attacker->atype() != ACT_PLAYER && attk_type == AT_CONSTRICT)
+        return (handle_monster_constriction());
+
     if (!handle_phase_attempted())
         return (false);
 
@@ -1274,7 +1278,8 @@ bool melee_attack::player_aux_unarmed()
     // Unarmed skill gives a chance at getting an aux even without the
     // corresponding mutation.
     if (attacker->fights_well_unarmed(attacker_armour_tohit_penalty
-                                   + attacker_shield_tohit_penalty))
+                                   + attacker_shield_tohit_penalty)
+	|| you.species == SP_NAGA || you.species == SP_OCTOPODE)
     {
         baseattack = player_aux_choose_baseattack();
     }
@@ -4605,6 +4610,9 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_base)
     if (_tran_forbid_aux_attack(atk))
         return (false);
 
+    if (atk == UNAT_CONSTRICT)
+        return (is_base);
+
     if (you.strength() + you.dex() <= random2(50))
         return (false);
 
@@ -5209,7 +5217,9 @@ void melee_attack::handle_player_constriction()
 	                                defender->body_size());
 
 	// if hit, grab
-        if (you.body_size() >= defender->body_size() 
+        if (you.body_size() >= defender->body_size()
+	    && !defender->is_insubstantial()
+	    && adjacent(attacker->pos(), defender->pos())
 	    && attackdice > defenddice)
 	{
 	    defender_grabbed = true;
@@ -5218,7 +5228,7 @@ void melee_attack::handle_player_constriction()
 	    {
 	        if (you.constricting[i] == NON_ENTITY)
 		{
-		    grabslot = i;
+		    grabslot = i+1;
                     you.constricting[i] = defender->mindex();
 		    you.dur_has_constricted[i] = 0;
 		    defender->constricted_by = MHITYOU;
@@ -5228,6 +5238,13 @@ void melee_attack::handle_player_constriction()
 	    ASSERT(grabslot != 0);
 
 	}
+	
+        dprf("constrict hitcalc at: %s df: %s atstr %d atsiz %d atdic %d dfev %d dfsiz %d dfdic %d gslot %d",
+             attacker->name(DESC_PLAIN, true).c_str(),
+	     defender->name(DESC_PLAIN, true).c_str(),
+	     you.strength(), you.body_size(), attackdice,
+	     defender->melee_evasion(attacker), defender->body_size(),
+	     defenddice, grabslot);
     }
 
     // if anything is grabbed, do damage accordingly
@@ -5248,6 +5265,7 @@ void melee_attack::handle_player_constriction()
 
                 damage = inflict_damage(damage, BEAM_MISSILE);
 		infdam = damage;
+		damage_done = damage;
 
                 if (damage > 0)
 		{
@@ -5261,15 +5279,118 @@ void melee_attack::handle_player_constriction()
 			 defender->name(DESC_THE).c_str(),
 			 you.can_see(defender) ? ", but do no damage" : "");
 	        }
-		if (defender->as_monster()->hit_points < 1)
-		    _monster_die(defender->as_monster(), KILL_YOU, NON_MONSTER);
+		
 		dprf("constrict at: %s df: %s base %d dur %d ac %d inf %d",
 		     attacker->name(DESC_PLAIN, true).c_str(),
 		     defender->name(DESC_PLAIN, true).c_str(),
 		     basedam, durdam, acdam, infdam);
+		if (defender->as_monster()->hit_points < 1)
+		    _monster_die(defender->as_monster(), KILL_YOU, NON_MONSTER);
 
             }
     }
     defender = save_defender;
 
+}
+
+bool melee_attack::handle_monster_constriction()
+{
+    // see what is grabbed already
+
+    bool defender_grabbed = false;
+    bool any_grabbed = false;
+    int maxgrab;
+    int grabslot = 0;
+    int damage = 0;
+    actor *save_defender = defender;
+    actor *target;
+
+    maxgrab = (attacker->type == MONS_OCTOPODE) ? 8 : 1;
+
+
+    for (int i = 0; i < maxgrab; i++)
+    {
+        if (attacker->constricting[i] == defender-> mindex())
+	    defender_grabbed = true;
+	if (attacker->constricting[i] != NON_ENTITY)
+	    any_grabbed = true;
+    }
+
+    // if a new constriction is possible, try it
+    if (!defender_grabbed 
+        && (!any_grabbed || attacker->has_usable_tentacle())
+	&& defender->constricted_by == NON_ENTITY)
+    {
+        // calculate to_hit
+        int attackdice = roll_dice(1, attacker->as_monster()->hit_dice*
+	                              attacker->body_size());
+	int defenddice = roll_dice(1, defender->melee_evasion(attacker)*
+	                              defender->body_size());
+
+	// if hit, grab
+        if (attacker->body_size() >= defender->body_size() 
+	    && !defender->is_insubstantial()
+	    && adjacent(attacker->pos(), defender->pos())
+	    && attackdice > defenddice)
+	{
+	    defender_grabbed = true;
+	    any_grabbed = true;
+	    for (int i = 0; i < maxgrab && grabslot == 0; i++)
+	    {
+	        if (attacker->constricting[i] == NON_ENTITY)
+		{
+		    grabslot = i+1;
+                    attacker->constricting[i] = defender->mindex();
+		    attacker->dur_has_constricted[i] = 0;
+		    defender->constricted_by = attacker->mindex();
+		    defender->dur_been_constricted = 0;
+		}
+	    }
+	    ASSERT(grabslot != 0);
+
+	}
+	
+        dprf("mconstrict hitcalc at: %s df: %s atstr %d atsiz %d atdic %d dfev %d dfsiz %d dfdic %d gslot %d",
+             attacker->name(DESC_PLAIN, true).c_str(),
+	     defender->name(DESC_PLAIN, true).c_str(),
+	     attacker->as_monster()->hit_dice, attacker->body_size(), 
+	     attackdice,
+	     defender->melee_evasion(attacker), defender->body_size(),
+	     defenddice, grabslot);
+    }
+
+    // if anything is grabbed, do damage accordingly
+    if (any_grabbed)
+    {
+        for (int i = 0; i < maxgrab; i++)
+	    if (attacker->constricting[i] != NON_ENTITY)
+	    {
+	        int basedam, durdam, acdam, infdam;
+	        target = &env.mons[attacker->constricting[i]];
+		defender = target;
+                damage = (attacker->as_monster()->hit_dice+1)/2;
+		basedam = damage;
+		damage += roll_dice(1, attacker->dur_has_constricted[i]/10);
+		durdam = damage;
+	        damage -= random2(1 + (defender->armour_class() / 2));
+		acdam = damage;
+
+                damage = inflict_damage(damage, BEAM_MISSILE);
+		infdam = damage;
+		damage_done = damage;
+
+		announce_hit();
+
+		dprf("mconstrict at: %s df: %s base %d dur %d ac %d inf %d",
+		     attacker->name(DESC_PLAIN, true).c_str(),
+		     defender->name(DESC_PLAIN, true).c_str(),
+		     basedam, durdam, acdam, infdam);
+		if (defender->as_monster()->hit_points < 1)
+		    _monster_die(defender->as_monster(), KILL_MON, 
+		                 attacker->mindex());
+
+            }
+    }
+    defender = save_defender;
+    return true;
 }

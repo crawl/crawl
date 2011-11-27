@@ -3549,6 +3549,17 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
         return (true);
     }
 
+    if (mons->is_constricted())
+    {
+        if (mons->attempt_escape())
+	    simple_monster_message(mons, "escapes!");
+	else
+	{
+	    simple_monster_message(mons, "struggles to escape constriction");
+	    return(true);
+	}
+    }
+
     if (mons_can_open_door(mons, f))
     {
         _mons_open_door(mons, f);
@@ -3611,6 +3622,8 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
 
     mons->check_clinging(true);
     ballisto_on_move(mons, old_pos);
+
+    mons->clear_all_constrictions(); // moved, let go any constrictions
 
     mons->check_redraw(mons->pos() - delta);
     mons->apply_location_effects(mons->pos() - delta);

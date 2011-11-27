@@ -352,12 +352,13 @@ public:
     int dur_been_constricted;
     int dur_has_constricted[8];     // max 8 for octopode
 
-    virtual bool is_constricted()
-    {
-        return (constricted_by != NON_ENTITY);
-    }
+    virtual bool is_constricted();
     virtual bool is_constricting();
-    
+    virtual bool has_usable_tentacle()
+    {
+        return false;
+    }
+
 protected:
     // These are here for memory management reasons...
     los_glob los;

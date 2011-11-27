@@ -23,7 +23,7 @@ enum unarmed_attack_type
     UNAT_BITE,
     UNAT_PSEUDOPODS,
     UNAT_TENTACLES,
-    UNAT_FIRST_ATTACK = UNAT_KICK,
+    UNAT_FIRST_ATTACK = UNAT_CONSTRICT,
     UNAT_LAST_ATTACK = UNAT_TENTACLES
 };
 
@@ -182,6 +182,7 @@ private:
                                      int reduction = 1);
     bool _vamp_wants_blood_from_monster(const monster* mon);
     void handle_player_constriction();
+    bool handle_monster_constriction();
 };
 
 #endif

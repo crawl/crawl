@@ -1463,6 +1463,7 @@ static void _go_upstairs()
         end_mislead(true);
 
     you.clear_clinging();
+    you.clear_all_constrictions();
 
     tag_followers(); // Only those beside us right now can follow.
     start_delay(DELAY_ASCENDING_STAIRS,
@@ -1556,6 +1557,7 @@ static void _go_downstairs()
         end_mislead(true);
 
     you.clear_clinging();
+    you.clear_all_constrictions();
 
     if (shaft)
     {
@@ -3463,12 +3465,6 @@ static void _open_door(coord_def move, bool check_confused)
         return;
     }
 
-    if (!you.attempt_escape()) // false means constricted and don't escape
-    {
-        mpr("You can't open doors while constricted.");
-	return;
-    }
-
     // The player used Ctrl + dir or a variant thereof.
     if (!move.origin())
     {
@@ -3764,12 +3760,6 @@ static void _close_door(coord_def move)
         return;
     }
 
-    if (!you.attempt_escape()) // false means constricted and don't escape
-    {
-        mpr("You can't close doors while constricted.");
-	return;
-    }
-
     dist door_move;
 
     // The player hasn't yet told us a direction.
@@ -4054,16 +4044,6 @@ static void _move_player(coord_def move)
         return;
     }
 
-    if (!you.attempt_escape()) // false means constricted and did not escape
-    {
-        std::string emsg = "While you don't manage to break free from ";
-	emsg += env.mons[you.constricted_by].name(DESC_THE,true);
-	emsg += ", you feel that another attempt might be more successful.";
-	mpr(emsg);
-	you.turn_is_over = true;
-	return;
-    }
-
     // When confused, sometimes make a random move
     if (you.confused())
     {
@@ -4229,6 +4209,16 @@ static void _move_player(coord_def move)
             }
         }
 
+        if (!you.attempt_escape()) // false means constricted and did not escape
+        {
+            std::string emsg = "While you don't manage to break free from ";
+	    emsg += env.mons[you.constricted_by].name(DESC_THE,true);
+	    emsg += ", you feel that another attempt might be more successful.";
+	    mpr(emsg);
+	    you.turn_is_over = true;
+	    return;
+        }
+
         std::string verb;
         if (you.flight_mode() == FL_FLY)
             verb = "fly";
@@ -4334,6 +4324,9 @@ static void _move_player(coord_def move)
     {
         did_god_conduct(DID_HASTY, 1, true);
     }
+    // moved and not an attack, clear constriction data
+    if (!attacking)
+        you.clear_all_constrictions();
 }
 
 
