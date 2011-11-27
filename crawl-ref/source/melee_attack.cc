@@ -1700,84 +1700,6 @@ void melee_attack::set_attack_verb()
             attack_verb = "clumsily bash";
     }
 
-    // Take transformations into account, if no weapon is wielded.
-    if (weap_type == WPN_UNARMED
-        && you.form != TRAN_NONE
-        && you.form != TRAN_APPENDAGE)
-    {
-        switch (you.form)
-        {
-        case TRAN_SPIDER:
-        case TRAN_BAT:
-        case TRAN_PIG:
-            if (damage_done < HIT_WEAK)
-                attack_verb = "hit";
-            else if (damage_done < HIT_STRONG)
-                attack_verb = "bite";
-            else
-                attack_verb = "maul";
-            break;
-        case TRAN_BLADE_HANDS:
-            if (damage_done < HIT_WEAK)
-                attack_verb = "hit";
-            else if (damage_done < HIT_MED)
-                attack_verb = "slash";
-            else if (damage_done < HIT_STRONG)
-                attack_verb = "slice";
-            else
-                attack_verb = "shred";
-            break;
-        case TRAN_STATUE:
-        case TRAN_LICH:
-            if (you.has_usable_claws())
-            {
-                if (damage_done < HIT_WEAK)
-                    attack_verb = "scratch";
-                else if (damage_done < HIT_MED)
-                    attack_verb = "claw";
-                else if (damage_done < HIT_STRONG)
-                    attack_verb = "mangle";
-                else
-                    attack_verb = "eviscerate";
-                break;
-            }
-            else if (you.has_usable_tentacles())
-            {
-                if (damage_done < HIT_WEAK)
-                    attack_verb = "tentacle-slap";
-                else if (damage_done < HIT_MED)
-                    attack_verb = "bludgeon";
-                else if (damage_done < HIT_STRONG)
-                    attack_verb = "batter";
-                else
-                    attack_verb = "thrash";
-                break;
-            }
-            // or fall-through
-        case TRAN_ICE_BEAST:
-            if (damage_done < HIT_WEAK)
-                attack_verb = "hit";
-            else if (damage_done < HIT_MED)
-                attack_verb = "punch";
-            else
-                attack_verb = "pummel";
-            break;
-        case TRAN_DRAGON:
-            if (damage_done < HIT_WEAK)
-                attack_verb = "hit";
-            else if (damage_done < HIT_MED)
-                attack_verb = "claw";
-            else if (damage_done < HIT_STRONG)
-                attack_verb = "bite";
-            else
-                attack_verb = "maul";
-            break;
-        case TRAN_NONE:
-        case TRAN_APPENDAGE:
-            break;
-        } // transformations
-    }
-
     // Take normal hits into account.  If the hit is from a weapon with
     // more than one damage type, randomly choose one damage type from
     // it.
@@ -1880,35 +1802,106 @@ void melee_attack::set_attack_verb()
         break;
 
     case -1: // unarmed
-        if (you.damage_type() == DVORP_CLAWING)
+        switch (you.form)
         {
+        case TRAN_SPIDER:
+        case TRAN_BAT:
+        case TRAN_PIG:
             if (damage_done < HIT_WEAK)
-                attack_verb = "scratch";
-            else if (damage_done < HIT_MED)
-                attack_verb = "claw";
+                attack_verb = "hit";
             else if (damage_done < HIT_STRONG)
-                attack_verb = "mangle";
+                attack_verb = "bite";
             else
-                attack_verb = "eviscerate";
-        }
-        else if (you.damage_type() == DVORP_TENTACLE)
-        {
+                attack_verb = "maul";
+            break;
+        case TRAN_BLADE_HANDS:
             if (damage_done < HIT_WEAK)
-                attack_verb = "tentacle-slap";
+                attack_verb = "hit";
             else if (damage_done < HIT_MED)
-                attack_verb = "bludgeon";
+                attack_verb = "slash";
             else if (damage_done < HIT_STRONG)
-                attack_verb = "batter";
+                attack_verb = "slice";
             else
-                attack_verb = "thrash";
-        }
-        else
-        {
-            if (damage_done < HIT_MED)
+                attack_verb = "shred";
+            break;
+        case TRAN_STATUE:
+        case TRAN_LICH:
+            if (you.has_usable_claws())
+            {
+                if (damage_done < HIT_WEAK)
+                    attack_verb = "scratch";
+                else if (damage_done < HIT_MED)
+                    attack_verb = "claw";
+                else if (damage_done < HIT_STRONG)
+                    attack_verb = "mangle";
+                else
+                    attack_verb = "eviscerate";
+                break;
+            }
+            else if (you.has_usable_tentacles())
+            {
+                if (damage_done < HIT_WEAK)
+                    attack_verb = "tentacle-slap";
+                else if (damage_done < HIT_MED)
+                    attack_verb = "bludgeon";
+                else if (damage_done < HIT_STRONG)
+                    attack_verb = "batter";
+                else
+                    attack_verb = "thrash";
+                break;
+            }
+            // or fall-through
+        case TRAN_ICE_BEAST:
+            if (damage_done < HIT_WEAK)
+                attack_verb = "hit";
+            else if (damage_done < HIT_MED)
                 attack_verb = "punch";
             else
                 attack_verb = "pummel";
-        }
+            break;
+        case TRAN_DRAGON:
+            if (damage_done < HIT_WEAK)
+                attack_verb = "hit";
+            else if (damage_done < HIT_MED)
+                attack_verb = "claw";
+            else if (damage_done < HIT_STRONG)
+                attack_verb = "bite";
+            else
+                attack_verb = "maul";
+            break;
+        case TRAN_NONE:
+        case TRAN_APPENDAGE:
+            if (you.damage_type() == DVORP_CLAWING)
+            {
+                if (damage_done < HIT_WEAK)
+                    attack_verb = "scratch";
+                else if (damage_done < HIT_MED)
+                    attack_verb = "claw";
+                else if (damage_done < HIT_STRONG)
+                    attack_verb = "mangle";
+                else
+                    attack_verb = "eviscerate";
+            }
+            else if (you.damage_type() == DVORP_TENTACLE)
+            {
+                if (damage_done < HIT_WEAK)
+                    attack_verb = "tentacle-slap";
+                else if (damage_done < HIT_MED)
+                    attack_verb = "bludgeon";
+                else if (damage_done < HIT_STRONG)
+                    attack_verb = "batter";
+                else
+                    attack_verb = "thrash";
+            }
+            else
+            {
+                if (damage_done < HIT_MED)
+                    attack_verb = "punch";
+                else
+                    attack_verb = "pummel";
+            }
+            break;
+        } // transformations
         break;
 
     case WPN_UNKNOWN:
@@ -1916,6 +1909,9 @@ void melee_attack::set_attack_verb()
         attack_verb = "hit";
         break;
     }
+
+
+    dprf("END ATTACK VERB %s", attack_verb.c_str());
 }
 
 void melee_attack::player_exercise_combat_skills()
