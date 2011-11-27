@@ -510,7 +510,8 @@ bool melee_attack::handle_phase_hit()
     if (attacker != defender && attk_flavour != AF_STEAL
         && defender->alive())
     {
-        mons_apply_attack_flavour();
+        if (attacker->atype() == ACT_MONSTER)
+            mons_apply_attack_flavour();
 
         if (needs_message && !special_damage_message.empty())
             mprf("%s", special_damage_message.c_str());
