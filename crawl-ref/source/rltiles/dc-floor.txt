@@ -217,10 +217,24 @@ bog_green1
 bog_green2
 bog_green3
 
-snake0 FLOOR_SNAKE
-snake1
-snake2
-snake3
+%weight 10
+snake-a0 FLOOR_SNAKE_A
+%weight 3
+snake-a1
+snake-a2
+snake-a3
+%weight 10
+snake-c0 FLOOR_SNAKE_C
+%weight 3
+snake-c1
+snake-c2
+snake-c3
+%weight 10
+snake-d0 FLOOR_SNAKE_D
+%weight 3
+snake-d1
+snake-d2
+snake-d3
 
 ## swamp also doesn't have any unique walls...
 swamp0 FLOOR_SWAMP
