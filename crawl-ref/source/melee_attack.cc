@@ -4285,7 +4285,6 @@ void melee_attack::mons_apply_attack_flavour()
         break;
 
     case AF_HOLY:
-
         if (defender->is_evil() || defender->is_unholy())
             special_damage = attk_damage * 0.75;
 
@@ -4298,7 +4297,6 @@ void melee_attack::mons_apply_attack_flavour()
                  special_attack_punctuation().c_str());
 
         }
-
         break;
 
     case AF_ANTIMAGIC:
