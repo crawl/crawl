@@ -484,6 +484,18 @@ bool melee_attack::handle_phase_hit()
              attacker->atype() == ACT_PLAYER ? "do" : "does");
     }
 
+    if (attacker->atype() == ACT_PLAYER)
+    {
+        // Always upset monster regardless of damage.
+        // However, successful stabs inhibit shouting.
+        behaviour_event(defender->as_monster(), ME_WHACK, MHITYOU,
+                        coord_def(), !stab_attempt);
+
+        // [ds] Monster may disappear after behaviour event.
+        if (!defender->alive())
+            return (true);
+    }
+
     // Check for weapon brand & inflict that damage too
     apply_damage_brand();
 
@@ -562,15 +574,6 @@ bool melee_attack::handle_phase_damaged()
     {
         if (damage_done)
             player_exercise_combat_skills();
-
-        // Always upset monster regardless of damage.
-        // However, successful stabs inhibit shouting.
-        behaviour_event(defender->as_monster(), ME_WHACK, MHITYOU,
-                        coord_def(), !stab_attempt);
-
-        // [ds] Monster may disappear after behaviour event.
-        if (!defender->alive())
-            return (true);
 
         // ugh, inspecting attack_verb here is pretty ugly
         if (damage_done && attack_verb == "trample")
