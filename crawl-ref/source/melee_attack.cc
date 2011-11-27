@@ -164,13 +164,6 @@ melee_attack::melee_attack(actor *attk, actor *defn, bool allow_unarmed,
 
     attacker_body_armour_penalty = attacker->adjusted_body_armour_penalty(1);
     attacker_shield_penalty = attacker->adjusted_shield_penalty(1);
-
-    if (defender && defender->submerged() && can_do_unarmed)
-    {
-        // Unarmed attacks from tentacles are the only ones that can
-        // reach submerged monsters.
-        can_do_unarmed = (attacker->damage_type() == DVORP_TENTACLE);
-    }
 }
 
 bool melee_attack::handle_phase_attempted()
