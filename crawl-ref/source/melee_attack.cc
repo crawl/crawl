@@ -5212,15 +5212,15 @@ void melee_attack::handle_player_constriction()
 	&& defender->constricted_by == NON_ENTITY)
     {
         // calculate to_hit
-        int attackdice = roll_dice(3, you.strength()*you.body_size());
+        int attackdice = roll_dice(3, you.strength()*(you.body_size()+1));
 	int defenddice = roll_dice(1, 3*defender->melee_evasion(attacker)*
-	                                defender->body_size());
+	                                (defender->body_size()+1));
 
 	// if hit, grab
         if (you.body_size() >= defender->body_size()
 	    && !defender->is_insubstantial()
 	    && adjacent(attacker->pos(), defender->pos())
-	    && attackdice > defenddice)
+	    && attackdice >= defenddice)
 	{
 	    defender_grabbed = true;
 	    any_grabbed = true;
@@ -5258,7 +5258,7 @@ void melee_attack::handle_player_constriction()
 		defender = target;
                 damage = (you.strength() - roll_dice(1,3)) / 3;
 		basedam = damage;
-		damage += roll_dice(1, you.dur_has_constricted[i]/10);
+		damage += roll_dice(1, (you.dur_has_constricted[i]/10)+1);
 		durdam = damage;
 	        damage -= random2(1 + (defender->armour_class() / 2));
 		acdam = damage;
@@ -5323,15 +5323,15 @@ bool melee_attack::handle_monster_constriction()
     {
         // calculate to_hit
         int attackdice = roll_dice(1, attacker->as_monster()->hit_dice*
-	                              attacker->body_size());
+	                              (attacker->body_size()+1));
 	int defenddice = roll_dice(1, defender->melee_evasion(attacker)*
-	                              defender->body_size());
+	                              (defender->body_size()+1));
 
 	// if hit, grab
         if (attacker->body_size() >= defender->body_size() 
 	    && !defender->is_insubstantial()
 	    && adjacent(attacker->pos(), defender->pos())
-	    && attackdice > defenddice)
+	    && attackdice >= defenddice)
 	{
 	    defender_grabbed = true;
 	    any_grabbed = true;
@@ -5370,7 +5370,7 @@ bool melee_attack::handle_monster_constriction()
 		defender = target;
                 damage = (attacker->as_monster()->hit_dice+1)/2;
 		basedam = damage;
-		damage += roll_dice(1, attacker->dur_has_constricted[i]/10);
+		damage += roll_dice(1, (attacker->dur_has_constricted[i]/10)+1);
 		durdam = damage;
 	        damage -= random2(1 + (defender->armour_class() / 2));
 		acdam = damage;
