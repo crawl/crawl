@@ -598,6 +598,10 @@ ENDMAP
 #       Using KMONS and KITEM, we could have fruits on the same
 #       square as a tree/plant.
 #
+# Nutritional data is normal/herbi 3/carni 3.
+
+# avg 4.675 chokos
+# 2.8k/6.3k/0 nutrition
 NAME:   blue_anna_choko_field
 TAGS:   fruiting_plant allow_dup
 WEIGHT: 1
@@ -617,6 +621,8 @@ MAP
 .....
 ENDMAP
 
+# avg 6.044 lychees or rambutans
+# 3.6k/8.1k/0 nutrition
 NAME:   blue_anna_soapberry_tree
 TAGS:   fruiting_plant allow_dup
 WEIGHT: 1
@@ -641,6 +647,8 @@ MAP
 .....
 ENDMAP
 
+# avg 6.044 oranges or lemons
+# 6k/13.2k/0 nutrition
 NAME:   blue_anna_citrus_tree
 TAGS:   fruiting_plant allow_dup
 WEIGHT: 2
@@ -665,6 +673,8 @@ MAP
 .....
 ENDMAP
 
+# avg 6.044 apples
+# 4.2k/9.7k/0 nutrition
 NAME:   blue_anna_apple_tree
 TAGS:   fruiting_plant allow_dup
 WEIGHT: 2
@@ -685,6 +695,8 @@ MAP
 .....
 ENDMAP
 
+# avg 6.044 apricots
+# 4.2k/9.7k/0 nutrition
 NAME:   blue_anna_apricot_tree
 TAGS:   fruiting_plant allow_dup
 SUBST:  . = G:20 B:15 .
@@ -705,6 +717,8 @@ MAP
 .....
 ENDMAP
 
+# avg 6.044 pears
+# 4.2k/9.7k/0 nutrition
 NAME:   blue_anna_pyrus_tree
 TAGS:   fruiting_plant allow_dup
 SUBST:  . = G:20 B:15 .
@@ -725,6 +739,8 @@ MAP
 .....
 ENDMAP
 
+# avg 5.756 snozzcumbers
+# 8.6k/17.3k/0 nutrition
 NAME:   blue_anna_bittermelon_vine
 TAGS:   fruiting_plant allow_dup
 WEIGHT: 1
@@ -744,6 +760,8 @@ MAP
 .....
 ENDMAP
 
+# avg 12.5 grapes or 14.236 sultanas
+# 1.2k/3.1k/0 or 1k/2.3k/0 nutrition
 NAME:   blue_anna_grape_vine
 TAGS:   fruiting_plant allow_dup
 WEIGHT: 2
@@ -769,6 +787,8 @@ MAP
 .....
 ENDMAP
 
+# avg 10.875 bananas (all in one pile)
+# 10.9k/23.4k/0 nutrition
 NAME:   blue_anna_musa_stalks
 TAGS:   fruiting_plant allow_dup
 WEIGHT: 2
@@ -790,6 +810,8 @@ MAP
 .....
 ENDMAP
 
+# avg 2.355 strawberries (all in one pile -- looks like a bug!)
+# 471/1170/0 nutrition
 NAME:   blue_anna_strawberry_field
 TAGS:   fruiting_plant allow_dup
 WEIGHT: 2
