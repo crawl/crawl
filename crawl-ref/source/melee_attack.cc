@@ -715,7 +715,7 @@ bool melee_attack::handle_phase_killed()
 
 bool melee_attack::handle_phase_end()
 {
-    if (attacker->atype() == ACT_PLAYER && can_do_unarmed
+    if (attacker->atype() == ACT_PLAYER
         && adjacent(defender->pos(), attacker->pos()))
     {
         // returns whether an aux attack successfully took place
@@ -1252,7 +1252,8 @@ bool melee_attack::player_aux_unarmed()
      */
     unarmed_attack_type baseattack = UNAT_NO_ATTACK;
 
-    baseattack = player_aux_choose_baseattack();
+    if (can_do_unarmed)
+        baseattack = player_aux_choose_baseattack();
 
     for (int i = UNAT_FIRST_ATTACK; i <= UNAT_LAST_ATTACK; ++i)
     {
