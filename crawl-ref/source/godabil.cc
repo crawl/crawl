@@ -3153,7 +3153,6 @@ void cheibriados_temporal_distortion()
         manage_clouds();
     }
     while (--you.duration[DUR_TIME_STEP] > 0);
-    update_level(time * 10);
 
     monster* mon;
     if (mon = monster_at(old_pos))

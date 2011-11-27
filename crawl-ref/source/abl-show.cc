@@ -423,7 +423,7 @@ static const ability_def Ability_List[] =
     // Cheibriados
     { ABIL_CHEIBRIADOS_TIME_BEND, "Bend Time", 3, 0, 50, 1, 0, ABFLAG_NONE},
     { ABIL_CHEIBRIADOS_DISTORTION, "Temporal Distortion",
-      4, 0, 100, 3, 0, ABFLAG_INSTANT},
+      4, 0, 200, 3, 0, ABFLAG_INSTANT},
     { ABIL_CHEIBRIADOS_SLOUCH, "Slouch", 5, 0, 100, 8, 0, ABFLAG_NONE},
     { ABIL_CHEIBRIADOS_TIME_STEP, "Step From Time",
       10, 0, 200, 10, 0, ABFLAG_NONE},
