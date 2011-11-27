@@ -182,7 +182,12 @@ define(["jquery", "comm", "client", "./enums"], function ($, comm, client, enums
         log("close_menu");
 
         if (menu_stack.length == 0)
-            client.hide_dialog();
+        {
+            setTimeout(function () {
+                if (menu_stack.length == 0)
+                    client.hide_dialog();
+            }, 50);
+        }
         else
             display_menu();
     }
