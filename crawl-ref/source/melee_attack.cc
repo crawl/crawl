@@ -484,6 +484,27 @@ bool melee_attack::handle_phase_hit()
              attacker->atype() == ACT_PLAYER ? "do" : "does");
     }
 
+    // Check for weapon brand & inflict that damage too
+    apply_damage_brand();
+
+    // Monsters attacking themselves don't get attack flavour.
+    // The message sequences look too weird.  Also, stealing
+    // attacks aren't handled until after the damage msg. Also,
+    // no attack flavours for dead defenders
+    if (attacker != defender && attk_flavour != AF_STEAL
+        && defender->alive())
+    {
+        mons_apply_attack_flavour();
+
+        if (needs_message && !special_damage_message.empty())
+            mprf("%s", special_damage_message.c_str());
+
+        inflict_damage(special_damage, special_damage_flavour, true);
+    }
+
+    if (attacker->atype() == ACT_PLAYER)
+        player_sustain_passive_damage();
+
     return (true);
 }
 
@@ -535,8 +556,6 @@ bool melee_attack::handle_phase_damaged()
     announce_hit();
     // Inflict stored damage
     damage_done = inflict_damage(damage_done);
-    // Check for weapon brand & inflict that damage too
-    apply_damage_brand();
 
     // TODO: Unify these, added here so we can get rid of player_attack
     if (attacker->atype() == ACT_PLAYER)
@@ -556,8 +575,6 @@ bool melee_attack::handle_phase_damaged()
         // ugh, inspecting attack_verb here is pretty ugly
         if (damage_done && attack_verb == "trample")
             do_knockback();
-
-        player_sustain_passive_damage();
 
         // Thirsty stabbing vampires get to draw blood.
         if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED
@@ -602,22 +619,6 @@ bool melee_attack::handle_phase_damaged()
 
         if (attacker != defender && attk_type == AT_TRAMPLE)
             do_knockback();
-
-        // Monsters attacking themselves don't get attack flavour.
-        // The message sequences look too weird.  Also, stealing
-        // attacks aren't handled until after the damage msg. Also,
-        // no attack flavours for dead defenders
-        if (attacker != defender && attk_flavour != AF_STEAL
-            && defender->alive())
-        {
-            mons_apply_attack_flavour();
-
-            if (needs_message && !special_damage_message.empty())
-                mprf("%s", special_damage_message.c_str());
-
-            inflict_damage(special_damage, special_damage_flavour, true);
-        }
-
 
         // Defender banished.  Bail since the defender is still alive in the
         // Abyss.
@@ -3036,6 +3037,8 @@ bool melee_attack::apply_damage_brand()
     if (needs_message && !special_damage_message.empty())
     {
         mprf("%s", special_damage_message.c_str());
+
+        special_damage_message.clear();
         // Don't do message-only miscasts along with a special
         // damage message.
         if (miscast_level == 0)
