@@ -6,7 +6,8 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge) {
     {
         this.set_cell_size(32, 32);
         this.glyph_mode = false;
-        this.glyph_mode_font = "24px monospace";
+        this.glyph_mode_font_size = 24;
+        this.glyph_mode_font = "monospace";
     }
 
     function in_water(cell)
@@ -167,8 +168,22 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge) {
                 this.ctx.font = prefix + this.glyph_mode_font_name();
                 this.ctx.textAlign = "center";
                 this.ctx.textBaseline = "middle";
-                this.ctx.fillText(map_cell.g,
-                                  x + this.cell_width/2, y + this.cell_height/2);
+
+                this.ctx.save();
+
+                try
+                {
+                    this.ctx.beginPath();
+                    this.ctx.rect(x, y, this.cell_width, this.cell_height);
+                    this.ctx.clip();
+
+                    this.ctx.fillText(map_cell.g,
+                                      x + this.cell_width/2, y + this.cell_height/2);
+                }
+                finally
+                {
+                    this.ctx.restore();
+                }
 
                 this.render_cursors(cx, cy, x, y);
                 return;
