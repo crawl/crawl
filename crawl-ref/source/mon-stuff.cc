@@ -1754,13 +1754,13 @@ int monster_die(monster* mons, killer_type killer,
                     did_god_conduct(DID_KILL_LIVING,
                                     mons->hit_dice, true, mons);
 
+                    // TSO hates natural evil and unholy beings.
                     if (mons->is_unholy())
                     {
                         did_god_conduct(DID_KILL_NATURAL_UNHOLY,
                                         mons->hit_dice, true, mons);
                     }
-
-                    if (mons->is_evil())
+                    else if (mons->is_evil())
                     {
                         did_god_conduct(DID_KILL_NATURAL_EVIL,
                                         mons->hit_dice, true, mons);
