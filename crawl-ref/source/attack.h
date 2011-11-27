@@ -84,7 +84,7 @@ public:
 
 // Public Methods
 public:
-    attack(actor *attk, actor *defn);
+    attack(actor *attk, actor *defn, bool allow_unarmed);
 
     // To-hit is a function of attacker/defender, defined in sub-classes
     virtual int calc_to_hit(bool) = 0;

@@ -25,7 +25,7 @@ enum unchivalric_attack_type
     UCAT_ALLY,
 };
 
-bool fight_melee(actor *attacker, actor *defender);
+bool fight_melee(actor *attacker, actor *defender, bool allow_unarmed = true);
 
 int effective_stat_bonus(int wepType = -1);
 

@@ -66,7 +66,7 @@
  * for each attack. Combat effects should not go here, if at all possible. This
  * is merely a wrapper function which is used to start combat.
  */
-bool fight_melee(actor *attacker, actor *defender)
+bool fight_melee(actor *attacker, actor *defender, bool allow_unarmed)
 {
     if (defender->atype() == ACT_PLAYER)
     {
@@ -94,7 +94,7 @@ bool fight_melee(actor *attacker, actor *defender)
             return (false);
         }
 
-        melee_attack attk(&you, defender);
+        melee_attack attk(&you, defender, allow_unarmed);
 
         // We're trying to hit a monster, break out of travel/explore now.
         if (!travel_kill_monster(defender->type))
@@ -193,14 +193,14 @@ bool fight_melee(actor *attacker, actor *defender)
             break;
         }
         // Skip dummy attacks.
-        if ((attk.type != AT_HIT && attk.flavour != AF_REACH)
+        if ((!allow_unarmed && attk.type != AT_HIT && attk.flavour != AF_REACH)
             || attk.type == AT_SHOOT)
         {
             --effective_attack_number;
             continue;
         }
 
-        melee_attack melee_attk(attacker, defender, attack_number,
+        melee_attack melee_attk(attacker, defender, allow_unarmed, attack_number,
                           effective_attack_number);
         melee_attk.attack();
     }
