@@ -193,8 +193,7 @@ bool fight_melee(actor *attacker, actor *defender)
             break;
         }
         // Skip dummy attacks.
-        if ((attk.type != AT_HIT && attk.flavour != AF_REACH)
-            || attk.type == AT_SHOOT)
+        if (attk.type == AT_SHOOT)
         {
             --effective_attack_number;
             continue;
