@@ -52,7 +52,6 @@ public:
     brand_type      damage_brand;
     skill_type      wpn_skill;
     hands_reqd_type hands;
-    bool            hand_half_bonus;
 
     // Attacker's shield, stored so we can reference it and determine
     // the attacker's combat effectiveness (staff + shield == bad)

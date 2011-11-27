@@ -155,12 +155,6 @@ melee_attack::melee_attack(actor *attk, actor *defn, bool allow_unarmed,
         }
     }
 
-    hand_half_bonus = (can_do_unarmed
-                       && !shield
-                       && weapon
-                       && !weapon->cursed()
-                       && hands == HANDS_HALF);
-
     attacker_visible   = attacker->observable();
     attacker_invisible = (!attacker_visible && you.see_cell(attacker->pos()));
     defender_visible   = defender && defender->observable();
