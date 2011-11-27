@@ -6289,7 +6289,9 @@ int player::res_rotting(bool temp) const
         return 1; // rottable by Zin, not by necromancy
 
     case US_SEMI_UNDEAD:
-        return temp ? 1 : 0;
+        if (temp && you.hunger_state < HS_SATIATED)
+            return 1;
+        return 0; // no permanent resistance
 
     case US_UNDEAD:
         if (!temp && you.form == TRAN_LICH)
