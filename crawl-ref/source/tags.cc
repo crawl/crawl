@@ -1312,6 +1312,7 @@ static void tag_construct_you(writer &th)
     marshallCoord(th, abyssal_state.major_coord);
     marshallFloat(th, abyssal_state.depth);
 
+
     marshallShort(th, you.constricted_by);
     marshallInt(th, you.escape_attempts);
     marshallInt(th, you.dur_been_constricted);
@@ -1320,7 +1321,7 @@ static void tag_construct_you(writer &th)
         marshallShort(th, you.constricting[k]);
 	marshallInt(th, you.dur_has_constricted[k]);
     }
-	
+
     if (!dlua.callfn("dgn_save_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to save Lua data: %s", dlua.error.c_str());
 
@@ -2340,6 +2341,8 @@ static void tag_read_you(reader &th)
     }
 #endif
 
+    if (th.getMinorVersion() >= TAG_MINOR_CONSTRICTION)
+    {
     you.constricted_by = unmarshallShort(th);
     you.escape_attempts = unmarshallInt(th);
     you.dur_been_constricted = unmarshallInt(th);
@@ -2347,6 +2350,7 @@ static void tag_read_you(reader &th)
     {
         you.constricting[k] = unmarshallShort(th);
 	you.dur_has_constricted[k] = unmarshallInt(th);
+    }
     }
 
     if (!dlua.callfn("dgn_load_data", "u", &th))
@@ -3111,6 +3115,7 @@ void marshallMonster(writer &th, const monster& m)
         ASSERT(m.ghost.get());
         marshallGhost(th, *m.ghost);
     }
+    
     marshallShort(th, m.constricted_by);
     marshallInt(th, m.escape_attempts);
     marshallInt(th, m.dur_been_constricted);
@@ -3119,7 +3124,7 @@ void marshallMonster(writer &th, const monster& m)
         marshallShort(th, m.constricting[k]);
 	marshallInt(th, m.dur_has_constricted[k]);
     }
-	
+
     m.props.write(th);
 }
 
@@ -3634,6 +3639,9 @@ void unmarshallMonster(reader &th, monster& m)
     if (mons_is_ghost_demon(m.type))
         m.set_ghost(unmarshallGhost(th));
 
+
+    if (th.getMinorVersion() >= TAG_MINOR_CONSTRICTION)
+    {
     m.constricted_by = unmarshallShort(th);
     m.escape_attempts = unmarshallInt(th);
     m.dur_been_constricted = unmarshallInt(th);
@@ -3642,6 +3650,7 @@ void unmarshallMonster(reader &th, monster& m)
 	    m.constricting[k] = unmarshallShort(th);
 	    m.dur_has_constricted[k] = unmarshallInt(th);
 	}
+    }
 
     m.props.clear();
     m.props.read(th);
