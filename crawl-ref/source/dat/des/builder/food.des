@@ -78,3 +78,200 @@ cpp+.1..+ppc
 cccc....cccc
 cccccccccccc
 ENDMAP
+
+NAME:   hangedman_fish_farm
+DEPTH:  D:7-14
+CHANCE: 100% (D:14), 15%
+TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_pool_fixup \
+        patrolling
+KMONS:  A = merfolk ; trident . spear
+KMONS:  B = big fish / nothing
+KMONS:  C = big fish
+KFEAT:  gBC = shallow_water
+ITEM:   meat ration q:2, bread ration q:2, throwing net
+:       dgn.delayed_decay(_G, 'g', 'big fish corpse')
+MAP
+xxxxxx
+xgxedx
++..fAx
+xCBBBx
+xxxxxx
+ENDMAP
+
+NAME:   hangedman_pestilent_swarm
+DEPTH:  D:8-14
+CHANCE: 100% (D:14), 15%
+TAGS:   uniq_second_food extra chance_second_food no_monster_gen patrolling
+MONS:   spider / shadow / giant firefly / giant frog / brain worm / jelly / goliath beetle
+MONS:   orange rat w:8 / tarantella / jumping spider / yellow wasp / \
+        rock worm / boring beetle
+MONS:   human / elf / nothing
+ITEM:   cheese q:3 / beef jerky q:3 / lemon q:3, potion of porridge
+MAP
+.xxxxxxx
+@xx.x.xcccc
+ ..x1x2cdec
+@xx.x.x+3dc
+.x1x.x2cccc
+ xxxxxxx
+ENDMAP
+
+NAME:   hangedman_little_slice_of_home
+DEPTH:  D:8-14
+CHANCE: 100% (D:14), 10%
+TAGS:   uniq_second_food extra chance_second_food
+KMONS:  A = jelly
+KMONS:  BC = ooze
+KITEM:  C = royal jelly q:3 / royal jelly q:4
+KFEAT:  AB = net trap w:2 / .
+KFEAT:  C = altar_jiyva w:1 / net trap w:1 / . w:20
+MARKER: + = lua:restrict_door()
+MAP
+ .Wxxxxx
+.Wxxxxxxx
+@.xBBAxxx
+ W+BxA+Cx
+@.xBBAxxx
+.Wxxxxxxx
+ .Wxxxxxx
+ENDMAP
+
+NAME:     hangedman_ranch
+DEPTH:    D:8-14
+CHANCE:   100% (D:14), 10%
+TAGS:     uniq_second_food extra chance_second_food no_monster_gen patrolling
+SUBVAULT: Z : fruiting_plant
+KMONS:    A = three-headed hydra / w:5 two-headed hydra
+KMONS:    B = sheep
+KMONS:    C = yak
+KMONS:    D = big kobold
+KMONS:    E = big kobold ; nothing
+KMONS:    F = plant
+KITEM:    C = cheese q:2
+KITEM:    E = falchion ego:flaming ident:type / short sword ego:flaming
+KITEM:    H = meat ration q:2
+KITEM:    I = sabre
+KFEAT:    EF = shallow_water
+MAP
+cccccccccc
+cAH+...CCc
+cIDcD..BBc
+c+ccm+++cc
+x.WFZZZZZx
+xFWWZZZZZx
+xWEFZZZZZx
+xFW.ZZZZZx
+xFFW.W.W.x
+xxxxx@xxxx
+ENDMAP
+
+NAME:   hangedman_tree_tricks
+DEPTH:  D:8-14
+CHANCE: 100% (D:14), 10%
+TAGS:   uniq_second_food extra chance_second_food no_monster_gen
+NSUBST: T = 1:. / 1:t
+KMONS:  1 = wandering mushroom
+KMONS:  2 = oklob sapling
+KITEM:  12A_ = apricot q:2 / pear q:2 / apple q:2 / banana q:2 / lemon q:2 / orange q:2
+KITEM:  B = cloak
+KFEAT:  _ = altar_fedhas
+MAP
+ tttttttttt
+tttt.ttttttt
+@tt1t.tttttt
+t.tt.t.Tt2tt
+t.t.ttT.1.tt
+t.t.ttt1_Att
+t.t1tt2.Attt
+tt.ttttttttt
+ tttttttttt
+ENDMAP
+
+NAME:   hangedman_tell_no_tales
+DEPTH:  D:9-14
+CHANCE: 100% (D:14), 10%
+TAGS:   uniq_second_food extra chance_second_food no_monster_gen no_item_gen
+MONS:   spriggan skeleton / centaur skeleton
+MONS:   troll skeleton / hungry ghost
+MONS:   shadow imp
+: if you.absdepth() < 13 then
+KMONS:  A = vapour spells:shock;shock;shock;.;.;.; name:brume n_rpl n_des w:5 / \
+        unseen horror / nothing w:3
+: else
+KMONS:  A = vapour w:4 / unseen horror / nothing w:1
+: end
+ITEM:   sultana w:8 q:1 / potion of water
+ITEM:   honeycomb q:2, bread ration q:2
+: if crawl.coinflip() then
+:     dgn.delayed_decay(_G, 'g', 'spriggan skeleton')
+: else
+:     dgn.delayed_decay(_G, 'g', 'ogre skeleton')
+: end
+: if crawl.coinflip() then
+:     dgn.delayed_decay(_G, 'A', 'spriggan skeleton')
+: else
+:     dgn.delayed_decay(_G, 'A', 'ogre skeleton')
+: end
+KFEAT:  C = c
+NSUBST: D = 1:A / 2:d / 2:e / 1:g, g = 1:g / .
+MAP
+ cccccCCCCC
+ccxx1xg+DDC
+c.x.x..mDDC
+@.d.x2.mDDC
+c.x.x..CC+C
+ccxx1x.+3fc
+ cccccccccc
+ENDMAP
+
+NAME:    hangedman_stone_soup
+DEPTH:   D:8-14
+CHANCE:  100% (D:14), 10%
+TAGS:    uniq_second_food extra chance_second_food patrolling
+KMONS:   A = kobold
+KMONS:   B = orc
+KMONS:   C = halfling
+KMONS:   D = felid
+KMONS:   E = elf
+KMONS:   F = deep dwarf
+KMONS:   G = human
+KMONS:   H = demigod
+KMONS:   I = demonspawn
+KMONS:   J = octopode
+KMONS:   K = naga
+KMONS:   L = spriggan
+KMONS:   M = merfolk
+KMONS:   N = tengu
+KMONS:   O = ogre
+KMONS:   P = centaur
+KMONS:   Q = troll
+KMONS:   R = draconian
+# Minotaurs are too strong and are busy guarding their labyrinths.
+# The undead don't care much for the culinary arts.
+KITEM:   1 = stone
+KITEM:   Ya = royal jelly / meat ration / bread ration
+KITEM:   b = honeycomb / cheese / apricot q:2 / apple q:2 / choko q:2
+KFEAT:   1Yab = shallow_water
+KMASK:   Yac = no_monster_gen
+MARKER:  Y = lua:fog_machine { \
+                cloud_type = "steam", pow_min = 1, pow_max = 10, delay = 60, \
+                size = 1, walk_dist = 0 \
+             }
+MARKER:  Z = lua:fog_machine { \
+                cloud_type = "flame", pow_min = 100, pow_max = 100, \
+                delay = 10, size = 1, walk_dist = 0, excl_radius = -1 \
+             }
+MARKER:  + = lua:restrict_door()
+NSUBST:  c = 2:a / b
+SHUFFLE: ABCDEFGHIJKLMNOPQR
+MAP
+ .......
+.A.....B.
+..+vvv+..
+..vcccv..
+.ZvY1cv..
+..vcccv..
+..+vvv+..
+.C.....D.
+ .......
+ENDMAP
