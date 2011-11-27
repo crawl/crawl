@@ -6281,7 +6281,7 @@ int player::res_rotting(bool temp) const
 
     switch (is_undead)
     {
-        default:
+    default:
     case US_ALIVE:
         return 0;
 
