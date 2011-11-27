@@ -187,7 +187,7 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         return (true);
     }
     else
-        fight_melee(&you, mons, false);
+        fight_melee(&you, mons);
 
     return (true);
 }
