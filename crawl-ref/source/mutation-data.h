@@ -367,11 +367,11 @@
 { MUT_DEFORMED,                   8,  3,  true,  true,
   "deformed body",
 
-  {"Armour fits poorly on your unusually shaped body.",
+  {"Armour fits poorly on your strangely shaped body.",
    "Armour fits poorly on your deformed body.",
    "Armour fits poorly on your badly deformed body."},
 
-  {"Your body twists unusually.",
+  {"Your body twists strangely.",
    "Your body twists and deforms.",
    "Your body twists and deforms."},
 
