@@ -3414,7 +3414,7 @@ int monster::res_rotting(bool temp) const
     int res = get_mons_resists(this).rotting;
     if (res)
         return (1);
-    switch(holiness())
+    switch (holiness())
     {
     case MH_NATURAL:
     case MH_PLANT: // was 1 before.  Gardening shows it should be -1 instead...
