@@ -770,7 +770,7 @@ static void _describe_nausea(status_info* inf)
     inf->light_colour = BROWN;
     inf->light_text   = "Nausea";
     inf->short_text   = "nauseated";
-    inf->long_text    = (you.hunger_state <= HS_STARVING) ?
+    inf->long_text    = (you.hunger_state <= HS_NEAR_STARVING) ?
                 "You would have trouble eating anything." :
                 "You cannot eat right now.";
 }
