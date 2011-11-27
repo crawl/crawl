@@ -1497,6 +1497,7 @@ int monster_die(monster* mons, killer_type killer,
     }
 
     mons_clear_trapping_net(mons);
+    mons->clear_all_constrictions();
 
     you.remove_beholder(mons);
     you.remove_fearmonger(mons);

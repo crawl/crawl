@@ -315,3 +315,8 @@ bool actor::is_constricting()
     return false;
 }
 
+bool actor::is_constricted()
+{
+    return (constricted_by != NON_ENTITY);
+}
+

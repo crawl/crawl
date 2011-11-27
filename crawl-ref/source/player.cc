@@ -6116,6 +6116,7 @@ int player::gdr_perc() const
 int player::melee_evasion(const actor *act, ev_ignore_type evit) const
 {
     return (player_evasion(evit)
+            - (const_cast<player *>(this)->is_constricted() ? 3 : 0)
             - ((!act || act->visible_to(this)
                 || (evit & EV_IGNORE_HELPLESS)) ? 0 : 10)
             - (you_are_delayed()
@@ -7396,12 +7397,17 @@ bool player::is_constricted_larger()
 
 }
 
+bool player::is_constricted()
+{
+    return (constricted_by != NON_ENTITY);
+}
+
 bool player::attempt_escape()
 {
     size_type thesize;
     int attfactor;
     int randfact;
-    monster themonst;
+    monster *themonst;
 
     if (!is_constricted())
         return true;
@@ -7413,8 +7419,8 @@ bool player::attempt_escape()
     attfactor = thesize * escape_attempts;
 
     randfact = roll_dice(1,5) + 5;
-    themonst = env.mons[constricted_by];
-    randfact += roll_dice(1,themonst.hit_dice);
+    themonst = &env.mons[constricted_by];
+    randfact += roll_dice(1,themonst->hit_dice);
 
     if (attfactor > randfact)
     {
@@ -7426,8 +7432,8 @@ bool player::attempt_escape()
 	mpr(emsg);
 	// update monster's has constricted info
         for (int i = 0; i < 8; i++)
-	    if (themonst.constricting[i] == MHITYOU)
-	        themonst.constricting[i] = NON_ENTITY;
+	    if (themonst->constricting[i] == MHITYOU)
+	        themonst->constricting[i] = NON_ENTITY;
 
 	// update your constricted by info
 	constricted_by = NON_ENTITY;
@@ -7437,6 +7443,52 @@ bool player::attempt_escape()
     }
     else
         return false;
+}
+
+void player::clear_all_constrictions()
+{
+    int myindex = MHITYOU;
+    monster *mons;
+
+    if (constricted_by != NON_ENTITY)
+    {
+        mons = &env.mons[constricted_by];
+	mons->clear_specific_constrictions(myindex);
+    }
+
+    constricted_by = NON_ENTITY;
+    dur_been_constricted = 0;
+    escape_attempts = 0;
+
+    for (int i = 0; i < 8; i++)
+    {
+	if (constricting[i] != NON_ENTITY)
+	{
+	    mons = &env.mons[constricting[i]];
+	    mons->clear_specific_constrictions(myindex);
+	}
+	constricting[i] = NON_ENTITY;
+	dur_has_constricted[i] = 0;
+    }
+}
+
+void player::clear_specific_constrictions(int mind)
+{
+    if (constricted_by == mind)
+    {
+        constricted_by = NON_ENTITY;
+	dur_been_constricted = 0;
+	escape_attempts = 0;
+    }
+     
+    for (int i = 0; i < 8; i++)
+    {
+        if (constricting[i] == mind)
+	{
+	    constricting[i] = NON_ENTITY;
+	    dur_has_constricted[i] = 0;
+	}
+    }
 }
 
 /*
