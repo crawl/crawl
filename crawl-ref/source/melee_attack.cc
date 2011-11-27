@@ -90,15 +90,15 @@
  *             BEGIN PUBLIC FUNCTIONS             *
  **************************************************
 */
-melee_attack::melee_attack(actor *attk, actor *defn, bool allow_unarmed,
+melee_attack::melee_attack(actor *attk, actor *defn,
                            int attack_num, int effective_attack_num)
     :  // Call attack's constructor
-    attack::attack(attk, defn, allow_unarmed),
+    attack::attack(attk, defn),
 
     perceived_attack(false), obvious_effect(false), attack_number(attack_num),
     effective_attack_number(effective_attack_num),
     skip_chaos_message(false), special_damage_flavour(BEAM_NONE),
-    can_do_unarmed(allow_unarmed), stab_attempt(false), stab_bonus(0),
+    stab_attempt(false), stab_bonus(0),
     miscast_level(-1), miscast_type(SPTYP_NONE), miscast_target(NULL)
 {
     attack_occurred = false;
@@ -111,10 +111,6 @@ melee_attack::melee_attack(actor *attk, actor *defn, bool allow_unarmed,
         attacker->armour_tohit_penalty(true);
     attacker_shield_tohit_penalty =
         attacker->shield_tohit_penalty(true);
-
-    can_do_unarmed =
-        attacker->fights_well_unarmed(attacker_armour_tohit_penalty
-                                   + attacker_shield_tohit_penalty);
 
     if (attacker->atype() == ACT_MONSTER)
     {
@@ -1249,9 +1245,13 @@ bool melee_attack::player_aux_unarmed()
      * but still needs to pass the other checks in _extra_aux_attack().
      */
     unarmed_attack_type baseattack = UNAT_NO_ATTACK;
-
-    if (can_do_unarmed)
+    // Unarmed skill gives a chance at getting an aux even without the
+    // corresponding mutation.
+    if (attacker->fights_well_unarmed(attacker_armour_tohit_penalty
+                                   + attacker_shield_tohit_penalty))
+    {
         baseattack = player_aux_choose_baseattack();
+    }
 
     for (int i = UNAT_FIRST_ATTACK; i <= UNAT_LAST_ATTACK; ++i)
     {
