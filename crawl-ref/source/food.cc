@@ -699,7 +699,7 @@ static bool _eat_check(bool check_hunger = true, bool silent = false)
     if (!check_hunger)
         return true;
 
-    if (you.duration[DUR_NAUSEA] && you.hunger_state > HS_STARVING)
+    if (you.duration[DUR_NAUSEA] && you.hunger_state > HS_NEAR_STARVING)
     {
         if (!silent)
         {
@@ -1999,7 +1999,7 @@ static void _eating(object_class_type item_class, int item_type)
 
             if (you.duration[DUR_NAUSEA])
             {
-                // possible only when starving
+                // possible only when starving or near starving
                 mpr("You force it down, but cannot stomach much of it.");
                 food_value /= 2;
             }
