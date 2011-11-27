@@ -25,7 +25,7 @@
  *             BEGIN PUBLIC FUNCTIONS             *
  **************************************************
 */
-attack::attack(actor *attk, actor *defn)
+attack::attack(actor *attk, actor *defn, bool allow_unarmed)
     : attacker(attk), defender(defn), attack_occurred(false),
     cancel_attack(false), did_hit(false), needs_message(false),
     attacker_visible(false), defender_visible(false),

@@ -39,6 +39,8 @@ public:
 
     beam_type special_damage_flavour;
 
+    bool      can_do_unarmed;
+
     bool    stab_attempt;
     int     stab_bonus;
 
@@ -49,7 +51,7 @@ public:
     actor* miscast_target;
 
 public:
-    melee_attack(actor *attacker, actor *defender,
+    melee_attack(actor *attacker, actor *defender, bool allow_unarmed = true,
                  int attack_num = -1, int effective_attack_num = -1);
 
     // Applies attack damage and other effects.

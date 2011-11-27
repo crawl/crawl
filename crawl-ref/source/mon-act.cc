@@ -805,7 +805,7 @@ static bool _handle_reaching(monster* mons)
 
         ASSERT(foe == &you || foe->atype() == ACT_MONSTER);
 
-        fight_melee(mons, foe);
+        fight_melee(mons, foe, false);
 
         if (mons->alive())
         {
