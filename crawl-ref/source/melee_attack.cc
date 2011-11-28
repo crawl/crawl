@@ -604,7 +604,8 @@ bool melee_attack::handle_phase_damaged()
             if (needs_message && !special_damage_message.empty())
                 mprf("%s", special_damage_message.c_str());
 
-            inflict_damage(special_damage, special_damage_flavour, true);
+            if (special_damage > 0)
+            	inflict_damage(special_damage, special_damage_flavour, true);
         }
 
         const bool chaos_attack = damage_brand == SPWPN_CHAOS
@@ -749,8 +750,6 @@ bool melee_attack::attack()
     // Calculate various ev values and begin to check them to determine the
     // correct handle_phase_ handler.
     const int ev = defender->melee_evasion(attacker);
-    const int ev_helpless = defender_invisible ? ev
-        : defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
 
     ev_margin = test_hit(to_hit, ev);
     const bool shield_blocked = attack_shield_blocked(true);
