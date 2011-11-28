@@ -9,30 +9,30 @@
 
 enum food_type
 {
-    FOOD_MEAT_RATION,                  //    0
+    FOOD_MEAT_RATION,
     FOOD_BREAD_RATION,
     FOOD_PEAR,
     FOOD_APPLE,
     FOOD_CHOKO,
-    FOOD_HONEYCOMB,                    //    5
+    FOOD_HONEYCOMB,
     FOOD_ROYAL_JELLY,
     FOOD_SNOZZCUMBER,
     FOOD_PIZZA,
     FOOD_APRICOT,
-    FOOD_ORANGE,                       //   10
+    FOOD_ORANGE,
     FOOD_BANANA,
     FOOD_STRAWBERRY,
     FOOD_RAMBUTAN,
     FOOD_LEMON,
-    FOOD_GRAPE,                        //   15
+    FOOD_GRAPE,
     FOOD_SULTANA,
     FOOD_LYCHEE,
     FOOD_BEEF_JERKY,
     FOOD_CHEESE,
-    FOOD_SAUSAGE,                      //   20
+    FOOD_SAUSAGE,
     FOOD_CHUNK,
     FOOD_AMBROSIA,
-    NUM_FOODS                          //   23
+    NUM_FOODS
 };
 
 #define BERSERK_NUTRITION    700
