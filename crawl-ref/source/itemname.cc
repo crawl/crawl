@@ -141,6 +141,7 @@ std::string item_def::name(description_level_type descrip,
         default:
             buff << "the ";
         case DESC_PLAIN:
+        case DESC_DBNAME:
             break;
         }
     }
