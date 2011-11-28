@@ -1224,11 +1224,12 @@ static void _get_inv_items_to_show(std::vector<const item_def*> &v,
     }
 }
 
-bool any_items_to_select(int selector, bool msg)
+bool any_items_to_select(int selector, bool msg, int excluded_slot)
 {
     for (int i = 0; i < ENDOFPACK; i++)
     {
         if (you.inv[i].defined()
+            && you.inv[i].link != excluded_slot
             && _is_item_selected(you.inv[i], selector))
         {
             return (true);
@@ -1750,13 +1751,15 @@ int prompt_invent_item(const char *prompt,
                         operation_types oper,
                         bool allow_list_known)
 {
-    if (!any_items_to_select(type_expect) && type_expect == OSEL_THROWABLE
+    if (!any_items_to_select(type_expect, false, excluded_slot)
+        && type_expect == OSEL_THROWABLE
         && oper == OPER_FIRE && mtype == MT_INVLIST)
     {
         type_expect = OSEL_ANY;
     }
 
-    if (!any_items_to_select(type_expect) && type_expect != OSEL_WIELD
+    if (!any_items_to_select(type_expect, false, excluded_slot)
+        && type_expect != OSEL_WIELD
         && type_expect != OSEL_BUTCHERY && mtype == MT_INVLIST)
     {
         mprf(MSGCH_PROMPT, "%s",
