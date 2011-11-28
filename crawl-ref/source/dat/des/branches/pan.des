@@ -1587,10 +1587,7 @@ ENDMAP
 
 NAME:   pan_surprise
 TAGS:   pan extra
-KMONS: 1 = executioner
-# Axe disabled, it's now Ignacio's gimmick.  If he fails to make it, you can
-# re-enable; otherwise, we'll axe the axe.
-#KITEM: 1 = executioner's axe
+KMONS:  1 = executioner
 # It may be a surprise for the executioner as well if the player has high
 # stealth -- an alarm trap would be found by most chars who dare Pan and thus
 # spoil the fun.
