@@ -3827,6 +3827,9 @@ bool bolt::determine_damage(monster* mon, int& preac, int& postac, int& final,
     if (!damage_ignores_armour())
     {
         int ac = mon->armour_class();
+        // Armour is less useful against electricity.
+        if (flavour == BEAM_ELECTRICITY)
+            ac /= 2;
         if (is_tracer && preac_max_damage > 0)
         {
             tracer_postac_min = std::max(0, preac_min_damage - ac);
