@@ -4980,8 +4980,11 @@ bool melee_attack::_player_vampire_draws_blood(const monster* mon, const int dam
 {
     ASSERT(you.species == SP_VAMPIRE);
 
-    if (!_vamp_wants_blood_from_monster(mon))
+    if (!_vamp_wants_blood_from_monster(mon) ||
+        (!adjacent(defender->pos(), attacker->pos()) && needs_bite_msg))
+    {
         return (false);
+    }
 
     const corpse_effect_type chunk_type = mons_corpse_effect(mon->type);
 
