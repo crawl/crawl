@@ -1689,8 +1689,7 @@ TAGS:   pan
 ORIENT: encompass
 KMONS:  1 = angel
 KMONS:  2 = cherub
-KMONS:  3 = cherub hd:25 name:seraph n_rpl n_spe col:lightmagenta \
-            tile:mons_seraph ; blessed great sword ego:flaming . fire dragon armour \
+KMONS:  3 = seraph ; blessed great sword ego:flaming . fire dragon armour \
             ego:positive_energy
 KMONS:  4 = ophan
 KMONS:  5 = daeva
@@ -1699,8 +1698,8 @@ KMONS:  7 = apis
 KMONS:  8 = shedu band
 # please add more types as they get usable
 TILE:   c = wall_church
-: _G.set_random_mon_list("angel / cherub / ophan / daeva / pearl dragon / " ..
-:                        "apis / shedu / apis / shedu / angel")
+: _G.set_random_mon_list("angel / cherub / seraph / ophan / daeva / " ..
+:                        "pearl dragon / apis / shedu / paladin / angel")
 MAP
 .
 ENDMAP

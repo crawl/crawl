@@ -912,8 +912,22 @@ static item_make_species_type _give_weapon(monster* mon, int level,
                                        WPN_BLESSED_SCIMITAR,
                                        WPN_BLESSED_FALCHION,
                                        -1);
+        item.plus  = random2(5);
+        item.plus2 = random2(5);
         // but flaming not holy wrath
         set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
+        item.flags |= ISFLAG_KNOW_TYPE;
+        break;
+
+    case MONS_SERAPH:
+        item_race  = MAKE_ITEM_NO_RACE;
+        force_item     = true;
+        item.base_type = OBJ_WEAPONS;
+        item.sub_type  = WPN_BLESSED_GREAT_SWORD;
+        set_item_ego_type(item, OBJ_WEAPONS, SPWPN_FLAMING);
+        // highly enchanted, we're top rank
+        item.plus  = 3 + random2(6);
+        item.plus2 = 3 + random2(6);
         item.flags |= ISFLAG_KNOW_TYPE;
         break;
 
@@ -1892,6 +1906,15 @@ void give_armour(monster* mon, int level, bool spectral_orcs)
         item_race = MAKE_ITEM_NO_RACE;
         item.base_type = OBJ_ARMOUR;
         item.sub_type  = ARM_ROBE;
+        break;
+
+    case MONS_SERAPH:
+        item_race = MAKE_ITEM_NO_RACE;
+        item.base_type = OBJ_ARMOUR;
+        // obscenely good, don't ever place them randomly
+        item.sub_type  = coinflip() ? ARM_PEARL_DRAGON_ARMOUR
+                                    : ARM_FIRE_DRAGON_ARMOUR;
+        level = MAKE_GOOD_ITEM;
         break;
 
     // Centaurs sometimes wear barding.
