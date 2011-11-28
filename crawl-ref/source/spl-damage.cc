@@ -309,7 +309,7 @@ spret_type cast_chain_lightning(int pow, const actor *caster, bool fail)
         beam.source = source;
         beam.target = target;
         beam.colour = LIGHTBLUE;
-        beam.damage = calc_dice(5, 12 + pow * 2 / 3);
+        beam.damage = calc_dice(5, 10 + pow * 2 / 3);
 
         // Be kinder to the caster.
         if (target == caster->pos())
