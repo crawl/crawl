@@ -5861,7 +5861,7 @@ int player::adjusted_body_armour_penalty(int scale, bool use_size) const
 
     return ((base_ev_penalty
              + std::max(0, 3 * base_ev_penalty - strength()))
-            * (450 - skill(SK_ARMOUR))
+            * (450 - skill(SK_ARMOUR, 10))
             * scale
             / 450);
 }
