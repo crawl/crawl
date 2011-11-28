@@ -254,6 +254,7 @@ enum attribute_type
     ATTR_APPENDAGE,            // eq slot of Beastly Appendage
     ATTR_TITHE_BASE,           // Remainder of untithed gold.
     ATTR_EVOL_XP,              // XP gained since last evolved mutation
+    ATTR_LIFE_GAINED,          // XL when a felid gained a life.
     NUM_ATTRIBUTES
 };
 

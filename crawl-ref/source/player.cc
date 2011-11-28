@@ -2780,9 +2780,6 @@ void forget_map(int chance_forgotten, bool force)
 
 int get_exp_progress()
 {
-    if (you.experience_level >= 27)
-        return 0;
-
     const int current = exp_needed(you.experience_level);
     const int next    = exp_needed(you.experience_level + 1);
     return ((you.experience - current) * 100 / (next - current));
@@ -2931,16 +2928,24 @@ static void _draconian_scale_colour_message()
     }
 }
 
+bool will_gain_life(int lev)
+{
+    if (lev < you.attribute[ATTR_LIFE_GAINED] - 2)
+        return false;
+
+    return (you.lives + you.deaths < (lev - 1) / 3);
+}
+
 static void _felid_extra_life()
 {
-    if (you.lives + you.deaths < (you.max_level - 1) / 3
-        && you.lives + you.deaths < 8
+    if (will_gain_life(you.max_level)
         && you.lives < 2)
     {
         you.lives++;
         mpr("Extra life!", MSGCH_INTRINSIC_GAIN);
+        you.attribute[ATTR_LIFE_GAINED] = you.max_level;
+        // Should play the 1UP sound from SMB...
     }
-    // Should play the 1UP sound from SMB...
 }
 
 void level_change(bool skip_attribute_increase)
@@ -2953,7 +2958,12 @@ void level_change(bool skip_attribute_increase)
     you.redraw_experience = true;
 
     while (you.experience < exp_needed(you.experience_level))
+    {
         lose_level();
+        // Allow a spare after two levels (we just lost one); the exact value
+        // doesn't matter here.
+        you.attribute[ATTR_LIFE_GAINED] = 0;
+    }
 
     while (you.experience_level < 27
            && you.experience >= exp_needed(you.experience_level + 1))

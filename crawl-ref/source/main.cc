@@ -1567,16 +1567,33 @@ static void _experience_check()
          you.experience_level,
          species_name(you.species).c_str(),
          you.class_name.c_str());
+    int perc = get_exp_progress();
 
     if (you.experience_level < 27)
     {
-        mprf("You are %d%% of the way to level %d.", get_exp_progress(),
+        mprf("You are %d%% of the way to level %d.", perc,
               you.experience_level + 1);
     }
     else
     {
         mpr("I'm sorry, level 27 is as high as you can go.");
         mpr("With the way you've been playing, I'm surprised you got this far.");
+    }
+
+    if (you.species == SP_FELID)
+    {
+        int xl = you.experience_level;
+        // calculate the "real" level
+        while (you.experience >= exp_needed(xl + 1))
+            xl++;
+        int nl = you.max_level;
+        // and the next level you'll get a life
+        do nl++; while (!will_gain_life(nl));
+        perc = (nl - xl) * 100 - perc;
+        mprf(you.lives < 2 ?
+             "You'll get an extra life in %d.%02d levels worth of XP." :
+             "If you died right now, you'd get an extra life in %d.%02d levels worth of XP.",
+             perc / 100, perc % 100);
     }
 
     handle_real_time();
