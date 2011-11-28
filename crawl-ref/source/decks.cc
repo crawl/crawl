@@ -403,9 +403,9 @@ static const deck_archetype* _random_sub_deck(uint8_t deck_type)
 static card_type _choose_from_archetype(const deck_archetype* pdeck,
                                         deck_rarity_type rarity)
 {
-    // We assume here that common == 1, rare == 2, legendary == 3.
-    // Rarity 0 (random) should have been replaced by one of the others by now.
-    ASSERT(rarity > 0);
+    // Random rarity should have been replaced by one of the others by now.
+    ASSERT(rarity >= DECK_RARITY_COMMON);
+    ASSERT(rarity <= DECK_RARITY_LEGENDARY);
 
     // FIXME: We should use one of the various choose_random_weighted
     // functions here, probably with an iterator, instead of
@@ -418,8 +418,8 @@ static card_type _choose_from_archetype(const deck_archetype* pdeck,
         const card_with_weights& cww = pdeck[i];
         if (_card_forbidden(cww.card))
             continue;
-        totalweight += cww.weight[rarity - 1];
-        if (x_chance_in_y(cww.weight[rarity - 1], totalweight))
+        totalweight += cww.weight[rarity - DECK_RARITY_COMMON];
+        if (x_chance_in_y(cww.weight[rarity - DECK_RARITY_COMMON], totalweight))
             result = cww.card;
     }
     return result;
