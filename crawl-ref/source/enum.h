@@ -468,10 +468,10 @@ enum branch_type                // you.where_are_you
 };
 
 enum burden_state_type          // you.burden_state
-{
-    BS_UNENCUMBERED,            //    0
-    BS_ENCUMBERED = 2,          //    2
-    BS_OVERLOADED = 5,          //    5
+{   // these values increase hunger and divide stealth
+    BS_UNENCUMBERED = 0,
+    BS_ENCUMBERED   = 2,
+    BS_OVERLOADED   = 5,
 };
 
 enum canned_message_type
@@ -1610,8 +1610,8 @@ enum god_type
     NUM_GODS,                          // always after last god
 
     GOD_RANDOM = 100,
-    GOD_NAMELESS = 101,                // for monsters with non-player gods
-    GOD_VIABLE = 102,
+    GOD_NAMELESS,                      // for monsters with non-player gods
+    GOD_VIABLE,
 };
 
 enum holy_word_source_type
@@ -1742,8 +1742,8 @@ enum job_type
     NUM_JOBS,                          // always after the last job
 
     JOB_UNKNOWN = 100,
-    JOB_RANDOM  = 101,
-    JOB_VIABLE  = 102,
+    JOB_RANDOM,
+    JOB_VIABLE,
 };
 
 enum KeymapContext
@@ -2682,7 +2682,7 @@ enum mutation_type
     MUT_EVOLUTION,
     NUM_MUTATIONS,
 
-    RANDOM_MUTATION = NUM_MUTATIONS + 1,
+    RANDOM_MUTATION,
     RANDOM_XOM_MUTATION,
     RANDOM_GOOD_MUTATION,
     RANDOM_BAD_MUTATION,
