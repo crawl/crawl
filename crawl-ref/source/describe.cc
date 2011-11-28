@@ -1846,13 +1846,13 @@ std::string get_item_description(const item_def &item, bool verbose,
                 if (item_type_known(item))
                 {
                     description << "[ERROR: no desc for item name '" << db_name
-                                << "']";
+                                << "']\n";
                 }
                 else
                 {
-                    description << article_a(item.name(DESC_A, true,
-                                                       false, false), false);
-                    description << ".";
+                    description << uppercase_first(item.name(DESC_A, true,
+                                                             false, false));
+                    description << ".\n";
                 }
             }
             else
@@ -1952,7 +1952,6 @@ std::string get_item_description(const item_def &item, bool verbose,
         {
             description << "\nUnfortunately, it has no charges left.";
         }
-        description << "\n";
         break;
 
     case OBJ_CORPSES:
@@ -2083,14 +2082,14 @@ std::string get_item_description(const item_def &item, bool verbose,
                 else
                     description << desc;
             }
-            std::string stats = "";
+            std::string stats = "\n";
             append_weapon_stats(stats, item);
             description << stats;
             description << "\n\nIt falls into the 'Maces & Flails' category.";
         }
         else
         {
-            std::string stats = "";
+            std::string stats = "\n";
             append_weapon_stats(stats, item);
             description << stats;
             description << "\n\nIt falls into the 'Staves' category.";
