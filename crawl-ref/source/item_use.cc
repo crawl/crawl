@@ -4850,15 +4850,28 @@ static bool _scroll_modify_item(item_def scroll)
     // Get the slot of the scroll just read.
     int item_slot = scroll.link;
 
-    // Get the slot of the item the scroll is to be used on.
-    // Ban the scroll's own slot from the prompt to avoid the stupid situation
-    // where you use identify on itself.
-    item_slot = prompt_invent_item("Use on which item? (\\ to view known items)",
-                                   MT_INVLIST, OSEL_ANY, true, true, false, 0,
-                                   item_slot, NULL, OPER_ANY, true);
+    do
+    {
+        // Get the slot of the item the scroll is to be used on.
+        // Ban the scroll's own slot from the prompt to avoid the stupid situation
+        // where you use identify on itself.
+        item_slot = prompt_invent_item("Use on which item? (\\ to view known items)",
+                                       MT_INVLIST, OSEL_ANY, true, true, false, 0,
+                                       item_slot, NULL, OPER_ANY, true);
 
-    if (prompt_failed(item_slot))
-        return (false);
+        if (item_slot == PROMPT_NOTHING)
+            return (false);
+
+        if (item_slot == PROMPT_ABORT
+            && yesno("Really abort (and waste the scroll)?"))
+        {
+            canned_msg(MSG_OK);
+            return (false);
+        }
+
+        ASSERT_SAVE(item_slot >= 0);
+    }
+    while (item_slot < 0);
 
     item_def &item = you.inv[item_slot];
 
