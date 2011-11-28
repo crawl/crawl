@@ -968,9 +968,9 @@ ENDMAP
 # This vault was built by evilmike, but the idea is mikee's. Who is really the
 # evil one here?
 NAME:   mikee_hates_you
-DEPTH:  D:9-27
+DEPTH:  D:13-27
 KPROP:  l = no_cloud_gen
-KMONS:  1 = generate_awake siren ; trident ego:distortion | trident ego:venom
+KMONS:  1 = generate_awake siren ; trident ego:distortion w:5 | trident ego:venom
 KITEM:  1 = acquire any
 MARKER: ! = lua:fog_machine { \
                 cloud_type = "foul pestilence", \
