@@ -809,7 +809,10 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
     description = "";
 
     if (verbose)
+    {
+        description += "\n";
         append_weapon_stats(description, item);
+    }
 
     int spec_ench = get_weapon_brand(item);
     int damtype = get_vorpal_type(item);
@@ -965,7 +968,7 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
         std::string rand_desc = _randart_descrip(item);
         if (!rand_desc.empty())
         {
-            description += "\n\n";
+            description += "\n";
             description += rand_desc;
         }
 
@@ -1290,6 +1293,7 @@ static std::string _describe_armour(const item_def &item, bool verbose)
         && item.sub_type != ARM_BUCKLER
         && item.sub_type != ARM_LARGE_SHIELD)
     {
+        description += "\n";
         append_armour_stats(description, item);
     }
 
@@ -1392,7 +1396,7 @@ static std::string _describe_armour(const item_def &item, bool verbose)
         std::string rand_desc = _randart_descrip(item);
         if (!rand_desc.empty())
         {
-            description += "\n\n";
+            description += "\n";
             description += rand_desc;
         }
 
@@ -1807,12 +1811,12 @@ std::string get_item_description(const item_def &item, bool verbose,
 
             if (item_type_known(item) && desc_id[0] != '\0')
             {
-                description << desc_id << "\n";
+                description << desc_id;
                 need_base_desc = false;
             }
             else if (desc[0] != '\0')
             {
-                description << desc << "\n";
+                description << desc;
                 need_base_desc = false;
             }
         }
@@ -1831,7 +1835,7 @@ std::string get_item_description(const item_def &item, bool verbose,
                 if (count_desc_lines(db_desc, lineWidth)
                     + count_desc_lines(quote, lineWidth) <= height)
                 {
-                    if (!db_desc.empty())
+                    if (!db_desc.empty() && !quote.empty())
                         db_desc += "\n";
                     db_desc += quote;
                 }
@@ -1842,29 +1846,24 @@ std::string get_item_description(const item_def &item, bool verbose,
                 if (item_type_known(item))
                 {
                     description << "[ERROR: no desc for item name '" << db_name
-                                << "']\n";
+                                << "']";
                 }
                 else
                 {
                     description << article_a(item.name(DESC_A, true,
                                                        false, false), false);
-                    description << ".\n";
+                    description << ".";
                 }
             }
             else
                 description << db_desc;
 
-            if (item.base_type == OBJ_WANDS
-                || item.base_type == OBJ_MISSILES
-                || item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK)
-            {
-                // Get rid of newline at end of description, so that
-                // either the wand "no charges left" or the meat chunk
-                // "unpleasant" description can follow on the same line.
-                // Same for missiles' descriptions.
-                description.seekp(description.tellp() - (std::streamoff)2);
-                description << " ";
-            }
+            // Get rid of newline at end of description; in most cases we
+            // will be adding "\n\n" immediately, and we want only one,
+            // not two, blank lines.  This allow allows the "unpleasant"
+            // message for chunks to appear on the same line.
+            description.seekp((std::streamoff)-1, std::ios_base::cur);
+            description << " ";
         }
     }
 
@@ -2029,7 +2028,6 @@ std::string get_item_description(const item_def &item, bool verbose,
                 description << "\n\n" << god_name(you.religion) << " disapproves "
                                "of eating such meat.";
             }
-            description << "\n";
         }
         break;
 
