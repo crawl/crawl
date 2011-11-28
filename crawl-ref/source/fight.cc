@@ -192,8 +192,9 @@ bool fight_melee(actor *attacker, actor *defender)
                 attacker->as_monster()->lose_energy(EUT_ATTACK);
             break;
         }
-        // Skip dummy attacks.
-        if (attk.type == AT_SHOOT)
+        // Skip invalid and dummy attacks.
+        if (!adjacent(attacker->pos(), defender->pos()) && attk.type != AT_HIT
+            && attk.flavour != AF_REACH || attk.type == AT_SHOOT)
         {
             --effective_attack_number;
             continue;
