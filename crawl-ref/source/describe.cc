@@ -2193,7 +2193,7 @@ std::string get_item_description(const item_def &item, bool verbose,
                     << "use of such an item.";
     }
 
-    if (origin_describable(item))
+    if (verbose && origin_describable(item))
         description << "\n" << origin_desc(item) << ".";
 
     if (verbose)
