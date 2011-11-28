@@ -2472,6 +2472,7 @@ enum monster_type                      // (int) menv[].type
     MONS_GNOLL_SERGEANT,
     MONS_CRAWLING_CORPSE,
     MONS_MACABRE_MASS,
+    MONS_SERAPH,
 
     NUM_MONSTERS,                      // used for polymorph
 
