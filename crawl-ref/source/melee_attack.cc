@@ -484,6 +484,9 @@ bool melee_attack::handle_phase_hit()
              attacker->atype() == ACT_PLAYER ? "do" : "does");
     }
 
+    // Check for weapon brand & inflict that damage too
+    apply_damage_brand();
+
     if (attacker->atype() == ACT_PLAYER)
     {
         // Always upset monster regardless of damage.
@@ -495,9 +498,6 @@ bool melee_attack::handle_phase_hit()
         if (!defender->alive())
             return (true);
     }
-
-    // Check for weapon brand & inflict that damage too
-    apply_damage_brand();
 
     // Monsters attacking themselves don't get attack flavour.
     // The message sequences look too weird.  Also, stealing
@@ -1909,9 +1909,6 @@ void melee_attack::set_attack_verb()
         attack_verb = "hit";
         break;
     }
-
-
-    dprf("END ATTACK VERB %s", attack_verb.c_str());
 }
 
 void melee_attack::player_exercise_combat_skills()
