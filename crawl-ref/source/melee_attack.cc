@@ -797,9 +797,6 @@ bool melee_attack::attack()
             return (false);
         }
 
-        if (to_hit >= ev && ev_helpless > ev)
-            defender->props["helpless"] = true;
-
         handle_phase_hit();
     }
     else
@@ -1393,9 +1390,6 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
              you.can_see(defender) ? ", but do no damage" : "");
     }
 
-    if (defender->props.exists("helpless"))
-        defender->props.erase("helpless");
-
     if (defender->as_monster()->hit_points < 1)
     {
         _monster_die(defender->as_monster(), KILL_YOU, NON_MONSTER);
@@ -1649,9 +1643,6 @@ int melee_attack::player_stab(int damage)
     {
         // Construct reasonable message.
         stab_message();
-
-        if (defender->props.exists("helpless"))
-            defender->props.erase("helpless");
 
         practise(EX_WILL_STAB);
     }
@@ -5057,6 +5048,8 @@ int melee_attack::calc_stat_to_dam_base()
 
 void melee_attack::stab_message()
 {
+    defender->props["helpless"] = true;
+
     switch (stab_bonus)
     {
     case 6:     // big melee, monster surrounded/not paying attention
@@ -5098,6 +5091,8 @@ void melee_attack::stab_message()
               defender->pronoun(PRONOUN_REFLEXIVE).c_str());
         break;
     }
+
+    defender->props.erase("helpless");
 }
 
 bool melee_attack::_vamp_wants_blood_from_monster(const monster* mon)
