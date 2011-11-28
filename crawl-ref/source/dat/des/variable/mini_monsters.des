@@ -942,6 +942,7 @@ ENDMAP
 
 NAME:  nooodl_orcs_dogs
 DEPTH: D:10-, Orc
+TAGS:  mini_float
 : if you.absdepth() > 18 then
 MONS:  w:5 orc warlord / orc knight / orc warrior / orc sorcerer / w:5 orc wizard
 : elseif you.absdepth() > 13 then
