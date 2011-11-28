@@ -698,11 +698,17 @@ bool melee_attack::handle_phase_killed()
         unrand_entry->fight_func.melee_effects(weapon, attacker, defender,
                                                true, special_damage);
 
-    killer_type killer = attacker->atype() == ACT_PLAYER
-                   ? KILL_YOU
-                   : (attacker->as_monster()->confused_by_you() ? KILL_YOU_CONF
-                                                                : KILL_MON);
-    _monster_die(defender->as_monster(), killer, NON_MONSTER);
+    killer_type killer = KILL_YOU;
+    int kindex = NON_MONSTER;
+
+    if (attacker->atype() == ACT_MONSTER)
+    {
+        const monster *kmons = attacker->as_monster();
+        killer = kmons->confused_by_you() ? KILL_YOU_CONF : KILL_MON;
+        kindex = kmons->mindex();
+    }
+
+    _monster_die(defender->as_monster(), killer, kindex);
 
     return (true);
 }
