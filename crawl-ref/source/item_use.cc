@@ -2629,7 +2629,7 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
 
         // Lower accuracy if held in a net.
         if (you.attribute[ATTR_HELD])
-            baseHit /= 2 - 1;
+            baseHit = baseHit / 2 - 1;
 
         // For all launched weapons, maximum effective specific skill
         // is twice throwing skill.  This models the fact that no matter
