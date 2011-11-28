@@ -666,8 +666,8 @@ void handle_delay()
             if (delay.type == DELAY_BOTTLE_BLOOD)
             {
                 mprf(MSGCH_MULTITURN_ACTION,
-                     "You start bottling blood from the %s.",
-                     mitm[delay.parm1].name(DESC_PLAIN).c_str());
+                     "You start bottling blood from %s.",
+                     mitm[delay.parm1].name(DESC_THE).c_str());
             }
             else
             {
@@ -681,8 +681,8 @@ void handle_delay()
                 default: tool = you.inv[delay.parm3].name(DESC_QUALNAME);
                 }
                 mprf(MSGCH_MULTITURN_ACTION,
-                     "You start butchering the %s with your %s.",
-                     mitm[delay.parm1].name(DESC_PLAIN).c_str(), tool.c_str());
+                     "You start butchering %s with your %s.",
+                     mitm[delay.parm1].name(DESC_THE).c_str(), tool.c_str());
             }
             break;
 
@@ -1194,9 +1194,9 @@ static void _finish_delay(const delay_queue_item &delay)
             }
             else
             {
-                mprf("You finish %s the %s into pieces.",
+                mprf("You finish %s %s into pieces.",
                      delay.parm3 <= SLOT_CLAWS ? "ripping" : "chopping",
-                     mitm[delay.parm1].name(DESC_PLAIN).c_str());
+                     mitm[delay.parm1].name(DESC_THE).c_str());
 
                 if (god_hates_cannibalism(you.religion)
                     && is_player_same_species(item.plus))
