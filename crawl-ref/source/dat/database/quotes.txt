@@ -75,6 +75,17 @@ A tree
     -Smokey the Bear
 %%%%
 ####################################################
+# Spells
+####################################################
+Ice Storm
+
+"Neither Deluge Nor Ice Storm Nor The Black Silence Of The Netherhells Shall
+ Stay These Messengers About Their Sacred Business. Do Not Ask Us About
+ Sabre-Tooth Tigers, Tar Pits, Big Green Things With Teeth Or The Goddess
+ Czol."
+    -Anghammarad, "Going Postal", Terry Pratchett.
+%%%%
+####################################################
 # Items
 ####################################################
 apple
