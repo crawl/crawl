@@ -2511,7 +2511,7 @@ bool book_has_title(const item_def &book)
 
 bool is_dangerous_spellbook(const int book_type)
 {
-    switch(book_type)
+    switch (book_type)
     {
     case BOOK_NECRONOMICON:
     case BOOK_GRAND_GRIMOIRE:
