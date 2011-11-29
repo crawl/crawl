@@ -118,8 +118,11 @@ bool SkillMenuEntry::is_selectable(bool keep_hotkey)
         return false;
     }
 
-    if (!you.can_train[m_sk] && !is_set(SKMF_RESKILL_TO))
+    if (!you.can_train[m_sk] && !is_set(SKMF_RESKILL_TO)
+        && !is_set(SKMF_RESKILL_FROM))
+    {
         return false;
+    }
 
     if (mastered())
     {
