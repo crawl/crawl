@@ -414,9 +414,6 @@ bool melee_attack::handle_phase_hit()
         if (crawl_state.game_is_hints())
             Hints.hints_melee_counter++;
 
-        // Check for stab (and set stab_attempt and stab_bonus)
-        player_stab_check();
-
         // TODO: Remove this (placed here so I can get rid of player_attack)
         if (you.religion == GOD_BEOGH
             && mons_genus(defender->mons_species()) == MONS_ORC
@@ -743,9 +740,8 @@ bool melee_attack::attack()
     // Calculate various ev values and begin to check them to determine the
     // correct handle_phase_ handler.
     const int ev = defender->melee_evasion(attacker);
-
     ev_margin = test_hit(to_hit, ev);
-    const bool shield_blocked = attack_shield_blocked(true);
+    bool shield_blocked = attack_shield_blocked(true);
 
     // Stuff for god conduct, this has to remain here for scope reasons.
     god_conduct_trigger conducts[3];
@@ -764,6 +760,14 @@ bool melee_attack::attack()
             dec_penance(GOD_ELYVILON, 1);
 
             return (false);
+        }
+        // Check for stab (and set stab_attempt and stab_bonus)
+        player_stab_check();
+        // Make sure we hit if we passed the stab check.
+        if (stab_attempt && stab_bonus > 0)
+        {
+            ev_margin = AUTOMATIC_HIT;
+            shield_blocked = false;
         }
     }
 
