@@ -172,12 +172,55 @@ bool melee_attack::handle_phase_attempted()
             targetter_smite hitfunc(attacker, 1, 1, 1);
             hitfunc.set_aim(defender->pos());
             if (stop_attack_prompt(hitfunc, "attack"))
+            {
+                cancel_attack = true;
                 return (false);
+            }
         }
         else if (stop_attack_prompt(defender->as_monster(), false,
                                     attacker->pos()))
         {
+            cancel_attack = true;
             return (false);
+        }
+    }
+    // Set delay now that we know the attack won't be cancelled.
+    if (attacker->atype() == ACT_PLAYER)
+    {
+        you.time_taken = calc_attack_delay();
+    }
+    else
+    {
+        // Initial attack causes energy to be used for all attacks.  No
+        // additional energy is used for unarmed attacks.
+        if (effective_attack_number == 0)
+            attacker->lose_energy(EUT_ATTACK);
+        // Monsters lose additional energy only for the first two weapon
+        // attacks; subsequent hits are free.
+        if (effective_attack_number < 1)
+        {
+            final_attack_delay = calc_attack_delay();
+            if (damage_brand == SPWPN_SPEED)
+                final_attack_delay = final_attack_delay / 2 + 1;
+
+            // speed adjustment for weapon-using monsters
+            if (final_attack_delay > 0)
+            {
+                const int atk_speed =
+                    attacker->as_monster()->action_energy(EUT_ATTACK);
+
+                // only get one third penalty/bonus for second weapons.
+                if (effective_attack_number > 0)
+                {
+                    final_attack_delay =
+                        div_rand_round((2 * atk_speed + final_attack_delay), 3);
+                }
+
+                int delta =
+                    div_rand_round((final_attack_delay - 10 + (atk_speed - 10)), 2);
+                if (delta > 0)
+                    attacker->as_monster()->speed_increment -= delta;
+            }
         }
     }
 
@@ -191,11 +234,6 @@ bool melee_attack::handle_phase_attempted()
 
     // The attacker loses nutrition.
     attacker->make_hungry(3, true);
-
-    // Initial attack causes energy to be used for all attacks.  No
-    // additional energy is used for unarmed attacks.
-    if (effective_attack_number == 0)
-        attacker->lose_energy(EUT_ATTACK);
 
     // Xom thinks fumbles are funny...
     if (attacker->fumbles_attack())
@@ -261,12 +299,6 @@ bool melee_attack::handle_phase_blocked()
 
         if (attacker->atype() == ACT_PLAYER)
         {
-            // Player incurs their attack delay, of course.
-            // TODO: potentially remove this; since this code has been pushed
-            // back in the time line of attack sequencing, we may have already
-            // incured the attacker's delay...
-            you.time_taken = calc_attack_delay();
-
             if (you.can_see(defender))
             {
                 mprf("The %s protects %s from harm.",
@@ -367,7 +399,6 @@ bool melee_attack::handle_phase_dodged()
 
 /* An attack has been determined to have hit something
  *
- * Applies attack delays for both players and monsters (independently),
  * Handles to-hit effects for both attackers and defenders,
  * Determines shield_block and passess off execution to handle_phase_blocked,
  * Determines damage and passes off execution to handle_phase_damaged
@@ -383,8 +414,6 @@ bool melee_attack::handle_phase_hit()
         if (crawl_state.game_is_hints())
             Hints.hints_melee_counter++;
 
-        // Apply attack delay
-        you.time_taken = calc_attack_delay();
         // Check for stab (and set stab_attempt and stab_bonus)
         player_stab_check();
 
@@ -406,34 +435,6 @@ bool melee_attack::handle_phase_hit()
         // parameters of the effec
         do_passive_freeze();
         emit_foul_stench();
-
-        // Monsters lose additional energy only for the first two weapon
-        // attacks; subsequent hits are free.
-        if (effective_attack_number < 1)
-        {
-            final_attack_delay = calc_attack_delay();
-            if (damage_brand == SPWPN_SPEED)
-                final_attack_delay = final_attack_delay / 2 + 1;
-
-            // speed adjustment for weapon-using monsters
-            if (final_attack_delay > 0)
-            {
-                const int atk_speed =
-                    attacker->as_monster()->action_energy(EUT_ATTACK);
-
-                // only get one third penalty/bonus for second weapons.
-                if (effective_attack_number > 0)
-                {
-                    final_attack_delay =
-                        div_rand_round((2 * atk_speed + final_attack_delay), 3);
-                }
-
-                int delta =
-                    div_rand_round((final_attack_delay - 10 + (atk_speed - 10)), 2);
-                if (delta > 0)
-                    attacker->as_monster()->speed_increment -= delta;
-            }
-        }
     }
 
     // Slimify does no damage and serves as an on-hit effect, handle it
@@ -605,7 +606,7 @@ bool melee_attack::handle_phase_damaged()
                 mprf("%s", special_damage_message.c_str());
 
             if (special_damage > 0)
-            	inflict_damage(special_damage, special_damage_flavour, true);
+             inflict_damage(special_damage, special_damage_flavour, true);
         }
 
         const bool chaos_attack = damage_brand == SPWPN_CHAOS
