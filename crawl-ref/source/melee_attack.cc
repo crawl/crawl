@@ -595,7 +595,7 @@ bool melee_attack::handle_phase_damaged()
                 mprf("%s", special_damage_message.c_str());
 
             if (special_damage > 0)
-             inflict_damage(special_damage, special_damage_flavour, true);
+                inflict_damage(special_damage, special_damage_flavour, true);
         }
 
         const bool chaos_attack = damage_brand == SPWPN_CHAOS
