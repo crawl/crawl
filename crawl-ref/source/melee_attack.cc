@@ -565,14 +565,6 @@ bool melee_attack::handle_phase_damaged()
         if (damage_done && attack_verb == "trample")
             do_knockback();
 
-        // Thirsty stabbing vampires get to draw blood.
-        if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED
-            && stab_attempt && stab_bonus > 0)
-        {
-            _player_vampire_draws_blood(defender->as_monster(),
-                                        damage_done, true);
-        }
-
         if (defender->alive())
         {
             print_wounds(defender->as_monster());
