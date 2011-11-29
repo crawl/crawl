@@ -124,10 +124,11 @@ std::string item_def::name(description_level_type descrip,
 #endif
                & MF_NAME_SPECIES)
              && !(corpse_flags & MF_NAME_DEFINITE))
-             && !(corpse_flags & MF_NAME_SUFFIX)
+        && !(corpse_flags & MF_NAME_SUFFIX)
         && !starts_with(get_corpse_name(*this), "shaped "))
     {
-        descrip = DESC_THE;
+        if (descrip != DESC_DBNAME)
+            descrip = DESC_THE;
     }
 
     if (item_is_orb(*this)
@@ -1857,7 +1858,8 @@ std::string item_def::name_aux(description_level_type desc,
             buff << "corpse bug";
 
         if (!_name.empty() && !shaped && name_type != MF_NAME_ADJECTIVE
-            && !(name_flags & MF_NAME_SPECIES) && name_type != MF_NAME_SUFFIX)
+            && !(name_flags & MF_NAME_SPECIES) && name_type != MF_NAME_SUFFIX
+            && !dbname)
         {
             buff << " of " << _name;
         }

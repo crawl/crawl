@@ -3066,7 +3066,7 @@ int mons_place(mgen_data mg)
     if (mid == -1)
         return (-1);
 
-    dprf("Created a %s.", menv[mid].base_name(DESC_PLAIN, true).c_str());
+    dprf("Created %s.", menv[mid].base_name(DESC_A, true).c_str());
 
     monster* creation = &menv[mid];
 
