@@ -120,6 +120,17 @@ melee_attack::melee_attack(actor *attk, actor *defn,
         attk_type       = mon_attk.type;
         attk_flavour    = mon_attk.flavour;
         attk_damage     = mon_attk.damage;
+
+        if (attk_type == AT_WEAP_ONLY)
+        {
+            int weap = attacker->as_monster()->inv[MSLOT_WEAPON];
+            if (weap == NON_ITEM)
+                attk_type = AT_NONE;
+            else if (is_range_weapon(mitm[weap]))
+                attk_type = AT_SHOOT;
+            else
+                attk_type = AT_HIT;
+        }
     }
 
     shield = attacker->shield();
@@ -222,6 +233,11 @@ bool melee_attack::handle_phase_attempted()
                     attacker->as_monster()->speed_increment -= delta;
             }
         }
+
+        // Statues and other special monsters which have AT_NONE need to lose
+        // energy, but otherwise should exit the melee attack now.
+        if (attk_type == AT_NONE)
+            return (false);
     }
 
     if (attacker != defender)
@@ -882,17 +898,6 @@ bool melee_attack::attack()
 // however formerly, attack_type was mons_attack_type and used exclusively for monster use.
 void melee_attack::adjust_noise()
 {
-    if (attk_type == AT_WEAP_ONLY)
-    {
-        int weap = attacker->as_monster()->inv[MSLOT_WEAPON];
-        if (weap == NON_ITEM)
-            attk_type = AT_NONE;
-        else if (is_range_weapon(mitm[weap]))
-            attk_type = AT_SHOOT;
-        else
-            attk_type = AT_HIT;
-    }
-
     if (weapon == NULL && attacker->atype() == ACT_MONSTER)
     {
         switch (attk_type)
