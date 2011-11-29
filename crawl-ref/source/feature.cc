@@ -465,6 +465,13 @@ static void _init_feat(feature_def &f, dungeon_feature_type feat)
             break;
 
         case DNGN_EXIT_DUNGEON:
+            f.colour      = LIGHTBLUE;
+            f.dchar       = DCHAR_STAIRS_UP;
+            f.map_colour  = GREEN;
+            f.seen_colour = LIGHTBLUE;
+            f.minimap     = MF_STAIR_BRANCH;
+            break;
+
         case DNGN_RETURN_FROM_DWARVEN_HALL:
         case DNGN_RETURN_FROM_ORCISH_MINES:
         case DNGN_RETURN_FROM_HIVE:
