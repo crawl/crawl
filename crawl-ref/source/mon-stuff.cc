@@ -4313,6 +4313,12 @@ void monster_teleport(monster* mons, bool instan, bool silent)
 	else
 	    monster_teleport_to_player(mons->constricted_by, newpos);
     }
+    for (int i = 0; i < 8; i++)
+        if (mons->constricting[i] == MHITYOU)
+	    player_teleport_to_monster(mons, newpos);
+        else if (mons->constricting[i] != NON_ENTITY)
+            monster_teleport_to_player(mons->constricting[i], newpos);
+
     const coord_def oldplace = mons->pos();
 
     // Pick the monster up.
@@ -4396,8 +4402,39 @@ void monster_teleport_to_player(int mindex, coord_def playerpos)
     // And slot it back into the grid.
     mgrd(mons->pos()) = mons->mindex();
 
-    simple_monster_message(mons, " comes along for the ride!");
     place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3), mons);
+
+    // the monster which has just moved could have been constricting more
+    // than one target, clear others if no longer adjacent
+    for (int i = 0; i < 8; i++)
+        if (mons->constricting[i] != mindex 
+	    && mons->constricting[i] != NON_ENTITY
+	    && !adjacent(mons->pos(), env.mons[mons->constricting[i]].pos()))
+	{
+	    monster *mons2 = &env.mons[mons->constricting[i]];
+	    mons2->clear_specific_constrictions(mons->mindex());
+            mons->constricting[i] = NON_ENTITY;
+	    mons->dur_has_constricted[i] = 0;
+	    std::string msg = " loses its grip on " + mons2->name(DESC_THE);
+	    simple_monster_message(mons, msg.c_str());
+	}
+
+    // if it's coming along because it was constricting player, but something
+    // else was constricting it, then the something else loses its grip too
+
+    if (mons->constricted_by != mindex && mons->constricted_by != NON_ENTITY
+        && !adjacent(mons->pos(), env.mons[mons->constricted_by].pos()))
+    {
+	monster *mons2 = &env.mons[mons->constricted_by];
+	mons2->clear_specific_constrictions(mons->mindex());
+        mons->constricted_by = NON_ENTITY;
+	mons->dur_been_constricted = 0;
+	mons->escape_attempts = 0;
+	std::string msg = " loses its grip on " + mons->name(DESC_THE);
+	simple_monster_message(mons2, msg.c_str());
+    }
+    
+    simple_monster_message(mons, " comes along for the ride!");
 
     mons->check_redraw(newpos);
     mons->apply_location_effects(newpos);
@@ -4437,6 +4474,36 @@ void player_teleport_to_monster(monster *mons, coord_def monsterpos)
     // Move it to its new home.
     you.moveto(newpos);
 
+    // you could have been constricting more
+    // than one target, clear others if no longer adjacent
+    for (int i = 0; i < 8; i++)
+        if (you.constricting[i] != mons->mindex() 
+	    && you.constricting[i] != NON_ENTITY
+	    && !adjacent(env.mons[you.constricting[i]].pos(), you.pos()))
+	{
+	    monster *mons2 = &env.mons[you.constricting[i]];
+	    mons2->clear_specific_constrictions(MHITYOU);
+            you.constricting[i] = NON_ENTITY;
+	    you.dur_has_constricted[i] = 0;
+	    std::string msg = "You lose your grip on " + mons2->name(DESC_THE);
+	    mpr(msg);
+	}
+
+    // if you're coming along because you're constricting it and something
+    // else was constricting you, then the something else loses its grip too
+
+    if (you.constricted_by != mons->mindex() 
+        && you.constricted_by != NON_ENTITY
+        && !adjacent(you.pos(), env.mons[you.constricted_by].pos()))
+    {
+	monster *mons2 = &env.mons[you.constricted_by];
+	mons2->clear_specific_constrictions(MHITYOU);
+        you.constricted_by = NON_ENTITY;
+	you.dur_been_constricted = 0;
+	you.escape_attempts = 0;
+	std::string msg = mons2->name(DESC_THE) + " loses its grip on you.";
+	mpr(msg);
+    }
     mpr("You come along for the ride!");
 
 }
