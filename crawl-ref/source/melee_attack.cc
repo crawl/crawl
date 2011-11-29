@@ -5290,7 +5290,7 @@ void melee_attack::handle_player_constriction()
             }
     }
     defender = save_defender;
-
+    you.has_constricted_this_turn = true;
 }
 
 bool melee_attack::handle_monster_constriction()
@@ -5392,5 +5392,6 @@ bool melee_attack::handle_monster_constriction()
             }
     }
     defender = save_defender;
+    attacker->has_constricted_this_turn = true;
     return true;
 }
