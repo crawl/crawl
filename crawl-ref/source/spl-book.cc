@@ -566,7 +566,7 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
         undead = true;
 
     if (you.species == SP_DEEP_DWARF && spell == SPELL_REGENERATION)
-        rc = true;
+        rc = true, undead = false;
 
     if (you.species == SP_FELID
         && (spell == SPELL_PORTAL_PROJECTILE
@@ -581,7 +581,7 @@ bool you_cannot_memorise(spell_type spell, bool &undead)
          // could be useful if it didn't require wielding
          || spell == SPELL_TUKIMAS_DANCE))
     {
-        rc = true;
+        rc = true, undead = false;
     }
 
     return (rc);
