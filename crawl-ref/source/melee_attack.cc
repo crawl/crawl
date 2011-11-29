@@ -580,8 +580,6 @@ bool melee_attack::handle_phase_damaged()
 
         if (defender->alive())
         {
-            print_wounds(defender->as_monster());
-
             // Actually apply the bleeding effect, this can come from an
             // aux claw or a main hand claw attack and up to now has not
             // actually happened.
@@ -722,11 +720,13 @@ bool melee_attack::handle_phase_killed()
 
 bool melee_attack::handle_phase_end()
 {
-    if (attacker->atype() == ACT_PLAYER
-        && adjacent(defender->pos(), attacker->pos()))
+    if (attacker->atype() == ACT_PLAYER)
     {
+        print_wounds(defender->as_monster());
+
         // returns whether an aux attack successfully took place
-        player_aux_unarmed();
+        if (adjacent(defender->pos(), attacker->pos()))
+            player_aux_unarmed();
     }
 
     // Check for passive mutation effects.
