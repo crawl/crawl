@@ -1314,8 +1314,8 @@ void monster::apply_enchantment(const mon_enchant &me)
             {
                 if (type == MONS_PILLAR_OF_SALT)
                 {
-                     mprf("The %s crumbles away.",
-                          name(DESC_PLAIN, false).c_str());
+                     mprf("%s crumbles away.",
+                          name(DESC_THE, false).c_str());
                 }
                 else
                 {
