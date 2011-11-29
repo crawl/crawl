@@ -4065,7 +4065,18 @@ void bolt::monster_post_hit(monster* mon, int dmg)
     // Don't annoy friendlies or good neutrals if the player's beam
     // did no damage.  Hostiles will still take umbrage.
     if (dmg > 0 || !mon->wont_attack() || !YOU_KILL(thrower))
+    {
+        bool was_asleep = mon->asleep();
         behaviour_event(mon, ME_ANNOY, beam_source_as_target());
+
+        // Don't allow needles of sleeping to awaken monsters.
+        if (item && item->base_type == OBJ_MISSILES
+            && get_ammo_brand(*item) == SPMSL_SLEEP
+            && was_asleep && !mon->asleep())
+        {
+            mon->put_to_sleep(agent(), 0);
+        }
+    }
 
     // Sticky flame.
     if (name == "sticky flame" || name == "splash of liquid fire")
