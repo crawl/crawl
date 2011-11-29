@@ -782,15 +782,6 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
         return SPRET_ABORT;
     }
 
-    // Protect the player from destroying the item.
-    if (feat_virtually_destroys_item(grd(you.pos()), item)
-        && !yesno("Really apport while over this terrain?",
-                  false, 'n'))
-    {
-        canned_msg(MSG_OK);
-        return SPRET_ABORT;
-    }
-
     fail_check();
     // Mass of one unit.
     const int unit_mass = item_mass(item);
@@ -867,24 +858,29 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
 
     dprf("Apport dist=%d, max_dist=%d", dist, max_dist);
 
-    coord_def new_spot = beam.path_taken[beam.path_taken.size() - max_dist];
-
-    if (max_dist <= dist)
-    {
-        dprf("Apport: new spot is %d/%d", new_spot.x, new_spot.y);
-
-        if (feat_virtually_destroys_item(grd(new_spot), item))
-        {
-            mpr("Not with that terrain in the way!");
-            return SPRET_SUCCESS;
-        }
-    }
-    // Item mimics land in front of you (and they will be revealed).
-    else if (item.flags & ISFLAG_MIMIC)
-        new_spot =  beam.path_taken[0];
-    // If power is high enough it'll just come straight to you.
-    else
+    int location_on_path = std::max(-1, dist - max_dist);
+    // Don't move mimics under you.
+    if ((item.flags & ISFLAG_MIMIC) && location_on_path == -1)
+        location_on_path = 0;
+    coord_def new_spot;
+    if (location_on_path == -1)
         new_spot = you.pos();
+    else
+        new_spot = beam.path_taken[location_on_path];
+    // Try to find safe terrain for the item.
+    while (location_on_path < dist)
+    {
+        if (!feat_virtually_destroys_item(grd(new_spot), item))
+            break;
+        location_on_path++;
+        new_spot = beam.path_taken[location_on_path];
+    }
+    if (location_on_path == dist)
+    {
+        mpr("Not with that terrain in the way!");
+        return SPRET_SUCCESS;
+    }
+    dprf("Apport: new spot is %d/%d", new_spot.x, new_spot.y);
 
     // Actually move the item.
     mprf("Yoink! You pull the item%s towards yourself.",
