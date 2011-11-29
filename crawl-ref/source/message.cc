@@ -998,14 +998,20 @@ bool strip_channel_prefix(std::string &text, msg_channel_type &channel, bool sil
 
     if (param == "WARN")
         channel = MSGCH_WARN, sound = true;
+    else if (param == "VISUAL WARN")
+        channel = MSGCH_WARN;
     else if (param == "SOUND")
         channel = MSGCH_SOUND, sound = true;
     else if (param == "VISUAL")
         channel = MSGCH_TALK_VISUAL;
     else if (param == "SPELL")
         channel = MSGCH_MONSTER_SPELL, sound = true;
+    else if (param == "VISUAL SPELL")
+        channel = MSGCH_MONSTER_SPELL;
     else if (param == "ENCHANT")
         channel = MSGCH_MONSTER_ENCHANT, sound = true;
+    else if (param == "VISUAL ENCHANT")
+        channel = MSGCH_MONSTER_ENCHANT;
     else
     {
         param = replace_all(param, " ", "_");
