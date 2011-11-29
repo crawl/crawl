@@ -4868,10 +4868,10 @@ static bool _scroll_modify_item(item_def scroll)
             canned_msg(MSG_OK);
             return (false);
         }
-
-        ASSERT_SAVE(item_slot >= 0);
     }
     while (item_slot < 0);
+
+    ASSERT_SAVE(item_slot >= 0);
 
     item_def &item = you.inv[item_slot];
 
