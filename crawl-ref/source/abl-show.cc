@@ -1900,7 +1900,7 @@ static bool _do_ability(const ability_def& abil)
         bool did_restore = restore_stat(STAT_ALL, 0, false);
 
         const int oldhpmax = you.hp_max;
-        unrot_hp(100);
+        unrot_hp(9999);
         if (you.hp_max > oldhpmax)
             did_restore = true;
 

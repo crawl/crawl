@@ -1348,7 +1348,7 @@ void elyvilon_purification()
     you.duration[DUR_PETRIFYING] = 0;
     you.duration[DUR_NAUSEA] = 0;
     restore_stat(STAT_ALL, 0, false);
-    unrot_hp(10000);
+    unrot_hp(9999);
 }
 
 bool elyvilon_divine_vigour()
