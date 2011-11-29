@@ -1827,7 +1827,7 @@ int move_item_to_player(int obj, int quant_got, bool quiet,
         env.orb_pos = you.pos(); // can be wrong in wizmode
         orb_pickup_noise(you.pos(), 30);
 
-        mpr("The lords of Pandemonium are not amused; beware!", MSGCH_WARN);
+        mpr("The lords of Pandemonium are not amused. Beware!", MSGCH_WARN);
         if (you.religion == GOD_CHEIBRIADOS)
         {
             mprf(MSGCH_GOD, "%s tells them not to hurry.",
