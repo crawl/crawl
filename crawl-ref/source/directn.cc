@@ -193,10 +193,10 @@ bool dist::isMe() const
                 || (target.origin() && delta.origin())));
 }
 
-void dist::confusion_fuzz()
+void dist::confusion_fuzz(int range)
 {
-    target   = you.pos() + coord_def(random_range(-6, 6),
-                                     random_range(-6, 6));
+    target   = you.pos() + coord_def(random_range(-range, range),
+                                     random_range(-range, range));
     choseRay = false;
 }
 
