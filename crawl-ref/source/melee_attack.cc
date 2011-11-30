@@ -1198,8 +1198,6 @@ bool melee_attack::player_aux_test_hit()
     did_hit = false;
 
     const int evasion = defender->melee_evasion(attacker);
-    const int helpful_evasion =
-        defender->melee_evasion(attacker, EV_IGNORE_HELPLESS);
 
     if (you.penance[GOD_ELYVILON]
         && god_hates_your_god(GOD_ELYVILON)
