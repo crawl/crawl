@@ -978,13 +978,13 @@ stops
 %%%%
 hound
 
-@The_monster@ @pauses_or_stops@ to sniff the @surface@.
+VISUAL:@The_monster@ @pauses_or_stops@ to sniff the @surface@.
 
-@The_monster@ gazes forward, looking utterly alone.
+VISUAL:@The_monster@ gazes forward, looking utterly alone.
 %%%%
 friendly hound
 
-@The_monster@ wags @possessive@ tail.
+VISUAL:@The_monster@ wags @possessive@ tail.
 
 @The_monster@ barks softly, and nuzzles your face.
 
@@ -1248,7 +1248,7 @@ Crossbows player ghost
 
 @_generic_ranged_@
 
-@The_monster@ @_reloads_adj_@ @possessive@ weapon.
+VISUAL:@The_monster@ @_reloads_adj_@ @possessive@ weapon.
 
 %%%%
 Throwing player ghost
@@ -1331,7 +1331,7 @@ w:1
 @The_monster@ whirls like a shadow given life, stepping faster than you can keep track, before standing precisely still, watching, waiting for your next assault.
 
 w:1
-VISUAL_SPELL:@The_monster@ produces a bizarre clockwork butterfly, ethereal and luminous, from @possessive@ pack, and hurls it at you - so perfect is its making that it comes to life and darts away before touching you.
+VISUAL SPELL:@The_monster@ produces a bizarre clockwork butterfly, ethereal and luminous, from @possessive@ pack, and hurls it at you - so perfect is its making that it comes to life and darts away before touching you.
 
 w:1
 @The_monster@ regards you luminously, comprehending your nature, and seems resigned. @Pronoun@ shouts, "Do you know what I know, @foe@..."
@@ -1397,7 +1397,7 @@ VISUAL SPELL:Energy condenses in front of @the_monster@, but quickly dissipates.
 %%%%
 Enchantments player ghost
 
-WARN:You feel a strange force tugging at your mind. @player_only@
+VISUAL WARN:You feel a strange force tugging at your mind. @player_only@
 
 @The_monster@ says @to_foe@, "You will soon be helpless to avoid my power."
 
@@ -1492,7 +1492,7 @@ Earth Magic player ghost
 @The_monster@ says, "I can make a mountain out of a molehill and squeeze you to death."
 
 VISUAL:@The_monster@ gestures.
-SPELL:For a moment, the earth shakes beneath you.
+VISUAL SPELL:For a moment, the earth shakes beneath you.
 
 %%%%
 Poison Magic player ghost
@@ -1591,8 +1591,8 @@ w:2
 %%%%
 _player_ghost_common_
 
-SPELL:@The_monster@ stares at @foe@.
-WARN:You feel cold.
+VISUAL SPELL:@The_monster@ stares at @foe@.
+VISUAL WARN:You feel cold.
 
 @The_monster@ lets out a mournful wail.
 
@@ -1600,7 +1600,7 @@ WARN:You feel cold.
 
 @The_monster@ wails.
 
-@The_monster@ ripples.
+VISUAL:@The_monster@ ripples.
 
 @The_monster@ @wails@, "What do you have that I didn't have?"
 
@@ -2433,9 +2433,9 @@ dissolution_common
 
 @The_monster@ emits a sizzling noise.
 
-@The_monster@ jiggles.
+VISUAL:@The_monster@ jiggles.
 
-@The_monster@ wobbles.
+VISUAL:@The_monster@ wobbles.
 %%%%
 dissolution_speech
 
@@ -2947,8 +2947,6 @@ w:50
 @The_monster@ says, "Oh, hey! I could use a new animal skin. Have you got any spares?"
 
 @The_monster@ says, "Nice kit."
-
-@The_monster@ says, "Can I have your spare potions?"
 
 VISUAL:@The_monster@ yawns.
 
@@ -3477,7 +3475,7 @@ _Dowan_Duvessa_dies_
 
 @The_monster@ screams, "No! No!"
 
-@The_monster@ seems overcome with grief, but rights @reflexive@ reflexively soon after.
+VISUAL:@The_monster@ seems overcome with grief, but rights @reflexive@ reflexively soon after.
 
 @The_monster@ screams, "No! Oh no!"
 
@@ -3586,7 +3584,7 @@ _Duvessa_Dowan_dies_
 
 @The_monster@ screams, "No! How DARE you!"
 
-@The_monster@ weeps, then rights @reflexive@ and shakes @possessive@ weapon.
+VISUAL:@The_monster@ weeps, then rights @reflexive@ and shakes @possessive@ weapon.
 %%%%
 _Duvessa_Dowan_dies_invisible_
 
@@ -4042,9 +4040,9 @@ VISUAL:@The_monster@ bares @possessive@ teeth.
 
 @The_monster@ grunts.
 
-@The_monster@ says @at_foe@, "My dogs and I will have a feast tonight..."
+@The_monster@ says @to_foe@, "My dogs and I will have a feast tonight..."
 
-@The_monster@ says @at_foe@, "You look like good eating."
+@The_monster@ says @to_foe@, "You look like good eating."
 %%%%
 _Grum_rare_
 
@@ -4235,7 +4233,7 @@ VISUAL:@The_monster@ looks very angry.
 
 @The_monster@ shouts @at_foe@, "You're disturbing me! I'll have to kill you!"
 
-SPELL:@The_monster@ gestures wildly.
+VISUAL SPELL:@The_monster@ gestures wildly.
 
 SPELL:@The_monster@ mumbles something strange.
 %%%%
@@ -4432,8 +4430,6 @@ Khufu
 
 @The_monster@ booms, "Everyone will worship Khufu but you!"
 
-SPELL:@The_monster@ smites.
-
 @The_monster@ declares, "When I'm finished with you, I will take on the gods!"
 
 @The_monster@ queries, "My people built me a pyramid - what did your people build for you?"
@@ -4516,7 +4512,7 @@ VISUAL SPELL:@The_monster@ gestures.
 
 VISUAL SPELL:@The_monster@ points ostentatiously.
 
-SPELL:@The_monster@ weaves an illusion.
+VISUAL SPELL:@The_monster@ weaves an illusion.
 %%%%
 _Mara_rare_
 
@@ -4561,6 +4557,14 @@ ENCHANT:@The_monster@ becomes transparent for a moment.
 
 ENCHANT:@The_monster@'s hands start to glow.
 %%%%
+_Margery_visual_spell_results_
+
+VISUAL ENCHANT:@The_monster@ is surrounded with an aura of power.
+
+VISUAL ENCHANT:@The_monster@ becomes transparent for a moment.
+
+VISUAL ENCHANT:@The_monster@'s hands start to glow.
+%%%%
 bad_effect
 
 weakened
@@ -4572,6 +4576,7 @@ doomed
 _Margery_common_
 
 VISUAL SPELL:@The_monster@ gestures.
+@_Margery_visual_spell_results_@
 
 SPELL:@The_monster@ casts a spell.
 @_Margery_spell_results_@
@@ -4735,7 +4740,7 @@ VISUAL:@The_monster@'s bandages flutter.
 
 @The_monster@ @Menkaure_verb@, "Let me perform the rites..."
 
-@The_monster@ breathes soot at you.
+VISUAL:@The_monster@ breathes soot at you.
 
 VISUAL SPELL:@The_monster@ blazes with dark energy!
 VISUAL WARN:You feel utter despair.
@@ -5871,13 +5876,13 @@ catoblepas
 
 @The_monster@ stomps with a crash on the ground.
 
-@The_monster@ smashes @possessive@ foot into the earth.
+VISUAL:@The_monster@ smashes @possessive@ foot into the earth.
 
-@The_monster@ rams the ground with @possessive@ head heavily.
+VISUAL:@The_monster@ rams the ground with @possessive@ head heavily.
 
-@The_monster@ carves a crescent into the ground, and seems achingly sad.
+VISUAL:@The_monster@ carves a crescent into the ground, and seems achingly sad.
 
-@The_monster@ claws at the earth roughly with @possessive@ hoof, venting @possessive@ fury.
+VISUAL:@The_monster@ claws at the earth roughly with @possessive@ hoof, venting @possessive@ fury.
 
 @The_monster@ breathes in.
 
@@ -5896,28 +5901,28 @@ VISUAL:@The_monster@ basks in @possessive@ own plume of deadly dust.
 @The_monster@ stomps on the ground.
 WARN:You hear tremors.
 
-@The_monster@ closes @possessive@ eyes.
-WARN:You feel like you are being watched from above.
+VISUAL:@The_monster@ closes @possessive@ eyes.
+VISUAL WARN:You feel like you are being watched from above.
 
-@The_monster@ bares @possessive@ teeth, and the ground turns slowly to stone.
+VISUAL:@The_monster@ bares @possessive@ teeth, and the ground turns slowly to stone.
 
-@The_monster@ stomps toward you, implacably.
+VISUAL:@The_monster@ stomps toward you, implacably.
 
-@The_monster@ prepares to charge at you.
+VISUAL:@The_monster@ prepares to charge at you.
 
-@The_monster@ wanders slowly into a prime firing position.
-
-w:1
-@The_monster@ readies @possessive@ vast lungs of living stone to calcify you where you stand.
+VISUAL:@The_monster@ wanders slowly into a prime firing position.
 
 w:1
-@The_monster@ sculpts the ground into a sphere of stone suspended by the thinnest support in the sky.
+VISUAL:@The_monster@ readies @possessive@ vast lungs of living stone to calcify you where you stand.
 
 w:1
-@The_monster@ breathes on the earth until a ridged crescent appears, raises @possessive@ hoof in rage, then stops.
+VISUAL:@The_monster@ sculpts the ground into a sphere of stone suspended by the thinnest support in the sky.
 
 w:1
-Tears glisten in @possessive@ eyes as @pronoun@ regards a sphere of stone @pronoun@ breathed into being on the floor.
+VISUAL:@The_monster@ breathes on the earth until a ridged crescent appears, raises @possessive@ hoof in rage, then stops.
+
+w:1
+VISUAL:Tears glisten in @possessive@ eyes as @pronoun@ regards a sphere of stone @pronoun@ breathed into being on the floor.
 %%%%
 ################## Crystal golem ###########################
 crystal golem
@@ -6252,11 +6257,11 @@ __NONE
 %%%%
 good_god_neutral_holy_being_reaction
 
-@The_monster@ is calmed by your holy aura.
+VISUAL:@The_monster@ is calmed by your holy aura.
 
-@The_monster@ relaxes @possessive@ fighting stance.
+VISUAL:@The_monster@ relaxes @possessive@ fighting stance.
 
-@The_monster@ salutes you.
+VISUAL:@The_monster@ salutes you.
 %%%%
 good_god_neutral_holy_being_speech
 
@@ -6268,11 +6273,11 @@ good_god_neutral_holy_being_speech
 %%%%
 good_god_nonneutral_holy_being_reaction
 
-@The_monster@ ignores your imperfect holy aura.
+VISUAL:@The_monster@ ignores your imperfect holy aura.
 
-@The_monster@ frowns, and retains @possessive@ fighting stance.
+VISUAL:@The_monster@ frowns, and retains @possessive@ fighting stance.
 
-@The_monster@ refuses to salute you.
+VISUAL:@The_monster@ refuses to salute you.
 %%%%
 good_god_nonneutral_holy_being_speech
 
