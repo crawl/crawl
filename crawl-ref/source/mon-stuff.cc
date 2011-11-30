@@ -4367,6 +4367,7 @@ void monster_teleport_to_player(int mindex, coord_def playerpos)
     coord_def target;
     coord_def newpos;
     monster *mons = &env.mons[mindex];
+    actor *mons2;
 
     int tries = 0;
     while (tries++ < 30)
@@ -4408,32 +4409,42 @@ void monster_teleport_to_player(int mindex, coord_def playerpos)
     // than one target, clear others if no longer adjacent
     for (int i = 0; i < 8; i++)
         if (mons->constricting[i] != mindex 
-	    && mons->constricting[i] != NON_ENTITY
-	    && !adjacent(mons->pos(), env.mons[mons->constricting[i]].pos()))
+	    && mons->constricting[i] != NON_ENTITY)
 	{
-	    monster *mons2 = &env.mons[mons->constricting[i]];
-	    mons2->clear_specific_constrictions(mons->mindex());
-            mons->constricting[i] = NON_ENTITY;
-	    mons->dur_has_constricted[i] = 0;
-	    std::string msg = " loses its grip on " + mons2->name(DESC_THE);
-	    simple_monster_message(mons, msg.c_str());
+	    if (mons->constricting[i] == MHITYOU)
+		mons2 = &you;
+            else
+		mons2 = &env.mons[mons->constricting[i]];
+
+	    if (!adjacent(mons->pos(), mons2->pos()))
+	    {
+	        mons2->clear_specific_constrictions(mons->mindex());
+                mons->constricting[i] = NON_ENTITY;
+	        mons->dur_has_constricted[i] = 0;
+	        std::string msg = " loses its grip on " + mons2->name(DESC_THE);
+	        simple_monster_message(mons, msg.c_str());
+	    }
 	}
 
     // if it's coming along because it was constricting player, but something
     // else was constricting it, then the something else loses its grip too
-
-    if (mons->constricted_by != mindex && mons->constricted_by != NON_ENTITY
-        && !adjacent(mons->pos(), env.mons[mons->constricted_by].pos()))
+    if (mons->constricted_by != mindex && mons->constricted_by != NON_ENTITY)
     {
-	monster *mons2 = &env.mons[mons->constricted_by];
-	mons2->clear_specific_constrictions(mons->mindex());
-        mons->constricted_by = NON_ENTITY;
-	mons->dur_been_constricted = 0;
-	mons->escape_attempts = 0;
-	std::string msg = " loses its grip on " + mons->name(DESC_THE);
-	simple_monster_message(mons2, msg.c_str());
+        if (mons->constricted_by == MHITYOU)
+            mons2 = &you;
+        else
+            mons2 = &env.mons[mons->constricted_by];
+
+        if (!adjacent(mons->pos(), mons2->pos()))
+        {
+	    mons2->clear_specific_constrictions(mons->mindex());
+            mons->constricted_by = NON_ENTITY;
+	    mons->dur_been_constricted = 0;
+	    mons->escape_attempts = 0;
+	    std::string msg = " loses its grip on " + mons->name(DESC_THE);
+	    simple_monster_message(mons2->as_monster(), msg.c_str());
+        }
     }
-    
     simple_monster_message(mons, " comes along for the ride!");
 
     mons->check_redraw(newpos);
