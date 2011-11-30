@@ -1211,7 +1211,7 @@ void yell(bool force)
     if (mons_targd != MHITNOT && mons_targd != MHITYOU)
         mpr("Attack!");
 
-    noisy(10, you.pos());
+    noisy(noise_level, you.pos());
 }
 
 inline static dungeon_feature_type _vitrified_feature(dungeon_feature_type feat)
