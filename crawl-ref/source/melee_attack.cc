@@ -1314,9 +1314,6 @@ bool melee_attack::player_aux_apply(unarmed_attack_type atk)
                                  : -random2(1 - slaying);
     aux_damage  = player_apply_misc_modifiers(aux_damage);
 
-    // Clear stab bonus which will be set for the primary weapon attack.
-    stab_bonus  = 0;
-
     const int pre_ac_dmg = aux_damage;
     const int post_ac_dmg = apply_defender_ac(aux_damage);
 
