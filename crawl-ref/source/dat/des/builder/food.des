@@ -89,6 +89,7 @@ cccc....cccc
 cccccccccccc
 ENDMAP
 
+# 18.8k/13.3k/13k
 NAME:   hangedman_fish_farm
 DEPTH:  D:7-14
 CHANCE: 100% (D:14), 15%
@@ -108,6 +109,7 @@ xCBBBx
 xxxxxx
 ENDMAP
 
+# 6k/6.8k/4.6k (min 6k/0/0), plus perishable 6k/6k/0
 NAME:   hangedman_pestilent_swarm
 DEPTH:  D:8-14
 CHANCE: 100% (D:14), 15%
@@ -126,6 +128,7 @@ MAP
  xxxxxxx
 ENDMAP
 
+# 14k (min 12k)
 NAME:   hangedman_little_slice_of_home
 DEPTH:  D:8-14
 CHANCE: 100% (D:14), 10%
@@ -146,6 +149,7 @@ MAP
  .Wxxxxxx
 ENDMAP
 
+# 17.5k/14k/13k (min 1.2k)
 NAME:     hangedman_ranch
 DEPTH:    D:8-14
 CHANCE:   100% (D:14), 10%
@@ -175,6 +179,7 @@ xFFW.W.W.x
 xxxxx@xxxx
 ENDMAP
 
+# 15.3k/34.2k/0
 NAME:   hangedman_tree_tricks
 DEPTH:  D:8-14
 CHANCE: 100% (D:14), 10%
@@ -197,6 +202,7 @@ tt.ttttttttt
  tttttttttt
 ENDMAP
 
+# 12.4k/14.7/8k
 NAME:   hangedman_tell_no_tales
 DEPTH:  D:9-14
 CHANCE: 100% (D:14), 10%
@@ -234,6 +240,7 @@ ccxx1x.+3fc
  cccccccccc
 ENDMAP
 
+# 20.6k/23k/12.5k (min 18k/6k/0)
 NAME:    hangedman_stone_soup
 DEPTH:   D:8-14
 CHANCE:  100% (D:14), 10%
