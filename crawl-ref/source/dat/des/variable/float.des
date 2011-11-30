@@ -1552,7 +1552,7 @@ MARKER:  e = lua:fog_machine { cloud_type = "freezing vapour", \
               pow_min = 9, pow_max = 9, delay = 200, start_clouds = 1, \
               size = 2, walk_dist = 0, spread_rate= 0 }
 MARKER:  G = lua:props_marker { stop_explore = "a frost-covered granite \
-             statue.", feature_desc = "A frost-covered granite statue." }
+             statue.", feature_description = "a frost-covered granite statue." }
 MAP
 mG+Gmmmmmmmmmmmmmmmmm
 mBBB111B111BeeeeeeeBm
