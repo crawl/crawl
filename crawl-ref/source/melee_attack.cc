@@ -387,9 +387,7 @@ bool melee_attack::handle_phase_dodged()
             // TODO: Unify these, placed player_warn_miss here so I can remove
             // player_attack
             if (attacker->atype() == ACT_PLAYER)
-            {
                 player_warn_miss();
-            }
             else
             {
                 mprf("%s%s misses %s%s",
@@ -402,15 +400,17 @@ bool melee_attack::handle_phase_dodged()
     }
 
     if (attacker != defender &&
-        defender->atype() == ACT_PLAYER &&
-        grid_distance(you.pos(), attacker->as_monster()->pos()) == 1)
+        grid_distance(defender->pos(), attacker->pos()) == 1)
     {
         // Only half the normal chance of retaliation for attacks after the
         // first one.
-        if (attacker->alive() &&
-            you.species == SP_MINOTAUR &&
-            you.can_see(attacker) &&
-            (effective_attack_number == 0 || coinflip()))
+        if (attacker->alive()
+            && (defender->is_player() ?
+                   you.species == SP_MINOTAUR :
+                   mons_base_type(defender->as_monster()) == MONS_MINOTAUR)
+            && defender->can_see(attacker)
+            // FIXME: player's attack is -1, even for auxes
+            && effective_attack_number <= 0)
         {
             do_minotaur_retaliation();
         }
@@ -4428,6 +4428,42 @@ void melee_attack::emit_foul_stench()
 
 void melee_attack::do_minotaur_retaliation()
 {
+    if (defender->cannot_act() || !attacker->alive())
+        return;
+
+    if (!defender->is_player())
+    {
+        // monsters have no STR or DEX
+        if (!x_chance_in_y(5, 5))
+            return;
+
+        int hurt = random2(20) - attacker->armour_class();
+        if (you.see_cell(defender->pos()))
+        {
+            const std::string defname = defender->name(DESC_THE);
+            mprf("%s furiously retaliates!", defname.c_str());
+            if (hurt <= 0)
+            {
+                mprf("%s headbutts %s, but does no damage.", defname.c_str(),
+                     attacker->name(DESC_THE).c_str());
+            }
+            else
+            {
+                mprf("%s headbutts %s%s", defname.c_str(),
+                     attacker->name(DESC_THE).c_str(),
+                     get_exclams(hurt).c_str());
+            }
+        }
+        if (hurt > 0)
+        {
+            if (attacker->is_player())
+                ouch(hurt, defender->mindex(), KILLED_BY_HEADBUTT);
+            else
+                attacker->hurt(defender, hurt);
+        }
+        return;
+    }
+
     if (!(you.form == TRAN_NONE || you.form == TRAN_APPENDAGE
           || you.form == TRAN_BLADE_HANDS || you.form == TRAN_STATUE
           || you.form == TRAN_LICH))
@@ -4435,16 +4471,11 @@ void melee_attack::do_minotaur_retaliation()
         // You are in a non-minotaur form.
         return;
     }
-    if (you.cannot_act())
-    {
-        // You can't move.
-        return;
-    }
     // This will usually be 2, but could be 3 if the player mutated more.
     const int mut = player_mutation_level(MUT_HORNS);
     const int slaying = slaying_bonus(PWPN_DAMAGE);
 
-    if (attacker->alive() && 5*you.strength() + 7*you.dex() > random2(600))
+    if (5 * you.strength() + 7 * you.dex() > random2(600))
     {
         // Use the same damage formula as a regular headbutt.
         int dmg = 5 + mut * 3;
@@ -4473,7 +4504,6 @@ void melee_attack::do_minotaur_retaliation()
             attacker->hurt(&you, hurt);
         }
     }
-    return;
 }
 
 bool melee_attack::do_knockback(bool trample)
