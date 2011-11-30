@@ -560,6 +560,7 @@ int line_reader::process_key(int ch)
         cursorto(pos);
         break;
     case CK_MOUSE_CLICK:
+        // FIXME: ought to move cursor to click location, if it's within the input
         return (-1);
     default:
         if (wcwidth(ch) >= 0 && length + wclen(ch) < static_cast<int>(bufsz))
