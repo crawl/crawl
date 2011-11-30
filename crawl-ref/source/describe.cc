@@ -2213,10 +2213,10 @@ void get_feature_desc(const coord_def &pos, describe_info &inf)
     dungeon_feature_type feat = grd(pos);
 
     std::string desc      = feature_description(pos, false, DESC_A, false);
-    std::string db_name   = feat == DNGN_ENTER_SHOP ? "A shop" : desc;
+    std::string db_name   = feat == DNGN_ENTER_SHOP ? "a shop" : desc;
     std::string long_desc = getLongDescription(db_name);
 
-    inf.title = desc;
+    inf.title = uppercase_first(desc);
     if (!ends_with(desc, ".") && !ends_with(desc, "!")
         && !ends_with(desc, "?"))
     {
