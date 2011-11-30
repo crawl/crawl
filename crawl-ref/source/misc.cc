@@ -2021,6 +2021,9 @@ void bring_to_safety()
 void revive()
 {
     adjust_level(-1);
+    // Allow a spare after two levels (we just lost one); the exact value
+    // doesn't matter here.
+    you.attribute[ATTR_LIFE_GAINED] = 0;
 
     you.disease = 0;
     you.magic_contamination = 0;

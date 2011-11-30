@@ -2961,12 +2961,7 @@ void level_change(bool skip_attribute_increase)
     you.redraw_experience = true;
 
     while (you.experience < exp_needed(you.experience_level))
-    {
         lose_level();
-        // Allow a spare after two levels (we just lost one); the exact value
-        // doesn't matter here.
-        you.attribute[ATTR_LIFE_GAINED] = 0;
-    }
 
     while (you.experience_level < 27
            && you.experience >= exp_needed(you.experience_level + 1))
