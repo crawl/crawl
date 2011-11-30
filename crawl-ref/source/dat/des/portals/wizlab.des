@@ -114,6 +114,7 @@ function wizlab_portal (e)
         turns = timeout_turns_long,
         turns_short = timeout_turns_short,
         floor = "stone_arch",
+        feat_tile = "dngn_portal_bazaar_gone",
         msg = messager })
     e.kfeat("O = enter_portal_vault")
     e.tile("O = no_random dngn_portal_wizard_lab")
