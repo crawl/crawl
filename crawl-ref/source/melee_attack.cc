@@ -1213,12 +1213,6 @@ bool melee_attack::player_aux_test_hit()
 
     bool auto_hit = one_chance_in(30);
 
-    if (!auto_hit && to_hit >= evasion && helpful_evasion > evasion
-        && defender_visible)
-    {
-        defender->props["helpless"] = true;
-    }
-
     if (to_hit >= evasion || auto_hit)
         return (true);
 
