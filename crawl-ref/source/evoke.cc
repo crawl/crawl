@@ -97,6 +97,11 @@ static bool _reaching_weapon_attack(const item_def& wpn)
         return (false);
     }
 
+    if (you.confused())
+    {
+        beam.confusion_fuzz(2);
+    }
+
     const coord_def delta = beam.target - you.pos();
     const int x_distance  = abs(delta.x);
     const int y_distance  = abs(delta.y);
@@ -119,15 +124,23 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     if (x_distance > 2 || y_distance > 2)
     {
         mpr("Your weapon cannot reach that far!");
-        return (false);
+        return (false); // Shouldn't happen with confused swings
     }
     else if (grd(first_middle) <= DNGN_MAX_NONREACH
              && grd(second_middle) <= DNGN_MAX_NONREACH)
     {
         // Might also be a granite statue/orcish idol which you
         // can reach _past_.
-        mpr("There's a wall in the way.");
-        return (false);
+        if (you.confused())
+        {
+            mpr("You swing wildly and hit a wall.");
+            return (true);
+        }
+        else
+        {
+            mpr("There's a wall in the way.");
+            return (false);
+        }
     }
 
     // Failing to hit someone due to a friend blocking is infuriating,
@@ -183,7 +196,12 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     {
         // Must return true, otherwise you get a free discovery
         // of invisible monsters.
-        mpr("You attack empty space.");
+
+        if (you.confused())
+            mprf("You swing wildly%s", beam.isMe() ?
+                                       " and almost hit yourself!" : ".");
+        else
+            mpr("You attack empty space.");
         return (true);
     }
     else
