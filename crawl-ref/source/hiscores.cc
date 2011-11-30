@@ -2361,6 +2361,10 @@ std::string xlog_fields::xlog_line() const
 ///////////////////////////////////////////////////////////////////////////////
 // Milestones
 
+/**
+ * @brief Record the player reaching a milestone, if ::DGL_MILESTONES is defined.
+ * @callergraph
+ */
 void mark_milestone(const std::string &type,
                     const std::string &milestone,
                     bool report_origin_level,
