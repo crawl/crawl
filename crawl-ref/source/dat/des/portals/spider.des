@@ -33,7 +33,7 @@ function spiders_nest_portal(e)
   e.lua_marker('O',
       timed_marker {
         disappear = "The entrance crumbles away.",
-        desc = "A crumbling entrance",
+        desc = "a crumbling entrance",
         desc_long = desc_long,
         entity = 'archway',
         dst = "spiders_nest",
