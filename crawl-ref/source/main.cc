@@ -1589,6 +1589,10 @@ static void _experience_check()
         int nl = you.max_level;
         // and the next level you'll get a life
         do nl++; while (!will_gain_life(nl));
+
+        // old value was capped at XL27
+        perc = (you.experience - exp_needed(xl)) * 100
+             / (exp_needed(xl + 1) - exp_needed(xl));
         perc = (nl - xl) * 100 - perc;
         mprf(you.lives < 2 ?
              "You'll get an extra life in %d.%02d levels worth of XP." :
