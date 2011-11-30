@@ -122,7 +122,7 @@ bool fight_melee(actor *attacker, actor *defender)
 
     // If execution gets here, attacker != Player, so we can safely continue
     // with processing the number of attacks a monster has without worrying
-    // about unpredictable or wierd results from players.
+    // about unpredictable or weird results from players.
 
     const int nrounds = attacker->as_monster()->has_hydra_multi_attack() ?
         attacker->as_monster()->number : 4;

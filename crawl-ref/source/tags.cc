@@ -973,7 +973,7 @@ void tag_write(tag_type tagID, writer &outf)
     outf.write(&buf[0], buf.size());
 }
 
-// Read a piece of data from inf into memory, then run the appropiate reader.
+// Read a piece of data from inf into memory, then run the appropriate reader.
 //
 // minorVersion is available for any sub-readers that need it
 void tag_read(reader &inf, tag_type tag_id)

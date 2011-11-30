@@ -140,7 +140,7 @@ public:
         else
             cgotoxy(1, height());
         // Otherwise cgotoxy asserts; let's just clobber the last line
-        // instead, which should be noticable enough.
+        // instead, which should be noticeable enough.
     }
 };
 

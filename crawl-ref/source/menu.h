@@ -655,7 +655,7 @@ public:
 };
 
 /**
- * Holds an arbitary number of tiles, currently rendered on top of each other
+ * Holds an arbitrary number of tiles, currently rendered on top of each other
  */
 #ifdef USE_TILE_LOCAL
 class TextTileItem : public TextItem

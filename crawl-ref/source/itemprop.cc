@@ -657,7 +657,7 @@ static bool _is_affordable(const item_def &item)
     if (in_shop(item))
         return (int)item_value(item) < you.gold;
 
-    // Explicitely marked by a vault.
+    // Explicitly marked by a vault.
     if (item.flags & ISFLAG_UNOBTAINABLE)
         return false;
 

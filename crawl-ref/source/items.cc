@@ -2500,7 +2500,7 @@ static void _autoinscribe_item(item_def& item)
             // Don't autoinscribe dropped items on ground with
             // "=g".  If the item matches a rule which adds "=g",
             // "=g" got added to it before it was dropped, and
-            // then the user explictly removed it because they
+            // then the user explicitly removed it because they
             // don't want to autopickup it again.
             std::string str = Options.autoinscriptions[i].second;
             if ((item.flags & ISFLAG_DROPPED) && !in_inventory(item))

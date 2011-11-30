@@ -1777,7 +1777,7 @@ std::string game_options::expand_vars(const std::string &field) const
 
         field_out = replace_all(field_out, dollar_plus_name, x->second);
 
-        // Start over at begining
+        // Start over at beginning
         curr_pos = 0;
     }
 

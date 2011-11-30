@@ -1413,7 +1413,7 @@ static bool _ok_dest_cell(const actor* orig_actor,
     return (true);
 }
 
-bool slide_feature_over(const coord_def &src, coord_def prefered_dest,
+bool slide_feature_over(const coord_def &src, coord_def preferred_dest,
                         bool announce)
 {
     ASSERT(in_bounds(src));
@@ -1421,10 +1421,10 @@ bool slide_feature_over(const coord_def &src, coord_def prefered_dest,
     const dungeon_feature_type orig_feat = grd(src);
     const actor* orig_actor = actor_at(src);
 
-    if (in_bounds(prefered_dest)
-        && _ok_dest_cell(orig_actor, orig_feat, prefered_dest))
+    if (in_bounds(preferred_dest)
+        && _ok_dest_cell(orig_actor, orig_feat, preferred_dest))
     {
-        ASSERT(prefered_dest != src);
+        ASSERT(preferred_dest != src);
     }
     else
     {
@@ -1434,16 +1434,16 @@ bool slide_feature_over(const coord_def &src, coord_def prefered_dest,
             if (_ok_dest_cell(orig_actor, orig_feat, *ai)
                 && one_chance_in(++squares))
             {
-                prefered_dest = *ai;
+                preferred_dest = *ai;
             }
         }
     }
 
-    if (!in_bounds(prefered_dest))
+    if (!in_bounds(preferred_dest))
         return (false);
 
-    ASSERT(prefered_dest != src);
-    return swap_features(src, prefered_dest, false, announce);
+    ASSERT(preferred_dest != src);
+    return swap_features(src, preferred_dest, false, announce);
 }
 
 // Returns true if we manage to scramble free.
