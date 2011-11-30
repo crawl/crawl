@@ -789,7 +789,7 @@ static void _explore_find_target_square()
             if (!env.map_knowledge(target + delta).seen() && target != you.pos()
                 && target != whereto)
             {
-                // Auto-explore is only zigzagging if the prefered
+                // Auto-explore is only zigzagging if the preferred
                 // target (whereto) and the anti-zigzag target are
                 // close together.
                 if (grid_distance(target, whereto) <= 5

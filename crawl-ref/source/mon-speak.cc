@@ -857,7 +857,7 @@ bool mons_speaks_msg(monster* mons, const std::string &msg,
 
         // This function is a little bit of a problem for the message
         // channels since some of the messages it generates are "fake"
-        // warning to scare the player.  In order to accomodate this
+        // warning to scare the player.  In order to accommodate this
         // intent, we're falsely categorizing various things in the
         // function as spells and danger warning... everything else
         // just goes into the talk channel -- bwr

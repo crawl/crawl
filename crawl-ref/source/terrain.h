@@ -117,7 +117,7 @@ bool swap_features(const coord_def &pos1, const coord_def &pos2,
                    bool swap_everything = false, bool announce = true);
 
 bool slide_feature_over(const coord_def &src,
-                        coord_def prefered_dest = coord_def(-1, -1),
+                        coord_def preferred_dest = coord_def(-1, -1),
                         bool announce = true);
 
 bool is_critical_feature(dungeon_feature_type feat);

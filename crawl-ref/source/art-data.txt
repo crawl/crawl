@@ -20,7 +20,7 @@
 # of different unrandarts conflict.
 #
 # Add new artefact definitions at the end of the file; doing so should cause
-# no problems with save-file compatibilty, but for tile builds it will
+# no problems with save-file compatibility, but for tile builds it will
 # cause a shift of remembered tiles (since each new unrandart needs its
 # own tiles).  Changing the order of the definitions will likely cause
 # strange behaviour in games saved previous to the change, and deleting

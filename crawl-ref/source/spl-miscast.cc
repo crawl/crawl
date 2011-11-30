@@ -1570,7 +1570,7 @@ void MiscastEffect::_divination_you(int severity)
 // XXX: Monster divination miscasts.
 void MiscastEffect::_divination_mon(int severity)
 {
-    // Nothing is appropiate for unmoving plants.
+    // Nothing is appropriate for unmoving plants.
     if (mons_is_firewood(target_as_monster()))
         return;
 

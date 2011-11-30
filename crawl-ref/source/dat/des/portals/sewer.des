@@ -656,7 +656,7 @@ KITEM:   ? = potion of levitation q:2 w:15 / potion of curing /\
 KITEM:   ! =  scroll of teleportation / scroll of fear w:5 /\
          scroll of blinking w:3 / scroll of magic mapping w:3 /\
          scroll of recharging w:2 / scroll of fog w:3
-#      Randomized enviroment
+#      Randomized environment
 SUBST:   . = .WW
 SUBST:   X = xx.
 SUBST:   Y = xw
@@ -1024,7 +1024,7 @@ ENDMAP
 # Cracked pipes. by co
 # Most of the time the player will move between the pipes through cracks,
 # these will be filled with rats. Only two of the paths will be generated
-# each map, but all three pipes will be accessable on all instances.
+# each map, but all three pipes will be accessible on all instances.
 # One map in three, will end in a harder rat nest containing a dangerous
 # orange rat. The harder rat nest also contains cheese and more loot.
 #
@@ -1048,7 +1048,7 @@ SHUFFLE: HI/JK/LM
 NSUBST:  H = 1:. / *:c
 NSUBST:  I = 1:. / *:c
 SUBST:   LMKJ = c
-#      randomize enviroment
+#      randomize environment
 SUBST:   . = .W
 SUBST:   V = .WWWW
 SUBST:   X = xx"
