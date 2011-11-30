@@ -44,8 +44,8 @@
  *
  * @param pot_eff       The potion type.
  * @param pow           The power of the effect. 40 for actual potions.
- * @param drank_it      Wether the player actually quaffed (potions and fountains).
- * @param was_known     Wether the potion was already identified.
+ * @param drank_it      Whether the player actually quaffed (potions and fountains).
+ * @param was_known     Whether the potion was already identified.
  * @param from_fountain Is this from a fountain?
  *
  * @return If the potion was identified.
