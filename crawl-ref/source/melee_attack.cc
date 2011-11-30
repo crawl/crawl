@@ -175,6 +175,15 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 
 bool melee_attack::handle_phase_attempted()
 {
+    // Skip invalid and dummy attacks.
+    if (!adjacent(attacker->pos(), defender->pos()) && attk_type != AT_HIT
+        && attk_flavour != AF_REACH || attk_type == AT_SHOOT)
+    {
+        --effective_attack_number;
+
+        return (false);
+    }
+
     if (attacker->atype() == ACT_PLAYER && defender->atype() == ACT_MONSTER)
     {
         if (weapon && is_unrandom_artefact(*weapon)
@@ -206,6 +215,12 @@ bool melee_attack::handle_phase_attempted()
         // additional energy is used for unarmed attacks.
         if (effective_attack_number == 0)
             attacker->lose_energy(EUT_ATTACK);
+
+        // Statues and other special monsters which have AT_NONE need to lose
+        // energy, but otherwise should exit the melee attack now.
+        if (attk_type == AT_NONE)
+            return (false);
+
         // Monsters lose additional energy only for the first two weapon
         // attacks; subsequent hits are free.
         if (effective_attack_number < 1)
@@ -233,11 +248,6 @@ bool melee_attack::handle_phase_attempted()
                     attacker->as_monster()->speed_increment -= delta;
             }
         }
-
-        // Statues and other special monsters which have AT_NONE need to lose
-        // energy, but otherwise should exit the melee attack now.
-        if (attk_type == AT_NONE)
-            return (false);
     }
 
     if (attacker != defender)

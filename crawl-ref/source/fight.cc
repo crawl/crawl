@@ -178,31 +178,13 @@ bool fight_melee(actor *attacker, actor *defender)
                 break;
         }
 
-        mon_attack_def attk = mons_attack_spec(attacker->as_monster(),
-                                               attack_number);
-
-        if (attk.type == AT_CHERUB)
-            attk.type = random_choose(AT_HIT, AT_BITE, AT_PECK, AT_GORE, -1);
-
-        if (attk.type == AT_NONE)
-        {
-            // Make sure the monster uses up some energy, even though it
-            // didn't actually attack.
-            if (effective_attack_number == 0)
-                attacker->as_monster()->lose_energy(EUT_ATTACK);
-            break;
-        }
-        // Skip invalid and dummy attacks.
-        if (!adjacent(attacker->pos(), defender->pos()) && attk.type != AT_HIT
-            && attk.flavour != AF_REACH || attk.type == AT_SHOOT)
-        {
-            --effective_attack_number;
-            continue;
-        }
-
         melee_attack melee_attk(attacker, defender, attack_number,
                           effective_attack_number);
-        melee_attk.attack();
+
+        // If the attack fails out, keep effective_attack_number up to
+        // date so that we don't cause excess energy loss in monsters
+        if (!melee_attk.attack())
+            effective_attack_number = melee_attk.effective_attack_number;
     }
 
     return (true);
