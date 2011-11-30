@@ -836,6 +836,9 @@ static void _seen_other_thing(dungeon_feature_type which_thing,
 
     default:
         const portal_type portal = _feature_to_portal(which_thing);
+        // hell upstairs are never interesting
+        if (portal == PORTAL_HELL && player_in_hell())
+            break;
         if (portal != PORTAL_NONE)
             portals_present[where] = portal;
         break;
