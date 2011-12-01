@@ -740,7 +740,15 @@ bool melee_attack::handle_phase_end()
 
 /* Initiate the processing of the attack
  *
+ * Called from the main code (fight.cc), this method begins the actual combat
+ * for a particular attack and is responsible for looping through each of the
+ * appropriate phases (which then can call other related phases within
+ * themselves).
  *
+ * Returns whether combat was completely successful
+ *      If combat was not successful, it could be any number of reasons, like
+ *      the defender or attacker dying during the attack? or a defender moving
+ *      from its starting position.
  */
 bool melee_attack::attack()
 {
@@ -787,54 +795,50 @@ bool melee_attack::attack()
         }
     }
 
-    if (!shield_blocked
-        && attacker != defender
-        && defender->atype() == ACT_PLAYER
-        && grid_distance(you.pos(), attacker->as_monster()->pos()) == 1)
-    {
-        // Check for defender Spines
-        do_spines();
-
-        // Spines can kill!
-        if (!attacker->alive())
-            return (false);
-    }
-
     if (shield_blocked)
     {
         handle_phase_blocked();
     }
-    else if (ev_margin >= 0)
-    {
-        if (attacker != defender && attack_warded_off())
-            {
-            // A warded-off attack takes half the normal energy.
-            attacker->gain_energy(EUT_ATTACK, 2);
-
-            perceived_attack = true;
-            return (false);
-        }
-
-        if (!handle_phase_hit())
-            return (false);
-    }
     else
     {
-        handle_phase_dodged();
+        if (attacker != defender
+            && defender->atype() == ACT_PLAYER
+            && grid_distance(defender->pos(), attacker->pos()) == 1)
+        {
+            // Check for defender Spines
+            do_spines();
+
+            // Spines can kill!
+            if (!attacker->alive())
+                return (false);
+        }
+
+        if (ev_margin >= 0)
+        {
+            if (attacker != defender && attack_warded_off())
+                {
+                // A warded-off attack takes half the normal energy.
+                attacker->gain_energy(EUT_ATTACK, 2);
+
+                perceived_attack = true;
+                return (false);
+            }
+
+            if (!handle_phase_hit())
+                return (false);
+        }
+        else
+            handle_phase_dodged();
     }
 
     // Remove sanctuary if - through some attack - it was violated.
     if (env.sanctuary_time > 0 && attack_occurred && !cancel_attack
-        && attacker != defender && !attacker->confused())
+        && attacker != defender && !attacker->confused()
+        && (is_sanctuary(attacker->pos()) || is_sanctuary(defender->pos()))
+        && (attacker->atype() == ACT_PLAYER
+            || attacker->as_monster()->friendly()))
     {
-        if (is_sanctuary(attacker->pos()) || is_sanctuary(defender->pos()))
-        {
-            if (attacker->atype() == ACT_PLAYER
-                || attacker->as_monster()->friendly())
-            {
-                remove_sanctuary(true);
-            }
-        }
+        remove_sanctuary(true);
     }
 
     if (attacker->atype() == ACT_PLAYER)
@@ -895,6 +899,12 @@ bool melee_attack::attack()
     return (attack_occurred);
 }
 
+/* Initializes the noise_factor
+ *
+ * For both players and monsters, separately sets the noise_factor for weapon
+ * attacks based on damage type or attack_type/attack_flavour respectively.
+ * Sets an average noise value for unarmed combat regardless of atype().
+ */
 // TODO: Unify attack_type and unarmed_attack_type, the former includes the latter
 // however formerly, attack_type was mons_attack_type and used exclusively for monster use.
 void melee_attack::adjust_noise()
@@ -1018,6 +1028,11 @@ bool melee_attack::check_unrand_effects()
     return (false);
 }
 
+/* Setup all unarmed (non attack_type) variables
+ *
+ * Clears any previous unarmed attack information and sets everything from
+ * noise_factor to verb and damage. Called after player_aux_choose_baseattack
+ */
 void melee_attack::player_aux_setup(unarmed_attack_type atk)
 {
     noise_factor = 100;
@@ -1168,7 +1183,13 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
     }
 }
 
-
+/* Selects the unarmed attack type
+ *
+ * Selects at random, but then takes into accout various combinations of player
+ * species, transformations, and other stuff to determine whether the randomly
+ * selected unarmed attack type is appropriate (eg, no kicking for octopodes...
+ * who technically lack legs.
+ */
 unarmed_attack_type melee_attack::player_aux_choose_baseattack()
 {
     unarmed_attack_type baseattack =
@@ -1249,6 +1270,14 @@ bool melee_attack::player_aux_test_hit()
     return (false);
 }
 
+/* Controls the looping on available unarmed attacks
+ *
+ * As the master method for unarmed player combat, this loops through
+ * available unarmed attacks, determining whether they hit and - if so -
+ * calculating and applying their damage.
+ *
+ * Returns (defender dead)
+ */
 // Returns true to end the attack round.
 bool melee_attack::player_aux_unarmed()
 {
