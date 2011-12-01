@@ -31,6 +31,7 @@
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tileview.h"
+ #include "tiledef-main.h"
 #endif
 #include "traps.h"
 #include "travel.h"
@@ -253,12 +254,39 @@ static void _update_item_at(const coord_def &gp)
 
 static void _update_cloud(int cloudno)
 {
-    const coord_def gp = env.cloud[cloudno].pos;
-    cloud_type cloud   = env.cloud[cloudno].type;
-    env.map_knowledge(gp).set_cloud(cloud, get_cloud_colour(cloudno));
+    cloud_struct& cloud = env.cloud[cloudno];
+    const coord_def gp = cloud.pos;
+
+    tileidx_t ch = 0;
 
 #ifdef USE_TILE
-    tile_place_cloud(gp, env.cloud[cloudno]);
+    tileidx_t index = 0;
+    if (!cloud.tile.empty())
+    {
+        if (!tile_main_index(cloud.tile.c_str(), &index))
+        {
+            mprf(MSGCH_ERROR, "Invalid tile requested for cloud: '%s'.", cloud.tile.c_str());
+            ch = TILE_ERROR;
+        }
+        else
+        {
+            int offset = tile_main_count(index);
+            ch = index + offset;
+        }
+    }
+#endif
+
+    int dur = cloud.decay/20;
+    if (dur < 0)
+        dur = 0;
+    else if (dur > 3)
+        dur = 3;
+
+    cloud_info ci(cloud.type, get_cloud_colour(cloudno), dur, ch, gp);
+    env.map_knowledge(gp).set_cloud(ci);
+
+#ifdef USE_TILE
+    tile_place_cloud(gp, *env.map_knowledge(gp).cloudinfo());
 #endif
 }
 

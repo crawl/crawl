@@ -11,7 +11,7 @@
 #include "tiledef_defines.h"
 
 struct bolt;
-struct cloud_struct;
+struct cloud_info;
 struct coord_def;
 struct item_def;
 class monster;
@@ -31,7 +31,7 @@ tileidx_t tileidx_item(const item_def &item);
 tileidx_t tileidx_item_throw(const item_def &item, int dx, int dy);
 tileidx_t tileidx_known_base_item(tileidx_t label);
 
-tileidx_t tileidx_cloud(const cloud_struct &cl, bool disturbance = false);
+tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance = false);
 tileidx_t tileidx_bolt(const bolt &bolt);
 tileidx_t tileidx_zap(int colour);
 tileidx_t tileidx_spell(const spell_type spell);
