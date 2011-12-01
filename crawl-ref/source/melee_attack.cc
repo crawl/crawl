@@ -132,6 +132,8 @@ melee_attack::melee_attack(actor *attk, actor *defn,
                 attk_type = AT_HIT;
         }
     }
+    else
+        attk_type = AT_HIT;
 
     shield = attacker->shield();
     defender_shield = defender ? defender->shield() : defender_shield;
