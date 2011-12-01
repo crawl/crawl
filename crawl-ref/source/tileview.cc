@@ -768,7 +768,7 @@ void tile_reset_feat(const coord_def &gc)
     env.tile_bk_bg(gc) = tileidx_feature(gc);
 }
 
-void tile_place_cloud(const coord_def &gc, const cloud_struct &cl)
+void tile_place_cloud(const coord_def &gc, const cloud_info &cl)
 {
     // In the Shoals, ink is handled differently. (jpeg)
     // I'm not sure it is even possible anywhere else, but just to be safe...

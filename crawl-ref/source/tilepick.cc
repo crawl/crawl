@@ -4067,34 +4067,18 @@ tileidx_t tileidx_known_base_item(tileidx_t label)
     return (0);
 }
 
-tileidx_t tileidx_cloud(const cloud_struct &cl, bool disturbance)
+tileidx_t tileidx_cloud(const cloud_info &cl, bool disturbance)
 {
     int type  = cl.type;
-    int decay = cl.decay;
-    std::string override = cl.tile;
     int colour = cl.colour;
 
-    tileidx_t ch  = TILE_ERROR;
-    int dur = decay/20;
-    if (dur < 0)
-        dur = 0;
-    else if (dur > 2)
+    tileidx_t ch = cl.tile;
+    int dur = cl.duration;
+
+    if (type != CLOUD_MAGIC_TRAIL && dur > 2)
         dur = 2;
 
-    if (!override.empty())
-    {
-        tileidx_t index;
-        if (!tile_main_index(override.c_str(), &index))
-        {
-            mprf(MSGCH_ERROR, "Invalid tile requested for cloud: '%s'.", override.c_str());
-        }
-        else
-        {
-            int offset = tile_main_count(index);
-            ch = index + offset;
-        }
-    }
-    else
+    if (ch == 0)
     {
         switch (type)
         {
@@ -4144,8 +4128,6 @@ tileidx_t tileidx_cloud(const cloud_struct &cl, bool disturbance)
                 break;
 
             case CLOUD_MAGIC_TRAIL:
-                if (decay/20 > 2)
-                    dur = 3;
                 ch = TILE_CLOUD_MAGIC_TRAIL_0 + dur;
                 break;
 

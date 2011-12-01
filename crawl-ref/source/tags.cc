@@ -2836,7 +2836,9 @@ void unmarshallItem(reader &th, item_def &item)
 #define MAP_SERIALIZE_ITEM 0x10
 #define MAP_SERIALIZE_CLOUD 0x20
 #define MAP_SERIALIZE_MONSTER 0x40
-#define MAP_SERIALIZE_CLOUD_COLOUR 0x80
+#if TAG_MAJOR_VERSION == 32
+ #define MAP_SERIALIZE_CLOUD_COLOUR 0x80
+#endif
 
 void marshallMapCell(writer &th, const map_cell &cell)
 {
@@ -2857,9 +2859,6 @@ void marshallMapCell(writer &th, const map_cell &cell)
 
     if (cell.cloud() != CLOUD_NONE)
         flags |= MAP_SERIALIZE_CLOUD;
-
-    if (cell.cloud_colour())
-        flags |= MAP_SERIALIZE_CLOUD_COLOUR;
 
     if (cell.item())
         flags |= MAP_SERIALIZE_ITEM;
@@ -2892,10 +2891,13 @@ void marshallMapCell(writer &th, const map_cell &cell)
         marshallByte(th, cell.trap());
 
     if (flags & MAP_SERIALIZE_CLOUD)
-        marshallUnsigned(th, cell.cloud());
-
-    if (flags & MAP_SERIALIZE_CLOUD_COLOUR)
-        marshallUnsigned(th, cell.cloud_colour());
+    {
+        cloud_info* ci = cell.cloudinfo();
+        marshallUnsigned(th, ci->type);
+        marshallUnsigned(th, ci->colour);
+        marshallUnsigned(th, ci->duration);
+        marshallShort(th, ci->tile);
+    }
 
     if (flags & MAP_SERIALIZE_ITEM)
         marshallItem(th, *cell.item());
@@ -2948,15 +2950,30 @@ void unmarshallMapCell(reader &th, map_cell& cell)
 
     cell.set_feature(feature, feat_colour, trap);
 
-    cloud_type cloud = CLOUD_NONE;
-    unsigned cloud_colour = 0;
-    if (flags & MAP_SERIALIZE_CLOUD)
-        cloud = (cloud_type)unmarshallUnsigned(th);
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_MINOR_TRANSIENT_MCACHE)
+    {
+        cloud_info ci;
+        if (flags & MAP_SERIALIZE_CLOUD)
+            ci.type = (cloud_type)unmarshallUnsigned(th);
 
-    if (flags & MAP_SERIALIZE_CLOUD_COLOUR)
-        cloud_colour = unmarshallUnsigned(th);
+        if (flags & MAP_SERIALIZE_CLOUD_COLOUR)
+            ci.colour = unmarshallUnsigned(th);
 
-    cell.set_cloud(cloud, cloud_colour);
+        if (flags & MAP_SERIALIZE_CLOUD)
+            cell.set_cloud(ci);
+    }
+    else
+#endif
+        if (flags & MAP_SERIALIZE_CLOUD)
+        {
+            cloud_info ci;
+            ci.type = (cloud_type)unmarshallUnsigned(th);
+            unmarshallUnsigned(th, ci.colour);
+            unmarshallUnsigned(th, ci.duration);
+            ci.tile = unmarshallShort(th);
+            cell.set_cloud(ci);
+        }
 
     if (flags & MAP_SERIALIZE_ITEM)
     {
@@ -3421,8 +3438,11 @@ static void tag_read_level(reader &th)
             ASSERT(grd[i][j] < NUM_FEATURES);
 
             unmarshallMapCell(th, env.map_knowledge[i][j]);
+            // Fixup positions
             if (env.map_knowledge[i][j].monsterinfo())
                 env.map_knowledge[i][j].monsterinfo()->pos = coord_def(i, j);
+            if (env.map_knowledge[i][j].cloudinfo())
+                env.map_knowledge[i][j].cloudinfo()->pos = coord_def(i, j);
 
             env.map_knowledge[i][j].flags &=~ MAP_VISIBLE_FLAG;
             env.pgrid[i][j] = unmarshallInt(th);
@@ -3794,8 +3814,11 @@ static void _reinit_mcache()
     for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1));
          ri; ++ri)
     {
-        if (env.tile_bk_fg(*ri) >= TILEP_MCACHE_START)
+        tileidx_t fg = env.tile_bk_fg(*ri) & TILE_FLAG_MASK;
+        if (fg >= TILEP_MCACHE_START)
+        {
             env.tile_bk_fg(*ri) = 0;
+        }
         if (env.map_knowledge(*ri).monsterinfo())
         {
             tile_place_monster(*ri, *env.map_knowledge(*ri).monsterinfo());
