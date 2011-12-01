@@ -594,11 +594,8 @@ static bool _check_buggy_deck(item_def& deck)
             num_cards--;
             num_buggy++;
         }
-        else
-        {
-            if (_flags & CFLAG_MARKED)
-                num_marked++;
-        }
+        else if (_flags & CFLAG_MARKED)
+            num_marked++;
     }
 
     if (num_buggy > 0)
@@ -2006,13 +2003,10 @@ static void _focus_card(int power, deck_rarity_type rarity)
         god_type which_god = crawl_state.which_god_acting();
         if (crawl_state.is_god_retribution())
             cause = "the wrath of " + god_name(which_god);
+        else if (which_god == GOD_XOM)
+            cause = "the capriciousness of Xom";
         else
-        {
-            if (which_god == GOD_XOM)
-                cause = "the capriciousness of Xom";
-            else
-                cause = "the 'helpfulness' of " + god_name(which_god);
-        }
+            cause = "the 'helpfulness' of " + god_name(which_god);
     }
 
     modify_stat(best_stat, 1, true, cause.c_str(), true);
@@ -2035,13 +2029,10 @@ static void _shuffle_card(int power, deck_rarity_type rarity)
         god_type which_god = crawl_state.which_god_acting();
         if (crawl_state.is_god_retribution())
             cause = "the wrath of " + god_name(which_god);
+        else if (which_god == GOD_XOM)
+            cause = "the capriciousness of Xom";
         else
-        {
-            if (which_god == GOD_XOM)
-                cause = "the capriciousness of Xom";
-            else
-                cause = "the 'helpfulness' of " + god_name(which_god);
-        }
+            cause = "the 'helpfulness' of " + god_name(which_god);
     }
 
     for (int i = 0; i < NUM_STATS; ++i)
@@ -2378,9 +2369,7 @@ static void _trowel_card(int power, deck_rarity_type rarity)
         // Generate a portal to something.
         const map_def *map = random_map_for_tag("trowel_portal");
         if (!map)
-        {
             mpr("A buggy portal flickers into view, then vanishes.");
-        }
         else
         {
             {
@@ -2607,9 +2596,7 @@ static void _summon_any_monster(int power, deck_rarity_type rarity)
 
         monster_type cur_try;
         do
-        {
             cur_try = random_monster_at_grid(you.pos() + delta);
-        }
         while (mons_is_unique(cur_try));
 
         if (mon_chosen == NUM_MONSTERS
@@ -2828,9 +2815,7 @@ static int _card_power(deck_rarity_type rarity)
     int result = 0;
 
     if (you.penance[GOD_NEMELEX_XOBEH])
-    {
         result -= you.penance[GOD_NEMELEX_XOBEH];
-    }
     else if (you.religion == GOD_NEMELEX_XOBEH)
     {
         result = you.piety;
