@@ -242,6 +242,19 @@ swamp1
 swamp2
 swamp3
 
+spider00 FLOOR_SPIDER
+spider01
+spider02
+spider03
+spider04
+spider05
+spider06
+spider07
+spider08
+spider09
+spider10
+spider11
+
 tomb0 FLOOR_TOMB
 tomb1
 tomb2
