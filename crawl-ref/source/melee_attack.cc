@@ -2961,7 +2961,6 @@ bool melee_attack::apply_damage_brand()
         // Handle weapon effects.
         // We only get here if we've done base damage, so no
         // worries on that score.
-
         if (attacker->atype() == ACT_PLAYER)
             mpr("You feel better.");
         else if (attacker_visible)
