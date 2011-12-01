@@ -732,14 +732,14 @@ bool melee_attack::handle_phase_end()
 {
     if (attacker->atype() == ACT_PLAYER)
     {
-        print_wounds(defender->as_monster());
-
         // returns whether an aux attack successfully took place
         if (!defender->as_monster()->friendly()
             && adjacent(defender->pos(), attacker->pos()))
         {
             player_aux_unarmed();
         }
+
+        print_wounds(defender->as_monster());
     }
 
     // Check for passive mutation effects.
