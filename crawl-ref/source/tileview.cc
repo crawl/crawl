@@ -206,7 +206,6 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
 
     case BRANCH_LAIR:
     case BRANCH_FOREST:
-    case BRANCH_SPIDER_NEST:
         flv.wall  = TILE_WALL_LAIR;
         flv.floor = TILE_FLOOR_LAIR;
         return;
@@ -229,6 +228,11 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
     case BRANCH_SHOALS:
         flv.wall  = TILE_WALL_YELLOW_ROCK;
         flv.floor = TILE_FLOOR_SAND_STONE;
+        return;
+
+    case BRANCH_SPIDER_NEST:
+        flv.wall  = TILE_WALL_LAIR;
+        flv.floor = TILE_FLOOR_SPIDER;
         return;
 
     case BRANCH_HALL_OF_ZOT:
