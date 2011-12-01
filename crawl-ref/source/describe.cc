@@ -508,13 +508,13 @@ static std::string _randart_descrip(const item_def &item)
     // Some special cases which don't fit into the above.
     if (known_proprt(ARTP_METABOLISM))
     {
-        if (proprt[ ARTP_METABOLISM ] >= 3)
+        if (proprt[ARTP_METABOLISM] >= 3)
             description += "\nIt greatly speeds your metabolism.";
-        else if (proprt[ ARTP_METABOLISM ] >= 1)
+        else if (proprt[ARTP_METABOLISM] >= 1)
             description += "\nIt speeds your metabolism. ";
-        if (proprt[ ARTP_METABOLISM ] <= -3)
+        if (proprt[ARTP_METABOLISM] <= -3)
             description += "\nIt greatly slows your metabolism.";
-        else if (proprt[ ARTP_METABOLISM ] <= -1)
+        else if (proprt[ARTP_METABOLISM] <= -1)
             description += "\nIt slows your metabolism. ";
     }
 
@@ -530,7 +530,7 @@ static std::string _randart_descrip(const item_def &item)
 
     if (known_proprt(ARTP_MUTAGENIC))
     {
-        if (proprt[ ARTP_MUTAGENIC ] > 3)
+        if (proprt[ARTP_MUTAGENIC] > 3)
             description += "\nIt glows with mutagenic radiation.";
         else
             description += "\nIt emits mutagenic radiation.";
