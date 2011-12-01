@@ -407,8 +407,10 @@ bool melee_attack::handle_phase_dodged()
 /* An attack has been determined to have hit something
  *
  * Handles to-hit effects for both attackers and defenders,
- * Determines shield_block and passess off execution to handle_phase_blocked,
  * Determines damage and passes off execution to handle_phase_damaged
+ * Also applies weapon brands
+ *
+ * Returns (continue combat)
  */
 bool melee_attack::handle_phase_hit()
 {
@@ -451,7 +453,7 @@ bool melee_attack::handle_phase_hit()
         slimify_monster(defender->as_monster());
         you.duration[DUR_SLIMIFY] = 0;
 
-        return (true);
+        return (false);
     }
 
     // This does more than just calculate the damage, it also sets up
@@ -460,7 +462,7 @@ bool melee_attack::handle_phase_hit()
 
     // Check if some hit-effect killed the monster
     if (attacker->atype() == ACT_PLAYER && player_monattk_hit_effects())
-        return (true);
+        return (false);
 
     if (damage_done > 0)
     {
@@ -736,6 +738,10 @@ bool melee_attack::handle_phase_end()
     return(true);
 }
 
+/* Initiate the processing of the attack
+ *
+ *
+ */
 bool melee_attack::attack()
 {
     if (!handle_phase_attempted())
@@ -809,7 +815,8 @@ bool melee_attack::attack()
             return (false);
         }
 
-        handle_phase_hit();
+        if (!handle_phase_hit())
+            return (false);
     }
     else
     {
