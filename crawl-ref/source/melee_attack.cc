@@ -4434,7 +4434,7 @@ void melee_attack::do_minotaur_retaliation()
     if (!defender->is_player())
     {
         // monsters have no STR or DEX
-        if (!x_chance_in_y(5, 5))
+        if (!x_chance_in_y(2, 5))
             return;
 
         int hurt = random2(20) - attacker->armour_class();
