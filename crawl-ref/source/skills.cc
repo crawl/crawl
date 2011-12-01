@@ -486,6 +486,11 @@ bool training_restricted(skill_type sk)
  */
 void init_can_train()
 {
+    // Clear everything out, in case this isn't the first game.
+    you.start_train.clear();
+    you.stop_train.clear();
+    you.can_train.init(false);
+
     for (int i = 0; i < NUM_SKILLS; ++i)
     {
         const skill_type sk = skill_type(i);
