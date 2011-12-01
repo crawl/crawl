@@ -2798,7 +2798,7 @@ bool melee_attack::apply_damage_brand()
 {
     bool brand_was_known = false;
     int brand, res = 0;
-    bool ret
+    bool ret = false;
 
     if (weapon)
     {
