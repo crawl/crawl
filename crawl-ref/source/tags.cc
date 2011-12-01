@@ -2952,7 +2952,7 @@ void unmarshallMapCell(reader &th, map_cell& cell)
     cell.set_feature(feature, feat_colour, trap);
 
 #if TAG_MAJOR_VERSION == 32
-    if (th.getMinorVersion() < TAG_MINOR_TRANSIENT_MCACHE)
+    if (th.getMinorVersion() < TAG_MINOR_LESS_TILE_DATA)
     {
         cloud_info ci;
         if (flags & MAP_SERIALIZE_CLOUD)
@@ -3165,7 +3165,7 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
 void unmarshallMonsterInfo(reader &th, monster_info& mi)
 {
 #if TAG_MAJOR_VERSION == 32
-    if (th.getMinorVersion() < TAG_MINOR_TRANSIENT_MCACHE)
+    if (th.getMinorVersion() < TAG_MINOR_LESS_TILE_DATA)
         mi.pos = unmarshallCoord(th);
 
     if (th.getMinorVersion() < TAG_MINOR_64_MB)
@@ -3184,7 +3184,7 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     ASSERT(!invalid_monster_type(mi.type));
     unmarshallUnsigned(th, mi.base_type);
 #if TAG_MAJOR_VERSION == 32
-    if (th.getMinorVersion() >= TAG_MINOR_TRANSIENT_MCACHE)
+    if (th.getMinorVersion() >= TAG_MINOR_LESS_TILE_DATA)
 #endif
         if (mons_genus(mi.type) == MONS_DRACONIAN)
             unmarshallUnsigned(th, mi.draco_type);
@@ -3201,7 +3201,7 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     mi.quote = unmarshallString(th);
 
 #if TAG_MAJOR_VERSION == 32
-    if (th.getMinorVersion() >= TAG_MINOR_TRANSIENT_MCACHE)
+    if (th.getMinorVersion() >= TAG_MINOR_LESS_TILE_DATA)
     {
 #endif
         unmarshallUnsigned(th, mi.holi);
@@ -3216,7 +3216,7 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     unmarshallUnsigned(th, mi.fly);
 
 #if TAG_MAJOR_VERSION == 32
-    if (th.getMinorVersion() >= TAG_MINOR_TRANSIENT_MCACHE)
+    if (th.getMinorVersion() >= TAG_MINOR_LESS_TILE_DATA)
     {
 #endif
         mi.two_weapons = unmarshallBoolean(th);
@@ -3226,7 +3226,7 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     if (th.getMinorVersion() < TAG_MINOR_NEW_MIMICS)
         unmarshallUnsigned(th);
 
-    if (th.getMinorVersion() >= TAG_MINOR_TRANSIENT_MCACHE)
+    if (th.getMinorVersion() >= TAG_MINOR_LESS_TILE_DATA)
 #endif
     {
         for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
@@ -3771,7 +3771,7 @@ void tag_read_level_tiles(reader &th)
     const int gy = unmarshallShort(th);
 
 #if TAG_MAJOR_VERSION == 32
-    if (th.getMinorVersion() < TAG_MINOR_TRANSIENT_MCACHE)
+    if (th.getMinorVersion() < TAG_MINOR_LESS_TILE_DATA)
     {
         // Throw away tile_bk data
         // BG first
@@ -3836,7 +3836,7 @@ void tag_read_level_tiles(reader &th)
     _debug_count_tiles();
 
 #if TAG_MAJOR_VERSION == 32
-    if (th.getMinorVersion() < TAG_MINOR_TRANSIENT_MCACHE)
+    if (th.getMinorVersion() < TAG_MINOR_LESS_TILE_DATA)
     {
         mcache.read(th);
         if (th.getMinorVersion() >= TAG_MINOR_MONSTER_TILES)
