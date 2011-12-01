@@ -257,7 +257,7 @@ static void _update_cloud(int cloudno)
     cloud_struct& cloud = env.cloud[cloudno];
     const coord_def gp = cloud.pos;
 
-    tileidx_t ch = 0;
+    unsigned short ch = 0;
 
 #ifdef USE_TILE
     tileidx_t index = 0;

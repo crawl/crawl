@@ -10,14 +10,14 @@ struct cloud_info
     { }
 
     cloud_info(cloud_type t, uint8_t c,
-               uint8_t dur, tileidx_t til, coord_def gc)
+               uint8_t dur, unsigned short til, coord_def gc)
         : type(t), colour(c), duration(dur), tile(til), pos(gc)
     { }
 
     cloud_type type:8;
     uint8_t colour;
     uint8_t duration; // decay/20, clamped to 0-3
-    tileidx_t tile;
+    unsigned short tile;
     coord_def pos;
 };
 
