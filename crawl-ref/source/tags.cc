@@ -288,6 +288,7 @@ static void tag_read_level_items(reader &th);
 static void tag_read_level_monsters(reader &th);
 static void tag_read_level_tiles(reader &th);
 static void tag_missing_level_tiles();
+static void tag_init_tile_bk();
 
 static void tag_construct_ghost(writer &th);
 static void tag_read_ghost(reader &th);
@@ -3315,68 +3316,6 @@ void tag_construct_level_tiles(writer &th)
     // how many Y?
     marshallShort(th, GYM);
 
-    tile = env.tile_bk_bg[0][0];
-    //  bg first
-    for (int count_x = 0; count_x < GXM; count_x++)
-        for (int count_y = 0; count_y < GYM; count_y++)
-        {
-            last_tile = tile;
-            tile = env.tile_bk_bg[count_x][count_y];
-
-            if (tile == last_tile)
-            {
-                rle_count++;
-                if (rle_count == 0x100)
-                {
-                    marshallInt(th, last_tile);
-                    marshallUByte(th, 0xFF);
-                    rle_count = 1;
-                }
-            }
-            else
-            {
-                marshallInt(th, last_tile);
-                // Note: the unsigned char tile count gets streamed
-                // as a signed char here.  It gets read back into
-                // an unsigned char in the read function.
-                marshallUByte(th, rle_count);
-                rle_count = 1;
-            }
-        }
-
-    marshallInt(th, tile);
-    marshallUByte(th, rle_count);
-
-    // fg
-    tile = env.tile_bk_fg[0][0];
-    rle_count = 0;
-    for (int count_x = 0; count_x < GXM; count_x++)
-        for (int count_y = 0; count_y < GYM; count_y++)
-        {
-            last_tile = tile;
-            tile = env.tile_bk_fg[count_x][count_y];
-
-            if (tile == last_tile)
-            {
-                rle_count++;
-                if (rle_count == 0x100)
-                {
-                    marshallInt(th, last_tile);
-                    marshallUByte(th, (char)0xFF);
-                    rle_count = 1;
-                }
-            }
-            else
-            {
-                marshallInt(th, last_tile);
-                marshallUByte(th, rle_count);
-                rle_count = 1;
-            }
-        }
-
-    marshallInt(th, tile);
-    marshallUByte(th, rle_count);
-
     marshallShort(th, env.tile_names.size());
     for (unsigned int i = 0; i < env.tile_names.size(); ++i)
     {
@@ -3808,25 +3747,6 @@ static void _debug_count_tiles()
 #endif
 }
 
-#ifdef USE_TILE
-static void _reinit_mcache()
-{
-    for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1));
-         ri; ++ri)
-    {
-        tileidx_t fg = env.tile_bk_fg(*ri) & TILE_FLAG_MASK;
-        if (fg >= TILEP_MCACHE_START)
-        {
-            env.tile_bk_fg(*ri) = 0;
-        }
-        if (env.map_knowledge(*ri).monsterinfo())
-        {
-            tile_place_monster(*ri, *env.map_knowledge(*ri).monsterinfo());
-        }
-   }
-}
-#endif
-
 void tag_read_level_tiles(reader &th)
 {
     if (!unmarshallBoolean(th))
@@ -3835,19 +3755,12 @@ void tag_read_level_tiles(reader &th)
         dprf("Tile data missing -- recreating from scratch.");
 #endif
         tag_missing_level_tiles();
+        tag_init_tile_bk();
         _debug_count_tiles();
         return;
     }
 
 #ifdef USE_TILE
-    // Initialise env settings.
-    for (int i = 0; i < GXM; i++)
-        for (int j = 0; j < GYM; j++)
-        {
-            env.tile_bk_bg[i][j] = 0;
-            env.tile_bk_fg[i][j] = 0;
-        }
-
     unsigned int rle_count = 0;
     unsigned int tile = 0;
 
@@ -3856,35 +3769,37 @@ void tag_read_level_tiles(reader &th)
     const int gx = unmarshallShort(th);
     // how many Y?
     const int gy = unmarshallShort(th);
-    ASSERT(gx == GXM);
-    ASSERT(gy == GYM);
 
-    // BG first
-    for (int i = 0; i < gx; i++)
-        for (int j = 0; j < gy; j++)
-        {
-            if (rle_count == 0)
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() < TAG_MINOR_TRANSIENT_MCACHE)
+    {
+        // Throw away tile_bk data
+        // BG first
+        for (int i = 0; i < gx; i++)
+            for (int j = 0; j < gy; j++)
             {
-                tile      = unmarshallInt(th);
-                rle_count = unmarshallUByte(th);
+                if (rle_count == 0)
+                {
+                    unmarshallInt(th);
+                    rle_count = unmarshallUByte(th);
+                }
+                rle_count--;
             }
-            env.tile_bk_bg[i][j] = tile;
-            rle_count--;
-        }
 
-    // FG
-    rle_count = 0;
-    for (int i = 0; i < gx; i++)
-        for (int j = 0; j < gy; j++)
-        {
-            if (rle_count == 0)
+        // FG
+        rle_count = 0;
+        for (int i = 0; i < gx; i++)
+            for (int j = 0; j < gy; j++)
             {
-                tile      = unmarshallInt(th);
-                rle_count = unmarshallUByte(th);
+                if (rle_count == 0)
+                {
+                    unmarshallInt(th);
+                    rle_count = unmarshallUByte(th);
+                }
+                rle_count--;
             }
-            env.tile_bk_fg[i][j] = tile;
-            rle_count--;
-        }
+    }
+#endif
 
     env.tile_names.clear();
     unsigned int num_tilenames = unmarshallShort(th);
@@ -3935,10 +3850,9 @@ void tag_read_level_tiles(reader &th)
         dprf("DNGN tilecount has changed -- recreating tile data.");
         tag_missing_level_tiles();
     }
-    else
-    {
-        _reinit_mcache();
-    }
+
+    // Draw remembered map
+    tag_init_tile_bk();
 
 #else // not Tiles
     // Snarf all remaining data, throwing it out.
@@ -4026,12 +3940,6 @@ static void _reinit_flavour_tiles()
             if (!env.tile_flv(*ri).feat)
                 env.tile_flv(*ri).feat_idx = 0;
         }
-        tileidx_t fg, bg;
-        // FIXME: This should use the functions from tileview.cc
-        tileidx_from_map_cell(&fg, &bg, *ri);
-
-        env.tile_bk_bg(*ri) = bg;
-        env.tile_bk_fg(*ri) = fg;
    }
 }
 #endif
@@ -4041,13 +3949,22 @@ static void tag_missing_level_tiles()
 #ifdef USE_TILE
     tile_init_default_flavour();
     tile_clear_flavour();
-    mcache.clear_all();
     _reinit_flavour_tiles();
 
     tile_new_level(true, false);
 #endif
 }
 
+static void tag_init_tile_bk()
+{
+#ifdef USE_TILE
+    for (rectangle_iterator ri(coord_def(0, 0), coord_def(GXM-1, GYM-1));
+         ri; ++ri)
+    {
+        tile_draw_map_cell(*ri);
+    }
+#endif
+}
 // ------------------------------- ghost tags ---------------------------- //
 
 static void marshallResists(writer &th, const mon_resist_def &res)

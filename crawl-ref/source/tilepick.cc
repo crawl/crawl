@@ -493,33 +493,6 @@ tileidx_t tileidx_out_of_bounds(int branch)
         return (TILE_DNGN_UNSEEN | TILE_FLAG_UNSEEN);
 }
 
-void tileidx_from_map_cell(tileidx_t *fg, tileidx_t *bg, const coord_def& gc)
-{
-    const map_cell& cell = env.map_knowledge(gc);
-    *bg = tileidx_feature(gc);
-
-    switch (get_cell_show_class(cell))
-    {
-    default:
-    case SH_NOTHING:
-    case SH_FEATURE:
-        *fg = 0;
-        break;
-    case SH_ITEM:
-        *fg = tileidx_item(*cell.item());
-        break;
-    case SH_CLOUD:
-        *fg = TILE_CLOUD_GREY_SMOKE;
-        break;
-    case SH_INVIS_EXPOSED:
-        *fg = TILE_UNSEEN_MONSTER;
-        break;
-    case SH_MONSTER:
-        *fg = tileidx_monster(*cell.monsterinfo());
-        break;
-    }
-}
-
 void tileidx_out_of_los(tileidx_t *fg, tileidx_t *bg, const coord_def& gc)
 {
     // Player memory.
