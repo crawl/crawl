@@ -119,7 +119,7 @@ void jiyva_stat_action()
     int target_stat[3];
     for (int x = 0; x < 3; ++x)
     {
-        cur_stat[x] = you.max_stat(static_cast<stat_type>(x));
+        cur_stat[x] = you.stat(static_cast<stat_type>(x), false);
         stat_total += cur_stat[x];
     }
     // Try to avoid burdening people or making their armour difficult to use.
