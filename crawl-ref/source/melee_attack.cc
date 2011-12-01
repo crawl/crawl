@@ -143,25 +143,6 @@ melee_attack::melee_attack(actor *attk, actor *defn,
             unrand_entry = get_unrand_entry(weapon->special);
     }
 
-    if (weapon)
-    {
-        hands = hands_reqd(*weapon, attacker->body_size());
-
-        switch (single_damage_type(*weapon))
-        {
-        case DAM_BLUDGEON:
-        case DAM_WHIP:
-            noise_factor = 125;
-            break;
-        case DAM_SLICE:
-            noise_factor = 100;
-            break;
-        case DAM_PIERCE:
-            noise_factor = 75;
-            break;
-        }
-    }
-
     attacker_visible   = attacker->observable();
     attacker_invisible = (!attacker_visible && you.see_cell(attacker->pos()));
     defender_visible   = defender && defender->observable();
@@ -911,7 +892,25 @@ bool melee_attack::attack()
 // however formerly, attack_type was mons_attack_type and used exclusively for monster use.
 void melee_attack::adjust_noise()
 {
-    if (weapon == NULL && attacker->atype() == ACT_MONSTER)
+    if (attacker->atype() == ACT_PLAYER && weapon != NULL)
+    {
+        hands = hands_reqd(*weapon, attacker->body_size());
+
+        switch (single_damage_type(*weapon))
+        {
+        case DAM_BLUDGEON:
+        case DAM_WHIP:
+            noise_factor = 125;
+            break;
+        case DAM_SLICE:
+            noise_factor = 100;
+            break;
+        case DAM_PIERCE:
+            noise_factor = 75;
+            break;
+        }
+    }
+    else if (attacker->atype() == ACT_MONSTER && weapon == NULL)
     {
         switch (attk_type)
         {
@@ -2762,7 +2761,8 @@ attack_flavour melee_attack::random_chaos_attack_flavour()
 bool melee_attack::apply_damage_brand()
 {
     bool brand_was_known = false;
-    int brand;
+    int brand, res = 0;
+    bool ret
 
     if (weapon)
     {
@@ -2771,18 +2771,10 @@ bool melee_attack::apply_damage_brand()
         else
             brand_was_known = item_type_known(*weapon);
     }
-    bool ret = false;
-
-    // Monster resistance to the brand.
-    int res = 0;
 
     special_damage = 0;
     obvious_effect = false;
-
-    if (damage_brand == SPWPN_CHAOS)
-        brand = random_chaos_brand();
-    else
-        brand = damage_brand;
+    brand = damage_brand == SPWPN_CHAOS ? random_chaos_brand() : damage_brand;
 
     switch (brand)
     {
