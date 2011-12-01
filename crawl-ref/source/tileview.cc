@@ -605,6 +605,55 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
         }
 }
 
+static tileidx_t _get_floor_bg(const coord_def& gc)
+{
+    tileidx_t bg = TILE_DNGN_UNSEEN | tileidx_unseen_flag(gc);
+
+    if (map_bounds(gc))
+    {
+        bg = tileidx_feature(gc);
+
+        dungeon_feature_type feat = grid_appearance(gc);
+        if (feat == DNGN_DETECTED_SECRET_DOOR)
+            bg |= TILE_FLAG_WAS_SECRET;
+        else if (is_unknown_stair(gc))
+            bg |= TILE_FLAG_NEW_STAIR;
+    }
+
+    return bg;
+}
+
+void tile_draw_map_cell(const coord_def& gc)
+{
+    env.tile_bk_bg(gc) = _get_floor_bg(gc);
+
+    const map_cell& cell = env.map_knowledge(gc);
+
+    switch (get_cell_show_class(cell))
+    {
+    default:
+    case SH_NOTHING:
+    case SH_FEATURE:
+        env.tile_bk_fg(gc) = 0;
+        break;
+    case SH_ITEM:
+        if (feat_is_stair(cell.feat()))
+            tile_place_item_marker(gc, *cell.item());
+        else
+            tile_place_item(gc, *cell.item());
+        break;
+    case SH_CLOUD:
+        tile_place_cloud(gc, *cell.cloudinfo());
+        break;
+    case SH_INVIS_EXPOSED:
+        tile_place_invisible_monster(gc);
+        break;
+    case SH_MONSTER:
+        tile_place_monster(gc, *cell.monsterinfo());
+        break;
+    }
+}
+
 void tile_draw_floor()
 {
     for (int cy = 0; cy < env.tile_fg.height(); cy++)
@@ -613,19 +662,7 @@ void tile_draw_floor()
             const coord_def ep(cx, cy);
             const coord_def gc = show2grid(ep);
 
-            tileidx_t bg = TILE_DNGN_UNSEEN | tileidx_unseen_flag(gc);
-
-            if (you.see_cell(gc))
-            {
-                bg = tileidx_feature(gc);
-
-                dungeon_feature_type feat = grid_appearance(gc);
-                if (feat == DNGN_DETECTED_SECRET_DOOR)
-                     bg |= TILE_FLAG_WAS_SECRET;
-                else if (is_unknown_stair(gc))
-                     bg |= TILE_FLAG_NEW_STAIR;
-            }
-
+            tileidx_t bg = _get_floor_bg(gc);
 
             // init tiles
             env.tile_bg(ep) = bg;

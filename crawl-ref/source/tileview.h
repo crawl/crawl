@@ -47,6 +47,7 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile);
 
 
 // Tile view related
+void tile_draw_map_cell(const coord_def &gc);
 void tile_draw_floor();
 void tile_place_item(const coord_def &gc, const item_def &item);
 void tile_place_item_marker(const coord_def &gc, const item_def &item);
