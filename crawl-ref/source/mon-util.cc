@@ -1406,7 +1406,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
     mon_attack_def attk = smc->attack[attk_number];
 
     if (attk.type == AT_RANDOM)
-        attk.type = random_choose(AT_HIT, AT_GORE);
+        attk.type = random_choose(AT_HIT, AT_GORE, -1);
 
     if (attk.type == AT_CHERUB)
         attk.type = random_choose(AT_HIT, AT_BITE, AT_PECK, AT_GORE, -1);
