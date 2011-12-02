@@ -99,9 +99,9 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
             mpr("A conflicting enchantment prevents the spell from "
                 "coming into effect.");
         }
-        else if (you.is_undead == US_SEMI_UNDEAD
-                     && you.hunger_state <= HS_SATIATED
-                 || you.is_undead == US_UNDEAD)
+        else if (you.is_undead != US_SEMI_UNDEAD
+                 || (you.is_undead == US_SEMI_UNDEAD
+                     && you.hunger_state <= HS_SATIATED))
         {
             mpr("You don't have enough blood to draw power from your "
                 "own body.");
