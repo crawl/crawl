@@ -1280,7 +1280,6 @@ bool melee_attack::player_aux_test_hit()
  *
  * Returns (defender dead)
  */
-// Returns true to end the attack round.
 bool melee_attack::player_aux_unarmed()
 {
     unwind_var<brand_type> save_brand(damage_brand);
@@ -1335,8 +1334,6 @@ bool melee_attack::player_aux_unarmed()
             if (!defender->alive())
                 return (true);
 
-            if (attack_shield_blocked(true))
-                continue;
             if (player_aux_apply(atk))
                 return (true);
         }
