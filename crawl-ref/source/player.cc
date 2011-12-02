@@ -3904,21 +3904,18 @@ static std::string _attack_delay_desc(int attack_delay)
 static void _display_attack_delay()
 {
     melee_attack attk(&you, NULL);
-    const int delay = attk.calc_attack_delay();
+    const int delay = attk.calc_attack_delay(false, false);
 
     // Scale to fit the displayed weapon base delay, i.e.,
     // normal speed is 100 (as in 100%).
-    // We could also compute the variance if desired.
     int avg;
     const item_def* weapon = you.weapon();
     if (weapon && is_range_weapon(*weapon))
         avg = launcher_final_speed(*weapon, you.shield());
     else
-        avg = static_cast<int>(round(10 * delay));
+        avg = 10 * delay;
 
-    // Haste wasn't counted here, but let's show finesse.
-    // Can't be done in the above function because of interactions with
-    // haste and caps.
+    // Haste shouldn't be counted, but let's show finesse.
     if (you.duration[DUR_FINESSE])
         avg = std::max(20, avg / 2);
 
