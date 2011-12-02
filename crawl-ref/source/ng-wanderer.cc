@@ -477,7 +477,7 @@ static void _curing_or_teleport(int n)
     }
 }
 
-// Create a random wand/rod of striking in the inventory.
+// Create a random wand in the inventory.
 static void _wanderer_random_evokable(int & slot)
 {
     wand_type selected_wand = WAND_ENSLAVEMENT;
@@ -599,7 +599,7 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
     }
 
     case SK_EVOCATIONS:
-        // Random wand/rod of striking.
+        // Random wand
         _wanderer_random_evokable(slot);
         break;
     }
