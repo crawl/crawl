@@ -1287,10 +1287,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
             mpr("You feel a slight, muted jump rush through you.");
         else
             mpr("You feel slightly jumpy.");
-        if (artefact)
-            fake_rap = ARTP_CAUSE_TELEPORTATION;
-        else
-            ident = ID_KNOWN_TYPE;
+        ident = ID_KNOWN_TYPE;
         break;
 
     case AMU_RAGE:
