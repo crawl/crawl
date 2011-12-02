@@ -110,7 +110,6 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
              mpr("Your attempt to draw power from your own body fails.");
         else
         {
-            // For vampires.
             int food = 0;
 
             while (you.magic_points < you.max_magic_points && you.hp > 1
