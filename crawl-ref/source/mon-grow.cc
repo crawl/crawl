@@ -199,7 +199,7 @@ void monster::init_experience()
     experience = mexplevs[std::min(hit_dice, MAX_MONS_HD)];
 }
 
-bool monster::gain_exp(int exp)
+bool monster::gain_exp(int exp, int max_levels_to_gain)
 {
     if (!alive())
         return (false);
@@ -224,11 +224,11 @@ bool monster::gain_exp(int exp)
 
     const monster mcopy(*this);
     int levels_gained = 0;
-    // Monsters can gain a maximum of two levels from one kill.
+    // Monsters can normally gain a maximum of two levels from one kill.
     while (hit_dice < MAX_MONS_HD
            && experience >= mexplevs[hit_dice + 1]
            && level_up()
-           && ++levels_gained < 2);
+           && ++levels_gained < max_levels_to_gain);
 
     if (levels_gained)
     {

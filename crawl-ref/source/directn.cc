@@ -1744,8 +1744,9 @@ void direction_chooser::handle_wizard_command(command_type key_command,
     case CMD_TARGET_WIZARD_GIVE_ITEM:  wizard_give_monster_item(m); break;
     case CMD_TARGET_WIZARD_POLYMORPH:  wizard_polymorph_monster(m); break;
 
-    // FIXME: implement
-    case CMD_TARGET_WIZARD_GAIN_LEVEL: break;
+    case CMD_TARGET_WIZARD_GAIN_LEVEL:
+        wizard_gain_monster_level(m);
+        break;
 
     case CMD_TARGET_WIZARD_BLESS_MONSTER:
         wizard_apply_monster_blessing(m);
