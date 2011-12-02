@@ -3784,6 +3784,17 @@ bool melee_attack::attack_warded_off()
     return (false);
 }
 
+/* Determine whether a block occurred
+ *
+ * At the moment, is for defender == player only, this does not handle any
+ * monster blocking, but eventually it really should. No blocks if defender
+ * is incapacitated, would be nice to eventually expand this method to handle
+ * partial blocks as well as full blocks (although this would serve as a nerf
+ * to shields and - while more realistic - may not be a good mechanic for
+ * shields.
+ *
+ * Returns (block_occurred)
+ */
 bool melee_attack::attack_shield_blocked(bool verbose)
 {
     if (!defender_shield && defender->atype() != ACT_PLAYER)
@@ -3822,6 +3833,14 @@ bool melee_attack::attack_shield_blocked(bool verbose)
     return (false);
 }
 
+/* Select the attack verb for attacker
+ *
+ * If klown, select randomly from klown_attack, otherwise check for any special
+ * case attack verbs (tentacles or door/fountain-mimics) and if all else fails,
+ * select an attack verb from attack_types based on the ENUM value of attk_type.
+ *
+ * Returns (attack_verb)
+ */
 std::string melee_attack::mons_attack_verb()
 {
     static const char *klown_attack[] =
