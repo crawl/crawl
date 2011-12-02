@@ -4397,7 +4397,7 @@ bool monster::can_safely_mutate() const
     return (can_mutate());
 }
 
-bool monster::can_bleed() const
+bool monster::can_bleed(bool /*allow_tran*/) const
 {
     return (mons_has_blood(type));
 }

@@ -614,9 +614,9 @@ bool player::can_go_berserk(bool intentional, bool potion) const
         return (false);
     }
 
-    if (is_undead
-        && (is_undead != US_SEMI_UNDEAD || hunger_state <= HS_SATIATED))
+    if (!you.can_bleed(false))
     {
+        // XXX: This message assumes that you're undead.
         if (verbose)
             mpr("You cannot raise a blood rage in your lifeless body.");
 

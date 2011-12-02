@@ -279,7 +279,7 @@ public:
     bool has_lifeforce() const;
     bool can_mutate() const;
     bool can_safely_mutate() const;
-    bool can_bleed() const;
+    bool can_bleed(bool allow_tran = true) const;
     bool mutate();
     void banish(const std::string &who = "");
     void expose_to_element(beam_type element, int strength = 0);
