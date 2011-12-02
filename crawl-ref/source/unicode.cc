@@ -67,7 +67,7 @@ int utf8towc(ucs_t *d, const char *s)
     {   // bare tail, invalid
         *d = 0xFFFD;
         int bad = 0;
-        do bad++; while((s[bad] & 0xc0) == 0x80);
+        do bad++; while ((s[bad] & 0xc0) == 0x80);
         return bad;
     }
 
@@ -118,7 +118,7 @@ std::wstring utf8_to_16(const char *s)
     std::wstring d;
     ucs_t c;
 
-    while(int l = utf8towc(&c, s))
+    while (int l = utf8towc(&c, s))
     {
         s += l;
         if (c >= 0x10000)
@@ -138,7 +138,7 @@ std::string utf16_to_8(const wchar_t *s)
     std::string d;
     ucs_t c;
 
-    while(*s)
+    while (*s)
     {
         if (*s >= 0xD800 && *s <= 0xDBFF)
             if (s[1] >= 0xDC00 && s[1] <= 0xDFFF)
@@ -171,7 +171,7 @@ std::string utf8_to_mb(const char *s)
     mbstate_t ps;
 
     memset(&ps, 0, sizeof(ps));
-    while((l = utf8towc(&c, s)))
+    while ((l = utf8towc(&c, s)))
     {
         s += l;
 
@@ -197,7 +197,7 @@ std::string mb_to_utf8(const char *s)
 
     memset(&ps, 0, sizeof(ps));
     // the input is zero-terminated, so third argument doesn't matter
-    while((l = mbrtowc(&c, s, MB_LEN_MAX, &ps)))
+    while ((l = mbrtowc(&c, s, MB_LEN_MAX, &ps)))
     {
         if (l > 0)
             s += l;
@@ -221,7 +221,7 @@ static std::string utf8_validate(const char *s)
     ucs_t c;
     int l;
 
-    while((l = utf8towc(&c, s)))
+    while ((l = utf8towc(&c, s)))
     {
         s += l;
 
@@ -258,7 +258,7 @@ FileLineInput::FileLineInput(const char *name)
 
     bom = BOM_NORMAL;
     int ch = fgetc(f);
-    switch(ch)
+    switch (ch)
     {
     case 0xEF:
         if (_check_trail(f, "\xBB\xBF", 2))
@@ -298,7 +298,7 @@ std::string FileLineInput::get_line()
     ucs_t c;
     int len;
 
-    switch(bom)
+    switch (bom)
     {
     case BOM_NORMAL:
         do
@@ -460,7 +460,7 @@ int strwidth(const char *s)
     ucs_t c;
     int w = 0;
 
-    while(int l = utf8towc(&c, s))
+    while (int l = utf8towc(&c, s))
     {
         s += l;
         int cw = wcwidth(c);

@@ -56,7 +56,7 @@ int identify(int power, int item_slot, std::string *pre_msg)
                                            OSEL_UNIDENT, true, true, false);
         }
         if (prompt_failed(item_slot))
-            return(identified);
+            return (identified);
 
         item_def& item(you.inv[item_slot]);
 
@@ -118,7 +118,7 @@ int identify(int power, int item_slot, std::string *pre_msg)
         item_slot = -1;
     }
     while (id_used > identified);
-    return(identified);
+    return (identified);
 }
 
 static bool _mons_hostile(const monster* mon)
@@ -571,7 +571,7 @@ static bool _selectively_remove_curse(std::string *pre_msg)
 {
     bool used = false;
 
-    while(1)
+    while (1)
     {
         if (!any_items_to_select(OSEL_CURSED_WORN, false) && used)
         {
@@ -665,7 +665,7 @@ bool remove_curse(bool alreadyknown, std::string *pre_msg)
 
 static bool _selectively_curse_item(bool armour, std::string *pre_msg)
 {
-    while(1)
+    while (1)
     {
         int item_slot = prompt_invent_item("Curse which item?", MT_INVLIST,
                                            armour ? OSEL_UNCURSED_WORN_ARMOUR

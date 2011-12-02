@@ -2548,7 +2548,7 @@ static bool _actions_prompt(item_def &item, bool allow_inscribe)
     std::string prompt = "You can ";
     int keyin;
     std::vector<command_type> actions;
-    switch(item.base_type)
+    switch (item.base_type)
     {
     case OBJ_WEAPONS:
     case OBJ_STAVES:

@@ -152,7 +152,7 @@ static spell_type _draco_type_to_breath(int drac_type)
 
 static bool _flavour_benefits_monster(beam_type flavour, monster& monster)
 {
-    switch(flavour)
+    switch (flavour)
     {
     case BEAM_HASTE:
         return (!monster.has_ench(ENCH_HASTE));

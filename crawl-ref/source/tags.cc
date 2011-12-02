@@ -466,7 +466,7 @@ void marshallFixedBitArray(writer& th, const FixedBitArray<SIZE>& arr)
             break;
 
     int i = 0;
-    while(1)
+    while (1)
     {
         uint8_t byte = 0;
         for (int j = 0; j < 7; j++)
@@ -2871,7 +2871,7 @@ void marshallMapCell(writer &th, const map_cell &cell)
 
     marshallUnsigned(th, flags);
 
-    switch(flags & MAP_SERIALIZE_FLAGS_MASK)
+    switch (flags & MAP_SERIALIZE_FLAGS_MASK)
     {
     case MAP_SERIALIZE_FLAGS_8:
         marshallByte(th, cell.flags);
@@ -2914,7 +2914,7 @@ void unmarshallMapCell(reader &th, map_cell& cell)
 
     cell.clear();
 
-    switch(flags & MAP_SERIALIZE_FLAGS_MASK)
+    switch (flags & MAP_SERIALIZE_FLAGS_MASK)
     {
     case MAP_SERIALIZE_FLAGS_8:
         cell_flags = unmarshallByte(th);

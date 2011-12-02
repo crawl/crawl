@@ -3443,7 +3443,7 @@ static std::string _hints_abilities(const item_def& item)
     std::vector<command_type> cmd;
     if (!item_is_equipped(item))
     {
-        switch(item.base_type)
+        switch (item.base_type)
         {
         case OBJ_WEAPONS:
             str += "first <w>%</w>ield it";

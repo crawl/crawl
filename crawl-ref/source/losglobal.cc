@@ -71,7 +71,7 @@ void invalidate_los()
 
 static void _update_globallos_at(const coord_def& p, los_type l)
 {
-    switch(l)
+    switch (l)
     {
     case LOS_DEFAULT:
         {

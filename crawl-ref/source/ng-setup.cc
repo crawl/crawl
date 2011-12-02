@@ -439,7 +439,7 @@ static void _update_weapon(const newgame_def& ng)
 
     const int plus = you.char_class == JOB_HUNTER ? 1 : 0;
 
-    switch(ng.weapon)
+    switch (ng.weapon)
     {
     case WPN_ROCKS:
         newgame_make_item(1, EQ_NONE, OBJ_MISSILES, MI_LARGE_ROCK, -1, 5, plus);

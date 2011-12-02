@@ -399,7 +399,7 @@ void push_features_to_abyss()
     {
         dungeon_feature_type feature = grd(*ri);
 
-        if(!in_bounds(*ri))
+        if (!in_bounds(*ri))
             feature = DNGN_UNSEEN;
 
         if (feat_is_stair(feature))

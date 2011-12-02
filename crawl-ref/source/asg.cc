@@ -71,7 +71,7 @@ void push_asg_state()
 
 void pop_asg_state()
 {
-    if(states.empty())
+    if (states.empty())
         return;
 
     delete asg_rng;

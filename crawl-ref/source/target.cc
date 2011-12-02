@@ -221,7 +221,7 @@ bool targetter_cloud::set_aim(coord_def a)
         for (unsigned int i = 0; i < to_place; i++)
         {
             coord_def c = queue[d1][i];
-            for(adjacent_iterator ai(c); ai; ++ai)
+            for (adjacent_iterator ai(c); ai; ++ai)
                 if (_cloudable(*ai) && seen.find(*ai) == seen.end())
                 {
                     unsigned int d2 = d1 + ((*ai - c).abs() == 1 ? 5 : 7);

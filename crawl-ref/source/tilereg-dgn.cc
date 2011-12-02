@@ -398,7 +398,7 @@ static const bool _is_appropriate_spell(spell_type spell,
     // Most spells are blocked by transparent walls.
     if (targeted && !you.see_cell_no_trans(target->pos()))
     {
-        switch(spell)
+        switch (spell)
         {
         case SPELL_HELLFIRE_BURST:
         case SPELL_SMITING:
@@ -553,7 +553,7 @@ static bool _spell_in_range(spell_type spell, actor* target)
 
     int range = calc_spell_range(spell);
 
-    switch(spell)
+    switch (spell)
     {
     case SPELL_EVAPORATE:
     case SPELL_MEPHITIC_CLOUD:

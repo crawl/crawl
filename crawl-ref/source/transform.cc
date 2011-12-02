@@ -349,7 +349,7 @@ static bool _abort_or_fizzle(bool just_check)
 
 monster_type transform_mons()
 {
-    switch(you.form)
+    switch (you.form)
     {
     case TRAN_SPIDER:
         return MONS_SPIDER;
@@ -385,7 +385,7 @@ std::string blade_parts(bool terse)
 
 monster_type dragon_form_dragon_type()
 {
-    switch(you.species)
+    switch (you.species)
     {
         case SP_WHITE_DRACONIAN:
              return MONS_ICE_DRAGON;
@@ -412,7 +412,7 @@ monster_type dragon_form_dragon_type()
 // with a denominator of 10
 int form_hp_mod()
 {
-    switch(you.form)
+    switch (you.form)
     {
     case TRAN_STATUE:
         return 13;
@@ -717,7 +717,7 @@ bool transform(int pow, transformation_type which_trans, bool force,
         if (!just_check)
         {
             you.attribute[ATTR_APPENDAGE] = app;
-            switch(app)
+            switch (app)
             {
             case MUT_HORNS:
                 msg = "You grow a pair of large bovine horns.";

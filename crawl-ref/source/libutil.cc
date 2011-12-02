@@ -1065,7 +1065,7 @@ int get_taskbar_size()
 
 static BOOL WINAPI console_handler(DWORD sig)
 {
-    switch(sig)
+    switch (sig)
     {
     case CTRL_C_EVENT:
     case CTRL_BREAK_EVENT:

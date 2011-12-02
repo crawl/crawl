@@ -462,7 +462,7 @@ void cprintf(const char *format, ...)
 
     ucs_t c;
     char *bp = buffer;
-    while(int s = utf8towc(&c, bp))
+    while (int s = utf8towc(&c, bp))
     {
         bp += s;
         putwch(c);
@@ -816,7 +816,7 @@ bool kbhit()
     i = get_wch(&c);
     nodelay(stdscr, FALSE);
 
-    switch(i)
+    switch (i)
     {
     case OK:
         pending = c;
