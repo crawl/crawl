@@ -3552,7 +3552,7 @@ int check_stealth(void)
         }
     }
 
-    switch(you.form)
+    switch (you.form)
     {
     case TRAN_SPIDER:
         race_mod = 21;
@@ -5858,7 +5858,7 @@ int player::adjusted_body_armour_penalty(int scale, bool use_size) const
     if (!base_ev_penalty)
         return (0);
 
-    if(use_size)
+    if (use_size)
     {
         const int size = you.body_size(PSIZE_BODY);
 
@@ -6093,7 +6093,7 @@ int player::armour_class() const
   **/
 int player::gdr_perc() const
 {
-    switch(you.form)
+    switch (you.form)
     {
     case TRAN_DRAGON:
         return 34; // base AC 8

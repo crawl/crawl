@@ -2766,7 +2766,7 @@ static bool _interesting_explore_pickup(const item_def& item)
     if (!item_type_known(item) & (item.flags & ISFLAG_COSMETIC_MASK))
         return (true);
 
-    switch(item.base_type)
+    switch (item.base_type)
     {
     case OBJ_WEAPONS:
     case OBJ_MISSILES:
@@ -2780,7 +2780,7 @@ static bool _interesting_explore_pickup(const item_def& item)
         break;
     }
 
-    switch(item.base_type)
+    switch (item.base_type)
     {
     case OBJ_WEAPONS:
     case OBJ_ARMOUR:

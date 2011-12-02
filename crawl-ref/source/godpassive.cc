@@ -626,7 +626,7 @@ std::map<skill_type, int8_t> ash_get_boosted_skills(eq_type type)
         ASSERT(wpn);
 
         // Boost weapon skill.
-        if(wpn->base_type == OBJ_WEAPONS)
+        if (wpn->base_type == OBJ_WEAPONS)
         {
             boost[is_range_weapon(*wpn) ? range_skill(*wpn)
                                         : weapon_skill(*wpn)] = bondage;

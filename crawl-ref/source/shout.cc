@@ -598,7 +598,7 @@ void check_player_sense(sense_type sense, int range, const coord_def& where)
 
     if (player_distance <= range)
     {
-        switch(sense)
+        switch (sense)
         {
         case SENSE_SMELL_BLOOD:
              dprf("Player smells blood, pos: (%d, %d), dist = %d)",
@@ -634,7 +634,7 @@ void check_monsters_sense(sense_type sense, int range, const coord_def& where)
     circle_def c(where, range, C_CIRCLE);
     for (monster_iterator mi(&c); mi; ++mi)
     {
-        switch(sense)
+        switch (sense)
         {
         case SENSE_SMELL_BLOOD:
             if (!mons_class_flag(mi->type, M_BLOOD_SCENT))

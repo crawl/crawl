@@ -1034,7 +1034,7 @@ static std::vector<std::string> _get_branch_keys()
         Branch     &branch       = branches[which_branch];
 
         // Skip unimplemented branches
-        if(branch_is_unfinished(which_branch))
+        if (branch_is_unfinished(which_branch))
             continue;
 
         names.push_back(branch.shortname);

@@ -340,7 +340,7 @@ static std::vector<int> _find_minimal_cellrays()
             for (min_it = min.begin();
                  min_it != min.end() && !dup;)
             {
-                switch(_compare_cellrays(*min_it, c))
+                switch (_compare_cellrays(*min_it, c))
                 {
                 case C_SUBRAY:
                     dup = true;
@@ -530,7 +530,7 @@ static int _imbalance(ray_def ray, const coord_def& target)
         coord_def old = ray.pos();
         if (!ray.advance())
             die("can't advance ray");
-        switch((ray.pos() - old).abs())
+        switch ((ray.pos() - old).abs())
         {
         case 1:
             diags = 0;

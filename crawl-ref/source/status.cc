@@ -272,12 +272,12 @@ void fill_status_info(int status, status_info* inf)
     switch (status)
     {
     case DUR_CONTROL_TELEPORT:
-        if(!allow_control_teleport(true))
+        if (!allow_control_teleport(true))
             inf->light_colour = DARKGREY;
         break;
 
     case DUR_SWIFTNESS:
-        if(you.in_water())
+        if (you.in_water())
             inf->light_colour = DARKGREY;
         break;
 

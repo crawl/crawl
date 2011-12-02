@@ -79,7 +79,7 @@ static bool _travel_colour_override(const coord_def& p)
     show_class cls = get_cell_show_class(cell, Options.clean_map);
     if (cls == SH_FEATURE)
     {
-        switch(cell.feat())
+        switch (cell.feat())
         {
         case DNGN_FLOOR:
         case DNGN_LAVA:

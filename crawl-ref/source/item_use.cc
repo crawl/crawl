@@ -1312,17 +1312,17 @@ bool fire_warn_if_impossible(bool silent)
 }
 static bool _autoswitch_to_ranged()
 {
-    if(you.equip[EQ_WEAPON] != 0 && you.equip[EQ_WEAPON] != 1)
+    if (you.equip[EQ_WEAPON] != 0 && you.equip[EQ_WEAPON] != 1)
         return false;
 
     int item_slot = you.equip[EQ_WEAPON] ^ 1;
     const item_def& launcher = you.inv[item_slot];
-    if(!is_range_weapon(launcher))
+    if (!is_range_weapon(launcher))
         return false;
 
     FixedVector<item_def,ENDOFPACK>::const_pointer iter = you.inv.begin();
     for (;iter!=you.inv.end(); ++iter)
-       if(iter->launched_by(launcher))
+       if (iter->launched_by(launcher))
        {
           if (!wield_weapon(true, item_slot))
               return false;
@@ -1344,13 +1344,13 @@ int get_ammo_to_shoot(int item, dist &target, bool teleport)
         return (-1);
     }
 
-    if(Options.auto_switch && you.m_quiver->get_fire_item() == -1
+    if (Options.auto_switch && you.m_quiver->get_fire_item() == -1
        && _autoswitch_to_ranged())
     {
         return (-1);
     }
 
-    if(!_fire_choose_item_and_target(item, target, teleport))
+    if (!_fire_choose_item_and_target(item, target, teleport))
         return (-1);
 
     std::string warn;
@@ -2009,7 +2009,7 @@ bool setup_missile_beam(const actor *agent, bolt &beam, item_def &item,
             entry->fight_func.launch(launcher, &beam, &ammo_name,
                                      &returning);
 
-        switch(sm)
+        switch (sm)
         {
         case SM_CONTINUE:
             break;
@@ -2324,7 +2324,7 @@ void throw_noise(actor* act, const bolt &pbolt, const item_def &ammo)
     int         level = 0;
     const char* msg   = NULL;
 
-    switch(launcher->sub_type)
+    switch (launcher->sub_type)
     {
     case WPN_BLOWGUN:
         return;

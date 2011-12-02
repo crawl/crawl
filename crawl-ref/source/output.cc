@@ -638,7 +638,7 @@ static void _get_status_lights(std::vector<status_light>& out)
             out.push_back(sl);
         }
     }
-    if(!allow_control_teleport(true) && Options.show_no_ctele)
+    if (!allow_control_teleport(true) && Options.show_no_ctele)
         out.push_back(status_light(RED,"-cTele"));
 }
 
@@ -1539,7 +1539,7 @@ static std::string _god_powers(bool simple)
             std::string asterisks = std::string(prank, '*')
                                     + std::string(6 - prank, '.');
             if (simple)
-                return(asterisks);
+                return (asterisks);
             godpowers = chop_string(godpowers, 20, false)
                       + " [" + asterisks + "]";
             return (colour_string(godpowers, god_colour(you.religion)));

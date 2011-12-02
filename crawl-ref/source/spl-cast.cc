@@ -1003,7 +1003,7 @@ static bool _spellcasting_aborted(spell_type spell,
 
 static targetter* _spell_targetter(spell_type spell, int pow, int range)
 {
-    switch(spell)
+    switch (spell)
     {
     case SPELL_FIRE_STORM:
         return new targetter_smite(&you, range, 2, pow > 76 ? 3 : 2);
@@ -1034,7 +1034,7 @@ spret_type your_spells(spell_type spell, int powc,
     beam.origin_spell = spell;
 
     // [dshaligram] Any action that depends on the spellcasting attempt to have
-    // succeeded must be performed after the switch().
+    // succeeded must be performed after the switch.
     if (_spellcasting_aborted(spell, check_range, wiz_cast))
         return (SPRET_ABORT);
 

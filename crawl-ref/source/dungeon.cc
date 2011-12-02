@@ -413,7 +413,7 @@ static bool _build_level_vetoable(int level_number, level_area_type level_type,
 static void _builder_assertions()
 {
 #ifdef ASSERTS
-    for(rectangle_iterator ri(0); ri; ++ri)
+    for (rectangle_iterator ri(0); ri; ++ri)
         if (!in_bounds(*ri))
             if (!is_valid_border_feat(grd(*ri)))
             {
@@ -2673,7 +2673,7 @@ static int _min_transitive_label(map_component & component)
         label = current->label;
 
         current = current->min_equivalent;
-    } while(current);
+    } while (current);
 
     return label;
 }

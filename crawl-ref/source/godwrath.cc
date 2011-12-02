@@ -363,7 +363,7 @@ static bool _cheibriados_retribution()
     if (one_chance_in(5 - wrath_type))
         glammer = true;
 
-    switch(wrath_type)
+    switch (wrath_type)
     {
     // Very high tension wrath
     case 4:

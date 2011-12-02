@@ -211,7 +211,7 @@ static void _check_odd_card(uint8_t flags)
 static bool _card_forbidden(card_type card)
 {
     if (crawl_state.game_is_zotdef())
-        switch(card)
+        switch (card)
         {
         case CARD_TOMB:
         case CARD_WARPWRIGHT:

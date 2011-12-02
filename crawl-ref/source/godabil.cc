@@ -3214,7 +3214,7 @@ bool ashenzari_transfer_knowledge()
         if (!ashenzari_end_transfer())
             return false;
 
-    while(true)
+    while (true)
     {
         skill_menu(SKMF_RESKILL_FROM);
         if (is_invalid_skill(you.transfer_from_skill))

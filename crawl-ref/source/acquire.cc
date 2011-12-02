@@ -1154,7 +1154,7 @@ static int _failed_acquirement(bool quiet)
 
 static int _weapon_brand_quality(int brand, bool range)
 {
-    switch(brand)
+    switch (brand)
     {
     case SPWPN_SPEED:
         return range ? 3 : 5;

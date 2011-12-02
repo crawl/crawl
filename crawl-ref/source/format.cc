@@ -421,7 +421,7 @@ void formatted_string::del_char()
     {
         if (i->type != FSOP_TEXT)
             continue;
-        switch(strwidth(i->text))
+        switch (strwidth(i->text))
         {
         case 0: // shouldn't happen
             continue;

@@ -737,7 +737,7 @@ bool melee_attack::handle_phase_end()
     // This may invalidate both the attacker and defender.
     fire_final_effects();
 
-    return(true);
+    return (true);
 }
 
 /* Initiate the processing of the attack

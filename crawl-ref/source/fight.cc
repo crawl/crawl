@@ -84,7 +84,7 @@ bool fight_melee(actor *attacker, actor *defender)
         // change that.
         behaviour_event(attacker->as_monster(), ME_ALERT, MHITYOU);
     }
-    else if(attacker->atype() == ACT_PLAYER)
+    else if (attacker->atype() == ACT_PLAYER)
     {
         ASSERT(!crawl_state.game_is_arena());
         // Can't damage orbs or boulders this way.

@@ -146,7 +146,7 @@ static skill_type _wanderer_role_skill_select(stat_type selected_role,
 {
     skill_type selected_skill = SK_NONE;
 
-    switch((int)selected_role)
+    switch ((int)selected_role)
     {
     case STAT_DEX:
         switch (random2(6))
@@ -295,7 +295,7 @@ static skill_type _weighted_skill_roll()
 static void _give_wanderer_book(skill_type skill, int & slot)
 {
     int book_type = BOOK_MINOR_MAGIC;
-    switch((int)skill)
+    switch ((int)skill)
     {
     case SK_SPELLCASTING:
         book_type = BOOK_MINOR_MAGIC;
@@ -539,7 +539,7 @@ static void _wanderer_good_equipment(skill_type & skill, int & slot)
         skill = max_skill;
     }
 
-    switch((int)skill)
+    switch ((int)skill)
     {
     case SK_MACES_FLAILS:
     case SK_AXES:
@@ -723,7 +723,7 @@ static void _wanderer_decent_equipment(skill_type & skill,
     if (gift_skills.find(skill) != gift_skills.end())
         skill = SK_TRAPS_DOORS;
 
-    switch((int)skill)
+    switch ((int)skill)
     {
     case SK_MACES_FLAILS:
     case SK_AXES:

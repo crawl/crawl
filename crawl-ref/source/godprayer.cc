@@ -371,7 +371,7 @@ void pray()
          you.duration[DUR_JELLY_PRAYER] ? "renew your" : "offer a",
          god_name(you.religion).c_str());
 
-    switch(you.religion)
+    switch (you.religion)
     {
     case GOD_JIYVA:
         you.duration[DUR_JELLY_PRAYER] = 200;

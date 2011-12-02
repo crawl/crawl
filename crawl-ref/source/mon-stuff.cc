@@ -1346,7 +1346,7 @@ static int _destroy_tentacles(monster* head)
 
 static std::string _killer_type_name(killer_type killer)
 {
-    switch(killer)
+    switch (killer)
     {
     case KILL_NONE:
         return ("none");

@@ -528,7 +528,7 @@ std::string print_abilities()
 static monster_type _monster_for_ability (const ability_def& abil)
 {
     monster_type mtyp = MONS_PROGRAM_BUG;
-    switch(abil.ability)
+    switch (abil.ability)
     {
         case ABIL_MAKE_PLANT:         mtyp = MONS_PLANT;         break;
         case ABIL_MAKE_FUNGUS:        mtyp = MONS_FUNGUS;        break;
@@ -610,7 +610,7 @@ static int _zp_cost(const ability_def& abil)
     int scale10 = 0;        // number of times to scale up by 10%
     int scale20 = 0;        // number of times to scale up by 20%
     int num;
-    switch(abil.ability)
+    switch (abil.ability)
     {
         default:
             return abil.zp_cost;
@@ -1548,7 +1548,7 @@ static bool _check_ability_possible(const ability_def& abil,
         if (item_blocks_teleport(false, false))
         {
             mpr("You cannot teleport right now.");
-            return(false);
+            return (false);
         }
         return (true);
 
@@ -1761,7 +1761,7 @@ static bool _do_ability(const ability_def& abil)
             canned_msg(MSG_OK);
             return (false);
         }
-        for(adjacent_iterator ai(abild.target); ai; ++ai)
+        for (adjacent_iterator ai(abild.target); ai; ++ai)
         {
             place_monster(mgen_data(MONS_FUNGUS, BEH_FRIENDLY, &you, 0, 0, *ai,
                           you.pet_target), true);
@@ -1817,7 +1817,7 @@ static bool _do_ability(const ability_def& abil)
             canned_msg(MSG_OK);
             return (false);
         }
-        for(adjacent_iterator ai(abild.target); ai; ++ai)
+        for (adjacent_iterator ai(abild.target); ai; ++ai)
         {
             place_monster(mgen_data(MONS_OKLOB_PLANT, BEH_FRIENDLY, &you, 0, 0,
                           *ai, you.pet_target), true);

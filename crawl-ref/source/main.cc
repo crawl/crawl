@@ -532,7 +532,7 @@ static void _god_greeting_message(bool game_start)
 
     std::string result = getSpeakString(msg);
 
-    if(!result.empty())
+    if (!result.empty())
         god_speaks(you.religion, result.c_str());
 }
 
@@ -1319,7 +1319,7 @@ static bool _marker_vetoes_stair()
 // portal, false if the user said no at the prompt.
 static bool _prompt_dangerous_portal(dungeon_feature_type ftype)
 {
-    switch(ftype)
+    switch (ftype)
     {
     case DNGN_ENTER_PANDEMONIUM:
     case DNGN_ENTER_ABYSS:

@@ -82,7 +82,7 @@ uint32_t hash(const void *data, int len)
 
     const uint8_t *d = (const uint8_t*)data;
     // Mix 4 bytes at a time into the hash
-    while(len >= 4)
+    while (len >= 4)
     {
         uint32_t k = htole32(*(uint32_t *)d);
 
@@ -98,7 +98,7 @@ uint32_t hash(const void *data, int len)
     }
 
     // Handle the last few bytes of the input array
-    switch(len)
+    switch (len)
     {
     case 3: h ^= (uint32_t)d[2] << 16;
     case 2: h ^= (uint32_t)d[1] << 8;

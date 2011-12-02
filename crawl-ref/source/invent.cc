@@ -474,7 +474,7 @@ static std::string _no_selectables_message(int item_selector)
         if (_has_melded_armour())
             return ("Your armour is currently melded into you.");
         else if (_has_tran_unwearable_armour())
-            return("You aren't carrying any armour you can wear in your "
+            return ("You aren't carrying any armour you can wear in your "
                    "current form.");
         else
             return "You aren't carrying any armour.";
@@ -484,7 +484,7 @@ static std::string _no_selectables_message(int item_selector)
     case OSEL_RECHARGE:
         return "You aren't carrying any rechargeable items.";
     case OSEL_ENCH_ARM:
-        return("You aren't carrying any armour which can be enchanted "
+        return ("You aren't carrying any armour which can be enchanted "
                "further.");
     case OBJ_CORPSES:
     case OSEL_VAMP_EAT:
