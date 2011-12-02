@@ -57,7 +57,7 @@ public:
 
     // To-hit is a function of attacker/defender, inherited from attack
     int calc_to_hit(bool random = true);
-    int calc_attack_delay(bool random = true);
+    int calc_attack_delay(bool random = true, bool scaled = true);
 
     static void chaos_affect_actor(actor *victim);
 

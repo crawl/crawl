@@ -3590,8 +3590,9 @@ int melee_attack::calc_to_hit(bool random)
  * and fork on the logic.
  *
  * @param random deterministic or stochastic calculation(s)
+ * @param apply haste/finesse scaling
  */
-int melee_attack::calc_attack_delay(bool random)
+int melee_attack::calc_attack_delay(bool random, bool scaled)
 {
     if (attacker->atype() == ACT_PLAYER)
     {
@@ -3611,6 +3612,9 @@ int melee_attack::calc_attack_delay(bool random)
 
         attack_delay = rv::max(attack_delay, constant(3));
         int final_delay = random ? attack_delay.roll() : attack_delay.expected();
+        // Stop here if we just want the unmodified value.
+        if (!scaled)
+            return final_delay;
 
         if (you.duration[DUR_FINESSE])
         {
