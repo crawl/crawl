@@ -4820,9 +4820,9 @@ bool monster::can_drink_potion(potion_type ptype) const
         case POT_BLOOD:
         case POT_BLOOD_COAGULATED:
             return (mons_species() == MONS_VAMPIRE);
+        case POT_BERSERK_RAGE:
         case POT_SPEED:
         case POT_MIGHT:
-        case POT_BERSERK_RAGE:
         case POT_INVISIBILITY:
             // If there are any item using monsters that are permanently
             // invisible, this might have to be restricted.
@@ -4851,14 +4851,14 @@ bool monster::should_drink_potion(potion_type ptype) const
     case POT_BLOOD:
     case POT_BLOOD_COAGULATED:
         return (hit_points <= max_hit_points / 2);
-    case POT_SPEED:
-        return (!has_ench(ENCH_HASTE));
-    case POT_MIGHT:
-        return (!has_ench(ENCH_MIGHT) && foe_distance() <= 2);
     case POT_BERSERK_RAGE:
         // this implies !berserk()
         return (!has_ench(ENCH_MIGHT) && !has_ench(ENCH_HASTE)
                 && needs_berserk());
+    case POT_SPEED:
+        return (!has_ench(ENCH_HASTE));
+    case POT_MIGHT:
+        return (!has_ench(ENCH_MIGHT) && foe_distance() <= 2);
     case POT_INVISIBILITY:
         // We're being nice: friendlies won't go invisible if the player
         // won't be able to see them.
@@ -4911,13 +4911,13 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff)
         }
         break;
 
-    case POT_SPEED:
-        if (enchant_monster_with_flavour(this, this, BEAM_HASTE))
+    case POT_BERSERK_RAGE:
+        if (enchant_monster_with_flavour(this, this, BEAM_BERSERK))
             ident = ID_KNOWN_TYPE;
         break;
 
-    case POT_INVISIBILITY:
-        if (enchant_monster_with_flavour(this, this, BEAM_INVISIBILITY))
+    case POT_SPEED:
+        if (enchant_monster_with_flavour(this, this, BEAM_HASTE))
             ident = ID_KNOWN_TYPE;
         break;
 
@@ -4926,8 +4926,8 @@ item_type_id_state_type monster::drink_potion_effect(potion_type pot_eff)
             ident = ID_KNOWN_TYPE;
         break;
 
-    case POT_BERSERK_RAGE:
-        if (enchant_monster_with_flavour(this, this, BEAM_BERSERK))
+    case POT_INVISIBILITY:
+        if (enchant_monster_with_flavour(this, this, BEAM_INVISIBILITY))
             ident = ID_KNOWN_TYPE;
         break;
 
