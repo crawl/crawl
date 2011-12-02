@@ -3637,6 +3637,13 @@ int melee_attack::calc_attack_delay(bool random, bool scaled)
     return (0);
 }
 
+/* Check for stab and prepare combat for stab-values
+ *
+ * Grant an automatic stab if paralyzed or sleeping (with highest damage value)
+ * stab_bonus is used as the divisor in damage calculations, so lower values
+ * will yield higher damage. Normal stab chance is (stab_skill + dex + 1 / roll)
+ * This averages out to about 1/3 chance for a non extended-endgame stabber.
+ */
 void melee_attack::player_stab_check()
 {
     if (you.stat_zero[STAT_DEX] || you.confused())
@@ -3687,6 +3694,9 @@ void melee_attack::player_stab_check()
     }
 }
 
+
+// TODO: Unify this and player_unarmed_speed (if possible), then unify with
+// monster weapon/attack speed
 random_var melee_attack::player_weapon_speed()
 {
     random_var attack_delay = constant(15);
@@ -3747,8 +3757,6 @@ random_var melee_attack::player_unarmed_speed()
 
     return (unarmed_delay);
 }
-
-///////////////////////////////////////////////////////////////////////////
 
 bool melee_attack::attack_warded_off()
 {
