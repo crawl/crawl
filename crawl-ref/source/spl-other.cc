@@ -99,7 +99,7 @@ spret_type cast_sublimation_of_blood(int pow, bool fail)
             mpr("A conflicting enchantment prevents the spell from "
                 "coming into effect.");
         }
-        else if (you.is_undead != US_SEMI_UNDEAD
+        else if ((you.is_undead && you.is_undead != US_SEMI_UNDEAD)
                  || (you.is_undead == US_SEMI_UNDEAD
                      && you.hunger_state <= HS_SATIATED))
         {
