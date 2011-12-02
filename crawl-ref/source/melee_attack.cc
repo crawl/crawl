@@ -4838,7 +4838,7 @@ int melee_attack::calc_base_unarmed_damage()
             damage = 8 + div_rand_round(you.strength() + you.dex(), 3);
             break;
         case TRAN_STATUE: // multiplied by 1.5 later
-            damage = 6 + you.strength();
+            damage = 6 + div_rand_round(you.strength(), 3);
             break;
         case TRAN_DRAGON: // +6 from claws
             damage = 12 + div_rand_round(you.strength() * 2, 3);
