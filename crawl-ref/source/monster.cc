@@ -4127,83 +4127,9 @@ bool monster::bleed(const actor* agent, int amount, int degree)
 {
     if (!has_ench(ENCH_BLEED) && you.can_see(this))
     {
-/* Removed during merge
- * <<<<<<< HEAD
-    case ENCH_INSANE:
-    case ENCH_BERSERK:
-        // Inflate hp.
-        scale_hp(3, 2);
-
-        if (has_ench(ENCH_SUBMERGED))
-            del_ench(ENCH_SUBMERGED);
-
-        if (mons_is_lurking(this))
-        {
-            behaviour = BEH_WANDER;
-            behaviour_event(this, ME_EVAL);
-        }
-        calc_speed();
-        break;
-
-    case ENCH_HASTE:
-        calc_speed();
-        break;
-
-    case ENCH_SLOW:
-        calc_speed();
-        break;
-
-    case ENCH_STONESKIN:
-        {
-            // player gets 2+earth/5
-            const int ac_bonus = hit_dice / 2;
-
-            ac += ac_bonus;
-            // the monster may get drained or level up, we need to store the bonus
-            props["stoneskin_ac"].get_byte() = ac_bonus;
-        }
-        break;
-
-    case ENCH_SUBMERGED:
-        mons_clear_trapping_net(this);
-
-        // Don't worry about invisibility.  You should be able to see if
-        // something has submerged.
-        if (!quiet && mons_near(this))
-        {
-            if (type == MONS_AIR_ELEMENTAL)
-            {
-                mprf("%s merges itself into the air.",
-                     name(DESC_A, true).c_str());
-            }
-            else if (type == MONS_TRAPDOOR_SPIDER)
-            {
-                mprf("%s hides itself under the floor.",
-                     name(DESC_A, true).c_str());
-            }
-            else if (seen_context == "surfaces"
-                     || seen_context == "bursts forth"
-                     || seen_context == "emerges")
-            {
-                // The monster surfaced and submerged in the same turn
-                // without doing anything else.
-                interrupt_activity(AI_SEE_MONSTER,
-                                   activity_interrupt_data(this,
-                                                           "surfaced"));
-            }
-            else if (crawl_state.game_is_arena())
-                mprf("%s submerges.", name(DESC_A, true).c_str());
-        }
-
-        // Pacified monsters leave the level when they submerge.
-        if (pacified())
-            make_mons_leave_level(this);
-        break;
-=======*/
         mprf("%s begins to bleed from %s wounds!", name(DESC_THE).c_str(),
              pronoun(PRONOUN_POSSESSIVE).c_str());
     }
-//>>>>>>> master
 
     add_ench(mon_enchant(ENCH_BLEED, degree, agent, amount * 10));
 
