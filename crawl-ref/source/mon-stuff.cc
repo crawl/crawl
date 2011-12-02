@@ -2596,7 +2596,7 @@ static bool _valid_morph(monster* mons, monster_type new_mclass)
         // The spell on Prince Ribbit can't be broken so easily.
         || (new_mclass == MONS_HUMAN
             && (mons->type == MONS_PRINCE_RIBBIT
-             || mons->mname == "Prince Ribbit")))
+                || mons->mname == "Prince Ribbit")))
     {
         return (false);
     }
