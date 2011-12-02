@@ -1334,6 +1334,8 @@ bool melee_attack::player_aux_unarmed()
             if (!defender->alive())
                 return (true);
 
+            if (attack_shield_blocked(true))
+                continue;
             if (player_aux_apply(atk))
                 return (true);
         }
