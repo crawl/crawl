@@ -1356,13 +1356,6 @@ void bolt::do_fire()
         ray.advance();
     }
 
-#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
-    // Before we start drawing the beam, turn buffering off.
-    bool oldValue = true;
-    if (!is_tracer)
-        oldValue = set_buffering(false);
-#endif
-
     while (map_bounds(pos()))
     {
         if (range_used() > range)
@@ -1472,11 +1465,6 @@ void bolt::do_fire()
             you.pet_target = beam_source;
         }
     }
-
-    // That's it!
-#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
-    set_buffering(oldValue);
-#endif
 }
 
 // Returns damage taken by a monster from a "flavoured" (fire, ice, etc.)
@@ -5297,13 +5285,6 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
     exp_map.init(INT_MAX);
     determine_affected_cells(exp_map, coord_def(), 0, r, true, true);
 
-#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
-    // turn buffering off
-    bool oldValue = true;
-    if (!is_tracer)
-        oldValue = set_buffering(false);
-#endif
-
     // We get a bit fancy, drawing all radius 0 effects, then radius
     // 1, radius 2, etc.  It looks a bit better that way.
     const std::vector< std::vector<coord_def> > sweep = _radial_sweep(r);
@@ -5361,11 +5342,6 @@ bool bolt::explode(bool show_more, bool hole_in_the_middle)
             }
         }
     }
-
-#if defined(TARGET_OS_WINDOWS) && !defined(USE_TILE)
-    if (!is_tracer)
-        set_buffering(oldValue);
-#endif
 
     // Delay after entire explosion has been drawn.
     if (!is_tracer && cells_seen > 0 && show_more)

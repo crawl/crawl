@@ -88,7 +88,6 @@ static int cx = 0, cy = 0;
 static CHAR_INFO *screen = NULL;
 static COORD screensize;
 #define SCREENINDEX(x,y) ((x)+screensize.X*(y))
-static bool buffering = false;
 static unsigned InputCP, OutputCP;
 static const unsigned PREFERRED_CODEPAGE = 437;
 
@@ -175,10 +174,6 @@ void writeChar(ucs_t c)
             chsx = cx;
         chy  = cy;
         chex = cx;
-
-        // if we're not buffering, flush
-        if (!buffering)
-            bFlush();
     }
 
     // update x position
@@ -386,9 +381,6 @@ void console_startup()
     // initialise cursor to NONE.
     _setcursortype_internal(false);
 
-    // buffering defaults to ON -- very important!
-    set_buffering(true);
-
     crawl_state.terminal_resize_handler = w32_term_resizer;
     crawl_state.terminal_resize_check   = w32_check_screen_resize;
 
@@ -575,10 +567,6 @@ static void cprintf_aux(const char *s)
         return;
     }
 
-    // turn buffering ON (temporarily)
-    bool oldValue = buffering;
-    set_buffering(true);
-
     // loop through string
     ucs_t c;
     while (int taken = utf8towc(&c, s))
@@ -586,9 +574,6 @@ static void cprintf_aux(const char *s)
         s += taken;
         writeChar(c);
     }
-
-    // reset buffering
-    set_buffering(oldValue);
 
     // flush string
     bFlush();
@@ -883,20 +868,6 @@ void puttext(int x1, int y1, const crawl_view_buffer &vbuf)
 void update_screen()
 {
     bFlush();
-}
-
-bool set_buffering(bool value)
-{
-    bool oldValue = buffering;
-
-    if (value == false)
-    {
-        // must flush buffer
-        bFlush();
-    }
-    buffering = value;
-
-    return oldValue;
 }
 
 int get_number_of_lines()
