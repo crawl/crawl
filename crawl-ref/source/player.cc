@@ -7062,8 +7062,8 @@ bool player::can_safely_mutate() const
 
 bool player::can_bleed() const
 {
-    if (is_undead && (species != SP_VAMPIRE
-                          || hunger_state <= HS_SATIATED))
+    if ((is_undead && is_undead != US_SEMI_UNDEAD)
+        || (is_undead == US_SEMI_UNDEAD && hunger_state <= HS_SATIATED))
     {
         return (false);
     }
@@ -7074,6 +7074,7 @@ bool player::can_bleed() const
     {
         return (false);
     }
+
     return (true);
 }
 
