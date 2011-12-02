@@ -90,11 +90,11 @@ static void _surge_power(spell_type spell)
     }
 }
 
-static std::string _spell_base_description(spell_type spell)
+static std::string _spell_base_description(spell_type spell, bool viewing)
 {
     std::ostringstream desc;
 
-    int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, true);
+    int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, !viewing);
 
     desc << "<" << colour_to_str(highlight) << ">" << std::left;
 
@@ -116,11 +116,11 @@ static std::string _spell_base_description(spell_type spell)
     return desc.str();
 }
 
-static std::string _spell_extra_description(spell_type spell)
+static std::string _spell_extra_description(spell_type spell, bool viewing)
 {
     std::ostringstream desc;
 
-    int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, true);
+    int highlight =  spell_highlight_by_utility(spell, COL_UNKNOWN, !viewing);
 
     desc << "<" << colour_to_str(highlight) << ">" << std::left;
 
@@ -241,8 +241,8 @@ int list_spells(bool toggle_with_I, bool viewing, bool allow_preselect,
                           || allow_preselect && you.last_cast_spell == spell);
 
         ToggleableMenuEntry* me =
-            new ToggleableMenuEntry(_spell_base_description(spell),
-                                    _spell_extra_description(spell),
+            new ToggleableMenuEntry(_spell_base_description(spell, viewing),
+                                    _spell_extra_description(spell, viewing),
                                     MEL_ITEM, 1, letter, preselect);
 
 #ifdef USE_TILE_LOCAL
