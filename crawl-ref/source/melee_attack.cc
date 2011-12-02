@@ -3788,12 +3788,10 @@ bool melee_attack::attack_warded_off()
 
 /* Determine whether a block occurred
  *
- * At the moment, is for defender == player only, this does not handle any
- * monster blocking, but eventually it really should. No blocks if defender
- * is incapacitated, would be nice to eventually expand this method to handle
- * partial blocks as well as full blocks (although this would serve as a nerf
- * to shields and - while more realistic - may not be a good mechanic for
- * shields.
+ * No blocks if defender is incapacitated, would be nice to eventually expand
+ * this method to handle partial blocks as well as full blocks (although this
+ * would serve as a nerf to shields and - while more realistic - may not be a
+ * good mechanic for shields.
  *
  * Returns (block_occurred)
  */
