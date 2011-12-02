@@ -486,10 +486,6 @@ void artefact_desc_properties(const item_def &item,
         fake_rap = ARTP_INVISIBLE;
         break;
 
-    case RING_TELEPORTATION:
-        fake_rap = ARTP_CAUSE_TELEPORTATION;
-        break;
-
     case RING_MAGICAL_POWER:
         fake_rap  = ARTP_MAGICAL_POWER;
         fake_plus = 9;
