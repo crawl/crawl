@@ -3347,15 +3347,6 @@ std::string feature_description(const coord_def& where, bool covering,
         return thing_do_grammar(dtype, add_stop, false, desc);
     }
 
-    if (grid == DNGN_OPEN_SEA)
-    {
-        switch (dtype)
-        {
-        case DESC_A:   dtype = DESC_THE;   break;
-        default: break;
-        }
-    }
-
     switch (grid)
     {
     case DNGN_TRAP_MECHANICAL:
