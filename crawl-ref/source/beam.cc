@@ -960,9 +960,14 @@ static bool _nuke_wall_msg(dungeon_feature_type feat, const coord_def& p)
     case DNGN_GRATE:
         if (hear)
         {
-            msg = "You hear the screech of bent metal.";
+            if (see)
+                msg = "The grate screeches as it bends and collapses.";
+            else
+                msg = "You hear the screech of bent metal.";
             chan = MSGCH_SOUND;
         }
+        else if (see)
+            msg = "The grate bends and collapses.";
         break;
 
     case DNGN_ORCISH_IDOL:
