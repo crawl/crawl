@@ -610,6 +610,8 @@ static void _note_item_destruction(const item_def &item)
         mprf(MSGCH_WARN, "A great rumbling fills the air... "
              "the Orb of Zot has been destroyed!");
         mark_milestone("orb.destroy", "destroyed the Orb of Zot");
+        env.orb_pos.reset();
+        invalidate_agrid(false);
     }
 }
 
@@ -1999,8 +2001,13 @@ bool move_item_to_grid(int *const obj, const coord_def& p, bool silent)
     item.link = igrd(p);
     igrd(p) = ob;
 
-    if (item.base_type == OBJ_ORBS && you.level_type == LEVEL_DUNGEON)
-        set_branch_flags(BFLAG_HAS_ORB);
+    if (item_is_orb(item))
+    {
+        if (you.level_type == LEVEL_DUNGEON)
+            set_branch_flags(BFLAG_HAS_ORB);
+        env.orb_pos = p;
+        invalidate_agrid(true);
+    }
 
     return (true);
 }
