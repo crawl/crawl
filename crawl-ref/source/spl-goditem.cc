@@ -365,7 +365,7 @@ void antimagic()
         DUR_INVIS, DUR_CONF, DUR_PARALYSIS, DUR_HASTE, DUR_MIGHT, DUR_AGILITY,
         DUR_BRILLIANCE, DUR_CONFUSING_TOUCH, DUR_SURE_BLADE, DUR_CORONA,
         DUR_FIRE_SHIELD, DUR_ICY_ARMOUR, DUR_REPEL_MISSILES,
-        DUR_REGENERATION, DUR_SWIFTNESS, DUR_TELEPORT, DUR_CONTROL_TELEPORT,
+        DUR_REGENERATION, DUR_SWIFTNESS, DUR_CONTROL_TELEPORT,
         DUR_TRANSFORMATION, DUR_DEATH_CHANNEL, DUR_DEFLECT_MISSILES,
         DUR_PHASE_SHIFT, DUR_SEE_INVISIBLE, DUR_WEAPON_BRAND, DUR_SILENCE,
         DUR_CONDENSATION_SHIELD, DUR_STONESKIN, DUR_INSULATION, DUR_RESIST_POISON,
@@ -375,13 +375,19 @@ void antimagic()
     };
 
     if (!you.permanent_levitation() && !you.permanent_flight()
-        && you.duration[DUR_LEVITATION] > 2)
+        && you.duration[DUR_LEVITATION] > 11)
     {
-        you.duration[DUR_LEVITATION] = 2;
+        you.duration[DUR_LEVITATION] = 11;
     }
 
-    if (!you.permanent_flight() && you.duration[DUR_CONTROLLED_FLIGHT] > 1)
-        you.duration[DUR_CONTROLLED_FLIGHT] = 1;
+    if (!you.permanent_flight() && you.duration[DUR_CONTROLLED_FLIGHT] > 11)
+        you.duration[DUR_CONTROLLED_FLIGHT] = 11;
+
+    if (you.duration[DUR_TELEPORT] > 0)
+    {
+        you.duration[DUR_TELEPORT] = 0;
+        mpr("You feel strangely stable.");
+    }
 
     // Post-berserk slowing isn't magic, so don't remove that.
     if (you.duration[DUR_SLOW] > you.duration[DUR_EXHAUSTED])
