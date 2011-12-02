@@ -7060,17 +7060,20 @@ bool player::can_safely_mutate() const
                && hunger_state == HS_ENGORGED);
 }
 
-bool player::can_bleed() const
+bool player::can_bleed(bool allow_tran) const
 {
-    if ((is_undead && is_undead != US_SEMI_UNDEAD)
-        || (is_undead == US_SEMI_UNDEAD && hunger_state <= HS_SATIATED))
+    if (allow_tran)
     {
-        return (false);
+        // These transformations don't bleed. Lichform is handled as undead.
+        if (you.form == TRAN_STATUE || you.form == TRAN_ICE_BEAST
+            || you.form == TRAN_SPIDER)
+        {
+            return (false);
+        }
     }
 
-    // The corresponding monsters don't bleed either.
-    if (you.form == TRAN_STATUE || you.form == TRAN_ICE_BEAST
-        || you.form == TRAN_LICH || you.form == TRAN_SPIDER)
+    if ((is_undead && is_undead != US_SEMI_UNDEAD)
+        || (is_undead == US_SEMI_UNDEAD && hunger_state <= HS_SATIATED))
     {
         return (false);
     }
