@@ -146,7 +146,7 @@ public:
     void gain_energy(energy_use_type et, int div = 1, int mult = 1);
 
     void scale_hp(int num, int den);
-    bool gain_exp(int exp);
+    bool gain_exp(int exp, int max_levels_to_gain = 2);
 
     void react_to_damage(const actor *oppressor, int damage, beam_type flavour);
 
