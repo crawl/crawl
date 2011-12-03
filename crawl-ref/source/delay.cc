@@ -1725,8 +1725,9 @@ inline static bool _monster_warning(activity_interrupt_type ai,
             if (ash_id)
                 ash_warning = "Ashenzari warns you:";
 
-            (ash_id ? ash_warning : text) += " " + mon->pronoun(PRONOUN)
-                                             + " is" + mweap + ".";
+            (ash_id ? ash_warning : text) +=
+                " " + uppercase_first(mon->pronoun(PRONOUN)) + " is"
+                + mweap + ".";
         }
 
         if (msgs_buf)
