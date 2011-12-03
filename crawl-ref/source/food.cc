@@ -1805,46 +1805,47 @@ static void _eat_chunk(corpse_effect_type chunk_effect, bool cannibal,
     case CE_ROTTEN:
     case CE_CONTAMINATED:
     case CE_CLEAN:
+    {
+        int contam = _contamination_ratio(chunk_effect);
+        if (player_mutation_level(MUT_SAPROVOROUS) == 3)
         {
-            int contam = _contamination_ratio(chunk_effect);
-            if (player_mutation_level(MUT_SAPROVOROUS) == 3)
+            mprf("This %s flesh tastes %s!",
+                 chunk_effect == CE_ROTTEN   ? "rotting"   : "raw",
+                 x_chance_in_y(contam, 1000) ? "delicious" : "good");
+            if (you.species == SP_GHOUL)
             {
-                mprf("This %s flesh tastes %s!",
-                     chunk_effect == CE_ROTTEN ? "rotting" : "raw",
-                     x_chance_in_y(contam, 1000) ? "delicious" : "good");
-                if (you.species == SP_GHOUL)
+                int hp_amt = 1 + random2(5) + random2(1 + you.experience_level);
+                if (!x_chance_in_y(contam + 4000, 5000))
+                    hp_amt = 0;
+                _heal_from_food(hp_amt, !one_chance_in(4),
+                                x_chance_in_y(contam, 5000));
+            }
+        }
+        else
+        {
+            if (x_chance_in_y(contam, 1000))
+            {
+                mpr("There is something wrong with this meat.");
+                if (you.duration[DUR_DIVINE_STAMINA] > 0)
+                    mpr("Your divine stamina protects you.");
+                else
                 {
-                    int hp_amt = 1 + random2(5) + random2(1 + you.experience_level);
-                    if (!x_chance_in_y(contam + 4000, 5000))
-                        hp_amt = 0;
-                    _heal_from_food(hp_amt, !one_chance_in(4),
-                                    x_chance_in_y(contam, 5000));
+                    if (you.duration[DUR_NAUSEA])
+                        you.sicken(50 + random2(100));
+                    you.increase_duration(DUR_NAUSEA, 100 + random2(200), 300);
+                    learned_something_new(HINT_CONTAMINATED_CHUNK);
+                    xom_is_stimulated(random2(100));
                 }
             }
             else
-            {
-                if (x_chance_in_y(contam, 1000))
-                {
-                    mpr("There is something wrong with this meat.");
-                    if (you.duration[DUR_DIVINE_STAMINA] > 0)
-                        mpr("Your divine stamina protects you.");
-                    else
-                    {
-                        if (you.duration[DUR_NAUSEA])
-                            you.sicken(50 + random2(100));
-                        you.increase_duration(DUR_NAUSEA, 100 + random2(200), 300);
-                        learned_something_new(HINT_CONTAMINATED_CHUNK);
-                        xom_is_stimulated(random2(100));
-                    }
-                }
-                else
-                    _say_chunk_flavour(likes_chunks);
-                nutrition = nutrition * (1000 - contam) / 1000;
-            }
+                _say_chunk_flavour(likes_chunks);
 
-            do_eat = true;
+            nutrition = nutrition * (1000 - contam) / 1000;
         }
+
+        do_eat = true;
         break;
+    }
 
     case CE_POISON_CONTAM: // _determine_chunk_effect should never return this
     case CE_MUTAGEN_GOOD:
