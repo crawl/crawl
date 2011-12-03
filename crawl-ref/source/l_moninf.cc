@@ -56,6 +56,14 @@ LUAFN(moninf_get_is)
     return (1);
 }
 
+LUAFN(moninf_get_is_very_stabbable)
+{
+    MONINF(ls, 1, mi);
+    lua_pushboolean(ls, mi->is(MB_DORMANT) || mi->is(MB_SLEEPING) ||
+                        mi->is(MB_PARALYSED));
+    return (1);
+}
+
 LUAFN(moninf_get_is_unique) {
     MONINF(ls, 1, mi);
     // XXX: A bit of a hack to prevent using this to determine which is fake.
@@ -94,6 +102,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(mname),
     MIREG(is),
     MIREG(is_safe),
+    MIREG(is_very_stabbable),
     MIREG(holiness),
     MIREG(attitude),
     MIREG(threat),
