@@ -155,7 +155,8 @@ SUBST:  b: v.., v: c.
 TILE:   X = wall_zot_magenta
 FTILE:  -OD = floor_hall
 COLOUR: X-D = magenta
-KPROP:  O- = no_tele_into
+KPROP:  O-X = no_tele_into
+SUBST:  X = c
 SUBST:  - = ., D = +
 KFEAT:  O = enter_zot
 MARKER: + = lua:restrict_door()
@@ -223,6 +224,7 @@ SUBST:  x: xcvX
 NSUBST: 2 = 2:2 / *:-
 TILE:   X = wall_zot_magenta
 COLOUR: X = magenta
+SUBST:  X = c
 COLOUR: . = white
 FTILE:  -23O = floor_hall
 SUBST:  - = .
@@ -263,6 +265,7 @@ TAGS:   no_monster_gen patrolling zot_entry
 KFEAT:  O = enter_zot
 TILE:   X = wall_zot_magenta
 COLOUR: X+- = magenta
+SUBST:  X = c
 FTILE:  -O+ = floor_hall
 KPROP:  O- = no_tele_into
 SUBST:  - = .
@@ -291,9 +294,9 @@ ENDMAP
 NAME:   evilmike_zot_entry_basic
 TAGS:   no_monster_gen zot_entry
 KFEAT:  O = enter_zot
-TILE:   x = wall_zot_magenta
-COLOUR: x+- = magenta
-FTILE:  O-+ = floor_hall
+TILE:   c = wall_zot_magenta
+COLOUR: c+- = magenta
+FTILE:  O-+c = floor_hall
 KPROP:  O- = no_tele_into
 SUBST:  - = .
 NSUBST: d = 5:3 / 2:2 / 1:1
@@ -302,13 +305,13 @@ MONS:   dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golde
 MONS:   patrolling base draconian
 MAP
 ....d....
-.dxx+xxd.
-.xx---xx.
-.x-----x.
-dx--O--xd
-.x-----x.
-.xx---xx.
-.dxxxxxd.
+.dcc+ccd.
+.cc---cc.
+.c-----c.
+dc--O--cd
+.c-----c.
+.cc---cc.
+.dcccccd.
 ....d....
 ENDMAP
 
@@ -316,10 +319,10 @@ NAME:   evilmike_zot_entry_diamond
 TAGS:   no_monster_gen zot_entry
 KFEAT:  O = enter_zot
 KFEAT:  A = stone_arch
-TILE:   X = wall_zot_magenta
-COLOUR: X+- = magenta
-FTILE:  -O+A = floor_hall
-KPROP:  -OxA = no_tele_into
+TILE:   c = wall_zot_magenta
+COLOUR: c+- = magenta
+FTILE:  -O+Ac = floor_hall
+KPROP:  -OcA = no_tele_into
 SUBST:  - = .
 NSUBST: 2 = 2:2 / *:.
 NSUBST: 1 = 2:1 / *:2
@@ -328,21 +331,21 @@ MONS:   dragon / ice dragon / storm dragon / shadow dragon / bone dragon / golde
 MONS:   patrolling base draconian
 MAP
       ..1..
-     .2X+X2.
-    ..XX-XX..
-   3.XX---XX.3
-  ..XX--O--XX..
- ..XXXX---XXXX..
-.2XX-XXX-XXX-XX2.
-.XX---XXXXX---XX.
-1+--A--XXX--A--+1
-.XX---XXXXX---XX.
-.2XX-XXX-XXX-XX2.
- ..XXXX---XXXX..
-  ..XX--A--XX..
-   3.XX---XX.3
-    ..XX-XX..
-     .2X+X2.
+     .2c+c2.
+    ..cc-cc..
+   3.cc---cc.3
+  ..cc--O--cc..
+ ..cccc---cccc..
+.2cc-ccc-ccc-cc2.
+.cc---ccccc---cc.
+1+--A--ccc--A--+1
+.cc---ccccc---cc.
+.2cc-ccc-ccc-cc2.
+ ..cccc---cccc..
+  ..cc--A--cc..
+   3.cc---cc.3
+    ..cc-cc..
+     .2c+c2.
       ..1..
 ENDMAP
 
