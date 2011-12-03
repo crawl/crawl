@@ -1299,6 +1299,7 @@ static void _setup_tutorial(const newgame_def& ng)
  */
 static void _setup_sprint(const newgame_def& ng)
 {
+    // nothing currently
 }
 
 /**
