@@ -5366,7 +5366,10 @@ bool melee_attack::handle_monster_constriction()
 	    if (attacker->constricting[i] != NON_ENTITY)
 	    {
 	        int basedam, durdam, acdam, infdam;
-	        target = &env.mons[attacker->constricting[i]];
+                if (attacker->constricting[i] == MHITYOU)
+                    target = &you;
+                else
+	            target = &env.mons[attacker->constricting[i]];
 		defender = target;
                 damage = (attacker->as_monster()->hit_dice+1)/2;
 		basedam = damage;
@@ -5385,7 +5388,8 @@ bool melee_attack::handle_monster_constriction()
 		     attacker->name(DESC_PLAIN, true).c_str(),
 		     defender->name(DESC_PLAIN, true).c_str(),
 		     basedam, durdam, acdam, infdam);
-		if (defender->as_monster()->hit_points < 1)
+		if (defender != &you
+                    && defender->as_monster()->hit_points < 1)
 		    _monster_die(defender->as_monster(), KILL_MON, 
 		                 attacker->mindex());
 

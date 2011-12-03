@@ -1959,7 +1959,7 @@ void handle_noattack_constrictions(monster *mons)
 	         attacker->name(DESC_PLAIN, true).c_str(),
 	         defender->name(DESC_PLAIN, true).c_str(),
 	         basedam, durdam, acdam, infdam);
-	    if (defender->as_monster()->hit_points < 1)
+	    if (defender != &you && defender->as_monster()->hit_points < 1)
 	        monster_die(defender->as_monster(), KILL_MON, 
 	                     attacker->mindex());
         }
