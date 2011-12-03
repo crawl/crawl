@@ -60,7 +60,7 @@ The contents of this text are:
                 confirm_butcher, prefer_safe_chunks, easy_eat_chunks,
                 easy_eat_gourmand, easy_eat_contaminated,
                 prompt_for_swap, easy_quit_item_prompts,
-                easy_exit_menu, sort_menus, spell_slot
+                easy_exit_menu, sort_menus, spell_slot, autofight_stop
 4-j     Message and Display Improvements.
                 hp_warning, mp_warning, hp_colour, mp_colour, stat_colour,
                 status_caption_colour, clear_messages, show_more, small_more,
@@ -367,13 +367,22 @@ The available stock Lua scripts are
   trapwalk.lua  -- allows travel to cross certain traps if you have
                    enough HP.
   autofight.lua -- provides a command for moving to and attacking the
-                   nearest monster. Attempts to move in a straight line
-                   into the direction of the closest hostile monster.
-                   If there are several monsters of equal distance,
-                   e.g. adjacent, prefers those to the upper left, then
-                   continues in anti-clockwise manner.
+                   nearest monster. Attempts to move towards or attack the
+                   closest hostile monster. If there are several monsters of
+                   equal distance, e.g. adjacent, prefers those that are
+                   sleeping or paralyzed, then those that are most injured,
+                   then those of a higher danger level. "Safe" but hostile
+                   monsters such as ballistomycetes and withdrawn agate snails
+                   will be targeted when there are no other targets. Will use
+                   reaching weapons and launchers, if equipped.
+                   Stops if HP <= (autofight_stop)% * MHP, where
+                   autofight_stop = 30 by default but can be set by the player.
+                   Never moves if hit_adjacent is used instead of hit_closest.
+                   Tab is automatically bound to hit_closest and shift-tab to
+                   hit_adjacent.
                    Requires non-rebound vi keys.
-                   New macroable function: hit_closest
+                   New macroable functions: hit_closest, hit_adjacent
+                   New options: autofight_stop
 
 
 The above mentioned Lua functions can be macroed in-game by setting the
@@ -1234,6 +1243,16 @@ spell_slot = <regex>:<list of spell letters>
           to use capital letters: (place this after all other
           spell_slot lines):
             spell_slot = .*:ABCDEFGHIJKLMNOPQRSTUVWXYZ
+
+autofight_stop = 30
+        This only works if autofight.lua has already been sourced in
+        init.txt.
+
+        Autofight will not act if your HP is at or lower than this
+        percentage of your max HP. For example, to remove this stop
+        you would want:
+            autofight_stop = 0
+
 
 4-j     Messages and Display Enhancements.
 ------------------------------------------
