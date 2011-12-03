@@ -37,7 +37,7 @@ function ossuary_portal(e)
   e.lua_marker('O',
       timed_marker {
         disappear = "The staircase has disappeared completely beneath the sand.",
-        desc = "a sand-covered staircase",
+        desc = "sand-covered staircase",
         desc_long = desc_long,
         entity = 'staircase',
         dst = "ossuary",

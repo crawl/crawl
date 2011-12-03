@@ -60,7 +60,7 @@ function ice_cave_portal(e)
   e.lua_marker('O',
       timed_marker {
         disappear = "The archway melts and disappears.",
-        desc = "a frozen archway",
+        desc = "frozen archway",
         desc_long = desc_long,
         entity = 'archway',
         dst = difficulty,
