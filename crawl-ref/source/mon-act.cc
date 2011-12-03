@@ -665,6 +665,8 @@ static void _handle_movement(monster* mons)
         return;
 
     // Did we just come into view?
+    // TODO: This doesn't seem to work right. Fix, or remove?
+
     if (mons->seen_context != _just_seen)
         return;
     if (testbits(mons->flags, MF_WAS_IN_VIEW))
@@ -3065,6 +3067,7 @@ static void _mons_open_door(monster* mons, const coord_def &pos)
         open_str += noun;
         open_str += ".";
 
+        // Should this be conditionalized on you.can_see(mons?)
         mons->seen_context = open_str;
 
         if (!you.can_see(mons))
