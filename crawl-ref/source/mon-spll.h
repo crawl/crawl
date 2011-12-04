@@ -312,7 +312,7 @@
        SPELL_BOLT_OF_DRAINING,
        SPELL_NO_SPELL,
        SPELL_ANIMATE_DEAD,
-       SPELL_ANIMATE_DEAD,
+       SPELL_SIMULACRUM,
        SPELL_NO_SPELL
       }
     },
