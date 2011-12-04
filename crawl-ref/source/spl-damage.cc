@@ -469,8 +469,14 @@ spret_type cast_refrigeration(int pow, bool non_player, bool freeze_potions,
     counted_monster_list affected_monsters;
 
     for (monster_iterator mi(&you); mi; ++mi)
-        if (cell_see_cell(you.pos(), mi->pos(), LOS_SOLID)) // not just you.can_see (Scry)
+    {
+        // not just you.can_see (Scry), and not cold-immune monsters
+        if (cell_see_cell(you.pos(), mi->pos(), LOS_SOLID)
+            && _refrigerateable(*mi))
+        {
             affected_monsters.add(*mi);
+        }
+    }
 
     if (!affected_monsters.empty())
     {
@@ -501,9 +507,13 @@ spret_type cast_refrigeration(int pow, bool non_player, bool freeze_potions,
         // (submerged, invisible) even though you get no information
         // about it.
 
-        // ... but not ones you see only via Scrying.
-        if (!cell_see_cell(you.pos(), mi->pos(), LOS_SOLID))
+        // ... but not ones you see only via Scrying, and not cold-immune ones
+        if (!cell_see_cell(you.pos(), mi->pos(), LOS_SOLID)
+            || !_refrigerateable(*mi))
+        {
             continue;
+        }
+
         // Calculate damage and apply.
         int hurt = mons_adjust_flavoured(*mi, beam, dam_dice.roll());
         dprf("damage done: %d", hurt);
