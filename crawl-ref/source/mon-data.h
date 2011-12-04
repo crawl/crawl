@@ -609,7 +609,7 @@ static monsterentry mondata[] = {
 {
     MONS_DRACONIAN_SCORCHER, 'd', LIGHTRED, "draconian scorcher",
     M_SPELLCASTER | M_ACTUAL_SPELLS | M_COLD_BLOOD | M_SPEAKS,
-    MR_RES_HELLFIRE,
+    MR_NO_FLAGS,
     900, 10, MONS_DRACONIAN, MONS_DRACONIAN, MH_NATURAL, -4,
     { {AT_HIT, AF_PLAIN, 15}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 16, 4, 2, 0 },
@@ -744,7 +744,7 @@ static monsterentry mondata[] = {
 {
     MONS_DEEP_ELF_HIGH_PRIEST, 'e', LIGHTGREEN, "deep elf high priest",
     M_SPELLCASTER | M_SPEAKS | M_PRIEST | M_WARM_BLOOD | M_SEE_INVIS,
-    MR_RES_HELLFIRE,
+    MR_NO_FLAGS,
     450, 10, MONS_ELF, MONS_ELF, MH_NATURAL, -6,
     { {AT_HIT, AF_PLAIN, 14}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 11, 3, 3, 0 },
@@ -1556,7 +1556,7 @@ static monsterentry mondata[] = {
     MONS_ORC_SORCERER, 'o', LIGHTMAGENTA, "orc sorcerer",
     M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS | M_ACTUAL_SPELLS
         | M_WARM_BLOOD,
-    MR_RES_FIRE,
+    MR_NO_FLAGS,
     600, 12, MONS_ORC, MONS_ORC, MH_NATURAL, -3,
     { {AT_HIT, AF_PLAIN, 7}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 9, 2, 3, 0 },
@@ -1568,7 +1568,7 @@ static monsterentry mondata[] = {
 {
     MONS_ORC_HIGH_PRIEST, 'o', LIGHTGREEN, "orc high priest",
     M_SPELLCASTER | M_SEE_INVIS | M_SPEAKS | M_PRIEST | M_WARM_BLOOD,
-    MR_RES_HELLFIRE,
+    MR_NO_FLAGS,
     600, 10, MONS_ORC, MONS_ORC, MH_NATURAL, -4,
     { {AT_HIT, AF_PLAIN, 7}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 11, 3, 4, 0 },
