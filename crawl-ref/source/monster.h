@@ -241,6 +241,7 @@ public:
     bool      pickup_misc(item_def &item, int near);
     bool      pickup_food(item_def &item, int near);
     bool      pickup_missile(item_def &item, int near, bool force);
+    bool      drop_item(int eslot, int near);
     void      equip(item_def &item, int slot, int near = -1);
     bool      unequip(item_def &item, int slot, int near = -1,
                       bool force = false);
@@ -451,7 +452,6 @@ private:
 
     bool decay_enchantment(const mon_enchant &me, bool decay_degree = true);
 
-    bool drop_item(int eslot, int near);
     bool wants_weapon(const item_def &item) const;
     bool wants_armour(const item_def &item) const;
     void lose_pickup_energy();

@@ -2084,6 +2084,7 @@ static void _apport_and_butcher(monster *caster, item_def &item)
 bool monster_simulacrum(monster *caster, bool actual)
 {
     dprf("trying to cast simulacrum");
+    bool need_drop = false;
     if (caster->inv[MSLOT_MISCELLANY] != NON_ITEM)
     {
         item_def& item(mitm[caster->inv[MSLOT_MISCELLANY]]);
@@ -2160,9 +2161,8 @@ bool monster_simulacrum(monster *caster, bool actual)
             return created;
         }
 
-        // TODO: drop non-chunks in preference to chunks, or not pick them up
-        // in the first place.  The pickup code is nice though, we want to
-        // gather chunks just lying around.
+        // a non-chunk
+        need_drop = true;
     }
 
     // need to be able to pick up the apported corpse
@@ -2183,7 +2183,11 @@ bool monster_simulacrum(monster *caster, bool actual)
             {
                 dprf("found %s", si->name(DESC_PLAIN).c_str());
                 if (actual)
+                {
+                    if (need_drop)
+                        caster->drop_item(MSLOT_MISCELLANY, -1);
                     _apport_and_butcher(caster, *si);
+                }
                 return true;
             }
         }
