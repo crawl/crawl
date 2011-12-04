@@ -33,6 +33,8 @@
 #include "view.h"
 #include "viewgeom.h"
 
+#include "json.h"
+
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -50,6 +52,38 @@ static unsigned int get_milliseconds()
 
     return ((unsigned int) tv.tv_sec) * 1000 + tv.tv_usec / 1000;
 }
+
+
+// Helper for json.h
+struct JsonWrapper
+{
+    JsonWrapper(JsonNode* n) : node(n)
+    { }
+
+    ~JsonWrapper()
+    {
+        if (node)
+            json_delete(node);
+    }
+
+    JsonNode* operator->()
+    {
+        return node;
+    }
+
+    void check(JsonTag tag)
+    {
+        if (!node || node->tag != tag)
+        {
+            throw malformed;
+        }
+    }
+
+    JsonNode* node;
+
+    static class MalformedException { } malformed;
+};
+
 
 TilesFramework tiles;
 
@@ -224,32 +258,40 @@ wint_t TilesFramework::_receive_control_message()
     }
 
     std::string data(buf, len);
-    return _handle_control_message(srcaddr, data);
+    try
+    {
+        return _handle_control_message(srcaddr, data);
+    }
+    catch (JsonWrapper::MalformedException&)
+    {
+        dprf("Malformed control message!");
+        return 0;
+    }
 }
 
 wint_t TilesFramework::_handle_control_message(sockaddr_un addr, std::string data)
 {
-    // Hack - this needs a real JSON parser
+    JsonWrapper obj = json_decode(data.c_str());
+    obj.check(JSON_OBJECT);
 
-    static const std::string keymsgstart("{\"msg\":\"key\",\"keycode\":");
+    JsonWrapper msg = json_find_member(obj.node, "msg");
+    msg.check(JSON_STRING);
+    std::string msgtype(msg->string_);
 
     int c = 0;
 
-    if (data == "{\"msg\":\"attach\"}")
+    if (msgtype == "attach")
     {
         m_dest_addrs.push_back(addr);
     }
-    else if (data.compare(0, keymsgstart.size(), keymsgstart) == 0)
+    else if (msgtype == "key")
     {
-        std::stringstream ss(data);
-        ss.ignore(keymsgstart.size());
+        JsonWrapper keycode = json_find_member(obj.node, "keycode");
+        keycode.check(JSON_NUMBER);
 
-        ss >> c;
-
-        if (ss.fail())
-            c = 0;
+        c = (int) keycode->number_;
     }
-    else if (data == "{\"msg\":\"spectator_joined\"}")
+    else if (msgtype == "spectator_joined")
     {
         _send_everything();
     }
