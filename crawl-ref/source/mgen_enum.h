@@ -104,6 +104,7 @@ enum mgen_flag_type
     MG_PLAYER_MADE  = 0x08,
     MG_PATROLLING   = 0x10,
     MG_BAND_MINION  = 0x20,
+    MG_DONT_COME    = 0x40, // suppress the "comes into view" spam
 };
 
 #endif

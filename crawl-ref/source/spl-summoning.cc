@@ -2094,6 +2094,9 @@ bool monster_simulacrum(monster *caster, bool actual)
             if (!actual)
                 return true;
 
+            // You can see the spell being cast, not necessarily the caster.
+            bool cast_visible = you.see_cell(caster->pos());
+
             monster_type sim_type = static_cast<monster_type>(item.plus);
             monster_type mon_type = mons_zombie_size(sim_type) == Z_BIG ?
                 MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL;
@@ -2116,12 +2119,13 @@ bool monster_simulacrum(monster *caster, bool actual)
                         mgen_data(mon_type, SAME_ATTITUDE(caster), caster,
                                   0, SPELL_SIMULACRUM,
                                   caster->pos(), caster->foe,
-                                  MG_FORCE_BEH, caster->god,
+                                  MG_FORCE_BEH | (cast_visible ? MG_DONT_COME : 0),
+                                  caster->god,
                                   sim_type));
 
                 if (mons != -1)
                 {
-                    if (!created++)
+                    if (!created++ && cast_visible)
                     {
                         simple_monster_message(caster,
                             " holds a chunk of flesh high, and a cloud of icy vapour forms.",
@@ -2143,17 +2147,23 @@ bool monster_simulacrum(monster *caster, bool actual)
                 }
             }
 
-            if (seen > 1)
+            if (cast_visible)
             {
-                mprf("The vapour coalesces into ice likenesses of %s.",
-                     pluralise(mons_class_name(sim_type)).c_str());
+                if (seen > 1)
+                {
+                    mprf(MSGCH_WARN,
+                         "The vapour coalesces into ice likenesses of %s.",
+                         pluralise(mons_class_name(sim_type)).c_str());
+                }
+                else if (seen == 1)
+                {
+                    const char *name = mons_class_name(sim_type);
+                    mprf(MSGCH_WARN,
+                         "The vapour coalesces into an ice likeness of %s %s.",
+                         article_a(name).c_str(), name);
+                }
             }
-            else if (seen == 1)
-            {
-                const char *name = mons_class_name(sim_type);
-                mprf("The vapour coalesces into an ice likeness of %s %s.",
-                     article_a(name).c_str(), name);
-            }
+            // if the cast was not visible, you get "comes into view" instead
 
             // Always return -- if we have chunks but there is no space to
             // create simulacra, obtaining more would have to be restricted
