@@ -1899,7 +1899,7 @@ spret_type cast_animate_skeleton(god_type god, bool fail)
             && mons_skeleton(si->plus)
             && mons_class_can_be_zombified(si->plus))
         {
-            turn_corpse_into_skeleton_and_chunks(*si);
+            butcher_corpse(*si, B_TRUE);
             mpr("Before your eyes, flesh is ripped from the corpse!");
             if (Options.chunks_autopickup)
                 request_autopickup();

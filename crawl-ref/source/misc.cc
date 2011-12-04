@@ -187,19 +187,34 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
         maybe_drop_monster_hide(corpse);
 }
 
-void turn_corpse_into_skeleton_and_chunks(item_def &item)
+static void _turn_corpse_into_skeleton_and_chunks(item_def &item, bool prefer_chunks)
 {
-    item_def chunks = item;
+    item_def copy = item;
 
-    if (mons_skeleton(item.plus))
-        turn_corpse_into_skeleton(item);
-
-    int o = get_mitm_slot();
-    if (o != NON_ITEM)
+    // Complicated logic, but unless we use the original, both could fail if
+    // mitm[] is overstuffed.
+    if (prefer_chunks)
     {
-        turn_corpse_into_chunks(chunks);
-        copy_item_to_grid(chunks, you.pos());
+        turn_corpse_into_chunks(item);
+        turn_corpse_into_skeleton(copy);
     }
+    else
+    {
+        turn_corpse_into_chunks(copy);
+        turn_corpse_into_skeleton(item);
+    }
+
+    copy_item_to_grid(copy, you.pos());
+}
+
+void butcher_corpse(item_def &item, maybe_bool skeleton)
+{
+    if (!mons_skeleton(item.plus))
+        skeleton = B_FALSE;
+    if (skeleton == B_TRUE || skeleton == B_MAYBE && one_chance_in(3))
+        _turn_corpse_into_skeleton_and_chunks(item, skeleton != B_TRUE);
+    else
+        turn_corpse_into_chunks(item);
 }
 
 // Initialise blood potions with a vector of timers.
