@@ -301,9 +301,11 @@ endif
 #
 # Check for an Apple-released compiler.
 #
+ifndef NO_APPLE_GCC
 ifeq ($(uname_S),Darwin)
 ifneq ($(shell gcc -v 2>&1 | grep Apple),)
 APPLE_GCC = YesPlease
+endif
 endif
 endif
 
