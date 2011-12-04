@@ -1220,10 +1220,7 @@ static void _finish_delay(const delay_queue_item &delay)
                 const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
                 const bool was_holy = (mons_class_holiness(item.plus) == MH_HOLY);
 
-                if (mons_skeleton(item.plus) && one_chance_in(3))
-                    turn_corpse_into_skeleton_and_chunks(item);
-                else
-                    turn_corpse_into_chunks(item);
+                butcher_corpse(item, B_MAYBE);
 
                 if (you.berserk()
                     && you.berserk_penalty != NO_BERSERK_PENALTY)
