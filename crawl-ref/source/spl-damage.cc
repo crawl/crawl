@@ -426,7 +426,7 @@ static bool _refrigerateable(const actor *act)
 {
     // Inconsistency: monsters suffer no damage at rC+++, players suffer
     // considerable damage.
-    return (!act->is_player() && act->res_cold() < 3);
+    return (act->is_player() || act->res_cold() < 3);
 }
 
 spret_type cast_refrigeration(int pow, bool non_player, bool freeze_potions,
