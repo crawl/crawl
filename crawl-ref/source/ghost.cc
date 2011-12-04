@@ -102,6 +102,8 @@ static spell_type search_order_third[] = {
     SPELL_CONTROLLED_BLINK,
     SPELL_BLINK,
     SPELL_NO_SPELL,                        // end search
+    // No Simulacrum: iffy for pghosts (picking up material components),
+    // largely useless on Pan lords.
 };
 
 // Order for looking for enchants for the 4th & 5th spell slots.  If

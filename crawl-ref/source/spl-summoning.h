@@ -78,6 +78,7 @@ int animate_dead(actor *caster, int pow, beh_type beha, unsigned short hitting,
                  god_type god = GOD_NO_GOD, bool actual = true);
 
 spret_type cast_simulacrum(int pow, god_type god, bool fail);
+bool monster_simulacrum(monster *caster, bool actual);
 
 spret_type cast_twisted_resurrection(int pow, god_type god, bool fail);
 bool undead_abomination_convert(monster* mon, int hd);

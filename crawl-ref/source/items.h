@@ -82,6 +82,7 @@ bool copy_item_to_grid(const item_def &item, const coord_def& p,
                         int quant_drop = -1,    // item.quantity by default
                         bool mark_dropped = false,
                         bool silent = false);
+coord_def item_pos(const item_def &item);
 
 bool move_top_item(const coord_def &src, const coord_def &dest);
 

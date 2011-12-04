@@ -1063,6 +1063,7 @@ bool setup_mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_SUMMON_UGLY_THING:
     case SPELL_ANIMATE_DEAD:
     case SPELL_TWISTED_RESURRECTION:
+    case SPELL_SIMULACRUM:
     case SPELL_CALL_IMP:
     case SPELL_SUMMON_SCORPIONS:
     case SPELL_SUMMON_SWARM:
@@ -1742,9 +1743,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (!cast_tukimas_ball(mons, 100, GOD_NO_GOD, true))
                 return (false);
         }
-
         // Try to animate dead: if nothing rises, pretend we didn't cast it.
-        if (spell_cast == SPELL_ANIMATE_DEAD)
+        else if (spell_cast == SPELL_ANIMATE_DEAD)
         {
             if (mons->friendly() && !_animate_dead_okay())
                 return (false);
@@ -1755,9 +1755,8 @@ bool handle_mon_spell(monster* mons, bolt &beem)
                 return (false);
             }
         }
-
         // Try to raise crawling corpses: if nothing rises, pretend we didn't cast it.
-        if (spell_cast == SPELL_TWISTED_RESURRECTION)
+        else if (spell_cast == SPELL_TWISTED_RESURRECTION)
         {
             if (mons->friendly() && !_animate_dead_okay())
                 return (false);
@@ -1767,6 +1766,15 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             {
                 return (false);
             }
+        }
+        // Ditto for simulacrum.
+        else if (spell_cast == SPELL_SIMULACRUM)
+        {
+            if (mons->friendly() && !_animate_dead_okay())
+                return (false);
+
+            if (!monster_simulacrum(mons, false))
+                return (false);
         }
         // Try to cause fear: if nothing is scared, pretend we didn't cast it.
         else if (spell_cast == SPELL_CAUSE_FEAR)
@@ -2462,6 +2470,7 @@ static bool _mon_spell_bail_out_early(monster* mons, spell_type spell_cast)
     {
     case SPELL_ANIMATE_DEAD:
     case SPELL_TWISTED_RESURRECTION:
+    case SPELL_SIMULACRUM:
         // see special handling in mon-stuff::handle_spell() {dlb}
         if (mons->friendly() && !_animate_dead_okay())
             return (true);
@@ -2987,6 +2996,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_TWISTED_RESURRECTION:
         twisted_resurrection(mons, 100, SAME_ATTITUDE(mons),
                              mons->foe, god);
+        return;
+
+    case SPELL_SIMULACRUM:
+        monster_simulacrum(mons, true);
         return;
 
     case SPELL_CALL_IMP: // class 5 demons
