@@ -422,12 +422,17 @@ spret_type cast_toxic_radiance(int pow, bool non_player, bool fail)
     return SPRET_SUCCESS;
 }
 
+static bool _refrigerateable(const actor *act)
+{
+    return (act->res_cold() < 3);
+}
+
 spret_type cast_refrigeration(int pow, bool non_player, bool freeze_potions,
                               bool fail)
 {
     {
         targetter_los hitfunc(&you, LOS_SOLID);
-        if (stop_attack_prompt(hitfunc, "harm"))
+        if (stop_attack_prompt(hitfunc, "harm",  _refrigerateable))
             return SPRET_ABORT;
     }
 
