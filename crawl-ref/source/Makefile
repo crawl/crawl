@@ -399,17 +399,36 @@ ifdef APPLE_GCC
 
 MARCH := $(uname_M)
 
+
+ifndef NO_AUTO_SDK
+
+# Find the oldest SDK available, in attempt to make this build as
+# backward-compatible as we possibly can.
+SDK_VER := $(shell ls /Developer/SDKs | sort -n | head -1 | perl -pe 's/^MacOSX//g;s/.sdk$$//g')
+
+ifeq ($(SDK_VER),10.4u)
+SDK_VER := 10.4
+endif
+
+ifndef SDK_VER
+$(error You do not seem to have any Mac OS X SDKs installed! This build is doomed to fail)
+endif
+
+endif
+
+ifndef SDK_VER
 ifeq ($(MARCH),ppc)
-	SDK_VER := 10.4
+SDK_VER := 10.4
 endif
 ifeq ($(MARCH),i386)
-	SDK_VER := 10.4
+SDK_VER := 10.4
 endif
 ifeq ($(MARCH),x86_64)
 ifdef TILES
-	SDK_VER := 10.6
+SDK_VER := 10.6
 else
-	SDK_VER := 10.5
+SDK_VER := 10.5
+endif
 endif
 endif
 
@@ -419,8 +438,11 @@ ifeq ($(SDK_VER),10.4)
 GCC_VER := 4.0
 SDKROOT := /Developer/SDKs/MacOSX$(SDK_VER)u.sdk
 else
-GCC_VER := 4.2
 SDKROOT := /Developer/SDKs/MacOSX$(SDK_VER).sdk
+endif
+
+ifneq ($(shell test -d $(SDKROOT) || echo NOPE),)
+$(error The Mac OS X $(SDK_VER) SDK seems missing)
 endif
 
 ifdef BUILD_UNIVERSAL
@@ -469,8 +491,8 @@ ifeq ($(shell which $(LMACH)gcc$(GCC_VER_SUFFIX) > /dev/null 2> /dev/null && ech
 LMACH :=
 endif
 
-GCC := $(LMACH)gcc$(GCC_VER_SUFFIX)
-GXX := $(LMACH)g++$(GCC_VER_SUFFIX)
+GCC := $(LMACH)$(GCC_VER_PREFIX)gcc$(GCC_VER_SUFFIX)
+GXX := $(LMACH)$(GCC_VER_PREFIX)g++$(GCC_VER_SUFFIX)
 
 else
 
