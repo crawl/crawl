@@ -2331,6 +2331,7 @@
 				B032D524106C01AF0002D70D /* Sources */,
 				B032D525106C01AF0002D70D /* Frameworks */,
 				B032D70F106C03000002D70D /* Copy Frameworks */,
+				1F909B87148B311300084E83 /* Generate Info.plist */,
 			);
 			buildRules = (
 			);
@@ -2393,6 +2394,7 @@
 				B090C2DB10671E3200AE855D /* Copy Crawl Executable */,
 				B090C2ED10671F5F00AE855D /* Copy Dungeon Tiles */,
 				B0B5DF681066EDFF0020B21F /* Copy Frameworks */,
+				1F909C56148B47CB00084E83 /* Generate Info.plist */,
 			);
 			buildRules = (
 			);
@@ -2555,6 +2557,34 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1F909B87148B311300084E83 /* Generate Info.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Generate Info.plist";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "export PATH=\"/opt/git/bin:/opt/local/bin:/usr/local/bin:/usr/bin:/bin:$PATH\"\nif [ -f $HOME/.bashrc ]; then\n\tsource $HOME/.bashrc\nfi\ncd \"${PROJECT_DIR}\"\nmkdir -p \"${TARGET_BUILD_DIR}/${CONTENTS_FOLDER_PATH}\"\nperl -lpe \"s/%VERSION%/$(git describe --tags)/g;\" \\\n\t     -e \"s/%NAME%/Dungeon Crawl Stone Soup/g;\" \\\n\t     -e \"s/%YEAR%/$(date +%Y)/ge;\" \\\n\t     -e \"s/%EXECUTABLE%/${EXECUTABLE_NAME}/g;\" \\\n\t     mac/Crawl-Info.plist > \"${TARGET_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/Info.plist\"";
+		};
+		1F909C56148B47CB00084E83 /* Generate Info.plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Generate Info.plist";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"/opt/git/bin:/opt/local/bin:/usr/local/bin:/usr/bin:/bin:$PATH\"\nif [ -f $HOME/.bashrc ]; then\n\tsource $HOME/.bashrc\nfi\ncd \"${PROJECT_DIR}\"\nmkdir -p \"${TARGET_BUILD_DIR}/${CONTENTS_FOLDER_PATH}\"\nperl -lpe \"s/%VERSION%/$(git describe --tags)/g;\" \\\n\t     -e \"s/%NAME%/Dungeon Crawl Stone Soup/g;\" \\\n\t     -e \"s/%YEAR%/$(date +%Y)/ge;\" \\\n\t     -e \"s/%EXECUTABLE%/${EXECUTABLE_NAME}/g;\" \\\n\t     mac/Crawl-Info.plist > \"${TARGET_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/Info.plist\"";
+		};
 		B090C2DB10671E3200AE855D /* Copy Crawl Executable */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2581,7 +2611,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$PROJECT_DIR\"\nutil/art-data.pl\ncd \"$PROJECT_DIR/rltiles\"\nfor a in main dngn player gui floor wall feat; do\n\tif [ ! -f tiledef-$a.cc ]; then\n\t\t\"$CONFIGURATION_BUILD_DIR/$FULL_PRODUCT_NAME/Contents/MacOS/$PRODUCT_NAME\" dc-$a.txt\n\tfi\ndone";
+			shellScript = "cd \"$PROJECT_DIR\"\nutil/art-data.pl\nutil/gen-mst.pl\nutil/gen-luatags.pl\ncd \"$PROJECT_DIR/rltiles\"\nfor a in main dngn player gui floor wall feat icons unrand; do\n\tif [ ! -f tiledef-$a.cc ]; then\n\t\t\"$CONFIGURATION_BUILD_DIR/$FULL_PRODUCT_NAME/Contents/MacOS/$PRODUCT_NAME\" dc-$a.txt\n\tfi\ndone";
 		};
 		B0C9CFB4108DFA1200E7FA35 /* Generate Headers */ = {
 			isa = PBXShellScriptBuildPhase;
