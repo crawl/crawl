@@ -3531,6 +3531,24 @@ enum disable_type
     NUM_DISABLEMENTS
 };
 
+// these are an unholy mess
+enum seen_context_type
+{
+    SC_NONE,
+    SC_JUST_SEEN,       // \TODO: find out and describe what's the difference
+    SC_NEWLY_SEEN,      // /between these two
+    SC_ALREADY_SEEN,
+    SC_TELEPORT_IN,
+    SC_SURFACES,                      // land-capable
+    SC_SURFACES_BRIEFLY,              // land-capable, submerged back
+    SC_FISH_SURFACES_SHOUT,           // water/lava-only, shouting
+    SC_FISH_SURFACES,                 // water/lava-only
+    SC_NONSWIMMER_SURFACES_FROM_DEEP, // impossible?!?
+    SC_UNCHARM,
+    SC_DOOR,
+    SC_GATE,
+};
+
 #ifdef USE_TILE
 enum screen_mode
 {

@@ -24,30 +24,30 @@ struct activity_interrupt_data
 {
     activity_interrupt_payload_type apt;
     const void *data;
-    std::string context;
+    seen_context_type context;
 
     activity_interrupt_data()
-        : apt(AIP_NONE), data(NULL), context()
+        : apt(AIP_NONE), data(NULL), context(SC_NONE)
     {
     }
     activity_interrupt_data(const int *i)
-        : apt(AIP_INT), data(i), context()
+        : apt(AIP_INT), data(i), context(SC_NONE)
     {
     }
     activity_interrupt_data(const char *s)
-        : apt(AIP_STRING), data(s), context()
+        : apt(AIP_STRING), data(s), context(SC_NONE)
     {
     }
     activity_interrupt_data(const std::string &s)
-        : apt(AIP_STRING), data(s.c_str()), context()
+        : apt(AIP_STRING), data(s.c_str()), context(SC_NONE)
     {
     }
-    activity_interrupt_data(const monster* m, const std::string &ctx = "")
+    activity_interrupt_data(const monster* m, seen_context_type ctx = SC_NONE)
         : apt(AIP_MONSTER), data(m), context(ctx)
     {
     }
     activity_interrupt_data(const ait_hp_loss *ahl)
-        : apt(AIP_HP_LOSS), data(ahl), context()
+        : apt(AIP_HP_LOSS), data(ahl), context(SC_NONE)
     {
     }
     activity_interrupt_data(const activity_interrupt_data &a)

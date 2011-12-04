@@ -66,7 +66,7 @@ public:
 
     std::auto_ptr<ghost_demon> ghost;  // Ghost information.
 
-    std::string seen_context;          // Non-standard context for
+    seen_context_type seen_context;    // Non-standard context for
                                        // AI_SEE_MONSTER
 
     int damage_friendly;               // Damage taken, x2 you, x1 pets, x0 else.

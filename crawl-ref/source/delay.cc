@@ -1577,7 +1577,7 @@ static bool _should_stop_activity(const delay_queue_item &item,
 
     // Don't interrupt player on monster's turn, they might wander off.
     if (you.turn_is_over
-        && (at.context == "already seen" || at.context == "uncharm"))
+        && (at.context == SC_ALREADY_SEEN || at.context == SC_UNCHARM))
     {
         return false;
     }
@@ -1629,7 +1629,7 @@ inline static bool _monster_warning(activity_interrupt_type ai,
     if (!delay_is_run(atype) && !_is_butcher_delay(atype)
         && !(atype == DELAY_NOT_DELAYED))
         return false;
-    if (at.context != "newly seen" && atype == DELAY_NOT_DELAYED)
+    if (at.context != SC_NEWLY_SEEN && atype == DELAY_NOT_DELAYED)
         return false;
 
     const monster* mon = static_cast<const monster* >(at.data);
@@ -1644,7 +1644,7 @@ inline static bool _monster_warning(activity_interrupt_type ai,
     if (mons_is_mimic(mon->type))
         return false;
 
-    if (at.context == "already seen" || at.context == "uncharm")
+    if (at.context == SC_ALREADY_SEEN || at.context == SC_UNCHARM)
     {
         // Only say "comes into view" if the monster wasn't in view
         // during the previous turn.
@@ -1655,7 +1655,7 @@ inline static bool _monster_warning(activity_interrupt_type ai,
                  mon->name(DESC_THE).c_str());
         }
     }
-    else if (mon->seen_context == "just seen")
+    else if (mon->seen_context == SC_JUST_SEEN)
         return false;
     else
     {
@@ -1667,22 +1667,25 @@ inline static bool _monster_warning(activity_interrupt_type ai,
         }
         set_auto_exclude(mon);
 
-        if (starts_with(at.context, "open"))
-            text += " " + at.context;
-        else if (at.context == "thin air")
-        {
-            if (mon->type == MONS_AIR_ELEMENTAL)
-                text += " forms itself from the air.";
-            else
-                text += " appears from thin air!";
-        }
+        if (at.context == SC_DOOR)
+            text += " opens the door.";
+        else if (at.context == SC_GATE)
+            text += " opens the gate.";
+        else if (at.context == SC_TELEPORT_IN)
+            text += " appears from thin air!";
         // The monster surfaced and submerged in the same turn without
         // doing anything else.
-        else if (at.context == "surfaced")
+        else if (at.context == SC_SURFACES_BRIEFLY)
             text += "surfaces briefly.";
-        else if (at.context == "surfaces")
-            text += " surfaces.";
-        else if (at.context.find("bursts forth") != std::string::npos)
+        else if (at.context == SC_SURFACES)
+            if (mon->type == MONS_AIR_ELEMENTAL)
+                text += " forms itself from the air.";
+            else if (mon->type == MONS_TRAPDOOR_SPIDER)
+                text += " leaps out from its hiding place under the floor!";
+            else
+                text += " surfaces.";
+        else if (at.context == SC_FISH_SURFACES_SHOUT
+              || at.context == SC_FISH_SURFACES)
         {
             text += " bursts forth from the ";
             if (mons_primary_habitat(mon) == HT_LAVA)
@@ -1693,18 +1696,8 @@ inline static bool _monster_warning(activity_interrupt_type ai,
                 text += "realm of bugdom";
             text += ".";
         }
-        else if (at.context.find("emerges") != std::string::npos)
+        else if (at.context == SC_NONSWIMMER_SURFACES_FROM_DEEP)
             text += " emerges from the water.";
-        else if (at.context.find("leaps out") != std::string::npos)
-        {
-            if (mon->type == MONS_TRAPDOOR_SPIDER)
-            {
-                text += " leaps out from its hiding place under the "
-                        "floor!";
-            }
-            else
-                text += " leaps out from hiding!";
-        }
         else
             text += " comes into view.";
 
@@ -1735,7 +1728,7 @@ inline static bool _monster_warning(activity_interrupt_type ai,
             if (ash_id)
                 mpr(ash_warning, MSGCH_GOD);
         }
-        const_cast<monster* >(mon)->seen_context = "just seen";
+        const_cast<monster* >(mon)->seen_context = SC_JUST_SEEN;
     }
 
     if (crawl_state.game_is_hints())

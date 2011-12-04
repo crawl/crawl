@@ -85,10 +85,6 @@ static int _compass_idx(const coord_def& mov)
     return (-1);
 }
 
-// A probably needless optimization: convert the C string "just seen" to
-// a C++ string just once, instead of twice every time a monster moves.
-static const std::string _just_seen("just seen");
-
 static bool immobile_monster[MAX_MONSTERS];
 
 static inline bool _mons_natural_regen_roll(monster* mons)
@@ -667,7 +663,7 @@ static void _handle_movement(monster* mons)
     // Did we just come into view?
     // TODO: This doesn't seem to work right. Fix, or remove?
 
-    if (mons->seen_context != _just_seen)
+    if (mons->seen_context != SC_JUST_SEEN)
         return;
     if (testbits(mons->flags, MF_WAS_IN_VIEW))
         return;
@@ -3068,7 +3064,7 @@ static void _mons_open_door(monster* mons, const coord_def &pos)
         open_str += ".";
 
         // Should this be conditionalized on you.can_see(mons?)
-        mons->seen_context = open_str;
+        mons->seen_context = (all_door.size() <= 2) ? SC_DOOR : SC_GATE;
 
         if (!you.can_see(mons))
         {
@@ -3522,8 +3518,8 @@ static bool _monster_swaps_places(monster* mon, const coord_def& delta)
         m2->apply_location_effects(n);
 
     // The seen context no longer applies if the monster is moving normally.
-    mon->seen_context.clear();
-    m2->seen_context.clear();
+    mon->seen_context = SC_NONE;
+    m2->seen_context = SC_NONE;
 
     return (false);
 }
@@ -3577,7 +3573,7 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
     // The monster gave a "comes into view" message and then immediately
     // moved back out of view, leaing the player nothing to see, so give
     // this message to avoid confusion.
-    if (mons->seen_context == _just_seen && !you.see_cell(f))
+    if (mons->seen_context == SC_JUST_SEEN && !you.see_cell(f))
         simple_monster_message(mons, " moves out of view.");
     else if (crawl_state.game_is_hints() && (mons->flags & MF_WAS_IN_VIEW)
              && !you.see_cell(f))
@@ -3586,7 +3582,7 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
     }
 
     // The seen context no longer applies if the monster is moving normally.
-    mons->seen_context.clear();
+    mons->seen_context = SC_NONE;
 
     // This appears to be the real one, ie where the movement occurs:
 #ifdef EUCLIDEAN
@@ -3598,7 +3594,8 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
     if (grd(mons->pos()) == DNGN_DEEP_WATER && grd(f) != DNGN_DEEP_WATER
         && !monster_habitable_grid(mons, DNGN_DEEP_WATER))
     {
-        mons->seen_context = "emerges from the water";
+        // er, what?  Seems impossible.
+        mons->seen_context = SC_NONSWIMMER_SURFACES_FROM_DEEP;
     }
     mgrd(mons->pos()) = NON_MONSTER;
 
