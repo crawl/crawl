@@ -277,7 +277,8 @@ tilepick-p.o \
 tileweb.o \
 tileview.o \
 tilecell.o \
-tileweb-text.o
+tileweb-text.o \
+json.o
 endif
 
 ifdef SDL
