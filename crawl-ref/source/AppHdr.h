@@ -16,6 +16,9 @@
 #ifndef APPHDR_H
 #define APPHDR_H
 
+/* Fix annoying precompiled header compile errors caused by unused Objective-C variant. */
+#if !defined(__OBJC__)
+
 #include "platform.h"
 #include <stdint.h>
 
@@ -406,5 +409,7 @@ inline void UNUSED(const volatile T &)
 #  include "tiles.h"
 # endif
 #endif
+
+#endif // !defined __OBJC__
 
 #endif // APPHDR_H
