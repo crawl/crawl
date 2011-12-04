@@ -3100,6 +3100,11 @@ level_id level_id::parse_level_id(const std::string &s) throw (std::string)
     else if (brname == "Port" ||
              portal_names.find(brname) != portal_names.end())
         return (level_id(LEVEL_PORTAL_VAULT));
+    // Ziggurat levels are "Port", "ziggurat" or "Zig:23", with no extra
+    // information available.  All we can do is return "Port" and hope this
+    // is enough.
+    if (brname == "Zig" || brname == "ziggurat")
+        return (level_id(LEVEL_PORTAL_VAULT));
 
     const branch_type br = str_to_branch(brname);
     if (br == NUM_BRANCHES)
