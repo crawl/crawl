@@ -52,6 +52,7 @@
 		1F909B57148B25DD00084E83 /* fearmonger.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B56148B25DD00084E83 /* fearmonger.cc */; };
 		1F909B65148B262D00084E83 /* icons.png in Copy Dungeon Tiles */ = {isa = PBXBuildFile; fileRef = 1F909B63148B262800084E83 /* icons.png */; };
 		1F909B72148B2CB400084E83 /* tiledef-icons.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B70148B2CB400084E83 /* tiledef-icons.cc */; };
+		1F909B81148B2D9100084E83 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1F909B80148B2D9100084E83 /* libz.dylib */; };
 		1F909BB5148B428E00084E83 /* zotdef.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909AFF148B23E000084E83 /* zotdef.cc */; };
 		1F909BBA148B42C700084E83 /* spl-clouds.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B0A148B242D00084E83 /* spl-clouds.cc */; };
 		1F909BBB148B42C700084E83 /* spl-damage.cc in Sources */ = {isa = PBXBuildFile; fileRef = 1F909B0C148B242D00084E83 /* spl-damage.cc */; };
@@ -1002,6 +1003,7 @@
 		1F909B63148B262800084E83 /* icons.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icons.png; path = rltiles/icons.png; sourceTree = "<group>"; };
 		1F909B70148B2CB400084E83 /* tiledef-icons.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "tiledef-icons.cc"; path = "rltiles/tiledef-icons.cc"; sourceTree = "<group>"; };
 		1F909B71148B2CB400084E83 /* tiledef-icons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "tiledef-icons.h"; path = "rltiles/tiledef-icons.h"; sourceTree = "<group>"; };
+		1F909B80148B2D9100084E83 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		4C59B08711E7964700760867 /* dgn-actions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "dgn-actions.h"; sourceTree = "<group>"; };
 		4C59B08811E7964700760867 /* hints.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hints.h; sourceTree = "<group>"; };
 		4C59B08A11E7964700760867 /* hints.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hints.cc; sourceTree = "<group>"; };
@@ -1594,6 +1596,7 @@
 				7B0EFDD80BD1374900002671 /* liblua.a in Frameworks */,
 				7B3B075B0BD13AAB00F2980E /* libreadline.dylib in Frameworks */,
 				7B3B07600BD13AF000F2980E /* libncurses.dylib in Frameworks */,
+				1F909BDC148B445100084E83 /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1601,11 +1604,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B0C9CFE0108E014800E7FA35 /* libSQLite.a in Frameworks */,
 				B032D68E106C02070002D70D /* AppKit.framework in Frameworks */,
 				B032D686106C02070002D70D /* liblua.a in Frameworks */,
 				B032D688106C02070002D70D /* libncurses.dylib in Frameworks */,
 				B032D687106C02070002D70D /* libreadline.dylib in Frameworks */,
+				B0C9CFE0108E014800E7FA35 /* libSQLite.a in Frameworks */,
+				1F909B81148B2D9100084E83 /* libz.dylib in Frameworks */,
 				B032D68C106C02070002D70D /* OpenGL.framework in Frameworks */,
 				B0F7DFEF1086F4F1008FFA70 /* libpng.framework in Frameworks */,
 				B0F7DF8B1086F0D5008FFA70 /* SDL_image.framework in Frameworks */,
@@ -1648,6 +1652,7 @@
 				1AB674ADFE9D54B511CA2CBB /* Products */,
 				7B352F1B0B0022C900CABB32 /* Resources */,
 				08FB7795FE84155DC02AAC07 /* Source */,
+				1F909B80148B2D9100084E83 /* libz.dylib */,
 			);
 			name = Crawl;
 			sourceTree = "<group>";
