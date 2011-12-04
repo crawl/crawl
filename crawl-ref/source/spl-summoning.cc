@@ -2012,6 +2012,185 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     }
 }
 
+static void _apport_and_butcher(monster *caster, item_def &item)
+{
+    ASSERT(caster->inv[MSLOT_MISCELLANY] == NON_ITEM);
+    bool apported = false;
+
+    if (item.pos != caster->pos())
+    {
+        apported = true;
+        const std::string item_name = item.name(DESC_A);
+
+        std::string theft;
+        if (is_being_drained(item))
+            theft = " you were drinking from";
+        else if (is_being_butchered(item))
+            theft = " you were butchering";
+
+        if (you.can_see(caster))
+        {
+            mprf("%s casts a spell and %s%s float%s close.",
+                 caster->name(DESC_THE).c_str(),
+                 item_name.c_str(),
+                 theft.c_str(),
+                 item.quantity > 1 ? "" : "s");
+        }
+        else if (you.see_cell(item.pos))
+        {
+            mprf("%s%s suddenly rise%s and float%s away!",
+                 item_name.c_str(),
+                 theft.c_str(),
+                 item.quantity > 1 ? "" : "s",
+                 item.quantity > 1 ? "" : "s");
+        }
+        if (!theft.empty())
+            xom_is_stimulated(100);
+    }
+
+    // Monsters get to pick up items as a free action elsewhere so let's
+    // exploit that here.  No Apportation tug of war, Animate Dead or Corpse
+    // Rot as guaranteed defense.
+    if (you.see_cell(caster->pos()))
+    {
+        mprf("%s picks up %s%s.",
+             caster->name(DESC_THE).c_str(),
+             item.name(apported ? DESC_THE : DESC_A).c_str(),
+             item.base_type == OBJ_CORPSES ? " and starts butchering it"
+                                           : "");
+    }
+
+    if (item.base_type == OBJ_CORPSES)
+    {
+        // Butchering takes a long time, though.
+        caster->lose_energy(EUT_SPECIAL, 1, 4);
+        butcher_corpse(item, B_MAYBE);
+    }
+
+    if (!caster->pickup_item(item, 0, true))
+    {
+        mprf(MSGCH_ERROR,
+             "ERROR: monster %s can't pick up simulacrum ingredients (%s).",
+             caster->name(DESC_PLAIN).c_str(),
+             item.name(DESC_PLAIN).c_str());
+        return;
+    }
+
+    ASSERT(item.is_valid());
+}
+
+// Monsters who get Simulacrum automatically know Apportation as well, just
+// like those with summoning spells get Abjuration.
+bool monster_simulacrum(monster *caster, bool actual)
+{
+    dprf("trying to cast simulacrum");
+    if (caster->inv[MSLOT_MISCELLANY] != NON_ITEM)
+    {
+        item_def& item(mitm[caster->inv[MSLOT_MISCELLANY]]);
+        if (item.base_type == OBJ_FOOD && item.sub_type == FOOD_CHUNK
+            && mons_class_can_be_zombified(item.plus))
+        {
+            if (!actual)
+                return true;
+
+            monster_type sim_type = static_cast<monster_type>(item.plus);
+            monster_type mon_type = mons_zombie_size(sim_type) == Z_BIG ?
+                MONS_SIMULACRUM_LARGE : MONS_SIMULACRUM_SMALL;
+
+            // Can't create more than the available chunks.
+            int how_many = std::min(8, 4 + random2(100) / 20);
+            how_many = std::min<int>(how_many, item.quantity);
+
+            int created = 0;
+            int seen = 0;
+
+            sim_type = static_cast<monster_type>(item.orig_monnum - 1);
+
+            for (int i = 0; i < how_many; ++i)
+            {
+                // Use the original monster type as the zombified type here,
+                // to get the proper stats from it.
+                const int mons =
+                    create_monster(
+                        mgen_data(mon_type, SAME_ATTITUDE(caster), caster,
+                                  0, SPELL_SIMULACRUM,
+                                  caster->pos(), caster->foe,
+                                  MG_FORCE_BEH, caster->god,
+                                  sim_type));
+
+                if (mons != -1)
+                {
+                    if (!created++)
+                    {
+                        simple_monster_message(caster,
+                            " holds a chunk of flesh high, and a cloud of icy vapour forms.",
+                            caster->friendly() ? MSGCH_FRIEND_SPELL : MSGCH_MONSTER_SPELL);
+                    }
+
+                    if (--item.quantity <= 0)
+                    {
+                        caster->inv[MSLOT_MISCELLANY] = NON_ITEM;
+                        destroy_item(item);
+                    }
+
+                    player_angers_monster(&menv[mons]);
+
+                    monster* sim = &menv[mons];
+                    sim->add_ench(mon_enchant(ENCH_FAKE_ABJURATION, 6));
+                    if (you.can_see(sim))
+                        seen++;
+                }
+            }
+
+            if (seen > 1)
+            {
+                mprf("The vapour coalesces into ice likenesses of %s.",
+                     pluralise(mons_class_name(sim_type)).c_str());
+            }
+            else if (seen == 1)
+            {
+                const char *name = mons_class_name(sim_type);
+                mprf("The vapour coalesces into an ice likeness of %s %s.",
+                     article_a(name).c_str(), name);
+            }
+
+            // Always return -- if we have chunks but there is no space to
+            // create simulacra, obtaining more would have to be restricted
+            // only to the same monster type.
+            return created;
+        }
+
+        // TODO: drop non-chunks in preference to chunks, or not pick them up
+        // in the first place.  The pickup code is nice though, we want to
+        // gather chunks just lying around.
+    }
+
+    // need to be able to pick up the apported corpse
+    if (caster->flight_mode() == FL_LEVITATE)
+        return false;
+    if (feat_virtually_destroys_item(grd(caster->pos()), item_def()))
+        return false;
+
+    for (distance_iterator di(caster->pos(), true, false, LOS_RADIUS); di; ++di)
+    {
+        if (!cell_see_cell(caster->pos(), *di, LOS_NO_TRANS))
+            continue;
+        for (stack_iterator si(*di); si; ++si)
+        {
+            if ((si->base_type == OBJ_FOOD && si->sub_type == FOOD_CHUNK
+                 || si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
+                && mons_class_can_be_zombified(si->plus))
+            {
+                dprf("found %s", si->name(DESC_PLAIN).c_str());
+                if (actual)
+                    _apport_and_butcher(caster, *si);
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 // Make the proper stat adjustments to turn a demonic abomination into
 // an undead abomination.
 bool undead_abomination_convert(monster* mon, int hd)

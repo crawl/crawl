@@ -170,7 +170,11 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
 
     // Only fresh corpses bleed enough to colour the ground.
     if (bloodspatter && !food_is_rotten(item))
-        bleed_onto_floor(you.pos(), montype, max_chunks, true);
+    {
+        coord_def pos = item_pos(item);
+        if (!pos.origin())
+            bleed_onto_floor(pos, montype, max_chunks, true);
+    }
 
     item.base_type = OBJ_FOOD;
     item.sub_type  = FOOD_CHUNK;
@@ -204,7 +208,7 @@ static void _turn_corpse_into_skeleton_and_chunks(item_def &item, bool prefer_ch
         turn_corpse_into_skeleton(item);
     }
 
-    copy_item_to_grid(copy, you.pos());
+    copy_item_to_grid(copy, item_pos(item));
 }
 
 void butcher_corpse(item_def &item, maybe_bool skeleton)
