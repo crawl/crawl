@@ -3945,6 +3945,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
 					USE_TILE,
+					USE_TILE_LOCAL,
 					CLUA_BINDINGS,
 					USE_SDL,
 					USE_GL,
