@@ -1846,6 +1846,8 @@ static int _place_monster_aux(const mgen_data &mg,
         arena_placed_monster(mon);
     else if (!Generating_Level && you.can_see(mon))
     {
+        if (mg.flags & MG_DONT_COME)
+            mon->seen_context = SC_JUST_SEEN;
         // FIXME: This causes "comes into view" messages at the
         //        wrong time, since code checks for placement
         //        success before printing messages.
