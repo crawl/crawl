@@ -63,7 +63,7 @@ bool monster::blink_to(const coord_def& dest, bool quiet)
         simple_monster_message(this, jump ? " leaps!" : " blinks!");
 
     if (!(flags & MF_WAS_IN_VIEW))
-        seen_context = "thin air";
+        seen_context = SC_TELEPORT_IN;
 
     const coord_def oldplace = pos();
     if (!move_to_pos(dest))

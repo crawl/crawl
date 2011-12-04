@@ -77,16 +77,16 @@ crawl_view_geometry crawl_view;
 bool handle_seen_interrupt(monster* mons, std::vector<std::string>* msgs_buf)
 {
     activity_interrupt_data aid(mons);
-    if (!mons->seen_context.empty())
+    if (mons->seen_context)
         aid.context = mons->seen_context;
     // XXX: Hack to make the 'seen' monster spec flag work.
     else if (testbits(mons->flags, MF_WAS_IN_VIEW)
              || testbits(mons->flags, MF_SEEN))
     {
-        aid.context = "already seen";
+        aid.context = SC_ALREADY_SEEN;
     }
     else
-        aid.context = "newly seen";
+        aid.context = SC_NEWLY_SEEN;
 
     if (!mons_is_safe(mons)
         && !mons_class_flag(mons->type, M_NO_EXP_GAIN)
@@ -281,7 +281,7 @@ void update_monsters_in_view()
 
             // If the monster hasn't been seen by the time that the player
             // gets control back then seen_context is out of date.
-            mi->seen_context.clear();
+            mi->seen_context = SC_NONE;
         }
     }
 

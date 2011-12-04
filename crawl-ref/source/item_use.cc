@@ -1676,7 +1676,7 @@ static bool _dispersal_hit_victim(bolt& beam, actor* victim, int dmg)
         monster* mon = victim->as_monster();
 
         if (!(mon->flags & MF_WAS_IN_VIEW))
-            mon->seen_context = "thin air";
+            mon->seen_context = SC_TELEPORT_IN;
 
         mon->move_to_pos(pos);
 

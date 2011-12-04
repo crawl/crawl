@@ -69,7 +69,7 @@ monster::monster()
       attitude(ATT_HOSTILE), behaviour(BEH_WANDER), foe(MHITYOU),
       enchantments(), flags(0), experience(0), base_monster(MONS_NO_MONSTER),
       number(0), colour(BLACK), foe_memory(0), shield_blocks(0),
-      god(GOD_NO_GOD), ghost(), seen_context(""), client_id(0)
+      god(GOD_NO_GOD), ghost(), seen_context(SC_NONE), client_id(0)
 
 {
     type = MONS_NO_MONSTER;
@@ -128,7 +128,7 @@ void monster::reset()
     travel_target = MTRAV_NONE;
     travel_path.clear();
     ghost.reset(NULL);
-    seen_context = "";
+    seen_context = SC_NONE;
     props.clear();
 
     client_id = 0;
@@ -225,7 +225,7 @@ bool monster::wants_submerge() const
     }
 
     // Don't submerge if we just unsubmerged to shout.
-    if (seen_context == "bursts forth shouting")
+    if (seen_context == SC_FISH_SURFACES_SHOUT)
         return (false);
 
     if (!mons_is_retreating(this) && mons_can_move_towards_target(this))

@@ -168,15 +168,15 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
                 mprf("%s hides itself under the floor.",
                      name(DESC_A, true).c_str());
             }
-            else if (seen_context == "surfaces"
-                     || seen_context == "bursts forth"
-                     || seen_context == "emerges")
+            else if (seen_context == SC_SURFACES)
             {
                 // The monster surfaced and submerged in the same turn
                 // without doing anything else.
                 interrupt_activity(AI_SEE_MONSTER,
                                    activity_interrupt_data(this,
-                                                           "surfaced"));
+                                                           SC_SURFACES_BRIEFLY));
+                // Why does this handle only land-capables?  I'd imagine this
+                // to happen mostly (only?) for fish. -- 1KB
             }
             else if (crawl_state.game_is_arena())
                 mprf("%s submerges.", name(DESC_A, true).c_str());
@@ -476,7 +476,7 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
         {
             // and fire activity interrupts
             interrupt_activity(AI_SEE_MONSTER,
-                               activity_interrupt_data(this, "uncharm"));
+                               activity_interrupt_data(this, SC_UNCHARM));
         }
 
         if (is_patrolling())
@@ -574,17 +574,13 @@ void monster::remove_enchantment_effect(const mon_enchant &me, bool quiet)
             if (!mons_is_safe(this) && delay_is_run(current_delay_action()))
             {
                 // Already set somewhere else.
-                if (!seen_context.empty())
+                if (seen_context)
                     return;
 
-                if (type == MONS_AIR_ELEMENTAL)
-                    seen_context = "thin air";
-                else if (type == MONS_TRAPDOOR_SPIDER)
-                    seen_context = "leaps out";
-                else if (!monster_habitable_grid(this, DNGN_FLOOR))
-                    seen_context = "bursts forth";
+                if (!monster_habitable_grid(this, DNGN_FLOOR))
+                    seen_context = SC_FISH_SURFACES;
                 else
-                    seen_context = "surfaces";
+                    seen_context = SC_SURFACES;
             }
             else if (!quiet)
             {
