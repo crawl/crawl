@@ -158,6 +158,10 @@ void tile_default_flv(level_area_type lev, branch_type br, tile_flavour &flv)
         return;
 
     case BRANCH_DWARVEN_HALL:
+        flv.wall  = TILE_WALL_HALL;
+        flv.floor = TILE_FLOOR_LIMESTONE;
+        return;
+
     case BRANCH_ELVEN_HALLS:
     case BRANCH_HALL_OF_BLADES:
         flv.wall  = TILE_WALL_HALL;

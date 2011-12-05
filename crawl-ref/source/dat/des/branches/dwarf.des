@@ -32,18 +32,6 @@ local_util.new_trigger = function(_type)
 end
 
 dhfh = {}
-dhfh.colors = function(e)
-    e.lfloorcol("yellow")
-    e.lfloortile("floor_limestone")
-    e.colour("c = lightgrey")
-    e.colour("x = lightgrey")
-    e.colour("' = darkgrey")
-    e.subst("' = .")
-    dgn.set_feature_desc_short("Floor", "Limestone")
-    dgn.set_feature_desc_long("Floor", "The floor is tiled in perfectly cut limestone.\n")
-    dgn.set_feature_desc_short("metal wall", "tempered metal wall")
-    dgn.set_feature_desc_long("metal wall", "These metal walls are brush-textured and recently maintained.\n")
-end
 
 dhfh.hall_setup = function(e, glyph)
     local mod
@@ -166,7 +154,8 @@ MONS:    shadow wraith / wraith / wight w:5 / troll / rock troll w:5 / \
 FTILE:   12O.A = floor_sandstone
 # crawl will rotate for the rest of possibilities
 NSUBST:  A = 1:= / *:c
-: dhfh.colors(_G)
+FTILE:   =12O. = floor_limestone
+COLOUR:  12 = yellow
 KFEAT:   O = enter_dwarven_hall
 MAP
 cccc.cccc
@@ -198,7 +187,6 @@ WEIGHT: 10
 ORIENT: float
 MONS:   nothing w:20 / deep dwarf / elf w:5
 MONS:   wight / troll w:5 / deep dwarf necromancer w:2 / deep dwarf artificer w:1
-: dhfh.colors(_G)
 MAP
 x.........x
 @.........@
@@ -221,7 +209,6 @@ PLACE:  Dwarf:1
 WEIGHT: 10
 ORIENT: float
 KMONS:  1 = nothing w:30 / deep dwarf w:5 / wight w:2 / troll w:1
-: dhfh.colors(_G)
 MAP
   ccccccc
   c.....c
@@ -245,7 +232,6 @@ TAGS:   no_rotate no_wall_fixup
 ORIENT: float
 SUBST:  f = T:40 V:40 U:20
 KMONS:  1 = nothing w:50 / deep dwarf w:5 / wight w:2 / troll w:1
-: dhfh.colors(_G)
 MAP
 xxxx..@..xxxx
 xf....G....fx
@@ -266,7 +252,6 @@ TAGS:   no_rotate no_wall_fixup
 ORIENT: float
 SUBST:  f = T:40 V:40 U:20
 KMONS:  1 = nothing / deep dwarf w:5 / wight w:2 / troll w:1
-: dhfh.colors(_G)
 MAP
 x@xxxxxxxxx@x
 x...........x
@@ -294,7 +279,8 @@ KMONS:  1 = nothing / war dog / giant centipede / \
             deep dwarf w:5 / wight w:2 / troll w:1
 KMONS:  2 = nothing / wight / troll w:5 / necrophage w:2
 KMONS:  3 = nothing / orange rat / redback / wolf spider
-: dhfh.colors(_G)
+FTILE:  . = floor_sandstone
+SUBST:  ' = .
 MAP
 ccccccccccccccccccccccccccccccccc
  @'''''''''''''''''''''''''''''@
@@ -321,7 +307,6 @@ WEIGHT: 5
 ORIENT: float
 SUBST:  W = W .:2
 SUBST:  w = w W:2
-: dhfh.colors(_G)
 MAP
 xxxW@WWxx
 xwWWWWWWx
@@ -370,7 +355,6 @@ ITEM:    amulet of faith / \
          potion of experience w:1 / potion of porridge / any potion / \
          scroll of holy word / scroll of torment / any scroll
 ITEM:    potion of porridge
-: dhfh.colors(_G)
 MAP
         xxxxxxxxxxxxxxxxxxxx
         xxxxxxxxxxxxgxxxxxxx
@@ -414,7 +398,6 @@ NSUBST: X = 2:= / *:x
 MARKER: = = lua:restrict_door()
 SUBST:  * = **d
 ITEM:   staff of death / scroll of torment / necronomicon w:1
-: dhfh.colors(_G)
 MAP
 cccccccccccccccccccc@cccccccccccccccccccc
 c$X...x............x.x............x...X$c
@@ -438,7 +421,6 @@ MONS:   war dog
 SUBST:  $ = $$d
 ITEM:   any weapon ego:draining / any armour ego:positive_energy / \
         staff of death / scroll of torment / necronomicon w:1
-: dhfh.colors(_G)
 MAP
 ..xxx@<xxxxx
 ............
@@ -648,7 +630,6 @@ KITEM:   G = griffon corpse
 KITEM:   H = sheep corpse
 KITEM:   I = deep troll corpse
 MARKER:  + = lua:restrict_door()
-: dhfh.colors(_G)
 : dgn.delayed_decay(_G, 'G', 'griffon corpse')
 : dgn.delayed_decay(_G, 'H', 'hell hound corpse')
 : dgn.delayed_decay(_G, 'I', 'deep troll corpse')
@@ -711,7 +692,6 @@ KFEAT:   ? = any shop
 KFEAT:   & = food shop
 MARKER:  = = lua:restrict_door()
 KFEAT:   8 = granite_statue
-: dhfh.colors(_G)
 MAP
 cccccccccccc.@.ccccc
 c1P1P1P1P1Pc...c...c
