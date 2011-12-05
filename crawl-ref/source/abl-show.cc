@@ -271,7 +271,7 @@ static const ability_def Ability_List[] =
 
     { ABIL_FLY, "Fly", 3, 0, 100, 0, 0, ABFLAG_NONE},
     { ABIL_STOP_FLYING, "Stop Flying", 0, 0, 0, 0, 0, ABFLAG_NONE},
-    { ABIL_HELLFIRE, "Hellfire", 0, 250, 200, 0, 0, ABFLAG_NONE},
+    { ABIL_HELLFIRE, "Hellfire", 0, 150, 200, 0, 0, ABFLAG_NONE},
 
     // FLY_II used to have ABFLAG_EXHAUSTION, but that's somewhat meaningless
     // as exhaustion's only (and designed) effect is preventing Berserk. - bwr
@@ -2134,8 +2134,8 @@ static bool _do_ability(const ability_def& abil)
 
     // DEMONIC POWERS:
     case ABIL_HELLFIRE:
-        if (your_spells(SPELL_HELLFIRE_BURST,
-                        you.experience_level * 5, false) == SPRET_ABORT)
+        if (your_spells(SPELL_HELLFIRE,
+                        you.experience_level * 10, false) == SPRET_ABORT)
             return (false);
         break;
 
