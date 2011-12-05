@@ -586,13 +586,21 @@ static void _ashenzari_sac_scroll(const item_def& item)
 // Unholy and evil weapons are handled specially.
 static bool _destroyed_valuable_weapon(int value, int type)
 {
-    // Artefacts, including most randarts.
-    if (type != OBJ_MISSILES && random2(value) >= random2(250))
+    // Once you've reached *** once, don't accept weapon sacrifices ever
+    // again just because of value.
+    if (you.piety_max[GOD_ELYVILON] >= piety_breakpoint(2))
+        return (false);
+
+    // value/500 chance of piety normally
+    if (value > random2(500))
         return (true);
 
-    // All weapons and missiles are acceptable at low piety.
-    if (you.piety < piety_breakpoint(0) || player_under_penance())
+    // But all non-missiles are acceptable if you've never reached *.
+    if (you.piety_max[GOD_ELYVILON] < piety_breakpoint(0)
+        && type != OBJ_MISSILES)
+    {
         return (true);
+    }
 
     return (false);
 }
