@@ -3363,7 +3363,7 @@ void melee_attack::player_apply_staff_damage()
         {
             cast_abjuration((you.skill(SK_SUMMONINGS, 100)
                             + you.skill(SK_EVOCATIONS, 50)) / 80,
-                            defender->as_monster());
+                            defender->pos());
         }
         break;
 

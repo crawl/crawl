@@ -1461,7 +1461,7 @@ static spret_type _do_cast(spell_type spell, int powc,
         return mass_enchantment(ENCH_CHARM, powc, fail);
 
     case SPELL_ABJURATION:
-        return cast_abjuration(powc, monster_at(target), fail);
+        return cast_abjuration(powc, beam.target, fail);
 
     case SPELL_MASS_ABJURATION:
         return cast_mass_abjuration(powc, fail);

@@ -2516,9 +2516,18 @@ static int _abjuration(int pow, monster *mon)
     return (true);
 }
 
-spret_type cast_abjuration(int pow, monster *mon, bool fail)
+spret_type cast_abjuration(int pow, const coord_def& where, bool fail)
 {
+    if (you.trans_wall_blocking(where))
+    {
+        mpr("There's something in the way!");
+        return SPRET_ABORT;
+    }
+
     fail_check();
+
+    monster* mon = monster_at(where);
+
     if (mon)
     {
         mpr("Send 'em back where they came from!");
