@@ -515,7 +515,7 @@ ORIENT: float
 TAGS:   no_rotate
 MONS:   red draconian scorcher / green draconian zealot / yellow draconian caller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
-SUBST:  1=123, w:w., w=Ww, m:mn
+SUBST:  1=123, w:w., w=Ww
 MAP
 ............................
 ..mmm..................mmm..
@@ -540,7 +540,7 @@ ORIENT: float
 TAGS:   no_rotate
 MONS:   red draconian scorcher / green draconian zealot / yellow draconian caller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
-SUBST:  1=123, w:w., w=Ww, m:mn
+SUBST:  1=123, w:w., w=Ww
 MAP
 ................
 ................
