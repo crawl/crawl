@@ -77,6 +77,8 @@ public:
     void finish_message();
     void send_message(const char *format = "", ...);
 
+    bool has_receivers() { return !m_dest_addrs.empty(); }
+
     /* Webtiles can receive input both via stdin, and on the
        socket. Also, while waiting for input, it should be
        able to handle other control messages (for example,
