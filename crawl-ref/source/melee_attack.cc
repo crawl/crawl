@@ -436,14 +436,6 @@ bool melee_attack::handle_phase_hit()
             hit_woke_orc = true;
         }
     }
-    else
-    {
-        // These effects (mutations right now) are only triggered when
-        // the player is hit, each of them will verify their own required
-        // parameters of the effec
-        do_passive_freeze();
-        emit_foul_stench();
-    }
 
     // Slimify does no damage and serves as an on-hit effect, handle it
     if (attacker->atype() == ACT_PLAYER && you.duration[DUR_SLIMIFY]
@@ -506,6 +498,14 @@ bool melee_attack::handle_phase_hit()
         // [ds] Monster may disappear after behaviour event.
         if (!defender->alive())
             return (true);
+    }
+    else if (defender->atype() == ACT_PLAYER)
+    {
+        // These effects (mutations right now) are only triggered when
+        // the player is hit, each of them will verify their own required
+        // parameters of the effec
+        do_passive_freeze();
+        emit_foul_stench();
     }
 
     if (attacker->atype() == ACT_PLAYER)
