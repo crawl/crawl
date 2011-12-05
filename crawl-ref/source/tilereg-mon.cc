@@ -4,6 +4,7 @@
 #include <algorithm>
 
 #include "tilereg-mon.h"
+#include "describe-templates.h"
 
 #include "cio.h"
 #include "directn.h"

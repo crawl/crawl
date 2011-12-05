@@ -3,6 +3,7 @@
 #ifdef USE_TILE_LOCAL
 
 #include "tilereg-dgn.h"
+#include "describe-templates.h"
 
 #include "cio.h"
 #include "cloud.h"
