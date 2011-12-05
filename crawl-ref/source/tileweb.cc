@@ -1083,6 +1083,8 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
 
 void TilesFramework::redraw()
 {
+    if (!has_receivers()) return;
+
     m_text_crt.send();
     m_text_stat.send();
     m_text_message.send();
