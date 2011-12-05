@@ -644,7 +644,7 @@ static piety_gain_t _sacrifice_one_item_noncount(const item_def& item,
         return _sac_corpse(item);
 
     // item_value() multiplies by quantity.
-    const int shop_value = item_value(item) / item.quantity;
+    const int shop_value = item_value(item, true) / item.quantity;
     // Since the god is taking the items as a sacrifice, they must have at
     // least minimal value, otherwise they wouldn't be taken.
     const int value = (is_worthless_consumable(item) ? 1 : shop_value);
