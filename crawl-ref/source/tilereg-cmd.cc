@@ -3,10 +3,12 @@
 #ifdef USE_TILE_LOCAL
 
 #include "tilereg-cmd.h"
+#include "describe-templates.h"
 
 #include "abl-show.h"
 #include "cio.h"
 #include "command.h"
+#include "describe-templates.h"
 #include "enum.h"
 #include "env.h"
 #include "libutil.h"
