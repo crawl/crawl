@@ -95,7 +95,6 @@ MAP
 .'''.
 .....
 ENDMAP
-#'
 
 NAME:    enter_dwarf_2
 TAGS:    dwarf_entry no_monster_gen
@@ -116,24 +115,6 @@ MAP
 .c'''c.
 .ccCcc.
 .......
-ENDMAP
-#'
-
-NAME:    enter_dwarf_3
-TAGS:    dwarf_entry no_monster_gen
-SUBST:   . = Y .
-COLOUR:  Y = yellow
-FTILE:   Y = floor_sandstone
-SUBST:   Y = .
-MONS:    deep dwarf w:30 / elf w:2 / war dog
-MONS:    wight / orange rat
-MONS:    giant centipede / redback
-SUBST:   . = .:100 11 2 3
-KFEAT:   O = enter_dwarven_hall
-MAP
-.G.
-.O.
-...
 ENDMAP
 
 NAME:    enter_dwarf_4
@@ -332,7 +313,6 @@ ccccccccccccccccccccccccccccccccc
               @...@
                @@@
 ENDMAP
-#'
 
 NAME:   dhfh_arrival_flooded
 TAGS:   extra no_wall_fixup no_pool_fixup
