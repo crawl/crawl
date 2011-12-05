@@ -1183,10 +1183,11 @@ PLACE:   Elf:5
 ORIENT:  northwest
 : elf_setup(_G)
 : elf_monsters(_G)
-KMONS:   9 = stone golem
-KMONS:   8 = crystal golem
+KMONS:   9 = stone golem / w:5 clay golem / w:5 nothing
+KMONS:   8 = crystal golem / nothing
 SUBST:   1=11., 2=22., 3=33., 4=44., 5=543, 6=66., 7=77.
-SHUFFLE: 12, 34, 67, 8b / 9c / 9c / 9c
+SHUFFLE: 12, 34, 67, 8b / 9C / 9C / 9C
+SUBST:   C = c
 : elf_loot_defenders(_G)
 : elf_loot_randomisation(_G)
 MAP
