@@ -1244,14 +1244,15 @@ ENDMAP
 NAME:   minmay_eyes
 DEPTH:  D:14-24
 ORIENT: float
+KFEAT:  m = iron_grate
 MONS:   eye of devastation / great orb of eyes w:2
 MONS:   golden eye / shining eye w:2
 MONS:   giant orange brain
 MAP
 ...................................
 .cccccccccccc.........cccccccccccc.
-.c.............................n2c.
-.c.1.............1.............nnc.
+.c.............................m2c.
+.c.1.............1.............mmc.
 .c...............................c.
 .c...cccccccccnnnnnnnccccccccc...c.
 .c...c.......................c...c.
@@ -1271,12 +1272,12 @@ MAP
 .n...n...c...c3.....3c...c.......n.
 .n...c...c...cccnnnccc...c...c...n.
 .c...c...c...............c...c...c.
-.c...c...cnn.....1.....1.c...c...c.
-.c...c...c2n.............c...c...c.
+.c...c...cmm.....1.....1.c...c...c.
+.c...c...c2m.............c...c...c.
 .c...c...cccccc.....cccccc...c...c.
 .c...c.......................c...c.
-.c...c.1.........1.........nnc...c.
-.c...c.....................n2c...c.
+.c...c.1.........1.........mmc...c.
+.c...c.....................m2c...c.
 .c...cccccccccnnnnnnnccccccccc...c.
 .c...............................c.
 .c.1.............1.............1.c.
