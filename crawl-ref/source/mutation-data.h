@@ -1376,8 +1376,8 @@
   NULL,
 
   {"You are partially covered in slimy green scales (AC +1).",
-   "You are mostly covered in slimy green scales (AC +2, EV -1).",
-   "You are completely covered in slimy green scales (AC +3, EV -2, rPois)."},
+   "You are mostly covered in slimy green scales (AC +2).",
+   "You are completely covered in slimy green scales (AC +3, rPois)."},
 
   {"Slimy green scales grow over part of your body.",
    "Slimy green scales spread over more of your body.",
