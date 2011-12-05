@@ -2384,7 +2384,7 @@ void handle_time()
                                false, false, false, false, false, true);
             // it would kill itself anyway, but let's speed that up
             if (one_chance_in(10)
-                && (wearing_amulet(AMU_RESIST_MUTATION) || one_chance_in(10)))
+                && (!wearing_amulet(AMU_RESIST_MUTATION) || one_chance_in(10)))
             {
                 evol |= delete_mutation(MUT_EVOLUTION, false);
             }
