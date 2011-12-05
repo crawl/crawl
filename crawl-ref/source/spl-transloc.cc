@@ -185,7 +185,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
                     break;
 
                 mesclr();
-                mpr("You can't blink through translucent walls.");
+                mpr("There's something in the way!");
             }
             else
             {
@@ -731,7 +731,7 @@ spret_type cast_portal_projectile(int pow, bool fail)
     // Can't use portal through walls. (That'd be just too cheap!)
     if (you.trans_wall_blocking(target.target))
     {
-        mpr("A translucent wall is in the way.");
+        mpr("There's something in the way!");
         return SPRET_ABORT;
     }
 
@@ -751,7 +751,7 @@ spret_type cast_apportation(int pow, bolt& beam, bool fail)
 
     if (you.trans_wall_blocking(where))
     {
-        mpr("Something is in the way.");
+        mpr("There's something in the way!");
         return SPRET_ABORT;
     }
 

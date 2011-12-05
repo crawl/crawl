@@ -1289,9 +1289,6 @@ bool spell_no_hostile_in_range(spell_type spell, int minRange)
     case SPELL_GOLUBRIAS_PASSAGE:
     case SPELL_FRAGMENTATION:
 
-    // Airstrike has LOS_RANGE and can go through glass walls.
-    case SPELL_AIRSTRIKE:
-
     // These bounce and may be aimed elsewhere to bounce at monsters
     // outside range (I guess).
     case SPELL_SHOCK:
