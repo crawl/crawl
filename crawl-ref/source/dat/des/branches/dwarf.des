@@ -4,7 +4,7 @@
 #
 # thematic branch based on Scandinavian folklore
 
-## section 1: Lua
+## Lua
 ################################################
 
 {{
@@ -70,7 +70,136 @@ dhfh.hall_setup = function(e, glyph)
 end
 }}
 
-## section 2: Arrival maps
+## Branch entries
+################################################
+
+# Dummy entry
+NAME:    enter_dwarf_dummy
+TAGS:    dwarf_entry
+KFEAT:   O = enter_dwarven_hall
+MAP
+O
+ENDMAP
+
+NAME:    enter_dwarf_1
+TAGS:    dwarf_entry no_monster_gen
+SUBST:   . = . ':7
+COLOUR:  ' = yellow
+FTILE:   ' = floor_sandstone
+SUBST:   ' = .
+KFEAT:   O = enter_dwarven_hall
+MAP
+.....
+.'G'.
+.'O'.
+.'''.
+.....
+ENDMAP
+#'
+
+NAME:    enter_dwarf_2
+TAGS:    dwarf_entry no_monster_gen
+SHUFFLE: CD / c+
+COLOUR:  ' = yellow
+COLOUR:  C = yellow
+COLOUR:  D = yellow
+SUBST:   D = =
+SUBST:   C = c
+FTILE:   =GO' = floor_sandstone
+SUBST:   ' = .
+KFEAT:   O = enter_dwarven_hall
+MAP
+.......
+.ccDcc.
+.c'G'c.
+.C'O'C.
+.c'''c.
+.ccCcc.
+.......
+ENDMAP
+#'
+
+NAME:    enter_dwarf_3
+TAGS:    dwarf_entry no_monster_gen
+SUBST:   . = Y .
+COLOUR:  Y = yellow
+FTILE:   Y = floor_sandstone
+SUBST:   Y = .
+MONS:    deep dwarf w:30 / elf w:2 / war dog
+MONS:    wight / orange rat
+MONS:    giant centipede / redback
+SUBST:   . = .:100 11 2 3
+KFEAT:   O = enter_dwarven_hall
+MAP
+.G.
+.O.
+...
+ENDMAP
+
+NAME:    enter_dwarf_4
+TAGS:    dwarf_entry no_monster_gen no_wall_fixup
+WEIGHT:  10
+CHANCE:  5%
+COLOUR:  1 = yellow, ' = yellow, x = white
+MONS:    dwarf w:30 / elf w:2 / war dog
+FTILE:   1'xO = floor_sandstone
+RTILE:   x = wall_tomb
+KFEAT:   O = enter_dwarven_hall
+MAP
+.........
+.xxxxxxx.
+.x1'O'1x.
+.x'''''x.
+.x'x'x'x.
+.xGx'xGx.
+.xxx'xxx.
+....'....
+ENDMAP
+
+NAME:    enter_dwarf_5
+TAGS:    dwarf_entry no_monster_gen
+COLOUR:  c = white, = = white, ' = yellow
+RTILE:   c = wall_tomb, = = wall_tomb
+FTILE:   ='GO = floor_sandstone
+NSUBST:  = = 1:= / *:c
+SUBST:   c : cx
+KFEAT:   O = enter_dwarven_hall
+MAP
+   ...
+  ..c..
+ ..=c=..
+..=cGc=..
+.cc'O'cc.
+..=c'c=..
+ ..=c=..
+  ..c..
+   ...
+ENDMAP
+
+NAME:    enter_dwarf_6
+TAGS:    dwarf_entry
+MONS:    elf / w:5 deep dwarf / deep dwarf necromancer / \
+         deep dwarf artificer
+MONS:    shadow wraith / wraith / wight w:5 / troll / rock troll w:5 / \
+         deep dwarf necromancer w:2 / deep dwarf artificer w:1
+FTILE:   12O.A = floor_sandstone
+# crawl will rotate for the rest of possibilities
+NSUBST:  A = 1:= / *:c
+: dhfh.colors(_G)
+KFEAT:   O = enter_dwarven_hall
+MAP
+cccc.cccc
+c1.....1c
+c.ccccc.c
+c.c.2.c.c
+..c.O.c..
+c.c...c.c
+c.cAAcc.c
+c1.....1c
+cccc.cccc
+ENDMAP
+
+## Arrival maps
 ################################################
 
 # Dummy arrival
@@ -233,7 +362,7 @@ xcccccccx
 xxxxxxxxx
 ENDMAP
 
-## section 3: Treasure maps
+## Treasure maps
 ################################################
 NAME:    dhfh_treasure_sunken_tomb
 TAGS:    extra uniq_dhfh_treasure no_item_gen no_monster_gen no_pool_fixup no_wall_fixup
@@ -346,7 +475,7 @@ MAP
 ............
 ENDMAP
 
-## section 4: misc. things before depth 5
+## guardhouses
 ################################################
 NAME:   dhfh_guard_house_d2
 TAGS:   dhfh_guard_house allow_dup
@@ -422,8 +551,7 @@ c*.c..c.*c
 cccc@.cccc
 ENDMAP
 
-
-## section 5: things at depth 5
+## the main hall
 ################################################
 NAME:  dhfh_hall_top
 TAGS:  dhfh_hall_top allow_dup no_rotate no_hmirror no_vmirror
@@ -527,7 +655,7 @@ SUBST:   W = W .
 SUBST:   P = %:25 $ *:2 P:3 R:1 D:1 M:1
 KITEM:   P = potion of porridge
 KITEM:   D = deck of changes / deck of war / deck of defence / \
-deck of destruction w:1 / deck of dungeons w:1 / deck of wonders w:5
+             deck of destruction w:1 / deck of dungeons w:1 / deck of wonders w:5
 KITEM:   R = any potion / potion of poison w:3 / \
              potion of strong poison w:1 / any scroll / scroll of acquirement w:1 / \
              scroll of random uselessness
@@ -622,134 +750,4 @@ ccccccccccsc...cscccccccccc
            c...c
            c.3.c
            c.@.c
-ENDMAP
-
-
-## section 6: Portal entries
-################################################
-
-# Dummy entry
-NAME:    enter_dwarf_dummy
-TAGS:    dwarf_entry
-KFEAT:   O = enter_dwarven_hall
-MAP
-O
-ENDMAP
-
-NAME:    enter_dwarf_1
-TAGS:    dwarf_entry no_monster_gen
-SUBST:   . = . ':7
-COLOUR:  ' = yellow
-FTILE:   ' = floor_sandstone
-SUBST:   ' = .
-KFEAT:   O = enter_dwarven_hall
-MAP
-.....
-.'G'.
-.'O'.
-.'''.
-.....
-ENDMAP
-#'
-
-NAME:    enter_dwarf_2
-TAGS:    dwarf_entry no_monster_gen
-SHUFFLE: CD / c+
-COLOUR:  ' = yellow
-COLOUR:  C = yellow
-COLOUR:  D = yellow
-SUBST:   D = =
-SUBST:   C = c
-FTILE:   =GO' = floor_sandstone
-SUBST:   ' = .
-KFEAT:   O = enter_dwarven_hall
-MAP
-.......
-.ccDcc.
-.c'G'c.
-.C'O'C.
-.c'''c.
-.ccCcc.
-.......
-ENDMAP
-#'
-
-NAME:    enter_dwarf_3
-TAGS:    dwarf_entry no_monster_gen
-SUBST:   . = Y .
-COLOUR:  Y = yellow
-FTILE:   Y = floor_sandstone
-SUBST:   Y = .
-MONS:    deep dwarf w:30 / elf w:2 / war dog
-MONS:    wight / orange rat
-MONS:    giant centipede / redback
-SUBST:   . = .:100 11 2 3
-KFEAT:   O = enter_dwarven_hall
-MAP
-.G.
-.O.
-...
-ENDMAP
-
-NAME:    enter_dwarf_4
-TAGS:    dwarf_entry no_monster_gen no_wall_fixup
-WEIGHT:  10
-CHANCE:  5%
-COLOUR:  1 = yellow, ' = yellow, x = white
-MONS:    dwarf w:30 / elf w:2 / war dog
-FTILE:   1'xO = floor_sandstone
-RTILE:   x = wall_tomb
-KFEAT:   O = enter_dwarven_hall
-MAP
-.........
-.xxxxxxx.
-.x1'O'1x.
-.x'''''x.
-.x'x'x'x.
-.xGx'xGx.
-.xxx'xxx.
-....'....
-ENDMAP
-
-NAME:    enter_dwarf_5
-TAGS:    dwarf_entry no_monster_gen
-COLOUR:  c = white, = = white, ' = yellow
-RTILE:   c = wall_tomb, = = wall_tomb
-FTILE:   ='GO = floor_sandstone
-NSUBST:  = = 1:= / *:c
-SUBST:   c : cx
-KFEAT:   O = enter_dwarven_hall
-MAP
-   ...
-  ..c..
- ..=c=..
-..=cGc=..
-.cc'O'cc.
-..=c'c=..
- ..=c=..
-  ..c..
-   ...
-ENDMAP
-
-NAME:    enter_dwarf_6
-TAGS:    dwarf_entry
-MONS:    elf / w:5 deep dwarf / deep dwarf necromancer / \
-         deep dwarf artificer
-MONS:    shadow wraith / wraith / wight w:5 / troll / rock troll w:5 / \
-         deep dwarf necromancer w:2 / deep dwarf artificer w:1
-FTILE:   12O.A = floor_sandstone
-# crawl will rotate for the rest of possibilities
-NSUBST:  A = 1:= / *:c
-: dhfh.colors(_G)
-KFEAT:   O = enter_dwarven_hall
-MAP
-cccc.cccc
-c1.....1c
-c.ccccc.c
-c.c.2.c.c
-..c.O.c..
-c.c...c.c
-c.cAAcc.c
-c1.....1c
-cccc.cccc
 ENDMAP
