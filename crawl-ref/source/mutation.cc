@@ -211,6 +211,12 @@ formatted_string describe_mutations()
     {
     case SP_MERFOLK:
         result += "You revert to your normal form in water.\n";
+        result += "You are very nimble and swift while swimming.\n";
+        have_any = true;
+        break;
+
+    case SP_MINOTAUR:
+        result += "You reflexively headbutt those who attack you in melee.\n";
         have_any = true;
         break;
 
