@@ -23,6 +23,8 @@
 #include "tiledoll.h"
 #endif
 
+class targetter;
+
 int check_stealth(void);
 
 typedef FixedVector<int, NUM_DURATIONS> durations_t;
@@ -332,6 +334,7 @@ public:
   bool redraw_evasion;
 
   uint8_t flash_colour;
+  targetter *flash_where;
 
   int time_taken;
 

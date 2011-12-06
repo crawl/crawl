@@ -339,9 +339,9 @@ static bool _toxic_radianceable(const actor *act)
 
 spret_type cast_toxic_radiance(int pow, bool non_player, bool fail)
 {
+    targetter_los hitfunc(&you, LOS_SOLID);
     if (!non_player)
     {
-        targetter_los hitfunc(&you, LOS_SOLID);
         if (stop_attack_prompt(hitfunc, "poison", _toxic_radianceable))
             return SPRET_ABORT;
     }
@@ -352,7 +352,7 @@ spret_type cast_toxic_radiance(int pow, bool non_player, bool fail)
     else
         mpr("You radiate a sickly green light!");
 
-    flash_view(GREEN);
+    flash_view(GREEN, &hitfunc);
     more();
     mesclr();
 
@@ -433,8 +433,8 @@ static bool _refrigerateable(const actor *act)
 spret_type cast_refrigeration(int pow, bool non_player, bool freeze_potions,
                               bool fail)
 {
+    targetter_los hitfunc(&you, LOS_SOLID);
     {
-        targetter_los hitfunc(&you, LOS_SOLID);
         if (stop_attack_prompt(hitfunc, "harm",  _refrigerateable))
             return SPRET_ABORT;
     }
@@ -445,7 +445,7 @@ spret_type cast_refrigeration(int pow, bool non_player, bool freeze_potions,
     else
         mpr("The heat is drained from your surroundings.");
 
-    flash_view(LIGHTCYAN);
+    flash_view(LIGHTCYAN, &hitfunc);
     more();
     mesclr();
 
@@ -1430,7 +1430,8 @@ static int _ignite_poison_player(coord_def where, int pow, int, actor *actor)
 spret_type cast_ignite_poison(int pow, bool fail)
 {
     fail_check();
-    flash_view(RED);
+    targetter_los hitfunc(&you, LOS_NO_TRANS);
+    flash_view(RED, &hitfunc);
 
     apply_area_visible(_ignite_poison_clouds, pow, true, &you);
     apply_area_visible(_ignite_poison_objects, pow, true, &you);
