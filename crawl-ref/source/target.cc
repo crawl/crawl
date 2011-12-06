@@ -64,8 +64,13 @@ targetter_smite::targetter_smite(const actor* act, int ran,
 
 bool targetter_smite::valid_aim(coord_def a)
 {
-    if (a != origin && !cell_see_cell(origin, a, LOS_DEFAULT))
+    if (a != origin && !cell_see_cell(origin, a, LOS_NO_TRANS))
+    {
+        // Scrying/glass/tree/grate.
+        if (agent && agent->see_cell(a))
+            return notify_fail("Your view is not clear enough.");
         return notify_fail("You cannot see that place.");
+    }
     if ((origin - a).abs() > range2)
         return notify_fail("Out of range.");
     if (!affects_walls && feat_is_solid(grd(a)))
