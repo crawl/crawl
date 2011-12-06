@@ -3440,7 +3440,7 @@ static std::string _mon_enchantments_string(const monster_info& mi)
 
     if (!enchant_descriptors.empty())
     {
-        return std::string(mi.pronoun(PRONOUN))
+        return std::string(mi.pronoun(PRONOUN_SUBJECTIVE))
             + " is "
             + comma_separated_line(enchant_descriptors.begin(),
                                    enchant_descriptors.end())
@@ -3522,7 +3522,7 @@ static std::vector<std::string> _get_monster_desc_vector(const monster_info& mi)
 static std::string _get_monster_desc(const monster_info& mi)
 {
     std::string text    = "";
-    std::string pronoun = mi.pronoun(PRONOUN);
+    std::string pronoun = mi.pronoun(PRONOUN_SUBJECTIVE);
 
     if (mi.is(MB_CLINGING))
         text += pronoun + " is clinging to the wall.\n";
@@ -3930,7 +3930,7 @@ static void _describe_cell(const coord_def& where, bool in_range)
         if (!in_range)
         {
             mprf(MSGCH_EXAMINE_FILTER, "%s is out of range.",
-                 mon->pronoun(PRONOUN).c_str());
+                 mon->pronoun(PRONOUN_SUBJECTIVE).c_str());
         }
 #ifndef DEBUG_DIAGNOSTICS
         monster_described = true;

@@ -281,7 +281,7 @@ static int _healing_spell(int healed, bool divine_ability,
             if (can_pacify == -2)
             {
                 mprf("You cannot pacify this monster while %s is sleeping!",
-                     mons->pronoun(PRONOUN).c_str());
+                     mons->pronoun(PRONOUN_SUBJECTIVE).c_str());
             }
             else
                 mpr("You cannot pacify this monster!");

@@ -107,7 +107,7 @@ std::string attack::anon_pronoun(pronoun_type pron)
     switch (pron)
     {
     default:
-    case PRONOUN:               return "it";
+    case PRONOUN_SUBJECTIVE:    return "it";
     case PRONOUN_POSSESSIVE:    return "its";
     case PRONOUN_REFLEXIVE:     return "itself";
     }

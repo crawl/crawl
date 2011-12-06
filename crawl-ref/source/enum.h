@@ -2804,10 +2804,10 @@ enum potion_type
 
 enum pronoun_type
 {
-    PRONOUN,
+    PRONOUN_SUBJECTIVE,
     PRONOUN_POSSESSIVE,
-    PRONOUN_REFLEXIVE,                  // reflexive is always lowercase
-    PRONOUN_OBJECTIVE,                  // objective is always lowercase
+    PRONOUN_REFLEXIVE,
+    PRONOUN_OBJECTIVE,
 };
 
 enum artefact_prop_type

@@ -1716,7 +1716,7 @@ inline static bool _monster_warning(activity_interrupt_type ai,
                 ash_warning = "Ashenzari warns you:";
 
             (ash_id ? ash_warning : text) +=
-                " " + uppercase_first(mon->pronoun(PRONOUN)) + " is"
+                " " + uppercase_first(mon->pronoun(PRONOUN_SUBJECTIVE)) + " is"
                 + mweap + ".";
         }
 

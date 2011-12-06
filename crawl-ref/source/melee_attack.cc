@@ -1261,7 +1261,7 @@ bool melee_attack::player_aux_test_hit()
         mprf("Your %s passes through %s as %s momentarily phases out.",
             aux_attack.c_str(),
             defender->name(DESC_THE).c_str(),
-            defender->pronoun(PRONOUN).c_str());
+            defender->pronoun(PRONOUN_SUBJECTIVE).c_str());
     }
     else
     {
