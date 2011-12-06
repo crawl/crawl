@@ -186,7 +186,7 @@ bool targetter_cloud::valid_aim(coord_def a)
     if (!map_bounds(a)
         || agent
            && origin != a
-           && !cell_see_cell(origin, a, LOS_SOLID))
+           && !cell_see_cell(origin, a, LOS_NO_TRANS))
     {
         // Scrying/glass/tree/grate.
         if (agent && agent->see_cell(a))
