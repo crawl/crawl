@@ -630,6 +630,9 @@ bool Menu::process_key(int keyin)
     {
         if (repaint)
         {
+#ifdef USE_TILE_WEB
+            webtiles_update_scroll_pos();
+#endif
             draw_menu();
         }
         // Easy exit should not kill the menu if there are selected items.
@@ -1433,6 +1436,20 @@ void Menu::webtiles_write_menu() const
     tiles.json_close_object();
 }
 
+void Menu::webtiles_scroll(int first)
+{
+    if (first >= (int) items.size()) first = (int) items.size() - 1;
+    if (first < 0) first = 0;
+
+    if (first_entry != first)
+    {
+        first_entry = first;
+        draw_menu();
+        update_screen();
+        webtiles_update_scroll_pos();
+    }
+}
+
 void Menu::webtiles_update_item(int index) const
 {
     tiles.json_open_object();
@@ -1457,6 +1474,15 @@ void Menu::webtiles_update_title() const
     tiles.json_open_object();
     tiles.json_write_string("msg", "update_menu");
     webtiles_write_title();
+    tiles.json_close_object();
+    tiles.send_message();
+}
+
+void Menu::webtiles_update_scroll_pos() const
+{
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "menu_scroll");
+    tiles.json_write_int("first", first_entry);
     tiles.json_close_object();
     tiles.send_message();
 }

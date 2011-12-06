@@ -370,6 +370,7 @@ public:
 
 #ifdef USE_TILE_WEB
     void webtiles_write_menu() const;
+    void webtiles_scroll(int first);
 #endif
 protected:
     MenuEntry *title;
@@ -413,6 +414,7 @@ protected:
 #ifdef USE_TILE_WEB
     void webtiles_update_item(int index) const;
     void webtiles_update_title() const;
+    void webtiles_update_scroll_pos() const;
 
     virtual void webtiles_write_title() const;
     virtual void webtiles_write_item(int index, const MenuEntry *me) const;

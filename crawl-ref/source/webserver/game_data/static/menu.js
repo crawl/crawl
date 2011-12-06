@@ -156,6 +156,8 @@ define(["jquery", "comm", "client", "./enums"], function ($, comm, client, enums
 
         items.scroll(menu_scroll_handler);
 
+        menu.server_scroll = true;
+
         client.show_dialog("#menu");
 
         update_visible_indices();
@@ -183,6 +185,9 @@ define(["jquery", "comm", "client", "./enums"], function ($, comm, client, enums
 
         if (menu_stack.length == 0)
         {
+            // Delay closing the dialog a bit to prevent flickering
+            // if the game immediately opens another one
+            // (e.g. when looking at an item from the inventory)
             setTimeout(function () {
                 if (menu_stack.length == 0)
                     client.hide_dialog();
@@ -217,6 +222,16 @@ define(["jquery", "comm", "client", "./enums"], function ($, comm, client, enums
         set_item_contents(item, item.elem);
 
         handle_size_change();
+    }
+
+    function server_menu_scroll(data)
+    {
+        log(data);
+
+        var menu = get_menu();
+        menu.server_first_visible = data.first;
+        if (menu.server_scroll)
+            scroll_to_item(data.first, true);
     }
 
     function update_title()
@@ -280,7 +295,7 @@ define(["jquery", "comm", "client", "./enums"], function ($, comm, client, enums
         scroll_to_item(previous);
     }
 
-    function scroll_to_item(item_or_index)
+    function scroll_to_item(item_or_index, was_server_initiated)
     {
         var menu = get_menu();
         var item = (item_or_index.elem ?
@@ -289,9 +304,12 @@ define(["jquery", "comm", "client", "./enums"], function ($, comm, client, enums
         var baseline = contents.children().offset().top;
 
         contents.scrollTop(item.elem.offset().top - baseline);
+
+        if (!was_server_initiated)
+            menu.server_scroll = false;
     }
 
-    function scroll_bottom_to_item(item_or_index)
+    function scroll_bottom_to_item(item_or_index, was_server_initiated)
     {
         var menu = get_menu();
         var item = (item_or_index.elem ?
@@ -301,6 +319,9 @@ define(["jquery", "comm", "client", "./enums"], function ($, comm, client, enums
 
         contents.scrollTop(item.elem.offset().top + item.elem.height()
                            - baseline - contents.innerHeight());
+
+        if (!was_server_initiated)
+            menu.server_scroll = false;
     }
 
     function update_visible_indices()
@@ -329,6 +350,35 @@ define(["jquery", "comm", "client", "./enums"], function ($, comm, client, enums
         menu.last_visible = menu.items.length - 1;
     }
 
+    var update_server_scroll_timeout = null;
+    function update_server_scroll()
+    {
+        if (update_server_scroll_timeout)
+        {
+            clearTimeout(update_server_scroll_timeout);
+            update_server_scroll_timeout = null;
+        }
+
+        var menu = get_menu();
+
+        if (!menu) return;
+
+        comm.send_message("menu_scroll", {
+            first: menu.first_visible,
+            last: menu.last_visible
+        });
+    }
+
+    function schedule_server_scroll()
+    {
+        if (update_server_scroll_timeout)
+        {
+            clearTimeout(update_server_scroll_timeout);
+            update_server_scroll_timeout = null;
+        }
+        update_server_scroll_timeout = setTimeout(update_server_scroll, 500);
+    }
+
     function handle_size_change()
     {
         var menu = get_menu();
@@ -347,6 +397,7 @@ define(["jquery", "comm", "client", "./enums"], function ($, comm, client, enums
     {
         var menu = get_menu(), contents = $("#menu_contents");
         update_visible_indices();
+        schedule_server_scroll();
         if (menu.last_visible >= menu.items.length - 1)
         {
             if (!(menu.flags & enums.menu_flag.ALWAYS_SHOW_MORE))
@@ -424,6 +475,7 @@ define(["jquery", "comm", "client", "./enums"], function ($, comm, client, enums
         "close_menu": close_menu,
         "update_menu": update_menu,
         "update_menu_item": update_menu_item,
+        "menu_scroll": server_menu_scroll,
         "init_menus": init_menus
     });
 });
