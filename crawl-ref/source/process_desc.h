@@ -6,6 +6,8 @@
 #ifndef DESCRIBE_TEMPLATES_H
 #define DESCRIBE_TEMPLATES_H
 
+#include "describe.h"
+
 template<class T> void process_description(T &proc, const describe_info &inf);
 template<class T> void process_quote(T &proc, const describe_info &inf);
 
