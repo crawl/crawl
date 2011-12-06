@@ -3,6 +3,17 @@
 import gdb.printing
 
 
+class NeedLibstdcxxPrinters(Exception):
+    def __str__(self):
+        return """Oops!!!
+The libstdc++ pretty printers seem to be missing.
+See http://gcc.gnu.org/onlinedocs/libstdc++/manual/debug.html for
+installation instructions.
+
+(Alternatively, see "help disable pretty-printer" to learn how to
+disable the failing printers.)"""
+
+
 class coord_def_printer:
     def __init__(self, val):
         self.val = val
@@ -41,6 +52,7 @@ class CrawlHashTable_printer:
         vis = gdb.default_visualizer(self.val["hash_map"].dereference())
         if vis:
             return vis.children()
+        raise NeedLibstdcxxPrinters
 
     def display_hint(self):
         return "map"
@@ -55,7 +67,9 @@ class CrawlVector_printer:
     def children(self):
         # needs libstdc++ printers
         vis = gdb.default_visualizer(self.val["vec"])
-        return vis.children()
+        if vis:
+            return vis.children()
+        raise NeedLibstdcxxPrinters
 
     def display_hint(self):
         return "array"
