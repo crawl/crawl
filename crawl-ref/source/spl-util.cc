@@ -749,18 +749,6 @@ int apply_one_neighbouring_square(cell_func cf, int power, actor *agent)
     return cf(you.pos() + bmove.delta, power, 1, agent);
 }
 
-int apply_area_within_radius(cell_func cf, const coord_def& where,
-                             int pow, int radius, int ctype,
-                             actor *agent)
-{
-    int rv = 0;
-
-    for (radius_iterator ri(where, radius, false, false); ri; ++ri)
-        rv += cf(*ri, pow, ctype, agent);
-
-    return (rv);
-}
-
 void apply_area_cloud(cloud_func func, const coord_def& where,
                        int pow, int number, cloud_type ctype,
                        const actor *agent,
