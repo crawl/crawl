@@ -2024,7 +2024,7 @@ blessing_done:
                      whom.c_str(), result.c_str()).c_str(),
         god);
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     flash_monster_colour(follower, god_colour(god), 200);
 #endif
 
