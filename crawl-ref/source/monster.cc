@@ -4319,7 +4319,7 @@ bool monster::visible_to(const actor *looker) const
 bool monster::near_foe() const
 {
     const actor *afoe = get_foe();
-    return (afoe && see_cell(afoe->pos()));
+    return (afoe && see_cell_no_trans(afoe->pos()));
 }
 
 bool monster::has_lifeforce() const

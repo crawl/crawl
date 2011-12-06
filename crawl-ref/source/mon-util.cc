@@ -3036,9 +3036,6 @@ bool mons_can_attack(const monster* mon)
     if (!foe || !mon->can_see(foe))
         return false;
 
-    if (mons_has_los_attack(mon))
-        return true;
-
     if (mons_has_ranged_attack(mon) && mon->see_cell_no_trans(foe->pos()))
         return true;
 

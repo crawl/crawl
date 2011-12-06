@@ -1509,10 +1509,6 @@ bool mons_can_hurt_player(const monster* mon, const bool want_move)
     if (_mons_has_path_to_player(mon, want_move))
         return (true);
 
-    // The monster need only see you to hurt you.
-    if (mons_has_los_attack(mon))
-        return (true);
-
     // Even if the monster can not actually reach the player it might
     // still use some ranged form of attack.
     if (you.see_cell_no_trans(mon->pos())
