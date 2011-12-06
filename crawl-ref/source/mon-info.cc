@@ -1179,7 +1179,7 @@ std::string monster_info::wounds_description_sentence() const
     if (wounds.empty())
         return "";
     else
-        return std::string(pronoun(PRONOUN)) + " is " + wounds + ".";
+        return std::string(pronoun(PRONOUN_SUBJECTIVE)) + " is " + wounds + ".";
 }
 
 std::string monster_info::wounds_description(bool use_colour) const

@@ -325,7 +325,7 @@ void update_monsters_in_view()
                 warning = true;
 
             if (size == 1)
-                warning_msg += mon->pronoun(PRONOUN);
+                warning_msg += mon->pronoun(PRONOUN_SUBJECTIVE);
             else if (mon->type == MONS_DANCING_WEAPON)
                 warning_msg += "There";
             else if (types[mon->type] == 1)

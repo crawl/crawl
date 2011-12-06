@@ -3111,7 +3111,7 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
 
     switch (variant)
     {
-        case PRONOUN:
+        case PRONOUN_SUBJECTIVE:
             return ((gender == GENDER_NEUTER) ? "it" :
                     (gender == GENDER_MALE)   ? "he" : "she");
 
@@ -3665,9 +3665,9 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     msg = replace_all(msg, "@The_monster@", mons->name(cap));
 
     msg = replace_all(msg, "@Pronoun@",
-                      mons->pronoun(PRONOUN));
+                      mons->pronoun(PRONOUN_SUBJECTIVE));
     msg = replace_all(msg, "@pronoun@",
-                      mons->pronoun(PRONOUN));
+                      mons->pronoun(PRONOUN_SUBJECTIVE));
     msg = replace_all(msg, "@Possessive@",
                       mons->pronoun(PRONOUN_POSSESSIVE));
     msg = replace_all(msg, "@possessive@",

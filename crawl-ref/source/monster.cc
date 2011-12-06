@@ -886,7 +886,7 @@ void monster::equip_weapon(item_def &item, int near, bool msg)
                  "firm grip on it.",
                  pronoun(PRONOUN_POSSESSIVE).c_str(),
                  hand_name(true).c_str(),
-                 pronoun(PRONOUN).c_str());
+                 pronoun(PRONOUN_SUBJECTIVE).c_str());
             break;
         case SPWPN_REAPING:
             mpr("It is briefly surrounded by shifting shadows.");
