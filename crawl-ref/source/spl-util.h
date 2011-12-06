@@ -110,10 +110,6 @@ int apply_random_around_square(cell_func cf, const coord_def& where,
 
 int apply_one_neighbouring_square(cell_func cf, int power, actor *agent = NULL);
 
-int apply_area_within_radius(cell_func cf,  const coord_def& where,
-                             int pow, int radius, int ctype,
-                             actor *agent = NULL);
-
 void apply_area_cloud(cloud_func func, const coord_def& where,
                       int pow, int number, cloud_type ctype,
                       const actor *agent,
