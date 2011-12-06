@@ -1,7 +1,7 @@
 define(["jquery", "./view_data", "./tileinfo-main", "./tileinfo-player",
         "./tileinfo-icons", "./tileinfo-dngn", "./enums",
-        "./map_knowledge"],
-function ($, view_data, main, player, icons, dngn, enums, map_knowledge) {
+        "./map_knowledge", "./tileinfos"],
+function ($, view_data, main, player, icons, dngn, enums, map_knowledge, tileinfos) {
     function DungeonCellRenderer()
     {
         this.set_cell_size(32, 32);
@@ -689,10 +689,10 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge) {
 
 
         // Helper functions for drawing from specific textures
-        draw_tile: function(idx, x, y, img_name, mod, ofsx, ofsy, y_max)
+        draw_tile: function(idx, x, y, mod, ofsx, ofsy, y_max)
         {
             var info = mod.get_tile_info(idx);
-            var img = get_img(img_name);
+            var img = get_img(mod.get_img(idx));
             if (!info)
             {
                 throw ("Tile not found: " + idx);
@@ -724,23 +724,28 @@ function ($, view_data, main, player, icons, dngn, enums, map_knowledge) {
 
         draw_dngn: function(idx, x, y)
         {
-            this.draw_tile(idx, x, y, dngn.get_img(idx), dngn);
+            this.draw_tile(idx, x, y, dngn);
         },
 
         draw_main: function(idx, x, y)
         {
-            this.draw_tile(idx, x, y, "main", main);
+            this.draw_tile(idx, x, y, main);
         },
 
         draw_player: function(idx, x, y, ofsx, ofsy, y_max)
         {
-            this.draw_tile(idx, x, y, "player",
-                           player, ofsx, ofsy, y_max);
+            this.draw_tile(idx, x, y, player, ofsx, ofsy, y_max);
         },
 
         draw_icon: function(idx, x, y, ofsx, ofsy)
         {
-            this.draw_tile(idx, x, y, "icons", icons, ofsx, ofsy);
+            this.draw_tile(idx, x, y, icons, ofsx, ofsy);
+        },
+
+        draw_from_texture: function (idx, x, y, tex, ofsx, ofsy, y_max)
+        {
+            var mod = tileinfos(tex);
+            this.draw_tile(idx, x, y, mod, ofsx, ofsy);
         },
     });
 

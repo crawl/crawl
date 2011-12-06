@@ -1,4 +1,6 @@
-define(["jquery", "comm", "client", "./enums"], function ($, comm, client, enums) {
+define(["jquery", "comm", "client", "./enums",
+        "./dungeon_renderer", "./cell_renderer"],
+function ($, comm, client, enums, dungeon_renderer, cr) {
     function item_selectable(item)
     {
         return item.level == 2 && item.hotkeys && item.hotkeys.length;
@@ -23,6 +25,24 @@ define(["jquery", "comm", "client", "./enums"], function ($, comm, client, enums
             return cls && cls.replace(/\bfg\S+/g, "");
         });
         elem.addClass("fg" + col);
+
+        if (item.tiles && item.tiles.length > 0 && !dungeon_renderer.glyph_mode)
+        {
+            var renderer = new cr.DungeonCellRenderer();
+            var canvas = $("<canvas>");
+            renderer.set_cell_size(dungeon_renderer.cell_width,
+                                   dungeon_renderer.cell_height);
+            canvas[0].width = renderer.cell_width;
+            canvas[0].height = renderer.cell_height;
+            canvas.css("vertical-align", "middle");
+            renderer.init(canvas[0]);
+
+            $.each(item.tiles, function () {
+                renderer.draw_from_texture(this.t, 0, 0, this.tex, 0, 0, this.ymax);
+            });
+
+            elem.prepend(canvas);
+        }
     }
 
     var cols = {

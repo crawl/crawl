@@ -1750,6 +1750,10 @@ bool tile_list_processor::write_data()
                     m_start_value_module.size() > 0 ? "m." : "",
                     m_start_value.c_str());
             fprintf(fp, "}\n\n");
+
+            fprintf(fp, "exports.get_img = function (idx) {\n");
+            fprintf(fp, "    return \"%s\";\n", lcname.c_str());
+            fprintf(fp, "};\n\n");
         }
         else
         {
@@ -1794,7 +1798,7 @@ bool tile_list_processor::write_data()
             add_abstracts(fp, "return (%s.tile_count(idx));", lc_enum, uc_max_enum);
             fprintf(fp, "};\n\n");
 
-            fprintf(fp, "exports.get_img = function (idx) {\n", lcname.c_str());
+            fprintf(fp, "exports.get_img = function (idx) {\n");
             add_abstracts(fp, "return \"%s\";", lc_enum, uc_max_enum);
             fprintf(fp, "};\n\n");
         }
