@@ -58,12 +58,6 @@ spret_type conjure_flame(int pow, const coord_def& where, bool fail)
         return SPRET_ABORT;
     }
 
-    if (you.trans_wall_blocking(where))
-    {
-        mpr("There's something in the way!");
-        return SPRET_ABORT;
-    }
-
     if (cell_is_solid(where))
     {
         switch (grd(where))
@@ -190,12 +184,6 @@ spret_type cast_big_c(int pow, cloud_type cty, const actor *caster, bolt &beam,
     if (cell_is_solid(beam.target))
     {
         mpr("You can't place clouds on a wall.");
-        return SPRET_ABORT;
-    }
-
-    if (you.trans_wall_blocking(beam.target))
-    {
-        mpr("There's something in the way!");
         return SPRET_ABORT;
     }
 

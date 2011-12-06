@@ -123,12 +123,6 @@ spret_type cast_fire_storm(int pow, bolt &beam, bool fail)
         return SPRET_ABORT;
     }
 
-    if (you.trans_wall_blocking(beam.target))
-    {
-        mpr("There's something in the way!");
-        return SPRET_ABORT;
-    }
-
     fail_check();
     setup_fire_storm(&you, pow, beam);
 
@@ -758,12 +752,6 @@ spret_type cast_freeze(int pow, monster* mons, bool fail)
 
 spret_type cast_airstrike(int pow, const dist &beam, bool fail)
 {
-    if (you.trans_wall_blocking(beam.target))
-    {
-        mpr("There's something in the way!");
-        return SPRET_ABORT;
-    }
-
     monster* mons = monster_at(beam.target);
     if (mons && (mons->submerged() ||
                  (cell_is_solid(beam.target) && mons_wall_shielded(mons))))
@@ -1598,12 +1586,6 @@ spret_type cast_fragmentation(int pow, const dist& spd, bool fail)
     bool destroy_wall = false;
     bool hole         = true;
     const char *what  = NULL;
-
-    if (!cell_see_cell(you.pos(), spd.target, LOS_SOLID))
-    {
-        mpr("There's something in the way!");
-        return SPRET_ABORT;
-    }
 
     bolt beam;
 

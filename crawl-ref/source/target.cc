@@ -68,7 +68,7 @@ bool targetter_smite::valid_aim(coord_def a)
     {
         // Scrying/glass/tree/grate.
         if (agent && agent->see_cell(a))
-            return notify_fail("Your view is not clear enough.");
+            return notify_fail("There's something in the way.");
         return notify_fail("You cannot see that place.");
     }
     if ((origin - a).abs() > range2)
@@ -195,7 +195,7 @@ bool targetter_cloud::valid_aim(coord_def a)
     {
         // Scrying/glass/tree/grate.
         if (agent && agent->see_cell(a))
-            return notify_fail("Your view is not clear enough.");
+            return notify_fail("There's something in the way.");
         return notify_fail("You cannot see that place.");
     }
     if (feat_is_solid(grd(a)))

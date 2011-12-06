@@ -956,12 +956,11 @@ bool direction_chooser::move_is_ok() const
 {
     if (!moves.isCancel && moves.isTarget)
     {
-        if (!cell_see_cell(you.pos(), target(), LOS_DEFAULT))
+        if (!cell_see_cell(you.pos(), target(), LOS_NO_TRANS))
         {
             if (you.see_cell(target()))
             {
-                ASSERT(you.xray_vision);
-                mpr("Your divination affects just sight, not spellcasting.",
+                mpr("There's something in the way.",
                     MSGCH_EXAMINE_FILTER);
             }
             else
