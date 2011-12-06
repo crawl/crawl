@@ -93,6 +93,8 @@ COLOUR:  D = yellow
 SUBST:   D = =
 SUBST:   C = c
 FTILE:   =GO' = floor_sandstone
+TILE:    c = wall_stone_dark
+TILE:    D = wall_stone_black_marked
 SUBST:   ' = .
 KFEAT:   O = enter_dwarven_hall
 MAP
@@ -155,18 +157,19 @@ FTILE:   12O.A = floor_sandstone
 # crawl will rotate for the rest of possibilities
 NSUBST:  A = 1:= / *:c
 FTILE:   =12O. = floor_limestone
+FTILE:   @ = floor_sandstone
 COLOUR:  12 = yellow
 KFEAT:   O = enter_dwarven_hall
 MAP
-cccc.cccc
+cccc@cccc
 c1.....1c
 c.ccccc.c
 c.c.2.c.c
-..c.O.c..
+@.c.O.c.@
 c.c...c.c
 c.cAAcc.c
 c1.....1c
-cccc.cccc
+cccc@cccc
 ENDMAP
 
 ## Arrival maps
