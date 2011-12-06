@@ -1433,12 +1433,12 @@ spret_type cast_ignite_poison(int pow, bool fail)
     targetter_los hitfunc(&you, LOS_NO_TRANS);
     flash_view(RED, &hitfunc);
 
-    apply_area_visible(_ignite_poison_clouds, pow, true, &you);
-    apply_area_visible(_ignite_poison_objects, pow, true, &you);
-    apply_area_visible(_ignite_poison_monsters, pow, true, &you);
+    apply_area_visible(_ignite_poison_clouds, pow, &you);
+    apply_area_visible(_ignite_poison_objects, pow, &you);
+    apply_area_visible(_ignite_poison_monsters, pow, &you);
 // Not currently relevant - nothing will ever happen as long as
 // the actor is &you.
-    apply_area_visible(_ignite_poison_player, pow, false, &you);
+    apply_area_visible(_ignite_poison_player, pow, &you);
 
 #ifndef USE_TILE
     delay(100); // show a brief flash
