@@ -186,8 +186,11 @@ bool targetter_cloud::valid_aim(coord_def a)
     if (!map_bounds(a)
         || agent
            && origin != a
-           && !cell_see_cell(origin, a, LOS_DEFAULT))
+           && !cell_see_cell(origin, a, LOS_SOLID))
     {
+        // Scrying/glass/tree/grate.
+        if (agent && agent->see_cell(a))
+            return notify_fail("Your view is not clear enough.");
         return notify_fail("You cannot see that place.");
     }
     if (feat_is_solid(grd(a)))
