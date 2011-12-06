@@ -55,7 +55,7 @@ spret_type cast_englaciation(int pow, bool fail)
 {
     fail_check();
     mpr("You radiate an aura of cold.");
-    apply_area_visible(_englaciate_monsters, pow, false, &you);
+    apply_area_visible(_englaciate_monsters, pow, &you);
     return SPRET_SUCCESS;
 }
 

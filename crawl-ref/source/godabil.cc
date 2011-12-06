@@ -3117,7 +3117,7 @@ static int _slouch_monsters(coord_def where, int pow, int dummy, actor* agent)
 
 bool cheibriados_slouch(int pow)
 {
-    int count = apply_area_visible(_slouchable, pow, true, &you);
+    int count = apply_area_visible(_slouchable, pow, &you);
     if (!count)
         if (!yesno("There's no one hasty visible. Invoke Slouch anyway?",
                    true, 'n'))
@@ -3132,7 +3132,7 @@ bool cheibriados_slouch(int pow)
     mpr("You can feel time thicken for a moment.");
     dprf("your speed is %d", player_movement_speed());
 
-    apply_area_visible(_slouch_monsters, pow, true, &you);
+    apply_area_visible(_slouch_monsters, pow, &you);
     return true;
 }
 
