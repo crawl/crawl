@@ -6,7 +6,7 @@
 #include "AppHdr.h"
 
 #include "describe.h"
-#include "describe-templates.h"
+#include "process_desc.h"
 #include "database.h"
 
 #include <stdio.h>
