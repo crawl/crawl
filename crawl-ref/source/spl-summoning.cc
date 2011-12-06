@@ -2391,12 +2391,6 @@ spret_type cast_twisted_resurrection(int pow, god_type god, bool fail)
 
 spret_type cast_haunt(int pow, const coord_def& where, god_type god, bool fail)
 {
-    if (you.trans_wall_blocking(where))
-    {
-        mpr("There's something in the way!");
-        return SPRET_ABORT;
-    }
-
     monster* m = monster_at(where);
 
     if (m == NULL)
@@ -2518,12 +2512,6 @@ static int _abjuration(int pow, monster *mon)
 
 spret_type cast_abjuration(int pow, const coord_def& where, bool fail)
 {
-    if (you.trans_wall_blocking(where))
-    {
-        mpr("There's something in the way!");
-        return SPRET_ABORT;
-    }
-
     fail_check();
 
     monster* mon = monster_at(where);
