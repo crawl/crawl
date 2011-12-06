@@ -2232,11 +2232,13 @@ static int _xom_change_scenery(bool debug = false)
         case DNGN_DETECTED_SECRET_DOOR:
         case DNGN_SECRET_DOOR:
             grd(pos) = DNGN_OPEN_DOOR;
+            set_terrain_changed(pos);
             if (you.see_cell(pos))
                 doors_open++;
             break;
         case DNGN_OPEN_DOOR:
             grd(pos) = DNGN_CLOSED_DOOR;
+            set_terrain_changed(pos);
             if (you.see_cell(pos))
                 doors_close++;
             break;
@@ -2248,6 +2250,7 @@ static int _xom_change_scenery(bool debug = false)
                 continue;
 
             grd(pos) = (dungeon_feature_type) (grd(pos) - fountain_diff);
+            set_terrain_changed(pos);
             if (you.see_cell(pos))
                 fountains_flow++;
             break;
@@ -2257,6 +2260,7 @@ static int _xom_change_scenery(bool debug = false)
                 continue;
 
             grd(pos) = DNGN_FOUNTAIN_BLOOD;
+            set_terrain_changed(pos);
             if (you.see_cell(pos))
                 fountains_blood++;
             break;
