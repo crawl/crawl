@@ -150,12 +150,12 @@ end
 
 local function is_candidate_for_attack(x,y)
   m = monster.get_monster_at(x, y)
-  if m then crawl.mpr("Checking: (" .. x .. "," .. y .. ") " .. m:desc()) end
+  --if m then crawl.mpr("Checking: (" .. x .. "," .. y .. ") " .. m:desc()) end
   if not m or m:attitude() ~= ATT_HOSTILE then
     return false
   end
   if m:is_safe() then
-    crawl.mpr("... is safe.")
+  --crawl.mpr("... is safe.")
     if string.find(m:desc(), "ballistomycete") then
       return true
     end
