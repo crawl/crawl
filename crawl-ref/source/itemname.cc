@@ -2740,6 +2740,10 @@ bool is_bad_item(const item_def &item, bool temp)
             return (false);
         }
     case OBJ_JEWELLERY:
+        // Potentially useful.  TODO: check the properties.
+        if (is_artefact(item))
+            return (false);
+
         switch (item.sub_type)
         {
         case AMU_INACCURACY:
@@ -2975,7 +2979,7 @@ bool is_useless_item(const item_def &item, bool temp)
         if (!item_type_known(item))
             return (false);
 
-        // Potentially useful.
+        // Potentially useful.  TODO: check the properties.
         if (is_artefact(item))
             return (false);
 
