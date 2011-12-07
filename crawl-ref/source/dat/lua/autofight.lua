@@ -4,7 +4,6 @@
 --
 -- To use this, add this line to your init.txt:
 --   lua_file = lua/autofight.lua
--- Then macro any key to "===hit_closest".
 --
 -- This uses the very incomplete client monster and view bindings, and
 -- is currently very primitive. Improvements welcome!
@@ -151,10 +150,12 @@ end
 
 local function is_candidate_for_attack(x,y)
   m = monster.get_monster_at(x, y)
+  if m then crawl.mpr("Checking: (" .. x .. "," .. y .. ") " .. m:desc()) end
   if not m or m:attitude() ~= ATT_HOSTILE then
     return false
   end
   if m:is_safe() then
+    crawl.mpr("... is safe.")
     if string.find(m:desc(), "ballistomycete") then
       return true
     end
