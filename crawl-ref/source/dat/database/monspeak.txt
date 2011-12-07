@@ -5902,7 +5902,7 @@ VISUAL:@The_monster@ basks in @possessive@ own plume of deadly dust.
 WARN:You hear tremors.
 
 VISUAL:@The_monster@ closes @possessive@ eyes.
-VISUAL WARN:You feel like you are being watched from above.
+VISUAL WARN:You feel as though you are being watched from above.
 
 VISUAL:@The_monster@ bares @possessive@ teeth, and the ground turns slowly to stone.
 
