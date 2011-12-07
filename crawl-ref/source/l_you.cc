@@ -89,6 +89,10 @@ LUARET1(you_race, string, species_name(you.species).c_str())
 function class() */
 LUARET1(you_class, string, get_job_name(you.char_class))
 /*
+--- Is player in wizard mode?
+function wizard() */
+LUARET1(you_wizard, boolean, you.wizard)
+/*
 --- Get name of player's god
 function god() */
 LUARET1(you_god, string, god_name(you.religion).c_str())
@@ -317,6 +321,7 @@ static const struct luaL_reg you_clib[] =
     { "race"        , you_race },
     { "class"       , you_class },
     { "genus"       , l_you_genus },
+    { "wizard"      , you_wizard },
     { "god"         , you_god },
     { "good_god"    , you_good_god },
     { "evil_god"    , you_evil_god },
