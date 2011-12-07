@@ -14,6 +14,7 @@
 #include <iomanip>
 
 #include "artefact.h"
+#include "effects.h"
 #include "externs.h"
 #include "species.h"
 #include "cio.h"
@@ -1461,8 +1462,10 @@ int staff_spell(int staff)
     }
 
     // All checks passed, we can cast the spell.
-    if (your_spells(spell, power, false, false)
-            == SPRET_ABORT)
+    if (you.confused())
+        random_uselessness();
+    else if (your_spells(spell, power, false, false)
+                == SPRET_ABORT)
     {
         crawl_state.zero_turns_taken();
         return (-1);
