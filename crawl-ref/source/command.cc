@@ -417,11 +417,12 @@ static void _adjust_ability(void)
     }
 
     int selected = -1;
-    while (selected < 0)
-    {
-        msg::streams(MSGCH_PROMPT) << "Adjust which ability? (? or * to list) "
-                                   << std::endl;
+    mpr("Adjust which ability? ", MSGCH_PROMPT);
 
+    if (Options.auto_list)
+        selected = choose_ability_menu(talents);
+    else
+    {
         const int keyin = get_ch();
 
         if (keyin == '?' || keyin == '*')
@@ -443,24 +444,22 @@ static void _adjust_ability(void)
                     break;
                 }
             }
-
-            // If we can't, cancel out.
-            if (selected < 0)
-            {
-                mpr("No such ability.");
-                return;
-            }
         }
     }
 
-    msg::stream << static_cast<char>(talents[selected].hotkey)
-                << " - "
-                << ability_name(talents[selected].which)
-                << std::endl;
+    // If we couldn't find anything, cancel out.
+    if (selected < 0)
+    {
+        mpr("No such ability.");
+        return;
+    }
+
+    mprf_nocap("%c - %s", static_cast<char>(talents[selected].hotkey),
+               ability_name(talents[selected].which));
 
     const int index1 = letter_to_index(talents[selected].hotkey);
 
-    msg::streams(MSGCH_PROMPT) << "Adjust to which letter? " << std::endl;
+    mpr("Adjust to which letter?", MSGCH_PROMPT);
 
     const int keyin = get_ch();
 
@@ -483,20 +482,18 @@ static void _adjust_ability(void)
     {
         if (talents[i].hotkey == keyin)
         {
-            msg::stream << "Swapping with: "
-                        << static_cast<char>(keyin) << " - "
-                        << ability_name(talents[i].which)
-                        << std::endl;
+            mprf("Swapping with: %c - %s", static_cast<char>(keyin),
+                 ability_name(talents[i].which));
             printed_message = true;
             break;
         }
     }
 
     if (!printed_message)
-        msg::stream << "Moving to: "
-                    << static_cast<char>(keyin) << " - "
-                    << ability_name(talents[selected].which)
-                    << std::endl;
+    {
+        mprf("Moving to: %c - %s", static_cast<char>(keyin),
+             ability_name(talents[selected].which));
+    }
 
     // Swap references in the letter table.
     ability_type tmp = you.ability_letter_table[index2];
