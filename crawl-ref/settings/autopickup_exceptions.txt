@@ -32,5 +32,5 @@ ae = evil_item
 # Some items may already be excluded as bad_item, e.g. inaccuracy.
 ae = amulet of (inaccuracy|the gourmand|controlled flight|warding)
 ae = amulet of (resist .*|clarity|rage|conservation|guardian spirit|faith|stasis)
-ae = ring of (see invisible|levitation|poison resistance|hunger)
+ae = ring of (see invisible|levitation|poison resistance|teleportation)
 ae = ring of (invisibility|teleport control)
