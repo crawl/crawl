@@ -60,7 +60,7 @@ Nemelex is a strange and unpredictable trickster God, whose powers can be invoke
 %%%%
 Elyvilon
 
-Elyvilon the Healer welcomes all good souls who are prepared to help others. Those individuals can expect to gain powerful healing abilities. The Healer prefers a creed of pacifism, and helps worshippers avoid bloodshed. Elyvilon appreciates the destruction of weapons. Elyvilon does not mind if worshippers shift to Zin or the Shining One.
+Elyvilon the Healer welcomes all good souls who are prepared to help others. Those individuals can expect to gain powerful healing abilities. The Healer prefers a creed of pacifism, and helps worshippers avoid bloodshed. Elyvilon appreciates the destruction of weapons, though more pious worshippers must find and destroy unholy or evil weapons to grow in piety in this way. Elyvilon does not mind if worshippers shift to Zin or the Shining One.
 %%%%
 Lugonu
 
@@ -152,7 +152,7 @@ Followers of Cheibriados move more slowly as they gain favour, and are rewarded 
 %%%%
 Jiyva powers
 
-Jiyva's followers can request jellies, turn monsters to slime, and eventually remove their harmful mutations. As their piety grows, Jiyva will, with increasing frequency, drop jellies into the dungeon, rearrange followers' attributes to favour the attribute last chosen when gaining an experience level, and grant mutation gifts. Slimes will never harm a follower of Jiyva, and Jiyva demands the same conduct in return. Eventually, all visible slimes will join in on prayers, preventing them from moving for awhile.
+Jiyva's followers can request jellies, turn monsters to slime, and eventually remove their harmful mutations. As their piety grows, Jiyva will, with increasing frequency, drop jellies into the dungeon, rearrange followers' attributes based on their skills, armour, and burden, and grant mutation gifts. Slimes will never harm a follower of Jiyva, and Jiyva demands the same conduct in return. Eventually, all visible slimes will join in on prayers, preventing them from moving for awhile.
 %%%%
 Ashenzari powers
 
