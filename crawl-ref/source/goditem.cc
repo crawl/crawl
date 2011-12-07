@@ -601,7 +601,7 @@ conduct_type good_god_hates_item_handling(const item_def &item)
         return (DID_NOTHING);
     }
 
-    if (item_type_known(item))
+    if (item_type_known(item) || is_unrandom_artefact(item))
     {
         if (is_evil_item(item))
             return (DID_NECROMANCY);

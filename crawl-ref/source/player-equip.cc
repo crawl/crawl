@@ -52,7 +52,7 @@ void equip_item(equipment_type slot, int item_slot, bool msg)
     _equip_effect(slot, item_slot, false, msg);
     ash_check_bondage();
     if (you.equip[slot] != -1 && you.inv[you.equip[slot]].cursed())
-        ash_id_inventory();
+        god_id_inventory();
 }
 
 // Clear an equipment slot (possibly melded).
