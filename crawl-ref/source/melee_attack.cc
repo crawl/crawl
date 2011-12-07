@@ -4426,13 +4426,11 @@ void melee_attack::mons_do_eyeball_confusion()
 void melee_attack::do_spines()
 {
     const item_def *body = you.slot_item(EQ_BODY_ARMOUR, false);
-    const int mut = player_mutation_level(MUT_SPINY);
-    int evp = 0;
+    const int evp = body ? -property(*body, PARM_EVASION) : 0;
+    const int mut = form_keeps_mutations() ? player_mutation_level(MUT_SPINY)
+                                           : 0;
 
-    if (body)
-        evp = -property(*body, PARM_EVASION);
-
-    if (you.mutation[MUT_SPINY] && attacker->alive() && one_chance_in(evp + 1))
+    if (mut && attacker->alive() && one_chance_in(evp + 1))
     {
         if (test_hit(2 + 4 * mut, attacker->melee_evasion(defender)) < 0)
         {
@@ -4521,9 +4519,7 @@ void melee_attack::do_minotaur_retaliation()
         return;
     }
 
-    if (!(you.form == TRAN_NONE || you.form == TRAN_APPENDAGE
-          || you.form == TRAN_BLADE_HANDS || you.form == TRAN_STATUE
-          || you.form == TRAN_LICH))
+    if (!form_keeps_mutations())
     {
         // You are in a non-minotaur form.
         return;

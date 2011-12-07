@@ -137,6 +137,20 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
     }
 }
 
+bool form_keeps_mutations(transformation_type form)
+{
+    switch (form) {
+    case TRAN_NONE:
+    case TRAN_BLADE_HANDS:
+    case TRAN_STATUE:
+    case TRAN_LICH:
+    case TRAN_APPENDAGE:
+        return true;
+    default:
+        return false;
+    }
+}
+
 static std::set<equipment_type>
 _init_equipment_removal(transformation_type form)
 {

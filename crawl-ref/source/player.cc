@@ -1489,8 +1489,11 @@ int player_res_fire(bool calc_unid, bool temp, bool items)
         rf--;
 
     // mutations:
-    rf += player_mutation_level(MUT_HEAT_RESISTANCE);
-    rf += player_mutation_level(MUT_MOLTEN_SCALES) == 3 ? 1 : 0;
+    if (!temp || form_keeps_mutations())
+    {
+        rf += player_mutation_level(MUT_HEAT_RESISTANCE);
+        rf += player_mutation_level(MUT_MOLTEN_SCALES) == 3 ? 1 : 0;
+    }
 
     // spells:
     if (temp)
@@ -1626,9 +1629,13 @@ int player_res_cold(bool calc_unid, bool temp, bool items)
         }
 
     // mutations:
-    rc += player_mutation_level(MUT_COLD_RESISTANCE);
-    rc += player_mutation_level(MUT_ICY_BLUE_SCALES) == 3 ? 1 : 0;
-    rc += player_mutation_level(MUT_SHAGGY_FUR) == 3 ? 1 : 0;
+    if (!temp || form_keeps_mutations())
+    {
+        rc += player_mutation_level(MUT_COLD_RESISTANCE);
+        rc += player_mutation_level(MUT_ICY_BLUE_SCALES) == 3 ? 1 : 0;
+        if (you.form != TRAN_STATUE)
+            rc += player_mutation_level(MUT_SHAGGY_FUR) == 3 ? 1 : 0;
+    }
 
     if (rc < -3)
         rc = -3;
@@ -1666,7 +1673,8 @@ int player_res_acid(bool calc_unid, bool items)
     }
 
     // mutations:
-    res += std::max(0, player_mutation_level(MUT_YELLOW_SCALES) - 1);
+    if (form_keeps_mutations())
+        res += std::max(0, player_mutation_level(MUT_YELLOW_SCALES) - 1);
 
     if (res > 3)
         res = 3;
@@ -1719,8 +1727,11 @@ int player_res_electricity(bool calc_unid, bool temp, bool items)
     }
 
     // mutations:
-    re += player_mutation_level(MUT_THIN_METALLIC_SCALES) == 3 ? 1 : 0;
-    re += player_mutation_level(MUT_SHOCK_RESISTANCE);
+    if (!temp || form_keeps_mutations())
+    {
+        re += player_mutation_level(MUT_THIN_METALLIC_SCALES) == 3 ? 1 : 0;
+        re += player_mutation_level(MUT_SHOCK_RESISTANCE);
+    }
 
     if (temp)
     {
@@ -1797,8 +1808,11 @@ int player_res_poison(bool calc_unid, bool temp, bool items)
     }
 
     // mutations:
-    rp += player_mutation_level(MUT_POISON_RESISTANCE);
-    rp += player_mutation_level(MUT_SLIMY_GREEN_SCALES) == 3 ? 1 : 0;
+    if (!temp || form_keeps_mutations())
+    {
+        rp += player_mutation_level(MUT_POISON_RESISTANCE);
+        rp += player_mutation_level(MUT_SLIMY_GREEN_SCALES) == 3 ? 1 : 0;
+    }
 
     // Only thirsty vampires are naturally poison resistant.
     if (you.species == SP_VAMPIRE && you.hunger_state < HS_SATIATED)
@@ -2092,7 +2106,8 @@ int player_prot_life(bool calc_unid, bool temp, bool items)
     }
 
     // undead/demonic power
-    pl += player_mutation_level(MUT_NEGATIVE_ENERGY_RESISTANCE);
+    if (!temp || form_keeps_mutations())
+        pl += player_mutation_level(MUT_NEGATIVE_ENERGY_RESISTANCE);
 
     pl = std::min(3, pl);
 
@@ -2358,11 +2373,15 @@ int player_evasion_bonuses(ev_ignore_type evit)
     evbonus += scan_artefacts(ARTP_EVASION);
 
     // mutations
-    if (player_mutation_level(MUT_ICY_BLUE_SCALES) > 1)
-        evbonus--;
-    if (player_mutation_level(MUT_MOLTEN_SCALES) > 1)
-        evbonus--;
-    evbonus += std::max(0, player_mutation_level(MUT_GELATINOUS_BODY) - 1);
+    if (form_keeps_mutations())
+    {
+        if (player_mutation_level(MUT_ICY_BLUE_SCALES) > 1)
+            evbonus--;
+        if (player_mutation_level(MUT_MOLTEN_SCALES) > 1)
+            evbonus--;
+        if (you.form != TRAN_STATUE)
+            evbonus += std::max(0, player_mutation_level(MUT_GELATINOUS_BODY) - 1);
+    }
 
     // transformation penalties/bonuses not covered by size alone:
     if (you.form == TRAN_STATUE)
@@ -2598,7 +2617,13 @@ int player_shield_class(void)
         shield += you.skill(SK_SHIELDS, 38) + std::min(you.skill(SK_SHIELDS, 38), 3 * 38);
 
     // mutations
-    shield += player_mutation_level(MUT_LARGE_BONE_PLATES) > 0 ? 100 + player_mutation_level(MUT_LARGE_BONE_PLATES) * 100 : 0;      // +2, +3, +4
+    if (form_keeps_mutations())
+    {
+        // +2, +3, +4
+        shield += (player_mutation_level(MUT_LARGE_BONE_PLATES) > 0
+                   ? 100 + player_mutation_level(MUT_LARGE_BONE_PLATES) * 100
+                   : 0);
+    }
 
     return (shield + stat + 50) / 100;
 }
@@ -3639,7 +3664,7 @@ int check_stealth(void)
             stealth += 20;
     }
 
-    else if (player_mutation_level(MUT_HOOVES) > 0)
+    else if (form_keeps_mutations() && player_mutation_level(MUT_HOOVES) > 0)
         stealth -= 5 + 5 * player_mutation_level(MUT_HOOVES);
 
     else if (you.species == SP_FELID && !you.form)
@@ -3657,11 +3682,14 @@ int check_stealth(void)
         stealth -= 50 + current_level_ambient_noise();
 
     // Mutations.
-    stealth += 25 * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
     stealth += 40 * player_mutation_level(MUT_NIGHTSTALKER);
-    stealth += 40 * player_mutation_level(MUT_CAMOUFLAGE);
-    if (player_mutation_level(MUT_TRANSLUCENT_SKIN) > 1)
-        stealth += 20 * (player_mutation_level(MUT_TRANSLUCENT_SKIN) - 1);
+    if (form_keeps_mutations())
+    {
+        stealth += 25 * player_mutation_level(MUT_THIN_SKELETAL_STRUCTURE);
+        stealth += 40 * player_mutation_level(MUT_CAMOUFLAGE);
+        if (player_mutation_level(MUT_TRANSLUCENT_SKIN) > 1)
+            stealth += 20 * (player_mutation_level(MUT_TRANSLUCENT_SKIN) - 1);
+    }
 
     // it's easier to be stealthy when there's a lot of background noise
     stealth += 2 * current_level_ambient_noise();
@@ -6057,18 +6085,24 @@ int player::armour_class() const
     }
 
     // Scale mutations, etc.
-    AC += player_mutation_level(MUT_TOUGH_SKIN) ? player_mutation_level(MUT_TOUGH_SKIN) * 100 : 0;                          // +1, +2, +3
-    AC += player_mutation_level(MUT_SHAGGY_FUR) ? player_mutation_level(MUT_SHAGGY_FUR) * 100 : 0;                          // +1, +2, +3
-    AC += player_mutation_level(MUT_IRIDESCENT_SCALES) ? 200 + player_mutation_level(MUT_IRIDESCENT_SCALES) * 200 : 0;      // +4, +6, +8
-    AC += player_mutation_level(MUT_LARGE_BONE_PLATES) ? 100 + player_mutation_level(MUT_LARGE_BONE_PLATES) * 100 : 0;      // +2, +3, +4
-    AC += player_mutation_level(MUT_ROUGH_BLACK_SCALES) ? 100 + player_mutation_level(MUT_ROUGH_BLACK_SCALES) * 300 : 0;    // +4, +7, +10
-    AC += player_mutation_level(MUT_RUGGED_BROWN_SCALES) ? 200 : 0;                                                         // +2, +2, +2
-    AC += player_mutation_level(MUT_ICY_BLUE_SCALES) ? player_mutation_level(MUT_ICY_BLUE_SCALES) * 100 : 0;                // +1, +2, +3
-    AC += player_mutation_level(MUT_MOLTEN_SCALES) ? player_mutation_level(MUT_MOLTEN_SCALES) * 100 : 0;                    // +1, +2, +3
-    AC += player_mutation_level(MUT_SLIMY_GREEN_SCALES) ? player_mutation_level(MUT_SLIMY_GREEN_SCALES) * 100 : 0;          // +1, +2, +3
-    AC += player_mutation_level(MUT_THIN_METALLIC_SCALES) ? player_mutation_level(MUT_THIN_METALLIC_SCALES) * 100 : 0;      // +1, +2, +3
-    AC += player_mutation_level(MUT_YELLOW_SCALES) ? player_mutation_level(MUT_YELLOW_SCALES) * 100 : 0;                    // +1, +2, +3
-    AC += player_mutation_level(MUT_GELATINOUS_BODY) ? (player_mutation_level(MUT_GELATINOUS_BODY) == 3 ? 200 : 100) : 0;   // +1, +1, +2
+    if (form_keeps_mutations())
+    {
+        if (you.form != TRAN_STATUE)
+        {
+            AC += player_mutation_level(MUT_TOUGH_SKIN) ? player_mutation_level(MUT_TOUGH_SKIN) * 100 : 0;                        // +1, +2, +3
+            AC += player_mutation_level(MUT_SHAGGY_FUR) ? player_mutation_level(MUT_SHAGGY_FUR) * 100 : 0;                        // +1, +2, +3
+            AC += player_mutation_level(MUT_GELATINOUS_BODY) ? (player_mutation_level(MUT_GELATINOUS_BODY) == 3 ? 200 : 100) : 0; // +1, +1, +2
+        }
+        AC += player_mutation_level(MUT_IRIDESCENT_SCALES) ? 200 + player_mutation_level(MUT_IRIDESCENT_SCALES) * 200 : 0;        // +4, +6, +8
+        AC += player_mutation_level(MUT_LARGE_BONE_PLATES) ? 100 + player_mutation_level(MUT_LARGE_BONE_PLATES) * 100 : 0;        // +2, +3, +4
+        AC += player_mutation_level(MUT_ROUGH_BLACK_SCALES) ? 100 + player_mutation_level(MUT_ROUGH_BLACK_SCALES) * 300 : 0;      // +4, +7, +10
+        AC += player_mutation_level(MUT_RUGGED_BROWN_SCALES) ? 200 : 0;                                                           // +2, +2, +2
+        AC += player_mutation_level(MUT_ICY_BLUE_SCALES) ? player_mutation_level(MUT_ICY_BLUE_SCALES) * 100 : 0;                  // +1, +2, +3
+        AC += player_mutation_level(MUT_MOLTEN_SCALES) ? player_mutation_level(MUT_MOLTEN_SCALES) * 100 : 0;                      // +1, +2, +3
+        AC += player_mutation_level(MUT_SLIMY_GREEN_SCALES) ? player_mutation_level(MUT_SLIMY_GREEN_SCALES) * 100 : 0;            // +1, +2, +3
+        AC += player_mutation_level(MUT_THIN_METALLIC_SCALES) ? player_mutation_level(MUT_THIN_METALLIC_SCALES) * 100 : 0;        // +1, +2, +3
+        AC += player_mutation_level(MUT_YELLOW_SCALES) ? player_mutation_level(MUT_YELLOW_SCALES) * 100 : 0;                      // +1, +2, +3
+    }
     return (AC / 100);
 }
  /**
@@ -6191,8 +6225,8 @@ bool player::is_unbreathing() const
 
     if (petrified())
         return (true);
-
-    return (player_mutation_level(MUT_UNBREATHING));
+ 
+    return (form_keeps_mutations() && player_mutation_level(MUT_UNBREATHING));
 }
 
 // This is a stub. Makes checking for silver damage a little cleaner.
@@ -6703,14 +6737,9 @@ int player::has_claws(bool allow_tran) const
         if (form == TRAN_DRAGON)
             return (3);
 
-        // transformations other than these will override claws
-        if (form != TRAN_NONE
-            && form != TRAN_APPENDAGE
-            && form != TRAN_STATUE
-            && form != TRAN_LICH)
-        {
+        // most transformations will override claws
+        if (!form_keeps_mutations() || form == TRAN_BLADE_HANDS)
             return (0);
-        }
     }
 
     if (const int c = species_has_claws(you.species))
@@ -6728,15 +6757,9 @@ int player::has_talons(bool allow_tran) const
 {
     if (allow_tran)
     {
-        // transformations other than these will override talons
-        if (form != TRAN_NONE
-            && form != TRAN_APPENDAGE
-            && form != TRAN_BLADE_HANDS
-            && form != TRAN_STATUE
-            && form != TRAN_LICH)
-        {
+        // most transformations will override talons
+        if (!form_keeps_mutations())
             return (0);
-        }
     }
 
     // XXX: Do merfolk in water belong under allow_tran?
@@ -6759,15 +6782,9 @@ int player::has_fangs(bool allow_tran) const
         if (form == TRAN_DRAGON)
             return (3);
 
-        // transformations other than these will override fangs
-        if (form != TRAN_NONE
-            && form != TRAN_APPENDAGE
-            && form != TRAN_BLADE_HANDS
-            && form != TRAN_STATUE
-            && form != TRAN_LICH)
-        {
+        // most transformations will override fangs
+        if (!form_keeps_mutations())
             return (0);
-        }
     }
 
     return (player_mutation_level(MUT_FANGS));
@@ -6790,15 +6807,9 @@ int player::has_tail(bool allow_tran) const
         if (form == TRAN_DRAGON)
             return (1);
 
-        // transformations other than these will override a tail
-        if (form != TRAN_NONE
-            && form != TRAN_APPENDAGE
-            && form != TRAN_BLADE_HANDS
-            && form != TRAN_STATUE
-            && form != TRAN_LICH)
-        {
+        // most transformations will override a tail
+        if (!form_keeps_mutations())
             return (0);
-        }
     }
 
     // XXX: Do merfolk in water belong under allow_tran?
@@ -6845,15 +6856,9 @@ int player::has_pseudopods(bool allow_tran) const
 {
     if (allow_tran)
     {
-        // transformations other than these will override pseudopods
-        if (form != TRAN_NONE
-            && form != TRAN_APPENDAGE
-            && form != TRAN_BLADE_HANDS
-            && form != TRAN_STATUE
-            && form != TRAN_LICH)
-        {
+        // most transformations will override pseudopods
+        if (!form_keeps_mutations())
             return (0);
-        }
     }
 
     return (player_mutation_level(MUT_PSEUDOPODS));
@@ -6868,14 +6873,9 @@ int player::has_tentacles(bool allow_tran) const
 {
     if (allow_tran)
     {
-        if (form != TRAN_NONE
-            && form != TRAN_APPENDAGE
-            && form != TRAN_BLADE_HANDS
-            && form != TRAN_STATUE
-            && form != TRAN_LICH)
-        {
+        // most transformations will override tentacles
+        if (!form_keeps_mutations())
             return (0);
-        }
     }
 
     return (player_mutation_level(MUT_TENTACLES));
