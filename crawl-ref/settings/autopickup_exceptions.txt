@@ -37,3 +37,7 @@ ae = amulet of (resist .*|clarity|rage|conservation|guardian spirit|faith|stasis
 # pick up the second one by hand.
 ae = ring of (see invisible|levitation|poison resistance|teleportation)
 ae = ring of (invisibility|teleport control)
+: if you.race() ~= "Ogre" and you.race() ~= "Troll"
+:    and you.race() ~= "Centaur" and you.race() ~= "Octopode" then
+ae = ring of sustenance
+: end
