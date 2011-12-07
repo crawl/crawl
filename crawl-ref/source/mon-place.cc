@@ -87,9 +87,6 @@ static monster_type _resolve_monster_type(monster_type mon_type,
 static monster_type _band_member(band_type band, int power);
 static band_type _choose_band(int mon_type, int power, int &band_size,
                               bool& natural_leader);
-// static int _place_monster_aux(int mon_type, beh_type behaviour, int target,
-//                               int px, int py, int power, int extra,
-//                               bool first_band_member, int dur = 0);
 
 static int _place_monster_aux(const mgen_data &mg, bool first_band_member,
                               bool force_pos = false, bool dont_place = false);
@@ -3394,15 +3391,6 @@ bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
     // XXX: A lot of hacks that could be avoided by passing the
     //      monster generation data through.
 
-    // Assume all player summoning originates from player x,y.
-    // XXX: no longer true with Haunt.
-    bool playerSummon = (where == you.pos());
-    bool monsterSummon = !playerSummon && actor_at(where);
-
-    // Require LOS and no transparent walls, except for
-    // summoning monsters.
-    los_type los = monsterSummon ? LOS_DEFAULT : LOS_NO_TRANS;
-
     int good_count = 0;
 
     for (radius_iterator ri(where, radius, C_ROUND, NULL, !allow_centre);
@@ -3413,7 +3401,7 @@ bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
         if (actor_at(*ri))
             continue;
 
-        if (!cell_see_cell(where, *ri, los))
+        if (!cell_see_cell(where, *ri, LOS_NO_TRANS))
             continue;
 
         success =
