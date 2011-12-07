@@ -572,7 +572,7 @@ void do_curse_item(item_def &item, bool quiet)
             }
 
             ash_check_bondage();
-            ash_id_inventory();
+            god_id_inventory();
         }
 
         xom_is_stimulated(amusement);
