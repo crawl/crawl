@@ -5235,8 +5235,8 @@ void place_spec_shop(int level_number,
                 && mitm[orb].base_type != OBJ_GOLD
                 && (env.shop[i].type != SHOP_GENERAL_ANTIQUE
                     || (mitm[orb].base_type != OBJ_MISSILES
-                        && mitm[orb].base_type != OBJ_FOOD
-                        && spec->items.empty())))
+                        && mitm[orb].base_type != OBJ_FOOD)
+                    || !spec->items.empty()))
             {
                 break;
             }
