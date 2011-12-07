@@ -643,8 +643,7 @@ static void _give_player_experience(int experience, killer_type killer,
         return;
 
     unsigned int exp_gain = 0;
-    unsigned int avail_gain = 0;
-    gain_exp(experience, &exp_gain, &avail_gain);
+    gain_exp(experience, &exp_gain);
 
     kill_category kc =
             (killer == KILL_YOU || killer == KILL_YOU_MISSILE) ? KC_YOU :
@@ -655,7 +654,6 @@ static void _give_player_experience(int experience, killer_type killer,
 
     delta.mon_kill_num[kc]++;
     delta.mon_kill_exp       += exp_gain;
-    delta.mon_kill_exp_avail += avail_gain;
 
     you.global_info += delta;
     you.global_info.assert_validity();
