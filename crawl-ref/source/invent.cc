@@ -1753,7 +1753,8 @@ int prompt_invent_item(const char *prompt,
 {
     if (!any_items_to_select(type_expect, false, excluded_slot)
         && type_expect == OSEL_THROWABLE
-        && oper == OPER_FIRE && mtype == MT_INVLIST)
+        && (oper == OPER_FIRE || oper == OPER_QUIVER)
+        && mtype == MT_INVLIST)
     {
         type_expect = OSEL_ANY;
     }
