@@ -2787,8 +2787,7 @@ int get_exp_progress()
     return ((you.experience - current) * 100 / (next - current));
 }
 
-void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
-              unsigned int* actual_avail_gain)
+void gain_exp(unsigned int exp_gained, unsigned int* actual_gain)
 {
     if (crawl_state.game_is_arena())
         return;
@@ -2806,8 +2805,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
     if (you.penance[GOD_ASHENZARI])
         ash_reduce_penance(exp_gained);
 
-    const unsigned int  old_exp   = you.experience;
-    const int           old_avail = you.exp_available;
+    const unsigned int old_exp = you.experience;
 
     dprf("gain_exp: %d", exp_gained);
 
@@ -2842,6 +2840,7 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
 
     if (you.duration[DUR_SAGE])
     {
+        const int old_avail = you.exp_available;
         // Bonus skill training from Sage.
         you.exp_available =
             (exp_gained * you.sage_bonus_degree) / 100 + exp_gained / 2;
@@ -2862,9 +2861,6 @@ void gain_exp(unsigned int exp_gained, unsigned int* actual_gain,
 
     if (actual_gain != NULL)
         *actual_gain = you.experience - old_exp;
-
-    if (actual_avail_gain != NULL)
-        *actual_avail_gain = you.exp_available - old_avail;
 }
 
 static void _draconian_scale_colour_message()

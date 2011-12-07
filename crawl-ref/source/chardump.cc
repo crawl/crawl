@@ -1035,7 +1035,7 @@ static std::string _sdump_kills_place_info(PlaceInfo place_info,
     if (total_kills == 0)
         return "";
 
-    float a, b, c, d, e, f, g;
+    float a, b, c, d, e, f;
 
     a = TO_PERCENT(total_kills, global_total_kills);
     b = TO_PERCENT(place_info.mon_kill_num[KC_YOU],
@@ -1046,16 +1046,13 @@ static std::string _sdump_kills_place_info(PlaceInfo place_info,
                    you.global_info.mon_kill_num[KC_OTHER]);
     e = TO_PERCENT(place_info.mon_kill_exp,
                    you.global_info.mon_kill_exp);
-    f = TO_PERCENT(place_info.mon_kill_exp_avail,
-                   you.global_info.mon_kill_exp_avail);
 
-    g = std::max<float>(place_info.mon_kill_exp, place_info.mon_kill_exp_avail)
-        / place_info.levels_seen;
+    f = float(place_info.mon_kill_exp) / place_info.levels_seen;
 
     out =
         make_stringf("%14s | %5.1f | %5.1f | %5.1f | %5.1f | %5.1f |"
-                     " %5.1f | %13.1f\n",
-                     name.c_str(), a, b, c , d, e, f, g);
+                     " %13.1f\n",
+                     name.c_str(), a, b, c , d, e, f);
 
     out = replace_all(out, " nan ", " N/A ");
 
@@ -1080,20 +1077,18 @@ static void _sdump_kills_by_place(dump_params &par)
     "     friends in the entire game.\n"
     " D = Other kills in this place as a percentage of other kills in the\n"
     "     entire game.\n"
-    " E = Character level experience gained in this place as a percentage of\n"
-    "     character level experience gained in the entire game.\n"
-    " F = Skills experience gained in this place as a percentage of skills\n"
-    "     experience gained in the entire game.\n"
-    " G = Experience gained in this place divided by the number of levels of\n"
+    " E = Experience gained in this place as a percentage of experience\n"
+    "     gained in the entire game.\n"
+    " F = Experience gained in this place divided by the number of levels of\n"
     "     this place that you have seen.\n\n";
 
     header += "               ";
-    header += "    A       B       C       D       E       F          G\n";
+    header += "    A       B       C       D       E               F\n";
     header += "               ";
-    header += "+-------+-------+-------+-------+-------+-------+--------------\n";
+    header += "+-------+-------+-------+-------+-------+----------------------\n";
 
     std::string footer = "               ";
-    footer += "+-------+-------+-------+-------+-------+-------+--------------\n";
+    footer += "+-------+-------+-------+-------+-------+----------------------\n";
 
     result += _sdump_kills_place_info(you.global_info, "Total");
 

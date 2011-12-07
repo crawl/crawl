@@ -1400,7 +1400,9 @@ static void marshallPlaceInfo(writer &th, PlaceInfo place_info)
     marshallInt(th, place_info.levels_seen);
 
     marshallInt(th, place_info.mon_kill_exp);
-    marshallInt(th, place_info.mon_kill_exp_avail);
+#if TAG_MAJOR_VERSION == 32
+    marshallInt(th, 0); // was: place_info.mon_kill_exp_avail
+#endif
 
     for (int i = 0; i < KC_NCATEGORIES; i++)
         marshallInt(th, place_info.mon_kill_num[i]);
@@ -2497,7 +2499,9 @@ static PlaceInfo unmarshallPlaceInfo(reader &th)
     place_info.levels_seen = unmarshallInt(th);
 
     place_info.mon_kill_exp       = unmarshallInt(th);
-    place_info.mon_kill_exp_avail = unmarshallInt(th);
+#if TAG_MAJOR_VERSION == 32
+    (void) unmarshallInt(th); // was: place_info.mon_kill_exp_avail
+#endif
 
     for (int i = 0; i < KC_NCATEGORIES; i++)
         place_info.mon_kill_num[i] = unmarshallInt(th);
