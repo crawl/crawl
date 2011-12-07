@@ -2769,12 +2769,12 @@ bool is_bad_item(const item_def &item, bool temp)
 // worthwhile.
 bool is_dangerous_item(const item_def &item, bool temp)
 {
+    if (!item_type_known(item))
+        return (false);
+
     switch (item.base_type)
     {
     case OBJ_SCROLLS:
-        if (!item_type_known(item))
-            return (false);
-
         switch (item.sub_type)
         {
         case SCR_IMMOLATION:
@@ -2790,9 +2790,6 @@ bool is_dangerous_item(const item_def &item, bool temp)
         }
 
     case OBJ_POTIONS:
-        if (!item_type_known(item))
-            return (false);
-
         switch (item.sub_type)
         {
         case POT_MUTATION:
