@@ -1677,9 +1677,16 @@ bool check_warning_inscriptions(const item_def& item,
         if (oper == OPER_DESTROY)
             return (false);
 
-        if (oper == OPER_WEAR)
+        if (oper == OPER_WIELD)
         {
-            if (item.base_type != OBJ_ARMOUR)
+            // Can't use can_wield in item_use.cc because it wants
+            // a non-const item_def.
+            if (!you.can_wield(item))
+                return (true);
+        }
+        else if (oper == OPER_WEAR)
+        {
+            if (!can_wear_armour(item, false, false))
                 return (true);
 
             // Don't ask if item already worn.
