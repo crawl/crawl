@@ -617,6 +617,8 @@ static void _do_wizard_command(int wiz_command, bool silent_fail)
     case CONTROL('V'): wizard_toggle_xray_vision(); break;
     case CONTROL('X'): debug_xom_effects(); break;
 
+    case CONTROL('C'): die("Intentional crash");
+
     case 'O': debug_test_explore();                  break;
     case 'S': wizard_set_skill_level();              break;
     case 'A': wizard_set_all_skills();               break;
