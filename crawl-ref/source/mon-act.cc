@@ -2771,13 +2771,13 @@ static bool _monster_eat_food(monster* mons, bool nearby)
                 return false;
 
             if (!nearby)
-                mprf(MSGCH_SOUND, "You hear a distant popping sound.");
+                mpr("You hear a distant popping sound.", MSGCH_SOUND);
             else
                 mprf("%s devours %s.", mons->name(DESC_THE).c_str(),
                     quant_name(*si, 1, DESC_THE).c_str());
             dec_mitm_item_quantity(si.link(), 1);
             if (!nearby)
-                mprf(MSGCH_SOUND, "You hear a distant popping sound.");
+                mpr("You hear a distant popping sound.", MSGCH_SOUND);
             else
                 mprf("%s devours %s.", mons->name(DESC_THE).c_str(),
                     quant_name(*si, 1, DESC_THE).c_str());
