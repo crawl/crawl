@@ -74,22 +74,24 @@ MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
          great orb of eyes / shining eye
-KPROP:   1Omn = no_rtele_into
+KPROP:   1Om = no_rtele_into
 SHUFFLE: 123x
 SUBST:   1=1..., 2=2., x=.
+KFEAT:   m = iron_grate
 : ziggurat_portal(_G)
 MAP
     ...
    ..m..
   ..mmm..
  ..mm1mm..
-..mm1O1nn..
+..mm1O1mm..
  ..mm1mm..
   ..mmm..
    ..m..
     ...
 ENDMAP
 
+# XXX: Undiggable glass has been converted to grates.
 NAME:    enter_ziggurat_d
 CHANCE:  5%
 TAGS:    chance_zig extra allow_dup luniq_zig
@@ -97,10 +99,11 @@ MONS:    lich / ancient lich
 MONS:    angel / daeva
 MONS:    eye of draining / eye of devastation / giant eyeball / \
          great orb of eyes / shining eye
-KPROP:   1Omn; = no_rtele_into
+KPROP:   1On; = no_rtele_into
 SHUFFLE: 123x
 SUBST:   1=1..., 2=2., x=.
 SUBST:   ;=.
+KFEAT:   n = iron_grate
 : ziggurat_portal(_G)
 MAP
     ...
@@ -140,7 +143,7 @@ NAME:    enter_shallow_ziggurat_c
 CHANCE:  1%
 TAGS:    chance_shallow_zig extra luniq_zig no_trap_gen
 MONS:    angel / nothing w:20
-KPROP:   1Omn; = no_rtele_into
+KPROP:   1Om; = no_rtele_into
 SUBST:   ;=.
 : ziggurat_portal(_G)
 MAP
@@ -159,7 +162,7 @@ NAME:    enter_shallow_ziggurat_d
 CHANCE:  1%
 TAGS:    chance_shallow_zig extra luniq_zig no_trap_gen
 MONS:    angel / nothing w:20
-KPROP:   1Omn; = no_rtele_into
+KPROP:   1On; = no_rtele_into
 SUBST:   ;=.
 : ziggurat_portal(_G)
 MAP
@@ -230,19 +233,21 @@ MONS:    eye of draining / eye of devastation / giant eyeball / \
          great orb of eyes / shining eye
 SHUFFLE: 123
 SUBST:   1=1, 2=22.
+KFEAT:   m = iron_grate
 : ziggurat_portal(_G)
 MAP
     ...
    ..m..
   ..mmm..
  ..mm1mm..
-..mm1O1nn..
+..mm1O1mm..
  ..mm1mm..
   ..mmm..
    ..m..
     ...
 ENDMAP
 
+# XXX: Undiggable glass has been converted to grates.
 NAME:    enter_ziggurat_pan_d
 CHANCE:  8%
 TAGS:    chance_pan_zig extra allow_dup
@@ -252,6 +257,7 @@ MONS:    eye of draining / eye of devastation / giant eyeball / \
          great orb of eyes / shining eye
 SHUFFLE: 123
 SUBST:   1=1.., 2=2., 3=33.
+KFEAT:   n = iron_grate
 : ziggurat_portal(_G)
 MAP
     ...
@@ -318,6 +324,7 @@ wwwww
  www
 ENDMAP
 
+# XXX: Undiggable glass has been converted to grates.
 NAME: ziggurat_pillar_centre_c
 TAGS: ziggurat_pillar centered
 # This is evil. Monster sets are: summoners (1), evil eyes (2), harmless (3).
@@ -332,8 +339,8 @@ SUBST: 1 = 12222
 SUBST: 1 = 12
 : elseif zig().depth > 8 and crawl.coinflip() then
 SUBST: 3 = 12
-SUBST: n = m
 : end
+KFEAT: n = iron_grate
 MAP
 nnn
 n3n

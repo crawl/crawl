@@ -169,7 +169,6 @@ KMONS:   S = ghoul ; nothing
 KMONS:   T = vampire spells:. ; nothing
 KMONS:   U = demigod ; nothing
 KMONS:   V = octopode ; nothing
-KFEAT:   m = iron_grate
 MAP
 ccccccc
 c[.{.(c
@@ -863,7 +862,6 @@ KMONS:  A = gnome ; nothing
 KMONS:  B = elf col:darkgrey name:grey_elf n_rpl n_spe n_des ; nothing
 KMONS:  C = dwarf name:hill_dwarf n_rpl n_spe n_des ; nothing
 KMONS:  D = dwarf name:mountain_dwarf n_rpl n_spe n_des ; nothing
-KFEAT:  m = iron_grate
 FTILE:  .m+T = floor_vault
 TILE:   X = wall_vines
 COLOUR: .= lightgrey

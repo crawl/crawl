@@ -720,6 +720,7 @@ MONS:   vampire
 ITEM:   any useful good_item w:10 / any
 ITEM:   any useful jewellery good_item / any useful good_item
 ITEM:   acquire weapon / acquire armour / any useful good_item
+KFEAT:  m = iron_grate
 : trove.setup_features(_G)
 epilogue{{
 trove.milestone(_G)

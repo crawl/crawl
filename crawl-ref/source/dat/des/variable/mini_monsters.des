@@ -1247,6 +1247,7 @@ xxxxxx
 ENDMAP
 
 # The Horrible House of Horrid Horrors (by Mu.)
+# XXX: Undiggable glass has been converted to statues.
 NAME:   horrible_house_mu
 DEPTH:  D:16-25, Vault
 KMONS:  g = boggart
@@ -1264,7 +1265,7 @@ MAP
 ..c..$$$.....$$$..c..
 ..c.g....lVl....g.c..
 ..c...llll.llll...c..
-..c...lnll.llnl...c..
+..c...lGll.llGl...c..
 ..c.hlllc.8.clllh.c..
 ..c...llcccccll...c..
 ..c...lllllllll...c..

@@ -441,6 +441,7 @@ NAME:  evilmike_abyss_rune_tso_outpost
 TAGS:  abyss_rune allow_dup no_monster_gen
 KITEM: O = abyssal rune of Zot
 KFEAT: _ = altar_the_shining_one
+KFEAT: m = iron_grate
 MONS:  angel, daeva, ophan
 MAP
 .......................

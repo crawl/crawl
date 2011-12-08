@@ -821,6 +821,7 @@ MONS:   moth of wrath, rat / worm w:5
 ITEM:   any weapon
 NSUBST: M = 4:d / *:.
 SUBST:  + = +....
+KFEAT:  o = iron_grate
 MAP
       xxxxxxx
      xxxMMMxxx
