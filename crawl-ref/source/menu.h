@@ -371,6 +371,7 @@ public:
 #ifdef USE_TILE_WEB
     void webtiles_write_menu() const;
     void webtiles_scroll(int first);
+    void webtiles_handle_item_request(int start, int end);
 #endif
 protected:
     MenuEntry *title;

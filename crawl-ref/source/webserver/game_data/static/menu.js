@@ -1,6 +1,8 @@
 define(["jquery", "comm", "client", "./enums",
         "./dungeon_renderer", "./cell_renderer"],
 function ($, comm, client, enums, dungeon_renderer, cr) {
+    var chunk_size = 50;
+
     function item_selectable(item)
     {
         return item.level == 2 && item.hotkeys && item.hotkeys.length;
@@ -20,11 +22,16 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
     {
         elem.html(formatted_string_to_html(item_text(item)));
         var col = item_colour(item);
-        // Remove old color
-        elem.attr("class", function (i, cls) {
-            return cls && cls.replace(/\bfg\S+/g, "");
-        });
+        elem.removeClass();
+        elem.addClass("level" + item.level);
         elem.addClass("fg" + col);
+
+        if (item_selectable(item))
+        {
+            elem.addClass("selectable");
+            elem.off("click.menu_item");
+            elem.on("click.menu_item", item_click_handler);
+        }
 
         if (item.tiles && item.tiles.length > 0 && !dungeon_renderer.glyph_mode)
         {
@@ -143,31 +150,16 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
         var items_inner = $("<div id='menu_contents_inner'>");
         items.append(items_inner);
         var container = $("<ol>");
+
         items_inner.append(container);
-        for (var i = 0; i < menu.items.length; ++i)
-        {
-            var item = menu.items[i];
-            if (typeof item === "string")
-            {
-                item = { level: 2, text: item };
-                menu.items[i] = item;
-            }
-            var elem = $("<li>");
-            elem.data("item", item);
-            elem.addClass("level" + item.level);
-            item.elem = elem;
-            set_item_contents(item, elem);
-
-            if (item_selectable(item))
-            {
-                elem.addClass("selectable");
-                elem.click(item_click_handler);
-            }
-
-            container.append(elem);
-        }
-
-        items_inner.append("<br>");
+        var chunk = menu.items;
+        menu.items = { length: menu.total_items };
+        menu.first_present = 999999;
+        menu.last_present = -999999;
+        prepare_item_range(menu.chunk_start,
+                           menu.chunk_start + chunk.length - 1,
+                           true, container);
+        update_item_range(menu.chunk_start, chunk);
 
         menu_div.append(items);
 
@@ -183,10 +175,34 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
         update_visible_indices();
         if (menu.flags & enums.menu_flag.START_AT_END)
         {
-            scroll_to_end();
+            scroll_bottom_to_item(menu.items.length - 1, true);
         }
         // Hide -more- if at the bottom
         menu_scroll_handler();
+    }
+
+    function update_item_range(chunk_start, items_list)
+    {
+        var menu = get_menu();
+        for (var i = 0; i < items_list.length; ++i)
+        {
+            var real_index = i + chunk_start;
+            var item = menu.items[real_index];
+            if (!item) continue;
+            var new_item = items_list[i];
+            if (typeof new_item === "string")
+            {
+                new_item = {
+                    type: 2,
+                    text: new_item
+                };
+            }
+            $.extend(item, new_item);
+            if (new_item.colour === undefined)
+                delete item.colour;
+
+            set_item_contents(item, item.elem);
+        }
     }
 
     function open_menu(data)
@@ -229,17 +245,15 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
         client.center_element($("#menu"));
     }
 
-    function update_menu_item(data)
+    function update_menu_items(data)
     {
         log(data);
 
-        var menu = get_menu(), item = menu.items[data.i];
-        if (!item) return;
-        $.extend(item, data);
-        if (data.colour == undefined)
-            delete item.colour;
+        prepare_item_range(data.chunk_start,
+                           data.chunk_start + data.items.length - 1,
+                           true);
 
-        set_item_contents(item, item.elem);
+        update_item_range(data.chunk_start, data.items);
 
         handle_size_change();
     }
@@ -271,12 +285,6 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
         menu_stack = data.menus;
         if (get_menu())
             display_menu();
-    }
-
-    function scroll_to_end()
-    {
-        var menu = get_menu();
-        scroll_bottom_to_item(menu.items.length - 1);
     }
 
     function page_down()
@@ -318,6 +326,13 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
     function scroll_to_item(item_or_index, was_server_initiated)
     {
         var menu = get_menu();
+
+        var index = (item_or_index.elem ?
+                     item_or_index.index : item_or_index);
+        prepare_item_range(index, index + chunk_size - 1);
+
+        log("Scrolling to " + index);
+
         var item = (item_or_index.elem ?
                     item_or_index : menu.items[item_or_index]);
         var contents = $("#menu_contents");
@@ -325,6 +340,8 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
 
         contents.scrollTop(item.elem.offset().top - baseline);
 
+        menu.anchor_last = false;
+        menu.first_visible = index;
         if (!was_server_initiated)
             menu.server_scroll = false;
     }
@@ -332,6 +349,13 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
     function scroll_bottom_to_item(item_or_index, was_server_initiated)
     {
         var menu = get_menu();
+
+        var index = (item_or_index.elem ?
+                     item_or_index.index : item_or_index);
+        prepare_item_range(index - chunk_size + 1, index);
+
+        log("Scrolling bottom to " + index);
+
         var item = (item_or_index.elem ?
                     item_or_index : menu.items[item_or_index]);
         var contents = $("#menu_contents");
@@ -340,6 +364,8 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
         contents.scrollTop(item.elem.offset().top + item.elem.height()
                            - baseline - contents.innerHeight());
 
+        menu.anchor_last = true;
+        menu.last_visible = index;
         if (!was_server_initiated)
             menu.server_scroll = false;
     }
@@ -351,23 +377,26 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
         var top = contents.offset().top;
         var bottom = top + contents.innerHeight();
         menu.first_visible = null;
-        for (var i = 0; i < menu.items.length; ++i)
+        menu.last_visible = null;
+        for (var i in menu.items)
         {
+            if (!menu.items.hasOwnProperty(i) || i == "length") continue;
             var item = menu.items[i];
             var item_top = item.elem.offset().top;
-            if (item_top >= top && menu.first_visible === null)
+            var item_bottom = item_top + item.elem.outerHeight();
+            if (item_top <= top && item_bottom >= top)
             {
-                menu.first_visible = i;
+                menu.first_visible = Number(i) + 1;
+                if (menu.last_visible !== null) return;
             }
-            if (item_top + item.elem.height() >
-                bottom)
+            if (item_top <= bottom && item_bottom >= bottom)
             {
-                menu.last_visible = i - 1;
-                return;
+                menu.last_visible = Number(i) - 1;
+                if (menu.first_visible !== null) return;
             }
         }
-        menu.first_visible = menu.first_visible || 0;
-        menu.last_visible = menu.items.length - 1;
+        menu.first_visible = menu.first_visible || menu.first_present;
+        menu.last_visible = menu.last_visible || menu.last_present;
     }
 
     var update_server_scroll_timeout = null;
@@ -399,6 +428,96 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
         update_server_scroll_timeout = setTimeout(update_server_scroll, 500);
     }
 
+    function prepare_item_range(start, end, no_request, container)
+    {
+        // Guarantees that the given (inclusive) range of item indices
+        // exists; requests them from the server if necessary, except
+        // if no_request is true.
+
+        var menu = get_menu();
+
+        if (start < 0) start = 0;
+        if (end >= menu.total_items)
+            end = menu.total_items - 1;
+
+        if (start >= menu.total_items || end < 0)
+            return;
+
+        // Find out which indices are missing.  This assumes that all
+        // missing items are in a continuous range, which is the case
+        // as long as the only ways to jump farther than chunk_size are
+        // home and end.
+        while (menu.items[start] !== undefined && start <= end)
+            start++;
+        if (start > end) return;
+        while (menu.items[end] !== undefined && start <= end)
+            end--;
+
+        // Extend to chunk_size, but only if we are actually
+        // requesting items (otherwise we would end up with
+        // placeholders for which items are never requested).
+        if (!no_request)
+        {
+            while (end - start + 1 < chunk_size
+                   && menu.items[end + 1] === undefined
+                   && end < menu.total_items - 1)
+            {
+                end++;
+            }
+            while (end - start + 1 < chunk_size
+                   && menu.items[start - 1] === undefined
+                   && start > 0)
+            {
+                start--;
+            }
+        }
+
+        log("Requesting item range: [" + start + "," + end + "]");
+
+        container = container || $("#menu_contents_inner ol");
+
+        // Find the place where we add the new elements
+        var present_index = end;
+        while (present_index < menu.total_items
+               && menu.items[present_index] === undefined)
+        {
+            present_index++;
+        }
+        var anchor = null;
+        if (menu.items[present_index])
+            anchor = menu.items[present_index].elem;
+
+        // Create the placeholders
+        for (var i = start; i <= end; ++i)
+        {
+            var item = {
+                level: 2,
+                text: "...",
+                index: i
+            };
+            var elem = $("<li>...</li>");
+            elem.data("item", item);
+            elem.addClass("placeholder");
+            item.elem = elem;
+
+            if (anchor)
+                anchor.before(elem);
+            else
+                container.append(elem);
+
+            menu.items[i] = item;
+        }
+
+        if (start < menu.first_present)
+            menu.first_present = start;
+        if (end > menu.last_present)
+            menu.last_present = end;
+
+        // Request the actual elements
+        if (!no_request)
+            comm.send_message("*request_menu_range", { start: start, end: end });
+    }
+
     function handle_size_change()
     {
         var menu = get_menu();
@@ -409,7 +528,10 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
             "max-height": $(window).height() - 100
         });
         client.center_element($("#menu"));
-        scroll_to_item(menu.first_visible);
+        if (menu.anchor_last)
+            scroll_bottom_to_item(menu.last_visible, true);
+        else
+            scroll_to_item(menu.first_visible, true);
         menu_scroll_handler();
     }
 
@@ -436,12 +558,32 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
         if (event.altKey || event.ctrlKey || event.shiftkey)
             return;
 
-        if (!get_menu() || get_menu().type === "crt") return;
+        var menu = get_menu();
+        if (!menu || menu.type === "crt") return;
+
+        log(event.which);
 
         switch (event.which)
         {
+        case 33: // page up
+            page_up();
+            event.preventDefault();
+            return false;
+        case 34: // page down
+            page_down();
+            event.preventDefault();
+            return false;
+        case 35: // end
+            scroll_bottom_to_item(menu.total_items - 1);
+            event.preventDefault();
+            return false;
+        case 36: // home
+            scroll_to_item(0);
+            event.preventDefault();
+            return false;
         case 38: // up
             line_up();
+            event.preventDefault();
             return false;
         case 40: // down
             line_down();
@@ -459,6 +601,7 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
         {
         case "<":
         case "-":
+        case ";":
             page_up();
             event.preventDefault();
             return false;
@@ -494,7 +637,7 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
         "menu": open_menu,
         "close_menu": close_menu,
         "update_menu": update_menu,
-        "update_menu_item": update_menu_item,
+        "update_menu_items": update_menu_items,
         "menu_scroll": server_menu_scroll,
         "init_menus": init_menus
     });

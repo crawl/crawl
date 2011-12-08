@@ -1410,6 +1410,8 @@ bool Menu::line_up()
 }
 
 #ifdef USE_TILE_WEB
+static const int chunk_size = 50; // Should be equal to the one defined in menu.js
+
 void Menu::webtiles_write_menu() const
 {
     if (crawl_state.doing_prev_cmd_again)
@@ -1424,9 +1426,21 @@ void Menu::webtiles_write_menu() const
 
     tiles.json_write_string("more", more.to_colour_string());
 
+    bool complete_send = items.size() <= chunk_size * 2;
+    int start;
+    if (is_set(MF_START_AT_END) && !complete_send)
+        start = items.size() - chunk_size;
+    else
+        start = 0;
+
+    int end = start + (complete_send ? items.size() : chunk_size);
+
+    tiles.json_write_int("total_items", items.size());
+    tiles.json_write_int("chunk_start", start);
+
     tiles.json_open_array("items");
 
-    for (unsigned i = 0; i < items.size(); ++i)
+    for (int i = start; i < end; ++i)
     {
         webtiles_write_item(i, items[i]);
     }
@@ -1450,12 +1464,39 @@ void Menu::webtiles_scroll(int first)
     }
 }
 
+void Menu::webtiles_handle_item_request(int start, int end)
+{
+    if (start < 0) start = 0;
+    if (start >= (int) items.size()) start = (int) items.size() - 1;
+    if (end < start) end = start;
+    if (end >= start + chunk_size) end = start + chunk_size - 1;
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "update_menu_items");
+
+    tiles.json_write_int("chunk_start", start);
+
+    tiles.json_open_array("items");
+
+    for (int i = start; i <= end; ++i)
+    {
+        webtiles_write_item(i, items[i]);
+    }
+
+    tiles.json_close_array();
+
+    tiles.json_close_object();
+    tiles.send_message();
+}
+
 void Menu::webtiles_update_item(int index) const
 {
     tiles.json_open_object();
 
-    tiles.json_write_string("msg", "update_menu_item");
-    tiles.json_write_int("i", index);
+    tiles.json_write_string("msg", "update_menu_items");
+    tiles.json_write_int("chunk_start", index);
+
+    tiles.json_open_array("items");
+    tiles.json_open_object();
 
     const MenuEntry* me = items[index];
     if (me->selected_qty)
@@ -1464,6 +1505,9 @@ void Menu::webtiles_update_item(int index) const
     int col = item_colour(index, me);
     if (col != MENU_ITEM_STOCK_COLOUR)
         tiles.json_write_int("colour", col);
+
+    tiles.json_close_object();
+    tiles.json_close_array();
 
     tiles.json_close_object();
     tiles.send_message();

@@ -306,6 +306,19 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, std::string dat
             m_menu_stack.back().menu->webtiles_scroll((int) first->number_);
         }
     }
+    else if (msgtype == "*request_menu_range")
+    {
+        JsonWrapper start = json_find_member(obj.node, "start");
+        start.check(JSON_NUMBER);
+        JsonWrapper end = json_find_member(obj.node, "end");
+        end.check(JSON_NUMBER);
+
+        if (!m_menu_stack.empty() && m_menu_stack.back().menu != NULL)
+        {
+            m_menu_stack.back().menu->webtiles_handle_item_request((int) start->number_,
+                                                                   (int) end->number_);
+        }
+    }
 
     return c;
 }
