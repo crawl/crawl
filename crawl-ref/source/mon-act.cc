@@ -2768,7 +2768,9 @@ static bool _monster_eat_food(monster* mons, bool nearby)
         {
             if (si->sub_type != FOOD_HONEYCOMB
                 && si->sub_type != FOOD_ROYAL_JELLY)
+            {
                 return false;
+            }
 
             if (!nearby)
                 mpr("You hear a distant popping sound.", MSGCH_SOUND);
