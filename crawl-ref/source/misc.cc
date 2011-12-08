@@ -163,21 +163,31 @@ void turn_corpse_into_skeleton(item_def &item)
     item.colour   = LIGHTGREY;
 }
 
+void maybe_bleed_monster_corpse(const item_def corpse)
+{
+    // Only fresh corpses bleed enough to colour the ground.
+    if (!food_is_rotten(corpse))
+    {
+        const coord_def pos = item_pos(corpse);
+        if (!pos.origin())
+        {
+            const monster_type montype = static_cast<monster_type>(corpse.plus);
+            const int max_chunks = get_max_corpse_chunks(corpse.plus);
+            bleed_onto_floor(pos, montype, max_chunks, true);
+        }
+    }
+}
+
 void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
                              bool make_hide)
 {
     ASSERT(item.base_type == OBJ_CORPSES && item.sub_type == CORPSE_BODY);
     const item_def corpse = item;
-    const monster_type montype = static_cast<monster_type>(item.plus);
     const int max_chunks = get_max_corpse_chunks(item.plus);
 
     // Only fresh corpses bleed enough to colour the ground.
-    if (bloodspatter && !food_is_rotten(item))
-    {
-        const coord_def pos = item_pos(item);
-        if (!pos.origin())
-            bleed_onto_floor(pos, montype, max_chunks, true);
-    }
+    if (bloodspatter)
+        maybe_bleed_monster_corpse(corpse);
 
     item.base_type = OBJ_FOOD;
     item.sub_type  = FOOD_CHUNK;
