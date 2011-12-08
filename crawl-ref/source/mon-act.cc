@@ -2718,24 +2718,8 @@ static bool _monster_eat_single_corpse(monster* mons, item_def& item,
              item.name(DESC_THE).c_str());
     }
 
-    // Assume that eating a corpse requires butchering it.  Use logic
-    // from misc.cc:turn_corpse_into_chunks() and the butchery-related
-    // delays in delay.cc:stop_delay().
-
-    const item_def corpse = item;
-    const int max_chunks = get_max_corpse_chunks(mt);
-
-    // Only fresh corpses bleed enough to colour the ground.
-    if (!food_is_rotten(item))
-        bleed_onto_floor(mons->pos(), mt, max_chunks, true);
-
-    if (mons_skeleton(mt) && one_chance_in(3))
-        turn_corpse_into_skeleton(item);
-    else
-        destroy_item(item.index());
-
-    // Happens after the corpse has been butchered.
-    maybe_drop_monster_hide(corpse);
+    // Butcher the corpse without leaving chunks.
+    butcher_corpse(item, B_MAYBE, false);
 
     return (true);
 }

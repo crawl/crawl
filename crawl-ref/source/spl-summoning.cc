@@ -2064,7 +2064,7 @@ static void _apport_and_butcher(monster *caster, item_def &item)
     {
         // Butchering takes a long time, though.
         caster->lose_energy(EUT_SPECIAL, 1, 4);
-        butcher_corpse(item, B_MAYBE);
+        butcher_corpse(item);
     }
 
     if (!caster->pickup_item(item, 0, true))

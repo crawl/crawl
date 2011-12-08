@@ -211,14 +211,30 @@ static void _turn_corpse_into_skeleton_and_chunks(item_def &item, bool prefer_ch
     copy_item_to_grid(copy, item_pos(item));
 }
 
-void butcher_corpse(item_def &item, maybe_bool skeleton)
+void butcher_corpse(item_def &item, maybe_bool skeleton, bool chunks)
 {
     if (!mons_skeleton(item.plus))
         skeleton = B_FALSE;
     if (skeleton == B_TRUE || skeleton == B_MAYBE && one_chance_in(3))
-        _turn_corpse_into_skeleton_and_chunks(item, skeleton != B_TRUE);
+    {
+        if (chunks)
+            _turn_corpse_into_skeleton_and_chunks(item, skeleton != B_TRUE);
+        else
+        {
+            maybe_drop_monster_hide(item);
+            turn_corpse_into_skeleton(item);
+        }
+    }
     else
-        turn_corpse_into_chunks(item);
+    {
+        if (chunks)
+            turn_corpse_into_chunks(item);
+        else
+        {
+            maybe_drop_monster_hide(item);
+            destroy_item(item.index());
+        }
+    }
 }
 
 // Initialise blood potions with a vector of timers.
