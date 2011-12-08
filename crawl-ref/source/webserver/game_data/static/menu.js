@@ -419,6 +419,50 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
         update_server_scroll_timeout = setTimeout(update_server_scroll, 500);
     }
 
+    function update_title()
+    {
+        set_item_contents(menu.title, $("#menu_title"));
+        if (menu.suffix)
+        {
+            $("#menu_title").append(" " + menu.suffix);
+        }
+    }
+
+    function pattern_select()
+    {
+        var title = $("#menu_title");
+        title.html("Select what? (regex) ");
+        var input = $("<input class='text pattern_select' type='text'>");
+        title.append(input);
+
+        input.focus();
+
+        var restore = function () {
+            input.blur();
+            update_title();
+        };
+
+        input.keydown(function (ev) {
+            if (ev.which == 27)
+            {
+                restore(); // ESC
+                ev.preventDefault();
+                return false;
+            }
+            else if (ev.which == 13)
+            {
+                var ctrlf = String.fromCharCode(6);
+                var enter = String.fromCharCode(13);
+                var text = ctrlf + input.val() + enter;
+                comm.send_message("input", { text: text + "\n" });
+
+                restore();
+                ev.preventDefault();
+                return false;
+            }
+        });
+    }
+
     // Message handlers
 
     function open_menu(data)
@@ -476,15 +520,6 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
         menu.server_first_visible = data.first;
         if (menu.server_scroll)
             scroll_to_item(data.first, true);
-    }
-
-    function update_title()
-    {
-        set_item_contents(menu.title, $("#menu_title"));
-        if (menu.suffix)
-        {
-            $("#menu_title").append(" " + menu.suffix);
-        }
     }
 
     function init_menus(data)
@@ -548,10 +583,24 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
 
     function menu_keydown_handler(event)
     {
-        if (event.altKey || event.ctrlKey || event.shiftkey)
+        if (event.altKey || event.shiftkey)
             return;
 
         if (!menu || menu.type === "crt") return;
+
+        if (event.ctrlKey)
+        {
+            if (String.fromCharCode(event.which) == "F")
+            {
+                if ((menu.flags & enums.menu_flag.ALLOW_FILTER))
+                {
+                    pattern_select();
+                }
+                event.preventDefault();
+                return false;
+            }
+            return;
+        }
 
         switch (event.which)
         {
@@ -587,6 +636,7 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
         if (!menu || menu.type === "crt") return;
 
         var chr = String.fromCharCode(event.which);
+
         switch (chr)
         {
         case "<":
