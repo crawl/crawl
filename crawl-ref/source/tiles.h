@@ -5,6 +5,7 @@
 
 #ifndef TILES_H
 #define TILES_H
+#ifdef USE_TILE
 
 // The different texture types.
 enum TextureID
@@ -37,4 +38,5 @@ TextureID get_dngn_tex(tileidx_t idx);
  #include "tileweb.h"
 #endif
 
+#endif
 #endif
