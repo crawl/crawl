@@ -3,6 +3,8 @@ define(["jquery", "comm", "client", "./enums",
 function ($, comm, client, enums, dungeon_renderer, cr) {
     var chunk_size = 50;
 
+    // Helpers
+
     function item_selectable(item)
     {
         return item.level == 2 && item.hotkeys && item.hotkeys.length;
@@ -102,18 +104,12 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
     }
 
     var menu_stack = [];
-
-    function get_menu()
-    {
-        if (menu_stack.length == 0) return null;
-        return menu_stack[menu_stack.length-1];
-    }
+    var menu = null;
 
     function display_menu()
     {
         client.set_layer("normal");
 
-        var menu = get_menu();
         if (menu.elem)
         {
             $("#menu").html(menu.elem);
@@ -143,15 +139,18 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
             update_title();
         }
 
-        var items = $("<div id='menu_contents'>");
-        items.css({
+        var content_div= $("<div id='menu_contents'>");
+        content_div.css({
             "max-height": $(window).height() - 100
         });
-        var items_inner = $("<div id='menu_contents_inner'>");
-        items.append(items_inner);
-        var container = $("<ol>");
+        menu_div.append(content_div);
 
+        var items_inner = $("<div id='menu_contents_inner'>");
+        content_div.append(items_inner);
+
+        var container = $("<ol>");
         items_inner.append(container);
+
         var chunk = menu.items;
         menu.items = { length: menu.total_items };
         menu.first_present = 999999;
@@ -161,12 +160,10 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
                            true, container);
         update_item_range(menu.chunk_start, chunk);
 
-        menu_div.append(items);
-
         menu_div.append("<div id='menu_more'>" + formatted_string_to_html(menu.more)
                         + "</div>");
 
-        items.scroll(menu_scroll_handler);
+        content_div.scroll(menu_scroll_handler);
 
         menu.server_scroll = true;
 
@@ -181,260 +178,11 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
         menu_scroll_handler();
     }
 
-    function update_item_range(chunk_start, items_list)
-    {
-        var menu = get_menu();
-        for (var i = 0; i < items_list.length; ++i)
-        {
-            var real_index = i + chunk_start;
-            var item = menu.items[real_index];
-            if (!item) continue;
-            var new_item = items_list[i];
-            if (typeof new_item === "string")
-            {
-                new_item = {
-                    type: 2,
-                    text: new_item
-                };
-            }
-            $.extend(item, new_item);
-            if (new_item.colour === undefined)
-                delete item.colour;
-
-            set_item_contents(item, item.elem);
-        }
-    }
-
-    function open_menu(data)
-    {
-        log(data);
-        menu_stack.push(data);
-
-        display_menu();
-    }
-
-    function close_menu()
-    {
-        menu_stack.pop();
-
-        log("close_menu");
-
-        if (menu_stack.length == 0)
-        {
-            // Delay closing the dialog a bit to prevent flickering
-            // if the game immediately opens another one
-            // (e.g. when looking at an item from the inventory)
-            setTimeout(function () {
-                if (menu_stack.length == 0)
-                    client.hide_dialog();
-            }, 50);
-        }
-        else
-            display_menu();
-    }
-
-    function update_menu(data)
-    {
-        log(data);
-
-        var menu = get_menu();
-        $.extend(menu, data);
-
-        update_title();
-
-        client.center_element($("#menu"));
-    }
-
-    function update_menu_items(data)
-    {
-        log(data);
-
-        prepare_item_range(data.chunk_start,
-                           data.chunk_start + data.items.length - 1,
-                           true);
-
-        update_item_range(data.chunk_start, data.items);
-
-        handle_size_change();
-    }
-
-    function server_menu_scroll(data)
-    {
-        log(data);
-
-        var menu = get_menu();
-        menu.server_first_visible = data.first;
-        if (menu.server_scroll)
-            scroll_to_item(data.first, true);
-    }
-
-    function update_title()
-    {
-        var menu = get_menu();
-        set_item_contents(menu.title, $("#menu_title"));
-        if (menu.suffix)
-        {
-            $("#menu_title").append(" " + menu.suffix);
-        }
-    }
-
-    function init_menus(data)
-    {
-        if (menu_stack.length > 0) return;
-
-        menu_stack = data.menus;
-        if (get_menu())
-            display_menu();
-    }
-
-    function page_down()
-    {
-        var menu = get_menu();
-        var next = menu.last_visible + 1;
-        if (next >= menu.items.length)
-            next = menu.items.length - 1;
-        scroll_to_item(next);
-    }
-
-    function page_up()
-    {
-        var menu = get_menu();
-        var previous = menu.first_visible - 1;
-        if (previous < 0)
-            previous = 0;
-        scroll_bottom_to_item(previous);
-    }
-
-    function line_down()
-    {
-        var menu = get_menu();
-        var next = menu.first_visible + 1;
-        if (next >= menu.items.length)
-            next = menu.items.length - 1;
-        scroll_to_item(next);
-    }
-
-    function line_up()
-    {
-        var menu = get_menu();
-        var previous = menu.first_visible - 1;
-        if (previous < 0)
-            previous = 0;
-        scroll_to_item(previous);
-    }
-
-    function scroll_to_item(item_or_index, was_server_initiated)
-    {
-        var menu = get_menu();
-
-        var index = (item_or_index.elem ?
-                     item_or_index.index : item_or_index);
-        prepare_item_range(index, index + chunk_size - 1);
-
-        log("Scrolling to " + index);
-
-        var item = (item_or_index.elem ?
-                    item_or_index : menu.items[item_or_index]);
-        var contents = $("#menu_contents");
-        var baseline = contents.children().offset().top;
-
-        contents.scrollTop(item.elem.offset().top - baseline);
-
-        menu.anchor_last = false;
-        menu.first_visible = index;
-        if (!was_server_initiated)
-            menu.server_scroll = false;
-    }
-
-    function scroll_bottom_to_item(item_or_index, was_server_initiated)
-    {
-        var menu = get_menu();
-
-        var index = (item_or_index.elem ?
-                     item_or_index.index : item_or_index);
-        prepare_item_range(index - chunk_size + 1, index);
-
-        log("Scrolling bottom to " + index);
-
-        var item = (item_or_index.elem ?
-                    item_or_index : menu.items[item_or_index]);
-        var contents = $("#menu_contents");
-        var baseline = contents.children().offset().top;
-
-        contents.scrollTop(item.elem.offset().top + item.elem.height()
-                           - baseline - contents.innerHeight());
-
-        menu.anchor_last = true;
-        menu.last_visible = index;
-        if (!was_server_initiated)
-            menu.server_scroll = false;
-    }
-
-    function update_visible_indices()
-    {
-        var menu = get_menu();
-        var contents = $("#menu_contents");
-        var top = contents.offset().top;
-        var bottom = top + contents.innerHeight();
-        menu.first_visible = null;
-        menu.last_visible = null;
-        for (var i in menu.items)
-        {
-            if (!menu.items.hasOwnProperty(i) || i == "length") continue;
-            var item = menu.items[i];
-            var item_top = item.elem.offset().top;
-            var item_bottom = item_top + item.elem.outerHeight();
-            if (item_top <= top && item_bottom >= top)
-            {
-                menu.first_visible = Number(i) + 1;
-                if (menu.last_visible !== null) return;
-            }
-            if (item_top <= bottom && item_bottom >= bottom)
-            {
-                menu.last_visible = Number(i) - 1;
-                if (menu.first_visible !== null) return;
-            }
-        }
-        menu.first_visible = menu.first_visible || menu.first_present;
-        menu.last_visible = menu.last_visible || menu.last_present;
-    }
-
-    var update_server_scroll_timeout = null;
-    function update_server_scroll()
-    {
-        if (update_server_scroll_timeout)
-        {
-            clearTimeout(update_server_scroll_timeout);
-            update_server_scroll_timeout = null;
-        }
-
-        var menu = get_menu();
-
-        if (!menu) return;
-
-        comm.send_message("menu_scroll", {
-            first: menu.first_visible,
-            last: menu.last_visible
-        });
-    }
-
-    function schedule_server_scroll()
-    {
-        if (update_server_scroll_timeout)
-        {
-            clearTimeout(update_server_scroll_timeout);
-            update_server_scroll_timeout = null;
-        }
-        update_server_scroll_timeout = setTimeout(update_server_scroll, 500);
-    }
-
     function prepare_item_range(start, end, no_request, container)
     {
         // Guarantees that the given (inclusive) range of item indices
         // exists; requests them from the server if necessary, except
         // if no_request is true.
-
-        var menu = get_menu();
 
         if (start < 0) start = 0;
         if (end >= menu.total_items)
@@ -471,8 +219,6 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
                 start--;
             }
         }
-
-        log("Requesting item range: [" + start + "," + end + "]");
 
         container = container || $("#menu_contents_inner ol");
 
@@ -518,9 +264,256 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
             comm.send_message("*request_menu_range", { start: start, end: end });
     }
 
+    function update_item_range(chunk_start, items_list)
+    {
+        for (var i = 0; i < items_list.length; ++i)
+        {
+            var real_index = i + chunk_start;
+            var item = menu.items[real_index];
+            if (!item) continue;
+            var new_item = items_list[i];
+            if (typeof new_item === "string")
+            {
+                new_item = {
+                    type: 2,
+                    text: new_item
+                };
+            }
+            $.extend(item, new_item);
+            if (new_item.colour === undefined)
+                delete item.colour;
+
+            set_item_contents(item, item.elem);
+        }
+    }
+
+    // Scrolling functions
+
+    function page_down()
+    {
+        var next = menu.last_visible + 1;
+        if (next >= menu.items.length)
+            next = menu.items.length - 1;
+        scroll_to_item(next);
+    }
+
+    function page_up()
+    {
+        var previous = menu.first_visible - 1;
+        if (previous < 0)
+            previous = 0;
+        scroll_bottom_to_item(previous);
+    }
+
+    function line_down()
+    {
+        var next = menu.first_visible + 1;
+        if (next >= menu.items.length)
+            next = menu.items.length - 1;
+        scroll_to_item(next);
+    }
+
+    function line_up()
+    {
+        var previous = menu.first_visible - 1;
+        if (previous < 0)
+            previous = 0;
+        scroll_to_item(previous);
+    }
+
+    function scroll_to_item(item_or_index, was_server_initiated)
+    {
+        var index = (item_or_index.elem ?
+                     item_or_index.index : item_or_index);
+        if (menu.first_visible == index) return;
+
+        prepare_item_range(index, index + chunk_size - 1);
+
+        var item = (item_or_index.elem ?
+                    item_or_index : menu.items[item_or_index]);
+        var contents = $("#menu_contents");
+        var baseline = contents.children().offset().top;
+
+        contents.scrollTop(item.elem.offset().top - baseline);
+
+        menu.anchor_last = false;
+        menu.first_visible = index;
+        if (!was_server_initiated)
+            menu.server_scroll = false;
+    }
+
+    function scroll_bottom_to_item(item_or_index, was_server_initiated)
+    {
+        var index = (item_or_index.elem ?
+                     item_or_index.index : item_or_index);
+        if (menu.last_visible == index) return;
+
+        prepare_item_range(index - chunk_size + 1, index);
+
+        var item = (item_or_index.elem ?
+                    item_or_index : menu.items[item_or_index]);
+        var contents = $("#menu_contents");
+        var baseline = contents.children().offset().top;
+
+        contents.scrollTop(item.elem.offset().top + item.elem.height()
+                           - baseline - contents.innerHeight());
+
+        menu.anchor_last = true;
+        menu.last_visible = index;
+        if (!was_server_initiated)
+            menu.server_scroll = false;
+    }
+
+    function update_visible_indices()
+    {
+        var contents = $("#menu_contents");
+        var top = contents.offset().top;
+        var bottom = top + contents.innerHeight();
+        menu.first_visible = null;
+        menu.last_visible = null;
+        for (var i in menu.items)
+        {
+            if (!menu.items.hasOwnProperty(i) || i == "length") continue;
+            var item = menu.items[i];
+            var item_top = item.elem.offset().top;
+            var item_bottom = item_top + item.elem.outerHeight();
+            if (item_top <= top && item_bottom >= top)
+            {
+                menu.first_visible = Number(i) + 1;
+                if (menu.last_visible !== null) return;
+            }
+            if (item_top <= bottom && item_bottom >= bottom)
+            {
+                menu.last_visible = Number(i) - 1;
+                if (menu.first_visible !== null) return;
+            }
+        }
+        menu.first_visible = menu.first_visible || menu.first_present;
+        menu.last_visible = menu.last_visible || menu.last_present;
+    }
+
+    var update_server_scroll_timeout = null;
+    function update_server_scroll()
+    {
+        if (update_server_scroll_timeout)
+        {
+            clearTimeout(update_server_scroll_timeout);
+            update_server_scroll_timeout = null;
+        }
+
+        if (!menu) return;
+
+        comm.send_message("menu_scroll", {
+            first: menu.first_visible,
+            last: menu.last_visible
+        });
+    }
+
+    function schedule_server_scroll()
+    {
+        if (update_server_scroll_timeout)
+        {
+            clearTimeout(update_server_scroll_timeout);
+            update_server_scroll_timeout = null;
+        }
+        update_server_scroll_timeout = setTimeout(update_server_scroll, 500);
+    }
+
+    // Message handlers
+
+    function open_menu(data)
+    {
+        menu_stack.push(data);
+        menu = data;
+
+        display_menu();
+    }
+
+    function close_menu()
+    {
+        menu_stack.pop();
+
+        if (menu_stack.length == 0)
+        {
+            menu = null;
+            // Delay closing the dialog a bit to prevent flickering
+            // if the game immediately opens another one
+            // (e.g. when looking at an item from the inventory)
+            setTimeout(function () {
+                if (menu_stack.length == 0)
+                    client.hide_dialog();
+            }, 50);
+        }
+        else
+        {
+            menu = menu_stack[menu_stack.length - 1];
+            display_menu();
+        }
+    }
+
+    function update_menu(data)
+    {
+        $.extend(menu, data);
+
+        update_title();
+
+        client.center_element($("#menu"));
+    }
+
+    function update_menu_items(data)
+    {
+        prepare_item_range(data.chunk_start,
+                           data.chunk_start + data.items.length - 1,
+                           true);
+
+        update_item_range(data.chunk_start, data.items);
+
+        handle_size_change();
+    }
+
+    function server_menu_scroll(data)
+    {
+        menu.server_first_visible = data.first;
+        if (menu.server_scroll)
+            scroll_to_item(data.first, true);
+    }
+
+    function update_title()
+    {
+        set_item_contents(menu.title, $("#menu_title"));
+        if (menu.suffix)
+        {
+            $("#menu_title").append(" " + menu.suffix);
+        }
+    }
+
+    function init_menus(data)
+    {
+        if (menu_stack.length > 0) return;
+
+        menu_stack = data.menus;
+        if (menu_stack.length > 0)
+        {
+            menu = menu_stack[menu_stack.length - 1];
+            display_menu();
+        }
+        else
+            menu = null;
+    }
+
+    comm.register_handlers({
+        "menu": open_menu,
+        "close_menu": close_menu,
+        "update_menu": update_menu,
+        "update_menu_items": update_menu_items,
+        "menu_scroll": server_menu_scroll,
+        "init_menus": init_menus
+    });
+
+    // Event handlers
+
     function handle_size_change()
     {
-        var menu = get_menu();
         if (!menu) return;
 
         var items = $("#menu_contents");
@@ -537,7 +530,7 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
 
     function menu_scroll_handler()
     {
-        var menu = get_menu(), contents = $("#menu_contents");
+        var contents = $("#menu_contents");
         update_visible_indices();
         schedule_server_scroll();
         if (menu.last_visible >= menu.items.length - 1)
@@ -558,10 +551,7 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
         if (event.altKey || event.ctrlKey || event.shiftkey)
             return;
 
-        var menu = get_menu();
         if (!menu || menu.type === "crt") return;
-
-        log(event.which);
 
         switch (event.which)
         {
@@ -594,7 +584,7 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
 
     function menu_keypress_handler(event)
     {
-        if (!get_menu() || get_menu().type === "crt") return;
+        if (!menu || menu.type === "crt") return;
 
         var chr = String.fromCharCode(event.which);
         switch (chr)
@@ -622,23 +612,13 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
             comm.send_message("input", { data: [ item.hotkeys[0] ] });
     }
 
-    $(document).off("game_init.menu");
-    $(document).on("game_init.menu", function () {
+    $(document).off("game_init.menu")
+               .on("game_init.menu", function () {
         menu_stack = [];
-        $(window).off("resize.menu");
-        $(document).off("game_keydown.menu");
-        $(document).off("game_keypress.menu");
-        $(window).on("resize.menu", handle_size_change);
-        $(document).on("game_keydown.menu", menu_keydown_handler);
-        $(document).on("game_keypress.menu", menu_keypress_handler);
-    });
-
-    comm.register_handlers({
-        "menu": open_menu,
-        "close_menu": close_menu,
-        "update_menu": update_menu,
-        "update_menu_items": update_menu_items,
-        "menu_scroll": server_menu_scroll,
-        "init_menus": init_menus
+        $(window).off("resize.menu")
+                 .on("resize.menu", handle_size_change);
+        $(document).off("game_keydown.menu game_keypress.menu")
+                   .on("game_keydown.menu", menu_keydown_handler)
+                   .on("game_keypress.menu", menu_keypress_handler);
     });
 });
