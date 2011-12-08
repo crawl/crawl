@@ -89,10 +89,15 @@ body {
 /* menus */
 #menu {
     line-height: 1.2em;
+    min-width: 40em;
 }
 
 #menu_title {
     white-space: pre;
+}
+
+#menu_suffix {
+    float: right;
 }
 
 #menu_more {

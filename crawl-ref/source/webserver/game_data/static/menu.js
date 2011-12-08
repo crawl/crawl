@@ -424,7 +424,9 @@ function ($, comm, client, enums, dungeon_renderer, cr) {
         set_item_contents(menu.title, $("#menu_title"));
         if (menu.suffix)
         {
-            $("#menu_title").append(" " + menu.suffix);
+            $("#menu_title").append(" <span id='menu_suffix'>"
+                                    + menu.suffix
+                                    + "</span>");
         }
     }
 
