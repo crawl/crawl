@@ -50,12 +50,12 @@ end
 
 local function have_reaching()
   local wp = items.equipped_at("weapon")
-  return wp and wp.reach_range == 8
+  return wp and wp.reach_range == 8 and not wp.is_melded
 end
 
 local function have_ranged()
   local wp = items.equipped_at("weapon")
-  return wp and wp.is_ranged
+  return wp and wp.is_ranged and not wp.is_melded
 end
 
 local function try_move(dx, dy)
