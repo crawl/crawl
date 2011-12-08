@@ -234,6 +234,7 @@ void butcher_corpse(item_def &item, maybe_bool skeleton, bool chunks)
             _turn_corpse_into_skeleton_and_chunks(item, skeleton != B_TRUE);
         else
         {
+            maybe_bleed_monster_corpse(item);
             maybe_drop_monster_hide(item);
             turn_corpse_into_skeleton(item);
         }
@@ -244,6 +245,7 @@ void butcher_corpse(item_def &item, maybe_bool skeleton, bool chunks)
             turn_corpse_into_chunks(item);
         else
         {
+            maybe_bleed_monster_corpse(item);
             maybe_drop_monster_hide(item);
             destroy_item(item.index());
         }
