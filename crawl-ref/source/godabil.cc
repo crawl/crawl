@@ -1911,21 +1911,20 @@ int fedhas_fungal_bloom()
     for (radius_iterator i(you.pos(), LOS_RADIUS); i; ++i)
     {
         monster* target = monster_at(*i);
-        if (target && target->is_summoned())
-            continue;
-
         if (!is_harmless_cloud(cloud_type_at(*i)))
             continue;
 
         if (target && target->mons_species() != MONS_TOADSTOOL)
         {
+            bool piety = !target->is_summoned();
             switch (mons_genus(target->mons_species()))
             {
             case MONS_ZOMBIE_SMALL:
                 // Maybe turn a zombie into a skeleton.
                 if (mons_skeleton(mons_zombie_base(target)))
                 {
-                    processed_count++;
+                    if (piety)
+                        processed_count++;
 
                     monster_type skele_type = MONS_SKELETON_LARGE;
                     if (mons_zombie_size(mons_zombie_base(target)) == Z_SMALL)
@@ -1956,7 +1955,10 @@ int fedhas_fungal_bloom()
                 // If a corpse didn't drop, create a toadstool.
                 // If one did drop, we will create toadstools from it as usual
                 // later on.
-                if (corpse < 0)
+                // Give neither piety nor toadstools for summoned creatures.
+                // Assumes that summoned creatures do not drop corpses (hence
+                // will not give piety in the next loop).
+                if (corpse < 0 && piety)
                 {
                     const int mushroom = create_monster(
                                 mgen_data(MONS_TOADSTOOL,
@@ -1980,6 +1982,10 @@ int fedhas_fungal_bloom()
 
                     continue;
                 }
+
+                // Verify that summoned creatures do not drop a corpse.
+                ASSERT(corpse < 0 || piety);
+
                 break;
             }
 
