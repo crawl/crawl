@@ -2646,6 +2646,13 @@ void change_monster_type(monster* mons, monster_type targetc)
     // the invisibility enchantment below.
     mons->del_ench(ENCH_INVIS, false, false);
 
+    // Remove replacement tile, since it probably doesn't work for the
+    // new monster.
+    mons->props.erase("monster_tile_name");
+#ifdef USE_TILE
+    mons->props.erase("monster_tile");
+#endif
+
     // Even if the monster transforms from one type that can behold the
     // player into a different type which can also behold the player,
     // the polymorph disrupts the beholding process.  Do this before
@@ -2670,7 +2677,17 @@ void change_monster_type(monster* mons, monster_type targetc)
 
     // Preserve the names of uniques and named monsters.
     if (!mons->mname.empty())
-        name = mons->mname;
+    {
+        if ((flags & MF_NAME_MASK) == MF_NAME_REPLACE)
+        {
+            // Remove the replacement name from the new monster
+            flags = flags & ~(MF_NAME_MASK | MF_NAME_DESCRIPTOR
+                              | MF_NAME_DEFINITE | MF_NAME_SPECIES
+                              | MF_NAME_ZOMBIE);
+        }
+        else
+            name = mons->mname;
+    }
     else if (mons_is_unique(mons->type))
     {
         flags |= MF_INTERESTING;
