@@ -220,6 +220,7 @@ TAGS:   no_monster_gen patrolling zot_entry
 KFEAT:  O = enter_zot
 # Grey dracs can escape from the islands if they have water. This is intentional.
 SUBST:  G: GXm., m: mmlw
+KFEAT:  m = iron_grate
 SUBST:  x: xcvX
 NSUBST: 2 = 2:2 / *:-
 TILE:   X = wall_zot_magenta
@@ -493,6 +494,7 @@ NAME:  lemuel_golem_globe
 DEPTH: Zot:*
 TAGS:  no_rotate
 KFEAT: T = teleport trap
+KFEAT: m = iron_grate
 SUBST: 1 = 1.
 MONS:  electric golem
 MAP
@@ -516,6 +518,7 @@ TAGS:   no_rotate
 MONS:   red draconian scorcher / green draconian zealot / yellow draconian caller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
 SUBST:  1=123, w:w., w=Ww
+KFEAT:  m = iron_grate
 MAP
 ............................
 ..mmm..................mmm..
@@ -541,6 +544,7 @@ TAGS:   no_rotate
 MONS:   red draconian scorcher / green draconian zealot / yellow draconian caller
 SUBST:  } = }:80 >, ) = ):80 > , ] = ]:80 >
 SUBST:  1=123, w:w., w=Ww
+KFEAT:  m = iron_grate
 MAP
 ................
 ................
