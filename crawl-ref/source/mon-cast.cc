@@ -1761,7 +1761,7 @@ bool handle_mon_spell(monster* mons, bolt &beem)
             if (mons->friendly() && !_animate_dead_okay())
                 return (false);
 
-            if (!twisted_resurrection(mons, 100, SAME_ATTITUDE(mons),
+            if (!twisted_resurrection(mons, 500, SAME_ATTITUDE(mons),
                                       mons->foe, god, false))
             {
                 return (false);
@@ -2994,7 +2994,9 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
         return;
 
     case SPELL_TWISTED_RESURRECTION:
-        twisted_resurrection(mons, 100, SAME_ATTITUDE(mons),
+        // Double efficiency compared to maxed out player spell: one
+        // elf corpse gives 4.5 HD.
+        twisted_resurrection(mons, 500, SAME_ATTITUDE(mons),
                              mons->foe, god);
         return;
 

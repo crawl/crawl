@@ -2252,6 +2252,10 @@ static const char *_count_article(int number, bool definite)
         return ("Some");
 }
 
+// Minimum number of affected corpses before a monster will cast
+// Twisted Resurrection.
+static const int _twisted_res_tracer_min_corpses = 2;
+
 bool twisted_resurrection(actor *caster, int pow, beh_type beha,
                           unsigned short foe, god_type god, bool actual)
 {
@@ -2276,7 +2280,10 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
             if (si->base_type == OBJ_CORPSES && si->sub_type == CORPSE_BODY)
             {
                 if (!actual)
-                    return (true);
+                {
+                    ++num_crawlies;
+                    continue;
+                }
 
                 if (mons_genus(si->plus) == MONS_ORC)
                     num_orcs++;
@@ -2293,10 +2300,11 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
             }
         }
 
-        if (num_corpses == 0)
+        if (!actual || num_corpses == 0)
             continue;
 
         // 20 aum per HD at max power; 30 at 100 power; and 60 at 0 power.
+        // 10 aum per HD at 500 power (monster version).
         int hd = div_rand_round((pow + 100) * total_mass, (200*300));
 
         if (hd <= 0)
@@ -2346,12 +2354,11 @@ bool twisted_resurrection(actor *caster, int pow, beh_type beha,
         }
     }
 
+    if (!actual)
+        return (num_crawlies >= _twisted_res_tracer_min_corpses);
+
     if (num_lost + num_crawlies + num_masses == 0)
         return (false);
-
-    // The tracer should have stopped at the first corpse, or found no
-    // corpses and returned false.
-    ASSERT(actual);
 
     if (num_lost)
         mprf("%s %s into %s!",
