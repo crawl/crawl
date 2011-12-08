@@ -1220,7 +1220,7 @@ static void _finish_delay(const delay_queue_item &delay)
                 const bool was_orc = (mons_genus(item.plus) == MONS_ORC);
                 const bool was_holy = (mons_class_holiness(item.plus) == MH_HOLY);
 
-                butcher_corpse(item, B_MAYBE);
+                butcher_corpse(item);
 
                 if (you.berserk()
                     && you.berserk_penalty != NO_BERSERK_PENALTY)
