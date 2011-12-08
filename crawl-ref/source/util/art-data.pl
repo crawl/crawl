@@ -129,7 +129,7 @@ sub finish_art
     $artefact->{_FINISHING} = 1;
 
     my $must;
-    foreach $must ("NAME", "APPEAR", "OBJ", "COLOUR")
+    foreach $must ("NAME", "OBJ", "COLOUR")
     {
         if (!defined($artefact->{$must}))
         {
@@ -163,6 +163,9 @@ sub finish_art
             $artefact->{BRAND} = "0";
         }
     }
+
+    # Appearance is no longer mandatory.
+    $artefact->{APPEAR} = $artefact->{NAME} unless defined($artefact->{APPEAR});
 
     # Fill in function pointers.
     my $enum = $artefact->{_ENUM};
