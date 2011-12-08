@@ -328,14 +328,15 @@ monster_info::monster_info(const monster* m, int milev)
 
     mname = m->mname;
 
-    if ((m->flags & MF_NAME_MASK) == MF_NAME_SUFFIX)
+    const uint64_t name_flags = m->flags & MF_NAME_MASK;
+
+    if (name_flags == MF_NAME_SUFFIX)
         mb.set(MB_NAME_SUFFIX);
-    else if ((m->flags & MF_NAME_MASK) == MF_NAME_ADJECTIVE)
+    else if (name_flags == MF_NAME_ADJECTIVE)
         mb.set(MB_NAME_ADJECTIVE);
-    else if ((m->flags & MF_NAME_MASK) == MF_NAME_REPLACE)
+    else if (name_flags == MF_NAME_REPLACE)
         mb.set(MB_NAME_REPLACE);
 
-    const uint64_t name_flags = m->flags & MF_NAME_MASK;
     const bool need_name_desc =
         name_flags == MF_NAME_SUFFIX
             || name_flags == MF_NAME_ADJECTIVE
