@@ -28,6 +28,7 @@ void trackers_init_new_level(bool transit);
 void maybe_drop_monster_hide(const item_def corpse);
 int get_max_corpse_chunks(int mons_class);
 void turn_corpse_into_skeleton(item_def &item);
+void maybe_bleed_monster_corpse(const item_def corpse);
 void turn_corpse_into_chunks(item_def &item, bool bloodspatter = true,
                              bool make_hide = true);
 void butcher_corpse(item_def &item, maybe_bool skeleton = B_MAYBE,
