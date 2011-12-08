@@ -975,14 +975,18 @@ static const int stat_width = 42;
 
 static void _send_layout_data()
 {
-    tiles.send_message("{msg:\"layout\",view_max_width:%u,view_max_height:%u,\
-force_overlay:%u,show_diameter:%u,msg_min_height:%u,stat_width:%u,   \
-min_stat_height:%u,gxm:%u,gym:%u}",
-                       Options.view_max_width, Options.view_max_height,
-                       Options.tile_force_overlay, ENV_SHOW_DIAMETER,
-                       Options.msg_min_height, stat_width,
-                       min_stat_height + (Options.show_gold_turns ? 1 : 0),
-                       GXM, GYM);
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "layout");
+
+    tiles.json_write_int("stat_width", crawl_view.hudsz.x);
+    tiles.json_write_int("show_diameter", ENV_SHOW_DIAMETER);
+    tiles.json_write_int("gxm", GXM);
+    tiles.json_write_int("gym", GYM);
+    tiles.json_write_int("msg_height", crawl_view.msgsz.y);
+
+    tiles.json_close_object();
+
+    tiles.send_message();
 }
 
 void TilesFramework::resize()
