@@ -128,11 +128,14 @@ static void _create_monster_hide(const item_def corpse)
         break;
     }
 
-    monster_type montype = static_cast<monster_type>(corpse.orig_monnum - 1);
+    const monster_type montype =
+        static_cast<monster_type>(corpse.orig_monnum - 1);
     if (!invalid_monster_type(montype) && mons_is_unique(montype))
         item.inscription = mons_type_name(montype, DESC_PLAIN);
 
-    move_item_to_grid(&o, corpse.pos);
+    const coord_def pos = item_pos(corpse);
+    if (!pos.origin())
+        move_item_to_grid(&o, pos);
 }
 
 void maybe_drop_monster_hide(const item_def corpse)
@@ -171,7 +174,7 @@ void turn_corpse_into_chunks(item_def &item, bool bloodspatter,
     // Only fresh corpses bleed enough to colour the ground.
     if (bloodspatter && !food_is_rotten(item))
     {
-        coord_def pos = item_pos(item);
+        const coord_def pos = item_pos(item);
         if (!pos.origin())
             bleed_onto_floor(pos, montype, max_chunks, true);
     }
