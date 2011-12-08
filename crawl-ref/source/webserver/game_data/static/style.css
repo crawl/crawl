@@ -117,3 +117,7 @@ body {
     outline: 1px solid lightgray;
     cursor: pointer;
 }
+
+#menu_contents li.placeholder {
+    color: darkgray;
+}
