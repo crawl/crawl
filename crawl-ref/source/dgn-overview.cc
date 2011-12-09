@@ -903,7 +903,10 @@ void set_unique_annotation(monster* mons, const level_id level)
     // Abyss persists its denizens.
     if (level.level_type != LEVEL_DUNGEON && level.level_type != LEVEL_ABYSS)
         return;
-    if (!mons_is_unique(mons->type) && mons->type != MONS_PLAYER_GHOST)
+    if (!mons_is_unique(mons->type)
+        && !(mons->props.exists("original_was_unique")
+            && mons->props["original_was_unique"].get_bool())
+        && mons->type != MONS_PLAYER_GHOST)
         return;
 
     remove_unique_annotation(mons);
