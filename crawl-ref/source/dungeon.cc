@@ -1958,8 +1958,9 @@ static void _ruin_level(Iterator ri,
                         int ruination = 10,
                         int plant_density = 5)
 {
-    typedef std::map<coord_def,dungeon_feature_type> coord2feat;
-    coord2feat to_replace;
+    typedef std::pair<coord_def, dungeon_feature_type> coord_feat;
+    typedef std::vector<coord_feat> coord_feats;
+    coord_feats to_replace;
 
     for (; ri; ++ri)
     {
@@ -1993,10 +1994,12 @@ static void _ruin_level(Iterator ri,
         /* chance of removing the tile is dependent on the number of adjacent
          * floor tiles */
         if (x_chance_in_y(floor_count, ruination))
-            to_replace[*ri] = replacement;
+        {
+            to_replace.push_back(coord_feat(*ri, replacement));
+        }
     }
 
-    for (coord2feat::const_iterator it = to_replace.begin();
+    for (coord_feats::const_iterator it = to_replace.begin();
          it != to_replace.end();
          ++it)
     {
