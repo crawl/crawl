@@ -1219,6 +1219,19 @@ void wizard_polymorph_monster(monster* mon)
     mon->check_redraw(mon->pos());
 
     if (mon->type == old_type)
+    {
+        mpr("Trying harder");
+        change_monster_type(mon, type);
+        if (!mon->alive())
+        {
+            mpr("Polymorph killed monster?", MSGCH_ERROR);
+            return;
+        }
+
+        mon->check_redraw(mon->pos());
+    }
+
+    if (mon->type == old_type)
         mpr("Polymorph failed.");
     else if (mon->type != type)
         mpr("Monster turned into something other than the desired type.");
