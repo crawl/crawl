@@ -2777,9 +2777,10 @@ int list_wizard_commands(bool do_redraw_screen)
                        "<w>Ctrl-t</w> : enter in-game Lua interpreter\n"
                        "<w>Ctrl-X</w> : Xom effect stats\n"
                        "\n"
-                       "<yellow>Wizard targeting commands</yellow>\n"
+                       "<yellow>Other wizard commands</yellow>\n"
                        "(not prefixed with <w>&</w>!)\n"
-                       "<w>x?</w>     : list targeted commands\n",
+                       "<w>x?</w>     : list targeted commands\n"
+                       "<w>X?</w>     : list map-mode commands\n",
                        true, true);
 
     int key = _show_keyhelp_menu(cols.formatted_lines(), false,
