@@ -82,14 +82,8 @@ monster_type pick_random_monster(const level_id &place,
                                  bool *chose_ood_monster,
                                  bool force_mobile = false);
 
-bool player_will_anger_monster(monster_type type, bool *holy = NULL,
-                               bool *unholy = NULL, bool *lawful = NULL,
-                               bool *antimagical = NULL);
-
-bool player_will_anger_monster(monster* mon, bool *holy = NULL,
-                               bool *unholy = NULL, bool *lawful = NULL,
-                               bool *antimagical = NULL);
-
+conduct_type player_will_anger_monster(monster_type type);
+conduct_type player_will_anger_monster(monster* mon);
 bool player_angers_monster(monster* mon);
 
 bool empty_surrounds(const coord_def& where, dungeon_feature_type spc_wanted,
