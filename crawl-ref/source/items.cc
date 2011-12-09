@@ -2224,7 +2224,7 @@ bool drop_item(int item_dropped, int quant_drop)
         && you.inv[item_dropped].base_type == OBJ_WEAPONS
         && you.inv[item_dropped].cursed())
     {
-        mpr("That object is stuck to you!");
+        mprf("%s is stuck to you!", you.inv[item_dropped].name(DESC_THE).c_str());
         return (false);
     }
 
