@@ -822,6 +822,9 @@ static std::string _describe_weapon(const item_def &item, bool verbose)
     if (!is_artefact(item) && !verbose)
         spec_ench = SPWPN_NORMAL;
 
+    if (verbose && weapon_skill(item) == SK_POLEARMS)
+        description += "\n\nIt can be evoked to extend its reach.";
+
     // special weapon descrip
     if (spec_ench != SPWPN_NORMAL && item_type_known(item))
     {
