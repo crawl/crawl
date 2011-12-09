@@ -3235,52 +3235,45 @@ coord_def find_newmons_square(int mons_class, const coord_def &p)
     return (pos);
 }
 
-bool player_will_anger_monster(monster_type type, bool *holy,
-                               bool *unholy, bool *lawful,
-                               bool *antimagical)
+conduct_type player_will_anger_monster(monster_type type)
 {
     monster dummy;
     dummy.type = type;
 
-    return (player_will_anger_monster(&dummy, holy, unholy, lawful,
-                                      antimagical));
+    return (player_will_anger_monster(&dummy));
 }
 
-bool player_will_anger_monster(monster* mon, bool *holy,
-                               bool *unholy, bool *lawful,
-                               bool *antimagical)
+conduct_type player_will_anger_monster(monster* mon)
 {
-    const bool isHoly =
-        (is_good_god(you.religion) && (mon->is_unholy() || mon->is_evil()));
-    const bool isUnholy =
-        (is_evil_god(you.religion) && mon->is_holy());
-    const bool isLawful =
-        (you.religion == GOD_ZIN && (mon->is_unclean() || mon->is_chaotic()));
-    const bool isAntimagical =
-        (you.religion == GOD_TROG && mon->is_actual_spellcaster());
+    if (is_good_god(you.religion) && mon->is_unholy())
+        return DID_UNHOLY;
+    if (is_good_god(you.religion) && mon->is_evil())
+        return DID_NECROMANCY;
+    if (you.religion == GOD_FEDHAS && mon->holiness() == MH_UNDEAD
+        && !mon->is_insubstantial())
+    {
+        return DID_CORPSE_VIOLATION;
+    }
+    if (is_evil_god(you.religion) && mon->is_holy())
+        return DID_HOLY;
+    if (you.religion == GOD_ZIN)
+    {
+        if (mon->is_unclean())
+            return DID_UNCLEAN;
+        if (mon->is_chaotic())
+            return DID_CHAOS;
+    }
+    if (you.religion == GOD_TROG && mon->is_actual_spellcaster())
+        return DID_SPELL_CASTING;
 
-    if (holy)
-        *holy = isHoly;
-    if (unholy)
-        *unholy = isUnholy;
-    if (lawful)
-        *lawful = isLawful;
-    if (antimagical)
-        *antimagical = isAntimagical;
-
-    return (isHoly || isUnholy || isLawful || isAntimagical);
+    return DID_NOTHING;
 }
 
 bool player_angers_monster(monster* mon)
 {
-    bool holy;
-    bool unholy;
-    bool lawful;
-    bool antimagical;
-
     // Get the drawbacks, not the benefits... (to prevent e.g. demon-scumming).
-    if (player_will_anger_monster(mon, &holy, &unholy, &lawful, &antimagical)
-        && mon->wont_attack())
+    conduct_type why = player_will_anger_monster(mon);
+    if (why && mon->wont_attack())
     {
         mon->attitude = ATT_HOSTILE;
         mon->del_ench(ENCH_CHARM);
@@ -3288,19 +3281,31 @@ bool player_angers_monster(monster* mon)
 
         if (you.can_see(mon))
         {
-            std::string aura;
+            const std::string mname = mon->name(DESC_THE).c_str();
 
-            if (holy)
-                aura = "holy";
-            else if (unholy)
-                aura = "unholy";
-            else if (lawful)
-                aura = "lawful";
-            else if (antimagical)
-                aura = "anti-magical";
-
-            mprf("%s is enraged by your %s aura!",
-                 mon->name(DESC_THE).c_str(), aura.c_str());
+            switch(why)
+            {
+            case DID_UNHOLY:
+            case DID_NECROMANCY:
+                mprf("%s is enraged by your holy aura!", mname.c_str());
+                break;
+            case DID_CORPSE_VIOLATION:
+                mprf("%s is revulsed by the natural decay you bring!", mname.c_str());
+                break;
+            case DID_HOLY:
+                mprf("%s is enraged by your evilness!", mname.c_str());
+                break;
+            case DID_UNCLEAN:
+            case DID_CHAOS:
+                mprf("%s is enraged by your lawfulness!", mname.c_str());
+                break;
+            case DID_SPELL_CASTING:
+                mprf("%s is enraged by your antimagic god!", mname.c_str());
+                break;
+            default:
+                mprf("%s is enraged by a buggy thing about you!", mname.c_str());
+                break;
+            }
         }
 
         return (true);
