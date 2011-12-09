@@ -1554,36 +1554,40 @@ MONS:   black bear / grizzly bear, wolf, spriggan
 MONS:   spriggan rider / spriggan druid
 SUBST:  T : T:20 .:1 t:1
 SUBST:  T = t.
+# These can't be substituted with floor because it might be disconnected, but if
+# there were some way to substitute space (DNGN_UNKNOWN) instead, that would
+# work.
+SUBST:  E = t
 SUBST:  2 = 2., 3 = 3., 4 = 4., . = .:190 1
 KITEM:  $ = gold, star_item
 MAP
 ttttttttttttttttttttttttttttttttttttttttttttttttttt
-tttttttttttttttttttttttttttttttttttttttttttttttttt.
-tttttttttT$G$Ttttttt....ttttttttt.....ttTTtttttTT..
-ttttttttt3.$..TTT....ttT...TTT....ttT.2222TTtt....
-tttttttTT.3.3....TTttttttT..3...TttttttTT222..ttT.
-tttttT.....4..3TtttttttttT3...3ttttttttt22ttttttt.
-ttttt..ttT3.3.TtttttttttT....3.tttttttt..tttttttT.
-tttt.ttttttttttttttttttt....tt..TttT...TT.tttttt..
-tttT2ttttttttttttttttT...TTttttt.....ttttT.Tttt..
-ttT22tttT.4TtttttttT....tttttttttTTttttttt..ttT.
-tt22ttt..3..tttttt..TTT.ttttttttttttttttttt.tt..
-tt22tttT..3.ttttT.Tttttt.22tttttttttttttttT.tt.
-tt2tttttt..TtttT2TtttttttT22TttttttttttttT.ttt.
-tt2ttttttt.TtTT22tttttttttT222ttttttttttt.tttt.
-tt..tttttTT..222Ttttttttttttt22ttTTTTtt..TtttT.
-ttT.tttt.....TTT222TttttttttttT...TT...TttttT..
-ttt..tt...TTttttttt..TTttttttttt..3...Tttttt..
-tttT....TtttttttttttT....TTttttt34.3.ttttttT.
-ttttT..tttttttttttttT..@...TTttttT..tttttT...
-ttttT..TtttttttttttT..    ....ttttttttt....
-ttttt...ttttttttttT..        ..ttttttt..
-tttttT..TttttttT....          ...TTT...
-ttttttt.@ttT.....               .....
-ttttttT......
-tttT....
-tT...
-t..
+tttttttttttttttttttttttttttttttttttttttttttttttttt
+tttttttttT$G$Ttttttt....ttttttttt.....ttTTtttttTT
+ttttttttt3.$..TTT....ttT...TTT....ttT.2222TTtt..@
+tttttttTT.3.3....TTttttttT..3...TttttttTT222..ttT
+tttttT.....4..3TtttttttttT3...3ttttttttt22ttttttt
+ttttt..ttT3.3.TtttttttttT....3.tttttttt..tttttttE
+tttt.ttttttttttttttttttt....tt..TttT...TT.tttttt
+tttT2ttttttttttttttttT...TTttttt.....ttttT.Tttt
+ttT22tttT.4TtttttttT....tttttttttTTttttttt..ttE
+tt22ttt..3..tttttt..TTT.ttttttttttttttttttt.tt
+tt22tttT..3.ttttT.Tttttt.22tttttttttttttttT.tt
+tt2tttttt..TtttT2TtttttttT22TttttttttttttT.ttt
+tt2ttttttt.TtTT22tttttttttT222ttttttttttt.tttt
+tt..tttttTT..222Ttttttttttttt22ttTTTTtt..TtttE
+ttT.tttt.....TTT222TttttttttttT...TT...TttttE
+ttt..tt...TTttttttt..TTttttttttt..3...Tttttt
+tttT....TtttttttttttT@   EEttttt34.3.ttttttE
+ttttT..tttttttttttttE      EEttttT..tttttE
+ttttT..TtttttttttttE          ttttttttt
+ttttt...ttttttttttE            ttttttt
+tttttT..TttttttE                 EEE
+ttttttt.@ttE
+ttttttE
+tttE
+tE
+t
 ENDMAP
 
 ##############################################################################
