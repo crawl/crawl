@@ -882,10 +882,19 @@ static void _update_unique_annotation(level_id level)
 static std::string unique_name(monster* mons)
 {
     std::string name = mons->name(DESC_PLAIN, true);
-    if (mons->type == MONS_LERNAEAN_HYDRA)
-        name = "Lernaean hydra";
     if (mons->type == MONS_PLAYER_GHOST)
         name += ", " + short_ghost_description(mons, true);
+    else {
+        if (strstr(name.c_str(), "royal jelly")
+            || strstr(name.c_str(), "Royal Jelly"))
+            name = "Royal Jelly";
+        if (strstr(name.c_str(), "Lernaean hydra"))
+            name = "Lernaean hydra";
+        if (strstr(name.c_str(), "Serpent of Hell"))
+            name = "Lernaean hydra";
+        if (strstr(name.c_str(), "Blork"))
+            name = "Blork the orc";
+    }
     return name;
 }
 
