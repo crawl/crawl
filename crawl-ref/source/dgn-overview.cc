@@ -891,7 +891,7 @@ static std::string unique_name(monster* mons)
         if (strstr(name.c_str(), "Lernaean hydra"))
             name = "Lernaean hydra";
         if (strstr(name.c_str(), "Serpent of Hell"))
-            name = "Lernaean hydra";
+            name = "Serpent of Hell";
         if (strstr(name.c_str(), "Blork"))
             name = "Blork the orc";
     }
