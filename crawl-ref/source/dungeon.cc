@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <list>
+#include <map>
 #include <set>
 #include <sstream>
 #include <algorithm>
@@ -1957,7 +1958,8 @@ static void _ruin_level(Iterator ri,
                         int ruination = 10,
                         int plant_density = 5)
 {
-    std::vector<coord_def> to_replace;
+    typedef std::map<coord_def,dungeon_feature_type> coord2feat;
+    coord2feat to_replace;
 
     for (; ri; ++ri)
     {
@@ -1977,31 +1979,36 @@ static void _ruin_level(Iterator ri,
         if (map_masked(*ri, vault_mask))
             continue;
 
+        // Pick a random adjacent non-wall, non-door feature, and
+        // count the number of such features.
+        dungeon_feature_type replacement = DNGN_FLOOR;
         int floor_count = 0;
         for (adjacent_iterator ai(*ri); ai; ++ai)
         {
             if (!feat_is_wall(grd(*ai)) && !feat_is_door(grd(*ai)))
-                floor_count++;
+                if (one_chance_in(++floor_count))
+                    replacement = grd(*ai);
         }
 
         /* chance of removing the tile is dependent on the number of adjacent
          * floor tiles */
         if (x_chance_in_y(floor_count, ruination))
-            to_replace.push_back(*ri);
+            to_replace[*ri] = replacement;
     }
 
-    for (std::vector<coord_def>::const_iterator it = to_replace.begin();
+    for (coord2feat::const_iterator it = to_replace.begin();
          it != to_replace.end();
          ++it)
     {
+        const coord_def &p(it->first);
+        const dungeon_feature_type replacement = it->second;
+
         /* only remove some doors, to preserve tactical options */
-        /* XXX: should this pick a random adjacent floor type, rather than
-         * just hardcoding DNGN_FLOOR? */
-        if (feat_is_wall(grd(*it)) || coinflip() && feat_is_door(grd(*it)))
-            grd(*it) = DNGN_FLOOR;
+        if (feat_is_wall(grd(p)) || coinflip() && feat_is_door(grd(p)))
+            grd(p) = replacement;
 
         /* but remove doors if we've removed all adjacent walls */
-        for (adjacent_iterator wai(*it); wai; ++wai)
+        for (adjacent_iterator wai(p); wai; ++wai)
         {
             if (feat_is_door(grd(*wai)))
             {
@@ -2012,18 +2019,19 @@ static void _ruin_level(Iterator ri,
                         remove = false;
                 }
                 if (remove)
-                    grd(*wai) = DNGN_FLOOR;
+                    grd(*wai) = replacement;
             }
         }
 
         /* replace some ruined walls with plants/fungi/bushes */
-        if (plant_density && one_chance_in(plant_density))
+        if (plant_density && one_chance_in(plant_density)
+            && replacement == DNGN_FLOOR)
         {
             mgen_data mg;
             mg.cls = one_chance_in(20) ? MONS_BUSH  :
                      coinflip()        ? MONS_PLANT :
                      MONS_FUNGUS;
-            mg.pos = *it;
+            mg.pos = p;
             mons_place(mgen_data(mg));
         }
     }
