@@ -3109,6 +3109,7 @@ void excommunication(god_type new_god)
     case GOD_ASHENZARI:
         if (you.transfer_skill_points > 0)
             ashenzari_end_transfer(false, true);
+        you.duration[DUR_SCRYING] = 0;
         you.exp_docked = exp_needed(std::min<int>(you.max_level, 27)  + 1)
                        - exp_needed(std::min<int>(you.max_level, 27));
         you.exp_docked_total = you.exp_docked;
