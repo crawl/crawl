@@ -3282,7 +3282,7 @@ std::string get_menu_colour_prefix_tags(const item_def &item,
     return (item_name);
 }
 
-typedef std::map<std::string, item_types_pair> item_names_map;
+typedef std::map<std::string, item_kind> item_names_map;
 static item_names_map item_names_cache;
 
 typedef std::map<unsigned, std::vector<std::string> > item_names_by_glyph_map;
@@ -3310,34 +3310,49 @@ void init_item_name_cache()
                 }
             }
 
+            int npluses = 0;
+            if (base_type == OBJ_BOOKS && sub_type == BOOK_MANUAL)
+                npluses = NUM_SKILLS;
+            else if (base_type == OBJ_MISCELLANY && sub_type == MISC_RUNE_OF_ZOT)
+                npluses = NUM_RUNE_TYPES;
+
             item_def item;
             item.base_type = base_type;
             item.sub_type = sub_type;
-            if (is_deck(item))
+            for (int plus = 0; plus <= npluses; plus++)
             {
-                item.plus = 1;
-                item.special = DECK_RARITY_COMMON;
-                init_deck(item);
-            }
-            std::string name = item.name(DESC_DBNAME, true, true);
-            lowercase(name);
-            glyph g = get_item_glyph(&item);
+                if (plus > 0)
+                    item.plus = std::max(0, plus - 1);
+                if (is_deck(item))
+                {
+                    item.plus = 1;
+                    item.special = DECK_RARITY_COMMON;
+                    init_deck(item);
+                }
+                std::string name = item.name(plus ? DESC_PLAIN : DESC_DBNAME,
+                                             true, true);
+                lowercase(name);
+                glyph g = get_item_glyph(&item);
 
-            if (base_type == OBJ_JEWELLERY && name == "buggy jewellery")
-                continue;
-            else if (name.find("buggy") != std::string::npos)
-            {
-                crawl_state.add_startup_error("Bad name for item name "
-                                              " cache: " + name);
-                continue;
-            }
+                if (base_type == OBJ_JEWELLERY && sub_type >= NUM_RINGS
+                    && sub_type < AMU_FIRST_AMULET)
+                {
+                    continue;
+                }
+                else if (name.find("buggy") != std::string::npos)
+                {
+                    crawl_state.add_startup_error("Bad name for item name "
+                                                  " cache: " + name);
+                    continue;
+                }
 
-            if (item_names_cache.find(name) == item_names_cache.end())
-            {
-                item_names_cache[name].base_type = base_type;
-                item_names_cache[name].sub_type = sub_type;
-                if (g.ch)
-                    item_names_by_glyph_cache[g.ch].push_back(name);
+                if (item_names_cache.find(name) == item_names_cache.end())
+                {
+                    item_kind kind = {base_type, sub_type, item.plus, 0};
+                    item_names_cache[name] = kind;
+                    if (g.ch)
+                        item_names_by_glyph_cache[g.ch].push_back(name);
+                }
             }
         }
     }
@@ -3345,7 +3360,7 @@ void init_item_name_cache()
     ASSERT(!item_names_cache.empty());
 }
 
-item_types_pair item_types_by_name(std::string name)
+item_kind item_kind_by_name(std::string name)
 {
     lowercase(name);
 
@@ -3354,7 +3369,7 @@ item_types_pair item_types_by_name(std::string name)
     if (i != item_names_cache.end())
         return (i->second);
 
-    item_types_pair err = {OBJ_UNASSIGNED, 0};
+    item_kind err = {OBJ_UNASSIGNED, 0, 0, 0};
 
     return (err);
 }

@@ -12,10 +12,11 @@
 #define CORPSE_NAME_KEY      "corpse_name_key"
 #define CORPSE_NAME_TYPE_KEY "corpse_name_type_key"
 
-struct item_types_pair
+struct item_kind
 {
     object_class_type base_type;
     uint8_t           sub_type;
+    int8_t            plus, plus2;
 };
 
 // [dshaligram] If you edit potion colours/descriptions, also update
@@ -123,7 +124,7 @@ std::string get_menu_colour_prefix_tags(const item_def &item,
                                         description_level_type desc);
 
 void            init_item_name_cache();
-item_types_pair item_types_by_name(std::string name);
+item_kind item_kind_by_name(std::string name);
 
 std::vector<std::string> item_name_list_for_glyph(unsigned glyph);
 

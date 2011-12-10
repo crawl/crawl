@@ -1075,7 +1075,7 @@ static bool _spell_filter(std::string key, std::string body)
 
 static bool _item_filter(std::string key, std::string body)
 {
-    return (item_types_by_name(key).base_type == OBJ_UNASSIGNED);
+    return (item_kind_by_name(key).base_type == OBJ_UNASSIGNED);
 }
 
 static bool _skill_filter(std::string key, std::string body)
