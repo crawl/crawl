@@ -8,6 +8,7 @@
 #include "debug.h"
 
 #include <errno.h>
+#include <signal.h>
 
 #include "clua.h"
 #include "coord.h"
@@ -39,7 +40,7 @@
 #include "view.h"
 #include "zotdef.h"
 
-#if defined(USE_TILE_LOCAL) && (defined(TARGET_OS_WINDOWS) || defined(TARGET_COMPILER_MINGW))
+#if defined(TARGET_OS_WINDOWS) || defined(TARGET_COMPILER_MINGW)
 #define NOCOMM            /* Comm driver APIs and definitions */
 #define NOLOGERROR        /* LogError() and related definitions */
 #define NOPROFILER        /* Profiler APIs */
@@ -71,7 +72,10 @@
 #define NOMCX             /* Modem Configuration Extensions */
 #include <windows.h>
 #undef max
+
+#ifdef USE_TILE_LOCAL
 #include <SDL/SDL_syswm.h>
+#endif
 #endif
 
 static std::string _assert_msg;
@@ -730,7 +734,7 @@ void do_crash_dump()
 //---------------------------------------------------------------
 static NORETURN void _BreakStrToDebugger(const char *mesg, bool assert)
 {
-#if defined(USE_TILE_LOCAL) && (defined(TARGET_COMPILER_MINGW) || defined(TARGET_OS_WINDOWS))
+#if defined(USE_TILE_LOCAL) && defined(TARGET_OS_WINDOWS)
     SDL_SysWMinfo SysInfo;
     SDL_VERSION(&SysInfo.version);
     if (SDL_GetWMInfo(&SysInfo) > 0)
@@ -741,21 +745,24 @@ static NORETURN void _BreakStrToDebugger(const char *mesg, bool assert)
     }
     // Print the message to STDERR in addition to the above message box,
     // so it's in the message history if we call Crawl from a shell.
-    fprintf(stderr, "%s", mesg);
-
-    int* p = NULL;
-    *p = 0;
-    abort();
-
-#else
+#endif
     fprintf(stderr, "%s\n", mesg);
-#if defined(TARGET_OS_MACOSX) || defined(TARGET_COMPILER_MINGW)
+
+#if defined(TARGET_OS_WINDOWS)
+    OutputDebugString(mesg);
+    if (IsDebuggerPresent())
+        DebugBreak();
+#endif
+
+#if defined(TARGET_OS_MACOSX)
 // raise(SIGINT);               // this is what DebugStr() does on OS X according to Tech Note 2030
     int* p = NULL;              // but this gives us a stack crawl...
     *p = 0;
 #endif
+
+    // MSVCRT's abort() give's a funny message ...
+    raise(SIGABRT);
     abort();
-#endif
 }
 
 #ifdef ASSERTS
