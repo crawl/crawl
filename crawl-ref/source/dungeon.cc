@@ -1980,19 +1980,24 @@ static void _ruin_level(Iterator ri,
         if (map_masked(*ri, vault_mask))
             continue;
 
-        // Pick a random adjacent non-wall, non-door feature, and
-        // count the number of such features.
+        // Pick a random adjacent non-wall, non-door, non-statue
+        // feature, and count the number of such features.
         dungeon_feature_type replacement = DNGN_FLOOR;
         int floor_count = 0;
         for (adjacent_iterator ai(*ri); ai; ++ai)
         {
-            if (!feat_is_wall(grd(*ai)) && !feat_is_door(grd(*ai)))
+            if (!feat_is_wall(grd(*ai)) && !feat_is_door(grd(*ai))
+                && !feat_is_statue_or_idol(grd(*ai))
+                // Shouldn't happen, but just in case.
+                && grd(*ai) != DNGN_MALIGN_GATEWAY)
+            {
                 if (one_chance_in(++floor_count))
                     replacement = grd(*ai);
+            }
         }
 
         /* chance of removing the tile is dependent on the number of adjacent
-         * floor tiles */
+         * floor(ish) tiles */
         if (x_chance_in_y(floor_count, ruination))
         {
             to_replace.push_back(coord_feat(*ri, replacement));
@@ -2006,12 +2011,21 @@ static void _ruin_level(Iterator ri,
         const coord_def &p(it->first);
         dungeon_feature_type replacement = it->second;
 
-        // Exclude traps, shops, stairs, portals, altars, fountains.
-        // The first four, especially, are a big deal.
-        if (replacement == DNGN_MALIGN_GATEWAY)
-            replacement = DNGN_ROCK_WALL;
-        else if (replacement >= DNGN_FLOOR_MIN)
+        // Don't replace doors with impassable features.
+        if (feat_is_door(grd(p)))
+        {
+            if (feat_is_water(replacement))
+                replacement = DNGN_SHALLOW_WATER;
+            else
+                replacement = DNGN_FLOOR;
+        }
+        else if (feat_has_solid_floor(replacement)
+                 && replacement != DNGN_SHALLOW_WATER)
+        {
+            // Exclude traps, shops, stairs, portals, altars, fountains.
+            // The first four, especially, are a big deal.
             replacement = DNGN_FLOOR;
+        }
 
         /* only remove some doors, to preserve tactical options */
         if (feat_is_wall(grd(p)) || coinflip() && feat_is_door(grd(p)))
@@ -2028,14 +2042,15 @@ static void _ruin_level(Iterator ri,
                     if (feat_is_wall(grd(*dai)))
                         remove = false;
                 }
+                // It's always safe to replace a door with floor.
                 if (remove)
-                    grd(*wai) = replacement;
+                    grd(*wai) = DNGN_FLOOR;
             }
         }
 
         /* replace some ruined walls with plants/fungi/bushes */
         if (plant_density && one_chance_in(plant_density)
-            && replacement == DNGN_FLOOR)
+            && feat_has_solid_floor(replacement))
         {
             mgen_data mg;
             mg.cls = one_chance_in(20) ? MONS_BUSH  :
