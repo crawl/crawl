@@ -3000,58 +3000,6 @@ int item_on_floor(const item_def &item, const coord_def& where)
     return (NON_ITEM);
 }
 
-static bool _find_subtype_by_name(item_def &item,
-                                  object_class_type base_type, int ntypes,
-                                  const std::string &name)
-{
-    // In order to get the sub-type, we'll fill out the base type...
-    // then we're going to iterate over all possible subtype values
-    // and see if we get a winner. -- bwr
-
-    item.base_type = base_type;
-    item.sub_type  = OBJ_RANDOM;
-    item.plus      = 0;
-    item.plus2     = 0;
-    item.special   = 0;
-    item.flags     = 0;
-    item.quantity  = 1;
-    // Don't use set_ident_flags in order to avoid triggering notes.
-    // FIXME - is this the proper solution?
-    item.flags |= (ISFLAG_KNOW_TYPE | ISFLAG_KNOW_PROPERTIES);
-
-    int type_wanted = -1;
-
-    for (int i = 0; i < ntypes; i++)
-    {
-        item.sub_type = i;
-
-        int npluses = 1;
-        if (base_type == OBJ_BOOKS && i == BOOK_MANUAL)
-            npluses = NUM_SKILLS;
-        else if (base_type == OBJ_MISCELLANY && i == MISC_RUNE_OF_ZOT)
-            npluses = NUM_RUNE_TYPES;
-
-        for (int j = 0; j < npluses; ++j)
-        {
-            item.plus = j;
-
-            if (name == lowercase_string(item.name(DESC_PLAIN, false, false, false)))
-            {
-                type_wanted = i;
-                i = ntypes;
-                break;
-            }
-        }
-    }
-
-    if (type_wanted != -1)
-        item.sub_type = type_wanted;
-    else
-        item.sub_type = OBJ_RANDOM;
-
-    return (item.sub_type != OBJ_RANDOM);
-}
-
 int get_max_subtype(object_class_type base_type)
 {
     static int max_subtype[] =
@@ -3085,28 +3033,6 @@ int get_max_subtype(object_class_type base_type)
     ASSERT(base_type < NUM_OBJECT_CLASSES);
 
     return (max_subtype[base_type]);
-}
-
-// Returns an incomplete item_def with base_type and sub_type set correctly
-// for the given item name. If the name is not found, sets sub_type to
-// OBJ_RANDOM.
-item_def find_item_type(std::string name)
-{
-    item_def item;
-    item.base_type = OBJ_RANDOM;
-    lowercase(name);
-
-    for (unsigned i = 0; i < NUM_OBJECT_CLASSES; ++i)
-    {
-        object_class_type cls = static_cast<object_class_type>(i);
-        if (get_max_subtype(cls) == 0)
-            continue;
-
-        if (_find_subtype_by_name(item, cls, get_max_subtype(cls), name))
-            break;
-    }
-
-    return (item);
 }
 
 equipment_type item_equip_slot(const item_def& item)
