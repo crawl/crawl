@@ -1095,6 +1095,16 @@ trap_def* find_trap(const coord_def& pos)
         return (NULL);
 
     unsigned short t = env.tgrid(pos);
+
+#if TAG_MAJOR_VERSION == 32
+    // Fix breakage from a brief _ruin_level() bug.
+    if (t == NON_ENTITY || t >= MAX_TRAPS)
+    {
+        grd(pos) = DNGN_FLOOR;
+        return (NULL);
+    }
+#endif
+
     ASSERT(t != NON_ENTITY && t < MAX_TRAPS);
     ASSERT(env.trap[t].pos == pos && env.trap[t].type != TRAP_UNASSIGNED);
 
