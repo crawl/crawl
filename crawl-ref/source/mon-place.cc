@@ -3290,7 +3290,7 @@ bool player_angers_monster(monster* mon)
                 mprf("%s is enraged by your holy aura!", mname.c_str());
                 break;
             case DID_CORPSE_VIOLATION:
-                mprf("%s is revulsed by the natural decay you bring!", mname.c_str());
+                mprf("%s is revulsed by your perversion of nature!", mname.c_str());
                 break;
             case DID_HOLY:
                 mprf("%s is enraged by your evilness!", mname.c_str());
