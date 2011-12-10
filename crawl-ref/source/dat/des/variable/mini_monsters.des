@@ -678,6 +678,40 @@ MAP
 '??.
 ENDMAP
 
+NAME:   nicolae_underground_beach
+DEPTH:  D:2-
+TAGS:   no_trap_gen no_pool_fixup
+SUBST:  N = MO, M = bW, O = wW
+: if you.absdepth() > 6 then
+SUBST:  b = SBB
+KPROP:  B = bloody
+SUBST:  B = S
+NSUBST: S = 3:v / *:S
+: dgn.delayed_decay(_G, 'v', 'human corpse')
+NSUBST: w = 4:j / *:w
+KMONS:  j = shark
+KFEAT:  j = w
+: else
+SUBST:  b = S
+TAGS:   no_monster_gen
+: end
+SUBST:  E = .S
+COLOUR: Sv : brown
+FTILE:  vSwWj = floor_sand_stone
+SUBST:  S = .
+MAP
+      xxxxx
+    xxxMNOxxx
+   xxbbMNOwwxx
+xxxxbbbMNOwwwx
+.EEEbbbMNOwwwx
+@EEEbbbMNOwwwx
+.EEEbbbMNOwwwx
+xxxxbbbMNOwwwx
+   xxbbMNOwwxx
+    xxxMNOxxx
+      xxxxx
+ENDMAP
 
 ###############################################################################
 #
