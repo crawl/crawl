@@ -5190,7 +5190,7 @@ void item_list::parse_raw_name(std::string name, item_spec &spec)
         return ;
     }
 
-    item_def parsed = find_item_type(OBJ_UNASSIGNED, name);
+    item_def parsed = find_item_type(name);
     if (parsed.sub_type != OBJ_RANDOM)
     {
         spec.base_type = parsed.base_type;

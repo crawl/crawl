@@ -3090,34 +3090,20 @@ int get_max_subtype(object_class_type base_type)
 // Returns an incomplete item_def with base_type and sub_type set correctly
 // for the given item name. If the name is not found, sets sub_type to
 // OBJ_RANDOM.
-item_def find_item_type(object_class_type base_type, std::string name)
+item_def find_item_type(std::string name)
 {
     item_def item;
     item.base_type = OBJ_RANDOM;
-    item.sub_type  = OBJ_RANDOM;
     lowercase(name);
 
-    if (base_type == OBJ_RANDOM || base_type == OBJ_UNASSIGNED)
-        base_type = OBJ_UNASSIGNED;
-
-    if (base_type == OBJ_UNASSIGNED)
+    for (unsigned i = 0; i < NUM_OBJECT_CLASSES; ++i)
     {
-        for (unsigned i = 0; i < NUM_OBJECT_CLASSES; ++i)
-        {
-            object_class_type cls = static_cast<object_class_type>(i);
-            if (get_max_subtype(cls) == 0)
-                continue;
+        object_class_type cls = static_cast<object_class_type>(i);
+        if (get_max_subtype(cls) == 0)
+            continue;
 
-            if (_find_subtype_by_name(item, cls, get_max_subtype(cls), name))
-            {
-                break;
-            }
-        }
-    }
-    else
-    {
-        _find_subtype_by_name(item, base_type,
-                              get_max_subtype(base_type), name);
+        if (_find_subtype_by_name(item, cls, get_max_subtype(cls), name))
+            break;
     }
 
     return (item);
