@@ -12,8 +12,6 @@
 local ATT_HOSTILE = 0
 local ATT_NEUTRAL = 1
 
-local MB_WITHDRAWN = 53
-
 AUTOFIGHT_STOP = 30
 
 local function delta_to_vi(dx, dy)
@@ -154,12 +152,12 @@ local function is_candidate_for_attack(x,y)
   if not m or m:attitude() ~= ATT_HOSTILE then
     return false
   end
-  if m:is_safe() then
-  --crawl.mpr("... is safe.")
+  if string.find(m:desc(), "butterfly") then
+    return false
+  end
+  if m:is_firewood() then
+  --crawl.mpr("... is firewood.")
     if string.find(m:desc(), "ballistomycete") then
-      return true
-    end
-    if m:is(MB_WITHDRAWN) then
       return true
     end
     return false
