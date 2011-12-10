@@ -156,6 +156,11 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     attacker_shield_penalty = attacker->adjusted_shield_penalty(1);
 }
 
+static bool _cell_is_water(const coord_def &pos)
+{
+    return feat_is_water(grd(pos));
+}
+
 bool melee_attack::handle_phase_attempted()
 {
     // Skip invalid and dummy attacks.
@@ -169,14 +174,17 @@ bool melee_attack::handle_phase_attempted()
 
     if (attacker->atype() == ACT_PLAYER && defender->atype() == ACT_MONSTER)
     {
-        if (weapon && is_unrandom_artefact(*weapon)
-            && weapon->special == UNRAND_DEVASTATOR)
+        if ((damage_brand == SPWPN_ELECTROCUTION
+                && _cell_is_water(defender->pos()))
+            || (weapon && is_unrandom_artefact(*weapon)
+                && weapon->special == UNRAND_DEVASTATOR))
         {
             std::string junk1, junk2;
             const char *verb = (bad_attack(defender->as_monster(), junk1, junk2)
                                 ? "attack" : "attack near");
 
-            targetter_smite hitfunc(attacker, 1, 1, 1);
+            targetter_smite hitfunc(attacker, 1, 1, 1, false,
+                damage_brand == SPWPN_ELECTROCUTION ? _cell_is_water : 0);
             hitfunc.set_aim(defender->pos());
             if (stop_attack_prompt(hitfunc, verb))
             {

@@ -50,8 +50,10 @@ aff_type targetter_view::is_affected(coord_def loc)
 
 
 targetter_smite::targetter_smite(const actor* act, int ran,
-                                 int exp_min, int exp_max, bool wall_ok):
-    exp_range_min(exp_min), exp_range_max(exp_max), affects_walls(wall_ok)
+                                 int exp_min, int exp_max, bool wall_ok,
+                                 bool (*affects_pos_func)(const coord_def &)):
+    exp_range_min(exp_min), exp_range_max(exp_max), affects_walls(wall_ok),
+    affects_pos(affects_pos_func)
 {
     ASSERT(act);
     ASSERT(exp_min >= 0);
@@ -102,6 +104,9 @@ bool targetter_smite::set_aim(coord_def a)
 aff_type targetter_smite::is_affected(coord_def loc)
 {
     if (!valid_aim(aim))
+        return AFF_NO;
+
+    if (affects_pos && !affects_pos(loc))
         return AFF_NO;
 
     if (loc == aim)
