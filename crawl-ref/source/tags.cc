@@ -3304,10 +3304,6 @@ void tag_construct_level_tiles(writer &th)
 #ifndef USE_TILE
     marshallBoolean(th, false);
 #else
-    unsigned int rle_count = 0; // for run-length encoding
-    unsigned int tile      = 0;
-    unsigned int last_tile = 0;
-
     marshallBoolean(th, true); // Tiles data included.
 
     // Map grids.
@@ -3762,7 +3758,6 @@ void tag_read_level_tiles(reader &th)
 
 #ifdef USE_TILE
     unsigned int rle_count = 0;
-    unsigned int tile = 0;
 
     // Map grids.
     // how many X?
