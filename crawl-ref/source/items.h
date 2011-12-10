@@ -50,7 +50,7 @@ bool items_stack(const item_def &item1, const item_def &item2,
 void merge_item_stacks(item_def &source, item_def &dest,
                        int quant = -1);
 
-item_def find_item_type(object_class_type base_type, std::string name);
+item_def find_item_type(std::string name);
 item_def *find_floor_item(object_class_type cls, int sub_type);
 int item_on_floor(const item_def &item, const coord_def& where);
 
