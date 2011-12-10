@@ -265,12 +265,6 @@ bool melee_attack::handle_phase_attempted()
 
     attack_occurred = true;
 
-    // Based on pre-unification code, this looks to be the appropriate place
-    // to check unrand effects, but this will result in behavior where unrand
-    // effects will occur regardless of whether the attacker hits or misses
-    if (check_unrand_effects())
-        return (false);
-
     /* TODO Permanently remove this? Commented out for temporary removal
      *
      * The only scenario this handles that isn't handled elsewhere (later on)
@@ -454,8 +448,14 @@ bool melee_attack::handle_phase_hit()
     // messages, etc.
     damage_done = calc_damage();
 
-    // Check if some hit-effect killed the monster
-    if (attacker->atype() == ACT_PLAYER && player_monattk_hit_effects())
+    bool stop_hit = false;
+    // Check if some hit-effect killed the monster.  We muse
+    if (attacker->atype() == ACT_PLAYER)
+        stop_hit = player_monattk_hit_effects();
+  
+    // check_unrand_effects is safe to call with a dead defender, so always
+    // call it, even if the hit effects said to stop.
+    if (check_unrand_effects() || stop_hit)
         return (false);
 
     if (damage_done > 0)
