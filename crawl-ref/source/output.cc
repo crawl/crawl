@@ -626,6 +626,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         DUR_TORNADO_COOLDOWN,
         STATUS_BACKLIT,
         STATUS_UMBRA,
+        DUR_DIVINE_STAMINA,
     };
 
     status_info inf;
