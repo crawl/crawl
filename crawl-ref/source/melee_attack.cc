@@ -158,10 +158,10 @@ melee_attack::melee_attack(actor *attk, actor *defn,
 
 static bool _conduction_affected(const coord_def &pos)
 {
-    const monster *mons = monster_at(pos);
+    const actor *act = actor_at(pos);
 
     // Don't check rElec to avoid leaking information about armour etc.
-    return feat_is_water(grd(pos)) && mons && mons->ground_level();
+    return feat_is_water(grd(pos)) && act && act->ground_level();
 }
 
 bool melee_attack::handle_phase_attempted()
@@ -182,17 +182,42 @@ bool melee_attack::handle_phase_attempted()
             || (weapon && is_unrandom_artefact(*weapon)
                 && weapon->special == UNRAND_DEVASTATOR))
         {
-            std::string junk1, junk2;
-            const char *verb = (bad_attack(defender->as_monster(), junk1, junk2)
-                                ? "attack" : "attack near");
-
-            targetter_smite hitfunc(attacker, 1, 1, 1, false,
-                damage_brand == SPWPN_ELECTROCUTION ? _conduction_affected : 0);
-            hitfunc.set_aim(defender->pos());
-            if (stop_attack_prompt(hitfunc, verb))
+            if (damage_brand == SPWPN_ELECTROCUTION
+                && adjacent(attacker->pos(), defender->pos())
+                && _conduction_affected(attacker->pos())
+                && !attacker->res_elec()
+                && !you.received_weapon_warning)
             {
-                cancel_attack = true;
-                return (false);
+                std::string prompt = "Really attack with ";
+                if (weapon)
+                    prompt += weapon->name(DESC_YOUR);
+                else 
+                    prompt += "your electric unarmed attack";
+                prompt += " while in water? ";
+
+                if (yesno(prompt.c_str(), true, 'n'))
+                    you.received_weapon_warning = true;
+                else
+                    return (false);
+            }
+            else
+            {
+                std::string junk1, junk2;
+                const char *verb = (bad_attack(defender->as_monster(),
+                                               junk1, junk2)
+                                    ? "attack" : "attack near");
+                bool (*aff_func)(const coord_def &) = 0;
+                if (damage_brand == SPWPN_ELECTROCUTION)
+                    aff_func = _conduction_affected;
+
+                targetter_smite hitfunc(attacker, 1, 1, 1, false, aff_func);
+                hitfunc.set_aim(defender->pos());
+
+                if (stop_attack_prompt(hitfunc, verb))
+                {
+                    cancel_attack = true;
+                    return (false);
+                }
             }
         }
         else if (stop_attack_prompt(defender->as_monster(), false,
