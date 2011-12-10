@@ -713,6 +713,21 @@ xxxxbbbMNOwwwx
       xxxxx
 ENDMAP
 
+# The dragon can be ood, but it can only get out if you let it chase you. A
+# window provides ample warning.
+NAME:   evilmike_quicksilver_bait
+TAGS:   no_monster_gen
+DEPTH:  D:16-
+KITEM:  1 = gold, gold, gold, superb_item, acquire any
+KMONS:  1 = patrolling quicksilver dragon
+MAP
+ ccccccccccccc
+@llllllllllllc
+ cnccccccccclc
+ c1llllllllllc
+ ccccccccccccc
+ENDMAP
+
 ###############################################################################
 #
 # <<3>> Humanoids
