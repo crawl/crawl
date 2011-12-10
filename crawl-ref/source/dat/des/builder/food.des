@@ -89,7 +89,7 @@ cccc....cccc
 cccccccccccc
 ENDMAP
 
-# 18.8k/13.3k/13k
+# 23.2k/19.9k/13k
 NAME:   hangedman_fish_farm
 DEPTH:  D:7-14
 CHANCE: 100% (D:14), 15%
@@ -99,7 +99,7 @@ KMONS:  A = merfolk ; spear
 KMONS:  B = big fish / nothing
 KMONS:  C = big fish
 KFEAT:  gBC = shallow_water
-ITEM:   meat ration q:2, bread ration q:2, throwing net
+ITEM:   meat ration q:2, bread ration q:3, throwing net
 :       dgn.delayed_decay(_G, 'g', 'big fish corpse')
 MAP
 xxxxxx
@@ -109,7 +109,7 @@ xCBBBx
 xxxxxx
 ENDMAP
 
-# 6k/6.8k/4.6k (min 6k/0/0), plus perishable 6k/6k/0
+# 18k/18.8k/16.6k (min 18k/12k/12k), plus perishable 6k/6k/0
 NAME:   hangedman_pestilent_swarm
 DEPTH:  D:8-14
 CHANCE: 100% (D:14), 15%
@@ -119,6 +119,7 @@ MONS:   orange rat w:8 / tarantella / jumping spider / yellow wasp / \
         rock worm / boring beetle
 MONS:   human / elf / nothing
 ITEM:   cheese q:3 / beef jerky q:3 / lemon q:3, potion of porridge
+KITEM:  3 = honeycomb q:6
 MAP
 .xxxxxxx
 @xx.x.xcccc
@@ -128,14 +129,14 @@ MAP
  xxxxxxx
 ENDMAP
 
-# 14k (min 12k)
+# 20k (min 16k)
 NAME:   hangedman_little_slice_of_home
 DEPTH:  D:8-14
 CHANCE: 100% (D:14), 10%
 TAGS:   uniq_second_food extra chance_second_food
 KMONS:  A = jelly
 KMONS:  BC = ooze
-KITEM:  C = royal jelly q:3 / royal jelly q:4
+KITEM:  C = royal jelly q:4 / royal jelly q:6
 KFEAT:  AB = net trap w:2 / .
 KFEAT:  C = altar_jiyva w:1 / net trap w:1 / . w:20
 MARKER: + = lua:restrict_door()
@@ -149,7 +150,7 @@ MAP
  .Wxxxxxx
 ENDMAP
 
-# 17.5k/14k/13k (min 1.2k)
+# 22.3k/18.8k/19k (min 9.6k)
 NAME:     hangedman_ranch
 DEPTH:    D:8-14
 CHANCE:   100% (D:14), 10%
@@ -161,7 +162,7 @@ KMONS:    C = yak
 KMONS:    D = big kobold
 KMONS:    E = big kobold ; nothing
 KMONS:    F = plant
-KITEM:    C = cheese q:2
+KITEM:    C = cheese q:4
 KITEM:    E = falchion ego:flaming ident:type / short sword ego:flaming
 KITEM:    H = meat ration q:2
 KITEM:    I = sabre
@@ -202,7 +203,7 @@ tt.ttttttttt
  tttttttttt
 ENDMAP
 
-# 12.4k/14.7/8k
+# 16.8k/21.3/8k
 NAME:   hangedman_tell_no_tales
 DEPTH:  D:9-14
 CHANCE: 100% (D:14), 10%
@@ -217,7 +218,7 @@ KMONS:  A = vapour spells:shock;shock;shock;.;.;.; name:brume n_rpl n_des w:5 / 
 KMONS:  A = vapour w:4 / unseen horror / nothing w:1
 : end
 ITEM:   sultana w:8 q:1 / potion of water
-ITEM:   honeycomb q:2, bread ration q:2
+ITEM:   honeycomb q:2, bread ration q:3
 : if crawl.coinflip() then
 :     dgn.delayed_decay(_G, 'g', 'spriggan skeleton')
 : else
