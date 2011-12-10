@@ -2004,7 +2004,14 @@ static void _ruin_level(Iterator ri,
          ++it)
     {
         const coord_def &p(it->first);
-        const dungeon_feature_type replacement = it->second;
+        dungeon_feature_type replacement = it->second;
+
+        // Exclude traps, shops, stairs, portals, altars, fountains.
+        // The first four, especially, are a big deal.
+        if (replacement == DNGN_MALIGN_GATEWAY)
+            replacement = DNGN_ROCK_WALL;
+        else if (replacement >= DNGN_FLOOR_MIN)
+            replacement = DNGN_FLOOR;
 
         /* only remove some doors, to preserve tactical options */
         if (feat_is_wall(grd(p)) || coinflip() && feat_is_door(grd(p)))
