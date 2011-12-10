@@ -156,9 +156,12 @@ melee_attack::melee_attack(actor *attk, actor *defn,
     attacker_shield_penalty = attacker->adjusted_shield_penalty(1);
 }
 
-static bool _cell_is_water(const coord_def &pos)
+static bool _conduction_affected(const coord_def &pos)
 {
-    return feat_is_water(grd(pos));
+    const monster *mons = monster_at(pos);
+
+    // Don't check rElec to avoid leaking information about armour etc.
+    return feat_is_water(grd(pos)) && mons && mons->ground_level();
 }
 
 bool melee_attack::handle_phase_attempted()
@@ -175,7 +178,7 @@ bool melee_attack::handle_phase_attempted()
     if (attacker->atype() == ACT_PLAYER && defender->atype() == ACT_MONSTER)
     {
         if ((damage_brand == SPWPN_ELECTROCUTION
-                && _cell_is_water(defender->pos()))
+                && _conduction_affected(defender->pos()))
             || (weapon && is_unrandom_artefact(*weapon)
                 && weapon->special == UNRAND_DEVASTATOR))
         {
@@ -184,7 +187,7 @@ bool melee_attack::handle_phase_attempted()
                                 ? "attack" : "attack near");
 
             targetter_smite hitfunc(attacker, 1, 1, 1, false,
-                damage_brand == SPWPN_ELECTROCUTION ? _cell_is_water : 0);
+                damage_brand == SPWPN_ELECTROCUTION ? _conduction_affected : 0);
             hitfunc.set_aim(defender->pos());
             if (stop_attack_prompt(hitfunc, verb))
             {
@@ -2872,8 +2875,9 @@ bool melee_attack::apply_damage_brand()
             const coord_def& pos = defender->pos();
 
             // We know the defender is neither airborne nor electricity
-            // resistant, from above, but is it on water?
-            if (feat_is_water(grd(pos)))
+            // resistant, from above, but we still have to make sure it
+            // is in water (and not clinging above it).
+            if (_conduction_affected(pos))
             {
                 add_final_effect(FINEFF_LIGHTNING_DISCHARGE, attacker, defender,
                                  pos);
