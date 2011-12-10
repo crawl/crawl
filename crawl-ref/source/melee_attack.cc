@@ -172,9 +172,13 @@ bool melee_attack::handle_phase_attempted()
         if (weapon && is_unrandom_artefact(*weapon)
             && weapon->special == UNRAND_DEVASTATOR)
         {
+            std::string junk1, junk2;
+            const char *verb = (bad_attack(defender->as_monster(), junk1, junk2)
+                                ? "attack" : "attack near");
+
             targetter_smite hitfunc(attacker, 1, 1, 1);
             hitfunc.set_aim(defender->pos());
-            if (stop_attack_prompt(hitfunc, "attack"))
+            if (stop_attack_prompt(hitfunc, verb))
             {
                 cancel_attack = true;
                 return (false);
