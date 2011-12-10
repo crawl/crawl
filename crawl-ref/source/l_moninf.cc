@@ -39,6 +39,7 @@ void lua_push_moninf(lua_State *ls, monster_info *mi)
 
 MIRET1(number, damage_level, dam)
 MIRET1(boolean, is_safe, is(MB_SAFE))
+MIRET1(boolean, is_firewood, is(MB_FIREWOOD))
 MIRET1(number, holiness, holi)
 MIRET1(number, attitude, attitude)
 MIRET1(number, threat, threat)
@@ -102,6 +103,7 @@ static const struct luaL_reg moninf_lib[] =
     MIREG(mname),
     MIREG(is),
     MIREG(is_safe),
+    MIREG(is_firewood),
     MIREG(is_very_stabbable),
     MIREG(holiness),
     MIREG(attitude),
