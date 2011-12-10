@@ -79,23 +79,23 @@ end
 -- 3. Optionally, the expected item name for DESC_PLAIN or a table of
 --    item description type and expected item name.
 local name_checks = {
-  { "griffon", { "The", "The griffon" }, { "a", "a griffon corpse" } },
+  { "griffon", { "the", "the griffon" }, { "a", "a griffon corpse" } },
   { "kobold name:ugly name_adjective",
-    { "A", "An ugly kobold" } },
+    { "a", "an ugly kobold" } },
   { "kobold name:ugly name_adjective",
     { "the", "the ugly kobold" } },
   { "kobold name:ugly n_adj n_spe", "ugly kobold", "ugly kobold corpse" },
   { "kobold name:Durwent",
-    { "A", "Durwent the kobold" },
+    { "a", "Durwent the kobold" },
     { "a", "the kobold corpse of Durwent" } },
   { "kobold name:wearing_mittens name_suffix",
-    { "A", "A kobold wearing mittens" },
+    { "a", "a kobold wearing mittens" },
     "kobold corpse" },
   { "gnoll name:gnoll_sergeant name_replace name_descriptor name_species",
-    { "A", "A gnoll sergeant" },
+    { "a", "a gnoll sergeant" },
     { "a", "a gnoll sergeant corpse" } },
   { "gnoll name:gnoll_sergeant name_replace name_descriptor",
-    { "A", "A gnoll sergeant" },
+    { "a", "a gnoll sergeant" },
     -- [ds] FIXME: this should probably be just "a gnoll corpse"
     { "a", "a gnoll corpse of gnoll sergeant" } },
 }
