@@ -122,7 +122,7 @@ static void _crash_signal_handler(int sig_num)
 #endif
     // In case the crash dumper is unable to open a file and has to dump
     // to stderr.
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     if (crawl_state.io_inited)
         console_shutdown();
 #endif
