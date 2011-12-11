@@ -2877,7 +2877,7 @@ static bool _fedhas_protects_species(int mc)
 
 bool fedhas_protects(const monster* target)
 {
-    return target && _fedhas_protects_species(target->mons_species());
+    return (target && _fedhas_protects_species(target->mons_species()));
 }
 
 // Fedhas neutralises most plants and fungi
@@ -3227,7 +3227,7 @@ bool god_hates_attacking_friend(god_type god, int species)
         case GOD_JIYVA:
             return (mons_class_is_slime(species));
         case GOD_FEDHAS:
-            return _fedhas_protects_species(species);
+            return (_fedhas_protects_species(species));
         default:
             return (false);
     }
