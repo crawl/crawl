@@ -1012,7 +1012,7 @@ bool direction_chooser::move_is_ok() const
 static bool _blocked_ray(const coord_def &where,
                          dungeon_feature_type* feat = NULL)
 {
-    if (exists_ray(you.pos(), where))
+    if (exists_ray(you.pos(), where, opc_solid_see))
         return (false);
     if (feat == NULL)
         return (true);
@@ -1628,7 +1628,7 @@ void direction_chooser::toggle_beam()
     if (show_beam)
     {
         have_beam = find_ray(you.pos(), target(), beam,
-                             opc_solid, BDS_DEFAULT);
+                             opc_solid_see, BDS_DEFAULT);
     }
 }
 
@@ -1702,7 +1702,7 @@ void direction_chooser::handle_wizard_command(command_type key_command,
     case CMD_TARGET_CYCLE_BEAM:
         show_beam = true;
         have_beam = find_ray(you.pos(), target(), beam,
-                             opc_solid, BDS_DEFAULT, show_beam);
+                             opc_solid_see, BDS_DEFAULT, show_beam);
         need_beam_redraw = true;
         return;
 
@@ -2036,7 +2036,7 @@ bool direction_chooser::do_main_loop()
     if (old_target != target())
     {
         have_beam = show_beam && find_ray(you.pos(), target(), beam,
-                                          opc_solid, BDS_DEFAULT);
+                                          opc_solid_see, BDS_DEFAULT);
         need_text_redraw   = true;
         need_beam_redraw   = true;
         need_cursor_redraw = true;
@@ -2093,7 +2093,7 @@ bool direction_chooser::choose_direction()
     if (show_beam)
     {
         have_beam = find_ray(you.pos(), target(), beam,
-                             opc_solid, BDS_DEFAULT);
+                             opc_solid_see, BDS_DEFAULT);
         need_beam_redraw = have_beam;
     }
     if (hitfunc)

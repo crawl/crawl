@@ -94,6 +94,13 @@ static void _update_globallos_at(const coord_def& p, los_type l)
             _save_los(&los, l);
             break;
         }
+    case LOS_SOLID_SEE:
+        {
+            los_def los(p, opc_solid_see);
+            los.update();
+            _save_los(&los, l);
+            break;
+        }
     default:
         die("invalid opacity");
     }

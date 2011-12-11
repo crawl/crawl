@@ -149,8 +149,11 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
 static bool _blocked_ray(const coord_def &where,
                          dungeon_feature_type* feat = NULL)
 {
-    if (exists_ray(you.pos(), where) || !exists_ray(you.pos(), where, opc_default))
+    if (exists_ray(you.pos(), where, opc_solid_see)
+        || !exists_ray(you.pos(), where, opc_default))
+    {
         return (false);
+    }
     if (feat == NULL)
         return (true);
     *feat = ray_blocker(you.pos(), where);

@@ -737,7 +737,7 @@ void bolt::choose_ray()
 {
     if (!chose_ray || reflections > 0)
     {
-        if (!find_ray(source, target, ray))
+        if (!find_ray(source, target, ray, opc_solid_see))
             fallback_ray(source, target, ray);
     }
 }
@@ -2207,7 +2207,7 @@ static void _create_feat_at(coord_def center,
         dungeon_terrain_changed(center, newfeat, true, false, true);
 }
 
-static coord_def _random_point_visible_from(const coord_def &c,
+static coord_def _random_point_hittable_from(const coord_def &c,
                                             int radius,
                                             int margin = 1,
                                             int tries = 5)
@@ -2234,7 +2234,7 @@ static void _create_feat_splash(coord_def center,
     _create_feat_at(center, overwriteable, newfeat);
     for (int i = 0; i < nattempts; ++i)
     {
-        const coord_def newp(_random_point_visible_from(center, radius));
+        const coord_def newp(_random_point_hittable_from(center, radius));
         if (newp.origin() || grd(newp) != overwriteable)
             continue;
         _create_feat_at(newp, overwriteable, newfeat);
