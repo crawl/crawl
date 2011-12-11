@@ -1093,6 +1093,13 @@ XX,o.o,XX
  XXX@XXX
 ENDMAP
 
+# This one doesn't work.  The idea is to have the player pick one of the
+# doors, two have goats one has a jelly (as in the "Monty Hall" problem).
+# Yet currently there is nothing to stop people from opening all the doors,
+# and in fact, autoexplore will do that for you unless you place extra
+# exclusions on remaining doors.
+# This vault had "warnings" written on front (but not back) doors, this
+# confused unspoiled players without giving anything.
 NAME:    xom_monty_hall
 TAGS:    no_item_gen no_monster_gen temple_overflow_xom uniq_altar_xom
 DEPTH:   D:2-7
@@ -1105,11 +1112,6 @@ SUBST:   x = ccbbvxX
 KFEAT:   _ = altar_xom
 MONS:    jelly
 MONS:    sheep hd:2 / quokka w:1
-MARKER:  / = lua:props_marker { \
-             door_open_prompt="This door is covered in warnings. Open " .. \
-                                         "it anyway?", \
-             door_description_prefix="warning-scrawled " \
-             }
 SUBST:   / = +
 MAP
  xnxnxnx
