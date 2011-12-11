@@ -4153,13 +4153,11 @@ int dismiss_monsters(std::string pattern)
 // applied to new games.
 void zap_los_monsters(bool items_also)
 {
-    // Not using player LOS since clouds might temporarily
-    // block monsters.
-    los_def los(you.pos(), opc_fullyopaque);
-    los.update();
-
-    for (radius_iterator ri(&los); ri; ++ri)
+    for (radius_iterator ri(you.pos(), LOS_RADIUS); ri; ++ri)
     {
+        if (!cell_see_cell(you.pos(), *ri, LOS_SOLID))
+            continue;
+
         if (items_also)
         {
             int item = igrd(*ri);
