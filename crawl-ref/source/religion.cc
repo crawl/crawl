@@ -284,7 +284,7 @@ const char* god_gain_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "mark four cards in a deck",
       "order the top five cards of a deck, losing the rest" },
     // Elyvilon
-    { "provide lesser healing for yourself and others",
+    { "provide lesser healing for yourself",
       "purify yourself",
       "provide greater healing for yourself and others",
       "restore your abilities",
@@ -401,7 +401,7 @@ const char* god_lose_power_messages[NUM_GODS][MAX_GOD_ABILITIES] =
       "mark decks",
       "stack decks" },
     // Elyvilon
-    { "provide lesser healing",
+    { "provide lesser healing for yourself",
       "purify yourself",
       "provide greater healing",
       "restore your abilities",
@@ -2918,7 +2918,7 @@ void excommunication(god_type new_god)
 
     take_note(Note(NOTE_LOSE_GOD, old_god));
 
-    std::vector<ability_type> abilities = get_god_abilities();
+    std::vector<ability_type> abilities = get_god_abilities(true);
     for (unsigned int i = 0; i < abilities.size(); ++i)
     {
         you.stop_train.insert(abil_skill(abilities[i]));
@@ -3501,6 +3501,10 @@ void god_pitch(god_type which_god)
             if (you.skills[sk])
                 you.train[sk] = 0;
 
+    // Elyvilon gives you invocations immediately.
+    if (you.religion == GOD_ELYVILON)
+        you.start_train.insert(SK_INVOCATIONS);
+
     // When you start worshipping a good god, you make all non-hostile
     // unholy and evil beings hostile; when you start worshipping Zin,
     // you make all non-hostile unclean and chaotic beings hostile; and
@@ -3530,6 +3534,7 @@ void god_pitch(god_type which_god)
     {
         mpr("You can now call upon Elyvilon to destroy weapons lying on the "
             "ground.", MSGCH_GOD);
+        mpr("You can now provide lesser healing for others.", MSGCH_GOD);
     }
     else if (you.religion == GOD_TROG)
     {

@@ -214,7 +214,7 @@ ability_type god_abilities[MAX_NUM_GODS][MAX_GOD_ABILITIES] =
     { ABIL_NEMELEX_DRAW_ONE, ABIL_NEMELEX_PEEK_TWO, ABIL_NEMELEX_TRIPLE_DRAW,
       ABIL_NEMELEX_MARK_FOUR, ABIL_NEMELEX_STACK_FIVE },
     // Elyvilon
-    { ABIL_ELYVILON_LESSER_HEALING_OTHERS, ABIL_ELYVILON_PURIFICATION,
+    { ABIL_ELYVILON_LESSER_HEALING_SELF, ABIL_ELYVILON_PURIFICATION,
       ABIL_ELYVILON_GREATER_HEALING_OTHERS, ABIL_NON_ABILITY,
       ABIL_ELYVILON_DIVINE_VIGOUR },
     // Lugonu
@@ -3115,21 +3115,9 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_BLINK, check_confused);
 
     // Religious abilities.
-    if (you.religion == GOD_TROG && !silenced(you.pos()))
-        _add_talent(talents, ABIL_TROG_BURN_SPELLBOOKS, check_confused);
-    else if (you.transfer_skill_points > 0)
-        _add_talent(talents, ABIL_ASHENZARI_END_TRANSFER, check_confused);
-
-    // Gods take abilities away until penance completed. -- bwr
-    // God abilities generally don't work while silenced (they require
-    // invoking the god), but Nemelex is an exception.
-    if (!player_under_penance() && (!silenced(you.pos())
-                                    || you.religion == GOD_NEMELEX_XOBEH))
-    {
-        std::vector<ability_type> abilities = get_god_abilities();
-        for (unsigned int i = 0; i < abilities.size(); ++i)
-            _add_talent(talents, abilities[i], check_confused);
-    }
+    std::vector<ability_type> abilities = get_god_abilities();
+    for (unsigned int i = 0; i < abilities.size(); ++i)
+        _add_talent(talents, abilities[i], check_confused);
 
     // And finally, the ability to opt-out of your faith {dlb}:
     if (you.religion != GOD_NO_GOD && !silenced(you.pos()))
@@ -3284,6 +3272,11 @@ void set_god_ability_slots()
 
     // Finally, add in current god's invocations in traditional slots.
     int num = 0;
+    if (you.religion == GOD_ELYVILON)
+    {
+        _set_god_ability_helper(ABIL_ELYVILON_LESSER_HEALING_OTHERS,
+                                'a' + num++);
+    }
 
     for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
     {
@@ -3295,10 +3288,8 @@ void set_god_ability_slots()
             if (you.religion == GOD_ELYVILON)
             {
                 if (god_abilities[you.religion][i]
-                        == ABIL_ELYVILON_LESSER_HEALING_OTHERS)
+                        == ABIL_ELYVILON_LESSER_HEALING_SELF)
                 {
-                    _set_god_ability_helper(ABIL_ELYVILON_LESSER_HEALING_SELF,
-                                            'a' + num++);
                     _set_god_ability_helper(ABIL_ELYVILON_LIFESAVING, 'p');
                 }
                 else if (god_abilities[you.religion][i]
@@ -3366,9 +3357,24 @@ static int _find_ability_slot(const ability_def &abil)
     return (-1);
 }
 
-std::vector<ability_type> get_god_abilities()
+std::vector<ability_type> get_god_abilities(bool include_unusable)
 {
     std::vector<ability_type> abilities;
+    if (you.religion == GOD_TROG && (include_unusable || !silenced(you.pos())))
+        abilities.push_back(ABIL_TROG_BURN_SPELLBOOKS);
+    else if (you.religion == GOD_ELYVILON && (include_unusable || !silenced(you.pos())))
+        abilities.push_back(ABIL_ELYVILON_LESSER_HEALING_OTHERS);
+    else if (you.transfer_skill_points > 0)
+        abilities.push_back(ABIL_ASHENZARI_END_TRANSFER);
+
+    // Remaining abilities are unusable if under penance, or if silenced if not
+    // Nemelex abilities.
+    if (!include_unusable && (player_under_penance()
+                              || silenced(you.pos()) && you.religion != GOD_NEMELEX_XOBEH))
+    {
+        return abilities;
+    }
+
     for (int i = 0; i < MAX_GOD_ABILITIES; ++i)
     {
         if (you.piety < piety_breakpoint(i))
@@ -3384,11 +3390,8 @@ std::vector<ability_type> get_god_abilities()
         }
 
         abilities.push_back(abil);
-        if (abil == ABIL_ELYVILON_LESSER_HEALING_OTHERS)
-        {
-            abilities.push_back(ABIL_ELYVILON_LESSER_HEALING_SELF);
+        if (abil == ABIL_ELYVILON_LESSER_HEALING_SELF)
             abilities.push_back(ABIL_ELYVILON_LIFESAVING);
-        }
         else if (abil == ABIL_ELYVILON_GREATER_HEALING_OTHERS)
             abilities.push_back(ABIL_ELYVILON_GREATER_HEALING_SELF);
         else if (abil == ABIL_YRED_RECALL_UNDEAD_SLAVES)
