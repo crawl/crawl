@@ -550,6 +550,30 @@ monster_info::monster_info(const monster* m, int milev)
     if (m->props.exists("description"))
         description = m->props["description"].get_string();
 
+    // init names of constrictor and constrictees
+    constrictor_name = "";
+    for (int idx=0; idx < 8; idx++)
+        constricting_name[idx] = "";
+
+    // name of what this monster is constricted by, if any
+    if (const_cast<monster *>(m)->is_constricted())
+    {
+        if (m->constricted_by == MHITYOU)
+            constrictor_name = "you";
+        else
+            constrictor_name = env.mons[m->constricted_by].
+                               name(DESC_PLAIN, true);
+    }
+    // names of what this monster is constricting, if any
+    for (int idx=0; idx<8; idx++)
+    {
+        if (m->constricting[idx] == MHITYOU)
+            constricting_name[idx] = "you";
+        else if (m->constricting[idx] != NON_ENTITY)
+            constricting_name[idx] = env.mons[m->constricting[idx]].
+                                     name(DESC_PLAIN, true);
+    }
+
     // this must be last because it provides this structure to Lua code
     if (milev > MILEV_SKIP_SAFE)
     {
@@ -1195,6 +1219,29 @@ std::string monster_info::wounds_description(bool use_colour) const
     }
     return desc;
 }
+
+std::string monster_info::constriction_description() const
+{
+    std::string cinfo = "";
+
+    if (constrictor_name != "")
+        cinfo += "constricted by " + constrictor_name;
+
+    bool first = true;
+    for (int i = 0; i < 8; i++)
+        if (constricting_name[i] != "")
+        {
+            if (first)
+                cinfo += ", constricting ";
+            else
+                cinfo += ", ";
+            first = false;
+            cinfo += constricting_name[i];
+        }
+    return cinfo;
+}
+
+                
 
 int monster_info::randarts(artefact_prop_type ra_prop) const
 {
