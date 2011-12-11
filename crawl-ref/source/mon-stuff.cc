@@ -248,6 +248,28 @@ monster_type fill_out_corpse(const monster* mons,
                 corpse_class = draco_subspecies(mons);
         }
 
+        if (mons && mons->type == MONS_SERPENT_OF_HELL)
+        {
+            switch (mons->props["serpent_of_hell_flavour"].get_int())
+            {
+            case BRANCH_GEHENNA:
+                corpse_class = MONS_DRAGON;
+                break;
+            case BRANCH_COCYTUS:
+                corpse_class = MONS_ICE_DRAGON;
+                break;
+            case BRANCH_DIS:
+                corpse_class = MONS_IRON_DRAGON;
+                break;
+            case BRANCH_TARTARUS:
+                corpse_class = MONS_SHADOW_DRAGON;
+                break;
+            default:
+                corpse_class = MONS_DRAGON;
+                break;
+            }
+        }
+
         if (mons->has_ench(ENCH_GLOWING_SHAPESHIFTER))
             mtype = corpse_class = MONS_GLOWING_SHAPESHIFTER;
         else if (mons->has_ench(ENCH_SHAPESHIFTER))
