@@ -616,12 +616,10 @@ static std::string _resolve_dir(const char* path, const char* suffix)
 #if defined(DGAMELAUNCH)
     return catpath(path, "");
 #else
-    if (!path[0])
-        return suffix;
     if (path[0] != '~')
-        return std::string(path) + "/" + suffix;
+        return catpath(std::string(path), suffix);
     else
-        return user_home_subpath(std::string(path + 1) + "/" + suffix);
+        return user_home_subpath(catpath(path + 1, suffix));
 #endif
 }
 
