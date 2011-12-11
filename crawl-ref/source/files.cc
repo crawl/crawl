@@ -433,6 +433,8 @@ static std::vector<std::string> _get_base_dirs()
         if (base.empty())
             continue;
 
+        base = canonicalise_file_separator(base);
+
         if (base[base.length() - 1] != FILE_SEPARATOR)
             base += FILE_SEPARATOR;
 
