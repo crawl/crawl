@@ -2853,6 +2853,15 @@ bool melee_attack::apply_damage_brand()
     obvious_effect = false;
     brand = damage_brand == SPWPN_CHAOS ? random_chaos_brand() : damage_brand;
 
+    if (brand != SPWPN_FLAMING && brand != SPWPN_FREEZING
+        && brand != SPWPN_ELECTROCUTION && brand != SPWPN_VAMPIRICISM
+        && !defender->alive())
+    {
+        // Most brands have no extra effects on just killed enemies, and the
+        // effect would be often inappropriate.
+        return false;
+    }
+
     switch (brand)
     {
     case SPWPN_FLAMING:
