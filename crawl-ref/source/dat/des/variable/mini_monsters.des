@@ -1017,6 +1017,7 @@ ENDMAP
 # This vault was built by evilmike, but the idea is mikee's. Who is really the
 # evil one here?
 NAME:   mikee_hates_you
+TAGS:   no_monster_gen
 DEPTH:  D:13-27
 KPROP:  l = no_cloud_gen
 KMONS:  1 = generate_awake siren ; trident ego:distortion w:5 | trident ego:venom
@@ -1035,11 +1036,12 @@ MARKER: + = lua:restrict_door()
 MARKER: = = lua:restrict_door()
 SUBST:  ! = .
 MAP
-xxxxxxxxxx
-xxxxx=xxxx
-+!!!!l1=>x
-xxxxxxxxxx
-xxxxxxxxxx
+ccccccccccc
+cccccc=cccc
+@+!!!!l1=>c
+cccccccnccc
+cccccccnccc
+       @
 ENDMAP
 
 #################################################################
