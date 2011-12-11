@@ -885,3 +885,59 @@ xxxxXXXXXmXxxxx
 xxxxxxxxxDxxxxx
 xxxxxxxxxxxxxxx
 ENDMAP
+
+NAME: nicolae_entry_kraken_aquarium_a
+TAGS: entry no_monster_gen no_pool_fixup no_trap_gen no_item_gen generate_awake
+ORIENT: float
+WEIGHT: 1
+SHUFFLE: ({[>
+KMONS: K = kraken att:neutral
+KFEAT: K = w
+NSUBST: ' = 12:! / *:'
+KMONS: ! = human / elf / orc; nothing / naga; nothing / centaur; nothing / \
+           draconian; nothing / ogre; nothing / minotaur / troll / kobold / \
+           mummy / ghoul / spriggan; nothing / dwarf; nothing / felid / \
+           octopode; nothing / vampire spells:.
+KPROP: Kw'! = no_rtele_into
+KFEAT: ' = .
+MAP
+  ...[...
+ .........
+..nnnnnnn..
+..n'''''n..
+..n'www'n..
+(.n'wKw'n.{
+..n'www'n..
+..n'''''n..
+..nnnnnnn..
+ .........
+  ...>...
+ENDMAP
+
+NAME: nicolae_entry_kraken_aquarium_b
+TAGS: entry no_monster_gen no_pool_fixup no_trap_gen no_item_gen
+ORIENT: float
+WEIGHT: 1
+SHUFFLE: ({[
+KMONS: K = kraken att:neutral
+KFEAT: K = w
+NSUBST: ' = 15:! / *:'
+KMONS: ! = human / elf / orc; nothing / naga; nothing / centaur; nothing / \
+           draconian; nothing / ogre; nothing / minotaur / troll / kobold / \
+           mummy / ghoul / spriggan; nothing / dwarf; nothing / felid / \
+           octopode; nothing / vampire spells:.
+KPROP: Kw'! = no_rtele_into
+KFEAT: ' = .
+MAP
+.........
+.nnnnnnn.
+.n'''''n.xxxxx
+.n'www'n.x.(.x
+.n'www'n+x...x
+.n'wKw'n+..[.x
+.n'www'n+x...x
+.n'www'n.x.{.x
+.n'''''n.xxxxx
+.nnnnnnn.
+.........
+ENDMAP
