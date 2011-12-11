@@ -680,7 +680,7 @@ dungeon_feature_type ray_blocker(const coord_def& source,
     ray_def ray;
     if (!find_ray(source, target, ray, opc_default))
     {
-        ASSERT (you.xray_vision);
+        ASSERT(you.xray_vision);
         return (NUM_FEATURES);
     }
 
@@ -693,7 +693,7 @@ dungeon_feature_type ray_blocker(const coord_def& source,
             return (env.grid(ray.pos()));
         ray.advance();
     }
-    ASSERT (false);
+    ASSERT(false);
     return (NUM_FEATURES);
 }
 
