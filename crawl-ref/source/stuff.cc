@@ -717,7 +717,7 @@ maybe_bool frombool(bool b)
 
 bool tobool(maybe_bool mb)
 {
-    ASSERT (mb != B_MAYBE);
+    ASSERT(mb != B_MAYBE);
     return (mb == B_TRUE);
 }
 

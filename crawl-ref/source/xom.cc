@@ -1615,8 +1615,8 @@ static int _xom_swap_weapons(bool debug = false)
     // ...and get its weapon.
     int monwpn = mon->inv[MSLOT_WEAPON];
     int mywpn  = you.equip[EQ_WEAPON];
-    ASSERT (monwpn != NON_ITEM);
-    ASSERT (mywpn  != -1);
+    ASSERT(monwpn != NON_ITEM);
+    ASSERT(mywpn  != -1);
 
     unwield_item();
 

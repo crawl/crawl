@@ -1822,7 +1822,7 @@ bool convert2bad(item_def &item)
 
 int weapon_str_weight(const item_def &wpn)
 {
-    ASSERT (wpn.base_type == OBJ_WEAPONS || wpn.base_type == OBJ_STAVES);
+    ASSERT(wpn.base_type == OBJ_WEAPONS || wpn.base_type == OBJ_STAVES);
 
     if (wpn.base_type == OBJ_STAVES)
         return (Weapon_prop[ Weapon_index[WPN_STAFF] ].str_weight);
@@ -2067,7 +2067,7 @@ int weapon_ev_bonus(const item_def &wpn, int skill, size_type body, int dex,
 
 static size_type weapon_size(const item_def &item)
 {
-    ASSERT (item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES);
+    ASSERT(item.base_type == OBJ_WEAPONS || item.base_type == OBJ_STAVES);
 
     if (item.base_type == OBJ_STAVES)
         return (Weapon_prop[ Weapon_index[WPN_STAFF] ].fit_size);
@@ -2313,7 +2313,7 @@ bool item_is_spellbook(const item_def &item)
 // Returns number of pluses on jewellery (always none for amulets yet).
 int ring_has_pluses(const item_def &item)
 {
-    ASSERT (item.base_type == OBJ_JEWELLERY);
+    ASSERT(item.base_type == OBJ_JEWELLERY);
 
     // not known -> no pluses
     if (!item_type_known(item))
@@ -2342,8 +2342,8 @@ int ring_has_pluses(const item_def &item)
 // has more effect than just having one on.
 bool ring_has_stackable_effect(const item_def &item)
 {
-    ASSERT (item.base_type == OBJ_JEWELLERY);
-    ASSERT (!jewellery_is_amulet(item));
+    ASSERT(item.base_type == OBJ_JEWELLERY);
+    ASSERT(!jewellery_is_amulet(item));
 
     if (!item_type_known(item))
         return (false);

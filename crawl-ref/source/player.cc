@@ -6225,7 +6225,7 @@ bool player::is_unbreathing() const
 
     if (petrified())
         return (true);
- 
+
     return (form_keeps_mutations() && player_mutation_level(MUT_UNBREATHING));
 }
 

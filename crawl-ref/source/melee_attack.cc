@@ -191,7 +191,7 @@ bool melee_attack::handle_phase_attempted()
                 std::string prompt = "Really attack with ";
                 if (weapon)
                     prompt += weapon->name(DESC_YOUR);
-                else 
+                else
                     prompt += "your electric unarmed attack";
                 prompt += " while in water? ";
 
@@ -492,7 +492,7 @@ bool melee_attack::handle_phase_hit()
     // Check if some hit-effect killed the monster.  We muse
     if (attacker->atype() == ACT_PLAYER)
         stop_hit = player_monattk_hit_effects();
-  
+
     // check_unrand_effects is safe to call with a dead defender, so always
     // call it, even if the hit effects said to stop.
     if (check_unrand_effects() || stop_hit)
