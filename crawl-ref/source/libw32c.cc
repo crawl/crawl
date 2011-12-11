@@ -403,7 +403,7 @@ void console_startup()
 void console_shutdown()
 {
     // don't do anything if we were never initted
-    if (inbuf == NULL || outbuf == NULL)
+    if (inbuf == NULL && outbuf == NULL && old_outbuf == NULL)
         return;
 
     // JWM, 06/12/2004: Code page stuff.  If it was the preferred code page, it
@@ -421,6 +421,8 @@ void console_shutdown()
     _setcursortype_internal(true);
     textcolor(DARKGREY);
 
+    inbuf = NULL;
+
     delete [] screen;
     screen = NULL;
 
@@ -434,6 +436,7 @@ void console_shutdown()
         SetConsoleActiveScreenBuffer(old_outbuf);
         CloseHandle(outbuf);
         old_outbuf = 0;
+        outbuf = 0;
     }
 }
 
