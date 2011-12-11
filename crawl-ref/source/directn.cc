@@ -667,12 +667,15 @@ void full_describe_view()
 
             std::string str = get_monster_equipment_desc(mi->mon(), DESC_FULL,
                                                          DESC_A, true);
-
             if (mi->is(MB_MESMERIZING))
                 str += ", keeping you mesmerised";
 
             if (mi->dam != MDAM_OKAY)
                 str += ", " + mi->damage_desc();
+
+            std::string consinfo = mi->constriction_description();
+            if (!consinfo.empty())
+                str += ", " + consinfo;
 
 #ifndef USE_TILE_LOCAL
             // Wraparound if the description is longer than allowed.
@@ -1527,6 +1530,7 @@ std::vector<std::string> direction_chooser::monster_description_suffixes(
     std::vector<std::string> suffixes;
 
     _push_back_if_nonempty(mi.wounds_description(true), &suffixes);
+    _push_back_if_nonempty(mi.constriction_description(), &suffixes);
     _append_container(suffixes, mi.attributes());
     _append_container(suffixes, _get_monster_desc_vector(mi));
     _append_container(suffixes, behaviour->get_monster_desc(mi));
@@ -2182,6 +2186,9 @@ void get_square_desc(const coord_def &c, describe_info &inf,
             const std::string wounds = mi.wounds_description_sentence();
             if (!wounds.empty())
                 desc += wounds + "\n";
+            const std::string constrictions = mi.constriction_description();
+            if (!constrictions.empty())
+                desc += constrictions + "\n";
             desc += _get_monster_desc(mi);
 
             inf.title = desc;
@@ -3613,7 +3620,9 @@ static void _describe_monster(const monster_info& mi)
     const std::string wounds_desc = mi.wounds_description_sentence();
     if (!wounds_desc.empty())
         text += " " + wounds_desc;
-
+    const std::string constriction_desc = mi.constriction_description();
+    if (!constriction_desc.empty())
+        text += " " + constriction_desc;
     mpr(text, MSGCH_EXAMINE);
 
     // Print the rest of the description.

@@ -3919,6 +3919,9 @@ static void _display_attack_delay()
     mpr(msg);
 }
 
+// forward declaration
+std::string _constriction_description();
+
 void display_char_status()
 {
     if (you.is_undead == US_SEMI_UNDEAD && you.hunger_state == HS_ENGORGED)
@@ -4017,6 +4020,9 @@ void display_char_status()
         if (!inf.long_text.empty())
             mpr(inf.long_text);
     }
+    std::string cinfo = _constriction_description();
+    if (!cinfo.empty())
+        mprf(cinfo.c_str());
 
     _display_movement_speed();
     _display_tohit();
@@ -7522,4 +7528,46 @@ bool need_expiration_warning(coord_def p)
 {
     return need_expiration_warning(DUR_LEVITATION, p)
            || need_expiration_warning(DUR_TRANSFORMATION, p);
+}
+
+std::string _constriction_description()
+{
+    std::string cinfo = "";
+    std::string constrictor_name;
+    std::string constricting_name[8];
+
+    // init names of constrictor and constrictees
+    constrictor_name = "";
+    for (int idx=0; idx < 8; idx++)
+        constricting_name[idx] = "";
+
+    // name of what this monster is constricted by, if any
+    if (you.is_constricted())
+    {
+        constrictor_name = env.mons[you.constricted_by].
+                               name(DESC_PLAIN, true);
+    }
+    // names of what this monster is constricting, if any
+    for (int idx=0; idx<8; idx++)
+    {
+        if (you.constricting[idx] != NON_ENTITY)
+            constricting_name[idx] = env.mons[you.constricting[idx]].
+                                     name(DESC_PLAIN, true);
+    }
+
+    if (constrictor_name != "")
+        cinfo += "You are being constricted by " + constrictor_name + ".";
+
+    bool first = true;
+    for (int i = 0; i < 8; i++)
+        if (constricting_name[i] != "")
+        {
+            if (first)
+                cinfo += "\nYou are constricting ";
+            else
+                cinfo += ", ";
+            first = false;
+            cinfo += constricting_name[i];
+        }
+    return cinfo;
 }
