@@ -339,7 +339,7 @@ static bool _toxic_radianceable(const actor *act)
 
 spret_type cast_toxic_radiance(int pow, bool non_player, bool fail)
 {
-    targetter_los hitfunc(&you, LOS_SOLID);
+    targetter_los hitfunc(&you, LOS_NO_TRANS);
     if (!non_player)
     {
         if (stop_attack_prompt(hitfunc, "poison", _toxic_radianceable))
@@ -372,7 +372,7 @@ spret_type cast_toxic_radiance(int pow, bool non_player, bool fail)
     for (monster_iterator mi(you.get_los()); mi; ++mi)
     {
         // Trees and translucent walls absorb enough of the radiance for it to be ineffective.
-        if (!mi->submerged() && cell_see_cell(you.pos(), mi->pos(), LOS_SOLID))
+        if (!mi->submerged() && cell_see_cell(you.pos(), mi->pos(), LOS_NO_TRANS))
         {
             // Monsters affected by corona are still invisible in that
             // radiation passes through them without affecting them. Therefore,

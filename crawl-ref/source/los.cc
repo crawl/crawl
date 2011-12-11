@@ -688,7 +688,7 @@ dungeon_feature_type ray_blocker(const coord_def& source,
     int blocked = 0;
     while (ray.pos() != target)
     {
-        blocked += opc_solid(ray.pos());
+        blocked += opc_solid_see(ray.pos());
         if (blocked >= OPC_OPAQUE)
             return (env.grid(ray.pos()));
         ray.advance();

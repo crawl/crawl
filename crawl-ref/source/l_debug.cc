@@ -146,7 +146,7 @@ LUAFN(debug_bouncy_beam)
     beam.draw_delay = 0;
 
     if (findray)
-        beam.chose_ray = find_ray(source, target, beam.ray);
+        beam.chose_ray = find_ray(source, target, beam.ray, opc_solid_see);
 
     beam.name       = "debug lightning beam";
     beam.short_name = "DEBUG";

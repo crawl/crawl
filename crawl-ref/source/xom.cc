@@ -3126,7 +3126,7 @@ bool move_stair(coord_def stair_pos, bool away, bool allow_under)
     }
 
     ray_def ray;
-    if (!find_ray(begin, towards, ray))
+    if (!find_ray(begin, towards, ray, opc_solid_see))
     {
         mpr("Couldn't find ray between player and stairs.", MSGCH_ERROR);
         return (stairs_moved);

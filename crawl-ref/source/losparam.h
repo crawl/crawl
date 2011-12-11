@@ -75,7 +75,7 @@ public:
 };
 static opacity_immob opc_immob;
 
-// Make anything solid block in addition to normal LOS.
+// Line of effect.
 class opacity_solid : public opacity_func
 {
 public:
@@ -84,6 +84,16 @@ public:
     opacity_type operator()(const coord_def& p) const;
 };
 static opacity_solid opc_solid;
+
+// Both line of sight and line of effect.
+class opacity_solid_see : public opacity_func
+{
+public:
+    CLONE(opacity_solid_see)
+
+    opacity_type operator()(const coord_def& p) const;
+};
+static opacity_solid_see opc_solid_see;
 
 // Opacity for monster movement, based on the late monster_los.
 class opacity_monmove : public opacity_func

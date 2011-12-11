@@ -1800,7 +1800,7 @@ struct complicated_sight_check
     bool operator()(monster* mons, actor * test)
     {
         return (test->visible_to(mons)
-                && cell_see_cell(base_position, test->pos(), LOS_SOLID));
+                && cell_see_cell(base_position, test->pos(), LOS_SOLID_SEE));
     }
 };
 
