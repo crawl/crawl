@@ -620,7 +620,10 @@ void do_crash_dump()
     errno = 0;
     FILE* file = crawl_state.test ? stderr : freopen(name, "w+", stderr);
 
-    if (file == NULL || errno != 0)
+    // The errno values are only relevant when the function in
+    // question has returned a value indicating (possible) failure, so
+    // only freak out if freopen() returned NULL!
+    if (!file)
     {
         fprintf(stdout, "\nUnable to open file '%s' for writing: %s\n",
                 name, strerror(errno));
