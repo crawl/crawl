@@ -5292,6 +5292,7 @@ void read_scroll(int slot)
             mpr(pre_succ_msg);
         id_the_scroll = _vorpalise_weapon(alreadyknown);
         if (!id_the_scroll)
+        {
             if (alreadyknown)
             {
                 mpr("This will not work.");
@@ -5303,6 +5304,9 @@ void read_scroll(int slot)
                 mpr("You feel like taking on a jabberwock.");
                 id_the_scroll = true;
             }
+            else
+                canned_msg(MSG_NOTHING_HAPPENS);
+        }
         break;
 
     case SCR_IDENTIFY:
