@@ -1049,7 +1049,7 @@ static spell_type _choose_mem_spell(spell_list &spells,
             new MenuEntry(desc.str(), MEL_ITEM, 1,
                           index_to_letter(i % 52));
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
         me->add_tile(tile_def(tileidx_spell(spell), TEX_GUI));
 #endif
 
