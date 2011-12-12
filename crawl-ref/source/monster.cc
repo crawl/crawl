@@ -5394,7 +5394,7 @@ bool monster::attempt_escape()
     size_type thesize;
     int attfactor;
     int randfact;
-    monster *themonst;
+    monster *themonst = 0;
 
     if (!is_constricted())
         return true;
