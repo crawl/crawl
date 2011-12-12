@@ -1783,7 +1783,7 @@ static void _find_description(bool *again, std::string *error_inout)
             me = new MenuEntry(uppercase_first(key_list[i]), MEL_ITEM, 1,
                                letter);
 
-#ifdef USE_TILE_LOCAL
+#ifdef USE_TILE
             if (doing_spells)
             {
                 spell_type spell = spell_by_name(str);
