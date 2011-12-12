@@ -2842,10 +2842,11 @@ bool throw_it(bolt &pbolt, int throw_2, bool teleport, int acc_bonus,
             }
 
             // Give an appropriate 'tohit':
-            // * hand axes and clubs are -5
-            // * daggers are +1
+            // * clubs and hand axes are -5
             // * spears are -1
-            // * rocks are 0
+            // * large rocks, stones and throwing nets are 0
+            // * daggers and javelins are +1
+            // * darts are +2
             if (wepClass == OBJ_WEAPONS)
             {
                 switch (wepType)
