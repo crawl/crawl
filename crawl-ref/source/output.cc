@@ -2329,7 +2329,6 @@ static std::string _status_mut_abilities(int sw)
                 break;
             case MUT_SLIMY_GREEN_SCALES:
                 AC_change += level;
-                EV_change -= level-1;
                 break;
             case MUT_THIN_METALLIC_SCALES:
                 AC_change += level;
