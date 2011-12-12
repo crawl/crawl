@@ -91,13 +91,13 @@ local name_checks = {
   { "kobold name:wearing_mittens name_suffix",
     { "a", "a kobold wearing mittens" },
     "kobold corpse" },
-  { "gnoll name:gnoll_sergeant name_replace name_descriptor name_species",
-    { "a", "a gnoll sergeant" },
-    { "a", "a gnoll sergeant corpse" } },
-  { "gnoll name:gnoll_sergeant name_replace name_descriptor",
-    { "a", "a gnoll sergeant" },
+  { "gnoll name:gnoll_lieutenant name_replace name_descriptor name_species",
+    { "a", "a gnoll lieutenant" },
+    { "a", "a gnoll lieutenant corpse" } },
+  { "gnoll name:gnoll_lieutenant name_replace name_descriptor",
+    { "a", "a gnoll lieutenant" },
     -- [ds] FIXME: this should probably be just "a gnoll corpse"
-    { "a", "a gnoll corpse of gnoll sergeant" } },
+    { "a", "a gnoll corpse of gnoll lieutenant" } },
 }
 check_names(name_checks)
 
