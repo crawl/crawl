@@ -2365,7 +2365,9 @@ static std::string _status_mut_abilities(int sw)
         }
     }
 
-    if (AC_change)
+    // Statue form does not get AC benefits from scales etc.  It does
+    // get changes to EV and SH.
+    if (AC_change && you.form != TRAN_STATUE)
     {
         snprintf(info, INFO_SIZE, "AC %s%d", (AC_change > 0 ? "+" : ""), AC_change);
         mutations.push_back(info);

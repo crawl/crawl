@@ -170,11 +170,15 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     }
 
     if ((mut == MUT_GELATINOUS_BODY || mut == MUT_TOUGH_SKIN
-         || mut == MUT_SHAGGY_FUR || mut == MUT_FAST || mut == MUT_SLOW)
+         || mut == MUT_SHAGGY_FUR || mut == MUT_FAST || mut == MUT_SLOW
+         || mut == MUT_IRIDESCENT_SCALES)
         && you.form == TRAN_STATUE)
     {
         return (MUTACT_INACTIVE);
     }
+
+    // TODO: most scales show as active for statues, though their AC
+    // benefits do not apply.
 
     // For all except the semi-undead, mutations always apply.
     if (you.is_undead == US_SEMI_UNDEAD)
