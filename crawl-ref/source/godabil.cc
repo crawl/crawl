@@ -1926,16 +1926,9 @@ int fedhas_fungal_bloom()
                     if (piety)
                         processed_count++;
 
-                    monster_type skele_type = MONS_SKELETON_LARGE;
-                    if (mons_zombie_size(mons_zombie_base(target)) == Z_SMALL)
-                        skele_type = MONS_SKELETON_SMALL;
-
                     simple_monster_message(target, "'s flesh rots away.");
-                    int current_hp = target->hit_points;
-                    target->upgrade_type(skele_type, true, true);
 
-                    if (target->hit_points > current_hp)
-                        target->hit_points = current_hp;
+                    downgrade_zombie_to_skeleton(target);
 
                     behaviour_event(target, ME_ALERT, MHITYOU);
 
