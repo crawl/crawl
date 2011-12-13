@@ -791,6 +791,9 @@ int wherey()
 
 void delay(unsigned int time)
 {
+    if (crawl_state.disables[DIS_DELAY])
+        return;
+
 #ifdef USE_TILE_WEB
     tiles.redraw();
     tiles.send_message("{msg:'delay',t:%d}", time);

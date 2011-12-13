@@ -847,6 +847,9 @@ bool kbhit()
 
 void delay(unsigned int ms)
 {
+    if (crawl_state.disables[DIS_DELAY])
+        return;
+
     Sleep((DWORD)ms);
 }
 

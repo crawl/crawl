@@ -562,6 +562,9 @@ void debug_fight_statistics(bool use_defaults, bool defence)
     menv[mindex].behaviour = BEH_SEEK;
 
     you.exp_available = 0;
+    unwind_var<FixedBitArray<NUM_DISABLEMENTS> > disabilities(crawl_state.disables);
+    crawl_state.disables.set(DIS_DEATH);
+    crawl_state.disables.set(DIS_DELAY);
 
     if (!use_defaults || defence)
     {
