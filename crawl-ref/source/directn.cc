@@ -2333,7 +2333,7 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
     if (!_is_target_in_range(where, range, hitfunc) || !you.see_cell(where))
         return (false);
 
-    const monster* mon = monster_at(where);
+    const monster_info* mon = env.map_knowledge(where).monsterinfo();
     if (mon == NULL)
         return (false);
 
@@ -2351,20 +2351,19 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
             continue;
 
         real_idx++;
-   }
+    }
 
-    if (!_mons_is_valid_target(mon, TARG_ANY, range))
+    const monster* real_mon = monster_at(where);
+    ASSERT(real_mon);
+    if (!_mons_is_valid_target(real_mon, TARG_ANY, range))
         return (false);
 
-    if (need_path && _blocked_ray(mon->pos()))
+    if (need_path && _blocked_ray(where))
         return (false);
 
-    const monster* monl = monster_at(player2grid(mlist[real_idx].pos));
-    // FIXME: Is it really necessary to compare to the monster*
-    // instead of the monster_info?
-    extern mon_attitude_type mons_attitude(const monster* m);
+    const monster_info* monl = &mlist[real_idx];
 
-    if (mons_attitude(mon) != mlist[idx].attitude)
+    if (mon->attitude != monl->attitude)
         return (false);
 
     if (mon->type != monl->type)
@@ -2372,15 +2371,15 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
 
     if (mlist_full_info)
     {
-        if (mons_is_zombified(mon)) // Both monsters are zombies.
-            return (mon->base_monster == monl->base_monster);
+        if (mons_class_is_zombified(mon->type)) // Both monsters are zombies.
+            return (mon->base_type == monl->base_type);
 
-        if (mon->has_hydra_multi_attack())
+        if (mons_genus(mon->base_type) == MONS_HYDRA)
             return (mon->number == monl->number);
     }
 
-    if (mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PLAYER_ILLUSION)
-        return (mon->name(DESC_PLAIN) == monl->name(DESC_PLAIN));
+    if (mons_is_pghost(mon->type))
+        return (mon->mname == monl->mname);
 
     // Else the two monsters are identical.
     return (true);
