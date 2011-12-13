@@ -1235,7 +1235,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 unarmed_attack_type melee_attack::player_aux_choose_baseattack()
 {
     unarmed_attack_type baseattack =
-        random_choose(UNAT_HEADBUTT, UNAT_KICK, UNAT_PUNCH, UNAT_NO_ATTACK,
+        random_choose(UNAT_HEADBUTT, UNAT_KICK, UNAT_PUNCH, UNAT_PUNCH,
                        -1);
 
     // No punching with a shield or 2-handed wpn, except staves.
@@ -4749,7 +4749,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_base)
                 && x_chance_in_y(2, 5));
 
     case UNAT_PUNCH:
-        return (is_base);
+        return (is_base && !one_chance_in(3));
 
     default:
         return (false);
