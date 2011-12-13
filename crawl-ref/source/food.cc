@@ -745,13 +745,16 @@ void end_nausea()
 {
     const char *add = "";
     // spoilable food, need to interrupt before it can go bad
-    if (_has_edible_chunks() or count_corpses_in_pack(false))
+    if (_has_edible_chunks())
         add = ", and you want to eat";
     else if (you.hunger_state <= HS_HUNGRY)
         add = ", and you need some food";
     else if (can_ingest(OBJ_FOOD, FOOD_CHUNK, true)) // carnivore/gourmand
         add = ", so let's find someone to eat";
     mprf(MSGCH_DURATION, "Your stomach is not as upset anymore%s.", add);
+
+    if (!_has_edible_chunks() && _eat_check(true, true))
+        _have_corpses_in_pack(false);
 }
 
 // [ds] Returns true if something was eaten.
