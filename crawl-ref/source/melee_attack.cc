@@ -1235,7 +1235,7 @@ void melee_attack::player_aux_setup(unarmed_attack_type atk)
 unarmed_attack_type melee_attack::player_aux_choose_baseattack()
 {
     unarmed_attack_type baseattack =
-        random_choose(UNAT_HEADBUTT, UNAT_KICK, UNAT_PUNCH, UNAT_NO_ATTACK,
+        random_choose(UNAT_HEADBUTT, UNAT_KICK, UNAT_PUNCH, UNAT_PUNCH,
                        -1);
 
     // No punching with a shield or 2-handed wpn, except staves.
@@ -3657,6 +3657,9 @@ int melee_attack::calc_attack_delay(bool random, bool scaled)
                                         rv::random2(1 + attacker_shield_penalty));
             }
         }
+        // Give unarmed shield-users a slight penalty always.
+        if (!weapon && player_wearing_slot(EQ_SHIELD))
+            attack_delay += rv::random2(2);
 
         attack_delay = rv::max(attack_delay, constant(3));
         int final_delay = random ? attack_delay.roll() : attack_delay.expected();
@@ -4743,7 +4746,7 @@ bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_base)
                 && x_chance_in_y(2, 5));
 
     case UNAT_PUNCH:
-        return (is_base);
+        return (is_base && !one_chance_in(3));
 
     default:
         return (false);

@@ -130,7 +130,7 @@ void monster::upgrade_type(monster_type after, bool adjust_hd,
     {
         const int minhd = dummy.hit_dice;
         if (hit_dice < minhd)
-            hit_dice      += minhd - hit_dice;
+            hit_dice += minhd - hit_dice;
     }
 
     if (adjust_hp)
