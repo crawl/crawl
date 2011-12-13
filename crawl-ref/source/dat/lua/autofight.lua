@@ -211,7 +211,9 @@ end
 
 function hit_closest()
   local x, y, info = get_target()
-  if hp_is_low() then
+  if you.confused() then
+    crawl.mpr("You are too confused!")
+  elseif hp_is_low() then
     crawl.mpr("You are too injured to fight blindly!")
   elseif info == nil then
     crawl.mpr("No target in view!")
@@ -228,7 +230,9 @@ end
 
 function hit_adjacent()
   local x, y, info = get_target()
-  if hp_is_low() then
+  if you.confused() then
+    crawl.mpr("You are too confused!")
+  elseif hp_is_low() then
     crawl.mpr("You are too injured to fight blindly!")
   elseif info == nil then
     crawl.mpr("No target in view!")
