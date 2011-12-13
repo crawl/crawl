@@ -516,6 +516,25 @@ std::string describe_mutations()
     return result;
 }
 
+static const std::string _mutations_footer = ("\n\n\n\n"
+    "()  : Partially suppressed.\n"
+    "<darkgrey>(())</darkgrey>: Completely suppressed.\n"
+    "<yellow>*</yellow>   : Suppressed by changes of form.\n");
+
+static const std::string _vampire_Ascreen_footer = (
+#ifndef USE_TILE_LOCAL
+    "Press '<w>!</w>'"
+#else
+    "<w>Right-click</w>"
+#endif
+    " to toggle between mutations and properties depending on your\n"
+    "hunger status.\n");
+
+static const std::string _vampire_mutations_footer = (
+    "<lightred>+</lightred>   : Suppressed by thirst.\n\n"
+    + _vampire_Ascreen_footer);
+
+
 static void _display_vampire_attributes()
 {
     ASSERT(you.species == SP_VAMPIRE);
@@ -603,14 +622,7 @@ static void _display_vampire_attributes()
     }
 
     result += "\n";
-    result +=
-#ifndef USE_TILE_LOCAL
-        "Press '<w>!</w>'"
-#else
-        "<w>Right-click</w>"
-#endif
-        " to toggle between mutations and properties depending on your\n"
-        "hunger status.\n";
+    result += _vampire_Ascreen_footer;
 
     const formatted_string vp_props = formatted_string::parse_string(result);
     vp_props.display();
@@ -626,11 +638,12 @@ void display_mutations()
     clrscr();
     cgotoxy(1,1);
 
-    const std::string mutation_s = describe_mutations();
+    const std::string mutation_s = describe_mutations() + _mutations_footer;
 
     if (you.species == SP_VAMPIRE)
     {
-        const formatted_string mutation_fs = formatted_string::parse_string(mutation_s);
+        const formatted_string mutation_fs = formatted_string::parse_string(
+            mutation_s + _vampire_mutations_footer);
         mutation_fs.display();
         mouse_control mc(MOUSE_MODE_MORE);
         const int keyin = getchm();
@@ -641,23 +654,6 @@ void display_mutations()
     {
         formatted_scroller mutation_menu;
         mutation_menu.add_text(mutation_s);
-        mutation_menu.add_text("\n\n\n\n"
-            "()  : Partially suppressed.\n"
-            "<darkgrey>(())</darkgrey>: Completely suppressed.\n"
-            "<yellow>*</yellow>   : Suppressed by changes of form.\n");
-
-        if (you.species == SP_VAMPIRE)
-        {
-            mutation_menu.add_text(
-                "<lightred>+</lightred>   : Suppressed by thirst.\n\n"
-#ifndef USE_TILE_LOCAL
-                "Press '<w>!</w>'"
-#else
-                "<w>Right-click</w>"
-#endif
-                " to toggle between mutations and properties depending on your\n"
-                "hunger status.\n");
-        }
 
         mutation_menu.show();
     }
