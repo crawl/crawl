@@ -2135,7 +2135,9 @@ bool downgrade_zombie_to_skeleton(monster* mon)
 
     mon->type           = (mons_zombie_size(mon->base_monster) == Z_SMALL) ?
                               MONS_SKELETON_SMALL : MONS_SKELETON_LARGE;
+
     mon->colour         = mons_class_colour(mon->type);
+    mon->speed          = mons_class_zombie_base_speed(mon->base_monster);
 
     roll_zombie_hp(mon);
     _roll_zombie_ac_ev(mon);
