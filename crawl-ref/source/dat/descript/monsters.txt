@@ -211,6 +211,10 @@ Louise
 
 An unusually heavily armoured spellcaster.
 %%%%
+Lumpy Terence
+
+Once an utterly unremarkable human adventurer, Terence was no stranger to mockery and derision. Haunted by self-doubt, his life was to be forever changed by his fateful discovery of a wand of polymorph; more importantly, though, his body was to be forever changed as well. He had sought to transform himself into something fierce, say, a dragon, or a catoblepas. Fate, however, is rarely so kind.
+%%%%
 Mara
 
 This tall and powerful demon is Mara, Lord of Illusions, mighty among dreamers. He is capable of creating intricately detailed illusions, able to mislead even the minds of the mightiest and most brilliant spell-casters.
@@ -312,10 +316,6 @@ You feel a lump in the pit of your stomach.
 Sonja
 
 A graceful kobold assassin. Admire her graceful pirouettes, thrill at her daring leaps! But watch out for her knives!
-%%%%
-Terence
-
-A mean-looking human fighter who likes to kill, and not much else.
 %%%%
 Terpsichore
 

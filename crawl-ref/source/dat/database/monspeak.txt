@@ -4533,6 +4533,48 @@ _Mara_rare_
 
 @The_monster@ boasts, "I am lord over the four continents and the two thousand adjacent isles."
 %%%%
+############ TERENCE ### A fighter who likes to kill and is a lump
+Lumpy Terence
+
+@_Terence_common_@
+
+w:4
+@_Terence_rare_@
+%%%%
+_Terence_common_
+
+VISUAL:@The_monster@ looks scornfully at @foe@.
+
+@The_monster@ asks @foe,@ "Do you want it fast or slow?"
+
+@The_monster@ says @to_foe@, "Don't bother to defend, it's @pointless@."
+
+@The_monster@ says @to_foe@, "I'll show you a few @ploy@s."
+
+@The_monster@ shouts @at_foe@, "Now you die!"
+
+@The_monster@ shouts @at_foe@, "@ATTACK@!!!"
+
+@The_monster@ shouts @at_foe@, "Get ready for death!"
+
+@The_monster@ screams @at_foe@, "I want your blood!"
+
+@The_monster@ screams @at_foe@, "I'm going to kill you!"
+%%%%
+_Terence_rare_
+
+@The_monster@ says @to_foe@, "Rest in peace."
+
+@The_monster@ says @to_foe@, "How do you enjoy it?"
+
+@The_monster@ says @to_foe@, "You're history."
+
+@The_monster@ says @to_foe@, "Did you write a will? You should..."
+
+@The_monster@ says @to_foe@, "Time to say good-bye..."
+
+## END Terence ###
+%%%%
 ############ MARGERY ### A powerful sorceress, guarding the ORB
 Margery
 
@@ -5595,50 +5637,6 @@ w:1
 
 @The_monster@ says @to_foe@, "Someone hired me to kill you, but I'm not supposed to say who."
 ## END Sonja ##
-%%%%
-############ TERENCE ### A fighter who likes to kill
-Terence
-
-@_Terence_common_@
-
-w:4
-@_Terence_rare_@
-%%%%
-_Terence_common_
-
-VISUAL:@The_monster@ looks scornfully at @foe@.
-
-VISUAL:@The_monster@ bares @possessive@ teeth.
-
-@The_monster@ asks @foe,@ "Do you want it fast or slow?"
-
-@The_monster@ says @to_foe@, "Don't bother to defend, it's @pointless@."
-
-@The_monster@ says @to_foe@, "I'll show you a few @ploy@s."
-
-@The_monster@ shouts @at_foe@, "Now you die!"
-
-@The_monster@ shouts @at_foe@, "@ATTACK@!!!"
-
-@The_monster@ shouts @at_foe@, "Get ready for death!"
-
-@The_monster@ screams @at_foe@, "I want your blood!"
-
-@The_monster@ screams @at_foe@, "I'm going to kill you!"
-%%%%
-_Terence_rare_
-
-@The_monster@ says @to_foe@, "Rest in peace."
-
-@The_monster@ says @to_foe@, "How do you enjoy it?"
-
-@The_monster@ says @to_foe@, "You're history."
-
-@The_monster@ says @to_foe@, "Did you write a will? You should..."
-
-@The_monster@ says @to_foe@, "Time to say good-bye..."
-
-## END Terence ###
 %%%%
 ############ TERPSICHORE ### A spectral dancer
 # Cantrip messages
