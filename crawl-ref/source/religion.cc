@@ -1775,9 +1775,7 @@ static bool _beogh_blessing_priesthood(monster* mon)
 
     if (priest_type != MONS_PROGRAM_BUG)
     {
-        // Turn an ordinary monster into a priestly monster, using a
-        // function normally used when going up an experience level.
-        // This is a hack, but there seems to be no better way for now.
+        // Turn an ordinary monster into a priestly monster.
         mon->upgrade_type(priest_type, true, true);
         give_monster_proper_name(mon);
 
