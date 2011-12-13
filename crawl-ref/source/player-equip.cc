@@ -1128,6 +1128,7 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
     artefact_prop_type      fake_rap     = ARTP_NUM_PROPERTIES;
     bool                    learn_pluses = false;
 
+    // FIXME:
     // Randart jewellery shouldn't auto-ID just because the base type
     // is known. Somehow the player should still be told, preferably
     // by message. (jpeg)
@@ -1286,7 +1287,9 @@ static void _equip_jewellery_effect(item_def &item, bool unmeld)
         if (crawl_state.game_is_sprint())
             mpr("You feel a slight, muted jump rush through you.");
         else
-            mpr("You feel slightly jumpy.");
+            // keep in sync with player_teleport
+            mprf("You feel slightly %sjumpy.",
+                 (player_teleport(false) > 8) ? "more " : "");
         ident = ID_KNOWN_TYPE;
         break;
 
