@@ -201,7 +201,7 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         return (MUTACT_FULL);
 }
 
-formatted_string describe_mutations()
+std::string describe_mutations()
 {
     std::string result;
     bool have_any = false;
@@ -251,8 +251,6 @@ formatted_string describe_mutations()
                 result += "<darkgrey>((" + acstr + "))*<darkgrey>\n";
             else
                 result += acstr + "*\n";
-
-            result += acstr;
         }
         have_any = true;
         break;
@@ -482,26 +480,7 @@ formatted_string describe_mutations()
     if (!have_any)
         result +=  "You are rather mundane.\n";
 
-    result += "\n\n\n\n"
-              "()  : Partially suppressed.\n"
-              "(()): Completely suppressed.\n"
-              "*   : Suppressed by changes of form.\n";
-
-
-    if (you.species == SP_VAMPIRE)
-    {
-        result +=
-            "+   : Suppressed by thirst.\n\n"
-#ifndef USE_TILE_LOCAL
-            "Press '<w>!</w>'"
-#else
-            "<w>Right-click</w>"
-#endif
-            " to toggle between mutations and properties depending on your\n"
-            "hunger status.\n";
-    }
-
-    return (formatted_string::parse_string(result));
+    return result;
 }
 
 static void _display_vampire_attributes()
@@ -614,10 +593,11 @@ void display_mutations()
     clrscr();
     cgotoxy(1,1);
 
-    const formatted_string mutation_fs = describe_mutations();
+    const std::string mutation_s = describe_mutations();
 
     if (you.species == SP_VAMPIRE)
     {
+        const formatted_string mutation_fs = formatted_string::parse_string(mutation_s);
         mutation_fs.display();
         mouse_control mc(MOUSE_MODE_MORE);
         const int keyin = getchm();
@@ -626,7 +606,26 @@ void display_mutations()
     }
     else
     {
-        Menu mutation_menu(mutation_fs);
+        formatted_scroller mutation_menu;
+        mutation_menu.add_text(mutation_s);
+        mutation_menu.add_text("\n\n\n\n"
+            "()  : Partially suppressed.\n"
+            "<darkgrey>(())</darkgrey>: Completely suppressed.\n"
+            "<yellow>*</yellow>   : Suppressed by changes of form.\n");
+
+        if (you.species == SP_VAMPIRE)
+        {
+            mutation_menu.add_text(
+                "<lightred>+</lightred>   : Suppressed by thirst.\n\n"
+#ifndef USE_TILE_LOCAL
+                "Press '<w>!</w>'"
+#else
+                "<w>Right-click</w>"
+#endif
+                " to toggle between mutations and properties depending on your\n"
+                "hunger status.\n");
+        }
+
         mutation_menu.show();
     }
 }
@@ -1573,12 +1572,12 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
         result = "(" + result + ")";
 
     if (mdef.form_based)
-        result = result + "*";
+        result += colour ? "<yellow>*</yellow>" : "*";
 
     if (you.species == SP_VAMPIRE && !mdef.physical
         && !you.innate_mutations[mut])
     {
-        result = result + "+";
+        result += colour ? "<lightred>+</lightred>" : "+";
     }
 
     if (colour)

@@ -81,7 +81,7 @@ inline bool give_bad_mutation(bool failMsg = true, bool force_mutation = false)
 
 void display_mutations();
 mutation_activity_type mutation_activity_level(mutation_type mut);
-formatted_string describe_mutations();
+std::string describe_mutations();
 
 bool delete_mutation(mutation_type which_mutation, bool failMsg = true,
                      bool force_mutation = false, bool god_gift = false,
