@@ -1930,8 +1930,11 @@ spret_type mass_enchantment(enchant_type wh_enchant, int pow, bool fail)
 
     pow = std::min(pow, 200);
 
-    for (monster_iterator mi(you.get_los()); mi; ++mi)
+    for (monster_iterator mi; mi; ++mi)
     {
+        if (!you.see_cell_no_trans(mi->pos()))
+            continue;
+
         if (mi->has_ench(wh_enchant))
             continue;
 
