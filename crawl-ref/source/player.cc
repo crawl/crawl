@@ -1201,7 +1201,7 @@ int player_teleport(bool calc_unid)
 
     int tp = 0;
 
-    // rings
+    // rings (keep in sync with _equip_jewellery_effect)
     tp += 8 * player_equip(EQ_RINGS, RING_TELEPORTATION, calc_unid);
 
     // mutations
