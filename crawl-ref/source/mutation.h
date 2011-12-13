@@ -13,9 +13,10 @@ class formatted_string;
 
 enum mutation_activity_type
 {
-    MUTACT_INACTIVE,
-    MUTACT_PARTIAL,
-    MUTACT_FULL,
+    MUTACT_INACTIVE, // form-based mutations in most forms
+    MUTACT_PARTIAL,  // scales on statues
+    MUTACT_HUNGER,   // non-physical mutations on vampires
+    MUTACT_FULL,     // other mutations
 };
 
 struct body_facet_def

@@ -6213,9 +6213,9 @@ int player_mutation_level(mutation_type mut, bool temp)
 
     const mutation_activity_type active = mutation_activity_level(mut);
 
-    if (active == MUTACT_FULL)
+    if (active == MUTACT_FULL || active == MUTACT_PARTIAL)
         return (mlevel);
-    else if (active == MUTACT_PARTIAL)
+    else if (active == MUTACT_HUNGER)
     {
         switch (you.hunger_state)
         {
