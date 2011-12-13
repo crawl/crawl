@@ -2972,8 +2972,6 @@ bool monster_polymorph(monster* mons, monster_type targetc,
             verb = "degenerates into ";
         else if (_jiyva_slime_target(targetc))
             verb = "quivers uncontrollably and liquefies into ";
-        else if (oldc == MONS_KILLER_BEE_LARVA && targetc == MONS_KILLER_BEE)
-            verb = "metamorphoses into ";
         else
             verb = "evaporates and reforms as ";
 

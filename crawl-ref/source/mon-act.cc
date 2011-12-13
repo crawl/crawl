@@ -2769,22 +2769,32 @@ static bool _monster_eat_food(monster* mons, bool nearby)
             if (si->sub_type != FOOD_HONEYCOMB
                 && si->sub_type != FOOD_ROYAL_JELLY)
             {
-                return false;
+                return (false);
             }
 
             if (!nearby)
                 mpr("You hear a distant popping sound.", MSGCH_SOUND);
             else
+            {
                 mprf("%s devours %s.", mons->name(DESC_THE).c_str(),
-                    quant_name(*si, 1, DESC_THE).c_str());
+                     quant_name(*si, 1, DESC_THE).c_str());
+            }
+
             dec_mitm_item_quantity(si.link(), 1);
+
+            std::string old_name_the = mons->name(DESC_THE);
+
+            mons->upgrade_type(MONS_KILLER_BEE, true, true);
+
             if (!nearby)
-                mpr("You hear a distant popping sound.", MSGCH_SOUND);
+                mpr("You hear a distant bursting sound.", MSGCH_SOUND);
             else
-                mprf("%s devours %s.", mons->name(DESC_THE).c_str(),
-                    quant_name(*si, 1, DESC_THE).c_str());
-            monster_polymorph(mons, MONS_KILLER_BEE);
-            return true;
+            {
+                mprf("%s metamorphoses into %s!",
+                     old_name_the.c_str(), mons->name(DESC_A).c_str());
+            }
+
+            return (true);
         }
 
         if (free_to_eat && coinflip())
