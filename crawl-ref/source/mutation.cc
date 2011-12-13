@@ -120,6 +120,30 @@ bool is_valid_mutation(mutation_type mut)
             && _seek_mutation(mut));
 }
 
+static const mutation_type _all_scales[] = {
+    MUT_DISTORTION_FIELD,           MUT_ICY_BLUE_SCALES,
+    MUT_IRIDESCENT_SCALES,          MUT_LARGE_BONE_PLATES,
+    MUT_MOLTEN_SCALES,              MUT_ROUGH_BLACK_SCALES,
+    MUT_RUGGED_BROWN_SCALES,        MUT_SLIMY_GREEN_SCALES,
+    MUT_THIN_METALLIC_SCALES,       MUT_THIN_SKELETAL_STRUCTURE,
+    MUT_YELLOW_SCALES,
+};
+
+static bool _is_covering(mutation_type mut)
+{
+    for (unsigned i = 0; i < ARRAYSZ(_all_scales); ++i)
+        if (_all_scales[i] == mut)
+            return (true);
+
+    return (false);
+}
+
+static bool _true_scales(mutation_type mut)
+{
+    return (mut != MUT_THIN_SKELETAL_STRUCTURE && mut != MUT_DISTORTION_FIELD
+            && _is_covering(mut));
+}
+
 bool is_body_facet(mutation_type mut)
 {
     for (unsigned i = 0; i < ARRAYSZ(_body_facets); i++)
@@ -169,12 +193,16 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
             return (MUTACT_INACTIVE);
     }
 
-    if ((mut == MUT_GELATINOUS_BODY || mut == MUT_TOUGH_SKIN
-         || mut == MUT_SHAGGY_FUR || mut == MUT_FAST || mut == MUT_SLOW
-         || mut == MUT_IRIDESCENT_SCALES)
-        && you.form == TRAN_STATUE)
+    if (you.form == TRAN_STATUE)
     {
-        return (MUTACT_INACTIVE);
+        if (mut == MUT_GELATINOUS_BODY || mut == MUT_TOUGH_SKIN
+            || mut == MUT_SHAGGY_FUR || mut == MUT_FAST || mut == MUT_SLOW
+            || mut == MUT_IRIDESCENT_SCALES)
+        {
+            return (MUTACT_INACTIVE);
+        }
+        else if (_true_scales(mut))
+            return (MUTACT_PARTIAL);
     }
 
     // TODO: most scales show as active for statues, though their AC
@@ -197,12 +225,20 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
 
         // Other mutations are partially active at satiated and above.
         if (you.hunger_state >= HS_SATIATED)
-            return (MUTACT_PARTIAL);
+            return (MUTACT_HUNGER);
         else
             return (MUTACT_INACTIVE);
     }
     else
         return (MUTACT_FULL);
+}
+
+static std::string _annotate_form_based(std::string desc, bool suppressed)
+{
+    if (suppressed)
+        return "<darkgrey>((" + desc + "))<yellow>*</yellow><darkgrey>\n";
+    else
+        return desc + "<yellow>*</yellow>\n";
 }
 
 std::string describe_mutations()
@@ -251,10 +287,7 @@ std::string describe_mutations()
             const std::string acstr = "Your serpentine skin is tough (AC +"
                                       + num.str() + ").";
 
-            if (player_is_shapechanged())
-                result += "<darkgrey>((" + acstr + "))*<darkgrey>\n";
-            else
-                result += acstr + "*\n";
+            result += _annotate_form_based(acstr, player_is_shapechanged());
         }
         have_any = true;
         break;
@@ -325,10 +358,8 @@ std::string describe_mutations()
     case SP_YELLOW_DRACONIAN:
         result += "You can spit globs of acid.\n";
         result += "You can corrode armour when you spit acid.\n";
-        if (form_keeps_mutations() || you.form == TRAN_DRAGON)
-            result += "You are resistant to acid.*\n";
-        else
-            result += "<darkgrey>((You are resistant to acid.))*</darkgrey>\n";
+        result += _annotate_form_based("You are resistant to acid.",
+                      form_keeps_mutations() || you.form == TRAN_DRAGON);
         scale_type = "golden yellow";
         have_any = true;
         break;
@@ -432,10 +463,8 @@ std::string describe_mutations()
         const std::string msg = "Your " + scale_type + " scales are hard"
                                 " (AC +" + num.str() + ").";
 
-        if (player_is_shapechanged() && you.form != TRAN_DRAGON)
-            result += "<darkgrey>((" + msg + "))*</darkgrey>\n";
-        else
-            result += msg + "*\n";
+        result += _annotate_form_based(msg,
+                      player_is_shapechanged() && you.form != TRAN_DRAGON);
 
         result += "Your body does not fit into most forms of armour.\n";
         have_any = true;
@@ -897,24 +926,6 @@ static int _handle_conflicting_mutations(mutation_type mutation,
     }
 
     return (0);
-}
-
-static const mutation_type _all_scales[] = {
-    MUT_DISTORTION_FIELD,           MUT_ICY_BLUE_SCALES,
-    MUT_IRIDESCENT_SCALES,          MUT_LARGE_BONE_PLATES,
-    MUT_MOLTEN_SCALES,              MUT_ROUGH_BLACK_SCALES,
-    MUT_RUGGED_BROWN_SCALES,        MUT_SLIMY_GREEN_SCALES,
-    MUT_THIN_METALLIC_SCALES,       MUT_THIN_SKELETAL_STRUCTURE,
-    MUT_YELLOW_SCALES,
-};
-
-static bool _is_covering(mutation_type mut)
-{
-    for (unsigned i = 0; i < ARRAYSZ(_all_scales); ++i)
-        if (_all_scales[i] == mut)
-            return (true);
-
-    return (false);
 }
 
 static int _body_covered()
@@ -1522,7 +1533,8 @@ bool delete_all_mutations()
 std::string mutation_name(mutation_type mut, int level, bool colour)
 {
     const mutation_activity_type active = mutation_activity_level(mut);
-    const bool fully_active = (active == MUTACT_FULL);
+    const bool partially_active = (active == MUTACT_PARTIAL
+                                   || active == MUTACT_HUNGER);
     const bool fully_inactive = (active == MUTACT_INACTIVE);
 
     // level == -1 means default action of current level
@@ -1572,7 +1584,7 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
 
     if (fully_inactive)
         result = "((" + result + "))";
-    else if (player_mutation_level(mut) < you.mutation[mut])
+    else if (partially_active)
         result = "(" + result + ")";
 
     if (mdef.form_based)
@@ -1597,7 +1609,7 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
 
             if (fully_inactive)
                 colourname = "darkgrey";
-            else if (!fully_active)
+            else if (partially_active)
                 colourname = demonspawn ? "yellow"   : "blue";
             else if (extra)
                 colourname = demonspawn ? "lightmagenta" : "cyan";
@@ -1606,7 +1618,7 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
         }
         else if (fully_inactive)
             colourname = "darkgrey";
-        else if (!fully_active)
+        else if (partially_active)
             colourname = "brown";
         else if (you.form == TRAN_APPENDAGE && you.attribute[ATTR_APPENDAGE] == mut)
             colourname = "lightgreen";
