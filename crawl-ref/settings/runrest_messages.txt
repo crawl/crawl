@@ -35,6 +35,8 @@ stop = flesh start
 # By default, stop if you have spoilable food you can eat right now,
 # don't in other cases.
 stop = Your stomach is not as upset anymore. and you want to eat\.
+# FIXME: might not actually be edible...
+stop = If you dropped the corpses? in your pack you could butcher
 ignore = Your stomach is not as upset anymore
 
 # Ghouls
