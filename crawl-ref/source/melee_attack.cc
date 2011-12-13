@@ -3657,6 +3657,9 @@ int melee_attack::calc_attack_delay(bool random, bool scaled)
                                         rv::random2(1 + attacker_shield_penalty));
             }
         }
+        // Give unarmed shield-users a slight penalty always.
+        if (!weapon && player_wearing_slot(EQ_SHIELD))
+            attack_delay += rv::random2(2);
 
         attack_delay = rv::max(attack_delay, constant(3));
         int final_delay = random ? attack_delay.roll() : attack_delay.expected();
