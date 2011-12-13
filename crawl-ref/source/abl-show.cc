@@ -3091,6 +3091,7 @@ std::vector<talent> your_talents(bool check_confused)
         _add_talent(talents, ABIL_FLY, check_confused);
     }
     else if (player_mutation_level(MUT_BIG_WINGS) && !you.airborne()
+             // Liches' bone wings and statues' stone wings cannot fly.
              && !form_changed_physiology())
     {
         ASSERT(player_genus(GENPC_DRACONIAN));

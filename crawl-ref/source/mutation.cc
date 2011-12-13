@@ -160,32 +160,45 @@ void fixup_mutations()
     }
 }
 
-bool mutation_is_fully_active(mutation_type mut)
+mutation_activity_type mutation_activity_level(mutation_type mut)
 {
+    // First make sure the player's form permits the mutation.
+    if (!form_keeps_mutations())
+    {
+        if (get_mutation_def(mut).form_based)
+            return (MUTACT_INACTIVE);
+    }
+
+    if ((mut == MUT_GELATINOUS_BODY || mut == MUT_TOUGH_SKIN
+         || mut == MUT_SHAGGY_FUR || mut == MUT_FAST || mut == MUT_SLOW)
+        && you.form == TRAN_STATUE)
+    {
+        return (MUTACT_INACTIVE);
+    }
+
     // For all except the semi-undead, mutations always apply.
-    if (you.is_undead != US_SEMI_UNDEAD)
-        return (true);
+    if (you.is_undead == US_SEMI_UNDEAD)
+    {
+        // Innate mutations are always active
+        if (you.innate_mutations[mut])
+            return (MUTACT_FULL);
 
-    // Innate mutations are always active
-    if (you.innate_mutations[mut])
-        return (true);
+        // ... as are all mutations for semi-undead who are fully alive
+        if (you.hunger_state == HS_ENGORGED)
+            return (MUTACT_FULL);
 
-    // ... as are all mutations for semi-undead who are fully alive
-    if (you.hunger_state == HS_ENGORGED)
-        return (true);
+        // ... as are physical mutations.
+        if (get_mutation_def(mut).physical)
+            return (MUTACT_FULL);
 
-    // ... as are physical mutations.
-    if (get_mutation_def(mut).physical)
-        return (true);
-
-    return (false);
-}
-
-static bool _mutation_is_fully_inactive(mutation_type mut)
-{
-    const mutation_def& mdef = get_mutation_def(mut);
-    return (you.is_undead == US_SEMI_UNDEAD && you.hunger_state < HS_SATIATED
-            && !you.innate_mutations[mut] && !mdef.physical);
+        // Other mutations are partially active at satiated and above.
+        if (you.hunger_state >= HS_SATIATED)
+            return (MUTACT_PARTIAL);
+        else
+            return (MUTACT_INACTIVE);
+    }
+    else
+        return (MUTACT_FULL);
 }
 
 formatted_string describe_mutations()
@@ -206,6 +219,8 @@ formatted_string describe_mutations()
     result += "</white>\n\n";
 
     // Innate abilities which don't fit as mutations.
+    // TODO: clean these up with respect to transformations.  Currently
+    // we handle only Naga/Draconian AC and Yellow Draconian rAcid.
     result += "<lightblue>";
     switch (you.species)
     {
@@ -229,7 +244,15 @@ formatted_string describe_mutations()
         {
             std::ostringstream num;
             num << you.experience_level/3;
-            result += "Your serpentine skin is tough (AC +" + num.str() + ").\n";
+            const std::string acstr = "Your serpentine skin is tough (AC +"
+                                      + num.str() + ").";
+
+            if (player_is_shapechanged())
+                result += "<darkgrey>((" + acstr + "))*<darkgrey>\n";
+            else
+                result += acstr + "*\n";
+
+            result += acstr;
         }
         have_any = true;
         break;
@@ -300,7 +323,10 @@ formatted_string describe_mutations()
     case SP_YELLOW_DRACONIAN:
         result += "You can spit globs of acid.\n";
         result += "You can corrode armour when you spit acid.\n";
-        result += "You are resistant to acid.\n";
+        if (form_keeps_mutations() || you.form == TRAN_DRAGON)
+            result += "You are resistant to acid.*\n";
+        else
+            result += "<darkgrey>((You are resistant to acid.))*</darkgrey>\n";
         scale_type = "golden yellow";
         have_any = true;
         break;
@@ -400,7 +426,14 @@ formatted_string describe_mutations()
         // weapons and carrying capacity.
         std::ostringstream num;
         num << 4 + you.experience_level / 3;
-        result += "Your " + scale_type + " scales are hard (AC +" + num.str() + ").\n";
+
+        const std::string msg = "Your " + scale_type + " scales are hard"
+                                " (AC +" + num.str() + ").";
+
+        if (player_is_shapechanged() && you.form != TRAN_DRAGON)
+            result += "<darkgrey>((" + msg + "))*</darkgrey>\n";
+        else
+            result += msg + "*\n";
 
         result += "Your body does not fit into most forms of armour.\n";
         have_any = true;
@@ -449,11 +482,16 @@ formatted_string describe_mutations()
     if (!have_any)
         result +=  "You are rather mundane.\n";
 
+    result += "\n\n\n\n"
+              "()  : Partially suppressed.\n"
+              "(()): Completely suppressed.\n"
+              "*   : Suppressed by changes of form.\n";
+
+
     if (you.species == SP_VAMPIRE)
     {
-        result += "\n\n";
-        result += "\n\n";
         result +=
+            "+   : Suppressed by thirst.\n\n"
 #ifndef USE_TILE_LOCAL
             "Press '<w>!</w>'"
 #else
@@ -927,7 +965,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
     if (mutat == MUT_TENTACLE_SPIKE && you.species != SP_OCTOPODE)
         return (true);
 
-    if ((mutat == MUT_HOOVES || mutat == MUT_TALONS) && !player_has_feet())
+    if ((mutat == MUT_HOOVES || mutat == MUT_TALONS) && !player_has_feet(false))
         return (true);
 
     // Only Nagas can get this upgrade.
@@ -981,7 +1019,7 @@ bool physiology_mutation_conflict(mutation_type mutat)
             {
                 if (eq_type == _body_facets[i].eq
                     && mutat != _body_facets[i].mut
-                    && player_mutation_level(_body_facets[i].mut))
+                    && player_mutation_level(_body_facets[i].mut, false))
                 {
                     return (true);
                 }
@@ -1480,9 +1518,9 @@ bool delete_all_mutations()
 // If colour is true, also add the colour annotation.
 std::string mutation_name(mutation_type mut, int level, bool colour)
 {
-    const bool fully_active = mutation_is_fully_active(mut);
-    const bool fully_inactive =
-        (!fully_active && _mutation_is_fully_inactive(mut));
+    const mutation_activity_type active = mutation_activity_level(mut);
+    const bool fully_active = (active == MUTACT_FULL);
+    const bool fully_inactive = (active == MUTACT_INACTIVE);
 
     // level == -1 means default action of current level
     if (level == -1)
@@ -1528,10 +1566,19 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     else if (result.empty() && level > 0)
         result = mdef.have[level - 1];
 
-    if (fully_inactive || player_mutation_level(mut) < you.mutation[mut])
+
+    if (fully_inactive)
+        result = "((" + result + "))";
+    else if (player_mutation_level(mut) < you.mutation[mut])
+        result = "(" + result + ")";
+
+    if (mdef.form_based)
+        result = result + "*";
+
+    if (you.species == SP_VAMPIRE && !mdef.physical
+        && !you.innate_mutations[mut])
     {
-        result = "(" + result;
-        result += ")";
+        result = result + "+";
     }
 
     if (colour)
@@ -1556,6 +1603,8 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
         }
         else if (fully_inactive)
             colourname = "darkgrey";
+        else if (!fully_active)
+            colourname = "brown";
         else if (you.form == TRAN_APPENDAGE && you.attribute[ATTR_APPENDAGE] == mut)
             colourname = "lightgreen";
         else if (_is_slime_mutation(mut))

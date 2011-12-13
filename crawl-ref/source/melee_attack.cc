@@ -4477,8 +4477,7 @@ void melee_attack::do_spines()
 {
     const item_def *body = you.slot_item(EQ_BODY_ARMOUR, false);
     const int evp = body ? -property(*body, PARM_EVASION) : 0;
-    const int mut = form_keeps_mutations() ? player_mutation_level(MUT_SPINY)
-                                           : 0;
+    const int mut = player_mutation_level(MUT_SPINY);
 
     if (mut && attacker->alive() && one_chance_in(evp + 1))
     {
@@ -4702,8 +4701,6 @@ bool melee_attack::_tran_forbid_aux_attack(unarmed_attack_type atk)
 bool melee_attack::_extra_aux_attack(unarmed_attack_type atk, bool is_base)
 {
     // No extra unarmed attacks for disabled mutations.
-    // XXX: It might be better to make player_mutation_level
-    //      aware of mutations that are disabled due to transformation.
     if (_tran_forbid_aux_attack(atk))
         return (false);
 
