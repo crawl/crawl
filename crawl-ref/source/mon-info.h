@@ -104,8 +104,6 @@ struct monster_info_base
     mon_itemuse_type mitemuse;
     int mbase_speed;
     flight_type fly;
-    bool two_weapons; // FIXME: Why are these two not simply in mb?
-    bool no_regen;
     CrawlHashTable props;
 
     uint32_t client_id;
@@ -232,10 +230,8 @@ struct monster_info : public monster_info_base
         return (mbase_speed);
     }
 
-    bool can_regenerate() const
-    {
-        return (!no_regen);
-    }
+    bool wields_two_weapons() const;
+    bool can_regenerate() const;
 
     size_type body_size() const;
 

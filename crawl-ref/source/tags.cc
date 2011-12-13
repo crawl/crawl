@@ -3135,8 +3135,6 @@ void marshallMonsterInfo(writer &th, const monster_info& mi)
     marshallUnsigned(th, mi.mitemuse);
     marshallByte(th, mi.mbase_speed);
     marshallUnsigned(th, mi.fly);
-    marshallBoolean(th, mi.two_weapons);
-    marshallBoolean(th, mi.no_regen);
     for (unsigned int i = 0; i <= MSLOT_LAST_VISIBLE_SLOT; ++i)
     {
         if (mi.inv[i].get())
@@ -3216,13 +3214,6 @@ void unmarshallMonsterInfo(reader &th, monster_info& mi)
     unmarshallUnsigned(th, mi.fly);
 
 #if TAG_MAJOR_VERSION == 32
-    if (th.getMinorVersion() >= TAG_MINOR_LESS_TILE_DATA)
-    {
-#endif
-        mi.two_weapons = unmarshallBoolean(th);
-        mi.no_regen = unmarshallBoolean(th);
-#if TAG_MAJOR_VERSION == 32
-    }
     if (th.getMinorVersion() < TAG_MINOR_NEW_MIMICS)
         unmarshallUnsigned(th);
 

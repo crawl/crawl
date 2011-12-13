@@ -3395,7 +3395,7 @@ static std::string _describe_monster_weapon(const monster_info& mi, bool ident)
         name1 = weap->name(DESC_A, false, false, true,
                            false, ISFLAG_KNOW_CURSE);
     }
-    if (alt && (!ident || item_type_known(*alt)) && mi.two_weapons)
+    if (alt && (!ident || item_type_known(*alt)) && mi.wields_two_weapons())
     {
         name2 = alt->name(DESC_A, false, false, true,
                           false, ISFLAG_KNOW_CURSE);
@@ -3734,7 +3734,7 @@ std::string get_monster_equipment_desc(const monster_info& mi,
         }
 
         // _describe_monster_weapon already took care of this
-        if (mi.two_weapons)
+        if (mi.wields_two_weapons())
             mon_alt = 0;
 
         const bool mon_has_wand = mi.props.exists("wand_known") && mon_wnd;

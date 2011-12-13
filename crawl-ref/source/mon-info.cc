@@ -296,14 +296,6 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
     if (fly == FL_NONE)
         fly = mons_class_flies(base_type);
 
-    two_weapons = mons_class_wields_two_weapons(type);
-    if (!two_weapons)
-        two_weapons = mons_class_wields_two_weapons(base_type);
-
-    no_regen = !mons_class_can_regenerate(type);
-    if (!no_regen)
-        no_regen = !mons_class_can_regenerate(base_type);
-
     threat = MTHRT_UNDEF;
 
     dam = MDAM_OKAY;
@@ -500,14 +492,6 @@ monster_info::monster_info(const monster* m, int milev)
     else
         fly = mons_class_flies(type);
 
-    two_weapons = mons_wields_two_weapons(m);
-
-    // don't give away regeneration of monsters you're misled about
-    if (type_known)
-        no_regen = !mons_can_regenerate(m);
-    else
-        no_regen = !mons_class_can_regenerate(type);
-
     if (m->haloed() && !m->umbraed())
         mb.set(MB_HALOED);
     if (!m->haloed() && m->umbraed())
@@ -633,7 +617,7 @@ monster_info::monster_info(const monster* m, int milev)
         else if (m->props.exists("ash_id") && item_type_known(mitm[m->inv[i]]))
             ok = true;
         else if (i == MSLOT_ALT_WEAPON)
-            ok = two_weapons;
+            ok = wields_two_weapons();
         else if (i == MSLOT_MISSILE)
             ok = false;
         else
@@ -1355,6 +1339,19 @@ int monster_info::res_magic() const
         mr /= 2;
 
     return (mr);
+}
+
+bool monster_info::wields_two_weapons() const
+{
+    return mons_class_wields_two_weapons(type)
+        || mons_class_wields_two_weapons(base_type);
+}
+
+bool monster_info::can_regenerate() const
+{
+    return mons_class_can_regenerate(type)
+        && mons_class_can_regenerate(base_type)
+        && !(mons_is_pghost(type) && u.ghost.species == SP_DEEP_DWARF);
 }
 
 size_type monster_info::body_size() const
