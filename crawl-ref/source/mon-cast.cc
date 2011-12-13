@@ -4493,6 +4493,7 @@ bool ms_waste_of_time(const monster* mon, spell_type monspell)
         break;
 
     case SPELL_DEATHS_DOOR:
+        // XXX: What to do if the caster is an (undead) enslaved soul?
         if (mon->has_ench(ENCH_DEATHS_DOOR))
             ret = true;
         break;
