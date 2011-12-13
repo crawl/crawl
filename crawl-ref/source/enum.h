@@ -3528,6 +3528,7 @@ enum disable_type
     DIS_PLAYER_REGEN,
     DIS_HUNGER,
     DIS_DEATH,
+    DIS_DELAY,
     NUM_DISABLEMENTS
 };
 

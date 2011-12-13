@@ -332,6 +332,7 @@ static const char* disablements[] =
     "player_regen",
     "hunger",
     "death",
+    "delay",
 };
 
 LUAFN(debug_disable)
