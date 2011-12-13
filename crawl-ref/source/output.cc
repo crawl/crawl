@@ -2162,7 +2162,12 @@ static std::string _status_mut_abilities(int sw)
 
       case SP_YELLOW_DRACONIAN:
           mutations.push_back("spit acid");
-          mutations.push_back("acid resistance");
+
+          if (form_keeps_mutations() || you.form == TRAN_DRAGON)
+              mutations.push_back("acid resistance");
+          else
+              mutations.push_back("<darkgrey>(acid resistance)</darkgrey>");
+
           break;
 
       case SP_GREY_DRACONIAN:
@@ -2214,9 +2219,10 @@ static std::string _status_mut_abilities(int sw)
     std::string current;
     for (unsigned i = 0; i < NUM_MUTATIONS; ++i)
     {
-        int level = player_mutation_level((mutation_type) i);
-        if (!level)
+        if (!you.mutation[i])
             continue;
+
+        int level = player_mutation_level((mutation_type) i);
 
         const bool lowered = (level < you.mutation[i]);
         const mutation_def& mdef = get_mutation_def((mutation_type) i);
@@ -2235,7 +2241,7 @@ static std::string _status_mut_abilities(int sw)
                 current += ostr.str();
             }
         }
-        else
+        else if (level)
         {
             switch (i)
             {
@@ -2351,6 +2357,8 @@ static std::string _status_mut_abilities(int sw)
 
         if (!current.empty())
         {
+            if (level == 0)
+                current = "(" + current + ")";
             if (lowered)
                 current = "<darkgrey>" + current + "</darkgrey>";
             mutations.push_back(current);

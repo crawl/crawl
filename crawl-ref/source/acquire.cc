@@ -136,7 +136,7 @@ static armour_type _pick_wearable_armour(const armour_type arm)
 
     // Mutation specific problems (horns and antennae allow caps, but not
     // Horns 3 or Antennae 3 (checked below)).
-    if (result == ARM_BOOTS && !player_has_feet()
+    if (result == ARM_BOOTS && !player_has_feet(false)
         || result == ARM_GLOVES && you.has_claws(false) >= 3)
     {
         result = NUM_ARMOURS;

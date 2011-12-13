@@ -11,6 +11,13 @@
 
 class formatted_string;
 
+enum mutation_activity_type
+{
+    MUTACT_INACTIVE,
+    MUTACT_PARTIAL,
+    MUTACT_FULL,
+};
+
 struct body_facet_def
 {
     equipment_type eq;
@@ -38,18 +45,19 @@ struct demon_mutation_info
 struct mutation_def
 {
     mutation_type mutation;
-    short         rarity;    // Rarity of the mutation.
-    short         levels;    // The number of levels of the mutation.
-    bool          bad;       // A mutation that's more bad than good. Xom uses
-                             // this to decide which mutations to hand out as
-                             // rewards.
-    bool          physical;  // A mutation affecting a character's outward
-                             // appearance.
-    const char*   short_desc;// What appears on the '%' screen.
-    const char*   have[3];   // What appears on the 'A' screen.
-    const char*   gain[3];   // Message when you gain the mutation.
-    const char*   lose[3];   // Message when you lose the mutation.
-    const char*   wizname;   // For gaining it in wizmode.
+    short       rarity;     // Rarity of the mutation.
+    short       levels;     // The number of levels of the mutation.
+    bool        bad;        // A mutation that's more bad than good. Xom uses
+                            // this to decide which mutations to hand out as
+                            // rewards.
+    bool        physical;   // A mutation affecting a character's outward
+                            // appearance; active for thirsty semi-undead.
+    bool        form_based; // A mutation that is suppressed when shapechanged.
+    const char* short_desc; // What appears on the '%' screen.
+    const char* have[3];    // What appears on the 'A' screen.
+    const char* gain[3];    // Message when you gain the mutation.
+    const char* lose[3];    // Message when you lose the mutation.
+    const char* wizname;    // For gaining it in wizmode.
 };
 
 void init_mut_index();
@@ -72,7 +80,7 @@ inline bool give_bad_mutation(bool failMsg = true, bool force_mutation = false)
 }
 
 void display_mutations();
-bool mutation_is_fully_active(mutation_type mut);
+mutation_activity_type mutation_activity_level(mutation_type mut);
 formatted_string describe_mutations();
 
 bool delete_mutation(mutation_type which_mutation, bool failMsg = true,
