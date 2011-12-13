@@ -2025,12 +2025,9 @@ void roll_zombie_hp(monster* mon)
     mon->hit_points     = mon->max_hit_points;
 }
 
-static void _roll_zombie_ac_ev(monster* mon)
+static void _roll_zombie_ac_ev_mods(monster* mon, int& acmod, int& evmod)
 {
     ASSERT(mons_class_is_zombified(mon->type));
-
-    int acmod = 0;
-    int evmod = 0;
 
     switch (mon->type)
     {
@@ -2062,6 +2059,16 @@ static void _roll_zombie_ac_ev(monster* mon)
         die("invalid zombie type %d (%s)", mon->type,
             mons_class_name(mon->type));
     }
+}
+
+static void _roll_zombie_ac_ev(monster* mon)
+{
+    ASSERT(mons_class_is_zombified(mon->type));
+
+    int acmod = 0;
+    int evmod = 0;
+
+    _roll_zombie_ac_ev_mods(mon, acmod, evmod);
 
     mon->ac = std::max(mon->ac + acmod, 0);
     mon->ev = std::max(mon->ev + evmod, 0);
@@ -2103,6 +2110,42 @@ void define_zombie(monster* mon, monster_type ztype, monster_type cs)
 
     roll_zombie_hp(mon);
     _roll_zombie_ac_ev(mon);
+}
+
+bool downgrade_zombie_to_skeleton(monster* mon)
+{
+    if ((mon->type != MONS_ZOMBIE_SMALL && mon->type != MONS_ZOMBIE_LARGE)
+        || !mons_skeleton(mon->base_monster))
+    {
+        return (false);
+    }
+
+    int acmod = 0;
+    int evmod = 0;
+
+    _roll_zombie_ac_ev_mods(mon, acmod, evmod);
+
+    // Reverse the zombie AC and EV mods, since they will be replaced
+    // with the skeleton AC and EV mods below.
+    mon->ac = std::max(mon->ac - acmod, 0);
+    mon->ev = std::max(mon->ev - evmod, 0);
+
+    const int old_hp    = mon->hit_points;
+    const int old_maxhp = mon->max_hit_points;
+
+    mon->type           = (mons_zombie_size(mon->base_monster) == Z_SMALL) ?
+                              MONS_SKELETON_SMALL : MONS_SKELETON_LARGE;
+
+    mon->colour         = mons_class_colour(mon->type);
+    mon->speed          = mons_class_zombie_base_speed(mon->base_monster);
+
+    roll_zombie_hp(mon);
+    _roll_zombie_ac_ev(mon);
+
+    // Scale the skeleton HP to the zombie HP.
+    mon->hit_points     = old_hp * mon->max_hit_points / old_maxhp;
+
+    return (true);
 }
 
 static band_type _choose_band(int mon_type, int power, int &band_size,
