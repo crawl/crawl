@@ -1528,9 +1528,13 @@ bool delete_all_mutations()
 // If colour is true, also add the colour annotation.
 std::string mutation_name(mutation_type mut, int level, bool colour)
 {
+    // Ignore the player's forms, etc.
+    const bool ignore_player = (level != -1);
+
     const mutation_activity_type active = mutation_activity_level(mut);
+    const bool lowered = you.mutation[mut] > player_mutation_level(mut);
     const bool partially_active = (active == MUTACT_PARTIAL
-                                   || active == MUTACT_HUNGER);
+        || active == MUTACT_HUNGER && lowered);
     const bool fully_inactive = (active == MUTACT_INACTIVE);
 
     // level == -1 means default action of current level
@@ -1577,19 +1581,21 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     else if (result.empty() && level > 0)
         result = mdef.have[level - 1];
 
-
-    if (fully_inactive)
-        result = "((" + result + "))";
-    else if (partially_active)
-        result = "(" + result + ")";
-
-    if (mdef.form_based)
-        result += colour ? "<yellow>*</yellow>" : "*";
-
-    if (you.species == SP_VAMPIRE && !mdef.physical
-        && !you.innate_mutations[mut])
+    if (!ignore_player)
     {
-        result += colour ? "<lightred>+</lightred>" : "+";
+        if (fully_inactive)
+            result = "((" + result + "))";
+        else if (partially_active)
+            result = "(" + result + ")";
+
+        if (mdef.form_based)
+            result += colour ? "<yellow>*</yellow>" : "*";
+
+        if (you.species == SP_VAMPIRE && !mdef.physical
+            && !you.innate_mutations[mut])
+        {
+            result += colour ? "<lightred>+</lightred>" : "+";
+        }
     }
 
     if (colour)
