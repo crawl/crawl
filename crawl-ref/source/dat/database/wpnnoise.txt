@@ -671,7 +671,7 @@ w:25
 
 @The_weapon@ @composes_or_sings@ a ballad about your adventures.
 
-@Your_weapon@ prematurely composes your obituary.
+@The_weapon@ prematurely composes your obituary.
 
 ###############################################################################
 # Speaking
