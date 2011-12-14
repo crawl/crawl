@@ -127,6 +127,7 @@ bool tile_page::add_synonym(const std::string &enumname, const std::string &syn)
 
 bool tile_page::write_image(const char *filename)
 {
+#ifdef USE_TILE
     if (m_width * m_height <= 0)
     {
         fprintf(stderr, "Error: failed to write image.  No images placed?\n");
@@ -159,6 +160,9 @@ bool tile_page::write_image(const char *filename)
     bool success = write_png(filename, pixels, m_width, m_height);
     delete[] pixels;
     return success;
+#else
+    return true;
+#endif
 }
 
 void tile_page::add_variation(int var_idx, int base_idx, int colour)

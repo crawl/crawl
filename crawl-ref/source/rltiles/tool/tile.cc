@@ -4,8 +4,10 @@
 #include <memory.h>
 
 #include <assert.h>
-#include <SDL.h>
-#include <SDL_image.h>
+#ifdef USE_TILE
+  #include <SDL.h>
+  #include <SDL_image.h>
+#endif
 
 tile::tile() : m_width(0), m_height(0), m_pixels(NULL), m_shrink(true)
 {
@@ -39,7 +41,11 @@ void tile::unload()
 
 bool tile::valid() const
 {
+#ifdef USE_TILE
     return m_pixels && m_width && m_height;
+#else
+    return m_pixels && !m_width && !m_height;
+#endif
 }
 
 const std::string &tile::filename() const
@@ -293,6 +299,7 @@ void tile::copy(const tile &img)
 
 bool tile::compose(const tile &img)
 {
+#ifdef USE_TILE
     if (!valid())
     {
         fprintf(stderr, "Error: can't compose onto an unloaded image.\n");
@@ -323,6 +330,7 @@ bool tile::compose(const tile &img)
         dest->b = (src->b * src->a + dest->b * (255 - src->a)) / 255;
         dest->a = (src->a * 255    + dest->a * (255 - src->a)) / 255;
     }
+#endif
 
     return (true);
 }
@@ -369,6 +377,7 @@ bool tile::load(const std::string &new_filename)
     if (m_pixels)
         unload();
 
+#ifdef USE_TILE
     SDL_Surface *img = IMG_Load(new_filename.c_str());
     if (!img)
         return (false);
@@ -450,6 +459,11 @@ bool tile::load(const std::string &new_filename)
     SDL_FreeSurface(img);
 
     replace_colour(tile_colour::background, tile_colour::transparent);
+#else
+    m_width  = 0;
+    m_height = 0;
+    m_pixels = new tile_colour[0];
+#endif
 
     return (true);
 }
@@ -474,8 +488,13 @@ void tile::replace_colour(tile_colour &find, tile_colour &replace)
 
 tile_colour &tile::get_pixel(unsigned int x, unsigned int y)
 {
+#ifdef USE_TILE
     assert(m_pixels && x < m_width && y < m_height);
     return m_pixels[x + y * m_width];
+#else
+    static tile_colour dummy;
+    return dummy;
+#endif
 }
 
 void tile::get_bounding_box(int &x0, int &y0, int &w, int &h)
@@ -487,8 +506,8 @@ void tile::get_bounding_box(int &x0, int &y0, int &w, int &h)
     }
 
     x0 = y0 = 0;
-    unsigned int x1 = m_width - 1;
-    unsigned int y1 = m_height - 1;
+    int x1 = m_width - 1;
+    int y1 = m_height - 1;
     while (x0 <= x1)
     {
         bool found = false;

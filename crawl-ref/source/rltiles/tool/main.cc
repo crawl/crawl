@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include "tile_list_processor.h"
 
-#include <SDL_main.h>
+#ifdef USE_TILE
+  #include <SDL_main.h>
+#endif
 
 int main(int argc, char **argv)
 {
