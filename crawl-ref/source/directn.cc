@@ -2874,6 +2874,17 @@ std::string thing_do_grammar(description_level_type dtype,
     {
         desc += ".";
     }
+
+    // Avoid double articles.
+    if (starts_with(desc, "the ") || starts_with(desc, "The ")
+        || starts_with(desc, "a ") || starts_with(desc, "A ")
+        || starts_with(desc, "an ") || starts_with(desc, "An ")
+        || starts_with(desc, "some ") || starts_with(desc, "Some "))
+    {
+        if (dtype == DESC_THE || dtype == DESC_A)
+            dtype = DESC_PLAIN;
+    }
+
     if (dtype == DESC_PLAIN || (!force_article && isupper(desc[0])))
     {
         /* Since we're removing caps, this shouldn't be needed,
@@ -2970,9 +2981,9 @@ static std::string _base_feature_desc(dungeon_feature_type grid,
     case DNGN_PERMAROCK_WALL:
         return ("unnaturally hard rock wall");
     case DNGN_OPEN_SEA:
-        return ("open sea");
+        return ("the open sea");
     case DNGN_LAVA_SEA:
-        return ("endless lava");
+        return ("the endless lava");
     case DNGN_CLOSED_DOOR:
         return ("closed door");
     case DNGN_DETECTED_SECRET_DOOR:

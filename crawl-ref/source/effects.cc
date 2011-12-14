@@ -2928,9 +2928,9 @@ static int _mushroom_ring(item_def &corpse, int & seen_count,
 // 8-connectivity.  Could change the expansion pattern by using a
 // priority queue for sequencing (priority = distance from origin under
 // some metric).
-int spawn_corpse_mushrooms(item_def &corpse,
+int spawn_corpse_mushrooms(item_def& corpse,
                            int target_count,
-                           int & seen_targets,
+                           int& seen_targets,
                            beh_type toadstool_behavior,
                            bool distance_as_time)
 

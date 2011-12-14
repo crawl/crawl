@@ -303,35 +303,6 @@ bool melee_attack::handle_phase_attempted()
         xom_is_stimulated(attacker->atype() == ACT_PLAYER ? 200 : 100);
     }
 
-    attack_occurred = true;
-
-    /* TODO Permanently remove this? Commented out for temporary removal
-     *
-     * The only scenario this handles that isn't handled elsewhere (later on)
-     * is identifying a ranged, cursed weapon wielded by a monster...which
-     * seems like an information leak and very much a special-case. -Cryptic
-    if (attacker->atype() == ACT_MONSTER)
-    {
-        item_def *weap = attacker->as_monster()->mslot_item(MSLOT_WEAPON);
-        if (weap && you.can_see(attacker) && weap->cursed()
-            && is_range_weapon(*weap))
-        {
-            set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
-        }
-    }
-     */
-
-    // Check for player practicing dodging
-    if (one_chance_in(3) && defender == &you)
-        practise(EX_MONSTER_MAY_HIT);
-
-    return (true);
-}
-
-bool melee_attack::handle_phase_blocked()
-{
-    damage_done = 0;
-
     // Defending monster protects itself from attacks using the wall
     // it's in. Zotdef: allow a 5% chance of a hit anyway
     if (defender->atype() == ACT_MONSTER && cell_is_solid(defender->pos())
@@ -372,8 +343,38 @@ bool melee_attack::handle_phase_blocked()
         // Give chaos weapon a chance to affect the attacker
         if (damage_brand == SPWPN_CHAOS)
             chaos_affects_attacker();
+
+        return (false);
     }
 
+    attack_occurred = true;
+
+    /* TODO Permanently remove this? Commented out for temporary removal
+     *
+     * The only scenario this handles that isn't handled elsewhere (later on)
+     * is identifying a ranged, cursed weapon wielded by a monster...which
+     * seems like an information leak and very much a special-case. -Cryptic
+    if (attacker->atype() == ACT_MONSTER)
+    {
+        item_def *weap = attacker->as_monster()->mslot_item(MSLOT_WEAPON);
+        if (weap && you.can_see(attacker) && weap->cursed()
+            && is_range_weapon(*weap))
+        {
+            set_ident_flags(*weap, ISFLAG_KNOW_CURSE);
+        }
+    }
+     */
+
+    // Check for player practicing dodging
+    if (one_chance_in(3) && defender == &you)
+        practise(EX_MONSTER_MAY_HIT);
+
+    return (true);
+}
+
+bool melee_attack::handle_phase_blocked()
+{
+    damage_done = 0;
     return (true);
 }
 
@@ -3794,19 +3795,14 @@ random_var melee_attack::player_unarmed_speed()
                  (rv::roll_dice(1, 10) +
                   rv::roll_dice(2, attacker_body_armour_penalty)));
 
-    // Not even bats can attack faster than this.
-    min_delay = 5;
-
-    // Unarmed speed.
+    // Unarmed speed. Min delay is 10 - 270/54 = 5.
     if (you.burden_state == BS_UNENCUMBERED)
     {
-        unarmed_delay =
-            rv::max(unarmed_delay
-                     - div_rand_round(constant(you.skill(SK_UNARMED_COMBAT, 10)),
-                                player_in_bat_form() ? 30 : 50),
-                    constant(min_delay));
+        unarmed_delay -= div_rand_round(constant(you.skill(SK_UNARMED_COMBAT, 10)), 54);
     }
-
+    // Bats are faster (for what good it does them).
+    if (player_in_bat_form())
+        unarmed_delay = div_rand_round(constant(3)*unarmed_delay, 5);
     return (unarmed_delay);
 }
 

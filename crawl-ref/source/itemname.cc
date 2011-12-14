@@ -940,6 +940,7 @@ static const char* _book_type_name(int booktype)
         return "Minor Magic";
 #if TAG_MAJOR_VERSION == 32
     case BOOK_CONJURATIONS_I:
+        return "Old Conjurations";
 #endif
     case BOOK_CONJURATIONS_II:
         return "Conjurations";
