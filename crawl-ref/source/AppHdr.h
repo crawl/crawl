@@ -406,11 +406,11 @@ inline void UNUSED(const volatile T &)
 # include "libw32c.h"
 #endif
 
-#ifdef USE_TILE
-# ifdef __cplusplus
+#ifdef __cplusplus
+# ifdef USE_TILE
 #  include "libgui.h"
-#  include "tiles.h"
 # endif
+# include "tiles.h"
 #endif
 
 #endif // !defined __OBJC__

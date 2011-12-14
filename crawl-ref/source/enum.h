@@ -3559,7 +3559,8 @@ enum los_type
     LOS_SOLID_SEE    = (1 << 3),
 };
 
-#ifdef USE_TILE
+// Tiles stuff.
+
 enum screen_mode
 {
     SCREENMODE_WINDOW = 0,
@@ -3705,8 +3706,6 @@ enum
 {
     NUM_MAX_DOLLS = 10,
 };
-
-#endif
 
 #ifdef WIZARD
 
