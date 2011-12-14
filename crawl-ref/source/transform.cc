@@ -139,7 +139,8 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
 
 bool form_keeps_mutations(transformation_type form)
 {
-    switch (form) {
+    switch (form)
+    {
     case TRAN_NONE:
     case TRAN_BLADE_HANDS:
     case TRAN_STATUE:

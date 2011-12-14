@@ -49,7 +49,8 @@ attack::attack(actor *attk, actor *defn)
     init_attack();
 }
 
-bool attack::handle_phase_attempted() {
+bool attack::handle_phase_attempted()
+{
     return true;
 }
 

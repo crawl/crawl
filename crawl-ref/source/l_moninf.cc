@@ -65,7 +65,8 @@ LUAFN(moninf_get_is_very_stabbable)
     return (1);
 }
 
-LUAFN(moninf_get_is_unique) {
+LUAFN(moninf_get_is_unique)
+{
     MONINF(ls, 1, mi);
     // XXX: A bit of a hack to prevent using this to determine which is fake.
     if (mi->type == MONS_MARA_FAKE)

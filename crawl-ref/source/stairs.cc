@@ -463,7 +463,8 @@ static void _leaving_level_now(dungeon_feature_type stair_used)
 
     _clear_golubria_traps();
 
-    if (grd(you.pos()) == DNGN_EXIT_ABYSS) {
+    if (grd(you.pos()) == DNGN_EXIT_ABYSS)
+    {
         you.level_type_name =
             static_cast<std::string>(you.props["abyss_return_name"]);
         you.level_type_name_abbrev =
