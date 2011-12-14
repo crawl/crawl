@@ -1902,9 +1902,8 @@ bool fedhas_shoot_through(const bolt & beam, const monster* victim)
 // Returns the number of corpses consumed.
 int fedhas_fungal_bloom()
 {
-    int seen_mushrooms  = 0;
-    int seen_corpses    = 0;
-
+    int seen_mushrooms = 0;
+    int seen_corpses = 0;
     int processed_count = 0;
     bool kills = false;
 
@@ -1923,14 +1922,14 @@ int fedhas_fungal_bloom()
                 // Maybe turn a zombie into a skeleton.
                 if (mons_skeleton(mons_zombie_base(target)))
                 {
-                    if (piety)
-                        processed_count++;
-
                     simple_monster_message(target, "'s flesh rots away.");
 
                     downgrade_zombie_to_skeleton(target);
 
                     behaviour_event(target, ME_ALERT, MHITYOU);
+
+                    if (piety)
+                        processed_count++;
 
                     continue;
                 }
@@ -1940,10 +1939,12 @@ int fedhas_fungal_bloom()
             {
                 simple_monster_message(target, " rots away and dies.");
 
-                coord_def pos = target->pos();
-                int colour    = target->colour;
-                int corpse    = monster_die(target, KILL_MISC, NON_MONSTER, true);
                 kills = true;
+
+                const coord_def pos = target->pos();
+                const int colour = target->colour;
+                const int corpse = monster_die(target, KILL_MISC, NON_MONSTER,
+                                               true);
 
                 // If a corpse didn't drop, create a toadstool.
                 // If one did drop, we will create toadstools from it as usual
@@ -1990,25 +1991,26 @@ int fedhas_fungal_bloom()
         for (stack_iterator j(*i); j; ++j)
         {
             bool corpse_on_pos = false;
+
             if (j->base_type == OBJ_CORPSES && j->sub_type == CORPSE_BODY)
             {
-                corpse_on_pos  = true;
-                int trial_prob = mushroom_prob(*j);
+                corpse_on_pos = true;
 
-                processed_count++;
-                int target_count = 1 + binomial_generator(20, trial_prob);
-
+                const int trial_prob = mushroom_prob(*j);
+                const int target_count = 1 + binomial_generator(20, trial_prob);
                 int seen_per;
                 spawn_corpse_mushrooms(*j, target_count, seen_per,
                                        BEH_GOOD_NEUTRAL, true);
-
-                seen_mushrooms += seen_per;
 
                 // Either turn this corpse into a skeleton or destroy it.
                 if (mons_skeleton(j->plus))
                     turn_corpse_into_skeleton(*j);
                 else
                     destroy_item(j->index());
+
+                seen_mushrooms += seen_per;
+
+                processed_count++;
             }
 
             if (corpse_on_pos && you.see_cell(*i))
@@ -2031,7 +2033,7 @@ int fedhas_fungal_bloom()
         // -cao
 
         int piety_gain = 0;
-        for (int i = 0; i < processed_count * 2; i++)
+        for (int i = 0; i < processed_count * 2; ++i)
             piety_gain += random2(15); // avg 1.4 piety per corpse
         gain_piety(piety_gain, 10);
     }
