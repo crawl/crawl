@@ -107,7 +107,7 @@ int tile_page::find(const std::string &enumname) const
 
 bool tile_page::add_synonym(int idx, const std::string &syn)
 {
-    if (idx < 0 || idx >= m_tiles.size())
+    if (idx < 0 || idx >= (int)m_tiles.size())
         return (false);
 
     m_tiles[idx]->add_enumname(syn);

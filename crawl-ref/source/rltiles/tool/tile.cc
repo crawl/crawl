@@ -400,7 +400,7 @@ bool tile::load(const std::string &new_filename)
         for (int y = 0; y < img->h; y++)
             for (int x = 0; x < img->w; x++)
             {
-                int index = ((unsigned char*)img->pixels)[src++];
+                unsigned int index = ((unsigned char*)img->pixels)[src++];
                 m_pixels[dest].r = pal->colors[index].r;
                 m_pixels[dest].g = pal->colors[index].g;
                 m_pixels[dest].b = pal->colors[index].b;
@@ -486,7 +486,7 @@ void tile::replace_colour(tile_colour &find, tile_colour &replace)
         }
 }
 
-tile_colour &tile::get_pixel(unsigned int x, unsigned int y)
+tile_colour &tile::get_pixel(int x, int y)
 {
 #ifdef USE_TILE
     assert(m_pixels && x < m_width && y < m_height);
@@ -511,7 +511,7 @@ void tile::get_bounding_box(int &x0, int &y0, int &w, int &h)
     while (x0 <= x1)
     {
         bool found = false;
-        for (unsigned int y = y0; !found && y < y1; y++)
+        for (int y = y0; !found && y < y1; y++)
             found |= (get_pixel(x0, y).a > 0);
 
         if (found)
@@ -522,7 +522,7 @@ void tile::get_bounding_box(int &x0, int &y0, int &w, int &h)
     while (x0 <= x1)
     {
         bool found = false;
-        for (unsigned int y = y0; !found && y < y1; y++)
+        for (int y = y0; !found && y < y1; y++)
             found |= (get_pixel(x1, y).a > 0);
 
         if (found)
@@ -533,7 +533,7 @@ void tile::get_bounding_box(int &x0, int &y0, int &w, int &h)
     while (y0 <= y1)
     {
         bool found = false;
-        for (unsigned int x = x0; !found && x < x1; x++)
+        for (int x = x0; !found && x < x1; x++)
             found |= (get_pixel(x, y0).a > 0);
 
         if (found)
@@ -544,7 +544,7 @@ void tile::get_bounding_box(int &x0, int &y0, int &w, int &h)
     while (y0 <= y1)
     {
         bool found = false;
-        for (unsigned int x = x0; !found && x < x1; x++)
+        for (int x = x0; !found && x < x1; x++)
             found |= (get_pixel(x, y1).a > 0);
 
         if (found)
