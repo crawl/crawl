@@ -27,8 +27,6 @@
 #include "pattern.h"
 #include "store.h"
 
-#ifdef USE_TILE
-
 #include "tiledef_defines.h"
 
 struct tile_flavour
@@ -58,8 +56,6 @@ protected:
     tileidx_t m_tile;
 };
 
-
-#endif
 
 #define INFO_SIZE       200          // size of message buffers
 #define ITEMNAME_SIZE   200          // size of item names/shop names/etc

@@ -227,7 +227,6 @@ public:
     map_featheight_list fheights;
 };
 
-#ifdef USE_TILE
 typedef std::pair<std::string, int> map_weighted_tile;
 class map_tile_list : public std::vector<map_weighted_tile>
 {
@@ -257,7 +256,6 @@ public:
     std::string fixed_tile;
     map_tile_list tiles;
 };
-#endif
 
 class map_marker_spec
 {
@@ -349,11 +347,9 @@ public:
     void write_maplines(writer &) const;
     void read_maplines(reader&);
 
-#ifdef USE_TILE
     std::string add_floortile(const std::string &s);
     std::string add_rocktile(const std::string &s);
     std::string add_spec_tile(const std::string &s);
-#endif
 
     std::vector<coord_def> find_glyph(const std::string &glyphs) const;
     std::vector<coord_def> find_glyph(int glyph) const;
@@ -458,9 +454,7 @@ private:
     void merge_cell(int x, int y, const map_def &vault, int vx, int vy,
                     int keyspec_idx);
 
-#ifdef USE_TILE
     void overlay_tiles(tile_spec &);
-#endif
     void check_borders();
     std::string shuffle(std::string s);
     std::string block_shuffle(const std::string &s);
@@ -475,9 +469,7 @@ private:
     std::string parse_glyph_replacements(std::string s,
                                          glyph_replacements_t &gly);
 
-#ifdef USE_TILE
     std::string add_tile(const std::string &sub, bool is_floor, bool is_feat);
-#endif
 
     std::string add_key_field(
         const std::string &s,
