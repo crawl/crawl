@@ -3794,19 +3794,14 @@ random_var melee_attack::player_unarmed_speed()
                  (rv::roll_dice(1, 10) +
                   rv::roll_dice(2, attacker_body_armour_penalty)));
 
-    // Not even bats can attack faster than this.
-    min_delay = 5;
-
-    // Unarmed speed.
+    // Unarmed speed. Min delay is 10 - 270/54 = 5.
     if (you.burden_state == BS_UNENCUMBERED)
     {
-        unarmed_delay =
-            rv::max(unarmed_delay
-                     - div_rand_round(constant(you.skill(SK_UNARMED_COMBAT, 10)),
-                                player_in_bat_form() ? 30 : 50),
-                    constant(min_delay));
+        unarmed_delay -= div_rand_round(constant(you.skill(SK_UNARMED_COMBAT, 10)), 54);
     }
-
+    // Bats are faster (for what good it does them).
+    if (player_in_bat_form())
+        unarmed_delay = div_rand_round(constant(3)*unarmed_delay, 5);
     return (unarmed_delay);
 }
 
