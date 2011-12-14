@@ -81,7 +81,8 @@ protected:
 };
 
 // A fixed array centered around the origin.
-template <class TYPE, int RADIUS> class SquareArray {
+template <class TYPE, int RADIUS> class SquareArray
+{
 //-----------------------------------
 //    Types
 //

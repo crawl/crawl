@@ -884,7 +884,8 @@ static std::string unique_name(monster* mons)
     std::string name = mons->name(DESC_PLAIN, true);
     if (mons->type == MONS_PLAYER_GHOST)
         name += ", " + short_ghost_description(mons, true);
-    else {
+    else
+    {
         if (strstr(name.c_str(), "royal jelly")
             || strstr(name.c_str(), "Royal Jelly"))
             name = "Royal Jelly";
@@ -907,7 +908,9 @@ void set_unique_annotation(monster* mons, const level_id level)
         && !(mons->props.exists("original_was_unique")
             && mons->props["original_was_unique"].get_bool())
         && mons->type != MONS_PLAYER_GHOST)
+    {
         return;
+    }
 
     remove_unique_annotation(mons);
     auto_unique_annotations.insert(std::make_pair(

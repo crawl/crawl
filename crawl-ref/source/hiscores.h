@@ -136,7 +136,8 @@ public:
     void init(time_t death_time = 0);
     void reset();
 
-    enum death_desc_verbosity {
+    enum death_desc_verbosity
+    {
         DDV_TERSE,
         DDV_ONELINE,
         DDV_NORMAL,

@@ -313,7 +313,8 @@ std::string item_def::name(description_level_type descrip,
 
             std::vector<std::string>::iterator iter = insparts.begin();
 
-            for (;;) {
+            for (;;)
+            {
                 buff << *iter;
                 if (++iter == insparts.end()) break;
                 buff << ", ";

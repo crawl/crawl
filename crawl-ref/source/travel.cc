@@ -3076,7 +3076,8 @@ std::string level_id::describe(bool long_name, bool with_number) const
 {
     std::string description = place_name(this->packed_place(),
                                          long_name, with_number);
-    if (level_type == LEVEL_PORTAL_VAULT) {
+    if (level_type == LEVEL_PORTAL_VAULT)
+    {
         std::string::size_type cpos = description.find(':');
         const std::string brname = (cpos != std::string::npos ?
                                     description.substr(0, cpos) : description);
