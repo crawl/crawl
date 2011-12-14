@@ -51,7 +51,7 @@
 #include "showsymb.h"
 #include "spl-transloc.h"
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 #include "directn.h"
 #endif
 

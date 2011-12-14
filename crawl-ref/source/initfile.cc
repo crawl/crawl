@@ -23,7 +23,7 @@
 #include "kills.h"
 #include "files.h"
 #include "defines.h"
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
  #include "tilereg-map.h"
 #endif
 #ifdef USE_TILE_WEB

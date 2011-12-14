@@ -51,8 +51,10 @@
 
 #ifdef USE_TILE
  #include "tilepick.h"
- #include "tilereg-crt.h"
  #include "tileview.h"
+#endif
+#ifdef USE_TILE_LOCAL
+ #include "tilereg-crt.h"
 #endif
 
 // Initialise a whole lot of stuff...
@@ -516,7 +518,7 @@ static int _misc_text_start_y(int num)
 {
     const int max_lines = get_number_of_lines() - NUM_MISC_LINES;
 
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     return (max_lines);
 #else
     if (num <= 2)

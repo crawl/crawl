@@ -96,7 +96,7 @@
 {'%', CMD_RESISTS_SCREEN},
 {',', CMD_PICKUP},
 {':', CMD_MAKE_NOTE},
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
 {'_', CMD_READ_MESSAGES},
 {'|', CMD_SHOW_TERRAIN},
 #endif

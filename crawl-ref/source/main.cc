@@ -136,6 +136,8 @@
 #ifdef USE_TILE
  #include "tiledef-dngn.h"
  #include "tilepick.h"
+#endif
+#ifdef USE_TILE_LOCAL
  #include "tilereg.h"
 #endif
 

@@ -67,7 +67,7 @@ static bool         _water_is_disturbed(int x, int y);
 
 static int _get_hints_cols()
 {
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     return crawl_view.msgsz.x;
 #else
     int ncols = get_number_of_cols();
@@ -289,7 +289,7 @@ void hints_starting_screen()
     clrscr();
 
     int width = _get_hints_cols();
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     // Use a more sensible screen width.
     if (width < 80 && width < crawl_view.msgsz.x + crawl_view.hudsz.x)
         width = crawl_view.msgsz.x + crawl_view.hudsz.x;
