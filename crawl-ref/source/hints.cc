@@ -283,9 +283,7 @@ void hints_zap_secret_doors()
 // Prints the hints mode welcome screen.
 void hints_starting_screen()
 {
-#ifndef USE_TILE
     cgotoxy(1, 1);
-#endif
     clrscr();
 
     int width = _get_hints_cols();
@@ -334,12 +332,10 @@ void hints_starting_screen()
     linebreak_string(text, width);
     display_tagged_block(text);
 
-#ifndef USE_TILE
-    getch_ck();
-#else
-    mouse_control mc(MOUSE_MODE_MORE);
-    getchm();
-#endif
+    {
+        mouse_control mc(MOUSE_MODE_MORE);
+        getchm();
+    }
     redraw_screen();
 }
 
