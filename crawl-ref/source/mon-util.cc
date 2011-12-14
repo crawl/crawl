@@ -3041,12 +3041,11 @@ bool mons_can_attack(const monster* mon)
     return adjacent(mon->pos(), foe->pos());
 }
 
-// Use of variant:
-// 0 : She is tap dancing.
-// 1 : It seems she is tap dancing. (lower case pronoun)
-// 2 : Her sword explodes!          (upper case possessive)
-// 3 : It sticks to her sword!      (lower case possessive)
-// ... as needed
+// Use of variant (case is irrelevant here):
+// PRONOUN_SUBJECTIVE : _She_ is tap dancing.
+// PRONOUN_POSSESSIVE : _Her_ sword explodes!
+// PRONOUN_REFLEXIVE  : The wizard mumbles to _herself_.
+// PRONOUN_OBJECTIVE  : You miss _her_.
 
 const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
                          bool visible)
@@ -3117,11 +3116,11 @@ const char *mons_pronoun(monster_type mon_type, pronoun_type variant,
             return ((gender == GENDER_NEUTER) ? "its" :
                     (gender == GENDER_MALE)   ? "his" : "her");
 
-        case PRONOUN_REFLEXIVE:  // Awkward at start of sentence, always lower.
+        case PRONOUN_REFLEXIVE:
             return ((gender == GENDER_NEUTER) ? "itself"  :
                     (gender == GENDER_MALE)   ? "himself" : "herself");
 
-        case PRONOUN_OBJECTIVE:  // Awkward at start of sentence, always lower.
+        case PRONOUN_OBJECTIVE:
             return ((gender == GENDER_NEUTER) ? "it"  :
                     (gender == GENDER_MALE)   ? "him" : "her");
      }
