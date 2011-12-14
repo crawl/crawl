@@ -871,7 +871,7 @@
 },
 
 // Naga only
-{ MUT_BREATHE_POISON,             0,  1, false, false, false,
+{ MUT_BREATHE_POISON,             0,  1, false, false, true,
   "breathe poison",
 
   {"You can exhale a cloud of poison.", "", ""},

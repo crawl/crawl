@@ -3039,7 +3039,7 @@ std::vector<talent> your_talents(bool check_confused)
                     ABIL_BREATHE_POISON : ABIL_SPIT_POISON, check_confused);
     }
     else if (player_mutation_level(MUT_SPIT_POISON)
-             || player_mutation_level(MUT_BREATHE_POISON))
+             || you.species == SP_NAGA)
     {
         _add_talent(talents, ABIL_SPIT_POISON, check_confused);
     }
