@@ -4333,14 +4333,20 @@ template <class citer> bool explore_discoveries::has_duplicates(
 }
 
 template <class C> void explore_discoveries::say_any(
-    const C &coll, const char *stub) const
+    const C &coll, const char *category) const
 {
     if (coll.empty())
         return;
 
+    const int size = coll.size();
+
+    std::string plural = pluralise(category);
+    if (size != 1) 
+        category = plural.c_str();
+
     if (has_duplicates(coll.begin(), coll.end()))
     {
-        mprf(stub, number_in_words(coll.size()).c_str());
+        mprf("Found %s %s.", number_in_words(size).c_str(), category);
         return;
     }
 
@@ -4348,7 +4354,7 @@ template <class C> void explore_discoveries::say_any(
         comma_separated_line(coll.begin(), coll.end()) + ".";
 
     if (strwidth(message) >= get_number_of_cols())
-        mprf(stub, number_in_words(coll.size()).c_str());
+        mprf("Found %s %s.", number_in_words(size).c_str(), category);
     else
         mprf("%s", message.c_str());
 }
@@ -4391,11 +4397,11 @@ bool explore_discoveries::prompt_stop() const
     if (!es_flags)
         return (marker_stop);
 
-    say_any(items, "Found %s items.");
-    say_any(shops, "Found %s shops.");
-    say_any(apply_quantities(altars), "Found %s altars.");
-    say_any(apply_quantities(portals), "Found %s gates.");
-    say_any(apply_quantities(stairs), "Found %s stairs.");
+    say_any(items, "item");
+    say_any(shops, "shop");
+    say_any(apply_quantities(altars), "altar");
+    say_any(apply_quantities(portals), "portal");
+    say_any(apply_quantities(stairs), "stair");
 
     return ((Options.explore_stop_prompt & es_flags) != es_flags
             || marker_stop

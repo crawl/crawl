@@ -270,7 +270,7 @@ private:
     std::vector<std::string> marked_feats;
 
 private:
-    template <class C> void say_any(const C &coll, const char *stub) const;
+    template <class C> void say_any(const C &coll, const char *category) const;
     template <class citer> bool has_duplicates(citer, citer) const;
 
     std::string cleaned_feature_description(const coord_def &) const;
