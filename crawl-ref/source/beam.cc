@@ -764,7 +764,8 @@ void bolt::draw(const coord_def& p)
 
     if (tile_beam != -1)
         tiles.add_overlay(p, tile_beam);
-#else
+#endif
+#ifndef USE_TILE_LOCAL
     cgotoxy(drawpos.x, drawpos.y, GOTO_DNGN);
     put_colour_ch(colour == BLACK ? random_colour()
                                   : element_colour(colour),
