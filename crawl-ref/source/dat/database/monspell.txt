@@ -279,7 +279,7 @@ Dissolution cast
 %%%%
 Gastronok cast
 
-@The_monster@'s eyestalks quiver as @pronoun@ mumbles some strange words.
+@The_monster@'s eyestalks quiver as @subjective@ mumbles some strange words.
 
 @The_monster@ chants a spell, wobbling all the while.
 

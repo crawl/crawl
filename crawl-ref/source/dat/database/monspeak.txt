@@ -1283,7 +1283,7 @@ VISUAL:@The_monster@ tries to sneak away.
 
 VISUAL:@The_monster@ tries to blend into @possessive@ surroundings.
 
-VISUAL:@The_monster@ whispers something so quietly that you cannot hear @pronoun@.
+VISUAL:@The_monster@ whispers something so quietly that you cannot hear @subjective@.
 
 VISUAL:For a moment, you lose track of @the_monster@.
 
@@ -1334,7 +1334,7 @@ w:1
 VISUAL SPELL:@The_monster@ produces a bizarre clockwork butterfly, ethereal and luminous, from @possessive@ pack, and hurls it at you - so perfect is its making that it comes to life and darts away before touching you.
 
 w:1
-@The_monster@ regards you luminously, comprehending your nature, and seems resigned. @Pronoun@ shouts, "Do you know what I know, @foe@..."
+@The_monster@ regards you luminously, comprehending your nature, and seems resigned. @Subjective@ shouts, "Do you know what I know, @foe@..."
 
 w:1
 @The_monster@ whispers, "I have found a way out of unlife even Necromancers could not discover."
@@ -4759,7 +4759,7 @@ VISUAL:@The_monster@ strides towards you, then pauses, indecisive.
 %%%%
 _Menkaure_rare_
 
-@The_monster@'s ankle releases a plume of dust as @pronoun@ confides, "I'm not really a mummy, you know."
+@The_monster@'s ankle releases a plume of dust as @subjective@ confides, "I'm not really a mummy, you know."
 
 VISUAL:@The_monster@ forgets how to to speak, silenced by the ages.
 
@@ -5922,7 +5922,7 @@ w:1
 VISUAL:@The_monster@ breathes on the earth until a ridged crescent appears, raises @possessive@ hoof in rage, then stops.
 
 w:1
-VISUAL:Tears glisten in @possessive@ eyes as @pronoun@ regards a sphere of stone @pronoun@ breathed into being on the floor.
+VISUAL:Tears glisten in @possessive@ eyes as @subjective@ regards a sphere of stone @subjective@ breathed into being on the floor.
 %%%%
 ################## Crystal golem ###########################
 crystal golem
@@ -6106,7 +6106,7 @@ VISUAL WARN:The ground rattles!
 
 VISUAL:@The_monster@ tries to bite you, but has no teeth.
 
-VISUAL:@The_monster@ forgets @pronoun@ is a moth of wrath and starts meditating mothfully.
+VISUAL:@The_monster@ forgets @subjective@ is a moth of wrath and starts meditating mothfully.
 VISUAL ENCHANT:The Dungeon calms.
 %%%%
 ################## Statues ##################
@@ -6644,7 +6644,7 @@ _friendly_beogh_speech_rare_
 
 @The_monster@ says, "I'm an Orc, you're an Orc, it's OK."
 
-@The_monster@ seems like @pronoun@ is about to say something to you, then stops.
+@The_monster@ seems like @subjective@ is about to say something to you, then stops.
 
 @The_monster@ @mutters@, "When this is all over, I'm going to start a fungus farm."
 %%%%
@@ -6725,13 +6725,13 @@ beogh_converted_orc_reaction_sight
 %%%%
 beogh_converted_orc_speech_sight
 
-@Pronoun@ shouts, "I'll follow thee gladly!"
+@Subjective@ shouts, "I'll follow thee gladly!"
 
-@Pronoun@ shouts, "Surely Beogh must have sent you!"
+@Subjective@ shouts, "Surely Beogh must have sent you!"
 
-@Pronoun@ asks, "Are you our saviour?"
+@Subjective@ asks, "Are you our saviour?"
 
-@Pronoun@ says, "I'm so glad you are here now."
+@Subjective@ says, "I'm so glad you are here now."
 %%%%
 # through battle
 beogh_converted_orc_reaction_battle
@@ -6744,11 +6744,11 @@ beogh_converted_orc_reaction_battle
 %%%%
 beogh_converted_orc_speech_battle
 
-@Pronoun@ shouts, "I'll follow you! Let me live!"
+@Subjective@ shouts, "I'll follow you! Let me live!"
 
-@Pronoun@ says, "You must be the Messiah, I see it now!"
+@Subjective@ says, "You must be the Messiah, I see it now!"
 
-@Pronoun@ yells, "Beogh is my god, I swear it!"
+@Subjective@ yells, "Beogh is my god, I swear it!"
 %%%%
 ########################################################
 # Maybe use different speech if converted by a follower.
@@ -6873,7 +6873,7 @@ VISUAL:Hollow, blind eyes appear on the @monster@'s head.
 
 VISUAL:Suppurating sores blossom under the @monster@'s eyelids.
 
-@The_monster@ begs you to kill @pronoun@.
+@The_monster@ begs you to kill @subjective@.
 
 VISUAL:@The_monster@ looks at @possessive@ body and cries without tears.
 
