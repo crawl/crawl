@@ -4341,7 +4341,7 @@ template <class C> void explore_discoveries::say_any(
     const int size = coll.size();
 
     std::string plural = pluralise(category);
-    if (size != 1) 
+    if (size != 1)
         category = plural.c_str();
 
     if (has_duplicates(coll.begin(), coll.end()))

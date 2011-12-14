@@ -320,7 +320,7 @@ std::string describe_mutations()
             if (you.experience_level > 14)
                 msg += " continuously";
             msg += ".";
-            
+
             result += _annotate_form_based(msg, (form_changed_physiology()
                                                  && you.form != TRAN_LICH));
             have_any = true;
