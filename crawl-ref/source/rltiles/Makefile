@@ -10,7 +10,7 @@ endif
 # Also, cross-compilation with no system libraries for host rather than target
 # is not supported.  If host=target, contribs are enough.
 
-CFLAGS := -O2 -g
+CFLAGS := -O2 -g -Wall -Wextra -Wno-parentheses -Wno-unused-parameter
 
 ifdef TILES
   ifndef CONTRIB_SDL

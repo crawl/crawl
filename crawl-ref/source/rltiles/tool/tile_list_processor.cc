@@ -16,10 +16,10 @@ tile_list_processor::tile_list_processor() :
     m_corpsify(false),
     m_composing(false),
     m_shrink(true),
-    m_texture(0),
     m_prefix("TILE"),
     m_start_value("0"),
     m_start_value_module(""),
+    m_texture(0),
     m_variation_idx(-1),
     m_variation_col(-1),
     m_weight(1)
@@ -588,8 +588,8 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
                     if (val < 0 || val > 255)
                     {
                         fprintf(stderr,
-                                "Error (%s:%d): Arg %u must be 0-255.\n",
-                                list_file, line, i);
+                                "Error (%s:%d): Arg %d must be 0-255.\n",
+                                list_file, line, (int)i);
                     }
 
                     cols[col_idx][comp_idx++] = static_cast<unsigned char>(val);
@@ -688,7 +688,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
 
             if (m_args.size() > 2)
             {
-                for (int i = 3; i < m_args.size(); ++i)
+                for (unsigned int i = 3; i < m_args.size(); ++i)
                 {
                     // Add enums for additional values.
                     m_page.add_synonym(m_args[2], m_args[i]);
@@ -700,7 +700,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
             // Add a synonym without resetting the enum count.
             CHECK_ARG(1);
 
-            for (int i = 1; i < m_args.size(); ++i)
+            for (unsigned int i = 1; i < m_args.size(); ++i)
                 m_page.add_synonym(m_page.m_tiles.size() - 1, m_args[i]);
         }
         else
@@ -772,7 +772,7 @@ bool tile_list_processor::process_line(char *read_line, const char *list_file,
         // Push tile onto tile page.
         add_image(img, m_args.size() > 1 ? m_args[1] : NULL);
 
-        for (int i = 2; i < m_args.size(); ++i)
+        for (unsigned int i = 2; i < m_args.size(); ++i)
         {
             // Add enums for additional values.
             m_page.add_synonym(m_args[1], m_args[i]);
@@ -1279,7 +1279,7 @@ bool tile_list_processor::write_data()
             fprintf(fp, "unsigned int tile_%s_part_count[%s] =\n{\n",
                     lcname.c_str(), ctg_max.c_str());
 
-            for (int i = 0; i < m_ctg_counts.size(); i++)
+            for (unsigned int i = 0; i < m_ctg_counts.size(); i++)
                 fprintf(fp, "    %d,\n", m_ctg_counts[i]);
 
             fprintf(fp, "};\n\n");
@@ -1287,7 +1287,7 @@ bool tile_list_processor::write_data()
             fprintf(fp, "tileidx_t tile_%s_part_start[%s] =\n{\n",
                     lcname.c_str(), ctg_max.c_str());
 
-            for (int i = 0; i < m_categories.size(); i++)
+            for (unsigned int i = 0; i < m_categories.size(); i++)
                 fprintf(fp, "    %u+%s,\n", part_min[i], m_start_value.c_str());
 
             fprintf(fp, "};\n\n");
@@ -1586,15 +1586,10 @@ bool tile_list_processor::write_data()
         }
 
         if (!m_page.m_tiles.empty())
-        {
-            fprintf(fp, "%s.png: \\\n",
-                    lcname.c_str(), lcname.c_str(), lcname.c_str());
-        }
+            fprintf(fp, "%s.png: \\\n", lcname.c_str());
 
         for (size_t i = 0; i < m_depends.size(); ++i)
-        {
              fprintf(fp, "  %s \\\n", m_depends[i].c_str());
-        }
 
         // Also generate empty dependencies for each file.
         // This way, if a file gets removed, the dependency file
@@ -1602,9 +1597,7 @@ bool tile_list_processor::write_data()
         fprintf(fp, "%s", "\n\n");
 
         for (size_t i = 0; i < m_depends.size(); ++i)
-        {
              fprintf(fp, "%s:\n", m_depends[i].c_str());
-        }
 
         fclose(fp);
     }
