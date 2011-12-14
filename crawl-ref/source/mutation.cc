@@ -574,9 +574,6 @@ static void _display_vampire_attributes()
 {
     ASSERT(you.species == SP_VAMPIRE);
 
-    clrscr();
-    cgotoxy(1,1);
-
     std::string result;
 
     const int lines = 15;
@@ -659,20 +656,19 @@ static void _display_vampire_attributes()
     result += "\n";
     result += _vampire_Ascreen_footer;
 
-    const formatted_string vp_props = formatted_string::parse_string(result);
-    vp_props.display();
+    formatted_scroller attrib_menu;
+    attrib_menu.add_text(result);
 
-    mouse_control mc(MOUSE_MODE_MORE);
-    const int keyin = getchm();
-    if (keyin == '!' || keyin == CK_MOUSE_CMD)
+    attrib_menu.show();
+    if (attrib_menu.getkey() == '!'
+        || attrib_menu.getkey() == CK_MOUSE_CMD)
+    {
         display_mutations();
+    }
 }
 
 void display_mutations()
 {
-    clrscr();
-    cgotoxy(1,1);
-
     std::string mutation_s = describe_mutations();
 
     std::string extra = "";
@@ -698,21 +694,18 @@ void display_mutations()
         mutation_s += extra;
     }
 
-    if (you.species == SP_VAMPIRE)
-    {
-        const formatted_string mutation_fs = formatted_string::parse_string(mutation_s);
-        mutation_fs.display();
-        mouse_control mc(MOUSE_MODE_MORE);
-        const int keyin = getchm();
-        if (keyin == '!' || keyin == CK_MOUSE_CMD)
-            _display_vampire_attributes();
-    }
-    else
-    {
-        formatted_scroller mutation_menu;
-        mutation_menu.add_text(mutation_s);
+    formatted_scroller mutation_menu;
+    mutation_menu.add_text(mutation_s);
 
-        mutation_menu.show();
+    mouse_control mc(MOUSE_MODE_MORE);
+
+    mutation_menu.show();
+
+    if (you.species == SP_VAMPIRE
+        && (mutation_menu.getkey() == '!'
+            || mutation_menu.getkey() == CK_MOUSE_CMD))
+    {
+        _display_vampire_attributes();
     }
 }
 
