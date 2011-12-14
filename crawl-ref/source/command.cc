@@ -737,7 +737,7 @@ static const char *targeting_help_1 =
     "<w>r</w> : move cursor to you\n"
     "<w>e</w> : create/remove travel exclusion\n"
     "<w>Ctrl-F</w> : monster targeting modes\n"
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     "<w>Ctrl-L</w> : targeting via monster list\n"
 #endif
     "<w>Ctrl-P</w> : repeat prompt\n"
@@ -1371,7 +1371,7 @@ static int _do_description(std::string key, std::string type,
 // that the *entire* descriptions, spells and all, doesn't get displayed.
 // I'm not sure why description is so fussy about that when the footer
 // and everything isn't even used.
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
                         // FIXME: Duplicates messages from describe.cc.
                         if (!player_can_memorise_from_spellbook(mitm[thing_created]))
                         {
@@ -1752,7 +1752,7 @@ static void _find_description(bool *again, std::string *error_inout)
             // FIXME: This doesn't generate proper draconian monsters.
             monster_list.push_back(fake_mon);
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
             int colour = mons_class_colour(m_type);
             if (colour == BLACK)
                 colour = LIGHTGREY;

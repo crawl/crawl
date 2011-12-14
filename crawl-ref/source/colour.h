@@ -108,7 +108,7 @@ int  element_colour(int element, bool no_random = false,
 bool get_tornado_phase(const coord_def& loc);
 bool get_orb_phase(const coord_def& loc);
 
-#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE)
+#if defined(TARGET_OS_WINDOWS) || defined(USE_TILE_LOCAL)
 unsigned short dos_brand(unsigned short colour,
                           unsigned brand = CHATTR_REVERSE);
 #endif

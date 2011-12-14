@@ -252,7 +252,7 @@ bool print_error_screen(const char *message, ...)
 
     // Break message into correctly sized lines.
     int width = 80;
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     width = crawl_view.msgsz.x;
 #else
     width = std::min(80, get_number_of_cols());

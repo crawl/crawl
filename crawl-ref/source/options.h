@@ -324,8 +324,7 @@ public:
     char        tile_show_items[20]; // show which item types in tile inventory
     bool        tile_skip_title;     // wait for a key at title screen?
     bool        tile_menu_icons;     // display icons in menus?
-#endif
-#ifdef USE_TILE_LOCAL
+
     // minimap colours
     char        tile_player_col;
     char        tile_monster_col;
@@ -348,6 +347,8 @@ public:
     char        tile_excluded_col;
     char        tile_excl_centre_col;
     char        tile_window_col;
+#endif
+#ifdef USE_TILE_LOCAL
     // font settings
     std::string tile_font_crt_file;
     int         tile_font_crt_size;

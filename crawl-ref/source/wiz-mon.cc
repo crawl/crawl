@@ -1243,7 +1243,7 @@ void debug_pathfind(int mid)
         return;
 
     mpr("Choose a destination!");
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     more();
 #endif
     coord_def dest;
