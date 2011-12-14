@@ -207,7 +207,7 @@ static bool _bless_weapon(god_type god, brand_type brand, int colour)
                 maybe_bloodify_square(*ri);
     }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     // Allow extra time for the flash to linger.
     delay(1000);
 #endif
