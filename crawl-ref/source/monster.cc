@@ -4241,6 +4241,9 @@ bool monster::can_go_berserk() const
     if (mons_intel(this) == I_PLANT)
         return (false);
 
+    if (paralysed() || petrified() || petrifying() || asleep())
+        return (false);
+
     if (berserk() || has_ench(ENCH_FATIGUE))
         return (false);
 
