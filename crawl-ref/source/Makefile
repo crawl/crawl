@@ -556,11 +556,12 @@ else
 endif
 
 RLTILES = rltiles
+INCLUDES_L += -I$(RLTILES)
+$(OBJECTS:%.o=%.cc): $(TILEDEFHDRS)
 
 ifdef WEBTILES
 DEFINES_L += -DUSE_TILE
 DEFINES_L += -DUSE_TILE_WEB
-INCLUDES_L += -I$(RLTILES)
 endif
 
 #
@@ -570,7 +571,6 @@ ifdef TILES
 
 DEFINES_L += -DUSE_TILE
 DEFINES_L += -DUSE_TILE_LOCAL
-INCLUDES_L += -I$(RLTILES)
 
 ifdef BUILD_SDL
 INCLUDES_L += -Icontrib/install/$(ARCH)/include/SDL
@@ -905,9 +905,9 @@ TILEFILES = $(TILEIMAGEFILES:%=%.png)
 ORIGTILEFILES = $(TILEFILES:%=$(RLTILES)/%)
 DESTTILEFILES = $(TILEFILES:%=dat/tiles/%)
 
-ifdef TILES_ANY
 OBJECTS += $(TILEDEFOBJS)
 
+ifdef TILES_ANY
 ifndef NO_OPTIMIZE
   ifneq (,$(shell which advpng))
     USE_ADVPNG = y
@@ -1336,7 +1336,7 @@ mon-util.d: mon-mst.h
 
 .PHONY: build-rltiles
 build-rltiles: .contrib-libs $(RLTILES)/dc-unrand.txt
-	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH)
+	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH) TILES=$(TILES)$(WEBTILES)
 
 $(TILEDEFSRCS): build-rltiles
 $(TILEDEFHDRS): build-rltiles
@@ -1354,7 +1354,6 @@ clean-rltiles:
 
 ifdef TILES_ANY
 $(GAME): $(DESTTILEFILES)
-$(OBJECTS:%.o=%.cc): $(TILEDEFHDRS)
 endif
 
 #############################################################################
