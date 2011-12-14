@@ -167,7 +167,7 @@ KFEAT:  ^ = pressure plate trap
   local tm = TriggerableFunction:new{func="callback.cloud_trap_stepped",
               repeated=true,
               data={triggered=false, cloud_type="calcifying dust",
-                cloud_message="The ceiling rumbles ... a layer of pale dust is dislodged!"} }
+                cloud_message="The ceiling rumbles... a layer of pale dust is dislodged!"} }
   tm:add_triggerer(DgnTriggerer:new{type="pressure_plate"})
   lua_marker('^', tm)
 }}
