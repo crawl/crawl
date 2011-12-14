@@ -78,6 +78,7 @@ public:
     void send_message(const char *format = "", ...);
 
     bool has_receivers() { return !m_dest_addrs.empty(); }
+    bool is_controlled_from_web() { return m_controlled_from_web; }
 
     /* Webtiles can receive input both via stdin, and on the
        socket. Also, while waiting for input, it should be
@@ -131,6 +132,8 @@ protected:
     int m_max_msg_size;
     std::string m_msg_buf;
     std::vector<sockaddr_un> m_dest_addrs;
+
+    bool m_controlled_from_web;
 
     void _await_connection();
     wint_t _handle_control_message(sockaddr_un addr, std::string data);

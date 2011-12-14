@@ -89,6 +89,7 @@ TilesFramework tiles;
 
 TilesFramework::TilesFramework()
     : m_crt_mode(CRT_NORMAL),
+      m_controlled_from_web(false),
       m_view_loaded(false),
       m_next_view_tl(0, 0),
       m_next_view_br(-1, -1),
@@ -282,7 +283,11 @@ wint_t TilesFramework::_handle_control_message(sockaddr_un addr, std::string dat
 
     if (msgtype == "attach")
     {
+        JsonWrapper primary = json_find_member(obj.node, "primary");
+        primary.check(JSON_BOOL);
+
         m_dest_addrs.push_back(addr);
+        m_controlled_from_web = primary->bool_;
     }
     else if (msgtype == "key")
     {
