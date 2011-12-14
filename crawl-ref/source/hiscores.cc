@@ -1141,8 +1141,10 @@ void scorefile_entry::init(time_t dt)
     // 4.2      - stats and god info
 
     version = Version::Short();
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
     tiles   = 1;
+#elif defined (USE_TILE_WEB)
+    tiles   = ::tiles.is_controlled_from_web();
 #else
     tiles   = 0;
 #endif
