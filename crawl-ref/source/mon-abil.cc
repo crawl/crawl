@@ -1167,7 +1167,6 @@ static void _cherub_hymn(monster* chief)
     }
 }
 
-
 static bool _make_monster_angry(const monster* mon, monster* targ)
 {
     if (mon->friendly() != targ->friendly())
