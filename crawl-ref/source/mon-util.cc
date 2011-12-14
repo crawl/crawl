@@ -3662,9 +3662,9 @@ std::string do_mon_str_replacements(const std::string &in_msg,
     msg = replace_all(msg, "@A_monster@",   mons->name(DESC_A));
     msg = replace_all(msg, "@The_monster@", mons->name(cap));
 
-    msg = replace_all(msg, "@Pronoun@",
+    msg = replace_all(msg, "@Subjective@",
                       mons->pronoun(PRONOUN_SUBJECTIVE));
-    msg = replace_all(msg, "@pronoun@",
+    msg = replace_all(msg, "@subjective@",
                       mons->pronoun(PRONOUN_SUBJECTIVE));
     msg = replace_all(msg, "@Possessive@",
                       mons->pronoun(PRONOUN_POSSESSIVE));
