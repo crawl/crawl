@@ -331,7 +331,7 @@ public:
         select_filter = filter;
     }
 
-    unsigned char getkey() const { return lastch; }
+    int getkey() const { return lastch; }
 
     void reset();
     std::vector<MenuEntry *> show(bool reuse_selections = false);
@@ -383,7 +383,7 @@ protected:
 
     int num;
 
-    unsigned char lastch;
+    int lastch;
 
     bool alive;
 
