@@ -68,6 +68,12 @@ ASSERTS = yes
 MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
 .SUFFIXES:       # ... so zap the suffix list to neutralize most predifined rules, too
 
+.PHONY: all test install clean clean-contrib clean-rltiles distclean debug debug-lite \
+        profile package-source source build-windows package-windows rest docs greet \
+        api
+
+all: greet $(GAME) docs webserver
+
 #
 # Compiler Flags
 #
@@ -979,12 +985,6 @@ PKG_SRC_DIR   := $(SRC_PKG_BASE)-$(SRC_VERSION)
 SRC_PKG_TAR   := $(PKG_SRC_DIR).tar.xz
 SRC_PKG_TAR_NODEPS := $(PKG_SRC_DIR)-nodeps.tar.xz
 SRC_PKG_ZIP   := $(PKG_SRC_DIR).zip
-
-.PHONY: all test install clean clean-contrib clean-rltiles distclean debug debug-lite \
-        profile package-source source build-windows package-windows rest docs greet \
-        api
-
-all: greet $(GAME) docs webserver
 
 greet:
 	@printf "  * If you experience any problems building Crawl, please take a second look\\n"\
