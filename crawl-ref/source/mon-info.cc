@@ -228,6 +228,21 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 
     if (base_type == MONS_NO_MONSTER)
         base_type = type;
+    
+    if (mons_is_unique(type))
+    {
+        if (type == MONS_LERNAEAN_HYDRA
+            || type == MONS_ROYAL_JELLY
+            || type == MONS_SERPENT_OF_HELL)
+        {
+            mb.set(MB_NAME_THE);
+        }
+        else
+        {
+            mb.set(MB_NAME_UNQUALIFIED);
+            mb.set(MB_NAME_THE);
+        }
+    }
 
     props.clear();
 
