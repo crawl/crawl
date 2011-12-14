@@ -116,25 +116,19 @@ std::string item_def::name(description_level_type descrip,
 
     monster_flag_type corpse_flags;
 
-    if (base_type == OBJ_CORPSES && is_named_corpse(*this)
+    if ((base_type == OBJ_CORPSES && is_named_corpse(*this)
+         && !(((corpse_flags = 
 #if TAG_MAJOR_VERSION == 32
-        && !(((corpse_flags = (int64_t)props[CORPSE_NAME_TYPE_KEY])
+                 (int64_t)props[CORPSE_NAME_TYPE_KEY]
 #else
-        && !(((corpse_flags = props[CORPSE_NAME_TYPE_KEY].get_int64())
+                 props[CORPSE_NAME_TYPE_KEY].get_int64()
 #endif
-               & MF_NAME_SPECIES)
-             && !(corpse_flags & MF_NAME_DEFINITE))
-        && !(corpse_flags & MF_NAME_SUFFIX)
-        && !starts_with(get_corpse_name(*this), "shaped "))
-    {
-        if (descrip != DESC_DBNAME)
-            descrip = DESC_THE;
-    }
-
-    if (item_is_orb(*this)
-        || item_is_horn_of_geryon(*this)
-        || (ident || item_type_known(*this))
-            && is_artefact(*this))
+               ) & MF_NAME_SPECIES)
+              && !(corpse_flags & MF_NAME_DEFINITE))
+         && !(corpse_flags & MF_NAME_SUFFIX)
+         && !starts_with(get_corpse_name(*this), "shaped "))
+        || item_is_orb(*this) || item_is_horn_of_geryon(*this)
+        || (ident || item_type_known(*this)) && is_artefact(*this))
     {
         // Artefacts always get "the" unless we just want the plain name.
         switch (descrip)
@@ -143,6 +137,8 @@ std::string item_def::name(description_level_type descrip,
             buff << "the ";
         case DESC_PLAIN:
         case DESC_DBNAME:
+        case DESC_BASENAME:
+        case DESC_QUALNAME:
             break;
         }
     }
