@@ -235,12 +235,34 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         return (MUTACT_FULL);
 }
 
+// Counts of various statuses/types of mutations from the current/most
+// recent call to describe_mutations.  TODO: eliminate
+static int _num_full_suppressed = 0;
+static int _num_part_suppressed = 0;
+static int _num_form_based = 0;
+static int _num_hunger_based = 0;
+
+// Can the player ever transform?
+static bool _species_can_transform()
+{
+    return you.species != SP_MUMMY && you.species != SP_GHOUL;
+}
+
 static std::string _annotate_form_based(std::string desc, bool suppressed)
 {
     if (suppressed)
-        return "<darkgrey>((" + desc + "))<yellow>*</yellow></darkgrey>\n";
-    else
-        return desc + "<yellow>*</yellow>\n";
+    {
+        desc = "<darkgrey>((" + desc + "))</darkgrey>";
+        ++_num_full_suppressed;
+    }
+
+    if (_species_can_transform())
+    {
+        ++_num_form_based;
+        desc += "<yellow>*</yellow>";
+    }
+
+    return desc + "\n";
 }
 
 static std::string _dragon_abil(std::string desc)
@@ -255,6 +277,9 @@ std::string describe_mutations()
     bool have_any = false;
     const char *mut_title = "Innate Abilities, Weirdness & Mutations";
     std::string scale_type = "plain brown";
+
+    _num_full_suppressed = _num_part_suppressed = 0;
+    _num_form_based = _num_hunger_based = 0;
 
     // center title
     int offset = 39 - strwidth(mut_title) / 2;
@@ -536,11 +561,6 @@ std::string describe_mutations()
     return result;
 }
 
-static const std::string _mutations_footer = ("\n\n\n\n"
-    "()  : Partially suppressed.\n"
-    "<darkgrey>(())</darkgrey>: Completely suppressed.\n"
-    "<yellow>*</yellow>   : Suppressed by changes of form.\n");
-
 static const std::string _vampire_Ascreen_footer = (
 #ifndef USE_TILE_LOCAL
     "Press '<w>!</w>'"
@@ -549,11 +569,6 @@ static const std::string _vampire_Ascreen_footer = (
 #endif
     " to toggle between mutations and properties depending on your\n"
     "hunger status.\n");
-
-static const std::string _vampire_mutations_footer = (
-    "<lightred>+</lightred>   : Suppressed by thirst.\n\n"
-    + _vampire_Ascreen_footer);
-
 
 static void _display_vampire_attributes()
 {
@@ -658,12 +673,34 @@ void display_mutations()
     clrscr();
     cgotoxy(1,1);
 
-    const std::string mutation_s = describe_mutations() + _mutations_footer;
+    std::string mutation_s = describe_mutations();
+
+    std::string extra = "";
+    if (_num_part_suppressed)
+        extra += "<brown>()</brown>  : Partially suppressed.\n";
+    if (_num_full_suppressed)
+        extra += "<darkgrey>(())</darkgrey>: Completely suppressed.\n";
+    if (_num_form_based) // TODO: check for form spells?
+        extra += "<yellow>*</yellow>   : Suppressed by some changes of form.\n";
+    if (_num_hunger_based)
+        extra += "<lightred>+</lightred>   : Suppressed by thirst.\n";
+    if (you.species == SP_VAMPIRE)
+    {
+        if (!extra.empty())
+            extra += "\n";
+
+        extra += _vampire_Ascreen_footer;
+    }
+
+    if (!extra.empty())
+    {
+        mutation_s += "\n\n\n\n";
+        mutation_s += extra;
+    }
 
     if (you.species == SP_VAMPIRE)
     {
-        const formatted_string mutation_fs = formatted_string::parse_string(
-            mutation_s + _vampire_mutations_footer);
+        const formatted_string mutation_fs = formatted_string::parse_string(mutation_s);
         mutation_fs.display();
         mouse_control mc(MOUSE_MODE_MORE);
         const int keyin = getchm();
@@ -1601,16 +1638,26 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     if (!ignore_player)
     {
         if (fully_inactive)
+        {
             result = "((" + result + "))";
+            ++_num_full_suppressed;
+        }
         else if (partially_active)
+        {
             result = "(" + result + ")";
+            ++_num_part_suppressed;
+        }
 
-        if (mdef.form_based)
+        if (mdef.form_based && _species_can_transform())
+        {
+            ++_num_form_based;
             result += colour ? "<yellow>*</yellow>" : "*";
+        }
 
         if (you.species == SP_VAMPIRE && !mdef.physical
             && !you.innate_mutations[mut])
         {
+            ++_num_hunger_based;
             result += colour ? "<lightred>+</lightred>" : "+";
         }
     }
