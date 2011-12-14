@@ -134,7 +134,6 @@ rare_chatter
 @Your_weapon@ asks, "Did you take a vow of silence?"
 
 @Your_weapon@ says, "You can tell me everything! I can keep a secret!"
-
 ###############################################################################
 # Weapon noises.
 ###############################################################################
@@ -230,7 +229,6 @@ weapon_noises
 @Your_weapon@ makes a tutting noise.
 
 @Your_weapon@ parrots the noises around you.
-
 ###############################################################################
 # Instrumental noises.
 ###############################################################################
@@ -264,7 +262,6 @@ instrumental_noises
 @Your_weapon@ goes toot-toot!
 
 @Your_weapon@ does a drum roll.
-
 ###############################################################################
 # Noises for weapons with NOISES property (not used for the Singing Sword)
 ###############################################################################
@@ -346,8 +343,6 @@ an echo.
 the wailing of sirens.
 
 a flourish of trumpets!
-
-
 ###############################################################################
 ###############################################################################
 #
@@ -355,7 +350,7 @@ a flourish of trumpets!
 #
 ###############################################################################
 ###############################################################################
-
+#
 # The Sword operates in three modes: no tension, low tension, high tension.
 #
 # No tension:
@@ -403,7 +398,6 @@ a flourish of trumpets!
 #
 ###############################################################################
 
-
 ###############################################################################
 # Weights for different types of message, depending on tension.
 
@@ -450,7 +444,6 @@ w:70
 
 w:100
 @weapon_chatter@
-
 ######### low tension ############
 %%%%
 singing sword low_tension
@@ -478,7 +471,6 @@ w:70
 
 w:160
 @weapon_noises_low-high_tension@
-
 ######### high tension ############
 %%%%
 singing sword high_tension
@@ -500,17 +492,14 @@ w:30
 
 w:360
 @weapon_noises_low-high_tension@
-
 ######### SCREAM (high tension + double damage) ############
 %%%%
 singing sword SCREAM
 
 @SCREAM@
-
 ###############################################################################
 # Weapon noises for the Singing Sword at low and high tension.
 ###############################################################################
-
 %%%%
 weapon_noises_low-high_tension
 
@@ -528,7 +517,6 @@ w:100
 @The_weapon@ laughs in a fit of madness.
 
 @The_weapon@ makes a horrifying noise.
-
 ###############################################################################
 # Singing or other making of music
 # The Singing Sword will happily sing a song during work (i.e. at low tension).
@@ -672,7 +660,6 @@ w:25
 @The_weapon@ @composes_or_sings@ a ballad about your adventures.
 
 @The_weapon@ prematurely composes your obituary.
-
 ###############################################################################
 # Speaking
 ###############################################################################
@@ -930,8 +917,6 @@ w:1
 
 w:1
 @The_weapon@ @screams@, "LET'S FONDLE THE @PETS@, FONDLE THEM!"
-
-
 ###############################################################################
 # Lines from real songs.
 ###############################################################################
@@ -1027,7 +1012,6 @@ real_song_high_tension
 
 # Frank Sinatra (or Sid Vicious)
 @The_weapon@ sings, "I did it my way!"
-
 ###############################################################################
 # synonyms used above
 ###############################################################################
@@ -1319,7 +1303,7 @@ forlorn
 
 hopeless
 %%%%
-#### "....looks @exasperated@."
+#### "...looks @exasperated@."
 exasperated
 
 exasperated
