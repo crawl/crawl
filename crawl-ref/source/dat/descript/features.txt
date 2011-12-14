@@ -411,3 +411,6 @@ Some shallow water
 
 This waist-deep, misty water makes movement and combat cumbersome for landlubbers - sometimes dangerous, but never directly fatal.
 %%%%
+The open sea
+
+Nothing but endless wind and waves, and not a lighthouse in sight. You'd be lost beyond all hope in short order - better not risk it.
