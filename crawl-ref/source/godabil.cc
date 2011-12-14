@@ -2224,7 +2224,7 @@ bool fedhas_sunlight()
         }
     }
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     // Move the cursor out of the way (it looks weird).
     coord_def temp = grid2view(base);
     cgotoxy(temp.x, temp.y, GOTO_DNGN);
@@ -3190,7 +3190,7 @@ void cheibriados_time_step(int pow) // pow is the number of turns to skip
     // a tiny bit.
     update_level(pow * 10);
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     delay(1000);
 #endif
 

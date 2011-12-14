@@ -1447,7 +1447,7 @@ spret_type cast_ignite_poison(int pow, bool fail)
 // the actor is &you.
     apply_area_visible(_ignite_poison_player, pow, &you);
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     delay(100); // show a brief flash
 #endif
     flash_view(0);
