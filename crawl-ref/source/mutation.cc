@@ -187,7 +187,12 @@ void fixup_mutations()
 mutation_activity_type mutation_activity_level(mutation_type mut)
 {
     // First make sure the player's form permits the mutation.
-    if (!form_keeps_mutations())
+    if (mut == MUT_BREATHE_POISON)
+    {
+        if (form_changed_physiology() && you.form != TRAN_SPIDER)
+            return (MUTACT_INACTIVE);
+    }
+    else if (!form_keeps_mutations())
     {
         if (get_mutation_def(mut).form_based)
             return (MUTACT_INACTIVE);
@@ -204,9 +209,6 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         else if (_true_scales(mut))
             return (MUTACT_PARTIAL);
     }
-
-    // TODO: most scales show as active for statues, though their AC
-    // benefits do not apply.
 
     // For all except the semi-undead, mutations always apply.
     if (you.is_undead == US_SEMI_UNDEAD)
@@ -236,9 +238,15 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
 static std::string _annotate_form_based(std::string desc, bool suppressed)
 {
     if (suppressed)
-        return "<darkgrey>((" + desc + "))<yellow>*</yellow><darkgrey>\n";
+        return "<darkgrey>((" + desc + "))<yellow>*</yellow></darkgrey>\n";
     else
         return desc + "<yellow>*</yellow>\n";
+}
+
+static std::string _dragon_abil(std::string desc)
+{
+    const bool supp = form_changed_physiology() && you.form != TRAN_DRAGON;
+    return _annotate_form_based(desc, supp);
 }
 
 std::string describe_mutations()
@@ -265,21 +273,29 @@ std::string describe_mutations()
     switch (you.species)
     {
     case SP_MERFOLK:
-        result += "You revert to your normal form in water.\n";
-        result += "You are very nimble and swift while swimming.\n";
+        result += _annotate_form_based(
+            "You revert to your normal form in water.",
+            form_changed_physiology());
+        result += _annotate_form_based(
+            "You are very nimble and swift while swimming.",
+            form_changed_physiology());
         have_any = true;
         break;
 
     case SP_MINOTAUR:
-        result += "You reflexively headbutt those who attack you in melee.\n";
+        result += _annotate_form_based(
+            "You reflexively headbutt those who attack you in melee.",
+            !form_keeps_mutations());
         have_any = true;
         break;
 
     case SP_NAGA:
         result += "You cannot wear boots.\n";
+
         // Breathe poison replaces spit poison.
-        if (!you.mutation[MUT_BREATHE_POISON])
+        if (!player_mutation_level(MUT_BREATHE_POISON))
             result += "You can spit poison.\n";
+
         if (you.experience_level > 2)
         {
             std::ostringstream num;
@@ -300,10 +316,13 @@ std::string describe_mutations()
     case SP_TENGU:
         if (you.experience_level > 4)
         {
-            result += "You can fly";
+            std::string msg = "You can fly";
             if (you.experience_level > 14)
-                result += " continuously";
-            result += ".\n";
+                msg += " continuously";
+            msg += ".";
+            
+            result += _annotate_form_based(msg, (form_changed_physiology()
+                                                 && you.form != TRAN_LICH));
             have_any = true;
         }
         break;
@@ -325,7 +344,7 @@ std::string describe_mutations()
         break;
 
     case SP_GREEN_DRACONIAN:
-        result += "You can breathe blasts of noxious fumes.\n";
+        result += _dragon_abil("You can breathe blasts of noxious fumes.");
         have_any = true;
         scale_type = "lurid green";
         break;
@@ -337,49 +356,49 @@ std::string describe_mutations()
         break;
 
     case SP_RED_DRACONIAN:
-        result += "You can breathe blasts of fire.\n";
+        result += _dragon_abil("You can breathe blasts of fire.");
         have_any = true;
         scale_type = "fiery red";
         break;
 
     case SP_WHITE_DRACONIAN:
-        result += "You can breathe waves of freezing cold.\n";
-        result += "You can buffet flying creatures when you breathe cold.\n";
+        result += _dragon_abil("You can breathe waves of freezing cold.");
+        result += _dragon_abil("You can buffet flying creatures when you breathe cold.");
         scale_type = "icy white";
         have_any = true;
         break;
 
     case SP_BLACK_DRACONIAN:
-        result += "You can breathe wild blasts of lightning.\n";
+        result += _dragon_abil("You can breathe wild blasts of lightning.");
         scale_type = "glossy black";
         have_any = true;
         break;
 
     case SP_YELLOW_DRACONIAN:
-        result += "You can spit globs of acid.\n";
-        result += "You can corrode armour when you spit acid.\n";
+        result += _dragon_abil("You can spit globs of acid.");
+        result += _dragon_abil("You can corrode armour when you spit acid.");
         result += _annotate_form_based("You are resistant to acid.",
-                      form_keeps_mutations() || you.form == TRAN_DRAGON);
+                      !form_keeps_mutations() && you.form != TRAN_DRAGON);
         scale_type = "golden yellow";
         have_any = true;
         break;
 
     case SP_PURPLE_DRACONIAN:
-        result += "You can breathe bolts of energy.\n";
-        result += "You can dispel enchantments when you breathe energy.\n";
+        result += _dragon_abil("You can breathe bolts of energy.");
+        result += _dragon_abil("You can dispel enchantments when you breathe energy.");
         scale_type = "rich purple";
         have_any = true;
         break;
 
     case SP_MOTTLED_DRACONIAN:
-        result += "You can spit globs of burning liquid.\n";
-        result += "You can ignite nearby creatures when you spit burning liquid.\n";
+        result += _dragon_abil("You can spit globs of burning liquid.");
+        result += _dragon_abil("You can ignite nearby creatures when you spit burning liquid.");
         scale_type = "weird mottled";
         have_any = true;
         break;
 
     case SP_PALE_DRACONIAN:
-        result += "You can breathe blasts of scalding steam.\n";
+        result += _dragon_abil("You can breathe blasts of scalding steam.");
         scale_type = "pale cyan-grey";
         have_any = true;
         break;
@@ -418,7 +437,8 @@ std::string describe_mutations()
     case SP_FELID:
         result += "You cannot wear armour.\n";
         result += "You are incapable of any advanced item manipulation.\n";
-        result += "Your paws have sharp claws.\n";
+        result += _annotate_form_based("Your paws have sharp claws.",
+            form_keeps_mutations() && you.form != TRAN_BLADE_HANDS);
         have_any = true;
         break;
 
@@ -1547,10 +1567,7 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     }
 
     std::string result;
-    bool innate = false;
-
-    if (mut == MUT_BREATHE_POISON && you.species == SP_NAGA)
-        innate = true;
+    bool innate_upgrade = (mut == MUT_BREATHE_POISON && you.species == SP_NAGA);
 
     const mutation_def& mdef = get_mutation_def(mut);
 
@@ -1602,8 +1619,16 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
     {
         const char* colourname = (mdef.bad ? "red" : "lightgrey");
         const bool permanent   = (you.innate_mutations[mut] > 0);
-        if (innate)
-            colourname = (level > 0 ? "cyan" : "lightblue");
+
+        if (innate_upgrade)
+        {
+            if (fully_inactive)
+                colourname = "darkgrey";
+            else if (partially_active)
+                colourname = "blue";
+            else
+                colourname = "cyan";
+        }
         else if (permanent)
         {
             const bool demonspawn = (you.species == SP_DEMONSPAWN);
