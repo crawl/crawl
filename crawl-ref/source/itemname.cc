@@ -117,7 +117,7 @@ std::string item_def::name(description_level_type descrip,
     monster_flag_type corpse_flags;
 
     if ((base_type == OBJ_CORPSES && is_named_corpse(*this)
-         && !(((corpse_flags = 
+         && !(((corpse_flags =
 #if TAG_MAJOR_VERSION == 32
                  (int64_t)props[CORPSE_NAME_TYPE_KEY]
 #else
