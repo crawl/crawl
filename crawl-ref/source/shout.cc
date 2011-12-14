@@ -377,19 +377,6 @@ bool check_awaken(monster* mons)
 
 void item_noise(const item_def &item, std::string msg, int loudness)
 {
-    if (is_unrandom_artefact(item))
-    {
-        // "Your Singing Sword" sounds disrespectful
-        // (as if there could be more than one!)
-        msg = replace_all(msg, "@Your_weapon@", "@The_weapon@");
-        msg = replace_all(msg, "@your_weapon@", "@the_weapon@");
-    }
-    else
-    {
-        msg = replace_all(msg, "@Your_weapon@", "Your @weapon@");
-        msg = replace_all(msg, "@your_weapon@", "your @weapon@");
-    }
-
     // Set appropriate channel (will usually be TALK).
     msg_channel_type channel = MSGCH_TALK;
 
@@ -430,9 +417,13 @@ void item_noise(const item_def &item, std::string msg, int loudness)
         msg = "You hear a strange noise.";
     }
 
-    // replace weapon references
-    msg = replace_all(msg, "@The_weapon@", "The @weapon@");
-    msg = replace_all(msg, "@the_weapon@", "the @weapon@");
+    // replace weapon references. Note that DESC_YOUR uses "the" for artefacts.
+    msg = replace_all(msg, "@Your_weapon@",
+                      uppercase_first(item.name(DESC_YOUR)));
+    msg = replace_all(msg, "@your_weapon@", item.name(DESC_YOUR));
+    msg = replace_all(msg, "@The_weapon@",
+                      uppercase_first(item.name(DESC_THE)));
+    msg = replace_all(msg, "@the_weapon@", item.name(DESC_THE));
     msg = replace_all(msg, "@weapon@", item.name(DESC_BASENAME));
 
     // replace references to player name and god
