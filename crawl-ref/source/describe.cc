@@ -1765,7 +1765,7 @@ std::string get_item_description(const item_def &item, bool verbose,
     std::ostringstream description;
 
     if (!dump)
-        description << item.name(DESC_INVENTORY_EQUIP);
+        description << uppercase_first(item.name(DESC_INVENTORY_EQUIP)) << ".";
 
 #ifdef DEBUG_DIAGNOSTICS
     if (!dump)
@@ -3379,7 +3379,7 @@ void get_monster_db_desc(const monster_info& mi, describe_info &inf,
                          bool &has_stat_desc, bool force_seen)
 {
     if (inf.title.empty())
-        inf.title = mi.full_name(DESC_A, true);
+        inf.title = uppercase_first(mi.full_name(DESC_A, true)) + ".";
 
     std::string db_name;
 
