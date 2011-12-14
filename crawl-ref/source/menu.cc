@@ -133,62 +133,6 @@ Menu::Menu(int _flags, const std::string& tagname, bool text_only)
     set_flags(flags);
 }
 
-Menu::Menu(const formatted_string &fs)
- : f_selitem(NULL), f_drawitem(NULL), f_keyfilter(NULL),
-   action_cycle(CYCLE_NONE), menu_action(ACT_EXAMINE), title(NULL),
-   title2(NULL),
-
-   // This is a text-viewer menu, init flags to be easy on the user.
-   flags(MF_NOSELECT | MF_EASY_EXIT),
-
-   tag(), first_entry(0), y_offset(0), pagesize(0),
-   max_pagesize(0), more("-more-", true), items(), sel(),
-   select_filter(), highlighter(new MenuHighlighter), num(-1),
-   lastch(0), alive(false), last_selected(-1)
-{
-    mdisplay = new MenuDisplayText(this);
-    mdisplay->set_num_columns(1);
-
-    int colour = LIGHTGREY;
-    int last_text_colour = LIGHTGREY;
-    std::string line;
-    for (formatted_string::oplist::const_iterator i = fs.ops.begin();
-         i != fs.ops.end(); ++i)
-    {
-        const formatted_string::fs_op &op(*i);
-        switch (op.type)
-        {
-        case FSOP_COLOUR:
-            colour = op.x;
-            break;
-        case FSOP_TEXT:
-        {
-            line += op.text;
-
-            const std::string::size_type nonblankp =
-                op.text.find_first_not_of(" \t\r\n");
-            const bool nonblank = nonblankp != std::string::npos;
-            const std::string::size_type eolp = op.text.find("\n");
-            const bool starts_with_eol =
-                nonblank && eolp != std::string::npos
-                && eolp < nonblankp;
-
-            if (nonblank && !starts_with_eol)
-                last_text_colour = colour;
-
-            check_add_formatted_line(last_text_colour, colour, line, true);
-
-            if (nonblank && starts_with_eol)
-                last_text_colour = colour;
-            break;
-        }
-        default:
-            break;
-        }
-    }
-    check_add_formatted_line(last_text_colour, colour, line, false);
-}
-
 void Menu::check_add_formatted_line(int firstcol, int nextcol,
                                     std::string &line, bool check_eol)
 {
