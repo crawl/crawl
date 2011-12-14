@@ -1173,7 +1173,6 @@ VISUAL:@The_monster@ takes a fighting stance.
 @The_monster@ sneers, "Do you call that fighting?"
 
 @The_monster@ laughs, "And you think you're capable of finding the legendary Orb of Zot. I had it, you know. Then I gave it away so I could steal it AGAIN."
-
 %%%%
 Short Blades player ghost
 
@@ -1182,7 +1181,6 @@ Short Blades player ghost
 @The_monster@ says @to_foe@, "You sneer at my short blade, I will sneer at your cold corpse."
 
 VISUAL:@The_monster@ flicks @possessive@ blade from hand to hand, faster than the eye can follow.
-
 %%%%
 Long Blades player ghost
 
@@ -1191,7 +1189,6 @@ VISUAL:@The_monster@ holds @possessive@ blade at the ready.
 @The_monster@ says, "Live by the sword, die by the sword."
 
 @The_monster@ says, "My hard blade and your soft body. They will meet - soon."
-
 %%%%
 Axes player ghost
 
@@ -1200,7 +1197,6 @@ Axes player ghost
 @The_monster@ mumbles, "They all look like pillowcases to me..."
 
 @The_monster@ says, "Try not to bleed too much."
-
 %%%%
 Maces & Flails player ghost
 
@@ -1209,7 +1205,6 @@ Maces & Flails player ghost
 VISUAL:@The_monster@ crushes a nearby insect and laughs.
 
 @The_monster@ says @to_foe@, "Crushing you to a pulp will hurt a lot. After that? Painless! I promise!"
-
 %%%%
 Polearms player ghost
 
@@ -1218,7 +1213,6 @@ Polearms player ghost
 @The_monster@ says @to_foe@, "Your head on a pike would complement this floor nicely."
 
 @The_monster@ says @to_foe@, "Your head would complement my pike nicely."
-
 %%%%
 Staves player ghost
 
@@ -1227,7 +1221,6 @@ Staves player ghost
 VISUAL:@The_monster@ twirls @possessive@ staff.
 
 @The_monster@ threatens to break your skull. @player_only@
-
 %%%%
 Slings player ghost
 
@@ -1242,14 +1235,12 @@ Bows player ghost
 @_generic_ranged_@
 
 @The_monster@ says, "Do you have an apple? I have a shot I want to try."
-
 %%%%
 Crossbows player ghost
 
 @_generic_ranged_@
 
 VISUAL:@The_monster@ @_reloads_adj_@ @possessive@ weapon.
-
 %%%%
 Throwing player ghost
 
@@ -1266,7 +1257,6 @@ Armour player ghost
 @The_monster@ says, "I am invincible!"
 
 @The_monster@ says, "I am made of steel!"
-
 %%%%
 Dodging player ghost
 
@@ -1275,7 +1265,6 @@ Dodging player ghost
 @The_monster@ ducks and says, "Too high!"
 
 @The_monster@ dodges and says, "Too slow!"
-
 %%%%
 Stealth player ghost
 
@@ -1290,7 +1279,6 @@ VISUAL:For a moment, you lose track of @the_monster@.
 @The_monster@ whispers, "Be very very quiet, I'm hunting @player_genus_plural@." @player_only@
 
 VISUAL:For a moment, @the_monster@ blends into the shadows.
-
 %%%%
 Stabbing player ghost
 
@@ -1305,14 +1293,12 @@ Stabbing player ghost
 @The_monster@ says, "I have assassinated emperors and kings... you are beneath me."
 
 @The_monster@ says @to_foe@, "You'd better not stain my armour with your blood."
-
 %%%%
 Shields player ghost
 
 @The_monster@ says, "What's that? Someone is blocking your path? And your attacks too?"
 
 @The_monster@ says, "You can hit me, but you can't hurt me."
-
 %%%%
 Traps & Doors player ghost
 
@@ -1344,7 +1330,6 @@ w:1
 @The_monster@ rises to @possessive@ full height, drawing on the power of @possessive@ mind.
 
 @The_monster@ regards you with anger at your presumption in entering @possessive@ workshop - the Dungeon.
-
 %%%%
 Unarmed Combat player ghost
 
@@ -1359,7 +1344,6 @@ VISUAL:@The_monster@ assumes a wrestling stance.
 VISUAL:@The_monster@ swings @possessive@ fists at you. @player_only@
 
 VISUAL:@The_monster@ flexes @possessive@ fingers.
-
 %%%%
 Spellcasting player ghost
 
@@ -1378,7 +1362,6 @@ VISUAL:@The_monster@ frowns in concentration.
 @The_monster@ says, "I am smarter than you!"
 
 @The_monster@ says, "More power, less hunger, what more do I need?"
-
 %%%%
 Conjurations player ghost
 
@@ -1393,7 +1376,6 @@ VISUAL:@The_monster@ takes aim.
 VISUAL ENCHANT:@The_monster@ is bathed in the radiant lights of Iskenderun.
 
 VISUAL SPELL:Energy condenses in front of @the_monster@, but quickly dissipates.
-
 %%%%
 Enchantments player ghost
 
@@ -1404,7 +1386,6 @@ VISUAL WARN:You feel a strange force tugging at your mind. @player_only@
 @The_monster@ says, "If you think I look tough now, just wait!"
 
 @The_monster@ says @to_foe@, "When I snap my fingers, you will think you are a chicken."
-
 %%%%
 Summonings player ghost
 
@@ -1417,7 +1398,6 @@ VISUAL SPELL:@The_monster@ pulls a quokka out of @possessive@ cap.
 @The_monster@ says, "It's nice to have friends."
 
 @The_monster@ says, "You had a pet as a child? I had five."
-
 %%%%
 Necromancy player ghost
 
@@ -1430,7 +1410,6 @@ Necromancy player ghost
 @The_monster@ says @to_foe@, "After I kill you, I will kill you again."
 
 @The_monster@ says @to_foe@, "I need your bones for a spell of mine."
-
 %%%%
 Translocations player ghost
 
@@ -1441,7 +1420,6 @@ VISUAL ENCHANT:@The_monster@ is wreathed in a cloud of translocational energy.
 VISUAL SPELL:@The_monster@ struggles to pull you closer. @player_only@
 
 VISUAL:@The_monster@ blinks @at_foe@.
-
 %%%%
 Transmutations player ghost
 
@@ -1450,7 +1428,6 @@ VISUAL:@The_monster@ briefly looks inexplicably like a @_form_@.
 VISUAL:@The_monster@ briefly turns into a @_form_@ and back.
 
 VISUAL:One of @the_monster@'s potions boils over and spills out.
-
 %%%%
 Fire Magic player ghost
 
@@ -1461,7 +1438,6 @@ Fire Magic player ghost
 @The_monster@ says, "Would you like to be cremated?"
 
 @The_monster@ says, "Don't worry, you'll be warm in a moment."
-
 %%%%
 Ice Magic player ghost
 
@@ -1470,7 +1446,6 @@ VISUAL WARN:A chill runs down your spine. @player_only@
 @The_monster@ says @to_foe@, "I hope the next monster to meet you likes frozen food!"
 
 @The_monster@ says @to_foe@, "An ice sculpture of you would look very nice here."
-
 %%%%
 Air Magic player ghost
 
@@ -1481,7 +1456,6 @@ VISUAL:@The_monster@ is surrounded by a shower of sparks.
 @The_monster@ says, "Resistance is futile!"
 
 @The_monster@ says, "It's all a matter of fight versus flight."
-
 %%%%
 Earth Magic player ghost
 
@@ -1493,7 +1467,6 @@ Earth Magic player ghost
 
 VISUAL:@The_monster@ gestures.
 VISUAL SPELL:For a moment, the earth shakes beneath you.
-
 %%%%
 Poison Magic player ghost
 
@@ -1508,7 +1481,6 @@ Poison Magic player ghost
 @The_monster@ says @to_foe@, "I don't need to breathe anymore, but you do!"
 
 @The_monster@ says, "I've got poisons running in my veins."
-
 %%%%
 Invocations player ghost
 
@@ -1523,7 +1495,6 @@ Invocations player ghost
 @The_monster@ mutters, "So much for the promised afterlife."
 
 VISUAL SPELL:@The_monster@ prays.
-
 %%%%
 Evocations player ghost
 
@@ -1534,21 +1505,18 @@ Evocations player ghost
 @The_monster@ taunts, "You'd probably drink from a bronze flask."
 
 @The_monster@ says, "I could kill you with a @_misc_item_@."
-
 %%%%
 _generic_ranged_
 
 @The_monster@ takes aim @at_foe@.
 
 You feel something passing dangerously close to your head. @player_only@
-
 %%%%
 _reloads_adj_
 
 struggles to reload
 
 effortlessly reloads
-
 %%%%
 _misc_item_
 
@@ -1557,14 +1525,12 @@ stone
 fan
 
 lamp
-
 %%%%
 _direction_
 
 left
 
 right
-
 %%%%
 _form_
 
@@ -1577,7 +1543,6 @@ dragon
 
 w:2
 lich
-
 %%%%
 player ghost
 
@@ -1676,7 +1641,6 @@ _player_ghost_rare_
 #######################################
 # Unique monsters
 #######################################
-%%%%
 ############ AIZUL ### Renegade guardian serpent whose vault was raided.
 Aizul
 
@@ -3449,7 +3413,6 @@ VISUAL:@The_monster@ smirks and points a slender finger @at_foe@.
 @The_monster@ says @to_foe@, "Stay away from my face!"
 
 @The_monster@ says @to_foe@, "Magic and the sword, together, will defeat you." @player_only@
-
 %%%%
 _Dowan_rare_
 
@@ -3564,7 +3527,6 @@ VISUAL:@The_monster@ gestures with @possessive@ weapon @at_foe@.
 @The_monster@ says @to_foe@, "Where magic fails, the sword succeeds!"
 
 @The_monster@ says @to_foe@, "When magic and the sword combine, nothing stands against them."
-
 %%%%
 _Duvessa_rare_
 
@@ -3960,7 +3922,6 @@ VISUAL:@The_monster@ sloshes about.
 @The_monster@ gurgles.
 
 @The_monster@ makes a strange noise.
-
 %%%%
 _Gastronok_rare_
 
@@ -4597,7 +4558,6 @@ VISUAL WARN:You feel @bad_effect@.
 @The_monster@ screams @at_foe@, "You can't withstand my power!"
 
 @The_monster@ screams @at_foe@, "All trespassers must die!"
-
 %%%%
 _Margery_rare_
 
@@ -4676,7 +4636,6 @@ VISUAL:@The_monster@ tries to hide in the shadows.
 @The_monster@ says, "Nice gear. Can I borrow some?"
 
 @The_monster@ shouts, "Mine, all mine!"
-
 %%%%
 _Maurice_medium_
 
@@ -5018,7 +4977,6 @@ VISUAL:@The_monster@ looks relaxed.
 @The_monster@ @Norris_verb@ @to_foe@, "Personally, I think you are better off dead."
 
 @The_monster@ looks @at_foe@ and intones, "So much life I see, so little death. Pity that!"
-
 %%%%
 _Norris_rare_
 
@@ -5848,12 +5806,10 @@ _Xtahua_rare_
 
 @The_monster@ roars, "BAH! BLOODY ADVENTURERS." @player_only@
 ## END Xtahua ##
-
+%%%%
 ##########################################
 # Specific non-unique monsters
 ##########################################
-
-%%%%
 ################## Chaos spawn #############################
 # Chaos spawns shouldn't have coherent speech, since that would be too
 # orderly for beings of pure chaos.
