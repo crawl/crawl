@@ -1240,7 +1240,8 @@ APPEAR:   loaded stick
 OBJ:      OBJ_WEAPONS/WPN_CLUB
 TILE:     urand_shillelagh
 TILE_EQ:  shillelagh
-PLUS:     +2/+4
+PLUS:     +4/+8
+BASE_DAM: +3
 BOOL:     special
 # hrm, nothing fitting, shouldn't be elemental but should be marked
 COLOUR:   WHITE
