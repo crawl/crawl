@@ -720,6 +720,7 @@ bool show_map(level_pos &lpos,
 
 #ifdef USE_TILE_WEB
         tiles_crt_control crt(false);
+        tiles_ui_control ui(UI_VIEW_MAP);
 #endif
 
         int move_x = 0, move_y = 0, scroll_y = 0;
