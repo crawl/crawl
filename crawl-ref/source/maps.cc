@@ -21,9 +21,7 @@
 #include "env.h"
 #include "enum.h"
 #include "files.h"
-#ifdef USE_TILE
 #include "initfile.h"
-#endif
 #include "libutil.h"
 #include "message.h"
 #include "mapdef.h"
@@ -1193,17 +1191,17 @@ static bool load_map_cache(const std::string &filename, const std::string &cache
     if (is_newer(filename, file_idx) || is_newer(filename, file_dsc))
         return (false);
 
-#ifdef USE_TILE
     // When the executable is rebuilt for tiles, it's possible that
     // the tile enums have changed, breaking old cache files.
     // So, conservatively regenerate cache files after rebuilding.
+
+    // Is this still the case?  Don't we use names as strings now? --1KB
     {
         std::string exe_path = SysEnv.crawl_base + FILE_SEPARATOR
                                + SysEnv.crawl_exe;
         if (is_newer(exe_path, file_idx) || is_newer(exe_path, file_dsc))
             return (false);
     }
-#endif
 
     if (!verify_map_index(descache_base) || !verify_map_full(descache_base))
         return (false);

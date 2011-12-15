@@ -6,9 +6,8 @@
 #ifndef TILEPICK_H
 #define TILEPICK_H
 
-#ifdef USE_TILE
-
 #include "tiledef_defines.h"
+#include "mon-info.h"
 
 struct bolt;
 struct cloud_info;
@@ -56,5 +55,4 @@ std::string tile_debug_string(tileidx_t fg, tileidx_t bg, char prefix);
 
 void tile_init_props(monster* mon);
 
-#endif
 #endif

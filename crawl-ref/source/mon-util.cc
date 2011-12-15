@@ -50,14 +50,11 @@
 #include "state.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "tilepick.h"
 #include "traps.h"
 #include "unicode.h"
 #include "view.h"
 #include "viewchar.h"
-
-#ifdef USE_TILE
-  #include "tilepick.h"
-#endif
 
 static FixedVector < int, NUM_MONSTERS > mon_entry;
 
@@ -787,9 +784,7 @@ void discover_mimic(const coord_def& pos)
                item->base_type == OBJ_GOLD ? "pile of gold coins"
                                            : item->name(DESC_BASENAME);
 
-#ifdef USE_TILE
     tileidx_t tile = tileidx_feature(pos);
-#endif
 
     // If a monster is standing on top of the mimic, move it out of the way.
     monster* mon = monster_at(pos);
@@ -841,9 +836,7 @@ void discover_mimic(const coord_def& pos)
         mg.props["feat_type"] = static_cast<short>(feat);
         mg.props["glyph"] = static_cast<int>(get_feat_symbol(feat));
 
-#ifdef USE_TILE
         mg.props["tile_idx"] = static_cast<int>(tile);
-#endif
     }
     else
     {

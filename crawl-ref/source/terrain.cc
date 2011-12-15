@@ -37,9 +37,7 @@
 #include "species.h"
 #include "spl-transloc.h"
 #include "env.h"
-#ifdef USE_TILE
- #include "tileview.h"
-#endif
+#include "tileview.h"
 #include "travel.h"
 #include "transform.h"
 #include "traps.h"
@@ -983,8 +981,8 @@ void dgn_move_entities_at(coord_def src, coord_def dst,
 #ifdef USE_TILE
     env.tile_bk_fg(dst) = env.tile_bk_fg(src);
     env.tile_bk_bg(dst) = env.tile_bk_bg(src);
-    env.tile_flv(dst) = env.tile_flv(src);
 #endif
+    env.tile_flv(dst) = env.tile_flv(src);
 
     // Move vault masks.
     env.level_map_mask(dst) = env.level_map_mask(src);
@@ -1134,9 +1132,7 @@ void dungeon_terrain_changed(const coord_def &pos,
     set_terrain_changed(pos);
 
     // Deal with doors being created by changing features.
-#ifdef USE_TILE
     tile_init_flavour(pos);
-#endif
 }
 
 static void _announce_swap_real(coord_def orig_pos, coord_def dest_pos)

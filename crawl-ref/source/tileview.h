@@ -7,8 +7,6 @@
 #ifndef TILEVIEW_H
 #define TILEVIEW_H
 
-#ifdef USE_TILE
-
 #include "target.h"
 #include "tiledef_defines.h"
 
@@ -66,5 +64,4 @@ void tile_apply_properties(const coord_def &gc, packed_cell &cell);
 void tile_clear_map(const coord_def &gc);
 void tile_forget_map(const coord_def &gc);
 
-#endif
 #endif
