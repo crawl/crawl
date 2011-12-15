@@ -324,7 +324,6 @@ wwwww
  www
 ENDMAP
 
-# XXX: Undiggable glass has been converted to grates.
 NAME: ziggurat_pillar_centre_c
 TAGS: ziggurat_pillar centered
 # This is evil. Monster sets are: summoners (1), evil eyes (2), harmless (3).
@@ -334,9 +333,9 @@ MONS: ancient lich / boggart / curse skull
 MONS: eye of draining / eye of devastation / giant eyeball
 MONS: plant col:lightred
 : if zig().depth > 21 then
-SUBST: 1 = 12222
+SUBST: 3 = 12222
 : elseif zig().depth > 15 then
-SUBST: 1 = 12
+SUBST: 3 = 12
 : elseif zig().depth > 8 and crawl.coinflip() then
 SUBST: 3 = 12
 : end
