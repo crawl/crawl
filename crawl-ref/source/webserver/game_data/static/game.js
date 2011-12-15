@@ -1,13 +1,14 @@
 
 define(["jquery", "comm", "client", "./dungeon_renderer", "./display", "./minimap",
-        "./settings",
+        "./settings", "./enums",
         "./text", "./menu"],
-function ($, comm, client, dungeon_renderer, display, minimap, settings) {
-    var layout_parameters;
+function ($, comm, client, dungeon_renderer, display, minimap, settings, enums) {
+    var layout_parameters, ui_state;
 
     function init()
     {
         layout_parameters = null;
+        ui_state = -1;
     }
 
     $(document).bind("game_init", init);
@@ -35,8 +36,8 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings) {
 
         layout_parameters = params;
 
-        var layer = current_layer;
-        set_layer("normal");
+        var state = ui_state;
+        set_ui_state(enums.ui.NORMAL);
 
         // Determine width of stats area
         var old_html = $("#stats").html();
@@ -59,8 +60,11 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings) {
         var remaining_width = window_width - stat_width_px;
         var remaining_height = window_height - msg_height_px;
 
+        layout_parameters.remaining_width = remaining_width;
+        layout_parameters.remaining_height = remaining_height;
+
         // Position controls
-        set_layer("normal");
+        client.set_layer("normal");
         dungeon_renderer.fit_to(remaining_width, remaining_height,
                                 layout_parameters.show_diameter);
 
@@ -68,13 +72,64 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings) {
 
         $("#monster_list").width(stat_width_px);
 
-        // Go back to the old layer, re-hide the minimap if necessary
-        set_layer(layer);
+        // Go back to the old layer
+        set_ui_state(state);
 
         // Update the view
         display.invalidate(true);
         display.display();
         minimap.update_overlay();
+    }
+
+    function toggle_full_window_dungeon_view(full)
+    {
+        // Toggles the dungeon view for X map mode
+        if (full)
+        {
+            dungeon_renderer.fit_to(layout_parameters.window_width - 5,
+                                    layout_parameters.window_height - 5,
+                                    layout_parameters.show_diameter);
+            $("#right_column").hide();
+            $("#messages").hide();
+        }
+        else
+        {
+            dungeon_renderer.fit_to(layout_parameters.remaining_width,
+                                    layout_parameters.remaining_height,
+                                    layout_parameters.show_diameter);
+            $("#right_column").show();
+            $("#messages").show();
+        }
+        display.invalidate(true);
+        display.display();
+    }
+
+    function set_ui_state(state)
+    {
+        if (state == ui_state) return;
+        var old_state = ui_state;
+        ui_state = state;
+        switch (ui_state)
+        {
+        case enums.ui.NORMAL:
+            client.set_layer("normal");
+            if (old_state == enums.ui.VIEW_MAP)
+                toggle_full_window_dungeon_view(false);
+            break;
+
+        case enums.ui.CRT:
+            client.set_layer("crt");
+            break;
+
+        case enums.ui.VIEW_MAP:
+            toggle_full_window_dungeon_view(true);
+            break;
+        }
+    }
+
+    function handle_set_ui_state(data)
+    {
+        set_ui_state(data.state);
     }
 
     function handle_delay(data)
@@ -124,5 +179,6 @@ function ($, comm, client, dungeon_renderer, display, minimap, settings) {
         "layout": layout,
         "delay": handle_delay,
         "version": handle_version,
+        "ui_state": handle_set_ui_state,
     });
 });

@@ -150,10 +150,7 @@ bool TilesFramework::initialise()
 
     _send_version();
 
-    // Do our initialization here.
-    m_active_layer = LAYER_CRT;
-    send_message("{msg:'layer',layer:'crt'}");
-
+    // Initially, switch to CRT.
     cgotoxy(1, 1, GOTO_CRT);
 
     return (true);
@@ -461,6 +458,24 @@ void TilesFramework::close_all_menus()
     while (m_menu_stack.size())
         pop_menu();
 }
+
+static void _send_ui_state(WebtilesUIState state)
+{
+    tiles.json_open_object();
+    tiles.json_write_string("msg", "ui_state");
+    tiles.json_write_int("state", state);
+    tiles.json_close_object();
+    tiles.send_message();
+}
+
+void TilesFramework::set_ui_state(WebtilesUIState state)
+{
+    if (m_ui_state == state) return;
+
+    m_ui_state = state;
+    _send_ui_state(state);
+}
+
 
 static void _send_doll(const dolls_data &doll, bool submerged, bool ghost)
 {
@@ -910,10 +925,9 @@ void TilesFramework::load_dungeon(const crawl_view_buffer &vbuf,
 
     m_view_loaded = true;
 
-    if (m_active_layer != LAYER_NORMAL)
+    if (m_ui_state == UI_CRT)
     {
-        m_active_layer = LAYER_NORMAL;
-        send_message("{msg:\"layer\",layer:\"normal\"}");
+        set_ui_state(UI_NORMAL);
     }
 
     m_next_flash_colour = you.flash_colour;
@@ -1022,18 +1036,8 @@ void TilesFramework::_send_everything()
 
     send_message("{msg:'redraw'}");
 
-    switch (m_active_layer)
-    {
-    case LAYER_CRT:
-        send_message("{msg:'layer',layer:'crt'}");
-        break;
-    case LAYER_NORMAL:
-        send_message("{msg:'layer',layer:'normal'}");
-        break;
-    default:
-        // Cannot happen
-        break;
-    }
+    // UI State
+    _send_ui_state(m_ui_state);
 
     // Menus
     json_open_object();
@@ -1085,9 +1089,7 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
             m_print_area = NULL;
             break;
         case CRT_NORMAL:
-            if (m_active_layer != LAYER_CRT)
-                send_message("{msg:'layer',layer:'crt'}");
-            m_active_layer = LAYER_CRT;
+            set_ui_state(UI_CRT);
             m_print_area = &m_text_crt;
             break;
         case CRT_MENU:
@@ -1096,15 +1098,9 @@ void TilesFramework::cgotoxy(int x, int y, GotoRegion region)
         }
         break;
     case GOTO_MSG:
-        if (m_active_layer != LAYER_NORMAL)
-            send_message("{msg:'layer',layer:'normal'}");
-        m_active_layer = LAYER_NORMAL;
         m_print_area = &m_text_message;
         break;
     case GOTO_STAT:
-        if (m_active_layer != LAYER_NORMAL)
-            send_message("{msg:'layer',layer:'normal'}");
-        m_active_layer = LAYER_NORMAL;
         m_print_area = &m_text_stat;
         break;
     default:

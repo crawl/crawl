@@ -1,10 +1,11 @@
 // TODO: Generate this automatically from enum.h?
 define(function () {
     var exports = {};
-    // Goto regions
-    exports.GOTO_CRT = 0;
-    exports.GOTO_MSG = 1;
-    exports.GOTO_STAT = 2;
+    // UI States (tileweb.h)
+    exports.ui = {};
+    exports.ui.NORMAL   = 0;
+    exports.ui.CRT      = 1;
+    exports.ui.VIEW_MAP = 2;
 
     // Cursors
     exports.CURSOR_MOUSE = 0;

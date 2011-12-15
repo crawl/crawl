@@ -23,6 +23,13 @@ enum WebtilesCRTMode
     CRT_MENU
 };
 
+enum WebtilesUIState
+{
+    UI_NORMAL,
+    UI_CRT,
+    UI_VIEW_MAP,
+};
+
 class TilesFramework
 {
 public:
@@ -127,6 +134,10 @@ public:
     WebtilesCRTMode m_crt_mode;
 
     void clear_crt_menu() { m_text_menu.clear(); }
+
+    void set_ui_state(WebtilesUIState state);
+    WebtilesUIState get_ui_state() { return m_ui_state; }
+
 protected:
     int m_sock;
     int m_max_msg_size;
@@ -150,14 +161,7 @@ protected:
     };
     std::vector<MenuInfo> m_menu_stack;
 
-    enum LayerID
-    {
-        LAYER_NORMAL,
-        LAYER_CRT,
-        LAYER_TILE_CONTROL,
-        LAYER_MAX,
-    };
-    LayerID m_active_layer;
+    WebtilesUIState m_ui_state;
 
     unsigned int m_last_tick_redraw;
     bool m_need_redraw;
@@ -249,6 +253,26 @@ public:
 
 private:
     WebtilesCRTMode m_old_mode;
+};
+
+class tiles_ui_control
+{
+public:
+    tiles_ui_control(WebtilesUIState state)
+        : m_new_state(state), m_old_state(tiles.get_ui_state())
+    {
+        tiles.set_ui_state(state);
+    }
+
+    ~tiles_ui_control()
+    {
+        if (tiles.get_ui_state() == m_new_state)
+            tiles.set_ui_state(m_old_state);
+    }
+
+private:
+    WebtilesUIState m_new_state;
+    WebtilesUIState m_old_state;
 };
 
 #endif
