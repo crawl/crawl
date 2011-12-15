@@ -72,8 +72,6 @@ MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
         profile package-source source build-windows package-windows rest docs greet \
         api
 
-all: greet $(GAME) docs webserver
-
 #
 # Compiler Flags
 #
@@ -251,6 +249,9 @@ ifdef BUILD_ALL
 	BUILD_LIBPNG = YesPlease
 	BUILD_ZLIB = YesPlease
 endif
+
+# Should be the first rule, but must come after $(GAME) is set.
+all: greet $(GAME) docs webserver
 
 LIBPCRE := contrib/install/$(ARCH)/lib/libpcre.a
 LIBSDL := contrib/install/$(ARCH)/lib/libSDL.a
