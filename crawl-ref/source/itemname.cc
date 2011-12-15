@@ -2967,7 +2967,8 @@ bool is_useless_item(const item_def &item, bool temp)
 
         case POT_INVISIBILITY:
             // If you're Corona'd or a TSO-ite, this is always useless.
-            return (temp ? you.backlit(true) : you.haloed());
+            return (temp ? you.backlit(true)
+                         : you.haloed() && you.religion == GOD_SHINING_ONE);
 
         }
 
@@ -3038,7 +3039,8 @@ bool is_useless_item(const item_def &item, bool temp)
             return (crawl_state.game_is_sprint());
 
         case RING_INVISIBILITY:
-            return (temp && you.backlit(true));
+            return (temp ? you.backlit(true)
+                         : you.haloed() && you.religion == GOD_SHINING_ONE);
 
         case RING_LEVITATION:
             return (you.permanent_levitation() || you.permanent_flight());
