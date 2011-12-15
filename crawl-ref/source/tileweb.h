@@ -52,7 +52,7 @@ public:
     void clear_text_tags(text_tag_type type);
     void add_text_tag(text_tag_type type, const std::string &tag,
                       const coord_def &gc);
-    void add_text_tag(text_tag_type type, const monster* mon);
+    void add_text_tag(text_tag_type type, const monster_info& mon);
 
     const coord_def &get_cursor() const;
 

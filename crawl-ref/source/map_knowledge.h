@@ -4,6 +4,23 @@
 #include "show.h"
 #include "mon-info.h"
 
+struct cloud_info
+{
+    cloud_info() : type(CLOUD_NONE), colour(0), duration(3), tile(0), pos(0, 0)
+    { }
+
+    cloud_info(cloud_type t, uint8_t c,
+               uint8_t dur, unsigned short til, coord_def gc)
+        : type(t), colour(c), duration(dur), tile(til), pos(gc)
+    { }
+
+    cloud_type type:8;
+    uint8_t colour;
+    uint8_t duration; // decay/20, clamped to 0-3
+    unsigned short tile;
+    coord_def pos;
+};
+
 #define MAP_MAGIC_MAPPED_FLAG   0x01
 #define MAP_SEEN_FLAG           0x02
 #define MAP_CHANGED_FLAG        0x04 // FIXME: this doesn't belong here
@@ -33,12 +50,12 @@
 
 /*
  * A map_cell stores what the player knows about a cell.
- * These go in env.map_knowledge_knowledge.
+ * These go in env.map_knowledge.
  */
 struct map_cell
 {
     map_cell() : flags(0), _feat(DNGN_UNSEEN), _feat_colour(0),
-                 _cloud(CLOUD_NONE), _cloud_colour(0), _item(0), _mons(0),
+                 _cloud(0), _item(0), _mons(0),
                  _trap(TRAP_UNASSIGNED)
     {
     }
@@ -46,6 +63,8 @@ struct map_cell
     map_cell(const map_cell& c)
     {
         memcpy(this, &c, sizeof(map_cell));
+        if (_cloud)
+            _cloud = new cloud_info(*_cloud);
         if (_mons)
             _mons = new monster_info(*_mons);
         if (_item)
@@ -54,6 +73,8 @@ struct map_cell
 
     ~map_cell()
     {
+        if (_cloud)
+            delete _cloud;
         if (!(flags & MAP_DETECTED_MONSTER) && _mons)
             delete _mons;
         if (_item)
@@ -64,11 +85,15 @@ struct map_cell
     {
         if (&c == this)
             return (*this);
+        if (_cloud)
+            delete _cloud;
         if (_mons)
             delete _mons;
         if (_item)
             delete _item;
         memcpy(this, &c, sizeof(map_cell));
+        if (_cloud)
+            _cloud = new cloud_info(*_cloud);
         if (_mons)
             _mons = new monster_info(*_mons);
         if (_item)
@@ -190,18 +215,28 @@ struct map_cell
 
     cloud_type cloud() const
     {
-        return _cloud;
+        if (_cloud)
+            return _cloud->type;
+        else
+            return CLOUD_NONE;
     }
 
     unsigned cloud_colour() const
     {
-        return _cloud_colour;
+        if (_cloud)
+            return _cloud->colour;
+        else
+            return 0;
     }
 
-    void set_cloud(cloud_type ncloud, unsigned colour = 0)
+    cloud_info* cloudinfo() const
     {
-        _cloud = ncloud;
-        _cloud_colour = colour;
+        return _cloud;
+    }
+
+    void set_cloud(const cloud_info& ci)
+    {
+        _cloud = new cloud_info(ci);
     }
 
     bool known() const
@@ -244,8 +279,7 @@ private:
     dungeon_feature_type _feat:8;
 #endif
     uint8_t _feat_colour;
-    cloud_type _cloud:8;
-    uint8_t _cloud_colour;
+    cloud_info* _cloud;
     item_info* _item;
     monster_info* _mons;
     trap_type _trap:8;

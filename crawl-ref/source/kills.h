@@ -13,6 +13,7 @@
 #include "enum.h"
 
 class monster;
+class monster_info;
 class reader;
 class writer;
 
@@ -20,6 +21,7 @@ class writer;
 struct kill_monster_desc
 {
     kill_monster_desc(const monster*);
+    kill_monster_desc(const monster_info&);
     kill_monster_desc() { }
 
     void save(writer&) const;
@@ -140,7 +142,10 @@ public:
 
     int get_kills(std::vector<kill_exp> &v) const;
     int num_kills(const monster* mon) const;
+    int num_kills(const monster_info& mon) const;
 private:
+    int num_kills(kill_monster_desc desc) const;
+
     typedef std::map<kill_monster_desc,
                      kill_def,
                      kill_monster_desc::less_than> kill_map;
@@ -167,8 +172,10 @@ public:
 
     // Number of kills, by category.
     int num_kills(const monster* mon, kill_category cat) const;
+    int num_kills(const monster_info& mon, kill_category cat) const;
     // Number of kills, any category.
     int num_kills(const monster* mon) const;
+    int num_kills(const monster_info& mon) const;
 
     int total_kills() const;
 

@@ -12,7 +12,7 @@
 #include "target.h"
 #include "tiledef_defines.h"
 
-struct cloud_struct;
+struct cloud_info;
 struct coord_def;
 struct dolls_data;
 struct item_def;
@@ -47,14 +47,15 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile);
 
 
 // Tile view related
+void tile_draw_map_cell(const coord_def &gc);
 void tile_draw_floor();
 void tile_place_item(const coord_def &gc, const item_def &item);
 void tile_place_item_marker(const coord_def &gc, const item_def &item);
 void tile_place_invisible_monster(const coord_def &gc);
-void tile_place_monster(const coord_def &gc, const monster* mons);
+void tile_place_monster(const coord_def &gc, const monster_info& mons);
 void tile_clear_monster(const coord_def &gc);
 void tile_reset_feat(const coord_def &gc);
-void tile_place_cloud(const coord_def &gc, const cloud_struct &cl);
+void tile_place_cloud(const coord_def &gc, const cloud_info &cl);
 void tile_place_ray(const coord_def &gc, aff_type in_range);
 void tile_draw_rays(bool reset_count);
 void tile_wizmap_terrain(const coord_def &gc);
