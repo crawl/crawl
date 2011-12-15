@@ -1349,9 +1349,7 @@ mon-util.d: mon-mst.h
 build-rltiles: .contrib-libs $(RLTILES)/dc-unrand.txt
 	+$(MAKE) -C $(RLTILES) all ARCH=$(ARCH) TILES=$(TILES)$(WEBTILES)
 
-$(TILEDEFSRCS): build-rltiles
-$(TILEDEFHDRS): build-rltiles
-$(ORIGTILEFILES): build-rltiles
+$(TILEDEFSRCS) $(TILEDEFHDRS) $(ORIGTILEFILES): build-rltiles
 
 dat/tiles/%.png: $(RLTILES)/%.png
 	$(QUIET_PNGCRUSH)$(PNGCRUSH) $< $@
