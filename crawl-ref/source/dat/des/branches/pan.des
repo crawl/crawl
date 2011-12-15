@@ -1681,29 +1681,144 @@ xxxx.........................---------------_..4.x
    xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
-###################################
-
-# Here, the forces good have taken a foothold in the lands of evil, and are
-# ready to smite your rear.
-NAME:   pan_holy
-WEIGHT: 0
-TAGS:   pan
+### Holy Pan Level ############################################################
+#
+# The angels have gained a foothold in pandemonium.
+#
+# This level's main feature is a TSO fortress with a lot of loot. Smaller
+# features are a temple of Zin, a weird Ely pasture in a cave, and a river for
+# some reason. There's also a cave with a pearl dragon and phoenixes.
+#
+# This level has a lot of open space where it mostly is up to the RNG to place
+# monsters.
+#
+# Four exits are given, with one placed randomly and the others in a room safe
+# to teleport into.
+#
+# Disabled (weight 0) for now. Encompass vaults don't work in pan, currently.
+# Also, water elementals are spawning randomly.
+#
+# Aside from these issues, there is the problem of this vault being free loot
+# to followers of good gods, and this vault being ultra-deadly to undead and
+# demonspawn. I've made it easy to teleport to the exit, at least.
+#
+NAME:   evilmike_holy_pan
+TAGS:   pan no_pool_fixup
 ORIENT: encompass
-KMONS:  1 = angel
-KMONS:  2 = cherub
-KMONS:  3 = seraph ; blessed great sword ego:flaming . fire dragon armour \
-            ego:positive_energy
-KMONS:  4 = ophan
-KMONS:  5 = daeva
-KMONS:  6 = pearl dragon
-KMONS:  7 = apis
-KMONS:  8 = shedu band
-# please add more types as they get usable
+WEIGHT: 0
+NSUBST: . = > / .
+ITEM:   potion of curing, potion of heal wounds, acquire any
+ITEM:   w:1 potion of cure mutation / w:3 any potion
+ITEM:   potion of restore abilities / any potion
+MONS:   angel
+MONS:   cherub
+MONS:   paladin
+MONS:   ophan
+MONS:   ophan
+MONS:   shedu band
+MONS:   daeva
+KMONS:  8 = phoenix
+KMONS:  9 = pearl dragon
+KMONS:  0 = apis
+KMONS:  A = apis
+KMONS:  B = daeva god:Zin
+KMONS:  Z = patrolling silver star
+KMONS:  _ = patrolling seraph
+KFEAT:  _ = altar_the_shining_one
+KFEAT:  E = altar_elyvilon
+KFEAT:  Z = altar_zin
+KFEAT:  > = transit_pandemonium
 TILE:   c = wall_church
-: _G.set_random_mon_list("angel / cherub / seraph / ophan / daeva / " ..
-:                        "pearl dragon / apis / shedu / paladin / angel")
+COLOUR: c = yellow
+TILE:   v = dngn_metal_wall_white
+COLOUR: v& = white
+# Needs a tile!
+# TILE:   GH = dngn_statue_golden
+FTILE:  _124DcG|*' = floor_limestone
+FTILE:  "E0 = floor_grass
+COLOUR: "0 = green
+FTILE:  -ZBgh&v = floor_vault
+KPROP:  '|*124D_-&ZBgh = no_tele_into
+SUBST:  D& = +, '"- = ., H = G, C = c
+MARKER: v = lua:portal_desc { \
+                desc="silver wall", \
+                desc_long="This wall is made of pure silver." }
+MARKER: G = lua:portal_desc { \
+                desc="golden statue", \
+                desc_long="A solid gold statue of a saint." }
+: _G.set_random_mon_list("angel / cherub / ophan / daeva / phoenix / " ..
+:                        "apis / paladin / apis / shedu / angel")
 MAP
-.
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxCCCCCxxxxxxxxxxxxwwwwxxxxxxxxxwwwxxxwwwxxxxxxCCCCCCCCCCCCCCCCCxxxxxxxxxxx
+xxxxxxxC%%%CxxxxxxxxxxwwwwwwwwwxxxwwwxwwwwwwwwxxxxxxCCCCC.......CCCCCxxxxxxxxxxx
+xxxxxxxC%.%CxxxxxxxxxxwwwwwwwwwwwwxxxwwwwwwwwxxxxxxxC...+.>.>.>.+...Cxxxxxxxxxxx
+xxxxxxCCC+CCCxxxxxx""""wwwwwwwwwwwwwwwwwwwwCCCCCCCCCC.CCC.......CCC.Cxxxxxxxxxxx
+xxxCCCC.....Cxxxx""0"""wwwwwwwwwww"wwwwwwww+........+.CCCCCC+CCCCCC.Cxxxxxxxxxxx
+xxxCddC.A...CCC"""""""""wwwwwwww""0"wwwwwwwCCCCCCCCCC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
+xxxCd.+9......+""0"www0"""wwwww""E""wwwwwwwxxxxxxxxxC.CCCCCC.CCCCCC.Cxxxxxxxxxxx
+xxxCddC.A...CCCx""""ww"""""wwwww"""wwwwwwwxxxxxxxxxxC.C7CCCC+CCCC7C.Cxxxxxxxxxxx
+xxxCCCC.....Cxxxxx""""""""""wwwww""wwwwwxxxxxxxxxxxxC.CC.........CC.Cxxxxxxxxxxx
+xxxxxxCCC+CCCxxxxx""0"""xx"""wwwwwwwwwwxxxxxxxxxxxxxC..+.C3C.C3C.+..Cxxxxxxxxxxx
+xxxxxxxCe.eCxxxxxxx""""xxxxxx""wwwwwwwxxxxxxxxxxxxxxCCCC.........CCCCxxxxxxxxxxx
+xxxxxxxCeeeCxxxxxxxxx"xxxxxx""wwwwwwwxxxxxxxxxxxxxxxCCCCCCCC+CCCCCCCCxxxxxxxxxxx
+xxxxxxxCCCCCxxxxxxxxxxxxxxxx"wwwwwwwwww.xxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwxwwwww.xxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwwwwww..xxxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxx..wwwwwwwwwwww.xxxxxxxxxxxxxxxxxxxxC.Cxxxxxxxxxxxxxxxxxx
+xCCCCCCCCCCCxxxxxxxxxxx..wwwwxwwwwwww.xx..xxxxx..xxx..xxxxxC+Cx..xxxxxxxxxxxxxxx
+xCf7333....Cxxxxxxx.....wwwwxxwwwww........xx..........xxxx........xxxxxxxxxxxxx
+xCCCCCCCC..Cxxxx.......wwwwxxwwww...............xx...................xxxxxxxxxxx
+xxxxxxxCCC.Cxx........wwwwwwwwcccc.............................cccc...xxxxxxxxxx
+xxxxxxxxxC+Cx...xx...wwwwwwwwwc1*ccccccccccccccccccccccccccccccc*1c...xxxxxxxxxx
+xxxxxxxxx......xxx..wwwwwwwww.c*'ccccccccccccccccccccccccccccccc'*c...xxxxxxxxxx
+xxxxxxxx.....xxxx...wwwwwwwww.ccc+..........3.......3..........+ccc...xxxxxxxxxx
+xxxxxxxx....xxxxx..wwwwwwwww...cc...............5...............cc...xxxxxxxxxxx
+xxxxxxx....xxxxx...wwwwwwww....cc..www.ccccccccccccccccccc.www..cc...xxxxxxxxxxx
+xxxxxx.....xxxx....wwwwwwwww...cc..wHw.cccccccc|||cccccccc.wHw..cc....xxxxxxxxxx
+xxxxxx....xxxx...wwwwwxxwwww...cc..www.ccw4''|||||||''2wcc.www..cc....xxxxxxxxxx
+xxxxxx....xxx...wwwwwxxwwww....cc......ccw''||||'||||''wcc......cc....xxxxxxxxxx
+xxxxxx...xxx...wwwwwwwwwww..xx.cc..ccc+ccccccccc'ccccccccc+ccc..cc.....xxxxxxxxx
+xxxxx....xx....wwwwwwwwww..xx..cc..c'''ccwwwcccc'ccccwwwcc***c..cc.....xxxxxxxxx
+xxxx...........wwwxwwwwww.xxx..cc..c1'1cGw'2'cc1_1cc'2'wGc***c..cc......xxxxxxxx
+xxxx..........wwwwxxwwww..xxx..cc..ccccccw''''c'4'c''''wcccccc..cc........xxxxxx
+xxxx...xxx....wwwxxxwwww.xxx...cc..ccwwcGw''''c'''c''''wGcwwcc..cc.........xxxxx
+xxxxx..xxx...wwwwxxxwww.xxxx...cc..cc22ccw''''''G''''''wcc22cc..cc..........xxxx
+xxxxx...xxx..wwwxxxwww...xx....cc..cc''D'''''''''''''''''D''cc..cc..........xxxx
+xxxxx...xx...wwwwwwww..........cc.3cc''ccw'''''''''''''wcc''cc3.cc.....xx....xxx
+xxxx...xxx..wwwwwwww...xx......cc..cc''cGw'''''''''''''wGc''cc..cc....xxxx...xxx
+xxx...xxx..wwwwwww...xxxxxx....cc..cc''ccwwwwwwwwwwwwwwwcc''cc..cc....xxxx...xxx
+xxx........wwwwww...xxxxxxx....cc..cc''cccGcGcGcGcGcGcGccc''cc..cc...xxxx....xxx
+xxx.......wwwwww....xxxxxxxx...cc..cc''ccccccccccccccccccc''cc..cc.....x....xxxx
+xxx......wwwwwww...xxxxxxxxx...cc..cc'''''''''''''''''''''''cc..cc..........xxxx
+xx.....wwwwwwwww..xxxxxxxxx....cc..cc''''2'''G'''''G'''2''''cc..cc.........xxxxx
+xx....wwwwwwwww...xxxxxxxxx....cc..cc4'''''''''''''''''''''4cc..cc........xxxxxx
+xx...wwwwwwwww.....xxxxxxxx....cc..ccc''ccccccDcDcDccccccc''cc..cc........xxxxxx
+xx..wwwwwwwww.....xxxxxxxx.....cc..cccwwccccG'''''''Gcccccwwcc..cc........xxxxxx
+xx.wwwwwwwww.......xxxxxx......cc..cccccccccc'''''''cccccccccc..cc...xx....xxxxx
+xxwwwwwwww....xx....xxx........cc...........cccDDDccc...........cc...xxx....xxxx
+xwwwwwww.....xxxx.........x....cc......5........3........5......cc....xx....xxxx
+xwwwwww.....xxxx.........xx...ccc+.......3.............3.......+ccc.........xxxx
+xwwww........xx...............c*'cccccccccccc.......cccccccccccc'*c........xxxxx
+xww...........................c1*cccccccccccc.......cccccccccccc*1c.......xxxxxx
+xxxx..xx..v.vvvvvvvvvvvvvv....cccc..........H.......H..........cccc......xxxxxxx
+xxxx..xx...vvv----v----hgv.v................................x..........xxxxxxxxx
+xxxx...x..vvv-Bv--&--vvghv.vv...............H.......H......xxx........xxxxxxxxxx
+xxxxx.....vv------v----hgv........v.........6.......6......xxx.........xxxxxxxxx
+xxxxx.....vv------vvvvvvvvvvvvvv......xx....H.......H.....xxx.....xx..x..xxxxxxx
+xxxxx.....vv---------vBv-v-v-v-v.v...xxxx.......................xxxxx....xxxxxxx
+xxxxx.....v--Z---vvv-&---------&......xxxx..................xxxxxxxxxxxx...x.8xx
+xxxxxx....vv---------vBv-v-v-v-v.v.....xxx.............xxxxxxxxxxxxxxxx........x
+xxxxxx....vv------vvvvvvvvvvvvvv...............xxxxxxxxxxxxxxx$$$xxxxx..xxxx...x
+xxxxxxx...vv------v----hgv........v......xxxxxxxxxxxxxxxxxxxx$.88xxxx8.xxxx..xxx
+xxxxxxxx..vvv-Bv--&--vvghv.vv.........xxxxxxxxxxxxxx$$$$$xxxxxx8...xxxxxxx....xx
+xxxxxxxx...vvv----v----hgv.v......xxxxxxxxxxxxxxxxx$$$9$$$xxxxxx..x..xxx....x..x
+xxxxxxxx..v.vvvvvvvvvvvvvv....xxxxxxxxxxxxxxxxxxxxx$$$$$$..xxxxxxx........xxxx8x
+xxxxxxxxx..................xxxxxxxxxxxxxxxxxxxxxxxxx$$$.....xxxxxxx......xxxxxxx
+xxxxxxxxxxx..............xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx....wwxxx....xxxxxxxxxxx
+xxxxxxxxxxxxx........xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxwwwwwxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ENDMAP
 
 ##############################################################################
