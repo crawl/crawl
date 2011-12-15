@@ -256,10 +256,10 @@ static weapon_def Weapon_prop[NUM_WEAPONS] =
     { WPN_BLESSED_LONG_SWORD,    "blessed long sword",    11,  0, 13, 160,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 0 },
-    { WPN_SCIMITAR,              "scimitar",              11, -1, 14, 170,  3,
+    { WPN_SCIMITAR,              "scimitar",              12, -2, 14, 170,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 10 },
-    { WPN_BLESSED_SCIMITAR,      "blessed scimitar",      12, -2, 13, 170,  3,
+    { WPN_BLESSED_SCIMITAR,      "blessed scimitar",      13, -3, 13, 170,  3,
         SK_LONG_BLADES,  HANDS_ONE,    SIZE_MEDIUM, MI_NONE, false,
         DAMV_SLICING, 0 },
 #if TAG_MAJOR_VERSION == 32
