@@ -1987,22 +1987,18 @@ static uint8_t _random_small_abomination_colour()
     return (col);
 }
 
-static int _serpent_of_hell_color(const monster* mon)
+static int _serpent_of_hell_colour(const monster* mon)
 {
     switch (mon->props["serpent_of_hell_flavour"].get_int())
     {
     case BRANCH_GEHENNA:
         return ETC_FIRE;
-        break;
     case BRANCH_COCYTUS:
         return ETC_ICE;
-        break;
     case BRANCH_DIS:
         return ETC_IRON;
-        break;
     case BRANCH_TARTARUS:
         return ETC_DEATH;
-        break;
     default:
         return ETC_FIRE;
     }
@@ -2161,7 +2157,7 @@ void define_monster(monster* mons)
         int &flavour = mons->props["serpent_of_hell_flavour"].get_int();
         if (!flavour)
             flavour = player_in_hell() ? you.where_are_you : BRANCH_GEHENNA;
-        col = _serpent_of_hell_color(mons);
+        col = _serpent_of_hell_colour(mons);
         break;
     }
 
