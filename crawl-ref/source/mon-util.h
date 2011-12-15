@@ -7,8 +7,6 @@
 #ifndef MONUTIL_H
 #define MONUTIL_H
 
-#include "mon-util.h"
-
 #include "externs.h"
 #include "enum.h"
 #include "mon-enum.h"
