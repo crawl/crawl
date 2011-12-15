@@ -563,7 +563,9 @@ endif
 
 RLTILES = rltiles
 INCLUDES_L += -I$(RLTILES)
-$(OBJECTS:%.o=%.cc): $(TILEDEFHDRS)
+
+# The "|" designates "order-only" dependancies. See: (make) Prerequisite Types
+$(OBJECTS:%.o=%.cc): | $(TILEDEFHDRS)
 
 ifdef WEBTILES
 DEFINES_L += -DUSE_TILE
@@ -1283,14 +1285,23 @@ endif
 
 # Plain old compilation
 #
+
 $(OBJECTS:%.o=%.cc): $(CC_DEP) $(CONTRIB_LIBS)
 
 $(UTIL)%.o: ALL_CFLAGS=$(YACC_CFLAGS)
 
-%.o: %.m .cflags $(GENERATED_HEADERS)
+# The "|" designates "order-only" dependancies. See: (make) Prerequisite Types.
+#
+# This ensures that we update these headers before building anything
+# that might depend on them without our knowing it yet, but lets the
+# .d files take care of *whether* or not to rebuild.
+#
+# This is kind of important when building without ccache.
+
+%.o: %.m .cflags | $(GENERATED_HEADERS)
 	$(QUIET_CC)$(CC) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
 
-%.o: %.cc .cflags $(GENERATED_HEADERS)
+%.o: %.cc .cflags | $(GENERATED_HEADERS)
 	$(QUIET_CXX)$(CXX) $(ALL_CFLAGS) $(INLINE_DEPGEN_CFLAGS) -c $< -o $@
 
 icon.o: util/crawl.rc util/crawl.ico .cflags
