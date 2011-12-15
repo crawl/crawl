@@ -4,8 +4,8 @@
  *        the crawl_environment that are shown to the player.
 **/
 
-#ifndef TILEDRAW_H
-#define TILEDRAW_H
+#ifndef TILEVIEW_H
+#define TILEVIEW_H
 
 #ifdef USE_TILE
 
