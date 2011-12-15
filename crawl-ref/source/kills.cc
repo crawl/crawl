@@ -10,6 +10,7 @@
 #include "describe.h"
 #include "mon-util.h"
 #include "mon-stuff.h"
+#include "mon-info.h"
 #include "files.h"
 #include "ghost.h"
 #include "libutil.h"
@@ -246,7 +247,21 @@ int KillMaster::num_kills(const monster* mon, kill_category cat) const
     return categorized_kills[cat].num_kills(mon);
 }
 
+int KillMaster::num_kills(const monster_info& mon, kill_category cat) const
+{
+    return categorized_kills[cat].num_kills(mon);
+}
+
 int KillMaster::num_kills(const monster* mon) const
+{
+    int total = 0;
+    for (int cat = 0; cat < KC_NCATEGORIES; cat++)
+        total += categorized_kills[cat].num_kills(mon);
+
+    return total;
+}
+
+int KillMaster::num_kills(const monster_info& mon) const
 {
     int total = 0;
     for (int cat = 0; cat < KC_NCATEGORIES; cat++)
@@ -377,6 +392,17 @@ void Kills::record_ghost_kill(const monster* mon)
 int Kills::num_kills(const monster* mon) const
 {
     kill_monster_desc desc(mon);
+    return num_kills(desc);
+}
+
+int Kills::num_kills(const monster_info& mon) const
+{
+    kill_monster_desc desc(mon);
+    return num_kills(desc);
+}
+
+int Kills::num_kills(kill_monster_desc desc) const
+{
     kill_map::const_iterator iter = kills.find(desc);
     int total = (iter == kills.end() ? 0 : iter->second.kills);
 
@@ -654,6 +680,33 @@ kill_monster_desc::kill_monster_desc(const monster* mon)
         monnum = mon->base_monster;
 
     if (mon->is_shapeshifter())
+        modifier = M_SHAPESHIFTER;
+}
+
+kill_monster_desc::kill_monster_desc(const monster_info& mon)
+{
+    monnum = mon.type;
+    modifier = M_NORMAL;
+    switch (mon.type)
+    {
+        case MONS_ZOMBIE_LARGE: case MONS_ZOMBIE_SMALL:
+            modifier = M_ZOMBIE;
+            break;
+        case MONS_SKELETON_LARGE: case MONS_SKELETON_SMALL:
+            modifier = M_SKELETON;
+            break;
+        case MONS_SIMULACRUM_LARGE: case MONS_SIMULACRUM_SMALL:
+            modifier = M_SIMULACRUM;
+            break;
+        case MONS_SPECTRAL_THING:
+            modifier = M_SPECTRE;
+            break;
+        default: break;
+    }
+    if (modifier != M_NORMAL)
+        monnum = mon.base_type;
+
+    if (mon.is(MB_SHAPESHIFTER))
         modifier = M_SHAPESHIFTER;
 }
 

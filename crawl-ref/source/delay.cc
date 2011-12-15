@@ -1705,9 +1705,11 @@ inline static bool _monster_warning(activity_interrupt_type ai,
         bool ash_id = mon->props.exists("ash_id") && mon->props["ash_id"];
         std::string ash_warning;
 
+        monster_info mi(mon);
+
         const std::string mweap =
-            get_monster_equipment_desc(mon, ash_id ? DESC_IDENTIFIED
-                                                   : DESC_WEAPON,
+            get_monster_equipment_desc(mi, ash_id ? DESC_IDENTIFIED
+                                                  : DESC_WEAPON,
                                        DESC_NONE);
 
         if (!mweap.empty())

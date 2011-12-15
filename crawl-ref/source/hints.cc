@@ -1004,11 +1004,12 @@ void hints_monster_seen(const monster& mon)
     Hints.hints_just_triggered = true;
 
     std::string text = "That ";
+    monster_info mi(&mon);
 #ifdef USE_TILE
     // need to highlight monster
     const coord_def gc = mon.pos();
     tiles.place_cursor(CURSOR_TUTORIAL, gc);
-    tiles.add_text_tag(TAG_TUTORIAL, &mon);
+    tiles.add_text_tag(TAG_TUTORIAL, mi);
 
     text += "monster is a ";
     text += mon.name(DESC_PLAIN).c_str();
@@ -1017,7 +1018,7 @@ void hints_monster_seen(const monster& mon)
             "by hovering your mouse over its tile, and read the monster "
             "description by clicking on it with your <w>right mouse button</w>."
 #else
-    text += glyph_to_tagstr(get_mons_glyph(&mon));
+    text += glyph_to_tagstr(get_mons_glyph(mi));
     text += " is a monster, usually depicted by a letter. Some typical "
             "early monsters look like <brown>r</brown>, <green>l</green>, "
             "<brown>K</brown> or <lightgrey>g</lightgrey>. ";
@@ -3048,22 +3049,22 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
 
     case HINT_SEEN_ZERO_EXP_MON:
     {
-        const monster* m = monster_at(gc);
+        const monster_info* mi = env.map_knowledge(gc).monsterinfo();
 
-        if (!m || !you.can_see(m))
+        if (!mi)
             DELAY_EVENT;
 
         text << "That ";
 #ifdef USE_TILE
         // need to highlight monster
         tiles.place_cursor(CURSOR_TUTORIAL, gc);
-        tiles.add_text_tag(TAG_TUTORIAL, m);
+        tiles.add_text_tag(TAG_TUTORIAL, *mi);
 
         text << "is a ";
 #else
-        text << glyph_to_tagstr(get_mons_glyph(m)) << " is a ";
+        text << glyph_to_tagstr(get_mons_glyph(*mi)) << " is a ";
 #endif
-        text << m->name(DESC_PLAIN).c_str() << ". ";
+        text << mi->proper_name(DESC_PLAIN).c_str() << ". ";
 
         text << "While <w>technically</w> a monster, it's more like "
                 "dungeon furniture, since it's harmless and doesn't move. "

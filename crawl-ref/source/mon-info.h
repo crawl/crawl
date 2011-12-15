@@ -105,8 +105,6 @@ struct monster_info_base
     mon_itemuse_type mitemuse;
     int mbase_speed;
     flight_type fly;
-    bool two_weapons;
-    bool no_regen;
     CrawlHashTable props;
 
     uint32_t client_id;
@@ -127,9 +125,9 @@ struct monster_info : public monster_info_base
 #define MILEV_SKIP_SAFE -1
 #define MILEV_NAME -2
     monster_info() { client_id = 0; }
-    monster_info(const monster* m, int level = MILEV_ALL);
-    monster_info(monster_type p_type,
-                 monster_type p_base_type = MONS_NO_MONSTER);
+    explicit monster_info(const monster* m, int level = MILEV_ALL);
+    explicit monster_info(monster_type p_type,
+                          monster_type p_base_type = MONS_NO_MONSTER);
 
     monster_info(const monster_info& mi)
     : monster_info_base(mi)
@@ -152,9 +150,6 @@ struct monster_info : public monster_info_base
 
     void to_string(int count, std::string& desc, int& desc_color, bool fullname = true) const;
 
-    // TODO: remove this
-    monster* mon() const;
-
     /* only real equipment is visible, miscellany is for mimic items */
     std::auto_ptr<item_def> inv[MSLOT_LAST_VISIBLE_SLOT + 1];
 
@@ -168,6 +163,8 @@ struct monster_info : public monster_info_base
             skill_type best_skill;
             short best_skill_rank;
             short xl_rank;
+            short damage;
+            short ac;
         } ghost;
     } u;
 
@@ -189,6 +186,7 @@ struct monster_info : public monster_info_base
     std::string db_name() const;
     bool has_proper_name() const;
     dungeon_feature_type get_mimic_feature() const;
+    const item_def* get_mimic_item() const;
     std::string mimic_name() const;
     std::string pluralized_name(bool fullname = true) const;
     std::string common_name(description_level_type desc = DESC_PLAIN) const;
@@ -233,12 +231,21 @@ struct monster_info : public monster_info_base
         return (mbase_speed);
     }
 
-    bool can_regenerate() const
-    {
-        return (!no_regen);
-    }
+    bool wields_two_weapons() const;
+    bool can_regenerate() const;
 
     size_type body_size() const;
+
+    // These should be kept in sync with the actor equivalents
+    // (Maybe unify somehow?)
+    bool cannot_move() const;
+    bool airborne() const;
+    bool ground_level() const;
+
+    bool is_named() const
+    {
+        return (!mname.empty() || mons_is_unique(type));
+    }
 
 protected:
     std::string _core_name() const;

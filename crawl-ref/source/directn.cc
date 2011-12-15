@@ -665,7 +665,7 @@ void full_describe_view()
                      + "</" + col_string + ">) ";
 #endif
 
-            std::string str = get_monster_equipment_desc(mi->mon(), DESC_FULL,
+            std::string str = get_monster_equipment_desc(*mi, DESC_FULL,
                                                          DESC_A, true);
 
             if (mi->is(MB_MESMERIZING))
@@ -684,7 +684,7 @@ void full_describe_view()
             for (unsigned int j = 0; j < fss.size(); ++j)
             {
                 if (j == 0)
-                    me = new MonsterMenuEntry(prefix+str, mi->mon(), hotkey++);
+                    me = new MonsterMenuEntry(prefix+str, &(*mi), hotkey++);
 #ifndef USE_TILE_LOCAL
                 else
                 {
@@ -772,28 +772,27 @@ void full_describe_view()
         if (quant == 1)
         {
             // Get selected monster.
-            monster* m = static_cast<monster* >(sel[0]->data);
+            monster_info* m = static_cast<monster_info* >(sel[0]->data);
 
 #ifdef USE_TILE
             // Highlight selected monster on the screen.
-            const coord_def gc(m->pos());
+            const coord_def gc(m->pos);
             tiles.place_cursor(CURSOR_TUTORIAL, gc);
             const std::string &desc = get_terse_square_desc(gc);
             tiles.clear_text_tags(TAG_TUTORIAL);
             tiles.add_text_tag(TAG_TUTORIAL, desc, gc);
 #endif
 
-            monster_info mi(m);
             if (desc_menu.menu_action == InvMenu::ACT_EXAMINE)
             {
                 // View database entry.
-                describe_monsters(mi);
+                describe_monsters(*m);
                 redraw_screen();
                 mesclr();
             }
             else // ACT_EXECUTE, here used to display monster status.
             {
-                _describe_monster(mi);
+                _describe_monster(*m);
                 getchm();
             }
         }
@@ -2334,7 +2333,7 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
     if (!_is_target_in_range(where, range, hitfunc) || !you.see_cell(where))
         return (false);
 
-    const monster* mon = monster_at(where);
+    const monster_info* mon = env.map_knowledge(where).monsterinfo();
     if (mon == NULL)
         return (false);
 
@@ -2352,18 +2351,19 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
             continue;
 
         real_idx++;
-   }
+    }
 
-    if (!_mons_is_valid_target(mon, TARG_ANY, range))
+    const monster* real_mon = monster_at(where);
+    ASSERT(real_mon);
+    if (!_mons_is_valid_target(real_mon, TARG_ANY, range))
         return (false);
 
-    if (need_path && _blocked_ray(mon->pos()))
+    if (need_path && _blocked_ray(where))
         return (false);
 
-    const monster* monl = mlist[real_idx].mon();
-    extern mon_attitude_type mons_attitude(const monster* m);
+    const monster_info* monl = &mlist[real_idx];
 
-    if (mons_attitude(mon) != mlist[idx].attitude)
+    if (mon->attitude != monl->attitude)
         return (false);
 
     if (mon->type != monl->type)
@@ -2371,15 +2371,15 @@ static bool _find_mlist(const coord_def& where, int idx, bool need_path,
 
     if (mlist_full_info)
     {
-        if (mons_is_zombified(mon)) // Both monsters are zombies.
-            return (mon->base_monster == monl->base_monster);
+        if (mons_class_is_zombified(mon->type)) // Both monsters are zombies.
+            return (mon->base_type == monl->base_type);
 
-        if (mon->has_hydra_multi_attack())
+        if (mons_genus(mon->base_type) == MONS_HYDRA)
             return (mon->number == monl->number);
     }
 
-    if (mon->type == MONS_PLAYER_GHOST || mon->type == MONS_PLAYER_ILLUSION)
-        return (mon->name(DESC_PLAIN) == monl->name(DESC_PLAIN));
+    if (mons_is_pghost(mon->type))
+        return (mon->mname == monl->mname);
 
     // Else the two monsters are identical.
     return (true);
@@ -3396,7 +3396,7 @@ static std::string _describe_monster_weapon(const monster_info& mi, bool ident)
         name1 = weap->name(DESC_A, false, false, true,
                            false, ISFLAG_KNOW_CURSE);
     }
-    if (alt && (!ident || item_type_known(*alt)) && mi.two_weapons)
+    if (alt && (!ident || item_type_known(*alt)) && mi.wields_two_weapons())
     {
         name2 = alt->name(DESC_A, false, false, true,
                           false, ISFLAG_KNOW_CURSE);
@@ -3735,7 +3735,7 @@ std::string get_monster_equipment_desc(const monster_info& mi,
         }
 
         // _describe_monster_weapon already took care of this
-        if (mi.two_weapons)
+        if (mi.wields_two_weapons())
             mon_alt = 0;
 
         const bool mon_has_wand = mi.props.exists("wand_known") && mon_wnd;
