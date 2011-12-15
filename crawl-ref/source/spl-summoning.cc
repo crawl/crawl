@@ -2227,7 +2227,7 @@ bool undead_abomination_convert(monster* mon, int hd)
     // Mark this abomination as undead.
     mon->flags |= MF_FAKE_UNDEAD;
 
-    mon->colour = ((hd > 2 * max_hd / 3) ? LIGHTRED : RED);
+    mon->colour = LIGHTRED;
 
     mon->hit_dice = std::min(max_hd, hd);
 

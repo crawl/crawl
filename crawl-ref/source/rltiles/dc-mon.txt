@@ -347,8 +347,8 @@ very_ugly_thing5
 
 ## Small abominations ('x')
 unseen_horror MONS_UNSEEN_HORROR
-# out of order so that red and pink abominations (from Twisted Resurrection)
-# will map to abomination_small1
+# out of order so that pink abominations (from Twisted Resurrection) will map
+# to abomination_small1
 abomination_small1 MONS_ABOMINATION_SMALL
 abomination_small
 
