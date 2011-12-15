@@ -347,7 +347,10 @@ very_ugly_thing5
 
 ## Small abominations ('x')
 unseen_horror MONS_UNSEEN_HORROR
-abomination_small MONS_ABOMINATION_SMALL
+# out of order so that red and pink abominations (from Twisted Resurrection)
+# will map to abomination_small1
+abomination_small1 MONS_ABOMINATION_SMALL
+abomination_small
 
 ## Golems ('8')
 %sdir dc-mon/nonliving
@@ -879,11 +882,10 @@ murray MONS_MURRAY
 curse_skull MONS_CURSE_SKULL
 curse_toe MONS_CURSE_TOE
 flying_skull MONS_FLYING_SKULL
+crawling_corpse MONS_CRAWLING_CORPSE
+macabre_mass MONS_MACABRE_MASS
 ## From a special vault (ancient_champions.des)
 dc-mon/vault/ancient_champion MONS_ANCIENT_CHAMPION
-## Placeholders, please replace
-UNUSED/spells/components/corpse MONS_CRAWLING_CORPSE
-dc-mon/demons/abomination_large5 MONS_MACABRE_MASS
 
 %include dc-zombie.txt
 

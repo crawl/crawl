@@ -1177,7 +1177,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_UNSEEN_HORROR:
         return TILEP_MONS_UNSEEN_HORROR;
     case MONS_ABOMINATION_SMALL:
-        return TILEP_MONS_ABOMINATION_SMALL;
+        return _mon_mod(TILEP_MONS_ABOMINATION_SMALL, colour);
     case MONS_CRAWLING_CORPSE:
         return TILEP_MONS_CRAWLING_CORPSE;
     case MONS_MACABRE_MASS:
