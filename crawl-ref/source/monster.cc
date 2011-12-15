@@ -5446,6 +5446,7 @@ void monster::clear_all_constrictions()
 {
     int myindex = mindex();
     monster *mons;
+    std::string rmsg;
 
     if (constricted_by == MHITYOU)
         you.clear_specific_constrictions(myindex);
@@ -5462,10 +5463,25 @@ void monster::clear_all_constrictions()
     for (int i = 0; i < 8; i++)
     {
         if (constricting[i] == MHITYOU)
+        {
+            if (alive())
+            {
+                rmsg = name(DESC_THE,true);
+                rmsg += " releases its hold on you.";
+                mpr(rmsg);
+            }
 	    you.clear_specific_constrictions(myindex);
+        }
 	else if (constricting[i] != NON_ENTITY)
 	{
 	    mons = &env.mons[constricting[i]];
+            if (alive() && mons->alive())
+            {
+                rmsg = name(DESC_THE,true);
+                rmsg += " releases its hold on ";
+                rmsg += mons->name(DESC_THE,true) + ".";
+                mpr(rmsg);
+            }
 	    mons->clear_specific_constrictions(myindex);
 	}
 	constricting[i] = NON_ENTITY;

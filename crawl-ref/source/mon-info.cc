@@ -1223,16 +1223,24 @@ std::string monster_info::wounds_description(bool use_colour) const
 std::string monster_info::constriction_description() const
 {
     std::string cinfo = "";
+    bool bymsg = false;
 
     if (constrictor_name != "")
+    {
         cinfo += "constricted by " + constrictor_name;
+        bymsg = true;
+    }
 
     bool first = true;
     for (int i = 0; i < 8; i++)
         if (constricting_name[i] != "")
         {
             if (first)
-                cinfo += ", constricting ";
+            {
+                if (bymsg)
+                    cinfo += ", ";
+                cinfo += "constricting ";
+            }
             else
                 cinfo += ", ";
             first = false;

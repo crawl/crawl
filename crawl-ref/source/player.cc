@@ -7459,7 +7459,8 @@ void player::clear_all_constrictions()
     if (constricted_by != NON_ENTITY)
     {
         mons = &env.mons[constricted_by];
-	mons->clear_specific_constrictions(myindex);
+        if (mons->alive())
+	    mons->clear_specific_constrictions(myindex);
     }
 
     constricted_by = NON_ENTITY;
@@ -7471,7 +7472,13 @@ void player::clear_all_constrictions()
 	if (constricting[i] != NON_ENTITY)
 	{
 	    mons = &env.mons[constricting[i]];
-	    mons->clear_specific_constrictions(myindex);
+            if (mons->alive())
+            {
+                std::string rmsg = "You release your hold on ";
+                rmsg += mons->name(DESC_THE,true) + ".";
+                mpr(rmsg);
+	        mons->clear_specific_constrictions(myindex);
+            }
 	}
 	constricting[i] = NON_ENTITY;
 	dur_has_constricted[i] = 0;
