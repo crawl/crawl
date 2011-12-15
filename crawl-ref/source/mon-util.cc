@@ -2033,15 +2033,15 @@ bool init_abomination(monster* mon, int hd)
     mon->max_hit_points = hp;
     mon->hit_points     = hp;
 
-    if (mon->type == MONS_ABOMINATION_SMALL)
-    {
-        mon->ac = std::min(max_ac, 3 + hd * 2 / 3);
-        mon->ev = std::min(max_ac, 4 + hd);
-    }
-    else
+    if (mon->type == MONS_ABOMINATION_LARGE)
     {
         mon->ac = std::min(max_ac, 7 + hd / 2);
         mon->ev = std::min(max_ac, 2 * hd / 3);
+    }
+    else
+    {
+        mon->ac = std::min(max_ac, 3 + hd * 2 / 3);
+        mon->ev = std::min(max_ac, 4 + hd);
     }
 
     return (true);
