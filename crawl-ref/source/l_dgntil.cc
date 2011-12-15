@@ -13,8 +13,6 @@
 #include "coord.h"
 #include "mapdef.h"
 
-#ifdef USE_TILE
-
 #include "env.h"
 #include "tiledef-dngn.h"
 #include "tileview.h"
@@ -42,11 +40,9 @@ tileidx_t get_tile_idx(lua_State *ls, int arg)
 
     return idx;
 }
-#endif
 
 LUAFN(dgn_lev_floortile)
 {
-#ifdef USE_TILE
     LEVEL(lev, br, 1);
 
     tile_flavour flv;
@@ -54,14 +50,10 @@ LUAFN(dgn_lev_floortile)
 
     const char *tile_name = tile_dngn_name(flv.floor);
     PLUARET(string, tile_name);
-#else
-    PLUARET(string, "invalid");
-#endif
 }
 
 LUAFN(dgn_lev_rocktile)
 {
-#ifdef USE_TILE
     LEVEL(lev, br, 1);
 
     tile_flavour flv;
@@ -69,40 +61,26 @@ LUAFN(dgn_lev_rocktile)
 
     const char *tile_name = tile_dngn_name(flv.wall);
     PLUARET(string, tile_name);
-#else
-    PLUARET(string, "invalid");
-#endif
 }
 
 LUAFN(dgn_lrocktile)
 {
     MAP(ls, 1, map);
 
-#ifdef USE_TILE
     map->rock_tile = luaL_checkstring(ls, 2);
     PLUARET(string, map->rock_tile.c_str());
-#else
-    UNUSED(map);
-    PLUARET(string, "invalid");
-#endif
 }
 
 LUAFN(dgn_lfloortile)
 {
     MAP(ls, 1, map);
 
-#ifdef USE_TILE
     map->floor_tile = luaL_checkstring(ls, 2);
     PLUARET(string, map->floor_tile.c_str());
-#else
-    UNUSED(map);
-    PLUARET(string, "invalid");
-#endif
 }
 
 LUAFN(dgn_change_rock_tile)
 {
-#ifdef USE_TILE
     std::string tilename = luaL_checkstring(ls, 1);
 
     tileidx_t rock;
@@ -119,14 +97,10 @@ LUAFN(dgn_change_rock_tile)
         store_tilename_get_index(tilename);
 
     PLUARET(string, tilename.c_str());
-#else
-    PLUARET(string, "invalid");
-#endif
 }
 
 LUAFN(dgn_change_floor_tile)
 {
-#ifdef USE_TILE
     std::string tilename = luaL_checkstring(ls, 1);
 
     tileidx_t floor;
@@ -143,41 +117,25 @@ LUAFN(dgn_change_floor_tile)
         store_tilename_get_index(tilename);
 
     PLUARET(string, tilename.c_str());
-#else
-    PLUARET(string, "invalid");
-#endif
 }
 
 LUAFN(dgn_ftile)
 {
-#ifdef USE_TILE
     return dgn_map_add_transform(ls, &map_lines::add_floortile);
-#else
-    return (0);
-#endif
 }
 
 LUAFN(dgn_rtile)
 {
-#ifdef USE_TILE
     return dgn_map_add_transform(ls, &map_lines::add_rocktile);
-#else
-    return (0);
-#endif
 }
 
 LUAFN(dgn_tile)
 {
-#ifdef USE_TILE
     return dgn_map_add_transform(ls, &map_lines::add_spec_tile);
-#else
-    return (0);
-#endif
 }
 
 LUAFN(dgn_tile_feat_changed)
 {
-#ifdef USE_TILE
     COORDS(c, 1, 2);
 
     if (lua_isnil(ls, 3))
@@ -201,14 +159,12 @@ LUAFN(dgn_tile_feat_changed)
     env.tile_flv(c).feat     = feat;
     env.tile_flv(c).feat_idx =
         store_tilename_get_index(tilename);
-#endif
 
     return (0);
 }
 
 LUAFN(dgn_tile_floor_changed)
 {
-#ifdef USE_TILE
     COORDS(c, 1, 2);
 
     if (lua_isnil(ls, 3))
@@ -232,7 +188,6 @@ LUAFN(dgn_tile_floor_changed)
     env.tile_flv(c).floor     = floor;
     env.tile_flv(c).floor_idx =
         store_tilename_get_index(tilename);
-#endif
 
     return (0);
 }

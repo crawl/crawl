@@ -59,14 +59,14 @@
 #include "env.h"
 #include "syscalls.h"
 #include "tags.h"
+#include "tiledef-dngn.h"
+#include "tiledef-player.h"
+#include "tileview.h"
 #include "tutorial.h"
 #ifdef USE_TILE
  #include "options.h"
- #include "tiledef-dngn.h"
- #include "tiledef-player.h"
  #include "tilemcache.h"
  #include "tilepick.h"
- #include "tileview.h"
  #include "showsymb.h"
 #endif
 #include "travel.h"
@@ -3298,10 +3298,9 @@ static void tag_construct_level_monsters(writer &th)
 
 void tag_construct_level_tiles(writer &th)
 {
-#ifndef USE_TILE
-    marshallBoolean(th, false);
-#else
+#if TAG_MAJOR_VERSION == 32
     marshallBoolean(th, true); // Tiles data included.
+#endif
 
     // Map grids.
     // how many X?
@@ -3340,7 +3339,6 @@ void tag_construct_level_tiles(writer &th)
         }
 
     marshallInt(th, TILE_WALL_MAX);
-#endif
 }
 
 static void tag_read_level(reader &th)
@@ -3643,7 +3641,6 @@ void unmarshallMonster(reader &th, monster& m)
     m.props.clear();
     m.props.read(th);
 
-#ifdef USE_TILE
     if (m.props.exists("monster_tile_name"))
     {
         std::string tile = m.props["monster_tile_name"].get_string();
@@ -3659,7 +3656,6 @@ void unmarshallMonster(reader &th, monster& m)
         else // Update monster tile.
             m.props["monster_tile"] = short(index);
     }
-#endif
 
     m.check_speed();
 }
@@ -3742,18 +3738,17 @@ static void _debug_count_tiles()
 
 void tag_read_level_tiles(reader &th)
 {
+#if TAG_MAJOR_VERSION == 32
     if (!unmarshallBoolean(th))
     {
-#ifdef USE_TILE
         dprf("Tile data missing -- recreating from scratch.");
-#endif
         tag_missing_level_tiles();
         tag_init_tile_bk();
         _debug_count_tiles();
         return;
     }
+#endif
 
-#ifdef USE_TILE
     unsigned int rle_count = 0;
 
     // Map grids.
@@ -3828,6 +3823,7 @@ void tag_read_level_tiles(reader &th)
     _debug_count_tiles();
 
 #if TAG_MAJOR_VERSION == 32
+# ifdef USE_TILE
     if (th.getMinorVersion() < TAG_MINOR_LESS_TILE_DATA)
     {
         mcache.read(th);
@@ -3835,6 +3831,24 @@ void tag_read_level_tiles(reader &th)
             unmarshallInt(th); // TILEP_PLAYER_MAX
     }
     mcache.clear_all();
+# else
+    // Snarf all remaining data, throwing it out.
+    // Console builds don't know of old mcache formats, it'd be too much work
+    // to properly skip it.  Instead, we snarf the remaining data and throw it
+    // out.  The only thing after mcache is TILE_WALL_MAX, and it's guaranteed
+    // it won't match anyway.
+    try
+    {
+        while (1)
+            unmarshallByte(th);
+    }
+    catch (short_read_exception &E)
+    {
+    }
+    dprf("An ancient save, can't check DNGN tilecount; recreating tile data.");
+    tag_missing_level_tiles();
+    return;
+# endif
 #endif
 
     if (unmarshallInt(th) != TILE_WALL_MAX)
@@ -3845,23 +3859,8 @@ void tag_read_level_tiles(reader &th)
 
     // Draw remembered map
     tag_init_tile_bk();
-
-#else // not Tiles
-    // Snarf all remaining data, throwing it out.
-    // This can happen only when loading in console a save from tiles.
-    // It's a data loss bug that needs to be fixed. (FIXME)
-    try
-    {
-        while (1)
-            unmarshallByte(th);
-    }
-    catch (short_read_exception &E)
-    {
-    }
-#endif
 }
 
-#ifdef USE_TILE
 static tileidx_t _get_tile_from_vector(const unsigned int idx)
 {
     if (idx <= 0 || idx > env.tile_names.size())
@@ -3934,17 +3933,14 @@ static void _reinit_flavour_tiles()
         }
    }
 }
-#endif
 
 static void tag_missing_level_tiles()
 {
-#ifdef USE_TILE
     tile_init_default_flavour();
     tile_clear_flavour();
     _reinit_flavour_tiles();
 
     tile_new_level(true, false);
-#endif
 }
 
 static void tag_init_tile_bk()

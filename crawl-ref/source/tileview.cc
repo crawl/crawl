@@ -1,6 +1,5 @@
 #include "AppHdr.h"
 
-#ifdef USE_TILE
 #include "tileview.h"
 
 #include "areas.h"
@@ -33,6 +32,7 @@ void tile_new_level(bool first_time, bool init_unseen)
     if (first_time)
         tile_init_flavour();
 
+#ifdef USE_TILE
     if (init_unseen)
     {
         for (unsigned int x = 0; x < GXM; x++)
@@ -61,6 +61,7 @@ void tile_new_level(bool first_time, bool init_unseen)
     for (unsigned int x = 0; x < GXM; x++)
         for (unsigned int y = 0; y < GYM; y++)
             tiles.update_minimap(coord_def(x, y));
+#endif
 }
 
 void tile_init_default_flavour()
@@ -613,6 +614,7 @@ void tile_floor_halo(dungeon_feature_type target, tileidx_t tile)
         }
 }
 
+#ifdef USE_TILE
 static tileidx_t _get_floor_bg(const coord_def& gc)
 {
     tileidx_t bg = TILE_DNGN_UNSEEN | tileidx_unseen_flag(gc);
@@ -1184,5 +1186,4 @@ void tile_forget_map(const coord_def &gc)
     env.tile_bk_bg(gc) = 0;
     tiles.update_minimap(gc);
 }
-
 #endif

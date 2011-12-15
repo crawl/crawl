@@ -262,6 +262,7 @@ namespace arena
             throw make_stringf("No arena maps named \"%s\"", arena_type.c_str());
 
 #ifdef USE_TILE
+        // Arena is never saved, so we can skip this.
         tile_init_default_flavour();
         tile_clear_flavour();
 #endif

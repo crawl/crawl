@@ -69,10 +69,8 @@
 #include "state.h"
 #include "tags.h"
 #include "terrain.h"
-#ifdef USE_TILE
- #include "tiledef-dngn.h"
- #include "tileview.h"
-#endif
+#include "tiledef-dngn.h"
+#include "tileview.h"
 #include "traps.h"
 #include "travel.h"
 #include "tutorial.h"
@@ -1042,7 +1040,6 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
     if (place.map.rock_colour != BLACK)
         env.rock_colour = place.map.rock_colour;
 
-#ifdef USE_TILE
     if (!place.map.rock_tile.empty())
     {
         tileidx_t rock;
@@ -1066,7 +1063,6 @@ void dgn_register_place(const vault_placement &place, bool register_vault)
             env.tile_default.floor = floor;
         }
     }
-#endif
 
     env.level_vaults.push_back(new vault_placement(place));
     if (register_vault)
@@ -1264,12 +1260,10 @@ void dgn_reset_level(bool enable_random_maps)
     // Clear exclusions
     clear_excludes();
 
-#ifdef USE_TILE
     // Clear custom tile settings from vaults
     tile_init_default_flavour();
     tile_clear_flavour();
     env.tile_names.clear();
-#endif
 }
 
 static void _build_layout_skeleton(int level_number, level_area_type level_type)
@@ -6333,9 +6327,7 @@ void vault_placement::apply_grid()
                 env.grid_colours(*ri) = 0;
                 env.pgrid(*ri) = 0;
                 // what about heightmap?
-#ifdef USE_TILE
                 tile_clear_flavour(*ri);
-#endif
             }
 
             keyed_mapspec *mapsp = map.mapspec_at(dp);

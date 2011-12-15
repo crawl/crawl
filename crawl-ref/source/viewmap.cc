@@ -32,13 +32,13 @@
 #include "stash.h"
 #include "stuff.h"
 #include "terrain.h"
+#include "tileview.h"
 #include "travel.h"
 #include "viewchar.h"
 #include "viewgeom.h"
 
 #ifdef USE_TILE
 #include "tilereg.h"
-#include "tileview.h"
 #endif
 
 #ifndef USE_TILE_LOCAL
@@ -667,11 +667,9 @@ public:
     {
 #ifdef USE_TILE
         tiles.clear_minimap();
+#endif
         level_excursion::go_to(next);
         tile_new_level(false);
-#else
-        level_excursion::go_to(next);
-#endif
 
         if (travel_mode)
         {

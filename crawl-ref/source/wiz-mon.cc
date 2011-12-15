@@ -1298,7 +1298,7 @@ static void _miscast_screen_update()
         REDRAW_LINE_1_MASK | REDRAW_LINE_2_MASK | REDRAW_LINE_3_MASK;
     print_stats();
 
-#ifndef USE_TILE
+#ifndef USE_TILE_LOCAL
     update_monster_pane();
 #endif
 }

@@ -1053,7 +1053,6 @@ bool maybe_bloodify_square(const coord_def& where)
     return true;
 }
 
-#ifdef USE_TILE
 /*
  * Rotate the wall blood splat tile, so that it is facing the source.
  *
@@ -1104,7 +1103,6 @@ static void _orient_wall_blood(const coord_def& where, coord_def from)
     else if (diff == coord_def(-1, 0))
         env.pgrid(where) |= FPROP_BLOOD_EAST;
 }
-#endif
 
 static void _maybe_bloodify_square(const coord_def& where, int amount,
                                    bool spatter = false,
@@ -1131,9 +1129,7 @@ static void _maybe_bloodify_square(const coord_def& where, int amount,
         if (may_bleed)
         {
             env.pgrid(where) |= FPROP_BLOODY;
-#ifdef USE_TILE
             _orient_wall_blood(where, from);
-#endif
 
             if (smell_alert && in_bounds(where))
                 blood_smell(12, where);
@@ -1219,9 +1215,7 @@ static void _spatter_neighbours(const coord_def& where, int chance,
         if (one_chance_in(chance))
         {
             env.pgrid(*ai) |= FPROP_BLOODY;
-#ifdef USE_TILE
             _orient_wall_blood(where, from);
-#endif
             _spatter_neighbours(*ai, chance+1, from);
         }
     }

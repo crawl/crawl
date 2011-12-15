@@ -38,7 +38,7 @@
 #include "stuff.h"
 #include "tagstring.h"
 #include "terrain.h"
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
  #include "tilepick.h"
 #endif
 #include "traps.h"

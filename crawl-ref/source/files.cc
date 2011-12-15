@@ -80,10 +80,11 @@
 #include "syscalls.h"
 #include "tags.h"
 #ifdef USE_TILE
+ // TODO -- dolls
  #include "tiledef-player.h"
  #include "tilepick-p.h"
- #include "tileview.h"
 #endif
+#include "tileview.h"
 #include "terrain.h"
 #include "travel.h"
 #include "hints.h"
@@ -1236,11 +1237,9 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
             Generated_Levels.insert(level_id::current());
         }
 
-#ifdef USE_TILE
         tile_init_default_flavour();
         tile_clear_flavour();
         env.tile_names.clear();
-#endif
 
         // XXX: This is ugly.
         bool dummy;
@@ -1341,9 +1340,7 @@ bool load_level(dungeon_feature_type stair_taken, load_mode_type load_mode,
     {
         // Tell stash-tracker and travel that we've changed levels.
         trackers_init_new_level(true);
-#ifdef USE_TILE
         tile_new_level(just_created_level);
-#endif
     }
     else if (load_mode == LOAD_RESTART_GAME)
     {

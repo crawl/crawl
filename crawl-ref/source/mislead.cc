@@ -14,7 +14,7 @@
 #include "mon-iter.h"
 #include "mon-util.h"
 #include "random.h"
-#ifdef USE_TILE
+#ifdef USE_TILE_LOCAL
  #include "tilepick.h"
 #endif
 #include "view.h"

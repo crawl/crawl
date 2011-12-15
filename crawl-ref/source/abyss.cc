@@ -43,10 +43,8 @@
 #include "sprint.h"
 #include "state.h"
 #include "terrain.h"
-#ifdef USE_TILE
- #include "tiledef-dngn.h"
- #include "tileview.h"
-#endif
+#include "tiledef-dngn.h"
+#include "tileview.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
@@ -678,9 +676,9 @@ static void _abyss_wipe_square_at(coord_def p, bool saveMonsters=false)
 #ifdef USE_TILE
     env.tile_bk_fg(p)   = 0;
     env.tile_bk_bg(p)   = 0;
+#endif
     tile_clear_flavour(p);
     tile_init_flavour(p);
-#endif
 
     env.level_map_mask(p) = 0;
     env.level_map_ids(p)  = INVALID_MAP_INDEX;
@@ -1250,9 +1248,7 @@ static void _abyss_generate_new_area()
 
     env.floor_colour = _roll_abyss_floor_colour();
     env.rock_colour = _roll_abyss_rock_colour();
-#ifdef USE_TILE
     tile_init_flavour();
-#endif
 
     map_mask abyss_genlevel_mask(false);
     _abyss_wipe_unmasked_area(abyss_genlevel_mask);
@@ -1583,7 +1579,6 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
     else if (feat == DNGN_FLOOR)
         env.grid_colours(c) = cenv.floor_colour;
 
-#ifdef USE_TILE
     if (feat == DNGN_ROCK_WALL)
     {
         env.tile_flv(c).wall = TILE_WALL_UNDEAD
@@ -1594,7 +1589,6 @@ static void _corrupt_square(const corrupt_env &cenv, const coord_def &c)
         env.tile_flv(c).floor = TILE_FLOOR_NERVES
             + random2(tile_dngn_count(TILE_FLOOR_NERVES));
     }
-#endif
 }
 
 static void _corrupt_level_features(const corrupt_env &cenv)

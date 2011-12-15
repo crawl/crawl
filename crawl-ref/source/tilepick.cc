@@ -1,6 +1,5 @@
 #include "AppHdr.h"
 
-#ifdef USE_TILE
 #include "tilepick.h"
 
 #include "artefact.h"
@@ -81,11 +80,13 @@ TextureID get_dngn_tex(tileidx_t idx)
         return (TEX_FEAT);
 }
 
+#ifdef USE_TILE
 static tileidx_t _tileidx_monster_base(int type,
                                        bool in_water = false,
                                        int colour = 0,
                                        int number = 0,
                                        int tile_num_prop = 0);
+#endif
 
 static tileidx_t _tileidx_trap(trap_type type)
 {
@@ -491,7 +492,7 @@ tileidx_t tileidx_feature(const coord_def &gc)
     }
 }
 
-
+#ifdef USE_TILE
 tileidx_t tileidx_out_of_bounds(int branch)
 {
     if (branch == BRANCH_SHOALS

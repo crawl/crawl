@@ -26,9 +26,7 @@
 #include "place.h"
 #include "religion.h"
 #include "stairs.h"
-#ifdef USE_TILE
- #include "tileview.h"
-#endif
+#include "tileview.h"
 #include "view.h"
 #include "wiz-dgn.h"
 
@@ -88,11 +86,9 @@ LUAFN(debug_generate_level)
     no_messages mx;
     env.map_knowledge.init(map_cell());
     los_changed();
-#ifdef USE_TILE
     tile_init_default_flavour();
     tile_clear_flavour();
     tile_new_level(true);
-#endif
     builder(you.absdepth0, you.level_type,
             lua_isboolean(ls, 1)? lua_toboolean(ls, 1) : true);
     return (0);

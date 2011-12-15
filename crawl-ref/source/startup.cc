@@ -46,12 +46,12 @@
 #include "state.h"
 #include "status.h"
 #include "terrain.h"
+#include "tileview.h"
 #include "view.h"
 #include "viewchar.h"
 
 #ifdef USE_TILE
  #include "tilepick.h"
- #include "tileview.h"
 #endif
 #ifdef USE_TILE_LOCAL
  #include "tilereg-crt.h"
@@ -293,9 +293,7 @@ static void _post_init(bool newc)
             fully_map_level();
     }
 
-#ifdef USE_TILE
     tile_new_level(newc);
-#endif
 
     // This just puts the view up for the first turn.
     viewwindow();
