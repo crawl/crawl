@@ -1967,11 +1967,9 @@ static uint8_t _random_large_abomination_colour()
     //  MAGENTA = orb guardian
     //  GREEN = tentacled monstrosity
     //  LIGHTCYAN = octopode
-    //  LIGHTRED = used for undead abominations (Twisted Resurrection)
     do
         col = random_monster_colour();
-    while (col == MAGENTA || col == GREEN || col == LIGHTCYAN
-           || col == LIGHTRED);
+    while (col == MAGENTA || col == GREEN || col == LIGHTCYAN);
 
     return (col);
 }
@@ -1981,11 +1979,10 @@ static uint8_t _random_small_abomination_colour()
     uint8_t col;
     // Restricted colours:
     //  MAGENTA = unseen horror
-    //  LIGHTRED = used for undead abominations (Twisted Resurrection)
     //  BROWN = used for crawling corpses/macabre masses
     do
         col = random_monster_colour();
-    while (col == MAGENTA || col == LIGHTRED || col == BROWN);
+    while (col == MAGENTA || col == BROWN);
 
     return (col);
 }
@@ -2009,6 +2006,45 @@ static int _serpent_of_hell_color(const monster* mon)
     default:
         return ETC_FIRE;
     }
+}
+
+bool init_abomination(monster* mon, int hd)
+{
+    if (mon->type == MONS_CRAWLING_CORPSE
+        || mon->type == MONS_MACABRE_MASS)
+    {
+        mon->hit_points = mon->max_hit_points = mon->hit_dice = hd;
+        return (true);
+    }
+    else if (mon->type != MONS_ABOMINATION_LARGE
+             && mon->type != MONS_ABOMINATION_SMALL)
+    {
+        return (false);
+    }
+
+    const int max_hd = mon->type == MONS_ABOMINATION_LARGE ? 30 : 15;
+    const int max_ac = mon->type == MONS_ABOMINATION_LARGE ? 20 : 10;
+
+    mon->hit_dice = std::min(max_hd, hd);
+
+    const monsterentry *m = get_monster_data(mon->type);
+    int hp = hit_points(hd, m->hpdice[1], m->hpdice[2]) + m->hpdice[3];
+
+    mon->max_hit_points = hp;
+    mon->hit_points     = hp;
+
+    if (mon->type == MONS_ABOMINATION_SMALL)
+    {
+        mon->ac = std::min(max_ac, 3 + hd * 2 / 3);
+        mon->ev = std::min(max_ac, 4 + hd);
+    }
+    else
+    {
+        mon->ac = std::min(max_ac, 7 + hd / 2);
+        mon->ev = std::min(max_ac, 2 * hd / 3);
+    }
+
+    return (true);
 }
 
 // Generate a shiny, new and unscarred monster.
@@ -2037,9 +2073,7 @@ void define_monster(monster* mons)
         break;
 
     case MONS_ABOMINATION_SMALL:
-        hd = 4 + random2(4);
-        ac = 3 + random2(7);
-        ev = 7 + random2(6);
+        init_abomination(mons, 4 + random2(4));
         col = _random_small_abomination_colour();
         break;
 
@@ -2048,9 +2082,7 @@ void define_monster(monster* mons)
         break;
 
     case MONS_ABOMINATION_LARGE:
-        hd = 8 + random2(4);
-        ac = 5 + random2avg(9, 2);
-        ev = 3 + random2(5);
+        init_abomination(mons, 8 + random2(4));
         col = _random_large_abomination_colour();
         break;
 

@@ -228,7 +228,7 @@ monster_info::monster_info(monster_type p_type, monster_type p_base_type)
 
     if (base_type == MONS_NO_MONSTER)
         base_type = type;
-    
+
     if (mons_is_unique(type))
     {
         if (type == MONS_LERNAEAN_HYDRA

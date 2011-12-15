@@ -487,7 +487,7 @@ static bool _do_merge_crawlies(monster* crawlie, monster* merge_to)
     merge_to->hit_dice = orighd;
     _merge_ench_durations(crawlie, merge_to, true);
 
-    undead_abomination_convert(merge_to, newhd);
+    init_abomination(merge_to, newhd);
     merge_to->max_hit_points = mhp;
     merge_to->hit_points = hp;
 
