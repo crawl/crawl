@@ -33,22 +33,19 @@ inline void process_description(T &proc, const describe_info &inf)
     const int footer_lines = count_desc_lines(inf.footer, line_width)
                              + (inf.footer.empty() ? 0 : 1);
 
-    // Maybe skip the body if body + title would be too many lines.
     if (inf.title.empty())
     {
         desc = inf.body.str();
         // There is a default 1 line addition for some reason.
         num_lines = body_lines + 1;
     }
-    else if (body_lines + num_lines + 2 <= height)
+    else
     {
         desc = inf.title + "\n\n";
         desc += inf.body.str();
         // Got 2 lines from the two \ns that weren't counted yet.
         num_lines += body_lines + 2;
     }
-    else
-        desc = inf.title + "\n";
 
     // Prefer the footer over the suffix.
     if (num_lines + suffix_lines + footer_lines <= height)
@@ -77,11 +74,25 @@ inline void process_description(T &proc, const describe_info &inf)
         }
     }
 
+    // Display as many lines as will fit.
+    int lineno = 0;
     while (!desc.empty())
     {
-        proc.print(wordwrap_line(desc, line_width));
-        if (!desc.empty())
-            proc.nextline();
+        const std::string line = wordwrap_line(desc, line_width);
+
+        // If this is the bottom line of the display but not
+        // the last line of text, print an ellipsis instead.
+        if (++lineno < height || desc.empty())
+        {
+            proc.print(line);
+            if (!desc.empty())
+                proc.nextline();
+        }
+        else
+        {
+            proc.print("...");
+            break;
+        }
     }
 }
 
