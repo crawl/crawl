@@ -291,6 +291,7 @@ int mons_colour(const monster* mon);
 monster_type royal_jelly_ejectable_monster();
 monster_type random_draconian_monster_species();
 
+bool init_abomination(monster* mon, int hd);
 void define_monster(monster* mons);
 
 void mons_pacify(monster* mon, mon_attitude_type att = ATT_GOOD_NEUTRAL);
