@@ -365,7 +365,7 @@ bool mons_is_firewood(const monster* mon);
 bool mons_has_body(const monster* mon);
 bool mons_has_flesh(const monster* mon);
 
-bool herd_monster(const monster * mon);
+bool herd_monster(const monster* mon);
 
 int cheibriados_monster_player_speed_delta(const monster* mon);
 bool cheibriados_thinks_mons_is_fast(const monster* mon);

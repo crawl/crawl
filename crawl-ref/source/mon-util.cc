@@ -682,7 +682,7 @@ bool mons_is_slime(const monster* mon)
     return (mons_class_is_slime(mon->type));
 }
 
-bool herd_monster(const monster * mon)
+bool herd_monster(const monster* mon)
 {
     return (mons_class_flag(mon->type, M_HERD));
 }
