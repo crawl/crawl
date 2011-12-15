@@ -78,13 +78,10 @@ ENDMAP
 
 # A ruined temple
 NAME:   evilmike_ruin_ashenzari
-TAGS:   uniq_altar_ashenzari temple_overflow_ashenzari
+TAGS:   uniq_altar_ashenzari temple_overflow_ashenzari mini_float
 SUBST:  x = xxxxx-, - = ----.
 TILE:   x = WALL_BRICK_VINES
 FTILE:  -V_ = FLOOR_SANDSTONE
-COLOUR: - = brown
-NSUBST: - = 1:d / 2:d- / *:-
-: dgn.delayed_decay(_G, 'd', 'human skeleton')
 KFEAT:  _ = altar_ashenzari
 SUBST:  - = .
 MAP
