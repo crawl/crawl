@@ -4230,7 +4230,7 @@ static monsterentry mondata[] = {
     MONS_OCTOPODE, 'x', LIGHTCYAN, "octopode",
     M_NO_SKELETON | M_COLD_BLOOD | M_SPEAKS,
     MR_NO_FLAGS,
-    700, 10, MONS_KRAKEN, MONS_OCTOPODE, MH_NATURAL, -1,
+    700, 10, MONS_OCTOPODE, MONS_OCTOPODE, MH_NATURAL, -1,
     { {AT_TENTACLE_SLAP, AF_PLAIN, 15}, {AT_BITE, AF_PLAIN, 10}, AT_NO_ATK,
        AT_NO_ATK },
     { 6, 4, 6, 0 },
