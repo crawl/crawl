@@ -1966,10 +1966,9 @@ static uint8_t _random_large_abomination_colour()
     // Restricted colours:
     //  MAGENTA = orb guardian
     //  GREEN = tentacled monstrosity
-    //  LIGHTCYAN = octopode
     do
         col = random_monster_colour();
-    while (col == MAGENTA || col == GREEN || col == LIGHTCYAN);
+    while (col == MAGENTA || col == GREEN);
 
     return (col);
 }
@@ -1980,9 +1979,10 @@ static uint8_t _random_small_abomination_colour()
     // Restricted colours:
     //  MAGENTA = unseen horror
     //  BROWN = used for crawling corpses/macabre masses
+    //  LIGHTCYAN = octopode
     do
         col = random_monster_colour();
-    while (col == MAGENTA || col == BROWN);
+    while (col == MAGENTA || col == BROWN || col == LIGHTCYAN);
 
     return (col);
 }
