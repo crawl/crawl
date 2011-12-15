@@ -97,7 +97,7 @@ int blink(int pow, bool high_level_controlled_blink, bool wizard_blink,
     // Check to see if being constricted will prevent a teleport
     else if (you.is_constricted_larger())
     {
-        mpr("You can't blink while constricted");
+        mpr("You can't blink while constricted.");
     }
     else if (you.confused() && !wizard_blink)
     {
@@ -437,7 +437,7 @@ static bool _teleport_player(bool allow_control, bool new_abyss_area,
     // Check to see if being constricted will prevent a teleport
     if (you.is_constricted_larger())
     {
-        mpr("Teleport cancelled by constriction");
+        mpr("Teleport cancelled by constriction.");
 	return (false);
     }
 
