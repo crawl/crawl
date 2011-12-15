@@ -1,5 +1,5 @@
-#ifndef SPL_SUMMONING
-#define SPL_SUMMONING
+#ifndef SPL_SUMMONING_H
+#define SPL_SUMMONING_H
 
 #include "enum.h"
 #include "itemprop-enum.h"

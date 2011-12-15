@@ -3,8 +3,8 @@
  * @brief Potion and potion-like effects.
 **/
 
-#ifndef IT_USE2_H
-#define IT_USE2_H
+#ifndef POTION_H
+#define POTION_H
 
 
 #include "externs.h"
