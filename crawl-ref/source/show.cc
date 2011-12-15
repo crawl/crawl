@@ -31,8 +31,8 @@
 #include "terrain.h"
 #ifdef USE_TILE
  #include "tileview.h"
- #include "tiledef-main.h"
 #endif
+#include "tiledef-main.h"
 #include "traps.h"
 #include "travel.h"
 #include "viewgeom.h"
