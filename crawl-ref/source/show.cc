@@ -259,7 +259,6 @@ static void _update_cloud(int cloudno)
 
     unsigned short ch = 0;
 
-#ifdef USE_TILE
     tileidx_t index = 0;
     if (!cloud.tile.empty())
     {
@@ -274,7 +273,6 @@ static void _update_cloud(int cloudno)
             ch = index + offset;
         }
     }
-#endif
 
     int dur = cloud.decay/20;
     if (dur < 0)
