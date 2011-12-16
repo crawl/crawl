@@ -826,7 +826,6 @@ TAGS:   temple_entry
 ORIENT: float
 WEIGHT: 5
 KFEAT:  O = enter_temple
-KFEAT:  } = no_mimic }
 MAP
       @
 ccccccncc
@@ -842,7 +841,6 @@ TAGS:   temple_entry
 ORIENT: float
 WEIGHT: 2
 KFEAT:  O = enter_temple
-KFEAT:  } = no_mimic }
 MAP
          @
 cccccccccnccc

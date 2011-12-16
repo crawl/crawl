@@ -2096,10 +2096,6 @@ static void _place_feature_mimics(int level_number,
         if (!is_valid_mimic_feat(feat))
             continue;
 
-        // Don't mess up tomb's layout.
-        if (player_in_branch(BRANCH_TOMB) && feat_is_stone_stair(feat))
-            continue;
-
         // Don't mimic the stairs the player is going to be placed on.
         if (feat == dest_stairs_type)
             continue;
@@ -2108,10 +2104,13 @@ static void _place_feature_mimics(int level_number,
         if (door_vetoed(pos))
             continue;
 
-        // Don't mimic escape hatches in vaults since they are often used
-        // to prevent trapping the player.
-        if (feat_is_escape_hatch(feat) && map_masked(pos, MMT_VAULT))
+        // Don't mimic staircases in vaults to avoid trapping the player or
+        // breaking vault layouts.
+        if (map_masked(pos, MMT_VAULT)
+            && (feat_is_escape_hatch(feat) || feat_is_stone_stair(feat)))
+        {
             continue;
+        }
 
         // Dont mimic guaranteed portals.
         if (feat == DNGN_ENTER_ABYSS && you.absdepth0 == 24)
