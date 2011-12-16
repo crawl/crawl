@@ -141,6 +141,7 @@ body {
     padding: 5px;
     border: 1px solid #626262;
 
+    z-index: 3000;
 }
 
 #chat_caption {
