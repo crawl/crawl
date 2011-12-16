@@ -339,7 +339,7 @@ end
 %%%%
 Wiglaf
 
-A fat dwarf wearing a stupid-looking hat. He's here to prove his worth to Okawaru by avenging his kin, the Mountain Dwarves, who were driven away from their lands by orcs and others, some of whom look just like you.
+A fat dwarf wearing a stupid-looking hat. In Okawaru's name, he's here to avenge his mountain dwarf kin, who were driven from their lands by hill orcs and others. From the way he looks at you, he also seems to hold you responsible.
 {{
 if you.can_smell() then
     return "\nHe reeks of alcohol."
