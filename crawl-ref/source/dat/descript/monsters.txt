@@ -339,7 +339,7 @@ end
 %%%%
 Wiglaf
 
-A fat dwarf wearing a stupid-looking hat.
+A fat dwarf wearing a stupid-looking hat. He's here to prove his worth to Okawaru by avenging his kin, the Mountain Dwarves, who were driven away from their lands by orcs and others, some of whom look just like you.
 {{
 if you.can_smell() then
     return "\nHe reeks of alcohol."
