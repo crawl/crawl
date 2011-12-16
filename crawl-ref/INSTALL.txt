@@ -130,6 +130,19 @@ apt-get install ccache
 less /usr/share/doc/ccache/README.Debian
 
 
+Prerequisites (Fedora):
+
+On Fedora, and possibly other RPM-based systems, you can get the dependencies
+by running the following as root:
+yum install gcc gcc-c++ make bison flex ncurses-devel lua-devel sqlite-devel \
+  zlib-devel pkgconfig SDL-devel SDL_image-devel libpng-devel freetype-devel
+(the last five are needed only for tile builds).  As with Debian, this package
+list avoids the need for the bundled "contribs".
+
+ccache can be installed with:
+yum install ccache
+
+
 Prerequisites (other systems):
 
 GNU gcc and g++, GNU make, libncursesw or libcursesw. You need the development
@@ -142,7 +155,7 @@ are also fine (edit your makefile appropriately).
 
 You need to link with a curses library that understands Unicode characters,
 usually named libncursesw (the development headers for libncursesw are
-usually in /usr/include/ncursesw.)
+usually in /usr/include/ncursesw).
 
 
 Building:
