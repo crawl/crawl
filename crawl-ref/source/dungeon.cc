@@ -2467,15 +2467,23 @@ static void _pan_level(int level_number)
     }
     else
     {
-        const map_def *layout = random_map_for_tag("layout", true, true);
-
-        dgn_ensure_vault_placed(_build_primary_vault(level_number, layout),
-                                 true);
-
         const map_def *vault = random_map_for_tag("pan", true);
         ASSERT(vault);
+        
+        if (vault->orient == MAP_ENCOMPASS)
+        {
+            dgn_ensure_vault_placed(_build_primary_vault(level_number, vault),
+                    true);
+        }
+        else
+        {
+            const map_def *layout = random_map_for_tag("layout", true, true);
 
-        _build_secondary_vault(level_number, vault);
+            dgn_ensure_vault_placed(_build_primary_vault(level_number, layout),
+                    true);
+
+            _build_secondary_vault(level_number, vault);
+        }
     }
 }
 
