@@ -3312,7 +3312,13 @@ int monster::res_steam() const
     int res = get_mons_resists(this).steam;
     if (has_equipped(EQ_BODY_ARMOUR, ARM_STEAM_DRAGON_ARMOUR))
         res += 3;
-    return (res + res_fire() / 2);
+
+    res += (res_fire() + 1) / 2;
+
+    if (res > 3)
+        res = 3;
+
+    return (res);
 }
 
 int monster::res_cold() const
