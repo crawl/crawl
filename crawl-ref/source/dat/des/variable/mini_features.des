@@ -1726,11 +1726,11 @@ KFEAT:   z = zot trap
 SUBST:   *: *$
 WEIGHT:  3
 MAP
-xxxxxxxxxx
-xxxxxxx**x
-@ZZZZZ=**x
-xxxxxxx**x
-xxxxxxxxxx
+xxxxxxcccc
+xxxxxxc**c
+@ZZZZZ=**c
+xxxxxxc**c
+xxxxxxcccc
 ENDMAP
 
 NAME:   water_maze_lemuel
@@ -1796,12 +1796,11 @@ xxxx$$$x
 ENDMAP
 
 # Transporter accident (mumra)
-# This might be quite hard to find (unless you're an Ash worshipper)
 NAME:   mumra_transporter_accident
 TAGS:   extra
 WEIGHT: 1
 DEPTH:  D:5-,Lair,Elf:1-4,Orc
-SUBST:  X = x.
+SUBST:  X = m.
  : dgn.delayed_decay(_G,'B', 'human skeleton')
 KITEM:  A : wand of teleportation charges:0 / wand of digging charges:0
 # Prevent random teleportation getting you stuck
@@ -1810,11 +1809,11 @@ KFEAT:  AB = floor
 MAP
      ....
     .XXXX.
-   .XxxxxX.
-  .XxxxxxxX.
-  .XxxABxxX.
-  .XxxxxxxX.
-   .XxxxxX.
+   .XmmmmX.
+  .XmmmmmmX.
+  .XmmABmmX.
+  .XmmmmmmX.
+   .XmmmmX.
     .XXXX.
      ....
 ENDMAP
@@ -1949,9 +1948,9 @@ TAGS:   no_monster_gen no_item_gen allow_dup extra luniq_mini
 NSUBST: + = 1:+ / *:x, = = 1:= / *:x
 SUBST:  d = %%%., e = **%.
 MAP
-x++xxxx
+xxxxxxx
 +dd=eex
-+dd=eex
+xdd=eem@
 xxxxxxx
 ENDMAP
 
@@ -2374,14 +2373,14 @@ DEPTH: D:4-
 MAP
 ............
 ..xxxx=xxx..
-.xx..x...xx.
+.xG..x...Gx.
 .x....x...x.
 .x...x....x.
 .xx.x*x.x.=.
 .=.x.x*x.xx.
 .x....x...x.
 .x...x....x.
-.xx...x..xx.
+.xG...x..Gx.
 ..xxx=xxxx..
 ............
 ENDMAP
@@ -2500,12 +2499,12 @@ MAP
 ............
 .~xxxxxxxx~.
 .x........x.
-.x.cccccc.x.
+.x.ccnccc.x.
 .x.c|..<c.x.
-.x.c.**.c.x.
-.x.c.**.c.x.
+.x.c.**.n.x.
+.x.n.**.c.x.
 .x.c>..|c.x.
-.x.cccccc.x.
+.x.cccncc.x.
 .x........x.
 .~xxxxxxxx~.
 ............

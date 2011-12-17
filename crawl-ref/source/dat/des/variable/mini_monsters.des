@@ -1122,7 +1122,7 @@ wwww..11x.x..wwwwwwwww
  www...xx>x11wwwwwwwww
  www..xx??x.wwwwwwwww
  wwww.xx??x.wwwwwww
-  wwww.xxxx.wwwwww
+  wwww.xxmx.wwwwww
    wwwwww..wwwww
     wwwwwwwwwww
        wwwwww
@@ -1619,7 +1619,7 @@ ENDMAP
 NAME:   minmay_statue_crystal_thing
 DEPTH:  D:9-26
 MONS:   orange crystal statue w:30 / silver statue / ice statue w:5
-NSUBST: ? = 1:= / *:b
+NSUBST: ? = 1:= / 1:n / *:b
 MAP
       .....
     ...b+b...
@@ -2257,7 +2257,7 @@ ENDMAP
 NAME:   minmay_evil_grid
 DEPTH:  D:8-
 NSUBST: A = 7:+ / *:c
-NSUBST: B = 1:= / *:c
+NSUBST: B = 1:= / 1:n / *:c
 NSUBST: C = 1:+ / *:c
 SUBST:  * = *|
 MAP
@@ -2889,14 +2889,14 @@ KMONS: F = orange crystal statue / silver statue / ice statue
 MAP
 ............
 .xxxxxxxxxx.
-.+.Ax.C=.9x.
-.x.B=.Dx..x.
-.xxxxxxxx=x.
-.x.8+|0x8.x.
-.x8$x.|x..x.
-.xx=xxxx=xx.
-.x.9=EFx..x.
-.x..xGH=9.x.
+.+.Ac.Cc.9x.
+.x.B=.D=..x.
+.xcccccc=cx.
+.x.8+|0c8.x.
+.x8$c.|c..x.
+.xc=cccc=cx.
+.x.9=EF=..x.
+.x..cGHc9.x.
 .xxxxxxxxxx.
 ............
 ENDMAP
