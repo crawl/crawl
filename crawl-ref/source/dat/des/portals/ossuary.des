@@ -416,7 +416,7 @@ SUBST:   M = 1f, d = dddf, e = eeef
 NSUBST:  . = 6:^ / *:.
 KFEAT:   ^ = alarm trap / floor w:20
 SUBST:   = : =+
-SUBST:   = = =+
+NSUBST:  = = 1:= / *:+
 : ossuary_setup_features(_G)
 epilogue{{
 ossuary_milestone(_G)
@@ -1011,21 +1011,21 @@ cc.......cc
      cc.cc
      cc.cc
     cc.cc
-   cc.cc                          ccccccccccccccccc
-   cc..ccc                        c...............c
-    cc...cc                       c.=cc..xxx..cc=.c
-  ccc...ccc                       c.c4c..x3x..c4c.c
- cc......cccccccccccccccccccccccccc.ccc..yzy..ccc.c
-cc........cc$c$c$c$c$cc.....cccVccc...............c
-c..........c+c+c+c+c+cc.GdG.cccoccc.cxy..eee..yxx.c
-c..c.......+..........+..d..L.....+.c3z..eee..z3x.c
-cc.cc......c+c+c+c+c+cc.GdG.cccoccc.cxy..eee..yxx.c
-cc.c......cc$c$c$c$c$cc.....cccXccc...............c
-cc.cc....cccccccccccccccccccccccccc.ccc..yzy..ccc.c
- cc.....cc                        c.c4c..x3x..c4c.c
-  cc...cc                         c.=cc..xxx..cc=.c
-   ccccc                          c...............c
-                                  ccccccccccccccccc
+   cc.cc                            ccccccccccccccccc
+   cc..ccc                          c...............c
+    cc...cc                         c.=cc..xxx..cc=.c
+  ccc...ccc                         c.c4c..x3x..c4c.c
+ cc......cccccccccccccccccccccccccccc.ccc..yzy..ccc.c
+cc........cc$c$c$c$c$cc.....cccccVccc...............c
+c..........c+c+c+c+c+cc.GdG.cccccoccc.cxy..eee..yxx.c
+c..c.......+..........+..d....L.....+.c3z..eee..z3x.c
+cc.cc......c+c+c+c+c+cc.GdG.cccccoccc.cxy..eee..yxx.c
+cc.c......cc$c$c$c$c$cc.....cccccXccc...............c
+cc.cc....cccccccccccccccccccccccccccc.ccc..yzy..ccc.c
+ cc.....cc                          c.c4c..x3x..c4c.c
+  cc...cc                           c.=cc..xxx..cc=.c
+   ccccc                            c...............c
+                                    ccccccccccccccccc
 ENDMAP
 
 
