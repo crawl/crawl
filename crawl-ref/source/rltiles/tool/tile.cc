@@ -404,8 +404,14 @@ bool tile::load(const std::string &new_filename)
                 m_pixels[dest].r = pal->colors[index].r;
                 m_pixels[dest].g = pal->colors[index].g;
                 m_pixels[dest].b = pal->colors[index].b;
+#if (SDL_MAJOR_VERSION == 1) && (SDL_MINOR_VERSION == 2)
                 if (ck_enabled)
                     m_pixels[dest].a = (index != img->format->colorkey ? 255 : 0);
+#else
+                Uint32 key;
+                if (ck_enabled && !SDL_GetColorKey(img, &key))
+                    m_pixels[dest].a = (index != key ? 255 : 0);
+#endif
                 else
                     m_pixels[dest].a = 255;
                 dest++;
