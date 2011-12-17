@@ -69,6 +69,7 @@ KMONS:  z = the Lernaean hydra
 KMONS:  # = giant amoeba
 KFEAT:  A = armour shop
 KMONS:  a = deep elf master archer
+KFEAT:  m = iron_grate
 KFEAT:  Y = any shop
 KITEM:  P = any good_item
 KITEM:  Z = Orb of Zot
