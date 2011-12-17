@@ -250,6 +250,9 @@ run on 9x).
   NOTE: Do NOT get any of the versions that do not have 'netinstall' in the
         filename. The 'netinstall' is the only one used by the Crawl team.
 
+  NOTE: msysgit should be installed to a path that does not contain spaces,
+        such as the default location 'c:\msysgit'.
+
 * Start msys by running 'c:\msysgit\msys.bat'. Now you're in a MinGW build
   environment.
 

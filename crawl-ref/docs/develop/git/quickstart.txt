@@ -49,6 +49,11 @@ Using git for Stone Soup development
    it's done, you have a full local copy of the crawl repository with all
    its history.
 
+   If you want to build the contributing libraries rather than using the
+   versions already installed on your system, you can fetch the submodules:
+   $ cd crawl
+   $ git submodule update --init
+
 2. Sanity-check your cloned repository (optional):
 
    When you come back to a git repository after a while, you may not
