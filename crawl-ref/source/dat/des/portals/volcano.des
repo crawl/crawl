@@ -669,15 +669,15 @@ MONS:  clay golem w:50 / molten gargoyle w:2
 :      volcano_setup(_G, false, true)
 MAP
 xxxxxxxxx+xxxxxxxxx
-xxxxxxxx...xxxxxxxx
-xcccccx.....xcccccx
+xcccccxx...xxcccccx
+xc...cx.....xc....x
 ccd$ecc..<..ccd$fcc
 c.$f$.c.....c.$e$.c
 c.g$g.ccc+ccc.g$g.c
-c..3..c.....c..3..c
-cc...c=.111.=c...cc
-xcccccc.G_G.ccccccx
-xxxxxxcc.2.ccxxxxxx
+cc.3.ccc...ccc.3.cc
+xc...=..111..=...cx
+xcccccccG_Gcccccccx
+xxxxxxxc.2.cxxxxxxx
 xxxxxxxcccccxxxxxxx
 ENDMAP
 
@@ -700,7 +700,7 @@ x...xx..xXx..xx...x
 xx.xx.1xXdXx1.xx.xx
 xx.x..xXefgXx..x.xx
 x....xXdexfgXx....x
-x....xXXXXXXXx....x
+x....xXXXGXXXx....x
 x......1...1......x
 xxx......2......xxx
 xxxxxxxxxxxxxxxxxxx
@@ -710,8 +710,8 @@ NAME:   vgs_hot_hot_hot
 TAGS:   volcano_grotto_subvault no_item_gen no_monster_gen no_rotate no_vmirror
 KFEAT:  _ = altar_makhleb / altar_trog / altar_vehumet
 #       Place the secret doors.
-NSUBST: X = 1:= / *:x
-NSUBST: Y = 1:= / *:x
+NSUBST: X = 1:= / 1:G / *:x
+NSUBST: Y = 1:= / 1:G / *:x
 #       Sets up the temple guardians.
 :       fiery_guardians(_G)
 KMONS:  l = lava snake / lava fish w:20 / lava worm w:20 / nothing w:70
@@ -752,7 +752,7 @@ x$...1.+.<.+.1...$x
 x$G..T.x...x.T..G$x
 x$.....xx+xx.....$x
 xx....xx...xx....xx
-xxxxXXxx121xxYYxxxx
+xxxxGxxx121xxxGxxxx
 xxxxdefX._.Ydefxxxx
 xxx3g$$X...Y$$g3xxx
 xxxxxxxxx.xxxxxxxxx
@@ -851,7 +851,7 @@ TAGS:       volcano no_item_gen no_monster_gen no_rotate
 KFEAT:      _ = altar_makhleb / altar_trog / altar_vehumet
 KMONS:      l = lava snake w:2 / lava fish w:5 / nothing w:900
 KFEAT:      l = l
-#           Let's choose a path from m, u, z, i, r, y
+#           Let's choose a path from m, u, z, i, r, n
 SHUFFLE:    m/u/z/i/r/n
 SUBST:      m = .
 SUBST:      u = l, z = l, i = l, r = l, n = l
@@ -861,6 +861,7 @@ MONS:       clay golem w:50 / molten gargoyle w:2
 #           Loot: 10 items, 6 gold.
 :           volcano_setup(_G)
 :           place_lake_volcanoes(_G, {"M", "E", "V", "Q", "T", "S"})
+KFEAT:      o = n
 epilogue{{
 volcano_milestone(_G)
 }}
@@ -886,7 +887,7 @@ MAP
    xxy.....Lrrllllllllllll.c.<1.c.G_G.c.1<.c.llllllllllllllLL.......yx
    xy......LllrrVllllllllL.c....c..2..c....c.Lllllllllllluuu.......yxx
    xxy.....Lllllrrllllllll.ccc==ccc+ccc==ccc.LllllllllluullL......yxx
-   xy.....LlllllllrllllllL.c......c.c......c.lllllllQuullllL.....yxx
+   xy.....LlllllllrllllllL.o......c.c......o.lllllllQuullllL.....yxx
    xxy.....LllllllVrllllll.cccccc.c.c.cccccc.LllllluulllllllL.....yxx
    xy......LllllllllrrlllL.c.$f$c.c.c.cgd$.c.lllluulQlllllllL......yxx
    xxy......Lllllllllrllll.c.$gec.c.c.c$e$.c.LluulllllllllllL......yxx
@@ -1052,11 +1053,11 @@ cccccccccGc..3..cccxxxxxxxx
 cccccccccGc..3..cccxxxxxxxx
 cxxxxxxxccc.....cxxxxxxxxxx
 xxxxxxxxc1c..Y..cxxxxxxxxxx
-xxxxxxxcc+ccccc=ccxccccccxx
-xxxxxccc.........ccc$defcxx
-xxxxxc2+.lllllll.+4=ge$fcxx
-xxxxxccc.........ccc$defcxx
-xxxxxxxcc+ccccc+cc ccccccxx
+xxxxxxxcc+ccccc+ccxvvvvvvxx
+xxxxxccc.........ccv$defvxx
+xxxxxc2+.lllllll.+4=ge$fvxx
+xxxxxccc.........ccv$defvxx
+xxxxxxxcc+ccccc+ccxvvvvvvxx
 xxxxxxxxc1cxxxcKcxxxxxxxxxx
 xxxxxxxxcccxxxcccxxxxxxxxxx
 ENDMAP
@@ -1065,8 +1066,8 @@ NAME:    vts_chambers
 TAGS:    volcano_tomb_subvault no_item_gen no_monster_gen no_rotate no_hmirror
 TAGS:    no_vmirror
 #        Traps and doors.
-NSUBST:  X = 1:= / *:c
-NSUBST:  Y = 1:= / *:c
+NSUBST:  X = 1:= / *:v
+NSUBST:  Y = 1:+ / *:c
 NSUBST:  t = 1:! / *:.
 KFEAT:   ! = alarm trap
 NSUBST:  r = 2:r / *:.
@@ -1088,21 +1089,21 @@ MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxcccccxxxxxxxxxxxxxxxxx
 xxxxxc...cxxxxxxxxxxxxxxxxx
-xxxxcc.<.cccxxxcccccccccxxx
-xxccc......ccccc..$X$$$cxxx
-cxc1.........3....$X$$$cxxx
-ccccc.c2.c.ccccc..$X$$$cxxx
-....+...2..cxxxcccccc=ccxxx
-ccccc.c2.c.ccccc..$Xssscxxx
-cxc1.........3....$Xssscxxx
-xxccc......ccccc..$Xssscxxx
-xxxxcc.cc.ccddeccYcccc=cxxx
-xxxxxc3cc3c1eeg+!.=4Yttcccx
-xxxccc.cc.cccccccYccctt=1cx
-xxxc...cc...crrrc..3c=ccccx
-xxxc...cc...crrr=.3.cffcxxx
-xxxc$$$cc$$$=rrrc3..=fgcxxx
-xxxcccccccccccccccccccccxxx
+xxxxcc.<.cccxxxccccvvvvvxxx
+xxccc......ccccc..$X$$$vxxx
+cxc1.........3....$X$$$vxxx
+ccccc.c2.c.ccccc..$X$$$vxxx
+....+...2..cxxxccccvv=vvxxx
+ccccc.c2.c.ccccc..$Xsssvxxx
+cxc1.........3....$Xsssvxxx
+xxccc......ccccc..$Xsssvxxx
+xxxxcc.cc.ccddeccYvvvv=vxxx
+xxxxxc3cc3c1eeg+!.=4Yttvvvx
+xxxccc.cc.cccccccYvvvtt=1vx
+xxxc...cc...crrrc..3v=vvvvx
+xxxc...cc...crrr+.3.vffvxxx
+xxxc$$$cc$$$+rrrc3..=fgvxxx
+xxxcccccccccccccccccvvvvxxx
 ENDMAP
 
 ###############################################################################
@@ -1216,7 +1217,7 @@ xxlllVlllllllllllxxxx       v.v33$e$$fv.v
  xxlllllllllllllllllxxx     v.v$$$gddgv.v
 xxllllllllllllllllllllxx    v.+ggdf$$ev.v
  xxllllllllvmvmvmvmvmvvvvvvvvvvvvvvvvvv.v
- xxllllllllm.....vKiii...2...v...=......v
+ xxllllllllm.....vKiii...2...v.....=....v
   xxlllllllv.232.viWtWW......+.<.vvvvvvvv
    xxllllllm.....vllttW..2...v...vxxx
     xxxllllvvv+vvvvvvvvvvvvvvvv+vv.yxx
