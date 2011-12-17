@@ -1705,7 +1705,6 @@ ENDMAP
 NAME:   evilmike_holy_pan
 TAGS:   pan no_pool_fixup
 ORIENT: encompass
-WEIGHT: 0
 NSUBST: . = > / .
 ITEM:   potion of curing, potion of heal wounds, acquire any
 ITEM:   w:1 potion of cure mutation / w:3 any potion
