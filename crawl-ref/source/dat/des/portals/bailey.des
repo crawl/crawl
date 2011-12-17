@@ -555,7 +555,7 @@ xxxxxxxxxcc.....ccxxxxxxxxx
 xxxxxxxxxc<d.3.d<cxxxxxxxxx
 xxxxxxxxxc...G...cxxxxxxxxx
 xxxxxxxxxcc.....ccxxxxxxxxx
-xxxxxxxxxxccc=cccxxxxxxxxxx
+xxxxxxxxxxcvv=vvcxxxxxxxxxx
 xxxxxxxxvvvv...vvvvxxxxxxxx
 xxxxxxvvv.........vvvxxxxxx
 xxxxxvv.............vvxxxxx
@@ -684,7 +684,7 @@ tttttcc1...1cc.1.....1.cc1...1ccttttt
 tttttc.......+....2....+.......cttttt
 ttttcc.......cc.1...1.cc.......cctttt
 ttttc.........c.......c.........ctttt
-tttcc...1.1...ccG...Gcc...1.1...ccttt
+tttcc...1.1...ccGG.GGcc...1.1...ccttt
 tttc1....T....1ccc=ccc1....T....1cttt
 tttcc...1.1...ccc...ccc...1.1...ccttt
 ttttc.........c1.....1c.........ctttt
@@ -835,11 +835,11 @@ x......WwwwwwWWWWcccccccccWWWWwwwwwW......x
 x......WWWWWWWWWccWWWWWWWccWWWWWWWWW......x
 x......WWWWWWWWccWWc=c=cWWccWWWWWWWW......x
 x......WWWWWWWWcWWcc2c2ccWWcWWWWWWWW......x
-x......WWWWWWWccWcccccccccWccWWWWWWW......x
-x......WWWWWWWccW=2cd4dc2=WccWWWWWWW......x
-x......WWWWWWWccWccc4X4cccWccWWWWWWW......x
-x......WWWWWWWccW=2c.4.c2=WccWWWWWWW......x
-x......WWWWWWWccWcccc=ccccWccWWWWWWW......x
+x......WWWWWWWccWccvvvvvccWccWWWWWWW......x
+x......WWWWWWWccW=2vd4dv2=WccWWWWWWW......x
+x......WWWWWWWccWccv4X4vccWccWWWWWWW......x
+x......WWWWWWWccW=2v.4.v2=WccWWWWWWW......x
+x......WWWWWWWccWccvv=vvccWccWWWWWWW......x
 x......WWWWWWWccWWcc<d<ccWWcWWWWWWWW......x
 x......WWWWWWWWWWWcc+++cWWccWWWWWWWW......x
 x......WWWWWWWWWWWccWWWWWccWWWWWWWWW......x
