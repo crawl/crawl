@@ -1695,12 +1695,12 @@ ENDMAP
 # Four exits are given, with one placed randomly and the others in a room safe
 # to teleport into.
 #
-# Disabled (weight 0) for now. Encompass vaults don't work in pan, currently.
-# Also, water elementals are spawning randomly.
+# There is the problem of this vault being free loot to followers of good gods, 
+# and this vault being ultra-deadly to undead and demonspawn. I've made it easy
+# to teleport to the exit, at least.
 #
-# Aside from these issues, there is the problem of this vault being free loot
-# to followers of good gods, and this vault being ultra-deadly to undead and
-# demonspawn. I've made it easy to teleport to the exit, at least.
+# My opinion is that in the long term this concept would work better as a
+# portal vault (for pan, even).
 #
 NAME:   evilmike_holy_pan
 TAGS:   pan no_pool_fixup
@@ -1728,7 +1728,7 @@ KFEAT:  E = altar_elyvilon
 KFEAT:  Z = altar_zin
 KFEAT:  > = transit_pandemonium
 TILE:   c = wall_church
-COLOUR: c = yellow
+COLOUR: cGH = yellow
 TILE:   v = dngn_metal_wall_white
 COLOUR: v& = white
 # Needs a tile!
@@ -1792,8 +1792,8 @@ xxx.......wwwwww....xxxxxxxx...cc..cc''ccccccccccccccccccc''cc..cc.....x....xxxx
 xxx......wwwwwww...xxxxxxxxx...cc..cc'''''''''''''''''''''''cc..cc..........xxxx
 xx.....wwwwwwwww..xxxxxxxxx....cc..cc''''2'''G'''''G'''2''''cc..cc.........xxxxx
 xx....wwwwwwwww...xxxxxxxxx....cc..cc4'''''''''''''''''''''4cc..cc........xxxxxx
-xx...wwwwwwwww.....xxxxxxxx....cc..ccc''ccccccDcDcDccccccc''cc..cc........xxxxxx
-xx..wwwwwwwww.....xxxxxxxx.....cc..cccwwccccG'''''''Gcccccwwcc..cc........xxxxxx
+xx...wwwwwwwww.....xxxxxxxx....cc..cc''cccccccDcDcDccccccc''cc..cc........xxxxxx
+xx..wwwwwwwww.....xxxxxxxx.....cc..ccwwcccccG'''''''Gcccccwwcc..cc........xxxxxx
 xx.wwwwwwwww.......xxxxxx......cc..cccccccccc'''''''cccccccccc..cc...xx....xxxxx
 xxwwwwwwww....xx....xxx........cc...........cccDDDccc...........cc...xxx....xxxx
 xwwwwwww.....xxxx.........x....cc......5........3........5......cc....xx....xxxx
