@@ -1546,7 +1546,12 @@ int player_res_steam(bool calc_unid, bool temp, bool items)
     if (items && player_equip_unrand(UNRAND_DRAGONSKIN) && coinflip())
         res++;
 
-    return (res + (player_res_fire(calc_unid, temp, items) + 1) / 2);
+    res += (player_res_fire(calc_unid, temp, items) + 1) / 2;
+
+    if (res > 3)
+        res = 3;
+
+    return (res);
 }
 
 int player_res_cold(bool calc_unid, bool temp, bool items)
