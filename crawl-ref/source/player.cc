@@ -2212,6 +2212,45 @@ int player_speed(void)
     return ps;
 }
 
+// Get level of player mutation, ignoring mutations with an activity level
+// less than minact (unless they have MUTACT_HUNGER, in which case check
+// the player's hunger state).
+static int _mut_level(mutation_type mut, mutation_activity_type minact)
+{
+    const int mlevel = you.mutation[mut];
+
+    const mutation_activity_type active = mutation_activity_level(mut);
+
+    if (active >= minact)
+    {
+        return (mlevel);
+    }
+    else if (active == MUTACT_HUNGER)
+    {
+        switch (you.hunger_state)
+        {
+        case HS_ENGORGED:
+            return (mlevel);
+        case HS_VERY_FULL:
+        case HS_FULL:
+            return (std::min(mlevel, 2));
+        case HS_SATIATED:
+            return (std::min(mlevel, 1));
+        }
+    }
+
+    return (0);
+}
+
+// Output level of player mutation.  If temp is true (the default), take into
+// account the suppression of mutations by non-"Alive" Vampires and by changes
+// of form.
+int player_mutation_level(mutation_type mut, bool temp)
+{
+    return _mut_level(mut, temp ? MUTACT_PARTIAL : MUTACT_INACTIVE);
+}
+
+
 int player_armour_slots()
 {
     int armour_slot_count = 0;
@@ -2360,9 +2399,9 @@ int player_evasion_bonuses(ev_ignore_type evit)
     evbonus += scan_artefacts(ARTP_EVASION);
 
     // mutations
-    if (player_mutation_level(MUT_ICY_BLUE_SCALES) > 1)
+    if (_mut_level(MUT_ICY_BLUE_SCALES, MUTACT_FULL) > 1)
         evbonus--;
-    if (player_mutation_level(MUT_MOLTEN_SCALES) > 1)
+    if (_mut_level(MUT_MOLTEN_SCALES, MUTACT_FULL) > 1)
         evbonus--;
     evbonus += std::max(0, player_mutation_level(MUT_GELATINOUS_BODY) - 1);
 
@@ -5930,44 +5969,6 @@ int player::traps_skill() const
         val += you.piety;
 
     return div_rand_round(val, 15);
-}
-
-// Get level of player mutation, ignoring mutations with an activity level
-// less than minact (unless they have MUTACT_HUNGER, in which case check
-// the player's hunger state).
-static int _mut_level(mutation_type mut, mutation_activity_type minact)
-{
-    const int mlevel = you.mutation[mut];
-
-    const mutation_activity_type active = mutation_activity_level(mut);
-
-    if (active >= minact)
-    {
-        return (mlevel);
-    }
-    else if (active == MUTACT_HUNGER)
-    {
-        switch (you.hunger_state)
-        {
-        case HS_ENGORGED:
-            return (mlevel);
-        case HS_VERY_FULL:
-        case HS_FULL:
-            return (std::min(mlevel, 2));
-        case HS_SATIATED:
-            return (std::min(mlevel, 1));
-        }
-    }
-
-    return (0);
-}
-
-// Output level of player mutation.  If temp is true (the default), take into
-// account the suppression of mutations by non-"Alive" Vampires and by changes
-// of form.
-int player_mutation_level(mutation_type mut, bool temp)
-{
-    return _mut_level(mut, temp ? MUTACT_PARTIAL : MUTACT_INACTIVE);
 }
 
 int player_icemail_armour_class()
