@@ -214,10 +214,10 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
         case MUT_ROUGH_BLACK_SCALES:
         case MUT_RUGGED_BROWN_SCALES:
             return (MUTACT_PARTIAL);
-        case MUT_ICY_BLUE_SCALES:
-        case MUT_MOLTEN_SCALES:
         case MUT_YELLOW_SCALES:
             return (you.mutation[mut] > 1 ? MUTACT_PARTIAL : MUTACT_INACTIVE);
+        case MUT_ICY_BLUE_SCALES:
+        case MUT_MOLTEN_SCALES:
         case MUT_SLIMY_GREEN_SCALES:
         case MUT_THIN_METALLIC_SCALES:
             return (you.mutation[mut] > 2 ? MUTACT_PARTIAL : MUTACT_INACTIVE);
