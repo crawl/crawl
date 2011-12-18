@@ -830,7 +830,7 @@ static bool _files_differ(FILE *newfile, FILE *oldfile)
         if (newread != oldread)
             return (true);
 
-        if (memcmp(newblock, oldblock, blocksize))
+        if (memcmp(newblock, oldblock, newread))
             return (true);
 
         bool newdone = !!feof(newfile);
