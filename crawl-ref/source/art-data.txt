@@ -640,7 +640,7 @@ STEALTH: 60
 BOOL:    inv, tilerim
 DESC:    It is designed for easy concealment, but still packs a nasty punch.
 
-NAME:    Wyrmbane
+NAME:    spear "Wyrmbane"
 APPEAR:  scale-covered lance
 OBJ:     OBJ_WEAPONS/WPN_SPEAR
 PLUS:    +9/+6
@@ -716,7 +716,7 @@ DESC_END: It is almost unerringly accurate.
 
 # A play on the spell of the same name.  Colour taken from crystal walls.
 ENUM:     CRYSTAL_SPEAR
-NAME:     Lehudib's crystal spear
+NAME:     crystal spear of Lehudib
 APPEAR:   crystal spear
 OBJ:      OBJ_WEAPONS/WPN_SPEAR
 PLUS:     +6/+6
@@ -868,7 +868,7 @@ DESC:     Some soft boots.
 DESC_END: These boots were specially designed by the Assassin's Guild.
 
 ENUM:    LEAR
-NAME:    Lear's chain mail
+NAME:    chain mail of Lear
 APPEAR:  golden chain mail
 OBJ:     OBJ_ARMOUR/ARM_CHAIN_MAIL
 PLUS:    -1
@@ -934,8 +934,9 @@ CURSED:  2
 BOOL:    nospell, randapp
 DESC:    A dull grey robe.
 
+# XXX: this name is awkward; do we need "the " suppression for artefacts?
 ENUM:    MAXWELL
-NAME:    Maxwell's patent armour
+NAME:    patent armour of Maxwell
 APPEAR:  weird-looking armour
 OBJ:     OBJ_ARMOUR/ARM_PLATE_ARMOUR
 PLUS:    +15
