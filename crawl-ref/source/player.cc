@@ -4572,8 +4572,8 @@ int get_real_hp(bool trans, bool rotted)
     // Frail and robust mutations, divine vigour, and rugged scale mut.
     hitp *= 100 + (player_mutation_level(MUT_ROBUST) * 10)
                 + (you.attribute[ATTR_DIVINE_VIGOUR] * 5)
-                + (player_mutation_level(MUT_RUGGED_BROWN_SCALES, false) ?
-                   player_mutation_level(MUT_RUGGED_BROWN_SCALES, false) * 2 + 1 : 0)
+                + (player_mutation_level(MUT_RUGGED_BROWN_SCALES) ?
+                   player_mutation_level(MUT_RUGGED_BROWN_SCALES) * 2 + 1 : 0)
                 - (player_mutation_level(MUT_FRAIL) * 10);
     hitp /= 100;
 
@@ -5932,6 +5932,44 @@ int player::traps_skill() const
     return div_rand_round(val, 15);
 }
 
+// Get level of player mutation, ignoring mutations with an activity level
+// less than minact (unless they have MUTACT_HUNGER, in which case check
+// the player's hunger state).
+static int _mut_level(mutation_type mut, mutation_activity_type minact)
+{
+    const int mlevel = you.mutation[mut];
+
+    const mutation_activity_type active = mutation_activity_level(mut);
+
+    if (active >= minact)
+    {
+        return (mlevel);
+    }
+    else if (active == MUTACT_HUNGER)
+    {
+        switch (you.hunger_state)
+        {
+        case HS_ENGORGED:
+            return (mlevel);
+        case HS_VERY_FULL:
+        case HS_FULL:
+            return (std::min(mlevel, 2));
+        case HS_SATIATED:
+            return (std::min(mlevel, 1));
+        }
+    }
+
+    return (0);
+}
+
+// Output level of player mutation.  If temp is true (the default), take into
+// account the suppression of mutations by non-"Alive" Vampires and by changes
+// of form.
+int player_mutation_level(mutation_type mut, bool temp)
+{
+    return _mut_level(mut, temp ? MUTACT_PARTIAL : MUTACT_INACTIVE);
+}
+
 int player_icemail_armour_class()
 {
     if (!you.mutation[MUT_ICEMAIL])
@@ -6057,24 +6095,32 @@ int player::armour_class() const
         }
     }
 
-    // Scale mutations, etc.  Statues don't keep scales (rather, they do,
-    // but since they are made of the same stone as everything else there
-    // is no AC benefit).
-    if (you.form != TRAN_STATUE)
-    {
-        AC += player_mutation_level(MUT_TOUGH_SKIN) ? player_mutation_level(MUT_TOUGH_SKIN) * 100 : 0;                        // +1, +2, +3
-        AC += player_mutation_level(MUT_SHAGGY_FUR) ? player_mutation_level(MUT_SHAGGY_FUR) * 100 : 0;                        // +1, +2, +3
-        AC += player_mutation_level(MUT_GELATINOUS_BODY) ? (player_mutation_level(MUT_GELATINOUS_BODY) == 3 ? 200 : 100) : 0; // +1, +1, +2
-        AC += player_mutation_level(MUT_IRIDESCENT_SCALES) ? 200 + player_mutation_level(MUT_IRIDESCENT_SCALES) * 200 : 0;    // +4, +6, +8
-        AC += player_mutation_level(MUT_LARGE_BONE_PLATES) ? 100 + player_mutation_level(MUT_LARGE_BONE_PLATES) * 100 : 0;    // +2, +3, +4
-        AC += player_mutation_level(MUT_ROUGH_BLACK_SCALES) ? 100 + player_mutation_level(MUT_ROUGH_BLACK_SCALES) * 300 : 0;  // +4, +7, +10
-        AC += player_mutation_level(MUT_RUGGED_BROWN_SCALES) ? 200 : 0;                                                       // +2, +2, +2
-        AC += player_mutation_level(MUT_ICY_BLUE_SCALES) ? player_mutation_level(MUT_ICY_BLUE_SCALES) * 100 : 0;              // +1, +2, +3
-        AC += player_mutation_level(MUT_MOLTEN_SCALES) ? player_mutation_level(MUT_MOLTEN_SCALES) * 100 : 0;                  // +1, +2, +3
-        AC += player_mutation_level(MUT_SLIMY_GREEN_SCALES) ? player_mutation_level(MUT_SLIMY_GREEN_SCALES) * 100 : 0;        // +1, +2, +3
-        AC += player_mutation_level(MUT_THIN_METALLIC_SCALES) ? player_mutation_level(MUT_THIN_METALLIC_SCALES) * 100 : 0;    // +1, +2, +3
-        AC += player_mutation_level(MUT_YELLOW_SCALES) ? player_mutation_level(MUT_YELLOW_SCALES) * 100 : 0;                  // +1, +2, +3
-    }
+    // Scale mutations, etc.  Statues don't get an AC benefit from scales,
+    // since the scales are made of the same stone as everything else.
+    AC += player_mutation_level(MUT_TOUGH_SKIN)
+          ? player_mutation_level(MUT_TOUGH_SKIN) * 100 : 0;                   // +1, +2, +3
+    AC += player_mutation_level(MUT_SHAGGY_FUR)
+          ? player_mutation_level(MUT_SHAGGY_FUR) * 100 : 0;                   // +1, +2, +3
+    AC += player_mutation_level(MUT_GELATINOUS_BODY)
+          ? (player_mutation_level(MUT_GELATINOUS_BODY) == 3 ? 200 : 100) : 0; // +1, +1, +2
+    AC += _mut_level(MUT_IRIDESCENT_SCALES, MUTACT_FULL)
+          ? 200 + _mut_level(MUT_IRIDESCENT_SCALES, MUTACT_FULL) * 200 : 0;    // +4, +6, +8
+    AC += _mut_level(MUT_LARGE_BONE_PLATES, MUTACT_FULL)
+          ? 100 + _mut_level(MUT_LARGE_BONE_PLATES, MUTACT_FULL) * 100 : 0;    // +2, +3, +4
+    AC += _mut_level(MUT_ROUGH_BLACK_SCALES, MUTACT_FULL)
+          ? 100 + _mut_level(MUT_ROUGH_BLACK_SCALES, MUTACT_FULL) * 300 : 0;   // +4, +7, +10
+    AC += _mut_level(MUT_RUGGED_BROWN_SCALES, MUTACT_FULL) ? 200 : 0;          // +2, +2, +2
+    AC += _mut_level(MUT_ICY_BLUE_SCALES, MUTACT_FULL)
+          ? _mut_level(MUT_ICY_BLUE_SCALES, MUTACT_FULL) * 100 : 0;            // +1, +2, +3
+    AC += _mut_level(MUT_MOLTEN_SCALES, MUTACT_FULL)
+          ? _mut_level(MUT_MOLTEN_SCALES, MUTACT_FULL) * 100 : 0;              // +1, +2, +3
+    AC += _mut_level(MUT_SLIMY_GREEN_SCALES, MUTACT_FULL)
+          ? _mut_level(MUT_SLIMY_GREEN_SCALES, MUTACT_FULL) * 100 : 0;         // +1, +2, +3
+    AC += _mut_level(MUT_THIN_METALLIC_SCALES, MUTACT_FULL)
+          ? _mut_level(MUT_THIN_METALLIC_SCALES, MUTACT_FULL) * 100 : 0;       // +1, +2, +3
+    AC += _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL)
+          ? _mut_level(MUT_YELLOW_SCALES, MUTACT_FULL) * 100 : 0;              // +1, +2, +3
+
     return (AC / 100);
 }
  /**
@@ -6205,36 +6251,6 @@ bool player::is_unbreathing() const
 bool player::is_insubstantial() const
 {
     return (false);
-}
-
-// Output level of player mutation.  If temp is true, take into account
-// the suppression of mutations by non-"Alive" Vampires and by changes of
-// form.
-int player_mutation_level(mutation_type mut, bool temp)
-{
-    const int mlevel = you.mutation[mut];
-    if (!temp)
-        return mlevel;
-
-    const mutation_activity_type active = mutation_activity_level(mut);
-
-    if (active == MUTACT_FULL || active == MUTACT_PARTIAL)
-        return (mlevel);
-    else if (active == MUTACT_HUNGER)
-    {
-        switch (you.hunger_state)
-        {
-        case HS_ENGORGED:
-            return (mlevel);
-        case HS_VERY_FULL:
-        case HS_FULL:
-            return (std::min(mlevel, 2));
-        case HS_SATIATED:
-            return (std::min(mlevel, 1));
-        }
-    }
-
-    return (0);
 }
 
 int player::res_acid() const
