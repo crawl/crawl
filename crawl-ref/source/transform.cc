@@ -85,7 +85,7 @@ bool form_can_butcher_barehanded(transformation_type form)
             || form == TRAN_ICE_BEAST);
 }
 
-// Used to mark transformations which override species/mutation intrinsics.
+// Used to mark transformations which override species intrinsics.
 bool form_changed_physiology(transformation_type form)
 {
     return (form != TRAN_NONE && form != TRAN_APPENDAGE
@@ -137,6 +137,7 @@ bool form_can_wear_item(const item_def& item, transformation_type form)
     }
 }
 
+// Used to mark forms which keep most form-based mutations.
 bool form_keeps_mutations(transformation_type form)
 {
     switch (form)

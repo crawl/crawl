@@ -138,12 +138,6 @@ static bool _is_covering(mutation_type mut)
     return (false);
 }
 
-static bool _true_scales(mutation_type mut)
-{
-    return (mut != MUT_THIN_SKELETAL_STRUCTURE && mut != MUT_DISTORTION_FIELD
-            && _is_covering(mut));
-}
-
 bool is_body_facet(mutation_type mut)
 {
     for (unsigned i = 0; i < ARRAYSZ(_body_facets); i++)
@@ -194,23 +188,45 @@ mutation_activity_type mutation_activity_level(mutation_type mut)
     }
     else if (!form_keeps_mutations())
     {
-        if (get_mutation_def(mut).form_based)
+        // Dex and HP changes are kept in all forms.
+        if (mut == MUT_ROUGH_BLACK_SCALES || mut == MUT_RUGGED_BROWN_SCALES)
+            return (MUTACT_PARTIAL);
+        else if (get_mutation_def(mut).form_based)
             return (MUTACT_INACTIVE);
     }
 
     if (you.form == TRAN_STATUE)
     {
-        if (mut == MUT_GELATINOUS_BODY || mut == MUT_TOUGH_SKIN
-            || mut == MUT_SHAGGY_FUR || mut == MUT_FAST || mut == MUT_SLOW
-            || mut == MUT_IRIDESCENT_SCALES)
+        // Statues get all but the AC benefit from scales, but are not affected
+        // by other changes in body material or speed.  We assume here that
+        // scale mutations are physical and therefore do not need the vampire
+        // checks below.
+        switch (mut)
         {
+        case MUT_GELATINOUS_BODY:
+        case MUT_TOUGH_SKIN:
+        case MUT_SHAGGY_FUR:
+        case MUT_FAST:
+        case MUT_SLOW:
+        case MUT_IRIDESCENT_SCALES:
             return (MUTACT_INACTIVE);
-        }
-        else if (_true_scales(mut))
+        case MUT_LARGE_BONE_PLATES:
+        case MUT_ROUGH_BLACK_SCALES:
+        case MUT_RUGGED_BROWN_SCALES:
             return (MUTACT_PARTIAL);
+        case MUT_ICY_BLUE_SCALES:
+        case MUT_MOLTEN_SCALES:
+        case MUT_YELLOW_SCALES:
+            return (you.mutation[mut] > 1 ? MUTACT_PARTIAL : MUTACT_INACTIVE);
+        case MUT_SLIMY_GREEN_SCALES:
+        case MUT_THIN_METALLIC_SCALES:
+            return (you.mutation[mut] > 2 ? MUTACT_PARTIAL : MUTACT_INACTIVE);
+        default:
+            break;
+        }
     }
 
-    // For all except the semi-undead, mutations always apply.
+    // Vampires may find their mutations suppressed by thirst.
     if (you.is_undead == US_SEMI_UNDEAD)
     {
         // Innate mutations are always active
@@ -242,10 +258,39 @@ static int _num_part_suppressed = 0;
 static int _num_form_based = 0;
 static int _num_hunger_based = 0;
 
-// Can the player ever transform?
-static bool _species_can_transform()
+// Can the player transform?  Returns true if the player is ever capable
+// of transforming (i.e. not a mummy or ghoul) and either: is transformed
+// (ignoring blade hands and appendage), is a vampire of sufficient level
+// to use bat form, or has a form-change spell (again, other than blade hands
+// and beastly appendage) memorised.
+static bool _player_can_transform()
 {
-    return you.species != SP_MUMMY && you.species != SP_GHOUL;
+    if (you.species == SP_MUMMY || you.species == SP_GHOUL)
+        return (false);
+
+    if (form_changed_physiology())
+        return (true);
+
+    // Bat form
+    if (you.species == SP_VAMPIRE && you.experience_level >= 3)
+        return (true);
+
+    for (int i = 0; i < MAX_KNOWN_SPELLS; i++)
+    {
+        switch (you.spells[i])
+        {
+        case SPELL_SPIDER_FORM:
+        case SPELL_ICE_FORM:
+        case SPELL_STATUE_FORM:
+        case SPELL_DRAGON_FORM:
+        case SPELL_NECROMUTATION:
+            return (true);
+        default:
+            break;
+        }
+    }
+
+    return (false);
 }
 
 static std::string _annotate_form_based(std::string desc, bool suppressed)
@@ -256,7 +301,7 @@ static std::string _annotate_form_based(std::string desc, bool suppressed)
         ++_num_full_suppressed;
     }
 
-    if (_species_can_transform())
+    if (_player_can_transform())
     {
         ++_num_form_based;
         desc += "<yellow>*</yellow>";
@@ -1641,7 +1686,7 @@ std::string mutation_name(mutation_type mut, int level, bool colour)
             ++_num_part_suppressed;
         }
 
-        if (mdef.form_based && _species_can_transform())
+        if (mdef.form_based && _player_can_transform())
         {
             ++_num_form_based;
             result += colour ? "<yellow>*</yellow>" : "*";
