@@ -1195,7 +1195,6 @@ ITEM:       apple / choko
 COLOUR:     m = blue
 COLOUR:     = = cyan
 COLOUR:     + = cyan
-MONS:       dragon
 MONS:       human ; robe ego:fire_resistance
 MONS:       toenail golem
 :           place_chained_volcano(_G)
@@ -1213,15 +1212,15 @@ MAP
       xxxx                  vvvvvvvvvvvvv
    xxxxllxxx xxx            v...........v
  xxxlllllllxxxlxxx          v.vvvvvvvvv.v
-xxlllVlllllllllllxxxx       v.v33$e$$fv.v
+xxlllVlllllllllllxxxx       v.v22$e$$fv.v
  xxlllllllllllllllllxxx     v.v$$$gddgv.v
 xxllllllllllllllllllllxx    v.+ggdf$$ev.v
  xxllllllllvmvmvmvmvmvvvvvvvvvvvvvvvvvv.v
- xxllllllllm.....vKiii...2...v.....=....v
-  xxlllllllv.232.viWtWW......+.<.vvvvvvvv
-   xxllllllm.....vllttW..2...v...vxxx
+ xxllllllllm.....vKiii...1...v.....=....v
+  xxlllllllv.121.viWtWW......+.<.vvvvvvvv
+   xxllllllm.....vllttW..1...v...vxxx
     xxxllllvvv+vvvvvvvvvvvvvvvv+vv.yxx
-      xxlllm.....v.v..2v2.....v..m..yxx
+      xxlllm.....v.v..1v1.....v..m..yxx
      xxllllv.<.A.+.v+vvvvv+v+vvv.=..Lyxxx
     xxlllllm.....v...............mLLllllxx
     xxlllllvmvmvmvmvmvmvmvmvmvmvmvlllllxxx
