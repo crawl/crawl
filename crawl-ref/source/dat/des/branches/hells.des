@@ -937,6 +937,7 @@ ENDMAP
 NAME:    evilmike_geh
 ORIENT:  encompass
 SHUFFLE: ([{<
+KMASK:   . = no_monster_gen
 NSUBST:  A = 1:+ / *=+cc
 SUBST:   B = ccc+
 SHUFFLE: CI / ''
@@ -997,23 +998,23 @@ Llllln--vv--C----E-----E----C--vv--nllllllllllllllRlv.G.vlRllllllllllL
 Llllln--vv--I----F-----F----I--vv--nllllllllllllllllv...vllllllllllllL
 Lllllc----5-cccccccc-cccccccc-5----cllllllllcccllccccc+cccccllcccllllL
 Lllllc------c.....GcAcG.....c------cllllllllcccncc----4----ccncccllllL
-LllllcccCIccc...............cccICcccllllllllcc%--c--v---v--c--%ccllllL
+LllllcccCIccc.......7.......cccICcccllllllllcc%--c--v---v--c--%ccllllL
 Lllllllc--c...................c--cllllllllllln%5-+--v---v--+-5%nlllllL
-Lllllllc--c.........7.........c--clllllllllllc%--c---------c--%clllllL
+Lllllllc--c.........v.........c--clllllllllllc%--c---------c--%clllllL
 Lllllllc--c....vv.......vv....c--cllllllllRlcccccccccc+ccccccccccllllL
 Lllllllc--c....vv.......vv....c--cllllllllllcccccccccc----------cllllL
 LlllllccEFc......8.....8......cFEccvvmmvmmvvc--------cccccccccc-cllllL
-Llllllc---cG.................Gc---c.........+--v--v---4-------c-cllllL
-LlllllN---cc........{........cc---+..G.G.G.7c--------v--v--v-4+-cllllL
-Llllllc4---A..7....<G(....7..B---4c.....8...+----------------D+-nllllL
-LlllllN---cc........[........cc---+..G.G.G.7c--------v--v--v-4+-cllllL
-Llllllc---cG.................Gc---c.........+--v--v---4-------c-cllllL
+Llllllc---cG........{........Gc---c.........+--v--v---4-------c-cllllL
+LlllllN---cc.................cc---+..G.G.G.7c--------v--v--v-4+-cllllL
+Llllllc4---A7.v...<.G.(...v.7B---4c.....8...+----------------D+-nllllL
+LlllllN---cc.................cc---+..G.G.G.7c--------v--v--v-4+-cllllL
+Llllllc---cG........[........Gc---c.........+--v--v---4-------c-cllllL
 LlllllccEFc......8.....8......cFEccvvmmvmmvvc--------cccccccccc-cllllL
 Lllllllc--c....vv.......vv....c--cllllllllllcccccccccc-------+--cllllL
 Lllllllc--c....vv.......vv....c--cllllllllRlcc-------c--vvv--ccccllllL
-Lllllllc--c.........7.........c--clllllllllllc-4-----+-------c5clllllL
+Lllllllc--c.........v.........c--clllllllllllc-4-----+-------c5clllllL
 Lllllllc--c...................c--cllllllllllln--4ccccccccccccc%nlllllL
-LllllcccCIccc...............cccICcccllllllllcc---+--------+--%%ccllllL
+LllllcccCIccc.......7.......cccICcccllllllllcc---+--------+--%%ccllllL
 Lllllc------c.....GcAcG.....c------cllllllllcccncc--------cccncccllllL
 Lllllc----5-cccccccc-cccccccc-5----cllllllllcccllccccc+cccccllcccllllL
 Llllln--vv--I----F-----F----I--vv--nllllllllllllllllv...vllllllllllllL
