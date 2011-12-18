@@ -1706,6 +1706,7 @@ NAME:   evilmike_holy_pan
 TAGS:   pan no_pool_fixup
 ORIENT: encompass
 NSUBST: . = > / .
+NSUBST: . = 2:6 / *:.
 ITEM:   potion of curing, potion of heal wounds, acquire any
 ITEM:   w:1 potion of cure mutation / w:3 any potion
 ITEM:   potion of restore abilities / any potion
@@ -1746,7 +1747,7 @@ MARKER: G = lua:portal_desc { \
                 desc="golden statue", \
                 desc_long="A solid gold statue of a saint." }
 : _G.set_random_mon_list("angel / cherub / ophan / daeva / phoenix / " ..
-:                        "apis / paladin / apis / shedu / angel")
+:                        "apis / paladin / apis / ophan / angel")
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxCCCCCxxxxxxxxxxxxwwwwxxxxxxxxxwwwxxxwwwxxxxxxCCCCCCCCCCCCCCCCCxxxxxxxxxxx
