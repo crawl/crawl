@@ -263,12 +263,12 @@ xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxx?xxx?x?xx?x.2xx?xxx?x*?xxx?.2.xxxx
 xxxxxxxxxxxxxxx.2.......?xx.x.?xxx?.??xxxx?x.?xxx
-xxxxxxxxxxxxx?....xxx...2....??????..????x..%xxxx
-xx?xx???xxxxx..xx??xx??..........?...???..??x=.?x
-@......xxx.2.xx?xxxxxx?x?x??.......1...2.x.xxx.?x
-xxx?xxx...xxxxxxxxxxxx?xxxx.??.2...?......?xxx$xx
-xxxxxx?xxx?xxxxxxxxxxxx....xx??...?....??..??xx?x
-xxxxxxxxxxxxxxxxxxxxx??.xxx?xx????..???2??.2O?xxx
+xxxxxxxxxxxxx?....xxx...2....??????..????x..%cccc
+xx?xx???xxxxx..xx??xx??..........?...???..??c=.?c
+@......xxx.2.xx?xxxxxx?x?x??.......1...2.x.ccc.?c
+xxx?xxx...xxxxxxxxxxxx?xxxx.??.2...?......?ccc$cc
+xxxxxx?xxx?xxxxxxxxxxxx....xx??...?....??..??cc?c
+xxxxxxxxxxxxxxxxxxxxx??.xxx?xx????..???2??.2O?ccc
 xxxxxxxxxxxxxxxxxxxxx?R?xxxxxxxxxx.xxx?xxx?xxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -1055,8 +1055,8 @@ DEPTH:  Lair
 MONS:   plant / oklob plant w:1 / nothing w:15
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-xllllllllxxxxxxxxxxxxxxxxxxx11xxx111....
-xlllllllxxxxxxxxxxxxxx111xxxx111xx111..@
+xllllllllxxxxxxxxxxxxxxxxxxx11xxx111.....
+xlllllllxxxxxxxxxxxxxx111xxxx111xx111...@
 xlllllxxxx111xxx11xxxxx111111111111111..x
 xllxxxxxx11xxxx11xxxx111111111111111111xx
 xllllxxxx1xxxxxx11111111111111111111x1xx
