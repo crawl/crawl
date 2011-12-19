@@ -361,6 +361,7 @@ ENDMAP
 # Lich vault
 NAME:  weyrava_lich_vault
 DEPTH: Crypt
+CHANCE: 100%
 TAGS:  no_monster_gen no_item_gen
 ITEM:  gold
 KFEAT: Z = blade trap / needle trap / bolt trap / w:8 zot trap / w:25 floor
@@ -372,22 +373,22 @@ KITEM: v = $ / %
 SUBST: $ = $.*|
 SUBST: + = +=
 MAP
-   ccccc
-ccccv.vcccc
-c$.=.Y..=$c
-c.ccv.vcc.c
-c+ccc+ccc+c
-c..$c.c$..c
-c.1.c.c.1.c
-c$.$c.c$.$c
-ccc=c.ccccc
-cccZcZc$c
-c.=.cZczc
-cZcccZc=c
-c.=2+Z+2c
-cccccZccc
-    c.c
-    c@c
+    ccccc
+ ccccv.vcccc
+ c$.=.Y..=$c
+ c.ccv.vcc.c
+ c+ccc+ccc+c
+ c..$c.c$..c
+@n.1.c.c.1.c
+ c$.$c.c$.$c
+ ccc=c.ccccc
+ cccZcZc$c
+ c.=.cZczc
+ cZcccZc=c
+ c.=2+Z+2c
+ cccccZccc
+     c.c
+     c@c
 ENDMAP
 
 ##############################################################################
