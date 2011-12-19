@@ -804,9 +804,9 @@ TAGS:    trove no_item_gen no_monster_gen allow_dup no_species_fe
 WEIGHT:  1
 ORIENT:  encompass
 ######## There should be a better way than listing all of the unrandarts...
-ITEM:    chain mail unrand:chain_mail_of_lear                                /\
+ITEM:    chain mail unrand:lears_chain_mail                                  /\
  randart plate armour w:50                                                   /\
-         plate armour unrand:patent_armour_of_maxwell                        /\
+         plate armour unrand:maxwells_patent_armour                          /\
  randart fire dragon armour                                                  /\
          gold dragon armour unrand:armour_of_the_dragon_king                 /\
  randart crystal plate armour                                                /\
