@@ -1057,16 +1057,16 @@ TRACK_CFLAGS = $(subst ','\'',$(CC) $(CXX) $(ALL_CFLAGS))           # (stray ' f
 
 .PHONY: .force-cflags
 
+endif
+endif
+endif
+
 ##########################################################################
 # Dependencies
 
 DEPS := $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d)
 
 -include $(DEPS)
-
-endif
-endif
-endif
 
 # Only serves to check if all .d files can be built
 depend: $(DEPS)
