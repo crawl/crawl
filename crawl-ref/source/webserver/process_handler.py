@@ -565,7 +565,7 @@ class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
         super(CompatCrawlProcessHandler, self).add_watcher(watcher, hide)
 
         if self.process:
-            self.process.write_input("^r")
+            self.process.stdin.write("^r")
 
     def handle_input(self, msg):
         if msg.startswith("{"):
@@ -583,7 +583,7 @@ class CompatCrawlProcessHandler(CrawlProcessHandlerBase):
                 data += obj.get("text", u"").encode("utf8")
 
                 if data == "^":
-                    self.process.write_input("\\94\n")
+                    self.process.stdin.write("\\94\n")
 
                 self.process.stdin.write(data)
 
