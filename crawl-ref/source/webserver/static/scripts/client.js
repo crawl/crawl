@@ -821,6 +821,7 @@ function (exports, $, key_conversion, chat, comm) {
     window.log = log;
     window.set_layer = set_layer;
     window.assert = function () {};
+    window.abs = function (x) { if (x < 0) return -x; else return x; }
 
     comm.register_immediate_handlers({
         "ping": pong,
