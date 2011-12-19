@@ -2144,6 +2144,7 @@ bool downgrade_zombie_to_skeleton(monster* mon)
 
     // Scale the skeleton HP to the zombie HP.
     mon->hit_points     = old_hp * mon->max_hit_points / old_maxhp;
+    mon->hit_points     = std::max(mon->hit_points, 1);
 
     return (true);
 }
