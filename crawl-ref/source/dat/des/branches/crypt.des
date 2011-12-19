@@ -361,7 +361,6 @@ ENDMAP
 # Lich vault
 NAME:  weyrava_lich_vault
 DEPTH: Crypt
-CHANCE: 100%
 TAGS:  no_monster_gen no_item_gen
 ITEM:  gold
 KFEAT: Z = blade trap / needle trap / bolt trap / w:8 zot trap / w:25 floor
