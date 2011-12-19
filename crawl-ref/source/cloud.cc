@@ -30,6 +30,7 @@
 #include "ouch.h"
 #include "player.h"
 #include "random.h"
+#include "religion.h"
 #include "state.h"
 #include "terrain.h"
 #include "tiledef-gui.h"
@@ -782,6 +783,16 @@ static bool _actor_cloud_immune(const actor *act, const cloud_struct &cloud)
         return (true);
 
     const bool player = act->is_player();
+
+    if (!player
+        && you.religion == GOD_FEDHAS
+        && fedhas_protects(act->as_monster())
+        && (cloud.whose == KC_YOU || cloud.whose == KC_FRIENDLY)
+        && (act->as_monster()->friendly() || act->as_monster()->neutral()))
+    {
+        return (true);
+    }
+
     switch (cloud.type)
     {
     case CLOUD_FIRE:
