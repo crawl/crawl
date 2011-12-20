@@ -3233,6 +3233,13 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
         return (false);
     }
 
+    if (mons->is_constricted())
+    {
+        if (!quiet)
+            simple_monster_message(mons, " is being constricted!");
+        return (false);
+    }
+
     // First try: move monster onto your position.
     bool swap = !monster_at(loc) && monster_habitable_grid(mons, grd(loc));
 
