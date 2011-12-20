@@ -391,8 +391,7 @@ std::string describe_mutations()
                 msg += " continuously";
             msg += ".";
 
-            result += _annotate_form_based(msg, (form_changed_physiology()
-                                                 && you.form != TRAN_LICH));
+            result += _annotate_form_based(msg, player_is_shapechanged());
             have_any = true;
         }
         break;
