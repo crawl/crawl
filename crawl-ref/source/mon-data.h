@@ -2335,7 +2335,7 @@ static monsterentry mondata[] = {
 {
     MONS_VAMPIRE_MOSQUITO, 'y', BROWN, "vampire mosquito",
     M_NO_SKELETON | M_BLOOD_SCENT,
-    MR_VUL_POISON,
+    MR_NO_FLAGS,
     200, 10, MONS_VAMPIRE_MOSQUITO, MONS_VAMPIRE_MOSQUITO, MH_UNDEAD, -3,
     { {AT_BITE, AF_DISEASE, 5}, {AT_BITE, AF_VAMPIRIC, 8}, AT_NO_ATK,
        AT_NO_ATK },
@@ -2554,7 +2554,7 @@ static monsterentry mondata[] = {
 {
     MONS_PROFANE_SERVITOR, 'A', ETC_BLOOD, "profane servitor",
     M_FIGHTER | M_SPELLCASTER | M_PRIEST | M_SEE_INVIS | M_SPEAKS,
-    MR_RES_COLD | MR_RES_POISON | mrd(MR_RES_ELEC, 2),
+    MR_RES_COLD | mrd(MR_RES_ELEC, 2),
     0, 10, MONS_ANGEL, MONS_PROFANE_SERVITOR, MH_UNDEAD, -8,
     { {AT_HIT, AF_VAMPIRIC, 25}, {AT_HIT, AF_DRAIN_XP, 10}, AT_NO_ATK,
        AT_NO_ATK },
