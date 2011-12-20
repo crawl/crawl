@@ -323,7 +323,6 @@ static mon_resist_def _serpent_of_hell_resists(int flavour)
     {
     case BRANCH_GEHENNA:
         res.hellfire = 1;
-        res.fire = 3;
         break;
 
     case BRANCH_COCYTUS:
