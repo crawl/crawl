@@ -4089,6 +4089,16 @@ bool monster::is_priest() const
     return (flags & MF_PRIEST);
 }
 
+bool monster::is_fighter() const
+{
+    return (flags & MF_FIGHTER);
+}
+
+bool monster::is_archer() const
+{
+    return (flags & MF_ARCHER);
+}
+
 bool monster::is_actual_spellcaster() const
 {
     return (flags & MF_ACTUAL_SPELLS);

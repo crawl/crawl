@@ -1387,9 +1387,6 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     mon_inv_type slot = get_mon_equip_slot(mons, mitm[msl]);
     ASSERT(slot != NUM_MONSTER_SLOTS);
 
-    const bool skilled = mons->flags & MF_FIGHTER;
-    const bool archer  = mons->flags & MF_ARCHER;
-
     mons->lose_energy(EUT_MISSILE);
     const int throw_energy = mons->action_energy(EUT_MISSILE);
 
@@ -1424,7 +1421,7 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
     ammoDamBonus = item.plus2;
 
     // Archers get a boost from their melee attack.
-    if (archer)
+    if (mons->is_archer())
     {
         const mon_attack_def attk = mons_attack_spec(mons, 0);
         if (attk.type == AT_SHOOT)
@@ -1690,8 +1687,8 @@ static bool _mons_throw(monster* mons, struct bolt &pbolt, int msl)
              pbolt.damage.num, pbolt.damage.size);
     }
 
-    // Skilled archers get better to-hit and damage.
-    if (skilled)
+    // Skilled fighters get better to-hit and damage.
+    if (mons->is_fighter())
     {
         pbolt.hit         = pbolt.hit * 120 / 100;
         pbolt.damage.size = pbolt.damage.size * 120 / 100;
@@ -1791,10 +1788,10 @@ static bool _handle_throw(monster* mons, bolt & beem)
     if (mons_itemuse(mons) < MONUSE_STARTING_EQUIPMENT)
         return (false);
 
-    const bool archer = mons->flags & MF_ARCHER;
+    const bool archer = mons->is_archer();
 
     // Highly-specialised archers are more likely to shoot than talk. (?)
-    if (one_chance_in(archer? 9 : 5))
+    if (one_chance_in(archer ? 9 : 5))
         return (false);
 
     // Don't allow offscreen throwing for now.
