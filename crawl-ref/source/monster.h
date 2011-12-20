@@ -126,6 +126,12 @@ public:
     // Has the 'priest' flag.
     bool is_priest() const;
 
+    // Has the 'fighter' flag.
+    bool is_fighter() const;
+
+    // Has the 'archer' flag.
+    bool is_archer() const;
+
     // Is an actual wizard-type spellcaster (it can be silenced, Trog
     // will dislike it, etc.).
     bool is_actual_spellcaster() const;
