@@ -3481,6 +3481,10 @@ int melee_attack::calc_to_hit(bool random)
         }
         else
         {                       // ...you must be unarmed
+            // Members of clawed species have presumably been using the claws,
+            // making them more practiced and thus more accurate in unarmed
+            // combat.  They keep this benefit even the claws are covered (or
+            // missing because of a change in form).
             mhit += species_has_claws(you.species) ? 4 : 2;
 
             mhit += maybe_random_div(you.skill(SK_UNARMED_COMBAT, 100), 100,

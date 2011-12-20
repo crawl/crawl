@@ -508,7 +508,7 @@ std::string describe_mutations()
         result += "You cannot wear armour.\n";
         result += "You are incapable of any advanced item manipulation.\n";
         result += _annotate_form_based("Your paws have sharp claws.",
-            form_keeps_mutations() && you.form != TRAN_BLADE_HANDS);
+            !form_keeps_mutations() || you.form == TRAN_BLADE_HANDS);
         have_any = true;
         break;
 
