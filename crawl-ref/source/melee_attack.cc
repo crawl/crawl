@@ -3439,7 +3439,9 @@ void melee_attack::player_apply_staff_damage()
  */
 int melee_attack::calc_to_hit(bool random)
 {
-    const int hd_mult = mons_class_flag(attacker->type, M_FIGHTER) ? 25 : 15;
+    const bool skilled = attacker->atype() == ACT_MONSTER
+                         && attacker->as_monster()->flags & MF_FIGHTER;
+    const int hd_mult = skilled ? 25 : 15;
     int mhit = attacker->atype() == ACT_PLAYER ?
                 15 + (calc_stat_to_hit_base() / 2)
               : 18 + attacker->get_experience_level() * hd_mult / 10;
