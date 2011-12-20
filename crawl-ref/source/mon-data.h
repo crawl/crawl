@@ -3702,7 +3702,7 @@ static monsterentry mondata[] = {
     M_COLD_BLOOD,
     MR_NO_FLAGS,
     750, 10, MONS_SNAKE, MONS_ANACONDA, MH_NATURAL, -3,
-    { {AT_CONSTRICT, AF_CRUSH, 30}, {AT_BITE, AF_PLAIN, 30},
+    { {AT_CONSTRICT, AF_CRUSH, 30}, {AT_BITE, AF_PLAIN, 20},
       AT_NO_ATK, AT_NO_ATK },
     { 11, 3, 5, 0 },
     4, 16, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_HISS,

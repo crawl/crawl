@@ -147,6 +147,16 @@ static bool _swap_monsters(monster* mover, monster* moved)
         && moved->type != MONS_KRAKEN_TENTACLE)
         return (false);
 
+    // If the target monster is constricted it is stuck
+    // and not eligible to be swapped with
+    if (moved->is_constricted())
+    {
+        dprf("%s fails to swap with %s, constricted.",
+            mover->name(DESC_THE).c_str(),
+            moved->name(DESC_THE).c_str());
+            return (false);
+    }
+
     // Swapping is a purposeful action.
     if (mover->confused())
         return (false);
