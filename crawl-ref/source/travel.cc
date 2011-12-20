@@ -3885,7 +3885,7 @@ void TravelCache::update()
 
 void TravelCache::update_da_counters()
 {
-    ::update_da_counters(find_level_info(level_id::current()));
+    ::update_da_counters(&get_level_info(level_id::current()));
 }
 
 unsigned int TravelCache::query_da_counter(daction_type c)
