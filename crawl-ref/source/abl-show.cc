@@ -1161,6 +1161,10 @@ static talent _get_talent(ability_type ability, bool check_confused)
         failure = 160 - you.piety;      // starts at 60%
         break;
 
+    case ABIL_YRED_ANIMATE_REMAINS_OR_DEAD: // Placeholder.
+        invoc = true;
+        break;
+
     case ABIL_YRED_ANIMATE_REMAINS:
     case ABIL_YRED_ANIMATE_DEAD:
     case ABIL_YRED_INJURY_MIRROR:
