@@ -79,6 +79,8 @@ enum monster_info_flags
     MB_BREATH_WEAPON,
     MB_DEATHS_DOOR,
     MB_FIREWOOD,
+    MB_TWO_WEAPONS,
+    MB_NO_REGEN,
     NUM_MB_FLAGS
 };
 
