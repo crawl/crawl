@@ -728,7 +728,7 @@ INT:      3
 BRAND:    SPWPN_RETURNING
 DESC_END: Presumably this relic led to the invention of the famous spell, or maybe the other way around.
 
-NAME:     Captain's cutlass
+NAME:     captain's cutlass
 APPEAR:   black cutlass
 OBJ:      OBJ_WEAPONS/WPN_SABRE
 PLUS:     +6/+7
@@ -997,7 +997,7 @@ MAGIC:   30
 BOOL:    elec
 DESC:    A dirty hat.
 
-NAME:    Fencer's gloves
+NAME:    fencer's gloves
 APPEAR:  silk gloves
 OBJ:     OBJ_ARMOUR/ARM_GLOVES
 PLUS:    +2
