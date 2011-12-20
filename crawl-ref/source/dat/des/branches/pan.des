@@ -1695,10 +1695,6 @@ ENDMAP
 # Four exits are given, with one placed randomly and the others in a room safe
 # to teleport into.
 #
-# There is the problem of this vault being free loot to followers of good gods, 
-# and this vault being ultra-deadly to undead and demonspawn. I've made it easy
-# to teleport to the exit, at least.
-#
 # My opinion is that in the long term this concept would work better as a
 # portal vault (for pan, even).
 #
@@ -1707,9 +1703,13 @@ TAGS:   pan no_pool_fixup
 ORIENT: encompass
 NSUBST: . = > / .
 NSUBST: . = 2:6 / *:.
-ITEM:   potion of curing, potion of heal wounds, acquire any
-ITEM:   w:1 potion of cure mutation / w:3 any potion
-ITEM:   potion of restore abilities / any potion
+ITEM:   w:5 any / potion of curing
+ITEM:   any / potion of heal wounds
+ITEM:   acquire any
+ITEM:   potion of cure mutation
+ITEM:   potion of restore abilities
+ITEM:   any
+NSUBST: i = 2=ghh / 3=ghhiii / *:i
 MONS:   angel
 MONS:   cherub
 MONS:   paladin
@@ -1723,7 +1723,7 @@ KMONS:  0 = apis
 KMONS:  A = apis
 KMONS:  B = daeva god:Zin
 KMONS:  Z = patrolling silver star
-KMONS:  _ = patrolling seraph
+KMONS:  S = patrolling seraph
 KFEAT:  _ = altar_the_shining_one
 KFEAT:  E = altar_elyvilon
 KFEAT:  Z = altar_zin
@@ -1734,11 +1734,10 @@ TILE:   v = dngn_metal_wall_white
 COLOUR: v& = white
 # Needs a tile!
 # TILE:   GH = dngn_statue_golden
-FTILE:  _124DcG|*' = floor_limestone
+FTILE:  _124SDcG|*' = floor_limestone
 FTILE:  "E0 = floor_grass
 COLOUR: "0 = green
-FTILE:  -ZBgh&v = floor_vault
-KPROP:  '|*124D_-&ZBgh = no_tele_into
+FTILE:  -ZBghi&v = floor_vault
 SUBST:  D& = +, '"- = ., H = G, C = c
 MARKER: v = lua:portal_desc { \
                 desc="silver wall", \
@@ -1748,6 +1747,14 @@ MARKER: G = lua:portal_desc { \
                 desc_long="A solid gold statue of a saint." }
 : _G.set_random_mon_list("angel / cherub / ophan / daeva / phoenix / " ..
 :                        "apis / paladin / apis / ophan / angel")
+# Do not place if you are with a holy god. It's just free loot in that case.
+veto {{
+    if you.god() == "The Shining One" or you.god() == "Zin" or you.god() == "Elyvilon" then
+        return true
+    else
+        return false
+    end
+}}
 MAP
 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 xxxxxxxCCCCCxxxxxxxxxxxxwwwwxxxxxxxxxwwwxxxwwwxxxxxxCCCCCCCCCCCCCCCCCxxxxxxxxxxx
@@ -1776,9 +1783,9 @@ xxxxxxxx.....xxxx...wwwwwwwww.ccc+..........3.......3..........+ccc...xxxxxxxxxx
 xxxxxxxx....xxxxx..wwwwwwwww...cc...............5...............cc...xxxxxxxxxxx
 xxxxxxx....xxxxx...wwwwwwww....cc..www.ccccccccccccccccccc.www..cc...xxxxxxxxxxx
 xxxxxx.....xxxx....wwwwwwwww...cc..wHw.cccccccc|||cccccccc.wHw..cc....xxxxxxxxxx
-xxxxxx....xxxx...wwwwwxxwwww...cc..www.ccw4''|||||||''2wcc.www..cc....xxxxxxxxxx
+xxxxxx....xxxx...wwwwwxxwwww...cc..www.ccw4''|||||||''4wcc.www..cc....xxxxxxxxxx
 xxxxxx....xxx...wwwwwxxwwww....cc......ccw''||||'||||''wcc......cc....xxxxxxxxxx
-xxxxxx...xxx...wwwwwwwwwww..xx.cc..ccc+ccccccccc'ccccccccc+ccc..cc.....xxxxxxxxx
+xxxxxx...xxx...wwwwwwwwwww..xx.cc..ccc+cccccccccSccccccccc+ccc..cc.....xxxxxxxxx
 xxxxx....xx....wwwwwwwwww..xx..cc..c'''ccwwwcccc'ccccwwwcc***c..cc.....xxxxxxxxx
 xxxx...........wwwxwwwwww.xxx..cc..c1'1cGw'2'cc1_1cc'2'wGc***c..cc......xxxxxxxx
 xxxx..........wwwwxxwwww..xxx..cc..ccccccw''''c'4'c''''wcccccc..cc........xxxxxx
@@ -1802,17 +1809,17 @@ xwwwwww.....xxxx.........xx...ccc+.......3.............3.......+ccc.........xxxx
 xwwww........xx...............c*'cccccccccccc.......cccccccccccc'*c........xxxxx
 xww...........................c1*cccccccccccc.......cccccccccccc*1c.......xxxxxx
 xxxx..xx..v.vvvvvvvvvvvvvv....cccc..........H.......H..........cccc......xxxxxxx
-xxxx..xx...vvv----v----hgv.v................................x..........xxxxxxxxx
-xxxx...x..vvv-Bv--&--vvghv.vv...............H.......H......xxx........xxxxxxxxxx
-xxxxx.....vv------v----hgv........v.........6.......6......xxx.........xxxxxxxxx
+xxxx..xx...vvv----v-----iv.v................................x..........xxxxxxxxx
+xxxx...x..vvv-Bv-----vvBiv.vv...............H.......H......xxx........xxxxxxxxxx
+xxxxx.....vvi-----v-----iv........v.........6.......6......xxx.........xxxxxxxxx
 xxxxx.....vv------vvvvvvvvvvvvvv......xx....H.......H.....xxx.....xx..x..xxxxxxx
 xxxxx.....vv---------vBv-v-v-v-v.v...xxxx.......................xxxxx....xxxxxxx
-xxxxx.....v--Z---vvv-&---------&......xxxx..................xxxxxxxxxxxx...x.8xx
+xxxxx.....vg-Z---vvv-&---------&......xxxx..................xxxxxxxxxxxx...x.8xx
 xxxxxx....vv---------vBv-v-v-v-v.v.....xxx.............xxxxxxxxxxxxxxxx........x
 xxxxxx....vv------vvvvvvvvvvvvvv...............xxxxxxxxxxxxxxx$$$xxxxx..xxxx...x
-xxxxxxx...vv------v----hgv........v......xxxxxxxxxxxxxxxxxxxx$.88xxxx8.xxxx..xxx
-xxxxxxxx..vvv-Bv--&--vvghv.vv.........xxxxxxxxxxxxxx$$$$$xxxxxx8...xxxxxxx....xx
-xxxxxxxx...vvv----v----hgv.v......xxxxxxxxxxxxxxxxx$$$9$$$xxxxxx..x..xxx....x..x
+xxxxxxx...vvi-----v-----iv........v......xxxxxxxxxxxxxxxxxxxx$.88xxxx8.xxxx..xxx
+xxxxxxxx..vvv-Bv-----vvBiv.vv.........xxxxxxxxxxxxxx$$$$$xxxxxx8...xxxxxxx....xx
+xxxxxxxx...vvv----v-----iv.v......xxxxxxxxxxxxxxxxx$$$9$$$xxxxxx..x..xxx....x..x
 xxxxxxxx..v.vvvvvvvvvvvvvv....xxxxxxxxxxxxxxxxxxxxx$$$$$$..xxxxxxx........xxxx8x
 xxxxxxxxx..................xxxxxxxxxxxxxxxxxxxxxxxxx$$$.....xxxxxxx......xxxxxxx
 xxxxxxxxxxx..............xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx....wwxxx....xxxxxxxxxxx
