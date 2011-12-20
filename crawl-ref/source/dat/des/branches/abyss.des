@@ -509,6 +509,7 @@ KFEAT:  12 = W
 KFEAT:  * = +
 MARKER: * = lua:restrict_door()
 SUBST:  c = ccv, . = .....W
+KFEAT:  n = iron_grate
 MAP
  .cccccc5 5cccccc.
  cc .. cc8cc .. cc
