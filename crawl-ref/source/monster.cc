@@ -3436,9 +3436,7 @@ int monster::res_rotting(bool temp) const
 {
     UNUSED(temp);
 
-    int res = get_mons_resists(this).rotting;
-    if (res)
-        return (1);
+    int res = 0;
     switch (holiness())
     {
     case MH_NATURAL:
@@ -3465,7 +3463,10 @@ int monster::res_rotting(bool temp) const
     }
     if (is_insubstantial())
         res = 3;
-    return (res);
+    if (get_mons_resists(this).rotting)
+        res += 1;
+
+    return (std::min(3, res));
 }
 
 int monster::res_holy_energy(const actor *attacker) const

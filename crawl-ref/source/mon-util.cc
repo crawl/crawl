@@ -329,10 +329,6 @@ static mon_resist_def _serpent_of_hell_resists(int flavour)
     case BRANCH_COCYTUS:
         res.cold = 3;
         break;
-
-    case BRANCH_TARTARUS:
-        res.rotting = 1;
-        break;
     }
 
     return res;
