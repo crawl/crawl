@@ -3153,7 +3153,7 @@ bool melee_attack::apply_damage_brand()
 //  * Each weapon type has a noise rating, like it does an accuracy
 //    rating and base delay.
 //
-//  * For player, stealth skill and/or weapon skillr reducing noise.
+//  * For player, stealth skill and/or weapon skill reducing noise.
 //
 //  * Randart property to make randart weapons louder or softer when
 //    they hit.
