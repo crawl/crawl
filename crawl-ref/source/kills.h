@@ -13,7 +13,7 @@
 #include "enum.h"
 
 class monster;
-class monster_info;
+struct monster_info;
 class reader;
 class writer;
 
