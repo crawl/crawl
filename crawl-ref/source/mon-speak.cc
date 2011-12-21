@@ -824,16 +824,6 @@ bool mons_speaks(monster* mons)
         return (false);
     }
 
-    if (foe == NULL)
-        msg = replace_all(msg, "__YOU_RESIST", "__NOTHING_HAPPENS");
-    else if (foe->atype() == ACT_MONSTER)
-    {
-        if (you.can_see(foe))
-            msg = replace_all(msg, "__YOU_RESIST", "@The_monster@ resists.");
-        else
-            msg = replace_all(msg, "__YOU_RESIST", "__NOTHING_HAPPENS");
-    }
-
     return (mons_speaks_msg(mons, msg, MSGCH_TALK, silence));
 }
 
@@ -880,10 +870,6 @@ bool mons_speaks_msg(monster* mons, const std::string &msg,
         // Except for VISUAL, none of the above influence these.
         if (msg_type == MSGCH_TALK_VISUAL)
             silence = false;
-        if (line == "__YOU_RESIST" && !silence)
-            canned_msg(MSG_YOU_RESIST);
-        else if (line == "__NOTHING_HAPPENS" && !silence)
-            canned_msg(MSG_NOTHING_HAPPENS);
         else if (line == "__MORE" && !silence)
             more();
         else if (msg_type == MSGCH_TALK_VISUAL && !you.can_see(mons))

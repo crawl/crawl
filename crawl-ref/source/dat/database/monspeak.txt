@@ -17,12 +17,6 @@
 # monsters are ever given names like "yells" or "begs".
 ############################################################
 %%%%
-__RESIST_OR_NOTHING
-
-__YOU_RESIST
-
-__NOTHING_HAPPENS
-%%%%
 ATTACK
 
 ATTACK
@@ -295,12 +289,6 @@ SPELL:@The_monster@ casts a spell.
 SPELL:@The_monster@ howls an incantation.
 %%%%
 _fake_spell_effect_
-
-w:20
-@__RESIST_OR_NOTHING@
-
-w:15
-__YOU_RESIST
 
 ENCHANT:@The_monster@ shimmers violently.
 
@@ -1875,13 +1863,10 @@ _warn_fake_spell_effect_
 
 WARN:Your equipment suddenly seems to weigh more.
 
-__YOU_RESIST
-
 WARN:Suddenly you are surrounded with a pale green light. @player_only@
 
 WARN:You have a terrible headache.
 
-ENCHANT:@The_monster@ speeds up.
 %%%%
 _Boris_medium_
 
