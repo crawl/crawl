@@ -7529,29 +7529,32 @@ std::string _constriction_description()
     if (you.is_constricted())
     {
         constrictor_name = env.mons[you.constricted_by].
-                               name(DESC_PLAIN, true);
+                               name(DESC_A);
     }
     // names of what this monster is constricting, if any
     for (int idx=0; idx<8; idx++)
     {
         if (you.constricting[idx] != NON_ENTITY)
             constricting_name[idx] = env.mons[you.constricting[idx]].
-                                     name(DESC_PLAIN, true);
+                                     name(DESC_A);
     }
 
     if (constrictor_name != "")
         cinfo += "You are being constricted by " + constrictor_name + ".";
 
-    bool first = true;
+    std::vector<std::string> constricting;
     for (int i = 0; i < 8; i++)
         if (constricting_name[i] != "")
         {
-            if (first)
-                cinfo += "\nYou are constricting ";
-            else
-                cinfo += ", ";
-            first = false;
-            cinfo += constricting_name[i];
+            constricting.push_back(constricting_name[i]);
         }
+
+    if (!constricting.empty())
+    {
+        cinfo += "\nYou are constricting ";
+        cinfo += comma_separated_line(constricting.begin(), constricting.end());
+        cinfo += ".";
+    }
+
     return cinfo;
 }
