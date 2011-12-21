@@ -217,7 +217,7 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
         you.clear_specific_constrictions(mindex());
 
         // TODO -- and friends
-        
+
         if (you.can_see(this))
             learned_something_new(HINT_MONSTER_FRIENDLY, pos());
         break;

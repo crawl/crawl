@@ -351,7 +351,7 @@ public:
     int escape_attempts;
     int dur_been_constricted;
     int dur_has_constricted[8];     // max 8 for octopode
-    
+
     // handles non-attack turn constrictions, does not need to be saved
     bool has_constricted_this_turn;
     virtual void clear_specific_constrictions(int mindex) = 0;

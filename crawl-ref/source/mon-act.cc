@@ -1931,47 +1931,47 @@ void handle_noattack_constrictions(monster *mons)
         if (attacker->constricting[i] != NON_ENTITY)
         {
             int basedam, durdam, acdam, infdam, damage;
-	    if (attacker->constricting[i] = MHITYOU)
-	        defender = &you;
+            if (attacker->constricting[i] = MHITYOU)
+                defender = &you;
             else
                 defender = &env.mons[mons->constricting[i]];
             damage = (attacker->as_monster()->hit_dice+1)/2;
-	    basedam = damage;
-	    damage += roll_dice(1, (attacker->dur_has_constricted[i]/10)+1);
-	    durdam = damage;
+            basedam = damage;
+            damage += roll_dice(1, (attacker->dur_has_constricted[i]/10)+1);
+            durdam = damage;
             damage -= random2(1 + (defender->armour_class() / 2));
-	    acdam = damage;
+            acdam = damage;
 
             damage = defender->hurt(attacker, damage, BEAM_MISSILE, false);
             infdam = damage;
 
             std::string exclams;
-	    if (damage < HIT_WEAK)
-	        exclams = ".";
+            if (damage < HIT_WEAK)
+                exclams = ".";
             else if (damage < HIT_MED)
-	        exclams = "!";
-	    else if (damage < HIT_STRONG)
-	        exclams = "!!";
-	    else
-	        exclams = "!!!";
+                exclams = "!";
+            else if (damage < HIT_STRONG)
+                exclams = "!!";
+            else
+                exclams = "!!!";
             mprf("%s %s %s%s%s",
                  attacker->name(DESC_THE).c_str(),
                  attacker->conj_verb("constrict").c_str(),
-	         defender->name(DESC_THE).c_str(),
+                 defender->name(DESC_THE).c_str(),
 #ifdef DEBUG_DIAGNOSTICS
-	         make_stringf(" for %d", damage).c_str(),
+                 make_stringf(" for %d", damage).c_str(),
 #else
                  "",
 #endif
-	        exclams.c_str());
+                exclams.c_str());
 
-	    dprf("mconstrict at: %s df: %s base %d dur %d ac %d inf %d",
-	         attacker->name(DESC_PLAIN, true).c_str(),
-	         defender->name(DESC_PLAIN, true).c_str(),
-	         basedam, durdam, acdam, infdam);
-	    if (defender != &you && defender->as_monster()->hit_points < 1)
-	        monster_die(defender->as_monster(), KILL_MON, 
-	                     attacker->mindex());
+            dprf("mconstrict at: %s df: %s base %d dur %d ac %d inf %d",
+                 attacker->name(DESC_PLAIN, true).c_str(),
+                 defender->name(DESC_PLAIN, true).c_str(),
+                 basedam, durdam, acdam, infdam);
+            if (defender != &you && defender->as_monster()->hit_points < 1)
+                monster_die(defender->as_monster(), KILL_MON,
+                             attacker->mindex());
         }
 }
 
@@ -3620,12 +3620,12 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
     if (mons->is_constricted())
     {
         if (mons->attempt_escape())
-	    simple_monster_message(mons, " escapes!");
-	else
-	{
-	    simple_monster_message(mons, " struggles to escape constriction.");
-	    return(true);
-	}
+            simple_monster_message(mons, " escapes!");
+        else
+        {
+            simple_monster_message(mons, " struggles to escape constriction.");
+            return(true);
+        }
     }
 
     if (mons_can_open_door(mons, f))

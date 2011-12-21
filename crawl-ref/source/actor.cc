@@ -310,7 +310,7 @@ bool actor::is_constricting()
 {
     for (int i=0; i<8; i++)
         if (constricting[i] != 0)
-	    return true;
+            return true;
 
     return false;
 }
@@ -319,4 +319,3 @@ bool actor::is_constricted()
 {
     return (constricted_by != NON_ENTITY);
 }
-
