@@ -1244,11 +1244,12 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
     const int temp_rand2 = random2(4);
 
     mprf("This spell is %s %s to %s.",
-         ((chance >= 80) ? "very" :
-          (chance >= 60) ? "quite" :
-          (chance >= 45) ? "rather" :
-          (chance >= 30) ? "somewhat"
-                         : "not that"),
+         ((chance >= 100) ? "too" :
+           (chance >= 80) ? "very" :
+           (chance >= 60) ? "quite" :
+           (chance >= 45) ? "rather" :
+           (chance >= 30) ? "somewhat"
+                          : "not that"),
          ((temp_rand1 == 0) ? "difficult" :
           (temp_rand1 == 1) ? "tricky"
                             : "challenging"),
@@ -1256,6 +1257,8 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
           (temp_rand2 == 1) ? "commit to memory" :
           (temp_rand2 == 2) ? "learn"
                             : "absorb"));
+    if (chance >= 100)
+        return (false);
 
     snprintf(info, INFO_SIZE,
              "Memorise %s, consuming %d spell level%s and leaving %d?",
@@ -1279,7 +1282,7 @@ bool learn_spell(spell_type specspell, int book, bool is_safest_book)
         return (false);
     }
 
-    if (random2(40) + random2(40) + random2(40) < chance)
+    if (random2avg(100, 3) < chance && !one_chance_in(10))
     {
         mpr("You fail to memorise the spell.");
         learned_something_new(HINT_MEMORISE_FAILURE);
