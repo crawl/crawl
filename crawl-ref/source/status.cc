@@ -490,13 +490,13 @@ void fill_status_info(int status, status_info* inf)
 
     case STATUS_CONSTRICTED:
         if (you.is_constricted())
-	{
-	    inf->light_colour = YELLOW;
-	    inf->light_text   = "Constr";
-	    inf->short_text   = "constricted";
-	    inf->long_text    = "You are being constricted";
-	}
-	break;
+        {
+            inf->light_colour = YELLOW;
+            inf->light_text   = "Constr";
+            inf->short_text   = "constricted";
+            inf->long_text    = "You are being constricted";
+        }
+        break;
 
     default:
         if (!found)

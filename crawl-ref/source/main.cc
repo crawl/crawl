@@ -1370,7 +1370,7 @@ static void _go_upstairs()
     if (!you.attempt_escape()) // false means constricted and don't escape
     {
         mpr("You can't go up stairs while constricted.");
-	return;
+        return;
     }
     if (ygrd == DNGN_ENTER_SHOP)
     {
@@ -1529,7 +1529,7 @@ static void _go_downstairs()
     if (!you.attempt_escape()) // false means constricted and don't escape
     {
         mpr("You can't go down stairs while constricted.");
-	return;
+        return;
     }
 
     if (!feat_is_gate(ygrd) && !player_can_reach_floor("floor"))
@@ -4218,11 +4218,11 @@ static void _move_player(coord_def move)
         if (!you.attempt_escape()) // false means constricted and did not escape
         {
             std::string emsg = "While you don't manage to break free from ";
-	    emsg += env.mons[you.constricted_by].name(DESC_THE,true);
-	    emsg += ", you feel that another attempt might be more successful.";
-	    mpr(emsg);
-	    you.turn_is_over = true;
-	    return;
+            emsg += env.mons[you.constricted_by].name(DESC_THE,true);
+            emsg += ", you feel that another attempt might be more successful.";
+            mpr(emsg);
+            you.turn_is_over = true;
+            return;
         }
 
         std::string verb;
@@ -4344,53 +4344,53 @@ static void _do_noattack_constrictions()
         if (you.constricting[i] != NON_ENTITY)
         {
             int basedam, durdam, acdam, infdam, damage;
-	    std::string exclams;
+            std::string exclams;
 
-	    defender = &env.mons[you.constricting[i]];
+            defender = &env.mons[you.constricting[i]];
             damage = (you.strength() - roll_dice(1,3)) / 3;
-	    basedam = damage;
-	    damage += roll_dice(1, (you.dur_has_constricted[i]/10)+1);
-	    durdam = damage;
+            basedam = damage;
+            damage += roll_dice(1, (you.dur_has_constricted[i]/10)+1);
+            durdam = damage;
             damage -= random2(1 + (defender->armour_class() / 2));
-	    acdam = damage;
+            acdam = damage;
 
             damage = defender->hurt(attacker, damage, BEAM_MISSILE, false);
-	    infdam = damage;
+            infdam = damage;
             if (damage < HIT_WEAK)
-	        exclams = ".";
+                exclams = ".";
             else if (damage < HIT_MED)
-	        exclams = "!";
-	    else if (damage < HIT_STRONG)
-	        exclams = "!!";
-	    else
-	        exclams = "!!!";
+                exclams = "!";
+            else if (damage < HIT_STRONG)
+                exclams = "!!";
+            else
+                exclams = "!!!";
 
             if (damage > 0)
-	    {
-	        mprf("You %s %s%s%s",
-	             "constrict",
-		     defender->name(DESC_THE).c_str(),
+            {
+                mprf("You %s %s%s%s",
+                     "constrict",
+                     defender->name(DESC_THE).c_str(),
 #ifdef DEBUG_DIAGNOSTICS
-		     make_stringf(" for %d", damage).c_str(),
+                     make_stringf(" for %d", damage).c_str(),
 #else
                      "",
 #endif
-		     exclams.c_str());
-	    }
-	    else
-	    {
-	        mprf("You %s %s%s.",
-	             "constrict",
-		     defender->name(DESC_THE).c_str(),
-		     you.can_see(defender) ? ", but do no damage" : "");
+                     exclams.c_str());
             }
-		
-	    dprf("non-melee cons at: %s df: %s base %d dur %d ac %d inf %d",
-	         attacker->name(DESC_PLAIN, true).c_str(),
-	         defender->name(DESC_PLAIN, true).c_str(),
-	         basedam, durdam, acdam, infdam);
-	    if (defender->as_monster()->hit_points < 1)
-	        monster_die(defender->as_monster(), KILL_YOU, NON_MONSTER);
+            else
+            {
+                mprf("You %s %s%s.",
+                     "constrict",
+                     defender->name(DESC_THE).c_str(),
+                     you.can_see(defender) ? ", but do no damage" : "");
+            }
+
+            dprf("non-melee cons at: %s df: %s base %d dur %d ac %d inf %d",
+                 attacker->name(DESC_PLAIN, true).c_str(),
+                 defender->name(DESC_PLAIN, true).c_str(),
+                 basedam, durdam, acdam, infdam);
+            if (defender->as_monster()->hit_points < 1)
+                monster_die(defender->as_monster(), KILL_YOU, NON_MONSTER);
 
         }
 }

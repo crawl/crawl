@@ -465,7 +465,7 @@ private:
     bool check_set_valid_home(const coord_def &place,
                               coord_def &chosen,
                               int &nvalid) const;
-		      
+
 };
 
 #endif

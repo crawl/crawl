@@ -1319,7 +1319,7 @@ static void tag_construct_you(writer &th)
     for (unsigned int k = 0; k < 8; k++)
     {
         marshallShort(th, you.constricting[k]);
-	marshallInt(th, you.dur_has_constricted[k]);
+        marshallInt(th, you.dur_has_constricted[k]);
     }
 
     if (!dlua.callfn("dgn_save_data", "u", &th))
@@ -2349,7 +2349,7 @@ static void tag_read_you(reader &th)
     for (unsigned int k = 0; k < 8; k++)
     {
         you.constricting[k] = unmarshallShort(th);
-	you.dur_has_constricted[k] = unmarshallInt(th);
+        you.dur_has_constricted[k] = unmarshallInt(th);
     }
     }
 
@@ -3115,14 +3115,14 @@ void marshallMonster(writer &th, const monster& m)
         ASSERT(m.ghost.get());
         marshallGhost(th, *m.ghost);
     }
-    
+
     marshallShort(th, m.constricted_by);
     marshallInt(th, m.escape_attempts);
     marshallInt(th, m.dur_been_constricted);
     for (unsigned int k = 0; k < 8; k++)
     {
         marshallShort(th, m.constricting[k]);
-	marshallInt(th, m.dur_has_constricted[k]);
+        marshallInt(th, m.dur_has_constricted[k]);
     }
 
     m.props.write(th);
@@ -3646,10 +3646,10 @@ void unmarshallMonster(reader &th, monster& m)
     m.escape_attempts = unmarshallInt(th);
     m.dur_been_constricted = unmarshallInt(th);
         for (unsigned int k = 0; k < 8; k++)
-	{
-	    m.constricting[k] = unmarshallShort(th);
-	    m.dur_has_constricted[k] = unmarshallInt(th);
-	}
+        {
+            m.constricting[k] = unmarshallShort(th);
+            m.dur_has_constricted[k] = unmarshallInt(th);
+        }
     }
 
     m.props.clear();

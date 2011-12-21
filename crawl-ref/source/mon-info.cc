@@ -1249,7 +1249,7 @@ std::string monster_info::constriction_description() const
     return cinfo;
 }
 
-                
+
 
 int monster_info::randarts(artefact_prop_type ra_prop) const
 {

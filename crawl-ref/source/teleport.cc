@@ -73,13 +73,13 @@ bool monster::blink_to(const coord_def& dest, bool quiet)
     if (is_constricted())
     {
         if (constricted_by == MHITYOU)
-	    player_teleport_to_monster(this, dest);
-	else
-	    monster_teleport_to_player(constricted_by, dest);
+            player_teleport_to_monster(this, dest);
+        else
+            monster_teleport_to_player(constricted_by, dest);
     }
     for (int i = 0; i < 8; i++)
         if (constricting[i] == MHITYOU)
-	    player_teleport_to_monster(this, dest);
+            player_teleport_to_monster(this, dest);
         else if (constricting[i] != NON_ENTITY)
             monster_teleport_to_player(constricting[i], dest);
 
@@ -316,4 +316,3 @@ bool random_near_space(const coord_def& origin, coord_def& target,
 
     return (false);
 }
-

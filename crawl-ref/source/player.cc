@@ -4010,7 +4010,7 @@ void display_char_status()
         DUR_SHROUD_OF_GOLUBRIA,
         STATUS_BACKLIT,
         STATUS_UMBRA,
-	STATUS_CONSTRICTED,
+        STATUS_CONSTRICTED,
     };
 
     status_info inf;
@@ -5573,7 +5573,7 @@ void player::init()
     for (int i = 0; i < 8; i++)
     {
         constricting[i] = NON_ENTITY;
-	dur_has_constricted[i] = 0;
+        dur_has_constricted[i] = 0;
     }
 
     // Protected fields:
@@ -6856,7 +6856,7 @@ bool player::has_usable_offhand() const
             || weapon_skill(*wp) == SK_STAVES);
 }
 
-bool player::has_usable_tentacle() 
+bool player::has_usable_tentacle()
 {
     if (species != SP_OCTOPODE)
         return(false);
@@ -6864,20 +6864,20 @@ bool player::has_usable_tentacle()
     int free_tentacles = 8;
     for (int i = 0; i < 8; i++)
         if (constricting[i] != NON_ENTITY)
-	    free_tentacles--;
+            free_tentacles--;
 
     const item_def* wp = slot_item(EQ_WEAPON);
     if (wp)
     {
         if (hands_reqd(*wp, body_size()) == HANDS_TWO)
-	    free_tentacles -= 2;
-	else if (wp->base_type != OBJ_STAVES &&
-	         weapon_skill(*wp) != SK_STAVES)
+            free_tentacles -= 2;
+        else if (wp->base_type != OBJ_STAVES &&
+                 weapon_skill(*wp) != SK_STAVES)
             free_tentacles--;
     }
 
     return (free_tentacles > 0);
-	    
+
 }
 
 int player::has_pseudopods(bool allow_tran) const
@@ -7387,7 +7387,7 @@ void player::accum_has_constricted()
 {
     for (int i = 0; i < 8; i++)
         if (constricting[i] != NON_ENTITY)
-	    dur_has_constricted[i] += you.time_taken;
+            dur_has_constricted[i] += you.time_taken;
 }
 
 bool player::is_constricted_larger()
@@ -7430,22 +7430,22 @@ bool player::attempt_escape()
 
     if (attfactor > randfact)
     {
-        // message that you escaped 
+        // message that you escaped
 
         std::string emsg = "You escape ";
-	emsg += env.mons[you.constricted_by].name(DESC_THE,true);
-	emsg += "'s grasp.";
-	mpr(emsg);
-	// update monster's has constricted info
+        emsg += env.mons[you.constricted_by].name(DESC_THE,true);
+        emsg += "'s grasp.";
+        mpr(emsg);
+        // update monster's has constricted info
         for (int i = 0; i < 8; i++)
-	    if (themonst->constricting[i] == MHITYOU)
-	        themonst->constricting[i] = NON_ENTITY;
+            if (themonst->constricting[i] == MHITYOU)
+                themonst->constricting[i] = NON_ENTITY;
 
-	// update your constricted by info
-	constricted_by = NON_ENTITY;
-	escape_attempts = 0;
+        // update your constricted by info
+        constricted_by = NON_ENTITY;
+        escape_attempts = 0;
 
-	return true;
+        return true;
     }
     else
         return false;
@@ -7460,7 +7460,7 @@ void player::clear_all_constrictions()
     {
         mons = &env.mons[constricted_by];
         if (mons->alive())
-	    mons->clear_specific_constrictions(myindex);
+            mons->clear_specific_constrictions(myindex);
     }
 
     constricted_by = NON_ENTITY;
@@ -7469,19 +7469,19 @@ void player::clear_all_constrictions()
 
     for (int i = 0; i < 8; i++)
     {
-	if (constricting[i] != NON_ENTITY)
-	{
-	    mons = &env.mons[constricting[i]];
+        if (constricting[i] != NON_ENTITY)
+        {
+            mons = &env.mons[constricting[i]];
             if (mons->alive())
             {
                 std::string rmsg = "You release your hold on ";
                 rmsg += mons->name(DESC_THE,true) + ".";
                 mpr(rmsg);
-	        mons->clear_specific_constrictions(myindex);
+                mons->clear_specific_constrictions(myindex);
             }
-	}
-	constricting[i] = NON_ENTITY;
-	dur_has_constricted[i] = 0;
+        }
+        constricting[i] = NON_ENTITY;
+        dur_has_constricted[i] = 0;
     }
 }
 
@@ -7490,17 +7490,17 @@ void player::clear_specific_constrictions(int mind)
     if (constricted_by == mind)
     {
         constricted_by = NON_ENTITY;
-	dur_been_constricted = 0;
-	escape_attempts = 0;
+        dur_been_constricted = 0;
+        escape_attempts = 0;
     }
-     
+
     for (int i = 0; i < 8; i++)
     {
         if (constricting[i] == mind)
-	{
-	    constricting[i] = NON_ENTITY;
-	    dur_has_constricted[i] = 0;
-	}
+        {
+            constricting[i] = NON_ENTITY;
+            dur_has_constricted[i] = 0;
+        }
     }
 }
 
