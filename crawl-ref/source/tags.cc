@@ -2341,10 +2341,10 @@ static void tag_read_you(reader &th)
     abyssal_state.depth = unmarshallFloat(th);
 #if TAG_MAJOR_VERSION == 32
     }
-#endif
 
     if (th.getMinorVersion() >= TAG_MINOR_CONSTRICTION)
     {
+#endif
     you.constricted_by = unmarshallShort(th);
     you.escape_attempts = unmarshallInt(th);
     you.dur_been_constricted = unmarshallInt(th);
@@ -2353,7 +2353,9 @@ static void tag_read_you(reader &th)
         you.constricting[k] = unmarshallShort(th);
         you.dur_has_constricted[k] = unmarshallInt(th);
     }
+#if TAG_MAJOR_VERSION == 32
     }
+#endif
 
     if (!dlua.callfn("dgn_load_data", "u", &th))
         mprf(MSGCH_ERROR, "Failed to load Lua persist table: %s",
@@ -3668,17 +3670,21 @@ void unmarshallMonster(reader &th, monster& m)
     if (mons_is_ghost_demon(m.type))
         m.set_ghost(unmarshallGhost(th));
 
+#if TAG_MAJOR_VERSION == 32
     if (th.getMinorVersion() >= TAG_MINOR_CONSTRICTION)
     {
+#endif
     m.constricted_by = unmarshallShort(th);
     m.escape_attempts = unmarshallInt(th);
     m.dur_been_constricted = unmarshallInt(th);
-        for (unsigned int k = 0; k < 8; k++)
-        {
-            m.constricting[k] = unmarshallShort(th);
-            m.dur_has_constricted[k] = unmarshallInt(th);
-        }
+    for (unsigned int k = 0; k < 8; k++)
+    {
+        m.constricting[k] = unmarshallShort(th);
+        m.dur_has_constricted[k] = unmarshallInt(th);
     }
+#if TAG_MAJOR_VERSION == 32
+    }
+#endif
 
     m.props.clear();
     m.props.read(th);
