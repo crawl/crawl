@@ -4401,9 +4401,23 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     mons_relocated(mons);
 }
 
+static void _lose_constriction(actor *att, actor *def)
+{
+    def->clear_specific_constrictions(att->mindex());
+    att->clear_specific_constrictions(def->mindex());
+
+    if (you.see_cell(att->pos()) || you.see_cell(def->pos()))
+    {
+        mprf("%s lose%s %s grip on %s.",
+             att->name(DESC_THE).c_str(),
+             att->is_player() ? "" : "s",
+             att->pronoun(PRONOUN_POSSESSIVE).c_str(),
+             def->name(DESC_THE).c_str());
+    }
+}
+
 void monster_teleport_to_player(int mindex, coord_def playerpos)
 {
-
     coord_def target;
     coord_def newpos;
     monster *mons = &env.mons[mindex];
@@ -4415,14 +4429,12 @@ void monster_teleport_to_player(int mindex, coord_def playerpos)
         target = coord_def(random_range(playerpos.x - 1, playerpos.x + 1),
                            random_range(playerpos.y - 1, playerpos.y + 1));
 
-
         if (!_monster_space_valid(mons, target, false))
             continue;
 
         newpos = target;
         break;
     }
-
 
     // XXX: If the above function didn't find a good spot, return now
     // rather than continue by slotting the monster (presumably)
@@ -4434,14 +4446,7 @@ void monster_teleport_to_player(int mindex, coord_def playerpos)
 
     const coord_def oldplace = mons->pos();
 
-    // Pick the monster up.
-    mgrd(oldplace) = NON_MONSTER;
-
-    // Move it to its new home.
-    mons->moveto(newpos);
-
-    // And slot it back into the grid.
-    mgrd(mons->pos()) = mons->mindex();
+    mons->move_to_pos(newpos);
 
     place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3), mons);
 
@@ -4457,13 +4462,7 @@ void monster_teleport_to_player(int mindex, coord_def playerpos)
                 mons2 = &env.mons[mons->constricting[i]];
 
             if (!adjacent(mons->pos(), mons2->pos()))
-            {
-                mons2->clear_specific_constrictions(mons->mindex());
-                mons->constricting[i] = NON_ENTITY;
-                mons->dur_has_constricted[i] = 0;
-                std::string msg = " loses its grip on " + mons2->name(DESC_THE);
-                simple_monster_message(mons, msg.c_str());
-            }
+                _lose_constriction(mons, mons2);
         }
 
     // if it's coming along because it was constricting player, but something
@@ -4476,15 +4475,9 @@ void monster_teleport_to_player(int mindex, coord_def playerpos)
             mons2 = &env.mons[mons->constricted_by];
 
         if (!adjacent(mons->pos(), mons2->pos()))
-        {
-            mons2->clear_specific_constrictions(mons->mindex());
-            mons->constricted_by = NON_ENTITY;
-            mons->dur_been_constricted = 0;
-            mons->escape_attempts = 0;
-            std::string msg = " loses its grip on " + mons->name(DESC_THE);
-            simple_monster_message(mons2->as_monster(), msg.c_str());
-        }
+            _lose_constriction(mons, mons2);
     }
+
     simple_monster_message(mons, " comes along for the ride!");
 
     mons->check_redraw(newpos);
@@ -4495,7 +4488,6 @@ void monster_teleport_to_player(int mindex, coord_def playerpos)
 
 void player_teleport_to_monster(monster *mons, coord_def monsterpos)
 {
-
     coord_def target;
     coord_def newpos;
 
@@ -4505,14 +4497,12 @@ void player_teleport_to_monster(monster *mons, coord_def monsterpos)
         target = coord_def(random_range(monsterpos.x - 1, monsterpos.x + 1),
                            random_range(monsterpos.y - 1, monsterpos.y + 1));
 
-
         if (!_monster_space_valid(mons, target, false))
             continue;
 
         newpos = target;
         break;
     }
-
 
     // XXX: If the above function didn't find a good spot, return now
     // rather than continue by slotting the monster (presumably)
@@ -4532,12 +4522,7 @@ void player_teleport_to_monster(monster *mons, coord_def monsterpos)
             && you.constricting[i] != NON_ENTITY
             && !adjacent(env.mons[you.constricting[i]].pos(), you.pos()))
         {
-            monster *mons2 = &env.mons[you.constricting[i]];
-            mons2->clear_specific_constrictions(MHITYOU);
-            you.constricting[i] = NON_ENTITY;
-            you.dur_has_constricted[i] = 0;
-            std::string msg = "You lose your grip on " + mons2->name(DESC_THE);
-            mpr(msg);
+            _lose_constriction(&you, &env.mons[you.constricting[i]]);
         }
 
     // if you're coming along because you're constricting it and something
@@ -4547,16 +4532,10 @@ void player_teleport_to_monster(monster *mons, coord_def monsterpos)
         && you.constricted_by != NON_ENTITY
         && !adjacent(you.pos(), env.mons[you.constricted_by].pos()))
     {
-        monster *mons2 = &env.mons[you.constricted_by];
-        mons2->clear_specific_constrictions(MHITYOU);
-        you.constricted_by = NON_ENTITY;
-        you.dur_been_constricted = 0;
-        you.escape_attempts = 0;
-        std::string msg = mons2->name(DESC_THE) + " loses its grip on you.";
-        mpr(msg);
+        _lose_constriction(&env.mons[you.constricted_by], &you);
     }
-    mpr("You come along for the ride!");
 
+    mpr("You come along for the ride!");
 }
 
 void mons_clear_trapping_net(monster* mon)

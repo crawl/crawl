@@ -5325,7 +5325,7 @@ bool monster::nightvision() const
 void monster::accum_been_constricted()
 {
     if (is_constricted())
-            dur_been_constricted += you.time_taken;
+        dur_been_constricted += you.time_taken;
 }
 
 void monster::accum_has_constricted()
