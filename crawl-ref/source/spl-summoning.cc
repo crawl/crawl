@@ -1951,9 +1951,7 @@ spret_type cast_simulacrum(int pow, god_type god, bool fail)
     const item_def* weapon = you.weapon();
 
     if (weapon
-        && (weapon->base_type == OBJ_CORPSES
-            || (weapon->base_type == OBJ_FOOD
-                && weapon->sub_type == FOOD_CHUNK)))
+        && weapon->base_type == OBJ_FOOD && weapon->sub_type == FOOD_CHUNK)
     {
         const monster_type sim_type = static_cast<monster_type>(weapon->plus);
 
