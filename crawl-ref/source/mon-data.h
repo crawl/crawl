@@ -3953,10 +3953,11 @@ static monsterentry mondata[] = {
 // large abominations ('X')
 {
     // coloured with mon-util.cc:random_large_abomination_colour.
+    // See comment under MONS_ABOMINATION_SMALL regarding holiness.
     MONS_ABOMINATION_LARGE, 'X', BLACK, "large abomination",
     M_NO_FLAGS,
     MR_NO_FLAGS,
-    0, 10, MONS_ABOMINATION_SMALL, MONS_ABOMINATION_LARGE, MH_DEMONIC, -7,
+    0, 10, MONS_ABOMINATION_SMALL, MONS_ABOMINATION_LARGE, MH_UNDEAD, -7,
     { {AT_HIT, AF_PLAIN, 40}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     { 11, 2, 5, 0 },
     0, 0, MST_NO_SPELLS, CE_NOCORPSE, Z_NOZOMBIE, S_SILENT,
