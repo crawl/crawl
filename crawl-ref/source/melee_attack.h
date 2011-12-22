@@ -71,6 +71,8 @@ private:
     bool handle_phase_damaged();
     bool handle_phase_killed();
     bool handle_phase_end();
+    // Replaces some of the above phases.
+    bool handle_constriction();
 
     /* Combat Calculations */
     int test_hit(int to_hit, int ev);
@@ -168,6 +170,7 @@ private:
     void player_warn_miss();
     void player_weapon_upsets_god();
     void _monster_die(monster* mons, killer_type killer, int killer_index);
+    void _defender_die();
 
     // Output methods
     void stab_message();
@@ -181,8 +184,6 @@ private:
                                      bool needs_bite_msg = false,
                                      int reduction = 1);
     bool _vamp_wants_blood_from_monster(const monster* mon);
-    void handle_player_constriction();
-    bool handle_monster_constriction();
 };
 
 #endif
