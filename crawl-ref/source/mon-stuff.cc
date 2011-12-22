@@ -60,6 +60,7 @@
 #include "state.h"
 #include "stuff.h"
 #include "tagstring.h"
+#include "teleport.h"
 #include "terrain.h"
 #include "transform.h"
 #include "traps.h"
@@ -1516,6 +1517,7 @@ int monster_die(monster* mons, killer_type killer,
     }
 
     mons_clear_trapping_net(mons);
+    mons->clear_all_constrictions();
 
     you.remove_beholder(mons);
     you.remove_fearmonger(mons);
@@ -3266,6 +3268,13 @@ bool swap_check(monster* mons, coord_def &loc, bool quiet)
         return (false);
     }
 
+    if (mons->is_constricted())
+    {
+        if (!quiet)
+            simple_monster_message(mons, " is being constricted!");
+        return (false);
+    }
+
     // First try: move monster onto your position.
     bool swap = !monster_at(loc) && monster_habitable_grid(mons, grd(loc));
 
@@ -4289,6 +4298,10 @@ void monster_teleport(monster* mons, bool instan, bool silent)
 
     coord_def newpos;
 
+    // if constricted by larger, abort
+    if (mons->is_constricted_larger())
+        return;
+
     if (mons_is_shedu(mons) && shedu_pair_alive(mons))
     {
         // find a location close to its mate instead.
@@ -4332,6 +4345,20 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     if (!silent)
         simple_monster_message(mons, " disappears!");
 
+    // handle constriction, if any
+    if (mons->is_constricted())
+    {
+        if (mons->constricted_by == MHITYOU)
+            player_teleport_to_monster(mons, newpos);
+        else
+            monster_teleport_to_player(mons->constricted_by, newpos);
+    }
+    for (int i = 0; i < 8; i++)
+        if (mons->constricting[i] == MHITYOU)
+            player_teleport_to_monster(mons, newpos);
+        else if (mons->constricting[i] != NON_ENTITY)
+            monster_teleport_to_player(mons->constricting[i], newpos);
+
     const coord_def oldplace = mons->pos();
 
     // Pick the monster up.
@@ -4372,6 +4399,164 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     mons->apply_location_effects(oldplace);
 
     mons_relocated(mons);
+}
+
+void monster_teleport_to_player(int mindex, coord_def playerpos)
+{
+
+    coord_def target;
+    coord_def newpos;
+    monster *mons = &env.mons[mindex];
+    actor *mons2;
+
+    int tries = 0;
+    while (tries++ < 30)
+    {
+        target = coord_def(random_range(playerpos.x - 1, playerpos.x + 1),
+                           random_range(playerpos.y - 1, playerpos.y + 1));
+
+
+        if (!_monster_space_valid(mons, target, false))
+            continue;
+
+        newpos = target;
+        break;
+    }
+
+
+    // XXX: If the above function didn't find a good spot, return now
+    // rather than continue by slotting the monster (presumably)
+    // back into its old location (previous behaviour). This seems
+    // to be much cleaner and safer than relying on what appears to
+    // have been a mistake.
+    if (newpos.origin())
+        return;
+
+    const coord_def oldplace = mons->pos();
+
+    // Pick the monster up.
+    mgrd(oldplace) = NON_MONSTER;
+
+    // Move it to its new home.
+    mons->moveto(newpos);
+
+    // And slot it back into the grid.
+    mgrd(mons->pos()) = mons->mindex();
+
+    place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3), mons);
+
+    // the monster which has just moved could have been constricting more
+    // than one target, clear others if no longer adjacent
+    for (int i = 0; i < 8; i++)
+        if (mons->constricting[i] != mindex
+            && mons->constricting[i] != NON_ENTITY)
+        {
+            if (mons->constricting[i] == MHITYOU)
+                mons2 = &you;
+            else
+                mons2 = &env.mons[mons->constricting[i]];
+
+            if (!adjacent(mons->pos(), mons2->pos()))
+            {
+                mons2->clear_specific_constrictions(mons->mindex());
+                mons->constricting[i] = NON_ENTITY;
+                mons->dur_has_constricted[i] = 0;
+                std::string msg = " loses its grip on " + mons2->name(DESC_THE);
+                simple_monster_message(mons, msg.c_str());
+            }
+        }
+
+    // if it's coming along because it was constricting player, but something
+    // else was constricting it, then the something else loses its grip too
+    if (mons->constricted_by != mindex && mons->constricted_by != NON_ENTITY)
+    {
+        if (mons->constricted_by == MHITYOU)
+            mons2 = &you;
+        else
+            mons2 = &env.mons[mons->constricted_by];
+
+        if (!adjacent(mons->pos(), mons2->pos()))
+        {
+            mons2->clear_specific_constrictions(mons->mindex());
+            mons->constricted_by = NON_ENTITY;
+            mons->dur_been_constricted = 0;
+            mons->escape_attempts = 0;
+            std::string msg = " loses its grip on " + mons->name(DESC_THE);
+            simple_monster_message(mons2->as_monster(), msg.c_str());
+        }
+    }
+    simple_monster_message(mons, " comes along for the ride!");
+
+    mons->check_redraw(newpos);
+    mons->apply_location_effects(newpos);
+
+    mons_relocated(mons);
+}
+
+void player_teleport_to_monster(monster *mons, coord_def monsterpos)
+{
+
+    coord_def target;
+    coord_def newpos;
+
+    int tries = 0;
+    while (tries++ < 30)
+    {
+        target = coord_def(random_range(monsterpos.x - 1, monsterpos.x + 1),
+                           random_range(monsterpos.y - 1, monsterpos.y + 1));
+
+
+        if (!_monster_space_valid(mons, target, false))
+            continue;
+
+        newpos = target;
+        break;
+    }
+
+
+    // XXX: If the above function didn't find a good spot, return now
+    // rather than continue by slotting the monster (presumably)
+    // back into its old location (previous behaviour). This seems
+    // to be much cleaner and safer than relying on what appears to
+    // have been a mistake.
+    if (newpos.origin())
+        return;
+
+    // Move it to its new home.
+    you.moveto(newpos);
+
+    // you could have been constricting more
+    // than one target, clear others if no longer adjacent
+    for (int i = 0; i < 8; i++)
+        if (you.constricting[i] != mons->mindex()
+            && you.constricting[i] != NON_ENTITY
+            && !adjacent(env.mons[you.constricting[i]].pos(), you.pos()))
+        {
+            monster *mons2 = &env.mons[you.constricting[i]];
+            mons2->clear_specific_constrictions(MHITYOU);
+            you.constricting[i] = NON_ENTITY;
+            you.dur_has_constricted[i] = 0;
+            std::string msg = "You lose your grip on " + mons2->name(DESC_THE);
+            mpr(msg);
+        }
+
+    // if you're coming along because you're constricting it and something
+    // else was constricting you, then the something else loses its grip too
+
+    if (you.constricted_by != mons->mindex()
+        && you.constricted_by != NON_ENTITY
+        && !adjacent(you.pos(), env.mons[you.constricted_by].pos()))
+    {
+        monster *mons2 = &env.mons[you.constricted_by];
+        mons2->clear_specific_constrictions(MHITYOU);
+        you.constricted_by = NON_ENTITY;
+        you.dur_been_constricted = 0;
+        you.escape_attempts = 0;
+        std::string msg = mons2->name(DESC_THE) + " loses its grip on you.";
+        mpr(msg);
+    }
+    mpr("You come along for the ride!");
+
 }
 
 void mons_clear_trapping_net(monster* mon)

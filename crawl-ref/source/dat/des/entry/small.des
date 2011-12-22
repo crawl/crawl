@@ -2370,8 +2370,8 @@ ENDMAP
 NAME:    onia_entry_handbag
 TAGS:    entry
 ORIENT:  float
-MONS:    w:30 rat / ooze / small snake
-MONS:    bat / w:6 small snake / w:2 snake / w:2 jackal / w:4 giant cockroach
+MONS:    w:30 rat / ooze / ball python
+MONS:    bat / w:6 ball python / w:2 adder / w:2 jackal / w:4 giant cockroach
 SUBST:   ! = $%%% , ? = ..~
 SHUFFLE: {[, [<(
 MAP

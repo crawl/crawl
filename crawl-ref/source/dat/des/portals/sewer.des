@@ -68,8 +68,8 @@ function sewer_setup(e)
   e.lrocktile("wall_slime")
   e.lfloortile("floor_slime")
 -- Random monster list and milestone.
-  e.set_random_mon_list("bat w:20 / giant newt w:20 / small snake / \
-                         ooze / worm / snake / giant cockroach / giant mite / \
+  e.set_random_mon_list("bat w:20 / giant newt w:20 / ball python / \
+                         ooze / worm / adder / giant cockroach / giant mite / \
                          giant gecko")
 end
 
@@ -88,7 +88,7 @@ CHANCE: 8%
 COLOUR: W = green / cyan w:5
 SUBST:  1 = 11234444444444
 MONS:   rat / grey rat / green rat w:5
-MONS:   small snake / snake w:2
+MONS:   ball python / adder w:2
 MONS:   giant cockroach / giant mite / worm w:3
 MONS:   nothing
 MAP
@@ -109,7 +109,7 @@ CHANCE: 8%
 ORIENT: float
 : sewer_portal(_G)
 SUBST:  '=W. , W=WW1
-KMONS:  1 = rat w:20 / grey rat w:20 / green rat/ small snake / snake w:2 / \
+KMONS:  1 = rat w:20 / grey rat w:20 / green rat/ ball python / adder w:2 / \
             giant cockroach / giant mite / worm w:3
 KFEAT:  1 = W
 COLOUR: W = green
@@ -130,7 +130,7 @@ WEIGHT: 4
 NSUBST: c = 2:= / 2:n / *:c
 NSUBST: W = 8:1 / *:W
 SUBST:  1 = 111W
-KMONS:  1 = rat w:20 / grey rat w:20 / green rat/ small snake / snake w:2 / \
+KMONS:  1 = rat w:20 / grey rat w:20 / green rat/ ball python / adder w:2 / \
              giant cockroach / giant mite / worm w:3
 KFEAT:  1 = W
 COLOUR: W = green / cyan w:5
@@ -168,7 +168,7 @@ SUBST:  X = ++=
 SUBST:  w = WW.
 NSUBST: W = 8:1 / *:W
 SUBST:  1 = 111W
-KMONS:  1 = rat w:20 / grey rat w:20 / green rat/ small snake / snake w:2 / \
+KMONS:  1 = rat w:20 / grey rat w:20 / green rat/ ball python / adder w:2 / \
             giant cockroach / giant mite / worm w:3
 KFEAT:  1 = W
 COLOUR: W = green / cyan w:5
@@ -291,7 +291,7 @@ WEIGHT: 15
 ORIENT: encompass
 MONS:   grey rat / rat w:2 / green rat w:1
 MONS:   kobold / big kobold w:1
-MONS:   small snake / snake w:5 / giant newt w:2 / ooze w:1
+MONS:   ball python / adder w:5 / giant newt w:2 / ooze w:1
 SUBST:   y : yyyyyyW., Y : YYYYYYWw
 SUBST:   y = W., Y = Ww
 ITEM:   potion of curing / potion of heal wounds / potion of might w:4 /\
@@ -362,10 +362,10 @@ SUBST:    - = WWW.
 SHUFFLE:  |d
 ITEM:     scroll of teleportation w:2 / scroll of blinking / \
           scroll of random uselessness w:1
-MONS:     giant newt / small snake w:5 / giant cockroach / giant mite w:5 / \
-          generate_awake giant newt / generate_awake small snake w:5 / \
+MONS:     giant newt / ball python w:5 / giant cockroach / giant mite w:5 / \
+          generate_awake giant newt / generate_awake ball python w:5 / \
           generate_awake giant cockroach / generate_awake giant mite w:5 / \
-          giant gecko / snake w:8 / nothing w:8
+          giant gecko / adder w:8 / nothing w:8
 NSUBST:   ! = 2:! / *:w
 KFEAT:    ! = w
 COLOUR:   ! = green
@@ -414,8 +414,8 @@ ORIENT:   encompass
 WEIGHT:   10
 NSUBST:   ! = 2:! / *:w
 SUBST:    - = WWWW.
-KMONS:    W = giant newt / small snake / giant cockroach / giant mite / \
-              giant gecko / snake w:4 / jelly w:2 / \
+KMONS:    W = giant newt / ball python / giant cockroach / giant mite / \
+              giant gecko / adder w:4 / jelly w:2 / \
               nothing w:270
 KFEAT:    W = W
 KFEAT:    ! = w
@@ -472,7 +472,7 @@ WEIGHT:  10
 ORIENT:  encompass
 SHUFFLE: de
 MONS:    grey rat / rat w:5 / green rat w:1
-MONS:    small snake / snake w:5 / giant newt w:2 / ooze w:1
+MONS:    ball python / adder w:5 / giant newt w:2 / ooze w:1
 MONS:    giant frog
 ITEM:    potion of curing / potion of heal wounds / potion of might /\
          potion of magic / potion of speed w:5 / potion of brilliance w:5
@@ -645,9 +645,9 @@ SUBST:   R = .
 #      lesser monsters.
 KFEAT:   1 = w
 COLOUR:  1 = green
-KMONS:   1 = giant newt / small snake w:5 / \
-         generate_awake giant newt / generate_awake small snake w:5 / \
-         snake w:4 / big fish w:3 / nothing w:6
+KMONS:   1 = giant newt / ball python w:5 / \
+         generate_awake giant newt / generate_awake ball python w:5 / \
+         adder w:4 / big fish w:3 / nothing w:6
 #      loot
 SUBST:   e = !!!!????%
 KITEM:   ? = potion of levitation q:2 w:15 / potion of curing /\
@@ -733,14 +733,14 @@ COLOUR:   " = green
 #       some random monsters II: standard Sewers set
 NSUBST:   W = 4:? / *:W
 KFEAT:    ? = W
-KMONS:    ? = bat / giant newt / small snake / giant cockroach / \
-              giant mite / giant gecko / ooze w:4 / worm w:4 / snake w:2
+KMONS:    ? = bat / giant newt / ball python / giant cockroach / \
+              giant mite / giant gecko / ooze w:4 / worm w:4 / adder w:2
 COLOUR:   ? = lightgreen
 #       a little more random shallow water
 SUBST:    - = W..
 : sewer_setup(_G)
-MONS:     bat / giant newt / small snake / giant cockroach / \
-          giant mite / giant gecko / ooze w:4 / worm w:4 / snake w:2
+MONS:     bat / giant newt / ball python / giant cockroach / \
+          giant mite / giant gecko / ooze w:4 / worm w:4 / adder w:2
 SHUFFLE:  23
 MONS:     bat / nothing w:2
 MONS:     patrolling jackal
@@ -805,8 +805,8 @@ ORIENT: encompass
 MONS:   rat w:3 / grey rat w:1 / nothing w:1, rat / grey rat / green rat
 KMONS:  G = mermaid hd:3 name:malarious name_adjective name_species
 KMONS:  H = siren hd:3 name:sickly name_adjective name_species
-KMONS:  hJ = giant newt / small snake / snake / nothing w:2
-KMONS:  g = giant newt / small snake / giant mite / giant cockroach / \
+KMONS:  hJ = giant newt / ball python / adder / nothing w:2
+KMONS:  g = giant newt / ball python / giant mite / giant cockroach / \
             giant gecko / nothing w:7
 KFEAT:  gsh = W
 KFEAT:  O = open_sea
@@ -869,7 +869,7 @@ NAME:    sewer_co_15_rooms
 TAGS:    sewer no_item_gen no_monster_gen no_pool_fixup
 ORIENT:  encompass
 MONS:    kobold / w:7 big kobold
-MONS:    kobold / snake / small snake / w:7 worm / w:7 ooze / \
+MONS:    kobold / adder / ball python / w:7 worm / w:7 ooze / \
          rat / green rat / grey rat
 SUBST:   . = W..
 SUBST:   X = xx.
@@ -952,7 +952,7 @@ NAME:   sewer_co_tree
 TAGS:   sewer no_item_gen no_monster_gen no_pool_fixup
 ORIENT: encompass
 MONS:   kobold / big kobold
-MONS:   snake / small snake / worm
+MONS:   adder / ball python / worm
 MONS:   ooze / rat / green rat / grey rat
 # less water in the middle, more at the endpoints.
 SUBST:  ~ = WWWW.
@@ -1032,10 +1032,10 @@ NAME:    sewer_co_cracked_pipes
 TAGS:    sewer no_item_gen no_monster_gen no_pool_fixup no_rotate no_vmirror
 ORIENT:  encompass
 #      water creatures
-MONS:    giant newt / small snake w:5 / \
-         generate_awake giant newt / generate_awake small snake w:5 / \
-         snake w:2 / nothing w:4
-KMONS:   2 = snake / big fish
+MONS:    giant newt / ball python w:5 / \
+         generate_awake giant newt / generate_awake ball python w:5 / \
+         adder w:2 / nothing w:4
+KMONS:   2 = adder / big fish
 KFEAT:   2 = W
 COLOUR:  2 = lightgreen
 #      generate first path.
@@ -1138,8 +1138,8 @@ KMONS:   P = plant / nothing
 #      pipe monsters.
 KFEAT:   1 = W
 COLOUR:  1 = lightgreen
-KMONS:   1 = giant newt / small snake w:5 /  generate_awake small snake w:5 / \
-         snake w:7 / big fish w:5
+KMONS:   1 = giant newt / ball python w:5 /  generate_awake ball python w:5 / \
+         adder w:7 / big fish w:5
 SUBST:   1 = 1111W
 #      other monsters
 KMONS:   2 = jackal / kobold, w:5 big kobold / w:5 green rat, w:7 grey rat, rat

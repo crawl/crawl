@@ -15,6 +15,7 @@ struct mon_attack_def;
 enum unarmed_attack_type
 {
     UNAT_NO_ATTACK,                    //    0
+    UNAT_CONSTRICT,  // put constriction first so octopodes will use it
     UNAT_KICK,
     UNAT_HEADBUTT,
     UNAT_TAILSLAP,
@@ -22,7 +23,7 @@ enum unarmed_attack_type
     UNAT_BITE,
     UNAT_PSEUDOPODS,
     UNAT_TENTACLES,
-    UNAT_FIRST_ATTACK = UNAT_KICK,
+    UNAT_FIRST_ATTACK = UNAT_CONSTRICT,
     UNAT_LAST_ATTACK = UNAT_TENTACLES
 };
 
@@ -180,6 +181,8 @@ private:
                                      bool needs_bite_msg = false,
                                      int reduction = 1);
     bool _vamp_wants_blood_from_monster(const monster* mon);
+    void handle_player_constriction();
+    bool handle_monster_constriction();
 };
 
 #endif

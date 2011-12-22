@@ -626,6 +626,7 @@ static void _get_status_lights(std::vector<status_light>& out)
         DUR_TORNADO_COOLDOWN,
         STATUS_BACKLIT,
         STATUS_UMBRA,
+        STATUS_CONSTRICTED,
         DUR_DIVINE_STAMINA,
     };
 
@@ -2056,6 +2057,7 @@ static std::string _status_mut_abilities(int sw)
         DUR_TORNADO_COOLDOWN,
         STATUS_BACKLIT,
         STATUS_UMBRA,
+        STATUS_CONSTRICTED,
     };
 
     status_info inf;
