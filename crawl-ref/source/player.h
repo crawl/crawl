@@ -713,7 +713,14 @@ public:
     void set_duration(duration_type dur, int turns, int cap = 0,
                       const char *msg = NULL);
 
-
+    void accum_been_constricted();
+    void accum_has_constricted();
+    bool attempt_escape();
+    bool is_constricted_larger();
+    bool is_constricted();
+    bool has_usable_tentacle();
+    void clear_all_constrictions();
+    void clear_specific_constrictions(int mindex);
 
 protected:
     void _removed_beholder();

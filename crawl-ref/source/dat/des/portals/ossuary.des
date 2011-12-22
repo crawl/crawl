@@ -196,7 +196,7 @@ KFEAT:   T = alarm trap / floor
 ITEM:    any scroll w:2 / any scroll q:2 w:3 / \
          any potion w:4 / any potion q:2 w:6
 MONS:    mummy
-MONS:    rat zombie / jackal zombie / snake zombie / goblin zombie / \
+MONS:    rat zombie / jackal zombie / adder zombie / goblin zombie / \
          hobgoblin zombie / kobold zombie / big kobold zombie / \
          human zombie / elf zombie / centaur zombie
 MONS:    kobold zombie / orc zombie / hobgoblin zombie
@@ -259,7 +259,7 @@ NSUBST:  J = 1:= / *:c
 NSUBST:  K = 1:= / *:c
 # loot: 12 items
 ITEM:    any scroll w:6 / any potion / any potion q:2 w:2
-MONS:    snake zombie / hobgoblin zombie / orc zombie / kobold zombie / nothing
+MONS:    adder zombie / hobgoblin zombie / orc zombie / kobold zombie / nothing
 MONS:    big kobold zombie / water moccasin zombie / gnoll zombie / nothing
 MONS:    mummy
 : ossuary_setup_features(_G)
@@ -349,7 +349,7 @@ SUBST:   3 = 3 2:1 .:1
 SUBST:   f = ~
 ITEM:    any scroll, any potion
 MONS:    mummy
-MONS:    rat zombie / jackal zombie / quokka zombie / snake zombie / \
+MONS:    rat zombie / jackal zombie / quokka zombie / adder zombie / \
          goblin zombie / hobgoblin zombie / kobold zombie
 MONS:    gnoll zombie / orc zombie / hound zombie / big kobold zombie / \
          human zombie / elf zombie / centaur zombie
@@ -497,7 +497,7 @@ WEIGHT:  20
 ORIENT:  encompass
 TAGS:    ossuary no_item_gen no_monster_gen no_rotate
 MONS:    rat zombie / jackal zombie / goblin zombie / hobgoblin zombie / \
-         snake zombie / gnoll zombie / orc zombie / kobold zombie / \
+         adder zombie / gnoll zombie / orc zombie / kobold zombie / \
          big kobold zombie / hound zombie / human zombie / elf zombie
 MONS:    mummy
 ITEM:    any scroll / any scroll q:2, any potion / any potion q:2
@@ -975,8 +975,8 @@ WEIGHT:  10
 ORIENT:  encompass
 TAGS:    ossuary no_item_gen no_monster_gen
 MONS:    centaur zombie w:1 / orc zombie / hobgoblin zombie /\
-         kobold zombie / snake zombie / orc skeleton / hobgoblin skeleton /\
-         small snake skeleton / nothing w:5
+         kobold zombie / adder zombie / orc skeleton / hobgoblin skeleton /\
+         ball python skeleton / nothing w:5
 MONS:    wight
 MONS:    flying skull
 MONS:    guardian mummy / mummy w:2
@@ -1081,7 +1081,7 @@ NAME:   ossuary_minmay_chase
 WEIGHT: 10
 ORIENT: encompass
 TAGS:   ossuary no_item_gen no_monster_gen
-MONS:   rat zombie / quokka zombie / snake zombie /\
+MONS:   rat zombie / quokka zombie / adder zombie /\
         goblin zombie / hobgoblin zombie / kobold zombie / gnoll zombie w:2 /\
         big kobold zombie w:1 / human zombie w:1 / elf zombie w:1 / orc zombie w:1
 MONS:   generate_awake mummy

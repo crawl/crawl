@@ -77,7 +77,15 @@ monster::monster()
     props.clear();
     if (crawl_state.game_is_arena())
         foe = MHITNOT;
-}
+    constricted_by = NON_ENTITY;
+    escape_attempts = 0;
+    dur_been_constricted = 0;
+    for (int i = 0; i < 8; i++)
+    {
+        constricting[i] = NON_ENTITY;
+        dur_has_constricted[i] = 0;
+    }
+};
 
 // Empty destructor to keep auto_ptr happy with incomplete ghost_demon type.
 monster::~monster()
@@ -132,6 +140,14 @@ void monster::reset()
     props.clear();
 
     client_id = 0;
+    constricted_by = NON_ENTITY;
+    escape_attempts = 0;
+    dur_been_constricted = 0;
+    for (int i = 0; i < 8; i++)
+    {
+        constricting[i] = NON_ENTITY;
+        dur_has_constricted[i] = 0;
+    }
 }
 
 void monster::init_with(const monster& mon)
@@ -3032,7 +3048,7 @@ int monster::melee_evasion(const actor *act, ev_ignore_type evit) const
 
     if (paralysed() || petrified() || petrifying() || asleep())
         evasion = 0;
-    else if (caught())
+    else if (caught() || const_cast<monster *>(this)->is_constricted())
         evasion /= (body_size(PSIZE_BODY) + 2);
     else if (confused())
         evasion /= 2;
@@ -3647,6 +3663,8 @@ int monster::skill(skill_type sk, int scale, bool real) const
 
 void monster::blink(bool)
 {
+    if (is_constricted_larger())  // disallow blink if constricted by larger
+        return;
     monster_blink(this);
 }
 
@@ -5302,4 +5320,172 @@ bool monster::is_web_immune() const
 bool monster::nightvision() const
 {
     return (undead_or_demonic() || god == GOD_YREDELEMNUL);
+}
+
+void monster::accum_been_constricted()
+{
+    if (is_constricted())
+            dur_been_constricted += you.time_taken;
+}
+
+void monster::accum_has_constricted()
+{
+    for (int i = 0; i < 8; i++)
+        if (constricting[i])
+            dur_has_constricted[i] += you.time_taken;
+}
+
+bool monster::is_constricted_larger()
+{
+    size_type csize;
+    size_type msize;
+
+    if (!is_constricted())
+        return false;
+    msize = body_size();
+    if (constricted_by == MHITYOU)
+        csize = you.body_size();
+    else
+        csize = env.mons[constricted_by].body_size();
+    return (csize > msize);
+
+}
+
+bool monster::is_constricted()
+{
+    return (constricted_by != NON_ENTITY);
+}
+
+bool monster::attempt_escape()
+{
+    size_type thesize;
+    int attfactor;
+    int randfact;
+    monster *themonst = 0;
+
+    if (!is_constricted())
+        return true;
+
+    escape_attempts++;
+    // player breaks free if size*attempts > 5 + d(12) + d(HD)
+    // this is inefficient on purpose, simplify after debug
+    thesize = body_size();
+    attfactor = thesize * escape_attempts;
+
+    if (constricted_by != MHITYOU)
+    {
+        randfact = roll_dice(1,5) + 5;
+        themonst = &env.mons[constricted_by];
+        randfact += roll_dice(1,themonst->hit_dice);
+    }
+    else
+    {
+        randfact = roll_dice(1, you.strength());
+    }
+
+    if (attfactor > randfact)
+    {
+        if (constricted_by != MHITYOU)
+        {
+            // update monster's has constricted info
+            for (int i = 0; i < 8; i++)
+                if (themonst->constricting[i] == mindex())
+                    themonst->constricting[i] = NON_ENTITY;
+        }
+        else
+        {
+            for (int i = 0; i < 8; i++)
+                if (you.constricting[i] == mindex())
+                    you.constricting[i] = NON_ENTITY;
+        }
+
+        // update your constricted by info
+        constricted_by = NON_ENTITY;
+        escape_attempts = 0;
+
+        return true;
+    }
+    else
+        return false;
+}
+
+void monster::clear_all_constrictions()
+{
+    int myindex = mindex();
+    monster *mons;
+    std::string rmsg;
+
+    if (constricted_by == MHITYOU)
+        you.clear_specific_constrictions(myindex);
+    else if (constricted_by != NON_ENTITY)
+    {
+        mons = &env.mons[constricted_by];
+        mons->clear_specific_constrictions(myindex);
+    }
+
+    constricted_by = NON_ENTITY;
+    dur_been_constricted = 0;
+    escape_attempts = 0;
+
+    for (int i = 0; i < 8; i++)
+    {
+        if (constricting[i] == MHITYOU)
+        {
+            if (alive())
+            {
+                rmsg = name(DESC_THE,true);
+                rmsg += " releases its hold on you.";
+                mpr(rmsg);
+            }
+            you.clear_specific_constrictions(myindex);
+        }
+        else if (constricting[i] != NON_ENTITY)
+        {
+            mons = &env.mons[constricting[i]];
+            if (alive() && mons->alive())
+            {
+                rmsg = name(DESC_THE,true);
+                rmsg += " releases its hold on ";
+                rmsg += mons->name(DESC_THE,true) + ".";
+                mpr(rmsg);
+            }
+            mons->clear_specific_constrictions(myindex);
+        }
+        constricting[i] = NON_ENTITY;
+        dur_has_constricted[i] = 0;
+    }
+}
+
+void monster::clear_specific_constrictions(int mind)
+{
+    if (constricted_by == mind)
+    {
+        constricted_by = NON_ENTITY;
+        dur_been_constricted = 0;
+        escape_attempts = 0;
+    }
+
+    for (int i = 0; i < 8; i++)
+    {
+        if (constricting[i] == mind)
+        {
+            constricting[i] = NON_ENTITY;
+            dur_has_constricted[i] = 0;
+        }
+    }
+}
+
+bool monster::has_usable_tentacle()
+{
+    if (type != MONS_OCTOPODE)
+        return(false);
+
+    int free_tentacles = 8;
+    for (int i = 0; i < 8; i++)
+        if (constricting[i] != NON_ENTITY)
+            free_tentacles--;
+
+    // ignoring monster octopodes with weapons, for now
+    return (free_tentacles > 0);
+
 }

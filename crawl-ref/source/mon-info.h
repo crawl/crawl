@@ -108,6 +108,8 @@ struct monster_info_base
     int mbase_speed;
     flight_type fly;
     CrawlHashTable props;
+    std::string constrictor_name;
+    std::string constricting_name[8];
 
     uint32_t client_id;
 };
@@ -204,6 +206,8 @@ struct monster_info : public monster_info_base
 
     std::string wounds_description_sentence() const;
     std::string wounds_description(bool colour = false) const;
+
+    std::string constriction_description() const;
 
     monster_type draco_subspecies() const
     {

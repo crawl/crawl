@@ -143,6 +143,16 @@ static bool _swap_monsters(monster* mover, monster* moved)
         && moved->type != MONS_KRAKEN_TENTACLE)
         return (false);
 
+    // If the target monster is constricted it is stuck
+    // and not eligible to be swapped with
+    if (moved->is_constricted())
+    {
+        dprf("%s fails to swap with %s, constricted.",
+            mover->name(DESC_THE).c_str(),
+            moved->name(DESC_THE).c_str());
+            return (false);
+    }
+
     // Swapping is a purposeful action.
     if (mover->confused())
         return (false);
@@ -1910,8 +1920,63 @@ static void _monster_add_energy(monster* mons)
 #    define DEBUG_ENERGY_USE(problem) ((void) 0)
 #endif
 
+
+void handle_noattack_constrictions(monster *mons)
+{
+    actor *attacker = mons;
+    actor *defender;
+
+    for (int i = 0; i < 8; i++)
+        if (attacker->constricting[i] != NON_ENTITY)
+        {
+            int basedam, durdam, acdam, infdam, damage;
+            if (attacker->constricting[i] = MHITYOU)
+                defender = &you;
+            else
+                defender = &env.mons[mons->constricting[i]];
+            damage = (attacker->as_monster()->hit_dice+1)/2;
+            basedam = damage;
+            damage += roll_dice(1, (attacker->dur_has_constricted[i]/10)+1);
+            durdam = damage;
+            damage -= random2(1 + (defender->armour_class() / 2));
+            acdam = damage;
+
+            damage = defender->hurt(attacker, damage, BEAM_MISSILE, false);
+            infdam = damage;
+
+            std::string exclams;
+            if (damage < HIT_WEAK)
+                exclams = ".";
+            else if (damage < HIT_MED)
+                exclams = "!";
+            else if (damage < HIT_STRONG)
+                exclams = "!!";
+            else
+                exclams = "!!!";
+            mprf("%s %s %s%s%s",
+                 attacker->name(DESC_THE).c_str(),
+                 attacker->conj_verb("constrict").c_str(),
+                 defender->name(DESC_THE).c_str(),
+#ifdef DEBUG_DIAGNOSTICS
+                 make_stringf(" for %d", damage).c_str(),
+#else
+                 "",
+#endif
+                exclams.c_str());
+
+            dprf("mconstrict at: %s df: %s base %d dur %d ac %d inf %d",
+                 attacker->name(DESC_PLAIN, true).c_str(),
+                 defender->name(DESC_PLAIN, true).c_str(),
+                 basedam, durdam, acdam, infdam);
+            if (defender != &you && defender->as_monster()->hit_points < 1)
+                monster_die(defender->as_monster(), KILL_MON,
+                             attacker->mindex());
+        }
+}
+
 void handle_monster_move(monster* mons)
 {
+    mons->has_constricted_this_turn = false;
     mons->hit_points = std::min(mons->max_hit_points,
                                    mons->hit_points);
 
@@ -1950,6 +2015,10 @@ void handle_monster_move(monster* mons)
     // Handle clouds on nonmoving monsters.
     if (mons->speed == 0)
         _mons_in_cloud(mons);
+
+    // Update constriction durations
+    mons->accum_been_constricted();
+    mons->accum_has_constricted();
 
     // Apply monster enchantments once for every normal-speed
     // player turn.
@@ -2446,6 +2515,9 @@ void handle_monster_move(monster* mons)
         }
         move_kraken_tentacles(mons);
     }
+
+    if (!mons->has_constricted_this_turn)
+        handle_noattack_constrictions(mons);
 
     if (mons->type != MONS_NO_MONSTER && mons->hit_points < 1)
         monster_die(mons, KILL_MISC, NON_MONSTER);
@@ -3541,6 +3613,17 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
         return (true);
     }
 
+    if (mons->is_constricted())
+    {
+        if (mons->attempt_escape())
+            simple_monster_message(mons, " escapes!");
+        else
+        {
+            simple_monster_message(mons, " struggles to escape constriction.");
+            return(true);
+        }
+    }
+
     if (mons_can_open_door(mons, f))
     {
         _mons_open_door(mons, f);
@@ -3604,6 +3687,8 @@ static bool _do_move_monster(monster* mons, const coord_def& delta)
 
     mons->check_clinging(true);
     ballisto_on_move(mons, old_pos);
+
+    mons->clear_all_constrictions(); // moved, let go any constrictions
 
     mons->check_redraw(mons->pos() - delta);
     mons->apply_location_effects(mons->pos() - delta);

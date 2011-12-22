@@ -73,7 +73,7 @@ ENDMAP
 NAME:   minmay_snake_entry_six_corridors
 TAGS:   snake_entry ruin_lair
 ORIENT: float
-MONS:   small snake, snake, water moccasin, black mamba
+MONS:   ball python, adder, water moccasin, black mamba
 KMONS:  P = plant / fungus w:1 / nothing
 SUBST:  1 = 1., 2 = 2., 3 = 3.
 SUBST:  1 = 122223333, 2 = 122333344, 3 = 33444
@@ -119,7 +119,7 @@ ENDMAP
 
 NAME:   minmay_snake_pond
 DEPTH:  Snake
-MONS:   small snake w:3 / snake / water moccasin
+MONS:   ball python w:3 / adder / water moccasin
 SUBST:  w = wwWW.1
 MAP
   wwww
@@ -137,7 +137,7 @@ TAGS:   no_monster_gen generate_awake
 DEPTH:  Snake
 ORIENT: south
 # Black mambas can't swim, so none of those
-MONS:   small snake w:3 / snake / water moccasin / nothing w:5
+MONS:   ball python w:3 / adder / water moccasin / nothing w:5
 MONS:   anaconda / nothing w:5
 SUBST:  w = wwW
 KPROP:  12 = no_rtele_into

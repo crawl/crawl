@@ -212,6 +212,12 @@ void monster::add_enchantment_effect(const mon_enchant &ench, bool quiet)
             firing_pos.reset();
         }
         mons_att_changed(this);
+        // clear any constrictions on/by you
+        clear_specific_constrictions(MHITYOU);
+        you.clear_specific_constrictions(mindex());
+
+        // TODO -- and friends
+
         if (you.can_see(this))
             learned_something_new(HINT_MONSTER_FRIENDLY, pos());
         break;

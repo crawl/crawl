@@ -25,6 +25,7 @@ enum status_type
     STATUS_FIREBALL,
     STATUS_BACKLIT,
     STATUS_UMBRA,
+    STATUS_CONSTRICTED,
 };
 
 struct status_info

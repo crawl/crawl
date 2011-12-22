@@ -69,6 +69,20 @@ bool monster::blink_to(const coord_def& dest, bool quiet)
     if (!move_to_pos(dest))
         return (false);
 
+    // handle constriction, if any
+    if (is_constricted())
+    {
+        if (constricted_by == MHITYOU)
+            player_teleport_to_monster(this, dest);
+        else
+            monster_teleport_to_player(constricted_by, dest);
+    }
+    for (int i = 0; i < 8; i++)
+        if (constricting[i] == MHITYOU)
+            player_teleport_to_monster(this, dest);
+        else if (constricting[i] != NON_ENTITY)
+            monster_teleport_to_player(constricting[i], dest);
+
     // Leave a purple cloud.
     if (!jump)
         place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3), this);

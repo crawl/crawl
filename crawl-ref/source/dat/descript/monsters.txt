@@ -357,6 +357,10 @@ acid blob
 
 A lump of sickly green flesh, dripping with lethal acid.
 %%%%
+adder
+
+The common dungeon snake.
+%%%%
 agate snail
 
 A huge and disgusting gastropod with a celadon shell, inside which it will hide when frightened.
@@ -404,6 +408,10 @@ A juvenile alligator. While it does not have crushing jaws, nor the strength to 
 ball lightning
 
 An oddity of nature, ball lightning bounces around behaving almost, but not quite, entirely unlike regular lightning.
+%%%%
+ball python
+
+A small snake that can augment its bite by constricting small creatures.
 %%%%
 ballistomycete
 
@@ -1705,10 +1713,6 @@ small abomination
 
 A hideous mass of body parts, part animated dead flesh, part demon.
 %%%%
-small snake
-
-The lesser dungeon snake.
-%%%%
 small simulacrum
 
 An ice replica of a monster that is animated by the powers of necromancy.
@@ -1724,10 +1728,6 @@ A corpse raised to undeath by necromancy.
 smoke demon
 
 An infernal demon that manifests itself as a writhing cloud of smoke. Having considerable pyrokinetic powers, it can very effectively attack its enemies from afar.
-%%%%
-snake
-
-The common dungeon snake.
 %%%%
 snapping turtle
 

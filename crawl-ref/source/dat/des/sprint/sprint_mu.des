@@ -597,7 +597,7 @@ ENDMAP
 NAME: sprint_mu_snake_twists
 TAGS: sprint_mu_snake no_rotate no_hmirror no_vmirror no_dup
 MONS: guardian serpent, naga warrior, greater naga, naga
-MONS: snake, water moccasin, black mamba
+MONS: adder, water moccasin, black mamba
 KMONS: 8 = anaconda
 SUBST: 5 = 5..
 SUBST: 5 = 5678
