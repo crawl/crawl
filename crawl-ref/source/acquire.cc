@@ -1449,11 +1449,6 @@ int acquirement_create_item(object_class_type class_wanted,
     {
         switch (thing.sub_type)
         {
-        case RING_SLAYING:
-            // Make sure plus to damage is >= 1.
-            thing.plus2 = std::max(abs(thing.plus2), 1);
-            // fall through...
-
         case RING_PROTECTION:
         case RING_STRENGTH:
         case RING_INTELLIGENCE:
@@ -1461,6 +1456,12 @@ int acquirement_create_item(object_class_type class_wanted,
         case RING_EVASION:
             // Make sure plus is >= 1.
             thing.plus = std::max(abs(thing.plus), 1);
+            break;
+
+        case RING_SLAYING:
+            // Two plusses to handle here, and accuracy can be +0.
+            thing.plus = abs(thing.plus);
+            thing.plus2 = std::max(abs(thing.plus2), 2);
             break;
 
         case RING_HUNGER:
