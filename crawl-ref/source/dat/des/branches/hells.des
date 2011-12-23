@@ -28,9 +28,10 @@ function geh_setup(e)
    e.kitem('O = obsidian rune of Zot')
    e.lrockcol("brown")
    e.lfloorcol("lightgrey")
+   e.lfloortile("floor_pebble_darkgray")
    e.colour("v = red")
-   dgn.set_feature_desc_short("Floor", "Ashen ground")
-   dgn.set_feature_desc_long("Floor", "With every step, you walk on ash. " ..
+   dgn.set_feature_desc_short("floor", "Ashen ground")
+   dgn.set_feature_desc_long("floor", "With every step, you walk on ash. " ..
                              "It is warm and almost comfortable.\n")
    dgn.set_feature_desc_short("metal wall", "tempered metal wall")
    dgn.set_feature_desc_long("metal wall", "These metal walls emit heat.\n")
@@ -52,8 +53,8 @@ function coc_setup(e)
    dgn.set_feature_desc_long("rock wall", "A rock wall coated in a thick layer of ice.\n")
    dgn.set_feature_desc_short("stone wall", "ice-covered stone wall")
    dgn.set_feature_desc_long("stone wall", "A stone wall coated in a thick layer of ice.\n")
-   dgn.set_feature_desc_short("Floor", "Frost-covered floor")
-   dgn.set_feature_desc_long("Floor", "Frost-covered floor. It crunches " ..
+   dgn.set_feature_desc_short("floor", "Frost-covered floor")
+   dgn.set_feature_desc_long("floor", "Frost-covered floor. It crunches " ..
                              "satisfyingly underfoot.\n")
 end
 
@@ -1030,7 +1031,7 @@ SHUFFLE: CI / ''
 SHUFFLE: EF / ""
 SHUFFLE: CI, EF
 SUBST:   CE = +, IF : cc+
-SUBST:   N = ncc
+SUBST:   N : ncc
 SUBST:   '" = -
 SHUFFLE: O1$ / *3|
 MONS:    patrolling asmodeus, brimstone fiend, brimstone fiend
@@ -1045,10 +1046,8 @@ KMONS:   V = fire vortex
 SUBST:   4 = 444499566-
 COLOUR:  c = lightred
 COLOUR:  G = red
-FTILE:   .G{([<78m = FLOOR_PEBBLE_RED
-TILE:    v = DNGN_METAL_WALL_RED
-TILE:    c = DNGN_STONE_WALL_RED
-TILE:    n = DNGN_TRANSPARENT_WALL_RED
+FTILE:   1234569%$*|Ovcn+- = floor_pebble_red
+TILE:    n = dngn_transparent_wall_red
 SUBST:   - = .
 KFEAT:   RV = lava
 KFEAT:   L = endless_lava
