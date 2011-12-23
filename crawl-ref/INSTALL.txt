@@ -199,37 +199,18 @@ Building:
 Building on Mac OS X
 --------------------
 
-For non-graphical builds, you can use the Unix build process described
-above, or you can use Xcode, as described below.
+Mac builds use the Unix build process described above, but require you
+to add 'APPLE_GCC=y' to the 'make' command-line. In addition, to build the
+graphical version of Crawl, you must add 'NO_PKGCONFIG=y' and
+'CONTRIB_SDL=y'.
 
-For graphical builds, we do not support the use of the Unix build process
-for various reasons.
+So, to build build Crawl on a Mac you could use the following example
+command lines.
 
-* Crawl is officially built and tested under Xcode 3.2 on OS X 10.6.1, but
-  it's highly likely that other versions of Xcode will work fine.
-
-* Make sure Xcode is installed. Xcode should be available on the Mac OS X
-  install DVD if you haven't already installed it.  You can also download
-  Xcode from Apple's website (note that their website often has versions of
-  Xcode that are newer than the versions distributed on their Mac OS X
-  DVDs):  http://developer.apple.com/TOOLS/Xcode/
-
-* Open the Xcode project (Crawl.xcodeproj) under the "source"
-  directory.
-
-* Hit Build in Xcode. This should build all the necessary dependencies,
-  including libpng, freetype, SDL, and SDL_image, and then finally build
-  Crawl itself.  The process may take quite a while, so go grab a coke or a
-  cup of coffee.
-
-* The default build configuration, Release, will build a ppc/i386 Universal
-  binary suitable for play on all OS X 10.4 or newer systems.  The other
-  build configurations are intended for development and may not result in a
-  binary that can be distributed to others.
-
-* If you would like users to be unable to script Crawl with Lua, you can
-  specify NO_LUA_BINDINGS=y when building. See the section on Lua for more
-  information.
+For the console version:
+  make APPLE_GCC=y
+For the graphical version:
+  make APPLE_GCC=y NO_PKGCONFIG=y CONTRIB_SDL=y TILES=y
 
 
 Building on Windows (MinGW)
