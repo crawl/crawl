@@ -737,6 +737,9 @@ static tileidx_t _tileidx_monster_zombified(const monster_info& mon)
     case MON_SHAPE_ARACHNID:
         z_tile = TILEP_MONS_ZOMBIE_SPIDER;
         break;
+    case MON_SHAPE_MISC:
+        if (mons_genus(subtype) == MONS_OCTOPODE)
+            return TILEP_MONS_ZOMBIE_OCTOPODE;
     default:
         z_tile = TILEP_ERROR;
     }

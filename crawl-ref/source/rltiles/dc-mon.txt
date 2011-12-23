@@ -931,6 +931,7 @@ statue_form_humanoid TRAN_STATUE_HUMANOID
 %syn TRAN_STATUE_EQUIP_FIRST
 statue_form_centaur TRAN_STATUE_CENTAUR
 statue_form_naga TRAN_STATUE_NAGA
+statue_form_octopode TRAN_STATUE_OCTOPODE
 %syn TRAN_STATUE_EQUIP_LAST
 statue_form_felid TRAN_STATUE_FELID
 dragon_form TRAN_DRAGON
@@ -938,6 +939,7 @@ lich_form_humanoid TRAN_LICH_HUMANOID
 %syn TRAN_LICH_EQUIP_FIRST
 lich_form_centaur TRAN_LICH_CENTAUR
 lich_form_naga TRAN_LICH_NAGA
+lich_form_octopode TRAN_LICH_OCTOPODE
 %syn TRAN_LICH_EQUIP_LAST
 lich_form_felid TRAN_LICH_FELID
 
