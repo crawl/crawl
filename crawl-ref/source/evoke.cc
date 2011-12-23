@@ -587,7 +587,7 @@ static bool _box_of_beasts(item_def &box)
     {
         const monster_type beasts[] = {
             MONS_BAT,       MONS_HOUND,     MONS_JACKAL,
-            MONS_RAT,       MONS_ICE_BEAST, MONS_SNAKE,
+            MONS_RAT,       MONS_ICE_BEAST, MONS_ADDER,
             MONS_YAK,       MONS_BUTTERFLY, MONS_WATER_MOCCASIN,
             MONS_CROCODILE, MONS_HELL_HOUND
         };

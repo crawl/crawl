@@ -606,7 +606,7 @@ bool mons_is_native_in_branch(const monster* mons,
 
     case BRANCH_SNAKE_PIT:
         return (mons_genus(mons->type) == MONS_NAGA
-                || mons_genus(mons->type) == MONS_SNAKE);
+                || mons_genus(mons->type) == MONS_ADDER);
 
     case BRANCH_HALL_OF_ZOT:
         return (mons_genus(mons->type) == MONS_DRACONIAN
