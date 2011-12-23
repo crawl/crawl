@@ -1930,7 +1930,7 @@ void handle_noattack_constrictions(monster *mons)
         if (attacker->constricting[i] != NON_ENTITY)
         {
             int basedam, durdam, acdam, infdam, damage;
-            if (attacker->constricting[i] = MHITYOU)
+            if (attacker->constricting[i] == MHITYOU)
                 defender = &you;
             else
                 defender = &env.mons[mons->constricting[i]];
