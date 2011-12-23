@@ -166,6 +166,8 @@ static void _dump_player(FILE *file)
         fprintf(file, "Standing on/in/over feature: %s\n",
                 raw_feature_description(feat, NUM_TRAPS, true).c_str());
     }
+
+    debug_dump_constriction(&you);
     fprintf(file, "\n");
 
     if (you.running.runmode != RMODE_NOT_RUNNING)

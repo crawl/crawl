@@ -123,6 +123,50 @@ std::string debug_mon_str(const monster* mon)
     return (out);
 }
 
+void debug_dump_constriction(const actor *act)
+{
+    for(int i_c = 0; i_c < 8; ++i_c)
+    {
+        short constricted = act->constricting[i_c];
+
+        if (constricted != NON_ENTITY)
+        {
+            fprintf(stderr, "Constricting[%d] ", i_c);
+            if (constricted == MHITYOU)
+            {
+                fprintf(stderr, "player %s ",
+                        debug_coord_str(you.pos()).c_str());
+            }
+            else if (invalid_monster_index(constricted))
+                fprintf(stderr, "invalid[%hd] ", constricted);
+            else
+            {
+                fprintf(stderr, "%s ",
+                        debug_mon_str(&env.mons[constricted]).c_str());
+            }
+
+            fprintf(stderr, "for %d turns\n", act->dur_has_constricted[i_c]);
+        }
+    }
+
+    if (act->constricted_by != NON_ENTITY)
+    {
+        fprintf(stderr, "Constricted by ");
+        if (act->constricted_by == MHITYOU)
+            fprintf(stderr, "player %s ", debug_coord_str(you.pos()).c_str());
+        else if (invalid_monster_index(act->constricted_by))
+            fprintf(stderr, "invalid[%hd] ", act->constricted_by);
+        else
+        {
+            fprintf(stderr, "%s ",
+                    debug_mon_str(&env.mons[act->constricted_by]).c_str());
+        }
+
+        fprintf(stderr, "for %d turns (%d escape attempts)\n",
+                act->dur_been_constricted, act->escape_attempts);
+    }
+}
+
 void debug_dump_mon(const monster* mon, bool recurse)
 {
     const int midx = mon->mindex();
@@ -197,6 +241,7 @@ void debug_dump_mon(const monster* mon, bool recurse)
         fprintf(stderr, "<OoB>");
 
     fprintf(stderr, "\n");
+    debug_dump_constriction(mon);
 
     if (mon->is_patrolling())
     {
