@@ -36,7 +36,6 @@ Section ""
   File /r /x "*~" "build-win\*"
   File ..\README.txt
   File ..\README.pdf
-  File ..\CREDITS.txt
   File /oname=LICENCE.txt ..\licence.txt
 
   # clean after previous versions; crawl-console.exe used to be named crawl.exe
