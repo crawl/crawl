@@ -201,14 +201,8 @@ static void _change_skill_level(skill_type exsk, int n)
         need_reset = true;
     }
 
-    const skill_type best_spell = best_skill(SK_SPELLCASTING,
-                                             SK_LAST_MAGIC);
-    if (exsk == SK_SPELLCASTING && you.skills[exsk] == n
-        && best_spell == SK_SPELLCASTING && n > 0)
-    {
-        mpr("You're starting to get the hang of this magic thing.");
+    if (exsk == SK_SPELLCASTING && you.skills[exsk] == n && n > 0)
         learned_something_new(HINT_GAINED_SPELLCASTING);
-    }
 
     if (need_reset)
         reset_training();

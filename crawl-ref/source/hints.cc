@@ -3291,8 +3291,10 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
                 "picked up automatically.";
         break;
     case HINT_GAINED_SPELLCASTING:
-        text << "Great, from now on you'll be able to cast spells!\n"
-                "Press <w>%</w> "
+        text << "As your Spellcasting skill increases, you will be able to "
+             << "memorise more spells, and will suffer less hunger and "
+             << "somewhat fewer failures when you cast them.\n"
+             << "Press <w>%</w> "
 #ifdef USE_TILE
              << "(or click on the <w>skill button</w> in the command panel) "
 #endif
