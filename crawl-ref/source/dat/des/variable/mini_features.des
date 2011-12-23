@@ -1541,6 +1541,13 @@ MAP
       ...........
 ENDMAP
 
+NAME:  abandoned_shop
+TAGS:  extra
+DEPTH: D:4-27, Orc, Elf, Shoals, Snake, Vault, Forest, Dwarf
+KFEAT: O = abandoned_shop
+MAP
+O
+ENDMAP
 
 #####################################################################
 #
