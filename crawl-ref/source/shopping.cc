@@ -336,6 +336,10 @@ static bool _in_a_shop(int shopidx, int &num_in_list)
 
     cursor_control coff(false);
 
+#ifdef USE_TILE_WEB
+    tiles_crt_control menu(CRT_MENU, "shop");
+#endif
+
     clrscr();
 
     const std::string hello = "Welcome to " + shop_name(shop.pos) + "!";
