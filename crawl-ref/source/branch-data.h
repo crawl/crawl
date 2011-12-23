@@ -149,7 +149,7 @@ Branch branches[] = {
       DNGN_ENTER_GEHENNA, NUM_FEATURES, // sentinel
       "Gehenna", "Gehenna", "Geh",
       NULL,
-      false, YELLOW, RED,
+      false, BROWN, RED,
       mons_gehenna_rare, mons_gehenna_level,
       'G', true, true, 0 },
 
