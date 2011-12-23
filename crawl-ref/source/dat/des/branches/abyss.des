@@ -169,7 +169,7 @@ ENDMAP
 
 NAME:   hangedman_abyss_mock_shop
 TAGS:   abyss no_monster_gen
-KFEAT:  0 = stone_arch
+KFEAT:  0 = abandoned_shop
 MONS:   patrolling water elemental, statue name:archer tile:mons_statue_archer \
         n_adj; longbow ego:chaos . arrow q:40
 KFEAT:  1 = permadry_fountain
