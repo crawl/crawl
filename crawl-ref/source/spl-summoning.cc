@@ -236,10 +236,10 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
                 || one_chance_in(5 - std::min(4, div_rand_round(pow * 2, 25))))
             {
                 mon = x_chance_in_y(pow / 3, 100) ? MONS_WATER_MOCCASIN
-                                                  : MONS_SNAKE;
+                                                  : MONS_ADDER;
             }
             else
-                mon = MONS_SMALL_SNAKE;
+                mon = MONS_BALL_PYTHON;
 
             const int mon_index = create_monster(mgen_data(mon, beha, &you,
                                       0, SPELL_STICKS_TO_SNAKES, you.pos(),
@@ -260,7 +260,7 @@ spret_type cast_sticks_to_snakes(int pow, god_type god, bool fail)
         // the really big sticks (so bonus applies really only to trolls
         // and ogres).  Still, it's unlikely any character is strong
         // enough to bother lugging a few of these around. - bwr
-        monster_type mon = MONS_SNAKE;
+        monster_type mon = MONS_ADDER;
 
         if (get_weapon_brand(wpn) == SPWPN_VENOM || item_mass(wpn) >= 300)
             mon = MONS_WATER_MOCCASIN;
@@ -1755,7 +1755,7 @@ static bool _raise_remains(const coord_def &pos, int corps, beh_type beha,
         *motions_r |= DEAD_ARE_FLYING;
     else if (mons_class_flies(zombie_type) == FL_LEVITATE)
         *motions_r |= DEAD_ARE_FLOATING;
-    else if (mons_genus(zombie_type)    == MONS_SNAKE
+    else if (mons_genus(zombie_type)    == MONS_ADDER
              || mons_genus(zombie_type) == MONS_NAGA
              || mons_genus(zombie_type) == MONS_GUARDIAN_SERPENT
              || mons_genus(zombie_type) == MONS_GIANT_SLUG

@@ -2757,10 +2757,10 @@ void mons_cast(monster* mons, bolt &pbolt, spell_type spell_cast,
                 || one_chance_in(5 - std::min(4, div_rand_round(pow * 2, 25))))
             {
                 sum = x_chance_in_y(pow / 3, 100) ? MONS_WATER_MOCCASIN
-                                                  : MONS_SNAKE;
+                                                  : MONS_ADDER;
             }
             else
-                sum = MONS_SMALL_SNAKE;
+                sum = MONS_BALL_PYTHON;
 
             if (create_monster(
                     mgen_data(sum, SAME_ATTITUDE(mons), mons,

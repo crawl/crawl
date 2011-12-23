@@ -2184,7 +2184,7 @@ int monster_die(monster* mons, killer_type killer,
             {
                 if (fake_abjuration)
                 {
-                    if (mons_genus(mons->type) == MONS_SNAKE)
+                    if (mons_genus(mons->type) == MONS_ADDER)
                     {
                         // Sticks to Snake
                         simple_monster_message(mons, " withers and dies!",
