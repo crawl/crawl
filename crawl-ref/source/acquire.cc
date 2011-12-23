@@ -1643,7 +1643,7 @@ bool acquirement(object_class_type class_wanted, int agent,
         case 'h':    class_wanted = OBJ_FOOD;       break;
         case 'i':    class_wanted = OBJ_GOLD;       break;
         case 'j':    class_wanted = OBJ_MISSILES;   break;
-        case '\\':   check_item_knowledge();        break;
+        case '\\':   check_item_knowledge(); redraw_screen(); break;
         default:
             // Lets wizards escape out of accidently choosing acquirement.
             if (agent == AQ_WIZMODE)

@@ -1989,7 +1989,7 @@ void process_command(command_type cmd)
     case CMD_DISPLAY_CHARACTER_STATUS: display_char_status();          break;
     case CMD_DISPLAY_COMMANDS:         list_commands(0, true);         break;
     case CMD_DISPLAY_INVENTORY:        get_invent(OSEL_ANY);           break;
-    case CMD_DISPLAY_KNOWN_OBJECTS:    check_item_knowledge();         break;
+    case CMD_DISPLAY_KNOWN_OBJECTS: check_item_knowledge(); redraw_screen(); break;
     case CMD_DISPLAY_MUTATIONS: display_mutations(); redraw_screen();  break;
     case CMD_DISPLAY_RUNES:            display_runes();                break;
     case CMD_DISPLAY_SKILLS:           skill_menu(); redraw_screen();  break;

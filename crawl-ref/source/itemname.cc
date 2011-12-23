@@ -2208,7 +2208,6 @@ void check_item_knowledge(bool unknown_items)
     menu.load_items(items, discoveries_item_mangle);
     menu.show(true);
     char last_char = menu.getkey();
-    redraw_screen();
 
     for (std::vector<const item_def*>::iterator iter = items.begin();
          iter != items.end(); ++iter)
