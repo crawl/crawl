@@ -5572,7 +5572,7 @@ feature_spec_list keyed_mapspec::parse_feature(const std::string &str)
         return (list);
     }
 
-    if (s.find("shop") != std::string::npos
+    if (s.find("shop") != std::string::npos && s != "abandoned_shop"
         || s.find("store") != std::string::npos)
     {
         list.push_back(parse_shop(s, weight));
