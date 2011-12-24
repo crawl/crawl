@@ -5344,6 +5344,10 @@ bool melee_attack::handle_constriction()
     actor *save_defender = defender;
     actor *target;
 
+    // if not adjacent then constriction is not possible
+    if (!adjacent(attacker->pos(), defender->pos()))
+        return false;
+
     if (attacker->atype() == ACT_PLAYER)
         maxgrab = (attacker->as_player()->species == SP_OCTOPODE) ? 8 : 1;
     else
