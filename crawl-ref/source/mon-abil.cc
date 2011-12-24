@@ -2893,6 +2893,20 @@ void mon_nearby_ability(monster* mons)
         mons->colour = random_colour();
         break;
 
+    case MONS_SUBTRACTOR_SNAKE:
+        // The set of unused snake colour is big enough to avoid conflicting
+        // with other snakes.
+        {
+            static uint8_t ss_colours[] = {CYAN, MAGENTA, LIGHTBLUE,
+                                           LIGHTRED, YELLOW};
+            // Should be same as the number of tiles; if this ever changes,
+            // just roll a separate random number for tile_num.
+            int rnd = random2(ARRAYSZ(ss_colours));
+            mons->colour = ss_colours[rnd];
+            mons->props["tile_num"].get_short() = rnd;
+        }
+        break;
+
     case MONS_GOLDEN_EYE:
         if (_eyeball_will_use_ability(mons))
         {

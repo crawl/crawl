@@ -2250,6 +2250,7 @@ int mons_hallzot_level(int mcls)
         mlev += 3;
         break;
     case MONS_MOTH_OF_WRATH:
+    case MONS_SUBTRACTOR_SNAKE:
         mlev += 2;
         break;
     case MONS_ORB_OF_FIRE:
@@ -2286,6 +2287,7 @@ int mons_hallzot_rare(int mcls)
     case MONS_GUARDIAN_MUMMY:
     case MONS_ELECTRIC_GOLEM:
     case MONS_CURSE_TOE:
+    case MONS_SUBTRACTOR_SNAKE:
         return 20;
 
     case MONS_MOTTLED_DRACONIAN:

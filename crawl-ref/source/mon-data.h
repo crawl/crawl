@@ -3739,6 +3739,19 @@ static monsterentry mondata[] = {
     MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
 },
 
+{
+    MONS_SUBTRACTOR_SNAKE, 'S', BLACK, "subtractor snake",
+    M_COLD_BLOOD,
+    MR_NO_FLAGS,
+    750, 10, MONS_ADDER, MONS_SUBTRACTOR_SNAKE, MH_NATURAL, -3,
+    { {AT_BITE, AF_KLOWN, 30}, {AT_BITE, AF_KLOWN, 20},
+      AT_NO_ATK, AT_NO_ATK },
+    { 18, 3, 5, 0 },
+    6, 16, MST_NO_SPELLS, CE_CLEAN, Z_BIG, S_HISS,
+    I_REPTILE, HT_LAND, FL_NONE, 18, DEFAULT_ENERGY,
+    MONUSE_NOTHING, MONEAT_NOTHING, SIZE_LARGE
+},
+
 // trolls ('T')
 {
     MONS_TROLL, 'T', BROWN, "troll",
