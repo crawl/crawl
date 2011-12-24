@@ -5570,8 +5570,7 @@ void player::init()
         montiers[i] = 0;
 #endif
 
-    spell_usage.clear();
-
+    action_count.clear();
 
     // Volatile (same-turn) state:
     turn_is_over     = false;
@@ -7557,4 +7556,12 @@ std::string _constriction_description()
     }
 
     return cinfo;
+}
+
+void count_action(caction_type type, int subtype)
+{
+    std::pair<caction_type, int> pair(type, subtype);
+    if (you.action_count.find(pair) == you.action_count.end())
+        you.action_count[pair].init(0);
+    you.action_count[pair][you.experience_level - 1]++;
 }

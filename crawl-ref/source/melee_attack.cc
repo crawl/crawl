@@ -231,6 +231,18 @@ bool melee_attack::handle_phase_attempted()
     if (attacker->atype() == ACT_PLAYER)
     {
         you.time_taken = calc_attack_delay();
+        if (weapon)
+        {
+            if (weapon->base_type == OBJ_WEAPONS)
+                count_action(CACT_MELEE, weapon->sub_type);
+            else if (weapon->base_type == OBJ_STAVES)
+            {
+                count_action(CACT_MELEE, item_is_rod(*weapon) ?
+                                          WPN_CLUB : WPN_STAFF);
+            }
+        }
+        else
+            count_action(CACT_MELEE, -1);
     }
     else
     {

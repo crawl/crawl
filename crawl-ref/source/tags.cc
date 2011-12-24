@@ -1295,20 +1295,27 @@ static void tag_construct_you(writer &th)
         marshallInt(th, you.montiers[k]);
 #endif
 
+#if TAG_MAJOR_VERSION == 32
+    marshallShort(th, 0); // was: length of you.spell_usage
+#endif
+
+    // Action counts.
     j = 0;
-    for (std::map<spell_type, FixedVector<int, 27> >::const_iterator sp =
-         you.spell_usage.begin(); sp != you.spell_usage.end(); ++sp)
+    for (std::map<std::pair<caction_type, int>, FixedVector<int, 27> >::const_iterator ac =
+         you.action_count.begin(); ac != you.action_count.end(); ++ac)
     {
         j++;
     }
     marshallShort(th, j);
-    for (std::map<spell_type, FixedVector<int, 27> >::const_iterator sp =
-         you.spell_usage.begin(); sp != you.spell_usage.end(); ++sp)
+    for (std::map<std::pair<caction_type, int>, FixedVector<int, 27> >::const_iterator ac =
+         you.action_count.begin(); ac != you.action_count.end(); ++ac)
     {
-        marshallShort(th, sp->first);
+        marshallShort(th, ac->first.first);
+        marshallInt(th, ac->first.second);
         for (int k = 0; k < 27; k++)
-            marshallInt(th, sp->second[k]);
+            marshallInt(th, ac->second[k]);
     }
+
 
     marshallCoord(th, abyssal_state.major_coord);
     marshallFloat(th, abyssal_state.depth);
@@ -2323,14 +2330,29 @@ static void tag_read_you(reader &th)
 #if TAG_MAJOR_VERSION == 32
     if (th.getMinorVersion() >= TAG_MINOR_SPELL_USAGE)
     {
-#endif
-    // Counts of spells cast, per level.
+    // was: size of you.spell_usage
     count = unmarshallShort(th);
     for (i = 0; i < count; i++)
     {
-        spell_type spell = (spell_type)unmarshallShort(th);
+        (void) unmarshallShort(th);
         for (j = 0; j < 27; j++)
-            you.spell_usage[spell][j] = unmarshallInt(th);
+            (void) unmarshallInt(th);
+    }
+    }
+#endif
+
+#if TAG_MAJOR_VERSION == 32
+    if (th.getMinorVersion() >= TAG_MINOR_ACTION_COUNTS)
+    {
+#endif
+    // Counts of actions made, by type.
+    count = unmarshallShort(th);
+    for (i = 0; i < count; i++)
+    {
+        caction_type caction = (caction_type)unmarshallShort(th);
+        int subtype = unmarshallInt(th);
+        for (j = 0; j < 27; j++)
+            you.action_count[std::pair<caction_type, int>(caction, subtype)][j] = unmarshallInt(th);
     }
 #if TAG_MAJOR_VERSION == 32
     }

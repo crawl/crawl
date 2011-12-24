@@ -441,6 +441,7 @@ void tome_of_power(int slot)
 
     mpr("You find yourself reciting the magical words!");
     practise(EX_WILL_READ_TOME);
+    count_action(CACT_EVOKE, EVOC_MISC);
 
     if (x_chance_in_y(7, 50))
     {
@@ -723,7 +724,10 @@ bool evoke_item(int slot)
     {
         ASSERT(item_is_equipped(item));
         if (entry->evoke_func(&item, &pract, &did_work, &unevokable))
+        {
+            count_action(CACT_EVOKE, EVOC_MISC);
             return (did_work);
+        }
     }
     else switch (item.base_type)
     {
@@ -759,6 +763,7 @@ bool evoke_item(int slot)
                 return (false);
 
             did_work = true;  // staff_spell() will handle messages
+            count_action(CACT_EVOKE, EVOC_ROD);
         }
         else if (item.sub_type == STAFF_CHANNELING)
         {
@@ -777,6 +782,7 @@ bool evoke_item(int slot)
                 pract = 1;
                 did_work = true;
                 ident = true;
+                count_action(CACT_EVOKE, EVOC_MISC);
             }
         }
         else
@@ -793,6 +799,7 @@ bool evoke_item(int slot)
             ASSERT(wielded);
             evoke_deck(item);
             pract = 1;
+            count_action(CACT_EVOKE, EVOC_DECK);
             break;
         }
 
@@ -889,6 +896,8 @@ bool evoke_item(int slot)
             unevokable = true;
             break;
         }
+        if (did_work)
+            count_action(CACT_EVOKE, EVOC_MISC);
         break;
 
     default:
