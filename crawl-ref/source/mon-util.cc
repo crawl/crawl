@@ -1399,6 +1399,14 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
 
         attk.flavour = RANDOM_ELEMENT(flavours);
     }
+    else if (attk.flavour == AF_SUBTRACTOR)
+    {
+        attack_flavour flavours[] =
+            {AF_POISON_NASTY, AF_ROT, AF_DRAIN_XP, AF_ANTIMAGIC, AF_DRAIN_STAT,
+             AF_POISON_STAT};
+
+        attk.flavour = RANDOM_ELEMENT(flavours);
+    }
 
     if (attk.flavour == AF_POISON_STAT)
     {
@@ -1407,8 +1415,7 @@ mon_attack_def mons_attack_spec(const monster* mon, int attk_number)
 
         attk.flavour = RANDOM_ELEMENT(flavours);
     }
-
-    if (attk.flavour == AF_DRAIN_STAT)
+    else if (attk.flavour == AF_DRAIN_STAT)
     {
         attack_flavour flavours[] =
             {AF_DRAIN_STR, AF_DRAIN_INT, AF_DRAIN_DEX};
