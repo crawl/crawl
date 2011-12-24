@@ -5339,10 +5339,6 @@ bool melee_attack::handle_constriction()
     actor *save_defender = defender;
     actor *target;
 
-    // if not adjacent then constriction is not possible
-    if (!adjacent(attacker->pos(), defender->pos()))
-        return false;
-
     int maxgrab = (attacker->mons_species(true) == MONS_OCTOPODE) ? 8 : 1;
     ASSERT(maxgrab <= MAX_CONSTRICT);
 
@@ -5419,6 +5415,12 @@ bool melee_attack::handle_constriction()
                     target = &you;
                 else
                     target = &env.mons[attacker->constricting[i]];
+                
+                // if not adjacent, skip.
+                // XXX needs to drop too!
+                if (!adjacent(attacker->pos(), target->pos()))
+                    continue;
+
                 defender = target;
                 damage = (attacker->atype() == ACT_PLAYER
                           ? (you.strength() - roll_dice(1, 3)) / 3
