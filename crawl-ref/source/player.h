@@ -290,8 +290,8 @@ public:
   // The biggest assigned monster id so far.
   mid_t last_mid;
 
-  // Count of spells cast.
-  std::map<spell_type, FixedVector<int, 27> > spell_usage;
+  // Count of various types of actions made.
+  std::map<std::pair<caction_type, int>, FixedVector<int, 27> > action_count;
 
   // Non-saved UI state:
   unsigned short prev_targ;
@@ -1000,4 +1000,6 @@ void run_macro(const char *macroname = NULL);
 int count_worn_ego(int which_ego);
 bool need_expiration_warning(duration_type dur, coord_def p = you.pos());
 bool need_expiration_warning(coord_def p = you.pos());
+
+void count_action(caction_type type, int subtype = 0);
 #endif

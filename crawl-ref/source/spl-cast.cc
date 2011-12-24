@@ -736,9 +736,7 @@ bool cast_a_spell(bool check_range, spell_type spell)
         {
             practise(EX_DID_CAST, spell);
             did_god_conduct(DID_SPELL_CASTING, 1 + random2(5));
-            if (you.spell_usage.find(spell) == you.spell_usage.end())
-                you.spell_usage[spell].init(0);
-            you.spell_usage[spell][you.experience_level - 1]++;
+            count_action(CACT_CAST, spell);
         }
         else
             practise(EX_DID_MISCAST, spell);

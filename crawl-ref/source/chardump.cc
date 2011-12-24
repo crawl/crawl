@@ -21,6 +21,7 @@
 #include "externs.h"
 #include "options.h"
 
+#include "abl-show.h"
 #include "artefact.h"
 #include "debug.h"
 #include "describe.h"
@@ -86,6 +87,7 @@ static void _sdump_hiscore(dump_params &);
 static void _sdump_monster_list(dump_params &);
 static void _sdump_vault_list(dump_params &);
 static void _sdump_spell_usage(dump_params &);
+static void _sdump_action_counts(dump_params &);
 static void _sdump_separator(dump_params &);
 #ifdef CLUA_BINDINGS
 static void _sdump_lua(dump_params &);
@@ -142,6 +144,7 @@ static dump_section_handler dump_handlers[] = {
     { "monlist",        _sdump_monster_list  },
     { "vaults",         _sdump_vault_list    },
     { "spell_usage",    _sdump_spell_usage   },
+    { "action_counts",  _sdump_action_counts },
 
     // Conveniences for the .crawlrc artist.
     { "",               _sdump_newline       },
@@ -1143,8 +1146,8 @@ static void _sdump_vault_list(dump_params &par)
     }
 }
 
-static bool _sort_by_first_cast(std::pair<spell_type, FixedVector<int, 28> > a,
-                                std::pair<spell_type, FixedVector<int, 28> > b)
+static bool _sort_by_first(std::pair<int, FixedVector<int, 28> > a,
+                           std::pair<int, FixedVector<int, 28> > b)
 {
     for (int i = 0; i < 27; i++)
     {
@@ -1158,8 +1161,23 @@ static bool _sort_by_first_cast(std::pair<spell_type, FixedVector<int, 28> > a,
 
 static void _sdump_spell_usage(dump_params &par)
 {
-    if (you.spell_usage.empty())
+    std::vector<std::pair<int, FixedVector<int, 28> > > usage_vec;
+    for (std::map<std::pair<caction_type, int>, FixedVector<int, 27> >::const_iterator sp = you.action_count.begin(); sp != you.action_count.end(); ++sp)
+    {
+        if (sp->first.first != CACT_CAST)
+            continue;
+        FixedVector<int, 28> v;
+        v[27] = 0;
+        for (int i = 0; i < 27; i++)
+        {
+            v[i] = sp->second[i];
+            v[27] += v[i];
+        }
+        usage_vec.push_back(std::pair<int, FixedVector<int, 28> >(sp->first.second, v));
+    }
+    if (usage_vec.empty())
         return;
+    std::sort(usage_vec.begin(), usage_vec.end(), _sort_by_first);
 
     int max_lt = (std::min<int>(you.max_level, 27) - 1) / 3;
 
@@ -1176,25 +1194,10 @@ static void _sdump_spell_usage(dump_params &par)
         par.text += "+-------";
     par.text += "++-------\n";
 
-    std::vector<std::pair<spell_type, FixedVector<int, 28> > > usage_vec;
-    for (std::map<spell_type, FixedVector<int, 27> >::const_iterator sp =
-         you.spell_usage.begin(); sp != you.spell_usage.end(); ++sp)
-    {
-        FixedVector<int, 28> v;
-        v[27] = 0;
-        for (int i = 0; i < 27; i++)
-        {
-            v[i] = sp->second[i];
-            v[27] += v[i];
-        }
-        usage_vec.push_back(std::pair<spell_type, FixedVector<int, 28> >(sp->first, v));
-    }
-    std::sort(usage_vec.begin(), usage_vec.end(), _sort_by_first_cast);
-
-    for (std::vector<std::pair<spell_type, FixedVector<int, 28> > >::const_iterator sp =
+    for (std::vector<std::pair<int, FixedVector<int, 28> > >::const_iterator sp =
          usage_vec.begin(); sp != usage_vec.end(); ++sp)
     {
-        par.text += chop_string(spell_title(sp->first), 24);
+        par.text += chop_string(spell_title((spell_type)sp->first), 24);
 
         for (int lt = 0; lt < max_lt; lt++)
         {
@@ -1206,12 +1209,134 @@ static void _sdump_spell_usage(dump_params &par)
             else
                 par.text += " |      ";
         }
-        ASSERT(sp->second[27] > 0);
         par.text += make_stringf(" ||%6d", sp->second[27]);
-
         par.text += "\n";
     }
 
+    par.text += "\n";
+}
+
+static std::string _describe_action(caction_type type)
+{
+    switch (type)
+    {
+    case CACT_MELEE:
+        return "Melee";
+    case CACT_FIRE:
+        return " Fire";
+    case CACT_THROW:
+        return "Throw";
+    case CACT_CAST:
+        return " Cast";
+    case CACT_INVOKE:
+        return "Invok";
+    case CACT_EVOKE:
+        return "Evoke";
+    case CACT_USE:
+        return "  Use";
+    default:
+        return "Error";
+    }
+}
+
+static std::string _describe_action_subtype(caction_type type, int subtype)
+{
+    switch (type)
+    {
+    case CACT_MELEE:
+    case CACT_FIRE:
+        return ((subtype == -1) ? "Unarmed"
+                : uppercase_first(item_base_name(OBJ_WEAPONS, subtype)));
+    case CACT_THROW:
+        return uppercase_first(item_base_name(OBJ_MISSILES, subtype));
+    case CACT_CAST:
+        return spell_title((spell_type)subtype);
+    case CACT_INVOKE:
+        return ability_name((ability_type)subtype);
+    case CACT_EVOKE:
+        switch ((evoc_type)subtype)
+        {
+        case EVOC_ABIL:
+            return "Ability";
+        case EVOC_WAND:
+            return "Wand";
+        case EVOC_ROD:
+            return "Rod";
+        case EVOC_DECK:
+            return "Deck";
+        case EVOC_MISC:
+            return "Miscellaneous";
+        default:
+            return "Error";
+        }
+    case CACT_USE:
+        return uppercase_first(base_type_string((object_class_type)subtype));
+    default:
+        return "Error";
+    }
+}
+
+static void _sdump_action_counts(dump_params &par)
+{
+    if (you.action_count.empty())
+        return;
+    int max_lt = (std::min<int>(you.max_level, 27) - 1) / 3;
+
+    // Don't show both a total and 1..3 when there's only one tier.
+    if (max_lt)
+        max_lt++;
+
+    par.text += make_stringf("\n%-24s", "Action");
+    for (int lt = 0; lt < max_lt; lt++)
+        par.text += make_stringf(" | %2d-%2d", lt * 3 + 1, lt * 3 + 3);
+    par.text += make_stringf(" || %5s", "total");
+    par.text += "\n-------------------------";
+    for (int lt = 0; lt < max_lt; lt++)
+        par.text += "+-------";
+    par.text += "++-------\n";
+
+    for (int cact = 0; cact < NUM_CACTIONS; cact++)
+    {
+        std::vector<std::pair<int, FixedVector<int, 28> > > action_vec;
+        for (std::map<std::pair<caction_type, int>, FixedVector<int, 27> >::const_iterator ac = you.action_count.begin(); ac != you.action_count.end(); ++ac)
+        {
+            if (ac->first.first != cact)
+                continue;
+            FixedVector<int, 28> v;
+            v[27] = 0;
+            for (int i = 0; i < 27; i++)
+            {
+                v[i] = ac->second[i];
+                v[27] += v[i];
+            }
+            action_vec.push_back(std::pair<int, FixedVector<int, 28> >(ac->first.second, v));
+        }
+        std::sort(action_vec.begin(), action_vec.end(), _sort_by_first);
+
+        for (std::vector<std::pair<int, FixedVector<int, 28> > >::const_iterator ac = action_vec.begin(); ac != action_vec.end(); ++ac)
+        {
+            if (ac == action_vec.begin())
+            {
+                par.text += _describe_action(caction_type(cact));
+                par.text += ": ";
+            }
+            else
+                par.text += "       ";
+            par.text += chop_string(_describe_action_subtype(caction_type(cact), ac->first), 17);
+            for (int lt = 0; lt < max_lt; lt++)
+            {
+                int ltotal = 0;
+                for (int i = lt * 3; i < lt * 3 + 3; i++)
+                    ltotal += ac->second[i];
+                if (ltotal)
+                    par.text += make_stringf(" |%6d", ltotal);
+                else
+                    par.text += " |      ";
+            }
+            par.text += make_stringf(" ||%6d", ac->second[27]);
+            par.text += "\n";
+        }
+    }
     par.text += "\n";
 }
 

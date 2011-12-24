@@ -474,6 +474,18 @@ enum burden_state_type          // you.burden_state
     BS_OVERLOADED   = 5,
 };
 
+enum caction_type    // Primary categorization of counted actions.
+{                    // A subtype will also be given in each case:
+    CACT_MELEE,      // weapon_type
+    CACT_FIRE,       // weapon_type
+    CACT_THROW,      // missile_type
+    CACT_CAST,       // spell_type
+    CACT_INVOKE,     // ability_type
+    CACT_EVOKE,      // evoc_type
+    CACT_USE,        // object_class_type
+    NUM_CACTIONS,
+};
+
 enum canned_message_type
 {
     MSG_SOMETHING_APPEARS,
@@ -1004,6 +1016,15 @@ enum description_level_type
                                        // description in the db.
 
     DESC_NONE
+};
+
+enum evoc_type
+{
+    EVOC_ABIL,
+    EVOC_WAND,
+    EVOC_ROD,
+    EVOC_DECK,
+    EVOC_MISC,
 };
 
 enum game_direction_type
