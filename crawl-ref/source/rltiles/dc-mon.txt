@@ -183,6 +183,11 @@ anaconda MONS_ANACONDA
 lava_snake MONS_LAVA_SNAKE
 sea_snake MONS_SEA_SNAKE
 salamander MONS_SALAMANDER
+snake_blue MONS_SUBTRACTOR_SNAKE
+snake_yellow
+snake_cyan
+snake_green
+snake_violet
 
 ## Bears ('U')
 black_bear MONS_BLACK_BEAR

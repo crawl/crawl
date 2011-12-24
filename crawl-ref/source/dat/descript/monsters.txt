@@ -1823,6 +1823,10 @@ storm dragon
 
 A huge and very powerful dragon. Sparks crackle along its enormous scaly wings.
 %%%%
+subtractor snake
+
+A weird deadly snake capable of diminishing your strengths, and dividing you into multiple small pieces.
+%%%%
 sun demon
 
 A demonic figure shining with the light and fury of a fallen star.
