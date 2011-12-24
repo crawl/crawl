@@ -110,14 +110,10 @@ static bool _reaching_weapon_attack(const item_def& wpn)
     if (mons && mons->submerged() && feat_is_floor(grd(beam.target)))
         mons = NULL;
 
-    const int x_first_middle = std::min(beam.target.x, you.pos().x)
-                            + (x_distance / 2);
-    const int y_first_middle = std::min(beam.target.y, you.pos().y)
-                            + (y_distance / 2);
-    const int x_second_middle = std::max(beam.target.x, you.pos().x)
-                            - (x_distance / 2);
-    const int y_second_middle = std::max(beam.target.y, you.pos().y)
-                            - (y_distance / 2);
+    const int x_first_middle = you.pos().x + (delta.x)/2;
+    const int y_first_middle = you.pos().y + (delta.y)/2;
+    const int x_second_middle = beam.target.x - (delta.x)/2;
+    const int y_second_middle = beam.target.y - (delta.y)/2;
     const coord_def first_middle(x_first_middle, y_first_middle);
     const coord_def second_middle(x_second_middle, y_second_middle);
 
