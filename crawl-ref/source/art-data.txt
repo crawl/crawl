@@ -643,7 +643,7 @@ DESC:    It is designed for easy concealment, but still packs a nasty punch.
 NAME:    Wyrmbane
 APPEAR:  scale-covered lance
 OBJ:     OBJ_WEAPONS/WPN_SPEAR
-BASE_DAM: +4
+BASE_DAM: +2
 PLUS:    +9/+6
 COLOUR:  LIGHTGREEN
 TILE:    urand_wyrmbane
