@@ -1264,10 +1264,12 @@ static std::string _describe_portal(const coord_def &gc)
 
     text << "stand over the portal and press <w>></w>. To return find "
 #ifdef USE_TILE
-        "a similar looking portal tile "
+            "a similar looking portal tile "
 #else
-        "another <w>\\</w> (though NOT the ancient stone arch you'll start "
-        "out on) "
+            "another <w>"
+         << stringize_glyph(get_feat_symbol(DNGN_EXIT_PORTAL_VAULT))
+         << "</w> (though NOT the ancient stone arch you'll start "
+            "out on) "
 #endif
         "and press <w><<</w>.";
 
@@ -3081,7 +3083,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         text << "To increase your chances of survival until you can find the "
                 "exit"
 #ifndef USE_TILE
-                " (a flickering <w>\\</w>)"
+                " (a flickering <w>"
+             << stringize_glyph(get_feat_symbol(DNGN_EXIT_ABYSS))
+             << "</w>)"
 #endif
                 ", keep moving, don't fight any of the monsters, and don't "
                 "bother picking up any items on the ground. If you're "
