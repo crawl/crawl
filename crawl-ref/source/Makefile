@@ -332,6 +332,8 @@ endif
 
 ifdef WIN32
 EXTRA_OBJECTS += icon.o
+else
+EXTRA_LIBS += -pthread
 endif
 
 ifndef TILES
@@ -629,7 +631,7 @@ SDL_INCLUDE := $(shell $(PKGCONFIG) sdl --cflags-only-I)
 SDL_CFLAGS  := $(shell $(PKGCONFIG) sdl --cflags-only-other)
 SDL_LDFLAGS := $(shell $(PKGCONFIG) sdl --libs-only-L) $(shell $(PKGCONFIG) sdl --libs-only-l)
 
-LIBS += -pthread -lSDL_image $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS)
+LIBS += -lSDL_image $(SDL_LDFLAGS) $(FREETYPE_LDFLAGS)
 
 endif # pkg-config
 

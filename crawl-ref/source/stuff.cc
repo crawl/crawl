@@ -21,6 +21,7 @@
 
 #include "cio.h"
 #include "colour.h"
+#include "crash.h"
 #include "database.h"
 #include "delay.h"
 #include "dungeon.h"
@@ -121,6 +122,8 @@ bool CrawlIsCrashing = false;
 
 NORETURN void end(int exit_code, bool print_error, const char *format, ...)
 {
+    disable_other_crashes();
+
     std::string error = print_error? strerror(errno) : "";
     if (format)
     {
