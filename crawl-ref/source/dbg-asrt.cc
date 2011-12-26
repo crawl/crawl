@@ -78,6 +78,8 @@
 #endif
 #endif
 
+#include "threads.h"
+
 static std::string _assert_msg;
 
 static void _dump_compilation_info(FILE* file)

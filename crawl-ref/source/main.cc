@@ -244,9 +244,9 @@ int main(int argc, char *argv[])
     real_crawl_state = new game_state();
     real_env = new crawl_environment();
 #endif
-    _compile_time_asserts();  // Actually, not just compile time.
-
     init_crash_handler();
+
+    _compile_time_asserts();  // Actually, not just compile time.
 
     // Hardcoded initial keybindings.
     init_keybindings();
