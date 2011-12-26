@@ -330,9 +330,6 @@ ifneq (,$(findstring clean,$(MAKECMDGOALS)))
 TILES := YesPlease
 endif
 
-# Works for Mac OS X and Linux.
-OBJECTS += crash-u.o
-
 ifdef WIN32
 EXTRA_OBJECTS += icon.o
 endif
