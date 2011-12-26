@@ -1243,7 +1243,7 @@ static std::string _describe_portal(const coord_def &gc)
                 "gathered enough gold to do so) ";
     }
     // For the sake of completeness, though it's very unlikely that a
-    // player will find a bazaar entrance before reahing XL 7.
+    // player will find a bazaar entrance before reaching XL 7.
     else if (desc.find("bazaar") != std::string::npos)
     {
         text << "is a portal to an inter-dimensional bazaar filled with "
@@ -1450,9 +1450,9 @@ void learned_something_new(hints_event_type seen_what, coord_def gc)
         break;
 
     case HINT_SEEN_SPBOOK:
-        text << "You have picked up a book ";
+        text << "You have picked up a book";
 #ifndef USE_TILE
-        text << "('<w>";
+        text << " ('<w>";
 
         text << stringize_glyph(get_item_symbol(SHOW_ITEM_BOOK))
              << "'</w>) "
@@ -4772,7 +4772,7 @@ void hints_describe_monster(const monster_info& mi, bool has_stat_desc)
                     "mode with <w>x</w> and then press <w>e</w> when your "
                     "cursor is hovering over the monster's grid. Doing so will "
                     "mark this grid and all surrounding ones within a radius "
-                    "of 8 as \"excluded\" ones that explore or travel modus "
+                    "of 8 as \"excluded\" ones that explore or travel modes "
                     "won't enter.";
         }
         else
