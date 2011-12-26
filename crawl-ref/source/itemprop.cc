@@ -519,19 +519,6 @@ void do_curse_item(item_def &item, bool quiet)
         return;
     }
 
-    // Neither can pearl dragon hides
-    if (item.base_type == OBJ_ARMOUR
-        && (item.sub_type == ARM_PEARL_DRAGON_HIDE
-            || item.sub_type == ARM_PEARL_DRAGON_ARMOUR))
-    {
-        if (!quiet)
-        {
-            mprf("Your %s glows black briefly, but repels the curse.",
-                item.name(DESC_PLAIN).c_str());
-        }
-        return;
-    }
-
     if (!quiet)
     {
         mprf("Your %s glows black for a moment.",
