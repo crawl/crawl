@@ -1011,7 +1011,7 @@ webserver/game_data/static/%.png: dat/tiles/%.png
 TILEINFOJS = $(TILEIMAGEFILES) dngn
 TITLEIMGS = denzi_dragon denzi_kitchen_duty denzi_summoner \
             denzi_undead_warrior omndra_zot_demon omndra_fire_mage \
-            shadyamish_octm
+            shadyamish_octm denzi_evil_mage denzi_invasion
 
 STATICFILES = $(TILEIMAGEFILES:%=webserver/game_data/static/%.png) \
               webserver/static/stone_soup_icon-32x32.png \
