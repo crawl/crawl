@@ -1987,6 +1987,66 @@ xXXXXXXXx
 xxxxxxxxx
 ENDMAP
 
+NAME:   dk_vineyard_1
+DEPTH:  D:2-12
+WEIGHT: 4
+TAGS:   no_item_gen no_monster_gen uniq_vineyard luniq_mini
+ITEM:   grape q:1 / grape q:3 / grape q:5 / sultana q:2 / sultana q:4
+NSUBST: . = 6:d
+KFEAT:  w = shallow_water
+FTILE:  .d = floor_moss / floor_grass / floor_dirt
+COLOUR: .d = green
+MAP
+xxxxxxxxx
+xwwwwwwwx
+xw.....wx
+xw.....wx
+xw.....w+
+xw.....wx
+xw.....wx
+xw.....wx
+xwwwwwwwx
+xxxxxxxxx
+ENDMAP
+
+NAME:   dk_vineyard_2
+DEPTH:  D:2-12
+WEIGHT: 4
+TAGS:   no_item_gen no_monster_gen uniq_vineyard luniq_mini
+ITEM:   grape q:1 / grape q:3 / grape q:5 / sultana q:2 / sultana q:4
+NSUBST: . = 4:d
+KFEAT:  w = shallow_water
+FTILE:  .d = floor_moss / floor_grass
+COLOUR: .d = green
+MAP
+xxxxxxxx
+x......x
+x.wwww.+
+x......x
+xxxxxxxx
+ENDMAP
+
+NAME:   dk_vineyard_3
+DEPTH:  D:2-12
+WEIGHT: 4
+TAGS:   no_item_gen no_monster_gen uniq_vineyard luniq_mini
+ITEM:   grape q:1 / grape q:3 / grape q:5 / sultana q:2 / sultana q:4
+NSUBST: . = 4:d
+NSUBST: : = 5:. / *:'
+KFEAT:  w = shallow_water
+FTILE:  .d = floor_moss / floor_grass
+COLOUR: .d = green
+FTILE:  ' = floor_normal
+MAP
+::..::
+:..ww.
+:.ww.:
+.ww..:
+:.ww..
+.ww...
+:...::
+ENDMAP
+
 ##########################################################################
 #
 # <<4>> Fog generator vaults.
