@@ -1179,7 +1179,7 @@ bool tile_list_processor::write_data()
         fprintf(fp, "#include <cassert>\n");
         fprintf(fp, "using namespace std;\n\n");
 
-        fprintf(fp, "unsigned int _tile_%s_count[%s - %s] =\n{\n",
+        fprintf(fp, "static unsigned int _tile_%s_count[%s - %s] =\n{\n",
                 lcname.c_str(), max.c_str(), m_start_value.c_str());
         for (unsigned int i = 0; i < m_page.m_counts.size(); i++)
             fprintf(fp, "    %u,\n", m_page.m_counts[i]);
@@ -1192,7 +1192,7 @@ bool tile_list_processor::write_data()
                 lcname.c_str(), m_start_value.c_str());
         fprintf(fp, "}\n\n");
 
-        fprintf(fp, "tileidx_t _tile_%s_basetiles[%s - %s] =\n{\n",
+        fprintf(fp, "static tileidx_t _tile_%s_basetiles[%s - %s] =\n{\n",
                 lcname.c_str(), max.c_str(), m_start_value.c_str());
         for (unsigned int i = 0; i < m_page.m_base_tiles.size(); i++)
             fprintf(fp, "    %u,\n", m_page.m_base_tiles[i]);
@@ -1205,7 +1205,7 @@ bool tile_list_processor::write_data()
                 lcname.c_str(), m_start_value.c_str());
         fprintf(fp, "}\n\n");
 
-        fprintf(fp, "int _tile_%s_probs[%s - %s] =\n{\n",
+        fprintf(fp, "static int _tile_%s_probs[%s - %s] =\n{\n",
                 lcname.c_str(), max.c_str(), m_start_value.c_str());
         for (unsigned int i = 0; i < m_page.m_probs.size(); i++)
             fprintf(fp, "    %d,\n", m_page.m_probs[i]);
@@ -1219,7 +1219,7 @@ bool tile_list_processor::write_data()
                 lcname.c_str(), m_start_value.c_str());
         fprintf(fp, "}\n\n");
 
-        fprintf(fp, "const char *_tile_%s_name[%s - %s] =\n{\n",
+        fprintf(fp, "static const char *_tile_%s_name[%s - %s] =\n{\n",
                 lcname.c_str(), max.c_str(), m_start_value.c_str());
 
         std::string old_enum_name = "";
@@ -1254,7 +1254,7 @@ bool tile_list_processor::write_data()
                 lcname.c_str(), m_start_value.c_str());
         fprintf(fp, "}\n\n");
 
-        fprintf(fp, "tile_info _tile_%s_info[%s - %s] =\n{\n",
+        fprintf(fp, "static tile_info _tile_%s_info[%s - %s] =\n{\n",
                 lcname.c_str(), max.c_str(), m_start_value.c_str());
         for (unsigned int i = 0; i < m_page.m_offsets.size(); i+=4)
         {
@@ -1295,7 +1295,7 @@ bool tile_list_processor::write_data()
 
         fprintf(fp, "\ntypedef std::pair<const char*, tileidx_t> _name_pair;\n\n");
 
-        fprintf(fp, "_name_pair %s_name_pairs[] =\n"
+        fprintf(fp, "static _name_pair %s_name_pairs[] =\n"
                     "{\n", lcname.c_str());
 
         typedef std::map<std::string, int> sort_map;
@@ -1353,7 +1353,7 @@ bool tile_list_processor::write_data()
         fprintf(fp, "\ntypedef std::pair<tile_variation, tileidx_t> _colour_pair;\n\n");
 
         fprintf(fp,
-            "_colour_pair %s_colour_pairs[] =\n"
+            "static _colour_pair %s_colour_pairs[] =\n"
             "{\n"
             "    _colour_pair(tile_variation(0, 0), 0),\n",
             lcname.c_str());
