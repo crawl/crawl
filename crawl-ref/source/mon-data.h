@@ -3740,7 +3740,7 @@ static monsterentry mondata[] = {
 },
 
 {
-    MONS_SUBTRACTOR_SNAKE, 'S', BLACK, "subtractor snake",
+    MONS_SUBTRACTOR_SNAKE, 'S', ETC_SUBTRACTOR, "subtractor snake",
     M_COLD_BLOOD | M_NO_POLY_TO,
     MR_NO_FLAGS,
     0, 10, MONS_ADDER, MONS_SUBTRACTOR_SNAKE, MH_NATURAL, -3,
