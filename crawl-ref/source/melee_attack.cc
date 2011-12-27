@@ -5350,16 +5350,12 @@ bool melee_attack::handle_constriction()
 
     bool defender_grabbed = false;
     bool any_grabbed = false;
-    int maxgrab;
     int grabslot = 0;
     int damage = 0;
     actor *save_defender = defender;
     actor *target;
 
-    if (attacker->atype() == ACT_PLAYER)
-        maxgrab = (attacker->as_player()->species == SP_OCTOPODE) ? 8 : 1;
-    else
-        maxgrab = (attacker->type == MONS_OCTOPODE) ? 8 : 1;
+    int maxgrab = (attacker->mons_species(true) == MONS_OCTOPODE) ? 8 : 1;
     ASSERT(maxgrab <= MAX_CONSTRICT);
 
     for (int i = 0; i < maxgrab; i++)

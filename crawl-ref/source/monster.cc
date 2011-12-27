@@ -5480,7 +5480,7 @@ void monster::clear_specific_constrictions(int mind)
 
 bool monster::has_usable_tentacle()
 {
-    if (type != MONS_OCTOPODE)
+    if (mons_species() != MONS_OCTOPODE)
         return(false);
 
     int free_tentacles = std::min(8, MAX_CONSTRICT);
