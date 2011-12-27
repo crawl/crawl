@@ -613,12 +613,6 @@ static void _fill_player_doll(player_save_info &p, package *save)
             tilep_scan_parts(fbuf, equip_doll, p.species, p.experience_level);
             tilep_race_default(p.species, p.experience_level, &equip_doll);
             success = true;
-
-            while (_readln(fdoll, fbuf))
-            {
-                if (strcmp(fbuf, "net") == 0)
-                    p.held_in_net = true;
-            }
         }
     }
 

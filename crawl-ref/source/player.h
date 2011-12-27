@@ -752,7 +752,6 @@ struct player_save_info
 
 #ifdef USE_TILE
     dolls_data doll;
-    bool held_in_net;
 #endif
 
     bool save_loadable;
