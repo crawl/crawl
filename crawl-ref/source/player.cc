@@ -5614,7 +5614,7 @@ void player::init()
     constricted_by = NON_ENTITY;
     escape_attempts = 0;
     dur_been_constricted = 0;
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < MAX_CONSTRICT; i++)
     {
         constricting[i] = NON_ENTITY;
         dur_has_constricted[i] = 0;
@@ -6858,8 +6858,8 @@ bool player::has_usable_tentacle()
     if (species != SP_OCTOPODE)
         return(false);
 
-    int free_tentacles = 8;
-    for (int i = 0; i < 8; i++)
+    int free_tentacles = std::min(8, MAX_CONSTRICT);
+    for (int i = 0; i < MAX_CONSTRICT; i++)
         if (constricting[i] != NON_ENTITY)
             free_tentacles--;
 
@@ -7361,7 +7361,7 @@ void player::accum_been_constricted()
 
 void player::accum_has_constricted()
 {
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < MAX_CONSTRICT; i++)
         if (constricting[i] != NON_ENTITY)
             dur_has_constricted[i] += you.time_taken;
 }
@@ -7413,7 +7413,7 @@ bool player::attempt_escape()
         emsg += "'s grasp.";
         mpr(emsg);
         // update monster's has constricted info
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < MAX_CONSTRICT; i++)
             if (themonst->constricting[i] == MHITYOU)
                 themonst->constricting[i] = NON_ENTITY;
 
@@ -7443,7 +7443,7 @@ void player::clear_all_constrictions()
     dur_been_constricted = 0;
     escape_attempts = 0;
 
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < MAX_CONSTRICT; i++)
     {
         if (constricting[i] != NON_ENTITY)
         {
@@ -7470,7 +7470,7 @@ void player::clear_specific_constrictions(int mind)
         escape_attempts = 0;
     }
 
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < MAX_CONSTRICT; i++)
     {
         if (constricting[i] == mind)
         {
@@ -7517,11 +7517,11 @@ std::string _constriction_description()
 {
     std::string cinfo = "";
     std::string constrictor_name;
-    std::string constricting_name[8];
+    std::string constricting_name[MAX_CONSTRICT];
 
     // init names of constrictor and constrictees
     constrictor_name = "";
-    for (int idx=0; idx < 8; idx++)
+    for (int idx = 0; idx < MAX_CONSTRICT; idx++)
         constricting_name[idx] = "";
 
     // name of what this monster is constricted by, if any
@@ -7531,7 +7531,7 @@ std::string _constriction_description()
                                name(DESC_A);
     }
     // names of what this monster is constricting, if any
-    for (int idx=0; idx<8; idx++)
+    for (int idx = 0; idx < MAX_CONSTRICT; idx++)
     {
         if (you.constricting[idx] != NON_ENTITY)
             constricting_name[idx] = env.mons[you.constricting[idx]].
@@ -7542,7 +7542,7 @@ std::string _constriction_description()
         cinfo += "You are being constricted by " + constrictor_name + ".";
 
     std::vector<std::string> constricting;
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < MAX_CONSTRICT; i++)
         if (constricting_name[i] != "")
         {
             constricting.push_back(constricting_name[i]);

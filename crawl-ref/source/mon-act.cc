@@ -1926,7 +1926,7 @@ void handle_noattack_constrictions(monster *mons)
     actor *attacker = mons;
     actor *defender;
 
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < MAX_CONSTRICT; i++)
         if (attacker->constricting[i] != NON_ENTITY)
         {
             int basedam, durdam, acdam, infdam, damage;
@@ -1934,9 +1934,9 @@ void handle_noattack_constrictions(monster *mons)
                 defender = &you;
             else
                 defender = &env.mons[mons->constricting[i]];
-            damage = (attacker->as_monster()->hit_dice+1)/2;
+            damage = (attacker->as_monster()->hit_dice + 1) / 2;
             basedam = damage;
-            damage += roll_dice(1, (attacker->dur_has_constricted[i]/10)+1);
+            damage += roll_dice(1, attacker->dur_has_constricted[i] / 10 + 1);
             durdam = damage;
             damage -= random2(1 + (defender->armour_class() / 2));
             acdam = damage;

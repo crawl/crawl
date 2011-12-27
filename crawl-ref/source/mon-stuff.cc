@@ -4353,7 +4353,7 @@ void monster_teleport(monster* mons, bool instan, bool silent)
         else
             monster_teleport_to_player(mons->constricted_by, newpos);
     }
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < MAX_CONSTRICT; i++)
         if (mons->constricting[i] == MHITYOU)
             player_teleport_to_monster(mons, newpos);
         else if (mons->constricting[i] != NON_ENTITY)
@@ -4452,7 +4452,7 @@ void monster_teleport_to_player(int mindex, coord_def playerpos)
 
     // the monster which has just moved could have been constricting more
     // than one target, clear others if no longer adjacent
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < MAX_CONSTRICT; i++)
         if (mons->constricting[i] != mindex
             && mons->constricting[i] != NON_ENTITY)
         {
@@ -4517,7 +4517,7 @@ void player_teleport_to_monster(monster *mons, coord_def monsterpos)
 
     // you could have been constricting more
     // than one target, clear others if no longer adjacent
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < MAX_CONSTRICT; i++)
         if (you.constricting[i] != mons->mindex()
             && you.constricting[i] != NON_ENTITY
             && !adjacent(env.mons[you.constricting[i]].pos(), you.pos()))

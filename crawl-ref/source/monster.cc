@@ -80,7 +80,7 @@ monster::monster()
     constricted_by = NON_ENTITY;
     escape_attempts = 0;
     dur_been_constricted = 0;
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < MAX_CONSTRICT; i++)
     {
         constricting[i] = NON_ENTITY;
         dur_has_constricted[i] = 0;
@@ -143,7 +143,7 @@ void monster::reset()
     constricted_by = NON_ENTITY;
     escape_attempts = 0;
     dur_been_constricted = 0;
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < MAX_CONSTRICT; i++)
     {
         constricting[i] = NON_ENTITY;
         dur_has_constricted[i] = 0;
@@ -5331,7 +5331,7 @@ void monster::accum_been_constricted()
 
 void monster::accum_has_constricted()
 {
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < MAX_CONSTRICT; i++)
         if (constricting[i])
             dur_has_constricted[i] += you.time_taken;
 }
@@ -5377,7 +5377,7 @@ bool monster::attempt_escape()
     {
         randfact = roll_dice(1,5) + 5;
         themonst = &env.mons[constricted_by];
-        randfact += roll_dice(1,themonst->hit_dice);
+        randfact += roll_dice(1, themonst->hit_dice);
     }
     else
     {
@@ -5389,13 +5389,13 @@ bool monster::attempt_escape()
         if (constricted_by != MHITYOU)
         {
             // update monster's has constricted info
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < MAX_CONSTRICT; i++)
                 if (themonst->constricting[i] == mindex())
                     themonst->constricting[i] = NON_ENTITY;
         }
         else
         {
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < MAX_CONSTRICT; i++)
                 if (you.constricting[i] == mindex())
                     you.constricting[i] = NON_ENTITY;
         }
@@ -5428,13 +5428,13 @@ void monster::clear_all_constrictions()
     dur_been_constricted = 0;
     escape_attempts = 0;
 
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < MAX_CONSTRICT; i++)
     {
         if (constricting[i] == MHITYOU)
         {
             if (alive())
             {
-                rmsg = name(DESC_THE,true);
+                rmsg = name(DESC_THE, true);
                 rmsg += " releases its hold on you.";
                 mpr(rmsg);
             }
@@ -5445,7 +5445,7 @@ void monster::clear_all_constrictions()
             mons = &env.mons[constricting[i]];
             if (alive() && mons->alive())
             {
-                rmsg = name(DESC_THE,true);
+                rmsg = name(DESC_THE, true);
                 rmsg += " releases its hold on ";
                 rmsg += mons->name(DESC_THE,true) + ".";
                 mpr(rmsg);
@@ -5466,7 +5466,7 @@ void monster::clear_specific_constrictions(int mind)
         escape_attempts = 0;
     }
 
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < MAX_CONSTRICT; i++)
     {
         if (constricting[i] == mind)
         {
@@ -5481,8 +5481,8 @@ bool monster::has_usable_tentacle()
     if (type != MONS_OCTOPODE)
         return(false);
 
-    int free_tentacles = 8;
-    for (int i = 0; i < 8; i++)
+    int free_tentacles = std::min(8, MAX_CONSTRICT);
+    for (int i = 0; i < MAX_CONSTRICT; i++)
         if (constricting[i] != NON_ENTITY)
             free_tentacles--;
 

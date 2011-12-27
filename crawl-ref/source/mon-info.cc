@@ -688,7 +688,7 @@ monster_info::monster_info(const monster* m, int milev)
 
     // init names of constrictor and constrictees
     constrictor_name = "";
-    for (int idx=0; idx < 8; idx++)
+    for (int idx = 0; idx < MAX_CONSTRICT; idx++)
         constricting_name[idx] = "";
 
     // name of what this monster is constricted by, if any
@@ -701,7 +701,7 @@ monster_info::monster_info(const monster* m, int milev)
                                name(DESC_PLAIN, true);
     }
     // names of what this monster is constricting, if any
-    for (int idx=0; idx<8; idx++)
+    for (int idx = 0; idx < MAX_CONSTRICT; idx++)
     {
         if (m->constricting[idx] == MHITYOU)
             constricting_name[idx] = "you";
@@ -1366,7 +1366,7 @@ std::string monster_info::constriction_description() const
     }
 
     bool first = true;
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < MAX_CONSTRICT; i++)
         if (constricting_name[i] != "")
         {
             if (first)

@@ -347,10 +347,10 @@ public:
 
     // Constriction stuff
     unsigned short constricted_by;
-    unsigned short constricting[8]; // max 8 for octopode
+    unsigned short constricting[MAX_CONSTRICT];
     int escape_attempts;
     int dur_been_constricted;
-    int dur_has_constricted[8];     // max 8 for octopode
+    int dur_has_constricted[MAX_CONSTRICT];
 
     // handles non-attack turn constrictions, does not need to be saved
     bool has_constricted_this_turn;

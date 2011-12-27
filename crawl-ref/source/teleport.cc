@@ -77,7 +77,7 @@ bool monster::blink_to(const coord_def& dest, bool quiet)
         else
             monster_teleport_to_player(constricted_by, dest);
     }
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < MAX_CONSTRICT; i++)
         if (constricting[i] == MHITYOU)
             player_teleport_to_monster(this, dest);
         else if (constricting[i] != NON_ENTITY)
