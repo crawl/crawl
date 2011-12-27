@@ -16,10 +16,9 @@ CFOPTIMIZE = $(shell dpkg-buildflags --get CXXFLAGS || echo -g -O2) $(shell dpkg
 tree-stamp:
 	dh_testdir
 	mkdir build-console
-	cp -ldpR docs settings source build-console/
-	rm -rf build-console/rltiles/*
+	cp -ldpR docs settings source CREDITS.txt build-console/
 	mkdir build-tiles
-	cp -ldpR docs settings source build-tiles/
+	cp -ldpR docs settings source CREDITS.txt build-tiles/
 	touch tree-stamp
 
 DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
