@@ -508,7 +508,7 @@ void Note::load(reader& inf)
     unmarshallString4(inf, desc);
 }
 
-bool notes_active = false;
+static bool notes_active = false;
 
 bool notes_are_active()
 {
