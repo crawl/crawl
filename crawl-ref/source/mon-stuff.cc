@@ -1792,6 +1792,17 @@ int monster_die(monster* mons, killer_type killer,
                 {
                     did_god_conduct(DID_KILL_UNDEAD,
                                     mons->hit_dice, true, mons);
+                    // Dual holiness, Trog and Kiku like dead demons.
+                    if ((mons->type == MONS_ABOMINATION_SMALL
+                         || mons->type == MONS_ABOMINATION_LARGE
+                         || mons->type == MONS_CRAWLING_CORPSE
+                         || mons->type == MONS_MACABRE_MASS)
+                        && (you.religion == GOD_TROG
+                         || you.religion == GOD_KIKUBAAQUDGHA))
+                    {
+                        did_god_conduct(DID_KILL_DEMON,
+                                        mons->hit_dice, true, mons);
+                    }
                 }
                 else if (targ_holy == MH_DEMONIC)
                 {
