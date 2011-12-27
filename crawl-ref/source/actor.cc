@@ -309,7 +309,7 @@ void actor::clear_clinging()
 bool actor::is_constricting()
 {
     for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (constricting[i] != 0)
+        if (constricting[i] != NON_ENTITY)
             return true;
 
     return false;
