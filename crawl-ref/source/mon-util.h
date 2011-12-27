@@ -80,16 +80,16 @@ struct mon_energy_usage
 
     mon_energy_usage operator | (const mon_energy_usage &o) const
     {
-		mon_energy_usage me;
-		me.move = combine(move, o.move);
-		me.swim = combine(swim, o.swim);
-		me.attack = combine(attack, o.attack);
-		me.missile = combine(missile, o.missile);
-		me.spell = combine(spell, o.spell);
-		me.special = combine(special, o.special);
-		me.item = combine(item, o.item);
-		me.pickup_percent = combine(pickup_percent, o.pickup_percent, 100);
-		return me;
+        mon_energy_usage me;
+        me.move = combine(move, o.move);
+        me.swim = combine(swim, o.swim);
+        me.attack = combine(attack, o.attack);
+        me.missile = combine(missile, o.missile);
+        me.spell = combine(spell, o.spell);
+        me.special = combine(special, o.special);
+        me.item = combine(item, o.item);
+        me.pickup_percent = combine(pickup_percent, o.pickup_percent, 100);
+        return me;
     }
 private:
     static int8_t combine(int8_t a, int8_t b, int8_t def = 10)
