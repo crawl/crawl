@@ -5652,10 +5652,6 @@ player_save_info& player_save_info::operator=(const player& rhs)
     // [ds] Perhaps we should move game type to player?
     saved_game_type  = crawl_state.type;
 
-#ifdef USE_TILE
-    held_in_net      = false;
-#endif
-
     return (*this);
 }
 

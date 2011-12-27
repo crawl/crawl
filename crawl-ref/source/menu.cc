@@ -1080,9 +1080,6 @@ bool PlayerMenuEntry::get_tiles(std::vector<tile_def>& tileset) const
         tileset.push_back(tile_def(idx, TEX_PLAYER, ymax));
     }
 
-    if (player.held_in_net)
-        tileset.push_back(tile_def(TILEP_TRAP_NET, TEX_PLAYER));
-
     return (true);
 }
 #endif

@@ -434,9 +434,6 @@ void save_doll_file(writer &dollf)
     char fbuf[80];
     tilep_print_parts(fbuf, result);
     dollf.write(fbuf, strlen(fbuf));
-
-    if (you.attribute[ATTR_HELD] > 0)
-        dollf.write("net\n", 4);
 }
 
 #ifdef USE_TILE_LOCAL
