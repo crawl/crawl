@@ -324,9 +324,13 @@ bool is_newer(const std::string &a, const std::string &b)
     return (file_modtime(a) > file_modtime(b));
 }
 
-static int _create_directory(const char *dir)
+static bool _create_directory(const char *dir)
 {
-    return mkdir_u(dir, 0755);
+    if (!mkdir_u(dir, 0755))
+        return true;
+    if (errno == EEXIST) // might be not a directory
+        return dir_exists(dir);
+    return false;
 }
 
 static bool _create_dirs(const std::string &dir)
@@ -349,7 +353,7 @@ static bool _create_dirs(const std::string &dir)
         if (i == 0 && dir.size() && dir[0] == FILE_SEPARATOR)
             path = FILE_SEPARATOR + path;
 
-        if (!dir_exists(path) && _create_directory(path.c_str()))
+        if (!_create_directory(path.c_str()))
             return (false);
 
         path += FILE_SEPARATOR;
