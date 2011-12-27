@@ -155,5 +155,9 @@ Thumbs.db
 # Python (webtiles) junk
 *.pyc
 
+# Webtiles stuff
+passwd.db3
+*.ttyrec
+
 # junk when compiled with DGAMELAUNCH
 /source/cache*
