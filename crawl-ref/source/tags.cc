@@ -203,7 +203,7 @@ void reader::fail_if_not_eof(const std::string &name)
         _file ? (fgetc(_file) != EOF) :
         _read_offset >= _pbuf->size())
     {
-        fail(("Incomplete read of \"" + name + "\" - aborting.").c_str());
+        fail("Incomplete read of \"%s\" - aborting.", name.c_str());
     }
 }
 

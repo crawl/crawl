@@ -25,7 +25,7 @@ public:
     std::string tostring(int start = 0, int end = -1) const;
     std::string to_colour_string() const;
 
-    void cprintf(const char *s, ...);
+    void cprintf(PRINTF(1, ));
     void cprintf(const std::string &s);
     void add_glyph(glyph g);
     void textcolor(int color);
