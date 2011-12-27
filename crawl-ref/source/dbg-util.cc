@@ -125,7 +125,7 @@ std::string debug_mon_str(const monster* mon)
 
 void debug_dump_constriction(const actor *act)
 {
-    for(int i_c = 0; i_c < 8; ++i_c)
+    for(int i_c = 0; i_c < MAX_CONSTRICT; ++i_c)
     {
         short constricted = act->constricting[i_c];
 
