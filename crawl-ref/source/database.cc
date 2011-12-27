@@ -265,6 +265,11 @@ static void* init_db(void *arg)
 
 void databaseSystemInit()
 {
+    // Note: if you're building contrib libraries initially checked out
+    // before 2011-12-28 and this assertion fails, please make sure you have
+    // the current version ("git submodule sync;git submodule update --init").
+    ASSERT(sqlite3_threadsafe());
+
     thread_t th[NUM_DB];
     for (unsigned int i = 0; i < NUM_DB; i++)
         if (thread_create_joinable(&th[i], init_db, (void*)(intptr_t)i))
