@@ -292,7 +292,7 @@ public:
     void banish(const std::string &who = "");
     void expose_to_element(beam_type element, int strength = 0);
 
-    int mons_species() const;
+    int mons_species(bool zombie_base = false) const;
 
     mon_holy_type holiness() const;
     bool undead_or_demonic() const;

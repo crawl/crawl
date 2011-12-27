@@ -586,7 +586,7 @@ public:
 
     int warding() const;
 
-    int mons_species() const;
+    int mons_species(bool zombie_base = false) const;
 
     mon_holy_type holiness() const;
     bool undead_or_demonic() const;

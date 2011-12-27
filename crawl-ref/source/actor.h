@@ -241,7 +241,7 @@ public:
     virtual int armour_tohit_penalty(bool random_factor) const = 0;
     virtual int shield_tohit_penalty(bool random_factor) const = 0;
 
-    virtual int mons_species() const = 0;
+    virtual int mons_species(bool zombie_base = false) const = 0;
 
     virtual mon_holy_type holiness() const = 0;
     virtual bool undead_or_demonic() const = 0;

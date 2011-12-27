@@ -3626,8 +3626,10 @@ bool monster::is_banished() const
     return (!alive() && flags & MF_BANISHED);
 }
 
-int monster::mons_species() const
+int monster::mons_species(bool zombie_base) const
 {
+    if (zombie_base && mons_class_is_zombified(type))
+        return ::mons_species(base_monster);
     return ::mons_species(type);
 }
 
