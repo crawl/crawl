@@ -1433,7 +1433,7 @@ static tileidx_t _tileidx_monster_base(int type, bool in_water, int colour,
     case MONS_SEA_SNAKE:
         return TILEP_MONS_SEA_SNAKE;
     case MONS_SUBTRACTOR_SNAKE:
-        return _mon_mod(TILEP_MONS_SUBTRACTOR_SNAKE, tile_num_prop);
+        return _mon_mod(TILEP_MONS_SUBTRACTOR_SNAKE, you.frame_no);
 
     // trolls ('T')
     case MONS_TROLL:
