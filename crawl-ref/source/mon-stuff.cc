@@ -1461,6 +1461,22 @@ static bool _reaping(monster *mons)
     return false;
 }
 
+int monster_die(monster* mons, actor *killer, bool silent,
+                bool wizard, bool fake)
+{
+    killer_type ktype = KILL_YOU;
+    int kindex = NON_MONSTER;
+
+    if (killer->atype() == ACT_MONSTER)
+    {
+        const monster *kmons = killer->as_monster();
+        ktype = kmons->confused_by_you() ? KILL_YOU_CONF : KILL_MON;
+        kindex = kmons->mindex();
+    }
+
+    return monster_die(mons, ktype, kindex, silent, wizard, fake);
+}
+
 // Returns the slot of a possibly generated corpse or -1.
 int monster_die(monster* mons, killer_type killer,
                 int killer_index, bool silent, bool wizard, bool fake)

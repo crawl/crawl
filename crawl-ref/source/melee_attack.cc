@@ -2118,31 +2118,15 @@ bool melee_attack::player_monattk_hit_effects()
     return (false);
 }
 
-void melee_attack::_monster_die(monster* mons, killer_type killer,
-                                int killer_index)
-{
-    if (invalid_monster(mons))
-        return; // Already died some other way.
-
-    monster_die(mons, killer, killer_index);
-}
-
 void melee_attack::_defender_die()
 {
     if (defender->atype() == ACT_PLAYER)
         return;
 
-    killer_type killer = KILL_YOU;
-    int kindex = NON_MONSTER;
+    if (invalid_monster(defender->as_monster()))
+        return;
 
-    if (attacker->atype() == ACT_MONSTER)
-    {
-        const monster *kmons = attacker->as_monster();
-        killer = kmons->confused_by_you() ? KILL_YOU_CONF : KILL_MON;
-        kindex = kmons->mindex();
-    }
-
-    _monster_die(defender->as_monster(), killer, kindex);
+    monster_die(defender->as_monster(), attacker);
 }
 
 int melee_attack::fire_res_apply_cerebov_downgrade(int res)
