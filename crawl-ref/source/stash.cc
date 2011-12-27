@@ -185,8 +185,6 @@ static void _fully_identify_item(item_def *item)
 // Stash
 // ----------------------------------------------------------------------
 
-bool Stash::aggressive_verify = true;
-
 Stash::Stash(int xp, int yp) : enabled(true), items()
 {
     // First, fix what square we're interested in
@@ -340,24 +338,21 @@ void Stash::update()
         // Compare these items
         if (!are_items_same(first, item))
         {
-            if (aggressive_verify)
+            // See if 'item' matches any of the items we have. If it does,
+            // we'll just make that the first item and leave 'verified'
+            // unchanged.
+
+            // Start from 1 because we've already checked items[0]
+            for (int i = 1, count = items.size(); i < count; ++i)
             {
-                // See if 'item' matches any of the items we have. If it does,
-                // we'll just make that the first item and leave 'verified'
-                // unchanged.
-
-                // Start from 1 because we've already checked items[0]
-                for (int i = 1, count = items.size(); i < count; ++i)
+                if (are_items_same(items[i], item))
                 {
-                    if (are_items_same(items[i], item))
-                    {
-                        // Found it. Swap it to the front of the vector.
-                        std::swap(items[i], items[0]);
+                    // Found it. Swap it to the front of the vector.
+                    std::swap(items[i], items[0]);
 
-                        // We don't set verified to true. If this stash was
-                        // already unverified, it remains so.
-                        return;
-                    }
+                    // We don't set verified to true. If this stash was
+                    // already unverified, it remains so.
+                    return;
                 }
             }
 
