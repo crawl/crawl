@@ -236,16 +236,18 @@ zotdef.o \
 tilepick.o \
 tileview.o
 
-ifdef TILES
-OBJECTS += \
+TILES_OBJECTS = \
+tiledoll.o \
+tilemcache.o \
+tilepick-p.o \
+tilecell.o
+
+GLTILES_OBJECTS = \
 glwrapper.o \
 libgui.o \
 tilebuf.o \
 tiledgnbuf.o \
-tiledoll.o \
 tilefont.o \
-tilemcache.o \
-tilepick-p.o \
 tilereg.o \
 tilereg-cmd.o \
 tilereg-crt.o \
@@ -266,23 +268,21 @@ tilereg-text.o \
 tilereg-title.o \
 tilesdl.o \
 tiletex.o \
-tilecell.o \
 windowmanager-sdl.o \
 glwrapper-ogl.o \
 fontwrapper-ft.o
-endif
 
-ifdef WEBTILES
-OBJECTS += \
-tiledoll.o \
-tilemcache.o \
-tilepick-p.o \
+WEBTILES_OBJECTS = \
 tileweb.o \
-tilecell.o \
 tileweb-text.o \
 json.o
-endif
 
 YACC_OBJECTS = \
 util/levcomp.tab.o \
 util/levcomp.lex.o
+
+ALL_OBJECTS = $(OBJECTS) $(TILES_OBJECTS) $(GLTILES_OBJECTS) \
+$(WEBTILES_OBJECTS) $(YACC_OBJECTS) $(TILEDEFOBJS) \
+libw32c.o \
+libunix.o \
+version.o

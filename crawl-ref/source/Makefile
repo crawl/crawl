@@ -72,6 +72,8 @@ MAKEFLAGS += -rR # This only works for recursive makes, i.e. contribs ...
         profile package-source source build-windows package-windows rest docs greet \
         api
 
+include Makefile.obj
+
 #
 # Compiler Flags
 #
@@ -290,10 +292,12 @@ SQLITE_LIB := -lsqlite3
 #
 ifdef TILES
 TILES_ANY = YesPlease
+OBJECTS += $(TILES_OBJECTS) $(GLTILES_OBJECTS)
 endif
 
 ifdef WEBTILES
 TILES_ANY = YesPlease
+OBJECTS += $(TILES_OBJECTS) $(WEBTILES_OBJECTS)
 endif
 
 #
@@ -307,16 +311,6 @@ endif
 endif
 endif
 
-#
-# Set up object file dependencies for $(GAME) target.
-#
-include Makefile.obj
-
-# Just a quick hack to make it clean up
-# tiles-specific object files too.
-ifneq (,$(findstring clean,$(MAKECMDGOALS)))
-TILES := YesPlease
-endif
 
 ifdef WIN32
 EXTRA_OBJECTS += icon.o
@@ -1208,7 +1202,7 @@ endif
 clean: clean-rltiles clean-webserver
 	+$(MAKE) -C $(UTIL) clean
 	$(RM) $(GAME) $(GAME).exe $(GENERATED_FILES) $(EXTRA_OBJECTS) libw32c.o\
-	    libunix.o $(OBJECTS) $(OBJECTS:.o=.d) $(YACC_OBJECTS:.o=.d) *.ixx  \
+	    libunix.o $(ALL_OBJECTS) $(ALL_OBJECTS:.o=.d) *.ixx  \
 	    .contrib-libs .cflags AppHdr.h.gch AppHdr.h.d
 	$(RM) -r build-win
 	$(RM) -r build
