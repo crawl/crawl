@@ -44,6 +44,7 @@
 #include "makeitem.h"
 #include "message.h"
 #include "misc.h"
+#include "mon-act.h"
 #include "mon-behv.h"
 #include "mon-cast.h"
 #include "mon-clone.h"
@@ -5335,9 +5336,6 @@ bool melee_attack::handle_constriction()
     bool defender_grabbed = false;
     bool any_grabbed = false;
     int grabslot = 0;
-    int damage = 0;
-    actor *save_defender = defender;
-    actor *target;
 
     int maxgrab = (attacker->mons_species(true) == MONS_OCTOPODE) ? 8 : 1;
     ASSERT(maxgrab <= MAX_CONSTRICT);
@@ -5407,59 +5405,8 @@ bool melee_attack::handle_constriction()
 
     // if anything is grabbed, do damage accordingly
     if (any_grabbed)
-    {
-        for (int i = 0; i < maxgrab; i++)
-            if (attacker->constricting[i] != NON_ENTITY)
-            {
-                if (attacker->constricting[i] == MHITYOU)
-                    target = &you;
-                else
-                    target = &env.mons[attacker->constricting[i]];
-                
-                // if not adjacent, skip.
-                // XXX needs to drop too!
-                if (!adjacent(attacker->pos(), target->pos()))
-                    continue;
+        handle_noattack_constrictions(attacker);
 
-                defender = target;
-                damage = (attacker->atype() == ACT_PLAYER
-                          ? (you.strength() - roll_dice(1, 3)) / 3
-                          : (attacker->as_monster()->hit_dice + 1) / 2);
-                DIAG_ONLY(int basedam = damage);
-                damage += roll_dice(1, (attacker->dur_has_constricted[i] / 10) + 1);
-                DIAG_ONLY(int durdam = damage);
-                damage -= random2(1 + (defender->armour_class() / 2));
-                DIAG_ONLY(int acdam = damage);
-
-                damage = inflict_damage(damage, BEAM_MISSILE);
-                DIAG_ONLY(int infdam = damage);
-                damage_done = damage;
-
-                if (attacker->atype() == ACT_MONSTER)
-                    announce_hit();
-                else if (damage > 0)
-                    player_announce_aux_hit();
-                else
-                {
-                    mprf("You %s %s%s.",
-                            aux_verb.c_str(),
-                            defender->name(DESC_THE).c_str(),
-                            you.can_see(defender) ? ", but do no damage" : "");
-                }
-
-                dprf("constrict at: %s df: %s base %d dur %d ac %d inf %d",
-                     attacker->name(DESC_PLAIN, true).c_str(),
-                     defender->name(DESC_PLAIN, true).c_str(),
-                     basedam, durdam, acdam, infdam);
-
-                if (defender->atype() == ACT_MONSTER
-                    && defender->as_monster()->hit_points < 1)
-                {
-                    _defender_die();
-                }
-            }
-    }
-    defender = save_defender;
     attacker->has_constricted_this_turn = true;
     return true;
 }
