@@ -149,7 +149,7 @@ int spellbook_contents(item_def &book, read_book_action_type action,
         strng[0] = index_to_letter(spelcount);
         strng[1] = 0;
 
-        out.cprintf(strng);
+        out.cprintf("%s", strng);
         out.cprintf(" - ");
 
         out.cprintf("%s", chop_string(spell_title(stype), 29).c_str());

@@ -1,8 +1,8 @@
 #ifndef ERRORS_H
 #define ERRORS_H
 
-NORETURN void fail(const char *msg, ...);
-NORETURN void sysfail(const char *msg, ...);
+NORETURN void fail(PRINTF(0, ));
+NORETURN void sysfail(PRINTF(0, ));
 
 class ext_fail_exception : public std::exception
 {
