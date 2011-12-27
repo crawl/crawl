@@ -27,7 +27,7 @@
 #include "tileview.h"
 #include "view.h"
 
-const char *VAULT_PLACEMENT_METATABLE = "crawl.vault-placement";
+static const char *VAULT_PLACEMENT_METATABLE = "crawl.vault-placement";
 
 ///////////////////////////////////////////////////////////////////////////
 // Lua dungeon bindings (in the dgn table).

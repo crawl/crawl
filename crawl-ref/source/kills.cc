@@ -33,7 +33,7 @@ static void kill_lua_filltable(std::vector<kill_exp> &v);
 // KillMaster
 //
 
-const char *kill_category_names[] =
+static const char *kill_category_names[] =
 {
     "you",
     "collateral kills",

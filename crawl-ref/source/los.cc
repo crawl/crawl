@@ -123,7 +123,7 @@ void clear_rays_on_exit()
 }
 
 // Pre-squared LOS radius.
-int _los_radius_sq = LOS_RADIUS_SQ;
+static int _los_radius_sq = LOS_RADIUS_SQ;
 
 static void _handle_los_change();
 

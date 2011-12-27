@@ -49,7 +49,7 @@
 
 static int _body_covered();
 
-mutation_def mut_data[] = {
+static mutation_def mut_data[] = {
 
 #include "mutation-data.h"
 

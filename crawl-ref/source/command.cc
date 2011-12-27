@@ -839,7 +839,7 @@ struct help_file
     bool auto_hotkey;
 };
 
-help_file help_files[] = {
+static help_file help_files[] = {
     { "crawl_manual.txt",  '*', true },
     { "../README.txt",     '!', false },
     { "aptitudes.txt",     '%', false },
