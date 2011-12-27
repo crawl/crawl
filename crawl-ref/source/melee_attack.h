@@ -169,7 +169,6 @@ private:
     std::string player_why_missed();
     void player_warn_miss();
     void player_weapon_upsets_god();
-    void _monster_die(monster* mons, killer_type killer, int killer_index);
     void _defender_die();
 
     // Output methods

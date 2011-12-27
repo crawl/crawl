@@ -1920,32 +1920,44 @@ static void _monster_add_energy(monster* mons)
 #    define DEBUG_ENERGY_USE(problem) ((void) 0)
 #endif
 
-
-void handle_noattack_constrictions(monster *mons)
+#ifdef DEBUG_DIAGNOSTICS
+# define DIAG_ONLY(x) x
+#else
+# define DIAG_ONLY(x) (void)0
+#endif
+void handle_noattack_constrictions(actor *attacker)
 {
-    actor *attacker = mons;
     actor *defender;
 
     for (int i = 0; i < MAX_CONSTRICT; i++)
         if (attacker->constricting[i] != NON_ENTITY)
         {
-            int basedam, durdam, acdam, infdam, damage;
+            int damage;
             if (attacker->constricting[i] == MHITYOU)
                 defender = &you;
             else
-                defender = &env.mons[mons->constricting[i]];
-            damage = (attacker->as_monster()->hit_dice + 1) / 2;
-            basedam = damage;
+                defender = &env.mons[attacker->constricting[i]];
+
+            if (attacker->atype() == ACT_PLAYER)
+                damage = (you.strength() - roll_dice(1,3)) / 3;
+            else
+                damage = (attacker->as_monster()->hit_dice + 1) / 2;
+            DIAG_ONLY(int basedam = damage);
             damage += roll_dice(1, attacker->dur_has_constricted[i] / 10 + 1);
-            durdam = damage;
+            DIAG_ONLY(int durdam = damage);
             damage -= random2(1 + (defender->armour_class() / 2));
-            acdam = damage;
+            DIAG_ONLY(int acdam = damage);
 
             damage = defender->hurt(attacker, damage, BEAM_MISSILE, false);
-            infdam = damage;
+            DIAG_ONLY(int infdam = damage);
 
             std::string exclams;
-            if (damage < HIT_WEAK)
+            if (damage <= 0 && attacker->atype() == ACT_PLAYER
+                && you.can_see(defender))
+            {
+                exclams = ", but do no damage.";
+            }
+            else if (damage < HIT_WEAK)
                 exclams = ".";
             else if (damage < HIT_MED)
                 exclams = "!";
@@ -1954,7 +1966,9 @@ void handle_noattack_constrictions(monster *mons)
             else
                 exclams = "!!!";
             mprf("%s %s %s%s%s",
-                 attacker->name(DESC_THE).c_str(),
+                 (attacker->atype() == ACT_PLAYER
+                     ? "You"
+                     : attacker->name(DESC_THE).c_str()),
                  attacker->conj_verb("constrict").c_str(),
                  defender->name(DESC_THE).c_str(),
 #ifdef DEBUG_DIAGNOSTICS
@@ -1962,15 +1976,18 @@ void handle_noattack_constrictions(monster *mons)
 #else
                  "",
 #endif
-                exclams.c_str());
+                 exclams.c_str());
 
-            dprf("mconstrict at: %s df: %s base %d dur %d ac %d inf %d",
+            dprf("non-melee constrict at: %s df: %s base %d dur %d ac %d inf %d",
                  attacker->name(DESC_PLAIN, true).c_str(),
                  defender->name(DESC_PLAIN, true).c_str(),
                  basedam, durdam, acdam, infdam);
-            if (defender != &you && defender->as_monster()->hit_points < 1)
-                monster_die(defender->as_monster(), KILL_MON,
-                             attacker->mindex());
+
+            if (defender->atype() == ACT_MONSTER
+                && defender->as_monster()->hit_points < 1)
+            {
+                monster_die(defender->as_monster(), attacker);
+            }
         }
 }
 
