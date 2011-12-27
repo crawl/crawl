@@ -369,5 +369,6 @@ protected:
 };
 
 bool actor_slime_wall_immune(const actor *actor);
+actor *mindex_to_actor(short mindex);
 
 #endif

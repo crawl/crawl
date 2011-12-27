@@ -1927,16 +1927,11 @@ static void _monster_add_energy(monster* mons)
 #endif
 void handle_noattack_constrictions(actor *attacker)
 {
-    actor *defender;
-
     for (int i = 0; i < MAX_CONSTRICT; i++)
         if (attacker->constricting[i] != NON_ENTITY)
         {
             int damage;
-            if (attacker->constricting[i] == MHITYOU)
-                defender = &you;
-            else
-                defender = &env.mons[attacker->constricting[i]];
+            actor *defender = mindex_to_actor(attacker->constricting[i]);
 
             // if not adjacent, stop constricting (and being constricted).
             if (!adjacent(attacker->pos(), defender->pos()))
