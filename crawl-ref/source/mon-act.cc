@@ -1938,10 +1938,13 @@ void handle_noattack_constrictions(actor *attacker)
             else
                 defender = &env.mons[attacker->constricting[i]];
 
-            // if not adjacent, skip.
-            // XXX needs to drop too!
+            // if not adjacent, stop constricting (and being constricted).
             if (!adjacent(attacker->pos(), defender->pos()))
+            {
+                attacker->clear_specific_constrictions(attacker->constricting[i]);
+                defender->clear_specific_constrictions(attacker->mindex());
                 continue;
+            }
 
             if (attacker->atype() == ACT_PLAYER)
                 damage = (you.strength() - roll_dice(1,3)) / 3;
