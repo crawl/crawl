@@ -1677,7 +1677,7 @@ std::string stair_climb_verb(dungeon_feature_type feat)
         return "pass through";
 }
 
-const char *dngn_feature_names[] =
+static const char *dngn_feature_names[] =
 {
 "unseen", "closed_door", "detected_secret_door", "secret_door",
 "wax_wall", "metal_wall", "green_crystal_wall", "rock_wall",

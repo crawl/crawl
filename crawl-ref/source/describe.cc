@@ -4034,7 +4034,7 @@ static std::string _religion_help(god_type god)
 // The various titles granted by the god of your choice.  Note that Xom
 // doesn't use piety the same way as the other gods, so these are just
 // placeholders.
-const char *divine_title[NUM_GODS][8] =
+static const char *divine_title[NUM_GODS][8] =
 {
     // No god.
     {"Buglet",             "Firebug",               "Bogeybug",                 "Bugger",
