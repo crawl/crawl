@@ -266,7 +266,10 @@ tilereg-text.o \
 tilereg-title.o \
 tilesdl.o \
 tiletex.o \
-tilecell.o
+tilecell.o \
+windowmanager-sdl.o \
+glwrapper-ogl.o \
+fontwrapper-ft.o
 endif
 
 ifdef WEBTILES
@@ -278,18 +281,6 @@ tileweb.o \
 tilecell.o \
 tileweb-text.o \
 json.o
-endif
-
-ifdef SDL
-OBJECTS += windowmanager-sdl.o
-endif
-
-ifdef GL
-OBJECTS += glwrapper-ogl.o
-endif
-
-ifdef FT
-OBJECTS += fontwrapper-ft.o
 endif
 
 YACC_OBJECTS = \

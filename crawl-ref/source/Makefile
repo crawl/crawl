@@ -289,23 +289,11 @@ SQLITE_LIB := -lsqlite3
 # Set up the TILES variant
 #
 ifdef TILES
-
-# For now, everything but the iPad uses the standard
-# SDL/OpenGL/Freetype combination.
-ifndef IPAD
-	SDL = YesPlease
-	GL = YesPlease
-	FT = YesPlease
-endif
-
 TILES_ANY = YesPlease
-
 endif
 
 ifdef WEBTILES
-
 TILES_ANY = YesPlease
-
 endif
 
 #
@@ -587,20 +575,10 @@ ifdef BUILD_FREETYPE
 INCLUDES_L += -Icontrib/install/$(ARCH)/include/freetype2
 endif
 
-ifdef SDL
-DEFINES_L += -DUSE_SDL
-endif
-
-ifdef GL
-DEFINES_L += -DUSE_GL
-endif
+DEFINES_L += -DUSE_SDL -DUSE_GL -DUSE_FT
 
 ifdef GLES
 DEFINES_L += -DUSE_GLES
-endif
-
-ifdef FT
-DEFINES_L += -DUSE_FT
 endif
 
 # Okay, we have to assume we're on something else that
