@@ -44,13 +44,13 @@
 #include "state.h"
 #include "env.h"
 #include "terrain.h"
+#include "tilepick.h"
 #include "traps.h"
 #include "travel.h"
 #include "view.h"
 #include "viewchar.h"
 #ifdef USE_TILE
  #include "tiledef-player.h"
- #include "tilepick.h"
 #endif
 
 band_type active_monster_band = BAND_NO_BAND;
@@ -1824,9 +1824,7 @@ static int _place_monster_aux(const mgen_data &mg,
         mon->ghost_demon_init();
     }
 
-#ifdef USE_TILE
     tile_init_props(mon);
-#endif
 
 #ifndef DEBUG_DIAGNOSTICS
     // A rare case of a debug message NOT showing in the debug mode.
