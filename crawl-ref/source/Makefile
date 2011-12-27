@@ -995,7 +995,7 @@ webserver/game_data/static/%.js: $(RLTILES)/%.js
 	$(QUIET_COPY)$(COPY) $< webserver/game_data/static/
 
 clean-webserver:
-	$(RM) $(STATICFILES)
+	$(RM) $(STATICFILES) webserver/*.pyc
 
 ifdef WEBTILES
 webserver: $(STATICFILES)
