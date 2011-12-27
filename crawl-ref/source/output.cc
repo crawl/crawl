@@ -161,12 +161,12 @@ class colour_bar
     int m_request_redraw_after; // force a redraw at this turn count
 };
 
-colour_bar HP_Bar(LIGHTGREEN, GREEN, RED, DARKGREY);
+static colour_bar HP_Bar(LIGHTGREEN, GREEN, RED, DARKGREY);
 
 #ifdef USE_TILE_LOCAL
-colour_bar MP_Bar(BLUE, BLUE, LIGHTBLUE, DARKGREY);
+static colour_bar MP_Bar(BLUE, BLUE, LIGHTBLUE, DARKGREY);
 #else
-colour_bar MP_Bar(LIGHTBLUE, BLUE, MAGENTA, DARKGREY);
+static colour_bar MP_Bar(LIGHTBLUE, BLUE, MAGENTA, DARKGREY);
 #endif
 
 // ----------------------------------------------------------------------

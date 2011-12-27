@@ -191,8 +191,8 @@ static void _calc_density();
 
 // A mask of vaults and vault-specific flags.
 std::vector<vault_placement> Temp_Vaults;
-FixedVector<bool, NUM_MONSTERS> temp_unique_creatures;
-FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
+static FixedVector<bool, NUM_MONSTERS> temp_unique_creatures;
+static FixedVector<unique_item_status_type, MAX_UNRANDARTS> temp_unique_items;
 
 const map_mask *Vault_Placement_Mask = NULL;
 

@@ -66,7 +66,7 @@
 // precalculations (only positive quadrant used).
 // For the LOS code to work correctly, any LOS shape that
 // is used needs to be contained in bds_precalc.
-const circle_def bds_precalc = circle_def(LOS_MAX_RANGE, C_ROUND);
+static const circle_def bds_precalc = circle_def(LOS_MAX_RANGE, C_ROUND);
 
 // These determine what rays are cast in the precomputation,
 // and affect start-up time significantly.
@@ -80,29 +80,29 @@ const circle_def bds_precalc = circle_def(LOS_MAX_RANGE, C_ROUND);
 // These are filled during precomputation (_register_ray).
 // XXX: fullrays is not needed anymore after precomputation.
 struct los_ray;
-std::vector<los_ray> fullrays;
-std::vector<coord_def> ray_coords;
+static std::vector<los_ray> fullrays;
+static std::vector<coord_def> ray_coords;
 
 // These store all unique minimal cellrays. For each i,
 // cellray i ends in cellray_ends[i] and passes through
 // thoses cells p that have blockrays(p)[i] set. In other
 // words, blockrays(p)[i] is set iff an opaque cell p blocks
 // the cellray with index i.
-std::vector<coord_def> cellray_ends;
+static std::vector<coord_def> cellray_ends;
 typedef FixedArray<bit_array*, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> blockrays_t;
-blockrays_t blockrays;
+static blockrays_t blockrays;
 
 // We also store the minimal cellrays by target position
 // for efficient retrieval by find_ray.
 // XXX: Consider condensing this representation.
 struct cellray;
-FixedArray<std::vector<cellray>, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> min_cellrays;
+static FixedArray<std::vector<cellray>, LOS_MAX_RANGE+1, LOS_MAX_RANGE+1> min_cellrays;
 
 // Temporary arrays used in losight() to track which rays
 // are blocked or have seen a smoke cloud.
 // Allocated when doing the precomputations.
-bit_array *dead_rays     = NULL;
-bit_array *smoke_rays    = NULL;
+static bit_array *dead_rays     = NULL;
+static bit_array *smoke_rays    = NULL;
 
 class quadrant_iterator : public rectangle_iterator
 {

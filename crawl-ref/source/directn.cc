@@ -868,7 +868,7 @@ void full_describe_view()
 
 #ifndef USE_TILE_LOCAL
 // XXX: Hack - can't pass mlist entries into _find_mlist().
-bool mlist_full_info;
+static bool mlist_full_info;
 std::vector<monster_info> mlist;
 static void _fill_monster_list(bool full_info)
 {

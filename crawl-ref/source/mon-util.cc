@@ -58,7 +58,7 @@
 
 static FixedVector < int, NUM_MONSTERS > mon_entry;
 
-mon_display monster_symbols[NUM_MONSTERS];
+static mon_display monster_symbols[NUM_MONSTERS];
 
 static bool initialised_randmons = false;
 static std::vector<monster_type> monsters_by_habitat[NUM_HABITATS];
