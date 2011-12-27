@@ -1970,18 +1970,34 @@ void handle_noattack_constrictions(actor *attacker)
                 exclams = "!!";
             else
                 exclams = "!!!";
-            mprf("%s %s %s%s%s",
-                 (attacker->atype() == ACT_PLAYER
-                     ? "You"
-                     : attacker->name(DESC_THE).c_str()),
-                 attacker->conj_verb("constrict").c_str(),
-                 defender->name(DESC_THE).c_str(),
+
+            if (you.can_see(attacker) || attacker == &you)
+            {
+                mprf("%s %s %s%s%s",
+                     (attacker->atype() == ACT_PLAYER
+                         ? "You"
+                         : attacker->name(DESC_THE).c_str()),
+                     attacker->conj_verb("constrict").c_str(),
+                     defender->name(DESC_THE).c_str(),
 #ifdef DEBUG_DIAGNOSTICS
-                 make_stringf(" for %d", damage).c_str(),
+                     make_stringf(" for %d", damage).c_str(),
 #else
-                 "",
+                     "",
 #endif
-                 exclams.c_str());
+                     exclams.c_str());
+            }
+            else if (you.can_see(defender) || defender == &you)
+            {
+                mprf("%s %s constricted%s%s",
+                     defender->name(DESC_THE).c_str(),
+                     defender->conj_verb("are").c_str(),
+#ifdef DEBUG_DIAGNOSTICS
+                     make_stringf(" for %d", damage).c_str(),
+#else
+                     "",
+#endif
+                     exclams.c_str());
+            }
 
             dprf("non-melee constrict at: %s df: %s base %d dur %d ac %d inf %d",
                  attacker->name(DESC_PLAIN, true).c_str(),
