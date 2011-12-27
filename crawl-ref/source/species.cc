@@ -353,6 +353,9 @@ monster_type player_species_to_mons_species(species_type species)
         return (MONS_OCTOPODE);
     case SP_ELF:
     case SP_HILL_DWARF:
+#if TAG_MAJOR_VERSION != 32
+    case SP_MOUNTAIN_DWARF:
+#endif
     case SP_OGRE_MAGE:
     case SP_GREY_ELF:
     case SP_GNOME:

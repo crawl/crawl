@@ -6523,19 +6523,7 @@ bool player::nightvision() const
 
 int player::mons_species() const
 {
-    if (player_genus(GENPC_DRACONIAN))
-        return (MONS_DRACONIAN);
-
-    switch (species)
-    {
-    case SP_HILL_ORC:
-        return (MONS_ORC);
-    case SP_HIGH_ELF: case SP_DEEP_ELF: case SP_SLUDGE_ELF:
-        return (MONS_ELF);
-
-    default:
-        return (MONS_HUMAN);
-    }
+    return player_species_to_mons_species(you.species);
 }
 
 bool player::poison(actor *agent, int amount, bool force)
