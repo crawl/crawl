@@ -344,7 +344,21 @@ void tile_init_flavour(const coord_def &gc)
             env.tile_flv(gc).special = 0;
     }
     else if (feat_is_secret_door(grd(gc)))
+    {
         env.tile_flv(gc).special = 0;
+
+        if (env.tile_flv(gc).feat == 0)
+        {
+            // If surrounding tiles from a secret door are using tile
+            // overrides, then use that tile for the secret door.
+            coord_def door;
+            dungeon_feature_type door_feat;
+            find_secret_door_info(gc, &door_feat, &door);
+
+            if (env.tile_flv(door).feat)
+                env.tile_flv(gc).feat = env.tile_flv(door).feat;
+        }
+    }
     else if (!env.tile_flv(gc).special)
         env.tile_flv(gc).special = random2(256);
 }
@@ -1059,15 +1073,13 @@ static inline void _apply_variations(const tile_flavour &flv, tileidx_t *bg,
              && !mimic)
     {
         tileidx_t override = flv.feat;
-        // Setting an override on a door specifically for undetected secret
-        // doors causes issues if there are a number of variants for that tile.
-        // In these instances, append "last_tile" and have the tile specifier
-        // for the door in question on its own line, and it should bypass any
-        // asserts or weird visual issues. Somewhat hackish. The following code
-        // assumes that if there is an override on a door location and that
-        // has no variations, that the override is not actually a door tile but
-        // the aforementioned secret door thing. {due}
-        if (override && tile_dngn_count(override) > 1)
+        /*
+          If the override is not a door tile (i.e., between
+          TILE_DNGN_DETECTED_SECRET_DOOR and TILE_DNGN_ORCISH_IDOL),
+          it's assumed to be for an undetected secret door and not
+          used here.
+         */
+        if (is_door_tile(override))
         {
             // XXX: This doesn't deal properly with detected doors.
             bool opened = (orig == TILE_DNGN_OPEN_DOOR);

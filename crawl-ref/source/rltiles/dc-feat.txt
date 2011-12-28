@@ -52,6 +52,9 @@ fleshy_orifice_open
 %sdir dc-dngn/gateways
 dngn_stone_arch DNGN_STONE_ARCH
 
+# Place new door tiles before this point, otherwise they can't be used as
+# door overrides.
+
 %sdir dc-dngn/statues
 dngn_orcish_idol DNGN_ORCISH_IDOL
 # dungeon statues
