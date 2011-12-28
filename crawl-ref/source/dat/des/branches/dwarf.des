@@ -8,49 +8,44 @@
 ################################################
 
 {{
-local_util = {}
-local_util.x_chance_in_y = function(x, y)
-    return (crawl.random2(y) < x)
-end
-local_util.statues_idx = 0
-local_util.monster_from_statue = function(monster)
-    local_util.statues_idx = local_util.statues_idx + 1
+dhfh = {}
+dhfh.statues_idx = 0
+dhfh.monster_from_statue = function(monster)
+    dhfh.statues_idx = dhfh.statues_idx + 1
     local mod = MonsterOnTrigger:new {
         target="auto",
         new_monster="generate_awake " .. monster,
         message_seen="The granite statue comes to life!",
         message_unseen="You hear a distant wail.",
-        master_name="statue" .. local_util.statues_idx
+        master_name="statue" .. dhfh.statues_idx
     }
     return mod
 end
-local_util.new_trigger = function(_type)
+dhfh.new_trigger = function(_type)
     return DgnTriggerer:new {
                         type   = _type,
                         target = "auto"
                       }
 end
 
-dhfh = {}
-
 dhfh.hall_setup = function(e, glyph)
     local mod
     if (glyph == "|") then
-        mod = local_util.monster_from_statue("eidolon")
-        mod:add_triggerer( local_util.new_trigger("item_pickup") )
+        mod = dhfh.monster_from_statue("eidolon")
+        mod:add_triggerer( dhfh.new_trigger("item_pickup") )
     else
         local new_monster
-        if (local_util.x_chance_in_y(1, 3)) then
+        if (crawl.x_chance_in_y(1, 3)) then
             new_monster="eidolon"
         else
             new_monster="freezing wraith"
         end
 
-        mod = local_util.monster_from_statue(new_monster)
-        mod:add_triggerer( local_util.new_trigger("item_pickup") )
+        mod = dhfh.monster_from_statue(new_monster)
+        mod:add_triggerer( dhfh.new_trigger("item_pickup") )
     end
     e.lua_marker("G", portal_desc { desc="granite statue of a fallen hero",
-            slaved_to="statue" .. local_util.statues_idx})
+            slaved_to="statue" .. dhfh.statues_idx})
     e.lua_marker(glyph, mod)
 end
 }}
