@@ -6050,14 +6050,14 @@ int player::armour_class() const
         // Note: Even though necromutation is a high level spell, it does
         // allow the character full armour (so the bonus is low). -- bwr
         if (form == TRAN_LICH)
-            AC += 300 + skill(SK_NECROMANCY, 100) / 6;    // max 7
+            AC += 600;
 
         if (player_genus(GENPC_DRACONIAN))
         {
            AC += 400 + 100 * (you.experience_level / 3);  // max 13
 
            if (form == TRAN_DRAGON)
-               AC += 700;
+               AC += 1000;
         }
         else
         {
@@ -6084,7 +6084,7 @@ int player::armour_class() const
             break;
 
         case TRAN_SPIDER: // low level (small bonus), also gets EV
-            AC += 200 + skill(SK_POISON_MAGIC, 100) / 6; // max 6
+            AC += 200;
             break;
 
         case TRAN_ICE_BEAST:
@@ -6095,7 +6095,7 @@ int player::armour_class() const
             break;
 
         case TRAN_DRAGON: // Draconians handled above
-            AC += 700 + skill(SK_FIRE_MAGIC, 100) / 3;   // max 16
+            AC += 1600;
             break;
 
         case TRAN_STATUE: // main ability is armour (high bonus)
