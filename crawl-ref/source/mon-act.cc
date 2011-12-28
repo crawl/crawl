@@ -1928,18 +1928,15 @@ static void _monster_add_energy(monster* mons)
 void handle_noattack_constrictions(actor *attacker)
 {
     for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (attacker->constricting[i] != NON_ENTITY)
+    {
+        actor* const defender = mindex_to_actor(attacker->constricting[i]);
+        if (defender)
         {
-            int damage;
-            actor *defender = mindex_to_actor(attacker->constricting[i]);
+            // Constriction should have stopped the moment the actors
+            // became non-adjacent.
+            ASSERT(adjacent(attacker->pos(), defender->pos()));
 
-            // if not adjacent, stop constricting (and being constricted).
-            if (!adjacent(attacker->pos(), defender->pos()))
-            {
-                attacker->clear_specific_constrictions(attacker->constricting[i]);
-                defender->clear_specific_constrictions(attacker->mindex());
-                continue;
-            }
+            int damage;
 
             if (attacker->atype() == ACT_PLAYER)
                 damage = (you.strength() - roll_dice(1,3)) / 3;
@@ -1997,7 +1994,7 @@ void handle_noattack_constrictions(actor *attacker)
                      exclams.c_str());
             }
 
-            dprf("non-melee constrict at: %s df: %s base %d dur %d ac %d inf %d",
+            dprf("constrict at: %s df: %s base %d dur %d ac %d inf %d",
                  attacker->name(DESC_PLAIN, true).c_str(),
                  defender->name(DESC_PLAIN, true).c_str(),
                  basedam, durdam, acdam, infdam);
@@ -2008,6 +2005,7 @@ void handle_noattack_constrictions(actor *attacker)
                 monster_die(defender->as_monster(), attacker);
             }
         }
+    }
 }
 
 void handle_monster_move(monster* mons)

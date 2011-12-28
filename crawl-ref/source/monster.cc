@@ -2666,6 +2666,8 @@ void monster::moveto(const coord_def& c, bool clear_net)
     }
 
     set_position(c);
+
+    clear_far_constrictions();
 }
 
 bool monster::fumbles_attack(bool verbose)
@@ -5394,16 +5396,11 @@ bool monster::attempt_escape()
 void monster::clear_all_constrictions()
 {
     int myindex = mindex();
-    monster *mons;
     std::string rmsg;
 
-    if (constricted_by == MHITYOU)
-        you.clear_specific_constrictions(myindex);
-    else if (constricted_by != NON_ENTITY)
-    {
-        mons = &env.mons[constricted_by];
-        mons->clear_specific_constrictions(myindex);
-    }
+    actor* const constrictor = mindex_to_actor(constricted_by);
+    if (constrictor)
+        constrictor->clear_specific_constrictions(myindex);
 
     constricted_by = NON_ENTITY;
     dur_been_constricted = 0;
@@ -5411,27 +5408,14 @@ void monster::clear_all_constrictions()
 
     for (int i = 0; i < MAX_CONSTRICT; i++)
     {
-        if (constricting[i] == MHITYOU)
+        actor* const constrictee = mindex_to_actor(constricting[i]);
+        if (constrictee && alive() && constrictee->alive())
         {
-            if (alive())
-            {
-                rmsg = name(DESC_THE, true);
-                rmsg += " releases its hold on you.";
-                mpr(rmsg);
-            }
-            you.clear_specific_constrictions(myindex);
-        }
-        else if (constricting[i] != NON_ENTITY)
-        {
-            mons = &env.mons[constricting[i]];
-            if (alive() && mons->alive())
-            {
-                rmsg = name(DESC_THE, true);
-                rmsg += " releases its hold on ";
-                rmsg += mons->name(DESC_THE,true) + ".";
-                mpr(rmsg);
-            }
-            mons->clear_specific_constrictions(myindex);
+            rmsg = name(DESC_THE, true);
+            rmsg += " releases its hold on ";
+            rmsg += constrictee->name(DESC_THE,true) + ".";
+            mpr(rmsg);
+            constrictee->clear_specific_constrictions(myindex);
         }
         constricting[i] = NON_ENTITY;
         dur_has_constricted[i] = 0;

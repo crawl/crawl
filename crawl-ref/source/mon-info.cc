@@ -703,11 +703,10 @@ monster_info::monster_info(const monster* m, int milev)
     // names of what this monster is constricting, if any
     for (int idx = 0; idx < MAX_CONSTRICT; idx++)
     {
-        if (m->constricting[idx] == MHITYOU)
-            constricting_name[idx] = "you";
-        else if (m->constricting[idx] != NON_ENTITY)
-            constricting_name[idx] = env.mons[m->constricting[idx]].
-                                     name(DESC_PLAIN, true);
+        actor* const constrictee = mindex_to_actor(m->constricting[idx]);
+
+        if (constrictee)
+            constricting_name[idx] = constrictee->name(DESC_PLAIN, true);
     }
 
     // this must be last because it provides this structure to Lua code
