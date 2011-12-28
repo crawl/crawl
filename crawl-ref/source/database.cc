@@ -273,9 +273,14 @@ void databaseSystemInit()
     thread_t th[NUM_DB];
     for (unsigned int i = 0; i < NUM_DB; i++)
         if (thread_create_joinable(&th[i], init_db, (void*)(intptr_t)i))
-            sysfail("cannot create database thread");
+        {
+            // if thread creation fails, do it serially
+            th[i] = 0;
+            AllDBs[i].init();
+        }
     for (unsigned int i = 0; i < NUM_DB; i++)
-        thread_join(th[i]);
+        if (th[i])
+            thread_join(th[i]);
 }
 
 void databaseSystemShutdown()
