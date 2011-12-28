@@ -12,7 +12,6 @@
 #include "attitude-change.h"
 #include "cloud.h"
 #include "cluautil.h"
-#include "coord.h"
 #include "coordit.h"
 #include "database.h"
 #include "delay.h"

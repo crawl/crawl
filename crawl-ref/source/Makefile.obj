@@ -126,7 +126,6 @@ melee_attack.o \
 menu.o \
 message-stream.o \
 message.o \
-mgen_data.o \
 misc.o \
 mislead.o \
 mon-abil.o \

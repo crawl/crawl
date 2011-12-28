@@ -21,7 +21,6 @@
 #include "delay.h"
 #include "defines.h"
 #include "dactions.h"
-#include "coord.h"
 #include "effects.h"
 #include "env.h"
 #include "format.h"

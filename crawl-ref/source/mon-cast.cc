@@ -32,7 +32,6 @@
 #include "terrain.h"
 #include "mislead.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "mon-gear.h"
 #include "mon-speak.h"
 #include "mon-stuff.h"

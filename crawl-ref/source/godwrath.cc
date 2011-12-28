@@ -26,7 +26,6 @@
 #include "mon-place.h"
 #include "terrain.h"
 #include "mgen_data.h"
-#include "coord.h"
 #include "makeitem.h"
 #include "mon-stuff.h"
 #include "mutation.h"

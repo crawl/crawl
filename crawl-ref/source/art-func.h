@@ -25,7 +25,6 @@
 #include "env.h"           // For storm bow env.cgrid
 #include "food.h"          // For evokes
 #include "godconduct.h"    // did_god_conduct
-#include "coord.h"
 #include "misc.h"
 #include "mgen_data.h"     // For Sceptre of Asmodeus evoke
 #include "mon-info.h"

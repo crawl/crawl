@@ -17,7 +17,6 @@
 #include "cellular.h"
 #include "cloud.h"
 #include "colour.h"
-#include "coord.h"
 #include "coordit.h"
 #include "dungeon.h"
 #include "env.h"

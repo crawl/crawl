@@ -15,7 +15,6 @@
 #include "branch.h"
 #include "cloud.h"
 #include "colour.h"
-#include "coord.h"
 #include "coordit.h"
 #include "directn.h"
 #include "dungeon.h"

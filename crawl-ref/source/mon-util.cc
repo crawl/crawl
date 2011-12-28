@@ -38,7 +38,6 @@
 #include "mon-death.h"
 #include "mon-iter.h"
 #include "mon-place.h"
-#include "coord.h"
 #include "mon-stuff.h"
 #include "notes.h"
 #include "options.h"

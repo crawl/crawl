@@ -20,7 +20,6 @@
 #include "artefact.h"
 #include "branch.h"
 #include "chardump.h"
-#include "coord.h"
 #include "coordit.h"
 #include "defines.h"
 #include "dgn-shoals.h"
