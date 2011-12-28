@@ -272,7 +272,9 @@ void databaseSystemInit()
 
     thread_t th[NUM_DB];
     for (unsigned int i = 0; i < NUM_DB; i++)
+#ifndef DGAMELAUNCH
         if (thread_create_joinable(&th[i], init_db, (void*)(intptr_t)i))
+#endif
         {
             // if thread creation fails, do it serially
             th[i] = 0;
