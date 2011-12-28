@@ -349,7 +349,7 @@ void actor::clear_far_constrictions()
 
         if (constrictee && !adjacent(pos(), constrictee->pos()))
         {
-            clear_specific_constrictions(constricted_by);
+            clear_specific_constrictions(constricting[i]);
             constrictee->clear_specific_constrictions(mindex());
             if (you.see_cell(pos()) || you.see_cell(constrictee->pos()))
             {
