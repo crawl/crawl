@@ -532,7 +532,7 @@ bool debug_make_shop(const coord_def& pos)
 
     representative = !!strchr(requested_shop, '*');
 
-    place_spec_shop(you.absdepth0, pos, new_shop_type, representative);
+    place_spec_shop(pos, new_shop_type, representative);
     link_items();
     mprf("Done.");
     return true;

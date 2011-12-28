@@ -195,8 +195,7 @@ void init_level_connectivity();
 void read_level_connectivity(reader &th);
 void write_level_connectivity(writer &th);
 
-bool builder(int level_number,
-             bool enable_random_maps = true,
+bool builder(bool enable_random_maps = true,
              dungeon_feature_type dest_stairs_type = NUM_FEATURES);
 void dgn_veto_level();
 
@@ -237,9 +236,9 @@ bool place_specific_trap(const coord_def& where, trap_type trap_spec);
 bool place_specific_trap(const coord_def& where, trap_spec* spec);
 
 struct shop_spec;
-void place_spec_shop(int level_number, const coord_def& where,
+void place_spec_shop(const coord_def& where,
                      shop_spec* spec, bool representative = false);
-void place_spec_shop(int level_number, const coord_def& where,
+void place_spec_shop(const coord_def& where,
                      int force_s_type, bool representative = false);
 bool seen_replace_feat(dungeon_feature_type replace,
                        dungeon_feature_type feature);

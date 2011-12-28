@@ -35,6 +35,8 @@ int subdungeon_depth(branch_type branch, int depth);
 // Get absolute depth given the displayable depth in the branch.
 int absdungeon_depth(branch_type branch, int subdepth);
 
+int absdungeon_depth();
+
 // Get displayable depth in the current branch.
 int player_branch_depth();
 

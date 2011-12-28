@@ -83,7 +83,7 @@ static bool mg_do_build_level(int niters)
         }
 
         ++mg_levels_tried;
-        if (!builder(you.absdepth0, you.where_are_you))
+        if (!builder())
         {
             ++mg_levels_failed;
             continue;
