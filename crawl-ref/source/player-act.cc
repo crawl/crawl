@@ -60,7 +60,7 @@ bool player::is_summoned(int* _duration, int* summon_type) const
     return (false);
 }
 
-void player::moveto(const coord_def &c, bool clear_net)
+void player::moveto(const coord_def &c, bool clear_net, bool check_constrict)
 {
     if (clear_net && c != pos())
         clear_trapping_net();
@@ -68,7 +68,8 @@ void player::moveto(const coord_def &c, bool clear_net)
     crawl_view.set_player_at(c);
     set_position(c);
 
-    clear_far_constrictions();
+    if (check_constrict)
+        clear_far_constrictions();
 
     if (player_has_orb())
     {
@@ -77,12 +78,13 @@ void player::moveto(const coord_def &c, bool clear_net)
     }
 }
 
-bool player::move_to_pos(const coord_def &c, bool clear_net)
+bool player::move_to_pos(const coord_def &c, bool clear_net,
+                         bool check_constrict)
 {
     actor *target = actor_at(c);
     if (!target || target->submerged())
     {
-        moveto(c, clear_net);
+        moveto(c, clear_net, check_constrict);
         return true;
     }
     return false;

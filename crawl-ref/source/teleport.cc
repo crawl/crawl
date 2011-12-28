@@ -66,7 +66,7 @@ bool monster::blink_to(const coord_def& dest, bool quiet)
         seen_context = SC_TELEPORT_IN;
 
     const coord_def oldplace = pos();
-    if (!move_to_pos(dest))
+    if (!move_to_pos(dest, true, false))
         return (false);
 
     // handle constriction, if any
@@ -82,6 +82,9 @@ bool monster::blink_to(const coord_def& dest, bool quiet)
             player_teleport_to_monster(this, dest);
         else if (constricting[i] != NON_ENTITY)
             monster_teleport_to_player(constricting[i], dest);
+
+    // Now break our nonadjacent constrictions.
+    clear_far_constrictions();
 
     // Leave a purple cloud.
     if (!jump)

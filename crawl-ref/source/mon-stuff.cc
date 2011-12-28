@@ -4371,6 +4371,14 @@ void monster_teleport(monster* mons, bool instan, bool silent)
 
     if (!silent)
         simple_monster_message(mons, " disappears!");
+    
+    const coord_def oldplace = mons->pos();
+
+    // Pick the monster up.
+    mgrd(oldplace) = NON_MONSTER;
+
+    // Move it to its new home, but don't break constrictions yet.
+    mons->moveto(newpos, true, false);
 
     // handle constriction, if any
     if (mons->is_constricted())
@@ -4386,13 +4394,8 @@ void monster_teleport(monster* mons, bool instan, bool silent)
         else if (mons->constricting[i] != NON_ENTITY)
             monster_teleport_to_player(mons->constricting[i], newpos);
 
-    const coord_def oldplace = mons->pos();
-
-    // Pick the monster up.
-    mgrd(oldplace) = NON_MONSTER;
-
-    // Move it to its new home.
-    mons->moveto(newpos);
+    // Now break constrictions.
+    mons->clear_far_constrictions();
 
     // And slot it back into the grid.
     mgrd(mons->pos()) = mons->mindex();
