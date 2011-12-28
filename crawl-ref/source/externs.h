@@ -261,8 +261,8 @@ struct coord_def
     int range(const coord_def other) const;
 };
 
-const coord_def INVALID_COORD(-1, -1);
-const coord_def NO_CURSOR(-1, -1);
+extern const coord_def INVALID_COORD;
+extern const coord_def NO_CURSOR;
 
 typedef bool (*coord_predicate)(const coord_def &c);
 
