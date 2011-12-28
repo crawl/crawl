@@ -205,8 +205,13 @@ void handle_behaviour(monster* mon)
             {
                 mpr("Your flesh rots away as the Orb of Zot is desecrated.",
                     MSGCH_DANGER);
+
+                // If the rot would reduce us to <= 0 max HP, attribute the
+                // kill to the monster.
+                if (loss >= you.hp_max_temp)
+                    ouch(loss, mon->mindex(), KILLED_BY_ROTTING);
+
                 rot_hp(loss);
-                ouch(1, mon->mindex(), KILLED_BY_ROTTING);
             }
         }
     }

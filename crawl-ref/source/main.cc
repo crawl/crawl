@@ -2774,7 +2774,6 @@ static void _decrement_durations()
                  && !you.duration[DUR_DEATHS_DOOR])
         {
             mpr("You feel your flesh rotting away.", MSGCH_WARN);
-            ouch(1, NON_MONSTER, KILLED_BY_ROTTING);
             rot_hp(1);
             you.rotting--;
         }
@@ -2800,7 +2799,6 @@ static void _decrement_durations()
         {
             dprf("rot rate: 1/%d", resilience);
             mpr("You feel your flesh rotting away.", MSGCH_WARN);
-            ouch(1, NON_MONSTER, KILLED_BY_ROTTING);
             rot_hp(1);
             if (you.rotting > 0)
                 you.rotting--;

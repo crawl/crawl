@@ -4489,6 +4489,9 @@ void rot_hp(int hp_loss)
     you.hp_max_temp -= hp_loss;
     calc_hp();
 
+    // Kill the player if they reached 0 maxhp.
+    ouch(0, NON_MONSTER, KILLED_BY_ROTTING);
+
     if (you.species != SP_GHOUL)
         xom_is_stimulated(hp_loss * 25);
 
