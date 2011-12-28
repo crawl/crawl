@@ -4428,27 +4428,11 @@ void monster_teleport(monster* mons, bool instan, bool silent)
     mons_relocated(mons);
 }
 
-static void _lose_constriction(actor *att, actor *def)
-{
-    def->clear_specific_constrictions(att->mindex());
-    att->clear_specific_constrictions(def->mindex());
-
-    if (you.see_cell(att->pos()) || you.see_cell(def->pos()))
-    {
-        mprf("%s lose%s %s grip on %s.",
-             att->name(DESC_THE).c_str(),
-             att->is_player() ? "" : "s",
-             att->pronoun(PRONOUN_POSSESSIVE).c_str(),
-             def->name(DESC_THE).c_str());
-    }
-}
-
 void monster_teleport_to_player(int mindex, coord_def playerpos)
 {
     coord_def target;
     coord_def newpos;
     monster *mons = &env.mons[mindex];
-    actor *mons2;
 
     int tries = 0;
     while (tries++ < 30)
@@ -4476,34 +4460,6 @@ void monster_teleport_to_player(int mindex, coord_def playerpos)
     mons->move_to_pos(newpos);
 
     place_cloud(CLOUD_TLOC_ENERGY, oldplace, 1 + random2(3), mons);
-
-    // the monster which has just moved could have been constricting more
-    // than one target, clear others if no longer adjacent
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (mons->constricting[i] != mindex
-            && mons->constricting[i] != NON_ENTITY)
-        {
-            if (mons->constricting[i] == MHITYOU)
-                mons2 = &you;
-            else
-                mons2 = &env.mons[mons->constricting[i]];
-
-            if (!adjacent(mons->pos(), mons2->pos()))
-                _lose_constriction(mons, mons2);
-        }
-
-    // if it's coming along because it was constricting player, but something
-    // else was constricting it, then the something else loses its grip too
-    if (mons->constricted_by != mindex && mons->constricted_by != NON_ENTITY)
-    {
-        if (mons->constricted_by == MHITYOU)
-            mons2 = &you;
-        else
-            mons2 = &env.mons[mons->constricted_by];
-
-        if (!adjacent(mons->pos(), mons2->pos()))
-            _lose_constriction(mons, mons2);
-    }
 
     simple_monster_message(mons, " comes along for the ride!");
 
@@ -4541,26 +4497,6 @@ void player_teleport_to_monster(monster *mons, coord_def monsterpos)
 
     // Move it to its new home.
     you.moveto(newpos);
-
-    // you could have been constricting more
-    // than one target, clear others if no longer adjacent
-    for (int i = 0; i < MAX_CONSTRICT; i++)
-        if (you.constricting[i] != mons->mindex()
-            && you.constricting[i] != NON_ENTITY
-            && !adjacent(env.mons[you.constricting[i]].pos(), you.pos()))
-        {
-            _lose_constriction(&you, &env.mons[you.constricting[i]]);
-        }
-
-    // if you're coming along because you're constricting it and something
-    // else was constricting you, then the something else loses its grip too
-
-    if (you.constricted_by != mons->mindex()
-        && you.constricted_by != NON_ENTITY
-        && !adjacent(you.pos(), env.mons[you.constricted_by].pos()))
-    {
-        _lose_constriction(&env.mons[you.constricted_by], &you);
-    }
 
     mpr("You come along for the ride!");
 }

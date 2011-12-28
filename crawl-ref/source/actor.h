@@ -355,6 +355,7 @@ public:
     // handles non-attack turn constrictions, does not need to be saved
     bool has_constricted_this_turn;
     virtual void clear_specific_constrictions(int mindex);
+    virtual void clear_far_constrictions();
     virtual bool is_constricted();
     virtual bool is_constricted_larger();
     virtual bool is_constricting();

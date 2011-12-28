@@ -325,6 +325,44 @@ void actor::clear_specific_constrictions(int mind)
     }
 }
 
+void actor::clear_far_constrictions()
+{
+    actor* const constrictor = mindex_to_actor(constricted_by);
+
+    if (constrictor && !adjacent(pos(), constrictor->pos()))
+    {
+        clear_specific_constrictions(constricted_by);
+        constrictor->clear_specific_constrictions(mindex());
+        if (you.see_cell(pos()) || you.see_cell(constrictor->pos()))
+        {
+            mprf("%s lose%s %s grip on %s.",
+                    constrictor->name(DESC_THE).c_str(),
+                    constrictor->is_player() ? "" : "s",
+                    constrictor->pronoun(PRONOUN_POSSESSIVE).c_str(),
+                    name(DESC_THE).c_str());
+        }
+    }
+
+    for (int i = 0; i < MAX_CONSTRICT; i++)
+    {
+        actor* const constrictee = mindex_to_actor(constricting[i]);
+
+        if (constrictee && !adjacent(pos(), constrictee->pos()))
+        {
+            clear_specific_constrictions(constricted_by);
+            constrictee->clear_specific_constrictions(mindex());
+            if (you.see_cell(pos()) || you.see_cell(constrictee->pos()))
+            {
+                mprf("%s lose%s %s grip on %s.",
+                        name(DESC_THE).c_str(),
+                        is_player() ? "" : "s",
+                        pronoun(PRONOUN_POSSESSIVE).c_str(),
+                        constrictee->name(DESC_THE).c_str());
+            }
+        }
+    }
+}
+
 bool actor::is_constricting()
 {
     for (int i = 0; i < MAX_CONSTRICT; i++)
