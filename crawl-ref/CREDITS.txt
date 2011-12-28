@@ -84,6 +84,7 @@ Ilyak
 Matthew Ince
 Mitsuhiro Itakura
 Mikko Juola
+Dominic 'dk' Kexel
 Jarmo Kielosto
 Kornel Kisielewicz
 Daniel Klein
