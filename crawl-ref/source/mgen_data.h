@@ -6,7 +6,7 @@
 
 // Hash key for passing a weapon to be given to
 // a dancing weapon.
-const std::string TUKIMA_WEAPON = "tukima-weapon";
+extern const std::string TUKIMA_WEAPON;
 
 // A structure with all the data needed to whip up a new monster.
 struct mgen_data
